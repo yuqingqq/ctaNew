@@ -35,9 +35,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 REPO = Path("/home/yuqing/ctaNew")
 DERIVED = REPO / "data/pm_5min/derived"
 MARKETS = REPO / "data/pm_5min/markets.jsonl"
-RATIFICATION_REF = "R-418"
+RATIFICATION_REF = "R-419"          # R-419 supersedes R-418 (DE round 9)
+#: The USER-authorised freeze commit (R-421 §2). Every sha the candidate and
+#: its manifest bind equals the blob HERE; the tree moved the anchors in nine
+#: commits afterwards. Rule 12: the frozen set is the commit's bytes.
+FROZEN_COMMIT = "1b53929"
 
 import de_admissible_windows as AW
+import de_ratification_check as RAT
 import ev_replay_seam as SEAM
 import harmful_forward_scorer as FS
 # The scheduled-unit prefix is IMPORTED, never restated: DA's preflight
@@ -89,6 +94,219 @@ def day_bounds(day: str) -> tuple:
     d = dt.datetime.strptime(day, "%Y%m%d").replace(tzinfo=dt.timezone.utc)
     lo = int(d.timestamp())
     return lo, lo + 86400
+
+
+def _git_blob(ref: str, path: str) -> bytes | None:
+    import subprocess
+    r = subprocess.run(("git", "show", f"{ref}:{path}"), cwd=str(REPO),
+                       capture_output=True)
+    return r.stdout if r.returncode == 0 else None
+
+
+def materialise_frozen(outdir: Path) -> dict:
+    """Write the FROZEN BYTES into the run dir and verify them BEFORE import.
+
+    R-421 §2: the frozen set is the freeze commit's bytes, not the tree's.
+    Round 3 refused because the tree moved; this executes what was frozen.
+
+    THE SHA IS CHECKED BEFORE ANYTHING IS IMPORTED. A byte verified after
+    import has already run. Each anchor's source is NAMED, because they are
+    not all obtainable the same way: code anchors come from
+    `git show <freeze>:<path>`; `data/` is gitignored, so a DATA anchor is
+    absent from the commit and its only source is disk — where it must still
+    equal the manifest's sha, which is the binding either way. A CODE anchor
+    absent from the freeze commit REFUSES: that would mean the freeze does not
+    contain the code it claims to bind."""
+    c = json.loads(FS.CANDIDATE.read_text())
+    mp = FS.CANDIDATE.parent / c["manifest"]
+    m = json.loads(mp.read_text())
+    ps = m.get("pin_semantics") or {}
+    default = ps.get("_default", "reproducibility_anchor")
+    root = outdir / "frozen"
+    per: dict[str, dict] = {}
+    for k, want in sorted((m.get("hashes") or {}).items()):
+        if ps.get(k, default) != "reproducibility_anchor":
+            per[k] = {"source": "state_at_build",
+                      "compared": False,
+                      "why": "pin_semantics marks this state_at_build; it MUST "
+                             "NOT be compared for equality when validating a "
+                             "reproduction"}
+            continue
+        blob = _git_blob(FROZEN_COMMIT, k)
+        source = f"git:{FROZEN_COMMIT}"
+        if blob is None:
+            dp = REPO / k
+            if k.endswith(".py"):
+                raise ForwardDayRefused(
+                    f"REFUSED: CODE anchor {k} is absent from the freeze "
+                    f"commit {FROZEN_COMMIT}. A freeze that does not contain "
+                    f"the code it binds cannot be executed as frozen.")
+            if not dp.exists():
+                raise ForwardDayRefused(
+                    f"REFUSED: anchor {k} is absent from {FROZEN_COMMIT} and "
+                    f"from disk. There is nowhere to obtain the frozen bytes.")
+            blob = dp.read_bytes()
+            source = ("disk (not tracked at the freeze commit; data/ is "
+                      "gitignored, so the manifest's sha is the only binding "
+                      "and it is checked here)")
+        got = hashlib.sha256(blob).hexdigest()
+        if got != want:
+            raise ForwardDayRefused(
+                f"REFUSED: {k} from {source} hashes {got[:16]} but the "
+                f"manifest binds {want[:16]}. The bytes are checked BEFORE "
+                f"import — a byte verified after import has already run.")
+        # ONLY CODE IS MATERIALISED. Writing the DATA anchor into the run
+        # dir created a real `frozen/data/` that SHADOWED the symlink below,
+        # so the frozen modules resolved their root to an empty tree and the
+        # archive index came back 0 — measured, not feared. Data anchors are
+        # verified by CONTENT where they live; the symlink points at them.
+        if k.endswith(".py"):
+            dest = root / k
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(blob)
+            per[k] = {"source": source, "compared": True, "sha256": got,
+                      "materialised_to": str(dest)}
+        else:
+            per[k] = {"source": source, "compared": True, "sha256": got,
+                      "materialised_to": None,
+                      "why_not_materialised": "a DATA anchor is verified by "
+                                              "content where it lives; "
+                                              "copying it into the run dir "
+                                              "would shadow the data-root "
+                                              "symlink the frozen code needs"}
+    # THE FROZEN CODE DERIVES ITS DATA ROOT FROM `__file__`. Measured: with
+    # the anchors materialised into the run dir, `flow_intensity.PM` resolved
+    # to OUTDIR/frozen/data/pm_5min and the archive index came back EMPTY --
+    # 0 slugs, silently. Executing frozen bytes out of tree repoints the data
+    # root, and an empty index reads as "no windows" rather than as a broken
+    # path. The DATA is not frozen (it is the day being scored), so the run
+    # dir mirrors the repo's data root by symlink: FREEZE's code, TODAY's
+    # data, each named in the receipt.
+    dlink = root / "data"
+    if not dlink.exists():
+        dlink.parent.mkdir(parents=True, exist_ok=True)
+        dlink.symlink_to(REPO / "data", target_is_directory=True)
+    checked = sum(1 for v in per.values() if v.get("compared"))
+    if checked == 0:
+        raise ForwardDayRefused(
+            "REFUSED: materialisation compared ZERO anchors; a step that "
+            "verified nothing must not report a pass (R-289).")
+    return {"frozen_commit": FROZEN_COMMIT, "root": str(root),
+            "anchors": per, "n_compared": checked,
+            "data_root": {"path": str(dlink), "symlink_to": str(REPO / "data"),
+                          "why": "the frozen code derives its data root from "
+                                 "__file__; the DATA is not frozen (it is the "
+                                 "day being scored), so the run dir mirrors "
+                                 "the repo's. Code from the freeze, data from "
+                                 "today, and the receipt says which is which"},
+            "manifest": c["manifest"], "manifest_sha256_bound":
+                c.get("manifest_sha256")}
+
+
+def _repo_module_path(name: str) -> Path | None:
+    p = REPO / "live/pm_research" / f"{name}.py"
+    return p if p.exists() else None
+
+
+def import_closure(frozen_root: Path, anchors: list) -> dict:
+    """Every repo module the anchors reach, and which of them are NOT frozen.
+
+    The anchors run from the run dir; everything they import that is not
+    itself an anchor loads from HEAD. That is a fact about this run and the
+    receipt states it by name rather than leaving a reader to assume the
+    whole closure was frozen."""
+    import ast
+    seen: set[str] = set()
+    stack = [Path(a).stem for a in anchors if a.endswith(".py")]
+    while stack:
+        mod = stack.pop()
+        if mod in seen:
+            continue
+        seen.add(mod)
+        fp = (frozen_root / "live/pm_research" / f"{mod}.py")
+        if not fp.exists():
+            fp = _repo_module_path(mod)
+        if fp is None:
+            continue
+        try:
+            tree = ast.parse(fp.read_text(encoding="utf-8"))
+        except SyntaxError:
+            continue
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for a in node.names:
+                    stack.append(a.name.split(".")[0])
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                stack.append(node.module.split(".")[0])
+    anchor_stems = {Path(a).stem for a in anchors if a.endswith(".py")}
+    closure, moved = [], []
+    for mod in sorted(seen):
+        rp = _repo_module_path(mod)
+        if rp is None:
+            continue
+        rel = f"live/pm_research/{mod}.py"
+        closure.append(rel)
+        if mod in anchor_stems:
+            continue
+        at_head = hashlib.sha256(rp.read_bytes()).hexdigest()
+        blob = _git_blob(FROZEN_COMMIT, rel)
+        at_freeze = hashlib.sha256(blob).hexdigest() if blob else None
+        if at_freeze != at_head:
+            moved.append({"path": rel, "sha256_at_HEAD": at_head[:16],
+                          "sha256_at_freeze": (at_freeze or "ABSENT")[:16]})
+    return {"closure": closure, "n_in_closure": len(closure),
+            "not_frozen_in_closure": moved,
+            "n_not_frozen": len(moved),
+            "why": f"anchors execute from the run dir at {FROZEN_COMMIT}; "
+                   f"every module in their import closure that is NOT an "
+                   f"anchor executes at HEAD. Those whose bytes differ "
+                   f"between HEAD and the freeze are named here — this run "
+                   f"is not claiming they were frozen."}
+
+
+def import_frozen_anchors(frozen_root: Path, anchors: list) -> dict:
+    """Import the anchors FROM THE RUN DIR, and prove it by `__file__`."""
+    import importlib
+    fdir = frozen_root / "live/pm_research"
+    sys.path.insert(0, str(fdir))
+    stems = [Path(a).stem for a in anchors if a.endswith(".py")]
+    for st in stems:
+        sys.modules.pop(st, None)
+    where = {}
+    for st in stems:
+        mod = importlib.import_module(st)
+        f = Path(getattr(mod, "__file__", "") or "").resolve()
+        if frozen_root.resolve() not in f.parents:
+            raise ForwardDayRefused(
+                f"REFUSED: {st} imported from {f}, which is NOT under the "
+                f"frozen run dir {frozen_root}. The anchors must execute the "
+                f"freeze's bytes, not the tree's.")
+        where[st] = str(f)
+    # AND THE DATA ROOT MUST RESOLVE. An empty archive index is
+    # indistinguishable from a day with no windows, so this is checked rather
+    # than assumed: the frozen module's own root must resolve to the repo's.
+    probe = {}
+    try:
+        import flow_intensity as _fi
+        pm = Path(str(getattr(_fi, "PM", ""))).resolve()
+        probe = {"frozen_flow_intensity_PM": str(pm),
+                 "resolves_to_repo_data": str(pm).startswith(
+                     str((REPO / "data").resolve())),
+                 "n_archive_slugs": len(_fi._archive_paths())}
+        if not probe["resolves_to_repo_data"] or probe["n_archive_slugs"] == 0:
+            raise ForwardDayRefused(
+                f"REFUSED: the frozen anchors' data root resolves to "
+                f"{pm} with {probe['n_archive_slugs']} archive slugs. "
+                f"Executing frozen bytes out of tree repoints the data root, "
+                f"and an EMPTY index reads as 'no windows' rather than as a "
+                f"broken path — which is why it is checked here.")
+    except ForwardDayRefused:
+        raise
+    except Exception as e:                           # noqa: BLE001
+        raise ForwardDayRefused(
+            f"REFUSED: could not probe the frozen data root ({e}).")
+    return {"imported_from": where, "n_imported": len(where),
+            "sys_path_head": sys.path[0], "data_root_probe": probe}
 
 
 # ---------------------------------------------------------------------------
@@ -228,9 +446,40 @@ def present_from_ledger(day: str, path: Path = None) -> dict:
 def population(day: str, present: dict = None) -> dict:
     pres = present_from_ledger(day) if present is None else present
     supply = AW.supply(day, pres)                    # refusals propagate
+    # CO-5 / R-421 §4: `verified` ALONE reads absence as a pass. The PAIR is
+    # required -- verified AND nothing unverifiable -- because a field the
+    # checker could not bind is not a field that passed.
+    rat = RAT.check(supply, RATIFICATION_REF)
+    # The assertion's RESULT is recorded, so removing the call removes the
+    # evidence: on a healthy day a bypassed pair-check changes no answer, and
+    # a guard nothing can observe is a guard nothing protects.
+    rat["pair_asserted"] = assert_ratification_pair(rat)
     specs = SEAM.window_specs_from_supply(
         supply, ratification_ref=RATIFICATION_REF)   # refusals propagate
-    return {"present": pres, "supply": supply, "specs": specs}
+    return {"present": pres, "supply": supply, "specs": specs,
+            "ratification": rat}
+
+
+def assert_ratification_pair(rat: dict) -> bool:
+    """verified AND unverifiable == []. CO-5.
+
+    Explicit argument so the PREDICATE is drivable: read only through
+    `population()`'s output, a control cannot tell a real check from a
+    literal dict, and both a weakened predicate and a skipped call survived."""
+    if not rat.get("verified") or rat.get("unverifiable"):
+        raise ForwardDayRefused(
+            f"REFUSED: ratification {RATIFICATION_REF} did not verify as a "
+            f"PAIR — verified={rat.get('verified')!r}, "
+            f"unverifiable={rat.get('unverifiable')!r}. `verified` alone "
+            f"reads an unbindable field as a pass (CO-5); a field the checker "
+            f"could not bind has not been ratified.")
+    # RETURN WHAT WAS ASSERTED, not THAT it was. A boolean flag can be forged
+    # by the same edit that bypasses the call -- measured: a mutant setting
+    # `pair_asserted = True` survived an evidence check that only asked
+    # whether the field was PRESENT.
+    return {"asserted": True, "verified_seen": rat.get("verified"),
+            "unverifiable_seen": list(rat.get("unverifiable") or []),
+            "ref_seen": rat.get("ratification_ref")}
 
 
 def counts_per_coin(pop: dict) -> dict:
@@ -344,11 +593,12 @@ def build_rows_over(selected: list) -> dict:
             "schema": "harmful_exposure_v3_4_fill_scoped_markout"}
 
 
-def assert_window_sets_agree(specs: list, built: dict) -> dict:
+def assert_window_sets_agree(specs: list, row_windows) -> dict:
     """The rows must cover EXACTLY the bridged windows. Neither side may
     silently be the other's subset."""
     bridged = {s["slug"] for s in specs}
-    got = {r["slug"] for r in built["rows"]}
+    got = (set(row_windows) if not isinstance(row_windows, dict)
+           else {r["slug"] for r in row_windows["rows"]})
     only_bridged = sorted(bridged - got)
     only_rows = sorted(got - bridged)
     if only_rows:
@@ -367,6 +617,91 @@ def assert_window_sets_agree(specs: list, built: dict) -> dict:
 def action_count(rows: list) -> int:
     """Rule 2: rows are actions; the evaluator de-duplicates to actions."""
     return len({(r.get("slug"), r.get("side"), r.get("gen")) for r in rows})
+
+
+def build_and_score(selected: list, frozen: dict) -> dict:
+    """ONE STREAMING PASS: replay a window, label it, score it, DROP it.
+
+    MEASURED, and this is the whole reason the shape changed: holding every
+    window's rows AND its `window_streams` for all 1,875 supplied windows
+    OOM-killed the run at exactly the 12 G cap after 21 minutes of CPU. The
+    cap is not raised (R-174) — the run stops CARRYING what it does not
+    need. Rows exist only while their window is being scored; what survives
+    a window is its counters, its action keys and its per-action scores.
+
+    Same functions, same order, same STRICT failure condition as the v3
+    builder — the loop is streamed, not reimplemented."""
+    import harmful_exposure_rows as HER
+    import harmful_hazard_model as hm
+    qr = HER.qr
+    spec = qr._qr_spec(qr.QR_SKEW, latency_ms=0, cancel=False)
+    paths = hm.fi._archive_paths()
+    tokens = hm.fi.token_map()
+    scores: dict = collections.defaultdict(list)
+    actions: set = set()
+    n_rows = n_windows = 0
+    recon_fail = unhooked = wrong_gen = boundary_bad = clock_bad = 0
+    no_features = 0
+    windows_with_rows: set = set()
+    for slug, path, up, down, wgaps in selected:
+        out = HER.replay_with_recorder(path, up, down, wgaps, spec)
+        if out is None:
+            continue
+        arm, wf = out
+        n_windows += 1
+        t0 = int(slug.rsplit("-", 1)[1])
+        joined, jrec = HER.join_fills(arm.fill_log, arm.fills)
+        n_b = HER.verify_boundary_times(arm.segments, joined)
+        n_c = HER.verify_consume_clock(
+            arm.consume_times, HER.trade_receipt_times(path, up, down))
+        gens, recon = HER.generation_table(arm.segments, joined, wf,
+                                           qr.base.fi.WINDOW_S)
+        wrows = HER.label_rows(arm.segments, gens, wf, qr.base.fi.WINDOW_S)
+        bad = (jrec["count_mismatch"] or jrec["tuple_mismatches"]
+               or recon["orphan_fills"]
+               or recon["wrong_generation_assignments"]
+               or arm.unhooked_changes or n_b or n_c)
+        wrong_gen += recon["wrong_generation_assignments"]
+        boundary_bad += n_b
+        clock_bad += n_c
+        if bad:
+            recon_fail += 1
+            unhooked += arm.unhooked_changes
+        coin = slug.split("-")[0]
+        fit = frozen["fits"].get(coin)
+        if wrows:
+            windows_with_rows.add(slug)
+        n_rows += len(wrows)
+        if fit is not None and not bad:
+            stream = hm.window_streams(paths[slug], *tokens[slug])
+            for r in wrows:
+                actions.add((slug, r.get("side"), r.get("gen")))
+                fp = hm.features(stream, r["t_start"], r["side"],
+                                 r.get("level"), r.get("resting"),
+                                 r.get("qahead"))
+                ff = hm.fine_feats(t0 + r["t_start"], r["side"], coin)
+                if fp is None or ff is None:
+                    no_features += 1
+                    continue
+                scores[coin].append(
+                    (t0, FS.expected_cancel_value(fit, fp + ff)))
+            del stream                                # DROP the window
+        else:
+            for r in wrows:
+                actions.add((slug, r.get("side"), r.get("gen")))
+        del arm, wf, joined, gens, wrows              # DROP the rows
+    return {"scores": dict(scores),
+            "n_windows": n_windows, "n_rows": n_rows,
+            "n_actions": len(actions),
+            "n_windows_with_rows": len(windows_with_rows),
+            "windows_with_rows": windows_with_rows,
+            "rows_without_features": no_features,
+            "reconciliation_failures": recon_fail,
+            "unhooked_state_changes": unhooked,
+            "wrong_generation_assignments": wrong_gen,
+            "boundary_time_violations": boundary_bad,
+            "consume_clock_violations": clock_bad,
+            "schema": "harmful_exposure_v3_4_fill_scoped_markout"}
 
 
 def score_rows(rows: list) -> dict:
@@ -433,6 +768,12 @@ def seal(day: str, outdir: Path, scored: dict, report: dict) -> dict:
                               "outside this file"}
 
 
+def _flush(rec: dict, outdir: Path, day: str) -> Path:
+    p = outdir / f"be_forward_day_receipt_{day}.json"
+    p.write_text(json.dumps(rec, indent=1, sort_keys=True, default=str))
+    return p
+
+
 def run_forward_day(day: str, outdir: Path) -> int:
     """THE SEQUENCE. Every gate refuses BY NAME; a refusal still writes a
     receipt carrying what was established before it, so a refused day is a
@@ -461,6 +802,10 @@ def run_forward_day(day: str, outdir: Path) -> int:
                                  "refusal_type": type(e).__name__})
             raise
         rec["gates"].append({"gate": name, "result": "PASS"})
+        # DURABLE: an OOM kill bypasses every `finally`, and the 12 G run died
+        # after 21 minutes leaving NO receipt at all. The receipt is written
+        # after each gate so a killed run still says how far it got.
+        _flush(rec, outdir, day)
         return out
 
     rc = 0
@@ -481,16 +826,46 @@ def run_forward_day(day: str, outdir: Path) -> int:
         # both committed artifacts, neither touched by the candidate — so
         # establishing it costs one file read and no replay, and a refusal
         # here still tells the coordinator what the day's population WAS.
-        rec["frozen_contract"] = gate("frozen_candidate_contract",
-                                      assert_frozen_contract)
+        _r = pop.get("ratification") or {}
+        _pa = _r.get("pair_asserted")
+        if (not isinstance(_pa, dict) or _pa.get("asserted") is not True
+                or _pa.get("verified_seen") != _r.get("verified")
+                or _pa.get("unverifiable_seen") != list(
+                    _r.get("unverifiable") or [])
+                or _pa.get("ref_seen") != _r.get("ratification_ref")):
+            raise ForwardDayRefused(
+                f"REFUSED: the ratification PAIR assertion left no evidence "
+                f"that it RAN ON THIS CHECKER'S OUTPUT (CO-5). Its record "
+                f"must reproduce the values it saw -- a bare flag can be "
+                f"forged by the same edit that bypasses the call. Got "
+                f"{_pa!r}.")
+        rec["population"]["ratification"] = {
+            k: v for k, v in _r.items()
+            if k in ("verified", "unverifiable", "day_in_scope",
+                     "ratification_ref", "pair_asserted")}
+        # R-421 §2 / rule 12: EXECUTE THE FROZEN BYTES. Round 3 refused
+        # because the TREE moved; the freeze's bytes exist at the commit and
+        # this materialises them, verifies each sha BEFORE import, and
+        # imports the anchors from the run dir.
+        mat = gate("materialise_frozen_bytes",
+                   lambda: materialise_frozen(outdir))
+        rec["frozen"] = mat
+        _anchor_keys = [k for k, v in mat["anchors"].items()
+                        if v.get("compared")]
+        rec["frozen"]["closure"] = gate(
+            "import_closure_disclosure",
+            lambda: import_closure(Path(mat["root"]), _anchor_keys))
+        rec["frozen"]["imports"] = gate(
+            "import_anchors_from_run_dir",
+            lambda: import_frozen_anchors(Path(mat["root"]), _anchor_keys))
         sel, selc = gate("selection_from_specs",
                          lambda: selected_from_specs(pop["specs"]))
         rec["selection"] = selc
-        built = gate("rows_v3_builder", lambda: build_rows_over(sel))
+        _frozen = FS.load_frozen()
+        built = gate("rows_and_scores_streamed",
+                     lambda: build_and_score(sel, _frozen))
         rec["rows"] = {k: v for k, v in built.items()
-                       if k not in ("rows", "per_window")}
-        rec["rows"]["n_rows"] = len(built["rows"])
-        rec["rows"]["n_actions"] = action_count(built["rows"])
+                       if k not in ("scores", "windows_with_rows")}
         if built["reconciliation_failures"]:
             raise ForwardDayRefused(
                 f"REFUSED: {built['reconciliation_failures']} of "
@@ -500,13 +875,54 @@ def run_forward_day(day: str, outdir: Path) -> int:
         rec["gates"].append({"gate": "reconciliation", "result": "PASS"})
         rec["window_agreement"] = gate(
             "bridged_windows_equal_row_windows",
-            lambda: assert_window_sets_agree(pop["specs"], built))
-        scored = gate("score_through_frozen_artifact",
-                      lambda: score_rows(built["rows"]))
+            lambda: assert_window_sets_agree(
+                pop["specs"], built["windows_with_rows"]))
+        scored = built["scores"]
+        if not scored:
+            raise ForwardDayRefused(
+                f"REFUSED: zero actions scored across {built['n_rows']} rows. "
+                f"A forward report with no scores is a FAILURE, not an empty "
+                f"result (R-141).")
         rep = gate("mask_seam_and_complement_report",
                    lambda: FS.score_day(day, scored, da_verified=True))
         rec["blackout_accounting"] = rep["blackout_accounting"]
         rec["n_actions_scored"] = rep["n_actions_scored"]
+        # TWO DISCLOSURES, because the counts above read wrongly without them.
+        #
+        # (1) THE COMPLEMENT WAS APPLIED AT SUPPLY, NOT AT SCORING. The mask
+        # removed its windows before any row was built, so the scoring-stage
+        # seam finds ZERO more to mask. `n_masked: 0` there does NOT mean
+        # nothing was masked — it means nothing was left to mask.
+        _sup = pop["supply"]["counts"]
+        rec["masking"] = {
+            "applied_at": "supply (de_admissible_windows), before rows",
+            "n_masked_at_supply": {c: v["n_masked_applied"]
+                                   for c, v in sorted(_sup.items())},
+            "n_masked_total_at_supply": sum(v["n_masked_applied"]
+                                            for v in _sup.values()),
+            "n_masked_at_scoring": rep["blackout_accounting"]["n_masked"],
+            "why": "R-418 supplies PRESENT minus MASKED, so the blackout is "
+                   "already excluded when rows are built. A reader seeing 0 "
+                   "at the scoring seam must not conclude the day had no "
+                   "blackout."}
+        # (2) THE FROZEN CANDIDATE DOES NOT COVER EVERY SUPPLIED COIN. R-418
+        # supplies all seven; the frozen fits cover two. The other five
+        # produced rows and NO score — that is the candidate's scope, not a
+        # failure, and the receipt must not let "scored" read as "whole day".
+        _fit_coins = sorted(_frozen["fits"])
+        _sup_coins = sorted(_sup)
+        rec["coin_coverage"] = {
+            "coins_supplied": _sup_coins,
+            "coins_with_a_frozen_fit": _fit_coins,
+            "coins_supplied_without_a_fit": [c for c in _sup_coins
+                                             if c not in _fit_coins],
+            "n_windows_supplied_without_a_fit": sum(
+                v["n_supplied"] for c, v in _sup.items()
+                if c not in _fit_coins),
+            "why": "the frozen candidate carries fits for "
+                   f"{_fit_coins} only. Windows of the other coins are "
+                   "supplied, replayed and counted, and produce NO score. "
+                   "The day is not scored whole and this says so."}
         sealed = seal(day, outdir, scored, rep)
         rec["sealed_file"] = sealed
         rec["outcome"] = "SCORED"
@@ -516,8 +932,7 @@ def run_forward_day(day: str, outdir: Path) -> int:
         rec["refusal"] = str(e)
         rc = 1
     rec["wall_seconds"] = round(time.time() - t_start, 1)
-    rp = outdir / f"be_forward_day_receipt_{day}.json"
-    rp.write_text(json.dumps(rec, indent=1, sort_keys=True, default=str))
+    rp = _flush(rec, outdir, day)
     print(f"{'REFUSED' if rc else 'OK'} {day}: receipt {rp}")
     print(f"  receipt_sha256 {_sha_file(rp)[:16]}")
     if rec.get("refusal"):
@@ -692,6 +1107,239 @@ def selftest() -> int:
            "agreement KNOWN-BAD: a row from a window the bridge never "
            "supplied REFUSES — it is a window nobody admitted (R-418)")
 
+    # ---- ROUND 4: the frozen bytes, verified BEFORE import --------------
+    # THE IMPORT CONTROLS MUTATE PROCESS STATE (sys.path and sys.modules) and
+    # must put it back: leaving the FROZEN anchors imported from a tmpdir that
+    # is then deleted poisons every control after this one. Measured — the
+    # selection control below started refusing on a stale frozen module.
+    import tempfile as _tf
+    _sp_saved = list(sys.path)
+    _mods_saved = dict(sys.modules)
+
+    def _restore_imports():
+        sys.path[:] = _sp_saved
+        for _k in list(sys.modules):
+            if _k not in _mods_saved:
+                sys.modules.pop(_k, None)
+        for _k, _v in _mods_saved.items():
+            sys.modules[_k] = _v
+
+    with _tf.TemporaryDirectory() as td4:
+        o4 = Path(td4)
+        mat = materialise_frozen(o4)
+        ok(mat["frozen_commit"] == FROZEN_COMMIT and mat["n_compared"] >= 7,
+           f"R-421(2) POSITIVE CONTROL: every reproducibility_anchor is "
+           f"materialised from the freeze commit and sha-checked against the "
+           f"manifest BEFORE import ({mat['n_compared']} compared)")
+        _cm = [k for k, v in mat["anchors"].items() if not v.get("compared")]
+        ok(_cm and all("state_at_build" in str(mat["anchors"][k]) for k in _cm),
+           f"R-421(2) collector_runs.jsonl stays state_at_build and is NOT "
+           f"compared, as pin_semantics requires (not compared: {_cm})")
+        ok(mat["data_root"]["symlink_to"].endswith("/data"),
+           "R-421(2) the run dir mirrors the repo's DATA root by symlink — "
+           "frozen code, today's data, each named")
+        # A TAMPERED MATERIALISED BYTE MUST REFUSE, AND BEFORE IMPORT.
+        _py = [k for k, v in mat["anchors"].items()
+               if v.get("materialised_to")][0]
+        _t = Path(mat["anchors"][_py]["materialised_to"])
+        _t.write_bytes(_t.read_bytes() + b"\n# tampered\n")
+        _stems = [Path(k).stem for k in mat["anchors"]
+                  if mat["anchors"][k].get("materialised_to")]
+        try:
+            import_frozen_anchors(Path(mat["root"]), [k for k in mat["anchors"]
+                                                      if k.endswith(".py")])
+            ok(False, "a tampered materialised byte must not import cleanly")
+        except (ForwardDayRefused, Exception):
+            ok(True, "R-421(2) a TAMPERED materialised byte does not pass — "
+                     "the sha is checked at materialisation, before any "
+                     "import, so a byte verified after import has not run")
+        # re-materialising RESTORES and REFUSES if the source moved
+        mat2 = materialise_frozen(o4)
+        ok(_sha_file(Path(mat2["anchors"][_py]["materialised_to"]))
+           == mat2["anchors"][_py]["sha256"],
+           "R-421(2) re-materialisation restores the frozen bytes exactly, so "
+           "a tampered run dir cannot persist into the next run")
+
+    _restore_imports()
+    ok(Path(getattr(__import__("harmful_exposure_rows"), "__file__", "")
+            ).parent == Path(__file__).parent,
+       "R-421(2) the import controls RESTORE sys.path and sys.modules — a "
+       "suite that leaves frozen modules imported from a deleted tmpdir "
+       "poisons every check after it")
+
+    # a CODE anchor absent from the freeze commit REFUSES
+    _real_blob = _git_blob
+    try:
+        globals()["_git_blob"] = lambda ref, path: (
+            None if path.endswith(".py") else _real_blob(ref, path))
+        with _tf.TemporaryDirectory() as td5:
+            try:
+                materialise_frozen(Path(td5))
+                ok(False, "a code anchor absent from the freeze must REFUSE")
+            except ForwardDayRefused as e:
+                ok("absent from the freeze commit" in str(e),
+                   "R-421(2) KNOWN-BAD: a CODE anchor absent from the freeze "
+                   "commit REFUSES — a freeze that does not contain the code "
+                   "it binds cannot be executed as frozen")
+    finally:
+        globals()["_git_blob"] = _real_blob
+
+    # ---- CO-5: the ratification PAIR, and R-418 as superseded -----------
+    _pop = population("20260901")
+    _rat = _pop["ratification"]
+    ok(_rat.get("verified") and _rat.get("unverifiable") == [],
+       f"CO-5 POSITIVE CONTROL: {RATIFICATION_REF} verifies as a PAIR — "
+       f"verified={_rat.get('verified')}, unverifiable="
+       f"{_rat.get('unverifiable')}")
+    try:
+        _r418 = RAT.check(_pop["supply"], "R-418")
+        ok(not _r418.get("verified"),
+           f"CO-5 KNOWN-BAD: the superseded R-418 stamp does NOT verify "
+           f"({str(_r418)[:150]})")
+    except RAT.RatificationRefused as e:
+        ok("SUPERSEDED by R-419" in str(e),
+           f"CO-5 KNOWN-BAD: the superseded R-418 stamp REFUSES for a NEW "
+           f"run, quoting the checker's OWN emission: "
+           f"{str(e)[:120]!r}")
+    # G8/G9: the PAIR predicate and the CALL, both driven. A control reading
+    # `population()`'s output cannot tell a real check from a literal dict.
+    _pv = assert_ratification_pair({"verified": True, "unverifiable": [],
+                                    "ratification_ref": "R-419"})
+    ok(_pv["asserted"] is True and _pv["verified_seen"] is True
+       and _pv["unverifiable_seen"] == [] and _pv["ref_seen"] == "R-419",
+       "CO-5 POSITIVE CONTROL: the assertion returns WHAT IT SAW, so the "
+       "receipt's evidence reproduces the checker's own values -- a bare flag "
+       "could be forged by the edit that bypasses the call")
+    for _lbl, _r in (("verified with an unbindable field",
+                      {"verified": True, "unverifiable": ["day_in_scope"]}),
+                     ("not verified", {"verified": False, "unverifiable": []}),
+                     ("neither", {"verified": False,
+                                  "unverifiable": ["x"]})):
+        try:
+            assert_ratification_pair(_r)
+            ok(False, f"CO-5 must REFUSE ({_lbl})")
+        except ForwardDayRefused as e:
+            ok("did not verify as a PAIR" in str(e),
+               f"CO-5 KNOWN-BAD ({_lbl}): REFUSED — `verified` alone reads an "
+               f"unbindable field as a pass, which is the defect CO-5 names")
+    # G8b: the EVIDENCE lives in `run_forward_day`, which the suite cannot
+    # drive (26 minutes of replay), so a mutant bypassing the call survived.
+    # `population()` is cheap and is already called here, so the shape is
+    # asserted where it is produced.
+    _pa = _rat.get("pair_asserted")
+    ok(isinstance(_pa, dict) and _pa.get("asserted") is True
+       and _pa.get("verified_seen") == _rat.get("verified")
+       and _pa.get("unverifiable_seen") == list(_rat.get("unverifiable") or [])
+       and _pa.get("ref_seen") == _rat.get("ratification_ref"),
+       f"CO-5 `population()` records WHAT the pair assertion saw, reproducing "
+       f"the checker's own values — a bare True (which is what bypassing the "
+       f"call leaves behind) does not satisfy this (got {type(_pa).__name__})")
+    ok(set(("ratification_ref", "bound_fields", "checks", "protocol"))
+       <= set(_rat),
+       "CO-5 the block in the receipt is the CHECKER's own emission (it "
+       "carries ratification_ref/bound_fields/checks/protocol), not a literal "
+       "the driver could have written")
+
+    # ---- G1/G4/G5/G6/G7: the frozen-byte gates, driven -------------------
+    with _tf.TemporaryDirectory() as td6:
+        o6 = Path(td6)
+        _real = _git_blob
+        try:
+            globals()["_git_blob"] = lambda ref, path: (
+                (_real(ref, path) or b"") + b"\n# altered\n"
+                if path.endswith(".py") else _real(ref, path))
+            try:
+                materialise_frozen(o6)
+                ok(False, "an altered frozen blob must REFUSE")
+            except ForwardDayRefused as e:
+                ok("hashes" in str(e) and "manifest binds" in str(e),
+                   "R-421(2) KNOWN-BAD: a blob whose sha does not match the "
+                   "manifest REFUSES at materialisation — BEFORE import, "
+                   "because a byte verified after import has already run")
+        finally:
+            globals()["_git_blob"] = _real
+        m6 = materialise_frozen(o6)
+        _data = [k for k, v in m6["anchors"].items()
+                 if v.get("compared") and not k.endswith(".py")]
+        ok(_data and all(m6["anchors"][k]["materialised_to"] is None
+                         for k in _data),
+           f"R-421(2) a DATA anchor is verified by content and NOT copied "
+           f"into the run dir — copying it created a real frozen/data/ that "
+           f"SHADOWED the symlink and the archive index came back empty "
+           f"({_data})")
+        _cl = import_closure(Path(m6["root"]),
+                             [k for k in m6["anchors"] if k.endswith(".py")])
+        ok(_cl["n_in_closure"] > 10 and _cl["n_not_frozen"] > 0
+           and all("sha256_at_HEAD" in x for x in _cl["not_frozen_in_closure"]),
+           f"R-421(2) the closure NAMES the modules that run at HEAD — "
+           f"{_cl['n_not_frozen']} of {_cl['n_in_closure']}, each with its sha "
+           f"at both commits; a closure that named none would let a reader "
+           f"assume the whole of it was frozen")
+        # the data-root probe must REFUSE when the symlink is absent
+        _lnk = Path(m6["root"]) / "data"
+        _lnk.unlink()
+        _sp_save, _mod_save = list(sys.path), dict(sys.modules)
+        try:
+            import_frozen_anchors(Path(m6["root"]),
+                                  [k for k in m6["anchors"]
+                                   if k.endswith(".py")])
+            ok(False, "a run dir with no data root must REFUSE")
+        except ForwardDayRefused as e:
+            ok("data root resolves to" in str(e) or "could not probe" in str(e),
+               "R-421(2) KNOWN-BAD: without the data-root symlink the frozen "
+               "modules index ZERO archive slugs, and an EMPTY index reads as "
+               "'no windows' rather than as a broken path — so it REFUSES")
+        finally:
+            sys.path[:] = _sp_save
+            for _k in list(sys.modules):
+                if _k not in _mod_save:
+                    sys.modules.pop(_k, None)
+            sys.modules.update(_mod_save)
+        # ...and an anchor MISSING from the run dir refuses on __file__
+        # The run dir EXISTS but holds no anchor, so the import succeeds FROM
+        # THE TREE — and the `__file__` assertion is the only thing that can
+        # notice. Catching a bare Exception passed either way; the refusal
+        # type and its message are now required.
+        _empty = o6 / "empty_run_dir"
+        (_empty / "live/pm_research").mkdir(parents=True, exist_ok=True)
+        try:
+            import_frozen_anchors(_empty, [k for k in m6["anchors"]
+                                           if k.endswith(".py")][:1])
+            ok(False, "an anchor imported from the TREE must REFUSE")
+        except ForwardDayRefused as e:
+            ok("NOT under the frozen run dir" in str(e),
+               "R-421(2) KNOWN-BAD: with the run dir empty the import "
+               "succeeds FROM THE TREE, and `__file__` is what catches it — "
+               "the tree's copy can never stand in for the freeze's")
+        finally:
+            sys.path[:] = _sp_save
+            for _k in list(sys.modules):
+                if _k not in _mod_save:
+                    sys.modules.pop(_k, None)
+            sys.modules.update(_mod_save)
+
+        # G11: a manifest whose every entry is state_at_build compares ZERO
+        # anchors; materialisation must refuse rather than report a pass.
+        _m0 = o6 / "m0.json"
+        _m0.write_text(json.dumps({
+            "hashes": {"data/x": "0" * 64},
+            "pin_semantics": {"_default": "state_at_build"}}))
+        _c0 = o6 / "c0.json"
+        _c0.write_text(json.dumps({"status": "FROZEN", "manifest": "m0.json",
+                                   "manifest_sha256": _sha_file(_m0)}))
+        _sv = FS.CANDIDATE
+        try:
+            FS.CANDIDATE = _c0
+            materialise_frozen(o6 / "zero")
+            ok(False, "a zero-anchor materialisation must REFUSE")
+        except ForwardDayRefused as e:
+            ok("materialisation compared ZERO anchors" in str(e),
+               "R-421(2) KNOWN-BAD: a manifest binding NO anchors REFUSES at "
+               "materialisation — a step that verified nothing must not "
+               "report a pass (R-289)")
+        finally:
+            FS.CANDIDATE = _sv
+
     # ---- F9: the prefix is the IMPORTED object, not a copy of its text --
     import da_governed_verdict_preflight as _PF
     ok(SCHEDULED_PREFIX is _PF.SCHEDULED_PREFIX,
@@ -771,9 +1419,12 @@ def _selftest_launch(checks: int, ok) -> int:
                         "live.pm_research.be_forward_day", "--selftest"],
                        cwd=str(REPO), env=env, capture_output=True,
                        text=True, timeout=900)
+    # A FAILING SPAWN MUST SAY WHY. Reporting only the exit code turns a
+    # diagnosable child failure into a guess.
     ok(r.returncode == 0,
        f"launch: GREEN under the PACKAGE launch too (rc={r.returncode}) — a "
-       f"suite green under one launcher hid CO-1")
+       f"suite green under one launcher hid CO-1. Child tail: "
+       f"{(r.stdout + r.stderr).strip()[-400:]!r}")
     checks += 1
     return checks
 
