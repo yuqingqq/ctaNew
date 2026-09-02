@@ -1381,3 +1381,90 @@ Moved in the MEM round-17 true-up of R-422. Join rule as in batch 1.
   Collector pid 1108125 alive as of this clock read. UNCHANGED: G=1/5; the 011
   family is 12 of 24 surviving with Q4 failing; development evidence.
 ```
+
+## Batch 24 — archived 2026-09-02T11:47Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-18 true-up of R-423. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T11:06Z (MEM ROUND 15 -- A SENTENCE ABOUT A RATIFICATION PASSES AS
+  ONE, AND MY 00:14Z WATCH RESOLVES INTO SOMETHING MORE INTERESTING THAN THE
+  WATCH). R-419 with DE round 8 (575f076, Q-DE-26) and the reviewer's DA round-2
+  filing (1e6624a); verified at the artifacts and at the box. CO-4 IS THE
+  FINDING, AND IT IS AT THE REGISTER RATHER THAN IN ANY MODULE: a fixture entry
+  titled "MEM round 14 verified; recap of state", whose body is a single RECAP
+  SENTENCE naming R-418's population and ending "Nothing here ratifies
+  anything", returns VERIFIED with binding_source PROSE and all five decidable
+  checks True. A CHECKER THAT BINDS FROM PROSE CANNOT TELL A RATIFICATION FROM A
+  SENTENCE ABOUT ONE -- CLAUDE.md rule 16 at the register level, where grep hits
+  on vocabulary are not references. What makes it sharp rather than cute is that
+  THE EXPOSURE GROWS WITH EVERY SWEEP: coordinator entries, and MEM true-ups
+  like this one, necessarily recite that vocabulary. Four smaller holes noted on
+  the same read: day_in_scope evaluates scope_from ONLY (scope_to is parsed and
+  ignored, so a block scoped to 09-01 reads True for 09-02); the block's ref is
+  NOT checked against the entry heading; sampling != NONE LOWERS verified but
+  does not refuse; and refusals is a dead list. DE ROUND 9 (Q-DE-27) IS IN
+  FLIGHT to make prose binding admissible for the grandfathered R-418 only, with
+  the R-9001 fixture as the live control. THE FORMAT IS ADOPTED (a format is the
+  coordinator's and introduces no number): every R-ADMISS entry from R-419 on
+  carries a fenced ratification block with ref, kind, population, sampling,
+  present_source, scope_days, scope_from, scope_to, revocable_by and supersedes,
+  with ref required to equal the heading's ref. R-419 SUPERSEDES R-418 IN-BAND
+  (rule 13; R-418 stays as provenance, never edited) WITH THE CONTENT UNCHANGED
+  -- the same population, the same no-sampling, the same list of what it does
+  NOT ratify (R-411(i), R-411(ii), any accrual call, any Phase-2 admission, all
+  the USER's) -- and the one field prose could not carry is now bound:
+  scope_from 20260901, the first accrued race day, stated as a RESTATED FACT
+  rather than a new number, with scope_to null, open until the USER closes or
+  revokes it. REFS IN FLIGHT: BE round 3 was dispatched under R-418 and its
+  SEALED SCRATCH RECEIPTS STAND AS PROVENANCE under that ref; from BE round 4
+  the ref is R-419; DE's R-0 stays a fixture ref. MY ROUND-14 WATCH IS RESOLVED,
+  AND THE RESOLUTION IS MORE INTERESTING THAN THE WATCH: the "cron one-shot"
+  existed -- as a CLAUDE CODE SESSION-LOCAL SCHEDULER ENTRY inside the
+  coordinator session (78375088), invisible to crontab -l and systemctl --user
+  list-timers BY CONSTRUCTION, and DYING WITH ITS SESSION. DA's standby wait
+  (bbp5f4bni) is the same kind of object, and DA's own filing records TWO PRIOR
+  WAITS KILLED MID-FLIGHT. So both legs meant to carry the 00:14Z check lived
+  inside processes no box-level tool can see -- a different failure from "nobody
+  built it": IT IS SCHEDULING THAT CANNOT BE AUDITED FROM THE BOX IT RUNS ON,
+  and the only reason it surfaced is that a state file asked where the scheduler
+  was. The coordinator confirms MEM's reading was correct as stated: nothing at
+  box level ran the preflight. A BOX-LEVEL LEG NOW EXISTS, verified by me at the
+  box rather than taken: co-preflight-20260902.timer ->
+  co-preflight-20260902.service, next elapse Thu 2026-09-03 00:14:00 UTC,
+  running the read-only preflight on 09-02 with stdout to
+  ~/.local/state/pm-co/preflight_20260902.json, and its POSITIVE CONTROL
+  EXECUTED on 09-01 (rc 1, classification PRE_GOVERNED_ARTIFACT, output at
+  preflight_probe_20260901.json, derived/ digest unchanged across the run).
+  THREE LEGS NOW, ONE AT BOX LEVEL, and the verdict itself is written by the
+  scheduled unit regardless of all three. ONE PROPERTY KEPT IN VIEW: the timer
+  is TRANSIENT (systemd-run, Persistent=no), so it is gone once it fires and
+  would not survive a restart of the user manager before 00:14Z -- correct for a
+  one-shot, not a standing schedule. REVIEW TABLE: DA round 1 RELEASED; BE round
+  2 RELEASED with RR10-1 closed, its review riding BE round 3; DE rounds 4-6
+  RELEASED and DE round 8 VERIFIED with RR11-1 CLOSED; DA ROUND 2 IS FILED AT
+  1e6624a AND IN VERIFICATION, NOT RELEASED -- the reviewer's filing states DA
+  round 7 released, and the coordinator's verification of that filing comes in
+  the next R-entry, so the table does not call it released yet. BE round 3's
+  review request queues when Q-BE-228 lands; DE rounds 7-9's when Q-DE-27 lands.
+  RR12-1 FROM THE DA FILING WILL BITE THE WORKTREES: da_blackout_mask.REPO is
+  hardcoded to the SHARED tree while module_sha256_prefix comes from __file__,
+  so a run from ~/ctaNew-wt-rev reports the shared tree's HEAD rather than the
+  worktree's and a dirtied worktree module still reads
+  tree_dirty_on_producing_files FALSE; the reviewer's own rehearsal therefore
+  executed shared-tree code, where a mutation had no effect while the same one
+  in-process fired immediately. Nothing shipped is wrong, but per-seat worktrees
+  were adopted three rounds ago (rule 19), so a provenance pair that disagrees
+  about which tree it is in is a LIVE hazard. AND A METHOD NOTE WORTH COPYING
+  from the same filing: a same-size mutate/restore inside one second left STALE
+  BYTECODE THAT READ EXACTLY LIKE A SURVIVING MUTANT -- recorded so the next
+  mutation run does not file it as one. IN FLIGHT: BE round 3 (production run
+  path, scores SEALED, counts and refusals only, Q-BE-228); DE round 9 (CO-4
+  plus the block-format checker, Q-DE-27); DA on standby (Q-DA-208, after
+  00:06Z); the reviewer IDLE pending the next request. USER DECISIONS UNCHANGED
+  AND FIVE: R-408(2) the Phase-2 winner, R-408(3) the v2 freeze, R-411(i) the
+  minimum complement for G-counting, R-411(ii) the P1 denominator, and the 09-02
+  accrual call after tonight. UNCHANGED: G=1/5; the 011 family is 12 of 24
+  surviving with Q4 failing; development evidence.
+```

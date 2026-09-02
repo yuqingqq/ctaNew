@@ -1,11 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T11:36Z — **a review "correction to the register" did not
-reproduce**: the driver *does* refuse tape-less windows, and the true statement
-is narrower and now recorded exactly. DE round 10 verified (CO-5, CO-R1's
-checker half, CO-R3 closed); DE rounds 7–9 RELEASED. **Six USER decisions,
-unchanged.** Prior line: BE's run path refuses correctly because the freeze's
-anchors moved in nine commits after `1b53929`.
+Updated: 2026-09-02T11:47Z — **BE round 4 is in flight and has surfaced that the
+freeze's DATA anchor is in no commit at all** (`data/` is gitignored; it is
+frozen by manifest sha only) — carried as **REPORTED, NOT VERIFIED**, and added
+to the record of the sixth USER decision. DE rounds 10–11 verified and released;
+DE10-R1 → DE round 12. **Six USER decisions, unchanged.** Prior line: a review
+"correction to the register" did not reproduce; the protection is real and in
+the wrong place.
 
 ## READ FIRST — current project handoff
 
@@ -110,7 +111,7 @@ recommendations, not rulings.**
 
 | option | what it means |
 |---|---|
-| **race on the frozen bytes at `1b53929`** | the plan's reading — BE round 4 materialises the bound bytes from that commit, verifies each sha **before import**, imports from the run dir and never from the tree, with the driver at HEAD as harness. **Output goes to scratch, sealed: an estimate, not a race score, until the USER rules** |
+| **race on the frozen bytes at `1b53929`** | the plan's reading — BE round 4 materialises the bound bytes from that commit, verifies each sha **before import**, imports from the run dir and never from the tree, with the driver at HEAD as harness. **Output goes to scratch, sealed: an estimate, not a race score, until the USER rules.** **Now better specified** (BE round 4, reported): the **code** anchors come from the commit; the **data** anchor has **no commit at all** and is frozen **by manifest sha only** — see the in-flight section below |
 | **re-freeze at HEAD** | a **NEW candidate**, **multiplicity 3**, and a **new freeze commit** — which only the USER authorises (rule 12; R-409's "any other things need my decision") |
 
 **A fifth ask lands tonight: the 09-02 accrual call.** The 00:06Z verdict
@@ -121,6 +122,34 @@ it.
 
 **Review state has moved since — see "Review and round state" below.** The four
 asks above are unchanged and none of them is blocked by any of it.
+
+### BE round 4 — IN FLIGHT: three facts REPORTED, none of them verified yet
+
+**Status first, because it governs how these read.** BE round 4 has **not
+landed**. What follows is BE's own pane report at 11:39Z — **a report, not an
+artifact** — and **every line becomes verified only when the commit lands.** It
+is recorded here so the facts are not lost, not so they can be relied on.
+
+| # | fact as reported | why it matters |
+|---|---|---|
+| **(i)** | the frozen code derives its **data root from `__file__`**, so materialising anchors into the run dir **silently repointed** `flow_intensity.PM` and **emptied the archive index** | the fix is a **symlink** — the freeze's code, today's data, both named in the receipt — plus a **probe that refuses** if the root does not resolve or the index is empty |
+| **(ii)** | materialising the **DATA** anchor **shadowed that symlink** | so **only CODE anchors are materialised** |
+| **(iii)** | the data anchor `harmful_exposure_rows_v3_eraB.json` **is not in the freeze commit at all** — `data/` is gitignored — and its bytes match the manifest **on disk**, verified by content with the source named | **this bears on the sixth USER decision** |
+
+**Fact (iii) is an addition to the record of the freeze disposition, stated for
+the USER and decided by no one.** The frozen set was described as "the commit's
+bytes". For the **code** anchors that is exact. **The data anchor has no commit
+to be frozen AT** — it is frozen **by manifest sha only**, verified by content.
+So "race on the frozen bytes at `1b53929`" means, precisely: the code from that
+commit, and the data from a file whose only binding is its hash in the manifest.
+That does not decide anything; it makes the choice better specified than it was
+when it was escalated.
+
+**One operational note from the same report**, worth keeping because the failure
+mode is generic: BE's mutation harness was **SIGKILLed by an outer timeout
+mid-mutation**, so its `finally` never ran and a mutant (F17) **stayed applied in
+the tree** until the next selftest caught it. BE added a backup. **A cleanup that
+lives only in `finally` does not survive SIGKILL.**
 
 ### A "correction to the register" that did not reproduce — and what is true instead
 
@@ -336,15 +365,32 @@ launchers at **235/19**.
 | **DA rounds 1–2** | **RELEASED** (round 2 verified at R-420); RR12-1 → DA round 10 |
 | **BE round 3** | **VERIFIED** — and it is reviewed **together with round 4, deliberately**: the run path is not finished until it executes the frozen bytes, and reviewing the refusing half alone would review a frame |
 | **DE rounds 7–9** | **RELEASED** (`b4da910`) — DE-R1..R4 reproduced at `2282e5c` → DE round 11. One register claim in that filing **did not reproduce**; see the section above |
-| **DE round 10** | **VERIFIED** (`2282e5c`, Q-DE-28): CO-5, CO-R1's checker half and CO-R3 all **CLOSED**, and DE's own addition — `require_verified` **refuses a PROVENANCE result** — **accepted**. Review request **FILED**; the reviewer is on it at `2282e5c` |
+| **DE round 10** | **RELEASED** (`922bff6`) — CO-5, CO-R1's checker half and CO-R3 closed; DE's addition (`require_verified` refuses a **PROVENANCE** result) accepted. **DE10-R1 (MEDIUM) stands → DE round 12** |
+| **DE round 11** | **VERIFIED** (`d07d901`): DE-R1..R4 all **CLOSED** — ratification **66**, admissible **53**, seam **69** checks under both launchers; checker audit **14 paths, `survivors []`**. DE's **two deliberate separations accepted**. Review **dispatched** at `d07d901` |
 | **the coordinator's own acts** | **REVIEWED** (`1384ec5`), no hold; CO-R1..R4 dispositioned |
 
-**In flight:** **BE round 4** (Q-BE-229) — the frozen-bytes execution, sha
-verified **before** import, output to scratch and sealed; **DE round 11**
-(Q-DE-29) — DE-R1..R4; **the reviewer** on DE round 10; **DA on standby**
-(Q-DA-208 after 00:06Z, round 10 after tonight = the RR12-1 split, identity-only
-admission log, and CO-R4). **BE round 5 queues** §4's population-gate
+**In flight:** **BE round 4** (Q-BE-229) — the frozen-bytes execution, **not
+landed**; **DE round 12** (Q-DE-30) — DE10-R1; **the reviewer** on DE round 11
+(BE rounds 3–4 still queue behind it); **DA on standby** (Q-DA-208 after 00:06Z;
+round 10 after tonight). **BE round 5 queues** the population-gate
 ledger-vs-tape comparison and `require_verified()`.
+
+**Open findings:** DE10-R1 → DE round 12; RR12-1 and CO-R4 → DA round 10.
+
+**DE10-R1 is worth its line because the failure is silent in both directions.**
+The checker compares timestamps **lexicographically as strings**, so
+`now_utc="zzzz"` reads `day_closed: True, verified: True`, and
+`scope_to: not-a-date` reads `day_in_scope: True, verified: True,
+unverifiable: []`. Garbage sorts **permissive** for `now_utc`/`scope_to` and
+**restrictive** for `scope_from`, **and none of the three surfaces**. DE round 12
+parses to datetimes and refuses an unparsable value **by name** — with a
+falsifier per field **in both directions**, because a fix tested only against
+permissive garbage would miss the restrictive half.
+
+**And a method note adopted from the reviewer's own correction:** a fixture whose
+essential property is *"not written yet"* **expires within minutes** — so the
+mechanism must be reproduced on the **current in-flight window and a future
+one**, not on a window that has since filled in.
 
 **The coordinator's acts were reviewed, and the four findings are worth their
 lines.** **CO-R1 (live):** on the open day 09-02 the ledger runs **ahead** of the
@@ -693,6 +739,57 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~11:47Z (MEM) — I CITED A DIRTY TREE, AND THE FREEZE HAS AN
+### ANCHOR WITH NO COMMIT
+
+**R-423 swept.** Two corrections and one fact that changes what a pending
+decision means.
+
+**The correction is mine.** Q-MEM-5 cited `be_forward_day.py:491-506` and
+`:1055` as evidence that the driver reads the tape. Those line numbers are from
+**BE's uncommitted round-4 working tree**, not from `805fd39`, the commit I
+named — and `:1055` cannot exist there at all, since that file is **810 lines**
+at the commit and **1,160** in the tree. **The identity claim survives; the
+citation did not.** Verified now at the commit itself: `selected_from_specs`
+reads `fi._archive_paths()` and `fi.token_map()` and carries the same refusal at
+**`805fd39:252-275`**. So the correct citation is `:252-275` at the commit, and
+`:487`/`:1055` describe a tree nobody else has.
+
+**This is RR12-1 landing on my own filing.** That finding is about provenance
+and execution disagreeing over which tree they are in; I verified against
+whatever was in the tree and then reported it under a commit hash. **A line
+number is a claim about a specific artifact, and mine named the wrong one.** The
+lesson is cheap and general: when a citation carries a commit, read the file
+*from* that commit.
+
+**The register has adopted the mirror rule** — *a vocabulary miss is not an
+absence* — into its own vocabulary, which is the outcome I would have wanted for
+it.
+
+**The fact that moves a pending decision: the freeze has an anchor with no
+commit.** BE round 4 reports — **reported, not verified, and it is not landed**
+— that `harmful_exposure_rows_v3_eraB.json` **is not in the freeze commit at
+all**, because `data/` is gitignored. Its bytes match the manifest **on disk**
+and are verified by content. So "race on the frozen bytes at `1b53929`" resolves
+to: **code from the commit, data from a file whose only binding is its hash.**
+That does not decide the sixth USER decision; it makes the option honest about
+what it actually is. Two related reports ride with it: the frozen code derives
+its data root from `__file__`, so materialising anchors **silently repointed the
+archive index to nothing** until a symlink plus a refusing probe was added; and
+materialising the data anchor **shadowed that symlink**, so only code anchors are
+materialised now.
+
+**One operational note worth generalising:** BE's mutation harness was SIGKILLed
+mid-mutation by an outer timeout, its `finally` never ran, and a mutant stayed
+applied in the working tree until the next selftest caught it. **Cleanup that
+lives only in `finally` does not survive SIGKILL** — the backup BE added is the
+right shape.
+
+**And a timestamp for the record:** R-423's heading reads 11:47Z while the commit
+that carries it is **11:46:34Z** — composed 26 s ahead. **The commit time is
+authoritative.** Recorded, not adjudicated; it is the sixth instance of the
+stamp-vs-clock class and the register now discloses them itself.
 
 ### 2026-09-02 ~11:36Z (MEM) — A VOCABULARY MISS IS NOT AN ABSENCE
 

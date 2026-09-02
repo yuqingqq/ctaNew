@@ -4,6 +4,82 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T11:47Z (MEM ROUND 18 -- I CITED A DIRTY TREE, AND THE FREEZE HAS AN
+  ANCHOR WITH NO COMMIT). R-423 swept. THE CORRECTION IS MINE: Q-MEM-5 cited
+  be_forward_day.py:491-506 and :1055 as evidence that the driver reads the
+  tape, but those line numbers come from BE's UNCOMMITTED round-4 WORKING TREE,
+  not from 805fd39, the commit I named -- and :1055 cannot exist there at all,
+  since that file is 810 LINES at the commit and 1,160 in the tree. THE IDENTITY
+  CLAIM SURVIVES; THE CITATION DID NOT. Verified now at the commit itself:
+  selected_from_specs reads fi._archive_paths() and fi.token_map() and carries
+  the same refusal at 805fd39:252-275, so the correct citation is :252-275 at
+  the commit while :487/:1055 describe a tree nobody else has. THIS IS RR12-1
+  LANDING ON MY OWN FILING -- that finding is about provenance and execution
+  disagreeing over which tree they are in, and I verified against whatever was
+  in the tree and then reported it under a commit hash. A LINE NUMBER IS A CLAIM
+  ABOUT A SPECIFIC ARTIFACT, AND MINE NAMED THE WRONG ONE: when a citation
+  carries a commit, read the file FROM that commit. The register has also
+  ADOPTED THE MIRROR RULE -- a vocabulary miss is not an absence -- into its own
+  vocabulary. THE FACT THAT MOVES A PENDING DECISION: THE FREEZE HAS AN ANCHOR
+  WITH NO COMMIT. BE round 4 reports -- REPORTED, NOT VERIFIED, AND NOT LANDED;
+  every line of it becomes verified only when the commit lands -- that (i) the
+  frozen code derives its DATA ROOT FROM __file__, so materialising anchors into
+  the run dir SILENTLY REPOINTED flow_intensity.PM and EMPTIED THE ARCHIVE
+  INDEX, fixed with a symlink (the freeze's code, today's data, both named in
+  the receipt) plus a PROBE THAT REFUSES if the root does not resolve or the
+  index is empty; (ii) materialising the DATA anchor SHADOWED that symlink, so
+  ONLY CODE ANCHORS are materialised; and (iii) the data anchor
+  harmful_exposure_rows_v3_eraB.json IS NOT IN THE FREEZE COMMIT AT ALL, because
+  data/ is gitignored -- its bytes match the manifest ON DISK and are verified
+  BY CONTENT with the source named. FACT (iii) IS AN ADDITION TO THE RECORD OF
+  THE SIXTH USER DECISION, STATED FOR THE USER AND DECIDED BY NO ONE: the frozen
+  set was described as "the commit's bytes", which is exact for the CODE
+  anchors, but THE DATA ANCHOR HAS NO COMMIT TO BE FROZEN AT -- it is frozen BY
+  MANIFEST SHA ONLY. So "race on the frozen bytes at 1b53929" resolves to code
+  from the commit and data from a file whose only binding is its hash; that
+  decides nothing and makes the option honest about what it is. THE DE ROUND 10
+  REVIEW IS RELEASED (922bff6) WITH THE REVIEWER'S OWN IN-BAND CORRECTION (rule
+  13; the released review untouched): it reproduced selected_from_specs refusing
+  a tape-less window by name, NAMED ITS OWN ERROR AS A GREP ESTABLISHING AN
+  ABSENCE, and WITHDREW the "intersect" half of its recommendation -- accepted,
+  with the disposition staying refuse-on-ledger_minus_tape, never intersect. Its
+  EXPIRY NOTE is recorded as method: A FIXTURE WHOSE ESSENTIAL PROPERTY IS "NOT
+  WRITTEN YET" EXPIRES WITHIN MINUTES, so reproduce the mechanism on the current
+  in-flight window AND a future one. DE10-R1 (MEDIUM) STANDS -> DE ROUND 12
+  (Q-DE-30, in flight), and it is silent in BOTH directions: the checker
+  compares timestamps LEXICOGRAPHICALLY AS STRINGS, so now_utc="zzzz" reads
+  day_closed True and verified True while scope_to "not-a-date" reads
+  day_in_scope True, verified True, unverifiable [] -- garbage sorts PERMISSIVE
+  for now_utc/scope_to and RESTRICTIVE for scope_from, and NONE OF THE THREE
+  SURFACES. Round 12 parses to datetimes and refuses an unparsable value BY NAME
+  with a falsifier per field IN BOTH DIRECTIONS, because a fix tested only
+  against permissive garbage would miss the restrictive half. DE ROUND 11
+  VERIFIED (d07d901, Q-DE-29): DE-R1..R4 all CLOSED -- ratification 66,
+  admissible 53, seam 69 checks under both launchers, checker audit 14 paths
+  with survivors [] and all_load_bearing True -- and DE's TWO DELIBERATE
+  SEPARATIONS ACCEPTED (kind kept outside the vocabulary loop; the
+  sampling/population contradiction check kept apart from the vocabulary,
+  because restricting sampling to NONE would have hardcoded that no sampled
+  ratification can exist, contradicting KNOWN_POPULATIONS). Nothing under review
+  moved: R-419 on 09-01 verified_for_new_run True and day_closed True; R-418
+  stamped 10:30Z provenance True. ONE OPERATIONAL NOTE WORTH GENERALISING: BE's
+  mutation harness was SIGKILLED mid-mutation by an outer timeout, its finally
+  never ran, and a mutant (F17) STAYED APPLIED IN THE TREE until the next
+  selftest caught it -- CLEANUP THAT LIVES ONLY IN finally DOES NOT SURVIVE
+  SIGKILL; BE added a backup. AND A TIMESTAMP FOR THE RECORD: R-423's heading
+  reads 11:47Z while the commit carrying it is 11:46:34Z, composed 26 s ahead --
+  THE COMMIT TIME IS AUTHORITATIVE. Recorded, not adjudicated; the sixth
+  instance of the stamp-vs-clock class, and the register now discloses them
+  itself. REVIEW TABLE: DE round 10 RELEASED; DE round 11 REVIEW DISPATCHED at
+  d07d901 (BE rounds 3-4 still queue behind it, to be reviewed together when
+  round 4 lands); DA round 10 after tonight. OPEN FINDINGS: DE10-R1 -> DE round
+  12; RR12-1 and CO-R4 -> DA round 10. IN FLIGHT: BE round 4 (Q-BE-229, not
+  landed), DE round 12 (Q-DE-30), the reviewer on DE round 11, DA on standby
+  (Q-DA-208 after 00:06Z); BE round 5 queues the population-gate comparison and
+  require_verified(). USER DECISIONS UNCHANGED AND SIX, with section 4(iii)
+  added to the sixth's record. R-419 remains revocable by the USER. UNCHANGED:
+  G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
+  evidence. PRIOR:
   2026-09-02T11:36Z (MEM ROUND 17 -- A VOCABULARY MISS IS NOT AN ABSENCE).
   R-422 swept; verified at the artifacts and, on the central claim, at the
   source myself. DE ROUND 10 VERIFIED (2282e5c, Q-DE-28): CO-5, CO-R1's checker
@@ -145,86 +221,7 @@ updated: >-
   G-counting, R-411(ii) the P1 denominator, the 09-02 accrual call after 00:06Z,
   AND THE FREEZE DISPOSITION. R-419 remains revocable by the USER. UNCHANGED:
   G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
-  evidence. PRIOR:
-  2026-09-02T11:06Z (MEM ROUND 15 -- A SENTENCE ABOUT A RATIFICATION PASSES AS
-  ONE, AND MY 00:14Z WATCH RESOLVES INTO SOMETHING MORE INTERESTING THAN THE
-  WATCH). R-419 with DE round 8 (575f076, Q-DE-26) and the reviewer's DA round-2
-  filing (1e6624a); verified at the artifacts and at the box. CO-4 IS THE
-  FINDING, AND IT IS AT THE REGISTER RATHER THAN IN ANY MODULE: a fixture entry
-  titled "MEM round 14 verified; recap of state", whose body is a single RECAP
-  SENTENCE naming R-418's population and ending "Nothing here ratifies
-  anything", returns VERIFIED with binding_source PROSE and all five decidable
-  checks True. A CHECKER THAT BINDS FROM PROSE CANNOT TELL A RATIFICATION FROM A
-  SENTENCE ABOUT ONE -- CLAUDE.md rule 16 at the register level, where grep hits
-  on vocabulary are not references. What makes it sharp rather than cute is that
-  THE EXPOSURE GROWS WITH EVERY SWEEP: coordinator entries, and MEM true-ups
-  like this one, necessarily recite that vocabulary. Four smaller holes noted on
-  the same read: day_in_scope evaluates scope_from ONLY (scope_to is parsed and
-  ignored, so a block scoped to 09-01 reads True for 09-02); the block's ref is
-  NOT checked against the entry heading; sampling != NONE LOWERS verified but
-  does not refuse; and refusals is a dead list. DE ROUND 9 (Q-DE-27) IS IN
-  FLIGHT to make prose binding admissible for the grandfathered R-418 only, with
-  the R-9001 fixture as the live control. THE FORMAT IS ADOPTED (a format is the
-  coordinator's and introduces no number): every R-ADMISS entry from R-419 on
-  carries a fenced ratification block with ref, kind, population, sampling,
-  present_source, scope_days, scope_from, scope_to, revocable_by and supersedes,
-  with ref required to equal the heading's ref. R-419 SUPERSEDES R-418 IN-BAND
-  (rule 13; R-418 stays as provenance, never edited) WITH THE CONTENT UNCHANGED
-  -- the same population, the same no-sampling, the same list of what it does
-  NOT ratify (R-411(i), R-411(ii), any accrual call, any Phase-2 admission, all
-  the USER's) -- and the one field prose could not carry is now bound:
-  scope_from 20260901, the first accrued race day, stated as a RESTATED FACT
-  rather than a new number, with scope_to null, open until the USER closes or
-  revokes it. REFS IN FLIGHT: BE round 3 was dispatched under R-418 and its
-  SEALED SCRATCH RECEIPTS STAND AS PROVENANCE under that ref; from BE round 4
-  the ref is R-419; DE's R-0 stays a fixture ref. MY ROUND-14 WATCH IS RESOLVED,
-  AND THE RESOLUTION IS MORE INTERESTING THAN THE WATCH: the "cron one-shot"
-  existed -- as a CLAUDE CODE SESSION-LOCAL SCHEDULER ENTRY inside the
-  coordinator session (78375088), invisible to crontab -l and systemctl --user
-  list-timers BY CONSTRUCTION, and DYING WITH ITS SESSION. DA's standby wait
-  (bbp5f4bni) is the same kind of object, and DA's own filing records TWO PRIOR
-  WAITS KILLED MID-FLIGHT. So both legs meant to carry the 00:14Z check lived
-  inside processes no box-level tool can see -- a different failure from "nobody
-  built it": IT IS SCHEDULING THAT CANNOT BE AUDITED FROM THE BOX IT RUNS ON,
-  and the only reason it surfaced is that a state file asked where the scheduler
-  was. The coordinator confirms MEM's reading was correct as stated: nothing at
-  box level ran the preflight. A BOX-LEVEL LEG NOW EXISTS, verified by me at the
-  box rather than taken: co-preflight-20260902.timer ->
-  co-preflight-20260902.service, next elapse Thu 2026-09-03 00:14:00 UTC,
-  running the read-only preflight on 09-02 with stdout to
-  ~/.local/state/pm-co/preflight_20260902.json, and its POSITIVE CONTROL
-  EXECUTED on 09-01 (rc 1, classification PRE_GOVERNED_ARTIFACT, output at
-  preflight_probe_20260901.json, derived/ digest unchanged across the run).
-  THREE LEGS NOW, ONE AT BOX LEVEL, and the verdict itself is written by the
-  scheduled unit regardless of all three. ONE PROPERTY KEPT IN VIEW: the timer
-  is TRANSIENT (systemd-run, Persistent=no), so it is gone once it fires and
-  would not survive a restart of the user manager before 00:14Z -- correct for a
-  one-shot, not a standing schedule. REVIEW TABLE: DA round 1 RELEASED; BE round
-  2 RELEASED with RR10-1 closed, its review riding BE round 3; DE rounds 4-6
-  RELEASED and DE round 8 VERIFIED with RR11-1 CLOSED; DA ROUND 2 IS FILED AT
-  1e6624a AND IN VERIFICATION, NOT RELEASED -- the reviewer's filing states DA
-  round 7 released, and the coordinator's verification of that filing comes in
-  the next R-entry, so the table does not call it released yet. BE round 3's
-  review request queues when Q-BE-228 lands; DE rounds 7-9's when Q-DE-27 lands.
-  RR12-1 FROM THE DA FILING WILL BITE THE WORKTREES: da_blackout_mask.REPO is
-  hardcoded to the SHARED tree while module_sha256_prefix comes from __file__,
-  so a run from ~/ctaNew-wt-rev reports the shared tree's HEAD rather than the
-  worktree's and a dirtied worktree module still reads
-  tree_dirty_on_producing_files FALSE; the reviewer's own rehearsal therefore
-  executed shared-tree code, where a mutation had no effect while the same one
-  in-process fired immediately. Nothing shipped is wrong, but per-seat worktrees
-  were adopted three rounds ago (rule 19), so a provenance pair that disagrees
-  about which tree it is in is a LIVE hazard. AND A METHOD NOTE WORTH COPYING
-  from the same filing: a same-size mutate/restore inside one second left STALE
-  BYTECODE THAT READ EXACTLY LIKE A SURVIVING MUTANT -- recorded so the next
-  mutation run does not file it as one. IN FLIGHT: BE round 3 (production run
-  path, scores SEALED, counts and refusals only, Q-BE-228); DE round 9 (CO-4
-  plus the block-format checker, Q-DE-27); DA on standby (Q-DA-208, after
-  00:06Z); the reviewer IDLE pending the next request. USER DECISIONS UNCHANGED
-  AND FIVE: R-408(2) the Phase-2 winner, R-408(3) the v2 freeze, R-411(i) the
-  minimum complement for G-counting, R-411(ii) the P1 denominator, and the 09-02
-  accrual call after tonight. UNCHANGED: G=1/5; the 011 family is 12 of 24
-  surviving with Q4 failing; development evidence.
+  evidence.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -3817,7 +3814,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T11:36Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T11:47Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3884,8 +3881,12 @@ focus: >
   fi._archive_paths()/token_map(); what is true and narrower is that DE's supply
   and the seam bridge do not read the tape and the driver's refusal sits AFTER
   the frozen-contract gate, so BE round 5 moves the comparison into the
-  population gate and REFUSES on any difference, never intersecting.
-  Fair-price
+  population gate and REFUSES on any difference, never intersecting. BE ROUND 4
+  IS IN FLIGHT AND NOT LANDED; its three in-pane facts are REPORTED, NOT
+  VERIFIED, and one of them adds to the sixth USER decision's record: THE
+  FREEZE'S DATA ANCHOR IS IN NO COMMIT AT ALL (data/ is gitignored) and is
+  frozen by MANIFEST SHA ONLY, so "race on the frozen bytes at 1b53929" means
+  code from the commit and data bound only by its hash. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an
