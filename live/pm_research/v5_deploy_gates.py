@@ -60,6 +60,8 @@ GATES: list[tuple[str, list[str]]] = [
     # not wiring -- the v2 rule is not in any verdict path.
     ("DA content-liveness v2 amendment checker (DRAFT)",
      [PY, str(HERE / "da_content_liveness_v2_check.py"), "--selftest"]),
+    ("DA blackout mask + complement (R-409)",
+     [PY, str(HERE / "da_blackout_mask.py"), "--selftest"]),
     ("chain equivalence (one fixture, two consumers)",
      [PY, str(HERE / "v5_chain_equivalence_test.py")]),
     ("chain differential fuzz",

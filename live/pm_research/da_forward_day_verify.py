@@ -679,17 +679,28 @@ def _content_liveness_composition(block: dict, governing: bool) -> dict:
              for c, v in (block.get("coins") or {}).items()
              if isinstance(v, dict) and "status" in v}
     return {
+        # THE RULED STATE (R-409), not an unresolved one. This is pinned by
+        # `assert_content_liveness_carried`, which REFUSES any verdict where
+        # it is not False, and by a selftest that names the ruling -- so a
+        # later flip is a loud failure rather than a quiet policy change.
         "content_thin_vetoes_HEALTHY": False,
         "governing_for_this_day": governing,
+        "ruled_by": "R-409",
         "why_not": (
-            "the frozen rule's SS7 reserves exclusion to the COORDINATOR with "
-            "a stated reason ('not a day this instrument rejects'), and its "
-            "SS8 lists (a) whether L1/L2 join the governing set and (c) "
-            "whether a CONTENT_THIN day is inadmissible as OPEN for the "
-            "coordinator/USER. R-386 froze the rule and resolved neither. "
-            "Composing it into HEALTHY here would be a worker choosing what "
-            "the frozen text reserves -- rules 11 and 14."),
-        "escalated": "ESCALATION-FOR-USER: frozen SS8 (a), (b) and (c)",
+            "USER R-409: 'If the data quality is good over the non-blackout "
+            "time, we should use that data.' A CONTENT_THIN day is DISCLOSED "
+            "and MASKED, not inadmissible -- it accrues on its complement. So "
+            "CONTENT_THIN does not veto HEALTHY, and this is now the RULED "
+            "state rather than an open question."),
+        "frozen_SS8_resolutions": {
+            "a_L1_L2_govern": "at WINDOW level -- they define the MASK",
+            "b_granularity": "per coin-day",
+            "c_content_thin_day": "DISCLOSED and MASKED, not inadmissible",
+            "ruled_by": "R-409 (USER, 2026-09-02)",
+            "supersedes": "the coordinator's R-403/R-408 exclude-if-thin "
+                          "recommendation; the USER chose the other branch",
+        },
+        "escalated": "RESOLVED by R-409; no longer an ESCALATION-FOR-USER",
         # DECISION MATERIAL. Computed, so the ruling reads numbers not prose.
         "day_is_CONTENT_THIN": thin,
         "coins_CONTENT_THIN": sorted(c for c, t in coins.items() if t),
@@ -703,6 +714,67 @@ def _content_liveness_composition(block: dict, governing: bool) -> dict:
             "the adjudicated coins are btc and eth (R-306), so a THIN coin "
             "outside that pair would not reach an adjudication even under a "
             "per-coin composition."),
+    }
+
+
+def blackout_mask_and_complement(day_token: str) -> dict[str, Any]:
+    """R-409's REPORTED pair: the mask SUMMARY and the complement's bars.
+
+    USER R-409: *"If the data quality is good over the non-blackout time, we
+    should use that data."* A blackout day is not excluded; it accrues if the
+    frozen bars pass on the non-blackout windows, and the blackout windows are
+    masked as accounted loss.
+
+    THIS BLOCK REPORTS AND DECIDES NOTHING. `race_accrual_eligible` keeps its
+    existing four-conjunct definition, untouched; the disposition is the
+    coordinator's act with R-409 as its stated reason (rule 14).
+
+    THE FULL MASK IS A SEPARATE ARTIFACT, deliberately. The verdict carries
+    counts and run structure; the window LIST lives in
+    `da_blackout_mask_<day>.json`, written by `da_blackout_mask.py --write`.
+    Two reasons: a 288-entry list per coin would bloat every verdict, and the
+    mask is consumed at SCORING time, so it may land after the verdict without
+    loss (R-409). The path is named here so a consumer refuses on absence
+    rather than assuming.
+    """
+    try:
+        import da_blackout_mask as BM
+    except Exception as e:                                   # pragma: no cover
+        return {"status": "UNRESOLVED", "governs": False,
+                "why": f"the mask module could not be imported: {e!r}"}
+    try:
+        m = BM.build_mask(day_token)
+        cq = BM.complement_quality(day_token, m)
+    except Exception as e:
+        # A refusal here is a STATUS, never an absent key and never a pass:
+        # "no mask" must not read to a consumer as "nothing was dark".
+        return {"status": "MASK_REFUSED", "governs": False,
+                "disposition_rule": BM.DISPOSITION_RULE,
+                "why": str(e),
+                "artifact_path": str(BM.DERIVED /
+                                     f"da_blackout_mask_{day_token}.json"),
+                "consumer_note": ("a scorer MUST refuse a day whose verdict "
+                                  "reports thin windows and whose mask is "
+                                  "absent or refused -- never assume an "
+                                  "empty mask")}
+    return {
+        "status": "REPORTED",
+        "governs": False,
+        "disposition_rule": BM.DISPOSITION_RULE,
+        "artifact_kind": BM.ARTIFACT_KIND,
+        "artifact_path": str(BM.DERIVED /
+                             f"da_blackout_mask_{day_token}.json"),
+        "artifact_written_by": "da_blackout_mask.py --write (separate from "
+                               "this verdict; may land after it)",
+        "detector": m["detector"],
+        "v2_seam": m["v2_seam"],
+        "total_masked_windows": m["total_masked_windows"],
+        "mask_summary": {c: {k: v.get(k) for k in
+                             ("n_windows_total", "n_masked", "masked_fraction",
+                              "longest_run_windows", "runs",
+                              "agrees_with_frozen_L1_numerator")}
+                         for c, v in m["coins"].items()},
+        "complement_quality": cq,
     }
 
 
@@ -2083,6 +2155,9 @@ def verify_day(day_token: str, freeze_epoch: float,
         # is the only one with bars. Each names the other.
         "content_liveness": content_liveness_for(day_token),
         "content_liveness_rule": content_liveness_rule_for(day_token),
+        # R-409's REPORTED pair. Governs nothing; the disposition is the
+        # coordinator's act with R-409 as the stated reason.
+        "blackout_mask_and_complement": blackout_mask_and_complement(day_token),
         "windows_gap_affected": affected,
         "gap_series": gs,
         "decision_note": (
@@ -2363,12 +2438,21 @@ def _selftests() -> int:
         # COMPOSITION: escalated, and never silently adopted.
         for _b in (_gov, _rep, _clean):
             _c = _b["composition_with_HEALTHY"]
+            # THE RULED STATE, PINNED (R-409). This check previously asserted
+            # the pre-ruling ESCALATION text and failed the moment the USER
+            # ruled -- the draft-state-pin class the R-386 freeze surfaced
+            # three times. It now pins what the RULING says, and it FAILS if
+            # anyone flips the veto or drops its authority.
             ok(_c["content_thin_vetoes_HEALTHY"] is False
-               and "ESCALATION-FOR-USER" in _c["escalated"]
-               and "SS8" in _c["why_not"],
-               "COMPOSITION: no verdict lets CONTENT_THIN veto HEALTHY, and "
-               "each one carries the frozen text's own citation for why that "
-               "is escalated rather than chosen")
+               and _c["ruled_by"] == "R-409"
+               and _c["frozen_SS8_resolutions"]["c_content_thin_day"]
+               == "DISCLOSED and MASKED, not inadmissible"
+               and _c["frozen_SS8_resolutions"]["a_L1_L2_govern"].startswith(
+                   "at WINDOW level"),
+               "RULED STATE PINNED (R-409): CONTENT_THIN never vetoes "
+               "HEALTHY, the verdict carries the ruling that made that the "
+               "answer, and SS8 (a)/(b)/(c) are recorded as RESOLVED -- a "
+               "day is disclosed and masked, not excluded")
         ok(_gov["composition_with_HEALTHY"][
                "would_flip_HEALTHY_under_worst_coin_composition"] is True
            and _rep["composition_with_HEALTHY"][
@@ -2399,6 +2483,33 @@ def _selftests() -> int:
            "WIRING END-TO-END: a report from the REAL verify_day CARRIES the "
            "frozen rule's block -- the call cannot be deleted without this "
            "failing")
+        # R-409's REPORTED pair must be in the REAL report too, and must
+        # govern nothing. Same leg as the frozen rule's, for the same reason:
+        # every other seam here stubs verify_day, so without this the call
+        # could be deleted with the suite still green (W1's class).
+        _bmc = _real_rep.get("blackout_mask_and_complement")
+        ok(isinstance(_bmc, dict) and _bmc.get("governs") is False
+           and _bmc.get("disposition_rule") == "R-409",
+           "R-409 END-TO-END: a report from the REAL verify_day carries the "
+           "blackout-mask/complement pair, and it REPORTS -- governs is False "
+           "and the ruling is named as text, not as a boolean that decides")
+        ok(_bmc.get("status") != "REPORTED"
+           or _bmc["v2_seam"]["refuses"] is True,
+           "R-409 END-TO-END: the v2 seam travels in the verdict and says it "
+           "REFUSES -- built-but-unauthorised must be explicit, never silent")
+        ok(_bmc.get("status") != "REPORTED"
+           or all(v.get("agrees_with_frozen_L1_numerator") is True
+                  for v in _bmc["mask_summary"].values()),
+           "R-409 END-TO-END: every coin's mask is equality-checked against "
+           "the frozen L1 numerator in the emitted verdict")
+        ok(_real_rep["verdict_split"]["race_accrual_eligible"]
+           == (_real_rep["verdict_split"]["day_closed"]
+               and _real_rep["verdict_split"]["post_freeze_pass"]
+               and _real_rep["verdict_split"]["era_admissible"]
+               and _real_rep["verdict_split"]["day_quality_pass"]),
+           "R-409: `race_accrual_eligible` keeps its EXISTING four-conjunct "
+           "definition -- the mask and the complement are reported beside it "
+           "and enter it nowhere")
         assert_content_liveness_carried(_real_rep, "20260829")
         ok(True, "WIRING END-TO-END: and the REAL guard admits that REAL "
                  "report, so producer and guard agree on one artifact rather "

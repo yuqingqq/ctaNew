@@ -1,0 +1,342 @@
+{
+ "artifact": "da_blackout_mask_v1",
+ "as_of_utc": "2026-09-02T10:00:44Z",
+ "coins": {
+  "bnb": {
+   "agrees_with_frozen_L1_numerator": true,
+   "frozen_n_invisible_thin": 22,
+   "longest_run_windows": 12,
+   "masked_fraction": 0.0764,
+   "masked_fraction_of_288": 0.0764,
+   "masked_windows": [
+    1788220800,
+    1788221100,
+    1788221400,
+    1788221700,
+    1788222000,
+    1788222300,
+    1788222600,
+    1788222900,
+    1788223200,
+    1788223500,
+    1788223800,
+    1788224100,
+    1788302700,
+    1788303000,
+    1788303300,
+    1788303600,
+    1788303900,
+    1788304200,
+    1788304500,
+    1788304800,
+    1788305100,
+    1788305400
+   ],
+   "n_masked": 22,
+   "n_windows_total": 288,
+   "runs": [
+    {
+     "end_utc": "2026-09-01T01:00:00Z",
+     "n_windows": 12,
+     "start_utc": "2026-09-01T00:00:00Z"
+    },
+    {
+     "end_utc": "2026-09-01T23:35:00Z",
+     "n_windows": 10,
+     "start_utc": "2026-09-01T22:45:00Z"
+    }
+   ],
+   "status": "CONTENT_LIVE"
+  },
+  "btc": {
+   "agrees_with_frozen_L1_numerator": true,
+   "frozen_n_invisible_thin": 23,
+   "longest_run_windows": 13,
+   "masked_fraction": 0.0799,
+   "masked_fraction_of_288": 0.0799,
+   "masked_windows": [
+    1788220800,
+    1788221100,
+    1788221400,
+    1788221700,
+    1788222000,
+    1788222300,
+    1788222600,
+    1788222900,
+    1788223200,
+    1788223500,
+    1788223800,
+    1788224100,
+    1788224400,
+    1788302700,
+    1788303000,
+    1788303300,
+    1788303600,
+    1788303900,
+    1788304200,
+    1788304500,
+    1788304800,
+    1788305100,
+    1788305400
+   ],
+   "n_masked": 23,
+   "n_windows_total": 288,
+   "runs": [
+    {
+     "end_utc": "2026-09-01T01:05:00Z",
+     "n_windows": 13,
+     "start_utc": "2026-09-01T00:00:00Z"
+    },
+    {
+     "end_utc": "2026-09-01T23:35:00Z",
+     "n_windows": 10,
+     "start_utc": "2026-09-01T22:45:00Z"
+    }
+   ],
+   "status": "CONTENT_THIN"
+  },
+  "doge": {
+   "agrees_with_frozen_L1_numerator": true,
+   "frozen_n_invisible_thin": 22,
+   "longest_run_windows": 12,
+   "masked_fraction": 0.0764,
+   "masked_fraction_of_288": 0.0764,
+   "masked_windows": [
+    1788220800,
+    1788221100,
+    1788221400,
+    1788221700,
+    1788222000,
+    1788222300,
+    1788222600,
+    1788222900,
+    1788223200,
+    1788223500,
+    1788223800,
+    1788224100,
+    1788302700,
+    1788303000,
+    1788303300,
+    1788303600,
+    1788303900,
+    1788304200,
+    1788304500,
+    1788304800,
+    1788305100,
+    1788305400
+   ],
+   "n_masked": 22,
+   "n_windows_total": 288,
+   "runs": [
+    {
+     "end_utc": "2026-09-01T01:00:00Z",
+     "n_windows": 12,
+     "start_utc": "2026-09-01T00:00:00Z"
+    },
+    {
+     "end_utc": "2026-09-01T23:35:00Z",
+     "n_windows": 10,
+     "start_utc": "2026-09-01T22:45:00Z"
+    }
+   ],
+   "status": "CONTENT_LIVE"
+  },
+  "eth": {
+   "agrees_with_frozen_L1_numerator": true,
+   "frozen_n_invisible_thin": 22,
+   "longest_run_windows": 13,
+   "masked_fraction": 0.0764,
+   "masked_fraction_of_288": 0.0764,
+   "masked_windows": [
+    1788220800,
+    1788221100,
+    1788221400,
+    1788221700,
+    1788222000,
+    1788222300,
+    1788222600,
+    1788222900,
+    1788223200,
+    1788223500,
+    1788223800,
+    1788224100,
+    1788224400,
+    1788303000,
+    1788303300,
+    1788303600,
+    1788303900,
+    1788304200,
+    1788304500,
+    1788304800,
+    1788305100,
+    1788305400
+   ],
+   "n_masked": 22,
+   "n_windows_total": 288,
+   "runs": [
+    {
+     "end_utc": "2026-09-01T01:05:00Z",
+     "n_windows": 13,
+     "start_utc": "2026-09-01T00:00:00Z"
+    },
+    {
+     "end_utc": "2026-09-01T23:35:00Z",
+     "n_windows": 9,
+     "start_utc": "2026-09-01T22:50:00Z"
+    }
+   ],
+   "status": "CONTENT_THIN"
+  },
+  "hype": {
+   "agrees_with_frozen_L1_numerator": true,
+   "frozen_n_invisible_thin": 9,
+   "longest_run_windows": 8,
+   "masked_fraction": 0.0312,
+   "masked_fraction_of_288": 0.0312,
+   "masked_windows": [
+    1788222000,
+    1788303300,
+    1788303600,
+    1788303900,
+    1788304200,
+    1788304500,
+    1788304800,
+    1788305100,
+    1788305400
+   ],
+   "n_masked": 9,
+   "n_windows_total": 288,
+   "runs": [
+    {
+     "end_utc": "2026-09-01T00:25:00Z",
+     "n_windows": 1,
+     "start_utc": "2026-09-01T00:20:00Z"
+    },
+    {
+     "end_utc": "2026-09-01T23:35:00Z",
+     "n_windows": 8,
+     "start_utc": "2026-09-01T22:55:00Z"
+    }
+   ],
+   "status": "CONTENT_LIVE"
+  },
+  "sol": {
+   "agrees_with_frozen_L1_numerator": true,
+   "frozen_n_invisible_thin": 23,
+   "longest_run_windows": 13,
+   "masked_fraction": 0.0799,
+   "masked_fraction_of_288": 0.0799,
+   "masked_windows": [
+    1788220800,
+    1788221100,
+    1788221400,
+    1788221700,
+    1788222000,
+    1788222300,
+    1788222600,
+    1788222900,
+    1788223200,
+    1788223500,
+    1788223800,
+    1788224100,
+    1788224400,
+    1788302700,
+    1788303000,
+    1788303300,
+    1788303600,
+    1788303900,
+    1788304200,
+    1788304500,
+    1788304800,
+    1788305100,
+    1788305400
+   ],
+   "n_masked": 23,
+   "n_windows_total": 288,
+   "runs": [
+    {
+     "end_utc": "2026-09-01T01:05:00Z",
+     "n_windows": 13,
+     "start_utc": "2026-09-01T00:00:00Z"
+    },
+    {
+     "end_utc": "2026-09-01T23:35:00Z",
+     "n_windows": 10,
+     "start_utc": "2026-09-01T22:45:00Z"
+    }
+   ],
+   "status": "CONTENT_THIN"
+  },
+  "xrp": {
+   "agrees_with_frozen_L1_numerator": true,
+   "frozen_n_invisible_thin": 20,
+   "longest_run_windows": 8,
+   "masked_fraction": 0.0694,
+   "masked_fraction_of_288": 0.0694,
+   "masked_windows": [
+    1788220800,
+    1788221100,
+    1788221400,
+    1788221700,
+    1788222000,
+    1788222300,
+    1788222900,
+    1788223200,
+    1788223500,
+    1788223800,
+    1788224100,
+    1788224400,
+    1788303300,
+    1788303600,
+    1788303900,
+    1788304200,
+    1788304500,
+    1788304800,
+    1788305100,
+    1788305400
+   ],
+   "n_masked": 20,
+   "n_windows_total": 288,
+   "runs": [
+    {
+     "end_utc": "2026-09-01T00:30:00Z",
+     "n_windows": 6,
+     "start_utc": "2026-09-01T00:00:00Z"
+    },
+    {
+     "end_utc": "2026-09-01T01:05:00Z",
+     "n_windows": 6,
+     "start_utc": "2026-09-01T00:35:00Z"
+    },
+    {
+     "end_utc": "2026-09-01T23:35:00Z",
+     "n_windows": 8,
+     "start_utc": "2026-09-01T22:55:00Z"
+    }
+   ],
+   "status": "CONTENT_LIVE"
+  }
+ },
+ "consumer_note": "REFUSE this artifact for final scoring unless `day_closed_calendar` is true -- a mid-day mask is a diagnostic, not a scoring input",
+ "day": "20260901",
+ "day_closed_calendar": true,
+ "day_status_frozen": "CONTENT_THIN",
+ "detector": {
+  "authority": "USER ruling 2026-09-01, R-386",
+  "definition": "below thin_frac x the SAME-DAY (day, coin) median AND not overlapped by a gap-ledger interval",
+  "module": "da_content_liveness_rule",
+  "module_sha256_prefix": "7196676840304f30",
+  "thin_frac": 0.05,
+  "version": "v1_FROZEN"
+ },
+ "disposition_rule": "R-409",
+ "disposition_text": "USER R-409: a day with a blackout is not excluded; it accrues if the frozen bars pass on the non-blackout windows, and the blackout windows are masked as accounted loss. This artifact REPORTS the mask; it decides nothing (rule 14).",
+ "n_coins": 7,
+ "total_masked_windows": 141,
+ "v2_seam": {
+  "frozen_by_user": false,
+  "refuses": true,
+  "status": "INERT_PENDING_USER_FREEZE",
+  "why": "v2's absolute floor is DRAFT. On a mostly-dark day v1 cannot identify the complement at all, so this seam refuses by name rather than returning a mask v1 could not see. Built and refusing, never silently absent."
+ }
+}

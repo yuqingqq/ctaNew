@@ -558,6 +558,47 @@ def selftest() -> int:
                "and both coins' longest runs are reported beside it, so the "
                "choice is visible rather than implicit")
 
+    # ---- RR7-1: the SHIPPED regex of EVERY venue, on a REAL line --------
+    # The fixtures above are all built with the `hyperliquid` spec, so the
+    # binance_hf and polymarket regexes were never matched against a real
+    # line -- a mutation to either left the suite green. The protection was
+    # in the product (the verdict refuses) and not in the suite; this is the
+    # suite half. Each venue must (a) match at least one real line from its
+    # OWN log and (b) yield the declared number of counters.
+    import re as _re
+    for _v, _spec in VENUES.items():
+        _hit = None
+        for _p in _spec["logs"]:
+            if not Path(_p).exists():
+                continue
+            for _ln in Path(_p).read_text(errors="replace").splitlines():
+                _m = _spec["re"].match(_ln)
+                if _m:
+                    _hit = (_ln, _m)
+                    break
+            if _hit:
+                break
+        ok(_hit is not None,
+           f"RR7-1 ({_v}): the SHIPPED regex matches a REAL line from that "
+           f"venue's OWN log -- otherwise a broken parser reads as an absent "
+           f"venue and then as an unaffected one")
+        _ln, _m = _hit
+        _g = _m.groups()
+        ok(len([x for x in _g[6:6 + _spec["counters"]] if x is not None])
+           == _spec["counters"],
+           f"RR7-1 ({_v}): that real line yields all {_spec['counters']} "
+           f"declared counter group(s), so the spec's `counters` matches the "
+           f"line it actually parses")
+    # AND THE CONTROL IN THE OTHER DIRECTION: a venue's regex must NOT match
+    # another venue's line, or 'matches a real line' proves nothing.
+    _pm_line = "[pm] 12:00:00Z markets=5 msgs=100"
+    ok(VENUES["polymarket"]["re"].match(_pm_line) is not None
+       and VENUES["binance_hf"]["re"].match(_pm_line) is None
+       and VENUES["hyperliquid"]["re"].match(_pm_line) is None,
+       "RR7-1 DISCRIMINATION: each venue's regex matches its own shape and "
+       "REJECTS another venue's -- three parsers that all matched everything "
+       "would pass the check above and discriminate nothing")
+
     print(f"da_cross_venue_forensics selftests: {checks} checks passed")
     return 0
 

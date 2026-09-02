@@ -156,7 +156,16 @@ def measure_v2(day: str, all_days: list[str], medians: dict, gaps=None,
             "median_over_reference": round(med / ref, 4) if ref else None,
             "L2_v1_run": l2, "L3_v2_run": l3,
             "L3_v2_dark_share": round(dark_share, 4),
+            # RR7-2: the two vocabularies EXTEND rather than map, so a
+            # consumer diffing `status_v1` against `status_v2` as STRINGS
+            # counts 7 changes on 08-26 where the amendment makes 1. The
+            # comparison the amendment actually makes is COMPUTED here and
+            # named, so nobody has to infer it from string inequality.
             "v2_catches_what_v1_misses": l3 > V2_RUN_MAX >= l2,
+            "v1_live_to_v2_dark": l3 > V2_RUN_MAX >= l2,
+            "verdict_changed": (l2 > V2_RUN_MAX) != (l3 > V2_RUN_MAX),
+            "status_strings_differ_but_verdict_does_not": (
+                (l2 > V2_RUN_MAX) == (l3 > V2_RUN_MAX) and l2 > V2_RUN_MAX),
         }
     judged = {c: v for c, v in coins.items() if "L3_v2_run" in v}
     return {
@@ -173,6 +182,17 @@ def measure_v2(day: str, all_days: list[str], medians: dict, gaps=None,
                       if judged == {} and coins else "CONTENT_LIVE"),
         "amendment_changes_this_day": any(
             v.get("v2_catches_what_v1_misses") for v in judged.values()),
+        "n_coin_days_verdict_changed": sum(
+            1 for v in judged.values() if v.get("verdict_changed")),
+        "n_coin_days_status_string_differs": sum(
+            1 for v in judged.values()
+            if v.get("status_v1") != v.get("status_v2")),
+        "RR7_2_note": (
+            "compare `n_coin_days_verdict_changed`, NOT the two status "
+            "strings: v1 and v2 use different labels for the same reading "
+            "(CONTENT_THIN vs CONTENT_DARK), so a naive string diff "
+            "over-counts -- on 08-26 it reports 7 where the amendment makes "
+            "1."),
         "governs": False,
         "frozen_by_user": False,
         "note": ("v2 is a DRAFT. It governs nothing, wires into nothing, and "
@@ -309,7 +329,11 @@ def selftest() -> int:
         p = r3["coins"]["btc"]
         ok(p["status_v1"] == "CONTENT_THIN" and p["status_v2"] == STATUS_DARK
            and p["L2_v1_run"] == 30 and p["L3_v2_run"] == 30
-           and p["v2_catches_what_v1_misses"] is False,
+           and p["v2_catches_what_v1_misses"] is False
+           and p["verdict_changed"] is False
+           and p["status_strings_differ_but_verdict_does_not"] is True
+           and r3["n_coin_days_verdict_changed"] == 0
+           and r3["n_coin_days_status_string_differs"] == 1,
            "ADDITIVITY: on a PARTIAL blackout v1 and v2 agree exactly (both "
            "run 30) -- v2 EXTENDS coverage into the case v1 cannot see and "
            "does not re-judge the ones it can")
