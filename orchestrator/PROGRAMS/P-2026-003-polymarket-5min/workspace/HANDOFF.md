@@ -1,10 +1,10 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T13:41Z — **DE round 17 RELEASED**, with two LOW findings
-that are both about **association rather than existence**: a map keyed by list
-**position**, so a reorder is invisible, and a documented claim with **no check
-behind it**. **USER decisions unchanged: four RULED, one OPEN.** Prior line: DA
-round 10 is held; the batch moved the path and kept the gate.
+Updated: 2026-09-02T13:56Z — **DE round 18's residual came back from the
+reviewer as a RULED finding** (DE18-R1), vindicating DE's refusal to close it by
+fiat; the **format rule NARROWS**; and **Q-BE-229's "USER-pending unchanged" line
+is STALE** — four are ruled, **only the freeze disposition is open**. **ONE USER
+decision open.** Prior line: DE round 17 released on association-not-existence.
 
 ## READ FIRST — current project handoff
 
@@ -646,8 +646,11 @@ launchers at **235/19**.
 | **DE round 17** | **VERIFIED** at `a8093a5` — DE15-R1..R4 closed, three mutants die by name. **Queued** for review behind DA round 10 |
 | **DE round 18** | **VERIFIED** at `db039a3` — **DE16-R1..R4 CLOSED**, ratification **132 → 150** (reproduced here), five coordinator mutants **die by name**, marker uniqueness asserted (28 markers / 28 names; 22 driven, six not, each named). **Review request written and queued.** One residual measured and **NOT ruled** — below |
 | **DE round 17 review** | **RELEASED** (`797ed9a`) — DE15-R1..R4 closed at the artifact; **no check removed to keep 132** (AST census identical across both tips). Two LOW findings, **DE17-R1** and **DE17-R2**, both reproduced |
-| **DE round 19** | **DISPATCHED** (Q-DE-37): the two DE17 closures, each with its own falsifier |
-| **DE round 20** | the **DATA_ROOT split**, now behind **DA round 11's** landing |
+| **DE round 18 review** | **RELEASED** (`3f4f2e5`) — DE16-R1..R4 close on the real register; **DE18-R1..R3** → DE round 20. Census corrected: **110 → 124** sites, and **three checks WERE removed** (tautological known-bads) |
+| **DE round 19** | **VERIFIED** at `2f6da2c` — **75 → 79** (reproduced here), DE17-R1/R2 closed, **nine coordinator mutants die by name**. **Two residuals measured and NOT ruled**, to the reviewer |
+| **DE round 20** | **DISPATCHED** (Q-DE-38 pending): DE18-R1..R3; the DATA_ROOT split still behind **DA round 11's** landing |
+| **DA round 11** | **HELD** at `e292439` — verified here as **unpushed and on no remote branch**. Under review; **lands after the 00:14Z read as Q-DA-209** |
+| **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
 | **DE round 16** | **STAGED** behind DA round 10's landing and the r14 review: the CODE_ROOT/DATA_ROOT split on the **three** DE-owned files in the class (`de_admissible_windows` :64/:77, `de_ratification_check` :43, `de_lane4_results_doc`) — **counted at the tree; five other DE files are not in the class** — following DA's `_resolve_data_root` convention so the split is written **once** |
 | **DA round 10** | **BUILT AND HELD** at worktree `3a89e6c` — verified here as **unpushed and on no remote branch**, nothing landed, the shared tree carrying only BE's in-flight file. Lands after the 00:14Z read |
@@ -680,8 +683,10 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **DE17-R1..R2** → DE round 19; **DA10-R1..R5** → DA round 11
-(on the held commit);
+**Open findings:** **DE18-R1..R3** → DE round 20; **DE round 19's two
+residuals** (A: prose paragraphs swapped inside the `#:` block leaves 79 green;
+B: a blank non-`#:` line above the heading) with the **reviewer, unruled**;
+**DA10-R1..R5** closed into DA round 11 (held);
 **DE16-R1..R4** closed at `db039a3`, pending review; the **own-supersedes-
 nonentry residual** with the reviewer; **BE's landing** — the counts satisfy the
 receipt condition and the coordinator holds a receipt copy, but
@@ -696,14 +701,25 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE round 18** at `db039a3` → **DA round
-11** when held → **DE round 19** when filed → **BE rounds 3–4** when BE files.
-**DA round 10's and DE round 17's reviews are both done** — the first HELD, the
-second RELEASED.
+**The reviewer's queue, in order:** **DA round 11** → **DE round 19** → **BE
+rounds 3–4** — **all three requests committed.**
 
-**DA round 11 is in flight on the held commit** (`3a89e6c`, confirmed still the
-worktree tip and unpushed), and **BE's confirming pair is still running** into
-`fwd5`.
+**Q-BE-229 verified at the artifacts, and its confirming run reproduces the
+superseded one exactly where it matters:** **68 numeric fields shared with the
+12:49 receipt, 2 differing** — `n_archive_slugs` (27,947 → 28,031, the archive
+index grew between runs; **not a population count**) and `wall_seconds`. **Every
+population count is identical** — 1,859 windows / 2,262,457 rows / 1,847,824
+actions, btc 610,064 and eth 441,409 scored, 1,344 supplied without a fit, 141
+excluded at supply. 09-02 **REFUSED at gate 1 by name**, and `derived/`
+untouched at 184 entries.
+
+> **A stale line in that filing, and it is the kind these files exist to
+> prevent.** Q-BE-229's disposition column says the four R-424 rulings are
+> *"USER-pending unchanged"*. **They are RULED** (R-424 §7); **the only open USER
+> decision is the freeze disposition.** BE supersedes the line in its next row
+> (rule 13) with the old row untouched. Recorded here because **R-424 §1
+> resolved a ruling's scope by reading this table** — a stale pending-list in a
+> seat's filing is exactly the failure the single-referent discipline is for.
 
 **BE's confirming pair now runs into a NEW OUTDIR** (`fwd5`, unit
 `be-fwd-final4.service`), with **Q-BE-229 to follow**. **That closes the
@@ -714,6 +730,54 @@ remedy — *an outdir per run* — is in use rather than merely recommended. **D
 00:14Z.** **BE's confirming audit is still running and nothing has been sent**
 (rule 18); the shared tree still carries BE's dirty `be_forward_day.py`,
 untouched by any coordinator commit.
+
+### The residual DE refused to rule came back as a finding
+
+**DE round 18 left one question deliberately open** — an entry whose **own**
+block claims to supersede a **non-existent** entry still verifies — measured it,
+recorded both readings, and handed the call to the reviewer rather than closing
+it as scope. **The reviewer ruled it a finding (DE18-R1)**, with three reasons
+worth keeping:
+
+1. **the deferral rests on a check nobody triggers** — DE's "the target's
+   existence becomes this question when someone checks that target" assumes a
+   later check that no one performs;
+2. **`check#1` already refuses the same shape one field over**, so the
+   inconsistency is internal;
+3. **the predicate and `pos` are already in hand** — the closure is one
+   `named not in pos` at the entry under check.
+
+**This is the escalation working, and it is worth saying so.** A seat
+four-for-four in a round declined to make the fifth call itself; the third party
+disagreed with its reading; and the disagreement produced a fix rather than an
+argument. **Had DE closed it as scope, nothing would have looked again.**
+
+**Two more findings, both LOW.** **DE18-R2** — a quoted block placed **first**,
+own block second, is REFUSED for the right reason but **names the wrong owner**.
+**DE18-R3** — `parse_day#1` neutralised leaves **150 green**: a guard **reached
+by nothing**. Both → DE round 20.
+
+### The format rule NARROWS — and a census claim was wrong in the letter
+
+**R-432 §1 narrows on the reviewer's answer:** quotations in **non-ratifying**
+entries proved harmless in every spelling constructed, while a fenced block
+**inside a ratifying entry before its own** is not. So: **an R-ADMISS entry
+carries exactly one fenced ratification block — its own, first; any other entry
+MAY quote, and the checker ignores it.** **The coordinator keeps quoting
+spellings inline regardless**, and **these state files still carry zero fenced
+blocks** — asserted again this round.
+
+**And a correction that lands on something I praised last round.** I recorded
+the reviewer's *"no check was removed to keep the count"* as a sceptical check
+worth making every time. Applied to **round 18**, the same check found the
+opposite: the census is **110 → 124** call sites, and **three checks WERE
+removed** — the three tautological KNOWN-BADs of DE16-R4, confirmed in the diff.
+**Q-DE-36's "none removed" was wrong in the letter and right in substance.**
+
+**That is the more useful version of the lesson.** The sceptical check is worth
+making precisely because it can come back *positive*; and when it does, the
+answer is not automatically a defect — **removing a tautological known-bad is
+legitimate, and saying "none removed" when three were is still wrong.**
 
 ### DE round 17 — RELEASED, and both findings are about ASSOCIATION
 
@@ -1301,6 +1365,51 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~13:56Z (MEM) — THE QUESTION DE REFUSED TO ANSWER CAME BACK AS
+### A FINDING
+
+**R-436 swept.** Three things, and the first is the process paying out.
+
+**DE round 18 declined to close a fifth finding by fiat. The reviewer ruled it a
+finding.** The residual — an entry whose own block claims to supersede a
+non-existent entry — came back as **DE18-R1**, on three grounds: **the deferral
+rests on a check nobody triggers**; `check#1` already refuses the same shape one
+field over; and the closure is one line already in hand. **Had DE closed it as
+scope, nothing would have looked again.** Two rounds ago I wrote that measuring a
+boundary question and handing it on keeps *"we fixed this"* and *"we decided this
+doesn't count"* apart — this is what that buys.
+
+**A correction that lands on something I praised last round.** I recorded the
+reviewer's *"no check was removed to keep the count"* as a sceptical check worth
+making every time. Applied to **round 18**, the same check came back **positive**:
+the census is **110 → 124** sites and **three checks WERE removed** — the
+tautological known-bads of DE16-R4, confirmed in the diff. **Q-DE-36's "none
+removed" was wrong in the letter and right in substance.**
+
+**That is the better version of the lesson, and it corrects my framing.** I
+presented the check as one that confirms a stable count is honest. Its real value
+is that **it can come back positive** — and when it does, the removal may still
+be legitimate. **"Nothing load-bearing was removed" and "nothing was removed" are
+different claims, and only one of them was true.**
+
+**The format rule narrows on evidence rather than caution.** Quotations in
+non-ratifying entries proved harmless in **every spelling constructed**, while a
+block placed **before** an entry's own remains unsafe — so the rule now binds
+where the danger is: **exactly one fenced block per R-ADMISS entry, its own,
+first.** These state files still carry **zero**, asserted again.
+
+**And a stale line in a seat's filing, recorded because these files are the
+referent.** Q-BE-229 says the four R-424 rulings are *"USER-pending unchanged"*.
+They are **ruled**; **only the freeze disposition is open**. BE supersedes it in
+band. **R-424 §1 resolved a ruling's scope by reading this table** — which is
+precisely why a stale pending-list anywhere else is worth catching rather than
+shrugging at.
+
+**Q-BE-229's confirming run is the clean part:** **68 numeric fields shared with
+the superseded receipt, 2 differing**, and neither is a population count — the
+archive index grew between runs, and wall time. **Every population count is
+identical.**
 
 ### 2026-09-02 ~13:41Z (MEM) — EXISTENCE IS CHECKED; ASSOCIATION IS NOT
 

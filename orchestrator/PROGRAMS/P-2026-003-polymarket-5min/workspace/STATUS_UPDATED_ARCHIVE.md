@@ -2314,3 +2314,75 @@ Moved in the MEM round-29 true-up of R-435. Join rule as in batch 1.
   with Q4 failing; development evidence; and BE's completed re-run still reports
   1,344 of 1,875 supplied windows (71.7%) producing no score.
 ```
+
+## Batch 36 — archived 2026-09-02T13:56Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-30 true-up of R-436. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T13:23Z (MEM ROUND 27 -- FOUR CLOSED, AND THE FIFTH LEFT OPEN ON
+  PURPOSE). R-433 swept; DE's counts reproduced and the fenced-block assertion
+  re-checked after every edit. DE ROUND 18 VERIFIED at db039a3 (Q-DE-36 at
+  cc497a1; de_ratification_check.py only, +407/-33, de_admissible_windows.py
+  untouched): ratification 132 -> 150 and admissible 75, rc 0 under both
+  launchers, with R-419 True/[] and R-418 REFUSED-FOR-A-NEW-RUN both UNCHANGED
+  on the real register. DE16-R1 CLOSED: own_ratification_blocks() admits a block
+  as the entry's own ONLY IF its ref equals the heading ref AND its kind is
+  R-ADMISS, so the sweep-entry quotation that read as SUPERSEDED / REFUSED /
+  REFUSED at a8093a5 now leaves R-419 True/[] in all three spellings, and two
+  own blocks REFUSE by name. DE16-R2 CLOSED: supersedes R-9021, R-99999 and an
+  absent R-418 each REFUSE by name at superseded_by#1. DE16-R3 CLOSED: two
+  supersedes: lines REFUSE by name, _parse_block reporting and the callers
+  refusing. DE16-R4 CLOSED BY HOOKS: mutation_audit gains _drop_case,
+  _migrate_case and _add_case that mutate the HARNESS with coverage recomputed
+  from REAL TRACEBACKS -- DE chose the hook over deletion under rule 15 ("a
+  mutant that lives in a filing is one nobody re-runs"), accepted. MARKER
+  UNIQUENESS ASSERTED: 28 markers, 28 names, 22 DRIVEN by the audit and SIX NOT,
+  EACH NAMED rather than counted. FIVE COORDINATOR MUTANTS EACH KILLED BY NAME
+  -- and ONE OF THEM NEEDED A TEMP TREE, which is a real property worth keeping:
+  _site_names reads __file__, so an in-memory harness would have re-read the
+  UNMUTATED file and the renamed-marker mutant only dies against a FILE COPY.
+  Beside RR12-1 and my own round-18 citation error, the general form is A CHECK
+  THAT READS ITS OWN SOURCE THROUGH __file__ IS CHECKING WHATEVER TREE IT
+  HAPPENS TO BE IN. THE ROUND'S MOST INTERESTING MOVE IS THE ONE IT DID NOT
+  MAKE: having closed the LATER-entry dangling-target case, DE hit the same
+  question ONE STEP IN -- AN ENTRY WHOSE OWN BLOCK DECLARES supersedes: R-777,
+  NO SUCH ENTRY, STILL VERIFIES True with unverifiable [] -- measured it, and
+  DECLINED TO RULE. DE states it as SCOPE ("the target's existence becomes this
+  question when someone checks that target"); the coordinator reads it as A
+  WELL-SHAPED CLAIM TO SUPERSEDE NOTHING PASSING THE ENTRY MAKING IT; and rather
+  than one overruling the other the disagreement WENT TO THE REVIEWER as item 2
+  of the request. THAT RESTRAINT IS WORTH NAMING BECAUSE THE ALTERNATIVE WAS SO
+  AVAILABLE: a seat four-for-four in a round can close a fifth by declaring it
+  out of scope and nobody looks again; measuring it, recording BOTH readings and
+  handing the call to a third party keeps "we fixed this" and "we decided this
+  doesn't count" from blurring -- precisely the distinction the audit-coverage
+  findings have been about all week. ALSO MEASURED: a quoted block placed BEFORE
+  the entry's own block in the entry under check REFUSES at check#8 -- FAIL-
+  CLOSED, the asymmetry DE states at :755-757, and the reason THE FORMAT RULE
+  OUTLIVES ITS TRIGGER. THE RULE NOW RUNS UNTIL THE DE ROUND 18 REVIEW IS
+  RELEASED (not until round 18 landed) AND BEYOND THAT FOR R-ADMISS ENTRIES
+  THEMSELVES: the failure mode is asymmetric, fail-closed in one order and
+  fail-open in the other, so a rule retired the moment the code improved would
+  have retired against the wrong half. ASSERTED THIS ROUND AS REQUIRED: ZERO
+  FENCED RATIFICATION BLOCKS IN BOTH STATE FILES (STATUS.yml 0, HANDOFF.md 0),
+  checked after every edit rather than once at the end. MY ROUND 26 WAS VERIFIED
+  AT THE COMMIT by the coordinator: HANDOFF's fenced block 1 -> 0, STATUS 0 -> 0
+  at both commits, STATUS parses with 177 flags, window of three, archive batch
+  32. REVIEWER QUEUE IN ORDER: DA round 10 at 3a89e6c (in flight from 13:10Z),
+  then DE round 17 at a8093a5, then DE round 18 at db039a3
+  (REQUEST_DE_ROUND_18_2026-09-02.md, seven items), then BE rounds 3-4 when BE
+  files. DE IS ON DELIBERATE STANDBY (rounds 16, 17, 18 complete; round 19, the
+  DATA_ROOT split, behind DA round 10's landing); DA IS HOLDING FOR 00:14Z; BE'S
+  CONFIRMING AUDIT IS STILL RUNNING WITH NOTHING SENT (rule 18), and the shared
+  tree still carries BE's dirty be_forward_day.py, untouched by any coordinator
+  commit. OPEN FINDINGS: RR12-1 and CO-R4 to DA round 10 (under review); CO-8 to
+  the coordinator after tonight; DE16-R1..R4 closed at db039a3 PENDING REVIEW;
+  the own-supersedes-nonentry residual with the reviewer. USER DECISIONS: FOUR
+  RULED (R-424), ONE OPEN -- the freeze disposition (R-424 section 6); the 09-02
+  accrual call MECHANICAL after 00:06Z. R-419 remains revocable by the USER.
+  UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with Q4 failing;
+  development evidence; BE's completed re-run still reports 1,344 of 1,875
+  supplied windows (71.7%) producing no score.
+```
