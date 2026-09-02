@@ -245,6 +245,42 @@ DECLARED_BLIND_SHAPES = (
 _LIMIT_ANCHOR = "DECLARED_BLIND_SHAPES = ("
 
 
+#: DE21-R1: THE ANCHORS PIN CONTENT, NOT EXTENT. Every blank inside the
+#: block took an anchor with it -- eight inter-section gaps, all red -- but
+#: only because `THE DECLARED LIMIT` happens to be the run's topmost line.
+#: A paragraph added ABOVE the head with a blank between reads 3,752 chars,
+#: identical to the intact block, with all three anchors present and the
+#: suite green: the new text is unread and nothing says so. The anchors
+#: name WHICH sections must be present; they cannot see how far the block
+#: goes, and the block has grown upward in each of the last three rounds.
+#:
+#: So the extent is pinned STRUCTURALLY, by the walk's own stop: what
+#: stands above the first line the reader read must not be another `#:`
+#: line. Intact, the walk stops at the blank under `_REBOUND = ...` and the
+#: line above that is code -- a real boundary. When a blank cuts a comment
+#: run in half, the line above the gap is a `#:` line, and that is true of
+#: BOTH cut shapes (a blank inside the block, and a paragraph above the
+#: head). It knows nothing about the prose, so it cannot go stale as the
+#: prose grows -- which is the failure mode the anchors have.
+def declared_limit_boundary(src: str | None = None) -> dict:
+    """Where the backward walk stopped, and what stands above it."""
+    lines = (src if src is not None
+             else Path(__file__).read_text()).split("\n")
+    i = next(n for n, ln in enumerate(lines) if ln.startswith(_LIMIT_ANCHOR))
+    first = i
+    while first > 0 and lines[first - 1].startswith("#:"):
+        first -= 1
+    j = first - 1
+    while j >= 0 and not lines[j].strip():      # the gap the walk stopped in
+        j -= 1
+    above = lines[j] if j >= 0 else "<start of file>"
+    return {"first_read_line": first + 1,
+            "first_read": lines[first][:60],
+            "above_line": j + 1,
+            "above": above[:60],
+            "stopped_at_a_real_boundary": not above.startswith("#:")}
+
+
 def declared_limit_text(src: str | None = None) -> str:
     """The declared-limit comment block above the list, normalised."""
     lines = (src if src is not None
@@ -779,7 +815,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 84
+EXPECTED_CHECKS = 87
 
 
 def _grid(day: str) -> list[int]:
@@ -1115,7 +1151,17 @@ def selftest() -> int:
     _limit = declared_limit_text()
     _phrase = ("ANY object's `.__import__('literal')` contributes that "
                "literal as a module")
-    ok("OVER-CAUGHT" in _limit and _phrase in _limit,
+
+    def _declaration_holds(text: str) -> bool:
+        """The declaration check's OWN predicate, so the known-bads below
+        run the expression the check runs rather than a restatement of it.
+        Both `_cut` and `_cut2` used to assert on the reader's output only,
+        which proves the reader distinguishes the mutated subject -- not
+        that the check would fail on it. The distance was small and this
+        closes it (the reviewer's "last inch", recorded not filed)."""
+        return "OVER-CAUGHT" in text and _phrase in text
+
+    ok(_declaration_holds(_limit),
        f"THE OVER-CAUGHT DECLARATION IS ASSERTED IN THE MODULE'S OWN LIMIT "
        f"TEXT ({len(_limit)} chars, read from the comment block above the "
        f"list and normalised across its line wraps): the two checks above "
@@ -1174,6 +1220,42 @@ def selftest() -> int:
        f"OVER-CAUGHT survives -- which is exactly why the three checks that "
        f"read this text stayed green through it")
 
+    # ---- DE21-R1: the anchors pin CONTENT; this pins EXTENT ------------
+    _bnd = declared_limit_boundary()
+    ok(_bnd["stopped_at_a_real_boundary"],
+       f"AND THE BLOCK'S EXTENT IS PINNED BY THE WALK'S OWN STOP: the "
+       f"reader's first line is {_bnd['first_read_line']} "
+       f"({_bnd['first_read']!r}) and what stands above the gap is line "
+       f"{_bnd['above_line']}, {_bnd['above']!r} -- CODE, so the walk "
+       f"stopped at a real boundary rather than inside a comment run. The "
+       f"three anchors name WHICH sections must be present and cannot see "
+       f"HOW FAR the block goes; they held only because the head happens "
+       f"to be the run's topmost line (DE21-R1)")
+    _above_head = Path(__file__).read_text().replace(
+        "#: THE DECLARED LIMIT",
+        "#: A PARAGRAPH ADDED ABOVE THE HEAD by the mutant.\n\n"
+        "#: THE DECLARED LIMIT", 1)
+    _b_above = declared_limit_boundary(_above_head)
+    ok(not _b_above["stopped_at_a_real_boundary"]
+       and len(declared_limit_text(_above_head)) == len(_limit)
+       and not [a for a in _anchors
+                if a not in declared_limit_text(_above_head)],
+       f"KNOWN-BAD, DRIVEN: a paragraph added ABOVE the head with a blank "
+       f"between reads {len(declared_limit_text(_above_head))} chars -- "
+       f"IDENTICAL to the intact block -- with all three anchors present, "
+       f"which is why it was green at 84. The walk now stops at line "
+       f"{_b_above['first_read_line']} with {_b_above['above']!r} above "
+       f"the gap: a `#:` line, so the run was cut and this check goes red")
+    _b_cut = declared_limit_boundary(_blank_above)
+    ok(not _b_cut["stopped_at_a_real_boundary"]
+       and _b_cut["above"].startswith("#:"),
+       f"KNOWN-BAD, DRIVEN: and the OTHER cut shape -- the blank inside "
+       f"the block, above OVER-CAUGHT -- fails the same predicate: the "
+       f"walk stops at line {_b_cut['first_read_line']} "
+       f"({_b_cut['first_read']!r}) with {_b_cut['above']!r} above the "
+       f"gap. One structural predicate covers both, and it knows nothing "
+       f"about the prose, so it cannot go stale as the block grows")
+
     # ---- DE19-R1: the ORDER the order check CITES is now read ----------
     # `:1189` asserts the map resolves onto the list in order and gives its
     # reason as "the order the docstring's prose above runs in" -- and read
@@ -1220,7 +1302,9 @@ def selftest() -> int:
         "blindness is", "#:   (paragraph deleted by the mutant)", 1)
     ok(_cut != Path(__file__).read_text()
        and _phrase in declared_limit_text()
-       and "OVER-CAUGHT" not in declared_limit_text(_cut),
+       and "OVER-CAUGHT" not in declared_limit_text(_cut)
+       and not _declaration_holds(declared_limit_text(_cut))
+       and _declaration_holds(_limit),
        "KNOWN-BAD, DRIVEN THROUGH THE READER ITSELF: with the paragraph's "
        "opening line replaced in a COPY of this source, the reader returns "
        "text the assertion above cannot find OVER-CAUGHT in -- so the "
@@ -1238,7 +1322,9 @@ def selftest() -> int:
         1)
     ok(_cut2 != Path(__file__).read_text()
        and "OVER-CAUGHT" in declared_limit_text(_cut2)
-       and _phrase not in declared_limit_text(_cut2),
+       and _phrase not in declared_limit_text(_cut2)
+       and not _declaration_holds(declared_limit_text(_cut2))
+       and _declaration_holds(_limit),
        "KNOWN-BAD FOR THE OTHER CONJUNCT: with the binding phrase REWORDED "
        "in a copy -- the paragraph still present, its heading intact -- the "
        "reader returns text the declaration check cannot find the phrase "
