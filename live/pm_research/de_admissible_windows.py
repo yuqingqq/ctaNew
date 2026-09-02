@@ -163,8 +163,8 @@ _REBOUND = "<rebound-import>"
 #:     getattr(importlib, "import_module") .... reached through a call this
 #:       reader does not resolve; catching it needs name resolution, which is
 #:       a different instrument, not a bigger regex.
-#:     a module imported by a C extension or an import hook .... outside the
-#:       source entirely. NOT ASSERTABLE IN-PROCESS -- there is no source
+#:     C extensions and import hooks ...... a module imported by one is
+#:       outside the source entirely. NOT ASSERTABLE IN-PROCESS -- no source
 #:       text for an expected-blind assertion to read, so this entry carries
 #:       none, and that is a decision recorded here rather than a row
 #:       missing from a loop (DE15-R2).
@@ -779,7 +779,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 79
+EXPECTED_CHECKS = 84
 
 
 def _grid(day: str) -> list[int]:
@@ -1129,6 +1129,92 @@ def selftest() -> int:
        "two checks below cannot drift into describing different things; "
        "this is the binding-phrase idiom `de_ratification_check` uses for "
        "`stamped_at`, applied to a declaration that lives in a comment")
+    # ---- DE19-R2: the block is pinned from BOTH ENDS ------------------
+    # The reader walks BACKWARDS from the anchor and stops at the first
+    # non-`#:` line, so a blank line inserted INSIDE the block -- an
+    # editor's stray newline, or a future paragraph written without the
+    # prefix -- truncates it from above: 3,754 -> 1,975 chars, 47% unread,
+    # suite green, with the block's own heading and the whole REFUSED and
+    # DECLARED BLIND sections gone from what any assertion could see. All
+    # three text checks lived in the surviving lower half, so for the upper
+    # half the reader was a control that could not fail. Pinned by
+    # STRUCTURE, never by length: `len(_limit) == 3754` would go red on
+    # every wording change and teach a maintainer to update the number
+    # instead of reading the text.
+    # A LOCAL, not a module constant: nothing outside this suite needs the
+    # heading, and the plain token "DECLARED BLIND" also occurs in the
+    # REFUSED section's cross-reference ("is DECLARED BLIND below"), so
+    # the section is found by its full heading rather than by a prefix
+    # that matches twice.
+    _BLIND_HEAD = "DECLARED BLIND -- seen, named, and NOT refused"
+    _anchors = ("THE DECLARED LIMIT", "REFUSED (in the sets above)",
+                _BLIND_HEAD)
+    _absent = [a for a in _anchors if a not in _limit]
+    # `len(_anchors) == 3` is part of the predicate, not decoration: an
+    # emptied tuple would satisfy both this check and its known-bad
+    # vacuously -- a control that cannot fail, built out of the fix for one.
+    ok(not _absent and len(_anchors) == 3,
+       f"THE BLOCK IS PINNED FROM BOTH ENDS by {list(_anchors)} -- its "
+       f"head and both upper section headings are in the text "
+       f"the reader returns, so a truncation from above is visible to an "
+       f"assertion. OVER-CAUGHT pins the bottom; these pin the top "
+       f"({len(_limit)} chars read, printed as a fact and asserted "
+       f"nowhere -- a length pin would be a number to update, not a "
+       f"property to keep) (DE19-R2)")
+    _blank_above = Path(__file__).read_text().replace(
+        "#:   OVER-CAUGHT -- stated because a limit list that names only",
+        "\n#:   OVER-CAUGHT -- stated because a limit list that names only", 1)
+    _trunc = declared_limit_text(_blank_above)
+    ok(len(_anchors) == 3 and all(a not in _trunc for a in _anchors)
+       and "OVER-CAUGHT" in _trunc and len(_trunc) < len(_limit),
+       f"KNOWN-BAD, DRIVEN THROUGH THE READER: one blank line above the "
+       f"OVER-CAUGHT paragraph cuts the block to {len(_trunc)} of "
+       f"{len(_limit)} chars ({100 - round(100 * len(_trunc) / len(_limit))}"
+       f"% unread) and every anchor above the cut disappears while "
+       f"OVER-CAUGHT survives -- which is exactly why the three checks that "
+       f"read this text stayed green through it")
+
+    # ---- DE19-R1: the ORDER the order check CITES is now read ----------
+    # `:1189` asserts the map resolves onto the list in order and gives its
+    # reason as "the order the docstring's prose above runs in" -- and read
+    # the prose nowhere. Swapping two prose paragraphs left the suite green:
+    # a sentence printed beside a check that does not evaluate it, which is
+    # the class this module removed from its own membership check two
+    # rounds ago (rule 10). The prose is the third artefact; the other two
+    # were bound to each other and this one to neither.
+    def _key_order(text: str) -> list[int]:
+        """Where each map key appears in the DECLARED BLIND section, in the
+        map's own order.  -1 for a key the prose does not name at all."""
+        if _BLIND_HEAD not in text or "OVER-CAUGHT" not in text:
+            return [-1]
+        sec = text[text.index(_BLIND_HEAD):text.index("OVER-CAUGHT")]
+        return [sec.find(tok) for tok in BLIND_ENTRY_ASSERTIONS]
+
+    _order = _key_order(_limit)
+    _unnamed = [t for t, i in zip(BLIND_ENTRY_ASSERTIONS, _order) if i < 0]
+    ok(not _unnamed and _order == sorted(_order) and len(set(_order)) == 4,
+       f"AND THE PROSE RUNS IN THAT ORDER TOO, READ RATHER THAN CITED: the "
+       f"four map keys appear in the DECLARED BLIND section at "
+       f"{_order} -- strictly increasing, so list, map and prose are one "
+       f"order rather than two that agree. A key the prose does not name "
+       f"is its own refusal and would be reported here by name "
+       f"({_unnamed or 'none missing'}) (DE19-R1)")
+    _swap = Path(__file__).read_text()
+    _p_runpy = _swap[_swap.index("#:     runpy.run_module / run_path"):
+                     _swap.index("#:     builtins.exec / builtins.eval")]
+    _p_getattr = _swap[_swap.index('#:     getattr(importlib, "import_module")'):
+                       _swap.index("#:     C extensions and import hooks")]
+    _swapped = declared_limit_text(
+        _swap.replace(_p_runpy, "\x00", 1).replace(_p_getattr, _p_runpy, 1)
+             .replace("\x00", _p_getattr, 1))
+    _sorder = _key_order(_swapped)
+    ok(_sorder != sorted(_sorder) and len(_sorder) == 4,
+       f"KNOWN-BAD, DRIVEN: with the runpy and getattr PARAGRAPHS swapped "
+       f"in a copy -- list and map untouched -- the keys resolve to "
+       f"{_sorder}, not increasing, and this check goes red. That mutant "
+       f"left the suite green at 79 while the order check went on citing "
+       f"the prose as its reason")
+
     _cut = Path(__file__).read_text().replace(
         "#:   OVER-CAUGHT -- stated because a limit list that names only "
         "blindness is", "#:   (paragraph deleted by the mutant)", 1)
@@ -1140,6 +1226,24 @@ def selftest() -> int:
        "text the assertion above cannot find OVER-CAUGHT in -- so the "
        "check is about the declaration and not about its own message "
        "(the trap a whole-file grep would fall into)")
+    # DE19-R3: the known-bad above drives the FIRST conjunct only; the
+    # second -- the binding PHRASE, the half that carries the declaration's
+    # content -- was evaluated on the uncut text, i.e. re-made the
+    # assertion above rather than falsifying it. It matters here because
+    # the OVER-CAUGHT conjunct is what catches the whole-file trap, so the
+    # untested half was the one carrying the meaning.
+    _cut2 = Path(__file__).read_text().replace(
+        "#:   NAME, so ANY object's `.__import__('literal')` contributes",
+        "#:   NAME, so SOME objects' `.__import__('literal')` may contribute",
+        1)
+    ok(_cut2 != Path(__file__).read_text()
+       and "OVER-CAUGHT" in declared_limit_text(_cut2)
+       and _phrase not in declared_limit_text(_cut2),
+       "KNOWN-BAD FOR THE OTHER CONJUNCT: with the binding phrase REWORDED "
+       "in a copy -- the paragraph still present, its heading intact -- the "
+       "reader returns text the declaration check cannot find the phrase "
+       "in. Both halves of that conjunction are now falsified from inside "
+       "the suite (DE19-R3)")
     ok(reads_no_verdict(imported_modules(
         "import importlib\n"
         "getattr(importlib, 'import_module')('da_forward_day_verify')\n"))
