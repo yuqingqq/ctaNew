@@ -1060,3 +1060,81 @@ Moved in the MEM round-13 true-up of R-413..R-416. Join rule as in batch 1.
   never a forecast. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with
   Q4 failing; development evidence.
 ```
+
+## Batch 20 — archived 2026-09-02T10:55Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-14 true-up of R-417..R-418. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T09:38Z (MEM ROUND 11 -- THE THREE USER RULINGS GET A CITABLE
+  ANCHOR, AND THE v2 DRAFT NAMES THE DAY IT GOES BLIND). R-406..R-408, each
+  verified at its artifact. THE FINDING WORTH KEEPING FROM THIS ROUND IS A
+  STATE-FILE ONE: the three pending rulings EXISTED ONLY IN THE COORDINATOR'S
+  CHAT until R-408 (2026-09-02T09:35Z) -- a fresh session reading these files
+  would not have known the programme was waiting on anything. They now have a
+  citable anchor, and HANDOFF's PENDING USER DECISIONS carries options-as-filed
+  plus the coordinator's recommendation on each, so the next reader sees the
+  decision without the chat. NOTHING ELSE IN THE PROGRAMME IS BLOCKED BEHIND
+  THEM and tonight's 00:06Z verdict runs unattended either way. THE THREE:
+  (1) DOES 09-02 ACCRUE -- (a) CONTENT_THIN at close, frozen section-7 exclusion
+  by coordinator act with a stated reason, recommend EXCLUDE; (b) genuinely
+  LIVE, accrues with the blackout disclosed, recommend ACCRUE; (c)
+  LIVE-by-median-collapse, where the instrument CANNOT FIRE so exclusion is a
+  coordinator act resting on the reviewer's table, USER's call, recommend
+  EXCLUDE. Carried with it so every future 00:06Z is mechanical: the v1 rule's
+  own section 8 is still open and recommended PROSPECTIVELY -- (a) L1/L2 GOVERN,
+  (b) per-coin-day granularity (R-211(3)), (c) a CONTENT_THIN day is
+  INADMISSIBLE via section 7, not merely disclosed. (2) THE PHASE-2 WINNER
+  (prereg 9.2/9.3): Q1's hazard head beats the incumbent's under EVERY unit,
+  collapse rule and arm (12 of 24 survive Holm; level a range 0.79-0.88 lgbm,
+  0.74-0.81 linear), Q3 survives at its OWN gate only, and Q4 -- THE DECISION
+  METRIC -- FAILS ALL SIX CELLS (best Holm 0.12). Recommend DO NOT ADVANCE the
+  composed candidate (9.2 names this case), record Q1 as the surviving COMPONENT
+  of record, NO race admission for this family (9.3), next population under the
+  frozen prospective 2000-draw declaration (A2); arm of record if any, LGBM.
+  (3) FREEZE CONTENT-LIVENESS v2 (plans/DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md
+  section 9, released R-407): (e) adopt L3 as drafted / different constants /
+  reject; (f) CONTENT_DARK governs or is reported beside; (g) re-state the 08-26
+  hype coin-day under v2 or leave it as v1 recorded; (h) section 8's original
+  (a)(b)(c) remain open. Recommend ADOPT AS DRAFTED, GOVERNING, EFFECTIVE
+  2026-09-03 -- tonight runs v1 only and no day is re-judged -- 08-26 left as
+  recorded, limit carried verbatim. WHAT v2 BUYS AND WHERE IT STILL STOPS,
+  verified in the draft rather than taken from the brief: it turns "any total
+  blackout is invisible" into "invisible past the FOURTH CONSECUTIVE dark day",
+  because with K=7 and a median of priors THE REFERENCE ITSELF TURNS DARK once
+  4 of 7 trailing days are dark; and a coin whose true volume steps down
+  permanently READS DARK FOR UP TO 7 DAYS -- a declared false-positive mode and
+  the stated price of a reference the day cannot move. The draft's own section-8
+  heading is "Limitations, declared rather than guarded", and its reasoning is
+  the one this programme keeps relearning: A GUARD THAT CANNOT FIRE IS NOT A
+  GUARD, SO STATE IT RATHER THAN PATCH IT. THE v1 MODULE IS BYTE-UNTOUCHED by
+  the draft (git diff 3298a1d..509859f on da_content_liveness_rule.py is EMPTY)
+  -- wiring follows a freeze, never precedes one -- and the draft's checker
+  passes 12/12 in my run. REVIEW STATE: NO HOLD IS OPEN ANYWHERE, in the
+  filing's own words (REVIEW_DA_FORENSICS_AND_V2_DRAFT_2026-09-02.md, 98970c2,
+  RELEASING DA rounds 4 and 5); RR7-1 (no per-venue regex check in the suite)
+  and RR7-2 (status vocabularies extend rather than map) are FILED, NOT HOLDING,
+  staged for DA's next round. Two marks from that filing worth copying: the
+  reviewer RECOMPUTED E3 from raw logs with its OWN regexes, backward-walk
+  dating and differencing and matched DA's artifact TO THE DIGIT -- which is
+  what makes agreement evidence rather than an echo -- and it DISCLOSED THAT
+  ONLY ONE MUTANT RAN this round, because the round's claims lived in
+  recomputation rather than mutation. A reviewer stating where its effort did
+  NOT go is rarer than one stating where it did. OPERATIONAL FACTS, checked:
+  collector pid 1108125 alive, up 1d11h on collect_pm.py; the on-disk
+  da_dayverdict_20260902.json is the 00:06:03Z OPEN-DAY snapshot carrying the
+  LEGACY block only (no content_liveness_rule key, content_liveness.governs
+  false), so TONIGHT'S CLOSING VERDICT IS THE FIRST TO CARRY THE FROZEN-RULE
+  BLOCK (RR6-2); and the "greater-than" prompt line in every seat pane is Claude
+  Code's DIMMED PROMPT SUGGESTION (verified ESC[2m), not an unsent dispatch --
+  seats are on standby BY DESIGN and no batch is lost. REGISTER HOUSEKEEPING,
+  verified as a PURE MOVE: R-396..R-408 had been inserted inside "## 7. Build
+  order" and were relocated after R-395; a multiset comparison of every line
+  before and after (fe27375 -> 0fc4445) shows 0 LOST and exactly 1 ADDED, the
+  new R-408 header itself. FUTURE ENTRIES GO AFTER THE LAST R-ENTRY AND BEFORE
+  "## 6. Build-readiness audit". CALENDAR: 00:06Z 2026-09-03 is the FIRST
+  GOVERNED VERDICT (v1 governs 09-02); the coordinator verifies it and files
+  either way; race G=1/5 per coin; and the venue-silence rate stays as measured
+  -- 3 events in 7 days, n=3, an observed rate and never a forecast.
+```

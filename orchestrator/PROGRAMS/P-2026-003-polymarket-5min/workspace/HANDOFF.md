@@ -1,11 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T10:45Z — **two canonical 00:06Z verdicts were overwritten by
-a mis-named hand run and recovered byte-exact from the launcher's own log**; the
-restoration is verified at the artifacts and the R-395/R-396 accrual chain is
-intact. The launch-invariance class (CO-1/2/3) is closed across BE and DE. Four
-items remain USER-pending, unchanged. Prior line: the USER ruled accrual on the
-non-blackout complement (R-409); forward race at G = 1/5.
+Updated: 2026-09-02T10:55Z — **the forward-race population is ratified (R-418):
+the full supplied complement, no sampling** — an application of R-409 that
+introduces no number and is USER-revocable. DA's two-leg admission deviation is
+accepted; RR10-1 is closed. **Five items wait on the USER**, the fifth being the
+09-02 accrual call after tonight. Prior line: the 10:16Z overwrite was recovered
+byte-exact and the accrual chain is intact; CO-1/2/3 closed across BE and DE.
 
 ## READ FIRST — current project handoff
 
@@ -92,7 +92,7 @@ defect of its own on real data before filing**: the first complement was
 `range(288) − masked`, which credited the still-open 09-02 with 248 unmasked
 windows out of 119 present; it is now `PRESENT − masked`.
 
-### PENDING USER DECISIONS — four, all unblocked, none decidable by a seat
+### PENDING USER DECISIONS — five, none decidable by a seat
 
 Options are as filed; **the recommendations below are the coordinator's
 recommendations, not rulings.**
@@ -104,8 +104,55 @@ recommendations, not rulings.**
 | **R-411(i)** | **minimum complement size for G-counting** — the frozen bars were pre-registered against a 288-window day and a small complement reads them on a population they were not registered for | for **G-counting only** (every good window is scored regardless), a coin-day counts toward the ≥5 bar only if its unmasked complement covers **≥50% of the calendar day** (≥144/288); anchored on v1's ~60%-dark blindness, so 50% sits inside the instrument's validity rather than at its edge |
 | **R-411(ii)** | **which P1 denominator governs "quality is good" on the complement** — DA carries both (btc 09-02: **93.01** s per unmasked hour vs **25.51** per calendar-24 h, a 3.6× spread) | **per unmasked hour** — it is loss per hour of *usable* feed; the calendar form dilutes the loss by the very blackout it is meant to exclude |
 
+**A fifth ask lands tonight: the 09-02 accrual call.** The 00:06Z verdict
+decides nothing on its own — 09-02 carries the 01:35–04:55Z Polymarket-side
+blackout and accrues **on its complement** per R-409, but **the call itself is
+the USER's**, and R-418 is explicit that ratifying the population does not make
+it.
+
 **Review state has moved since — see "Review and round state" below.** The four
-USER asks above are unchanged and none of them is blocked by any of it.
+asks above are unchanged and none of them is blocked by any of it.
+
+### R-418 — the forward-race population is ratified, and it selects nothing
+
+**Ratified by the coordinator** (an R-ADMISS act `EV_REPLAY_PLAN` §2 assigns to
+that seat), **revocable by the USER**: for a forward-race day, the
+replay/scoring population is **every window `de_admissible_windows.supply(D,
+present)` emits** — `present` read from the day's own market ledger, minus the
+windows DA's committed mask masks — **with no stratified or capped selection**.
+`select_stratified` is a research-day instrument and is not used on race days.
+
+**It is R-409 applied, and it introduces no number.** The set is a function of
+two committed artifacts (the ledger and the mask), and the supply's
+`mask_identity_hash` fixes it. **What it explicitly does not ratify:** the
+minimum complement for G-counting (R-411(i)), the P1 denominator (R-411(ii)),
+the accrual call for any day, and the admission of any Phase-2 candidate — all
+the USER's. A receipt stamped `ratification_ref: R-418` says only *which windows
+it ran over and why*; whether the day counts is decided elsewhere.
+
+**DE's bridge was built before the ref existed** and carries a fixture ref
+(`R-0`) over 1,875 specs — the same 1,875 = 288 × 7 − 141 the supplier produced
+on the real 09-01 mask. Receipts carrying `R-418` re-stamp if the USER overrules
+any part of it; nothing frozen depends on it.
+
+### Accepted: DA's two-leg admission deviation (R-416 §3(a))
+
+DA was ordered to gate the nightly governed path on a **single declared
+variable** and instead implemented **two legs — cgroup identity OR
+`DA_MIDNIGHT_MODE=production`**. The deviation is **accepted**, and the reasoning
+is worth keeping because it inverts the usual direction:
+
+- **It weakens nothing.** The hand-run path is exactly the single-leg form, and
+  the identity leg is the same test `write_reason` already relies on.
+- **It removes an outage mode the single-leg order would have introduced** — a
+  nightly governed path that refuses when one new variable goes missing, *with
+  nothing running to say so*.
+
+Red-first evidence on the incident's own shape: a bare run → **rc 6**;
+`OUTDIR=/tmp/x LOG=/tmp/y` (the wrong names that caused the 10:16Z overwrite) →
+**rc 6**; one of the pair → rc 5 under the older guard; and **the log mtime and
+both verdict shas were unchanged after all three** — the refusal precedes the log
+header, so a rejected run cannot even touch the artifacts.
 
 ### THE 10:16Z INCIDENT — two canonical verdicts overwritten, and recovered
 
@@ -168,9 +215,21 @@ launchers at **235/19**.
 | round | state |
 |---|---|
 | **DA round 1** (mask producer) | **RELEASED** — RR9-1/2/3 closed in DA round 7 |
-| **BE round 2** (mask consumer) | **RELEASED** — RR8-1/2/3 and CO-1 closed on the real artifact across three launch modes; **RR10-1 (LOW) open**, fix batch dispatched |
-| **DE round** | **IN REVIEW** at `21f4edf` |
-| **DA round 2** | **QUEUED** at `770e5ee` |
+| **BE round 2** (mask consumer) | **RELEASED**; **RR10-1 CLOSED** at `e56f70a` — the review rides BE round 3 |
+| **DE rounds 4–6** | **RELEASED** (`7a48333`, no hold, all seven scopes by execution); **RR11-1 (LOW) open** → DE round 8 |
+| **DA round 2** | **IN REVIEW** at `770e5ee` |
+
+**In flight:** BE round 3 — the production run path, **scores SEALED, counts and
+refusals only** (Q-BE-228); DE round 8 — RR11-1 plus the ratification checker and
+the proposed block format (Q-DE-26); DA round 9 — **deliberate standby** with the
+00:06Z timed task (Q-DA-208); the reviewer on DA round 2.
+
+**RR10-1's closure is the right shape and worth the sentence:** the control is now
+a **fixture pair derived from the frozen rule's own `EFFECTIVE_FROM_DAY`** — one
+day before passes, the same fixture on the governed day refuses by name — plus a
+member that makes the fixture load-bearing. It no longer depends on what any live
+day happens to read, which is what made the old version unfailable. Verified
+here: **63 checks, rc 0**, under both launchers.
 
 **RR10-1 is a control that cannot fail**, which is this programme's recurring
 shape: BE's pre-governed control scores 08-27 with a comment asserting 09-01
@@ -289,6 +348,14 @@ and two of them are new today.**
 mirror gap closed at `8b47dff` — `pm-evaluation-pipeline` and
 `pm-measurement-pipeline` are both byte-identical to their repo copies, verified
 by `diff` at 13:53Z, so the guard is reproducible from git and not merely live.
+
+> **SCOPE, so this is not misread:** the "exists only in the installed unit"
+> finding below is about **`pm-evaluation-pipeline.service`** and nothing else.
+> It is **not** about the midnight verifier. `da-midnight-verify.service` was
+> re-checked at 2026-09-02T10:55Z and its installed copy is **byte-for-byte
+> identical** to `live/pm_research/systemd/da-midnight-verify.service` — not
+> merely equal on non-comment lines — with `Environment=DA_MIDNIGHT_MODE=production`,
+> `DropInPaths=` empty, and the timer next elapsing **2026-09-03 00:06:00 UTC**.
 The `n_actions` mislabel was independently found by DA as **Q-DA-197 F1** (the
 cell carries the arrival n in 12 of 24 cells — a 22× overstatement of the
 population behind the statistic) and rides BE's open batch; it was a disclosure
@@ -341,10 +408,21 @@ USER's**. Race stands at **G = 1/5 per coin** (09-01 accrued, chain verified
 intact after the incident above). The venue-silence rate stays as measured: **3
 events in 7 days, n = 3** — an observed rate, not a forecast.
 
-**In flight this round:** BE's RR10-1 fixture batch; DA round 8 (governed-verdict
-preflight, predicates only); DE round 7 (supply → seam bridge with a parameter
-ratification ref); the reviewer on DE. **Collector alive** at pid 1108125 as of
-the 10:44Z clock read.
+**The governed-verdict preflight is the instrument that reads tonight's result**
+(`da_governed_verdict_preflight.py`, Q-DA-207) — **predicates only, read-only**,
+and verified here at **30 checks, rc 0**. R-417 says *"the 00:14Z check runs
+first; the cron one-shot carries it."*
+
+> **WATCH — I could not find that scheduler.** As of 2026-09-02T10:55Z the user
+> crontab holds **three** non-comment entries (convexity monthly retrain, two
+> okxSolver scans) and **none** mentions the preflight, `pm_research`, or a
+> 00:14 slot; there is no `at` binary, and the only systemd timer in this family
+> is `da-midnight-verify.timer` at **00:06:00Z**. So the 00:06Z verdict is
+> scheduled and the 00:14Z preflight, as far as this box shows, is **not**.
+> Recorded for the coordinator, not adjudicated — it may simply be owed by DA
+> round 9, whose standby is described as carrying "the 00:06Z timed task".
+
+**Collector alive** at pid 1108125 as of the 10:55Z clock read.
 
 **The on-disk 09-02 verdict is NOT the governed one.** Checked:
 `da_dayverdict_20260902.json` is the **00:06:03Z open-day snapshot** written by
@@ -440,6 +518,51 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~10:55Z (MEM) — A POPULATION RATIFIED, A DEVIATION ACCEPTED,
+### AND A SCHEDULER I COULD NOT FIND
+
+**R-417/R-418 plus Q-BE-227, Q-DA-207, Q-DE-25 and Q-MEM-1.** Sections above
+carry the substance; three things belong here.
+
+**R-418 ratifies a population by refusing to choose one.** The forward-race set
+is every window the supplier emits from the day's own market ledger minus the
+committed mask — no stratified or capped selection, `select_stratified` kept to
+research days. That is the whole point: the set is a **function of two committed
+artifacts**, so a receipt stamped `R-418` reports which windows it ran over
+rather than which it picked. It introduces no number, and it explicitly does not
+ratify the G-counting minimum, the P1 denominator, any accrual call or any
+candidate admission — all still the USER's.
+
+**The gap named in R-417 §2 is carried: DA's two-leg admission deviation is
+accepted** (R-416 §3(a)), and the reasoning inverts the usual direction. DA was
+ordered to gate on a single declared variable and shipped two legs instead —
+**and the deviation removes an outage mode the order would have created**: a
+nightly governed path that refuses when one new variable goes missing, with
+nothing running to say so. A seat declining an instruction because the
+instruction was less safe, then saying so, is the behaviour the protocol wants;
+this is the third time in three days a seat has corrected the coordinator by
+measurement or reasoning rather than complying.
+
+**And one thing I could not verify, recorded rather than smoothed over.** R-417
+says the 00:14Z preflight is carried by "the cron one-shot". I looked: the user
+crontab has three non-comment entries and none is it; there is no `at`; the only
+timer in this family is the 00:06Z midnight verifier. **The verdict is
+scheduled; the preflight is not, as far as this box shows.** It may simply be
+owed by DA round 9 — its standby is described as carrying the 00:06Z timed task
+— but "an instrument that runs first" and "an instrument nothing runs" are
+different states, and this programme has paid for that distinction three times
+now (the unwired content-liveness rule, the unwired incumbent loader, the
+evaluator functions with no call sites).
+
+**Also corrected on request:** the old *"the edit exists only in the installed
+unit"* paragraph is provenance about **`pm-evaluation-pipeline.service`**, and a
+scope note now sits above it so no reader takes it for the midnight verifier. I
+re-checked that unit independently: `da-midnight-verify.service` installed is
+**byte-for-byte identical** to `live/pm_research/systemd/da-midnight-verify.service`
+— stronger than the non-comment-lines claim — with
+`Environment=DA_MIDNIGHT_MODE=production`, no drop-ins, timer next elapsing
+2026-09-03 00:06:00 UTC.
 
 ### 2026-09-02 ~10:45Z (MEM) — THE DAY THE ONLY ACCRUED DAY GOT OVERWRITTEN,
 ### AND WHY IT WAS RECOVERABLE
