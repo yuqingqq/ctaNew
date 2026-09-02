@@ -189,8 +189,41 @@ construction, and **P1–P3 are computed per draw before the replay**: a draw
 whose stream fails one is REJECTED under that predicate's own name and
 redrawn.
 
-**Reported with it (DE31-R2, DE37-C1):** `n_strata`, `strata_with_room`,
-`n_distinct_draws`, `n_draws_attempted`, `n_draws_accepted`,
+**The IDENTITY draw is ADMITTED, COUNTED, and it is what makes a cell
+degenerate.** Under (γ) a draw is a choice of which |above| generations
+carry the above values, so the draw naming exactly the above-carrying
+generations — the identity — is one of the C(N, k) permutations, and a null
+that excludes it is not the permutation distribution. The identity guard,
+written for a control matched on *actions*, is therefore **retired for (γ)**
+rather than re-pointed: measured over 200 seeds on the proving fixture, it
+fired 0 times as written and would have fired 65 times if handed the demand
+— refusing exactly the sample points the null must contain.
+
+**What that exposed, and what this addendum now asks the USER to read.** On
+the fixture that proves (γ), *every accepted draw was the identity*: one
+generation per stratum leaves the identity as the only draw satisfying the
+match, so the "null" was the treated arm and the difference against its
+median was 0.0 by construction. The remedy is reporting, not a change to the
+frozen matching rule (`DRAFT:147-156` fixes matching on action count, side
+and hour and is silent on degeneracy — silence there is this addendum's to
+fill):
+
+- the statistics that describe the null are computed on the **accepted**
+  set, not the attempted one: `n_distinct_accepted` beside
+  `n_distinct_attempted`, each labelled with its population;
+- **per stratum, before any §3 number**: the accepted set's size, its
+  distinct count, `n_accepted_identity`, and whether it **collapsed**;
+- an accepted set of **one** distinct draw publishes
+  **`null: DEGENERATE`** with its reason and **no `null_quantiles` and no
+  `net_diff_vs_null_median_cents`** — rule 6 declares ≥ 200 *draws*, and 200
+  copies of one draw is one draw. The cell falls back to the **labelled
+  point estimate** the addendum already declares for cells without an
+  interval; rho and retention for that cell are unaffected.
+
+**Reported with it (DE31-R2, DE37-C1, DE38-C1):** `n_strata`, `strata_with_room`,
+`n_distinct_accepted`, `n_distinct_attempted`,
+`n_accepted_identity_whole_draw`, `accepted_by_stratum`,
+`n_draws_attempted`, `n_draws_accepted`,
 `n_rejected_by_stratum`, **`n_rejected_by_reason` (`PERM_NOT_OK`, `P1`,
 `P2`, `P3`, `P4`)**, **`first_rejection`**, **`predicates_per_draw`**, and an
 explicit **POINT MASS** declaration where a stratum has no room. A reader
@@ -210,6 +243,18 @@ fit-commit bytes and are **declared additive** with their reasons. Each
 declaration now carries **two literal AST shas** — at the fit commit and at
 the tip that declared it (`cb8aab5`) — written into the source and compared
 against the file the run finds.
+
+Each entry also **names the commit that changed the function**
+(`851edaf`), and that claim is checked at both sides of it: at that commit
+the three functions carry the declared tip shas, and at its parent they
+carry the declared fit shas. Prose cannot be pinned; the fact the prose is
+about can be, so a re-declaration that moves the shas while keeping the old
+justification fails. Two limits stay open by nature and are stated rather
+than worked around: the literals live in the file that reads them, so a seat
+editing code and declaration in one commit re-seals silently — that is
+closed by review, not by code — and the tip half pins the **declaration**,
+so every future edit to a declared function BLOCKS until re-declared, which
+is the intended cost.
 
 Round 37 computed the declaring-tip sha at import **from the file it was
 checking**, so the comparison was true by construction: driven twice, an

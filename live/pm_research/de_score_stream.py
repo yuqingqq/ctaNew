@@ -31,12 +31,19 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import ast as _ast
 import json
 import math
 import sys
 from pathlib import Path
 
-EXPECTED_CHECKS = 25
+EXPECTED_CHECKS = 26
+
+#: The event contract, in ONE place: `score_events` checks these keys and
+#: builds its events from the same tuple, so the two cannot disagree
+#: (DE38-R3). `gen` is here because the (gamma) control permutes the
+#: above-threshold values over GENERATIONS.
+REQUIRED_EVENT_KEYS = ("t", "slug", "side", "gen")
 
 ROOT = Path(__file__).resolve().parents[2]
 FITS = ROOT / "data/pm_5min/derived/phase2_fits"
@@ -152,7 +159,7 @@ def score_events(rows, *, head: str, coin: str, scorer,
         # `(slug, side, None)`, and the permutation silently became the
         # identity. A missing generation is refused here, at the adapter
         # that builds the stream, rather than inferred downstream.
-        for k in ("t", "slug", "side", "gen"):
+        for k in REQUIRED_EVENT_KEYS:
             if k not in r:
                 # SITE: score_events#3
                 raise ScoreStreamRefused(f"row[{i}]: missing {k!r}")
@@ -168,9 +175,14 @@ def score_events(rows, *, head: str, coin: str, scorer,
                 f"against every threshold and becomes a silent no-op "
                 f"(harmful_stateful_policy:383-404 refuses it downstream; "
                 f"refusing it here names the row)")
-        out.append({"t": r["t"], "slug": r["slug"], "side": r["side"],
-                    "gen": r["gen"], "score": float(v),
-                    "head": head, "coin": coin})
+        # DE38-R3: ONE SOURCE. The required-key tuple and the event
+        # construction were two lists saying the same thing, so dropping a
+        # key from the check left it in the output and the failure arrived
+        # as a bare `KeyError` from this line. Built from the tuple, a key
+        # removed from the contract is removed from the events, and the
+        # runner's `null#3` refuses BY NAME.
+        out.append({**{k: r[k] for k in REQUIRED_EVENT_KEYS},
+                    "score": float(v), "head": head, "coin": coin})
     return out
 
 
@@ -345,6 +357,36 @@ def selftest() -> int:
        "artifact has a production consumer, so the adapter takes the "
        "caller's table and invents no population -- stated rather than "
        "worked around (R-459 §3)")
+    _src = Path(__file__).read_text()
+    _t = _ast.parse(_src)
+    # THE EVENT PATH -- the functions that build or shape the stream. The
+    # HEAD-BINDING path (`manifest_hashes`, `verify_head`) reads files by
+    # design: that is how a fit's bytes are bound, and IR-R4's limit is
+    # about FEATURES, not about the manifest. Naming the two rather than
+    # excluding "everything that reads" is the point.
+    _evpath = {"score_events", "lift", "coin_of", "validate_scores"}
+    _reads = {"open", "read_text", "read_bytes", "load", "loads", "loadtxt"}
+    _opens = [(fn.name, _ast.unparse(nd)[:60]) for fn in _ast.walk(_t)
+              if isinstance(fn, _ast.FunctionDef) and fn.name in _evpath
+              for nd in _ast.walk(fn)
+              if (isinstance(nd, _ast.Call)
+                  and (getattr(nd.func, "id", "") == "open"
+                       or getattr(nd.func, "attr", "") in _reads))]
+    _binders = sorted({fn.name for fn in _ast.walk(_t)
+                       if isinstance(fn, _ast.FunctionDef)
+                       and fn.name not in ("selftest", "main")
+                       for nd in _ast.walk(fn)
+                       if isinstance(nd, _ast.Call)
+                       and getattr(nd.func, "attr", "") in _reads})
+    ok(not _opens and _binders == ["manifest_hashes", "verify_head"],
+       f"DE38-R2: AND THE LIMIT IS COMPUTED, not only declared -- the "
+       f"EVENT PATH ({sorted(_evpath)}) opens no file ({len(_opens)} such "
+       f"calls, from the parse), and the only functions in this module "
+       f"that read one are {_binders} (the suite excepted -- it reads "
+       f"fixtures), which bind the head's BYTES. The "
+       f"docstring states the limit; this predicate goes red the day an "
+       f"edit makes the adapter read a population instead of taking the "
+       f"caller's table (IR-R4)")
     ok(SIDES == tuple(_hsp.SIDES) and "BUY_UP" in SIDES,
        f"AND THE SIDE VOCABULARY IS THE CONSUMER'S OWN OBJECT: {SIDES} -- "
        f"imported from `harmful_stateful_policy`, not restated. The first "

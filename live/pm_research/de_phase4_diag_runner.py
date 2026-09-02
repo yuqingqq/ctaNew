@@ -40,7 +40,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 101
+EXPECTED_CHECKS = 115
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -168,11 +168,20 @@ PIN_VERDICTS = ("IDENTICAL", "ADDITIVE_DECLARED", "BLOCKING", "NOT_CALLED")
 #: PROCEEDED, while an edited UNDECLARED function (`join_fills`) BLOCKED.
 #: A sha computed from the artifact it is meant to pin is not a pin.
 #:
+#: DE38 §2(iii): each entry also names the COMMIT THAT CHANGED THE
+#: FUNCTION, and that claim is CHECKED -- at `changed_at` the function's
+#: AST sha must equal `sha_at_declaring_tip`, and at `changed_at^` it must
+#: equal `sha_at_fit`. Nothing can pin a REASON's prose, but this pins the
+#: fact the prose is about: a re-declaration that moves the shas while
+#: keeping the old justification fails here, because the old commit no
+#: longer produces the new bytes.
+#:
 #: `sha_at_fit: None` is not a missing value -- it is the declared fact
 #: that the function is ABSENT from the fit bytes (new at 851edaf), which
 #: is what two of these three declarations are about.
 DECLARED_ADDITIVE = {
     ("harmful_exposure_rows.py", "select_v2_era"): {
+        "changed_at": "851edaf",
         "sha_at_fit": "e97a6662273d8abc",
         "sha_at_declaring_tip": "3b34bdc86b1056ca",
         "reason":
@@ -183,6 +192,7 @@ DECLARED_ADDITIVE = {
             "selection for this population and turn a silent empty into a "
             "refusal, which is the direction the fit-commit bytes lack"},
     ("harmful_exposure_rows.py", "_era_or_refuse"): {
+        "changed_at": "851edaf",
         "sha_at_fit": None,
         "sha_at_declaring_tip": "830c4fa88ba44280",
         "reason":
@@ -192,6 +202,7 @@ DECLARED_ADDITIVE = {
             "adds a refusal and changes no selection that is non-empty, so "
             "for this population the selected set is the fit's"},
     ("harmful_exposure_rows.py", "_refuse_empty_selection"): {
+        "changed_at": "851edaf",
         "sha_at_fit": None,
         "sha_at_declaring_tip": "a6cfb900e1ced0b8",
         "reason":
@@ -722,6 +733,17 @@ def build_receipt(cells: list, population: dict, *, heads: dict,
 
 def validate_receipt(r: dict) -> dict:
     """Refuse a receipt that is missing anything it is bound by."""
+    _tainted = {i: c["produced_under_falsifier_input"]
+                for i, c in enumerate(r.get("cells") or [])
+                if isinstance(c, dict) and c.get("produced_under_falsifier_input")}
+    if _tainted:
+        # SITE: receipt#4
+        raise DiagRefused(
+            f"cell(s) {sorted(_tainted)} were produced under a FALSIFIER "
+            f"INPUT ({_tainted}): those parameters exist so a refusal can "
+            f"be driven, and a receipt built from a cell that took one is "
+            f"a receipt about the falsifier. It says so here and is not "
+            f"published (DE38-R4)")
     missing = [f for f in BINDING_FIELDS if f not in r]
     if missing:
         # SITE: receipt#1
@@ -1108,6 +1130,16 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
         per_arm[arm] = arm_result(reference, scores, c, theta=th[arm])
         per_arm[arm]["spec"] = ARM_SPEC.get(arm, {}).get("note")
     out = dict(c)
+    # DE38-R4: a cell produced under a FALSIFIER INPUT carries that fact,
+    # and `validate_receipt` refuses to publish it. The flags are inert by
+    # default and their call sites are asserted from the parse -- this is
+    # the belt to that brace: a receipt produced under them says so, or
+    # does not exist.
+    _fflags = ([("_known_bad_demand" if _known_bad_demand else None),
+                ("_draw_log" if _draw_log is not None else None)])
+    _fflags = [f for f in _fflags if f]
+    if _fflags:
+        out["produced_under_falsifier_input"] = _fflags
     out["per_arm"] = per_arm
     head = "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm"
     inc = "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d"
@@ -1133,13 +1165,6 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             # SITE: null#1
             raise DiagRefused("a null cell needs the treated arm it is "
                               "matched to; none was replayed")
-        # The pool is the GENERATIONS the reference carries -- the same
-        # objects the treated arm could have cancelled -- with the
-        # protocol's (side, hour) strata.
-        pool = [{"slug": f"{slug}|{side}|{g['gen']}", "side": side,
-                 "hour": _hour_of(slug)}
-                for slug, sides in sorted(reference.items())
-                for side in HSP.SIDES for g in sides[side]]
         # DE35-C4: hoisted -- these were rebuilt inside the seed loop.
         gidx = _gen_index(reference)
         treated_scores = list(scores_by_arm[head])
@@ -1154,6 +1179,27 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
                 f"every event of one (slug, side) collapses to one key and "
                 f"the permutation silently becomes the identity. Round 37 "
                 f"built its null from exactly such a stream (DE37-C1)")
+        # DE38-R1/C3 -- THE POOL IS THE STREAM'S SUPPORT, not the
+        # reference's generations. The draw is over above-threshold EVENTS,
+        # so a generation the stream does not carry is a key no draw may
+        # legally use: drawing it spends budget and is rejected P3, and --
+        # worse, and the reason this is not cosmetic -- `_room` is computed
+        # against this pool, so `strata_with_room` counted freedom the draw
+        # could not use. The freedom statistic and the draw now read the
+        # same support.
+        pool_by_key: dict = {}
+        for e in treated_scores:
+            _k = f"{e['slug']}|{e['side']}|{e['gen']}"
+            if _k in pool_by_key:
+                # SITE: null#4
+                raise DiagRefused(
+                    f"two score events name the same generation ({_k}): the "
+                    f"pool is the stream's support, and a duplicated key "
+                    f"would let one generation be drawn twice and weight "
+                    f"its value twice in the null")
+            pool_by_key[_k] = {"slug": _k, "side": e["side"],
+                               "hour": _hour_of(e["slug"])}
+        pool = [pool_by_key[k] for k in sorted(pool_by_key)]
         # DE37-C1(a) -- THE DEMAND IS THE ABOVE-THRESHOLD EVENT COUNT, not
         # the action count. (gamma) asks for the above VALUES permuted over
         # ALL above events, acting and non-acting, so the draw must name as
@@ -1181,9 +1227,6 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
                 for e in treated_scores
                 if float(e["score"]) >= th[head]]
         treated = demand_events
-        _actions_for_guard = [
-            {"slug": f"{a['slug']}|{a['side']}|{a['gen']}"}
-            for a in _treated_actions(per_arm[head])]
         vals, rhos = [], []
         # DE31-R2: the null's own population -- how many strata, how many
         # had room, and how many DISTINCT draws the seeds produced. A
@@ -1199,6 +1242,21 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             _dem[(_sd, _hour_of(_sl))] = _dem.get((_sd, _hour_of(_sl)), 0) + 1
         _room = {k: _strata.get(k, 0) - v for k, v in _dem.items()}
         _seen_draws = set()
+        # DE38-C1 rulings (1), (2) and (4): the ACCEPTED set is the null.
+        # Everything a reader needs to judge it is accumulated here --
+        # which draws were accepted, how many were DISTINCT, and how many
+        # were the IDENTITY (the draw naming exactly the above-carrying
+        # generations, which under (gamma) is a legal permutation and is
+        # therefore admitted, not refused).
+        _above_by_st: dict = {}
+        for e in treated_scores:
+            if float(e["score"]) >= th[head]:
+                _st = (e["side"], _hour_of(e["slug"]))
+                _above_by_st.setdefault(_st, set()).add(
+                    f"{e['slug']}|{e['side']}|{e['gen']}")
+        _accepted_draws: list = []
+        _acc_by_st: dict = {}
+        _identity_all = 0
         _rc_treated = _realised_by_stratum(per_arm[head], gidx)
         attempted = accepted = rejected = 0
         rej_by_stratum: dict = {}
@@ -1223,14 +1281,31 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             # and it is read on the same two numbers as every other arm.
             drawn = MRC.draw(pool, treated, seed=seed)
             _seen_draws.add(tuple(drawn))
-            # THE IDENTITY GUARD KEEPS ITS OWN POPULATION: it asks
-            # whether the draw reproduced the treated arm's ACTIONS where
-            # it had room to differ. That is a question about actions, so
-            # it is asked with the actions -- the demand is a different
-            # variable and handing this guard the demand would ask it a
-            # question it does not answer (DE37-C1: two variables, two
-            # uses).
-            MRC.refuse_if_not_random(drawn, _actions_for_guard, pool=pool)
+            # THE IDENTITY GUARD IS RETIRED HERE (DE38-C1 ruling 1),
+            # and deliberately NOT re-pointed at the demand.
+            #
+            # It was written for a control matched on ACTIONS, where a draw
+            # equal to the treated arm's actions meant the control did
+            # nothing and the cell had to refuse. Under (gamma) a draw is a
+            # uniform choice of which |above| generations carry the above
+            # values, and the IDENTITY -- the draw that names exactly the
+            # above-carrying generations -- is one of the C(N, k)
+            # permutations. A permutation null that excludes it is not the
+            # permutation distribution. Measured on the C1 fixture over 200
+            # seeds: handed the actions the guard fired 0 times (it returns
+            # early, because |drawn| = |above| != |actions| whenever a
+            # stratum holds a non-acting above event); handed the demand it
+            # would have fired 65 times -- refusing exactly the sample
+            # points the null must contain.
+            #
+            # So the identity is ADMITTED and COUNTED: `n_accepted_identity`
+            # per stratum below says how much of the accepted set is the
+            # treated arm, and an accepted set of one distinct draw makes
+            # the cell DEGENERATE rather than a number. The guard's own
+            # module keeps it, with its own suite; this call site is gone
+            # and the parse certificate that asserted the call is deleted
+            # with it -- a check certifying a call that cannot go red reads
+            # as coverage and is worse than no check.
             # The control ACTS: a score above any threshold on exactly the
             # generations the draw named, and nothing else.
             # §5 AS RULED = (gamma): the control's stream is the treated
@@ -1297,6 +1372,24 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
                             rej_by_stratum.get(f"{st[0]}|{st[1]}", 0) + 1
                 continue
             accepted += 1
+            _accepted_draws.append(tuple(sorted(drawn)))
+            _by_st: dict = {}
+            for _dk in drawn:
+                _sl, _sd, _gn = _dk.split("|")
+                _by_st.setdefault((_sd, _hour_of(_sl)), set()).add(_dk)
+            for _st, _keys in _by_st.items():
+                _e = _acc_by_st.setdefault(
+                    _st, {"size": 0, "distinct": set(), "n_identity": 0})
+                _e["size"] += 1
+                _e["distinct"].add(frozenset(_keys))
+                if _keys == _above_by_st.get(_st, set()):
+                    _e["n_identity"] += 1
+            # The IDENTITY as a property of the WHOLE draw: the control's
+            # stream is then the treated arm's, exactly. Summing the
+            # per-stratum counts would give draws x strata, which is not a
+            # count of anything a reader wants.
+            if set(drawn) == set().union(*_above_by_st.values()):
+                _identity_all += 1
             if _draw_log is not None:
                 _draw_log[-1]["value"] = res["cost_adjusted_value_cents"]
             vals.append(res["cost_adjusted_value_cents"])
@@ -1307,13 +1400,16 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             raise DiagRefused(
                 f"only {accepted} of {draws} draws matched the treated "
                 f"arm's per-stratum realised action count in "
-                f"{attempted} attempts ({rejected} rejected). A null built "
+                f"{attempted} attempts ({rejected} rejected: "
+                f"{ {k: v for k, v in sorted(rej_by_reason.items()) if v} }"
+                f"). A null built "
                 f"from the draws that happened to match is matched on "
                 f"acceptance, not on the decision variable -- refusing is "
                 f"the honest end (DRAW_ATTEMPT_BUDGET = "
                 f"{DRAW_ATTEMPT_BUDGET})")
         vals.sort()
         rhos.sort()
+        _n_distinct_accepted = len(set(_accepted_draws))
         out["null_population"] = {
             "n_draws_attempted": attempted,
             "n_draws_accepted": accepted,
@@ -1331,25 +1427,87 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             "strata_with_room": sum(1 for v in _room.values() if v > 0),
             "strata_forced": sorted(f"{k[0]}|{k[1]}" for k, v in _room.items()
                                     if v <= 0),
-            "n_distinct_draws": len(_seen_draws),
-            "point_mass": len(_seen_draws) == 1,
+            # DE38-C1 ruling (2): the statistics that describe THE NULL
+            # are computed on the ACCEPTED set. `_seen_draws` accumulates
+            # every ATTEMPTED draw, so a statistic over it describes the
+            # SAMPLER; the accepted set is what the claim rests on (rule
+            # 10). Both are reported, each labelled with its population.
+            # DE38-R1/C3: the pool the draw and the freedom statistic
+            # both read -- the STREAM's support, its size stated so a
+            # reader can see it is not the reference's generation count.
+            "pool_source": "the score stream's support (one key per event)",
+            "pool_size": len(pool),
+            "n_distinct_accepted": _n_distinct_accepted,
+            "n_distinct_attempted": len(_seen_draws),
+            "point_mass_accepted": _n_distinct_accepted == 1,
+            # The count a reader wants globally: accepted draws whose
+            # control stream IS the treated arm's. Per stratum it is in
+            # `accepted_by_stratum` below (ruling 1 asks for both).
+            "n_accepted_identity_whole_draw": _identity_all,
+            # DE38-C1 ruling (4): per stratum, BEFORE any §3 number -- how
+            # big the accepted set is there, how many DISTINCT draws it
+            # holds, how many of them were the identity, and whether it
+            # collapsed. The frozen text (DRAFT:147-156) fixes the matching
+            # rule and is silent on what to do when the matched set
+            # degenerates; this block is what makes that visible.
+            "accepted_by_stratum": {
+                f"{k[0]}|{k[1]}": {
+                    "size": v["size"],
+                    "n_distinct": len(v["distinct"]),
+                    "n_accepted_identity": v["n_identity"],
+                    "collapsed": len(v["distinct"]) <= 1}
+                for k, v in sorted(_acc_by_st.items())},
             "note": ("a stratum with no room contributes a POINT MASS: the "
                      "matched draw there is forced, so its contribution is "
-                     "a constant and not a sample (DE31-R2)"),
+                     "a constant and not a sample (DE31-R2). The IDENTITY "
+                     "draw is ADMITTED -- it is one of the C(N, k) "
+                     "permutations and a null that excludes it is not the "
+                     "permutation distribution -- and counted, so a reader "
+                     "sees how much of the accepted set is the treated arm "
+                     "(DE38-C1)"),
         }
-        out["null_quantiles"] = {
-            "n": len(vals),
-            "metric": "cost_adjusted_value_cents AND rho -- the DECISION "
-                      "metrics (frozen §6), never a harm share",
-            "value_q50": vals[len(vals) // 2],
-            "value_q95": vals[int(0.95 * len(vals))],
-            "value_max": vals[-1],
-            "rho_q50": rhos[len(rhos) // 2] if rhos else None,
-            "rho_q05": rhos[int(0.05 * len(rhos))] if rhos else None,
-        }
-        out["net_diff_vs_null_median_cents"] = (
-            per_arm[head]["cost_adjusted_value_cents"]
-            - out["null_quantiles"]["value_q50"])
+        if _n_distinct_accepted <= 1:
+            # DE38-C1 ruling (2), the refusal half. Rule 6 declares >= 200
+            # DRAWS, and 200 copies of one draw is one draw. So the cell
+            # publishes NO quantiles and NO difference against a median
+            # that would be the treated arm's own value: it says the null
+            # DEGENERATED and falls back to the point estimate the addendum
+            # already declares for cells without one. Weaker than failing
+            # the run (rho and retention for this cell are unaffected) and
+            # stronger than a "declared point mass", which invites reading
+            # a 0.0 difference as a result.
+            out["null"] = (f"DEGENERATE (n_distinct_accepted = "
+                           f"{_n_distinct_accepted})")
+            out["null_degenerate_reason"] = (
+                f"the accepted set holds {_n_distinct_accepted} distinct "
+                f"draw(s) over {accepted} acceptances "
+                f"({_identity_all} of them the IDENTITY draw -- the "
+                f"control stream IS the treated arm's), so the null has "
+                f"no spread: any "
+                f"quantile would be that one draw's value and any "
+                f"difference against its median would be an artefact of "
+                f"the matching, not a comparison. No `null_quantiles` and "
+                f"no `net_diff_vs_null_median_cents` are published for "
+                f"this cell (DE38-C1 ruling 2)")
+            out["point_estimate_cents"] = \
+                per_arm[head]["cost_adjusted_value_cents"]
+            out["point_estimate_label"] = (
+                "point estimate, labelled -- no interval, because the "
+                "cluster (here the accepted null) does not support one")
+        else:
+            out["null_quantiles"] = {
+                "n": len(vals),
+                "metric": "cost_adjusted_value_cents AND rho -- the "
+                          "DECISION metrics (frozen §6), never a harm share",
+                "value_q50": vals[len(vals) // 2],
+                "value_q95": vals[int(0.95 * len(vals))],
+                "value_max": vals[-1],
+                "rho_q50": rhos[len(rhos) // 2] if rhos else None,
+                "rho_q05": rhos[int(0.05 * len(rhos))] if rhos else None,
+            }
+            out["net_diff_vs_null_median_cents"] = (
+                per_arm[head]["cost_adjusted_value_cents"]
+                - out["null_quantiles"]["value_q50"])
     return out
 
 
@@ -1606,12 +1764,158 @@ def selftest() -> int:
        f"ORDERING, not in the scale of the numbers")
 
     # ---- the null's draws: REPLAYED, and read on the decision metrics --
-    ncell = run_cell(ref, {
+    # DE38-C1 ruling (3): THE NULL FIXTURE MUST BE ABLE TO PRODUCE A NULL.
+    # Round 38's was the 20-slug one below -- one generation per (side,
+    # hour) stratum, so the only draw satisfying the match was the IDENTITY
+    # and the accepted set was the treated arm, valued 0.0 against itself.
+    # This one puts FOUR generations in ONE stratum, two above threshold
+    # and two below, two harmful and two benign, so several distinct draws
+    # are acceptable and they do not all carry the same value.
+    _fslug = [f"btc-updown-5m-{1787579400 + i * 100}" for i in range(4)]
+    _free = {_fslug[i]: {"BUY_UP": [_gen(1, 0.0, 20.0,
+                                        [(5.0, 1.0, -20.0 if i < 2 else 4.0)])],
+                         "SELL_UP": []} for i in range(4)}
+    _fsc = [{"t": 0.0, "slug": _fslug[i], "side": "BUY_UP", "gen": 1,
+             "score": (0.9, 0.8, 0.2, 0.1)[i]} for i in range(4)]
+    # A generation the REFERENCE carries and the STREAM does not: the pool
+    # must not contain it (DE38-R1), and `strata_with_room` must not count
+    # the freedom it would appear to give.
+    _free["btc-updown-5m-1787579800"] = {
+        "BUY_UP": [_gen(1, 0.0, 20.0, [(5.0, 1.0, 4.0)])], "SELL_UP": []}
+    _fdumb = [dict(e, score=0.5) for e in _fsc]
+    _flog: list = []
+    _nerr = ""
+    try:
+        ncell = run_cell(_free, {
+        "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": _fsc,
+        "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": _fdumb},
+        good, draws=20, thetas={
+            "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5,
+                "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": 0.5},
+            _draw_log=_flog)
+    except (DiagRefused, MRC.ControlRefused) as _e:
+        # A re-added identity guard refuses the IDENTITY draws this null
+        # must contain, and the cell dies. That must be a named red here,
+        # not a traceback (DE38-C1 ruling 1).
+        ncell, _nerr = None, f"{type(_e).__name__}: {str(_e)[:120]}"
+    ok(ncell is not None,
+       f"THE FREE NULL FIXTURE BUILDS ITS NULL AT ALL -- no per-draw "
+       f"refusal ends the cell{(' -- REFUSED INSTEAD: ' + _nerr) if _nerr else ''}. "
+       f"With the identity guard back in the loop this is where the run "
+       f"stops, because under (gamma) the identity is a legal draw")
+    _np_free = (ncell or {}).get("null_population") or {
+        "n_distinct_accepted": 0, "n_distinct_attempted": 0,
+        "n_accepted_identity_whole_draw": 0, "accepted_by_stratum": {},
+        "pool_size": 0}
+    _fpool = [{"slug": f"{e['slug']}|{e['side']}|{e['gen']}",
+               "side": e["side"], "hour": _hour_of(e["slug"])} for e in _fsc]
+    _fabove = [{"slug": f"{e['slug']}|{e['side']}|{e['gen']}"}
+               for e in _fsc if e["score"] >= 0.5]
+    _tmap = {(e["slug"], e["side"], e["gen"]): e["score"] for e in _fsc}
+    _differs = 0
+    for _r in [r for r in _flog if r["accepted"]]:
+        _d = MRC.draw(_fpool, _fabove, seed=_r["seed"])
+        _cs, _ = permuted_stream(_fsc, _d, 0.5, _gen_index(_free))
+        if {(e["slug"], e["side"], e["gen"]): e["score"]
+                for e in _cs} != _tmap:
+            _differs += 1
+    ok(_np_free["n_distinct_accepted"] >= 2 and _differs >= 1
+       and _np_free["n_accepted_identity_whole_draw"] >= 1
+       and _np_free["n_distinct_accepted"]
+       <= _np_free["n_distinct_attempted"],
+       f"DE38-C1 ruling (3): THE ACCEPTED SET IS A NULL, asserted on what "
+       f"was ACCEPTED -- {_np_free['n_distinct_accepted']} distinct "
+       f"accepted draws of {_np_free['n_distinct_attempted']} distinct "
+       f"attempted, {_differs} of the accepted draws carrying a control "
+       f"stream that DIFFERS from the treated one, and "
+       f"{_np_free['n_accepted_identity_whole_draw']} of them the "
+       f"IDENTITY draw, "
+       f"admitted and counted rather than refused. Round 38 asserted "
+       f"`accepted == 2` and `P4 > 0`, both true of a null that is the "
+       f"treated arm five times over (DE38-C1)")
+    ok(_np_free["pool_size"] == len(_fsc)
+       and sum(len(v[sd]) for v in _free.values() for sd in HSP.SIDES)
+       == len(_fsc) + 1,
+       f"DE38-R1/C3, DRIVEN: the pool is the STREAM'S SUPPORT -- "
+       f"{_np_free['pool_size']} keys for {len(_fsc)} events, while the "
+       f"reference carries "
+       f"{sum(len(v[sd]) for v in _free.values() for sd in HSP.SIDES)} "
+       f"generations. The extra generation has no score event, so no draw "
+       f"may name it; at `dfd4c00` it was in the pool, could be drawn "
+       f"(spending budget on a P3 rejection) and -- worse -- counted "
+       f"toward `strata_with_room`, so the freedom statistic described a "
+       f"support the draw could not legally use")
+    _accst = _np_free["accepted_by_stratum"]
+    ok(len(_accst) == 1 and not list(_accst.values())[0]["collapsed"]
+       and list(_accst.values())[0]["n_distinct"] >= 2
+       and list(_accst.values())[0]["size"] == 20,
+       f"DE38-C1 ruling (4): the accepted set is reported PER STRATUM "
+       f"before any §3 number -- {_accst} -- so a reader sees where the "
+       f"null had spread and where it collapsed, which is the fact the "
+       f"frozen matching rule is silent about")
+    # A REAL cell produced under a falsifier input: no draws, so nothing
+    # is sampled -- the point is the marking, and that the receipt refuses
+    # it (DE38-R4).
+    _r4cell = run_cell(ref, {
+        "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": smart}, good,
+        thetas={"CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5},
+        _draw_log=[])
+    ok(_r4cell.get("produced_under_falsifier_input") == ["_draw_log"],
+       f"and a cell produced under a falsifier input SAYS SO in the cell "
+       f"itself: {_r4cell.get('produced_under_falsifier_input')}")
+    refuses(lambda: validate_receipt(dict(rec, cells=list(rec["cells"])
+                                          + [_r4cell])),
+        f"DE38-R4, DRIVEN ON A REAL CELL: a cell actually produced under "
+        f"a FALSIFIER INPUT carries "
+        f"{_r4cell.get('produced_under_falsifier_input')} and the receipt "
+        f"REFUSES it -- those parameters exist so a refusal can be driven, "
+        f"and a receipt built from a cell that took one is a receipt about "
+        f"the falsifier", needle="FALSIFIER")
+    # THE DEGENERATE CASE, driven on round 38's own null fixture.
+    dcell = run_cell(ref, {
         "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": smart,
         "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": dumb},
         good, draws=20, thetas={
             "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5,
             "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": 0.5})
+    _dnp = dcell["null_population"]
+    ok(dcell.get("null", "").startswith("DEGENERATE")
+       and "null_quantiles" not in dcell
+       and "net_diff_vs_null_median_cents" not in dcell
+       and dcell.get("point_estimate_cents") is not None
+       and _dnp["n_distinct_accepted"] == 1
+       and _dnp["n_accepted_identity_whole_draw"]
+       == _dnp["n_draws_accepted"],
+       f"DE38-C1 ruling (2), DRIVEN on round 38's own null fixture: one "
+       f"generation per stratum makes the identity the only acceptable "
+       f"draw, so the accepted set holds "
+       f"{_dnp['n_distinct_accepted']} distinct draw "
+       f"({_dnp['n_accepted_identity_whole_draw']}/"
+       f"{_dnp['n_draws_accepted']} of them "
+       f"the identity) and the cell publishes `{dcell.get('null')}` with NO "
+       f"quantiles and NO difference against a median that would be the "
+       f"treated arm's own value -- falling back to the labelled point "
+       f"estimate ({dcell.get('point_estimate_cents')} cents). Round 38 "
+       f"published q50 and a 0.0 difference here, by construction")
+    _dpred = evaluate_predicates([dcell])["by_cell"][0]
+    ok(_dpred["interval"] == "POINT_ESTIMATE_NO_INTERVAL"
+       and _dpred["null_quantiles"] is None
+       and _dpred["beats_null_q95"] is None
+       and _dpred["net_diff_vs_null_median_cents"] is None,
+       f"and the DEGENERATE cell reaches the predicate table as a LABELLED "
+       f"POINT ESTIMATE -- interval `{_dpred['interval']}`, "
+       f"`beats_null_q95` {_dpred['beats_null_q95']} -- so no reader can "
+       f"take a comparison from a cell whose null was the treated arm. "
+       f"That is the fallback the addendum already declares for cells "
+       f"without an interval, reached here by the cell not having one")
+    ok(all(v["collapsed"] for v in _dnp["accepted_by_stratum"].values())
+       and _dnp["n_distinct_attempted"] == 1,
+       f"and every stratum of that cell is marked `collapsed` "
+       f"({_dnp['accepted_by_stratum']}), with the ATTEMPTED distinct "
+       f"count ({_dnp['n_distinct_attempted']}) reported beside the "
+       f"accepted one -- the sampler's statistic and the null's statistic "
+       f"are different quantities and each is labelled with its "
+       f"population (rule 10)")
     # DE33-C4: round 33's null fixture put 20 windows an hour apart, so
     # every (side, hour) stratum held ONE generation and 200 seeds produced
     # ONE distinct draw -- the checks below would pass on a forced null.
@@ -1710,13 +2014,15 @@ def selftest() -> int:
     _calls = [c for f in _rc for c in _ast.walk(f)
               if isinstance(c, _ast.Call)
               and getattr(c.func, "attr", "") == "refuse_if_not_random"]
-    ok(len(_rc) == 1 and len(_calls) == 1,
-       f"THE IDENTITY GUARD IS CALLED ON EVERY DRAW, asserted from the "
+    ok(len(_rc) == 1 and len(_calls) == 0,
+       f"THE IDENTITY GUARD IS RETIRED FOR (gamma), asserted from the "
        f"parse: `run_cell` contains {len(_calls)} call(s) to "
-       f"`refuse_if_not_random`. Removing that call left every other check "
-       f"in this suite green -- a control the runner holds but never "
-       f"invokes is a control that cannot fire, and only the code's shape "
-       f"says whether it is invoked")
+       f"`refuse_if_not_random` (DE38-C1 ruling 1). The certificate that "
+       f"used to assert the call is deleted with it -- handed the actions "
+       f"it fired 0/200 seeds (it returns early whenever |drawn| != "
+       f"|actions|), and handed the demand it would have refused the 65 "
+       f"IDENTITY draws the permutation null must contain. This check is "
+       f"the retirement's own falsifier: re-adding the call turns it red")
     _rcf = [fn for fn in _ast.walk(_tree)
             if isinstance(fn, _ast.FunctionDef) and fn.name == "run_cell"][0]
     _args = [a.arg for a in (_rcf.args.args + _rcf.args.kwonlyargs)]
@@ -2176,6 +2482,25 @@ def selftest() -> int:
        f"{ {k[1]: DECLARED_ADDITIVE[k]['sha_at_declaring_tip'] for k in DECLARED_ADDITIVE} } "
        f"-- so the declaration describes the code that is actually there, "
        f"and the check above says it cannot describe itself")
+    _ca = sorted({DECLARED_ADDITIVE[k]["changed_at"]
+                  for k in DECLARED_ADDITIVE})
+    _at = _fn_asts(_git_show(_ca[0],
+                             "live/pm_research/harmful_exposure_rows.py") or "")
+    _before = _fn_asts(_git_show(f"{_ca[0]}^",
+                                 "live/pm_research/harmful_exposure_rows.py")
+                       or "")
+    ok(len(_ca) == 1
+       and all(DECLARED_ADDITIVE[k]["sha_at_declaring_tip"]
+               == _ast_sha(_at.get(k[1])) for k in DECLARED_ADDITIVE)
+       and all(DECLARED_ADDITIVE[k]["sha_at_fit"]
+               == _ast_sha(_before.get(k[1])) for k in DECLARED_ADDITIVE),
+       f"DE38 §2(iii): each declaration NAMES THE COMMIT THAT CHANGED THE "
+       f"FUNCTION ({_ca[0]}) and the claim is CHECKED at both sides of it "
+       f"-- at that commit the three functions carry the declared TIP "
+       f"shas, and at its parent they carry the declared FIT shas (two of "
+       f"them absent). Prose cannot be pinned; the FACT the prose is "
+       f"about can be, and a re-declaration that moves the shas while "
+       f"keeping the old justification fails here")
     # DE37-C2 DRIVEN, ON A SOURCE EDIT: the known-bad is an edited FUNCTION
     # BODY in a copy of the module directory, not a tampered dict -- the
     # state round 37's falsifier could not produce.
@@ -2293,6 +2618,17 @@ def selftest() -> int:
        f"it. Round 37 asserted this branch from the parse only"
        f"{(' -- REFUSED INSTEAD: ' + _ncerr) if _ncerr else ''}")
     ok(_ncell is not None
+       and _np.get("n_distinct_accepted") == 1
+       and _np.get("n_distinct_attempted", 0) >= 2
+       and (_ncell or {}).get("null", "").startswith("DEGENERATE"),
+       f"and THAT cell's own accepted set is a POINT MASS while its "
+       f"ATTEMPTED set is not: {_np.get('n_distinct_accepted')} distinct "
+       f"accepted of {_np.get('n_distinct_attempted')} distinct attempted, "
+       f"so the cell reads `{(_ncell or {}).get('null')}`. The two "
+       f"populations differ HERE, which is what makes the substitution "
+       f"round 38 shipped (reporting the sampler's count as the null's) a "
+       f"visible error rather than an invisible one")
+    ok(_ncell is not None
        and all(_nrr.get(r, 1) == 0
                for r in ("PERM_NOT_OK", "P1", "P2", "P3")),
        f"and with the demand taken over ABOVE EVENTS, no draw is rejected "
@@ -2328,6 +2664,25 @@ def selftest() -> int:
        f"KNOWN-BAD, DRIVEN: a budget that permits no attempt REACHES "
        f"`null#2` and REFUSES, naming its accounting rather than "
        f"returning a smaller null: \"{_kbmsg[:110]}...\"")
+    # DE38-C2: the refusal must carry the REASONS, not just P4's wording.
+    _c2msg = ""
+    try:
+        globals()["DRAW_ATTEMPT_BUDGET"] = 1
+        run_cell(_href, _harm, good, draws=3, thetas=_hth)
+    except DiagRefused as _e:
+        _c2msg = str(_e)
+    finally:
+        globals()["DRAW_ATTEMPT_BUDGET"] = _sv_budget
+    _c2at = _c2msg.index("rejected:") if "rejected:" in _c2msg else 0
+    ok("'P4'" in _c2msg and "rejected:" in _c2msg
+       and "PERM_NOT_OK" not in _c2msg,
+       f"DE38-C2, DRIVEN: `null#2` now carries `n_rejected_by_reason` -- "
+       f"\"{_c2msg[_c2at:][:70]}...\" -- rather than "
+       f"naming P4's reason for a total that counts every reason. On a "
+       f"population where the rejections were all P4 the old wording "
+       f"looked right, which is exactly when a wrong label is invisible. "
+       f"Reasons with a zero count are omitted, so the refusal names what "
+       f"actually happened")
     ok(run_cell(_href, _harm, good, draws=1,
                 thetas=_hth)["null_population"]["n_draws_accepted"] == 1,
        f"POSITIVE CONTROL: with the budget restored to {_sv_budget} the "
@@ -2358,6 +2713,41 @@ def selftest() -> int:
        f" -- identical to the value the null recorded. Round 32 valued "
        f"each draw as a HARM SUM (the proxy the frozen §6 forbids), and "
        f"round 37 answered that with a substring check on this file")
+    # ---- DE38-R3: ONE SOURCE for the event contract, DRIVEN ------------
+    # A copy of the adapter with `gen` removed from the contract tuple is
+    # loaded, used to build a stream, and handed to `run_cell`: the event
+    # dict is built from that same tuple, so the key is absent from the
+    # output and `null#3` refuses BY NAME. At `dfd4c00` the two were
+    # separate lists and this died as a bare `KeyError` inside the adapter.
+    import importlib.util as _ilu
+    with _tf.TemporaryDirectory() as _sd:
+        _cp = Path(_sd) / "de_score_stream_nogen.py"
+        _cp.write_text((Path(__file__).resolve().parent
+                        / "de_score_stream.py").read_text().replace(
+            'REQUIRED_EVENT_KEYS = ("t", "slug", "side", "gen")',
+            'REQUIRED_EVENT_KEYS = ("t", "slug", "side")', 1))
+        _spec = _ilu.spec_from_file_location("de_score_stream_nogen", _cp)
+        _mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mod)
+        _rows = [{"t": e["t"], "slug": e["slug"], "side": e["side"],
+                  "gen": e["gen"]} for e in _fsc]
+        _nogen_ev = _mod.score_events(
+            _rows, head="q1_arrival_composed_lgbm", coin="btc",
+            scorer=lambda r: 0.9, verified={"lgbm_haz_btc.txt": "x"})
+    ok(all("gen" not in e for e in _nogen_ev),
+       f"DE38-R3: the contract is ONE TUPLE -- removing `gen` from "
+       f"`REQUIRED_EVENT_KEYS` removes it from the {len(_nogen_ev)} events "
+       f"the adapter emits, because they are built from that tuple. At "
+       f"`dfd4c00` the required-key list and the event construction were "
+       f"two sources, so the key survived the removal")
+    refuses(lambda: run_cell(_free, {
+        "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": _nogen_ev},
+        good, draws=1, thetas={
+            "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5}),
+        "and the runner then refuses BY NAME at `null#3` rather than "
+        "dying as a bare `KeyError` inside the adapter -- which is what "
+        "the ninth mutant did last round, and what DE38-R3 asked to close",
+        needle="do not name their generation")
     _kbsrc = [n for n in _ast.walk(_ast.parse(Path(__file__).read_text()))
               if isinstance(n, _ast.Call)
               and getattr(n.func, "id", "") == "run_cell"
