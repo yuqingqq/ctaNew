@@ -1,11 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T12:38Z — **`supersedes` is matched by raw string equality
-and validated nowhere** (DE14-R1): an empty or malformed value one entry over is
-**invisible** — the shape DE12-R2 just closed, in the field that drives the
-strongest refusal. Bounded today, forward exposure. **USER decisions unchanged:
-four RULED, one OPEN.** Prior line: the declared-blind list claimed a limitation
-the code did not have; BE's completed receipt was overwritten by its re-run.
+Updated: 2026-09-02T12:54Z — **BE's re-run COMPLETED with counts matching the
+first pass exactly**, so the landing condition is satisfiable in its second
+form — but the receipt reads **`working_tree_dirty: true`**, so the landing
+still needs the commit. **Its own numbers say 1,344 of 1,875 supplied windows —
+71.7% — produce no score**, because the frozen candidate fits btc and eth only.
+**USER decisions unchanged: four RULED, one OPEN.** Prior line: `supersedes` was
+matched raw and validated nowhere.
 
 ## READ FIRST — current project handoff
 
@@ -148,7 +149,52 @@ next word can settle it:
 **Until it is ruled, BE round 4's output stays an estimate in scratch, not a
 race score.**
 
-### BE round 4 — the 09-01 pass COMPLETED, and the re-run has overwritten its receipt
+### BE round 4 — the re-run COMPLETED, and its own numbers are the disclosure
+
+**Finished 12:49:42Z**, unit `Result=success`, `ExecMainStatus=0`, **ten gates
+PASS** — verified at the unit and the receipt, not from the report.
+
+**The landing condition is satisfiable in its second form.** The counts **match
+the first pass exactly**: `1,875 = 1,875` supplied and bridged, **1,859**
+windows with rows, **2,262,457 rows → 1,847,824 actions**. So the first pass's
+receipt — overwritten, no copy found — is **evidenced only by that agreement**,
+which is what the condition was written to accept. It is weaker than the bytes
+and it is honest about being weaker.
+
+**But the landing still needs the commit.** The receipt carries
+**`working_tree_dirty: true`** beside `carrying_commit: 0ca510e…` — so **the
+commit it names is not what ran.** That is RR12-1's family again, and the same
+lesson my own round-18 citation earned: *a hash in a receipt is a claim about a
+specific artifact, and a dirty tree makes it a claim about something else.*
+
+**And a reader should note the receipt's `as_of` is the run's START** —
+`12:23:29Z`, twenty-six minutes before its own bytes were written at 12:49:42Z.
+Correct for a run receipt; misleading if read as a write time.
+
+**The coverage disclosure is now IN the receipt, and its arithmetic is worth
+doing.** `coin_coverage` records seven coins supplied, **btc and eth with a
+frozen fit**, five without, and **1,344 windows supplied without a fit**. From
+the receipt's own per-coin counts:
+
+| | windows |
+|---|---|
+| present (7 × 288) | 2,016 |
+| masked at supply | −141 |
+| **supplied / bridged** | **1,875** |
+| btc + eth (have a fit) | 531 |
+| **bnb, doge, hype, sol, xrp (no fit)** | **1,344** |
+
+**So 71.7% of the supplied population produces no score.** The receipt says so
+in its own words — *"the day is not scored whole and this says so"* — and the
+mask arithmetic closes exactly (2,016 − 141 = 1,875; 531 + 1,344 = 1,875).
+**Sixteen bridged windows produced no rows** (1,875 bridged vs 1,859 with rows),
+which the receipt also carries.
+
+**What that is and is not.** It is a **fact for the receipt** and it is now in
+it. **What it means for G-counting is the USER's policy question** (rule 14) —
+and it is still **not a pending decision until someone puts it to them.**
+
+### BE round 4 — the receipt-overwrite finding (now a landing condition)
 
 **The first streaming pass completed** (BE's report, to be verified at landing):
 exit 0, **26 min, peak 5.9 G against the unraised 12 G cap**, **ten gates PASS**,
@@ -555,8 +601,9 @@ launchers at **235/19**.
 | **DE round 13** | **RELEASED** (`b7ce7bb`) — DE11-R1 closed **wider than filed**: eight rebinding shapes of `__import__` all refuse, and the closure test that matters — `reads_no_verdict` True on DE's own three files, **False** on `be_forward_day`/`da_blackout_mask` because they import verdict producers. **DE13-R1** (CO-7 sharpened) and **DE13-R2** (new) |
 | **DE round 14** | **VERIFIED** (`194b5e9`) and **UNDER REVIEW**: **102 checks** both launchers (reproduced here). DE12-R2 and CO-7 **CLOSED**; the empty-value refusal is **GENERAL** and distinct from MISSING and VALUE; **`none` removed as a decision** because R-419 §4 adopted `null` only; audit reports **n_cases 21 / n_raise_sites 16, computed** rather than narrated |
 | **DE round 14** | **RELEASED** (`b437e14`) with **four findings**, all reproduced at `0ca510e` — see below. **The falsifier round 13 owed is paid:** the reviewer's own pre-fix mutant now **dies by name** (check 46), and under it the audit surfaces `survivors ['unparsable_stamped_at_not_superseded']` with attribution going non-total (20 vs 21) |
-| **DE round 15** | **VERIFIED** (`0ca510e`) and **UNDER REVIEW** — admissible **69** / ratification **104** / seam **69**, all reproduced here. DE13-R2 **CLOSED**; the declared-blind list was tested and found wrong (below). **The round-13 §3 in-band correction is required as its own section of this review** |
-| **DE round 16** | **IN FLIGHT** (Q-DE-34): DE14-R1..R4 |
+| **DE round 15** | **RELEASED** — and **the reviewer's in-band round-13 correction is ACCEPTED**, made in its own section as required. **DE15-R1..R4** reproduced by the coordinator → DE round 17. One of them is the familiar shape: **the swap-docstring mutant leaves 104 green** |
+| **DE round 16** | **VERIFIED** at `829910e` (Q-DE-34) and **UNDER REVIEW** — **132 checks** (reproduced here); **DE14-R1..R4 CLOSED**; **both coordinator mutants die by name**; the R-419 / R-418 verdicts are **unchanged from `0ca510e`**, which is the check that matters — a validation round that moved a verdict would have been a different change |
+| **DE round 17** | **DISPATCHED**: DE15-R1..R4, plus the DATA_ROOT split staged behind DA round 10 |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
 | **DE round 16** | **STAGED** behind DA round 10's landing and the r14 review: the CODE_ROOT/DATA_ROOT split on the **three** DE-owned files in the class (`de_admissible_windows` :64/:77, `de_ratification_check` :43, `de_lane4_results_doc`) — **counted at the tree; five other DE files are not in the class** — following DA's `_resolve_data_root` convention so the split is written **once** |
 | **DA round 10** | **BUILT AND HELD** at worktree `3a89e6c` — verified here as **unpushed and on no remote branch**, nothing landed, the shared tree carrying only BE's in-flight file. Lands after the 00:14Z read |
@@ -589,10 +636,15 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **DE14-R1..R4** → DE round 16; **RR12-1** and **CO-R4** → DA
-round 10 (held); **CO-8** → the coordinator, after tonight; the **round-13 §3
-in-band correction** → the reviewer, in the DE round 15 review; the **first-pass
-receipt** → BE, as a landing condition.
+**Open findings:** **DE15-R1..R4** → DE round 17; **RR12-1** and **CO-R4** → DA
+round 10 (held); **CO-8** → the coordinator, after tonight; **BE's landing** —
+the counts now satisfy the receipt condition, but `working_tree_dirty: true`
+means the commit is still owed.
+
+**The reviewer's own correction landed in band and was accepted** — the round-13
+§3 claim about the five declared shapes, corrected in the round-15 review's own
+section rather than a sidecar. **Rule 13 applied to a reviewer's filing, by the
+reviewer**, which is the first time that has happened in this programme.
 
 **CO-7 got worse before it closed, and the sharpening is the lesson.** The
 reviewer did not merely note the missing check — it **restored the exact pre-fix
@@ -1044,6 +1096,54 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~12:54Z (MEM) — THE RUN FINISHED, AND ITS OWN NUMBERS SAY 71.7%
+### OF IT PRODUCES NO SCORE
+
+**R-430 swept.** BE's re-run completed, and the most useful thing in it is
+arithmetic the receipt now carries about itself.
+
+**The landing condition is met in its second form, and that form is weaker on
+purpose.** The counts match the first pass **exactly** — 1,875 supplied and
+bridged, 1,859 windows with rows, 2,262,457 rows → 1,847,824 actions. The
+overwritten first-pass receipt is therefore **evidenced only by that
+agreement**. That is what the condition was written to accept, and it does not
+pretend to be the bytes.
+
+**The landing still owes a commit.** The receipt reads **`working_tree_dirty:
+true`** beside `carrying_commit: 0ca510e…`, so **the commit it names is not what
+ran** — RR12-1's family, and the same lesson my own round-18 citation earned.
+Worth one more line because it keeps recurring: **a hash in a receipt is a claim
+about a specific artifact**, and a dirty tree quietly makes it a claim about
+something else.
+
+**And I did the coverage arithmetic rather than repeating the headline number.**
+`coin_coverage` says 1,344 windows are supplied without a fit. Against the
+receipt's own per-coin counts that is **1,344 of 1,875 — 71.7% of the supplied
+population producing no score**, because the frozen candidate fits **btc and eth
+only**. The mask arithmetic closes exactly (2,016 present − 141 masked = 1,875;
+531 with a fit + 1,344 without = 1,875), and **sixteen bridged windows produced
+no rows** besides.
+
+**The receipt says this in its own voice** — *"the day is not scored whole and
+this says so"* — which is the right place for it. **It is a fact for the
+receipt; what it means for G-counting is the USER's**, and it is still not a
+pending decision until someone puts it to them. But a reader meeting *"ten gates
+PASS"* and *"counts match"* should meet 71.7% in the same breath, which is why
+it is in the section above rather than only in the artifact.
+
+**DE round 16 verified at 132 checks with DE14-R1..R4 closed, and the check I
+care about is the negative one:** the R-419 and R-418 verdicts are **unchanged
+from `0ca510e`**. A validation round that moved a verdict would have been a
+different kind of change, and saying so is how the round proves it fixed
+plumbing rather than answers.
+
+**And a first for this programme: the reviewer corrected its own filing in
+band.** The round-13 §3 claim about the five declared shapes — the one whose
+unexamined member turned out to be the wrong one — is corrected in the round-15
+review's **own section**, not a sidecar. **Rule 13 applied to a reviewer's
+filing, by the reviewer.** The round also carries DE15-R1..R4, one of which is
+the shape of the week again: **a swap-docstring mutant leaves 104 green.**
 
 ### 2026-09-02 ~12:38Z (MEM) — THE RULE STOPPED ONE FIELD SHORT
 

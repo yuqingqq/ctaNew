@@ -1952,3 +1952,80 @@ Moved in the MEM round-24 true-up of R-429. Join rule as in batch 1.
   revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
   with Q4 failing; development evidence.
 ```
+
+## Batch 31 — archived 2026-09-02T12:54Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-25 true-up of R-430. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T12:20Z (MEM ROUND 22 -- THE WORKTREES PAID FOR THEMSELVES). R-427
+  swept; verified at the artifacts, including one claim I reproduced as NOT
+  reproducing. CO-7 CLOSED BY BEING MADE WORSE FIRST: the reviewer did not stop
+  at "no check was added" -- it RESTORED THE EXACT PRE-FIX SHAPE (parse only
+  inside the superseded branch, raw echo) and THE SUITE STAYED GREEN AT 84, so
+  the defect was REINSTATABLE IN FULL, SILENTLY. Those two statements are the
+  same fact but only the second prices it: A FIX WITHOUT A FALSIFIER IS NOT AN
+  INCOMPLETE FIX, IT IS A FIX THAT CAN BE UNDONE WITHOUT ANYONE NOTICING. That
+  is DE13-R1 (LOW-MEDIUM), now CLOSED at 194b5e9. A FILED CLAIM THAT DID NOT
+  REPRODUCE, AND I CHECKED IT MYSELF: DE round 14 filed stamped_at_raw as
+  DOCUMENTED; at that tip it appears FOUR TIMES -- one emission line (:672) and
+  three selftest lines (:987, :990, :994) -- AND NOWHERE IN DOCUMENTATION. That
+  is the reviewer's DE13-R2, STILL OPEN, with an IN-BAND CORRECTION REQUIRED in
+  Q-DE-33. The direction matters: NO EXTERNAL CHECK WOULD FIND THIS, because the
+  code is right and only the claim about it is wrong -- the same family as my own
+  round-20 truncated read, one seat over. DE ROUND 14 VERIFIED (194b5e9,
+  Q-DE-32): 102 CHECKS both launchers, reproduced here; DE12-R2 and CO-7 CLOSED;
+  the empty-value refusal is GENERAL and DISTINCT from MISSING and from VALUE;
+  "none" REMOVED as a decision because R-419 section 4 adopted "null" only; and
+  the audit now reports n_cases 21 / n_raise_sites 16, COMPUTED rather than
+  narrated. THE DE ROUND 13 REVIEW IS VERIFIED AND RELEASED (b7ce7bb): DE11-R1
+  closed WIDER THAN FILED -- eight rebinding shapes of __import__ (chained alias,
+  dict value, list element, default argument, keyword argument, tuple unpack,
+  attribute assignment) all refuse, with a literal call, a string and a comment
+  not swept up -- and the closure test that matters is the reviewer's:
+  reads_no_verdict is TRUE on DE's own three files and FALSE on be_forward_day
+  and da_blackout_mask because they import verdict producers, which is the
+  predicate WORKING. The reviewer's judgement that A DECLARED LIMIT CAN BE
+  TESTED FOR ITS CONSEQUENCE (expected-blind assertions, both directions) is
+  ACCEPTED and routed to DE round 15. DA ROUND 10 IS BUILT AND HELD at worktree
+  commit 3a89e6c -- I verified the HOLD rather than the intent: it is detached
+  from b75c9fe, ON NO REMOTE BRANCH, nothing landed, nothing under data/, the
+  installed unit unchanged, and the shared tree carries only BE's in-flight
+  be_forward_day.py, with da-midnight-verify.timer armed for 2026-09-03
+  00:06:00Z. Counts as reported, to be verified at landing: 235 -> 244 / mask 19
+  -> 30 / preflight 30 -> 34. DA FOUND A CLASS, NOT A BUG: 32 FILES under
+  live/pm_research/ derive a data/pm_5min path from __file__, which points at the
+  CODE root, so inside a per-seat worktree they resolve to an EMPTY data/; the
+  fix is a CODE_ROOT/DATA_ROOT SPLIT resolved in the lowest-level reader. DA
+  FIXED THE SEVEN IT OWNS AND TOUCHED NO OTHER SEAT'S FILE (rule 18), which is
+  correct and LEAVES TWENTY-FIVE INSTANCES STANDING. ONE OF THEM IS ON THE
+  COORDINATOR'S OWN SURFACE -- CO-8: v41_boundary_preflight.py carries the same
+  defect (REPO = P.REPO at :53, PROVENANCE_LEDGER at :177) and TWO OF ITS GATES
+  FAIL IN A BARE WORKTREE; it is NOT on tonight's path (only v5_deploy_gates.py's
+  selftest runs it, no timer does), so it is coordinator-owned and fixed after
+  tonight, with the reviewer taking it in the DA round 10 review. WORTH STATING
+  PLAINLY: PER-SEAT WORKTREES WERE ADOPTED THREE ROUNDS AGO FOR ISOLATION AND
+  THEIR FIRST REAL YIELD IS A LATENT 32-FILE CLASS NOBODY HAD SEEN -- isolation
+  did not cause this, it made a shared-tree assumption visible by removing the
+  shared tree. AND DA FOUND THE CONTROL-THAT-RAN-NOTHING CLASS IN ITS OWN SUITE:
+  SIX of its checks were SILENTLY SKIPPING in a worktree, 235 counted against
+  229 RUN. The round-12 review had closed that class STRUCTURALLY FOR THE
+  CHECKER by proving an emptied loop fails on the count; it reappeared ONE
+  SURFACE OVER, which is CO-6's lesson in a different key -- FIXING A CLASS
+  WHERE YOU FOUND IT DOES NOT FIX IT WHERE YOU DID NOT LOOK. The count now
+  asserts over checks that RAN. A NUMBERING CORRECTION THE COORDINATOR TOOK
+  AGAINST ITSELF: R-424 dispatched round 10 as Q-DA-208 when 208 was already
+  assigned by round 9 to tonight's verdict filing; DA files as Q-DA-209 and 208
+  STAYS WITH THE VERDICT -- FIRST-ASSIGNED KEEPS THE NUMBER, which is the right
+  rule, since the alternative silently renames an artifact someone else has
+  already cited. REVIEW TABLE: DE round 13 RELEASED; DE round 14 VERIFIED and
+  UNDER REVIEW at 194b5e9; DE round 15 IN FLIGHT (Q-DE-33); DA round 10 HELD for
+  the 00:14Z read; BE round 4 in flight, about 21 minutes in and under the cap.
+  OPEN FINDINGS: DE13-R2 to DE round 15; RR12-1 and CO-R4 to DA round 10 (held);
+  CO-8 to the coordinator after tonight. USER DECISIONS UNCHANGED: FOUR RULED,
+  ONE OPEN (the freeze disposition, R-424 section 6), the 09-02 accrual call
+  MECHANICAL after 00:06Z. R-419 remains revocable by the USER. UNCHANGED:
+  G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
+  evidence.
+```
