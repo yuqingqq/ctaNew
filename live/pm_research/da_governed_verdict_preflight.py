@@ -113,6 +113,39 @@ def frozen_status_set() -> set[str]:
     return seen
 
 
+#: Wording that was true before R-442 and is false after it. Kept as DATA so
+#: the check can NAME what it found rather than describe it.
+STALE_DECISION_PHRASES = ("awaiting the USER's word", "NOT reached by the")
+
+
+def _assert_decisions_coherent(esc: dict) -> None:
+    """A decision cannot be both settled and open, and settled wording must move.
+
+    Two failures this makes impossible, both one careless edit away: (1) a key
+    in `ruled` AND `still_open` -- a contradiction inside one block, which a
+    reader can only resolve by guessing; (2) the pre-ruling wording surviving
+    after the entry that settled the question, which is how
+    `freeze_disposition` read as "awaiting the USER's word" for the whole of
+    R-442's afternoon.
+    """
+    ruled = esc.get("ruled") or {}
+    still = esc.get("still_open") or {}
+    both = sorted(set(ruled) & set(still))
+    if both:
+        raise PreflightRefused(
+            f"REFUSED: {both} appear in BOTH `ruled` and `still_open`. A "
+            f"decision cannot be settled and open at once, and a reader "
+            f"cannot resolve the contradiction from the artifact.")
+    blob = json.dumps(esc)
+    hit = [ph for ph in STALE_DECISION_PHRASES if ph in blob]
+    if hit:
+        raise PreflightRefused(
+            f"REFUSED: the decisions block still carries pre-ruling wording "
+            f"{hit}. After the entry that settled a question, that phrasing "
+            f"makes a settled thing read as open -- which is the failure this "
+            f"check exists to catch, not a style point.")
+
+
 def _iso(ts: float) -> str:
     return dt.datetime.fromtimestamp(ts, dt.timezone.utc).strftime(
         "%Y-%m-%dT%H:%M:%SZ")
@@ -354,9 +387,14 @@ def preflight(day: str, derived: Path | None = None) -> dict[str, Any]:
     for k in cq:
         if k.startswith("ESCALATION"):
             esc[k] = cq[k]
-    # RULED vs STILL OPEN, kept apart. Three of these were open questions and
-    # the USER answered them at R-424; an artifact that keeps listing an
-    # answered question as open is asking a settled thing forever.
+    # RULED vs STILL OPEN, kept apart -- and an answered question must MOVE.
+    # This block listed `freeze_disposition` as "awaiting the USER's word"
+    # after R-442 had ruled it, which is the same failure R-434 §2's mirror
+    # rule exists to prevent, one entry later: an artifact that keeps asking a
+    # settled thing asks it forever. `_assert_decisions_coherent` below makes
+    # the two halves unable to contradict each other or to carry the stale
+    # wording, so this cannot recur by editing one half and forgetting the
+    # other.
     esc["ruled"] = {
         "R-411(i)": "minimum complement for G-COUNTING -- RULED at R-424 §4: "
                     ">= 144 of 288 windows; every good window is scored "
@@ -373,15 +411,21 @@ def preflight(day: str, derived: Path | None = None) -> dict[str, Any]:
                     "candidate DOES NOT ADVANCE, Q1_arrival is the surviving "
                     "component of record, and there is NO race admission.",
     }
-    esc["still_open"] = {
-        "freeze_disposition": "R-421 §3 / R-424 §6 -- NOT reached by the "
-                              "R-424 ruling; a recommendation is now on "
-                              "record awaiting the USER's word.",
-    }
+    esc["ruled"]["freeze_disposition"] = (
+        "RULED at R-442: race on the frozen bytes at 1b53929 (R-424 §6 "
+        "adopted verbatim); no re-freeze; multiplicity 2.")
+    # EMPTY, and it SAYS it is empty. A bare {} reads as "not computed" to a
+    # reader who does not know the schema; the note is what makes the absence
+    # a statement.
+    esc["still_open"] = {}
     esc["note"] = ("`ruled` entries are settled and cite the entry that "
-                   "settled them; `still_open` is what remains the USER's. "
-                   "Any key beginning ESCALATION_ found in the artifact is "
-                   "carried above, unchanged, as the producer wrote it.")
+                   "settled them; `still_open` is what remains the USER's, "
+                   "and it is EMPTY: nothing remains the USER's as of R-442. "
+                   "The 09-02 accrual call is R-409's principle applied at "
+                   "scoring, not a decision listed here. Any key beginning "
+                   "ESCALATION_ found in the artifact is carried above, "
+                   "unchanged, as the producer wrote it.")
+    _assert_decisions_coherent(esc)
     mseam = (json.loads(mpath.read_text()).get("v2_seam")
              if mpath.exists() else None)
 
@@ -528,17 +572,73 @@ def selftest() -> int:
            == 40,
            "and the R-405 overlap is reported as a FACT for 09-02 -- all 40 "
            "fixture windows sit inside 01:35-04:55Z")
-        ok(len(r["open_decisions"]["ruled"]) == 4
-           and "R-411(i)" in r["open_decisions"]["ruled"]
-           and "R-411(ii)" in r["open_decisions"]["ruled"]
-           and "R-408(3)" in r["open_decisions"]["ruled"]
-           and "R-408(2)" in r["open_decisions"]["ruled"]
-           and "NO race admission" in r["open_decisions"]["ruled"]["R-408(2)"]
-           and "freeze_disposition" in r["open_decisions"]["still_open"]
-           and "R-424" in r["open_decisions"]["ruled"]["R-411(i)"],
-           "R-424: the output separates RULED decisions (citing the entry "
-           "that settled them) from what is STILL the USER's -- an artifact "
-           "that lists an answered question as open asks it forever")
+        _od = r["open_decisions"]
+        ok(len(_od["ruled"]) == 5
+           and set(_od["ruled"]) == {"R-411(i)", "R-411(ii)", "R-408(3)",
+                                     "R-408(2)", "freeze_disposition"}
+           and "NO race admission" in _od["ruled"]["R-408(2)"]
+           and "R-424" in _od["ruled"]["R-411(i)"]
+           and "R-442" in _od["ruled"]["freeze_disposition"]
+           and "1b53929" in _od["ruled"]["freeze_disposition"]
+           and _od["still_open"] == {}
+           and "EMPTY" in _od["note"],
+           "R-442: all FIVE decisions read as RULED -- the same count the "
+           "register carries for R-424 plus R-442 -- and `still_open` is "
+           "EMPTY and says so. An artifact that lists an answered question as "
+           "open asks it forever")
+        # ---- R-442: the block cannot contradict itself, driven both ways --
+        _base_esc = {"ruled": dict(_od["ruled"]), "still_open": {},
+                     "note": "EMPTY"}
+        _assert_decisions_coherent(_base_esc)
+        ok(True, "R-442 POSITIVE CONTROL: the real decisions block is "
+                 "coherent -- a guard that only ever refuses passes nothing")
+        try:
+            _assert_decisions_coherent(
+                {"ruled": dict(_od["ruled"]),
+                 "still_open": {"freeze_disposition": "still open, somehow"},
+                 "note": "EMPTY"})
+            ok(False, "a key in BOTH halves must REFUSE")
+        except PreflightRefused as _e:
+            ok("appear in BOTH" in str(_e)
+               and "freeze_disposition" in str(_e),
+               "R-442 KNOWN-BAD: a key in BOTH `ruled` and `still_open` "
+               "REFUSES and NAMES it -- a decision cannot be settled and open "
+               "at once, and a reader cannot resolve that from the artifact")
+        try:
+            _assert_decisions_coherent(
+                {"ruled": dict(_od["ruled"]),
+                 "still_open": {"x": "a recommendation is on record awaiting "
+                                     "the USER's word."},
+                 "note": "EMPTY"})
+            ok(False, "the pre-ruling wording must REFUSE")
+        except PreflightRefused as _e:
+            ok("pre-ruling wording" in str(_e)
+               and "awaiting the USER's word" in str(_e),
+               "R-442 KNOWN-BAD: the pre-ruling phrasing ANYWHERE in the "
+               "block REFUSES and quotes it -- that exact sentence made a "
+               "settled question read as open for an afternoon")
+        # AND THE GUARD IS ON THE PRODUCTION PATH, not merely proven. A
+        # mutation deleting the call from `preflight()` survived every check
+        # above, because they all drive the function directly -- rule 17's
+        # class, which this file has now met three times. Poisoning the phrase
+        # list with a string the REAL block contains makes the real call the
+        # only thing that can refuse.
+        _saved_ph = globals()["STALE_DECISION_PHRASES"]
+        try:
+            globals()["STALE_DECISION_PHRASES"] = ("RULED at R-442",)
+            try:
+                preflight(day, tmp)
+                ok(False, "the coherence guard is NOT called by preflight()")
+            except PreflightRefused as _e:
+                ok("RULED at R-442" in str(_e),
+                   "R-442 WIRING: `preflight()` itself runs the coherence "
+                   "guard -- with the phrase list poisoned by a string the "
+                   "REAL block carries, the production path is the only "
+                   "thing that can raise, and it does")
+        finally:
+            globals()["STALE_DECISION_PHRASES"] = _saved_ph
+        ok(globals()["STALE_DECISION_PHRASES"] is _saved_ph,
+           "R-442: the phrase list is restored after the wiring control")
 
         # ---- PER-PREDICATE MUTANTS: each must FAIL BY NAME ---------------
         def remut(mutate) -> dict:
