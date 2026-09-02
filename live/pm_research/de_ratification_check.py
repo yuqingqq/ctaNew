@@ -401,8 +401,26 @@ def entry_index(register_text: str, *, subject: str | None = None
                 f"either silently is how a supersession is lost at one end "
                 f"while a direction error is manufactured at the other "
                 f"(DE22-R1).")
+        # DE24-R1: this read EVERY fenced block, owned or QUOTED, so a
+        # non-ratifying sweep entry quoting a block that named a
+        # duplicated ref made every OTHER entry's check refuse -- a narrow
+        # return of DE16-R1, with the quotation refusing a check instead
+        # of superseding an entry. That path can decide NOTHING:
+        # `superseded_by` reads own blocks only, and round 18 settled that
+        # a quoted block is not that entry's ratification. By R-446 §3's
+        # own criterion -- refuse where the duplication CAN reach an
+        # answer, report where it cannot -- the case belongs on the
+        # reporting side, and the rule stops leaning on R-432 §1, a FORMAT
+        # convention about prose, when the module has an ownership
+        # predicate of its own. RULED in band (R-450 §3): "(ii) is named
+        # by the `supersedes:` of any entry's OWN ratification block".
+        #
+        # ORDERING, unchanged: `own_ratification_blocks` raises on a
+        # malformed entry, and it is already called on this same path (by
+        # `superseded_by` for every later entry, and by `check()` on the
+        # entry under check), so nothing is refused earlier than before.
         named = {str(blk.get("supersedes", "")).strip()
-                 for e in entries for blk, _ in _fenced_blocks(e)}
+                 for e in entries for blk in own_ratification_blocks(e)}
         reached = [r for r in dups if r in named]
         if reached:
             # SITE: entry_index#2
@@ -411,11 +429,13 @@ def entry_index(register_text: str, *, subject: str | None = None
                 f"({ {r: dups[r] for r in reached} }, 0-based lines) AND "
                 f"are named by a `supersedes:` in this register. WHERE the "
                 f"target stands decides whether the supersession is read "
-                f"at all, so a duplicate that any block points at reaches "
-                f"an answer (DE22-R1). Every fenced block is scanned, not "
-                f"only the ones a ratification is bound from: the question "
-                f"is what a future read COULD resolve to, and refusing is "
-                f"the recoverable direction.")
+                f"at all, so a duplicate an OWN block points at reaches "
+                f"an answer (DE22-R1). Only entries' OWN ratification "
+                f"blocks are read here (R-450 §3): a block QUOTED inside "
+                f"a non-ratifying entry supersedes nothing, so it cannot "
+                f"make a duplication reach an answer either, and refusing "
+                f"on it was the narrow return of DE16-R1 -- a quotation "
+                f"deciding another entry's check.")
         blocky = [r for r in dups
                   if any(_fenced_blocks(e) for e in entries if e["ref"] == r)]
         if blocky:
@@ -964,10 +984,11 @@ def check(supplied: dict, ratification_ref: str,
                     > own_idx[ratification_ref]["line"]):
                 # SITE: check#18
                 raise RatificationRefused(
-                    f"REFUSED: {ratification_ref} (register line "
+                    f"REFUSED: {ratification_ref} (0-based register line "
                     f"{own_idx[ratification_ref]['line']}) declares "
                     f"`supersedes: {own_named}`, which stands LATER in the "
-                    f"register (line {own_idx[own_named]['line']}). "
+                    f"register (0-based line "
+                    f"{own_idx[own_named]['line']}). "
                     f"Supersession is read forward only, so this one never "
                     f"takes effect: the entry it names keeps verifying for "
                     f"new runs and this one verifies too. It is a "
@@ -1104,7 +1125,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 168
+EXPECTED_CHECKS = 171
 
 
 def selftest() -> int:
@@ -1836,6 +1857,67 @@ def selftest() -> int:
             "being the subject -- where the target stands is what decides "
             "whether the supersession is read at all",
             needle="named by a `supersedes:`")
+
+    # ---- DE24-R1: (ii) reads OWN blocks, so a QUOTATION cannot refuse
+    # another entry's check ---------------------------------------------
+    _quote = (
+        "\n### R-99901 — 2026-09-02T16:00Z — coordinator: showing a "
+        "spelling\n\n```ratification\nref: R-903\nkind: R-ADMISS\n"
+        f"population: {POP_FULL}\nsampling: NONE\n"
+        "present_source: data/pm_5min/markets.jsonl\n"
+        "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+        "scope_to: null\nrevocable_by: USER\nsupersedes: {dup}\n```\n\n"
+        "Nothing here ratifies anything.\n\n## next\n")
+    _rtxt0 = REGISTER.read_text()
+    _dupref = next(iter(entry_index(_rtxt0).duplicate_refs))
+    _quoted = _rtxt0 + _quote.replace("{dup}", _dupref)
+    _saw_q = ""
+    try:
+        _qres = check(sup, "R-419", _quoted)
+    except RatificationRefused as _exc:
+        _qres, _saw_q = None, f" REFUSED INSTEAD: {str(_exc)[:110]}"
+    ok(_qres is not None and _qres["verified"]
+       and _qres["unverifiable"] == []
+       and _dupref in _qres["duplicate_refs"] and not _saw_q,
+       f"POSITIVE CONTROL (DE24-R1): a later, NON-RATIFYING entry QUOTING "
+       f"a block whose `supersedes:` names the duplicated {_dupref} does "
+       f"NOT refuse R-419's check -- it verifies "
+       f"{_qres['verified'] if _qres else False}, "
+       f"{_qres['unverifiable'] if _qres else '<refused>'}, and the "
+       f"duplication still STANDS AS A REPORT "
+       f"({_qres['duplicate_refs'] if _qres else {}}). A quotation "
+       f"supersedes nothing, so it cannot make a duplication reach an "
+       f"answer; refusing on it was DE16-R1 returning narrow -- a "
+       f"quotation deciding another entry's check{_saw_q}")
+    _own_names = _dup([("R-902", "NO_BLOCK"), ("R-902", "NO_BLOCK"),
+                       ("R-903", "R-902")])
+    _dl = [e["line"] for e in all_entries(_own_names) if e["ref"] == "R-902"]
+    _msg2 = ""
+    try:
+        check(sup, "R-903", _own_names)
+    except RatificationRefused as _exc:
+        _msg2 = str(_exc)
+    ok("R-902" in _msg2 and str(_dl) in _msg2 and "0-based lines" in _msg2,
+       f"KNOWN-BAD (DE24-R1's other half): an entry's OWN block naming a "
+       f"duplicated ref STILL refuses at `entry_index#2`, naming the ref "
+       f"and both 0-based lines {_dl} -- every reachable case still "
+       f"refuses, which is what the refinement had to preserve: "
+       f"{_msg2[:76]!r}")
+
+    # ---- DE24-R2: `check#18` names the convention its number uses ------
+    _msg18 = ""
+    try:
+        check(sup, "R-902", _backwards)
+    except RatificationRefused as _exc:
+        _msg18 = str(_exc)
+    ok("0-based register line" in _msg18 and "0-based line" in _msg18
+       and "stands LATER" in _msg18,
+       f"DE24-R2: `check#18` now names the convention at BOTH numbers it "
+       f"prints -- it was the one message of five printing a 0-based field "
+       f"under the bare words 'register line' / '(line ...)', in the "
+       f"message whose whole job is to send an author to two specific "
+       f"places in a 20,000-line file, one line above each heading: "
+       f"{_msg18[:96]!r}")
 
     # ---- and the real register, where it is REPORTED ------------------
     _rtxt = REGISTER.read_text()
