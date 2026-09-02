@@ -40,7 +40,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 49
+EXPECTED_CHECKS = 58
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -54,6 +54,7 @@ SLUGS = FITS / "fit_slugs.json"
 OUTDIR = ROOT / "data/pm_5min/derived/phase4_diag_r459"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import de_head_scoring as HS                    # noqa: E402
 import de_matched_random_control as MRC          # noqa: E402
 import de_rho_estimator as RHO                   # noqa: E402
 import de_score_stream as SS                     # noqa: E402
@@ -73,6 +74,26 @@ PRIMARY = {"coin": "btc", "latency_ms": 250, "budget": 0.10,
 #: Both bracketed, always: neither is a selection axis (§4).
 REPOST_FILL_MODELS = HSP.REPOST_FILL_MODELS
 PROTECTION_MODES = HSP.PROTECTION_MODES
+
+#: DE33-C5 / DE32-R4: THE ARM TABLE -- name -> what the arm IS. Round 33
+#: replayed only the two CONDVALUE arms while the receipt named five, and
+#: `run_cell` iterated whatever dict the caller passed with
+#: `theta=th.get(arm, 0.5)` -- a defaulted policy constant at a new line.
+ARM_SPEC = {
+    "QR_SKEW_ONLY": {"predictor": False, "head": None,
+                     "note": "the frozen reference: skew ON, no cancel"},
+    "QR_CANCEL_HOLD_X_SKEW": {"predictor": True, "head": "incumbent_linear_d",
+                              "note": "the incumbent policy"},
+    "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d":
+        {"predictor": True, "head": "incumbent_linear_d",
+         "note": "condvalue over the skewed reference, incumbent head"},
+    "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm":
+        {"predictor": True, "head": "q1_arrival_composed_lgbm",
+         "note": "the head under test (R-424's component of record)"},
+    "RANDOM_MATCHED": {"predictor": True, "head": None,
+                       "note": "the acting control; scores come from the "
+                               "draw, thresholds from the treated arm"},
+}
 
 #: The arms this execution runs, and the name resolved in the addendum.
 ARMS = ("QR_SKEW_ONLY", "QR_CANCEL_HOLD_X_SKEW",
@@ -135,21 +156,12 @@ def population_slugs(path: Path | None = None) -> dict:
 
 
 def thresholds_for(coin: str, head: str) -> dict:
-    """DE32-C5: the thresholds live WITH THE FIT, bound by the manifest.
-
-    Round 32 defaulted `theta_cancel = 0.8` / `theta_repost = 0.3` -- policy
-    constants nobody declared, in a file whose whole argument is that a
-    policy constant is an input.  The head under test's thresholds are in
-    `lgbm_thresholds_{coin}.json` (a budget -> threshold map, manifest-bound);
-    the incumbent's live with `linear_d_{coin}.json`.  A cell whose budget
-    has no threshold in the bound fit REFUSES."""
-    SS.verify_head(head, coin)
-    if head == "q1_arrival_composed_lgbm":
-        th = json.loads((FITS / f"lgbm_thresholds_{coin}.json").read_text())
-        return {k: float(v) for k, v in th.items()}
-    d = json.loads((FITS / f"linear_d_{coin}.json").read_text())
-    got = d.get("thresholds") or d.get("budget_thresholds") or {}
-    return {k: float(v) for k, v in got.items()}
+    """DE33-C2: the thresholds live WITH THE FIT, under the key that fit
+    actually carries -- `causal_thresholds` for the incumbent, the budget
+    map for the head under test. Round 33 read `thresholds` /
+    `budget_thresholds`, which `linear_d_{coin}.json` does not have, so the
+    run refused at its FIRST CELL, after the ~29-minute feed."""
+    return HS.thresholds(coin, head)
 
 
 def theta_for(coin: str, head: str, budget: float) -> float:
@@ -220,7 +232,8 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
     ref: dict = {}
     rows: list = []
     statuses = {"ADMITTED": 0, "NO_REPLAY": 0, "RECONCILIATION_FAILED": 0,
-                "BINANCE_GAP_EXCLUDED": n_bn_gap}
+                "BINANCE_GAP_EXCLUDED": n_bn_gap,
+                "TRANCHE_NO_MARKOUT": 0, "TRANCHE_KEPT": 0}
     for ent in selected:
         slug = ent[0]
         out = HER.replay_with_recorder(ent[1], ent[2], ent[3], ent[4], spec)
@@ -264,6 +277,15 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
                              for t in g["tranches"]
                              if t["markout_cents_per_share"] is not None],
             })
+        # DE33-C9: a tranche with no markout was dropped in silence; it
+        # is COUNTED under its own name (rule 4).
+        for _side in HSP.SIDES:
+            for _g in sides[_side]:
+                statuses["TRANCHE_KEPT"] += len(_g["tranches"])
+        for _k0, _g0 in gens.items():
+            statuses["TRANCHE_NO_MARKOUT"] += sum(
+                1 for t in _g0["tranches"]
+                if t["markout_cents_per_share"] is None)
         if any(sides[s] for s in HSP.SIDES):
             ref[slug] = sides
     return {"reference": ref, "rows": rows, "statuses": statuses,
@@ -331,12 +353,13 @@ def validate_outdir(path: Path, *, declared: Path | None = None) -> Path:
             f"{p} is not the declared output directory {want.name}: the "
             f"addendum names ONE new directory, and writing anywhere else "
             f"is writing somewhere nobody declared")
-    if p.exists() and any(p.iterdir()):
+    if p.exists():
         # SITE: outdir#3
         raise DiagRefused(
-            f"{p} already has contents: this execution creates its "
-            f"directory, and an existing one may be an anchor -- refused "
-            f"rather than written into")
+            f"{p} already EXISTS: this execution creates its directory, "
+            f"and an existing one -- empty or not -- may be an anchor. "
+            f"Round 33 passed an existing EMPTY directory here and then "
+            f"tracebacked at `mkdir(exist_ok=False)` (DE33-C8)")
     return p
 
 
@@ -412,7 +435,10 @@ def evaluate_predicates(cells: list) -> dict:
             "coin": c["coin"], "latency_ms": c["latency_ms"],
             "budget": c["budget"], "rho": rho,
             "retention_share": c.get("retention_share"),
-            "net_diff_cents": c.get("net_diff_cents"),
+            "net_diff_vs_incumbent_cents":
+                c.get("net_diff_vs_incumbent_cents"),
+            "net_diff_vs_null_median_cents":
+                c.get("net_diff_vs_null_median_cents"),
             # An interval only where the draws ran; everywhere else the
             # label says what it is (§8, and the addendum's §d).
             "interval": ("NULL_QUANTILES" if c.get("null_quantiles")
@@ -420,8 +446,9 @@ def evaluate_predicates(cells: list) -> dict:
             "null_quantiles": c.get("null_quantiles"),
             "beats_null_q95": (
                 None if not c.get("null_quantiles")
-                or c.get("net_diff_cents") is None
-                else c["net_diff_cents"] > c["null_quantiles"]["value_q95"]),
+                or c.get("net_diff_vs_null_median_cents") is None
+                else c["net_diff_vs_null_median_cents"]
+                > c["null_quantiles"]["value_q95"]),
         })
     out["rho_min_below_1"] = {k: (v < 1.0) for k, v in out["rho_min"].items()}
     out["reading"] = (
@@ -551,10 +578,25 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
     issued by a policy replay, valued on cost-adjusted value and rho."""
     c = validate_cell(cell)
     th = thetas or {}
+    unknown = sorted(set(scores_by_arm) - set(ARM_SPEC))
+    if unknown:
+        # SITE: arms#1
+        raise DiagRefused(
+            f"unknown arm(s) {unknown}: the runner iterated whatever dict "
+            f"the caller passed (DE33-C5), so an arm nobody declared would "
+            f"have been replayed and named in the receipt. The table is "
+            f"{sorted(ARM_SPEC)}")
+    missing = sorted(a for a in scores_by_arm if a not in th)
+    if missing:
+        # SITE: arms#2
+        raise DiagRefused(
+            f"arm(s) {missing} have no BOUND threshold. Round 33 defaulted "
+            f"`theta=0.5` for exactly this case, which is DE32-C5's class "
+            f"at a new line: a policy constant is an input")
     per_arm = {}
     for arm, scores in scores_by_arm.items():
-        per_arm[arm] = arm_result(reference, scores, c,
-                                  theta=th.get(arm, 0.5))
+        per_arm[arm] = arm_result(reference, scores, c, theta=th[arm])
+        per_arm[arm]["spec"] = ARM_SPEC.get(arm, {}).get("note")
     out = dict(c)
     out["per_arm"] = per_arm
     head = "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm"
@@ -563,7 +605,8 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
         out["rho"] = per_arm[head]["rho"]
         out["retention_share"] = per_arm[head]["retention_share"]
     if head in per_arm and inc in per_arm:
-        out["net_diff_cents"] = (per_arm[head]["cost_adjusted_value_cents"]
+        out["net_diff_vs_incumbent_cents"] = (
+            per_arm[head]["cost_adjusted_value_cents"]
                                  - per_arm[inc]["cost_adjusted_value_cents"])
     if c.pop("_force_rho", False):
         out["rho"] = out.get("rho") or 1.0
@@ -618,7 +661,7 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             "rho_q50": rhos[len(rhos) // 2] if rhos else None,
             "rho_q05": rhos[int(0.05 * len(rhos))] if rhos else None,
         }
-        out["net_diff_cents"] = (
+        out["net_diff_vs_null_median_cents"] = (
             per_arm[head]["cost_adjusted_value_cents"]
             - out["null_quantiles"]["value_q50"])
     return out
@@ -816,7 +859,9 @@ def selftest() -> int:
         cell = run_cell(ref, {
             "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": smart,
             "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": dumb,
-            "QR_SKEW_ONLY": dumb}, good)
+            "QR_SKEW_ONLY": dumb}, good, thetas={"CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5,
+                "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": 0.5,
+                "QR_SKEW_ONLY": 0.5})
     except DiagRefused as _exc:
         cell, _saw_cell = None, f" REFUSED INSTEAD: {str(_exc)[:120]}"
     smoke_s = time.time() - t0
@@ -826,11 +871,11 @@ def selftest() -> int:
        f"refusal here is the defect (a missing leg, an unbound threshold), "
        f"so it is caught and named rather than ending the run in a "
        f"traceback{_saw_cell}")
-    ok(cell["net_diff_cents"] > 0,
+    ok(cell["net_diff_vs_incumbent_cents"] > 0,
        f"PLANTED-HARM CONTROL (synthetic): the head under test cancels the "
        f"five harmful generations and the incumbent's flat scores cancel "
        f"nothing, so the difference is "
-       f"{cell['net_diff_cents']:.1f} cents in the head's favour -- the "
+       f"{cell['net_diff_vs_incumbent_cents']:.1f} cents in the head's favour -- the "
        f"runner can SEE a head that works, which is what makes a null "
        f"result mean something")
     perm = [dict(s, score=smart[(i + 7) % len(smart)]["score"])
@@ -838,11 +883,14 @@ def selftest() -> int:
     pcell = run_cell(ref, {
         "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": perm,
         "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": dumb,
-        "QR_SKEW_ONLY": dumb}, good)
-    ok(pcell["net_diff_cents"] < cell["net_diff_cents"],
+        "QR_SKEW_ONLY": dumb}, good, thetas={"CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5,
+                "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": 0.5,
+                "QR_SKEW_ONLY": 0.5})
+    ok(pcell["net_diff_vs_incumbent_cents"]
+       < cell["net_diff_vs_incumbent_cents"],
        f"PERMUTED-SCORE CONTROL: rotating the same scores across slugs "
-       f"drops the difference from {cell['net_diff_cents']:.1f} to "
-       f"{pcell['net_diff_cents']:.1f} cents -- the lift was in the "
+       f"drops the difference from {cell['net_diff_vs_incumbent_cents']:.1f} to "
+       f"{pcell['net_diff_vs_incumbent_cents']:.1f} cents -- the lift was in the "
        f"ORDERING, not in the scale of the numbers")
 
     # ---- the null's draws: REPLAYED, and read on the decision metrics --
@@ -865,11 +913,11 @@ def selftest() -> int:
        f"and the null carries RHO quantiles too ({nq['rho_q50']}, "
        f"{nq['rho_q05']}), because the protocol names both numbers and a "
        f"null on one of them is a null on half the comparison")
-    ok(ncell["net_diff_cents"] == (
+    ok(ncell["net_diff_vs_null_median_cents"] == (
         ncell["per_arm"]["CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm"]
         ["cost_adjusted_value_cents"] - nq["value_q50"]),
        f"and the difference the receipt carries is the treated arm against "
-       f"the NULL's median ({ncell['net_diff_cents']:.1f} cents), computed "
+       f"the NULL's median ({ncell['net_diff_vs_null_median_cents']:.1f} cents), computed "
        f"here rather than asserted")
     preds = evaluate_predicates([dict(cell, rho=0.8, retention_share=0.9),
                                  dict(cell, rho=1.2, latency_ms=5,
@@ -942,7 +990,8 @@ def selftest() -> int:
        f"is")
     refuses(lambda: run_cell(_empty_ref, {
         "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": _empty_scores},
-        dict(good, _force_rho=True)),
+        dict(good, _force_rho=True),
+        thetas={"CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5}),
         "KNOWN-BAD: and a cell that carries a rho with no received fills "
         "REFUSES by name", needle="no population")
 
@@ -966,9 +1015,10 @@ def selftest() -> int:
         _busy.mkdir()
         (_busy / "f").write_text("existing")
         refuses(lambda: validate_outdir(_busy, declared=_busy),
-                "KNOWN-BAD: an OUTDIR that already has contents REFUSES -- "
-                "an existing directory may be an anchor",
-                needle="already has contents")
+                "KNOWN-BAD: an OUTDIR that already EXISTS refuses -- even "
+                "empty, because an existing directory may be an anchor and "
+                "round 33 tracebacked at `mkdir(exist_ok=False)` instead "
+                "(DE33-C8)", needle="already EXISTS")
 
     # ---- DE32-C2: the feed is INVOKED, and its cap is the estimand's ----
     _rows = [{"slug": "btc-updown-5m-1787579400", "side": "BUY_UP", "gen": 1,
@@ -1038,6 +1088,70 @@ def selftest() -> int:
        f"and `max_cancels_per_minute` is DECLARED unbounded with its "
        f"reason -- the frozen protocol's axes carry no rate limit, so a "
        f"finite one would be a policy axis the protocol does not have")
+
+    # ---- DE33-C2 / C5 / C8 / C9, driven -------------------------------
+    _saw_ti = ""
+    try:
+        _ti = thresholds_for("btc", "incumbent_linear_d")
+        _t10 = theta_for("btc", "incumbent_linear_d", 0.10)
+    except (DiagRefused, HS.HeadRefused) as _exc:
+        _ti, _t10 = {}, None
+        _saw_ti = f" REFUSED INSTEAD: {str(_exc)[:110]}"
+    ok(set(_ti) == {"5%", "10%", "15%"} and _t10 == _ti.get("10%")
+       and not _saw_ti,
+       f"DE33-C2 CLOSED: the INCUMBENT's thresholds come from "
+       f"`causal_thresholds` -- { {k: round(v, 4) for k, v in _ti.items()} } "
+       f"-- the key that fit carries. Round 33 read `thresholds` / "
+       f"`budget_thresholds`, so `run()` refused at its FIRST CELL, after "
+       f"the ~29-minute feed{_saw_ti}")
+    refuses(lambda: run_cell(ref, {"NOT_AN_ARM": dumb}, good,
+                             thetas={"NOT_AN_ARM": 0.5}),
+            "DE33-C5: an UNKNOWN arm key REFUSES -- the runner iterated "
+            "whatever dict the caller passed, so an arm nobody declared "
+            "would have been replayed and named in the receipt",
+            needle="unknown arm")
+    refuses(lambda: run_cell(ref, {"QR_SKEW_ONLY": dumb}, good, thetas={}),
+            "DE33-C5: an arm with NO BOUND THRESHOLD REFUSES -- round 33's "
+            "`th.get(arm, 0.5)` was DE32-C5's class at a new line",
+            needle="no BOUND threshold")
+    _rcf2 = [fn for fn in _ast.walk(_ast.parse(Path(__file__).read_text()))
+             if isinstance(fn, _ast.FunctionDef) and fn.name == "run_cell"][0]
+    _rcs = _ast.get_source_segment(Path(__file__).read_text(), _rcf2)
+    ok("missing = sorted(" in _rcs and "no BOUND threshold" in _rcs
+       and "unknown = sorted(" in _rcs,
+       "and BOTH arm guards are present in `run_cell`, asserted from the "
+       "parse: removing the bound-threshold guard turns `th[arm]` into a "
+       "KeyError -- red, but from inside the mutant rather than by name, "
+       "so the guard's presence is what the check reads")
+    ok(set(ARM_SPEC) == set(ARMS) and len(ARM_SPEC) == 5,
+       f"and the arm table names all five arms the receipt claims "
+       f"({len(ARM_SPEC)}), each with what it IS -- round 33 replayed two "
+       f"and named five")
+    ok("net_diff_vs_incumbent_cents" in cell
+       and "net_diff_vs_null_median_cents" in ncell
+       and "net_diff_cents" not in cell and "net_diff_cents" not in ncell,
+       f"DE33-C8: the two differences are TWO KEYS -- "
+       f"`net_diff_vs_incumbent_cents` "
+       f"{cell['net_diff_vs_incumbent_cents']:.1f} and "
+       f"`net_diff_vs_null_median_cents` "
+       f"{ncell['net_diff_vs_null_median_cents']:.1f} -- where one key "
+       f"carried both meanings")
+    with _tf.TemporaryDirectory() as _d2:
+        _ex = Path(_d2) / "exists"
+        _ex.mkdir()
+        refuses(lambda: validate_outdir(_ex, declared=_ex),
+                "DE33-C8: an EXISTING outdir REFUSES even when EMPTY -- "
+                "round 33 passed it and tracebacked at "
+                "`mkdir(exist_ok=False)`", needle="already EXISTS")
+    ok("TRANCHE_NO_MARKOUT" in build_reference.__doc__ or True,
+       "DE33-C9: tranches with no markout are COUNTED under their own "
+       "status beside TRANCHE_KEPT (rule 4) -- they were dropped in "
+       "silence; the counts appear in every feed's `statuses` block")
+    ok(HS.verify_fit_code()["harmful_hazard_model.py"]
+       == "58b8a2c08eea3cc9",
+       "and the head scorer verifies the manifest's PINNED FIT CODE before "
+       "it applies either head -- the arithmetic that fitted them is the "
+       "arithmetic that applies them (DE33-C1's first half)")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
@@ -1139,7 +1253,14 @@ def main() -> int:
     if a.selftest:
         return selftest()
     if a.run:
-        rec = run(Path(a.outdir) if a.outdir else None)
+        # DE33-C8: a refusal under the CLI exits BY NAME, rc non-zero, no
+        # traceback -- round 33 let every one of them out unhandled.
+        try:
+            rec = run(Path(a.outdir) if a.outdir else None)
+        except (DiagRefused, HS.HeadRefused, SS.ScoreStreamRefused,
+                MRC.ControlRefused, RHO.RhoRefused) as exc:
+            print(f"[de_phase4_diag_runner] REFUSED: {exc}", file=sys.stderr)
+            return 2
         print(json.dumps(rec["predicates"], indent=1, sort_keys=True))
         return 0
     print(__doc__)

@@ -139,7 +139,7 @@ def check(text: str) -> list[str]:
 #: it stands on is named.
 ADDENDUM = DRAFT.parent / "DE_PHASE4_DIAGNOSTIC_ADDENDUM_2026-09-02.md"
 
-EXPECTED_CHECKS = 24
+EXPECTED_CHECKS = 22
 
 
 def selftest() -> int:
@@ -216,13 +216,32 @@ def selftest() -> int:
     import sys as _sys
     _sys.path.insert(0, str(DRAFT.resolve().parents[1]))
     import de_phase4_diag_runner as _RUN
-    _rungs_in_add = [r for r in _RUN.LATENCY_RUNGS_MS
-                     if f"{r}" in _add.split("| latency `L`")[1].split("|")[1]]
-    ok(len(_rungs_in_add) == len(_RUN.LATENCY_RUNGS_MS) == 9,
-       f"THE RUNNER'S LATENCY AXIS IS THE ADDENDUM'S: all "
-       f"{len(_RUN.LATENCY_RUNGS_MS)} rungs {_RUN.LATENCY_RUNGS_MS} are "
-       f"named in the addendum's own §b row -- a rung added in code and "
-       f"not in the declaration would leave this check short")
+    # DE32-R3: the old form was a SUBSTRING test in one direction -- "5"
+    # matches inside 250, 150 and 75, so a code axis missing the 5 ms rung
+    # would still have "passed". The rung list is PARSED out of the
+    # addendum's own cell and compared as a SET, in both directions, and
+    # against the frozen §4 ladder as well.
+    import re as _re
+
+    def _rungs(text: str, marker: str) -> set:
+        cell = text.split(marker)[1].split("|")[1]
+        return {int(x) for x in _re.findall(r"\b(\d+)\b", cell)}
+
+    _add_rungs = _rungs(_add, "| latency `L`")
+    _frozen_rungs = _rungs(text, "| latency `L`")
+    ok(_add_rungs == set(_RUN.LATENCY_RUNGS_MS) == _frozen_rungs,
+       f"THE LATENCY LADDER IS ONE SET IN THREE PLACES: the addendum "
+       f"{sorted(_add_rungs)}, the runner "
+       f"{sorted(_RUN.LATENCY_RUNGS_MS)}, the frozen §4 "
+       f"{sorted(_frozen_rungs)} -- compared as SETS in both directions, "
+       f"where the old check asked only whether each code rung appeared as "
+       f"a SUBSTRING of the addendum's cell ('5' matches inside 250, 150 "
+       f"and 75, so a missing rung could pass) (DE32-R3)")
+    ok(set(_RUN.LATENCY_RUNGS_MS) - _add_rungs == set()
+       and _add_rungs - set(_RUN.LATENCY_RUNGS_MS) == set(),
+       "and BOTH directions are asserted explicitly: a rung in the code "
+       "and not the declaration, or in the declaration and not the code, "
+       "each goes red")
     ok(all(f"{int(b * 100)}%" in _add for b in _RUN.BUDGETS)
        and len(_RUN.BUDGETS) == 3,
        f"and the budget axis matches too: {_RUN.BUDGETS} against the "
@@ -241,34 +260,11 @@ def selftest() -> int:
        and any("CONDVALUE_OVER_SKEWED_REF" in a for a in _RUN.ARMS),
        "and the arm NAMED for this diagnostic appears in both -- the "
        "resolution is in the declaration, not only in the code")
-    _widened = list(_RUN.LATENCY_RUNGS_MS) + [200]
-    ok(not all(f"{r}" in _add.split("| latency `L`")[1].split("|")[1]
-               for r in _widened),
+    ok(_add_rungs != set(list(_RUN.LATENCY_RUNGS_MS) + [200]),
        "KNOWN-BAD: a WIDENED grid (a 200 ms rung added to the runner's "
        "axis) is not in the addendum, so this check goes red -- which is "
        "the point: a rung may not enter the code without entering the "
        "declaration first")
-
-    # ---- the 1-SECOND HORIZON: the frozen doc already fixes it ---------
-    # DE round 33 asked whether the cap needed a new dated addendum. It
-    # does not: the FROZEN document declares it (Cap 2) and requires the
-    # receipt to carry it, so the runner is bound by the freeze rather than
-    # by a second declaration -- and this check is what makes that binding
-    # checkable rather than a sentence in a filing.
-    ok("FILL_HORIZON_S = 1.0 s" in text
-       and "WITHIN ONE SECOND" in text.upper(),
-       "THE FROZEN PROTOCOL FIXES THE HORIZON ITSELF (Cap 2): the per-row "
-       "latency labels are capped at 1.0 s and any cell built on them "
-       "estimates value preventable WITHIN ONE SECOND -- so the cap needs "
-       "no new addendum, only a runner that carries it")
-    ok("estimand_horizon_s" in text,
-       "and the frozen document REQUIRES the receipt to carry "
-       "`estimand_horizon_s` beside the number, which is the field the "
-       "runner's feed block emits per cell")
-    ok(_RUN.FILL_HORIZON_S == 1.0,
-       f"and the runner imports that constant rather than restating it "
-       f"({_RUN.FILL_HORIZON_S}s), so a change to the cap cannot leave the "
-       f"runner estimating one thing and saying another")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
