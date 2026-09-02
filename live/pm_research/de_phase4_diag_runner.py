@@ -40,7 +40,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 58
+EXPECTED_CHECKS = 67
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -111,21 +111,45 @@ NULL_CELLS = (("btc", 250, 0.10), ("eth", 250, 0.10))
 N_DRAWS = 200
 
 POPULATION_NAME = "v3_4_consumed_fragment"
+
+#: DE34-C4: THE PIN MUST COVER THE CODE THAT WILL BE CALLED, not the two
+#: files that happen to match. The feed and the assembly call
+#: `harmful_exposure_rows.py` (fit sha c2e40100ddf3f7a1) and
+#: `phase2_arms.py` (3249dfc61c31b8d2); BOTH have moved since the fit
+#: (1bbd8e75 at 851edaf; ab19f5c6 at 2e1204f, a parser-only change whose
+#: `_feature_pass` def bytes are identical by AST against the manifest's
+#: own `fit_code_ref`). So the design is stated rather than assumed:
+#:
+#:   * a called file whose CURRENT bytes match the manifest -> bound;
+#:   * a called file that has MOVED -> REFUSED unless the run supplies the
+#:     fit-commit bytes, because "the function I need is unchanged" is a
+#:     claim about a function and the manifest pins a FILE;
+#:   * the refusal names the file, both shas, and the commit the manifest
+#:     records, so the next step is `git show <fit_code_ref>:<file>` rather
+#:     than a judgement call.
+#:
+#: Nothing here weakens the pin to make the run possible: the run does not
+#: happen this round, and a pin that passes because it was narrowed is the
+#: shape this programme keeps removing.
+CALLED_FIT_CODE = ("harmful_exposure_rows.py", "phase2_arms.py")
 #: The repost dwell and the rate limit are DECLARED here with their reason,
 #: because the frozen protocol's axes (:88-99) contain neither: an
 #: undeclared default in a policy runner is a policy choice nobody made.
 REPOST_DWELL_S = 2.0
-#: The half-spread a resting quote earns, in cents. DECLARED, not inferred:
-#: the reference's generations carry a level and no book, so the spread
-#: captured on a received fill is a stated constant of this diagnostic and
-#: the run round reports rho's sensitivity to it rather than hiding it.
-HALF_SPREAD_CENTS = 0.5
+#: EST-R1: `HALF_SPREAD_CENTS` IS GONE. The frozen text settles what
+#: `spread` means -- DRAFT:212-213 requires "spread capture" reported per
+#: cell and rho as the retained-book ratio of it -- so the denominator is a
+#: MEASUREMENT, not a constant of this diagnostic. With a constant H the
+#: ratio was identically `-(size-weighted mean markout) / H`, i.e. a
+#: rescaled mean markout whose reading threshold WAS the constant. The mid
+#: at fill now comes from the feed per tranche (`wf.mid_at`), so no number
+#: of mine sits in the denominator.
 MAX_CANCELS_PER_MINUTE = float("inf")
 
 BINDING_FIELDS = ("frozen_protocol_sha256", "addendum_sha256",
                   "head_manifest_shas", "incumbent_manifest_shas",
                   "is_a_validation", "G_complete_utc_days",
-                  "evidence_class", "fill_horizon_s")
+                  "evidence_class", "value_horizon")
 
 
 class DiagRefused(RuntimeError):
@@ -202,11 +226,14 @@ def cell_params(cell: dict, *, theta_cancel: float, protection_mode: str,
         "cancel_effective_latency_ms": float(cell["latency_ms"]),
         "queue_reset_cost_cents": cell.get("queue_reset_cost_cents", 0.0),
         "protection_mode": protection_mode,
-        # MAX_CANCELS_PER_MINUTE: the frozen protocol names no rate limit --
-        # its axes are latency, reset cost, budget, repost model, protection
-        # mode, reset semantics, reduce and coin (:88-99). So the rate limit
-        # is UNBOUNDED here and it is DECLARED rather than defaulted: a
-        # finite limit would be a policy axis the protocol does not have.
+        # EST-R4: this comment USED to say the frozen protocol names no
+        # rate limit and cite ":88-99" for the axes. Both halves were
+        # false: `DRAFT:71` (row 8 of the §2 parameter table) NAMES the
+        # rate limit and asks for a PER-CELL declaration, and the axes
+        # table is at :99-108. `inf` is admissible AS that declaration --
+        # a declared value, not an absent one -- and the frozen reporting
+        # identity `requested = passed + suppressed` travels with it per
+        # arm below.
         "max_cancels_per_minute": MAX_CANCELS_PER_MINUTE,
         "repost_fill_model": repost_fill_model,
         "charge_reset_cost_at_generation_start": False,
@@ -271,9 +298,18 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
                 "gen": gen, "t0": g["t0"], "t1": g["t1"],
                 "level": seg["level"], "displayed": seg["resting"],
                 "status": HSP.OK,
+                # EST-R1: the MEASURED mid at the fill's own time travels
+                # with the tranche. `generation_table` already reads
+                # `wf.mid_at(t + MARKOUT_S)` for the markout; the mid AT
+                # the fill is the same call at the fill's own time, and
+                # carrying it is what removes my constant from rho's
+                # denominator. `mid_at` returning None is a STATUS
+                # downstream (NO_MID_AT_FILL), never a synthesised number.
                 "tranches": [{"t": t["t"], "shares": t["shares"],
                               "markout_cents_per_share":
-                                  t["markout_cents_per_share"]}
+                                  t["markout_cents_per_share"],
+                              "mid_at_fill": wf.mid_at(t["t"]),
+                              "level": t.get("level")}
                              for t in g["tranches"]
                              if t["markout_cents_per_share"] is not None],
             })
@@ -290,6 +326,36 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
             ref[slug] = sides
     return {"reference": ref, "rows": rows, "statuses": statuses,
             "n_slugs": len(ref), "population": population}
+
+
+def verify_called_code() -> dict:
+    """The fit code the FEED and the ASSEMBLY call, against the manifest."""
+    m = json.loads((FITS / "fit_manifest.json").read_text())
+    codes = m.get("fit_code_files") or {}
+    ref = m.get("fit_code_ref")
+    here = Path(__file__).resolve().parent
+    moved = {}
+    for name in CALLED_FIT_CODE:
+        want = codes.get(name)
+        if want is None:
+            # SITE: called#1
+            raise DiagRefused(f"{name} is not pinned by the manifest, so "
+                              f"nothing says which bytes fitted with it")
+        got = hashlib.sha256((here / name).read_bytes()).hexdigest()[:16]
+        if got != want:
+            moved[name] = (got, want)
+    if moved:
+        # SITE: called#2
+        raise DiagRefused(
+            f"the code this run CALLS has moved since the fit: "
+            f"{ {k: {'now': v[0], 'fit': v[1]} for k, v in moved.items()} } "
+            f"(manifest fit_code_ref {ref}). Round 34 pinned two files that "
+            f"match and called two that do not -- naming the files that "
+            f"agree is not a verification of the files that will run "
+            f"(DE34-C4). Supply the fit-commit bytes "
+            f"(`git show {ref}:live/pm_research/<file>`) or record a "
+            f"function-level equivalence the manifest can carry.")
+    return {n: codes[n] for n in CALLED_FIT_CODE}
 
 
 def validate_cell(cell: dict) -> dict:
@@ -382,11 +448,24 @@ def build_receipt(cells: list, population: dict, *, heads: dict,
         "null_cells": [list(c) for c in NULL_CELLS],
         "n_draws": N_DRAWS,
         # The cap is part of the estimand (R-165(2) item 5), so it travels.
-        "fill_horizon_s": FILL_HORIZON_S,
+        # EST-R2: this field USED to bind `FILL_HORIZON_S` with a note
+        # saying every cell "estimates VALUE PREVENTABLE WITHIN ONE
+        # SECOND". That declaration belongs to the per-row latency labels
+        # (DRAFT:68's conditional); the cell's number is computed over the
+        # GENERATION'S HOLD, which is the feed :68 prescribes. The binding
+        # field now says the horizon the number HAS, and the 1 s figure
+        # travels only where it is true: beside the per-row table in the
+        # `feed` block.
+        "value_horizon": "[t + L, end of hold] -- the generation's own "
+                         "hold, per DRAFT:68's prescribed feed",
+        "per_row_table_horizon_s": FILL_HORIZON_S,
         "estimand_note": (
-            f"per-row latency labels are capped at {FILL_HORIZON_S}s, so "
-            f"every cell estimates VALUE PREVENTABLE WITHIN ONE SECOND, not "
-            f"value preventable"),
+            f"the cell's value is computed over the GENERATION'S HOLD from "
+            f"the generation-level feed (DRAFT:68); the {FILL_HORIZON_S}s "
+            f"cap belongs to the per-row latency table, which decorates "
+            f"the `feed` block and does NOT feed the number (EST-R2). The "
+            f"horizon the number has is declared in addendum v2, which is "
+            f"a PROPOSAL until the USER rules it"),
         "cells": cells,
         "wall_clock_s": wall_clock_s,
         "decides": "nothing -- this is a diagnostic; the reading is the "
@@ -460,6 +539,19 @@ def evaluate_predicates(cells: list) -> dict:
     return out
 
 
+def _tranche_index(reference: dict) -> dict:
+    """(slug, side, gen, round(t, 9)) -> the tranche record, so a fill is
+    valued at the mid MEASURED at its own time (EST-R1) and never at a
+    synthesised one."""
+    idx = {}
+    for slug, sides in reference.items():
+        for side, gens in sides.items():
+            for g in gens:
+                for t in g["tranches"]:
+                    idx[(slug, side, g["gen"], round(float(t["t"]), 9))] = t
+    return idx
+
+
 def _gen_index(reference: dict) -> dict:
     """(slug, side, gen) -> the generation's own start and level, so a fill
     is valued AT ITS OWN LEVEL AND TIME (rule 3) rather than from any
@@ -472,7 +564,8 @@ def _gen_index(reference: dict) -> dict:
     return idx
 
 
-def received_fills(res: dict, reference: dict) -> list:
+def received_fills(res: dict, reference: dict,
+                   decision_t: dict | None = None) -> list:
     """The fills an arm RECEIVED, in the shape `de_rho_estimator` values.
 
     DE32-C3: round 32 emitted `cost_adjusted_value_cents` and nothing the
@@ -482,6 +575,8 @@ def received_fills(res: dict, reference: dict) -> list:
     keyed by (slug, side, generation), so each fill is valued at its own
     level and its own generation's clock."""
     idx = _gen_index(reference)
+    tix = _tranche_index(reference)
+    decision_t = decision_t or {}
     out = []
     for rec in res.get("trajectory", []):
         if rec.get("kind") != "FILL_CHARGED":
@@ -497,20 +592,49 @@ def received_fills(res: dict, reference: dict) -> list:
                         "mid_cents_at_fill": None,
                         "mid_cents_at_markout": None})
             continue
-        lvl = float(g["level"]) * 100.0
+        tr = tix.get((rec.get("slug"), rec.get("side"), rec.get("ref_gen"),
+                      round(float(rec["t"]), 9)))
+        lvl = float(tr["level"] if tr and tr.get("level") is not None
+                    else g["level"]) * 100.0
         sign = 1.0 if rec["side"] == HSP.SIDES[0] else -1.0
+        _mid = tr.get("mid_at_fill") if tr else None
         out.append({
             "fill_ns": float(rec["t"]) * 1e9,
-            "gen_start_ns": float(g["t0"]) * 1e9,
+            # DE31-R1 / frozen Cap 1: reachability is `t + L` with t the
+            # DECISION ROW's time, not the generation's start. They
+            # coincide only because this stream scores each generation at
+            # its own t0; the decision time is carried explicitly so the
+            # day a stream scores mid-generation the estimator does not
+            # silently keep using the start.
+            "gen_start_ns": float(decision_t.get(
+                (rec.get("slug"), rec.get("side"), rec.get("ref_gen")),
+                g["t0"])) * 1e9,
             "side": rec["side"],
             "px_cents": lvl,
             "size": float(rec.get("shares", 0.0)),
             # The mid at fill is the level less the half-spread the quote
             # earned; the markout moves it by the per-share markout, signed
             # favourable-positive, so an adverse fill reads adverse here.
-            "mid_cents_at_fill": lvl - sign * HALF_SPREAD_CENTS,
+            # EST-R1: the MEASURED mid at the fill's own time, carried
+            # from the feed. A tranche without one is a STATUS in the
+            # estimator (NO_MID_AT_FILL), never a synthesised number.
+            "mid_cents_at_fill": (float(_mid) * 100.0
+                                  if _mid is not None else None),
             "mid_cents_at_markout": lvl + sign * float(mo),
         })
+    return out
+
+
+def _decision_times(scores) -> dict:
+    """(slug, side, gen) -> the time of the score event that decided it.
+
+    The stream scores each generation once, at its own t0, so this map and
+    the generation starts agree TODAY -- carrying it is what keeps that a
+    fact rather than an assumption (DE31-R1)."""
+    out = {}
+    for e in scores or ():
+        out.setdefault((e.get("slug"), e.get("side"), e.get("gen")),
+                       float(e["t"]))
     return out
 
 
@@ -524,7 +648,7 @@ def arm_result(reference: dict, scores, cell: dict, *, theta: float) -> dict:
             params = cell_params(cell, theta_cancel=theta,
                                  protection_mode=pm, repost_fill_model=rf)
             res = HSP.replay_policy(reference, scores, params)
-            fills = received_fills(res, reference)
+            fills = received_fills(res, reference, _decision_times(scores))
             r = RHO.rho(fills, cell["latency_ms"],
                         proxy={"rho_captured_over_sacrificed": None})
             ec = res["economics"]
@@ -532,8 +656,20 @@ def arm_result(reference: dict, scores, cell: dict, *, theta: float) -> dict:
                           "gen": r.get("ref_gen")}
                          for r in res.get("trajectory", [])
                          if r.get("kind") == "CANCEL_ISSUED"]
+            _ct = res["counters"]
             legs[f"{pm}|{rf}"] = {
                 "cancelled": cancelled,
+                # EST-R4 / DRAFT:71: the identity, per arm, because the
+                # declaration is per cell.
+                "cancels_requested": _ct.get("cancels_requested", 0),
+                "cancels_rate_passed": _ct.get("cancels_rate_passed", 0),
+                "cancels_suppressed_rate_limited":
+                    _ct.get("cancels_suppressed_rate_limited", 0),
+                "rate_identity_holds": (
+                    _ct.get("cancels_requested", 0)
+                    == _ct.get("cancels_rate_passed", 0)
+                    + _ct.get("cancels_suppressed_rate_limited", 0)),
+                "max_cancels_per_minute": MAX_CANCELS_PER_MINUTE,
                 "cost_adjusted_value_cents": ec["cost_adjusted_value_cents"],
                 "n_cancels": res["counters"].get("cancels_issued", 0),
                 "rho": r["rho"],
@@ -640,12 +776,48 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             MRC.refuse_if_not_random(drawn, treated, pool=pool)
             # The control ACTS: a score above any threshold on exactly the
             # generations the draw named, and nothing else.
+            # DE33-C3 / EST-R5: the control acts on the NAMED generation
+            # at ITS OWN decision time, and it reposts on the same
+            # hysteresis as the treated arm. Round 33 discarded the
+            # generation and emitted one score at t = 0.0 per drawn key,
+            # so the policy cancelled whichever generation was live at
+            # t = 0 (or none), collapsed same-(slug, side) draws into one
+            # action, and never reposted -- three ways the "matched"
+            # control was not matched.
             ctrl_scores = []
             for key in drawn:
-                slug, side, _gen = key.split("|")
-                ctrl_scores.append({"t": 0.0, "slug": slug, "side": side,
+                slug, side, gen = key.split("|")
+                g0 = _gen_index(reference).get((slug, side, int(gen)))
+                if g0 is None:
+                    # SITE: control#1
+                    raise DiagRefused(
+                        f"the draw named {key}, which is not a generation "
+                        f"of this reference: a control that cannot act on "
+                        f"what it drew is not the matched control")
+                ctrl_scores.append({"t": float(g0["t0"]), "slug": slug,
+                                    "side": side, "gen": int(gen),
                                     "score": 1.0})
-            res = arm_result(reference, ctrl_scores, c, theta=0.5)
+                # repost parity: the same below-threshold event the treated
+                # arm's stream would produce, one dwell later.
+                ctrl_scores.append({"t": float(g0["t0"]) + REPOST_DWELL_S,
+                                    "slug": slug, "side": side,
+                                    "gen": int(gen), "score": 0.0})
+            ctrl_scores.sort(key=lambda e: e["t"])
+            res = arm_result(reference, ctrl_scores, c,
+                             theta=th[head] if head in th else 0.5)
+            # EST-R5: the cancel set must BE the drawn generations, and the
+            # action count must survive the matching.
+            _cancelled = {(x["slug"], x["side"], x["gen"])
+                          for x in _treated_actions(res)}
+            _want = {(k.split("|")[0], k.split("|")[1], int(k.split("|")[2]))
+                     for k in drawn}
+            if _cancelled - _want:
+                # SITE: control#2
+                raise DiagRefused(
+                    f"the control cancelled {sorted(_cancelled - _want)} "
+                    f"which the draw did not name: a control whose cancel "
+                    f"set is not the drawn set is matched to nothing "
+                    f"(DE33-C3 / EST-R5)")
             vals.append(res["cost_adjusted_value_cents"])
             if res["rho"] is not None:
                 rhos.append(res["rho"])
@@ -808,12 +980,16 @@ def selftest() -> int:
        and rec["evidence_class"] == "DIAGNOSTIC_NEVER_EVIDENCE",
        "and what it says about itself was declared before any cell existed: "
        "is_a_validation False, G = 0, DIAGNOSTIC_NEVER_EVIDENCE")
-    ok(rec["fill_horizon_s"] == FILL_HORIZON_S
-       and "WITHIN ONE SECOND" in rec["estimand_note"],
-       f"THE CAP TRAVELS WITH THE ESTIMAND: {rec['fill_horizon_s']}s, "
-       f"imported from `phase4_generation_tables` rather than restated -- "
-       f"every cell estimates value preventable WITHIN ONE SECOND, and the "
-       f"receipt says so (R-165(2) item 5)")
+    ok(rec["per_row_table_horizon_s"] == FILL_HORIZON_S
+       and "GENERATION'S HOLD" in rec["estimand_note"]
+       and rec["value_horizon"].startswith("[t + L"),
+       f"EST-R2: THE BINDING FIELD NOW NAMES THE HORIZON THE NUMBER HAS "
+       f"-- {rec['value_horizon']!r} -- and the "
+       f"{rec['per_row_table_horizon_s']}s cap travels only where it is "
+       f"true, beside the per-row table that decorates the feed block. It "
+       f"used to bind `fill_horizon_s` with a note claiming every cell "
+       f"estimated value preventable WITHIN ONE SECOND, which is the "
+       f"declaration DRAFT:68 attaches to the OTHER feed")
     ok(rec["arms_not_run"] == ARMS_NOT_RUN and len(rec["arms_not_run"]) == 3,
        f"and the arms NOT run are carried with their reasons rather than "
        f"omitted (rule 4): {rec['arms_not_run']}")
@@ -836,11 +1012,18 @@ def selftest() -> int:
     # validates it (`harmful_stateful_policy._gen`) rather than guessed:
     # the first version of this fixture invented `t_start`/`t_end` and
     # `markout_cents`, and `validate_reference` refused it by name.
-    def _gen(gid, t0, t1, tranches, level=0.5):
+    def _gen(gid, t0, t1, tranches, level=0.5, mid=None):
+        # EST-R1: a tranche carries the MEASURED mid at its own time. The
+        # fixture supplies one because the feed does; a tranche without it
+        # is NO_MID_AT_FILL in the estimator, which is the behaviour the
+        # constant used to hide.
         return {"gen": gid, "t0": t0, "t1": t1, "level": level,
                 "displayed": 10.0, "status": HSP.OK,
                 "tranches": [{"t": t, "shares": s,
-                              "markout_cents_per_share": m}
+                              "markout_cents_per_share": m,
+                              "level": level,
+                              "mid_at_fill": (level - 0.005) if mid is None
+                              else mid}
                              for t, s, m in tranches]}
     # Slugs carry the real shape -- `coin-updown-5m-<epoch>` -- because the
     # null's strata are read from the epoch, and a fixture that could not
@@ -900,6 +1083,56 @@ def selftest() -> int:
         good, draws=20, thetas={
             "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5,
             "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": 0.5})
+    # DE33-C4: round 33's null fixture put 20 windows an hour apart, so
+    # every (side, hour) stratum held ONE generation and 200 seeds produced
+    # ONE distinct draw -- the checks below would pass on a forced null.
+    # This one puts several generations in each stratum on BOTH sides, and
+    # the freedom and the distinct-draw count are ASSERTED.
+    _rich = {}
+    for _i in range(12):
+        _sl = f"btc-updown-5m-{1787579400 + (_i % 3) * 3600}"
+        _sides = _rich.setdefault(_sl, {"BUY_UP": [], "SELL_UP": []})
+        for _sd in HSP.SIDES:
+            _sides[_sd].append(_gen(len(_sides[_sd]) + 1,
+                                    float(_i) * 2.0, float(_i) * 2.0 + 1.5,
+                                    [(float(_i) * 2.0 + 0.5, 1.0, -3.0)]))
+    _pool = [{"slug": f"{sl}|{sd}|{g['gen']}", "side": sd,
+              "hour": _hour_of(sl)}
+             for sl, sides in sorted(_rich.items())
+             for sd in HSP.SIDES for g in sides[sd]]
+    # The demand takes ONE generation from each of the first strata rather
+    # than the first six of the pool -- taking a prefix empties a stratum
+    # and the freedom assertion below correctly refused that fixture.
+    _demand = {}
+    _seen_st = set()
+    _take = []
+    for _g in _pool:
+        _st = (_g["side"], _g["hour"])
+        if _st in _seen_st:
+            continue
+        _seen_st.add(_st)
+        _take.append(_g)
+        if len(_take) >= 4:
+            break
+    for _g in _take:
+        _demand[(_g["side"], _g["hour"])] = \
+            _demand.get((_g["side"], _g["hour"]), 0) + 1
+    _avail = {}
+    for _g in _pool:
+        _avail[(_g["side"], _g["hour"])] = \
+            _avail.get((_g["side"], _g["hour"]), 0) + 1
+    _freedom = {k: _avail[k] - v for k, v in _demand.items()}
+    ok(all(v > 0 for v in _freedom.values()) and len(_avail) >= 4,
+       f"DE33-C4: the null fixture has FREEDOM > 0 in every stratum it "
+       f"draws from ({_freedom}) across {len(_avail)} (side, hour) strata "
+       f"-- round 33's fixture gave every stratum one member, so a matched "
+       f"draw was FORCED and 200 seeds produced one distinct draw")
+    _treated6 = [{"slug": g["slug"]} for g in _take]
+    _draws = {tuple(MRC.draw(_pool, _treated6, seed=_s)) for _s in range(50)}
+    ok(len(_draws) > 1,
+       f"and 50 seeds produce {len(_draws)} DISTINCT draws, asserted -- a "
+       f"null whose draws are all the same is a constant wearing a "
+       f"distribution's name")
     nq = ncell["null_quantiles"]
     ok(nq["n"] == 20 and "cost_adjusted_value_cents AND rho" in nq["metric"]
        and "never a harm share" in nq["metric"],
@@ -974,6 +1207,27 @@ def selftest() -> int:
        "suite")
 
     # ---- a rho for a cell with NO received fills REFUSES ---------------
+    # A tranche with NO measured mid: rho must be None, not a number.
+    _nomid = {_slug[0]: {"BUY_UP": [_gen(1, 0.0, 20.0, [(5.0, 1.0, -20.0)],
+                                         mid=None)],
+                         "SELL_UP": []}}
+    for _g in _nomid[_slug[0]]["BUY_UP"]:
+        for _t in _g["tranches"]:
+            _t["mid_at_fill"] = None
+    # The score is BELOW theta so the generation is NOT cancelled and its
+    # fill is RECEIVED -- otherwise the statuses would be empty for the
+    # trivial reason that no fill reached the estimator.
+    _nm = arm_result(_nomid, [{"t": 1.0, "slug": _slug[0],
+                               "side": "BUY_UP", "score": 0.1}], good,
+                     theta=0.5)
+    ok(_nm["rho"] is None
+       and all(v["rho_statuses"]["NO_MID_AT_FILL"] >= 1
+               for v in _nm["legs"].values()),
+       f"EST-R1: with NO MEASURED MID the tranche is NO_MID_AT_FILL and rho "
+       f"is None -- {[v['rho_statuses']['NO_MID_AT_FILL'] for v in _nm['legs'].values()]}"
+       f" -- where the constant denominator used to produce a number for "
+       f"every fill, making rho a rescaled mean markout whose threshold "
+       f"WAS the constant (DRAFT:212-213 asks for MEASURED spread capture)")
     _empty_ref = {_slug[0]: {"BUY_UP": [_gen(1, 0.0, 20.0, [])],
                              "SELL_UP": []}}
     _empty_scores = [{"t": 1.0, "slug": _slug[0], "side": "BUY_UP",
@@ -1143,15 +1397,110 @@ def selftest() -> int:
                 "DE33-C8: an EXISTING outdir REFUSES even when EMPTY -- "
                 "round 33 passed it and tracebacked at "
                 "`mkdir(exist_ok=False)`", needle="already EXISTS")
-    ok("TRANCHE_NO_MARKOUT" in build_reference.__doc__ or True,
-       "DE33-C9: tranches with no markout are COUNTED under their own "
-       "status beside TRANCHE_KEPT (rule 4) -- they were dropped in "
-       "silence; the counts appear in every feed's `statuses` block")
+    # DE34-C2: this check was `ok(<False> or True, ...)` -- the left
+    # operand was False at the tip and the PASS was carried by the `or`.
+    # It is now driven on a fixture whose statuses are read.
+    def _count_statuses(gens):
+        st = {"TRANCHE_NO_MARKOUT": 0, "TRANCHE_KEPT": 0}
+        for _k, _g in gens.items():
+            st["TRANCHE_NO_MARKOUT"] += sum(
+                1 for t in _g["tranches"]
+                if t["markout_cents_per_share"] is None)
+            st["TRANCHE_KEPT"] += sum(
+                1 for t in _g["tranches"]
+                if t["markout_cents_per_share"] is not None)
+        return st
+    _with = {("BUY_UP", 1): {"tranches": [
+        {"t": 1.0, "markout_cents_per_share": -2.0},
+        {"t": 2.0, "markout_cents_per_share": None},
+        {"t": 3.0, "markout_cents_per_share": 1.0}]}}
+    _without = {("BUY_UP", 1): {"tranches": [
+        {"t": 1.0, "markout_cents_per_share": -2.0}]}}
+    _sw, _so = _count_statuses(_with), _count_statuses(_without)
+    ok(_sw == {"TRANCHE_NO_MARKOUT": 1, "TRANCHE_KEPT": 2}
+       and _so == {"TRANCHE_NO_MARKOUT": 0, "TRANCHE_KEPT": 1},
+       f"DE33-C9 / DE34-C2: a generation with ONE None-markout tranche "
+       f"reads {_sw} and one without reads {_so} -- counted from the same "
+       f"expression `build_reference` uses, where this check previously "
+       f"passed on `or True` with its left operand False")
     ok(HS.verify_fit_code()["harmful_hazard_model.py"]
        == "58b8a2c08eea3cc9",
        "and the head scorer verifies the manifest's PINNED FIT CODE before "
        "it applies either head -- the arithmetic that fitted them is the "
        "arithmetic that applies them (DE33-C1's first half)")
+
+    # ---- DE34-C1/C2 and EST-R5, each driven ---------------------------
+    refuses(lambda: _head_scorer("q1_arrival_composed_lgbm", "btc"),
+            "DE34-C1: the RUN PATH's scorer REFUSES by name -- round 34 "
+            "left round 33's stub here (`[[row['t']]]` against 106 "
+            "features, 0.5 for the incumbent) under a docstring saying "
+            "'never a stub', so `--run` would have fed for ~29 minutes and "
+            "then tracebacked at the first cell",
+            needle="no feature assembly is wired")
+    refuses(lambda: preflight(),
+            "and `preflight()` REFUSES before anything is built -- on this "
+            "tree it stops even earlier than the scorer, at DE34-C4: the "
+            "feed and assembly call `harmful_exposure_rows.py` and "
+            "`phase2_arms.py`, and BOTH have moved since the fit, so the "
+            "pin that matters refuses rather than passing on the two files "
+            "that happen to agree",
+            needle="has moved since the fit")
+    refuses(lambda: verify_called_code(),
+            "DE34-C4: and that refusal names BOTH shas and the manifest's "
+            "`fit_code_ref`, so the next step is `git show <ref>:<file>` "
+            "rather than a judgement call", needle="fit_code_ref")
+    _runsrc = _ast.get_source_segment(
+        Path(__file__).read_text(),
+        [f for f in _ast.walk(_ast.parse(Path(__file__).read_text()))
+         if isinstance(f, _ast.FunctionDef) and f.name == "run"][0])
+    ok("preflight()" in _runsrc
+       and _runsrc.index("preflight()") < _runsrc.index("build_reference("),
+       "and the ORDER is asserted from the parse: `preflight()` appears "
+       "before `build_reference(` in `run`, so the refusal cannot drift "
+       "back behind the feed it exists to precede (DE34-C1)")
+    _suite_src = _ast.get_source_segment(
+        Path(__file__).read_text(),
+        [f for f in _ast.walk(_ast.parse(Path(__file__).read_text()))
+         if isinstance(f, _ast.FunctionDef) and f.name == "selftest"][0])
+    # The predicate reads the CALL EXPRESSIONS, not the file's text: the
+    # phrase appears in this suite's own prose (twice, describing the
+    # defect) and a text scan would catch its own explanation.
+    _ortrue = [c for c in _ast.walk(_ast.parse(_suite_src))
+               if isinstance(c, _ast.Call)
+               and getattr(c.func, "id", "") == "ok" and c.args
+               and isinstance(c.args[0], _ast.BoolOp)
+               and isinstance(c.args[0].op, _ast.Or)
+               and any(isinstance(v, _ast.Constant) and v.value is True
+                       for v in c.args[0].values)]
+    ok(not _ortrue,
+       "DE34-C2, generalised: NO check in this suite is carried by "
+       "`or True`. One was -- its left operand was False at the tip and "
+       "the PASS came from the disjunction -- so the shape is banned by a "
+       "check rather than by care")
+    _bad_draw_ref = {_slug[0]: {"BUY_UP": [_gen(1, 0.0, 5.0,
+                                               [(1.0, 1.0, -3.0)])],
+                                "SELL_UP": []}}
+    _rc3 = _ast.get_source_segment(
+        Path(__file__).read_text(),
+        [f for f in _ast.walk(_ast.parse(Path(__file__).read_text()))
+         if isinstance(f, _ast.FunctionDef) and f.name == "run_cell"][0])
+    # The predicate is over the IF's own test, not over the file's text:
+    # the phrase `_cancelled - _want` also appears inside the refusal's
+    # message, so a text scan would be satisfied by the sentence that
+    # describes the guard after the guard itself was removed.
+    _guard = [nd for nd in _ast.walk(_ast.parse(_rc3))
+              if isinstance(nd, _ast.If)
+              and any(isinstance(x, _ast.BinOp) and isinstance(x.op, _ast.Sub)
+                      and getattr(x.left, "id", "") == "_cancelled"
+                      and getattr(x.right, "id", "") == "_want"
+                      for x in _ast.walk(nd.test))]
+    ok(_guard
+       and 'ctrl_scores.append({"t": float(g0["t0"])' in _rc3,
+       "EST-R5: the control acts at the NAMED generation's own t0 with a "
+       "repost one dwell later, and a cancel outside the drawn set "
+       "REFUSES -- asserted from the parse, because forcing a mismatched "
+       "cancel would mean mutating the policy the control replays. The "
+       "null cell above exercises the passing direction on every draw")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
@@ -1169,6 +1518,7 @@ def run(outdir: Path | None = None, *, coins=COINS,
     filing named it as the invocation of record. The flag is real here and
     the path under it is the one the addendum declares."""
     out = validate_outdir(outdir or OUTDIR)
+    preflight()      # DE34-C1: BEFORE the feed, not after it
     t_feed = time.time()
     feeds = {c: build_reference(c, limit=limit) for c in coins}
     feed_s = time.time() - t_feed
@@ -1226,21 +1576,44 @@ def score_events_for(reference: dict, *, coin: str, head: str) -> list:
 
 
 def _head_scorer(head: str, coin: str):
-    """The head applied to one generation row.  The LGBM head is loaded
-    from the manifest-bound text model; the incumbent from its own fit."""
-    if head == "q1_arrival_composed_lgbm":
-        import lightgbm as lgb                      # noqa: F401
-        booster = lgb.Booster(model_file=str(FITS / f"lgbm_haz_{coin}.txt"))
+    """REFUSES. The feature assembly is not wired (DE33-C1's other half).
 
-        def _s(row):
-            return float(booster.predict([[row["t"]]])[0])
-        return _s
-    d = json.loads((FITS / f"linear_d_{coin}.json").read_text())
-    coefs = d.get("coefficients") or d.get("coef") or {}
+    Round 33 fed the LGBM booster `[[row["t"]]]` -- one column against 106
+    -- and returned a constant 0.5 for the incumbent, under a docstring
+    that said "never a stub". Round 34 built the real head application in
+    `de_head_scoring` and LEFT THIS FUNCTION IN THE RUN PATH, so `--run`
+    would still have fed for ~29 minutes and then tracebacked at the first
+    cell on a `LightGBMError` `main()` did not catch.
 
-    def _lin(row):
-        return float(sum(coefs.values()) * 0.0 + 0.5)
-    return _lin
+    Until `phase2_arms._feature_pass(src, population, TAPE)` is wired --
+    the exposure-rows artifact plus the rebuilt state tape it refuses to
+    re-derive (R-187 seam 2) -- there is no feature vector to score, and
+    the honest behaviour is to refuse BEFORE the feed rather than return a
+    number that is not a prediction (DE34-C1)."""
+    # SITE: scorer#1
+    raise DiagRefused(
+        f"no feature assembly is wired, so {head}/{coin} cannot be scored: "
+        f"the incumbent needs 60 PM+fine values and the head under test "
+        f"106 PM+fine+state, both from "
+        f"`phase2_arms._feature_pass(src, population, TAPE)`. "
+        f"`de_head_scoring` applies both heads correctly to a vector of the "
+        f"right width -- there is no vector yet. Refused HERE, before any "
+        f"feed is built (DE34-C1)")
+
+
+def preflight() -> None:
+    """Everything knowable BEFORE the ~29-minute feed.
+
+    The run's first cell is the worst place to learn that the scorer is a
+    stub or a thresholds key is wrong: each is checkable in milliseconds,
+    so each is checked here and the feed is never paid for a run that
+    cannot finish."""
+    for coin in COINS:
+        for head in ("incumbent_linear_d", "q1_arrival_composed_lgbm"):
+            HS.thresholds(coin, head)
+    HS.verify_fit_code()
+    verify_called_code()
+    _head_scorer("q1_arrival_composed_lgbm", COINS[0])
 
 
 def main() -> int:
@@ -1258,7 +1631,8 @@ def main() -> int:
         try:
             rec = run(Path(a.outdir) if a.outdir else None)
         except (DiagRefused, HS.HeadRefused, SS.ScoreStreamRefused,
-                MRC.ControlRefused, RHO.RhoRefused) as exc:
+                MRC.ControlRefused, RHO.RhoRefused,
+                HSP.ReferenceIntegrityError) as exc:
             print(f"[de_phase4_diag_runner] REFUSED: {exc}", file=sys.stderr)
             return 2
         print(json.dumps(rec["predicates"], indent=1, sort_keys=True))

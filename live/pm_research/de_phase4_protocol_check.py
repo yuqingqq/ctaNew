@@ -139,7 +139,7 @@ def check(text: str) -> list[str]:
 #: it stands on is named.
 ADDENDUM = DRAFT.parent / "DE_PHASE4_DIAGNOSTIC_ADDENDUM_2026-09-02.md"
 
-EXPECTED_CHECKS = 22
+EXPECTED_CHECKS = 26
 
 
 def selftest() -> int:
@@ -265,6 +265,38 @@ def selftest() -> int:
        "axis) is not in the addendum, so this check goes red -- which is "
        "the point: a rung may not enter the code without entering the "
        "declaration first")
+
+    # ---- DE34-C3: the constant binding returns, without the claim -----
+    # Round 34 removed three horizon checks and said so nowhere. Two of
+    # them asserted the frozen text supports "the cap needs no addendum",
+    # which EST-R2 shows was wrong and which is therefore NOT restored.
+    # The third -- that the runner IMPORTS the constant rather than
+    # restating it -- was never wrong and comes back here.
+    ok(_RUN.FILL_HORIZON_S == 1.0,
+       f"the runner IMPORTS `FILL_HORIZON_S` ({_RUN.FILL_HORIZON_S}s) from "
+       f"`phase4_generation_tables` rather than restating it, so a change "
+       f"to the cap cannot leave the runner saying one thing and computing "
+       f"another. The two checks REMOVED with it asserted that the frozen "
+       f"text made an addendum unnecessary -- EST-R2 shows that reading "
+       f"was wrong, so they are withdrawn rather than restored (DE34-C3)")
+    ok(_RUN.BINDING_FIELDS.count("value_horizon") == 1
+       and "fill_horizon_s" not in _RUN.BINDING_FIELDS,
+       f"and the receipt's BINDING field is now `value_horizon`, not "
+       f"`fill_horizon_s`: the field a later reader resolves names the "
+       f"horizon the number HAS (EST-R2)")
+    _v2 = DRAFT.parent / "DE_PHASE4_DIAGNOSTIC_ADDENDUM_V2_DRAFT_2026-09-02.md"
+    ok(_v2.exists() and "PROPOSAL" in _v2.read_text()[:400]
+       and "not frozen" in _v2.read_text()[:400],
+       "and addendum v2 exists as a DRAFT PROPOSAL that says so in its "
+       "first lines -- it is what the USER rules on, and nothing in the "
+       "code cites it as authority")
+    _srcs = "".join((DRAFT.parent.parent / f).read_text()
+                    for f in ("de_phase4_diag_runner.py",
+                              "de_head_scoring.py"))
+    ok("ADDENDUM_V2" not in _srcs and "addendum_v2" not in _srcs,
+       "KNOWN-BAD/CONTROL: no module references the v2 draft as authority "
+       "-- a proposal cited by running code would be a seat deciding what "
+       "the USER has not ruled (rule 14)")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
