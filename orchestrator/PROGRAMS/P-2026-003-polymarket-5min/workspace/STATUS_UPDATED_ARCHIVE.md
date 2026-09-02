@@ -1626,3 +1626,87 @@ Moved in the MEM round-20 true-up of R-425. Join rule as in batch 1.
   G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
   evidence.
 ```
+
+## Batch 27 — archived 2026-09-02T12:11Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-21 true-up of R-426. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T11:47Z (MEM ROUND 18 -- I CITED A DIRTY TREE, AND THE FREEZE HAS AN
+  ANCHOR WITH NO COMMIT). R-423 swept. THE CORRECTION IS MINE: Q-MEM-5 cited
+  be_forward_day.py:491-506 and :1055 as evidence that the driver reads the
+  tape, but those line numbers come from BE's UNCOMMITTED round-4 WORKING TREE,
+  not from 805fd39, the commit I named -- and :1055 cannot exist there at all,
+  since that file is 810 LINES at the commit and 1,160 in the tree. THE IDENTITY
+  CLAIM SURVIVES; THE CITATION DID NOT. Verified now at the commit itself:
+  selected_from_specs reads fi._archive_paths() and fi.token_map() and carries
+  the same refusal at 805fd39:252-275, so the correct citation is :252-275 at
+  the commit while :487/:1055 describe a tree nobody else has. THIS IS RR12-1
+  LANDING ON MY OWN FILING -- that finding is about provenance and execution
+  disagreeing over which tree they are in, and I verified against whatever was
+  in the tree and then reported it under a commit hash. A LINE NUMBER IS A CLAIM
+  ABOUT A SPECIFIC ARTIFACT, AND MINE NAMED THE WRONG ONE: when a citation
+  carries a commit, read the file FROM that commit. The register has also
+  ADOPTED THE MIRROR RULE -- a vocabulary miss is not an absence -- into its own
+  vocabulary. THE FACT THAT MOVES A PENDING DECISION: THE FREEZE HAS AN ANCHOR
+  WITH NO COMMIT. BE round 4 reports -- REPORTED, NOT VERIFIED, AND NOT LANDED;
+  every line of it becomes verified only when the commit lands -- that (i) the
+  frozen code derives its DATA ROOT FROM __file__, so materialising anchors into
+  the run dir SILENTLY REPOINTED flow_intensity.PM and EMPTIED THE ARCHIVE
+  INDEX, fixed with a symlink (the freeze's code, today's data, both named in
+  the receipt) plus a PROBE THAT REFUSES if the root does not resolve or the
+  index is empty; (ii) materialising the DATA anchor SHADOWED that symlink, so
+  ONLY CODE ANCHORS are materialised; and (iii) the data anchor
+  harmful_exposure_rows_v3_eraB.json IS NOT IN THE FREEZE COMMIT AT ALL, because
+  data/ is gitignored -- its bytes match the manifest ON DISK and are verified
+  BY CONTENT with the source named. FACT (iii) IS AN ADDITION TO THE RECORD OF
+  THE SIXTH USER DECISION, STATED FOR THE USER AND DECIDED BY NO ONE: the frozen
+  set was described as "the commit's bytes", which is exact for the CODE
+  anchors, but THE DATA ANCHOR HAS NO COMMIT TO BE FROZEN AT -- it is frozen BY
+  MANIFEST SHA ONLY. So "race on the frozen bytes at 1b53929" resolves to code
+  from the commit and data from a file whose only binding is its hash; that
+  decides nothing and makes the option honest about what it is. THE DE ROUND 10
+  REVIEW IS RELEASED (922bff6) WITH THE REVIEWER'S OWN IN-BAND CORRECTION (rule
+  13; the released review untouched): it reproduced selected_from_specs refusing
+  a tape-less window by name, NAMED ITS OWN ERROR AS A GREP ESTABLISHING AN
+  ABSENCE, and WITHDREW the "intersect" half of its recommendation -- accepted,
+  with the disposition staying refuse-on-ledger_minus_tape, never intersect. Its
+  EXPIRY NOTE is recorded as method: A FIXTURE WHOSE ESSENTIAL PROPERTY IS "NOT
+  WRITTEN YET" EXPIRES WITHIN MINUTES, so reproduce the mechanism on the current
+  in-flight window AND a future one. DE10-R1 (MEDIUM) STANDS -> DE ROUND 12
+  (Q-DE-30, in flight), and it is silent in BOTH directions: the checker
+  compares timestamps LEXICOGRAPHICALLY AS STRINGS, so now_utc="zzzz" reads
+  day_closed True and verified True while scope_to "not-a-date" reads
+  day_in_scope True, verified True, unverifiable [] -- garbage sorts PERMISSIVE
+  for now_utc/scope_to and RESTRICTIVE for scope_from, and NONE OF THE THREE
+  SURFACES. Round 12 parses to datetimes and refuses an unparsable value BY NAME
+  with a falsifier per field IN BOTH DIRECTIONS, because a fix tested only
+  against permissive garbage would miss the restrictive half. DE ROUND 11
+  VERIFIED (d07d901, Q-DE-29): DE-R1..R4 all CLOSED -- ratification 66,
+  admissible 53, seam 69 checks under both launchers, checker audit 14 paths
+  with survivors [] and all_load_bearing True -- and DE's TWO DELIBERATE
+  SEPARATIONS ACCEPTED (kind kept outside the vocabulary loop; the
+  sampling/population contradiction check kept apart from the vocabulary,
+  because restricting sampling to NONE would have hardcoded that no sampled
+  ratification can exist, contradicting KNOWN_POPULATIONS). Nothing under review
+  moved: R-419 on 09-01 verified_for_new_run True and day_closed True; R-418
+  stamped 10:30Z provenance True. ONE OPERATIONAL NOTE WORTH GENERALISING: BE's
+  mutation harness was SIGKILLED mid-mutation by an outer timeout, its finally
+  never ran, and a mutant (F17) STAYED APPLIED IN THE TREE until the next
+  selftest caught it -- CLEANUP THAT LIVES ONLY IN finally DOES NOT SURVIVE
+  SIGKILL; BE added a backup. AND A TIMESTAMP FOR THE RECORD: R-423's heading
+  reads 11:47Z while the commit carrying it is 11:46:34Z, composed 26 s ahead --
+  THE COMMIT TIME IS AUTHORITATIVE. Recorded, not adjudicated; the sixth
+  instance of the stamp-vs-clock class, and the register now discloses them
+  itself. REVIEW TABLE: DE round 10 RELEASED; DE round 11 REVIEW DISPATCHED at
+  d07d901 (BE rounds 3-4 still queue behind it, to be reviewed together when
+  round 4 lands); DA round 10 after tonight. OPEN FINDINGS: DE10-R1 -> DE round
+  12; RR12-1 and CO-R4 -> DA round 10. IN FLIGHT: BE round 4 (Q-BE-229, not
+  landed), DE round 12 (Q-DE-30), the reviewer on DE round 11, DA on standby
+  (Q-DA-208 after 00:06Z); BE round 5 queues the population-gate comparison and
+  require_verified(). USER DECISIONS UNCHANGED AND SIX, with section 4(iii)
+  added to the sixth's record. R-419 remains revocable by the USER. UNCHANGED:
+  G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
+  evidence.
+```

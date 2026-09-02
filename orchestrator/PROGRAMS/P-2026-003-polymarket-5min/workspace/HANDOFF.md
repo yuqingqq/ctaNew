@@ -1,12 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T12:02Z — **BE round 4 was OOM-killed at the 12 G cap and is
-re-running as a streaming pass** — the cap was **not** raised, and its receipt
-now flushes per gate, which I confirmed live mid-run. DE round 12 verified
-(DE10-R1 closed **in both directions**, 84 checks, audit 19/0); DE round 11
-review released; DE11-R1 and CO-6 → DE round 13. **USER decisions unchanged:
-four RULED, one OPEN.** Prior line: the USER ruled "Proceed according to your
-recommendation" and this file was the referent.
+Updated: 2026-09-02T12:11Z — **CO-7: a fix landed without its falsifier** — the
+CO-6 repair was correct and added **no selftest line** (84 → 84), and the count
+that did not move is the tell. DE round 13 verified (DE11-R1 and CO-6 CLOSED);
+DE round 12 review released with **DE12-R2** (an *empty* `scope_to` reads
+silently open-ended). **USER decisions unchanged: four RULED, one OPEN.** Prior
+line: BE round 4 re-runs as a streaming pass with the 12 G cap unraised.
 
 ## READ FIRST — current project handoff
 
@@ -176,7 +175,27 @@ when it was escalated.
 | # | fact as reported | status |
 |---|---|---|
 | **(iv)** | the 09-01 run was **OOM-killed at 12.0 GiB after 21 min**; **the cap was not raised** — the pass was restructured to **stream** instead, and re-launched ~11:55Z | **observed live at the box:** `be-fwd-0901c.service` in `research.slice`, `MemoryMax` = **12 GiB unchanged**, and at 12:02Z (≈7 min in) `MemoryCurrent` ≈ **2.75 GiB** — far under the cap so far. The run is **not finished**; this is a mid-run observation, not a result |
-| **(v)** | the killed run **wrote no receipt at all**; the receipt is now **flushed after every gate** | **observed live:** `be_forward_day_receipt_20260901.json` (9,584 B) exists **while the run is still going**, already carrying a `gates` array with `day_closed_and_attributed`, `population_supply_and_bridge` and `materialise_frozen_bytes` each **PASS**, and stamping `ratification_ref: R-419` — correct for round 4 under R-419's supersession |
+| **(v)** | the killed run **wrote no receipt at all**; the receipt is now **flushed after every gate** | **observed live:** `be_forward_day_receipt_20260901.json` (9,584 B) exists **while the run is still going**, carrying **six** PASS gates — `day_closed_and_attributed`, `population_supply_and_bridge`, `materialise_frozen_bytes`, `import_closure_disclosure`, `import_anchors_from_run_dir`, `selection_from_specs` — and stamping `ratification_ref: R-419`, correct for round 4 under R-419's supersession |
+
+**Two corrections to my own round-20 reading of that receipt, both mine.**
+**(a) Six gates, not three.** My print truncated at 220 characters and I reported
+what it showed as though it were the whole array — the same partial-read shape
+this programme keeps recording, committed by me while recording it.
+**(b) The flush is not progressive.** All six gates landed **within ~4 s of the
+11:55:06Z start**, and the receipt's mtime has not moved since **11:55:10.29**
+through fifteen minutes of streaming scoring. So the partial record a kill would
+leave is *the gates*, and **nothing about how far scoring got** — the hole is
+smaller than it was, not closed.
+
+**And `sealed: True` in that receipt does not mean the run ended.** Its own
+`sealing_note` says per-action scores and every value metric go to the **sealed
+file only**, while the receipt carries counts, identities and hashes and **no
+metric** (rule 11); unsealing is the coordinator's or the USER's act. A reader
+finding `sealed: true` mid-run must not read it as completion.
+
+**Live at 12:10Z:** still active, `MemoryMax` **12 GiB unchanged**,
+`MemoryCurrent` ≈ **4.0 GiB** (2.75 → 4.0 over eight minutes) — climbing, far
+under the cap, and still not a result.
 
 **The 3–4 review must see two falsifiers**, and they are the right two: that the
 **streaming pass scores identically** to the non-streamed one on a small
@@ -408,8 +427,9 @@ launchers at **235/19**.
 | **DE rounds 7–9** | **RELEASED** (`b4da910`) — DE-R1..R4 reproduced at `2282e5c` → DE round 11. One register claim in that filing **did not reproduce**; see the section above |
 | **DE round 10** | **RELEASED** (`922bff6`) — CO-5, CO-R1's checker half and CO-R3 closed; DE's addition (`require_verified` refuses a **PROVENANCE** result) accepted. **DE10-R1 (MEDIUM) stands → DE round 12** |
 | **DE round 11** | **RELEASED** (`1e494f9`) — DE-R1..R4 closed, **two past the ask**; both deliberate separations accepted with the reviewer's reason (`STRATIFIED` is a legal `sampling` value, so the defect is in the **pair** — folding it into the vocabulary loop would name one field for a two-field fault). **DE11-R1 → DE round 13** |
-| **DE round 12** | **VERIFIED** (`9dbaa5a`) and **UNDER REVIEW** at that tip: **84 checks** rc 0 both launchers (reproduced here), `mutation_audit` **19 paths, `survivors []`**. **DE10-R1 CLOSED in both directions** — permissive garbage (`now_utc="zzzz"`, `scope_to: not-a-date`) *and* restrictive garbage (`scope_from: zzzz`) both refuse by field and value, `now_utc=123` refuses as a type rather than crashing, and the 09-01 boundary reads `23:59:59Z` → not closed / `00:00:00Z` → closed |
-| **DE round 13** | **IN FLIGHT** (Q-DE-31): DE11-R1 + **CO-6** |
+| **DE round 12** | **RELEASED** (`dcb7036`) — DE10-R1 closed **at the root** (all five temporal sites compare datetimes). Two findings: **DE12-R1** = CO-6 confirmed and **widened to non-strings**, raised to **MEDIUM-LOW**; **DE12-R2 (new)** — an **empty** `scope_to` reads silently open-ended |
+| **DE round 13** | **VERIFIED** (`f04c06a`) and **UNDER REVIEW** at that tip: admissible **62**, ratification **84**, seam **69**, rc 0 both launchers. **DE11-R1 CLOSED** and **CO-6/DE12-R1 CLOSED at entry** |
+| **DE round 14** | **IN FLIGHT** (Q-DE-32): DE12-R2 + **CO-7** + the audit-count wording |
 | **the coordinator's own acts** | **REVIEWED** (`1384ec5`), no hold; CO-R1..R4 dispositioned |
 
 **In flight:** **BE round 4** (Q-BE-229) — the frozen-bytes execution, **not
@@ -439,8 +459,38 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **DE11-R1** and **CO-6** → DE round 13; **RR12-1** and
+**Open findings:** **DE12-R2** and **CO-7** → DE round 14; **RR12-1** and
 **CO-R4** → DA round 10.
+
+**CO-7 is the one to keep: a fix landed without its falsifier.** The CO-6 repair
+is **correct** — `stamped_at` is now parsed at entry, and `'not-a-time'`, `123`
+and `''` all refuse by field and value on the non-superseded ref. But the diff
+added **no selftest line**, so the count went **84 → 84** and **no check asserts
+either the refusal on that branch or the echoed parsed value.** Rule 15 says a
+checker ships its falsifier, and **a count that does not move is the tell** —
+which is sharper for having been demonstrated the same hour: the round-12 review
+proved the count assertion *works* by emptying a selftest loop and watching
+`82 == 84` fail. The mechanism that would have caught this was verified three
+commits before it happened.
+
+**DE12-R2 is DE10-R1's family read on the permissive side.**
+`SCOPE_OPEN_TOKENS = ('null', 'none', '')`, so a `scope_to:` with **nothing after
+the colon** reads open-ended — `verified: True`, `unverifiable: []`, no sign in
+the emission. **An editing slip becomes an unbounded ratification.** (`~`
+refuses; absent reads MISSING — so the hole is exactly the empty value.)
+
+**Two things from the round-12 review worth carrying as method.** Its structural
+closure of *"the control that ran nothing"* is the right kind of proof — emptying
+a loop **fails the suite on the count assertion**, so a loop that runs zero times
+cannot pass. And its audit-count note is accepted: **19 paths = 19 (input,
+refusal) cases over three raise sites** — that is *call-site coverage of a shared
+parser*, the right design, and it should say so in the count's own emission
+rather than read as nineteen independent guards.
+
+**DE's own false positive is recorded as method too:** matching on the attribute
+name made `re.compile` look like an opaque `exec`, and the seam refused itself —
+**the dependent suite caught it before it shipped**. `DECLARED_BLIND_SHAPES` now
+names five shapes it cannot see, which is the honest form.
 
 **CO-6 is the coordinator's own finding, and it is DE10-R1 one branch over.**
 `stamped_at` is **parsed only on the superseded branch**: on R-418 (superseded)
@@ -820,6 +870,52 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~12:11Z (MEM) — A FIX WITHOUT ITS FALSIFIER, AND TWO
+### CORRECTIONS TO MY OWN READING
+
+**R-426 swept.** The round's finding and my own two errors point the same way.
+
+**CO-7: the CO-6 fix is correct and shipped without a falsifier.** `stamped_at`
+is now parsed at entry and refuses garbage on the branch that used to echo it —
+verified. But the diff added **no selftest line**: the count went **84 → 84**, so
+nothing asserts the refusal or the parsed echo. **A count that does not move is
+the tell**, and what makes this more than bookkeeping is the timing: the round-12
+review had just *proved that assertion works*, by emptying a selftest loop and
+watching the count assertion fail (`82 == 84`). The instrument that would have
+caught CO-7 was demonstrated three commits before CO-7 happened.
+
+**Two corrections to my round-20 entry, both mine, and both the shape I keep
+writing down about other people.** First, I reported the receipt as carrying
+**three** PASS gates; it carries **six** — my print truncated at 220 characters
+and I described what it showed as though it were the array. **A partial read
+reported as complete**, committed by the seat that has recorded that class four
+times this week. Second, I wrote that the receipt exists "while the run is still
+going" in a way that reads as *progressive* flushing. It is not: **all six gates
+landed within ~4 s of start and the file has not moved since 11:55:10** through
+fifteen minutes of streaming scoring. So a kill during scoring would leave the
+gates and **nothing about scoring progress** — the hole is smaller, not closed.
+Both corrected in place.
+
+**And one thing I had not looked at closely enough to get wrong yet:**
+`sealed: true` in that receipt means **metrics go to the sealed file only**
+(rule 11), not that the run finished. Mid-run, `sealed` and `done` look
+identical to a careless reader; the sealing note is what separates them.
+
+**DE12-R2 belongs beside CO-7 as the other half of the same week.** An **empty**
+`scope_to` — nothing after the colon — reads open-ended with `verified: True`
+and `unverifiable: []`. **An editing slip becomes an unbounded ratification**,
+and it is DE10-R1's family again, this time interpreted permissively. `~`
+refuses and an absent field reads MISSING, so the hole is precisely the empty
+value: the one a human typo produces.
+
+**Two method marks worth keeping from DE and the reviewer.** The reviewer proved
+*"the control that ran nothing"* cannot pass by **emptying a loop and watching
+the count assertion fail** — a structural proof rather than an argument. And DE
+shipped a false positive of its own into its own suite (attribute-name matching
+made `re.compile` an opaque `exec`, and the seam refused itself), **caught by the
+dependent suite before it left the round**; `DECLARED_BLIND_SHAPES` now names
+five shapes the checker cannot see, which is the honest form of a limit.
 
 ### 2026-09-02 ~12:02Z (MEM) — STATE THAT ONLY EXISTS IF THE PROCESS EXITS
 ### NORMALLY
