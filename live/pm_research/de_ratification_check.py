@@ -420,7 +420,7 @@ def entry_index(register_text: str, *, subject: str | None = None
         # `superseded_by` for every later entry, and by `check()` on the
         # entry under check), so nothing is refused earlier than before.
         named = {str(blk.get("supersedes", "")).strip()
-                 for e in entries for blk in own_ratification_blocks(e)}
+                 for e in entries for blk in own_blocks_quiet(e)}
         reached = [r for r in dups if r in named]
         if reached:
             # SITE: entry_index#2
@@ -436,15 +436,25 @@ def entry_index(register_text: str, *, subject: str | None = None
                 f"make a duplication reach an answer either, and refusing "
                 f"on it was the narrow return of DE16-R1 -- a quotation "
                 f"deciding another entry's check.")
+        # R-451 §3: OWN blocks, the same criterion as (ii). A QUOTED block
+        # under a duplicated heading reaches no answer -- `superseded_by`
+        # reads the kept occurrence's OWN blocks, and a quotation is not
+        # own whichever occurrence were kept -- so it belongs on the
+        # reporting side. A SELF-quotation counts as own and refuses:
+        # that is the predicate's definition, and fail-closed.
         blocky = [r for r in dups
-                  if any(_fenced_blocks(e) for e in entries if e["ref"] == r)]
+                  if any(own_blocks_quiet(e) for e in entries
+                         if e["ref"] == r)]
         if blocky:
             # SITE: entry_index#3
             raise RatificationRefused(
                 f"REFUSED: {blocky} head more than one entry "
                 f"({ {r: dups[r] for r in blocky} }, 0-based lines) and at "
-                f"least one occurrence carries a ratification block. Two "
-                f"headings under one ref with a block among them is the "
+                f"least one occurrence carries an OWN ratification block "
+                f"(ref == the heading, kind R-ADMISS; a QUOTED block is "
+                f"somebody else's and reaches no answer here -- R-451 §3). "
+                f"Two headings under one ref with an own block among them "
+                f"is the "
                 f"heading-level form of `own_ratification_blocks#1`: a "
                 f"corrected ratification would be shadowed by the one it "
                 f"corrects, and which is read would depend on the order "
@@ -597,6 +607,35 @@ def _heading_ref(entry: dict) -> str | None:
 #: `check#8` already applies to the entry under check, one loop over: the
 #: block's `ref` must be the entry's OWN heading ref, and its `kind` must be
 #: R-ADMISS. Anything else is a quotation and is not read.
+#: CO-9: THE SCANS MUST NOT ADJUDICATE. Round 26 moved (ii) from
+#: `_fenced_blocks` -- which raises nowhere -- to
+#: `own_ratification_blocks`, which RAISES (`#1` two own blocks, `#2` a
+#: duplicated key), and the scan runs over EVERY entry. So a malformed own
+#: block in an entry standing EARLIER than the subject refused the
+#: subject's check: an entry before the subject can supersede nothing, and
+#: the refusal named a defect with nothing to do with the ref being
+#: checked -- the DE16-R1 sentence, one reader over. It fired only while
+#: the register carried an UNRELATED duplicate, because the scan sits
+#: inside `if dups:`; whether one entry refused another depended on R-6.
+#:
+#: My round-26 ordering note ("nothing is refused earlier than before") was
+#: true of ORDER and silent on the SET, and the suite had no
+#: earlier-malformed fixture, so its green was not the check on that claim.
+#: It is now: fixtures C and C3 stand on either side of the subject.
+#:
+#: So ownership is asked TWICE, by two readers with different jobs. This
+#: one only ANSWERS -- same predicate, no raise -- and is what the two
+#: scans use; `own_ratification_blocks` stays the ADJUDICATING reader on
+#: the path (`check()` on the subject, `superseded_by` on later entries),
+#: where a malformed entry is the answer rather than an obstacle to one.
+def own_blocks_quiet(entry: dict) -> list[dict]:
+    """The entry's own ratification blocks, ANSWERED not adjudicated."""
+    ref = _heading_ref(entry)
+    return [blk for blk, _dups in _fenced_blocks(entry)
+            if str(blk.get("ref", "")).strip() == ref
+            and str(blk.get("kind", "")).strip() == "R-ADMISS"]
+
+
 def own_ratification_blocks(entry: dict) -> list[dict]:
     """The entry's OWN ratification block(s) -- ref == heading ref and
     kind == R-ADMISS.  More than one REFUSES: two ratifications under one
@@ -1125,7 +1164,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 171
+EXPECTED_CHECKS = 177
 
 
 def selftest() -> int:
@@ -1848,7 +1887,7 @@ def selftest() -> int:
             "block REFUSE even when neither is the subject -- the "
             "heading-level form of `own_ratification_blocks#1`, where a "
             "corrected ratification is shadowed by the one it corrects",
-            needle="carries a ratification block")
+            needle="carries an OWN ratification block")
     refuses(lambda: check(sup, "R-903",
                           _dup([("R-902", "NO_BLOCK"), ("R-902", "NO_BLOCK"),
                                 ("R-903", "R-902")])),
@@ -1903,6 +1942,122 @@ def selftest() -> int:
        f"and both 0-based lines {_dl} -- every reachable case still "
        f"refuses, which is what the refinement had to preserve: "
        f"{_msg2[:76]!r}")
+
+    # ---- CO-9: the scans ANSWER, they do not adjudicate ---------------
+    # C / C2 / C3 stand on either side of the subject, which is the
+    # fixture my round-26 ordering note lacked: it was true of ORDER and
+    # silent on the SET, and a suite with no earlier-malformed entry could
+    # not have caught that.
+    def _malformed(ref):
+        """An entry carrying TWO blocks of its OWN -- `#1`'s known-bad."""
+        blk = ("```ratification\nref: " + ref + "\nkind: R-ADMISS\n"
+               f"population: {POP_FULL}\nsampling: NONE\n"
+               "present_source: data/pm_5min/markets.jsonl\n"
+               "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+               "scope_to: null\nrevocable_by: USER\nsupersedes: null\n"
+               "```\n")
+        return (f"\n### {ref} — 2026-09-02T16:30Z — coordinator: R-ADMISS\n\n"
+                + blk + "\nand again, malformed:\n\n" + blk + "\n")
+
+    _r419_line = entry_index(_rtxt0)["R-419"]["line"]
+    _lines0 = _rtxt0.split("\n")
+    _before = ("\n".join(_lines0[:_r419_line]) + _malformed("R-99900")
+               + "\n".join(_lines0[_r419_line:]))
+    _saw_c = ""
+    try:
+        _c = check(sup, "R-419", _before)
+    except RatificationRefused as _exc:
+        _c, _saw_c = None, f" REFUSED INSTEAD: {str(_exc)[:110]}"
+    ok(_c is not None and _c["verified"] and not _saw_c,
+       f"POSITIVE CONTROL C (CO-9): a MALFORMED entry standing EARLIER "
+       f"than the subject -- two own blocks under one heading -- no longer "
+       f"refuses the subject's check: R-419 verifies "
+       f"{_c['verified'] if _c else False}. An entry before the subject "
+       f"can supersede nothing, so it reaches no answer, and the scan "
+       f"ANSWERS ownership rather than adjudicating it{_saw_c}")
+    # The SECOND occurrence is renamed, by its parsed line rather than by
+    # a text replace -- and to a ref the register cannot hold, since
+    # appending a digit to a real ref lands on another real one.
+    _bl = _before.split("\n")
+    _dup_lines = [e["line"] for e in all_entries(_before)
+                  if e["ref"] == _dupref]
+    _bl[max(_dup_lines)] = _bl[max(_dup_lines)].replace(
+        f"### {_dupref} ", "### R-990006 ", 1)
+    _no_dup = "\n".join(_bl)
+    _saw_c2 = ""
+    try:
+        _c2 = check(sup, "R-419", _no_dup)
+    except RatificationRefused as _exc:
+        _c2, _saw_c2 = None, f" REFUSED INSTEAD: {str(_exc)[:110]}"
+    ok(_c2 is not None and _c2["verified"]
+       and _c2["duplicate_refs"] == {} and not _saw_c2,
+       f"POSITIVE CONTROL C2: the SAME register with the duplicate renamed "
+       f"away verifies too ({_c2['duplicate_refs'] if _c2 else None} "
+       f"duplicates) -- and that pair is the point of the finding: before "
+       f"this round C refused and C2 returned, so whether one entry "
+       f"refused another depended on {_dupref}, a duplicate with nothing "
+       f"to do with either{_saw_c2}")
+    _after = _rtxt0 + _malformed("R-99900")
+    refuses(lambda: check(sup, "R-419", _after),
+            "KNOWN-BAD C3: the same malformed entry standing LATER than "
+            "the subject STILL refuses -- it is on the path, read by "
+            "`superseded_by` as a possible superseder, and round 18 made "
+            "that adjudication the answer rather than an obstacle to one",
+            needle="ratification blocks of its OWN")
+
+    # ---- R-451 §3: (iii) reads OWN blocks -----------------------------
+    def _dupe_pair(second_block_ref, sup_val="null", kind="R-ADMISS"):
+        """A ref heading two entries; the second carries a block whose
+        `ref` is `second_block_ref` -- own when it equals the heading."""
+        head = ("### R-99903 — 2026-09-02T16:40Z — coordinator: R-ADMISS\n"
+                "\nprose only, no block\n\n")
+        blk = (f"### R-99903 — 2026-09-02T16:45Z — coordinator: R-ADMISS\n\n"
+               f"```ratification\nref: {second_block_ref}\n"
+               f"kind: {kind}\npopulation: {POP_FULL}\nsampling: NONE\n"
+               "present_source: data/pm_5min/markets.jsonl\n"
+               "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+               f"scope_to: null\nrevocable_by: USER\n"
+               f"supersedes: {sup_val}\n```\n\n")
+        return _rtxt0 + "\n" + head + blk + "## next\n"
+
+    _saw_d = ""
+    try:
+        _d = check(sup, "R-419", _dupe_pair("R-777"))
+    except RatificationRefused as _exc:
+        _d, _saw_d = None, f" REFUSED INSTEAD: {str(_exc)[:110]}"
+    ok(_d is not None and _d["verified"]
+       and _d["duplicate_refs"].get("R-99903") is not None and not _saw_d,
+       f"POSITIVE CONTROL D (R-451 §3): a duplicated heading whose second "
+       f"occurrence carries a QUOTED block (`ref: R-777`) is REPORTED, not "
+       f"refused -- {_d['duplicate_refs'] if _d else {}} -- because "
+       f"`superseded_by` reads the kept occurrence's OWN blocks and a "
+       f"quotation is not own whichever occurrence were kept. It reached "
+       f"no answer, so it belongs on the reporting side{_saw_d}")
+    # D2 is the control for the filter's OTHER conjunct: a block whose ref
+    # IS the heading but whose kind is not R-ADMISS is not a ratification,
+    # so it is not own -- the same pair `check#8` and `check#10` apply to
+    # the subject. Without this, dropping `kind` from the quiet filter
+    # passes: D turns on the REF conjunct and nothing turned on kind.
+    _saw_d2 = ""
+    try:
+        _d2 = check(sup, "R-419", _dupe_pair("R-99903", kind="STATUS_NOTE"))
+    except RatificationRefused as _exc:
+        _d2, _saw_d2 = None, f" REFUSED INSTEAD: {str(_exc)[:110]}"
+    ok(_d2 is not None and _d2["verified"]
+       and _d2["duplicate_refs"].get("R-99903") is not None and not _saw_d2,
+       f"POSITIVE CONTROL D2: and a block under its OWN heading that does "
+       f"NOT declare itself R-ADMISS is not a ratification either, so the "
+       f"duplication is REPORTED "
+       f"({_d2['duplicate_refs'] if _d2 else {}}) -- ownership is ref AND "
+       f"kind in the quiet filter exactly as in the adjudicating "
+       f"reader{_saw_d2}")
+    refuses(lambda: check(sup, "R-419", _dupe_pair("R-99903", "R-419")),
+            "KNOWN-BAD E: the same shape with an OWN block on the second "
+            "occurrence -- ref == the heading, carrying `supersedes: "
+            "R-419` -- still REFUSES at `entry_index#3`: keeping the first "
+            "occurrence would drop that supersession, which is an answer "
+            "reached",
+            needle="carries an OWN ratification block")
 
     # ---- DE24-R2: `check#18` names the convention its number uses ------
     _msg18 = ""
