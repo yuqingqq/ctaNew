@@ -2112,3 +2112,72 @@ Moved in the MEM round-26 true-up of R-431/R-432. Join rule as in batch 1.
   R-419 remains revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of
   24 surviving with Q4 failing; development evidence.
 ```
+
+## Batch 33 — archived 2026-09-02T13:23Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-27 true-up of R-433. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T12:38Z (MEM ROUND 24 -- THE RULE STOPPED ONE FIELD SHORT). R-429
+  swept; verified at the artifacts, with the central mechanism read at SOURCE
+  rather than taken. DE14-R1 (MEDIUM): DE12-R2 taught that AN EMPTY VALUE MUST
+  REFUSE, and DE14-R1 finds THE ONE FIELD IT DID NOT REACH -- supersedes.
+  superseded_by() compares str(blk.get("supersedes","")).strip() == ref
+  (de_ratification_check.py:279-292), so an ABSENT OR EMPTY value becomes "" and
+  simply FAILS TO MATCH; later entries' blocks are BOUND BUT NEVER VALIDATED, so
+  r-902 (wrong case), R-9O2 (letter O for zero) and "R-902, R-901" (two refs in
+  one field) are INVISIBLE the same way. THE FAILURE MODE IS THE QUIET ONE: not
+  a wrong answer but "nothing supersedes this", IN THE FIELD THAT DRIVES THE
+  CHECKER'S STRONGEST REFUSAL. BOUNDED, AND I CHECKED THE BOUND RATHER THAN
+  REPEATING IT: the register holds EXACTLY ONE ratification block, R-419 with
+  supersedes R-418, an exact match -- NOTHING SHIPPED IS WRONG and the exposure
+  is FORWARD, at BE's check() call site. That distinction is worth keeping: a
+  MEDIUM finding with no present instance is still worth fixing BEFORE the
+  second block exists, which is precisely when it stops being checkable by eye.
+  DE14-R2 (LOW-MEDIUM) IS THE WEEK'S MOST PERSISTENT SHAPE IN NEW CLOTHES: THE
+  AUDIT REPORTS COVERAGE IT DOES NOT ASSERT -- "superseded" refuses at the
+  HEADING-TIMESTAMP guard rather than the SUPERSEDED guard, and
+  unknown_population_value at VALUE rather than the line it names, so DELETING
+  ROUND 14'S OWN NEW CASE LEAVES THE SUITE GREEN. A coverage claim that names a
+  guard the case never reaches is the same thing as a count standing in for a
+  check, and this programme has now recorded that family IN THE CHECKER, IN THE
+  REVIEWER'S CHAIR, IN DA'S SUITE, and here IN AN AUDIT'S OWN ATTRIBUTION.
+  DE14-R3 (LOW): .lower() admits NULL/Null/nUlL while the module case-folds
+  nowhere else -- DECIDED BY THE COORDINATOR AS RESTORATION (exact null, code
+  matching R-419 section 4 as adopted), so NO SPEC CHANGE AND NO USER DECISION:
+  housekeeping rather than a manufactured seventh item, the same restraint that
+  kept the freeze disposition out of the four-item ruling. DE14-R4 (LOW):
+  n_guards still carries the case count. All four go to DE ROUND 16 (Q-DE-34, in
+  flight); DE ROUND 17 is the DATA_ROOT split, STAGED behind DA round 10. AND
+  THE FALSIFIER ROUND 13 OWED WAS PAID: the reviewer's own pre-fix mutant now
+  DIES BY NAME at check 46 under both launchers, and under it the audit surfaces
+  survivors ['unparsable_stamped_at_not_superseded'] with attribution going
+  NON-TOTAL (20 vs 21) -- a debt named two rounds ago, settled where it was
+  incurred. The round-14 closures were driven rather than read: every one of the
+  ten RATIFICATION_FIELDS present-and-empty refuses EMPTY, absent MISSING, wrong
+  VALUE, on their own cases; two empties report together; scope_from null
+  refuses "not a day"; the audit's numbers are COMPUTED from the physical raise
+  line; 84 -> 102 accounted (8 + 8 + 2); emptying the garbage loop fires 99 ==
+  102; 19 of 19 refusals interpolate, 0 constant. MY RECEIPT FINDING BECAME A
+  BE LANDING CONDITION rather than a note (R-429 section 4), and the form is
+  better than what I proposed: EITHER A COPY OF THE FIRST PASS'S RECEIPT EXISTS,
+  OR THE RE-RUN'S TEN-GATE RECEIPT IS THE ONLY RECEIPT AND THE FIRST PASS'S PANE
+  COUNTS MUST MATCH IT -- it does not pretend the bytes are recoverable, and it
+  makes the surviving artifact carry the burden of agreeing with what was
+  reported; it also rides the BE 3-4 review request. STILL LIVE AT 12:38Z: the
+  re-run is active, the receipt at that path still reads as_of 2026-09-02T12:23:
+  29Z with SIX gates, and NO TEN-GATE RECEIPT EXISTS YET, so the condition is
+  not yet satisfiable either way. REVIEW TABLE: DE round 14 RELEASED; DE round
+  15 VERIFIED and UNDER REVIEW at 0ca510e, with the round-13 section-3 IN-BAND
+  CORRECTION REQUIRED AS ITS OWN SECTION of that review; DE round 16 IN FLIGHT;
+  DE round 17 STAGED; DA round 10 HELD for the 00:14Z read; BE round 4 IN FLIGHT
+  on the re-run (~12:50Z expected). OPEN: DE14-R1..R4 to DE round 16; RR12-1 and
+  CO-R4 to DA round 10; CO-8 to the coordinator after tonight; the reviewer's
+  round-13 section-3 correction to the DE round 15 review; the first-pass
+  receipt to BE as a landing condition. USER DECISIONS UNCHANGED: FOUR RULED,
+  ONE OPEN (the freeze disposition, R-424 section 6), the 09-02 accrual call
+  MECHANICAL after 00:06Z. R-419 remains revocable by the USER. UNCHANGED:
+  G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
+  evidence.
+```

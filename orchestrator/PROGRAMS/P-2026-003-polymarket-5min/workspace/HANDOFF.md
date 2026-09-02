@@ -1,11 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T13:10Z — **a fenced ratification block quoted in any later
-entry is read as that entry's own** (DE16-R1, live), so a **coordinator format
-rule** now forbids quoting one outside an R-ADMISS entry — **it binds these state
-files, and I removed the one this file was carrying.** **USER decisions
-unchanged: four RULED, one OPEN.** Prior line: BE's re-run completed with
-matching counts; 71.7% of the supplied population produces no score.
+Updated: 2026-09-02T13:23Z — **DE round 18 closed DE16-R1..R4** (ratification
+132 → **150**, five coordinator mutants dying by name) and **left one residual
+measured but NOT ruled**: an entry whose **own** block claims to supersede a
+**non-existent** entry still verifies. **The format rule stays in force**, and
+beyond the review for R-ADMISS entries themselves. **USER decisions unchanged:
+four RULED, one OPEN.** Prior line: the format rule bound this file and it was
+in breach.
 
 ## READ FIRST — current project handoff
 
@@ -306,7 +307,16 @@ write as you go.
 
 ### FORMAT RULE — no fenced ratification block outside an R-ADMISS entry
 
-**In force from R-432 until DE round 18 lands.** No register entry other than an
+**Still in force. It now runs until the DE round 18 REVIEW is released** — not
+until round 18 landed — **and beyond that for R-ADMISS entries themselves**,
+because of an asymmetry DE measured: **a quoted block placed BEFORE an entry's
+own block still refuses** at `check#8`. That is the **fail-closed** direction, and
+it is the reason the rule does not simply retire when the code improves.
+
+**Asserted this round, as required: ZERO fenced ratification blocks in either
+state file** (`STATUS.yml` 0, `HANDOFF.md` 0) — checked after every edit below.
+
+**In force from R-432.** No register entry other than an
 R-ADMISS entry's own may contain a **fenced** `ratification` block; spellings are
 quoted **in prose with inline backticks only**. **The rule binds these state
 files too.**
@@ -636,7 +646,7 @@ launchers at **235/19**.
 | **DE round 16** | **VERIFIED** at `829910e` (Q-DE-34) and **UNDER REVIEW** — **132 checks** (reproduced here); **DE14-R1..R4 CLOSED**; **both coordinator mutants die by name**; the R-419 / R-418 verdicts are **unchanged from `0ca510e`**, which is the check that matters — a validation round that moved a verdict would have been a different change |
 | **DE round 16 review** | **RELEASED** (`81e050b`, 13:03:51Z) — **sequencing SATISFIED**; four findings, each reproduced |
 | **DE round 17** | **VERIFIED** at `a8093a5` — DE15-R1..R4 closed, three mutants die by name. **Queued** for review behind DA round 10 |
-| **DE round 18** | **DISPATCHED** (Q-DE-36): DE16-R1..R4 + marker-name uniqueness |
+| **DE round 18** | **VERIFIED** at `db039a3` — **DE16-R1..R4 CLOSED**, ratification **132 → 150** (reproduced here), five coordinator mutants **die by name**, marker uniqueness asserted (28 markers / 28 names; 22 driven, six not, each named). **Review request written and queued.** One residual measured and **NOT ruled** — below |
 | **DE round 19** | the **DATA_ROOT split**, behind DA round 10 |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
 | **DE round 16** | **STAGED** behind DA round 10's landing and the r14 review: the CODE_ROOT/DATA_ROOT split on the **three** DE-owned files in the class (`de_admissible_windows` :64/:77, `de_ratification_check` :43, `de_lane4_results_doc`) — **counted at the tree; five other DE files are not in the class** — following DA's `_resolve_data_root` convention so the split is written **once** |
@@ -676,7 +686,33 @@ counts satisfy the receipt condition, but `working_tree_dirty: true` means the
 commit is still owed.
 
 **The reviewer's queue, in order:** **DA round 10** at `3a89e6c` (in flight from
-13:10Z) → **DE round 17** at `a8093a5` → **BE rounds 3–4** when BE files.
+13:10Z) → **DE round 17** at `a8093a5` → **DE round 18** at `db039a3`
+(`REQUEST_DE_ROUND_18_2026-09-02.md`, seven items) → **BE rounds 3–4** when BE
+files. **DE is on deliberate standby** — rounds 16, 17 and 18 complete; round 19
+(the DATA_ROOT split) waits behind DA round 10's landing. **DA is holding for
+00:14Z.** **BE's confirming audit is still running and nothing has been sent**
+(rule 18); the shared tree still carries BE's dirty `be_forward_day.py`,
+untouched by any coordinator commit.
+
+### A residual DE measured and refused to rule on
+
+**An entry whose OWN block declares `supersedes: R-777` — no such entry — still
+verifies `True, []`.** DE closed the *later*-entry version of this (DE16-R2: a
+dangling target in a **superseding** entry now refuses by name), and then hit the
+same question one step in and **did not answer it**.
+
+**Both readings are on the record, which is the point.** DE states it as
+**scope**: *"the target's existence becomes this question when someone checks
+that target."* The coordinator's reading is that **a well-shaped claim to
+supersede nothing passes the entry making it** — and rather than rule between
+them, it **put the disagreement to the reviewer as item 2 of the request.**
+
+**That is the right disposition for a boundary question.** A seat that closed
+four findings in one round could easily have closed a fifth by fiat; declaring it
+scope, measuring it anyway, and handing the reading to someone else keeps the
+distinction between *"we fixed this"* and *"we decided this doesn't count"*
+visible — which is exactly what the audit-coverage findings this week were
+about.
 
 **BE round 4 is still in flight by BE's own audit**, and two things are already
 evidenced: the coordinator **holds a copy of the receipt** (sha256
@@ -1146,6 +1182,46 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~13:23Z (MEM) — FOUR CLOSED, AND THE FIFTH LEFT OPEN ON PURPOSE
+
+**R-433 swept.** DE round 18 closed DE16-R1..R4 at **150 checks** (reproduced
+here, 132 → 150), with five coordinator mutants dying by name and marker
+uniqueness finally asserted — 28 markers, 28 names, **22 driven and six not, each
+named** rather than counted.
+
+**The round's most interesting move is the one it did not make.** Having closed
+the *later*-entry dangling-target case, DE hit the same question one step in —
+**an entry whose own block claims to supersede an entry that does not exist** —
+measured it, found it verifies, and **declined to rule**. DE calls it scope
+(*"the target's existence becomes this question when someone checks that
+target"*); the coordinator reads it as **a well-shaped claim to supersede nothing
+passing the entry making it**; and instead of one overruling the other, the
+disagreement went to the reviewer as a numbered request item.
+
+**That restraint is worth naming because the alternative was so available.** A
+seat four-for-four in a round can close a fifth by declaring it out of scope, and
+nobody would look again. Measuring it, recording both readings, and handing the
+call to a third party keeps *"we fixed this"* and *"we decided this doesn't
+count"* from blurring — which is precisely the distinction the audit-coverage
+findings have been about all week.
+
+**One mutant needed a temp tree to die, and the reason is a real property.**
+`_site_names` reads `__file__`, so an in-memory harness would have re-read the
+**unmutated** file; the renamed-marker mutant only dies against a **file copy**.
+Worth keeping beside RR12-1 and my own round-18 citation error: **a check that
+reads its own source through `__file__` is checking whatever tree it happens to
+be in.**
+
+**The format rule outlives its trigger, correctly.** It now runs until the round
+18 **review** is released, and beyond that for R-ADMISS entries themselves —
+because a quotation placed **before** an entry's own block still refuses at
+`check#8`. **The failure mode is asymmetric: fail-closed in one order, and it was
+fail-open in the other.** A rule retired the moment the code improves would have
+retired against the wrong half.
+
+**Asserted, as the round required: zero fenced ratification blocks in both state
+files** — verified after each edit, not once at the end.
 
 ### 2026-09-02 ~13:10Z (MEM) — A RULE THAT BINDS MY OWN FILE, AND IT WAS IN
 ### BREACH
