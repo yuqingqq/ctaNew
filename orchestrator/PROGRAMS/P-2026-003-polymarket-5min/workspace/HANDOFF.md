@@ -1,12 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T11:06Z — **the ratification is restated in an adopted block
-format and R-419 supersedes R-418 in-band** (content unchanged, `scope_from
-20260901`); **CO-4 found that an entry merely *about* a ratification verifies
-from prose**; and the 00:14Z scheduler I could not find is named and given a
-box-level leg. **Five items wait on the USER**, unchanged. Prior line: the
-forward-race population is the full supplied complement, no sampling; the 10:16Z
-overwrite was recovered and the accrual chain is intact.
+Updated: 2026-09-02T11:25Z — **BE's run path refuses on the real tree, correctly:
+the freeze's anchors moved in nine commits after the freeze commit, so the tree's
+bytes are not the frozen bytes.** The frozen bytes exist at `1b53929` and **the
+disposition is a SIXTH USER decision**. Prior line: R-419 supersedes R-418 in an
+adopted block format; CO-4 found that an entry merely *about* a ratification
+verifies from prose.
 
 ## READ FIRST — current project handoff
 
@@ -93,7 +92,7 @@ defect of its own on real data before filing**: the first complement was
 `range(288) − masked`, which credited the still-open 09-02 with 248 unmasked
 windows out of 119 present; it is now `PRESENT − masked`.
 
-### PENDING USER DECISIONS — five, none decidable by a seat
+### PENDING USER DECISIONS — six, none decidable by a seat
 
 Options are as filed; **the recommendations below are the coordinator's
 recommendations, not rulings.**
@@ -105,6 +104,15 @@ recommendations, not rulings.**
 | **R-411(i)** | **minimum complement size for G-counting** — the frozen bars were pre-registered against a 288-window day and a small complement reads them on a population they were not registered for | for **G-counting only** (every good window is scored regardless), a coin-day counts toward the ≥5 bar only if its unmasked complement covers **≥50% of the calendar day** (≥144/288); anchored on v1's ~60%-dark blindness, so 50% sits inside the instrument's validity rather than at its edge |
 | **R-411(ii)** | **which P1 denominator governs "quality is good" on the complement** — DA carries both (btc 09-02: **93.01** s per unmasked hour vs **25.51** per calendar-24 h, a 3.6× spread) | **per unmasked hour** — it is loss per hour of *usable* feed; the calendar form dilutes the loss by the very blackout it is meant to exclude |
 
+**A sixth ask is now open: the freeze disposition** (R-421 §3, escalated and
+**decided by no one**). Plan §10 step 9 says the frozen set is scored
+**unchanged**, and the frozen set is the commit's bytes. Two readings:
+
+| option | what it means |
+|---|---|
+| **race on the frozen bytes at `1b53929`** | the plan's reading — BE round 4 materialises the bound bytes from that commit, verifies each sha **before import**, imports from the run dir and never from the tree, with the driver at HEAD as harness. **Output goes to scratch, sealed: an estimate, not a race score, until the USER rules** |
+| **re-freeze at HEAD** | a **NEW candidate**, **multiplicity 3**, and a **new freeze commit** — which only the USER authorises (rule 12; R-409's "any other things need my decision") |
+
 **A fifth ask lands tonight: the 09-02 accrual call.** The 00:06Z verdict
 decides nothing on its own — 09-02 carries the 01:35–04:55Z Polymarket-side
 blackout and accrues **on its complement** per R-409, but **the call itself is
@@ -113,6 +121,33 @@ it.
 
 **Review state has moved since — see "Review and round state" below.** The four
 asks above are unchanged and none of them is blocked by any of it.
+
+### THE FREEZE FACTS — carry these exactly; the run path refuses because of them
+
+**BE round 3 is verified and its refusal is correct.** The forward-day run path
+refuses on the real tree, and the reason is not a defect in the path:
+
+- The candidate `harmful_reduced_fine_candidate_v1.json` binds manifest sha
+  `eb8733da2c8e2126…` and builder sha `0091fe75c38af79e…`; the manifest binds
+  **eight `reproducibility_anchor` entries** plus `collector_runs.jsonl` as
+  `state_at_build`.
+- **Every bound sha equals the blob at commit `1b53929`** (2026-08-26T10:49:55Z,
+  *"Authorised by the user's explicit yes in BE's pane"*, **multiplicity 2**).
+  **That commit IS the freeze** (rule 12).
+- The manifest's `hashes` block has been **byte-identical since**. Its **prose
+  still reads "NOT FROZEN" / weights PENDING** because it was written **before**
+  the freeze and **was never re-stamped — by design**: a freeze is the commit,
+  not a status string (rule 12/13, and the gate reads `status` from the
+  candidate, which says FROZEN). **Do not "fix" that prose.**
+- **After the freeze the working tree moved the anchors in nine commits:**
+  `f30cf26` (08-26 15:45Z), `f46f350`, `a410c07`, `3f538a3`, `b6168b9` (08-27),
+  `46ab455` (08-28), `2e1204f` (08-29), `851edaf` (09-01 09:12Z), and the
+  manifest's text at `608d71a` (08-26 14:47Z).
+
+**So the tree's bytes are not the frozen bytes, and BE's gate is right to say
+so.** Nothing is re-stamped and no frozen artifact is edited (rule 13). The
+frozen bytes still **exist** — they are retrievable from `1b53929` — which is
+why the disposition above is a choice rather than a loss.
 
 ### R-419 supersedes R-418 — same ratification, now in a format that binds
 
@@ -255,14 +290,34 @@ launchers at **235/19**.
 | **DA round 1** (mask producer) | **RELEASED** — RR9-1/2/3 closed in DA round 7 |
 | **BE round 2** (mask consumer) | **RELEASED**; **RR10-1 CLOSED** at `e56f70a` — the review rides BE round 3 |
 | **DE rounds 4–6** | **RELEASED** (`7a48333`, no hold, all seven scopes by execution); **RR11-1 (LOW) open** → DE round 8 |
-| **DE round 8** | **VERIFIED**, RR11-1 **CLOSED**; CO-4 found on the same read → DE round 9 |
-| **DA round 2** | **FILED at `1e6624a` — IN VERIFICATION, not released.** The reviewer's filing states DA round 7 released; the coordinator's verification of that filing comes in the next R-entry, so this table does not call it released yet |
+| **DA rounds 1–2** | **RELEASED** (round 2 verified at R-420); RR12-1 → DA round 10 |
+| **BE round 3** | **VERIFIED** — and it is reviewed **together with round 4, deliberately**: the run path is not finished until it executes the frozen bytes, and reviewing the refusing half alone would review a frame |
+| **DE rounds 7–9** | **REVIEW REQUEST FILED** (`REQUEST_DE_ROUNDS_7-9_2026-09-02.md`); the reviewer is on it at `b98421d`. Round 9 verified, CO-4 **CLOSED**; **CO-5 (LOW) open** → DE round 10 |
+| **the coordinator's own acts** | **REVIEWED** (`1384ec5`), no hold; CO-R1..R4 dispositioned |
 
-**In flight:** BE round 3 — the production run path, **scores SEALED, counts and
-refusals only** (Q-BE-228); DE round 9 — CO-4 plus the block-format checker
-(Q-DE-27); DA on **standby** (Q-DA-208, after 00:06Z); **the reviewer is idle**
-pending the next request. BE round 3's review request queues when Q-BE-228 lands;
-DE rounds 7–9's queues when Q-DE-27 lands.
+**In flight:** **BE round 4** (Q-BE-229) — the frozen-bytes execution, sha
+verified **before** import, output to scratch and sealed; **DE round 10**
+(Q-DE-28) — CO-5, CO-R3 and CO-R1's `day_closed` predicate; **the reviewer** on
+DE rounds 7–9; **DA on standby** (Q-DA-208 after 00:06Z, round 10 after tonight =
+the RR12-1 split, identity-only admission log, and CO-R4).
+
+**The coordinator's acts were reviewed, and the four findings are worth their
+lines.** **CO-R1 (live):** on the open day 09-02 the ledger runs **ahead** of the
+tape — 137 vs 135 windows per coin, the 14 ledger-only entries being the 11:15Z
+and 11:20Z starts — while on the closed 09-01 the two agree 288/288. It is
+already enforced (the driver refuses an open day at gate 1, and the bridge
+refuses any supplied window with no archive), and **no restatement is made
+tonight**: `scope_days: FORWARD_RACE_DAYS` already binds FINISHED through the
+forward-race rule, and a new block would supersede R-419 hours before the first
+run that stamps it. DE round 10 makes closure a **decided predicate**.
+**CO-R2** is stated and closed: the format was declared at 11:03Z and enforced
+from 11:09Z, and **no receipt stamped R-419 in that interval** (round 3's stamp
+R-418 and are sealed scratch). **CO-R3** → DE round 10: supersession evaluated
+against the receipt's own stamp, so a receipt written before a superseding entry
+stays verified **by computation, not by a sentence**. **CO-R4** is above, on the
+timer. **And the reviewer withdrew one of its own legs** — the V-from-$0 leg —
+which the RR12-1 fix splits: provenance follows the bytes, execution stays on
+the code that runs.
 
 **RR12-1, from the DA filing, is the one that will bite the worktrees:**
 `da_blackout_mask.REPO` is hardcoded to the **shared** tree while
@@ -484,11 +539,17 @@ executed on 09-01** — `rc 1`, `classification: PRE_GOVERNED_ARTIFACT`, output 
 run. **Three legs now, one of them at box level; and the verdict itself is
 written by the scheduled unit regardless of all three.**
 
-> **One property to keep in view:** the timer is **transient**
+> **Two properties to keep in view.** (1) The timer is **transient**
 > (`systemd-run`, `Persistent=no`), so it is gone once it fires and would not
-> survive a restart of the user manager before 00:14Z. That is appropriate for a
-> one-shot and is not a defect — it is simply not a standing schedule, so a
-> recurring need would want a real unit.
+> survive a restart of the user manager before 00:14Z — appropriate for a
+> one-shot, but not a standing schedule. (2) **CO-R4, reproduced with a
+> correction: if the verdict is absent at 00:14Z the preflight raises
+> `PreflightRefused` uncaught, the traceback goes to STDERR and stdout is
+> EMPTY — so `preflight_20260902.json` would be a ZERO-BYTE FILE, and its
+> `rc 1` collides with the ordinary `n_failing > 0` return.** **A zero-byte
+> JSON tomorrow morning means REFUSED, not clean**; the reason would be in the
+> journal, not the file. DA round 10 (after tonight) gives it a JSON refusal
+> object on stdout and a distinct rc.
 
 **Collector alive** at pid 1108125 as of the 10:55Z clock read.
 
@@ -586,6 +647,51 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~11:25Z (MEM) — THE FREEZE IS A COMMIT, AND THE TREE WALKED
+### AWAY FROM IT
+
+**R-421 swept.** The sections above carry the facts; three things belong here.
+
+**BE's run path refuses, and the refusal is the finding.** The frozen candidate
+binds eight anchors whose shas equal the blobs at `1b53929` — that commit *is*
+the freeze, USER-authorised, multiplicity 2. **Then the tree moved the anchors in
+nine commits**, the last on 09-01. So the code sitting in the working tree is not
+the code the freeze bound, and a gate that noticed is worth more than one that
+ran. **Nothing is broken and nothing is re-stamped**: the frozen bytes still
+exist and are retrievable from the commit.
+
+**The manifest's prose still says "NOT FROZEN", and that must be left alone.** It
+was written before the freeze and was deliberately never re-stamped, because **a
+freeze is a commit, not a status string** (rule 12/13) — the gate reads `status`
+from the candidate, which says FROZEN. This is exactly the kind of line a future
+sweep would "tidy", so it is now recorded in watch-out-for as *carry these
+exactly*.
+
+**And the disposition is genuinely the USER's, not a formality.** Plan §10 step 9
+says the frozen set is scored unchanged; the frozen set is the commit's bytes. So
+either the race runs on those bytes (materialised from `1b53929`, each sha
+verified **before** import, output sealed in scratch as an **estimate**), or the
+candidate is **re-frozen at HEAD** — which is a *new* candidate, multiplicity 3,
+and a new freeze commit that only the USER can authorise. **A seat choosing
+between those would be choosing the programme's own baseline**, which is why it
+is escalated and decided by no one.
+
+**One item lands on something I verified last round.** CO-R4 says that if the
+verdict is absent at 00:14Z the preflight raises uncaught, the traceback goes to
+**stderr**, and **stdout is empty** — so the box-level timer I confirmed would
+write a **zero-byte** `preflight_20260902.json`, with `rc 1` colliding with the
+ordinary failing-predicate return. **A zero-byte file tomorrow morning means
+refused, not clean.** I have attached that to the timer's own note rather than
+leaving it in the register, because the file is what a reader will find first and
+an empty file reads like nothing happened. It is this programme's standing shape
+— absence reading as a pass — arriving at the one instrument added to close an
+audit gap.
+
+**CO-R2 is worth one line for the opposite reason:** an interval was named
+(format declared 11:03Z, enforced 11:09Z), checked, and found to contain no
+receipt stamped under it. A window that turned out to be empty, stated rather
+than assumed empty.
 
 ### 2026-09-02 ~11:06Z (MEM) — A SENTENCE ABOUT A RATIFICATION PASSES AS ONE
 

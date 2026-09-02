@@ -1226,3 +1226,75 @@ Moved in the MEM round-15 true-up of R-419. Join rule as in batch 1.
   rather than left as a silent empty sweep. UNCHANGED: G=1/5; the 011 family is
   12 of 24 surviving with Q4 failing; development evidence.
 ```
+
+## Batch 22 — archived 2026-09-02T11:25Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-16 true-up of R-421. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T10:45Z (MEM ROUND 13 -- THE ONLY ACCRUED DAY GOT OVERWRITTEN, AND
+  WAS RECOVERED). R-413..R-416 with Q-BE-225/226, Q-DA-205/206, Q-DE-22/23/24;
+  verified at the artifacts, including by running both launchers. THE INCIDENT
+  IS THE ITEM: at 10:16:14Z and 10:16:17Z a reviewer hand run using the WRONG
+  ENVIRONMENT-VARIABLE NAMES (OUTDIR=/LOG= instead of the ones the launcher
+  reads) overwrote the canonical da_dayverdict_20260901.json and _20260902.json
+  with write_reason "UNATTRIBUTED hand run". Nothing governing moved, and that
+  is nearly beside the point: the canonical record of the ONLY day this forward
+  race has ever counted was replaced by a run nobody intended. IT WAS
+  RECOVERABLE BECAUSE OF SOMETHING BUILT FOR ANOTHER REASON: DA's launcher
+  echoes each verdict into its own log, so the originals came back BYTE-EXACT
+  from a source that exists to make runs auditable, not to survive overwrites.
+  VERIFIED AT THE ARTIFACTS RATHER THAN AT THE FILING: restored 09-01 sha
+  c087d507fe433210 and 09-02 sha 09a14a7392abe224, both mtime 10:29:25Z;
+  as_of 00:06:01.284484Z / 00:06:03.718835Z with write_reason "scheduled unit
+  run"; restored.recovered_content_sha256 f18724e37d8f1e3f / b1d67fcd9b189489
+  matching the coordinator's own 00:06Z captures; and 09-01 STILL READS ALL FOUR
+  CONJUNCTS TRUE with race_accrual_eligible true, so THE R-395/R-396 ACCRUAL
+  CHAIN IS INTACT AND G=1/5 STANDS. THE RESTORATION IS DELIBERATELY NOT
+  BYTE-IDENTICAL (rule 13): each file carries the 00:06Z CONTENT plus a
+  supersedes block naming what it replaced and a restored block naming where the
+  bytes came from -- A RESTORING WRITE THAT CARRIED NO RECORD OF WHAT IT
+  REPLACED WOULD BE THE SILENT VERSION OF THE SAME INCIDENT.
+  prior_bytes_tracked_in_git: false is stated rather than glossed, and the
+  overwritten bytes sit beside each file as
+  .superseded_20260902T1016....json. THE HOLE IS SHUT IN THE WAY THAT PREVENTS
+  RECURRENCE: both verdicts and both superseded copies are NOW GIT-TRACKED
+  (84ec1a1); they were not when the overwrite happened, which is why "recovered
+  from a log echo" was the best available option rather than "restored from
+  version control". THE LAUNCH-INVARIANCE CLASS (CO-1/2/3) IS CLOSED across BE
+  (1 module) and DE (5 modules, CO-2 closed AS A CLASS rather than per-module),
+  with DA's modules passing both launchers at 235/19. CO-1 IS THE ONE WORTH
+  REMEMBERING: the forward scorer imported the frozen rule bare, that import
+  fails under python3 -m, and an "except Exception: EFFECTIVE_FROM_DAY = None"
+  fallback made governed FALSE FOR EVERY DAY -- so a governed day with no mask
+  would have scored WHOLE, SILENTLY. Green under the script-dir launch BE used,
+  rc=1 under the package launch. A FALLBACK THAT CONVERTS A REQUIREMENT INTO
+  PERMISSION IS WORSE THAN A CRASH, because the crash is visible. Confirmed
+  closed by running both launches here: harmful_forward_scorer --selftest rc=0,
+  60 checks, each way. REVIEW AND ROUND STATE: DA round 1 (mask producer)
+  RELEASED with RR9-1/2/3 closed in round 7; BE round 2 (mask consumer) RELEASED
+  with RR10-1 (LOW) open and its fix batch dispatched; the DE round IN REVIEW at
+  21f4edf; DA round 2 QUEUED at 770e5ee. RR10-1 IS A CONTROL THAT CANNOT FAIL,
+  this programme's recurring shape: BE's pre-governed control asserts 09-01 "now
+  reads CONTENT_THIN", true when written and made FALSE by the 10:29Z
+  restoration, and swapping the control's day leaves the suite 60/60 green; the
+  closure anchors it to a FIXTURE verdict rather than a live day, which is the
+  only version that stays true. ONE MISS RECORDED AGAINST THE COORDINATOR'S OWN
+  SEAT (R-413): DE round 4 sat verified SIX HOURS LATE, named as a breach of
+  R-381's no-idle clause by the coordinator rather than a DE problem -- the
+  third coordinator self-correction in two days, after a premise corrected by
+  DA's measurement and a breadth figure corrected by mine. TONIGHT: the 00:06Z
+  09-03 run is the FIRST GOVERNED VERDICT (on 09-02) and the FIRST CANONICAL
+  MASK; BE REFUSES 09-02 ON GOVERNANCE until that mask lands -- governed, thin,
+  mask absent, refusing by name, which is the ruled behaviour and not a failure.
+  09-02 carries the 01:35-04:55Z Polymarket-side blackout (R-405) and ACCRUES ON
+  ITS COMPLEMENT per R-409, but THE ACCRUAL CALL IS THE USER'S. IN FLIGHT: BE's
+  RR10-1 fixture batch, DA round 8 (governed-verdict preflight, predicates
+  only), DE round 7 (supply-to-seam bridge with a parameter ratification ref),
+  and the reviewer on DE. Collector pid 1108125 alive as of the 10:44Z clock
+  read. USER DECISIONS PENDING, UNCHANGED AND FOUR: R-408(2) the Phase-2 winner,
+  R-408(3) the v2 freeze, R-411(i) the minimum complement for G-counting, and
+  R-411(ii) the P1 denominator on the complement. UNCHANGED: the 011 family is
+  12 of 24 surviving with Q4 failing; development evidence.
+```
