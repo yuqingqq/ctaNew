@@ -885,6 +885,23 @@ def selftest() -> int:
                 _child_head = _sp.run(
                     ["git", "-C", str(_wt_path), "rev-parse", "HEAD"],
                     capture_output=True, text=True).stdout.strip()
+                _child_h2 = _sp.run(
+                    ["git", "-C", str(_wt_path), "rev-parse", "HEAD~2"],
+                    capture_output=True, text=True).stdout.strip()
+
+                def _names_the_executing_tree(prod):
+                    """THE CONTROL'S PREDICATE, STATED ONCE (DA16-R1).
+
+                    Written as a function so the assertion and its FALSIFIER
+                    read the SAME text. Two `!=` lines could enumerate wrong
+                    commits forever and still miss the property: with the
+                    identity conjunct gone, ANY commit other than the ones
+                    named walks through, and nothing notices the removal --
+                    which is what a driven falsifier fixes and a further
+                    inequality does not.
+                    """
+                    return (prod.get("carrying_commit") == _child_head
+                            and prod.get("carrying_commit") != _here)
                 ok(_child_head and _child_head not in (_here, _there),
                    f"CO-10 precondition: after the fixture commit the child's "
                    f"HEAD ({_child_head[:12]}) is a THIRD value, distinct "
@@ -892,6 +909,13 @@ def selftest() -> int:
                    f"({_there[:12]}) -- so the two conjuncts below compare "
                    f"against DIFFERENT commits and neither can stand in for "
                    f"the other")
+                ok(_child_h2 and _child_h2 not in (_here, _there,
+                                                   _child_head),
+                   f"DA16-R1 precondition: the child's HEAD~2 "
+                   f"({_child_h2[:12]}) is a FOURTH distinct value -- so a "
+                   f"producer answering it is naming a commit that no "
+                   f"assertion enumerates, which is the case the identity "
+                   f"conjunct exists for")
                 _clean_exp, _clean_prod, _ = _measure("clean")
                 ok(_clean_exp is False,
                    "RR12-1 fixture: with nothing copied the child's producing "
@@ -924,8 +948,7 @@ def selftest() -> int:
                    f"from __file__ and a worktree has no tape "
                    f"({_r.stderr.strip()[-160:]})")
                 _prod = json.loads(_r.stdout.strip().splitlines()[-1])
-                ok(_prod["carrying_commit"] == _child_head
-                   and _prod["carrying_commit"] != _here,
+                ok(_names_the_executing_tree(_prod),
                    f"CO-10 CONTROL: the run from the worktree records the "
                    f"CHILD's own HEAD ({_child_head[:12]}) -- an IDENTITY "
                    f"with the tree that executed -- and that value is NOT "
@@ -973,6 +996,38 @@ def selftest() -> int:
                    f"({_prod['tree_dirty_on_producing_files']}) equals the "
                    f"child tree's measured state ({_exp_dirty}). This "
                    f"arrangement kills a producer hardcoded `False`")
+                # ---- DA16-R1: THE IDENTITY CONJUNCT GETS A DRIVER -------
+                # ARRANGEMENT: an UNCOMMITTED edit to the child's own copy of
+                # the producer, not a copy-and-commit. Committing it would
+                # MOVE the child's HEAD, so `carrying_commit` would differ
+                # from `_child_head` because the tree advanced -- the
+                # predicate would go False for the wrong reason and the
+                # falsifier would prove nothing. Uncommitted, the child's HEAD
+                # is unchanged and the producer simply NAMES a commit that did
+                # not execute, which is the property under test. (The child is
+                # dirty in this arrangement; nothing here asserts the dirty
+                # flag -- that is DA14-R2's pair, above.)
+                _wrong = _wt_path / "live/pm_research/da_blackout_mask.py"
+                _wrong.write_text(_wrong.read_text().replace(
+                    '"rev-parse", "HEAD"]', '"rev-parse", "HEAD~2"]', 1))
+                _, _pw, _rw = _measure("wrongcommit")
+                ok(_rw.returncode == 0 and _pw.get("carrying_commit"),
+                   "DA16-R1 fixture: the wrong-commit producer RUNS and emits "
+                   "a carrying_commit -- a falsifier that failed to execute "
+                   "would look exactly like one that passed")
+                ok(_pw["carrying_commit"] == _child_h2,
+                   f"DA16-R1 fixture: and it really does answer HEAD~2 "
+                   f"({_child_h2[:12]}), a commit that did NOT execute -- "
+                   f"checked, so the falsifier below is refusing the thing it "
+                   f"names")
+                ok(not _names_the_executing_tree(_pw),
+                   f"DA16-R1 FALSIFIER: a producer answering HEAD~2 "
+                   f"({_child_h2[:12]}) is REFUSED by the identity control -- "
+                   f"the SAME predicate the CO-10 CONTROL asserts, so "
+                   f"weakening it makes THIS line red. Two inequalities could "
+                   f"not do that: they enumerate values, and the identity "
+                   f"conjunct is the one whose removal nothing noticed")
+
                 # DA10-R5: ASSERT THE PROPERTY, NOT THE ENVIRONMENT. This
                 # compared the child's data_root against the PARENT's, which
                 # only holds when the parent's own root is canonical -- so the
