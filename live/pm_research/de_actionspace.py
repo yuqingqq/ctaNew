@@ -27,6 +27,14 @@ from __future__ import annotations
 import argparse
 from typing import Any
 
+import sys
+from pathlib import Path
+# CO-2 (class, not instance): a bare flat import dies under
+# `python3 -m live.pm_research.…` while the script-dir launch is green --
+# a suite that passes only because of how it was started. DA's modules
+# already do this; measured before/after in both launches.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 import de_constraints as dc
 
 VENUE_MIN_SIZE = 5.0     # SP §4 orderMinSize, MEASURED; = the pin (Class D)

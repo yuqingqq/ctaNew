@@ -52,13 +52,44 @@ from typing import Any, Callable, Iterable, Sequence
 PROTOCOL = "de_admissible_windows_v1"
 ROOT = Path(__file__).resolve().parents[2]
 
+# CO-2: LAUNCH-INVARIANCE. `_grid` did a bare `import da_blackout_mask` and
+# died with ModuleNotFoundError under `python3 -m live.pm_research.…` while
+# the script-dir launch was green -- a suite that passes only because of how
+# it was started. A crash is not a refusal (my own words last round), and it
+# is the same class as BE's CO-1. DA's modules already do this; this module
+# now does too, and the filing records BOTH launch rc's.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 # ---- CITED CONSTANTS.  Every one is read from a ruled text or the committed
 # artifact; none is chosen here, and a new one would be an escalation.
 MASK_ARTIFACT_KIND = "da_blackout_mask_v1"      # the committed envelope
 MASK_DIR = ROOT / "data/pm_5min/derived"
 MASK_STEM = "da_blackout_mask_{day}.json"       # R-412: the path already agrees
-MASK_GOVERNED_FROM_DAY = "20260902"             # R-410/R-412 EFFECTIVE_FROM_DAY
 SLUG_FORM = "{coin}-updown-5m-{start}"          # the repo's slug, not a new one
+
+# CO-3: THE GOVERNING DAY IS NOT RESTATED HERE.
+# It was `MASK_GOVERNED_FROM_DAY = "20260902"` -- a literal that could drift
+# from the frozen rule the scorer binds to, so a USER amendment of the rule's
+# effective day would have left this supplier governing a different calendar
+# than the consumer of its output. The MODULE is imported and the attribute
+# is read AT CALL TIME rather than copied at import: copying would bind a
+# snapshot, and an amendment applied to the rule after import would not reach
+# here. One source, read late.
+def _load_rule():
+    """The frozen rule module, or the REASON it could not be read."""
+    try:
+        import da_content_liveness_rule as _r
+        return _r, None
+    except Exception as e1:                          # noqa: BLE001
+        try:
+            from . import da_content_liveness_rule as _r
+            return _r, None
+        except Exception as e2:                      # noqa: BLE001
+            return None, (f"bare import: {type(e1).__name__}: {e1}; "
+                          f"package-relative: {type(e2).__name__}: {e2}")
+
+
+RULE_MODULE, RULE_IMPORT_ERROR = _load_rule()
 
 REQUIRED_MASK_TOP = ("artifact", "day", "coins", "day_closed_calendar",
                      "as_of_utc")
@@ -95,9 +126,58 @@ def reads_no_verdict(imports: Iterable[str]) -> bool:
     return not (set(imports) & set(VERDICT_MODULES))
 
 
+def restated_day_literals(src: str, day: str) -> list[str]:
+    """Module-level constants whose value RESTATES the governing day.
+
+    Over the parsed AST, not the text: a grep would count the comment that
+    EXPLAINS why the literal was removed, and would miss the same value
+    assigned under a different name -- which is the drift CO-3 is about. The
+    check that first replaced the literal was a grep and failed on its own
+    explanation, which is the F-1 shape appearing in the batch that removed
+    one."""
+    import ast
+    out: list[str] = []
+    for node in ast.parse(src).body:
+        if not isinstance(node, ast.Assign):
+            continue
+        if not (isinstance(node.value, ast.Constant)
+                and isinstance(node.value.value, str)
+                and node.value.value == day):
+            continue
+        out += [t.id for t in node.targets if isinstance(t, ast.Name)]
+    return sorted(out)
+
+
 class AdmissibleWindowsRefused(RuntimeError):
     """An input this module will not guess at, or a contradiction between two
     inputs.  Refusal is the product; a silent drop is not (rule 4)."""
+
+
+class GoverningRuleUnreadable(AdmissibleWindowsRefused):
+    """The frozen rule's effective day could not be read.
+
+    A SUBCLASS of the module's refusal, deliberately: the cause is specific
+    and the disposition is not -- callers catch one concept.  And it REFUSES
+    rather than defaulting, because a supplier that cannot tell a governed
+    day from a pre-governed one would turn the mask REQUIREMENT into
+    PERMISSION, which is CO-1's hole in this seat."""
+
+
+def governing_day() -> str:
+    """The first GOVERNED day, read from the frozen rule at CALL TIME."""
+    if RULE_MODULE is None:
+        raise GoverningRuleUnreadable(
+            f"REFUSED: the governing day could not be read from "
+            f"`da_content_liveness_rule.EFFECTIVE_FROM_DAY` "
+            f"({RULE_IMPORT_ERROR}). Defaulting to 'not governed' would make "
+            f"a mask permitted-absent on every day, turning the requirement "
+            f"into permission.")
+    day = getattr(RULE_MODULE, "EFFECTIVE_FROM_DAY", None)
+    if not day:
+        raise GoverningRuleUnreadable(
+            f"REFUSED: `da_content_liveness_rule` carries no usable "
+            f"EFFECTIVE_FROM_DAY (got {day!r})")
+    return str(day)
 
 
 # ---------------------------------------------------------------------------
@@ -111,8 +191,11 @@ def mask_path(day: str) -> Path:
 def is_governed(day: str) -> bool:
     """A day is GOVERNED from the frozen rule's EFFECTIVE_FROM_DAY onward.
     Governance decides whether a mask is REQUIRED; PRESENCE decides whether
-    one is consumed (R-411's in-band amendment of R-410)."""
-    return str(day) >= MASK_GOVERNED_FROM_DAY
+    one is consumed (R-411's in-band amendment of R-410).
+
+    REFUSES if the rule is unreadable -- it never answers False on ignorance,
+    because False here is the permissive answer."""
+    return str(day) >= governing_day()
 
 
 def validate_mask(mask: Any, day: str) -> None:
@@ -203,7 +286,8 @@ def _sha(obj: Any) -> str:
 def _g_mask_required(ctx) -> None:
     if ctx["mask"] is None and is_governed(ctx["day"]):
         raise AdmissibleWindowsRefused(
-            f"day {ctx['day']} is GOVERNED (>= {MASK_GOVERNED_FROM_DAY}) and "
+            f"day {ctx['day']} is GOVERNED (>= {governing_day()}, read from "
+            f"the frozen rule) and "
             f"no mask artifact was supplied; expected it at "
             f"{mask_path(ctx['day'])}. Absence must mean 'the producer did "
             f"not run', never 'nothing was thin' (R-412 ruling 2), so "
@@ -366,10 +450,11 @@ def supply(day: str, present: dict[str, Sequence[int]],
         "governed": is_governed(day),
         "mask_consumed": mask is not None,
         "mask_requirement_basis": (
-            f"GOVERNED from {MASK_GOVERNED_FROM_DAY} (R-410/R-412): a mask is "
-            f"REQUIRED" if is_governed(day) else
-            f"PRE-GOVERNED (< {MASK_GOVERNED_FROM_DAY}): a mask is CONSUMED "
-            f"when present and permitted absent (R-411)"),
+            f"GOVERNED from {governing_day()} (R-410/R-412, read from "
+            f"da_content_liveness_rule): a mask is REQUIRED"
+            if is_governed(day) else
+            f"PRE-GOVERNED (< {governing_day()}): a mask is CONSUMED when "
+            f"present and permitted absent (R-411)"),
         "mask_identity": ident,
         "mask_identity_hash": ident_hash,
         "counts": counts,
@@ -394,7 +479,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 30
+EXPECTED_CHECKS = 39
 
 
 def _grid(day: str) -> list[int]:
@@ -498,11 +583,23 @@ def selftest() -> int:
     # ---- the empty mask, from DA's OWN producer ------------------------
     import da_blackout_mask as M
     empty = M.build_mask(EMPTY_DAY)
-    ok(empty["total_masked_windows"] == 0 and empty["artifact"]
-       == MASK_ARTIFACT_KIND and sorted(empty) == sorted(real),
+    validate_mask(empty, EMPTY_DAY)          # the contract, not the key set
+    extra = sorted(set(empty) - set(real))
+    ok(empty["total_masked_windows"] == 0
+       and empty["artifact"] == MASK_ARTIFACT_KIND
+       and not set(REQUIRED_MASK_TOP) - set(empty),
        f"the empty-mask control is the PRODUCER's own emission for "
-       f"{EMPTY_DAY} (0 masked, same envelope keys as the committed file) -- "
-       f"not a hand-built envelope, which is exactly what drifted in RR8-1")
+       f"{EMPTY_DAY} (0 masked) and satisfies the envelope THIS module "
+       f"depends on -- not a hand-built one, which is exactly what drifted "
+       f"in RR8-1")
+    ok(True if not extra else all(k not in REQUIRED_MASK_TOP for k in extra),
+       f"AND THE CONTRACT IS A REQUIRED SUBSET, NOT AN EQUAL SET: the live "
+       f"producer emits {extra or 'no'} field(s) the committed 09-01 file "
+       f"does not, and that is ADDITIVE GROWTH, not drift. The first version "
+       f"of this control asserted `sorted(empty) == sorted(real)` and went "
+       f"red the moment DA legitimately added a `producer` provenance block "
+       f"-- a consumer that breaks on a producer's additive change is making "
+       f"someone else's improvement look like its own regression.")
     grid_e = _grid(EMPTY_DAY)
     em_e = supply(EMPTY_DAY, {c: list(grid_e) for c in empty["coins"]}, empty)
     ok(all(len(em_e["windows"][c]) == len(grid_e) for c in empty["coins"])
@@ -578,6 +675,58 @@ def selftest() -> int:
     refuses(lambda: _g_no_decision_field({"emission": leaky}),
             "KNOWN-BAD: a decision-shaped field in the emission REFUSES, so "
             "the check above is a filter and not a blanket")
+
+    # ---- CO-3: the governing day is BOUND, not restated ----------------
+    ok(RULE_MODULE is not None and governing_day()
+       == RULE_MODULE.EFFECTIVE_FROM_DAY,
+       f"the governing day is READ from the frozen rule "
+       f"(da_content_liveness_rule.EFFECTIVE_FROM_DAY = "
+       f"{governing_day()!r}), not restated as a literal here")
+    _src = Path(__file__).read_text()
+    ok(restated_day_literals(_src, governing_day()) == [],
+       "and NO module-level constant here restates that day -- checked over "
+       "the parsed AST, so it counts neither the comment explaining the "
+       "removal nor a rename, and one source means a USER amendment of the "
+       "rule cannot leave this supplier on a different calendar than the "
+       "scorer")
+    ok(restated_day_literals(f'X = {governing_day()!r}\n', governing_day())
+       == ["X"],
+       "KNOWN-BAD: the same predicate NAMES a restated literal under any "
+       "constant name, so it is a check and not a constant")
+    # THE CONTROL THE DISPATCH ASKED FOR: patch the rule, and the supplier
+    # must FOLLOW. It follows because the attribute is read at CALL time; a
+    # value copied at import would have pinned a snapshot and this control
+    # would fail, which is exactly why it is not copied.
+    _orig = RULE_MODULE.EFFECTIVE_FROM_DAY
+    try:
+        RULE_MODULE.EFFECTIVE_FROM_DAY = "20260901"
+        ok(is_governed("20260901") and governing_day() == "20260901",
+           "KNOWN-BAD/FOLLOW-THE-RULE: with the rule patched to 20260901, "
+           "09-01 becomes GOVERNED here immediately -- the supplier follows "
+           "the rule rather than a snapshot of it")
+        refuses(lambda: supply("20260901", {"btc": [1]}, None,
+                               load_if_present=False),
+                "and the consequence propagates: 09-01 with no mask now "
+                "REFUSES, where a moment ago it was permitted")
+        RULE_MODULE.EFFECTIVE_FROM_DAY = "20261231"
+        ok(not is_governed("20260902"),
+           "POSITIVE CONTROL, the other direction: pushed to 20261231, "
+           "09-02 stops being governed -- the binding tracks both ways")
+        RULE_MODULE.EFFECTIVE_FROM_DAY = None
+        try:
+            is_governed("20260902")
+            unreadable_refuses = False
+        except GoverningRuleUnreadable:
+            unreadable_refuses = True
+        ok(unreadable_refuses,
+           "KNOWN-BAD: an unreadable governing day REFUSES rather than "
+           "answering False -- False is the PERMISSIVE answer here, and "
+           "defaulting to it would turn the mask REQUIREMENT into "
+           "PERMISSION (CO-1's hole, in this seat)")
+    finally:
+        RULE_MODULE.EFFECTIVE_FROM_DAY = _orig
+    ok(governing_day() == _orig and _orig == "20260902",
+       f"and the rule is restored: governing_day() back to {_orig!r}")
 
     # ---- mutation audit: every guard blanked, one at a time -------------
     audit = mutation_audit(real, present, grid)
