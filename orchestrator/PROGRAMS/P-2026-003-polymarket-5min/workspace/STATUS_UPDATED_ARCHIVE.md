@@ -3645,3 +3645,70 @@ Moved in the MEM round-49 true-up of R-458, R-459 and R-460. Join rule as in bat
   UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
   Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 56 — archived 2026-09-02T18:28Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-50 true-up of R-461, R-462 and R-463. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T17:12Z (MEM ROUND 47 -- I MEASURED THE WRONG FILE, AND THE ROUND
+  BEFORE LAST IS WHY I NOTICED). R-455 swept; four landings, two new findings at
+  the BE tip, and one failure of my own worth more than the checks that went
+  right. THE FAILURE FIRST: I set out to verify CO-13 by counting PASS lines
+  against the printed total; HEAD's COMMITTED be_forward_day.py hashes to
+  857819a76ca5c3a9, exactly fcafe9f -- I checked that -- but the file I RAN was
+  the WORKING TREE'S, and by the time the run started the tree was DIRTY WITH
+  BE'S UNCOMMITTED ROUND-8 WIP (ab65b026e3093cad). THE TREE MOVED BETWEEN TWO OF
+  MY OWN READS INSIDE ONE ROUND, so my partial transcript (103 PASS lines) is a
+  count of a file nobody has committed: it corroborates nothing AND I WITHDRAW
+  IT. I stopped the run; derived/ reads 173 before and after. THAT IS ROUND 40'S
+  FINDING TURNED ON ITS AUTHOR -- I wrote then that no count taken from that file
+  is a committed figure, and then took one -- and the fix is mechanical: HASH THE
+  FILE IMMEDIATELY BEFORE THE RUN AND AGAIN AFTER, since a check at the top of
+  the round is a check of the wrong moment. CO-13 IS THEREFORE CARRIED AS THE
+  COORDINATOR'S MEASUREMENT, WITH ITS STATIC HALF VERIFIED BY ME AT fcafe9f: the
+  BE5-R3 block calls ok(...), which increments checks, and is IMMEDIATELY
+  FOLLOWED BY A BARE checks += 1 -- ONE ASSERTION, TWO COUNTS -- so the printed
+  total is one ahead of the assertions that ran, which is exactly 101 versus
+  "102 checks OK". Read, not run, and said so. CO-12 IS THE SHARPER OF THE TWO
+  AND IT IS THE NEW STANDARD'S SECOND INSTANCE: the audit's attribution is
+  at_named = want in out over stdout + stderr (:1566) while ok prints
+  "  PASS  {label}" for every check that passes (:1591) and raises
+  AssertionError(label) when one fails (:1589), so for any case whose `want` is a
+  prefix of its own check's label -- 7 OF THE 10 -- the predicate is satisfied by
+  THE GREEN BASELINE TRANSCRIPT: it tests that the named check RAN, not that the
+  mutant DIED THERE. The ten mutants do die; THE ATTRIBUTION THE ROW RESTS ON IS
+  WHAT HAS NO FALSIFIER. Closure right: attribute on the AssertionError line on
+  STDERR, and ship a control BOTH DIRECTIONS (a mis-named case asserted a
+  SURVIVOR, the same edit correctly named asserted KILLED). AND THE STANDARD IS
+  NOW THREE-FOR-THREE: every guard added to catch a class is itself a candidate
+  for that class -- CO-11 lived in the census guarding DE27-R1's fix, CO-12 lives
+  in the audit shipped to close BE5-R3 -- so I have ADOPTED IT INTO
+  standing_rules (7 -> 8) and into HANDOFF's standards section in the
+  operational form: WHEN A FIX ADDS A CONTROL, MUTATE THE CONTROL. DE ROUND 30
+  RE-RUN HERE: 183 both launchers, EXPECTED_CHECKS = 183, census ok 97, CO-11
+  CLOSED; the observation the coordinator did NOT file (a name-bound
+  comprehension spelling still passes) is right as an ITEM rather than a finding
+  -- a drift guard whose message names its key owes no dataflow census, and that
+  message now names the key exactly. DA ROUND 17 at e353119 READ AT THE ARTIFACT:
+  da_blackout_mask.py only, +57/-2, and the shape is precisely what was routed --
+  _names_the_executing_tree defined ONCE (:892) with TWO call sites, the CO-10
+  CONTROL (:951) and at :1023 the same predicate under `not` as the DA16-R1
+  FALSIFIER: THE CONJUNCT GOT A DRIVER, NOT A COMPANION; mask 38; and UNDER
+  R-454 SECTION 4 THIS IS THE TIP THAT LANDS TONIGHT, a HOLD falling back to
+  3b7e10a. ONE THING OF MINE TO CORRECT RATHER THAN EXPLAIN AWAY: Q-BE-232 landed
+  inside MY commit 1b874f9 -- I checked, and that commit added TWO rows, mine and
+  BE's -- because A PATHSPEC PROTECTS AGAINST UNRELATED FILES, NOT AGAINST
+  ANOTHER SEAT'S UNCOMMITTED EDITS IN THE SAME FILE; content intact, nothing to
+  correct, and the discipline is mine to fix: BEFORE COMMITTING A SHARED
+  APPEND-ONLY FILE, VERIFY THE STAGED DIFF CONTAINS ONLY MY OWN ROW (done this
+  round). BE round 8 (Q-BE-233) dispatched with CO-12 and CO-13; the durable
+  landing is BE ROUND 9, after the 00:14Z read. Reviewer queue: BE r6 (in flight)
+  -> DE 29+30 as one filing at 27d0d37 -> BE 7(+8) -> DA 17 at e353119; three
+  requests filed. DE and DA on DELIBERATE standby (R-381). TONIGHT UNCHANGED:
+  00:06Z verdict, 00:14Z preflight, the coordinator's wake after it, then DA's
+  landing at the chain's tip of the moment, BE round 9, CO-8,
+  --require-no-skips, the DATA_ROOT split. USER decisions SIX RULED, NONE OPEN.
+  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
+  Phase-4 gated; R-419 revocable.
+```

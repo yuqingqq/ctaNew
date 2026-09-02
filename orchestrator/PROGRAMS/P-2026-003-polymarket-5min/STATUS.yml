@@ -4,6 +4,65 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T18:28Z (MEM ROUND 50 -- THE CAP IS RECORDED, ASSERTED AGAINST
+  ITSELF, AND NEVER ENFORCED). R-461, R-462 and R-463 swept in one batch. Nothing
+  run and nothing read from a forbidden surface: BE round 9 is open so
+  be_forward_day.py went untouched, DE round 33 is in flight so ~/ctaNew-wt-de
+  went unread and only its CODE TIP 6d04833 (18:20:40Z) is recorded; everything
+  else is a committed blob or a plan file. ITEM 8'S RULING IS THE ROUND AND BOTH
+  HALVES VERIFY: the one-second horizon is not an addendum choice but THE FROZEN
+  PROTOCOL'S OWN CAP 2 (DE_PHASE4_PROTOCOL_DRAFT.md:41-45) -- FILL_HORIZON_S =
+  1.0 s, every cell meaning "value preventable WITHIN ONE SECOND of the decision
+  row", and phase4_generation_tables.tranche_table REFUSING TO EMIT WITHOUT
+  declare_cap=True -- while THE ADDENDUM DOES NOT CARRY IT (grepped in five
+  spellings, ZERO hits). So the document that BINDS THE PROTOCOL BY SHA omits the
+  protocol's own semantic cap: BINDING BY CONTENT PROVES WHICH DOCUMENT, IT DOES
+  NOT CARRY THAT DOCUMENT'S OBLIGATIONS INTO YOURS. AND THE RUNNER'S TREATMENT OF
+  THE CAP IS THE SHARPER HALF: at e52d183 the cap is IMPORTED (:61), RECORDED in
+  the receipt (:205), EXPLAINED in prose (:207) and CHECKED at :438-440 by
+  asserting rec["fill_horizon_s"] == FILL_HORIZON_S and that "WITHIN ONE SECOND"
+  appears in the note THE SAME CODE WROTE -- BOTH SIDES OF THAT CHECK COME FROM
+  ONE SOURCE -- while tranche_table occurs EXACTLY ONCE IN THE FILE, ON LINE 26,
+  INSIDE THE DOCSTRING, AND IS NEVER CALLED. The protocol's actual enforcement,
+  the refusal, is NAMED IN PROSE AND NEVER INVOKED, and what runs is a field
+  compared to the constant it was copied from: A CHECK WHOSE TWO SIDES SHARE AN
+  ORIGIN IS A SPELLING TEST. That is why "verified by count and FOUND SHORT" is
+  the right verdict on round 32 and why the review's separation matters: e52d183
+  is released as DECLARATION + THREE INSTRUMENTS and THE RUNNER IS NOT RELEASED
+  AS A PRODUCER; Q-DE-50 BUILT THE RUNNER'S SHELL, not "the runner", and the
+  review table says it that way because the other phrasing would read as a
+  producer existing. FINDINGS WITH ROUTING KEPT HONEST ABOUT WHAT IS AND IS NOT
+  DISPATCHED: DE32-R1 and DE32-R2 (MEDIUM) stay OPEN pending the round-33 landing
+  check, remainder to round 34; DE31-R1 and DE32-R3 are NOT IN THE ROUND-33
+  DISPATCH -- round 34 unless the tip carries them, which the LANDING CHECK
+  decides, not the dispatch; DE32-R4 / DE31-R2 / DE32-R5 (LOW) likewise; DA17-R1
+  (LOW) sits behind DA's landing. RECORDING THE ABSENCE FROM A DISPATCH IS THE
+  PART THAT USUALLY GOES UNWRITTEN AND IS EXACTLY HOW A FINDING QUIETLY
+  DISAPPEARS. ONE TRUE-UP BEYOND THE DISPATCH: it says Q-DE-51 is PENDING; the
+  row LANDED AT 2b72d02 while this batch was composed, and I record it as FILED,
+  NOT COORDINATOR-VERIFIED -- same treatment as DE round 21 in round 33, because
+  a row landing is not a verification. THE RUN'S PRECONDITIONS ARE NOW WRITTEN
+  BESIDE THE RULING where a reader meets them: the round AFTER DE round 33 lands
+  AND the reviewer reads it, EARLIEST 09-03, after tonight's landings, by
+  coordinator dispatch under systemd-run --user --scope --slice=research.slice -p
+  MemoryMax=12G, INTO THE DECLARED OUTDIR ONLY -- four gates, with the protocol
+  frozen before any of them, which is the whole reason a diagnostic can be
+  scheduled without becoming evidence. R-461'S CORRECTION IS CARRIED AND IT WAS
+  MINE: R-459 section 2's budget-axis citation :105 -> :103, adopted in band with
+  R-459 standing as provenance; and BE7-R4's root -- REPO hardcoded at
+  c54e48e:37 -- is carried into BE ROUND 9'S LANDING CHECK, the right home for
+  it, since the finding was about one reader, the root is about the constant, and
+  a landing check is where a root gets tested rather than a symptom. Reviewer's
+  DA 17 filing f4c7734 (145 lines) RELEASE for e353119; DE 31+32 filing 82126ca
+  (251 lines); reviewer now on BE ROUND 8 at c54e48e per
+  REQUEST_BE_ROUND_8_2026-09-02.md. TONIGHT UNCHANGED: 00:06Z verdict timer,
+  00:14Z preflight, coordinator wake after, R-409 accrual with the R-411(ii)
+  denominator, DA landing at e353119 (HOLD -> 3b7e10a), BE durable landing the
+  round after the read, CO-8, --require-no-skips, DATA_ROOT split behind DA's
+  landing. USER: SEVEN RULED; TWO OPEN -- the Phase-2 winner ruling and the
+  content-liveness v2 freeze -- NEITHER NEEDED TONIGHT. UNCHANGED: G=1/5; the 011
+  family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-02T18:00Z (MEM ROUND 49 -- A SEVENTH RULING, AND A CONSTANT THAT WAS
   FIXED AT ONE CALL SITE). R-458, R-459 and R-460 swept in one batch. NOTHING WAS
   RUN: BE round 9 is in flight so the main tree's live/pm_research/ is BE's
@@ -129,67 +188,6 @@ updated: >-
   corrected window and not with the original. USER decisions SIX RULED, NONE
   OPEN. Tonight unchanged. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4
   failing; the sequencing rule; Phase-4 gated; R-419 revocable.
-  PRIOR:
-  2026-09-02T17:12Z (MEM ROUND 47 -- I MEASURED THE WRONG FILE, AND THE ROUND
-  BEFORE LAST IS WHY I NOTICED). R-455 swept; four landings, two new findings at
-  the BE tip, and one failure of my own worth more than the checks that went
-  right. THE FAILURE FIRST: I set out to verify CO-13 by counting PASS lines
-  against the printed total; HEAD's COMMITTED be_forward_day.py hashes to
-  857819a76ca5c3a9, exactly fcafe9f -- I checked that -- but the file I RAN was
-  the WORKING TREE'S, and by the time the run started the tree was DIRTY WITH
-  BE'S UNCOMMITTED ROUND-8 WIP (ab65b026e3093cad). THE TREE MOVED BETWEEN TWO OF
-  MY OWN READS INSIDE ONE ROUND, so my partial transcript (103 PASS lines) is a
-  count of a file nobody has committed: it corroborates nothing AND I WITHDRAW
-  IT. I stopped the run; derived/ reads 173 before and after. THAT IS ROUND 40'S
-  FINDING TURNED ON ITS AUTHOR -- I wrote then that no count taken from that file
-  is a committed figure, and then took one -- and the fix is mechanical: HASH THE
-  FILE IMMEDIATELY BEFORE THE RUN AND AGAIN AFTER, since a check at the top of
-  the round is a check of the wrong moment. CO-13 IS THEREFORE CARRIED AS THE
-  COORDINATOR'S MEASUREMENT, WITH ITS STATIC HALF VERIFIED BY ME AT fcafe9f: the
-  BE5-R3 block calls ok(...), which increments checks, and is IMMEDIATELY
-  FOLLOWED BY A BARE checks += 1 -- ONE ASSERTION, TWO COUNTS -- so the printed
-  total is one ahead of the assertions that ran, which is exactly 101 versus
-  "102 checks OK". Read, not run, and said so. CO-12 IS THE SHARPER OF THE TWO
-  AND IT IS THE NEW STANDARD'S SECOND INSTANCE: the audit's attribution is
-  at_named = want in out over stdout + stderr (:1566) while ok prints
-  "  PASS  {label}" for every check that passes (:1591) and raises
-  AssertionError(label) when one fails (:1589), so for any case whose `want` is a
-  prefix of its own check's label -- 7 OF THE 10 -- the predicate is satisfied by
-  THE GREEN BASELINE TRANSCRIPT: it tests that the named check RAN, not that the
-  mutant DIED THERE. The ten mutants do die; THE ATTRIBUTION THE ROW RESTS ON IS
-  WHAT HAS NO FALSIFIER. Closure right: attribute on the AssertionError line on
-  STDERR, and ship a control BOTH DIRECTIONS (a mis-named case asserted a
-  SURVIVOR, the same edit correctly named asserted KILLED). AND THE STANDARD IS
-  NOW THREE-FOR-THREE: every guard added to catch a class is itself a candidate
-  for that class -- CO-11 lived in the census guarding DE27-R1's fix, CO-12 lives
-  in the audit shipped to close BE5-R3 -- so I have ADOPTED IT INTO
-  standing_rules (7 -> 8) and into HANDOFF's standards section in the
-  operational form: WHEN A FIX ADDS A CONTROL, MUTATE THE CONTROL. DE ROUND 30
-  RE-RUN HERE: 183 both launchers, EXPECTED_CHECKS = 183, census ok 97, CO-11
-  CLOSED; the observation the coordinator did NOT file (a name-bound
-  comprehension spelling still passes) is right as an ITEM rather than a finding
-  -- a drift guard whose message names its key owes no dataflow census, and that
-  message now names the key exactly. DA ROUND 17 at e353119 READ AT THE ARTIFACT:
-  da_blackout_mask.py only, +57/-2, and the shape is precisely what was routed --
-  _names_the_executing_tree defined ONCE (:892) with TWO call sites, the CO-10
-  CONTROL (:951) and at :1023 the same predicate under `not` as the DA16-R1
-  FALSIFIER: THE CONJUNCT GOT A DRIVER, NOT A COMPANION; mask 38; and UNDER
-  R-454 SECTION 4 THIS IS THE TIP THAT LANDS TONIGHT, a HOLD falling back to
-  3b7e10a. ONE THING OF MINE TO CORRECT RATHER THAN EXPLAIN AWAY: Q-BE-232 landed
-  inside MY commit 1b874f9 -- I checked, and that commit added TWO rows, mine and
-  BE's -- because A PATHSPEC PROTECTS AGAINST UNRELATED FILES, NOT AGAINST
-  ANOTHER SEAT'S UNCOMMITTED EDITS IN THE SAME FILE; content intact, nothing to
-  correct, and the discipline is mine to fix: BEFORE COMMITTING A SHARED
-  APPEND-ONLY FILE, VERIFY THE STAGED DIFF CONTAINS ONLY MY OWN ROW (done this
-  round). BE round 8 (Q-BE-233) dispatched with CO-12 and CO-13; the durable
-  landing is BE ROUND 9, after the 00:14Z read. Reviewer queue: BE r6 (in flight)
-  -> DE 29+30 as one filing at 27d0d37 -> BE 7(+8) -> DA 17 at e353119; three
-  requests filed. DE and DA on DELIBERATE standby (R-381). TONIGHT UNCHANGED:
-  00:06Z verdict, 00:14Z preflight, the coordinator's wake after it, then DA's
-  landing at the chain's tip of the moment, BE round 9, CO-8,
-  --require-no-skips, the DATA_ROOT split. USER decisions SIX RULED, NONE OPEN.
-  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
-  Phase-4 gated; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3793,6 +3791,13 @@ flags:
   reviewer_be_r7_released: "fcafe9f (0f34aad); BE7-R1..R4, R4 first to r9"
   de_r31_verified_diagnostic_declared: "addendum 35e8aba1381cfa4e binds protocol ab07fd71c9fc2bff"
   r459_budget_axis_citation: ":103 (not :105, which is protection mode)"
+  de32_r1_r2_open_medium: "pending the DE round-33 landing check; remainder -> DE round 34"
+  de31_r1_de32_r3_not_dispatched: "round 34 unless the round-33 tip carries them"
+  de_r32_shell_not_runner: "e52d183 released as declaration + instruments, NOT as a producer"
+  phase4_cap2_unenforced_at_e52d183: "protocol :41-45 has it; addendum 0 hits; tranche_table never called"
+  phase4_run_when: "the round AFTER DE r33 lands AND the reviewer reads it; earliest 09-03; declared OUTDIR only"
+  reviewer_da_r17_released: "e353119 (f4c7734); DA17-R1 behind DA landing"
+  de_r33_code_tip: "6d04833 18:20:40Z; row Q-DE-51 landed at 2b72d02, FILED not verified"
                              # v18-v19 added the daily pipeline and all-coin
                              # commit-last batch; v20 adds R-DERIVE, R-GROSS,
                              # R-DUAL and R-ONEROW plus Tier-2 markout,
@@ -3801,7 +3806,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T18:00Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T18:28Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
