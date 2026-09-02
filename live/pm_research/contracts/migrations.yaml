@@ -1252,3 +1252,16 @@ migrations:
   new: '[''CancelAllStatus'', ''HealthEvent'', ''HeartbeatPulse'', ''HeartbeatRegistration'']'
   reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['CancelAllStatus']; old set fully preserved\
     \ \u2014 superset asserted at generation"
+- from_version: 25
+  to_version: 26
+  operation: remove
+  key: config_supplied:ActionSet
+  old: "config_supplied"
+  new: "produced by DE-ActionSpace"
+  reason: 'DE-ActionSpace (amendment D, v25) produces the action menu from
+    committed code (de_actionspace.enumerate_actions). A type that is both
+    config-supplied and produced has two authorities and no way to tell which
+    one a consumer read. DE-AMENDMENT-E drafted at 24->25; applied at 25->26
+    because A-D consumed that step; content otherwise verbatim. BE (the sole
+    consumer) CONFIRMED in Q-BE-222, accepting the off-menu constraint
+    explicitly. Applied by coordinator on USER ruling R-397 item 4 / R-398.'

@@ -1,4 +1,4 @@
-version: 25
+version: 26
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -2357,7 +2357,7 @@ prelude:
   - ImputationRuleId
   - AdmissibilityRuleId
 config_supplied:
-- ActionSet
+# ActionSet removed at v26 (DE-AMENDMENT-E, BE confirmed Q-BE-222, R-398): produced by DE-ActionSpace
 - ForecastRequest
 - CouplingGraph
 - ScenarioLossConstraint
