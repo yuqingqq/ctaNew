@@ -18279,6 +18279,16 @@ Also this entry: the coordination loop is now self-paced (commit monitor + heart
 
 **Standing USER decisions unchanged:** R-408(2), R-408(3), R-411(i), R-411(ii); the 09-02 accrual call after tonight's verdict.
 
+### R-418 — 2026-09-02T10:53Z — coordinator: R-ADMISS ratification for FORWARD-RACE DAYS — the population is the FULL supplied complement, no sampling; an application of R-409, revocable by the USER
+
+**What is ratified.** For a forward-race day D (a day the race counts, or is being tested for counting), the replay/scoring population is **every window that `de_admissible_windows.supply(D, present)` emits** — `present` read from the day's own market ledger (`data/pm_5min/markets.jsonl`, the windows that existed), minus the windows DA's committed mask masks — **with no stratified or capped selection** (`harmful_exposure_rows.select_stratified` is a research-day instrument and is not used on race days). This is R-409 applied ("if the data quality is good over the non-blackout time, we should use that data"): the complement is used whole, the blackout is accounted loss. Nothing is chosen: the set is a function of the ledger and the mask, both committed artifacts, and the supply's `mask_identity_hash` fixes it.
+
+**What is NOT ratified here.** No minimum complement for G-counting (R-411(i), USER); no P1 denominator (R-411(ii), USER); no accrual call for any day (the 09-02 call after tonight's verdict is the USER's); no admission of any Phase-2 candidate to the race (R-408(2), USER). A receipt stamped `ratification_ref: R-418` says only which windows it ran over and why; whether the day counts is decided elsewhere.
+
+**Why the coordinator can file this.** EV_REPLAY_PLAN §2 makes window selection an R-ADMISS act the coordinator ratifies; this act selects nothing new — it names the population R-409 already ruled usable. It introduces no number. If the USER overrules any part of it, the ref changes and every receipt carrying `R-418` re-stamps; nothing frozen depends on it.
+
+**Consumers.** `ev_replay_seam.window_specs_from_supply(supply, ratification_ref="R-418")` for replay; BE's production run path (round 3, dispatched with this entry) for forward-day scoring, whose scores stay SEALED (rule 11) until the coordinator or the USER unseals them — the filing reports counts and refusals only.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
