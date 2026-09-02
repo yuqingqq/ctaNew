@@ -934,3 +934,49 @@ Moved in the MEM round-11 true-up of R-406..R-408. Join rule as in batch 1.
   runs its selftest, so governs() returns True and no verdict consumes it.
   UNCHANGED: the forward race is at G=1/5 and 09-02 is accruing.
 ```
+
+## Batch 18 — archived 2026-09-02T10:15Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-12 true-up of R-409..R-412. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T05:38Z (MEM ROUND 9 -- THE UNIT QUESTION IS ANSWERED AND THE ANSWER
+  DOES NOT DEPEND ON THE UNIT; THE WINNER RULING IS UNBLOCKED). Recomputed from
+  the artifact, not read off its summary. R-399's hold was RIGHT and closing it
+  cost nothing: the reviewer released BE's batch and held only the WINNER
+  INFERENCE, on RR4-3 -- Q1's AUC was computed over 311,640 ROWS while the
+  cell's n read 177,674 ACTIONS (1.754 rows/action), CLAUDE.md rule 2's exact
+  class sitting in the one surviving statistic. One deduplicated pass, no refit
+  and no new estimand, was all the ruling needed. WHAT CAME BACK (188,119 B,
+  as-of 2026-09-02T05:21:34Z): THE LEVEL IS A RANGE, NOT A REPLACEMENT NUMBER --
+  lgbm 0.790 / 0.864 / 0.876 by collapse rule (first / mean / max) against
+  row-level 0.830, and linear 0.735 / 0.798 / 0.814 against 0.773, with THE
+  ROW-LEVEL FIGURE SITTING INSIDE THE RANGE ON BOTH ARMS, which is the finding:
+  it was not an artefact of counting a generation more than once. AND THE
+  COMPARISON IS INVARIANT TO EVERY CHOICE A SEAT MADE: the candidate beats the
+  incumbent hazard head under EVERY unit and EVERY collapse rule on BOTH arms,
+  4/4 each, agrees_with_row_level true -- that is the conjunct Q1's gate actually
+  asks about, and it is why the unit debate does not reach the verdict. 3.44% of
+  generations (6,108 of 177,674) carry DISAGREEING ROW LABELS, a counted
+  population rather than an assumption. TWO THINGS A READER SHOULD NOT MISS,
+  both disclosed in the artifact rather than dug out of it: the designated
+  primary collapse rule is MAX, which is also the HIGHEST of the three, and
+  under FIRST the action-unit AUC (0.790) is BELOW row level -- so "deduplication
+  raises it" holds for the primary rule and for two of three, not universally,
+  and the artifact states plainly that which rule adjudicates is a USER
+  question. The honest headline is the INVARIANT COMPARISON, not the level.
+  RR4-1 CLOSED AND IT MATTERS LATER: twelve cells had been asserting
+  gate_conjuncts_evaluated true while carrying a NULL conjunct -- the RR2-1 shape
+  again, harmless only while Q4 fails and a live defect the moment Q4 improves.
+  It is now DERIVED from the conjuncts themselves and Q4's reads False. RR4-2
+  (both one-draw numbers computed rather than multiplied) closed in the same
+  batch; RR4-4 is the coordinator's. THE WINNER RULING IS UNBLOCKED PENDING ONLY
+  THE REVIEWER'S RELEASE, round open at pinned tip c180061. NOTHING ABOUT THE
+  TEMPER CHANGES: the family is still 12 of 24 surviving, Q4 -- THE DECISION
+  METRIC -- STILL FAILS, every surviving p still sits at the 1/501 floor as a
+  bound rather than a measurement, and this is development evidence (prereg 4:
+  it selects, it never validates). UNCHANGED: forward race at G=1/5, 09-02
+  accruing; DA's content-liveness bar escalation still unruled and the rule
+  still unwired.
+```

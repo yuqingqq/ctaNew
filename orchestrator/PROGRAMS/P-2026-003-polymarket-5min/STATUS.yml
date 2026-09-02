@@ -4,6 +4,86 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T10:15Z (MEM ROUND 12 -- THE USER RULED THE ACCRUAL QUESTION, AND
+  THE MASK BECAME A THREE-SEAT CONTRACT). R-409..R-412, verified at the
+  artifacts. THE RULING WENT AGAINST THE COORDINATOR'S OWN RECOMMENDATION, and
+  the register records both side by side: twice (R-403, R-408) the
+  recommendation was EXCLUDE-IF-THIN; the USER ruled, verbatim at R-409
+  (2026-09-02 ~09:48Z), "If the data quality is good over the non-blackout time,
+  we should use that data." Recorded as a GENERAL disposition, not a one-day
+  exception. So a blackout day is NOT thrown away: it ACCRUES on its
+  non-blackout complement, with the dark windows MASKED as accounted loss --
+  counted, reported, excluded from that day's forward score. IT RESOLVES v1
+  SECTION 8: (a) L1/L2 GOVERN at WINDOW level, defining the mask; (b)
+  granularity is PER COIN-DAY; (c) a CONTENT_THIN day is DISCLOSED AND MASKED,
+  NOT INADMISSIBLE -- which SUPERSEDES the coordinator's R-403/R-408
+  exclude-if-thin recommendation. Section 8(d), 08-31's status, is UNTOUCHED.
+  content_thin_vetoes_HEALTHY: false is now the RULED state rather than an open
+  question -- verified pinned at source with ruled_by "R-409" and the USER's
+  sentence quoted in the file that consumes it -- and race_accrual_eligible
+  KEEPS ITS FOUR-CONJUNCT DEFINITION unchanged. Rule 11 standing, stated in the
+  entry itself: the ruling was made while 09-02 was still OPEN and BEFORE any
+  forward score for any day exists. WHY THE RULE IS WORTH MORE THAN THE DAY IT
+  SETTLED: excluding a day is cheap to implement and expensive in evidence --
+  it throws away every good window to punish the bad ones -- while accruing on
+  the complement keeps the evidence and pushes the cost onto the machinery,
+  which must now identify WHICH windows were dark. That is why the v2 freeze
+  stopped being housekeeping: v1 cannot see a mostly-dark day (RR6-1), so on
+  such a day the complement cannot be identified at all. THE MASK IS NOW A
+  CONTRACT BETWEEN THREE SEATS, R-410 amended in-band by R-411 and R-412 in nine
+  minutes, each narrowing the same wiring question: PRESENCE CONSUMES (a mask,
+  when present, is consumed for ANY day -- 09-01 has one and its 141 windows are
+  masked at scoring) while GOVERNANCE REQUIRES (from EFFECTIVE_FROM_DAY 20260902
+  a mask is REQUIRED, absent refuses, empty permitted); UNRESOLVED (not yet
+  judged -- the rule block lands with the closing verdict) REFUSES AND RETRIES
+  while UNJUDGEABLE (cannot be judged -- too few windows, zero median) REFUSES
+  and emits routed_to "frozen rule section 7 -- coordinator exclusion with a
+  stated reason" as TEXT, because the scorer never decides a disposition (rule
+  14); THE PRODUCER'S COMMITTED ARTIFACT IS THE CONTRACT (RR8-1: BE's adapter
+  REFUSED DA's real committed mask -- BE asserted protocol/per_coin, DA emits
+  artifact/coins, substance identical; neither side wrong alone, each suite
+  testing its own half, and the closure loads the REAL committed artifact);
+  partial masks REFUSE via day_closed_calendar; and DA must emit an explicit
+  mask for EVERY governed coin-day, empty permitted, BECAUSE ABSENCE MUST MEAN
+  "THE PRODUCER DID NOT RUN", NEVER "NOTHING WAS THIN" -- without which R-409's
+  accrue-on-the-complement could silently become do-not-accrue whenever a
+  producer lagged. VERIFIED RATHER THAN ACCEPTED: da_blackout_mask_20260901.json
+  declares artifact da_blackout_mask_v1, day_closed_calendar true, detector
+  v1_FROZEN (thin_frac 0.05, module sha 7196676840304f30), and its seven
+  per-coin counts -- btc 23, sol 23, eth 22, bnb 22, doge 22, xrp 20, hype 9 --
+  SUM TO 141, matching its own stated total_masked_windows. TWO SEAT MARKS KEPT:
+  the coordinator's dispatch asserted 09-01 had no thin windows and must emit an
+  EMPTY mask when it has 141, recorded at Q-DA-201, and DA MEASURED INSTEAD OF
+  COMPLYING, using a genuinely empty day (08-27) for the empty-mask control
+  while proving 09-01's governing fields byte-identical -- the second time a
+  seat has corrected a coordinator premise by measurement rather than obeying
+  it, named against the seat in the register; and DA caught a defect of its OWN
+  on real data before filing, the complement having been range(288) - masked,
+  which credited the still-open 09-02 with 248 unmasked windows out of 119
+  present. REVIEW STATE: NO HOLD IS OPEN ANYWHERE (R-407 stands). BE's mask-seam
+  round is RELEASED at 3a1d475 with RR8-1 (HIGH), RR8-2 (MED) and RR8-3 (LOW)
+  filed, and BE's fix batch is in flight; DA's producer round is IN REVIEW NOW
+  (reviews/REQUEST_DA_MASK_PRODUCER_2026-09-02.md, tip 181b4fa). FOUR ITEMS WAIT
+  ON THE USER, all unblocked, and the coordinator's positions below are
+  RECOMMENDATIONS AND NOT RULINGS: R-408(2) the Phase-2 winner -- recommend DO
+  NOT ADVANCE the composed candidate, record Q1 as the surviving COMPONENT of
+  record, no race admission, arm of record if any LGBM; R-408(3) the v2 freeze
+  -- recommend adopt as drafted, GOVERNING, effective 2026-09-03, 08-26 left as
+  recorded; R-411(i) the minimum complement size for G-COUNTING -- recommend a
+  coin-day counts toward the >=5 bar only if its unmasked complement covers >=
+  50% of the calendar day (>=144/288), anchored on v1's ~60%-dark blindness so
+  50% sits inside the instrument's validity rather than at its edge; and
+  R-411(ii) which P1 denominator governs "quality is good" on the complement --
+  recommend PER UNMASKED HOUR, since the calendar form dilutes loss by the very
+  blackout it is meant to exclude (btc 09-02: 93.01 s per unmasked hour vs 25.51
+  per calendar-24h, a 3.6x spread). WATCH: 00:06Z 2026-09-03 is the FIRST
+  GOVERNED VERDICT, on 09-02, and the first closing verdict to carry a
+  content_liveness_rule block (RR6-2); DA proved nothing governing moved, so it
+  runs identically with or without this round's batches. Collector pid 1108125
+  alive, up 1d12h, as of the 10:14Z clock read. NOTHING IN THE TODO TICKS THIS
+  ROUND -- checked; no box covers masks, blackouts or content liveness -- stated
+  rather than left as a silent empty sweep. UNCHANGED: G=1/5; the 011 family is
+  12 of 24 surviving with Q4 failing; development evidence. PRIOR:
   2026-09-02T09:38Z (MEM ROUND 11 -- THE THREE USER RULINGS GET A CITABLE
   ANCHOR, AND THE v2 DRAFT NAMES THE DAY IT GOES BLIND). R-406..R-408, each
   verified at its artifact. THE FINDING WORTH KEEPING FROM THIS ROUND IS A
@@ -145,45 +225,7 @@ updated: >-
   forward race's 5-day set could take substantially longer than the calendar
   suggests, and "weekly" would under-plan it. Stated as an observed rate on n=3,
   never a forecast. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with
-  Q4 failing; development evidence. PRIOR:
-  2026-09-02T05:38Z (MEM ROUND 9 -- THE UNIT QUESTION IS ANSWERED AND THE ANSWER
-  DOES NOT DEPEND ON THE UNIT; THE WINNER RULING IS UNBLOCKED). Recomputed from
-  the artifact, not read off its summary. R-399's hold was RIGHT and closing it
-  cost nothing: the reviewer released BE's batch and held only the WINNER
-  INFERENCE, on RR4-3 -- Q1's AUC was computed over 311,640 ROWS while the
-  cell's n read 177,674 ACTIONS (1.754 rows/action), CLAUDE.md rule 2's exact
-  class sitting in the one surviving statistic. One deduplicated pass, no refit
-  and no new estimand, was all the ruling needed. WHAT CAME BACK (188,119 B,
-  as-of 2026-09-02T05:21:34Z): THE LEVEL IS A RANGE, NOT A REPLACEMENT NUMBER --
-  lgbm 0.790 / 0.864 / 0.876 by collapse rule (first / mean / max) against
-  row-level 0.830, and linear 0.735 / 0.798 / 0.814 against 0.773, with THE
-  ROW-LEVEL FIGURE SITTING INSIDE THE RANGE ON BOTH ARMS, which is the finding:
-  it was not an artefact of counting a generation more than once. AND THE
-  COMPARISON IS INVARIANT TO EVERY CHOICE A SEAT MADE: the candidate beats the
-  incumbent hazard head under EVERY unit and EVERY collapse rule on BOTH arms,
-  4/4 each, agrees_with_row_level true -- that is the conjunct Q1's gate actually
-  asks about, and it is why the unit debate does not reach the verdict. 3.44% of
-  generations (6,108 of 177,674) carry DISAGREEING ROW LABELS, a counted
-  population rather than an assumption. TWO THINGS A READER SHOULD NOT MISS,
-  both disclosed in the artifact rather than dug out of it: the designated
-  primary collapse rule is MAX, which is also the HIGHEST of the three, and
-  under FIRST the action-unit AUC (0.790) is BELOW row level -- so "deduplication
-  raises it" holds for the primary rule and for two of three, not universally,
-  and the artifact states plainly that which rule adjudicates is a USER
-  question. The honest headline is the INVARIANT COMPARISON, not the level.
-  RR4-1 CLOSED AND IT MATTERS LATER: twelve cells had been asserting
-  gate_conjuncts_evaluated true while carrying a NULL conjunct -- the RR2-1 shape
-  again, harmless only while Q4 fails and a live defect the moment Q4 improves.
-  It is now DERIVED from the conjuncts themselves and Q4's reads False. RR4-2
-  (both one-draw numbers computed rather than multiplied) closed in the same
-  batch; RR4-4 is the coordinator's. THE WINNER RULING IS UNBLOCKED PENDING ONLY
-  THE REVIEWER'S RELEASE, round open at pinned tip c180061. NOTHING ABOUT THE
-  TEMPER CHANGES: the family is still 12 of 24 surviving, Q4 -- THE DECISION
-  METRIC -- STILL FAILS, every surviving p still sits at the 1/501 floor as a
-  bound rather than a measurement, and this is development evidence (prereg 4:
-  it selects, it never validates). UNCHANGED: forward race at G=1/5, 09-02
-  accruing; DA's content-liveness bar escalation still unruled and the rule
-  still unwired.
+  Q4 failing; development evidence.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -3776,7 +3818,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T09:38Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T10:15Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3813,7 +3855,13 @@ focus: >
   content-liveness escalation is superseded: the rule is now WIRED (R-402/R-403)
   and the reviewer has shown it BLIND to total blackouts (RR6-1), which the
   queued rule-v2 absolute-floor amendment is meant to close. See HANDOFF's
-  PENDING USER DECISIONS -- three items, one due by ~00:06Z tonight. Fair-price
+  PENDING USER DECISIONS. R-408(1) is now RULED (R-409): a blackout day accrues
+  on its NON-BLACKOUT COMPLEMENT with the dark windows masked as accounted loss,
+  which resolves v1 section 8(a)(b)(c) and supersedes the coordinator's
+  exclude-if-thin recommendation; the mask is a producer-to-consumer contract
+  (R-410..R-412) and 09-01's carries 141 windows. FOUR items remain
+  USER-pending: the Phase-2 winner, the v2 freeze, the minimum complement for
+  G-counting, and the P1 denominator on the complement. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an

@@ -1,11 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T09:38Z — **three USER rulings are now briefed on the record
-(R-408) and nothing else in the programme waits on them**; the content-liveness
-v2 amendment is drafted and review-released, with its own blind spot measured
-and stated. No reviewer hold is open anywhere. Prior line: the blackout cause is
-established and POLYMARKET-SIDE; the v1 rule was wired same-day and then proved
-blind to total blackouts; forward race at G = 1/5.
+Updated: 2026-09-02T10:15Z — **the USER ruled the accrual question (R-409): a
+day with a blackout accrues on its non-blackout complement, with the blackout
+windows masked as accounted loss.** The mask is now a producer→consumer contract
+across three seats. Four items remain USER-pending. Prior line: the blackout
+cause is POLYMARKET-SIDE; v2 is drafted and review-released; forward race at
+G = 1/5.
 
 ## READ FIRST — current project handoff
 
@@ -15,7 +15,9 @@ stateful cancel x skew TODO is a subordinate implementation worksheet; its
 **47/113** checkbox count is not total project completion (39 → 42 → 47 across
 two MEM sweeps, every tick behind a commit or an artifact).
 
-### PENDING USER DECISIONS — nothing here can be decided by a seat
+### RULED AND EXECUTED — the record of decisions already taken
+
+*(The live asks are further down, under PENDING USER DECISIONS.)*
 
 **The five that stood here are RULED AND EXECUTED** (R-397, the USER adopting
 each recommendation verbatim: *"we can proceed the five decisions according to
@@ -29,71 +31,83 @@ the recommendation"*). Verified at their artifacts, not from the entry:
 | 4 | **Phase-4 protocol + registry** | the protocol reads **FROZEN — IN FORCE**, declared before any cell is read and with **no Phase-4 cell existing at freeze**; `contracts.yaml` is at **v26** with 30 modules — EV-Replay and DE-ActionSpace registered, `ReplayWindowSpec` added, and `config_supplied:ActionSet` removed under amendment E on BE's confirmation |
 | 5 | **Worktrees** | four execution worktrees exist (`~/ctaNew-wt-{be,da,de,rev}`), `SEAT_PROTOCOL` rule 19. **Limitation stated rather than papered over:** git refuses one branch in two worktrees, so LANDING stays in the shared tree under pathspec discipline — isolation covers execution, and the ledger keeps one writer path |
 
-**THREE ITEMS WAIT, ALL USER-ONLY, ALL BRIEFED ON THE RECORD AT R-408.** They
-existed only in the coordinator's chat until that entry; the citable anchor is
-now `COORDINATION.md` R-408 (2026-09-02T09:35Z). Options are as filed; the
-recommendation on each is the coordinator's. **Nothing else in the programme is
-blocked behind them, and tonight's 00:06Z verdict runs unattended either way.**
+### RESOLVED — R-408(1), the accrual question, ruled by the USER at R-409
 
----
+> *"If the data quality is good over the non-blackout time, we should use that
+> data."* — USER, 2026-09-02 ~09:48Z, quoted verbatim in R-409.
 
-**(1) Does day 09-02 accrue?** (R-404 scenarios, R-405 cause.) Three possible
-closes:
+Recorded as a **general disposition, not a one-day exception**: the USER stated a
+principle and it applies prospectively to every day unless the USER narrows it.
+R-404's three scenarios collapse to one rule — **a day with a blackout is not
+excluded wholesale; it ACCRUES if the frozen bars pass on the non-blackout
+windows, and the blackout windows are MASKED as accounted loss** (counted,
+reported, excluded from that day's forward score).
 
-| close | disposition | recommendation |
+**It resolves the v1 rule's §8**, which the freeze had left open: **(a)** L1/L2
+**govern at WINDOW level** — they define the mask; **(b)** granularity is **per
+coin-day**; **(c)** a CONTENT_THIN day is **disclosed and masked, not
+inadmissible**. That last one **supersedes the coordinator's own R-403/R-408
+exclude-if-thin recommendation** — the USER took the other branch, and the
+register says so on the record. **§8(d), 08-31's status, is untouched.**
+
+Two consequences worth keeping straight. `content_thin_vetoes_HEALTHY: false` is
+now the **RULED** state rather than an unresolved one — verified pinned in
+`da_forward_day_verify.py` with `ruled_by: "R-409"` and the USER's sentence
+quoted in-file — and **`race_accrual_eligible` keeps its four-conjunct
+definition unchanged**. And the ruling is **coupled to the pending v2 freeze**:
+masking requires an instrument that can *see* the blackout, and v1 is blind to a
+mostly-dark day by construction (RR6-1), so R-408(3) is now load-bearing rather
+than housekeeping.
+
+**Rule 11 standing, stated in the entry itself:** the ruling was made while 09-02
+was still open and **before any forward score for any day exists** — a
+data-quality disposition taken before an outcome, not after.
+
+### The mask is now a contract between three seats
+
+R-410 as amended in-band by R-411 and R-412 — three amendments in nine minutes,
+each narrowing the same wiring question:
+
+| rule | state |
+|---|---|
+| **presence consumes** | a mask, when PRESENT, is consumed for **any** day — 09-01 has one and its **141 windows** are masked at scoring |
+| **governance requires** | from the frozen rule's `EFFECTIVE_FROM_DAY` (**20260902**) a mask artifact is REQUIRED; absent → refuse (empty permitted) |
+| **UNRESOLVED ≠ UNJUDGEABLE** | *not yet judged* (the rule block lands with the closing verdict) → **refuse and retry**; *cannot be judged* (too few windows, zero median) → **refuse** and emit `routed_to: "frozen rule §7 — coordinator exclusion with a stated reason"` as text. The scorer never decides the disposition (rule 14) |
+| **the producer's artifact is the contract** | RR8-1: BE's adapter **refused DA's real committed mask** — BE asserted `protocol`/`per_coin`, DA emits `artifact: da_blackout_mask_v1`/`coins`, substance identical. Ruled: BE reads DA's envelope as committed, and the closing seam check loads the **real** artifact |
+| **partial masks refuse** | RR8-3: the consumer honours `day_closed_calendar`; scoring off a partial mask scores the complement of a day that has not finished |
+| **producer obligation** | DA emits an explicit mask for **every governed coin-day, empty permitted** — absence must mean *"the producer did not run"*, never *"nothing was thin"*, so R-409's accrue-on-the-complement cannot silently become do-not-accrue because the producer lagged |
+
+**Verified at the artifact, recomputed not read:** `da_blackout_mask_20260901.json`
+declares `artifact: da_blackout_mask_v1`, `day_closed_calendar: true`, detector
+`v1_FROZEN` (thin_frac 0.05, module sha `7196676840304f30`), and its per-coin
+counts — btc 23, sol 23, eth 22, bnb 22, doge 22, xrp 20, hype 9 — **sum to 141,
+matching its own `total_masked_windows`**.
+
+**Two seat-level marks from this round.** The coordinator's dispatch carried a
+**wrong premise** — that 09-01 had no thin windows and must emit an empty mask —
+when 09-01 has **141** and was recorded CONTENT_THIN at Q-DA-201; **DA measured
+instead of complying**, used a genuinely empty day (08-27) for the empty-mask
+control, and proved 09-01's governing fields byte-identical. And **DA found a
+defect of its own on real data before filing**: the first complement was
+`range(288) − masked`, which credited the still-open 09-02 with 248 unmasked
+windows out of 119 present; it is now `PRESENT − masked`.
+
+### PENDING USER DECISIONS — four, all unblocked, none decidable by a seat
+
+Options are as filed; **the recommendations below are the coordinator's
+recommendations, not rulings.**
+
+| # | ask | coordinator's recommendation |
 |---|---|---|
-| **(a)** CONTENT_THIN at close | frozen **§7** exclusion by coordinator act, with a stated reason | **EXCLUDE** |
-| **(b)** genuinely LIVE | accrues, blackout disclosed | **ACCRUE** |
-| **(c)** LIVE-by-median-collapse | the instrument **cannot fire**, so exclusion is a coordinator act resting on the reviewer's table | USER's call; **EXCLUDE** |
+| **R-408(2)** | **the Phase-2 winner** — Q1's hazard head beats the incumbent's under every unit, collapse rule and arm; Q3 survives at its own gate only; **Q4, the decision metric, fails all six cells** (best Holm 0.12) | **do not advance** the composed candidate (§9.2 names this case); record **Q1 as the surviving component of record**; **no race admission** (§9.3); next population under the frozen prospective 2,000-draw declaration. Arm of record if any: LGBM |
+| **R-408(3)** | **freeze content-liveness v2** — now load-bearing for R-409, since masking a mostly-dark day needs v2's absolute floor | **adopt as drafted, GOVERNING, effective 2026-09-03**; 08-26 left as v1 recorded it; the limit carried verbatim |
+| **R-411(i)** | **minimum complement size for G-counting** — the frozen bars were pre-registered against a 288-window day and a small complement reads them on a population they were not registered for | for **G-counting only** (every good window is scored regardless), a coin-day counts toward the ≥5 bar only if its unmasked complement covers **≥50% of the calendar day** (≥144/288); anchored on v1's ~60%-dark blindness, so 50% sits inside the instrument's validity rather than at its edge |
+| **R-411(ii)** | **which P1 denominator governs "quality is good" on the complement** — DA carries both (btc 09-02: **93.01** s per unmasked hour vs **25.51** per calendar-24 h, a 3.6× spread) | **per unmasked hour** — it is loss per hour of *usable* feed; the calendar form dilutes the loss by the very blackout it is meant to exclude |
 
-Carried with it, so every future 00:06Z is mechanical rather than re-argued:
-the v1 rule's own **§8 is still open** and is recommended **prospectively** —
-(a) L1/L2 **govern**; (b) **per-coin-day** granularity (R-211(3)); (c) a
-CONTENT_THIN day is **inadmissible via §7**, not merely disclosed.
-
-**(2) The Phase-2 winner.** (R-400/R-401; prereg §9.2/§9.3.) Q1's hazard head
-beats the incumbent's under **every** unit, collapse rule and arm (12 of 24
-survive Holm; the level is a range — 0.79–0.88 lgbm, 0.74–0.81 linear); Q3
-survives at its **own** gate only; **Q4, the decision metric, fails all six
-cells** (best Holm 0.12). **Recommendation: DO NOT ADVANCE** the composed
-candidate — §9.2 names this case — record **Q1 as the surviving component of
-record**, take **no race admission** for this family (§9.3), and run the next
-population under the frozen prospective 2,000-draw declaration (A2). Arm of
-record if any: **LGBM**.
-
-**(3) Freeze content-liveness v2?**
-(`plans/DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md` §9, released R-407.) The
-open choices are **(e)** adopt L3 as drafted / different structural constants /
-reject; **(f)** whether `CONTENT_DARK` **governs** or is reported beside;
-**(g)** whether the 08-26 hype coin-day is **re-stated** under v2 or left as v1
-recorded it; **(h)** §8's original (a)/(b)/(c) remain open and unaffected.
-**Recommendation: adopt as drafted, GOVERNING, effective 2026-09-03** — tonight
-runs v1 only and no day is re-judged — with 08-26 left as recorded and the
-limit carried verbatim.
-
-**What v2 buys, and where it still stops — verified in the draft, not taken
-from the brief.** It turns *"any total blackout is invisible"* into *"a total
-blackout past the **fourth consecutive** dark day is invisible"*: with K = 7 and
-a median of priors, the reference itself turns dark once **4 of 7** trailing
-days are dark. A second declared limitation: **a coin whose true volume steps
-down permanently reads DARK until the trailing window catches up, at most 7
-days** — a false-positive mode, and the stated price of a reference the day
-cannot move. **The draft states both limits itself, which is the reason to trust
-the rest of it.** The v1 module is **byte-untouched** by the draft (`git diff
-3298a1d..509859f` on it is empty) — wiring follows a freeze, never precedes one.
-Its checker passes **12/12** in my run.
-
-**Review state: no hold is open anywhere.** The filing
-(`workspace/reviews/REVIEW_DA_FORENSICS_AND_V2_DRAFT_2026-09-02.md`, `98970c2`)
-**RELEASES DA rounds 4 and 5** and states it in those words. **RR7-1** (no
-per-venue regex check in the suite) and **RR7-2** (status vocabularies extend
-rather than map) are **FILED, not holding**, staged for DA's next round. The
-reviewer recomputed E3 from raw logs with its own regexes, dating and
-differencing and matched DA's artifact **to the digit**, and it discloses that
-only **one mutant** ran this round because the round's claims lived in
-recomputation rather than mutation.
-
----
+**Review state: no hold is open anywhere** (R-407 stands). BE's mask-seam round
+is **RELEASED** at `3a1d475` with RR8-1 (HIGH), RR8-2 (MED) and RR8-3 (LOW)
+filed; BE's fix batch is in flight. DA's producer round is **in review now**
+(`reviews/REQUEST_DA_MASK_PRODUCER_2026-09-02.md`, tip `181b4fa`).
 
 ### The blackouts are Polymarket's, and that is now established rather than suspected
 
@@ -241,12 +255,14 @@ the register, so there was nothing to tick there.
 
 ### Calendar and watch-out-for
 
-**Tonight, 00:06Z 2026-09-03 — the first GOVERNED verdict.** The frozen v1 rule
-governs 09-02, and this is the first closing verdict that will carry a
-`content_liveness_rule` block (RR6-2). The coordinator verifies it and files
-either way; the run itself is unattended. Race stands at **G = 1/5 per coin**
-(09-01 accrued). The venue-silence rate I recorded stays as measured: **3 events
-in 7 days, n = 3** — an observed rate, not a forecast.
+**Tonight, 00:06Z 2026-09-03 — the first GOVERNED verdict**, on 09-02. The
+frozen v1 rule governs that day, and this is the first closing verdict to carry
+a `content_liveness_rule` block (RR6-2). The coordinator verifies it and files
+either way; the run itself is unattended, and DA proved nothing governing moved
+— 00:06Z runs identically with or without this round's batches. Race stands at
+**G = 1/5 per coin** (09-01 accrued). The venue-silence rate stays as measured:
+**3 events in 7 days, n = 3** — an observed rate, not a forecast. **Collector
+alive** at pid 1108125, up 1 d 12 h, as of the 10:14Z clock read.
 
 **The on-disk 09-02 verdict is NOT the governed one.** Checked:
 `da_dayverdict_20260902.json` is the **00:06:03Z open-day snapshot** written by
@@ -342,6 +358,65 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~10:15Z (MEM) — THE USER PICKED THE OTHER BRANCH, AND THE MASK
+### BECAME A CONTRACT
+
+**R-409 is the ruling this programme had been circling for a day, and it went
+against the coordinator's own recommendation** — which is worth saying plainly,
+because the register records the recommendation and the ruling side by side.
+Twice (R-403, R-408) the recommendation was **exclude-if-thin**. The USER ruled:
+
+> *"If the data quality is good over the non-blackout time, we should use that
+> data."*
+
+So a blackout day is **not** thrown away; it accrues on its complement, with the
+dark windows masked as accounted loss. That closes v1 §8(a)(b)(c), leaves §8(d)
+untouched, makes `content_thin_vetoes_HEALTHY: false` a **ruled** state rather
+than an open one, and leaves `race_accrual_eligible`'s four conjuncts alone. I
+verified the pin at source: `ruled_by: "R-409"` with the USER's sentence quoted
+in the file that consumes it.
+
+**The rule is worth more than the day it settled.** Excluding a day is cheap to
+implement and expensive in evidence — it throws away every good window to
+punish the bad ones. Accruing on the complement keeps the evidence and pushes
+the cost onto the machinery, which now has to identify *which* windows were
+dark. That is why the v2 freeze stopped being housekeeping: v1 cannot see a
+mostly-dark day, so on such a day the complement cannot be identified at all.
+
+**And identifying it turned into a three-seat contract in nine minutes**
+(R-410 → R-411 → R-412), each amendment narrowing the same wiring question:
+presence consumes / governance requires; *not yet judged* refuses-and-retries
+while *cannot be judged* refuses and routes to §7 as text (the scorer never
+decides a disposition); the **producer's committed artifact is the contract**;
+partial masks refuse; and DA must emit a mask for every governed coin-day,
+empty permitted — **because absence must mean "the producer did not run", never
+"nothing was thin"**. That last one is the sharpest: without it, R-409's
+accrue-on-the-complement could silently become do-not-accrue whenever a
+producer lagged.
+
+**RR8-1 is the finding both suites were structurally unable to see:** BE's
+adapter **refused DA's real committed mask** — BE asserted `protocol`/`per_coin`,
+DA emits `artifact`/`coins`, substance identical. Neither side was wrong alone;
+each suite tested its own half. The closure is the only kind that could have
+failed: the seam check now loads the **real committed artifact**.
+
+**Verified rather than accepted:** `da_blackout_mask_20260901.json` declares
+`da_blackout_mask_v1`, `day_closed_calendar: true`, detector `v1_FROZEN`, and
+its seven per-coin counts **sum to 141**, matching its own stated total.
+
+**Two seat marks I want kept.** The coordinator's dispatch asserted 09-01 had no
+thin windows and must emit an empty mask; it has **141**, recorded at Q-DA-201.
+**DA measured instead of complying** and found a genuinely empty day for the
+control — the second time a seat has corrected a coordinator premise by
+measurement rather than obeying it, and the register names it against the seat.
+DA also caught its own defect on real data before filing: the complement was
+`range(288) − masked`, crediting the still-open 09-02 with 248 unmasked windows
+out of 119 present.
+
+**Nothing in the TODO ticks this round** — I checked; no box in
+`STATEFUL_HARMFUL_CANCEL_TODO.md` covers masks, blackouts or content liveness.
+Stated rather than left as a silent empty sweep.
 
 ### 2026-09-02 ~09:38Z (MEM) — THE THREE RULINGS GET AN ANCHOR, AND THE v2
 ### DRAFT NAMES THE DAY IT GOES BLIND
