@@ -1,14 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T15:06Z — **THE 09-01 SCORE OF RECORD REPRODUCED
-BYTE-FOR-BYTE**: BE's `fwd6/` re-run, a commit and a rebuilt driver later, emits
-a sealed file `cmp`-EQUAL to `fwd5/`'s (`aca22317ab06adbf…`) — verified here.
-**Four landings and three in-band corrections.** Tonight's 00:14Z preflight is
-**round-9 vintage `fadc986`** (sha `6a15ed5dd25513b7`, confirmed by hash): its
-decisions line is a **known-stale provenance line**, not live open decisions —
-**the ruled state is the register's, SIX RULED, none open.** DA's `e384792`
-mirrors it after landing, with a guard that makes the contradiction
-unrepresentable.
+Updated: 2026-09-02T15:16Z — **THE REGISTER HAS A DUPLICATED REF TODAY**:
+`R-6` heads two entries (file lines **1781** and **9507**) and the one index
+answers **last-wins** — reproduced here on the real register (437 entries, 436
+distinct refs). **Latent, not live**: nothing declares `supersedes: R-6`, R-6
+carries no ratification block, and the live answers are unchanged. Closure RULED
+at R-446 §3 and in flight as DE round 24 — **no register edit**. Two reviewer
+rulings are now **PROGRAMME STANDARDS** (narrow caught-and-named refusals;
+pre-run `__pycache__` clear). **SIX RULED, none open.**
 
 ## READ FIRST — current project handoff
 
@@ -341,6 +340,26 @@ not survive SIGKILL**. Now: a receipt written only at the end means **a killed
 run leaves no trace of how far it got**. Both are the same shape — *state that
 exists only if the process exits normally* — and the fix is the same shape too:
 write as you go.
+
+### PROGRAMME STANDARDS — adopted at R-446, binding on every seat
+
+Two rulings from the DE round-22 review, recorded here and in `STATUS.yml`'s
+`standing_rules` because a standard that lives only in the log is a standard
+nobody reads.
+
+1. **A caught-and-named refusal inside a positive control is the right shape**,
+   provided the catch is **narrow** (the module's own refusal type, never bare
+   `Exception`) and it **fails rather than degrades** — the sentinel is a
+   conjunct of the assertion, not a printed note. A bare traceback is not
+   louder, only less informative. Verified at three sites in
+   `de_ratification_check.py` (`:1076`, `:1665`, `:1752`), each catching
+   `RatificationRefused` only.
+2. **Every seat's mutant loop clears `__pycache__` BEFORE each execution**
+   (or runs under `sys.dont_write_bytecode`). The mechanism is real: a mutant
+   and its restore differing in no byte-count and sharing a whole-second mtime
+   leave the OLD bytecode executing. **The dangerous direction is the stale
+   RESTORE — a falsifier credited without ever having fired.** A pre-run clear
+   closes both directions; a post-run clear closes only one.
 
 ### FORMAT RULE — no fenced ratification block outside an R-ADMISS entry
 
@@ -692,9 +711,10 @@ launchers at **235/19**.
 | **DE round 19 review** | **RELEASED** (`a558356`) — DE17-R1/R2 close; **both residuals RULED as findings** (DE19-R1, DE19-R2) plus **DE19-R3** filed |
 | **DE round 21** | **VERIFIED** at `0255b60` (Q-DE-39) — DE19-R1..R3 closed, `de_admissible_windows.py` only, **79 → 84** (reproduced here, both launchers). Four coordinator mutants red by name; **one assertion-mutant stays GREEN** → the reviewer, as a question |
 | **DE round 21 review** | **RELEASED** (`533e38c`) — DE19-R1..R3 close; **DE21-R1 (LOW)** filed; **ruling adopted as the programme's standard: a subject-mutant THROUGH THE READER is what "driven" means** |
-| **DE round 22** | **LANDED** at `92fc615` (Q-DE-40) — DE20-R1/R2 closed, ratification **160**, one `all_entries` call site. **In review** |
+| **DE round 22** | **RELEASED** (`8df60bf`) for `92fc615` — DE20-R1/R2 close; **two rulings adopted as PROGRAMME STANDARD**; **DE22-R1 (LOW-MED)** → DE round 24 |
 | **DE round 23** | **LANDED** at `a83083a` (Q-DE-41) — DE21-R1 closed by a structural predicate on the walk's stop, admissible **87** (reproduced here) |
-| **DE round 24** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
+| **DE round 24** | **IN FLIGHT** (Q-DE-42) — the duplicated-ref closure: refuse where a duplicate can reach an answer, report by name where it cannot, first occurrence kept **by rule** |
+| **DE round 25** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
 | **DA round 13** | **HELD** at `e384792` (chain `3a89e6c`→`e292439`→`636a455`→`e384792`) — preflight **39**; `freeze_disposition` moves to `ruled`, `still_open == {}`, and a **coherence guard** makes the contradiction unrepresentable |
@@ -736,8 +756,9 @@ ledger-vs-tape refusal, and `require_verified()`.
 **Open findings:** **BE34-R2 CLOSED** at `90036b7` (an existing receipt is KEPT
 byte-identical and the run takes a numbered successor carrying `supersedes_receipt`
 — verified here); **BE34-R1/R3/R4/R5** → **BE round 6, in flight**;
-**DE20-R1/R2 CLOSED** at `92fc615`, in review; **DE21-R1 CLOSED** at `a83083a`;
-**DA12-R1** → DA round 14 (held);
+**DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
+`a83083a`; **DE22-R1** → DE round 24, in flight; **DA12-R1** → DA round 14
+(held);
 **DE18-R1..R3 CLOSED** at `0778918`, review released;
 **DE19-R1..R3 CLOSED** at `0255b60`, review released;
 **DA11-R1..R2 CLOSED** at `636a455`, review released; **DA10-R1..R5 CLOSED** at `e292439`,
@@ -756,11 +777,11 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE round 22** at `92fc615` (in flight from
-14:59Z) → **BE round 5** at `90036b7`+`baa986d` → then DE round 23 and DA round
-13/14 as they clear the hold. **Released so far:** BE rounds 3–4 (`1d9c543`), DA
-rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19 (`a558356`), 20
-(`819d225`) and 21 (`533e38c`).
+**The reviewer's queue, in order:** **BE round 5** at `baa986d` (dispatched
+15:14Z) → **DE round 23** at `a83083a` → **DE round 24** when it lands → then DA
+rounds 13/14 as they clear the hold. **Released so far:** BE rounds 3–4
+(`1d9c543`), DA rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19
+(`a558356`), 20 (`819d225`), 21 (`533e38c`) and 22 (`8df60bf`).
 
 > **Item 1 landed: the "frozen bytes" fact is ON THE RECORD, *stated, not
 > ruled*** (`1d9c543` §1, notified to the USER 14:30Z). The freeze disposition
@@ -1563,6 +1584,72 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~15:16Z (MEM) — A DUPLICATE THE REGISTER ALREADY CARRIES, AND
+### A LINE NUMBER THAT POINTS ONE SHORT
+
+**R-446 swept.** DE round 22 is RELEASED, two rulings become programme standards
+(recorded in the section above and in `STATUS.yml`'s `standing_rules`, not only
+here), and the round's finding is one this register has been carrying in plain
+sight.
+
+**I reproduced DE22-R1 on the real register with DE's own parser.** `all_entries`
+returns **437 entries, 436 distinct refs** at my as-of (through R-446) —
+`R-6` twice — against the coordinator's **436 / 435** through R-445. The delta is
+exactly the entry that landed between the two measurements, which is what a
+growing tape is supposed to look like when both readings carry their as-of.
+`entry_index("R-6")` resolves to the **later** occurrence; nothing refuses it and
+nothing reports it.
+
+**Bounded, and I checked the bound rather than repeating it.** No ratification
+block declares `supersedes: R-6` — the single text hit is **inside R-446's own
+prose saying so**, which is the vocabulary-hit-is-not-a-reference shape one more
+time; I separated them by parsing the four fenced blocks in the register instead
+of grepping. R-6 itself carries **no block**. Latent, not live.
+
+**One thing I found that is live, and it belongs to the round in flight.** DE's
+`all_entries` records `line` as **0-indexed** (`:278`, `line: i` from
+`enumerate`), while `grep -n` and every editor are 1-indexed: R-6's entries are
+at **file lines 1781 and 9507**, and the parser reports **1780 and 9506**. That
+is already reaching prose — `check#18`'s refusal at `:884-887` prints
+`own_idx[ref]["line"]` **raw** under the words *"register line"*. And the module
+disagrees with itself: the other extractor at `:432` returns
+`line_start: start + 1`, **1-indexed**. The ruled closure (a) requires the
+refusal to **name BOTH lines** of a duplicate, so the convention decides whether
+a reader who follows the message lands on the entry or one line above it.
+**DE round 24 is touching exactly this code right now** — recorded for DE to
+rule, not fixed here.
+
+**A second measurement caveat, cheap and worth having.** R-446 cites *"217 of
+436 entry headings are stamped"* as the fact that makes "an unstamped heading is
+not an entry" unavailable as a rule. I recomputed: **217 of 437** under a strict
+`### R-N — <ISO> — ` shape, **244** under a looser "the heading contains an ISO
+stamp". The count is therefore **instrument-dependent**, and the unstamped set is
+not purely the early era — R-226, R-227, R-228 and R-239 fall in it too. **The
+ruling's premise survives both readings** (either way roughly half the register
+is unstamped), but if any future rule ever leans on that count, the shape has to
+be stated with it.
+
+**The two standards are worth more than the finding.** A **caught-and-named
+refusal inside a positive control** is the right shape when the catch is narrow
+and the sentinel is a conjunct — verified at `:1076`, `:1665`, `:1752`, each
+catching `RatificationRefused` only. And **every seat's mutant loop now clears
+`__pycache__` BEFORE each execution**: the dangerous direction is the stale
+**restore**, a falsifier credited without having fired, and only a pre-run clear
+closes both directions. DE met this as a false RED — the survivable side. The
+standard exists because the same collision with the signs reversed is a false
+GREEN, and nothing in a suite would say so.
+
+**Nothing moves for tonight.** The 00:14Z preflight is round-9 vintage and does
+not import the checker at all; BE's `require_verified()` gate reads the real
+register, on which `R-6` falls in the **REPORTED** class, not the refused one.
+The closure is a checker change and a register-format reading — **no register
+edit**, the append-only file untouched, first occurrence kept **by rule and
+stated**, never chosen.
+
+**Seats.** Reviewer: BE round 5 at `baa986d`, then DE round 23, then DE round 24.
+DE round 24, BE round 6 and DA round 14 (held) are in flight. **SIX RULED, none
+open.**
 
 ### 2026-09-02 ~15:06Z (MEM) — THE SAME BYTES, FROM A DIFFERENT DRIVER
 

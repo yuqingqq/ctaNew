@@ -2836,3 +2836,64 @@ Moved in the MEM round-37 true-up of R-444 and R-445. Join rule as in batch 1.
   still the only one. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
   with Q4 failing; development evidence.
 ```
+
+## Batch 44 — archived 2026-09-02T15:16Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-38 true-up of R-446. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T14:37Z (MEM ROUND 35 -- THE FACT THE USER'S DECISION TURNS ON,
+  HASHED RATHER THAN QUOTED). R-441 swept. BE ROUNDS 3-4 REVIEW RELEASED
+  (1d9c543): 248e99f accepted as THE CONFIRMING DRIVER OF RECORD for the 09-01
+  score, 46 checks rc 0 both launchers, five findings BE34-R1..R5 (two MEDIUM).
+  THE "FROZEN BYTES" FACT FOR THE USER'S OPEN FREEZE-DISPOSITION DECISION IS ON
+  THE RECORD -- STATED BY THE REVIEWER, NOT RULED BY ANYONE, notified to the
+  USER 14:30Z -- and I re-derived it from the objects rather than reading it:
+  the candidate binds manifest_sha256 = eb8733da2c8e2126, and the manifest BLOB
+  AT THE FREEZE COMMIT 1b53929 hashes to EXACTLY THAT; the manifest names 8
+  reproducibility anchors (7 .py modules + 1 data file) plus one non-anchor hash
+  (collector_runs.jsonl); warning_window is imported at module level by
+  policy_bounds_v1:44 and an AST COMPARISON OF EVERY FUNCTION AT BOTH COMMITS
+  returns exactly one difference, select_holdout, with nothing added or removed
+  and select_by_day AST-IDENTICAL; tier1_pipeline's only import site is
+  layer2_v1.py:167, inside load_winners (156-174), which nothing on the driver's
+  path calls. ONE HALF OF THE FACT IS DOING MORE WORK THAN THE OTHER: the 7 code
+  anchors are frozen-by-commit, but the data anchor
+  harmful_exposure_rows_v3_eraB.json is UNTRACKED AND 1.24 GB, so NO COMMIT CAN
+  EVER FREEZE IT -- the reason being CLAUDE.md's own rule against large data
+  files in git, not an oversight. Rule 12's "a freeze is a commit" cannot bind
+  it and the receipt is right to call it a DISCLOSURE, not a freeze; that
+  distinction is the USER's to weigh and is not a defect. AND ONE FACT OF MY
+  OWN, which sharpens what "the frozen bytes execute" means: the manifest HAS
+  MOVED since the freeze (03762753 at 248e99f, at HEAD and in the working
+  tree), and the driver does not paper over it -- I ran it and section 10(1)
+  REFUSES, an independent re-reading agreeing a bound input moved, WITH A
+  POSITIVE CONTROL proving a matching contract HOLDS so the gate discriminates
+  rather than refusing universally; the code's own comment records that a
+  mutant disabling this drift check ONCE SURVIVED and the falsifier was added
+  afterwards. So the honest phrasing for a reader of R-424 section 6: THE
+  FROZEN BYTES REACH THE RUN BY MATERIALISATION FROM 1b53929, NOT BY READING
+  TODAY'S TREE, and the contract against today's tree is refused by name. THE
+  FIVE FINDINGS REPRODUCE AT THEIR LINES: BE34-R1 (MEDIUM) build_and_score() at
+  :622 has no falsifier and score_rows() at :707 has ZERO CALL SITES (grepped;
+  the def line is the only hit), so streamed-vs-held cannot be compared and the
+  68-field cross-pass agreement demonstrates DETERMINISM, NOT CORRECTNESS;
+  BE34-R2 (MEDIUM) outdir.mkdir(parents=True, exist_ok=True) at :783 with
+  fixed-name writes at :758/:773, the shape that destroyed the 12:49 receipt in
+  fwd4/; BE34-R3 (LOW-MED) REPO = Path("/home/yuqing/ctaNew") at :35 spawned
+  with cwd=str(REPO) at :1420; BE34-R4 (LOW) the usage branch returns 0 at
+  :1438 (the print spans 1436-1437); BE34-R5 (LOW) the closure is computed
+  statically and the receipt OVER-STATES HEAD EXPOSURE BY ONE MODULE, in BE's
+  own disfavour. BE34-R3 IS VISIBLE IN THE TREE RIGHT NOW: the review measured
+  46 checks at 248e99f and the driver at HEAD runs 78 (rc 0) because BE's
+  round-5 file landed at 90036b7 underneath it. SEQUENCING RULE ADOPTED BY THE
+  COORDINATOR, NOT A USER DECISION: no 09-02 scoring run until BE34-R1/R2 close
+  AND are reviewed; be-fwd-final4.service is inactive and the driver runs by
+  hand, so nothing enforces it but the rule -- a rule with no interlock is a
+  promise, kept by a seat rather than by a unit. BE round 6 STAGED behind round
+  5's row (rule 18; BE's fwd6 run and 50-mutant audit in flight); reviewer DE 20
+  -> DE 21 -> DA 12 -> BE 5. Gate roster checked myself: 21 at 248e99f, 22 at
+  e292439, the same file at two commits. USER-open: the freeze disposition, now
+  with its fact on the record. UNCHANGED: G=1/5; the 011 family is 12 of 24
+  surviving with Q4 failing; development evidence.
+```
