@@ -213,7 +213,49 @@ def check_verdict(rep: dict, day_token: str,
          "independently)",
          {"coins_ok": per_ok, "problems": per_bad})
 
-    r.assert_read(2, {"day_token": 1, "day_closed_calendar": 1,
+    # ---- the USER-FROZEN content-liveness rule (R-386), wired R-402 -----
+    clr = r.typed(rep, "content_liveness_rule", dict, "root") or {}
+    clr_status = r.typed(clr, "status", str, "content_liveness_rule")
+    clr_governs = clr.get("governs")
+    r.fields["clr_governs"] = r.fields.get("clr_governs", 0) + 1
+    frozen = r.typed(clr, "frozen_rule", dict, "content_liveness_rule") or {}
+    comp = r.typed(clr, "composition_with_HEALTHY", dict,
+                   "content_liveness_rule") or {}
+    try:
+        import da_content_liveness_rule as CLR
+        want_gov = CLR.governs(day_token)
+        want_bars = (CLR.L1_SEVERITY_MAX, CLR.L2_RUN_WINDOWS_MAX)
+    except Exception:
+        want_gov, want_bars = None, (None, None)
+    _add(res, "frozen_content_liveness_rule_is_carried",
+         bool(clr_status) and bool(frozen) and bool(comp)
+         and clr_governs == want_gov,
+         "the verdict carries the USER-frozen rule's status, the bars that "
+         "judged it, and its composition -- and its governs field agrees with "
+         "what the frozen module answers for this day, recomputed here rather "
+         "than read back",
+         {"status": clr_status, "governs_in_artifact": clr_governs,
+          "governs_per_module": want_gov,
+          "bars_in_artifact": (frozen.get("L1_severity_max"),
+                               frozen.get("L2_run_windows_max")),
+          "bars_per_module": want_bars,
+          "effective_from_day": frozen.get("effective_from_day")})
+    _add(res, "CONTENT_THIN_does_not_silently_veto_HEALTHY",
+         comp.get("content_thin_vetoes_HEALTHY") is False,
+         "the frozen rule's SS7 reserves exclusion to the coordinator and its "
+         "SS8 leaves the composition open; a verdict that had adopted it "
+         "would be a worker ruling (rules 11/14). If this ever reads True it "
+         "must cite the ruling that made it so",
+         {"content_thin_vetoes_HEALTHY":
+          comp.get("content_thin_vetoes_HEALTHY"),
+          "escalated": comp.get("escalated"),
+          "day_is_CONTENT_THIN": comp.get("day_is_CONTENT_THIN"),
+          "would_flip_under_worst_coin":
+              comp.get("would_flip_HEALTHY_under_worst_coin_composition")})
+
+    r.assert_read(2, {"content_liveness_rule": 1, "clr_governs": 1,
+                      "frozen_rule": 1, "composition_with_HEALTHY": 1,
+                      "day_token": 1, "day_closed_calendar": 1,
                       "verdict_split": 1, "race_accrual_eligible": 1,
                       "rule": 1, "era_role": 1, "day_bar_v2": 1,
                       "windows_affected_disclosure": 2,
@@ -253,7 +295,14 @@ def _fixture(day="20260829", era="clob_v3_1", closed=True,
              "era_role": "INTERLOCK, NOT A QUALITY GRADE (USER 2026-09-01)."}
     bar = {"evaluable": True, "P1_pass": True, "P2_pass": True,
            "P3_pass": True, "windows_affected_disclosure": dict(disc)}
+    clr = {"status": "CONTENT_LIVE", "governs": False,
+           "frozen_rule": {"module": "da_content_liveness_rule",
+                           "effective_from_day": "20260902",
+                           "L1_severity_max": 0.08, "L2_run_windows_max": 12},
+           "composition_with_HEALTHY": {"content_thin_vetoes_HEALTHY": False,
+                                        "escalated": "ESCALATION-FOR-USER"}}
     return {"day_token": day, "day_closed_calendar": closed,
+            "content_liveness_rule": clr,
             "as_of_utc": "2026-09-02T00:06:00+00:00", "all_pass": True,
             "selector_era": era, "verdict_split": dict(split),
             "day_bar_v2": {"btc": dict(bar), "eth": dict(bar)},
@@ -400,6 +449,29 @@ def selftest() -> int:
            "quality PASSES, era is not admissible, so it does not accrue. A "
            "checker that graded every day 'complete and accruing' would pass "
            "the fixture legs above too")
+
+    # KNOWN-BADS for the frozen-rule legs.
+    m = copy.deepcopy(base)
+    m.pop("content_liveness_rule")
+    try:
+        r = check_verdict(m, "20260829")
+        ok(not named(r, "frozen_content_liveness_rule_is_carried")["pass"],
+           "KNOWN-BAD: a verdict with no frozen-rule block must fail")
+    except SystemExit:
+        ok(True, "KNOWN-BAD: a verdict with no frozen-rule block refuses")
+    m = copy.deepcopy(base)
+    m["content_liveness_rule"]["governs"] = True
+    r = check_verdict(m, "20260829")
+    ok(not named(r, "frozen_content_liveness_rule_is_carried")["pass"],
+       "KNOWN-BAD: an artifact claiming it was JUDGED on a day the frozen "
+       "module says it was not fails -- governs is recomputed, not read")
+    m = copy.deepcopy(base)
+    m["content_liveness_rule"]["composition_with_HEALTHY"][
+        "content_thin_vetoes_HEALTHY"] = True
+    r = check_verdict(m, "20260829")
+    ok(not named(r, "CONTENT_THIN_does_not_silently_veto_HEALTHY")["pass"],
+       "KNOWN-BAD: a verdict that adopted the composition without a ruling "
+       "fails -- the checker refuses a worker-made policy change")
 
     print(f"da_verdict_check selftests: {checks} checks passed")
     return 0

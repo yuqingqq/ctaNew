@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import collections
 import datetime as dt
+import hashlib
 import json
 import math
 import re
@@ -568,10 +569,22 @@ def content_liveness_for(day_token: str, log_path: Path | None = None,
     low = [r for r in rates if med > 0 and r / med < 0.10]
     return {
         "status": "CONTENT_LIVENESS_UNRESOLVED",
-        "why": ("the discriminator is computed and frozen; NO ratified band "
-                "exists, and inventing one from the days that motivated the "
-                "rule -- or from 09-01 after seeing it -- is the error this "
-                "structure was declared early to avoid"),
+        # DEMOTED, NOT RETIRED, and the text below is the correction (R-402).
+        # It used to say "NO ratified band exists" -- written before the rule
+        # was drafted and STALE since the R-386 freeze. A band exists now, in
+        # `da_content_liveness_rule`, and this block is not it.
+        "why": ("REPORTED DIAGNOSTIC. A ratified band DOES now exist -- the "
+                "USER-frozen `da_content_liveness_rule` (R-386), carried in "
+                "this same artifact as `content_liveness_rule`. THIS block "
+                "has no band and states none: it reads a DIFFERENT INPUT "
+                "(the collector log's msgs/s between heartbeats) from the "
+                "frozen rule (raw tape bytes per window), so the two "
+                "CORROBORATE rather than duplicate -- on 2026-09-01 they "
+                "agreed to one minute, 116 against 115. Two blocks, two "
+                "inputs, ONE named governing answer, which is not this one."),
+        "instrument": "collector log, msgs/s between heartbeats",
+        "role": "REPORTED DIAGNOSTIC -- CORROBORATING, NEVER GOVERNING",
+        "governing_rule_lives_in": "content_liveness_rule (this artifact)",
         "n_intervals": len(rates),
         "median_msgs_per_s": round(med, 3),
         "min_msgs_per_s": round(min(rates), 3),
@@ -585,6 +598,111 @@ def content_liveness_for(day_token: str, log_path: Path | None = None,
                                  "half of the discriminator and needs the "
                                  "per-coin join, not shipped here"),
         "governs": False,
+    }
+
+
+def content_liveness_rule_for(day_token: str, raw_root: Path | None = None,
+                              gaps=None) -> dict[str, Any]:
+    """The USER-FROZEN content-liveness rule, carried in every verdict.
+
+    R-402: the rule was frozen (R-386) and NOTHING CALLED IT. Green module,
+    green gate, and the pipeline that judges days never imported it -- rule
+    17's class on the governing instrument itself, caught the morning of its
+    first governed day. This is the wiring half; `assert_content_liveness_
+    carried` is the artifact-level half, because wiring that no artifact
+    demands can be removed without anything noticing.
+
+    IT IS COMPUTED FOR EVERY DAY AND GOVERNS NONE OF THEM HERE. That is not
+    my choice and not a hedge -- it is what the frozen text says. See
+    `composition_with_HEALTHY` below, which carries the citation and the
+    decision material rather than a verdict.
+
+    A FAILURE HERE MUST NOT TAKE THE VERDICT DOWN, and must not read as
+    liveness either: every failure path returns an UNRESOLVED STATUS with its
+    reason, never an absent key and never a pass (rule 4).
+    """
+    out: dict[str, Any] = {}
+    try:
+        import da_content_liveness_rule as CLR
+    except Exception as e:                                   # pragma: no cover
+        return {"status": "CONTENT_LIVENESS_UNRESOLVED", "governs": None,
+                "why": f"the frozen rule module could not be imported: {e!r}",
+                "wiring": "BROKEN -- this verdict was produced without the "
+                          "frozen rule being consulted"}
+    try:
+        out = CLR.measure_day(day_token, gaps=gaps, raw_root=raw_root)
+    except Exception as e:
+        out = {"status": "CONTENT_LIVENESS_UNRESOLVED",
+               "governs": CLR.governs(day_token),
+               "why": f"the frozen rule raised while measuring: {e!r}"}
+    # WHAT judged it, carried so a receipt names its own authority.
+    out["frozen_rule"] = {
+        "module": "da_content_liveness_rule",
+        "frozen_by_user": CLR.FROZEN_BY_USER,
+        "effective_from_day": CLR.EFFECTIVE_FROM_DAY,
+        "calibration_max_day": CLR.CALIBRATION_MAX_DAY,
+        "L1_severity_max": CLR.L1_SEVERITY_MAX,
+        "L2_run_windows_max": CLR.L2_RUN_WINDOWS_MAX,
+        "thin_frac": CLR.THIN_FRAC,
+        "authority": "USER ruling 2026-09-01, R-386",
+        "module_sha256_prefix": hashlib.sha256(
+            Path(CLR.__file__).read_bytes()).hexdigest()[:16],
+    }
+    out["composition_with_HEALTHY"] = _content_liveness_composition(
+        out, CLR.governs(day_token))
+    return out
+
+
+def _content_liveness_composition(block: dict, governing: bool) -> dict:
+    """How a governing CONTENT_THIN meets ACCRUAL_RULE's HEALTHY conjunct.
+
+    ANSWERED BY THE FROZEN TEXT, NOT BY ME, and the answer is that it does
+    not meet it here:
+
+      * frozen SS7: "a day it fails becomes a day the COORDINATOR excludes
+        with a stated reason, NOT a day this instrument rejects";
+      * frozen SS8 lists as STILL OPEN for the coordinator/USER: (a) whether
+        L1/L2 join the governing set or stay REPORTED beside it, (b)
+        worst-coin vs per-coin granularity, (c) whether a CONTENT_THIN day is
+        inadmissible or merely disclosed.
+
+    R-386 froze the rule and resolved none of SS8 -- its own text records the
+    ruling as "Yea proceed" on freezing plus the CLAUDE.md amendment. So
+    wiring CONTENT_THIN into HEALTHY would be a worker deciding what the
+    frozen text reserves (rules 11 and 14). ESCALATED, not chosen.
+
+    What IS supplied is the decision material, computed both ways, so the
+    ruling can be made from numbers rather than from this prose.
+    """
+    thin = block.get("status") == "CONTENT_THIN"
+    coins = {c: (v.get("status") == "CONTENT_THIN")
+             for c, v in (block.get("coins") or {}).items()
+             if isinstance(v, dict) and "status" in v}
+    return {
+        "content_thin_vetoes_HEALTHY": False,
+        "governing_for_this_day": governing,
+        "why_not": (
+            "the frozen rule's SS7 reserves exclusion to the COORDINATOR with "
+            "a stated reason ('not a day this instrument rejects'), and its "
+            "SS8 lists (a) whether L1/L2 join the governing set and (c) "
+            "whether a CONTENT_THIN day is inadmissible as OPEN for the "
+            "coordinator/USER. R-386 froze the rule and resolved neither. "
+            "Composing it into HEALTHY here would be a worker choosing what "
+            "the frozen text reserves -- rules 11 and 14."),
+        "escalated": "ESCALATION-FOR-USER: frozen SS8 (a), (b) and (c)",
+        # DECISION MATERIAL. Computed, so the ruling reads numbers not prose.
+        "day_is_CONTENT_THIN": thin,
+        "coins_CONTENT_THIN": sorted(c for c, t in coins.items() if t),
+        "would_flip_HEALTHY_under_worst_coin_composition": bool(
+            governing and thin),
+        "would_flip_HEALTHY_under_per_coin_composition": {
+            c: bool(governing and t) for c, t in sorted(coins.items())},
+        "note": (
+            "'would_flip' answers ONLY 'does this day read CONTENT_THIN while "
+            "the rule governs'. It is not a verdict and nothing consumes it; "
+            "the adjudicated coins are btc and eth (R-306), so a THIN coin "
+            "outside that pair would not reach an adjudication even under a "
+            "per-coin composition."),
     }
 
 
@@ -1481,6 +1599,58 @@ def assert_disclosure_carried(rep: dict) -> None:
               "as unqualified.")
 
 
+def assert_content_liveness_carried(rep: dict, day_token: str) -> None:
+    """REFUSE a verdict produced without consulting the USER-FROZEN rule.
+
+    Rule 17's second half, on the governing instrument. R-402 found the rule
+    frozen since R-386 and NEVER CALLED: green module, green gate, and the
+    pipeline that judges days did not import it. Wiring alone does not close
+    that -- wiring nothing demands can be deleted and every suite stays green.
+    So the ARTIFACT refuses to exist without the block.
+
+    THE `governs` FIELD IS CHECKED FOR HONESTY, NOT PINNED TO A STATE. Pinning
+    it to True would refuse every day if the USER ever unfroze the rule, and
+    pinning it to False was exactly the draft-state trap the freeze surfaced
+    three times in this rule's own selftest (R-386). The invariant is that the
+    artifact reports what the module answers.
+    """
+    block = rep.get("content_liveness_rule")
+    if not isinstance(block, dict):
+        raise DisclosureNotCarried(
+            "REFUSED to emit: no `content_liveness_rule` block. The rule is "
+            "USER-frozen (R-386) and a verdict produced without consulting it "
+            "is a verdict produced by a pipeline that does not have it.")
+    missing = [k for k in ("status", "frozen_rule", "composition_with_HEALTHY")
+               if k not in block]
+    if missing:
+        raise DisclosureNotCarried(
+            f"REFUSED to emit: `content_liveness_rule` is missing {missing}. "
+            f"A status without its authority and its composition is not a "
+            f"disclosure.")
+    try:
+        import da_content_liveness_rule as CLR
+    except Exception as e:                                   # pragma: no cover
+        raise DisclosureNotCarried(
+            f"REFUSED to emit: the frozen rule could not be imported to "
+            f"verify the artifact against it ({e!r})")
+    want = CLR.governs(day_token)
+    got = block.get("governs")
+    if got != want:
+        raise DisclosureNotCarried(
+            f"REFUSED to emit: the artifact reports governs={got!r} for "
+            f"{day_token} while the frozen rule answers {want!r}. An artifact "
+            f"that misreports whether it was judged is worse than one that "
+            f"does not carry the field.")
+    comp = block["composition_with_HEALTHY"]
+    if comp.get("content_thin_vetoes_HEALTHY") is not False:
+        raise DisclosureNotCarried(
+            "REFUSED to emit: this verdict composes CONTENT_THIN into "
+            "HEALTHY. The frozen rule's SS7 reserves exclusion to the "
+            "COORDINATOR and its SS8 leaves the composition OPEN; R-386 "
+            "resolved neither. A worker may not adopt it by shipping it "
+            "(rules 11/14) -- lift this guard only with the ruling cited.")
+
+
 def closed_label(day_closed, calendar_closed: bool) -> str:
     """Attribute the day-closed flag to WHOSE it is, and name a disagreement.
 
@@ -1907,9 +2077,12 @@ def verify_day(day_token: str, freeze_epoch: float,
         "predicates": preds,
         "all_pass": _day_all_pass,
         "tape_density": _td,
-        # A REPORT FIELD, not a predicate. A predicate carries pass/fail and
-        # this has no ratified bar, so a pass/fail here would be invented.
+        # TWO BLOCKS, TWO INPUTS, ONE GOVERNING ANSWER (Q-DA-200's lesson).
+        # `content_liveness` is the collector-LOG diagnostic and is DEMOTED;
+        # `content_liveness_rule` is the USER-FROZEN rule on the RAW TAPE and
+        # is the only one with bars. Each names the other.
         "content_liveness": content_liveness_for(day_token),
+        "content_liveness_rule": content_liveness_rule_for(day_token),
         "windows_gap_affected": affected,
         "gap_series": gs,
         "decision_note": (
@@ -2110,9 +2283,22 @@ def _selftests() -> int:
             "bar = json.loads(sys.argv[1])\n"
             "carry = sys.argv[2] == 'carry'\n"
             "if not carry: bar.pop('windows_affected_disclosure')\n"
+            "import da_content_liveness_rule as CLR\n"
+            "clr = {'status': 'CONTENT_LIVE',\n"
+            "       'governs': CLR.governs('20260829'),\n"
+            "       'frozen_rule': {'module': 'da_content_liveness_rule'},\n"
+            "       'composition_with_HEALTHY': {\n"
+            "           'content_thin_vetoes_HEALTHY': False}}\n"
+            "if sys.argv[3:] and sys.argv[3] == 'drop_clr': clr = None\n"
+            "if sys.argv[3:] and sys.argv[3] == 'lie_clr':\n"
+            "    clr['governs'] = not CLR.governs('20260829')\n"
+            "if sys.argv[3:] and sys.argv[3] == 'veto_clr':\n"
+            "    clr['composition_with_HEALTHY']["
+            "'content_thin_vetoes_HEALTHY'] = True\n"
             "D.verify_day = lambda *a, **k: {'bar_regime': 'day_bar_v2',\n"
             "    'day_bar_v2': {'btc': bar}, 'per_coin': {}, 'predicates': [],\n"
             "    'all_pass': True, 'windows_gap_affected': {}, 'day': 'x',\n"
+            "    'content_liveness_rule': clr,\n"
             "    'verdict_granularity': 'whole_day'}\n"
             "sys.argv = ['x', 'verify', '--day', '20260829',\n"
             "            '--freeze-epoch', '1787897340']\n"
@@ -2130,6 +2316,179 @@ def _selftests() -> int:
            "0h EXIT-CODE SEAM POSITIVE CONTROL: the identical report WITH the "
            "disclosure exits 0 -- the guard refuses the missing field, not "
            "every run")
+        # ---- THE FROZEN RULE'S BEHAVIOUR, ON BOTH SIDES OF ITS DATE -----
+        # Built as a synthetic raw tree so the bars are driven by DATA, not by
+        # whatever the live tape happens to hold today.
+        import gzip as _gz
+        import da_content_liveness_rule as _CLR
+        _rr = Path(_td) / "raw_clr"
+
+        def _mkday(tok, thin_from=None, thin_len=0):
+            d = _rr / tok
+            d.mkdir(parents=True, exist_ok=True)
+            base = day_bounds(tok)[0]
+            for i in range(288):
+                n = 5000
+                if thin_from is not None and thin_from <= i < thin_from + thin_len:
+                    n = 3
+                with _gz.open(d / f"btc-updown-5m-{base + i * WINDOW_S}.jsonl.gz",
+                              "wb") as fh:
+                    fh.write(b'{"x":1}\n' * n)
+
+        # A day AFTER the effective date, thinned past BOTH bars.
+        _mkday("20260902", thin_from=100, thin_len=30)
+        _gov = content_liveness_rule_for("20260902", raw_root=_rr, gaps={})
+        ok(_gov["status"] == "CONTENT_THIN" and _gov["governs"] is True
+           and _gov["coins"]["btc"]["L2_pass"] is False
+           and _gov["frozen_rule"]["effective_from_day"]
+           == _CLR.EFFECTIVE_FROM_DAY,
+           "FROZEN RULE, GOVERNING SIDE: a synthetic 30-window quiet spell on "
+           "a day >= the effective date reads CONTENT_THIN with governs=True, "
+           "judged by the frozen bars and naming them")
+        # The SAME data one day EARLIER is measured and reported, never judged.
+        _mkday("20260830", thin_from=100, thin_len=30)
+        _rep = content_liveness_rule_for("20260830", raw_root=_rr, gaps={})
+        ok(_rep["status"] == "CONTENT_THIN" and _rep["governs"] is False,
+           "FROZEN RULE, REPORTED SIDE: the IDENTICAL thinness before the "
+           "effective date is still MEASURED and still says CONTENT_THIN -- "
+           "it is the governs flag that moves, not the measurement. A rule "
+           "that went quiet on old days would hide the evidence it exists for")
+        # A clean day after the date must ADMIT, or the bars reject everything.
+        _mkday("20260903")
+        _clean = content_liveness_rule_for("20260903", raw_root=_rr, gaps={})
+        ok(_clean["status"] == "CONTENT_LIVE" and _clean["governs"] is True,
+           "FROZEN RULE POSITIVE CONTROL: a clean day after the effective date "
+           "reads CONTENT_LIVE while GOVERNING -- the bars admit as well as "
+           "refuse (rule 16)")
+        # COMPOSITION: escalated, and never silently adopted.
+        for _b in (_gov, _rep, _clean):
+            _c = _b["composition_with_HEALTHY"]
+            ok(_c["content_thin_vetoes_HEALTHY"] is False
+               and "ESCALATION-FOR-USER" in _c["escalated"]
+               and "SS8" in _c["why_not"],
+               "COMPOSITION: no verdict lets CONTENT_THIN veto HEALTHY, and "
+               "each one carries the frozen text's own citation for why that "
+               "is escalated rather than chosen")
+        ok(_gov["composition_with_HEALTHY"][
+               "would_flip_HEALTHY_under_worst_coin_composition"] is True
+           and _rep["composition_with_HEALTHY"][
+               "would_flip_HEALTHY_under_worst_coin_composition"] is False,
+           "COMPOSITION DECISION MATERIAL: the would-flip field is TRUE only "
+           "where the day is thin AND the rule governs, so the USER can rule "
+           "from a number instead of from this prose -- and it discriminates "
+           "rather than reading True everywhere")
+        # A BROKEN detector must be a STATUS, never an absent key or a pass.
+        _broken = content_liveness_rule_for("20991231", raw_root=_rr, gaps={})
+        ok(_broken["status"] == "CONTENT_LIVENESS_UNRESOLVED"
+           and "composition_with_HEALTHY" in _broken
+           and _broken["governs"] == _CLR.governs("20991231"),
+           "FROZEN RULE KNOWN-BAD: a day the detector cannot reach is "
+           "UNRESOLVED WITH its composition block and an honest governs -- an "
+           "unreadable diagnostic must not take the verdict down, and must "
+           "not read as liveness either")
+
+        # ---- W1: THE WIRING ITSELF, THROUGH THE REAL verify_day ---------
+        # A mutation DELETING the report line survived everything above,
+        # because every seam here stubs verify_day -- so the suite proved the
+        # guard and the function while the PIPELINE could lose the call with
+        # nothing noticing. That is R-402's own defect surviving the fix for
+        # R-402. This leg builds a REAL report and runs the REAL guard on it.
+        _real_rep = verify_day("20260829", 1787897340.0)
+        ok(isinstance(_real_rep.get("content_liveness_rule"), dict)
+           and "frozen_rule" in _real_rep["content_liveness_rule"],
+           "WIRING END-TO-END: a report from the REAL verify_day CARRIES the "
+           "frozen rule's block -- the call cannot be deleted without this "
+           "failing")
+        assert_content_liveness_carried(_real_rep, "20260829")
+        ok(True, "WIRING END-TO-END: and the REAL guard admits that REAL "
+                 "report, so producer and guard agree on one artifact rather "
+                 "than on two fixtures")
+        _stripped = dict(_real_rep)
+        _stripped.pop("content_liveness_rule")
+        try:
+            assert_content_liveness_carried(_stripped, "20260829")
+            ok(False, "WIRING END-TO-END known-bad: the real report with the "
+                      "block removed must REFUSE")
+        except DisclosureNotCarried:
+            ok(True, "WIRING END-TO-END KNOWN-BAD: the same real report with "
+                     "the block removed REFUSES -- the guard discriminates on "
+                     "content, not on the report being synthetic")
+
+        # ---- W8: a HALF block must refuse BY NAME, not by KeyError -------
+        import da_content_liveness_rule as _CLRg
+        for _drop in ("frozen_rule", "composition_with_HEALTHY"):
+            _half = {"status": "CONTENT_LIVE",
+                     "governs": _CLRg.governs("20260829"),
+                     "frozen_rule": {}, "composition_with_HEALTHY":
+                         {"content_thin_vetoes_HEALTHY": False}}
+            _half.pop(_drop)
+            try:
+                assert_content_liveness_carried(
+                    {"content_liveness_rule": _half}, "20260829")
+                ok(False, f"W8 known-bad: a block missing {_drop} must REFUSE")
+            except DisclosureNotCarried as _e:
+                ok(_drop in str(_e) and "is missing" in str(_e),
+                   f"W8 KNOWN-BAD: a block missing {_drop} refuses BY NAME -- "
+                   f"a status without its authority, or without its "
+                   f"composition, is not a disclosure. It must not arrive as "
+                   f"a KeyError either, which reads as a crashed instrument "
+                   f"rather than an incomplete one")
+
+        # ---- W6: a detector that RAISES must become a STATUS -------------
+        _saved_md = _CLR.measure_day
+        try:
+            def _boom(*a, **k):
+                raise RuntimeError("synthetic detector failure")
+            _CLR.measure_day = _boom
+            _blk = content_liveness_rule_for("20260829")
+            ok(_blk["status"] == "CONTENT_LIVENESS_UNRESOLVED"
+               and "synthetic detector failure" in _blk["why"]
+               and "frozen_rule" in _blk
+               and "composition_with_HEALTHY" in _blk,
+               "W6 KNOWN-BAD: a detector that RAISES yields an UNRESOLVED "
+               "STATUS carrying its reason, its authority and its "
+               "composition -- never an exception that takes the verdict "
+               "down, and never a missing key that reads as liveness")
+        finally:
+            _CLR.measure_day = _saved_md
+        ok(_CLR.measure_day is _saved_md,
+           "W6: the detector is restored after the control")
+
+        # ---- W7: the legacy block is DEMOTED, and says so ----------------
+        _leg = content_liveness_for("20260829")
+        ok(_leg.get("role") == "REPORTED DIAGNOSTIC -- CORROBORATING, NEVER "
+                               "GOVERNING"
+           and _leg.get("governing_rule_lives_in") == "content_liveness_rule "
+                                                      "(this artifact)"
+           and "NO ratified band" not in _leg.get("why", ""),
+           "W7: the legacy collector-log block names itself a corroborating "
+           "diagnostic, points at the governing rule, and no longer claims "
+           "NO ratified band exists -- that text predated the rule and was "
+           "stale from the moment it was frozen (two blocks, two inputs, ONE "
+           "named governing answer)")
+
+        # ---- THE FROZEN RULE, THROUGH THE SAME REAL ENTRY POINT ---------
+        # R-402: the rule was frozen and never called. These drive main() with
+        # the block DROPPED, with a LYING governs field, and with the
+        # composition silently adopted -- each must exit 4 (instrument
+        # refused), never 1 (the day failed).
+        for _mode, _needle in (("drop_clr", "no `content_liveness_rule` block"),
+                               ("lie_clr", "misreports whether it was judged"),
+                               ("veto_clr", "composes CONTENT_THIN into")):
+            _r = _sp.run([sys.executable, str(_stub), json.dumps(_bar_ok),
+                          "carry", _mode], capture_output=True, text=True)
+            ok(_r.returncode == 4 and _needle in (_r.stdout + _r.stderr),
+               f"FROZEN-RULE SEAM ({_mode}): the real entry point exits 4 and "
+               f"names the defect -- a governing rule that the pipeline did "
+               f"not consult, or an artifact that misreports it, is an "
+               f"INSTRUMENT failure and never a failing day")
+        _r_ok = _sp.run([sys.executable, str(_stub), json.dumps(_bar_ok),
+                         "carry", "keep"], capture_output=True, text=True)
+        ok(_r_ok.returncode == 0,
+           "FROZEN-RULE SEAM POSITIVE CONTROL: the same report WITH an honest "
+           "block exits 0 -- the guard refuses three named defects, not every "
+           "run")
+
         ok("REFUSED to emit" in _rc["drop"][1],
            "0h EXIT-CODE SEAM: and the refusal SAYS what was missing, so an "
            "operator reading the nightly log is not left with a bare 4")
@@ -3698,6 +4057,7 @@ def main() -> int:
         # refusal to emit exits 4 (nothing verified) rather than 1 (the day
         # failed). Those must never share an exit code.
         assert_disclosure_carried(rep)
+        assert_content_liveness_carried(rep, a.day)
     except Exception:
         import traceback
         traceback.print_exc()
