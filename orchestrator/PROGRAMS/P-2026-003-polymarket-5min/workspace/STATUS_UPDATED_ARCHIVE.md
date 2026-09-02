@@ -3768,3 +3768,85 @@ Moved in the MEM round-51 true-up of R-464. Join rule as in batch 1.
   OPEN. Tonight unchanged. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4
   failing; the sequencing rule; Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 58 — archived 2026-09-02T18:50Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-52 true-up of R-465. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T18:00Z (MEM ROUND 49 -- A SEVENTH RULING, AND A CONSTANT THAT WAS
+  FIXED AT ONE CALL SITE). R-458, R-459 and R-460 swept in one batch. NOTHING WAS
+  RUN: BE round 9 is in flight so the main tree's live/pm_research/ is BE's
+  working surface again, and every check was a COMMITTED BLOB or a PLAN FILE --
+  the ninth standing rule's second round of use. THE RULING IS THE ROUND: "Yes
+  schedule this test", the SEVENTH USER decision. I checked what it lifts at the
+  artifact rather than from the entry: DE_PHASE4_PROTOCOL_DRAFT.md:3 reads FROZEN
+  -- IN FORCE and :13-17 carries the gate in its own words ("it may not be run
+  until the hold is lifted by the USER") -- THAT IS THE SENTENCE THIS RULING
+  ANSWERS, AND IT ANSWERS IT ONCE. The protocol's sha is ab07fd71c9fc2bff and
+  DE's addendum (DE_PHASE4_DIAGNOSTIC_ADDENDUM_2026-09-02.md, 35e8aba1381cfa4e)
+  BINDS IT BY THAT SHA and names R-459, so THE THING BEING RUN IS IDENTIFIED BY
+  CONTENT, NOT BY TITLE. WHAT THE RULING DOES NOT DO IS THE PART WORTH KEEPING
+  LEGIBLE: the population is the protocol's own section 3 fragment and :80-84
+  already says what it is -- CONSUMED, is_a_validation = false, G = 0, no
+  interval claimable, no forward verdict -- so the run CANNOT BECOME EVIDENCE BY
+  ACCIDENT, the frozen document refusing that on its own terms before any receipt
+  field does; latency is swept because :101 says it is NOT a selection axis, and
+  budget is reported in all three rungs with NONE SELECTED because it IS one.
+  ONE ITEM 4 CHANGE, RECORDED BESIDE THE ITEM AND NOT INSTEAD OF IT: the
+  Immediate-order item STANDS and its EXECUTION HOLD IS LIFTED FOR THAT EXECUTION
+  ONLY; no PnL, capacity, promotion or forward verdict is claimable, INCLUDING
+  FOR THAT RUN, every output carrying DIAGNOSTIC_NEVER_EVIDENCE. AND THE
+  DECISIONS SECTION STOPS SAYING "NOTHING IS AWAITING THE USER", which it has
+  said since R-442: per R-460 TWO decisions are OPEN AND UNBLOCKED -- the Phase-2
+  winner ruling and the content-liveness v2 freeze -- NEITHER NEEDED TONIGHT;
+  superseded IN BAND rather than edited away, because a table that once said
+  "none open" is exactly what a later reader trusts without re-checking. A
+  CITATION TO FIX, THE THIRD IN THREE ROUNDS: R-459 cites the budget axis at :105
+  but :105 is the PROTECTION MODE row -- THE BUDGET ROW IS :103 ("| budget b |
+  5%, 10%, 15% | YES -- someone chooses a budget |"); the substance is exactly
+  right and the pointer is two lines off, and three drifted citations in three
+  rounds (fcafe9f:2588-2590 out of range, :405-406 vs :404-405, now :105 vs :103)
+  is not luck but WHAT HAPPENS WHEN A LINE NUMBER IS TYPED FROM A READING RATHER
+  THAN RE-DERIVED AT COMPOSE TIME. R-459 stands as provenance. BE7-R4 VERIFIED AT
+  THE BLOB, AND IT HAS A ROOT I CAN NAME: _provenance (fcafe9f:70) runs git
+  rev-parse HEAD and git status --porcelain with cwd=str(REPO), and REPO is STILL
+  Path("/home/yuqing/ctaNew") HARDCODED at c54e48e:37, so a driver executing in
+  ANY worktree records THE MAIN TREE'S commit and dirtiness -- THE SAME CONSTANT
+  BE34-R3 WAS ABOUT, round 6 having fixed it AT THE SPAWN SITE ONLY (:2611 now
+  uses Path(__file__).resolve().parents[2]) and left the constant and its other
+  readers in place, with an audit case named "spawn root REPO vs parents[2]"
+  (:1401) so THE FIX AND ITS COVERAGE ARE BOTH SCOPED TO THE ONE CALL SITE.
+  FIXING A USE OF A BAD CONSTANT IS NOT FIXING THE CONSTANT. AND ONE OF THE TWO
+  REMAINING READERS IS BENIGN, WHICH MATTERS: the frozen-blob reader at :103 also
+  uses cwd=REPO but runs git show <sha>:<path>, and worktrees SHARE THE OBJECT
+  DATABASE, so those bytes are identical from anywhere -- :79 reads PER-WORKTREE
+  STATE and is the finding, :103 reads OBJECT-STORE CONTENT and is not; two
+  identical spellings, one defect. CARRIED WITHOUT INDEPENDENT MEASUREMENT AND
+  MARKED AS SUCH: BE round 8's 106/106 and DE round 31's instrument counts (21 /
+  24 / 20, ratification 184, phase-4 check 15) are THE COORDINATOR'S COUNTS --
+  running them would mean the main tree (forbidden while BE round 9 is open) or a
+  worktree of my own, and git worktree list stays 33; structure verified, numbers
+  carried. ONE LAYOUT FACT FROM DE ROUND 31 THAT WILL BITE SOMEONE AT 2 A.M.: a
+  BARE DETACHED WORKTREE HAS NO data/, so the runner must mirror data/pm_5min per
+  entry (derived/ 173) or THE DRIVER REFUSES AT CHECK 24 BY DESIGN -- that
+  refusal is right and the note is what stops it being read as a break.
+  SEQUENCING FOR THE DIAGNOSTIC, DELIBERATELY SLOW: DE declares (done, r31) ->
+  reviewer reads the declaration -> DE builds the runner (r32, in flight) ->
+  reviewer reads -> run (NO DATE; see below) -> coordinator entry -> USER: FOUR GATES
+  BETWEEN A RULING AND A NUMBER, which is the point of freezing the protocol
+  first. Also swept: R-458's DE 29+30 RELEASE for 27d0d37 with CO-11 CLOSED at
+  both tips and DE30-R1 since closed in r31, and its IN-BAND CORRECTION of
+  R-456 section 2's citation -- fcafe9f:2588-2590 does not resolve, the citation
+  of record being :2481/:2483 with the paired ok at :2532-2534, R-456 standing as
+  provenance. Filings of record: Q-BE-233, Q-DE-49, REVIEW_BE_ROUND_7 (0f34aad).
+  IN FLIGHT: BE r9 (Q-BE-234: BE7-R4 first, then BE6-R1..R7 and BE7-R1..R3),
+  reviewer on DA 17 at e353119 then DE 31, DE r32 (Q-DE-50, the runner, no run),
+  DA standby (R-381) until the 00:14Z read. TONIGHT UNCHANGED:
+  da-midnight-verify.timer 00:06Z (09-03), co-preflight-20260902.timer 00:14Z,
+  coordinator wake after; R-409 accrual with the R-411(ii) denominator; DA lands
+  Q-DA-209..213 at e353119 (HOLD -> 3b7e10a); BE durable landing the round after
+  the read; CO-8; --require-no-skips; DATA_ROOT split after DA's landing.
+  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
+  R-419 revocable.
+```

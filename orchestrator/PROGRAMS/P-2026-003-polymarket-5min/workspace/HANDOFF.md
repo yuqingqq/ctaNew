@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T18:43Z — **DE round 33 found SHORT BY EXECUTION: nine
-findings, three HIGH.** **The Phase-4 run now has NO DATE** — *"earliest 09-03"
-is withdrawn.* **A THIRD USER decision is open**: the runner's two chosen numbers,
-**declared nowhere above the runner** (I grepped protocol, addendum and manifest —
-**zero hits in all three**). And the cap arc closed the way the wording invited:
-`tranche_table` went from **never called** to **called in the suite** and, on the
-production path, **assigned to `cap` and never used again.** **SEVEN RULED, THREE
-OPEN**, none needed tonight.
+Updated: 2026-09-02T18:50Z — **BE round 9 EXECUTED at its own tip and found
+short: 93 PASS then rc 1**, with **checks 95–117 unverifiable at that tip in any
+tree**. The failing check **depends on the BRANCH's git state**, not the driver —
+**the fourth symptom of one hardcoded constant**. **The durable landing moves to
+BE round 11**: a driver whose selftest fails at its tip cannot produce the
+artifact of record. **And a residual of mine is closed: the withdrawn "earliest
+09-03" is gone from THREE live places**, not the two I was shown. **SEVEN RULED,
+THREE OPEN**, none needed tonight.
 
 ## READ FIRST — current project handoff
 
@@ -816,8 +816,11 @@ launchers at **235/19**.
 | **BE round 6 review** | **RELEASED** (`03b5dca`, 273 lines) for `5e9ed91` — **seven findings BE6-R1..R7**; two rulings adopted, including *the shipped audit must COMPUTE verdict counts, never grep vocabulary* (rule 10), folded into CO-12's closure |
 | **BE round 7 review** | **RELEASED** (`0f34aad`) for `fcafe9f` — CO-12/CO-13 **confirmed**; four findings **BE7-R1..R4**, with **R4 routed FIRST** to BE round 9 |
 | **BE round 8** | **VERIFIED** at `c54e48e` (Q-BE-233) — **CO-12 and CO-13 CLOSED**, 106/106 both launchers (the coordinator's count; I did not run it — rule 9) |
-| **BE round 9** | **LANDED** at `90638c3` + row Q-BE-234 (`07681d2`) — **FILED, coordinator verification pending**. The main tree is **clean at the tip** (checked) |
-| **BE — durable landing** | unchanged and **unaffected by the seven**: the round after the **00:14Z** read (R-442 §3(c)) |
+| **BE round 8 review** | **RELEASED** (`f804f33`) for `c54e48e` — **CO-12 and CO-13 both CONFIRMED CLOSED**; two LOW findings |
+| **BE round 9** | **EXECUTED at the tip and FOUND SHORT** (`90638c3`, Q-BE-234 → **VERIFIED-SHORT**) — **93 PASS then rc 1** under both launchers; **checks 95–117 unverifiable at that tip in ANY tree**. Three findings **BE9-C1..C3** |
+| **BE round 10** | **DISPATCHED** 18:48Z (Q-BE-235) — BE9-C1..C3, **no run against a real day** |
+| **BE round 11** | **the R-442 §3(c) DURABLE LANDING** — after the 00:14Z read **AND** after round 10 lands |
+| **BE — durable landing** | now **BE round 11**: after the **00:14Z** read **AND** after round 10 lands — **a driver whose selftest fails at its tip cannot produce the artifact of record** |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
@@ -863,6 +866,7 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE30-R1 CLOSED** in DE round 31;
 **BE7-R4** (FIRST), **BE6-R1..R7** and **BE7-R1..R3** → **BE round 9, in flight**;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
+**BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
 tense**; **DA17-R1 (LOW)** → behind DA's landing;
@@ -889,9 +893,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **BE round 8 at `c54e48e`** (in flight) →
-**BE round 9** at `90638c3` → **DE rounds 33 + 34 as ONE filing at the round-34
-tip**.
+**The reviewer's queue, in order:** **BE rounds 9 + 10 as ONE filing at the
+round-10 tip** → **DE rounds 33 + 34 as ONE filing at the round-34 tip**. **BE
+round 8's review is RELEASED** (`f804f33`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
 29+30 and **31+32** (`82126ca`), and **DA round 17** (`f4c7734`). **Released so far:**
 DE rounds 23 (`0b03618`), 24 (`304cd5f`), 25 (`a7860dc`) and 26+27 (`723271e`),
@@ -1705,6 +1709,70 @@ than a clean zero (the density receipt covers 13 days, not this one).
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
 
+### 2026-09-02 ~18:50Z (MEM) — I REPLACED ONE OCCURRENCE AND CALLED IT REPLACED
+
+**R-465 swept.** Nothing run; committed blobs only.
+
+**My residual first, because it is the same failure I named a round ago.** I
+wrote *"replaced, not annotated"* about the withdrawn Phase-4 date — and then
+replaced **one** occurrence. The coordinator found **two** more. I grepped the
+phrase across both files and found **three** live statements of it, not two:
+`STATUS.yml:3806` (the `phase4_run_when` **flag** — current state), `STATUS.yml`
+in the round-49 window narrative (*"reviewer reads → run, earliest 09-03"*), and
+**`HANDOFF.md:1830`**, which the dispatch did not name. **All three are
+replaced**; the only surviving occurrences are the ones that *name the
+withdrawal*. **The lesson is not "be careful": it is that a withdrawal is a
+GREP, not an edit.** A date lives in as many places as it was useful, and the
+one you remember is the one you wrote last.
+
+**I edited a dated window entry to do it, and say so.** The round-49 narrative
+now reads *"run (NO DATE; see below)"*. That entry has not yet rotated to the
+archive, so nothing is lost — **git holds the original wording**, and when the
+entry rotates it will carry the corrected text. I would not do this to a frozen
+artifact; the rolling window is current context a reader consumes, and a
+withdrawn date sitting in it is exactly the quotation hazard.
+
+**BE round 9 was EXECUTED, not just read — and that is why it is short.** 93
+PASS, then **rc 1**, under both launchers, in a detached scratch worktree. The
+failure is the **BE7-R4 flip check** (`90638c3:2565-2588`), and I read it: it
+takes `_main_head` and `_prev = HEAD~1` **with `cwd=str(REPO)` — the MAIN tree** —
+adds a worktree detached at that `HEAD~1`, copies the running file in and asserts
+it is **dirty** there. **That premise holds only until the next commit lands on
+the branch.** From the first commit after BE's own, `HEAD~1` no longer holds BE's
+version and the check's verdict changes **without the driver changing at all**.
+**A check whose answer depends on the branch's history is measuring the
+repository, not the code.**
+
+**And it is the fourth symptom of a single constant.** `REPO =
+Path("/home/yuqing/ctaNew")` produced **BE34-R3** (the spawned child, closed in
+round 6 at *one call site*), **BE7-R4** (the provenance block, round 49),
+**BE9-C1** (this flip check) and **BE9-C2** (anchors, data and the audit tree
+still rooted there, so *"the tree that executed"* is only ever the receipt's).
+**Round 6 fixed a use; the constant is still the defect**, exactly as I recorded
+three rounds ago — and it has now cost four findings across four rounds.
+
+**The consequence for the count is what makes this HIGH rather than annoying:
+checks 95–117 are unverifiable at that tip in ANY tree.** Twenty-three assertions
+past the failure never execute, so *"the closures are present"* is a claim about
+**lines**, not about **behaviour**. That is why Q-BE-234 is **VERIFIED-SHORT**:
+its closures are present at the line, and nothing past check 94 ran.
+
+**The landing move is the right call and worth stating as a principle.** The
+R-442 §3(c) durable landing becomes **BE round 11** — after the 00:14Z read
+**and** after round 10 lands. **A driver whose own selftest fails at its tip
+cannot produce the artifact of record.** The artifact would be reproducible only
+by a driver that cannot demonstrate itself.
+
+**BE round 8's review is RELEASED** (`f804f33`): **CO-12 and CO-13 both CONFIRMED
+CLOSED**, two LOW findings. So the attribution defect I verified statically in
+round 47 is now closed and confirmed at the artifact by someone other than its
+author.
+
+**Sequencing.** BE round 10 (Q-BE-235) is dispatched with BE9-C1..C3 and **no run
+against a real day**. The reviewer takes **BE 9 + 10 as one filing at the round-10
+tip**, then **DE 33 + 34 as one filing at the round-34 tip**. **Tonight's timers
+are unchanged.**
+
 ### 2026-09-02 ~18:43Z (MEM) — "NEVER CALLED" WAS FIXED BY CALLING IT
 
 **R-464 swept.** Nothing was run; nothing was read from `~/ctaNew-wt-de` (DE round
@@ -1827,8 +1895,10 @@ landing is not a verification.
 
 **The run's preconditions are now written beside the ruling**, where a reader
 meets them: the round **after DE round 33 lands AND the reviewer reads it**,
-**earliest 09-03**, after tonight's landings, by coordinator dispatch under the
-memory-capped scope, **into the declared OUTDIR only**. **Four gates, and the
+**no date** — R-464 §6 withdrew *"earliest 09-03"*; it is the round after DE
+round 34 lands, the reviewer reads it and §5 is settled — after tonight's
+landings, by coordinator dispatch under the memory-capped scope, **into the
+declared OUTDIR only**. **Four gates, and the
 protocol frozen before any of them** — which is the whole reason a diagnostic can
 be scheduled at all without becoming evidence.
 

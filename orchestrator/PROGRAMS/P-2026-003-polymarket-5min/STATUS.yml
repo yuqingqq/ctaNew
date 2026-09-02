@@ -4,6 +4,60 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T18:50Z (MEM ROUND 52 -- I REPLACED ONE OCCURRENCE AND CALLED IT
+  REPLACED). R-465 swept; nothing run; committed blobs only. MY RESIDUAL FIRST,
+  BECAUSE IT IS THE SAME FAILURE I NAMED A ROUND AGO: I wrote "replaced, not
+  annotated" about the withdrawn Phase-4 date and then replaced ONE occurrence;
+  the coordinator found two more, and grepping the phrase across both files
+  found THREE live statements of it, not two -- STATUS.yml:3806 (the
+  phase4_run_when FLAG, current state), the round-49 window narrative ("reviewer
+  reads -> run, earliest 09-03"), and HANDOFF.md:1830, WHICH THE DISPATCH DID
+  NOT NAME. All three replaced; the only surviving occurrences NAME THE
+  WITHDRAWAL. THE LESSON IS NOT "BE CAREFUL": A WITHDRAWAL IS A GREP, NOT AN
+  EDIT -- a date lives in as many places as it was useful, and the one you
+  remember is the one you wrote last. I EDITED A DATED WINDOW ENTRY TO DO IT AND
+  SAY SO: the round-49 narrative now reads "run (NO DATE; see below)"; that entry
+  has not yet rotated to the archive so nothing is lost, GIT HOLDS THE ORIGINAL
+  WORDING, and when it rotates it carries the corrected text. I would not do this
+  to a frozen artifact; the rolling window is CURRENT CONTEXT A READER CONSUMES
+  and a withdrawn date sitting in it is exactly the quotation hazard. BE ROUND 9
+  WAS EXECUTED, NOT JUST READ, AND THAT IS WHY IT IS SHORT: 93 PASS then RC 1
+  under both launchers in a detached scratch worktree. The failure is the BE7-R4
+  FLIP CHECK (90638c3:2565-2588) and I read it -- it takes _main_head and _prev =
+  HEAD~1 with cwd=str(REPO), THE MAIN TREE, adds a worktree detached at that
+  HEAD~1, copies the running file in and asserts it is DIRTY there -- A PREMISE
+  THAT HOLDS ONLY UNTIL THE NEXT COMMIT LANDS ON THE BRANCH. From the first
+  commit after BE's own, HEAD~1 no longer holds BE's version and the check's
+  verdict changes WITHOUT THE DRIVER CHANGING AT ALL: A CHECK WHOSE ANSWER
+  DEPENDS ON THE BRANCH'S HISTORY IS MEASURING THE REPOSITORY, NOT THE CODE. AND
+  IT IS THE FOURTH SYMPTOM OF A SINGLE CONSTANT: REPO = Path("/home/yuqing/
+  ctaNew") produced BE34-R3 (the spawned child, closed in round 6 AT ONE CALL
+  SITE), BE7-R4 (the provenance block, round 49), BE9-C1 (this flip check) and
+  BE9-C2 (anchors, data and the audit tree still rooted there, so "the tree that
+  executed" is only ever the receipt's) -- ROUND 6 FIXED A USE; THE CONSTANT IS
+  STILL THE DEFECT, exactly as recorded three rounds ago, and it has now cost
+  four findings across four rounds. THE CONSEQUENCE FOR THE COUNT IS WHAT MAKES
+  THIS HIGH RATHER THAN ANNOYING: CHECKS 95-117 ARE UNVERIFIABLE AT THAT TIP IN
+  ANY TREE, twenty-three assertions past the failure never executing, so "the
+  closures are present" is a claim about LINES, not about BEHAVIOUR -- which is
+  why Q-BE-234 is VERIFIED-SHORT: closures present at the line, nothing past
+  check 94 ran. THE LANDING MOVE IS RIGHT AND WORTH STATING AS A PRINCIPLE: the
+  R-442 section 3(c) durable landing becomes BE ROUND 11, after the 00:14Z read
+  AND after round 10 lands, because A DRIVER WHOSE OWN SELFTEST FAILS AT ITS TIP
+  CANNOT PRODUCE THE ARTIFACT OF RECORD -- the artifact would be reproducible
+  only by a driver that cannot demonstrate itself. BE ROUND 8'S REVIEW IS
+  RELEASED (f804f33): CO-12 and CO-13 BOTH CONFIRMED CLOSED, two LOW findings --
+  so the attribution defect I verified statically in round 47 is now closed and
+  confirmed at the artifact by someone other than its author. SEQUENCING: BE
+  round 10 (Q-BE-235) dispatched 18:48Z with BE9-C1..C3 and NO RUN AGAINST A REAL
+  DAY; the reviewer takes BE 9 + 10 AS ONE FILING at the round-10 tip, then DE 33
+  + 34 as one filing at the round-34 tip. TONIGHT'S TIMERS UNCHANGED: 00:06Z
+  verdict, 00:14Z preflight, coordinator wake after, R-409 accrual with the
+  R-411(ii) denominator, DA landing at e353119 (HOLD -> 3b7e10a), CO-8,
+  --require-no-skips, DATA_ROOT split after DA's landing. USER: SEVEN RULED,
+  THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with
+  Q4 failing; the sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-02T18:43Z (MEM ROUND 51 -- "NEVER CALLED" WAS FIXED BY CALLING IT).
   R-464 swept. Nothing run; ~/ctaNew-wt-de unread (DE round 34 in flight);
   everything a committed blob or a plan/manifest file. THE CAP ARC IS NOW THREE
@@ -120,82 +174,6 @@ updated: >-
   landing. USER: SEVEN RULED; TWO OPEN -- the Phase-2 winner ruling and the
   content-liveness v2 freeze -- NEITHER NEEDED TONIGHT. UNCHANGED: G=1/5; the 011
   family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-02T18:00Z (MEM ROUND 49 -- A SEVENTH RULING, AND A CONSTANT THAT WAS
-  FIXED AT ONE CALL SITE). R-458, R-459 and R-460 swept in one batch. NOTHING WAS
-  RUN: BE round 9 is in flight so the main tree's live/pm_research/ is BE's
-  working surface again, and every check was a COMMITTED BLOB or a PLAN FILE --
-  the ninth standing rule's second round of use. THE RULING IS THE ROUND: "Yes
-  schedule this test", the SEVENTH USER decision. I checked what it lifts at the
-  artifact rather than from the entry: DE_PHASE4_PROTOCOL_DRAFT.md:3 reads FROZEN
-  -- IN FORCE and :13-17 carries the gate in its own words ("it may not be run
-  until the hold is lifted by the USER") -- THAT IS THE SENTENCE THIS RULING
-  ANSWERS, AND IT ANSWERS IT ONCE. The protocol's sha is ab07fd71c9fc2bff and
-  DE's addendum (DE_PHASE4_DIAGNOSTIC_ADDENDUM_2026-09-02.md, 35e8aba1381cfa4e)
-  BINDS IT BY THAT SHA and names R-459, so THE THING BEING RUN IS IDENTIFIED BY
-  CONTENT, NOT BY TITLE. WHAT THE RULING DOES NOT DO IS THE PART WORTH KEEPING
-  LEGIBLE: the population is the protocol's own section 3 fragment and :80-84
-  already says what it is -- CONSUMED, is_a_validation = false, G = 0, no
-  interval claimable, no forward verdict -- so the run CANNOT BECOME EVIDENCE BY
-  ACCIDENT, the frozen document refusing that on its own terms before any receipt
-  field does; latency is swept because :101 says it is NOT a selection axis, and
-  budget is reported in all three rungs with NONE SELECTED because it IS one.
-  ONE ITEM 4 CHANGE, RECORDED BESIDE THE ITEM AND NOT INSTEAD OF IT: the
-  Immediate-order item STANDS and its EXECUTION HOLD IS LIFTED FOR THAT EXECUTION
-  ONLY; no PnL, capacity, promotion or forward verdict is claimable, INCLUDING
-  FOR THAT RUN, every output carrying DIAGNOSTIC_NEVER_EVIDENCE. AND THE
-  DECISIONS SECTION STOPS SAYING "NOTHING IS AWAITING THE USER", which it has
-  said since R-442: per R-460 TWO decisions are OPEN AND UNBLOCKED -- the Phase-2
-  winner ruling and the content-liveness v2 freeze -- NEITHER NEEDED TONIGHT;
-  superseded IN BAND rather than edited away, because a table that once said
-  "none open" is exactly what a later reader trusts without re-checking. A
-  CITATION TO FIX, THE THIRD IN THREE ROUNDS: R-459 cites the budget axis at :105
-  but :105 is the PROTECTION MODE row -- THE BUDGET ROW IS :103 ("| budget b |
-  5%, 10%, 15% | YES -- someone chooses a budget |"); the substance is exactly
-  right and the pointer is two lines off, and three drifted citations in three
-  rounds (fcafe9f:2588-2590 out of range, :405-406 vs :404-405, now :105 vs :103)
-  is not luck but WHAT HAPPENS WHEN A LINE NUMBER IS TYPED FROM A READING RATHER
-  THAN RE-DERIVED AT COMPOSE TIME. R-459 stands as provenance. BE7-R4 VERIFIED AT
-  THE BLOB, AND IT HAS A ROOT I CAN NAME: _provenance (fcafe9f:70) runs git
-  rev-parse HEAD and git status --porcelain with cwd=str(REPO), and REPO is STILL
-  Path("/home/yuqing/ctaNew") HARDCODED at c54e48e:37, so a driver executing in
-  ANY worktree records THE MAIN TREE'S commit and dirtiness -- THE SAME CONSTANT
-  BE34-R3 WAS ABOUT, round 6 having fixed it AT THE SPAWN SITE ONLY (:2611 now
-  uses Path(__file__).resolve().parents[2]) and left the constant and its other
-  readers in place, with an audit case named "spawn root REPO vs parents[2]"
-  (:1401) so THE FIX AND ITS COVERAGE ARE BOTH SCOPED TO THE ONE CALL SITE.
-  FIXING A USE OF A BAD CONSTANT IS NOT FIXING THE CONSTANT. AND ONE OF THE TWO
-  REMAINING READERS IS BENIGN, WHICH MATTERS: the frozen-blob reader at :103 also
-  uses cwd=REPO but runs git show <sha>:<path>, and worktrees SHARE THE OBJECT
-  DATABASE, so those bytes are identical from anywhere -- :79 reads PER-WORKTREE
-  STATE and is the finding, :103 reads OBJECT-STORE CONTENT and is not; two
-  identical spellings, one defect. CARRIED WITHOUT INDEPENDENT MEASUREMENT AND
-  MARKED AS SUCH: BE round 8's 106/106 and DE round 31's instrument counts (21 /
-  24 / 20, ratification 184, phase-4 check 15) are THE COORDINATOR'S COUNTS --
-  running them would mean the main tree (forbidden while BE round 9 is open) or a
-  worktree of my own, and git worktree list stays 33; structure verified, numbers
-  carried. ONE LAYOUT FACT FROM DE ROUND 31 THAT WILL BITE SOMEONE AT 2 A.M.: a
-  BARE DETACHED WORKTREE HAS NO data/, so the runner must mirror data/pm_5min per
-  entry (derived/ 173) or THE DRIVER REFUSES AT CHECK 24 BY DESIGN -- that
-  refusal is right and the note is what stops it being read as a break.
-  SEQUENCING FOR THE DIAGNOSTIC, DELIBERATELY SLOW: DE declares (done, r31) ->
-  reviewer reads the declaration -> DE builds the runner (r32, in flight) ->
-  reviewer reads -> run, earliest 09-03 -> coordinator entry -> USER: FOUR GATES
-  BETWEEN A RULING AND A NUMBER, which is the point of freezing the protocol
-  first. Also swept: R-458's DE 29+30 RELEASE for 27d0d37 with CO-11 CLOSED at
-  both tips and DE30-R1 since closed in r31, and its IN-BAND CORRECTION of
-  R-456 section 2's citation -- fcafe9f:2588-2590 does not resolve, the citation
-  of record being :2481/:2483 with the paired ok at :2532-2534, R-456 standing as
-  provenance. Filings of record: Q-BE-233, Q-DE-49, REVIEW_BE_ROUND_7 (0f34aad).
-  IN FLIGHT: BE r9 (Q-BE-234: BE7-R4 first, then BE6-R1..R7 and BE7-R1..R3),
-  reviewer on DA 17 at e353119 then DE 31, DE r32 (Q-DE-50, the runner, no run),
-  DA standby (R-381) until the 00:14Z read. TONIGHT UNCHANGED:
-  da-midnight-verify.timer 00:06Z (09-03), co-preflight-20260902.timer 00:14Z,
-  coordinator wake after; R-409 accrual with the R-411(ii) denominator; DA lands
-  Q-DA-209..213 at e353119 (HOLD -> 3b7e10a); BE durable landing the round after
-  the read; CO-8; --require-no-skips; DATA_ROOT split after DA's landing.
-  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
-  R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3803,7 +3781,7 @@ flags:
   de31_r1_de32_r3_not_dispatched: "round 34 unless the round-33 tip carries them"
   de_r32_shell_not_runner: "e52d183 released as declaration + instruments, NOT as a producer"
   phase4_cap2_unenforced_at_e52d183: "protocol :41-45 has it; addendum 0 hits; tranche_table never called"
-  phase4_run_when: "the round AFTER DE r33 lands AND the reviewer reads it; earliest 09-03; declared OUTDIR only"
+  phase4_run_when: "NO DATE (R-464 6 withdrew 'earliest 09-03'): the round AFTER DE r34 lands, the reviewer reads it, and 5 is settled; declared OUTDIR only"
   reviewer_da_r17_released: "e353119 (f4c7734); DA17-R1 behind DA landing"
   de_r33_code_tip: "6d04833 18:20:40Z; row Q-DE-51 landed at 2b72d02, FILED not verified"
   de_r33_verified_short: "6d04833; nine findings DE33-C1..C9, three HIGH; Q-DE-51 = VERIFIED-SHORT"
@@ -3812,6 +3790,11 @@ flags:
   user_open_runner_two_numbers: "R-464 5: theta_repost=theta_cancel/2 (:188), HALF_SPREAD_CENTS=0.5 (:101); zero hits in protocol/addendum/manifest"
   be_r9_landed_pending_verification: "90638c3 + row 07681d2; main tree clean at the tip"
   cap_unconsumed_call: "6d04833:1068 cap = tranche_table(...) assigned and never used; :979 call is in the selftest"
+  be_r9_verified_short: "90638c3 executed at the tip: 93 PASS then rc 1; checks 95-117 unverifiable in ANY tree"
+  be9_c1_c2_c3_open: "BE round 10 (Q-BE-235) dispatched 18:48Z; no run against a real day"
+  be_durable_landing_is_round_11: "after the 00:14Z read AND after round 10 lands"
+  repo_constant_four_symptoms: "BE34-R3, BE7-R4, BE9-C1, BE9-C2 all from REPO hardcoded; round 6 fixed a USE"
+  reviewer_be_r8_released: "c54e48e (f804f33); CO-12 and CO-13 CONFIRMED CLOSED; two LOW"
                              # v18-v19 added the daily pipeline and all-coin
                              # commit-last batch; v20 adds R-DERIVE, R-GROSS,
                              # R-DUAL and R-ONEROW plus Tier-2 markout,
@@ -3820,7 +3803,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T18:43Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T18:50Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
