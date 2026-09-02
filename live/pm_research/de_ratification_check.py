@@ -348,15 +348,93 @@ def validate_supersedes(value, where: str) -> str | None:
 #: DE18-R1 were both about, from opposite ends. One implementation, and it
 #: carries the LINE as well as the ref, because existence without direction
 #: is DE20-R2 one line down.
-def entry_index(register_text: str) -> dict[str, dict]:
+#: DE22-R1: AND A DICT ANSWERS BY LAST-WINS. A ref heading two entries
+#: resolved to the LATER one, refused by nothing and reported by nothing --
+#: and the register HAS one: R-6 heads an entry ABOUT R-6 (the CO-4 shape,
+#: this time the ref itself in a heading) as well as the real one. Measured
+#: on a fixture where it matters (R-902 at lines 0 and 30, R-903 at 15
+#: declaring `supersedes: R-902`): the supersession was LOST, R-902
+#: verified for a new run, and R-903 was REFUSED at `check#18` quoting line
+#: 30 -- BOTH ENDS WRONG AT ONCE, and the refusal quoting a line its author
+#: never wrote.
+#:
+#: The register is append-only and only 217 of its 437 headings carry the
+#: stamped form, so "unstamped is not an entry" is not available and the
+#: existing duplicate cannot be edited away. So (R-446 section 3): REFUSE
+#: where a duplicate can REACH AN ANSWER -- it is the subject of the check,
+#: it is named by any `supersedes:` in the register, or any occurrence of
+#: it carries a ratification block -- and REPORT it otherwise, keeping the
+#: FIRST occurrence. Which occurrence is kept is a RULE, not a judgement:
+#: nothing here names a ref and there is no allowlist, so the day R-6 gains
+#: a block or a superseder the answer becomes a refusal by itself.
+class EntryIndex(dict):
+    """ref -> entry, plus what the parse found duplicated."""
+
+
+def entry_index(register_text: str, *, subject: str | None = None
+                ) -> EntryIndex:
     """ref -> entry, for every entry in the register. The one place that
-    answers whether an entry exists and where it stands."""
-    return {e["ref"]: e for e in all_entries(register_text)}
+    answers whether an entry exists and where it stands.
+
+    `line` is the parser's 0-BASED index into `register_text.split("\n")`
+    -- the same number `check#18` prints, so a reader comparing a message
+    with an editor's 1-based gutter adds one."""
+    entries = all_entries(register_text)
+    at: dict[str, list[int]] = {}
+    for e in entries:
+        at.setdefault(e["ref"], []).append(e["line"])
+    dups = {r: ls for r, ls in sorted(at.items()) if len(ls) > 1}
+    idx = EntryIndex()
+    for e in entries:
+        idx.setdefault(e["ref"], e)          # the FIRST occurrence, by rule
+    idx.duplicate_refs = dups
+    idx.kept = ("FIRST occurrence, by rule -- computed from the parse; no "
+                "ref is named in this module and there is no allowlist")
+    if dups:
+        if subject in dups:
+            # SITE: entry_index#1
+            raise RatificationRefused(
+                f"REFUSED: {subject} heads {len(dups[subject])} entries in "
+                f"this register, at 0-based lines {dups[subject]}, and it "
+                f"is the SUBJECT of this check. Which one is asked about "
+                f"cannot be decided by a reader of the file, and taking "
+                f"either silently is how a supersession is lost at one end "
+                f"while a direction error is manufactured at the other "
+                f"(DE22-R1).")
+        named = {str(blk.get("supersedes", "")).strip()
+                 for e in entries for blk, _ in _fenced_blocks(e)}
+        reached = [r for r in dups if r in named]
+        if reached:
+            # SITE: entry_index#2
+            raise RatificationRefused(
+                f"REFUSED: {reached} head more than one entry "
+                f"({ {r: dups[r] for r in reached} }, 0-based lines) AND "
+                f"are named by a `supersedes:` in this register. WHERE the "
+                f"target stands decides whether the supersession is read "
+                f"at all, so a duplicate that any block points at reaches "
+                f"an answer (DE22-R1). Every fenced block is scanned, not "
+                f"only the ones a ratification is bound from: the question "
+                f"is what a future read COULD resolve to, and refusing is "
+                f"the recoverable direction.")
+        blocky = [r for r in dups
+                  if any(_fenced_blocks(e) for e in entries if e["ref"] == r)]
+        if blocky:
+            # SITE: entry_index#3
+            raise RatificationRefused(
+                f"REFUSED: {blocky} head more than one entry "
+                f"({ {r: dups[r] for r in blocky} }, 0-based lines) and at "
+                f"least one occurrence carries a ratification block. Two "
+                f"headings under one ref with a block among them is the "
+                f"heading-level form of `own_ratification_blocks#1`: a "
+                f"corrected ratification would be shadowed by the one it "
+                f"corrects, and which is read would depend on the order "
+                f"they were appended (DE22-R1).")
+    return idx
 
 
 def superseded_by(register_text: str, ref: str) -> list[str]:
     """Refs of LATER entries whose block declares it supersedes `ref`."""
-    idx = entry_index(register_text)
+    idx = entry_index(register_text, subject=ref)
     entries = list(idx.values())
     pos = {r: e["line"] for r, e in idx.items()}
     if ref not in pos:
@@ -719,6 +797,11 @@ def check(supplied: dict, ratification_ref: str,
             f"exist looks exactly like a valid one, which is why the bridge's "
             f"shape check cannot be the last word.")
 
+    # ONE index for this call, and it knows its SUBJECT: a duplicated ref
+    # that reaches an answer refuses here (DE22-R1), and one that cannot is
+    # carried into the emission as a reported fact.
+    idx = entry_index(register_text, subject=ratification_ref)
+
     # SUPERSESSION FIRST -- before any field is read, because a superseded
     # ratification's fields may be perfectly valid and still not the one in
     # force. FOR NEW RUNS ONLY: a receipt written BEFORE the superseding
@@ -729,7 +812,7 @@ def check(supplied: dict, ratification_ref: str,
     provenance = False
     superseder_times: dict[str, str] = {}
     if supers:
-        entries = entry_index(register_text)      # DE20-R1: one source
+        entries = idx                              # DE20-R1/DE22-R1: one
         for sref in supers:
             ts = entry_timestamp(entries[sref]["heading"])
             if ts is None:
@@ -845,7 +928,7 @@ def check(supplied: dict, ratification_ref: str,
             # shape one field over, for the reason it states in its own
             # message: a well-formed ref to an entry that does not exist
             # looks exactly like a valid one.
-            own_idx = entry_index(register_text)      # DE20-R1: one source
+            own_idx = idx                          # DE20-R1/DE22-R1: one
             if own_named is not None and own_named not in own_idx:
                 # SITE: check#16
                 raise RatificationRefused(
@@ -1010,13 +1093,18 @@ def check(supplied: dict, ratification_ref: str,
                                           if v is None]
                                  and not provenance),
         "unverifiable": sorted(k for k, v in checks.items() if v is None),
+        # DE22-R1: a duplication that could not reach an answer is REPORTED
+        # rather than swallowed -- with the line numbers, so a reader can
+        # see both headings, and with which occurrence the index kept.
+        "duplicate_refs": dict(idx.duplicate_refs),
+        "duplicate_refs_kept": idx.kept,
         "decides": "nothing -- this reports; admission is the coordinator's "
                    "act and accrual is decided elsewhere (R-418)",
     }
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 160
+EXPECTED_CHECKS = 168
 
 
 def selftest() -> int:
@@ -1679,15 +1767,135 @@ def selftest() -> int:
        f"two refusals above are about DIRECTION and not about "
        f"supersession.{_saw903}")
 
+    # ---- DE22-R1: a duplicated ref, refused where it can reach an
+    # answer and REPORTED where it cannot ------------------------------
+    def _dup(ref_lines, extra=""):
+        """A register with `ref_lines` = [(ref, supersedes|None), ...] in
+        file order, headings stamped so nothing dies at `check#2` first."""
+        out, hh = [], 9
+        for r, sv in ref_lines:
+            rows = ["ref: " + r, "kind: R-ADMISS", f"population: {POP_FULL}",
+                    "sampling: NONE",
+                    "present_source: data/pm_5min/markets.jsonl",
+                    "scope_days: FORWARD_RACE_DAYS", "scope_from: 20260901",
+                    "scope_to: null", "revocable_by: USER",
+                    f"supersedes: {sv if sv else 'null'}"]
+            body = ("\n```ratification\n" + "\n".join(rows) + "\n```\n"
+                    if sv != "NO_BLOCK" else "\nprose only, no block\n")
+            out.append(f"### {r} — 2026-09-02T{hh:02d}:00Z — coordinator: "
+                       f"R-ADMISS\n{body}\n")
+            hh += 1
+        return "".join(out) + extra + "## next\n"
+
+    # THE REVIEWER'S FIXTURE: R-902 twice with R-903 declaring it superseded
+    # in between. Before this round: superseded_by(R-902) == [] (the real
+    # supersession LOST), check(R-902) VERIFIED, and check(R-903) REFUSED
+    # at check#18 quoting a line its author never wrote -- both ends wrong
+    # at once, from one dict lookup.
+    _rev = _dup([("R-902", "NO_BLOCK"), ("R-903", "R-902"),
+                 ("R-902", None)])
+    _seen = {}
+    for _who in ("R-902", "R-903"):
+        try:
+            _r = check(sup, _who, _rev)
+            _seen[_who] = f"VERIFIED {_r['verified']}"
+        except RatificationRefused as _exc:
+            _seen[_who] = str(_exc)
+    # The lines are COMPUTED from the fixture, never pinned: the geometry
+    # is the parser's, and a literal here would be a number to update.
+    _revlines = [e["line"] for e in all_entries(_rev) if e["ref"] == "R-902"]
+    ok(len(_revlines) == 2
+       and all(str(_revlines) in v for v in _seen.values()),
+       f"DE22-R1, THE REVIEWER'S FIXTURE: a ref heading TWO entries with a "
+       f"supersession pointing at it now REFUSES at BOTH ends, naming the "
+       f"ref and both 0-based lines {_revlines} -- R-902 refuses as the "
+       f"SUBJECT, R-903 because a `supersedes:` names it: "
+       f"{_seen['R-902'][:76]!r}. "
+       f"Before, the dict answered LAST-WINS: the supersession was lost, "
+       f"R-902 verified for a new run, and R-903 was refused at `check#18` "
+       f"quoting the LAST line ({_revlines[-1]}), which nobody wrote")
+    refuses(lambda: check(sup, "R-902", _dup([("R-902", "NO_BLOCK"),
+                                              ("R-902", "NO_BLOCK")])),
+            "KNOWN-BAD: the SUBJECT of the check duplicated REFUSES -- "
+            "which of the two is being asked about cannot be decided by a "
+            "reader of the file, so it is not decided here either",
+            needle="is the SUBJECT of this check")
+    refuses(lambda: check(sup, "R-903",
+                          _dup([("R-902", None), ("R-902", None),
+                                ("R-903", None)])),
+            "KNOWN-BAD: two duplicated entries each CARRYING a ratification "
+            "block REFUSE even when neither is the subject -- the "
+            "heading-level form of `own_ratification_blocks#1`, where a "
+            "corrected ratification is shadowed by the one it corrects",
+            needle="carries a ratification block")
+    refuses(lambda: check(sup, "R-903",
+                          _dup([("R-902", "NO_BLOCK"), ("R-902", "NO_BLOCK"),
+                                ("R-903", "R-902")])),
+            "KNOWN-BAD: a duplicated ref NAMED BY A `supersedes:` refuses "
+            "too, with neither occurrence carrying a block and neither "
+            "being the subject -- where the target stands is what decides "
+            "whether the supersession is read at all",
+            needle="named by a `supersedes:`")
+
+    # ---- and the real register, where it is REPORTED ------------------
+    _rtxt = REGISTER.read_text()
+    _ridx = entry_index(_rtxt)
+    _rlines = _rtxt.split("\n")
+    _expect = {r: [e["line"] for e in all_entries(_rtxt) if e["ref"] == r]
+               for r in _ridx.duplicate_refs}
+    ok(_ridx.duplicate_refs == _expect and len(_expect) == 1,
+       f"ON THE REAL REGISTER the duplication is REPORTED, not refused: "
+       f"{_ridx.duplicate_refs} -- computed from the parse and compared "
+       f"with an independent recount, never a literal. It reaches no "
+       f"answer here: it is nobody's subject, no `supersedes:` names it, "
+       f"and no occurrence carries a block")
+    _dref, _dlines = next(iter(_ridx.duplicate_refs.items()))
+    ok(_ridx[_dref]["line"] == min(_dlines)
+       and _rlines[_ridx[_dref]["line"]].startswith(f"### {_dref}")
+       and _rlines[max(_dlines)].startswith(f"### {_dref}"),
+       f"and the index keeps the FIRST occurrence by rule -- line "
+       f"{_ridx[_dref]['line']} of {_dlines} -- with BOTH headings "
+       f"reachable in the file at those 0-BASED indices: "
+       f"{_rlines[min(_dlines)][:44]!r} and {_rlines[max(_dlines)][:44]!r}. "
+       f"The convention is the parser's own and the one `check#18` prints; "
+       f"an editor's 1-based gutter shows these as "
+       f"{[n + 1 for n in _dlines]}")
+    _rres = check(sup, "R-419")
+    ok(_rres["verified"] and _rres["unverifiable"] == []
+       and _rres["superseded_by"] == []
+       and _rres["duplicate_refs"] == _ridx.duplicate_refs
+       and "FIRST occurrence" in _rres["duplicate_refs_kept"],
+       f"AND EVERY LIVE ANSWER IS UNCHANGED THROUGH IT: R-419 verifies "
+       f"{_rres['verified']}, {_rres['unverifiable']}, superseded_by "
+       f"{_rres['superseded_by']}, and the emission now CARRIES the "
+       f"duplication as a reported fact ({_rres['duplicate_refs']}) with "
+       f"the occurrence it kept -- a reader of the artifact alone is told")
+    require_verified(_rres)
+    ok(True,
+       "and BE's consumer path is exercised on the real register: "
+       "`require_verified(check(sup, 'R-419'))` returns rather than "
+       "raising, so the reported duplication does not reach the gate that "
+       "reads this result")
+
     # ---- DE20-R1: ONE implementation of "an entry exists" --------------
     import ast as _ast
 
     def _entry_calls(src: str) -> tuple[int, int]:
-        """(calls to all_entries in the module, calls inside entry_index)."""
+        """(calls to all_entries in the module's LOGIC, calls inside
+        entry_index). The suite's own calls are excluded, deliberately:
+        the rule is that the module answers "an entry exists" one way, and
+        this selftest RECOUNTS independently to check the index against a
+        fresh parse. Forbidding that would forbid verification by
+        independent derivation -- and the mutant that matters injects a
+        second derivation into `check()`, which this still catches."""
         tree = _ast.parse(src)
+        suite = [f for f in _ast.walk(tree)
+                 if isinstance(f, _ast.FunctionDef) and f.name == "selftest"]
+        in_suite = {id(n) for f in suite for n in _ast.walk(f)}
         every = [n for n in _ast.walk(tree)
                  if isinstance(n, _ast.Call)
-                 and getattr(n.func, "id", "") == "all_entries"]
+                 and getattr(n.func, "id", "") == "all_entries"
+                 and id(n) not in in_suite]
         helper = [f for f in _ast.walk(tree)
                   if isinstance(f, _ast.FunctionDef)
                   and f.name == "entry_index"]
@@ -1700,15 +1908,17 @@ def selftest() -> int:
     _every, _inside = _entry_calls(_src)
     ok(_every == 1 and _inside == 1,
        f"ONE IMPLEMENTATION OF 'AN ENTRY EXISTS': `all_entries` is called "
-       f"{_every} time(s) in this module and {_inside} of them is inside "
+       f"{_every} time(s) in this module's LOGIC (the suite's own "
+       f"independent recounts excluded) and {_inside} of them is inside "
        f"`entry_index` -- read from the AST, not asserted. It was derived "
        f"THREE ways (a line map, an entry map, a set comprehension) over "
        f"the same unfiltered call; they could not disagree, which is why "
        f"the finding is the DRIFT SURFACE: a filter added at one site "
        f"would leave the two ends of one rule answering differently "
        f"(DE20-R1)")
-    _extra = _src.replace("    own_idx = entry_index(register_text)",
-                          "    own_idx = {e['ref']: e for e in "
+    _extra = _src.replace("    idx = entry_index(register_text, "
+                          "subject=ratification_ref)",
+                          "    idx = {e['ref']: e for e in "
                           "all_entries(register_text)}", 1)
     ok(_extra != _src and _entry_calls(_extra) == (2, 1),
        f"KNOWN-BAD, DRIVEN THROUGH THE SAME READER: re-deriving the index "
@@ -2174,6 +2384,9 @@ EXPECTED_SITE: dict[str, str] = {
     "under_check_dangling_supersedes": "check#16",
     "under_check_self_supersedes": "check#17",
     "under_check_backwards_supersedes": "check#18",
+    "duplicate_subject": "entry_index#1",
+    "duplicate_named_by_supersedes": "entry_index#2",
+    "duplicate_carrying_a_block": "entry_index#3",
     "not_a_ratification": "check#10",
     "counts_do_not_sum": "check#11",
     "sampled_population": "check#13",
@@ -2249,6 +2462,28 @@ def mutation_audit(sup: dict, *, _drop_case: str | None = None,
     dangling = stamped_chain.replace("supersedes: R-902", "supersedes: R-9021")
     dup_key = fixture_register("R-902").replace(
         "scope_to: null", "scope_to: null\nscope_to: 20260901")
+    def _stamped(rows):
+        """entries in file order, headings stamped; sv=NO_BLOCK = prose."""
+        out, hh = [], 9
+        for r, sv in rows:
+            fields = ["ref: " + r, "kind: R-ADMISS", f"population: {POP_FULL}",
+                      "sampling: NONE",
+                      "present_source: data/pm_5min/markets.jsonl",
+                      "scope_days: FORWARD_RACE_DAYS",
+                      "scope_from: 20260901", "scope_to: null",
+                      "revocable_by: USER",
+                      f"supersedes: {sv if sv else 'null'}"]
+            body = ("\n```ratification\n" + "\n".join(fields) + "\n```\n"
+                    if sv != "NO_BLOCK" else "\nprose only, no block\n")
+            out.append(f"### {r} — 2026-09-02T{hh:02d}:00Z — coordinator: "
+                       f"R-ADMISS\n{body}\n")
+            hh += 1
+        return "".join(out) + "## next\n"
+
+    dup_subject = _stamped([("R-902", "NO_BLOCK"), ("R-902", "NO_BLOCK")])
+    dup_named = _stamped([("R-902", "NO_BLOCK"), ("R-902", "NO_BLOCK"),
+                          ("R-903", "R-902")])
+    dup_block = _stamped([("R-902", None), ("R-902", None), ("R-903", None)])
     backwards = (fixture_register("R-902", supersedes="R-903")
                  .replace("\n\n## next\n", "\n\n")
                  + fixture_register("R-903"))
@@ -2374,6 +2609,13 @@ def mutation_audit(sup: dict, *, _drop_case: str | None = None,
         "under_check_backwards_supersedes": (
             ((sup, "R-902", backwards), {}),
             ((sup, "R-900", good), {})),
+        # DE22-R1: the three ways a duplicated ref reaches an answer.
+        "duplicate_subject": (((sup, "R-902", dup_subject), {}),
+                              ((sup, "R-900", good), {})),
+        "duplicate_named_by_supersedes": (
+            ((sup, "R-903", dup_named), {}), ((sup, "R-900", good), {})),
+        "duplicate_carrying_a_block": (
+            ((sup, "R-903", dup_block), {}), ((sup, "R-900", good), {})),
         # --- DE16-R1/R2/R3 -----------------------------------------------
         "later_entry_dangling_supersedes": (
             ((sup, "R-902", dangling),
