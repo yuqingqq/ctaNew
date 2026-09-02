@@ -106,10 +106,62 @@ MASK_ARTIFACT = "da_blackout_mask_v1"
 #: The first GOVERNED day, read from the frozen rule rather than repeated
 #: here: from this day a mask is REQUIRED, not merely consumed when present
 #: (R-410 as amended by R-411).
-try:
-    from da_content_liveness_rule import EFFECTIVE_FROM_DAY
-except Exception:                                    # noqa: BLE001
-    EFFECTIVE_FROM_DAY = None
+#:
+#: CO-1: THE FALLBACK WAS THE DEFECT, NOT THE PATH. This read
+#: `except Exception: EFFECTIVE_FROM_DAY = None`, and `governed` is
+#: `bool(EFFECTIVE_FROM_DAY) and day >= EFFECTIVE_FROM_DAY` -- so a failed
+#: import made EVERY day pre-governed and a governed day with no mask scored
+#: WHOLE, silently. Reproduced: under `python3 -m live.pm_research.…` the
+#: bare import fails (this module never put its own directory on sys.path,
+#: which DA's modules do) and the suite was green ONLY in the script-dir
+#: launch. Absence read as pass, R-402/rule 11.
+#:
+#: Two fixes, because either alone leaves the hole: the import is now
+#: LAUNCH-INVARIANT, and a failure REFUSES AT THE POINT OF USE instead of
+#: turning a requirement into permission.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+
+def _load_effective_from_day() -> tuple:
+    """The governing day, or the REASON it could not be read. Never a None
+    that reads as 'not governed'."""
+    try:
+        from da_content_liveness_rule import EFFECTIVE_FROM_DAY as _e
+        return _e, None
+    except Exception as e1:                          # noqa: BLE001
+        try:
+            from .da_content_liveness_rule import EFFECTIVE_FROM_DAY as _e
+            return _e, None
+        except Exception as e2:                      # noqa: BLE001
+            return None, (f"bare import: {type(e1).__name__}: {e1}; "
+                          f"package-relative: {type(e2).__name__}: {e2}")
+
+
+EFFECTIVE_FROM_DAY, EFFECTIVE_FROM_DAY_ERROR = _load_effective_from_day()
+
+
+class GoverningRuleUnreadable(RuntimeError):
+    """The frozen rule's governing day could not be read. REFUSE, never
+    default: a scorer that cannot tell a governed day from a pre-governed one
+    cannot decide whether a mask is required."""
+
+
+def governing_day() -> str:
+    """`EFFECTIVE_FROM_DAY`, or a REFUSAL naming the module. CO-1.
+
+    DA's verifier returns an UNRESOLVED-shaped result on the same failure --
+    never a pass -- and this is the consumer-side equivalent: a missing frozen
+    rule must REFUSE, not turn a REQUIREMENT into PERMISSION."""
+    if not EFFECTIVE_FROM_DAY:
+        raise GoverningRuleUnreadable(
+            f"REFUSED: the governing day could not be read from "
+            f"`da_content_liveness_rule.EFFECTIVE_FROM_DAY` "
+            f"({EFFECTIVE_FROM_DAY_ERROR}). Nothing can be scored: without it "
+            f"a governed day is indistinguishable from a pre-governed one, "
+            f"and defaulting to 'not governed' turns the mask REQUIREMENT "
+            f"into PERMISSION -- every governed day would score WHOLE with no "
+            f"mask (CO-1).")
+    return EFFECTIVE_FROM_DAY
 #: DA's per-(day, coin) mask. DA owns this artifact; BE only reads it.
 def mask_path(day: str) -> Path:
     return DERIVED / f"da_blackout_mask_{day}.json"
@@ -253,7 +305,7 @@ def apply_blackout_mask(day: str, scored_windows: dict, mask: dict,
     # cannot. PRESENCE CONSUMES -- a mask is honoured for any day, so 09-01's
     # 141 windows are masked at scoring, which is the USER's R-409 principle.
     # GOVERNANCE REQUIRES -- from EFFECTIVE_FROM_DAY a mask must EXIST.
-    governed = bool(EFFECTIVE_FROM_DAY) and str(day) >= str(EFFECTIVE_FROM_DAY)
+    governed = str(day) >= str(governing_day())
     n_masked_declared = sum((mask.get("n_masked") or {}).values())
 
     # RR8-3: a MID-DAY mask lists only the windows that exist so far, so
@@ -484,13 +536,69 @@ def selftest() -> int:
            "and it produces a finite score on a real 60-feature input")
 
     checks = _selftest_blackout_mask(checks)
+    _before_launch = checks
+    checks = _selftest_launch_invariance(checks)
+    # CO-1: THE CHECK MUST HAVE RUN. Removing the call above is a
+    # guard-removal on a healthy pipeline — nothing else notices, which is
+    # the shape this whole finding is about. The suite therefore asserts its
+    # own coverage rather than trusting the call to still be there.
+    import os as _os
+    if (_os.environ.get("BE_SCORER_LAUNCH_CHECK") != "1"
+            and checks == _before_launch):
+        raise AssertionError(
+            "CO-1: the launch-invariance check contributed NO checks, so it "
+            "did not run. Green under one launcher is not green — that gap "
+            "is exactly what hid a governed day scoring whole.")
     print(f"harmful_forward_scorer selftest: {checks} checks OK")
     return 0
 
 
+def _selftest_launch_invariance(checks: int) -> int:
+    """The suite must be green under BOTH launches, and SAY so. CO-1.
+
+    The defect was invisible because the suite only ever ran from the script
+    directory. Green under one launcher is not green: this runs the OTHER one
+    and asserts it. Guarded by an env flag so the spawned run does not spawn
+    again -- a recursion that would look like a hang, not a failure."""
+    import os, subprocess
+    if os.environ.get("BE_SCORER_LAUNCH_CHECK") == "1":
+        return checks
+
+    def ok(cond, label):
+        nonlocal checks
+        if not cond:
+            raise AssertionError(label)
+        checks += 1
+        print(f"  PASS  {label}")
+
+    env = dict(os.environ, BE_SCORER_LAUNCH_CHECK="1")
+    repo = Path(__file__).resolve().parents[2]
+    r = subprocess.run([sys.executable, "-m",
+                        "live.pm_research.harmful_forward_scorer",
+                        "--selftest"],
+                       cwd=str(repo), env=env, capture_output=True,
+                       text=True, timeout=600)
+    ok(r.returncode == 0,
+       f"CO-1 the suite is GREEN under the PACKAGE launch "
+       f"(`python3 -m live.pm_research.harmful_forward_scorer --selftest`, "
+       f"rc={r.returncode}) — it was rc=1 there while green from the script "
+       f"directory, and that gap is what hid a governed day scoring whole")
+    r2 = subprocess.run(
+        [sys.executable, "-c",
+         "from live.pm_research import harmful_forward_scorer as S;"
+         "print(repr(S.EFFECTIVE_FROM_DAY))"],
+        cwd=str(repo), env=env, capture_output=True, text=True, timeout=120)
+    ok(r2.returncode == 0 and repr(EFFECTIVE_FROM_DAY) in r2.stdout,
+       f"CO-1 and the governing day READS THE SAME under both launches "
+       f"({r2.stdout.strip()} vs {EFFECTIVE_FROM_DAY!r}) — it was None under "
+       f"the package launch, which made `governed` False for every day")
+    return checks
+
+
 def _selftest_blackout_mask(checks: int) -> int:
     """R-409's mask seam, red-first in all three directions."""
-    import subprocess, tempfile
+    import os, subprocess, tempfile
+    EFFECTIVE_FROM_DAY_REAL = EFFECTIVE_FROM_DAY
 
     def ok(cond, label):
         nonlocal checks
@@ -524,6 +632,53 @@ def _selftest_blackout_mask(checks: int) -> int:
            "R-409 REFUSAL CONTROL: a thin PRE-GOVERNED day with an ABSENT "
            "mask is refused and the refusal NAMES the missing artifact and "
            "the status that required it — never assume unmasked")
+
+    # ---- CO-1: an UNREADABLE governing rule must REFUSE, not default ----
+    # THE DEFECT, driven: with EFFECTIVE_FROM_DAY unset, `governed` was
+    # `bool(None) and ...` = False for EVERY day, so a governed day with no
+    # mask scored WHOLE. The suite was green because it only ever ran from
+    # the script directory, where the bare import happens to work.
+    # THE RUNNING MODULE'S OWN GLOBALS, not `import harmful_forward_scorer`.
+    # Under `__main__` that import creates a SECOND module object, so setting
+    # its attribute leaves the running one untouched and the control passes
+    # while testing nothing — the dual-module-identity hazard IMPORT_LAYOUT.md
+    # names, met here for real.
+    _G = globals()
+    _saved_e = _G["EFFECTIVE_FROM_DAY"]
+    _saved_err = _G["EFFECTIVE_FROM_DAY_ERROR"]
+    try:
+        _G["EFFECTIVE_FROM_DAY"] = None
+        _G["EFFECTIVE_FROM_DAY_ERROR"] = "simulated import failure"
+        try:
+            governing_day()
+            ok(False, "an unreadable governing rule must REFUSE")
+        except GoverningRuleUnreadable as e:
+            ok("da_content_liveness_rule" in str(e)
+               and "PERMISSION" in str(e),
+               "CO-1 KNOWN-BAD: an unreadable governing rule REFUSES and NAMES "
+               "the module — it must never default to 'not governed', which "
+               "turns the mask REQUIREMENT into PERMISSION")
+        try:
+            apply_blackout_mask(day_gov, sw, {"present": True, "per_coin": {},
+                                              "n_masked": {},
+                                              "day_closed_calendar": True},
+                                live_ok)
+            ok(False, "scoring must REFUSE when the governing day is unknown")
+        except GoverningRuleUnreadable:
+            ok(True,
+               "CO-1 and NOTHING is scored while it is unreadable — the "
+               "refusal is at the POINT OF USE, so no day slips through as "
+               "pre-governed")
+    finally:
+        _G["EFFECTIVE_FROM_DAY"] = _saved_e
+        _G["EFFECTIVE_FROM_DAY_ERROR"] = _saved_err
+    ok(_G["EFFECTIVE_FROM_DAY"] == EFFECTIVE_FROM_DAY_REAL,
+       "CO-1 the control RESTORES the constant it simulated away — a suite "
+       "that leaves it unset poisons every check after it")
+    ok(governing_day() == EFFECTIVE_FROM_DAY_REAL,
+       f"CO-1 POSITIVE CONTROL: the governing day is READ from the frozen "
+       f"rule ({EFFECTIVE_FROM_DAY_REAL!r}), so the refusal discriminates "
+       f"rather than always firing")
 
     # ---- R-410/R-411: GOVERNANCE requires, PRESENCE consumes -------------
     try:
@@ -828,12 +983,37 @@ def _selftest_blackout_mask(checks: int) -> int:
         # the refusal must reach the EXIT CODE, not only the log
         thin_v = Path(td) / "v.json"
         thin_v.write_text("{}")
-        r2 = subprocess.run(me + ["--score-day", day, "--actions", str(af),
+        # 08-27 is the genuinely empty day (R-411): no verdict block, and
+        # PRE-governed, so it scores whole. 09-01 no longer serves here —
+        # DA's rule block has LANDED and 09-01 now reads CONTENT_THIN, so
+        # refusing it without a mask is CORRECT, not a false positive.
+        r2 = subprocess.run(me + ["--score-day", "20260827",
+                                  "--actions", str(af),
                                   "--mask", str(Path(td) / "absent.json")],
                             capture_output=True, text=True, timeout=120)
         ok(r2.returncode == 0,
-           "R-409 a day with no thin signal and no mask scores normally "
-           "(rc=0) — the refusal is targeted, not universal")
+           "R-409 a PRE-GOVERNED day with no thin signal and no mask scores "
+           "normally (rc=0) — the refusal is targeted, not universal")
+        # THE LIVE CASE, on real artifacts: 09-02 is GOVERNED and reads
+        # CONTENT_THIN with its mask still absent. It must REFUSE by name.
+        # This is the day the whole ruling is about, and it is checked
+        # against what is on disk rather than a fixture.
+        r3 = subprocess.run(me + ["--score-day", "20260902",
+                                  "--actions", str(af)],
+                            capture_output=True, text=True, timeout=120)
+        _l902 = liveness_status(read_day_verdict("20260902"))
+        _m902 = load_blackout_mask("20260902")
+        if _l902.get("is_thin") and not _m902.get("present"):
+            ok(r3.returncode != 0 and "GOVERNED" in (r3.stdout + r3.stderr),
+               "R-410 LIVE CASE: 09-02 is GOVERNED, reads CONTENT_THIN and "
+               "has no mask on disk — it REFUSES by name rather than scoring "
+               "a known blackout whole (the silent trigger I escalated last "
+               "round, now closed by DA's rule block landing)")
+        else:
+            ok(r3.returncode == 0 or "REFUSED" in (r3.stdout + r3.stderr),
+               f"R-410 09-02 state changed (thin={_l902.get('is_thin')}, "
+               f"mask={_m902.get('present')}); the scorer responded "
+               f"consistently with what is on disk")
     return checks
 
 
