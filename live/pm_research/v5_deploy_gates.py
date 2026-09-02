@@ -54,6 +54,8 @@ GATES: list[tuple[str, list[str]]] = [
      [PY, str(HERE / "da_content_liveness_rule.py"), "--selftest"]),
     ("DA closed-day verdict checker",
      [PY, str(HERE / "da_verdict_check.py"), "--selftest"]),
+    ("DA cross-venue forensics", 
+     [PY, str(HERE / "da_cross_venue_forensics.py"), "--selftest"]),
     ("chain equivalence (one fixture, two consumers)",
      [PY, str(HERE / "v5_chain_equivalence_test.py")]),
     ("chain differential fuzz",
