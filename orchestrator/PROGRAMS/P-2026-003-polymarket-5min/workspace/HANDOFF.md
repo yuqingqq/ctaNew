@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T15:46Z — **DE round 25 VERIFIED at `50a9113` (91)**: the
-three comment shapes now **refuse**, `X = 1` is a **DECLARED** limit rather than
-a chased one, and the length conjunct is **gone** — all re-run here. **DE round
-24 RELEASED** (`304cd5f`), with **R-446 §3(a)(ii) REFINED IN BAND to OWN
-ratification blocks** — recorded in the standards section above, R-446's text
-untouched. The `R-6` recount is stated **as a rule, not a number**: every filed
-Q-row moves both lines by one, and the suite recounts. **SIX RULED, none
-open.**
+Updated: 2026-09-02T15:57Z — **DE round 26 VERIFIED at `89aef8c` (171)** — a
+quotation now REPORTS, an own block still REFUSES, `check#18` says **"0-based"**.
+**CO-9 reproduced here at the mechanism**: the (ii) scan calls the *adjudicating*
+reader on every entry, so a malformed block in an entry that can supersede
+nothing refuses the subject's check — **and only while an unrelated duplicate
+exists.** Condition **(iii) is refined to OWN blocks in band** beside (ii); both
+now share one criterion. **DA rounds 13+14 RELEASED** (`a2a1cf8`) → DA round 15,
+held, before tonight. **SIX RULED, none open.**
 
 ## READ FIRST — current project handoff
 
@@ -371,6 +371,17 @@ rewritten):
 > *"(ii) is named by any `supersedes:` in the register"* now reads **"named by
 > the `supersedes:` of any entry's OWN ratification block"** (`own_ratification_blocks`).
 
+**R-451 §3 REFINES condition (a)(iii) THE SAME WAY, also in band** (R-446 and
+R-450 both stand as provenance):
+
+> *"(iii) has ANY occurrence carrying a ratification block"* now reads **"at
+> least one occurrence carries an OWN ratification block."**
+
+A self-quotation under a duplicated heading counts as own and refuses —
+**fail-closed by the predicate's definition, not by a gap.** With both conditions
+refined, **(ii) and (iii) share one criterion**: ownership, as the module defines
+it, rather than the presence of a fence.
+
 **Why the refinement is the same distinction the module already spent a round
 establishing:** `superseded_by` reads own blocks only, and DE16-R1 settled that a
 **quoted** block is not the quoting entry's ratification. So a quotation naming a
@@ -732,11 +743,14 @@ launchers at **235/19**.
 | **DE round 23** | **VERIFIED**, and its **review RELEASED** (`0b03618`) for `a83083a` — DE21-R1 closed for **both** cut shapes through the reader, the predicate **prose-blind**; two LOW findings **DE23-R1/R2** → DE round 25 |
 | **DE round 24** | **VERIFIED** at `e0d1e9f` and its **review RELEASED** (`304cd5f`) — DE22-R1 closed at **both ends** of the reviewer's fixture, the census refinement RULED sound; two findings **DE24-R1/R2** → DE round 26 |
 | **DE round 25** | **VERIFIED** at `50a9113` (Q-DE-43) — admissible **91** (reproduced here); the three comment shapes now refuse, `X = 1` is a **DECLARED** limit, the length conjunct is **gone** |
-| **DE round 26** | **IN FLIGHT** (Q-DE-44) — DE24-R1 (`named` from OWN blocks) and DE24-R2 (the `check#18` label) |
+| **DE round 26** | **VERIFIED** at `89aef8c` (Q-DE-44) — ratification **171** (reproduced here); `named` from `own_ratification_blocks` (`:422-423`), `check#18` now says **"0-based"** (`:987`/`:990`) |
+| **DE round 27** | **IN FLIGHT** (Q-DE-45) — **CO-9** (a quiet ownership filter for the (ii)/(iii) scans) and the **(iii) refinement**, with C/C2/C3 and D/E as controls |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
 | **DA round 13** | **HELD** at `e384792` (chain `3a89e6c`→`e292439`→`636a455`→`e384792`) — preflight **39**; `freeze_disposition` moves to `ruled`, `still_open == {}`, and a **coherence guard** makes the contradiction unrepresentable |
+| **DA rounds 13+14 review** | **RELEASED** (`a2a1cf8`) for **both** `e384792` and `801eb31`, dispositions identical, no hold — three LOW/LOW-MED findings **DA13-R1, DA14-R1, DA14-R2** → DA round 15 |
+| **DA round 15** | **DISPATCHED and HELD** on the chain as its sixth commit, **before tonight** — selftest regions only, no real-day run |
 | **DA round 14** | **HELD and VERIFIED** at `801eb31` — DA12-R1 closed, twinning **both directions**, **23 + 15 = 38** and `--falsify` 39 (recomputed here in a parity tree), the one exclusion **named with a reproduced reason**. A one-assertion scope deviation **ACCEPTED in-batch** |
 | **BE round 5 review** | **RELEASED** (`d990162`) for `baa986d` — **BE34-R2 CLOSED at the artifact**; two rulings adopted; three LOW-MED findings **BE5-R1/R2/R3** → BE round 7 |
 | **BE round 6** | code at `faaabdc`; **row Q-BE-231 PENDING** — not verified until the row lands (rule 18) |
@@ -781,7 +795,8 @@ in the round-5 review (three runs into one outdir → base/`.1`/`.2`, the base
 byte-identical throughout); **BE34-R1/R3/R4/R5** → **BE round 6** (row pending);
 **BE5-R1/R2/R3** → **BE round 7** (staged, before tonight's read);
 **DE23-R1/R2 CLOSED** at `50a9113`, queued for review;
-**DE24-R1/R2** → **DE round 26, in flight**;
+**DE24-R1/R2 CLOSED** at `89aef8c`; **CO-9 + the (iii) refinement** → **DE round
+27, in flight**; **DA13-R1 / DA14-R1 / DA14-R2** → **DA round 15** (held);
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
 `a83083a`; **DE22-R1 CLOSED** at `e0d1e9f`, queued for review; **DA12-R1** → DA round 14
 (held);
@@ -803,10 +818,11 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DA rounds 13+14** at `801eb31` (in flight)
-→ **DE round 25** at `50a9113` → **BE round 6** when its row lands → **BE round
-7** after that. **DE round 24's review is RELEASED** (`304cd5f`), as are DE round
-23's (`0b03618`) and BE round 5's (`d990162`). **Released so far:** BE rounds 3–4
+**The reviewer's queue, in order:** **DE round 25** at `50a9113` (in flight) →
+**BE round 6** when its row lands → **BE round 7** → **DA round 15** when it
+files; **DE rounds 26+27 go as ONE filing** written when 27 lands. **DA rounds
+13+14's review is RELEASED** (`a2a1cf8`), as are DE rounds 24 (`304cd5f`) and 23
+(`0b03618`) and BE round 5 (`d990162`). **Released so far:** BE rounds 3–4
 (`1d9c543`), DA rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19
 (`a558356`), 20 (`819d225`), 21 (`533e38c`) and 22 (`8df60bf`).
 
@@ -1611,6 +1627,83 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~15:57Z (MEM) — A REFUSAL THAT DEPENDS ON AN UNRELATED ENTRY
+### SOMEWHERE ELSE IN THE FILE
+
+**R-451 swept.** DE round 26 closes both round-24 findings; the fix introduced a
+new one; and the new one is the most instructive object this cycle has produced.
+
+**DE round 26 re-run here.** `EXPECTED_CHECKS = 171` (`:1128`), **171 rc 0**;
+`named` is built from `own_ratification_blocks(e)` (`:422-423`); and **DE24-R2 is
+gone** — `check#18` now reads *"0-based register line"* (`:987`) and *"0-based
+line"* (`:990`), so **all six sites that print a line now say which kind it is.**
+That residual took three rounds to travel from a measurement of mine to a
+labelled message, and it never needed a dispatch of its own.
+
+**CO-9, reproduced at the mechanism rather than read.** I drove `entry_index`
+directly on doctored copies of the real register:
+
+| fixture | result |
+|---|---|
+| the real register | **OK**, `duplicate_refs {'R-6': [1788, 9514]}` |
+| **C** — an entry with TWO own blocks, inserted **earlier** than R-419 | **REFUSED**: *"R-99900 carries 2 ratification blocks of its OWN"* |
+| **C2** — the same entry, with the duplicate `R-6` heading renamed away | **OK**, `duplicate_refs {}` |
+| **C3** — the same malformed entry placed **later** | **REFUSED** — the scan is **position-blind** |
+
+**C2 is the finding.** Whether a malformed entry refuses a check about a
+different entry depends on whether an **unrelated** duplicate exists elsewhere in
+the file — `R-6`, a fact of this register since long before either. **A refusal
+whose trigger lives in a third entry is not a property of the subject at all**,
+and C3 shows why DE's ordering note could be true and still not cover this: the
+note is about **order**, and the scan does not consult order. *A claim that
+nothing is refused **earlier** than before says nothing about what is refused
+**at all**.*
+
+**The (iii) refinement is the same move as (ii), and I checked both fixtures.**
+D — a duplicated heading whose second occurrence carries a **quoted** block —
+refuses at `entry_index#3` today; E — the same shape with an **own** block naming
+`R-419` — also refuses. So the refinement's job is to **separate** them: D
+reaches no answer and belongs on the reporting side; E drops a real supersession
+under kept-first and must keep refusing. **(ii) and (iii) now share one
+criterion — ownership as the module defines it, not the presence of a fence** —
+and I have recorded it **in band beside the (ii) refinement, with R-446 and R-450
+both left standing** (rule 13).
+
+**The closure's shape is worth as much as the rule.** The fix is a **quiet**
+ownership filter for the two scans — the module's own predicate over
+`_fenced_blocks`, no adjudication — while `own_ratification_blocks` stays the
+adjudicating reader **on the path**. That is the distinction between *reading to
+decide* and *reading to scan*: the same text, two readers, and the round-26 fix
+accidentally gave the scan the decider's temperament. **A reader that raises is
+the wrong instrument for a survey.**
+
+**DA rounds 13+14 released for BOTH commits with identical dispositions**, and
+its three findings reproduce at the held bytes. **DA13-R1**: the wiring poison is
+the **literal** `("RULED at R-442",)` (`:628`, asserted at `:633`) where every
+ruled entry carries the **form** `RULED at ` (`:399` and four more) — a
+legitimate re-ruling turns the control red, DA10-R5 again, safe direction.
+**DA14-R1**: `_t2, _e2 = twins[:-1], excluded` then
+`ok(len(_t2) + len(_e2) != len(roster))` — given the invariant asserted two lines
+above, that is `roster − 1 ≠ roster`, **arithmetic**, true under every
+arrangement: the DE16-R4 shape, a control that cannot fail. **DA14-R2**: the
+recomputed `_exp_dirty` is the right property, but the fixture builds **one**
+arrangement, so a producer hardcoding `True` still passes — the round-15
+candidate I recorded at R-447 §3, now a finding with the reviewer's ruling
+attached: *the recomputed expectation is right and not yet sufficient; drive both
+arrangements.*
+
+**My figure stands and the coordinator's is withdrawn.** `REVIEW_DE_ROUND_24` is
+**253** lines by `wc -l` and 253 insertions at `304cd5f`; R-450 §2's 254 is
+withdrawn in band. Recorded because a withdrawn number that nobody records comes
+back.
+
+**Seats.** DE round 27 in flight (CO-9 + the (iii) refinement, C/C2/C3 and D/E as
+controls); **DA round 15 held on the chain as its sixth commit, before tonight**,
+selftest regions only, no real-day run, the shared tree and timers untouched.
+Reviewer: **DE round 25**, then BE round 6 when its row lands, then BE round 7,
+then DA round 15 — and **DE rounds 26+27 go as ONE filing**. **SIX RULED, none
+open.**
 
 ### 2026-09-02 ~15:46Z (MEM) — A RULE THAT STOPPED LEANING ON A PROSE
 ### CONVENTION

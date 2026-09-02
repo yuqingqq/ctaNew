@@ -3162,3 +3162,71 @@ Moved in the MEM round-42 true-up of R-450. Join rule as in batch 1.
   (no second scoring day until BE34-R1/R2 close and are reviewed); Phase-4
   gated; R-419 revocable.
 ```
+
+## Batch 49 — archived 2026-09-02T15:57Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-43 true-up of R-451. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T15:33Z (MEM ROUND 40 -- A COUNT THAT DEPENDS ON SOMEBODY ELSE'S
+  UNCOMMITTED FILE). R-448 swept. BE ROUND 5 REVIEW RELEASED (d990162, 314
+  lines) for baa986d, NO HOLD, and BE34-R2 CLOSED AT THE ARTIFACT rather than in
+  the code alone: three runs into one outdir yield base + .1 + .2 with the base
+  BYTE-IDENTICAL throughout, where rounds 3-4 left one file replaced in place;
+  "same run" is rec["_receipt_path"], an IN-MEMORY key STRIPPED FROM EVERY
+  WRITTEN RECEIPT (:1013, :1019, :1037, :1042 -- I read all four), not a
+  timestamp, pid or file name, which is why three runs inside one second still
+  produce three distinct files. ALL THREE FINDINGS REPRODUCE AT THE PINNED
+  BYTES: BE5-R1, _flush (:996) computes the next free .N but records
+  supersedes_receipt.path as p, THE CANONICAL BASE (:1029-1030), whatever N is
+  -- so with base/.1/.2 both successors name the base, the supersession graph is
+  a STAR, and "which is current" is answerable only by sorting filenames;
+  BE5-R2, DECISION_ALLOWLIST (:954) has ZERO membership assertions (grepped)
+  while the suite asserts excused_paths == ["gates[].gate"] (:1781), which
+  reports what THIS EMISSION USED, so a second excused path leaves the suite
+  green; BE5-R3, the module ships NO mutation audit -- the word "mutation"
+  occurs ONCE, in a comment -- so "47/47 killed" is a report in a filing and the
+  4-vs-5 I narrowed last round is UNSETTLEABLE BY ANY READER. BE5-R3 CARRIES THE
+  STRUCTURAL MORAL: the two-way rebuild pins 90036b7's bytes (4c0425c5) while
+  47/47 is reported at baa986d's (65da7ae0), so THE REBUILD EVIDENCE DOES NOT
+  CARRY ACROSS THE COMMIT IT WAS MADE AT; closure is rule 15 at the HARNESS
+  level -- ship the mutant table, assert survivors == [] in the suite, clear the
+  cache before each execution (R-446) -- which is what the DE modules already do
+  and why DE's counts can be re-derived by anyone. THE COUNT CORRECTION IS THE
+  SHARPEST ITEM AND I CONFIRMED THE MECHANISM MYSELF: _selftest_launch spawns a
+  child with BE_FORWARD_LAUNCH_CHECK=1 and cwd=REPO, the child skips the spawn
+  and the parent adds the launch check, so 84 IS THE REPRODUCIBLE FIGURE AT
+  baa986d AND THE 85TH IS THE SPAWN, whose child reads THE SHARED TREE'S FILE,
+  not the pinned one (BE34-R3). Today that file is DIRTY with BE's round-6 WIP:
+  committed HEAD 8a851eae, worktree e6cda52f, the pin 65da7ae0 -- and running
+  the tree right now gives 94 full / 92 with the spawn skipped, a TWO-check
+  launch contribution, not one. SO NO COUNT TAKEN FROM THAT FILE TODAY IS A
+  COMMITTED FIGURE AT ALL, and Q-BE-230's "85" holds only while the shared tree
+  equals the pin; that is BE34-R3 stated as a number rather than as a shape, and
+  round 6 closing it is what makes any of these counts reproducible. TWO RULINGS
+  ADOPTED, the first reframing what a gate is: require_verified() is the gate BY
+  DATA DEPENDENCY -- its return value is consumed, so deleting the production
+  call is NameError, RC 1, NOT A SILENT BYPASS, and faking the result is red at
+  the PROVENANCE conjunct, the one BE's own pair logic cannot hold; the
+  exception-type assertion is the SMALLER half of why. General form worth
+  keeping: A CALL WHOSE RESULT IS CONSUMED CANNOT BE DELETED QUIETLY; A CALL MADE
+  ONLY FOR ITS SIDE EFFECT CAN. Second ruling: the ONE excused path's SHAPE IS
+  RIGHT (path-bound, string-typed, receipt-reported, vocabulary borrowed by
+  value) and its weakness is GOVERNANCE -- growth invisible until used -- which
+  is precisely BE5-R2. ROUTING AND WHY IT IS ORDERED THIS WAY: BE ROUND 7 =
+  BE5-R1 + R2 + R3, ONE BATCH, dispatched when Q-BE-231 lands, BEFORE tonight's
+  read (three one-edit closures plus the shipped audit; no run against a real
+  day; nothing under derived/); THE DURABLE LANDING BECOMES BE ROUND 8, AFTER
+  the 00:14Z read -- the landing is a FIRST WRITE INTO AN EMPTY TARGET so
+  BE5-R1's successor naming never touches it, but the driver that lands it
+  should already carry the audit and the pinned allowlist, which is why the
+  order is this way round. MY check#18 RESIDUAL HAS A HOME: it sits inside the
+  reviewer's round-24 ITEM 4 (consistency across every message that prints a
+  line), so it reaches DE through that review or round 25 -- recorded there, not
+  re-filed. ROSTER: BE34-R1/R3/R4/R5 -> BE r6 (row pending); BE5-R1/R2/R3 -> BE
+  r7 (staged); DA12-R1 -> DA r14 (held, verified); DE22-R1 -> DE r24 (verified);
+  CO-8 and the --require-no-skips shape -> after tonight. Reviewer: DE 23 (in
+  flight) -> DE 24 -> DA 13+14 -> BE 6 -> BE 7. USER decisions SIX RULED, NONE
+  OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; Phase-4 gated; R-419 revocable.
+```
