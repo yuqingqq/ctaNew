@@ -1176,7 +1176,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 180
+EXPECTED_CHECKS = 183
 
 
 def selftest() -> int:
@@ -2105,56 +2105,136 @@ def selftest() -> int:
        f"an uncaught refusal inside another control (DE27-R1){_saw_k}")
 
     # ---- and the filter is written in ONE place, asserted from the AST --
+    # CO-11: the first version of this census keyed on the VARIABLE NAME
+    # (`blk.get("kind", ...)`), so the same filter pasted back with the
+    # loop variable RENAMED -- semantically the second text DE27-R1
+    # removed -- left it GREEN, and its known-bad exercised exactly the
+    # idiom the census keyed on, so the falsifier could not fail by any
+    # other spelling. The message claimed the predicate; the check
+    # asserted the idiom. It is now keyed on the CONSTANT and the SHAPE:
+    # any `==` against "R-ADMISS" whose left side reaches a `kind` lookup,
+    # by `.get("kind")` or by `["kind"]`, on ANY receiver.
     import ast as _ast_own
     _own_src = Path(__file__).read_text()
 
     def _ownership_sites(src: str, _ast=_ast_own) -> list[str]:
-        """Functions comparing a block's `kind` to R-ADMISS by equality --
-        the ownership conjunct. `check#10` asks a different question of a
-        different object (`fields.get("kind") != "R-ADMISS"`, the BOUND
-        kind of the entry under check) and is not this predicate."""
+        """Functions asking a block's `kind` whether it EQUALS R-ADMISS --
+        the ownership conjunct, whatever the receiver is called.
+
+        `check#10` stays out by its operator: it asks
+        `fields.get("kind") != "R-ADMISS"` of the BOUND kind of the entry
+        under check, a different question about a different object.
+
+        `selftest` and everything nested in it are excluded because the
+        suite's own fixtures ASSERT this constant rather than deciding
+        with it -- the named control above reads
+        `_own_two[0].get("kind") == "R-ADMISS"` to show the filter kept
+        the right block. A census that counted its own assertions would
+        report two texts the moment it was written."""
         tree = _ast.parse(src)
+        suite = [f for f in _ast.walk(tree)
+                 if isinstance(f, _ast.FunctionDef) and f.name == "selftest"]
+        in_suite = {id(n) for f in suite for n in _ast.walk(f)}
         out = []
         for fn in [n for n in _ast.walk(tree)
-                   if isinstance(n, _ast.FunctionDef)]:
+                   if isinstance(n, _ast.FunctionDef)
+                   and id(n) not in in_suite]:
             for cmp_ in [n for n in _ast.walk(fn)
                          if isinstance(n, _ast.Compare)]:
                 if not any(isinstance(o, _ast.Eq) for o in cmp_.ops):
                     continue
                 if not any(isinstance(c, _ast.Constant)
-                           and c.value == "R-ADMISS" for c in cmp_.comparators):
+                           and c.value == "R-ADMISS"
+                           for c in cmp_.comparators):
                     continue
-                if any(isinstance(n, _ast.Call)
-                       and isinstance(n.func, _ast.Attribute)
-                       and n.func.attr == "get"
-                       and getattr(n.func.value, "id", "") == "blk"
-                       and n.args and isinstance(n.args[0], _ast.Constant)
-                       and n.args[0].value == "kind"
-                       for n in _ast.walk(cmp_.left)):
+                reaches_kind = False
+                for n in _ast.walk(cmp_.left):
+                    if (isinstance(n, _ast.Call)
+                            and isinstance(n.func, _ast.Attribute)
+                            and n.func.attr == "get" and n.args
+                            and isinstance(n.args[0], _ast.Constant)
+                            and n.args[0].value == "kind"):
+                        reaches_kind = True
+                    if (isinstance(n, _ast.Subscript)
+                            and isinstance(n.slice, _ast.Constant)
+                            and n.slice.value == "kind"):
+                        reaches_kind = True
+                if reaches_kind:
                     out.append(fn.name)
         return sorted(set(out))
 
+    def _paste_into_reader(src: str, filter_text: str, _ast=_ast_own):
+        """Put `filter_text` where `own_ratification_blocks` asks for
+        ownership, LOCATED BY THE AST rather than by a text anchor.
+
+        CO-11's second half: the old known-bad replaced the code line by
+        its text, and that same text is a STRING LITERAL in this suite --
+        so with the code line gone the replace hit the literal, left the
+        copy with an unterminated string, and `ast.parse` raised a
+        SyntaxError: a traceback where a refusal by name belongs, and
+        `_pasted != _own_src` was satisfied by mangling the suite. Returns
+        None when the assignment is not exactly where it should be, and a
+        copy is never built by guessing."""
+        tree = _ast.parse(src)
+        fns = [f for f in _ast.walk(tree)
+               if isinstance(f, _ast.FunctionDef)
+               and f.name == "own_ratification_blocks"]
+        if len(fns) != 1:
+            return None
+        tgt = [n for n in fns[0].body
+               if isinstance(n, _ast.Assign)
+               and getattr(n.targets[0], "id", "") == "own"]
+        if len(tgt) != 1:
+            return None
+        lines = src.split("\n")
+        return "\n".join(lines[:tgt[0].lineno - 1] + filter_text.split("\n")
+                          + lines[tgt[0].end_lineno:])
+
     _osites = _ownership_sites(_own_src)
     ok(_osites == ["own_blocks_quiet"],
-       f"ONE OWNERSHIP TEXT, asserted from the AST: the `blk['kind'] == "
-       f"R-ADMISS` comparison appears in {_osites} and nowhere else -- "
-       f"`own_ratification_blocks` now CONSUMES that filter and adds only "
-       f"its two raises. The same guarantee DE20-R1 gave `all_entries`, "
-       f"for the same reason: a predicate stated twice drifts without "
-       f"either copy noticing (DE27-R1)")
-    _pasted = _own_src.replace(
-        "    own = own_blocks_quiet(entry)",
-        "    own = [(blk, dups) for blk, dups in _fenced_blocks(entry)\n"
-        "           if str(blk.get('ref', '')).strip() == ref\n"
-        "           and str(blk.get('kind', '')).strip() == 'R-ADMISS']", 1)
-    ok(_pasted != _own_src
-       and _ownership_sites(_pasted) == ["own_blocks_quiet",
-                                         "own_ratification_blocks"],
-       f"KNOWN-BAD, DRIVEN THROUGH THE SAME PARSE: pasting the filter back "
-       f"into the adjudicating reader in a COPY makes it "
-       f"{_ownership_sites(_pasted)} -- two texts again -- and this check "
-       f"goes red. The predicate is over the parse, so a second copy "
-       f"cannot arrive as a comment or a string")
+       f"ONE OWNERSHIP TEXT, asserted from the AST on the CONSTANT AND THE "
+       f"SHAPE: an `== \"R-ADMISS\"` whose left side reaches a `kind` "
+       f"lookup -- `.get(\"kind\")` or `[\"kind\"]`, on any receiver -- "
+       f"appears in {_osites} and nowhere else outside the suite. Keyed on "
+       f"the VARIABLE NAME it read the idiom rather than the predicate, "
+       f"and a renamed copy passed (CO-11)")
+    # The same filter, three spellings, each pasted back into the
+    # adjudicating reader: the idiom the census used to key on, the
+    # RENAMED variable that defeated it, and a SUBSCRIPT lookup.
+    _variants = {
+        "the same idiom (`blk.get`)":
+            '    own = [(blk, dups) for blk, dups in _fenced_blocks(entry)\n'
+            "           if str(blk.get('ref', '')).strip() == ref\n"
+            "           and str(blk.get('kind', '')).strip() == 'R-ADMISS']",
+        "the loop variable RENAMED (`b.get`)":
+            '    own = [(b, d) for b, d in _fenced_blocks(entry)\n'
+            "           if str(b.get('ref', '')).strip() == ref\n"
+            "           and str(b.get('kind', '')).strip() == 'R-ADMISS']",
+        "a SUBSCRIPT lookup (`b[\"kind\"]`)":
+            '    own = [(b, d) for b, d in _fenced_blocks(entry)\n'
+            "           if str(b.get('ref', '')).strip() == ref\n"
+            '           and str(b["kind"]).strip() == "R-ADMISS"]',
+    }
+    for _label, _text in _variants.items():
+        _copy = _paste_into_reader(_own_src, _text)
+        _sites = _ownership_sites(_copy) if _copy else ["<not located>"]
+        ok(_copy is not None
+           and _sites == ["own_blocks_quiet", "own_ratification_blocks"],
+           f"KNOWN-BAD, DRIVEN THROUGH THE SAME PARSE ({_label}): the "
+           f"filter pasted back into the adjudicating reader reads "
+           f"{_sites} -- two texts again -- and the census goes red. The "
+           f"renamed one is CO-11's mutant: it passed until this round, "
+           f"because the check was keyed on what the variable was called")
+    _no_reader = _own_src.replace("def own_ratification_blocks(entry: dict)",
+                                  "def _reader_renamed_by_the_mutant(entry: dict)", 1)
+    ok(_paste_into_reader(_no_reader, "    own = []") is None
+       and _paste_into_reader(_own_src, "    own = []") is not None,
+       "AND THE PASTE IS LOCATED BY THE AST, NOT BY A TEXT ANCHOR: with "
+       "the reader's own assignment absent, the helper returns None rather "
+       "than replacing the first matching TEXT -- which in this file is a "
+       "string literal in this very suite, so the old anchor built a copy "
+       "with an unterminated string and `ast.parse` raised a SyntaxError: "
+       "a traceback where a refusal by name belongs (CO-11)")
 
     # ---- DE24-R2: `check#18` names the convention its number uses ------
     _msg18 = ""
