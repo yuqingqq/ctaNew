@@ -1976,9 +1976,33 @@ def selftest() -> int:
            "hardcoded-verdict shape (rule 10)")
 
     # ---- BE34-R4: a usage error is a refusal, not a success --------------
-    ok(main([]) == 2 and main(["--forward-day"]) == 2,
-       "BE34-R4 `main([])` returns 2, the code every other refusal here "
-       "uses — returning 0 let a misspelled flag look like a day that ran")
+    # sys.argv is NEUTRALISED for the call, for two reasons. It stops the
+    # check depending on how the suite was launched; and MEASURED, an early
+    # version of this control re-entered `selftest()` under the mutant that
+    # ignores `argv` (sys.argv still held --selftest), so each level re-ran
+    # the whole suite AND spawned a child. The falsifier therefore asserts
+    # the MESSAGE, not just the code: both paths return 2, and only the text
+    # says which argv was read.
+    import contextlib as _cl, io as _io
+    _sv = list(sys.argv)
+    try:
+        sys.argv = ["be_forward_day.py"]
+        _out = _io.StringIO()
+        with _cl.redirect_stdout(_out):
+            _rc_usage = main([])
+            _rc_day = main(["--forward-day"])
+        _txt = _out.getvalue()
+    finally:
+        sys.argv = _sv
+    ok(_rc_usage == 2 and _rc_day == 2,
+       f"BE34-R4 a usage error RETURNS 2, the code every other refusal here "
+       f"uses (got {_rc_usage}/{_rc_day}) — returning 0 let a misspelled "
+       f"flag look to a caller like a day that ran")
+    ok("usage: be_forward_day.py" in _txt
+       and "needs a day token" in _txt,
+       f"BE34-R4 and the message matches the argv PASSED, not the process's "
+       f"own — `main` that ignored its parameter would answer both calls "
+       f"from sys.argv and print the same text twice")
 
     # ---- ROUND 5, the AUDIT's own finding: five mutants survived --------
     # Every one of them was an edit that leaves a HEALTHY day's numbers
@@ -2145,11 +2169,27 @@ def selftest() -> int:
     return 0
 
 
+def _child_count(r) -> int:
+    """The count a spawned child printed, or None if it printed none."""
+    m = re.search(r"be_forward_day selftest: (\d+) checks OK",
+                  r.stdout + r.stderr)
+    return int(m.group(1)) if m else None
+
+
+def _launch_parity(rc: int, child: int, expect: int) -> bool:
+    """ONE predicate for both spawns, so weakening it fails the known-bad."""
+    return rc == 0 and child == expect
+
+
 def _selftest_launch(checks: int, ok) -> int:
     """Green under BOTH launchers, asserted rather than assumed."""
-    import os, subprocess
+    import os, subprocess, tempfile as _tf
     if os.environ.get("BE_FORWARD_LAUNCH_CHECK") == "1":
         return checks
+    # The child returns from HERE without adding a check, so its total is
+    # exactly the count at this point -- captured, not re-derived from the
+    # increment order below.
+    at_entry = checks
     env = dict(os.environ, BE_FORWARD_LAUNCH_CHECK="1")
     # BE34-R3: the tree of THIS FILE, never a hardcoded root. `cwd=REPO` made
     # every worktree spawn the SHARED tree's module, so the child checked a
@@ -2160,17 +2200,38 @@ def _selftest_launch(checks: int, ok) -> int:
                         "live.pm_research.be_forward_day", "--selftest"],
                        cwd=str(tree), env=env, capture_output=True,
                        text=True, timeout=900)
-    m = re.search(r"be_forward_day selftest: (\d+) checks OK",
-                  r.stdout + r.stderr)
-    child = int(m.group(1)) if m else None
-    # ONE check, deliberately: rc AND parity together, so the child's count is
-    # exactly the parent's minus this very check -- which is the parity the
-    # guard is named for. Splitting it in two would make "minus one" false.
-    ok(r.returncode == 0 and child == checks,
-       f"launch: GREEN under the PACKAGE launch of {tree}, and the child "
-       f"counted {child} = this parent's {checks} (its total is ours minus "
-       f"this check) — an rc alone cannot tell a child running THIS file "
-       f"from one running another tree's. Child tail: "
+    child = _child_count(r)
+    # THE COMPARISON MUST BE ABLE TO FAIL. In a single tree the parent and the
+    # child run the SAME file, so `child == checks` is a tautology there and
+    # three mutations of it survived a full audit. A second spawn against a
+    # DELIBERATELY DIVERGENT stub tree gives the predicate something it must
+    # reject, and both spawns go through the same `_launch_parity`, so a
+    # mutation that weakens the comparison fails the known-bad.
+    with _tf.TemporaryDirectory() as _td:
+        _stub = Path(_td) / "live/pm_research"
+        _stub.mkdir(parents=True)
+        (_stub / "__init__.py").write_text("")
+        (Path(_td) / "live/__init__.py").write_text("")
+        (_stub / "be_forward_day.py").write_text(
+            "print('be_forward_day selftest: 4242 checks OK')\n")
+        _rs = subprocess.run([sys.executable, "-m",
+                              "live.pm_research.be_forward_day", "--selftest"],
+                             cwd=_td, env=env, capture_output=True,
+                             text=True, timeout=120)
+        _cs = _child_count(_rs)
+    # ONE check holding BOTH directions. Written as two, the negative half
+    # could be weakened to something that cannot fail and nothing would
+    # notice -- which is what a mutation of it proved. Inside one condition,
+    # weakening the predicate breaks the positive or the negative side.
+    ok(_launch_parity(r.returncode, child, at_entry)
+       and _cs == 4242 and _cs != child
+       and not _launch_parity(_rs.returncode, _cs, at_entry),
+       f"launch: GREEN under the PACKAGE launch of {tree}, the child counted "
+       f"{child} = this parent's count on entry ({at_entry}) so its total is "
+       f"ours minus this one check — AND a child spawned from another tree "
+       f"reports {_cs} and the same predicate REFUSES it. Both halves are "
+       f"needed: in one tree the parent and the child are the same file, so "
+       f"the comparison alone is a tautology. Child tail: "
        f"{(r.stdout + r.stderr).strip()[-300:]!r}")
     checks += 1
     return checks
