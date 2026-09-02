@@ -4,6 +4,68 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T15:33Z (MEM ROUND 40 -- A COUNT THAT DEPENDS ON SOMEBODY ELSE'S
+  UNCOMMITTED FILE). R-448 swept. BE ROUND 5 REVIEW RELEASED (d990162, 314
+  lines) for baa986d, NO HOLD, and BE34-R2 CLOSED AT THE ARTIFACT rather than in
+  the code alone: three runs into one outdir yield base + .1 + .2 with the base
+  BYTE-IDENTICAL throughout, where rounds 3-4 left one file replaced in place;
+  "same run" is rec["_receipt_path"], an IN-MEMORY key STRIPPED FROM EVERY
+  WRITTEN RECEIPT (:1013, :1019, :1037, :1042 -- I read all four), not a
+  timestamp, pid or file name, which is why three runs inside one second still
+  produce three distinct files. ALL THREE FINDINGS REPRODUCE AT THE PINNED
+  BYTES: BE5-R1, _flush (:996) computes the next free .N but records
+  supersedes_receipt.path as p, THE CANONICAL BASE (:1029-1030), whatever N is
+  -- so with base/.1/.2 both successors name the base, the supersession graph is
+  a STAR, and "which is current" is answerable only by sorting filenames;
+  BE5-R2, DECISION_ALLOWLIST (:954) has ZERO membership assertions (grepped)
+  while the suite asserts excused_paths == ["gates[].gate"] (:1781), which
+  reports what THIS EMISSION USED, so a second excused path leaves the suite
+  green; BE5-R3, the module ships NO mutation audit -- the word "mutation"
+  occurs ONCE, in a comment -- so "47/47 killed" is a report in a filing and the
+  4-vs-5 I narrowed last round is UNSETTLEABLE BY ANY READER. BE5-R3 CARRIES THE
+  STRUCTURAL MORAL: the two-way rebuild pins 90036b7's bytes (4c0425c5) while
+  47/47 is reported at baa986d's (65da7ae0), so THE REBUILD EVIDENCE DOES NOT
+  CARRY ACROSS THE COMMIT IT WAS MADE AT; closure is rule 15 at the HARNESS
+  level -- ship the mutant table, assert survivors == [] in the suite, clear the
+  cache before each execution (R-446) -- which is what the DE modules already do
+  and why DE's counts can be re-derived by anyone. THE COUNT CORRECTION IS THE
+  SHARPEST ITEM AND I CONFIRMED THE MECHANISM MYSELF: _selftest_launch spawns a
+  child with BE_FORWARD_LAUNCH_CHECK=1 and cwd=REPO, the child skips the spawn
+  and the parent adds the launch check, so 84 IS THE REPRODUCIBLE FIGURE AT
+  baa986d AND THE 85TH IS THE SPAWN, whose child reads THE SHARED TREE'S FILE,
+  not the pinned one (BE34-R3). Today that file is DIRTY with BE's round-6 WIP:
+  committed HEAD 8a851eae, worktree e6cda52f, the pin 65da7ae0 -- and running
+  the tree right now gives 94 full / 92 with the spawn skipped, a TWO-check
+  launch contribution, not one. SO NO COUNT TAKEN FROM THAT FILE TODAY IS A
+  COMMITTED FIGURE AT ALL, and Q-BE-230's "85" holds only while the shared tree
+  equals the pin; that is BE34-R3 stated as a number rather than as a shape, and
+  round 6 closing it is what makes any of these counts reproducible. TWO RULINGS
+  ADOPTED, the first reframing what a gate is: require_verified() is the gate BY
+  DATA DEPENDENCY -- its return value is consumed, so deleting the production
+  call is NameError, RC 1, NOT A SILENT BYPASS, and faking the result is red at
+  the PROVENANCE conjunct, the one BE's own pair logic cannot hold; the
+  exception-type assertion is the SMALLER half of why. General form worth
+  keeping: A CALL WHOSE RESULT IS CONSUMED CANNOT BE DELETED QUIETLY; A CALL MADE
+  ONLY FOR ITS SIDE EFFECT CAN. Second ruling: the ONE excused path's SHAPE IS
+  RIGHT (path-bound, string-typed, receipt-reported, vocabulary borrowed by
+  value) and its weakness is GOVERNANCE -- growth invisible until used -- which
+  is precisely BE5-R2. ROUTING AND WHY IT IS ORDERED THIS WAY: BE ROUND 7 =
+  BE5-R1 + R2 + R3, ONE BATCH, dispatched when Q-BE-231 lands, BEFORE tonight's
+  read (three one-edit closures plus the shipped audit; no run against a real
+  day; nothing under derived/); THE DURABLE LANDING BECOMES BE ROUND 8, AFTER
+  the 00:14Z read -- the landing is a FIRST WRITE INTO AN EMPTY TARGET so
+  BE5-R1's successor naming never touches it, but the driver that lands it
+  should already carry the audit and the pinned allowlist, which is why the
+  order is this way round. MY check#18 RESIDUAL HAS A HOME: it sits inside the
+  reviewer's round-24 ITEM 4 (consistency across every message that prints a
+  line), so it reaches DE through that review or round 25 -- recorded there, not
+  re-filed. ROSTER: BE34-R1/R3/R4/R5 -> BE r6 (row pending); BE5-R1/R2/R3 -> BE
+  r7 (staged); DA12-R1 -> DA r14 (held, verified); DE22-R1 -> DE r24 (verified);
+  CO-8 and the --require-no-skips shape -> after tonight. Reviewer: DE 23 (in
+  flight) -> DE 24 -> DA 13+14 -> BE 6 -> BE 7. USER decisions SIX RULED, NONE
+  OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; Phase-4 gated; R-419 revocable.
+  PRIOR:
   2026-09-02T15:28Z (MEM ROUND 39 -- THE NUMBERS THAT MOVE, AND THE ONE MESSAGE
   THAT STILL DOES NOT SAY WHICH KIND IT PRINTS). R-447 swept. DE ROUND 24
   VERIFIED at e0d1e9f: 168 checks reproduced here rc 0, the real register's R-6
@@ -111,75 +173,6 @@ updated: >-
   round 23, then DE round 24; DE round 24, BE round 6 and DA round 14 (held) in
   flight. USER decisions: SIX RULED, NONE OPEN. UNCHANGED: G=1/5; the 011 family
   12 of 24 with Q4 failing; the sequencing rule; Phase-4 gated; R-419 revocable.
-  PRIOR:
-  2026-09-02T15:06Z (MEM ROUND 37 -- THE SAME BYTES, FROM A DIFFERENT DRIVER).
-  R-444 and R-445 swept. THE 09-01 SCORE OF RECORD REPRODUCES BYTE-FOR-BYTE and
-  I ran cmp, not the report: BE's fwd6/ re-run -- driver sha 4c0425c578e36b2a
-  (the 90036b7 file), a commit and a rebuilt file after the run that produced
-  the record -- writes a sealed scores file sha aca22317ab06adbf that is
-  cmp-EQUAL to fwd5/'s. The receipts DIFFER (a568346660a3b4db, 20,895 B against
-  14,022 B) and that is the CORRECT shape: the receipt carries provenance,
-  counts and identities, which grew with round 5's disclosures; the sealed file
-  carries the values, which did not move. A reproduction that changed the
-  receipt and not the scores is the one you want. 09-02 refusal receipt
-  dd730f1aba7c67af; supersedes_receipt absent (first write of the run).
-  TONIGHT'S PREFLIGHT LINE IS STALE AND THE USEFUL PART IS KNOWING HOW STALE:
-  the shared tree's da_governed_verdict_preflight.py hashes to 6a15ed5dd25513b7,
-  BYTE-IDENTICAL TO fadc986 (round-9 vintage, verified by hash not by reading),
-  with NO ruled/still_open split at all -- it prints register_ids_transcribed
-  (:340) with THREE entries each labelled "-- USER". So the 00:14Z run is stale
-  about R-424's FOUR rulings as well as R-442's: a KNOWN-STALE PROVENANCE LINE
-  of round-9 vintage, NOT three live open decisions. THE RULED STATE IS THE
-  REGISTER'S: SIX RULED, NONE OPEN. R-402 working as designed, written down so
-  nobody reading tonight's artifact tomorrow mistakes a vintage for a status.
-  THE FINDING I RAISED LAST ROUND IS CLOSED, AND CLOSED GENERALLY: at DA's held
-  e384792 freeze_disposition moves into `ruled` with R-442's words, still_open
-  == {}, and _assert_decisions_coherent (:121, called from the production path
-  at :428) makes the contradiction UNREPRESENTABLE -- any key in BOTH halves
-  refuses naming it, any pre-ruling phrase surviving in the block refuses
-  quoting it; its docstring names the instance ("which is how
-  freeze_disposition read as 'awaiting the USER's word' for the whole of
-  R-442's afternoon"). A one-key fix would have left the same trap for the next
-  ruling. The guard's own first version was RULE 17's CLASS AGAIN -- driven by
-  every check, called by nothing -- closed by poisoning the phrase list with a
-  string the real block carries so only the production call can raise; THIRD
-  TIME that class has been met in this one file. TWO REGISTER-DISCIPLINE FACTS
-  VERIFIED RATHER THAN TAKEN: 768465a is EXACTLY one insertion and one deletion,
-  a single -/+ pair on the Q-BE-230 row, so the row was REWRITTEN IN PLACE where
-  the register's rows are append-only and rule 13's shape is a superseding row
-  (nothing lost, git keeps both; recorded, not adjudicated); and on the row's own
-  numbers the parenthetical reads 50 mutants -> 5 survived, 49 -> 3, 47 -> 47/47
-  killed while the body says the first audit left 4 and the second 3, so THE
-  SECOND AND THIRD PASSES AGREE AND THE DISAGREEMENT IS ISOLATED TO THE FIRST,
-  5 against 4 -- stated precisely because it tells BE round 6 where to look.
-  Q-BE-230's disposition column calls the freeze disposition "the ONLY open USER
-  decision" TWICE with an as-of of 14:52Z, FIFTEEN MINUTES AFTER R-442 ruled it;
-  BE had not read R-442; the register's state governs and BE round 6 supersedes
-  the column in band; the decisions table stays SIX RULED, NONE OPEN. BE34-R2 IS
-  GENUINELY CLOSED and I read the code, not the claim: an existing receipt is
-  KEPT byte-identical and the run takes a NUMBERED SUCCESSOR carrying a
-  supersedes_receipt block with the prior path, its sha and the reason, driven by
-  a selftest asserting the successor exists and that the recorded sha equals the
-  kept file's. COUNTS REPRODUCED HERE AT HEAD: ratification 160, admissible 87,
-  driver 85, each rc 0. RR5-1/RR5-2 and RR7-1/RR7-2 are CLOSED (e8a9480) and I
-  checked my own files for a line still staging them: THERE IS NONE -- the single
-  mention is a historic entry recording that RR7-1/RR7-2 were filed NOT HOLDING,
-  true when written and kept as provenance. DE'S METHOD FACT DESERVES TO OUTLIVE
-  ITS ROUND: a flip mutant and its restore differed by ONE CHARACTER -- same
-  size, same mtime second -- so __pycache__ kept executing the MUTANT's bytecode
-  and the suite failed on a CORRECT file; every mutant since clears the cache on
-  both sides. A mutation harness that does not invalidate bytecode is measuring
-  the wrong file, and this failure mode is a false RED, the survivable direction;
-  the same collision with the signs reversed would have been a false GREEN.
-  SEATS: DA rounds 13 (e384792, 39) and 14 (DA12-R1) held; DE rounds 22 (92fc615,
-  160) and 23 (a83083a, 87) landed and DE on DELIBERATE standby; BE round 6 in
-  flight; reviewer on DE round 22 then BE round 5. DA's session-local 00:06Z
-  standby wait was KILLED at ~14:43Z, the THIRD such kill this session, cause
-  unknown, and DA is not re-arming: the audited legs are the BOX-LEVEL timers
-  (da-midnight-verify.timer 00:06Z, co-preflight-20260902.timer 00:14Z), exactly
-  as Q-MEM-3 found when both session-local legs proved invisible to crontab and
-  systemctl. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
-  sequencing rule; Phase-4 gated; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3773,7 +3766,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T15:28Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T15:33Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are

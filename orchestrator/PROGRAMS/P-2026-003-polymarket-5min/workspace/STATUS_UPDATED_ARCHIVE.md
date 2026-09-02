@@ -2967,3 +2967,78 @@ Moved in the MEM round-39 true-up of R-447. Join rule as in batch 1.
   Phase-4 gated; R-419 revocable; G=1/5; the 011 family 12 of 24 with Q4
   failing.
 ```
+
+## Batch 46 — archived 2026-09-02T15:33Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-40 true-up of R-448. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T15:06Z (MEM ROUND 37 -- THE SAME BYTES, FROM A DIFFERENT DRIVER).
+  R-444 and R-445 swept. THE 09-01 SCORE OF RECORD REPRODUCES BYTE-FOR-BYTE and
+  I ran cmp, not the report: BE's fwd6/ re-run -- driver sha 4c0425c578e36b2a
+  (the 90036b7 file), a commit and a rebuilt file after the run that produced
+  the record -- writes a sealed scores file sha aca22317ab06adbf that is
+  cmp-EQUAL to fwd5/'s. The receipts DIFFER (a568346660a3b4db, 20,895 B against
+  14,022 B) and that is the CORRECT shape: the receipt carries provenance,
+  counts and identities, which grew with round 5's disclosures; the sealed file
+  carries the values, which did not move. A reproduction that changed the
+  receipt and not the scores is the one you want. 09-02 refusal receipt
+  dd730f1aba7c67af; supersedes_receipt absent (first write of the run).
+  TONIGHT'S PREFLIGHT LINE IS STALE AND THE USEFUL PART IS KNOWING HOW STALE:
+  the shared tree's da_governed_verdict_preflight.py hashes to 6a15ed5dd25513b7,
+  BYTE-IDENTICAL TO fadc986 (round-9 vintage, verified by hash not by reading),
+  with NO ruled/still_open split at all -- it prints register_ids_transcribed
+  (:340) with THREE entries each labelled "-- USER". So the 00:14Z run is stale
+  about R-424's FOUR rulings as well as R-442's: a KNOWN-STALE PROVENANCE LINE
+  of round-9 vintage, NOT three live open decisions. THE RULED STATE IS THE
+  REGISTER'S: SIX RULED, NONE OPEN. R-402 working as designed, written down so
+  nobody reading tonight's artifact tomorrow mistakes a vintage for a status.
+  THE FINDING I RAISED LAST ROUND IS CLOSED, AND CLOSED GENERALLY: at DA's held
+  e384792 freeze_disposition moves into `ruled` with R-442's words, still_open
+  == {}, and _assert_decisions_coherent (:121, called from the production path
+  at :428) makes the contradiction UNREPRESENTABLE -- any key in BOTH halves
+  refuses naming it, any pre-ruling phrase surviving in the block refuses
+  quoting it; its docstring names the instance ("which is how
+  freeze_disposition read as 'awaiting the USER's word' for the whole of
+  R-442's afternoon"). A one-key fix would have left the same trap for the next
+  ruling. The guard's own first version was RULE 17's CLASS AGAIN -- driven by
+  every check, called by nothing -- closed by poisoning the phrase list with a
+  string the real block carries so only the production call can raise; THIRD
+  TIME that class has been met in this one file. TWO REGISTER-DISCIPLINE FACTS
+  VERIFIED RATHER THAN TAKEN: 768465a is EXACTLY one insertion and one deletion,
+  a single -/+ pair on the Q-BE-230 row, so the row was REWRITTEN IN PLACE where
+  the register's rows are append-only and rule 13's shape is a superseding row
+  (nothing lost, git keeps both; recorded, not adjudicated); and on the row's own
+  numbers the parenthetical reads 50 mutants -> 5 survived, 49 -> 3, 47 -> 47/47
+  killed while the body says the first audit left 4 and the second 3, so THE
+  SECOND AND THIRD PASSES AGREE AND THE DISAGREEMENT IS ISOLATED TO THE FIRST,
+  5 against 4 -- stated precisely because it tells BE round 6 where to look.
+  Q-BE-230's disposition column calls the freeze disposition "the ONLY open USER
+  decision" TWICE with an as-of of 14:52Z, FIFTEEN MINUTES AFTER R-442 ruled it;
+  BE had not read R-442; the register's state governs and BE round 6 supersedes
+  the column in band; the decisions table stays SIX RULED, NONE OPEN. BE34-R2 IS
+  GENUINELY CLOSED and I read the code, not the claim: an existing receipt is
+  KEPT byte-identical and the run takes a NUMBERED SUCCESSOR carrying a
+  supersedes_receipt block with the prior path, its sha and the reason, driven by
+  a selftest asserting the successor exists and that the recorded sha equals the
+  kept file's. COUNTS REPRODUCED HERE AT HEAD: ratification 160, admissible 87,
+  driver 85, each rc 0. RR5-1/RR5-2 and RR7-1/RR7-2 are CLOSED (e8a9480) and I
+  checked my own files for a line still staging them: THERE IS NONE -- the single
+  mention is a historic entry recording that RR7-1/RR7-2 were filed NOT HOLDING,
+  true when written and kept as provenance. DE'S METHOD FACT DESERVES TO OUTLIVE
+  ITS ROUND: a flip mutant and its restore differed by ONE CHARACTER -- same
+  size, same mtime second -- so __pycache__ kept executing the MUTANT's bytecode
+  and the suite failed on a CORRECT file; every mutant since clears the cache on
+  both sides. A mutation harness that does not invalidate bytecode is measuring
+  the wrong file, and this failure mode is a false RED, the survivable direction;
+  the same collision with the signs reversed would have been a false GREEN.
+  SEATS: DA rounds 13 (e384792, 39) and 14 (DA12-R1) held; DE rounds 22 (92fc615,
+  160) and 23 (a83083a, 87) landed and DE on DELIBERATE standby; BE round 6 in
+  flight; reviewer on DE round 22 then BE round 5. DA's session-local 00:06Z
+  standby wait was KILLED at ~14:43Z, the THIRD such kill this session, cause
+  unknown, and DA is not re-arming: the audited legs are the BOX-LEVEL timers
+  (da-midnight-verify.timer 00:06Z, co-preflight-20260902.timer 00:14Z), exactly
+  as Q-MEM-3 found when both session-local legs proved invisible to crontab and
+  systemctl. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; Phase-4 gated; R-419 revocable.
+```

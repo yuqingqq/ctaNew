@@ -1,12 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T15:28Z — **THE DUPLICATED REF IS CLOSED AS RULED**: DE round
-24 at `e0d1e9f` **reports** `R-6` (0-based **1782/9508**) instead of resolving it
-silently, keeps the FIRST occurrence **by rule**, and refuses only where a
-duplicate can reach an answer — **168 checks reproduced here, every live answer
-unchanged.** Those line numbers **MOVE with every filed Q-row and are recounted,
-never pinned.** DA round 14 held at `801eb31` (**23 + 15 = 38**, recomputed here);
-BE round 6's code is at `faaabdc` with its **row pending**. **SIX RULED, none
+Updated: 2026-09-02T15:33Z — **BE round 5 RELEASED (`d990162`) and BE34-R2 is
+closed at the artifact**: three runs into one outdir give base/`.1`/`.2` with the
+base byte-identical, and "same run" is an **in-memory key stripped from every
+written receipt**. Three LOW-MED findings **BE5-R1/R2/R3**, each reproduced at
+the pinned bytes here, go to **BE round 7 BEFORE tonight's read**; the durable
+landing becomes **round 8, after it**. **The suite count at that pin is 84, not
+85** — the 85th is the spawn that reads the shared tree. **SIX RULED, none
 open.**
 
 ## READ FIRST — current project handoff
@@ -719,7 +719,10 @@ launchers at **235/19**.
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
 | **DA round 13** | **HELD** at `e384792` (chain `3a89e6c`→`e292439`→`636a455`→`e384792`) — preflight **39**; `freeze_disposition` moves to `ruled`, `still_open == {}`, and a **coherence guard** makes the contradiction unrepresentable |
 | **DA round 14** | **HELD and VERIFIED** at `801eb31` — DA12-R1 closed, twinning **both directions**, **23 + 15 = 38** and `--falsify` 39 (recomputed here in a parity tree), the one exclusion **named with a reproduced reason**. A one-assertion scope deviation **ACCEPTED in-batch** |
+| **BE round 5 review** | **RELEASED** (`d990162`) for `baa986d` — **BE34-R2 CLOSED at the artifact**; two rulings adopted; three LOW-MED findings **BE5-R1/R2/R3** → BE round 7 |
 | **BE round 6** | code at `faaabdc`; **row Q-BE-231 PENDING** — not verified until the row lands (rule 18) |
+| **BE round 7** | **STAGED** — BE5-R1/R2/R3 as one batch, dispatched when the row lands, **BEFORE tonight's read** |
+| **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
@@ -754,9 +757,10 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **BE34-R2 CLOSED** at `90036b7` (an existing receipt is KEPT
-byte-identical and the run takes a numbered successor carrying `supersedes_receipt`
-— verified here); **BE34-R1/R3/R4/R5** → **BE round 6, in flight**;
+**Open findings:** **BE34-R2 CLOSED** at `90036b7` and **closed at the artifact**
+in the round-5 review (three runs into one outdir → base/`.1`/`.2`, the base
+byte-identical throughout); **BE34-R1/R3/R4/R5** → **BE round 6** (row pending);
+**BE5-R1/R2/R3** → **BE round 7** (staged, before tonight's read);
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
 `a83083a`; **DE22-R1 CLOSED** at `e0d1e9f`, queued for review; **DA12-R1** → DA round 14
 (held);
@@ -778,9 +782,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **BE round 5** at `baa986d` (in flight) →
-**DE round 23** at `a83083a` → **DE round 24** at `e0d1e9f` → **DA rounds 13+14**
-at `801eb31` → **BE round 6** when its row lands. All three requests are filed. **Released so far:** BE rounds 3–4
+**The reviewer's queue, in order:** **DE round 23** at `a83083a` (in flight) →
+**DE round 24** at `e0d1e9f` → **DA rounds 13+14** at `801eb31` → **BE round 6**
+when its row lands → **BE round 7** after that. **BE round 5's review is
+RELEASED** (`d990162`). **Released so far:** BE rounds 3–4
 (`1d9c543`), DA rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19
 (`a558356`), 20 (`819d225`), 21 (`533e38c`) and 22 (`8df60bf`).
 
@@ -1585,6 +1590,80 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~15:33Z (MEM) — A COUNT THAT DEPENDS ON SOMEBODY ELSE'S
+### UNCOMMITTED FILE
+
+**R-448 swept.** BE round 5 is RELEASED at `baa986d` with no hold, **BE34-R2 is
+closed at the artifact** rather than in the code alone — three runs into one
+outdir yield base + `.1` + `.2` with the base byte-identical throughout, where
+rounds 3–4 left one file replaced in place. The part worth keeping is *how* "same
+run" is established: `rec["_receipt_path"]`, an **in-memory key stripped from
+every written receipt** (`:1013`, `:1019`, `:1037`, `:1042` — I read all four) —
+**not a timestamp, not a pid, not a file name**, which is why three runs inside
+one second still produce three distinct files.
+
+**All three findings reproduce at the pinned bytes.** **BE5-R1**: `_flush`
+(`:996`) computes the next free `.N` but records `supersedes_receipt.path` as
+**`p`, the canonical base** (`:1029-1030`), whatever N is — so with base/`.1`/`.2`
+both successors name the base, the supersession graph is a **star**, and "which
+is current" is answerable only by sorting filenames. **BE5-R2**:
+`DECISION_ALLOWLIST` (`:954`) has **zero membership assertions** — I grepped —
+while the suite asserts `excused_paths == ["gates[].gate"]` (`:1781`), which
+reports what *this emission used*, so a second excused path leaves the suite
+green. **BE5-R3**: the module ships **no** mutation audit — the word "mutation"
+occurs **once**, in a comment — so "47/47 killed" is a report in a filing and the
+4-vs-5 I narrowed last round is **unsettleable by any reader**.
+
+**BE5-R3 is the one with a structural moral.** The two-way rebuild pins
+`90036b7`'s bytes (`4c0425c5…`) while 47/47 is reported at `baa986d`'s
+(`65da7ae0…`), so **the rebuild evidence does not carry across the commit it was
+made at.** The closure is rule 15 at the harness level — ship the mutant table,
+assert `survivors == []` in the suite, clear the cache before each execution
+(R-446) — which is what the DE modules already do and why DE's counts can be
+re-derived by anyone.
+
+**The count correction is the sharpest item, and I confirmed the mechanism
+myself.** `_selftest_launch` spawns a child with `BE_FORWARD_LAUNCH_CHECK=1`,
+`cwd=REPO`; the child skips the spawn and the parent adds the launch check. So
+**84 is the reproducible figure at `baa986d` and the 85th is the spawn — whose
+child reads the SHARED TREE's file, not the pinned one** (BE34-R3). Today that
+file is **dirty with BE's round-6 WIP**: committed HEAD is `8a851eae…`, the
+worktree is **`e6cda52f…`**, the pin was `65da7ae0…`. Running the tree right now
+gives **94 full / 92 with the spawn skipped** — a **two**-check launch
+contribution, not one. **So no count taken from that file today is a committed
+figure at all**, and Q-BE-230's "85" holds only while the shared tree equals the
+pin. That is BE34-R3 stated as a number rather than as a shape, and round 6
+closing it is what makes any of these counts reproducible.
+
+**Two rulings adopted, and the first one reframes what a gate is.**
+`require_verified()` is the gate **by DATA DEPENDENCY** — its return value is
+consumed, so deleting the production call is `NameError`, **rc 1, not a silent
+bypass**, and faking the result is red at the **provenance** conjunct, the one
+BE's own pair logic cannot hold. The exception-type assertion is the *smaller*
+half of why it works. Worth keeping as a general form: **a call whose result is
+consumed cannot be deleted quietly; a call made only for its side effect can.**
+The second ruling: the single excused path's **shape is right** (path-bound,
+string-typed, receipt-reported, vocabulary borrowed by value) and its weakness is
+**governance** — growth invisible until used — which is precisely BE5-R2.
+
+**Routing, and why it is ordered this way.** **BE round 7 = BE5-R1 + R2 + R3, one
+batch, dispatched when Q-BE-231 lands, BEFORE tonight's read** — three one-edit
+closures plus the shipped audit, no run against a real day, nothing under
+`derived/`. **The durable landing becomes BE round 8, AFTER the 00:14Z read.**
+The landing is a **first write into an empty target**, so BE5-R1's successor
+naming never touches it — but the driver that lands it should already carry the
+audit and the pinned allowlist, which is the reason the order is this way round
+and not the other.
+
+**My `check#18` residual has a home.** It sits inside the reviewer's round-24
+**item 4** — consistency across every message that prints a line — so it reaches
+DE through that review or round 25. **Recorded there, not re-filed.**
+
+**Roster.** BE34-R1/R3/R4/R5 → BE r6 (row pending); BE5-R1/R2/R3 → BE r7
+(staged); DA12-R1 → DA r14 (held, verified); DE22-R1 → DE r24 (verified); CO-8
+and the `--require-no-skips` shape → after tonight. Reviewer: **DE 23 → DE 24 →
+DA 13+14 → BE 6 → BE 7.** **SIX RULED, none open.**
 
 ### 2026-09-02 ~15:28Z (MEM) — THE NUMBERS THAT MOVE, AND THE ONE MESSAGE THAT
 ### STILL DOES NOT SAY WHICH KIND IT PRINTS
