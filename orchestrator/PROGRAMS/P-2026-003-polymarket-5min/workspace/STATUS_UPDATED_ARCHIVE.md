@@ -2615,3 +2615,67 @@ Moved in the MEM round-33 true-up of R-439. Join rule as in batch 1.
   surviving with Q4 failing; development evidence; 1,344 of 1,875 supplied
   windows (71.7%) produce no score.
 ```
+
+## Batch 40 — archived 2026-09-02T14:26Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-34 true-up of R-440. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T14:05Z (MEM ROUND 31 -- A POSITIVE CONTROL THAT PASSED BECAUSE ITS
+  TARGET WAS ABSENT). R-437 swept; DE's count reproduced under both launchers.
+  DE ROUND 20 VERIFIED at 0778918 (Q-DE-38 at 235e444; de_ratification_check.py
+  only, +139/-17; de_admissible_windows.py byte-identical to 2f6da2c):
+  ratification 150 -> 155, rc 0 each way, audit 29 cases / 23 sites with
+  coverage True, EXPECTED_SITE 29, markers 29 UNIQUE; R-419 True/[]/[] on the
+  real register, R-418 still REFUSED FOR A NEW RUN, seam 1,875. AND THE
+  INTERESTING THING IS NOT THE CLOSURE BUT WHAT THE CLOSURE DISTURBED: A FIXTURE
+  CHANGED SIDES AND DE READ THE CHANGE AS EVIDENCE.
+  fixture_register(supersedes="R-418") had been a POSITIVE CONTROL, and it
+  PASSED ONLY BECAUSE R-418 IS ABSENT FROM THAT FIXTURE REGISTER -- nothing to
+  do with the property it was meant to demonstrate; under the new existence rule
+  it becomes THE KNOWN-BAD (:1558), with the positive control REBUILT ON A
+  TWO-ENTRY REGISTER WHERE THE TARGET EXISTS. THAT IS THIS WEEK'S CLASS SEEN
+  FROM THE OTHER END: we have been finding controls that CANNOT FAIL, and this
+  is a control that PASSED FOR THE WRONG REASON -- both are the same defect, THE
+  CHECK IS NOT ATTACHED TO THE PROPERTY, and only one of them ever looks
+  suspicious. WHEN A FIXTURE FLIPS ROLE UNDER A NEW RULE, THE FLIP IS EVIDENCE
+  ABOUT THE OLD FIXTURE, and DE treated it that way rather than quietly
+  re-labelling it. DE18-R1 CLOSED: check#16 (:832) refuses the entry under
+  check's OWN supersedes R-777, naming "R-902's own block" and "NO ENTRY R-777",
+  where the same string verified True/[] at db039a3 -- driven by an audit case
+  (under_check_dangling_supersedes) and in-suite. DE18-R2 CLOSED: the shape rule
+  moved from the first-fence branch into the OWN-BLOCK branch after check#8
+  (:771), so the coordinator's quotation-first fixture is REFUSED AS A QUOTATION
+  -- naming declares ref 'R-903' and WITHOUT "R-999's block" -- asserted ON THE
+  MESSAGE TEXT IN BOTH DIRECTIONS (:1672), because a refusal that names the
+  wrong thing is still wrong. DE18-R3 CLOSED BY DRIVING THE GUARD, NOT
+  ANNOTATING IT (:1528), and DE's reason applies this week's biggest lesson
+  PROSPECTIVELY: the guard defends an exported function's contract against a
+  direct caller, and ANNOTATING IT UNREACHABLE WOULD DECLARE A LIMIT THE MODULE
+  DOES NOT HAVE -- precisely the declared-blind failure, a list claiming a
+  limitation the code lacked, REFUSED BEFORE IT COULD BE WRITTEN DOWN. A seat
+  declining to create the exact defect the programme spent two rounds removing
+  is worth the line. FOUR COORDINATOR MUTANTS ON A FILE COPY, EACH RED BY NAME:
+  the existence rule neutralised (the DE18-R1 known-bad), parse_day coercing
+  (DE's own "fair mutant", caught by the direct-call known-bad), check#16's
+  marker renamed onto check#9 (the coverage assertion), and the EXPECTED_SITE
+  row dropped (the coverage assertion again). RESIDUALS A AND B ARE UNTOUCHED BY
+  DESIGN -- THE REVIEWER RULES FIRST -- which is the THIRD CONSECUTIVE ROUND in
+  which DE has left a measured question open rather than closing it, and R-436
+  is the argument for the discipline: the last question DE declined to close
+  came back as a RULED FINDING. THE REVIEW REQUEST (REQUEST_DE_ROUND_20_2026-09
+  -02.md, seven items) IS QUEUED FOURTH, and DE IS ON DELIBERATE STANDBY: round
+  21 is the DATA_ROOT split behind DA's landing after 00:14Z, and residuals A/B
+  await the round-19 ruling. REVIEWER QUEUE: DA round 11 IN FLIGHT, then DE
+  round 19, then BE rounds 3-4, then DE round 20. BE ROUND 5 AND THE DA-11
+  REVIEW ARE IN FLIGHT; DA IS HOLDING. ASSERTED THIS ROUND: ZERO FENCED
+  RATIFICATION BLOCKS IN BOTH STATE FILES, checked after every edit. OPEN
+  FINDINGS: DE18-R1..R3 CLOSED at 0778918 pending review; DE round 19's two
+  residuals with the reviewer, unruled; DA10-R1..R5 closed into the held DA
+  round 11 (e292439, unpushed, landing after the 00:14Z read as Q-DA-209); BE's
+  landing commit still owed. USER DECISIONS: FOUR RULED (R-424), ONE OPEN -- THE
+  FREEZE DISPOSITION ONLY (R-424 section 6); the 09-02 accrual call MECHANICAL
+  after 00:06Z. R-419 remains revocable by the USER. UNCHANGED: G=1/5; the 011
+  family is 12 of 24 surviving with Q4 failing; development evidence; 1,344 of
+  1,875 supplied windows (71.7%) produce no score.
+```

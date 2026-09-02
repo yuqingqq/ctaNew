@@ -1,10 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T14:16Z — **DE round 19 RELEASED, and both escalated
-residuals came back as findings** — the second is quantified: a **blank line**
-inside the limit block leaves **47% of it unread with the suite green**. That is
-**three for three** on questions DE declined to close itself. **ONE USER decision
-open: the freeze disposition.** Prior line: DA round 11 released as Q-DA-209.
+Updated: 2026-09-02T14:26Z — **DE round 21 VERIFIED at `0255b60` (84) and DA
+round 12 VERIFIED at the held object `636a455` (gates 22 → 36).** Both closures
+reproduce here. **One mutant stays green — the phrase conjunct neutralised in the
+declaration check's own ASSERTION** — reproduced independently and routed to the
+reviewer **as a question, not a finding**: a known-bad that falsifies the SUBJECT
+and one that mutates the ASSERTION prove different things. **ONE USER decision
+open: the freeze disposition.** Prior line: DE round 19 released, both residuals
+ruled findings.
 
 ## READ FIRST — current project handoff
 
@@ -650,10 +653,10 @@ launchers at **235/19**.
 | **DE round 19** | **VERIFIED** at `2f6da2c` and its **review RELEASED** — 75 → 79, DE17-R1/R2 closed, nine coordinator mutants dying by name. **Its two residuals came back RULED as findings** |
 | **DE round 20** | **VERIFIED** at `0778918` — DE18-R1..R3 and two rule-10 nits closed, **150 → 155** (reproduced here), four coordinator mutants dying by name. **Review request queued FOURTH** |
 | **DE round 19 review** | **RELEASED** (`a558356`) — DE17-R1/R2 close; **both residuals RULED as findings** (DE19-R1, DE19-R2) plus **DE19-R3** filed |
-| **DE round 21** | **FILED** at `0255b60` (Q-DE-39) — DE19-R1..R3 closed, `de_admissible_windows.py` only, **79 → 84**. Landed after this dispatch; **not yet coordinator-verified** |
+| **DE round 21** | **VERIFIED** at `0255b60` (Q-DE-39) — DE19-R1..R3 closed, `de_admissible_windows.py` only, **79 → 84** (reproduced here, both launchers). Four coordinator mutants red by name; **one assertion-mutant stays GREEN** → the reviewer, as a question |
 | **DE round 22** | the **DATA_ROOT split**, behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
-| **DA round 12** | **DISPATCHED and HELD** on top of `e292439`, five items. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
+| **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
 | **DE round 16** | **STAGED** behind DA round 10's landing and the r14 review: the CODE_ROOT/DATA_ROOT split on the **three** DE-owned files in the class (`de_admissible_windows` :64/:77, `de_ratification_check` :43, `de_lane4_results_doc`) — **counted at the tree; five other DE files are not in the class** — following DA's `_resolve_data_root` convention so the split is written **once** |
@@ -688,8 +691,8 @@ mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
 **Open findings:** **DE18-R1..R3 CLOSED** at `0778918`, pending review;
-**DE19-R1..R3** → DE round 21 (the two residuals now **RULED as findings**);
-**DA11-R1..R2** → DA round 12 (held); **DA10-R1..R5 CLOSED** at `e292439`,
+**DE19-R1..R3 CLOSED** at `0255b60`, queued for review;
+**DA11-R1..R2 CLOSED** at `636a455`, held and queued; **DA10-R1..R5 CLOSED** at `e292439`,
 review released;
 **DE16-R1..R4** closed at `db039a3`, pending review; the **own-supersedes-
 nonentry residual** with the reviewer; **BE's landing** — the counts satisfy the
@@ -705,16 +708,19 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **BE rounds 3–4** at `248e99f` → **DE round
-20**. **DA round 11's and DE round 19's reviews are both done and released.**
+**The reviewer's queue, in order:** **BE rounds 3–4** at `248e99f` (in flight
+from 14:15Z) → **DE round 20** at `0778918` → **DE round 21** at `0255b60` →
+**DA round 12** at `636a455` → **BE round 5** (its request waits on the row).
+**DA round 11's and DE round 19's reviews are both done and released.**
 
 > **Item 1 of the BE 3–4 request is the one to watch:** the **"frozen bytes"
 > fact for the USER's open decision — *stated, not ruled*.** The freeze
 > disposition is the single open USER item, and its factual basis (code from the
 > commit; the data anchor bound only by its manifest sha) is being put on the
-> record by the reviewer rather than settled by it. **DE is on deliberate standby**: round 21 waits on DA's landing after
-00:14Z. **Residuals A/B are RULED** — now DE19-R1/R2, in round 21. **BE round 5
-is in flight; DA is holding.**
+> record by the reviewer rather than settled by it. **DE is on deliberate standby** with rounds 16–21 complete and three reviews
+queued: **round 22** — the DATA_ROOT split — waits on DA's landing after 00:14Z.
+**DA is holding deliberately** for the 00:06Z/00:14Z reads with `636a455` in
+hand. **BE round 5 is in flight.**
 
 **Q-BE-229 verified at the artifacts, and its confirming run reproduces the
 superseded one exactly where it matters:** **68 numeric fields shared with the
@@ -1505,6 +1511,87 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~14:26Z (MEM) — A KNOWN-BAD THAT MOVES THE WORLD AND ONE THAT
+### MOVES THE ASSERTION ARE DIFFERENT PROOFS
+
+**R-440 swept.** Two rounds verified, and the interesting thing this round is not
+a defect — it is a **methodological question the coordinator declined to answer
+by fiat and sent to the reviewer instead.**
+
+**DE round 21 verified at `0255b60`, reproduced here.** `EXPECTED_CHECKS = 84`,
+rc 0 under both launchers from the repo root. The DE19-R2 closure is exactly the
+shape that was ruled: **three structural anchors** — `THE DECLARED LIMIT`,
+`REFUSED (in the sets above)` and the full `DECLARED BLIND` heading — with
+`len(_limit)` **printed as a fact and asserted nowhere**. The known-bad reads
+**`1975 of 3752 chars (47% unread)`**, and the block is 3,752 rather than
+last round's 3,754 because a prose reword shortened it by two characters: **the
+same measurement, not a disagreeing one.** `_key_order` resolves to
+**`[64, 263, 621, 803]`** and its known-bad to `[604, 246, 64, 803]`.
+
+**The fix carries a guard against becoming the defect it fixes.** `len(_anchors)
+== 3` sits **inside the predicate**, with the reason written beside it: an
+emptied tuple would satisfy the check *and* its known-bad vacuously — *a control
+that cannot fail, built out of the fix for one.* That is the first time in this
+programme a fix has been shipped with the rule-16 failure mode of **its own new
+control** anticipated in the same commit.
+
+**The one green mutant — I reproduced it rather than relaying it.** Neutralising
+the **phrase conjunct inside the declaration check's own assertion** leaves the
+suite **GREEN at 84**. To know that green was the suite's property and not my
+harness's, I ran a second mutant in the same tree — `_anchors = ()` — and got
+**rc 1, red by name**. Both directions, on my own instrument, before writing the
+number down.
+
+**Why it is a question and not a finding.** The `_cut2` known-bad falsifies the
+**subject** — it rewords the phrase in a copy so the reader returns text the
+assertion cannot find it in. That proves the check **reads the world**. It does
+not prove the conjunct is **load-bearing in the check's own code**, which is what
+an assertion-mutant tests. **They are different proofs, and this suite ships only
+the first.** Whether subject-mutation is the standard here is a real question
+about what mutation testing is *for* — item 3 of the DE-21 request. Routing it
+beats ruling it: the same reflex that produced three findings out of three
+escalations.
+
+**DA round 12 verified statically at `636a455`** (held, unpushed, on `e292439`;
+four files). DA11-R1: `EXPECTED_CHECKS = 9` with a `skipped` list and
+`ran + skipped == 9` **raised before the summary prints**, so the constant in
+that line is unreachable unless the computed sum equals it — **checked, and NOT
+an instance of a count standing in for a check.** DA11-R2: the `-m` twins are
+**derived, not transcribed**, and the file says why — a second roster would go
+stale the first time a gate is added.
+
+**I recomputed the roster arithmetic at the held object rather than accepting
+22 → 36.** Roster **22**, derived twins **14**, total **36**. And the review
+request's own open item — which gates the derivation EXCLUDES — has a factual
+answer I can give now: **eight**, of which seven are two-argument script gates
+with no `--selftest` at all (`v5 heartbeat behaviour`, `v5 deadline falsifier`,
+`chain equivalence`, `chain differential fuzz`, `preflight mutation audit`,
+`v4 behaviour (git-extracted)`, `v4_1 mutation audit`) and the eighth is
+`tier1 normalisation`, **already the `-m` form.** So nothing with a module
+suite's shape is excluded. **Stated as MEM's computation; the reviewer still
+rules the item.**
+
+**Two citation details worth fixing in place, neither a defect.** The opt-in
+`--require-no-skips` lives in **`da_forward_day_verify.py`** at 2400/4526/4543/
+4579 — **not** in `v5_deploy_gates.py`, where the roster is, which is where a
+reader chasing bare line numbers would look first. And the membership conjunct is
+`da_blackout_mask.py:874`. Both confirmed by reading the four files at the
+commit; I record the filenames because line numbers without one is the exact
+shape that sent me to a dirty tree in round 18.
+
+**DA caught a measurement defect in its own instrument** — `… | tail -1;
+echo $?` read **rc 0 for an rc-1 case**, the pipe swallowing the exit code — and
+re-measured without the pipe. The instrument was wrong, not the code under test,
+and DA found it by checking the check.
+
+**Sequencing.** Reviewer queue: **BE 3–4 at `248e99f` (in flight) → DE 20 at
+`0778918` → DE 21 at `0255b60` → DA 12 at `636a455` → BE 5** once its row lands.
+BE round 5's file is committed at `90036b7` (+464/−4, 468 lines touched) **mid-
+batch with the row not yet filed** — nothing goes to BE while its batch is in
+flight (rule 18). **DE and DA are both on deliberate standby**, DA holding for
+the 00:06Z/00:14Z reads. **Q-DA-209 lands after the 00:14Z read with `636a455`
+as its content.** USER-open: the freeze disposition, still the only one.
 
 ### 2026-09-02 ~14:19Z (MEM) — THREE FOR THREE: EVERY QUESTION DE DECLINED
 ### TO CLOSE CAME BACK A FINDING

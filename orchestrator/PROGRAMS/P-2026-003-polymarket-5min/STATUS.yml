@@ -4,6 +4,57 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T14:26Z (MEM ROUND 34 -- A KNOWN-BAD THAT MOVES THE WORLD AND ONE
+  THAT MOVES THE ASSERTION ARE DIFFERENT PROOFS). R-440 swept. DE ROUND 21
+  VERIFIED at 0255b60, reproduced here: EXPECTED_CHECKS = 84, rc 0 under both
+  launchers from the repo root; DE19-R2 closed by THREE STRUCTURAL ANCHORS
+  (THE DECLARED LIMIT / REFUSED (in the sets above) / the full DECLARED BLIND
+  heading) with len(_limit) PRINTED AS A FACT AND ASSERTED NOWHERE -- the
+  ruled shape, not a length pin; its known-bad reads 1975 of 3752 chars (47%
+  unread), the block being 3,752 rather than round 33's 3,754 because a prose
+  reword shortened it by two characters -- THE SAME MEASUREMENT, NOT A
+  DISAGREEING ONE. DE19-R1's _key_order resolves to [64, 263, 621, 803] and
+  its known-bad to [604, 246, 64, 803]. THE FIX SHIPS A GUARD AGAINST BECOMING
+  THE DEFECT IT FIXES: len(_anchors) == 3 sits INSIDE the predicate because an
+  emptied tuple would satisfy both the check and its known-bad vacuously -- the
+  rule-16 failure mode of a NEW control anticipated in the same commit. ONE
+  MUTANT STAYS GREEN AND I REPRODUCED IT RATHER THAN RELAYING IT: the phrase
+  conjunct neutralised inside the declaration check's OWN ASSERTION leaves the
+  suite green at 84; to know that green was the suite's property and not my
+  harness's I ran _anchors = () in the same tree and got rc 1, RED BY NAME.
+  It is a QUESTION, NOT A FINDING, and correctly routed: the _cut2 known-bad
+  falsifies the SUBJECT, proving the check READS THE WORLD, which is a
+  different proof from an ASSERTION-mutant proving the conjunct is
+  LOAD-BEARING IN THE CHECK'S OWN CODE -- this suite ships only the first
+  (item 3 of the DE-21 request). DA ROUND 12 VERIFIED STATICALLY at 636a455
+  (held, unpushed, on e292439, four files): DA11-R1's ran + skipped == 9 is
+  RAISED BEFORE the summary prints, so the constant in that line is
+  unreachable unless the computed sum equals it -- CHECKED, and NOT an
+  instance of a count standing in for a check; DA11-R2's -m twins are DERIVED,
+  NOT TRANSCRIBED, and I recomputed the arithmetic at the held object rather
+  than accepting it: roster 22, twins 14, total 36. The request's own open
+  item -- which gates the derivation EXCLUDES -- has a factual answer now:
+  EIGHT, seven being two-argument script gates with no --selftest at all (v5
+  heartbeat behaviour, v5 deadline falsifier, chain equivalence, chain
+  differential fuzz, preflight mutation audit, v4 behaviour (git-extracted),
+  v4_1 mutation audit) and the eighth tier1 normalisation, ALREADY the -m
+  form, so nothing with a module suite's shape is excluded; stated as MEM's
+  computation, the reviewer still rules. TWO CITATION DETAILS FIXED IN PLACE,
+  neither a defect: --require-no-skips lives in da_forward_day_verify.py
+  (2400/4526/4543/4579), NOT in v5_deploy_gates.py where the roster is, and
+  the membership conjunct is da_blackout_mask.py:874 -- filenames recorded
+  because bare line numbers is the shape that sent me to a dirty tree in round
+  18. DA caught a defect in its OWN INSTRUMENT (a pipe swallowed the exit code:
+  rc 0 read for an rc-1 case) and re-measured without it. Reviewer queue: BE
+  3-4 at 248e99f (in flight) -> DE 20 at 0778918 -> DE 21 at 0255b60 -> DA 12
+  at 636a455 -> BE 5 once its row lands; BE round 5's file is committed at
+  90036b7 (+464/-4, 468 lines touched) mid-batch with the row not yet filed,
+  and nothing goes to BE in flight (rule 18). DE and DA both on DELIBERATE
+  standby, DA holding for the 00:06Z/00:14Z reads; Q-DA-209 lands after the
+  00:14Z read with 636a455 as its content. USER-open: the freeze disposition,
+  still the only one. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
+  with Q4 failing; development evidence.
+  PRIOR:
   2026-09-02T14:19Z (MEM ROUND 33 -- THREE FOR THREE: EVERY QUESTION DE
   DECLINED TO CLOSE CAME BACK A FINDING). R-439 swept. The reviewer RELEASED
   DE round 19 at 2f6da2c (filing a558356) and RULED both escalated residuals
@@ -90,64 +141,7 @@ updated: >-
   ONLY (R-424 section 6); the 09-02 accrual call MECHANICAL after 00:06Z. R-419
   remains revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of 24
   surviving with Q4 failing; development evidence; 1,344 of 1,875 supplied
-  windows (71.7%) produce no score. PRIOR:
-  2026-09-02T14:05Z (MEM ROUND 31 -- A POSITIVE CONTROL THAT PASSED BECAUSE ITS
-  TARGET WAS ABSENT). R-437 swept; DE's count reproduced under both launchers.
-  DE ROUND 20 VERIFIED at 0778918 (Q-DE-38 at 235e444; de_ratification_check.py
-  only, +139/-17; de_admissible_windows.py byte-identical to 2f6da2c):
-  ratification 150 -> 155, rc 0 each way, audit 29 cases / 23 sites with
-  coverage True, EXPECTED_SITE 29, markers 29 UNIQUE; R-419 True/[]/[] on the
-  real register, R-418 still REFUSED FOR A NEW RUN, seam 1,875. AND THE
-  INTERESTING THING IS NOT THE CLOSURE BUT WHAT THE CLOSURE DISTURBED: A FIXTURE
-  CHANGED SIDES AND DE READ THE CHANGE AS EVIDENCE.
-  fixture_register(supersedes="R-418") had been a POSITIVE CONTROL, and it
-  PASSED ONLY BECAUSE R-418 IS ABSENT FROM THAT FIXTURE REGISTER -- nothing to
-  do with the property it was meant to demonstrate; under the new existence rule
-  it becomes THE KNOWN-BAD (:1558), with the positive control REBUILT ON A
-  TWO-ENTRY REGISTER WHERE THE TARGET EXISTS. THAT IS THIS WEEK'S CLASS SEEN
-  FROM THE OTHER END: we have been finding controls that CANNOT FAIL, and this
-  is a control that PASSED FOR THE WRONG REASON -- both are the same defect, THE
-  CHECK IS NOT ATTACHED TO THE PROPERTY, and only one of them ever looks
-  suspicious. WHEN A FIXTURE FLIPS ROLE UNDER A NEW RULE, THE FLIP IS EVIDENCE
-  ABOUT THE OLD FIXTURE, and DE treated it that way rather than quietly
-  re-labelling it. DE18-R1 CLOSED: check#16 (:832) refuses the entry under
-  check's OWN supersedes R-777, naming "R-902's own block" and "NO ENTRY R-777",
-  where the same string verified True/[] at db039a3 -- driven by an audit case
-  (under_check_dangling_supersedes) and in-suite. DE18-R2 CLOSED: the shape rule
-  moved from the first-fence branch into the OWN-BLOCK branch after check#8
-  (:771), so the coordinator's quotation-first fixture is REFUSED AS A QUOTATION
-  -- naming declares ref 'R-903' and WITHOUT "R-999's block" -- asserted ON THE
-  MESSAGE TEXT IN BOTH DIRECTIONS (:1672), because a refusal that names the
-  wrong thing is still wrong. DE18-R3 CLOSED BY DRIVING THE GUARD, NOT
-  ANNOTATING IT (:1528), and DE's reason applies this week's biggest lesson
-  PROSPECTIVELY: the guard defends an exported function's contract against a
-  direct caller, and ANNOTATING IT UNREACHABLE WOULD DECLARE A LIMIT THE MODULE
-  DOES NOT HAVE -- precisely the declared-blind failure, a list claiming a
-  limitation the code lacked, REFUSED BEFORE IT COULD BE WRITTEN DOWN. A seat
-  declining to create the exact defect the programme spent two rounds removing
-  is worth the line. FOUR COORDINATOR MUTANTS ON A FILE COPY, EACH RED BY NAME:
-  the existence rule neutralised (the DE18-R1 known-bad), parse_day coercing
-  (DE's own "fair mutant", caught by the direct-call known-bad), check#16's
-  marker renamed onto check#9 (the coverage assertion), and the EXPECTED_SITE
-  row dropped (the coverage assertion again). RESIDUALS A AND B ARE UNTOUCHED BY
-  DESIGN -- THE REVIEWER RULES FIRST -- which is the THIRD CONSECUTIVE ROUND in
-  which DE has left a measured question open rather than closing it, and R-436
-  is the argument for the discipline: the last question DE declined to close
-  came back as a RULED FINDING. THE REVIEW REQUEST (REQUEST_DE_ROUND_20_2026-09
-  -02.md, seven items) IS QUEUED FOURTH, and DE IS ON DELIBERATE STANDBY: round
-  21 is the DATA_ROOT split behind DA's landing after 00:14Z, and residuals A/B
-  await the round-19 ruling. REVIEWER QUEUE: DA round 11 IN FLIGHT, then DE
-  round 19, then BE rounds 3-4, then DE round 20. BE ROUND 5 AND THE DA-11
-  REVIEW ARE IN FLIGHT; DA IS HOLDING. ASSERTED THIS ROUND: ZERO FENCED
-  RATIFICATION BLOCKS IN BOTH STATE FILES, checked after every edit. OPEN
-  FINDINGS: DE18-R1..R3 CLOSED at 0778918 pending review; DE round 19's two
-  residuals with the reviewer, unruled; DA10-R1..R5 closed into the held DA
-  round 11 (e292439, unpushed, landing after the 00:14Z read as Q-DA-209); BE's
-  landing commit still owed. USER DECISIONS: FOUR RULED (R-424), ONE OPEN -- THE
-  FREEZE DISPOSITION ONLY (R-424 section 6); the 09-02 accrual call MECHANICAL
-  after 00:06Z. R-419 remains revocable by the USER. UNCHANGED: G=1/5; the 011
-  family is 12 of 24 surviving with Q4 failing; development evidence; 1,344 of
-  1,875 supplied windows (71.7%) produce no score.
+  windows (71.7%) produce no score.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3741,7 +3735,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T14:19Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T14:26Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
