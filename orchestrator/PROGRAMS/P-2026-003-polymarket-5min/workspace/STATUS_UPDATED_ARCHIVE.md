@@ -2748,3 +2748,34 @@ Moved in the MEM round-35 true-up of R-441. Join rule as in batch 1.
   surviving with Q4 failing; development evidence; 1,344 of 1,875 supplied
   windows (71.7%) produce no score.
 ```
+
+## Batch 42 — archived 2026-09-02T14:44Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-36 true-up of R-442 and R-443. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T14:19Z (MEM ROUND 33 -- THREE FOR THREE: EVERY QUESTION DE
+  DECLINED TO CLOSE CAME BACK A FINDING). R-439 swept. The reviewer RELEASED
+  DE round 19 at 2f6da2c (filing a558356) and RULED both escalated residuals
+  as findings: DE19-R1 (LOW, the order check cites the prose and does not read
+  it) and DE19-R2 (LOW-MED, a blank line inside the limit block above
+  OVER-CAUGHT truncates the reader 3,754 -> 1,975 chars, 47% of the block
+  unread including the heading and both upper sections, suite green), plus
+  DE19-R3 (LOW, the declaration check's phrase conjunct has no in-suite
+  driver). With DE18's escalation that is three for three on questions DE
+  measured but declined to close -- escalating rather than self-closing has
+  been right every time. The ruled closure for R-2 is a STRUCTURAL ANCHOR at
+  the block's head, NOT a length pin: a pin would go green when the block
+  legitimately grows and red for the wrong reason. The closures verified clean
+  -- the map binds by content and goes red from either side, an entry that
+  merely MENTIONS another's token fails LOUD rather than binding to the first
+  match, and the census moved 70 -> 74 with "nothing removed" holding as a
+  checked fact. DE round 21 was dispatched on de_admissible_windows.py only
+  (DE19-R1..R3) and HAS SINCE FILED at 0255b60 (Q-DE-39, 79 -> 84), not yet
+  coordinator-verified; the DATA_ROOT split slips to round 22 behind DA's landing
+  after 00:14Z, its fourth deferral. The reviewer's queue is BE rounds 3-4 at
+  248e99f, then DE round 20; item 1 of that request is the "frozen bytes" fact
+  for the USER's open decision -- STATED, NOT RULED. USER-open: the freeze
+  disposition only. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
+  with Q4 failing; development evidence.
+```

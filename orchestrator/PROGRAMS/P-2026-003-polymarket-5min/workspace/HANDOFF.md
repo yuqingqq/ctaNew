@@ -1,14 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T14:37Z — **BE rounds 3–4 RELEASED (`1d9c543`): `248e99f` is
-the confirming driver of record for the 09-01 score**, with five findings
-(BE34-R1..R5, two MEDIUM) and a **sequencing rule — no second scoring day until
-R1/R2 close and are reviewed.** **The "frozen bytes" fact for the USER's open
-decision is ON THE RECORD, stated and not ruled**, and reproduced here down to
-the hash: the manifest blob at `1b53929` **is** the `eb8733da…` the candidate
-binds, `select_by_day` is AST-identical at both commits, and the **1.24 GB data
-anchor is untracked — no commit can freeze it.** **ONE USER decision open: the
-freeze disposition.** Prior line: DE round 21 and DA round 12 verified.
+Updated: 2026-09-02T14:44Z — **THE USER RULED THE FREEZE DISPOSITION (R-442,
+~14:33Z): the race runs on the FROZEN BYTES at `1b53929`, no re-freeze,
+multiplicity 2 — and the `fwd5/` 09-01 receipt is the RACE SCORE OF RECORD, no
+longer an estimate in scratch.** **ALL SIX USER DECISIONS ARE RULED; NONE IS
+OPEN.** All three record files re-hashed here and equal; the untracked 1.24 GB
+data anchor still matches the sha the receipt binds. DE round 20 RELEASED
+(`819d225`), DE20-R1/R2 → round 22, in flight. Prior line: BE rounds 3–4
+released as the confirming driver of record.
 
 ## READ FIRST — current project handoff
 
@@ -95,6 +94,18 @@ defect of its own on real data before filing**: the first complement was
 `range(288) − masked`, which credited the still-open 09-02 with 248 unmasked
 windows out of 119 present; it is now `PRESENT − masked`.
 
+### ALL SIX USER DECISIONS RULED — none open (R-424 + R-442)
+
+**The table's six asks are settled.** Four were adopted at R-424 (~11:49Z), the
+freeze disposition at **R-442 (~14:33Z)**, and the sixth — the 09-02 accrual
+call — is **not a separate decision**: R-409 already rules it as a principle and
+the coordinator applies it mechanically after the 00:06Z verdict, with R-411(ii)
+fixing which denominator that reading uses. **Nothing is awaiting the USER.**
+
+| # | ruled | at |
+|---|---|---|
+| **freeze disposition** | **race on the FROZEN BYTES at `1b53929`**; no re-freeze; **multiplicity stays 2**; the `fwd5/` 09-01 receipt is the **race score of record** | **R-442**, USER ~14:33Z |
+
 ### RULED 2026-09-02 — "Proceed according to your recommendation"
 
 > *"Proceed according to your recommendation."* — USER, ~11:49Z, quoted verbatim
@@ -104,7 +115,8 @@ windows out of 119 present; it is now `PRESENT − masked`.
 R-424 §1 records the referent explicitly: the recommendations on record at the
 moment of the ruling were **this table** — *"PENDING USER DECISIONS — six"*, four
 rows each carrying *"coordinator's recommendation"* (`79f2db5`) — mirrored in
-R-408 and R-411. **Four adopted, one deliberately not reached.**
+R-408 and R-411. **Four adopted, one deliberately not reached** — that one, the
+freeze disposition, was ruled three hours later at R-442.
 
 | # | ruled | executed |
 |---|---|---|
@@ -126,30 +138,52 @@ principle; the coordinator applies it after the 00:06Z verdict as a §7-style ac
 with R-409 as the stated reason, and **R-411(ii) now fixes which denominator
 that reading uses**.
 
-### STILL OPEN — the freeze disposition, and why the ruling did not reach it
+### RULED 2026-09-02T14:33Z — the freeze disposition, the sixth and last
 
-**It carried no recommendation, so there was nothing to proceed on.** This table
-described it as *"decided by no one"* with two options and no recommendation
-beside either — and R-424 §1 reads that as out of scope by construction rather
-than as adopted by default. **A recommendation now exists** (R-424 §6), so the
-next word can settle it:
+**SUPERSEDED (R-442).** This section stood open from R-424 §6 until the USER
+ruled. **All six USER decisions are now RULED; none is open.**
 
-> **Recommended: race on the frozen bytes at `1b53929`** — the plan's reading
-> (§10 step 9: the frozen set is scored UNCHANGED). Code anchors materialised
-> from the commit and **sha-verified before import**; the data anchor
-> `harmful_exposure_rows_v3_eraB.json`, which **has no commit** (`data/` is
-> gitignored — BE fact (iii), **still unverified until round 4 lands**), bound by
-> the sha the frozen manifest (`eb8733da…`) records for it and **verified by
-> content with the source named**; the driver at HEAD as harness, with every
-> non-anchor module in the closure that moved since `1b53929` **named in the
-> receipt**.
->
-> **Why not re-freeze:** a re-freeze is a **NEW candidate (multiplicity 3)** and
-> a new freeze commit **with no new evidence behind it** — it would let the
-> anchors' drift choose the candidate.
+> *"Yes proceed according to recommendation."* — USER, ~14:33Z, quoted verbatim
+> in R-442, after the 14:30Z notification carrying the reviewer's §1 fact.
 
-**Until it is ruled, BE round 4's output stays an estimate in scratch, not a
-race score.**
+**Adopted, verbatim from R-424 §6:** **race on the frozen bytes at `1b53929`** —
+the plan's §10 step 9 reading, the frozen set scored UNCHANGED; code anchors
+materialised from the commit and sha-verified before import; the data anchor
+`harmful_exposure_rows_v3_eraB.json`, which has **no commit**, bound by the sha
+the frozen manifest (`eb8733da…`) records and verified **by content** with the
+source named; the driver at HEAD as harness with every moved non-anchor module
+named in the receipt. **Not adopted, by the same word:** a re-freeze at HEAD —
+a new candidate, multiplicity 3, a new freeze commit with no new evidence.
+**Multiplicity stays 2.** Revocable by one word (rule 13).
+
+**What the ruling makes true, and what I checked at the bytes rather than the
+entry:** the `fwd5/` 09-01 receipt is **the 09-01 race score of record** — no
+longer an estimate in scratch. I re-hashed all three files: receipt
+**`4000106752f816e4…`** (14,022 B), sealed file **`aca22317ab06adbf…`**
+(54,213,086 B), 09-02 receipt **`0907b0369e14d77b…`** (1,123 B) — **all three
+match**, and the safety copy's `SHA256SUMS` verifies **OK on four files**. The
+receipt's fields carry the ruled shape: `frozen_commit` `1b53929`,
+`manifest_sha256_bound` `eb8733da2c8e2126…`, the data anchor `compared: true`
+with `materialised_to: null` and its reason stated, `n_not_frozen: 2` naming
+`tier1_pipeline` and `warning_window` **with a sha at both commits**,
+`carrying_commit` `248e99f…`, `outcome: SCORED`,
+`coin_coverage.coins_with_a_frozen_fit = ['btc','eth']`.
+
+**And the score reproduces today:** the untracked 1.24 GB data anchor still
+hashes to **`19a50195c34d0af2…`**, exactly what the receipt binds. That is the
+one input no commit holds and no copy holds — the receipt's sha is its only
+binding, which is why it is checked on every run rather than assumed.
+
+**The 09-02 receipt is a REFUSAL record, not a score**, and the gate has a name
+worth using instead of its ordinal: **`day_closed_and_attributed`** — *"20260902
+is not closed by calendar … Scoring an OPEN day scores a population that is
+still growing."*
+
+**What did NOT change:** BE34-R1..R5 stay open → BE round 6; the sequencing rule
+stands (no second scoring day until R1/R2 close **and are reviewed**) — the
+ruling settles **whose bytes race**, not whether the streaming loop has a
+falsifier; tonight's units are untouched; Phase-4 stays gated; R-419 stays
+revocable.
 
 ### BE round 4 — the re-run COMPLETED, and its own numbers are the disclosure
 
@@ -718,9 +752,9 @@ round 5** (its request waits on the row). **BE rounds 3–4's review is RELEASED
 
 > **Item 1 landed: the "frozen bytes" fact is ON THE RECORD, *stated, not
 > ruled*** (`1d9c543` §1, notified to the USER 14:30Z). The freeze disposition
-> is still the single open USER item — the reviewer put its factual basis on the
+> **was** the single open USER item — the reviewer put its factual basis on the
 > record rather than settling it, which is rule 12 working as intended: **a
-> freeze is the USER's act.** What the fact says is in the 14:37Z entry, and one
+> freeze is the USER's act, and the USER made it at 14:33Z (R-442).** What the fact says is in the 14:37Z entry, and one
 > half of it is load-bearing: **7 code anchors are frozen-by-commit; the 1.24 GB
 > data anchor is untracked, so no commit can ever freeze it** — it is identified
 > by content and disclosed as such. **DE is on deliberate standby** with rounds 16–21 complete and three reviews
@@ -1517,6 +1551,79 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~14:44Z (MEM) — THE WORD LANDED, AND THE THING IT MAKES TRUE IS
+### A SET OF HASHES
+
+**R-442 and R-443 swept.** The USER ruled — *"Yes proceed according to
+recommendation"*, ~14:33Z — and **the last open decision in this programme is
+closed. Six ruled, none open.**
+
+**I checked what the ruling makes true at the bytes, not at the entry.** All
+three record files re-hashed and equal: receipt **`4000106752f816e4…`**
+(14,022 B), sealed file **`aca22317ab06adbf…`** (54,213,086 B), 09-02 receipt
+**`0907b0369e14d77b…`** (1,123 B). The safety copy's `SHA256SUMS` verifies **OK
+on four files**. The receipt carries the ruled shape field by field, including
+`n_not_frozen: 2` naming both moved modules **with a sha at each commit** and
+`coin_coverage.coins_with_a_frozen_fit = ['btc','eth']`.
+
+**The score still reproduces today, and one input is why that is not automatic.**
+The untracked **1.24 GB** data anchor hashes to **`19a50195c34d0af2…`** — exactly
+what the receipt binds. It is the one input **no commit holds and no copy holds**
+(the safety copy took the four small files, not the 1.24 GB anchor, and not the
+materialised `frozen/` dir — the code anchors are reconstructible from
+`1b53929`, which is the point of freezing by commit). Its sha is its only
+binding, checked on every run rather than assumed. **That is now a property of
+the race score of record, not a caveat about a scratch estimate** — which is
+exactly what the ruling changed.
+
+**The 09-02 receipt is a refusal record and its gate has a name.**
+`refused_at: day_closed_and_attributed` — *"20260902 is not closed by calendar …
+Scoring an OPEN day scores a population that is still growing."* I record the
+name rather than "gate 1", because a gate's ordinal moves when a gate is
+inserted and its name does not.
+
+**One instruction did not survive contact with the artifact, and the fix is not
+mine to make.** R-442 §5 asks for `STATUS.yml still_open` to be emptied.
+**There is no `still_open` field in `STATUS.yml`** — I searched the parsed
+document, not the text. The field lives in **DA's `da_governed_verdict_preflight.py`**,
+in the `open_decisions` block, and the `:97` in the entry resolves to a line of
+my own prose *quoting* that artifact. So the six-ruled state is recorded here in
+the forms these files actually use, and the real field is flagged below.
+
+**And that flag is worth a seat's attention.** At DA's held `636a455` the block
+reads `esc["still_open"] = {"freeze_disposition": "… awaiting the USER's word."}`
+— **and a selftest at `:537` asserts `"freeze_disposition" in
+r["open_decisions"]["still_open"]`.** So the staleness R-442 creates is not
+silent, it is **pinned by DA's own suite**: when the held work lands after the
+00:14Z read, the artifact will assert a decision is open that the USER settled at
+14:33Z, and the suite will keep it that way until DA changes both. **DA's
+surface, not mine** — recorded, not touched.
+
+**Tonight is unaffected, and I checked why rather than assuming it.** DA's
+`e292439` and `636a455` are **not on `mm-research`** — I tested ancestry; both
+are detached commits whose own subjects begin `HELD:`. The branch's last commit
+touching that file is **`fadc986` (10:49Z)**, and the working tree is clean
+against it. So the 00:14Z preflight runs `fadc986`, which has **no `ruled` /
+`still_open` block at all** — the stale claim cannot appear tonight. **That is
+the hold working as designed** (R-402: the first governed verdict runs the tree
+as-is), and it is worth stating because "DA10-R1..R5 CLOSED at `e292439`" reads
+like the fixes are in the tree. They are not, deliberately.
+
+**R-443, briefly.** DE round 20 RELEASED at `0778918` — DE18-R1/R2/R3 closed,
+census 124 → 129 with **"nothing removed" holding this round**. Both findings
+reproduce: **DE20-R1** — `all_entries(register_text)` at exactly three call sites
+(`:342`, `:714`, `:831`, the definition at `:263`), one predicate with three
+implementations of "an entry exists"; **DE20-R2** — existence still lacks
+**direction**, so a self-supersession verifies. DE round 22 (Q-DE-40) is in
+flight on `de_ratification_check.py`, carrying two Q-DE-38 accounting corrections
+**superseded in-band** rather than edited. Reviewer → DE round 21.
+
+**Sequencing.** BE round 6 now carries R-442 §3(c) as well: the durable landing
+of both receipts under `data/pm_5min/derived/`, **byte-identical, shas asserted
+on landing, no re-emission and no new field** — after the 00:14Z read on 09-03.
+The sealed file stays external at 54 MB, identified by content. **Nothing is
+awaiting the USER.**
 
 ### 2026-09-02 ~14:37Z (MEM) — THE FACT THE USER'S DECISION TURNS ON, HASHED
 ### RATHER THAN QUOTED
