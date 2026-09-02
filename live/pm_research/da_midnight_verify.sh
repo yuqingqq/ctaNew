@@ -51,6 +51,46 @@ if { [ -n "${DA_MIDNIGHT_LOG:-}" ] && [ -z "${DA_MIDNIGHT_OUTDIR:-}" ]; } || \
        "writes PRODUCTION verdicts while logging elsewhere." >&2
   exit 5
 fi
+# RR9-3(a): A CANONICAL WRITE MUST BE NAMED. The pair guard above catches an
+# override of ONE variable; it cannot catch an override of NEITHER, which is
+# what a MIS-NAMED override produces (`OUTDIR=`/`LOG=` instead of
+# `DA_MIDNIGHT_OUTDIR=`/`DA_MIDNIGHT_LOG=`). That reads as an ordinary
+# production run and writes the canonical directory -- exactly what happened
+# at 10:16Z on 2026-09-02, replacing two 00:06Z verdicts. Mis-naming is the
+# likelier operator error and it was the one shape the guard could not see.
+#
+# TWO INDEPENDENT WAYS TO BE ALLOWED, deliberately, because ONE new required
+# variable on a nightly governed path is itself an outage risk: if the unit
+# lost it, every future 00:06Z verdict would refuse and nothing would run to
+# say so.
+#   (1) IDENTITY -- the cgroup says this process really is
+#       da-midnight-verify.service. An identity, not an assertion, and the
+#       same test `write_reason` already uses.
+#   (2) DECLARATION -- DA_MIDNIGHT_MODE=production, for a deliberate hand run.
+# The unit sets (2) as well, so a run has to lose BOTH to be refused.
+# A run that is neither identifies itself as nothing and REFUSES BEFORE ANY
+# WRITE -- including before the log header, per this script's own lesson that
+# a guard which writes before it refuses has already done the thing it
+# refuses.
+if [ -z "${DA_MIDNIGHT_OUTDIR:-}" ] && [ -z "${DA_MIDNIGHT_LOG:-}" ]; then
+  case ":$(cat /proc/self/cgroup 2>/dev/null):" in
+    */da-midnight-verify.service/*|*/da-midnight-verify.service:*) _named=1 ;;
+    *) _named=0 ;;
+  esac
+  [ "${DA_MIDNIGHT_MODE:-}" = "production" ] && _named=1
+  if [ "$_named" -ne 1 ]; then
+    echo "REFUSED: this run would write CANONICAL verdicts into $OUTDIR but" \
+         "identifies itself as neither the scheduled unit (by cgroup) nor an" \
+         "explicit DA_MIDNIGHT_MODE=production hand run. A mis-named" \
+         "override (OUTDIR=/LOG= instead of DA_MIDNIGHT_OUTDIR=/" \
+         "DA_MIDNIGHT_LOG=) sets NEITHER variable and is indistinguishable" \
+         "from a production run to the pair guard above -- which is how two" \
+         "00:06Z verdicts were replaced at 10:16Z. For a rehearsal set" \
+         "DA_MIDNIGHT_OUTDIR and DA_MIDNIGHT_LOG together; for a deliberate" \
+         "canonical run set DA_MIDNIGHT_MODE=production." >&2
+    exit 6
+  fi
+fi
 if [ -n "${DA_MIDNIGHT_VERIFY_BIN:-}" ] && \
    { [ -z "${DA_MIDNIGHT_LOG:-}" ] || [ -z "${DA_MIDNIGHT_OUTDIR:-}" ]; }; then
   echo "REFUSED: DA_MIDNIGHT_VERIFY_BIN may be set ONLY inside a fully" \

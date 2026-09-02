@@ -82,6 +82,41 @@ def _runs(ws: list[int]) -> list[dict]:
              "n_windows": len(r)} for r in out]
 
 
+def uncompressed_for(p: Path) -> int:
+    """Thin wrapper so the fixture can assert its own window sizes."""
+    return TD.uncompressed_size(p)
+
+
+def _head_commit() -> str | None:
+    """The commit this producer ran at (R-387's `carrying_commit`)."""
+    import subprocess
+    try:
+        r = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"],
+                           capture_output=True, text=True, timeout=20)
+        return r.stdout.strip() or None
+    except Exception:                                        # pragma: no cover
+        return None
+
+
+def _tree_dirty() -> bool | None:
+    """True when a PRODUCING file differs from the commit named above.
+
+    A `carrying_commit` recorded over a dirty tree points at bytes that did
+    not run -- R-306's standing rule, one artifact down.
+    """
+    import subprocess
+    files = ["live/pm_research/da_blackout_mask.py",
+             "live/pm_research/da_content_liveness_rule.py",
+             "live/pm_research/pm_tape_density.py"]
+    try:
+        r = subprocess.run(["git", "-C", str(REPO), "status", "--porcelain",
+                            "--"] + files, capture_output=True, text=True,
+                           timeout=20)
+        return bool(r.stdout.strip())
+    except Exception:                                        # pragma: no cover
+        return None
+
+
 def v2_mask_windows(*_a, **_k):
     """The v2 absolute-floor seam. REFUSES until the USER freezes v2.
 
@@ -169,6 +204,17 @@ def build_mask(day: str, raw_root: Path | None = None, gaps=None
             "the frozen bars pass on the non-blackout windows, and the "
             "blackout windows are masked as accounted loss. This artifact "
             "REPORTS the mask; it decides nothing (rule 14)."),
+        # R-387/R-412: an artifact that names no code cannot be reproduced.
+        # `carrying_commit` is the HEAD the producer ran at; `dirty` says
+        # whether the tree matched it, because a commit ref over a dirty tree
+        # is a pointer to bytes that did not run.
+        "producer": {
+            "module": "da_blackout_mask",
+            "module_sha256_prefix": hashlib.sha256(
+                Path(__file__).read_bytes()).hexdigest()[:16],
+            "carrying_commit": _head_commit(),
+            "tree_dirty_on_producing_files": _tree_dirty(),
+        },
         "detector": {
             "module": "da_content_liveness_rule",
             "version": "v1_FROZEN",
@@ -307,6 +353,12 @@ def complement_quality(day: str, mask: dict, gaps_path: Path | None = None,
             if unmasked else None,
             "P2_share_of_288": round(material / WINDOWS_PER_DAY, 4),
             "P2_frozen_bar_share": D.P2_MATERIAL_SHARE_MAX,
+            # RR9-2: the OTHER half of P2's definition. The block's thesis is
+            # that every denominator is stated; the numerator's threshold --
+            # which windows count as material at all -- has to be too, or a
+            # reader of the artifact alone cannot reconstruct P2. READ from
+            # the constant, never restated as a literal.
+            "P2_material_span_s": D.P2_MATERIAL_SPAN_S,
             "P3_worst_rolling_60min_lost_s": round(worst, 1),
             "P3_frozen_bar": D.P3_ROLLING_60MIN_LOST_S_MAX,
             "L1_over_complement": 0.0,
@@ -498,6 +550,59 @@ def selftest() -> int:
            "day, so neither can be read as the other")
         ok(c8["unmasked_hours"] == round(109 * WINDOW_S / 3600.0, 3),
            "and the unmasked-hours denominator follows the present windows")
+
+        # ---- RR9-1: make the export contract STRUCTURAL, not data-dependent
+        # The equality can only fire when the two definitions DISAGREE on
+        # that day's data. Both redefinition mutants (drop the gap-overlap
+        # exclusion; move thin_frac 0.05 -> 0.06) passed the whole suite,
+        # and on real data one of them still BUILDS 08-26 cleanly -- so a
+        # redefined mask ships silently on any day where the change happens
+        # not to matter, which is the day nobody would look at. This fixture
+        # makes BOTH changes matter by construction.
+        #
+        #   row (a): a thin window that OVERLAPS a gap-ledger interval, so
+        #            dropping the exclusion adds it to the mask;
+        #   row (b): a window between 0.05x and 0.06x the median, so moving
+        #            the fraction to 0.06 adds THAT one.
+        med_lines = 5000
+        rr9 = "20260404"
+        (root / rr9).mkdir(parents=True, exist_ok=True)
+        b9 = day_bounds(rr9)[0]
+        # 0.055 x median -> inside (0.05, 0.06)
+        between = max(1, int(med_lines * 0.055))
+        for i in range(288):
+            n = med_lines
+            if i == 50:            # (a) thin AND gap-covered
+                n = 3
+            elif i == 60:          # (b) between the two fractions
+                n = between
+            elif i == 70:          # a plain thin window, in the mask either way
+                n = 3
+            with gzip.open(root / rr9 /
+                           f"btc-updown-5m-{b9 + i * WINDOW_S}.jsonl.gz",
+                           "wb") as fh:
+                fh.write(b'{"x":1}\n' * n)
+        g9 = {"btc": [(b9 + 50 * WINDOW_S + 10, b9 + 50 * WINDOW_S + 20)]}
+        m9 = build_mask(rr9, raw_root=root, gaps=g9)
+        b9c = m9["coins"]["btc"]
+        ok(b9c["n_masked"] == 1
+           and b9c["masked_windows"] == [b9 + 70 * WINDOW_S],
+           "RR9-1 STRUCTURAL FIXTURE: under v1's definition exactly ONE "
+           "window is masked -- window 70. Window 50 is thin but GAP-COVERED "
+           "(accounted loss, excluded) and window 60 sits at 0.055x the "
+           "median, thin under 0.06 but not under 0.05")
+        # The two rows exist and are what they claim to be -- otherwise the
+        # fixture could pass while testing nothing.
+        _sizes = {i: uncompressed_for(root / rr9 /
+                                      f"btc-updown-5m-{b9 + i * WINDOW_S}.jsonl.gz")
+                  for i in (50, 60, 70)}
+        _med = sorted(_sizes.values())[1]
+        ok(TD.gap_overlaps(g9, "btc", b9 + 50 * WINDOW_S,
+                           b9 + 51 * WINDOW_S) is True
+           and not TD.gap_overlaps(g9, "btc", b9 + 60 * WINDOW_S,
+                                   b9 + 61 * WINDOW_S),
+           "RR9-1: row (a) really is gap-covered and row (b) really is not -- "
+           "a fixture that did not carry both shapes would kill neither mutant")
 
         # KNOWN-BAD, RED-FIRST: a mask that disagrees with L1's count REFUSES.
         _real = CLR.measure_day

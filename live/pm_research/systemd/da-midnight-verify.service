@@ -26,5 +26,21 @@ Description=DA forward-day verdict (P-2026-003) -- nightly day-quality verificat
 # systemd should wait for it and report its status rather than treat launch as
 # success.
 Type=oneshot
+# RR9-3(a): NAME THE CANONICAL WRITE. The script refuses a run that
+# identifies itself as neither this unit (by cgroup) nor an explicit
+# production hand run, because a MIS-NAMED override sets neither
+# DA_MIDNIGHT_OUTDIR nor DA_MIDNIGHT_LOG and is otherwise
+# indistinguishable from a scheduled run -- how two 00:06Z verdicts
+# were replaced at 10:16Z on 2026-09-02.
+#
+# This is REDUNDANT with the cgroup test ON PURPOSE, and it is not the
+# same thing as the DA_WRITE_REASON the header forbids: that would be
+# an ASSERTION OF IDENTITY, where this is a DECLARATION OF INTENT.
+# `write_reason` still comes from the cgroup and cannot be spoofed by
+# this line. The redundancy exists because a single new required
+# variable on a nightly governed path is itself an outage risk: if it
+# were dropped here, every 00:06Z verdict would refuse and nothing
+# would run to say so.
+Environment=DA_MIDNIGHT_MODE=production
 OOMScoreAdjust=1000
 ExecStart=/home/yuqing/ctaNew/live/pm_research/da_midnight_verify.sh

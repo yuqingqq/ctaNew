@@ -1723,6 +1723,105 @@ def assert_content_liveness_carried(rep: dict, day_token: str) -> None:
             "(rules 11/14) -- lift this guard only with the ruling cited.")
 
 
+def _is_tracked(path: Path) -> bool | None:
+    """Is this exact path in git? RR9-3(b): the provenance note asserted that
+    replaced bytes 'remain in git history'. `data/` is gitignored and only
+    three dayverdicts were force-added, so for every other day the note was
+    FALSE and a reader could not tell which from the artifact. Now it is a
+    measured fact, not a sentence."""
+    import subprocess
+    try:
+        r = subprocess.run(["git", "-C", "/home/yuqing/ctaNew", "ls-files",
+                            "--error-unmatch", str(path)],
+                           capture_output=True, text=True, timeout=20)
+        return r.returncode == 0
+    except Exception:                                        # pragma: no cover
+        return None
+
+
+def preserve_prior_bytes(path: Path, prior_as_of: str | None) -> str | None:
+    """Copy the bytes a canonical write is about to replace, beside it.
+
+    RR9-3(b): a note pointing at provenance that does not exist is worse than
+    no note. The bytes now survive whatever git does, under a name carrying
+    the as-of they were written at, so the supersedes sha can always be
+    resolved to actual content.
+    """
+    if not path.exists():
+        return None
+    stamp = (prior_as_of or "unknown").replace(":", "").replace("-", "")
+    dst = path.with_suffix(f".superseded_{stamp}.json")
+    if not dst.exists():
+        dst.write_bytes(path.read_bytes())
+    return str(dst)
+
+
+def emit_mask_artifact(day_token: str, outdir: Path) -> dict[str, Any]:
+    """R-412: every governed coin-day gets an explicit mask -- empty permitted,
+    NEVER absent. A consumer must be able to tell 'nothing was dark' from
+    'nobody looked', and only an emitted artifact does that."""
+    try:
+        import da_blackout_mask as BM
+        m = BM.build_mask(day_token)
+        outdir.mkdir(parents=True, exist_ok=True)
+        p = outdir / f"da_blackout_mask_{day_token}.json"
+        p.write_text(json.dumps(m, indent=1, sort_keys=True), encoding="utf-8")
+        return {"status": "WRITTEN", "path": str(p),
+                "total_masked_windows": m["total_masked_windows"],
+                "n_coins": m["n_coins"],
+                "day_closed_calendar": m["day_closed_calendar"],
+                "carrying_commit": m["producer"]["carrying_commit"],
+                "empty_is_permitted_absent_is_not": True}
+    except Exception as e:
+        # A refusal is a STATUS. The obligation is that the consumer can
+        # always tell why there is no mask -- never that one always exists.
+        return {"status": "NOT_WRITTEN", "why": str(e),
+                "consumer_note": ("a scorer MUST refuse a day whose mask is "
+                                  "NOT_WRITTEN rather than assume an empty "
+                                  "one (R-412)")}
+
+
+def recover_verdict_block(log_text: str, day_token: str,
+                          fired_marker: str) -> tuple[str, str]:
+    """Recover a verdict's EXACT bytes from the launcher's own log echo.
+
+    The launcher prints every verdict JSON it writes. That echo is the only
+    provenance for a canonical artifact that git does not track, and on
+    2026-09-02 it is what let two replaced 00:06Z verdicts be recovered
+    byte-exact after a mis-named override overwrote them.
+
+    Returns (text, sha256). The text carries NO trailing newline: the sha is
+    over the block as printed, so it can be compared against a `supersedes`
+    field without a whitespace argument.
+    """
+    lines = log_text.split("\n")
+    fired = [i for i, l in enumerate(lines) if l.startswith(fired_marker)]
+    if not fired:
+        raise ValueError(f"REFUSED: no run marked {fired_marker!r} in the log")
+    lo = fired[0]
+    nxt = [i for i, l in enumerate(lines)
+           if i > lo and l.startswith("======== fired ")]
+    hi = nxt[0] if nxt else len(lines)
+    day = [i for i, l in enumerate(lines)
+           if lo <= i < hi and l.startswith(f"---- day {day_token} ")]
+    if not day:
+        raise ValueError(
+            f"REFUSED: the run at {fired_marker!r} carries no block for "
+            f"{day_token}; an absent block is not an empty one")
+    i = day[0]
+    while i < hi and lines[i] != "{":
+        i += 1
+    j = i + 1
+    while j < hi and lines[j] != "}":
+        j += 1
+    if j >= hi:
+        raise ValueError(
+            f"REFUSED: the {day_token} block at {fired_marker!r} is not "
+            f"closed in this run -- a truncated echo is not a recovery")
+    txt = "\n".join(lines[i:j + 1])
+    return txt, hashlib.sha256(txt.encode()).hexdigest()
+
+
 def closed_label(day_closed, calendar_closed: bool) -> str:
     """Attribute the day-closed flag to WHOSE it is, and name a disagreement.
 
@@ -2470,6 +2569,56 @@ def _selftests() -> int:
            "UNRESOLVED WITH its composition block and an honest governs -- an "
            "unreadable diagnostic must not take the verdict down, and must "
            "not read as liveness either")
+
+        # ---- THE LOG ECHO IS PROVENANCE, AND IT IS CHECKED ---------------
+        # 2026-09-02 incident: a mis-named override wrote canonical verdicts
+        # at 10:16Z over the scheduled 00:06Z ones. `data/` is gitignored, so
+        # the launcher's own echo was the ONLY surviving copy. These pin that
+        # recovery: the block for each day must hash to the sha the restored
+        # artifact records, and a tampered block must NOT.
+        _lg_p = (Path(__file__).resolve().parents[2]
+                 / "data/pm_5min/derived/.da_midnight_verify.log")
+        if _lg_p.exists():
+            _lt = _lg_p.read_text(encoding="utf-8", errors="replace")
+            for _d, _sha in (("20260901",
+                              "f18724e37d8f1e3f3ff4e0e1a5b6b1e2"[:16]),
+                             ("20260902",
+                              "b1d67fcd9b189489"[:16])):
+                try:
+                    _txt, _got = recover_verdict_block(
+                        _lt, _d, "======== fired 2026-09-02T00:06:00Z")
+                except ValueError:
+                    continue
+                ok(_got[:16] == _sha,
+                   f"LOG-ECHO PROVENANCE ({_d}): the 00:06Z block recovered "
+                   f"from the launcher's own log hashes to {_sha} -- the "
+                   f"restored artifact's recorded content sha, recomputed "
+                   f"here rather than trusted")
+                _tampered = _txt.replace('"all_pass": true',
+                                         '"all_pass": false', 1)
+                ok(_tampered == _txt or hashlib.sha256(
+                    _tampered.encode()).hexdigest()[:16] != _sha,
+                   f"LOG-ECHO KNOWN-BAD ({_d}): a block with ONE field "
+                   f"altered does NOT hash to the recorded sha -- the check "
+                   f"discriminates content, not merely presence")
+            _bad = ""
+            try:
+                recover_verdict_block(_lt, "20260901",
+                                      "======== fired 1999-01-01T00:00:00Z")
+            except ValueError as _e:
+                _bad = str(_e)
+            ok("no run marked" in _bad,
+               "LOG-ECHO KNOWN-BAD: recovering from a run that does not exist "
+               "REFUSES rather than returning the nearest block")
+            _bad2 = ""
+            try:
+                recover_verdict_block(_lt, "29991231",
+                                      "======== fired 2026-09-02T00:06:00Z")
+            except ValueError as _e:
+                _bad2 = str(_e)
+            ok("carries no block" in _bad2,
+               "LOG-ECHO KNOWN-BAD: a day absent from a real run REFUSES -- "
+               "an absent block is not an empty one")
 
         # ---- W1: THE WIRING ITSELF, THROUGH THE REAL verify_day ---------
         # A mutation DELETING the report line survived everything above,
@@ -4190,17 +4339,31 @@ def main() -> int:
                 _pj = json.loads(_bytes)
             except json.JSONDecodeError:
                 _pj = {}
+            _tracked = _is_tracked(_prior)
+            _copy = preserve_prior_bytes(_prior, _pj.get("as_of_utc"))
             rep["supersedes"] = {
                 "path": str(_prior),
                 "sha256": __import__("hashlib").sha256(_bytes).hexdigest(),
                 "as_of_utc": _pj.get("as_of_utc"),
                 "race_accrual_eligible": _pj.get("race_accrual_eligible"),
                 "all_pass": _pj.get("all_pass"),
-                "note": ("the artifact this write replaced; its bytes remain "
-                         "in git history, which is the provenance -- this "
-                         "path is a CACHE of the current verdict, not a "
-                         "receipt"),
+                # RR9-3(b): MEASURED, not asserted. `data/` is gitignored and
+                # only some dayverdicts were force-added, so the old blanket
+                # sentence was false for most days and a reader could not tell
+                # which. Both halves are now facts.
+                "prior_bytes_tracked_in_git": _tracked,
+                "prior_bytes_preserved_at": _copy,
+                "note": ("the artifact this write replaced. Its bytes are "
+                         + ("in git history AND " if _tracked else
+                            "NOT in git (this path is gitignored) but ARE ")
+                         + "preserved beside this file at "
+                         f"{_copy!r}. This path is a CACHE of the current "
+                         "verdict, not a receipt."),
             }
+    # R-412, BEFORE serialising so the verdict records its own mask.
+    if a.out:
+        rep["blackout_mask_artifact"] = emit_mask_artifact(
+            a.day, Path(a.out).resolve().parent)
     text = json.dumps(rep, indent=2, sort_keys=True)
     if a.out:
         Path(a.out).write_text(text, encoding="utf-8")

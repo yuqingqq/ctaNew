@@ -1,0 +1,592 @@
+{
+  "all_pass": true,
+  "as_of_utc": "2026-09-02T00:06:01.284484+00:00",
+  "authorised_by": "R-141(1); DA-verifies-first restored as a hard precondition by R-153(2)",
+  "bar_regime": "day_bar_v2",
+  "content_liveness": {
+    "fraction_of_day_below_10pct": 0.0806,
+    "governs": false,
+    "intervals_below_10pct_of_median": 116,
+    "median_msgs_per_s": 599.583,
+    "min_msgs_per_s": 0.0,
+    "n_intervals": 1439,
+    "note_10pct": "10% is a REPORTING cut so the shape is visible, NOT a ratified bar and not used to classify anything",
+    "status": "CONTENT_LIVENESS_UNRESOLVED",
+    "why": "the discriminator is computed and frozen; NO ratified band exists, and inventing one from the days that motivated the rule -- or from 09-01 after seeing it -- is the error this structure was declared early to avoid",
+    "written_received_note": "the collector logs RECEIVED; WRITTEN comes from the tape. Pairing them is the second half of the discriminator and needs the per-coin join, not shipped here",
+    "written_received_ratio": null
+  },
+  "day": "2026-09-01",
+  "day_bar_v2": {
+    "btc": {
+      "P1_lost_s_per_hr": 84.4,
+      "P1_pass": true,
+      "P2_material_share": 0.0,
+      "P2_material_windows": 0,
+      "P2_pass": true,
+      "P3_pass": true,
+      "P3_worst_rolling_60min_lost_s": 185.2,
+      "all_pass": true,
+      "coin_level_gap_intervals": 345,
+      "evaluable": true,
+      "hours_elapsed": 24.0,
+      "lost_seconds": 2025.5,
+      "partial_day": false,
+      "thresholds": {
+        "P1_max_s_per_hr": 120.0,
+        "P2_material_span_s": 75.0,
+        "P2_max_share": 0.05,
+        "P3_max_rolling_60min_s": 900.0
+      },
+      "windows_affected_disclosure": {
+        "affected_over_288": 0.5556,
+        "affected_over_elapsed": 0.5556,
+        "coin_level_gap_intervals_read": 345,
+        "coverage_observed_arg": "True",
+        "denominator_note": "affected_over_elapsed is the LIVE rate over COMPLETE elapsed windows; affected_over_288 is progress toward the complete-day denominator and is the ONLY one a closing-day receipt quotes. They coincide on a closed day.",
+        "governs_all_pass": false,
+        "has_threshold": false,
+        "is_a_gate": false,
+        "meaning_note": "a DISCLOSURE COUNT of short blind intervals and modeled queue resets -- NOT a count of contaminated windows, NOT a gate, and NOT a threshold. The governing bars score DURATION (P1/P2/P3); breadth is carried BESIDE them, never instead of them, because v2 retired the only predicate that saw it (08-28: 186/288 windows touched with all three duration bars passing).",
+        "pct_of_288": 55.6,
+        "pct_of_elapsed": 55.6,
+        "role": "REPORTED_NOT_GOVERNING",
+        "windows_affected_COIN_LEVEL": 160,
+        "windows_complete_elapsed": 288,
+        "windows_total": 288,
+        "zero_affected_is_not_a_clean_claim": false
+      }
+    },
+    "eth": {
+      "P1_lost_s_per_hr": 6.9,
+      "P1_pass": true,
+      "P2_material_share": 0.0,
+      "P2_material_windows": 0,
+      "P2_pass": true,
+      "P3_pass": true,
+      "P3_worst_rolling_60min_lost_s": 107.9,
+      "all_pass": true,
+      "coin_level_gap_intervals": 7,
+      "evaluable": true,
+      "hours_elapsed": 24.0,
+      "lost_seconds": 165.6,
+      "partial_day": false,
+      "thresholds": {
+        "P1_max_s_per_hr": 120.0,
+        "P2_material_span_s": 75.0,
+        "P2_max_share": 0.05,
+        "P3_max_rolling_60min_s": 900.0
+      },
+      "windows_affected_disclosure": {
+        "affected_over_288": 0.0243,
+        "affected_over_elapsed": 0.0243,
+        "coin_level_gap_intervals_read": 7,
+        "coverage_observed_arg": "True",
+        "denominator_note": "affected_over_elapsed is the LIVE rate over COMPLETE elapsed windows; affected_over_288 is progress toward the complete-day denominator and is the ONLY one a closing-day receipt quotes. They coincide on a closed day.",
+        "governs_all_pass": false,
+        "has_threshold": false,
+        "is_a_gate": false,
+        "meaning_note": "a DISCLOSURE COUNT of short blind intervals and modeled queue resets -- NOT a count of contaminated windows, NOT a gate, and NOT a threshold. The governing bars score DURATION (P1/P2/P3); breadth is carried BESIDE them, never instead of them, because v2 retired the only predicate that saw it (08-28: 186/288 windows touched with all three duration bars passing).",
+        "pct_of_288": 2.4,
+        "pct_of_elapsed": 2.4,
+        "role": "REPORTED_NOT_GOVERNING",
+        "windows_affected_COIN_LEVEL": 7,
+        "windows_complete_elapsed": 288,
+        "windows_total": 288,
+        "zero_affected_is_not_a_clean_claim": false
+      }
+    }
+  },
+  "day_bar_v2_governing": {
+    "applies_to_this_day": true,
+    "commits": "dfa0977 (declared) + 368345b (amended pre-judgment)",
+    "doc": "live/pm_research/plans/DAY_BAR_V2_PREREGISTRATION.md",
+    "from_day": "20260829",
+    "note": "days before the boundary are judged by the FROZEN count bar; the v2 bars are not applied retroactively"
+  },
+  "day_closed_calendar": true,
+  "day_closed_selector": false,
+  "day_token": "20260901",
+  "decision_note": "This instrument STATES REASONS; it does not exclude. R-141(1): a day that fails DA's verification is EXCLUDED WITH A STATED REASON, and that exclusion is the coordinator's to rule, not a worker's boolean (rule 14). Note also that gaps/hour understates damage: day one ran 28.0/hr while 80.2% of btc windows carried a gap -- read windows_gap_affected beside it, never instead of it.",
+  "era_admission": {
+    "boundaries_inside_day": [],
+    "day": "20260901",
+    "era_admissible_ruled": {
+      "clob_v4_1": true
+    },
+    "era_pure": true,
+    "era_reconstructed": false,
+    "era_unevidenced_start": false,
+    "eras_touched": [
+      "clob_v4_1"
+    ],
+    "race_admissible_by_era": true,
+    "why": "a day not lying ENTIRELY inside ONE admissible era cannot accrue for ANY coin, whatever its quality -- era admission is a ruled property of the collector, not a measured property of the feed"
+  },
+  "freeze_epoch": 1787897340.0,
+  "gap_series": {
+    "causes": {
+      "CONNECTIONCLOSEDOK": 4,
+      "NO_CLOSE_FRAME": 120,
+      "PING_TIMEOUT": 202,
+      "SLOW_CONSUMER_1013": 43
+    },
+    "coin": null,
+    "gaps_per_hour": 15.38,
+    "hours_elapsed": 24.0,
+    "hours_over_bar": [
+      7,
+      8,
+      11,
+      13,
+      15,
+      16,
+      18,
+      19,
+      20
+    ],
+    "hours_with_a_gap": 24,
+    "ledger_lines": 10082,
+    "ledger_unparseable": 0,
+    "lost_s": 3025.6,
+    "n_gaps": 369,
+    "n_hours_over_bar": 9,
+    "per_hour": {
+      "0": 1,
+      "1": 12,
+      "10": 12,
+      "11": 16,
+      "12": 15,
+      "13": 27,
+      "14": 14,
+      "15": 23,
+      "16": 18,
+      "17": 14,
+      "18": 31,
+      "19": 29,
+      "2": 12,
+      "20": 28,
+      "21": 9,
+      "22": 8,
+      "23": 6,
+      "3": 8,
+      "4": 6,
+      "5": 10,
+      "6": 12,
+      "7": 18,
+      "8": 29,
+      "9": 11
+    },
+    "rate_estimable": true,
+    "rate_note": null,
+    "worst_hour": 31
+  },
+  "granularity_note": "R-211(3), declared 2026-08-27 while no 08-28 data existed. Days before the boundary are judged by the FROZEN whole-day rule; from the boundary each coin-day passes or fails on its own completeness and its own hourly gap bars. `all_pass` remains whole-day-strict under BOTH rules so an un-updated reader fails safe; per-coin verdicts are in `per_coin`.",
+  "instrument": "da_forward_day_verify_v1",
+  "per_coin": {
+    "btc": {
+      "all_pass": true,
+      "day_bar_v2": {
+        "P1_lost_s_per_hr": 84.4,
+        "P1_pass": true,
+        "P2_material_share": 0.0,
+        "P2_material_windows": 0,
+        "P2_pass": true,
+        "P3_pass": true,
+        "P3_worst_rolling_60min_lost_s": 185.2,
+        "coin_level_gap_intervals": 345,
+        "evaluable": true,
+        "hours_elapsed": 24.0,
+        "lost_seconds": 2025.5,
+        "thresholds": {
+          "P1_max_s_per_hr": 120.0,
+          "P2_material_span_s": 75.0,
+          "P2_max_share": 0.05,
+          "P3_max_rolling_60min_s": 900.0
+        },
+        "windows_affected_disclosure": {
+          "affected_over_288": 0.5556,
+          "affected_over_elapsed": 0.5556,
+          "coin_level_gap_intervals_read": 345,
+          "coverage_observed_arg": "True",
+          "denominator_note": "affected_over_elapsed is the LIVE rate over COMPLETE elapsed windows; affected_over_288 is progress toward the complete-day denominator and is the ONLY one a closing-day receipt quotes. They coincide on a closed day.",
+          "governs_all_pass": false,
+          "has_threshold": false,
+          "is_a_gate": false,
+          "meaning_note": "a DISCLOSURE COUNT of short blind intervals and modeled queue resets -- NOT a count of contaminated windows, NOT a gate, and NOT a threshold. The governing bars score DURATION (P1/P2/P3); breadth is carried BESIDE them, never instead of them, because v2 retired the only predicate that saw it (08-28: 186/288 windows touched with all three duration bars passing).",
+          "pct_of_288": 55.6,
+          "pct_of_elapsed": 55.6,
+          "role": "REPORTED_NOT_GOVERNING",
+          "windows_affected_COIN_LEVEL": 160,
+          "windows_complete_elapsed": 288,
+          "windows_total": 288,
+          "zero_affected_is_not_a_clean_claim": false
+        }
+      },
+      "gap_series": {
+        "causes": {
+          "NO_CLOSE_FRAME": 103,
+          "PING_TIMEOUT": 199,
+          "SLOW_CONSUMER_1013": 43
+        },
+        "coin": "btc",
+        "gaps_per_hour": 14.38,
+        "hours_elapsed": 24.0,
+        "hours_over_bar": [
+          7,
+          8,
+          13,
+          15,
+          16,
+          18,
+          19,
+          20
+        ],
+        "hours_with_a_gap": 23,
+        "ledger_lines": 10082,
+        "ledger_unparseable": 0,
+        "lost_s": 2025.5,
+        "n_gaps": 345,
+        "n_hours_over_bar": 8,
+        "per_hour": {
+          "1": 12,
+          "10": 12,
+          "11": 15,
+          "12": 15,
+          "13": 27,
+          "14": 14,
+          "15": 22,
+          "16": 18,
+          "17": 12,
+          "18": 31,
+          "19": 26,
+          "2": 12,
+          "20": 26,
+          "21": 6,
+          "22": 5,
+          "23": 6,
+          "3": 8,
+          "4": 6,
+          "5": 10,
+          "6": 11,
+          "7": 18,
+          "8": 22,
+          "9": 11
+        },
+        "rate_estimable": true,
+        "rate_note": null,
+        "worst_hour": 31
+      },
+      "governing_predicates": [
+        "entirely_post_freeze",
+        "complete_tape",
+        "P1_bar",
+        "P2_bar",
+        "P3_bar"
+      ],
+      "predicates": [
+        {
+          "detail": "btc 288/288 admissible/total",
+          "pass": true,
+          "predicate": "entirely_post_freeze"
+        },
+        {
+          "detail": "expect 288 (closed day (calendar)); btc 288 (short 0)",
+          "pass": true,
+          "predicate": "complete_tape"
+        },
+        {
+          "detail": "345 btc gaps over 24.0h = 14.38/hr vs bar 15; 8 hours over; worst 31; 2025.5s lost",
+          "pass": false,
+          "predicate": "gap_rate_under_bar"
+        },
+        {
+          "detail": "P1 on this coin's own gaps",
+          "pass": true,
+          "predicate": "P1_bar"
+        },
+        {
+          "detail": "P2 on this coin's own gaps",
+          "pass": true,
+          "predicate": "P2_bar"
+        },
+        {
+          "detail": "P3 on this coin's own gaps",
+          "pass": true,
+          "predicate": "P3_bar"
+        }
+      ],
+      "race_accrual_eligible": true,
+      "superseded_not_governing": [
+        "gap_rate_under_bar"
+      ],
+      "verdict_split": {
+        "day_closed": true,
+        "day_quality_pass": true,
+        "era_admissible": true,
+        "era_role": "INTERLOCK, NOT A QUALITY GRADE (USER 2026-09-01). Among RULED eras quality alone decides: clob_v3_1/v4/v4_1 make NO row-stamping change, so era carries no fidelity claim about the rows that survive. This conjunct exists to refuse an UNRULED collector at the next boundary, not to judge the feed. Cross-era quality COMPARISON stays invalid separately: the bars are era-dependent in magnitude.",
+        "post_freeze_pass": true,
+        "race_accrual_eligible": true,
+        "rule": "a day accrues iff FINISHED (closed UTC day) AND AFTER (post freeze commit) AND ADMISSIBLE (the era is RULED -- an interlock against an unvetted collector, never a quality grade) AND HEALTHY (the quality bars of that day's OWN bar regime). Four conjuncts, four different questions. Among ruled eras QUALITY ALONE DECIDES (USER 2026-09-01); era carries no fidelity claim, since clob_v3_1/v4/v4_1 make NO row-stamping change. Cross-era quality comparison stays invalid: the bars are era-dependent in magnitude.",
+        "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day -- and an UNFINISHED day is not yet a day at all"
+      },
+      "windows_gap_affected": {
+        "era_covered_windows": 288,
+        "gap_affected_COIN_LEVEL": 160,
+        "gap_affected_PER_SLUG": 159,
+        "gap_affected_pct_COIN_LEVEL": 55.6,
+        "gap_affected_pct_PER_SLUG": 55.2,
+        "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
+      }
+    },
+    "eth": {
+      "all_pass": true,
+      "day_bar_v2": {
+        "P1_lost_s_per_hr": 6.9,
+        "P1_pass": true,
+        "P2_material_share": 0.0,
+        "P2_material_windows": 0,
+        "P2_pass": true,
+        "P3_pass": true,
+        "P3_worst_rolling_60min_lost_s": 107.9,
+        "coin_level_gap_intervals": 7,
+        "evaluable": true,
+        "hours_elapsed": 24.0,
+        "lost_seconds": 165.6,
+        "thresholds": {
+          "P1_max_s_per_hr": 120.0,
+          "P2_material_span_s": 75.0,
+          "P2_max_share": 0.05,
+          "P3_max_rolling_60min_s": 900.0
+        },
+        "windows_affected_disclosure": {
+          "affected_over_288": 0.0243,
+          "affected_over_elapsed": 0.0243,
+          "coin_level_gap_intervals_read": 7,
+          "coverage_observed_arg": "True",
+          "denominator_note": "affected_over_elapsed is the LIVE rate over COMPLETE elapsed windows; affected_over_288 is progress toward the complete-day denominator and is the ONLY one a closing-day receipt quotes. They coincide on a closed day.",
+          "governs_all_pass": false,
+          "has_threshold": false,
+          "is_a_gate": false,
+          "meaning_note": "a DISCLOSURE COUNT of short blind intervals and modeled queue resets -- NOT a count of contaminated windows, NOT a gate, and NOT a threshold. The governing bars score DURATION (P1/P2/P3); breadth is carried BESIDE them, never instead of them, because v2 retired the only predicate that saw it (08-28: 186/288 windows touched with all three duration bars passing).",
+          "pct_of_288": 2.4,
+          "pct_of_elapsed": 2.4,
+          "role": "REPORTED_NOT_GOVERNING",
+          "windows_affected_COIN_LEVEL": 7,
+          "windows_complete_elapsed": 288,
+          "windows_total": 288,
+          "zero_affected_is_not_a_clean_claim": false
+        }
+      },
+      "gap_series": {
+        "causes": {
+          "NO_CLOSE_FRAME": 4,
+          "PING_TIMEOUT": 3
+        },
+        "coin": "eth",
+        "gaps_per_hour": 0.29,
+        "hours_elapsed": 24.0,
+        "hours_over_bar": [],
+        "hours_with_a_gap": 5,
+        "ledger_lines": 10082,
+        "ledger_unparseable": 0,
+        "lost_s": 165.6,
+        "n_gaps": 7,
+        "n_hours_over_bar": 0,
+        "per_hour": {
+          "19": 2,
+          "20": 1,
+          "21": 2,
+          "22": 1,
+          "6": 1
+        },
+        "rate_estimable": true,
+        "rate_note": null,
+        "worst_hour": 2
+      },
+      "governing_predicates": [
+        "entirely_post_freeze",
+        "complete_tape",
+        "P1_bar",
+        "P2_bar",
+        "P3_bar"
+      ],
+      "predicates": [
+        {
+          "detail": "eth 288/288 admissible/total",
+          "pass": true,
+          "predicate": "entirely_post_freeze"
+        },
+        {
+          "detail": "expect 288 (closed day (calendar)); eth 288 (short 0)",
+          "pass": true,
+          "predicate": "complete_tape"
+        },
+        {
+          "detail": "7 eth gaps over 24.0h = 0.29/hr vs bar 15; 0 hours over; worst 2; 165.6s lost",
+          "pass": true,
+          "predicate": "gap_rate_under_bar"
+        },
+        {
+          "detail": "P1 on this coin's own gaps",
+          "pass": true,
+          "predicate": "P1_bar"
+        },
+        {
+          "detail": "P2 on this coin's own gaps",
+          "pass": true,
+          "predicate": "P2_bar"
+        },
+        {
+          "detail": "P3 on this coin's own gaps",
+          "pass": true,
+          "predicate": "P3_bar"
+        }
+      ],
+      "race_accrual_eligible": true,
+      "superseded_not_governing": [
+        "gap_rate_under_bar"
+      ],
+      "verdict_split": {
+        "day_closed": true,
+        "day_quality_pass": true,
+        "era_admissible": true,
+        "era_role": "INTERLOCK, NOT A QUALITY GRADE (USER 2026-09-01). Among RULED eras quality alone decides: clob_v3_1/v4/v4_1 make NO row-stamping change, so era carries no fidelity claim about the rows that survive. This conjunct exists to refuse an UNRULED collector at the next boundary, not to judge the feed. Cross-era quality COMPARISON stays invalid separately: the bars are era-dependent in magnitude.",
+        "post_freeze_pass": true,
+        "race_accrual_eligible": true,
+        "rule": "a day accrues iff FINISHED (closed UTC day) AND AFTER (post freeze commit) AND ADMISSIBLE (the era is RULED -- an interlock against an unvetted collector, never a quality grade) AND HEALTHY (the quality bars of that day's OWN bar regime). Four conjuncts, four different questions. Among ruled eras QUALITY ALONE DECIDES (USER 2026-09-01); era carries no fidelity claim, since clob_v3_1/v4/v4_1 make NO row-stamping change. Cross-era quality comparison stays invalid: the bars are era-dependent in magnitude.",
+        "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day -- and an UNFINISHED day is not yet a day at all"
+      },
+      "windows_gap_affected": {
+        "era_covered_windows": 288,
+        "gap_affected_COIN_LEVEL": 7,
+        "gap_affected_PER_SLUG": 4,
+        "gap_affected_pct_COIN_LEVEL": 2.4,
+        "gap_affected_pct_PER_SLUG": 1.4,
+        "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
+      }
+    }
+  },
+  "per_coin_rule_from_day": "20260828",
+  "predicates": [
+    {
+      "detail": "selector day_closed=False (calendar says True; the tape-derived predicate lags the boundary by up to one window); bnb 288/288, btc 288/288, doge 288/288, eth 288/288 (+3 more)",
+      "pass": true,
+      "predicate": "entirely_post_freeze"
+    },
+    {
+      "detail": "expect 288 (closed day (calendar)); btc 288 (short 0), eth 288 (short 0)  [selector day_closed=False DISAGREES with the calendar; its tape-derived predicate lags the boundary by up to one window]",
+      "pass": true,
+      "predicate": "complete_tape"
+    },
+    {
+      "detail": "UNMEASURED -- density receipt covers 13 day(s), not 20260901",
+      "pass": false,
+      "predicate": "tape_density"
+    },
+    {
+      "detail": "369 gaps over 24.0h elapsed = 15.38/hr vs bar 15; 9 hours over; worst 31; 3025.6s lost",
+      "pass": false,
+      "predicate": "gap_rate_under_bar"
+    },
+    {
+      "detail": "lost 2025.5s = 84.4/hr vs bar 120.0",
+      "pass": true,
+      "predicate": "P1_btc"
+    },
+    {
+      "detail": "0 windows >= 75.0s in gap = 0.00% vs bar 5%",
+      "pass": true,
+      "predicate": "P2_btc"
+    },
+    {
+      "detail": "worst rolling 60min 185.2s vs bar 900.0",
+      "pass": true,
+      "predicate": "P3_btc"
+    },
+    {
+      "detail": "lost 165.6s = 6.9/hr vs bar 120.0",
+      "pass": true,
+      "predicate": "P1_eth"
+    },
+    {
+      "detail": "0 windows >= 75.0s in gap = 0.00% vs bar 5%",
+      "pass": true,
+      "predicate": "P2_eth"
+    },
+    {
+      "detail": "worst rolling 60min 107.9s vs bar 900.0",
+      "pass": true,
+      "predicate": "P3_eth"
+    }
+  ],
+  "race_accrual_eligible": true,
+  "restored": {
+    "by": "DA (pm-da)",
+    "kind": "canonical_00_06Z_restoration",
+    "original_supersedes_preserved": {
+      "all_pass": false,
+      "as_of_utc": "2026-09-01T00:06:03.847366+00:00",
+      "note": "the artifact this write replaced; its bytes remain in git history, which is the provenance -- this path is a CACHE of the current verdict, not a receipt",
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260901.json",
+      "race_accrual_eligible": false,
+      "sha256": "0e7757aacd249608d7a04439d65c64c217552311ecab8708924780f57c475947"
+    },
+    "recovered_content_sha256": "f18724e37d8f1e3fde72962687be3b79e2aeb33dd7e5b0f934b753ab4abe9b1c",
+    "recovered_from": {
+      "block": "the verdict JSON echoed by the 00:06Z run",
+      "fired_marker": "======== fired 2026-09-02T00:06:00Z ========",
+      "path": "data/pm_5min/derived/.da_midnight_verify.log"
+    },
+    "replaces_sha256": "d071030deb8328f0e668ac4ad2db07196c56ffe01cf36b07f168fbe9eaf3ce4a",
+    "restored_at_utc": "2026-09-02T10:29:25Z",
+    "restores_as_of_utc": "2026-09-02T00:06:01.284484+00:00",
+    "this_file_is_not_byte_identical_to_the_00_06Z_artifact": "deliberately. Rule 13: a correction supersedes IN BAND rather than editing silently, so this file carries the recovered content PLUS this block and a supersedes naming the write it replaced. The 00:06Z bytes themselves hash to f18724e37d8f1e3f and are reproducible from the log.",
+    "why": "a reviewer ran the launcher with mis-named overrides at 10:16Z and it wrote canonical verdicts as an UNATTRIBUTED hand run, replacing the scheduled 00:06Z artifacts. NO GOVERNING VALUE CHANGED in either direction; what was lost was the attribution and the as-of of the scheduled run, which is what the register cites."
+  },
+  "selector_era": "clob_v4_1",
+  "supersedes": {
+    "all_pass": true,
+    "as_of_utc": "2026-09-02T10:16:14.709993+00:00",
+    "note": "the UNATTRIBUTED 10:16Z hand run this restoration replaces (reviewer incident, 2026-09-02). Its bytes are preserved beside this file at 'data/pm_5min/derived/da_dayverdict_20260901.superseded_20260902T101614.709993+0000.json'.",
+    "path": "data/pm_5min/derived/da_dayverdict_20260901.json",
+    "prior_bytes_preserved_at": "data/pm_5min/derived/da_dayverdict_20260901.superseded_20260902T101614.709993+0000.json",
+    "prior_bytes_tracked_in_git": false,
+    "race_accrual_eligible": true,
+    "sha256": "d071030deb8328f0e668ac4ad2db07196c56ffe01cf36b07f168fbe9eaf3ce4a"
+  },
+  "tape_density": {
+    "status": "UNMEASURED",
+    "why": "density receipt covers 13 day(s), not 20260901"
+  },
+  "verdict_granularity": "per_coin",
+  "verdict_split": {
+    "day_closed": true,
+    "day_quality_pass": true,
+    "era_admissible": true,
+    "era_role": "INTERLOCK, NOT A QUALITY GRADE (USER 2026-09-01). Among RULED eras quality alone decides: clob_v3_1/v4/v4_1 make NO row-stamping change, so era carries no fidelity claim about the rows that survive. This conjunct exists to refuse an UNRULED collector at the next boundary, not to judge the feed. Cross-era quality COMPARISON stays invalid separately: the bars are era-dependent in magnitude.",
+    "post_freeze_pass": true,
+    "race_accrual_eligible": true,
+    "rule": "a day accrues iff FINISHED (closed UTC day) AND AFTER (post freeze commit) AND ADMISSIBLE (the era is RULED -- an interlock against an unvetted collector, never a quality grade) AND HEALTHY (the quality bars of that day's OWN bar regime). Four conjuncts, four different questions. Among ruled eras QUALITY ALONE DECIDES (USER 2026-09-01); era carries no fidelity claim, since clob_v3_1/v4/v4_1 make NO row-stamping change. Cross-era quality comparison stays invalid: the bars are era-dependent in magnitude.",
+    "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day -- and an UNFINISHED day is not yet a day at all"
+  },
+  "windows_gap_affected": {
+    "btc": {
+      "era_covered_windows": 288,
+      "gap_affected_COIN_LEVEL": 160,
+      "gap_affected_PER_SLUG": 159,
+      "gap_affected_pct_COIN_LEVEL": 55.6,
+      "gap_affected_pct_PER_SLUG": 55.2,
+      "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
+    },
+    "eth": {
+      "era_covered_windows": 288,
+      "gap_affected_COIN_LEVEL": 7,
+      "gap_affected_PER_SLUG": 4,
+      "gap_affected_pct_COIN_LEVEL": 2.4,
+      "gap_affected_pct_PER_SLUG": 1.4,
+      "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
+    }
+  },
+  "write_reason": "scheduled unit run, da-midnight-verify.service (INVOCATION_ID=69ba0fae7ef84731832b9e2bfb50de2e)"
+}
