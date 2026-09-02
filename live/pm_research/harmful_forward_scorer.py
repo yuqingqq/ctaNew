@@ -96,7 +96,20 @@ def expected_cancel_value(fit: dict, raw: list) -> float:
 # `--score-day` through `main()` itself, so rule 17 -- suite-green is not
 # pipeline-wired -- cannot bite when that path is opened.
 
-MASK_PROTOCOL = "DA_BLACKOUT_MASK_V1"
+#: DA's committed artifact identifier. THE PRODUCER'S ARTIFACT IS THE
+#: CONTRACT (R-412 ruling 1). BE previously asserted a `protocol`/`per_coin`
+#: envelope of its own invention and REFUSED DA's real mask -- both suites
+#: green, each testing its own side, the exact class R-402 named. The names
+#: below are transcribed from
+#: `data/pm_5min/derived/da_blackout_mask_20260901.json`.
+MASK_ARTIFACT = "da_blackout_mask_v1"
+#: The first GOVERNED day, read from the frozen rule rather than repeated
+#: here: from this day a mask is REQUIRED, not merely consumed when present
+#: (R-410 as amended by R-411).
+try:
+    from da_content_liveness_rule import EFFECTIVE_FROM_DAY
+except Exception:                                    # noqa: BLE001
+    EFFECTIVE_FROM_DAY = None
 #: DA's per-(day, coin) mask. DA owns this artifact; BE only reads it.
 def mask_path(day: str) -> Path:
     return DERIVED / f"da_blackout_mask_{day}.json"
@@ -108,6 +121,12 @@ class MaskRequired(RuntimeError):
 
 class MaskSchemaDrift(RuntimeError):
     """DA's mask did not match the schema this adapter asserts."""
+
+
+#: R-412(2): where an UNJUDGEABLE day goes. Emitted as TEXT — the scorer
+#: states the routing and never decides the disposition (rule 14).
+ROUTED_UNJUDGEABLE = ("frozen rule §7 — coordinator exclusion with a stated "
+                      "reason")
 
 
 def liveness_status(verdict: dict) -> dict:
@@ -132,15 +151,17 @@ def liveness_status(verdict: dict) -> dict:
 
 
 def load_blackout_mask(day: str, path: Path = None) -> dict:
-    """DA's mask, through an adapter that ASSERTS the schema. R-409.
+    """DA's mask, through an adapter that ASSERTS DA'S schema. R-412(1).
 
-    BE does not invent a parallel schema. The fields asserted here are the
-    ones DA's committed detector already produces -- per coin, the window
-    STARTS it judged invisible-thin (`da_content_liveness_rule` keys its
-    windows by start-epoch and counts them as `n_invisible_thin`). If DA's
-    emitted names differ, this REFUSES BY NAME rather than reading a
-    plausible-looking field: a mask misread is a day scored over its own
-    blackout, which is the failure the whole ruling exists to prevent."""
+    THE PRODUCER'S COMMITTED ARTIFACT IS THE CONTRACT. The window STARTS come
+    from DA's MASK PRODUCER (`da_blackout_mask`), not from the liveness
+    DETECTOR, which emits only a count (`n_invisible_thin`) -- the previous
+    docstring named the wrong source, and the envelope BE asserted alongside
+    it (`protocol`/`per_coin`) was BE's own invention. It refused DA's real
+    mask while both suites stayed green, because each tested its own side.
+
+    Every field below is transcribed from the committed artifact. Drift still
+    REFUSES BY NAME: a mask misread is a day scored over its own blackout."""
     p = mask_path(day) if path is None else Path(path)
     if not p.exists():
         return {"present": False, "path": str(p)}
@@ -150,48 +171,67 @@ def load_blackout_mask(day: str, path: Path = None) -> dict:
         raise MaskSchemaDrift(f"REFUSED: {p.name} does not parse ({e}).")
     if not isinstance(d, dict):
         raise MaskSchemaDrift(f"REFUSED: {p.name} is not an object.")
-    proto = str(d.get("protocol") or "")
-    if "BLACKOUT_MASK" not in proto.upper():
+    art = str(d.get("artifact") or "")
+    if art != MASK_ARTIFACT:
         raise MaskSchemaDrift(
-            f"REFUSED: {p.name} declares protocol {proto!r}, which does not "
-            f"identify as a blackout mask. Expected a protocol naming "
-            f"BLACKOUT_MASK (this adapter asserts {MASK_PROTOCOL!r}); reading "
-            f"an unidentified artifact as a mask is how a blackout gets "
-            f"scored.")
+            f"REFUSED: {p.name} declares artifact {art!r}, not "
+            f"{MASK_ARTIFACT!r}. Reading an unidentified artifact as a mask "
+            f"is how a blackout gets scored.")
     if str(d.get("day")) != str(day):
         raise MaskSchemaDrift(
             f"REFUSED: {p.name} is for day {d.get('day')!r}, not {day!r}. A "
             f"mask from another day would exclude the wrong windows.")
-    per = d.get("per_coin")
-    if not isinstance(per, dict) or not per:
+    coins = d.get("coins")
+    if not isinstance(coins, dict):
         raise MaskSchemaDrift(
-            f"REFUSED: {p.name} carries no per_coin block "
-            f"({type(per).__name__}). The mask is per coin-day (R-409(b)).")
-    out = {}
-    for coin, blk in sorted(per.items()):
+            f"REFUSED: {p.name} carries no `coins` block "
+            f"({type(coins).__name__}). The mask is per coin-day (R-409(b)).")
+    closed = d.get("day_closed_calendar")
+    if not isinstance(closed, bool):
+        raise MaskSchemaDrift(
+            f"REFUSED: {p.name} has no boolean `day_closed_calendar` (got "
+            f"{closed!r}). DA's own consumer_note makes this the field that "
+            f"separates a final mask from a mid-day diagnostic (RR8-3).")
+    out, meta = {}, {}
+    for coin, blk in sorted(coins.items()):
         if not isinstance(blk, dict):
             raise MaskSchemaDrift(
-                f"REFUSED: {p.name} per_coin[{coin!r}] is "
+                f"REFUSED: {p.name} coins[{coin!r}] is "
                 f"{type(blk).__name__}, not an object.")
         wins = blk.get("masked_windows")
         if not isinstance(wins, list) or any(not isinstance(w, int)
                                              for w in wins):
             raise MaskSchemaDrift(
-                f"REFUSED: {p.name} per_coin[{coin!r}].masked_windows is not a "
+                f"REFUSED: {p.name} coins[{coin!r}].masked_windows is not a "
                 f"list of integer window starts (got "
                 f"{type(wins).__name__}). This adapter asserts DA's schema "
                 f"and refuses on drift rather than guessing a field.")
         n = blk.get("n_masked")
         if n is not None and n != len(wins):
             raise MaskSchemaDrift(
-                f"REFUSED: {p.name} per_coin[{coin!r}] says n_masked={n} with "
+                f"REFUSED: {p.name} coins[{coin!r}] says n_masked={n} with "
                 f"{len(wins)} windows listed. A count that disagrees with its "
                 f"own list cannot be used to account for loss.")
         out[coin] = sorted(set(wins))
+        meta[coin] = {k: blk.get(k) for k in
+                      ("n_windows_total", "longest_run_windows",
+                       "agrees_with_frozen_L1_numerator", "status")}
+    # DA's OWN TOTAL, cross-checked against DA's own per-coin lists. A total
+    # that disagrees with the windows it summarises cannot account for loss.
+    tot = d.get("total_masked_windows")
+    have = sum(len(w) for w in out.values())
+    if tot is not None and tot != have:
+        raise MaskSchemaDrift(
+            f"REFUSED: {p.name} declares total_masked_windows={tot} while its "
+            f"own per-coin lists hold {have}.")
     return {"present": True, "path": str(p), "day": str(day),
-            "protocol": proto, "per_coin": out,
+            "artifact": art, "per_coin": out,
             "n_masked": {c: len(w) for c, w in out.items()},
-            "as_of_utc": d.get("as_of_utc"), "commit": d.get("commit"),
+            "total_masked_windows": tot,
+            "day_closed_calendar": closed,
+            "as_of_utc": d.get("as_of_utc"), "detector": d.get("detector"),
+            "day_status_frozen": d.get("day_status_frozen"),
+            "per_coin_meta": meta,
             "schema_asserted_by": "harmful_forward_scorer.load_blackout_mask"}
 
 
@@ -208,7 +248,52 @@ def apply_blackout_mask(day: str, scored_windows: dict, mask: dict,
     point: scoring a blackout as if it were live is the error the ruling
     exists to prevent, and an absent artifact is not evidence of an empty
     one."""
+    # THE TRIGGER IS THE DAY'S GOVERNED STATUS, NOT A READING OF LIVENESS
+    # (R-410, amended by R-411 and R-412). A reading can be ABSENT; a status
+    # cannot. PRESENCE CONSUMES -- a mask is honoured for any day, so 09-01's
+    # 141 windows are masked at scoring, which is the USER's R-409 principle.
+    # GOVERNANCE REQUIRES -- from EFFECTIVE_FROM_DAY a mask must EXIST.
+    governed = bool(EFFECTIVE_FROM_DAY) and str(day) >= str(EFFECTIVE_FROM_DAY)
     n_masked_declared = sum((mask.get("n_masked") or {}).values())
+
+    # RR8-3: a MID-DAY mask lists only the windows that exist so far, so
+    # scoring off it scores the complement of a day that has not finished.
+    # DA's own consumer_note says exactly this.
+    if mask.get("present") and mask.get("day_closed_calendar") is not True:
+        raise MaskRequired(
+            f"REFUSED: {day}'s mask at {mask.get('path')} has "
+            f"day_closed_calendar={mask.get('day_closed_calendar')!r}. A "
+            f"PARTIAL mask lists only the windows that exist so far, so "
+            f"scoring off it scores the complement of a day that has not "
+            f"finished (RR8-3). It is a diagnostic, not a final mask.")
+
+    # PERMANENT before TEMPORARY: an UNJUDGEABLE day cannot become judgeable
+    # with later data (too few windows, or a zero median), so retrying is not
+    # the remedy -- a disposition is. The scorer REFUSES and ROUTES; it never
+    # decides the disposition itself (rule 14).
+    if str(liveness.get("status") or "").upper().endswith("UNJUDGEABLE"):
+        raise MaskRequired(
+            f"REFUSED: {day} liveness is {liveness.get('status')!r}, which is "
+            f"PERMANENT -- no later data makes it judgeable -- so this is not "
+            f"a retry. routed_to: {ROUTED_UNJUDGEABLE!r}. The scorer states "
+            f"the routing and does NOT decide the disposition (rule 14).")
+
+    if governed and not mask.get("present"):
+        raise MaskRequired(
+            f"REFUSED: {day} is GOVERNED (on or after EFFECTIVE_FROM_DAY "
+            f"{EFFECTIVE_FROM_DAY}) and its blackout mask is ABSENT at "
+            f"{mask.get('path')}. From the governed day every scored day "
+            f"REQUIRES a mask artifact, EMPTY PERMITTED (R-410): absence "
+            f"means the producer did not run, never that nothing was thin.")
+
+    if governed and not liveness.get("is_resolved"):
+        raise MaskRequired(
+            f"REFUSED: {day} is GOVERNED and its liveness reads "
+            f"{liveness.get('status')!r} from {liveness.get('read_from')!r}, "
+            f"which is UNRESOLVED -- the rule block lands with the closing "
+            f"verdict. This is TEMPORARY: retry when the verdict lands. No "
+            f"disposition is implied and none is decided here.")
+
     if (liveness.get("is_thin") or n_masked_declared > 0) and not mask.get("present"):
         raise MaskRequired(
             f"REFUSED: {day} reports thin windows (liveness status "
@@ -227,7 +312,12 @@ def apply_blackout_mask(day: str, scored_windows: dict, mask: dict,
     # stated in the report so a reader sees which condition fired and which
     # could not. Escalated, not silently widened: changing the trigger is a
     # ruling, and BE does not choose it.
-    if liveness.get("is_thin"):
+    if mask.get("present"):
+        basis = (f"a mask is PRESENT and is CONSUMED for any day (R-411: "
+                 f"presence consumes, governance requires); this day is "
+                 f"{'GOVERNED' if governed else 'PRE-GOVERNED'} against "
+                 f"EFFECTIVE_FROM_DAY {EFFECTIVE_FROM_DAY!r}")
+    elif liveness.get("is_thin"):
         basis = f"liveness status {liveness.get('status')!r} is THIN"
     elif n_masked_declared > 0:
         basis = f"the mask itself declares n_masked={n_masked_declared}"
@@ -254,12 +344,16 @@ def apply_blackout_mask(day: str, scored_windows: dict, mask: dict,
     tot_masked = sum(masked_n.values())
     return kept, {
         "mask_requirement_basis": basis,
+        "day_governed": governed,
+        "effective_from_day": EFFECTIVE_FROM_DAY,
+        "mask_day_closed_calendar": mask.get("day_closed_calendar"),
+        "mask_total_masked_windows": mask.get("total_masked_windows"),
         "liveness_resolved": bool(liveness.get("is_resolved")),
         "mask_present": bool(mask.get("present")),
         "mask_path": mask.get("path"),
         "mask_as_of_utc": mask.get("as_of_utc"),
-        "mask_commit": mask.get("commit"),
-        "mask_protocol": mask.get("protocol"),
+        "mask_detector": mask.get("detector"),
+        "mask_artifact": mask.get("artifact"),
         "liveness": liveness,
         "n_windows_scored": scored_n,
         "n_masked": masked_n,
@@ -406,7 +500,10 @@ def _selftest_blackout_mask(checks: int) -> int:
         print(f"  PASS  {label}")
 
     W = 300
-    day = "20260902"
+    # PRE-GOVERNED vs GOVERNED are now different regimes (R-410/R-411), so the
+    # controls name which they are exercising instead of sharing one token.
+    day = "20260901"          # pre-governed: presence consumes, absence is OK
+    day_gov = "20260902"      # governed: a mask is REQUIRED, empty permitted
     t0 = 1788307200          # a window-start grid; values are epoch seconds
     # A hand-built day: 5 windows per coin, values chosen so the complement
     # is computable BY HAND rather than by re-running the code under test.
@@ -424,9 +521,77 @@ def _selftest_blackout_mask(checks: int) -> int:
         ok(False, "a THIN day with no mask must REFUSE")
     except MaskRequired as e:
         ok("/nope/mask.json" in str(e) and "CONTENT_THIN" in str(e),
-           "R-409 REFUSAL CONTROL: a thin day with an ABSENT mask is refused "
-           "and the refusal NAMES the missing artifact and the status that "
-           "required it — never assume unmasked")
+           "R-409 REFUSAL CONTROL: a thin PRE-GOVERNED day with an ABSENT "
+           "mask is refused and the refusal NAMES the missing artifact and "
+           "the status that required it — never assume unmasked")
+
+    # ---- R-410/R-411: GOVERNANCE requires, PRESENCE consumes -------------
+    try:
+        apply_blackout_mask(day_gov, sw, {"present": False,
+                                          "path": "/nope/g.json"}, live_ok)
+        ok(False, "a GOVERNED day with no mask must REFUSE")
+    except MaskRequired as e:
+        ok("GOVERNED" in str(e) and "EMPTY PERMITTED" in str(e)
+           and "/nope/g.json" in str(e),
+           "R-410 a GOVERNED day REFUSES without a mask even when liveness is "
+           "LIVE — absence means the producer did not run, never that nothing "
+           "was thin")
+    _kg, _ag = apply_blackout_mask(day, sw, {"present": False, "path": "x"},
+                                   live_ok)
+    ok(len(_kg["btc"]) == 5 and _ag["day_governed"] is False,
+       "R-410 POSITIVE CONTROL: a PRE-GOVERNED day with no mask scores whole "
+       "— the requirement is the day's governed status, and the report says "
+       "which regime applied")
+
+    # ---- R-412(2): UNRESOLVED (retry) vs UNJUDGEABLE (route) -------------
+    _unres_g = {"read_from": "content_liveness", "is_thin": False,
+                "status": "CONTENT_LIVENESS_UNRESOLVED", "is_resolved": False}
+    try:
+        apply_blackout_mask(day_gov, sw, {"present": True, "per_coin": {},
+                                          "n_masked": {},
+                                          "day_closed_calendar": True},
+                            _unres_g)
+        ok(False, "UNRESOLVED on a governed day must REFUSE")
+    except MaskRequired as e:
+        ok("TEMPORARY" in str(e) and "retry when the verdict lands" in str(e)
+           and "no disposition" in str(e).lower(),
+           "R-412(2) UNRESOLVED on a GOVERNED day REFUSES and states the "
+           "remedy — it is TEMPORARY, the rule block lands with the closing "
+           "verdict")
+    _unj = {"read_from": "content_liveness_rule", "is_thin": False,
+            "status": "CONTENT_LIVENESS_UNJUDGEABLE", "is_resolved": False}
+    try:
+        apply_blackout_mask(day, sw, {"present": False, "path": "x"}, _unj)
+        ok(False, "UNJUDGEABLE must REFUSE")
+    except MaskRequired as e:
+        ok(ROUTED_UNJUDGEABLE in str(e) and "PERMANENT" in str(e)
+           and "not a retry" in str(e),
+           "R-412(2) UNJUDGEABLE REFUSES and emits routed_to as TEXT — it is "
+           "PERMANENT, so retrying is not the remedy and the scorer states "
+           "the routing without deciding the disposition (rule 14)")
+    ok("retry" not in str(ROUTED_UNJUDGEABLE),
+       "R-412(2) and the two statuses are DISTINGUISHED: one routes, the "
+       "other retries — collapsing them would send a permanently unjudgeable "
+       "day round a loop that cannot end")
+
+    # ---- RR8-3: a PARTIAL mask is refused, by name ----------------------
+    try:
+        apply_blackout_mask(day, sw, {"present": True, "path": "mid.json",
+                                      "per_coin": {}, "n_masked": {},
+                                      "day_closed_calendar": False}, live_ok)
+        ok(False, "a PARTIAL mask must REFUSE")
+    except MaskRequired as e:
+        ok("day_closed_calendar=False" in str(e) and "RR8-3" in str(e),
+           "RR8-3 a mask with day_closed_calendar False is REFUSED by name — "
+           "a mid-day mask lists only the windows that exist so far, so "
+           "scoring off it scores the complement of an unfinished day")
+    _kc, _ac = apply_blackout_mask(day, sw, {"present": True, "path": "f.json",
+                                             "per_coin": {}, "n_masked": {},
+                                             "day_closed_calendar": True},
+                                   live_ok)
+    ok(_ac["mask_day_closed_calendar"] is True and len(_kc["btc"]) == 5,
+       "RR8-3 POSITIVE CONTROL: a CLOSED-day mask is accepted and the flag is "
+       "carried into the report — the check discriminates on the field")
 
     # ---- liveness_status ITSELF, driven. My fixtures were hand-built, so
     # the reader that classifies a real verdict was never exercised: mutants
@@ -462,7 +627,8 @@ def _selftest_blackout_mask(checks: int) -> int:
 
     # ---- POSITIVE CONTROL: two masked windows -> exactly the complement ---
     mask2 = {"present": True, "path": "m.json", "as_of_utc": "Z",
-             "commit": "abc1234", "protocol": MASK_PROTOCOL,
+             "detector": {"authority": "fixture"}, "artifact": MASK_ARTIFACT,
+             "day_closed_calendar": True, "total_masked_windows": 2,
              "per_coin": {"btc": [t0 + W, t0 + 3 * W]},
              "n_masked": {"btc": 2}}
     kept, acct = apply_blackout_mask(day, sw, mask2, live_thin)
@@ -479,7 +645,8 @@ def _selftest_blackout_mask(checks: int) -> int:
        and acct["masked_fraction"]["btc"] == 0.4,
        f"R-409 the loss is ACCOUNTED, per coin, with its fraction "
        f"({acct['n_masked']}, {acct['masked_fraction']})")
-    ok(acct["mask_as_of_utc"] == "Z" and acct["mask_commit"] == "abc1234",
+    ok(acct["mask_as_of_utc"] == "Z"
+       and acct["mask_detector"] == {"authority": "fixture"},
        "R-409 the mask's as-of and commit travel into the report (rule 8: "
        "every quoted population carries its n AND its as-of)")
 
@@ -501,8 +668,8 @@ def _selftest_blackout_mask(checks: int) -> int:
        "the check discriminates rather than always firing")
 
     # ---- EMPTY MASK == TODAY, field for field ----------------------------
-    empty = {"present": True, "path": "e.json", "protocol": MASK_PROTOCOL,
-             "per_coin": {}, "n_masked": {}}
+    empty = {"present": True, "path": "e.json", "artifact": MASK_ARTIFACT,
+             "day_closed_calendar": True, "per_coin": {}, "n_masked": {}}
     kept0, acct0 = apply_blackout_mask("20260901", sw, empty, live_ok)
     plain = build_report("20260901", {c: [v for _, v in r]
                                       for c, r in sw.items()}, True)
@@ -534,19 +701,22 @@ def _selftest_blackout_mask(checks: int) -> int:
        "R-409 and a RESOLVED live day says something different — the basis "
        "field discriminates instead of printing one sentence for every day")
     _k3, _a3 = apply_blackout_mask(day, sw, mask2, _unres)
-    ok("n_masked=2" in _a3["mask_requirement_basis"]
-       and _a3["n_masked"]["btc"] == 2,
-       "R-409 and once the MASK declares windows the trigger fires on its "
-       "own, even with liveness unresolved — which is how 09-02 becomes "
-       "maskable the moment DA's artifact lands")
+    ok("PRESENT and is CONSUMED" in _a3["mask_requirement_basis"]
+       and _a3["n_masked"]["btc"] == 2 and _k3["btc"] == [1.0, 3.0, 5.0],
+       "R-411 PRESENCE CONSUMES: a mask is honoured on a PRE-GOVERNED day "
+       "with liveness UNRESOLVED — which is exactly how 09-01's 141 windows "
+       "are masked at scoring, the USER's R-409 principle")
 
     # ---- the ADAPTER asserts DA's schema and REFUSES on drift ------------
     with tempfile.TemporaryDirectory() as td:
         good = Path(td) / "m.json"
         good.write_text(json.dumps({
-            "protocol": MASK_PROTOCOL, "day": day, "as_of_utc": "Z",
-            "commit": "c0ffee", "per_coin": {"btc": {
-                "masked_windows": [t0, t0 + W], "n_masked": 2}}}))
+            "artifact": MASK_ARTIFACT, "day": day, "as_of_utc": "Z",
+            "day_closed_calendar": True, "total_masked_windows": 2,
+            "detector": {"authority": "fixture"}, "coins": {"btc": {
+                "masked_windows": [t0, t0 + W], "n_masked": 2,
+                "n_windows_total": 288, "longest_run_windows": 2,
+                "agrees_with_frozen_L1_numerator": True}}}))
         m = load_blackout_mask(day, good)
         ok(m["present"] and m["per_coin"]["btc"] == [t0, t0 + W]
            and m["n_masked"] == {"btc": 2},
@@ -556,22 +726,37 @@ def _selftest_blackout_mask(checks: int) -> int:
            "R-409 an ABSENT mask reads as absent, not as empty — the two are "
            "different and only one of them permits scoring a thin day")
         for lbl, doc, want in (
-                ("wrong protocol", {"protocol": "SOMETHING_ELSE", "day": day,
-                                    "per_coin": {"btc": {"masked_windows": []}}},
-                 "does not identify as a blackout mask"),
-                ("wrong day", {"protocol": MASK_PROTOCOL, "day": "20260101",
-                               "per_coin": {"btc": {"masked_windows": []}}},
+                ("wrong artifact id", {"artifact": "SOMETHING_ELSE",
+                                       "day": day, "day_closed_calendar": True,
+                                       "coins": {"btc": {"masked_windows": []}}},
+                 "not 'da_blackout_mask_v1'"),
+                ("wrong day", {"artifact": MASK_ARTIFACT, "day": "20260101",
+                               "day_closed_calendar": True,
+                               "coins": {"btc": {"masked_windows": []}}},
                  "is for day"),
-                ("no per_coin", {"protocol": MASK_PROTOCOL, "day": day},
-                 "carries no per_coin"),
-                ("windows not ints", {"protocol": MASK_PROTOCOL, "day": day,
-                                      "per_coin": {"btc": {
+                ("no coins block", {"artifact": MASK_ARTIFACT, "day": day,
+                                    "day_closed_calendar": True},
+                 "carries no `coins` block"),
+                ("no day_closed_calendar", {"artifact": MASK_ARTIFACT,
+                                            "day": day,
+                                            "coins": {"btc": {
+                                                "masked_windows": []}}},
+                 "no boolean `day_closed_calendar`"),
+                ("windows not ints", {"artifact": MASK_ARTIFACT, "day": day,
+                                      "day_closed_calendar": True,
+                                      "coins": {"btc": {
                                           "masked_windows": ["a"]}}},
                  "not a list of integer window starts"),
                 ("count disagrees with its own list",
-                 {"protocol": MASK_PROTOCOL, "day": day, "per_coin": {
+                 {"artifact": MASK_ARTIFACT, "day": day,
+                  "day_closed_calendar": True, "coins": {
                      "btc": {"masked_windows": [t0], "n_masked": 7}}},
-                 "disagrees with its own list")):
+                 "disagrees with its own list"),
+                ("total disagrees with the lists it summarises",
+                 {"artifact": MASK_ARTIFACT, "day": day,
+                  "day_closed_calendar": True, "total_masked_windows": 99,
+                  "coins": {"btc": {"masked_windows": [t0], "n_masked": 1}}},
+                 "own per-coin lists hold")):
             bad_p = Path(td) / f"bad_{abs(hash(lbl))}.json"
             bad_p.write_text(json.dumps(doc))
             try:
@@ -583,7 +768,46 @@ def _selftest_blackout_mask(checks: int) -> int:
                    f"does not invent a parallel schema, and a misread mask "
                    f"is a day scored over its own blackout")
 
-        # ---- LAUNCHER-SHAPED DRIVE, through main() itself -----------------
+            # ---- RR8-1: THE REAL COMMITTED ARTIFACT. A fixture cannot close
+        # this finding — the adapter passed its own fixtures while REFUSING
+        # DA's real mask, because BE asserted an envelope it had invented.
+        # This check reads the artifact DA committed, and it is the only kind
+        # that could have failed today.
+        real = mask_path("20260901")
+        if real.exists():
+            da = json.loads(real.read_text())
+            rm = load_blackout_mask("20260901")
+            ok(rm["present"] and rm["artifact"] == MASK_ARTIFACT,
+               f"RR8-1 the adapter READS DA's real committed mask "
+               f"({real.name}) — it refused it before, both suites green")
+            ok(rm["total_masked_windows"] == da["total_masked_windows"]
+               == sum(len(w) for w in rm["per_coin"].values()),
+               f"RR8-1 and the window count agrees with DA's own "
+               f"total_masked_windows ({da['total_masked_windows']}) — "
+               f"asserted against the ARTIFACT, not a literal")
+            # per-coin, against DA's numbers rather than transcribed ones
+            want = {c: b["n_masked"] for c, b in da["coins"].items()}
+            ok(rm["n_masked"] == want,
+               f"RR8-1 per-coin masked counts equal DA's artifact exactly "
+               f"({want})")
+            # and SCORING it must exclude exactly those windows
+            sw_real = {c: [(w, float(i)) for i, w in
+                           enumerate(sorted(b["masked_windows"])[:3]
+                                     + [b["masked_windows"][0] - 300])]
+                       for c, b in list(da["coins"].items())[:2]}
+            live_unres = liveness_status(read_day_verdict("20260901"))
+            kept_r, acct_r = apply_blackout_mask("20260901", sw_real, rm,
+                                                 live_unres)
+            ok(all(acct_r["n_masked"][c] == 3 for c in sw_real),
+               f"RR8-1 scoring 09-01 with its REAL mask excludes exactly the "
+               f"windows DA listed (masked {acct_r['n_masked']}) and keeps "
+               f"the one that is not in it")
+            ok(acct_r["mask_day_closed_calendar"] is True
+               and acct_r["mask_as_of_utc"] == da["as_of_utc"],
+               "RR8-1 and the real mask's closed-day flag and as-of travel "
+               "into the report")
+
+    # ---- LAUNCHER-SHAPED DRIVE, through main() itself -----------------
         af = Path(td) / "actions.json"
         af.write_text(json.dumps({c: [[w, v] for w, v in r]
                                   for c, r in sw.items()}))
