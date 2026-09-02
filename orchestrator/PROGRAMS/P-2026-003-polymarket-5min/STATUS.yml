@@ -4,6 +4,67 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T20:09Z (MEM ROUND 56 -- THE GUARD KEEPS THE PROPOSAL FROM BEING
+  OBEYED; IT DOES NOT KEEP IT FROM BEING WRONG). R-475, R-476, Q-DE-54, Q-BE-235
+  and the reviewer's DE-36 filing swept; nothing run; committed blobs and plan
+  files only. DE36-R1 IS THE SHARPEST ITEM THIS WEEK AND IT LANDS ONE LAYER ABOVE
+  EVERY FINDING BEFORE IT: the addendum v2 DRAFT -- THE DOCUMENT THE USER IS
+  BEING ASKED TO FREEZE -- says at :144 "This is a property, not a number, and
+  the runner already implements it", THE REVIEWER RULES THAT FALSE, and IT MUST
+  NOT REACH THE USER; I read the line at the file. SET THAT BESIDE LAST ROUND'S
+  NEGATIVE CONTROL AND THE GAP IS EXACT: de_phase4_protocol_check.py proves
+  NOTHING CITES THE DRAFT AS AUTHORITY -- an excellent guard that says nothing
+  about whether THE DRAFT'S OWN PROSE IS TRUE. THE GUARD KEEPS A PROPOSAL FROM
+  BEING OBEYED; IT DOES NOT KEEP IT FROM BEING WRONG. A false sentence about the
+  code inside the document the USER freezes is worse than one in code: THE CODE
+  HAS A SUITE, THE PROSE HAS A READER. SECTION 5 IS NOW RULED IN FULL and the
+  (gamma) wording is a stronger object than what it replaces: TOTAL permutation
+  of ALL above-threshold values within (side, hour) strata with THE DRAW NAMING
+  WHICH GENERATIONS RECEIVE THEM; matched on the REALISED ACTION COUNT AFTER THE
+  REPLAY with failed draws REJECTED AND REDRAWN under a bound;
+  n_draws_attempted / n_draws_accepted / n_rejected_by_stratum IN THE RECEIPT;
+  control#2 WITHDRAWN; P1-P4 predicates REPLACING THE SUBSTRING CHECK. THE MATCH
+  MOVED FROM WHAT WAS INTENDED TO WHAT ACTUALLY HAPPENED -- a realised count
+  cannot be satisfied by a draw that failed, which is precisely how the previous
+  control flattered itself. AND C1 WAS CONFIRMED THE HARD WAY: MEASURED ON A
+  FIXTURE, WITH A TRUE SWAP SHOWN NOT TO FIX IT -- the obvious repair was tested
+  and rejected before the real one was ruled. DE36-R4 IS THE WEEK'S RECURRING
+  GENUS, THIRD INSTANCE: three checks assert SOURCE STRINGS -- ok("res =
+  arm_result(" in _null_src) at :1372, ok("preflight()" in _runsrc) at :1673, and
+  ok(... "_above = [e for e in treated_scores" in _ctrl_src) at :1733 -- which is
+  CO-11 (keyed on a spelling) and CO-12 (attribution by substring) in a third
+  costume: A CHECK THAT READS SOURCE TEXT INSTEAD OF RUNNING IT PASSES FOR A
+  RENAME AND FAILS FOR A REFORMATTING. Round 37 replaces them with predicates, in
+  the right order -- SECTION 5 FIRST, THE DRAFT'S TWO SENTENCES SECOND, the two
+  things that can reach the USER. THE COMPUTE FIGURE NOW TRAVELS HONESTLY SPLIT
+  and the reason matters more than the number: the FEED ~28.6 MIN IS MEASURED
+  (round 33) and travels; THE REPLAY IS UNMEASURED and its synthetic figure is A
+  FLOOR, the fixture being 20 SLUGS x ONE GENERATION x ONE TRANCHE x ONE SIDE,
+  NOT the "471 windows" a reader would assume; DE35-R2's 4x STANDS and the
+  "~1000x overstated in total" half is DE'S OWN AND NOT ESTABLISHED. A COST
+  ESTIMATE THAT MIXES ONE MEASURED HALF WITH ONE SYNTHETIC HALF IS NOT A RANGE,
+  IT IS TWO DIFFERENT CLAIMS WEARING ONE NUMBER. ONE TRANSCRIPTION SLIP CAUGHT AT
+  THE SOURCE: Q-DE-54 reports the runner "68 -> 71" while EXPECTED_CHECKS reads
+  67 at 27c1ccd and 71 at 92c7da4, so it is 67 -> 71 -- and the correction
+  matters because THE DELTA IS WHAT A READER USES: +4, NOT +3 (R-471 and Q-DE-53
+  both recorded 67). Q-BE-235 IS LANDED AND NOT VERIFIED, and I keep those two
+  words apart: BE9-C1..C3 closed, executed IN TWO TREES, a 26-CASE mutation
+  audit, with COORDINATOR VERIFICATION IN FLIGHT SINCE 20:01:48Z; RUN B'S TREE IS
+  A QUESTION FOR THE REVIEWER'S BE 9+10 ROUND, not a settled fact. The pin's
+  three rulings and called#1's falsifier are recorded, and THE THREE DECLARED
+  REASONS ARE TRUE -- checked by the reviewer, carried by me. The reviewer also
+  corrected IN BAND its own round-35 "asserted from the parse" label. RELEASE:
+  92c7da4 as ROUND 37'S BASE. SEATS: DE round 37 DISPATCHED at e791f4f (Q-DE-55
+  in flight); the REVIEWER on RECORDED STANDBY until R-477 (BE round 10
+  verified), then BE 9 + 10 AS ONE ROUND; BE on RECORDED STANDBY, round 11 being
+  the durable landing after the 00:14Z read; DA standby until 00:06Z / 00:14Z.
+  THE PHASE-4 RUN HAS NO DATE. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z
+  preflight, coordinator wake after, R-409 accrual with the R-411(ii)
+  denominator, DA landing at e353119 (HOLD -> 3b7e10a), CO-8,
+  --require-no-skips, DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed
+  tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-02T19:39Z (MEM ROUND 55 -- THE FINDING SURVIVED; ITS EXPLANATION DID
   NOT). R-472, R-473 and the reviewer's DE-35 filing swept; nothing run; state
   files only. R-473 SECTION 0 IS THE SHAPE WORTH LEARNING FROM AND IT IS NOT A
@@ -113,68 +174,6 @@ updated: >-
   ROUND 10 LANDS, CO-8, --require-no-skips, DATA_ROOT split. THE PHASE-4 RUN HAS
   NO DATE. USER: SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5;
   the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-02T19:05Z (MEM ROUND 53 -- THE FROZEN TEXT ALREADY ASKED FOR TWO OF THE
-  THINGS THE RUNNER WOULD HAVE HAD TO INVENT). R-466, R-467 and R-468 swept;
-  nothing run; frozen plan files and committed blobs only. I CHECKED THE ESTIMAND
-  FILING'S CITATIONS AT THE FROZEN LINES AND THE READING THEY SUPPORT IS STRONGER
-  THAN "FIVE FINDINGS": DRAFT:212-213 defines rho as the RETAINED-BOOK
-  ADVERSE-COST / SPREAD-CAPTURE RATIO and :68 row 5 fixes the feed as
-  GENERATION-LEVEL TRANCHE TABLES, NEVER PER-ROW LATENCY LABELS -- so EST-R1 is
-  not a preference about denominators: THE FROZEN PROTOCOL ALREADY SAYS THE
-  DENOMINATOR IS MEASURED, which means a constant HALF_SPREAD_CENTS does not
-  merely approximate it, IT MAKES THE READING THRESHOLD THE CONSTANT (0.7
-  c/share closes the route at H = 0.5 and does not at H = 1.0). A CONSTANT
-  STANDING IN FOR A MEASUREMENT MOVES THE VERDICT, NOT THE PRECISION. AND EST-R2
-  LANDS ON THE RECEIPT, NOT THE NUMBER: the over-the-hold value IS the frozen
-  feed's (:68), so what is wrong is the receipt BINDING fill_horizon_s and an
-  estimand note that declare a 1-second cap over it -- and I checked the other
-  half myself: THE ADDENDUM MENTIONS "horizon" ZERO TIMES, so the governing
-  document declares NO horizon, the receipt declares ONE, and they are about
-  different quantities, which is why the closure is "declare the horizon the
-  number has, in addendum v2, before the run" rather than "fix the constant".
-  This is the round-50 finding grown a layer: the addendum omitted Cap 2, and it
-  also omits ANY horizon at all. TWO OF THE SIX ADDENDUM ITEMS ARE NOT NEW ASKS
-  -- THE FROZEN TEXT ALREADY DEMANDS THEM: DRAFT:71 row 8 says
-  max_cancels_per_minute is DECLARED PER CELL with requested / effective(passed)
-  / suppressed counts REPORTED, so EST-R4's identity is THE PROTOCOL'S OWN DUTY,
-  unmet, and the runner's stated reason for skipping it is false on both halves;
-  likewise STATEFUL_HARMFUL_CANCEL_TODO.md:381-382 REQUIRES theta_repost <
-  theta_cancel FOR A DECLARED DWELL, so REPOST_DWELL_S is a number THE
-  PROGRAMME'S OWN TODO DEMANDED and nobody has proposed (2.0 s with no proposal
-  on record). THE GAP BETWEEN "THE DOCUMENT REQUIRES IT" AND "SOMEBODY CHOSE IT"
-  IS WHERE ALL THREE NUMBERS LIVE. SO THE USER ITEM WIDENED WITHOUT MULTIPLYING:
-  it is still ONE decision -- ONE DATED ADDENDUM v2 THE USER FREEZES -- now
-  carrying THREE NUMBERS (theta_repost with sensitivity at 1.0x-eps and 0.5x and
-  NEITHER SELECTED; REPOST_DWELL_S; HALF_SPREAD_CENTS ONLY IF KEPT, both DE and
-  the reviewer recommending it be MEASURED AWAY) and THREE DECLARATIONS (the
-  horizon the number has; repost parity in the control, required by the
-  estimand's logic and SILENT in the frozen text; the rate-limit declaration with
-  its identity). BUNDLING THEM IS THE RIGHT SHAPE: six separate asks would arrive
-  as six chances to answer partially. EST-R5 IS THE ONE TO FLAG TO A READER IN A
-  HURRY: the cancel set MUST be the drawn generations (:147-156) and the control
-  at :601-604 DISCARDS _gen AND COLLAPSES same-(slug, side) draws, so THE ACTION
-  COUNT IS NOT PRESERVED -- rule 2 of this programme's own reliability rules,
-  ROWS ARE ACTIONS, appearing INSIDE THE MATCHED CONTROL where it silently
-  changes what the control is matched on. DE ROUND 34 EXECUTED AT 47a2ba6 AND
-  COUNTS AS FILED: four findings closed, C1 HALF-CLOSED, five named open,
-  DE34-C1..C4 raised -- "counts as filed" being the honest status, the round
-  having done what it said and named what it did not do. DE ROUND 35 IS ROUTED
-  with the feed change the five open findings share, the code halves of
-  EST-R1/R2/R4/R5, and THE ADDENDUM v2 DRAFT FOR THE USER -- the right ordering,
-  because the draft is written by the seat that must implement it and frozen by
-  the USER who must own the numbers. TWO IN-BAND CORRECTIONS CARRIED WITHOUT
-  FLATTENING THEM: R-467 corrected R-466's reading times, and R-468 section 0
-  corrects R-467 section 1's own "verified 18:53Z" -- A CORRECTION OF A
-  CORRECTION IS NOT NOISE, it is the only way a time written ahead of the clock
-  stops propagating. BE8-R1/R2 go to BE ROUND 12; the reviewer takes DE 33 + 34
-  AS ONE FILING at 47a2ba6 (request c70e8e2), then BE 9 + 10 at the round-10 tip.
-  THE PHASE-4 RUN HAS NO DATE. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z
-  preflight, coordinator wake after, R-409 accrual with the R-411(ii)
-  denominator, DA landing at e353119 (HOLD -> 3b7e10a), THE DURABLE LANDING IS BE
-  ROUND 11 AFTER ROUND 10 LANDS, CO-8, --require-no-skips, DATA_ROOT split. USER:
-  SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family
-  12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3796,7 +3795,7 @@ flags:
   be_durable_landing_is_round_11: "after the 00:14Z read AND after round 10 lands"
   repo_constant_four_symptoms: "BE34-R3, BE7-R4, BE9-C1, BE9-C2 all from REPO hardcoded; round 6 fixed a USE"
   reviewer_be_r8_released: "c54e48e (f804f33); CO-12 and CO-13 CONFIRMED CLOSED; two LOW"
-  user_addendum_v2_bundle: "DRAFT LANDED, NOT FORWARDED (sha16 6edefdfda909a897): TWO numbers (theta_repost, REPOST_DWELL_S -- HALF_SPREAD_CENTS was DELETED at 27c1ccd, so there is no number to rule) + three declarations. Reviewer: 1 and 4 may go ahead of 5; 2 and 3 may not. 5 restated by DE round 36, then the package is sent WHOLE in ONE notification. DE35-R2 travels with it: each null draw = four replays, ~800 per cell, so v1 d's 'of order 6 hours' is understated ~4x"
+  user_addendum_v2_bundle: "DRAFT LANDED, NOT FORWARDED (sha16 6edefdfda909a897): TWO numbers (theta_repost, REPOST_DWELL_S) + three declarations. Section state: 1 and 4 READY; 3 READY; 2 RE-READ against the (gamma) stream; 5 = the (gamma) wording (total permutation within (side,hour), matched on the REALISED action count, control#2 WITHDRAWN, P1-P4 replace the substring check) PENDING DE round 37 + its review. Compute travels SPLIT: feed ~28.6 min MEASURED, replay UNMEASURED with the synthetic figure a FLOOR (fixture = 20 slugs x one generation x one tranche x one side, NOT 471 windows); DE35-R2 4x STANDS, ~1000x NOT established. Package still travels WHOLE in ONE notification after round 37 is reviewed"
   est_r1_r5_open: "EST-R1/R2 HIGH, R3/R4/R5 MED -> DE round 35; rho denominator is MEASURED at DRAFT:212-213"
   addendum_declares_no_horizon: "grep horizon in the addendum = 0 hits; the receipt binds one, the addendum declares none"
   de_r34_executed_counts_as_filed: "47a2ba6 (Q-DE-52 68f63aa); four closed, C1 half-closed, five named open; DE34-C1..C4"
@@ -3815,6 +3814,12 @@ flags:
   addendum_v2_section_order: "reviewer: 1 and 4 may go ahead of 5; 2 and 3 may not; 5 restated by DE round 36; package sent WHOLE in ONE notification"
   de_r36_dispatched: "Q-DE-54 in flight at 3d9b9e9; row not landed when MEM filed; scoring wiring is a LATER round with DE35-R3"
   de34_r7_ruling: "run against the TIP, called set COMPUTED, residue carried as STATUSES, phase2_arms.py NOT_CALLED"
+  de_r36_executed: "92c7da4 (Q-DE-54 2432aa5); counts and pin statuses reproduce; run blocked by the wiring only; DE36-C1..C6"
+  qde54_transcription_slip: "its runner 68 -> 71 is 67 -> 71; EXPECTED_CHECKS read at both blobs; the delta is +4, not +3"
+  reviewer_de_r36_released: "aa1e44a 20:01:57Z; DE36-C1..C6 ALL CONFIRMED (C1 measured on a fixture, a TRUE swap does not fix it); DE36-R1 HIGH, R2/R3 MED, R4 LOW-MED; 92c7da4 = round 37 base"
+  de36_r1_high: "the DRAFT tells the USER the runner already implements 5 -- FALSE; must not reach the USER (draft :144)"
+  de_r37_dispatched: "Q-DE-55 in flight at e791f4f; five items IN ORDER: 5 (gamma) -> the DRAFT sentences -> the pin rulings -> the wiring with the feed counters -> the substring checks"
+  be_r10_landed_not_verified: "code ff60d0a, row Q-BE-235 5b4eb06 20:00:39Z; coordinator verification IN FLIGHT since 20:01:48Z; RUN B tree is a question for the BE 9+10 round"
                              # v18-v19 added the daily pipeline and all-coin
                              # commit-last batch; v20 adds R-DERIVE, R-GROSS,
                              # R-DUAL and R-ONEROW plus Tier-2 markout,
@@ -3823,7 +3828,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T19:39Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T20:09Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are

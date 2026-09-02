@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T19:39Z — **DE round 35 RELEASED (`df123f2`): C1..C5 all
-CONFIRMED**, C4 contested **as a blocker, not as a finding**. **The USER package
-is TWO numbers, not three** — `HALF_SPREAD_CENTS` was **deleted at `27c1ccd`**,
-so its denominator is a measurement and there is **no number to rule**. The
-reviewer **splits the bundle** (§1/§4 may go ahead; §2/§3 may not; §5 restated by
-round 36), and it goes **whole, in one notification, after round 36**. **R-471
-§2(a)'s MECHANISM is corrected in band — the finding stands.** **The run has no
-date. SEVEN RULED, THREE OPEN.**
+Updated: 2026-09-02T20:09Z — **DE36-C1..C6 ALL CONFIRMED** and §5 is ruled: the
+**(γ)** wording — total permutation within `(side, hour)`, matched on the
+**realised action count**, `control#2` **withdrawn**, **P1–P4** replacing the
+substring check. **DE36-R1 (HIGH) is the one to watch: the DRAFT tells the USER
+the runner "already implements it", and that is FALSE — it must not reach them.**
+The compute travels **split**: feed **measured**, replay **an unmeasured floor**;
+**DE35-R2's 4× stands, "~1000×" is not established.** BE round 10 **landed,
+verification IN FLIGHT — not verified.** **The run has no date.**
 
 ## READ FIRST — current project handoff
 
@@ -125,13 +125,23 @@ diagnostic**, below.
 > **All of it lands in ONE addendum the USER freezes; none of it is decided by a
 > seat (rule 14). Nothing runs until it is settled, and the run has no date.**
 >
-> **STATUS: the DRAFT HAS LANDED and is NOT FORWARDED — and the reviewer has
-> split it.** **§1 and §4 may go ahead of §5; §2 and §3 may NOT.** **§5 is
-> restated by DE round 36**, and the package then goes to the USER **WHOLE, in
-> ONE notification** (the coordinator's routing choice, R-473 §2). **DE35-R2
-> travels with it:** each null draw is **four replays**, ~**800 per cell**, so
-> v1 §d's *"of order 6 hours"* is **understated by about 4×** — a cost estimate
-> the USER should have before freezing, not after.
+> **STATUS: the DRAFT HAS LANDED and is NOT FORWARDED.** Section by section:
+> **§1 and §4 are READY**; **§3 is READY**; **§2 must be RE-READ against the
+> (γ) stream**; **§5 is the (γ) wording** — *total permutation of ALL
+> above-threshold values within `(side, hour)` strata, the draw naming which
+> generations receive them, matched on the per-stratum **REALISED ACTION COUNT**
+> after the replay, failed draws **rejected and redrawn** (bounded, with
+> `n_draws_attempted` / `n_draws_accepted` / `n_rejected_by_stratum` in the
+> receipt), `control#2` **WITHDRAWN**, and predicates **P1–P4** replacing the
+> substring check* — **pending DE round 37 and its review.**
+>
+> **The compute figure travels split, because only half of it is measured:**
+> the **feed ~28.6 min is MEASURED** (round 33) and travels; **the replay is
+> UNMEASURED and its synthetic figure is a FLOOR** — the fixture is **20 slugs ×
+> one generation × one tranche × one side**, *not* "471 windows". **DE35-R2's
+> 4× STANDS; the "~1000× overstated in total" half is DE's and is NOT
+> established.** The package still travels **WHOLE, in ONE notification, after
+> round 37 is reviewed.**
 > `plans/DE_PHASE4_DIAGNOSTIC_ADDENDUM_V2_DRAFT_2026-09-02.md` (sha16
 > **`6edefdfda909a897`**) is a **PROPOSAL**. **§5 is NOT forwarded to the USER**
 > until the reviewer rules **DE35-C1**: the control's repost event has **no
@@ -827,7 +837,9 @@ launchers at **235/19**.
 | **DE rounds 33+34 review** | **RELEASED** (`20bd233`, 219 lines) — **DE34-C1..C4 all CONFIRMED**; seven findings **DE34-R1..R7**; `47a2ba6` released **as round 35's BASE ONLY** |
 | **DE round 35** | **LANDED and EXECUTED** at `27c1ccd` (Q-DE-53 `19ddb43`) — counts **21/67/26/21/24/21/184/92** reproduce; the preflight **refuses before the feed**; five findings **DE35-C1..C5** (**C1 HIGH**) |
 | **DE round 35 review** | **RELEASED** (`df123f2`, 276 lines) — **DE35-C1..C5 all CONFIRMED** (C4 **contested as a blocker**, not as a finding); five findings **DE35-R1..R5**; `27c1ccd` released **as round 36's base** |
-| **DE round 36** | **DISPATCHED** (Q-DE-54, in flight) — **§5 restated**, DE35-C2..C5, DE34-R2/R3/R5/R6. The **scoring wiring is a LATER round**, with DE35-R3 |
+| **DE round 36** | **EXECUTED** at `92c7da4` (Q-DE-54 `2432aa5`) — counts and pin statuses reproduce, the run **blocked by the wiring only**; six findings **DE36-C1..C6**. Its row's *"runner 68 → 71"* is a **transcription slip: 67 → 71** (`EXPECTED_CHECKS` read at both blobs) |
+| **DE round 36 review** | **RELEASED** (`aa1e44a`, 263 lines, 20:01:57Z) — **DE36-C1..C6 ALL CONFIRMED** (C1 **measured on a fixture**; **a TRUE swap does not fix it**); four findings **DE36-R1..R4**; `92c7da4` released **as round 37's base** |
+| **DE round 37** | **DISPATCHED** at `e791f4f` (Q-DE-55, in flight) — five items **in order**: **§5 (γ)** → the DRAFT's two sentences → the pin's rulings → the wiring with the feed's counters → the substring checks |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -847,7 +859,7 @@ launchers at **235/19**.
 | **BE round 8** | **VERIFIED** at `c54e48e` (Q-BE-233) — **CO-12 and CO-13 CLOSED**, 106/106 both launchers (the coordinator's count; I did not run it — rule 9) |
 | **BE round 8 review** | **RELEASED** (`f804f33`) for `c54e48e` — **CO-12 and CO-13 both CONFIRMED CLOSED**; two LOW findings |
 | **BE round 9** | **EXECUTED at the tip and FOUND SHORT** (`90638c3`, Q-BE-234 → **VERIFIED-SHORT**) — **93 PASS then rc 1** under both launchers; **checks 95–117 unverifiable at that tip in ANY tree**. Three findings **BE9-C1..C3** |
-| **BE round 10** | **CODE LANDED** `ff60d0a` 19:13:34Z — *"the check was a function of the branch, not of the code"*. **Row in flight; verification pending.** Not read here (standing rule 9) |
+| **BE round 10** | **LANDED** — code `ff60d0a`, row Q-BE-235 `5b4eb06` (20:00:39Z): BE9-C1..C3 closed, executed in **two trees**, a **26-case** mutation audit. **Coordinator verification IN FLIGHT since 20:01:48Z — NOT verified.** **RUN B's tree is a question for the reviewer's BE 9+10 round** |
 | **BE round 11** | **the R-442 §3(c) DURABLE LANDING** — after the 00:14Z read **AND** after round 10 lands |
 | **BE — durable landing** | now **BE round 11**: after the **00:14Z** read **AND** after round 10 lands — **a driver whose selftest fails at its tip cannot produce the artifact of record** |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
@@ -897,9 +909,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**DE34-C1..C4 CONFIRMED and closed** at `27c1ccd`; **DE35-C1..C5 all CONFIRMED**
-(C4 **contested as a blocker**); **DE35-C2..C5**, **DE35-R1..R5** and
-**DE34-R2/R3/R5/R6** → **DE round 36, dispatched**;
+**DE35-C1..C5 CONFIRMED** (C4 contested as a blocker); **DE36-C1..C6 ALL
+CONFIRMED**; **DE36-R1 (HIGH)**, **DE36-R2/R3 (MED)**, **DE36-R4 (LOW-MED)** →
+**DE round 37, dispatched**;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
 tense**; **DA17-R1 (LOW)** → behind DA's landing;
@@ -926,8 +938,8 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on RECORDED STANDBY** until **BE round 10's row lands**; then
-**BE rounds 9 + 10 as ONE filing** at the round-10 tip. **Released so far**
+**The reviewer is on RECORDED STANDBY** until **R-477 (BE round 10 verified)**;
+then **BE rounds 9 + 10 as ONE round**. **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1742,6 +1754,78 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~20:09Z (MEM) — THE GUARD KEEPS THE PROPOSAL FROM BEING OBEYED;
+### IT DOES NOT KEEP IT FROM BEING WRONG
+
+**R-475, R-476, Q-DE-54, Q-BE-235 and the DE-36 filing swept.** Nothing run;
+committed blobs and plan files only.
+
+**DE36-R1 is the sharpest item this week, and it lands one layer above every
+finding before it.** The addendum v2 DRAFT — **the document the USER is being
+asked to freeze** — says at `:144`: *"**This is a property, not a number**, and
+the runner already implements it"*. **The reviewer rules that false**, and it
+**must not reach the USER**. I read the line at the file.
+
+**Set that beside last round's negative control and the gap is exact.**
+`de_phase4_protocol_check.py` proves **nothing cites the draft as authority** —
+an excellent guard, and it says nothing whatever about whether **the draft's own
+prose is true**. **The guard keeps a proposal from being obeyed; it does not keep
+it from being wrong.** A false sentence about the code, inside the document the
+USER freezes, is worse than a false sentence in code: the code has a suite, and
+the prose has a reader.
+
+**§5 is now ruled in full, and the (γ) wording is a stronger object than what it
+replaces.** *Total* permutation of **all** above-threshold values within
+`(side, hour)` strata, with **the draw naming which generations receive them**;
+matched on the **realised action count after the replay**, with failed draws
+**rejected and redrawn** under a bound; `n_draws_attempted` /
+`n_draws_accepted` / `n_rejected_by_stratum` **in the receipt**; `control#2`
+**withdrawn**; and **P1–P4 predicates replacing the substring check**. **The
+match moved from what was intended to what actually happened** — a realised count
+cannot be satisfied by a draw that failed, which is precisely how the previous
+control flattered itself.
+
+**And C1 was confirmed the hard way: measured on a fixture, with a TRUE swap
+shown NOT to fix it.** That matters because "swap the events" is the obvious
+repair, and the obvious repair was tested and rejected before the real one was
+ruled.
+
+**DE36-R4 is the week's recurring genus, third instance.** Three checks assert
+**source strings** — `ok("res = arm_result(" in _null_src)` (`:1372`),
+`ok("preflight()" in _runsrc)` (`:1673`), and `ok(… "_above = [e for e in
+treated_scores" in _ctrl_src)` (`:1733`) — which is CO-11 (keyed on a spelling)
+and CO-12 (attribution by substring) in a third costume. **A check that reads
+source text instead of running it passes for a rename and fails for a
+reformatting.** Round 37 replaces them with predicates, in the right order:
+**§5 first, the DRAFT's two sentences second** — the two things that can reach the
+USER.
+
+**The compute figure now travels honestly split, and I record why that matters
+more than the number.** The **feed ~28.6 min is MEASURED** (round 33) and
+travels. **The replay is UNMEASURED**, and its synthetic figure is **a FLOOR** —
+the fixture is **20 slugs × one generation × one tranche × one side**, *not* the
+"471 windows" a reader would assume. **DE35-R2's 4× stands; the "~1000×
+overstated in total" half is DE's own and is NOT established.** *A cost estimate
+that mixes one measured half with one synthetic half is not a range, it is two
+different claims wearing one number.*
+
+**One transcription slip caught at the source.** Q-DE-54 reports the runner
+**"68 → 71"**; `EXPECTED_CHECKS` reads **67** at `27c1ccd` and **71** at
+`92c7da4`, so it is **67 → 71** — and the correction matters because the *delta*
+is what a reader uses: **+4, not +3.** R-471 and Q-DE-53 both recorded 67.
+
+**Q-BE-235 is LANDED and NOT verified**, and I keep those two words apart:
+BE9-C1..C3 closed, executed **in two trees**, a **26-case** mutation audit — with
+**coordinator verification in flight since 20:01:48Z**. **RUN B's tree is a
+question for the reviewer's BE 9+10 round**, not a settled fact. The pin's three
+rulings and `called#1`'s falsifier are recorded, and **the three declared reasons
+are TRUE** — checked by the reviewer, carried by me.
+
+**Seats.** DE round 37 dispatched at `e791f4f` (Q-DE-55 **in flight**). The
+**reviewer is on recorded standby until R-477** (BE round 10 verified), then **BE
+9 + 10 as one round**. **BE is on recorded standby** — round 11 is the durable
+landing after the 00:14Z read. **DA standby until 00:06Z / 00:14Z.**
 
 ### 2026-09-02 ~19:39Z (MEM) — THE FINDING SURVIVED; ITS EXPLANATION DID NOT
 

@@ -4039,3 +4039,71 @@ Moved in the MEM round-55 true-up of R-472, R-473 and the DE-35 filing. Join rul
   THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with
   Q4 failing; the sequencing rule; R-419 revocable.
 ```
+
+## Batch 62 — archived 2026-09-02T20:09Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-56 true-up of R-475, R-476 and the DE-36 filing. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T19:05Z (MEM ROUND 53 -- THE FROZEN TEXT ALREADY ASKED FOR TWO OF THE
+  THINGS THE RUNNER WOULD HAVE HAD TO INVENT). R-466, R-467 and R-468 swept;
+  nothing run; frozen plan files and committed blobs only. I CHECKED THE ESTIMAND
+  FILING'S CITATIONS AT THE FROZEN LINES AND THE READING THEY SUPPORT IS STRONGER
+  THAN "FIVE FINDINGS": DRAFT:212-213 defines rho as the RETAINED-BOOK
+  ADVERSE-COST / SPREAD-CAPTURE RATIO and :68 row 5 fixes the feed as
+  GENERATION-LEVEL TRANCHE TABLES, NEVER PER-ROW LATENCY LABELS -- so EST-R1 is
+  not a preference about denominators: THE FROZEN PROTOCOL ALREADY SAYS THE
+  DENOMINATOR IS MEASURED, which means a constant HALF_SPREAD_CENTS does not
+  merely approximate it, IT MAKES THE READING THRESHOLD THE CONSTANT (0.7
+  c/share closes the route at H = 0.5 and does not at H = 1.0). A CONSTANT
+  STANDING IN FOR A MEASUREMENT MOVES THE VERDICT, NOT THE PRECISION. AND EST-R2
+  LANDS ON THE RECEIPT, NOT THE NUMBER: the over-the-hold value IS the frozen
+  feed's (:68), so what is wrong is the receipt BINDING fill_horizon_s and an
+  estimand note that declare a 1-second cap over it -- and I checked the other
+  half myself: THE ADDENDUM MENTIONS "horizon" ZERO TIMES, so the governing
+  document declares NO horizon, the receipt declares ONE, and they are about
+  different quantities, which is why the closure is "declare the horizon the
+  number has, in addendum v2, before the run" rather than "fix the constant".
+  This is the round-50 finding grown a layer: the addendum omitted Cap 2, and it
+  also omits ANY horizon at all. TWO OF THE SIX ADDENDUM ITEMS ARE NOT NEW ASKS
+  -- THE FROZEN TEXT ALREADY DEMANDS THEM: DRAFT:71 row 8 says
+  max_cancels_per_minute is DECLARED PER CELL with requested / effective(passed)
+  / suppressed counts REPORTED, so EST-R4's identity is THE PROTOCOL'S OWN DUTY,
+  unmet, and the runner's stated reason for skipping it is false on both halves;
+  likewise STATEFUL_HARMFUL_CANCEL_TODO.md:381-382 REQUIRES theta_repost <
+  theta_cancel FOR A DECLARED DWELL, so REPOST_DWELL_S is a number THE
+  PROGRAMME'S OWN TODO DEMANDED and nobody has proposed (2.0 s with no proposal
+  on record). THE GAP BETWEEN "THE DOCUMENT REQUIRES IT" AND "SOMEBODY CHOSE IT"
+  IS WHERE ALL THREE NUMBERS LIVE. SO THE USER ITEM WIDENED WITHOUT MULTIPLYING:
+  it is still ONE decision -- ONE DATED ADDENDUM v2 THE USER FREEZES -- now
+  carrying THREE NUMBERS (theta_repost with sensitivity at 1.0x-eps and 0.5x and
+  NEITHER SELECTED; REPOST_DWELL_S; HALF_SPREAD_CENTS ONLY IF KEPT, both DE and
+  the reviewer recommending it be MEASURED AWAY) and THREE DECLARATIONS (the
+  horizon the number has; repost parity in the control, required by the
+  estimand's logic and SILENT in the frozen text; the rate-limit declaration with
+  its identity). BUNDLING THEM IS THE RIGHT SHAPE: six separate asks would arrive
+  as six chances to answer partially. EST-R5 IS THE ONE TO FLAG TO A READER IN A
+  HURRY: the cancel set MUST be the drawn generations (:147-156) and the control
+  at :601-604 DISCARDS _gen AND COLLAPSES same-(slug, side) draws, so THE ACTION
+  COUNT IS NOT PRESERVED -- rule 2 of this programme's own reliability rules,
+  ROWS ARE ACTIONS, appearing INSIDE THE MATCHED CONTROL where it silently
+  changes what the control is matched on. DE ROUND 34 EXECUTED AT 47a2ba6 AND
+  COUNTS AS FILED: four findings closed, C1 HALF-CLOSED, five named open,
+  DE34-C1..C4 raised -- "counts as filed" being the honest status, the round
+  having done what it said and named what it did not do. DE ROUND 35 IS ROUTED
+  with the feed change the five open findings share, the code halves of
+  EST-R1/R2/R4/R5, and THE ADDENDUM v2 DRAFT FOR THE USER -- the right ordering,
+  because the draft is written by the seat that must implement it and frozen by
+  the USER who must own the numbers. TWO IN-BAND CORRECTIONS CARRIED WITHOUT
+  FLATTENING THEM: R-467 corrected R-466's reading times, and R-468 section 0
+  corrects R-467 section 1's own "verified 18:53Z" -- A CORRECTION OF A
+  CORRECTION IS NOT NOISE, it is the only way a time written ahead of the clock
+  stops propagating. BE8-R1/R2 go to BE ROUND 12; the reviewer takes DE 33 + 34
+  AS ONE FILING at 47a2ba6 (request c70e8e2), then BE 9 + 10 at the round-10 tip.
+  THE PHASE-4 RUN HAS NO DATE. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z
+  preflight, coordinator wake after, R-409 accrual with the R-411(ii)
+  denominator, DA landing at e353119 (HOLD -> 3b7e10a), THE DURABLE LANDING IS BE
+  ROUND 11 AFTER ROUND 10 LANDS, CO-8, --require-no-skips, DATA_ROOT split. USER:
+  SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family
+  12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+```
