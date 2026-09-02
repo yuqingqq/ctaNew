@@ -2779,3 +2779,60 @@ Moved in the MEM round-36 true-up of R-442 and R-443. Join rule as in batch 1.
   disposition only. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
   with Q4 failing; development evidence.
 ```
+
+## Batch 43 — archived 2026-09-02T15:06Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-37 true-up of R-444 and R-445. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T14:26Z (MEM ROUND 34 -- A KNOWN-BAD THAT MOVES THE WORLD AND ONE
+  THAT MOVES THE ASSERTION ARE DIFFERENT PROOFS). R-440 swept. DE ROUND 21
+  VERIFIED at 0255b60, reproduced here: EXPECTED_CHECKS = 84, rc 0 under both
+  launchers from the repo root; DE19-R2 closed by THREE STRUCTURAL ANCHORS
+  (THE DECLARED LIMIT / REFUSED (in the sets above) / the full DECLARED BLIND
+  heading) with len(_limit) PRINTED AS A FACT AND ASSERTED NOWHERE -- the
+  ruled shape, not a length pin; its known-bad reads 1975 of 3752 chars (47%
+  unread), the block being 3,752 rather than round 33's 3,754 because a prose
+  reword shortened it by two characters -- THE SAME MEASUREMENT, NOT A
+  DISAGREEING ONE. DE19-R1's _key_order resolves to [64, 263, 621, 803] and
+  its known-bad to [604, 246, 64, 803]. THE FIX SHIPS A GUARD AGAINST BECOMING
+  THE DEFECT IT FIXES: len(_anchors) == 3 sits INSIDE the predicate because an
+  emptied tuple would satisfy both the check and its known-bad vacuously -- the
+  rule-16 failure mode of a NEW control anticipated in the same commit. ONE
+  MUTANT STAYS GREEN AND I REPRODUCED IT RATHER THAN RELAYING IT: the phrase
+  conjunct neutralised inside the declaration check's OWN ASSERTION leaves the
+  suite green at 84; to know that green was the suite's property and not my
+  harness's I ran _anchors = () in the same tree and got rc 1, RED BY NAME.
+  It is a QUESTION, NOT A FINDING, and correctly routed: the _cut2 known-bad
+  falsifies the SUBJECT, proving the check READS THE WORLD, which is a
+  different proof from an ASSERTION-mutant proving the conjunct is
+  LOAD-BEARING IN THE CHECK'S OWN CODE -- this suite ships only the first
+  (item 3 of the DE-21 request). DA ROUND 12 VERIFIED STATICALLY at 636a455
+  (held, unpushed, on e292439, four files): DA11-R1's ran + skipped == 9 is
+  RAISED BEFORE the summary prints, so the constant in that line is
+  unreachable unless the computed sum equals it -- CHECKED, and NOT an
+  instance of a count standing in for a check; DA11-R2's -m twins are DERIVED,
+  NOT TRANSCRIBED, and I recomputed the arithmetic at the held object rather
+  than accepting it: roster 22, twins 14, total 36. The request's own open
+  item -- which gates the derivation EXCLUDES -- has a factual answer now:
+  EIGHT, seven being two-argument script gates with no --selftest at all (v5
+  heartbeat behaviour, v5 deadline falsifier, chain equivalence, chain
+  differential fuzz, preflight mutation audit, v4 behaviour (git-extracted),
+  v4_1 mutation audit) and the eighth tier1 normalisation, ALREADY the -m
+  form, so nothing with a module suite's shape is excluded; stated as MEM's
+  computation, the reviewer still rules. TWO CITATION DETAILS FIXED IN PLACE,
+  neither a defect: --require-no-skips lives in da_forward_day_verify.py
+  (2400/4526/4543/4579), NOT in v5_deploy_gates.py where the roster is, and
+  the membership conjunct is da_blackout_mask.py:874 -- filenames recorded
+  because bare line numbers is the shape that sent me to a dirty tree in round
+  18. DA caught a defect in its OWN INSTRUMENT (a pipe swallowed the exit code:
+  rc 0 read for an rc-1 case) and re-measured without it. Reviewer queue: BE
+  3-4 at 248e99f (in flight) -> DE 20 at 0778918 -> DE 21 at 0255b60 -> DA 12
+  at 636a455 -> BE 5 once its row lands; BE round 5's file is committed at
+  90036b7 (+464/-4, 468 lines touched) mid-batch with the row not yet filed,
+  and nothing goes to BE in flight (rule 18). DE and DA both on DELIBERATE
+  standby, DA holding for the 00:06Z/00:14Z reads; Q-DA-209 lands after the
+  00:14Z read with 636a455 as its content. USER-open: the freeze disposition,
+  still the only one. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
+  with Q4 failing; development evidence.
+```

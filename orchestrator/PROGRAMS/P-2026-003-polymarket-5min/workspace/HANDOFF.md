@@ -1,13 +1,14 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T14:44Z — **THE USER RULED THE FREEZE DISPOSITION (R-442,
-~14:33Z): the race runs on the FROZEN BYTES at `1b53929`, no re-freeze,
-multiplicity 2 — and the `fwd5/` 09-01 receipt is the RACE SCORE OF RECORD, no
-longer an estimate in scratch.** **ALL SIX USER DECISIONS ARE RULED; NONE IS
-OPEN.** All three record files re-hashed here and equal; the untracked 1.24 GB
-data anchor still matches the sha the receipt binds. DE round 20 RELEASED
-(`819d225`), DE20-R1/R2 → round 22, in flight. Prior line: BE rounds 3–4
-released as the confirming driver of record.
+Updated: 2026-09-02T15:06Z — **THE 09-01 SCORE OF RECORD REPRODUCED
+BYTE-FOR-BYTE**: BE's `fwd6/` re-run, a commit and a rebuilt driver later, emits
+a sealed file `cmp`-EQUAL to `fwd5/`'s (`aca22317ab06adbf…`) — verified here.
+**Four landings and three in-band corrections.** Tonight's 00:14Z preflight is
+**round-9 vintage `fadc986`** (sha `6a15ed5dd25513b7`, confirmed by hash): its
+decisions line is a **known-stale provenance line**, not live open decisions —
+**the ruled state is the register's, SIX RULED, none open.** DA's `e384792`
+mirrors it after landing, with a guard that makes the contradiction
+unrepresentable.
 
 ## READ FIRST — current project handoff
 
@@ -690,8 +691,14 @@ launchers at **235/19**.
 | **DE round 20** | **VERIFIED** at `0778918` — DE18-R1..R3 and two rule-10 nits closed, **150 → 155** (reproduced here), four coordinator mutants dying by name. **Review request queued FOURTH** |
 | **DE round 19 review** | **RELEASED** (`a558356`) — DE17-R1/R2 close; **both residuals RULED as findings** (DE19-R1, DE19-R2) plus **DE19-R3** filed |
 | **DE round 21** | **VERIFIED** at `0255b60` (Q-DE-39) — DE19-R1..R3 closed, `de_admissible_windows.py` only, **79 → 84** (reproduced here, both launchers). Four coordinator mutants red by name; **one assertion-mutant stays GREEN** → the reviewer, as a question |
-| **DE round 22** | the **DATA_ROOT split**, behind DA's landing after 00:14Z |
+| **DE round 21 review** | **RELEASED** (`533e38c`) — DE19-R1..R3 close; **DE21-R1 (LOW)** filed; **ruling adopted as the programme's standard: a subject-mutant THROUGH THE READER is what "driven" means** |
+| **DE round 22** | **LANDED** at `92fc615` (Q-DE-40) — DE20-R1/R2 closed, ratification **160**, one `all_entries` call site. **In review** |
+| **DE round 23** | **LANDED** at `a83083a` (Q-DE-41) — DE21-R1 closed by a structural predicate on the walk's stop, admissible **87** (reproduced here) |
+| **DE round 24** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
+| **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
+| **DA round 13** | **HELD** at `e384792` (chain `3a89e6c`→`e292439`→`636a455`→`e384792`) — preflight **39**; `freeze_disposition` moves to `ruled`, `still_open == {}`, and a **coherence guard** makes the contradiction unrepresentable |
+| **DA round 14** | **DISPATCHED and HELD** (Q-DA-211) — DA12-R1, `v5_deploy_gates.py` only, builds on `e384792` |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
@@ -726,10 +733,14 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **BE34-R1..R5** → BE round 6 (staged behind round 5's row);
-**DE18-R1..R3 CLOSED** at `0778918`, in review;
-**DE19-R1..R3 CLOSED** at `0255b60`, queued for review;
-**DA11-R1..R2 CLOSED** at `636a455`, held and queued; **DA10-R1..R5 CLOSED** at `e292439`,
+**Open findings:** **BE34-R2 CLOSED** at `90036b7` (an existing receipt is KEPT
+byte-identical and the run takes a numbered successor carrying `supersedes_receipt`
+— verified here); **BE34-R1/R3/R4/R5** → **BE round 6, in flight**;
+**DE20-R1/R2 CLOSED** at `92fc615`, in review; **DE21-R1 CLOSED** at `a83083a`;
+**DA12-R1** → DA round 14 (held);
+**DE18-R1..R3 CLOSED** at `0778918`, review released;
+**DE19-R1..R3 CLOSED** at `0255b60`, review released;
+**DA11-R1..R2 CLOSED** at `636a455`, review released; **DA10-R1..R5 CLOSED** at `e292439`,
 review released;
 **DE16-R1..R4** closed at `db039a3`, pending review; the **own-supersedes-
 nonentry residual** with the reviewer; **BE's landing** — the counts satisfy the
@@ -745,10 +756,11 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE round 20** at `0778918` (in flight from
-14:30Z) → **DE round 21** at `0255b60` → **DA round 12** at `636a455` → **BE
-round 5** (its request waits on the row). **BE rounds 3–4's review is RELEASED**
-(`1d9c543`) — as are DA round 11's and DE round 19's.
+**The reviewer's queue, in order:** **DE round 22** at `92fc615` (in flight from
+14:59Z) → **BE round 5** at `90036b7`+`baa986d` → then DE round 23 and DA round
+13/14 as they clear the hold. **Released so far:** BE rounds 3–4 (`1d9c543`), DA
+rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19 (`a558356`), 20
+(`819d225`) and 21 (`533e38c`).
 
 > **Item 1 landed: the "frozen bytes" fact is ON THE RECORD, *stated, not
 > ruled*** (`1d9c543` §1, notified to the USER 14:30Z). The freeze disposition
@@ -1551,6 +1563,94 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~15:06Z (MEM) — THE SAME BYTES, FROM A DIFFERENT DRIVER
+
+**R-444 and R-445 swept.** Four landings, three corrections made in band, and one
+result that is worth more than any of them: **the 09-01 score of record
+reproduces byte-for-byte.**
+
+**I ran `cmp`, not the report.** BE's `fwd6/` re-run — driver sha
+`4c0425c578e36b2a` (the `90036b7` file), a commit and a rebuilt file after the
+run that produced the record — writes a sealed scores file whose sha is
+**`aca22317ab06adbf…`** and which is **`cmp`-EQUAL to `fwd5/`'s**. The receipts
+differ (`a568346660a3b4db…`, 20,895 B against 14,022 B) and **that is the correct
+shape**: the receipt carries provenance, counts and identities, which grew with
+round 5's disclosures; the sealed file carries the values, which did not move.
+**A reproduction that changed the receipt and not the scores is the one you
+want.** The 09-02 refusal receipt is `dd730f1aba7c67af…`; `supersedes_receipt` is
+absent, this being the run's first write.
+
+**Tonight's preflight line is stale, and the useful part is knowing exactly how
+stale.** The shared tree's `da_governed_verdict_preflight.py` hashes to
+**`6a15ed5dd25513b7`, byte-identical to `fadc986`** — round-9 vintage, verified
+here by hash rather than by reading. It has **no `ruled`/`still_open` split at
+all**: it prints `register_ids_transcribed` (`:340`) with **three** entries each
+labelled `-- USER`. So what the 00:14Z run prints is stale about **R-424's four
+rulings as well as R-442's** — it is a **known-stale provenance line of round-9
+vintage**, not three live open decisions. **The ruled state is the register's:
+six ruled, none open.** This is R-402 working as designed — the first governed
+verdict runs the tree as-is — and it is written down here so that nobody reading
+tonight's artifact tomorrow mistakes a vintage for a status.
+
+**The finding I raised last round is closed, and closed generally.** At DA's held
+`e384792`, `freeze_disposition` moves into `ruled` with R-442's words,
+`still_open == {}`, and — the part that matters — `_assert_decisions_coherent`
+(`:121`, called from the production path at `:428`) makes the contradiction
+**unrepresentable**: any key in BOTH halves refuses naming it, and any pre-ruling
+phrase surviving in the block refuses quoting it. Its docstring names the very
+instance: *"which is how `freeze_disposition` read as 'awaiting the USER's word'
+for the whole of R-442's afternoon."* **A one-key fix would have left the same
+trap for the next ruling.** And the guard's own first version was rule 17's class
+again — driven by every check, called by nothing — closed by poisoning the phrase
+list with a string the real block carries, so only the production call can raise.
+**Third time that class has been met in this one file.**
+
+**Two register-discipline facts I verified rather than took.** `768465a` is
+**exactly one insertion and one deletion** — a single `-`/`+` pair on the
+Q-BE-230 row — so the row was **rewritten in place**, where the register's rows
+are append-only and rule 13's shape is a superseding row. Nothing is lost (git
+keeps both), and it is recorded as a discipline fact, not adjudicated. And on the
+row's own numbers: the parenthetical reads **50 mutants → 5 survived; 49 → 3;
+47 → 47/47 killed**, while the body says the first audit left **4** and the
+second **3**. **The second and third passes agree; the disagreement is isolated
+to the first — 5 against 4.** Worth stating that precisely rather than as "one of
+two is wrong", because it tells BE round 6 where to look.
+
+**Q-BE-230's disposition column is stale for an honest reason.** It calls the
+freeze disposition *"the ONLY open USER decision"* — twice — with an as-of of
+**14:52Z**, fifteen minutes after R-442 ruled it. **BE had not read R-442.** The
+register's state governs; BE round 6 supersedes the column in band. **The
+decisions table stays SIX RULED, none open.**
+
+**BE34-R2 is genuinely closed and I read the code, not the claim.** An existing
+receipt is now **KEPT byte-identical** and the run takes a numbered successor
+carrying a `supersedes_receipt` block with the prior path, its sha and the reason
+— rule 13's shape, driven by a selftest that asserts the successor exists and
+that the recorded sha equals the kept file's.
+
+**Counts reproduced here, all at HEAD:** ratification **160**, admissible **87**,
+driver **85** — each rc 0. **RR5-1/RR5-2 and RR7-1/RR7-2 are closed
+(`e8a9480`)**, and I checked my own files for a line still staging them: **there
+is none.** The single mention is a historic entry recording that RR7-1/RR7-2 were
+*filed not holding*, which was true when written and stays as provenance.
+
+**DE's method fact deserves to outlive its round.** A flip mutant and its restore
+differed by **one character** — same size, same mtime second — so `__pycache__`
+kept executing the **mutant's** bytecode and the suite failed on a correct file.
+Every mutant since clears the cache on both sides. **A mutation harness that does
+not invalidate bytecode is measuring the wrong file**, and the failure mode is a
+false RED, which is the survivable direction; the same collision with the signs
+reversed would have been a false GREEN.
+
+**Seats.** DA rounds 13 (`e384792`, 39) and 14 (DA12-R1) are held; DE rounds 22
+and 23 have landed and DE is on **deliberate standby**; BE round 6 is in flight;
+the reviewer has DE round 22, then BE round 5. **DA's session-local 00:06Z
+standby wait was killed at ~14:43Z — the third such kill this session, cause
+unknown** — and DA is not re-arming: the audited legs are the **box-level
+timers** (`da-midnight-verify.timer` 00:06Z, `co-preflight-20260902.timer`
+00:14Z), exactly as Q-MEM-3 found when both session-local legs proved invisible
+to `crontab` and `systemctl`.
 
 ### 2026-09-02 ~14:44Z (MEM) — THE WORD LANDED, AND THE THING IT MAKES TRUE IS
 ### A SET OF HASHES
