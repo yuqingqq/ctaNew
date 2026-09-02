@@ -113,7 +113,7 @@ scope_days: FORWARD_RACE_DAYS
 scope_from: 20260901          # the field prose cannot supply
 scope_to: null                # open-ended, stated as null rather than absent
 revocable_by: USER
-supersedes: null
+supersedes: null              # the prior ref or `null`; SINGULAR
 ```"""
 
 
@@ -157,6 +157,7 @@ def parse_instant(value, field: str):
     """An ISO-8601 Z instant, or a REFUSAL naming the field and the value."""
     import datetime as _dt
     if not isinstance(value, str):
+        # SITE: parse_instant#1
         raise RatificationRefused(
             f"REFUSED: {field} is {value!r} ({type(value).__name__}), not a "
             f"string. A TypeError from a comparison is not a refusal -- it "
@@ -167,6 +168,7 @@ def parse_instant(value, field: str):
                 tzinfo=_dt.timezone.utc)
         except ValueError:
             continue
+    # SITE: parse_instant#2
     raise RatificationRefused(
         f"REFUSED: {field} carries {value!r}, which is not an instant in "
         f"{list(INSTANT_FORMATS)}. Compared as a STRING it would sort "
@@ -178,6 +180,7 @@ def parse_day(value, field: str):
     """A YYYYMMDD day, or a REFUSAL naming the field and the value."""
     import datetime as _dt
     if not isinstance(value, str):
+        # SITE: parse_day#1
         raise RatificationRefused(
             f"REFUSED: {field} is {value!r} ({type(value).__name__}), not a "
             f"string")
@@ -185,6 +188,7 @@ def parse_day(value, field: str):
         return _dt.datetime.strptime(value.strip(), DAY_FORMAT).replace(
             tzinfo=_dt.timezone.utc)
     except ValueError:
+        # SITE: parse_day#2
         raise RatificationRefused(
             f"REFUSED: {field} carries {value!r}, which is not a day in "
             f"{DAY_FORMAT}. Compared as a STRING it would sort against real "
@@ -276,6 +280,63 @@ def all_entries(register_text: str) -> list[dict]:
     return out
 
 
+#: DE14-R1: `supersedes` is the one field whose VALUE decides another
+#: entry's check, and it was matched by raw string equality and validated
+#: nowhere. On a two-entry chain, a superseder declaring `supersedes:` empty
+#: (or `r-902`, `R-9O2`, `R-902 (partial)`, `R-902, R-901`) left the entry it
+#: names verifying for NEW RUNS -- the DE12-R2 shape one entry over, in the
+#: field that drives this module's strongest refusal. The register could hold
+#: an entry simultaneously "refused if you check it" and "invisible as a
+#: superseder".
+#:
+#: SINGULAR STAYS SINGULAR. R-419 section 4 defines `supersedes` as "the
+#: prior ref or null" -- one ref. A comma list REFUSES by name; declaring a
+#: plural spelling is a spec change and the coordinator's, not this module's.
+SUPERSEDES_NULL = "null"
+
+
+def validate_supersedes(value, where: str) -> str | None:
+    """The shape of a `supersedes` field, or a REFUSAL naming where it came
+    from.  Returns the ref it names, or None for the declared `null`."""
+    if value is None:
+        # SITE: validate_supersedes#1
+        raise RatificationRefused(
+            f"REFUSED: {where} carries no `supersedes`. The adopted block "
+            f"requires it -- `null` when nothing is superseded -- and an "
+            f"absent one cannot be told from a supersession nobody wrote.")
+    if not isinstance(value, str):
+        # SITE: validate_supersedes#2
+        raise RatificationRefused(
+            f"REFUSED: {where} `supersedes` is {value!r} "
+            f"({type(value).__name__}), not a string")
+    v = value.strip()
+    if not v:
+        # SITE: validate_supersedes#3
+        raise RatificationRefused(
+            f"REFUSED: {where} `supersedes` is EMPTY. An empty value is "
+            f"absence in place -- and here it silently means 'supersedes "
+            f"nothing', which is how an entry stays invisible as a "
+            f"superseder while refusing if anyone checks it (DE14-R1).")
+    if v == SUPERSEDES_NULL:
+        return None
+    if "," in v:
+        # SITE: validate_supersedes#4
+        raise RatificationRefused(
+            f"REFUSED: {where} `supersedes` names MORE THAN ONE ref "
+            f"({v!r}). R-419 section 4 defines it as the prior ref or "
+            f"`null`, singular. A plural spelling is a SPEC CHANGE and the "
+            f"coordinator's to declare; this module refuses rather than "
+            f"inventing one.")
+    if not REF_RE.match(v):
+        # SITE: validate_supersedes#5
+        raise RatificationRefused(
+            f"REFUSED: {where} `supersedes` is {v!r}, which is neither "
+            f"`{SUPERSEDES_NULL}` nor a well-shaped ref "
+            f"({REF_RE.pattern}). Matched by raw equality it would simply "
+            f"fail to match and supersede nothing, silently.")
+    return v
+
+
 def superseded_by(register_text: str, ref: str) -> list[str]:
     """Refs of LATER entries whose block declares it supersedes `ref`."""
     entries = all_entries(register_text)
@@ -287,7 +348,13 @@ def superseded_by(register_text: str, ref: str) -> list[str]:
         if e["line"] <= pos[ref]:
             continue
         blk = bind_from_block(e)
-        if blk and str(blk.get("supersedes", "")).strip() == ref:
+        if not blk:
+            continue
+        # THE LATER ENTRY'S OWN FIELD IS VALIDATED. It is never otherwise
+        # checked, and its value decides whether THIS ref may start a run.
+        named = validate_supersedes(blk.get("supersedes"),
+                                    f"{e['ref']} (a later entry)")
+        if named == ref:
             out.append(e["ref"])
     return sorted(set(out))
 
@@ -324,6 +391,18 @@ def parse_entry(register_text: str, ref: str) -> dict | None:
 # ---------------------------------------------------------------------------
 # 2. bind fields -- from the fenced block if present, else from prose
 # ---------------------------------------------------------------------------
+
+def _undef_note(empty: list) -> str:
+    """NAME AN UNDEFINED FIELD AS UNDEFINED. The EMPTY message ranges over
+    `block.items()`, so an empty `notes:` line would otherwise be reported as
+    though `notes` were a ratification field."""
+    undefined = [f for f in empty if f not in RATIFICATION_FIELDS]
+    if not undefined:
+        return ""
+    return (f" Of these, {undefined} are NOT ratification fields at all -- "
+            f"they are undefined in the adopted block, so an empty undefined "
+            f"line is absence in place, not a missing ratification field.")
+
 
 def bind_from_block(entry: dict) -> dict | None:
     """The PROPOSED machine-readable form, if the entry carries one."""
@@ -445,7 +524,13 @@ def day_in_scope(day: str, fields: dict, unbindable: Sequence[str]):
     to = fields.get("scope_to")
     if to is None:
         return None                       # absent is NOT null
-    if isinstance(to, str) and to.strip().lower() in SCOPE_OPEN_TOKENS:
+    # DE14-R3: EXACT, not case-folded. The constant said one spelling and
+    # the comparison admitted four (`NULL`, `Null`, `nUlL`), so a user who
+    # lowercases any other field is refused while one who uppercases this one
+    # is silently granted an unbounded scope. The module case-folds nowhere
+    # else. R-419 section 4 says `null`; restoring the exactness is not a
+    # spec change, it is the code agreeing with its own constant.
+    if isinstance(to, str) and to.strip() in SCOPE_OPEN_TOKENS:
         return True                       # `null` = open, explicitly
     return d <= parse_day(to, "block.scope_to")
 
@@ -495,6 +580,7 @@ def check(supplied: dict, ratification_ref: str,
         register_text = REGISTER.read_text()
     entry = parse_entry(register_text, ratification_ref)
     if entry is None:
+        # SITE: check#1
         raise RatificationRefused(
             f"REFUSED: no register entry `### {ratification_ref} ` in "
             f"{REGISTER.name}. A well-formed ref to an entry that does not "
@@ -515,6 +601,7 @@ def check(supplied: dict, ratification_ref: str,
         for sref in supers:
             ts = entry_timestamp(entries[sref]["heading"])
             if ts is None:
+                # SITE: check#2
                 raise RatificationRefused(
                     f"REFUSED: {sref} supersedes {ratification_ref} but its "
                     f"heading carries no parsable register timestamp, so "
@@ -525,6 +612,7 @@ def check(supplied: dict, ratification_ref: str,
             superseder_times[sref] = _norm_ts(
                 ts, f"heading timestamp of {sref}")
         if stamped_at is None:
+            # SITE: check#3
             raise RatificationRefused(
                 f"REFUSED FOR A NEW RUN: {ratification_ref} is SUPERSEDED by "
                 f"{', '.join(supers)}. A receipt already carrying "
@@ -538,6 +626,7 @@ def check(supplied: dict, ratification_ref: str,
         else:
             in_force = sorted(r for r, t in superseder_times.items()
                               if t <= stamp)
+            # SITE: check#4
             raise RatificationRefused(
                 f"REFUSED: {ratification_ref} was ALREADY superseded by "
                 f"{in_force} at the stamped instant {stamp} -- the run did "
@@ -549,15 +638,23 @@ def check(supplied: dict, ratification_ref: str,
         empty = sorted(f for f, v in block.items()
                        if isinstance(v, str) and not v.strip())
         if empty:
+            # SITE: check#5
             raise RatificationRefused(
                 f"REFUSED: {ratification_ref}'s ratification block carries "
                 f"EMPTY value(s) for {empty}. An empty value is ABSENCE IN "
                 f"PLACE: the line is there and says nothing. It is neither a "
                 f"MISSING field nor a wrong VALUE, and it used to read as "
                 f"open-ended for `scope_to` while the same absence written as "
-                f"a missing line refused (DE12-R2).")
+                f"a missing line refused (DE12-R2).{_undef_note(empty)}")
+        # The same shape rule on the entry under check: its own
+        # `supersedes` was unvalidated too (`WHATEVER`, `/etc/passwd`,
+        # `R-418` all verified).
+        if "supersedes" in block:
+            validate_supersedes(block["supersedes"],
+                                f"{ratification_ref}'s block")
         missing = [f for f in RATIFICATION_FIELDS if f not in block]
         if missing:
+            # SITE: check#6
             raise RatificationRefused(
                 f"REFUSED: {ratification_ref}'s ratification block is MISSING "
                 f"{missing}. A missing field left the check UNDECIDED and "
@@ -567,6 +664,7 @@ def check(supplied: dict, ratification_ref: str,
     if block is None:
         # CO-4: prose binding survives for exactly one grandfathered ref.
         if ratification_ref not in GRANDFATHERED_PROSE_REFS:
+            # SITE: check#7
             raise RatificationRefused(
                 f"REFUSED: {ratification_ref} carries no ratification block; "
                 f"prose binding is not admissible after R-419. An entry that "
@@ -581,6 +679,7 @@ def check(supplied: dict, ratification_ref: str,
         heading_ref = HEADING_RE.match(entry["heading"])
         heading_ref = heading_ref.group(1) if heading_ref else None
         if str(block.get("ref", "")).strip() != heading_ref:
+            # SITE: check#8
             raise RatificationRefused(
                 f"REFUSED: the block declares ref "
                 f"{block.get('ref')!r} while the entry heading is "
@@ -600,6 +699,7 @@ def check(supplied: dict, ratification_ref: str,
         if _f not in fields:
             continue
         if fields[_f] not in _allowed:
+            # SITE: check#9
             raise RatificationRefused(
                 f"REFUSED: {ratification_ref} field {_f!r} carries the VALUE "
                 f"{fields[_f]!r}, which is not in the adopted vocabulary "
@@ -607,12 +707,14 @@ def check(supplied: dict, ratification_ref: str,
                 f"field and not an undecidable one -- round 10 made absence "
                 f"refuse and left nonsense verifying clean (DE-R3).")
     if fields.get("kind") != "R-ADMISS":
+        # SITE: check#10
         raise RatificationRefused(
             f"REFUSED: {ratification_ref} does not declare itself an R-ADMISS "
             f"ratification (bound kind: {fields.get('kind')!r}). An entry can "
             f"be real, recent and about something else entirely.")
     pop = supply_population(supplied)
     if not pop["counts_sum_matches"]:
+        # SITE: check#11
         raise RatificationRefused(
             f"REFUSED: the supply's n_supplied_total "
             f"({pop['n_supplied_total']}) is not the sum of its per-coin "
@@ -621,17 +723,20 @@ def check(supplied: dict, ratification_ref: str,
             f"describe itself consistently")
     named = fields.get("population")
     if named not in KNOWN_POPULATIONS:
+        # SITE: check#12
         raise RatificationRefused(
             f"REFUSED: {ratification_ref} names population {named!r}, which "
             f"this checker cannot evaluate (known: {KNOWN_POPULATIONS}). "
             f"Reported as unknown rather than assumed to be the full one.")
     if named != POP_FULL:
+        # SITE: check#13
         raise RatificationRefused(
             f"REFUSED: {ratification_ref} ratifies a {named} population while "
             f"this supply is the full complement "
             f"({pop['n_supplied_total']} windows, no selection field). A "
             f"ratification for a sampled population does not cover a full one.")
     if pop["selection_fields_present"]:
+        # SITE: check#14
         raise RatificationRefused(
             f"REFUSED: {ratification_ref} ratifies the FULL complement "
             f"but the supply carries selection field(s) "
@@ -640,6 +745,7 @@ def check(supplied: dict, ratification_ref: str,
     # itself. It REFUSES rather than lowering `verified`: a self-contradictory
     # ratification is not a weaker one.
     if fields.get("sampling") != "NONE":
+        # SITE: check#15
         raise RatificationRefused(
             f"REFUSED: {ratification_ref} ratifies {POP_FULL} but declares "
             f"sampling={fields.get('sampling')!r}. A ratification that "
@@ -706,7 +812,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 104
+EXPECTED_CHECKS = 132
 
 
 def selftest() -> int:
@@ -973,8 +1079,42 @@ def selftest() -> int:
             "else, and adding a second spelling to a coordinator-adopted "
             "format is not mine to do -- it belongs in the block spec first",
             needle="not a day")
+    ok("the prior ref or `null`; SINGULAR" in PROPOSED_BLOCK
+       and validate_supersedes(SUPERSEDES_NULL, "the documented spelling")
+       is None,
+       "and the documented block SAYS the shape the validator enforces -- "
+       "the doc line and the code are checked against each other, because "
+       "a documentation claim that nothing executes is the shape Q-DE-33 "
+       "corrected in band")
     ok(SCOPE_OPEN_TOKENS == ("null",),
        f"the open-token set is exactly {SCOPE_OPEN_TOKENS}")
+    # ---- DE14-R3: the constant and the comparison must say the SAME
+    # thing.  `.lower()` on the value admitted three spellings the declared
+    # set does not contain, so the tuple read as one token and behaved as
+    # four. DECIDED as a RESTORATION: exact `null`, matching R-419 section 4.
+    for _case in ("NULL", "Null", "nUlL"):
+        refuses(lambda v=_case: check(sup, "R-900",
+                                      fixture_register(scope_to=v)),
+                f"KNOWN-BAD: scope_to {_case!r} REFUSES as a VALUE -- "
+                f"`.lower()` made it OPEN-ENDED and `verified True`, while "
+                f"the constant beside it declared one spelling. Each of "
+                f"these is its own control: none is a typo for the other",
+                needle="not a day")
+    ok(check(sup, "R-900",
+             fixture_register(scope_to="null"))["checks"]["day_in_scope"]
+       is True,
+       "POSITIVE CONTROL: the declared spelling `null` is still OPEN, so "
+       "the restoration removed the undeclared spellings and nothing else")
+
+    # ---- the EMPTY message named a field the format does not define -----
+    _und = fixture_register().replace("supersedes: null\n",
+                                      "supersedes: null\nnotes: \n")
+    refuses(lambda: check(sup, "R-900", _und),
+            "an EMPTY value on a field the format does not DEFINE refuses "
+            "and says so: the message iterates the block's own rows, so an "
+            "undefined `notes:` used to be listed beside real fields as "
+            "though R-419 section 4 had a `notes` field",
+            needle="are NOT ratification fields at all")
     refuses(lambda: check(sup, "R-900", fixture_register(revocable_by="")),
             "and the empty-value refusal is GENERAL, not a scope_to special "
             "case: any block field that is present and says nothing refuses",
@@ -1147,6 +1287,86 @@ def selftest() -> int:
             "what the stamp exists to avoid",
             needle="no parsable register timestamp")
 
+    # ---- DE14-R1: `supersedes` was matched by RAW EQUALITY and validated
+    # nowhere.  The field that decides whether an entry may start a run was
+    # the one field nothing checked, and the LATER entry's copy -- the one
+    # that actually does the deciding -- was never even read as a value.
+    def _chain(sup_val, ref="R-903"):
+        """R-902 at 09:00Z, then a later entry whose block carries
+        `sup_val` as its `supersedes`."""
+        blocks = []
+        for r, ts, sv in (("R-902", "09:00Z", "null"), (ref, "10:00Z",
+                                                        sup_val)):
+            rows = ["ref: " + r, "kind: R-ADMISS", f"population: {POP_FULL}",
+                    "sampling: NONE",
+                    "present_source: data/pm_5min/markets.jsonl",
+                    "scope_days: FORWARD_RACE_DAYS", "scope_from: 20260901",
+                    "scope_to: null", "revocable_by: USER"]
+            if sv is not None:
+                rows.append(f"supersedes: {sv}")
+            blocks.append(f"### {r} — 2026-09-02T{ts} — coordinator: "
+                          f"R-ADMISS\n\n```ratification\n"
+                          + "\n".join(rows) + "\n```\n\n")
+        return "".join(blocks) + "## next\n"
+
+    _before = "2026-09-02T09:30:00Z"        # predates the superseder
+    ok(superseded_by(_chain("R-902"), "R-902") == ["R-903"],
+       "POSITIVE CONTROL FIRST: the EXACT row `supersedes: R-902` is still "
+       "found, so the shape rule below is a filter on a working matcher "
+       "and not a wall in front of a broken one")
+    ok(superseded_by(_chain("null"), "R-902") == [],
+       "and a later entry declaring `null` is READ, ADMITTED and does not "
+       "supersede -- `null` is a value here, not a hole")
+    for _bad, _why, _needle in (
+            ("", "an EMPTY value -- absence in place, the exact shape "
+                 "DE12-R2 closed one field over", "EMPTY"),
+            ("   ", "WHITESPACE, which is the empty case wearing a "
+                    "different spelling", "EMPTY"),
+            ("r-902", "the right ref in the wrong CASE", "neither"),
+            ("R-9O2", "a LETTER O for a ZERO -- indistinguishable by eye "
+                      "and never equal", "neither"),
+            ("R-902 (partial)", "a ref with a PARENTHETICAL, which is how "
+                                "a coordinator would naturally qualify one",
+             "neither"),
+            ("R-902, R-901", "TWO refs, which R-419 section 4 does not "
+                             "define -- singular stays singular, and a "
+                             "plural spelling is a SPEC CHANGE that is the "
+                             "coordinator's to declare, not mine to invent",
+             "MORE THAN ONE")):
+        refuses(lambda v=_bad: check(sup, "R-902", _chain(v),
+                                     stamped_at=_before),
+                f"KNOWN-BAD ON THE LATER ENTRY: `supersedes: {_bad!r}` "
+                f"REFUSES BY NAME -- {_why}. Every one of these left "
+                f"R-902 reading `verified_for_new_run: True` while a "
+                f"supersession sat one entry away, because raw equality "
+                f"simply fails to match and says nothing (DE14-R1)",
+                needle=_needle)
+    refuses(lambda: check(sup, "R-902", _chain(None), stamped_at=_before),
+            "and an ABSENT `supersedes` on a later entry REFUSES too: the "
+            "adopted block requires the field, and an absent one cannot be "
+            "told from a supersession nobody wrote",
+            needle="carries no `supersedes`")
+    refuses(lambda: validate_supersedes(902, "a fixture"),
+            "a NON-STRING refuses naming its type -- the block is read "
+            "from text today, but the validator is the contract and a "
+            "future JSON reader is where an int would arrive",
+            needle="not a string")
+    ok(validate_supersedes("null", "x") is None
+       and validate_supersedes("R-902", "x") == "R-902",
+       "and in the admitting direction it RETURNS the ref it names, `null` "
+       "as None -- so the caller matches on a validated value")
+    for _u, _lab in (("WHATEVER", "free text"),
+                     ("/etc/passwd", "a path"),
+                     ("R-902 (partial)", "a qualified ref")):
+        refuses(lambda v=_u: check(sup, "R-900",
+                                   fixture_register(supersedes=v)),
+                f"KNOWN-BAD ON THE ENTRY UNDER CHECK: `supersedes: {_u!r}` "
+                f"({_lab}) REFUSES -- its own field was unvalidated too, "
+                f"and all three verified clean")
+    ok(check(sup, "R-900", fixture_register(supersedes="R-418"))["verified"],
+       "POSITIVE CONTROL: a WELL-SHAPED ref in that field still verifies, "
+       "so the rule is about SHAPE and does not quietly require `null`")
+
     # ---- scope_to, the heading ref, and self-contradiction --------------
     def _blk(**over):
         f = {"ref": "R-902", "kind": "R-ADMISS",
@@ -1255,8 +1475,62 @@ def selftest() -> int:
        == audit["n_cases"],
        f"every case is attributed to the site that refused it, and the "
        f"attribution is total: {audit['cases_per_site']}")
-    ok(set(audit["per_guard"]) == set(audit["expected"]),
-       f"covering every refusal by name: {sorted(audit['per_guard'])}")
+    # ---- DE14-R2: the coverage is now ASSERTED, against a map the
+    # producer RECORDED rather than derived from the run ----------------
+    _reached = audit["site_reached_by_case"]
+    ok(audit["coverage_matches_expected"] and _reached == EXPECTED_SITE,
+       f"COVERAGE IS ASSERTED, NOT REPORTED: every one of the "
+       f"{audit['n_cases']} cases reaches the raise site EXPECTED_SITE "
+       f"records for it. The old assertion compared per_guard with "
+       f"`expected`, which mutation_audit built as sorted(cases) -- derived "
+       f"from the very dict it was compared to, so it could not fail "
+       f"(DE14-R2)")
+    ok(all(v["file"] == "de_ratification_check.py" and v["lineno"] > 0
+           and v["site"] != "<untagged>"
+           for v in audit["raise_site_by_case"].values()),
+       "and each site is keyed on (filename, lineno) READ FROM THE "
+       "TRACEBACK and resolved to its `# SITE:` name, so a raise that "
+       "moves down the file keeps its identity while a raise that is "
+       "deleted loses it")
+    # THE FALSIFIERS, all three directions of the same comparison.
+    ok({k: v for k, v in _reached.items() if k != "superseded"}
+       != EXPECTED_SITE,
+       "KNOWN-BAD: DELETING A CASE goes red -- the reviewer's test. Round "
+       "14's own new case could be removed and the suite stayed green")
+    ok(dict(_reached, some_new_case="check#1") != EXPECTED_SITE,
+       "KNOWN-BAD: an UNRECORDED case goes red too, so a case added "
+       "without recording where it must land is not silently absorbed")
+    ok(dict(_reached, superseded="check#9") != EXPECTED_SITE,
+       "KNOWN-BAD: a case that MIGRATES to another guard goes red -- which "
+       "is exactly what `superseded` and `unknown_population_value` did "
+       "unnoticed, one at a heading-timestamp guard and one at the VALUE "
+       "guard, both under names claiming otherwise")
+    ok(_reached["superseded"] == "check#2"
+       and _reached["superseded_new_run"] == "check#3",
+       f"and the two are now DISTINCT cases at DISTINCT sites: "
+       f"`superseded` refuses where the superseder's heading carries no "
+       f"parsable timestamp ({_reached['superseded']}), and "
+       f"`superseded_new_run` -- new this round, on a well-formed stamped "
+       f"chain -- reaches the NEW-RUN refusal itself "
+       f"({_reached['superseded_new_run']})")
+    ok(_reached["unknown_population_value"] == "check#9"
+       and _reached["population_unbindable_from_prose"] == "check#12",
+       f"and the population site the audit never reached HAS a driver "
+       f"rather than a story: an unknown VALUE dies in the vocabulary "
+       f"check ({_reached['unknown_population_value']}) since round 10 "
+       f"gave `population` a vocabulary, and the KNOWN_POPULATIONS guard "
+       f"({_reached['population_unbindable_from_prose']}) is reachable "
+       f"ONLY through the grandfathered prose path, where the field can "
+       f"bind to NOTHING -- a block missing it refuses as MALFORMED first. "
+       f"Reachable, so it stays")
+    ok("n_guards" not in audit
+       and audit["note"].count("n_cases") >= 1
+       and "n_raise_sites" in audit["note"],
+       f"DE14-R4: `n_guards` is GONE from the emission (it carried "
+       f"len(per) = the CASE count, in the round whose point was that the "
+       f"two differ; nothing in the repo read it), and the distinction "
+       f"travels WITH the numbers for a machine reading the dict: "
+       f"{audit['note']!r}")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
@@ -1268,6 +1542,64 @@ def sup_chain_fixture() -> str:
     """R-902 followed by R-903, whose block supersedes it."""
     return (fixture_register("R-902").replace("\n\n## next\n", "\n\n")
             + fixture_register("R-903", supersedes="R-902"))
+
+
+#: DE14-R2: THE AUDIT REPORTED ITS COVERAGE AND ASSERTED NONE OF IT.
+#: Two of 21 cases refused at a guard other than the one their name claimed
+#: (`superseded` died at the no-parsable-timestamp guard because
+#: `fixture_register()` headings carry none; `unknown_population_value`
+#: migrated to the VALUE guard when round 10 gave `population` a vocabulary
+#: entry). Neither showed as a number: `n_raise_sites` was asserted only as
+#: `1 <= n < n_cases`, and `expected` was `sorted(cases)` -- derived from the
+#: dict it was compared to, so it could not fail. Adding two cases or
+#: DELETING round 14's own new case both left the suite green.
+#:
+#: So the expectation is PRODUCER-RECORDED (R-230): case name -> the raise
+#: site it must reach. Sites are named `<function>#<ordinal>` rather than by
+#: line number, so the map survives an edit elsewhere in the file; the
+#: (filename, lineno) is still recorded beside it for a reader.
+EXPECTED_SITE: dict[str, str] = {
+    "entry_absent": "check#1",
+    "superseder_timestamp_unparsable": "check#2",
+    "superseded": "check#2",
+    "superseded_new_run": "check#3",
+    "already_superseded_at_stamp": "check#4",
+    "no_block_not_grandfathered": "check#7",
+    "empty_block_value": "check#5",
+    "malformed_block_missing_field": "check#6",
+    "block_ref_mismatch": "check#8",
+    "nonsense_field_value": "check#9",
+    "unknown_population_value": "check#9",
+    "population_unbindable_from_prose": "check#12",
+    "later_entry_bad_supersedes": "validate_supersedes#5",
+    "under_check_bad_supersedes": "validate_supersedes#5",
+    "not_a_ratification": "check#10",
+    "counts_do_not_sum": "check#11",
+    "sampled_population": "check#13",
+    "selection_field": "check#14",
+    "self_contradicting_sampling": "check#15",
+    "unparsable_now_utc": "parse_instant#2",
+    "non_string_now_utc": "parse_instant#1",
+    "unparsable_stamped_at": "parse_instant#2",
+    "unparsable_stamped_at_not_superseded": "parse_instant#2",
+    "unparsable_scope_to": "parse_day#2",
+    "unparsable_scope_from": "parse_day#2",
+}
+
+
+def _site_names(path: Path | None = None) -> dict:
+    """lineno of each `raise RatificationRefused` -> its `# SITE:` name,
+    read from this module's own source. Computed, never transcribed."""
+    src = (path or Path(__file__)).read_text().split("\n")
+    out, pending = {}, None
+    for i, ln in enumerate(src, 1):
+        st = ln.strip()
+        if st.startswith("# SITE: "):
+            pending = st[len("# SITE: "):]
+        elif st.startswith("raise RatificationRefused(") and pending:
+            out[i] = pending
+            pending = None
+    return out
 
 
 def mutation_audit(sup: dict) -> dict:
@@ -1296,6 +1628,18 @@ def mutation_audit(sup: dict) -> dict:
         "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
         "scope_to: null\nrevocable_by: USER\nsupersedes: R-902\n```\n\n"
         "## next\n")
+    # The grandfathered prose pair. The bad one carries the KIND vocabulary
+    # and no population sentence, so `population` binds to nothing at all --
+    # `fields.get("population")` is None, which is not an unknown value but
+    # an unbound field, and the two refuse at different sites.
+    prose_no_population = (
+        "### R-418 — coordinator: R-ADMISS ratification\n\n"
+        "Body naming data/pm_5min/markets.jsonl for a forward-race day.\n\n"
+        "## next\n")
+    prose_full = (
+        "### R-418 — coordinator: R-ADMISS ratification — the population "
+        "is the FULL supplied complement, no sampling\n\nBody naming "
+        "data/pm_5min/markets.jsonl for a forward-race day.\n\n## next\n")
     # (bad args/kwargs, control args/kwargs)
     cases = {
         "entry_absent": (((sup, "R-901", good), {}),
@@ -1374,6 +1718,29 @@ def mutation_audit(sup: dict) -> dict:
              {"stamped_at": "2026-09-02T10:30:00Z"}),
             ((sup, "R-902", stamped_chain),
              {"stamped_at": "2026-09-02T09:30:00Z"})),
+        # --- DE14-R2: sites the audit reported nothing about ------------
+        # The NEW-RUN refusal on a WELL-FORMED chain. `superseded` above
+        # never reached it: its fixture headings carry no timestamp, so it
+        # died one guard earlier and the audit still printed its name.
+        "superseded_new_run": (((sup, "R-902", stamped_chain), {}),
+                               ((sup, "R-903", stamped_chain), {})),
+        # The UNBINDABLE population, which is a different fact from an
+        # unknown VALUE and refuses at a different site. Only the
+        # grandfathered prose path can produce it: a block missing the
+        # field refuses as MALFORMED first.
+        "population_unbindable_from_prose": (
+            ((sup, "R-418", prose_no_population), {}),
+            ((sup, "R-418", prose_full), {})),
+        # --- DE14-R1's two call sites, measured rather than promised ----
+        "later_entry_bad_supersedes": (
+            ((sup, "R-902",
+              stamped_chain.replace("supersedes: R-902", "supersedes: R-9O2")),
+             {"stamped_at": "2026-09-02T09:30:00Z"}),
+            ((sup, "R-902", stamped_chain),
+             {"stamped_at": "2026-09-02T09:30:00Z"})),
+        "under_check_bad_supersedes": (
+            ((sup, "R-900", fixture_register(supersedes="WHATEVER")), {}),
+            ((sup, "R-900", good), {})),
     }
     import traceback as _tb
     per: dict[str, dict] = {}
@@ -1390,7 +1757,7 @@ def mutation_audit(sup: dict) -> dict:
             # count as a guard count. So both numbers are reported and
             # neither is narrated.
             _f = _tb.extract_tb(sys.exc_info()[2])[-1]
-            sites[name] = _f.lineno
+            sites[name] = (_f.filename.rsplit("/", 1)[-1], _f.lineno)
             live = True
         try:
             check(*ctl_a, **ctl_k)
@@ -1401,15 +1768,29 @@ def mutation_audit(sup: dict) -> dict:
                      "refuses_on_the_control": disabled,
                      "load_bearing": live and not disabled}
     survivors = sorted(k for k, v in per.items() if not v["load_bearing"])
-    return {"n_cases": len(per),
-            "n_raise_sites": len(set(sites.values())),
-            "raise_site_by_case": sites,
-            "cases_per_site": {ln: sorted(k for k, v in sites.items()
-                                          if v == ln)
-                               for ln in sorted(set(sites.values()))},
-            "n_guards": len(per),          # kept: older readers use it
-            "per_guard": per, "survivors": survivors,
-            "expected": sorted(cases), "all_load_bearing": not survivors}
+    names = _site_names()
+    by_case = {k: {"file": f, "lineno": ln, "site": names.get(ln, "<untagged>")}
+               for k, (f, ln) in sites.items()}
+    reached = {k: v["site"] for k, v in by_case.items()}
+    return {
+        "n_cases": len(per),
+        "n_raise_sites": len({v["site"] for v in by_case.values()}),
+        # THE DISTINCTION LIVES BESIDE THE NUMBERS (DE14-R4), not only in a
+        # selftest label a JSON reader never sees.
+        "note": ("n_cases counts (input, expected-refusal) CASES; "
+                 "n_raise_sites counts the distinct raises they reach. "
+                 "Several inputs through one refusal is call-site coverage "
+                 "for a shared parser -- do NOT read n_cases as a guard "
+                 "count."),
+        "raise_site_by_case": by_case,
+        "site_reached_by_case": reached,
+        "expected_site": dict(EXPECTED_SITE),
+        "coverage_matches_expected": reached == EXPECTED_SITE,
+        "cases_per_site": {
+            st: sorted(k for k, v in reached.items() if v == st)
+            for st in sorted({v for v in reached.values()})},
+        "per_guard": per, "survivors": survivors,
+        "all_load_bearing": not survivors}
 
 
 def main(argv=None) -> int:
