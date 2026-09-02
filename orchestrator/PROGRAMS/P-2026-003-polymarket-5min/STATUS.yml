@@ -4,6 +4,67 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T21:07Z (MEM ROUND 57 -- A VARIABLE ASSIGNED ONCE AND READ ZERO
+  TIMES). R-477 and R-478 swept; nothing run; committed blobs only. DE37-C1 IS
+  THE THIRD ACT OF THE STORY THIS FILE HAS BEEN TELLING ALL EVENING: round 36
+  ruled section 5's (gamma) wording, round 37 WROTE IT INTO THE DRAFT VERBATIM
+  and DID NOT BUILD IT ON THE RUN PATH -- the demand is still ACTIONS
+  (:1093-1094), permuted_stream returns ok=False and a TRUNCATED-ZIP stream,
+  _perm_ok is ASSIGNED ONCE AND READ ZERO TIMES, stream_predicates is
+  SELFTEST-ONLY, and measured, TWO OF THREE DRAWS FAIL P2 with the third failing
+  P3. So the document now says the right thing and the code does not do it, WHICH
+  IS EXACTLY DE36-R1'S FAILURE MODE IN THE OPPOSITE DIRECTION: in one round the
+  prose was FALSE about the code, in the next the prose is TRUE and the code is
+  ABSENT. A VARIABLE ASSIGNED ONCE AND READ ZERO TIMES IS THE CHEAPEST POSSIBLE
+  TELL, and it is the one a substring check would never find. DE37-C2 IS THE SAME
+  DISEASE IN THE SEAL: DECLARED_ADDITIVE_SHAS = {} is FILLED FROM THE CURRENT
+  FILE so the seal certifies whatever it is shown, and the coordinator DROVE it
+  -- an edited select_v2_era body still reads ADDITIVE_DECLARED with the seal
+  moving 3b34bdc86b1056ca -> 9a1158dd13713ad0. A DECLARATION THAT COMPUTES ITS
+  OWN EXPECTED VALUE IS NOT A DECLARATION, IT IS A MIRROR. BE ROUND 10 VERIFIED
+  AT 121/121 and the review released it AS ROUND 11'S BASE with the sentence that
+  matters: NOTHING PRECEDES THE LANDING. BE9-C1..C3 CONFIRMED CLOSED AT THE PASS
+  LINES, the 26-case audit green, nothing leaking; RUN B'S TREE ANSWERED FROM THE
+  REFLOG -- it was THE SHARED MAIN TREE, no checkout in the window -- and the
+  reviewer REPRODUCED RUN B'S CONDITION IN ITS OWN SCRATCH WORKTREE AT 874a041,
+  also 121/121. So Q-BE-234'S NUMBERS STAND AS HISTORY, NOT AS PROPERTIES OF THE
+  CODE: the count-versus-property distinction, settled by someone reproducing the
+  condition somewhere else. STANDING RULE 10 ADOPTED (9 -> 10) AND IT IS NOT RULE
+  9 RESTATED: RULE 9 SAYS WHERE YOU MAY READ, RULE 10 SAYS WHERE YOU MAY RUN and
+  what you owe if you must run elsewhere -- the run DECLARED IN THE ROW BEFORE IT
+  IS MADE (tree, HEAD, condition, and why no other tree produces it), NO WRITE
+  outside its own git-admin entries, VERIFIED AFTERWARDS FROM A THIRD TREE by git
+  worktree list + git status --short; and the first clause does the work: LOOK
+  FIRST FOR A COMMIT THAT REPRODUCES THE CONDITION IN YOUR OWN TREE. A LOW
+  AGAINST ME, AND THE FIX IS NOT THE NUMBER: I carried the DRAFT's sha as a BARE
+  NAME and it has moved twice (6edefdfda909a897 at 27c1ccd -> ec1538f1545999d1 at
+  218509e). A LIVING DOCUMENT'S SHA IS A FACT WITH AN AS-OF. I learned exactly
+  this for the register's line numbers -- RECOUNT, NEVER PIN -- and did not carry
+  it across to shas: HAVING A RULE AND APPLYING IT TO ONE DATATYPE IS HOW IT GETS
+  RELEARNED. The field now reads "sha ... AS OF 218509e". A PATTERN, NOT A SLIP,
+  AND I SAY SO BECAUSE IT IS THE SECOND: Q-DE-55 reports the runner "74 -> 85"
+  while EXPECTED_CHECKS reads 71 at 92c7da4 and 85 at 218509e, so 71 -> 85, +14;
+  last round it was "68 -> 71" for 67 -> 71. TWO CONSECUTIVE ROUNDS WHERE THE
+  PRIOR COUNT IS WRONG AND THE NEW ONE IS RIGHT -- the new count comes from the
+  run, the prior one from memory -- flagged as a pattern, not corrected twice in
+  silence. TWO ITEMS JOIN THE USER PACKAGE, both honest about their status: THE
+  SPLIT QUESTION (the section 3 population 08-24/08-25 SPANS BOTH FIT SPLITS and
+  the DRAFT DOES NOT CHOOSE -- raised rather than settled, the right instinct)
+  and A THIRD COST, UNMEASURED (tape 3,170,987,711 B + fragment 1,241,115,096 B,
+  BYTE COUNTS VERIFIED against the files, the row and split counts DE'S) --
+  recorded with that seam visible, because the last compute figure had to be
+  split for exactly this reason. SEATS: the reviewer is on the DE ROUND-37 FILING
+  (request REQUEST_DE_ROUND_37_2026-09-02.md at 2ca1c81, in flight); DE on
+  RECORDED STANDBY (round 38 = C1..C5 as ruled plus DE37-Rn); BE on RECORDED
+  STANDBY (round 11 = THE DURABLE LANDING after the 00:14Z read; round 12 =
+  BE10-R1..R4 with BE8-R1/R2, R2 FIRST if the file is opened before the landing);
+  DA standby until 00:06Z / 00:14Z. THE PHASE-4 RUN HAS NO DATE; THE PACKAGE IS
+  NOT FORWARDED. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator
+  wake after, R-409 accrual with the R-411(ii) denominator, DA landing at
+  e353119 (HOLD -> 3b7e10a), CO-8, --require-no-skips, DATA_ROOT split. USER:
+  SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family
+  12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-02T20:09Z (MEM ROUND 56 -- THE GUARD KEEPS THE PROPOSAL FROM BEING
   OBEYED; IT DOES NOT KEEP IT FROM BEING WRONG). R-475, R-476, Q-DE-54, Q-BE-235
   and the reviewer's DE-36 filing swept; nothing run; committed blobs and plan
@@ -126,54 +187,6 @@ updated: >-
   --require-no-skips, DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed
   tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-02T19:25Z (MEM ROUND 54 -- A CHECK WHOSE JOB IS TO PROVE A DOCUMENT IS
-  NOT BEING OBEYED). R-469, R-470, R-471 and Q-DE-53 swept; nothing run; no seat
-  worktree read; be_forward_day.py untouched (BE round 10's row in flight,
-  standing rule 9). THE DISPATCH SAYS THE ADDENDUM V2 DRAFT IS "CITED BY
-  NOTHING", AND THE PRECISE VERSION IS BETTER THAN THE SUMMARY: I grepped, and
-  the draft IS referenced exactly once in code, at
-  de_phase4_protocol_check.py:287 -- AND THAT REFERENCE EXISTS TO PROVE THE
-  ABSENCE. The check asserts the file exists AS A PROPOSAL THAT SAYS SO IN ITS
-  OWN FIRST 400 CHARACTERS, and a second assertion at :296 builds the runner and
-  head-scoring sources and requires "ADDENDUM_V2" not in _srcs, its message
-  spelling out why: "a proposal cited by running code would be a seat deciding
-  what the USER has not ruled (rule 14)". THAT IS THE INVERSE OF EVERY DEFECT
-  CATALOGUED THIS WEEK -- the usual shape is a claim with no check behind it,
-  and this is A CHECK WHOSE ENTIRE JOB IS TO KEEP A DOCUMENT NON-LOAD-BEARING, a
-  negative control on AUTHORITY that names the rule it enforces. So "cited by
-  nothing" is EXACT WHERE IT COUNTS (no number of the draft's is consumed) and
-  LITERALLY FALSE (one reference exists and it is the guard); both halves belong
-  in the record, because a later reader grepping the name will find a hit and
-  needs to know it is the proof, not the breach. DE35-C1 IS WHY THE PACKAGE IS
-  HELD, AND THE REASON IS SYMMETRY, NOT CAUTION: the control's REPOST EVENT HAS
-  NO COUNTERPART IN THE TREATED STREAM, so a comparison meant to differ only in
-  the policy differs also in WHAT EVENTS EXIST AT ALL, and forwarding section 5
-  with that open would ask the USER to FREEZE A NUMBER WHOSE CONTROL IS NOT YET
-  SYMMETRIC -- worse than waiting one round. "The USER package is ONE REVIEWER
-  ROUND FROM READY" is the right status line: it names the DISTANCE, not a date.
-  ADDENDUM v2 DRAFT sha16 6edefdfda909a897, LANDED and NOT FORWARDED. DE ROUND
-  35 LANDED AND EXECUTED at 27c1ccd (Q-DE-53 19ddb43): counts
-  21/67/26/21/24/21/184/92 reproduce and THE PREFLIGHT REFUSES BEFORE THE FEED,
-  which matters more than it reads because DE34-C1 was precisely a refusal
-  arriving AFTER the expensive step. DE34-C1..C4 ALL CONFIRMED by the reviewer
-  (20bd233, 219 lines), and 47a2ba6 released AS ROUND 35'S BASE ONLY -- a release
-  scoped to what it can support, not to the whole artifact -- with seven findings
-  DE34-R1..R7. FIVE COORDINATOR FINDINGS DE35-C1..C5 sit on the same object.
-  ROUND 36 IS QUEUED BEHIND THE REVIEWER'S DE-35 FILING (section 5 restated,
-  DE35-C2..C5, DE34-R2/R3/R5/R6) -- QUEUED, NOT DISPATCHED, recorded that way
-  because a queued round and a dispatched one differ in exactly the thing that
-  goes wrong later. BE ROUND 10'S CODE LANDED at ff60d0a 19:13:34Z with a commit
-  title that is itself the finding it closes ("the check was a function of the
-  branch, not of the code"), and ITS ROW IS IN FLIGHT: recorded as
-  LANDED-CODE / ROW-PENDING / VERIFICATION-PENDING and NOT READ HERE, the file
-  being the surface of an open BE round -- the rule I bought in round 47 by
-  measuring the wrong file. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight,
-  coordinator wake after, R-409 accrual with the R-411(ii) denominator, DA
-  landing at e353119 (HOLD -> 3b7e10a), THE DURABLE LANDING IS BE ROUND 11 AFTER
-  ROUND 10 LANDS, CO-8, --require-no-skips, DATA_ROOT split. THE PHASE-4 RUN HAS
-  NO DATE. USER: SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5;
-  the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3795,7 +3808,7 @@ flags:
   be_durable_landing_is_round_11: "after the 00:14Z read AND after round 10 lands"
   repo_constant_four_symptoms: "BE34-R3, BE7-R4, BE9-C1, BE9-C2 all from REPO hardcoded; round 6 fixed a USE"
   reviewer_be_r8_released: "c54e48e (f804f33); CO-12 and CO-13 CONFIRMED CLOSED; two LOW"
-  user_addendum_v2_bundle: "DRAFT LANDED, NOT FORWARDED (sha16 6edefdfda909a897): TWO numbers (theta_repost, REPOST_DWELL_S) + three declarations. Section state: 1 and 4 READY; 3 READY; 2 RE-READ against the (gamma) stream; 5 = the (gamma) wording (total permutation within (side,hour), matched on the REALISED action count, control#2 WITHDRAWN, P1-P4 replace the substring check) PENDING DE round 37 + its review. Compute travels SPLIT: feed ~28.6 min MEASURED, replay UNMEASURED with the synthetic figure a FLOOR (fixture = 20 slugs x one generation x one tranche x one side, NOT 471 windows); DE35-R2 4x STANDS, ~1000x NOT established. Package still travels WHOLE in ONE notification after round 37 is reviewed"
+  user_addendum_v2_bundle: "NOT FORWARDED. DRAFT sha ec1538f1545999d1 AS OF 218509e (was 6edefdfda909a897 at 27c1ccd -- a living document's sha is a fact with an AS-OF, not a name). TWO numbers (theta_repost, REPOST_DWELL_S) + three declarations. 1 and 4 READY; 3 READY; 2 re-read against the (gamma) stream; 5 = (gamma) DECLARED in the DRAFT but NOT REALISED on the run path (DE37-C1 HIGH); the declaration seal is a TAUTOLOGY (DE37-C2). JOINING THE PACKAGE: the split question (the 3 population spans BOTH fit splits, the DRAFT does not choose) and a THIRD COST, UNMEASURED (tape 3,170,987,711 B + fragment 1,241,115,096 B; byte counts verified, row/split counts are DE's). Compute still SPLIT: feed MEASURED, replay an UNMEASURED floor; DE35-R2 4x stands, ~1000x not established. Package travels WHOLE in ONE notification; THE RUN HAS NO DATE"
   est_r1_r5_open: "EST-R1/R2 HIGH, R3/R4/R5 MED -> DE round 35; rho denominator is MEASURED at DRAFT:212-213"
   addendum_declares_no_horizon: "grep horizon in the addendum = 0 hits; the receipt binds one, the addendum declares none"
   de_r34_executed_counts_as_filed: "47a2ba6 (Q-DE-52 68f63aa); four closed, C1 half-closed, five named open; DE34-C1..C4"
@@ -3819,7 +3832,13 @@ flags:
   reviewer_de_r36_released: "aa1e44a 20:01:57Z; DE36-C1..C6 ALL CONFIRMED (C1 measured on a fixture, a TRUE swap does not fix it); DE36-R1 HIGH, R2/R3 MED, R4 LOW-MED; 92c7da4 = round 37 base"
   de36_r1_high: "the DRAFT tells the USER the runner already implements 5 -- FALSE; must not reach the USER (draft :144)"
   de_r37_dispatched: "Q-DE-55 in flight at e791f4f; five items IN ORDER: 5 (gamma) -> the DRAFT sentences -> the pin rulings -> the wiring with the feed counters -> the substring checks"
-  be_r10_landed_not_verified: "code ff60d0a, row Q-BE-235 5b4eb06 20:00:39Z; coordinator verification IN FLIGHT since 20:01:48Z; RUN B tree is a question for the BE 9+10 round"
+  be_r10_verified: "ff60d0a: 121/121 both launchers, 26-case audit green, BE9-C1..C3 closed at the PASS lines; RUN B tree = the shared main tree (reflog); reviewer reproduced the condition in its own worktree at 874a041, 121/121"
+  de_r37_executed: "218509e (Q-DE-55); counts 31/85/26/21/24/21/184/92; pin 11 IDENTICAL + 1 ADDITIVE_DECLARED over a transitive closure of 75 modules; --run scratch rc 2, preflight refusing at the scorer naming PA.tape_index / PA._feature_pass"
+  de37_c1_high: "(gamma) DECLARED in the DRAFT, NOT BUILT on the run path: demand = actions (:1093-1094), permuted_stream ok=False + truncated zip, _perm_ok assigned once and READ ZERO TIMES, predicates selftest-only; measured 2 of 3 draws fail P2, the third fails P3"
+  de37_c2_seal_tautology: "DECLARED_ADDITIVE_SHAS = {} filled from the CURRENT file; DRIVEN: an edited select_v2_era body still reads ADDITIVE_DECLARED, seal 3b34bdc86b1056ca -> 9a1158dd13713ad0"
+  de_prior_count_slips_pattern: "TWO CONSECUTIVE rounds: Q-DE-54 said 68 for 67, Q-DE-55 said 74 for 71 (71 -> 85 = +14). The NEW count comes from the run, the PRIOR one from memory -- a pattern, not a slip"
+  reviewer_be_9_10_released: "a8e88de; BE9-C1/C2/C3 CONFIRMED closed; BE10-R1..R4 -> round 12 with BE8-R1/R2 (R2 first if the file is opened before the landing); ff60d0a is round 11 base, NOTHING PRECEDES THE LANDING"
+  qbe234_numbers_are_history: "they stand as history, not as properties of the code (reviewer reproduced RUN B's condition elsewhere)"
                              # v18-v19 added the daily pipeline and all-coin
                              # commit-last batch; v20 adds R-DERIVE, R-GROSS,
                              # R-DUAL and R-ONEROW plus Tier-2 markout,
@@ -3828,7 +3847,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T20:09Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T21:07Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3987,6 +4006,15 @@ focus: >
   capacity, promotion or forward verdict is claimable yet.
 
 standing_rules:
+  - "STANDING RULE 10 (R-478 3, from the reviewer's 5c; DISTINCT from rule 9) --
+    A SEAT'S SELFTEST RUNS IN THAT SEAT'S OWN WORKTREE. Where a check's
+    condition can only be produced in another tree (THE SHARED MAIN TREE
+    INCLUDED), the run is DECLARED IN THE ROW BEFORE IT IS MADE -- tree, HEAD,
+    the condition, and why no other tree produces it -- performs NO WRITE
+    outside its own git-admin entries, and is VERIFIED AFTERWARDS FROM A THIRD
+    TREE by `git worktree list` + `git status --short`. A seat needing the
+    shared tree looks FIRST for a commit that reproduces the condition in its
+    own."
   - "PROGRAMME STANDARD (R-457 §2, from MEM's withdrawn count) — A SUITE RUN IN
     THE SHARED TREE MEASURES WHATEVER IS THERE AT SPAWN TIME. No seat reads,
     runs or counts another seat's module from the main tree while that seat's

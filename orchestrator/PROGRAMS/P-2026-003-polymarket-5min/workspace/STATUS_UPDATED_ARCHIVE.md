@@ -4107,3 +4107,57 @@ Moved in the MEM round-56 true-up of R-475, R-476 and the DE-36 filing. Join rul
   SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family
   12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
 ```
+
+## Batch 63 — archived 2026-09-02T21:07Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-57 true-up of R-477 and R-478. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T19:25Z (MEM ROUND 54 -- A CHECK WHOSE JOB IS TO PROVE A DOCUMENT IS
+  NOT BEING OBEYED). R-469, R-470, R-471 and Q-DE-53 swept; nothing run; no seat
+  worktree read; be_forward_day.py untouched (BE round 10's row in flight,
+  standing rule 9). THE DISPATCH SAYS THE ADDENDUM V2 DRAFT IS "CITED BY
+  NOTHING", AND THE PRECISE VERSION IS BETTER THAN THE SUMMARY: I grepped, and
+  the draft IS referenced exactly once in code, at
+  de_phase4_protocol_check.py:287 -- AND THAT REFERENCE EXISTS TO PROVE THE
+  ABSENCE. The check asserts the file exists AS A PROPOSAL THAT SAYS SO IN ITS
+  OWN FIRST 400 CHARACTERS, and a second assertion at :296 builds the runner and
+  head-scoring sources and requires "ADDENDUM_V2" not in _srcs, its message
+  spelling out why: "a proposal cited by running code would be a seat deciding
+  what the USER has not ruled (rule 14)". THAT IS THE INVERSE OF EVERY DEFECT
+  CATALOGUED THIS WEEK -- the usual shape is a claim with no check behind it,
+  and this is A CHECK WHOSE ENTIRE JOB IS TO KEEP A DOCUMENT NON-LOAD-BEARING, a
+  negative control on AUTHORITY that names the rule it enforces. So "cited by
+  nothing" is EXACT WHERE IT COUNTS (no number of the draft's is consumed) and
+  LITERALLY FALSE (one reference exists and it is the guard); both halves belong
+  in the record, because a later reader grepping the name will find a hit and
+  needs to know it is the proof, not the breach. DE35-C1 IS WHY THE PACKAGE IS
+  HELD, AND THE REASON IS SYMMETRY, NOT CAUTION: the control's REPOST EVENT HAS
+  NO COUNTERPART IN THE TREATED STREAM, so a comparison meant to differ only in
+  the policy differs also in WHAT EVENTS EXIST AT ALL, and forwarding section 5
+  with that open would ask the USER to FREEZE A NUMBER WHOSE CONTROL IS NOT YET
+  SYMMETRIC -- worse than waiting one round. "The USER package is ONE REVIEWER
+  ROUND FROM READY" is the right status line: it names the DISTANCE, not a date.
+  ADDENDUM v2 DRAFT sha16 6edefdfda909a897, LANDED and NOT FORWARDED. DE ROUND
+  35 LANDED AND EXECUTED at 27c1ccd (Q-DE-53 19ddb43): counts
+  21/67/26/21/24/21/184/92 reproduce and THE PREFLIGHT REFUSES BEFORE THE FEED,
+  which matters more than it reads because DE34-C1 was precisely a refusal
+  arriving AFTER the expensive step. DE34-C1..C4 ALL CONFIRMED by the reviewer
+  (20bd233, 219 lines), and 47a2ba6 released AS ROUND 35'S BASE ONLY -- a release
+  scoped to what it can support, not to the whole artifact -- with seven findings
+  DE34-R1..R7. FIVE COORDINATOR FINDINGS DE35-C1..C5 sit on the same object.
+  ROUND 36 IS QUEUED BEHIND THE REVIEWER'S DE-35 FILING (section 5 restated,
+  DE35-C2..C5, DE34-R2/R3/R5/R6) -- QUEUED, NOT DISPATCHED, recorded that way
+  because a queued round and a dispatched one differ in exactly the thing that
+  goes wrong later. BE ROUND 10'S CODE LANDED at ff60d0a 19:13:34Z with a commit
+  title that is itself the finding it closes ("the check was a function of the
+  branch, not of the code"), and ITS ROW IS IN FLIGHT: recorded as
+  LANDED-CODE / ROW-PENDING / VERIFICATION-PENDING and NOT READ HERE, the file
+  being the surface of an open BE round -- the rule I bought in round 47 by
+  measuring the wrong file. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight,
+  coordinator wake after, R-409 accrual with the R-411(ii) denominator, DA
+  landing at e353119 (HOLD -> 3b7e10a), THE DURABLE LANDING IS BE ROUND 11 AFTER
+  ROUND 10 LANDS, CO-8, --require-no-skips, DATA_ROOT split. THE PHASE-4 RUN HAS
+  NO DATE. USER: SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5;
+  the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+```

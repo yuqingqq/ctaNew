@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T20:09Z — **DE36-C1..C6 ALL CONFIRMED** and §5 is ruled: the
-**(γ)** wording — total permutation within `(side, hour)`, matched on the
-**realised action count**, `control#2` **withdrawn**, **P1–P4** replacing the
-substring check. **DE36-R1 (HIGH) is the one to watch: the DRAFT tells the USER
-the runner "already implements it", and that is FALSE — it must not reach them.**
-The compute travels **split**: feed **measured**, replay **an unmeasured floor**;
-**DE35-R2's 4× stands, "~1000×" is not established.** BE round 10 **landed,
-verification IN FLIGHT — not verified.** **The run has no date.**
+Updated: 2026-09-02T21:07Z — **DE37-C1 (HIGH): (γ) is DECLARED in the DRAFT and
+NOT BUILT on the run path** — `_perm_ok` is assigned once and **read zero times**,
+the predicates are **selftest-only**, and two of three draws fail P2 with the
+third failing P3. **DE37-C2: the declaration seal is a tautology, DRIVEN.** **BE
+round 10 VERIFIED (121/121)** and **released as round 11's base — nothing
+precedes the landing.** **STANDING RULE 10 ADOPTED** (9 → 10): a seat's selftest
+runs in that seat's own worktree. **The run has no date; the package is NOT
+forwarded.**
 
 ## READ FIRST — current project handoff
 
@@ -125,7 +125,17 @@ diagnostic**, below.
 > **All of it lands in ONE addendum the USER freezes; none of it is decided by a
 > seat (rule 14). Nothing runs until it is settled, and the run has no date.**
 >
-> **STATUS: the DRAFT HAS LANDED and is NOT FORWARDED.** Section by section:
+> **STATUS: NOT FORWARDED. The DRAFT's sha is `ec1538f1545999d1` AS OF
+> `218509e`** — it was `6edefdfda909a897` at `27c1ccd`, and **a living
+> document's sha is a fact with an as-of, not a name** (my round-56 carry was
+> stale; this is the second supersession). **§5 is (γ) DECLARED in the DRAFT
+> and NOT REALISED on the run path** (DE37-C1, HIGH), and **the declaration
+> seal is a tautology** (DE37-C2). **Two more items join the package:** the
+> **split question** — the §3 population (08-24 / 08-25) spans **BOTH fit
+> splits** and the DRAFT does not choose — and a **THIRD cost, UNMEASURED**
+> (tape **3,170,987,711 B** + fragment **1,241,115,096 B**, byte counts
+> verified against the files; the row/split counts are DE's). Section by
+> section:
 > **§1 and §4 are READY**; **§3 is READY**; **§2 must be RE-READ against the
 > (γ) stream**; **§5 is the (γ) wording** — *total permutation of ALL
 > above-threshold values within `(side, hour)` strata, the draw naming which
@@ -420,6 +430,18 @@ nobody reads.
    leave the OLD bytecode executing. **The dangerous direction is the stale
    RESTORE — a falsifier credited without ever having fired.** A pre-run clear
    closes both directions; a post-run clear closes only one.
+
+5. **A seat's selftest runs in that seat's own worktree** (R-478 §3, adopted from
+   the reviewer's §5c — **standing rule 10**, and **distinct from rule 9**). Where
+   a check's condition **can only be produced in another tree — the shared main
+   tree included** — the run is **DECLARED IN THE ROW BEFORE IT IS MADE**: the
+   tree, its HEAD, the condition, and **why no other tree produces it**. It
+   **performs no write outside its own git-admin entries**, and is **verified
+   afterwards from a THIRD tree** with `git worktree list` and `git status
+   --short`. A seat that thinks it needs the shared tree **looks first for a
+   commit that reproduces the condition in its own.** *Rule 9 says where you may
+   READ; this says where you may RUN, and what you owe if you must run
+   elsewhere.*
 
 4. **A suite run in the shared tree measures whatever is there at spawn time**
    (R-457 §2, from my own withdrawn count; now `standing_rules`' ninth). **No
@@ -839,7 +861,8 @@ launchers at **235/19**.
 | **DE round 35 review** | **RELEASED** (`df123f2`, 276 lines) — **DE35-C1..C5 all CONFIRMED** (C4 **contested as a blocker**, not as a finding); five findings **DE35-R1..R5**; `27c1ccd` released **as round 36's base** |
 | **DE round 36** | **EXECUTED** at `92c7da4` (Q-DE-54 `2432aa5`) — counts and pin statuses reproduce, the run **blocked by the wiring only**; six findings **DE36-C1..C6**. Its row's *"runner 68 → 71"* is a **transcription slip: 67 → 71** (`EXPECTED_CHECKS` read at both blobs) |
 | **DE round 36 review** | **RELEASED** (`aa1e44a`, 263 lines, 20:01:57Z) — **DE36-C1..C6 ALL CONFIRMED** (C1 **measured on a fixture**; **a TRUE swap does not fix it**); four findings **DE36-R1..R4**; `92c7da4` released **as round 37's base** |
-| **DE round 37** | **DISPATCHED** at `e791f4f` (Q-DE-55, in flight) — five items **in order**: **§5 (γ)** → the DRAFT's two sentences → the pin's rulings → the wiring with the feed's counters → the substring checks |
+| **DE round 37** | **EXECUTED** at `218509e` (Q-DE-55) — counts **31/85/26/21/24/21/184/92** reproduce; pin statuses **11 IDENTICAL + 1 ADDITIVE_DECLARED** over a **transitive** closure of **75 modules**; `--run` scratch **rc 2**, the preflight refusing **at the scorer, naming `PA.tape_index` / `PA._feature_pass`**. Five findings **DE37-C1..C5** |
+| **DE round 38** | **QUEUED** — DE37-C1..C5 as ruled, plus DE37-Rn from the reviewer's filing (in flight) |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -859,7 +882,9 @@ launchers at **235/19**.
 | **BE round 8** | **VERIFIED** at `c54e48e` (Q-BE-233) — **CO-12 and CO-13 CLOSED**, 106/106 both launchers (the coordinator's count; I did not run it — rule 9) |
 | **BE round 8 review** | **RELEASED** (`f804f33`) for `c54e48e` — **CO-12 and CO-13 both CONFIRMED CLOSED**; two LOW findings |
 | **BE round 9** | **EXECUTED at the tip and FOUND SHORT** (`90638c3`, Q-BE-234 → **VERIFIED-SHORT**) — **93 PASS then rc 1** under both launchers; **checks 95–117 unverifiable at that tip in ANY tree**. Three findings **BE9-C1..C3** |
-| **BE round 10** | **LANDED** — code `ff60d0a`, row Q-BE-235 `5b4eb06` (20:00:39Z): BE9-C1..C3 closed, executed in **two trees**, a **26-case** mutation audit. **Coordinator verification IN FLIGHT since 20:01:48Z — NOT verified.** **RUN B's tree is a question for the reviewer's BE 9+10 round** |
+| **BE round 10** | **VERIFIED** at `ff60d0a` — **121/121 both launchers**, the 26-case audit **green**, **BE9-C1..C3 closed at the PASS lines**, nothing leaking |
+| **BE rounds 9+10 review** | **RELEASED** (`a8e88de`) — BE9-C1/C2/C3 **CONFIRMED closed**; four findings **BE10-R1..R4**; **`ff60d0a` is round 11's base and nothing precedes the landing** |
+| **BE round 12** | **BE10-R1..R4 with BE8-R1/R2** — **R2 first if the file is opened before the landing** |
 | **BE round 11** | **the R-442 §3(c) DURABLE LANDING** — after the 00:14Z read **AND** after round 10 lands |
 | **BE — durable landing** | now **BE round 11**: after the **00:14Z** read **AND** after round 10 lands — **a driver whose selftest fails at its tip cannot produce the artifact of record** |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
@@ -909,9 +934,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**DE35-C1..C5 CONFIRMED** (C4 contested as a blocker); **DE36-C1..C6 ALL
-CONFIRMED**; **DE36-R1 (HIGH)**, **DE36-R2/R3 (MED)**, **DE36-R4 (LOW-MED)** →
-**DE round 37, dispatched**;
+**DE36-C1..C6 CONFIRMED**; **DE37-C1 (HIGH)**, **DE37-C2 (MED-HIGH)**,
+**DE37-C3/C4 (MED)**, **DE37-C5 (LOW)** → **DE round 38 (queued)**;
+**BE10-R1..R4** → **BE round 12** with BE8-R1/R2;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
 tense**; **DA17-R1 (LOW)** → behind DA's landing;
@@ -938,8 +963,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on RECORDED STANDBY** until **R-477 (BE round 10 verified)**;
-then **BE rounds 9 + 10 as ONE round**. **Released so far**
+**The reviewer is on the DE round-37 filing** (request
+`REQUEST_DE_ROUND_37_2026-09-02.md`, `2ca1c81`), **in flight**. **BE rounds 9+10's
+review is RELEASED** (`a8e88de`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1754,6 +1780,76 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~21:07Z (MEM) — A VARIABLE ASSIGNED ONCE AND READ ZERO TIMES
+
+**R-477 and R-478 swept.** Nothing run; committed blobs only.
+
+**DE37-C1 is the third act of the story this file has been telling all evening.**
+Round 36 ruled §5's (γ) wording. Round 37 **wrote it into the DRAFT verbatim** —
+and **did not build it on the run path**: the demand is still **actions**
+(`:1093-1094`), `permuted_stream` returns **`ok=False` and a truncated-zip
+stream**, **`_perm_ok` is assigned once and read zero times**, and
+`stream_predicates` is **selftest-only**. Measured: **two of three draws fail P2,
+the third fails P3.** So the document now says the right thing and the code does
+not do it — **which is exactly the failure mode DE36-R1 caught in the opposite
+direction** (the DRAFT claiming the runner already implemented it). *In one round
+the prose was false about the code; in the next the prose is true and the code is
+absent.* **A variable assigned once and read zero times is the cheapest possible
+tell**, and it is the one a substring check would never find.
+
+**DE37-C2 is the same disease in the seal.** `DECLARED_ADDITIVE_SHAS = {}` is
+**filled from the current file**, so the seal certifies whatever it is shown: the
+coordinator **drove** it — an edited `select_v2_era` body still reads
+**ADDITIVE_DECLARED**, with the seal moving `3b34bdc86b1056ca` →
+`9a1158dd13713ad0`. **A declaration that computes its own expected value is not a
+declaration; it is a mirror.**
+
+**BE round 10 verified at 121/121, and the review released it as round 11's base
+with the sentence that matters: nothing precedes the landing.** BE9-C1..C3 are
+**confirmed closed at the PASS lines**, the 26-case audit is green, nothing leaks.
+**RUN B's tree is answered from the reflog** — it was **the shared main tree**, no
+checkout in the window — and the reviewer **reproduced RUN B's condition in its
+own scratch worktree at `874a041`, also 121/121**. So **Q-BE-234's numbers stand
+as history, not as properties of the code**: the distinction I have been drawing
+between *a count* and *a property*, settled here by someone reproducing the
+condition somewhere else.
+
+**Standing rule 10 is adopted, and it is not rule 9 restated.** *Rule 9 says where
+you may READ; rule 10 says where you may RUN, and what you owe if you must run
+elsewhere:* the run is **declared in the row before it is made** — tree, HEAD,
+condition, and **why no other tree produces it** — writes nothing outside its own
+git-admin entries, and is **verified afterwards from a third tree**. And the first
+clause is the one that will do the work: **look first for a commit that reproduces
+the condition in your own tree.**
+
+**A LOW against me, and the fix is not the number.** I carried the DRAFT's sha as
+a bare name; it has moved twice (`6edefdfda909a897` at `27c1ccd` →
+**`ec1538f1545999d1`** at `218509e`). **A living document's sha is a fact with an
+as-of.** I learned exactly this for the register's line numbers — *recount, never
+pin* — and did not carry it across to shas. **Having a rule and applying it to one
+datatype is how it gets relearned.** The field now reads *sha … AS OF `218509e`*.
+
+**A pattern, not a slip, and I say so because it is the second.** Q-DE-55 reports
+the runner **"74 → 85"**; `EXPECTED_CHECKS` reads **71** at `92c7da4` and **85** at
+`218509e` — so **71 → 85, +14**. Last round it was **"68 → 71"** for **67 → 71**.
+**Two consecutive rounds where the PRIOR count is wrong and the new one is right**
+— the new count comes from the run, the prior one from memory. **It is flagged as
+a pattern, not corrected twice in silence.**
+
+**Two items join the USER package, both honest about their status.** The **split
+question**: the §3 population (08-24 / 08-25) **spans both fit splits and the
+DRAFT does not choose** — a question DE raised rather than settled, which is the
+right instinct. And a **third cost, UNMEASURED**: tape **3,170,987,711 B** plus
+fragment **1,241,115,096 B**, **byte counts verified against the files**, with the
+row and split counts **DE's**. Recorded with that seam visible, because the last
+compute figure had to be split for exactly this reason.
+
+**Seats.** The reviewer is on the **DE round-37 filing** (in flight). **DE is on
+recorded standby** (round 38 = C1..C5 as ruled plus DE37-Rn). **BE is on recorded
+standby** — **round 11 is the durable landing after the 00:14Z read**, round 12
+carries BE10-R1..R4 with BE8-R1/R2, **R2 first if the file is opened before the
+landing**. **DA standby until 00:06Z / 00:14Z.**
 
 ### 2026-09-02 ~20:09Z (MEM) — THE GUARD KEEPS THE PROPOSAL FROM BEING OBEYED;
 ### IT DOES NOT KEEP IT FROM BEING WRONG
