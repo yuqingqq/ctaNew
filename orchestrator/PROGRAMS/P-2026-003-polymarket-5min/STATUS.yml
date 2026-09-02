@@ -4,6 +4,72 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T16:38Z (MEM ROUND 46 -- THE STANDARD EARNED ITS KEEP IN ONE ROUND).
+  R-454 swept; three landings. DE ROUND 29 VERIFIED at ea3b525 and RE-RUN HERE:
+  180 both launchers rc 0, census ok 93 -> 96, refuses 54. The closure is real --
+  own_blocks_quiet (:631-648) returns (block, duplicated keys) PAIRS and is the
+  ONE TEXT of the two conjuncts, own_ratification_blocks (:650-676) CONSUMES it
+  at :658 and adds only its two raises -- and the thing DE27-R1 was actually
+  about is fixed: a NAMED CONTROL (:2074-2107) now sits on the `kind` conjunct so
+  the drop is CAUGHT AND REPORTED rather than escaping as a traceback; four
+  mutants red by name, ZERO TRACEBACKS. CO-11 REPRODUCED HERE IN A PARITY TREE
+  AND IT REPRODUCES THE EXACT SHAPE I RECORDED LAST ROUND: _ownership_sites keys
+  the census on the VARIABLE NAME (getattr(n.func.value, "id", "") == "blk",
+  :2130), so pasting the filter back into the adjudicating reader with the loop
+  variable RENAMED (blk -> b) -- semantically the second text DE27-R1 removed --
+  leaves ONE OWNERSHIP TEXT saying PASS at stdout line 124, WHICH WAS ALSO THE
+  LAST LINE OF STDOUT. THE MESSAGE CLAIMS THE PREDICATE; THE CHECK ASSERTS THE
+  IDIOM. The secondary half fell out of the same run and I verified its cause
+  statically: the text `own = own_blocks_quiet(entry)` occurs TWICE in the module
+  -- the code at :658 and a STRING LITERAL at :2146 inside the census known-bad's
+  own .replace -- so with the code line renamed away the replace hits the
+  literal, the copy is left with an unterminated string, and the run dies
+  SyntaxError: unterminated string literal (detected at line 2148) ON STDERR: A
+  TRACEBACK WHERE A REFUSAL BY NAME BELONGS. SO: LAST STDOUT LINE "PASS", EXIT 1,
+  ONE ROUND AFTER THAT OBSERVATION WAS ADOPTED AS THE STANDARD AND INSIDE THE FIX
+  FOR THE FINDING IT WAS ADOPTED FOR. That is the argument for the standard being
+  a HABIT rather than a rule you remember when relevant: EVERY GUARD ADDED TO
+  CATCH A CLASS IS ITSELF A CANDIDATE FOR THAT CLASS, and the only routine that
+  catches it is capture both streams separately, read the exit code, and never
+  take the last line of stdout for the verdict. THE GENERAL LESSON BENEATH CO-11
+  IS NARROWER AND MORE USEFUL THAN "the census is weak": a drift guard's
+  known-bad exercised EXACTLY THE IDIOM THE GUARD KEYS ON, so the falsifier could
+  not fail by any other spelling -- RULE 15'S KNOWN-BAD NARROWER THAN THE CLAIM
+  IT IS DEFENDING. Round 30 (Q-DE-48) is the right shape: key on the CONSTANT AND
+  THE SHAPE, drive the known-bad under BOTH the same idiom and a renamed copy,
+  and assert the anchor so an absent line REFUSES BY NAME instead of crashing the
+  parser. DA ROUNDS 15+16 REVIEW RELEASED (5d9bfb8, 219 lines) for 3b7e10a, no
+  hold, CO-10 CONFIRMED CLOSED by the 2x2+1, and three carried facts of mine
+  RULED: the separate != _there line IS a control with its own falsifier (cell
+  4); "32 checks at 8910701" is HISTORY CORRECTLY SCOPED, NOT A STALE COUNT; and
+  DA14-R1's deletion-over-a-hook is the honest call with "a tripwire on a future
+  edit" the honest label. DA16-R1 IS THE SAME SPECIES AS CO-10 ONE LAYER UP AND
+  THE LOGIC IS CHECKABLE BY READING: with the identity conjunct dropped what
+  remains is carrying_commit != _here (:927-928) and != _there (:944), so a
+  producer answering HEAD~2 yields a FOURTH value -- neither -- BOTH NEGATIVES
+  HOLD AND THE SUITE GOES GREEN AT 34; the pair is jointly sufficient for THE
+  VALUE CO-10 WAS FOUND ON, not for THE PROPERTY THE CONTROL CLAIMS. I DID NOT
+  RUN THIS ONE: it needs a worktree on DA's chain and git worktree list reads 33
+  here as it should -- verified by reading, and said so. THE ROUTING IS THE PART
+  WORTH KEEPING: the closure is DRIVEN, NOT A FOURTH != -- another negative just
+  extends an enumerated set by one value and leaves the identity drop invisible
+  -- so state the control's predicate ONCE AS A FUNCTION OF THE EMISSION, run a
+  wrong-commit producer copy through _measure in the child and assert it REFUSED
+  by that predicate, so dropping the identity turns THAT FALSIFIER red; != _there
+  kept as ruled; a fourth-distinct-value precondition beside the third. THE
+  DA14-R2 SHAPE APPLIED TO A CONJUNCT: GIVE IT A DRIVER, NOT A COMPANION.
+  TONIGHT'S LANDING RULE AS RULED: the landing takes THE CHAIN'S TIP OF THE
+  MOMENT -- 3b7e10a is RELEASED, and a round-17 commit above it is SELFTEST-ONLY
+  and lands ONLY IF coordinator-verified at the artifact before the landing
+  dispatch, else the landing is at 3b7e10a; timers unchanged. The reviewer's pane
+  showed context at 100% after its filing; nothing was done about it and nothing
+  needs to be -- THE REQUESTS OF RECORD CARRY THE STATE, which is why they are
+  files rather than messages. SEATS: DE round 30, DA round 17 (held) and BE round
+  7 in flight; reviewer BE round 6 (5e9ed91) now, then DE round 29 (ea3b525),
+  then BE round 7, then DA round 17. USER decisions SIX RULED, NONE OPEN.
+  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
+  Phase-4 gated; R-419 revocable.
+  PRIOR:
   2026-09-02T16:28Z (MEM ROUND 45 -- THE SUITE'S LAST WORD WAS "PASS" AND THE
   PROCESS EXITED 1). R-453 swept; four landings. DE ROUND 28 VERIFIED at 1480ab6
   and RE-RUN HERE on the same collision fixture I built two rounds ago: 92
@@ -128,67 +194,6 @@ updated: >-
   DA round 15, then BE round 6; three requests filed. Tonight's timers unchanged.
   USER decisions SIX RULED, NONE OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24
   with Q4 failing; the sequencing rule; Phase-4 gated; R-419 revocable.
-  PRIOR:
-  2026-09-02T15:57Z (MEM ROUND 43 -- A REFUSAL THAT DEPENDS ON AN UNRELATED
-  ENTRY SOMEWHERE ELSE IN THE FILE). R-451 swept. DE ROUND 26 VERIFIED at
-  89aef8c and RE-RUN HERE: EXPECTED_CHECKS = 171 (:1128), 171 rc 0; `named` is
-  built from own_ratification_blocks(e) (:422-423); and DE24-R2 IS GONE --
-  check#18 now reads "0-based register line" (:987) and "0-based line" (:990),
-  so ALL SIX SITES THAT PRINT A LINE NOW SAY WHICH KIND IT IS. That residual
-  took three rounds to travel from a measurement of mine to a labelled message
-  and never needed a dispatch of its own. CO-9 REPRODUCED AT THE MECHANISM
-  RATHER THAN READ, by driving entry_index directly on doctored copies of the
-  real register: the real register returns OK with duplicate_refs {'R-6':
-  [1788, 9514]}; fixture C -- an entry with TWO own blocks inserted EARLIER than
-  R-419 -- REFUSES ("R-99900 carries 2 ratification blocks of its OWN"); fixture
-  C2, the same entry with the duplicate R-6 heading renamed away, returns OK
-  with duplicate_refs {}; fixture C3, the same malformed entry placed LATER,
-  ALSO refuses, so THE SCAN IS POSITION-BLIND. C2 IS THE FINDING: whether a
-  malformed entry refuses a check about a DIFFERENT entry depends on whether an
-  UNRELATED duplicate exists elsewhere in the file -- R-6, a fact of this
-  register since long before either -- and A REFUSAL WHOSE TRIGGER LIVES IN A
-  THIRD ENTRY IS NOT A PROPERTY OF THE SUBJECT AT ALL. C3 shows why DE's
-  ordering note could be true and still not cover this: the note is about ORDER
-  and the scan does not consult order -- A CLAIM THAT NOTHING IS REFUSED EARLIER
-  THAN BEFORE SAYS NOTHING ABOUT WHAT IS REFUSED AT ALL. THE (iii) REFINEMENT IS
-  THE SAME MOVE AS (ii) AND I CHECKED BOTH FIXTURES: D, a duplicated heading
-  whose second occurrence carries a QUOTED block, refuses at entry_index#3
-  today; E, the same shape with an OWN block naming R-419, also refuses -- so
-  the refinement's job is to SEPARATE them, D reaching no answer and belonging
-  on the reporting side while E drops a real supersession under kept-first and
-  must keep refusing. (ii) AND (iii) NOW SHARE ONE CRITERION -- OWNERSHIP AS THE
-  MODULE DEFINES IT, NOT THE PRESENCE OF A FENCE -- recorded IN BAND beside the
-  (ii) refinement in HANDOFF's standards section, WITH R-446 AND R-450 BOTH LEFT
-  STANDING (rule 13). THE CLOSURE'S SHAPE IS WORTH AS MUCH AS THE RULE: the fix
-  is a QUIET ownership filter for the two scans (the module's own predicate over
-  _fenced_blocks, no adjudication) while own_ratification_blocks stays the
-  ADJUDICATING reader ON THE PATH -- the distinction between READING TO DECIDE
-  and READING TO SCAN, the round-26 fix having accidentally given the scan the
-  decider's temperament. A READER THAT RAISES IS THE WRONG INSTRUMENT FOR A
-  SURVEY. DA ROUNDS 13+14 REVIEW RELEASED (a2a1cf8, 278 lines) for BOTH e384792
-  AND 801eb31 with identical dispositions and no hold, and its three findings
-  reproduce at the held bytes: DA13-R1, the wiring poison is the LITERAL
-  ("RULED at R-442",) at :628 asserted at :633 where every ruled entry carries
-  the FORM "RULED at " (:399 and four more), so a legitimate re-ruling turns the
-  control red -- DA10-R5 again, safe direction; DA14-R1, `_t2, _e2 =
-  twins[:-1], excluded` then ok(len(_t2) + len(_e2) != len(roster)) is, given
-  the invariant asserted two lines above, roster - 1 != roster, ARITHMETIC, true
-  under every arrangement -- the DE16-R4 shape, a control that cannot fail;
-  DA14-R2, the recomputed _exp_dirty is the right property but the fixture
-  builds ONE arrangement so a producer hardcoding True still passes -- the
-  round-15 candidate recorded at R-447 section 3, now a finding with the
-  reviewer's ruling attached (the recomputed expectation is right AND NOT YET
-  SUFFICIENT; drive both arrangements). MY FIGURE STANDS AND THE COORDINATOR'S
-  IS WITHDRAWN: REVIEW_DE_ROUND_24 is 253 lines by wc -l and 253 insertions at
-  304cd5f; R-450 section 2's 254 is withdrawn in band -- recorded because a
-  withdrawn number that nobody records comes back. SEATS: DE round 27 (Q-DE-45)
-  in flight with CO-9 and the (iii) refinement, C/C2/C3 and D/E as controls; DA
-  ROUND 15 DISPATCHED AND HELD on the chain as its sixth commit, BEFORE tonight,
-  selftest regions of three files only, no real-day run, shared tree and timers
-  untouched; reviewer on DE round 25 (50a9113), then BE round 6 when its row
-  lands, then BE round 7, then DA round 15 -- and DE ROUNDS 26+27 GO AS ONE
-  FILING. USER decisions SIX RULED, NONE OPEN. UNCHANGED: G=1/5; the 011 family
-  12 of 24 with Q4 failing; the sequencing rule; Phase-4 gated; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3782,7 +3787,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T16:28Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T16:38Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are

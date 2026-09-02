@@ -1,12 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T16:28Z — **DE25-R1 CLOSED at `1480ab6`**: my own collision
-fixture now reads **0 chars and answers FALSE**, where it answered True two
-rounds ago. **CO-10 CLOSED on the chain at `3b7e10a`** — the identity conjunct is
-back and the `HEAD~1` mutant is red by name. **DE27-R1 reproduced here in a
-parity tree:** dropping the adjudicating `kind` conjunct exits **rc 1 with an
-UNCAUGHT refusal — and the last line on stdout is a PASS.** Red is not the same
-as caught. **SIX RULED, none open.**
+Updated: 2026-09-02T16:38Z — **DE27-R1 CLOSED at `ea3b525` (180)**, and the
+guard that closed it has its own gap: **CO-11 reproduced here — a renamed loop
+variable leaves `ONE OWNERSHIP TEXT` saying PASS while the second text exists**,
+and the run then dies with a `SyntaxError` on stderr. **Last stdout line PASS,
+exit 1 — the standard adopted last round produced a fresh instance one round
+later, inside the fix for the previous one.** **CO-10 CONFIRMED CLOSED**
+(`5d9bfb8`); **DA16-R1** → DA round 17. **SIX RULED, none open.**
 
 ## READ FIRST — current project handoff
 
@@ -747,14 +747,17 @@ launchers at **235/19**.
 | **DE round 27** | **VERIFIED** at `5e9dc8b` (Q-DE-45) — **CO-9 CLOSED**, ratification **177**; `own_blocks_quiet()` (`:631`) scans, `own_ratification_blocks` (`:639`) adjudicates on the path |
 | **DE rounds 26+27 review** | **RELEASED** (`723271e`) for **both** `5e9dc8b` and `89aef8c` — the fixture matrix reproduces the register's table; three rulings adopted; **DE27-R1 (LOW)** → DE round 29 |
 | **DE round 28** | **VERIFIED** at `1480ab6` (Q-DE-46) — **DE25-R1 CLOSED**: `read_nothing` (`:319`) makes an empty read answer **False**; admissible **92** (reproduced here) |
-| **DE round 29** | **IN FLIGHT** (Q-DE-47) — DE27-R1: **one text** for the ownership predicate, and a **named** control for the `kind` conjunct |
+| **DE round 29** | **VERIFIED** at `ea3b525` (Q-DE-47) — **DE27-R1 CLOSED**: one ownership text, a **named** control for the `kind` conjunct, **180** both launchers (reproduced here), four mutants red **with zero tracebacks**. **CO-11 (LOW)** filed at the same tip |
+| **DE round 30** | **IN FLIGHT** (Q-DE-48) — CO-11: key the census on the **constant and the shape**, not the variable name; anchor the paste so an absent line **refuses by name** |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
 | **DA round 13** | **HELD** at `e384792` (chain `3a89e6c`→`e292439`→`636a455`→`e384792`) — preflight **39**; `freeze_disposition` moves to `ruled`, `still_open == {}`, and a **coherence guard** makes the contradiction unrepresentable |
 | **DA rounds 13+14 review** | **RELEASED** (`a2a1cf8`) for **both** `e384792` and `801eb31`, dispositions identical, no hold — three LOW/LOW-MED findings **DA13-R1, DA14-R1, DA14-R2** → DA round 15 |
 | **DA round 15** | **HELD and VERIFIED** at `8910701` — DA13-R1/DA14-R1/DA14-R2 closed (39 / 5 / 32 both launchers). **CO-10** filed at the same tip |
-| **DA round 16** | **HELD and VERIFIED** at `3b7e10a` (Q-DA-212) — **CO-10 CLOSED on the chain**, pending the reviewer: the identity conjunct is back (`:927-928`), `_child_head` re-read after the fixture commit, the `HEAD~1` mutant **red by name**. Mask **32 → 34** |
+| **DA rounds 15+16 review** | **RELEASED** (`5d9bfb8`) for `3b7e10a` — **CO-10 CONFIRMED CLOSED** (the 2×2+1); items 1, 2 and 7 ruled; **DA16-R1 (LOW-MED)** → DA round 17 |
+| **DA round 16** | **HELD and VERIFIED** at `3b7e10a` (Q-DA-212) — CO-10 closed, the identity conjunct back (`:927-928`), the `HEAD~1` mutant **red by name**. Mask **32 → 34** |
+| **DA round 17** | **DISPATCHED and HELD** (Q-DA-213) — DA16-R1, the closure read as **DRIVEN**: the predicate stated once as a function of the emission, a wrong-commit producer run through `_measure` and asserted refused |
 | **DA round 14** | **HELD and VERIFIED** at `801eb31` — DA12-R1 closed, twinning **both directions**, **23 + 15 = 38** and `--falsify` 39 (recomputed here in a parity tree), the one exclusion **named with a reproduced reason**. A one-assertion scope deviation **ACCEPTED in-batch** |
 | **BE round 5 review** | **RELEASED** (`d990162`) for `baa986d` — **BE34-R2 CLOSED at the artifact**; two rulings adopted; three LOW-MED findings **BE5-R1/R2/R3** → BE round 7 |
 | **BE round 6** | **VERIFIED** at `5e9ed91` (Q-BE-231) — BE34-R1/R3/R4/R5 closed, **95** both launchers, sha `957a9d3c…`, usage rc **2** (all reproduced here); three of BE's own corrections in band |
@@ -799,9 +802,10 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **BE5-R1/R2/R3** → **BE round 7** (staged, before tonight's read);
 **DE23-R1/R2 CLOSED** at `50a9113`, queued for review;
 **DE24-R1/R2 CLOSED** at `89aef8c`; **CO-9 CLOSED** at `5e9dc8b`;
-**DE25-R1 CLOSED** at `1480ab6`; **DE27-R1** → **DE round 29, in flight**;
-**DA13-R1 / DA14-R1 / DA14-R2 CLOSED** at `8910701`; **CO-10 CLOSED** at
-`3b7e10a`, pending the reviewer;
+**DE25-R1 CLOSED** at `1480ab6`; **DE27-R1 CLOSED** at `ea3b525`;
+**CO-11** → **DE round 30, in flight**;
+**DA13-R1 / DA14-R1 / DA14-R2 CLOSED** at `8910701`; **CO-10 CLOSED and
+CONFIRMED** at `3b7e10a`; **DA16-R1** → **DA round 17** (held);
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
 `a83083a`; **DE22-R1 CLOSED** at `e0d1e9f`, queued for review; **DA12-R1** → DA round 14
 (held);
@@ -823,11 +827,14 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DA rounds 15+16 as ONE filing at
-`3b7e10a`** (the round-16 addendum, items 7–10, is filed) → **BE round 6** at
-`5e9ed91` → **BE round 7**. **Released so far:** DE rounds 23 (`0b03618`), 24
-(`304cd5f`), 25 (`a7860dc`) and **26+27** (`723271e`, covering both tips), DA
-rounds 13+14 (`a2a1cf8`), BE round 5 (`d990162`). **Released so far:** BE rounds 3–4
+**The reviewer's queue, in order:** **BE round 6** at `5e9ed91` (now) → **DE
+round 29** at `ea3b525` → **BE round 7** → **DA round 17**. **Released so far:**
+DE rounds 23 (`0b03618`), 24 (`304cd5f`), 25 (`a7860dc`) and 26+27 (`723271e`),
+DA rounds 13+14 (`a2a1cf8`) and **15+16** (`5d9bfb8`), BE round 5 (`d990162`).
+
+> **The reviewer's pane showed context at 100% after its filing.** Nothing was
+> done about it and nothing needs to be: **the requests of record carry the
+> state**, which is the whole reason they are files rather than messages. **Released so far:** BE rounds 3–4
 (`1d9c543`), DA rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19
 (`a558356`), 20 (`819d225`), 21 (`533e38c`) and 22 (`8df60bf`).
 
@@ -1632,6 +1639,85 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~16:38Z (MEM) — THE STANDARD EARNED ITS KEEP IN ONE ROUND
+
+**R-454 swept.** Three landings, and the round's finding is in the guard that
+closed the last round's finding.
+
+**DE round 29 verified and re-run here:** **180** both launchers, rc 0, `census
+ok 93 → 96`, `refuses 54`. The closure is real — `own_blocks_quiet`
+(`:631-648`) returns `(block, duplicated keys)` pairs and is now the **one text**
+of the two conjuncts; `own_ratification_blocks` (`:650-676`) **consumes** it at
+`:658` and adds only its two raises. And the thing DE27-R1 was actually about is
+fixed: **a NAMED control (`:2074-2107`)** now sits on the `kind` conjunct, so the
+drop is caught and reported rather than escaping as a traceback. **Four mutants
+red by name, zero tracebacks.**
+
+**CO-11, reproduced here in a parity tree — and it reproduces the exact shape I
+recorded last round.** `_ownership_sites` keys the census on the **variable
+name**: `getattr(n.func.value, "id", "") == "blk"` (`:2130`). I pasted the filter
+back into the adjudicating reader with the loop variable **renamed** (`blk` →
+`b`) — semantically the second text DE27-R1 removed — and **`ONE OWNERSHIP TEXT`
+still said PASS**, at stdout line 124, which was also the **last line of
+stdout**. **The message claims the predicate; the check asserts the idiom.**
+
+**The secondary half fell out of the same run, and I verified its cause
+statically.** The text `own = own_blocks_quiet(entry)` occurs **twice** in the
+module — the code at `:658` and a **string literal at `:2146`**, inside the
+census known-bad's own `.replace`. With the code line renamed away, the replace
+hits the literal, the copy is left with an unterminated string, and the run dies
+**`SyntaxError: unterminated string literal (detected at line 2148)`** on stderr.
+**A traceback where a refusal by name belongs.**
+
+**So: last stdout line `PASS`, exit 1 — one round after that observation was
+adopted as the standard, and inside the fix for the finding it was adopted
+for.** That is not irony worth enjoying; it is the argument for the standard
+being a *habit* rather than a rule you remember when relevant. **Every guard
+added to catch a class is itself a candidate for that class**, and the only
+routine that catches it is: capture both streams separately, read the exit code,
+and never take the last line of stdout for the verdict.
+
+**The general lesson beneath CO-11 is narrower and more useful than "the census
+is weak."** A drift guard's known-bad exercised **exactly the idiom the guard
+keys on**, so the falsifier could not fail by any other spelling — **rule 15's
+known-bad narrower than the claim it is defending.** Round 30's fix is the right
+shape: key on the **constant and the shape**, drive the known-bad under **both**
+the same idiom and a renamed copy, and assert the anchor so an absent line
+**refuses by name** instead of crashing the parser.
+
+**DA rounds 15+16 RELEASED and CO-10 CONFIRMED CLOSED** by the reviewer's 2×2+1.
+Three of my own carried facts were ruled: the separate `!= _there` line **IS** a
+control with its own falsifier (cell 4); *"32 checks at `8910701`"* is **history
+correctly scoped, not a stale count**; and DA14-R1's deletion-over-a-hook is the
+honest call with "a tripwire on a future edit" the honest label.
+
+**DA16-R1 is the same species as CO-10, one layer up, and the logic is checkable
+by reading.** With the identity conjunct dropped, what remains is
+`carrying_commit != _here` (`:927-928`) and `!= _there` (`:944`). A producer
+answering `HEAD~2` yields a **fourth** value — neither `_here` nor `_there` — so
+**both negatives hold and the suite goes green at 34.** The pair is jointly
+sufficient for *the value CO-10 was found on*, not for *the property the control
+claims*. I did not run this one: it needs a worktree on DA's chain, and
+`git worktree list` reads **33** here as it should. **Verified by reading, and
+said so.**
+
+**The routing for it is the part worth keeping.** The closure is **DRIVEN, not a
+fourth `!=`** — another negative just extends an enumerated set by one value and
+leaves the identity drop invisible. Instead: state the control's predicate **once
+as a function of the emission**, run a wrong-commit producer copy through
+`_measure` in the child and assert it **REFUSED by that predicate**, so dropping
+the identity turns *that falsifier* red. **The DA14-R2 shape applied to a
+conjunct: give it a driver, not a companion.**
+
+**Tonight's landing rule, as ruled.** The landing takes **the chain's tip of the
+moment**: `3b7e10a` is RELEASED, and a round-17 commit above it is **selftest-only
+and lands only if coordinator-verified at the artifact before the landing
+dispatch** — otherwise the landing is at `3b7e10a`. Timers unchanged.
+
+**Seats.** DE round 30, DA round 17 (held) and BE round 7 in flight. Reviewer:
+**BE round 6 now**, then DE round 29, then BE round 7, then DA round 17. **SIX
+RULED, none open.**
 
 ### 2026-09-02 ~16:28Z (MEM) — THE SUITE'S LAST WORD WAS "PASS" AND THE PROCESS
 ### EXITED 1

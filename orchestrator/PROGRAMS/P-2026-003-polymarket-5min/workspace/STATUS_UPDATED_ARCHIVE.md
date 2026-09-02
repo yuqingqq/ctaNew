@@ -3369,3 +3369,70 @@ Moved in the MEM round-45 true-up of R-453. Join rule as in batch 1.
   UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
   Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 52 — archived 2026-09-02T16:38Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-46 true-up of R-454. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T15:57Z (MEM ROUND 43 -- A REFUSAL THAT DEPENDS ON AN UNRELATED
+  ENTRY SOMEWHERE ELSE IN THE FILE). R-451 swept. DE ROUND 26 VERIFIED at
+  89aef8c and RE-RUN HERE: EXPECTED_CHECKS = 171 (:1128), 171 rc 0; `named` is
+  built from own_ratification_blocks(e) (:422-423); and DE24-R2 IS GONE --
+  check#18 now reads "0-based register line" (:987) and "0-based line" (:990),
+  so ALL SIX SITES THAT PRINT A LINE NOW SAY WHICH KIND IT IS. That residual
+  took three rounds to travel from a measurement of mine to a labelled message
+  and never needed a dispatch of its own. CO-9 REPRODUCED AT THE MECHANISM
+  RATHER THAN READ, by driving entry_index directly on doctored copies of the
+  real register: the real register returns OK with duplicate_refs {'R-6':
+  [1788, 9514]}; fixture C -- an entry with TWO own blocks inserted EARLIER than
+  R-419 -- REFUSES ("R-99900 carries 2 ratification blocks of its OWN"); fixture
+  C2, the same entry with the duplicate R-6 heading renamed away, returns OK
+  with duplicate_refs {}; fixture C3, the same malformed entry placed LATER,
+  ALSO refuses, so THE SCAN IS POSITION-BLIND. C2 IS THE FINDING: whether a
+  malformed entry refuses a check about a DIFFERENT entry depends on whether an
+  UNRELATED duplicate exists elsewhere in the file -- R-6, a fact of this
+  register since long before either -- and A REFUSAL WHOSE TRIGGER LIVES IN A
+  THIRD ENTRY IS NOT A PROPERTY OF THE SUBJECT AT ALL. C3 shows why DE's
+  ordering note could be true and still not cover this: the note is about ORDER
+  and the scan does not consult order -- A CLAIM THAT NOTHING IS REFUSED EARLIER
+  THAN BEFORE SAYS NOTHING ABOUT WHAT IS REFUSED AT ALL. THE (iii) REFINEMENT IS
+  THE SAME MOVE AS (ii) AND I CHECKED BOTH FIXTURES: D, a duplicated heading
+  whose second occurrence carries a QUOTED block, refuses at entry_index#3
+  today; E, the same shape with an OWN block naming R-419, also refuses -- so
+  the refinement's job is to SEPARATE them, D reaching no answer and belonging
+  on the reporting side while E drops a real supersession under kept-first and
+  must keep refusing. (ii) AND (iii) NOW SHARE ONE CRITERION -- OWNERSHIP AS THE
+  MODULE DEFINES IT, NOT THE PRESENCE OF A FENCE -- recorded IN BAND beside the
+  (ii) refinement in HANDOFF's standards section, WITH R-446 AND R-450 BOTH LEFT
+  STANDING (rule 13). THE CLOSURE'S SHAPE IS WORTH AS MUCH AS THE RULE: the fix
+  is a QUIET ownership filter for the two scans (the module's own predicate over
+  _fenced_blocks, no adjudication) while own_ratification_blocks stays the
+  ADJUDICATING reader ON THE PATH -- the distinction between READING TO DECIDE
+  and READING TO SCAN, the round-26 fix having accidentally given the scan the
+  decider's temperament. A READER THAT RAISES IS THE WRONG INSTRUMENT FOR A
+  SURVEY. DA ROUNDS 13+14 REVIEW RELEASED (a2a1cf8, 278 lines) for BOTH e384792
+  AND 801eb31 with identical dispositions and no hold, and its three findings
+  reproduce at the held bytes: DA13-R1, the wiring poison is the LITERAL
+  ("RULED at R-442",) at :628 asserted at :633 where every ruled entry carries
+  the FORM "RULED at " (:399 and four more), so a legitimate re-ruling turns the
+  control red -- DA10-R5 again, safe direction; DA14-R1, `_t2, _e2 =
+  twins[:-1], excluded` then ok(len(_t2) + len(_e2) != len(roster)) is, given
+  the invariant asserted two lines above, roster - 1 != roster, ARITHMETIC, true
+  under every arrangement -- the DE16-R4 shape, a control that cannot fail;
+  DA14-R2, the recomputed _exp_dirty is the right property but the fixture
+  builds ONE arrangement so a producer hardcoding True still passes -- the
+  round-15 candidate recorded at R-447 section 3, now a finding with the
+  reviewer's ruling attached (the recomputed expectation is right AND NOT YET
+  SUFFICIENT; drive both arrangements). MY FIGURE STANDS AND THE COORDINATOR'S
+  IS WITHDRAWN: REVIEW_DE_ROUND_24 is 253 lines by wc -l and 253 insertions at
+  304cd5f; R-450 section 2's 254 is withdrawn in band -- recorded because a
+  withdrawn number that nobody records comes back. SEATS: DE round 27 (Q-DE-45)
+  in flight with CO-9 and the (iii) refinement, C/C2/C3 and D/E as controls; DA
+  ROUND 15 DISPATCHED AND HELD on the chain as its sixth commit, BEFORE tonight,
+  selftest regions of three files only, no real-day run, shared tree and timers
+  untouched; reviewer on DE round 25 (50a9113), then BE round 6 when its row
+  lands, then BE round 7, then DA round 15 -- and DE ROUNDS 26+27 GO AS ONE
+  FILING. USER decisions SIX RULED, NONE OPEN. UNCHANGED: G=1/5; the 011 family
+  12 of 24 with Q4 failing; the sequencing rule; Phase-4 gated; R-419 revocable.
+```
