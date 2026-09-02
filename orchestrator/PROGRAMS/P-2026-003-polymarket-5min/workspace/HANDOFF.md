@@ -1,12 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T16:38Z — **DE27-R1 CLOSED at `ea3b525` (180)**, and the
-guard that closed it has its own gap: **CO-11 reproduced here — a renamed loop
-variable leaves `ONE OWNERSHIP TEXT` saying PASS while the second text exists**,
-and the run then dies with a `SyntaxError` on stderr. **Last stdout line PASS,
-exit 1 — the standard adopted last round produced a fresh instance one round
-later, inside the fix for the previous one.** **CO-10 CONFIRMED CLOSED**
-(`5d9bfb8`); **DA16-R1** → DA round 17. **SIX RULED, none open.**
+Updated: 2026-09-02T17:12Z — **Four landings.** BE round 7 at `fcafe9f` (102),
+DE round 30 at `27d0d37` (**183**, CO-11 closed), DA round 17 at `e353119`
+(**DA16-R1 closed — the predicate is stated once and has its own falsifier**);
+**`e353119` is the tip that lands tonight, HOLD falls back to `3b7e10a`.** Two
+new findings at the BE tip, **CO-12 / CO-13 → BE round 8**. **My own attempted
+count of the BE suite measured BE's UNCOMMITTED round-8 WIP and is withdrawn** —
+recorded, because the tree moved between two of my own reads. **SIX RULED, none
+open.**
 
 ## READ FIRST — current project handoff
 
@@ -359,6 +360,12 @@ nobody reads.
    leave the OLD bytecode executing. **The dangerous direction is the stale
    RESTORE — a falsifier credited without ever having fired.** A pre-run clear
    closes both directions; a post-run clear closes only one.
+
+3. **Every guard added to catch a class is itself a candidate for that class**
+   (R-455 §5, adopted from MEM's round-46 form; now in `STATUS.yml`'s
+   `standing_rules`). Two instances in consecutive rounds: **CO-11**, in the
+   census guarding DE27-R1's one-text fix, and **CO-12**, in the mutation audit
+   shipped to close BE5-R3. **When a fix adds a control, mutate the control.**
 
 **The duplicated-ref rule, as it now reads.** R-446 §3 ruled that the one index
 **refuses** a duplicated ref where the duplication can change an answer and
@@ -748,7 +755,7 @@ launchers at **235/19**.
 | **DE rounds 26+27 review** | **RELEASED** (`723271e`) for **both** `5e9dc8b` and `89aef8c` — the fixture matrix reproduces the register's table; three rulings adopted; **DE27-R1 (LOW)** → DE round 29 |
 | **DE round 28** | **VERIFIED** at `1480ab6` (Q-DE-46) — **DE25-R1 CLOSED**: `read_nothing` (`:319`) makes an empty read answer **False**; admissible **92** (reproduced here) |
 | **DE round 29** | **VERIFIED** at `ea3b525` (Q-DE-47) — **DE27-R1 CLOSED**: one ownership text, a **named** control for the `kind` conjunct, **180** both launchers (reproduced here), four mutants red **with zero tracebacks**. **CO-11 (LOW)** filed at the same tip |
-| **DE round 30** | **IN FLIGHT** (Q-DE-48) — CO-11: key the census on the **constant and the shape**, not the variable name; anchor the paste so an absent line **refuses by name** |
+| **DE round 30** | **VERIFIED** at `27d0d37` (Q-DE-48) — **CO-11 CLOSED**: the census keys on the **constant and the shape**, the renamed paste is **red**, the absent anchor **refuses by name**; **183** both launchers (reproduced here) |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -757,11 +764,13 @@ launchers at **235/19**.
 | **DA round 15** | **HELD and VERIFIED** at `8910701` — DA13-R1/DA14-R1/DA14-R2 closed (39 / 5 / 32 both launchers). **CO-10** filed at the same tip |
 | **DA rounds 15+16 review** | **RELEASED** (`5d9bfb8`) for `3b7e10a` — **CO-10 CONFIRMED CLOSED** (the 2×2+1); items 1, 2 and 7 ruled; **DA16-R1 (LOW-MED)** → DA round 17 |
 | **DA round 16** | **HELD and VERIFIED** at `3b7e10a` (Q-DA-212) — CO-10 closed, the identity conjunct back (`:927-928`), the `HEAD~1` mutant **red by name**. Mask **32 → 34** |
-| **DA round 17** | **DISPATCHED and HELD** (Q-DA-213) — DA16-R1, the closure read as **DRIVEN**: the predicate stated once as a function of the emission, a wrong-commit producer run through `_measure` and asserted refused |
+| **DA round 17** | **HELD and VERIFIED** at `e353119` (Q-DA-213) — **DA16-R1 CLOSED**: `_names_the_executing_tree` stated **once** (`:892`) with **two** call sites — the control (`:951`) and its own **falsifier** (`:1023`). Mask **38**. **The tip that lands tonight** |
 | **DA round 14** | **HELD and VERIFIED** at `801eb31` — DA12-R1 closed, twinning **both directions**, **23 + 15 = 38** and `--falsify` 39 (recomputed here in a parity tree), the one exclusion **named with a reproduced reason**. A one-assertion scope deviation **ACCEPTED in-batch** |
 | **BE round 5 review** | **RELEASED** (`d990162`) for `baa986d` — **BE34-R2 CLOSED at the artifact**; two rulings adopted; three LOW-MED findings **BE5-R1/R2/R3** → BE round 7 |
 | **BE round 6** | **VERIFIED** at `5e9ed91` (Q-BE-231) — BE34-R1/R3/R4/R5 closed, **95** both launchers, sha `957a9d3c…`, usage rc **2** (all reproduced here); three of BE's own corrections in band |
-| **BE round 7** | **DISPATCHED** (Q-BE-232) — BE5-R1/R2/R3, one batch, no real-day run |
+| **BE round 7** | **VERIFIED** at `fcafe9f` (Q-BE-232) — BE5-R1/R2/R3 closed, **102** both launchers, sha `857819a7…` (confirmed here). Two findings **CO-12 / CO-13** at the same tip → BE round 8 |
+| **BE round 8** | **DISPATCHED** (Q-BE-233) — CO-12 (attribute on the `AssertionError` line, with a named control **both directions**) and CO-13 (the double count) |
+| **BE round 9** | the **durable landing** under `data/pm_5min/derived/`, **after the 00:14Z read** (was round 8) |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
@@ -803,9 +812,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE23-R1/R2 CLOSED** at `50a9113`, queued for review;
 **DE24-R1/R2 CLOSED** at `89aef8c`; **CO-9 CLOSED** at `5e9dc8b`;
 **DE25-R1 CLOSED** at `1480ab6`; **DE27-R1 CLOSED** at `ea3b525`;
-**CO-11** → **DE round 30, in flight**;
+**CO-11 CLOSED** at `27d0d37`; **CO-12 / CO-13** → **BE round 8**;
 **DA13-R1 / DA14-R1 / DA14-R2 CLOSED** at `8910701`; **CO-10 CLOSED and
-CONFIRMED** at `3b7e10a`; **DA16-R1** → **DA round 17** (held);
+CONFIRMED** at `3b7e10a`; **DA16-R1 CLOSED** at `e353119` (held);
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
 `a83083a`; **DE22-R1 CLOSED** at `e0d1e9f`, queued for review; **DA12-R1** → DA round 14
 (held);
@@ -827,8 +836,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **BE round 6** at `5e9ed91` (now) → **DE
-round 29** at `ea3b525` → **BE round 7** → **DA round 17**. **Released so far:**
+**The reviewer's queue, in order:** **BE round 6** at `5e9ed91` (in flight) →
+**DE rounds 29+30 as ONE filing at `27d0d37`** → **BE round 7 (+8)** → **DA round
+17 at `e353119`**. **Released so far:**
 DE rounds 23 (`0b03618`), 24 (`304cd5f`), 25 (`a7860dc`) and 26+27 (`723271e`),
 DA rounds 13+14 (`a2a1cf8`) and **15+16** (`5d9bfb8`), BE round 5 (`d990162`).
 
@@ -1639,6 +1649,77 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~17:12Z (MEM) — I MEASURED THE WRONG FILE, AND THE ROUND BEFORE
+### LAST IS WHY I NOTICED
+
+**R-455 swept.** Four landings, two new findings at the BE tip, and one failure of
+my own that is worth more to this record than the checks that went right.
+
+**The failure first.** I set out to verify CO-13 by counting `PASS` lines against
+the printed total. HEAD's committed `be_forward_day.py` hashes to
+**`857819a76ca5c3a9`**, exactly `fcafe9f` — I checked that. But the file I
+*ran* was the **working tree's**, and by the time the run started the tree was
+**dirty with BE's uncommitted round-8 WIP** (`ab65b026e3093cad`). **The tree
+moved between two of my own reads inside one round.** My partial transcript —
+103 `PASS` lines — is a count of a file nobody has committed, so **it
+corroborates nothing and I withdraw it.** I stopped the run; `derived/` reads
+**173** before and after.
+
+**That is round 40's finding turned on its author.** I wrote then that *no count
+taken from that file is a committed figure*, and then took one. The fix is
+mechanical and I will use it: **hash the file immediately before the run and
+again after** — a check at the top of the round is a check of the wrong moment.
+
+**So CO-13 is carried as the coordinator's measurement, with its static half
+verified by me at `fcafe9f`:** the BE5-R3 block calls `ok(...)` — which
+increments `checks` — and is immediately followed by a bare **`checks += 1`**.
+**One assertion, two counts.** The printed total is one ahead of the assertions
+that ran, which is exactly 101 versus "102 checks OK". Read, not run, and said so.
+
+**CO-12 is the sharper of the two, and it is the new standard's second
+instance.** The audit's attribution is `at_named = want in out` over
+`stdout + stderr` (`:1566`), while `ok` prints `  PASS  {label}` for every check
+that passes (`:1591`) and raises `AssertionError(label)` when one fails
+(`:1589`). So for any case whose `want` is a prefix of its own check's label —
+**7 of the 10** — the predicate is satisfied by **the green baseline
+transcript**: it tests that the named check *ran*, not that the mutant *died
+there*. The ten mutants do die; **the attribution the row rests on is what has no
+falsifier.** The closure is right: attribute on the `AssertionError` line on
+**stderr**, and ship a control **both directions** — a mis-named case asserted a
+**SURVIVOR**, the same edit correctly named asserted **KILLED**.
+
+**And the standard is now three-for-three.** *Every guard added to catch a class
+is itself a candidate for that class*: CO-11 lived in the census guarding
+DE27-R1's fix; CO-12 lives in the audit shipped to close BE5-R3. I have put it in
+`STATUS.yml`'s `standing_rules` (**7 → 8**) and in the standards section here, in
+the operational form: **when a fix adds a control, mutate the control.**
+
+**DE round 30 re-run here: 183 both launchers**, `EXPECTED_CHECKS = 183`,
+census `ok` 97. **CO-11 CLOSED.** The observation the coordinator did *not* file
+— a name-bound comprehension spelling still passes — is the right call as an
+item rather than a finding: **a drift guard whose message names its key owes no
+dataflow census**, and that message now names the key exactly.
+
+**DA round 17 at `e353119`, read at the artifact:** `da_blackout_mask.py` only,
+**+57/−2**, and the shape is precisely what was routed —
+`_names_the_executing_tree` defined **once** (`:892`) with **two** call sites:
+the CO-10 CONTROL (`:951`) and, at `:1023`, the same predicate under `not` as the
+**DA16-R1 falsifier**. **The conjunct got a driver, not a companion.** Mask 38.
+**Under R-454 §4 this is the tip that lands tonight**; a HOLD falls back to
+`3b7e10a`.
+
+**One thing of mine to correct rather than explain away.** Q-BE-232 landed inside
+**my** commit `1b874f9` — I checked, and that commit added **two** rows, mine and
+BE's. **A pathspec protects against unrelated files, not against another seat's
+uncommitted edits in the same file.** Content intact, nothing to correct, but the
+discipline is mine to fix: **before committing a shared append-only file, verify
+the staged diff contains only my own row.** I did that this round.
+
+**Tonight is unchanged:** 00:06Z verdict, 00:14Z preflight, the coordinator's
+wake after it; then DA's landing at the chain's tip of the moment, **BE round 9**
+for the durable landing, then CO-8, `--require-no-skips` and the DATA_ROOT split.
+**DE and DA are on deliberate standby.** **SIX RULED, none open.**
 
 ### 2026-09-02 ~16:38Z (MEM) — THE STANDARD EARNED ITS KEEP IN ONE ROUND
 

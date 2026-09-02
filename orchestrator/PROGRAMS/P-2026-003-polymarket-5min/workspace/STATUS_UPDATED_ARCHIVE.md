@@ -3436,3 +3436,74 @@ Moved in the MEM round-46 true-up of R-454. Join rule as in batch 1.
   FILING. USER decisions SIX RULED, NONE OPEN. UNCHANGED: G=1/5; the 011 family
   12 of 24 with Q4 failing; the sequencing rule; Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 53 — archived 2026-09-02T17:12Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-47 true-up of R-455. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T16:16Z (MEM ROUND 44 -- THE SCAN STOPPED ADJUDICATING, AND THE
+  READER THAT SHOULD STILL DOES). R-452 swept; five landings. CO-9 IS CLOSED at
+  5e9dc8b and I RE-DROVE MY OWN FIXTURES at the tip rather than reading the
+  result: the real register returns (duplicate_refs {'R-6': [1792, 9518]} at my
+  as-of, the recount rule holding); C -- two own blocks EARLIER than R-419 --
+  now RETURNS from entry_index (it refused at 89aef8c) AND superseded_by(R-419)
+  returns []; C2 returns with {}; C3, the same entry placed LATER, RETURNS from
+  entry_index but REFUSES in superseded_by; D (duplicate whose second occurrence
+  carries a QUOTED block) RETURNS and is REPORTED; E (own block naming R-419)
+  REFUSES. READ THE C3 ROW CAREFULLY BECAUSE IT IS THE WHOLE POINT: C3 refuses
+  IN THE ADJUDICATING READER, NOT IN THE SCAN. own_blocks_quiet() (:631) is read
+  by (ii) :423 and (iii) :446; own_ratification_blocks (:639) stays on the path
+  -- SAME TEXT, TWO READERS, AND NOW THEY HAVE DIFFERENT JOBS. Ratification 177
+  both launchers (EXPECTED_CHECKS = 177 at :1167); the #3 message says "carries
+  an OWN ratification block" (:453). DE'S D2 IS THE ROUND'S BEST EVIDENCE AND IT
+  IS NOT DE'S FIX BUT DE'S MUTANT: with only D, dropping the `kind` conjunct
+  from the quiet filter PASSED, and D2 exists because the mutant was actually
+  run -- A FIXTURE SET IS SIZED BY THE MUTANTS YOU RUN AGAINST IT, NOT BY THE
+  CASES YOU THOUGHT OF. The reviewer has the reverse-direction question (the
+  predicate now exists twice, :631 and :639) as item 1. DE ROUND 25 REVIEW
+  RELEASED (a7860dc) for 50a9113 with three rulings adopted, and DE25-R1
+  REPRODUCED TO THE DIGIT: a line at column 0 at the end of the module docstring
+  -- an anchor collision -- makes declared_limit_text return 0 CHARS with
+  stopped_at_a_real_boundary TRUE, first_read_line 53, above_line 52, and ALL
+  THREE ANCHORS ABSENT; the suite is red because the anchors check fires, so it
+  is a COMPLETENESS POINT ABOUT THE STATED LIMIT, NOT AN EXPOSURE -- and worse
+  IN KIND than X = 1: A READ OF NOTHING THAT ANSWERS TRUE. DE round 28 (Q-DE-46)
+  names the shape and the composition's own condition (the anchors cover code
+  cuts only while they remain the block's topmost content). DA ROUND 15 VERIFIED
+  at the chain's 8910701 (39 / 5 / 32 both launchers): DA13-R1 closed with the
+  FORM at :635/:640, DA14-R1 closed BY DELETION with the reason in the comment
+  :236-252, DA14-R2 closed with BOTH arrangements :849-898 -- and DA's own first
+  clean arrangement deserves billing: NOT COPYING THE FILES RAN THE CHILD'S
+  COMMITTED CODE, so a parent-side mutation never reached it and a hardcoded
+  True SURVIVED; copy AND commit in the scratch child is the difference between a
+  fixture that LOOKS isolated and one that IS. CO-10 IS THE DA10-R5 CLASS IN ITS
+  MOST EXPENSIVE FORM AND I VERIFIED BOTH ENDS: at 801eb31 the carrying-commit
+  control asserted IDENTITY (carrying_commit == _there, :847, the child's HEAD);
+  the round-15 fixture commits in the child and moves that HEAD, so the check was
+  rewritten (:902-903) as != _here and != _root_git.stdout.strip() -- AND _here
+  IS _root_git.stdout.strip() (:802), two negatives of one value. The first three
+  instances ENCODED an arrangement; this one encoded one, had it INVALIDATED by a
+  fixture change, and was REPAIRED INTO A TAUTOLOGY. Recorded beside DA10-R5 in
+  the generalising form: WHEN A FIXTURE CHANGE BREAKS A CONTROL, RE-DERIVE THE
+  PROPERTY -- DO NOT WEAKEN THE ASSERTION UNTIL IT FITS. Dispatched as DA round
+  16 (Q-DA-212), held on the chain, before tonight. BE ROUND 6 VERIFIED at
+  5e9ed91: driver sha 957a9d3cc38b3dde, 95 both launchers, usage rc 2, all
+  reproduced here; BE34-R1/R3/R4/R5 closed and BE34-R1's closure is the one to
+  keep -- one fixture through both consumers, scores EQUAL per coin, the same
+  featureless row dropped, and the scores DISTINCT AND SMALL so a 1e9-scale value
+  cannot hide a 1e-9 perturbation. BE corrected three things of its own IN BAND,
+  including naming the in-place row rewrite as its fault, and SETTLED THE 5-VS-4
+  I NARROWED TWO ROUNDS AGO: two passes, mr5 13/4 and mall 50 with SIX survivor
+  lines but FIVE distinct -- H14 listed twice by the harness. The number was
+  never wrong about the code; the harness printed one mutant twice. ONE
+  DISCLOSURE OF THE COORDINATOR'S KEPT VISIBLE because it is the kind of thing
+  that normally goes unrecorded: a compound command carried its cd into DA's
+  worktree and ran git pull --ff-only there; it ABORTED and nothing moved,
+  verified from outside -- THE ABORTED FORM IS THE ONLY REASON NOTHING MOVED.
+  SEATS: DE round 28, DA round 16 (held) and BE round 7 (Q-BE-232, BE5-R1/R2/R3,
+  no real-day run) in flight; reviewer takes DE ROUNDS 26+27 AS ONE FILING, then
+  DA round 15, then BE round 6; three requests filed. Tonight's timers unchanged.
+  USER decisions SIX RULED, NONE OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24
+  with Q4 failing; the sequencing rule; Phase-4 gated; R-419 revocable.
+```
