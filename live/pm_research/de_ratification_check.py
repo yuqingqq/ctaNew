@@ -1176,7 +1176,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 183
+EXPECTED_CHECKS = 184
 
 
 def selftest() -> int:
@@ -2161,6 +2161,36 @@ def selftest() -> int:
                         reaches_kind = True
                 if reaches_kind:
                     out.append(fn.name)
+            # THE REVIEWER'S PER-FUNCTION KEY (REVIEW_DE_ROUNDS_29_30 §5),
+            # ADOPTED as a UNION with the shape key above rather than
+            # instead of it. Mine requires the `kind` lookup INSIDE the
+            # compared expression, so a two-line spelling defeats it:
+            #     k = blk.get("kind", "")
+            #     ... if str(k).strip() == "R-ADMISS"
+            # -- the same predicate, split over a variable, invisible to a
+            # key that reads one expression. The per-function key sees it,
+            # and its cost is the other direction: a function that compared
+            # something else to "R-ADMISS" AND looked up "kind" for an
+            # unrelated reason would be counted. None does today (`check#10`
+            # stays out by NotEq), and a false name here is a red check to
+            # investigate, while a missed one is a drift nobody sees --
+            # which is the direction to err in.
+            _eq_admiss = any(
+                any(isinstance(o, _ast.Eq) for o in c.ops)
+                and any(isinstance(x, _ast.Constant) and x.value == "R-ADMISS"
+                        for x in c.comparators)
+                for c in _ast.walk(fn) if isinstance(c, _ast.Compare))
+            _kind_anywhere = any(
+                (isinstance(n, _ast.Call) and isinstance(n.func, _ast.Attribute)
+                 and n.func.attr == "get" and n.args
+                 and isinstance(n.args[0], _ast.Constant)
+                 and n.args[0].value == "kind")
+                or (isinstance(n, _ast.Subscript)
+                    and isinstance(n.slice, _ast.Constant)
+                    and n.slice.value == "kind")
+                for n in _ast.walk(fn))
+            if _eq_admiss and _kind_anywhere:
+                out.append(fn.name)
         return sorted(set(out))
 
     def _paste_into_reader(src: str, filter_text: str, _ast=_ast_own):
@@ -2210,6 +2240,14 @@ def selftest() -> int:
             '    own = [(b, d) for b, d in _fenced_blocks(entry)\n'
             "           if str(b.get('ref', '')).strip() == ref\n"
             "           and str(b.get('kind', '')).strip() == 'R-ADMISS']",
+        "the lookup SPLIT over a variable (only the per-function key "
+        "sees this one)":
+            '    own = []\n'
+            "    for b, d in _fenced_blocks(entry):\n"
+            "        k = b.get('kind', '')\n"
+            "        if str(b.get('ref', '')).strip() == ref \\\n"
+            "                and str(k).strip() == 'R-ADMISS':\n"
+            "            own.append((b, d))",
         "a SUBSCRIPT lookup (`b[\"kind\"]`)":
             '    own = [(b, d) for b, d in _fenced_blocks(entry)\n'
             "           if str(b.get('ref', '')).strip() == ref\n"
@@ -2218,11 +2256,20 @@ def selftest() -> int:
     for _label, _text in _variants.items():
         _copy = _paste_into_reader(_own_src, _text)
         _sites = _ownership_sites(_copy) if _copy else ["<not located>"]
+        # DE30-R1: this message said "two texts again" in BOTH branches,
+        # while `_sites` can be `['<not located>']` -- the sentence
+        # describing the failure it did not have. It branches on the
+        # sentinel it already computes.
+        _why = (f"reads {_sites} -- two texts again -- and the census goes "
+                f"red"
+                if _copy is not None else
+                f"could not even be built: the reader's `own = ...` "
+                f"assignment is not where the locator expects it, so no "
+                f"copy was made and nothing was parsed ({_sites[0]})")
         ok(_copy is not None
            and _sites == ["own_blocks_quiet", "own_ratification_blocks"],
            f"KNOWN-BAD, DRIVEN THROUGH THE SAME PARSE ({_label}): the "
-           f"filter pasted back into the adjudicating reader reads "
-           f"{_sites} -- two texts again -- and the census goes red. The "
+           f"filter pasted back into the adjudicating reader {_why}. The "
            f"renamed one is CO-11's mutant: it passed until this round, "
            f"because the check was keyed on what the variable was called")
     _no_reader = _own_src.replace("def own_ratification_blocks(entry: dict)",

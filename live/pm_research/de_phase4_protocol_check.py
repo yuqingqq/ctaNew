@@ -132,7 +132,14 @@ def check(text: str) -> list[str]:
     return bad
 
 
-EXPECTED_CHECKS = 10
+#: R-459: the scheduled diagnostic is declared in an ADDENDUM, never by
+#: editing the frozen document (rule 13). The addendum is only worth
+#: anything if it binds the bytes it claims to be an addendum TO -- so the
+#: sha it carries is recomputed here from the frozen file, and the ruling
+#: it stands on is named.
+ADDENDUM = DRAFT.parent / "DE_PHASE4_DIAGNOSTIC_ADDENDUM_2026-09-02.md"
+
+EXPECTED_CHECKS = 15
 
 
 def selftest() -> int:
@@ -175,6 +182,33 @@ def selftest() -> int:
     ok(space_size(bad_axes) != space_size(),
        "KNOWN-BAD: changing an axis changes the recomputed space, so the "
        "space is a function of the axes and not a constant")
+    # ---- R-459: the addendum binds the frozen document by its bytes ----
+    import hashlib as _hl
+    _frozen_sha = _hl.sha256(DRAFT.read_bytes()).hexdigest()
+    ok(ADDENDUM.exists(), f"the diagnostic addendum exists at "
+                          f"{ADDENDUM.name}")
+    _add = ADDENDUM.read_text()
+    ok(_frozen_sha in _add,
+       f"THE ADDENDUM BINDS THE FROZEN DOCUMENT BY ITS BYTES: sha256 "
+       f"{_frozen_sha[:16]}... recomputed here from "
+       f"{DRAFT.name} and found in the addendum -- so an addendum written "
+       f"against a different version of the protocol is a red check, not a "
+       f"reader's problem (rule 13: the frozen document is never edited)")
+    ok("R-459" in _add and "seventh" in _add,
+       "and it NAMES THE RULING it stands on -- R-459, the USER's seventh "
+       "decision -- so the authority for running a protocol that is "
+       "otherwise execution-gated is in the document rather than in a "
+       "conversation")
+    ok("DIAGNOSTIC_NEVER_EVIDENCE" in _add and "is_a_validation = false"
+       in _add and "G = 0" in _add,
+       "and it declares what every output says about itself before any "
+       "cell exists: is_a_validation false, G = 0, "
+       "DIAGNOSTIC_NEVER_EVIDENCE")
+    ok(_hl.sha256(b"not the protocol").hexdigest() not in _add,
+       "KNOWN-BAD/CONTROL on that binding: an unrelated sha is NOT in the "
+       "addendum, so the check above is a comparison and not a substring "
+       "that any hex would satisfy")
+
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
     print(f"[de_phase4_protocol_check] selftest OK -- {n[0]} checks")
