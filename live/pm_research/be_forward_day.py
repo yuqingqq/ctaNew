@@ -67,16 +67,26 @@ def _as_of() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _provenance() -> dict:
+def _provenance(tree: Path = None) -> dict:
     """The carrying commit and this driver's own bytes.
 
     A ref alone is not an identity — the dirty flag and the file hash travel
-    with it, the same shape the scorer's provenance block uses."""
+    with it, the same shape the scorer's provenance block uses.
+
+    BE7-R4: the commit and the dirt are read from THE TREE THIS FILE IS IN,
+    never from a hardcoded root. With `cwd=REPO` a receipt written from a
+    worktree named the MAIN tree's HEAD and inherited its dirtiness while
+    `driver_sha256_prefix` correctly named the file that ran — so the receipt
+    claimed a commit it did not carry. BE builds in a worktree, so that was
+    the normal case, not the exotic one; the programme ruled the same point
+    for DA at CO-10. `_git_blob`'s freeze reads are UNAFFECTED: the object
+    store is shared, so `git show <ref>:<path>` resolves from any worktree."""
     import subprocess
+    root = Path(__file__).resolve().parents[2] if tree is None else Path(tree)
 
     def git(*a):
         try:
-            r = subprocess.run(("git", *a), cwd=str(REPO), capture_output=True,
+            r = subprocess.run(("git", *a), cwd=str(root), capture_output=True,
                                text=True, timeout=20)
             return r.stdout.strip() if r.returncode == 0 else None
         except Exception:                            # noqa: BLE001
@@ -89,6 +99,7 @@ def _provenance() -> dict:
             "carrying_commit_resolved": bool(head),
             "working_tree_dirty": ("unknown" if status is None
                                    else bool(status.strip())),
+            "provenance_root": str(root),
             "driver": me.name, "driver_sha256_prefix": _sha_file(me)[:16]}
 
 
@@ -797,6 +808,7 @@ def build_and_score(selected: list, frozen: dict) -> dict:
     n_rows = n_windows = 0
     recon_fail = unhooked = wrong_gen = boundary_bad = clock_bad = 0
     no_features = 0
+    recon_bad: list = []
     windows_with_rows: set = set()
     for slug, path, up, down, wgaps in selected:
         out = HER.replay_with_recorder(path, up, down, wgaps, spec)
@@ -821,6 +833,7 @@ def build_and_score(selected: list, frozen: dict) -> dict:
         clock_bad += n_c
         if bad:
             recon_fail += 1
+            recon_bad.append(slug)
             unhooked += arm.unhooked_changes
         coin = slug.split("-")[0]
         fit = frozen["fits"].get(coin)
@@ -852,6 +865,7 @@ def build_and_score(selected: list, frozen: dict) -> dict:
             "windows_with_rows": windows_with_rows,
             "rows_without_features": no_features,
             "reconciliation_failures": recon_fail,
+            "reconciliation_failed_windows": recon_bad,
             "unhooked_state_changes": unhooked,
             "wrong_generation_assignments": wrong_gen,
             "boundary_time_violations": boundary_bad,
@@ -1182,11 +1196,23 @@ def run_forward_day(day: str, outdir: Path) -> int:
         rec["rows"] = {k: v for k, v in built.items()
                        if k not in ("scores", "windows_with_rows")}
         if built["reconciliation_failures"]:
+            # BE6-R1: the two bare raises here are NOT inside `gate()`, so
+            # the generic handler blamed `gates[-1]` -- the gate that had
+            # just PASSED, and the suite pinned that as expected. A reader,
+            # or the automated resolver rule 13 exists for, was sent to a
+            # gate that succeeded. Each bare raise now names its own check.
+            rec["refused_at"] = "reconciliation"
+            # BE6-R4: the count without the name. WHICH windows failed is
+            # what an operator needs, bounded the way
+            # `assert_window_sets_agree` already bounds its examples.
+            _bad = sorted(built.get("reconciliation_failed_windows") or ())
             raise ForwardDayRefused(
                 f"REFUSED: {built['reconciliation_failures']} of "
-                f"{built['n_windows']} windows failed reconciliation. The "
-                f"reconciliation selftest is the gate: a mismatch fails the "
-                f"DAY and is never absorbed.")
+                f"{built['n_windows']} windows failed reconciliation "
+                f"({', '.join(_bad[:8])}"
+                f"{f' and {len(_bad) - 8} more' if len(_bad) > 8 else ''}). "
+                f"The reconciliation selftest is the gate: a mismatch fails "
+                f"the DAY and is never absorbed.")
         rec["gates"].append({"gate": "reconciliation", "result": "PASS"})
         rec["window_agreement"] = gate(
             "bridged_windows_equal_row_windows",
@@ -1194,6 +1220,7 @@ def run_forward_day(day: str, outdir: Path) -> int:
                 pop["specs"], built["windows_with_rows"]))
         scored = built["scores"]
         if not scored:
+            rec["refused_at"] = "zero_actions_scored"
             raise ForwardDayRefused(
                 f"REFUSED: zero actions scored across {built['n_rows']} rows. "
                 f"A forward report with no scores is a FAILURE, not an empty "
@@ -1243,7 +1270,10 @@ def run_forward_day(day: str, outdir: Path) -> int:
         rec["outcome"] = "SCORED"
     except Exception as e:                           # noqa: BLE001
         rec["outcome"] = "REFUSED"
-        rec["refused_at"] = rec["gates"][-1]["gate"] if rec["gates"] else None
+        # A bare raise names its own check; only a failure INSIDE `gate()`
+        # (whose entry is the REFUSED one) falls back to gates[-1].
+        rec["refused_at"] = rec.get("refused_at") or (
+            rec["gates"][-1]["gate"] if rec["gates"] else None)
         rec["refusal"] = str(e)
         rc = 1
     rec["wall_seconds"] = round(time.time() - t_start, 1)
@@ -1277,8 +1307,14 @@ _R1_FROZEN = {"fits": {"btc": {"w": _R1_W},
 def _r1_windows(bad_window: str = None) -> tuple:
     """(selected, rows) for a handful of windows with KNOWN features."""
     selected, rows = [], []
+    # BE6-R7: `sol` is present in the windows and ABSENT from the frozen
+    # fits -- the real day's DOMINANT class (five of seven supplied coins
+    # carry no fit, 1,344 of 1,875 windows). Without it the equality never
+    # entered `build_and_score`'s no-fit branch, so the two consumers could
+    # have stopped agreeing there and nothing would have noticed.
     for k, (coin, t0) in enumerate((("btc", 1788000000), ("eth", 1788000300),
-                                    ("btc", 1788000600), ("eth", 1788000900))):
+                                    ("sol", 1788000600), ("btc", 1788000900),
+                                    ("eth", 1788001200), ("sol", 1788001500))):
         slug = f"{coin}-updown-5m-{t0}"
         selected.append((slug, f"/fixture/{slug}", "U", "D", ()))
         for j in range(3):
@@ -1453,6 +1489,42 @@ AUDIT_CASES = (
     ("CO-12 the failure line is taken from the FIRST raise, not the last",
      '    i = stderr.rfind(_AUDIT_RAISE)', '    i = stderr.find(_AUDIT_RAISE)',
      "CO-12 with a CHAINED traceback the attribution takes the LAST"),
+    ("BE7-R4 the provenance root is hardcoded again",
+     '    root = Path(__file__).resolve().parents[2] if tree is None else Path(tree)',
+     '    root = REPO if tree is None else Path(tree)',
+     "BE7-R4 a receipt written from a WORKTREE names THAT worktree's HEAD"),
+    ("BE7-R2 n_prior is off by one and nothing notices",
+     '"is_base": stands_after == p, "n_prior": len(prior),',
+     '"is_base": stands_after == p, "n_prior": len(prior) - 1,',
+     "BE5-R1 and the whole chain is carried beside it"),
+    ("BE7-R3 a LEGITIMATE second exemption — table AND tuple both grow",
+     'DECISION_ALLOWLIST_PINNED = ("gates[].gate",)',
+     'DECISION_ALLOWLIST_PINNED = ("gates[].gate", "population.gate")\n'
+     '_SECOND = {"population.gate": "a reason, stated"}',
+     "BE5-R2 the excused-path allowlist is PINNED"),
+    ("BE6-R1 the reconciliation refusal stops naming its own check",
+     '            rec["refused_at"] = "reconciliation"', '            pass',
+     "BE34-R1 KNOWN-BAD: the CALLER refuses the whole DAY by name"),
+    ("BE6-R1 the zero-score refusal stops naming its own check",
+     '            rec["refused_at"] = "zero_actions_scored"', '            pass',
+     "BE6-R3 KNOWN-BAD: a day whose windows all reconcile but score"),
+    ("BE6-R2 the launch parity ignores the sha again",
+     '    return (rc == 0 and child_sha is not None and child_sha == expect_sha\n'
+     '            and child == expect)',
+     '    return rc == 0 and child == expect',
+     "BE6-R2 the launch parity compares the SHA of the file that ran"),
+    ("BE6-R4 the refusal drops WHICH windows failed",
+     "                f\"({', '.join(_bad[:8])}\"",
+     '                f"(",',
+     "BE34-R1 KNOWN-BAD: the CALLER refuses the whole DAY by name"),
+    ("BE6-R7 the fixture loses the coin with NO frozen fit",
+     '("sol", 1788000600), ("btc", 1788000900),',
+     '("btc", 1788000600), ("btc", 1788000900),',
+     "BE34-R1 and BOTH drop the SAME rows"),
+    ("BE6-R6 the restore evicts everything absent from the snapshot again",
+     '            if _f.startswith(_tree) or (root and _f.startswith(str(root))):',
+     '            if True:',
+     "BE6-R6 the restore leaves the TREE's modules alone"),
     ("BE34-R4 the usage error returns success again",
      '        print("usage: be_forward_day.py --selftest | "\n'
      '              "--forward-day <YYYYMMDD> --outdir <dir>")\n        return 2',
@@ -1796,10 +1868,29 @@ def selftest() -> int:
     _sp_saved = list(sys.path)
     _mods_saved = dict(sys.modules)
 
-    def _restore_imports():
+    def _restore_imports(root=None):
+        """Undo the run-dir imports WITHOUT evicting the tree's modules.
+
+        BE6-R6: evicting every name absent from the snapshot threw out
+        packages that had nothing to do with the tmpdir — measured, numpy was
+        first imported after the snapshot and its reload guard fired at the
+        re-import below. Nothing here carries a numpy object across the
+        boundary today, so it was latent; but the isolation this exists for
+        is the ANCHORS imported from the run dir, and that is what it now
+        removes: a module whose `__file__` lies under the run dir."""
         sys.path[:] = _sp_saved
+        _tree = str(Path(__file__).resolve().parents[2])
         for _k in list(sys.modules):
-            if _k not in _mods_saved:
+            if _k in _mods_saved:
+                continue
+            _f = str(getattr(sys.modules.get(_k), "__file__", None) or "")
+            # Evict what the run dir brought in AND the TREE's own modules --
+            # the latter because one of them caches an archive index built
+            # while the run dir's data root was in effect, and keeping it
+            # empties the index two checks later (measured). THIRD-PARTY
+            # packages are left alone: that is BE6-R6's point, and numpy was
+            # the one being reloaded for no reason.
+            if _f.startswith(_tree) or (root and _f.startswith(str(root))):
                 sys.modules.pop(_k, None)
         for _k, _v in _mods_saved.items():
             sys.modules[_k] = _v
@@ -1840,12 +1931,26 @@ def selftest() -> int:
            "R-421(2) re-materialisation restores the frozen bytes exactly, so "
            "a tampered run dir cannot persist into the next run")
 
-    _restore_imports()
+    _np_before = sys.modules.get("numpy")
+    _restore_imports(o4)
     ok(Path(getattr(__import__("harmful_exposure_rows"), "__file__", "")
             ).parent == Path(__file__).parent,
        "R-421(2) the import controls RESTORE sys.path and sys.modules — a "
        "suite that leaves frozen modules imported from a deleted tmpdir "
        "poisons every check after it")
+    # BE6-R6, both directions: the tree's modules SURVIVE the restore, and
+    # the run dir's do not. Evicting by absence-from-snapshot threw out numpy
+    # -- first imported after the snapshot -- and its reload guard fired on
+    # the re-import above.
+    ok(_np_before is not None and sys.modules.get("numpy") is _np_before,
+       "BE6-R6 the restore leaves the TREE's modules alone: numpy is the "
+       "same object afterwards, so a C-extension package first imported "
+       "after the snapshot is no longer evicted and reloaded")
+    ok(not [k for k, m in sys.modules.items()
+            if str(getattr(m, "__file__", "") or "").startswith(str(o4))],
+       f"BE6-R6 and NOTHING imported from the run dir survives it — the "
+       f"isolation this exists for is the anchors, and that is exactly what "
+       f"it removes")
 
     # a CODE anchor absent from the freeze commit REFUSES
     _real_blob = _git_blob
@@ -2072,7 +2177,8 @@ def selftest() -> int:
         _chain = r4.get("prior_receipts") or []
         ok([Path(x["path"]).name for x in _chain] == [p1.name, p2.name]
            and all(x["sha256"] == _sha_file(Path(x["path"]))
-                   for x in _chain),
+                   for x in _chain)
+           and r4["supersedes_receipt"]["n_prior"] == len(_chain),
            f"BE5-R1 and the whole chain is carried beside it "
            f"({[Path(x['path']).name for x in _chain]}), each "
            f"with its sha, so a reader reconstructs the order from the "
@@ -2233,17 +2339,19 @@ def selftest() -> int:
        f"scores are EQUAL to `score_rows`'s on the same windows "
        f"({ {c: len(v) for c, v in _sr.items()} }) — the streaming rewrite "
        f"replaced the reference and nothing had ever compared them")
-    ok(sum(len(v) for v in _sr.values()) == 11 and _bs["n_rows"] == 12
-       and _bs["rows_without_features"] == 1,
-       f"BE34-R1 and BOTH drop the SAME row: 12 rows in, 11 scored, 1 "
+    ok(sum(len(v) for v in _sr.values()) == 11 and _bs["n_rows"] == 18
+       and _bs["rows_without_features"] == 1 and "sol" not in _bs["scores"]
+       and "sol" not in _sr,
+       f"BE34-R1 and BOTH drop the SAME rows: 18 rows in, 11 scored — 6 for "
+       f"a coin with NO frozen fit (BE6-R7's dominant class) and 1 "
        f"without features (got {_bs['n_rows']}/"
        f"{sum(len(v) for v in _sr.values())}/"
        f"{_bs['rows_without_features']}) — an equality between two consumers "
        f"that both dropped everything would also be an equality")
-    ok(_bs["n_windows"] == 4 and _bs["n_actions"] == 12
-       and _bs["n_windows_with_rows"] == 4,
+    ok(_bs["n_windows"] == 6 and _bs["n_actions"] == 18
+       and _bs["n_windows_with_rows"] == 6,
        f"BE34-R1 the counters the receipt publishes come from the same pass: "
-       f"4 windows, 12 actions (got {_bs['n_windows']}/{_bs['n_actions']})")
+       f"6 windows, 18 actions (got {_bs['n_windows']}/{_bs['n_actions']})")
     _vals = sorted(v for lst in _sr.values() for _, v in lst)
     ok(len(set(_vals)) == len(_vals) and max(abs(v) for v in _vals) < 1e5,
        f"BE34-R1 every fixture score is DISTINCT and small "
@@ -2255,9 +2363,10 @@ def selftest() -> int:
     with _r1_installed(_rowsb, bad_window="eth-updown-5m-1788000300"):
         _bad = build_and_score(_selb, _R1_FROZEN)
     _eth_t0 = {t for t, _ in _bad["scores"].get("eth", ())}
-    ok(_bad["reconciliation_failures"] == 1 and _bad["n_windows"] == 4
-       and 1788000300 not in _eth_t0 and 1788000900 in _eth_t0
-       and _bad["n_rows"] == 12 and _bad["n_actions"] == 12,
+    ok(_bad["reconciliation_failures"] == 1 and _bad["n_windows"] == 6
+       and 1788000300 not in _eth_t0 and 1788001200 in _eth_t0
+       and _bad["reconciliation_failed_windows"] == ["eth-updown-5m-1788000300"]
+       and _bad["n_rows"] == 18 and _bad["n_actions"] == 18,
        f"BE34-R1 a window whose fills do not reconcile is COUNTED and ITS "
        f"rows are not scored, while the OTHER window of the same coin still "
        f"is ({_bad['reconciliation_failures']} of {_bad['n_windows']}; eth "
@@ -2284,15 +2393,50 @@ def selftest() -> int:
         _why = _recr.get("refusal", "")
         ok(_rc != 0 and _recr["outcome"] == "REFUSED"
            and "failed reconciliation" in _why and "fails the DAY" in _why
-           and _recr["refused_at"] == "rows_and_scores_streamed",
+           and "eth-updown-5m-1788000300" in _why
+           and _recr["refused_at"] == "reconciliation",
            f"BE34-R1 KNOWN-BAD: the CALLER refuses the whole DAY by name "
            f"(rc={_rc}) — driven through the real gate chain, so disabling "
            f"the refusal is visible here; a mismatch is never absorbed")
         ok(not any(g["gate"] == "reconciliation" and g["result"] == "PASS"
-                   for g in _recr["gates"]),
-           "BE34-R1 and no `reconciliation: PASS` is recorded for a day that "
-           "refused — a receipt that says PASS beside a refusal is the "
-           "hardcoded-verdict shape (rule 10)")
+                   for g in _recr["gates"])
+           and _recr["gates"][-1]["result"] == "PASS"
+           and _recr["gates"][-1]["gate"] != _recr["refused_at"],
+           f"BE6-R1 the refusal names the CHECK that refused "
+           f"({_recr['refused_at']!r}) and NOT the last gate to pass "
+           f"({_recr['gates'][-1]['gate']!r}) — a bare raise sits outside "
+           f"`gate()`, so the generic fallback blamed a gate that succeeded, "
+           f"and the suite used to pin that as expected")
+        # BE6-R3: the zero-score refusal, driven. It is the guard between an
+        # empty book and a "scored" day when the frozen fits do not cover the
+        # supply, and it had no falsifier.
+        _empty = dict(_bad, reconciliation_failures=0,
+                      reconciliation_failed_windows=[], scores={},
+                      windows_with_rows=set())
+        _mods2 = dict(sys.modules)
+        globals()["build_and_score"] = lambda sel, fr: dict(_empty)
+        try:
+            _rc0 = run_forward_day("20260901", Path(tdr1))
+        finally:
+            globals()["build_and_score"] = _real_bas
+            for _k in [k for k in sys.modules if k not in _mods2]:
+                del sys.modules[_k]
+            for _k, _v in _mods2.items():
+                if sys.modules.get(_k) is not _v:
+                    sys.modules[_k] = _v
+        # The SECOND run into this outdir takes a numbered successor, and
+        # `.1.json` sorts BEFORE `.json`, so the newest is chosen by write
+        # time rather than by name.
+        _rp0 = max(Path(tdr1).glob("be_forward_day_receipt_20260901*.json"),
+                   key=lambda x: x.stat().st_mtime)
+        _rec0 = json.loads(_rp0.read_text())
+        ok(_rc0 != 0 and _rec0["outcome"] == "REFUSED"
+           and "zero actions scored" in _rec0.get("refusal", "")
+           and _rec0["refused_at"] == "zero_actions_scored",
+           f"BE6-R3 KNOWN-BAD: a day whose windows all reconcile but score "
+           f"NOTHING is REFUSED, not published as an empty book (R-141), and "
+           f"the receipt names {_rec0['refused_at']!r} — the check that "
+           f"refused, not the gate before it")
 
     # ---- BE34-R4: a usage error is a refusal, not a success --------------
     # sys.argv is NEUTRALISED for the call, for two reasons. It stops the
@@ -2413,6 +2557,86 @@ def selftest() -> int:
                f"R5(5) KNOWN-BAD ({_lbl}): REFUSED naming `{_want}` — the "
                f"allowlist binds to ONE path and requires a string, so it "
                f"excuses the gate's NAME and nothing else")
+    # ---- BE7-R4: the receipt names THE TREE THAT EXECUTED ---------------
+    # Driven against a real detached worktree, because in the main tree the
+    # hardcoded root and this file's tree are the SAME path and no in-tree
+    # comparison can tell them apart -- BE34-R3's lesson, one function over.
+    import subprocess as _sp
+    _me_tree = Path(__file__).resolve().parents[2]
+    _main_head = _sp.run(("git", "rev-parse", "HEAD"), cwd=str(REPO),
+                         capture_output=True, text=True).stdout.strip()
+    _prev = _sp.run(("git", "rev-parse", "HEAD~1"), cwd=str(REPO),
+                    capture_output=True, text=True).stdout.strip()
+    with _tf.TemporaryDirectory() as _wtd:
+        _wt = Path(_wtd) / "wt"
+        _add = _sp.run(("git", "worktree", "add", "--detach", str(_wt), _prev),
+                       cwd=str(REPO), capture_output=True, text=True)
+        try:
+            ok(_add.returncode == 0 and _wt.exists(),
+               f"BE7-R4 a detached scratch worktree at HEAD~1 exists to drive "
+               f"this against ({_add.returncode})")
+            # CLEAN first: a fresh worktree at HEAD~1 with nothing copied.
+            _pv0 = _provenance(tree=_wt)
+            ok(_pv0["carrying_commit"] == _prev
+               and _pv0["working_tree_dirty"] is False,
+               f"BE7-R4 a CLEAN worktree reads clean and names HEAD~1 "
+               f"({_pv0['carrying_commit'][:12]}) — the flag and the commit "
+               f"are read from the tree asked about, not from a fixed root")
+            _tgt = _wt / "live/pm_research" / Path(__file__).name
+            _tgt.write_bytes(Path(__file__).read_bytes())   # the CURRENT code
+            _pv1 = _provenance(tree=_wt)
+            ok(_pv1["working_tree_dirty"] is True
+               and _pv1["carrying_commit"] == _prev,
+               "BE7-R4 and it FLIPS with that tree: copying this file in "
+               "makes THAT worktree dirty while its commit is unchanged — "
+               "the flag tracks the tree, not a fixed root")
+            _probe = (
+                "import sys, json;"
+                f"sys.path.insert(0, {str(_tgt.parent)!r});"
+                "import be_forward_day as M;"
+                "print(json.dumps(M._provenance()))")
+            _r = _sp.run((sys.executable, "-c", _probe), cwd=str(_wt),
+                         capture_output=True, text=True, timeout=300)
+            _pv = json.loads(_r.stdout.strip().splitlines()[-1])
+            ok(_pv["carrying_commit"] == _prev
+               and _pv["carrying_commit"] != _main_head
+               and _pv["provenance_root"] == str(_wt.resolve()),
+               f"BE7-R4 a receipt written from a WORKTREE names THAT "
+               f"worktree's HEAD ({_pv['carrying_commit'][:12]}) and not the "
+               f"main tree's ({_main_head[:12]}) — with a hardcoded root the "
+               f"receipt claimed a commit it did not carry while its driver "
+               f"sha correctly named the file that ran")
+            ok(_pv["working_tree_dirty"] is True
+               and _pv["driver_sha256_prefix"]
+               == _sha_file(Path(__file__).resolve())[:16],
+               "BE7-R4 and the DEFAULT derivation is the running file's "
+               "tree: the child was given no `tree`, ran the same bytes, and "
+               "still reported the worktree — which is the case a hardcoded "
+               "root gets wrong and the main tree cannot distinguish")
+            _blob = _git_blob(FROZEN_COMMIT,
+                              "live/pm_research/harmful_hazard_model.py")
+            ok(_blob is not None and len(_blob) > 0,
+               "BE7-R4 `_git_blob`'s freeze reads are UNAFFECTED — the object "
+               "store is shared, so `git show <ref>:<path>` resolves the same "
+               "bytes from any worktree")
+        finally:
+            _sp.run(("git", "worktree", "remove", "--force", str(_wt)),
+                    cwd=str(REPO), capture_output=True, text=True)
+            _sp.run(("git", "worktree", "prune"), cwd=str(REPO),
+                    capture_output=True, text=True)
+
+    # ---- BE6-R2: the parity predicate is an IDENTITY, driven -------------
+    ok(_launch_parity(0, 5, 5, "aa", "aa") is True
+       and _launch_parity(0, 5, 5, "aa", "bb") is False,
+       "BE6-R2 the launch parity compares the SHA of the file that ran — a "
+       "byte-different tree with the same count is refused, which a count "
+       "alone let through")
+    ok(_launch_parity(0, 5, 5, None, "aa") is False
+       and _launch_parity(0, 5, 6, "aa", "aa") is False
+       and _launch_parity(1, 5, 5, "aa", "aa") is False,
+       "BE6-R2 and a child that prints NO sha (the stub tree) is refused by "
+       "the same predicate, with the count kept as the second conjunct")
+
     # ---- CO-12: the attribution predicate, driven both directions -------
     # NOT gated behind BE_FORWARD_AUDIT, so these run inside the audit's own
     # children too -- which is what lets a mutation of the predicate be
@@ -2455,6 +2679,10 @@ def selftest() -> int:
        "attributed to, so it is a survivor and not a kill")
 
     # BE5-R2: the allowlist's MEMBERSHIP, not merely what an emission used.
+    # BE7-R3: `len(...) == 1` is a THIRD pin, not decoration. The set
+    # comparison alone passes when the table AND the tuple both grow — which
+    # is exactly what a legitimate-looking second exemption does — and the
+    # literal refuses that too, so growth takes THREE deliberate edits.
     ok(set(DECISION_ALLOWLIST) == set(DECISION_ALLOWLIST_PINNED)
        and len(DECISION_ALLOWLIST) == 1,
        f"BE5-R2 the excused-path allowlist is PINNED to "
@@ -2574,7 +2802,10 @@ def selftest() -> int:
             "the launch-invariance check contributed NO checks, so it did not "
             "run — removing that call is a guard-removal nothing else "
             "notices, which is CO-1's own shape")
-    print(f"be_forward_day selftest: {checks} checks OK")
+    # BE6-R2: the child announces WHICH FILE ran, not just how many checks
+    # it counted. A count is not an identity.
+    print(f"be_forward_day selftest: {checks} checks OK "
+          f"[sha {_sha_file(Path(__file__).resolve())[:16]}]")
     return 0
 
 
@@ -2585,9 +2816,27 @@ def _child_count(r) -> int:
     return int(m.group(1)) if m else None
 
 
-def _launch_parity(rc: int, child: int, expect: int) -> bool:
-    """ONE predicate for both spawns, so weakening it fails the known-bad."""
-    return rc == 0 and child == expect
+def _child_sha(r) -> str:
+    """The sha of the file the child actually RAN, or None if it said none.
+
+    BE6-R2: the stub tree prints a bare count and no sha, so it is refused by
+    the same predicate rather than by a special case."""
+    m = re.search(r"be_forward_day selftest: \d+ checks OK \[sha ([0-9a-f]+)\]",
+                  r.stdout + r.stderr)
+    return m.group(1) if m else None
+
+
+def _launch_parity(rc: int, child: int, expect: int,
+                   child_sha: str = None, expect_sha: str = None) -> bool:
+    """ONE predicate for both spawns, so weakening it fails the known-bad.
+
+    BE6-R2: a COUNT is not an identity — a byte-different tree with the SAME
+    number of checks passed, and the message claimed the tree while the
+    predicate compared only the total (rule 10). The child now prints the sha
+    of the file that ran; the shas are compared, with the count kept as the
+    second conjunct. The stub tree prints no sha and stays refused."""
+    return (rc == 0 and child_sha is not None and child_sha == expect_sha
+            and child == expect)
 
 
 def _selftest_launch(checks: int, ok) -> int:
@@ -2613,7 +2862,8 @@ def _selftest_launch(checks: int, ok) -> int:
                         "live.pm_research.be_forward_day", "--selftest"],
                        cwd=str(tree), env=env, capture_output=True,
                        text=True, timeout=900)
-    child = _child_count(r)
+    child, child_sha = _child_count(r), _child_sha(r)
+    me_sha = _sha_file(Path(__file__).resolve())[:16]
     # THE COMPARISON MUST BE ABLE TO FAIL. In a single tree the parent and the
     # child run the SAME file, so `child == checks` is a tautology there and
     # three mutations of it survived a full audit. A second spawn against a
@@ -2631,17 +2881,17 @@ def _selftest_launch(checks: int, ok) -> int:
                               "live.pm_research.be_forward_day", "--selftest"],
                              cwd=_td, env=env, capture_output=True,
                              text=True, timeout=120)
-        _cs = _child_count(_rs)
+        _cs, _cs_sha = _child_count(_rs), _child_sha(_rs)
     # ONE check holding BOTH directions. Written as two, the negative half
     # could be weakened to something that cannot fail and nothing would
     # notice -- which is what a mutation of it proved. Inside one condition,
     # weakening the predicate breaks the positive or the negative side.
-    ok(_launch_parity(r.returncode, child, at_entry)
-       and _cs == 4242 and _cs != child
-       and not _launch_parity(_rs.returncode, _cs, at_entry),
+    ok(_launch_parity(r.returncode, child, at_entry, child_sha, me_sha)
+       and _cs == 4242 and _cs != child and _cs_sha is None
+       and not _launch_parity(_rs.returncode, _cs, at_entry, _cs_sha, me_sha),
        f"launch: GREEN under the PACKAGE launch of {tree}, the child counted "
-       f"{child} = this parent's count on entry ({at_entry}) so its total is "
-       f"ours minus this one check — AND a child spawned from another tree "
+       f"{child} = this parent's count on entry ({at_entry}), and its sha "
+       f"is this file's — AND a child spawned from another tree "
        f"reports {_cs} and the same predicate REFUSES it. Both halves are "
        f"needed: in one tree the parent and the child are the same file, so "
        f"the comparison alone is a tautology. Child tail: "
