@@ -106,6 +106,13 @@ below-threshold event was an invented literal `0.0`, which sits under every
 candidate rung. **The pair is proposed only because §5 makes it readable; if
 the USER declines §5, decline this pair with it.**
 
+**And it is readable only because the below values stay put (§5, DE37-C3).**
+Repost eligibility is a *dwell* condition on the below-threshold path, so if
+the control's below values were permuted too, the tight rung would be
+comparing two different below-value paths and the pair would measure the
+construction as much as the policy. With them fixed at their own
+generations, the only difference between the arms is the one (γ) is about.
+
 ## 3. `REPOST_DWELL_S` — the second number I chose (EST-R3, DE35-R4)
 
 **What it is:** how long a repost waits after the cancel becomes effective.
@@ -162,12 +169,55 @@ cancelling, and the realised set is neither the treated set nor the drawn
 one. The frozen text asks for matching on **action count** (`DRAFT:147-156`),
 not on identity.
 
-**Reported with it (DE31-R2):** `n_strata`, `strata_with_room`,
+**The below-threshold values stay at their own generations.** Only the swap
+moves: a generation that is not drawn and carried a below-threshold value
+keeps **its own**, and the below values displaced by drawn generations go to
+the non-drawn generations that carried above values — there are exactly as
+many of each. Moving them would be a **second** difference between the arms,
+which is what (γ) exists to remove, and it is not inert: repost eligibility
+is "score < `theta_repost` continuously for `REPOST_DWELL_S`", so a moved
+below value changes **when** a held side becomes repost-eligible — §2's
+number meeting §5's stream. The assignment is by sorted key, so it carries
+no value order.
+
+**BUILT, not merely declared — and here is what says so.** Round 37's runner
+demanded the draw on the treated arm's **action** count, so in any stratum
+holding a non-acting above event the permutation could not be honoured; the
+stream was built anyway and replayed. It now demands over **all
+above-threshold events**, so `|drawn| == |above|` per stratum by
+construction, and **P1–P3 are computed per draw before the replay**: a draw
+whose stream fails one is REJECTED under that predicate's own name and
+redrawn.
+
+**Reported with it (DE31-R2, DE37-C1):** `n_strata`, `strata_with_room`,
 `n_distinct_draws`, `n_draws_attempted`, `n_draws_accepted`,
-`n_rejected_by_stratum`, and an explicit **POINT MASS** declaration where a
-stratum has no room. Exhausting the attempt budget **refuses**: a null built
-from the draws that happened to match is matched on acceptance, not on the
-decision variable.
+`n_rejected_by_stratum`, **`n_rejected_by_reason` (`PERM_NOT_OK`, `P1`,
+`P2`, `P3`, `P4`)**, **`first_rejection`**, **`predicates_per_draw`**, and an
+explicit **POINT MASS** declaration where a stratum has no room. A reader
+who wants to know whether (γ) held on this run reads
+`n_rejected_by_reason`: stream defects and decision-variable mismatches are
+counted apart, so a null whose rejections are all `P4` is a matched null,
+and one with any `P1`–`P3` is a construction that failed. Exhausting the
+attempt budget **refuses**: a null built from the draws that happened to
+match is matched on acceptance, not on the decision variable.
+
+## 6. The pin's own claim (DE37-C2/R1) — stated here because the package rests on it
+
+Not a question for the USER; a statement of what the pin now asserts, so
+that a reader of this document knows what "the fit code is the fit's" means
+here. Three functions in `harmful_exposure_rows.py` differ from the
+fit-commit bytes and are **declared additive** with their reasons. Each
+declaration now carries **two literal AST shas** — at the fit commit and at
+the tip that declared it (`cb8aab5`) — written into the source and compared
+against the file the run finds.
+
+Round 37 computed the declaring-tip sha at import **from the file it was
+checking**, so the comparison was true by construction: driven twice, an
+edited `select_v2_era` still read ADDITIVE_DECLARED and the run PROCEEDED,
+while an edited undeclared function BLOCKED. The three declared functions
+were a permanent exemption. With literals, an edit to any of them re-opens
+the file to **BLOCKING** — driven on an edited function body, not on a
+tampered dict.
 
 ---
 
@@ -178,6 +228,17 @@ decision variable.
    case they are the USER's numbers and not mine.
 3. Adopt `inf` with the identity in §4.
 4. Adopt repost parity in §5.
+5. **Rule the split question in §1a, with 2 and 4 rather than after them.**
+   The §3 population spans **both** of the fit's splits, so every cell
+   scores generations the heads were fitted on. That is not a footnote to
+   the numbers above: §2's and §3's rungs, §5's null and the split are read
+   against the same stream, and a cell's meaning changes with the answer.
+   Either the diagnostic is declared a MECHANICS diagnostic on a consumed
+   population (in which case the split is admissible and the receipt says
+   so per cell), or the run is restricted to the `score` split (in which
+   case the population is smaller and §3's counts change). **This seat does
+   not choose between them** (rule 14); the run declares the splits it
+   consumed either way.
 
 **Until that ruling, the runner keeps the values it has and this document is
 cited by nothing.** The code's own comments say the same: they name these as

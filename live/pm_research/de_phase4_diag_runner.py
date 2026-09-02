@@ -40,7 +40,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 85
+EXPECTED_CHECKS = 101
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -152,32 +152,52 @@ PIN_VERDICTS = ("IDENTICAL", "ADDITIVE_DECLARED", "BLOCKING", "NOT_CALLED")
 #: Differences the run has looked at and declared additive, with the reason
 #: each cannot reach the number. A function NOT in this map that differs is
 #: BLOCKING -- silence is never the additive answer.
-#: DE36-C5: each entry carries the function's AST sha AT THE FIT COMMIT
-#: and AT THE TIP THAT DECLARED IT. A later edit to either side re-opens
-#: the question instead of inheriting this pass -- rule 12's shape applied
-#: to a declaration. The shas are filled by `_seal_declarations()` at
-#: import, from the same two sources the comparison reads, so they cannot
-#: drift from what is actually compared.
-DECLARED_ADDITIVE_SHAS: dict = {}
-
+#:
+#: DE37-C2/R1 -- WHAT THIS MAP ASSERTS, AND WHAT ROUND 37's VERSION DID
+#: NOT. Each entry carries TWO LITERAL AST shas: the function's sha at the
+#: fit commit, and its sha at the tip where the declaration was WRITTEN
+#: (`cb8aab5`, computed once and typed here). `pin_statuses` compares the
+#: file it finds against BOTH literals, so an edit to a declared function
+#: re-opens it to BLOCKING.
+#:
+#: Round 37 computed `sha_at_declaring_tip` at import from the current
+#: file -- the same bytes the comparison then read -- so `want == now` by
+#: construction and the three declared functions were a PERMANENT
+#: EXEMPTION: driven twice (coordinator and reviewer), an edited
+#: `select_v2_era` still read ADDITIVE_DECLARED and `verify_called_code()`
+#: PROCEEDED, while an edited UNDECLARED function (`join_fills`) BLOCKED.
+#: A sha computed from the artifact it is meant to pin is not a pin.
+#:
+#: `sha_at_fit: None` is not a missing value -- it is the declared fact
+#: that the function is ABSENT from the fit bytes (new at 851edaf), which
+#: is what two of these three declarations are about.
 DECLARED_ADDITIVE = {
-    ("harmful_exposure_rows.py", "select_v2_era"):
-        "the `era` keyword now defaults to `fi.ERA` via `_era_or_refuse` "
-        "(the value this "
-        "population is selected under anyway) and an empty selection "
-        "REFUSES instead of returning nothing -- both make the same "
-        "selection for this population and turn a silent empty into a "
-        "refusal, which is the direction the fit-commit bytes lack",
-    ("harmful_exposure_rows.py", "_era_or_refuse"):
-        "NEW at 851edaf (absent from the fit bytes): it names the era from "
-        "`fi.ERA` -- the value this population is already selected under -- "
-        "and routes the empty case to the refusal below. It adds a refusal "
-        "and changes no selection that is non-empty, so for this "
-        "population the selected set is the fit's",
-    ("harmful_exposure_rows.py", "_refuse_empty_selection"):
-        "NEW at 851edaf: it exists only to RAISE on an empty selection, "
-        "so it cannot alter a selection that is non-empty -- and the "
-        "population this diagnostic runs on is 471 windows, measured",
+    ("harmful_exposure_rows.py", "select_v2_era"): {
+        "sha_at_fit": "e97a6662273d8abc",
+        "sha_at_declaring_tip": "3b34bdc86b1056ca",
+        "reason":
+            "the `era` keyword now defaults to `fi.ERA` via "
+            "`_era_or_refuse` (the value this "
+            "population is selected under anyway) and an empty selection "
+            "REFUSES instead of returning nothing -- both make the same "
+            "selection for this population and turn a silent empty into a "
+            "refusal, which is the direction the fit-commit bytes lack"},
+    ("harmful_exposure_rows.py", "_era_or_refuse"): {
+        "sha_at_fit": None,
+        "sha_at_declaring_tip": "830c4fa88ba44280",
+        "reason":
+            "NEW at 851edaf (absent from the fit bytes): it names the era "
+            "from `fi.ERA` -- the value this population is already selected "
+            "under -- and routes the empty case to the refusal below. It "
+            "adds a refusal and changes no selection that is non-empty, so "
+            "for this population the selected set is the fit's"},
+    ("harmful_exposure_rows.py", "_refuse_empty_selection"): {
+        "sha_at_fit": None,
+        "sha_at_declaring_tip": "a6cfb900e1ced0b8",
+        "reason":
+            "NEW at 851edaf: it exists only to RAISE on an empty selection, "
+            "so it cannot alter a selection that is non-empty -- and the "
+            "population this diagnostic runs on is 471 windows, measured"},
 }
 
 BINDING_FIELDS = ("frozen_protocol_sha256", "addendum_sha256",
@@ -378,29 +398,6 @@ def _ast_sha(dump: str | None) -> str | None:
         dump.encode()).hexdigest()[:16]
 
 
-def _seal_declarations() -> dict:
-    """The AST sha of every declared function, at the fit commit and at
-    this tip -- computed once, from the sources the comparison reads."""
-    if DECLARED_ADDITIVE_SHAS:
-        return DECLARED_ADDITIVE_SHAS
-    m = json.loads((FITS / "fit_manifest.json").read_text())
-    ref = m.get("fit_code_ref") or ""
-    here = Path(__file__).resolve().parent
-    by_file: dict = {}
-    for (name, fn) in DECLARED_ADDITIVE:
-        if name not in by_file:
-            fit_src = _git_show(ref, f"live/pm_research/{name}")
-            by_file[name] = (_fn_asts(fit_src) if fit_src else {},
-                             _fn_asts((here / name).read_text())
-                             if (here / name).exists() else {})
-        a, b = by_file[name]
-        DECLARED_ADDITIVE_SHAS[(name, fn)] = {
-            "sha_at_fit": _ast_sha(a.get(fn)),
-            "sha_at_declaring_tip": _ast_sha(b.get(fn)),
-        }
-    return DECLARED_ADDITIVE_SHAS
-
-
 def import_closure(mod_path: Path | None = None) -> set:
     """The modules this runner actually imports, from its own parse --
     including the lazy imports inside functions, which is where
@@ -496,12 +493,17 @@ def _git_show(ref: str, path: str) -> str | None:
     return r.stdout if r.returncode == 0 else None
 
 
-def pin_statuses() -> list:
-    """One computed status per manifest-pinned file (DE34-R7)."""
+def pin_statuses(here: Path | None = None) -> list:
+    """One computed status per manifest-pinned file (DE34-R7).
+
+    `here` is injectable ONLY so the falsifier can drive this function
+    against a COPY of the module directory with one function body edited
+    (DE37-C2: the known-bad must be an edited function, not a tampered
+    in-memory dict). The run never passes it."""
     m = json.loads((FITS / "fit_manifest.json").read_text())
     codes = m.get("fit_code_files") or {}
     ref = m.get("fit_code_ref") or ""
-    here = Path(__file__).resolve().parent
+    here = Path(here) if here is not None else Path(__file__).resolve().parent
     called = import_closure()
     out = []
     for name in sorted(codes):
@@ -516,6 +518,11 @@ def pin_statuses() -> list:
             out.append(row)
             continue
         if sha_run == codes[name]:
+            # The whole file is byte-identical, so the reached set does not
+            # change the answer -- and the receipt says WHICH comparison
+            # was made, because the two are not the same claim (DE37 item 7).
+            row["comparison"] = "whole-file"
+            row["reached"] = None
             row["verdict"] = "IDENTICAL"
             out.append(row)
             continue
@@ -532,19 +539,30 @@ def pin_statuses() -> list:
                  | called_functions(fit_src, entries)
                  | {"<module top-level>"})
         row["entry_points"] = sorted(entries)
+        # DE37 item 7: the VERDICT IS A FUNCTION OF THIS SET, so the set
+        # travels with it. Wiring the expensive half will reach
+        # `tape_index` and `_feature_pass`, which are not in today's; with
+        # `reached` in the receipt that re-opening is visible in the diff
+        # of two receipts instead of an IDENTICAL that quietly changed
+        # meaning.
+        row["comparison"] = "per-function over the reached set"
+        row["reached"] = sorted(reach)
         row["n_functions_called"] = len(reach)
         changed = sorted(n for n in reach if a.get(n) != b.get(n))
         row["functions_changed"] = changed
-        sealed = _seal_declarations()
         undeclared = []
         for n in changed:
             key = (name, n)
             if key not in DECLARED_ADDITIVE:
                 undeclared.append(n)
                 continue
-            # DE36-C5: the declaration is pinned to WHAT IT DECLARED. If
-            # either side has moved since, the pass is not inherited.
-            want = sealed.get(key, {})
+            # DE37-C2: the declaration is pinned to WHAT IT DECLARED, and
+            # what it declared is TWO LITERALS in this file. If the fit
+            # bytes or the file in front of us has moved since, the pass is
+            # not inherited. Round 37 recomputed the tip sha from the very
+            # file it was checking, so an edit moved the seal with it.
+            want = {k: DECLARED_ADDITIVE[key][k]
+                    for k in ("sha_at_fit", "sha_at_declaring_tip")}
             now = {"sha_at_fit": _ast_sha(a.get(n)),
                    "sha_at_declaring_tip": _ast_sha(b.get(n))}
             if want != now:
@@ -553,21 +571,21 @@ def pin_statuses() -> list:
         row["undeclared"] = undeclared
         row["verdict"] = ("IDENTICAL" if not changed else
                           "BLOCKING" if undeclared else "ADDITIVE_DECLARED")
-        row["declared"] = {n: DECLARED_ADDITIVE[(name, n)]
+        row["declared"] = {n: DECLARED_ADDITIVE[(name, n)]["reason"]
                            for n in changed if (name, n) in DECLARED_ADDITIVE}
         row["n_functions_in_file"] = len(set(a) | set(b))
         out.append(row)
     return out
 
 
-def verify_called_code(rows=None) -> list:
+def verify_called_code(rows=None, *, here: Path | None = None) -> list:
     """The statuses, refusing ONLY on BLOCKING (DE34-R7 ruled).
 
     `rows` is injectable so the refusal can be DRIVEN (rule 15): the
     falsifier builds a status row for a synthetic undeclared change and
     asserts this raises by name -- round 36 shipped the refusal without
     one."""
-    rows = pin_statuses() if rows is None else rows
+    rows = pin_statuses(here=here) if rows is None else rows
     bad = [r for r in rows if r["verdict"] == "BLOCKING"]
     if bad:
         # SITE: called#1
@@ -691,6 +709,9 @@ def build_receipt(cells: list, population: dict, *, heads: dict,
             f"horizon the number has is declared in addendum v2, which is "
             f"a PROPOSAL until the USER rules it"),
         "cells": cells,
+        # DE37 item 7: the pin's statuses AND the reached set each verdict
+        # was computed over.
+        "fit_code_pin": verify_called_code(),
         "wall_clock_s": wall_clock_s,
         "decides": "nothing -- this is a diagnostic; the reading is the "
                    "addendum's and the decision is the USER's",
@@ -946,7 +967,21 @@ def permuted_stream(treated_scores, drawn, theta: float, gidx):
     Every generation keeps exactly one event at its own t0; the
     per-stratum multiset of scores is unchanged; nothing is invented and
     nothing is dropped. Returns `(stream, ok)` where `ok` is False when a
-    stratum cannot be permuted as asked -- the caller redraws."""
+    stratum cannot be permuted as asked -- and `run_cell` REJECTS and
+    redraws on that, which round 37 did not: it bound the flag once and
+    read it zero times (DE37-C1).
+
+    DE37-C3 -- THE BELOW VALUES STAY AT THEIR OWN GENERATIONS. Round 37
+    sorted them descending and laid them onto the non-drawn keys in stream
+    order, so they moved too. That is a SECOND difference between the arms,
+    and it is not inert: repost eligibility is "score < theta_repost
+    continuously for REPOST_DWELL_S", so a moved below value changes WHEN a
+    held side becomes repost-eligible -- §2's number meeting §5's stream.
+    Only the swap moves now: a non-drawn generation that carried a below
+    value keeps ITS OWN, and the below values displaced by drawn
+    generations go to the non-drawn generations that carried above values
+    (there are exactly as many of each, by counting). The assignment is by
+    sorted key, so it is deterministic and carries no value order."""
     want = {(sl, sd, int(gn)) for sl, sd, gn in
             (k.split("|") for k in drawn)}
     by_st: dict = {}
@@ -955,21 +990,32 @@ def permuted_stream(treated_scores, drawn, theta: float, gidx):
         by_st.setdefault(_stratum_of(key, gidx), []).append(e)
     out, ok = [], True
     for st, events in by_st.items():
-        above = sorted((float(e["score"]) for e in events
-                        if float(e["score"]) >= theta), reverse=True)
-        below = sorted((float(e["score"]) for e in events
-                        if float(e["score"]) < theta), reverse=True)
+        own = {(e["slug"], e["side"], e.get("gen")): float(e["score"])
+               for e in events}
+        above = sorted((v for v in own.values() if v >= theta), reverse=True)
         keys = [(e["slug"], e["side"], e.get("gen")) for e in events]
         drawn_here = [k for k in keys if k in want]
         rest = [k for k in keys if k not in want]
         if len(drawn_here) != len(above):
             # The draw named a different number of generations in this
             # stratum than there are above-threshold values to give them:
-            # a permutation cannot honour it, so the caller redraws.
+            # a permutation cannot honour it, so the caller redraws. With
+            # the demand taken over ABOVE EVENTS this is unreachable for a
+            # well-formed reference -- and it is still checked, because
+            # "unreachable" is a claim about the caller.
             ok = False
-        pairs = list(zip(drawn_here, above)) + list(zip(rest, below))
-        # Any leftover key (when the counts disagree) keeps its own value,
-        # so the multiset is still the stream's own.
+        pairs = list(zip(drawn_here, above))
+        # The below values: every non-drawn generation that carried one
+        # KEEPS ITS OWN. Only the ones displaced by a drawn generation
+        # move, and they move to the non-drawn generations that carried
+        # above values -- the swap, and nothing else (DE37-C3).
+        _stay = [k for k in rest if own[k] < theta]
+        _needs = sorted(k for k in rest if own[k] >= theta)
+        _spare = sorted(own[k] for k in drawn_here if own[k] < theta)
+        pairs += [(k, own[k]) for k in _stay]
+        pairs += list(zip(_needs, _spare))
+        # Any leftover key (only when the counts disagree, i.e. ok=False)
+        # keeps its own value, so the multiset is still the stream's own.
         placed = {k for k, _ in pairs}
         for e in events:
             k = (e["slug"], e["side"], e.get("gen"))
@@ -1015,7 +1061,11 @@ def stream_predicates(treated, control, drawn, theta: float, gidx,
             (k.split("|") for k in drawn)}
     ctrl_above = {(e["slug"], e["side"], e.get("gen")) for e in control
                   if float(e["score"]) >= theta}
-    p3 = ctrl_above == {w for w in want if w in set(kc)}
+    # DE37-R3: the draw's keys must be IN the stream before the equality is
+    # asked. Round 37 filtered `want` down to the stream's keys, so a draw
+    # naming a generation the stream does not carry passed, and an empty
+    # intersection made P3 vacuously true.
+    p3 = bool(want) and want <= set(kc) and ctrl_above == want
     p4 = None if (rc_treated is None or rc_control is None) \
         else rc_treated == rc_control
     return {"P1_key_multisets_equal": p1,
@@ -1025,7 +1075,9 @@ def stream_predicates(treated, control, drawn, theta: float, gidx,
 
 
 def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
-             draws: int = 0, thetas: dict | None = None) -> dict:
+             draws: int = 0, thetas: dict | None = None,
+             _known_bad_demand: bool = False,
+             _draw_log: list | None = None) -> dict:
     """One declared cell: every arm replayed over the SAME reference, valued
     on the decision metric, with the null -- when the cell declares one --
     REPLAYED AS AN ACTING ARM and read on the same two numbers.
@@ -1090,9 +1142,48 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
                 for side in HSP.SIDES for g in sides[side]]
         # DE35-C4: hoisted -- these were rebuilt inside the seed loop.
         gidx = _gen_index(reference)
-        treated = [{"slug": f"{a['slug']}|{a['side']}|{a['gen']}"}
-                   for a in _treated_actions(per_arm[head])]
         treated_scores = list(scores_by_arm[head])
+        _nogen = [e for e in treated_scores if e.get("gen") is None]
+        if _nogen:
+            # SITE: null#3
+            raise DiagRefused(
+                f"{len(_nogen)} of {len(treated_scores)} score events do "
+                f"not name their generation. (gamma) permutes the "
+                f"above-threshold VALUES over GENERATIONS within a "
+                f"stratum, so an event with no `gen` cannot be placed: "
+                f"every event of one (slug, side) collapses to one key and "
+                f"the permutation silently becomes the identity. Round 37 "
+                f"built its null from exactly such a stream (DE37-C1)")
+        # DE37-C1(a) -- THE DEMAND IS THE ABOVE-THRESHOLD EVENT COUNT, not
+        # the action count. (gamma) asks for the above VALUES permuted over
+        # ALL above events, acting and non-acting, so the draw must name as
+        # many generations per stratum as there are above values to give
+        # them: |drawn_here| == |above| by construction.
+        #
+        # Round 37 demanded on `_treated_actions`. Every action is an above
+        # event and not conversely -- the policy is stateful, a HELD side
+        # suppresses later crossings -- so in any stratum with a non-acting
+        # above event the demand was too small, `permuted_stream` returned
+        # `ok=False` with a TRUNCATED-ZIP stream (above values dropped,
+        # below values duplicated), and the run replayed it anyway.
+        #
+        # The ACTION count keeps its own job, where the frozen text puts
+        # it: P4, matched AFTER the replay. Two variables, two uses.
+        if _known_bad_demand:
+            # The falsifier's input, and the ONLY way to get round 37's
+            # demand back: it exists so the rejection can be DRIVEN on this
+            # path (rule 15). No run passes it -- asserted from the parse.
+            demand_events = [{"slug": f"{a['slug']}|{a['side']}|{a['gen']}"}
+                             for a in _treated_actions(per_arm[head])]
+        else:
+            demand_events = [
+                {"slug": f"{e['slug']}|{e['side']}|{e.get('gen')}"}
+                for e in treated_scores
+                if float(e["score"]) >= th[head]]
+        treated = demand_events
+        _actions_for_guard = [
+            {"slug": f"{a['slug']}|{a['side']}|{a['gen']}"}
+            for a in _treated_actions(per_arm[head])]
         vals, rhos = [], []
         # DE31-R2: the null's own population -- how many strata, how many
         # had room, and how many DISTINCT draws the seeds produced. A
@@ -1111,6 +1202,12 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
         _rc_treated = _realised_by_stratum(per_arm[head], gidx)
         attempted = accepted = rejected = 0
         rej_by_stratum: dict = {}
+        # DE37-C1(b): every rejection is counted under ITS OWN reason. A
+        # null whose rejections are all filed under "action count" hides a
+        # stream defect behind a matching statistic.
+        rej_by_reason: dict = {"PERM_NOT_OK": 0, "P1": 0, "P2": 0, "P3": 0,
+                               "P4": 0}
+        _first_rejection = None
         # DRAW_ATTEMPT_BUDGET: how many seeds may be tried to obtain
         # `draws` ACCEPTED draws. 20x the target, and the number is stated
         # rather than felt: a rejection happens when a permutation moves a
@@ -1126,7 +1223,14 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             # and it is read on the same two numbers as every other arm.
             drawn = MRC.draw(pool, treated, seed=seed)
             _seen_draws.add(tuple(drawn))
-            MRC.refuse_if_not_random(drawn, treated, pool=pool)
+            # THE IDENTITY GUARD KEEPS ITS OWN POPULATION: it asks
+            # whether the draw reproduced the treated arm's ACTIONS where
+            # it had room to differ. That is a question about actions, so
+            # it is asked with the actions -- the demand is a different
+            # variable and handing this guard the demand would ask it a
+            # question it does not answer (DE37-C1: two variables, two
+            # uses).
+            MRC.refuse_if_not_random(drawn, _actions_for_guard, pool=pool)
             # The control ACTS: a score above any threshold on exactly the
             # generations the draw named, and nothing else.
             # §5 AS RULED = (gamma): the control's stream is the treated
@@ -1151,20 +1255,50 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             # per-stratum REALISED action count, after the replay.
             ctrl_scores, _perm_ok = permuted_stream(
                 treated_scores, drawn, th[head], gidx)
+            attempted += 1
+            # DE37-C1(b) -- P1-P3 ARE COMPUTED HERE, PER DRAW, BEFORE THE
+            # REPLAY, and a failure is a rejection under ITS OWN REASON.
+            # Round 37 computed them in the selftest only and discarded
+            # `ok`, so a stream the code had already judged wrong was
+            # replayed and its value entered the null.
+            _pred = stream_predicates(treated_scores, ctrl_scores, drawn,
+                                      th[head], gidx)
+            _why = (["PERM_NOT_OK"] if not _perm_ok else []) + [
+                n.split("_")[0] for n in ("P1_key_multisets_equal",
+                                          "P2_stratum_score_multisets_equal",
+                                          "P3_drawn_carry_above_and_only_drawn")
+                if not _pred[n]]
+            if _draw_log is not None:
+                _draw_log.append({"seed": seed, "reasons": list(_why),
+                                  "accepted": not _why, "value": None})
+            if _why:
+                rejected += 1
+                for r in _why:
+                    rej_by_reason[r] = rej_by_reason.get(r, 0) + 1
+                if _first_rejection is None:
+                    _first_rejection = {"seed": seed, "reasons": _why}
+                continue
             res = arm_result(reference, ctrl_scores, c, theta=th[head])
             _rc_ctrl = _realised_by_stratum(res, gidx)
-            attempted += 1
+            if _draw_log is not None and _rc_ctrl != _rc_treated:
+                _draw_log[-1] = {"seed": seed, "reasons": ["P4"],
+                                 "accepted": False}
             if _rc_ctrl != _rc_treated:
                 # P4: the decision variable did not match. Reject, count
                 # per stratum, and redraw -- never keep a control matched
                 # on something other than the frozen variable.
                 rejected += 1
+                rej_by_reason["P4"] = rej_by_reason["P4"] + 1
+                if _first_rejection is None:
+                    _first_rejection = {"seed": seed, "reasons": ["P4"]}
                 for st in set(_rc_ctrl) | set(_rc_treated):
                     if _rc_ctrl.get(st, 0) != _rc_treated.get(st, 0):
                         rej_by_stratum[f"{st[0]}|{st[1]}"] = \
                             rej_by_stratum.get(f"{st[0]}|{st[1]}", 0) + 1
                 continue
             accepted += 1
+            if _draw_log is not None:
+                _draw_log[-1]["value"] = res["cost_adjusted_value_cents"]
             vals.append(res["cost_adjusted_value_cents"])
             if res["rho"] is not None:
                 rhos.append(res["rho"])
@@ -1184,6 +1318,14 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             "n_draws_attempted": attempted,
             "n_draws_accepted": accepted,
             "n_rejected_by_stratum": dict(sorted(rej_by_stratum.items())),
+            "n_rejected_by_reason": dict(sorted(rej_by_reason.items())),
+            "first_rejection": _first_rejection,
+            "predicates_per_draw": ["P1", "P2", "P3"],
+            "predicate_note": ("P1-P3 are stream properties, computed per "
+                               "draw BEFORE the replay; P4 is the decision "
+                               "variable, matched AFTER it. A draw failing "
+                               "any of them is rejected under that name "
+                               "and redrawn (DE37-C1)"),
             "draw_attempt_budget": DRAW_ATTEMPT_BUDGET,
             "n_strata": len(_strata),
             "strata_with_room": sum(1 for v in _room.values() if v > 0),
@@ -1336,6 +1478,21 @@ def selftest() -> int:
        f"every binding field present, so the known-bads below are about a "
        f"field going missing and not about the builder never having had "
        f"it{_saw_rec}")
+    _rp = rec["fit_code_pin"]
+    _rper = [r for r in _rp if r["path"] == "harmful_exposure_rows.py"][0]
+    _rwhole = [r for r in _rp if r["comparison"] == "whole-file"]
+    ok(len(_rp) == 12 and len(_rwhole) == 10
+       and _rper["comparison"] == "per-function over the reached set"
+       and "select_v2_era" in _rper["reached"]
+       and all(r["reached"] is None for r in _rwhole),
+       f"AND THE RECEIPT CARRIES THE PIN WITH THE POPULATION EACH VERDICT "
+       f"WAS COMPUTED OVER (DE37 item 7): {len(_rp)} rows, {len(_rwhole)} "
+       f"compared WHOLE-FILE (`reached` null, because the bytes match and "
+       f"the reached set cannot change that answer) and the rest "
+       f"per-function over a named set -- `harmful_exposure_rows.py` over "
+       f"{len(_rper['reached'])} entries. An IDENTICAL verdict whose "
+       f"reached set has changed is a different claim, and two receipts "
+       f"now show that in their diff instead of agreeing in silence")
     ok(rec["frozen_protocol_sha256"] == _sha(FROZEN)
        and rec["addendum_sha256"] == _sha(ADDENDUM),
        f"THE RECEIPT BINDS BOTH DOCUMENTS BY THEIR BYTES: protocol "
@@ -1404,10 +1561,10 @@ def selftest() -> int:
     ref = {_slug[i]: {"BUY_UP": [_gen(1, 0.0, 20.0,
                                       [(5.0, 1.0, -20.0 if i < 5 else 4.0)])],
                       "SELL_UP": []} for i in range(20)}
-    smart = [{"t": 1.0, "slug": _slug[i], "side": "BUY_UP",
+    smart = [{"t": 1.0, "slug": _slug[i], "side": "BUY_UP", "gen": 1,
               "score": 0.95 if i < 5 else 0.05} for i in range(20)]
-    dumb = [{"t": 1.0, "slug": _slug[i], "side": "BUY_UP", "score": 0.5}
-            for i in range(20)]
+    dumb = [{"t": 1.0, "slug": _slug[i], "side": "BUY_UP", "gen": 1,
+             "score": 0.5} for i in range(20)]
     t0 = time.time()
     _saw_cell = ""
     try:
@@ -1562,17 +1719,22 @@ def selftest() -> int:
        f"says whether it is invoked")
     _rcf = [fn for fn in _ast.walk(_tree)
             if isinstance(fn, _ast.FunctionDef) and fn.name == "run_cell"][0]
-    _null_src = _ast.get_source_segment(Path(__file__).read_text(), _rcf)
-    ok("res = arm_result(" in _null_src
-       and 'vals.append(res["cost_adjusted_value_cents"])' in _null_src
-       and "harm_by_slug" not in _null_src,
-       "AND THE NULL'S VALUES COME FROM A REPLAY, asserted at the source: "
-       "the draw is passed through `arm_result` and appended as its "
-       "`cost_adjusted_value_cents`, and the word `harm` does not appear "
-       "and round 32's `harm_by_slug` parameter is gone entirely. It "
-       "valued each draw as a HARM SUM, "
-       "which is the proxy the frozen §6 forbids the comparison on "
-       "(DE32-C4)")
+    _args = [a.arg for a in (_rcf.args.args + _rcf.args.kwonlyargs)]
+    # IDENTIFIERS ONLY -- names, attributes and parameters. The prose is
+    # deliberately not scanned: this function's own note says the null is
+    # "never a harm sum", and a check that went red on the sentence
+    # explaining the rule would be a check about text again.
+    _names = {n.id for n in _ast.walk(_rcf) if isinstance(n, _ast.Name)} | {
+        getattr(n, "attr", "") for n in _ast.walk(_rcf)
+        if isinstance(n, _ast.Attribute)}
+    ok(not [a for a in _args if "harm" in a.lower()]
+       and not [n for n in _names if "harm" in str(n).lower()],
+       f"and `run_cell` takes NO harm-keyed argument and names nothing "
+       f"harm-keyed anywhere in its body -- read from the parse over "
+       f"{len(_args)} parameters and {len(_names)} identifiers (prose "
+       f"excluded, deliberately). "
+       f"Round 32's `harm_by_slug` parameter is gone, and this is the "
+       f"check that would notice it coming back")
     ok(RHO.EXPECTED_CHECKS and SS.EXPECTED_CHECKS and MRC.EXPECTED_CHECKS,
        "the three instruments are imported, not reimplemented: rho, the "
        "score stream and the matched-random control each carry their own "
@@ -1982,30 +2144,72 @@ def selftest() -> int:
        "and the module's TOP-LEVEL BODY enters the comparison as its own "
        "entry -- a changed constant is exactly what a function-level diff "
        "cannot see (DE36-C4)")
-    _sealed = _seal_declarations()
-    ok(len(_sealed) == 3
-       and all(v["sha_at_declaring_tip"] for v in _sealed.values()),
-       f"and each DECLARED_ADDITIVE entry is PINNED to what it declared -- "
-       f"the AST sha at the fit commit AND at this tip -- so a later edit "
-       f"re-opens the question instead of inheriting the pass (DE36-C5): "
-       f"{ {k[1]: v['sha_at_declaring_tip'] for k, v in _sealed.items()} }")
-    # DE36-C5 DRIVEN: tamper with what a declaration was sealed against
-    # and the verdict must re-open to BLOCKING.
-    _key = ("harmful_exposure_rows.py", "select_v2_era")
-    _save = dict(DECLARED_ADDITIVE_SHAS[_key])
-    DECLARED_ADDITIVE_SHAS[_key] = dict(_save, sha_at_fit="deadbeefdeadbeef")
-    try:
-        _tampered = [r for r in pin_statuses()
-                     if r["path"] == "harmful_exposure_rows.py"][0]
-    finally:
-        DECLARED_ADDITIVE_SHAS[_key] = _save
-    ok(_tampered["verdict"] == "BLOCKING"
-       and any("declaration stale" in str(x)
-               for x in _tampered.get("undeclared", [])),
-       f"KNOWN-BAD, DRIVEN: a declaration whose sealed AST sha no longer "
-       f"matches re-opens to {_tampered['verdict']}, naming the stale "
-       f"entry in `undeclared` ({[x for x in _tampered.get('undeclared', []) if 'stale' in str(x)][:1]}) "
-       f"-- a later edit cannot inherit the pass (DE36-C5)")
+    # DE37-C2/R1: the shas are LITERALS in this file, asserted FROM THE
+    # PARSE -- a value computed at import from the file being checked is
+    # not a pin, and that is exactly what round 37 shipped.
+    _dsrc = [n for n in _ast.walk(_ast.parse(Path(__file__).read_text()))
+             if isinstance(n, _ast.Assign)
+             and any(getattr(t, "id", "") == "DECLARED_ADDITIVE"
+                     for t in n.targets)]
+    _shanodes = [v for d in _dsrc for dd in _ast.walk(d)
+                 if isinstance(dd, _ast.Dict)
+                 for k, v in zip(dd.keys, dd.values)
+                 if isinstance(k, _ast.Constant)
+                 and k.value in ("sha_at_fit", "sha_at_declaring_tip")]
+    ok(len(_dsrc) == 1 and len(_shanodes) == 6
+       and all(isinstance(v, _ast.Constant) for v in _shanodes)
+       and sum(1 for v in _shanodes if v.value is None) == 2,
+       f"DE37-C2: all {len(_shanodes)} declaration shas are LITERAL "
+       f"constants in `DECLARED_ADDITIVE` -- read from the parse, so a "
+       f"future edit that recomputes one from the file it pins fails "
+       f"HERE. Two are literal `None`, which is the declared fact that "
+       f"those functions are ABSENT from the fit bytes, not a gap")
+    _now_fit = _fn_asts(_git_show(
+        json.loads((FITS / 'fit_manifest.json').read_text())["fit_code_ref"],
+        "live/pm_research/harmful_exposure_rows.py") or "")
+    _now_tip = _fn_asts((Path(__file__).resolve().parent
+                         / "harmful_exposure_rows.py").read_text())
+    ok(all(DECLARED_ADDITIVE[k]["sha_at_fit"] == _ast_sha(_now_fit.get(k[1]))
+           and DECLARED_ADDITIVE[k]["sha_at_declaring_tip"]
+           == _ast_sha(_now_tip.get(k[1])) for k in DECLARED_ADDITIVE),
+       f"and the six literals are TRUE of the two artifacts today: "
+       f"{ {k[1]: DECLARED_ADDITIVE[k]['sha_at_declaring_tip'] for k in DECLARED_ADDITIVE} } "
+       f"-- so the declaration describes the code that is actually there, "
+       f"and the check above says it cannot describe itself")
+    # DE37-C2 DRIVEN, ON A SOURCE EDIT: the known-bad is an edited FUNCTION
+    # BODY in a copy of the module directory, not a tampered dict -- the
+    # state round 37's falsifier could not produce.
+    with _tf.TemporaryDirectory() as _md:
+        _here = Path(__file__).resolve().parent
+        for _f in _here.glob("*.py"):
+            (Path(_md) / _f.name).write_bytes(_f.read_bytes())
+        _tgt = Path(_md) / "harmful_exposure_rows.py"
+        _txt = _tgt.read_text()
+        _decl_at = _txt.index("def select_v2_era(")
+        _body_at = _txt.index("\n", _txt.index(":\n", _decl_at)) + 1
+        _tgt.write_text(_txt[:_body_at] + "    _tampered_marker = 1\n"
+                        + _txt[_body_at:])
+        _ed = [r for r in pin_statuses(here=Path(_md))
+               if r["path"] == "harmful_exposure_rows.py"][0]
+        _un = [r for r in pin_statuses(here=Path(_md))
+               if r["path"] == "harmful_candidate_manifest.py"][0]
+    ok(_ed["verdict"] == "BLOCKING"
+       and any("declaration stale" in str(x) for x in _ed["undeclared"]),
+       f"KNOWN-BAD, DRIVEN ON AN EDITED FUNCTION BODY: one statement "
+       f"inserted into `select_v2_era` re-opens the file to "
+       f"{_ed['verdict']}, naming the stale declaration. Round 37 answered "
+       f"ADDITIVE_DECLARED here and `verify_called_code()` PROCEEDED, "
+       f"because the seal was recomputed from the edited file -- the three "
+       f"declared functions were a permanent exemption (DE37-R1)")
+    ok(_un["verdict"] == "IDENTICAL",
+       f"POSITIVE CONTROL, same injected directory: an untouched pinned "
+       f"file still reads {_un['verdict']}, so the BLOCKING above is the "
+       f"edit and not the copy")
+    ok([r["verdict"] for r in pin_statuses()
+        if r["path"] == "harmful_exposure_rows.py"] == ["ADDITIVE_DECLARED"],
+       "POSITIVE CONTROL: the real directory still reads "
+       "ADDITIVE_DECLARED after that drive -- nothing in the repo was "
+       "touched (the edit lives in a temporary copy)")
     _rcsrc = _ast.get_source_segment(
         Path(__file__).read_text(),
         [f for f in _ast.walk(_ast.parse(Path(__file__).read_text()))
@@ -2020,20 +2224,165 @@ def selftest() -> int:
                      and any(getattr(x, "id", "") == "accepted"
                              for x in _ast.walk(nd.test))]
     ok(_p4_guard and _budget_guard,
-       "and both null-side guards are present in `run_cell`, asserted from "
-       "the parse: the P4 rejection branch (a draw whose per-stratum "
-       "realised count differs is rejected, counted and redrawn) and the "
-       "budget refusal (exhausting DRAW_ATTEMPT_BUDGET refuses rather than "
-       "building the null from whichever draws matched). Driving either "
-       "would need a population engineered to reject, which is the "
-       "fixture work item 1 leaves to the run")
-    refuses(lambda: verify_called_code([
-        {"path": "harmful_exposure_rows.py", "sha_at_fit": "aaaa",
-         "sha_at_run": "bbbb", "commit": "e12e2c7",
-         "functions_changed": ["join_fills"], "verdict": "BLOCKING"}]),
-        "KNOWN-BAD, DRIVEN (rule 15): a synthetic UNDECLARED change to a "
-        "called function refuses by name at `called#1` -- the falsifier "
-        "round 36 shipped without", needle="BLOCKING pin status")
+       "both null-side guards are present in `run_cell`, asserted from the "
+       "parse -- and, unlike round 37, each is also DRIVEN below (DE37-C4: "
+       "the run cannot be the first place a rejection is seen to fire)")
+    # ---- DE37-C1(c) and DE37-C4, DRIVEN ON THE RUN PATH ----------------
+    # Two slugs in ONE (side, hour) stratum. Slug A carries TWO above
+    # events; only the first ACTS, because cancelling it holds the side and
+    # the second generation is suppressed. Slug B carries one below event.
+    # So |above| = 2 and |actions| = 1 in that stratum -- the ordinary
+    # case, and the one round 37's demand could not express.
+    _A = "btc-updown-5m-1787579400"
+    _B = "btc-updown-5m-1787579700"
+    _href = {_A: {"BUY_UP": [_gen(1, 0.0, 20.0, [(5.0, 1.0, -20.0)]),
+                             _gen(2, 21.0, 40.0, [(25.0, 1.0, -20.0)])],
+                  "SELL_UP": []},
+             _B: {"BUY_UP": [_gen(1, 0.0, 20.0, [(5.0, 1.0, 4.0)])],
+                  "SELL_UP": []},
+             # a third below-threshold generation, so the stratum is wide
+             # enough that the known-bad demand below takes several
+             # attempts before it happens to draw the acting generation
+             "btc-updown-5m-1787580000": {
+                 "BUY_UP": [_gen(1, 0.0, 20.0, [(5.0, 1.0, 4.0)])],
+                 "SELL_UP": []}}
+    _hsc = [{"t": 0.0, "slug": _A, "side": "BUY_UP", "gen": 1, "score": 0.9},
+            {"t": 21.0, "slug": _A, "side": "BUY_UP", "gen": 2, "score": 0.8},
+            {"t": 0.0, "slug": _B, "side": "BUY_UP", "gen": 1, "score": 0.1},
+            {"t": 0.0, "slug": "btc-updown-5m-1787580000", "side": "BUY_UP",
+             "gen": 1, "score": 0.05}]
+    _harm = {"CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": _hsc}
+    _hth = {"CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5}
+    _base = run_cell(_href, _harm, good, thetas=_hth)
+    _rc0 = _realised_by_stratum(
+        _base["per_arm"]["CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm"],
+        _gen_index(_href))
+    _above_n = sum(1 for e in _hsc if e["score"] >= 0.5)
+    ok(_rc0 == {("BUY_UP", 13): 1} and _above_n == 2,
+       f"THE FIXTURE IS THE ORDINARY CASE, measured not asserted: the "
+       f"stratum holds {_above_n} above-threshold events and the treated "
+       f"arm realises {_rc0[('BUY_UP', 13)]} action -- the second above "
+       f"event is HELD by the first cancel. Round 37 demanded the draw on "
+       f"the ACTION count, so it could never name both")
+    try:
+        _ncell, _ncerr = run_cell(_href, _harm, good, draws=2,
+                                  thetas=_hth), ""
+    except (DiagRefused, MRC.ControlRefused) as _e:
+        # A cell that cannot build its null must fail HERE, by name: the
+        # demand is what decides whether it can, and a mutant that puts
+        # round 37's demand back would otherwise end this suite in a
+        # traceback rather than at a check.
+        _ncell, _ncerr = None, f"{type(_e).__name__}: {str(_e)[:130]}"
+    _np = (_ncell or {}).get("null_population") or {
+        "n_draws_attempted": 0, "n_draws_accepted": 0,
+        "n_rejected_by_reason": {}, "first_rejection": None}
+    # The MESSAGE must survive the failure it reports: round 21 and round
+    # 25 each ended a suite in a traceback from inside an `ok` label.
+    _nrr = _np.get("n_rejected_by_reason") or {}
+    _nfr = _np.get("first_rejection") or {"seed": "-"}
+    ok(_ncell is not None and _np["n_draws_accepted"] == 2
+       and _nrr.get("P4", 0) > 0
+       and _np["first_rejection"] is not None,
+       f"DRIVEN, RUN PATH: P4 REJECTS AND THE RUN REDRAWS -- "
+       f"{_np['n_draws_attempted']} attempts, {_np['n_draws_accepted']} "
+       f"accepted, rejections by reason "
+       f"{ {k: v for k, v in _nrr.items() if v} } "
+       f"(first at seed {_nfr['seed']}). A draw that "
+       f"places the above values on A-gen1 and B-gen1 realises TWO "
+       f"cancels against the treated arm's ONE, and the null never sees "
+       f"it. Round 37 asserted this branch from the parse only"
+       f"{(' -- REFUSED INSTEAD: ' + _ncerr) if _ncerr else ''}")
+    ok(_ncell is not None
+       and all(_nrr.get(r, 1) == 0
+               for r in ("PERM_NOT_OK", "P1", "P2", "P3")),
+       f"and with the demand taken over ABOVE EVENTS, no draw is rejected "
+       f"for a STREAM defect: {_nrr} -- P1-P3 and "
+       f"`ok` hold for every draw, which is what (gamma) being BUILT (not "
+       f"merely declared) looks like on this path")
+    _kblog, _kbclass = [], ""
+    try:
+        run_cell(_href, _harm, good, draws=1, thetas=_hth,
+                 _known_bad_demand=True, _draw_log=_kblog)
+    except (DiagRefused, MRC.ControlRefused) as _e:
+        _kbclass = type(_e).__name__
+    ok(_kblog and not any(r["accepted"] for r in _kblog)
+       and all("PERM_NOT_OK" in r["reasons"] for r in _kblog)
+       and _kbclass in ("DiagRefused", "ControlRefused"),
+       f"KNOWN-BAD, DRIVEN ON THE RUN PATH: round 37's demand restored "
+       f"(the ACTION count) makes `permuted_stream` return `ok=False` in "
+       f"this ordinary stratum -- and every one of the "
+       f"{len(_kblog)} attempts is REJECTED under PERM_NOT_OK, none "
+       f"accepted, before any replay. Round 37 bound that flag and read "
+       f"it zero times, so the truncated stream was replayed and its "
+       f"value entered the null. The run ends in {_kbclass}, by name")
+    _sv_budget = globals()["DRAW_ATTEMPT_BUDGET"]
+    _kbmsg = ""
+    try:
+        globals()["DRAW_ATTEMPT_BUDGET"] = 0
+        run_cell(_href, _harm, good, draws=1, thetas=_hth)
+    except DiagRefused as _e:
+        _kbmsg = str(_e)
+    finally:
+        globals()["DRAW_ATTEMPT_BUDGET"] = _sv_budget
+    ok("0 of 1 draws matched" in _kbmsg and "0 attempts" in _kbmsg,
+       f"KNOWN-BAD, DRIVEN: a budget that permits no attempt REACHES "
+       f"`null#2` and REFUSES, naming its accounting rather than "
+       f"returning a smaller null: \"{_kbmsg[:110]}...\"")
+    ok(run_cell(_href, _harm, good, draws=1,
+                thetas=_hth)["null_population"]["n_draws_accepted"] == 1,
+       f"POSITIVE CONTROL: with the budget restored to {_sv_budget} the "
+       f"same cell builds its null, so the refusal above is the budget "
+       f"and not the fixture")
+    # DE37 item 6: the LAST substring check in these modules, replaced by
+    # an assertion about the OBJECTS. "asserted at the source" is a claim
+    # about text; this recomputes one accepted draw and compares numbers.
+    _olog: list = []
+    _ocell = run_cell(_href, _harm, good, draws=1, thetas=_hth,
+                      _draw_log=_olog)
+    _acc = [r for r in _olog if r["accepted"]][0]
+    _opool = [{"slug": f"{sl}|{sd}|{g['gen']}", "side": sd,
+               "hour": _hour_of(sl)}
+              for sl, sides in sorted(_href.items())
+              for sd in HSP.SIDES for g in sides[sd]]
+    _oabove = [{"slug": f"{e['slug']}|{e['side']}|{e['gen']}"}
+               for e in _hsc if e["score"] >= 0.5]
+    _odrawn = MRC.draw(_opool, _oabove, seed=_acc["seed"])
+    _octrl, _ook = permuted_stream(_hsc, _odrawn, 0.5, _gen_index(_href))
+    _ores = arm_result(_href, _octrl, validate_cell(dict(good)), theta=0.5)
+    ok(_ook and _acc["value"] is not None
+       and _ores["cost_adjusted_value_cents"] == _acc["value"],
+       f"AND THE NULL'S VALUES ARE A REPLAY'S, ASSERTED ON THE OBJECTS: "
+       f"draw {_acc['seed']} is recomputed here from the pool and the "
+       f"stream, replayed through `arm_result`, and its "
+       f"`cost_adjusted_value_cents` is {_ores['cost_adjusted_value_cents']}"
+       f" -- identical to the value the null recorded. Round 32 valued "
+       f"each draw as a HARM SUM (the proxy the frozen §6 forbids), and "
+       f"round 37 answered that with a substring check on this file")
+    _kbsrc = [n for n in _ast.walk(_ast.parse(Path(__file__).read_text()))
+              if isinstance(n, _ast.Call)
+              and getattr(n.func, "id", "") == "run_cell"
+              and any(k.arg == "_known_bad_demand" for k in n.keywords)]
+    ok(len(_kbsrc) == 1,
+       f"and the known-bad demand has {len(_kbsrc)} call sites, ALL of "
+       f"them in this selftest -- read from the parse. It exists so the "
+       f"rejection can be driven on the run path (rule 15); a run that "
+       f"passed it would be a run demanding on the wrong variable")
+    with _tf.TemporaryDirectory() as _md2:
+        _here2 = Path(__file__).resolve().parent
+        for _f in _here2.glob("*.py"):
+            (Path(_md2) / _f.name).write_bytes(_f.read_bytes())
+        _t2 = Path(_md2) / "harmful_exposure_rows.py"
+        _x2 = _t2.read_text()
+        _at2 = _x2.index("\n", _x2.index(":\n",
+                                         _x2.index("def join_fills("))) + 1
+        _t2.write_text(_x2[:_at2] + "    _tampered_marker = 2\n" + _x2[_at2:])
+        refuses(lambda: verify_called_code(here=Path(_md2)),
+                "KNOWN-BAD, DRIVEN ON A SOURCE EDIT (rule 15): one "
+                "statement inserted into `join_fills` -- a CALLED, "
+                "UNDECLARED function -- refuses by name at `called#1`. "
+                "Round 37's falsifier passed a synthetic status ROW, which "
+                "tests the filter and not the path that produces it",
+                needle="BLOCKING pin status")
     ok(verify_called_code(_pin) == _pin,
        "POSITIVE CONTROL on the same path: the real statuses carry no "
        "BLOCKING verdict, so the refusal is a filter and not a wall")
@@ -2100,6 +2449,70 @@ def selftest() -> int:
        "redrawn (counted in `n_rejected_by_stratum`), because a stateful "
        "policy cannot be made to cancel exactly the drawn set -- which is "
        "why `control#2` is withdrawn (DE36-R3)")
+    # ---- DE37-C3: the below values stay at their own generations ------
+    _bs = [{"t": 0.0, "slug": _slug[0], "side": "BUY_UP", "gen": 1,
+            "score": 0.9},
+           {"t": 1.0, "slug": _slug[0], "side": "BUY_UP", "gen": 2,
+            "score": 0.2},
+           {"t": 2.0, "slug": _slug[0], "side": "BUY_UP", "gen": 3,
+            "score": 0.1}]
+    _gidxb = {(_slug[0], "BUY_UP", g): {"t0": float(g)} for g in (1, 2, 3)}
+    _bdrawn = [f"{_slug[0]}|BUY_UP|3"]
+    _bctrl, _bok = permuted_stream(_bs, _bdrawn, 0.5, _gidxb)
+    _bmap = {(e["slug"], e["side"], e["gen"]): e["score"] for e in _bctrl}
+    _k = lambda g: (_slug[0], "BUY_UP", g)
+    ok(_bok and _bmap[_k(3)] == 0.9 and _bmap[_k(2)] == 0.2
+       and _bmap[_k(1)] == 0.1,
+       f"DE37-C3: THE BELOW VALUES STAY AT THEIR OWN GENERATIONS. The "
+       f"draw names gen 3, so it takes the above value 0.9 and gen 1 takes "
+       f"the below value gen 3 gave up (0.1) -- and gen 2, drawn by "
+       f"nobody, KEEPS ITS OWN 0.2. Round 37 sorted the below values "
+       f"descending onto the non-drawn keys in stream order, which put "
+       f"0.2 on gen 1 and 0.1 on gen 2: both moved, for no reason (γ) "
+       f"asks for")
+    _sorted_would = dict(zip([_k(1), _k(2)], sorted([0.1, 0.2],
+                                                    reverse=True)))
+    ok(_sorted_would[_k(2)] != _bmap[_k(2)],
+       f"KNOWN-BAD, COMPUTED: round 37's descending assignment would put "
+       f"{_sorted_would[_k(2)]} on gen 2 where its own value is "
+       f"{_bmap[_k(2)]}. Repost eligibility is a DWELL condition on the "
+       f"below path, so a moved below value changes when a held side "
+       f"becomes repost-eligible -- §2's number meeting §5's stream")
+    # ---- DE37-R3: P3 asks whether the draw is IN the stream ------------
+    # The vacuous shape needs a stream with NO above events: then the
+    # control carries no above key, the filtered draw is empty too, and
+    # round 37's P3 compared {} == {} and answered True.
+    _allbelow = [dict(x, score=0.1 + 0.01 * i)
+                 for i, x in enumerate(_bs)]
+    _acctrl, _acok = permuted_stream(_allbelow, [], 0.5, _gidxb)
+    _Pvac = stream_predicates(_allbelow, _acctrl,
+                              [f"{_slug[0]}|BUY_UP|9"], 0.5, _gidxb)
+    _Pvac_old = ({(e["slug"], e["side"], e["gen"]) for e in _acctrl
+                  if e["score"] >= 0.5}
+                 == {w for w in {(_slug[0], "BUY_UP", 9)}
+                     if w in {(e["slug"], e["side"], e["gen"])
+                              for e in _acctrl}})
+    _Pempty = stream_predicates(_bs, _bctrl, [], 0.5, _gidxb)
+    ok(_Pvac["P3_drawn_carry_above_and_only_drawn"] is False
+       and _Pvac_old is True
+       and _Pempty["P3_drawn_carry_above_and_only_drawn"] is False,
+       f"DE37-R3, THE VACUOUS SHAPE DRIVEN AND ITS OLD ANSWER COMPUTED "
+       f"BESIDE IT: on an all-below stream with the draw naming gen 9 -- a "
+       f"generation the stream does not carry -- round 37's P3 compared "
+       f"two empty sets and answered {_Pvac_old}; asking `want <= "
+       f"keys(stream)` FIRST answers "
+       f"{_Pvac['P3_drawn_carry_above_and_only_drawn']}. An EMPTY draw is "
+       f"red for the same reason: a null draw that names nothing is not a "
+       f"draw whose keys all carry above values")
+    ok(len(_drawn3) == 2 and sum(1 for e in _t_scores
+                                 if e["score"] >= 0.5) == 2,
+       f"DE37-R2 CLOSED BY THE SAME CHANGE: the (gamma) fixture above "
+       f"draws {len(_drawn3)} keys where the stratum holds 2 above events "
+       f"-- which round 37's demand (the ACTION count) could not produce, "
+       f"so P1-P3 were asserted only on a state the run path could not "
+       f"reach. With the demand over above events, that IS the run path's "
+       f"state, and the driven checks earlier in this suite exercise it "
+       f"through `run_cell`")
     _np2 = ncell.get("null_population") or {}
     ok(_np2.get("n_draws_accepted") == _np2.get("n_draws_attempted", -1)
        - sum([_np2.get("n_draws_attempted", 0)
@@ -2181,7 +2594,7 @@ def score_events_for(reference: dict, *, coin: str, head: str,
     """Score events for every generation in the reference, through the
     manifest-bound adapter -- never a stub."""
     v = SS.verify_head(head, coin)
-    rows = [{"t": g["t0"], "slug": slug, "side": side}
+    rows = [{"t": g["t0"], "slug": slug, "side": side, "gen": g["gen"]}
             for slug, sides in sorted(reference.items())
             for side in HSP.SIDES for g in sides[side]]
     return SS.score_events(rows, head=head, coin=coin,

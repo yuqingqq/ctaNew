@@ -36,7 +36,7 @@ import math
 import sys
 from pathlib import Path
 
-EXPECTED_CHECKS = 24
+EXPECTED_CHECKS = 25
 
 ROOT = Path(__file__).resolve().parents[2]
 FITS = ROOT / "data/pm_5min/derived/phase2_fits"
@@ -145,7 +145,14 @@ def score_events(rows, *, head: str, coin: str, scorer,
             f"the model cannot")
     out = []
     for i, r in enumerate(rows):
-        for k in ("t", "slug", "side"):
+        # DE37-C1: `gen` is REQUIRED. The (gamma) control permutes the
+        # above-threshold VALUES over GENERATIONS within a stratum, so an
+        # event that does not name its generation cannot be placed --
+        # round 37's stream carried none, every key collapsed to
+        # `(slug, side, None)`, and the permutation silently became the
+        # identity. A missing generation is refused here, at the adapter
+        # that builds the stream, rather than inferred downstream.
+        for k in ("t", "slug", "side", "gen"):
             if k not in r:
                 # SITE: score_events#3
                 raise ScoreStreamRefused(f"row[{i}]: missing {k!r}")
@@ -162,7 +169,8 @@ def score_events(rows, *, head: str, coin: str, scorer,
                 f"(harmful_stateful_policy:383-404 refuses it downstream; "
                 f"refusing it here names the row)")
         out.append({"t": r["t"], "slug": r["slug"], "side": r["side"],
-                    "score": float(v), "head": head, "coin": coin})
+                    "gen": r["gen"], "score": float(v),
+                    "head": head, "coin": coin})
     return out
 
 
@@ -245,14 +253,25 @@ def selftest() -> int:
 
     # ---- the adapter's own shape ----------------------------------------
     rows = [{"t": 1000.0 + i, "slug": f"btc-updown-5m-{i}",
-             "side": SIDES[i % 2], "x": i / 10.0}
+             "side": SIDES[i % 2], "gen": 1 + i // 5, "x": i / 10.0}
             for i in range(10)]
     ev = score_events(rows, head="q1_arrival_composed_lgbm", coin="btc",
                       scorer=lambda r: r["x"], verified=v_q1)
-    ok(len(ev) == 10 and all(set(e) >= {"t", "slug", "side", "score"}
-                             for e in ev),
+    ok(len(ev) == 10 and all(set(e) >= {"t", "slug", "side", "gen", "score"}
+                             for e in ev)
+       and [e["gen"] for e in ev] == [r["gen"] for r in rows],
        f"the adapter emits the shape `validate_scores` demands -- "
-       f"{sorted(ev[0])} -- one event per generation row")
+       f"{sorted(ev[0])} -- one event per generation row, and the "
+       f"GENERATION travels with it (DE37-C1: without it the null's "
+       f"permutation cannot name what it is permuting)")
+    refuses(lambda: score_events(
+        [{"t": 1.0, "slug": "btc-updown-5m-1", "side": SIDES[0]}],
+        head="q1_arrival_composed_lgbm", coin="btc",
+        scorer=lambda r: 0.5, verified=v_q1),
+        "KNOWN-BAD: a row with no `gen` REFUSES -- an event that does not "
+        "name its generation collapses every key in its stratum to one, "
+        "and the (gamma) permutation becomes the identity in silence",
+        needle="missing 'gen'")
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import harmful_stateful_policy as _hsp
@@ -289,7 +308,7 @@ def selftest() -> int:
                                  scorer=lambda r: 1.0, verified=v_inc),
             "KNOWN-BAD: a row missing `side` REFUSES by name",
             needle="missing 'side'")
-    refuses(lambda: score_events([{"t": 1.0, "slug": "s", "side": "LONG"}],
+    refuses(lambda: score_events([{"t": 1.0, "slug": "s", "side": "LONG", "gen": 1}],
                                  head="incumbent_linear_d", coin="btc",
                                  scorer=lambda r: 1.0, verified=v_inc),
             "KNOWN-BAD: an unknown side REFUSES", needle="side 'LONG'")
