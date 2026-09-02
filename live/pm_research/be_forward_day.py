@@ -525,20 +525,29 @@ def population(day: str, present: dict = None) -> dict:
     # forgeable-evidence defect I named in `pair_asserted` last round, made
     # again here. The evidence is now the checker's RETURN VALUE, so removing
     # the call leaves `_rv` unbound and the driver cannot run at all.
-    _rv = RAT.require_verified(rat)
+    _rv = RAT.require_verified(rat)   # RAISES on a refusal; see below
     rat["pair_asserted"] = assert_ratification_pair(rat)
+    # ONE place, and it is HERE. A second reading in `run_forward_day` could
+    # not be reached by any affordable suite (gate 2 is 60 s in, the replay is
+    # 26 min), so a mutant deleting it survived while the suite stayed green.
+    # A guard nothing can drive is a guard nothing protects.
     rat["require_verified"] = {
         "checker": "de_ratification_check.require_verified",
-        "returned_the_checked_object": _rv is rat,
         "verified": bool(_rv.get("verified")),
         "unverifiable": list(_rv.get("unverifiable") or ()),
         "provenance_absent": not _rv.get("provenance"),
         "checks_seen": len(_rv.get("checks") or ())}
+    # NO second gate here. `require_verified` checks all three conjuncts and
+    # RAISES; a local re-check of the same three could only fire on something
+    # the checker let through, which is nothing -- and the audit proved it,
+    # by disabling it with no test able to notice (H5b).
     specs = SEAM.window_specs_from_supply(
         supply, ratification_ref=RATIFICATION_REF)   # refusals propagate
     # MEASURED (mutant H6): stubbing this call with a literal `{"agree":
     # True}` survived, because the controls exercised the function and nobody
     # consumed its result. The record must reproduce the ledger it checked.
+    # Driven by the suite with a stubbed checker: a guard that only fires
+    # when another function is replaced must be shown to fire.
     _lva = ledger_vs_archive.get("per_coin") or {}
     _mismatch = sorted(c for c in pres
                        if (_lva.get(c) or {}).get("n_ledger")
@@ -1105,12 +1114,9 @@ def run_forward_day(day: str, outdir: Path) -> int:
             if k in ("verified", "unverifiable", "day_in_scope",
                      "ratification_ref", "pair_asserted",
                      "require_verified")}
-        _rvv = _r.get("require_verified") or {}
-        if not (_rvv.get("returned_the_checked_object") is True
-                and _rvv.get("verified") is True
-                and _rvv.get("unverifiable") == []
-                and _rvv.get("provenance_absent") is True
-                and _rvv.get("checks_seen", 0) > 0):
+        # The gate itself is in `population()` -- reachable, and driven by the
+        # suite with a refusing checker. What remains here is the RECORD.
+        if not isinstance(_r.get("require_verified"), dict):
             raise ForwardDayRefused(
                 "REFUSED: `de_ratification_check.require_verified` left no "
                 "evidence that it ran. It is the CONSUMER's fail-closed gate "
@@ -1665,15 +1671,14 @@ def selftest() -> int:
                f"refuses — asserting the pair myself left the provenance "
                f"conjunct unchecked")
     _rvv = _rat.get("require_verified") or {}
-    ok(_rvv.get("returned_the_checked_object") is True
-       and _rvv.get("verified") is True and _rvv.get("unverifiable") == []
+    ok(_rvv.get("verified") is True and _rvv.get("unverifiable") == []
        and _rvv.get("provenance_absent") is True
        and _rvv.get("checks_seen", 0) > 0,
-       f"R5(3) the population gate's evidence is the checker's RETURN VALUE "
-       f"({_rvv.get('checks_seen')} checks seen, object identity confirmed) "
-       f"— a `called: True` flag written beside the call survived deleting "
-       f"the call, so the flag is gone; the local pair assertion stays as "
-       f"evidence, not as the gate")
+       f"R5(3) the receipt records what the checker SAW "
+       f"({_rvv.get('checks_seen')} checks) — but the record is evidence, "
+       f"never the gate: every field of it is reproducible from the "
+       f"checker's INPUT, which is exactly why the audit killed two "
+       f"successive attempts to make it one")
 
     # ---- ROUND 5 (4): the ledger and the archive must agree -------------
     _arc = archive_windows_for_day("20260901")
@@ -1776,6 +1781,78 @@ def selftest() -> int:
         ok(_r9["decision_field_check"]["excused_paths"] == ["gates[].gate"],
            "R5(5) and exactly ONE path is excused, named in the receipt with "
            "its reason — an exemption a reader cannot see is not one")
+    # ---- ROUND 5, the AUDIT's own finding: five mutants survived --------
+    # Every one of them was an edit that leaves a HEALTHY day's numbers
+    # untouched -- the checker not called (its input already satisfies the
+    # evidence), the guard disabled (it only fires on a bad day), the
+    # denominator restated (the literal equals the constant). A suite that
+    # only ever runs a good day cannot kill any of them. Each now has a
+    # KNOWN-BAD input driven through the REAL producer (rule 16).
+    _real_check = RAT.check
+    for _lbl, _res, _typ, _frag in (
+            ("unverifiable remains",
+             {"verified": True, "unverifiable": ["x"], "checks": {"a": True},
+              "ratification_ref": RATIFICATION_REF},
+             "NotVerified", "unverifiable checks remain"),
+            ("not verified",
+             {"verified": False, "unverifiable": [], "checks": {"a": False},
+              "ratification_ref": RATIFICATION_REF},
+             "NotVerified", "verified is False"),
+            ("a PROVENANCE result",
+             {"verified": True, "unverifiable": [], "checks": {"a": True},
+              "provenance": {"stamped_at": "earlier"},
+              "ratification_ref": RATIFICATION_REF},
+             "NotVerified", "PROVENANCE")):
+        RAT.check = (lambda *_a, _r=_res, **_k: dict(_r))
+        try:
+            population("20260901", present=real)
+            ok(False, f"R5(3) population must REFUSE ({_lbl})")
+        except Exception as e:                        # noqa: BLE001
+            # WHICH guard fired is the whole question. Accepting any refusal
+            # let `require_verified` be deleted and still pass: the pair
+            # assertion refuses the first two cases by itself. Only the
+            # PROVENANCE conjunct is the checker's alone, and only its
+            # exception TYPE distinguishes the checker from my own guard.
+            ok(type(e).__name__ == _typ and _frag in str(e),
+               f"R5(3) KNOWN-BAD ({_lbl}): REFUSED by {_typ} — "
+               f"{'the checker ALONE holds this conjunct, so deleting the '
+                  'call is visible here and nowhere else'
+                  if _typ == 'NotVerified' else
+                  'the recorded pair assertion refuses it'}")
+        finally:
+            RAT.check = _real_check
+    _real_lva = globals()["assert_ledger_matches_archive"]
+    for _lbl, _stub in (
+            ("an empty per-coin block", {"agree": True, "per_coin": {}}),
+            ("a block that does not reproduce the ledger",
+             {"agree": True, "per_coin": {"btc": {"n_ledger": 1}}})):
+        globals()["assert_ledger_matches_archive"] = (
+            lambda *_a, _s=_stub, **_k: dict(_s))
+        try:
+            population("20260901", present=real)
+            ok(False, f"R5(4) population must REFUSE ({_lbl})")
+        except ForwardDayRefused as e:
+            ok("does not reproduce the ledger" in str(e),
+               f"R5(4) KNOWN-BAD ({_lbl}): REFUSED. This guard only fires "
+               f"when the cross-count is stubbed, so a good-day suite could "
+               f"never kill its removal — it has to be driven")
+        finally:
+            globals()["assert_ledger_matches_archive"] = _real_lva
+    _real_wpd = _DAM_T.WINDOWS_PER_DAY
+    try:
+        _DAM_T.WINDOWS_PER_DAY = 997
+        ok(r411_inputs(_pop["supply"])["per_coin"]["btc"]
+           ["calendar_windows_per_day"] == 997,
+           "R5(5) KNOWN-BAD: moving the PRODUCER's constant moves the emitted "
+           "denominator — a restated `288` equals the constant on every real "
+           "day, so only changing it can tell a binding from a copy")
+    finally:
+        _DAM_T.WINDOWS_PER_DAY = _real_wpd
+    ok(r411_inputs(_pop["supply"])["per_coin"]["btc"]
+       ["calendar_windows_per_day"] == _real_wpd,
+       "R5(5) POSITIVE CONTROL: and it is restored, so the mutation cannot "
+       "leak into the checks that follow")
+
     # the exemption is a PATH, and it cannot be used to smuggle
     for _lbl, _bad, _want in (
             ("a boolean at the excused path",
