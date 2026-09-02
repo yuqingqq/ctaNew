@@ -4,6 +4,64 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T00:21Z (MEM ROUND 7 -- THE FORWARD RACE HAS ITS FIRST DAY:
+  2026-09-01 ACCRUED, G = 1/5). Verified at the artifact
+  (da_dayverdict_20260901.json, written by the 00:06:00Z timer, as-of
+  2026-09-02T00:06:01Z), with the conjunction RECOMPUTED rather than read back:
+  FINISHED (day_closed true -- day_closed_calendar true, and the
+  day_closed_selector false sub-field is a stated reason, not the conjunct) AND
+  AFTER (post_freeze_pass) AND ADMISSIBLE (era_admissible, clob_v4_1,
+  era_role INTERLOCK) AND HEALTHY (day_quality_pass, with BOTH adjudicated coins
+  passing their governing day_bar_v2) -> race_accrual_eligible TRUE. btc P1 84.4
+  s/hr against 120, P2 0 material windows, P3 185.2 against 900; eth P1 6.9,
+  P3 107.9. I REPRODUCED DA'S INDEPENDENT CHECK BY RUNNING ITS INSTRUMENT:
+  da_verdict_check --day 20260901 gives 8/8, accrues=True, four scopes, both
+  denominators coinciding -- the check that catches an open-day elapsed count
+  inside a closed-day report. FOUR MORE ACCRUING DAYS REACH THE >=5-DAY BAR;
+  EARLIEST HONEST INTERVAL ~09-05, AND ONLY IF EVERY DAY ACCRUES.
+  A CORRECTION THAT MATTERS BECAUSE A STATE FILE IS WHERE A NUMBER BECOMES THE
+  RECORD: R-395 reports "the decision_note itself flags ~80% of btc windows
+  touched at 28.0 gaps/hr", and the round-7 dispatch repeats it as this day's
+  figure. IT IS NOT THIS DAY'S. That sentence lives inside decision_note as the
+  instrument's STANDING ILLUSTRATION, phrased about "day one" of an earlier era,
+  and it exists to argue that gaps/hour understates damage. 09-01's OWN btc
+  numbers, at the artifact: breadth 160/288 = 55.6% COIN_LEVEL (the governing
+  scope, R-191) and 159/288 = 55.2% PER_SLUG, at 14.38 gaps/hr with 345 gaps,
+  2,025.5 lost seconds, 23 of 24 hours carrying a gap, and 8 hours over the
+  SUPERSEDED v1 count bar (worst hour 31, governing nothing). The caution is
+  sound and still applies -- read windows_gap_affected beside gaps/hour, never
+  instead of it -- but the figures belong to a different day. Flagged for the
+  coordinator; the register is their surface. THE HEAVY DISCLOSURE: ~115 MINUTES
+  OF NEAR-TOTAL LOSS THAT NO GOVERNING BAR CAN SEE. DA's finding, two contiguous
+  outages -- 00:00-01:05Z (65 min) and 22:45-23:35Z (50 min) -- at 0.01-2.2% of
+  median window content, on ALL SEVEN COINS, with NO GAP ROWS. P1/P2/P3 pass
+  straight through both, because the duration bars charge only for time the
+  ledger knows about. TWO INDEPENDENT INSTRUMENTS AGREE TO ONE MINUTE: the
+  collector log's msgs/s measure reads 116 intervals below a tenth of median
+  (0.0806 of 1,439) and the raw gzip-trailer byte measure reads 115 -- different
+  inputs, different code, no shared term, which is what makes it a measurement
+  rather than one estimator's artifact. AND THE RULE WRITTEN FOR EXACTLY THIS
+  CLASS BECAME EFFECTIVE TODAY WHILE REMAINING UNWIRED. The content-liveness
+  rule is frozen (R-386) with EFFECTIVE_FROM_DAY = 20260902, so 09-02 is its
+  first governed day -- but governs() returning True CHANGES NO VERDICT: I
+  grepped it independently and the only reference outside its own file is
+  v5_deploy_gates.py:54, which runs its SELFTEST. No consumer calls governs() or
+  measure_day(). THAT IS RULE 17'S SHAPE TWICE IN TWELVE HOURS -- the Q1
+  incumbent leg that cost the 011 family its six survivors, and now a frozen
+  rule that governs nothing because nothing calls it. Both were built, both were
+  falsifier-proven, neither was reached: a guard's EXISTENCE and a guard's
+  WIRING are separate facts and only the second is load-bearing. DAY ONE'S
+  ACCRUAL IS UNAFFECTED by any of it: the rule does not govern 09-01, reads it
+  CONTENT_THIN on the margins (L1 0.07968 vs 0.08, L2 13 vs 12, three coins
+  failing L2 by one window), and the breadth figures are reported, never
+  governing. tape_density reads UNMEASURED for 09-01 -- correctly a status
+  rather than a clean zero. DA has escalated for the USER that the bar now sits
+  where the events are (65 min fails, 60 passes); the coordinator has not ruled
+  whether that joins the numbered list, so the FIVE USER DECISIONS ARE
+  UNCHANGED: Q1-leg wiring, the Q3 gate ruling, amendment A2 with its
+  prospective resolution, the Phase-4 and registry freezes, and per-seat
+  worktrees. The 011 result of record is unchanged and negative: 0 of 24 cells
+  survive the joint reading. PRIOR:
   2026-09-01T17:24Z (MEM ROUND 6 -- THE REVIEW CYCLE IS FULLY RELEASED AND THE
   011 RESULT OF RECORD IS ZERO SURVIVORS). Verified at the artifact, not from
   the register. THE ARC, R-385..R-393: the family went from SIX published
@@ -117,89 +175,7 @@ updated: >-
   R-384 records the TODO sweep as "39->47"; both endpoints are right, and the
   path was 39 -> 42 (round 2, three ticks) -> 47 (round 4, five ticks), across
   two sweeps rather than one. UNCHANGED: 09-01 is still the first possible
-  forward day and reach is still G=0/5, judged tonight at 00:06Z. PRIOR:
-  2026-09-01T13:53Z (MEM ROUND 3 -- R-374..R-381 SWEPT INTO THE STATE FILES).
-  Every claim below verified at its artifact by execution, never from the
-  dispatch that ordered the sweep. THE REVIEWER SEAT CHANGED HANDS (R-375,
-  8b47dff): Codex quota exhausted and the USER restarted pm-codex as a CLAUDE
-  session. The seat's surface is unchanged -- filings under workspace/reviews/,
-  holds and an explicit HOLD RELEASED, never fixes code, never touches state
-  files -- but ITS INDEPENDENCE PROFILE DID NOT SURVIVE, and that is recorded
-  rather than hidden: the reviewer is now the same model family as every seat it
-  reviews, which is R-348's correlated-blind-spot finding applied to the review
-  seat itself. The mitigation is GROUND, not prompt -- review only committed
-  artifacts at the pinned tip, prefer EXECUTION over reading, and treat
-  agreement with a seat's own claim as consistency and never confirmation. New
-  filings are REVIEW_* carrying a reviewer line; the CODEX_* files are the
-  Codex-era record and are never edited (the KIND of document must stay
-  identifiable). The 1aaac18 RR1/RR3 closure claims remain UNRELEASED because
-  the round-2 filing reviewed its parent. THE RESOURCE RULE IS NOW A MECHANISM,
-  NOT A DISCIPLINE (R-376, 8b47dff): pm_research_guard runs on a 60-second timer
-  OUTSIDE research.slice -- deliberately, because a memory-saturated slice must
-  not stall its own guard -- and I verified it live, last run 19 s before this
-  sweep. IN_SLICE is report-only (the kernel's job); COLLECTOR is NEVER touched
-  and matches BOTH homes, pm-collector-* AND collectors.slice, an exemption
-  CORRECTED BY MEASUREMENT after the first draft's match missed the P-2026-002
-  collectors; outside the slice FLAG >= 2G and KILL >= 8G, where 8G is measured
-  territory rather than taste (Q-BE-111 polled 8.8G one to two minutes before
-  the box died). CPU is deliberately not killed on: weights already price
-  contention, and on a swapless box memory is the failure that destroys.
-  pm-measurement-pipeline was the SECOND unguarded 16G unit, found by looking
-  for the CLASS instead of the instance; verified here that it and
-  pm-evaluation-pipeline both read Slice=research.slice -- AND MY ROUND-2
-  FINDING IS CLOSED: both repo mirrors are now byte-identical to the installed
-  units, so the guard is reproducible from git and not merely live. COORDINATION
-  IS BATCHED IN BOTH DIRECTIONS: R-377 (USER) makes the review cycle
-  batch-complete -- one filing per round, all fixes landed and pushed TOGETHER,
-  the reviewer notified ONCE at a pinned tip -- and R-378 (USER) applies the same
-  law to the coordinator's own dispatch loop as SEAT_PROTOCOL rule 18: a seat
-  receives its COMPLETE batch in one dispatch and nothing further while it is in
-  flight, stop-the-line excepted. R-381 (USER) adds the clause that batching is
-  about COMPLETENESS, NOT IDLENESS -- a closed round is followed promptly by the
-  next complete batch, and a seat waiting between rounds is a coordination miss.
-  THE DE SEAT IS STAFFED (R-379, d929031, USER act), executing R-165's parking
-  clause: harmful_stateful_policy.py, de_actionspace.py and de_constraints.py
-  transfer to DE, whose first batch is real-data seven-arm parity, the
-  registry-closure draft and the Phase-4 grid protocol as DRAFT-FOR-USER-FREEZE.
-  THE MODULE AUDIT, verified by me at live/pm_research/contracts/contracts.yaml
-  (version 24, 28 modules): EV-Replay is THE gap -- exact-case "Replay" has ZERO
-  hits, no module and no type, while the lowercase word appears only twice in
-  prose bodies, so a grep for vocabulary must not be read as a reference (rule
-  16). DE-ActionSpace is a registry inconsistency: the TYPE exists at :1201 and
-  is referenced at :386 and the CODE exists, while the module list registers
-  only DE-Constraints, DE-Actuator and DE-Allocator. OP-LatencyBudget has zero
-  hits and is deferred-with-trigger, to be NAMED rather than silently absent.
-  The OPS seat is consciously coordinator-absorbed and staffing it is the
-  USER's call. ON THE 011 LANE THE ARTIFACT STATE IS NOT WHAT A READER WOULD
-  ASSUME. DA's Q-DA-197 ran an INDEPENDENT reader
-  (live/pm_research/da_iter011_contract_verify.py, no shared code with
-  phase2_iter011*, R-235) and I REPRODUCED ITS VERDICT BY RUNNING IT: "14/23
-  contract checks hold; 9 FAIL; reads: 24 cells; 296 typed field reads". The
-  nine are disclosure and predicate defects, not a moved number: F1 the n a cell
-  CARRIES is the arrival n in 12 of 24 cells, a 22x overstatement of the
-  population behind the statistic; F2 the survivor predicate was HOLM ALONE, so
-  NO_INCUMBENT_COUNTERPART cells were published as surviving; F3 the
-  declaration's own handling does not reach Q3; F4 is rule 10's fourth instance
-  (the Q3 string named the BETTER side while the code computed the worse),
-  found independently by BE and DA in the same hours, which is what R-235
-  exists for; F5 fit_code_ref null; F6 no as_of. BE cleared F3/F4 at 20d3c3a
-  and, when F2 landed mid-fit, KILLED THE RE-RUN RATHER THAN LET IT EMIT
-  (4438961): F2 changes a PUBLISHED VERDICT FIELD, so the artifact is to be BORN
-  under the closed predicate instead of superseded afterwards. CURRENT ARTIFACT
-  STATE, verified on disk: the declared path still holds 0b1f6bb's original
-  (96,707 B, 11:23:34Z), preserved byte-identically beside it as
-  __as_verified_by_Q-DA-197.json (same sha256 prefix 7d8437e6523ed32d); a
-  __readjudicated_v2.json (101,789 B, 13:09Z) exists from the intermediate
-  state; and iter011-fit-batch.service is ACTIVE/RUNNING, so NO artifact under
-  the closed predicate exists yet and Q4 STILL HAS NO ECONOMIC RESULT.
-  Q-DA-198 shipped the 0h breadth disclosure as REPORTED_NOT_GOVERNING carrying
-  both denominators with a refusal behind it -- its own fixture-mirror mutant
-  survived first and was killed -- and proved tonight's 00:06Z path by EXECUTION
-  on closed 08-29, reproducing the HANDOFF row by a separate run. ROUND EDGES:
-  BE open (fits running in-slice), DE open (first batch), DA re-opened on its
-  round 2, the reviewer on a prep batch that files nothing, MEM closing here.
-  UNCHANGED AND WORTH SAYING: nothing about the forward race moved today --
-  09-01 is still the first possible forward day and reach is still G=0/5.
+  forward day and reach is still G=0/5, judged tonight at 00:06Z.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -221,7 +197,31 @@ flags:
                              # 09-01 is era-pure/admissible and provisionally
                              # passes its governing v2 quality bars, but is not
                              # a complete UTC day and therefore has not accrued.
-  hazard_forward_reach: G-0-OF-5-COMPLETE-QUALIFYING-DAYS
+  hazard_forward_reach: G-1-OF-5-COMPLETE-QUALIFYING-DAYS
+                             # ADVANCED 2026-09-02T00:21Z (MEM): 2026-09-01 is
+                             # the FIRST day the forward race has ever counted.
+                             # All four ACCRUAL_RULE conjuncts true at
+                             # da_dayverdict_20260901.json (as-of 00:06:01Z),
+                             # conjunction RECOMPUTED not read back; btc P1 84.4
+                             # /120, P2 0, P3 185.2/900; eth P1 6.9. DA's 8/8
+                             # independent check REPRODUCED by running its
+                             # instrument. Four more accruing days reach the
+                             # bar; earliest honest interval ~09-05 and only if
+                             # every day accrues. DISCLOSURES RIDE WITH IT:
+                             # breadth 160/288 = 55.6% COIN_LEVEL at 14.38
+                             # gaps/hr (REPORTED, not governing -- and NOT the
+                             # "80%/28.0" figure R-395 quotes, which is
+                             # decision_note's standing illustration about an
+                             # earlier "day one"); ~115 min of near-total loss
+                             # on all seven coins in two contiguous blocks with
+                             # NO gap rows, invisible to every duration bar, two
+                             # independent instruments agreeing to one minute
+                             # (116 vs 115); and the content-liveness rule is
+                             # effective 09-02 but UNWIRED -- its only reference
+                             # outside its own file is the deploy gate's
+                             # SELFTEST, so governs() changes no verdict.
+                             # EARLIER ENTRY (rule 13):
+                             # G-0-OF-5-COMPLETE-QUALIFYING-DAYS
                              # The separate BTC hazard seed is frozen and
                              # marked unvalidated. No integrated hazard x
                              # conditional-value x skew candidate is frozen.
@@ -3768,7 +3768,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-01T17:24Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T00:21Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are

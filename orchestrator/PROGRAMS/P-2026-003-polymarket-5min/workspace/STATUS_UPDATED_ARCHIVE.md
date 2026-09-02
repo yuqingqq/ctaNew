@@ -582,3 +582,94 @@ Join rule as in batch 1.
   live, 09-01 the first era-pure admissible day but incomplete, G=0/5 forward
   reach, era as an interlock, breadth reported and not gated.
 ```
+
+## Batch 13 — archived 2026-09-02T00:21Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-7 true-up of the first accrued forward-race day.
+Join rule as in batch 1.
+
+```yaml
+
+  2026-09-01T13:53Z (MEM ROUND 3 -- R-374..R-381 SWEPT INTO THE STATE FILES).
+  Every claim below verified at its artifact by execution, never from the
+  dispatch that ordered the sweep. THE REVIEWER SEAT CHANGED HANDS (R-375,
+  8b47dff): Codex quota exhausted and the USER restarted pm-codex as a CLAUDE
+  session. The seat's surface is unchanged -- filings under workspace/reviews/,
+  holds and an explicit HOLD RELEASED, never fixes code, never touches state
+  files -- but ITS INDEPENDENCE PROFILE DID NOT SURVIVE, and that is recorded
+  rather than hidden: the reviewer is now the same model family as every seat it
+  reviews, which is R-348's correlated-blind-spot finding applied to the review
+  seat itself. The mitigation is GROUND, not prompt -- review only committed
+  artifacts at the pinned tip, prefer EXECUTION over reading, and treat
+  agreement with a seat's own claim as consistency and never confirmation. New
+  filings are REVIEW_* carrying a reviewer line; the CODEX_* files are the
+  Codex-era record and are never edited (the KIND of document must stay
+  identifiable). The 1aaac18 RR1/RR3 closure claims remain UNRELEASED because
+  the round-2 filing reviewed its parent. THE RESOURCE RULE IS NOW A MECHANISM,
+  NOT A DISCIPLINE (R-376, 8b47dff): pm_research_guard runs on a 60-second timer
+  OUTSIDE research.slice -- deliberately, because a memory-saturated slice must
+  not stall its own guard -- and I verified it live, last run 19 s before this
+  sweep. IN_SLICE is report-only (the kernel's job); COLLECTOR is NEVER touched
+  and matches BOTH homes, pm-collector-* AND collectors.slice, an exemption
+  CORRECTED BY MEASUREMENT after the first draft's match missed the P-2026-002
+  collectors; outside the slice FLAG >= 2G and KILL >= 8G, where 8G is measured
+  territory rather than taste (Q-BE-111 polled 8.8G one to two minutes before
+  the box died). CPU is deliberately not killed on: weights already price
+  contention, and on a swapless box memory is the failure that destroys.
+  pm-measurement-pipeline was the SECOND unguarded 16G unit, found by looking
+  for the CLASS instead of the instance; verified here that it and
+  pm-evaluation-pipeline both read Slice=research.slice -- AND MY ROUND-2
+  FINDING IS CLOSED: both repo mirrors are now byte-identical to the installed
+  units, so the guard is reproducible from git and not merely live. COORDINATION
+  IS BATCHED IN BOTH DIRECTIONS: R-377 (USER) makes the review cycle
+  batch-complete -- one filing per round, all fixes landed and pushed TOGETHER,
+  the reviewer notified ONCE at a pinned tip -- and R-378 (USER) applies the same
+  law to the coordinator's own dispatch loop as SEAT_PROTOCOL rule 18: a seat
+  receives its COMPLETE batch in one dispatch and nothing further while it is in
+  flight, stop-the-line excepted. R-381 (USER) adds the clause that batching is
+  about COMPLETENESS, NOT IDLENESS -- a closed round is followed promptly by the
+  next complete batch, and a seat waiting between rounds is a coordination miss.
+  THE DE SEAT IS STAFFED (R-379, d929031, USER act), executing R-165's parking
+  clause: harmful_stateful_policy.py, de_actionspace.py and de_constraints.py
+  transfer to DE, whose first batch is real-data seven-arm parity, the
+  registry-closure draft and the Phase-4 grid protocol as DRAFT-FOR-USER-FREEZE.
+  THE MODULE AUDIT, verified by me at live/pm_research/contracts/contracts.yaml
+  (version 24, 28 modules): EV-Replay is THE gap -- exact-case "Replay" has ZERO
+  hits, no module and no type, while the lowercase word appears only twice in
+  prose bodies, so a grep for vocabulary must not be read as a reference (rule
+  16). DE-ActionSpace is a registry inconsistency: the TYPE exists at :1201 and
+  is referenced at :386 and the CODE exists, while the module list registers
+  only DE-Constraints, DE-Actuator and DE-Allocator. OP-LatencyBudget has zero
+  hits and is deferred-with-trigger, to be NAMED rather than silently absent.
+  The OPS seat is consciously coordinator-absorbed and staffing it is the
+  USER's call. ON THE 011 LANE THE ARTIFACT STATE IS NOT WHAT A READER WOULD
+  ASSUME. DA's Q-DA-197 ran an INDEPENDENT reader
+  (live/pm_research/da_iter011_contract_verify.py, no shared code with
+  phase2_iter011*, R-235) and I REPRODUCED ITS VERDICT BY RUNNING IT: "14/23
+  contract checks hold; 9 FAIL; reads: 24 cells; 296 typed field reads". The
+  nine are disclosure and predicate defects, not a moved number: F1 the n a cell
+  CARRIES is the arrival n in 12 of 24 cells, a 22x overstatement of the
+  population behind the statistic; F2 the survivor predicate was HOLM ALONE, so
+  NO_INCUMBENT_COUNTERPART cells were published as surviving; F3 the
+  declaration's own handling does not reach Q3; F4 is rule 10's fourth instance
+  (the Q3 string named the BETTER side while the code computed the worse),
+  found independently by BE and DA in the same hours, which is what R-235
+  exists for; F5 fit_code_ref null; F6 no as_of. BE cleared F3/F4 at 20d3c3a
+  and, when F2 landed mid-fit, KILLED THE RE-RUN RATHER THAN LET IT EMIT
+  (4438961): F2 changes a PUBLISHED VERDICT FIELD, so the artifact is to be BORN
+  under the closed predicate instead of superseded afterwards. CURRENT ARTIFACT
+  STATE, verified on disk: the declared path still holds 0b1f6bb's original
+  (96,707 B, 11:23:34Z), preserved byte-identically beside it as
+  __as_verified_by_Q-DA-197.json (same sha256 prefix 7d8437e6523ed32d); a
+  __readjudicated_v2.json (101,789 B, 13:09Z) exists from the intermediate
+  state; and iter011-fit-batch.service is ACTIVE/RUNNING, so NO artifact under
+  the closed predicate exists yet and Q4 STILL HAS NO ECONOMIC RESULT.
+  Q-DA-198 shipped the 0h breadth disclosure as REPORTED_NOT_GOVERNING carrying
+  both denominators with a refusal behind it -- its own fixture-mirror mutant
+  survived first and was killed -- and proved tonight's 00:06Z path by EXECUTION
+  on closed 08-29, reproducing the HANDOFF row by a separate run. ROUND EDGES:
+  BE open (fits running in-slice), DE open (first batch), DA re-opened on its
+  round 2, the reviewer on a prep batch that files nothing, MEM closing here.
+  UNCHANGED AND WORTH SAYING: nothing about the forward race moved today --
+  09-01 is still the first possible forward day and reach is still G=0/5.
+```

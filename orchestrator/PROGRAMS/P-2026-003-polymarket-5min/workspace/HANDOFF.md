@@ -1,11 +1,9 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-01T17:24Z — **the review cycle is fully released and the 011
-result of record is 0/24 cells surviving the joint reading.** Five items now
-wait on the USER (see PENDING USER DECISIONS below); the two that waited this
-morning both landed on the USER's "Yea proceed" (R-386). Prior line: the
-reviewer seat is a Claude session, the resource rule is a mechanism,
-coordination is batched both directions, and the DE seat is staffed.
+Updated: 2026-09-02T00:21Z — **THE FORWARD RACE HAS ITS FIRST DAY: 2026-09-01
+ACCRUED, G = 1/5**, with heavy honest disclosures beside it. Prior line: the
+review cycle is fully released and the 011 result of record is 0/24 cells
+surviving the joint reading; five items wait on the USER.
 
 ## READ FIRST — current project handoff
 
@@ -29,8 +27,14 @@ only head with survivors keeps them.
 | 4 | **Freeze DE's Phase-4 protocol + the registry amendment** | no Phase-4 cell may be read before its protocol is frozen; the registry closes EV-Replay's gap | R-386 (deliberately deferred), R-389 |
 | 5 | **Per-seat worktrees** | whether seats get isolated worktrees rather than sharing one tree | R-390 |
 
-**Closed this afternoon on the USER's "Yea proceed" (R-386), both verified here
-at their artifacts, not taken from the entry:**
+**Arrived overnight with Q-DA-201, not yet on the numbered list because the
+coordinator has not ruled whether it joins:** the content-liveness rule is
+ratified and effective from today, **but unwired** — its bar sits where 09-01's
+events actually are (65 min fails, 60 passes), and until a consumer calls
+`governs()` it changes no verdict. DA filed this as an escalation for the USER.
+
+**Closed on the USER's "Yea proceed" (R-386), both verified here at their
+artifacts, not taken from the entry:**
 
 - **The content-liveness rule is FROZEN** — `FROZEN_BY_USER = True` with the
   USER's words quoted in-file, and `EFFECTIVE_FROM_DAY = "20260902"`
@@ -137,6 +141,69 @@ carry. **`HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10 has no checkboxes at all** 
 it is a numbered implementation order, and its state lives in STATUS/HANDOFF and
 the register, so there was nothing to tick there.
 
+### Forward race — G = 1 of 5
+
+**2026-09-01 ACCRUED.** The first day the forward race has ever counted.
+Verified at `data/pm_5min/derived/da_dayverdict_20260901.json` (written by the
+00:06:00Z timer, as-of `2026-09-02T00:06:01Z`), and the conjunction was
+**recomputed rather than read back**:
+
+| conjunct | value |
+|---|---|
+| FINISHED (`day_closed`) | true — `day_closed_calendar: true`; the `day_closed_selector: false` sub-field is a stated reason, not the conjunct |
+| AFTER (`post_freeze_pass`) | true |
+| ADMISSIBLE (`era_admissible`) | true — `clob_v4_1`, `era_role: INTERLOCK` |
+| HEALTHY (`day_quality_pass`) | true — **both** adjudicated coins pass their governing `day_bar_v2` |
+
+btc P1 **84.4** s/hr against 120, P2 **0** material windows, P3 **185.2** s
+against 900; eth P1 6.9, P3 107.9. **I reproduced DA's independent check by
+running its instrument**: `da_verdict_check --day 20260901` → **8/8**,
+`accrues=True`, four scopes, both denominators coinciding — the check that
+catches an open-day elapsed count inside a closed-day report.
+
+**Four more accruing days reach the ≥5-complete-day bar. Earliest honest
+interval ~09-05, and only if every day accrues.**
+
+### The disclosures that ride with day one — read them beside it, never instead
+
+**1. Breadth is high, and the number in R-395 is not this day's.** The honest
+btc figures, at the artifact: **160/288 = 55.6% COIN_LEVEL** (the governing
+scope, R-191), 159/288 = 55.2% PER_SLUG, at **14.38 gaps/hr** with 345 gaps,
+2,025.5 lost seconds, 23 of 24 hours carrying a gap and **8 hours over the
+superseded v1 count bar** (worst hour 31). R-395 and the round-7 dispatch both
+quote *"~80% of btc windows touched at 28.0 gaps/hr"* — **that is the
+instrument's own standing illustration about "day one" inside `decision_note`,
+not a 09-01 measurement.** The caution it makes is sound and still applies
+(gaps/hour understates damage; read `windows_gap_affected` beside it); the
+figures belong to a different day. Flagged for the coordinator — the register
+is theirs to correct.
+
+**2. ~115 minutes of near-total loss that no governing bar can see.** DA's
+finding: two contiguous outages, **00:00–01:05Z (65 min)** and
+**22:45–23:35Z (50 min)**, at 0.01–2.2% of median window content, **on all
+seven coins, with NO gap rows**. P1/P2/P3 pass straight through both, because
+the duration bars charge only for time the ledger knows about. **Two
+independent instruments agree to one minute** — the collector log's msgs/s
+measure reads 116 intervals below a tenth of median (0.0806 of 1,439), the raw
+gzip-trailer byte measure reads 115. Different inputs, different code, no shared
+term.
+
+**3. The content-liveness rule is effective today — and it is UNWIRED.** This
+is the class it exists for, and 09-02 is its first governed day (frozen R-386,
+`EFFECTIVE_FROM_DAY = 20260902`). But **`governs()` returning True changes no
+verdict**: grepped independently, the only reference to the rule outside its own
+file is `v5_deploy_gates.py:54`, which runs its **selftest**. No consumer calls
+`governs()` or `measure_day()`. That is rule 17's shape — suite-green is not
+pipeline-wired — arriving on the same day the Q1 incumbent leg cost the 011
+family its six survivors for exactly the same reason. On 09-01 the rule reads
+**CONTENT_THIN** (L1 0.07968 vs 0.08; L2 13 vs 12; three coins fail L2 by one
+window) and **does not govern it**, so day one's accrual is unaffected either
+way. DA has escalated that the bar now sits where the events are: 65 min fails,
+60 passes.
+
+**4. `tape_density` reads `UNMEASURED` for 09-01** — correctly a status rather
+than a clean zero (the density receipt covers 13 days, not this one).
+
 ### Current data and forward state
 
 - `clob_v4_1` has run since the ruled 2026-08-31T22:00Z boundary. At this
@@ -149,6 +216,49 @@ the register, so there was nothing to tick there.
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~00:21Z (MEM) — DAY ONE ACCRUES, AND THE NUMBER QUOTED BESIDE
+### IT BELONGS TO A DIFFERENT DAY
+
+**G = 1/5.** 2026-09-01 is the first day this programme's forward race has ever
+counted. All four `ACCRUAL_RULE` conjuncts true at the artifact, the conjunction
+**recomputed** rather than read back, and DA's independent 8/8 **reproduced by
+running its instrument** rather than accepted from its filing. Details in the
+FORWARD RACE section above.
+
+**The correction, because a state file is where a number becomes the record.**
+R-395 reports *"the decision_note itself flags ~80% of btc windows touched at
+28.0 gaps/hr"*, and the round-7 dispatch repeats it as this day's figure. It is
+not. That sentence lives inside `decision_note` as the instrument's **standing
+illustration**, phrased about *"day one"* of an earlier era, and it exists to
+argue that gaps/hour understates damage. **09-01's own btc numbers are 55.6%
+COIN_LEVEL breadth (160/288) at 14.38 gaps/hr.** The caution is sound and still
+applies; the figures are a different day's. Recorded here and left with the
+coordinator, whose surface the register is.
+
+**Two things about day one that are worse than its verdict, and both are
+disclosures rather than defects.** ~115 minutes of near-total loss across all
+seven coins in two contiguous blocks, invisible to every governing bar because
+duration bars charge only for time the ledger knows about — and **two
+independent instruments agree on it to one minute** (116 vs 115), which is what
+makes it a measurement rather than an artifact of one estimator. And the rule
+written for exactly this class became effective today while remaining
+**unwired**: I grepped it myself, and the only reference outside its own file is
+the deploy gate's selftest. `governs()` returns True today and no verdict
+changes.
+
+**That is rule 17's shape twice in twelve hours** — the Q1 incumbent leg that
+cost the 011 family its six survivors, and now a frozen rule that governs
+nothing because nothing calls it. Both were built, both were falsifier-proven,
+neither was reached. The lesson the programme keeps paying for is not that
+guards are missing; it is that **a guard's existence and a guard's wiring are
+separate facts, and only the second one is load-bearing.**
+
+**Day one's accrual is unaffected by any of this.** The content-liveness rule
+does not govern 09-01 (effective 09-02), reads it CONTENT_THIN on the margins
+(L1 0.07968 vs 0.08), and the breadth figures are reported, never governing.
+Four more accruing days reach the bar; earliest honest interval ~09-05, and only
+if every day accrues.
 
 ### 2026-09-01 ~17:24Z (MEM) — THE REVIEW CYCLE CLOSED, AND THE NUMBER IT
 ### PRODUCED IS ZERO
