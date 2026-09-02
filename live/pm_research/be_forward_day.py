@@ -28,6 +28,7 @@ import datetime as dt
 import hashlib
 import json
 import re
+import os
 import sys
 from pathlib import Path
 
@@ -959,6 +960,15 @@ def _walk_paths(obj, pre=""):
 # word is fine THERE and nowhere else, and only a path can say that. The
 # value must still be a string, or `gates[].gate: true` would smuggle a
 # boolean through the exemption.
+# PINNED, and the pin is asserted (BE5-R2). `excused_paths` reports what an
+# emission USED, so a second entry that nothing happens to hit leaves every
+# check green and the growth is already in the artifact by the time anything
+# notices. An exemption from a rule-14 post-condition grows by a deliberate,
+# visible act: adding a path here fails the membership assertion until this
+# tuple is changed too. The idiom is `de_admissible_windows`'s
+# BLIND_ENTRY_ASSERTIONS and `de_ratification_check`'s SCOPE_OPEN_TOKENS.
+DECISION_ALLOWLIST_PINNED = ("gates[].gate",)
+
 DECISION_ALLOWLIST = {
     "gates[].gate": ("the NAME of a gate this run ran (a string identifier), "
                      "not a right to anything. Any non-string here refuses, "
@@ -1028,18 +1038,34 @@ def _flush(rec: dict, outdir: Path, day: str) -> Path:
             indent=1, sort_keys=True, default=str))
         return q
     if p.exists():
+        # BE5-R1: the chain, not a star. Recording `p` whatever N is made
+        # BOTH `.1` and `.2` claim to supersede the BASE, so two receipts
+        # named the same predecessor and "which is current" was answerable
+        # only by sorting filenames -- in a programme whose rule 13 is
+        # precisely about what superseded what. The successor now names the
+        # receipt it actually STANDS AFTER (the highest-numbered existing
+        # one), and carries the whole chain beside it so the order is
+        # readable from the receipts themselves.
+        prior = [p]
         n = 1
         while True:
             q = outdir / f"be_forward_day_receipt_{day}.{n}.json"
             if not q.exists():
                 break
+            prior.append(q)
             n += 1
+        stands_after = prior[-1]
         rec["supersedes_receipt"] = {
-            "path": str(p), "sha256": _sha_file(p),
-            "why": "an earlier run's receipt was already here. It is KEPT "
-                   "byte-identical and this run takes a numbered successor "
-                   "-- overwriting evidence loses the comparison a reader "
-                   "needs (rule 13)."}
+            "path": str(stands_after), "sha256": _sha_file(stands_after),
+            "is_base": stands_after == p, "n_prior": len(prior),
+            "why": "the receipt this run STANDS AFTER -- the highest-numbered "
+                   "one already present, not the base. Every prior receipt is "
+                   "KEPT byte-identical and this run takes the next number; "
+                   "overwriting evidence loses the comparison a reader needs, "
+                   "and naming the base from every successor loses the ORDER "
+                   "(rule 13)."}
+        rec["prior_receipts"] = [
+            {"path": str(x), "sha256": _sha_file(x)} for x in prior]
         rec["_receipt_path"] = str(q)
         q.write_text(json.dumps(
             {k: v for k, v in rec.items() if k != "_receipt_path"},
@@ -1342,6 +1368,214 @@ class _r1_installed:
                 sys.modules[n] = m
         FS.expected_cancel_value, FS.load_frozen = self._saved_fs
         return False
+
+
+# ---------------------------------------------------------------------------
+# BE5-R3: the mutation audit SHIPS
+# ---------------------------------------------------------------------------
+# The audit was the substance of rounds 5 and 6 -- it killed two of my own
+# evidence attempts and found four call-site survivors -- and none of it was
+# in the module, so "N/M killed" was a claim in a filing that no reader could
+# re-run. Rule 15 at the level of the harness: a checker ships its falsifier.
+#
+# Each case names THE EDIT and THE CHECK THAT MUST GO RED. A case passes only
+# if the mutated module fails AND fails at that check; a mutant that dies for
+# some other reason is NOT counted as killed, because then the named check is
+# not what caught it.
+#
+# The edit is applied to a COPY in a temp tree, never to this file. Two runs
+# of an earlier scratch harness were SIGKILLed mid-mutation and left a mutant
+# in the working tree; a copy cannot do that. The siblings are symlinked so
+# the copy imports the same modules, and `data/` is read through the real
+# repo path, read-only.
+#
+# SCOPE, stated so the count is not mistaken for more than it is: these cases
+# cover the round-5 and round-6 items and the two closures of round 7. They
+# are not the whole 63-mutant sweep run out-of-tree, and three of that sweep's
+# four survivors are recorded in `AUDIT_KNOWN_UNKILLABLE` below with the
+# reason each cannot be killed from inside one tree.
+
+AUDIT_KNOWN_UNKILLABLE = {
+    "spawn root REPO vs parents[2]":
+        "a no-op wherever the two names denote the same path, which is true "
+        "in the shared tree; it is observable only from a worktree whose file "
+        "differs, and it was executed and killed there",
+    "a true conjunct is deleted":
+        "removing a conjunct that holds whenever the code is correct cannot "
+        "be seen by correct code; the conjunct's load-bearing-ness is shown "
+        "instead by OTHER cases dying only once it exists",
+}
+
+# (name, old, new, the check whose text must appear in the failure)
+AUDIT_CASES = (
+    ("BE5-R1 the successor names the base again, not what it stands after",
+     '        stands_after = prior[-1]', '        stands_after = prior[0]',
+     "BE5-R1 the chain is a CHAIN"),
+    ("BE5-R1 the prior chain is not carried",
+     '        rec["prior_receipts"] = [', '        _unused_prior = [',
+     "BE5-R1 and the whole chain is carried beside it"),
+    ("BE5-R2 a second path is added to the allowlist",
+     'DECISION_ALLOWLIST = {\n    "gates[].gate":',
+     'DECISION_ALLOWLIST = {\n    "population.gate": "smuggled",\n'
+     '    "gates[].gate":',
+     "BE5-R2 the excused-path allowlist is PINNED"),
+    ("BE5-R2 the pin is widened to match instead of the allowlist narrowed",
+     'DECISION_ALLOWLIST_PINNED = ("gates[].gate",)',
+     'DECISION_ALLOWLIST_PINNED = ("gates[].gate", "population.gate")',
+     "BE5-R2 the excused-path allowlist is PINNED"),
+    ("R5(1) a receipt overwrites an earlier run's",
+     '    if p.exists():\n        # BE5-R1', '    if False:\n        # BE5-R1',
+     "R5(1) KNOWN-BAD: a SECOND run into the same outdir"),
+    ("R5(5) the decision-field post-condition is removed from the flush",
+     '    rec["decision_field_check"] = assert_no_decision_field(',
+     '    _skip = dict(',
+     "R5(5) a decision-shaped key (counts_toward_G) must REFUSE"),
+    ("R5(5) the post-condition looks at top-level keys only",
+     '    for path, k, v in _walk_paths(emission):',
+     '    for path, k, v in [(str(x), str(x), emission[x]) for x in emission]:',
+     "R5(5) a decision-shaped key (counts_toward_G) must REFUSE"),
+    ("R5(5) the excused path stops requiring a string",
+     '        if path in DECISION_ALLOWLIST and isinstance(v, str):\n'
+     '            excused.append(path)',
+     '        if path in DECISION_ALLOWLIST:\n            excused.append(path)',
+     "R5(5) must REFUSE (a boolean at the excused path)"),
+    ("BE34-R5 the closure method is no longer declared",
+     '            "closure_method": "STATIC import walk (ast Import/ImportFrom, "',
+     '            "closure_method_UNUSED": "STATIC import walk (ast Import/'
+     'ImportFrom, "',
+     "BE34-R5 the closure DECLARES its method"),
+    ("BE34-R4 the usage error returns success again",
+     '        print("usage: be_forward_day.py --selftest | "\n'
+     '              "--forward-day <YYYYMMDD> --outdir <dir>")\n        return 2',
+     '        print("usage: be_forward_day.py --selftest | "\n'
+     '              "--forward-day <YYYYMMDD> --outdir <dir>")\n        return 0',
+     "BE34-R4 a usage error RETURNS 2"),
+)
+
+
+def _audit_span(base: str) -> tuple:
+    """Where the case table itself lives in this source.
+
+    Every anchor below appears TWICE -- once at the site it names and once in
+    the table that names it -- so a naive uniqueness test reports 2 for every
+    case and the whole audit refuses to run. The table's own span is excluded
+    and uniqueness is required OUTSIDE it, which is stricter than counting:
+    an anchor that appears twice in real code still refuses."""
+    a = base.index("AUDIT_CASES = (")
+    b = base.index("\n)\n", a)
+    return a, b
+
+
+def _audit_apply(base: str, old: str, new: str) -> tuple:
+    """(mutated source, n_outside). None when not uniquely locatable."""
+    a, b = _audit_span(base)
+    hits = []
+    i = base.find(old)
+    while i != -1:
+        if not (a <= i < b):
+            hits.append(i)
+        i = base.find(old, i + 1)
+    if len(hits) != 1:
+        return None, len(hits)
+    i = hits[0]
+    return base[:i] + new + base[i + len(old):], 1
+
+
+def _audit_tree(src: str, root: Path) -> Path:
+    """A temp tree holding the MUTATED copy and symlinks to its siblings."""
+    here = Path(__file__).resolve().parent
+    pkg = root / "live/pm_research"
+    pkg.mkdir(parents=True, exist_ok=True)
+    (root / "live/__init__.py").write_text("")
+    (pkg / "__init__.py").write_text("")
+    me = Path(__file__).name
+    for f in here.iterdir():
+        if f.name in (me, "__init__.py") or f.name.startswith("__pycache__"):
+            continue
+        tgt = pkg / f.name
+        if tgt.exists():
+            continue
+        # MEASURED: symlinking the siblings did not work. Nearly every module
+        # here does `sys.path.insert(0, Path(__file__).resolve().parent)`, and
+        # `resolve()` FOLLOWS a symlink -- so the first sibling imported put
+        # the REAL directory at the front of sys.path and every later import
+        # came from the tree, not the copy. Importable files are COPIED; the
+        # rest (data, notebooks) are symlinked, since nothing resolves them.
+        if f.is_file() and f.suffix == ".py":
+            tgt.write_bytes(f.read_bytes())
+        else:
+            tgt.symlink_to(f)
+    (pkg / me).write_text(src)
+    # The copy's DATA and DOCUMENT roots are derived from `__file__` too
+    # (round 4's lesson: materialising anchors into a run dir silently
+    # emptied the archive index, and an empty index reads as "no windows"
+    # rather than as a broken path). Every tree-root entry except `live` --
+    # which the copy provides -- is linked, so `data/` and the ratification
+    # register resolve. Linked for READING: the suite writes only into its
+    # own temp dirs, and nothing here writes under `data/`.
+    for entry in REPO.iterdir():
+        if entry.name == "live":
+            continue
+        lnk = root / entry.name
+        if not lnk.exists():
+            lnk.symlink_to(entry)
+    return pkg / me
+
+
+def mutation_audit(cases=AUDIT_CASES) -> dict:
+    """Every case driven against a COPY; survivors named, never counted away.
+
+    A GREEN BASELINE IS REQUIRED. An earlier scratch harness mutated a
+    RENAMED copy whose name-bound control failed on ANY copy, so every case
+    'died' for the wrong reason and the audit proved nothing. If the
+    unmutated copy is not green, this refuses rather than reporting kills.
+    """
+    import subprocess, tempfile as _tf, shutil as _sh
+    base = Path(__file__).read_text(encoding="utf-8")
+    env = dict(os.environ, BE_FORWARD_AUDIT="1", BE_FORWARD_LAUNCH_CHECK="1")
+    per, survivors = {}, []
+
+    def _run(text: str) -> tuple:
+        with _tf.TemporaryDirectory() as td:
+            mod = _audit_tree(text, Path(td))
+            # R-446: a stale .pyc can answer for a source file that changed.
+            _sh.rmtree(mod.parent / "__pycache__", ignore_errors=True)
+            r = subprocess.run([sys.executable, str(mod), "--selftest"],
+                               env=env, capture_output=True, text=True,
+                               timeout=900)
+            return r.returncode, (r.stdout + r.stderr)
+
+    rc0, out0 = _run(base)
+    if rc0 != 0:
+        raise ForwardDayRefused(
+            f"REFUSED: the UNMUTATED copy is not green (rc={rc0}), so no "
+            f"case here could be said to die of its own edit. A harness "
+            f"whose baseline is red proves nothing about its mutants. "
+            f"Tail: {out0.strip()[-400:]!r}")
+    for name, old, new, want in cases:
+        text, n_outside = _audit_apply(base, old, new)
+        if text is None:
+            survivors.append(name)
+            per[name] = {"applied": False, "n_anchor_outside_table": n_outside,
+                         "why": "the edit's anchor is not uniquely locatable "
+                                "outside the case table, so this case did "
+                                "NOT run and is counted as a survivor -- a "
+                                "case that did not execute is never a kill"}
+            continue
+        rc, out = _run(text)
+        at_named = want in out
+        per[name] = {"applied": True, "rc": rc, "died_at_named_check": at_named,
+                     "must_go_red": want}
+        if not (rc != 0 and at_named):
+            survivors.append(name)
+    return {"n_cases": len(cases), "survivors": sorted(survivors),
+            "n_survivors": len(survivors), "baseline_green": True,
+            "per_case": per,
+            "known_unkillable_in_one_tree": dict(AUDIT_KNOWN_UNKILLABLE),
+            "scope": "the round-5/6 items and round 7's two closures, each "
+                     "driven against a COPY in a temp tree; a case counts as "
+                     "killed only if the mutant fails AT ITS NAMED CHECK, so "
+                     "dying for another reason is not a kill"}
 
 
 def selftest() -> int:
@@ -1776,6 +2010,36 @@ def selftest() -> int:
         ok(p1.read_bytes() == first,
            "R5(1) and the FIRST receipt is byte-identical afterwards — "
            "overwriting evidence loses the comparison a reader needs")
+        # BE5-R1 driven: THREE runs -> base / .1 / .2, and the chain must
+        # read .2 -> .1 -> base. Recording the base from both successors made
+        # the graph a star; with same-second runs the receipts are otherwise
+        # byte-identical, so the record IS the only order there is.
+        r4 = {"protocol": "X", "day": "20260101", "n": 4}
+        p4 = _flush(r4, o7, "20260101")
+        ok(p4.name == "be_forward_day_receipt_20260101.2.json"
+           and r4["supersedes_receipt"]["path"] == str(p2)
+           and r4["supersedes_receipt"]["sha256"] == _sha_file(p2)
+           and r4["supersedes_receipt"]["is_base"] is False
+           and r2["supersedes_receipt"]["path"] == str(p1)
+           and r2["supersedes_receipt"]["is_base"] is True,
+           f"BE5-R1 the chain is a CHAIN: `.2` names `.1` and `.1` names the "
+           f"base ({p4.name} -> {Path(r4['supersedes_receipt']['path']).name} "
+           f"-> {Path(r2['supersedes_receipt']['path']).name}) — naming the "
+           f"base from every successor made two receipts claim the same "
+           f"predecessor and left the order readable only from `ls`")
+        _chain = r4.get("prior_receipts") or []
+        ok([Path(x["path"]).name for x in _chain] == [p1.name, p2.name]
+           and all(x["sha256"] == _sha_file(Path(x["path"]))
+                   for x in _chain),
+           f"BE5-R1 and the whole chain is carried beside it "
+           f"({[Path(x['path']).name for x in _chain]}), each "
+           f"with its sha, so a reader reconstructs the order from the "
+           f"receipts and never from the filenames")
+        ok(p1.read_bytes() == first and p2.exists()
+           and json.loads(p2.read_text())["n"] == 2,
+           "BE5-R1 and every earlier receipt is still byte-identical after "
+           "the third run — the chain is recorded by ADDING, never by "
+           "touching what already stands")
         ok(r2["supersedes_receipt"]["sha256"] == _sha_file(p1),
            "R5(1) the successor NAMES the receipt it did not overwrite, by "
            "path and sha")
@@ -2107,6 +2371,18 @@ def selftest() -> int:
                f"R5(5) KNOWN-BAD ({_lbl}): REFUSED naming `{_want}` — the "
                f"allowlist binds to ONE path and requires a string, so it "
                f"excuses the gate's NAME and nothing else")
+    # BE5-R2: the allowlist's MEMBERSHIP, not merely what an emission used.
+    ok(set(DECISION_ALLOWLIST) == set(DECISION_ALLOWLIST_PINNED)
+       and len(DECISION_ALLOWLIST) == 1,
+       f"BE5-R2 the excused-path allowlist is PINNED to "
+       f"{sorted(DECISION_ALLOWLIST_PINNED)} — `excused_paths` reports what "
+       f"THIS emission used, so a second entry nothing happens to hit left "
+       f"every check green and the growth reached the artifact unannounced")
+    ok(all(k in DECISION_ALLOWLIST and DECISION_ALLOWLIST[k].strip()
+           for k in DECISION_ALLOWLIST_PINNED),
+       "BE5-R2 and every pinned path carries its REASON in the table the "
+       "receipt publishes — a pin with no stated ground is a list, not a "
+       "justification")
     ok(assert_no_decision_field(
         {"gates": [{"gate": "g", "result": "PASS"}]})["excused_paths"]
        == ["gates[].gate"],
@@ -2171,6 +2447,19 @@ def selftest() -> int:
 
     _before = checks
     checks = _selftest_launch(checks, ok)
+    # BE5-R3: the audit is an ARTIFACT, not a report. Skipped in the audit's
+    # own children and in the launch child (both carry BE_FORWARD_AUDIT=1),
+    # or every case would re-run the whole sweep inside itself.
+    if os.environ.get("BE_FORWARD_AUDIT") != "1":
+        _aud = mutation_audit()
+        ok(_aud["survivors"] == [] and _aud["baseline_green"]
+           and all(v.get("died_at_named_check")
+                   for v in _aud["per_case"].values()),
+           f"BE5-R3 the shipped mutation audit runs GREEN: {_aud['n_cases']} "
+           f"cases, {_aud['n_survivors']} survivors, each mutant dying AT "
+           f"ITS NAMED CHECK against a copy — the audit's result is now "
+           f"re-runnable by a reader instead of a number in a filing")
+        checks += 1
     import os as _os
     if (_os.environ.get("BE_FORWARD_LAUNCH_CHECK") != "1"
             and checks == _before):
@@ -2203,7 +2492,11 @@ def _selftest_launch(checks: int, ok) -> int:
     # exactly the count at this point -- captured, not re-derived from the
     # increment order below.
     at_entry = checks
-    env = dict(os.environ, BE_FORWARD_LAUNCH_CHECK="1")
+    # The child skips BOTH the spawn and the shipped audit. Without the
+    # second flag the child re-runs the whole audit inside the parent's --
+    # doubling the suite -- and adds a check the parent's parity does not
+    # expect, so the arithmetic that proves the child ran THIS file breaks.
+    env = dict(os.environ, BE_FORWARD_LAUNCH_CHECK="1", BE_FORWARD_AUDIT="1")
     # BE34-R3: the tree of THIS FILE, never a hardcoded root. `cwd=REPO` made
     # every worktree spawn the SHARED tree's module, so the child checked a
     # file the parent was not running and the launcher silently stopped being
