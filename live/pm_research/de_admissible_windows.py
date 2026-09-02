@@ -283,7 +283,29 @@ def declared_limit_boundary(src: str | None = None) -> dict:
     first line should be, which is the anchors' job and the thing that goes
     stale. Stated rather than chased, and the anchors still name WHICH
     sections must be present, so a code line that cut the run above the
-    head would leave the anchors intact and this limit is real."""
+    head would leave the anchors intact and this limit is real.
+
+    AND THE COMPOSITION HAS ITS OWN CONDITION, which is the other half of
+    that sentence: the anchors cover code cuts only while they remain the
+    block's TOPMOST content. A future section written above
+    `THE DECLARED LIMIT` would sit above every anchor, and a code line
+    cutting between the two would be invisible to BOTH checks -- the
+    boundary reading a code line as a real stop and the anchors all
+    surviving below the cut. Whoever adds a section above the head adds an
+    anchor for it, or moves the head.
+
+    DE25-R1 -- THE ANCHOR COLLISION, worse in kind than the code line and
+    named here because this paragraph is what a maintainer reads before
+    trusting the predicate. The block is located by the FIRST line
+    starting with `DECLARED_BLIND_SHAPES = (`, so a line carrying that
+    same text EARLIER in the file -- a quotation of the constant at column
+    0 in a docstring, say -- redirects the walk to it. The reader then
+    returns NOTHING, where the code-line case at least returns a truncated
+    but real block. A read of nothing answering "a real boundary" is the
+    one answer nothing should take at face value, so this shape is not
+    left to the paragraph: `read_nothing` is computed below and the
+    boundary is False whenever the walk read no line at all. One
+    comparison, and it needs no knowledge of the prose."""
     lines = (src if src is not None
              else Path(__file__).read_text()).split("\n")
     i = next(n for n, ln in enumerate(lines) if ln.startswith(_LIMIT_ANCHOR))
@@ -294,12 +316,14 @@ def declared_limit_boundary(src: str | None = None) -> dict:
     while j >= 0 and not lines[j].strip():      # the gap the walk stopped in
         j -= 1
     above = lines[j] if j >= 0 else "<start of file>"
+    read_nothing = first == i          # the walk never left the anchor line
     return {"first_read_line": first + 1,
             "first_read": lines[first][:60],
             "above_line": j + 1,
             "above": above[:60],
+            "read_nothing": read_nothing,
             "stopped_at_a_real_boundary":
-                not above.lstrip().startswith("#")}
+                not read_nothing and not above.lstrip().startswith("#")}
 
 
 def declared_limit_text(src: str | None = None) -> str:
@@ -836,7 +860,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 91
+EXPECTED_CHECKS = 92
 
 
 def _grid(day: str) -> list[int]:
@@ -1236,19 +1260,22 @@ def selftest() -> int:
        and "OVER-CAUGHT" in _trunc and len(_trunc) < len(_limit),
        f"KNOWN-BAD, DRIVEN THROUGH THE READER: one blank line above the "
        f"OVER-CAUGHT paragraph cuts the block to {len(_trunc)} of "
-       f"{len(_limit)} chars ({100 - round(100 * len(_trunc) / len(_limit))}"
+       f"{len(_limit)} chars ("
+       f"{100 - round(100 * len(_trunc) / len(_limit)) if _limit else '?'}"
        f"% unread) and every anchor above the cut disappears while "
        f"OVER-CAUGHT survives -- which is exactly why the three checks that "
        f"read this text stayed green through it")
 
     # ---- DE21-R1: the anchors pin CONTENT; this pins EXTENT ------------
     _bnd = declared_limit_boundary()
-    ok(_bnd["stopped_at_a_real_boundary"],
+    ok(_bnd["stopped_at_a_real_boundary"] and not _bnd["read_nothing"],
        f"AND THE BLOCK'S EXTENT IS PINNED BY THE WALK'S OWN STOP: the "
        f"reader's first line is {_bnd['first_read_line']} "
        f"({_bnd['first_read']!r}) and what stands above the gap is line "
        f"{_bnd['above_line']}, {_bnd['above']!r} -- CODE, so the walk "
-       f"stopped at a real boundary rather than inside a comment run. The "
+       f"stopped at a real boundary rather than inside a comment run, "
+       f"and it READ SOMETHING ({_bnd['read_nothing']} = read_nothing). "
+       f"The "
        f"three anchors name WHICH sections must be present and cannot see "
        f"HOW FAR the block goes; they held only because the head happens "
        f"to be the run's topmost line (DE21-R1)")
@@ -1292,6 +1319,7 @@ def selftest() -> int:
                                 "\n#: THE DECLARED LIMIT", 1)
     _b_grown_cut = declared_limit_boundary(_grown_cut)
     ok(_b_grown["stopped_at_a_real_boundary"]
+       and not _b_grown["read_nothing"]
        and len(declared_limit_text(_grown)) > len(_limit)
        and not _b_grown_cut["stopped_at_a_real_boundary"],
        f"POSITIVE CONTROL ON UPWARD GROWTH: a CONTIGUOUS paragraph above "
@@ -1304,6 +1332,33 @@ def selftest() -> int:
        f"{_b_grown_cut['first_read_line']}). Growth is admitted, cutting "
        f"is not, and the falsifier no longer assumes the head is the "
        f"topmost line (DE23-R2)")
+    # DE25-R1: THE ANCHOR COLLISION. The block is found by the FIRST line
+    # carrying the anchor text, so a quotation of the constant earlier in
+    # the file redirects the walk to it -- and the reader then returns
+    # NOTHING while the old predicate answered "a real boundary". The
+    # code-line limit at least leaves a truncated but real block; this one
+    # certifies a block it never read.
+    _collide = Path(__file__).read_text().replace(
+        "SURFACE AUTHORISATION",
+        _LIMIT_ANCHOR + "  # a quotation of the constant, in the "
+        "docstring\nSURFACE AUTHORISATION", 1)
+    _b_coll = declared_limit_boundary(_collide)
+    ok(_collide != Path(__file__).read_text()
+       and _b_coll["read_nothing"]
+       and not _b_coll["stopped_at_a_real_boundary"]
+       and declared_limit_text(_collide) == ""
+       and _b_coll["first_read"].startswith(_LIMIT_ANCHOR),
+       f"KNOWN-BAD, DRIVEN (DE25-R1): a line carrying the anchor text "
+       f"placed EARLIER in the file redirects the walk to itself -- the "
+       f"reader returns {len(declared_limit_text(_collide))} chars and "
+       f"stops at line {_b_coll['first_read_line']}, which is the "
+       f"collision line itself ({_b_coll['first_read'][:44]!r}) -- and the "
+       f"boundary now REFUSES it "
+       f"({_b_coll['stopped_at_a_real_boundary']}) instead of certifying a "
+       f"block it never read. The anchors catch the CONSEQUENCE (all three "
+       f"sections missing); this catches the READ, and it is one "
+       f"comparison with no knowledge of the prose")
+
     # DE23-R1: THE PREDICATE TESTED `#:`-NESS where it means "the run was
     # not cut". Each of these truncates the block by the same 47% and
     # reported a real boundary anyway -- and each is an edit a person makes
