@@ -4,6 +4,44 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T05:38Z (MEM ROUND 9 -- THE UNIT QUESTION IS ANSWERED AND THE ANSWER
+  DOES NOT DEPEND ON THE UNIT; THE WINNER RULING IS UNBLOCKED). Recomputed from
+  the artifact, not read off its summary. R-399's hold was RIGHT and closing it
+  cost nothing: the reviewer released BE's batch and held only the WINNER
+  INFERENCE, on RR4-3 -- Q1's AUC was computed over 311,640 ROWS while the
+  cell's n read 177,674 ACTIONS (1.754 rows/action), CLAUDE.md rule 2's exact
+  class sitting in the one surviving statistic. One deduplicated pass, no refit
+  and no new estimand, was all the ruling needed. WHAT CAME BACK (188,119 B,
+  as-of 2026-09-02T05:21:34Z): THE LEVEL IS A RANGE, NOT A REPLACEMENT NUMBER --
+  lgbm 0.790 / 0.864 / 0.876 by collapse rule (first / mean / max) against
+  row-level 0.830, and linear 0.735 / 0.798 / 0.814 against 0.773, with THE
+  ROW-LEVEL FIGURE SITTING INSIDE THE RANGE ON BOTH ARMS, which is the finding:
+  it was not an artefact of counting a generation more than once. AND THE
+  COMPARISON IS INVARIANT TO EVERY CHOICE A SEAT MADE: the candidate beats the
+  incumbent hazard head under EVERY unit and EVERY collapse rule on BOTH arms,
+  4/4 each, agrees_with_row_level true -- that is the conjunct Q1's gate actually
+  asks about, and it is why the unit debate does not reach the verdict. 3.44% of
+  generations (6,108 of 177,674) carry DISAGREEING ROW LABELS, a counted
+  population rather than an assumption. TWO THINGS A READER SHOULD NOT MISS,
+  both disclosed in the artifact rather than dug out of it: the designated
+  primary collapse rule is MAX, which is also the HIGHEST of the three, and
+  under FIRST the action-unit AUC (0.790) is BELOW row level -- so "deduplication
+  raises it" holds for the primary rule and for two of three, not universally,
+  and the artifact states plainly that which rule adjudicates is a USER
+  question. The honest headline is the INVARIANT COMPARISON, not the level.
+  RR4-1 CLOSED AND IT MATTERS LATER: twelve cells had been asserting
+  gate_conjuncts_evaluated true while carrying a NULL conjunct -- the RR2-1 shape
+  again, harmless only while Q4 fails and a live defect the moment Q4 improves.
+  It is now DERIVED from the conjuncts themselves and Q4's reads False. RR4-2
+  (both one-draw numbers computed rather than multiplied) closed in the same
+  batch; RR4-4 is the coordinator's. THE WINNER RULING IS UNBLOCKED PENDING ONLY
+  THE REVIEWER'S RELEASE, round open at pinned tip c180061. NOTHING ABOUT THE
+  TEMPER CHANGES: the family is still 12 of 24 surviving, Q4 -- THE DECISION
+  METRIC -- STILL FAILS, every surviving p still sits at the 1/501 floor as a
+  bound rather than a measurement, and this is development evidence (prereg 4:
+  it selects, it never validates). UNCHANGED: forward race at G=1/5, 09-02
+  accruing; DA's content-liveness bar escalation still unruled and the rule
+  still unwired. PRIOR:
   2026-09-02T04:05Z (MEM ROUND 8 -- ALL FIVE USER DECISIONS EXECUTED, AND THE
   FULLY-EVALUATED FAMILY IS THE RESULT OF RECORD: 12 SURVIVORS WITH THE DECISION
   METRIC STILL FAILING). Verified at the artifacts, recomputed not read back.
@@ -115,69 +153,7 @@ updated: >-
   UNCHANGED: Q1-leg wiring, the Q3 gate ruling, amendment A2 with its
   prospective resolution, the Phase-4 and registry freezes, and per-seat
   worktrees. The 011 result of record is unchanged and negative: 0 of 24 cells
-  survive the joint reading. PRIOR:
-  2026-09-01T17:24Z (MEM ROUND 6 -- THE REVIEW CYCLE IS FULLY RELEASED AND THE
-  011 RESULT OF RECORD IS ZERO SURVIVORS). Verified at the artifact, not from
-  the register. THE ARC, R-385..R-393: the family went from SIX published
-  survivors to ZERO, and that is the artifact becoming honest rather than the
-  result getting worse. The six surviving cells' own declared_gate carried an
-  incumbent conjunct THAT WAS NEVER EVALUATED -- apply_incumbent_hazard, built
-  and falsifier-proven, ZERO production call sites: defect I11-2's shape for the
-  third time in this programme, this time in the ONLY surviving head, found and
-  escalated by BE itself (RR2-1). The fix makes the survivor predicate require
-  every declared conjunct EVALUATED; failing cells become
-  GATE_PARTIALLY_EVALUATED, reported and never dropped, denominator still 24.
-  THE RESULT OF RECORD, measured at the file (142,609 B, as-of 16:57:01Z, and
-  that as-of NAMES the population-read instant): surviving_cells = [], 0 of 24
-  survive the joint reading; cells_by_status = 6 GATE_PARTIALLY_EVALUATED + 12
-  NO_INCUMBENT_COUNTERPART + 6 OK. Q4'S INCREMENT IS POSITIVE IN ALL SIX CELLS
-  (+278.6 to +3,867.1 net cents) AND CLEARS NO FAMILY-WISE BAR UNDER EITHER NULL
-  FORM -- best one-sided p 0.01999 -> Holm 0.1199, with the two-sided form
-  reported and never adjudicated. Q1's two AUCs (0.8303 lgbm / 0.7733 linear)
-  are UNDECIDED pending the USER's Q1-leg ruling. NOTHING WAS DELETED TO REACH
-  ZERO, and I checked rather than assumed: all six Q1 cells carry statistic,
-  p_value and holm_p IDENTICAL TO THE DIGIT against the pre-fix artifact, and
-  only status moved. Q4'S NUMBER ALSO CHANGED MEANING, which is easy to
-  misread: this morning's +12,333.5c was the CANDIDATE'S OWN value, explicitly
-  not an increment, because the incumbent never loaded; it now loads, so the
-  cell REPORTS candidate +12,333.5 and incumbent +8,466.4 and ADJUDICATES the
-  increment +3,867.1c over 166 windows against 2,000 sign-flip permutations --
-  a reader comparing the two headline numbers across the day is comparing two
-  different estimands. TWO REVIEWER RULINGS WORTH CARRYING: BE's refusal to
-  raise the matched-random draw count was ENDORSED (A1.6's 2,000 pins the
-  INCREMENT null; 5(1)'s matched-random declares >=200, so 500 satisfied the
-  frozen design and raising it after seeing a one-draw margin would be rule 11),
-  and the resolution for the NEXT run must be declared PROSPECTIVELY, a line
-  that rides the A2 amendment -- BE refused a coordinator instruction and
-  escalated instead, the protocol working against the coordinator, which is the
-  correct direction. AND THE REVIEWER ATTACKED ITS OWN ACCEPTED FIX: it tried to
-  defeat GATE_PARTIALLY_EVALUATED by dressing an unwired Q4 in it and the guard
-  refused; its shrunk-coverage known-bad, admitted at 6 checks the round before,
-  now REFUSES; removing either new rule kills the suite, and so does forcing
-  every cell partial -- the admit direction it most expected to be missing. For
-  a same-model reviewer (R-375) that is the ground the mitigation asks for: it
-  RAN the code rather than reading it. Coordinator-side: RR2-3 at 9a53ea3, then
-  RR3-2/RR3-3 at f72504d (a reversed-ledger-order fixture kills a loosened >= at
-  check 173; a reused pid with no pin now REFUSES naming both candidate
-  instants), 176 checks and 17 gates. BOTH OF THIS MORNING'S USER ASKS LANDED
-  (R-386, "Yea proceed"): the content-liveness rule is FROZEN with
-  FROZEN_BY_USER=True and EFFECTIVE_FROM_DAY unchanged at 20260902, so the first
-  governed day is tomorrow and 09-01 is neither calibrated on nor judged; and
-  the CLAUDE.md amendment LANDED with both hunks verbatim -- checked by
-  re-running my own draft's anchor test IN REVERSE, so the claim rests on the
-  file. Rule 9 no longer names Binance and asserts no settlement statistic, and
-  the one-writer exception retires SEAT_PROTOCOL rule 6's standing caveat. FIVE
-  ASKS NOW WAIT ON THE USER, gathered in HANDOFF's PENDING USER DECISIONS table:
-  (1) wire Q1's incumbent leg or rule it out -- the sharpest, it decides whether
-  the published survivor count returns 0 -> 6; (2) the Q3 gate ruling; (3)
-  amendment A2 plus the prospective-resolution declaration; (4) the Phase-4
-  protocol and registry freezes; (5) per-seat worktrees. ONE TIMESTAMP FLAG,
-  recorded not adjudicated: R-393's header reads 17:35Z while the commit that
-  created it (8b80d83) is stamped 17:22:09Z -- the entry runs ~13 minutes AHEAD
-  of its own commit, rule 12's class in the forward direction. Nothing
-  downstream depends on it and the register is the coordinator's surface.
-  UNCHANGED: the forward race waits on tonight's 00:06Z first accrual-eligible
-  verdict; G=0/5.
+  survive the joint reading.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -3770,7 +3746,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T04:05Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T05:38Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3799,7 +3775,10 @@ focus: >
   FAILS (all six increments positive, none surviving, best Holm 0.1199).
   Development evidence only. ALL FIVE USER DECISIONS ARE RULED AND EXECUTED
   (R-397); ONE QUESTION NOW WAITS: does Q1's full-gate survival constitute the
-  PHASE-2 WINNER that unblocks DE's grids (R-398, escalated not decided)? DA's
+  PHASE-2 WINNER that unblocks DE's grids (R-398, escalated not decided)? It is
+  now ANSWERABLE -- the action-unit measurement RR4-3 asked for is in, and the
+  comparison it tests is unit-invariant (4/4 on both arms), pending only the
+  reviewer's winner-hold release at c180061. DA's
   content-liveness bar escalation is still unruled and the rule is still
   unwired. See HANDOFF's PENDING USER DECISIONS. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;

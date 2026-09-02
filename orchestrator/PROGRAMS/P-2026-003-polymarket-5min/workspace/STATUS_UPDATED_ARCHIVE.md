@@ -734,3 +734,74 @@ fully-evaluated family. Join rule as in batch 1.
   two sweeps rather than one. UNCHANGED: 09-01 is still the first possible
   forward day and reach is still G=0/5, judged tonight at 00:06Z.
 ```
+
+## Batch 15 — archived 2026-09-02T05:38Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-9 true-up of the action-unit measurement.
+Join rule as in batch 1.
+
+```yaml
+
+  2026-09-01T17:24Z (MEM ROUND 6 -- THE REVIEW CYCLE IS FULLY RELEASED AND THE
+  011 RESULT OF RECORD IS ZERO SURVIVORS). Verified at the artifact, not from
+  the register. THE ARC, R-385..R-393: the family went from SIX published
+  survivors to ZERO, and that is the artifact becoming honest rather than the
+  result getting worse. The six surviving cells' own declared_gate carried an
+  incumbent conjunct THAT WAS NEVER EVALUATED -- apply_incumbent_hazard, built
+  and falsifier-proven, ZERO production call sites: defect I11-2's shape for the
+  third time in this programme, this time in the ONLY surviving head, found and
+  escalated by BE itself (RR2-1). The fix makes the survivor predicate require
+  every declared conjunct EVALUATED; failing cells become
+  GATE_PARTIALLY_EVALUATED, reported and never dropped, denominator still 24.
+  THE RESULT OF RECORD, measured at the file (142,609 B, as-of 16:57:01Z, and
+  that as-of NAMES the population-read instant): surviving_cells = [], 0 of 24
+  survive the joint reading; cells_by_status = 6 GATE_PARTIALLY_EVALUATED + 12
+  NO_INCUMBENT_COUNTERPART + 6 OK. Q4'S INCREMENT IS POSITIVE IN ALL SIX CELLS
+  (+278.6 to +3,867.1 net cents) AND CLEARS NO FAMILY-WISE BAR UNDER EITHER NULL
+  FORM -- best one-sided p 0.01999 -> Holm 0.1199, with the two-sided form
+  reported and never adjudicated. Q1's two AUCs (0.8303 lgbm / 0.7733 linear)
+  are UNDECIDED pending the USER's Q1-leg ruling. NOTHING WAS DELETED TO REACH
+  ZERO, and I checked rather than assumed: all six Q1 cells carry statistic,
+  p_value and holm_p IDENTICAL TO THE DIGIT against the pre-fix artifact, and
+  only status moved. Q4'S NUMBER ALSO CHANGED MEANING, which is easy to
+  misread: this morning's +12,333.5c was the CANDIDATE'S OWN value, explicitly
+  not an increment, because the incumbent never loaded; it now loads, so the
+  cell REPORTS candidate +12,333.5 and incumbent +8,466.4 and ADJUDICATES the
+  increment +3,867.1c over 166 windows against 2,000 sign-flip permutations --
+  a reader comparing the two headline numbers across the day is comparing two
+  different estimands. TWO REVIEWER RULINGS WORTH CARRYING: BE's refusal to
+  raise the matched-random draw count was ENDORSED (A1.6's 2,000 pins the
+  INCREMENT null; 5(1)'s matched-random declares >=200, so 500 satisfied the
+  frozen design and raising it after seeing a one-draw margin would be rule 11),
+  and the resolution for the NEXT run must be declared PROSPECTIVELY, a line
+  that rides the A2 amendment -- BE refused a coordinator instruction and
+  escalated instead, the protocol working against the coordinator, which is the
+  correct direction. AND THE REVIEWER ATTACKED ITS OWN ACCEPTED FIX: it tried to
+  defeat GATE_PARTIALLY_EVALUATED by dressing an unwired Q4 in it and the guard
+  refused; its shrunk-coverage known-bad, admitted at 6 checks the round before,
+  now REFUSES; removing either new rule kills the suite, and so does forcing
+  every cell partial -- the admit direction it most expected to be missing. For
+  a same-model reviewer (R-375) that is the ground the mitigation asks for: it
+  RAN the code rather than reading it. Coordinator-side: RR2-3 at 9a53ea3, then
+  RR3-2/RR3-3 at f72504d (a reversed-ledger-order fixture kills a loosened >= at
+  check 173; a reused pid with no pin now REFUSES naming both candidate
+  instants), 176 checks and 17 gates. BOTH OF THIS MORNING'S USER ASKS LANDED
+  (R-386, "Yea proceed"): the content-liveness rule is FROZEN with
+  FROZEN_BY_USER=True and EFFECTIVE_FROM_DAY unchanged at 20260902, so the first
+  governed day is tomorrow and 09-01 is neither calibrated on nor judged; and
+  the CLAUDE.md amendment LANDED with both hunks verbatim -- checked by
+  re-running my own draft's anchor test IN REVERSE, so the claim rests on the
+  file. Rule 9 no longer names Binance and asserts no settlement statistic, and
+  the one-writer exception retires SEAT_PROTOCOL rule 6's standing caveat. FIVE
+  ASKS NOW WAIT ON THE USER, gathered in HANDOFF's PENDING USER DECISIONS table:
+  (1) wire Q1's incumbent leg or rule it out -- the sharpest, it decides whether
+  the published survivor count returns 0 -> 6; (2) the Q3 gate ruling; (3)
+  amendment A2 plus the prospective-resolution declaration; (4) the Phase-4
+  protocol and registry freezes; (5) per-seat worktrees. ONE TIMESTAMP FLAG,
+  recorded not adjudicated: R-393's header reads 17:35Z while the commit that
+  created it (8b80d83) is stamped 17:22:09Z -- the entry runs ~13 minutes AHEAD
+  of its own commit, rule 12's class in the forward direction. Nothing
+  downstream depends on it and the register is the coordinator's surface.
+  UNCHANGED: the forward race waits on tonight's 00:06Z first accrual-eligible
+  verdict; G=0/5.
+```

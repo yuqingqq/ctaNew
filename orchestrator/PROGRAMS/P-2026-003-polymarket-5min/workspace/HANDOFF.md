@@ -1,10 +1,10 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T04:05Z — **the five USER decisions are ruled and executed,
-and the fully-evaluated 011 family is the result of record: 12 survivors, with
-the DECISION METRIC (Q4) STILL FAILING.** One question now waits on the USER:
-is this the Phase-2 winner? Prior line: the forward race has its first day,
-2026-09-01 accrued, G = 1/5.
+Updated: 2026-09-02T05:38Z — **the winner question is now ANSWERABLE**: Q1's
+action-unit number is in, and the incumbent comparison holds under every unit
+and collapse rule (4/4 on both arms). Prior line: the five USER decisions are
+executed and the fully-evaluated family is 12 survivors with the decision metric
+(Q4) still failing; the forward race is at G = 1/5.
 
 ## READ FIRST — current project handoff
 
@@ -28,16 +28,44 @@ the recommendation"*). Verified at their artifacts, not from the entry:
 | 4 | **Phase-4 protocol + registry** | the protocol reads **FROZEN — IN FORCE**, declared before any cell is read and with **no Phase-4 cell existing at freeze**; `contracts.yaml` is at **v26** with 30 modules — EV-Replay and DE-ActionSpace registered, `ReplayWindowSpec` added, and `config_supplied:ActionSet` removed under amendment E on BE's confirmation |
 | 5 | **Worktrees** | four execution worktrees exist (`~/ctaNew-wt-{be,da,de,rev}`), `SEAT_PROTOCOL` rule 19. **Limitation stated rather than papered over:** git refuses one branch in two worktrees, so LANDING stays in the shared tree under pathspec discipline — isolation covers execution, and the ledger keeps one writer path |
 
-**ONE QUESTION NOW WAITS, and it is the biggest one this programme has asked:**
+**ONE QUESTION WAITS, and the measurement it was blocked on has now landed:**
 
 > **Does Q1's full-gate survival constitute the Phase-2 WINNER** that, together
 > with the now-frozen Phase-4 protocol, unblocks DE's latency × queue-reset-cost
 > × budget grids?
 
-Escalated by the coordinator (R-398), **not decided**. What makes it askable for
-the first time is that Q1's gate is finally complete — and what should temper it
-is that **the decision metric still fails** and this remains development
-evidence (prereg 4: it selects, it never validates).
+Escalated by the coordinator (R-398), **not decided**. It was deferred on
+RR4-3 — Q1's AUC was computed over 311,640 **rows** while the cell's n was
+177,674 **actions** (1.754 rows/action), which is CLAUDE.md rule 2's exact class
+sitting in the surviving statistic. **That number now exists** (R-400), and the
+answer does not depend on it:
+
+| | lgbm | linear |
+|---|---|---|
+| row level | 0.8303 | 0.7733 |
+| action unit, `first` | 0.7903 | 0.7353 |
+| action unit, `mean` | 0.8641 | 0.7978 |
+| action unit, `max` (designated primary) | **0.8760** | **0.8144** |
+| incumbent, best of any rule | 0.7418 | 0.7418 |
+| **beats the incumbent** | **4/4** | **4/4** |
+
+**The comparison is unit-invariant** — the candidate beats the incumbent hazard
+head under every unit and every collapse rule on both arms, recomputed here from
+the artifact's own numbers, and that is the conjunct Q1's gate actually asks
+about. **The level is not invariant**: it is a *range*, not a replacement number,
+and the row-level figure sits inside it.
+
+**Two things to weigh, both disclosed rather than found:** the designated primary
+collapse rule (`max`) is also the most favourable of the three, and under `first`
+the action-unit AUC (0.790) is *below* row level — so "deduplication raises it"
+holds for two rules of three and for the primary, not universally. Which rule
+adjudicates is explicitly a USER question. And **3.44% of generations (6,108 of
+177,674) carry disagreeing row labels**, counted and reported.
+
+**What should still temper the ruling is unchanged:** the decision metric (Q4)
+still fails, and this is development evidence (prereg 4: it selects, it never
+validates). **The last formality is the reviewer's winner-hold release**, whose
+round is open at pinned tip `c180061`.
 
 **Still open from 09-01 and not among the five, so it did not get resolved with
 them:** DA's escalation that the content-liveness bar now sits exactly where the
@@ -66,8 +94,11 @@ returns True and no verdict consumes it.
   the attempt "wrote no result artifact" described the stopped 09:34Z attempt
   and is superseded by the 12:56Z entry below; it stays as provenance.
   **THE RESULT OF RECORD, re-adjudicated with every gate fully evaluated
-  (as-of 2026-09-02T03:46:59Z, 157,455 B): 12 of 24 cells survive the joint
-  reading** — recomputed from the cells here, not read off the summary.
+  (as-of 2026-09-02T05:21:34Z, 188,119 B): 12 of 24 cells survive the joint
+  reading** — recomputed from the cells here, not read off the summary. Q1 now
+  also carries its **action-unit** AUC as a range beside the row-level one
+  (RR4-3, below), and RR4-1 made Q4's `gate_conjuncts_evaluated` honestly
+  **False** over its null conjunct.
   `cells_by_status` = **18 OK + 6 NO_INCUMBENT_COUNTERPART**, denominator 24.
   **Q1_arrival PASSES ITS COMPLETE GATE, both conjuncts computed**: candidate
   AUC **0.8303** lgbm / **0.7733** linear against the incumbent hazard head's
@@ -222,6 +253,51 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~05:38Z (MEM) — THE UNIT QUESTION ANSWERED, AND THE ANSWER DOES
+### NOT DEPEND ON THE UNIT
+
+**R-399's hold was right, and closing it did not cost the result.** The reviewer
+released BE's batch and held only the **winner inference**, on RR4-3: Q1's AUC
+was computed over 311,640 **rows** while the cell's n read 177,674 **actions**
+— 1.754 rows/action, CLAUDE.md rule 2's exact class, sitting in the one
+surviving statistic. One deduplicated pass, no refit and no new estimand, was
+all the ruling needed.
+
+**What came back** (188,119 B, as-of 05:21:34Z), recomputed here from the
+artifact rather than read off its summary:
+
+- **The level is a range, not a replacement number.** lgbm 0.790 / 0.864 /
+  0.876 by collapse rule (`first` / `mean` / `max`) against row-level 0.830;
+  linear 0.735 / 0.798 / 0.814 against 0.773. **The row-level figure sits inside
+  the range on both arms** — which is the finding: it was not an artefact of
+  counting a generation more than once.
+- **The comparison is invariant to every choice a seat made.** The candidate
+  beats the incumbent hazard head under every unit and every collapse rule, both
+  arms, **4/4 each**, `agrees_with_row_level: true`. That is the conjunct Q1's
+  gate actually asks about, and it is the reason the unit debate does not reach
+  the verdict.
+- **3.44% of generations (6,108 of 177,674) carry disagreeing row labels**, a
+  counted population rather than an assumption.
+
+**Two things I would not want a reader to miss, both disclosed in the artifact
+rather than dug out of it.** The designated primary collapse rule is `max`,
+which is also the highest of the three; and under `first` the action-unit AUC
+(0.790) is **below** row level. So "deduplication raises it" is true for the
+primary rule and for two of three, not universally — and the artifact says
+plainly that which rule adjudicates is a USER question. The honest headline is
+the invariant comparison, not the level.
+
+**RR4-1 closed and it matters for later:** twelve cells had been asserting
+`gate_conjuncts_evaluated: true` while carrying a null conjunct — the RR2-1
+shape again, harmless only while Q4 fails, and a live defect the moment Q4
+improves. It is now derived from the conjuncts themselves, and Q4's reads
+**False**. RR4-2 (both one-draw numbers computed rather than multiplied) closed
+in the same batch; RR4-4 is the coordinator's.
+
+**The winner ruling is unblocked pending only the reviewer's release**, whose
+round is open at `c180061`. Nothing about the temper changes: Q4 still fails,
+and this is development evidence.
 
 ### 2026-09-02 ~04:05Z (MEM) — TWELVE SURVIVORS, AND THE ONE THAT MATTERS
 ### STILL FAILS
