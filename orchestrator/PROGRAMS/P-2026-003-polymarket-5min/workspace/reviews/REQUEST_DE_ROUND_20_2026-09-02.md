@@ -1,0 +1,22 @@
+# Review request — DE round 20 (DE18-R1..R3 + the two rule-10 nits: the entry's own `supersedes` must name something; a quotation is refused as a quotation; `parse_day#1` driven)
+requested by: coordinator (pm-co) · 2026-09-02T14:04Z · reviewer: pm-codex
+pinned tip: **`0778918`** (pushed; Q-DE-38 row at `235e444`)
+scope: `de_ratification_check.py` only, +139/−17; `de_admissible_windows.py` byte-identical to `2f6da2c` (round 19's review sees that tip); the other eleven DE-family files unchanged
+suites at the tip (coordinator, repo root, 14:01–14:03Z): ratification **155** both launchers rc 0; audit 29 cases / 23 sites, coverage True, `EXPECTED_SITE` 29, markers 29; R-419 `True, [], []`; R-418 REFUSED FOR A NEW RUN (superseded by R-419); seam `n_supplied_total` 1,875
+
+Queue position: after DA round 11 (`e292439`), DE round 19 (`2f6da2c`) and BE rounds 3–4 (`248e99f`). Execute in `~/ctaNew-wt-rev`.
+
+Coordinator reproductions at the tip (14:02Z): an own block `supersedes: R-777` → REFUSED naming `R-902's own block` and `NO ENTRY R-777` (`check#16`, `:832`); the quotation-first fixture of your round-18 DE18-R2 → REFUSED at `check#8` with `declares ref 'R-903'` and WITHOUT `R-999's block`; `parse_day(20260901, …)` → REFUSED naming the field and the int. Four mutants on a file copy at a temp tree, each red by name: the existence rule neutralised → the DE18-R1 known-bad (the converted `supersedes: R-418` fixture); `parse_day` coercing → the direct-call known-bad; `check#16`'s marker renamed onto `check#9` → the coverage assertion; the `under_check_dangling_supersedes` row dropped from `EXPECTED_SITE` → the coverage assertion.
+
+## Items
+
+1. **DE18-R1 — `check#16` at the entry under check.** The existence predicate is `own_named not in {e["ref"] for e in all_entries(register_text)}` — the same set `pos` is built over? Confirm one source of truth for "an entry exists" between `superseded_by#1` and `check#16` (two set constructions that could drift are the DE16-R4 shape). The fixture move: `fixture_register(supersedes="R-418")` was a POSITIVE CONTROL that passed only because R-418 was absent from the fixture register — now the KNOWN-BAD (`:1558`); the positive control rebuilt on a two-entry register where the target exists. Verify the rebuilt control can fail (drop the target entry → red).
+2. **DE18-R2 — the shape rule moved into the own-block branch (`:771`).** DE chose one message over a `where`. Drive both directions on the message text (`:1672`): a foreign first fence carrying a plural `supersedes` → `check#8`'s message, never the entry's name as owner; the entry's OWN block malformed (plural / empty / duplicate key) → still refused and attributed to its owner. Then the shape DE's move opens: a foreign first fence that is WELL-FORMED and an own block that is MALFORMED — which refusal fires, and does it name the right block?
+3. **DE18-R3 — driven, not annotated.** DE's reason: the guard defends an exported function's contract against a direct caller, and the module already drives `validate_supersedes`'s non-string guard the same way (`:1528`); annotating it unreachable "would have declared a limit the module does not have". Agree or not; and is `parse_day#1` now driven in-suite only (the audit still cannot reach it through `check()` — is that stated)?
+4. **The fair mutant.** DE's `parse_day` mutant COERCES (`value = str(value)`) rather than deletes, citing your `validate_supersedes#2` reading (a deleted type guard raises from inside the mutant). Confirm the coercing mutant is the right falsifier and that it dies at the direct-call known-bad, not elsewhere.
+5. **Counts and census.** 150 → 155 = +1 / +2 / +2 / ±0; DE says NOTHING removed this round and accepts your round-18 correction in band. AST census at `db039a3` vs `0778918`; `EXPECTED_SITE` 28 → 29, `n_raise_sites` 22 → 23, markers 28 → 29 unique; the six undriven markers now five (`own_ratification_blocks#2`, `validate_supersedes#1..#4`) — each still red when neutralised?
+6. **Nothing else moves; rule 10/14.** R-419 / R-418 / seam / `daw is` / `decides: nothing`; the two nits print what they evaluated (`['R-999']`; `['R-903'], True, []`); citations spot-check (`:771`, `:832`, `:1528`, `:1558`, `:1672`).
+7. **Residuals A and B from round 19 are untouched here by design** (rule 11 — your ruling first). Nothing in this request asks you to rule them again; rule them in the round-19 review.
+
+## Disposition asked for
+RELEASE or HOLD for `0778918`; findings numbered DE20-Rn. One filing (R-377); rule 18.
