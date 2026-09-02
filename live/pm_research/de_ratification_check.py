@@ -337,10 +337,28 @@ def validate_supersedes(value, where: str) -> str | None:
     return v
 
 
+#: DE20-R1: "AN ENTRY EXISTS" WAS DERIVED THREE TIMES -- a line map here,
+#: an entry map in the supersession branch, and a set comprehension at
+#: `check#16` -- over the same unfiltered call on the same text. They could
+#: not disagree, and that is the point: the finding is the DRIFT SURFACE.
+#: If one site ever gains a filter (skip malformed entries, ignore a
+#: section, restrict to R-ADMISS) the others do not follow, and the two
+#: ends of ONE rule -- the later entry's `supersedes` and the entry's own --
+#: would answer "exists" differently. That asymmetry is what DE16-R2 and
+#: DE18-R1 were both about, from opposite ends. One implementation, and it
+#: carries the LINE as well as the ref, because existence without direction
+#: is DE20-R2 one line down.
+def entry_index(register_text: str) -> dict[str, dict]:
+    """ref -> entry, for every entry in the register. The one place that
+    answers whether an entry exists and where it stands."""
+    return {e["ref"]: e for e in all_entries(register_text)}
+
+
 def superseded_by(register_text: str, ref: str) -> list[str]:
     """Refs of LATER entries whose block declares it supersedes `ref`."""
-    entries = all_entries(register_text)
-    pos = {e["ref"]: e["line"] for e in entries}
+    idx = entry_index(register_text)
+    entries = list(idx.values())
+    pos = {r: e["line"] for r, e in idx.items()}
     if ref not in pos:
         return []
     out = []
@@ -711,7 +729,7 @@ def check(supplied: dict, ratification_ref: str,
     provenance = False
     superseder_times: dict[str, str] = {}
     if supers:
-        entries = {e["ref"]: e for e in all_entries(register_text)}
+        entries = entry_index(register_text)      # DE20-R1: one source
         for sref in supers:
             ts = entry_timestamp(entries[sref]["heading"])
             if ts is None:
@@ -827,8 +845,8 @@ def check(supplied: dict, ratification_ref: str,
             # shape one field over, for the reason it states in its own
             # message: a well-formed ref to an entry that does not exist
             # looks exactly like a valid one.
-            if own_named is not None and own_named not in {
-                    e["ref"] for e in all_entries(register_text)}:
+            own_idx = entry_index(register_text)      # DE20-R1: one source
+            if own_named is not None and own_named not in own_idx:
                 # SITE: check#16
                 raise RatificationRefused(
                     f"REFUSED: {ratification_ref}'s own block declares "
@@ -838,6 +856,39 @@ def check(supplied: dict, ratification_ref: str,
                     f"the end nobody checks later: the entry it meant to "
                     f"retire keeps verifying for new runs and no run on "
                     f"THIS one ever asks (DE18-R1).")
+            # DE20-R2: EXISTENCE IS NECESSARY, NOT SUFFICIENT. Both shapes
+            # below are well-formed, name entries that exist, and supersede
+            # NOTHING while the entry claiming the supersession verifies --
+            # DE18-R1's own argument one step over. `superseded_by` scans
+            # FORWARD only, and rightly: the direction is the module's rule
+            # and its control asserts it. So a claim pointing at itself or
+            # backwards can never take effect, and saying so is the only
+            # way the author finds out.
+            if own_named == ratification_ref:
+                # SITE: check#17
+                raise RatificationRefused(
+                    f"REFUSED: {ratification_ref}'s own block declares "
+                    f"`supersedes: {own_named}` -- ITSELF. A ratification "
+                    f"cannot supersede itself: the entry would have to "
+                    f"postdate itself for the supersession to be read, and "
+                    f"it verified clean while superseding nothing.")
+            # `own_named in own_idx` is not redundant with `check#16`
+            # above: written without it, neutralising THAT guard turns THIS
+            # line into a KeyError, and a crash is neither a refusal nor a
+            # named failure. Each guard stands on its own input.
+            if (own_named is not None and own_named in own_idx
+                    and own_idx[own_named]["line"]
+                    > own_idx[ratification_ref]["line"]):
+                # SITE: check#18
+                raise RatificationRefused(
+                    f"REFUSED: {ratification_ref} (register line "
+                    f"{own_idx[ratification_ref]['line']}) declares "
+                    f"`supersedes: {own_named}`, which stands LATER in the "
+                    f"register (line {own_idx[own_named]['line']}). "
+                    f"Supersession is read forward only, so this one never "
+                    f"takes effect: the entry it names keeps verifying for "
+                    f"new runs and this one verifies too. It is a "
+                    f"supersession written on the wrong entry (DE20-R2).")
         fields, evidence, unbindable = bind_from_prose(entry)
         fields = {**fields, **block}
         evidence = {**evidence, **{k: "ratification block" for k in block}}
@@ -965,7 +1016,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 155
+EXPECTED_CHECKS = 160
 
 
 def selftest() -> int:
@@ -1014,10 +1065,23 @@ def selftest() -> int:
        and not ENTRY_END_RE.match("**bold**"),
        "and its end is the next entry or section heading, so the body is "
        "this entry's text and not the rest of the file")
-    res = check(sup, "R-419")
-    ok(res["verified"] and res["binding_source"] == "BLOCK",
+    # The module's anchor claim, and the one an added rule is most likely
+    # to break: a refusal here is CAUGHT and reported by name rather than
+    # ending the run in a traceback. (A rule with the comparison the wrong
+    # way round refuses R-419 itself, because its block supersedes the
+    # EARLIER R-418 -- which is the shape this catch was written for.)
+    _saw419 = ""
+    try:
+        res = check(sup, "R-419")
+    except RatificationRefused as _exc:
+        res = {"verified": False, "binding_source": None, "checks": {},
+               "bound_fields": {}, "unverifiable": ["<REFUSED>"],
+               "superseded_by": []}
+        _saw419 = f" REFUSED INSTEAD: {str(_exc)[:110]}"
+    ok(res["verified"] and res["binding_source"] == "BLOCK" and not _saw419,
        f"R-419 VERIFIES against the real 09-01 supply, bound from its "
-       f"adopted BLOCK: { {k: v for k, v in res['checks'].items()} }")
+       f"adopted BLOCK: { {k: v for k, v in res['checks'].items()} }"
+       f"{_saw419}")
     ok(res["checks"]["day_in_scope"] is True,
        f"and `day_in_scope` is now DECIDABLE and True — scope_from "
        f"{res['bound_fields']['scope_from']}, scope_to "
@@ -1570,6 +1634,88 @@ def selftest() -> int:
        f"target EXISTS in the register still verifies "
        f"({_psup['verified']}, {_psup['unverifiable']}) -- the rule is "
        f"shape AND existence, and it does not quietly require `null`")
+    # ---- DE20-R2: existence is NECESSARY, NOT SUFFICIENT ---------------
+    refuses(lambda: check(sup, "R-902",
+                          fixture_register("R-902", supersedes="R-902")),
+            "KNOWN-BAD: a block declaring `supersedes: <ITSELF>` REFUSES -- "
+            "it verified True with superseded_by [], superseding nothing: "
+            "the entry would have to postdate itself for the supersession "
+            "to be read at all (DE20-R2)",
+            needle="ITSELF")
+    _backwards = (fixture_register("R-902", supersedes="R-903")
+                  .replace("\n\n## next\n", "\n\n")
+                  + fixture_register("R-903"))
+    refuses(lambda: check(sup, "R-902", _backwards),
+            "KNOWN-BAD: an EARLIER entry declaring it supersedes a LATER "
+            "one REFUSES -- `superseded_by` scans forward only, so the "
+            "claim never takes effect: both entries verified and neither "
+            "was superseded. A supersession written on the wrong entry",
+            needle="stands LATER in the register")
+    # The STAMPED chain, because `fixture_register` headings carry no
+    # register timestamp and a correctly-directed supersession then dies at
+    # `check#2` before the new-run refusal can be reached -- which would
+    # make this control pass on the wrong refusal.
+    _fwd = _chain("R-902")
+    # A REFUSAL on the correctly-directed entry is the defect this control
+    # exists for, so it is CAUGHT and reported by name: uncaught, a flipped
+    # comparison would end the run in a traceback instead.
+    _f903, _saw903 = None, ""
+    try:
+        _f903 = check(sup, "R-903", _fwd)
+    except RatificationRefused as _exc:
+        _f903 = {"verified": False, "superseded_by": []}
+        _saw903 = f" R-903 REFUSED INSTEAD: {str(_exc)[:100]}"
+    _f902 = None
+    try:
+        check(sup, "R-902", _fwd)
+    except RatificationRefused as _exc:
+        _f902 = str(_exc)
+    ok(_f903["verified"] and _f903["superseded_by"] == [] and not _saw903
+       and _f902 is not None and "SUPERSEDED by R-903" in _f902,
+       f"POSITIVE CONTROL ON THE DIRECTION: written the RIGHT way round -- "
+       f"the LATER entry superseding the earlier -- R-903 verifies "
+       f"({_f903['verified']}, superseded_by {_f903['superseded_by']}) and "
+       f"R-902 then refuses FOR A NEW RUN: {str(_f902)[:64]!r}... So the "
+       f"two refusals above are about DIRECTION and not about "
+       f"supersession.{_saw903}")
+
+    # ---- DE20-R1: ONE implementation of "an entry exists" --------------
+    import ast as _ast
+
+    def _entry_calls(src: str) -> tuple[int, int]:
+        """(calls to all_entries in the module, calls inside entry_index)."""
+        tree = _ast.parse(src)
+        every = [n for n in _ast.walk(tree)
+                 if isinstance(n, _ast.Call)
+                 and getattr(n.func, "id", "") == "all_entries"]
+        helper = [f for f in _ast.walk(tree)
+                  if isinstance(f, _ast.FunctionDef)
+                  and f.name == "entry_index"]
+        inside = [n for f in helper for n in _ast.walk(f)
+                  if isinstance(n, _ast.Call)
+                  and getattr(n.func, "id", "") == "all_entries"]
+        return len(every), len(inside)
+
+    _src = Path(__file__).read_text()
+    _every, _inside = _entry_calls(_src)
+    ok(_every == 1 and _inside == 1,
+       f"ONE IMPLEMENTATION OF 'AN ENTRY EXISTS': `all_entries` is called "
+       f"{_every} time(s) in this module and {_inside} of them is inside "
+       f"`entry_index` -- read from the AST, not asserted. It was derived "
+       f"THREE ways (a line map, an entry map, a set comprehension) over "
+       f"the same unfiltered call; they could not disagree, which is why "
+       f"the finding is the DRIFT SURFACE: a filter added at one site "
+       f"would leave the two ends of one rule answering differently "
+       f"(DE20-R1)")
+    _extra = _src.replace("    own_idx = entry_index(register_text)",
+                          "    own_idx = {e['ref']: e for e in "
+                          "all_entries(register_text)}", 1)
+    ok(_extra != _src and _entry_calls(_extra) == (2, 1),
+       f"KNOWN-BAD, DRIVEN THROUGH THE SAME READER: re-deriving the index "
+       f"at `check#16` in a COPY makes it {_entry_calls(_extra)} -- two "
+       f"call sites, one of them outside the helper -- and this check goes "
+       f"red. The predicate is over the parse, so a second derivation "
+       f"cannot arrive as a comment or a string")
 
     # ---- DE16-R1: A QUOTED BLOCK IS NOT THE QUOTING ENTRY'S -----------
     # The register is exactly where these spellings get documented, and one
@@ -2026,6 +2172,8 @@ EXPECTED_SITE: dict[str, str] = {
     "two_own_blocks": "own_ratification_blocks#1",
     "under_check_bad_supersedes": "validate_supersedes#5",
     "under_check_dangling_supersedes": "check#16",
+    "under_check_self_supersedes": "check#17",
+    "under_check_backwards_supersedes": "check#18",
     "not_a_ratification": "check#10",
     "counts_do_not_sum": "check#11",
     "sampled_population": "check#13",
@@ -2101,6 +2249,9 @@ def mutation_audit(sup: dict, *, _drop_case: str | None = None,
     dangling = stamped_chain.replace("supersedes: R-902", "supersedes: R-9021")
     dup_key = fixture_register("R-902").replace(
         "scope_to: null", "scope_to: null\nscope_to: 20260901")
+    backwards = (fixture_register("R-902", supersedes="R-903")
+                 .replace("\n\n## next\n", "\n\n")
+                 + fixture_register("R-903"))
     two_own = (fixture_register("R-902").replace("\n\n## next\n", "\n\n")
                + "```ratification\nref: R-902\nkind: R-ADMISS\n"
                f"population: {POP_FULL}\nsampling: NONE\n"
@@ -2213,6 +2364,15 @@ def mutation_audit(sup: dict, *, _drop_case: str | None = None,
         # the target names no entry.
         "under_check_dangling_supersedes": (
             ((sup, "R-900", fixture_register(supersedes="R-777")), {}),
+            ((sup, "R-900", good), {})),
+        # DE20-R2: the same field again -- shape passes, the target exists,
+        # and the claim still supersedes nothing.
+        "under_check_self_supersedes": (
+            ((sup, "R-902", fixture_register("R-902", supersedes="R-902")),
+             {}),
+            ((sup, "R-900", good), {})),
+        "under_check_backwards_supersedes": (
+            ((sup, "R-902", backwards), {}),
             ((sup, "R-900", good), {})),
         # --- DE16-R1/R2/R3 -----------------------------------------------
         "later_entry_dangling_supersedes": (
