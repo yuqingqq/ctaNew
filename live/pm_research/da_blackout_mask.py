@@ -850,11 +850,27 @@ def selftest() -> int:
                    f"WORKTREE's commit ({_there[:12]}), NOT the main tree's "
                    f"({_here[:12]}). The artifact names the tree that "
                    f"executed")
-                ok(_prod["tree_dirty_on_producing_files"] is True,
-                   "RR12-1 CONTROL: and the dirty flag reads True there, "
-                   "because the worktree's producing files differ from its "
-                   "own HEAD -- the flag answers about the tree that ran, "
-                   "not about some other tree")
+                # THE FLAG MUST AGREE WITH THE CHILD TREE'S ACTUAL STATE,
+                # which is COMPUTED here rather than assumed. Asserting `True`
+                # encoded the fixture's arrangement: it holds only while the
+                # copied files differ from the child's HEAD, so the control
+                # went red the first time a commit touched none of them
+                # (e384792 changed only the preflight). Third instance of the
+                # DA10-R5 class, in the same control -- assert the property.
+                _exp_dirty = bool(_sp.run(
+                    ["git", "-C", str(_wt_path), "status", "--porcelain",
+                     "--"] + [f"live/pm_research/{_f}" for _f in
+                              ("da_blackout_mask.py", "pm_tape_density.py",
+                               "da_content_liveness_rule.py",
+                               "da_forward_day_verify.py")],
+                    capture_output=True, text=True).stdout.strip())
+                ok(_prod["tree_dirty_on_producing_files"] == _exp_dirty,
+                   f"RR12-1 CONTROL: the dirty flag ({_prod['tree_dirty_on_producing_files']}) "
+                   f"equals the CHILD tree's own measured state "
+                   f"({_exp_dirty}) -- the flag answers about the tree that "
+                   f"ran, and the expectation is computed from that tree "
+                   f"rather than assumed from how the fixture happened to be "
+                   f"arranged")
                 # DA10-R5: ASSERT THE PROPERTY, NOT THE ENVIRONMENT. This
                 # compared the child's data_root against the PARENT's, which
                 # only holds when the parent's own root is canonical -- so the
