@@ -420,7 +420,7 @@ def entry_index(register_text: str, *, subject: str | None = None
         # `superseded_by` for every later entry, and by `check()` on the
         # entry under check), so nothing is refused earlier than before.
         named = {str(blk.get("supersedes", "")).strip()
-                 for e in entries for blk in own_blocks_quiet(e)}
+                 for e in entries for blk, _ in own_blocks_quiet(e)}
         reached = [r for r in dups if r in named]
         if reached:
             # SITE: entry_index#2
@@ -628,22 +628,34 @@ def _heading_ref(entry: dict) -> str | None:
 #: scans use; `own_ratification_blocks` stays the ADJUDICATING reader on
 #: the path (`check()` on the subject, `superseded_by` on later entries),
 #: where a malformed entry is the answer rather than an obstacle to one.
-def own_blocks_quiet(entry: dict) -> list[dict]:
-    """The entry's own ratification blocks, ANSWERED not adjudicated."""
+def own_blocks_quiet(entry: dict) -> list[tuple[dict, list[str]]]:
+    """The entry's own ratification blocks as `(block, duplicated keys)`,
+    ANSWERED not adjudicated.
+
+    DE27-R1: the two conjuncts were spelled out HERE and again in
+    `own_ratification_blocks` -- one predicate, two texts, edited under
+    different pressures (this one by the scans, that one by the path).
+    They agreed and every conjunct drop was red, so it was a DRIFT SURFACE
+    rather than a gap -- the same shape DE20-R1 removed for "an entry
+    exists", and asserted from the AST for the same reason: a predicate
+    stated twice drifts without either copy noticing. The pairs are
+    returned rather than the blocks alone so the adjudicating reader can
+    consume this output and add ONLY its two raises."""
     ref = _heading_ref(entry)
-    return [blk for blk, _dups in _fenced_blocks(entry)
+    return [(blk, dups) for blk, dups in _fenced_blocks(entry)
             if str(blk.get("ref", "")).strip() == ref
             and str(blk.get("kind", "")).strip() == "R-ADMISS"]
 
 
 def own_ratification_blocks(entry: dict) -> list[dict]:
-    """The entry's OWN ratification block(s) -- ref == heading ref and
-    kind == R-ADMISS.  More than one REFUSES: two ratifications under one
-    heading is a malformed entry, not a choice between them."""
+    """The entry's OWN ratification block(s) -- ownership is asked of
+    `own_blocks_quiet`, the one text that spells the two conjuncts. This
+    reader adds only what ADJUDICATION means: more than one own block
+    REFUSES, because two ratifications under one heading is a malformed
+    entry rather than a choice between them, and a duplicated key inside
+    one REFUSES because the parse is last-wins."""
     ref = _heading_ref(entry)
-    own = [(blk, dups) for blk, dups in _fenced_blocks(entry)
-           if str(blk.get("ref", "")).strip() == ref
-           and str(blk.get("kind", "")).strip() == "R-ADMISS"]
+    own = own_blocks_quiet(entry)
     if len(own) > 1:
         # SITE: own_ratification_blocks#1
         raise RatificationRefused(
@@ -1164,7 +1176,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 177
+EXPECTED_CHECKS = 180
 
 
 def selftest() -> int:
@@ -2058,6 +2070,91 @@ def selftest() -> int:
             "occurrence would drop that supersession, which is an answer "
             "reached",
             needle="carries an OWN ratification block")
+
+    # ---- DE27-R1: ONE ownership text, and a control aimed at the
+    # conjunct that had none ------------------------------------------
+    # Three of the four conjunct drops died at a control written for that
+    # conjunct; the ADJUDICATING reader's `kind` drop died as an UNCAUGHT
+    # refusal inside a positive control ("R-419 is SUPERSEDED by R-999") --
+    # red and loud, but not aimed at it, so an edit that changed which
+    # fixture broke would turn a named red into a puzzling one. After the
+    # refactor the drop is a SINGLE site, and this is the control on it.
+    _two_kinds = {"heading": "### R-99904 — 2026-09-02T17:00Z — coordinator: "
+                             "R-ADMISS",
+                  "body": ("\n```ratification\nref: R-99904\n"
+                           "kind: STATUS_NOTE\n"
+                           "supersedes: null\n```\n\nand its real one:\n\n"
+                           "```ratification\nref: R-99904\n"
+                           "kind: R-ADMISS\nsupersedes: null\n```\n"),
+                  "ref": "R-99904"}
+    _own_two, _saw_k = None, ""
+    try:
+        _own_two = own_ratification_blocks(_two_kinds)
+    except RatificationRefused as _exc:
+        _saw_k = f" REFUSED INSTEAD: {str(_exc)[:110]}"
+    ok(_own_two is not None and len(_own_two) == 1
+       and _own_two[0].get("kind") == "R-ADMISS" and not _saw_k,
+       f"NAMED CONTROL for the ownership filter's `kind` conjunct: an "
+       f"entry (`R-99904`) carrying TWO fenced blocks under its own ref, "
+       f"one `kind: STATUS_NOTE` and one `kind: R-ADMISS`, has exactly ONE "
+       f"own block ({len(_own_two) if _own_two is not None else '<refused>'}"
+       f") -- so the adjudicating reader does NOT refuse it. Drop the "
+       f"`kind` conjunct and both count as own, and the message a "
+       f"maintainer meets is `own_ratification_blocks#1`: 'R-99904 carries "
+       f"2 ratification blocks of its OWN'. That drop used to surface as "
+       f"an uncaught refusal inside another control (DE27-R1){_saw_k}")
+
+    # ---- and the filter is written in ONE place, asserted from the AST --
+    import ast as _ast_own
+    _own_src = Path(__file__).read_text()
+
+    def _ownership_sites(src: str, _ast=_ast_own) -> list[str]:
+        """Functions comparing a block's `kind` to R-ADMISS by equality --
+        the ownership conjunct. `check#10` asks a different question of a
+        different object (`fields.get("kind") != "R-ADMISS"`, the BOUND
+        kind of the entry under check) and is not this predicate."""
+        tree = _ast.parse(src)
+        out = []
+        for fn in [n for n in _ast.walk(tree)
+                   if isinstance(n, _ast.FunctionDef)]:
+            for cmp_ in [n for n in _ast.walk(fn)
+                         if isinstance(n, _ast.Compare)]:
+                if not any(isinstance(o, _ast.Eq) for o in cmp_.ops):
+                    continue
+                if not any(isinstance(c, _ast.Constant)
+                           and c.value == "R-ADMISS" for c in cmp_.comparators):
+                    continue
+                if any(isinstance(n, _ast.Call)
+                       and isinstance(n.func, _ast.Attribute)
+                       and n.func.attr == "get"
+                       and getattr(n.func.value, "id", "") == "blk"
+                       and n.args and isinstance(n.args[0], _ast.Constant)
+                       and n.args[0].value == "kind"
+                       for n in _ast.walk(cmp_.left)):
+                    out.append(fn.name)
+        return sorted(set(out))
+
+    _osites = _ownership_sites(_own_src)
+    ok(_osites == ["own_blocks_quiet"],
+       f"ONE OWNERSHIP TEXT, asserted from the AST: the `blk['kind'] == "
+       f"R-ADMISS` comparison appears in {_osites} and nowhere else -- "
+       f"`own_ratification_blocks` now CONSUMES that filter and adds only "
+       f"its two raises. The same guarantee DE20-R1 gave `all_entries`, "
+       f"for the same reason: a predicate stated twice drifts without "
+       f"either copy noticing (DE27-R1)")
+    _pasted = _own_src.replace(
+        "    own = own_blocks_quiet(entry)",
+        "    own = [(blk, dups) for blk, dups in _fenced_blocks(entry)\n"
+        "           if str(blk.get('ref', '')).strip() == ref\n"
+        "           and str(blk.get('kind', '')).strip() == 'R-ADMISS']", 1)
+    ok(_pasted != _own_src
+       and _ownership_sites(_pasted) == ["own_blocks_quiet",
+                                         "own_ratification_blocks"],
+       f"KNOWN-BAD, DRIVEN THROUGH THE SAME PARSE: pasting the filter back "
+       f"into the adjudicating reader in a COPY makes it "
+       f"{_ownership_sites(_pasted)} -- two texts again -- and this check "
+       f"goes red. The predicate is over the parse, so a second copy "
+       f"cannot arrive as a comment or a string")
 
     # ---- DE24-R2: `check#18` names the convention its number uses ------
     _msg18 = ""
