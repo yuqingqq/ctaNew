@@ -263,7 +263,27 @@ _LIMIT_ANCHOR = "DECLARED_BLIND_SHAPES = ("
 #: head). It knows nothing about the prose, so it cannot go stale as the
 #: prose grows -- which is the failure mode the anchors have.
 def declared_limit_boundary(src: str | None = None) -> dict:
-    """Where the backward walk stopped, and what stands above it."""
+    """Where the backward walk stopped, and what stands above it.
+
+    DE23-R1: the test was `not above.startswith("#:")` -- `#:`-ness, where
+    the property is THE COMMENT RUN WAS NOT CUT. Four one-line
+    interruptions above the OVER-CAUGHT paragraph truncated the block by
+    the same 1,777 characters (47%) and reported a real boundary anyway:
+    `# a plain comment`, `  #: an indented continuation`, a bare `#`, and
+    `X = 1`. The first three are edits a person makes without thinking
+    about this predicate at all -- a note, a lint pragma, a reflow -- while
+    the shape that WAS caught, a blank line, is the one an editor inserts
+    by accident. `lstrip().startswith("#")` covers all three together and
+    stays prose-blind.
+
+    THE DECLARED LIMIT, since it cannot be closed by this method: a CODE
+    line inserted into the run (`X = 1`) is indistinguishable from a real
+    boundary here, because the intact boundary IS a code line
+    (`_REBOUND = ...`). Telling them apart needs to know what the block's
+    first line should be, which is the anchors' job and the thing that goes
+    stale. Stated rather than chased, and the anchors still name WHICH
+    sections must be present, so a code line that cut the run above the
+    head would leave the anchors intact and this limit is real."""
     lines = (src if src is not None
              else Path(__file__).read_text()).split("\n")
     i = next(n for n, ln in enumerate(lines) if ln.startswith(_LIMIT_ANCHOR))
@@ -278,7 +298,8 @@ def declared_limit_boundary(src: str | None = None) -> dict:
             "first_read": lines[first][:60],
             "above_line": j + 1,
             "above": above[:60],
-            "stopped_at_a_real_boundary": not above.startswith("#:")}
+            "stopped_at_a_real_boundary":
+                not above.lstrip().startswith("#")}
 
 
 def declared_limit_text(src: str | None = None) -> str:
@@ -815,7 +836,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 87
+EXPECTED_CHECKS = 91
 
 
 def _grid(day: str) -> list[int]:
@@ -1236,16 +1257,77 @@ def selftest() -> int:
         "#: A PARAGRAPH ADDED ABOVE THE HEAD by the mutant.\n\n"
         "#: THE DECLARED LIMIT", 1)
     _b_above = declared_limit_boundary(_above_head)
+    # DE23-R2: the LENGTH conjunct is gone. It asserted that the cut copy
+    # reads exactly as many chars as the intact block -- true only because
+    # the head is the run's topmost line TODAY. A contiguous paragraph
+    # added above the head (the upward growth this predicate exists to
+    # survive) grows the intact block while the cut copy still stops at
+    # the mutant's blank, and the suite went red with the predicate
+    # answering correctly throughout: the falsifier held the assumption
+    # the anchors held, one artefact over. The property being falsified is
+    # THE BOUNDARY FIRES AND THE ANCHORS DO NOT; the length equality was a
+    # reason the anchors were fooled, not part of the claim.
     ok(not _b_above["stopped_at_a_real_boundary"]
-       and len(declared_limit_text(_above_head)) == len(_limit)
        and not [a for a in _anchors
                 if a not in declared_limit_text(_above_head)],
        f"KNOWN-BAD, DRIVEN: a paragraph added ABOVE the head with a blank "
-       f"between reads {len(declared_limit_text(_above_head))} chars -- "
-       f"IDENTICAL to the intact block -- with all three anchors present, "
-       f"which is why it was green at 84. The walk now stops at line "
+       f"between leaves ALL THREE ANCHORS present -- which is why it was "
+       f"green at 84 -- while the walk stops at line "
        f"{_b_above['first_read_line']} with {_b_above['above']!r} above "
-       f"the gap: a `#:` line, so the run was cut and this check goes red")
+       f"the gap: a comment line, so the run was cut and this check goes "
+       f"red. It reads {len(declared_limit_text(_above_head))} chars "
+       f"against the intact {len(_limit)}, printed as a fact and asserted "
+       f"nowhere (DE23-R2)")
+    # POSITIVE CONTROL, and the case the old known-bad turned red: growth
+    # that keeps the run CONTIGUOUS is not a cut, and the same copy with a
+    # blank between IS one. Both directions on one source, so neither can
+    # pass by accident of layout.
+    _grown = Path(__file__).read_text().replace(
+        "#: THE DECLARED LIMIT",
+        "#: A CONTIGUOUS PARAGRAPH added above the head by this control,\n"
+        "#: with no blank line between it and what follows.\n"
+        "#: THE DECLARED LIMIT", 1)
+    _b_grown = declared_limit_boundary(_grown)
+    _grown_cut = _grown.replace("#: THE DECLARED LIMIT",
+                                "\n#: THE DECLARED LIMIT", 1)
+    _b_grown_cut = declared_limit_boundary(_grown_cut)
+    ok(_b_grown["stopped_at_a_real_boundary"]
+       and len(declared_limit_text(_grown)) > len(_limit)
+       and not _b_grown_cut["stopped_at_a_real_boundary"],
+       f"POSITIVE CONTROL ON UPWARD GROWTH: a CONTIGUOUS paragraph above "
+       f"the head is not a cut -- the walk still stops at a real boundary "
+       f"({_b_grown['above']!r} at line {_b_grown['above_line']}) and the "
+       f"block simply grows, {len(declared_limit_text(_grown))} chars "
+       f"against {len(_limit)}. Put a BLANK between the same two "
+       f"paragraphs and the same predicate refuses it "
+       f"({_b_grown_cut['stopped_at_a_real_boundary']}, stopping at line "
+       f"{_b_grown_cut['first_read_line']}). Growth is admitted, cutting "
+       f"is not, and the falsifier no longer assumes the head is the "
+       f"topmost line (DE23-R2)")
+    # DE23-R1: THE PREDICATE TESTED `#:`-NESS where it means "the run was
+    # not cut". Each of these truncates the block by the same 47% and
+    # reported a real boundary anyway -- and each is an edit a person makes
+    # without thinking about this predicate: a note, a lint pragma, a
+    # reflow. The blank line, the one shape it did catch, is the one an
+    # editor inserts by accident.
+    for _lab, _ins in (("a plain `#` comment", "# a note above the block"),
+                       ("an INDENTED `#:` continuation",
+                        "  #: an indented continuation"),
+                       ("a bare `#`", "#")):
+        _shape = Path(__file__).read_text().replace(
+            "#:   OVER-CAUGHT -- stated because",
+            _ins + "\n#:   OVER-CAUGHT -- stated because", 1)
+        _b_shape = declared_limit_boundary(_shape)
+        ok(not _b_shape["stopped_at_a_real_boundary"]
+           and len(declared_limit_text(_shape)) < len(_limit),
+           f"KNOWN-BAD, DRIVEN ({_lab}): one line inserted into the "
+           f"comment run cuts it -- the reader stops at line "
+           f"{_b_shape['first_read_line']} "
+           f"({_b_shape['first_read']!r}) and reads "
+           f"{len(declared_limit_text(_shape))} of {len(_limit)} chars -- "
+           f"and the boundary now says so. It reported TRUE until this "
+           f"round, because `startswith(\"#:\")` tested the prefix rather "
+           f"than the run (DE23-R1)")
     _b_cut = declared_limit_boundary(_blank_above)
     ok(not _b_cut["stopped_at_a_real_boundary"]
        and _b_cut["above"].startswith("#:"),
