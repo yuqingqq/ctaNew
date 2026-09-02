@@ -1,12 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T13:23Z — **DE round 18 closed DE16-R1..R4** (ratification
-132 → **150**, five coordinator mutants dying by name) and **left one residual
-measured but NOT ruled**: an entry whose **own** block claims to supersede a
-**non-existent** entry still verifies. **The format rule stays in force**, and
-beyond the review for R-ADMISS entries themselves. **USER decisions unchanged:
-four RULED, one OPEN.** Prior line: the format rule bound this file and it was
-in breach.
+Updated: 2026-09-02T13:33Z — **DA round 10 is HELD** on five findings, the first
+of which is the control-that-ran-nothing class **for the second time in the same
+suite**: the batch moved the path and **kept the gate**, so the six provenance
+checks it was written for **still skip silently**. Two claims **did not
+reproduce** — CO-8's worry and the request's own launcher expectation. **USER
+decisions unchanged: four RULED, one OPEN.** Prior line: DE round 18 closed four
+and left the fifth open on purpose.
 
 ## READ FIRST — current project handoff
 
@@ -680,19 +680,92 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **DE16-R1..R4** → DE round 18; **RR12-1** and **CO-R4** → DA
-round 10; **CO-8** → the coordinator, after tonight; **BE's landing** — the
-counts satisfy the receipt condition, but `working_tree_dirty: true` means the
-commit is still owed.
+**Open findings:** **DA10-R1..R5** → DA round 11 (on the held commit);
+**DE16-R1..R4** closed at `db039a3`, pending review; the **own-supersedes-
+nonentry residual** with the reviewer; **BE's landing** — the counts satisfy the
+receipt condition and the coordinator holds a receipt copy, but
+`working_tree_dirty: true` means the commit is still owed. **CO-R4 is CLOSED**
+and **CO-8 is dead — its worry did not reproduce.**
 
-**The reviewer's queue, in order:** **DA round 10** at `3a89e6c` (in flight from
-13:10Z) → **DE round 17** at `a8093a5` → **DE round 18** at `db039a3`
-(`REQUEST_DE_ROUND_18_2026-09-02.md`, seven items) → **BE rounds 3–4** when BE
-files. **DE is on deliberate standby** — rounds 16, 17 and 18 complete; round 19
+**A format ruling on what a reader meets at 00:14Z.** The preflight's
+`open_decisions.ruled` carried **three** of R-424's rulings and omitted
+**R-408(2)** by a stated scoping choice — *"three of these were open questions of
+this instrument"*. Ruled: **mirror all four.** The emission is **a statement of
+the REGISTER's state, not of the instrument's own escalation history** — a
+distinction worth keeping, because a reader at 00:14Z has no way to know which
+questions this particular tool once asked.
+
+**The reviewer's queue, in order:** **DE round 17** at `a8093a5` → **DE round
+18** at `db039a3` → **DA round 11** (dispatched on the held commit) → **BE rounds
+3–4** when BE files. **DA round 10's review is done and HELD.**
+
+**BE's confirming pair now runs into a NEW OUTDIR** (`fwd5`, unit
+`be-fwd-final4.service`), with **Q-BE-229 to follow**. **That closes the
+same-path overwrite loop:** `fwd4`'s completed **ten-gate** receipt is verified
+still present and intact, because the new run no longer writes over it. The
+remedy — *an outdir per run* — is in use rather than merely recommended. **DE is on deliberate standby** — rounds 16, 17 and 18 complete; round 19
 (the DATA_ROOT split) waits behind DA round 10's landing. **DA is holding for
 00:14Z.** **BE's confirming audit is still running and nothing has been sent**
 (rule 18); the shared tree still carries BE's dirty `be_forward_day.py`,
 untouched by any coordinator commit.
+
+### DA round 10 — HELD, and the first finding is the same class twice
+
+**Held at `3a89e6c`; nothing lands before 00:14Z, and tonight is unchanged
+either way.** The re-review precedes the landing. The reviewer executed in
+`~/ctaNew-wt-rev` with `derived/` **identical before and after every step** (184
+entries) and the log's mtime unmoved — and never ran the real launcher.
+
+**DA10-R1 (MEDIUM) is the one to read twice.** DA round 10 was dispatched partly
+*because* six of its checks silently skipped in a worktree. The batch **moved the
+path** (`__file__` → `DATA_ROOT`) and **kept the gate** — `if _lg_p.exists():`
+still fences the six log-echo checks, there is **no `EXPECTED_CHECKS` anywhere in
+the module**, and the run **prints the count and returns 0**. Measured
+**238 / 244 / 238** across three roots, **rc 0 every time**. So *"the count now
+asserts over checks that RAN"* — reported in DA's pane and carried by me in round
+22 — **does not exist at the artifact.**
+
+**I carried that pane claim, so the correction is partly mine.** It was labelled
+as DA's report at the time and it was not verified at the object; this is the
+second time this week a pane fact reached these files ahead of its artifact. The
+root cause the reviewer names is worth more than the count: **the resolver's
+predicate is "carries `data/pm_5min/raw`" while the consumers read `derived/` and
+`data/mm_hf/`** — a resolver answering a different question from the one its
+callers ask.
+
+**The other four, each reproduced at the object:** **R2** — `code_root` /
+`data_root` are emitted by the **mask only**, so the governing artifact and the
+00:14Z emission **cannot say which tree produced them**. **R3** —
+`da_hf_pm_alignment` imports `pm_tape_density` bare, so `python3 -m` raises
+`ModuleNotFoundError` while the path launch passes 53 checks (CO-2's class, and
+the module is **not** in the deploy gates). **R4** — `_is_tracked()` asks git
+about **`/home/yuqing/ctaNew`** while building the path from `DATA_ROOT`, so a
+tracked file under any other worktree reports **provenance absent when present**.
+**R5** — the RR12-1 control asserts the child's `data_root` equals the *parent's*
+`DATA_ROOT`, so the suite exits rc 1 from any non-canonical parent: **loud, but
+encoding the environment rather than the property.**
+
+**And two claims did NOT reproduce — one the coordinator's, one the request's.**
+**CO-8's `REPO = DATA_ROOT` worry is dead:** `v5_boundary_preflight.py` defines
+its own `REPO`, `v41_boundary_preflight.py:53` keeps a **code** root, and **no
+importer inherits the rebound name** — I confirmed at the tree that nothing
+imports that symbol at all. **The request's expected launcher refusal was
+inverted and the code is right:** under the full rehearsal pair a different
+binary is **admitted by design**, and the substitution guard is reachable only in
+a named canonical run. **Two checks that would have manufactured work if taken on
+authority.**
+
+**One premise correction worth keeping:** `~/ctaNew-wt-rev` carries a
+`data/pm_5min/raw` **symlink** — the only seat worktree that does — so it
+resolves branch 2, the **tape-present / artifacts-absent** layout the resolver's
+single test cannot see, and exactly where the six checks skip.
+
+**Closed in the same review:** **CO-R4** (rc 3, JSON, `classification REFUSED`,
+distinct from rc 1, no collision in any single channel) and the **R-411
+constants verbatim** to R-424 §4 with **no new number** — `144`, `288`,
+`per_unmasked_hour`, with `counts_toward_G` gating nothing yet. The v2 wiring
+reads `governs` **False / True / True** for 09-02 / 03 / 04, with
+`V2_TRAILING_DAYS // 2 == 3` **computed**.
 
 ### A residual DE measured and refused to rule on
 
@@ -1182,6 +1255,52 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~13:33Z (MEM) — THE BATCH MOVED THE PATH AND KEPT THE GATE
+
+**R-434 swept.** DA round 10 is **held**, and its first finding is a repeat of
+the reason the round existed.
+
+**DA round 10 was dispatched partly because six of DA's checks silently skipped
+in a worktree. The batch moved the path and kept the gate.** `if
+_lg_p.exists():` still fences the six log-echo checks, there is **no
+`EXPECTED_CHECKS` in the module**, and the run **prints the count and returns
+0** — measured **238 / 244 / 238** across three roots, **rc 0 every time**. So
+the pane claim that *"the count now asserts over checks that RAN"* **does not
+exist at the artifact.**
+
+**I carried that claim in round 22, so part of the correction is mine.** I
+labelled it as DA's report rather than as verified, which is the right label —
+but this is the second time this week a pane fact reached these files ahead of
+its object, and the honest lesson is that **labelling a claim as unverified does
+not stop it from being read**. The root cause the reviewer names is the better
+keepsake: **the resolver's predicate asks "carries `data/pm_5min/raw`" while its
+consumers read `derived/` and `data/mm_hf/`** — a resolver answering a different
+question from the one its callers ask, which is why moving the path fixed
+nothing.
+
+**Two claims did not reproduce, and both would have created work.** **CO-8** —
+the coordinator's own worry that `REPO = DATA_ROOT` would propagate — is dead:
+nothing imports that symbol at all, which I checked at the tree. And **the
+request's expected launcher refusal was inverted**: under the full rehearsal pair
+a different binary is **admitted by design**. **A review that only confirmed
+findings would have shipped two fixes for defects that were not there.**
+
+**DA10-R5 is a small gem of a distinction.** The RR12-1 control *does* fail
+loudly — but it asserts the child's `data_root` equals the **parent's**
+`DATA_ROOT`, so it fires from any non-canonical parent. **It encodes the
+environment rather than the property**, which is the failure mode that looks
+most like working correctly.
+
+**And the outdir loop is closed.** BE's confirming pair now runs into **`fwd5`**,
+and I verified `fwd4`'s completed **ten-gate** receipt is still intact. The
+remedy I proposed two rounds ago — *an outdir per run* — is in use, and the
+artifact that was overwritten once will not be again.
+
+**One format ruling worth the line:** the preflight's `open_decisions.ruled` will
+mirror **all four** R-424 rulings rather than the three this instrument happened
+to raise. **What a reader meets at 00:14Z should state the register's state, not
+the instrument's autobiography.**
 
 ### 2026-09-02 ~13:23Z (MEM) — FOUR CLOSED, AND THE FIFTH LEFT OPEN ON PURPOSE
 

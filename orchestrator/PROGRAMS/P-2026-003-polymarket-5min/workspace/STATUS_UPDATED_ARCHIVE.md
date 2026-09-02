@@ -2181,3 +2181,65 @@ Moved in the MEM round-27 true-up of R-433. Join rule as in batch 1.
   G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
   evidence.
 ```
+
+## Batch 34 — archived 2026-09-02T13:33Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-28 true-up of R-434. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T12:54Z (MEM ROUND 25 -- THE RUN FINISHED, AND ITS OWN NUMBERS SAY
+  71.7% OF IT PRODUCES NO SCORE). R-430 swept; verified at the unit and the
+  receipt, with the coverage arithmetic done here rather than repeated. BE'S
+  RE-RUN COMPLETED 12:49:42Z: unit be-fwd-0901d.service Result=success,
+  ExecMainStatus=0, TEN GATES PASS. THE LANDING CONDITION IS MET IN ITS SECOND
+  FORM AND THAT FORM IS WEAKER ON PURPOSE: the counts MATCH THE FIRST PASS
+  EXACTLY -- 1,875 supplied = 1,875 bridged, 1,859 windows with rows, 2,262,457
+  rows -> 1,847,824 actions -- so the overwritten first-pass receipt is
+  EVIDENCED ONLY BY THAT AGREEMENT unless BE holds a copy. That is what the
+  condition was written to accept and it does not pretend to be the bytes. THE
+  LANDING STILL OWES A COMMIT: the receipt reads working_tree_dirty TRUE beside
+  carrying_commit 0ca510e, SO THE COMMIT IT NAMES IS NOT WHAT RAN -- RR12-1's
+  family, and the same lesson my own round-18 citation earned: A HASH IN A
+  RECEIPT IS A CLAIM ABOUT A SPECIFIC ARTIFACT, and a dirty tree quietly makes
+  it a claim about something else. A reader should also note the receipt's as_of
+  is the RUN'S START (12:23:29Z), twenty-six minutes before its own bytes were
+  written at 12:49:42Z -- correct for a run receipt, misleading if read as a
+  write time. AND THE COVERAGE ARITHMETIC, DONE HERE FROM THE RECEIPT'S OWN
+  PER-COIN COUNTS: coin_coverage records seven coins supplied, btc and eth with
+  a frozen fit, five without, and 1,344 windows supplied WITHOUT A FIT -- which
+  against the receipt's own numbers is 1,344 OF 1,875, or 71.7% OF THE SUPPLIED
+  POPULATION PRODUCING NO SCORE. The mask arithmetic closes exactly: 7 x 288 =
+  2,016 present, minus 141 masked at supply = 1,875; 531 with a fit (btc 265 +
+  eth 266) plus 1,344 without (bnb 266, doge 266, hype 279, sol 265, xrp 268) =
+  1,875. SIXTEEN BRIDGED WINDOWS PRODUCED NO ROWS (1,875 bridged vs 1,859 with
+  rows), which the receipt also carries. The receipt says it in its own voice --
+  "the day is not scored whole and this says so" -- which is the right place for
+  it. IT IS A FACT FOR THE RECEIPT; WHAT IT MEANS FOR G-COUNTING IS THE USER'S
+  POLICY QUESTION (rule 14) AND STILL NOT A PENDING DECISION UNTIL SOMEONE PUTS
+  IT TO THEM. But a reader meeting "ten gates PASS" and "counts match" should
+  meet 71.7% in the same breath, which is why it sits beside them in HANDOFF
+  rather than only in the artifact. DE ROUND 16 VERIFIED at 829910e (Q-DE-34)
+  and UNDER REVIEW: 132 CHECKS, reproduced here; DE14-R1..R4 CLOSED; BOTH
+  COORDINATOR MUTANTS DIE BY NAME; and the check that matters most is the
+  NEGATIVE one -- THE R-419 AND R-418 VERDICTS ARE UNCHANGED FROM 0ca510e, since
+  a validation round that MOVED a verdict would have been a different kind of
+  change, and saying so is how the round proves it fixed plumbing rather than
+  answers. THE DE ROUND 15 REVIEW IS RELEASED, AND A FIRST FOR THIS PROGRAMME:
+  THE REVIEWER CORRECTED ITS OWN FILING IN BAND -- the round-13 section-3 claim
+  about the five declared shapes, the one whose unexamined member turned out to
+  be the wrong one, corrected in the round-15 review's OWN SECTION rather than a
+  sidecar. RULE 13 APPLIED TO A REVIEWER'S FILING, BY THE REVIEWER. Its
+  DE15-R1..R4 were reproduced by the coordinator and go to DE ROUND 17
+  (dispatched, and also carrying the DATA_ROOT split staged behind DA round 10);
+  one of them is the week's shape again -- THE SWAP-DOCSTRING MUTANT LEAVES 104
+  GREEN. REVIEW TABLE: DE round 15 RELEASED; DE round 16 VERIFIED and UNDER
+  REVIEW; DE round 17 DISPATCHED; DA round 10 HELD for the 00:14Z read; BE round
+  4 COMPLETE and awaiting its landing commit. OPEN: DE15-R1..R4 to DE round 17;
+  RR12-1 and CO-R4 to DA round 10; CO-8 to the coordinator after tonight; BE's
+  landing commit, since the counts satisfy the receipt condition but the tree
+  was dirty. USER DECISIONS UNCHANGED: FOUR RULED (R-424), ONE OPEN (the freeze
+  disposition, R-424 section 6), the 09-02 accrual call MECHANICAL after 00:06Z.
+  R-419 remains revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of
+  24 surviving with Q4 failing; development evidence.
+```
