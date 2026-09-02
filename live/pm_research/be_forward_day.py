@@ -1385,9 +1385,11 @@ class _r1_installed:
 #
 # The edit is applied to a COPY in a temp tree, never to this file. Two runs
 # of an earlier scratch harness were SIGKILLed mid-mutation and left a mutant
-# in the working tree; a copy cannot do that. The siblings are symlinked so
-# the copy imports the same modules, and `data/` is read through the real
-# repo path, read-only.
+# in the working tree; a copy cannot do that. The importable siblings are
+# COPIED, not symlinked -- `Path(__file__).resolve()` follows a symlink, so
+# symlinked siblings put the real tree back at the front of `sys.path` and
+# the copy stopped being what ran. `data/` and the other tree roots are
+# linked and read through the real repo path, read-only.
 #
 # SCOPE, stated so the count is not mistaken for more than it is: these cases
 # cover the round-5 and round-6 items and the two closures of round 7. They
@@ -1444,6 +1446,13 @@ AUDIT_CASES = (
      '            "closure_method_UNUSED": "STATIC import walk (ast Import/'
      'ImportFrom, "',
      "BE34-R5 the closure DECLARES its method"),
+    ("CO-12 the attribution matches the TRANSCRIPT again, not the failure",
+     '    line = _audit_failure_line(stderr)\n    return bool(line) and want in line',
+     '    line = _audit_failure_line(stderr)\n    return want in stderr',
+     "CO-12 KNOWN-BAD: a `want` that appears only on a `  PASS  ` line"),
+    ("CO-12 the failure line is taken from the FIRST raise, not the last",
+     '    i = stderr.rfind(_AUDIT_RAISE)', '    i = stderr.find(_AUDIT_RAISE)',
+     "CO-12 with a CHAINED traceback the attribution takes the LAST"),
     ("BE34-R4 the usage error returns success again",
      '        print("usage: be_forward_day.py --selftest | "\n'
      '              "--forward-day <YYYYMMDD> --outdir <dir>")\n        return 2',
@@ -1479,6 +1488,30 @@ def _audit_apply(base: str, old: str, new: str) -> tuple:
         return None, len(hits)
     i = hits[0]
     return base[:i] + new + base[i + len(old):], 1
+
+
+_AUDIT_RAISE = "AssertionError: "
+
+
+def _audit_failure_line(stderr: str) -> str:
+    """The label the child DIED on, or None if it did not die at a check.
+
+    `ok` raises `AssertionError(label)`, so the label is the tail of the
+    traceback on STDERR. A mutant that dies some other way (a KeyError, a
+    refusal, a non-zero return with no traceback) has NO failure label, and
+    that is not a kill at a named check -- it is a survivor."""
+    i = stderr.rfind(_AUDIT_RAISE)
+    if i == -1:
+        return None
+    return stderr[i + len(_AUDIT_RAISE):].strip() or None
+
+
+def _audit_attributed(want: str, stderr: str) -> bool:
+    """Did the child die AT the named check? Matched against the failure
+    line ALONE -- never against the transcript, where the same text appears
+    on the `  PASS  ` line the check prints when it merely RAN."""
+    line = _audit_failure_line(stderr)
+    return bool(line) and want in line
 
 
 def _audit_tree(src: str, root: Path) -> Path:
@@ -1543,15 +1576,20 @@ def mutation_audit(cases=AUDIT_CASES) -> dict:
             r = subprocess.run([sys.executable, str(mod), "--selftest"],
                                env=env, capture_output=True, text=True,
                                timeout=900)
-            return r.returncode, (r.stdout + r.stderr)
+            # CO-12 / R-454 §1: the two streams are kept SEPARATE. Joined,
+            # a `want` that is a prefix of its check's own label matched the
+            # `  PASS  {label}` line the check prints when it RUNS -- so
+            # attribution said "died at the named check" for any mutant that
+            # died anywhere AFTER it. 7 of 10 cases were in that class.
+            return r.returncode, r.stdout, r.stderr
 
-    rc0, out0 = _run(base)
+    rc0, out0, err0 = _run(base)
     if rc0 != 0:
         raise ForwardDayRefused(
             f"REFUSED: the UNMUTATED copy is not green (rc={rc0}), so no "
             f"case here could be said to die of its own edit. A harness "
             f"whose baseline is red proves nothing about its mutants. "
-            f"Tail: {out0.strip()[-400:]!r}")
+            f"Tail: {(out0 + err0).strip()[-400:]!r}")
     for name, old, new, want in cases:
         text, n_outside = _audit_apply(base, old, new)
         if text is None:
@@ -1562,10 +1600,14 @@ def mutation_audit(cases=AUDIT_CASES) -> dict:
                                 "NOT run and is counted as a survivor -- a "
                                 "case that did not execute is never a kill"}
             continue
-        rc, out = _run(text)
-        at_named = want in out
+        rc, out, err = _run(text)
+        died_at = _audit_failure_line(err)
+        at_named = _audit_attributed(want, err)
         per[name] = {"applied": True, "rc": rc, "died_at_named_check": at_named,
-                     "must_go_red": want}
+                     "must_go_red": want, "died_at": died_at,
+                     "attribution": "the AssertionError line on STDERR only; "
+                                    "STDOUT (where every PASS is printed) is "
+                                    "never searched"}
         if not (rc != 0 and at_named):
             survivors.append(name)
     return {"n_cases": len(cases), "survivors": sorted(survivors),
@@ -2371,6 +2413,47 @@ def selftest() -> int:
                f"R5(5) KNOWN-BAD ({_lbl}): REFUSED naming `{_want}` — the "
                f"allowlist binds to ONE path and requires a string, so it "
                f"excuses the gate's NAME and nothing else")
+    # ---- CO-12: the attribution predicate, driven both directions -------
+    # NOT gated behind BE_FORWARD_AUDIT, so these run inside the audit's own
+    # children too -- which is what lets a mutation of the predicate be
+    # caught by the shipped audit rather than only by a reader.
+    _pass_txt = ("  PASS  BE34-R4 a usage error RETURNS 2, the code every "
+                 "other refusal here uses\n")
+    _died_txt = ('Traceback (most recent call last):\n  File "x", line 1\n'
+                 "AssertionError: R5(1) KNOWN-BAD: a SECOND run into the "
+                 "same outdir takes a NUMBERED SUCCESSOR\n")
+    ok(_audit_attributed("R5(1) KNOWN-BAD: a SECOND run", _died_txt) is True
+       and _audit_failure_line(_died_txt).startswith("R5(1) KNOWN-BAD"),
+       "CO-12 the attribution reads the label the child DIED on, taken from "
+       "the AssertionError line the raise leaves on stderr")
+    ok(_audit_attributed("BE34-R4 a usage error RETURNS 2",
+                         _pass_txt + _died_txt) is False,
+       "CO-12 KNOWN-BAD: a `want` that appears only on a `  PASS  ` line is "
+       "NOT attribution — matching the transcript made every case whose "
+       "`want` prefixes its own label read as killed whenever that check "
+       "merely RAN, which was 7 of the 10")
+    # A CHAINED traceback is the real shape when a check fails inside an
+    # `except`: Python prints the HANDLED exception first and the one that
+    # actually ended the run last. Attributing to the first would name an
+    # exception the code recovered from.
+    _chain_txt = ('Traceback (most recent call last):\n  File "x", line 1\n'
+                  "AssertionError: FIRST label, which was HANDLED\n\n"
+                  "During handling of the above exception, another "
+                  "exception occurred:\n\n"
+                  'Traceback (most recent call last):\n  File "y", line 2\n'
+                  "AssertionError: SECOND label, the one it DIED on\n")
+    ok(_audit_failure_line(_chain_txt) == "SECOND label, the one it DIED on"
+       and _audit_attributed("FIRST label", _chain_txt) is False
+       and _audit_attributed("SECOND label", _chain_txt) is True,
+       "CO-12 with a CHAINED traceback the attribution takes the LAST "
+       "AssertionError — the one the run died on — not the first, which "
+       "Python prints for an exception that was handled")
+    ok(_audit_attributed("anything", "") is False
+       and _audit_failure_line("boom\n") is None,
+       "CO-12 and a child that dies WITHOUT an AssertionError — a KeyError, "
+       "a refusal, a bare non-zero exit — has no named check to be "
+       "attributed to, so it is a survivor and not a kill")
+
     # BE5-R2: the allowlist's MEMBERSHIP, not merely what an emission used.
     ok(set(DECISION_ALLOWLIST) == set(DECISION_ALLOWLIST_PINNED)
        and len(DECISION_ALLOWLIST) == 1,
@@ -2459,7 +2542,31 @@ def selftest() -> int:
            f"cases, {_aud['n_survivors']} survivors, each mutant dying AT "
            f"ITS NAMED CHECK against a copy — the audit's result is now "
            f"re-runnable by a reader instead of a number in a filing")
-        checks += 1
+        # CO-12 END TO END, both directions, through the REAL audit: the
+        # SAME edit, named once wrongly and once rightly. Under the old
+        # transcript test both read as killed; the wrong one must now be a
+        # SURVIVOR, or the attribution is not attributing.
+        _usage = [c for c in AUDIT_CASES if c[0].startswith("BE34-R4")][0]
+        _mis = ("CO-12 CONTROL: the usage edit named to a check it does NOT "
+                "die at", _usage[1], _usage[2],
+                "R5(1) KNOWN-BAD: a SECOND run into the same outdir")
+        _hit = ("CO-12 CONTROL: the same edit named to the check it DOES "
+                "die at", _usage[1], _usage[2], _usage[3])
+        _ctl = mutation_audit(cases=(_mis, _hit))
+        ok(_ctl["survivors"] == [_mis[0]]
+           and _ctl["per_case"][_hit[0]]["died_at_named_check"] is True
+           and _ctl["per_case"][_mis[0]]["died_at"]
+           == _ctl["per_case"][_hit[0]]["died_at"],
+           f"CO-12 the attribution HAS a falsifier: ONE edit, TWO names — "
+           f"named to a check it does not die at it is a SURVIVOR, named to "
+           f"the one it does it is KILLED, and both died at the SAME line "
+           f"({(_ctl['per_case'][_hit[0]]['died_at'] or '')[:60]!r}). Without "
+           f"this, no case was ever driven to a survivor by dying at the "
+           f"wrong check")
+        # CO-13: `ok` already increments. The extra `checks += 1` that stood
+        # here counted this ONE assertion TWICE, so the printed figure was
+        # one more than the assertions that ran -- 101 PASS lines under a
+        # summary saying 102.
     import os as _os
     if (_os.environ.get("BE_FORWARD_LAUNCH_CHECK") != "1"
             and checks == _before):
