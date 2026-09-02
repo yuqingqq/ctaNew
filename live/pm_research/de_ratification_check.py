@@ -371,10 +371,20 @@ UNBINDABLE_FROM_PROSE = ("scope_from", "scope_to")
 #: reporting. So prose binding survives only for the one PRE-FORMAT entry it
 #: was built to read, and every other block-less entry refuses by name.
 GRANDFATHERED_PROSE_REFS = ("R-418",)
-#: `scope_to: null` means OPEN. Written as a string because the block is
-#: read as text; an absent field is NOT the same as null and does not open
-#: the scope.
-SCOPE_OPEN_TOKENS = ("null", "none", "")
+#: `scope_to: null` means OPEN -- and `null` is the ONLY spelling.
+#:
+#: DE12-R2: the set was `("null", "none", "")`, so `scope_to:` with NOTHING
+#: after the colon read as OPEN-ENDED, `verified True`, `unverifiable []`,
+#: silently. An empty value is ABSENCE IN PLACE, and this module already
+#: refuses the line when it is missing entirely -- so the two shapes of the
+#: same absence were treated oppositely, one refused and one permissive.
+#:
+#: `none` went with it, and that is a decision rather than tidying: R-419
+#: section 4 adopted the block with `scope_to` (`null` = open) and nothing
+#: else. A synonym I kept would be a SECOND SPELLING NOBODY RATIFIED, and
+#: adding one to a coordinator-adopted format is not mine to do. If a synonym
+#: is wanted it belongs in the block spec first.
+SCOPE_OPEN_TOKENS = ("null",)
 
 
 def bind_from_prose(entry: dict) -> tuple[dict, dict, list[str]]:
@@ -529,6 +539,16 @@ def check(supplied: dict, ratification_ref: str,
     block = bind_from_block(entry)
     if block is not None:
         # CO-5: a MALFORMED block is refused BY NAME, not left undecided.
+        empty = sorted(f for f, v in block.items()
+                       if isinstance(v, str) and not v.strip())
+        if empty:
+            raise RatificationRefused(
+                f"REFUSED: {ratification_ref}'s ratification block carries "
+                f"EMPTY value(s) for {empty}. An empty value is ABSENCE IN "
+                f"PLACE: the line is there and says nothing. It is neither a "
+                f"MISSING field nor a wrong VALUE, and it used to read as "
+                f"open-ended for `scope_to` while the same absence written as "
+                f"a missing line refused (DE12-R2).")
         missing = [f for f in RATIFICATION_FIELDS if f not in block]
         if missing:
             raise RatificationRefused(
@@ -675,7 +695,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 84
+EXPECTED_CHECKS = 102
 
 
 def selftest() -> int:
@@ -915,6 +935,66 @@ def selftest() -> int:
             "existed and had NO control in the audit; it has one now",
             needle="carries the VALUE")
 
+    # ---- DE12-R2: an empty value is ABSENCE IN PLACE --------------------
+    refuses(lambda: check(sup, "R-900", fixture_register(scope_to="")),
+            "DE12-R2 CLOSED: `scope_to:` with NOTHING after the colon "
+            "REFUSES -- it used to read as OPEN-ENDED with verified True and "
+            "unverifiable [], while the SAME absence written as a missing "
+            "line refused. Two shapes of one absence, treated oppositely",
+            needle="EMPTY value(s)")
+    ok(check(sup, "R-900", fixture_register(scope_to="null"))
+       ["checks"]["day_in_scope"] is True,
+       "and `null` is still the declared open spelling")
+    ok(check(sup, "R-900", fixture_register(scope_to="20260930"))
+       ["checks"]["day_in_scope"] is True,
+       "a bounded scope still bounds (09-01 <= 09-30)")
+    refuses(lambda: check(sup, "R-900", fixture_register(scope_to="~")),
+            "and `~` still refuses as a VALUE, not as an absence",
+            needle="not a day")
+    refuses(lambda: check(sup, "R-900",
+                          fixture_register().replace("scope_to: null\n", "")),
+            "while the ABSENT line still refuses as MISSING -- the three "
+            "cases now have three distinct messages",
+            needle="MISSING")
+    refuses(lambda: check(sup, "R-900", fixture_register(scope_to="none")),
+            "SCOPE_OPEN_TOKENS is `null` ALONE: `none` was an undeclared "
+            "SYNONYM and is gone. R-419 section 4 adopted `null` and nothing "
+            "else, and adding a second spelling to a coordinator-adopted "
+            "format is not mine to do -- it belongs in the block spec first",
+            needle="not a day")
+    ok(SCOPE_OPEN_TOKENS == ("null",),
+       f"the open-token set is exactly {SCOPE_OPEN_TOKENS}")
+    refuses(lambda: check(sup, "R-900", fixture_register(revocable_by="")),
+            "and the empty-value refusal is GENERAL, not a scope_to special "
+            "case: any block field that is present and says nothing refuses",
+            needle="EMPTY value(s)")
+
+    # ---- CO-7: the CO-6 fix ships its falsifier -------------------------
+    # Round 13 changed behaviour and added NO check: 84 -> 84. The refusal
+    # worked and nothing asserted it, which is rule 15 unmet in my own batch.
+    for _bad in ("not-a-time", "", "2026-13-45T99:99Z"):
+        refuses(lambda v=_bad: check(sup, "R-419", stamped_at=v),
+                f"CO-7: a garbage `stamped_at` ({_bad!r}) REFUSES on R-419, "
+                f"which is NOT superseded -- the branch the parse used to "
+                f"skip entirely",
+                needle="stamped_at")
+    for _bad in (123, 20260902, ["x"]):
+        refuses(lambda v=_bad: check(sup, "R-419", stamped_at=v),
+                f"and a NON-STRING stamp ({_bad!r}) refuses there too",
+                needle="stamped_at")
+    _st = check(sup, "R-419", stamped_at="2026-09-02T10:30Z")
+    ok(_st["verified"] and _st["stamped_at"] == "2026-09-02T10:30:00Z"
+       and _st["stamped_at_raw"] == "2026-09-02T10:30Z",
+       f"POSITIVE CONTROL: a WELL-FORMED stamp on a non-superseded ref "
+       f"verifies, and the emission echoes BOTH -- the PARSED value "
+       f"({_st['stamped_at']}) and the raw one ({_st['stamped_at_raw']}), so "
+       f"a receipt can be matched against its own field while a reader still "
+       f"sees what was handed in")
+    ok(check(sup, "R-419")["stamped_at"] is None
+       and check(sup, "R-419")["stamped_at_raw"] is None,
+       "and with no receipt supplied both read None -- `no receipt` is not "
+       "an unparsable one")
+
     # ---- CO-R1: closure as a DECIDED check ------------------------------
     ok(check(sup, "R-419")["checks"]["day_closed"] is True,
        "CO-R1: 09-01 reads day_closed TRUE today -- the ratified "
@@ -1135,8 +1215,21 @@ def selftest() -> int:
 
     audit = mutation_audit(sup)
     ok(audit["all_load_bearing"],
-       f"MUTATION AUDIT: {audit['n_guards']} refusal paths, live and disabled "
-       f"as distinct calls, {audit['survivors']} survivors")
+       f"MUTATION AUDIT: {audit['n_cases']} CASES, live and control as "
+       f"distinct calls, {audit['survivors']} survivors")
+    ok(audit["n_raise_sites"] < audit["n_cases"]
+       and audit["n_raise_sites"] >= 1,
+       f"AND THE TWO NUMBERS ARE REPORTED SEPARATELY, computed from the "
+       f"tracebacks rather than narrated: {audit['n_cases']} cases reach "
+       f"{audit['n_raise_sites']} RAISE SITES. For a shared parser that is "
+       f"call-site coverage -- several inputs through one refusal -- and a "
+       f"reader must not read the case count as a guard count "
+       f"(REVIEW_DE_ROUND_12 section 6, accepted)")
+    ok(all(len(v) >= 1 for v in audit["cases_per_site"].values())
+       and sum(len(v) for v in audit["cases_per_site"].values())
+       == audit["n_cases"],
+       f"every case is attributed to the site that refused it, and the "
+       f"attribution is total: {audit['cases_per_site']}")
     ok(set(audit["per_guard"]) == set(audit["expected"]),
        f"covering every refusal by name: {sorted(audit['per_guard'])}")
 
@@ -1239,18 +1332,40 @@ def mutation_audit(sup: dict) -> dict:
             ((sup, "R-418", None), {"stamped_at": "nope"}),
             ((sup, "R-418", None),
              {"stamped_at": "2026-09-02T10:30:00Z"})),
+        # CO-7: the SAME refusal driven on the NON-superseded branch -- the
+        # one the parse used to skip entirely. Driving it only on R-418
+        # exercised the path that already refused and left the blind one
+        # uncovered, which is how a fix without a falsifier looks from the
+        # audit's side.
+        "unparsable_stamped_at_not_superseded": (
+            ((sup, "R-419", None), {"stamped_at": "nope"}),
+            ((sup, "R-419", None),
+             {"stamped_at": "2026-09-02T10:30:00Z"})),
+        "empty_block_value": (
+            ((sup, "R-900", fixture_register(scope_to="")), {}),
+            ((sup, "R-900", good), {})),
         "already_superseded_at_stamp": (
             ((sup, "R-902", stamped_chain),
              {"stamped_at": "2026-09-02T10:30:00Z"}),
             ((sup, "R-902", stamped_chain),
              {"stamped_at": "2026-09-02T09:30:00Z"})),
     }
+    import traceback as _tb
     per: dict[str, dict] = {}
+    sites: dict[str, int] = {}
     for name, ((bad_a, bad_k), (ctl_a, ctl_k)) in cases.items():
         try:
             check(*bad_a, **bad_k)
             live = False
         except RatificationRefused:
+            # WHERE it raised, computed. The reviewer's note (accepted, not a
+            # finding): these are (input, expected-refusal) CASES over fewer
+            # raise SITES -- for a shared parser that is call-site coverage,
+            # which is the right design, and a reader must not read the case
+            # count as a guard count. So both numbers are reported and
+            # neither is narrated.
+            _f = _tb.extract_tb(sys.exc_info()[2])[-1]
+            sites[name] = _f.lineno
             live = True
         try:
             check(*ctl_a, **ctl_k)
@@ -1261,7 +1376,14 @@ def mutation_audit(sup: dict) -> dict:
                      "refuses_on_the_control": disabled,
                      "load_bearing": live and not disabled}
     survivors = sorted(k for k, v in per.items() if not v["load_bearing"])
-    return {"n_guards": len(per), "per_guard": per, "survivors": survivors,
+    return {"n_cases": len(per),
+            "n_raise_sites": len(set(sites.values())),
+            "raise_site_by_case": sites,
+            "cases_per_site": {ln: sorted(k for k, v in sites.items()
+                                          if v == ln)
+                               for ln in sorted(set(sites.values()))},
+            "n_guards": len(per),          # kept: older readers use it
+            "per_guard": per, "survivors": survivors,
             "expected": sorted(cases), "all_load_bearing": not survivors}
 
 
