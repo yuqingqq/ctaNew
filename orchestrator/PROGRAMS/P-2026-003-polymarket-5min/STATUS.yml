@@ -4,6 +4,75 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T12:20Z (MEM ROUND 22 -- THE WORKTREES PAID FOR THEMSELVES). R-427
+  swept; verified at the artifacts, including one claim I reproduced as NOT
+  reproducing. CO-7 CLOSED BY BEING MADE WORSE FIRST: the reviewer did not stop
+  at "no check was added" -- it RESTORED THE EXACT PRE-FIX SHAPE (parse only
+  inside the superseded branch, raw echo) and THE SUITE STAYED GREEN AT 84, so
+  the defect was REINSTATABLE IN FULL, SILENTLY. Those two statements are the
+  same fact but only the second prices it: A FIX WITHOUT A FALSIFIER IS NOT AN
+  INCOMPLETE FIX, IT IS A FIX THAT CAN BE UNDONE WITHOUT ANYONE NOTICING. That
+  is DE13-R1 (LOW-MEDIUM), now CLOSED at 194b5e9. A FILED CLAIM THAT DID NOT
+  REPRODUCE, AND I CHECKED IT MYSELF: DE round 14 filed stamped_at_raw as
+  DOCUMENTED; at that tip it appears FOUR TIMES -- one emission line (:672) and
+  three selftest lines (:987, :990, :994) -- AND NOWHERE IN DOCUMENTATION. That
+  is the reviewer's DE13-R2, STILL OPEN, with an IN-BAND CORRECTION REQUIRED in
+  Q-DE-33. The direction matters: NO EXTERNAL CHECK WOULD FIND THIS, because the
+  code is right and only the claim about it is wrong -- the same family as my own
+  round-20 truncated read, one seat over. DE ROUND 14 VERIFIED (194b5e9,
+  Q-DE-32): 102 CHECKS both launchers, reproduced here; DE12-R2 and CO-7 CLOSED;
+  the empty-value refusal is GENERAL and DISTINCT from MISSING and from VALUE;
+  "none" REMOVED as a decision because R-419 section 4 adopted "null" only; and
+  the audit now reports n_cases 21 / n_raise_sites 16, COMPUTED rather than
+  narrated. THE DE ROUND 13 REVIEW IS VERIFIED AND RELEASED (b7ce7bb): DE11-R1
+  closed WIDER THAN FILED -- eight rebinding shapes of __import__ (chained alias,
+  dict value, list element, default argument, keyword argument, tuple unpack,
+  attribute assignment) all refuse, with a literal call, a string and a comment
+  not swept up -- and the closure test that matters is the reviewer's:
+  reads_no_verdict is TRUE on DE's own three files and FALSE on be_forward_day
+  and da_blackout_mask because they import verdict producers, which is the
+  predicate WORKING. The reviewer's judgement that A DECLARED LIMIT CAN BE
+  TESTED FOR ITS CONSEQUENCE (expected-blind assertions, both directions) is
+  ACCEPTED and routed to DE round 15. DA ROUND 10 IS BUILT AND HELD at worktree
+  commit 3a89e6c -- I verified the HOLD rather than the intent: it is detached
+  from b75c9fe, ON NO REMOTE BRANCH, nothing landed, nothing under data/, the
+  installed unit unchanged, and the shared tree carries only BE's in-flight
+  be_forward_day.py, with da-midnight-verify.timer armed for 2026-09-03
+  00:06:00Z. Counts as reported, to be verified at landing: 235 -> 244 / mask 19
+  -> 30 / preflight 30 -> 34. DA FOUND A CLASS, NOT A BUG: 32 FILES under
+  live/pm_research/ derive a data/pm_5min path from __file__, which points at the
+  CODE root, so inside a per-seat worktree they resolve to an EMPTY data/; the
+  fix is a CODE_ROOT/DATA_ROOT SPLIT resolved in the lowest-level reader. DA
+  FIXED THE SEVEN IT OWNS AND TOUCHED NO OTHER SEAT'S FILE (rule 18), which is
+  correct and LEAVES TWENTY-FIVE INSTANCES STANDING. ONE OF THEM IS ON THE
+  COORDINATOR'S OWN SURFACE -- CO-8: v41_boundary_preflight.py carries the same
+  defect (REPO = P.REPO at :53, PROVENANCE_LEDGER at :177) and TWO OF ITS GATES
+  FAIL IN A BARE WORKTREE; it is NOT on tonight's path (only v5_deploy_gates.py's
+  selftest runs it, no timer does), so it is coordinator-owned and fixed after
+  tonight, with the reviewer taking it in the DA round 10 review. WORTH STATING
+  PLAINLY: PER-SEAT WORKTREES WERE ADOPTED THREE ROUNDS AGO FOR ISOLATION AND
+  THEIR FIRST REAL YIELD IS A LATENT 32-FILE CLASS NOBODY HAD SEEN -- isolation
+  did not cause this, it made a shared-tree assumption visible by removing the
+  shared tree. AND DA FOUND THE CONTROL-THAT-RAN-NOTHING CLASS IN ITS OWN SUITE:
+  SIX of its checks were SILENTLY SKIPPING in a worktree, 235 counted against
+  229 RUN. The round-12 review had closed that class STRUCTURALLY FOR THE
+  CHECKER by proving an emptied loop fails on the count; it reappeared ONE
+  SURFACE OVER, which is CO-6's lesson in a different key -- FIXING A CLASS
+  WHERE YOU FOUND IT DOES NOT FIX IT WHERE YOU DID NOT LOOK. The count now
+  asserts over checks that RAN. A NUMBERING CORRECTION THE COORDINATOR TOOK
+  AGAINST ITSELF: R-424 dispatched round 10 as Q-DA-208 when 208 was already
+  assigned by round 9 to tonight's verdict filing; DA files as Q-DA-209 and 208
+  STAYS WITH THE VERDICT -- FIRST-ASSIGNED KEEPS THE NUMBER, which is the right
+  rule, since the alternative silently renames an artifact someone else has
+  already cited. REVIEW TABLE: DE round 13 RELEASED; DE round 14 VERIFIED and
+  UNDER REVIEW at 194b5e9; DE round 15 IN FLIGHT (Q-DE-33); DA round 10 HELD for
+  the 00:14Z read; BE round 4 in flight, about 21 minutes in and under the cap.
+  OPEN FINDINGS: DE13-R2 to DE round 15; RR12-1 and CO-R4 to DA round 10 (held);
+  CO-8 to the coordinator after tonight. USER DECISIONS UNCHANGED: FOUR RULED,
+  ONE OPEN (the freeze disposition, R-424 section 6), the 09-02 accrual call
+  MECHANICAL after 00:06Z. R-419 remains revocable by the USER. UNCHANGED:
+  G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
+  evidence. PRIOR:
   2026-09-02T12:11Z (MEM ROUND 21 -- A FIX WITHOUT ITS FALSIFIER, AND TWO
   CORRECTIONS TO MY OWN READING). R-426 swept; verified at the artifacts and
   live at the box. CO-7 (LOW, coordinator): THE CO-6 FIX IS CORRECT AND SHIPPED
@@ -140,88 +209,7 @@ updated: >-
   disposition, with the coordinator's recommendation at R-424 section 6), and
   the 09-02 accrual call MECHANICAL after 00:06Z. R-419 remains revocable by the
   USER. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with Q4 failing;
-  development evidence. PRIOR:
-  2026-09-02T11:56Z (MEM ROUND 19 -- THE RULING NAMED NO ITEM, AND THIS FILE WAS
-  THE REFERENT). R-424 swept; the executed freeze verified at the artifact. THE
-  USER RULED FOUR DECISIONS WITH SIX WORDS -- "Proceed according to your
-  recommendation" (verbatim, ~11:49Z) -- and R-424 section 1 resolves the scope
-  by NAMING THIS FILE: the recommendations on record at the moment of the ruling
-  were HANDOFF's six-item table at 79f2db5, four rows each carrying an explicit
-  "coordinator's recommendation", mirrored in R-408 and R-411. FOUR ADOPTED, ONE
-  DELIBERATELY NOT REACHED. THE FREEZE DISPOSITION WAS NOT REACHED BECAUSE THE
-  TABLE SAID IT HAD NO RECOMMENDATION, describing it as "decided by no one" with
-  two options and nothing advised beside either -- and that is the whole value of
-  marking a recommendation AS a recommendation: had that row carried a
-  suggestion in the same voice as the other four, a six-word ruling would have
-  silently adopted A NEW CANDIDATE, MULTIPLICITY 3, AND A NEW FREEZE COMMIT, the
-  one decision the register insists only the USER can make. THE FOUR RULED:
-  R-408(2) THE PHASE-2 WINNER -- the composed candidate DOES NOT ADVANCE (9.2,
-  Q4 fails), Q1_arrival is the SURVIVING COMPONENT OF RECORD, NO RACE ADMISSION
-  (9.3, multiplicity unchanged), the next population runs under A2 as frozen
-  (2,000 draws one-sided; this family stays at 500 with its floor disclosure),
-  arm of record if one is ever named composed_lgbm, and PHASE-4 GRIDS STAY
-  GATED. Executed as a NEW document, plans/ITER011_PHASE2_ADJUDICATION_2026-09
-  -02.md -- the frozen preregistration is NOT edited (rule 13; 9.2/9.3 call for
-  exactly this in-band record), so a NEGATIVE result got the same ceremony a
-  positive one would have. R-408(3) THE v2 FREEZE -- FROZEN, GOVERNING FROM
-  2026-09-03: (e) adopted as drafted with no structural constant re-chosen, (f)
-  CONTENT_DARK JOINS THE GOVERNING SET from the effective day, (g) the 08-26
-  hype coin-day LEFT AS v1 RECORDED IT, and the section 8(1) limit carried
-  verbatim (blind on the fourth consecutive dark day). VERIFIED BY ME AT THE
-  ARTIFACT: FROZEN_BY_USER True, EFFECTIVE_FROM_DAY "20260903",
-  CONTENT_DARK_GOVERNS True, RESTATE_20260826_HYPE False, 19 CHECKS rc 0, and --
-  the part that matters tonight -- governs("20260902") is FALSE while
-  governs("20260903") is TRUE. R-411(i) THE G-COUNTING FLOOR -- for G-COUNTING
-  ONLY, a coin-day counts toward the >=5 bar only if its unmasked complement
-  covers >= 144 OF 288 WINDOWS; EVERY GOOD WINDOW IS SCORED REGARDLESS.
-  R-411(ii) THE P1 DENOMINATOR -- the P1 bar on a complement reads PER UNMASKED
-  HOUR (loss per hour of usable feed), with the calendar-24h form KEPT BESIDE IT
-  rather than replaced. Both are new constants named once each in
-  da_blackout_mask.py with the ruling quoted and consumed by BE's scorer; the
-  ESCALATION_no_minimum_complement_size block and the preflight's open_decisions
-  entry become the ruled state naming R-424. TONIGHT IS UNTOUCHED AND THAT WAS
-  CHECKED RATHER THAN ASSUMED: the v2 checker is imported by NO verdict path --
-  not da_forward_day_verify.py, not da_midnight_verify.sh, not
-  da_governed_verdict_preflight.py; only v5_deploy_gates.py runs its selftest --
-  so the 09-02 closing verdict at 00:06Z RUNS v1 ONLY. A FREEZE THAT GOVERNS
-  FROM TOMORROW CANNOT REACH TONIGHT. Wiring lands in DA round 10 AFTER that
-  verdict is verified and BEFORE 2026-09-04 00:06Z, the first governed v2
-  verdict. THE 09-02 ACCRUAL CALL IS NOT A FIFTH ADOPTION: R-409 already rules
-  it as a principle, the coordinator applies it after the 00:06Z verdict as a
-  section-7-style act with R-409 as the stated reason, and R-411(ii) now fixes
-  WHICH DENOMINATOR that reading uses. THE SIXTH DECISION STAYS OPEN AND NOW HAS
-  A RECOMMENDATION (R-424 section 6): race on the FROZEN BYTES AT 1b53929 -- the
-  plan's reading, section 10 step 9, the frozen set scored UNCHANGED -- with code
-  anchors materialised from the commit and SHA-VERIFIED BEFORE IMPORT, the data
-  anchor harmful_exposure_rows_v3_eraB.json (which HAS NO COMMIT, data/ being
-  gitignored; BE fact (iii), STILL UNVERIFIED until round 4 lands) bound by the
-  sha the frozen manifest eb8733da records and VERIFIED BY CONTENT with the
-  source named, and the driver at HEAD as harness with every non-anchor module
-  in the closure that moved since 1b53929 NAMED IN THE RECEIPT. WHY NOT
-  RE-FREEZE: a re-freeze is a NEW candidate (multiplicity 3) and a new freeze
-  commit WITH NO NEW EVIDENCE BEHIND IT -- it would let the anchors' drift choose
-  the candidate. Until ruled, BE round 4's output stays AN ESTIMATE IN SCRATCH,
-  NOT A RACE SCORE. DA ROUND 10 IS ONE BATCH, BUILT NOW IN ~/ctaNew-wt-da AND
-  LANDED ONLY AFTER THE 00:06Z VERDICT IS VERIFIED, because THE FIRST GOVERNED
-  VERDICT RUNS THE TREE AS IT IS (R-402) and landing beforehand would change the
-  instrument under the run it exists to read: (a) the RR12-1 split, REPO from
-  __file__ with the record proving WHICH TREE RAN; (b) the identity-only
-  admission log; (c) CO-R4, the preflight's refusal emitted as JSON ON STDOUT
-  WITH A DISTINCT RC, since rc 1 means failing predicates and a refusal is not
-  that; (d) the R-411(i)/(ii) constants with falsifiers ON THE BOUNDARY ITSELF
-  (143 does not count, 144 does); (e) the v2 wiring, where CONTENT_DARK joins
-  the governing set beside v1's statuses on a governed day, NO_REFERENCE IS
-  NEVER A PASS, the composite is the more severe, v1 untouched, with a control
-  that the 09-02 verdict path is BYTE-IDENTICAL with and without the wiring and
-  a positive control on a synthetic governed dark day. BE round 5 (after the 3-4
-  review) adds consuming counts_toward_G from the mask block and REFUSING IF
-  ABSENT on a governed day, the population-gate ledger-vs-tape refusal, and
-  require_verified(). STATE: FOUR USER DECISIONS RULED, ONE OPEN (the freeze
-  disposition), the 09-02 accrual call mechanical after 00:06Z; R-419 remains
-  revocable by the USER. Landed and awaiting the coordinator's next entry: MEM
-  round 18 (79f2db5, Q-MEM-6 21da8fd), DE round 12 (9dbaa5a), the DE round 11
-  review (1e494f9). UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with
-  Q4 failing; development evidence.
+  development evidence.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -3814,7 +3802,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T12:11Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T12:20Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3899,7 +3887,12 @@ focus: >
   commit lands. CO-7: THE CO-6 FIX LANDED WITHOUT ITS FALSIFIER -- the behaviour
   is right and the selftest count did not move (84 -> 84), which is the tell --
   and DE12-R2 found that an EMPTY scope_to reads silently open-ended; both go to
-  DE round 14. Fair-price
+  DE round 14, where both CLOSED -- CO-7 having first been SHARPENED from an
+  absence into a demonstration (the pre-fix shape restored, the suite still
+  green at 84, the defect reinstatable in full). DA round 10 is BUILT AND HELD
+  (unpushed, nothing landed) and found a 32-FILE CLASS deriving data paths from
+  __file__; DA fixed its own seven, and one instance on the coordinator's
+  preflight is recorded as CO-8 for after tonight. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an

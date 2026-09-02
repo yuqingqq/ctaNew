@@ -1710,3 +1710,92 @@ Moved in the MEM round-21 true-up of R-426. Join rule as in batch 1.
   G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
   evidence.
 ```
+
+## Batch 28 — archived 2026-09-02T12:20Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-22 true-up of R-427. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T11:56Z (MEM ROUND 19 -- THE RULING NAMED NO ITEM, AND THIS FILE WAS
+  THE REFERENT). R-424 swept; the executed freeze verified at the artifact. THE
+  USER RULED FOUR DECISIONS WITH SIX WORDS -- "Proceed according to your
+  recommendation" (verbatim, ~11:49Z) -- and R-424 section 1 resolves the scope
+  by NAMING THIS FILE: the recommendations on record at the moment of the ruling
+  were HANDOFF's six-item table at 79f2db5, four rows each carrying an explicit
+  "coordinator's recommendation", mirrored in R-408 and R-411. FOUR ADOPTED, ONE
+  DELIBERATELY NOT REACHED. THE FREEZE DISPOSITION WAS NOT REACHED BECAUSE THE
+  TABLE SAID IT HAD NO RECOMMENDATION, describing it as "decided by no one" with
+  two options and nothing advised beside either -- and that is the whole value of
+  marking a recommendation AS a recommendation: had that row carried a
+  suggestion in the same voice as the other four, a six-word ruling would have
+  silently adopted A NEW CANDIDATE, MULTIPLICITY 3, AND A NEW FREEZE COMMIT, the
+  one decision the register insists only the USER can make. THE FOUR RULED:
+  R-408(2) THE PHASE-2 WINNER -- the composed candidate DOES NOT ADVANCE (9.2,
+  Q4 fails), Q1_arrival is the SURVIVING COMPONENT OF RECORD, NO RACE ADMISSION
+  (9.3, multiplicity unchanged), the next population runs under A2 as frozen
+  (2,000 draws one-sided; this family stays at 500 with its floor disclosure),
+  arm of record if one is ever named composed_lgbm, and PHASE-4 GRIDS STAY
+  GATED. Executed as a NEW document, plans/ITER011_PHASE2_ADJUDICATION_2026-09
+  -02.md -- the frozen preregistration is NOT edited (rule 13; 9.2/9.3 call for
+  exactly this in-band record), so a NEGATIVE result got the same ceremony a
+  positive one would have. R-408(3) THE v2 FREEZE -- FROZEN, GOVERNING FROM
+  2026-09-03: (e) adopted as drafted with no structural constant re-chosen, (f)
+  CONTENT_DARK JOINS THE GOVERNING SET from the effective day, (g) the 08-26
+  hype coin-day LEFT AS v1 RECORDED IT, and the section 8(1) limit carried
+  verbatim (blind on the fourth consecutive dark day). VERIFIED BY ME AT THE
+  ARTIFACT: FROZEN_BY_USER True, EFFECTIVE_FROM_DAY "20260903",
+  CONTENT_DARK_GOVERNS True, RESTATE_20260826_HYPE False, 19 CHECKS rc 0, and --
+  the part that matters tonight -- governs("20260902") is FALSE while
+  governs("20260903") is TRUE. R-411(i) THE G-COUNTING FLOOR -- for G-COUNTING
+  ONLY, a coin-day counts toward the >=5 bar only if its unmasked complement
+  covers >= 144 OF 288 WINDOWS; EVERY GOOD WINDOW IS SCORED REGARDLESS.
+  R-411(ii) THE P1 DENOMINATOR -- the P1 bar on a complement reads PER UNMASKED
+  HOUR (loss per hour of usable feed), with the calendar-24h form KEPT BESIDE IT
+  rather than replaced. Both are new constants named once each in
+  da_blackout_mask.py with the ruling quoted and consumed by BE's scorer; the
+  ESCALATION_no_minimum_complement_size block and the preflight's open_decisions
+  entry become the ruled state naming R-424. TONIGHT IS UNTOUCHED AND THAT WAS
+  CHECKED RATHER THAN ASSUMED: the v2 checker is imported by NO verdict path --
+  not da_forward_day_verify.py, not da_midnight_verify.sh, not
+  da_governed_verdict_preflight.py; only v5_deploy_gates.py runs its selftest --
+  so the 09-02 closing verdict at 00:06Z RUNS v1 ONLY. A FREEZE THAT GOVERNS
+  FROM TOMORROW CANNOT REACH TONIGHT. Wiring lands in DA round 10 AFTER that
+  verdict is verified and BEFORE 2026-09-04 00:06Z, the first governed v2
+  verdict. THE 09-02 ACCRUAL CALL IS NOT A FIFTH ADOPTION: R-409 already rules
+  it as a principle, the coordinator applies it after the 00:06Z verdict as a
+  section-7-style act with R-409 as the stated reason, and R-411(ii) now fixes
+  WHICH DENOMINATOR that reading uses. THE SIXTH DECISION STAYS OPEN AND NOW HAS
+  A RECOMMENDATION (R-424 section 6): race on the FROZEN BYTES AT 1b53929 -- the
+  plan's reading, section 10 step 9, the frozen set scored UNCHANGED -- with code
+  anchors materialised from the commit and SHA-VERIFIED BEFORE IMPORT, the data
+  anchor harmful_exposure_rows_v3_eraB.json (which HAS NO COMMIT, data/ being
+  gitignored; BE fact (iii), STILL UNVERIFIED until round 4 lands) bound by the
+  sha the frozen manifest eb8733da records and VERIFIED BY CONTENT with the
+  source named, and the driver at HEAD as harness with every non-anchor module
+  in the closure that moved since 1b53929 NAMED IN THE RECEIPT. WHY NOT
+  RE-FREEZE: a re-freeze is a NEW candidate (multiplicity 3) and a new freeze
+  commit WITH NO NEW EVIDENCE BEHIND IT -- it would let the anchors' drift choose
+  the candidate. Until ruled, BE round 4's output stays AN ESTIMATE IN SCRATCH,
+  NOT A RACE SCORE. DA ROUND 10 IS ONE BATCH, BUILT NOW IN ~/ctaNew-wt-da AND
+  LANDED ONLY AFTER THE 00:06Z VERDICT IS VERIFIED, because THE FIRST GOVERNED
+  VERDICT RUNS THE TREE AS IT IS (R-402) and landing beforehand would change the
+  instrument under the run it exists to read: (a) the RR12-1 split, REPO from
+  __file__ with the record proving WHICH TREE RAN; (b) the identity-only
+  admission log; (c) CO-R4, the preflight's refusal emitted as JSON ON STDOUT
+  WITH A DISTINCT RC, since rc 1 means failing predicates and a refusal is not
+  that; (d) the R-411(i)/(ii) constants with falsifiers ON THE BOUNDARY ITSELF
+  (143 does not count, 144 does); (e) the v2 wiring, where CONTENT_DARK joins
+  the governing set beside v1's statuses on a governed day, NO_REFERENCE IS
+  NEVER A PASS, the composite is the more severe, v1 untouched, with a control
+  that the 09-02 verdict path is BYTE-IDENTICAL with and without the wiring and
+  a positive control on a synthetic governed dark day. BE round 5 (after the 3-4
+  review) adds consuming counts_toward_G from the mask block and REFUSING IF
+  ABSENT on a governed day, the population-gate ledger-vs-tape refusal, and
+  require_verified(). STATE: FOUR USER DECISIONS RULED, ONE OPEN (the freeze
+  disposition), the 09-02 accrual call mechanical after 00:06Z; R-419 remains
+  revocable by the USER. Landed and awaiting the coordinator's next entry: MEM
+  round 18 (79f2db5, Q-MEM-6 21da8fd), DE round 12 (9dbaa5a), the DE round 11
+  review (1e494f9). UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with
+  Q4 failing; development evidence.
+```

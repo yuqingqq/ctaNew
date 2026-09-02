@@ -1,11 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T12:11Z — **CO-7: a fix landed without its falsifier** — the
-CO-6 repair was correct and added **no selftest line** (84 → 84), and the count
-that did not move is the tell. DE round 13 verified (DE11-R1 and CO-6 CLOSED);
-DE round 12 review released with **DE12-R2** (an *empty* `scope_to` reads
-silently open-ended). **USER decisions unchanged: four RULED, one OPEN.** Prior
-line: BE round 4 re-runs as a streaming pass with the 12 G cap unraised.
+Updated: 2026-09-02T12:20Z — **CO-7 sharpened from an absence to a
+demonstration: the pre-fix shape was restored and the suite stayed green — the
+defect was reinstatable in full.** Now closed. **DA round 10 is BUILT AND HELD**
+(unpushed, nothing landed) and found a **32-file class**, one instance of it on
+the coordinator's own surface (**CO-8**). **USER decisions unchanged: four
+RULED, one OPEN.** Prior line: a fix without its falsifier, and two corrections
+to my own reading.
 
 ## READ FIRST — current project handoff
 
@@ -428,8 +429,10 @@ launchers at **235/19**.
 | **DE round 10** | **RELEASED** (`922bff6`) — CO-5, CO-R1's checker half and CO-R3 closed; DE's addition (`require_verified` refuses a **PROVENANCE** result) accepted. **DE10-R1 (MEDIUM) stands → DE round 12** |
 | **DE round 11** | **RELEASED** (`1e494f9`) — DE-R1..R4 closed, **two past the ask**; both deliberate separations accepted with the reviewer's reason (`STRATIFIED` is a legal `sampling` value, so the defect is in the **pair** — folding it into the vocabulary loop would name one field for a two-field fault). **DE11-R1 → DE round 13** |
 | **DE round 12** | **RELEASED** (`dcb7036`) — DE10-R1 closed **at the root** (all five temporal sites compare datetimes). Two findings: **DE12-R1** = CO-6 confirmed and **widened to non-strings**, raised to **MEDIUM-LOW**; **DE12-R2 (new)** — an **empty** `scope_to` reads silently open-ended |
-| **DE round 13** | **VERIFIED** (`f04c06a`) and **UNDER REVIEW** at that tip: admissible **62**, ratification **84**, seam **69**, rc 0 both launchers. **DE11-R1 CLOSED** and **CO-6/DE12-R1 CLOSED at entry** |
-| **DE round 14** | **IN FLIGHT** (Q-DE-32): DE12-R2 + **CO-7** + the audit-count wording |
+| **DE round 13** | **RELEASED** (`b7ce7bb`) — DE11-R1 closed **wider than filed**: eight rebinding shapes of `__import__` all refuse, and the closure test that matters — `reads_no_verdict` True on DE's own three files, **False** on `be_forward_day`/`da_blackout_mask` because they import verdict producers. **DE13-R1** (CO-7 sharpened) and **DE13-R2** (new) |
+| **DE round 14** | **VERIFIED** (`194b5e9`) and **UNDER REVIEW**: **102 checks** both launchers (reproduced here). DE12-R2 and CO-7 **CLOSED**; the empty-value refusal is **GENERAL** and distinct from MISSING and VALUE; **`none` removed as a decision** because R-419 §4 adopted `null` only; audit reports **n_cases 21 / n_raise_sites 16, computed** rather than narrated |
+| **DE round 15** | **IN FLIGHT** (Q-DE-33): DE13-R2 + the expected-blind assertions |
+| **DA round 10** | **BUILT AND HELD** at worktree `3a89e6c` — verified here as **unpushed and on no remote branch**, nothing landed, the shared tree carrying only BE's in-flight file. Lands after the 00:14Z read |
 | **the coordinator's own acts** | **REVIEWED** (`1384ec5`), no hold; CO-R1..R4 dispositioned |
 
 **In flight:** **BE round 4** (Q-BE-229) — the frozen-bytes execution, **not
@@ -459,8 +462,50 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **DE12-R2** and **CO-7** → DE round 14; **RR12-1** and
-**CO-R4** → DA round 10.
+**Open findings:** **DE13-R2** → DE round 15; **RR12-1** and **CO-R4** → DA
+round 10 (held); **CO-8** → the coordinator, after tonight.
+
+**CO-7 got worse before it closed, and the sharpening is the lesson.** The
+reviewer did not merely note the missing check — it **restored the exact pre-fix
+shape** (parse only inside the superseded branch, raw echo) and **the suite
+stayed green at 84**. So the defect was not just unguarded; it was
+**reinstatable in full, silently**. *"No check was added"* and *"the old bug can
+be put back and nothing notices"* are the same fact, and only the second one
+makes the cost visible. Closed at `194b5e9`.
+
+**A filed claim that did not reproduce, and I checked it myself.** DE round 14
+reported `stamped_at_raw` as *documented*; at that tip it appears **four times —
+one emission line and three selftest lines — and nowhere in documentation.**
+That is the reviewer's **DE13-R2**, still open, and Q-DE-33 must carry an
+**in-band correction**. Worth noting the direction: this is a seat overstating
+its *own* completeness, which no external grep would catch and only reading the
+file does.
+
+**DA round 10 found a class, not a bug.** **32 files** under `live/pm_research/`
+derive a `data/pm_5min` path from `__file__` — which points at the **code** root,
+so in a worktree that resolves to `~/ctaNew-wt-*/data/…`, **empty**. The fix is a
+**CODE_ROOT / DATA_ROOT split**, resolved in the lowest-level reader. **DA fixed
+the seven it owns and touched no other seat's file** (rule 18), which is correct
+and leaves twenty-five instances standing.
+
+**One of them is on the coordinator's own surface — CO-8.**
+`v41_boundary_preflight.py` carries the same defect and **two of its gates fail
+in a bare worktree**. It is **not on tonight's path** (only `v5_deploy_gates.py`'s
+selftest runs it; no timer does), so it is coordinator-owned and fixed after
+tonight. **The worktrees adopted three rounds ago are what made a latent
+32-file class visible** — isolation did not create the defect, it revealed it.
+
+**And DA found the control-that-ran-nothing class in its own suite:** **six of
+its checks were silently skipping in a worktree** — 235 counted, **229 ran**.
+The round-12 review closed that class *structurally for the checker* by proving
+an emptied loop fails on the count; here it reappeared one surface over, which is
+CO-6's "sibling branch is not fixed, merely unvisited" in a different key. The
+count now asserts over checks that **ran**.
+
+**A numbering correction, and the coordinator took it against itself:** R-424
+dispatched DA round 10 as **Q-DA-208**, but round 9 had already assigned 208 to
+tonight's verdict filing. DA files as **Q-DA-209**; **208 stays with the
+verdict** — first-assigned keeps the number.
 
 **CO-7 is the one to keep: a fix landed without its falsifier.** The CO-6 repair
 is **correct** — `stamped_at` is now parsed at entry, and `'not-a-time'`, `123`
@@ -870,6 +915,54 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~12:20Z (MEM) — THE WORKTREES PAID FOR THEMSELVES
+
+**R-427 swept.** Three things, and they connect.
+
+**CO-7 closed by being made worse first.** The reviewer did not stop at *"no
+check was added"*. It **restored the exact pre-fix shape** and the suite stayed
+**green at 84** — so the defect was **reinstatable in full, silently**. Those two
+statements are the same fact, but only the second prices it. **A fix without a
+falsifier is not an incomplete fix; it is a fix that can be undone without
+anyone noticing**, and the demonstration is what makes that concrete rather than
+procedural.
+
+**A seat overstated its own completeness, and only reading the file caught it.**
+DE round 14 filed `stamped_at_raw` as *documented*. I checked at that tip: four
+occurrences — **one emission line and three selftest lines, none in
+documentation**. That is DE13-R2, still open, with an in-band correction required
+in the next round. The direction matters: **no external check would find this**,
+because the code is right and only the claim about it is wrong. It is the same
+family as my own round-20 truncated read, one seat over.
+
+**And DA's round found a class because the worktrees exist.** **32 files** derive
+a data path from `__file__` — the **code** root — so inside a per-seat worktree
+they resolve to an **empty** `data/`. DA fixed the seven it owns, touched nothing
+else (rule 18), and left twenty-five instances standing, **one of them on the
+coordinator's own preflight (CO-8, two gates failing in a bare worktree, not on
+tonight's path)**. Worth stating plainly: **per-seat worktrees were adopted three
+rounds ago for isolation, and their first real yield is a latent 32-file class
+nobody had seen.** Isolation did not cause this; it made a shared-tree assumption
+visible by removing the shared tree.
+
+**DA also found the control-that-ran-nothing class in its own suite** — six
+checks **silently skipping** in a worktree, 235 counted against **229 run**. The
+round-12 review had closed that class *structurally for the checker*; it
+reappeared one surface over. That is CO-6's lesson again in a different key:
+**fixing a class where you found it does not fix it where you did not look.** The
+count now asserts over checks that ran.
+
+**Held, correctly, and I verified the hold rather than the intent:** DA round 10
+sits at worktree commit `3a89e6c`, **on no remote branch**, with the shared tree
+carrying only BE's in-flight file — nothing landed, the installed unit untouched,
+the 00:06Z timer armed. **The first governed verdict will run the tree as it is.**
+
+**One numbering correction, taken by the coordinator against itself:** R-424
+dispatched round 10 as Q-DA-208 when 208 was already tonight's verdict filing.
+DA files as **Q-DA-209**, and **first-assigned keeps the number** — the right
+rule, since the alternative silently renames an artifact someone else has already
+cited.
 
 ### 2026-09-02 ~12:11Z (MEM) — A FIX WITHOUT ITS FALSIFIER, AND TWO
 ### CORRECTIONS TO MY OWN READING
