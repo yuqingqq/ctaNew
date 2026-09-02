@@ -3979,3 +3979,63 @@ Moved in the MEM round-54 true-up of R-469, R-470, R-471 and Q-DE-53. Join rule 
   --require-no-skips, DATA_ROOT split after DA's landing. UNCHANGED: G=1/5; the
   011 family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
 ```
+
+## Batch 61 — archived 2026-09-02T19:39Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-55 true-up of R-472, R-473 and the DE-35 filing. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T18:50Z (MEM ROUND 52 -- I REPLACED ONE OCCURRENCE AND CALLED IT
+  REPLACED). R-465 swept; nothing run; committed blobs only. MY RESIDUAL FIRST,
+  BECAUSE IT IS THE SAME FAILURE I NAMED A ROUND AGO: I wrote "replaced, not
+  annotated" about the withdrawn Phase-4 date and then replaced ONE occurrence;
+  the coordinator found two more, and grepping the phrase across both files
+  found THREE live statements of it, not two -- STATUS.yml:3806 (the
+  phase4_run_when FLAG, current state), the round-49 window narrative ("reviewer
+  reads -> run, earliest 09-03"), and HANDOFF.md:1830, WHICH THE DISPATCH DID
+  NOT NAME. All three replaced; the only surviving occurrences NAME THE
+  WITHDRAWAL. THE LESSON IS NOT "BE CAREFUL": A WITHDRAWAL IS A GREP, NOT AN
+  EDIT -- a date lives in as many places as it was useful, and the one you
+  remember is the one you wrote last. I EDITED A DATED WINDOW ENTRY TO DO IT AND
+  SAY SO: the round-49 narrative now reads "run (NO DATE; see below)"; that entry
+  has not yet rotated to the archive so nothing is lost, GIT HOLDS THE ORIGINAL
+  WORDING, and when it rotates it carries the corrected text. I would not do this
+  to a frozen artifact; the rolling window is CURRENT CONTEXT A READER CONSUMES
+  and a withdrawn date sitting in it is exactly the quotation hazard. BE ROUND 9
+  WAS EXECUTED, NOT JUST READ, AND THAT IS WHY IT IS SHORT: 93 PASS then RC 1
+  under both launchers in a detached scratch worktree. The failure is the BE7-R4
+  FLIP CHECK (90638c3:2565-2588) and I read it -- it takes _main_head and _prev =
+  HEAD~1 with cwd=str(REPO), THE MAIN TREE, adds a worktree detached at that
+  HEAD~1, copies the running file in and asserts it is DIRTY there -- A PREMISE
+  THAT HOLDS ONLY UNTIL THE NEXT COMMIT LANDS ON THE BRANCH. From the first
+  commit after BE's own, HEAD~1 no longer holds BE's version and the check's
+  verdict changes WITHOUT THE DRIVER CHANGING AT ALL: A CHECK WHOSE ANSWER
+  DEPENDS ON THE BRANCH'S HISTORY IS MEASURING THE REPOSITORY, NOT THE CODE. AND
+  IT IS THE FOURTH SYMPTOM OF A SINGLE CONSTANT: REPO = Path("/home/yuqing/
+  ctaNew") produced BE34-R3 (the spawned child, closed in round 6 AT ONE CALL
+  SITE), BE7-R4 (the provenance block, round 49), BE9-C1 (this flip check) and
+  BE9-C2 (anchors, data and the audit tree still rooted there, so "the tree that
+  executed" is only ever the receipt's) -- ROUND 6 FIXED A USE; THE CONSTANT IS
+  STILL THE DEFECT, exactly as recorded three rounds ago, and it has now cost
+  four findings across four rounds. THE CONSEQUENCE FOR THE COUNT IS WHAT MAKES
+  THIS HIGH RATHER THAN ANNOYING: CHECKS 95-117 ARE UNVERIFIABLE AT THAT TIP IN
+  ANY TREE, twenty-three assertions past the failure never executing, so "the
+  closures are present" is a claim about LINES, not about BEHAVIOUR -- which is
+  why Q-BE-234 is VERIFIED-SHORT: closures present at the line, nothing past
+  check 94 ran. THE LANDING MOVE IS RIGHT AND WORTH STATING AS A PRINCIPLE: the
+  R-442 section 3(c) durable landing becomes BE ROUND 11, after the 00:14Z read
+  AND after round 10 lands, because A DRIVER WHOSE OWN SELFTEST FAILS AT ITS TIP
+  CANNOT PRODUCE THE ARTIFACT OF RECORD -- the artifact would be reproducible
+  only by a driver that cannot demonstrate itself. BE ROUND 8'S REVIEW IS
+  RELEASED (f804f33): CO-12 and CO-13 BOTH CONFIRMED CLOSED, two LOW findings --
+  so the attribution defect I verified statically in round 47 is now closed and
+  confirmed at the artifact by someone other than its author. SEQUENCING: BE
+  round 10 (Q-BE-235) dispatched 18:48Z with BE9-C1..C3 and NO RUN AGAINST A REAL
+  DAY; the reviewer takes BE 9 + 10 AS ONE FILING at the round-10 tip, then DE 33
+  + 34 as one filing at the round-34 tip. TONIGHT'S TIMERS UNCHANGED: 00:06Z
+  verdict, 00:14Z preflight, coordinator wake after, R-409 accrual with the
+  R-411(ii) denominator, DA landing at e353119 (HOLD -> 3b7e10a), CO-8,
+  --require-no-skips, DATA_ROOT split after DA's landing. USER: SEVEN RULED,
+  THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with
+  Q4 failing; the sequencing rule; R-419 revocable.
+```

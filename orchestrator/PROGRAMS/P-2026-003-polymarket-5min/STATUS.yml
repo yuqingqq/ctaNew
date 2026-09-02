@@ -4,6 +4,68 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T19:39Z (MEM ROUND 55 -- THE FINDING SURVIVED; ITS EXPLANATION DID
+  NOT). R-472, R-473 and the reviewer's DE-35 filing swept; nothing run; state
+  files only. R-473 SECTION 0 IS THE SHAPE WORTH LEARNING FROM AND IT IS NOT A
+  RETRACTION: R-471 section 2(a) explained DE35-C1 by saying the treated arm "is
+  HELD with no event to anchor a repost", and the reviewer's fixture shows that
+  is FALSE -- the treated arm DOES repost through a later generation's own
+  below-theta_repost score, measured TREATED 1 cancel / 1 repost / value 4.000
+  against CONTROL 2 / 2 / 0.000 on the same fixture. THE FINDING STANDS AND ITS
+  MECHANISM IS REPLACED: the defect is the control's INVENTED LITERAL-0.0 EVENT
+  at t0 + REPOST_DWELL_S (:802-804) whose PRESENCE AND TIMING DEPEND ON THE DRAW,
+  so the null's repost economics are AN ARTEFACT OF THE CONTROL'S CONSTRUCTION,
+  not of the scored stream. A FINDING CAN BE RIGHT ABOUT THE ASYMMETRY AND WRONG
+  ABOUT WHY, and the corrected version is the MORE damaging one: an artefact that
+  moves with the draw is worse than an absence. BOTH STRING CORRECTIONS MADE, AND
+  THE SECOND IS MINE TO OWN: the 19:2xZ in STATUS.yml:3801 and HANDOFF.md:923 was
+  THE COORDINATOR'S PLACEHOLDER WHICH I COPIED FAITHFULLY -- and faithfully is
+  the problem: A PLACEHOLDER COPIED IS A PLACEHOLDER PUBLISHED. The register's
+  stamps put the dispatch at 19:23:09-19:23:21Z so both now read 19:23Z, and the
+  lesson is that AN "x" IN A TIMESTAMP IS NOT A TRANSCRIPTION, IT IS AN
+  UNFINISHED FIELD -- resolve it or don't carry it. THE FIRST CORRECTION I
+  CHECKED AT THE BLOB RATHER THAN TAKING IT: HALF_SPREAD_CENTS IS GONE AT
+  27c1ccd, one mention surviving at :139 and it is THE COMMENT RECORDING THE
+  DELETION ("EST-R1: HALF_SPREAD_CENTS IS GONE") with DRAFT:212-213 cited as the
+  reason -- same shape as last round's addendum guard, THE SURVIVING STRING IS
+  THE RECORD OF THE ABSENCE. So the USER package is TWO NUMBERS, and
+  REPOST_DWELL_S = 2.0 now stands as a declared module constant with its own
+  reason beside it ("an undeclared default in a policy runner is a policy choice
+  nobody made"). A THIRD STALE OCCURRENCE EXISTS AND I AM DELIBERATELY NOT
+  CHANGING IT: HANDOFF.md:1834, inside my round-53 dated entry, still says
+  "HALF_SPREAD_CENTS only if kept" -- I checked the clocks, that entry was
+  committed 19:06:05Z and 27c1ccd landed 19:12:02Z, SIX MINUTES LATER, so the
+  sentence WAS TRUE WHEN WRITTEN. That is the line separating it from the
+  "earliest 09-03" case I mishandled two rounds ago: THAT was a forward
+  commitment that outlived its withdrawal, THIS is a dated observation accurate
+  at its stamp. CORRECT CURRENT-STATE STATEMENTS; LEAVE DATED STATEMENTS THAT
+  WERE TRUE WHEN STAMPED -- AND READ THE STAMP BEFORE DECIDING WHICH YOU HAVE.
+  THE REVIEWER SPLIT THE BUNDLE RATHER THAN BLOCKING IT, the more useful verdict:
+  SECTIONS 1 AND 4 MAY GO AHEAD OF 5; 2 AND 3 MAY NOT; 5 is restated by round 36
+  and the package then goes to the USER WHOLE, IN ONE NOTIFICATION (R-473 section
+  2). DE35-R2 TRAVELS WITH IT: each null draw is FOUR REPLAYS, ~800 PER CELL, so
+  v1 section d's "of order 6 hours" is UNDERSTATED BY ABOUT 4x -- a cost estimate
+  belongs in the package the USER freezes, not in the round that discovers it was
+  wrong. TWO RULINGS RECORDED AS RULINGS: section 5 becomes THE TREATED ARM'S OWN
+  STREAM PERMUTED WITHIN (side, hour) STRATA, so the control stops being invented
+  and starts being a permutation of the thing it controls; and DE34-R7 is run
+  AGAINST THE TIP with the called set COMPUTED and the residue CARRIED AS
+  STATUSES, phase2_arms.py NOT_CALLED -- statuses rather than silence, this
+  programme's rule 4 applied to arms. DE ROUND 35 REVIEW RELEASED (df123f2, 276
+  lines): DE35-C1..C5 ALL CONFIRMED with C4 CONTESTED AS A BLOCKER, NOT AS A
+  FINDING; five findings DE35-R1..R5; 27c1ccd released as ROUND 36'S BASE. SEATS:
+  DE round 36 DISPATCHED at this tip (Q-DE-54 in flight, its row NOT landed when
+  I filed -- checked; the scoring wiring is a LATER round with DE35-R3); the
+  REVIEWER on RECORDED STANDBY until BE round 10's row lands, then BE 9 + 10 as
+  ONE filing; BE round 10's row IN FLIGHT (code ff60d0a); DA on standby until
+  tonight's 00:06Z / 00:14Z reads. THE PHASE-4 RUN HAS NO DATE. TONIGHT
+  UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after, R-409
+  accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
+  3b7e10a), the durable landing BE ROUND 11 after round 10 lands, CO-8,
+  --require-no-skips, DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed
+  tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-02T19:25Z (MEM ROUND 54 -- A CHECK WHOSE JOB IS TO PROVE A DOCUMENT IS
   NOT BEING OBEYED). R-469, R-470, R-471 and Q-DE-53 swept; nothing run; no seat
   worktree read; be_forward_day.py untouched (BE round 10's row in flight,
@@ -113,60 +175,6 @@ updated: >-
   ROUND 11 AFTER ROUND 10 LANDS, CO-8, --require-no-skips, DATA_ROOT split. USER:
   SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family
   12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-02T18:50Z (MEM ROUND 52 -- I REPLACED ONE OCCURRENCE AND CALLED IT
-  REPLACED). R-465 swept; nothing run; committed blobs only. MY RESIDUAL FIRST,
-  BECAUSE IT IS THE SAME FAILURE I NAMED A ROUND AGO: I wrote "replaced, not
-  annotated" about the withdrawn Phase-4 date and then replaced ONE occurrence;
-  the coordinator found two more, and grepping the phrase across both files
-  found THREE live statements of it, not two -- STATUS.yml:3806 (the
-  phase4_run_when FLAG, current state), the round-49 window narrative ("reviewer
-  reads -> run, earliest 09-03"), and HANDOFF.md:1830, WHICH THE DISPATCH DID
-  NOT NAME. All three replaced; the only surviving occurrences NAME THE
-  WITHDRAWAL. THE LESSON IS NOT "BE CAREFUL": A WITHDRAWAL IS A GREP, NOT AN
-  EDIT -- a date lives in as many places as it was useful, and the one you
-  remember is the one you wrote last. I EDITED A DATED WINDOW ENTRY TO DO IT AND
-  SAY SO: the round-49 narrative now reads "run (NO DATE; see below)"; that entry
-  has not yet rotated to the archive so nothing is lost, GIT HOLDS THE ORIGINAL
-  WORDING, and when it rotates it carries the corrected text. I would not do this
-  to a frozen artifact; the rolling window is CURRENT CONTEXT A READER CONSUMES
-  and a withdrawn date sitting in it is exactly the quotation hazard. BE ROUND 9
-  WAS EXECUTED, NOT JUST READ, AND THAT IS WHY IT IS SHORT: 93 PASS then RC 1
-  under both launchers in a detached scratch worktree. The failure is the BE7-R4
-  FLIP CHECK (90638c3:2565-2588) and I read it -- it takes _main_head and _prev =
-  HEAD~1 with cwd=str(REPO), THE MAIN TREE, adds a worktree detached at that
-  HEAD~1, copies the running file in and asserts it is DIRTY there -- A PREMISE
-  THAT HOLDS ONLY UNTIL THE NEXT COMMIT LANDS ON THE BRANCH. From the first
-  commit after BE's own, HEAD~1 no longer holds BE's version and the check's
-  verdict changes WITHOUT THE DRIVER CHANGING AT ALL: A CHECK WHOSE ANSWER
-  DEPENDS ON THE BRANCH'S HISTORY IS MEASURING THE REPOSITORY, NOT THE CODE. AND
-  IT IS THE FOURTH SYMPTOM OF A SINGLE CONSTANT: REPO = Path("/home/yuqing/
-  ctaNew") produced BE34-R3 (the spawned child, closed in round 6 AT ONE CALL
-  SITE), BE7-R4 (the provenance block, round 49), BE9-C1 (this flip check) and
-  BE9-C2 (anchors, data and the audit tree still rooted there, so "the tree that
-  executed" is only ever the receipt's) -- ROUND 6 FIXED A USE; THE CONSTANT IS
-  STILL THE DEFECT, exactly as recorded three rounds ago, and it has now cost
-  four findings across four rounds. THE CONSEQUENCE FOR THE COUNT IS WHAT MAKES
-  THIS HIGH RATHER THAN ANNOYING: CHECKS 95-117 ARE UNVERIFIABLE AT THAT TIP IN
-  ANY TREE, twenty-three assertions past the failure never executing, so "the
-  closures are present" is a claim about LINES, not about BEHAVIOUR -- which is
-  why Q-BE-234 is VERIFIED-SHORT: closures present at the line, nothing past
-  check 94 ran. THE LANDING MOVE IS RIGHT AND WORTH STATING AS A PRINCIPLE: the
-  R-442 section 3(c) durable landing becomes BE ROUND 11, after the 00:14Z read
-  AND after round 10 lands, because A DRIVER WHOSE OWN SELFTEST FAILS AT ITS TIP
-  CANNOT PRODUCE THE ARTIFACT OF RECORD -- the artifact would be reproducible
-  only by a driver that cannot demonstrate itself. BE ROUND 8'S REVIEW IS
-  RELEASED (f804f33): CO-12 and CO-13 BOTH CONFIRMED CLOSED, two LOW findings --
-  so the attribution defect I verified statically in round 47 is now closed and
-  confirmed at the artifact by someone other than its author. SEQUENCING: BE
-  round 10 (Q-BE-235) dispatched 18:48Z with BE9-C1..C3 and NO RUN AGAINST A REAL
-  DAY; the reviewer takes BE 9 + 10 AS ONE FILING at the round-10 tip, then DE 33
-  + 34 as one filing at the round-34 tip. TONIGHT'S TIMERS UNCHANGED: 00:06Z
-  verdict, 00:14Z preflight, coordinator wake after, R-409 accrual with the
-  R-411(ii) denominator, DA landing at e353119 (HOLD -> 3b7e10a), CO-8,
-  --require-no-skips, DATA_ROOT split after DA's landing. USER: SEVEN RULED,
-  THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with
-  Q4 failing; the sequencing rule; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3788,7 +3796,7 @@ flags:
   be_durable_landing_is_round_11: "after the 00:14Z read AND after round 10 lands"
   repo_constant_four_symptoms: "BE34-R3, BE7-R4, BE9-C1, BE9-C2 all from REPO hardcoded; round 6 fixed a USE"
   reviewer_be_r8_released: "c54e48e (f804f33); CO-12 and CO-13 CONFIRMED CLOSED; two LOW"
-  user_addendum_v2_bundle: "DRAFT LANDED, NOT FORWARDED (sha16 6edefdfda909a897): three numbers (theta_repost, REPOST_DWELL_S, HALF_SPREAD_CENTS only if kept) + three declarations; 5 held back until the reviewer rules DE35-C1; one reviewer round from ready"
+  user_addendum_v2_bundle: "DRAFT LANDED, NOT FORWARDED (sha16 6edefdfda909a897): TWO numbers (theta_repost, REPOST_DWELL_S -- HALF_SPREAD_CENTS was DELETED at 27c1ccd, so there is no number to rule) + three declarations. Reviewer: 1 and 4 may go ahead of 5; 2 and 3 may not. 5 restated by DE round 36, then the package is sent WHOLE in ONE notification. DE35-R2 travels with it: each null draw = four replays, ~800 per cell, so v1 d's 'of order 6 hours' is understated ~4x"
   est_r1_r5_open: "EST-R1/R2 HIGH, R3/R4/R5 MED -> DE round 35; rho denominator is MEASURED at DRAFT:212-213"
   addendum_declares_no_horizon: "grep horizon in the addendum = 0 hits; the receipt binds one, the addendum declares none"
   de_r34_executed_counts_as_filed: "47a2ba6 (Q-DE-52 68f63aa); four closed, C1 half-closed, five named open; DE34-C1..C4"
@@ -3798,9 +3806,15 @@ flags:
   de35_c1_high_open: "the control repost event has no counterpart in the treated stream; blocks addendum 5"
   de_r36_queued_not_dispatched: "behind the reviewer DE-35 filing: 5 restated, DE35-C2..C5, DE34-R2/R3/R5/R6"
   reviewer_de_33_34_released: "20bd233; DE34-C1..C4 CONFIRMED; DE34-R1..R7; 47a2ba6 released as round 35 BASE ONLY"
-  reviewer_state: "DE 35 filing IN FLIGHT (dispatched 19:2xZ)"
+  reviewer_state: "DE 35 filing RELEASED (df123f2); standby until BE round 10's row lands, then BE 9 + 10 as ONE filing"
   be_r10_code_landed_row_pending: "ff60d0a 19:13:34Z; verification pending; file not read (standing rule 9)"
   addendum_v2_negative_control: "de_phase4_protocol_check.py:287/:296 assert the draft is a PROPOSAL and that no module cites it as authority (rule 14)"
+  reviewer_de_r35_released: "df123f2; DE35-C1..C5 all CONFIRMED (C4 contested as a BLOCKER, not as a finding); DE35-R1..R5; 27c1ccd = round 36 base"
+  de35_c1_mechanism_corrected: "R-473 0 in band: the treated arm DOES repost via a later generation; the defect is the control's invented literal-0.0 event at t0+REPOST_DWELL_S (:802-804), draw-dependent. Finding STANDS"
+  half_spread_cents_deleted: "27c1ccd; the one surviving mention at :139 is the comment recording the deletion"
+  addendum_v2_section_order: "reviewer: 1 and 4 may go ahead of 5; 2 and 3 may not; 5 restated by DE round 36; package sent WHOLE in ONE notification"
+  de_r36_dispatched: "Q-DE-54 in flight at 3d9b9e9; row not landed when MEM filed; scoring wiring is a LATER round with DE35-R3"
+  de34_r7_ruling: "run against the TIP, called set COMPUTED, residue carried as STATUSES, phase2_arms.py NOT_CALLED"
                              # v18-v19 added the daily pipeline and all-coin
                              # commit-last batch; v20 adds R-DERIVE, R-GROSS,
                              # R-DUAL and R-ONEROW plus Tier-2 markout,
@@ -3809,7 +3823,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T19:25Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T19:39Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are

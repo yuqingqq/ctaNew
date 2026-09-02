@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T19:25Z — **The addendum v2 DRAFT has LANDED and is NOT
-FORWARDED** (sha16 `6edefdfda909a897`): **DE35-C1 (HIGH)** — the control's repost
-event has **no counterpart in the treated stream** — holds §5 back until the
-reviewer rules. **The USER package is one reviewer round from ready.** DE round
-35 landed and executed at `27c1ccd`, counts reproducing and the preflight
-**refusing before the feed**; **DE 33+34 RELEASED as round 35's BASE ONLY**
-(`20bd233`). BE round 10's **code** landed (`ff60d0a`), **row in flight**. **The
-run has no date. SEVEN RULED, THREE OPEN.**
+Updated: 2026-09-02T19:39Z — **DE round 35 RELEASED (`df123f2`): C1..C5 all
+CONFIRMED**, C4 contested **as a blocker, not as a finding**. **The USER package
+is TWO numbers, not three** — `HALF_SPREAD_CENTS` was **deleted at `27c1ccd`**,
+so its denominator is a measurement and there is **no number to rule**. The
+reviewer **splits the bundle** (§1/§4 may go ahead; §2/§3 may not; §5 restated by
+round 36), and it goes **whole, in one notification, after round 36**. **R-471
+§2(a)'s MECHANISM is corrected in band — the finding stands.** **The run has no
+date. SEVEN RULED, THREE OPEN.**
 
 ## READ FIRST — current project handoff
 
@@ -111,9 +111,9 @@ diagnostic**, below.
 >
 > **Numbers** — `theta_repost` (DE proposes `theta_cancel/2`, sensitivity at
 > `1.0×−ε` and `0.5×`, **select neither**); **`REPOST_DWELL_S`** (2.0 s, **no
-> proposal on record yet**); and `HALF_SPREAD_CENTS` **only if it is kept** —
-> DE's and the reviewer's recommendation coincide: **measure it and there is no
-> number to rule.**
+> proposal on record yet**). **`HALF_SPREAD_CENTS` is no longer in the set: the
+> constant was DELETED at `27c1ccd`**, so the denominator is a measurement and
+> **there is no number to rule.** The set is **TWO numbers**.
 >
 > **Declarations, no numbers** — the **horizon the number actually has** (the
 > addendum declares **none today**: I grepped it for "horizon" and got **zero
@@ -125,7 +125,13 @@ diagnostic**, below.
 > **All of it lands in ONE addendum the USER freezes; none of it is decided by a
 > seat (rule 14). Nothing runs until it is settled, and the run has no date.**
 >
-> **STATUS: the DRAFT HAS LANDED and is NOT FORWARDED.**
+> **STATUS: the DRAFT HAS LANDED and is NOT FORWARDED — and the reviewer has
+> split it.** **§1 and §4 may go ahead of §5; §2 and §3 may NOT.** **§5 is
+> restated by DE round 36**, and the package then goes to the USER **WHOLE, in
+> ONE notification** (the coordinator's routing choice, R-473 §2). **DE35-R2
+> travels with it:** each null draw is **four replays**, ~**800 per cell**, so
+> v1 §d's *"of order 6 hours"* is **understated by about 4×** — a cost estimate
+> the USER should have before freezing, not after.
 > `plans/DE_PHASE4_DIAGNOSTIC_ADDENDUM_V2_DRAFT_2026-09-02.md` (sha16
 > **`6edefdfda909a897`**) is a **PROPOSAL**. **§5 is NOT forwarded to the USER**
 > until the reviewer rules **DE35-C1**: the control's repost event has **no
@@ -820,7 +826,8 @@ launchers at **235/19**.
 | **Phase-4 estimand reading** | **FILED and VERIFIED** (`a23667b`) — four rulings, **five findings EST-R1..R5** (R1, R2 **HIGH**), every citation checked at the frozen line |
 | **DE rounds 33+34 review** | **RELEASED** (`20bd233`, 219 lines) — **DE34-C1..C4 all CONFIRMED**; seven findings **DE34-R1..R7**; `47a2ba6` released **as round 35's BASE ONLY** |
 | **DE round 35** | **LANDED and EXECUTED** at `27c1ccd` (Q-DE-53 `19ddb43`) — counts **21/67/26/21/24/21/184/92** reproduce; the preflight **refuses before the feed**; five findings **DE35-C1..C5** (**C1 HIGH**) |
-| **DE round 36** | **QUEUED behind the reviewer's DE-35 filing** — §5 restated, DE35-C2..C5, DE34-R2/R3/R5/R6 |
+| **DE round 35 review** | **RELEASED** (`df123f2`, 276 lines) — **DE35-C1..C5 all CONFIRMED** (C4 **contested as a blocker**, not as a finding); five findings **DE35-R1..R5**; `27c1ccd` released **as round 36's base** |
+| **DE round 36** | **DISPATCHED** (Q-DE-54, in flight) — **§5 restated**, DE35-C2..C5, DE34-R2/R3/R5/R6. The **scoring wiring is a LATER round**, with DE35-R3 |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -890,9 +897,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**DE34-C1..C4 CONFIRMED and closed** at `27c1ccd`; **DE35-C1 (HIGH)** blocks the
-addendum's §5 from the USER until the reviewer rules; **DE35-C2..C5** and
-**DE34-R2/R3/R5/R6** → **DE round 36** (queued);
+**DE34-C1..C4 CONFIRMED and closed** at `27c1ccd`; **DE35-C1..C5 all CONFIRMED**
+(C4 **contested as a blocker**); **DE35-C2..C5**, **DE35-R1..R5** and
+**DE34-R2/R3/R5/R6** → **DE round 36, dispatched**;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
 tense**; **DA17-R1 (LOW)** → behind DA's landing;
@@ -919,10 +926,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE round 35 at `27c1ccd`** (filing **in
-flight**, dispatched 19:2xZ) → **BE rounds 9 + 10 as ONE filing at the round-10
-tip**. **Released so far** include BE round 8 (`f804f33`), the **estimand
-reading** (`a23667b`) and **DE rounds 33+34** (`20bd233`).
+**The reviewer is on RECORDED STANDBY** until **BE round 10's row lands**; then
+**BE rounds 9 + 10 as ONE filing** at the round-10 tip. **Released so far**
+include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
+33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
 29+30 and **31+32** (`82126ca`), and **DA round 17** (`f4c7734`). **Released so far:**
 DE rounds 23 (`0b03618`), 24 (`304cd5f`), 25 (`a7860dc`) and 26+27 (`723271e`),
@@ -1735,6 +1742,73 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~19:39Z (MEM) — THE FINDING SURVIVED; ITS EXPLANATION DID NOT
+
+**R-472, R-473 and the DE-35 filing swept.** Nothing run; state files only.
+
+**R-473 §0 is the shape worth learning from, and it is not a retraction.** R-471
+§2(a) explained DE35-C1 by saying the treated arm *"is HELD with no event to
+anchor a repost"*. The reviewer's fixture shows that is **false**: the treated arm
+**does** repost, through a later generation's own below-`theta_repost` score —
+**treated 1 cancel / 1 repost / value 4.000 against control 2 / 2 / 0.000 on the
+same fixture.** **The finding stands and its mechanism is replaced:** the defect
+is the control's **invented literal-`0.0` event** at `t0 + REPOST_DWELL_S`
+(`:802-804`), whose **presence and timing depend on the draw** — so the null's
+repost economics are **an artefact of the control's construction**, not of the
+scored stream. *A finding can be right about the asymmetry and wrong about why,
+and the corrected version is the more damaging one*: an artefact that moves with
+the draw is worse than an absence.
+
+**Both string corrections are made, and the second one is mine to own.** The
+`19:2xZ` in `STATUS.yml:3801` and `HANDOFF.md:923` was **the coordinator's
+placeholder, which I copied faithfully** — and faithfully is the problem. **A
+placeholder copied is a placeholder published.** The register's stamps put the
+dispatch at **19:23:09–19:23:21Z**, so both now read **19:23Z**. I take the
+lesson as: *an `x` in a timestamp is not a transcription, it is an unfinished
+field — resolve it or don't carry it.*
+
+**The first correction is real and I checked it at the blob rather than taking
+it.** `HALF_SPREAD_CENTS` is **gone at `27c1ccd`** — one mention survives, at
+`:139`, and it is the **comment recording the deletion**: *"EST-R1:
+`HALF_SPREAD_CENTS` IS GONE"*, with `DRAFT:212-213` cited as the reason. Same
+shape as last round's addendum guard: **the surviving string is the record of the
+absence, not the absence's failure.** So the USER package is **two numbers**, and
+`REPOST_DWELL_S = 2.0` now stands as a declared module constant with its own
+reason beside it — *"an undeclared default in a policy runner is a policy choice
+nobody made."*
+
+**A third stale occurrence exists and I am deliberately NOT changing it.**
+`HANDOFF.md:1834`, inside my round-53 dated entry, still says
+*"`HALF_SPREAD_CENTS` only if kept"*. I checked the clocks: that entry was
+committed **19:06:05Z** and `27c1ccd` landed **19:12:02Z** — **six minutes
+later**. The sentence was **true when written**. This is the line that separates
+it from the *"earliest 09-03"* case I mishandled two rounds ago: **that was a
+forward commitment that outlived its withdrawal; this is a dated observation that
+was accurate at its stamp.** *Correct current-state statements; leave dated
+statements that were true when stamped — and read the stamp before deciding which
+you have.*
+
+**The reviewer split the bundle rather than blocking it, which is the more useful
+verdict.** **§1 and §4 may go ahead of §5; §2 and §3 may not.** §5 is restated by
+round 36, and the package then goes to the USER **whole, in one notification**.
+And **DE35-R2 travels with it**: each null draw is **four replays**, ~**800 per
+cell**, so v1 §d's *"of order 6 hours"* is **understated by about 4×**. **A cost
+estimate belongs in the package the USER freezes, not in the round that discovers
+it was wrong.**
+
+**Two rulings recorded as rulings.** §5 becomes **the treated arm's own stream
+permuted within `(side, hour)` strata** — the control stops being invented and
+starts being a permutation of the thing it controls. And **DE34-R7** is to be run
+**against the TIP**, with the called set **computed** and the residue **carried as
+statuses**, `phase2_arms.py` **NOT_CALLED** — statuses rather than silence, which
+is this programme's rule 4 applied to arms.
+
+**Seat states.** DE round 36 is **dispatched at this tip** (Q-DE-54 **in flight**;
+its row had **not** landed when I filed — I checked). The **reviewer is on
+recorded standby** until BE round 10's row lands, then **BE 9 + 10 as one
+filing**. **BE round 10's row is in flight** (code `ff60d0a`). **DA is on standby
+until tonight's 00:06Z / 00:14Z reads.**
 
 ### 2026-09-02 ~19:25Z (MEM) — A CHECK WHOSE JOB IS TO PROVE A DOCUMENT IS NOT
 ### BEING OBEYED
