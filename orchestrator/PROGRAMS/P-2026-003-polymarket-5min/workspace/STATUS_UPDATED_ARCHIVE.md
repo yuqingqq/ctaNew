@@ -1560,3 +1560,69 @@ Moved in the MEM round-19 true-up of R-424. Join rule as in batch 1.
   G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
   evidence.
 ```
+
+## Batch 26 — archived 2026-09-02T12:02Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-20 true-up of R-425. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T11:36Z (MEM ROUND 17 -- A VOCABULARY MISS IS NOT AN ABSENCE).
+  R-422 swept; verified at the artifacts and, on the central claim, at the
+  source myself. DE ROUND 10 VERIFIED (2282e5c, Q-DE-28): CO-5, CO-R1's checker
+  half and CO-R3 all CLOSED, and DE's own addition -- require_verified REFUSES a
+  PROVENANCE result -- ACCEPTED. THE DE ROUNDS 7-9 REVIEW (b4da910) IS VERIFIED
+  AND RELEASED, with DE-R1..R4 reproduced at 2282e5c and routed to DE round 11
+  (Q-DE-29, in flight). AND ONE CLAIM IN THAT FILING DID NOT REPRODUCE, WHICH IS
+  THE ITEM OF THE ROUND. The review stated that R-421 section 6's "the driver
+  already refuses ... ledger-only windows" "does not hold at the artifact: no
+  layer in the chain reads the tape". Executed on the working tree at 11:32Z,
+  it does not reproduce: be_forward_day.selected_from_specs, given two real
+  09-01 specs plus one for a ledger-only window with no archive yet, REFUSES --
+  "1 supplied windows have no archive or no token map ... R-418 scores the
+  complement WHOLE; dropping windows here would silently re-select" -- and the
+  same for a slug that can never exist. I VERIFIED THE MECHANISM AT SOURCE
+  INDEPENDENTLY: the gate reads the tape through fi._archive_paths() and
+  fi.token_map() at be_forward_day.py:491-506, with the refusal asserted by its
+  own control at :1055. WHY THE REVIEWER MISSED IT IS THE TRANSFERABLE PART:
+  its search was for scan_day and raw/, and THE ARCHIVE INDEX ANSWERS TO NEITHER
+  NAME. A GREP FOR VOCABULARY IS NOT A REFERENCE -- IN EITHER DIRECTION. This
+  programme has recorded the forward version three times (a vocabulary HIT is
+  not a reference); THIS IS THE MIRROR AND IT IS THE MORE DANGEROUS HALF, because
+  a false positive from grep gets caught when someone opens the file while a
+  false NEGATIVE produces a confident "no layer does this", which reads like a
+  finding and travels as one -- this one reached the register before it was
+  executed against. WHAT THE REVIEWER DID ESTABLISH IS TRUE AND NARROWER, and I
+  confirmed both halves: DE's supply() and the seam bridge genuinely DO NOT read
+  the tape (no _archive_paths, token_map or scan_day in either module), so a
+  tape-less window IS supplied (1,876); and the driver's refusal sits at
+  selected_from_specs, AFTER the frozen-contract gate, which on the current tree
+  has never been reached in a real run. So THE PROTECTION IS REAL AND IT IS IN
+  THE WRONG PLACE, which is a different statement from "there is no protection".
+  DISPOSITION, accepting the reviewer's recommendation IN ITS REFUSE FORM ONLY:
+  BE round 5 moves the ledger-vs-tape comparison into the POPULATION GATE
+  (present_from_ledger, the receipt carrying ledger_minus_tape per coin BY NAME)
+  and REFUSES ON ANY DIFFERENCE -- IT NEVER INTERSECTS, because intersecting
+  would look like the helpful fix and would SILENTLY RE-SELECT THE RATIFIED
+  POPULATION: R-418/R-419 fixed the complement as WHOLE, and a quiet
+  intersection is exactly the kind of selection a ratification exists to forbid.
+  R-419's TEXT IS UNCHANGED and the USER may restate or revoke it; the checker's
+  day_closed (DE round 10) stays as the visible half. AND IT CORRECTS ONE OF MY
+  OWN LINES: my round-16 entry attributed the refusal to "the bridge"; IT IS THE
+  DRIVER. Corrected in place with the new section as its reason -- the
+  attribution mattered here precisely because the residual finding turns on
+  which layer reads what. REVIEW TABLE: DA rounds 1-2 RELEASED (RR12-1 to DA
+  round 10); BE round 2 RELEASED and BE ROUNDS 3-4 REVIEWED TOGETHER when round
+  4 lands, deliberately, because the run path is not finished until it executes
+  the frozen bytes; DE rounds 4-6 RELEASED; DE ROUNDS 7-9 RELEASED; DE ROUND 10
+  REVIEW REQUEST FILED (REQUEST_DE_ROUND_10_2026-09-02.md, the reviewer on it at
+  2282e5c); the coordinator's acts REVIEWED. IN FLIGHT: BE round 4 (Q-BE-229),
+  DE round 11 (Q-DE-29), the reviewer on DE round 10, DA on standby (Q-DA-208
+  after 00:06Z); BE round 5 QUEUES the population-gate comparison and
+  require_verified(). USER DECISIONS UNCHANGED AND SIX: R-408(2) the Phase-2
+  winner, R-408(3) the v2 freeze, R-411(i) the minimum complement for
+  G-counting, R-411(ii) the P1 denominator, the 09-02 accrual call after 00:06Z,
+  and the freeze disposition. R-419 remains revocable by the USER. UNCHANGED:
+  G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
+  evidence.
+```

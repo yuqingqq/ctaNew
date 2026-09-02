@@ -1,12 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T11:56Z — **THE USER RULED: "Proceed according to your
-recommendation."** Four decisions are ADOPTED and executed — content-liveness v2
-FROZEN and governing from 2026-09-03; the Phase-2 composed candidate **does not
-advance**, Q1 the surviving component of record, **no race admission**; the
-G-counting floor **≥144/288**; P1 **per unmasked hour**. **The freeze
-disposition is NOT reached** — it carried no recommendation — and now has one.
-**One decision open; the 09-02 accrual call is mechanical.**
+Updated: 2026-09-02T12:02Z — **BE round 4 was OOM-killed at the 12 G cap and is
+re-running as a streaming pass** — the cap was **not** raised, and its receipt
+now flushes per gate, which I confirmed live mid-run. DE round 12 verified
+(DE10-R1 closed **in both directions**, 84 checks, audit 19/0); DE round 11
+review released; DE11-R1 and CO-6 → DE round 13. **USER decisions unchanged:
+four RULED, one OPEN.** Prior line: the USER ruled "Proceed according to your
+recommendation" and this file was the referent.
 
 ## READ FIRST — current project handoff
 
@@ -149,7 +149,7 @@ next word can settle it:
 **Until it is ruled, BE round 4's output stays an estimate in scratch, not a
 race score.**
 
-### BE round 4 — IN FLIGHT: three facts REPORTED, none of them verified yet
+### BE round 4 — IN FLIGHT: five facts REPORTED, two of them observed live
 
 **Status first, because it governs how these read.** BE round 4 has **not
 landed**. What follows is BE's own pane report at 11:39Z — **a report, not an
@@ -171,11 +171,26 @@ commit, and the data from a file whose only binding is its hash in the manifest.
 That does not decide anything; it makes the choice better specified than it was
 when it was escalated.
 
-**One operational note from the same report**, worth keeping because the failure
-mode is generic: BE's mutation harness was **SIGKILLed by an outer timeout
-mid-mutation**, so its `finally` never ran and a mutant (F17) **stayed applied in
-the tree** until the next selftest caught it. BE added a backup. **A cleanup that
-lives only in `finally` does not survive SIGKILL.**
+**Two further facts, reported at 12:00Z and still BE's in-flight work:**
+
+| # | fact as reported | status |
+|---|---|---|
+| **(iv)** | the 09-01 run was **OOM-killed at 12.0 GiB after 21 min**; **the cap was not raised** — the pass was restructured to **stream** instead, and re-launched ~11:55Z | **observed live at the box:** `be-fwd-0901c.service` in `research.slice`, `MemoryMax` = **12 GiB unchanged**, and at 12:02Z (≈7 min in) `MemoryCurrent` ≈ **2.75 GiB** — far under the cap so far. The run is **not finished**; this is a mid-run observation, not a result |
+| **(v)** | the killed run **wrote no receipt at all**; the receipt is now **flushed after every gate** | **observed live:** `be_forward_day_receipt_20260901.json` (9,584 B) exists **while the run is still going**, already carrying a `gates` array with `day_closed_and_attributed`, `population_supply_and_bridge` and `materialise_frozen_bytes` each **PASS**, and stamping `ratification_ref: R-419` — correct for round 4 under R-419's supersession |
+
+**The 3–4 review must see two falsifiers**, and they are the right two: that the
+**streaming pass scores identically** to the non-streamed one on a small
+population, and that the **per-gate flush survives SIGKILL between gates**. The
+first guards the restructure from changing the number; the second is the only
+way to know the flush is real rather than incidental.
+
+**This is the same lesson twice in one seat, in two forms.** Earlier: BE's
+mutation harness was SIGKILLed mid-mutation, its `finally` never ran, and a
+mutant stayed applied in the tree — **cleanup that lives only in `finally` does
+not survive SIGKILL**. Now: a receipt written only at the end means **a killed
+run leaves no trace of how far it got**. Both are the same shape — *state that
+exists only if the process exits normally* — and the fix is the same shape too:
+write as you go.
 
 ### A "correction to the register" that did not reproduce — and what is true instead
 
@@ -392,7 +407,9 @@ launchers at **235/19**.
 | **BE round 3** | **VERIFIED** — and it is reviewed **together with round 4, deliberately**: the run path is not finished until it executes the frozen bytes, and reviewing the refusing half alone would review a frame |
 | **DE rounds 7–9** | **RELEASED** (`b4da910`) — DE-R1..R4 reproduced at `2282e5c` → DE round 11. One register claim in that filing **did not reproduce**; see the section above |
 | **DE round 10** | **RELEASED** (`922bff6`) — CO-5, CO-R1's checker half and CO-R3 closed; DE's addition (`require_verified` refuses a **PROVENANCE** result) accepted. **DE10-R1 (MEDIUM) stands → DE round 12** |
-| **DE round 11** | **VERIFIED** (`d07d901`): DE-R1..R4 all **CLOSED** — ratification **66**, admissible **53**, seam **69** checks under both launchers; checker audit **14 paths, `survivors []`**. DE's **two deliberate separations accepted**. Review **dispatched** at `d07d901` |
+| **DE round 11** | **RELEASED** (`1e494f9`) — DE-R1..R4 closed, **two past the ask**; both deliberate separations accepted with the reviewer's reason (`STRATIFIED` is a legal `sampling` value, so the defect is in the **pair** — folding it into the vocabulary loop would name one field for a two-field fault). **DE11-R1 → DE round 13** |
+| **DE round 12** | **VERIFIED** (`9dbaa5a`) and **UNDER REVIEW** at that tip: **84 checks** rc 0 both launchers (reproduced here), `mutation_audit` **19 paths, `survivors []`**. **DE10-R1 CLOSED in both directions** — permissive garbage (`now_utc="zzzz"`, `scope_to: not-a-date`) *and* restrictive garbage (`scope_from: zzzz`) both refuse by field and value, `now_utc=123` refuses as a type rather than crashing, and the 09-01 boundary reads `23:59:59Z` → not closed / `00:00:00Z` → closed |
+| **DE round 13** | **IN FLIGHT** (Q-DE-31): DE11-R1 + **CO-6** |
 | **the coordinator's own acts** | **REVIEWED** (`1384ec5`), no hold; CO-R1..R4 dispositioned |
 
 **In flight:** **BE round 4** (Q-BE-229) — the frozen-bytes execution, **not
@@ -422,7 +439,24 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** DE10-R1 → DE round 12; RR12-1 and CO-R4 → DA round 10.
+**Open findings:** **DE11-R1** and **CO-6** → DE round 13; **RR12-1** and
+**CO-R4** → DA round 10.
+
+**CO-6 is the coordinator's own finding, and it is DE10-R1 one branch over.**
+`stamped_at` is **parsed only on the superseded branch**: on R-418 (superseded)
+`stamped_at="not-a-time"` refuses by name, but on R-419 (not superseded) the same
+garbage returned `verified: True` with the value **carried verbatim into the
+emission, never parsed**. **A stamp supplied is a claim about a receipt whether
+or not a superseder exists today** — so a value that "sorts nowhere until it
+matters" is exactly the defect DE round 12 just closed, hiding in the branch
+round 12 did not touch. Parse at entry, refuse by field and value, keep `None`
+as *no receipt*. Severity is the reviewer's to confirm in the round-12 review.
+
+**DE11-R1, for the record:** `exec('import X')`, `eval("__import__('X')")` and a
+**rebound `__import__`** each parse to `[]`, so `reads_no_verdict` answers
+**True** — the controls behave (a literal is caught; a non-literal argument
+refuses), but dynamic forms slip past. A checker that answers *"reads no
+verdict"* on code it could not parse is answering the wrong question.
 
 **DE10-R1 is worth its line because the failure is silent in both directions.**
 The checker compares timestamps **lexicographically as strings**, so
@@ -786,6 +820,50 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~12:02Z (MEM) — STATE THAT ONLY EXISTS IF THE PROCESS EXITS
+### NORMALLY
+
+**R-425 swept.** Two of BE's in-flight facts I could check **live**, and the rest
+verified at the artifacts.
+
+**The cap held and the fix was the code, not the ceiling.** BE's 09-01 run was
+OOM-killed at **12.0 GiB after 21 minutes** and the answer was to **restructure
+into a streaming pass**, not to raise the limit. Confirmed at the box: the
+re-run sits in `research.slice` with `MemoryMax` **still 12 GiB**, and about
+seven minutes in it was using **≈2.75 GiB**. That is the same discipline that
+produced `compact_design` when iteration 011 OOM'd twice — *pack the work, don't
+raise the cap* — and it is now the second time this programme has taken the
+harder branch on memory.
+
+**And the receipt now exists before the run does.** The killed run wrote
+**nothing**, so nobody could tell how far it got. I opened the current run's
+receipt **while it was still running**: it already carries a `gates` array with
+three gates recorded PASS and stamps `ratification_ref: R-419`. **A killed run
+now leaves a partial record instead of a hole.**
+
+**Those two are one lesson in two costumes, and this seat has now paid for both.**
+Earlier today BE's mutation harness was SIGKILLed and its `finally` never ran, so
+a mutant stayed applied in the tree. Now a receipt written only at the end
+vanished with the process. **State that exists only if the process exits normally
+is not state — it is a wish**, and both fixes are the same instruction: write as
+you go, and prove it survives a kill. The 3–4 review's two falsifiers are exactly
+right — score-identity for the restructure, and **flush survival across SIGKILL
+between gates** for the receipt.
+
+**CO-6 is the round's quiet one, and it is the coordinator finding its own
+defect.** `stamped_at` is parsed **only on the superseded branch**: garbage
+refuses on R-418, and the identical garbage on R-419 returned `verified: True`
+with the value copied into the emission unparsed. That is **DE10-R1 one branch
+over** — a value that sorts nowhere until it matters — found in the branch round
+12 did not touch, hours after round 12 closed the other one. The generalisation
+is worth keeping: **when a class of defect is fixed on one branch, the same class
+on the sibling branch is not fixed; it is merely unvisited.**
+
+**DE11-R1 belongs beside it:** `exec('import X')`, `eval("__import__('X')")` and
+a rebound `__import__` all parse to `[]`, so the checker answers *"reads no
+verdict: True"* about code it could not parse at all. **An answer about
+unparsed code is not an answer.**
 
 ### 2026-09-02 ~11:56Z (MEM) — THE RULING NAMED NO ITEM, AND THIS FILE WAS THE
 ### REFERENT
