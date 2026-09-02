@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T22:52Z — **DE round 39 LANDED and EXECUTED at `cd93663`:
-every DE38 ruling BUILT and DRIVEN** — the identity **admitted and counted**, the
-guard **retired with its parse certificate inverted**, statistics on the
-**accepted** set, and a degenerate null that **refuses its own interval**
-(`POINT_ESTIMATE_NO_INTERVAL`, no quantiles, no `net_diff`). **One candidate
-remains, and it is dormant rather than resolved: DE39-C1 — the code computes SET
-identity while the prose promises STREAM identity**, decision-inert at one θ with
-`enable_reduce` False. **The reviewer's to rule.** **Run: NO DATE.**
+Updated: 2026-09-02T22:59Z — **THE PACKAGE IS RELEASED BY THE REVIEWER —
+conditions (i)–(iv) ALL MET at `cd93663`** — *"May the package travel whole? YES
+— DE39-C1 does not hold it"*. **RELEASED IS NOT FORWARDED:** it travels **at DE's
+round-40 tip, once the DRAFT clause is verified at the blob** (rule 13 — forwarding
+first would be superseded in-band the same night). **Every DE38 closure CONFIRMED,
+each driven.** Two new findings, and **DE39-R1 is the sharp one: a collapsed null
+and a never-run null read IDENTICALLY** — the refusal built last round does not
+distinguish *cannot* from *did not*. **Run: NO DATE.**
 
 ## READ FIRST — current project handoff
 
@@ -125,13 +125,19 @@ diagnostic**, below.
 > **All of it lands in ONE addendum the USER freezes; none of it is decided by a
 > seat (rule 14). Nothing runs until it is settled, and the run has no date.**
 >
-> **STATUS: NOT FORWARDED, and every remaining reason now names WHO closes it.**
-> **DE39-C1 open** — the reviewer's round. **Condition (i): the coordinator has
-> MEASURED §5's promises as BUILT at `cd93663`; the reviewer's confirmation is
-> the closure**, not the measurement. **Conditions (ii)–(iv): MET at
-> `dfd4c00`, to be RE-STATED by the reviewer at `cd93663`.** *Every line here
-> is now a named seat and a named tip, which is the difference between a
-> blocker and a backlog.* The reviewer's sentence is the one to
+> **STATUS: RELEASED BY THE REVIEWER — conditions (i)–(iv) ALL MET at
+> `cd93663`.** The reviewer's answer to its own question is on the record:
+> ***"May the package travel whole? YES — DE39-C1 does not hold it"***, sent
+> **WITH §5's `enable_reduce` clause**. **The two reasons that stood here last
+> round — DE39-C1 and condition (i) — are CLOSED, and REPLACED rather than
+> carried.**
+>
+> **RELEASED IS NOT FORWARDED, and exactly one thing stands in between:** the
+> package is **FORWARDED AT DE'S ROUND-40 TIP, once the coordinator VERIFIES
+> THE DRAFT CLAUSE AT THE BLOB.** The reason is rule 13 and it is worth stating
+> rather than assuming: **a package forwarded before the clause lands would be
+> superseded in-band the same night** — the USER would be reading a document
+> that a correction was already chasing. The reviewer's sentence is the one to
 > keep: ***"a USER reading §5 today would be adopting the words while the
 > artifact behind them produces a null that cannot differ."*** The four: **§5 gets either a
 > declared-vs-built sentence or (γ) built first**; **§5 must say what happens
@@ -885,7 +891,8 @@ launchers at **235/19**.
 | **DE round 38** | **EXECUTED** at `dfd4c00` (Q-DE-56) — counts **31/101/26/21/25/21/184/92** reproduce; **DE37-C1(a)(b)(c), C2..C5 and R1..R4 ALL CLOSED** — the seal is **six literals** (driven closed by the coordinator's own edit), **(γ) is built on the run path**, `gen` required at the adapter. Shas: runner `a49458a0…`, score-stream `4ccdadea…`, v2 DRAFT `a45b8762…` (all three verified here) |
 | **DE round 38 review** | **RELEASED** (`0a5a6a7`, 232 lines, 22:06:13Z) — **DE38-C1/C2/C3 CONFIRMED**, C1 **reproduced independently** (24/5 identity, **0/200 vs 65/200**, 3/False) and **RULED in four parts**; **DE37-C1..C5 and R1..R4 CONFIRMED CLOSED**, the seal driven closed by the **reviewer's own** edit; new **DE38-R1 (MED)** and **R2/R3/R4 (LOW)** |
 | **DE round 39** | **LANDED and EXECUTED** at `cd93663` (Q-DE-57) — counts **31/115/26/21/26/21/184/92**; **all four DE38-C1 rulings BUILT as ruled**, plus DE38-R1+C3, C2, R3, R4, R2 and §2(iii) — **every step driven**. Shas verified here: runner `2976b46e…` (3,201 lines), score-stream `f85be335…` (420), DRAFT `6a62569f…` (290) |
-| **DE round 40** | **WAITS on the reviewer's DE-39 filing** — **DE39-C1 (LOW)** open, the reviewer's to rule |
+| **DE round 39 review** | **RELEASED** (`650569c`, 194 lines, 22:55:56Z) — **EVERY DE38 closure CONFIRMED, each driven**; the **six literals verified at BOTH sides of `851edaf`** by the reviewer's own `_fn_asts`; counts reproduced. **DE39-C1 CONFIRMED (LOW) and RULED in three parts**; two new findings **DE39-R1 (LOW-MED)** and **DE39-R2 (LOW)** |
+| **DE round 40** | **DISPATCHED** (Q-DE-58 expected, **one commit**, **the DRAFT clause LAST**) — four-step order: ruling (i) → rulings (ii)+(iii) → DE39-R1 → DE39-R2. **The reviewer's step 5 (the wiring's expensive half) is USER-GATED and NOT dispatched** |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -957,9 +964,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**DE38-C1 (all four rulings), C2, C3, R1, R2, R3, R4 and §2(iii) BUILT and
-VERIFIED** at `cd93663`; **DE39-C1 (LOW) OPEN — the REVIEWER's to rule, not
-closed**;
+**every DE38 closure CONFIRMED CLOSED** by the reviewer, each driven; **DE39-C1
+CONFIRMED and RULED in three parts**; **DE39-R1 (LOW-MED)** and **DE39-R2
+(LOW)** → **DE round 40, dispatched**;
 **BE10-R1..R4** → **BE round 12** with BE8-R1/R2;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
@@ -987,9 +994,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on DE round 39**, dispatched as **ONE round**
-(`REQUEST_DE_ROUND_39_2026-09-02.md`). **Released so far** include BE rounds 9+10
-(`a8e88de`) and DE rounds 37 (`3f1d310`) and 38 (`0a5a6a7`). **Released so far**
+**The reviewer is on RECORDED STANDBY.** **Released so far** include BE rounds
+9+10 (`a8e88de`) and DE rounds 37 (`3f1d310`), 38 (`0a5a6a7`) and 39
+(`650569c`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1804,6 +1811,72 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~22:59Z (MEM) — THE REFUSAL DOES NOT SAY WHICH REFUSAL IT IS
+
+**R-483 and the DE-39 filing swept.** Nothing run; committed blobs only.
+
+**The milestone first, stated so the two halves cannot merge.** The reviewer has
+**RELEASED the package**: conditions **(i)–(iv) ALL MET at `cd93663`**, with its
+own question answered on the record — ***"May the package travel whole? YES —
+DE39-C1 does not hold it"***, sent **with §5's `enable_reduce` clause**. **And it
+is not forwarded.** It travels **at DE's round-40 tip, once the coordinator
+verifies the DRAFT clause at the blob**, because **a package forwarded before the
+clause lands would be superseded in-band the same night** — the USER would be
+reading a document a correction was already chasing. **After many rounds of "not
+forwarded", the word that changed is RELEASED, and I have kept the two apart in
+the bundle status rather than letting the good news blur the gate.**
+
+**The two reasons that stood there last round are CLOSED and replaced, not
+annotated** — DE39-C1 and condition (i). *A status field that accumulates struck-
+through reasons stops being a status field.*
+
+**DE39-R1 is the finding I would most want a reader to see, and I read it at the
+blob.** The predicate row computes
+
+> `"interval": ("NULL_QUANTILES" if c.get("null_quantiles") else "POINT_ESTIMATE_NO_INTERVAL")`
+
+— so **`POINT_ESTIMATE_NO_INTERVAL` is emitted whenever `null_quantiles` is
+falsy**, which covers **a null that COLLAPSED** (degenerate, one distinct accepted
+draw) **and a null that NEVER RAN**. There is **no `null` field in the row to tell
+them apart**. And the comment directly above says *"an interval only where the
+draws ran; everywhere else **the label says what it is**"* — **the label is the
+same in both cases, so it does not.**
+
+**Read that against last round and the lesson is sharper than either finding
+alone.** Round 39 taught the artifact to **refuse a statistic it cannot support**,
+and I recorded that as its best property. **This round shows the refusal does not
+say WHICH refusal it is.** *A refusal is only as informative as its reason, and
+"no interval" answers a question nobody asked — the reader wants to know whether
+the null was empty or absent.* The prose promising the discrimination the code
+does not make is, again, the same class — **now inside the fix I praised.**
+
+**DE39-R2 came in the other direction, and that is worth its own line.** The
+coordinator had `len(_ca) == 1` (`:2492`) as *"noted, not a finding"*; **the
+reviewer's reading was adopted** and it is now a finding — the check **encodes
+today's single `changed_at`** and should group by it instead. **Most weeks the
+traffic runs the other way** (a claim that does not reproduce, a contested
+blocker); a **note promoted to a finding by a second reader** is the same
+machinery working in the direction nobody celebrates.
+
+**Every DE38 closure is confirmed, each driven — and the six literals were
+verified at BOTH sides of `851edaf` by the reviewer's own `_fn_asts`.** That is
+the third independent instrument on that seal in three rounds. **A seal checked
+only by the tool that wrote it is a mirror; this one has now been read by three
+different parsers.**
+
+**Sequencing, with the one restraint that matters.** `cd93663` is round 40's base;
+the four-step order is **ruling (i) → rulings (ii)+(iii) → DE39-R1 → DE39-R2**,
+with **the DRAFT clause LAST**. And **the reviewer's step 5 — the wiring's
+expensive half — is USER-GATED and NOT dispatched.** *A reviewer may recommend
+work the coordinator may not start; recording the gap is how the gate survives the
+enthusiasm.*
+
+**Unchanged and stated:** **Phase-4 run has NO DATE**; **`preflight()` still
+refuses at the scorer (1.33 s)**; the **bundle sha stays `6a62569f536e460f` @
+`cd93663`** until round 40 moves the DRAFT. **My round 61 verified with nothing
+found**, archive **batch 67** verbatim. **Seats:** DE round 40 dispatched; the
+reviewer, BE and DA on **recorded standby**.
 
 ### 2026-09-02 ~22:52Z (MEM) — A DEGENERATE NULL THAT REFUSES ITS OWN INTERVAL
 

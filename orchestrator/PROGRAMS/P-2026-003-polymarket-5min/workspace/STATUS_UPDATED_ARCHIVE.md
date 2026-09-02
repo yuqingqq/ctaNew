@@ -4427,3 +4427,59 @@ Moved in the MEM round-61 true-up of R-482 and Q-DE-57. Join rule as in batch 1.
   SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family
   12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
 ```
+
+## Batch 68 — archived 2026-09-02T22:59Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-62 true-up of R-483 and the DE-39 filing. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T22:00Z (MEM ROUND 59 -- THE CONTROL WAS FINALLY BUILT, AND IT
+  ACCEPTS ONLY THE DRAW THAT CHANGES NOTHING). R-480 and Q-DE-56 swept; nothing
+  run; committed blobs only. FIRST THE GOOD NEWS, BECAUSE IT IS REAL AND
+  COMPLETE: at dfd4c00 EVERY DE37 ITEM CLOSES -- C1's three parts, C2, C3, C4,
+  C5 and R1..R4. THE SEAL IS NOW SIX LITERALS and it was DRIVEN CLOSED BY THE
+  COORDINATOR'S OWN EDIT, the falsifier the ruling asked for rather than the
+  assertion that it works; (gamma) IS BUILT ON THE RUN PATH and `gen` is REQUIRED
+  AT THE ADAPTER; counts 31/101/26/21/25/21/184/92 reproduce; I VERIFIED ALL
+  THREE SHAS MYSELF -- runner a49458a04253175d, score-stream 4ccdadeafe982b87, v2
+  DRAFT a45b87624f72b567. AND THE MOMENT (gamma) ACTUALLY RAN IT PRODUCED
+  DE38-C1: on DE'S OWN C1 FIXTURE EVERY P4-ACCEPTED DRAW IS THE IDENTITY DRAW --
+  the control stream EQUALS the treated stream, the null value EQUALS the treated
+  value (40.0), and net_diff_vs_null_median_cents is 0.0. A CONTROL THAT IS
+  FINALLY CORRECT BY CONSTRUCTION CAN STILL BE EMPTY BY SELECTION: the
+  permutation is real, and the acceptance rule keeps only the permutation that
+  permutes nothing. THE GUARD THAT EXISTS FOR EXACTLY THIS CANNOT FIRE: handed
+  THE ACTIONS, under (gamma) with a held above event, the identity guard fires
+  0 OF 200; handed THE DEMAND it fires 65 OF 200 -- so the check is not weak, IT
+  IS LOOKING AT THE WRONG OBJECT, and that difference is the whole finding. AND
+  THE TWO DIAGNOSTICS THAT WOULD HAVE SHOWN THE COLLAPSE ARE MEASURED ON THE
+  WRONG POPULATION: n_distinct_draws and point_mass are computed over the
+  ATTEMPTED draws, not the ACCEPTED ones -- A DIAGNOSTIC COMPUTED ON THE
+  ATTEMPTED SET CANNOT REPORT A COLLAPSE IN THE ACCEPTED SET; it will show
+  healthy variety in draws that were all thrown away. That is this evening's
+  recurring shape at the OUTCOME layer: the number is real, THE POPULATION UNDER
+  IT IS THE WRONG ONE. READ THE THREE ROUNDS TOGETHER: round 37 DECLARED (gamma)
+  and did not build it; round 38 BUILT it and the built version ACCEPTS ONLY THE
+  DRAW THAT CHANGES NOTHING -- each round's fix correct, each exposing the next
+  layer, which is what a review loop should look like; the thing to resist is
+  reading "all closed" as "done". THE DRAFT'S SHA MOVED A THIRD TIME AND THE
+  FRAMING HELD: 6edefdfda909a897 (27c1ccd) -> ec1538f1545999d1 (218509e) ->
+  a45b87624f72b567 (dfd4c00). Last round I stopped carrying it as a bare name;
+  this round it moved again AND NEEDED NO CORRECTION, ONLY AN AS-OF -- what a
+  good framing buys is that THE VALUE CHANGES AND THE RECORD DOES NOT BECOME
+  WRONG. THE PACKAGE IS NOT FORWARDED AND THE REASONS NOW STACK THREE DEEP: the
+  reviewer's four conditions (i)-(iv), UNVERIFIED BY THE REVIEWER, AND DE38-C1
+  OPEN -- all three written into the bundle status rather than the newest alone,
+  because A SINGLE STATED BLOCKER INVITES THE READING THAT CLEARING IT CLEARS THE
+  WAY. DE38-C2 (LOW) and DE38-C3 (a QUESTION) are also open. UNCHANGED AND
+  STATED: the PHASE-4 RUN HAS NO DATE and preflight() STILL REFUSES AT THE SCORER
+  (PA.tape_index / PA._feature_pass NOT WIRED). SEATS: the reviewer has DE round
+  38 (dispatched 21:58Z, request REQUEST_DE_ROUND_38_2026-09-02.md, ONE filing
+  expected); DE on RECORDED STANDBY with round 39 waiting on that filing; BE and
+  DA on RECORDED STANDBY. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight,
+  coordinator wake after, R-409 accrual with the R-411(ii) denominator, DA
+  landing at e353119 (HOLD -> 3b7e10a), BE round 11 = the durable landing, CO-8,
+  --require-no-skips, DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed
+  tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+```
