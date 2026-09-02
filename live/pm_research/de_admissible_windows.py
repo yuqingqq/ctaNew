@@ -37,6 +37,17 @@ The reading that would make masked-windows-in-PRESENT refuse is the one
 reading NOT taken, because it would make the subtraction unimplementable --
 recorded so the choice is visible and correctable.
 
+WHAT THE IMPORT PREDICATE CAN AND CANNOT SEE (declared, not discovered).
+`reads_no_verdict` answers only about shapes it can read.  It RESOLVES
+`import X`, `from X import ...`, `importlib.import_module('X')` and
+`__import__('X')`, taking the first AND last segment of a dotted name.  It
+REFUSES -- never answers True -- on a non-literal argument, on any
+`exec`/`eval`/`compile`, and on a bare `__import__` reference that is
+rebound rather than called.  And it is DECLARED BLIND to the shapes named in
+`DECLARED_BLIND_SHAPES`: they are listed there with the reason each is not
+refused, because a limit that is stated is a limit and one that is
+discovered is a finding.
+
     python3 live/pm_research/de_admissible_windows.py --selftest
     python3 live/pm_research/de_admissible_windows.py supply --day 20260901
 """
@@ -115,6 +126,49 @@ VERDICT_MODULES = ("da_forward_day_verify", "da_dayverdict",
 DYNAMIC_IMPORT_CALLS = ("import_module", "__import__")
 _UNRESOLVED = "<non-literal>"
 
+#: DE11-R1: shapes that IMPORT WITHOUT AN IMPORT NODE. `exec('import X')`,
+#: `eval("__import__('X')")` and a REBOUND `__import__` (`f = __import__;
+#: f('X')`) each parsed to an EMPTY set, so `reads_no_verdict` answered True
+#: -- blind AND passing, which is the worst pair. They are treated exactly
+#: as a non-literal argument already was: their PRESENCE makes the source
+#: UNRESOLVABLE, because what they import cannot be read from the tree.
+OPAQUE_EXEC_CALLS = ("exec", "eval", "compile")
+_OPAQUE = "<opaque-exec>"
+_REBOUND = "<rebound-import>"
+
+#: THE DECLARED LIMIT (a limit that is stated is a limit; one that is
+#: discovered is a finding). Per shape, REFUSED or DECLARED-BLIND:
+#:
+#:   REFUSED (in the sets above)
+#:     exec / eval / compile ......... any use at all, argument unread
+#:     a bare `__import__` reference not called with a literal
+#:     importlib.import_module / __import__ with a non-literal argument
+#:
+#:   DECLARED BLIND -- seen, named, and NOT refused, with the reason
+#:     runpy.run_module / run_path ... imports by executing a module; adding
+#:       it would refuse any file that legitimately runs another, and this
+#:       module's consumers do not. NAMED so its absence is a decision.
+#:     builtins.__import__ / getattr(importlib, "import_module") .... reached
+#:       through an attribute on an object this reader does not resolve;
+#:       catching them needs name resolution, which is a different
+#:       instrument, not a bigger regex.
+#:     a module imported by a C extension or an import hook .... outside the
+#:       source entirely.
+#:
+#: The blind list is a STATEMENT about what this predicate does not see. It
+#: is checked below only in the sense that the module asserts the list is
+#: non-empty and named -- there is no way to test for a shape one cannot see,
+#: and pretending otherwise would be the control that cannot fail.
+DECLARED_BLIND_SHAPES = (
+    "runpy.run_module / runpy.run_path",
+    "builtins.exec / builtins.eval / builtins.compile (attribute form: "
+    "matching the bare name is what keeps `re.compile` from reading as an "
+    "opaque exec)",
+    "builtins.__import__ (via the builtins module object)",
+    'getattr(importlib, "import_module")(...)',
+    "C extensions and import hooks (outside the source)",
+)
+
 
 def imported_modules(src: str) -> set[str]:
     """Every module a source file imports -- STATIC and DYNAMIC.
@@ -137,8 +191,12 @@ def imported_modules(src: str) -> set[str]:
         parts = dotted.split(".")
         return {parts[0], parts[-1]}
 
+    tree = ast.parse(src)
+    for _n in ast.walk(tree):                 # tag call functions first
+        if isinstance(_n, ast.Call) and isinstance(_n.func, ast.Name):
+            _n.func._is_call_func = True
     out: set[str] = set()
-    for node in ast.walk(ast.parse(src)):
+    for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for a in node.names:
                 out |= _segs(a.name)
@@ -148,6 +206,20 @@ def imported_modules(src: str) -> set[str]:
             fn = node.func
             name = (fn.attr if isinstance(fn, ast.Attribute)
                     else fn.id if isinstance(fn, ast.Name) else None)
+            if (name in OPAQUE_EXEC_CALLS
+                    and isinstance(fn, ast.Name)):
+                # DE11-R1: whatever this imports is inside a STRING this
+                # reader does not execute.
+                #
+                # BARE NAMES ONLY, and the first version was not: matching on
+                # the attribute name made `re.compile(...)` an opaque exec,
+                # so the seam -- which compiles one regex -- refused itself.
+                # Its own suite caught it. The builtins are called as bare
+                # names; an ATTRIBUTE form (`builtins.exec`, `x.eval`) is a
+                # different object this reader cannot resolve, and is
+                # DECLARED BLIND rather than guessed at.
+                out.add(_OPAQUE)
+                continue
             if name not in DYNAMIC_IMPORT_CALLS or not node.args:
                 continue
             arg = node.args[0]
@@ -155,6 +227,14 @@ def imported_modules(src: str) -> set[str]:
                 out |= _segs(arg.value)
             else:
                 out.add(_UNRESOLVED)
+        elif isinstance(node, ast.Name) and node.id == "__import__":
+            # A BARE `__import__` REFERENCE that is not the function of a
+            # call: it is being rebound, passed or stored, and the import it
+            # eventually performs is not visible here. The call form is
+            # handled above and does not reach this branch.
+            parent_calls = getattr(node, "_is_call_func", False)
+            if not parent_calls:
+                out.add(_REBOUND)
     return out
 
 
@@ -164,12 +244,22 @@ def reads_no_verdict(imports: Iterable[str]) -> bool:
     The old form returned a bool over whatever the reader happened to see,
     so an import it could not see read as an import that was not there."""
     imports = set(imports)
-    if _UNRESOLVED in imports:
+    opaque = {
+        _UNRESOLVED: "a dynamic import whose argument is not a literal",
+        _OPAQUE: f"a call to one of {list(OPAQUE_EXEC_CALLS)}, whose "
+                 f"argument is a STRING this reader does not execute",
+        _REBOUND: "a bare `__import__` reference that is rebound, passed or "
+                  "stored rather than called with a literal",
+    }
+    hit = [why for tok, why in opaque.items() if tok in imports]
+    if hit:
         raise ImportsUnresolvable(
-            f"REFUSED: this source contains a dynamic import whose argument "
-            f"is not a literal, so what it imports cannot be read. 'Cannot "
-            f"tell what this imports' is not 'imports nothing', and "
-            f"answering True here is what DE-R2 found.")
+            f"REFUSED: this source contains {'; '.join(hit)}, so what it "
+            f"imports cannot be read. 'Cannot tell what this imports' is not "
+            f"'imports nothing', and answering True here is what DE-R2 found "
+            f"for the non-literal shape and DE11-R1 for the rest. Shapes "
+            f"this predicate is DECLARED BLIND to, and does not refuse, are "
+            f"named in DECLARED_BLIND_SHAPES.")
     return not (imports & set(VERDICT_MODULES))
 
 
@@ -591,7 +681,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 53
+EXPECTED_CHECKS = 62
 
 
 def _grid(day: str) -> list[int]:
@@ -811,6 +901,44 @@ def selftest() -> int:
        "verdict producer resolved to `live` and passed. First AND last "
        "segment are taken now -- widening is the safe direction for a "
        "reads-NOTHING predicate")
+    # ---- DE11-R1: three shapes that imported with no import node --------
+    _X = "da_forward_day_verify"
+    for _name, _src in (
+            ("exec", f"exec('import {_X}')"),
+            ("eval", f"eval(\"__import__('{_X}')\")"),
+            ("rebound __import__", f"f = __import__\nf('{_X}')")):
+        refuses(lambda src=_src: reads_no_verdict(imported_modules(src)),
+                f"DE11-R1 ({_name}): REFUSES -- it used to parse to an EMPTY "
+                f"set and answer True, which is blind AND passing, the worst "
+                f"pair. The shape is NAMED in the message")
+    ok(_OPAQUE in imported_modules("exec('import x')")
+       and _REBOUND in imported_modules("f = __import__\n")
+       and _UNRESOLVED in imported_modules(
+           "import importlib\nimportlib.import_module(v)\n"),
+       "each unreadable shape is reported as its OWN sentinel, so the "
+       "refusal can say WHICH one it saw rather than 'something'")
+    ok(reads_no_verdict(imported_modules("__import__('json')\n")) is True,
+       "POSITIVE CONTROL: `__import__` CALLED with a literal still resolves "
+       "normally -- the rebound branch does not swallow the call form")
+    ok(not reads_no_verdict(imported_modules(f"__import__('{_X}')\n")),
+       "and that same call form still CATCHES a verdict producer")
+    ok(not reads_no_verdict(imported_modules(
+        f"from importlib import import_module\nimport_module('{_X}')\n")),
+       "the `from importlib import import_module` form is caught")
+    ok(not reads_no_verdict(imported_modules(
+        f"import importlib as il\nil.import_module('{_X}')\n")),
+       "and so is the aliased-module form -- the call is matched on the "
+       "attribute name, not on the module alias")
+    ok(len(DECLARED_BLIND_SHAPES) >= 4
+       and any("runpy" in x for x in DECLARED_BLIND_SHAPES)
+       and any("builtins" in x for x in DECLARED_BLIND_SHAPES),
+       f"THE LIMIT IS DECLARED, not discovered: {len(DECLARED_BLIND_SHAPES)} "
+       f"shapes this predicate does NOT see are named with their reasons "
+       f"(runpy, builtins.__import__, getattr-reached import_module, C "
+       f"extensions). There is no way to TEST for a shape one cannot see -- "
+       f"asserting otherwise would be the control that cannot fail -- so "
+       f"the assertion is that the list exists and names them")
+
     ok("da_content_liveness_rule" in imps,
        "and this module's OWN dynamic import (the RR11-1 demonstration) "
        "resolves to `da_content_liveness_rule` -- the frozen liveness rule, "

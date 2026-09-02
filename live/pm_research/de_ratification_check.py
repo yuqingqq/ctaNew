@@ -465,6 +465,15 @@ def check(supplied: dict, ratification_ref: str,
     else:
         now_dt = parse_instant(now_utc, "now_utc")
         now_utc_source = "injected"
+    # CO-6: PARSE THE STAMP WHENEVER ONE IS SUPPLIED, before any branch.
+    # It used to be parsed only on the SUPERSEDED path, so the same garbage
+    # refused on R-418 and was echoed verbatim into a verified result on
+    # R-419. A stamp is a claim about a receipt whether or not a superseder
+    # exists TODAY -- and a superseder that lands tomorrow would then be
+    # weighed against a value nobody ever parsed. `None` stays "no receipt".
+    stamped_dt = None
+    if stamped_at is not None:
+        stamped_dt = parse_instant(stamped_at, "stamped_at")
     if register_text is None:
         register_text = REGISTER.read_text()
     entry = parse_entry(register_text, ratification_ref)
@@ -505,7 +514,7 @@ def check(supplied: dict, ratification_ref: str,
                 f"{ratification_ref} is provenance -- pass its `as_of_utc` as "
                 f"`stamped_at` and this becomes a COMPUTED provenance "
                 f"finding rather than a sentence in a report (CO-R3).")
-        stamp = _norm_ts(stamped_at, "stamped_at")
+        stamp = stamped_dt          # parsed at entry (CO-6)
         later = {r: t for r, t in superseder_times.items() if t > stamp}
         if len(later) == len(superseder_times):
             provenance = True          # every superseder postdates the stamp
@@ -638,7 +647,9 @@ def check(supplied: dict, ratification_ref: str,
                          "already carrying a ref keeps it as provenance",
         "now_utc": now_utc,
         "now_utc_source": now_utc_source,
-        "stamped_at": stamped_at,
+        "stamped_at": (stamped_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+                       if stamped_dt else None),
+        "stamped_at_raw": stamped_at,
         "provenance": provenance,
         "superseded_by": sorted(superseder_times),
         "superseder_times": {r: t.strftime("%Y-%m-%dT%H:%M:%SZ")
