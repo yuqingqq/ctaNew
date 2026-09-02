@@ -843,7 +843,10 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
                    f"placeholder ONLY -- it is not adjudicated, p is withheld, "
                    f"and the per-coin evidence is {per_coin_ev!r} so a ruling "
                    f"can be applied without re-running.")
-    if head in ("Q2_sign", "Q3_magnitudes"):
+    if head == "Q2_sign":
+        # Q2's frozen gate DOES name an incumbent and the incumbent has no
+        # sign head, so R-237's no-counterpart status is correct here. R-397
+        # ruling 2 removes it from Q3 ONLY, whose gate never asked.
         return I11.build_cell(
             arm, head, budget, statistic=min(good), p_value=(ps[0] if ps else None),
             status=I11.CELL_STATUS_NO_COUNTERPART, n_actions=n_actions,
@@ -944,6 +947,113 @@ def load_verified_incumbent(coin: str, fitdir=None, manifest: dict = None) -> di
                         "this proves only that this file is the one the "
                         "manifest recorded"}
     return d
+
+
+def q1_incremental(cand_p: list, inc_haz: dict, rows: list,
+                   y_fill: list) -> dict:
+    """Q1's SECOND declared conjunct: does the candidate beat the incumbent
+    hazard head on the identical action population? R-397 ruling 1.
+
+    THE GATE IS A CONJUNCTION OF TWO DIFFERENT KINDS OF THING, and reading it
+    literally is what keeps this honest. Frozen prereg 3, Q1:
+
+        "beats the matched-random null AND beats the incumbent hazard head"
+
+    The first conjunct is a NULL TEST and carries a p. The second is a
+    COMPARISON on the identical population and is a BOOLEAN. Composing them
+    into a single p would require a rule nobody has ruled, so nothing is
+    composed: the adjudicated p stays the matched-random one, and the
+    comparison is reported as the boolean the gate asks for.
+
+    THE 5(2) INCREMENT NULL IS ALSO COMPUTED, AND ITS LIMIT IS STATED.
+    Prereg 5(2) declares "window-level sign-flip permutation of per-window
+    paired differences" for the increment. That design is additive: for Q4 the
+    per-window values SUM to the statistic. **AUC does not sum.** The
+    population AUC difference is NOT the mean of per-window AUC differences,
+    so this null describes the MEAN PER-WINDOW difference, not the declared
+    population statistic. It is therefore REPORTED and never adjudicated, and
+    the mismatch is named here rather than resolved by picking one — that
+    would be exactly the "p that does not describe the number beside it"
+    defect (I11-B5) the programme already fixed once.
+
+    Windows where either side's AUC is undefined (one class present) are
+    EXCLUDED BY NAME and counted (rule 4), never silently dropped."""
+    # THE INCUMBENT MUST IDENTIFY ITSELF, not merely supply numbers.
+    # Measured: replacing `apply_incumbent_hazard(...)` with a constant
+    # `{"p_fill": [0.0] * n}` produced a perfectly well-formed comparison
+    # (all-tied scores give AUC 0.5), so the leg READ as computed, the seam
+    # passed, and Q1's gate reported a beat against nothing. A number cannot
+    # say where it came from; the verified artifact hash can.
+    _arm = inc_haz.get("arm") if isinstance(inc_haz, dict) else None
+    if _arm != INCUMBENT_ARM:
+        raise RuntimeError(
+            f"REFUSED: Q1's incumbent leg was handed "
+            f"{type(inc_haz).__name__} declaring arm {_arm!r}, not "
+            f"{INCUMBENT_ARM!r}. A vector of numbers is not the incumbent "
+            f"hazard head.")
+    prov = inc_haz.get("provenance") or {}
+    if not prov.get("sha256_prefix"):
+        raise RuntimeError(
+            "REFUSED: Q1's incumbent leg carries no verified provenance. The "
+            "comparison is only meaningful against the COMMITTED incumbent "
+            "(R-280), and an unidentified predictor would let a constant "
+            "vector pass as one.")
+    if inc_haz.get("head") != "Q1_arrival":
+        raise RuntimeError(
+            f"REFUSED: Q1's leg was handed the {inc_haz.get('head')!r} head; "
+            f"the gate names the incumbent HAZARD head specifically.")
+    inc_p = inc_haz["p_fill"]
+    n = len(rows)
+    if not (len(cand_p) == len(inc_p) == len(y_fill) == n):
+        raise RuntimeError(
+            f"REFUSED: Q1's incremental leg needs the IDENTICAL action "
+            f"population (prereg 5.2); got candidate {len(cand_p)}, incumbent "
+            f"{len(inc_p)}, labels {len(y_fill)}, rows {n}.")
+    a_c, a_i = I11.auc(cand_p, y_fill), I11.auc(inc_p, y_fill)
+    increment = None if (a_c is None or a_i is None) else a_c - a_i
+    by_w: dict = {}
+    for i, r in enumerate(rows):
+        by_w.setdefault(r.get("slug"), []).append(i)
+    diffs, excl = {}, {"single_class_window": 0, "too_few_rows": 0}
+    for w, idx in sorted(by_w.items()):
+        ys = [y_fill[i] for i in idx]
+        if len(idx) < 2:
+            excl["too_few_rows"] += 1
+            continue
+        wc = I11.auc([cand_p[i] for i in idx], ys)
+        wi = I11.auc([inc_p[i] for i in idx], ys)
+        if wc is None or wi is None:
+            excl["single_class_window"] += 1
+            continue
+        diffs[w] = wc - wi
+    null = I11.sign_flip_null(diffs) if diffs else None
+    return {
+        "head": "Q1_arrival",
+        "candidate_auc": a_c, "incumbent_auc": a_i,
+        "increment_auc": increment,
+        "beats_incumbent_hazard_head": (None if increment is None
+                                        else increment > 0.0),
+        "n_actions": n,
+        "incumbent_provenance": prov,
+        "windows_total": len(by_w), "windows_used": len(diffs),
+        "windows_excluded": excl,
+        "increment_null_REPORTED_NOT_ADJUDICATED": (
+            None if null is None else {
+                "p_value": null["p_value"],
+                "p_two_sided": null.get("p_two_sided"),
+                "n_units": null["n_units"], "n_perm": null["n_perm"],
+                "observed_mean_per_window_auc_difference": null["observed"]}),
+        "why_the_null_is_not_adjudicated":
+            "prereg 5(2)'s sign-flip design is ADDITIVE — for Q4 the "
+            "per-window values sum to the statistic. AUC does not sum, so the "
+            "population AUC difference is not the mean of per-window AUC "
+            "differences and this p describes the mean per-window difference, "
+            "not the declared statistic. Adjudicating it would put a p beside "
+            "a number it does not describe (I11-B5). The GATE's second "
+            "conjunct is a comparison, and that is what is adjudicated.",
+        "arm_note": "the incumbent is INCUMBENT_REWEIGHTED_ONLY's HAZARD head "
+                    "(probability before the value head), applied to the same "
+                    "rows by apply_incumbent_hazard (R-280, R-397 ruling 1)"}
 
 
 def _pm_fn_row(block: dict, j: int, n_expected: int) -> list:
@@ -1318,7 +1428,13 @@ def _q3_compose(arm: str, per_coin: dict) -> tuple:
     # reports. Both sides' n travel in the detail so the pair stays visible.
     _n_stat = _head_n(r[arm], worse_stat_side)
     _n_both = {k: _head_n(r[arm], k) for k in subs}
-    return (stat, pval, I11.CELL_STATUS_NO_COUNTERPART, _n_stat,
+    # R-397 RULING 2: Q3 adjudicates on ITS OWN gate. Its frozen gate is
+    # "calibration slope CI excludes 0 for each, reported separately" and
+    # carries NO incumbent term, so NO_INCUMBENT_COUNTERPART -- a status
+    # meaning "the incumbent cannot answer this head" -- was blocking a head
+    # that never asked the incumbent anything. Both slope conjuncts are
+    # evaluated (R-306), so the cell is OK.
+    return (stat, pval, I11.CELL_STATUS_OK, _n_stat,
             f"Q3 binding side {worse_stat_side} n_actions (A1.5); "
             f"both sides {_n_both}",
             f"n behind this statistic: {_n_stat!r} actions on "
@@ -1339,9 +1455,12 @@ def _q3_compose(arm: str, per_coin: dict) -> tuple:
             f"form -- matched-random null at no_skill_value=0.0, one-sided "
             f"'greater', VERIFIED on both sides -- and NO literal interval is "
             f"claimed: rule 8 forbids one at G=0 complete UTC days. Status is "
-            f"NO_INCUMBENT_COUNTERPART for the same reason as Q2 (R-237): the "
-            f"incumbent has no magnitude head, so the p reported is the "
-            f"MATCHED-RANDOM null, never an incremental one.")
+            f"OK and adjudicated on ITS OWN declared gate (R-397 ruling 2, "
+            f"USER): this head's frozen gate carries NO incumbent term, so "
+            f"NO_INCUMBENT_COUNTERPART -- which means 'the incumbent cannot "
+            f"answer this head' -- was blocking a head that never asked it "
+            f"anything. The p is the MATCHED-RANDOM null, which IS this "
+            f"gate's declared null (R-286); no incremental null is owed.")
 
 
 def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
@@ -1732,11 +1851,15 @@ def selftest() -> int:
     # R-306 INVERTS BOTH OF THESE, and they are kept as the record of what
     # changed: the AGGREGATION_UNDECLARED refusal was correct until the ruling
     # existed, and wrong after it. A gap a ruling has closed is no longer a gap.
-    ok(all(_fam["cells"][k]["status"] == I11.CELL_STATUS_NO_COUNTERPART
+    # R-397 RULING 2 SUPERSEDES the status half of this control, and it is
+    # kept as the record: Q3 adjudicates (R-306) AND is now OK, because its
+    # frozen gate carries no incumbent term and NO_INCUMBENT_COUNTERPART was
+    # blocking a head that never asked the incumbent anything.
+    ok(all(_fam["cells"][k]["status"] == I11.CELL_STATUS_OK
            for k in _fam["cells"] if "/Q3_magnitudes/" in k),
-       "R-306 Q3 cells ADJUDICATE (conjunction + worse side) and carry Q2's "
-       "status for the same reason: the incumbent has no magnitude head, so "
-       "the p is the matched-random null, never an incremental one")
+       "R-397(2) Q3 cells are OK and adjudicated on their OWN declared gate; "
+       "the no-counterpart status stays on Q2, whose gate DOES name an "
+       "incumbent the incumbent cannot supply")
     ok(all(_fam["cells"][k]["p_value"] == 0.44
            for k in _fam["cells"] if "/Q3_magnitudes/" in k),
        "R-306 Q3's adjudicated p is the WORSE of the two (0.44, m_good), NOT "
@@ -2107,8 +2230,174 @@ def selftest() -> int:
     _selftest_review_batch_f2_f7(ok)
     _selftest_gate_evaluation_rr2(ok)
     _selftest_frozen_prereg_anchor(ok)
+    _selftest_r397_rulings(ok)
 
     return _selftest_verdict(fails)
+
+
+def _selftest_r397_rulings(ok):
+    """R-397 rulings 1 and 2, red-first in both directions."""
+    L = str(D.TARGET_LATENCY_MS)
+
+    def rows(n=40):
+        return [{"slug": f"w{i // 8}", "side": "BUY_UP", "gen": i,
+                 "t0": 1787650200.0 + (i // 8) * 300, "t_start": float(i % 8),
+                 "coin": "btc"} for i in range(n)]
+
+    # ---- RULING 1: the second conjunct is a COMPARISON, and it discriminates
+    _r, _y = rows(), [i % 2 for i in range(40)]
+    _better = [0.9 if y else 0.1 for y in _y]          # perfect
+    _worse = [0.1 if y else 0.9 for y in _y]           # inverted
+
+    def inc(p):
+        """A well-formed incumbent hazard block, as apply_incumbent_hazard
+        returns it — arm, head and VERIFIED provenance, not bare numbers."""
+        return {"p_fill": list(p), "arm": INCUMBENT_ARM, "head": "Q1_arrival",
+                "n": len(p), "provenance": {"sha256_prefix": "deadbeef"}}
+
+    _win = q1_incremental(_better, inc(_worse), _r, _y)
+    ok(_win["beats_incumbent_hazard_head"] is True
+       and _win["candidate_auc"] == 1.0 and _win["incumbent_auc"] == 0.0,
+       f"R-397(1) POSITIVE CONTROL: a candidate that outranks the incumbent "
+       f"BEATS its hazard head (auc {_win['candidate_auc']} vs "
+       f"{_win['incumbent_auc']})")
+    _lose = q1_incremental(_worse, inc(_better), _r, _y)
+    ok(_lose["beats_incumbent_hazard_head"] is False,
+       "R-397(1) KNOWN-BAD: the SAME code returns False when the candidate "
+       "loses — the conjunct discriminates rather than always passing, which "
+       "is what makes 'pass or fail, either is the result of record' true")
+    _tie = q1_incremental(_better, inc(_better), _r, _y)
+    ok(_tie["beats_incumbent_hazard_head"] is False
+       and _tie["increment_auc"] == 0.0,
+       "R-397(1) a TIE does not beat: 'beats' is strict, so an identical "
+       "hazard head fails the conjunct rather than passing it")
+
+    # the identical-population requirement is CHECKED, not assumed
+    try:
+        q1_incremental(_better, inc(_worse[:-1]), _r, _y)
+        ok(False, "R-397(1) a misaligned incumbent must REFUSE")
+    except RuntimeError as e:
+        ok("IDENTICAL action population" in str(e),
+           "R-397(1) KNOWN-BAD: a mismatched incumbent vector REFUSES — "
+           "prereg 5.2's increment is defined only on the identical "
+           "population")
+
+    # M60, THE ONE THAT SURVIVED: a CONSTANT vector produces a perfectly
+    # well-formed comparison (all-tied scores give AUC 0.5), so the leg read
+    # as computed and the gate reported a beat against nothing. A number
+    # cannot say where it came from.
+    for _lbl, _bad in (
+            ("a bare list of numbers", [0.0] * 40),
+            ("a dict with only p_fill", {"p_fill": [0.0] * 40}),
+            ("the right arm but NO provenance",
+             {"p_fill": [0.0] * 40, "arm": INCUMBENT_ARM,
+              "head": "Q1_arrival"}),
+            ("provenance but the WRONG head",
+             {"p_fill": [0.0] * 40, "arm": INCUMBENT_ARM, "head": "Q4",
+              "provenance": {"sha256_prefix": "deadbeef"}})):
+        try:
+            q1_incremental(_better, _bad, _r, _y)
+            ok(False, f"R-397(1) KNOWN-BAD ({_lbl}) must REFUSE")
+        except RuntimeError as e:
+            ok("REFUSED" in str(e),
+               f"R-397(1) KNOWN-BAD ({_lbl}): Q1's leg REFUSES a predictor "
+               f"that cannot identify itself — unwiring the call and handing "
+               f"back a constant produced a well-formed AUC and passed")
+
+    # windows that cannot carry an AUC are EXCLUDED BY NAME and counted
+    _one = [1] * 40
+    _ex = q1_incremental(_better, inc(_worse), _r, _one)
+    ok(_ex["windows_used"] == 0
+       and _ex["windows_excluded"]["single_class_window"] == 5
+       and _ex["increment_null_REPORTED_NOT_ADJUDICATED"] is None,
+       f"R-397(1) single-class windows are EXCLUDED BY NAME and COUNTED "
+       f"(rule 4), and with none usable the null is absent rather than "
+       f"fabricated (got {_ex['windows_excluded']})")
+    ok("does not sum" in _win["why_the_null_is_not_adjudicated"],
+       "R-397(1) the artifact STATES why the 5(2) null is reported and not "
+       "adjudicated: AUC does not sum over windows, so its p would not "
+       "describe the declared statistic")
+
+    # ---- RULING 2: each head answers ITS OWN gate ---------------------
+    def fam(q1_beats=True):
+        cells = {}
+        for a in I11.ARMS_011:
+            for h in I11.HEADS_011:
+                for b in I11.BUDGETS_011:
+                    cells[I11.cell_key(a, h, b)] = I11.build_cell(
+                        a, h, b, statistic=1.0, p_value=0.001,
+                        status=I11.CELL_STATUS_OK, n_actions=10)
+        f = I11.assemble_family(cells)
+        # Q4's leg must be present too, or the RR2-1 predicate fires on Q4
+        # and the control would report Q1 passing for the wrong reason.
+        return {"family": f, "results": {"btc": {
+            a: {"q1_incremental": {"beats_incumbent_hazard_head": q1_beats,
+                                   "incumbent_auc": 0.5,
+                                   "incumbent_provenance": {
+                                       "sha256_prefix": "deadbeef"}},
+                "economics": {b: {"paired_against_incumbent": True,
+                                  "incumbent_net_cents": 1.0}
+                              for b in I11.BUDGETS_011}}
+            for a in I11.ARMS_011}}}
+
+    _f = fam(q1_beats=True)
+    attach_declared_gate_outcomes(_f)
+    _q3 = _f["family"]["cells"]["composed_lgbm/Q3_magnitudes/5%"]
+    _q2 = _f["family"]["cells"]["composed_lgbm/Q2_sign/5%"]
+    _q1 = _f["family"]["cells"]["composed_lgbm/Q1_arrival/5%"]
+    ok(_q3["declared_gate_outcome"]["passed"] is True
+       and "incumbent" not in str(_q3["declared_gate_outcome"]["conjuncts"]),
+       "R-397(2) Q3 answers its OWN gate — two slope conjuncts, no incumbent "
+       "term anywhere in it")
+    ok(_q2["declared_gate_outcome"]["passed"] is None
+       and _q2["declared_gate_outcome"]["conjuncts"]["incumbent"] is None,
+       "R-397(2) Q2's incumbent conjunct reads NULL, not false: the incumbent "
+       "has no sign head, so it is UNANSWERABLE, not answered-and-failed")
+    ok(_q1["declared_gate_outcome"]["passed"] is True
+       and _q1["declared_gate_outcome"]["conjuncts"]["incumbent_hazard"] is True,
+       "R-397(1+2) Q1's gate is now FULLY evaluated: both conjuncts present")
+    _fl = fam(q1_beats=False)
+    attach_declared_gate_outcomes(_fl)
+    ok(_fl["family"]["cells"]["composed_lgbm/Q1_arrival/5%"][
+           "declared_gate_outcome"]["passed"] is False,
+       "R-397(1) KNOWN-BAD: when the candidate does NOT beat the incumbent "
+       "hazard head its gate FAILS — the wiring can produce a failure, which "
+       "is what makes the pass meaningful")
+    ok(_f["family"]["declared_gate_outcomes"]["counts"]["not_evaluable"] >= 6,
+       "R-397(2) heads whose gate cannot be fully evaluated are COUNTED as "
+       "not-evaluable rather than folded into 'failed'")
+
+    # the joint reading stays a SEPARATE question
+    ok("survives_joint_reading_at_0_05" in
+       _f["family"]["declared_gate_outcomes"]["separate_from"],
+       "R-397(2) the artifact says the gate outcome and the joint reading are "
+       "different questions, answered in different fields")
+
+    # ---- the RR2-1 predicate must now PASS ---------------------------
+    _art = {"family": _f["family"],
+            "incumbent_null_applicability": {"comparable": dict(
+                INCUMBENT_COMPARABLE)},
+            "results": _f["results"]}
+    _art["incumbent_legs_evaluated"] = incumbent_legs_evaluated(_art)
+    ok(_art["incumbent_legs_evaluated"]["Q1_arrival"][
+           "incumbent_counterpart_computed"] is True,
+       "R-397(1) incumbent_legs_evaluated reads TRUE for Q1 — read from the "
+       "RESULT (a real incumbent AUC), never from the presence of a call site")
+    _ge = apply_gate_evaluation_status(_art)
+    ok(_ge["cells_gate_partially_evaluated"] == [],
+       f"R-397(1) the RR2-1 predicate now PASSES: no cell is "
+       f"GATE_PARTIALLY_EVALUATED once the leg is wired (got "
+       f"{_ge['cells_gate_partially_evaluated']})")
+    # ...and it must still FIRE if the leg goes away, or the pass means nothing
+    _art2 = json.loads(json.dumps(_art))
+    for _rep in _art2["results"]["btc"].values():
+        _rep["q1_incremental"] = {}
+    _art2["incumbent_legs_evaluated"] = incumbent_legs_evaluated(_art2)
+    ok(len(apply_gate_evaluation_status(_art2)[
+        "cells_gate_partially_evaluated"]) == 6,
+       "R-397(1) KNOWN-BAD: remove the leg's RESULT and the predicate fires "
+       "again on all six Q1 cells — the pass is evidence, not a disabled "
+       "check")
 
 
 def _selftest_frozen_prereg_anchor(ok):
@@ -2179,6 +2468,27 @@ def _selftest_frozen_prereg_anchor(ok):
            "RR3-1 KNOWN-BAD: two maps agreeing on every head are REFUSED as "
            "harmonised — the Q2 difference is what RR2-1 rests on and must "
            "not be tidied away")
+
+    # THE GATE TEXT, not only the boolean. A mutation rewriting Q3's gate
+    # string left the boolean untouched and passed everything, while the
+    # artifact would publish a gate the frozen document does not contain.
+    ok(assert_gate_text_matches({"a": "x  y"}, {"a": "x y"})["heads_checked"]
+       == ["a"],
+       "RR3-1 the gate-TEXT check ADMITS the frozen wording (whitespace "
+       "normalised, because a table cell wraps)")
+    for _lbl, _d, _c in (("a paraphrase", {"a": "beats the incumbent"},
+                          {"a": "beats the incumbent hazard head"}),
+                         ("a missing string", {"a": "x"}, {}),
+                         ("an added conjunct", {"a": "beats X"},
+                          {"a": "beats X AND beats Y"})):
+        try:
+            assert_gate_text_matches(_d, _c)
+            ok(False, f"RR3-1 gate-text drift ({_lbl}) must REFUSE")
+        except RuntimeError as e:
+            ok("not the frozen section-3 wording" in str(e),
+               f"RR3-1 KNOWN-BAD ({_lbl}): a published gate string that is "
+               f"not the document's is REFUSED — the boolean check cannot "
+               f"see it")
 
     # THE TRANSCRIPTION CHECK, driven DIRECTLY — on the real document the two
     # already agree, so a mutant deleting it changed nothing and survived.
@@ -2757,9 +3067,16 @@ def _selftest_artifact_wiring_guard(ok):
         r["incumbent_applicability_guard"] = {"checks": 18}
         r["frozen_prereg_anchor"] = {
             "chain_terminates_at": "fixture",
-            "gate_carries_incumbent_term": {"Q1_arrival": True}}
+            "gate_carries_incumbent_term": {"Q1_arrival": True},
+            "gate_text_verified_heads": list(I11.HEADS_011)}
+        r["incumbent_legs_evaluated"] = {
+            h: {"incumbent_counterpart_computed": True}
+            for h, v in INCUMBENT_COMPARABLE.items() if v}
         r["family"]["gate_evaluation"] = {"cells_checked": 24,
                                           "cells_gate_partially_evaluated": []}
+        r["family"]["declared_gate_outcomes"] = {
+            "counts": {"passed": len(r["family"]["cells"]), "failed": 0,
+                       "not_evaluable": 0}}
         for c in r["family"]["cells"].values():
             c["permutation_floor"] = {"at_permutation_floor": False}
         return r
@@ -2795,6 +3112,14 @@ def _selftest_artifact_wiring_guard(ok):
             ("the floor disclosure never reached the cells",
              _strip_floor(emitted()),
              "permutation_floor"),
+            ("the declared-gate pass left NO evidence (R-397 ruling 2)",
+             {**emitted(), "family": {**emitted()["family"],
+                                      "declared_gate_outcomes": {}}},
+             "declared-gate pass left evidence"),
+            ("Q1's incumbent leg was not computed (R-397 ruling 1)",
+             {**emitted(), "incumbent_legs_evaluated": {
+                 "Q4_combined_ev": {"incumbent_counterpart_computed": True}}},
+             "incumbent leg was NOT computed"),
             ("the frozen-prereg anchor left NO evidence",
              {**emitted(), "frozen_prereg_anchor": {}},
              "anchor RAN"),
@@ -3021,7 +3346,7 @@ def _selftest_q3_r306(ok):
 
     # POSITIVE CONTROL, and it must ADMIT: both sides evaluable adjudicates.
     _st, _p, _s, _d = cell(head(0.70, 0.05), head(0.91, 0.44))
-    ok(_s == I11.CELL_STATUS_NO_COUNTERPART and _p == 0.44 and _st == 0.70,
+    ok(_s == I11.CELL_STATUS_OK and _p == 0.44 and _st == 0.70,
        f"R-306 POSITIVE CONTROL: both sides evaluable -> the cell adjudicates, "
        f"p = worse 0.44, statistic = min slope 0.70 (got {_s}, {_p}, {_st})")
 
@@ -3055,7 +3380,7 @@ def _selftest_q3_r306(ok):
     # apart while reading as evidence.
     _tp, _tpv, _ts, _dt = cell(head(0.70, 0.44), head(0.91, 0.44))
     ok("TIED ON p" in _dt and "AGREE" not in _dt and _tpv == 0.44
-       and _ts == I11.CELL_STATUS_NO_COUNTERPART and _tp == 0.70,
+       and _ts == I11.CELL_STATUS_OK and _tp == 0.70,
        f"R-306 equal p on both sides reports TIED, never AGREE: the ruling's "
        f"worse-of-the-two cannot discriminate and the p is the same either "
        f"way (got p={_tpv}, stat={_tp})")
@@ -3663,6 +3988,7 @@ def _parse_section3(body: str, origin: str = "<body>") -> dict:
             carries = "incumbent" in gate.lower()
             prev = gate
         gates[head_of[cols[0]]] = {"gate_text": resolved,
+                                   "gate_text_raw": gate,
                                    "carries_incumbent_term": carries,
                                    "inherited": gate is not resolved}
     if len(gates) != 4:
@@ -3671,6 +3997,26 @@ def _parse_section3(body: str, origin: str = "<body>") -> dict:
             f"{origin}, expected 4 ({sorted(gates)}). A partial parse would "
             f"anchor the constants to a fragment.")
     return gates
+
+
+def assert_gate_text_matches(doc_text: dict, code_text: dict) -> dict:
+    """The published gate STRING must be the frozen document's, verbatim.
+
+    `assert_gate_terms_match` compares the derived boolean, and a mutation
+    that rewrote only the TEXT survived it — the artifact would then publish,
+    per cell, a gate the frozen preregistration does not contain. Whitespace
+    is normalised because a table cell wraps; nothing else is."""
+    def norm(t):
+        return " ".join(str(t or "").split())
+    drift = {h: {"document": norm(doc_text[h]), "code": norm(code_text.get(h))}
+             for h in doc_text if norm(doc_text[h]) != norm(code_text.get(h))}
+    if drift:
+        raise RuntimeError(
+            f"REFUSED: DECLARED_GATES publishes gate TEXT that is not the "
+            f"frozen section-3 wording: {drift}. A cell's declared_gate is "
+            f"what a reader resolves against the preregistration; a "
+            f"paraphrase there is a claim the document does not make.")
+    return {"heads_checked": sorted(doc_text)}
 
 
 def assert_gate_terms_match(doc_terms: dict, code_terms: dict) -> dict:
@@ -3742,6 +4088,13 @@ def assert_constants_match_frozen_prereg(fitdir=None) -> dict:
                           .get("carries_incumbent_term"))
                   for h in gates}
     assert_gate_terms_match(doc_terms, code_terms)
+    # AND THE TEXT, not only the boolean. Measured: rewriting Q3's gate
+    # string to "beats the incumbent" left the boolean untouched and passed
+    # every check, while the artifact then PUBLISHED a gate the frozen
+    # document does not contain. The text is what a reader resolves.
+    _text_ev = assert_gate_text_matches(
+        {h: g["gate_text_raw"] for h, g in gates.items()},
+        {h: (I11.DECLARED_GATES.get(h) or {}).get("gate") for h in gates})
 
     # WHICH HEADS THE INCUMBENT ACTUALLY HAS, read from the artifact whose
     # identity `load_verified_incumbent` binds by hash. This is a property of
@@ -3774,6 +4127,11 @@ def assert_constants_match_frozen_prereg(fitdir=None) -> dict:
     divergent = assert_propositions_not_harmonised(doc_terms,
                                                    dict(INCUMBENT_COMPARABLE))
     return {"preregistration": PREREG_DOC, "preregistration_commit": PREREG_COMMIT,
+            # RECORDED, so removing the call removes the evidence. On the
+            # real document the texts already match, so a mutant deleting the
+            # check changed no behaviour and survived; the seam below asks
+            # for this field instead of grepping for the call.
+            "gate_text_verified_heads": _text_ev["heads_checked"],
             "source_of_DECLARED_GATES": "the frozen section-3 gate table, read "
                                         "from git at the recorded commit",
             "source_of_INCUMBENT_COMPARABLE": "the hash-verified incumbent "
@@ -3788,6 +4146,90 @@ def assert_constants_match_frozen_prereg(fitdir=None) -> dict:
                                           "rests on",
             "chain_terminates_at": "a USER-frozen document and a hash-bound "
                                    "artifact, not at an editable constant"}
+
+
+def attach_declared_gate_outcomes(receipt: dict) -> dict:
+    """Each head's OWN gate, evaluated separately from the joint reading.
+
+    R-397 RULING 2. `NO_INCUMBENT_COUNTERPART` was blocking Q3, whose frozen
+    gate — "calibration slope CI excludes 0 for each, reported separately" —
+    carries NO incumbent term at all. A status invented for heads the
+    incumbent cannot answer was deciding a head that never asked it anything.
+
+    The two questions are now answered in two fields, because they are two
+    questions and one flag cannot carry both:
+
+      declared_gate_outcome           did THIS head pass ITS OWN frozen gate?
+      survives_joint_reading_at_0_05  did this cell survive Holm over 24?
+
+    Conjuncts are evaluated per head from what the run actually computed. A
+    conjunct nobody computed reads `null`, never `false`: "not evaluated" and
+    "evaluated and failed" are different findings, and collapsing them is how
+    Q1 came to publish a survival on half a gate."""
+    fam = receipt.get("family") or {}
+    cells = fam.get("cells") or {}
+    results = receipt.get("results") or {}
+    if not cells:
+        raise RuntimeError(
+            "REFUSED: the declared-gate pass read ZERO cells; a pass that "
+            "touched nothing must not report an outcome (R-289).")
+    # per-arm Q1 incremental evidence, READ from the result
+    q1inc = {}
+    for arms in results.values():
+        for arm, rep in arms.items():
+            if rep.get("q1_incremental"):
+                q1inc[arm] = rep["q1_incremental"]
+    counts = {"passed": 0, "failed": 0, "not_evaluable": 0}
+    for key, c in cells.items():
+        head, arm = c.get("head"), c.get("arm")
+        gate = c.get("declared_gate") or {}
+        holm, p = c.get("holm_p"), c.get("p_value")
+        # conjunct 1, common to Q1/Q2/Q4: the head's own null, read at the
+        # family-wide bar so the gate and the joint reading use one alpha.
+        null_ok = None if (holm is None or p is None) else bool(holm < 0.05)
+        conj: dict = {}
+        if head == "Q1_arrival":
+            conj["matched_random"] = null_ok
+            _b = (q1inc.get(arm) or {}).get("beats_incumbent_hazard_head")
+            conj["incumbent_hazard"] = _b
+        elif head == "Q2_sign":
+            conj["matched_random"] = null_ok
+            # the incumbent has NO sign head, so this conjunct is not merely
+            # uncomputed -- it is unanswerable for this head (R-237).
+            conj["incumbent"] = None
+        elif head == "Q3_magnitudes":
+            # its ONLY conjuncts are the two slope gates, composed by R-306
+            # into the cell's adjudicated p. No incumbent term exists.
+            conj["slope_excludes_zero_m_harm"] = null_ok
+            conj["slope_excludes_zero_m_good"] = null_ok
+        else:
+            conj["increment_beats_incumbent"] = null_ok
+            # Q4's frozen gate ALSO names a matched-random conjunct and this
+            # run computes none for Q4. Reported as uncomputed rather than
+            # assumed: it is a disclosure, not a status change (R-397 rules
+            # Q1 and Q3 only).
+            conj["matched_random"] = None
+        vals = list(conj.values())
+        passed = (None if any(v is None for v in vals) else all(vals))
+        counts["not_evaluable" if passed is None else
+               ("passed" if passed else "failed")] += 1
+        c["declared_gate_outcome"] = {
+            "gate": gate.get("gate"), "conjuncts": conj, "passed": passed,
+            "alpha": "holm_p < 0.05 over the declared family of 24",
+            "why": "R-397 ruling 2: a head's survival is ITS OWN declared "
+                   "gate. A conjunct nobody computed reads null, never "
+                   "false — 'not evaluated' and 'evaluated and failed' are "
+                   "different findings."}
+    fam["declared_gate_outcomes"] = {
+        "counts": counts,
+        "heads_passing_their_own_gate": sorted(
+            {c["head"] for c in cells.values()
+             if (c["declared_gate_outcome"] or {}).get("passed") is True}),
+        "separate_from": "survives_joint_reading_at_0_05, which is the "
+                         "family-wide Holm reading and answers a different "
+                         "question",
+        "ruling": "R-397 ruling 2 (USER)"}
+    return fam["declared_gate_outcomes"]
 
 
 def finalise_family(receipt: dict) -> dict:
@@ -3818,6 +4260,16 @@ def finalise_family(receipt: dict) -> dict:
     receipt["family"].update(carried)
     receipt["family"]["gate_evaluation"] = ge
     attach_floor_disclosure(receipt)
+    # AFTER the re-assembly, because a gate outcome reads holm_p and the
+    # FINAL status; computing it earlier would read a verdict still to move.
+    #
+    # THIS CALL WENT MISSING ONCE, and the suite stayed green because every
+    # control invokes `attach_declared_gate_outcomes` DIRECTLY — rule 17's
+    # shape in the code written to close rule 17's shape. It was surfaced by
+    # a mutant that could not find its anchor, not by a failing check. The
+    # seam now demands this pass's evidence in the artifact, so the call
+    # cannot vanish quietly again.
+    attach_declared_gate_outcomes(receipt)
     return receipt["family"]
 
 
@@ -3941,14 +4393,51 @@ def assert_dry_run_family(receipt: dict) -> dict:
             "INSTANT it names. as_of precedes written_at by the fit's "
             "duration, and rule 8's as-of is the POPULATION READ instant; a "
             "bare timestamp leaves a reader to infer which one it is.")
+    # R-397 ruling 1: Q1's leg must have ARRIVED, checked at the artifact.
+    # A source grep would pass on a call whose result never reaches the cell,
+    # which is exactly how MUTANT A defeated the previous guard.
+    _legs = receipt.get("incumbent_legs_evaluated") or {}
+    _owed = sorted(h for h, v in (
+        (receipt.get("incumbent_null_applicability") or {}).get("comparable")
+        or {}).items() if v)
+    _missing = sorted(h for h in _owed
+                      if not (_legs.get(h) or {}).get(
+                          "incumbent_counterpart_computed"))
+    for _arms in (receipt.get("results") or {}).values():
+        for _a, _rep in _arms.items():
+            _qi = _rep.get("q1_incremental")
+            if _qi is not None and not (_qi.get("incumbent_provenance") or {}
+                                        ).get("sha256_prefix"):
+                raise RuntimeError(
+                    f"REFUSED: {_a}'s Q1 incremental leg carries no incumbent "
+                    f"provenance. A constant vector produces a well-formed "
+                    f"AUC comparison and would otherwise read as a computed "
+                    f"leg (R-397 ruling 1).")
+    if _missing:
+        raise RuntimeError(
+            f"REFUSED: {_missing} are declared comparable and their incumbent "
+            f"leg was NOT computed. R-397 ruling 1 wired Q1's leg; an "
+            f"artifact emitted without it is the half-evaluated gate the "
+            f"ruling exists to close.")
     fa = receipt.get("frozen_prereg_anchor") or {}
-    if not fa.get("chain_terminates_at") or not fa.get("gate_carries_incumbent_term"):
+    if (not fa.get("chain_terminates_at")
+            or not fa.get("gate_carries_incumbent_term")
+            or len(fa.get("gate_text_verified_heads") or []) != 4):
         raise RuntimeError(
             f"REFUSED: the artifact carries no evidence that the frozen-"
             f"preregistration anchor RAN ({sorted(fa)}). Without it the "
             f"coverage floor's expected set terminates at an editable "
             f"constant (RR3-1), and a check not called is indistinguishable "
             f"from one that passed.")
+    dgo = ((receipt.get("family") or {}).get("declared_gate_outcomes")) or {}
+    _c = dgo.get("counts") or {}
+    if sum(_c.values()) != len(cells):
+        raise RuntimeError(
+            f"REFUSED: the declared-gate pass left evidence for "
+            f"{sum(_c.values())} cells against {len(cells)} in the family "
+            f"({dgo.get('counts')!r}). R-397 ruling 2 makes each head's own "
+            f"gate outcome a published field; a pass that did not run leaves "
+            f"the joint-reading flag answering a question it was never asked.")
     ge = ((receipt.get("family") or {}).get("gate_evaluation")) or {}
     if not isinstance(ge.get("cells_checked"), int) or ge["cells_checked"] <= 0:
         raise RuntimeError(
@@ -4107,6 +4596,14 @@ def incumbent_legs_evaluated(receipt: dict) -> dict:
             if any((e or {}).get("paired_against_incumbent")
                    for e in (rep.get("economics") or {}).values()):
                 econ_backed.add("Q4_combined_ev")
+            # R-397 ruling 1: Q1's leg is COMPUTED when the arm carries a
+            # real incumbent-hazard comparison on the identical population.
+            # Read from the RESULT, never from the presence of a call site.
+            _q1i = rep.get("q1_incremental") or {}
+            if (_q1i.get("incumbent_auc") is not None
+                    and (_q1i.get("incumbent_provenance") or {})
+                    .get("sha256_prefix")):
+                econ_backed.add("Q1_arrival")
     out = {}
     for head, is_comp in comparable.items():
         if not is_comp:
@@ -4494,8 +4991,15 @@ def main() -> int:
             coin, EVAL[coin]["w"]["PM"] + EVAL[coin]["w"]["FN"])
             if _dry else None)
         _incm = load_verified_incumbent(coin, fitdir=_incdir)
-        inc_pred = apply_incumbent(_incm, EVAL[coin],
-                                   range(len(EVAL[coin]["kept"])))
+        _rng = range(len(EVAL[coin]["kept"]))
+        inc_pred = apply_incumbent(_incm, EVAL[coin], _rng)
+        # R-397 RULING 1: apply_incumbent_hazard gets its PRODUCTION CALL
+        # SITE. It was built red-first at R-280, falsifier-proven, and had
+        # ZERO call sites, so Q1 -- the head that carried the family's only
+        # survivors -- was adjudicated on ONE of its two declared conjuncts.
+        # The USER ruled the leg wired; the cells re-adjudicate honestly and
+        # either answer is the result of record.
+        inc_haz = apply_incumbent_hazard(_incm, EVAL[coin], _rng)
         out.setdefault("q4_incumbent", {})[coin] = {
             "arm": inc_pred["arm"], "n_scored": inc_pred["n"],
             "provenance": inc_pred["provenance"],
@@ -4542,6 +5046,10 @@ def main() -> int:
             # Found by the --dry-run harness on its first execution.
             rep["economics"] = q4_economics(ap, EVAL[coin]["kept"],
                                             incumbent=inc_pred)
+            # Q1's second conjunct, on the IDENTICAL action population the
+            # candidate scored (prereg 5.2's "identical action population").
+            rep["q1_incremental"] = q1_incremental(
+                ap["p_fill"], inc_haz, EVAL[coin]["kept"], tge["y_fill"])
             out["results"][coin][arm] = rep
             h = rep["heads"]
             # I11-1: this printed h['Q2_sign'], a key report_arm has never
@@ -4557,7 +5065,7 @@ def main() -> int:
                   f"underpowered {rep['underpowered_heads']} | "
                   f"unevaluable {rep.get('unevaluable_heads')}", flush=True)
             del fr, ap
-        del inc_pred, Xf, Xe, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
+        del inc_pred, inc_haz, Xf, Xe, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
 
     # I11-2: the DECLARED family, actually evaluated and adjudicated.
     # RR2-1: ordered in `finalise_family`, because survivors used to be

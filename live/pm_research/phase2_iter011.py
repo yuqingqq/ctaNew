@@ -1265,8 +1265,15 @@ DECLARED_GATES = {
         "conjuncts": ("matched_random", "incumbent_hazard"),
         "carries_incumbent_term": True},
     "Q2_sign": {
-        "gate": "beats the matched-random null AND beats the incumbent, on "
-                "the fill-conditional population",
+        # VERBATIM from the frozen table. It previously read a PARAPHRASE --
+        # accurate in substance, but not what the document says, and a cell
+        # publishes this string for a reader to resolve against the
+        # preregistration. The inheritance is carried beside it, not folded
+        # into it.
+        "gate": "same, on the fill-conditional population",
+        "gate_resolved": "beats the matched-random null AND beats the "
+                         "incumbent hazard head, on the fill-conditional "
+                         "population ('same' inherits Q1's gate)",
         "conjuncts": ("matched_random", "incumbent"),
         "carries_incumbent_term": True},
     "Q3_magnitudes": {
@@ -1280,9 +1287,13 @@ DECLARED_GATES = {
                 "never had (F-4). Whether that status should attach here is a "
                 "DESIGN question routed to the USER, not settled in code."},
     "Q4_combined_ev": {
-        "gate": "net value increment over the incumbent on the identical "
-                "action population",
-        "conjuncts": ("increment_beats_incumbent",),
+        # VERBATIM, and the correction matters: the paraphrase named ONE
+        # conjunct while the frozen gate names TWO. Published beside a cell
+        # it UNDERSTATED the gate that cell is judged against. Caught by the
+        # text anchor, which the boolean check could not see.
+        "gate": "beats matched-random AND beats the incumbent by a "
+                "preregistered null (\u00a75)",
+        "conjuncts": ("matched_random", "increment_beats_incumbent"),
         "carries_incumbent_term": True},
 }
 
