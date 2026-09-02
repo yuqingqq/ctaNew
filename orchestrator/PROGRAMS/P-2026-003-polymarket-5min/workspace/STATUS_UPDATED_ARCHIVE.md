@@ -1138,3 +1138,91 @@ Moved in the MEM round-14 true-up of R-417..R-418. Join rule as in batch 1.
   either way; race G=1/5 per coin; and the venue-silence rate stays as measured
   -- 3 events in 7 days, n=3, an observed rate and never a forecast.
 ```
+
+## Batch 21 — archived 2026-09-02T11:06Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-15 true-up of R-419. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T10:15Z (MEM ROUND 12 -- THE USER RULED THE ACCRUAL QUESTION, AND
+  THE MASK BECAME A THREE-SEAT CONTRACT). R-409..R-412, verified at the
+  artifacts. THE RULING WENT AGAINST THE COORDINATOR'S OWN RECOMMENDATION, and
+  the register records both side by side: twice (R-403, R-408) the
+  recommendation was EXCLUDE-IF-THIN; the USER ruled, verbatim at R-409
+  (2026-09-02 ~09:48Z), "If the data quality is good over the non-blackout time,
+  we should use that data." Recorded as a GENERAL disposition, not a one-day
+  exception. So a blackout day is NOT thrown away: it ACCRUES on its
+  non-blackout complement, with the dark windows MASKED as accounted loss --
+  counted, reported, excluded from that day's forward score. IT RESOLVES v1
+  SECTION 8: (a) L1/L2 GOVERN at WINDOW level, defining the mask; (b)
+  granularity is PER COIN-DAY; (c) a CONTENT_THIN day is DISCLOSED AND MASKED,
+  NOT INADMISSIBLE -- which SUPERSEDES the coordinator's R-403/R-408
+  exclude-if-thin recommendation. Section 8(d), 08-31's status, is UNTOUCHED.
+  content_thin_vetoes_HEALTHY: false is now the RULED state rather than an open
+  question -- verified pinned at source with ruled_by "R-409" and the USER's
+  sentence quoted in the file that consumes it -- and race_accrual_eligible
+  KEEPS ITS FOUR-CONJUNCT DEFINITION unchanged. Rule 11 standing, stated in the
+  entry itself: the ruling was made while 09-02 was still OPEN and BEFORE any
+  forward score for any day exists. WHY THE RULE IS WORTH MORE THAN THE DAY IT
+  SETTLED: excluding a day is cheap to implement and expensive in evidence --
+  it throws away every good window to punish the bad ones -- while accruing on
+  the complement keeps the evidence and pushes the cost onto the machinery,
+  which must now identify WHICH windows were dark. That is why the v2 freeze
+  stopped being housekeeping: v1 cannot see a mostly-dark day (RR6-1), so on
+  such a day the complement cannot be identified at all. THE MASK IS NOW A
+  CONTRACT BETWEEN THREE SEATS, R-410 amended in-band by R-411 and R-412 in nine
+  minutes, each narrowing the same wiring question: PRESENCE CONSUMES (a mask,
+  when present, is consumed for ANY day -- 09-01 has one and its 141 windows are
+  masked at scoring) while GOVERNANCE REQUIRES (from EFFECTIVE_FROM_DAY 20260902
+  a mask is REQUIRED, absent refuses, empty permitted); UNRESOLVED (not yet
+  judged -- the rule block lands with the closing verdict) REFUSES AND RETRIES
+  while UNJUDGEABLE (cannot be judged -- too few windows, zero median) REFUSES
+  and emits routed_to "frozen rule section 7 -- coordinator exclusion with a
+  stated reason" as TEXT, because the scorer never decides a disposition (rule
+  14); THE PRODUCER'S COMMITTED ARTIFACT IS THE CONTRACT (RR8-1: BE's adapter
+  REFUSED DA's real committed mask -- BE asserted protocol/per_coin, DA emits
+  artifact/coins, substance identical; neither side wrong alone, each suite
+  testing its own half, and the closure loads the REAL committed artifact);
+  partial masks REFUSE via day_closed_calendar; and DA must emit an explicit
+  mask for EVERY governed coin-day, empty permitted, BECAUSE ABSENCE MUST MEAN
+  "THE PRODUCER DID NOT RUN", NEVER "NOTHING WAS THIN" -- without which R-409's
+  accrue-on-the-complement could silently become do-not-accrue whenever a
+  producer lagged. VERIFIED RATHER THAN ACCEPTED: da_blackout_mask_20260901.json
+  declares artifact da_blackout_mask_v1, day_closed_calendar true, detector
+  v1_FROZEN (thin_frac 0.05, module sha 7196676840304f30), and its seven
+  per-coin counts -- btc 23, sol 23, eth 22, bnb 22, doge 22, xrp 20, hype 9 --
+  SUM TO 141, matching its own stated total_masked_windows. TWO SEAT MARKS KEPT:
+  the coordinator's dispatch asserted 09-01 had no thin windows and must emit an
+  EMPTY mask when it has 141, recorded at Q-DA-201, and DA MEASURED INSTEAD OF
+  COMPLYING, using a genuinely empty day (08-27) for the empty-mask control
+  while proving 09-01's governing fields byte-identical -- the second time a
+  seat has corrected a coordinator premise by measurement rather than obeying
+  it, named against the seat in the register; and DA caught a defect of its OWN
+  on real data before filing, the complement having been range(288) - masked,
+  which credited the still-open 09-02 with 248 unmasked windows out of 119
+  present. REVIEW STATE: NO HOLD IS OPEN ANYWHERE (R-407 stands). BE's mask-seam
+  round is RELEASED at 3a1d475 with RR8-1 (HIGH), RR8-2 (MED) and RR8-3 (LOW)
+  filed, and BE's fix batch is in flight; DA's producer round is IN REVIEW NOW
+  (reviews/REQUEST_DA_MASK_PRODUCER_2026-09-02.md, tip 181b4fa). FOUR ITEMS WAIT
+  ON THE USER, all unblocked, and the coordinator's positions below are
+  RECOMMENDATIONS AND NOT RULINGS: R-408(2) the Phase-2 winner -- recommend DO
+  NOT ADVANCE the composed candidate, record Q1 as the surviving COMPONENT of
+  record, no race admission, arm of record if any LGBM; R-408(3) the v2 freeze
+  -- recommend adopt as drafted, GOVERNING, effective 2026-09-03, 08-26 left as
+  recorded; R-411(i) the minimum complement size for G-COUNTING -- recommend a
+  coin-day counts toward the >=5 bar only if its unmasked complement covers >=
+  50% of the calendar day (>=144/288), anchored on v1's ~60%-dark blindness so
+  50% sits inside the instrument's validity rather than at its edge; and
+  R-411(ii) which P1 denominator governs "quality is good" on the complement --
+  recommend PER UNMASKED HOUR, since the calendar form dilutes loss by the very
+  blackout it is meant to exclude (btc 09-02: 93.01 s per unmasked hour vs 25.51
+  per calendar-24h, a 3.6x spread). WATCH: 00:06Z 2026-09-03 is the FIRST
+  GOVERNED VERDICT, on 09-02, and the first closing verdict to carry a
+  content_liveness_rule block (RR6-2); DA proved nothing governing moved, so it
+  runs identically with or without this round's batches. Collector pid 1108125
+  alive, up 1d12h, as of the 10:14Z clock read. NOTHING IN THE TODO TICKS THIS
+  ROUND -- checked; no box covers masks, blackouts or content liveness -- stated
+  rather than left as a silent empty sweep. UNCHANGED: G=1/5; the 011 family is
+  12 of 24 surviving with Q4 failing; development evidence.
+```

@@ -4,6 +4,85 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T11:06Z (MEM ROUND 15 -- A SENTENCE ABOUT A RATIFICATION PASSES AS
+  ONE, AND MY 00:14Z WATCH RESOLVES INTO SOMETHING MORE INTERESTING THAN THE
+  WATCH). R-419 with DE round 8 (575f076, Q-DE-26) and the reviewer's DA round-2
+  filing (1e6624a); verified at the artifacts and at the box. CO-4 IS THE
+  FINDING, AND IT IS AT THE REGISTER RATHER THAN IN ANY MODULE: a fixture entry
+  titled "MEM round 14 verified; recap of state", whose body is a single RECAP
+  SENTENCE naming R-418's population and ending "Nothing here ratifies
+  anything", returns VERIFIED with binding_source PROSE and all five decidable
+  checks True. A CHECKER THAT BINDS FROM PROSE CANNOT TELL A RATIFICATION FROM A
+  SENTENCE ABOUT ONE -- CLAUDE.md rule 16 at the register level, where grep hits
+  on vocabulary are not references. What makes it sharp rather than cute is that
+  THE EXPOSURE GROWS WITH EVERY SWEEP: coordinator entries, and MEM true-ups
+  like this one, necessarily recite that vocabulary. Four smaller holes noted on
+  the same read: day_in_scope evaluates scope_from ONLY (scope_to is parsed and
+  ignored, so a block scoped to 09-01 reads True for 09-02); the block's ref is
+  NOT checked against the entry heading; sampling != NONE LOWERS verified but
+  does not refuse; and refusals is a dead list. DE ROUND 9 (Q-DE-27) IS IN
+  FLIGHT to make prose binding admissible for the grandfathered R-418 only, with
+  the R-9001 fixture as the live control. THE FORMAT IS ADOPTED (a format is the
+  coordinator's and introduces no number): every R-ADMISS entry from R-419 on
+  carries a fenced ratification block with ref, kind, population, sampling,
+  present_source, scope_days, scope_from, scope_to, revocable_by and supersedes,
+  with ref required to equal the heading's ref. R-419 SUPERSEDES R-418 IN-BAND
+  (rule 13; R-418 stays as provenance, never edited) WITH THE CONTENT UNCHANGED
+  -- the same population, the same no-sampling, the same list of what it does
+  NOT ratify (R-411(i), R-411(ii), any accrual call, any Phase-2 admission, all
+  the USER's) -- and the one field prose could not carry is now bound:
+  scope_from 20260901, the first accrued race day, stated as a RESTATED FACT
+  rather than a new number, with scope_to null, open until the USER closes or
+  revokes it. REFS IN FLIGHT: BE round 3 was dispatched under R-418 and its
+  SEALED SCRATCH RECEIPTS STAND AS PROVENANCE under that ref; from BE round 4
+  the ref is R-419; DE's R-0 stays a fixture ref. MY ROUND-14 WATCH IS RESOLVED,
+  AND THE RESOLUTION IS MORE INTERESTING THAN THE WATCH: the "cron one-shot"
+  existed -- as a CLAUDE CODE SESSION-LOCAL SCHEDULER ENTRY inside the
+  coordinator session (78375088), invisible to crontab -l and systemctl --user
+  list-timers BY CONSTRUCTION, and DYING WITH ITS SESSION. DA's standby wait
+  (bbp5f4bni) is the same kind of object, and DA's own filing records TWO PRIOR
+  WAITS KILLED MID-FLIGHT. So both legs meant to carry the 00:14Z check lived
+  inside processes no box-level tool can see -- a different failure from "nobody
+  built it": IT IS SCHEDULING THAT CANNOT BE AUDITED FROM THE BOX IT RUNS ON,
+  and the only reason it surfaced is that a state file asked where the scheduler
+  was. The coordinator confirms MEM's reading was correct as stated: nothing at
+  box level ran the preflight. A BOX-LEVEL LEG NOW EXISTS, verified by me at the
+  box rather than taken: co-preflight-20260902.timer ->
+  co-preflight-20260902.service, next elapse Thu 2026-09-03 00:14:00 UTC,
+  running the read-only preflight on 09-02 with stdout to
+  ~/.local/state/pm-co/preflight_20260902.json, and its POSITIVE CONTROL
+  EXECUTED on 09-01 (rc 1, classification PRE_GOVERNED_ARTIFACT, output at
+  preflight_probe_20260901.json, derived/ digest unchanged across the run).
+  THREE LEGS NOW, ONE AT BOX LEVEL, and the verdict itself is written by the
+  scheduled unit regardless of all three. ONE PROPERTY KEPT IN VIEW: the timer
+  is TRANSIENT (systemd-run, Persistent=no), so it is gone once it fires and
+  would not survive a restart of the user manager before 00:14Z -- correct for a
+  one-shot, not a standing schedule. REVIEW TABLE: DA round 1 RELEASED; BE round
+  2 RELEASED with RR10-1 closed, its review riding BE round 3; DE rounds 4-6
+  RELEASED and DE round 8 VERIFIED with RR11-1 CLOSED; DA ROUND 2 IS FILED AT
+  1e6624a AND IN VERIFICATION, NOT RELEASED -- the reviewer's filing states DA
+  round 7 released, and the coordinator's verification of that filing comes in
+  the next R-entry, so the table does not call it released yet. BE round 3's
+  review request queues when Q-BE-228 lands; DE rounds 7-9's when Q-DE-27 lands.
+  RR12-1 FROM THE DA FILING WILL BITE THE WORKTREES: da_blackout_mask.REPO is
+  hardcoded to the SHARED tree while module_sha256_prefix comes from __file__,
+  so a run from ~/ctaNew-wt-rev reports the shared tree's HEAD rather than the
+  worktree's and a dirtied worktree module still reads
+  tree_dirty_on_producing_files FALSE; the reviewer's own rehearsal therefore
+  executed shared-tree code, where a mutation had no effect while the same one
+  in-process fired immediately. Nothing shipped is wrong, but per-seat worktrees
+  were adopted three rounds ago (rule 19), so a provenance pair that disagrees
+  about which tree it is in is a LIVE hazard. AND A METHOD NOTE WORTH COPYING
+  from the same filing: a same-size mutate/restore inside one second left STALE
+  BYTECODE THAT READ EXACTLY LIKE A SURVIVING MUTANT -- recorded so the next
+  mutation run does not file it as one. IN FLIGHT: BE round 3 (production run
+  path, scores SEALED, counts and refusals only, Q-BE-228); DE round 9 (CO-4
+  plus the block-format checker, Q-DE-27); DA on standby (Q-DA-208, after
+  00:06Z); the reviewer IDLE pending the next request. USER DECISIONS UNCHANGED
+  AND FIVE: R-408(2) the Phase-2 winner, R-408(3) the v2 freeze, R-411(i) the
+  minimum complement for G-counting, R-411(ii) the P1 denominator, and the 09-02
+  accrual call after tonight. UNCHANGED: G=1/5; the 011 family is 12 of 24
+  surviving with Q4 failing; development evidence. PRIOR:
   2026-09-02T10:55Z (MEM ROUND 14 -- A POPULATION RATIFIED, A DEVIATION
   ACCEPTED, AND A SCHEDULER I COULD NOT FIND). R-417/R-418 with Q-BE-227,
   Q-DA-207, Q-DE-25 and Q-MEM-1; verified at the artifacts, including by running
@@ -142,86 +221,6 @@ updated: >-
   read. USER DECISIONS PENDING, UNCHANGED AND FOUR: R-408(2) the Phase-2 winner,
   R-408(3) the v2 freeze, R-411(i) the minimum complement for G-counting, and
   R-411(ii) the P1 denominator on the complement. UNCHANGED: the 011 family is
-  12 of 24 surviving with Q4 failing; development evidence. PRIOR:
-  2026-09-02T10:15Z (MEM ROUND 12 -- THE USER RULED THE ACCRUAL QUESTION, AND
-  THE MASK BECAME A THREE-SEAT CONTRACT). R-409..R-412, verified at the
-  artifacts. THE RULING WENT AGAINST THE COORDINATOR'S OWN RECOMMENDATION, and
-  the register records both side by side: twice (R-403, R-408) the
-  recommendation was EXCLUDE-IF-THIN; the USER ruled, verbatim at R-409
-  (2026-09-02 ~09:48Z), "If the data quality is good over the non-blackout time,
-  we should use that data." Recorded as a GENERAL disposition, not a one-day
-  exception. So a blackout day is NOT thrown away: it ACCRUES on its
-  non-blackout complement, with the dark windows MASKED as accounted loss --
-  counted, reported, excluded from that day's forward score. IT RESOLVES v1
-  SECTION 8: (a) L1/L2 GOVERN at WINDOW level, defining the mask; (b)
-  granularity is PER COIN-DAY; (c) a CONTENT_THIN day is DISCLOSED AND MASKED,
-  NOT INADMISSIBLE -- which SUPERSEDES the coordinator's R-403/R-408
-  exclude-if-thin recommendation. Section 8(d), 08-31's status, is UNTOUCHED.
-  content_thin_vetoes_HEALTHY: false is now the RULED state rather than an open
-  question -- verified pinned at source with ruled_by "R-409" and the USER's
-  sentence quoted in the file that consumes it -- and race_accrual_eligible
-  KEEPS ITS FOUR-CONJUNCT DEFINITION unchanged. Rule 11 standing, stated in the
-  entry itself: the ruling was made while 09-02 was still OPEN and BEFORE any
-  forward score for any day exists. WHY THE RULE IS WORTH MORE THAN THE DAY IT
-  SETTLED: excluding a day is cheap to implement and expensive in evidence --
-  it throws away every good window to punish the bad ones -- while accruing on
-  the complement keeps the evidence and pushes the cost onto the machinery,
-  which must now identify WHICH windows were dark. That is why the v2 freeze
-  stopped being housekeeping: v1 cannot see a mostly-dark day (RR6-1), so on
-  such a day the complement cannot be identified at all. THE MASK IS NOW A
-  CONTRACT BETWEEN THREE SEATS, R-410 amended in-band by R-411 and R-412 in nine
-  minutes, each narrowing the same wiring question: PRESENCE CONSUMES (a mask,
-  when present, is consumed for ANY day -- 09-01 has one and its 141 windows are
-  masked at scoring) while GOVERNANCE REQUIRES (from EFFECTIVE_FROM_DAY 20260902
-  a mask is REQUIRED, absent refuses, empty permitted); UNRESOLVED (not yet
-  judged -- the rule block lands with the closing verdict) REFUSES AND RETRIES
-  while UNJUDGEABLE (cannot be judged -- too few windows, zero median) REFUSES
-  and emits routed_to "frozen rule section 7 -- coordinator exclusion with a
-  stated reason" as TEXT, because the scorer never decides a disposition (rule
-  14); THE PRODUCER'S COMMITTED ARTIFACT IS THE CONTRACT (RR8-1: BE's adapter
-  REFUSED DA's real committed mask -- BE asserted protocol/per_coin, DA emits
-  artifact/coins, substance identical; neither side wrong alone, each suite
-  testing its own half, and the closure loads the REAL committed artifact);
-  partial masks REFUSE via day_closed_calendar; and DA must emit an explicit
-  mask for EVERY governed coin-day, empty permitted, BECAUSE ABSENCE MUST MEAN
-  "THE PRODUCER DID NOT RUN", NEVER "NOTHING WAS THIN" -- without which R-409's
-  accrue-on-the-complement could silently become do-not-accrue whenever a
-  producer lagged. VERIFIED RATHER THAN ACCEPTED: da_blackout_mask_20260901.json
-  declares artifact da_blackout_mask_v1, day_closed_calendar true, detector
-  v1_FROZEN (thin_frac 0.05, module sha 7196676840304f30), and its seven
-  per-coin counts -- btc 23, sol 23, eth 22, bnb 22, doge 22, xrp 20, hype 9 --
-  SUM TO 141, matching its own stated total_masked_windows. TWO SEAT MARKS KEPT:
-  the coordinator's dispatch asserted 09-01 had no thin windows and must emit an
-  EMPTY mask when it has 141, recorded at Q-DA-201, and DA MEASURED INSTEAD OF
-  COMPLYING, using a genuinely empty day (08-27) for the empty-mask control
-  while proving 09-01's governing fields byte-identical -- the second time a
-  seat has corrected a coordinator premise by measurement rather than obeying
-  it, named against the seat in the register; and DA caught a defect of its OWN
-  on real data before filing, the complement having been range(288) - masked,
-  which credited the still-open 09-02 with 248 unmasked windows out of 119
-  present. REVIEW STATE: NO HOLD IS OPEN ANYWHERE (R-407 stands). BE's mask-seam
-  round is RELEASED at 3a1d475 with RR8-1 (HIGH), RR8-2 (MED) and RR8-3 (LOW)
-  filed, and BE's fix batch is in flight; DA's producer round is IN REVIEW NOW
-  (reviews/REQUEST_DA_MASK_PRODUCER_2026-09-02.md, tip 181b4fa). FOUR ITEMS WAIT
-  ON THE USER, all unblocked, and the coordinator's positions below are
-  RECOMMENDATIONS AND NOT RULINGS: R-408(2) the Phase-2 winner -- recommend DO
-  NOT ADVANCE the composed candidate, record Q1 as the surviving COMPONENT of
-  record, no race admission, arm of record if any LGBM; R-408(3) the v2 freeze
-  -- recommend adopt as drafted, GOVERNING, effective 2026-09-03, 08-26 left as
-  recorded; R-411(i) the minimum complement size for G-COUNTING -- recommend a
-  coin-day counts toward the >=5 bar only if its unmasked complement covers >=
-  50% of the calendar day (>=144/288), anchored on v1's ~60%-dark blindness so
-  50% sits inside the instrument's validity rather than at its edge; and
-  R-411(ii) which P1 denominator governs "quality is good" on the complement --
-  recommend PER UNMASKED HOUR, since the calendar form dilutes loss by the very
-  blackout it is meant to exclude (btc 09-02: 93.01 s per unmasked hour vs 25.51
-  per calendar-24h, a 3.6x spread). WATCH: 00:06Z 2026-09-03 is the FIRST
-  GOVERNED VERDICT, on 09-02, and the first closing verdict to carry a
-  content_liveness_rule block (RR6-2); DA proved nothing governing moved, so it
-  runs identically with or without this round's batches. Collector pid 1108125
-  alive, up 1d12h, as of the 10:14Z clock read. NOTHING IN THE TODO TICKS THIS
-  ROUND -- checked; no box covers masks, blackouts or content liveness -- stated
-  rather than left as a silent empty sweep. UNCHANGED: G=1/5; the 011 family is
   12 of 24 surviving with Q4 failing; development evidence.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3815,7 +3814,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T10:55Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T11:06Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3868,7 +3867,10 @@ focus: >
   introduced, USER-revocable), and DA's two-leg admission deviation is ACCEPTED
   because it removes an outage mode the single-leg order would have introduced.
   USER decisions are now FIVE: the four above plus the 09-02 accrual call after
-  tonight. Fair-price
+  tonight. R-419 SUPERSEDES R-418 in-band with the content unchanged, restating
+  the ratification in an adopted block format that binds scope_from 20260901;
+  CO-4 showed that an entry merely ABOUT a ratification verifies from prose, and
+  DE round 9 is in flight to close it. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an

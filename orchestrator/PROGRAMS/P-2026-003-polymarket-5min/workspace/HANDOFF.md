@@ -1,11 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T10:55Z — **the forward-race population is ratified (R-418):
-the full supplied complement, no sampling** — an application of R-409 that
-introduces no number and is USER-revocable. DA's two-leg admission deviation is
-accepted; RR10-1 is closed. **Five items wait on the USER**, the fifth being the
-09-02 accrual call after tonight. Prior line: the 10:16Z overwrite was recovered
-byte-exact and the accrual chain is intact; CO-1/2/3 closed across BE and DE.
+Updated: 2026-09-02T11:06Z — **the ratification is restated in an adopted block
+format and R-419 supersedes R-418 in-band** (content unchanged, `scope_from
+20260901`); **CO-4 found that an entry merely *about* a ratification verifies
+from prose**; and the 00:14Z scheduler I could not find is named and given a
+box-level leg. **Five items wait on the USER**, unchanged. Prior line: the
+forward-race population is the full supplied complement, no sampling; the 10:16Z
+overwrite was recovered and the accrual chain is intact.
 
 ## READ FIRST — current project handoff
 
@@ -113,27 +114,64 @@ it.
 **Review state has moved since — see "Review and round state" below.** The four
 asks above are unchanged and none of them is blocked by any of it.
 
-### R-418 — the forward-race population is ratified, and it selects nothing
+### R-419 supersedes R-418 — same ratification, now in a format that binds
 
-**Ratified by the coordinator** (an R-ADMISS act `EV_REPLAY_PLAN` §2 assigns to
-that seat), **revocable by the USER**: for a forward-race day, the
-replay/scoring population is **every window `de_admissible_windows.supply(D,
-present)` emits** — `present` read from the day's own market ledger, minus the
-windows DA's committed mask masks — **with no stratified or capped selection**.
-`select_stratified` is a research-day instrument and is not used on race days.
+**The content did not change; the binding did.** R-418 ratified the forward-race
+population in prose. R-419 restates it in the newly **adopted `ratification`
+block format** and supersedes it in-band (rule 13 — R-418 stays as provenance,
+never edited):
 
-**It is R-409 applied, and it introduces no number.** The set is a function of
-two committed artifacts (the ledger and the mask), and the supply's
-`mask_identity_hash` fixes it. **What it explicitly does not ratify:** the
-minimum complement for G-counting (R-411(i)), the P1 denominator (R-411(ii)),
-the accrual call for any day, and the admission of any Phase-2 candidate — all
-the USER's. A receipt stamped `ratification_ref: R-418` says only *which windows
-it ran over and why*; whether the day counts is decided elsewhere.
+```ratification
+ref: R-419
+kind: R-ADMISS
+population: FULL_SUPPLIED_COMPLEMENT
+sampling: NONE
+present_source: data/pm_5min/markets.jsonl
+scope_days: FORWARD_RACE_DAYS
+scope_from: 20260901
+scope_to: null
+revocable_by: USER
+supersedes: R-418
+```
 
-**DE's bridge was built before the ref existed** and carries a fixture ref
-(`R-0`) over 1,875 specs — the same 1,875 = 288 × 7 − 141 the supplier produced
-on the real 09-01 mask. Receipts carrying `R-418` re-stamp if the USER overrules
-any part of it; nothing frozen depends on it.
+**The one field prose could not carry is now bound:** `scope_from 20260901` —
+the first accrued race day — stated as a restated fact rather than a new number,
+with `scope_to: null` open until the USER closes or revokes it.
+
+**What it ratifies is R-418's text verbatim:** for a forward-race day the
+population is every window the supplier emits from that day's own market ledger
+minus the committed mask, **no stratified or capped selection**. **What it does
+not ratify is also unchanged:** R-411(i), R-411(ii), any accrual call, any
+Phase-2 admission — all the USER's.
+
+**Refs in flight:** BE round 3 was dispatched under `R-418` and its **sealed
+scratch receipts stand as provenance under that ref**; **from BE round 4 the ref
+is `R-419`**. DE's `R-0` stays a fixture ref.
+
+### CO-4 — an entry *about* a ratification verifies from prose
+
+**The finding of the round, and it is at the register rather than in the code.**
+A fixture register carrying the real text plus one appended entry — `### R-9001
+… coordinator: MEM round 14 verified; recap of state`, whose body is a single
+*recap sentence* mentioning R-418's population and ending "Nothing here ratifies
+anything" — returns **VERIFIED**, `binding_source: PROSE`, all five decidable
+checks True.
+
+**Prose binding cannot tell a ratification from a sentence about one.** That is
+CLAUDE.md rule 16 at the register level: vocabulary hits are not references. And
+the exposure grows rather than decays — **every coordinator sweep entry from
+here on carries exactly that vocabulary**, including the entry that found it.
+
+Four smaller holes noted on the same read: `day_in_scope` evaluates `scope_from`
+**only** (`scope_to` is parsed and ignored, so a block scoped to 09-01 reads True
+for 09-02); the block's `ref` is **not** checked against the entry heading;
+`sampling ≠ NONE` **lowers** `verified` but does not refuse; and `refusals` is a
+dead list. **DE round 9 (Q-DE-27) is in flight** to make prose binding admissible
+for the grandfathered `R-418` only, with the R-9001 fixture as the live control.
+
+**Format adopted** (a format is the coordinator's; it introduces no number):
+every R-ADMISS entry from R-419 on carries the fenced block above, with `ref`
+required to equal the heading's ref.
 
 ### Accepted: DA's two-leg admission deviation (R-416 §3(a))
 
@@ -217,12 +255,29 @@ launchers at **235/19**.
 | **DA round 1** (mask producer) | **RELEASED** — RR9-1/2/3 closed in DA round 7 |
 | **BE round 2** (mask consumer) | **RELEASED**; **RR10-1 CLOSED** at `e56f70a` — the review rides BE round 3 |
 | **DE rounds 4–6** | **RELEASED** (`7a48333`, no hold, all seven scopes by execution); **RR11-1 (LOW) open** → DE round 8 |
-| **DA round 2** | **IN REVIEW** at `770e5ee` |
+| **DE round 8** | **VERIFIED**, RR11-1 **CLOSED**; CO-4 found on the same read → DE round 9 |
+| **DA round 2** | **FILED at `1e6624a` — IN VERIFICATION, not released.** The reviewer's filing states DA round 7 released; the coordinator's verification of that filing comes in the next R-entry, so this table does not call it released yet |
 
 **In flight:** BE round 3 — the production run path, **scores SEALED, counts and
-refusals only** (Q-BE-228); DE round 8 — RR11-1 plus the ratification checker and
-the proposed block format (Q-DE-26); DA round 9 — **deliberate standby** with the
-00:06Z timed task (Q-DA-208); the reviewer on DA round 2.
+refusals only** (Q-BE-228); DE round 9 — CO-4 plus the block-format checker
+(Q-DE-27); DA on **standby** (Q-DA-208, after 00:06Z); **the reviewer is idle**
+pending the next request. BE round 3's review request queues when Q-BE-228 lands;
+DE rounds 7–9's queues when Q-DE-27 lands.
+
+**RR12-1, from the DA filing, is the one that will bite the worktrees:**
+`da_blackout_mask.REPO` is hardcoded to the **shared** tree while
+`module_sha256_prefix` comes from `__file__` — so run from `~/ctaNew-wt-rev`,
+`_head_commit()` returns the shared tree's HEAD rather than the worktree's, and
+dirtying the worktree module leaves `tree_dirty_on_producing_files` **false**.
+The reviewer's own worktree rehearsal therefore executed shared-tree code: a
+mutation there had no effect while the same one in-process fired immediately.
+Nothing shipped is wrong, but **the programme adopted per-seat worktrees three
+rounds ago** (rule 19), so the provenance pair needs to derive both from
+`__file__`.
+
+**And a method note worth copying from the same filing:** a same-size
+mutate/restore inside one second left **stale bytecode that read exactly like a
+surviving mutant**. Recorded so the next mutation run does not file it as one.
 
 **RR10-1's closure is the right shape and worth the sentence:** the control is now
 a **fixture pair derived from the frozen rule's own `EFFECTIVE_FROM_DAY`** — one
@@ -408,19 +463,32 @@ USER's**. Race stands at **G = 1/5 per coin** (09-01 accrued, chain verified
 intact after the incident above). The venue-silence rate stays as measured: **3
 events in 7 days, n = 3** — an observed rate, not a forecast.
 
-**The governed-verdict preflight is the instrument that reads tonight's result**
+**The governed-verdict preflight reads tonight's result**
 (`da_governed_verdict_preflight.py`, Q-DA-207) — **predicates only, read-only**,
-and verified here at **30 checks, rc 0**. R-417 says *"the 00:14Z check runs
-first; the cron one-shot carries it."*
+verified at **30 checks, rc 0**.
 
-> **WATCH — I could not find that scheduler.** As of 2026-09-02T10:55Z the user
-> crontab holds **three** non-comment entries (convexity monthly retrain, two
-> okxSolver scans) and **none** mentions the preflight, `pm_research`, or a
-> 00:14 slot; there is no `at` binary, and the only systemd timer in this family
-> is `da-midnight-verify.timer` at **00:06:00Z**. So the 00:06Z verdict is
-> scheduled and the 00:14Z preflight, as far as this box shows, is **not**.
-> Recorded for the coordinator, not adjudicated — it may simply be owed by DA
-> round 9, whose standby is described as carrying "the 00:06Z timed task".
+**My round-14 watch is RESOLVED, and the answer was worth having.** R-417's
+"cron one-shot" was a **Claude Code session-local scheduler entry** inside the
+coordinator session (`78375088`); DA's standby wait (`bbp5f4bni`) is
+session-local in the same sense. **Neither is visible to `crontab -l` or
+`systemctl --user list-timers`, and both die with their sessions** — DA's own
+filing notes two prior waits killed mid-flight. So the state I found was the
+true state: nothing at box level ran the preflight.
+
+**A box-level leg now exists**, verified here rather than taken:
+`co-preflight-20260902.timer` → `co-preflight-20260902.service`, next elapse
+**Thu 2026-09-03 00:14:00 UTC**, running the read-only preflight on 09-02 with
+stdout to `~/.local/state/pm-co/preflight_20260902.json`. Its **positive control
+executed on 09-01** — `rc 1`, `classification: PRE_GOVERNED_ARTIFACT`, output at
+`preflight_probe_20260901.json`, and the `derived/` digest unchanged across the
+run. **Three legs now, one of them at box level; and the verdict itself is
+written by the scheduled unit regardless of all three.**
+
+> **One property to keep in view:** the timer is **transient**
+> (`systemd-run`, `Persistent=no`), so it is gone once it fires and would not
+> survive a restart of the user manager before 00:14Z. That is appropriate for a
+> one-shot and is not a defect — it is simply not a standing schedule, so a
+> recurring need would want a real unit.
 
 **Collector alive** at pid 1108125 as of the 10:55Z clock read.
 
@@ -518,6 +586,54 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~11:06Z (MEM) — A SENTENCE ABOUT A RATIFICATION PASSES AS ONE
+
+**R-419, DE round 8 and the DA round-2 filing.** Two things from this round are
+worth more than the sweep.
+
+**CO-4 is the finding, and it is at the register rather than in any module.** A
+fixture entry titled *"MEM round 14 verified; recap of state"*, whose body is a
+single recap sentence naming R-418's population and ending **"Nothing here
+ratifies anything"**, returns **VERIFIED** with `binding_source: PROSE` and all
+five decidable checks True. **A checker that binds from prose cannot tell a
+ratification from a sentence about one** — rule 16 at the register. What makes it
+sharp rather than cute: **the exposure grows with every sweep**, because
+coordinator entries (and MEM true-ups like this one) necessarily recite that
+vocabulary. The fix is not better prose; it is the adopted block, with prose
+grandfathered for exactly one ref.
+
+**My round-14 watch is resolved, and the resolution is more interesting than the
+watch.** The "cron one-shot" existed — as a **Claude Code session-local scheduler
+entry**, invisible to `crontab` and `systemctl` by construction, and **dying with
+its session**. DA's standby wait is the same kind of object, and DA's own filing
+records two prior waits killed mid-flight. So *both* legs that were supposed to
+carry the 00:14Z check lived inside processes that no box-level tool can see.
+That is a different failure from "nobody built it": **it is scheduling that
+cannot be audited from the box it runs on**, and the only reason it surfaced is
+that a state file asked where the scheduler was.
+
+A box-level leg now exists and I verified it at the box —
+`co-preflight-20260902.timer`, next elapse 00:14:00Z, positive control executed
+on 09-01 at rc 1 with the `derived/` digest unchanged. I noted one property in
+the section above: it is **transient** (`Persistent=no`), so it is a correct
+one-shot and not a standing schedule.
+
+**R-419 supersedes R-418 in-band with the content unchanged** — the ratification
+restated in the adopted block so `scope_from 20260901` is bound rather than
+implied. BE round 3's sealed scratch receipts keep `R-418` as provenance; round 4
+onward stamps `R-419`. **DA round 2 is recorded as FILED / IN VERIFICATION, not
+released** — the reviewer's filing releases DA round 7, and the coordinator's
+verification of that filing has not landed yet; the distinction is the whole
+point of the table.
+
+**One item carried from the DA filing because worktrees make it live:** RR12-1 —
+`REPO` hardcoded to the shared tree while `module_sha256_prefix` comes from
+`__file__`, so a worktree run reports the **shared** tree's HEAD and a dirtied
+worktree module still reads clean. The reviewer's own rehearsal executed
+shared-tree code without knowing it. Per-seat worktrees were adopted three rounds
+ago, so a provenance pair that disagrees about which tree it is in is a live
+hazard, not a latent one.
 
 ### 2026-09-02 ~10:55Z (MEM) — A POPULATION RATIFIED, A DEVIATION ACCEPTED,
 ### AND A SCHEDULER I COULD NOT FIND
