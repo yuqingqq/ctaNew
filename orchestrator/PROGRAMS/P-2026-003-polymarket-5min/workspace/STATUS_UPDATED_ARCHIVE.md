@@ -4483,3 +4483,67 @@ Moved in the MEM round-62 true-up of R-483 and the DE-39 filing. Join rule as in
   tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
 ```
+
+## Batch 69 — archived 2026-09-02T23:34Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-63 true-up of R-484 and Q-DE-58. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T22:11Z (MEM ROUND 60 -- THE IDENTITY DRAW IS NOT A BUG TO EXCLUDE,
+  IT IS A STATE TO COUNT). R-481 and the reviewer's DE-38 filing swept; nothing
+  run; committed blobs only. THE RULING ON DE38-C1 IS BETTER THAN THE FIX I WOULD
+  HAVE EXPECTED AND THE DIFFERENCE IS WORTH STATING: the obvious response to
+  "every accepted draw is the identity draw" is to STOP ACCEPTING IT, and the
+  ruling does the OPPOSITE -- the identity draw is ADMITTED AND COUNTED
+  (n_accepted_identity per stratum), the identity guard is RETIRED for (gamma)
+  with its parse assertion deleted, n_distinct and point_mass move onto the
+  ACCEPTED set, and an accepted set of ONE DISTINCT DRAW becomes null:
+  DEGENERATE -- no interval, a point estimate, LABELLED AS SUCH. EXCLUDING THE
+  IDENTITY DRAW WOULD HAVE MANUFACTURED A NULL THAT DIFFERS; COUNTING IT REPORTS
+  THE TRUTH THAT THIS NULL DOES NOT. AND THE BOUNDARY IS DRAWN EXACTLY WHERE RULE
+  13 REQUIRES: the collapse RE-OPENS REPORTING ONLY, the frozen matching rule
+  (DRAFT:147-156) UNTOUCHED -- a finding does not get to reach back into a frozen
+  document because it is inconvenient; it changes what the artifact SAYS ABOUT
+  ITSELF. The DRIVEN check is specified so it cannot pass on the degenerate case:
+  it must assert AN ACCEPTED DRAW WHOSE CONTROL DIFFERS and n_distinct_accepted
+  >= 2 -- the shape this programme keeps arriving at, A CONTROL MUST DEMONSTRATE
+  THE STATE IT CLAIMS TO DISTINGUISH, not merely run. DE38-R1 I VERIFIED AT THE
+  BLOB AND THE MISMATCH IS A POPULATION MISMATCH AGAIN: pool is built over THE
+  REFERENCE'S GENERATIONS (:1139) while the draw is over THE STREAM'S
+  ABOVE-THRESHOLD EVENTS, and _room (:1192, :1200) and strata_with_room (:1331)
+  are computed on that pool, so the receipt reports FREEDOM THE DRAW CANNOT USE
+  -- the THIRD distinct instance tonight of THE NUMBER IS REAL, THE POPULATION
+  UNDER IT IS THE WRONG ONE (after n_distinct/point_mass on the attempted set,
+  and the identity guard handed the actions instead of the demand). THE REVIEWER
+  CONFIRMED DE37'S CLOSURES INDEPENDENTLY, including by RE-DRIVING THE SEAL WITH
+  ITS OWN EDIT: two seats have now driven that falsifier from different trees, and
+  A SEAL THAT ONLY ITS AUTHOR CAN BREAK IS NOT SEALED -- this one has been broken
+  twice, on purpose, and closed both times. THE CONDITION-(i) VERDICT IS A SPLIT I
+  WOULD HAVE FLATTENED AND SHOULD NOT HAVE: it IS met as to THE STREAM AND THE
+  REJECTION ACCOUNTING and is NOT met as to THE NULL'S SECTION 5 PROMISES, with
+  the reviewer's sentence carried verbatim -- "a USER reading 5 today would be
+  adopting the words while the artifact behind them produces a null that cannot
+  differ". A CONDITION CAN BE MET IN ITS MECHANICS AND UNMET IN ITS MEANING, AND
+  ONLY THE SECOND ONE PROTECTS THE USER. THE STACK SHRANK AND I REPLACED RATHER
+  THAN CARRIED: "unverified by the reviewer" is CLOSED by this filing, so it is
+  GONE from the bundle status, not annotated as satisfied; what remains is
+  DE38-C1 OPEN and CONDITION (i) UNMET AS TO SECTION 5, with (ii)-(iv) MET at
+  dfd4c00. A REASON LIST THAT ONLY EVER GROWS STOPS BEING READ; this one now says
+  exactly what is left. DE38-C2 CONFIRMED (LOW); DE38-C3 CONFIRMED; DE38-R2/R3/R4
+  LOW (a docstring-asserted limit at de_score_stream:342, two sources for the
+  event contract at :155 and :172-174, and a falsifier-flag receipt that must say
+  so). UNCHANGED AND STATED: the PHASE-4 RUN HAS NO DATE; preflight() STILL
+  REFUSES AT THE SCORER; the BUNDLE SHA STAYS a45b87624f72b567 AS OF dfd4c00
+  until round 39 moves the DRAFT. RELEASE dfd4c00 AS ROUND 39'S BASE, dispatched
+  with the six-step order and THE SECTION 5 REPORTING SENTENCE LAST -- the right
+  place for it, THE WORDS GOING IN AFTER THE ARTIFACT BEHIND THEM IS TRUE. SEATS:
+  DE round 39 DISPATCHED (Q-DE-57 expected, ONE commit); the REVIEWER on RECORDED
+  STANDBY until it lands; BE and DA on RECORDED STANDBY. MY ROUND 59 VERIFIED
+  WITH NOTHING FOUND and the archive batch-65 move recorded verbatim. TONIGHT
+  UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after, R-409
+  accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
+  3b7e10a), BE round 11 = the durable landing, CO-8, --require-no-skips,
+  DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED:
+  G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419
+  revocable.
+```

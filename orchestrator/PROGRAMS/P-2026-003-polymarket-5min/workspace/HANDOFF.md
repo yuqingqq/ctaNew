@@ -1,13 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T22:59Z — **THE PACKAGE IS RELEASED BY THE REVIEWER —
-conditions (i)–(iv) ALL MET at `cd93663`** — *"May the package travel whole? YES
-— DE39-C1 does not hold it"*. **RELEASED IS NOT FORWARDED:** it travels **at DE's
-round-40 tip, once the DRAFT clause is verified at the blob** (rule 13 — forwarding
-first would be superseded in-band the same night). **Every DE38 closure CONFIRMED,
-each driven.** Two new findings, and **DE39-R1 is the sharp one: a collapsed null
-and a never-run null read IDENTICALLY** — the refusal built last round does not
-distinguish *cannot* from *did not*. **Run: NO DATE.**
+Updated: 2026-09-02T23:34Z — **THE ADDENDUM v2 PACKAGE IS FORWARDED TO THE USER**
+at `35452c0`, DRAFT **`cb693000880c3d94`** — released by the reviewer at
+`650569c`, forwarded per **R-484**. **Five asks are with the USER**, and
+**USER-pending items are now FOUR**. The DRAFT's delta is **+17 −0**: *the text
+the reviewer released is still, line for line, inside the text the USER reads.*
+DE round 40 executed at `35452c0` with every ruling driven. **Run: NO DATE.**
 
 ## READ FIRST — current project handoff
 
@@ -104,7 +102,11 @@ with R-411(ii) fixing the denominator), and the seventh is the **Phase-4
 diagnostic**, below.
 
 > **SUPERSEDES the "nothing is awaiting the USER" line this section carried
-> from R-442 until now.** **THREE USER decisions are open and unblocked** — the
+> from R-442 until now.** **FOUR items are now USER-PENDING (R-484):**
+> **(1)** the **09-02 accrual**, after tonight's 00:06Z / 00:14Z reads;
+> **(2)** the **Phase-2 winner**; **(3)** the **content-liveness v2 freeze**;
+> **(4)** the **addendum v2 package**, now **FORWARDED**. Previously recorded
+> as three open and unblocked — the
 > **Phase-2 winner ruling** and the **content-liveness v2 freeze** (R-460), and
 > now **ONE dated addendum v2 for the USER to freeze (R-464 §5, WIDENED by
 > R-468 §2)**. It carries **three numbers** and **three declarations**:
@@ -125,65 +127,24 @@ diagnostic**, below.
 > **All of it lands in ONE addendum the USER freezes; none of it is decided by a
 > seat (rule 14). Nothing runs until it is settled, and the run has no date.**
 >
-> **STATUS: RELEASED BY THE REVIEWER — conditions (i)–(iv) ALL MET at
-> `cd93663`.** The reviewer's answer to its own question is on the record:
-> ***"May the package travel whole? YES — DE39-C1 does not hold it"***, sent
-> **WITH §5's `enable_reduce` clause**. **The two reasons that stood here last
-> round — DE39-C1 and condition (i) — are CLOSED, and REPLACED rather than
-> carried.**
+> **STATUS: FORWARDED TO THE USER at `35452c0`** — DRAFT sha
+> **`cb693000880c3d94`** (**307 lines**, **+17 −0** against `cd93663` — I
+> verified both at the blob). **Released by the reviewer** at `650569c`
+> (conditions (i)–(iv) all met, *"May the package travel whole? YES"*);
+> **forwarded** per **R-484**, once the DRAFT clause existed to be read.
 >
-> **RELEASED IS NOT FORWARDED, and exactly one thing stands in between:** the
-> package is **FORWARDED AT DE'S ROUND-40 TIP, once the coordinator VERIFIES
-> THE DRAFT CLAUSE AT THE BLOB.** The reason is rule 13 and it is worth stating
-> rather than assuming: **a package forwarded before the clause lands would be
-> superseded in-band the same night** — the USER would be reading a document
-> that a correction was already chasing. The reviewer's sentence is the one to
-> keep: ***"a USER reading §5 today would be adopting the words while the
-> artifact behind them produces a null that cannot differ."*** The four: **§5 gets either a
-> declared-vs-built sentence or (γ) built first**; **§5 must say what happens
-> to below-threshold values, with §2 re-read**; **the seal's form must be
-> settled**; and **the two numbers and the split question travel TOGETHER** —
-> *the split question is a decision the USER is GIVEN with the §5 numbers, not
-> a footnote.* **§5's TEXT survives as the text the USER rules on; the CODE is
-> what fails** — and **the package must not travel while the suite presents (γ)
-> as achieved on a fixture the run path cannot produce.** The **pin claim rests
-> on the seal** (DE37-C2). **The DRAFT's sha is `ec1538f1545999d1` AS OF
-> `cd93663`** — `6edefdfda909a897` (`27c1ccd`) → `ec1538f1545999d1` (`218509e`)
-> → `a45b87624f72b567` (`dfd4c00`) → now **`6a62569f536e460f`**, **the fourth
-> supersession in four rounds**, each absorbed by the AS-OF framing without a
-> correction. **Verified at the blob here (290 lines).** — it was `6edefdfda909a897` at `27c1ccd`, and **a living
-> document's sha is a fact with an as-of, not a name** (my round-56 carry was
-> stale; this is the second supersession). **§5 is (γ) DECLARED in the DRAFT
-> and NOT REALISED on the run path** (DE37-C1, HIGH), and **the declaration
-> seal is a tautology** (DE37-C2). **Two more items join the package:** the
-> **split question** — the §3 population (08-24 / 08-25) spans **BOTH fit
-> splits** and the DRAFT does not choose — and a **THIRD cost, UNMEASURED**
-> (tape **3,170,987,711 B** + fragment **1,241,115,096 B**, byte counts
-> verified against the files; the row/split counts are DE's). Section by
-> section:
-> **§1 and §4 are READY**; **§3 is READY**; **§2 must be RE-READ against the
-> (γ) stream**; **§5 is the (γ) wording** — *total permutation of ALL
-> above-threshold values within `(side, hour)` strata, the draw naming which
-> generations receive them, matched on the per-stratum **REALISED ACTION COUNT**
-> after the replay, failed draws **rejected and redrawn** (bounded, with
-> `n_draws_attempted` / `n_draws_accepted` / `n_rejected_by_stratum` in the
-> receipt), `control#2` **WITHDRAWN**, and predicates **P1–P4** replacing the
-> substring check* — **pending DE round 37 and its review.**
+> **The five asks now with the USER:** **§1** the horizon; **§2**
+> `theta_repost` and **§3** `REPOST_DWELL_S` — **pairs or fixed**; **§4**
+> `inf` **plus the identity**; **§5** repost parity **with the
+> `enable_reduce` clause**; and **§1a** TRAIN/SCORE, **ruled WITH §2 and
+> §4**, not separately.
 >
-> **The compute figure travels split, because only half of it is measured:**
-> the **feed ~28.6 min is MEASURED** (round 33) and travels; **the replay is
-> UNMEASURED and its synthetic figure is a FLOOR** — the fixture is **20 slugs ×
-> one generation × one tranche × one side**, *not* "471 windows". **DE35-R2's
-> 4× STANDS; the "~1000× overstated in total" half is DE's and is NOT
-> established.** The package still travels **WHOLE, in ONE notification, after
-> round 37 is reviewed.**
-> `plans/DE_PHASE4_DIAGNOSTIC_ADDENDUM_V2_DRAFT_2026-09-02.md` (sha16
-> **`6edefdfda909a897`**) is a **PROPOSAL**. **§5 is NOT forwarded to the USER**
-> until the reviewer rules **DE35-C1**: the control's repost event has **no
-> counterpart in the treated stream**. **The USER package is one reviewer round
-> from ready** — and holding it there is the point: a bundle forwarded with a
-> known-open HIGH in it asks the USER to freeze a number whose control is not
-> yet symmetric.
+> **The delta is worth one line of its own: +17 −0.** The round that carried
+> the clause **added seventeen lines and removed none** — so **the text the
+> reviewer released is still, line for line, inside the text the USER now
+> reads.** For a document about to be frozen, a purely additive delta is the
+> strongest available statement that nothing was quietly re-worded on the way
+> out.
 
 | # | ruled | at |
 |---|---|---|
@@ -892,7 +853,8 @@ launchers at **235/19**.
 | **DE round 38 review** | **RELEASED** (`0a5a6a7`, 232 lines, 22:06:13Z) — **DE38-C1/C2/C3 CONFIRMED**, C1 **reproduced independently** (24/5 identity, **0/200 vs 65/200**, 3/False) and **RULED in four parts**; **DE37-C1..C5 and R1..R4 CONFIRMED CLOSED**, the seal driven closed by the **reviewer's own** edit; new **DE38-R1 (MED)** and **R2/R3/R4 (LOW)** |
 | **DE round 39** | **LANDED and EXECUTED** at `cd93663` (Q-DE-57) — counts **31/115/26/21/26/21/184/92**; **all four DE38-C1 rulings BUILT as ruled**, plus DE38-R1+C3, C2, R3, R4, R2 and §2(iii) — **every step driven**. Shas verified here: runner `2976b46e…` (3,201 lines), score-stream `f85be335…` (420), DRAFT `6a62569f…` (290) |
 | **DE round 39 review** | **RELEASED** (`650569c`, 194 lines, 22:55:56Z) — **EVERY DE38 closure CONFIRMED, each driven**; the **six literals verified at BOTH sides of `851edaf`** by the reviewer's own `_fn_asts`; counts reproduced. **DE39-C1 CONFIRMED (LOW) and RULED in three parts**; two new findings **DE39-R1 (LOW-MED)** and **DE39-R2 (LOW)** |
-| **DE round 40** | **DISPATCHED** (Q-DE-58 expected, **one commit**, **the DRAFT clause LAST**) — four-step order: ruling (i) → rulings (ii)+(iii) → DE39-R1 → DE39-R2. **The reviewer's step 5 (the wiring's expensive half) is USER-GATED and NOT dispatched** |
+| **DE round 40** | **EXECUTED** at `35452c0` (Q-DE-58) — counts **31/119/26/21/26/21/184/92**; rulings (i)(ii)(iii), **DE39-R1** and **DE39-R2** all **driven**, with the **in-suite reordering invariance**. Verified here: runner `3f4bf21da2dfa188` (**3,329** lines, `EXPECTED_CHECKS = 119`), DRAFT `cb693000880c3d94` (**307** lines, **+17 −0** vs `cd93663`) |
+| **DE round 41** | **WAITS on the reviewer's DE-40 filing**. **The reviewer's step 5 (the wiring's expensive half) stays USER-GATED and NOT dispatched** |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -964,9 +926,8 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**every DE38 closure CONFIRMED CLOSED** by the reviewer, each driven; **DE39-C1
-CONFIRMED and RULED in three parts**; **DE39-R1 (LOW-MED)** and **DE39-R2
-(LOW)** → **DE round 40, dispatched**;
+**DE39-C1's three rulings, DE39-R1 and DE39-R2 ALL DRIVEN** at `35452c0`;
+nothing from DE is open pending the reviewer's DE-40 filing;
 **BE10-R1..R4** → **BE round 12** with BE8-R1/R2;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
@@ -994,9 +955,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on RECORDED STANDBY.** **Released so far** include BE rounds
-9+10 (`a8e88de`) and DE rounds 37 (`3f1d310`), 38 (`0a5a6a7`) and 39
-(`650569c`). **Released so far**
+**The reviewer is on DE round 40** (`REQUEST_DE_ROUND_40_2026-09-02.md`).
+**Released so far** include BE rounds 9+10 (`a8e88de`) and DE rounds 37
+(`3f1d310`), 38 (`0a5a6a7`) and 39 (`650569c`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1811,6 +1772,58 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~23:34Z (MEM) — FORWARDED, AND THE DELTA IS +17 −0
+
+**R-484 and Q-DE-58 swept.** Nothing run; committed blobs only.
+
+**The package has gone to the USER.** Released by the reviewer at `650569c`,
+**forwarded at `35452c0` per R-484** — and the ordering is the whole reason it is
+worth a line: the release came first, the clause was written second, and the
+forwarding waited for the clause to **exist to be read**. *A release is a
+judgement about a text; a forwarding is a claim that the text is there.* This
+programme kept those apart for four rounds and then did them in order.
+
+**I verified every figure at the blob:** runner **`3f4bf21da2dfa188`**, **3,329
+lines**, `EXPECTED_CHECKS = 119`; DRAFT **`cb693000880c3d94`**, **307 lines**.
+
+**And the DRAFT delta is `+17 −0`, which deserves its own sentence.** The round
+that carried the clause **added seventeen lines and removed none.** So **the text
+the reviewer released is still, line for line, inside the text the USER now
+reads** — nothing was re-worded on the way out. For a document about to be frozen
+that is the strongest cheap statement available, and it is the sort of thing that
+is trivially checkable now and unprovable in a month.
+
+**Five asks are with the USER, and one of them is a shape rather than a number.**
+**§1** the horizon; **§2** `theta_repost` and **§3** `REPOST_DWELL_S` — **pairs or
+fixed**; **§4** `inf` **plus the identity**; **§5** repost parity **with the
+`enable_reduce` clause**. And **§1a TRAIN/SCORE is to be ruled WITH §2 and §4, not
+separately** — the same instinct that made the split question travel *with* the
+numbers rather than beneath them. *Bundling is not tidiness; it stops a decision
+being answered in a form that presupposes the others.*
+
+**USER-pending is now FOUR**, and I have replaced the three-item line rather than
+appending: **(1)** the 09-02 accrual, after tonight's **00:06Z / 00:14Z** reads;
+**(2)** the Phase-2 winner; **(3)** the content-liveness v2 freeze; **(4)** the
+addendum v2 package. **Item (1) is new to this list** — it has lived in these
+files as *R-409's principle applied mechanically after the verdict*, and it now
+appears as an item awaiting tonight's reads. **Both readings are in the record and
+I have not silently merged them.**
+
+**DE round 40 executed with every ruling driven** — (i), (ii), (iii), DE39-R1 and
+DE39-R2 — **plus an in-suite reordering invariance**, which is the right companion
+to a set-identity fix: having named the identity as *set* identity, the suite now
+demonstrates that order does not change the answer, rather than asserting it in
+prose. **That closes the DE39-C1 loop the way the previous three closed: the claim
+and the demonstration arrive together.**
+
+**Nothing from DE is open pending the reviewer's DE-40 filing**, and **the
+reviewer's step 5 — the wiring's expensive half — remains USER-GATED and NOT
+dispatched.** *The gate outlived the round that wanted through it.*
+
+**Unchanged and stated:** the **Phase-4 run has NO DATE**; **`preflight()` still
+refuses at the scorer**. **My round 62 verified.** **Seats:** the reviewer is on
+DE round 40; DE, BE and DA on **recorded standby**.
 
 ### 2026-09-02 ~22:59Z (MEM) — THE REFUSAL DOES NOT SAY WHICH REFUSAL IT IS
 

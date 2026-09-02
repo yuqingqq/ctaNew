@@ -4,6 +4,50 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T23:34Z (MEM ROUND 63 -- FORWARDED, AND THE DELTA IS +17 -0). R-484
+  and Q-DE-58 swept; nothing run; committed blobs only. THE PACKAGE HAS GONE TO
+  THE USER: released by the reviewer at 650569c, FORWARDED AT 35452c0 PER R-484,
+  and the ORDERING is the whole reason it is worth a line -- the release came
+  first, the clause was written second, and the forwarding waited for the clause
+  to EXIST TO BE READ. A RELEASE IS A JUDGEMENT ABOUT A TEXT; A FORWARDING IS A
+  CLAIM THAT THE TEXT IS THERE. This programme kept those apart for four rounds
+  and then did them in order. I VERIFIED EVERY FIGURE AT THE BLOB: runner
+  3f4bf21da2dfa188, 3,329 lines, EXPECTED_CHECKS = 119; DRAFT cb693000880c3d94,
+  307 lines. AND THE DRAFT DELTA IS +17 -0, WHICH DESERVES ITS OWN SENTENCE: the
+  round that carried the clause ADDED SEVENTEEN LINES AND REMOVED NONE, so THE
+  TEXT THE REVIEWER RELEASED IS STILL, LINE FOR LINE, INSIDE THE TEXT THE USER
+  NOW READS -- nothing re-worded on the way out. For a document about to be
+  frozen that is the strongest cheap statement available, and it is trivially
+  checkable now and unprovable in a month. FIVE ASKS ARE WITH THE USER AND ONE OF
+  THEM IS A SHAPE RATHER THAN A NUMBER: 1 the horizon; 2 theta_repost and 3
+  REPOST_DWELL_S -- PAIRS OR FIXED; 4 inf PLUS THE IDENTITY; 5 repost parity WITH
+  the enable_reduce clause; and 1a TRAIN/SCORE RULED WITH 2 AND 4, NOT
+  SEPARATELY -- the same instinct that made the split question travel WITH the
+  numbers rather than beneath them: BUNDLING IS NOT TIDINESS, IT STOPS A DECISION
+  BEING ANSWERED IN A FORM THAT PRESUPPOSES THE OTHERS. USER-PENDING IS NOW FOUR
+  and I REPLACED the three-item line rather than appending: (1) the 09-02 accrual
+  after tonight's 00:06Z / 00:14Z reads; (2) the Phase-2 winner; (3) the
+  content-liveness v2 freeze; (4) the addendum v2 package. ITEM (1) IS NEW TO
+  THIS LIST -- it has lived in these files as R-409'S PRINCIPLE APPLIED
+  MECHANICALLY AFTER THE VERDICT, and it now appears as an item awaiting
+  tonight's reads; BOTH READINGS ARE IN THE RECORD AND I HAVE NOT SILENTLY MERGED
+  THEM. DE ROUND 40 EXECUTED WITH EVERY RULING DRIVEN -- (i), (ii), (iii),
+  DE39-R1 and DE39-R2 -- PLUS AN IN-SUITE REORDERING INVARIANCE, the right
+  companion to a set-identity fix: having named the identity as SET identity, the
+  suite now DEMONSTRATES that order does not change the answer rather than
+  asserting it in prose, so THE CLAIM AND THE DEMONSTRATION ARRIVE TOGETHER.
+  Nothing from DE is open pending the reviewer's DE-40 filing, and THE REVIEWER'S
+  STEP 5 -- the wiring's expensive half -- REMAINS USER-GATED AND NOT DISPATCHED:
+  the gate outlived the round that wanted through it. UNCHANGED AND STATED: the
+  PHASE-4 RUN HAS NO DATE; preflight() STILL REFUSES AT THE SCORER. MY ROUND 62
+  VERIFIED. SEATS: the reviewer on DE round 40
+  (REQUEST_DE_ROUND_40_2026-09-02.md); DE, BE and DA on RECORDED STANDBY. TONIGHT
+  UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after, R-409
+  accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
+  3b7e10a), BE round 11 = the durable landing, CO-8, --require-no-skips,
+  DATA_ROOT split. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-02T22:59Z (MEM ROUND 62 -- THE REFUSAL DOES NOT SAY WHICH REFUSAL IT
   IS). R-483 and the reviewer's DE-39 filing swept; nothing run; committed blobs
   only. THE MILESTONE FIRST, STATED SO THE TWO HALVES CANNOT MERGE: the reviewer
@@ -108,64 +152,6 @@ updated: >-
   MY ROUND 60 VERIFIED WITH NOTHING FOUND, archive batch 66 recorded verbatim.
   TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after,
   R-409 accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
-  3b7e10a), BE round 11 = the durable landing, CO-8, --require-no-skips,
-  DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED:
-  G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419
-  revocable.
-  PRIOR:
-  2026-09-02T22:11Z (MEM ROUND 60 -- THE IDENTITY DRAW IS NOT A BUG TO EXCLUDE,
-  IT IS A STATE TO COUNT). R-481 and the reviewer's DE-38 filing swept; nothing
-  run; committed blobs only. THE RULING ON DE38-C1 IS BETTER THAN THE FIX I WOULD
-  HAVE EXPECTED AND THE DIFFERENCE IS WORTH STATING: the obvious response to
-  "every accepted draw is the identity draw" is to STOP ACCEPTING IT, and the
-  ruling does the OPPOSITE -- the identity draw is ADMITTED AND COUNTED
-  (n_accepted_identity per stratum), the identity guard is RETIRED for (gamma)
-  with its parse assertion deleted, n_distinct and point_mass move onto the
-  ACCEPTED set, and an accepted set of ONE DISTINCT DRAW becomes null:
-  DEGENERATE -- no interval, a point estimate, LABELLED AS SUCH. EXCLUDING THE
-  IDENTITY DRAW WOULD HAVE MANUFACTURED A NULL THAT DIFFERS; COUNTING IT REPORTS
-  THE TRUTH THAT THIS NULL DOES NOT. AND THE BOUNDARY IS DRAWN EXACTLY WHERE RULE
-  13 REQUIRES: the collapse RE-OPENS REPORTING ONLY, the frozen matching rule
-  (DRAFT:147-156) UNTOUCHED -- a finding does not get to reach back into a frozen
-  document because it is inconvenient; it changes what the artifact SAYS ABOUT
-  ITSELF. The DRIVEN check is specified so it cannot pass on the degenerate case:
-  it must assert AN ACCEPTED DRAW WHOSE CONTROL DIFFERS and n_distinct_accepted
-  >= 2 -- the shape this programme keeps arriving at, A CONTROL MUST DEMONSTRATE
-  THE STATE IT CLAIMS TO DISTINGUISH, not merely run. DE38-R1 I VERIFIED AT THE
-  BLOB AND THE MISMATCH IS A POPULATION MISMATCH AGAIN: pool is built over THE
-  REFERENCE'S GENERATIONS (:1139) while the draw is over THE STREAM'S
-  ABOVE-THRESHOLD EVENTS, and _room (:1192, :1200) and strata_with_room (:1331)
-  are computed on that pool, so the receipt reports FREEDOM THE DRAW CANNOT USE
-  -- the THIRD distinct instance tonight of THE NUMBER IS REAL, THE POPULATION
-  UNDER IT IS THE WRONG ONE (after n_distinct/point_mass on the attempted set,
-  and the identity guard handed the actions instead of the demand). THE REVIEWER
-  CONFIRMED DE37'S CLOSURES INDEPENDENTLY, including by RE-DRIVING THE SEAL WITH
-  ITS OWN EDIT: two seats have now driven that falsifier from different trees, and
-  A SEAL THAT ONLY ITS AUTHOR CAN BREAK IS NOT SEALED -- this one has been broken
-  twice, on purpose, and closed both times. THE CONDITION-(i) VERDICT IS A SPLIT I
-  WOULD HAVE FLATTENED AND SHOULD NOT HAVE: it IS met as to THE STREAM AND THE
-  REJECTION ACCOUNTING and is NOT met as to THE NULL'S SECTION 5 PROMISES, with
-  the reviewer's sentence carried verbatim -- "a USER reading 5 today would be
-  adopting the words while the artifact behind them produces a null that cannot
-  differ". A CONDITION CAN BE MET IN ITS MECHANICS AND UNMET IN ITS MEANING, AND
-  ONLY THE SECOND ONE PROTECTS THE USER. THE STACK SHRANK AND I REPLACED RATHER
-  THAN CARRIED: "unverified by the reviewer" is CLOSED by this filing, so it is
-  GONE from the bundle status, not annotated as satisfied; what remains is
-  DE38-C1 OPEN and CONDITION (i) UNMET AS TO SECTION 5, with (ii)-(iv) MET at
-  dfd4c00. A REASON LIST THAT ONLY EVER GROWS STOPS BEING READ; this one now says
-  exactly what is left. DE38-C2 CONFIRMED (LOW); DE38-C3 CONFIRMED; DE38-R2/R3/R4
-  LOW (a docstring-asserted limit at de_score_stream:342, two sources for the
-  event contract at :155 and :172-174, and a falsifier-flag receipt that must say
-  so). UNCHANGED AND STATED: the PHASE-4 RUN HAS NO DATE; preflight() STILL
-  REFUSES AT THE SCORER; the BUNDLE SHA STAYS a45b87624f72b567 AS OF dfd4c00
-  until round 39 moves the DRAFT. RELEASE dfd4c00 AS ROUND 39'S BASE, dispatched
-  with the six-step order and THE SECTION 5 REPORTING SENTENCE LAST -- the right
-  place for it, THE WORDS GOING IN AFTER THE ARTIFACT BEHIND THEM IS TRUE. SEATS:
-  DE round 39 DISPATCHED (Q-DE-57 expected, ONE commit); the REVIEWER on RECORDED
-  STANDBY until it lands; BE and DA on RECORDED STANDBY. MY ROUND 59 VERIFIED
-  WITH NOTHING FOUND and the archive batch-65 move recorded verbatim. TONIGHT
-  UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after, R-409
-  accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
   3b7e10a), BE round 11 = the durable landing, CO-8, --require-no-skips,
   DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED:
   G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419
@@ -3791,7 +3777,7 @@ flags:
   be_durable_landing_is_round_11: "after the 00:14Z read AND after round 10 lands"
   repo_constant_four_symptoms: "BE34-R3, BE7-R4, BE9-C1, BE9-C2 all from REPO hardcoded; round 6 fixed a USE"
   reviewer_be_r8_released: "c54e48e (f804f33); CO-12 and CO-13 CONFIRMED CLOSED; two LOW"
-  user_addendum_v2_bundle: "RELEASED BY THE REVIEWER -- conditions (i)-(iv) ALL MET at cd93663; 'May the package travel whole? YES -- DE39-C1 does not hold it', sent WITH 5's enable_reduce clause. The DE39-C1 and condition-(i) reasons are CLOSED and REPLACED, not carried. RELEASED IS NOT FORWARDED: it travels AT DE'S ROUND-40 TIP once the coordinator VERIFIES THE DRAFT CLAUSE AT THE BLOB -- rule 13, since a package forwarded before the clause lands would be SUPERSEDED IN-BAND THE SAME NIGHT. TWO numbers + three declarations; the split question travels WITH the numbers; third cost UNMEASURED. DRAFT sha 6a62569f536e460f AS OF cd93663 until round 40 moves it. THE RUN HAS NO DATE"
+  user_addendum_v2_bundle: "FORWARDED TO THE USER at 35452c0 (R-484); DRAFT sha cb693000880c3d94, 307 lines, DELTA +17 -0 against cd93663 -- sha and line count VERIFIED BY MEM AT THE BLOB, and a purely ADDITIVE delta means the text the reviewer released is still LINE FOR LINE inside the text the USER reads. RELEASED by the reviewer at 650569c (conditions (i)-(iv) all met). THE FIVE ASKS WITH THE USER: 1 the horizon; 2 theta_repost and 3 REPOST_DWELL_S -- PAIRS OR FIXED; 4 inf PLUS the identity; 5 repost parity WITH the enable_reduce clause; and 1a TRAIN/SCORE RULED WITH 2 AND 4, not separately. AWAITING THE USER. THE RUN HAS NO DATE"
   est_r1_r5_open: "EST-R1/R2 HIGH, R3/R4/R5 MED -> DE round 35; rho denominator is MEASURED at DRAFT:212-213"
   addendum_declares_no_horizon: "grep horizon in the addendum = 0 hits; the receipt binds one, the addendum declares none"
   de_r34_executed_counts_as_filed: "47a2ba6 (Q-DE-52 68f63aa); four closed, C1 half-closed, five named open; DE34-C1..C4"
@@ -3839,7 +3825,10 @@ flags:
   de39_r1_open: "LOW-MEDIUM: the predicate row has NO null field, so POINT_ESTIMATE_NO_INTERVAL is emitted whenever null_quantiles is falsy -- A COLLAPSED NULL AND A NEVER-RUN NULL READ IDENTICALLY (evaluate_predicates :770-798, verified at the blob); the comment claims the label says what it is, and it does not"
   de39_r2_open: "LOW: len(_ca) == 1 at :2492 encodes today's single changed_at -- group by it. The coordinator had it as NOTED, NOT A FINDING; THE REVIEWER'S READING WAS ADOPTED"
   reviewer_de_r39_released: "650569c 22:55:56Z, 194 lines; EVERY DE38 closure CONFIRMED, each DRIVEN; the six literals verified at BOTH sides of 851edaf by the reviewer's own _fn_asts -- a THIRD independent parser on that seal"
-  de_r40_dispatched: "Q-DE-58 expected, ONE commit, THE DRAFT CLAUSE LAST; base cd93663; four-step order (ruling (i); rulings (ii)+(iii); DE39-R1; DE39-R2). The reviewer's STEP 5 (the wiring's expensive half) is USER-GATED and NOT DISPATCHED"
+  de_r40_executed: "35452c0 (Q-DE-58): counts 31/119/26/21/26/21/184/92; rulings (i)(ii)(iii), DE39-R1 and DE39-R2 ALL DRIVEN, plus the IN-SUITE REORDERING INVARIANCE; runner 3f4bf21da2dfa188 (3,329 lines, EXPECTED_CHECKS = 119) -- verified by MEM at the blob"
+  user_pending_four: "(1) the 09-02 accrual after tonight's 00:06Z/00:14Z reads; (2) the Phase-2 winner; (3) the content-liveness v2 freeze; (4) the addendum v2 package, FORWARDED. Item (1) is NEW TO THIS LIST -- it has lived in these files as R-409's principle applied mechanically after the verdict, and both readings are recorded, not merged"
+  reviewer_on_de_r40: "REQUEST_DE_ROUND_40_2026-09-02.md; nothing from DE open pending its filing"
+  reviewer_step5_still_user_gated: "the wiring's expensive half -- USER-GATED and NOT DISPATCHED"
   reviewer_on_de_r39: "dispatched as ONE round; REQUEST_DE_ROUND_39_2026-09-02.md"
   de38_c2_c3_open: "C2 LOW; C3 is a QUESTION"
   de_r39_waits: "for the reviewer's DE-38 filing"
@@ -3853,7 +3842,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T22:59Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T23:34Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
