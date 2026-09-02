@@ -1,6 +1,6 @@
 # Phase-4 protocol — latency × queue-reset-cost × budget — DRAFT-FOR-USER-FREEZE
 
-**STATUS: DRAFT-FOR-USER-FREEZE. Declared BEFORE any cell is read (rule 11).**
+**STATUS: FROZEN — IN FORCE. USER ruling 2026-09-02 ("we can proceed the five decisions according to the recommendation", R-397). Declared BEFORE any cell is read (rule 11); no Phase-4 cell existed at freeze time (verified by de_phase4_protocol_check.py at the reviewed tip). Grids remain gated on a Phase-2 winner; the freeze arms the protocol, it does not start a run. Frozen by coordinator commit on the USER ruling.**
 Nothing in this document has been computed on a Phase-4 cell; no Phase-4 cell
 exists. The point of freezing it now is that every quantity below — the
 primary cell, the null, the minimum sample, the multiplicity, the gate — is

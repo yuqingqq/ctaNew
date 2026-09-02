@@ -109,6 +109,18 @@ except where marked USER-ONLY.
     complete batch — a seat waiting between rounds is a coordination miss,
     not a discipline.**
 
+19. **Per-seat worktrees for execution** (R-397, USER ruling on the review's
+    scope-4 recommendation): each build-heavy seat has a detached worktree
+    (`~/ctaNew-wt-be`, `-da`, `-de`, `-rev`, each with a `data/` symlink) for
+    builds, suite runs, mutation audits and reviews — its own index, so
+    staged state can never be swept by another seat's commit. Refresh with
+    `git -C <wt> checkout --detach mm-research` after a fetch. LIMITATION
+    STATED, not hidden: git refuses the same branch in two worktrees, and
+    per-seat branches would conflict daily on the append-shared register —
+    so LANDING commits stay in the shared tree under the R-387 discipline
+    (explicit pathspec + `carrying_commit` in every result-bearing receipt).
+    Isolation covers execution; the ledger keeps one writer path.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under

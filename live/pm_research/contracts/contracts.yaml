@@ -1,4 +1,4 @@
-version: 24
+version: 25
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -1825,6 +1825,99 @@ types:
       seat: enum:USER|COORDINATOR
     notes: 'SP §7(6): carrier for non-module owners (STOP-MM-VIABLE owner = the user). Widening
       ParamValue.owner to use it is a FUTURE migration, deliberately not in this batch.'
+  # --- v25 (R-397, USER ruling 2026-09-02): DE registry amendment A-D applied; E HELD behind BE confirmation (proposal section 2.3) ---
+  ReplayFill:
+    fields:
+      t: Timestamp
+      maker_side: str
+      level: float
+      size: float
+      mid_at_fill: float
+      aggressor_micro: bool
+    notes: one maker fill as the environment emits it (ev_replay.py:82-98); RAW,
+      carrying no markout and no evaluation field
+  UnavailableInterval:
+    fields:
+      t0: Timestamp
+      t1: Timestamp
+    notes: a collector-gap interval during which state was killed and resting
+      quotes retracted; first-class in RunRecord because an absence must be a
+      status, never a silent omission
+  ReplayWindowSpec:
+    fields:
+      slug: str
+      inputs_hash: Hash
+    notes: 'the environment takes an EXPLICIT window list and stamps it, never
+      chooses (EV_REPLAY_PLAN section 2: selection is an R-ADMISS decision the
+      coordinator ratifies). inputs_hash covers the gap list and token ids, which
+      shape records and previously moved run_hash unattributably.'
+  RunRecord:
+    fields:
+      slug: str
+      coin: str
+      arm: str
+      queue_bound: enum:FRONT|BACK_DISPLAYED
+      fills: list[ReplayFill]
+      mid_t: list[Timestamp]
+      mid_v: list[float]
+      unavailable_iv: list[UnavailableInterval]
+      diagnostics: dict[str, int]
+      record_hash: Hash
+    notes: 'RAW events of one window replay, carrying NO evaluation field by
+      design (EV_REPLAY_PLAN section 0 rule 1: markout, calibration, gate
+      verdicts and attribution are computed after a run returns, never inside
+      the loop and never visible to the solver). record_hash covers the FULL
+      record including the mid path and interval endpoints the receipt body does
+      not serialize.'
+  ReplayReceipt:
+    fields:
+      protocol: str
+      status: str
+      engine_hash: Hash
+      state_lag_s: Duration
+      quote_size_shares: float
+      seed: int
+      collector_era: str
+      sp_parameter_set: dict[str, any]
+      windows: list[ReplayWindowSpec]
+      records: list[RunRecord]
+      gates: dict[str, any]
+      provenance: Provenance
+      run_hash: Hash
+    notes: 'the stamped identity of one replay run. Gate outcomes live IN the
+      receipt, not in stdout, so a PASS cell is checkable at the artifact rather
+      than by entailment from fail-loud ordering. status is
+      RESEARCH_ONLY_NOT_DECISION_ELIGIBLE in v1 and no field here is
+      decision-eligible: models estimate, policy decides.'
+  GenerationTrancheTable:
+    fields:
+      unit: enum:GENERATION
+      latency_ms: int
+      estimand_horizon_s: Duration
+      estimand_note: str
+      markout_s: Duration
+      n_generations: int
+      n_rows_consumed: int
+      rows_per_generation: float
+      generations: dict[str, GenerationTranche]
+    notes: 'the Phase-4 feed (R-165(2) item 5): generation-level tranche tables,
+      NOT per-row latency labels, because a generation is the cancellable unit
+      and several rows share one outcome (measured 1.99 rows/fill, max 23).
+      estimand_horizon_s is REQUIRED and carried, so a downstream cell cannot
+      lose the 1 s cap it inherited; the emitter refuses to produce this record
+      without an explicit declaration of the cap.'
+  GenerationTranche:
+    fields:
+      n_rows: int
+      preventable_value_cents: float
+      preventable_shares: float
+      stale_shares: float
+      t_start_min: Timestamp
+      t_start_max: Timestamp
+      coin: str
+      day: Date
+    notes: one cancellable generation's value AT ITS FIRST CROSSING, never the
+      sum over its rows; summing would count one outcome once per row
 modules:
   DA-FlowNormalize:
     consumes:
@@ -2157,6 +2250,45 @@ modules:
     - spec_out
     notes: 'SP §7(1): without it DecisionProblem.spec_snapshot and ResolvedContracts.spec_hash
       have no producer.'
+  # --- v25 (R-397, USER ruling 2026-09-02): DE registry amendment A-D applied; E HELD behind BE confirmation (proposal section 2.3) ---
+  EV-Replay:
+    consumes:
+    - ReplayWindowSpec
+    produces:
+    - RunRecord
+    - ReplayReceipt
+    ports:
+    - read_all
+    notes: 'offline replay ENVIRONMENT (architecture section 9): Live/Replay/Sim
+      are implementations behind the same ports, and the replay clock plus tape
+      port go to the replay runner alone. EV reads all planes and is read by
+      none, so no output of this module may enter a policy loop: evaluation runs
+      as a separate pass over a completed RunRecord. Window selection is NOT this
+      module job and is supplied, never chosen. The registered-plugin path and
+      artifact resolution are NOT IN v1; a DecisionProblem consume edge enters
+      only when that path is built, and adding it earlier would record a seam
+      that does not exist.'
+  DE-ActionSpace:
+    consumes:
+    - HaltState
+    - PortfolioState
+    - FeasibleSet
+    produces:
+    - ActionSet
+    ports:
+    - state_view
+    - telemetry_out
+    notes: 'the action MENU enumerator: given halt state, position, resting
+      quotes and the feasibility oracle side-keyed map, it emits the FINITE menu
+      of venue-EXPRESSIBLE actions the solver may choose among. The oracle says
+      what is feasible; this module says what is expressible, and the menu is
+      the intersection. It owns ONE fact: the venue floor orderMinSize = 5, so
+      an action the oracle caps below the floor is feasible and INEXPRESSIBLE
+      and is omitted as a typed fact, never truncated silently. Menu
+      construction is DEFAULT-DENY end to end. It does NOT produce the type
+      ActionSpace, which is a verb menu derived from VenueCapabilities: the
+      module emits concrete Actions, and conflating the two would put the
+      name-is-not-the-definition defect into the registry.'
 ports:
   BE-*:
   - state_view
@@ -2240,3 +2372,4 @@ config_supplied:
 - SourceProfile
 - ImputationRule
 - AdmissibilityRule
+- ReplayWindowSpec  # v25 (R-397): DE-AMENDMENT-C

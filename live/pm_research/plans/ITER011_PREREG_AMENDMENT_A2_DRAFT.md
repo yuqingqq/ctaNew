@@ -1,6 +1,6 @@
 # ITER011 PREREGISTRATION — AMENDMENT A2
 
-**STATUS: DRAFT-FOR-USER-FREEZE. Not in force. Drafted by BE 2026-09-01.**
+**STATUS: FROZEN — IN FORCE. USER ruling 2026-09-02 ("we can proceed the five decisions according to the recommendation", R-397) adopts OPTION 1: §5(2) is AMENDED to one-sided with R-286/R-288 as the recorded cause and `p_two_sided` retained as a reported diagnostic; AND the carried recommendation is ADOPTED — the matched-random resolution for the NEXT run/population is DECLARED PROSPECTIVELY at n_draws = 2000; THIS family stays adjudicated at 500 with its floor disclosure. Drafted by BE 2026-09-01; frozen by coordinator commit on the USER ruling.**
 
 Rule 4: frozen documents are amended only by the USER; a seat drafts and never
 adopts. Nothing in this file changes any committed number, and the artifact
