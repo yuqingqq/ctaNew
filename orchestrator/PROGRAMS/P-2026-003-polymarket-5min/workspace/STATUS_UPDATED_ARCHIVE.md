@@ -3042,3 +3042,58 @@ Moved in the MEM round-40 true-up of R-448. Join rule as in batch 1.
   systemctl. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 47 — archived 2026-09-02T15:36Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-41 true-up of R-449. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T15:16Z (MEM ROUND 38 -- A DUPLICATE THE REGISTER ALREADY CARRIES,
+  AND A LINE NUMBER THAT POINTS ONE SHORT). R-446 swept. DE ROUND 22 RELEASED at
+  92fc615 (8df60bf) with TWO RULINGS ADOPTED AS PROGRAMME STANDARDS, now
+  recorded in standing_rules above and in HANDOFF, not only in the log: a
+  CAUGHT-AND-NAMED REFUSAL inside a POSITIVE CONTROL is the right shape when the
+  catch is NARROW (the module's own refusal type, verified at
+  de_ratification_check.py :1076/:1665/:1752, each catching RatificationRefused
+  only) and the sentinel is a CONJUNCT so it fails rather than degrades; and
+  EVERY SEAT'S MUTANT LOOP CLEARS __pycache__ BEFORE EACH EXECUTION -- DE met
+  the mechanism as a false RED, the survivable side, and the standard exists
+  because the same collision with the signs reversed is a FALSE GREEN that
+  nothing in a suite would report. DE22-R1 REPRODUCED ON THE REAL REGISTER WITH
+  DE'S OWN PARSER: all_entries returns 437 entries / 436 distinct refs at my
+  as-of (through R-446) against the coordinator's 436/435 through R-445 -- the
+  delta is exactly the entry that landed between the two readings, which is what
+  a growing tape looks like when both carry their as-of. R-6 heads TWO entries
+  and entry_index resolves to the LATER one, nothing refusing it and nothing
+  reporting it. BOUNDED, AND I CHECKED THE BOUND: no ratification block declares
+  supersedes: R-6 -- the single text hit is INSIDE R-446's own prose saying so,
+  the vocabulary-hit-is-not-a-reference shape again, separated by parsing the
+  four fenced blocks rather than grepping; R-6 carries no block; latent, not
+  live. ONE THING I FOUND THAT IS LIVE, BELONGING TO THE ROUND IN FLIGHT: DE's
+  all_entries records `line` 0-INDEXED (:278, line: i from enumerate) while
+  grep -n and every editor are 1-indexed -- R-6's entries are at FILE lines 1781
+  and 9507 and the parser reports 1780 and 9506 -- and this already reaches
+  prose, since check#18's refusal at :884-887 prints own_idx[ref]["line"] RAW
+  under the words "register line", while the other extractor at :432 returns
+  line_start = start + 1, 1-INDEXED. The ruled closure (a) requires the refusal
+  to NAME BOTH LINES, so the convention decides whether a reader who follows the
+  message lands on the entry or one line above it. Recorded for DE round 24 to
+  rule; not fixed here. A SECOND MEASUREMENT CAVEAT: R-446 cites "217 of 436
+  entry headings are stamped" as what makes "an unstamped heading is not an
+  entry" unavailable as a rule; I recompute 217 of 437 under a strict
+  "### R-N -- <ISO> -- " shape and 244 under a looser "heading contains an ISO
+  stamp", so THE COUNT IS INSTRUMENT-DEPENDENT and the unstamped set is not
+  purely the early era (R-226, R-227, R-228 and R-239 fall in it too). The
+  ruling's premise survives both readings -- either way roughly half the
+  register is unstamped -- but any future rule leaning on that count must state
+  the shape with it. CLOSURE RULED at R-446 section 3 and dispatched as DE round
+  24 (Q-DE-42, in flight): refuse where a duplicate can reach an answer, report
+  by name where it cannot, FIRST occurrence kept BY RULE and stated, never
+  chosen, and NO REGISTER EDIT (append-only, rule 13). NOTHING MOVES FOR
+  TONIGHT: the 00:14Z preflight is round-9 vintage and does not import the
+  checker; BE's require_verified() gate reads the real register, on which R-6
+  falls in the REPORTED class. SEATS: reviewer on BE round 5 at baa986d, then DE
+  round 23, then DE round 24; DE round 24, BE round 6 and DA round 14 (held) in
+  flight. USER decisions: SIX RULED, NONE OPEN. UNCHANGED: G=1/5; the 011 family
+  12 of 24 with Q4 failing; the sequencing rule; Phase-4 gated; R-419 revocable.
+```

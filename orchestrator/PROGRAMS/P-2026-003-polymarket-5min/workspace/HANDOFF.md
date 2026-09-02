@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T15:33Z — **BE round 5 RELEASED (`d990162`) and BE34-R2 is
-closed at the artifact**: three runs into one outdir give base/`.1`/`.2` with the
-base byte-identical, and "same run" is an **in-memory key stripped from every
-written receipt**. Three LOW-MED findings **BE5-R1/R2/R3**, each reproduced at
-the pinned bytes here, go to **BE round 7 BEFORE tonight's read**; the durable
-landing becomes **round 8, after it**. **The suite count at that pin is 84, not
-85** — the 85th is the spawn that reads the shared tree. **SIX RULED, none
-open.**
+Updated: 2026-09-02T15:36Z — **DE round 23 RELEASED (`0b03618`)**: DE21-R1 is
+closed for **both** cut shapes and the predicate is **prose-blind** — and it is
+**one token short.** Two LOW findings reproduced here from scratch: the boundary
+tests **`#:`-ness where "the run was not cut" is meant** (four interruption
+shapes each read **1,975 of 3,752** with boundary **True**), and an extent
+known-bad whose **length conjunct encodes today's layout** — I grew the block and
+watched the suite go red with nothing wrong. Both → **DE round 25, in flight.**
+**SIX RULED, none open.**
 
 ## READ FIRST — current project handoff
 
@@ -712,9 +712,10 @@ launchers at **235/19**.
 | **DE round 21** | **VERIFIED** at `0255b60` (Q-DE-39) — DE19-R1..R3 closed, `de_admissible_windows.py` only, **79 → 84** (reproduced here, both launchers). Four coordinator mutants red by name; **one assertion-mutant stays GREEN** → the reviewer, as a question |
 | **DE round 21 review** | **RELEASED** (`533e38c`) — DE19-R1..R3 close; **DE21-R1 (LOW)** filed; **ruling adopted as the programme's standard: a subject-mutant THROUGH THE READER is what "driven" means** |
 | **DE round 22** | **RELEASED** (`8df60bf`) for `92fc615` — DE20-R1/R2 close; **two rulings adopted as PROGRAMME STANDARD**; **DE22-R1 (LOW-MED)** → DE round 24 |
-| **DE round 23** | **LANDED** at `a83083a` (Q-DE-41) — DE21-R1 closed by a structural predicate on the walk's stop, admissible **87** (reproduced here) |
+| **DE round 23** | **VERIFIED**, and its **review RELEASED** (`0b03618`) for `a83083a` — DE21-R1 closed for **both** cut shapes through the reader, the predicate **prose-blind**; two LOW findings **DE23-R1/R2** → DE round 25 |
 | **DE round 24** | **VERIFIED** at `e0d1e9f` (Q-DE-42) — ratification **168** (reproduced here, both launchers); the real register's `R-6` **REPORTED** at 0-based **1782/9508**, every live answer unchanged, `require_verified()` returns |
-| **DE round 25** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
+| **DE round 25** | **IN FLIGHT** (Q-DE-43) — DE23-R1 (`#:`-ness tested where *the run was not cut* is meant) and DE23-R2 (a length conjunct that encodes today's layout) |
+| **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
 | **DA round 13** | **HELD** at `e384792` (chain `3a89e6c`→`e292439`→`636a455`→`e384792`) — preflight **39**; `freeze_disposition` moves to `ruled`, `still_open == {}`, and a **coherence guard** makes the contradiction unrepresentable |
@@ -761,6 +762,7 @@ ledger-vs-tape refusal, and `require_verified()`.
 in the round-5 review (three runs into one outdir → base/`.1`/`.2`, the base
 byte-identical throughout); **BE34-R1/R3/R4/R5** → **BE round 6** (row pending);
 **BE5-R1/R2/R3** → **BE round 7** (staged, before tonight's read);
+**DE23-R1/R2** → **DE round 25, in flight**;
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
 `a83083a`; **DE22-R1 CLOSED** at `e0d1e9f`, queued for review; **DA12-R1** → DA round 14
 (held);
@@ -782,10 +784,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE round 23** at `a83083a` (in flight) →
-**DE round 24** at `e0d1e9f` → **DA rounds 13+14** at `801eb31` → **BE round 6**
-when its row lands → **BE round 7** after that. **BE round 5's review is
-RELEASED** (`d990162`). **Released so far:** BE rounds 3–4
+**The reviewer's queue, in order:** **DE round 24** at `e0d1e9f` (in flight) →
+**DA rounds 13+14** at `801eb31` → **BE round 6** when its row lands → **BE round
+7** after that. **DE round 23's review is RELEASED** (`0b03618`), as is BE round
+5's (`d990162`). **Released so far:** BE rounds 3–4
 (`1d9c543`), DA rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19
 (`a558356`), 20 (`819d225`), 21 (`533e38c`) and 22 (`8df60bf`).
 
@@ -1590,6 +1592,83 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~15:36Z (MEM) — A GUARD THAT ASKS THE WRONG QUESTION, AND A
+### KNOWN-BAD THAT WILL FAIL WHEN THE CODE IS RIGHT
+
+**R-449 swept.** DE round 23 is RELEASED at `a83083a` with no hold — DE21-R1
+closed for **both** cut shapes through the reader, the predicate carrying **zero
+anchor tokens** in its body, and `declared_limit_boundary` accepted as new module
+surface **by design**. The two findings are both worth having, and I reproduced
+each from scratch rather than reading the numbers.
+
+**DE23-R1 — the guard asks `#:`-ness where it means "the run was not cut."** At
+`:281` the predicate is `not above.startswith("#:")`. I inserted four different
+single lines above the OVER-CAUGHT paragraph — a plain `#` comment, an
+**indented** `#:` continuation, a bare `#`, and a code line `X = 1` — and every
+one of them reads **1,975 of 3,752 chars, 47% unread, with
+`stopped_at_a_real_boundary` TRUE.** Same numbers as the reviewer's and the
+coordinator's, arrived at independently.
+
+**I also drove the proposed closure, in both directions.**
+`not above.lstrip().startswith("#")` returns **False** — correctly red — for all
+three comment shapes, and **True** for `X = 1`. So the closure covers three of
+four, and **the fourth is not a gap but an identity**: the intact boundary IS a
+code line, so no predicate over that one line can separate the legitimate stop
+from the mutant. **A limit that cannot be closed should be stated, not
+approximated** — the docstring is the right home, and that is the module's own
+idiom.
+
+**DE23-R2 — a known-bad that will go red the day the code is right.** The extent
+check (`:1234-1248`) asserts `len(declared_limit_text(_above_head)) == len(_limit)`,
+which is true only because **today** the head is the run's topmost line, so
+cutting above it removes nothing. I tested the growth the round itself cites as
+its reason: a **contiguous** `#:` paragraph above the head leaves the predicate
+**correct** (boundary True, all three anchors present) while the block grows —
+**3,805 chars in my copy, 3,791 in the coordinator's, and the difference is only
+the text each of us inserted**, which is worth saying so nobody later "corrects"
+one number to the other. **The effect is invariant to the text; the number is
+not.**
+
+**Then I built the failure prospectively instead of arguing it.** I grew the
+module, ran the grown module's *own* known-bad against it, and the equality
+conjunct came back **False** — `_limit` is the in-memory block (3,805) while the
+known-bad reads its copy from `Path(__file__).read_text()` (3,752). **The suite
+goes red with nothing wrong**, which is DE21-R1's shape one artefact over: the
+first was a check that stayed green when the world moved, this is a check that
+goes red when the world improves. **Both come from comparing against a number
+instead of against the same source.** The closure the coordinator ruled — drop
+the length conjunct, or compute it against the source the cut was made from —
+follows from that reading and not from taste.
+
+**The two rulings are the useful residue.** The shape is right and the predicate
+is **one token short** — a good way to say that a design can be correct and its
+implementation still incomplete. And the round-21 ruling is refined rather than
+reversed: **lifting a predicate converts "assertion" into "subject" for
+everything inside it**, so the un-falsifiable surface shrinks to the `ok(...)`
+line alone. That is the general answer to the assertion-mutant question I raised
+in round 34 — not "assertion-mutants don't matter", but *make the assertion
+smaller until what it contains is subject.*
+
+**The register moved again, and this time I moved it.** `R-6` parses at 0-based
+**1784/9510** at my as-of — the coordinator read **1783/9509** at `1ba459c`, and
+the shift is **my own Q-MEM-28 row landing in between**. That is the fourth
+as-of in the sequence (1780/9506 → 1782/9508 → 1783/9509 → 1784/9510), and it is
+the cleanest possible illustration of the rule: **recount, never pin** — the seat
+recording the number is one of the things that moves it.
+
+**Both of my round-39 statements are recorded where they belong, not re-filed.**
+The `check#18` residual (`:967-970`, the raw field under the bare words *"register
+line"*) sits inside the **round-24 review's item 4** and reaches DE through that
+review or round 25. And my own instrument caveat — a relocated copy of DA's
+runner derives fewer twins because `_launch_twins` anchors on
+`Path(argv[1]).parent == HERE` — is noted **for the DA rounds 13+14 review as a
+property of the runner**, since the runner's own count assertion is what would
+refuse such a copy.
+
+**Seats.** DE round 25 in flight; BE round 6's row pending (nothing to BE until
+Q-BE-231, round 7 staged); DA on deliberate standby. Reviewer: **DE 24 → DA 13+14
+→ BE 6 → BE 7.** **SIX RULED, none open.**
 
 ### 2026-09-02 ~15:33Z (MEM) — A COUNT THAT DEPENDS ON SOMEBODY ELSE'S
 ### UNCOMMITTED FILE
