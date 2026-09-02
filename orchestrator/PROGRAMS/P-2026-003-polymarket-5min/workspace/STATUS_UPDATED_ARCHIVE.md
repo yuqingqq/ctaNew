@@ -3915,3 +3915,67 @@ Moved in the MEM round-53 true-up of R-466, R-467 and R-468. Join rule as in bat
   content-liveness v2 freeze -- NEITHER NEEDED TONIGHT. UNCHANGED: G=1/5; the 011
   family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
 ```
+
+## Batch 60 — archived 2026-09-02T19:25Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-54 true-up of R-469, R-470, R-471 and Q-DE-53. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T18:43Z (MEM ROUND 51 -- "NEVER CALLED" WAS FIXED BY CALLING IT).
+  R-464 swept. Nothing run; ~/ctaNew-wt-de unread (DE round 34 in flight);
+  everything a committed blob or a plan/manifest file. THE CAP ARC IS NOW THREE
+  ROUNDS LONG AND IS THE CLEAREST LESSON OF THE WEEK: at e52d183 I found
+  tranche_table NAMED IN A DOCSTRING AND NEVER CALLED; at 6d04833 it is called
+  TWICE and I read both -- :979 INSIDE THE SELFTEST on a four-line hand-built
+  _rows fixture, its own message reading "DE32-C2 CLOSED: `tranche_table` is
+  CALLED (not merely named in a docstring)", which asserts THE FACT OF THE CALL,
+  precisely what the previous finding's wording made salient; and :1068 ON THE
+  PRODUCTION PATH inside the loop over coins x budgets x latency rungs, cap =
+  tranche_table(rows, L, declare_cap=True), where THE NAME `cap` NEVER APPEARS
+  AGAIN IN THE FILE -- assigned, dropped. SO THE DEFECT SURVIVED ITS OWN FIX BY
+  MATCHING THE WORDS OF THE REPORT: a call whose result is discarded is not
+  enforcement, it is a call. This is the round-46 standard with a new edge -- A
+  FINDING PHRASED AS "X IS NEVER CALLED" INVITES A FIX THAT CALLS X -- and the
+  durable phrasing is DE33-C7's: DECLARED BY AN UNCONSUMED CALL. From now on I
+  name THE CONSUMPTION, not the call. NINE FINDINGS, AND THE THREE HIGH ONES ARE
+  ABOUT THE OBJECT UNDER TEST, NOT THE PLUMBING: C1 the heads are not scored on
+  their own features so IR-R4 IS NOT CLOSED; C2 the incumbent's thresholds are
+  read at the WRONG KEY; C3 the acting control DOES NOT ACT on the drawn
+  generation -- together meaning the runner would produce numbers that LOOK like
+  the estimand and are not it. C4-C6 are the same family one layer down (a
+  fixture forced null again, two of five arms never replayed with a default
+  theta, rho's denominator a DECLARED CONSTANT); C8/C9 are the reporting layer
+  (tracebacks as refusals, one key with two meanings, a silent tranche drop).
+  Q-DE-51'S STATUS IS NOW VERIFIED-SHORT AND THE DISTINCTION IS WORTH KEEPING:
+  ITS COUNTS, TIMING AND NO-ECONOMICS STATEMENTS STAND -- found short by
+  execution is NOT found wrong, and a round can be honest in everything it claims
+  and still not have built what the next step needs. THE RUN HAS NO DATE:
+  "earliest 09-03" is WITHDRAWN (R-464 section 6); it is the round AFTER DE round
+  34 lands, the reviewer reads it, AND section 5 is settled -- and I REPLACED the
+  dated line beside the ruling rather than annotating it, because a withdrawn
+  date left in place is exactly what gets quoted back as a commitment. A THIRD
+  USER DECISION IS OPEN AND I CHECKED ITS PREMISE MYSELF: the runner chooses
+  theta_repost = theta_cancel / 2 (:188) and HALF_SPREAD_CENTS = 0.5 (:101), and
+  grepping the FROZEN PROTOCOL, the ADDENDUM and the MANIFEST for both names
+  returns ZERO HITS IN ALL THREE (the fits I did not check, and say so) -- POLICY
+  CONSTANTS CHOSEN AT THE BOTTOM OF THE STACK, in a file released as a shell, and
+  harmful_stateful_policy REFUSES to default the first one precisely because it
+  encodes a policy choice. The coordinator's recommendation is RECORDED, NOT
+  RULED: make (ii) a MEASUREMENT by carrying the mid at fill, and put (i) to the
+  USER as DE's proposal in a DATED ADDENDUM v2 BEFORE ANY RUN, with sensitivity
+  at x1 and x0.5; nothing runs until both are settled. SEVEN RULED, THREE OPEN
+  (the Phase-2 winner ruling, the content-liveness v2 freeze, and these two
+  numbers), NONE NEEDED TONIGHT. SEQUENCING: DE round 34 (Q-DE-52) dispatched
+  18:42Z with DE33-C1..C9 PLUS the five reviewer findings still open (DE31-R1,
+  DE31-R2, DE32-R2, DE32-R3, DE32-R4; DE32-R1 closed FOR THE LGBM HEAD ONLY,
+  DE32-R5 closed in tense), THE FEATURE TABLE AS THE OBJECT, no section 3
+  economics read, ONE timed feature build under the 12G scope; the reviewer takes
+  DE 33 + 34 AS ONE FILING at the round-34 tip, after BE round 8 (in flight at
+  c54e48e) and BE round 9 (90638c3, row Q-BE-234 07681d2) which I record as
+  FILED, COORDINATOR VERIFICATION PENDING, with the main tree CLEAN AT THE TIP
+  (checked). TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator
+  wake after, R-409 accrual with the R-411(ii) denominator, DA landing at
+  e353119 (HOLD -> 3b7e10a), BE durable landing the round after the read, CO-8,
+  --require-no-skips, DATA_ROOT split after DA's landing. UNCHANGED: G=1/5; the
+  011 family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+```

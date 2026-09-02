@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T19:05Z — **The estimand reading is filed and verified
-(`a23667b`), and it moves the USER item rather than adding to it:** the Phase-4
-run now waits on **ONE dated addendum v2** carrying **three numbers and three
-declarations** — and **one of those declarations is the frozen text's own duty**,
-not a new ask. **rho's denominator is MEASURED in the frozen protocol
-(`DRAFT:212-213`), so a constant makes the reading threshold the constant.** DE
-round 34 executed at `47a2ba6`; **DE round 35 routed with the addendum DRAFT in
-it.** **The run has no date. SEVEN RULED, THREE OPEN**, none needed tonight.
+Updated: 2026-09-02T19:25Z — **The addendum v2 DRAFT has LANDED and is NOT
+FORWARDED** (sha16 `6edefdfda909a897`): **DE35-C1 (HIGH)** — the control's repost
+event has **no counterpart in the treated stream** — holds §5 back until the
+reviewer rules. **The USER package is one reviewer round from ready.** DE round
+35 landed and executed at `27c1ccd`, counts reproducing and the preflight
+**refusing before the feed**; **DE 33+34 RELEASED as round 35's BASE ONLY**
+(`20bd233`). BE round 10's **code** landed (`ff60d0a`), **row in flight**. **The
+run has no date. SEVEN RULED, THREE OPEN.**
 
 ## READ FIRST — current project handoff
 
@@ -124,6 +124,15 @@ diagnostic**, below.
 >
 > **All of it lands in ONE addendum the USER freezes; none of it is decided by a
 > seat (rule 14). Nothing runs until it is settled, and the run has no date.**
+>
+> **STATUS: the DRAFT HAS LANDED and is NOT FORWARDED.**
+> `plans/DE_PHASE4_DIAGNOSTIC_ADDENDUM_V2_DRAFT_2026-09-02.md` (sha16
+> **`6edefdfda909a897`**) is a **PROPOSAL**. **§5 is NOT forwarded to the USER**
+> until the reviewer rules **DE35-C1**: the control's repost event has **no
+> counterpart in the treated stream**. **The USER package is one reviewer round
+> from ready** — and holding it there is the point: a bundle forwarded with a
+> known-open HIGH in it asks the USER to freeze a number whose control is not
+> yet symmetric.
 
 | # | ruled | at |
 |---|---|---|
@@ -809,7 +818,9 @@ launchers at **235/19**.
 | **DE round 33** | **VERIFIED BY COUNT and FOUND SHORT BY EXECUTION** at `6d04833` (Q-DE-51 `2b72d02`, now **VERIFIED-SHORT** — its counts, timing and no-economics statements stand) — **nine findings DE33-C1..C9**, three HIGH |
 | **DE round 34** | **EXECUTED** at `47a2ba6` (Q-DE-52 `68f63aa`) — **counts as filed**; four findings closed, **C1 half-closed**, five named open; **DE34-C1..C4** raised |
 | **Phase-4 estimand reading** | **FILED and VERIFIED** (`a23667b`) — four rulings, **five findings EST-R1..R5** (R1, R2 **HIGH**), every citation checked at the frozen line |
-| **DE round 35** | **ROUTED** (Q-DE-53) — DE34-C1..C4, **the feed change the five open findings share**, EST-R1/R2/R4/R5 in code, **and a DATED ADDENDUM v2 DRAFT for the USER** |
+| **DE rounds 33+34 review** | **RELEASED** (`20bd233`, 219 lines) — **DE34-C1..C4 all CONFIRMED**; seven findings **DE34-R1..R7**; `47a2ba6` released **as round 35's BASE ONLY** |
+| **DE round 35** | **LANDED and EXECUTED** at `27c1ccd` (Q-DE-53 `19ddb43`) — counts **21/67/26/21/24/21/184/92** reproduce; the preflight **refuses before the feed**; five findings **DE35-C1..C5** (**C1 HIGH**) |
+| **DE round 36** | **QUEUED behind the reviewer's DE-35 filing** — §5 restated, DE35-C2..C5, DE34-R2/R3/R5/R6 |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -829,7 +840,7 @@ launchers at **235/19**.
 | **BE round 8** | **VERIFIED** at `c54e48e` (Q-BE-233) — **CO-12 and CO-13 CLOSED**, 106/106 both launchers (the coordinator's count; I did not run it — rule 9) |
 | **BE round 8 review** | **RELEASED** (`f804f33`) for `c54e48e` — **CO-12 and CO-13 both CONFIRMED CLOSED**; two LOW findings |
 | **BE round 9** | **EXECUTED at the tip and FOUND SHORT** (`90638c3`, Q-BE-234 → **VERIFIED-SHORT**) — **93 PASS then rc 1** under both launchers; **checks 95–117 unverifiable at that tip in ANY tree**. Three findings **BE9-C1..C3** |
-| **BE round 10** | **DISPATCHED** 18:48Z (Q-BE-235) — BE9-C1..C3, **no run against a real day** |
+| **BE round 10** | **CODE LANDED** `ff60d0a` 19:13:34Z — *"the check was a function of the branch, not of the code"*. **Row in flight; verification pending.** Not read here (standing rule 9) |
 | **BE round 11** | **the R-442 §3(c) DURABLE LANDING** — after the 00:14Z read **AND** after round 10 lands |
 | **BE — durable landing** | now **BE round 11**: after the **00:14Z** read **AND** after round 10 lands — **a driver whose selftest fails at its tip cannot produce the artifact of record** |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
@@ -879,8 +890,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**EST-R1 / EST-R2 (HIGH), EST-R3 / EST-R4 / EST-R5 (MED)** and **DE34-C1..C4** →
-**DE round 35**;
+**DE34-C1..C4 CONFIRMED and closed** at `27c1ccd`; **DE35-C1 (HIGH)** blocks the
+addendum's §5 from the USER until the reviewer rules; **DE35-C2..C5** and
+**DE34-R2/R3/R5/R6** → **DE round 36** (queued);
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
 tense**; **DA17-R1 (LOW)** → behind DA's landing;
@@ -907,10 +919,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE rounds 33 + 34 as ONE filing at
-`47a2ba6`** (request filed, `c70e8e2`) → **BE rounds 9 + 10 as ONE filing at the
-round-10 tip**. **BE round 8's review is RELEASED** (`f804f33`); the **estimand
-reading** is filed and verified (`a23667b`).
+**The reviewer's queue, in order:** **DE round 35 at `27c1ccd`** (filing **in
+flight**, dispatched 19:2xZ) → **BE rounds 9 + 10 as ONE filing at the round-10
+tip**. **Released so far** include BE round 8 (`f804f33`), the **estimand
+reading** (`a23667b`) and **DE rounds 33+34** (`20bd233`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
 29+30 and **31+32** (`82126ca`), and **DA round 17** (`f4c7734`). **Released so far:**
 DE rounds 23 (`0b03618`), 24 (`304cd5f`), 25 (`a7860dc`) and 26+27 (`723271e`),
@@ -1723,6 +1735,61 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~19:25Z (MEM) — A CHECK WHOSE JOB IS TO PROVE A DOCUMENT IS NOT
+### BEING OBEYED
+
+**R-469, R-470, R-471 and Q-DE-53 swept.** Nothing run; no seat worktree read;
+`be_forward_day.py` untouched (BE round 10's row is in flight — standing rule 9).
+
+**The dispatch says the addendum v2 draft is "cited by nothing", and the precise
+version of that is better than the summary.** I grepped: the draft **is**
+referenced, exactly once in code, at `de_phase4_protocol_check.py:287` — **and
+that reference exists to prove the absence.** The check asserts the file exists
+**as a PROPOSAL that says so in its own first 400 characters**, and a second
+assertion at `:296` builds the runner and head-scoring sources and requires
+**`"ADDENDUM_V2" not in _srcs`**, with the message spelling out why: *"a proposal
+cited by running code would be a seat deciding what the USER has not ruled (rule
+14)"*.
+
+**That is the inverse of every defect I have catalogued this week.** The usual
+shape is a claim with no check behind it. This is **a check whose entire job is
+to keep a document non-load-bearing** — a negative control on authority, naming
+the rule it enforces. So *"cited by nothing"* is exact where it counts (**no
+number of the draft's is consumed**) and literally false (**one reference exists,
+and it is the guard**). Both halves belong in the record, because a later reader
+grepping the name will find a hit and needs to know it is the proof, not the
+breach.
+
+**DE35-C1 is why the package is held, and the reason is symmetry, not caution.**
+The control's **repost event has no counterpart in the treated stream** — so a
+comparison that is supposed to differ only in the policy differs also in what
+events exist at all. **Forwarding §5 with that open would ask the USER to freeze
+a number whose control is not yet symmetric**, which is a worse outcome than
+waiting one round. *The USER package is one reviewer round from ready* is the
+right status line: it names the distance, not a date.
+
+**DE round 35 landed AND executed**: counts **21/67/26/21/24/21/184/92**
+reproduce, and the preflight **refuses before the feed** — which matters more than
+it reads, because DE34-C1 was precisely a refusal arriving *after* the expensive
+step. **DE34-C1..C4 are all CONFIRMED** by the reviewer, and `47a2ba6` is released
+**as round 35's base only** — a release scoped to what it can support, not to the
+whole artifact.
+
+**Seven reviewer findings (DE34-R1..R7) plus five coordinator findings
+(DE35-C1..C5) are on one object.** Round 36 is **queued behind the reviewer's DE-35
+filing** with §5 restated, DE35-C2..C5 and DE34-R2/R3/R5/R6 — queued, not
+dispatched, and I record it that way because a queued round and a dispatched one
+differ in exactly the thing that goes wrong later.
+
+**BE round 10's code landed at `ff60d0a`** with a commit title that is itself the
+finding it closes — *"the check was a function of the branch, not of the code"* —
+and **its row is in flight**. Recorded as **landed-code / row-pending /
+verification-pending**, and **not read here**: the file is the surface of an open
+BE round, which is the rule I bought in round 47 by measuring the wrong file.
+
+**Tonight is unchanged**, and the durable landing is still **BE round 11, after
+round 10 lands**.
 
 ### 2026-09-02 ~19:05Z (MEM) — THE FROZEN TEXT ALREADY ASKED FOR TWO OF THE
 ### THINGS THE RUNNER WOULD HAVE HAD TO INVENT
