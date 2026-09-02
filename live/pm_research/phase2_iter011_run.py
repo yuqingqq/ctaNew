@@ -530,6 +530,21 @@ def report_arm(pred: dict, tg: dict, rows: list) -> dict:
         q2_cell_detail = "min(AUC p_pos, AUC p_neg) — the WORSE side"
     heads = {"Q1_arrival": q1, "Q2_p_pos": q2p, "Q2_p_neg": q2n,
              "Q3_m_harm": q3h, "Q3_m_good": q3g}
+    # RR4-3: the SAME statistic at the ACTION unit, beside the row-level one.
+    # Each head keeps its own population and index set, because collapsing a
+    # head over rows it never scored would measure a different thing.
+    for _nm, _kind, _pv, _av, _ix in (
+            ("Q1_arrival", "probability", pred["p_fill"], tg["y_fill"], _all),
+            ("Q2_p_pos", "probability", [pred["p_pos"][i] for i in ip],
+             tg["y_pos"], ip),
+            ("Q2_p_neg", "probability", [pred["p_neg"][i] for i in ip],
+             tg["y_neg"], ip),
+            ("Q3_m_harm", "magnitude", [pred["m_harm"][i] for i in ih],
+             tg["m_harm_target"], ih),
+            ("Q3_m_good", "magnitude", [pred["m_good"][i] for i in ig],
+             tg["m_good_target"], ig)):
+        heads[_nm]["action_unit"] = action_unit_metrics(
+            _pv, _av, rows, _kind, idx=_ix)
     under = sorted(k for k, v in heads.items()
                    if v.get("status") == I11.UNDERPOWERED)
     return {
@@ -742,7 +757,7 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
                               status=status, n_actions=n_actions, detail=detail,
                               arrival_n=n_actions, statistic_n=sn,
                               statistic_n_basis=snb,
-                              statistic_n_unit="actions")
+                              statistic_n_unit="rows")
 
     # Q1/Q2/Q3: the adjudicated statistic is a discrimination/calibration
     # figure, identical across budgets (budgets select CANCELLATIONS, not
@@ -776,23 +791,29 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
     # ruled statistic is the WORSE SIDE's AUC (R-249) and both sides are
     # scored on the PREVENTABLE base, which is a different population from
     # the arrival one the cell was selected from.
-    _sn, _snb = None, ""
+    _sn, _snb, _su = None, "", "actions"
     if len(per_coin) == 1:
         _c, _r = next(iter(per_coin.items()))
         if head == "Q1_arrival":
-            _sn = _head_n(_r[arm], "Q1_arrival")
-            _snb = "Q1_arrival n_actions (the arrival population itself)"
+            _m = _head_metric_n(_r[arm], "Q1_arrival")
+            _sn, _su = _m["metric_n"], _m["metric_unit"]
+            _snb = (f"Q1_arrival — the ROW count the AUC was computed on "
+                    f"(RR4-3). ACTION-UNIT auc {_m['action_unit_value']!r} "
+                    f"over {_m['action_n']!r} actions "
+                    f"({_m['rows_per_action']!r} rows/action)")
         elif head == "Q2_sign":
             _hs = _r[arm].get("heads", {}) or {}
             _sc = [(_hs.get(x, {}).get("auc"), x) for x in ("Q2_p_pos", "Q2_p_neg")]
             _sc = [(a, x) for a, x in _sc if a is not None]
             if _sc:
                 _ws = min(_sc)[1]
-                _sn = _head_n(_r[arm], _ws)
-                _snb = (f"Q2 worse side {_ws} n_actions (R-249): the "
-                        f"PREVENTABLE base, not the arrival population; both "
-                        f"sides "
-                        f"{ {x: _head_n(_r[arm], x) for _, x in _sc} }")
+                _m = _head_metric_n(_r[arm], _ws)
+                _sn, _su = _m["metric_n"], _m["metric_unit"]
+                _snb = (f"Q2 worse side {_ws} (R-249) — the ROW count the AUC "
+                        f"was computed on, over the PREVENTABLE base, not the "
+                        f"arrival population (RR4-3). ACTION-UNIT auc "
+                        f"{_m['action_unit_value']!r} over {_m['action_n']!r} "
+                        f"actions ({_m['rows_per_action']!r} rows/action)")
     good = [x for x in stats if x is not None]
     if not good:
         return I11.build_cell(
@@ -861,7 +882,7 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
         p_value=(ps[0] if ps else None),
         status=I11.CELL_STATUS_OK if ps else I11.CELL_STATUS_UNEVALUABLE,
         n_actions=n_actions, arrival_n=n_actions,
-        statistic_n=_sn, statistic_n_basis=_snb, statistic_n_unit="actions",
+        statistic_n=_sn, statistic_n_basis=_snb, statistic_n_unit=_su,
         detail=(f"single coin, single head: adjudicated on its own "
                 f"matched-random null (prereg §5.1), {len(ps)} p available"
                 if ps else
@@ -949,6 +970,82 @@ def load_verified_incumbent(coin: str, fitdir=None, manifest: dict = None) -> di
     return d
 
 
+def action_unit_metrics(pred: list, actual: list, rows: list, kind: str,
+                        idx=None) -> dict:
+    """The SAME statistic, measured once per ACTION instead of once per row.
+
+    RR4-3, and CLAUDE.md rule 2 is the reason: "rows are actions... if several
+    rows can share one outcome, the evaluator must de-duplicate to actions or
+    the result is inflated (measured: 1.99 rows/fill, max 23)". `head_report`
+    uses `gen_keys` to decide UNDERPOWERED and computes the METRIC over the
+    full row vector, so every surviving statistic is a row-level number
+    reported under an action-level n — measured here at 1.754 rows/action for
+    Q1 and up to 1.992 for Q3_m_harm.
+
+    NO RE-FIT AND NO NEW ESTIMAND. The model's predictions are untouched; this
+    collapses them to one value per (slug, side, gen) and recomputes the same
+    metric. It is reported BESIDE the row-level number, never instead of it —
+    which of the two adjudicates is the USER's question, not a seat's.
+
+    THE COLLAPSE RULE IS A CHOICE, SO ALL THREE ARE REPORTED. `max` is not
+    invented here: `q4_economics` already ranks generations by their maximum
+    score, and AUC is a ranking metric, so the ranking convention already in
+    the codebase is the primary. `mean` and `first` (earliest decision
+    instant) are computed beside it, so a reader sees whether the answer
+    depends on the rule rather than taking one on trust.
+
+    THE LABEL IS THE SHARED OUTCOME. A generation's rows share one fill, so
+    the action's label is 1 if ANY of its rows carries the outcome. Generations
+    whose rows DISAGREE are counted and reported: if that count is large the
+    "shared outcome" premise is itself wrong, and that is a finding rather
+    than a detail."""
+    idx = list(range(len(rows))) if idx is None else list(idx)
+    if not (len(pred) == len(actual) == len(idx)):
+        raise RuntimeError(
+            f"REFUSED: action-unit collapse needs aligned vectors; got pred "
+            f"{len(pred)}, actual {len(actual)}, idx {len(idx)}.")
+    gens: dict = {}
+    for j, i in enumerate(idx):
+        r = rows[i]
+        gens.setdefault((r.get("slug"), r.get("side"), r.get("gen")),
+                        []).append(j)
+    mixed = 0
+    order_max, order_mean, order_first, labels = [], [], [], []
+    for k, js in sorted(gens.items()):
+        ys = [actual[j] for j in js]
+        if len(set(ys)) > 1:
+            mixed += 1
+        ps = [pred[j] for j in js]
+        order_max.append(max(ps))
+        order_mean.append(math.fsum(ps) / len(ps))
+        first = min(js, key=lambda j: (rows[idx[j]].get("t_start"), j))
+        order_first.append(pred[first])
+        if kind == "probability":
+            labels.append(1 if any(ys) else 0)
+        else:
+            labels.append(math.fsum(ys) / len(ys))
+    def metric(scores):
+        if kind == "probability":
+            return I11.auc(scores, labels)
+        return I11.calibration_slope(scores, labels)
+    return {
+        "unit": "ACTION (distinct slug/side/gen)",
+        "n_actions": len(gens), "n_rows": len(idx),
+        "rows_per_action": (round(len(idx) / len(gens), 4) if gens else None),
+        "collapse_primary": "max",
+        "value": metric(order_max),
+        "by_collapse_rule": {"max": metric(order_max),
+                             "mean": metric(order_mean),
+                             "first": metric(order_first)},
+        "generations_with_disagreeing_row_labels": mixed,
+        "label_rule": ("any row carries the outcome (probability heads); "
+                       "mean of the rows' targets (magnitude heads)"),
+        "why": "rule 2: several rows share one outcome, so a row-level metric "
+               "lets a generation with more rows count more than once. "
+               "Reported BESIDE the row-level number; which adjudicates is a "
+               "USER question (RR4-3)."}
+
+
 def q1_incremental(cand_p: list, inc_haz: dict, rows: list,
                    y_fill: list) -> dict:
     """Q1's SECOND declared conjunct: does the candidate beat the incumbent
@@ -1027,13 +1124,43 @@ def q1_incremental(cand_p: list, inc_haz: dict, rows: list,
             continue
         diffs[w] = wc - wi
     null = I11.sign_flip_null(diffs) if diffs else None
+    _au_c = action_unit_metrics(cand_p, y_fill, rows, "probability")
+    _au_i = action_unit_metrics(inc_p, y_fill, rows, "probability")
+    _au_inc = (None if (_au_c["value"] is None or _au_i["value"] is None)
+               else _au_c["value"] - _au_i["value"])
     return {
         "head": "Q1_arrival",
         "candidate_auc": a_c, "incumbent_auc": a_i,
         "increment_auc": increment,
         "beats_incumbent_hazard_head": (None if increment is None
                                         else increment > 0.0),
-        "n_actions": n,
+        # RR4-3: this was labelled `n_actions` while holding the ROW count,
+        # which A1.5 forbids outright ("no head may report an action count
+        # larger than its population's distinct (slug, side, gen) count").
+        # Both are carried, each under its own name.
+        "n_rows": n,
+        "n_actions": len({(r.get("slug"), r.get("side"), r.get("gen"))
+                          for r in rows}),
+        "auc_unit": "ROW — candidate_auc/incumbent_auc/increment_auc above "
+                    "are computed over ROWS; the action-unit pair is below",
+        # RR4-3: THE SAME COMPARISON AT THE ACTION UNIT. Q1's gate conjunct is
+        # "beats the incumbent hazard head", and whether it beats can depend
+        # on the unit, so both are computed and neither is hidden. Both sides
+        # are collapsed by the SAME rule on the SAME generations, so the
+        # comparison stays paired.
+        "action_unit": {
+            "candidate": _au_c, "incumbent": _au_i,
+            "increment_auc": _au_inc,
+            "beats_incumbent_hazard_head": (None if _au_inc is None
+                                            else _au_inc > 0.0),
+            "agrees_with_row_level": (
+                None if (_au_inc is None or increment is None)
+                else (_au_inc > 0.0) == (increment > 0.0)),
+            "why": "RR4-3: the gate conjunct is a comparison, and a "
+                   "comparison can depend on the unit it is measured at. "
+                   "Both units are computed on the same generations with the "
+                   "same collapse rule; whether they AGREE is the fact a "
+                   "reader needs, so it is computed rather than assumed."},
         "incumbent_provenance": prov,
         "windows_total": len(by_w), "windows_used": len(diffs),
         "windows_excluded": excl,
@@ -1204,6 +1331,24 @@ def _cell_p(per_coin: dict, arm: str, head: str) -> list:
     return out
 
 
+def _head_metric_n(r_arm: dict, sub: str):
+    """The n the sub-head's METRIC was computed on, with its UNIT. RR4-3.
+
+    `head_report` decides UNDERPOWERED from the action count and computes the
+    METRIC over the full row vector, so the two are different numbers and the
+    cell was reporting the wrong one: measured 1.754 rows/action on Q1, up to
+    1.992 on Q3_m_harm. The row count is what the statistic was computed on;
+    the action count is what the action-unit statistic beside it uses."""
+    h = (r_arm.get("heads", {}) or {}).get(sub) or {}
+    n_rows, n_act = h.get("n_rows"), h.get("n_actions")
+    au = (h.get("action_unit") or {})
+    return {"metric_n": n_rows if isinstance(n_rows, int) else n_act,
+            "metric_unit": "rows" if isinstance(n_rows, int) else "actions",
+            "action_n": n_act,
+            "action_unit_value": au.get("value"),
+            "rows_per_action": au.get("rows_per_action")}
+
+
 def _head_n(r_arm: dict, sub: str):
     """The ACTION count the sub-head `sub` was scored on, or None.
 
@@ -1234,6 +1379,20 @@ def _cell_n_draws(receipt: dict, cell: dict):
     return None
 
 
+def _holm_over(pvals: dict, m: int) -> dict:
+    """Holm step-down over `pvals` with denominator `m`. RR4-2.
+
+    The same arithmetic `assemble_family` runs, applied to a HYPOTHETICAL p
+    vector so the one-draw consequence can be COMPUTED rather than multiplied."""
+    order = sorted(pvals, key=lambda k: pvals[k])
+    adj, prev = {}, 0.0
+    for i, k in enumerate(order):
+        a = max(min(1.0, pvals[k] * (m - i)), prev)
+        adj[k] = a
+        prev = a
+    return adj
+
+
 def attach_floor_disclosure(receipt: dict) -> dict:
     """Every cell at its null's floor SAYS SO -- above all a surviving one."""
     cells = ((receipt.get("family") or {}).get("cells")) or {}
@@ -1248,6 +1407,41 @@ def attach_floor_disclosure(receipt: dict) -> dict:
             at.append(key)
     surv_at = sorted(k for k in at
                      if cells[k].get("survives_joint_reading_at_0_05"))
+    # RR4-2: BOTH one-draw numbers, COMPUTED. `permutation_floor_disclosure`
+    # multiplies by the full denominator, which is the WHOLE-FAMILY case: if
+    # every at-floor cell moved together the multiplier stays m. If only ONE
+    # cell moves it sorts BEHIND the still-tied cells and Holm's step-down
+    # gives it a SMALLER multiplier, so the single-cell consequence is milder
+    # than the multiplied figure implies. The reviewer's round-1 framing (and
+    # mine, taken from it) overstated it; both are now run through the real
+    # step-down instead of being reasoned about.
+    base_p = {k: c["p_value"] for k, c in cells.items()
+              if c.get("p_value") is not None}
+    for key, c in cells.items():
+        d = c.get("permutation_floor") or {}
+        if not d.get("at_permutation_floor"):
+            continue
+        nd = d.get("n_draws")
+        nxt = 2.0 / (nd + 1) if nd else None
+        if nxt is None:
+            continue
+        one = dict(base_p); one[key] = nxt
+        allf = dict(base_p)
+        for k2 in at:
+            allf[k2] = 2.0 / ((cells[k2]["permutation_floor"]["n_draws"]) + 1)
+        h1 = _holm_over(one, m).get(key)
+        h2 = _holm_over(allf, m).get(key)
+        d["holm_if_ONE_draw_beat_it_in_THIS_CELL_ONLY"] = h1
+        d["survives_if_THIS_CELL_ONLY_moved"] = (h1 is not None and h1 < 0.05)
+        d["holm_if_ONE_draw_beat_it_in_EVERY_at_floor_CELL"] = h2
+        d["survives_if_EVERY_at_floor_cell_moved"] = (h2 is not None
+                                                      and h2 < 0.05)
+        d["one_draw_numbers_are_COMPUTED"] = (
+            "both run through the real Holm step-down on the perturbed p "
+            "vector, not obtained by multiplying. A single cell moving sorts "
+            "BEHIND the still-tied cells and gets a smaller multiplier, so "
+            "the single-cell consequence is milder than the whole-family one "
+            "(RR4-2).")
     receipt["family"]["permutation_floor_summary"] = {
         "cells_read": seen, "cells_at_floor": len(at),
         "SURVIVING_cells_at_floor": surv_at,
@@ -1289,7 +1483,9 @@ def permutation_floor_disclosure(p_value, n_draws, m: int = 24) -> dict:
         "floor_p": floor,
         "holm_at_floor": min(1.0, m * floor),
         "next_attainable_p": nxt,
-        "holm_if_ONE_draw_had_beaten_the_observed": min(1.0, m * nxt),
+        # MULTIPLIED, and named as the whole-family case it actually is.
+        # `attach_floor_disclosure` adds the two COMPUTED numbers beside it.
+        "holm_if_EVERY_at_floor_cell_moved_together_multiplied": min(1.0, m * nxt),
         "margin_in_draws": 1 if at else None,
         "why": ("AT THE FLOOR: 0 of {n} draws reached the observed, so this p "
                 "is the smallest this null can express and the result is "
@@ -1426,8 +1622,10 @@ def _q3_compose(arm: str, per_coin: dict) -> tuple:
                     f"cell's p can separate anything")
     # F1: the cell's n is the BINDING side's -- the side whose slope the cell
     # reports. Both sides' n travel in the detail so the pair stays visible.
-    _n_stat = _head_n(r[arm], worse_stat_side)
-    _n_both = {k: _head_n(r[arm], k) for k in subs}
+    _mn = _head_metric_n(r[arm], worse_stat_side)
+    _n_stat = _mn["metric_n"]
+    _n_both = {k: _head_metric_n(r[arm], k)["metric_n"] for k in subs}
+    _au = {k: _head_metric_n(r[arm], k) for k in subs}
     # R-397 RULING 2: Q3 adjudicates on ITS OWN gate. Its frozen gate is
     # "calibration slope CI excludes 0 for each, reported separately" and
     # carries NO incumbent term, so NO_INCUMBENT_COUNTERPART -- a status
@@ -1435,8 +1633,13 @@ def _q3_compose(arm: str, per_coin: dict) -> tuple:
     # that never asked the incumbent anything. Both slope conjuncts are
     # evaluated (R-306), so the cell is OK.
     return (stat, pval, I11.CELL_STATUS_OK, _n_stat,
-            f"Q3 binding side {worse_stat_side} n_actions (A1.5); "
-            f"both sides {_n_both}",
+            f"Q3 binding side {worse_stat_side} — the ROW count the "
+            f"calibration slope was computed on (RR4-3); both sides "
+            f"{_n_both}. ACTION-UNIT slope beside it: "
+            f"{ {k: v['action_unit_value'] for k, v in _au.items()} } over "
+            f"{ {k: v['action_n'] for k, v in _au.items()} } actions "
+            f"({ {k: v['rows_per_action'] for k, v in _au.items()} } "
+            f"rows/action)",
             f"n behind this statistic: {_n_stat!r} actions on "
             f"{worse_stat_side} (both sides {_n_both!r}). "
             f"R-306 (USER, 2026-08-29, frozen A1.4): Q3's two slope gates "
@@ -2231,8 +2434,196 @@ def selftest() -> int:
     _selftest_gate_evaluation_rr2(ok)
     _selftest_frozen_prereg_anchor(ok)
     _selftest_r397_rulings(ok)
+    _selftest_action_unit_rr4(ok)
 
     return _selftest_verdict(fails)
+
+
+def _selftest_action_unit_rr4(ok):
+    """RR4-3: the same statistic, deduplicated to actions. Red-first."""
+    # Two generations. The FIRST has three rows and the SECOND one, so a
+    # row-level metric lets generation A count three times. That is the
+    # inflation rule 2 names, constructed so it MUST show.
+    rws = ([{"slug": "w", "side": "BUY_UP", "gen": 0, "t_start": float(i)}
+            for i in range(3)]
+           + [{"slug": "w", "side": "BUY_UP", "gen": 1, "t_start": 0.0}])
+    ok(action_unit_metrics([0.9, 0.9, 0.9, 0.1], [1, 1, 1, 0], rws,
+                           "probability")["n_actions"] == 2,
+       "RR4-3 the collapse counts ACTIONS, not rows (2 generations from 4 rows)")
+    _m = action_unit_metrics([0.9, 0.9, 0.9, 0.1], [1, 1, 1, 0], rws,
+                             "probability")
+    ok(_m["n_rows"] == 4 and _m["rows_per_action"] == 2.0,
+       f"RR4-3 both populations travel with their ratio "
+       f"({_m['n_rows']} rows / {_m['n_actions']} actions = "
+       f"{_m['rows_per_action']})")
+
+    # THE INFLATION IS REAL AND MEASURABLE. Row-level AUC is dominated by the
+    # generation with more rows; the action unit gives each one vote.
+    # Constructed so the two units MUST disagree: generation A (3 rows) is
+    # mixed and generation B (1 row) is negative. At the row unit A's three
+    # rows each vote; at the action unit A votes once. Row AUC 0.75, action
+    # AUC 1.0 — my first fixture gave 0.0 at BOTH units and proved nothing.
+    _p = [0.9, 0.8, 0.7, 0.85]
+    _y = [1, 1, 0, 0]
+    _row_auc = I11.auc(_p, _y)
+    _act = action_unit_metrics(_p, _y, rws, "probability")
+    ok(_row_auc != _act["value"] and _row_auc == 0.75
+       and _act["value"] == 1.0,
+       f"RR4-3 KNOWN-BAD: a generation with THREE rows and one with ONE give "
+       f"different answers at the two units (row {_row_auc}, action "
+       f"{_act['value']}) — which is the inflation rule 2 names")
+
+    # ...and the control must ADMIT the case where they agree, or it is a
+    # check that fires on everything.
+    _even = [{"slug": "w", "side": "BUY_UP", "gen": g, "t_start": 0.0}
+             for g in range(4)]
+    _pe, _ye = [0.9, 0.8, 0.2, 0.1], [1, 1, 0, 0]
+    ok(action_unit_metrics(_pe, _ye, _even, "probability")["value"]
+       == I11.auc(_pe, _ye),
+       "RR4-3 POSITIVE CONTROL: with ONE row per action the two units agree "
+       "exactly — the collapse changes nothing when there is nothing to "
+       "collapse")
+
+    # ALL THREE COLLAPSE RULES ARE REPORTED, and they can differ.
+    _mix = [{"slug": "w", "side": "BUY_UP", "gen": 0, "t_start": 0.0},
+            {"slug": "w", "side": "BUY_UP", "gen": 0, "t_start": 1.0},
+            {"slug": "w", "side": "BUY_UP", "gen": 1, "t_start": 0.0}]
+    _r3 = action_unit_metrics([0.1, 0.9, 0.5], [1, 1, 0], _mix,
+                              "probability")["by_collapse_rule"]
+    ok(set(_r3) == {"max", "mean", "first"},
+       f"RR4-3 all three collapse rules are reported, so a reader sees "
+       f"whether the answer depends on the choice (got {_r3})")
+
+    # DISAGREEING ROW LABELS ARE COUNTED — if large, the shared-outcome
+    # premise is itself wrong, and that is a finding not a detail.
+    _d = action_unit_metrics([0.1, 0.9, 0.5], [1, 0, 0], _mix, "probability")
+    ok(_d["generations_with_disagreeing_row_labels"] == 1,
+       "RR4-3 generations whose rows DISAGREE on the outcome are counted; a "
+       "large count would refute the shared-outcome premise the collapse "
+       "rests on")
+    ok(action_unit_metrics([0.1, 0.9, 0.5], [1, 1, 0], _mix,
+                           "probability")[
+           "generations_with_disagreeing_row_labels"] == 0,
+       "RR4-3 and it reads zero when they agree — the counter discriminates")
+
+    # magnitude heads collapse too, and refuse a misaligned call
+    ok(action_unit_metrics([1.0, 2.0, 3.0], [1.0, 2.0, 9.0], _mix,
+                           "magnitude")["value"] is not None,
+       "RR4-3 magnitude heads collapse as well, so Q3's surviving slope has "
+       "an action-unit twin")
+    try:
+        action_unit_metrics([0.1], [1, 0], _mix, "probability")
+        ok(False, "RR4-3 a misaligned collapse must REFUSE")
+    except RuntimeError as e:
+        ok("aligned vectors" in str(e),
+           "RR4-3 KNOWN-BAD: misaligned vectors REFUSE rather than zipping to "
+           "the shorter one")
+
+    # M79: the CELL must quote the metric's OWN population. The action count
+    # is the twin's n, not this statistic's, and reporting it here is F1's
+    # defect one layer down — the thing RR4-3 is about.
+    _ra = {"heads": {"Q1_arrival": {
+        "n_rows": 311640, "n_actions": 177674,
+        "action_unit": {"value": 0.8, "rows_per_action": 1.754}}}}
+    _mn = _head_metric_n(_ra, "Q1_arrival")
+    ok(_mn["metric_n"] == 311640 and _mn["metric_unit"] == "rows"
+       and _mn["action_n"] == 177674,
+       f"RR4-3 the cell quotes the ROW count the metric was computed on with "
+       f"its unit, and carries the action count beside it (got "
+       f"{_mn['metric_n']} {_mn['metric_unit']}, action {_mn['action_n']})")
+    _mn2 = _head_metric_n({"heads": {"H": {"n_actions": 5}}}, "H")
+    ok(_mn2["metric_n"] == 5 and _mn2["metric_unit"] == "actions",
+       "RR4-3 and a head with no row count falls back to actions and SAYS so "
+       "— the unit is never assumed")
+
+    # ---- RR4-1: the conjunct-derived status, driven ------------------
+    def cellset(q4_null=True, q2_status=I11.CELL_STATUS_NO_COUNTERPART):
+        cs = {}
+        for a in I11.ARMS_011:
+            for h in I11.HEADS_011:
+                for b in I11.BUDGETS_011:
+                    cs[I11.cell_key(a, h, b)] = I11.build_cell(
+                        a, h, b, statistic=1.0, p_value=0.001,
+                        status=(q2_status if h == "Q2_sign"
+                                else I11.CELL_STATUS_OK), n_actions=10)
+        r = {"family": I11.assemble_family(cs),
+             "incumbent_null_applicability": {"comparable": dict(
+                 INCUMBENT_COMPARABLE)},
+             "results": {"btc": {a: {"q1_incremental": {
+                 "beats_incumbent_hazard_head": True, "incumbent_auc": 0.7,
+                 "incumbent_provenance": {"sha256_prefix": "x"}}}
+                 for a in I11.ARMS_011}}}
+        r["incumbent_legs_evaluated"] = {
+            h: {"incumbent_counterpart_computed": True}
+            for h, v in INCUMBENT_COMPARABLE.items() if v}
+        if not q4_null:
+            for c in r["family"]["cells"].values():
+                if c["head"] == "Q4_combined_ev":
+                    c["declared_gate_outcome"] = {"conjuncts": {
+                        "increment_beats_incumbent": True,
+                        "matched_random": True}}
+        return r
+
+    _cs = cellset()
+    attach_declared_gate_outcomes(_cs)
+    _g = apply_gate_evaluation_status(_cs)
+    _q4 = [k for k, c in _cs["family"]["cells"].items()
+           if c["head"] == "Q4_combined_ev"]
+    ok(all(_cs["family"]["cells"][k]["status"]
+           == I11.CELL_STATUS_GATE_PARTIAL for k in _q4)
+       and all(_cs["family"]["cells"][k]["gate_conjuncts_evaluated"] is False
+               for k in _q4),
+       "RR4-1 KNOWN-BAD: an OK cell carrying a NULL conjunct (Q4's uncomputed "
+       "matched-random) is re-statused GATE_PARTIALLY_EVALUATED — twelve "
+       "cells previously asserted gate_conjuncts_evaluated true while "
+       "carrying one")
+    ok(all("conjuncts never evaluated" in
+           _cs["family"]["cells"][k]["gate_partial_reason"] for k in _q4),
+       "RR4-1 and the reason names the GENERIC cause, distinct from the "
+       "incumbent-leg one")
+    _q2 = [k for k, c in _cs["family"]["cells"].items()
+           if c["head"] == "Q2_sign"]
+    ok(all(_cs["family"]["cells"][k]["status"]
+           == I11.CELL_STATUS_NO_COUNTERPART for k in _q2),
+       "RR4-1 KNOWN-BAD (the other way): a cell already carrying a MORE "
+       "SPECIFIC status keeps it — NO_INCUMBENT_COUNTERPART says WHY the "
+       "conjunct is unanswerable and the generic status would lose that")
+    _q1 = [k for k, c in _cs["family"]["cells"].items()
+           if c["head"] in ("Q1_arrival", "Q3_magnitudes")]
+    ok(all(_cs["family"]["cells"][k]["status"] == I11.CELL_STATUS_OK
+           and _cs["family"]["cells"][k]["gate_conjuncts_evaluated"] is True
+           for k in _q1),
+       "RR4-1 POSITIVE CONTROL: Q1 and Q3, whose conjuncts are all evaluated, "
+       "stay OK — the generalisation narrows nothing that was whole")
+    _cs2 = cellset(q4_null=False)
+    _g2 = apply_gate_evaluation_status(_cs2)
+    ok(not any(_cs2["family"]["cells"][k]["head"] == "Q4_combined_ev"
+               for k in _g2["cells_gate_partially_evaluated"]),
+       "RR4-1 and with Q4's conjuncts BOTH evaluated it is not re-statused — "
+       "the rule follows the conjuncts, not the head")
+
+    # ---- RR4-2: the per-cell numbers must be COMPUTED -----------------
+    _fl = {"family": {"cells": {}, "holm_denominator": 24},
+           "results": {"btc": {"composed_linear": {"heads": {
+               "Q1_arrival": {"matched_random": {"n_draws": 500}}}}}}}
+    for i in range(24):
+        k = I11.cell_key("composed_linear", "Q1_arrival", f"{i}%")
+        c = I11.build_cell("composed_linear", "Q1_arrival", f"{i}%",
+                           statistic=0.8, p_value=1 / 501, n_actions=10)
+        c["holm_p"] = 24 / 501
+        _fl["family"]["cells"][k] = c
+    attach_floor_disclosure(_fl)
+    _d0 = list(_fl["family"]["cells"].values())[0]["permutation_floor"]
+    ok(_d0["holm_if_ONE_draw_beat_it_in_THIS_CELL_ONLY"]
+       < _d0["holm_if_ONE_draw_beat_it_in_EVERY_at_floor_CELL"],
+       f"RR4-2 both one-draw numbers are attached per cell and the "
+       f"single-cell one is MILDER "
+       f"({_d0['holm_if_ONE_draw_beat_it_in_THIS_CELL_ONLY']:.4f} vs "
+       f"{_d0['holm_if_ONE_draw_beat_it_in_EVERY_at_floor_CELL']:.4f})")
+    ok(_d0["survives_if_THIS_CELL_ONLY_moved"] is True
+       and _d0["survives_if_EVERY_at_floor_cell_moved"] is False,
+       "RR4-2 and they answer DIFFERENTLY at the bar, which is why the "
+       "multiplied figure alone overstated the single-cell consequence")
 
 
 def _selftest_r397_rulings(ok):
@@ -2384,17 +2775,21 @@ def _selftest_r397_rulings(ok):
        "R-397(1) incumbent_legs_evaluated reads TRUE for Q1 — read from the "
        "RESULT (a real incumbent AUC), never from the presence of a call site")
     _ge = apply_gate_evaluation_status(_art)
-    ok(_ge["cells_gate_partially_evaluated"] == [],
-       f"R-397(1) the RR2-1 predicate now PASSES: no cell is "
-       f"GATE_PARTIALLY_EVALUATED once the leg is wired (got "
-       f"{_ge['cells_gate_partially_evaluated']})")
+    _q1part = [k for k in _ge["cells_gate_partially_evaluated"]
+               if _art["family"]["cells"][k]["head"] == "Q1_arrival"]
+    ok(_q1part == [],
+       f"R-397(1) the RR2-1 predicate now PASSES FOR Q1: none of its cells is "
+       f"GATE_PARTIALLY_EVALUATED once the leg is wired (got {_q1part}). "
+       f"Q2/Q4 still are, under RR4-1, because their conjuncts are genuinely "
+       f"unevaluated — a different fact about different heads")
     # ...and it must still FIRE if the leg goes away, or the pass means nothing
     _art2 = json.loads(json.dumps(_art))
     for _rep in _art2["results"]["btc"].values():
         _rep["q1_incremental"] = {}
     _art2["incumbent_legs_evaluated"] = incumbent_legs_evaluated(_art2)
-    ok(len(apply_gate_evaluation_status(_art2)[
-        "cells_gate_partially_evaluated"]) == 6,
+    _ge3 = apply_gate_evaluation_status(_art2)
+    ok(len([k for k in _ge3["cells_gate_partially_evaluated"]
+            if _art2["family"]["cells"][k]["head"] == "Q1_arrival"]) == 6,
        "R-397(1) KNOWN-BAD: remove the leg's RESULT and the predicate fires "
        "again on all six Q1 cells — the pass is evidence, not a disabled "
        "check")
@@ -2576,6 +2971,15 @@ def _selftest_gate_evaluation_rr2(ok):
                  INCUMBENT_COMPARABLE)},
              "results": {"btc": {a: {
                  "economics": econ,
+                 # RR4-1 derives the conjunct from the RESULT, so a fixture
+                 # that set `incumbent_legs_evaluated` directly without this
+                 # no longer passes — correctly, and it is stricter: the leg
+                 # fact and the evidence behind it can no longer disagree.
+                 **({"q1_incremental": {
+                     "beats_incumbent_hazard_head": True,
+                     "incumbent_auc": 0.71,
+                     "incumbent_provenance": {"sha256_prefix": "deadbeef"}}}
+                    if leg_computed else {}),
                  # ENOUGH FOR evaluate_family TO REBUILD, because
                  # finalise_family rebuilds rather than reusing the cells --
                  # a fixture that only supplied cells would exercise the
@@ -2626,15 +3030,22 @@ def _selftest_gate_evaluation_rr2(ok):
     _a["family"] = I11.assemble_family(_a["family"]["cells"])
     _q1 = [k for k, c in _a["family"]["cells"].items()
            if c["head"] == "Q1_arrival"]
-    ok(len(_ge["cells_gate_partially_evaluated"]) == 6
-       and _ge["heads_affected"] == ["Q1_arrival"]
+    # RR4-1 GENERALISES THIS: Q4's matched-random conjunct is uncomputed, so
+    # its six cells re-status too. Q1's six are the RR2-1 case (a declared
+    # counterpart that exists and was not computed); both are the same rule
+    # now — a conjunct nobody evaluated.
+    ok("Q1_arrival" in _ge["heads_affected"]
        and all(_a["family"]["cells"][k]["status"]
                == I11.CELL_STATUS_GATE_PARTIAL for k in _q1),
        f"RR2-1 KNOWN-BAD (the SHIPPED shape): all six Q1 cells are re-statused "
        f"GATE_PARTIALLY_EVALUATED because their gate names a counterpart that "
-       f"EXISTS and was not computed (got "
-       f"{len(_ge['cells_gate_partially_evaluated'])} cells, "
+       f"EXISTS and was not computed (heads affected "
        f"{_ge['heads_affected']})")
+    ok(all("incumbent leg" in _a["family"]["cells"][k]["gate_partial_reason"]
+           for k in _q1),
+       "RR4-1 and Q1's cells keep the SPECIFIC reason (the incumbent leg), "
+       "not the generic one — the two cases are one rule and still "
+       "distinguishable in the receipt")
     ok(not any(_a["family"]["cells"][k]["survives_joint_reading_at_0_05"]
                for k in _q1),
        "RR2-1 and NONE of them is published as surviving — the flag stops "
@@ -2654,14 +3065,16 @@ def _selftest_gate_evaluation_rr2(ok):
     _b["family"] = I11.assemble_family(_b["family"]["cells"])
     _q1b = [k for k, c in _b["family"]["cells"].items()
             if c["head"] == "Q1_arrival"]
-    ok(_ge2["cells_gate_partially_evaluated"] == []
-       and all(_b["family"]["cells"][k]["status"] == I11.CELL_STATUS_OK
-               for k in _q1b),
-       "RR2-1 POSITIVE CONTROL: with Q1's leg COMPUTED, nothing is re-statused")
+    ok(all(_b["family"]["cells"][k]["status"] == I11.CELL_STATUS_OK
+           for k in _q1b)
+       and not any(c["head"] == "Q1_arrival"
+                   for c in (_b["family"]["cells"][k]
+                             for k in _ge2["cells_gate_partially_evaluated"])),
+       "RR2-1 POSITIVE CONTROL: with Q1's leg COMPUTED its cells are OK again "
+       "— the conjunct narrows the claim, it does not disable the head")
     ok(all(_b["family"]["cells"][k]["survives_joint_reading_at_0_05"]
            for k in _q1b),
-       "RR2-1 and the six cells DO survive again — the conjunct narrows the "
-       "claim, it does not disable the head")
+       "RR2-1 and the six Q1 cells DO survive again once their gate is whole")
 
     # The three inputs must each be load-bearing, or the predicate is passing
     # for a reason it does not name.
@@ -2676,10 +3089,19 @@ def _selftest_gate_evaluation_rr2(ok):
                  {"Q1_arrival": False}))):
         _c = artifact(leg_computed=False)
         _mut(_c)
-        ok(apply_gate_evaluation_status(_c)[
-               "cells_gate_partially_evaluated"] == [],
-           f"RR2-1 the predicate needs ALL THREE inputs: with '{_lbl}' it does "
-           f"NOT fire, so it is not simply refusing whenever a leg is missing")
+        attach_declared_gate_outcomes(_c)
+        _aff = apply_gate_evaluation_status(_c)["cells_gate_partially_evaluated"]
+        # Under RR4-1 Q1 still re-statuses here — but for the GENERIC reason
+        # (a conjunct nobody evaluated), never the incumbent-leg one. That
+        # distinction is what proves the leg predicate needs all three inputs
+        # rather than firing whenever a leg is absent.
+        _reasons = {_c["family"]["cells"][k]["gate_partial_reason"]
+                    for k in _aff
+                    if _c["family"]["cells"][k]["head"] == "Q1_arrival"}
+        ok(not any("incumbent leg" in r for r in _reasons),
+           f"RR2-1 the incumbent-leg predicate needs ALL THREE inputs: with "
+           f"'{_lbl}' Q1 carries no incumbent-leg reason (got {_reasons or 'none'}), "
+           f"so it is not simply refusing whenever a leg is missing")
 
     # THE ORDERING, THROUGH finalise_family ITSELF. The control below proves
     # the re-assembly matters; this one proves finalise_family DOES it. A
@@ -2730,13 +3152,33 @@ def _selftest_review_batch_f2_f7(ok):
     """F-2..F-7 from the reviewer's filing. Each must fire AND admit."""
     # ---- F-3 the floor disclosure -------------------------------------
     _f = permutation_floor_disclosure(1 / 501, 500, 24)
+    _k = "holm_if_EVERY_at_floor_cell_moved_together_multiplied"
     ok(_f["at_permutation_floor"] is True
        and abs(_f["holm_at_floor"] - 24 / 501) < 1e-15
-       and abs(_f["holm_if_ONE_draw_had_beaten_the_observed"] - 48 / 501) < 1e-15
+       and abs(_f[_k] - 48 / 501) < 1e-15
        and _f["margin_in_draws"] == 1,
-       f"F-3 a p at 1/(n+1) is NAMED as the floor with the one-draw margin "
-       f"computed: holm {_f['holm_at_floor']:.4f} -> "
-       f"{_f['holm_if_ONE_draw_had_beaten_the_observed']:.4f}")
+       f"F-3 a p at 1/(n+1) is NAMED as the floor with the one-draw margin: "
+       f"holm {_f['holm_at_floor']:.4f} -> {_f[_k]:.4f} if EVERY at-floor "
+       f"cell moved together (RR4-2 names it as the whole-family case)")
+
+    # RR4-2: the SINGLE-CELL consequence is milder, and it must be COMPUTED.
+    # A cell that moves alone sorts BEHIND the still-tied cells, so Holm's
+    # step-down gives it a smaller multiplier than m. Multiplying by m — the
+    # round-1 framing, which the reviewer corrected as originally its own —
+    # overstates what one draw would do to one cell.
+    _tied = {f"c{i}": 1 / 501 for i in range(24)}
+    _one = dict(_tied); _one["c0"] = 2 / 501
+    _h_one = _holm_over(_one, 24)["c0"]
+    _h_all = _holm_over({k: 2 / 501 for k in _tied}, 24)["c0"]
+    ok(_h_one < _h_all and abs(_h_all - 48 / 501) < 1e-12,
+       f"RR4-2 one cell moving alone is adjusted MORE GENTLY than the whole "
+       f"family moving together ({_h_one:.4f} vs {_h_all:.4f}), because it "
+       f"sorts behind the still-tied cells — the multiplied figure is the "
+       f"whole-family case, not the single-cell one")
+    ok(_h_one < 0.05 <= _h_all,
+       f"RR4-2 and the two answer DIFFERENTLY at the bar: alone it would "
+       f"still survive ({_h_one:.4f}), together it would not ({_h_all:.4f}) "
+       f"— which is exactly why both are emitted")
     _nf = permutation_floor_disclosure(2 / 501, 500, 24)
     ok(_nf["at_permutation_floor"] is False and _nf["margin_in_draws"] is None,
        "F-3 KNOWN-BAD: a p ONE draw off the floor is NOT reported as at it — "
@@ -4148,6 +4590,31 @@ def assert_constants_match_frozen_prereg(fitdir=None) -> dict:
                                    "artifact, not at an editable constant"}
 
 
+def _gate_conjuncts(cell: dict, receipt: dict, legs: dict) -> dict:
+    """This cell's declared conjuncts, for the status pass. RR4-1.
+
+    Shared with `attach_declared_gate_outcomes` so ONE definition of "which
+    conjuncts does this head declare" exists; two would be two rules."""
+    head, arm = cell.get("head"), cell.get("arm")
+    holm, p = cell.get("holm_p"), cell.get("p_value")
+    null_ok = None if (holm is None or p is None) else bool(holm < 0.05)
+    q1 = {}
+    for arms in (receipt.get("results") or {}).values():
+        for a, rep in arms.items():
+            if rep.get("q1_incremental"):
+                q1[a] = rep["q1_incremental"]
+    if head == "Q1_arrival":
+        return {"matched_random": null_ok,
+                "incumbent_hazard": (q1.get(arm) or {}).get(
+                    "beats_incumbent_hazard_head")}
+    if head == "Q2_sign":
+        return {"matched_random": null_ok, "incumbent": None}
+    if head == "Q3_magnitudes":
+        return {"slope_excludes_zero_m_harm": null_ok,
+                "slope_excludes_zero_m_good": null_ok}
+    return {"increment_beats_incumbent": null_ok, "matched_random": None}
+
+
 def attach_declared_gate_outcomes(receipt: dict) -> dict:
     """Each head's OWN gate, evaluated separately from the joint reading.
 
@@ -4187,28 +4654,12 @@ def attach_declared_gate_outcomes(receipt: dict) -> dict:
         # conjunct 1, common to Q1/Q2/Q4: the head's own null, read at the
         # family-wide bar so the gate and the joint reading use one alpha.
         null_ok = None if (holm is None or p is None) else bool(holm < 0.05)
-        conj: dict = {}
-        if head == "Q1_arrival":
-            conj["matched_random"] = null_ok
-            _b = (q1inc.get(arm) or {}).get("beats_incumbent_hazard_head")
-            conj["incumbent_hazard"] = _b
-        elif head == "Q2_sign":
-            conj["matched_random"] = null_ok
-            # the incumbent has NO sign head, so this conjunct is not merely
-            # uncomputed -- it is unanswerable for this head (R-237).
-            conj["incumbent"] = None
-        elif head == "Q3_magnitudes":
-            # its ONLY conjuncts are the two slope gates, composed by R-306
-            # into the cell's adjudicated p. No incumbent term exists.
-            conj["slope_excludes_zero_m_harm"] = null_ok
-            conj["slope_excludes_zero_m_good"] = null_ok
-        else:
-            conj["increment_beats_incumbent"] = null_ok
-            # Q4's frozen gate ALSO names a matched-random conjunct and this
-            # run computes none for Q4. Reported as uncomputed rather than
-            # assumed: it is a disclosure, not a status change (R-397 rules
-            # Q1 and Q3 only).
-            conj["matched_random"] = None
+        # ONE definition of the conjunct set, shared with the status pass
+        # (RR4-1). Q2's incumbent conjunct is UNANSWERABLE (R-237, no sign
+        # head); Q4's matched-random conjunct is simply UNCOMPUTED. Both read
+        # null, and the difference is carried in the cell's status and detail
+        # rather than by pretending one of them is false.
+        conj = _gate_conjuncts(c, receipt, {})
         vals = list(conj.values())
         passed = (None if any(v is None for v in vals) else all(vals))
         counts["not_evaluable" if passed is None else
@@ -4252,6 +4703,10 @@ def finalise_family(receipt: dict) -> dict:
     receipt["incumbent_legs_evaluated"] = incumbent_legs_evaluated(receipt)
     receipt["family"] = evaluate_family(receipt.get("results") or {},
                                         receipt.get("populations") or {})
+    # RR4-1 needs the CONJUNCTS, so they are computed before the status pass
+    # and recomputed after the re-assembly (holm moves, and a conjunct reads
+    # it). Two passes, because the two facts genuinely depend on each other.
+    attach_declared_gate_outcomes(receipt)
     ge = apply_gate_evaluation_status(receipt)
     cells = receipt["family"]["cells"]
     carried = {k: v for k, v in receipt["family"].items()
@@ -4314,17 +4769,38 @@ def apply_gate_evaluation_status(receipt: dict) -> dict:
         gate = c.get("declared_gate") or {}
         checked += 1
         computed = (legs.get(head) or {}).get("incumbent_counterpart_computed")
-        partial = bool(gate.get("carries_incumbent_term")
-                       and comparable.get(head)
-                       and not computed)
-        c["gate_conjuncts_evaluated"] = not partial
+        # RR4-1: DERIVE FROM THE CONJUNCTS, not from the incumbent-leg fact.
+        # `gate_conjuncts_evaluated` claimed "every conjunct was evaluated"
+        # while being computed from ONE conjunct, so twelve cells asserted
+        # true while carrying a null conjunct (Q2's unanswerable incumbent
+        # term, Q4's uncomputed matched-random one). Harmless while those
+        # cells fail anyway; the RR2-1 shape the moment Q4's p improves.
+        conj = ((c.get("declared_gate_outcome") or {}).get("conjuncts")
+                if c.get("declared_gate_outcome") else None)
+        if conj is None:
+            conj = _gate_conjuncts(c, receipt, legs)
+        unevaluated = sorted(k for k, v in conj.items() if v is None)
+        c["gate_conjuncts_evaluated"] = not unevaluated
+        c["gate_conjuncts_unevaluated"] = unevaluated
+        # The incumbent-leg case keeps its own, more specific reason.
+        partial_leg = bool(gate.get("carries_incumbent_term")
+                           and comparable.get(head) and not computed)
+        # A cell that already carries a MORE SPECIFIC non-OK status keeps it:
+        # NO_INCUMBENT_COUNTERPART says WHY the conjunct is unanswerable, and
+        # replacing it with the generic status would lose that.
+        partial = partial_leg or bool(
+            unevaluated and c.get("status") == I11.CELL_STATUS_OK)
         if not partial:
             continue
         moved.append(key)
+        c["gate_partial_reason"] = ("incumbent leg declared and not computed"
+                                    if partial_leg else
+                                    f"conjuncts never evaluated: {unevaluated}")
         c["status_before_gate_check"] = c.get("status")
         c["status"] = I11.CELL_STATUS_GATE_PARTIAL
         c["detail"] = (
-            f"GATE PARTIALLY EVALUATED (RR2-1). This head's frozen gate is "
+            f"GATE PARTIALLY EVALUATED ({c['gate_partial_reason']}; RR2-1 + "
+            f"RR4-1). This head's frozen gate is "
             f"{gate.get('gate')!r} with conjuncts {list(gate.get('conjuncts') or ())}. "
             f"The incumbent counterpart EXISTS (comparable={comparable.get(head)}) "
             f"and was NOT COMPUTED, so only the matched-random conjunct was "
