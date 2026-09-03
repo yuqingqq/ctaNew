@@ -97,6 +97,67 @@ DECLARED_PREDICATES = {
 }
 
 
+#: The commit in which the tolerances above were fixed, BEFORE the reconciler
+#: had ever been run. Named as a constant so the claim "declared first" is
+#: checkable by anyone from the artifact alone, and so it survives later edits
+#: to this file: `tolerances_unchanged_since` re-reads the declaration OUT OF
+#: this commit and compares it to what actually ran.
+TOLERANCE_DECLARING_COMMIT = "1e9b6626e23ddab1de10a216cad1d425cd46973f"
+
+#: The lines that constitute the declaration. Compared verbatim.
+_DECL_MARKERS = ("TOL_EXACT =", "TOL_CENTS_ABS =", "TOL_RATE_REPORTED_ONLY =",
+                 "DECLARED_PREDICATES = {")
+
+
+def _declaration_lines(text: str) -> list:
+    """The declaration block, extracted the same way from any version."""
+    out, inside = [], False
+    for ln in text.splitlines():
+        if ln.startswith("DECLARED_PREDICATES = {"):
+            inside = True
+        if inside:
+            out.append(ln.rstrip())
+            if ln.startswith("}"):
+                inside = False
+            continue
+        if any(ln.startswith(m) for m in _DECL_MARKERS):
+            out.append(ln.rstrip())
+    return out
+
+
+def tolerances_unchanged_since(commit: str = None, path: Path = None) -> dict:
+    """Are the tolerances that RAN the ones that were DECLARED?
+
+    A later edit to this file is legitimate -- adding a disclosure, fixing a
+    check count -- but it must not be able to move a tolerance silently. This
+    re-reads the declaration block out of the declaring commit and compares it
+    line for line with the block in the file that just ran."""
+    commit = commit or TOLERANCE_DECLARING_COMMIT
+    f = Path(path or __file__).resolve()
+    tree = f.parents[2]
+    rel = str(f.relative_to(tree))
+    r = subprocess.run(["git", "-C", str(tree), "show", f"{commit}:{rel}"],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return {"checked": False,
+                "why": f"cannot read {rel} at {commit[:12]}: {r.stderr[:120]}"}
+    then = _declaration_lines(r.stdout)
+    now = _declaration_lines(f.read_text())
+    return {
+        "checked": True, "declaring_commit": commit,
+        "n_declaration_lines": len(now),
+        "unchanged": then == now,
+        "declaration_sha16_then": hashlib.sha256(
+            "\n".join(then).encode()).hexdigest()[:16],
+        "declaration_sha16_now": hashlib.sha256(
+            "\n".join(now).encode()).hexdigest()[:16],
+        "why": ("the tolerances that judged this reconciliation are compared "
+                "line-for-line with the ones committed before it was ever "
+                "run. A later edit to this file cannot move a tolerance "
+                "without turning this False."),
+    }
+
+
 def _sha256(p: Path) -> str:
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -203,6 +264,12 @@ def reconcile_cell(art: dict, arm: str, budget: str) -> dict:
             "delivered": n_can / n_tot if n_tot else None,
             "n_cancelled_actions": n_can, "n_actions_total": n_tot,
             "tolerance": TOL_RATE_REPORTED_ONLY,
+            "uninformative_for_the_forward_case": (
+                "these cells were produced RETROSPECTIVELY (kk = int(n*b), "
+                "cutoff read off the ranking), so delivered EQUALS nominal by "
+                "construction. Under a declared FROZEN_FROM_TRAIN_QUANTILE "
+                "theta it will not, and that gap is the form's declared risk. "
+                "Read this column as arithmetic, never as reassurance."),
             "why_reported_not_judged": (
                 "the delivered rate is a property of the score distribution, "
                 "not of this path. It is the FROZEN_FROM_TRAIN_QUANTILE "
@@ -211,6 +278,54 @@ def reconcile_cell(art: dict, arm: str, budget: str) -> dict:
         },
         "null_seed": null["perm_seed"], "null_n_perm": null["n_perm"],
         "null_unit_order": null["unit_order"],
+    }
+
+
+def pairing_divergence(art: dict) -> dict:
+    """A DIVERGENCE THE RECONCILIATION SURFACED, reported not adjudicated.
+
+    Every declared predicate held, so this is not a failure -- it sits in the
+    half this module names NOT_RECONCILED_HERE, and it is exactly the kind of
+    thing that half was flagged for.
+
+    Iteration 011 pairs the arms BY COUNT: `kk = max(1, int(len(order) * b))`
+    and each arm cancels ITS OWN top-kk actions, so the two arms use DIFFERENT
+    cutoff scores and the same number of cancellations. `be_forward_metric`'s
+    `increment()` pairs them BY THRESHOLD: one declared theta is applied to
+    both arms, so the cutoffs are equal and the counts differ.
+
+    Under a declared FROZEN_FROM_TRAIN_QUANTILE grid these are different
+    estimands, and which one the forward read uses is a DECLARATION nobody has
+    made. Computed here from the artifact's own fields rather than asserted:
+    a single `n_cancelled_actions` per cell, shared by both arms, is what
+    count-matching looks like."""
+    ev = []
+    for arm in RECON_ARMS:
+        for b in RECON_BUDGETS:
+            try:
+                e = _economics(art, arm, b)
+            except KeyError:
+                continue
+            ev.append({"arm": arm, "budget": b,
+                       "n_cancelled_actions": e["n_cancelled_actions"],
+                       "n_actions_total": e["n_actions_total"]})
+    by_budget = {}
+    for r in ev:
+        by_budget.setdefault(r["budget"], set()).add(r["n_cancelled_actions"])
+    return {
+        "published_pairing": "BY COUNT (each arm cancels its own top-kk)",
+        "evidence": ("one `n_cancelled_actions` per cell, identical across "
+                     "arms at each budget"),
+        "n_cancelled_identical_across_arms_per_budget": {
+            b: (len(v) == 1) for b, v in sorted(by_budget.items())},
+        "be_forward_metric_pairing": ("BY THRESHOLD (one declared theta "
+                                      "applied to both arms; counts differ)"),
+        "same_estimand": False,
+        "consequence": ("a forward run under a declared theta grid will NOT "
+                        "reproduce these published numbers, and should not be "
+                        "expected to: the pairing rule differs. Which rule "
+                        "the forward read declares is an OPEN DECLARATION."),
+        "who_declares": "the USER (rule 14); this module selects neither",
     }
 
 
@@ -268,6 +383,8 @@ def reconcile(artifact: Path = None, outdir: Path = None) -> dict:
             "predicates": {k: {"statement": v[0], "tolerance": v[1]}
                            for k, v in DECLARED_PREDICATES.items()},
             "declared_in": declaring_commit(),
+            "tolerances_unchanged_since_declaration":
+                tolerances_unchanged_since(),
             "declared_before_the_run": ("the tolerances are constants in "
                                         "be_forward_recon.py and the commit "
                                         "above carries them; this receipt "
@@ -298,6 +415,7 @@ def reconcile(artifact: Path = None, outdir: Path = None) -> dict:
                             "null, the sidedness, the multiplicity and the "
                             "disclosure, and says so"),
         },
+        "PAIRING_CONVENTION_DIVERGENCE": pairing_divergence(art),
         "adjudicates": None,
         "who_adjudicates": "the coordinator verifies; the USER rules (rule 14)",
     }
@@ -309,7 +427,7 @@ def reconcile(artifact: Path = None, outdir: Path = None) -> dict:
 # must be ADMITTED. Without the first half a reconciliation that always
 # passed would be indistinguishable from one that worked.
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 18
+EXPECTED_CHECKS = 21
 
 
 def selftest() -> int:
@@ -341,6 +459,17 @@ def selftest() -> int:
     dc = declaring_commit()
     ok(dc["file"].endswith("be_forward_recon.py") and dc["head"],
        "the receipt can name the commit the tolerances were declared in")
+    tu = tolerances_unchanged_since()
+    ok(tu["checked"] and tu["unchanged"] is True,
+       f"POSITIVE CONTROL: the tolerances that ran are byte-identical to "
+       f"those committed at {TOLERANCE_DECLARING_COMMIT[:12]} "
+       f"({tu.get('n_declaration_lines')} declaration lines)")
+    _tamp = _declaration_lines(
+        Path(__file__).read_text().replace("TOL_CENTS_ABS = 1e-6",
+                                           "TOL_CENTS_ABS = 1e6"))
+    ok(_tamp != _declaration_lines(Path(__file__).read_text()),
+       "KNOWN-BAD: widening a tolerance CHANGES the declaration block, so the "
+       "comparison above would turn False -- the check can fail")
 
     # --- POSITIVE CONTROL: a real cell reconciles on every predicate
     r = reconcile_cell(art, "composed_lgbm", "10%")
@@ -398,6 +527,16 @@ def selftest() -> int:
        "a reader to infer the scope")
     ok(full["adjudicates"] is None,
        "the reconciler adjudicates nothing (rule 14)")
+    pd_ = full["PAIRING_CONVENTION_DIVERGENCE"]
+    ok(pd_["same_estimand"] is False
+       and all(pd_["n_cancelled_identical_across_arms_per_budget"].values()),
+       "the pairing divergence is COMPUTED from the artifact: one shared "
+       "n_cancelled_actions per budget across both arms is what count-matching "
+       "looks like, and be_forward_metric matches by THRESHOLD instead")
+    ok("uninformative_for_the_forward_case" in
+       full["cells"][0]["delivered_rate_REPORTED"],
+       "the delivered-rate column carries its own warning: these cells are "
+       "retrospective, so delivered equals nominal by construction")
 
     print(f"\n{checks} checks passed" if not fails
           else f"\n{len(fails)} FAILURES of {checks} checks")
