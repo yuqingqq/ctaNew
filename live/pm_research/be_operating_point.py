@@ -352,8 +352,10 @@ def selftest() -> int:
                f"POSITIVE CONTROL: the built declaration for {_c} PASSES the "
                f"fence -- provenance rehashed, theta digest recomputed")
             if VERIFICATION_PATH.exists():
-                _fo = dict(_f, coin=_c, verification=_op["verification"])
-                _fen = _FM.require_fenced_op(_fo, "10%")
+                # BE19-R1: NO hand-injection. The production shape is the
+                # fence's own output, unmodified -- if a key has to be added
+                # here, the chain does not work.
+                _fen = _FM.require_fenced_op(_f, "10%")
                 ok(_fen["token_recomputed"] is True
                    and _fen["recomputation_verified"]["bound_by"].startswith(
                        "recomputation"),
@@ -503,8 +505,11 @@ def op_declaration_for(coin: str, declaration: dict = None,
             f"be_operating_point --build over {d['derived_from_split']['days']}"
             f" ({d['counters']['rows_scored']:,} rows scored)"),
         "coin": coin,
-        "verification": (json.loads(VERIFICATION_PATH.read_text())
-                         if VERIFICATION_PATH.exists() else None),
+        # BE19-R1: a REFERENCE, not the content. The fence opens this file and
+        # rehashes it, so the evidence is fetched rather than supplied.
+        "verification_ref": ({"path": str(VERIFICATION_PATH),
+                              "sha256": sha256_file(VERIFICATION_PATH)}
+                             if VERIFICATION_PATH.exists() else None),
     }
 
 

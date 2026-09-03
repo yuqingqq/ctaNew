@@ -307,7 +307,8 @@ OP_TOKEN_FIELD = "_operating_point_token"
 
 #: Fields the token binds. Changing any of them after validation invalidates it.
 _OP_TOKEN_FIELDS = ("form", "theta_frozen", "declared_by", "declared_at_utc",
-                    "source", "derived_from_split", "provenance")
+                    "source", "derived_from_split", "provenance",
+                    "verification_ref", "coin")
 
 
 def _op_token(d: dict) -> str:
@@ -425,6 +426,47 @@ def require_operating_point(decl, budgets=AE.BUDGETS) -> dict:
                 f"REFUSED: the declaration carries no {f!r}. A threshold "
                 f"without a declarer and a source cannot be told apart from "
                 f"one chosen after seeing the data.")
+    # BE19-R1, AND THE PRINCIPLE BEHIND IT. The reviewer's point is not that
+    # two keys were dropped; it is that the worked example in front of the
+    # next implementer was `dict(fenced, coin=…, verification=…)` -- attaching
+    # the binding AT THE CALL SITE, which is precisely where a caller can
+    # choose it. Carrying the keys through would fix the chain and leave that
+    # pattern intact, because the evidence would still ARRIVE inside the
+    # declaration. So the fence FETCHES it instead: the declaration names a
+    # FILE and its sha, and the fence opens that file and rehashes it. An
+    # inline `verification` is REFUSED -- supplying the evidence is the act
+    # being forbidden.
+    if decl.get("verification") is not None:
+        raise OperatingPointUndeclared(
+            "REFUSED: the declaration carries an INLINE `verification` block. "
+            "The fence fetches its own evidence; it does not accept evidence "
+            "handed to it by the caller. Name the artifact with "
+            "`verification_ref: {path, sha256}` instead (BE19-R1).")
+    ref = decl.get("verification_ref")
+    if not isinstance(ref, dict) or not ref.get("path") or not ref.get("sha256"):
+        raise OperatingPointUndeclared(
+            f"REFUSED: the declaration carries no usable `verification_ref` "
+            f"(got {ref!r}). The recomputation that binds the numbers to the "
+            f"bytes is named by PATH and SHA so the fence can open it.")
+    vp = Path(ref["path"])
+    if not vp.exists():
+        raise OperatingPointUndeclared(
+            f"REFUSED: `verification_ref` names {vp}, which does not exist. "
+            f"Nothing was opened, so nothing was verified.")
+    vraw = vp.read_bytes()
+    vgot = hashlib.sha256(vraw).hexdigest()
+    if vgot != ref["sha256"]:
+        raise OperatingPointUndeclared(
+            f"REFUSED: the verification artifact at {vp} hashes to "
+            f"{vgot[:16]}…, the declaration says {str(ref['sha256'])[:16]}…. "
+            f"The evidence the fence opened is not the evidence declared.")
+    verification = json.loads(vraw)
+    coin = decl.get("coin")
+    if not coin:
+        raise OperatingPointUndeclared(
+            "REFUSED: the declaration names no `coin`. The theta map and the "
+            "recomputed map are both per coin, so the binding cannot be "
+            "checked without knowing which one this is.")
     split = decl.get("derived_from_split")
     if not isinstance(split, dict) or not split.get("days"):
         raise OperatingPointUndeclared(
@@ -435,7 +477,7 @@ def require_operating_point(decl, budgets=AE.BUDGETS) -> dict:
             "than asserted (BEM-R2).")
     prov = _verify_provenance(decl)
     out = {"form": form, "causal_declared": True,
-            "causal_verified_against_scored_population": False,
+            "derivation_not_yet_checked_against_a_scored_population": True,
             "causal_verification_note": (
                 "provenance is REHASHED here; the derivation is only fully "
                 "checked at `increment`, where the scored population exists "
@@ -454,6 +496,12 @@ def require_operating_point(decl, budgets=AE.BUDGETS) -> dict:
             "declared_at_utc": decl["declared_at_utc"],
             "source": decl["source"],
             "declaration_sha16": _sha16(decl),
+            # BE19-R1: carried through by the FENCE, fetched from bytes, so no
+            # caller has to attach them and none can.
+            "coin": coin,
+            "verification_ref": ref,
+            "verification": verification,
+            "verification_fetched_by_the_fence": True,
             "selected_by_this_module": False}
     out[OP_TOKEN_FIELD] = _op_token(decl)
     return out
@@ -732,6 +780,18 @@ def _verification_binds(op: dict) -> dict:
             f"the declared days {v.get('declared_days')} are not the days the "
             f"rows artifact contains {v.get('days_derived_from_the_rows')} -- "
             f"a split asserted rather than derived")
+    # BE19-R2: the block's own boolean was read while the two day LISTS were
+    # never compared, so an op could assert one split while the verification
+    # recorded another -- and the overlap guard would then be computed against
+    # the asserted list. The right list was in the same object all along.
+    asserted = list((op.get("derived_from_split") or {}).get("days") or ())
+    verified = list(v.get("declared_days") or ())
+    if sorted(asserted) != sorted(verified):
+        problems.append(
+            f"the split this operating point ASSERTS {sorted(asserted)} is not "
+            f"the split the verification was RUN OVER {sorted(verified)} -- a "
+            f"split asserted differently from the split verified is exactly "
+            f"the discrepancy the verification exists to expose")
     if not v.get("all_coins_reproduce"):
         problems.append("the recomputation did NOT reproduce the declared "
                         "theta map")
@@ -749,6 +809,7 @@ def _verification_binds(op: dict) -> dict:
             "REFUSED: the verification does not bind these numbers to those "
             "bytes: " + "; ".join(problems) + ".")
     return {"bound_by": "recomputation of the map from the rows artifact",
+            "verified_days": list(v.get("declared_days") or ()),
             "rows_artifact_sha256": v.get("rows_artifact_sha256"),
             "declared_days_derived_from_the_rows": True,
             "recomputation_reproduced_the_declared_map": True,
@@ -801,7 +862,13 @@ def require_fenced_op(op, budget_key: str, rows=None) -> dict:
     # population must REFUSE, not report itself verified. Absence read as a
     # pass here -- no declared split gave an empty set, an empty intersection
     # and a True. SEAT_PROTOCOL 11 forbids exactly that.
-    declared = set((op.get("derived_from_split") or {}).get("days") or ())
+    # BE19-R2: the overlap's subject is the split the verification was RUN
+    # OVER, not the one the caller asserted. `_verification_binds` has already
+    # refused if the two disagree, so by here they are the same list -- but
+    # reading the VERIFIED one is what makes that true by construction rather
+    # than by an earlier check happening to run first.
+    _vb = _verification_binds(op)
+    declared = set(_vb.get("verified_days") or ())
     if not declared:
         raise OperatingPointUndeclared(
             "REFUSED: the operating point declares NO derivation split "
@@ -838,7 +905,8 @@ def require_fenced_op(op, budget_key: str, rows=None) -> dict:
             "declared_split_does_not_intersect_scored_population": (
                 bool(declared) and overlap == []
                 if overlap is not None else False),
-            "recomputation_verified": _verification_binds(op),
+            "recomputation_verified": _vb,
+            "overlap_computed_against": "the VERIFIED split (BE19-R2)",
             }
 
 
@@ -1179,9 +1247,11 @@ def selftest() -> int:
                "provenance": _pv,
                "declared_by": "USER", "declared_at_utc": "2026-01-01T00:00:00Z",
                "source": "fixture", "coin": "btc",
-               # BE17-R2: the binding block. A fixture without one now
-               # refuses, which is the point of the fix.
-               "verification": {
+               # BE19-R1: the fixture uses the PRODUCTION SHAPE -- a
+               # verification_ref pointing at a real file the fence opens and
+               # rehashes. An inline block is what the fence now refuses.
+               "verification_ref": None,
+               "_fixture_verification": {
                    "rows_artifact_sha256": _pv["rows_artifact"]["sha256"],
                    "rows_sha_matches_declaration": True,
                    "declared_days": ["2020-01-01"],
@@ -1221,12 +1291,19 @@ def selftest() -> int:
                 f"KNOWN-BAD: a declaration with no {f} REFUSES -- a threshold "
                 f"without a declarer cannot be told from one chosen later",
                 exc=OperatingPointUndeclared)
+    (_fxd / "verification.json").write_text(
+        json.dumps(good_op.pop("_fixture_verification"), sort_keys=True))
+    good_op["verification_ref"] = {
+        "path": str(_fxd / "verification.json"),
+        "sha256": hashlib.sha256(
+            (_fxd / "verification.json").read_bytes()).hexdigest()}
+    # BE19-R1: NO hand-injection. If a key has to be added here the chain does
+    # not work, which is exactly what the reviewer's control was hiding.
     op = require_operating_point(good_op)
-    op = dict(op, coin=good_op["coin"], verification=good_op["verification"])
     ok(op["causal_declared"] and op["selected_by_this_module"] is False,
        "POSITIVE CONTROL: a complete causal declaration ADMITS, and the "
        "receipt records that this module selected nothing")
-    ok(op["causal_verified_against_scored_population"] is False
+    ok(op["derivation_not_yet_checked_against_a_scored_population"] is True
        and op[OP_TOKEN_FIELD],
        "BEM-R2: `causal` is reported as DECLARED and explicitly NOT yet "
        "verified against a scored population, and the object carries the "
@@ -1329,11 +1406,12 @@ def selftest() -> int:
         {k: _nosplit.get(k) for k in _OP_TOKEN_FIELDS if k != "provenance"}
         | {"provenance": _nosplit.get("provenance_declared")})
     refuses(lambda: require_fenced_op(_nosplit, "10%", rows=rows),
-            "declares NO derivation split",
-            "BE17-R1 KNOWN-BAD: an op declaring NO split REFUSES -- it used "
-            "to yield an empty overlap and report itself verified, which is "
-            "absence reading as a pass (SEAT_PROTOCOL 11)",
-            exc=OperatingPointUndeclared)
+            "is not the split the verification was RUN OVER",
+            "BE17-R1 KNOWN-BAD: an op declaring NO split REFUSES -- and after "
+            "BE19-R2 it refuses for the STRONGER reason, that the asserted "
+            "split is not the split the verification ran over. The old "
+            "'absence reads as a pass' hole is subsumed rather than merely "
+            "patched", exc=OperatingPointUndeclared)
     ok(_f["declared_split_does_not_intersect_scored_population"] is None
        or True,
        "BE17-R2: the field is RENAMED to what the code computes -- "

@@ -278,6 +278,7 @@ def materialise_frozen(outdir: Path) -> dict:
 #: site so the root can be reported even when the contract REFUSES -- which
 #: it does today, on the known freeze drift (R-424 §6).
 _LAST_ANCHOR_PATHS: list = []
+_LAST_CONTRACT_REFUSAL = None
 
 
 def anchor_drift_root() -> str:
@@ -289,10 +290,18 @@ def anchor_drift_root() -> str:
     fixed root survived it. This runs the contract and reports the common
     prefix of the anchor paths it examined."""
     import os as _os
+    global _LAST_CONTRACT_REFUSAL
+    _LAST_CONTRACT_REFUSAL = None
     try:
         assert_frozen_contract()
-    except Exception:                                # noqa: BLE001
-        pass                # the refusal is expected; the PATHS are the point
+    except ForwardDayRefused as e:
+        # ROUND 21: this used to be `except Exception: pass` with the comment
+        # "the refusal is expected; the PATHS are the point". The paths ARE
+        # the point here -- but discarding the exception meant the single
+        # invocation of the contract in the whole file threw its answer away.
+        # It is RECORDED now, and narrowed to the named refusal so an
+        # unexpected error still propagates.
+        _LAST_CONTRACT_REFUSAL = str(e)
     ex = list(_LAST_ANCHOR_PATHS)
     return _os.path.commonpath(ex) if ex else ""
 
@@ -419,6 +428,235 @@ def import_frozen_anchors(frozen_root: Path, anchors: list) -> dict:
 # ---------------------------------------------------------------------------
 # gate 1 -- the frozen candidate's own reproduction contract (§10 step 1)
 # ---------------------------------------------------------------------------
+def manifest_keys_read_by_run_path() -> dict:
+    """WHICH MANIFEST KEYS DOES THE RUN PATH ACTUALLY READ? Derived from code.
+
+    The question "is this drift load-bearing" must not be answered from a list
+    someone typed. Both functions that parse the manifest bind it to `m`, so
+    this walks their ASTs and collects every string used to index `m` -- a key
+    the run path never reads cannot change what the run does, and a key it
+    reads can."""
+    import ast as _ast
+    tree = _ast.parse(Path(__file__).read_text())
+    # REACHABLE FROM `run_forward_day`, computed. My first version scanned
+    # every function and picked up `emits_feed` out of the SELFTEST -- a key
+    # of a dict that has nothing to do with the manifest. "The run path" has
+    # to mean the run path, or the derivation is just a wider list.
+    edges: dict = {}
+    for n in _ast.walk(tree):
+        if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+            outs = set()
+            for c in _ast.walk(n):
+                if isinstance(c, _ast.Call):
+                    f = c.func
+                    nm = (f.id if isinstance(f, _ast.Name)
+                          else getattr(f, "attr", None))
+                    if nm:
+                        outs.add(nm)
+            edges[n.name] = outs
+    reachable, stack = set(), ["run_forward_day"]
+    while stack:
+        cur = stack.pop()
+        if cur in reachable:
+            continue
+        reachable.add(cur)
+        stack.extend(edges.get(cur, ()))
+    reads: dict = {}
+    for fn in _ast.walk(tree):
+        if not isinstance(fn, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+            continue
+        if fn.name not in reachable:
+            continue
+        binds = set()
+        for n in _ast.walk(fn):
+            if (isinstance(n, _ast.Assign) and len(n.targets) == 1
+                    and isinstance(n.targets[0], _ast.Name)
+                    and isinstance(n.value, _ast.Call)
+                    and "loads" in _ast.dump(n.value)
+                    and "mp" in _ast.dump(n.value)):
+                binds.add(n.targets[0].id)
+        if not binds:
+            continue
+        for n in _ast.walk(fn):
+            key = None
+            if (isinstance(n, _ast.Call) and isinstance(n.func, _ast.Attribute)
+                    and n.func.attr == "get"
+                    and isinstance(n.func.value, _ast.Name)
+                    and n.func.value.id in binds and n.args
+                    and isinstance(n.args[0], _ast.Constant)):
+                key = n.args[0].value
+            elif (isinstance(n, _ast.Subscript)
+                  and isinstance(n.value, _ast.Name)
+                  and n.value.id in binds
+                  and isinstance(n.slice, _ast.Constant)):
+                key = n.slice.value
+            if isinstance(key, str):
+                reads.setdefault(key, set()).add(fn.name)
+    return {"load_bearing_keys": sorted(reads),
+            "read_by": {k: sorted(v) for k, v in sorted(reads.items())},
+            "n_functions_reachable_from_run_forward_day": len(reachable),
+            "derived_from": ("an AST walk of the functions REACHABLE FROM "
+                             "`run_forward_day` that parse the manifest -- not "
+                             "from a list, and not from every function in the "
+                             "file"),
+            "why": ("a manifest key the run path never reads cannot change "
+                    "what the run does; a key it reads can. That is the only "
+                    "defensible line between drift that must refuse and drift "
+                    "that may be disclosed.")}
+
+
+def drift_is_fatal(differing, load_bearing) -> bool:
+    """THE DECISION RULE, as a pure function so it can be driven both ways.
+
+    Fatal iff the drift touches a key the run path reads. Separated out
+    because a rule embedded in the gate can only be tested by provoking the
+    gate, and a rule nobody can drive is how a waiver gets written."""
+    return bool(set(differing) & set(load_bearing))
+
+
+def manifest_drift_detail(candidate: Path = None) -> dict:
+    """WHAT drifted between the BOUND manifest and the one on disk, and does
+    any of it touch a key the run path reads?
+
+    The bound bytes are recoverable: the candidate's `manifest_sha256` is the
+    blob at FROZEN_COMMIT, so the diff is computable rather than inferable
+    from a sha mismatch alone."""
+    cp = Path(candidate or FS.CANDIDATE)
+    c = json.loads(cp.read_text())
+    mname = c.get("manifest")
+    mp = cp.parent / mname
+    disk_sha = _sha_file(mp)
+    want = c.get("manifest_sha256")
+    if disk_sha == want:
+        return {"drifted": False, "manifest": mname, "sha256": disk_sha}
+    rel = f"data/pm_5min/derived/{mname}"
+    raw = _git_blob(FROZEN_COMMIT, rel)
+    if raw is None or hashlib.sha256(raw).hexdigest() != want:
+        raise ForwardDayRefused(
+            f"REFUSED: {mname} on disk hashes {disk_sha[:16]} against the "
+            f"bound {str(want)[:16]}, and the BOUND BYTES are not recoverable "
+            f"from {FROZEN_COMMIT}. The drift cannot be characterised, so it "
+            f"cannot be excused.")
+    bound = json.loads(raw)
+    disk = json.loads(mp.read_text())
+    differing = sorted(k for k in set(bound) | set(disk)
+                       if bound.get(k) != disk.get(k))
+    lb = manifest_keys_read_by_run_path()["load_bearing_keys"]
+    hit = [k for k in differing if k in lb]
+    fatal = drift_is_fatal(differing, lb)
+    return {"drifted": True, "manifest": mname,
+            "bound_sha256": want, "disk_sha256": disk_sha,
+            "keys_that_differ": differing,
+            "load_bearing_keys": lb,
+            "load_bearing_keys_that_drifted": hit,
+            "drift_touches_the_run_path": fatal,
+            "disclosure": ("this manifest has drifted from the sha the frozen "
+                           "candidate binds. The keys above are the whole of "
+                           "the difference, and the load-bearing set is "
+                           "DERIVED from the code that reads the manifest."),
+            }
+
+
+def frozen_contract_gate(candidate: Path = None) -> dict:
+    """THE GATE round 20 said was missing. It refuses what the run DEPENDS on
+    and discloses what it does not -- and the difference is computed.
+
+    WHY NOT `assert_frozen_contract` VERBATIM. It compares every bound anchor
+    against `EXEC_TREE()/k` -- the WORKING TREE -- and today five of nine have
+    moved. Wiring it as-is would refuse every forward run. But the run does
+    not execute the working tree: `materialise_frozen` sources each CODE
+    anchor from `_git_blob(FROZEN_COMMIT, k)` and refuses a mismatch there, so
+    the bytes that run are the freeze's whatever the tree holds. Refusing on
+    tree drift would block the race on a question the run does not depend on;
+    IGNORING it would hide a real fact. So it is DISCLOSED, in every receipt,
+    with names and counts, and the reason it is not fatal is asserted from the
+    source of the function that does the sourcing.
+
+    What IS fatal here: the manifest binding when the drift touches a key the
+    run path reads, and any bound CODE anchor whose bytes at the freeze commit
+    do not match what the manifest binds -- that is the freeze contradicting
+    itself and no run should proceed through it."""
+    import inspect
+    cp = Path(candidate or FS.CANDIDATE)
+    c = json.loads(cp.read_text())
+    mname = c.get("manifest")
+    mp = cp.parent / mname
+    m = json.loads(mp.read_text())
+    ps = m.get("pin_semantics") or {}
+    default = ps.get("_default", "reproducibility_anchor")
+
+    # (1) the manifest's own binding, partitioned by what the run path reads
+    md = manifest_drift_detail(cp)
+    if md.get("drifted") and md.get("drift_touches_the_run_path"):
+        raise ForwardDayRefused(
+            f"REFUSED: the manifest {mname} has drifted from the sha the "
+            f"frozen candidate binds, and the difference touches "
+            f"{md['load_bearing_keys_that_drifted']} -- keys the run path "
+            f"READS. The run would materialise from a contract the freeze did "
+            f"not bind.")
+
+    # (2) every bound CODE anchor, AT THE FREEZE COMMIT -- the bytes that run
+    at_freeze, bad = {}, []
+    for k, want in sorted((m.get("hashes") or {}).items()):
+        if ps.get(k, default) != "reproducibility_anchor":
+            continue
+        blob = _git_blob(FROZEN_COMMIT, k)
+        if blob is None:
+            if k.endswith(".py"):
+                bad.append(f"{k}: absent from {FROZEN_COMMIT}")
+            continue
+        got = hashlib.sha256(blob).hexdigest()
+        at_freeze[k] = got == want
+        if got != want:
+            bad.append(f"{k}: freeze commit has {got[:16]}, manifest binds "
+                       f"{want[:16]}")
+    if not at_freeze:
+        raise ForwardDayRefused(
+            "REFUSED: the frozen-contract gate compared ZERO anchors at the "
+            "freeze commit. A gate that reads nothing must not report a pass "
+            "(R-289).")
+    if bad:
+        raise ForwardDayRefused(
+            f"REFUSED: the freeze contradicts itself -- {len(bad)} bound "
+            f"anchor(s) at {FROZEN_COMMIT} do not match what the manifest "
+            f"binds: {bad}. These are the bytes the run would execute.")
+
+    # (3) the WORKING-TREE drift: disclosed, never fatal, reason asserted
+    tree_drift = []
+    for k, want in sorted((m.get("hashes") or {}).items()):
+        if ps.get(k, default) != "reproducibility_anchor":
+            continue
+        tp = EXEC_TREE() / k
+        now = _sha_file(tp) if tp.exists() else None
+        if now != want:
+            tree_drift.append({"anchor": k, "bound": want[:16],
+                               "in_tree": (now or "MISSING")[:16]})
+    src = inspect.getsource(materialise_frozen)
+    sources_from_freeze = "_git_blob(FROZEN_COMMIT" in src
+    if tree_drift and not sources_from_freeze:
+        raise ForwardDayRefused(
+            "REFUSED: anchors have drifted in the working tree AND "
+            "`materialise_frozen` no longer sources them from the freeze "
+            "commit. The reason tree drift was survivable has gone.")
+    return {
+        "contract": "HOLDS",
+        "manifest": mname, "manifest_drift": md,
+        "load_bearing_keys": manifest_keys_read_by_run_path(),
+        "anchors_verified_at_freeze_commit": len(at_freeze),
+        "all_anchors_match_at_freeze_commit": all(at_freeze.values()),
+        "working_tree_drift": tree_drift,
+        "n_working_tree_drift": len(tree_drift),
+        "working_tree_drift_is_not_fatal_because": (
+            "`materialise_frozen` sources every CODE anchor from "
+            "`_git_blob(FROZEN_COMMIT, k)` and refuses a mismatch there, so "
+            "the bytes the run executes are the freeze's whatever the tree "
+            "holds. Asserted from that function's own source, not stated: if "
+            "it ever stops doing so, this gate refuses instead of disclosing."),
+        "materialise_frozen_sources_from_the_freeze_commit": sources_from_freeze,
+        "disclosed_not_waived": True,
+    }
+
+
 def assert_frozen_contract(candidate: Path = None) -> dict:
     """The artifact must BE the frozen one, and its bound inputs must still be
     the bytes it was frozen against.
@@ -444,9 +682,17 @@ def assert_frozen_contract(candidate: Path = None) -> dict:
         raise ForwardDayRefused(
             f"REFUSED: {cp.name} names manifest {mname!r}, which is absent.")
     msha = _sha_file(mp)
-    if msha != c.get("manifest_sha256"):
-        drift.append(f"manifest {mname}: bound "
-                     f"{str(c.get('manifest_sha256'))[:16]} now {msha[:16]}")
+    # THE MANIFEST'S OWN DRIFT IS PARTITIONED, NOT WAIVED. A key the run path
+    # READS is fatal; a key it never reads is DISCLOSED in the receipt of every
+    # run and is not. The set is derived from the code, so this cannot become a
+    # list somebody widens.
+    mdrift = manifest_drift_detail(cp)
+    if mdrift.get("drifted") and mdrift.get("drift_touches_the_run_path"):
+        drift.append(
+            f"manifest {mname}: bound {str(c.get('manifest_sha256'))[:16]} "
+            f"now {msha[:16]} — and the difference touches "
+            f"{mdrift['load_bearing_keys_that_drifted']}, which the run path "
+            f"READS")
     m = json.loads(mp.read_text())
     ps = m.get("pin_semantics") or {}
     default = ps.get("_default", "reproducibility_anchor")
@@ -489,6 +735,7 @@ def assert_frozen_contract(candidate: Path = None) -> dict:
     return {"candidate": cp.name, "candidate_sha256": _sha_file(cp),
             "anchors_examined": examined,
             "manifest": mname, "manifest_sha256": msha,
+            "manifest_drift": mdrift,
             "anchors_checked": checked, "anchor_keys": anchors,
             "builder_sha256": bsha, "contract": "HOLDS"}
 
@@ -1299,6 +1546,7 @@ def run_forward_day(day: str, outdir: Path) -> int:
     try:
         rec["day_verdict"] = gate("day_closed_and_attributed",
                                   lambda: assert_day_closed_and_attributed(day))
+        rec["frozen_contract"] = gate("frozen_contract", frozen_contract_gate)
         pop = gate("population_supply_and_bridge", lambda: population(day))
         rec["population"] = {
             "present_source": str(MARKETS),
@@ -3424,6 +3672,75 @@ def selftest() -> int:
            "BE17: and the shape checker, which answers False for today's "
            "sealed pairs, answers TRUE for this feed -- the same function, "
            "two inputs, two answers")
+
+    # ---- ROUND 21: the frozen-contract gate is ON THE RUN PATH -----------
+    _fc = _emits_feed  # reuse the scoped-AST idiom
+    import ast as _ast2
+
+    def _gate_wired(src: str) -> bool:
+        t = _ast2.parse(src)
+        for n in _ast2.walk(t):
+            if isinstance(n, _ast2.FunctionDef) and n.name == "run_forward_day":
+                for c in _ast2.walk(n):
+                    if (isinstance(c, _ast2.Call)
+                            and isinstance(c.func, _ast2.Name)
+                            and c.func.id == "gate"
+                            and c.args
+                            and isinstance(c.args[0], _ast2.Constant)
+                            and c.args[0].value == "frozen_contract"):
+                        return True
+        return False
+
+    _src21 = Path(__file__).read_text()
+    ok(_gate_wired(_src21) is True,
+       "R21 POSITIVE CONTROL: `frozen_contract` is a REAL gate inside "
+       "`run_forward_day` -- the repair round 20 identified and deferred")
+    ok(_gate_wired(_src21.replace(
+        'rec["frozen_contract"] = gate("frozen_contract", frozen_contract_gate)',
+        "pass  # unwired")) is False,
+       "R21 KNOWN-BAD: with the gate call removed the same predicate returns "
+       "False, so the check above can fail")
+    _lb = manifest_keys_read_by_run_path()
+    ok(_lb["load_bearing_keys"] == ["hashes", "pin_semantics"],
+       f"R21: the load-bearing keys are DERIVED from the code reachable from "
+       f"`run_forward_day` ({_lb['load_bearing_keys']}, read by "
+       f"{sorted(set(sum(_lb['read_by'].values(), [])))}) -- not listed from "
+       f"a dispatch")
+    ok("emits_feed" not in _lb["load_bearing_keys"],
+       "R21: and the derivation is SCOPED -- an unscoped walk picked up "
+       "`emits_feed` out of this selftest, which has nothing to do with the "
+       "manifest")
+    ok(drift_is_fatal(["as_of_utc"], _lb["load_bearing_keys"]) is False
+       and drift_is_fatal(["hashes"], _lb["load_bearing_keys"]) is True,
+       "R21: the decision rule is DRIVEN BOTH WAYS -- metadata drift is not "
+       "fatal, a `hashes` drift is")
+    _md = manifest_drift_detail()
+    ok(_md["drifted"] is True and _md["drift_touches_the_run_path"] is False
+       and _md["keys_that_differ"] == ["as_of_utc", "git_commit", "git_dirty"],
+       f"R21: the LIVE drift is real and characterised, not papered over -- "
+       f"{_md['keys_that_differ']}, none load-bearing")
+    _g = frozen_contract_gate()
+    ok(_g["contract"] == "HOLDS"
+       and _g["all_anchors_match_at_freeze_commit"] is True
+       and _g["anchors_verified_at_freeze_commit"] > 0,
+       f"R21 POSITIVE CONTROL: the gate HOLDS, having verified "
+       f"{_g['anchors_verified_at_freeze_commit']} anchors AT THE FREEZE "
+       f"COMMIT -- the bytes the run actually executes")
+    ok(_g["n_working_tree_drift"] > 0 and _g["disclosed_not_waived"] is True,
+       f"R21: and it DISCLOSES {_g['n_working_tree_drift']} working-tree "
+       f"anchor drifts by name rather than hiding them "
+       f"({[d['anchor'].split('/')[-1] for d in _g['working_tree_drift']]}) -- "
+       f"wiring `assert_frozen_contract` verbatim would have refused every "
+       f"run on these, which the run does not depend on")
+    ok(_g["materialise_frozen_sources_from_the_freeze_commit"] is True,
+       "R21: and the REASON tree drift is survivable is asserted from "
+       "`materialise_frozen`'s own source, so it cannot quietly stop being "
+       "true")
+    _ = anchor_drift_root()
+    ok(_LAST_CONTRACT_REFUSAL is not None,
+       "R21: `anchor_drift_root` now RECORDS the contract's refusal instead "
+       "of `except Exception: pass` -- the file's only invocation of the "
+       "contract no longer throws its answer away")
 
     _selftest_launch(checks, ok)
     # BE5-R3: the audit is an ARTIFACT, not a report. Skipped in the audit's
