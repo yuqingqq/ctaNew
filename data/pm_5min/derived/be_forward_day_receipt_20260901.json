@@ -1,0 +1,379 @@
+{
+ "as_of_utc": "2026-09-02T13:24:05Z",
+ "blackout_accounting": {
+  "accounting": "ACCOUNTED LOSS (R-409): blackout windows are excluded from the score and COUNTED here, never silently dropped. The day accrues on its non-blackout complement.",
+  "day_governed": false,
+  "effective_from_day": "20260902",
+  "liveness": {
+   "is_resolved": false,
+   "is_thin": false,
+   "read_from": "content_liveness",
+   "status": "CONTENT_LIVENESS_UNRESOLVED"
+  },
+  "liveness_resolved": false,
+  "mask_artifact": "da_blackout_mask_v1",
+  "mask_as_of_utc": "2026-09-02T10:34:15Z",
+  "mask_day_closed_calendar": true,
+  "mask_detector": {
+   "authority": "USER ruling 2026-09-01, R-386",
+   "definition": "below thin_frac x the SAME-DAY (day, coin) median AND not overlapped by a gap-ledger interval",
+   "module": "da_content_liveness_rule",
+   "module_sha256_prefix": "7196676840304f30",
+   "thin_frac": 0.05,
+   "version": "v1_FROZEN"
+  },
+  "mask_path": "/home/yuqing/ctaNew/data/pm_5min/derived/da_blackout_mask_20260901.json",
+  "mask_present": true,
+  "mask_requirement_basis": "a mask is PRESENT and is CONSUMED for any day (R-411: presence consumes, governance requires); this day is PRE-GOVERNED against EFFECTIVE_FROM_DAY '20260902'",
+  "mask_total_masked_windows": 141,
+  "masked_fraction": {
+   "btc": 0.0,
+   "eth": 0.0
+  },
+  "masked_fraction_total": 0.0,
+  "n_actions_masked_total": 0,
+  "n_masked": {
+   "btc": 0,
+   "eth": 0
+  },
+  "n_windows_scored": {
+   "btc": 610064,
+   "eth": 441409
+  },
+  "ruling": "R-409 (USER, 2026-09-02)"
+ },
+ "coin_coverage": {
+  "coins_supplied": [
+   "bnb",
+   "btc",
+   "doge",
+   "eth",
+   "hype",
+   "sol",
+   "xrp"
+  ],
+  "coins_supplied_without_a_fit": [
+   "bnb",
+   "doge",
+   "hype",
+   "sol",
+   "xrp"
+  ],
+  "coins_with_a_frozen_fit": [
+   "btc",
+   "eth"
+  ],
+  "n_windows_supplied_without_a_fit": 1344,
+  "why": "the frozen candidate carries fits for ['btc', 'eth'] only. Windows of the other coins are supplied, replayed and counted, and produce NO score. The day is not scored whole and this says so."
+ },
+ "day": "20260901",
+ "day_verdict": {
+  "day_closed_calendar": true,
+  "write_reason": "scheduled unit run, da-midnight-verify.service (INVOCATION_ID=69ba0fae7ef84731832b9e2bfb50de2e)",
+  "write_reason_prefix_source": "da_governed_verdict_preflight.SCHEDULED_PREFIX"
+ },
+ "frozen": {
+  "anchors": {
+   "data/mm_hf/collector_runs.jsonl": {
+    "compared": false,
+    "source": "state_at_build",
+    "why": "pin_semantics marks this state_at_build; it MUST NOT be compared for equality when validating a reproduction"
+   },
+   "data/pm_5min/derived/harmful_exposure_rows_v3_eraB.json": {
+    "compared": true,
+    "materialised_to": null,
+    "sha256": "19a50195c34d0af21aba81b9f6b9501ea58656212d8448ddd8cc219da26d0f08",
+    "source": "disk (not tracked at the freeze commit; data/ is gitignored, so the manifest's sha is the only binding and it is checked here)",
+    "why_not_materialised": "a DATA anchor is verified by content where it lives; copying it into the run dir would shadow the data-root symlink the frozen code needs"
+   },
+   "live/pm_research/flow_fill_development.py": {
+    "compared": true,
+    "materialised_to": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/flow_fill_development.py",
+    "sha256": "d5f381cccdc4b7b6e12fa80d0c05947c8338bb0683cd7a0e58f74ac53074dce4",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/flow_intensity.py": {
+    "compared": true,
+    "materialised_to": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/flow_intensity.py",
+    "sha256": "e65c812fd42fc8d76c368ebbd6312c8cfbc86f06f2ed0ca726f38e69f783b367",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/harmful_action_eval.py": {
+    "compared": true,
+    "materialised_to": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/harmful_action_eval.py",
+    "sha256": "55ea57b995afdd4c46ae5909b40a9e64cc1b5092a358399dd36d8c7e03225a06",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/harmful_exposure_rows.py": {
+    "compared": true,
+    "materialised_to": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/harmful_exposure_rows.py",
+    "sha256": "8fb34b0319b0d5966938b6a9a9eddfc96d00a28a1aeaaef624e68aad12f9b9bf",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/harmful_hazard_model.py": {
+    "compared": true,
+    "materialised_to": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/harmful_hazard_model.py",
+    "sha256": "0091fe75c38af79ec8b6bf23c084916d2c9a139aa247847676f4fd6f2cbbfeca",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/harmful_rows_loader.py": {
+    "compared": true,
+    "materialised_to": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/harmful_rows_loader.py",
+    "sha256": "8b90c48cfe331e7184fdafdaea17ae9168e65eba0f0d4e3f802b250c92df2308",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/policy_bounds_v1.py": {
+    "compared": true,
+    "materialised_to": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/policy_bounds_v1.py",
+    "sha256": "717033ba3b571def77efb50a7ed8d2b4fffd1332df8213c487e2e750a06f0374",
+    "source": "git:1b53929"
+   }
+  },
+  "closure": {
+   "closure": [
+    "live/pm_research/adverse_feature_rows.py",
+    "live/pm_research/adverse_feature_rows_fast.py",
+    "live/pm_research/adverse_move_fast.py",
+    "live/pm_research/adverse_move_harmful.py",
+    "live/pm_research/adverse_move_hurdle.py",
+    "live/pm_research/adverse_move_nonlinear.py",
+    "live/pm_research/de_constraints.py",
+    "live/pm_research/edge_layer1.py",
+    "live/pm_research/flow_fill_development.py",
+    "live/pm_research/flow_intensity.py",
+    "live/pm_research/harmful_action_eval.py",
+    "live/pm_research/harmful_candidate_manifest.py",
+    "live/pm_research/harmful_exposure_rows.py",
+    "live/pm_research/harmful_hazard_model.py",
+    "live/pm_research/harmful_rows_loader.py",
+    "live/pm_research/inventory_walk.py",
+    "live/pm_research/layer2_v1.py",
+    "live/pm_research/placement_skew.py",
+    "live/pm_research/policy_bounds_v1.py",
+    "live/pm_research/policy_optimizer.py",
+    "live/pm_research/policy_optimizer_cancel_hold_skew.py",
+    "live/pm_research/policy_optimizer_cancel_skew.py",
+    "live/pm_research/policy_optimizer_queue_realistic.py",
+    "live/pm_research/skew_bound.py",
+    "live/pm_research/tier1_pipeline.py",
+    "live/pm_research/warning_window.py"
+   ],
+   "n_in_closure": 26,
+   "n_not_frozen": 2,
+   "not_frozen_in_closure": [
+    {
+     "path": "live/pm_research/tier1_pipeline.py",
+     "sha256_at_HEAD": "dd19c259a82b1ac1",
+     "sha256_at_freeze": "f918b9ecbb6b173f"
+    },
+    {
+     "path": "live/pm_research/warning_window.py",
+     "sha256_at_HEAD": "72abb33062bb647a",
+     "sha256_at_freeze": "d117923a7ca1700a"
+    }
+   ],
+   "why": "anchors execute from the run dir at 1b53929; every module in their import closure that is NOT an anchor executes at HEAD. Those whose bytes differ between HEAD and the freeze are named here \u2014 this run is not claiming they were frozen."
+  },
+  "data_root": {
+   "path": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/data",
+   "symlink_to": "/home/yuqing/ctaNew/data",
+   "why": "the frozen code derives its data root from __file__; the DATA is not frozen (it is the day being scored), so the run dir mirrors the repo's. Code from the freeze, data from today, and the receipt says which is which"
+  },
+  "frozen_commit": "1b53929",
+  "imports": {
+   "data_root_probe": {
+    "frozen_flow_intensity_PM": "/home/yuqing/ctaNew/data/pm_5min",
+    "n_archive_slugs": 28031,
+    "resolves_to_repo_data": true
+   },
+   "imported_from": {
+    "flow_fill_development": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/flow_fill_development.py",
+    "flow_intensity": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/flow_intensity.py",
+    "harmful_action_eval": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/harmful_action_eval.py",
+    "harmful_exposure_rows": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/harmful_exposure_rows.py",
+    "harmful_hazard_model": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/harmful_hazard_model.py",
+    "harmful_rows_loader": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/harmful_rows_loader.py",
+    "policy_bounds_v1": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research/policy_bounds_v1.py"
+   },
+   "n_imported": 7,
+   "sys_path_head": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen/live/pm_research"
+  },
+  "manifest": "harmful_candidate_manifest_v1.json",
+  "manifest_sha256_bound": "eb8733da2c8e2126d79e290c398d2ea65b8680721c29198a8219dd80098e04e4",
+  "n_compared": 8,
+  "root": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/frozen"
+ },
+ "gates": [
+  {
+   "gate": "day_closed_and_attributed",
+   "result": "PASS"
+  },
+  {
+   "gate": "population_supply_and_bridge",
+   "result": "PASS"
+  },
+  {
+   "gate": "materialise_frozen_bytes",
+   "result": "PASS"
+  },
+  {
+   "gate": "import_closure_disclosure",
+   "result": "PASS"
+  },
+  {
+   "gate": "import_anchors_from_run_dir",
+   "result": "PASS"
+  },
+  {
+   "gate": "selection_from_specs",
+   "result": "PASS"
+  },
+  {
+   "gate": "rows_and_scores_streamed",
+   "result": "PASS"
+  },
+  {
+   "gate": "reconciliation",
+   "result": "PASS"
+  },
+  {
+   "gate": "bridged_windows_equal_row_windows",
+   "result": "PASS"
+  },
+  {
+   "gate": "mask_seam_and_complement_report",
+   "result": "PASS"
+  }
+ ],
+ "masking": {
+  "applied_at": "supply (de_admissible_windows), before rows",
+  "n_masked_at_scoring": {
+   "btc": 0,
+   "eth": 0
+  },
+  "n_masked_at_supply": {
+   "bnb": 22,
+   "btc": 23,
+   "doge": 22,
+   "eth": 22,
+   "hype": 9,
+   "sol": 23,
+   "xrp": 20
+  },
+  "n_masked_total_at_supply": 141,
+  "why": "R-418 supplies PRESENT minus MASKED, so the blackout is already excluded when rows are built. A reader seeing 0 at the scoring seam must not conclude the day had no blackout."
+ },
+ "n_actions_scored": {
+  "btc": 610064,
+  "eth": 441409
+ },
+ "outcome": "SCORED",
+ "population": {
+  "counts_per_coin": {
+   "bnb": {
+    "n_masked": 22,
+    "n_present": 288,
+    "n_supplied": 266
+   },
+   "btc": {
+    "n_masked": 23,
+    "n_present": 288,
+    "n_supplied": 265
+   },
+   "doge": {
+    "n_masked": 22,
+    "n_present": 288,
+    "n_supplied": 266
+   },
+   "eth": {
+    "n_masked": 22,
+    "n_present": 288,
+    "n_supplied": 266
+   },
+   "hype": {
+    "n_masked": 9,
+    "n_present": 288,
+    "n_supplied": 279
+   },
+   "sol": {
+    "n_masked": 23,
+    "n_present": 288,
+    "n_supplied": 265
+   },
+   "xrp": {
+    "n_masked": 20,
+    "n_present": 288,
+    "n_supplied": 268
+   }
+  },
+  "governed": false,
+  "mask_consumed": true,
+  "mask_identity_hash": "8d05a091f9da2bdaf378a067ea080a1e9fe7164a307a5a33141fa8d566ba5f8d",
+  "n_bridged_specs": 1875,
+  "n_supplied_total": 1875,
+  "present_source": "/home/yuqing/ctaNew/data/pm_5min/markets.jsonl",
+  "ratification": {
+   "pair_asserted": {
+    "asserted": true,
+    "ref_seen": "R-419",
+    "unverifiable_seen": [],
+    "verified_seen": true
+   },
+   "ratification_ref": "R-419",
+   "unverifiable": [],
+   "verified": true
+  }
+ },
+ "producing_code": {
+  "carrying_commit": "248e99ffd03ab5c4d1d606568fdb4eb821a417a5",
+  "carrying_commit_resolved": true,
+  "driver": "be_forward_day.py",
+  "driver_sha256_prefix": "4a2c5e667b9765c0",
+  "working_tree_dirty": true
+ },
+ "protocol": "BE_FORWARD_DAY_SEALED_V1",
+ "ratification_ref": "R-419",
+ "rows": {
+  "boundary_time_violations": 0,
+  "consume_clock_violations": 0,
+  "n_actions": 1847824,
+  "n_rows": 2262457,
+  "n_windows": 1859,
+  "n_windows_with_rows": 1859,
+  "reconciliation_failures": 0,
+  "rows_without_features": 24,
+  "schema": "harmful_exposure_v3_4_fill_scoped_markout",
+  "unhooked_state_changes": 0,
+  "wrong_generation_assignments": 0
+ },
+ "sealed": true,
+ "sealed_file": {
+  "bytes": 54213086,
+  "contents": "per-action scores and the full complement report",
+  "not_in_receipt": "no metric, rho, net value or sign appears outside this file",
+  "path": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/be_forward_day_SEALED_scores_20260901.json",
+  "sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627"
+ },
+ "sealing_note": "per-action scores and every value metric are written to the sealed file only; this receipt carries counts, identities and hashes and NO metric (rule 11). Unsealing is the coordinator's or the USER's act.",
+ "selection": {
+  "n_selected": 1875,
+  "n_specs": 1875
+ },
+ "wall_seconds": 1576.0,
+ "window_agreement": {
+  "bridged_without_rows": 16,
+  "bridged_without_rows_examples": [
+   "doge-updown-5m-1788224400",
+   "eth-updown-5m-1788302700",
+   "hype-updown-5m-1788220800",
+   "hype-updown-5m-1788221100",
+   "hype-updown-5m-1788221400",
+   "hype-updown-5m-1788221700",
+   "hype-updown-5m-1788222300",
+   "hype-updown-5m-1788222600"
+  ],
+  "n_bridged": 1875,
+  "n_with_rows": 1859,
+  "note": "a bridged window with no rows is a window that produced no cancellable generation; it is COUNTED here, never dropped from the denominator"
+ }
+}

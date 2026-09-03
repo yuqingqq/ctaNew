@@ -1,0 +1,27 @@
+{
+ "as_of_utc": "2026-09-02T13:50:22Z",
+ "day": "20260902",
+ "gates": [
+  {
+   "gate": "day_closed_and_attributed",
+   "refusal_type": "ForwardDayRefused",
+   "result": "REFUSED",
+   "why": "REFUSED: 20260902 is not closed by calendar (day_closed_calendar=False). Scoring an OPEN day scores a population that is still growing."
+  }
+ ],
+ "outcome": "REFUSED",
+ "producing_code": {
+  "carrying_commit": "3f4f2e547aafb137601b9d4e4715708b2cab62aa",
+  "carrying_commit_resolved": true,
+  "driver": "be_forward_day.py",
+  "driver_sha256_prefix": "4a2c5e667b9765c0",
+  "working_tree_dirty": false
+ },
+ "protocol": "BE_FORWARD_DAY_SEALED_V1",
+ "ratification_ref": "R-419",
+ "refusal": "REFUSED: 20260902 is not closed by calendar (day_closed_calendar=False). Scoring an OPEN day scores a population that is still growing.",
+ "refused_at": "day_closed_and_attributed",
+ "sealed": true,
+ "sealing_note": "per-action scores and every value metric are written to the sealed file only; this receipt carries counts, identities and hashes and NO metric (rule 11). Unsealing is the coordinator's or the USER's act.",
+ "wall_seconds": 0.0
+}
