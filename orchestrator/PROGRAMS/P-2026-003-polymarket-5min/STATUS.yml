@@ -4,6 +4,85 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-03T04:08Z (MEM ROUND 72 -- THE WRITER EXCEPTION ENDS, AND THE THING IT
+  BROKE WAS THE RULE THAT SAYS WHAT THIS FIELD IS). R-495 and R-496 swept; I
+  resume as SOLE WRITER of STATUS.yml and HANDOFF.md; nothing run but read-only
+  reads at the artifacts. THREE USER RULINGS LANDED AT R-496 AND ALL THREE CHANGE
+  STATE I OWN. (1) 09-02 ACCRUES on its non-blackout complement per R-409, so G
+  GOES 1 -> 2 OF 5 -- verified at da_dayverdict_20260902.json rather than from the
+  entry: day_closed, day_quality_pass, era_admissible and post_freeze_pass ALL
+  TRUE and race_accrual_eligible TRUE at the day level AND in BOTH per_coin
+  blocks. (2) THE ADDENDUM V2 PACKAGE IS ADOPTED AS RECOMMENDED, all five asks,
+  with SECTION 1a DECLARED AS MECHANICS ON BOTH SPLITS, SPLITS LABELLED PER CELL
+  -- which closes THE DECLARATION HALF of the phase4-diagnostic and leaves only
+  the producer half (DE round 44). (3) A PARTIAL-DATA PROFITABILITY READ IS
+  PRE-DECLARED AND DISPATCHED: 08-29 primary, 08-30 a SEPARATELY LABELLED
+  secondary NEVER POOLED, both NAMED AS CONSUMED the moment they are opened.
+  Verified at their own verdicts: 08-29 is day_quality_pass TRUE, post_freeze
+  TRUE, era_pure TRUE on clob_v3_1, race_accrual_eligible FALSE -- A GOOD DAY THAT
+  CAN NEVER COUNT, so reading it costs the race nothing; 08-30 is post_freeze TRUE
+  but quality FALSE and era MIXED with a boundary at 2026-08-30T05:30:02.114727Z.
+  I WAS TOLD TO TRUST THE COORDINATOR'S WRITER-EXCEPTION EDITS LEAST AND CHECKED
+  THEM AT THE ARTIFACT, NOT AGAINST R-495'S ACCOUNT OF THEM: BOTH CORRECTIONS
+  HOLD. cells_by_status at the 188,119 B / 05:21:34Z artifact is 12 OK + 6
+  NO_INCUMBENT_COUNTERPART + 6 GATE_PARTIALLY_EVALUATED -- AND I COUNTED THE 24
+  CELLS MYSELF out of family.cells instead of reading the summary field, so the
+  field agrees with the cells it summarises; distinct_results gives declared_cells
+  24, distinct_overall 12, surviving_cells 12 and DISTINCT_SURVIVING_RESULTS 4;
+  and ALL 18 NON-Q4 CELLS carry ONE p (0.001996007984031936), ONE holm
+  (0.04790419161676646), at_permutation_floor TRUE and n_draws 500 -- checked AS
+  SETS, not by sampling one cell. ONE PRECISION THE CORRECTION'S SENTENCE DOES NOT
+  CARRY, AND THE ARTIFACT CARRIES IT ITSELF: "one draw the other way" collapses
+  the surviving set ONLY IF IT MOVES IN EVERY AT-FLOOR CELL. The cell separates
+  the two cases and says BOTH ARE RUN THROUGH THE REAL HOLM STEP-DOWN RATHER THAN
+  MULTIPLIED -- THIS_CELL_ONLY 0.0479 and still surviving, EVERY_at_floor_CELL
+  0.0958 and not -- because a single cell that moves SORTS BEHIND THE STILL-TIED
+  CELLS AND GETS A SMALLER MULTIPLIER (RR4-2). THE CORRECTION IS RIGHT AND ITS
+  SENTENCE IS THE WHOLE-FAMILY CASE WEARING THE ONE-DRAW CASE'S CLOTHES. Two more
+  off the same block: the 18 at-floor cells are the 12 survivors PLUS the 6 Q2
+  cells, and the artifact DISCLOSES ITS OWN NON-UNIFORM RESOLUTION (500 draws and
+  2,000) -- the head that survives and the head that fails were not measured at the
+  same resolution. THE THIRD CORRECTION IS THE COORDINATOR'S OWN AND I VERIFIED IT
+  AT BOTH ITS SOURCES: the content-liveness v2 freeze was NEVER an open USER
+  decision -- R-424 ruled it on 2026-09-02T11:55Z and
+  DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md reads FROZEN -- GOVERNING FROM
+  2026-09-03, EFFECTIVE_FROM_DAY 20260903, 09-02 judged on v1 ONLY. I DROVE THE
+  PREDICATE INSTEAD OF READING THE DATE: governs("20260902") False,
+  governs("20260903") True, wiring at da_forward_day_verify.py:801 with its
+  production call at :2278. THE COUNT THEREFORE MOVED TWICE -- FIVE to FOUR (that
+  item was never open) to ONE. THE ONLY OPEN USER DECISION IS THE PHASE-2 WINNER,
+  AND THE RACE DECIDES IT. THE FINDING OF MY OWN ROUND IS IN THE EDITS I WAS TOLD
+  TO DOUBT, AND IT IS THIS FIELD: THE RULED ROLLING WINDOW WAS BROKEN AND THE
+  PARAGRAPH THAT DEFINES IT WAS DELETED IN THE SAME EDIT. The consolidation
+  replaced three full entries with one condensed paragraph that ENDS MID-SENTENCE,
+  so ROUNDS 70 AND 69 LEFT STATUS.yml WITHOUT BEING MOVED TO
+  STATUS_UPDATED_ARCHIVE.md -- both ABSENT from the archive, which still ended at
+  Batch 77, and 51c4464 does not touch that file at all. The ruling (coordinator,
+  2026-08-28T10:02Z) says entries are "moved, never deleted" and that "nothing
+  here is dropped"; THE SENTENCE CARRYING THAT PROMISE WAS ITSELF REMOVED, so the
+  field then read as two entries with nothing left in it saying it should read as
+  three. REPAIRED IN THIS COMMIT: rounds 70 and 69 restored VERBATIM as ARCHIVE
+  BATCH 78, round 71 restored VERBATIM to the window's third slot in place of the
+  condensation, and the ARCHIVED paragraph put back. NOTHING WAS LOST -- both
+  narratives survive as dated HANDOFF entries and in git at d9b85ee -- BUT THE
+  ARCHIVE HAD STOPPED BEING ABLE TO RECONSTRUCT THE CHAIN IT PROMISES, WHICH IS
+  THE ONLY THING IT IS FOR. NAMED ONCE: A DOCUMENT THAT DESCRIBES ITS OWN
+  DISCIPLINE CAN LOSE THE DISCIPLINE AND THE DESCRIPTION IN ONE EDIT, AND
+  AFTERWARDS NOTHING IN IT IS WRONG. OBSERVED, NOT CLAIMED: at 04:03:06Z, WHILE I
+  WAS WORKING, be_forward_day_SEALED_scores_20260901.json APPEARED IN
+  data/pm_5min/derived/ at 54,213,086 B with its mtime preserved -- BE executing
+  R-496's relocation with its batch IN FLIGHT; no superseding receipt yet, and the
+  authoritative statement is BE'S RECEIPT, NOT MY LISTING. THE DURABILITY FINDING
+  VERIFIED AT THE RECEIPT ITSELF: the TRACKED receipt's sealed_file.path names a
+  DEAD SESSION'S /tmp SCRATCHPAD (32b9d1f8-...) and declares sha256 aca22317ab06,
+  which is exactly what I got hashing the 03:52Z backup; THE SEAL IS NOT OPENED.
+  SEQUENCING: BE round 13 in flight (relocation, the 08-29 free read OPENED, the
+  08-30 secondary, the 09-02 SEALED accrual run, opened and sealed strictly
+  separated by outdir); DE round 44 on the producer half with the split DECLARED;
+  DA round 21, its round-20 chain STILL HELD because all three files sit on the
+  path the 00:06Z unit executes; the reviewer on BE 12 with DA 20 queued behind
+  it. USER ITEMS: ONE.
+  PRIOR:
   2026-09-03T03:23Z (COORDINATOR, WRITER EXCEPTION R-495 -- FULL STOP AND
   CONSOLIDATION ON THE USER'S INSTRUCTION). All five seats halted 03:18Z; every
   seat's context cleared and re-loaded from the state files. STATUS.yml and
@@ -36,14 +115,62 @@ updated: >-
   dispatched against it. SEAT STATE AT THE STOP: BE clean at 669ef72; DA holds
   two unpushed commits 3c49cb7 -> a36db71; DE holds one unpushed WIP commit
   0d03902; MEM clean at d9b85ee; reviewer clean at cc4cfb9.
+  PRIOR:
+  2026-09-03T02:25Z (MEM ROUND 71 -- A BASELINE THAT DEPENDS ON WHOSE COMMIT CAME
+  LAST). R-494 and the reviewer's DA-20 filing swept; nothing run; every check at
+  the blob. THE DISPOSITION IS THE NARROWEST THIS PROGRAMME HAS ISSUED AND THE
+  SHAPE IS WORTH NAMING: HOLD FOR ONE ITEM, RELEASE THE REST -- not "hold the
+  round" and not "release with findings" but ONE ITEM HELD, EVERYTHING ELSE
+  RELEASED, with DA REBUILDING THE HELD CHAIN (still unpushed) RATHER THAN
+  PATCHING ON TOP OF IT. A HOLD THAT NAMES ONE ITEM IS A HOLD SOMEBODY CAN CLEAR;
+  A HOLD ON A ROUND IS A HOLD ON A SEAT. THE ROW-ONLY-TIP PROPERTY HAS NOW REACHED
+  THE REVIEWER'S OWN BASELINE AND I VERIFIED THE COUNTEREXAMPLE IS MINE: at
+  5a11ee9, my round-68 commit, the diff touches STATUS.yml, COORDINATION.md,
+  HANDOFF.md and the archive and EXACTLY ZERO of the four DA .py files
+  (intersection counted: 0), so the fixture's git add stages nothing, the commit
+  is EMPTY, and THE UNMUTATED PRE-ROUND MODULE IS RED at the CO-10 precondition
+  (DA18-R1 live) -- the reviewer's "unmutated 38 rc 0" therefore HOLDS ONLY WHERE
+  HEAD~1 DIFFERS IN THOSE FOUR FILES. THAT IS THE FOURTH APPEARANCE OF THIS
+  PROPERTY AND ITS MOST CONSEQUENTIAL FORM: round 65 named the wrong author on an
+  artifact, round 66 emptied a fixture commit, round 67 labelled a version by a
+  commit that did not author it, and ROUND 71 DECIDES WHETHER A CONTROL'S BASELINE
+  IS GREEN. A MEASUREMENT THAT IS TIP-CONDITIONAL IS NOT WRONG, IT IS
+  UNDER-SPECIFIED, AND THE MISSING CLAUSE IS WHICH COMMIT CAME LAST -- recorded so
+  that any future "it was green before" carries the tip it was green at. TWO
+  PREMISES WERE CORRECTED IN DIFFERENT DIRECTIONS THIS ROUND, WHICH IS THE SYSTEM
+  WORKING: the reviewer SUPERSEDED R-493's "run-twice alone" sentence IN-BAND as
+  too strong and drove LANDED RED by replacing the fixture's git add with git
+  status; and DA'S OWN "GREEN BEFORE" DOES NOT REPRODUCE, the CO-10-returning
+  mutant having been ALREADY RED at the DA16-R1 falsifier in the pre-round module
+  (DA20-R1). MY ROUND-70 MEASUREMENT IS NOW A FILED FINDING: both production
+  annotate_governance wirings remain deletable with 254 GREEN -- DA20-R2, MEDIUM,
+  AND THE ONE ITEM HELD -- travelling from an unruled coordinator measurement to a
+  reviewer finding to the single blocker on a chain WITHOUT ANYBODY DECIDING IT IN
+  PASSING; the closure asks for TWO RULE-15 FALSIFIERS, TAPE-INDEPENDENT. DA18-R1
+  IS CLOSED WITH THREE FALSIFIERS, and DA17-R1 and the host-load FORM with it,
+  while THE CLASS SCANS CAME BACK CLEAN -- no other silent shrink, no other
+  unnoticed wiring -- which is what turns three closures into a BOUNDED STATEMENT
+  rather than three anecdotes. ONE BOOKKEEPING INSTRUCTION IMPLEMENTED EXACTLY,
+  because getting it wrong would lose provenance: d37c3d9 and 0cd18ba REMAIN THE
+  HELD CHAIN NOW and become SUPERSEDED-UNPUSHED ONLY ONCE DA REPORTS THE NEW SHAS;
+  and Q-DA-216 KEEPS ITS NUMBER since the row never landed -- nothing to
+  supersede, only to correct, with the superseded unpushed shas named as
+  provenance. UNCHANGED: nothing on the unit path moves; the 09-04 00:06Z run is
+  on the landed chain either way; DA 20's landing is AFTER FRI 2026-09-04 00:06:00
+  UTC, ON THE REBUILT CHAIN, AFTER THE REVIEWER'S ONE-ITEM ROUND; DE rests at
+  5658f24; BE 12 in flight; the reviewer on standby until DA's rebuilt READY or BE
+  12, whichever first. USER ITEMS: FIVE, UNCHANGED -- the 09-02 accrual (R-486
+  recommends ACCRUE, UNRULED), the Phase-2 winner, the content-liveness v2 freeze,
+  the addendum v2 package (five asks; runner at 5658f24, RELEASED), the 09-04 run
+  on the landed chain (no pin, no install). UNCHANGED: the 011 family 12 of 24
+  with Q4 failing; the sequencing rule; R-419 revocable.
 
-  PREVIOUSLY (MEM ROUND 71, 2026-09-03T02:25Z -- A BASELINE THAT DEPENDS ON
-  WHOSE COMMIT CAME LAST): R-494 and the reviewer's DA-20 filing swept; nothing
-  run; every check at the blob. HOLD FOR ONE ITEM, RELEASE THE REST, with DA
-  REBUILDING THE HELD CHAIN rather than patching on top of it. The row-only-tip
-  property reached the reviewer's own baseline: at 5a11ee9 the diff touches
-  STATUS.yml, COORDINATION.md, HANDOFF.md and the archive and EXACTLY ZERO of
-  the four DA .py files (intersection counted: 0)
+  ARCHIVED: entries older than these three are moved, never deleted, to
+  workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
+  ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
+  each sweep moves the overflow to the archive in the SAME commit, so it
+  never regrows. Nothing here is dropped -- if a reader needs the full
+  chain it is in the archive and in git history.
 flags:
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-SECTION-10
                              # USER correction, documented 2026-09-01T03:49:46Z.
@@ -3644,7 +3771,7 @@ flags:
   de31_r1_de32_r3_not_dispatched: "round 34 unless the round-33 tip carries them"
   de_r32_shell_not_runner: "e52d183 released as declaration + instruments, NOT as a producer"
   phase4_cap2_unenforced_at_e52d183: "protocol :41-45 has it; addendum 0 hits; tranche_table never called"
-  phase4_run_when: "STILL NO DATE, and the conditions that once defined it HAVE ALL HAPPENED: DE is at round 41, the reviewer has read through round 40, section 5 is settled and the package is FORWARDED. What now gates the run is THE USER'S ANSWER to the addendum v2 asks -- nothing runs before it. Declared OUTDIR only. (The withdrawn 'earliest 09-03' is dated history: 09-03 arrived on 2026-09-03 and the run did not.)"
+  phase4_run_when: "SUPERSEDED-BY-r496_three_user_rulings (MEM round 72). THE DECLARATION HALF IS NOW CLOSED: the addendum v2 package is ADOPTED (R-496) and section 1a is DECLARED as MECHANICS ON BOTH SPLITS with splits labelled per cell, so the run is no longer gated on a USER answer. WHAT REMAINS IS THE PRODUCER HALF -- the feature assembly wired in DE round 43 and continuing as ROUND 44 -- plus the cost, still UNMEASURED for the assembly. Declared OUTDIR only, and it still does not exist. STILL NO DATE."
   reviewer_da_r17_released: "e353119 (f4c7734); DA17-R1 behind DA landing"
   de_r33_code_tip: "6d04833 18:20:40Z; row Q-DE-51 landed at 2b72d02, FILED not verified"
   de_r33_verified_short: "6d04833; nine findings DE33-C1..C9, three HIGH; Q-DE-51 = VERIFIED-SHORT"
@@ -3658,7 +3785,7 @@ flags:
   be_durable_landing_is_round_11: "after the 00:14Z read AND after round 10 lands"
   repo_constant_four_symptoms: "BE34-R3, BE7-R4, BE9-C1, BE9-C2 all from REPO hardcoded; round 6 fixed a USE"
   reviewer_be_r8_released: "c54e48e (f804f33); CO-12 and CO-13 CONFIRMED CLOSED; two LOW"
-  user_addendum_v2_bundle: "FORWARDED TO THE USER at 35452c0 (R-484); DRAFT sha cb693000880c3d94, 307 lines, DELTA +17 -0 against cd93663 -- sha and line count VERIFIED BY MEM AT THE BLOB, and a purely ADDITIVE delta means the text the reviewer released is still LINE FOR LINE inside the text the USER reads. RELEASED by the reviewer at 650569c (conditions (i)-(iv) all met). THE FIVE ASKS WITH THE USER: 1 the horizon; 2 theta_repost and 3 REPOST_DWELL_S -- PAIRS OR FIXED; 4 inf PLUS the identity; 5 repost parity WITH the enable_reduce clause; and 1a TRAIN/SCORE RULED WITH 2 AND 4, not separately. AWAITING THE USER. THE RUN HAS NO DATE THE REVIEWER HAS PRICED ASK (5) PER ANSWER -- ITS ESTIMATE, NOTHING DECIDED (rule 14), R-485 + c3f8743: answering MECHANICS costs ONE FIELD, ONE REFUSAL, ONE FALSIFIER; answering the score-split costs A ROUND AND A RE-DECLARATION THAT TRAVELS BACK TO THE USER -- one branch of the answer ends in another question for the same person."
+  user_addendum_v2_bundle: "SUPERSEDED-BY-r496_three_user_rulings (MEM round 72). ADOPTED AS RECOMMENDED AT R-496, ALL FIVE ASKS, 2026-09-03T03:57Z: 1a the split = MECHANICS ON BOTH SPLITS with splits labelled per cell; 2 theta_repost and 3 REPOST_DWELL_S keep the seat values with sensitivity pairs reported and NEITHER SELECTED; 4 the inf handling plus the identity, and 5 repost parity, adopted. Provenance kept: FORWARDED at 35452c0 (R-484), DRAFT sha cb693000880c3d94, 307 lines, delta +17 -0 against cd93663 -- verified by MEM at the blob, and a purely ADDITIVE delta means the released text is still line for line inside what the USER read. Released by the reviewer at 650569c."
   est_r1_r5_open: "EST-R1/R2 HIGH, R3/R4/R5 MED -> DE round 35; rho denominator is MEASURED at DRAFT:212-213"
   addendum_declares_no_horizon: "grep horizon in the addendum = 0 hits; the receipt binds one, the addendum declares none"
   de_r34_executed_counts_as_filed: "47a2ba6 (Q-DE-52 68f63aa); four closed, C1 half-closed, five named open; DE34-C1..C4"
@@ -3707,7 +3834,7 @@ flags:
   de39_r2_open: "LOW: len(_ca) == 1 at :2492 encodes today's single changed_at -- group by it. The coordinator had it as NOTED, NOT A FINDING; THE REVIEWER'S READING WAS ADOPTED"
   reviewer_de_r39_released: "650569c 22:55:56Z, 194 lines; EVERY DE38 closure CONFIRMED, each DRIVEN; the six literals verified at BOTH sides of 851edaf by the reviewer's own _fn_asts -- a THIRD independent parser on that seal"
   de_r40_executed: "35452c0 (Q-DE-58): counts 31/119/26/21/26/21/184/92; rulings (i)(ii)(iii), DE39-R1 and DE39-R2 ALL DRIVEN, plus the IN-SUITE REORDERING INVARIANCE; runner 3f4bf21da2dfa188 (3,329 lines, EXPECTED_CHECKS = 119) -- verified by MEM at the blob"
-  user_pending_five: "(1) the 09-02 ACCRUAL on its complement -- the USER's call per R-409, with R-486 RECOMMENDING ACCRUE and UNRULED; (2) the Phase-2 winner; (3) the content-liveness v2 freeze; (4) the addendum v2 package, FORWARDED; (5) the 09-04 run on the LANDED chain -- A FACT WITH A RECOMMENDATION, not a request for a number"
+  user_pending_five: "SUPERSEDED-BY-user_pending_one (MEM round 72, 2026-09-03T04:08Z). The five were: (1) the 09-02 accrual -- RULED ACCRUE at R-496; (2) the Phase-2 winner -- STILL OPEN, the only one; (3) the content-liveness v2 freeze -- RULED AT R-424 ON 2026-09-02, so this flag was STALE FROM THE MOMENT IT WAS WRITTEN (see v2_freeze_was_never_an_open_user_item); (4) the addendum v2 package -- ADOPTED IN FULL at R-496; (5) the 09-04 run on the LANDED chain -- a fact with a recommendation, not a request for a number."
   first_governed_verdict_landed: "00:06Z (09-03) unit fired status 0; 09-02 verdict sha16 6f283262df463957 as_of 2026-09-03T00:06:01.399260Z, race_accrual_eligible TRUE for btc and eth; mask sha16 0bac652c44fba8f2 with 251 masked across 7 coins, ALL CONTENT_THIN (btc 40, eth 40, xrp 40, sol 39, bnb 38, doge 38, hype 16); preflight 10/10 GOVERNED_VERDICT_COMPLETE at 00:14:17Z -- all re-derived at the blobs by MEM"
   receipts_of_record_in_git: "BE round 11 fc70b17 (Q-BE-236): 4000106752f816e4 14,022 B and 0907b0369e14d77b 1,123 B, BYTE-IDENTICAL, re-hashed from the commit -- the 09-01 race score has moved from a /tmp scratchpad to a TRACKED artifact"
   da_r18_landed: "c511750 (Q-DA-214): the held chain REBASED WITH NO CONTENT MOVED (21de639...7792fb5), plus the tracked 09-02 verdict and the force-added 09-02 mask"
@@ -3855,8 +3982,129 @@ flags:
     both collectors live. E2.0 is the notional-weighted true-mid recompute that
     voids or settles ADA; E2-A resolves the overlay bracket with real books.
     NOTHING IS DISPATCHED AGAINST IT.
+  r496_three_user_rulings: >-
+    R-496, 2026-09-03T03:57Z, all three read at the entry and each verified at
+    its own artifact by MEM. (1) 09-02 ACCRUES on its non-blackout complement
+    per R-409 -- G goes 1 -> 2 of 5. (2) THE ADDENDUM V2 PACKAGE IS ADOPTED AS
+    RECOMMENDED, all five asks: section 1a the split = MECHANICS ON BOTH SPLITS
+    with splits labelled per cell; section 2 theta_repost and section 3
+    REPOST_DWELL_S keep the seat's values with sensitivity pairs reported and
+    NEITHER SELECTED; section 4 the inf handling plus the identity, and section
+    5 repost parity, adopted. (3) A partial-data profitability read on 08-29
+    (primary) and 08-30 (labelled secondary) is PRE-DECLARED and dispatched to
+    BE. With these, ONE USER decision remains open: the Phase-2 winner.
+  accrual_20260902_ruled_g2_of_5: >-
+    VERIFIED BY MEM AT da_dayverdict_20260902.json, not from the entry: all four
+    conjuncts TRUE (day_closed, day_quality_pass, era_admissible,
+    post_freeze_pass) and race_accrual_eligible TRUE at the day level AND in
+    BOTH per_coin blocks (btc, eth). Content liveness read CONTENT_THIN 7 of 7
+    coins and is DISCLOSED AND MASKED (251 windows), not a HEALTHY veto (R-409).
+    The race stands at G = 2 of 5; earliest possible G=5 is ~09-06 and only if
+    every day accrues.
+  partial_data_profitability_read_declared: >-
+    R-496 (C)(D). 08-29 PRIMARY: verified at da_dayverdict_20260829.json --
+    day_quality_pass TRUE, post_freeze_pass TRUE, era_pure TRUE on clob_v3_1,
+    boundaries_inside_day [], era_admissible FALSE, race_accrual_eligible FALSE.
+    A GOOD DAY THAT CAN NEVER ACCRUE for a ruled reason unrelated to its
+    economics, so reading it costs the race ZERO days. CAVEAT THAT MUST APPEAR
+    IN THE RESULT: 08-29 runs on collector era clob_v3_1, TWO surface
+    generations behind the race's clob_v4_1. 08-30 SECONDARY, labelled and never
+    pooled: post_freeze TRUE, quality FALSE, era MIXED (clob_v3_1 + clob_v4,
+    boundary 2026-08-30T05:30:02.114727Z). Decision metric = net cents against
+    the incumbent, de-duplicated to ACTIONS, valued only after t + L; secondary
+    rho = adverse/spread; control matched on action count, side and hour;
+    nulls >= 200 draws, target 2,000 sign-flip; cluster disclosure G = 1,
+    unit used window against the ruled UTC day, POINT ESTIMATE AND NO INTERVAL.
+    RULE 11: THIS IS A READ, NOT A SELECTION -- both days are NAMED AS CONSUMED
+    the moment they are opened and no later work may validate on them.
+    09-01 and 09-02 STAY SEALED.
+  mem72_verified_the_writer_exception_edits: >-
+    MEM round 72 checked the coordinator's R-495 (J) edits AT THE ARTIFACT
+    rather than against R-495's account of them, because the seat that made them
+    is the seat that would not have caught itself. BOTH ITER-011 CORRECTIONS
+    HOLD. cells_by_status at the 188,119 B / as_of 2026-09-02T05:21:34Z artifact
+    = 12 OK + 6 NO_INCUMBENT_COUNTERPART + 6 GATE_PARTIALLY_EVALUATED, AND THE
+    24 CELLS WERE COUNTED OUT OF family.cells RATHER THAN READ FROM THE SUMMARY
+    FIELD (the field agrees with the cells it summarises). distinct_results:
+    declared_cells 24, distinct_overall 12, surviving_cells 12,
+    distinct_surviving_results 4. All 18 non-Q4 cells carry ONE p value
+    0.001996007984031936, ONE holm 0.04790419161676646, at_permutation_floor
+    TRUE and n_draws 500 -- checked AS SETS, not by sampling one cell. Q4's best
+    is one-sided p 0.01999 -> holm 0.1199 at composed_linear/10%, NOT at a floor
+    (n_draws 2,000), so that one is a measurement.
+  iter011_one_draw_precision_mem72: >-
+    A PRECISION THE CORRECTION'S SENTENCE DOES NOT CARRY, read off the cell's
+    own permutation_floor block: "one draw the other way" collapses the
+    surviving set ONLY IF IT MOVES IN EVERY AT-FLOOR CELL.
+    holm_if_ONE_draw_beat_it_in_THIS_CELL_ONLY = 0.0479 with
+    survives_if_THIS_CELL_ONLY_moved TRUE; holm_if_ONE_draw_beat_it_in_EVERY_
+    at_floor_CELL = 0.0958 with survives_if_EVERY_at_floor_cell_moved FALSE --
+    a single cell that moves SORTS BEHIND THE STILL-TIED CELLS and gets a
+    SMALLER MULTIPLIER (RR4-2), and the artifact states both numbers are run
+    through the REAL HOLM STEP-DOWN, not obtained by multiplying. Two more from
+    the same block: the 18 at-floor cells are the 12 survivors PLUS the 6 Q2
+    cells, and draw_counts_are_not_uniform [500, 2000] -- the head that survives
+    and the head that fails were NOT measured at the same resolution, which the
+    artifact discloses and refuses to correct after the fact (rule 11).
+  v2_freeze_was_never_an_open_user_item: >-
+    RESULTS.md section 7 item 3 ("content-liveness v2 freeze -- open") is FALSE;
+    the coordinator's own in-band correction at R-496 (F), verified by MEM at
+    BOTH sources. R-424 (2026-09-02T11:55Z) adopted R-408(3), and
+    plans/DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md reads "STATUS: FROZEN --
+    GOVERNING FROM 2026-09-03" with EFFECTIVE_FROM_DAY = 20260903 and the 09-02
+    closing verdict on v1 ONLY. MEM DROVE THE PREDICATE INSTEAD OF READING THE
+    DATE: da_content_liveness_v2_check.governs("20260902") False,
+    governs("20260903") True; frozen constants FROZEN_BY_USER True,
+    CONTENT_DARK_GOVERNS True, RESTATE_20260826_HYPE False; wiring
+    content_liveness_v2_for at da_forward_day_verify.py:801 with its production
+    call at :2278, governance decided by the v2 module's own predicate rather
+    than by a date restated in the consumer.
+  user_pending_one: >-
+    ONE OPEN USER DECISION after R-496: THE PHASE-2 WINNER, and the forward race
+    decides it. The other four are closed -- the 09-02 accrual RULED ACCRUE
+    (R-496 E), the addendum v2 package ADOPTED in full (R-496 E), the
+    content-liveness v2 freeze RULED AT R-424 on 2026-09-02 and never actually
+    open after that date, and the 09-04 00:06Z run a FACT WITH A RECOMMENDATION
+    (no pin, no install) rather than a request for a number.
+  status_rolling_window_broken_and_repaired: >-
+    MEM ROUND 72 FINDING, in the writer-exception edits themselves. The ruled
+    rolling window of THREE (coordinator, 2026-08-28T10:02Z) was replaced at
+    51c4464 by the coordinator's own entry plus ONE CONDENSED PARAGRAPH THAT
+    ENDS MID-SENTENCE, so the round-70 and round-69 entries LEFT STATUS.yml
+    WITHOUT BEING MOVED to workspace/STATUS_UPDATED_ARCHIVE.md -- both verified
+    ABSENT from the archive, which still ended at Batch 77, and 51c4464 does not
+    touch that file at all. The ARCHIVED paragraph carrying the
+    "moved, never deleted / nothing here is dropped" rule was deleted in the
+    same edit, so the field then read as two entries with nothing left in it
+    saying it should read as three. REPAIRED IN THE ROUND-72 COMMIT: rounds 70
+    and 69 restored VERBATIM from d9b85ee as ARCHIVE BATCH 78 (verbatim
+    confirmed alnum-normalised, present in the archive and absent from
+    STATUS.yml), round 71 restored VERBATIM to the window's third slot in place
+    of the condensation, and the ARCHIVED paragraph put back. Nothing was lost
+    -- both narratives also exist as dated HANDOFF entries and in git -- but the
+    archive had stopped being able to reconstruct the chain it promises, which
+    is the only thing it is for. CLASS: A DOCUMENT THAT DESCRIBES ITS OWN
+    DISCIPLINE CAN LOSE THE DISCIPLINE AND THE DESCRIPTION IN ONE EDIT, AND
+    AFTERWARDS NOTHING IN IT IS WRONG.
+  sealed_0901_durability_and_relocation: >-
+    R-496 (B), stop-the-line, verified by MEM at the receipt rather than from
+    the entry: the TRACKED receipt data/pm_5min/derived/
+    be_forward_day_receipt_20260901.json declares sealed_file.path
+    /tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-.../scratchpad/fwd5/... --
+    A DEAD SESSION'S SCRATCHPAD -- with bytes 54,213,086 and sha256
+    aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627; outcome
+    SCORED; sealing_note "this receipt carries counts, identities and hashes and
+    NO metric (rule 11)". MEM hashed the 03:52:48Z backup at
+    ~/ctaNew_sealed_backup/ and got EXACTLY that sha; THE SEAL IS NOT OPENED.
+    OBSERVED, NOT CLAIMED: at 04:03:06Z, during MEM's round,
+    be_forward_day_SEALED_scores_20260901.json APPEARED under
+    data/pm_5min/derived/ at 54,213,086 B with its mtime preserved -- BE
+    executing the relocation with its batch IN FLIGHT. No superseding receipt
+    exists yet; the authoritative statement is BE'S RECEIPT, not MEM's listing.
+    CLASS: a sealed artifact whose only copy is in a session-scoped temp
+    directory is one /tmp sweep from voiding a race day.
 focus: >
-  As-of 2026-09-03T02:25Z, build and test the offline model mechanism-first
+  As-of 2026-09-03T04:08Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3899,7 +4147,9 @@ focus: >
   exclude-if-thin recommendation; the mask is a producer-to-consumer contract
   (R-410..R-412) and 09-01's carries 141 windows. FOUR items remain
   USER-pending: the Phase-2 winner, the v2 freeze, the minimum complement for
-  G-counting, and the P1 denominator on the complement. THE 10:16Z INCIDENT is
+  G-counting, and the P1 denominator on the complement. [SUPERSEDED 2026-09-03,
+  MEM round 72: all four were ruled -- the v2 freeze and both numbers at R-424
+  on 2026-09-02, the Phase-2 winner alone still open.] THE 10:16Z INCIDENT is
   closed by recovery: two canonical 00:06Z verdicts were overwritten by a
   mis-named hand run and restored byte-exact from DA's launcher log, with
   supersedes+restored provenance rather than byte-identity (rule 13); the
@@ -3909,7 +4159,10 @@ focus: >
   introduced, USER-revocable), and DA's two-leg admission deviation is ACCEPTED
   because it removes an outage mode the single-leg order would have introduced.
   USER decisions are now FIVE: the four above plus the 09-02 accrual call after
-  tonight. R-419 SUPERSEDES R-418 in-band with the content unchanged, restating
+  tonight. [SUPERSEDED 2026-09-03T04:08Z, MEM round 72: the count is now ONE.
+  R-424 ruled the v2 freeze and both numbers on 2026-09-02; R-496 ruled the
+  09-02 accrual (ACCRUE) and adopted the addendum v2 package in full on
+  2026-09-03. Only the PHASE-2 WINNER remains, and the forward race decides it.] R-419 SUPERSEDES R-418 in-band with the content unchanged, restating
   the ratification in an adopted block format that binds scope_from 20260901;
   CO-4 showed that an entry merely ABOUT a ratification verifies from prose, and
   DE round 9 CLOSED it (CO-5 open to round 10). THE FREEZE IS COMMIT 1b53929 and
@@ -4006,9 +4259,14 @@ focus: >
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an
   integrated candidate freeze remain downstream. clob_v4_1 has run since
-  2026-08-31T22:00Z. 08-31 is a mixed-era BTC quality failure. 09-01 is the
-  first era-pure admissible v4.1 day and provisionally passes its governing v2
-  quality bars, but it is incomplete; forward reach is therefore G=0/5.
+  2026-08-31T22:00Z. 08-31 is a mixed-era BTC quality failure. 09-01 was the
+  first era-pure admissible v4.1 day and ACCRUED; 09-02 ACCRUES TOO on its
+  non-blackout complement (USER ruling, R-496 E, verified by MEM at the day
+  verdict), so FORWARD REACH IS NOW G = 2 OF 5 and the earliest possible G=5 is
+  ~09-06, only if every day accrues. NO FORWARD PROFITABILITY NUMBER HAS BEEN
+  READ: 09-01's scores are SEALED and unopened, and the R-496 partial-data read
+  runs on 08-29 (free, never-accruable) and 08-30 (labelled secondary), both
+  NAMED AS CONSUMED when opened.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -4351,21 +4609,71 @@ tasks:
   - id: e3-screen
     phase: 2
     name: Hazard plan §10.9 — unchanged forward scoring on >=5 complete days
-    status: blocked-awaiting-qualifying-complete-v4_1-days-G1-of-5
+    status: blocked-awaiting-qualifying-complete-v4_1-days-G2-of-5
     notes: |
-      UPDATED 2026-09-03T03:23Z (R-495): G = 1 of 5. 09-01 ACCRUED -- the
-      first day this race has ever counted, four conjuncts recomputed rather
-      than read back, and BE scored it (610,064 btc + 441,409 eth actions,
-      outcome SCORED; the scores are SEALED and unread per rule 11). 09-02's
-      GOVERNED verdict landed from the 00:06Z unit with race_accrual_eligible
-      true; the accrual itself is the USER's call (R-486 (6)) and is OPEN. The
-      separate BTC hazard seed is frozen but marked unvalidated; no integrated
-      candidate is frozen. 08-29 is era-inadmissible, 08-30 and 08-31 do not
-      accrue. Earliest possible G=5 is ~09-06 and only if every day accrues.
+      UPDATED 2026-09-03T04:08Z (MEM round 72, sweeping R-496): G = 2 OF 5.
+      09-01 ACCRUED -- the first day this race ever counted, four conjuncts
+      recomputed rather than read back, and BE scored it (610,064 btc + 441,409
+      eth actions, outcome SCORED; the scores are SEALED and unread per rule
+      11). 09-02 NOW ACCRUES TOO: the USER ruled it at R-496 (E) on the
+      recommendation of record (R-486), accruing on its NON-BLACKOUT COMPLEMENT
+      per R-409 with 251 windows masked as accounted loss. VERIFIED BY MEM AT
+      da_dayverdict_20260902.json rather than read back: day_closed,
+      day_quality_pass, era_admissible and post_freeze_pass ALL TRUE and
+      race_accrual_eligible TRUE at the day level AND in both per_coin blocks.
+      BE's 09-02 receipt is a REFUSAL written before the day closed and is
+      re-run SEALED in the current round. The separate BTC hazard seed is frozen
+      but marked unvalidated; no integrated candidate is frozen. 08-29 is
+      era-inadmissible, 08-30 and 08-31 do not accrue -- 08-29 and 08-30 are
+      instead the population of the R-496 partial-data profitability READ, which
+      consumes no race day (see task partial-data-profitability-read).
+      Earliest possible G=5 is ~09-06 and only if every day accrues.
+  - id: partial-data-profitability-read
+    phase: 2
+    name: R-496 partial-data profitability read — 08-29 primary (free), 08-30 labelled secondary
+    status: pre-declared-2026-09-03-dispatched-to-BE-no-result-read
+    notes: |
+      RULED BY THE USER AT R-496 on 2026-09-03 ("i want to launch a round to
+      check the profitability first using partial data"), after the coordinator
+      answered that NO FORWARD PROFITABILITY NUMBER HAS EVER BEEN READ: the
+      09-01 receipt carries outcome SCORED, ten of ten gates PASS and NO METRIC
+      AT ALL, its own sealing_note reserving unsealing to the coordinator or the
+      USER, and the seal is intact and unopened.
+      POPULATION AND WHY IT IS FREE, verified by MEM at the day verdicts rather
+      than read back: 08-29 is day_quality_pass TRUE, post_freeze_pass TRUE,
+      era_pure TRUE on clob_v3_1, boundaries_inside_day [], era_admissible FALSE
+      and race_accrual_eligible FALSE -- a healthy post-freeze out-of-sample day
+      that can NEVER accrue for a ruled reason unrelated to its economics, so
+      reading it consumes NOTHING THE RACE WAS EVER GOING TO USE. 08-30 is
+      post_freeze TRUE, quality FALSE, era MIXED (clob_v3_1 + clob_v4, boundary
+      2026-08-30T05:30:02.114727Z): admissible only as a SEPARATELY LABELLED
+      secondary, NEVER POOLED. 09-01 and 09-02 STAY SEALED.
+      THE CAVEAT THAT MUST APPEAR IN THE RESULT: 08-29 runs on collector era
+      clob_v3_1, TWO surface generations behind the race's clob_v4_1. The read
+      is out-of-sample in time and free in race-days, and it is NOT measured on
+      the surface the race uses; whether the surface moves the economics is
+      UNKNOWN and is not assumed in either direction.
+      NUMBERS OF RECORD, DECLARED BEFORE ANY RESULT (rule 6): decision metric
+      NET CENTS AGAINST THE INCUMBENT, de-duplicated to ACTIONS (rule 2), every
+      tranche valued at its own time and level (rule 3) and only after t + L
+      (rule 7); secondary rho = adverse/spread; control matched on ACTION COUNT,
+      SIDE AND HOUR and compared on the DECISION metric, never on a proxy;
+      nulls = matched-random AND incumbent-increment, minimum 200 draws, TARGET
+      2,000 SIGN-FLIP so the result is a measurement and not a floor; cluster
+      disclosure stamped in the artifact (ruled unit UTC day, G = 1 for the
+      primary, unit used window, weaker_than_ruled true, intervals_claimable
+      false) so it is a POINT ESTIMATE WITH NO INTERVAL (rule 8); multiplicity
+      declared before the read and Holm applied over it; skill reported
+      incremental to the INCUMBENT (rule 9); exclusions as statuses with counts
+      (rule 4); predicates computed, no verdict string printed (rule 10).
+      RULE 11, THE CLAUSE THAT PROTECTS EVERYTHING DOWNSTREAM: THIS IS A READ,
+      NOT A SELECTION. No parameter, threshold, horizon, budget, feature subset
+      or candidate may be chosen on 08-29 or 08-30, and both days are NAMED AS
+      CONSUMED at the moment they are opened.
   - id: phase4-diagnostic
     phase: 2
     name: R-459 Phase-4 diagnostic — ONE execution of the frozen protocol on its §3 CONSUMED population
-    status: never-ran-producer-step-unbuilt-and-split-undeclared
+    status: never-ran-split-DECLARED-at-R-496-producer-step-in-DE-round-44
     notes: |
       RULED BY THE USER AT R-459 ("Yes schedule this test") on 2026-09-02
       ~17:18Z: ONE diagnostic execution, head under test Q1_arrival of
@@ -4379,6 +4687,11 @@ tasks:
       PA._feature_pass over 1,135,943 rows) has never been executed for this
       diagnostic, and the §3 population spans BOTH fit splits, a declaration
       nobody has made.
+      UPDATE 2026-09-03T04:08Z (MEM round 72): ONE OF THE TWO BLOCKERS IS
+      CLOSED. The USER ADOPTED the addendum v2 package in full at R-496 (E) and
+      SECTION 1a IS DECLARED: MECHANICS ON BOTH SPLITS, SPLITS LABELLED PER
+      CELL. The population statement is therefore settled and no seat chose it.
+      WHAT REMAINS IS THE PRODUCER HALF ALONE, continuing as DE ROUND 44.
       TWO BLOCKERS, ONE OF EACH KIND: (a) the producer step -- the
       coordinator's omission, never dispatched while rounds 33-42 hardened the
       runner's instruments (necessary work: round 33 would have fed ~29 min and
@@ -4389,6 +4702,9 @@ tasks:
       cell, or restricted to the `score` split (population shrinks from
       1,764,206 to 638,917 rows and §3's counts change). Filed as addendum-v2
       ask 1a, to be ruled WITH asks 2 and 4.
+      RULED 2026-09-03T03:57Z (R-496 E): MECHANICS ON BOTH SPLITS, SPLITS
+      LABELLED PER CELL -- the first branch, as recommended. Blocker (b) is
+      CLOSED; blocker (a) is not.
       COST, AS FAR AS KNOWN: the feed is MEASURED at ~28.6 min for the §3
       population, both coins. The feature assembly is UNMEASURED. One
       arm_result is unmeasured on real data with a floor of 0.007 s; 200 draws

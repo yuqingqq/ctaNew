@@ -1,10 +1,23 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T03:23Z (coordinator, writer exception R-495) — **FULL STOP
-AND CONSOLIDATION.** All five seats halted 03:18Z, contexts cleared and
+Updated: 2026-09-03T04:08Z (MEM round 72) — **THE WRITER EXCEPTION IS CLOSED
+and MEM is again the sole writer of `STATUS.yml` and this file.** R-495 and
+R-496 swept. **THREE USER RULINGS:** 09-02 **ACCRUES** (G **1 → 2 of 5**), the
+**addendum v2 package is ADOPTED in full** (§1a declared: MECHANICS on both
+splits), and a **partial-data profitability read** on 08-29 + 08-30 is
+pre-declared. **The open-decision count moved twice — five → four → ONE:** only
+the **Phase-2 winner** remains, and the race decides it. Both of the
+coordinator's in-band corrections were **re-verified at the artifact and hold**,
+with one precision added. **And the edit that carried them broke this
+programme's ruled rolling window** — rounds 70 and 69 were deleted from
+`STATUS.yml` without being archived; **repaired this round.** See the READ FIRST
+block below. **USER items: ONE.**
+
+Previously (coordinator, writer exception R-495) — 2026-09-03T03:23Z — **FULL
+STOP AND CONSOLIDATION.** All five seats halted 03:18Z, contexts cleared and
 re-loaded from these files. New entry point: **`workspace/RESULTS.md`**. Two
 in-band corrections to this file's own numbers. The R-459 diagnostic has never
-run and the reason is now measured. See the READ FIRST block below.
+run and the reason is now measured.
 
 Previously (MEM round 71) — 2026-09-03T02:25Z — **HOLD for ONE item, RELEASE the rest** — the
 narrowest disposition this programme has issued, and DA is **rebuilding the held
@@ -16,6 +29,111 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-03T04:08Z — MEM round 72: the writer exception is closed, three USER rulings land, and the window that carried them was broken
+>
+> **MEM is again the sole writer of `STATUS.yml` and this file.** The R-495 (J)
+> exception ended at this round, exactly as it was logged.
+>
+> **THREE USER RULINGS AT R-496, each verified at its own artifact rather than
+> from the entry:**
+> - **09-02 ACCRUES** on its non-blackout complement (R-409 principle, R-486
+>   recommendation adopted). Read at `da_dayverdict_20260902.json`: `day_closed`,
+>   `day_quality_pass`, `era_admissible`, `post_freeze_pass` **all true** and
+>   `race_accrual_eligible` **true** at the day level **and in both `per_coin`
+>   blocks**. **G = 2 of 5.**
+> - **The addendum v2 package is ADOPTED as recommended, all five asks** — **§1a
+>   the split is DECLARED: MECHANICS on BOTH splits, splits labelled per cell**;
+>   §2/§3 keep the seat's values with sensitivity pairs reported and **neither
+>   selected**; §4 and §5 adopted. **This closes the declaration half of the
+>   R-459 diagnostic**; only the producer half (DE round 44) remains.
+> - **A partial-data profitability read is pre-declared and dispatched** — 08-29
+>   **primary and free** (`day_quality_pass` true, `post_freeze_pass` true,
+>   `era_pure` true on `clob_v3_1`, `race_accrual_eligible` **false**: a good day
+>   that can never accrue, so reading it costs the race nothing), 08-30 a
+>   **separately labelled secondary, never pooled**. **Both are NAMED AS CONSUMED
+>   the moment they are opened** (rule 11). **09-01 and 09-02 stay sealed.**
+>   Caveat that must travel with the result: **08-29 runs on `clob_v3_1`, two
+>   collector generations behind the race's `clob_v4_1`.**
+>
+> **THE OPEN-DECISION COUNT MOVED TWICE: five → four → ONE.** The
+> content-liveness v2 freeze was **never open** after 2026-09-02 — **R-424**
+> ruled it and `plans/DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md` reads **FROZEN —
+> GOVERNING FROM 2026-09-03**, `EFFECTIVE_FROM_DAY` `20260903`, 09-02 judged on
+> v1 only. I drove the predicate rather than reading the date:
+> `governs("20260902")` **False**, `governs("20260903")` **True**; the wiring is
+> `content_liveness_v2_for` at `da_forward_day_verify.py:801` with its production
+> call at `:2278`. **ONE decision remains open: the Phase-2 winner, and the
+> forward race decides it.**
+>
+> **I CHECKED THE COORDINATOR'S WRITER-EXCEPTION EDITS AT THE ARTIFACT, NOT
+> AGAINST R-495's ACCOUNT OF THEM. Both corrections hold.** At
+> `iter011_conditional_value_v1__coin_btc.json` (188,119 B, `as_of`
+> 2026-09-02T05:21:34Z): `cells_by_status` = **12 OK + 6
+> NO_INCUMBENT_COUNTERPART + 6 GATE_PARTIALLY_EVALUATED** — and I **counted the
+> 24 cells out of `family.cells`** rather than reading the summary field, so the
+> field agrees with the cells it summarises. `distinct_results`:
+> `declared_cells` 24, `distinct_overall` 12, `surviving_cells` 12,
+> **`distinct_surviving_results` 4**. All **18 non-Q4 cells** carry **one** p
+> (`0.001996007984031936`), **one** Holm (`0.04790419161676646`),
+> `at_permutation_floor` **true**, `n_draws` **500** — checked **as sets**, not
+> by sampling one cell.
+>
+> **ONE PRECISION THE CORRECTION'S SENTENCE DOES NOT CARRY, and the artifact
+> carries it itself:** *"one draw the other way"* collapses the surviving set
+> **only if it moves in EVERY at-floor cell**. The cell separates the two cases
+> and states that **both are run through the real Holm step-down, not obtained
+> by multiplying**: `holm_if_ONE_draw_beat_it_in_THIS_CELL_ONLY` **0.0479** with
+> `survives_if_THIS_CELL_ONLY_moved` **true**, against
+> `holm_if_ONE_draw_beat_it_in_EVERY_at_floor_CELL` **0.0958** with
+> `survives_if_EVERY_at_floor_cell_moved` **false** — a single cell that moves
+> **sorts behind the still-tied cells and gets a smaller multiplier** (RR4-2).
+> The correction is right; its sentence is the whole-family case wearing the
+> one-draw case's clothes. Two more from the same block: the 18 at-floor cells
+> are the **12 survivors plus the 6 Q2 cells**, and
+> `draw_counts_are_not_uniform` **[500, 2000]** — the head that survives and the
+> head that fails were **not measured at the same resolution**, which the
+> artifact discloses and refuses to fix after the fact (rule 11).
+>
+> **THE FINDING OF THIS ROUND IS IN THE EDITS I WAS TOLD TO DOUBT, AND IT IS THE
+> STATE FILE'S OWN DISCIPLINE.** `STATUS.yml`'s `updated:` field is a **ruled
+> rolling window of three** (coordinator, 2026-08-28T10:02Z) whose overflow is
+> **moved, never deleted**, to `workspace/STATUS_UPDATED_ARCHIVE.md`. The
+> consolidation at `51c4464` replaced the three full entries with the
+> coordinator's own entry plus **one condensed paragraph that ends
+> mid-sentence** — so **rounds 70 and 69 left `STATUS.yml` deleted rather than
+> moved**: both verified **absent** from the archive, which still ended at Batch
+> 77, and `51c4464` **does not touch that file at all**. **The paragraph that
+> states the moved-never-deleted rule was removed in the same edit**, so the
+> field then read as two entries with nothing left in it saying it should read
+> as three. **Repaired in this commit:** rounds 70 and 69 restored **verbatim**
+> from `d9b85ee` as **archive Batch 78** (verbatim confirmed alnum-normalised —
+> present in the archive, absent from `STATUS.yml`), round 71 restored
+> **verbatim** to the window's third slot in place of the condensation, and the
+> `ARCHIVED:` paragraph put back. **Nothing was lost** — both narratives also
+> exist as dated entries in this file and in git — **but the archive had stopped
+> being able to reconstruct the chain it promises, which is the only thing it is
+> for.** Named once: **a document that describes its own discipline can lose the
+> discipline and the description in one edit, and afterwards nothing in it is
+> wrong.**
+>
+> **Observed, not claimed:** at **04:03:06Z, during this round**,
+> `be_forward_day_SEALED_scores_20260901.json` appeared under
+> `data/pm_5min/derived/` at **54,213,086 B** with its mtime preserved — **BE
+> executing R-496's relocation, its batch in flight**. No superseding receipt
+> exists yet; **the authoritative statement is BE's receipt, not my listing.**
+> The durability finding itself I verified at the receipt: the **tracked**
+> `be_forward_day_receipt_20260901.json` declares `sealed_file.path` inside a
+> **dead session's `/tmp` scratchpad** and `sha256`
+> `aca22317ab06adbf37f8176433c147139da6e4ddd…`, which is exactly what hashing the
+> 03:52Z backup returned. **The seal is not opened.**
+>
+> **Sequencing:** BE round 13 in flight (relocation · the 08-29 free read
+> **opened** · the 08-30 secondary · the 09-02 **sealed** accrual run, opened and
+> sealed strictly separated by outdir); DE round 44 on the producer half with the
+> split now declared; DA round 21, its round-20 chain **still held** because all
+> three of its files sit on the path the 00:06Z unit executes; the reviewer on BE
+> 12 with DA 20's rebuilt chain queued behind it. **USER items: ONE.**
 
 > ### 2026-09-03T03:23Z — FULL STOP AND CONSOLIDATION (coordinator, on the USER's instruction)
 >
@@ -133,7 +251,7 @@ defect of its own on real data before filing**: the first complement was
 `range(288) − masked`, which credited the still-open 09-02 with 248 unmasked
 windows out of 119 present; it is now `PRESENT − masked`.
 
-### SEVEN USER DECISIONS RULED — and TWO now open (R-424 + R-442 + R-459)
+### SEVEN USER DECISIONS RULED — and ONE now open (R-424 + R-442 + R-459 + R-496)
 
 **The table's six asks are settled**, and a **seventh** was ruled at **R-459**.
 Four were adopted at R-424 (~11:49Z), the freeze disposition at **R-442
@@ -142,6 +260,23 @@ Four were adopted at R-424 (~11:49Z), the freeze disposition at **R-442
 with R-411(ii) fixing the denominator), and the seventh is the **Phase-4
 diagnostic**, below.
 
+> ### SUPERSEDED 2026-09-03T04:08Z (MEM round 72) — the count is now **ONE**
+>
+> **Of the four listed below, three are RULED and the fourth was never open
+> after 2026-09-02.** **(1) the 09-02 accrual — RULED ACCRUE at R-496 (E)**, so
+> the race stands at **G = 2 of 5**. **(3) the content-liveness v2 freeze — RULED
+> AT R-424 on 2026-09-02**, and `plans/DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md`
+> has read **FROZEN — GOVERNING FROM 2026-09-03** ever since; listing it as
+> pending here (and in `RESULTS.md` §7) was **stale, not undecided** — the
+> coordinator's own in-band correction at R-496 (F), which I verified at **both**
+> sources and by driving `governs()` rather than reading a date. **(4) the
+> addendum v2 package — ADOPTED IN FULL at R-496 (E), all five asks**, with
+> **§1a declared as MECHANICS on BOTH splits, splits labelled per cell**, which
+> closes the declaration half of the R-459 diagnostic. **ONLY (2) THE PHASE-2
+> WINNER REMAINS OPEN, and the forward race decides it.** The block below stays
+> as written — it is the record of what was pending at R-484, not a current
+> statement.
+>
 > **SUPERSEDES the "nothing is awaiting the USER" line this section carried
 > from R-442 until now.** **FOUR items are now USER-PENDING (R-484):**
 > **(1)** the **09-02 accrual**, after tonight's 00:06Z / 00:14Z reads;
@@ -173,6 +308,13 @@ diagnostic**, below.
 > verified both at the blob). **Released by the reviewer** at `650569c`
 > (conditions (i)–(iv) all met, *"May the package travel whole? YES"*);
 > **forwarded** per **R-484**, once the DRAFT clause existed to be read.
+>
+> **ADOPTED 2026-09-03T03:57Z (R-496 E) — all five, as recommended:** §1a
+> **MECHANICS on BOTH splits, splits labelled per cell**; §2 `theta_repost` and
+> §3 `REPOST_DWELL_S` **keep the seat's values with sensitivity pairs reported
+> and NEITHER SELECTED**; §4 the `inf` handling **plus the identity**, and §5
+> repost parity, **adopted**. The list below is the record of the asks as they
+> went to the USER.
 >
 > **The five asks now with the USER:** **§1** the horizon; **§2**
 > `theta_repost` and **§3** `REPOST_DWELL_S` — **pairs or fixed**; **§4**
@@ -1613,6 +1755,23 @@ observed rate on n=3, not a forecast.
   (the artifact's own field: budgets replicate Q1/Q2/Q3's single statistic three
   times), every one of them at the permutation floor p = 1/501 with 500 draws.
   See `workspace/RESULTS.md` §2.**
+  **RE-VERIFIED AT THE ARTIFACT 2026-09-03T04:08Z (MEM round 72), because the
+  seat that wrote the correction is the seat that would not have caught itself:
+  the correction HOLDS, and the 24 cells were COUNTED OUT OF `family.cells`
+  rather than read from the summary field — the field agrees with the cells it
+  summarises. `distinct_results` = `declared_cells` 24 / `distinct_overall` 12 /
+  `surviving_cells` 12 / `distinct_surviving_results` 4; all 18 non-Q4 cells
+  carry ONE p (`0.001996007984031936`), ONE Holm (`0.04790419161676646`),
+  `at_permutation_floor` true and `n_draws` 500, checked as SETS. ONE PRECISION
+  ADDED: "one draw the other way moves it to 0.0958" is the WHOLE-FAMILY case —
+  the cell's own fields give `holm_if_ONE_draw_beat_it_in_THIS_CELL_ONLY`
+  **0.0479** with `survives_if_THIS_CELL_ONLY_moved` **true** against
+  `holm_if_ONE_draw_beat_it_in_EVERY_at_floor_CELL` **0.0958** with
+  `survives_if_EVERY_at_floor_cell_moved` **false**, both run through the real
+  Holm step-down rather than multiplied, because a single moving cell sorts
+  behind the still-tied cells and gets a smaller multiplier (RR4-2). And
+  `draw_counts_are_not_uniform` **[500, 2000]**: the head that survives and the
+  head that fails were not measured at the same resolution.**
   **Q1_arrival PASSES ITS COMPLETE GATE, both conjuncts computed**: candidate
   AUC **0.8303** lgbm / **0.7733** linear against the incumbent hazard head's
   **0.7139** — increments **+0.1164 / +0.0594**, `beats_incumbent_hazard_head`
