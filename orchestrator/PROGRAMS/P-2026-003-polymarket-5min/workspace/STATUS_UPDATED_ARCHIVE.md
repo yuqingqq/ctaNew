@@ -4668,3 +4668,53 @@ Moved in the MEM round-65 true-up of R-486, R-487 and the three landings. Join r
   tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
 ```
+
+## Batch 72 — archived 2026-09-03T00:54Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-66 true-up of R-488, R-489 and the landings filing. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T23:34Z (MEM ROUND 63 -- FORWARDED, AND THE DELTA IS +17 -0). R-484
+  and Q-DE-58 swept; nothing run; committed blobs only. THE PACKAGE HAS GONE TO
+  THE USER: released by the reviewer at 650569c, FORWARDED AT 35452c0 PER R-484,
+  and the ORDERING is the whole reason it is worth a line -- the release came
+  first, the clause was written second, and the forwarding waited for the clause
+  to EXIST TO BE READ. A RELEASE IS A JUDGEMENT ABOUT A TEXT; A FORWARDING IS A
+  CLAIM THAT THE TEXT IS THERE. This programme kept those apart for four rounds
+  and then did them in order. I VERIFIED EVERY FIGURE AT THE BLOB: runner
+  3f4bf21da2dfa188, 3,329 lines, EXPECTED_CHECKS = 119; DRAFT cb693000880c3d94,
+  307 lines. AND THE DRAFT DELTA IS +17 -0, WHICH DESERVES ITS OWN SENTENCE: the
+  round that carried the clause ADDED SEVENTEEN LINES AND REMOVED NONE, so THE
+  TEXT THE REVIEWER RELEASED IS STILL, LINE FOR LINE, INSIDE THE TEXT THE USER
+  NOW READS -- nothing re-worded on the way out. For a document about to be
+  frozen that is the strongest cheap statement available, and it is trivially
+  checkable now and unprovable in a month. FIVE ASKS ARE WITH THE USER AND ONE OF
+  THEM IS A SHAPE RATHER THAN A NUMBER: 1 the horizon; 2 theta_repost and 3
+  REPOST_DWELL_S -- PAIRS OR FIXED; 4 inf PLUS THE IDENTITY; 5 repost parity WITH
+  the enable_reduce clause; and 1a TRAIN/SCORE RULED WITH 2 AND 4, NOT
+  SEPARATELY -- the same instinct that made the split question travel WITH the
+  numbers rather than beneath them: BUNDLING IS NOT TIDINESS, IT STOPS A DECISION
+  BEING ANSWERED IN A FORM THAT PRESUPPOSES THE OTHERS. USER-PENDING IS NOW FOUR
+  and I REPLACED the three-item line rather than appending: (1) the 09-02 accrual
+  after tonight's 00:06Z / 00:14Z reads; (2) the Phase-2 winner; (3) the
+  content-liveness v2 freeze; (4) the addendum v2 package. ITEM (1) IS NEW TO
+  THIS LIST -- it has lived in these files as R-409'S PRINCIPLE APPLIED
+  MECHANICALLY AFTER THE VERDICT, and it now appears as an item awaiting
+  tonight's reads; BOTH READINGS ARE IN THE RECORD AND I HAVE NOT SILENTLY MERGED
+  THEM. DE ROUND 40 EXECUTED WITH EVERY RULING DRIVEN -- (i), (ii), (iii),
+  DE39-R1 and DE39-R2 -- PLUS AN IN-SUITE REORDERING INVARIANCE, the right
+  companion to a set-identity fix: having named the identity as SET identity, the
+  suite now DEMONSTRATES that order does not change the answer rather than
+  asserting it in prose, so THE CLAIM AND THE DEMONSTRATION ARRIVE TOGETHER.
+  Nothing from DE is open pending the reviewer's DE-40 filing, and THE REVIEWER'S
+  STEP 5 -- the wiring's expensive half -- REMAINS USER-GATED AND NOT DISPATCHED:
+  the gate outlived the round that wanted through it. UNCHANGED AND STATED: the
+  PHASE-4 RUN HAS NO DATE; preflight() STILL REFUSES AT THE SCORER. MY ROUND 62
+  VERIFIED. SEATS: the reviewer on DE round 40
+  (REQUEST_DE_ROUND_40_2026-09-02.md); DE, BE and DA on RECORDED STANDBY. TONIGHT
+  UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after, R-409
+  accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
+  3b7e10a), BE round 11 = the durable landing, CO-8, --require-no-skips,
+  DATA_ROOT split. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+```

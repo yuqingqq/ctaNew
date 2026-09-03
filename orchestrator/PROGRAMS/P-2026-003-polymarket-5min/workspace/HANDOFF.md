@@ -1,13 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T00:36Z — **THE FIRST GOVERNED VERDICT LANDED.** The 00:06Z
-unit fired (status 0), the 09-02 verdict is **`6f283262df463957`** as-of
-**00:06:01.399Z** with **`race_accrual_eligible` TRUE**, the mask
-**`0bac652c44fba8f2`** carries **251** masked windows and **CONTENT_THIN 7/7**,
-and the 00:14Z preflight read **10/10 GOVERNED_VERDICT_COMPLETE**. **The receipts
-of record are IN GIT** (BE round 11, byte-identical). **The 09-02 accrual is the
-USER's call — R-486 recommends ACCRUE, unruled.** **NEW, escalated: the 09-04
-00:06Z run executes the LANDED chain on an UNPINNED unit.**
+Updated: 2026-09-03T00:54Z — **`c511750` RELEASED, and NOTHING MUST MOVE BEFORE
+FRI 2026-09-04 00:06:00 UTC.** The unit path was driven **end to end,
+NON-production** — I verified its three shas at the release. Two findings sit
+**off** that path, and **DA18-R1 has a cause worth knowing: the fixture commit is
+EMPTY at a ROW-ONLY tip** — which is precisely what a state-file commit like mine
+produces. **R-488 corrected the ageing premise at the host**: `sar25` dies at
+**00:07Z on 09-04**, not by drift. **USER items: FIVE, unchanged.**
 
 ## READ FIRST — current project handoff
 
@@ -887,10 +886,12 @@ launchers at **235/19**.
 | **BE round 9** | **EXECUTED at the tip and FOUND SHORT** (`90638c3`, Q-BE-234 → **VERIFIED-SHORT**) — **93 PASS then rc 1** under both launchers; **checks 95–117 unverifiable at that tip in ANY tree**. Three findings **BE9-C1..C3** |
 | **BE round 10** | **VERIFIED** at `ff60d0a` — **121/121 both launchers**, the 26-case audit **green**, **BE9-C1..C3 closed at the PASS lines**, nothing leaking |
 | **BE rounds 9+10 review** | **RELEASED** (`a8e88de`) — BE9-C1/C2/C3 **CONFIRMED closed**; four findings **BE10-R1..R4**; **`ff60d0a` is round 11's base and nothing precedes the landing** |
-| **BE round 12** | **BE10-R1..R4 with BE8-R1/R2** — **R2 first if the file is opened before the landing** |
+| **BE round 12** | **DISPATCHED and MAY LAND** — BE10-R1..R4 with BE8-R1/R2; **not on the unit path**, so the 09-04 freeze does not bind it |
 | **BE round 11** | **LANDED** at `fc70b17` (Q-BE-236) — **the two `fwd5/` receipts are IN GIT, byte-identical**: `4000106752f816e4…` **14,022 B** and `0907b0369e14d77b…` **1,123 B** (both re-hashed here). **The 09-01 race score of record is now a tracked artifact** |
 | **DA round 18** | **LANDED** at `c511750` (Q-DA-214) — the held chain **rebased with no content moved** (`21de639`…`7792fb5`), plus the **tracked 09-02 verdict** and the **force-added 09-02 mask** |
-| **DA round 19** | a **proposal row** — the `v5_deploy_gates` "host-load join" gate is **36/38 OFF the unit path** (sa25 recycled by sysstat); **rule 15 rules out a SKIP** |
+| **BE11 + DA18 landings review** | **RELEASED** (`95a0e0e`, 215 lines, 00:44:56Z) — **nothing must move before Fri 2026-09-04 00:06:00 UTC**; the unit path driven **end to end, NON-production**, in the reviewer's scratch root; the eight held/landed DA commits are **`=` pairwise by range-diff**, so **the DA-17 RELEASE transfers**. Two findings **off the unit path**: **DA18-R1 (MED)**, **BE11-R1 (LOW)** |
+| **DA round 19** | a **proposal row** — "host-load join" **36/38 OFF the unit path**; **R-488 CORRECTED the ageing premise at the host**: `HISTORY=7`, `sa2` deletes at **00:07Z daily**, so **`sar25` dies at 00:07Z on 09-04** |
+| **DA round 20** | **DISPATCHED — builds now, HOLDS its landing until after 00:06Z 09-04.** Day-relative liveness with completeness **DERIVED** (**143 = 24 h / 10 min − 1**, last 23:50Z, **no literal**) and the reviewer's **two-job split** |
 | **BE — durable landing** | now **BE round 11**: after the **00:14Z** read **AND** after round 10 lands — **a driver whose selftest fails at its tip cannot produce the artifact of record** |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
@@ -969,9 +970,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on RECORDED STANDBY.** **Released so far** include BE rounds
-9+10 (`a8e88de`) and DE rounds 37 (`3f1d310`), 38 (`0a5a6a7`), 39 (`650569c`) and
-40 (`c3f8743`). **Released so far**
+**The reviewer is on DE round 41** (`REQUEST_DE_ROUND_41_2026-09-03.md`).
+**Released so far** include BE rounds 9+10 (`a8e88de`), the **BE11+DA18
+landings** (`95a0e0e`), and DE rounds 37 (`3f1d310`), 38 (`0a5a6a7`), 39
+(`650569c`) and 40 (`c3f8743`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1786,6 +1788,77 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-03 ~00:54Z (MEM) — MY OWN COMMITS ARE PART OF THE CONDITION
+
+**R-488, R-489 and the landings filing swept.** Nothing run; every figure taken
+from the blobs or from files outside any seat's surface.
+
+**The release comes with a freeze and the freeze has a clock, not a mood.**
+`c511750` is RELEASED and **nothing must move before Fri 2026-09-04 00:06:00
+UTC**. I verified the unit path's three legs at the release: **`da_midnight_verify.sh`
+`4d79d79a2afc8346` → `da_forward_day_verify.py` `9e042ec942af6f07` →
+`da_blackout_mask.py` `15ea6dcb8c97c72d`** — and the third of those equals the
+working tree's file, which I measured last round. **The path in the release and
+the path on disk are the same bytes.**
+
+**The reviewer drove it end to end NON-production**, in its own scratch root — the
+refusal leg exiting **6**, the rehearsal leg writing into the **scratch outdir**
+and **labelling itself unattributed**. *A rehearsal that does not label itself is
+indistinguishable from a run; this one says what it is in its own output.* And the
+eight held/landed DA commits are **`=` pairwise by range-diff**, which is why **the
+DA-17 RELEASE transfers** rather than needing to be re-earned — *a rebase that
+moves no content should cost nothing, and here it is demonstrated rather than
+assumed.*
+
+**DA18-R1 is the finding I want on the record with its cause, because the cause
+is me.** At `c511750:865-878` the RR12-1 fixture runs `git add` on four `.py`
+files and then `git commit`, **both with output captured and neither rc checked**.
+At a **row-only tip** — a commit that touches no `.py` file — those four files are
+identical in the child, **nothing stages, the commit fails silently, and the
+fixture commit is EMPTY**; CO-10's re-read then returns an unchanged HEAD and the
+third-distinct-value precondition fails, so **the mask selftest is red at the
+tip**. **A row-only tip is exactly what my Q-MEM row commits produce.**
+
+**That closes a loop with last round's note from the other side.** I wrote that
+`carrying_commit` **names the tree, not the author**, after finding a DA artifact
+bound to my bookkeeping commit. Here the same fact bites in the opposite
+direction: **my bookkeeping commits are part of the condition that reddens
+another seat's selftest.** *A ledger writer who touches no code still moves the
+tree every seat measures against.* It is off the unit path — the verifier only
+**imports** the module — so nothing about tonight changes; but the cause belongs
+in the record next to the finding, not only in DA's round 20.
+
+**BE11-R1 is answered rather than carried.** The sealed 09-01 score does live on a
+session scratchpad path, **and a durable copy exists** at
+`~/.local/state/pm-co/race_record_20260901_fwd5/` — I re-hashed it:
+**`aca22317ab06adbf…`**, the same value I verified in round 35 and the one R-442
+records. **No change needed**, and the finding is right that the receipt's path
+field points somewhere volatile.
+
+**The host-load red was a premise error, and the correction is the useful part.**
+DA read it as ageing drift; **R-488 corrected it at the host**: `sysstat` has
+**`HISTORY=7`**, `sa2` deletes `sa??`/`sar??` older than seven days **at 00:07Z
+daily**, so **`sar25` is deleted at 00:07Z on 09-04** — a scheduled event with a
+timestamp, not a slow decay. A **safety copy sits outside the repo** at
+`~/.local/state/pm-co/sysstat_preserve_20260903/` (PROVENANCE.txt, SHA256SUMS,
+`sa26`) — verified present. *"It aged out" and "a cron job deletes it at 00:07Z"
+support very different fixes.*
+
+**And the completeness figure is derived, which is the whole point.**
+**143 = 24 h / 10 min − 1** (last sample 23:50Z) — **no literal in the code**. I
+checked the arithmetic. *A derived bound moves when the sampling interval moves; a
+literal 143 would be right until someone changed the cadence and silently wrong
+after.* DA round 20 implements it in the reviewer's order and **holds its landing
+until after 00:06Z 09-04**.
+
+**Sequencing.** The reviewer is on **DE round 41**; **DA round 20 builds and
+holds**; **BE round 12 may land** — it is **not on the unit path**, so the freeze
+does not bind it. **USER items: FIVE, unchanged** — the 09-02 accrual (R-486
+recommends ACCRUE, **unruled**), the Phase-2 winner, the content-liveness v2
+freeze, the addendum v2 package, and the 09-04 run on the landed chain, which now
+carries **the reviewer's end-to-end drive** behind the recommendation of **no pin,
+no install**.
 
 ### 2026-09-03 ~00:36Z (MEM) — THE NIGHT THE CALENDAR STOPPED BEING A PLAN
 

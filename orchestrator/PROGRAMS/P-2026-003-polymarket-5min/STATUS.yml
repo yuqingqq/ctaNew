@@ -4,6 +4,63 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-03T00:54Z (MEM ROUND 66 -- MY OWN COMMITS ARE PART OF THE CONDITION).
+  R-488, R-489 and the landings filing swept; nothing run; every figure from the
+  blobs or from files outside any seat's surface. THE RELEASE COMES WITH A FREEZE
+  AND THE FREEZE HAS A CLOCK, NOT A MOOD: c511750 is RELEASED and NOTHING MUST
+  MOVE BEFORE FRI 2026-09-04 00:06:00 UTC. I verified the unit path's three legs
+  at the release -- da_midnight_verify.sh 4d79d79a2afc8346 ->
+  da_forward_day_verify.py 9e042ec942af6f07 -> da_blackout_mask.py
+  15ea6dcb8c97c72d -- and the third equals the working tree's file, so THE PATH
+  IN THE RELEASE AND THE PATH ON DISK ARE THE SAME BYTES. The reviewer drove it
+  END TO END NON-PRODUCTION in its own scratch root, the refusal leg exiting 6
+  and the rehearsal leg writing into the SCRATCH outdir and LABELLING ITSELF
+  UNATTRIBUTED -- A REHEARSAL THAT DOES NOT LABEL ITSELF IS INDISTINGUISHABLE
+  FROM A RUN, and this one says what it is in its own output. The eight
+  held/landed DA commits are = PAIRWISE BY RANGE-DIFF, which is why THE DA-17
+  RELEASE TRANSFERS rather than needing to be re-earned: a rebase that moves no
+  content should cost nothing, and here it is DEMONSTRATED rather than assumed.
+  DA18-R1 IS THE FINDING I WANT ON THE RECORD WITH ITS CAUSE, BECAUSE THE CAUSE
+  IS ME: at c511750:865-878 the RR12-1 fixture runs git add on four .py files and
+  then git commit, BOTH WITH OUTPUT CAPTURED AND NEITHER rc CHECKED, so AT A
+  ROW-ONLY TIP those files are identical in the child, NOTHING STAGES, THE COMMIT
+  FAILS SILENTLY AND THE FIXTURE COMMIT IS EMPTY; CO-10's re-read then returns an
+  unchanged HEAD, the third-distinct-value precondition fails, and the mask
+  selftest is RED AT THE TIP. A ROW-ONLY TIP IS EXACTLY WHAT MY Q-MEM ROW COMMITS
+  PRODUCE. THAT CLOSES A LOOP WITH LAST ROUND FROM THE OTHER SIDE: I wrote that
+  carrying_commit NAMES THE TREE, NOT THE AUTHOR after finding a DA artifact
+  bound to my bookkeeping commit, and here the same fact bites in the opposite
+  direction -- MY BOOKKEEPING COMMITS ARE PART OF THE CONDITION THAT REDDENS
+  ANOTHER SEAT'S SELFTEST. A LEDGER WRITER WHO TOUCHES NO CODE STILL MOVES THE
+  TREE EVERY SEAT MEASURES AGAINST. It is OFF the unit path (the verifier only
+  IMPORTS the module) so nothing about tonight changes, but the cause belongs
+  beside the finding, not only in DA's round 20. BE11-R1 IS ANSWERED RATHER THAN
+  CARRIED: the sealed 09-01 score does live on a session scratchpad path AND a
+  durable copy exists at ~/.local/state/pm-co/race_record_20260901_fwd5/, which I
+  re-hashed -- aca22317ab06adbf, the same value verified in round 35 and recorded
+  in R-442 -- so NO CHANGE, and the finding is right that the receipt's path field
+  points somewhere volatile. THE HOST-LOAD RED WAS A PREMISE ERROR AND THE
+  CORRECTION IS THE USEFUL PART: DA read it as ageing drift; R-488 corrected it AT
+  THE HOST -- sysstat HISTORY=7, sa2 deleting sa??/sar?? older than seven days AT
+  00:07Z DAILY, so sar25 IS DELETED AT 00:07Z ON 09-04, A SCHEDULED EVENT WITH A
+  TIMESTAMP, NOT A SLOW DECAY -- with a safety copy OUTSIDE THE REPO at
+  ~/.local/state/pm-co/sysstat_preserve_20260903/ (PROVENANCE.txt, SHA256SUMS,
+  sa26), verified present. "IT AGED OUT" AND "A CRON JOB DELETES IT AT 00:07Z"
+  SUPPORT VERY DIFFERENT FIXES. AND THE COMPLETENESS FIGURE IS DERIVED, WHICH IS
+  THE WHOLE POINT: 143 = 24h / 10min - 1 (last sample 23:50Z), NO LITERAL IN THE
+  CODE, arithmetic checked here -- A DERIVED BOUND MOVES WHEN THE SAMPLING
+  INTERVAL MOVES; A LITERAL 143 WOULD BE RIGHT UNTIL SOMEONE CHANGED THE CADENCE
+  AND SILENTLY WRONG AFTER. DA round 20 implements it in the reviewer's order and
+  HOLDS ITS LANDING UNTIL AFTER 00:06Z 09-04. SEQUENCING: the reviewer is on DE
+  ROUND 41 (REQUEST_DE_ROUND_41_2026-09-03.md); DA round 20 BUILDS AND HOLDS; BE
+  round 12 MAY LAND, being NOT on the unit path so the freeze does not bind it.
+  USER ITEMS: FIVE, UNCHANGED -- the 09-02 accrual (R-486 recommends ACCRUE,
+  UNRULED), the Phase-2 winner, the content-liveness v2 freeze, the addendum v2
+  package (five asks), and the 09-04 run on the landed chain, which now carries
+  THE REVIEWER'S END-TO-END DRIVE behind the recommendation of NO PIN, NO
+  INSTALL. NOTHING RUNS. UNCHANGED: the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-03T00:36Z (MEM ROUND 65 -- THE NIGHT THE CALENDAR STOPPED BEING A
   PLAN). R-486, R-487 and the three landings swept; nothing run; every figure
   re-derived at the blob or the file. THE FIRST GOVERNED VERDICT EXISTS: the
@@ -96,50 +153,6 @@ updated: >-
   DE round 41 in flight; the reviewer on RECORDED STANDBY; BE and DA standby.
   TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after,
   R-409 accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
-  3b7e10a), BE round 11 = the durable landing, CO-8, --require-no-skips,
-  DATA_ROOT split. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
-  sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-02T23:34Z (MEM ROUND 63 -- FORWARDED, AND THE DELTA IS +17 -0). R-484
-  and Q-DE-58 swept; nothing run; committed blobs only. THE PACKAGE HAS GONE TO
-  THE USER: released by the reviewer at 650569c, FORWARDED AT 35452c0 PER R-484,
-  and the ORDERING is the whole reason it is worth a line -- the release came
-  first, the clause was written second, and the forwarding waited for the clause
-  to EXIST TO BE READ. A RELEASE IS A JUDGEMENT ABOUT A TEXT; A FORWARDING IS A
-  CLAIM THAT THE TEXT IS THERE. This programme kept those apart for four rounds
-  and then did them in order. I VERIFIED EVERY FIGURE AT THE BLOB: runner
-  3f4bf21da2dfa188, 3,329 lines, EXPECTED_CHECKS = 119; DRAFT cb693000880c3d94,
-  307 lines. AND THE DRAFT DELTA IS +17 -0, WHICH DESERVES ITS OWN SENTENCE: the
-  round that carried the clause ADDED SEVENTEEN LINES AND REMOVED NONE, so THE
-  TEXT THE REVIEWER RELEASED IS STILL, LINE FOR LINE, INSIDE THE TEXT THE USER
-  NOW READS -- nothing re-worded on the way out. For a document about to be
-  frozen that is the strongest cheap statement available, and it is trivially
-  checkable now and unprovable in a month. FIVE ASKS ARE WITH THE USER AND ONE OF
-  THEM IS A SHAPE RATHER THAN A NUMBER: 1 the horizon; 2 theta_repost and 3
-  REPOST_DWELL_S -- PAIRS OR FIXED; 4 inf PLUS THE IDENTITY; 5 repost parity WITH
-  the enable_reduce clause; and 1a TRAIN/SCORE RULED WITH 2 AND 4, NOT
-  SEPARATELY -- the same instinct that made the split question travel WITH the
-  numbers rather than beneath them: BUNDLING IS NOT TIDINESS, IT STOPS A DECISION
-  BEING ANSWERED IN A FORM THAT PRESUPPOSES THE OTHERS. USER-PENDING IS NOW FOUR
-  and I REPLACED the three-item line rather than appending: (1) the 09-02 accrual
-  after tonight's 00:06Z / 00:14Z reads; (2) the Phase-2 winner; (3) the
-  content-liveness v2 freeze; (4) the addendum v2 package. ITEM (1) IS NEW TO
-  THIS LIST -- it has lived in these files as R-409'S PRINCIPLE APPLIED
-  MECHANICALLY AFTER THE VERDICT, and it now appears as an item awaiting
-  tonight's reads; BOTH READINGS ARE IN THE RECORD AND I HAVE NOT SILENTLY MERGED
-  THEM. DE ROUND 40 EXECUTED WITH EVERY RULING DRIVEN -- (i), (ii), (iii),
-  DE39-R1 and DE39-R2 -- PLUS AN IN-SUITE REORDERING INVARIANCE, the right
-  companion to a set-identity fix: having named the identity as SET identity, the
-  suite now DEMONSTRATES that order does not change the answer rather than
-  asserting it in prose, so THE CLAIM AND THE DEMONSTRATION ARRIVE TOGETHER.
-  Nothing from DE is open pending the reviewer's DE-40 filing, and THE REVIEWER'S
-  STEP 5 -- the wiring's expensive half -- REMAINS USER-GATED AND NOT DISPATCHED:
-  the gate outlived the round that wanted through it. UNCHANGED AND STATED: the
-  PHASE-4 RUN HAS NO DATE; preflight() STILL REFUSES AT THE SCORER. MY ROUND 62
-  VERIFIED. SEATS: the reviewer on DE round 40
-  (REQUEST_DE_ROUND_40_2026-09-02.md); DE, BE and DA on RECORDED STANDBY. TONIGHT
-  UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after, R-409
-  accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
   3b7e10a), BE round 11 = the durable landing, CO-8, --require-no-skips,
   DATA_ROOT split. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
@@ -3820,6 +3833,14 @@ flags:
   unit_unpinned_for_0904: "ESCALATED: the 09-04 00:06Z run executes the LANDED chain (rounds 10-12 are production wiring). DIFFED BY MEM: the repo unit carries Environment=DA_MIDNIGHT_VERIFY_BIN at :51; THE INSTALLED UNIT HAS NO SUCH LINE, only ExecStart at :47. Coordinator recommends NO PIN and NO INSTALL; the reviewer's landings round verifies the launcher path first"
   mask_producer_sha_mismatch_expected: "the 09-02 mask records producer.module_sha256_prefix d191695dcff0546e while the working da_blackout_mask.py is 15ea6dcb8c97c72d -- EXPECTED, the binding being carrying_commit 3eabeeb, WHICH IS MEM'S OWN ROUND-64 STATE-FILE COMMIT: carrying_commit NAMES THE TREE, NOT THE AUTHOR"
   da_r19_proposal_row: "v5_deploy_gates host-load join is 36/38 OFF THE UNIT PATH -- sa25 recycled by sysstat, an input that AGED OUT; RULE 15 RULES OUT A SKIP, so round 19 is a PROPOSAL ROW rather than a quiet exclusion"
+  landings_review_released: "95a0e0e 00:44:56Z, 215 lines: RELEASE c511750; NOTHING MUST MOVE BEFORE FRI 2026-09-04 00:06:00 UTC; the unit path driven END TO END NON-PRODUCTION in the reviewer's scratch root (refusal leg exit 6; rehearsal leg writes to the SCRATCH outdir and LABELS ITSELF UNATTRIBUTED); the eight held/landed DA commits are = PAIRWISE BY RANGE-DIFF, so THE DA-17 RELEASE TRANSFERS"
+  unit_path_shas_verified: "at c511750 by MEM: da_midnight_verify.sh 4d79d79a2afc8346 -> da_forward_day_verify.py 9e042ec942af6f07 -> da_blackout_mask.py 15ea6dcb8c97c72d, the third equal to the working tree file"
+  da18_r1_open: "MEDIUM, OFF the unit path: da_blackout_mask.py:865-878 runs git add + git commit with output captured and NEITHER rc CHECKED, so AT A ROW-ONLY TIP the four .py files are unchanged in the child, nothing stages, the commit fails silently and THE FIXTURE COMMIT IS EMPTY -- CO-10's re-read then returns an unchanged HEAD and the third-distinct-value precondition fails, reddening the mask selftest. A ROW-ONLY TIP IS EXACTLY WHAT MEM'S Q-ROW COMMITS PRODUCE: a ledger writer who touches no code still moves the tree every seat measures against. The verifier only IMPORTS the module"
+  be11_r1_answered: "LOW, ANSWERED not carried: the sealed 09-01 score sits on a session scratchpad path AND a durable copy exists at ~/.local/state/pm-co/race_record_20260901_fwd5/, sha aca22317ab06adbf (re-hashed by MEM, same value as round 35 and R-442). No change"
+  hostload_ageing_premise_corrected: "R-488 at the host: sysstat HISTORY=7 and sa2 deletes sa??/sar?? older than 7 days AT 00:07Z DAILY, so sar25 is DELETED AT 00:07Z ON 09-04 -- a SCHEDULED EVENT WITH A TIMESTAMP, not slow decay; safety copy OUTSIDE THE REPO at ~/.local/state/pm-co/sysstat_preserve_20260903/ (PROVENANCE.txt, SHA256SUMS, sa26), verified present"
+  completeness_is_derived: "143 = 24h / 10min - 1 (last sample 23:50Z), NO LITERAL -- arithmetic checked by MEM; a derived bound moves when the cadence moves, a literal would be silently wrong after"
+  da_r20_builds_and_holds: "dispatched; implements the reviewer's order (day-relative liveness, derived completeness, two-job split) and HOLDS ITS LANDING until after 00:06Z 09-04"
+  be_r12_may_land: "dispatched; BE10-R1..R4 with BE8-R1/R2; NOT on the unit path, so the 09-04 freeze does not bind it"
   de_r41_verified: "8479b67 (Q-DE-59): 124 checks, DE40-R1/R2/R3 closed and driven, four mutants red by name; its review QUEUED behind the landings round"
   reviewer_de_r40_released: "c3f8743 23:38:26Z, 166 lines; ruling (i) YES; (ii)+(iii) CONFIRMED CLOSED on a 21-FIELD MEASUREMENT (exactly ONE moves); DE39-R1 CONFIRMED CLOSED; DE39-R2 CLOSED IN FORM (kept verbatim -- closed in form and closed are different claims); 35452c0 = round 41 base, three-step order"
   de40_r1_r2_r3_open: "DE40-R1 LOW-MED (_by_ca has NO FALSIFIER), DE40-R2 LOW (null_status derived FROM ABSENCE rather than FROM REQUEST), DE40-R3 LOW (a six-field enumeration where the block is wider) -> DE round 41, IN FLIGHT at base 35452c0"
@@ -3838,7 +3859,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-03T00:36Z, build and test the offline model mechanism-first
+  As-of 2026-09-03T00:54Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
