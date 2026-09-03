@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T23:41Z — **DE round 40 RELEASED (`c3f8743`)** — ruling (i)
-**YES**, (ii)+(iii) closed on a **21-field measurement (one moves)**, DE39-R1
-closed, DE39-R2 **closed in form**; three new LOW/LOW-MED findings → **round 41,
-in flight**. **And the reviewer PRICED the USER's ask (5) per answer:** MECHANICS
-= **one field, one refusal, one falsifier**; `score`-split = **a round AND a
-re-declaration that travels back to the USER.** *One branch of the answer ends in
-another question for the same person.* **Its estimate, nothing decided (rule
-14).** **Run: NO DATE.**
+Updated: 2026-09-03T00:36Z — **THE FIRST GOVERNED VERDICT LANDED.** The 00:06Z
+unit fired (status 0), the 09-02 verdict is **`6f283262df463957`** as-of
+**00:06:01.399Z** with **`race_accrual_eligible` TRUE**, the mask
+**`0bac652c44fba8f2`** carries **251** masked windows and **CONTENT_THIN 7/7**,
+and the 00:14Z preflight read **10/10 GOVERNED_VERDICT_COMPLETE**. **The receipts
+of record are IN GIT** (BE round 11, byte-identical). **The 09-02 accrual is the
+USER's call — R-486 recommends ACCRUE, unruled.** **NEW, escalated: the 09-04
+00:06Z run executes the LANDED chain on an UNPINNED unit.**
 
 ## READ FIRST — current project handoff
 
@@ -865,7 +865,7 @@ launchers at **235/19**.
 | **DE round 39 review** | **RELEASED** (`650569c`, 194 lines, 22:55:56Z) — **EVERY DE38 closure CONFIRMED, each driven**; the **six literals verified at BOTH sides of `851edaf`** by the reviewer's own `_fn_asts`; counts reproduced. **DE39-C1 CONFIRMED (LOW) and RULED in three parts**; two new findings **DE39-R1 (LOW-MED)** and **DE39-R2 (LOW)** |
 | **DE round 40** | **EXECUTED** at `35452c0` (Q-DE-58) — counts **31/119/26/21/26/21/184/92**; rulings (i)(ii)(iii), **DE39-R1** and **DE39-R2** all **driven**, with the **in-suite reordering invariance**. Verified here: runner `3f4bf21da2dfa188` (**3,329** lines, `EXPECTED_CHECKS = 119`), DRAFT `cb693000880c3d94` (**307** lines, **+17 −0** vs `cd93663`) |
 | **DE round 40 review** | **RELEASED** (`c3f8743`, 166 lines, 23:38:26Z) — **ruling (i) YES**; (ii)+(iii) **CONFIRMED CLOSED** on a **21-field measurement (one moves)**; **DE39-R1 CONFIRMED CLOSED**, **DE39-R2 closed in form**; three findings **DE40-R1 (LOW-MED)**, **DE40-R2 (LOW)**, **DE40-R3 (LOW)**. `35452c0` is round 41's base |
-| **DE round 41** | **IN FLIGHT** at base `35452c0` — DE40-R1/R2/R3, three-step order. **The reviewer's step 5 (the wiring's expensive half) stays USER-GATED and NOT dispatched** |
+| **DE round 41** | **VERIFIED** at `8479b67` (Q-DE-59) — **124 checks**; **DE40-R1/R2/R3 closed and driven**, four mutants red by name. Its review is **QUEUED behind the landings round**. **Step 5 stays USER-GATED** |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -888,7 +888,9 @@ launchers at **235/19**.
 | **BE round 10** | **VERIFIED** at `ff60d0a` — **121/121 both launchers**, the 26-case audit **green**, **BE9-C1..C3 closed at the PASS lines**, nothing leaking |
 | **BE rounds 9+10 review** | **RELEASED** (`a8e88de`) — BE9-C1/C2/C3 **CONFIRMED closed**; four findings **BE10-R1..R4**; **`ff60d0a` is round 11's base and nothing precedes the landing** |
 | **BE round 12** | **BE10-R1..R4 with BE8-R1/R2** — **R2 first if the file is opened before the landing** |
-| **BE round 11** | **the R-442 §3(c) DURABLE LANDING** — after the 00:14Z read **AND** after round 10 lands |
+| **BE round 11** | **LANDED** at `fc70b17` (Q-BE-236) — **the two `fwd5/` receipts are IN GIT, byte-identical**: `4000106752f816e4…` **14,022 B** and `0907b0369e14d77b…` **1,123 B** (both re-hashed here). **The 09-01 race score of record is now a tracked artifact** |
+| **DA round 18** | **LANDED** at `c511750` (Q-DA-214) — the held chain **rebased with no content moved** (`21de639`…`7792fb5`), plus the **tracked 09-02 verdict** and the **force-added 09-02 mask** |
+| **DA round 19** | a **proposal row** — the `v5_deploy_gates` "host-load join" gate is **36/38 OFF the unit path** (sa25 recycled by sysstat); **rule 15 rules out a SKIP** |
 | **BE — durable landing** | now **BE round 11**: after the **00:14Z** read **AND** after round 10 lands — **a driver whose selftest fails at its tip cannot produce the artifact of record** |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
@@ -1784,6 +1786,76 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-03 ~00:36Z (MEM) — THE NIGHT THE CALENDAR STOPPED BEING A PLAN
+
+**R-486, R-487 and the three landings swept.** Nothing run; every figure below
+re-derived at the blob or the file.
+
+**The first governed verdict exists.** The 00:06Z unit fired with **status 0**, and
+I read the artifacts rather than the report: the 09-02 verdict hashes
+**`6f283262df463957`**, `as_of` **2026-09-03T00:06:01.399260Z**, with
+**`race_accrual_eligible` TRUE** for btc and eth. The mask hashes
+**`0bac652c44fba8f2`** and carries **251 masked windows across 7 coins, every one
+CONTENT_THIN** — btc 40, eth 40, xrp 40, sol 39, bnb 38, doge 38, hype 16. The
+00:14Z preflight read **10/10, GOVERNED_VERDICT_COMPLETE**. **After weeks of
+building the instrument, the instrument ran on a real day and produced a
+verdict.**
+
+**And the decision it produces is not ours.** The **09-02 accrual on its
+complement is the USER's call** (R-409). **R-486 RECOMMENDS ACCRUE and it is
+UNRULED** — I have written those two facts in that order, because a
+recommendation recorded next to an unruled item is one careless read away from
+becoming the decision.
+
+**The receipts of record are in git, and byte-identical.** BE round 11 landed
+`4000106752f816e4…` (**14,022 B**) and `0907b0369e14d77b…` (**1,123 B**) — I
+re-hashed both from the commit. **The 09-01 race score has moved from a
+scratchpad under `/tmp` to a tracked artifact**, which is the whole arc of R-442
+§3(c) finished. DA round 18 landed the chain **rebased with no content moved**,
+plus the tracked verdict and the force-added mask.
+
+**The new fact is a wiring fact and it deserves its escalation.** The **09-04
+00:06Z run will execute the LANDED chain** — rounds 10–12 are production wiring —
+and **the installed unit is UNPINNED**: I diffed them. The repo's unit file
+carries `Environment=DA_MIDNIGHT_VERIFY_BIN=…` at `:51`; **the installed unit has
+no such line**, only `ExecStart` at `:47`. So tomorrow's run resolves its binary at
+run time. **The coordinator recommends no pin and no install**, and the reviewer's
+landings round verifies the launcher path first. *An unpinned unit is not a defect
+tonight; it is a fact that must be known before the night it matters.*
+
+**One mismatch that is expected, and one detail inside it that is not obvious.**
+The 09-02 mask's `producer.module_sha256_prefix` is **`d191695dcff0546e`** while
+the working `da_blackout_mask.py` is **`15ea6dcb8c97c72d`** — expected, because
+**the binding is `carrying_commit`**, not the working file. And the
+`carrying_commit` it records is **`3eabeeb…` — my own round-64 state-file
+commit.** The artifact of record for 09-02 is bound to a bookkeeping commit,
+simply because that was the branch tip at 00:06Z. **`carrying_commit` names the
+TREE, not the author** — worth writing down before someone reads a MEM commit as
+provenance for a DA artifact.
+
+**A gate is red off the unit path, and the response is the right one.**
+`v5_deploy_gates` "host-load join" reads **36/38** because **sa25 was recycled by
+sysstat** — an input that aged out, not a code change. **Rule 15 rules out a
+SKIP**, so DA round 19 is **a proposal row** rather than a quiet exclusion. *An
+absent input is a status; the rule that forbids the easy fix is doing exactly what
+it was written for.*
+
+**And the calendar caught up with a phrase.** The withdrawn *"earliest 09-03"* is
+now **dated history — 09-03 arrived and the run did not.** I re-read all five
+occurrences and rewrote **three that spoke in the future tense** (both
+`phase4_run_*` flags and the preconditions block beside the ruling), because their
+conditions have all happened: **DE is at round 41, the reviewer has read through
+40, §5 is settled, the package is forwarded.** **What gates the run now is the
+USER's answer.** The **two occurrences inside dated entries I left untouched** —
+they were true when stamped, which is the rule I set in round 55 and the second
+time it has decided a case cleanly.
+
+**DE round 41 verified at `8479b67`: 124 checks**, DE40-R1/R2/R3 closed and
+driven. Its review is **queued behind the landings round**. **USER items open:
+five** — the 09-02 accrual, the Phase-2 winner, the content-liveness v2 freeze,
+the addendum v2 package, and **the 09-04 run on the landed chain (a fact with a
+recommendation, not a request for a number)**. **Nothing runs.**
 
 ### 2026-09-02 ~23:41Z (MEM) — A COST ESTIMATE THAT INCLUDES "AND THEN WE ASK
 ### YOU AGAIN"
@@ -2722,9 +2794,11 @@ landing is not a verification.
 
 **The run's preconditions are now written beside the ruling**, where a reader
 meets them: the round **after DE round 33 lands AND the reviewer reads it**,
-**no date** — R-464 §6 withdrew *"earliest 09-03"*; it is the round after DE
-round 34 lands, the reviewer reads it and §5 is settled — after tonight's
-landings, by coordinator dispatch under the memory-capped scope, **into the
+**no date — and that is now DEMONSTRATED rather than promised: 09-03 arrived
+and the run did not.** The conditions this line once named have all happened —
+DE is at round 41, the reviewer has read through round 40, §5 is settled, and the
+package is **forwarded**. **What gates the run now is the USER's answer**, after
+which it goes by coordinator dispatch under the memory-capped scope, **into the
 declared OUTDIR only**. **Four gates, and the
 protocol frozen before any of them** — which is the whole reason a diagnostic can
 be scheduled at all without becoming evidence.

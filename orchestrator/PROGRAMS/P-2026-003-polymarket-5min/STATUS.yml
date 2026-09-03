@@ -4,6 +4,63 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-03T00:36Z (MEM ROUND 65 -- THE NIGHT THE CALENDAR STOPPED BEING A
+  PLAN). R-486, R-487 and the three landings swept; nothing run; every figure
+  re-derived at the blob or the file. THE FIRST GOVERNED VERDICT EXISTS: the
+  00:06Z unit fired with STATUS 0, and I read the artifacts rather than the
+  report -- the 09-02 verdict hashes 6f283262df463957, as_of
+  2026-09-03T00:06:01.399260Z, with race_accrual_eligible TRUE for btc and eth;
+  the mask hashes 0bac652c44fba8f2 and carries 251 MASKED WINDOWS ACROSS 7 COINS,
+  EVERY ONE CONTENT_THIN (btc 40, eth 40, xrp 40, sol 39, bnb 38, doge 38, hype
+  16); the 00:14Z preflight read 10/10 GOVERNED_VERDICT_COMPLETE. After weeks of
+  building the instrument, THE INSTRUMENT RAN ON A REAL DAY AND PRODUCED A
+  VERDICT. AND THE DECISION IT PRODUCES IS NOT OURS: the 09-02 ACCRUAL on its
+  complement is THE USER'S CALL (R-409), and R-486 RECOMMENDS ACCRUE AND IT IS
+  UNRULED -- written in that order, because A RECOMMENDATION RECORDED NEXT TO AN
+  UNRULED ITEM IS ONE CARELESS READ AWAY FROM BECOMING THE DECISION. THE RECEIPTS
+  OF RECORD ARE IN GIT AND BYTE-IDENTICAL: BE round 11 landed 4000106752f816e4
+  (14,022 B) and 0907b0369e14d77b (1,123 B), both RE-HASHED FROM THE COMMIT --
+  the 09-01 race score has moved FROM A SCRATCHPAD UNDER /tmp TO A TRACKED
+  ARTIFACT, which finishes the whole arc of R-442 section 3(c); DA round 18
+  landed the chain REBASED WITH NO CONTENT MOVED plus the tracked verdict and the
+  force-added mask. THE NEW FACT IS A WIRING FACT AND DESERVES ITS ESCALATION:
+  the 09-04 00:06Z run WILL EXECUTE THE LANDED CHAIN (rounds 10-12 are production
+  wiring) and THE INSTALLED UNIT IS UNPINNED -- I DIFFED THEM: the repo's unit
+  file carries Environment=DA_MIDNIGHT_VERIFY_BIN at :51 and THE INSTALLED UNIT
+  HAS NO SUCH LINE, only ExecStart at :47, so tomorrow's run RESOLVES ITS BINARY
+  AT RUN TIME. The coordinator recommends NO PIN AND NO INSTALL and the
+  reviewer's landings round verifies the launcher path first. AN UNPINNED UNIT IS
+  NOT A DEFECT TONIGHT; IT IS A FACT THAT MUST BE KNOWN BEFORE THE NIGHT IT
+  MATTERS. ONE MISMATCH THAT IS EXPECTED, WITH A DETAIL INSIDE IT THAT IS NOT
+  OBVIOUS: the 09-02 mask's producer.module_sha256_prefix is d191695dcff0546e
+  while the working da_blackout_mask.py is 15ea6dcb8c97c72d -- expected, because
+  THE BINDING IS carrying_commit -- and the carrying_commit it records is
+  3eabeeb, MY OWN ROUND-64 STATE-FILE COMMIT. The artifact of record for 09-02 is
+  bound to a bookkeeping commit simply because that was the branch tip at 00:06Z:
+  carrying_commit NAMES THE TREE, NOT THE AUTHOR, worth writing down before
+  someone reads a MEM commit as provenance for a DA artifact. A GATE IS RED OFF
+  THE UNIT PATH AND THE RESPONSE IS THE RIGHT ONE: v5_deploy_gates "host-load
+  join" reads 36/38 because SA25 WAS RECYCLED BY SYSSTAT -- an input that AGED
+  OUT, not a code change -- and RULE 15 RULES OUT A SKIP, so DA round 19 is A
+  PROPOSAL ROW rather than a quiet exclusion: AN ABSENT INPUT IS A STATUS, and
+  the rule that forbids the easy fix is doing exactly what it was written for.
+  AND THE CALENDAR CAUGHT UP WITH A PHRASE: the withdrawn "earliest 09-03" is now
+  DATED HISTORY -- 09-03 ARRIVED AND THE RUN DID NOT. I re-read all five
+  occurrences and REWROTE THE THREE THAT SPOKE IN THE FUTURE TENSE (both
+  phase4_run_* flags and the preconditions block beside the ruling), because
+  their conditions have ALL HAPPENED: DE is at round 41, the reviewer has read
+  through 40, section 5 is settled, the package is FORWARDED, and WHAT GATES THE
+  RUN NOW IS THE USER'S ANSWER. The TWO occurrences inside dated entries I LEFT
+  UNTOUCHED -- true when stamped, the rule I set in round 55 and the second time
+  it has decided a case cleanly. DE ROUND 41 VERIFIED at 8479b67: 124 checks,
+  DE40-R1/R2/R3 closed and driven, four mutants red by name; its review QUEUED
+  behind the landings round. USER ITEMS OPEN: FIVE -- the 09-02 accrual, the
+  Phase-2 winner, the content-liveness v2 freeze, the addendum v2 package, and
+  the 09-04 run on the landed chain (A FACT WITH A RECOMMENDATION, not a request
+  for a number). NOTHING RUNS. UNCHANGED: G is now the race's to count on the
+  09-02 complement once the USER rules; the 011 family 12 of 24 with Q4 failing;
+  the sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-02T23:41Z (MEM ROUND 64 -- A COST ESTIMATE THAT INCLUDES "AND THEN WE
   ASK YOU AGAIN"). R-485 and the reviewer's DE-40 filing swept; nothing run;
   committed blobs only; no plan, review or request file touched. THE ITEM WORTH
@@ -85,62 +142,6 @@ updated: >-
   accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
   3b7e10a), BE round 11 = the durable landing, CO-8, --require-no-skips,
   DATA_ROOT split. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
-  sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-02T22:59Z (MEM ROUND 62 -- THE REFUSAL DOES NOT SAY WHICH REFUSAL IT
-  IS). R-483 and the reviewer's DE-39 filing swept; nothing run; committed blobs
-  only. THE MILESTONE FIRST, STATED SO THE TWO HALVES CANNOT MERGE: the reviewer
-  has RELEASED the package -- conditions (i)-(iv) ALL MET at cd93663, with its
-  own question answered on the record, "May the package travel whole? YES --
-  DE39-C1 does not hold it", sent WITH section 5's enable_reduce clause -- AND IT
-  IS NOT FORWARDED. It travels AT DE'S ROUND-40 TIP, ONCE THE COORDINATOR
-  VERIFIES THE DRAFT CLAUSE AT THE BLOB, because A PACKAGE FORWARDED BEFORE THE
-  CLAUSE LANDS WOULD BE SUPERSEDED IN-BAND THE SAME NIGHT (rule 13) -- the USER
-  would be reading a document a correction was already chasing. After many rounds
-  of "not forwarded" the word that changed is RELEASED, and I have KEPT THE TWO
-  APART in the bundle status rather than letting the good news blur the gate. The
-  two reasons that stood there last round are CLOSED AND REPLACED, NOT ANNOTATED
-  (DE39-C1 and condition (i)): a status field that accumulates struck-through
-  reasons stops being a status field. DE39-R1 IS THE FINDING I WOULD MOST WANT A
-  READER TO SEE AND I READ IT AT THE BLOB: the predicate row computes "interval":
-  ("NULL_QUANTILES" if c.get("null_quantiles") else "POINT_ESTIMATE_NO_INTERVAL"),
-  so POINT_ESTIMATE_NO_INTERVAL IS EMITTED WHENEVER null_quantiles IS FALSY --
-  covering A NULL THAT COLLAPSED (degenerate, one distinct accepted draw) AND A
-  NULL THAT NEVER RAN -- with NO null FIELD IN THE ROW TO TELL THEM APART, while
-  the comment directly above says "an interval only where the draws ran;
-  everywhere else THE LABEL SAYS WHAT IT IS". THE LABEL IS THE SAME IN BOTH CASES,
-  SO IT DOES NOT. READ THAT AGAINST LAST ROUND AND THE LESSON IS SHARPER THAN
-  EITHER FINDING ALONE: round 39 taught the artifact to REFUSE A STATISTIC IT
-  CANNOT SUPPORT and I recorded that as its best property; THIS ROUND SHOWS THE
-  REFUSAL DOES NOT SAY WHICH REFUSAL IT IS. A REFUSAL IS ONLY AS INFORMATIVE AS
-  ITS REASON, and "no interval" answers a question nobody asked -- the reader
-  wants to know whether the null was EMPTY or ABSENT; the prose promising the
-  discrimination the code does not make is the same class AGAIN, now INSIDE THE
-  FIX I PRAISED. DE39-R2 CAME IN THE OTHER DIRECTION AND THAT IS WORTH ITS OWN
-  LINE: the coordinator had len(_ca) == 1 (:2492) as "noted, not a finding" and
-  THE REVIEWER'S READING WAS ADOPTED -- the check ENCODES TODAY'S SINGLE
-  changed_at and should group by it. Most weeks the traffic runs the other way (a
-  claim that does not reproduce, a contested blocker); A NOTE PROMOTED TO A
-  FINDING BY A SECOND READER is the same machinery working in the direction
-  nobody celebrates. EVERY DE38 CLOSURE IS CONFIRMED, EACH DRIVEN, and the six
-  literals were verified at BOTH SIDES of 851edaf by the reviewer's own _fn_asts
-  -- the THIRD independent instrument on that seal in three rounds: A SEAL
-  CHECKED ONLY BY THE TOOL THAT WROTE IT IS A MIRROR, and this one has now been
-  read by three different parsers. SEQUENCING WITH THE ONE RESTRAINT THAT
-  MATTERS: cd93663 is round 40's base, four-step order (ruling (i); rulings
-  (ii)+(iii); DE39-R1; DE39-R2) with THE DRAFT CLAUSE LAST, and THE REVIEWER'S
-  STEP 5 -- the wiring's expensive half -- IS USER-GATED AND NOT DISPATCHED: a
-  reviewer may recommend work the coordinator may not start, and recording the
-  gap is how the gate survives the enthusiasm. UNCHANGED AND STATED: the PHASE-4
-  RUN HAS NO DATE; preflight() STILL REFUSES AT THE SCORER (1.33 s); the bundle
-  sha stays 6a62569f536e460f AS OF cd93663 until round 40 moves the DRAFT. MY
-  ROUND 61 VERIFIED WITH NOTHING FOUND, archive batch 67 verbatim. SEATS: DE
-  round 40 dispatched (Q-DE-58 expected); the reviewer, BE and DA on RECORDED
-  STANDBY. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake
-  after, R-409 accrual with the R-411(ii) denominator, DA landing at e353119
-  (HOLD -> 3b7e10a), BE round 11 = the durable landing, CO-8,
-  --require-no-skips, DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed
-  tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
@@ -3749,12 +3750,12 @@ flags:
   de31_r1_de32_r3_not_dispatched: "round 34 unless the round-33 tip carries them"
   de_r32_shell_not_runner: "e52d183 released as declaration + instruments, NOT as a producer"
   phase4_cap2_unenforced_at_e52d183: "protocol :41-45 has it; addendum 0 hits; tranche_table never called"
-  phase4_run_when: "NO DATE (R-464 6 withdrew 'earliest 09-03'): the round AFTER DE r34 lands, the reviewer reads it, and 5 is settled; declared OUTDIR only"
+  phase4_run_when: "STILL NO DATE, and the conditions that once defined it HAVE ALL HAPPENED: DE is at round 41, the reviewer has read through round 40, section 5 is settled and the package is FORWARDED. What now gates the run is THE USER'S ANSWER to the addendum v2 asks -- nothing runs before it. Declared OUTDIR only. (The withdrawn 'earliest 09-03' is dated history: 09-03 arrived on 2026-09-03 and the run did not.)"
   reviewer_da_r17_released: "e353119 (f4c7734); DA17-R1 behind DA landing"
   de_r33_code_tip: "6d04833 18:20:40Z; row Q-DE-51 landed at 2b72d02, FILED not verified"
   de_r33_verified_short: "6d04833; nine findings DE33-C1..C9, three HIGH; Q-DE-51 = VERIFIED-SHORT"
   de_r34_dispatched: "Q-DE-52 18:42Z; C1..C9 + five open reviewer findings; feature table as the object"
-  phase4_run_has_no_date: "earliest 09-03 WITHDRAWN (R-464 6); after DE r34 lands, reviewer reads, 5 settled"
+  phase4_run_has_no_date: "TRUE, and now demonstrated rather than promised: 09-03 came and went with no run. R-464 6 withdrew the 'earliest 09-03' phrasing; the round-34 conditions it named are all met; the gate is the USER"
   user_open_runner_two_numbers: "R-464 5: theta_repost=theta_cancel/2 (:188), HALF_SPREAD_CENTS=0.5 (:101); zero hits in protocol/addendum/manifest"
   be_r9_landed_pending_verification: "90638c3 + row 07681d2; main tree clean at the tip"
   cap_unconsumed_call: "6d04833:1068 cap = tranche_table(...) assigned and never used; :979 call is in the selftest"
@@ -3812,7 +3813,14 @@ flags:
   de39_r2_open: "LOW: len(_ca) == 1 at :2492 encodes today's single changed_at -- group by it. The coordinator had it as NOTED, NOT A FINDING; THE REVIEWER'S READING WAS ADOPTED"
   reviewer_de_r39_released: "650569c 22:55:56Z, 194 lines; EVERY DE38 closure CONFIRMED, each DRIVEN; the six literals verified at BOTH sides of 851edaf by the reviewer's own _fn_asts -- a THIRD independent parser on that seal"
   de_r40_executed: "35452c0 (Q-DE-58): counts 31/119/26/21/26/21/184/92; rulings (i)(ii)(iii), DE39-R1 and DE39-R2 ALL DRIVEN, plus the IN-SUITE REORDERING INVARIANCE; runner 3f4bf21da2dfa188 (3,329 lines, EXPECTED_CHECKS = 119) -- verified by MEM at the blob"
-  user_pending_four: "(1) the 09-02 accrual after tonight's 00:06Z/00:14Z reads; (2) the Phase-2 winner; (3) the content-liveness v2 freeze; (4) the addendum v2 package, FORWARDED. Item (1) is NEW TO THIS LIST -- it has lived in these files as R-409's principle applied mechanically after the verdict, and both readings are recorded, not merged"
+  user_pending_five: "(1) the 09-02 ACCRUAL on its complement -- the USER's call per R-409, with R-486 RECOMMENDING ACCRUE and UNRULED; (2) the Phase-2 winner; (3) the content-liveness v2 freeze; (4) the addendum v2 package, FORWARDED; (5) the 09-04 run on the LANDED chain -- A FACT WITH A RECOMMENDATION, not a request for a number"
+  first_governed_verdict_landed: "00:06Z (09-03) unit fired status 0; 09-02 verdict sha16 6f283262df463957 as_of 2026-09-03T00:06:01.399260Z, race_accrual_eligible TRUE for btc and eth; mask sha16 0bac652c44fba8f2 with 251 masked across 7 coins, ALL CONTENT_THIN (btc 40, eth 40, xrp 40, sol 39, bnb 38, doge 38, hype 16); preflight 10/10 GOVERNED_VERDICT_COMPLETE at 00:14:17Z -- all re-derived at the blobs by MEM"
+  receipts_of_record_in_git: "BE round 11 fc70b17 (Q-BE-236): 4000106752f816e4 14,022 B and 0907b0369e14d77b 1,123 B, BYTE-IDENTICAL, re-hashed from the commit -- the 09-01 race score has moved from a /tmp scratchpad to a TRACKED artifact"
+  da_r18_landed: "c511750 (Q-DA-214): the held chain REBASED WITH NO CONTENT MOVED (21de639...7792fb5), plus the tracked 09-02 verdict and the force-added 09-02 mask"
+  unit_unpinned_for_0904: "ESCALATED: the 09-04 00:06Z run executes the LANDED chain (rounds 10-12 are production wiring). DIFFED BY MEM: the repo unit carries Environment=DA_MIDNIGHT_VERIFY_BIN at :51; THE INSTALLED UNIT HAS NO SUCH LINE, only ExecStart at :47. Coordinator recommends NO PIN and NO INSTALL; the reviewer's landings round verifies the launcher path first"
+  mask_producer_sha_mismatch_expected: "the 09-02 mask records producer.module_sha256_prefix d191695dcff0546e while the working da_blackout_mask.py is 15ea6dcb8c97c72d -- EXPECTED, the binding being carrying_commit 3eabeeb, WHICH IS MEM'S OWN ROUND-64 STATE-FILE COMMIT: carrying_commit NAMES THE TREE, NOT THE AUTHOR"
+  da_r19_proposal_row: "v5_deploy_gates host-load join is 36/38 OFF THE UNIT PATH -- sa25 recycled by sysstat, an input that AGED OUT; RULE 15 RULES OUT A SKIP, so round 19 is a PROPOSAL ROW rather than a quiet exclusion"
+  de_r41_verified: "8479b67 (Q-DE-59): 124 checks, DE40-R1/R2/R3 closed and driven, four mutants red by name; its review QUEUED behind the landings round"
   reviewer_de_r40_released: "c3f8743 23:38:26Z, 166 lines; ruling (i) YES; (ii)+(iii) CONFIRMED CLOSED on a 21-FIELD MEASUREMENT (exactly ONE moves); DE39-R1 CONFIRMED CLOSED; DE39-R2 CLOSED IN FORM (kept verbatim -- closed in form and closed are different claims); 35452c0 = round 41 base, three-step order"
   de40_r1_r2_r3_open: "DE40-R1 LOW-MED (_by_ca has NO FALSIFIER), DE40-R2 LOW (null_status derived FROM ABSENCE rather than FROM REQUEST), DE40-R3 LOW (a six-field enumeration where the block is wider) -> DE round 41, IN FLIGHT at base 35452c0"
   ask5_per_answer_cost: "the reviewer's ESTIMATE, nothing decided (rule 14): MECHANICS = one field, one refusal, one falsifier; score-split = a round AND A RE-DECLARATION THAT TRAVELS BACK TO THE USER"
@@ -3830,7 +3838,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T23:41Z, build and test the offline model mechanism-first
+  As-of 2026-09-03T00:36Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are

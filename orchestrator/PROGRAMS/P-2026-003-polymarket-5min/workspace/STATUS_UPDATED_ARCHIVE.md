@@ -4606,3 +4606,65 @@ Moved in the MEM round-64 true-up of R-485 and the DE-40 filing. Join rule as in
   G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419
   revocable.
 ```
+
+## Batch 71 — archived 2026-09-03T00:36Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-65 true-up of R-486, R-487 and the three landings. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T22:59Z (MEM ROUND 62 -- THE REFUSAL DOES NOT SAY WHICH REFUSAL IT
+  IS). R-483 and the reviewer's DE-39 filing swept; nothing run; committed blobs
+  only. THE MILESTONE FIRST, STATED SO THE TWO HALVES CANNOT MERGE: the reviewer
+  has RELEASED the package -- conditions (i)-(iv) ALL MET at cd93663, with its
+  own question answered on the record, "May the package travel whole? YES --
+  DE39-C1 does not hold it", sent WITH section 5's enable_reduce clause -- AND IT
+  IS NOT FORWARDED. It travels AT DE'S ROUND-40 TIP, ONCE THE COORDINATOR
+  VERIFIES THE DRAFT CLAUSE AT THE BLOB, because A PACKAGE FORWARDED BEFORE THE
+  CLAUSE LANDS WOULD BE SUPERSEDED IN-BAND THE SAME NIGHT (rule 13) -- the USER
+  would be reading a document a correction was already chasing. After many rounds
+  of "not forwarded" the word that changed is RELEASED, and I have KEPT THE TWO
+  APART in the bundle status rather than letting the good news blur the gate. The
+  two reasons that stood there last round are CLOSED AND REPLACED, NOT ANNOTATED
+  (DE39-C1 and condition (i)): a status field that accumulates struck-through
+  reasons stops being a status field. DE39-R1 IS THE FINDING I WOULD MOST WANT A
+  READER TO SEE AND I READ IT AT THE BLOB: the predicate row computes "interval":
+  ("NULL_QUANTILES" if c.get("null_quantiles") else "POINT_ESTIMATE_NO_INTERVAL"),
+  so POINT_ESTIMATE_NO_INTERVAL IS EMITTED WHENEVER null_quantiles IS FALSY --
+  covering A NULL THAT COLLAPSED (degenerate, one distinct accepted draw) AND A
+  NULL THAT NEVER RAN -- with NO null FIELD IN THE ROW TO TELL THEM APART, while
+  the comment directly above says "an interval only where the draws ran;
+  everywhere else THE LABEL SAYS WHAT IT IS". THE LABEL IS THE SAME IN BOTH CASES,
+  SO IT DOES NOT. READ THAT AGAINST LAST ROUND AND THE LESSON IS SHARPER THAN
+  EITHER FINDING ALONE: round 39 taught the artifact to REFUSE A STATISTIC IT
+  CANNOT SUPPORT and I recorded that as its best property; THIS ROUND SHOWS THE
+  REFUSAL DOES NOT SAY WHICH REFUSAL IT IS. A REFUSAL IS ONLY AS INFORMATIVE AS
+  ITS REASON, and "no interval" answers a question nobody asked -- the reader
+  wants to know whether the null was EMPTY or ABSENT; the prose promising the
+  discrimination the code does not make is the same class AGAIN, now INSIDE THE
+  FIX I PRAISED. DE39-R2 CAME IN THE OTHER DIRECTION AND THAT IS WORTH ITS OWN
+  LINE: the coordinator had len(_ca) == 1 (:2492) as "noted, not a finding" and
+  THE REVIEWER'S READING WAS ADOPTED -- the check ENCODES TODAY'S SINGLE
+  changed_at and should group by it. Most weeks the traffic runs the other way (a
+  claim that does not reproduce, a contested blocker); A NOTE PROMOTED TO A
+  FINDING BY A SECOND READER is the same machinery working in the direction
+  nobody celebrates. EVERY DE38 CLOSURE IS CONFIRMED, EACH DRIVEN, and the six
+  literals were verified at BOTH SIDES of 851edaf by the reviewer's own _fn_asts
+  -- the THIRD independent instrument on that seal in three rounds: A SEAL
+  CHECKED ONLY BY THE TOOL THAT WROTE IT IS A MIRROR, and this one has now been
+  read by three different parsers. SEQUENCING WITH THE ONE RESTRAINT THAT
+  MATTERS: cd93663 is round 40's base, four-step order (ruling (i); rulings
+  (ii)+(iii); DE39-R1; DE39-R2) with THE DRAFT CLAUSE LAST, and THE REVIEWER'S
+  STEP 5 -- the wiring's expensive half -- IS USER-GATED AND NOT DISPATCHED: a
+  reviewer may recommend work the coordinator may not start, and recording the
+  gap is how the gate survives the enthusiasm. UNCHANGED AND STATED: the PHASE-4
+  RUN HAS NO DATE; preflight() STILL REFUSES AT THE SCORER (1.33 s); the bundle
+  sha stays 6a62569f536e460f AS OF cd93663 until round 40 moves the DRAFT. MY
+  ROUND 61 VERIFIED WITH NOTHING FOUND, archive batch 67 verbatim. SEATS: DE
+  round 40 dispatched (Q-DE-58 expected); the reviewer, BE and DA on RECORDED
+  STANDBY. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake
+  after, R-409 accrual with the R-411(ii) denominator, DA landing at e353119
+  (HOLD -> 3b7e10a), BE round 11 = the durable landing, CO-8,
+  --require-no-skips, DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed
+  tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+```
