@@ -159,6 +159,18 @@ escalate; never accrue or refuse it yourself.**
 
 ---
 
+## 5a. Resetting the seats
+
+The stop / consolidate / clear / reload operation is a **skill**:
+`.claude/skills/seat-reset/SKILL.md` (invoke as `/seat-reset`; add
+`+coordinator` to include this session's own reset). It carries the four-question
+stop dispatch, the WIP-HELD rule for uncommitted worktree edits, the harvest step
+(seat pane scrollback is NOT retained), the doc-consolidation order, the
+self-contained brief shape, and the guardrails. First executed 2026-09-03,
+recorded as R-495.
+
+---
+
 ## 6. Standing prohibitions (coordinator)
 
 - **Never** run `da_midnight_verify.sh` in production mode; never set
