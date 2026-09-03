@@ -64,6 +64,60 @@ def EXEC_TREE() -> Path:
 DERIVED = REPO / "data/pm_5min/derived"
 MARKETS = REPO / "data/pm_5min/markets.jsonl"
 RATIFICATION_REF = "R-419"          # R-419 supersedes R-418 (DE round 9)
+
+#: R-502: the USER ratified 08-29 for a DEVELOPMENT READ. It does NOT
+#: supersede R-419, which stands unchanged and still ratifies the forward
+#: race from 20260901 -- the register now carries two ratification fences.
+#:
+#: KEYED BY DAY, exactly as `USER_ADMISSIONS_BY_DAY` is, and for the same
+#: reason: a day not in this table gets the race ref and the race gate, so
+#: the development ratification cannot become the driver's mode.
+#:
+#: AND THE GATE IS CHOSEN WITH IT, NEVER A FLAG. DE round 51 made
+#: `race_admissible` load-bearing IN THE REFUSING DIRECTION: the default
+#: `require_verified` REFUSES a non-race block BY NAME with
+#: `NotForRaceAdmission`, and a development read must reach for a
+#: DIFFERENTLY-NAMED function. A flag on the default gate would mean a
+#: caller who forgets it gets an admission; a separate name means a caller
+#: who forgets it gets a refusal. That asymmetry is the whole design, so
+#: this selector returns the ref AND the gate together and there is no
+#: parameter anywhere that turns one into the other.
+DEVELOPMENT_READ_RATIFICATIONS = {
+    "20260829": {
+        "ref": "R-502",
+        "ratified_by": "USER",
+        "recorded_at": "R-502",
+        "scope_days": "DEVELOPMENT_READ_DAYS",
+        "scope_from": "20260829", "scope_to": "20260829",
+        "does_not_supersede": ("R-419 -- the race ratification stands "
+                               "unchanged and still ratifies from 20260901"),
+        "why_this_day": ("the USER withdrew 08-29 from the race at R-500 and "
+                         "kept it readable; this ratifies the POPULATION for "
+                         "that read and for nothing else"),
+    },
+}
+
+
+def ratification_for(day: str) -> dict:
+    """The ref and the GATE for this day, chosen together.
+
+    Returns the race pair for every day but the ones the USER has ratified
+    for a development read -- so the race path is what a caller gets by
+    default and by omission, and the development path takes naming it."""
+    d = DEVELOPMENT_READ_RATIFICATIONS.get(day)
+    if d is None:
+        return {"ref": RATIFICATION_REF,
+                "gate": RAT.require_verified,
+                "gate_name": "de_ratification_check.require_verified",
+                "kind": "RACE",
+                "why": "no development ratification covers this day"}
+    return {"ref": d["ref"],
+            "gate": RAT.require_verified_for_development_read,
+            "gate_name": "de_ratification_check."
+                         "require_verified_for_development_read",
+            "kind": "DEVELOPMENT_READ",
+            "why": d["why_this_day"],
+            "record": d}
 #: The USER-authorised freeze commit (R-421 §2). Every sha the candidate and
 #: its manifest bind equals the blob HERE; the tree moved the anchors in nine
 #: commits afterwards. Rule 12: the frozen set is the commit's bytes.
@@ -1090,7 +1144,8 @@ def population(day: str, present: dict = None) -> dict:
     # CO-5 / R-421 §4: `verified` ALONE reads absence as a pass. The PAIR is
     # required -- verified AND nothing unverifiable -- because a field the
     # checker could not bind is not a field that passed.
-    rat = RAT.check(supply, RATIFICATION_REF)
+    _sel = ratification_for(day)
+    rat = RAT.check(supply, _sel["ref"])
     # The assertion's RESULT is recorded, so removing the call removes the
     # evidence: on a healthy day a bypassed pair-check changes no answer, and
     # a guard nothing can observe is a guard nothing protects.
@@ -1105,14 +1160,19 @@ def population(day: str, present: dict = None) -> dict:
     # forgeable-evidence defect I named in `pair_asserted` last round, made
     # again here. The evidence is now the checker's RETURN VALUE, so removing
     # the call leaves `_rv` unbound and the driver cannot run at all.
-    _rv = RAT.require_verified(rat)   # RAISES on a refusal; see below
+    _rv = _sel["gate"](rat)          # RAISES on a refusal; see below
     rat["pair_asserted"] = assert_ratification_pair(rat)
     # ONE place, and it is HERE. A second reading in `run_forward_day` could
     # not be reached by any affordable suite (gate 2 is 60 s in, the replay is
     # 26 min), so a mutant deleting it survived while the suite stayed green.
     # A guard nothing can drive is a guard nothing protects.
     rat["require_verified"] = {
-        "checker": "de_ratification_check.require_verified",
+        "checker": _sel["gate_name"],
+        "ratification_ref_used": _sel["ref"],
+        "ratification_kind": _sel["kind"],
+        "why_this_gate": _sel["why"],
+        "race_admissible_reported_by_the_checker": _rv.get("race_admissible"),
+        "scope_days_reported_by_the_checker": _rv.get("scope_days"),
         "verified": bool(_rv.get("verified")),
         "unverifiable": list(_rv.get("unverifiable") or ()),
         "provenance_absent": not _rv.get("provenance"),
@@ -1122,7 +1182,7 @@ def population(day: str, present: dict = None) -> dict:
     # the checker let through, which is nothing -- and the audit proved it,
     # by disabling it with no test able to notice (H5b).
     specs = SEAM.window_specs_from_supply(
-        supply, ratification_ref=RATIFICATION_REF)   # refusals propagate
+        supply, ratification_ref=_sel["ref"])        # refusals propagate
     # MEASURED (mutant H6): stubbing this call with a literal `{"agree":
     # True}` survived, because the controls exercised the function and nobody
     # consumed its result. The record must reproduce the ledger it checked.
@@ -1734,8 +1794,12 @@ def run_forward_day(day: str, outdir: Path) -> int:
     import time
     t_start = time.time()
     outdir.mkdir(parents=True, exist_ok=True)
+    # R24: this hardcoded RATIFICATION_REF, so the FIRST 08-29 receipt says
+    # `R-419` at the top while the population was admitted under `R-502` --
+    # the headline ref contradicting the ref actually used. It is derived
+    # from the same selector the gate uses, so the two cannot disagree.
     rec: dict = {"protocol": "BE_FORWARD_DAY_SEALED_V1", "day": day,
-                 "ratification_ref": RATIFICATION_REF,
+                 "ratification_ref": ratification_for(day)["ref"],
                  "as_of_utc": _as_of(),
                  "sealed": True,
                  "sealing_note": "per-action scores and every value metric are "
