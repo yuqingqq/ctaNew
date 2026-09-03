@@ -50,6 +50,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import harmful_action_eval as AE
 import phase2_increment_null as PIN
+import phase2_iter011 as I11
 
 
 class ForwardMetricRefused(RuntimeError):
@@ -465,6 +466,29 @@ def increment(rows, cand_scores, inc_scores, theta: float,
             "unit": "ACTION", "baseline": "INCUMBENT, not a base rate (rule 9)"}
 
 
+def paired_null(inc_by_window: dict, n_perm: int = I11.N_PERM_011,
+                seed: int = I11.PERM_SEED_011) -> dict:
+    """The paired sign-flip null, BORROWED FROM THE INSTRUMENT THAT SORTS.
+
+    BE15-S1, and it is a correction to round 14's own choice. This module first
+    borrowed `phase2_increment_null.sign_flip_p`, which consumes
+    `inc_by_window.values()` in DICT ORDER. `phase2_iter011.sign_flip_null`
+    sorts its keys at consumption and says why in its own docstring: R-234's
+    defect was a seeded sign sequence applied to an unpinned data order, so
+    every run was an independent draw rather than a replay, and *"sorting the
+    keys ... belongs here, at the point of consumption, where it cannot be
+    undone by a caller's iteration order."*
+
+    MEASURED, not argued: on one dict's content in two insertion orders,
+    `sign_flip_p` returns 0.27680798 and 0.23690773 while `sign_flip_null`
+    returns 0.27680798 both times. My `increment()` happens to build its dict
+    in sorted order, so the old borrow was correct BY THE CALLER -- which is
+    exactly the reliance R-234 says must not exist. It also returns the
+    ONE-SIDED `p_value` that R-286/R-288 adjudicate, which `sign_flip_p` does
+    not compute at all."""
+    return I11.sign_flip_null(inc_by_window, n_perm=n_perm, seed=seed)
+
+
 def exclusions(rows, *score_vectors) -> dict:
     """Statuses with counts, never silent drops (rule 4).
 
@@ -514,7 +538,7 @@ def cluster_disclosure(rows) -> dict:
 # every control fires on the bad case AND ADMITS the good one -- a named SKIP
 # is not an admission.
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 56
+EXPECTED_CHECKS = 59
 
 _L = 50
 
@@ -790,14 +814,37 @@ def selftest() -> int:
     ok(incd["increment_cents"] != 0.0,
        "and a genuinely different incumbent gives a NON-ZERO increment, so "
        "the zero above is the identity and not a dead code path")
-    null = PIN.sign_flip_p(self_inc["increment_by_window"], n_perm=200, seed=1)
-    ok(null["p_two_sided"] == 1.0,
-       "POSITIVE CONTROL: an all-zero increment yields p = 1.0 -- the null "
-       "behaves at the degenerate point rather than dividing by zero")
-    null2 = PIN.sign_flip_p(incd["increment_by_window"], n_perm=200, seed=1)
-    ok(null2["n_perm"] == 200 and 0 < null2["p_two_sided"] <= 1.0,
-       "POSITIVE CONTROL: the borrowed sign-flip null runs at a declared draw "
-       "count and returns a p in (0, 1]")
+    null = paired_null(self_inc["increment_by_window"], n_perm=200, seed=1)
+    ok(null["p_two_sided"] == 1.0 and null["p_value"] == 1.0,
+       "POSITIVE CONTROL: an all-zero increment yields p = 1.0 on BOTH sides "
+       "-- the null behaves at the degenerate point rather than dividing by "
+       "zero")
+    null2 = paired_null(incd["increment_by_window"], n_perm=200, seed=1)
+    ok(null2["n_perm"] == 200 and 0 < null2["p_value"] <= 1.0
+       and null2["sided"] == "one",
+       "POSITIVE CONTROL: the borrowed null runs at a declared draw count and "
+       "returns the ONE-SIDED p that R-286/R-288 adjudicate")
+    # BE15-S1 BOTH DIRECTIONS: order-invariance is the property being borrowed
+    # FOR, so it is driven -- and the known-bad shows the instrument this
+    # module NO LONGER uses is order-DEPENDENT on the same content.
+    _b = {f"w{i:03d}": (i % 7) - 3.0 + 0.5 for i in range(40)}
+    import random as _r
+    _ks = list(_b); _r.Random(99).shuffle(_ks)
+    _shuf = {k: _b[k] for k in _ks}
+    ok(paired_null(_b, n_perm=400, seed=7)["p_two_sided"]
+       == paired_null(_shuf, n_perm=400, seed=7)["p_two_sided"],
+       "BE15-S1 POSITIVE CONTROL: the borrowed null is ORDER-INVARIANT -- the "
+       "same content in a different insertion order gives the same p")
+    ok(PIN.sign_flip_p(_b, n_perm=400, seed=7)["p_two_sided"]
+       != PIN.sign_flip_p(_shuf, n_perm=400, seed=7)["p_two_sided"],
+       "BE15-S1 KNOWN-BAD: `phase2_increment_null.sign_flip_p`, which round 14 "
+       "borrowed, gives a DIFFERENT p for the same content in a different "
+       "order -- the R-234 defect, still live, and the reason for the swap")
+    ok("sorted(" in __import__("inspect").getsource(I11.sign_flip_null)
+       and "sorted(" not in __import__("inspect").getsource(PIN.sign_flip_p),
+       "BE15-S1 the difference is located at the SOURCE: one sorts at "
+       "consumption, the other does not -- asserted from the code, not from "
+       "the two p-values alone")
 
     # ---- EXCLUSIONS AND CLUSTER DISCLOSURE -----------------------------
     ex = exclusions(rows, cand, inc)
