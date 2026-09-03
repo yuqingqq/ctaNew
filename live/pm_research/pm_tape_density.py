@@ -91,7 +91,7 @@ DATA_ROOT_BRANCH: str = "unresolved"
 
 #: DA11-R1: this suite's own total, asserted over ran + skipped so an empty
 #: data root cannot produce the same summary line as a complete one.
-EXPECTED_CHECKS = 9
+EXPECTED_CHECKS = 16
 
 
 def _resolve_data_root() -> Path:
@@ -317,6 +317,108 @@ def sensitivity(days: list[str], gaps, raw_root: Path = RAW,
     return out
 
 
+def data_root_resolution_audit(module_dir: Path | None = None
+                               ) -> dict:
+    """Who still derives a DATA path the way RR12-1 forbade, and who pins one?
+
+    THE RULE THIS MODULE OWNS, stated once and then CHECKED rather than
+    trusted: code paths come from `__file__`, data paths come from
+    `_resolve_data_root()`. RR12-1 was that rule's first violation and it was
+    repaired at `da_blackout_mask` and `da_forward_day_verify` by importing
+    the resolution from here -- but a repair applied at the sites that were
+    noticed is not a class closed, which is how `flow_intensity` kept the old
+    expression until round 23 and quietly emptied the accrual selector for
+    every worktree run.
+
+    TWO CATEGORIES, DIFFERENT VERDICTS, and collapsing them would be wrong:
+
+      * `derived_data_roots` -- a module-level CONSTANT that becomes a DATA
+        path off a `__file__`-derived root. THIS is RR12-1's defect: from a
+        worktree it resolves to a tree with no tape and the reader sees an
+        EMPTY population, which is the failure that reads like a clean result.
+      * `other_joins` -- the same join inside a function or a suite. A USE,
+        not a declaration, and reported apart because counting them together
+        makes the audit flag its own falsifier (it did).
+      * `pinned_canonical_paths` -- a data path hardcoded to the canonical
+        tree. NOT the same defect and mostly not a defect at all: it always
+        reads the real data, so it fails safe. Its cost is different and is
+        stated rather than scored -- such a path cannot be redirected, so a
+        run under PM_DATA_ROOT redirects the readers that resolve and not
+        these, giving a PARTIAL isolation. This repo has already paid for the
+        general form of that (an isolation covering only the visible half
+        reads as isolated).
+
+    REPORTED, NEVER ENFORCED (rule 14). Several of the pinned paths are other
+    seats' files, and DA's own two -- the era ledger and the collector log --
+    are canonical deliberately.
+
+    ONE THING THIS SCANNER GOT WRONG FIRST, AND ITS OWN FALSIFIER CAUGHT IT.
+    The root-assignment pattern was anchored with `^` and compiled WITHOUT
+    `re.M`, so `^` matched only the start of the FILE: every root declared on
+    any line but the first was invisible and the scan returned a clean 0 over
+    164 files. The planted-violation control refused to fire and that is the
+    only reason the zero was not believed -- rule 15 exactly, on the
+    instrument rather than on the code it audits.
+    """
+    d = (Path(__file__).resolve().parent if module_dir is None
+         else Path(module_dir))
+    if not d.is_dir():
+        raise Refused(
+            f"REFUSED: no module directory at {d}. An audit that cannot read "
+            f"the source must refuse, never report a clean surface -- a "
+            f"silent regex mismatch once reported exactly that.")
+    _asg = re.compile(
+        r"^\s*([A-Z_][A-Z0-9_]*)\s*=\s*Path\(__file__\)\.resolve\(\)"
+        r"\.parents?\[?\d*\]?", re.M)
+    _pin = re.compile(r"""Path\(\s*["']/home/yuqing/ctaNew/data/""")
+    _JOIN = r"\b%s\s*/\s*[\"']data/"
+    derived, other, pinned = [], [], []
+    files = sorted(d.glob("*.py"))
+    for f in files:
+        try:
+            txt = f.read_text(encoding="utf-8", errors="replace")
+        except OSError:                                      # pragma: no cover
+            continue
+        names = set(_asg.findall(txt))
+        for n, line in enumerate(txt.splitlines(), 1):
+            if line.lstrip().startswith("#"):
+                continue
+            if _pin.search(line):
+                pinned.append({"file": f.name, "line": n,
+                               "text": line.strip()[:110]})
+            for nm in names:
+                if not re.search(_JOIN % nm, line):
+                    continue
+                rec = {"file": f.name, "line": n, "root": nm,
+                       "text": line.strip()[:110]}
+                # A DECLARATION is the class RR12-1 names: a module-level
+                # constant that BECOMES a data path. A join inside a function
+                # or a selftest is a USE -- reported separately, because
+                # counting the two together makes an audit of its own suite
+                # flag itself, which this one did.
+                if re.match(r"^[A-Z_][A-Z0-9_]*\s*=", line):
+                    derived.append(rec)
+                else:
+                    other.append(rec)
+    return {
+        "module_dir": str(d), "n_files_scanned": len(files),
+        "derived_data_roots": derived,
+        "n_derived_data_roots": len(derived),
+        "derived_root_files": sorted({x["file"] for x in derived}),
+        "other_joins": other,
+        "n_other_joins": len(other),
+        "pinned_canonical_paths": pinned,
+        "n_pinned_canonical_paths": len(pinned),
+        "pinned_files": sorted({x["file"] for x in pinned}),
+        "rr12_1_class_closed": not derived,
+        "role": "REPORTED_NOT_ENFORCED",
+        "note": ("`rr12_1_class_closed` is about the FIRST category only. "
+                 "The pinned paths are a different trade-off and are listed "
+                 "so the partial-isolation cost is visible, not so they can "
+                 "be counted as violations."),
+    }
+
+
 def all_days(raw_root: Path = RAW) -> list[str]:
     """Derived from disk, never hardcoded — the day list in this repo went
     stale four times in three days when it was a literal."""
@@ -456,6 +558,104 @@ def selftest() -> int:
     else:
         skip("resolved-root-carries-days",
              f"{DATA_ROOT}/data/pm_5min/raw (branch {DATA_ROOT_BRANCH})")
+    # ---------------------------------------------------------------- RR12-1
+    # THE CLASS, NOT THE INSTANCE. The scanner is driven on a planted
+    # violation before its zero on the real tree is allowed to mean anything
+    # (rule 15: a zero from an instrument that never proved it can fire is not
+    # a result -- a silent regex mismatch once reported a clean surface).
+    import tempfile as _tfa
+    with _tfa.TemporaryDirectory() as _t:
+        _d = Path(_t)
+        (_d / "clean.py").write_text(
+            "from pathlib import Path\n"
+            "CODE_ROOT = Path(__file__).resolve().parents[2]\n"
+            "DOC = CODE_ROOT / 'docs/README.md'\n"
+            "# COMMENTED = CODE_ROOT / \"data/pm_5min\"\n", encoding="utf-8")
+        _a0 = data_root_resolution_audit(_d)
+        ok(_a0["n_derived_data_roots"] == 0
+           and _a0["n_pinned_canonical_paths"] == 0
+           and _a0["rr12_1_class_closed"] is True,
+           "RR12-1 AUDIT admits a clean file: a `__file__`-derived root is "
+           "fine when what hangs off it is CODE, and a commented-out join is "
+           "not a join")
+        (_d / "guilty.py").write_text(
+            "from pathlib import Path\n"
+            "REPO = Path(__file__).resolve().parents[2]\n"
+            "PM = REPO / \"data/pm_5min\"\n", encoding="utf-8")
+        _a1 = data_root_resolution_audit(_d)
+        # THE MESSAGE MUST NOT INDEX WHAT THE CHECK IS TESTING FOR. Written
+        # the obvious way -- `_a1["derived_data_roots"][0]["root"]` inside the
+        # label -- this check FAILED WITH AN IndexError instead of by name the
+        # moment the scanner stopped finding anything, which is the shape
+        # R-495 (D) named. Driven: re-introducing the anchor bug now goes red
+        # BY NAME with the empty list shown.
+        _hits = _a1["derived_data_roots"]
+        ok(len(_hits) == 1 and _hits[0]["file"] == "guilty.py"
+           and _hits[0]["root"] == "REPO"
+           and _a1["rr12_1_class_closed"] is False,
+           f"RR12-1 AUDIT FIRES on a planted DECLARATION and names the root "
+           f"(got {_hits!r}) -- the exact expression "
+           f"`flow_intensity` carried until this round. NOTE: the FIRST "
+           f"version of this scanner anchored on `^` without re.M, so it saw "
+           f"only line 1 of each file and returned a clean 0 across 164 "
+           f"files. THIS control is the only reason that zero was not "
+           f"believed")
+        (_d / "uses.py").write_text(
+            "from pathlib import Path\n"
+            "ROOT = Path(__file__).resolve().parents[2]\n"
+            "def f():\n"
+            "    return ROOT / \"data/pm_5min/derived\"\n", encoding="utf-8")
+        _a1b = data_root_resolution_audit(_d)
+        ok(_a1b["n_derived_data_roots"] == 1 and _a1b["n_other_joins"] == 1
+           and _a1b["other_joins"][0]["file"] == "uses.py",
+           "RR12-1 AUDIT separates a DECLARATION from a USE: the same join "
+           "inside a function is reported as an other-join and does not move "
+           "the class count. Without that split an audit of its own suite "
+           "flags its own falsifier, which this one did")
+        (_d / "pinned.py").write_text(
+            "from pathlib import Path\n"
+            "DERIVED = Path(\"/home/yuqing/ctaNew/data/pm_5min/derived\")\n",
+            encoding="utf-8")
+        _a2 = data_root_resolution_audit(_d)
+        ok(_a2["n_derived_data_roots"] == 1
+           and _a2["n_pinned_canonical_paths"] == 1
+           and _a2["pinned_files"] == ["pinned.py"],
+           "RR12-1 AUDIT keeps the two categories APART: a hardcoded "
+           "canonical path is counted as PINNED and not as a derived-root "
+           "violation. They fail in opposite directions -- one reads an "
+           "empty tree, the other always reads the real one -- so scoring "
+           "them together would hide which is which")
+    try:
+        data_root_resolution_audit(Path("/nonexistent/pm_research"))
+        ok(False, "RR12-1 AUDIT must refuse an absent module dir")
+    except Refused as _e:
+        ok("never report a clean surface" in str(_e),
+           "RR12-1 AUDIT REFUSES an unreadable source tree -- 'I could not "
+           "read it' must never come back as 'nothing to find'")
+    _real = data_root_resolution_audit()
+    _ACCRUAL = ("flow_intensity.py", "warning_window.py", "pm_tape_density.py",
+                "da_forward_day_verify.py", "da_blackout_mask.py")
+    _bad = [f for f in _ACCRUAL if f in _real["derived_root_files"]]
+    ok(not _bad,
+       f"RR12-1 THE ACCRUAL PATH IS CLEAN, and that is the claim this round "
+       f"is entitled to make: none of {list(_ACCRUAL)} declares a data root "
+       f"from `__file__` (offenders: {_bad}). `flow_intensity` was the last "
+       f"one and it is repaired here; `da_blackout_mask` and "
+       f"`da_forward_day_verify` already import this module's resolution, so "
+       f"RR12-1's ORIGINAL SITE needs nothing further")
+    ok(_real["rr12_1_class_closed"] is False
+       and _real["n_derived_data_roots"] > 0,
+       f"RR12-1 THE CLASS IS NOT CLOSED, MEASURED AND NOT ASSUMED: "
+       f"{_real['n_derived_data_roots']} declaration(s) across "
+       f"{len(_real['derived_root_files'])} of {_real['n_files_scanned']} "
+       f"files still resolve a data path from `__file__`, plus "
+       f"{_real['n_other_joins']} other join(s) and "
+       f"{_real['n_pinned_canonical_paths']} canonical pin(s). "
+       f"`pm_host_load_join.py` is among them -- DA20-R4, already filed, now "
+       f"shown to be ONE MEMBER OF A CLASS rather than a lone nit. This "
+       f"check asserts the state is REPORTED, not that it is zero: closing "
+       f"26 files is a dispatch, not a side effect")
+
     if len(checks) + len(skipped) != EXPECTED_CHECKS:
         raise AssertionError(
             f"pm_tape_density selftest FAILED: {len(checks)} ran + "

@@ -37,16 +37,67 @@ import datetime as dt
 import json
 import math
 import random
+import sys
 import zlib
 from pathlib import Path
 from typing import Any, Iterator, Mapping, Sequence, Iterable
 
-REPO = Path(__file__).resolve().parents[2]
+#: RR12-1, AT THE SITE WHERE THE RESOLUTION HAPPENS. CODE ROOT AND DATA ROOT
+#: ARE NOT THE SAME TREE, and this module reads DATA. `REPO` was
+#: `Path(__file__).resolve().parents[2]`, which is right for CODE and wrong for
+#: the tape: `data/` is gitignored and exists ONCE, so from a worktree this
+#: resolved to a tree with no `data/pm_5min/raw` and `_archive_paths()`
+#: returned an EMPTY MAP.
+#:
+#: WHAT THAT COST, MEASURED RATHER THAN FEARED. `warning_window.select_holdout`
+#: reads its windows through here, and `da_forward_day_verify`'s
+#: `entirely_post_freeze` reads the selector. From a bare worktree the selector
+#: was empty for EVERY era, so a live `verify_day` returned
+#: `post_freeze_pass: FALSE` for EVERY day -- 2026-09-01 and 2026-09-02
+#: INCLUDED, the two days that have accrued, whose artifacts read True. The
+#: message said "absent from the selector", which reads as a data problem and
+#: is a ROOT problem. Measured: 0 archive paths from a worktree against 29,438
+#: with the tape mirrored, the SAME code both times.
+#:
+#: PRODUCTION WAS NEVER WRONG -- the nightly unit runs from the canonical tree,
+#: where the old expression and the new resolution return the SAME path. What
+#: was wrong is that every VERIFICATION run in a detached scratch worktree read
+#: a silently empty tape, so the defect corrupted the instrument used to check
+#: the work rather than the work.
+#:
+#: ONE RULE, IMPORTED, NEVER A SECOND COPY. `pm_tape_density` is the
+#: lowest-level reader of this tape and owns the resolution (explicit
+#: PM_DATA_ROOT > the code tree IF it carries the tape > canonical), so
+#: everything above it agrees by construction instead of by two expressions
+#: that can disagree.
+CODE_ROOT = Path(__file__).resolve().parents[2]
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+import pm_tape_density as _TDROOT                              # noqa: E402
+DATA_ROOT = _TDROOT.DATA_ROOT
+#: WHICH BRANCH ANSWERED, re-exported so a short run is self-explaining rather
+#: than merely smaller (DA10-R2's lesson, applied to this module's consumers).
+DATA_ROOT_BRANCH = _TDROOT.DATA_ROOT_BRANCH
+
+#: KEPT UNDER ITS OLD NAME ON PURPOSE. Twenty-two modules read `fi.REPO`,
+#: `fi.PM`, `fi.RAW`, `fi.GAPS` or `fi.MARKETS`, and every one of them wants
+#: the TAPE -- so the name keeps its meaning and only its resolution is
+#: repaired. The one consumer that wants the CODE (the register path in
+#: `file_vacate_row`) is moved to CODE_ROOT below, which is the whole
+#: distinction RR12-1 draws.
+REPO = DATA_ROOT
 PM = REPO / "data/pm_5min"
 RAW = PM / "raw"
 GAPS = PM / "collector_gaps.jsonl"
 MARKETS = PM / "markets.jsonl"
 OUT_MD = Path(__file__).with_name("FLOW_INTENSITY_RESULTS.md")
+
+#: THE REGISTER IS CODE, NOT DATA. It is tracked, it exists in every worktree,
+#: and a run from a worktree that filed into the CANONICAL tree's register
+#: would be writing to a tree it is not in. Named as a constant so the
+#: distinction is checkable rather than buried in a default argument.
+REGISTER_DEFAULT = (CODE_ROOT / "orchestrator/PROGRAMS/P-2026-003-polymarket-5min"
+                    / "workspace/COORDINATION.md")
 
 WINDOW_S = 300.0
 QUOTE_STATE_LAG_S = 0.250  # frozen; shared by numerator and exposure
@@ -595,8 +646,7 @@ def file_vacate_obligation(result: Mapping[str, Any],
     if dry_run:
         return {"filed": False, "dry_run": True, "row": row,
                 "note": "re-call with dry_run=False to append"}
-    path = register or (REPO / "orchestrator/PROGRAMS/P-2026-003-polymarket-5min"
-                               / "workspace/COORDINATION.md")
+    path = register or REGISTER_DEFAULT
     text = path.read_text()
     marker = "\n## 0. Roles"
     if marker not in text:
@@ -1297,6 +1347,100 @@ def selftest() -> int:
        "a re-sampled markout leaves the operative bar untouched")
     ok(_cand["status"] == "CANDIDATE_NOT_A_BAR" and _cand["amendment_is_free"] is False,
        "and is labelled a candidate whose amendment is no longer free")
+
+    # ----------------------------------------------------------------------
+    # RR12-1 AT ITS ORIGIN: the roots, driven in BOTH directions on real trees.
+    #
+    # The old expression is not argued about here, it is RUN: a scratch code
+    # tree with no `data/` is built, this module is copied into it, and a CHILD
+    # imports it twice -- once as shipped, once with the pre-fix line restored.
+    # One finds the tape, the other finds nothing. That is the defect and its
+    # repair in the same check.
+    # ----------------------------------------------------------------------
+    import shutil as _sh
+    import subprocess as _sp
+    import tempfile as _tf
+
+    _PROBE = (
+        "import sys, json\n"
+        "sys.path.insert(0, sys.argv[1])\n"
+        "import flow_intensity as fi\n"
+        "print(json.dumps({'code_root': str(fi.CODE_ROOT),\n"
+        "                  'repo': str(fi.REPO),\n"
+        "                  'data_root': str(fi.DATA_ROOT),\n"
+        "                  'branch': fi.DATA_ROOT_BRANCH,\n"
+        "                  'raw': str(fi.RAW),\n"
+        "                  'n_paths': len(fi._archive_paths())}))\n")
+
+    def _child(tree: Path, prefix_mutant: bool) -> dict:
+        """Import this module from `tree` and report what it resolved."""
+        src = Path(__file__).resolve().parent
+        dst = tree / "live" / "pm_research"
+        dst.mkdir(parents=True, exist_ok=True)
+        for _n in ("flow_intensity.py", "pm_tape_density.py"):
+            _sh.copy2(src / _n, dst / _n)
+        if prefix_mutant:
+            _t = (dst / "flow_intensity.py").read_text(encoding="utf-8")
+            _t = _t.replace("REPO = DATA_ROOT\n",
+                            "REPO = Path(__file__).resolve().parents[2]\n", 1)
+            (dst / "flow_intensity.py").write_text(_t, encoding="utf-8")
+        _pr = tree / "probe.py"
+        _pr.write_text(_PROBE, encoding="utf-8")
+        _r = _sp.run([sys.executable, str(_pr), str(dst)],
+                     capture_output=True, text=True, timeout=600)
+        if _r.returncode != 0:                               # pragma: no cover
+            raise AssertionError(f"probe failed: {_r.stderr[-400:]}")
+        return json.loads(_r.stdout.strip().splitlines()[-1])
+
+    with _tf.TemporaryDirectory() as _t:
+        _tree = Path(_t) / "tapeless"
+        _fixed = _child(_tree, prefix_mutant=False)
+        ok(_fixed["code_root"] == str(_tree)
+           and _fixed["repo"] != str(_tree)
+           and _fixed["data_root"] != str(_tree)
+           and _fixed["branch"] == "3_canonical"
+           and _fixed["n_paths"] > 0,
+           f"RR12-1 REPAIRED, DRIVEN: imported from a code tree with NO "
+           f"`data/`, this module resolves CODE_ROOT to that tree and "
+           f"DATA_ROOT elsewhere (branch {_fixed['branch']}), and finds "
+           f"{_fixed['n_paths']} archive paths")
+        _broken = _child(Path(_t) / "tapeless_mutant", prefix_mutant=True)
+        ok(_broken["repo"] == _broken["code_root"]
+           and _broken["n_paths"] == 0,
+           f"RR12-1 KNOWN-BAD, THE ORIGINAL EXPRESSION RESTORED IN A COPY: "
+           f"`REPO = Path(__file__).resolve().parents[2]` in the SAME tree "
+           f"resolves the tape to the code tree and finds "
+           f"{_broken['n_paths']} archive paths. That empty map is what made "
+           f"`warning_window.select_holdout` return no days and "
+           f"`entirely_post_freeze` read FALSE for every day, 09-01 and "
+           f"09-02 included")
+
+        # AND THE CANONICAL BEHAVIOUR IS UNCHANGED -- a tree that CARRIES the
+        # tape still resolves to ITSELF, which is what the nightly unit does.
+        _own = Path(_t) / "carries"
+        (_own / "data" / "pm_5min").mkdir(parents=True)
+        (_own / "data" / "pm_5min" / "raw").symlink_to(RAW)
+        _r3 = _child(_own, prefix_mutant=False)
+        ok(_r3["repo"] == _r3["data_root"] == _r3["code_root"] == str(_own)
+           and _r3["branch"] == "2_code_tree_carries_the_tape"
+           and _r3["n_paths"] > 0,
+           f"RR12-1 REGRESSION CONTROL: a code tree that DOES carry the tape "
+           f"still resolves to ITSELF (branch {_r3['branch']}, "
+           f"{_r3['n_paths']} paths) -- so in the canonical tree, which is "
+           f"where the nightly unit runs, the new resolution returns exactly "
+           f"the path the old expression returned. The repair changes what a "
+           f"WORKTREE reads and nothing else")
+
+    ok(str(REGISTER_DEFAULT).startswith(str(CODE_ROOT))
+       and not str(REGISTER_DEFAULT).startswith(str(DATA_ROOT) + "/orch"),
+       f"RR12-1 THE OTHER HALF: the register default follows CODE_ROOT "
+       f"({CODE_ROOT}), not the data root. The register is TRACKED and exists "
+       f"in every worktree; a run from a worktree that filed into the "
+       f"canonical tree's register would be writing to a tree it is not in")
+    ok(CODE_ROOT != DATA_ROOT or (CODE_ROOT / "data/pm_5min/raw").is_dir(),
+       "RR12-1 and the two roots are ALLOWED to be equal -- they are, in the "
+       "canonical tree -- so this check states the property rather than "
+       "asserting a difference that only a worktree has")
 
     print(f"flow_intensity selftest: {checks} checks OK")
     return 0
