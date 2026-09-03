@@ -1,12 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T01:21Z — **THE DE LANE IS AT REST.** `5658f24` is RELEASED
-as the runner's **RESTING TIP** with **NO new findings**, and **there is no round
-43 until the USER rules on the five asks** — the lane has run out of work that is
-not a decision. **Nothing was forced**: `c511750`, `8479b67`, `fcdbb15` and my
-`8a31112` are each **ancestors** of the tip, all four checked here. **Two numbers
-that look like a discrepancy are ONE LINE at two injection depths — and both are
-right.** **USER items: FIVE.**
+Updated: 2026-09-03T02:08Z — **DA 20 is READY and HELD, UNPUSHED** — read here
+**by sha from the shared object store**, `d37c3d9` (+748/−54 across four files,
+`EXPECTED_CHECKS` **247 → 254**) — **HELD, not landed**. **The unit path is
+byte-identical to `b950e55`** on both legs I checked. **And the round that fixed
+four checks that could not FIRE surfaced a fifth that cannot either: deleting
+EITHER production `annotate_governance` call leaves the suite GREEN at 254** — a
+coordinator measurement **DA did not make**, routed to the reviewer **unruled**.
+**USER items: FIVE.**
 
 ## READ FIRST — current project handoff
 
@@ -892,7 +893,7 @@ launchers at **235/19**.
 | **DA round 18** | **LANDED** at `c511750` (Q-DA-214) — the held chain **rebased with no content moved** (`21de639`…`7792fb5`), plus the **tracked 09-02 verdict** and the **force-added 09-02 mask** |
 | **BE11 + DA18 landings review** | **RELEASED** (`95a0e0e`, 215 lines, 00:44:56Z) — **nothing must move before Fri 2026-09-04 00:06:00 UTC**; the unit path driven **end to end, NON-production**, in the reviewer's scratch root; the eight held/landed DA commits are **`=` pairwise by range-diff**, so **the DA-17 RELEASE transfers**. Two findings **off the unit path**: **DA18-R1 (MED)**, **BE11-R1 (LOW)** |
 | **DA round 19** | a **proposal row** — "host-load join" **36/38 OFF the unit path**; **R-488 CORRECTED the ageing premise at the host**: `HISTORY=7`, `sa2` deletes at **00:07Z daily**, so **`sar25` dies at 00:07Z on 09-04** |
-| **DA round 20** | **DISPATCHED — builds now, HOLDS its landing until after 00:06Z 09-04.** Day-relative liveness with completeness **DERIVED** (**143 = 24 h / 10 min − 1**, last 23:50Z, **no literal**) and the reviewer's **two-job split** |
+| **DA round 20** | **READY and HELD — UNPUSHED, in DA's worktree**, read here **by sha from the shared object store**: `d37c3d9` (parent `5a11ee9`, 01:18:02Z, **4 files +748/−54**) with row-only child `0cd18ba` (Q-DA-216). `da_blackout_mask` **`10d02c09…`**, `da_forward_day_verify` **`bb7213d6…`** (**`EXPECTED_CHECKS` 247 → 254**), `pm_host_load_join` **`8689db8b…`**, new fixture **31,428 B** `d663ce6b…`. **NOT on the branch — HELD, not landed** |
 | **BE — durable landing** | now **BE round 11**: after the **00:14Z** read **AND** after round 10 lands — **a driver whose selftest fails at its tip cannot produce the artifact of record** |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
@@ -971,8 +972,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on RECORDED STANDBY until BE 12 lands or DA 20 reports
-READY.** **BE 12 in flight; DA 20 in flight and HELD.** **Released so far**
+**The reviewer is on DA round 20, HELD** (`REQUEST_DA_ROUND_20_2026-09-03.md`,
+eight items — **the landing is NOT part of the round**). **BE 12 in flight; DE at
+rest at `5658f24`.** **Released so far**
 include the **BE11+DA18 landings** (`95a0e0e`) and DE rounds 37–42, the last at
 `1de1761`. **Released so far** include BE rounds
 9+10 (`a8e88de`), the **BE11+DA18 landings** (`95a0e0e`), and DE rounds 37
@@ -1791,6 +1793,69 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-03 ~02:08Z (MEM) — FOUR CHECKS THAT COULD NOT FIRE, AND A FIFTH
+### NOBODY HAD LOOKED FOR
+
+**R-493 and the DA-20 request swept.** Nothing run; the held chain read **by sha
+from the shared object store**, never from DA's worktree.
+
+**Everything I could check, I checked, and it holds.** `d37c3d9` (**01:18:02Z**,
+parent **`5a11ee9`** — my round-68 commit) changes **four files, +748/−54**:
+`da_blackout_mask` **`10d02c092939be48`**, `da_forward_day_verify`
+**`bb7213d6e4f78dee`** with **`EXPECTED_CHECKS` 247 → 254** (247 confirmed at
+`b950e55`), `pm_host_load_join` **`8689db8b34697d4b`**, and a new fixture
+`fixtures/sysstat_parser_control.sa` at **31,428 B**, **`d663ce6b…`**. The
+row-only child is `0cd18ba`. **It is NOT on the branch** — **HELD and unpushed**,
+and the state files say so.
+
+**And the reason that matters tonight: the unit path does not move.** I compared
+both legs against `b950e55` — `da_midnight_verify.sh` **`4d79d79a2afc8346`** and
+`v5_deploy_gates.py` **`b6e4b23a8180a641`** — **byte-identical**. So **748 lines
+of new work sit beside the 09-04 run without touching it**, which is exactly what
+"builds now, holds the landing" was supposed to mean, demonstrated rather than
+asserted.
+
+**The finding of the round is one DA did not make, and it is rule 17 in its purest
+form.** Deleting **EITHER** production `annotate_governance` call — day level or
+per coin — **leaves the suite green at 254**. **The wiring has no falsifier in the
+suite.** In a round titled for *four checks that could not fire*, the measurement
+found **a fifth thing that cannot fire: the call itself.** *A suite can prove every
+function and still prove nothing about whether anything calls them* — and the only
+way that surfaces is a deletion nobody was asked to try. **Routed to the reviewer
+as item 5, unruled**, which is the right handling: the coordinator measured it and
+did not also rule it.
+
+**DA's own closures are strong where they land.** DA18-R1 — **my round-66 finding,
+whose cause was my row-only commits** — is reproduced **as a defect by an
+out-of-module replay** (rc 1 *"nothing to commit"* at the row-only tip; rc 0 with
+the plant) and **closed by the plant plus an rc check**. *The fix checks the return
+code that was discarded, which is the whole of it.* DA17-R1's CO-10-returning
+mutant is **red at the `HEAD~1` falsifier**. And the host-load regression control
+was reproduced against the **old** module, where the **(3b) defect is live** —
+**September `sa01` printed as `2026-08-01` with an unconditional trailer.** *A
+regression control that reproduces the defect in the module it replaces is the
+strongest form of it.*
+
+**Two unrepaired observations are carried as DA's own, not as closures.** Under a
+**tapeless `PM_DATA_ROOT`**: preflight **39 → 38** and verdict_check **21 → 19**,
+**rc 0, no skip named**. **Checks disappear silently rather than being named as
+skips** — this programme's own rule 11, unrepaired and recorded as such. And
+`pm_host_load_join` **resolves `data/` from `__file__` with no `PM_DATA_ROOT`
+branch**.
+
+**One non-finding recorded as a non-finding**, because otherwise someone
+rediscovers it at 3 a.m.: BE's transient prunable `be-r10-c3-stale` worktree
+entries at `c511750` (**36–37 at 01:58Z, back to 34 by 02:02Z**) are **BE round
+12's fixtures**. *A count that returns to normal on its own is a fixture, and
+saying so costs one line now and an hour later.*
+
+**Sequencing.** The reviewer has **DA 20 HELD** — eight items, and **the landing
+is NOT part of the round**. **DA holds `d37c3d9`/`0cd18ba` until the coordinator
+calls the landing after Fri 2026-09-04 00:06:00 UTC.** **DE rests at `5658f24`;
+BE 12 in flight.** **USER items: FIVE, unchanged** — and **DA 20 does not touch
+the unit path**, so the 09-04 recommendation (no pin, no install) is unaffected by
+any of it.
 
 ### 2026-09-03 ~01:21Z (MEM) — THE LANE RAN OUT OF WORK THAT ISN'T A DECISION
 

@@ -4889,3 +4889,65 @@ Moved in the MEM round-69 true-up of R-492 and the DE-42 filing. Join rule as in
   INSTALL. NOTHING RUNS. UNCHANGED: the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
 ```
+
+## Batch 76 — archived 2026-09-03T02:08Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-70 true-up of R-493 and the DA-20 request. Join rule as in batch 1.
+
+```yaml
+  2026-09-03T01:04Z (MEM ROUND 67 -- A COMMIT ID NAMES THE TREE, NOT THE CHANGE).
+  R-490 and the reviewer's DE-41 filing swept; nothing run; every figure taken at
+  the blob. THE CLOSURES ARE CLEAN AND THE PHRASE THAT CARRIES THEM IS
+  "FALSIFIERS THAT FIRE": DE40-R1/R2/R3 are CLOSED AT THE TIP, each driven, and
+  the counts 31/124/26/21/26/21/184/92 were reproduced by THE REVIEWER AND THE
+  COORDINATOR, INCLUDING THE 92 DE COULD NOT MEASURE -- a count a seat cannot
+  measure, reproduced twice by seats that can, is a stronger fact than a count its
+  author reports. THE PROVENANCE WRINKLE IS THE THIRD OF ITS KIND IN THREE ROUNDS
+  SO I NAME THE PATTERN ONCE INSTEAD OF THE INSTANCE THREE TIMES: the two-group
+  fixture uses a REAL second declaring commit 46ab455 (BE, 08-28) whose PARENT IS
+  647baa7, A COORDINATOR REGISTER COMMIT, and I checked the blobs --
+  647baa7:harmful_exposure_rows.py and f30cf26's are THE SAME BYTES
+  (c0cfdac3788beef4) while 46ab455's is c2e40100ddf3f7a1 -- so THE REVIEWER'S
+  TABLE NAMES THE FILE'S PREVIOUS VERSION BY A COMMIT THAT DID NOT AUTHOR IT, AND
+  THE SHAS HOLD. Put the three together: round 65, a DA artifact's carrying_commit
+  was MEM's state-file commit (IT NAMES THE TREE, NOT THE AUTHOR); round 66, a
+  ROW-ONLY TIP made DA's fixture commit EMPTY and reddened the mask selftest (MY
+  BOOKKEEPING COMMITS ARE PART OF THE CONDITION); round 67, a REGISTER COMMIT is
+  the parent whose blob labels a version (A COMMIT ID NAMES THE TREE, NOT THE
+  CHANGE). IN ALL THREE THE ARTIFACT IS CORRECT ABOUT BYTES AND MISLEADING ABOUT
+  AUTHORSHIP: the ledger's own commits are SUBSTRATE, moving the tip every other
+  seat measures against without moving any code -- NOT A DEFECT TO FIX BUT A
+  PROPERTY TO STATE, so a later reader does not infer authorship from a commit
+  label. DE41-R1 HAS A RECURSION WORTH KEEPING: at :815-820 the refusal that
+  CLOSED DE40-R2 says in its own words that "a null that was never requested and a
+  null that collapsed would be reported alike, from the absence of the same
+  field", and THE GUARD-ONLY MUTANT OF THAT VERY REFUSAL IS CAUGHT BY A KeyError
+  AT :820 RATHER THAN BY THE KNOWN-BAD'S NAME -- the fix for "these two cases read
+  alike" now has a mutant that dies namelessly; reproduced in a scratch worktree,
+  RESTORED BYTE-IDENTICAL, 34 worktrees, derived 178. DE41-R2 IS THE
+  COORDINATOR'S OWN R-487 (A) OBSERVATION, NOW FILED: the DE40-R3 failure line
+  counts the FILTERED block, printing "ALL 21 of the 22 ... identical" ON A RED
+  LINE. BOTH LOWS LIVE IN FAILURE PATHS, which is exactly where this kind of
+  defect survives longest: NOBODY READS THE MESSAGE OF A CHECK THAT PASSES. THREE
+  CLASS ANSWERS ARRIVED AND ALL THREE ARE NEGATIVE IN THE USEFUL WAY: NO
+  ORDER-DEPENDENCE OUTSIDE null_population (the whole cell's 32 fields and the
+  predicate row's 11 identical across DESC/ASC, with ONLY
+  n_accepted_stream_differs moving -- precisely the labelled statistic round 39
+  stopped resting on); the grouping key (changed_at, file) CANNOT MERGE TWO
+  COMMITS; and pred#2 HAS NO DRIVABLE FALSIFIER BY DESIGN AND SAYS SO IN ITS OWN
+  REFUSAL -- a control that cannot be driven and ANNOUNCES that fact is honest,
+  the failure mode being the one that stays silent. AND A COST ESTIMATE WENT DOWN
+  FOR A GOOD REASON: the DE-40 item-6 answer on ask (5) HOLDS LINE FOR LINE, ONE
+  CLAUSE CHEAPER, because NULL_COLLAPSED is now DERIVED from n_draws_requested so
+  THE SHRUNKEN-POPULATION CASE REPORTS ITSELF -- an artifact that learns to report
+  a case removes the clause that was there to describe it; the ask-(5) mechanics
+  stay USER-GATED. SEQUENCING: DE round 42 dispatched (DE41-R2 THEN DE41-R1, base
+  8479b67, v2 DRAFT UNTOUCHED, row Q-DE-60); the reviewer on RECORDED STANDBY
+  until DE 42 or BE 12 lands, with DA 20 HELD AND REVIEWABLE BY SHA WHEN READY;
+  DA 20 and BE 12 in flight. NOTHING MOVES ON THE UNIT PATH BEFORE FRI 2026-09-04
+  00:06:00 UTC. USER ITEMS: FIVE, UNCHANGED -- the 09-02 accrual (R-486
+  recommends ACCRUE, UNRULED), the Phase-2 winner, the content-liveness v2
+  freeze, the addendum v2 package (five asks), the 09-04 run on the landed chain
+  (no pin, no install). UNCHANGED: the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+```

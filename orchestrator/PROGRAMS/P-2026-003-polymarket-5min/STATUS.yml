@@ -4,6 +4,57 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-03T02:08Z (MEM ROUND 70 -- FOUR CHECKS THAT COULD NOT FIRE, AND A FIFTH
+  NOBODY HAD LOOKED FOR). R-493 and the DA-20 request swept; nothing run; the held
+  chain read BY SHA FROM THE SHARED OBJECT STORE, never from DA's worktree.
+  EVERYTHING I COULD CHECK, I CHECKED, AND IT HOLDS: d37c3d9 (01:18:02Z, parent
+  5a11ee9 = my round-68 commit) changes FOUR FILES, +748/-54 --
+  da_blackout_mask 10d02c092939be48, da_forward_day_verify bb7213d6e4f78dee with
+  EXPECTED_CHECKS 247 -> 254 (247 confirmed at b950e55), pm_host_load_join
+  8689db8b34697d4b, and a NEW fixture fixtures/sysstat_parser_control.sa at
+  31,428 B, d663ce6b -- with row-only child 0cd18ba. IT IS NOT ON THE BRANCH:
+  HELD AND UNPUSHED, and the state files say so. AND THE REASON THAT MATTERS
+  TONIGHT: THE UNIT PATH DOES NOT MOVE -- I compared both legs against b950e55,
+  da_midnight_verify.sh 4d79d79a2afc8346 and v5_deploy_gates.py
+  b6e4b23a8180a641, BYTE-IDENTICAL -- so 748 LINES OF NEW WORK SIT BESIDE THE
+  09-04 RUN WITHOUT TOUCHING IT, which is what "builds now, holds the landing"
+  was supposed to mean, DEMONSTRATED RATHER THAN ASSERTED. THE FINDING OF THE
+  ROUND IS ONE DA DID NOT MAKE AND IT IS RULE 17 IN ITS PUREST FORM: deleting
+  EITHER production annotate_governance call -- day level or per coin -- LEAVES
+  THE SUITE GREEN AT 254, so THE WIRING HAS NO FALSIFIER IN THE SUITE. In a round
+  titled for FOUR CHECKS THAT COULD NOT FIRE, the measurement found A FIFTH THING
+  THAT CANNOT FIRE: THE CALL ITSELF. A SUITE CAN PROVE EVERY FUNCTION AND STILL
+  PROVE NOTHING ABOUT WHETHER ANYTHING CALLS THEM, and the only way that surfaces
+  is a deletion nobody was asked to try. Routed to the reviewer as item 5,
+  UNRULED -- the right handling: the coordinator measured it and did not also rule
+  it. DA'S OWN CLOSURES ARE STRONG WHERE THEY LAND: DA18-R1 -- MY round-66
+  finding, whose cause was MY OWN row-only commits -- is reproduced AS A DEFECT by
+  an out-of-module replay (rc 1 "nothing to commit" at the row-only tip; rc 0 with
+  the plant) and CLOSED by the plant plus AN RC CHECK, the fix checking the return
+  code that was discarded; DA17-R1's CO-10-returning mutant is RED at the HEAD~1
+  falsifier; and the host-load regression control was reproduced against the OLD
+  module where the (3b) defect is LIVE -- SEPTEMBER sa01 PRINTED AS 2026-08-01
+  WITH AN UNCONDITIONAL TRAILER -- A REGRESSION CONTROL THAT REPRODUCES THE DEFECT
+  IN THE MODULE IT REPLACES BEING THE STRONGEST FORM OF IT. TWO UNREPAIRED
+  OBSERVATIONS ARE CARRIED AS DA'S OWN, NOT AS CLOSURES: under a TAPELESS
+  PM_DATA_ROOT the preflight goes 39 -> 38 and verdict_check 21 -> 19 with RC 0
+  AND NO SKIP NAMED -- CHECKS DISAPPEARING SILENTLY RATHER THAN BEING NAMED AS
+  SKIPS, this programme's own rule 11 -- and pm_host_load_join resolves data/ from
+  __file__ with NO PM_DATA_ROOT BRANCH. ONE NON-FINDING RECORDED AS A NON-FINDING
+  because otherwise someone rediscovers it at 3 a.m.: BE's transient prunable
+  be-r10-c3-stale worktree entries at c511750 (36-37 at 01:58Z, back to 34 by
+  02:02Z) are BE ROUND 12'S FIXTURES -- a count that returns to normal on its own
+  is a fixture, and saying so costs one line now and an hour later. SEQUENCING:
+  the reviewer has DA 20 HELD (eight items, THE LANDING NOT PART OF THE ROUND); DA
+  holds d37c3d9/0cd18ba until the coordinator calls the landing AFTER FRI
+  2026-09-04 00:06:00 UTC; DE rests at 5658f24; BE 12 in flight. USER ITEMS: FIVE,
+  UNCHANGED -- the 09-02 accrual (R-486 recommends ACCRUE, UNRULED), the Phase-2
+  winner, the content-liveness v2 freeze, the addendum v2 package (five asks;
+  runner at 5658f24, RELEASED), the 09-04 run on the landed chain (no pin, no
+  install) -- AND DA 20 DOES NOT TOUCH THE UNIT PATH, so that recommendation is
+  unaffected by any of it. UNCHANGED: the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-03T01:21Z (MEM ROUND 69 -- THE LANE RAN OUT OF WORK THAT ISN'T A
   DECISION). R-492 and the reviewer's DE-42 filing swept; nothing run; every
   figure taken at the blob. DE HAS REACHED A RESTING TIP AND THAT IS A STATE
@@ -101,62 +152,6 @@ updated: >-
   winner, the content-liveness v2 freeze, the addendum v2 package (five asks), the
   09-04 run on the landed chain (no pin, no install). UNCHANGED: the 011 family 12
   of 24 with Q4 failing; the sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-03T01:04Z (MEM ROUND 67 -- A COMMIT ID NAMES THE TREE, NOT THE CHANGE).
-  R-490 and the reviewer's DE-41 filing swept; nothing run; every figure taken at
-  the blob. THE CLOSURES ARE CLEAN AND THE PHRASE THAT CARRIES THEM IS
-  "FALSIFIERS THAT FIRE": DE40-R1/R2/R3 are CLOSED AT THE TIP, each driven, and
-  the counts 31/124/26/21/26/21/184/92 were reproduced by THE REVIEWER AND THE
-  COORDINATOR, INCLUDING THE 92 DE COULD NOT MEASURE -- a count a seat cannot
-  measure, reproduced twice by seats that can, is a stronger fact than a count its
-  author reports. THE PROVENANCE WRINKLE IS THE THIRD OF ITS KIND IN THREE ROUNDS
-  SO I NAME THE PATTERN ONCE INSTEAD OF THE INSTANCE THREE TIMES: the two-group
-  fixture uses a REAL second declaring commit 46ab455 (BE, 08-28) whose PARENT IS
-  647baa7, A COORDINATOR REGISTER COMMIT, and I checked the blobs --
-  647baa7:harmful_exposure_rows.py and f30cf26's are THE SAME BYTES
-  (c0cfdac3788beef4) while 46ab455's is c2e40100ddf3f7a1 -- so THE REVIEWER'S
-  TABLE NAMES THE FILE'S PREVIOUS VERSION BY A COMMIT THAT DID NOT AUTHOR IT, AND
-  THE SHAS HOLD. Put the three together: round 65, a DA artifact's carrying_commit
-  was MEM's state-file commit (IT NAMES THE TREE, NOT THE AUTHOR); round 66, a
-  ROW-ONLY TIP made DA's fixture commit EMPTY and reddened the mask selftest (MY
-  BOOKKEEPING COMMITS ARE PART OF THE CONDITION); round 67, a REGISTER COMMIT is
-  the parent whose blob labels a version (A COMMIT ID NAMES THE TREE, NOT THE
-  CHANGE). IN ALL THREE THE ARTIFACT IS CORRECT ABOUT BYTES AND MISLEADING ABOUT
-  AUTHORSHIP: the ledger's own commits are SUBSTRATE, moving the tip every other
-  seat measures against without moving any code -- NOT A DEFECT TO FIX BUT A
-  PROPERTY TO STATE, so a later reader does not infer authorship from a commit
-  label. DE41-R1 HAS A RECURSION WORTH KEEPING: at :815-820 the refusal that
-  CLOSED DE40-R2 says in its own words that "a null that was never requested and a
-  null that collapsed would be reported alike, from the absence of the same
-  field", and THE GUARD-ONLY MUTANT OF THAT VERY REFUSAL IS CAUGHT BY A KeyError
-  AT :820 RATHER THAN BY THE KNOWN-BAD'S NAME -- the fix for "these two cases read
-  alike" now has a mutant that dies namelessly; reproduced in a scratch worktree,
-  RESTORED BYTE-IDENTICAL, 34 worktrees, derived 178. DE41-R2 IS THE
-  COORDINATOR'S OWN R-487 (A) OBSERVATION, NOW FILED: the DE40-R3 failure line
-  counts the FILTERED block, printing "ALL 21 of the 22 ... identical" ON A RED
-  LINE. BOTH LOWS LIVE IN FAILURE PATHS, which is exactly where this kind of
-  defect survives longest: NOBODY READS THE MESSAGE OF A CHECK THAT PASSES. THREE
-  CLASS ANSWERS ARRIVED AND ALL THREE ARE NEGATIVE IN THE USEFUL WAY: NO
-  ORDER-DEPENDENCE OUTSIDE null_population (the whole cell's 32 fields and the
-  predicate row's 11 identical across DESC/ASC, with ONLY
-  n_accepted_stream_differs moving -- precisely the labelled statistic round 39
-  stopped resting on); the grouping key (changed_at, file) CANNOT MERGE TWO
-  COMMITS; and pred#2 HAS NO DRIVABLE FALSIFIER BY DESIGN AND SAYS SO IN ITS OWN
-  REFUSAL -- a control that cannot be driven and ANNOUNCES that fact is honest,
-  the failure mode being the one that stays silent. AND A COST ESTIMATE WENT DOWN
-  FOR A GOOD REASON: the DE-40 item-6 answer on ask (5) HOLDS LINE FOR LINE, ONE
-  CLAUSE CHEAPER, because NULL_COLLAPSED is now DERIVED from n_draws_requested so
-  THE SHRUNKEN-POPULATION CASE REPORTS ITSELF -- an artifact that learns to report
-  a case removes the clause that was there to describe it; the ask-(5) mechanics
-  stay USER-GATED. SEQUENCING: DE round 42 dispatched (DE41-R2 THEN DE41-R1, base
-  8479b67, v2 DRAFT UNTOUCHED, row Q-DE-60); the reviewer on RECORDED STANDBY
-  until DE 42 or BE 12 lands, with DA 20 HELD AND REVIEWABLE BY SHA WHEN READY;
-  DA 20 and BE 12 in flight. NOTHING MOVES ON THE UNIT PATH BEFORE FRI 2026-09-04
-  00:06:00 UTC. USER ITEMS: FIVE, UNCHANGED -- the 09-02 accrual (R-486
-  recommends ACCRUE, UNRULED), the Phase-2 winner, the content-liveness v2
-  freeze, the addendum v2 package (five asks), the 09-04 run on the landed chain
-  (no pin, no install). UNCHANGED: the 011 family 12 of 24 with Q4 failing; the
-  sequencing rule; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3840,7 +3835,14 @@ flags:
   be11_r1_answered: "LOW, ANSWERED not carried: the sealed 09-01 score sits on a session scratchpad path AND a durable copy exists at ~/.local/state/pm-co/race_record_20260901_fwd5/, sha aca22317ab06adbf (re-hashed by MEM, same value as round 35 and R-442). No change"
   hostload_ageing_premise_corrected: "R-488 at the host: sysstat HISTORY=7 and sa2 deletes sa??/sar?? older than 7 days AT 00:07Z DAILY, so sar25 is DELETED AT 00:07Z ON 09-04 -- a SCHEDULED EVENT WITH A TIMESTAMP, not slow decay; safety copy OUTSIDE THE REPO at ~/.local/state/pm-co/sysstat_preserve_20260903/ (PROVENANCE.txt, SHA256SUMS, sa26), verified present"
   completeness_is_derived: "143 = 24h / 10min - 1 (last sample 23:50Z), NO LITERAL -- arithmetic checked by MEM; a derived bound moves when the cadence moves, a literal would be silently wrong after"
-  da_r20_builds_and_holds: "dispatched; implements the reviewer's order (day-relative liveness, derived completeness, two-job split) and HOLDS ITS LANDING until after 00:06Z 09-04"
+  da_r20_ready_and_held: "READY and HELD, UNPUSHED, in DA's worktree; read BY SHA from the shared object store: d37c3d9 (parent 5a11ee9 = MEM round 68, 01:18:02Z, 4 files +748/-54) with row-only child 0cd18ba (Q-DA-216). da_blackout_mask 10d02c092939be48; da_forward_day_verify bb7213d6e4f78dee with EXPECTED_CHECKS 247 -> 254 (247 confirmed at b950e55); pm_host_load_join 8689db8b34697d4b; NEW fixture fixtures/sysstat_parser_control.sa 31,428 B d663ce6b. NOT ON THE BRANCH -- HELD, NOT LANDED. All verified by MEM"
+  da_r20_does_not_touch_the_unit_path: "verified by MEM against b950e55: da_midnight_verify.sh 4d79d79a2afc8346 and v5_deploy_gates.py b6e4b23a8180a641 BYTE-IDENTICAL -- 748 lines of new work sitting BESIDE the 09-04 run without touching it; the frozen rule 7196676840304f30 likewise"
+  governance_wiring_unfalsified: "COORDINATOR MEASUREMENT DA DID NOT MAKE: deleting EITHER production annotate_governance call (day level OR per coin) leaves the suite GREEN at 254 -- THE WIRING HAS NO FALSIFIER IN THE SUITE. In a round titled for FOUR CHECKS THAT COULD NOT FIRE, the measurement found A FIFTH THING THAT CANNOT FIRE: THE CALL ITSELF. Rule 17 in its purest form. Routed to the reviewer as item 5, UNRULED"
+  da18_r1_closed_at_the_rc: "MEM's round-66 finding, whose cause was MEM's own row-only commits, reproduced AS A DEFECT by an out-of-module replay (rc 1 nothing-to-commit at the row-only tip; rc 0 with the plant) and CLOSED by the plant plus AN RC CHECK -- the fix checks the return code that was discarded"
+  hostload_regression_control_reproduces_the_old_defect: "run against the 5a11ee9 module, where the (3b) defect is LIVE: September sa01 printed as 2026-08-01 with an unconditional trailer -- A REGRESSION CONTROL THAT REPRODUCES THE DEFECT IN THE MODULE IT REPLACES IS THE STRONGEST FORM OF IT"
+  da_two_unrepaired_observations: "under a TAPELESS PM_DATA_ROOT: preflight 39 -> 38 and verdict_check 21 -> 19, RC 0, NO SKIP NAMED -- checks disappearing SILENTLY rather than being named as skips (rule 11), unrepaired; and pm_host_load_join resolves data/ from __file__ with NO PM_DATA_ROOT branch"
+  be_stale_worktrees_a_non_finding: "BE's transient prunable be-r10-c3-stale entries at c511750 (36-37 at 01:58Z, back to 34 by 02:02Z) are BE round 12's FIXTURES -- recorded AS A NON-FINDING so it is not rediscovered as one"
+  reviewer_on_da_r20_held: "REQUEST_DA_ROUND_20_2026-09-03.md, eight items; THE LANDING IS NOT PART OF THE ROUND; DA holds d37c3d9/0cd18ba until the coordinator calls the landing AFTER Fri 2026-09-04 00:06:00 UTC"
   be_r12_may_land: "dispatched; BE10-R1..R4 with BE8-R1/R2; NOT on the unit path, so the 09-04 freeze does not bind it"
   de_r41_verified: "8479b67 (Q-DE-59): 124 checks, DE40-R1/R2/R3 closed and driven, four mutants red by name; its review QUEUED behind the landings round"
   reviewer_de_r41_released: "fcdbb15, 143 lines: RELEASE 8479b67 as round 42's base; DE40-R1/R2/R3 ALL CLOSED at the tip, each driven with FALSIFIERS THAT FIRE; counts 31/124/26/21/26/21/184/92 reproduced by BOTH reviewer and coordinator INCLUDING THE 92 DE COULD NOT MEASURE"
@@ -3879,7 +3881,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-03T01:21Z, build and test the offline model mechanism-first
+  As-of 2026-09-03T02:08Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
