@@ -1,7 +1,8 @@
 # RESULTS — P-2026-003 Polymarket crypto 5-min
 
-Consolidated 2026-09-03T03:23Z by the coordinator (ctanew-7e) on the USER's
-instruction, with every seat halted. **Single writer: the coordinator.** This
+Consolidated 2026-09-03T03:23Z, **substantially rewritten 2026-09-03T08:29Z**
+after a day in which the programme's own forward path was found unable to
+produce its decision metric. **Single writer: the coordinator.** This
 file is the compact, artifact-anchored answer to "what has been tested and what
 came out of it". `STATUS.yml` and `workspace/HANDOFF.md` remain the running
 state; `COORDINATION.md` remains the append-only register. Read this first, then
@@ -16,19 +17,28 @@ is a **correction**, not a restatement.
 
 ## 1. The bottom line, in four sentences
 
-The **ranking model works and the economics do not yet clear their own bar.**
-Iteration 011's arrival head beats the incumbent hazard head by a wide margin
-(AUC 0.8303 vs 0.7139), but every surviving cell sits **at its permutation
-floor** with 500 draws on a null the artifact itself discloses as optimistic,
-and the decision metric — net cents against the incumbent — does not survive
-multiplicity (best Holm 0.1199). The **forward race**, which is the only thing
-that could turn development evidence into validation, has **2 of the 5 required
-complete days accrued** (R-496). The **Phase-4 diagnostic the USER scheduled at
-R-459 has not run**: its split declaration was ruled by the USER at R-496 and
-its producer step — the feature assembly that had never been executed — is in
-build as DE round 44. **No forward profitability number has ever been read**;
-the one scored day is sealed, and a free out-of-sample read on the
-non-accruable 08-29 is pre-declared at R-496 (D) and running.
+The **ranking model works, the economics do not yet clear their own bar, and
+until 2026-09-03 the forward race could not have answered the question it
+exists to answer.** Iteration 011's arrival head beats the incumbent hazard head
+by a wide margin (AUC 0.8303 vs 0.7139), but every surviving cell sits **at its
+permutation floor** with 500 draws on a null the artifact itself discloses as
+optimistic, and the decision metric — net cents against the incumbent — does not
+survive multiplicity (best Holm 0.1199).
+
+**The finding of 2026-09-03, and it is the largest of the programme so far: the
+forward path could not produce its own decision metric.** A sealed day held
+per-ROW candidate values with no action key and no incumbent leg; nothing
+downstream read a sealed day at all; and every module computing net cents read
+**development** rows. Unsealing 09-01 or 09-02 would have answered nothing, and
+**reaching G=5 would have answered nothing** — five sealed days of per-row
+scores is not a net-cents-against-incumbent answer. Established at the code
+without opening a seal (BE rounds 13–14). The estimator itself was **not**
+missing: `evaluate_policy` is action-native, latency-aware and control-matched;
+what was missing was a feed and three declarations.
+
+**The race stands at G = 2 of 5**, earliest G=5 **2026-09-06**. **No forward
+profitability number has ever been read**, and none can be until the release
+gate below opens.
 
 ---
 
@@ -177,17 +187,41 @@ minute. This is the class the content-liveness rule exists for.
 
 ---
 
-## 4. The Phase-4 diagnostic the USER scheduled (R-459) — NOT RUN
+## 4. The Phase-4 diagnostic the USER scheduled (R-459) — RAN, AND DIED
 
-**Verified at 03:11Z** by importing `de_phase4_diag_runner` at the landed tip and
-calling `preflight()` read-only (no `--run`, nothing written):
+**Both original blockers were cleared on 2026-09-03**: the USER declared the
+population split (R-496, MECHANICS on both splits, labelled per cell) and DE
+built the producer half that had never been dispatched. The USER then admitted
+the `_stream_tape_rows` fit-vs-tip drift (R-499) — **conditionally**:
+`tape_rows_array_closed()` is evaluated at run time on the actual tape, and the
+run refuses if it returns False, the ruling notwithstanding.
 
-> `DiagRefused: the feature assembly's EXPENSIVE HALF is not wired, so
-> q1_arrival_composed_lgbm/btc cannot be scored. What is missing is exactly one
-> step: PA.tape_index(split) over the fit's own tape and
-> PA._feature_pass(PA.FRAGMENT, 'phase4_diag', TAPE=...). … and the §3 population
-> spans BOTH fit splits, which is a declaration nobody has made. Refused HERE,
-> before any feed is built (DE34-C1).`
+**Launched 07:01:35Z. Died 07:09:18Z on a `MemoryError`.** The conditional
+admission worked exactly as designed — the first progress line records
+`admitted_by USER`, `recorded_at R-499`, `condition_holds true`, with the
+evidence read off 3,170,987,711 bytes of real tape.
+
+**The cause, measured at full scale** (not scaled from a slice, which is what
+the original price did wrong): `tape_index[score]` 1.42 GB, `tape_index[train]`
+3.90 GB, `fragment json.loads` **8.33 GB** — resident *before* the per-window
+pass does any work — then ~3.55 GB accumulated across 1,125,289 rows. 8.33 +
+3.55 crosses the 12 GB cap.
+
+**The worse half was not the crash.** The progress log held one line —
+`preflight_passed` — and then silence, indistinguishable from a healthy run;
+the traceback went to a session scratch dir. It was found by reading the process
+table. DE round 48 fixed that first: a terminal record on **every** exit path
+(success, exception, signal, atexit fallback), stderr `dup2`'d into the outdir,
+a 30 s heartbeat, all installed *before* the first expensive stage and asserted
+from the parse — with a falsifier that **SIGTERMs a live run** and asserts the
+log's last line says so.
+
+**The fix bounds rather than enlarges, and no cap increase was requested**
+(coordinator ruling: a memory cap is a safety property, not a budget to spend
+down). Chunked assembly, partition by split, `_BN_CACHE` cleared between chunks
+as a runtime call on the module rather than an edit to it: ~9.6 GB → ~6–7 GB.
+The relaunch is gated on proving chunked-and-partitioned equivalent to whole on
+real data, tolerance declared before looking.
 
 Two blockers, one of each kind:
 
@@ -210,6 +244,68 @@ over `phase2_state_tape_v5.json` (3,170,987,711 B) and `_feature_pass` over
 `harmful_exposure_rows_v3_eraB.json` (1,241,115,096 B, 1,135,943 rows). One
 `arm_result` is unmeasured on real data with a floor of 0.007 s; 200 draws is
 **800 replays**, plus rejected attempts.
+
+---
+
+## 4a. The forward decision-metric path — built 2026-09-03, **not yet released**
+
+Built across BE rounds 14–21 after the finding in §1. What it now does, and
+every item below was landed only after an adversarial review drove the previous
+version:
+
+- **The estimand is fenced.** `increment()` — the decision metric under the
+  USER's by-threshold ruling (R-497 (F)(4)) — no longer accepts a bare theta. It
+  takes the object the fence returns plus a budget key.
+- **The fence fetches its own evidence.** The declaration names
+  `verification_ref {path, sha256}`; the fence opens and rehashes it, and an
+  **inline verification block is REFUSED** — supplying the evidence is the act
+  being forbidden. This went beyond the reviewer's specified fix, which BE
+  judged would have *"satisfied the letter and not the principle."*
+- **The numbers are bound to the bytes.** `derive_days_from_rows` asks the rows
+  artifact which days it contains; `verify_declaration_by_recomputation`
+  re-derives the quantile map restricted to the declared days —
+  `all_coins_reproduce` **True**, `max_abs_difference` **0.0**, over 1,135,930
+  rows.
+- **`RETROSPECTIVE_TOPK` is refused, not offered.** `evaluate_policy` silently
+  fell back to a threshold *read off the data being scored*. That fallback sat
+  directly on the path this programme was about to run.
+- **Reconciled against a known answer on already-consumed data**: iteration
+  011's Q4, **36/36 predicates**, both permutation p-values bit-for-bit, Holm
+  reproducing across the declared family. Re-run independently by the
+  coordinator and by the reviewer; the cell digest is stable across two
+  `PYTHONHASHSEED`s.
+- **The declared family is 18, enumerated not multiplied** — superseding the
+  coordinator's "doubles" (R-498). `require_declared_count` refuses a different
+  count *or the same count with a substituted cell*.
+
+**The gate is shut.** Three release reviews; the first two found the fences
+real, tested both ways, and **off the path**. **No forward day may be scored
+until it opens** — which is also why the 08-29 read the USER preserved has not
+happened.
+
+---
+
+## 4b. The recurring failure of this codebase, named with its instances
+
+**Five zero-consumer / zero-reachability findings in one day, each found by a
+different route and none by a green suite.** `SEAT_PROTOCOL` 17 already names
+the class (*suite-green is not pipeline-wired*); what is new is the frequency.
+
+| # | the fence | how it failed |
+|---|---|---|
+| 1 | `require_operating_point` / `require_arm_identity` | **every** executable call inside `selftest()`; the decision metric passed through neither |
+| 2 | six evaluator functions (I11-2) | falsifier-proven, zero call sites in the runner |
+| 3 | `assert_frozen_contract` | one call site, inside `anchor_drift_root`, wrapped in `try/except Exception: pass`. The binding it guards **already fails** (`eb8733da…` vs `03762753…`); survivable only because the drift is metadata-only — *benign by luck, not by check* |
+| 4 | the R-486 `governs` stamping | **both** production call sites deletable with 254 checks still passing |
+| 5 | `counts_toward_race` | written and never read; the field the race is counted by still reads `True` for the withdrawn day — binding against **edits**, not against **counting** |
+
+Two adjacent shapes found the same day, both worth naming: a control that
+**hand-injects what production drops** (`dict(_f, coin=…, verification=…)`) so
+it passes on a shape production cannot produce; and a check that was
+**structurally incapable of passing** — the token taken over one object while
+its expectation was rebuilt from another, so False in the honest case and True
+in none. This programme has long named controls that cannot *fail*; that is the
+mirror image.
 
 ---
 
@@ -275,30 +371,35 @@ rounds.**
 
 ---
 
-## 7. Open USER decisions — **one** (rule 14: none is a seat's to make)
+## 7. Open USER decisions — **one**, plus one queued
 
-Three of the five listed at the 03:23Z consolidation were ruled by the USER at
-**R-496** (2026-09-03), and a fourth was never open — a correction to this
-file's own §7, in band (rule 13).
+**Seven rulings were taken on 2026-09-03.** Recorded here because several
+changed what earlier sections of this file said.
 
-| # | decision | status |
+| ruling | where | consequence |
 |---|---|---|
-| 1 | **09-02 accrual** on its non-blackout complement (R-409) | **RULED — ACCRUE** (R-496). G = 1 → 2 of 5 |
-| 2 | **Phase-2 winner** | **OPEN — the only one.** The forward race decides it; no seat may pre-empt it |
-| 3 | content-liveness v2 freeze | **WAS NEVER OPEN — this file was wrong.** The USER froze it at **R-424** (2026-09-02); `DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md` reads FROZEN — GOVERNING FROM 2026-09-03, 09-02 judged on v1 only. Verified further at the code: `content_liveness_v2_for` (`da_forward_day_verify.py:801`) with its production call at `:2278`, governance by the module's own `governs()` predicate, not a restated date |
-| 4 | **addendum v2 package**, five asks | **RULED — adopted as recommended** (R-496): §1a MECHANICS on both splits, splits labelled per cell; §2/§3 keep the seat's values, sensitivity pairs reported, **neither selected**; §4/§5 adopt |
-| 5 | the 09-04 00:06Z run staying on the landed chain | **RULED — no pin, no install.** DA's round-20 chain stays HELD because all three of its files sit on the path the unit executes |
+| 09-02 **accrues** | R-496 | G 1 → 2 |
+| addendum v2 **adopted as a package** | R-496 | split declared; unblocked the diagnostic's declaration half |
+| era: **quality is the bar, not collector version** | R-497 | `clob_v3_1` admitted; the invariant repair found **two more** unruled entries (`clob_v5` had `True` and no ruling at all; `clob_v4`'s cite does not name it) |
+| operating point: **declare a grid, report all, select none** | R-497 | runs on `FROZEN_FROM_TRAIN_QUANTILE` |
+| futility check: **configurable** | R-497 | parameterised, with a coordinator-added guard: a run refuses unless its config sits in a commit that provably predates the read |
+| pairing: **both, threshold primary** | R-497 | family 12 → **18**, enumerated (R-498) |
+| `_stream_tape_rows` drift: **ADMIT** | R-499 | conditionally — the condition is re-evaluated at run time and the run refuses if it fails |
+| **08-29 withdrawn from the race, kept readable** | R-500 | **spends the cleanest post-freeze day.** G stays 2; earliest G=5 stays 09-06 |
 
-**Queued for the USER, not yet a decision:** whether declaring
-`phase2_arms._stream_tape_rows` — a fit-vs-tip code drift whose diff is confined
-to a branch that provably cannot fire for this tape — is a seat's call or an
-admissibility ruling. DE named the boundary and correctly declined to rule it.
-Facts: sha `f0741bc4b170fabc` → `f0b3bccfb8ec5b88` at `2e1204f`, accepting path
-byte-for-byte unchanged, this tape's rows array closed.
+**On the 08-29 withdrawal.** The day is *admissible and deliberately not
+entered* — two separable facts. The verdict stops asserting `era_admissible:
+false` (made false by R-497) and carries the true one instead. **The withdrawal
+is recorded before any read and is binding after it**: re-admitting a day whose
+economics have been seen is selection on the outcome. The reviewer attacked
+removal, re-citation and day-substitution on a real git history; each refuses
+**by name**, and the guard is proved non-vacuous. **Its limit, stated:** binding
+against *edits*, not yet against *counting* (§4b, row 5).
 
-The addendum DRAFT is at
-`live/pm_research/plans/DE_PHASE4_DIAGNOSTIC_ADDENDUM_V2_DRAFT_2026-09-02.md`
-(307 lines, sha `cb693000880c3d94`). **Nobody edits it.**
+| # | still open | status |
+|---|---|---|
+| 1 | **the Phase-2 winner** | the race decides it. Not before G=5 |
+| 2 | the `clob_v4` cite — its R-340 resolves but does not name `clob_v4` | **queued**, packaged by DA with both answers and what the runner would do under each |
 
 ---
 
