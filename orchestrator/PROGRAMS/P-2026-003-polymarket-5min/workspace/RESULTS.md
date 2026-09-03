@@ -58,8 +58,12 @@ on 166/166 windows with zero exclusions.
 1. **Every surviving p is a floor, not a measurement.** All 18 non-Q4 cells
    carry the *identical* p = 0.001996 = **1/501** with
    `at_permutation_floor: true`, 500 draws. Holm 0.0479 sits 0.0021 under the
-   0.05 line; **one draw the other way moves it to 0.0958 and the entire
-   surviving set collapses.**
+   0.05 line. **Stated precisely** (MEM round 72's correction to this file,
+   verified by computation): if the *whole tied family* draws the other way
+   (p → 2/501), Holm goes to **0.0958** and the entire surviving set collapses;
+   if a **single** cell moves, it sorts behind the still-tied cells at adjusted
+   p 0.0279 and the leading Holm stays **0.0479**. The fragility is the family's,
+   not one draw's — the earlier wording implied the latter.
 2. **"12 of 24 survive" overstates the evidence, and the artifact says so
    itself.** `distinct_results`: 24 declared cells → **12 distinct**, and
    **4 distinct surviving results** (Q1×2 arms, Q3×2 arms). Budgets select
