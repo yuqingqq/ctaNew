@@ -1,97 +1,604 @@
 {
-  "all_pass": false,
-  "as_of_utc": "2026-09-02T00:06:03.718835+00:00",
+  "all_pass": true,
+  "as_of_utc": "2026-09-03T00:06:01.399260+00:00",
   "authorised_by": "R-141(1); DA-verifies-first restored as a hard precondition by R-153(2)",
   "bar_regime": "day_bar_v2",
-  "content_liveness": {
-    "fraction_of_day_below_10pct": 0.0,
+  "blackout_mask_and_complement": {
+    "artifact_kind": "da_blackout_mask_v1",
+    "artifact_path": "/home/yuqing/ctaNew/data/pm_5min/derived/da_blackout_mask_20260902.json",
+    "artifact_written_by": "da_blackout_mask.py --write (separate from this verdict; may land after it)",
+    "complement_quality": {
+      "ESCALATION_no_minimum_complement_size": "NO minimum complement size is set here and none is chosen. The frozen bars were pre-registered against a 288-window day; applied to a small complement they are being read on a population they were not registered for, and below some size they mean nothing. That constant is the USER's (rule 14 / rule 11). Until it is ruled, read `complement_fraction` beside every number here.",
+      "bar_regime_note": "P1/P2/P3 are the day_bar_v2 statistics. On a day whose GOVERNING regime is count_bar_v1_frozen (before 2026-08-29) these numbers are computed but do not govern that day -- read `bar_regime` in the verdict beside them.",
+      "block": "complement_quality",
+      "coins": {
+        "bnb": {
+          "L1_over_complement": 0.0,
+          "L1_over_complement_is_TAUTOLOGICAL": true,
+          "L1_tautology_note": "the complement is DEFINED as the windows v1 did not call thin, so v1 finds none in it. Rule 9: this is arithmetic, not evidence, and must never be read as 'the complement is clean'.",
+          "P1_frozen_bar": 120.0,
+          "P1_lost_s_per_CALENDAR_24h": 0.0,
+          "P1_lost_s_per_UNMASKED_hour": 0.0,
+          "P2_frozen_bar_share": 0.05,
+          "P2_material_span_s": 75.0,
+          "P2_material_windows_in_complement": 0,
+          "P2_share_of_288": 0.0,
+          "P2_share_of_UNMASKED": 0.0,
+          "P3_frozen_bar": 900.0,
+          "P3_worst_rolling_60min_lost_s": 0.0,
+          "complement_fraction_of_288": 0.8681,
+          "complement_fraction_of_PRESENT": 0.8681,
+          "day_is_complete": true,
+          "lost_seconds_in_complement": 0.0,
+          "n_windows_masked": 38,
+          "n_windows_present": 288,
+          "n_windows_unmasked": 250,
+          "unmasked_hours": 20.833
+        },
+        "btc": {
+          "L1_over_complement": 0.0,
+          "L1_over_complement_is_TAUTOLOGICAL": true,
+          "L1_tautology_note": "the complement is DEFINED as the windows v1 did not call thin, so v1 finds none in it. Rule 9: this is arithmetic, not evidence, and must never be read as 'the complement is clean'.",
+          "P1_frozen_bar": 120.0,
+          "P1_lost_s_per_CALENDAR_24h": 73.71,
+          "P1_lost_s_per_UNMASKED_hour": 85.6,
+          "P2_frozen_bar_share": 0.05,
+          "P2_material_span_s": 75.0,
+          "P2_material_windows_in_complement": 0,
+          "P2_share_of_288": 0.0,
+          "P2_share_of_UNMASKED": 0.0,
+          "P3_frozen_bar": 900.0,
+          "P3_worst_rolling_60min_lost_s": 219.7,
+          "complement_fraction_of_288": 0.8611,
+          "complement_fraction_of_PRESENT": 0.8611,
+          "day_is_complete": true,
+          "lost_seconds_in_complement": 1769.1,
+          "n_windows_masked": 40,
+          "n_windows_present": 288,
+          "n_windows_unmasked": 248,
+          "unmasked_hours": 20.667
+        },
+        "doge": {
+          "L1_over_complement": 0.0,
+          "L1_over_complement_is_TAUTOLOGICAL": true,
+          "L1_tautology_note": "the complement is DEFINED as the windows v1 did not call thin, so v1 finds none in it. Rule 9: this is arithmetic, not evidence, and must never be read as 'the complement is clean'.",
+          "P1_frozen_bar": 120.0,
+          "P1_lost_s_per_CALENDAR_24h": 0.78,
+          "P1_lost_s_per_UNMASKED_hour": 0.9,
+          "P2_frozen_bar_share": 0.05,
+          "P2_material_span_s": 75.0,
+          "P2_material_windows_in_complement": 0,
+          "P2_share_of_288": 0.0,
+          "P2_share_of_UNMASKED": 0.0,
+          "P3_frozen_bar": 900.0,
+          "P3_worst_rolling_60min_lost_s": 12.2,
+          "complement_fraction_of_288": 0.8681,
+          "complement_fraction_of_PRESENT": 0.8681,
+          "day_is_complete": true,
+          "lost_seconds_in_complement": 18.8,
+          "n_windows_masked": 38,
+          "n_windows_present": 288,
+          "n_windows_unmasked": 250,
+          "unmasked_hours": 20.833
+        },
+        "eth": {
+          "L1_over_complement": 0.0,
+          "L1_over_complement_is_TAUTOLOGICAL": true,
+          "L1_tautology_note": "the complement is DEFINED as the windows v1 did not call thin, so v1 finds none in it. Rule 9: this is arithmetic, not evidence, and must never be read as 'the complement is clean'.",
+          "P1_frozen_bar": 120.0,
+          "P1_lost_s_per_CALENDAR_24h": 1.85,
+          "P1_lost_s_per_UNMASKED_hour": 2.15,
+          "P2_frozen_bar_share": 0.05,
+          "P2_material_span_s": 75.0,
+          "P2_material_windows_in_complement": 0,
+          "P2_share_of_288": 0.0,
+          "P2_share_of_UNMASKED": 0.0,
+          "P3_frozen_bar": 900.0,
+          "P3_worst_rolling_60min_lost_s": 15.5,
+          "complement_fraction_of_288": 0.8611,
+          "complement_fraction_of_PRESENT": 0.8611,
+          "day_is_complete": true,
+          "lost_seconds_in_complement": 44.5,
+          "n_windows_masked": 40,
+          "n_windows_present": 288,
+          "n_windows_unmasked": 248,
+          "unmasked_hours": 20.667
+        },
+        "hype": {
+          "L1_over_complement": 0.0,
+          "L1_over_complement_is_TAUTOLOGICAL": true,
+          "L1_tautology_note": "the complement is DEFINED as the windows v1 did not call thin, so v1 finds none in it. Rule 9: this is arithmetic, not evidence, and must never be read as 'the complement is clean'.",
+          "P1_frozen_bar": 120.0,
+          "P1_lost_s_per_CALENDAR_24h": 2.05,
+          "P1_lost_s_per_UNMASKED_hour": 2.17,
+          "P2_frozen_bar_share": 0.05,
+          "P2_material_span_s": 75.0,
+          "P2_material_windows_in_complement": 0,
+          "P2_share_of_288": 0.0,
+          "P2_share_of_UNMASKED": 0.0,
+          "P3_frozen_bar": 900.0,
+          "P3_worst_rolling_60min_lost_s": 44.6,
+          "complement_fraction_of_288": 0.9444,
+          "complement_fraction_of_PRESENT": 0.9444,
+          "day_is_complete": true,
+          "lost_seconds_in_complement": 49.2,
+          "n_windows_masked": 16,
+          "n_windows_present": 288,
+          "n_windows_unmasked": 272,
+          "unmasked_hours": 22.667
+        },
+        "sol": {
+          "L1_over_complement": 0.0,
+          "L1_over_complement_is_TAUTOLOGICAL": true,
+          "L1_tautology_note": "the complement is DEFINED as the windows v1 did not call thin, so v1 finds none in it. Rule 9: this is arithmetic, not evidence, and must never be read as 'the complement is clean'.",
+          "P1_frozen_bar": 120.0,
+          "P1_lost_s_per_CALENDAR_24h": 1.49,
+          "P1_lost_s_per_UNMASKED_hour": 1.73,
+          "P2_frozen_bar_share": 0.05,
+          "P2_material_span_s": 75.0,
+          "P2_material_windows_in_complement": 0,
+          "P2_share_of_288": 0.0,
+          "P2_share_of_UNMASKED": 0.0,
+          "P3_frozen_bar": 900.0,
+          "P3_worst_rolling_60min_lost_s": 33.4,
+          "complement_fraction_of_288": 0.8646,
+          "complement_fraction_of_PRESENT": 0.8646,
+          "day_is_complete": true,
+          "lost_seconds_in_complement": 35.8,
+          "n_windows_masked": 39,
+          "n_windows_present": 288,
+          "n_windows_unmasked": 249,
+          "unmasked_hours": 20.75
+        },
+        "xrp": {
+          "L1_over_complement": 0.0,
+          "L1_over_complement_is_TAUTOLOGICAL": true,
+          "L1_tautology_note": "the complement is DEFINED as the windows v1 did not call thin, so v1 finds none in it. Rule 9: this is arithmetic, not evidence, and must never be read as 'the complement is clean'.",
+          "P1_frozen_bar": 120.0,
+          "P1_lost_s_per_CALENDAR_24h": 0.18,
+          "P1_lost_s_per_UNMASKED_hour": 0.21,
+          "P2_frozen_bar_share": 0.05,
+          "P2_material_span_s": 75.0,
+          "P2_material_windows_in_complement": 0,
+          "P2_share_of_288": 0.0,
+          "P2_share_of_UNMASKED": 0.0,
+          "P3_frozen_bar": 900.0,
+          "P3_worst_rolling_60min_lost_s": 3.2,
+          "complement_fraction_of_288": 0.8611,
+          "complement_fraction_of_PRESENT": 0.8611,
+          "day_is_complete": true,
+          "lost_seconds_in_complement": 4.4,
+          "n_windows_masked": 40,
+          "n_windows_present": 288,
+          "n_windows_unmasked": 248,
+          "unmasked_hours": 20.667
+        }
+      },
+      "denominator_note": "P1 is carried over BOTH denominators: per UNMASKED hour (loss per hour of usable feed) and per CALENDAR 24 h (what the FROZEN bar divides by). P2's share is given over the unmasked count AND over 288. P3's rolling hour stays CALENDAR-wide and excludes loss inside masked windows.",
+      "disposition_rule": "R-409",
+      "governs": false,
+      "role": "REPORTED \u2014 the disposition is the coordinator's act (rule 14)"
+    },
+    "detector": {
+      "authority": "USER ruling 2026-09-01, R-386",
+      "definition": "below thin_frac x the SAME-DAY (day, coin) median AND not overlapped by a gap-ledger interval",
+      "module": "da_content_liveness_rule",
+      "module_sha256_prefix": "7196676840304f30",
+      "thin_frac": 0.05,
+      "version": "v1_FROZEN"
+    },
+    "disposition_rule": "R-409",
     "governs": false,
-    "intervals_below_10pct_of_median": 0,
-    "median_msgs_per_s": 398.85,
-    "min_msgs_per_s": 253.5,
-    "n_intervals": 5,
+    "mask_summary": {
+      "bnb": {
+        "agrees_with_frozen_L1_numerator": true,
+        "longest_run_windows": 38,
+        "masked_fraction": 0.1319,
+        "n_masked": 38,
+        "n_windows_total": 288,
+        "runs": [
+          {
+            "end_utc": "2026-09-02T04:55:00Z",
+            "n_windows": 38,
+            "start_utc": "2026-09-02T01:45:00Z"
+          }
+        ]
+      },
+      "btc": {
+        "agrees_with_frozen_L1_numerator": true,
+        "longest_run_windows": 40,
+        "masked_fraction": 0.1389,
+        "n_masked": 40,
+        "n_windows_total": 288,
+        "runs": [
+          {
+            "end_utc": "2026-09-02T04:55:00Z",
+            "n_windows": 40,
+            "start_utc": "2026-09-02T01:35:00Z"
+          }
+        ]
+      },
+      "doge": {
+        "agrees_with_frozen_L1_numerator": true,
+        "longest_run_windows": 38,
+        "masked_fraction": 0.1319,
+        "n_masked": 38,
+        "n_windows_total": 288,
+        "runs": [
+          {
+            "end_utc": "2026-09-02T04:55:00Z",
+            "n_windows": 38,
+            "start_utc": "2026-09-02T01:45:00Z"
+          }
+        ]
+      },
+      "eth": {
+        "agrees_with_frozen_L1_numerator": true,
+        "longest_run_windows": 36,
+        "masked_fraction": 0.1389,
+        "n_masked": 40,
+        "n_windows_total": 288,
+        "runs": [
+          {
+            "end_utc": "2026-09-02T00:15:00Z",
+            "n_windows": 1,
+            "start_utc": "2026-09-02T00:10:00Z"
+          },
+          {
+            "end_utc": "2026-09-02T01:50:00Z",
+            "n_windows": 3,
+            "start_utc": "2026-09-02T01:35:00Z"
+          },
+          {
+            "end_utc": "2026-09-02T04:55:00Z",
+            "n_windows": 36,
+            "start_utc": "2026-09-02T01:55:00Z"
+          }
+        ]
+      },
+      "hype": {
+        "agrees_with_frozen_L1_numerator": true,
+        "longest_run_windows": 14,
+        "masked_fraction": 0.0556,
+        "n_masked": 16,
+        "n_windows_total": 288,
+        "runs": [
+          {
+            "end_utc": "2026-09-02T02:05:00Z",
+            "n_windows": 1,
+            "start_utc": "2026-09-02T02:00:00Z"
+          },
+          {
+            "end_utc": "2026-09-02T02:25:00Z",
+            "n_windows": 1,
+            "start_utc": "2026-09-02T02:20:00Z"
+          },
+          {
+            "end_utc": "2026-09-02T04:55:00Z",
+            "n_windows": 14,
+            "start_utc": "2026-09-02T03:45:00Z"
+          }
+        ]
+      },
+      "sol": {
+        "agrees_with_frozen_L1_numerator": true,
+        "longest_run_windows": 20,
+        "masked_fraction": 0.1354,
+        "n_masked": 39,
+        "n_windows_total": 288,
+        "runs": [
+          {
+            "end_utc": "2026-09-02T03:10:00Z",
+            "n_windows": 19,
+            "start_utc": "2026-09-02T01:35:00Z"
+          },
+          {
+            "end_utc": "2026-09-02T04:55:00Z",
+            "n_windows": 20,
+            "start_utc": "2026-09-02T03:15:00Z"
+          }
+        ]
+      },
+      "xrp": {
+        "agrees_with_frozen_L1_numerator": true,
+        "longest_run_windows": 40,
+        "masked_fraction": 0.1389,
+        "n_masked": 40,
+        "n_windows_total": 288,
+        "runs": [
+          {
+            "end_utc": "2026-09-02T04:55:00Z",
+            "n_windows": 40,
+            "start_utc": "2026-09-02T01:35:00Z"
+          }
+        ]
+      }
+    },
+    "status": "REPORTED",
+    "total_masked_windows": 251,
+    "v2_seam": {
+      "frozen_by_user": false,
+      "refuses": true,
+      "status": "INERT_PENDING_USER_FREEZE",
+      "why": "v2's absolute floor is DRAFT. On a mostly-dark day v1 cannot identify the complement at all, so this seam refuses by name rather than returning a mask v1 could not see. Built and refusing, never silently absent."
+    }
+  },
+  "blackout_mask_artifact": {
+    "carrying_commit": "3eabeeb2cabf6a80434246a6f3a4c1b17e9fc82b",
+    "day_closed_calendar": true,
+    "empty_is_permitted_absent_is_not": true,
+    "n_coins": 7,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/da_blackout_mask_20260902.json",
+    "status": "WRITTEN",
+    "total_masked_windows": 251
+  },
+  "content_liveness": {
+    "fraction_of_day_below_10pct": 0.1419,
+    "governing_rule_lives_in": "content_liveness_rule (this artifact)",
+    "governs": false,
+    "instrument": "collector log, msgs/s between heartbeats",
+    "intervals_below_10pct_of_median": 204,
+    "median_msgs_per_s": 603.908,
+    "min_msgs_per_s": 0.033,
+    "n_intervals": 1438,
     "note_10pct": "10% is a REPORTING cut so the shape is visible, NOT a ratified bar and not used to classify anything",
+    "role": "REPORTED DIAGNOSTIC -- CORROBORATING, NEVER GOVERNING",
     "status": "CONTENT_LIVENESS_UNRESOLVED",
-    "why": "the discriminator is computed and frozen; NO ratified band exists, and inventing one from the days that motivated the rule -- or from 09-01 after seeing it -- is the error this structure was declared early to avoid",
+    "why": "REPORTED DIAGNOSTIC. A ratified band DOES now exist -- the USER-frozen `da_content_liveness_rule` (R-386), carried in this same artifact as `content_liveness_rule`. THIS block has no band and states none: it reads a DIFFERENT INPUT (the collector log's msgs/s between heartbeats) from the frozen rule (raw tape bytes per window), so the two CORROBORATE rather than duplicate -- on 2026-09-01 they agreed to one minute, 116 against 115. Two blocks, two inputs, ONE named governing answer, which is not this one.",
     "written_received_note": "the collector logs RECEIVED; WRITTEN comes from the tape. Pairing them is the second half of the discriminator and needs the per-coin join, not shipped here",
     "written_received_ratio": null
+  },
+  "content_liveness_rule": {
+    "bars": {
+      "L1_severity_max": 0.08,
+      "L2_run_windows_max": 12,
+      "thin_frac": 0.05
+    },
+    "coins": {
+      "bnb": {
+        "L1_pass": false,
+        "L1_severity": 0.12849,
+        "L2_longest_run_windows": 38,
+        "L2_pass": false,
+        "failing_bars": [
+          "L1_severity",
+          "L2_concentration"
+        ],
+        "median_bytes": 3994270,
+        "n_invisible_thin": 38,
+        "n_windows": 288,
+        "status": "CONTENT_THIN"
+      },
+      "btc": {
+        "L1_pass": false,
+        "L1_severity": 0.13849,
+        "L2_longest_run_windows": 40,
+        "L2_pass": false,
+        "failing_bars": [
+          "L1_severity",
+          "L2_concentration"
+        ],
+        "median_bytes": 66646157,
+        "n_invisible_thin": 40,
+        "n_windows": 288,
+        "status": "CONTENT_THIN"
+      },
+      "doge": {
+        "L1_pass": false,
+        "L1_severity": 0.12832,
+        "L2_longest_run_windows": 38,
+        "L2_pass": false,
+        "failing_bars": [
+          "L1_severity",
+          "L2_concentration"
+        ],
+        "median_bytes": 4012998,
+        "n_invisible_thin": 38,
+        "n_windows": 288,
+        "status": "CONTENT_THIN"
+      },
+      "eth": {
+        "L1_pass": false,
+        "L1_severity": 0.13794,
+        "L2_longest_run_windows": 36,
+        "L2_pass": false,
+        "failing_bars": [
+          "L1_severity",
+          "L2_concentration"
+        ],
+        "median_bytes": 23935201,
+        "n_invisible_thin": 40,
+        "n_windows": 288,
+        "status": "CONTENT_THIN"
+      },
+      "hype": {
+        "L1_pass": true,
+        "L1_severity": 0.05467,
+        "L2_longest_run_windows": 14,
+        "L2_pass": false,
+        "failing_bars": [
+          "L2_concentration"
+        ],
+        "median_bytes": 1911795,
+        "n_invisible_thin": 16,
+        "n_windows": 288,
+        "status": "CONTENT_THIN"
+      },
+      "sol": {
+        "L1_pass": false,
+        "L1_severity": 0.13386,
+        "L2_longest_run_windows": 20,
+        "L2_pass": false,
+        "failing_bars": [
+          "L1_severity",
+          "L2_concentration"
+        ],
+        "median_bytes": 12827710,
+        "n_invisible_thin": 39,
+        "n_windows": 288,
+        "status": "CONTENT_THIN"
+      },
+      "xrp": {
+        "L1_pass": false,
+        "L1_severity": 0.13715,
+        "L2_longest_run_windows": 40,
+        "L2_pass": false,
+        "failing_bars": [
+          "L1_severity",
+          "L2_concentration"
+        ],
+        "median_bytes": 10339105,
+        "n_invisible_thin": 40,
+        "n_windows": 288,
+        "status": "CONTENT_THIN"
+      }
+    },
+    "coins_thin": [
+      "bnb",
+      "btc",
+      "doge",
+      "eth",
+      "hype",
+      "sol",
+      "xrp"
+    ],
+    "composition_with_HEALTHY": {
+      "coins_CONTENT_THIN": [
+        "bnb",
+        "btc",
+        "doge",
+        "eth",
+        "hype",
+        "sol",
+        "xrp"
+      ],
+      "content_thin_vetoes_HEALTHY": false,
+      "day_is_CONTENT_THIN": true,
+      "escalated": "RESOLVED by R-409; no longer an ESCALATION-FOR-USER",
+      "frozen_SS8_resolutions": {
+        "a_L1_L2_govern": "at WINDOW level -- they define the MASK",
+        "b_granularity": "per coin-day",
+        "c_content_thin_day": "DISCLOSED and MASKED, not inadmissible",
+        "ruled_by": "R-409 (USER, 2026-09-02)",
+        "supersedes": "the coordinator's R-403/R-408 exclude-if-thin recommendation; the USER chose the other branch"
+      },
+      "governing_for_this_day": true,
+      "note": "'would_flip' answers ONLY 'does this day read CONTENT_THIN while the rule governs'. It is not a verdict and nothing consumes it; the adjudicated coins are btc and eth (R-306), so a THIN coin outside that pair would not reach an adjudication even under a per-coin composition.",
+      "ruled_by": "R-409",
+      "why_not": "USER R-409: 'If the data quality is good over the non-blackout time, we should use that data.' A CONTENT_THIN day is DISCLOSED and MASKED, not inadmissible -- it accrues on its complement. So CONTENT_THIN does not veto HEALTHY, and this is now the RULED state rather than an open question.",
+      "would_flip_HEALTHY_under_per_coin_composition": {
+        "bnb": true,
+        "btc": true,
+        "doge": true,
+        "eth": true,
+        "hype": true,
+        "sol": true,
+        "xrp": true
+      },
+      "would_flip_HEALTHY_under_worst_coin_composition": true
+    },
+    "day": "20260902",
+    "effective_from_day": "20260902",
+    "frozen_by_user": true,
+    "frozen_rule": {
+      "L1_severity_max": 0.08,
+      "L2_run_windows_max": 12,
+      "authority": "USER ruling 2026-09-01, R-386",
+      "calibration_max_day": "20260831",
+      "effective_from_day": "20260902",
+      "frozen_by_user": true,
+      "module": "da_content_liveness_rule",
+      "module_sha256_prefix": "7196676840304f30",
+      "thin_frac": 0.05
+    },
+    "governs": true,
+    "n_coins_judged": 7,
+    "n_coins_unjudgeable": 0,
+    "status": "CONTENT_THIN",
+    "status_is_a_measurement_not_a_verdict": "CONTENT_THIN reports that a day carries invisible content loss beyond the proposed bars. Whether that makes the day inadmissible is the coordinator's ruling (rule 14), and until FROZEN_BY_USER this rule has no bars in force at all.",
+    "worst_L1_coin": "btc",
+    "worst_L1_severity": 0.13849,
+    "worst_L2_coin": "btc",
+    "worst_L2_longest_run_windows": 40
   },
   "day": "2026-09-02",
   "day_bar_v2": {
     "btc": {
-      "P1_pass": false,
-      "P2_pass": false,
-      "P3_pass": false,
-      "all_pass": false,
-      "coin_level_gap_intervals": 1,
-      "coverage_observed_arg": "False",
-      "evaluable": false,
-      "hours_elapsed": 0.101,
-      "lost_seconds": 2.2,
-      "note": "P1 divides lost seconds by 24 as declared, so on an OPEN day it is a LOWER BOUND, not the day's rate. The closing verdict is the one that judges.",
-      "partial_day": true,
+      "P1_lost_s_per_hr": 73.71,
+      "P1_pass": true,
+      "P2_material_share": 0.0,
+      "P2_material_windows": 0,
+      "P2_pass": true,
+      "P3_pass": true,
+      "P3_worst_rolling_60min_lost_s": 219.7,
+      "all_pass": true,
+      "coin_level_gap_intervals": 287,
+      "evaluable": true,
+      "hours_elapsed": 24.0,
+      "lost_seconds": 1769.1,
+      "partial_day": false,
       "thresholds": {
         "P1_max_s_per_hr": 120.0,
         "P2_material_span_s": 75.0,
         "P2_max_share": 0.05,
         "P3_max_rolling_60min_s": 900.0
       },
-      "why": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
       "windows_affected_disclosure": {
-        "affected_over_288": 0.0035,
-        "affected_over_elapsed": 1.0,
-        "coin_level_gap_intervals_read": 1,
-        "coverage_observed_arg": "False",
+        "affected_over_288": 0.5035,
+        "affected_over_elapsed": 0.5035,
+        "coin_level_gap_intervals_read": 287,
+        "coverage_observed_arg": "True",
         "denominator_note": "affected_over_elapsed is the LIVE rate over COMPLETE elapsed windows; affected_over_288 is progress toward the complete-day denominator and is the ONLY one a closing-day receipt quotes. They coincide on a closed day.",
         "governs_all_pass": false,
         "has_threshold": false,
         "is_a_gate": false,
         "meaning_note": "a DISCLOSURE COUNT of short blind intervals and modeled queue resets -- NOT a count of contaminated windows, NOT a gate, and NOT a threshold. The governing bars score DURATION (P1/P2/P3); breadth is carried BESIDE them, never instead of them, because v2 retired the only predicate that saw it (08-28: 186/288 windows touched with all three duration bars passing).",
-        "pct_of_288": 0.3,
-        "pct_of_elapsed": 100.0,
+        "pct_of_288": 50.3,
+        "pct_of_elapsed": 50.3,
         "role": "REPORTED_NOT_GOVERNING",
-        "windows_affected_COIN_LEVEL": 1,
-        "windows_complete_elapsed": 1,
+        "windows_affected_COIN_LEVEL": 145,
+        "windows_complete_elapsed": 288,
         "windows_total": 288,
         "zero_affected_is_not_a_clean_claim": false
       }
     },
     "eth": {
-      "P1_pass": false,
-      "P2_pass": false,
-      "P3_pass": false,
-      "all_pass": false,
-      "coin_level_gap_intervals": 0,
-      "coverage_observed_arg": "False",
-      "evaluable": false,
-      "hours_elapsed": 0.101,
-      "lost_seconds": 0,
-      "note": "P1 divides lost seconds by 24 as declared, so on an OPEN day it is a LOWER BOUND, not the day's rate. The closing verdict is the one that judges.",
-      "partial_day": true,
+      "P1_lost_s_per_hr": 1.85,
+      "P1_pass": true,
+      "P2_material_share": 0.0,
+      "P2_material_windows": 0,
+      "P2_pass": true,
+      "P3_pass": true,
+      "P3_worst_rolling_60min_lost_s": 15.5,
+      "all_pass": true,
+      "coin_level_gap_intervals": 5,
+      "evaluable": true,
+      "hours_elapsed": 24.0,
+      "lost_seconds": 44.5,
+      "partial_day": false,
       "thresholds": {
         "P1_max_s_per_hr": 120.0,
         "P2_material_span_s": 75.0,
         "P2_max_share": 0.05,
         "P3_max_rolling_60min_s": 900.0
       },
-      "why": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
       "windows_affected_disclosure": {
-        "affected_over_288": 0.0,
-        "affected_over_elapsed": 0.0,
-        "coin_level_gap_intervals_read": 0,
-        "coverage_observed_arg": "False",
+        "affected_over_288": 0.0174,
+        "affected_over_elapsed": 0.0174,
+        "coin_level_gap_intervals_read": 5,
+        "coverage_observed_arg": "True",
         "denominator_note": "affected_over_elapsed is the LIVE rate over COMPLETE elapsed windows; affected_over_288 is progress toward the complete-day denominator and is the ONLY one a closing-day receipt quotes. They coincide on a closed day.",
         "governs_all_pass": false,
         "has_threshold": false,
         "is_a_gate": false,
         "meaning_note": "a DISCLOSURE COUNT of short blind intervals and modeled queue resets -- NOT a count of contaminated windows, NOT a gate, and NOT a threshold. The governing bars score DURATION (P1/P2/P3); breadth is carried BESIDE them, never instead of them, because v2 retired the only predicate that saw it (08-28: 186/288 windows touched with all three duration bars passing).",
-        "pct_of_288": 0.0,
-        "pct_of_elapsed": 0.0,
+        "pct_of_288": 1.7,
+        "pct_of_elapsed": 1.7,
         "role": "REPORTED_NOT_GOVERNING",
-        "windows_affected_COIN_LEVEL": 0,
-        "windows_complete_elapsed": 1,
+        "windows_affected_COIN_LEVEL": 5,
+        "windows_complete_elapsed": 288,
         "windows_total": 288,
-        "zero_affected_is_not_a_clean_claim": true
+        "zero_affected_is_not_a_clean_claim": false
       }
     }
   },
@@ -102,8 +609,8 @@
     "from_day": "20260829",
     "note": "days before the boundary are judged by the FROZEN count bar; the v2 bars are not applied retroactively"
   },
-  "day_closed_calendar": false,
-  "day_closed_selector": null,
+  "day_closed_calendar": true,
+  "day_closed_selector": false,
   "day_token": "20260902",
   "decision_note": "This instrument STATES REASONS; it does not exclude. R-141(1): a day that fails DA's verification is EXCLUDED WITH A STATED REASON, and that exclusion is the coordinator's to rule, not a worker's boolean (rule 14). Note also that gaps/hour understates damage: day one ran 28.0/hr while 80.2% of btc windows carried a gap -- read windows_gap_affected beside it, never instead of it.",
   "era_admission": {
@@ -124,84 +631,279 @@
   "freeze_epoch": 1787897340.0,
   "gap_series": {
     "causes": {
-      "SLOW_CONSUMER_1013": 1
+      "CONNECTIONCLOSEDOK": 5,
+      "NO_CLOSE_FRAME": 91,
+      "PING_TIMEOUT": 178,
+      "SLOW_CONSUMER_1013": 30
     },
     "coin": null,
-    "gaps_per_hour": null,
-    "hours_elapsed": 0.101,
-    "hours_over_bar": [],
-    "hours_with_a_gap": 1,
-    "ledger_lines": 10082,
+    "gaps_per_hour": 12.67,
+    "hours_elapsed": 24.0,
+    "hours_over_bar": [
+      0,
+      6,
+      8,
+      13,
+      14,
+      16,
+      19,
+      20
+    ],
+    "hours_with_a_gap": 23,
+    "ledger_lines": 10691,
     "ledger_unparseable": 0,
-    "lost_s": 2.2,
-    "n_gaps": 1,
-    "n_hours_over_bar": 0,
+    "lost_s": 1921.8,
+    "n_gaps": 304,
+    "n_hours_over_bar": 8,
     "per_hour": {
-      "0": 1
+      "0": 17,
+      "1": 5,
+      "10": 6,
+      "11": 9,
+      "12": 11,
+      "13": 22,
+      "14": 18,
+      "15": 10,
+      "16": 16,
+      "17": 8,
+      "18": 5,
+      "19": 33,
+      "20": 18,
+      "21": 14,
+      "22": 13,
+      "23": 14,
+      "3": 1,
+      "4": 5,
+      "5": 15,
+      "6": 20,
+      "7": 14,
+      "8": 20,
+      "9": 10
     },
-    "rate_estimable": false,
-    "rate_note": "only 364s elapsed -- NO RATE REPORTED; 1 raw gaps so far",
-    "worst_hour": 1
+    "rate_estimable": true,
+    "rate_note": null,
+    "worst_hour": 33
   },
   "granularity_note": "R-211(3), declared 2026-08-27 while no 08-28 data existed. Days before the boundary are judged by the FROZEN whole-day rule; from the boundary each coin-day passes or fails on its own completeness and its own hourly gap bars. `all_pass` remains whole-day-strict under BOTH rules so an un-updated reader fails safe; per-coin verdicts are in `per_coin`.",
   "instrument": "da_forward_day_verify_v1",
   "per_coin": {
     "btc": {
-      "all_pass": false,
+      "all_pass": true,
       "day_bar_v2": {
-        "P1_pass": false,
-        "P2_pass": false,
-        "P3_pass": false,
-        "coin_level_gap_intervals": 1,
-        "coverage_observed_arg": "False",
-        "evaluable": false,
-        "hours_elapsed": 0.101,
-        "lost_seconds": 2.2,
+        "P1_lost_s_per_hr": 73.71,
+        "P1_pass": true,
+        "P2_material_share": 0.0,
+        "P2_material_windows": 0,
+        "P2_pass": true,
+        "P3_pass": true,
+        "P3_worst_rolling_60min_lost_s": 219.7,
+        "coin_level_gap_intervals": 287,
+        "evaluable": true,
+        "hours_elapsed": 24.0,
+        "lost_seconds": 1769.1,
         "thresholds": {
           "P1_max_s_per_hr": 120.0,
           "P2_material_span_s": 75.0,
           "P2_max_share": 0.05,
           "P3_max_rolling_60min_s": 900.0
         },
-        "why": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
         "windows_affected_disclosure": {
-          "affected_over_288": 0.0035,
-          "affected_over_elapsed": 1.0,
-          "coin_level_gap_intervals_read": 1,
-          "coverage_observed_arg": "False",
+          "affected_over_288": 0.5035,
+          "affected_over_elapsed": 0.5035,
+          "coin_level_gap_intervals_read": 287,
+          "coverage_observed_arg": "True",
           "denominator_note": "affected_over_elapsed is the LIVE rate over COMPLETE elapsed windows; affected_over_288 is progress toward the complete-day denominator and is the ONLY one a closing-day receipt quotes. They coincide on a closed day.",
           "governs_all_pass": false,
           "has_threshold": false,
           "is_a_gate": false,
           "meaning_note": "a DISCLOSURE COUNT of short blind intervals and modeled queue resets -- NOT a count of contaminated windows, NOT a gate, and NOT a threshold. The governing bars score DURATION (P1/P2/P3); breadth is carried BESIDE them, never instead of them, because v2 retired the only predicate that saw it (08-28: 186/288 windows touched with all three duration bars passing).",
-          "pct_of_288": 0.3,
-          "pct_of_elapsed": 100.0,
+          "pct_of_288": 50.3,
+          "pct_of_elapsed": 50.3,
           "role": "REPORTED_NOT_GOVERNING",
-          "windows_affected_COIN_LEVEL": 1,
-          "windows_complete_elapsed": 1,
+          "windows_affected_COIN_LEVEL": 145,
+          "windows_complete_elapsed": 288,
           "windows_total": 288,
           "zero_affected_is_not_a_clean_claim": false
         }
       },
       "gap_series": {
         "causes": {
-          "SLOW_CONSUMER_1013": 1
+          "CONNECTIONCLOSEDOK": 1,
+          "NO_CLOSE_FRAME": 81,
+          "PING_TIMEOUT": 175,
+          "SLOW_CONSUMER_1013": 30
         },
         "coin": "btc",
-        "gaps_per_hour": null,
-        "hours_elapsed": 0.101,
-        "hours_over_bar": [],
-        "hours_with_a_gap": 1,
-        "ledger_lines": 10082,
+        "gaps_per_hour": 11.96,
+        "hours_elapsed": 24.0,
+        "hours_over_bar": [
+          0,
+          6,
+          8,
+          13,
+          14,
+          19,
+          20
+        ],
+        "hours_with_a_gap": 22,
+        "ledger_lines": 10691,
         "ledger_unparseable": 0,
-        "lost_s": 2.2,
-        "n_gaps": 1,
+        "lost_s": 1769.1,
+        "n_gaps": 287,
+        "n_hours_over_bar": 7,
+        "per_hour": {
+          "0": 17,
+          "1": 4,
+          "10": 6,
+          "11": 8,
+          "12": 11,
+          "13": 22,
+          "14": 17,
+          "15": 10,
+          "16": 13,
+          "17": 7,
+          "18": 5,
+          "19": 32,
+          "20": 17,
+          "21": 11,
+          "22": 13,
+          "23": 14,
+          "4": 5,
+          "5": 15,
+          "6": 20,
+          "7": 12,
+          "8": 20,
+          "9": 8
+        },
+        "rate_estimable": true,
+        "rate_note": null,
+        "worst_hour": 32
+      },
+      "governing_predicates": [
+        "entirely_post_freeze",
+        "complete_tape",
+        "P1_bar",
+        "P2_bar",
+        "P3_bar"
+      ],
+      "predicates": [
+        {
+          "detail": "btc 288/288 admissible/total",
+          "pass": true,
+          "predicate": "entirely_post_freeze"
+        },
+        {
+          "detail": "expect 288 (closed day (calendar)); btc 288 (short 0)",
+          "pass": true,
+          "predicate": "complete_tape"
+        },
+        {
+          "detail": "287 btc gaps over 24.0h = 11.96/hr vs bar 15; 7 hours over; worst 32; 1769.1s lost",
+          "pass": false,
+          "predicate": "gap_rate_under_bar"
+        },
+        {
+          "detail": "P1 on this coin's own gaps",
+          "pass": true,
+          "predicate": "P1_bar"
+        },
+        {
+          "detail": "P2 on this coin's own gaps",
+          "pass": true,
+          "predicate": "P2_bar"
+        },
+        {
+          "detail": "P3 on this coin's own gaps",
+          "pass": true,
+          "predicate": "P3_bar"
+        }
+      ],
+      "race_accrual_eligible": true,
+      "superseded_not_governing": [
+        "gap_rate_under_bar"
+      ],
+      "verdict_split": {
+        "day_closed": true,
+        "day_quality_pass": true,
+        "era_admissible": true,
+        "era_role": "INTERLOCK, NOT A QUALITY GRADE (USER 2026-09-01). Among RULED eras quality alone decides: clob_v3_1/v4/v4_1 make NO row-stamping change, so era carries no fidelity claim about the rows that survive. This conjunct exists to refuse an UNRULED collector at the next boundary, not to judge the feed. Cross-era quality COMPARISON stays invalid separately: the bars are era-dependent in magnitude.",
+        "post_freeze_pass": true,
+        "race_accrual_eligible": true,
+        "rule": "a day accrues iff FINISHED (closed UTC day) AND AFTER (post freeze commit) AND ADMISSIBLE (the era is RULED -- an interlock against an unvetted collector, never a quality grade) AND HEALTHY (the quality bars of that day's OWN bar regime). Four conjuncts, four different questions. Among ruled eras QUALITY ALONE DECIDES (USER 2026-09-01); era carries no fidelity claim, since clob_v3_1/v4/v4_1 make NO row-stamping change. Cross-era quality comparison stays invalid: the bars are era-dependent in magnitude.",
+        "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day -- and an UNFINISHED day is not yet a day at all"
+      },
+      "windows_gap_affected": {
+        "era_covered_windows": 288,
+        "gap_affected_COIN_LEVEL": 145,
+        "gap_affected_PER_SLUG": 145,
+        "gap_affected_pct_COIN_LEVEL": 50.3,
+        "gap_affected_pct_PER_SLUG": 50.3,
+        "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
+      }
+    },
+    "eth": {
+      "all_pass": true,
+      "day_bar_v2": {
+        "P1_lost_s_per_hr": 1.85,
+        "P1_pass": true,
+        "P2_material_share": 0.0,
+        "P2_material_windows": 0,
+        "P2_pass": true,
+        "P3_pass": true,
+        "P3_worst_rolling_60min_lost_s": 15.5,
+        "coin_level_gap_intervals": 5,
+        "evaluable": true,
+        "hours_elapsed": 24.0,
+        "lost_seconds": 44.5,
+        "thresholds": {
+          "P1_max_s_per_hr": 120.0,
+          "P2_material_span_s": 75.0,
+          "P2_max_share": 0.05,
+          "P3_max_rolling_60min_s": 900.0
+        },
+        "windows_affected_disclosure": {
+          "affected_over_288": 0.0174,
+          "affected_over_elapsed": 0.0174,
+          "coin_level_gap_intervals_read": 5,
+          "coverage_observed_arg": "True",
+          "denominator_note": "affected_over_elapsed is the LIVE rate over COMPLETE elapsed windows; affected_over_288 is progress toward the complete-day denominator and is the ONLY one a closing-day receipt quotes. They coincide on a closed day.",
+          "governs_all_pass": false,
+          "has_threshold": false,
+          "is_a_gate": false,
+          "meaning_note": "a DISCLOSURE COUNT of short blind intervals and modeled queue resets -- NOT a count of contaminated windows, NOT a gate, and NOT a threshold. The governing bars score DURATION (P1/P2/P3); breadth is carried BESIDE them, never instead of them, because v2 retired the only predicate that saw it (08-28: 186/288 windows touched with all three duration bars passing).",
+          "pct_of_288": 1.7,
+          "pct_of_elapsed": 1.7,
+          "role": "REPORTED_NOT_GOVERNING",
+          "windows_affected_COIN_LEVEL": 5,
+          "windows_complete_elapsed": 288,
+          "windows_total": 288,
+          "zero_affected_is_not_a_clean_claim": false
+        }
+      },
+      "gap_series": {
+        "causes": {
+          "NO_CLOSE_FRAME": 2,
+          "PING_TIMEOUT": 3
+        },
+        "coin": "eth",
+        "gaps_per_hour": 0.21,
+        "hours_elapsed": 24.0,
+        "hours_over_bar": [],
+        "hours_with_a_gap": 5,
+        "ledger_lines": 10691,
+        "ledger_unparseable": 0,
+        "lost_s": 44.5,
+        "n_gaps": 5,
         "n_hours_over_bar": 0,
         "per_hour": {
-          "0": 1
+          "1": 1,
+          "14": 1,
+          "16": 1,
+          "19": 1,
+          "20": 1
         },
-        "rate_estimable": false,
-        "rate_note": "only 364s elapsed -- NO RATE REPORTED; 1 raw gaps so far",
+        "rate_estimable": true,
+        "rate_note": null,
         "worst_hour": 1
       },
       "governing_predicates": [
@@ -213,172 +915,56 @@
       ],
       "predicates": [
         {
-          "detail": "2026-09-02 absent from the selector -- not verifiable",
-          "pass": false,
+          "detail": "eth 288/288 admissible/total",
+          "pass": true,
           "predicate": "entirely_post_freeze"
         },
         {
-          "detail": "expect 1 (elapsed so far); btc 0 (short 1)",
-          "pass": false,
+          "detail": "expect 288 (closed day (calendar)); eth 288 (short 0)",
+          "pass": true,
           "predicate": "complete_tape"
         },
         {
-          "detail": "NOT ESTIMABLE -- only 364s elapsed -- NO RATE REPORTED; 1 raw gaps so far",
-          "pass": false,
+          "detail": "5 eth gaps over 24.0h = 0.21/hr vs bar 15; 0 hours over; worst 1; 44.5s lost",
+          "pass": true,
           "predicate": "gap_rate_under_bar"
         },
         {
-          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-          "pass": false,
+          "detail": "P1 on this coin's own gaps",
+          "pass": true,
           "predicate": "P1_bar"
         },
         {
-          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-          "pass": false,
+          "detail": "P2 on this coin's own gaps",
+          "pass": true,
           "predicate": "P2_bar"
         },
         {
-          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-          "pass": false,
+          "detail": "P3 on this coin's own gaps",
+          "pass": true,
           "predicate": "P3_bar"
         }
       ],
-      "race_accrual_eligible": false,
+      "race_accrual_eligible": true,
       "superseded_not_governing": [
         "gap_rate_under_bar"
       ],
       "verdict_split": {
-        "day_closed": false,
-        "day_quality_pass": false,
+        "day_closed": true,
+        "day_quality_pass": true,
         "era_admissible": true,
         "era_role": "INTERLOCK, NOT A QUALITY GRADE (USER 2026-09-01). Among RULED eras quality alone decides: clob_v3_1/v4/v4_1 make NO row-stamping change, so era carries no fidelity claim about the rows that survive. This conjunct exists to refuse an UNRULED collector at the next boundary, not to judge the feed. Cross-era quality COMPARISON stays invalid separately: the bars are era-dependent in magnitude.",
-        "post_freeze_pass": false,
-        "race_accrual_eligible": false,
+        "post_freeze_pass": true,
+        "race_accrual_eligible": true,
         "rule": "a day accrues iff FINISHED (closed UTC day) AND AFTER (post freeze commit) AND ADMISSIBLE (the era is RULED -- an interlock against an unvetted collector, never a quality grade) AND HEALTHY (the quality bars of that day's OWN bar regime). Four conjuncts, four different questions. Among ruled eras QUALITY ALONE DECIDES (USER 2026-09-01); era carries no fidelity claim, since clob_v3_1/v4/v4_1 make NO row-stamping change. Cross-era quality comparison stays invalid: the bars are era-dependent in magnitude.",
         "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day -- and an UNFINISHED day is not yet a day at all"
       },
       "windows_gap_affected": {
-        "era_covered_windows": 0,
-        "gap_affected_COIN_LEVEL": 1,
-        "gap_affected_PER_SLUG": 0,
-        "gap_affected_pct_COIN_LEVEL": 0.3,
-        "gap_affected_pct_PER_SLUG": null,
-        "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
-      }
-    },
-    "eth": {
-      "all_pass": false,
-      "day_bar_v2": {
-        "P1_pass": false,
-        "P2_pass": false,
-        "P3_pass": false,
-        "coin_level_gap_intervals": 0,
-        "coverage_observed_arg": "False",
-        "evaluable": false,
-        "hours_elapsed": 0.101,
-        "lost_seconds": 0,
-        "thresholds": {
-          "P1_max_s_per_hr": 120.0,
-          "P2_material_span_s": 75.0,
-          "P2_max_share": 0.05,
-          "P3_max_rolling_60min_s": 900.0
-        },
-        "why": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-        "windows_affected_disclosure": {
-          "affected_over_288": 0.0,
-          "affected_over_elapsed": 0.0,
-          "coin_level_gap_intervals_read": 0,
-          "coverage_observed_arg": "False",
-          "denominator_note": "affected_over_elapsed is the LIVE rate over COMPLETE elapsed windows; affected_over_288 is progress toward the complete-day denominator and is the ONLY one a closing-day receipt quotes. They coincide on a closed day.",
-          "governs_all_pass": false,
-          "has_threshold": false,
-          "is_a_gate": false,
-          "meaning_note": "a DISCLOSURE COUNT of short blind intervals and modeled queue resets -- NOT a count of contaminated windows, NOT a gate, and NOT a threshold. The governing bars score DURATION (P1/P2/P3); breadth is carried BESIDE them, never instead of them, because v2 retired the only predicate that saw it (08-28: 186/288 windows touched with all three duration bars passing).",
-          "pct_of_288": 0.0,
-          "pct_of_elapsed": 0.0,
-          "role": "REPORTED_NOT_GOVERNING",
-          "windows_affected_COIN_LEVEL": 0,
-          "windows_complete_elapsed": 1,
-          "windows_total": 288,
-          "zero_affected_is_not_a_clean_claim": true
-        }
-      },
-      "gap_series": {
-        "causes": {},
-        "coin": "eth",
-        "gaps_per_hour": null,
-        "hours_elapsed": 0.101,
-        "hours_over_bar": [],
-        "hours_with_a_gap": 0,
-        "ledger_lines": 10082,
-        "ledger_unparseable": 0,
-        "lost_s": 0.0,
-        "n_gaps": 0,
-        "n_hours_over_bar": 0,
-        "per_hour": {},
-        "rate_estimable": false,
-        "rate_note": "only 364s elapsed -- NO RATE REPORTED; 0 raw gaps so far",
-        "worst_hour": 0
-      },
-      "governing_predicates": [
-        "entirely_post_freeze",
-        "complete_tape",
-        "P1_bar",
-        "P2_bar",
-        "P3_bar"
-      ],
-      "predicates": [
-        {
-          "detail": "2026-09-02 absent from the selector -- not verifiable",
-          "pass": false,
-          "predicate": "entirely_post_freeze"
-        },
-        {
-          "detail": "expect 1 (elapsed so far); eth 0 (short 1)",
-          "pass": false,
-          "predicate": "complete_tape"
-        },
-        {
-          "detail": "NOT ESTIMABLE -- only 364s elapsed -- NO RATE REPORTED; 0 raw gaps so far",
-          "pass": false,
-          "predicate": "gap_rate_under_bar"
-        },
-        {
-          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-          "pass": false,
-          "predicate": "P1_bar"
-        },
-        {
-          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-          "pass": false,
-          "predicate": "P2_bar"
-        },
-        {
-          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-          "pass": false,
-          "predicate": "P3_bar"
-        }
-      ],
-      "race_accrual_eligible": false,
-      "superseded_not_governing": [
-        "gap_rate_under_bar"
-      ],
-      "verdict_split": {
-        "day_closed": false,
-        "day_quality_pass": false,
-        "era_admissible": true,
-        "era_role": "INTERLOCK, NOT A QUALITY GRADE (USER 2026-09-01). Among RULED eras quality alone decides: clob_v3_1/v4/v4_1 make NO row-stamping change, so era carries no fidelity claim about the rows that survive. This conjunct exists to refuse an UNRULED collector at the next boundary, not to judge the feed. Cross-era quality COMPARISON stays invalid separately: the bars are era-dependent in magnitude.",
-        "post_freeze_pass": false,
-        "race_accrual_eligible": false,
-        "rule": "a day accrues iff FINISHED (closed UTC day) AND AFTER (post freeze commit) AND ADMISSIBLE (the era is RULED -- an interlock against an unvetted collector, never a quality grade) AND HEALTHY (the quality bars of that day's OWN bar regime). Four conjuncts, four different questions. Among ruled eras QUALITY ALONE DECIDES (USER 2026-09-01); era carries no fidelity claim, since clob_v3_1/v4/v4_1 make NO row-stamping change. Cross-era quality comparison stays invalid: the bars are era-dependent in magnitude.",
-        "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day -- and an UNFINISHED day is not yet a day at all"
-      },
-      "windows_gap_affected": {
-        "era_covered_windows": 0,
-        "gap_affected_COIN_LEVEL": 0,
-        "gap_affected_PER_SLUG": 0,
-        "gap_affected_pct_COIN_LEVEL": 0.0,
-        "gap_affected_pct_PER_SLUG": null,
+        "era_covered_windows": 288,
+        "gap_affected_COIN_LEVEL": 5,
+        "gap_affected_PER_SLUG": 3,
+        "gap_affected_pct_COIN_LEVEL": 1.7,
+        "gap_affected_pct_PER_SLUG": 1.0,
         "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
       }
     }
@@ -386,13 +972,13 @@
   "per_coin_rule_from_day": "20260828",
   "predicates": [
     {
-      "detail": "2026-09-02 absent from the selector for its own era 'clob_v4_1' -- cannot be verified, not passed",
-      "pass": false,
+      "detail": "selector day_closed=False (calendar says True; the tape-derived predicate lags the boundary by up to one window); bnb 288/288, btc 288/288, doge 288/288, eth 288/288 (+3 more)",
+      "pass": true,
       "predicate": "entirely_post_freeze"
     },
     {
-      "detail": "expect 1 (elapsed so far); btc 0 (short 1), eth 0 (short 1)",
-      "pass": false,
+      "detail": "expect 288 (closed day (calendar)); btc 288 (short 0), eth 288 (short 0)  [selector day_closed=False DISAGREES with the calendar; its tape-derived predicate lags the boundary by up to one window]",
+      "pass": true,
       "predicate": "complete_tape"
     },
     {
@@ -401,68 +987,52 @@
       "predicate": "tape_density"
     },
     {
-      "detail": "NOT ESTIMABLE -- only 364s elapsed -- NO RATE REPORTED; 1 raw gaps so far",
+      "detail": "304 gaps over 24.0h elapsed = 12.67/hr vs bar 15; 8 hours over; worst 33; 1921.8s lost",
       "pass": false,
       "predicate": "gap_rate_under_bar"
     },
     {
-      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-      "pass": false,
+      "detail": "lost 1769.1s = 73.71/hr vs bar 120.0",
+      "pass": true,
       "predicate": "P1_btc"
     },
     {
-      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-      "pass": false,
+      "detail": "0 windows >= 75.0s in gap = 0.00% vs bar 5%",
+      "pass": true,
       "predicate": "P2_btc"
     },
     {
-      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-      "pass": false,
+      "detail": "worst rolling 60min 219.7s vs bar 900.0",
+      "pass": true,
       "predicate": "P3_btc"
     },
     {
-      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-      "pass": false,
+      "detail": "lost 44.5s = 1.85/hr vs bar 120.0",
+      "pass": true,
       "predicate": "P1_eth"
     },
     {
-      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-      "pass": false,
+      "detail": "0 windows >= 75.0s in gap = 0.00% vs bar 5%",
+      "pass": true,
       "predicate": "P2_eth"
     },
     {
-      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
-      "pass": false,
+      "detail": "worst rolling 60min 15.5s vs bar 900.0",
+      "pass": true,
       "predicate": "P3_eth"
     }
   ],
-  "race_accrual_eligible": false,
-  "restored": {
-    "by": "DA (pm-da)",
-    "kind": "canonical_00_06Z_restoration",
-    "original_supersedes_preserved": null,
-    "recovered_content_sha256": "b1d67fcd9b18948903edcacd103d55e7c7ec78f1bce76265e221a22873b76e57",
-    "recovered_from": {
-      "block": "the verdict JSON echoed by the 00:06Z run",
-      "fired_marker": "======== fired 2026-09-02T00:06:00Z ========",
-      "path": "data/pm_5min/derived/.da_midnight_verify.log"
-    },
-    "replaces_sha256": "71001e120e3a6974aa960219892972ebae735ee8b4519d82512d1fae8c4f32bb",
-    "restored_at_utc": "2026-09-02T10:29:25Z",
-    "restores_as_of_utc": "2026-09-02T00:06:03.718835+00:00",
-    "this_file_is_not_byte_identical_to_the_00_06Z_artifact": "deliberately. Rule 13: a correction supersedes IN BAND rather than editing silently, so this file carries the recovered content PLUS this block and a supersedes naming the write it replaced. The 00:06Z bytes themselves hash to b1d67fcd9b189489 and are reproducible from the log.",
-    "why": "a reviewer ran the launcher with mis-named overrides at 10:16Z and it wrote canonical verdicts as an UNATTRIBUTED hand run, replacing the scheduled 00:06Z artifacts. NO GOVERNING VALUE CHANGED in either direction; what was lost was the attribution and the as-of of the scheduled run, which is what the register cites."
-  },
+  "race_accrual_eligible": true,
   "selector_era": "clob_v4_1",
   "supersedes": {
     "all_pass": false,
-    "as_of_utc": "2026-09-02T10:16:17.888480+00:00",
-    "note": "the UNATTRIBUTED 10:16Z hand run this restoration replaces (reviewer incident, 2026-09-02). Its bytes are preserved beside this file at 'data/pm_5min/derived/da_dayverdict_20260902.superseded_20260902T101617.888480+0000.json'.",
-    "path": "data/pm_5min/derived/da_dayverdict_20260902.json",
-    "prior_bytes_preserved_at": "data/pm_5min/derived/da_dayverdict_20260902.superseded_20260902T101617.888480+0000.json",
-    "prior_bytes_tracked_in_git": false,
+    "as_of_utc": "2026-09-02T00:06:03.718835+00:00",
+    "note": "the artifact this write replaced. Its bytes are in git history AND preserved beside this file at '/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260902.superseded_20260902T000603.718835+0000.json'. This path is a CACHE of the current verdict, not a receipt.",
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260902.json",
+    "prior_bytes_preserved_at": "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260902.superseded_20260902T000603.718835+0000.json",
+    "prior_bytes_tracked_in_git": true,
     "race_accrual_eligible": false,
-    "sha256": "71001e120e3a6974aa960219892972ebae735ee8b4519d82512d1fae8c4f32bb"
+    "sha256": "09a14a7392abe224eed2bcf85e7ccb711fe826d37a6ddc251e34cb5322138a17"
   },
   "tape_density": {
     "status": "UNMEASURED",
@@ -470,32 +1040,32 @@
   },
   "verdict_granularity": "per_coin",
   "verdict_split": {
-    "day_closed": false,
-    "day_quality_pass": false,
+    "day_closed": true,
+    "day_quality_pass": true,
     "era_admissible": true,
     "era_role": "INTERLOCK, NOT A QUALITY GRADE (USER 2026-09-01). Among RULED eras quality alone decides: clob_v3_1/v4/v4_1 make NO row-stamping change, so era carries no fidelity claim about the rows that survive. This conjunct exists to refuse an UNRULED collector at the next boundary, not to judge the feed. Cross-era quality COMPARISON stays invalid separately: the bars are era-dependent in magnitude.",
-    "post_freeze_pass": false,
-    "race_accrual_eligible": false,
+    "post_freeze_pass": true,
+    "race_accrual_eligible": true,
     "rule": "a day accrues iff FINISHED (closed UTC day) AND AFTER (post freeze commit) AND ADMISSIBLE (the era is RULED -- an interlock against an unvetted collector, never a quality grade) AND HEALTHY (the quality bars of that day's OWN bar regime). Four conjuncts, four different questions. Among ruled eras QUALITY ALONE DECIDES (USER 2026-09-01); era carries no fidelity claim, since clob_v3_1/v4/v4_1 make NO row-stamping change. Cross-era quality comparison stays invalid: the bars are era-dependent in magnitude.",
     "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day -- and an UNFINISHED day is not yet a day at all"
   },
   "windows_gap_affected": {
     "btc": {
-      "era_covered_windows": 0,
-      "gap_affected_COIN_LEVEL": 1,
-      "gap_affected_PER_SLUG": 0,
-      "gap_affected_pct_COIN_LEVEL": 0.3,
-      "gap_affected_pct_PER_SLUG": null,
+      "era_covered_windows": 288,
+      "gap_affected_COIN_LEVEL": 145,
+      "gap_affected_PER_SLUG": 145,
+      "gap_affected_pct_COIN_LEVEL": 50.3,
+      "gap_affected_pct_PER_SLUG": 50.3,
       "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
     },
     "eth": {
-      "era_covered_windows": 0,
-      "gap_affected_COIN_LEVEL": 0,
-      "gap_affected_PER_SLUG": 0,
-      "gap_affected_pct_COIN_LEVEL": 0.0,
-      "gap_affected_pct_PER_SLUG": null,
+      "era_covered_windows": 288,
+      "gap_affected_COIN_LEVEL": 5,
+      "gap_affected_PER_SLUG": 3,
+      "gap_affected_pct_COIN_LEVEL": 1.7,
+      "gap_affected_pct_PER_SLUG": 1.0,
       "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
     }
   },
-  "write_reason": "scheduled unit run, da-midnight-verify.service (INVOCATION_ID=69ba0fae7ef84731832b9e2bfb50de2e)"
+  "write_reason": "scheduled unit run, da-midnight-verify.service (INVOCATION_ID=90a4ae2ca55947debe1d566b131e216b)"
 }
