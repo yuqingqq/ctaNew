@@ -1148,6 +1148,72 @@ def selftest() -> int:
            "instrument that leaves trees behind is the untracked-drop-in "
            "class in another costume")
 
+    # ----------------------------------------------------------------------
+    # DA21-B2: WHERE THIS MASK STOPS SEEING, MEASURED RATHER THAN QUOTED.
+    #
+    # The mask exports v1's numerator: below THIN_FRAC x the SAME-DAY median.
+    # RR6-1 states in prose that past "roughly 60% dark" the median itself
+    # crosses into the dark regime and v1 goes blind. That number has never
+    # been computed in this file, and a bound nobody computed is a bound
+    # nobody can hold the code to. The BOUNDARY IS THE MEDIAN CROSSING, so it
+    # sits at MORE THAN HALF the coin-day's windows -- driven here on both
+    # sides of it, on a fixture, in the same run.
+    #
+    # Nothing here changes the mask, the frozen detector, or any constant.
+    # It records the trigger condition for the failure mode the v2 seam
+    # exists to answer, so a future ruling on that seam has a number.
+    import gzip as _gz2
+    import tempfile as _tf2
+    import da_content_liveness_v2_check as _V2X
+    _CD = ["20300101", "20300102", "20300103", "20300104", "20300105"]
+    _CC = "aaa"
+
+    def _cross(n_dark: int) -> tuple:
+        with _tf2.TemporaryDirectory() as _t:
+            _root = Path(_t)
+            for _d in _CD:
+                _rd = _root / _d
+                _rd.mkdir(parents=True)
+                _b0 = day_bounds(_d)[0]
+                _nd = n_dark if _d == _CD[-1] else 0
+                for _i in range(WINDOWS_PER_DAY):
+                    with _gz2.open(_rd / f"{_CC}-updown-5m-"
+                                         f"{_b0 + _i * WINDOW_S}.jsonl.gz",
+                                   "wb") as _fh:
+                        _fh.write(b"x" * (200 if _i < _nd else 20000))
+            _m = build_mask(_CD[-1], raw_root=_root, gaps={})
+            _med = _V2X.day_medians(_CD, _root)
+            _v2 = _V2X.measure_v2(_CD[-1], _CD, _med, gaps={}, raw_root=_root)
+            _c2 = _v2["coins"][_CC]
+            return (_m["coins"][_CC]["n_masked"], _m["coins"][_CC]["status"],
+                    _c2["L3_v2_run"], _c2["status_v2"])
+
+    _at_half = _cross(WINDOWS_PER_DAY // 2)          # 144 of 288 -- exactly 50%
+    ok(_at_half[0] == WINDOWS_PER_DAY // 2 and _at_half[2] == WINDOWS_PER_DAY // 2,
+       f"DA21-B2 AT EXACTLY HALF DARK the mask still sees the whole blackout: "
+       f"v1 masks {_at_half[0]} of {WINDOWS_PER_DAY} windows and v2's "
+       f"absolute floor reads a run of {_at_half[2]}. The two agree, which "
+       f"is what makes the next line a crossing and not a difference of "
+       f"instruments")
+    _past = _cross(WINDOWS_PER_DAY // 2 + 6)         # 150 of 288 -- 52.1%
+    ok(_past[0] == 0 and _past[2] == WINDOWS_PER_DAY // 2 + 6
+       and _past[3] == _V2X.STATUS_DARK,
+       f"DA21-B2b SIX WINDOWS LATER THE MASK IS EMPTY: at "
+       f"{WINDOWS_PER_DAY // 2 + 6} of {WINDOWS_PER_DAY} dark the same "
+       f"fixture yields n_masked={_past[0]} with status {_past[1]!r} -- the "
+       f"day's own median HAS BECOME the dark level, so nothing is below a "
+       f"twentieth of it -- while v2's floor still reads a run of "
+       f"{_past[2]} and {_past[3]}. THE BOUNDARY IS THE MEDIAN CROSSING, "
+       f"i.e. MORE THAN HALF the coin-day; RR6-1's 'roughly 60%' is prose "
+       f"and this is the measured value")
+    ok(_past[0] == 0 and _at_half[0] > 0,
+       f"DA21-B2c AND THE CONTROL FIRES IN BOTH DIRECTIONS on one fixture "
+       f"shape: {_at_half[0]} masked below the crossing, {_past[0]} above it. "
+       f"A mask that is empty because the day was clean and a mask that is "
+       f"empty because the day was TOO dark to see are the same bytes to a "
+       f"consumer -- which is the fact the v2 seam was built for and the "
+       f"reason its disposition is a USER ruling, not this module's")
+
     print(f"da_blackout_mask selftests: {checks} checks passed")
     return 0
 

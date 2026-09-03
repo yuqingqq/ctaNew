@@ -2555,7 +2555,7 @@ def verify_day(day_token: str, freeze_epoch: float,
 #: 238 / 244 / 238 across three layouts at rc 0, with only the log's presence
 #: differing and nothing saying so. `ran + skipped` must equal this in EVERY
 #: layout, so a vanished check fails the suite instead of shrinking the count.
-EXPECTED_CHECKS = 261
+EXPECTED_CHECKS = 266
 
 
 def _selftests(require_no_skips: bool = False) -> int:
@@ -3062,6 +3062,74 @@ def _selftests(require_no_skips: bool = False) -> int:
            == "CONTENT_THIN",
            "R-424: the composite is the MORE SEVERE of the two in BOTH "
            "directions -- v2 can raise it and v1 can raise it")
+
+        # ------------------------------------------------------------------
+        # DA21: WHAT A GOVERNING CONTENT_DARK ACTUALLY MOVES.
+        #
+        # THE GAP THIS CLOSES, and it is in the control just above: the R-424
+        # LEAK CONTROL stubs v2 with `governs: False` and runs it on 08-29, a
+        # PRE-EFFECTIVE day. It therefore proves the wiring is inert in the
+        # regime where v2 does not govern -- the only regime that existed when
+        # it was written. From EFFECTIVE_FROM_DAY the regime CHANGES and that
+        # control does not follow it: a governing CONTENT_DARK has never been
+        # driven through a verdict by any check. R-249's shape, one regime
+        # later.
+        #
+        # The question is the coordinator's: can CONTENT_DARK joining the
+        # governing set change a verdict v1 alone would have passed? It is
+        # answered by COMPUTATION on a governed day, not by reading the
+        # composite's prose, and the answer is recorded either way.
+        _gd = "20260903"
+        ok(_V2.governs(_gd) is True,
+           f"DA21-B1 PRECONDITION: {_gd} is a day v2 GOVERNS by its own "
+           f"predicate, so the question is asked in the regime it is about")
+        _rg = verify_day(_gd, 1787897340.0)
+        _names = [x["predicate"] for x in _rg["predicates"]]
+        ok(not [n for n in _names if n.startswith("content_liveness")],
+           f"DA21-B1 THE COMPOSITE IS NOT A PREDICATE: the governed verdict's "
+           f"predicate vocabulary is {_names} -- no content-liveness row is "
+           f"among them, so `compose_all_pass` never sees one. If a USER "
+           f"freeze ever wires one, THIS line goes red and the wiring is "
+           f"noticed rather than assumed")
+        _recomposed = compose_all_pass(
+            [dict(x) for x in _rg["predicates"]],
+            _rg.get("per_coin") or {}, _rg.get("day_bar_v2") or {},
+            bar_regime(_gd))
+        ok(_recomposed == _rg["all_pass"],
+           f"DA21-B1b AND all_pass IS A FUNCTION OF THOSE ROWS ALONE: "
+           f"recomposing from the artifact's own predicates reproduces "
+           f"{_rg['all_pass']!r}. Nothing outside the predicate list -- the "
+           f"composite included -- contributes to the day verdict")
+        # THE OTHER DIRECTION: the composition is live and WOULD notice such a
+        # row. Without this, 'no content-liveness row contributes' is equally
+        # true of a composition that ignores everything.
+        _with_row = [dict(x) for x in _rg["predicates"]] + [
+            {"predicate": "content_liveness_composite_governs", "pass": False,
+             "detail": "DA21-B1c falsifier row, never emitted by production"}]
+        ok(compose_all_pass(_with_row, _rg.get("per_coin") or {},
+                            _rg.get("day_bar_v2") or {}, bar_regime(_gd))
+           is False,
+           "DA21-B1c FALSIFIER: appending a FAILING content-liveness row to "
+           "the same list drives compose_all_pass False -- the composition "
+           "responds to a row of that name if one is ever added, so its "
+           "silence above is about the ROWS EMITTED, not about a composition "
+           "that ignores everything")
+        _cd = content_liveness_composite(
+            _rg["content_liveness_rule"], {"status": "CONTENT_DARK",
+                                           "governs": True}, _gd)
+        ok(_cd["status"] == "CONTENT_DARK" and _cd["is_a_pass"] is False
+           and _cd["governing_contributors"] == ["v1", "v2"]
+           and compose_all_pass([dict(x) for x in _rg["predicates"]],
+                                _rg.get("per_coin") or {},
+                                _rg.get("day_bar_v2") or {},
+                                bar_regime(_gd)) == _rg["all_pass"],
+           f"DA21-B1d THE ANSWER, RECORDED: on a GOVERNED day a CONTENT_DARK "
+           f"composite is not a pass and names both contributors, and the "
+           f"day verdict is unchanged ({_rg['all_pass']!r}). CONTENT_DARK "
+           f"joins the composite's governing set (R-424(f)); it does NOT "
+           f"join the DAY VERDICT's governing set, which is a different set. "
+           f"Whether it should is a USER ruling (rule 14) and no code here "
+           f"pre-empts it in either direction")
 
         # ---- W1: THE WIRING ITSELF, THROUGH THE REAL verify_day ---------
         # A mutation DELETING the report line survived everything above,
