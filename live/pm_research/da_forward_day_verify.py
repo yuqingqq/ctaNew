@@ -47,6 +47,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 # imported from `pm_tape_density`, the lowest-level reader, so there is
 # ONE rule rather than two copies that can disagree.
 import pm_tape_density as _TDROOT  # noqa: E402
+import da_race_withdrawals as _RW  # noqa: E402
 CODE_ROOT = Path(__file__).resolve().parents[2]
 REPO = _TDROOT.DATA_ROOT
 PM_GAPS = REPO / "data/pm_5min/collector_gaps.jsonl"
@@ -171,6 +172,114 @@ def days_needing_verdict(outdir: Path, closed_token: str,
                    f"{len(catchup)} day(s) to catch up"}
 
 
+def prior_attributed_versions(day_token: str,
+                              repo: Path | None = None,
+                              rel: str | None = None) -> dict[str, Any]:
+    """Committed versions of this day's verdict that BE's gate 1 would accept.
+
+    DA22-R1, upheld. `accrual_attribution_reachability` computed something
+    narrow and correct -- that `days_needing_verdict` will not revisit this day
+    GIVEN THE ARTIFACT NOW AT THIS PATH -- and then named it
+    `UNREACHABLE_BY_ANY_HONEST_ROUTE`, which generalises a statement about one
+    file into a statement about the day. The generalisation was FALSE: a
+    verdict for 2026-08-29 written inside the scheduled unit, closed by
+    calendar and carrying the prefix, has been in git the whole time, and this
+    module's own grader returns ATTRIBUTED_ALREADY when pointed at those bytes.
+
+    So the function now REPORTS the route instead of foreclosing it. Whether
+    restoring a cached artifact from its declared provenance is permitted is
+    NOT decided here (rule 14) -- for 08-29 the USER has since ruled the day
+    out of the race entirely (R-500), which is a different answer from
+    'impossible' and is recorded as one.
+
+    A history that cannot be read is a STATUS, never an empty list.
+    """
+    repo = CODE_ROOT if repo is None else Path(repo)
+    rel = (f"data/pm_5min/derived/da_dayverdict_{day_token}.json"
+           if rel is None else rel)
+    import subprocess as _sp                                  # noqa: PLC0415
+    try:
+        import da_governed_verdict_preflight as _PF           # noqa: PLC0415
+        _pre = _PF.SCHEDULED_PREFIX
+        _r = _sp.run(["git", "log", "--format=%H", "--", rel],
+                     capture_output=True, text=True, cwd=str(repo), timeout=120)
+    except Exception as e:                                    # pragma: no cover
+        return {"status": "UNREADABLE", "why": repr(e), "versions": []}
+    if _r.returncode != 0:
+        return {"status": "UNREADABLE", "path": rel, "repo": str(repo),
+                "why": f"git log rc {_r.returncode}",
+                "note": "an unreadable history is a status; it must never "
+                        "read as 'no attributed version exists'",
+                "versions": []}
+    out = []
+    for c in [x for x in _r.stdout.split() if x]:
+        b = _sp.run(["git", "show", f"{c}:{rel}"], capture_output=True,
+                    text=True, cwd=str(repo), timeout=120)
+        if b.returncode != 0:
+            continue
+        try:
+            doc = json.loads(b.stdout)
+        except Exception:
+            continue
+        wr = doc.get("write_reason")
+        att = isinstance(wr, str) and wr.startswith(_pre)
+        closed = doc.get("day_closed_calendar") is True
+        sha = _sp.run(["git", "rev-parse", f"{c}:{rel}"], capture_output=True,
+                      text=True, cwd=str(repo), timeout=120).stdout.strip()
+        out.append({
+            "commit": c[:7], "blob": sha[:9],
+            "as_of_utc": doc.get("as_of_utc"),
+            "attributed": att, "day_closed_calendar": closed,
+            "gate_1_would_accept": bool(att and closed),
+            "race_accrual_eligible": (doc.get("verdict_split") or {}).get(
+                "race_accrual_eligible"),
+            "write_reason": (wr[:80] + "..." ) if isinstance(wr, str) and len(
+                wr) > 80 else wr,
+        })
+    return {
+        "status": "READ", "path": rel, "repo": str(repo),
+        "n_versions": len(out),
+        "n_gate_1_would_accept": sum(1 for v in out
+                                     if v["gate_1_would_accept"]),
+        "versions": out,
+        "prefix_source": "da_governed_verdict_preflight.SCHEDULED_PREFIX",
+        "decides_nothing": ("whether a cached artifact may be restored from "
+                            "its declared provenance is a USER call (rule 14); "
+                            "this reports that the bytes exist"),
+    }
+
+
+def assert_withdrawal_carried(rep: dict, day_token: str) -> dict[str, Any]:
+    """A verdict must carry the race-withdrawal fact, and the record must be
+    intact. REFUSES by name; called on the emission path, not only in a suite.
+
+    THIS IS THE HALF THAT MAKES THE WITHDRAWAL BINDING RATHER THAN RECORDED.
+    `assert_withdrawals_monotone` reads the registry module's own committed
+    history; if a recorded withdrawal has been removed or re-cited, EVERY
+    canonical verdict write refuses, by name, naming the day. A withdrawal a
+    later commit can quietly undo buys nothing (R-500 (C)), and the available
+    guarantee is not immutability -- it is that an undo cannot pass unnoticed.
+    """
+    blk = rep.get("race_withdrawal")
+    if not isinstance(blk, dict) or "withdrawn_from_race" not in blk:
+        raise ValueError(
+            f"REFUSED to emit a verdict for {day_token} with no "
+            f"`race_withdrawal` block. The block is carried on EVERY day so "
+            f"that a missing one is a defect and never an interpretation "
+            f"(rule 4); got {type(blk).__name__}.")
+    vs = rep.get("verdict_split") or {}
+    if bool(blk["withdrawn_from_race"]) != bool(vs.get("withdrawn_from_race")):
+        raise ValueError(
+            f"REFUSED: {day_token}'s `race_withdrawal` block and its "
+            f"`verdict_split` DISAGREE about withdrawal "
+            f"({blk['withdrawn_from_race']!r} vs "
+            f"{vs.get('withdrawn_from_race')!r}). One artifact, two answers, "
+            f"is how a reader ends up quoting the wrong one.")
+    mono = _RW.assert_withdrawals_monotone()      # raises by name on an undo
+    return {"carried": True, "withdrawn": bool(blk["withdrawn_from_race"]),
+            "monotone": mono}
+
+
 def accrual_attribution_reachability(
         day_token: str, outdir: Path | None = None,
         closed_token: str | None = None, opened_token: str | None = None,
@@ -231,6 +340,8 @@ def accrual_attribution_reachability(
     _kinds = {t: k for t, k in _dn["days"]}
     would_revisit = day_token in _kinds
 
+    _prior = prior_attributed_versions(day_token)
+
     if attributed and closed is True:
         verdict = "ATTRIBUTED_ALREADY"
         why = ("the artifact on disk already carries the scheduled unit's "
@@ -241,16 +352,33 @@ def accrual_attribution_reachability(
                f"{_kinds[day_token]!r}, so its next run writes it with the "
                f"cgroup-derived attribution")
     else:
-        verdict = "UNREACHABLE_BY_ANY_HONEST_ROUTE"
-        why = (f"the artifact is present and reads closed "
-               f"(_artifact_closed={closed!r}), so `days_needing_verdict` "
-               f"excludes it: catch-up fires only for an ABSENT, UNREADABLE "
-               f"or WRITTEN-WHILE-OPEN artifact. The scheduled unit is the "
-               f"only writer that can confer the prefix, and it will never "
-               f"revisit this day. Deleting or truncating the artifact would "
-               f"MANUFACTURE the catch-up condition; setting DA_WRITE_REASON "
-               f"to the prefix would FORGE the identity the cgroup test "
-               f"exists to check. Both are inventions, not routes")
+        # DA22-R1: THE NAME NOW SAYS WHAT IS COMPUTED. This branch is a
+        # statement about ONE FILE'S PRESENT CONTENTS, and the previous name
+        # -- UNREACHABLE_BY_ANY_HONEST_ROUTE -- generalised it to the DAY. It
+        # was true of the artifact and false of 2026-08-29, for which a
+        # unit-written, closed, gate-1-satisfying verdict has been in git the
+        # whole time. The route is now REPORTED beside the verdict.
+        verdict = "NOT_REACHABLE_FROM_THE_ARTIFACT_NOW_ON_DISK"
+        why = (f"the artifact CURRENTLY at this path is present and reads "
+               f"closed (_artifact_closed={closed!r}), so "
+               f"`days_needing_verdict` excludes it: catch-up fires only for "
+               f"an ABSENT, UNREADABLE or WRITTEN-WHILE-OPEN artifact, and "
+               f"the scheduled unit will not revisit this day while those "
+               f"bytes stand. THIS IS A STATEMENT ABOUT THE FILE, NOT ABOUT "
+               f"THE DAY: "
+               + (f"{_prior['n_gate_1_would_accept']} committed version(s) of "
+                  f"this path WOULD satisfy BE's gate 1 "
+                  f"({[v['commit'] for v in _prior['versions'] if v['gate_1_would_accept']]}), "
+                  f"so a route exists and this function does not foreclose it."
+                  if _prior.get("n_gate_1_would_accept") else
+                  f"no committed version of this path satisfies gate 1 "
+                  f"either (history {_prior.get('status')}).")
+               + " What this function still refuses to call a route: deleting "
+                 "or truncating the artifact to MANUFACTURE the catch-up "
+                 "condition, and setting DA_WRITE_REASON to the prefix to "
+                 "FORGE the identity the cgroup test exists to check. Whether "
+                 "restoring a cached artifact from its declared provenance is "
+                 "permitted is a USER call (rule 14)")
     return {
         "day": day_token,
         "artifact_path": str(art),
@@ -274,8 +402,24 @@ def accrual_attribution_reachability(
             "closed_token": closed_token, "opened_token": opened_token,
             "only_writer": "da_midnight_verify.sh, attribution derived from "
                            "/proc/self/cgroup",
+            # DA22-R1's amend clause: the route, computed and reported.
+            "prior_attributed_versions": _prior,
         },
-        "attribution_reachable": verdict != "UNREACHABLE_BY_ANY_HONEST_ROUTE",
+        # COMPUTED FROM THE FACTS, not from the verdict string. Keying it on
+        # a name meant that renaming the name silently made every day
+        # "reachable" -- the defect DA22-R1 found, one layer down.
+        "attribution_reachable": bool(
+            (attributed and closed is True) or would_revisit
+            or _prior.get("n_gate_1_would_accept")),
+        "attribution_reachable_why": (
+            "already attributed" if (attributed and closed is True) else
+            "the unit's day list includes it" if would_revisit else
+            f"{_prior.get('n_gate_1_would_accept')} committed version(s) of "
+            f"this path satisfy gate 1"
+            if _prior.get("n_gate_1_would_accept") else
+            f"no route found: not attributed, not in the unit's day list, and "
+            f"no committed version satisfies gate 1 (history "
+            f"{_prior.get('status')})"),
         "verdict": verdict,
         "why": why,
         "decides_nothing": ("REPORTED. Whether BE's gate should accept a "
@@ -1680,7 +1824,8 @@ ACCRUAL_RULE = ("a day accrues iff FINISHED (closed UTC day) AND AFTER (post "
 
 def split_verdict(preds: list, regime: str = "count_bar_v1_frozen",
                   era_admissible: bool | None = None,
-                  day_closed: bool | None = None) -> dict:
+                  day_closed: bool | None = None,
+                  withdrawn: bool = False) -> dict:
     """Separate DAY QUALITY (feed health) from RACE ACCRUAL (eligibility).
 
     CALLABLE, so the split can be driven directly rather than inferred from a
@@ -1711,13 +1856,35 @@ def split_verdict(preds: list, regime: str = "count_bar_v1_frozen",
             "REFUSED: split_verdict needs an explicit day_closed. A day that "
             "has not finished cannot have accrued, and eligibility must not "
             "be obtainable by omitting the question.")
+    if withdrawn is not True and withdrawn is not False:
+        raise ValueError(
+            f"REFUSED: `withdrawn` must be an explicit bool, got "
+            f"{withdrawn!r}. A policy fact that can be supplied as None is a "
+            f"policy fact that can be obtained by not asking.")
+    _elig = q_ok and a_ok and era_admissible and day_closed
     return {
         "day_quality_pass": q_ok,
         "post_freeze_pass": a_ok,
         "era_admissible": era_admissible,
         "day_closed": day_closed,
-        "race_accrual_eligible": q_ok and a_ok and era_admissible
-        and day_closed,
+        "race_accrual_eligible": _elig,
+        # R-500 (C). THE TWO FACTS STAY SEPARATE. `race_accrual_eligible` is
+        # the FOUR-CONJUNCT COMPUTATION and keeps its meaning whatever the
+        # USER decides; `withdrawn_from_race` is a POLICY FACT with its own
+        # cite; `counts_toward_race` is DERIVED from both and is the number a
+        # reader should count. Encoding the policy by falsifying the
+        # computation -- which is what leaving `era_admissible: false` on
+        # 08-29 would have done -- is the ERA_ADMISSIBLE defect in a new coat.
+        "withdrawn_from_race": withdrawn,
+        "counts_toward_race": bool(_elig) and not withdrawn,
+        "counts_toward_race_why": (
+            "eligible by the four conjuncts, and WITHDRAWN by USER ruling, so "
+            "it does not count -- the day is out of the race by a recorded "
+            "decision, not by a failed computation"
+            if withdrawn and _elig else
+            "withdrawn by USER ruling, and it does not satisfy the four "
+            "conjuncts either" if withdrawn else
+            "not withdrawn; counts exactly when the four conjuncts hold"),
         "rule": ACCRUAL_RULE,
         "why": "feed health and clock eligibility are separate questions; a "
                "healthy day BEFORE the freeze commit is a good day that does "
@@ -2724,7 +2891,9 @@ def verify_day(day_token: str, freeze_epoch: float,
             # SAME era admission for every coin: a mixed-era day is mixed
             # for all of them, and a coin cannot pass its way out of it.
             _csplit = split_verdict(cp, _reg, _era["race_admissible_by_era"],
-                                    day_closed=now.timestamp() >= hi)
+                                    day_closed=now.timestamp() >= hi,
+                                    withdrawn=bool(
+                                        _RW.withdrawal_for(day_token)))
             per_coin[coin] = {
                 "predicates": cp,
                 "day_bar_v2": _cb,
@@ -2791,7 +2960,21 @@ def verify_day(day_token: str, freeze_epoch: float,
     # CALENDAR closure, not the selector's -- the selector's `day_closed`
     # depends on tape arriving, so a stalled collector would make a finished
     # day look unfinished. The question here is only "has the UTC day ended".
+    _wd = _RW.withdrawal_for(day_token)
+    # Reachability is computed ONLY for a withdrawn day: it shells out to git
+    # and the answer is meaningless for a day nobody has taken out of the
+    # race. `None` on every other day, and the block says so.
+    _reach = None
+    if _wd:
+        try:
+            _reach = accrual_attribution_reachability(
+                day_token, closed_token=(now - dt.timedelta(days=1)).strftime(
+                    "%Y%m%d"), opened_token=now.strftime("%Y%m%d"))
+        except Exception as _e:                              # pragma: no cover
+            _reach = {"verdict": "UNCOMPUTED", "attribution_reachable": None,
+                      "achievable": {}, "why": repr(_e)}
     _split = split_verdict(preds, regime, _era["race_admissible_by_era"],
+                           withdrawn=bool(_wd),
                            day_closed=now.timestamp() >= hi)
 
     return {
@@ -2804,6 +2987,12 @@ def verify_day(day_token: str, freeze_epoch: float,
         # with nothing saying why.
         "roots": _TDROOT.data_root_provenance(),
         "verdict_split": _split,
+        # R-500. THE POLICY FACT, ON EVERY DAY, so absence never has to be
+        # interpreted (rule 4). Carries the reachability beside it because
+        # what keeps a withdrawn day out is the RULING, not impossibility --
+        # DA22-R1's correction, made visible in the artifact a reader opens.
+        "race_withdrawal": _RW.withdrawal_block(
+            day_token, reachability=_reach),
         "era_admission": _era,
         # The era whose windows the accrual predicate actually loaded. Carried
         # because "which population was read" is the question the old literal
@@ -2869,7 +3058,7 @@ def verify_day(day_token: str, freeze_epoch: float,
 #: 238 / 244 / 238 across three layouts at rc 0, with only the log's presence
 #: differing and nothing saying so. `ran + skipped` must equal this in EVERY
 #: layout, so a vanished check fails the suite instead of shrinking the count.
-EXPECTED_CHECKS = 288
+EXPECTED_CHECKS = 301
 
 
 def _selftests(require_no_skips: bool = False) -> int:
@@ -3082,6 +3271,12 @@ def _selftests(require_no_skips: bool = False) -> int:
             "    'day_bar_v2': {'btc': bar}, 'per_coin': {}, 'predicates': [],\n"
             "    'all_pass': True, 'windows_gap_affected': {}, 'day': 'x',\n"
             "    'content_liveness_rule': clr,\n"
+            # The withdrawal block is an unrelated PRECONDITION of main(),
+            # not the subject of this seam, so the stub supplies it exactly
+            # as a real report carries it. Supplying a precondition is not
+            # supplying what the code under test should produce.
+            "    'verdict_split': {'withdrawn_from_race': False},\n"
+            "    'race_withdrawal': {'withdrawn_from_race': False},\n"
             "    'verdict_granularity': 'whole_day'}\n"
             "sys.argv = ['x', 'verify', '--day', '20260829',\n"
             "            '--freeze-epoch', '1787897340']\n"
@@ -4272,14 +4467,15 @@ def _selftests(require_no_skips: bool = False) -> int:
         _art(td, "20260903", True, _PRE + " (INVOCATION_ID=x)")
         _r = accrual_attribution_reachability(
             "20260829", Path(td), "20260903", "20260904")
-        ok(_r["verdict"] == "UNREACHABLE_BY_ANY_HONEST_ROUTE"
-           and _r["attribution_reachable"] is False
+        ok(_r["verdict"] == "NOT_REACHABLE_FROM_THE_ARTIFACT_NOW_ON_DISK"
            and _r["achievable"]["attributed_now"] is False
            and _r["achievable"]["unit_would_revisit"] is False,
-           "DA22-B1 THE 08-29 SHAPE ON A FIXTURE: an artifact that is PRESENT, "
-           "CLOSED and UNATTRIBUTED can never be attributed -- the scheduled "
-           "unit is the only writer that confers the prefix and its own day "
-           "list excludes a present closed artifact, by design")
+           "DA22-B1 THE 08-29 SHAPE ON A FIXTURE: given the artifact PRESENT, "
+           "CLOSED and UNATTRIBUTED at this path, the unit will not revisit "
+           "the day. **RENAMED IN ROUND 24 (DA22-R1, upheld):** this branch "
+           "says something about ONE FILE'S PRESENT CONTENTS and the old name "
+           "-- UNREACHABLE_BY_ANY_HONEST_ROUTE -- generalised it to the DAY, "
+           "which was false for 2026-08-29")
         # SAME DAY, ARTIFACT ABSENT -> the unit WOULD write it.
         (Path(td) / "da_dayverdict_20260829.json").unlink()
         _art(td, "20260826", True, _PRE)
@@ -4332,6 +4528,129 @@ def _selftests(require_no_skips: bool = False) -> int:
        "DA22-B2 BE's gate and this reachability check read the SAME constant: "
        "be_forward_day IMPORTS SCHEDULED_PREFIX and carries no literal copy "
        "of it, so the two cannot drift into agreeing about different strings")
+    # ------------------------------------------------------------------
+    # DA24: R-500 -- THE WITHDRAWAL, ON THE PATH AND BINDING.
+    # ------------------------------------------------------------------
+    _r29 = accrual_attribution_reachability(
+        "20260829", closed_token="20260903", opened_token="20260904")
+    _pv = _r29["achievable"]["prior_attributed_versions"]
+    _acc = [v for v in _pv["versions"] if v["gate_1_would_accept"]]
+    ok(_pv["status"] == "READ" and _pv["n_versions"] == 3
+       and len(_acc) == 1 and _acc[0]["commit"] == "4e1133c"
+       and _acc[0]["blob"] == "79767ca38"
+       and _acc[0]["race_accrual_eligible"] is True,
+       f"DA24-1 DA22-R1's ROUTE, REPORTED BY THE INSTRUMENT THAT USED TO "
+       f"FORECLOSE IT: {_pv['n_versions']} committed versions of 08-29's "
+       f"verdict path, and {len(_acc)} satisfies BE's gate 1 -- commit "
+       f"{_acc[0]['commit']}, blob {_acc[0]['blob']}, as_of "
+       f"{_acc[0]['as_of_utc']}, race_accrual_eligible True. Verified by "
+       f"importing the prefix module, not by matching a string by eye")
+    ok(_r29["attribution_reachable"] is True
+       and "satisfy gate 1" in _r29["attribution_reachable_why"],
+       "DA24-1b AND `attribution_reachable` IS COMPUTED FROM THE FACTS, not "
+       "from the verdict string. Keying it on a name meant that renaming the "
+       "name would silently make every day reachable -- DA22-R1's defect one "
+       "layer down, closed in the same round that renamed it")
+    _r30 = accrual_attribution_reachability(
+        "20260830", closed_token="20260903", opened_token="20260904")
+    ok(_r30["attribution_reachable"] is False
+       and "no route found" in _r30["attribution_reachable_why"],
+       f"DA24-1c AND IT STILL DISCRIMINATES: 08-30 has NO committed version "
+       f"satisfying gate 1, so it reads reachable=False while 08-29 reads "
+       f"True. A field that says True for everything says nothing")
+
+    _reg29 = _RW.withdrawal_for("20260829")
+    ok(_reg29 is not None and "R-500" in _reg29["authority"]
+       and _reg29["era_admissible_at_withdrawal"] is True,
+       "DA24-2 THE REGISTRY IS CONSULTED FROM HERE, and 08-29 is withdrawn by "
+       "R-500 (B) with the era recorded as ADMISSIBLE -- the two facts the "
+       "old artifact ran together")
+    _v29 = verify_day("20260829", 1787897340.0)
+    _vs29 = _v29["verdict_split"]
+    ok(_vs29["era_admissible"] is True
+       and _vs29["race_accrual_eligible"] is True
+       and _vs29["withdrawn_from_race"] is True
+       and _vs29["counts_toward_race"] is False,
+       f"DA24-3 THE VERDICT STOPS ASSERTING THE FALSE THING AND CARRIES THE "
+       f"TRUE ONE: 08-29 computes era_admissible TRUE (R-497 (F)(1)) and "
+       f"race_accrual_eligible TRUE, and does NOT count, because it is "
+       f"WITHDRAWN. The policy is encoded in its own field instead of by "
+       f"falsifying the computation -- which is what `era_admissible: false` "
+       f"standing on disk was doing")
+    _v01 = verify_day("20260901", 1787897340.0)
+    ok(_v01["verdict_split"]["withdrawn_from_race"] is False
+       and _v01["verdict_split"]["counts_toward_race"] is True
+       and _v01["race_withdrawal"]["withdrawn_from_race"] is False,
+       "DA24-3b AND AN ORDINARY DAY IS UNAFFECTED: 09-01 carries the block "
+       "with withdrawn False and counts_toward_race True -- the block is on "
+       "EVERY day so a missing one is a defect, never an interpretation")
+    ok(_v29["race_withdrawal"]["reachability"]["attribution_reachable"]
+       is True
+       and "not impossibility" in
+       _v29["race_withdrawal"]["reachability"]["note"],
+       "DA24-4 AND THE ARTIFACT SAYS WHY THE DAY IS OUT: the block carries "
+       "the reachability beside the ruling, so a reader sees G stayed at 2 by "
+       "the USER's CHOICE and not by an accident of file state")
+
+    # THE WIRING, DRIVEN. Without this, production could pass `withdrawn=False`
+    # for a withdrawn day and every check above would still pass on the
+    # registry alone (rule 17).
+    _saved_wf = _RW.withdrawal_for
+    try:
+        _RW.withdrawal_for = lambda d, table=None: None
+        _stub = verify_day("20260829", 1787897340.0)
+    finally:
+        _RW.withdrawal_for = _saved_wf
+    ok(_stub["verdict_split"]["withdrawn_from_race"] is False
+       and _stub["verdict_split"]["counts_toward_race"] is True
+       and _vs29["counts_toward_race"] is False,
+       "DA24-5 WIRING FALSIFIER: with the registry lookup stubbed to return "
+       "nothing, the SAME day emits counts_toward_race TRUE. So the True/False "
+       "above comes from the production call site and not from the registry "
+       "being right -- a stamp whose wiring no check would miss is the shape "
+       "this chain closed at DA20-R2")
+    ok(_RW.withdrawal_for is _saved_wf,
+       "DA24-5b and the lookup is restored after the wiring falsifier")
+
+    for _bad in (None, 1, "true"):
+        try:
+            split_verdict([{"predicate": "x", "pass": True}],
+                          "day_bar_v2", True, True, withdrawn=_bad)
+            ok(False, f"DA24-6: withdrawn={_bad!r} must be refused")
+        except ValueError:
+            pass
+    ok(True, "DA24-6 `split_verdict` REFUSES a non-bool `withdrawn` (None, an "
+             "int, a string) -- a policy fact obtainable by not asking is the "
+             "defect `era_admissible` and `day_closed` already refuse")
+
+    _awc = assert_withdrawal_carried(_v29, "20260829")
+    ok(_awc["withdrawn"] is True
+       and _awc["monotone"]["status"] == "READ",
+       f"DA24-7 the emission-path assertion ADMITS a well-formed verdict AND "
+       f"carries the one-way status it evaluated "
+       f"({_awc['monotone']['status']}) -- so removing the monotonicity call "
+       f"from the emission path goes red here rather than silently dropping "
+       f"the binding half")
+    try:
+        _bad_rep = dict(_v29)
+        _bad_rep.pop("race_withdrawal")
+        assert_withdrawal_carried(_bad_rep, "20260829")
+        ok(False, "DA24-7b: a verdict with no block must refuse")
+    except ValueError as _e:
+        ok("no `race_withdrawal` block" in str(_e),
+           "DA24-7b FALSIFIER: a verdict emitted without the block REFUSES BY "
+           "NAME on the write path -- not in a suite, on the path")
+    try:
+        _bad2 = json.loads(json.dumps(_v29))
+        _bad2["race_withdrawal"]["withdrawn_from_race"] = False
+        assert_withdrawal_carried(_bad2, "20260829")
+        ok(False, "DA24-7c: block and split disagreeing must refuse")
+    except ValueError as _e:
+        ok("DISAGREE about withdrawal" in str(_e),
+           "DA24-7c FALSIFIER: a block that disagrees with `verdict_split` "
+           "REFUSES -- one artifact with two answers is how a reader ends up "
+           "quoting the wrong one")
+
     ok(_PRE in (_bs := (CODE_ROOT / "live/pm_research"
                         / "da_midnight_verify.sh").read_text(
                             encoding="utf-8", errors="replace"))
@@ -5556,9 +5875,25 @@ def main() -> int:
     # paths are unaffected.
     if a.out:
         _op = Path(a.out).resolve()
-        if (_op.parent == CANONICAL_VERDICT_DIR
-                and _op.name.startswith("da_dayverdict_")
-                and _op.name.endswith(".json") and not a.write_reason):
+        _canon = (_op.parent == CANONICAL_VERDICT_DIR
+                  and _op.name.startswith("da_dayverdict_")
+                  and _op.name.endswith(".json"))
+        if _canon:
+            # R-500: THE ONE-WAY GUARANTEE MUST HOLD WHERE IT MATTERS. A
+            # canonical write from a tree with no history cannot show that no
+            # withdrawal was dropped, and "I could not check" must never let
+            # the write through.
+            _mono = _RW.assert_withdrawals_monotone()
+            if _mono.get("monotone") is not True:
+                raise SystemExit(
+                    f"REFUSED: {_op.name} is a CANONICAL production verdict "
+                    f"and the race-withdrawal record could not be shown "
+                    f"intact from this tree (status "
+                    f"{_mono.get('status')!r}, monotone "
+                    f"{_mono.get('monotone')!r}). A withdrawal is one-way "
+                    f"(R-500); a canonical write that cannot evidence that "
+                    f"must not happen.")
+        if (_canon and not a.write_reason):
             raise SystemExit(
                 f"REFUSED: {_op.name} is a CANONICAL production verdict and "
                 f"--write-reason is required. The path is stable, so this "
@@ -5578,6 +5913,9 @@ def main() -> int:
         # failed). Those must never share an exit code.
         assert_disclosure_carried(rep)
         assert_content_liveness_carried(rep, a.day)
+        # R-500: the withdrawal record must be intact for ANY verdict to be
+        # emitted, not merely for the withdrawn day's own.
+        assert_withdrawal_carried(rep, a.day)
     except Exception:
         import traceback
         traceback.print_exc()
