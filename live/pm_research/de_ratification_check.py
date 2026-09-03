@@ -94,9 +94,47 @@ FIELD_VOCABULARY: dict[str, tuple] = {
     # sampling is CONTRADICTING ITSELF, not carrying an unknown word.
     "sampling": ("NONE", "STRATIFIED", "CAPPED"),
     "present_source": (LEDGER_PATH,),
-    "scope_days": ("FORWARD_RACE_DAYS",),
+    "scope_days": ("FORWARD_RACE_DAYS", "DEVELOPMENT_READ_DAYS"),
     "revocable_by": ("USER",),
 }
+
+#: THE TWO SCOPE VOCABULARIES, and the difference between them is not
+#: decorative.
+#:
+#: `FORWARD_RACE_DAYS` is what every existing block carries, R-419
+#: included, and it is the ONLY value that can admit a day to the forward
+#: race.
+#:
+#: `DEVELOPMENT_READ_DAYS` (round 51) exists because the USER withdrew
+#: 08-29 from the race at R-500 and kept it readable. A ratification for
+#: that read had no honest way to be written: the only admissible value
+#: said "forward-race day", so the read would have had to borrow the
+#: race's vocabulary for a day the USER had removed from the race. Moving
+#: R-419's `scope_from` instead would have turned this checker green while
+#: the entry still said RACE in words -- and `scope_days` is never
+#: compared against the day, so nothing would have caught it. BE refused
+#: to propose that and was right to.
+#:
+#: What makes the new value MEAN something rather than merely parse:
+#:   * `race_admissible` is COMPUTED from it and travels in the result;
+#:   * `require_verified` -- the gate `be_forward_day` calls -- REFUSES a
+#:     block that is not race-admissible, BY NAME. A development read must
+#:     call `require_verified_for_development_read` instead, so a caller
+#:     that forgets gets a refusal rather than a silent admission;
+#:   * a `DEVELOPMENT_READ_DAYS` block must carry a BOUNDED `scope_to`.
+#:     An open scope is what lets a ratification drift forward, and the
+#:     one thing a withdrawn day must not do is come back.
+SCOPE_DAYS_RACE = "FORWARD_RACE_DAYS"
+SCOPE_DAYS_DEVELOPMENT_READ = "DEVELOPMENT_READ_DAYS"
+
+#: The values that may admit a day to the forward race. ONE, and adding to
+#: this tuple is the act that would re-open the question R-500 closed.
+RACE_ADMISSIBLE_SCOPE_DAYS = (SCOPE_DAYS_RACE,)
+
+
+class NotForRaceAdmission(RuntimeError):
+    """A ratification that is real, verified, and NOT for the race."""
+
 
 #: `### R-419 — 2026-09-02T11:03Z — coordinator: …`
 HEADING_TS_RE = re.compile(
@@ -242,6 +280,54 @@ def require_verified(res: dict) -> dict:
     if res.get("provenance"):
         bad.append("this result is PROVENANCE for a run stamped before the "
                    "superseding entry; it may not start a new run")
+    if bad:
+        raise NotVerified(
+            f"REFUSED for {res.get('ratification_ref')!r}: " + "; ".join(bad))
+    # ROUND 51: THE RACE GATE IS THE DEFAULT, AND IT FAILS CLOSED.
+    # `be_forward_day` calls this function to decide whether a day may be
+    # scored for the forward race. A ratification written for a
+    # DEVELOPMENT READ must never satisfy it -- the USER withdrew 08-29
+    # from the race at R-500, and a ratification that could quietly
+    # re-admit it would undo the binding property of that withdrawal.
+    # Refusing HERE rather than adding a flag at the call site is
+    # deliberate: a caller that forgets a flag gets an admission, and a
+    # caller that must call a differently-named function gets a refusal.
+    if not res.get("race_admissible", False):
+        raise NotForRaceAdmission(
+            f"REFUSED for {res.get('ratification_ref')!r}: scope_days is "
+            f"{res.get('scope_days')!r}, which is not in "
+            f"{list(RACE_ADMISSIBLE_SCOPE_DAYS)}. This ratification is real "
+            f"and verified and it is NOT FOR THE RACE. `require_verified` "
+            f"is the race consumer's gate; a development read calls "
+            f"`require_verified_for_development_read`, which admits this "
+            f"block and refuses nothing else about it.")
+    return res
+
+
+def require_verified_for_development_read(res: dict) -> dict:
+    """The DEVELOPMENT READ's gate -- every conjunct `require_verified`
+    demands, and the race conjunct replaced rather than dropped.
+
+    It admits `DEVELOPMENT_READ_DAYS` and it REFUSES `FORWARD_RACE_DAYS`,
+    which is not symmetry for its own sake: a caller reaching for this
+    function while holding a race ratification has confused which read it
+    is performing, and that is worth a refusal in a programme where a
+    withdrawn day must stay withdrawn."""
+    bad = []
+    if not res.get("verified"):
+        bad.append("verified is False: "
+                   + str(sorted(k for k, v in res.get("checks", {}).items()
+                                if v is False)))
+    if res.get("unverifiable"):
+        bad.append(f"unverifiable checks remain: {res['unverifiable']}")
+    if res.get("provenance"):
+        bad.append("this result is PROVENANCE for a run stamped before the "
+                   "superseding entry; it may not start a new run")
+    if res.get("scope_days") != SCOPE_DAYS_DEVELOPMENT_READ:
+        bad.append(f"scope_days is {res.get('scope_days')!r}, not "
+                   f"{SCOPE_DAYS_DEVELOPMENT_READ!r}: this gate is for the "
+                   f"development read, and a race ratification presented "
+                   f"here is a caller who has confused the two")
     if bad:
         raise NotVerified(
             f"REFUSED for {res.get('ratification_ref')!r}: " + "; ".join(bad))
@@ -1065,6 +1151,21 @@ def check(supplied: dict, ratification_ref: str,
                 f"{list(_allowed)}. This is a WRONG VALUE, not a missing "
                 f"field and not an undecidable one -- round 10 made absence "
                 f"refuse and left nonsense verifying clean (DE-R3).")
+    if fields.get("scope_days") == SCOPE_DAYS_DEVELOPMENT_READ:
+        _to = fields.get("scope_to")
+        if _to is None or (isinstance(_to, str)
+                           and _to.strip() in SCOPE_OPEN_TOKENS):
+            # SITE: check#9b
+            raise RatificationRefused(
+                f"REFUSED: {ratification_ref} declares scope_days "
+                f"{SCOPE_DAYS_DEVELOPMENT_READ} with scope_to {_to!r}, which "
+                f"is OPEN. A development read is ratified for the day or "
+                f"days it reads and no others -- an open `scope_to` is "
+                f"exactly how a block written for one day silently extends "
+                f"to every later one, and the day this vocabulary exists "
+                f"for is a day the USER WITHDREW from the race (R-500). "
+                f"Give it a bounded `scope_to`; `null` is admissible only "
+                f"for {SCOPE_DAYS_RACE}.")
     if fields.get("kind") != "R-ADMISS":
         # SITE: check#10
         raise RatificationRefused(
@@ -1157,6 +1258,13 @@ def check(supplied: dict, ratification_ref: str,
         "binding_evidence": evidence,
         "unbindable_from_prose": unbindable,
         "supply_population": pop,
+        # COMPUTED, never asserted: what this ratification may be used FOR.
+        # A consumer that reads `verified` alone would learn nothing about
+        # it, which is why `require_verified` refuses on it rather than
+        # leaving it to be noticed.
+        "scope_days": fields.get("scope_days"),
+        "race_admissible": fields.get("scope_days")
+        in RACE_ADMISSIBLE_SCOPE_DAYS,
         "checks": checks,
         "verified": all(v for v in checks.values() if v is not None),
         "verified_for_new_run": (all(v for v in checks.values()
@@ -1176,7 +1284,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 184
+EXPECTED_CHECKS = 193
 
 
 def selftest() -> int:
@@ -1366,6 +1474,121 @@ def selftest() -> int:
             "conjunction of DECIDED checks, still read True, so a consumer "
             "reading that one field read an ABSENCE as a PASS",
             needle="is MISSING ['scope_to']")
+    # ---- DE51: A SECOND SCOPE VOCABULARY, ADDITIVE ONLY ---------------
+    # (1) ADDITIVITY, PROVEN BY EXECUTION RATHER THAN BY INSPECTION.
+    # R-419 is run through the PRE-CHANGE module -- loaded from git, not
+    # from a copy of this file -- and through this one, and the two
+    # results are compared field for field. Reading the diff and judging
+    # it harmless is exactly what this control exists to replace.
+    import importlib.util as _ilu
+    import subprocess as _sp51
+    import tempfile as _tf51
+    _base = _sp51.run(("git", "show",
+                       "HEAD:live/pm_research/de_ratification_check.py"),
+                      cwd=str(ROOT), capture_output=True, text=True)
+    _added = None
+    if _base.returncode == 0 and _base.stdout:
+        with _tf51.TemporaryDirectory() as _d51:
+            _old = Path(_d51) / "de_ratification_check_prechange.py"
+            _old.write_text(_base.stdout)
+            _spec = _ilu.spec_from_file_location("_rat_prechange", _old)
+            _M = _ilu.module_from_spec(_spec)
+            _spec.loader.exec_module(_M)
+            # It derives ROOT from its own __file__, which is the temp
+            # copy. Point it at the REAL register so both versions read
+            # the SAME bytes -- otherwise the comparison would be between
+            # two different inputs and would prove nothing.
+            _M.ROOT, _M.REGISTER = ROOT, REGISTER
+            _before = _M.check(sup, "R-419")
+            _after = check(sup, "R-419")
+            _added = sorted(set(_after) - set(_before))
+            _removed = sorted(set(_before) - set(_after))
+            _changed = sorted(k for k in _before
+                              if k in _after and _before[k] != _after[k])
+            ok(_removed == [] and _changed == []
+               and _added == ["race_admissible", "scope_days"]
+               and _after["verified"] is True
+               and _after["race_admissible"] is True,
+               f"DE51 (1) ADDITIVE, PROVEN: R-419 through the PRE-CHANGE "
+               f"module (loaded from git HEAD) and through this one give "
+               f"IDENTICAL results -- {len(_before)} keys, 0 removed, 0 "
+               f"CHANGED -- with exactly {_added} added. Same verdicts, "
+               f"same fields, same refusals. The coordinator is letting a "
+               f"USER read proceed on this before review, and that trade "
+               f"holds only if this line is a measurement")
+    ok(_added == ["race_admissible", "scope_days"],
+       f"and the additivity control ACTUALLY RAN ({_added}) -- a control "
+       f"skipped because git was unavailable would leave the claim "
+       f"unproven while the suite stayed green, which is the one outcome "
+       f"the coordinator's trade cannot survive")
+    # (2) THE NEW VALUE MUST NOT ADMIT A DAY TO THE RACE.
+    # BOUNDED TO THE SUPPLY'S OWN DAY: the block under test must be in
+    # scope, or the refusal driven below would be `day_in_scope` and the
+    # race gate would never be reached -- a control that fires for the
+    # wrong reason proves nothing (the shape this programme keeps finding).
+    _dev = fixture_register(scope_days="DEVELOPMENT_READ_DAYS",
+                            scope_from=day, scope_to=day)
+    _dres = check(sup, "R-900", _dev)
+    ok(_dres["scope_days"] == "DEVELOPMENT_READ_DAYS"
+       and _dres["race_admissible"] is False
+       and RACE_ADMISSIBLE_SCOPE_DAYS == ("FORWARD_RACE_DAYS",),
+       f"DE51 (2): a DEVELOPMENT_READ_DAYS block is verified and reads "
+       f"race_admissible={_dres['race_admissible']} -- COMPUTED from "
+       f"scope_days, not asserted. The race-admissible set is "
+       f"{list(RACE_ADMISSIBLE_SCOPE_DAYS)}, and adding to that tuple is "
+       f"the act that would re-open what R-500 closed")
+    _raised = None
+    try:
+        require_verified(_dres)
+    except NotForRaceAdmission as _e51:
+        _raised = str(_e51)
+    ok(_raised and "not for the race" in _raised.lower()
+       and "DEVELOPMENT_READ_DAYS" in _raised,
+       f"KNOWN-BAD, DRIVEN: `require_verified` -- the gate "
+       f"`be_forward_day` calls -- REFUSES the development block BY NAME "
+       f"({_raised[:120]}...). The USER withdrew 08-29 from the race at "
+       f"R-500; a ratification that could quietly re-admit it would undo "
+       f"the binding property of that withdrawal")
+    require_verified_for_development_read(_dres)
+    ok(True,
+       "POSITIVE CONTROL: the SAME block passes "
+       "`require_verified_for_development_read`, so the refusal above is "
+       "about WHICH READ it is for and not about the block being bad")
+    # (3) THE SCOPE MUST BE BOUNDED.
+    refuses(lambda: check(sup, "R-900",
+                          fixture_register(
+                              scope_days="DEVELOPMENT_READ_DAYS",
+                              scope_from=day, scope_to="null")),
+            "DE51 (3) KNOWN-BAD: a DEVELOPMENT_READ_DAYS block with an "
+            "OPEN scope_to REFUSES. An open end is how a block written "
+            "for one day silently extends to every later one, and the day "
+            "this vocabulary exists for is one the USER withdrew",
+            needle="which is OPEN")
+    ok(check(sup, "R-900",
+             fixture_register(scope_days="DEVELOPMENT_READ_DAYS",
+                              scope_from=day,
+                              scope_to=day))["checks"]["day_in_scope"]
+       is not None,
+       "and `scope_to` was ALREADY evaluated -- `day_in_scope` parses both "
+       "ends and compares (this module's DE12/DE14 work) -- so bounding "
+       "is a REQUIREMENT added on a field that already binds, not a field "
+       "that was accepted and ignored. That would have been its own "
+       "finding and it is not one")
+    # (4) THE OLD VALUE, UNCHANGED IN BOTH DIRECTIONS.
+    _race = check(sup, "R-900", fixture_register())
+    require_verified(_race)
+    ok(_race["race_admissible"] is True
+       and _race["scope_days"] == "FORWARD_RACE_DAYS",
+       "DE51 (4): a FORWARD_RACE_DAYS block still passes "
+       "`require_verified` untouched -- the admitting direction for the "
+       "value every existing block carries")
+    refuses_nv(lambda: require_verified_for_development_read(_race),
+               "and the development gate REFUSES it: a caller reaching for "
+               "the development read while holding a race ratification has "
+               "confused which read it is performing, and in a programme "
+               "where a withdrawn day must stay withdrawn that is worth a "
+               "refusal rather than a shrug")
+
     ok(len(RATIFICATION_FIELDS) == 10 and "scope_to" in RATIFICATION_FIELDS,
        f"and the required-field list is now USED rather than declared: "
        f"{len(RATIFICATION_FIELDS)} fields, the adopted format's own "
