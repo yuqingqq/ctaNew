@@ -43,7 +43,7 @@ operations.
 
 | thing | effect of losing it | how to restore |
 |---|---|---|
-| the `/loop` ScheduleWakeup | **the standing coordinator duty stops** — nobody checks the 00:06Z governed verdict | re-issue `/loop <the coordinator prompt>`; the prompt of record is in R-486's dispatch and repeated in §5 |
+| the `/loop` ScheduleWakeup | **the standing coordinator duty stops** — nobody checks the 00:06Z governed verdict | re-issue `/loop <the coordinator prompt>`. **CORRECTION (R-496): there is no prompt of record.** An earlier version of this line cited "R-486's dispatch"; the register contains **zero** occurrences of `/loop`, so the prompt was never written down and died with the session that held it. Reconstruct it from §5, which is the duty in prose, and **write the prompt you use into the register** so the next coordinator inherits it |
 | the commit `Monitor` on `mm-research` | seat landings no longer wake the coordinator; you fall back to polling | re-arm a Monitor on new commits to the branch |
 | background Bash tasks (verification batteries) | partial results in the old scratchpad; nothing in the repo is affected | re-run; batteries are idempotent and read-only |
 | the scratchpad path | a NEW session gets a new dir under `/tmp/claude-*/…/scratchpad`; old drafts survive at the old path | nothing to restore — drafts are disposable, the register is the record |
@@ -198,20 +198,29 @@ recorded as R-495.
 
 ---
 
-## 7. State at this writing (2026-09-03T03:40Z) — verify, don't trust
+## 7. State at this writing (2026-09-03T04:00Z) — verify, don't trust
 
-- Branch tip `51c4464` (R-495). Register: 486 `### R-` headers, one ratification
-  fence. **Next entry R-496.** Next Q numbers: **Q-BE-238, Q-DA-217, Q-DE-61,
-  Q-MEM-60.**
-- All five seats: contexts cleared 03:32Z, re-briefed 03:33Z, confirmed and
-  **standing by**. No round is open; no review round is in flight.
-- Held and unpushed: **DA** `3c49cb7` → `a36db71` (round 20, verified, awaiting
-  the reviewer's round and then a landing after the 09-04 run); **DE**
-  `0d03902` (round 43 WIP, RED by design, the Phase-4 producer wiring).
-- Two review rounds are QUEUED, unstarted: BE round 12 at `669ef72`, and DA
-  round 20's rebuilt chain. Whichever is dispatched first, the other queues
-  (R-377).
-- **Five USER decisions open** — see `RESULTS.md` §7. The one that blocks the
-  R-459 diagnostic is the addendum's ask 1a (the population split).
+Superseded whenever a round lands; the artifacts are the authority.
+
+- Branch tip after R-496 and the doc corrections. Register: **487** `### R-`
+  headers, one ratification fence. **Next entry R-497.** Next Q numbers:
+  **Q-BE-239, Q-DA-218, Q-DE-62, Q-MEM-61** (238/217/61/60 are in flight).
+- **Round dispatched 2026-09-03 ~04:00Z, all five seats working**: BE 13 (seal
+  relocation + the 08-29 free read + the 08-30 labelled secondary + the 09-02
+  sealed accrual run), DE 44 (Phase-4 producer half, split now declared), DA 21
+  (low-content-without-gap-rows detector + the read-only 09-04 preflight; its
+  round-20 chain stays HELD), MEM 72 (resumes sole writership), reviewer on
+  BE round 12.
+- Held and unpushed: **DA** `3c49cb7` → `a36db71` (round 20; all three files sit
+  on the path the 00:06Z unit executes, so it lands only AFTER the 09-04 run);
+  **DE** `0d03902` (round 43 WIP, RED by design) — being built on in round 44.
+- **G = 2 of 5.** The USER ruled the 09-02 accrual at R-496.
+- **ONE USER decision open**: the Phase-2 winner, which the race decides. See
+  `RESULTS.md` §7 — three were ruled at R-496 and one was never open.
+- **A sealed race artifact was found living only in a dead session's `/tmp`**
+  (R-496 (B)). Backup at `~/ctaNew_sealed_backup/`; BE is relocating the
+  authoritative copy under `data/` with a superseding receipt. **Check this
+  class whenever a sealed artifact is produced: a receipt whose `sealed_file.path`
+  starts with `/tmp` is one sweep from voiding a race day.**
 - Sister program **P-2026-002's E2.0/E2-A gate opened 2026-09-03** and nothing
   is dispatched against it.

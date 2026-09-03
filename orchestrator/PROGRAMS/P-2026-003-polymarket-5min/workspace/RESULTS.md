@@ -22,11 +22,13 @@ Iteration 011's arrival head beats the incumbent hazard head by a wide margin
 floor** with 500 draws on a null the artifact itself discloses as optimistic,
 and the decision metric — net cents against the incumbent — does not survive
 multiplicity (best Holm 0.1199). The **forward race**, which is the only thing
-that could turn development evidence into validation, has **1 of the 5 required
-complete days accrued**, with day 2 eligible and awaiting a USER call. The
-**Phase-4 diagnostic the USER scheduled at R-459 has not run**, because the
-runner's feature-assembly step had never been executed and the population's
-split declaration is a USER ruling that is still open.
+that could turn development evidence into validation, has **2 of the 5 required
+complete days accrued** (R-496). The **Phase-4 diagnostic the USER scheduled at
+R-459 has not run**: its split declaration was ruled by the USER at R-496 and
+its producer step — the feature assembly that had never been executed — is in
+build as DE round 44. **No forward profitability number has ever been read**;
+the one scored day is sealed, and a free out-of-sample read on the
+non-accruable 08-29 is pre-declared at R-496 (D) and running.
 
 ---
 
@@ -106,16 +108,27 @@ prose.
 ## 3. Forward race — the only path from development evidence to validation
 
 **Bar:** ≥5 complete UTC days, each FINISHED ∧ AFTER ∧ ADMISSIBLE ∧ HEALTHY.
-**State: G = 1 of 5.**
+**State: G = 2 of 5** (R-496, 2026-09-03 — the USER ruled the 09-02 accrual).
 
-| day | verdict | note |
-|---|---|---|
-| 08-29 | not admissible | era |
-| 08-30 | does not accrue | |
-| 08-31 | does not accrue | mixed `clob_v4`/`clob_v4_1`; BTC P1 298.52 s/hr against a 120 s bar |
-| **09-01** | **ACCRUED** | first day the race has ever counted; four conjuncts recomputed, not read back |
-| **09-02** | **eligible, un-ruled** | first **governed** verdict; `race_accrual_eligible: true`; the accrual itself is the USER's (R-486 (6)) |
-| 09-03 → | open | earliest possible G=5 is ~09-06, and only if every day accrues |
+Freeze epoch `1787897340` = **2026-08-28T06:09:00Z**. Every day below is read
+from its own `da_dayverdict_<day>.json`, `verdict_split` and `era_admission`.
+
+| day | post-freeze | era | quality | accrues | note |
+|---|---|---|---|---|---|
+| 08-28 | **false** | — | false | no | freeze falls inside the day |
+| **08-29** | true | `clob_v3_1`, **pure** | **true** | no — era ruled | **the free read.** Healthy, out-of-sample, permanently non-accruable for a *ruled collector* reason: *"era admission is a ruled property of the collector, not a measured property of the feed"* |
+| 08-30 | true | `clob_v3_1`+`clob_v4`, boundary 05:30:02Z | false | no | labelled secondary only, never pooled |
+| 08-31 | **false** | `clob_v4`+`clob_v4_1`, boundary 22:00:02Z | false | no | BTC P1 298.52 s/hr against a 120 s bar |
+| **09-01** | true | `clob_v4_1` | true | **ACCRUED** | first day the race ever counted; four conjuncts recomputed, not read back |
+| **09-02** | true | `clob_v4_1` | true | **ACCRUED** | R-496, the USER's call on R-486 (6); first **governed** verdict |
+| 09-03 → | open | — | — | open | earliest possible G=5 is ~09-05, and only if every day accrues |
+
+**The partial-data profitability read (R-496 (D)) spends none of this.** 08-29
+is post-freeze, era-pure and quality-passing yet can never accrue, so opening it
+consumes nothing the race was going to use — 09-01 and 09-02 stay **sealed**.
+The caveat is not a footnote: 08-29 runs on `clob_v3_1`, **two collector
+generations behind** the race's `clob_v4_1`; the read is out-of-sample in *time*
+and free in *race-days*, and is not measured on the surface the race uses.
 
 **09-02, at `data/pm_5min/derived/da_dayverdict_20260902.json`** (43,449 B,
 sha256 `6f283262df463957…`, `as_of` 2026-09-03T00:06:01.399Z, written by the
@@ -258,21 +271,30 @@ rounds.**
 
 ---
 
-## 7. Open USER decisions (five; none is a seat's to make — rule 14)
+## 7. Open USER decisions — **one** (rule 14: none is a seat's to make)
 
-| # | decision | recommendation on record | blocking what |
-|---|---|---|---|
-| 1 | **09-02 accrual** on its non-blackout complement, per R-409 | **ACCRUE** (R-486) | G = 1 → 2 of 5 |
-| 2 | **Phase-2 winner** | none — the race decides it | the forward race's meaning |
-| 3 | **content-liveness v2 freeze** | open | whether 09-02+ days are judged on v1 or v2 |
-| 4 | **addendum v2 package**, five asks (§1 horizon, §2 `theta_repost`, §3 `REPOST_DWELL_S`, §4 `inf` + the identity, §5 repost parity, and **§1a the split — ruled *with* §2 and §4, not after**) | §1a: declare **MECHANICS on both splits**, splits labelled per cell; §2/§3: keep the seat's values with sensitivity pairs reported and **neither selected**; §4/§5: adopt. The reviewer priced the alternative: the `score`-split answer costs a round **and** a re-declaration that comes back to the USER | **the R-459 diagnostic** |
-| 5 | the 09-04 00:06Z run staying on the landed chain | no pin, no install | nothing — it fires either way |
+Three of the five listed at the 03:23Z consolidation were ruled by the USER at
+**R-496** (2026-09-03), and a fourth was never open — a correction to this
+file's own §7, in band (rule 13).
+
+| # | decision | status |
+|---|---|---|
+| 1 | **09-02 accrual** on its non-blackout complement (R-409) | **RULED — ACCRUE** (R-496). G = 1 → 2 of 5 |
+| 2 | **Phase-2 winner** | **OPEN — the only one.** The forward race decides it; no seat may pre-empt it |
+| 3 | content-liveness v2 freeze | **WAS NEVER OPEN — this file was wrong.** The USER froze it at **R-424** (2026-09-02); `DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md` reads FROZEN — GOVERNING FROM 2026-09-03, 09-02 judged on v1 only. Verified further at the code: `content_liveness_v2_for` (`da_forward_day_verify.py:801`) with its production call at `:2278`, governance by the module's own `governs()` predicate, not a restated date |
+| 4 | **addendum v2 package**, five asks | **RULED — adopted as recommended** (R-496): §1a MECHANICS on both splits, splits labelled per cell; §2/§3 keep the seat's values, sensitivity pairs reported, **neither selected**; §4/§5 adopt |
+| 5 | the 09-04 00:06Z run staying on the landed chain | **RULED — no pin, no install.** DA's round-20 chain stays HELD because all three of its files sit on the path the unit executes |
+
+**Queued for the USER, not yet a decision:** whether declaring
+`phase2_arms._stream_tape_rows` — a fit-vs-tip code drift whose diff is confined
+to a branch that provably cannot fire for this tape — is a seat's call or an
+admissibility ruling. DE named the boundary and correctly declined to rule it.
+Facts: sha `f0741bc4b170fabc` → `f0b3bccfb8ec5b88` at `2e1204f`, accepting path
+byte-for-byte unchanged, this tape's rows array closed.
 
 The addendum DRAFT is at
 `live/pm_research/plans/DE_PHASE4_DIAGNOSTIC_ADDENDUM_V2_DRAFT_2026-09-02.md`
-(307 lines, sha `cb693000880c3d94`, the asks at §286-307). **Nobody edits it.**
-It was released by the reviewer with a **+17 / −0** delta — purely additive, so
-the released text is still line-for-line inside what the USER now reads.
+(307 lines, sha `cb693000880c3d94`). **Nobody edits it.**
 
 ---
 
