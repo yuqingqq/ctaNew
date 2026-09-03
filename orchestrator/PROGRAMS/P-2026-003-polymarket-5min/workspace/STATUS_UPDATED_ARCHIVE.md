@@ -5220,3 +5220,89 @@ archived rather than dropped — which is the rule batch 78 had to repair.
   two unpushed commits 3c49cb7 -> a36db71; DE holds one unpushed WIP commit
   0d03902; MEM clean at d9b85ee; reviewer clean at cc4cfb9.
 ```
+
+## Batch 81 — archived 2026-09-03T07:40Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-75 true-up of BE 18/19, both reviewer filings, DA 22/23
+and DE 46. Join rule as in batch 1.
+
+```yaml
+  2026-09-03T04:08Z (MEM ROUND 72 -- THE WRITER EXCEPTION ENDS, AND THE THING IT
+  BROKE WAS THE RULE THAT SAYS WHAT THIS FIELD IS). R-495 and R-496 swept; I
+  resume as SOLE WRITER of STATUS.yml and HANDOFF.md; nothing run but read-only
+  reads at the artifacts. THREE USER RULINGS LANDED AT R-496 AND ALL THREE CHANGE
+  STATE I OWN. (1) 09-02 ACCRUES on its non-blackout complement per R-409, so G
+  GOES 1 -> 2 OF 5 -- verified at da_dayverdict_20260902.json rather than from the
+  entry: day_closed, day_quality_pass, era_admissible and post_freeze_pass ALL
+  TRUE and race_accrual_eligible TRUE at the day level AND in BOTH per_coin
+  blocks. (2) THE ADDENDUM V2 PACKAGE IS ADOPTED AS RECOMMENDED, all five asks,
+  with SECTION 1a DECLARED AS MECHANICS ON BOTH SPLITS, SPLITS LABELLED PER CELL
+  -- which closes THE DECLARATION HALF of the phase4-diagnostic and leaves only
+  the producer half (DE round 44). (3) A PARTIAL-DATA PROFITABILITY READ IS
+  PRE-DECLARED AND DISPATCHED: 08-29 primary, 08-30 a SEPARATELY LABELLED
+  secondary NEVER POOLED, both NAMED AS CONSUMED the moment they are opened.
+  Verified at their own verdicts: 08-29 is day_quality_pass TRUE, post_freeze
+  TRUE, era_pure TRUE on clob_v3_1, race_accrual_eligible FALSE -- A GOOD DAY THAT
+  CAN NEVER COUNT, so reading it costs the race nothing; 08-30 is post_freeze TRUE
+  but quality FALSE and era MIXED with a boundary at 2026-08-30T05:30:02.114727Z.
+  I WAS TOLD TO TRUST THE COORDINATOR'S WRITER-EXCEPTION EDITS LEAST AND CHECKED
+  THEM AT THE ARTIFACT, NOT AGAINST R-495'S ACCOUNT OF THEM: BOTH CORRECTIONS
+  HOLD. cells_by_status at the 188,119 B / 05:21:34Z artifact is 12 OK + 6
+  NO_INCUMBENT_COUNTERPART + 6 GATE_PARTIALLY_EVALUATED -- AND I COUNTED THE 24
+  CELLS MYSELF out of family.cells instead of reading the summary field, so the
+  field agrees with the cells it summarises; distinct_results gives declared_cells
+  24, distinct_overall 12, surviving_cells 12 and DISTINCT_SURVIVING_RESULTS 4;
+  and ALL 18 NON-Q4 CELLS carry ONE p (0.001996007984031936), ONE holm
+  (0.04790419161676646), at_permutation_floor TRUE and n_draws 500 -- checked AS
+  SETS, not by sampling one cell. ONE PRECISION THE CORRECTION'S SENTENCE DOES NOT
+  CARRY, AND THE ARTIFACT CARRIES IT ITSELF: "one draw the other way" collapses
+  the surviving set ONLY IF IT MOVES IN EVERY AT-FLOOR CELL. The cell separates
+  the two cases and says BOTH ARE RUN THROUGH THE REAL HOLM STEP-DOWN RATHER THAN
+  MULTIPLIED -- THIS_CELL_ONLY 0.0479 and still surviving, EVERY_at_floor_CELL
+  0.0958 and not -- because a single cell that moves SORTS BEHIND THE STILL-TIED
+  CELLS AND GETS A SMALLER MULTIPLIER (RR4-2). THE CORRECTION IS RIGHT AND ITS
+  SENTENCE IS THE WHOLE-FAMILY CASE WEARING THE ONE-DRAW CASE'S CLOTHES. Two more
+  off the same block: the 18 at-floor cells are the 12 survivors PLUS the 6 Q2
+  cells, and the artifact DISCLOSES ITS OWN NON-UNIFORM RESOLUTION (500 draws and
+  2,000) -- the head that survives and the head that fails were not measured at the
+  same resolution. THE THIRD CORRECTION IS THE COORDINATOR'S OWN AND I VERIFIED IT
+  AT BOTH ITS SOURCES: the content-liveness v2 freeze was NEVER an open USER
+  decision -- R-424 ruled it on 2026-09-02T11:55Z and
+  DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md reads FROZEN -- GOVERNING FROM
+  2026-09-03, EFFECTIVE_FROM_DAY 20260903, 09-02 judged on v1 ONLY. I DROVE THE
+  PREDICATE INSTEAD OF READING THE DATE: governs("20260902") False,
+  governs("20260903") True, wiring at da_forward_day_verify.py:801 with its
+  production call at :2278. THE COUNT THEREFORE MOVED TWICE -- FIVE to FOUR (that
+  item was never open) to ONE. THE ONLY OPEN USER DECISION IS THE PHASE-2 WINNER,
+  AND THE RACE DECIDES IT. THE FINDING OF MY OWN ROUND IS IN THE EDITS I WAS TOLD
+  TO DOUBT, AND IT IS THIS FIELD: THE RULED ROLLING WINDOW WAS BROKEN AND THE
+  PARAGRAPH THAT DEFINES IT WAS DELETED IN THE SAME EDIT. The consolidation
+  replaced three full entries with one condensed paragraph that ENDS MID-SENTENCE,
+  so ROUNDS 70 AND 69 LEFT STATUS.yml WITHOUT BEING MOVED TO
+  STATUS_UPDATED_ARCHIVE.md -- both ABSENT from the archive, which still ended at
+  Batch 77, and 51c4464 does not touch that file at all. The ruling (coordinator,
+  2026-08-28T10:02Z) says entries are "moved, never deleted" and that "nothing
+  here is dropped"; THE SENTENCE CARRYING THAT PROMISE WAS ITSELF REMOVED, so the
+  field then read as two entries with nothing left in it saying it should read as
+  three. REPAIRED IN THIS COMMIT: rounds 70 and 69 restored VERBATIM as ARCHIVE
+  BATCH 78, round 71 restored VERBATIM to the window's third slot in place of the
+  condensation, and the ARCHIVED paragraph put back. NOTHING WAS LOST -- both
+  narratives survive as dated HANDOFF entries and in git at d9b85ee -- BUT THE
+  ARCHIVE HAD STOPPED BEING ABLE TO RECONSTRUCT THE CHAIN IT PROMISES, WHICH IS
+  THE ONLY THING IT IS FOR. NAMED ONCE: A DOCUMENT THAT DESCRIBES ITS OWN
+  DISCIPLINE CAN LOSE THE DISCIPLINE AND THE DESCRIPTION IN ONE EDIT, AND
+  AFTERWARDS NOTHING IN IT IS WRONG. OBSERVED, NOT CLAIMED: at 04:03:06Z, WHILE I
+  WAS WORKING, be_forward_day_SEALED_scores_20260901.json APPEARED IN
+  data/pm_5min/derived/ at 54,213,086 B with its mtime preserved -- BE executing
+  R-496's relocation with its batch IN FLIGHT; no superseding receipt yet, and the
+  authoritative statement is BE'S RECEIPT, NOT MY LISTING. THE DURABILITY FINDING
+  VERIFIED AT THE RECEIPT ITSELF: the TRACKED receipt's sealed_file.path names a
+  DEAD SESSION'S /tmp SCRATCHPAD (32b9d1f8-...) and declares sha256 aca22317ab06,
+  which is exactly what I got hashing the 03:52Z backup; THE SEAL IS NOT OPENED.
+  SEQUENCING: BE round 13 in flight (relocation, the 08-29 free read OPENED, the
+  08-30 secondary, the 09-02 SEALED accrual run, opened and sealed strictly
+  separated by outdir); DE round 44 on the producer half with the split DECLARED;
+  DA round 21, its round-20 chain STILL HELD because all three files sit on the
+  path the 00:06Z unit executes; the reviewer on BE 12 with DA 20 queued behind
+  it. USER ITEMS: ONE.
+```
