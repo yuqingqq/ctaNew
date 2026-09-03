@@ -41,7 +41,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 188
+EXPECTED_CHECKS = 189
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -3507,6 +3507,13 @@ def selftest() -> int:
            f"TERMINAL/{_ok_row.get('outcome')} -- so the terminal record "
            f"reports WHAT HAPPENED and is not a machine that only ever "
            f"says a run died (rule 16, both directions)")
+    _sig49 = __import__("inspect").signature(run).parameters
+    ok("prior_attempt" in _sig49 and "prior_attempt" in _runsrc
+       and _sig49["prior_attempt"].default is None,
+       f"DE49: the run records the PRIOR FAILED ATTEMPT by name in its "
+       f"own log, so a reader of the new outdir can find the dead one "
+       f"rather than guess that it existed. Default None -- a run with no "
+       f"predecessor says so rather than inventing one")
     _runsrc48 = _ast.get_source_segment(
         Path(__file__).read_text(),
         [nd for nd in _ast.walk(_ast.parse(Path(__file__).read_text()))
@@ -4377,7 +4384,7 @@ def redirect_stderr_into(outdir: Path) -> Path:
 
 def run(outdir: Path | None = None, *, splits, coins=COINS,
         limit: int | None = None, cap_bytes: int | None = None,
-        chunk_windows: int = 60) -> dict:
+        chunk_windows: int = 60, prior_attempt: str | None = None) -> dict:
     """THE RUN PATH (DE32-C1).  Feed -> assembly -> scores -> arms -> rho ->
     null -> receipt, written once into the declared directory.
 
@@ -4410,6 +4417,9 @@ def run(outdir: Path | None = None, *, splits, coins=COINS,
     log.stage("preflight_passed", splits=list(got),
               stderr_log=str(_err_path),
               heartbeat_s=HEARTBEAT_S,
+              # A reader of THIS outdir must be able to find the failed
+              # attempt BY NAME rather than by guessing that one existed.
+              prior_attempt=prior_attempt,
               admissions=admission_conditions(),
               pin_verdicts={r["path"]: r["verdict"]
                             for r in verify_called_code()})
@@ -4521,7 +4531,7 @@ def run(outdir: Path | None = None, *, splits, coins=COINS,
               n_cells=len(cells),
               bytes=(out / "phase4_diag_r459_receipt.json").stat().st_size)
     _hb.set()
-    _finish("SUCCESS", n_cells=len(cells),
+    _finish("SUCCESS", n_cells=len(cells), prior_attempt=prior_attempt,
             wall_clock_s=round(time.time() - t_run, 1),
             receipt=str(out / "phase4_diag_r459_receipt.json"))
     return rec
@@ -6375,6 +6385,9 @@ def main() -> int:
                     help="price the ruled run end to end into --outdir "
                          "(never data/, never the run's OUTDIR)")
     ap.add_argument("--feed-windows", type=int, default=3)
+    ap.add_argument("--prior-attempt", default=None,
+                    help="name of a previous failed OUTDIR, recorded in "
+                         "this run's log so a reader can find it by name")
     ap.add_argument("--chunk-windows", type=int, default=60,
                     help="fragment chunk size in WINDOWS for the "
                          "streaming assembly (memory is tape + one chunk)")
@@ -6429,7 +6442,8 @@ def main() -> int:
             rec = run(Path(a.outdir) if a.outdir else None,
                       splits=_splits_from_cli(a.splits),
                       cap_bytes=a.cap_bytes,
-                      chunk_windows=a.chunk_windows)
+                      chunk_windows=a.chunk_windows,
+                      prior_attempt=a.prior_attempt)
         except (DiagRefused, HS.HeadRefused, SS.ScoreStreamRefused,
                 MRC.ControlRefused, RHO.RhoRefused,
                 HSP.ReferenceIntegrityError) as exc:
