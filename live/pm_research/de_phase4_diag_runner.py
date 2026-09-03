@@ -40,7 +40,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 124
+EXPECTED_CHECKS = 154
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -209,6 +209,35 @@ DECLARED_ADDITIVE = {
             "NEW at 851edaf: it exists only to RAISE on an empty selection, "
             "so it cannot alter a selection that is non-empty -- and the "
             "population this diagnostic runs on is 471 windows, measured"},
+}
+
+#: NOT A DECLARATION.  Round 43's wiring reached `_stream_tape_rows` for
+#: the first time and the pin went BLOCKING on it; round 43 then WROTE a
+#: declaration and named the doubt.  R-496's dispatch ruled the doubt:
+#: admitting a fit-vs-tip drift is an ADMISSIBILITY call and admissibility
+#: is the USER's (rule 14), so the declaration is WITHDRAWN and the pin
+#: stays BLOCKING.  What lives here instead is the FACT SHEET the ruling
+#: needs, and not one field of it is consulted by `pin_statuses` -- a
+#: record that the pin read would be a declaration wearing another name.
+#: Every claim in it is COMPUTED by `stream_tape_rows_drift()` (rule 10);
+#: the two strings below are the CANDIDATES that function verifies, not
+#: assertions it repeats.
+UNDECLARED_DRIFT = {
+    "file": "phase2_arms.py",
+    "function": "_stream_tape_rows",
+    "candidate_changed_at": "2e1204f",
+    "candidate_commit_subject": "BE: T2 fail-open readers",
+    "routed_to": "USER",
+    "question": (
+        "the function differs from the fit-commit bytes and the pin "
+        "therefore BLOCKS the run. Whether that difference is ADMISSIBLE "
+        "for a diagnostic that must score what the heads were fitted on "
+        "is not a seat's call: the facts below are computable and are "
+        "computed, the judgement is the USER's"),
+    "what_a_grant_would_mean": (
+        "an entry in DECLARED_ADDITIVE for (phase2_arms.py, "
+        "_stream_tape_rows), after which `verify_called_code()` proceeds "
+        "and the run's only remaining gate is the execution act itself"),
 }
 
 BINDING_FIELDS = ("frozen_protocol_sha256", "addendum_sha256",
@@ -716,8 +745,18 @@ def validate_outdir(path: Path, *, declared: Path | None = None) -> Path:
 
 
 def build_receipt(cells: list, population: dict, *, heads: dict,
-                  wall_clock_s: float) -> dict:
-    """The receipt, with every binding field computed rather than asserted."""
+                  wall_clock_s: float, pin=None) -> dict:
+    """The receipt, with every binding field computed rather than asserted.
+
+    `pin` is injectable FOR THE SUITE ALONE. The pin now BLOCKS (round
+    44: `_stream_tape_rows` is undeclared and admissibility is the
+    USER's), so on the run path a receipt CANNOT BE BUILT until that is
+    ruled -- `verify_called_code()` refuses first, which is the
+    artifact-level guard rule 17 asks for: no receipt exists that was
+    produced without the code check passing. The suite passes the REAL
+    computed rows (`pin_statuses()`), never a fabricated clean set, and
+    the run path passes NOTHING -- asserted from this file's own parse
+    rather than promised in this docstring."""
     r = {
         "protocol": "de_phase4_diag_r459_v1",
         "frozen_protocol_sha256": _sha(FROZEN),
@@ -755,7 +794,11 @@ def build_receipt(cells: list, population: dict, *, heads: dict,
         "cells": cells,
         # DE37 item 7: the pin's statuses AND the reached set each verdict
         # was computed over.
-        "fit_code_pin": verify_called_code(),
+        "fit_code_pin": verify_called_code() if pin is None else pin,
+        # The drift the pin blocks on, computed rather than described --
+        # so a receipt produced AFTER a grant still carries what was
+        # granted and on what evidence (rule 16).
+        "undeclared_drift": stream_tape_rows_drift(),
         "wall_clock_s": wall_clock_s,
         "decides": "nothing -- this is a diagnostic; the reading is the "
                    "addendum's and the decision is the USER's",
@@ -1739,7 +1782,11 @@ def selftest() -> int:
 
     # ---- the RECEIPT's binding fields ------------------------------------
     heads = {h: SS.verify_head(h, "btc") for h in SS.HEADS}
-    rec = build_receipt([], pop, heads=heads, wall_clock_s=0.0)
+    # The REAL rows, computed -- not a fabricated clean set. A fixture
+    # that supplies what the code under test should produce is the R-229
+    # class, and the row this receipt must carry is the BLOCKING one.
+    rec = build_receipt([], pop, heads=heads, wall_clock_s=0.0,
+                        pin=pin_statuses())
     # A refusal HERE is the defect this control exists for -- the builder
     # dropping a binding field -- so it is caught and reported by name
     # rather than ending the run in a traceback (my own standard, and the
@@ -2340,9 +2387,29 @@ def selftest() -> int:
        "Round 32's row named it as the invocation of record while "
        "`main()` parsed `--selftest` only, so the declared invocation "
        "would have exited argparse rc 2")
-    refuses(lambda: run(Path("/tmp/not_the_declared_dir")),
+    refuses(lambda: run(Path("/tmp/not_the_declared_dir"),
+                        splits=DECLARED_SPLIT_SETS[RULED_SPLIT_SET]),
             "KNOWN-BAD: `--run` pointed anywhere but OUTDIR REFUSES before "
-            "any feed is built", needle="names ONE new")
+            "any feed is built -- and it refuses at the OUTDIR even with "
+            "the ruled split set named, so the two gates are independent",
+            needle="names ONE new")
+    refuses(lambda: run(None, splits=None),
+            "KNOWN-BAD: `--run` at the DECLARED outdir with NO split set "
+            "refuses at the split, before the pin and before any feed -- "
+            "the ruling exists and is still not supplied on the caller's "
+            "behalf", needle="the split set is UNDECLARED")
+    refuses(lambda: preflight(
+        splits=DECLARED_SPLIT_SETS[RULED_SPLIT_SET]),
+        "AND THE HONEST STATE OF THE DIAGNOSTIC, DRIVEN AT `preflight()` "
+        "AND DELIBERATELY NOT AT `run()`: with the RULED split set named, "
+        "the split gate PASSES and what refuses is the PIN. Round 44 "
+        "closed the producer half and the split half; what is left is one "
+        "admissibility ruling that belongs to the USER (rule 14). THIS "
+        "CHECK USED TO CALL `run()` AND THAT WAS BE12-S1's DEFECT IN A "
+        "NEW PLACE: a control whose subject is a GATE, which passes the "
+        "day the gate is granted and becomes a ~29-minute feed inside the "
+        "selftest. The mutant that re-declares the drift found it",
+        needle="BLOCKING pin status")
     import tempfile as _tf
     with _tf.TemporaryDirectory() as _d:
         _busy = Path(_d) / "x"
@@ -2534,12 +2601,13 @@ def selftest() -> int:
 
     # ---- DE34-C1/C2 and EST-R5, each driven ---------------------------
     refuses(lambda: _head_scorer("q1_arrival_composed_lgbm", "btc"),
-            "DE34-C1: the RUN PATH's scorer REFUSES by name, and after "
-            "round 37 it names ONE remaining step rather than the whole "
-            "assembly -- round 33's stub (`[[row['t']]]` against 106 "
-            "features, 0.5 for the incumbent) would have fed for ~29 "
-            "minutes and tracebacked at the first cell",
-            needle="EXPENSIVE HALF is not wired")
+            "DE34-C1: the RUN PATH's scorer REFUSES by name when it is "
+            "handed NO assembled scores -- round 44 wired the assembly, "
+            "and the one thing this function must never do is invent a "
+            "number when the assembly's output did not reach it (round "
+            "33's stub: `[[row['t']]]` against 106 features, 0.5 for the "
+            "incumbent, ~29 minutes of feed and then a traceback)",
+            needle="no assembled scores were supplied")
     _pre = assembly_preconditions()
     ok(_pre["incumbent_width"] == 60 and _pre["lgbm_norm_width"] == 105
        and _pre["lgbm_width"] == 106 and _pre["state_width"] == 45
@@ -2589,8 +2657,8 @@ def selftest() -> int:
     _rows = [{"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t_start": -6.0},
              {"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t_start": -3.0},
              {"slug": "s1", "side": HSP.SIDES[0], "gen": 1, "t_start": -6.0}]
-    _gs, _gst = generation_scores(_blk(_rows), _fixref, coin="btc",
-                                  head="incumbent_linear_d")
+    _gs, _gst, _gsp = generation_scores(_blk(_rows), _fixref, coin="btc",
+                                        head="incumbent_linear_d")
     _each = [HS.score_incumbent(_incm, HS.compose_head_inputs(
         _blk(_rows)["PM"][i], _blk(_rows)["FN"][i], _blk(_rows)["ST"][i],
         norms=_norms, incumbent_width=_incm["_n_features"],
@@ -2604,8 +2672,9 @@ def selftest() -> int:
        f"`phase2_arms.freeze_thresholds` resolves theta over. A mean or a "
        f"first-row score is compared against a cutoff taken from a "
        f"different distribution and selects the wrong count")
-    _gs2, _gst2 = generation_scores(_blk(_rows[:1]), _fixref, coin="btc",
-                                    head="incumbent_linear_d")
+    _gs2, _gst2, _ = generation_scores(_blk(_rows[:1]), _fixref,
+                                       coin="btc",
+                                       head="incumbent_linear_d")
     ok(_gst2["NO_ROWS_KEPT"] == 1 and _gst2["SCORED"] == 1
        and ("s1", HSP.SIDES[0], 400.0) not in _gs2,
        f"KNOWN-BAD: a generation whose rows the feature pass DROPPED is "
@@ -2631,12 +2700,26 @@ def selftest() -> int:
         "unequal length pairs one row's features with another row's "
         "identity, silently", needle="parallel")
     refuses(lambda: preflight(),
-            "and `preflight()` REFUSES before anything is built -- at the "
-            "scorer, AFTER the cheap preconditions have run, because the "
-            "pin no longer blocks on a file the run does not execute "
-            "(DE35-R1)",
-            needle="EXPENSIVE HALF is not wired")
-    _pin = verify_called_code()          # PROCEEDS: no BLOCKING verdict
+            "and `preflight()` REFUSES before anything is built -- now at "
+            "the PIN, not at the scorer. Round 44 wired the expensive "
+            "half, so the scorer is satisfied and what stands in the run's "
+            "way is a CALLED function that differs from the fit bytes. "
+            "That is an ADMISSIBILITY question and this seat does not "
+            "answer it (rule 14)",
+            needle="BLOCKING pin status")
+    refuses(lambda: preflight(splits=["not_a_split"]),
+            "and `preflight(splits=...)` refuses an UNKNOWN split in "
+            "milliseconds, before the pin and before any read -- a name "
+            "the tape does not carry indexes nothing",
+            needle="are not in the tape")
+    _pin = pin_statuses()                # the rows, computed
+    refuses(lambda: verify_called_code(),
+            "DE44: `verify_called_code()` REFUSES BY NAME on the "
+            "BLOCKING verdict. Round 43 wrote a declaration for "
+            "`_stream_tape_rows` and named its own doubt; R-496's "
+            "dispatch ruled the doubt -- the declaration is WITHDRAWN and "
+            "the pin stays blocking until the USER grants it",
+            needle="_stream_tape_rows")
     _pv = {r["path"]: r["verdict"] for r in _pin}
     _her = [r for r in _pin if r["path"] == "harmful_exposure_rows.py"][0]
     ok(_her["verdict"] == "ADDITIVE_DECLARED"
@@ -2655,24 +2738,299 @@ def selftest() -> int:
        f"their reason -> {_her['verdict']}. The run proceeds against the "
        f"TIP, as R-473 rules")
     _pa = [r for r in _pin if r["path"] == "phase2_arms.py"][0]
-    ok(_pa["verdict"] == "IDENTICAL" and _pa["sha_at_fit"] != _pa["sha_at_run"]
-       and _pa["n_functions_called"] == 1
-       and _pa["n_functions_called"] < _pa["n_functions_in_file"],
-       f"AND THE VERDICT'S SCOPE IS SAID OUT LOUD: `phase2_arms.py` reads "
-       f"IDENTICAL while its FILE sha has moved since the fit "
-       f"({_pa['sha_at_fit']} -> {_pa['sha_at_run']}). IDENTICAL means "
-       f"every entry the run REACHES matches the fit bytes -- here "
-       f"{_pa['n_functions_called']} of {_pa['n_functions_in_file']} (the "
-       f"module's top-level body, which is where `FRAGMENT` and "
-       f"`TAPE_PATH` live). THE OPEN ITEM INHERITS THIS: wiring the "
-       f"expensive half calls `tape_index` and `_feature_pass`, which are "
-       f"NOT in today's reached set, so they enter the comparison then and "
-       f"may not be identical. A green pin today is not a green pin for "
-       f"the wired run")
+    _tc = tape_rows_array_closed()
+    ok(_pa["verdict"] == "BLOCKING"
+       and _pa["n_functions_called"] >= 5
+       and _pa["functions_changed"] == ["_stream_tape_rows"]
+       and _pa["undeclared"] == ["_stream_tape_rows"]
+       and ("phase2_arms.py", "_stream_tape_rows") not in DECLARED_ADDITIVE,
+       f"THE PROPHECY OF ROUND 37 CAME TRUE, AND THE PIN IS STILL HOLDING: "
+       f"wiring the expensive half moved `phase2_arms.py` from IDENTICAL "
+       f"at 1 reached entry to {_pa['n_functions_called']} "
+       f"({_pa['entry_points']} and what they call), and one of them -- "
+       f"`_stream_tape_rows` -- DIFFERS from the fit bytes. It is "
+       f"{_pa['verdict']} and UNDECLARED ({_pa['undeclared']}) because "
+       f"admitting a fit-vs-tip drift is an admissibility call and "
+       f"admissibility is the USER's (rule 14). What this round adds is "
+       f"not a declaration but the FACTS, each computed")
+    _drift = stream_tape_rows_drift()
+    ok(_drift["differs"] and _drift["accepting_path_unchanged"]
+       and _drift["n_substitutions_that_restore_the_fit"] == 1
+       and _drift["enclosing_test"] == "not chunk"
+       and _drift["changed_at_verified"]
+       and _drift["sha_at_fit"] == "f0741bc4b170fabc"
+       and _drift["sha_at_tip"] == "f0b3bccfb8ec5b88"
+       and _tc["rows_array_closed"],
+       f"DE44, THE FOUR SENTENCES TURNED INTO FOUR PREDICATES: "
+       f"`{_drift['function']}` differs "
+       f"({_drift['sha_at_fit']} -> {_drift['sha_at_tip']}, verified at "
+       f"BOTH sides of {_drift['candidate_changed_at']}); the ACCEPTING "
+       f"PATH IS UNCHANGED, established by SUBSTITUTION -- putting a bare "
+       f"`return` back where the tip raises makes the whole function's "
+       f"AST equal the fit commit's, and exactly "
+       f"{_drift['n_substitutions_that_restore_the_fit']} substitution "
+       f"does that; the changed statement sits under "
+       f"`if {_drift['enclosing_test']}:`, which is EOF; and this tape's "
+       f"rows array IS closed ({_tc['tail']!r}, {_tc['bytes']:,} B), so "
+       f"the added branch cannot fire for this input. Round 43 asserted "
+       f"all four in prose")
+    _bad_commit = stream_tape_rows_drift(candidate="669ef72")
+    ok(not _bad_commit["changed_at_verified"]
+       and _bad_commit["accepting_path_unchanged"],
+       f"KNOWN-BAD on the COMMIT: a commit that did not change the "
+       f"function reads `changed_at_verified` False "
+       f"({_bad_commit['changed_at_verified']}) while the substitution "
+       f"clause -- which is about the two ENDPOINTS and not about the "
+       f"commit -- stays True. Two claims, two failure modes, and the "
+       f"check can tell them apart")
+    _pa_src = (Path(__file__).resolve().parent
+               / "phase2_arms.py").read_text()
+    _needle = "\n            yield obj\n"
+    ok(_pa_src.count(_needle) == 1,
+       f"and the tamper site for the control below is UNIQUE in "
+       f"`phase2_arms.py` ({_pa_src.count(_needle)} occurrence) -- a "
+       f"known-bad built by a string replace that silently matches "
+       f"nothing is the defect that once reported a clean surface (rule "
+       f"15), so the match is asserted before it is used")
+    _tampered = _pa_src.replace(
+        _needle, "\n            pass\n            yield obj\n", 1)
+    _tam = stream_tape_rows_drift(tip_src=_tampered)
+    ok(_tampered != _pa_src and not _tam["accepting_path_unchanged"]
+       and _tam["n_substitutions_that_restore_the_fit"] == 0,
+       f"KNOWN-BAD on the ACCEPTING PATH: a tip carrying ONE extra "
+       f"statement on the accepting side (a `pass` before `buf += chunk`) "
+       f"reads `accepting_path_unchanged` False with "
+       f"{_tam['n_substitutions_that_restore_the_fit']} restoring "
+       f"substitutions -- so the clause is a MEASUREMENT of the other "
+       f"paths and not a restatement of the one that changed. This is the "
+       f"control that decides whether the whole fact sheet is worth "
+       f"anything (rule 16)")
+    _rep = code_drift_report()
+    ok(_rep["run_is_blocked_by_the_pin"] is True
+       and _rep["blocking"] == {"phase2_arms.py": ["_stream_tape_rows"]}
+       and _rep["undeclared_drift"]["routed_to"] == "USER"
+       and _rep["undeclared_drift"]["computed"]["accepting_path_unchanged"],
+       f"and the report an operator can read WITHOUT running anything "
+       f"(`--pin-report`) carries the verdict DERIVED from "
+       f"`pin_statuses()` ({_rep['blocking']}) rather than a literal, so "
+       f"a grant changes it on its own and nothing here has to be edited "
+       f"to notice")
+    # ---- DE44: THE SPLIT IS RULED, AND STILL NOT A DEFAULT ------------
+    ok(RULED_SPLIT_SET == "MECHANICS_BOTH_SPLITS"
+       and SPLIT_RULING["ruled_by"] == "R-496 (E)"
+       and DECLARED_SPLIT_SETS[RULED_SPLIT_SET] == ("score", "train")
+       and validate_splits(DECLARED_SPLIT_SETS[RULED_SPLIT_SET])
+       == ("score", "train"),
+       f"DE44 / R-496 (E): the USER's ruling is RECORDED "
+       f"({RULED_SPLIT_SET}, {SPLIT_RULING['ask']}) and the set it names "
+       f"validates -- the ADMITTING half of the control, because a guard "
+       f"shown only to refuse has not been shown to let the right thing "
+       f"through (SEAT_PROTOCOL rule 16)")
+    refuses(lambda: validate_splits(None),
+            "KNOWN-BAD, THE OTHER DIRECTION: silence still REFUSES BY "
+            "NAME even though the ruling exists. A ruling the code "
+            "supplies when nobody names it is a ruling nobody has to "
+            "read, and the run would then proceed under a population "
+            "statement no operator ever typed (rule 14)",
+            needle="the split set is UNDECLARED")
+    refuses(lambda: validate_splits([]),
+            "KNOWN-BAD: an EMPTY set refuses -- it selects no rows, so "
+            "every generation would drop and the run would read as a null "
+            "result", needle="selects no rows")
+    _sig = __import__("inspect").signature(run).parameters["splits"]
+    ok(_sig.kind is _sig.KEYWORD_ONLY and _sig.default is _sig.empty
+       and _splits_from_cli(None) is None
+       and _splits_from_cli("MECHANICS_BOTH_SPLITS") == ("score", "train"),
+       f"and `run(splits=...)` is KEYWORD-ONLY WITH NO DEFAULT "
+       f"({_sig.default is _sig.empty}) while the CLI translates an "
+       f"ABSENT --splits to None rather than to {RULED_SPLIT_SET} -- read "
+       f"from the signature and from the function, so a later edit that "
+       f"adds a convenience default fails HERE")
+    _sb = {("s1", HSP.SIDES[0], 0): "train",
+           ("s1", HSP.SIDES[0], 1): "score",
+           ("s1", HSP.SIDES[1], 0): "MIXED"}
+    _tally = split_tally(list(_sb) + [("s9", HSP.SIDES[0], 7)], _sb)
+    ok(_tally == {"train": 1, "score": 1, "MIXED": 1, "UNLABELLED": 1},
+       f"DRIVEN: `split_tally` is the whole content of \"labelled per "
+       f"cell\" -- {_tally}. MIXED and UNLABELLED are NAMED BUCKETS, "
+       f"never folded into a split: a generation whose rows came from "
+       f"both splits is not a `train` generation, and one the map does "
+       f"not carry is an exclusion with a status (rule 4)")
+    _blk3 = _blk(_rows)
+    _, _, _sp3 = generation_scores(
+        _blk3, _fixref, coin="btc", head="incumbent_linear_d",
+        split_of={("s1", HSP.SIDES[0], 0, -6.0): "train",
+                  ("s1", HSP.SIDES[0], 0, -3.0): "score",
+                  ("s1", HSP.SIDES[0], 1, -6.0): "train"})
+    ok(_sp3[("s1", HSP.SIDES[0], 0)] == "MIXED"
+       and _sp3[("s1", HSP.SIDES[0], 1)] == "train",
+       f"and a generation whose two rows were indexed under DIFFERENT "
+       f"splits is labelled {_sp3[('s1', HSP.SIDES[0], 0)]!r}, not "
+       f"whichever row came first -- the generation is the unit, so its "
+       f"label is a property of all of its rows")
+    _, _, _sp4 = generation_scores(_blk3, _fixref, coin="btc",
+                                   head="incumbent_linear_d")
+    ok(set(_sp4.values()) == {"UNLABELLED"},
+       f"KNOWN-BAD: with NO split map every scored generation reads "
+       f"UNLABELLED ({sorted(set(_sp4.values()))}) rather than defaulting "
+       f"to a split -- an unlabelled cell must be visible in the receipt, "
+       f"because under MECHANICS_BOTH_SPLITS the label is the ONLY thing "
+       f"distinguishing a fitted generation from an unfitted one")
+
+    # ---- DE44: THE COST, MEASURED RATHER THAN PROJECTED ---------------
+    _roots = input_roots()
+    ok(_roots["agree"] == (_roots["derived_root"] == _roots["archive_root"])
+       and Path(_roots["derived"]).name == "derived"
+       and input_roots(archive_repo=_roots["derived_root"])["agree"] is True
+       and input_roots(archive_repo="/")["agree"] is False,
+       f"DE44: the fit stack reads from TWO ROOTS and the runner computes "
+       f"both -- tape/fragment from {_roots['derived_root']} (HARDCODED "
+       f"in `phase2_arms`), window archives from "
+       f"{_roots['archive_root']} (`__file__`-relative in "
+       f"`flow_intensity`). They agree in the main tree and DISAGREE in "
+       f"every worktree ({_roots['agree']} here), which is a split-brain "
+       f"input that costs a whole tape index before it shows up as "
+       f"`no_archive` 100%. DRIVEN BOTH WAYS: pointed at the derived root the "
+       f"comparison reads AGREE, pointed at `/` it reads DISAGREE")
+    _mat = feature_pass_materialises_whole_file()
+    ok(_mat["materialises_whole_file"]
+       and _mat["whole_file_loads"] == ["json.loads(src.read_text())"],
+       f"and the memory caveat is a PREDICATE over the fit's own parse, "
+       f"not a sentence: `_feature_pass` reads its input whole "
+       f"({_mat['whole_file_loads']}), so its requirement is a property "
+       f"of the full fragment and does not scale down with a row slice")
+    _ex = extrapolate(10.0, slice_unit=100, full_unit=250, unit="rows")
+    ok(_ex["provenance"] == "EXTRAPOLATION" and _ex["estimate"] == 25.0
+       and _ex["factor"] == 2.5
+       and "LINEAR IN THE STATED UNIT" in _ex["assumption"],
+       f"and every scaled number CARRIES ITS PROVENANCE: {_ex['measured']} "
+       f"measured on {_ex['slice_unit']} {_ex['unit']} -> "
+       f"{_ex['estimate']} at {_ex['full_unit']}, stamped "
+       f"{_ex['provenance']} with the linearity assumption attached. A "
+       f"number whose provenance is an extrapolation says so in the row")
+    refuses(lambda: extrapolate(1.0, slice_unit=0, full_unit=10,
+                                unit="rows"),
+            "KNOWN-BAD: an extrapolation from a slice of ZERO refuses -- "
+            "a factor with nothing under it is not an estimate",
+            needle="division by nothing")
+    refuses(lambda: scratch_outdir(OUTDIR),
+            "KNOWN-BAD: a measurement outdir that IS the declared "
+            "diagnostic OUTDIR refuses -- pre-creating it would turn the "
+            "run's already-exists refusal into a false alarm",
+            needle="DECLARED diagnostic OUTDIR")
+    refuses(lambda: scratch_outdir(ROOT / "data/pm_5min/derived/de44_x"),
+            "KNOWN-BAD: a measurement outdir under `data/` refuses -- "
+            "this seat is read-only there, and a sliced copy of the tape "
+            "landing beside the tape is how a diagnostic input becomes a "
+            "production one", needle="READ-ONLY under")
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _td:
+        _sd = scratch_outdir(Path(_td) / "m")
+        ok(_sd.is_dir() and _sd.resolve() != OUTDIR.resolve(),
+           f"POSITIVE CONTROL: an ordinary scratch directory is ADMITTED "
+           f"and created ({_sd.name}) -- the guard above refuses two "
+           f"things and lets the right one through, which is the half a "
+           f"guard shown only to refuse never proves")
+    import tempfile as _tf2
+    with _tf2.TemporaryDirectory() as _td2:
+        _f = Path(_td2) / "rows.json"
+        _f.write_text(json.dumps({"rows": [{"a": i} for i in range(500)]}))
+        _rd = row_density(_f)
+        ok(_rd["rows_in_sample"] == 500
+           and abs(_rd["estimated_total_rows"] - 500) < 1
+           and _rd["basis"].startswith("the ORIGINAL file"),
+           f"DRIVEN: `row_density` recovers {_rd['rows_in_sample']} rows "
+           f"and estimates {_rd['estimated_total_rows']:.1f} on a file "
+           f"whose true count is 500 -- and it reads the ORIGINAL "
+           f"artifact rather than the slice this runner writes, because "
+           f"`json.dumps` re-serialises and every count taken from a "
+           f"slice comes out biased in one direction")
+        _f.write_text('{"rows": []}')
+        refuses(lambda: row_density(_f),
+                "KNOWN-BAD: a file with an EMPTY rows array refuses -- a "
+                "density of zero rows per byte makes every extrapolation "
+                "infinite, and an infinite estimate reads as a number",
+                needle="no complete row decoded")
+    # ---- DE44: THE WIRING, ASSERTED FROM THE PARSE --------------------
+    # SEAT_PROTOCOL rule 17 names the distinction this check sits on: a
+    # control that cannot FAIL is not a control that cannot RUN. `run()`
+    # CANNOT be executed while the pin blocks, so the honest instrument
+    # for its wiring today is its own parse. It is NOT the seam test --
+    # that runs with the ruled execution, on the producer's real rows --
+    # and this check exists so the wiring cannot rot in the meantime.
+    _runsrc = _ast.get_source_segment(Path(__file__).read_text(),
+                                      [nd for nd in _ast.walk(_ast.parse(
+                                          Path(__file__).read_text()))
+                                       if isinstance(nd, _ast.FunctionDef)
+                                       and nd.name == "run"][0])
+    _rtree = _ast.parse(_runsrc.replace("\ndef run", "\ndef run"))
+    _calls = {}
+    for nd in _ast.walk(_rtree):
+        if isinstance(nd, _ast.Call):
+            nm = getattr(nd.func, "id", None) or getattr(nd.func, "attr", "")
+            _calls.setdefault(nm, []).append(
+                sorted(k.arg for k in nd.keywords if k.arg))
+    _assigns = [_ast.unparse(t) for nd in _ast.walk(_rtree)
+                if isinstance(nd, _ast.Assign) for t in nd.targets]
+    ok("assemble_gen_scores" in _calls
+       and any("gen_scores" in kw for kw in _calls.get("score_events_for", []))
+       and any("splits" in kw for kw in _calls.get("assemble_gen_scores", []))
+       and "cell_out['splits']" in _assigns
+       and _calls.get("build_receipt")
+       and all("pin" not in kw for kw in _calls["build_receipt"]),
+       f"DE44, THE WIRING FROM THE PARSE (rule 17): `run()` calls "
+       f"`assemble_gen_scores(splits=...)`, hands its output to "
+       f"`score_events_for(gen_scores=...)` "
+       f"({_calls.get('score_events_for')}), assigns `cell_out['splits']`, "
+       f"and calls `build_receipt` with NO `pin=` "
+       f"({_calls['build_receipt']}) -- so the suite's injectable pin "
+       f"cannot leak onto the run path. Round 43's expensive half existed "
+       f"as functions with no call site, which is the defect this check "
+       f"is about")
+    _first = {}
+    for nd in _ast.walk(_rtree):
+        if isinstance(nd, _ast.Call):
+            nm = getattr(nd.func, "id", None) or getattr(nd.func, "attr", "")
+            _first.setdefault(nm, nd.lineno)
+            _first[nm] = min(_first[nm], nd.lineno)
+    ok(_first["validate_outdir"] < _first["validate_splits"]
+       < _first["preflight"] < _first["build_reference"]
+       < _first["assemble_gen_scores"],
+       f"and `run()`'s CHEAP GATES ALL PRECEDE THE FEED, asserted from "
+       f"the parse: validate_outdir(L{_first['validate_outdir']}) < "
+       f"validate_splits(L{_first['validate_splits']}) < "
+       f"preflight(L{_first['preflight']}) < "
+       f"build_reference(L{_first['build_reference']}) < "
+       f"assemble_gen_scores(L{_first['assemble_gen_scores']}). This is "
+       f"what makes the `run(None, splits=None)` known-bad above cost "
+       f"milliseconds instead of half an hour -- cheap BY CONSTRUCTION, "
+       f"not by luck, and the check says which construction")
+    _cellish = [{"slug": "s1", "side": HSP.SIDES[0], "gen": 0},
+                {"slug": "s1", "side": HSP.SIDES[0], "gen": 1}]
+    _ct = split_tally([(a["slug"], a["side"], a["gen"]) for a in _cellish],
+                      {("s1", HSP.SIDES[0], 0): "train",
+                       ("s1", HSP.SIDES[0], 1): "score"})
+    ok(_ct == {"train": 1, "score": 1},
+       f"and the per-cell stamp is driven on the SHAPE `run()` builds it "
+       f"from -- `_treated_actions`' (slug, side, gen) dicts -> {_ct}. The "
+       f"cell's label is over the generations IT ACTED ON, so it moves "
+       f"with theta and is not the population's constant restated "
+       f"eighteen times")
+
+    ok(OUTDIR.exists() is False,
+       f"and the DECLARED OUTDIR {OUTDIR.name} STILL DOES NOT EXIST after "
+       f"this suite: round 44 is the producer half and the execution is a "
+       f"separate act the USER rules")
+
+    ok(HS.load_incumbent("btc")["_n_features"] == 60,
+       "and the width the assembly is checked against is the FIT'S OWN "
+       "(`linear_d_btc.json`'s normalisers, bound by the manifest), never "
+       "a literal in this file")
     from collections import Counter as _C
     _verd = _C(r["verdict"] for r in _pin)
-    ok(_pv.get("phase2_arms.py") == "IDENTICAL"
-       and _verd["IDENTICAL"] == 11 and _verd["ADDITIVE_DECLARED"] == 1
+    ok(_pv.get("phase2_arms.py") == "BLOCKING"
+       and _verd["IDENTICAL"] == 10 and _verd["ADDITIVE_DECLARED"] == 1
+       and _verd["BLOCKING"] == 1
        and _verd["NOT_CALLED"] == 0 and sum(_verd.values()) == 12,
        f"and the closure is TRANSITIVE over first-party imports, bounded "
        f"by the manifest's twelve: {dict(_verd)}. THE COUNT MOVED THIS "
@@ -2702,23 +3060,29 @@ def selftest() -> int:
                  for k, v in zip(dd.keys, dd.values)
                  if isinstance(k, _ast.Constant)
                  and k.value in ("sha_at_fit", "sha_at_declaring_tip")]
-    ok(len(_dsrc) == 1 and len(_shanodes) == 6
+    ok(len(_dsrc) == 1 and len(_shanodes) == 2 * len(DECLARED_ADDITIVE)
        and all(isinstance(v, _ast.Constant) for v in _shanodes)
        and sum(1 for v in _shanodes if v.value is None) == 2,
-       f"DE37-C2: all {len(_shanodes)} declaration shas are LITERAL "
+       f"DE37-C2: all {len(_shanodes)} declaration shas "
+       f"({len(DECLARED_ADDITIVE)} entries x 2) are LITERAL "
        f"constants in `DECLARED_ADDITIVE` -- read from the parse, so a "
        f"future edit that recomputes one from the file it pins fails "
        f"HERE. Two are literal `None`, which is the declared fact that "
        f"those functions are ABSENT from the fit bytes, not a gap")
-    _now_fit = _fn_asts(_git_show(
-        json.loads((FITS / 'fit_manifest.json').read_text())["fit_code_ref"],
-        "live/pm_research/harmful_exposure_rows.py") or "")
-    _now_tip = _fn_asts((Path(__file__).resolve().parent
-                         / "harmful_exposure_rows.py").read_text())
-    ok(all(DECLARED_ADDITIVE[k]["sha_at_fit"] == _ast_sha(_now_fit.get(k[1]))
+    _ref_fit = json.loads(
+        (FITS / "fit_manifest.json").read_text())["fit_code_ref"]
+    _here_dir = Path(__file__).resolve().parent
+    _fitsrc, _tipsrc = {}, {}
+    for _f in sorted({k[0] for k in DECLARED_ADDITIVE}):
+        _fitsrc[_f] = _fn_asts(
+            _git_show(_ref_fit, f"live/pm_research/{_f}") or "")
+        _tipsrc[_f] = _fn_asts((_here_dir / _f).read_text())
+    ok(all(DECLARED_ADDITIVE[k]["sha_at_fit"]
+           == _ast_sha(_fitsrc[k[0]].get(k[1]))
            and DECLARED_ADDITIVE[k]["sha_at_declaring_tip"]
-           == _ast_sha(_now_tip.get(k[1])) for k in DECLARED_ADDITIVE),
-       f"and the six literals are TRUE of the two artifacts today: "
+           == _ast_sha(_tipsrc[k[0]].get(k[1])) for k in DECLARED_ADDITIVE),
+       f"and the {2 * len(DECLARED_ADDITIVE)} literals are TRUE of the "
+       f"artifacts today: "
        f"{ {k[1]: DECLARED_ADDITIVE[k]['sha_at_declaring_tip'] for k in DECLARED_ADDITIVE} } "
        f"-- so the declaration describes the code that is actually there, "
        f"and the check above says it cannot describe itself")
@@ -3040,9 +3404,18 @@ def selftest() -> int:
                 "Round 37's falsifier passed a synthetic status ROW, which "
                 "tests the filter and not the path that produces it",
                 needle="BLOCKING pin status")
-    ok(verify_called_code(_pin) == _pin,
-       "POSITIVE CONTROL on the same path: the real statuses carry no "
-       "BLOCKING verdict, so the refusal is a filter and not a wall")
+    _nonblocking = [r for r in _pin if r["verdict"] != "BLOCKING"]
+    ok(verify_called_code(_nonblocking) == _nonblocking
+       and len(_nonblocking) == len(_pin) - 1
+       and {r["verdict"] for r in _nonblocking} == {"IDENTICAL",
+                                                    "ADDITIVE_DECLARED"},
+       f"POSITIVE CONTROL on the same path, and it MATTERS more now that "
+       f"the real set BLOCKS: the same real rows with the one BLOCKING "
+       f"row dropped ({len(_nonblocking)} of {len(_pin)}) are ADMITTED "
+       f"unchanged. So `called#1` is a FILTER on a verdict and not a wall "
+       f"that refuses everything -- the half a refusal-only control never "
+       f"proves (SEAT_PROTOCOL rule 16). The verdicts are the ones "
+       f"`pin_statuses` computed, never a fabricated clean set")
 
     # ---- §5 (gamma): P1-P4 COMPUTED on the two streams ----------------
     _t_scores = [{"t": 0.0, "slug": _slug[0], "side": "BUY_UP", "gen": 1,
@@ -3187,20 +3560,34 @@ def selftest() -> int:
     return 0
 
 
-def run(outdir: Path | None = None, *, coins=COINS,
+def run(outdir: Path | None = None, *, splits, coins=COINS,
         limit: int | None = None) -> dict:
-    """THE RUN PATH (DE32-C1).  Feed -> scores -> arms -> rho -> null ->
-    receipt, written once into the declared directory.
+    """THE RUN PATH (DE32-C1).  Feed -> assembly -> scores -> arms -> rho ->
+    null -> receipt, written once into the declared directory.
 
     Round 32 declared an invocation whose flag did not exist: `main()`
     parsed `--selftest` only, so `--run` exited argparse rc 2 while the
     filing named it as the invocation of record. The flag is real here and
-    the path under it is the one the addendum declares."""
+    the path under it is the one the addendum declares.
+
+    `splits` is a REQUIRED keyword with NO default. R-496 (E) ruled the
+    set; the ruling is recorded in `SPLIT_RULING` and is still not a
+    fallback here, so a caller who names nothing gets a refusal by name
+    rather than a run under a value nobody typed."""
     out = validate_outdir(outdir or OUTDIR)
-    preflight()      # DE34-C1: BEFORE the feed, not after it
+    got = validate_splits(splits)
+    preflight(splits=got)      # DE34-C1: BEFORE the feed, not after it
     t_feed = time.time()
     feeds = {c: build_reference(c, limit=limit) for c in coins}
     feed_s = time.time() - t_feed
+    # THE EXPENSIVE HALF, once. It is the same tape index and the same
+    # feature pass for every cell, and round 43's wiring put it behind a
+    # per-(coin, head) call -- 18 cells x 2 heads would have paid for it
+    # 36 times.
+    t_asm = time.time()
+    asm = assemble_gen_scores({c: feeds[c]["reference"] for c in coins},
+                              splits=got, coins=coins)
+    asm_s = time.time() - t_asm
     heads = {h: SS.verify_head(h, coins[0]) for h in SS.HEADS}
     cells: list = []
     for coin in coins:
@@ -3217,7 +3604,9 @@ def run(outdir: Path | None = None, *, coins=COINS,
                 for head in ("incumbent_linear_d",
                              "q1_arrival_composed_lgbm"):
                     arm = f"CONDVALUE_OVER_SKEWED_REF/{head}"
-                    ev = score_events_for(ref, coin=coin, head=head)
+                    ev = score_events_for(
+                        ref, coin=coin, head=head,
+                        gen_scores=asm["by_arm"][(coin, head)][0])
                     scores[arm] = ev
                     thetas[arm] = theta_for(coin, head, budget)
                 draws = (N_DRAWS
@@ -3225,6 +3614,23 @@ def run(outdir: Path | None = None, *, coins=COINS,
                          {(c, l, b) for c, l, b in NULL_CELLS} else 0)
                 cell_out = run_cell(ref, scores, cell, draws=draws,
                                     thetas=thetas)
+                # R-496 (E): SPLITS LABELLED PER CELL -- and the label is
+                # over the generations THIS cell acted on, which is a
+                # per-cell fact (theta moves with the budget), not the
+                # population's constant restated eighteen times.
+                _acts = [(a["slug"], a["side"], a["gen"])
+                         for arm in cell_out["per_arm"].values()
+                         for a in _treated_actions(arm)]
+                cell_out["splits"] = {
+                    "declared_set": asm["assembly"]["split_set"],
+                    "splits": list(asm["assembly"]["splits"]),
+                    "ruled_by": SPLIT_RULING["ruled_by"],
+                    "population_generations_by_split":
+                        asm["split_counts"][coin],
+                    "treated_actions_by_split": split_tally(
+                        _acts, asm["split_by_gen"][coin]),
+                    "n_treated_actions": len(_acts),
+                }
                 cell_out["feed"] = {
                     # Published so the FIRST REAL RUN prices the replay
                     # instead of projecting it from a one-generation
@@ -3239,6 +3645,9 @@ def run(outdir: Path | None = None, *, coins=COINS,
     rec = build_receipt(cells, pop, heads=heads,
                         wall_clock_s=time.time() - t_feed)
     rec["feed_seconds"] = feed_s
+    rec["assembly_seconds"] = asm_s
+    rec["assembly"] = asm["assembly"]
+    rec["split_ruling"] = dict(SPLIT_RULING)
     validate_receipt(rec)
     out.mkdir(parents=True, exist_ok=False)
     (out / "phase4_diag_r459_receipt.json").write_text(
@@ -3306,9 +3715,817 @@ def assembly_preconditions() -> dict:
     return out
 
 
+#: The two split sets round 43 put to the USER, and the one the USER
+#: RULED. Addendum v2 ask 1a, adopted at R-496 (E) as recommended:
+#: **MECHANICS ON BOTH SPLITS, with splits labelled per cell.**
+DECLARED_SPLIT_SETS = {
+    "MECHANICS_BOTH_SPLITS": ("score", "train"),
+    "SCORE_ONLY": ("score",),
+}
+TAPE_SPLITS = ("score", "train")
+
+#: THE RULING, recorded -- and deliberately NOT a default anywhere in this
+#: file. `run(splits=...)` is a REQUIRED keyword and `validate_splits`
+#: refuses silence by name, so a caller that never chose still cannot
+#: proceed under a value it did not name. The distance between "the USER
+#: ruled X" and "the code assumes X when nobody says anything" is the
+#: whole of rule 14: this constant is what an operator NAMES on the
+#: command line, not what the runner falls back to.
+RULED_SPLIT_SET = "MECHANICS_BOTH_SPLITS"
+SPLIT_RULING = {
+    "set": RULED_SPLIT_SET,
+    "ruled_by": "R-496 (E)",
+    "ask": "addendum v2 §1a",
+    "adopted": "2026-09-03T03:57Z",
+    "labelling": "splits labelled per cell",
+    "consequence_stated_in_the_ruling": (
+        "the §3 population spans BOTH fit splits (1,125,289 train rows and "
+        "638,917 score rows), so cells score generations the heads were "
+        "FITTED on. That is what MECHANICS means: the run measures whether "
+        "the machinery composes and replays, and it is never evidence "
+        "about the heads' skill"),
+}
+
+
+def tape_rows_array_closed(path: Path | None = None, *,
+                           tail_bytes: int = 64) -> dict:
+    """Does the tape's rows array actually END with `]`?
+
+    The factual anchor of the `_stream_tape_rows` declaration. The added
+    refusal fires only at EOF WITHOUT the closing bracket, so whether it
+    can fire on this input is a question about the input's last bytes --
+    which is checkable in microseconds and is checked, rather than
+    asserted in the declaration's prose."""
+    import phase2_arms as PA
+    p = Path(path) if path is not None else PA.TAPE_PATH
+    if not p.exists():
+        # SITE: tape#1
+        raise DiagRefused(f"{p} does not exist, so nothing can be said "
+                          f"about how it ends")
+    with open(p, "rb") as fh:
+        fh.seek(0, 2)
+        n = fh.tell()
+        fh.seek(max(0, n - tail_bytes))
+        tail = fh.read()
+    txt = tail.decode("utf-8", "replace").rstrip()
+    closed = txt.endswith("]") or (txt.endswith("}")
+                                   and "]" in txt[-8:])
+    return {"path": str(p), "bytes": n, "tail": txt[-24:],
+            "rows_array_closed": bool(closed)}
+
+
+def _fn_node(src: str, name: str):
+    """The top-level FunctionDef `name` in `src`, or None."""
+    import ast as _a
+    for nd in _a.parse(src).body:
+        if isinstance(nd, (_a.FunctionDef, _a.AsyncFunctionDef)) \
+                and nd.name == name:
+            return nd
+    return None
+
+
+def stream_tape_rows_drift(*, candidate: str | None = None,
+                           tip_src: str | None = None) -> dict:
+    """THE UNDECLARED DRIFT, COMPUTED -- every clause a predicate.
+
+    Round 43 wrote four sentences about `_stream_tape_rows` and they were
+    all true; sentences are still not evidence (rule 10). This function
+    computes each of them:
+
+    * `accepting_path_unchanged` by SUBSTITUTION, which is the only form
+      of the claim that is checkable. Put a bare `return` back where the
+      tip raises, and if the whole function's AST then equals the fit
+      commit's, the difference IS that one statement and nothing else --
+      every other path, including the accepting one, is identical. A
+      textual diff cannot say that; this can.
+    * `enclosing_test`, so the branch the change lives in is named from
+      the parse rather than from a reading of the comment beside it.
+    * `changed_at_verified`, by checking the candidate commit from BOTH
+      sides -- the tip sha at it, the fit sha at its parent.
+    * `rows_array_closed`, from the tape's own last bytes.
+
+    `candidate` and `tip_src` are injectable for the falsifiers ONLY: a
+    wrong commit must read False here, and a tip whose difference is NOT
+    one statement must read `accepting_path_unchanged` False. The run
+    passes neither."""
+    import ast as _a
+    name = UNDECLARED_DRIFT["function"]
+    fname = UNDECLARED_DRIFT["file"]
+    ref = json.loads((FITS / "fit_manifest.json").read_text())["fit_code_ref"]
+    fit_src = _git_show(ref, f"live/pm_research/{fname}")
+    if fit_src is None:
+        # SITE: drift#1
+        raise DiagRefused(
+            f"the fit bytes of {fname} are not retrievable at {ref}: with "
+            f"no left-hand side there is no drift to describe, and a "
+            f"report that quietly compares the tip with itself is worse "
+            f"than none")
+    if tip_src is None:
+        tip_src = (Path(__file__).resolve().parent / fname).read_text()
+    A, B = _fn_node(fit_src, name), _fn_node(tip_src, name)
+    if A is None or B is None:
+        # SITE: drift#2
+        raise DiagRefused(
+            f"{name} is absent from {fname} on "
+            f"{'the fit side' if A is None else 'the tip side'}: an absent "
+            f"function is a different fact from a changed one and is not "
+            f"reported as one")
+    want = _a.dump(A, annotate_fields=True, include_attributes=False)
+    raises = [nd for nd in _a.walk(B) if isinstance(nd, _a.Raise)]
+    hits = []
+    for nd in raises:
+        keep = nd.exc
+        nd.exc, nd.cause = None, None
+        nd.__class__ = _a.Return
+        nd.value = None
+        got = _a.dump(B, annotate_fields=True, include_attributes=False)
+        nd.__class__ = _a.Raise
+        nd.exc, nd.cause, nd.value = keep, None, None
+        if got == want:
+            hits.append(nd)
+    node = hits[0] if len(hits) == 1 else None
+    encl = None
+    if node is not None:
+        for nd in _a.walk(B):
+            if isinstance(nd, _a.If) and any(
+                    st is node for st in nd.body):
+                encl = _a.unparse(nd.test)
+                break
+    at = _fn_asts(_git_show(candidate or UNDECLARED_DRIFT[
+        "candidate_changed_at"], f"live/pm_research/{fname}") or "")
+    before = _fn_asts(_git_show(
+        (candidate or UNDECLARED_DRIFT["candidate_changed_at"]) + "^",
+        f"live/pm_research/{fname}") or "")
+    sha_fit = _ast_sha(_fn_asts(fit_src).get(name))
+    sha_tip = _ast_sha(_fn_asts(tip_src).get(name))
+    return {
+        "file": fname, "function": name, "fit_code_ref": ref,
+        "sha_at_fit": sha_fit, "sha_at_tip": sha_tip,
+        "differs": sha_fit != sha_tip,
+        "candidate_changed_at": candidate or UNDECLARED_DRIFT[
+            "candidate_changed_at"],
+        "changed_at_verified": (at.get(name) is not None
+                                and _ast_sha(at.get(name)) == sha_tip
+                                and _ast_sha(before.get(name)) == sha_fit),
+        "n_substitutions_that_restore_the_fit": len(hits),
+        "accepting_path_unchanged": node is not None,
+        "changed_statement": ("Return -> Raise" if node is not None
+                              else None),
+        "enclosing_test": encl,
+        "raise_message_head": (
+            _a.unparse(node.exc)[:80] if node is not None else None),
+        "tape": tape_rows_array_closed(),
+        "how_accepting_path_unchanged_was_established": (
+            "SUBSTITUTION: replacing the single Raise with a bare Return "
+            "makes the tip function's AST equal the fit commit's, so the "
+            "difference is that one statement and no other path moved"),
+    }
+
+
+def code_drift_report() -> dict:
+    """The pin's verdict and the undeclared drift, COMPUTED and reportable
+    without running anything -- because the decision the drift needs is the
+    USER's and a decision needs its facts in front of it.
+
+    `blocking` here is derived from `pin_statuses()`, never from a literal:
+    if the USER grants the declaration, this function's verdict changes on
+    its own."""
+    rows = pin_statuses()
+    blocking = {r["path"]: r["functions_changed"] for r in rows
+                if r["verdict"] == "BLOCKING"}
+    drift = stream_tape_rows_drift()
+    return {
+        "pin": rows,
+        "verdicts": {r["path"]: r["verdict"] for r in rows},
+        "blocking": blocking,
+        "run_is_blocked_by_the_pin": bool(blocking),
+        "undeclared_drift": dict(UNDECLARED_DRIFT, **{"computed": drift}),
+        "decides": "nothing -- admissibility is the USER's (rule 14); "
+                   "these are the facts the ruling needs",
+    }
+
+
+def validate_splits(splits) -> tuple:
+    """The split set, as an ARGUMENT. Never a default (rule 14).
+
+    The §3 population spans both of the fit's splits, so scoring it on
+    both means scoring generations the heads were FITTED on. That is a
+    decision with a priced trade-off -- a mechanics diagnostic on a
+    consumed population, or a smaller population that was never fitted --
+    and it belongs to the USER. This function's whole job is to refuse
+    the state where nobody chose."""
+    if splits is None:
+        # SITE: splits#1
+        raise DiagRefused(
+            f"the split set is UNDECLARED. The §3 population spans BOTH "
+            f"fit splits, so every cell would score generations the heads "
+            f"were fitted on -- or not -- and which of those a cell means "
+            f"is not a default this runner may pick. The USER HAS RULED "
+            f"({SPLIT_RULING['ruled_by']}: {RULED_SPLIT_SET}) and the "
+            f"ruling is still not a default here: NAME it "
+            f"({sorted(DECLARED_SPLIT_SETS)}, or an explicit subset of "
+            f"{list(TAPE_SPLITS)}) and it runs; leave it silent and it "
+            f"refuses HERE, before any feed. A ruling that the code "
+            f"supplies on the caller's behalf is a ruling nobody has to "
+            f"read (rule 14)")
+    got = tuple(sorted({str(x) for x in splits}))
+    if not got:
+        # SITE: splits#2
+        raise DiagRefused("an EMPTY split set selects no rows at all: the "
+                          "feature pass would drop every generation and "
+                          "the run would read as a null result")
+    bad = [x for x in got if x not in TAPE_SPLITS]
+    if bad:
+        # SITE: splits#3
+        raise DiagRefused(
+            f"split(s) {bad} are not in the tape ({list(TAPE_SPLITS)}): a "
+            f"name the tape does not carry indexes nothing, and an empty "
+            f"index is indistinguishable from a population that was "
+            f"excluded")
+    return got
+
+
+def split_set_name(splits) -> str:
+    """The declared name of a split set, or an explicit description."""
+    for name, val in DECLARED_SPLIT_SETS.items():
+        if tuple(sorted(val)) == tuple(sorted(splits)):
+            return name
+    return "EXPLICIT:" + "+".join(sorted(splits))
+
+
+def feature_blocks(*, splits, fragment: Path | None = None) -> dict:
+    """THE EXPENSIVE HALF, wired: the fit's own tape index over the
+    DECLARED splits, and the fit's own feature pass over the fragment.
+
+    Nothing here is re-implemented. `PA.tape_index` and
+    `PA._feature_pass` are the functions the fit ran; this supplies the
+    split set (an argument, never a default) and reports what each stage
+    cost and what it excluded.
+
+    Returns the per-coin blocks, the per-key split map (so a cell can say
+    which splits it consumed), the timings, and the pass's own drop
+    counts -- exclusions are STATUSES here, never silent (rule 4)."""
+    got = validate_splits(splits)
+    pre = assembly_preconditions()
+    import phase2_arms as PA
+    frag = Path(fragment) if fragment is not None else PA.FRAGMENT
+    stages: dict = {}
+    TAPE: dict = {}
+    split_of: dict = {}
+    for sp in got:
+        t0 = time.time()
+        idx = PA.tape_index(sp)
+        dup = [k for k in idx if k in TAPE]
+        if dup:
+            # SITE: assembly#5
+            raise DiagRefused(
+                f"{len(dup)} tape key(s) appear in more than one split "
+                f"(first {dup[0]}): the splits are supposed to partition "
+                f"the tape, and a key in both would be indexed twice and "
+                f"scored under whichever split happened to be read last")
+        TAPE.update(idx)
+        for k in idx:
+            split_of[k] = sp
+        stages[f"tape_index[{sp}]"] = {
+            "wall_s": round(time.time() - t0, 2),
+            "rows_indexed": len(idx),
+            "peak_rss_mb_highwater": _peak_rss_mb()}
+    t1 = time.time()
+    blocks = PA._feature_pass(frag, "phase4_diag", TAPE=TAPE)
+    stages["_feature_pass"] = {
+        "wall_s": round(time.time() - t1, 2),
+        "fragment": str(frag),
+        "kept_by_coin": {c: len(b["kept"]) for c, b in blocks.items()},
+        "drops_by_coin": {c: dict(b["drops"]) for c, b in blocks.items()},
+        "peak_rss_mb_highwater": _peak_rss_mb()}
+    # The width the fit itself carries, read from the artifacts the
+    # manifest binds -- never a literal in this file (rule 15's positive
+    # control has to be able to fail).
+    for coin, b in blocks.items():
+        if not b["kept"]:
+            continue
+        w = len(b["PM"][0]) + len(b["FN"][0])
+        if w != pre["incumbent_width"]:
+            # SITE: assembly#6
+            raise DiagRefused(
+                f"the assembled PM+fine vector for {coin} is {w} wide and "
+                f"the fit's own incumbent normalises "
+                f"{pre['incumbent_width']}: the pass produced vectors no "
+                f"head was fitted on, which would score as numbers and "
+                f"not as predictions")
+        if len(b["ST"][0]) + w != pre["lgbm_norm_width"]:
+            # SITE: assembly#7
+            raise DiagRefused(
+                f"{coin}: PM+fine+state is {len(b['ST'][0]) + w} against "
+                f"the fit's {pre['lgbm_norm_width']} normalisers")
+    return {"blocks": blocks, "splits": got,
+            "split_set": split_set_name(got), "split_of": split_of,
+            "stages": stages, "widths": pre,
+            "n_tape_rows": len(TAPE)}
+
+
+def scratch_outdir(path) -> Path:
+    """A MEASUREMENT directory: never under `data/`, never the declared
+    OUTDIR.
+
+    The cost measurement writes slices of the fit's own inputs, and a
+    slice of the tape landing beside the tape is how a diagnostic input
+    becomes a production one. Both guards are identity checks on resolved
+    paths, so a symlink into `data/` cannot walk around them."""
+    p = Path(path).resolve()
+    if p == OUTDIR.resolve() or OUTDIR.resolve() in p.parents:
+        # SITE: measure#1
+        raise DiagRefused(
+            f"{p} is (or is under) the DECLARED diagnostic OUTDIR "
+            f"{OUTDIR}: that directory is created by the RUN, once, and a "
+            f"measurement that pre-creates it turns the run's "
+            f"already-exists refusal into a false alarm")
+    data = (ROOT / "data").resolve()
+    if p == data or data in p.parents:
+        # SITE: measure#2
+        raise DiagRefused(
+            f"{p} is under {data}: this seat is READ-ONLY under `data/` "
+            f"and a sliced copy of the tape or the fragment written there "
+            f"is an artifact nobody declared, sitting beside the ones the "
+            f"fit is bound to")
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+
+def input_roots(*, archive_repo: str | None = None) -> dict:
+    """WHERE THE FIT STACK READS FROM -- and it is TWO roots, not one.
+
+    `phase2_arms.DERIVED` is a HARDCODED absolute path: the tree the fit
+    ran in. `flow_intensity.PM` -- which is where the WINDOW ARCHIVES and
+    `markets.jsonl` come from -- is `__file__`-relative. In the main tree
+    the two coincide and nothing is visible. From ANY worktree they do
+    not, and `_feature_pass` then reads the tape and the fragment from one
+    tree and the archives from another.
+
+    This is not hypothetical and it is not a code defect anyone can fix
+    from this seat: measured here, the disagreement makes `_archive_paths`
+    return nothing for all 471 §3 windows, and the fit's own absorption
+    bound refuses at `no_archive` 100%. That is the guard working. What it
+    must never be is a surprise at minute 29 of a run, so it is computed
+    BEFORE anything expensive."""
+    import phase2_arms as PA
+    import flow_intensity as fi
+    d = Path(PA.DERIVED).resolve().parents[2]
+    # `archive_repo` is injectable ONLY so both directions of the
+    # comparison can be driven -- a guard that has only ever seen
+    # DISAGREE has not been shown to recognise AGREE (rule 16).
+    a = (Path(archive_repo).resolve() if archive_repo is not None
+         else Path(fi.PM).resolve().parents[1])
+    return {"derived_root": str(d), "archive_root": str(a),
+            "agree": d == a,
+            "derived": str(Path(PA.DERIVED).resolve()),
+            "archive_raw": str(Path(fi.RAW).resolve()),
+            "archive_raw_exists": Path(fi.RAW).is_dir()}
+
+
+def _write_rows(dst: Path, rows: list) -> dict:
+    """Write a `{"rows": [...]}` file the fit's own readers accept."""
+    dst.write_text(json.dumps({"rows": rows}))
+    return {"path": str(dst), "bytes": dst.stat().st_size,
+            "n_rows": len(rows)}
+
+
+def fragment_slice(dst: Path, *, n_windows: int, source: Path | None = None,
+                   only_slugs=None, row_cap: int = 400_000) -> dict:
+    """The first `n_windows` WINDOWS of the fragment, whole.
+
+    Windows, not rows: `_feature_pass` groups by slug and reads one
+    archive per slug, so a slice cut mid-window measures a pass whose
+    per-window fixed cost is charged to a fraction of its rows.
+
+    `only_slugs` restricts the slice to windows the pass can actually DO
+    WORK ON -- the §3 population that has an archive and a token pair. A
+    slice of windows the pass drops at the first branch measures the
+    drop, and the extrapolation from it would be an order of magnitude
+    too cheap."""
+    import phase2_arms as PA
+    src = Path(source) if source is not None else PA.FRAGMENT
+    want = set(only_slugs) if only_slugs is not None else None
+    keep: list = []
+    slugs: list = []
+    scanned = 0
+    for r in PA._stream_tape_rows(src):
+        scanned += 1
+        sl = r["slug"]
+        if want is not None and sl not in want:
+            if len(slugs) >= n_windows:
+                break
+            continue
+        if sl not in slugs:
+            if len(slugs) >= n_windows:
+                break
+            slugs.append(sl)
+        keep.append(r)
+        if len(keep) >= row_cap:
+            # SITE: measure#3
+            raise DiagRefused(
+                f"the first {n_windows} window(s) of {src.name} exceed the "
+                f"{row_cap:,}-row cap: the slice is meant to be small, and "
+                f"silently returning a truncated window would measure a "
+                f"pass over rows whose archive cost was paid once")
+    out = _write_rows(Path(dst), keep)
+    out["slugs"] = slugs
+    out["n_windows"] = len(slugs)
+    out["fragment_rows_scanned"] = scanned
+    out["coins"] = sorted({r["coin"] for r in keep})
+    if not slugs:
+        # SITE: measure#9
+        raise DiagRefused(
+            f"the slice is EMPTY: no window of {src.name} matched the "
+            f"{0 if want is None else len(want)} wanted slugs. An empty "
+            f"slice measures nothing and would extrapolate from zero")
+    return out
+
+
+def tape_slice(dst: Path, *, slugs, source: Path | None = None,
+               row_cap: int = 2_000_000) -> dict:
+    """Every tape row belonging to `slugs`, so the join is COMPLETE.
+
+    A slice that half-covers its fragment measures `state_join_failed`,
+    not the pass -- and `assert_fit_absorption_within_bound` would refuse
+    it, which is the fit's own guard telling you the measurement is about
+    the slice."""
+    import phase2_arms as PA
+    src = Path(source) if source is not None else PA.TAPE_PATH
+    want = set(slugs)
+    keep: list = []
+    seen: set = set()
+    n = 0
+    t0 = time.time()
+    for r in PA._stream_tape_rows(src):
+        n += 1
+        sl = r["slug"]
+        if sl in want:
+            keep.append(r)
+            seen.add(sl)
+        elif seen and len(seen) == len(want):
+            break                 # past the wanted block: tape is grouped
+        if n >= row_cap:
+            # SITE: measure#4
+            raise DiagRefused(
+                f"scanned {n:,} tape rows without closing the slice "
+                f"({sorted(want - seen)} still unseen): the slice would "
+                f"join partially and the pass would measure join failures")
+    out = _write_rows(Path(dst), keep)
+    out.update({"slugs_covered": sorted(seen),
+                "tape_rows_scanned": n,
+                "scan_wall_s": round(time.time() - t0, 2),
+                "splits_present": sorted({str(r.get("split")) for r in keep})})
+    return out
+
+
+def row_density(path: Path, *, sample_bytes: int = 32 << 20) -> dict:
+    """Bytes per row and the implied row count, read from the ORIGINAL file.
+
+    The obvious basis for an extrapolation -- the slice this runner wrote
+    -- is BIASED: `json.dumps` re-serialises with its own separators, so a
+    slice is a few percent larger per row than the bytes it came from, and
+    every count derived from it comes out low. The density is therefore
+    measured on the artifact itself, from a sample whose consumed offset
+    is tracked exactly."""
+    p = Path(path)
+    n = p.stat().st_size
+    dec = json.JSONDecoder()
+    with open(p, "r") as fh:
+        head = fh.read(1 << 16)
+        i = head.index('"rows"')
+        i = head.index("[", i) + 1
+        header = i
+        buf = head[i:] + fh.read(max(0, sample_bytes - len(head)))
+    # INDEXED, never sliced: `buf[used:]` on a 32 MB sample is quadratic
+    # and turned a two-second density read into a two-minute timeout.
+    used, rows, n_buf = 0, 0, len(buf)
+    while used < n_buf:
+        while used < n_buf and buf[used] in " \t\r\n,":
+            used += 1
+        if used >= n_buf or buf[used] == "]":
+            break
+        try:
+            _, end = dec.raw_decode(buf, used)
+        except ValueError:
+            break
+        used = end
+        rows += 1
+    if not rows:
+        # SITE: measure#11
+        raise DiagRefused(
+            f"no complete row decoded from the first {sample_bytes:,} "
+            f"bytes of {p.name}: a density of zero rows per byte would "
+            f"make every extrapolation infinite")
+    bpr = used / rows
+    return {"path": str(p), "file_bytes": n, "header_bytes": header,
+            "sample_bytes_consumed": used, "rows_in_sample": rows,
+            "bytes_per_row": bpr,
+            "estimated_total_rows": (n - header) / bpr,
+            "basis": "the ORIGINAL file, not a re-serialised slice"}
+
+
+#: Linearity is an ASSUMPTION, and it is written down beside every number
+#: it produces rather than left in a reader's head.
+LINEARITY_ASSUMPTION = (
+    "EXTRAPOLATION, LINEAR IN THE STATED UNIT. The measured slice is "
+    "scaled by (full unit / slice unit). This assumes cost per unit is "
+    "CONSTANT across the artifact -- it is not measured to be, and three "
+    "things could break it: per-window archive costs vary with window "
+    "size, the tape's split mix varies along the file, and `_feature_pass` "
+    "materialises the WHOLE fragment with `json.loads(read_text())`, so "
+    "its MEMORY is a property of the full file and does not scale with a "
+    "row slice at all. Treat the wall-clock figures as an order of "
+    "magnitude and the memory figure as a lower bound.")
+
+
+def extrapolate(measured: float, *, slice_unit: float, full_unit: float,
+                unit: str) -> dict:
+    """A scaled number that carries its own provenance (rule 10)."""
+    if slice_unit <= 0:
+        # SITE: measure#5
+        raise DiagRefused(
+            f"an extrapolation from a slice of {slice_unit} {unit} is a "
+            f"division by nothing: a number with no measurement under it "
+            f"is not an estimate")
+    f = full_unit / slice_unit
+    return {"provenance": "EXTRAPOLATION",
+            "measured": measured, "unit": unit,
+            "slice_unit": slice_unit, "full_unit": full_unit,
+            "factor": f, "estimate": measured * f,
+            "assumption": LINEARITY_ASSUMPTION}
+
+
+def feature_pass_materialises_whole_file() -> dict:
+    """Is `_feature_pass`'s input read whole? COMPUTED from its parse.
+
+    The memory claim in `LINEARITY_ASSUMPTION` is the kind of sentence
+    this programme has been wrong about; it is a predicate over the fit's
+    own source instead."""
+    import ast as _a
+    import phase2_arms as PA
+    src = Path(PA.__file__).read_text()
+    node = _fn_node(src, "_feature_pass")
+    if node is None:
+        # SITE: measure#6
+        raise DiagRefused("`_feature_pass` is absent from phase2_arms: "
+                          "the claim has no subject")
+    hits = [_a.unparse(nd) for nd in _a.walk(node)
+            if isinstance(nd, _a.Call)
+            and getattr(nd.func, "attr", "") == "loads"]
+    return {"whole_file_loads": hits,
+            "materialises_whole_file": any("read_text" in h for h in hits)}
+
+
+def measure_assembly_slice(outdir, *, splits, n_windows: int = 2,
+                           probe_rows: int = 50_000,
+                           archive_root: str | None = None) -> dict:
+    """THE COST OF THE EXPENSIVE HALF, measured on a bounded slice.
+
+    RESULTS.md §4 records the feed at ~28.6 min MEASURED and the assembly
+    as UNMEASURED. This measures it the only way a 3.2 GB index and a 1.2
+    GB pass can be measured before they are authorised to run: on a slice,
+    with the extrapolation stamped as an extrapolation.
+
+    Writes ONLY into `outdir`, which `scratch_outdir` refuses to let be
+    `data/` or the declared OUTDIR."""
+    import resource
+    import phase2_arms as PA
+    import flow_intensity as fi
+    import harmful_hazard_model as hm
+    got = validate_splits(splits)
+    out = scratch_outdir(outdir)
+    roots = input_roots()
+    if not roots["agree"] and archive_root is None:
+        # SITE: measure#7
+        raise DiagRefused(
+            f"the fit stack reads from TWO ROOTS and they disagree: the "
+            f"tape and fragment come from {roots['derived_root']} "
+            f"(hardcoded in `phase2_arms`) and the window archives from "
+            f"{roots['archive_root']} (`__file__`-relative in "
+            f"`flow_intensity`). Measured from a worktree that is a "
+            f"split-brain input, and `_feature_pass` would drop 100% at "
+            f"`no_archive` after paying for the whole tape index. Supply "
+            f"`archive_root` to point the archives at the SAME tree the "
+            f"tape comes from -- nothing else is admissible")
+    if archive_root is not None and str(
+            Path(archive_root).resolve()) != roots["derived_root"]:
+        # SITE: measure#8
+        raise DiagRefused(
+            f"archive_root {archive_root} is not the tree the tape and "
+            f"fragment come from ({roots['derived_root']}): the only "
+            f"admissible correction to a split-brain input is to make the "
+            f"two roots the SAME tree, not to choose a third")
+    rss0 = _peak_rss_mb()
+    rep: dict = {"splits": list(got), "split_set": split_set_name(got),
+                 "n_windows_requested": n_windows,
+                 "rss_at_start_mb": rss0,
+                 "input_roots": roots,
+                 "archive_root_injected": (
+                     None if archive_root is None
+                     else str(Path(archive_root).resolve())),
+                 "materialisation": feature_pass_materialises_whole_file()}
+
+    # ---- the raw streaming rate of the REAL tape, bounded --------------
+    t0 = time.time()
+    n = 0
+    for _ in PA._stream_tape_rows(PA.TAPE_PATH):
+        n += 1
+        if n >= probe_rows:
+            break
+    probe_s = time.time() - t0
+    rep["tape_stream_probe"] = {
+        "rows": n, "wall_s": round(probe_s, 2),
+        "rows_per_s": round(n / probe_s, 1) if probe_s else None,
+        "peak_rss_mb": _peak_rss_mb()}
+
+    # ---- the slices ----------------------------------------------------
+    _saved = (fi.PM, fi.RAW, fi.MARKETS, fi.GAPS, fi.DAYS)
+    try:
+        if archive_root is not None:
+            # The INJECTION, reported in the artifact: the archives are
+            # pointed at the tree the tape and fragment already come from,
+            # so the pass reads ONE tree. No file is created or moved.
+            fi.PM = Path(archive_root).resolve() / "data/pm_5min"
+            fi.RAW = fi.PM / "raw"
+            fi.MARKETS = fi.PM / "markets.jsonl"
+            fi.GAPS = fi.PM / "collector_gaps.jsonl"
+            fi.DAYS = fi._discover_days()
+        paths, tokens = hm.fi._archive_paths(), hm.fi.token_map()
+        pop = [sl for sl in json.loads(SLUGS.read_text())
+               if sl in paths and sl in tokens]
+        rep["population"] = {
+            "n_declared": len(json.loads(SLUGS.read_text())),
+            "n_with_archive_and_token": len(pop),
+            "archive_days": len(getattr(fi, "DAYS", ()) or ())}
+        if not pop:
+            # SITE: measure#10
+            raise DiagRefused(
+                f"NONE of the §3 population's windows has both an archive "
+                f"and a token pair under {fi.RAW}: every row would drop at "
+                f"`no_archive` and the fit's own absorption bound would "
+                f"refuse. There is nothing to measure and this says so "
+                f"rather than reporting a fast pass over nothing")
+        t0 = time.time()
+        fr = fragment_slice(out / "fragment_slice.json",
+                            n_windows=n_windows, only_slugs=pop)
+        fr["build_wall_s"] = round(time.time() - t0, 2)
+        tp = tape_slice(out / "tape_slice.json", slugs=fr["slugs"])
+        rep["fragment_slice"], rep["tape_slice"] = fr, tp
+
+        # ---- STAGE A: the fit's own tape_index, on the sliced tape ----
+        real = PA.TAPE_PATH
+        idx: dict = {}
+        stage_a = {}
+        try:
+            PA.TAPE_PATH = out / "tape_slice.json"
+            for sp in got:
+                t0 = time.time()
+                part = PA.tape_index(sp)
+                stage_a[sp] = {"wall_s": round(time.time() - t0, 2),
+                               "rows_indexed": len(part),
+                               "peak_rss_mb": _peak_rss_mb()}
+                idx.update(part)
+        finally:
+            PA.TAPE_PATH = real
+        rep["stage_a_tape_index"] = stage_a
+        rep["stage_a_rows_indexed_total"] = len(idx)
+
+        # ---- STAGE B: the fit's own feature pass, on the slice --------
+        t0 = time.time()
+        blocks = PA._feature_pass(out / "fragment_slice.json",
+                                  "phase4_diag_slice", TAPE=idx)
+        b_s = time.time() - t0
+        rep["stage_b_feature_pass"] = {
+            "wall_s": round(b_s, 2),
+            "kept_by_coin": {c: len(b["kept"]) for c, b in blocks.items()},
+            "drops_by_coin": {c: dict(b["drops"]) for c, b in blocks.items()},
+            "peak_rss_mb": _peak_rss_mb()}
+    finally:
+        fi.PM, fi.RAW, fi.MARKETS, fi.GAPS, fi.DAYS = _saved
+
+    # ---- the extrapolations, each stamped ------------------------------
+    pre = assembly_preconditions()
+    dens_t = row_density(PA.TAPE_PATH)
+    dens_f = row_density(PA.FRAGMENT)
+    rep["row_density"] = {"tape": dens_t, "fragment": dens_f}
+    est_tape_rows = dens_t["estimated_total_rows"]
+    est_frag_rows = dens_f["estimated_total_rows"]
+    a_total = sum(v["wall_s"] for v in stage_a.values())
+    rep["extrapolation"] = {
+        # The FLOOR: pure streaming, once per split, nothing else.
+        "stage_a_stream_only_floor": extrapolate(
+            probe_s * len(got), slice_unit=n,
+            full_unit=est_tape_rows, unit="tape rows streamed per split"),
+        # The ESTIMATE OF RECORD: the real function, scaled by rows. It
+        # already contains the per-split loop, so it is not multiplied
+        # again.
+        "stage_a_index_build": extrapolate(
+            a_total, slice_unit=tp["n_rows"], full_unit=est_tape_rows,
+            unit="tape rows in the sliced tape"),
+        "stage_b_feature_pass": extrapolate(
+            b_s, slice_unit=fr["n_rows"], full_unit=est_frag_rows,
+            unit="fragment rows"),
+        "stage_b_peak_rss_delta_mb": extrapolate(
+            rep["stage_b_feature_pass"]["peak_rss_mb"] - rss0,
+            slice_unit=fr["n_rows"], full_unit=est_frag_rows,
+            unit="fragment rows"),
+        "estimated_full_tape_rows": est_tape_rows,
+        "estimated_full_fragment_rows": est_frag_rows,
+        "n_splits_streamed": len(got),
+        "note": (
+            "`tape_index` streams the WHOLE tape ONCE PER SPLIT, so the "
+            f"floor above is multiplied by {len(got)} for "
+            f"{split_set_name(got)}. The index-build estimate scales the "
+            f"measured slice run, which already performed that loop"),
+        "memory_caveat": (
+            "the RSS estimate is scaled linearly and `_feature_pass` "
+            "materialises the WHOLE fragment "
+            f"({pre['fragment_bytes']:,} B) with json.loads(read_text()), "
+            "so the true requirement does not depend on a row slice at "
+            "all. Both readings say the same thing: this does not fit in "
+            "8 GB. The cap for the ruled execution is not a seat's to set"),
+    }
+    rep["peak_rss_mb_process"] = _peak_rss_mb()
+    rep["maxrss_kb_raw"] = resource.getrusage(
+        resource.RUSAGE_SELF).ru_maxrss
+    rep["as_of"] = None            # stamped by the caller from `date -u`
+    (out / "assembly_cost_report.json").write_text(
+        json.dumps(rep, indent=1, sort_keys=True, default=str))
+    return rep
+
+
+def _peak_rss_mb() -> float:
+    """Peak RSS of THIS process so far, in MB -- a high-water mark, so a
+    later stage's figure includes every earlier stage."""
+    import resource
+    return round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024.0,
+                 1)
+
+
+def assemble_gen_scores(refs: dict, *, splits, coins=COINS,
+                        heads=("incumbent_linear_d",
+                               "q1_arrival_composed_lgbm")) -> dict:
+    """(coin, head) -> (per-generation scores, exclusion statuses).
+
+    The join is to the §3 POPULATION: the feature pass covers the whole
+    fragment, and only the generations the reference carries are scored.
+    A generation whose rows the pass dropped is counted under
+    NO_ROWS_KEPT and is absent from the scores -- an exclusion with a
+    status, never a generation scored from nothing."""
+    fb = feature_blocks(splits=splits)
+    out = {"assembly": {k: v for k, v in fb.items()
+                        if k not in ("blocks", "split_of")},
+           "by_arm": {}, "split_by_gen": {}, "split_counts": {}}
+    out["assembly"]["ruling"] = dict(SPLIT_RULING)
+    for coin in coins:
+        if coin not in fb["blocks"]:
+            # SITE: assembly#8
+            raise DiagRefused(
+                f"the feature pass produced no block for {coin}: every row "
+                f"was excluded, which reads as a null result and is an "
+                f"absent one")
+        for head in heads:
+            sc, st, sb = generation_scores(fb["blocks"][coin], refs[coin],
+                                           coin=coin, head=head,
+                                           split_of=fb["split_of"])
+            out["by_arm"][(coin, head)] = (sc, st)
+            # The labelling is a property of the ROWS, so it must not
+            # depend on which head scored them. If two heads disagree the
+            # map is not about the population and the run says so.
+            prev = out["split_by_gen"].get(coin)
+            if prev is not None and prev != sb:
+                # SITE: assembly#9
+                raise DiagRefused(
+                    f"the split label of {len(set(prev.items()) ^ set(sb.items()))} "
+                    f"generation(s) of {coin} depends on WHICH HEAD scored "
+                    f"them: the label is a property of the tape index, so a "
+                    f"head-dependent one means the two passes saw different "
+                    f"rows and no cell could honestly carry either label")
+            out["split_by_gen"][coin] = sb
+        out["split_counts"][coin] = split_tally(
+            out["split_by_gen"][coin].keys(), out["split_by_gen"][coin])
+    return out
+
+
+def split_tally(keys, split_by_gen: dict) -> dict:
+    """Count `keys` by the split their rows were indexed under.
+
+    The whole content of R-496 (E)'s "labelled per cell": a cell says how
+    many of the generations IT ACTED ON came from each of the fit's
+    splits. `UNLABELLED` and `MIXED` are named buckets, never folded into
+    a split (rule 4: exclusions are statuses)."""
+    out: dict = {}
+    for k in keys:
+        lab = split_by_gen.get(tuple(k), "UNLABELLED")
+        out[lab] = out.get(lab, 0) + 1
+    return out
+
+
 def generation_scores(blocks: dict, reference: dict, *, coin: str,
-                      head: str) -> tuple:
-    """(slug, side, t0) -> one score per GENERATION, and the exclusions.
+                      head: str, split_of: dict | None = None) -> tuple:
+    """(slug, side, t0) -> one score per GENERATION, the exclusions, and
+    THE SPLIT EACH GENERATION'S ROWS CAME FROM.
 
     TWO THINGS THIS FUNCTION EXISTS TO GET RIGHT, both of which a direct
     row-level stream gets wrong:
@@ -3324,7 +4541,15 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
        reasons -- `pm`, `fine`, `state_join_failed`, the design exclusions
        -- so misses are expected, and a generation that keeps only some of
        its rows carries a max over FEWER rows than the fit's, which is a
-       different number and is counted as `PARTIAL_ROWS`."""
+       different number and is counted as `PARTIAL_ROWS`.
+
+    3. **Every generation carries the SPLIT its rows were indexed under**
+       (R-496 (E): "splits labelled per cell"). `split_of` maps the tape
+       key to the split it was indexed from; a generation whose rows came
+       from more than one split is `MIXED` and says so rather than being
+       assigned the first split seen, and one whose key is not in the map
+       is `UNLABELLED` -- which under MECHANICS_BOTH_SPLITS should be
+       empty and is COUNTED rather than assumed empty."""
     norms = HS.load_lgbm_normalisers(coin)
     inc = HS.load_incumbent(coin)
     booster, wl = HS.load_lgbm(coin)
@@ -3338,14 +4563,20 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
             f"lists and zipping them at unequal length pairs one row's "
             f"features with another row's identity")
     by_gen: dict = {}
+    spl_gen: dict = {}
     for i, r in enumerate(kept):
         v = HS.compose_head_inputs(
             pm[i], fn[i], st[i], norms=norms,
             incumbent_width=inc["_n_features"], lgbm_width=wl)[head]
         sc = (HS.score_incumbent(inc, v) if head == "incumbent_linear_d"
               else HS.score_lgbm(booster, wl, v))
-        by_gen.setdefault((r["slug"], r["side"], r["gen"]), []).append(sc)
+        gk = (r["slug"], r["side"], r["gen"])
+        by_gen.setdefault(gk, []).append(sc)
+        spl_gen.setdefault(gk, set()).add(
+            (split_of or {}).get(
+                (r["slug"], r["side"], r["gen"], r["t_start"])))
     scores: dict = {}
+    split_by_gen: dict = {}
     statuses = {"SCORED": 0, "NO_ROWS_KEPT": 0, "PARTIAL_ROWS": 0}
     for slug, sides in reference.items():
         for side in HSP.SIDES:
@@ -3355,10 +4586,14 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                     statuses["NO_ROWS_KEPT"] += 1
                     continue
                 scores[(slug, side, float(g["t0"]))] = max(got)
+                sp = spl_gen[(slug, side, g["gen"])]
+                split_by_gen[(slug, side, g["gen"])] = (
+                    "UNLABELLED" if sp == {None}
+                    else "MIXED" if len(sp) > 1 else sorted(sp)[0])
                 statuses["SCORED"] += 1
     statuses["PARTIAL_ROWS"] = sum(
         1 for k, v in by_gen.items() if len(v) < _rows_expected(k, reference))
-    return scores, statuses
+    return scores, statuses, split_by_gen
 
 
 def _rows_expected(key, reference: dict) -> int:
@@ -3390,13 +4625,18 @@ def _head_scorer(head: str, coin: str, gen_scores: dict | None = None):
     `freeze_thresholds`), and every precondition of the expensive pass
     (`assembly_preconditions`).
 
-    WHAT IS NOT: the expensive pass itself --
+    WHAT IS WIRED NOW (round 44): the expensive pass itself --
     `PA.tape_index(split)` over the 3.2 GB tape and
-    `PA._feature_pass(PA.FRAGMENT, ..., TAPE)` over its 1.14M rows. It has
-    never been executed for this diagnostic, its cost has never been
-    measured here, and the §3 population spans BOTH of the fit's splits
-    (train and score), which is a declaration the USER has not been asked
-    for. So it refuses BEFORE the feed rather than proceed (DE34-C1)."""
+    `PA._feature_pass(PA.FRAGMENT, 'phase4_diag', TAPE=...)` over its
+    1.14M rows, behind `feature_blocks` / `assemble_gen_scores`, on the
+    split set R-496 (E) ruled.
+
+    WHAT THIS FUNCTION STILL REFUSES, and always must: being called with
+    NO assembled scores. Round 33's stub fed the booster one column
+    against 106 and returned a constant 0.5 for the incumbent under a
+    docstring that said "never a stub". There is no path here that
+    invents a score: either the assembly produced one for the generation
+    in front of it, or this refuses by name (DE34-C1)."""
     if gen_scores is not None:
         def _score(row):
             k = (row["slug"], row["side"], float(row["t"]))
@@ -3412,31 +4652,57 @@ def _head_scorer(head: str, coin: str, gen_scores: dict | None = None):
         return _score
     # SITE: scorer#1
     raise DiagRefused(
-        f"the feature assembly's EXPENSIVE HALF is not wired, so "
-        f"{head}/{coin} cannot be scored. What is missing is exactly one "
-        f"step: `PA.tape_index(split)` over the fit's own tape and "
-        f"`PA._feature_pass(PA.FRAGMENT, 'phase4_diag', TAPE=...)`. "
-        f"Composition, per-generation statistic and preconditions ARE "
-        f"wired and falsified; the pass has never been executed for this "
-        f"diagnostic, and the §3 population spans BOTH fit splits, which "
-        f"is a declaration nobody has made. Refused HERE, before any feed "
-        f"is built (DE34-C1)")
+        f"no assembled scores were supplied for {head}/{coin}, so there "
+        f"is nothing to score with. The assembly IS wired "
+        f"(`feature_blocks` -> `PA.tape_index` + `PA._feature_pass`, "
+        f"round 44) and `run()` calls it once and passes its output here; "
+        f"a call that reaches this line reached it without that output, "
+        f"and the alternative to refusing is the round-33 stub -- a "
+        f"constant 0.5 for the incumbent, and the row's timestamp fed to "
+        f"the booster as its one feature. Refused HERE rather than "
+        f"scored from nothing (DE34-C1)")
 
 
-def preflight() -> None:
-    """Everything knowable BEFORE the ~29-minute feed.
+def preflight(*, splits=None) -> None:
+    """Everything knowable BEFORE the ~29-minute feed and the assembly.
 
     The run's first cell is the worst place to learn that the scorer is a
     stub or a thresholds key is wrong: each is checkable in milliseconds,
     so each is checked here and the feed is never paid for a run that
-    cannot finish."""
+    cannot finish.
+
+    WHAT IT REFUSES ON TODAY, and this is the honest state of the
+    diagnostic: `verify_called_code()`, because wiring the expensive half
+    reached `_stream_tape_rows` and that function differs from the fit
+    bytes. Round 44 did NOT declare it away -- admitting a fit-vs-tip
+    drift is an admissibility call and admissibility is the USER's (rule
+    14). The facts the ruling needs are computed by `code_drift_report()`
+    and are printed by `--pin-report`, which writes nothing.
+
+    `splits`, when given, is validated here so a run under an undeclared
+    or unknown split set dies in milliseconds rather than after the feed.
+    It is NOT defaulted: `run()` requires it."""
+    if splits is not None:
+        validate_splits(splits)
     for coin in COINS:
         for head in ("incumbent_linear_d", "q1_arrival_composed_lgbm"):
             HS.thresholds(coin, head)
     HS.verify_fit_code()
     verify_called_code()
     assembly_preconditions()
-    _head_scorer("q1_arrival_composed_lgbm", COINS[0])
+
+
+def _splits_from_cli(arg: str | None):
+    """The `--splits` string as a split set -- and SILENCE STAYS SILENCE.
+
+    `None` is passed straight through to `validate_splits`, which refuses
+    by name. Translating an absent flag into `RULED_SPLIT_SET` here is
+    exactly the move rule 14 forbids: the ruling would then be something
+    the code supplies rather than something an operator states."""
+    if arg is None:
+        return None
+    return DECLARED_SPLIT_SETS.get(arg) or tuple(
+        x.strip() for x in arg.split(",") if x.strip())
 
 
 def main() -> int:
@@ -3445,14 +4711,47 @@ def main() -> int:
     ap.add_argument("--run", action="store_true",
                     help="execute the declared diagnostic into OUTDIR")
     ap.add_argument("--outdir", default=None)
+    ap.add_argument("--splits", default=None,
+                    help=f"the DECLARED split set -- one of "
+                         f"{sorted(DECLARED_SPLIT_SETS)}, or a "
+                         f"comma-separated subset of {list(TAPE_SPLITS)}. "
+                         f"NO DEFAULT: the USER's ruling (R-496 (E)) is "
+                         f"{RULED_SPLIT_SET} and it is named here, never "
+                         f"assumed")
+    ap.add_argument("--pin-report", action="store_true",
+                    help="print the code pin and the undeclared drift, "
+                         "computed; writes nothing")
+    ap.add_argument("--measure-slice", action="store_true",
+                    help="measure the assembly on a bounded slice into "
+                         "--outdir (never data/, never the run's OUTDIR)")
+    ap.add_argument("--n-windows", type=int, default=2)
+    ap.add_argument("--archive-root", default=None,
+                    help="point the window archives at this repo root -- "
+                         "admissible ONLY when it is the tree the tape "
+                         "and fragment already come from (see input_roots)")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.pin_report:
+        print(json.dumps(code_drift_report(), indent=1, sort_keys=True,
+                         default=str))
+        return 0
+    if a.measure_slice:
+        try:
+            rep = measure_assembly_slice(
+                a.outdir, splits=_splits_from_cli(a.splits),
+                n_windows=a.n_windows, archive_root=a.archive_root)
+        except DiagRefused as exc:
+            print(f"[de_phase4_diag_runner] REFUSED: {exc}", file=sys.stderr)
+            return 2
+        print(json.dumps(rep, indent=1, sort_keys=True, default=str))
+        return 0
     if a.run:
         # DE33-C8: a refusal under the CLI exits BY NAME, rc non-zero, no
         # traceback -- round 33 let every one of them out unhandled.
         try:
-            rec = run(Path(a.outdir) if a.outdir else None)
+            rec = run(Path(a.outdir) if a.outdir else None,
+                      splits=_splits_from_cli(a.splits))
         except (DiagRefused, HS.HeadRefused, SS.ScoreStreamRefused,
                 MRC.ControlRefused, RHO.RhoRefused,
                 HSP.ReferenceIntegrityError) as exc:
