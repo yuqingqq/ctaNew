@@ -602,10 +602,17 @@ def reduce_window(wrows, scores, latency_ms: int) -> list:
     out = []
     for r, sc in zip(wrows, scores):
         lat = r.get("latency") or {}
+        # ROUND 25: `scores` is now a (candidate, incumbent) PAIR per row. A
+        # bare float is still accepted, because a caller that has only one arm
+        # should get a feed missing the second column rather than a crash --
+        # and `increment()` will then refuse for the RIGHT reason, by name,
+        # instead of silently comparing an arm against itself.
+        _c, _i = sc if isinstance(sc, tuple) else (sc, None)
         out.append({
             "slug": r.get("slug"), "side": r["side"], "gen": r["gen"],
             "t0": r["t0"], "t_start": r["t_start"],
-            "score": float(sc),
+            "score": float(_c),
+            "score_incumbent": (None if _i is None else float(_i)),
             "any_fill_ahead": bool(r.get("any_fill_ahead")),
             "value_cents": (float(lat[L]["preventable_value_cents"])
                             if r.get("any_fill_ahead") and L in lat else 0.0),
@@ -1134,7 +1141,7 @@ def cluster_disclosure(rows) -> dict:
 # every control fires on the bad case AND ADMITS the good one -- a named SKIP
 # is not an admission.
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 99
+EXPECTED_CHECKS = 101
 
 _L = 50
 
@@ -1555,10 +1562,23 @@ def selftest() -> int:
     # ---- THE PRODUCER CONTRACT -----------------------------------------
     feed = reduce_window(rows, cand, _L)
     ok(len(feed) == 6 and set(feed[0]) == {"slug", "side", "gen", "t0",
-                                           "t_start", "score", "value_cents",
+                                           "t_start", "score",
+                                           "score_incumbent", "value_cents",
                                            "any_fill_ahead"},
        "POSITIVE CONTROL: reduce_window emits one record per row with exactly "
-       "the eight fields the estimand needs, `any_fill_ahead` among them")
+       "the NINE fields the estimand needs -- `any_fill_ahead` among them and, "
+       "from round 25, `score_incumbent`, because an increment needs TWO arms")
+    ok(all(r["score_incumbent"] is None for r in feed),
+       "R25: a ONE-ARM caller still gets a well-formed feed, with "
+       "`score_incumbent` explicitly None rather than absent -- so a "
+       "downstream reader refuses on a stated null instead of a missing key")
+    _pair = reduce_window(rows, [(c, c * 0.5) for c in cand], _L)
+    ok([r["score"] for r in _pair] == [r["score"] for r in feed]
+       and all(abs(r["score_incumbent"] - r["score"] * 0.5) < 1e-12
+               for r in _pair),
+       "R25 POSITIVE CONTROL: given (candidate, incumbent) PAIRS the "
+       "candidate column is UNCHANGED and the incumbent column carries the "
+       "second arm -- the two are driven apart, not assumed distinct")
     ok(feed[1]["value_cents"] == 90.0 and feed[2]["value_cents"] == -4.0,
        "POSITIVE CONTROL: the latency-aware value is RESOLVED at the row, "
        "including a negative one, so no pointer into a dropped structure")

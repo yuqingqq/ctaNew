@@ -127,7 +127,66 @@ FROZEN_COMMIT = "1b53929"
 #: assert the driver emits it without importing the metric module.
 FEED_PROTOCOL = "BE_FORWARD_METRIC_FEED_V1"
 FEED_FIELDS = ("slug", "side", "gen", "t0", "t_start", "score",
-               "any_fill_ahead", "value_cents")
+               "score_incumbent", "any_fill_ahead", "value_cents")
+
+#: ROUND 25: THE SECOND ARM. The declared estimand is net cents AGAINST THE
+#: INCUMBENT; `increment()` takes TWO score vectors and the driver emitted
+#: ONE. That is the round-13 gap in its last form -- capability built, wiring
+#: absent -- and it is closed by scoring both arms IN THE SAME REPLAY PASS.
+#:
+#: CHOSEN ON MEASURED COST, not preference. The incumbent consumes the SAME
+#: 60-feature vector the candidate does (the candidate's own
+#: `feature_vector_contract` says "54 PM features, then 6 reduced-fine
+#: features", and both fits carry len(norm_mu) == 60, len(weights) == 61),
+#: and `expected_cancel_value` is the identical p x v construction
+#: `phase2_increment_null` uses for INCUMBENT_REWEIGHTED_ONLY. So the second
+#: arm costs ONE extra 61-dim dot product pair per row and ONE float per feed
+#: row (~+20 MB). Carrying the raw blocks instead would have added
+#: 880,766 x 60 floats -- about 1.0 GB of JSON, a 7x blow-up of a sealed
+#: artifact, and it would put model INPUTS in it for no gain.
+#:
+#: BOUND TO THE DECLARED IDENTITY, never to whatever the path holds (BEM-R3):
+#: the shas are the ones `be_read_declaration_v1.json` froze before the read.
+INCUMBENT_FITS = {
+    "btc": {"path": "data/pm_5min/derived/phase2_fits/linear_d_btc.json",
+            "sha256": "18701008c2bd18c68dc8c8ba38f49ca34ac83a0d"
+                      "9d7587f139f8a03848a6980c"},
+    "eth": {"path": "data/pm_5min/derived/phase2_fits/linear_d_eth.json",
+            "sha256": "fb371f6352214a9245523a5724e7f645b01c7835"
+                      "1f728bb82cba27cc2d704797"},
+}
+
+
+def load_incumbent_fits() -> dict:
+    """The per-coin incumbent, verified against the sha the declaration froze.
+
+    A mismatch REFUSES: the estimand is defined against a NAMED incumbent, and
+    scoring against a different one would answer a different question while
+    looking identical in every count."""
+    out = {}
+    for coin, d in sorted(INCUMBENT_FITS.items()):
+        f = REPO / d["path"]
+        if not f.exists():
+            raise ForwardDayRefused(
+                f"REFUSED: no incumbent fit for {coin} at {f}. The declared "
+                f"estimand is an increment OVER the incumbent; without it "
+                f"there is no increment to compute.")
+        raw = f.read_bytes()
+        got = hashlib.sha256(raw).hexdigest()
+        if got != d["sha256"]:
+            raise ForwardDayRefused(
+                f"REFUSED: the {coin} incumbent at {f} hashes {got[:16]}, not "
+                f"the {d['sha256'][:16]} the read declaration froze. This is "
+                f"not the incumbent the estimand names.")
+        fit = json.loads(raw)
+        if len(fit.get("norm_mu") or ()) != 60:
+            raise ForwardDayRefused(
+                f"REFUSED: the {coin} incumbent takes "
+                f"{len(fit.get('norm_mu') or ())} features, not the 60 the "
+                f"candidate's feature_vector_contract emits. The two arms "
+                f"must consume the SAME vector or they are not comparable.")
+        out[coin] = fit
+    return out
 
 #: The latency the feed resolves its value at. Taken from the FROZEN
 #: candidate's own declaration, never chosen here.
@@ -1405,7 +1464,8 @@ def action_count(rows: list) -> int:
     return len({(r.get("slug"), r.get("side"), r.get("gen")) for r in rows})
 
 
-def build_and_score(selected: list, frozen: dict, feed=None) -> dict:
+def build_and_score(selected: list, frozen: dict, feed=None,
+                    inc_fits: dict = None) -> dict:
     """ONE STREAMING PASS: replay a window, label it, score it, DROP it.
 
     MEASURED, and this is the whole reason the shape changed: holding every
@@ -1419,6 +1479,12 @@ def build_and_score(selected: list, frozen: dict, feed=None) -> dict:
     builder — the loop is streamed, not reimplemented."""
     import harmful_exposure_rows as HER
     import harmful_hazard_model as hm
+    # ROUND 25: the second arm, loaded ONCE and verified against the sha the
+    # read declaration froze before the read. INJECTABLE exactly as `frozen`
+    # is, because the suite stubs the scorer with a fit shape of its own --
+    # and a production default that a test cannot replace is a seam the
+    # suite has to route around instead of exercising.
+    inc_fits = load_incumbent_fits() if inc_fits is None else inc_fits
     qr = HER.qr
     spec = qr._qr_spec(qr.QR_SKEW, latency_ms=0, cancel=False)
     paths = hm.fi._archive_paths()
@@ -1472,14 +1538,20 @@ def build_and_score(selected: list, frozen: dict, feed=None) -> dict:
                 if fp is None or ff is None:
                     no_features += 1
                     continue
-                _s = FS.expected_cancel_value(fit, fp + ff)
+                _vec = fp + ff
+                _s = FS.expected_cancel_value(fit, _vec)
+                # THE SECOND ARM, on the SAME vector, in the SAME pass. The
+                # candidate's score above is untouched by this line -- it is
+                # computed first and from its own fit.
+                _si = (FS.expected_cancel_value(inc_fits[coin], _vec)
+                       if coin in inc_fits else None)
                 scores[coin].append((t0, _s))
                 if feed is not None:
                     # `t0` is added to the row so the feed carries an ABSOLUTE
                     # time; `t_start` alone is relative to the window and the
                     # estimand's hour key needs both (harmful_action_eval:35).
                     _feed_rows.append(dict(r, slug=slug, t0=t0))
-                    _feed_scores.append(_s)
+                    _feed_scores.append((_s, _si))
             if feed is not None and _feed_rows:
                 feed.write_window(_feed_rows, _feed_scores)
             del _feed_rows, _feed_scores
@@ -2016,6 +2088,12 @@ def run_forward_day(day: str, outdir: Path) -> int:
 # pass the very mutant this exists to catch.
 
 _R1_W = [1.0, 2.0, 0.5, 3.0, 0.25]          # 3 window feats + 2 fine feats
+#: ROUND 25: the fixture's INCUMBENT, in the same stub shape as the
+#: candidate. Deliberately DIFFERENT weights: an incumbent stub equal to the
+#: candidate's would make every increment identically zero, and a cell that
+#: is zero by construction cannot tell a working estimand from a broken one.
+_R1_INC = {"btc": {"w": [x * 0.5 for x in _R1_W]},
+           "eth": {"w": [x * 0.25 for x in _R1_W]}}
 _R1_FROZEN = {"fits": {"btc": {"w": _R1_W},
                        "eth": {"w": [x * 1.5 for x in _R1_W]}}}
 
@@ -3253,7 +3331,7 @@ def selftest() -> int:
     # ---- BE34-R1: the streaming pass EQUALS the reference, per score -----
     _sel, _rows = _r1_windows()
     with _r1_installed(_rows):
-        _bs = build_and_score(_sel, _R1_FROZEN)
+        _bs = build_and_score(_sel, _R1_FROZEN, inc_fits=_R1_INC)
         _sr = score_rows(_rows)
     ok(_bs["scores"] == _sr,
        f"BE34-R1 ONE fixture, TWO consumers: `build_and_score`'s streamed "
@@ -3282,7 +3360,7 @@ def selftest() -> int:
     # ---- BE34-R1: a reconciliation failure fails the DAY, by name --------
     _selb, _rowsb = _r1_windows()
     with _r1_installed(_rowsb, bad_window="eth-updown-5m-1788000300"):
-        _bad = build_and_score(_selb, _R1_FROZEN)
+        _bad = build_and_score(_selb, _R1_FROZEN, inc_fits=_R1_INC)
     _eth_t0 = {t for t, _ in _bad["scores"].get("eth", ())}
     ok(_bad["reconciliation_failures"] == 1 and _bad["n_windows"] == 6
        and 1788000300 not in _eth_t0 and 1788001200 in _eth_t0
