@@ -4718,3 +4718,48 @@ Moved in the MEM round-66 true-up of R-488, R-489 and the landings filing. Join 
   DATA_ROOT split. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
 ```
+
+## Batch 73 — archived 2026-09-03T01:04Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-67 true-up of R-490 and the DE-41 filing. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T23:41Z (MEM ROUND 64 -- A COST ESTIMATE THAT INCLUDES "AND THEN WE
+  ASK YOU AGAIN"). R-485 and the reviewer's DE-40 filing swept; nothing run;
+  committed blobs only; no plan, review or request file touched. THE ITEM WORTH
+  THE ROUND IS THE REVIEWER PRICING ASK (5) PER ANSWER, NOT PER TASK: answering
+  MECHANICS costs ONE FIELD, ONE REFUSAL, ONE FALSIFIER; answering the
+  score-split costs A ROUND -- AND A RE-DECLARATION THAT TRAVELS BACK TO THE
+  USER. So ONE BRANCH OF THIS DECISION ENDS IN ANOTHER QUESTION FOR THE SAME
+  PERSON and the other does not. THAT IS A DIFFERENT KIND OF ESTIMATE FROM THE
+  ONES THIS FILE HAS CARRIED ALL EVENING, AND BETTER: the compute figures priced
+  THE WORK, this prices EACH ANSWER INCLUDING THE ANSWER'S OWN FOLLOW-ON, and A
+  DECISION-MAKER TOLD ONLY THE TOTAL COST CANNOT SEE THAT ONE OPTION BUYS A
+  SECOND INTERRUPTION OF THEIR OWN TIME. It is the reviewer's ESTIMATE and
+  NOTHING IS DECIDED (rule 14) -- written into the bundle block AS A QUOTED
+  ESTIMATE rather than as a recommendation, because A COST ATTACHED TO ONE BRANCH
+  READS AS ADVICE UNLESS IT IS LABELLED. THE CLOSURES ARE CLEAN AND ONE IS
+  MEASURED RATHER THAN ASSERTED: ruling (i) is YES; (ii)+(iii) are CONFIRMED
+  CLOSED on a 21-FIELD MEASUREMENT IN WHICH EXACTLY ONE FIELD MOVES -- THE
+  DISCRIMINATING COUNT, NOT THE REASSURING ONE, since twenty fields staying put is
+  what makes the one that moves meaningful; DE39-R1 is CONFIRMED CLOSED and
+  DE39-R2 is CLOSED IN FORM, a phrase kept EXACTLY AS FILED because "closed in
+  form" and "closed" are different claims and the difference is the whole reason
+  to write it down. THE THREE NEW FINDINGS ARE ALL SMALL AND ALL SPECIES THIS
+  PROGRAMME KEEPS MEETING: DE40-R1, _by_ca has NO FALSIFIER -- a check with
+  nothing that makes it fail; DE40-R2, null_status derived FROM ABSENCE RATHER
+  THAN FROM REQUEST -- a status inferred from a missing thing rather than from
+  what was asked for; DE40-R3, a SIX-FIELD ENUMERATION WHERE THE BLOCK IS WIDER
+  -- a list that will be right until the block grows. Three LOWs, three shapes
+  this file already has names for, and NONE OF THEM HOLDS THE BASE: 35452c0 is
+  round 41's base, three-step order, and DE round 41 is IN FLIGHT. NOTHING ELSE
+  MOVED: the package stays FORWARDED at 35452c0 with DRAFT cb693000880c3d94;
+  USER-PENDING REMAINS FOUR; the PHASE-4 RUN HAS NO DATE; preflight() still
+  refuses at the scorer; STEP 5 STAYS USER-GATED. MY ROUND 63 VERIFIED. SEATS:
+  DE round 41 in flight; the reviewer on RECORDED STANDBY; BE and DA standby.
+  TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after,
+  R-409 accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
+  3b7e10a), BE round 11 = the durable landing, CO-8, --require-no-skips,
+  DATA_ROOT split. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+```

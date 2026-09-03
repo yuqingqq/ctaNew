@@ -1,12 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T00:54Z — **`c511750` RELEASED, and NOTHING MUST MOVE BEFORE
-FRI 2026-09-04 00:06:00 UTC.** The unit path was driven **end to end,
-NON-production** — I verified its three shas at the release. Two findings sit
-**off** that path, and **DA18-R1 has a cause worth knowing: the fixture commit is
-EMPTY at a ROW-ONLY tip** — which is precisely what a state-file commit like mine
-produces. **R-488 corrected the ageing premise at the host**: `sar25` dies at
-**00:07Z on 09-04**, not by drift. **USER items: FIVE, unchanged.**
+Updated: 2026-09-03T01:04Z — **DE round 41 RELEASED (`fcdbb15`)**: DE40-R1/R2/R3
+**CLOSED at the tip**, each driven with **falsifiers that fire**, and the counts
+reproduced by **both** reviewer and coordinator **including the 92 DE could not
+measure**. Two LOW findings, **both in FAILURE PATHS of the selftest** — one of
+them the mutant of the very refusal that closed DE40-R2. **A THIRD register-commit
+provenance wrinkle in three rounds** — I have named the pattern once rather than
+three times. **Nothing moves on the unit path before Fri 2026-09-04 00:06:00
+UTC. USER items: FIVE.**
 
 ## READ FIRST — current project handoff
 
@@ -864,7 +865,8 @@ launchers at **235/19**.
 | **DE round 39 review** | **RELEASED** (`650569c`, 194 lines, 22:55:56Z) — **EVERY DE38 closure CONFIRMED, each driven**; the **six literals verified at BOTH sides of `851edaf`** by the reviewer's own `_fn_asts`; counts reproduced. **DE39-C1 CONFIRMED (LOW) and RULED in three parts**; two new findings **DE39-R1 (LOW-MED)** and **DE39-R2 (LOW)** |
 | **DE round 40** | **EXECUTED** at `35452c0` (Q-DE-58) — counts **31/119/26/21/26/21/184/92**; rulings (i)(ii)(iii), **DE39-R1** and **DE39-R2** all **driven**, with the **in-suite reordering invariance**. Verified here: runner `3f4bf21da2dfa188` (**3,329** lines, `EXPECTED_CHECKS = 119`), DRAFT `cb693000880c3d94` (**307** lines, **+17 −0** vs `cd93663`) |
 | **DE round 40 review** | **RELEASED** (`c3f8743`, 166 lines, 23:38:26Z) — **ruling (i) YES**; (ii)+(iii) **CONFIRMED CLOSED** on a **21-field measurement (one moves)**; **DE39-R1 CONFIRMED CLOSED**, **DE39-R2 closed in form**; three findings **DE40-R1 (LOW-MED)**, **DE40-R2 (LOW)**, **DE40-R3 (LOW)**. `35452c0` is round 41's base |
-| **DE round 41** | **VERIFIED** at `8479b67` (Q-DE-59) — **124 checks**; **DE40-R1/R2/R3 closed and driven**, four mutants red by name. Its review is **QUEUED behind the landings round**. **Step 5 stays USER-GATED** |
+| **DE round 41** | **VERIFIED** at `8479b67` (Q-DE-59) — **124 checks**; **DE40-R1/R2/R3 closed and driven**. Its **review is RELEASED** (`fcdbb15`, 143 lines): all three **CLOSED at the tip**, each driven with **falsifiers that fire**, counts reproduced by **both** reviewer and coordinator **including the 92 DE could not measure**. Two LOW findings **DE41-R1/R2**, both in **failure paths of the selftest** |
+| **DE round 42** | **DISPATCHED** — **DE41-R2 then DE41-R1**, base `8479b67`, **v2 DRAFT untouched** (row Q-DE-60). **Step 5 stays USER-GATED** |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -970,10 +972,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on DE round 41** (`REQUEST_DE_ROUND_41_2026-09-03.md`).
-**Released so far** include BE rounds 9+10 (`a8e88de`), the **BE11+DA18
-landings** (`95a0e0e`), and DE rounds 37 (`3f1d310`), 38 (`0a5a6a7`), 39
-(`650569c`) and 40 (`c3f8743`). **Released so far**
+**The reviewer is on RECORDED STANDBY until DE 42 or BE 12 lands** — **DA 20 is
+HELD and reviewable BY SHA when READY**. **Released so far** include BE rounds
+9+10 (`a8e88de`), the **BE11+DA18 landings** (`95a0e0e`), and DE rounds 37
+(`3f1d310`), 38 (`0a5a6a7`), 39 (`650569c`), 40 (`c3f8743`) and 41 (`fcdbb15`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1788,6 +1790,78 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-03 ~01:04Z (MEM) — A COMMIT ID NAMES THE TREE, NOT THE CHANGE
+
+**R-490 and the DE-41 filing swept.** Nothing run; every figure taken at the blob.
+
+**The closures are clean, and the phrase that carries them is "falsifiers that
+FIRE."** DE40-R1/R2/R3 are **closed at the tip**, each driven — and the counts
+**31/124/26/21/26/21/184/92** were reproduced by **the reviewer AND the
+coordinator**, **including the 92 DE could not measure**. *A count a seat cannot
+measure, reproduced twice by seats that can, is a stronger fact than a count its
+author reports.*
+
+**The provenance wrinkle is the third of its kind in three rounds, so I am naming
+the pattern once instead of the instance three times.** The two-group fixture uses
+a **real second declaring commit `46ab455`** (BE, 08-28). Its **parent is
+`647baa7` — a coordinator REGISTER commit**. I checked the blobs:
+**`647baa7:harmful_exposure_rows.py` and `f30cf26`'s are the same bytes
+(`c0cfdac3788beef4`)**, while `46ab455`'s is `c2e40100ddf3f7a1`. **So the
+reviewer's table names the file's PREVIOUS version by a commit that did not
+author it — and the shas hold.** The table is right about bytes and misleading
+about change.
+
+**Put the three together and the shape is one thing, not three:**
+
+- **Round 65** — a DA artifact's `carrying_commit` was **my** state-file commit:
+  *it names the tree, not the author.*
+- **Round 66** — a **row-only tip** made DA's fixture commit **empty** and
+  reddened the mask selftest: *my bookkeeping commits are part of the condition.*
+- **Round 67** — a **register commit** is the parent whose blob labels a version:
+  *a commit id names the tree, not the change.*
+
+**In all three the artifact is correct about bytes and misleading about
+authorship.** The ledger's own commits are **substrate**: they move the tip every
+other seat measures against without moving any code. *That is not a defect to fix
+— it is a property to state, so that a later reader does not infer authorship from
+a commit label.*
+
+**DE41-R1 has a recursion worth keeping.** At `:815-820` the refusal that CLOSED
+DE40-R2 says, in its own words, that *"a null that was never requested and a null
+that collapsed would be reported alike, from the absence of the same field"* — and
+**the guard-only mutant of that very refusal is caught by a `KeyError` at `:820`
+rather than by the known-bad's name.** *The fix for "these two cases read alike"
+now has a mutant that dies namelessly.* Reproduced in a scratch worktree,
+**restored byte-identical, 34 worktrees, `derived/` 178** — the housekeeping is in
+the filing because the finding required a tree to be touched.
+
+**DE41-R2 is my own earlier observation, filed.** The DE40-R3 failure line counts
+the **filtered** block, so it prints *"ALL 21 of the 22 … identical"* **on a red
+line** — the R-487 (A) note, now a finding. **Both LOWs live in FAILURE paths**,
+which is exactly where this kind of defect survives longest: *nobody reads the
+message of a check that passes.*
+
+**Three class answers arrived with the filing and all three are negative in the
+useful way.** There is **no order-dependence outside `null_population`** — the
+whole cell's **32 fields** and the predicate row's **11** are identical across
+DESC/ASC, with **only `n_accepted_stream_differs` moving**, which is precisely the
+labelled statistic round 39 stopped resting on. The grouping key **`(changed_at,
+file)` cannot merge two commits**. And **`pred#2` has no drivable falsifier BY
+DESIGN — and says so in its own refusal.** *A control that cannot be driven and
+announces that fact is honest; the failure mode is the one that stays silent.*
+
+**And a cost estimate went DOWN for a good reason.** The DE-40 item-6 answer on
+ask (5) **holds line for line, one clause cheaper**: `NULL_COLLAPSED` is now
+derived from `n_draws_requested`, so **the shrunken-population case reports
+itself**. *An artifact that learns to report a case removes the clause that was
+there to describe it.* The ask-(5) mechanics stay **USER-gated**.
+
+**Sequencing.** DE round 42 dispatched — **DE41-R2 then DE41-R1**, base `8479b67`,
+**v2 DRAFT untouched**. The reviewer is on **recorded standby until DE 42 or BE 12
+lands**, with **DA 20 HELD and reviewable BY SHA when READY**. **DA 20 and BE 12
+in flight.** **Nothing moves on the unit path before Fri 2026-09-04 00:06:00
+UTC.** **USER items: FIVE, unchanged.**
 
 ### 2026-09-03 ~00:54Z (MEM) — MY OWN COMMITS ARE PART OF THE CONDITION
 
