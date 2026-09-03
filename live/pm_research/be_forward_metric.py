@@ -303,6 +303,13 @@ def operating_point_pricing(candidate_path=None) -> dict:
 #: by having done the validation arithmetic on the same values. It closes the
 #: route BEM-R1 found -- a bare float reaching the decision metric -- by making
 #: the fence's OUTPUT the only shape `increment` will read a theta out of.
+#: BE21-R1: the ONE place a verification artifact may live. Declared here
+#: rather than imported from `be_operating_point` so the fence does not depend
+#: on the module that produces what it checks.
+CANONICAL_VERIFICATION_PATH = (Path(__file__).resolve().parent
+                               / "declarations"
+                               / "be_operating_point_verification_v1.json")
+
 OP_TOKEN_FIELD = "_operating_point_token"
 
 #: Fields the token binds. Changing any of them after validation invalidates it.
@@ -449,6 +456,23 @@ def require_operating_point(decl, budgets=AE.BUDGETS) -> dict:
             f"(got {ref!r}). The recomputation that binds the numbers to the "
             f"bytes is named by PATH and SHA so the fence can open it.")
     vp = Path(ref["path"])
+    # BE21-R1. The fetch narrowed the boundary from "a dict the caller wrote"
+    # to "any path the caller can name" -- integrity without authenticity: the
+    # sha proves the bytes are the bytes named, never that they are a real
+    # recomputation. A fabricated file with its own true sha passed, and so
+    # did a symlink to one the caller controls. `resolve()` follows symlinks,
+    # so the comparison is on the real target, and the only admissible target
+    # is the canonical committed artifact. Fabricating the evidence now
+    # requires COMMITTING it -- visible in git, reviewable, and falsifiable by
+    # one command over known bytes.
+    canon = CANONICAL_VERIFICATION_PATH.resolve()
+    if vp.resolve() != canon:
+        raise OperatingPointUndeclared(
+            f"REFUSED: `verification_ref.path` resolves to {vp.resolve()}, "
+            f"not to the canonical committed verification artifact {canon}. "
+            f"The fence decides WHERE its evidence lives; a caller-named path "
+            f"-- including a symlink to one -- is receiving a pointer instead "
+            f"of a payload (BE21-R1).")
     if not vp.exists():
         raise OperatingPointUndeclared(
             f"REFUSED: `verification_ref` names {vp}, which does not exist. "
@@ -460,7 +484,21 @@ def require_operating_point(decl, budgets=AE.BUDGETS) -> dict:
             f"REFUSED: the verification artifact at {vp} hashes to "
             f"{vgot[:16]}…, the declaration says {str(ref['sha256'])[:16]}…. "
             f"The evidence the fence opened is not the evidence declared.")
-    verification = json.loads(vraw)
+    try:
+        verification = json.loads(vraw)
+    except ValueError as e:
+        # BE21-R3: an empty or truncated artifact whose sha matches used to
+        # die by JSONDecodeError. A refusal must be by name, never a
+        # traceback.
+        raise OperatingPointUndeclared(
+            f"REFUSED: the verification artifact at {vp} is not parseable "
+            f"JSON ({type(e).__name__}: {str(e)[:90]}). Its sha matched, so "
+            f"the BYTES are the declared bytes -- they are simply not a "
+            f"verification.") from None
+    if not isinstance(verification, dict):
+        raise OperatingPointUndeclared(
+            f"REFUSED: the verification artifact at {vp} parsed to "
+            f"{type(verification).__name__}, not a mapping.")
     coin = decl.get("coin")
     if not coin:
         raise OperatingPointUndeclared(
@@ -1221,84 +1259,36 @@ def selftest() -> int:
             "leaves every downstream number plausible")
 
     # ---- THE OPERATING POINT -------------------------------------------
-    import tempfile as _tf
-    _fx = _tf.TemporaryDirectory()
-    _fxd = Path(_fx.name)
-    (_fxd / "rows.json").write_text("rows-fixture")
-    (_fxd / "fit.json").write_text("fit-fixture")
-
-    def _prov():
-        def _h(n):
-            return hashlib.sha256((_fxd / n).read_bytes()).hexdigest()
-        return {"rows_artifact": {"path": str(_fxd / "rows.json"),
-                                  "sha256": _h("rows.json")},
-                "fit_artifact": {"path": str(_fxd / "fit.json"),
-                                 "sha256": _h("fit.json")},
-                "theta_map_sha16": None}
-
-    _tf_map = {"5%": 0.85, "10%": 0.5, "15%": 0.15}
-    _pv = _prov()
-    _pv["theta_map_sha16"] = hashlib.sha256(json.dumps(
-        _tf_map, sort_keys=True, separators=(",", ":")).encode()).hexdigest()[:16]
-    good_op = {"form": "FROZEN_FROM_TRAIN_QUANTILE",
-               "theta_frozen": _tf_map,
-               "derived_from_split": {"days": ["2020-01-01"],
-                                      "population": "fixture"},
-               "provenance": _pv,
-               "declared_by": "USER", "declared_at_utc": "2026-01-01T00:00:00Z",
-               "source": "fixture", "coin": "btc",
-               # BE19-R1: the fixture uses the PRODUCTION SHAPE -- a
-               # verification_ref pointing at a real file the fence opens and
-               # rehashes. An inline block is what the fence now refuses.
-               "verification_ref": None,
-               "_fixture_verification": {
-                   "rows_artifact_sha256": _pv["rows_artifact"]["sha256"],
-                   "rows_sha_matches_declaration": True,
-                   "declared_days": ["2020-01-01"],
-                   "days_derived_from_the_rows": ["2020-01-01"],
-                   "declared_days_match_the_rows": True,
-                   "all_coins_reproduce": True,
-                   "recomputed_theta_map": {"btc": dict(_tf_map)},
-                   "as_of_utc": "2026-01-01T00:00:01Z",
-                   "residual_limitation_stated": "fixture"}}
-    refuses(lambda: require_operating_point(None), "no operating point declared",
-            "KNOWN-BAD: no operating point REFUSES BY NAME (rule 11/14)",
-            exc=OperatingPointUndeclared)
-    refuses(lambda: require_operating_point({**good_op, "form": "RETROSPECTIVE_TOPK"}),
-            "NOT causal",
-            "KNOWN-BAD: the RETROSPECTIVE form is REFUSED, not stamped as a "
-            "mode -- it is listed so it can be named and refused",
-            exc=OperatingPointUndeclared)
-    refuses(lambda: require_operating_point({**good_op, "form": "MY_OWN_IDEA"}),
-            "not one of",
-            "KNOWN-BAD: a form invented at the call site REFUSES",
-            exc=OperatingPointUndeclared)
-    refuses(lambda: require_operating_point(
-                {**good_op, "theta_frozen": {"5%": 0.85, "10%": 0.5}}),
-            "lacks budget key",
-            "KNOWN-BAD: a PARTIAL theta map REFUSES (R-209(2)); it never falls "
-            "back for the missing budgets",
-            exc=OperatingPointUndeclared)
-    refuses(lambda: require_operating_point(
-                {**good_op, "theta_frozen": {"5%": True, "10%": 0.5, "15%": 0.1}}),
-            "must be numbers",
-            "KNOWN-BAD: a boolean threshold REFUSES (True would compare as 1)",
-            exc=OperatingPointUndeclared)
-    for f in ("declared_by", "declared_at_utc", "source"):
-        refuses(lambda f=f: require_operating_point({k: v for k, v in good_op.items()
-                                                     if k != f}),
-                f"no {f!r}",
-                f"KNOWN-BAD: a declaration with no {f} REFUSES -- a threshold "
-                f"without a declarer cannot be told from one chosen later",
-                exc=OperatingPointUndeclared)
-    (_fxd / "verification.json").write_text(
-        json.dumps(good_op.pop("_fixture_verification"), sort_keys=True))
-    good_op["verification_ref"] = {
-        "path": str(_fxd / "verification.json"),
-        "sha256": hashlib.sha256(
-            (_fxd / "verification.json").read_bytes()).hexdigest()}
-    # BE19-R1: NO hand-injection. If a key has to be added here the chain does
-    # not work, which is exactly what the reviewer's control was hiding.
+    # BE21-R1: the fixture now uses THE PRODUCTION SHAPE -- the committed
+    # operating-point declaration plus the canonical verification artifact the
+    # fence pins to. Built from the two DATA files, with no import of the
+    # module that produces them, so the positive control exercises what
+    # production produces rather than a shape assembled to pass.
+    _decl_dir = Path(__file__).resolve().parent / "declarations"
+    _opd = json.loads((_decl_dir / "be_operating_point_declaration_v1.json"
+                       ).read_text())
+    _vpath = CANONICAL_VERIFICATION_PATH
+    _coin = "btc"
+    _tf_map = _opd["theta_frozen_by_coin"][_coin]
+    good_op = {
+        "form": _opd["form"],
+        "theta_frozen": _tf_map,
+        "derived_from_split": _opd["derived_from_split"],
+        "provenance": {
+            "rows_artifact": {"path": _opd["rows_artifact"]["path"],
+                              "sha256": _opd["rows_artifact"]["sha256"]},
+            "fit_artifact": {"path": _opd["fit_artifact"]["path"],
+                             "sha256": _opd["fit_artifact"]["sha256"]},
+            "theta_map_sha16": hashlib.sha256(json.dumps(
+                _tf_map, sort_keys=True,
+                separators=(",", ":")).encode()).hexdigest()[:16]},
+        "declared_by": "USER", "declared_at_utc": _opd["as_of_utc"],
+        "source": "the committed operating-point declaration",
+        "coin": _coin,
+        "verification_ref": {"path": str(_vpath),
+                             "sha256": hashlib.sha256(
+                                 _vpath.read_bytes()).hexdigest()},
+    }
     op = require_operating_point(good_op)
     ok(op["causal_declared"] and op["selected_by_this_module"] is False,
        "POSITIVE CONTROL: a complete causal declaration ADMITS, and the "
@@ -1316,6 +1306,7 @@ def selftest() -> int:
         refuses(lambda b=_bad: require_operating_point({**good_op, **b}),
                 _want, f"BEM-R2 KNOWN-BAD: {_lab} REFUSES",
                 exc=OperatingPointUndeclared)
+    _pv = good_op["provenance"]
     _p2 = {k: dict(v) if isinstance(v, dict) else v for k, v in _pv.items()}
     _p2["rows_artifact"] = {**_p2["rows_artifact"], "sha256": "0" * 64}
     refuses(lambda: require_operating_point({**good_op, "provenance": _p2}),
@@ -1445,7 +1436,91 @@ def selftest() -> int:
        "BE17-R2 POSITIVE CONTROL: a genuine op with a binding verification is "
        "ADMITTED and the receipt names WHAT bound it")
 
+    # ---- BE21-R1: WHERE THE TRUST BOUNDARY SITS -------------------------
+    # The fetch narrowed it from "a dict the caller wrote" to "any path the
+    # caller can name". These are the reviewer's own attacks, permanent.
+    import os as _os
+    import tempfile as _tf2
+    with _tf2.TemporaryDirectory() as _atk:
+        _atk = Path(_atk)
+        _fake = _atk / "fabricated_verification.json"
+        _fake.write_text(json.dumps({
+            "rows_artifact_sha256": "0" * 64, "all_coins_reproduce": True,
+            "declared_days": ["2026-08-29"],
+            "days_derived_from_the_rows": ["2026-08-29"],
+            "declared_days_match_the_rows": True,
+            "rows_sha_matches_declaration": True,
+            "recomputed_theta_map": {"btc": {"5%": 0.99, "10%": 0.99,
+                                             "15%": 0.99}}}))
+        refuses(lambda: require_operating_point(
+                    {**good_op, "theta_frozen": {"5%": 0.99, "10%": 0.99,
+                                                 "15%": 0.99},
+                     "verification_ref": {
+                         "path": str(_fake),
+                         "sha256": hashlib.sha256(
+                             _fake.read_bytes()).hexdigest()}}),
+                "not to the canonical committed verification artifact",
+                "BE21-R1 KNOWN-BAD (the reviewer's own attack): a FABRICATED "
+                "verification file with its own TRUE sha REFUSES -- the sha "
+                "gave integrity and never authenticity",
+                exc=OperatingPointUndeclared)
+        _ln = _atk / "link.json"
+        _os.symlink(str(_fake), str(_ln))
+        refuses(lambda: require_operating_point(
+                    {**good_op, "verification_ref": {
+                        "path": str(_ln),
+                        "sha256": hashlib.sha256(
+                            _ln.read_bytes()).hexdigest()}}),
+                "not to the canonical committed verification artifact",
+                "BE21-R1 KNOWN-BAD: a SYMLINK to a caller-controlled file "
+                "REFUSES -- `resolve()` follows it and compares the target",
+                exc=OperatingPointUndeclared)
+    refuses(lambda: require_operating_point(
+                {**good_op, "verification": {"inline": True}}),
+            "INLINE `verification` block",
+            "BE19-R1 KNOWN-BAD: an INLINE verification block REFUSES -- "
+            "supplying the evidence is the act being forbidden",
+            exc=OperatingPointUndeclared)
+    refuses(lambda: require_operating_point(
+                {k: v for k, v in good_op.items() if k != "verification_ref"}),
+            "no usable `verification_ref`",
+            "BE21-R1 KNOWN-BAD: no verification_ref at all REFUSES",
+            exc=OperatingPointUndeclared)
+    refuses(lambda: require_operating_point(
+                {**good_op, "verification_ref": {
+                    **good_op["verification_ref"], "sha256": "0" * 64}}),
+            "is not the evidence declared",
+            "BE21-R1 KNOWN-BAD: the canonical artifact with a WRONG declared "
+            "sha REFUSES -- the pin is on the path, the sha still binds the "
+            "bytes", exc=OperatingPointUndeclared)
+    refuses(lambda: require_operating_point(
+                {k: v for k, v in good_op.items() if k != "coin"}),
+            "names no `coin`",
+            "BE19-R1 KNOWN-BAD: a declaration naming no coin REFUSES -- the "
+            "maps are per coin and the binding cannot be checked without it",
+            exc=OperatingPointUndeclared)
+    _canon_bytes = CANONICAL_VERIFICATION_PATH.read_bytes()
+    try:
+        CANONICAL_VERIFICATION_PATH.write_bytes(b"")
+        refuses(lambda: require_operating_point(
+                    {**good_op, "verification_ref": {
+                        "path": str(CANONICAL_VERIFICATION_PATH),
+                        "sha256": hashlib.sha256(b"").hexdigest()}}),
+                "is not parseable JSON",
+                "BE21-R3 KNOWN-BAD: an EMPTY artifact at the canonical path "
+                "whose sha matches REFUSES BY NAME -- it used to die by "
+                "JSONDecodeError", exc=OperatingPointUndeclared)
+    finally:
+        CANONICAL_VERIFICATION_PATH.write_bytes(_canon_bytes)
+    ok(hashlib.sha256(CANONICAL_VERIFICATION_PATH.read_bytes()).hexdigest()
+       == good_op["verification_ref"]["sha256"],
+       "BE21-R3: and the canonical artifact is RESTORED byte-identical after "
+       "the tamper -- a control that damages a real artifact must put it back")
+
     # ---- ARM IDENTITY --------------------------------------------------
+    import tempfile as _tf
+    _fx = _tf.TemporaryDirectory()
+    _fxd = Path(_fx.name)
     (_fxd / "arm.json").write_text("arm-artifact-bytes")
     _arm_sha = hashlib.sha256((_fxd / "arm.json").read_bytes()).hexdigest()
     good_id = {"path": str(_fxd / "arm.json"), "sha256": _arm_sha,

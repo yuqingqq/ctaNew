@@ -442,17 +442,30 @@ def manifest_keys_read_by_run_path() -> dict:
     # every function and picked up `emits_feed` out of the SELFTEST -- a key
     # of a dict that has nothing to do with the manifest. "The run path" has
     # to mean the run path, or the derivation is just a wider list.
+    # BE21-R2: a `Call.func`-only walk cannot see a function passed BY
+    # REFERENCE -- which is exactly how `frozen_contract_gate` is wired, by
+    # `gate("frozen_contract", frozen_contract_gate)`. So the gate, a manifest
+    # reader, was invisible to the derivation that decides which manifest keys
+    # are load-bearing. The key SET happens to be identical today because the
+    # missed reader reads the same two keys; that is luck. A future reader
+    # wired the same way and reading a THIRD key would be silently omitted,
+    # and a drift in it would be DISCLOSED as survivable instead of refusing
+    # -- the one direction this gate must never get wrong. Every Name and
+    # Attribute in a function body now counts as an edge, called or not.
+    defined = {n.name for n in _ast.walk(tree)
+               if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef))}
     edges: dict = {}
     for n in _ast.walk(tree):
         if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
             outs = set()
             for c in _ast.walk(n):
-                if isinstance(c, _ast.Call):
-                    f = c.func
-                    nm = (f.id if isinstance(f, _ast.Name)
-                          else getattr(f, "attr", None))
-                    if nm:
-                        outs.add(nm)
+                nm = None
+                if isinstance(c, _ast.Name):
+                    nm = c.id
+                elif isinstance(c, _ast.Attribute):
+                    nm = c.attr
+                if nm and nm in defined and nm != n.name:
+                    outs.add(nm)
             edges[n.name] = outs
     reachable, stack = set(), ["run_forward_day"]
     while stack:
@@ -497,8 +510,9 @@ def manifest_keys_read_by_run_path() -> dict:
             "n_functions_reachable_from_run_forward_day": len(reachable),
             "derived_from": ("an AST walk of the functions REACHABLE FROM "
                              "`run_forward_day` that parse the manifest -- not "
-                             "from a list, and not from every function in the "
-                             "file"),
+                             "from a list, not from every function in the "
+                             "file, and counting a function passed BY "
+                             "REFERENCE as an edge (BE21-R2)"),
             "why": ("a manifest key the run path never reads cannot change "
                     "what the run does; a key it reads can. That is the only "
                     "defensible line between drift that must refuse and drift "

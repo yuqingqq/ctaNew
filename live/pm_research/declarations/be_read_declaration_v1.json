@@ -1,0 +1,250 @@
+{
+ "adjudicates": null,
+ "amendment_status": {
+  "R496_R2_decisions_frozen_at_the_instant_the_day_is_opened": {
+   "by": "this declaration's `frozen_decisions`, which names each with the artifact that fixes it",
+   "previously_partially_closed_by": [
+    "be_forward_arm_identity_v1.json (candidate + incumbent)",
+    "be_forward_family_declaration_v1.json (coins, budgets, conventions, cell count 18)",
+    "be_operating_point_declaration_v1.json (form + theta map)"
+   ],
+   "state": "CLOSED HERE"
+  },
+  "R496_R3_draw_count_and_sidedness_stated_not_ranged": {
+   "by": "this declaration's `null_declaration`; neither value is chosen here \u2014 A2 (FROZEN \u2014 IN FORCE) fixes both",
+   "state": "CLOSED HERE"
+  },
+  "R496_R4_closed_exclusion_vocabulary_and_08_30_reported_regardless": {
+   "by": "`EXCLUSION_VOCABULARY` + `classify_status`, which REFUSES the run on an unknown status rather than shrinking the population",
+   "state": "CLOSED HERE"
+  },
+  "R496_R5_08_29_masking_treatment_declared_in_advance": {
+   "by": "this declaration's `masking_treatment`: NO MASK APPLIED, disclosed, with the reason computed from the rules' own EFFECTIVE_FROM_DAY and the absence of a mask artifact",
+   "state": "CLOSED HERE"
+  },
+  "R496_R6_scoring_stack_frozen_first_run_of_record_attempts_enumerated": {
+   "by": "this declaration's `scoring_stack`, 14 modules by sha with a stack digest",
+   "state": "CLOSED HERE"
+  },
+  "R496_R7_era_caveat_replaced_by_verified_content": {
+   "by": "this declaration's `era_caveat`",
+   "state": "CLOSED HERE"
+  }
+ },
+ "amends": "R-496 (D), as amended by the reviewer at R496-R2..R7",
+ "as_of_utc": "2026-09-03T09:11:59Z",
+ "cluster_disclosure": {
+  "G_complete_days": 1,
+  "authority": "CLAUDE.md rule 8 -- below G=5 complete days: point estimate, no interval, and say so. G=1 here.",
+  "intervals_claimable": false,
+  "ruled_cluster_unit": "UTC day",
+  "unit_actually_used": "window",
+  "weaker_than_ruled": true,
+  "what_is_reported": "A POINT ESTIMATE AND NO INTERVAL",
+  "why_the_window_unit_does_not_rescue_it": "windows within one day are not independent draws of the day effect, so a window-clustered interval would be narrower than the ruled unit permits -- it is disclosed as WEAKER, never substituted for the ruled unit"
+ },
+ "day_status": "WITHDRAWN FROM THE RACE and KEPT READABLE by the USER (R-500). This read does not make it a race day.",
+ "declared_in_commit": "23b338a91ec1f1b829edf4cd9f78f93265cc2ea9",
+ "era_caveat": {
+  "not_resizable_after_the_fact": true,
+  "supersedes": "08-29 runs on collector era clob_v3_1, TWO surface generations behind the race's clob_v4_1 ... whether the surface moves the economics is unknown and is not assumed in either direction",
+  "verified_content": {
+   "08_29_measured_quality": "btc P1 32.29 s/hr against a bar of 120 \u2014 the cleanest day in the record",
+   "fields_and_stamping": "IDENTICAL across clob_v3_1 and clob_v4_1 \u2014 verified in the code and on 180,000 tape rows, with a planted-field falsifier that breaks the equality",
+   "keepalive": "clob_v4_1 is the ROLLBACK to v3_1's own 10/10 keepalive, so clob_v4 is the outlier BETWEEN them and 08-29's era is the race era's configuration on the one axis anybody measured",
+   "the_material_one": "O1c's absence: before it, a socket that connects and never delivers opens no gap row, so that loss class is invisible on 08-29. Handled under masking above.",
+   "the_real_deltas": "O1b/O1c/O1d, confined to DETECTING AND LABELLING loss \u2014 never the values of rows that survive"
+  },
+  "why_superseded": "an open-ended caveat is a lever of adjustable size: an unfavourable number can be dismissed as 'the old collector', a favourable one keeps it as a footnote. R496-R7 measured the distance and the label overstated it."
+ },
+ "estimand": {
+  "comparator": "the frozen per-coin incumbent, not a base rate",
+  "latency_axis": "only tranches after t + L are valued, L = 50 ms (rule 7 -- latency enters the estimand)",
+  "pairing_authority": "R-497 (F)(4) -- the primary, causal convention",
+  "pairing_convention": "BY_THRESHOLD",
+  "quantity": "NET CENTS against the INCUMBENT",
+  "tranche_valuation": "each tranche at ITS OWN time and level (rule 3), never a nearby proxy",
+  "unit_of_analysis": "the ACTION (slug, side, gen), de-duplicated",
+  "why_actions": "rule 2 -- several rows can share one outcome; measured 1.99 rows/fill, max 23, so a row-level count inflates"
+ },
+ "exclusion_vocabulary": {
+  "an_unknown_status": "is REPORTED with its count and FLAGGED as a known weakness of this run; it is never silently dropped",
+  "known_at_declaration": [
+   "SCORED",
+   "NO_FILL_AHEAD",
+   "ZERO_VALUE",
+   "NON_FINITE_SCORE"
+  ],
+  "set_is_closed": false
+ },
+ "frozen_decisions": {
+  "L_equals_the_freeze": true,
+  "L_latency_ms": 50,
+  "L_source": "phase2_declaration.TARGET_LATENCY_MS, equal to the frozen candidate's own target_latency_ms",
+  "any_later_change_is_a_new_declaration": "with its own multiplicity; a change made after seeing this read's number is rule 11 without re-using a single consumed row",
+  "budget_grid": [
+   "5%",
+   "10%",
+   "15%"
+  ],
+  "budget_grid_module_sha256": "aa866f8261677d79",
+  "budget_grid_source": "phase2_declaration.BUDGETS",
+  "candidate": {
+   "model_form": "LINEAR",
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_reduced_fine_candidate_v1.json",
+   "sha256": "cfc454d62f521d9aecf389b51a6536a4fa9cadb2370a11c19fbce0da9a68c341",
+   "spec": "PM_PLUS_FINE (reduced fine)"
+  },
+  "coin_set": [
+   "btc",
+   "eth"
+  ],
+  "declared_cell_count": 18,
+  "declared_cell_count_cited_by_sha256": "60c6cad7eb448a39ddb2fe830e5f42f0cdbd04c34c26a4be3a30fb6567b5c25c",
+  "incumbent": {
+   "btc": {
+    "bytes": 5251,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_fits/linear_d_btc.json",
+    "role": "incumbent",
+    "sha256": "18701008c2bd18c68dc8c8ba38f49ca34ac83a0d9d7587f139f8a03848a6980c",
+    "spec": "INCUMBENT_REWEIGHTED_ONLY (per-coin linear)"
+   },
+   "eth": {
+    "bytes": 5252,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_fits/linear_d_eth.json",
+    "role": "incumbent",
+    "sha256": "fb371f6352214a9245523a5724e7f645b01c78351f728bb82cba27cc2d704797",
+    "spec": "INCUMBENT_REWEIGHTED_ONLY (per-coin linear)"
+   }
+  },
+  "none_of_these_may_move_on_this_read": true,
+  "operating_point_form": "FROZEN_FROM_TRAIN_QUANTILE",
+  "operating_point_theta_map_sha16": "72b61c771efffb50",
+  "pairing_conventions": [
+   "BY_COUNT",
+   "BY_THRESHOLD"
+  ],
+  "phase2_winner_criterion": {
+   "frozen_here": "the criterion by which the Phase-2 winner is decided may not move on the basis of this read. That is R496-R2's consequential item: naming the day as consumed bars the DAY, not the DECISION.",
+   "status": "NOT DECIDED BY THIS READ",
+   "who": "the USER; the race decides it (RESULTS.md \u00a77)"
+  },
+  "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+  "threshold_mode_source": "phase2_declaration.THRESHOLD_PRIMARY"
+ },
+ "masking_treatment": {
+  "and_disclosed_as": "the result carries `masked: false` and `no_content_rule_governs_this_day: true`, so a reader is never left to infer that an unmasked day was a clean one",
+  "content_liveness_v1_effective_from": "20260902",
+  "content_liveness_v2_effective_from": "20260903",
+  "day": "20260829",
+  "declared_treatment": "NO MASK APPLIED",
+  "mask_artifact_exists": false,
+  "masks_that_do_exist": [
+   "da_blackout_mask_20260901.json",
+   "da_blackout_mask_20260902.json"
+  ],
+  "redirectable": "the coordinator or the USER may order a mask instead",
+  "the_consequence_is_stated_not_hidden": "an undetected stall would leave the last book standing, so adverse selection is measured smaller and the spread frozen \u2014 biasing rho toward the flattering side. Direction argued from the code path; magnitude unknown and not asserted (R496-R5).",
+  "v1_governs_this_day": false,
+  "v2_governs_this_day": false,
+  "why_not_build_one": "no content-liveness rule governs 08-29 and no mask exists for it. Building a mask now would invent a rule for a day already known, which is R496-R5's own concern; and 08-29 predates O1c, so the invisible-hole class the rule exists for leaves no gap row to build a mask from in any case."
+ },
+ "null_declaration": {
+  "draw_count_is_stated_not_ranged": true,
+  "floor_disclosure": {
+   "at_floor_means": "the observed arrangement is itself one arrangement under H0, so a permutation p can never be zero; a p AT the floor is a bound, not a measurement, and must be reported as one",
+   "floor_p_at_2000_draws": 0.0004997501249375312
+  },
+  "matched_random_null": {
+   "compared_on": "net cents, NOT harm share",
+   "matching": "action count within (side x hour) strata",
+   "n_random": 200,
+   "source": "harmful_action_eval.N_RANDOM"
+  },
+  "paired_incumbent_null": {
+   "n_perm": 2000,
+   "seed": 20260828,
+   "source": "phase2_iter011.N_PERM_011 / PERM_SEED_011",
+   "statistic": "window-level sign-flip of paired increments",
+   "unit_order": "SORTED KEYS, pinned at consumption (R-234)"
+  },
+  "sidedness": {
+   "a2_status_read_from_the_plan": "FROZEN \u2014 IN FORCE",
+   "adjudicated": "ONE-SIDED",
+   "alternative": "greater \u2014 the candidate must BEAT the incumbent",
+   "chosen_here": false,
+   "ruled_by": "R-286/R-288, amendment A2",
+   "two_sided_reported_as": "a diagnostic, never adjudicated"
+  },
+  "why_2000_is_not_a_choice_made_here": "amendment A2 declares the matched-random resolution for the NEXT run/population PROSPECTIVELY at n_draws = 2000, with iteration 011's own family left at 500 and its floor disclosed. This read IS that next population, so the number was fixed before it existed \u2014 which is the whole point of a prospective declaration."
+ },
+ "protocol": "BE_READ_DECLARATION_V1",
+ "read_day": "20260829",
+ "reconciliation_caveat": {
+  "claim": "the decision metric has NEVER been reconciled against any published number, and cannot be from existing artifacts",
+  "for_the_reader": "do not carry the reconciliation's authority onto the number this read produces",
+  "required_in_the_receipt": true,
+  "what_it_did_not": "the primary estimand, and the producer half beneath it",
+  "what_the_36_of_36_did_validate": "the BRIDGE arm and everything downstream of `increment_by_window` \u2014 the identity, the paired null, the sidedness, the multiplicity and the cluster disclosure \u2014 reproduced bit-for-bit against a published result",
+  "why_not": "`increment()` computes the BY_THRESHOLD estimand; iteration 011's published cells are BY_COUNT. This module's own PAIRING_CONVENTION_DIVERGENCE establishes they are different estimands, so the primary estimand is unreconcilable against that artifact BY CONSTRUCTION, not by omission."
+ },
+ "rule_11_in_force": {
+  "consequence_if_one_moves": "the read is consumed and the moved quantity is selected on seen data -- rule 11 voids the test, and no later day repairs it",
+  "consumed_the_moment_it_is_opened": true,
+  "day": "20260829",
+  "may_not_be_chosen_on_what_is_seen": [
+   "parameter",
+   "threshold",
+   "horizon",
+   "budget",
+   "candidate"
+  ],
+  "withdrawal_binding_after_this_read": true,
+  "withdrawn_from_the_race_before_this_read": "R-500 (USER)"
+ },
+ "scoring_stack": {
+  "any_post_read_change_requires": "every already-accrued day to be re-scored on the new code, and the fact recorded in the register (R496-R6)",
+  "every_attempt_enumerated": "the driver's `_flush` already chains re-runs as `.1`, `.2` with `supersedes_receipt` and `prior_receipts` and their sha256s, so the enumeration is a property of the artifacts rather than an undertaking. The read's filing lists every attempt with its receipt path and sha.",
+  "first_completed_run_is_the_result_of_record": true,
+  "frozen_for_the_duration_of_the_race": true,
+  "modules": {
+   "be_forward_day.py": "9aebeb276d17c152545b56722c96123af4c22b1a5ef8368a2e382a1616899033",
+   "be_forward_metric.py": "4b77dff32a1785707ce8d024132a476675d4dc50833b5756be2eeef429078498",
+   "be_operating_point.py": "874f821cdfd728bc4ef0367d2c5831c19fc8e089257f8ca9a5a316f57f88f173",
+   "de_admissible_windows.py": "4d8f622075b0447fb0b9f80c5a5b5201a243edd7a2afe882430358ce42cefc1d",
+   "ev_replay_seam.py": "d63612a2a7b26c4846f7bad503ac7474bd0c3d87ea31c295442747a414ea02fd",
+   "harmful_action_eval.py": "2c4e21936e3fc1d2d91af5dad86afa113a7c3f5f8ca24a7a9efa1bd53f66db64",
+   "harmful_exposure_rows.py": "1bbd8e7525fc27ac342d39e59b958082df78a1929d7b19dde0a2b8c40a338ad5",
+   "harmful_fast_compute.py": "86866fea2506cafa5c013a9d680365f29796df315a7cfba27e019044064df63c",
+   "harmful_forward_scorer.py": "37142b125ffbd842adefce8ebcb0a1158231664d25a348561d8032fbc9d30333",
+   "harmful_hazard_model.py": "58b8a2c08eea3cc9ee9bfd13b3ca5648d65a2947275d1cc5df0ad8e1153ac7ed",
+   "phase2_declaration.py": "aa866f8261677d799dbf56bcb2feb9a7f99f59db7982820e60fff05db0a54df9",
+   "phase2_increment_null.py": "5d94da83430233e4471811942be32e636cb18a68c991bc6bc95835c60006b0ff",
+   "phase2_iter011.py": "c3de39ae2892e931a665578dfa02860d5a6c9a35e5fe411526540fa78f65b25d",
+   "policy_optimizer_queue_realistic.py": "ae13af2931bc33b85b6a73a144261f0ca1d45b4767e985cf94e0cdda0e5c204c"
+  },
+  "n_modules": 14,
+  "opened_and_sealed_use_distinct_outdir_ROOTS": "not merely distinct filenames within one outdir (R496-R6)",
+  "stack_digest": "d492255ef9469f5f"
+ },
+ "selects_nothing": true,
+ "skipped_deliberately": {
+  "closed_exclusion_status_vocabulary": {
+   "known_weakness_stated": "the set is NOT closed in advance, so a status invented after the read is a weakness of this run and is flagged as one",
+   "skipped": true,
+   "what_still_binds": "rule 4 -- every exclusion REPORTED with its count, none silently dropped"
+  },
+  "day_08_30": {
+   "not_reported": true,
+   "not_run": true,
+   "skipped": true,
+   "why": "the USER's era ruling excludes it on quality"
+  },
+  "formal_scoring_stack_freeze": {
+   "machinery_not_built": true,
+   "skipped": true,
+   "what_is_recorded_instead": "driver and dependency sha256s in the receipt -- free, and it pins the bytes that produced the number"
+  }
+ },
+ "who_decides": "the USER (rule 14); the coordinator authorises the read"
+}
