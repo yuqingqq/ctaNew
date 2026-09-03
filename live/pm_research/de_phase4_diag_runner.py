@@ -817,7 +817,11 @@ def _null_status(c: dict) -> str:
             "cannot be read: a null that was never requested and a null "
             "that collapsed would be reported alike, from the absence of "
             "the same field (DE40-R2)")
-    if not c["n_draws_requested"]:
+    # DE41-R1: read with `.get()` BELOW the guard. Indexing here meant the
+    # guard's removal died as `KeyError: 'n_draws_requested'` INSIDE this
+    # function while its own known-bad was being driven -- red, but at a
+    # traceback rather than at the line that names what broke.
+    if not c.get("n_draws_requested"):
         return "NO_NULL_REQUESTED"
     if str(c.get("null", "")).startswith("DEGENERATE"):
         return "NULL_COLLAPSED"
@@ -1980,6 +1984,14 @@ def selftest() -> int:
     _blk_a = {k: v for k, v in _np_free.items()
               if k not in _ORDER_DEPENDENT}
     _blk_b = {k: v for k, v in _snp.items() if k not in _ORDER_DEPENDENT}
+    # DE41-R2: the count is taken AFTER the comparison, and what the line
+    # reports is what DIFFERS. Reporting "ALL n of m identical" from the
+    # filtered block asserted the invariant on the one path where the
+    # message is load-bearing -- the RED one.
+    _diff_fields = sorted(set(_blk_a) | set(_blk_b)
+                          if _blk_a != _blk_b else set())
+    _diff_fields = [k for k in _diff_fields
+                    if _blk_a.get(k, object()) != _blk_b.get(k, object())]
     try:
         _pred_a = evaluate_predicates([ncell])["by_cell"][0]
         _pred_b = evaluate_predicates([_scell])["by_cell"][0]
@@ -1996,11 +2008,12 @@ def selftest() -> int:
        == sorted(r["value"] for r in _acc_log)
        and _sval_differs == _val_differs and _sval_differs >= 1,
        f"DE39-C1 / DE40-R3, THE REORDERING DRIVEN OVER THE WHOLE BLOCK: "
-       f"swapping the two above values in time leaves ALL "
-       f"{len(_blk_a)} of the {len(_np_free)} `null_population` fields "
-       f"identical -- every field except the one excluded BY NAME, "
-       f"{list(_ORDER_DEPENDENT)} -- and the predicate row identical "
-       f"too{_prederr}. "
+       f"swapping the two above values in time leaves "
+       f"{len(_diff_fields)} of the {len(_np_free)} `null_population` "
+       f"fields DIFFERENT ({_diff_fields or 'none'}) outside the one "
+       f"excluded BY NAME, {list(_ORDER_DEPENDENT)}, and the predicate "
+       f"row {'differs' if _pred_a != _pred_b else 'identical'}"
+       f"{_prederr}. "
        f"So the accepted value "
        f"multiset, the quantiles (q50 "
        f"{_scell['null_quantiles']['value_q50']}), the difference "
