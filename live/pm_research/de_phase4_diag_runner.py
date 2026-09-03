@@ -36,11 +36,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 178
+EXPECTED_CHECKS = 188
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -3111,21 +3112,25 @@ def selftest() -> int:
                 sorted(k.arg for k in nd.keywords if k.arg))
     _assigns = [_ast.unparse(t) for nd in _ast.walk(_rtree)
                 if isinstance(nd, _ast.Assign) for t in nd.targets]
-    ok("assemble_gen_scores" in _calls
+    ok("assemble_streaming" in _calls
        and any("gen_scores" in kw for kw in _calls.get("score_events_for", []))
-       and any("splits" in kw for kw in _calls.get("assemble_gen_scores", []))
+       and any("chunk_windows" in kw
+               for kw in _calls.get("assemble_streaming", []))
+       and any("log" in kw for kw in _calls.get("assemble_streaming", []))
        and "cell_out['splits']" in _assigns
        and _calls.get("build_receipt")
        and all("pin" not in kw for kw in _calls["build_receipt"]),
-       f"DE44, THE WIRING FROM THE PARSE (rule 17): `run()` calls "
-       f"`assemble_gen_scores(splits=...)`, hands its output to "
+       f"DE44/DE48, THE WIRING FROM THE PARSE (rule 17): `run()` calls "
+       f"`assemble_streaming(splits=..., chunk_windows=..., log=...)` "
+       f"({_calls.get('assemble_streaming')}), hands its output to "
        f"`score_events_for(gen_scores=...)` "
        f"({_calls.get('score_events_for')}), assigns `cell_out['splits']`, "
        f"and calls `build_receipt` with NO `pin=` "
        f"({_calls['build_receipt']}) -- so the suite's injectable pin "
        f"cannot leak onto the run path. Round 43's expensive half existed "
        f"as functions with no call site, which is the defect this check "
-       f"is about")
+       f"is about; round 48's replaces the whole-fragment call with the "
+       f"chunked one and this line is where a half-done swap would show")
     _first = {}
     for nd in _ast.walk(_rtree):
         if isinstance(nd, _ast.Call):
@@ -3134,13 +3139,13 @@ def selftest() -> int:
             _first[nm] = min(_first[nm], nd.lineno)
     ok(_first["validate_outdir"] < _first["validate_splits"]
        < _first["preflight"] < _first["build_reference"]
-       < _first["assemble_gen_scores"],
+       < _first["assemble_streaming"],
        f"and `run()`'s CHEAP GATES ALL PRECEDE THE FEED, asserted from "
        f"the parse: validate_outdir(L{_first['validate_outdir']}) < "
        f"validate_splits(L{_first['validate_splits']}) < "
        f"preflight(L{_first['preflight']}) < "
        f"build_reference(L{_first['build_reference']}) < "
-       f"assemble_gen_scores(L{_first['assemble_gen_scores']}). This is "
+       f"assemble_streaming(L{_first['assemble_streaming']}). This is "
        f"what makes the `run(None, splits=None)` known-bad above cost "
        f"milliseconds instead of half an hour -- cheap BY CONSTRUCTION, "
        f"not by luck, and the check says which construction")
@@ -3417,6 +3422,161 @@ def selftest() -> int:
        f"clear, and this is the same instrument that said `called_code` "
        f"last round")
 
+    # ---- DE48: THE LOG MUST NEVER MAKE A DEAD RUN LOOK ALIVE ----------
+    import subprocess as _sp
+    import tempfile as _tf4
+    _HARNESS = (
+        "import sys, time, signal\n"
+        "sys.path.insert(0, %r)\n"
+        "import de_phase4_diag_runner as R\n"
+        "from pathlib import Path\n"
+        "log = R.Progress(Path(sys.argv[1]) / 'p.log')\n"
+        "fin = R.install_terminal_record(log)\n"
+        "R.redirect_stderr_into(Path(sys.argv[1]))\n"
+        "hb = R.start_heartbeat(log, interval_s=0.3)\n"
+        "log.stage('stage_started')\n"
+        "mode = sys.argv[2]\n"
+        "if mode == 'raise':\n"
+        "    raise ValueError('KNOWN-BAD: died inside a stage')\n"
+        "if mode == 'ok':\n"
+        "    hb.set(); fin('SUCCESS'); sys.exit(0)\n"
+        "print('READY', flush=True)\n"
+        "time.sleep(120)\n"
+    ) % str(Path(__file__).resolve().parent)
+
+    def _last(logp):
+        rows = [json.loads(l) for l in Path(logp).read_text().splitlines()
+                if l.strip()]
+        return rows[-1] if rows else {}
+
+    with _tf4.TemporaryDirectory() as _d4:
+        _d4 = Path(_d4)
+        # (a) KILLED MID-STAGE -- the case that actually happened
+        _pr = _sp.Popen([sys.executable, "-c", _HARNESS, str(_d4), "hang"],
+                        stdout=_sp.PIPE, text=True)
+        _pr.stdout.readline()                     # READY: inside the stage
+        time.sleep(0.8)                           # let a heartbeat land
+        _pr.send_signal(__import__("signal").SIGTERM)
+        _pr.wait(timeout=30)
+        _sig_row = _last(_d4 / "p.log")
+        _beats = sum(1 for l in (_d4 / "p.log").read_text().splitlines()
+                     if json.loads(l)["stage"] == "heartbeat")
+        ok(_sig_row.get("stage") == "TERMINAL"
+           and _sig_row.get("outcome") == "SIGNAL"
+           and _sig_row.get("signal_name") == "SIGTERM"
+           and _beats >= 1,
+           f"DE48, DRIVEN BY KILLING A LIVE PROCESS MID-STAGE: a run "
+           f"SIGTERMed while a stage is running ends with "
+           f"TERMINAL/{_sig_row.get('outcome')}/"
+           f"{_sig_row.get('signal_name')} as the log's LAST line, and "
+           f"{_beats} heartbeat(s) were written while it worked. The "
+           f"ruled run of 2026-09-03 wrote ONE line at 07:01:37Z, died at "
+           f"07:09:18Z, and was found by checking the process table -- a "
+           f"dead run that looks alive for five hours is worse than one "
+           f"that fails loudly")
+        for _f in _d4.iterdir():
+            _f.unlink()
+        # (b) DIED INSIDE A STAGE by an unhandled exception
+        _pr2 = _sp.run([sys.executable, "-c", _HARNESS, str(_d4), "raise"],
+                       capture_output=True, text=True, timeout=60)
+        _exc_row = _last(_d4 / "p.log")
+        _errlog = (_d4 / "phase4_diag_r459_stderr.log")
+        ok(_exc_row.get("stage") == "TERMINAL"
+           and _exc_row.get("outcome") == "EXCEPTION"
+           and _exc_row.get("exc_type") == "ValueError"
+           and "KNOWN-BAD" in (_exc_row.get("traceback") or "")
+           and _errlog.exists()
+           and "ValueError" in _errlog.read_text(),
+           f"KNOWN-BAD: an unhandled exception INSIDE a stage ends with "
+           f"TERMINAL/{_exc_row.get('outcome')}/"
+           f"{_exc_row.get('exc_type')} carrying the traceback IN THE "
+           f"LOG, and the interpreter's own stderr lands in the OUTDIR "
+           f"({_errlog.name}, {_errlog.stat().st_size} B) rather than in "
+           f"a session scratch directory only the launcher knows about. "
+           f"That is where the ruled run's traceback went, and it is why "
+           f"the artifact could not explain itself")
+        for _f in _d4.iterdir():
+            _f.unlink()
+        # (c) THE ADMITTING DIRECTION: a clean finish says SUCCESS
+        _sp.run([sys.executable, "-c", _HARNESS, str(_d4), "ok"],
+                capture_output=True, text=True, timeout=60)
+        _ok_row = _last(_d4 / "p.log")
+        ok(_ok_row.get("stage") == "TERMINAL"
+           and _ok_row.get("outcome") == "SUCCESS",
+           f"POSITIVE CONTROL: a clean finish ends "
+           f"TERMINAL/{_ok_row.get('outcome')} -- so the terminal record "
+           f"reports WHAT HAPPENED and is not a machine that only ever "
+           f"says a run died (rule 16, both directions)")
+    _runsrc48 = _ast.get_source_segment(
+        Path(__file__).read_text(),
+        [nd for nd in _ast.walk(_ast.parse(Path(__file__).read_text()))
+         if isinstance(nd, _ast.FunctionDef) and nd.name == "run"][0])
+    _first48 = {}
+    for _nd in _ast.walk(_ast.parse(_runsrc48)):
+        if isinstance(_nd, _ast.Call):
+            _nm = getattr(_nd.func, "id", None) or getattr(_nd.func,
+                                                           "attr", "")
+            _first48.setdefault(_nm, _nd.lineno)
+    ok(_first48["install_terminal_record"] < _first48["build_reference"]
+       and _first48["redirect_stderr_into"] < _first48["build_reference"]
+       and _first48["start_heartbeat"] < _first48["build_reference"]
+       and "_finish" in _runsrc48,
+       f"and all three are installed BEFORE the first expensive stage "
+       f"(terminal L{_first48['install_terminal_record']}, stderr "
+       f"L{_first48['redirect_stderr_into']}, heartbeat "
+       f"L{_first48['start_heartbeat']} < the first expensive stage "
+       f"L{_first48['build_reference']}) -- a guarantee installed after "
+       f"the stage that can kill the run is not a guarantee")
+
+    # ---- DE48: CHUNKING CHANGES MEMORY AND NOTHING ELSE ---------------
+    with _tf4.TemporaryDirectory() as _d5:
+        _d5 = Path(_d5)
+        _frag = _d5 / "frag.json"
+        _synth = [{"slug": f"w{w}", "coin": "btc", "gen": g,
+                   "status": "OK", "n": w * 100 + g}
+                  for w in range(7) for g in range(1 + w % 3)]
+        _write_rows(_frag, _synth)
+        for _cw in (1, 2, 3, 7, 99):
+            _got, _seen = [], []
+            for _cp, _sl in _fragment_chunks(_d5, chunk_windows=_cw,
+                                             source=_frag):
+                _rows5 = json.loads(_cp.read_text())["rows"]
+                _got.extend(_rows5)
+                _seen.append(_sl)
+                _cp.unlink()
+            _flat = [x for grp in _seen for x in grp]
+            ok(_got == _synth
+               and _flat == sorted(set(_flat), key=_flat.index)
+               and len(_flat) == 7
+               and all(len(g) <= _cw for g in _seen)
+               and all(len({r["slug"] for r in _synth if r["slug"] in g})
+                       == len(g) for g in _seen),
+               f"DE48, CHUNK SIZE {_cw}: the chunks CONCATENATE BACK TO "
+               f"THE FRAGMENT ROW FOR ROW ({len(_got)} rows, identical "
+               f"list), every cut is on a WINDOW boundary "
+               f"({[len(g) for g in _seen]} windows per chunk, none over "
+               f"{_cw}), and no window appears in two chunks. "
+               f"`_feature_pass` groups by slug and reads one archive per "
+               f"slug, so a cut mid-window would change WHAT the pass "
+               f"does and not merely when -- this is the predicate behind "
+               f"'chunking changes memory and nothing else'")
+    _asrc = _ast.get_source_segment(
+        Path(__file__).read_text(),
+        [nd for nd in _ast.walk(_ast.parse(Path(__file__).read_text()))
+         if isinstance(nd, _ast.FunctionDef)
+         and nd.name == "assemble_streaming"][0])
+    ok("del blocks" in _asrc and "chunk_path.unlink" in _asrc
+       and "build_tape_index" in _asrc
+       and _asrc.index("build_tape_index") < _asrc.index("for chunk_path"),
+       f"and the REDUCTION is what bounds it, read from the function's "
+       f"own source: the tape index is built ONCE before the loop (it is "
+       f"needed throughout, 3.90 GB measured), each chunk's blocks are "
+       f"`del`eted and each chunk file unlinked once reduced to "
+       f"per-generation scores. Peak becomes tape + one chunk instead of "
+       f"tape + whole fragment + every block -- 8.33 GB resident before "
+       f"any work, plus ~3.55 GB of accumulating features, is what killed "
+       f"the ruled run at 07:09:18Z")
+
     # ---- DE46: THE RUN'S OWN OPERATIONAL SHAPE ------------------------
     _sl = slice_memory()
     ok(isinstance(_sl.get("MemoryCurrent"), int)
@@ -3474,17 +3634,21 @@ def selftest() -> int:
             if _nm not in _order:
                 _order[_nm] = _nd.lineno
     ok(_order["preflight"] < _order["mkdir"] < _order["Progress"]
-       < _order["feature_blocks"] < _order["build_reference"],
-       f"DE46, THE ORDER THAT MAKES A MEMORY FAILURE CHEAP, asserted from "
-       f"the parse: preflight(L{_order['preflight']}) < "
-       f"mkdir(L{_order['mkdir']}) < Progress(L{_order['Progress']}) < "
-       f"feature_blocks(L{_order['feature_blocks']}) < "
-       f"build_reference(L{_order['build_reference']}). "
-       f"`feature_blocks` needs no reference, so nothing forced it to run "
-       f"second -- and it is the stage that can exhaust the cap. First, a "
-       f"memory failure costs the assembly's own minutes; after the feed "
-       f"it costs those PLUS ~28, and the OUTDIR is already created so a "
-       f"retry refuses")
+       < _order["install_terminal_record"] < _order["build_reference"]
+       < _order["assemble_streaming"]
+       and "feature_blocks" not in _order,
+       f"DE48, AND IT SUPERSEDES ROUND 46's ORDERING: preflight("
+       f"L{_order['preflight']}) < mkdir(L{_order['mkdir']}) < Progress("
+       f"L{_order['Progress']}) < install_terminal_record("
+       f"L{_order['install_terminal_record']}) < build_reference("
+       f"L{_order['build_reference']}) < assemble_streaming("
+       f"L{_order['assemble_streaming']}), and `feature_blocks` is no "
+       f"longer on the run path at all. Round 46 put the assembly FIRST "
+       f"so a memory failure would be cheap; round 48 makes it not fail "
+       f"-- the guarantee moved from ORDER to BOUNDING, and the streaming "
+       f"assembly reduces each chunk against the reference, so it needs "
+       f"the feed to exist. Bounding beats sequencing: the cheap failure "
+       f"was still a failure")
 
     ok(OUTDIR.exists() is False,
        f"and the DECLARED OUTDIR {OUTDIR.name} STILL DOES NOT EXIST after "
@@ -4074,6 +4238,12 @@ def slice_memory(unit: str = "research.slice") -> dict:
     return out
 
 
+#: How often the heartbeat writes while a stage is running. A stage that
+#: takes 6.5 minutes (the tape index, measured) must not look identical
+#: to a stage that died in its first second.
+HEARTBEAT_S = 30.0
+
+
 class Progress:
     """A JSONL progress log, written into the OUTDIR as the run goes.
 
@@ -4108,11 +4278,106 @@ class Progress:
         with open(self.path, "a") as fh:
             fh.write(json.dumps(row, sort_keys=True, default=str) + "\n")
             fh.flush()
+            os.fsync(fh.fileno())
         return row
+
+    def terminal(self, outcome: str, **facts) -> dict:
+        """THE LAST LINE, and there is always one.
+
+        A log whose last line is a stage boundary is a log that cannot
+        tell a reader whether the run is still working or died an hour
+        ago. Measured: the ruled run of 2026-09-03 died at 07:09:18Z
+        having written ONE line at 07:01:37Z, and it was found by
+        checking the process table rather than by reading the log. A dead
+        run that looks alive is worse than one that fails loudly."""
+        return self.stage("TERMINAL", outcome=outcome, **facts)
+
+
+def install_terminal_record(log: Progress):
+    """Guarantee a TERMINAL line on EVERY exit path.
+
+    Normal return, a named refusal, an unhandled exception, SIGTERM,
+    SIGINT, SIGHUP, or an interpreter exit nobody planned -- each ends
+    with a line in the log saying which. SIGKILL cannot be caught by
+    anything, and that is what the HEARTBEAT is for: a reader compares
+    the last heartbeat's clock with now.
+
+    Returns the finisher so the caller can record a SUCCESS explicitly;
+    it is idempotent, so the first outcome recorded wins and the atexit
+    fallback never overwrites a real one."""
+    import atexit
+    import signal as _sig
+    import traceback as _tb
+    state = {"done": False}
+
+    def finish(outcome: str, **kw):
+        if state["done"]:
+            return None
+        state["done"] = True
+        try:
+            return log.terminal(outcome, **kw)
+        except Exception:                            # noqa: BLE001
+            return None
+
+    def _hook(et, ev, tb):
+        finish("EXCEPTION", exc_type=et.__name__, exc=str(ev)[:2000],
+               traceback="".join(_tb.format_exception(et, ev, tb))[-4000:])
+        sys.__excepthook__(et, ev, tb)
+
+    def _on_signal(signum, frame):
+        finish("SIGNAL", signal_name=_sig.Signals(signum).name,
+               signal_number=int(signum))
+        raise SystemExit(128 + int(signum))
+
+    sys.excepthook = _hook
+    for _s in (_sig.SIGTERM, _sig.SIGINT, _sig.SIGHUP):
+        try:
+            _sig.signal(_s, _on_signal)
+        except (ValueError, OSError):                # not in main thread
+            pass
+    atexit.register(lambda: finish("EXIT_WITHOUT_RECORD"))
+    return finish
+
+
+def start_heartbeat(log: Progress, interval_s: float = HEARTBEAT_S):
+    """A timestamped line every `interval_s` while a stage is running.
+
+    This is what tells "working" from "wedged". The stage boundaries
+    alone cannot: the tape index takes 6.5 minutes MEASURED, so between
+    two boundaries a healthy run and a hung one look the same."""
+    import threading
+    stop = threading.Event()
+
+    def _beat():
+        while not stop.wait(interval_s):
+            try:
+                log.stage("heartbeat")
+            except Exception:                        # noqa: BLE001
+                return
+
+    t = threading.Thread(target=_beat, daemon=True, name="de-heartbeat")
+    t.start()
+    return stop
+
+
+def redirect_stderr_into(outdir: Path) -> Path:
+    """Point fd 2 at a file INSIDE the outdir.
+
+    The ruled run's traceback landed in a session scratch directory that
+    only the process that launched it knew about. The artifact has to
+    carry its own failure, so `os.dup2` moves the real file descriptor --
+    not just `sys.stderr` -- and a traceback printed by the interpreter
+    itself lands there too."""
+    path = Path(outdir) / "phase4_diag_r459_stderr.log"
+    fh = open(path, "ab", buffering=0)
+    os.dup2(fh.fileno(), 2)
+    sys.stderr = os.fdopen(2, "w", buffering=1, closefd=False)
+    return path
 
 
 def run(outdir: Path | None = None, *, splits, coins=COINS,
-        limit: int | None = None, cap_bytes: int | None = None) -> dict:
+        limit: int | None = None, cap_bytes: int | None = None,
+        chunk_windows: int = 60) -> dict:
     """THE RUN PATH (DE32-C1).  Feed -> assembly -> scores -> arms -> rho ->
     null -> receipt, written once into the declared directory.
 
@@ -4135,7 +4400,16 @@ def run(outdir: Path | None = None, *, splits, coins=COINS,
     out.mkdir(parents=True, exist_ok=False)
     log = Progress(out / "phase4_diag_r459_progress.log",
                    cap_bytes=cap_bytes)
+    # THE LOG MUST NEVER MAKE A DEAD RUN LOOK ALIVE. Installed BEFORE the
+    # first stage, so even a failure inside the first stage ends with a
+    # TERMINAL line, and the stderr of THIS process lands in the artifact
+    # rather than in whatever directory the launcher happened to use.
+    _finish = install_terminal_record(log)
+    _err_path = redirect_stderr_into(out)
+    _hb = start_heartbeat(log)
     log.stage("preflight_passed", splits=list(got),
+              stderr_log=str(_err_path),
+              heartbeat_s=HEARTBEAT_S,
               admissions=admission_conditions(),
               pin_verdicts={r["path"]: r["verdict"]
                             for r in verify_called_code()})
@@ -4146,23 +4420,28 @@ def run(outdir: Path | None = None, *, splits, coins=COINS,
     # feed, it costs those PLUS the feed's ~28. Round 43's wiring put it
     # behind a per-(coin, head) call, which would have paid for a 3.2 GB
     # index and a 1.2 GB pass 108 times (Q-DE-62's correction).
-    t_asm = time.time()
-    fb = feature_blocks(splits=got)
-    asm_s = time.time() - t_asm
-    log.stage("assembly_done", wall_s=round(asm_s, 1),
-              stages=fb["stages"], n_tape_rows=fb["n_tape_rows"],
-              kept_by_coin={c: len(b["kept"])
-                            for c, b in fb["blocks"].items()})
+    # THE FEED FIRST NOW, and the reason is the opposite of round 46's:
+    # the streaming assembly REDUCES each chunk to per-generation scores
+    # against the reference, so it needs the reference to exist. The feed
+    # is ~28 min and cheap in memory (measured); the assembly is the
+    # expensive one and it now peaks at tape + one chunk instead of
+    # tape + whole fragment + all blocks.
     t_feed = time.time()
     feeds = {c: build_reference(c, limit=limit) for c in coins}
     feed_s = time.time() - t_feed
     log.stage("feed_done", wall_s=round(feed_s, 1),
               windows={c: len(feeds[c]["reference"]) for c in coins},
               statuses={c: feeds[c]["statuses"] for c in coins})
-    t_join = time.time()
-    asm = assemble_gen_scores({c: feeds[c]["reference"] for c in coins},
-                              splits=got, coins=coins, blocks=fb)
-    log.stage("join_done", wall_s=round(time.time() - t_join, 1),
+    t_asm = time.time()
+    asm = assemble_streaming({c: feeds[c]["reference"] for c in coins},
+                             splits=got, coins=coins,
+                             chunk_windows=chunk_windows, log=log)
+    asm_s = time.time() - t_asm
+    log.stage("assembly_done", wall_s=round(asm_s, 1),
+              n_chunks=asm["assembly"]["n_chunks"],
+              chunk_windows=asm["assembly"]["chunk_windows"],
+              kept_by_coin=asm["assembly"]["kept_by_coin"],
+              drops_by_coin=asm["assembly"]["drops_by_coin"],
               split_counts=asm["split_counts"],
               statuses={f"{c}/{h}": asm["by_arm"][(c, h)][1]
                         for c in coins for h in HEADS_RUN})
@@ -4241,6 +4520,10 @@ def run(outdir: Path | None = None, *, splits, coins=COINS,
               path=str(out / "phase4_diag_r459_receipt.json"),
               n_cells=len(cells),
               bytes=(out / "phase4_diag_r459_receipt.json").stat().st_size)
+    _hb.set()
+    _finish("SUCCESS", n_cells=len(cells),
+            wall_clock_s=round(time.time() - t_run, 1),
+            receipt=str(out / "phase4_diag_r459_receipt.json"))
     return rec
 
 
@@ -4640,7 +4923,8 @@ def split_set_name(splits) -> str:
     return "EXPLICIT:" + "+".join(sorted(splits))
 
 
-def feature_blocks(*, splits, fragment: Path | None = None) -> dict:
+def feature_blocks(*, splits, fragment: Path | None = None,
+                   tape: dict | None = None) -> dict:
     """THE EXPENSIVE HALF, wired: the fit's own tape index over the
     DECLARED splits, and the fit's own feature pass over the fragment.
 
@@ -4656,6 +4940,39 @@ def feature_blocks(*, splits, fragment: Path | None = None) -> dict:
     pre = assembly_preconditions()
     import phase2_arms as PA
     frag = Path(fragment) if fragment is not None else PA.FRAGMENT
+    if tape is not None:
+        stages, TAPE, split_of = dict(tape["stages"]), tape["TAPE"], \
+            tape["split_of"]
+    else:
+        _t = build_tape_index(got)
+        stages, TAPE, split_of = dict(_t["stages"]), _t["TAPE"], \
+            _t["split_of"]
+    t1 = time.time()
+    blocks = PA._feature_pass(frag, "phase4_diag", TAPE=TAPE)
+    stages["_feature_pass"] = {
+        "wall_s": round(time.time() - t1, 2),
+        "fragment": str(frag),
+        "kept_by_coin": {c: len(b["kept"]) for c, b in blocks.items()},
+        "drops_by_coin": {c: dict(b["drops"]) for c, b in blocks.items()},
+        "peak_rss_mb": _peak_rss_mb()}
+    _check_assembled_widths(blocks, pre)
+    return {"blocks": blocks, "splits": got,
+            "split_set": split_set_name(got), "split_of": split_of,
+            "stages": stages, "widths": pre,
+            "n_tape_rows": len(TAPE)}
+
+
+def build_tape_index(splits) -> dict:
+    """THE TAPE INDEX, built ONCE and reusable across feature passes.
+
+    MEASURED at full scale, which the price never did: the score split is
+    638,917 rows and 1.42 GB, the train split 1,125,289 rows and 3.90 GB
+    cumulative, 390.7 s for both. That 3.9 GB is resident for the whole
+    assembly, and the ruled run of 2026-09-03 died because it was held
+    alongside the entire fragment. Splitting it out is what lets the
+    fragment be consumed in chunks against ONE index."""
+    got = validate_splits(splits)
+    import phase2_arms as PA
     stages: dict = {}
     TAPE: dict = {}
     split_of: dict = {}
@@ -4677,17 +4994,13 @@ def feature_blocks(*, splits, fragment: Path | None = None) -> dict:
             "wall_s": round(time.time() - t0, 2),
             "rows_indexed": len(idx),
             "peak_rss_mb_highwater": _peak_rss_mb()}
-    t1 = time.time()
-    blocks = PA._feature_pass(frag, "phase4_diag", TAPE=TAPE)
-    stages["_feature_pass"] = {
-        "wall_s": round(time.time() - t1, 2),
-        "fragment": str(frag),
-        "kept_by_coin": {c: len(b["kept"]) for c, b in blocks.items()},
-        "drops_by_coin": {c: dict(b["drops"]) for c, b in blocks.items()},
-        "peak_rss_mb_highwater": _peak_rss_mb()}
-    # The width the fit itself carries, read from the artifacts the
-    # manifest binds -- never a literal in this file (rule 15's positive
-    # control has to be able to fail).
+    return {"TAPE": TAPE, "split_of": split_of, "stages": stages,
+            "n_tape_rows": len(TAPE), "splits": got}
+
+
+def _check_assembled_widths(blocks: dict, pre: dict) -> None:
+    """The width the fit itself carries, read from the artifacts the
+    manifest binds -- never a literal in this file."""
     for coin, b in blocks.items():
         if not b["kept"]:
             continue
@@ -4705,10 +5018,6 @@ def feature_blocks(*, splits, fragment: Path | None = None) -> dict:
             raise DiagRefused(
                 f"{coin}: PM+fine+state is {len(b['ST'][0]) + w} against "
                 f"the fit's {pre['lgbm_norm_width']} normalisers")
-    return {"blocks": blocks, "splits": got,
-            "split_set": split_set_name(got), "split_of": split_of,
-            "stages": stages, "widths": pre,
-            "n_tape_rows": len(TAPE)}
 
 
 def scratch_outdir(path) -> Path:
@@ -5512,6 +5821,188 @@ def split_tally(keys, split_by_gen: dict) -> dict:
     return out
 
 
+def assemble_streaming(refs: dict, *, splits, coins=COINS,
+                       heads=HEADS_RUN, chunk_windows: int = 60,
+                       log=None, scratch: Path | None = None,
+                       source: Path | None = None,
+                       tape: dict | None = None,
+                       partition_by_split: bool = True,
+                       clear_bn_cache: bool = True) -> dict:
+    """THE ASSEMBLY, CHUNKED AND REDUCED -- O(chunk) in memory, not O(all).
+
+    WHY, measured rather than reasoned: the ruled run of 2026-09-03 died
+    with MemoryError 7 min 44 s in, and the profile says exactly where
+    the memory went --
+
+        tape_index[score]   1.42 GB   638,917 rows   196.7 s
+        tape_index[train]   3.90 GB 1,125,289 rows   194.0 s
+        fragment json.loads 8.33 GB 1,135,943 rows    11.7 s
+
+    -- 8.33 GB resident BEFORE the per-window pass does any work, under a
+    12 GB cap, with the pass then accumulating PM+FN+ST for 1,125,289
+    kept rows at ~106 floats each (~3.55 GB). 8.33 + 3.55 crosses 12.
+
+    THE FIX BOUNDS RATHER THAN ENLARGES. The tape index is built ONCE
+    (it is needed throughout). The FRAGMENT is consumed in chunks of
+    whole windows, and each chunk is REDUCED to per-generation scores
+    before the next is read -- the feature blocks are discarded, because
+    nothing downstream wants them. Peak becomes tape + one chunk, and the
+    chunk is a parameter.
+
+    TWO CONSEQUENCES STATED RATHER THAN HIDDEN:
+    1. `assert_fit_absorption_within_bound` is applied by
+       `_feature_pass` PER CALL, so chunking applies it per chunk rather
+       than per population. That is STRICTER, never looser: a chunk whose
+       drops exceed 1% refuses where the whole population might have
+       absorbed it. A false refusal, not a false pass -- the safe
+       direction -- and the per-chunk drops are aggregated and reported
+       so the population-level figure is still readable.
+    2. Chunks are cut on WINDOW boundaries, because `_feature_pass`
+       groups by slug and reads one archive per slug. A chunk cut mid
+       window would change what the pass does, not merely when."""
+    import tempfile
+    got = validate_splits(splits)
+    import phase2_arms as PA
+    import harmful_hazard_model as _hm
+    pre = assembly_preconditions()
+    # ONE SPLIT AT A TIME. A fragment row belongs to EXACTLY ONE split, so
+    # the two tape indices never need to be resident together -- measured,
+    # both together are 4.01 GB and the larger alone is ~2.5 GB. This is
+    # the single largest retained term in the run.
+    passes = [(sp,) for sp in got] if partition_by_split and tape is None \
+        else [got]
+    scores: dict = {(c, h): {} for c in coins for h in heads}
+    statuses: dict = {(c, h): {} for c in coins for h in heads}
+    split_by_gen: dict = {c: {} for c in coins}
+    drops: dict = {c: {} for c in coins}
+    kept_total: dict = {c: 0 for c in coins}
+    n_chunks = 0
+    tmp = tempfile.TemporaryDirectory(dir=str(scratch) if scratch else None)
+    stages: dict = {}
+    n_tape_rows = 0
+    n_cache_clears = 0
+    cache_clear_s = 0.0
+    try:
+        for part in passes:
+            t0 = time.time()
+            tp = build_tape_index(part) if tape is None else tape
+            stages.update(tp["stages"])
+            n_tape_rows += tp["n_tape_rows"]
+            if log:
+                log.stage("tape_index_done", split=list(part),
+                          wall_s=round(time.time() - t0, 1),
+                          n_tape_rows=tp["n_tape_rows"])
+            _keys = set(tp["TAPE"]) if len(passes) > 1 else None
+            for chunk_path, slugs in _fragment_chunks(
+                    Path(tmp.name), chunk_windows=chunk_windows,
+                    source=source, keys=_keys):
+                n_chunks += 1
+                if clear_bn_cache:
+                    # `_bn_hour` is DETERMINISTIC GIVEN THE FILE: it reads
+                    # the hour off disk and builds ts/vals from it, so
+                    # dropping the cache cannot change a result -- only
+                    # what has to be re-read. MEASURED: one hour is 0.763
+                    # GB and `_BN_CACHE` holds four.
+                    _t = time.time()
+                    _hm._BN_CACHE.clear()
+                    n_cache_clears += 1
+                    cache_clear_s += time.time() - _t
+                t_c = time.time()
+                blocks = PA._feature_pass(chunk_path, "phase4_diag",
+                                          TAPE=tp["TAPE"])
+                _check_assembled_widths(blocks, pre)
+                for coin in coins:
+                    b = blocks.get(coin)
+                    if not b:
+                        continue
+                    for k, v in b["drops"].items():
+                        drops[coin][k] = drops[coin].get(k, 0) + v
+                    kept_total[coin] += len(b["kept"])
+                    if not b["kept"]:
+                        continue
+                    for head in heads:
+                        sc, st, sb = generation_scores(
+                            b, refs[coin], coin=coin, head=head,
+                            split_of=tp["split_of"])
+                        scores[(coin, head)].update(sc)
+                        for kk, vv in st.items():
+                            statuses[(coin, head)][kk] = \
+                                statuses[(coin, head)].get(kk, 0) + vv
+                        split_by_gen[coin].update(sb)
+                del blocks
+                chunk_path.unlink(missing_ok=True)
+                if log:
+                    log.stage("chunk_done", chunk=n_chunks,
+                              split=list(part), windows=len(slugs),
+                              wall_s=round(time.time() - t_c, 1),
+                              kept_so_far=dict(kept_total))
+            if tape is None:
+                del tp                       # release this split's index
+    finally:
+        tmp.cleanup()
+    out = {"assembly": {"splits": list(got),
+                        "split_set": split_set_name(got),
+                        "stages": stages,
+                        "widths": pre,
+                        "partition_by_split": partition_by_split
+                        and tape is None,
+                        "passes": [list(x) for x in passes],
+                        "bn_cache_cleared": clear_bn_cache,
+                        "n_bn_cache_clears": n_cache_clears,
+                        "bn_cache_clear_s": round(cache_clear_s, 3),
+                        "n_tape_rows": n_tape_rows,
+                        "n_chunks": n_chunks,
+                        "chunk_windows": chunk_windows,
+                        "kept_by_coin": dict(kept_total),
+                        "drops_by_coin": {c: dict(v)
+                                          for c, v in drops.items()},
+                        "absorption_bound_scope": (
+                            "PER CHUNK -- `_feature_pass` applies it per "
+                            "call. Stricter than per population, never "
+                            "looser; the aggregated drops above are the "
+                            "population-level figure"),
+                        "ruling": dict(SPLIT_RULING)},
+           "by_arm": {k: (scores[k], statuses[k]) for k in scores},
+           "split_by_gen": split_by_gen,
+           "split_counts": {c: split_tally(split_by_gen[c].keys(),
+                                           split_by_gen[c])
+                            for c in coins}}
+    return out
+
+
+def _fragment_chunks(dst_dir: Path, *, chunk_windows: int,
+                     source: Path | None = None, keys=None):
+    """Yield (path, slugs) for the fragment cut on WINDOW boundaries.
+
+    Streamed, so the whole fragment is never resident: one chunk's rows
+    at a time, written and handed back, and the caller unlinks it once
+    the pass has consumed it."""
+    import phase2_arms as PA
+    src = Path(source) if source is not None else PA.FRAGMENT
+    buf: list = []
+    slugs: list = []
+    i = 0
+    for r in PA._stream_tape_rows(src):
+        if keys is not None and (r["slug"], r["side"], r["gen"],
+                                 r["t_start"]) not in keys:
+            continue                 # belongs to another split's pass
+        sl = r["slug"]
+        if sl not in slugs:
+            if len(slugs) >= chunk_windows:
+                i += 1
+                dst = Path(dst_dir) / f"chunk_{i:04d}.json"
+                _write_rows(dst, buf)
+                yield dst, list(slugs)
+                buf, slugs = [], []
+            slugs.append(sl)
+        buf.append(r)
+    if buf:
+        i += 1
+        dst = Path(dst_dir) / f"chunk_{i:04d}.json"
+        _write_rows(dst, buf)
+        yield dst, list(slugs)
+
+
 def generation_scores(blocks: dict, reference: dict, *, coin: str,
                       head: str, split_of: dict | None = None) -> tuple:
     """(slug, side, t0) -> one score per GENERATION, the exclusions, and
@@ -5884,6 +6375,9 @@ def main() -> int:
                     help="price the ruled run end to end into --outdir "
                          "(never data/, never the run's OUTDIR)")
     ap.add_argument("--feed-windows", type=int, default=3)
+    ap.add_argument("--chunk-windows", type=int, default=60,
+                    help="fragment chunk size in WINDOWS for the "
+                         "streaming assembly (memory is tape + one chunk)")
     ap.add_argument("--cap-bytes", type=int, default=None,
                     help="the MemoryMax this run was launched under, so "
                          "the progress log reports peak RSS AGAINST it")
@@ -5934,7 +6428,8 @@ def main() -> int:
         try:
             rec = run(Path(a.outdir) if a.outdir else None,
                       splits=_splits_from_cli(a.splits),
-                      cap_bytes=a.cap_bytes)
+                      cap_bytes=a.cap_bytes,
+                      chunk_windows=a.chunk_windows)
         except (DiagRefused, HS.HeadRefused, SS.ScoreStreamRefused,
                 MRC.ControlRefused, RHO.RhoRefused,
                 HSP.ReferenceIntegrityError) as exc:
