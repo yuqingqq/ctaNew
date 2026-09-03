@@ -56,7 +56,7 @@ DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
 #: This suite's own total, asserted over ran + skipped.
-EXPECTED_CHECKS = 24
+EXPECTED_CHECKS = 25
 
 #: THE REGISTRY. One entry per day the USER has taken out of the race.
 #: EVERY entry carries its authority as DATA -- the same discipline round 22
@@ -139,10 +139,28 @@ def forward_read_exists(day_token: str, derived: Path | None = None,
                                      "not evidence of absence"})
                 continue
             outcome = doc.get("outcome")
-            sealed = doc.get("sealed_file") or doc.get("sealed")
+            # THE NAME IS NOT THE DEFINITION, and this cost a wrong refusal
+            # the first time it ran against the real artifact. BE's 08-29
+            # receipt carries `"sealed": true` -- a PROTOCOL FLAG meaning the
+            # receipt follows the sealing discipline -- while its `outcome` is
+            # REFUSED, it names no score file, and it holds no rows and no
+            # metric. Reading that boolean as evidence of a read classified a
+            # gate firing as a look at the day's economics and REFUSED the
+            # withdrawal for a reason that was not true.
+            #
+            # Evidence of a READ is a PATH to scores, never a boolean: a
+            # non-empty `sealed_file`, or a positive scored-row/action count.
+            _sf = doc.get("sealed_file")
+            _sealed_path = _sf if isinstance(_sf, str) and _sf.strip() else None
+            _n = doc.get("n_actions_scored") or doc.get("rows") or 0
+            _scored = isinstance(_n, (int, float)) and _n > 0
+            sealed = bool(_sealed_path) or _scored
             rec = {"path": str(f), "outcome": outcome,
                    "refused_at": doc.get("refused_at"),
-                   "has_sealed": bool(sealed),
+                   "sealed_file": _sealed_path,
+                   "n_scored": _n if isinstance(_n, (int, float)) else None,
+                   "sealed_flag_present": "sealed" in doc,
+                   "sealed_flag_is_not_evidence": True,
                    "as_of": doc.get("as_of_utc")}
             if outcome == "REFUSED" and not sealed:
                 refusals.append(rec)
@@ -402,6 +420,23 @@ def selftest() -> int:
            "FRONT DOOR: a REFUSED receipt with no sealed file is a GATE "
            "FIRING, not a read -- 08-29's real receipt is exactly this, so "
            "the withdrawal is recorded before any economics are seen")
+        # THE REAL RECEIPT'S SHAPE, and the defect it caught. BE's 08-29
+        # receipt is `outcome: REFUSED` WITH `"sealed": true` -- a protocol
+        # flag, not a score file. Reading that boolean as evidence of a read
+        # refused the withdrawal for a reason that was not true, on the first
+        # run against the real artifact.
+        (d / "be_forward_day_receipt_20260829.v1b.json").write_text(json.dumps(
+            {"outcome": "REFUSED", "refused_at": "day_closed_and_attributed",
+             "sealed": True}), encoding="utf-8")
+        _rb = assert_withdrawal_admissible("20260829", d)
+        ok(_rb["admissible_to_withdraw"] is True and _rb["n_reads"] == 0
+           and _rb["n_refusals"] == 2
+           and all(r["sealed_flag_present"] for r in _rb["refusals"][-1:]),
+           "FRONT DOOR: a REFUSED receipt carrying `\"sealed\": true` is "
+           "STILL a refusal -- that boolean is BE's protocol flag, not a "
+           "score file. Evidence of a read is a PATH or a positive scored "
+           "count; the name is not the definition, and reading it as one "
+           "refused this very withdrawal on its first real run")
         (d / "be_forward_day_receipt_20260829.v2.json").write_text(json.dumps(
             {"outcome": "SCORED", "sealed_file": "/x/scores.json"}),
             encoding="utf-8")
