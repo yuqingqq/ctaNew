@@ -243,6 +243,38 @@ def preflight(day: str, derived: Path | None = None) -> dict[str, Any]:
            "not read from the headline",
            "verdict.verdict_split", {"stated": stated,
                                      "recomputed": recomputed})
+        # DA24-R1: AND THE FIELD THE RACE IS COUNTED BY. `withdrawn` is
+        # recomputed from the registry, never taken from the artifact -- a
+        # preflight that believes the producer about a USER ruling is not a
+        # preflight. An artifact that omits either field is UNEVALUABLE, which
+        # is how a verdict produced without this path becomes refusable.
+        import da_race_withdrawals as _RW                     # noqa: PLC0415
+        _wd_reg = bool(_RW.withdrawal_for(day))
+        _wd_art = vs.get("withdrawn_from_race")
+        _cnt_art = vs.get("counts_toward_race")
+        if not isinstance(_wd_art, bool) or not isinstance(_cnt_art, bool):
+            _p(res, "counts_toward_race_equals_conjuncts_and_not_withdrawn",
+               "UNEVALUABLE",
+               "the verdict carries no withdrawn_from_race / "
+               "counts_toward_race pair, so the number G is counted by "
+               "cannot be checked at all -- an artifact produced without that "
+               "path is refused here rather than graded on the field that "
+               "reads TRUE for a withdrawn day",
+               "verdict.verdict_split",
+               {"withdrawn_from_race": _wd_art,
+                "counts_toward_race": _cnt_art, "registry": _wd_reg})
+        else:
+            _cnt_re = recomputed and not _wd_reg
+            _p(res, "counts_toward_race_equals_conjuncts_and_not_withdrawn",
+               "PASS" if (_wd_art == _wd_reg and _cnt_art == _cnt_re)
+               else "FAIL",
+               "counts_toward_race recomputed from the four conjuncts AND the "
+               "withdrawal registry. THIS is the field G is counted by; "
+               "race_accrual_eligible answers a different question and reads "
+               "TRUE for a withdrawn day (R-500)",
+               "verdict.verdict_split",
+               {"withdrawn_stated": _wd_art, "withdrawn_registry": _wd_reg,
+                "counts_stated": _cnt_art, "counts_recomputed": _cnt_re})
 
     # (c) the frozen rule's block, against the frozen rule's OWN vocabulary ---
     clr = v.get("content_liveness_rule")
@@ -538,10 +570,15 @@ def selftest() -> int:
             "day_token": day,
             "write_reason": SCHEDULED_PREFIX + " (INVOCATION_ID=abc)",
             "as_of_utc": "2026-09-03T00:06:01+00:00",
+            # DA24-R1: a well-formed verdict carries the withdrawal pair.
+            # The fixture's day (2026-09-02) is NOT withdrawn, so it counts;
+            # the pair is a PRECONDITION of this control, not its subject.
             "verdict_split": {"day_closed": True, "post_freeze_pass": True,
                               "era_admissible": True,
                               "day_quality_pass": True,
-                              "race_accrual_eligible": True},
+                              "race_accrual_eligible": True,
+                              "withdrawn_from_race": False,
+                              "counts_toward_race": True},
             "content_liveness_rule": {"status": "CONTENT_THIN",
                                       "governs": True},
             "blackout_mask_artifact": {
@@ -556,6 +593,40 @@ def selftest() -> int:
         (tmp / f"da_blackout_mask_{day}.json").write_text(json.dumps(mask))
         (tmp / f"da_dayverdict_{day}.json").write_text(json.dumps(verdict))
         return verdict, mask
+
+    # DA24-R1: the field G is counted by, driven in BOTH failing directions.
+    # A preflight that validates only `race_accrual_eligible` grades the field
+    # that reads TRUE for a withdrawn day.
+    def _named(rr, n):
+        return next((x for x in rr["predicates"] if x["predicate"] == n), None)
+
+    with tempfile.TemporaryDirectory() as td:
+        tmp = Path(td)
+        v0, _ = fixture(tmp)
+        v0["verdict_split"]["counts_toward_race"] = False   # disagrees
+        (tmp / f"da_dayverdict_{day}.json").write_text(json.dumps(v0))
+        _rc = preflight(day, tmp)
+        _pc = _named(_rc,
+                     "counts_toward_race_equals_conjuncts_and_not_withdrawn")
+        ok(_pc is not None and _pc["state"] == "FAIL",
+           "DA25-2 KNOWN-BAD: a verdict whose `counts_toward_race` disagrees "
+           "with the recomputation FAILS here -- recomputed from the four "
+           "conjuncts AND the withdrawal registry, never read from the "
+           "headline")
+    with tempfile.TemporaryDirectory() as td:
+        tmp = Path(td)
+        v0, _ = fixture(tmp)
+        v0["verdict_split"].pop("counts_toward_race")
+        v0["verdict_split"].pop("withdrawn_from_race")
+        (tmp / f"da_dayverdict_{day}.json").write_text(json.dumps(v0))
+        _ru = preflight(day, tmp)
+        _pu = _named(_ru,
+                     "counts_toward_race_equals_conjuncts_and_not_withdrawn")
+        ok(_pu is not None and _pu["state"] == "UNEVALUABLE",
+           "DA25-2b KNOWN-BAD: a verdict produced WITHOUT the pair is "
+           "UNEVALUABLE, not a pass -- an artifact made by a path that never "
+           "learned about the withdrawal is refusable here rather than being "
+           "graded on the field that reads TRUE for a withdrawn day")
 
     with tempfile.TemporaryDirectory() as td:
         tmp = Path(td)

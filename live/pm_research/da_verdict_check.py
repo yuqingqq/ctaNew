@@ -40,7 +40,8 @@ from pathlib import Path
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import da_forward_day_verify as D                              # noqa: E402
+import da_forward_day_verify as D
+import da_race_withdrawals as RW                              # noqa: E402
 
 # RR12-1: the DATA root, resolved once in `pm_tape_density`.
 import pm_tape_density as _TDROOT  # noqa: E402
@@ -122,6 +123,36 @@ def check_verdict(rep: dict, day_token: str,
          "taken from the headline -- a headline that disagrees with its own "
          "inputs has contradicted a table three times in this programme",
          {"stated": elig, "recomputed": recomputed, "conjuncts": vals})
+
+    # DA24-R1. THE FIELD THE RACE IS COUNTED BY MUST REFLECT THE WITHDRAWAL.
+    # `race_accrual_eligible` is the pure four-conjunct computation and reads
+    # TRUE for a withdrawn day -- correctly, because the day IS eligible and
+    # is deliberately not entered. Until this check existed, the independent
+    # verifier validated the field that says the day counts, and anyone
+    # counting G by it got 3 of 5 instead of 2.
+    #
+    # `withdrawn` is recomputed FROM THE REGISTRY, not read from the artifact:
+    # a checker that takes the producer's word for the policy fact is checking
+    # nothing. The artifact must then AGREE with the registry.
+    _wd_reg = bool(RW.withdrawal_for(day_token))
+    _wd_art = r.typed(split, "withdrawn_from_race", bool, "verdict_split")
+    _cnt_art = r.typed(split, "counts_toward_race", bool, "verdict_split")
+    _cnt_recomputed = recomputed and not _wd_reg
+    _add(res, "withdrawal_matches_the_registry",
+         _wd_art is not None and _wd_art == _wd_reg,
+         "withdrawn_from_race recomputed from da_race_withdrawals here, not "
+         "taken from the artifact -- an artifact that disagrees with the "
+         "registry about a USER ruling is the one a reader must not believe",
+         {"stated": _wd_art, "registry": _wd_reg,
+          "authority": (RW.withdrawal_for(day_token) or {}).get("authority")})
+    _add(res, "counts_toward_race_EQUALS_conjuncts_AND_not_withdrawn",
+         _cnt_art is not None and _cnt_art == _cnt_recomputed,
+         "counts_toward_race recomputed from the four conjuncts AND the "
+         "registry. THIS is the field G is counted by (D.ACCRUAL_RULE says "
+         "so); race_accrual_eligible answers a different question and reads "
+         "TRUE for a withdrawn day",
+         {"stated": _cnt_art, "recomputed": _cnt_recomputed,
+          "eligible": recomputed, "withdrawn": _wd_reg})
 
     rule = r.typed(split, "rule", str, "verdict_split")
     role = r.typed(split, "era_role", str, "verdict_split")
@@ -270,8 +301,17 @@ def check_verdict(rep: dict, day_token: str,
         "as_of_utc": rep.get("as_of_utc"),
         "checks": res, "n_checks": len(res), "n_failing": len(fails),
         "artifact_complete": not fails,
-        # THE OUTCOME, reported and never decided here.
-        "accrues": recomputed,
+        # THE OUTCOME, reported and never decided here. DA24-R1: `accrues` is
+        # now the WITHDRAWAL-AWARE value, so every consumer of this checker
+        # gets the number G is counted by without having to know that a second
+        # field exists. The four-conjunct answer is carried beside it under a
+        # name that says which question it answers.
+        "accrues": _cnt_recomputed,
+        "eligible_by_four_conjuncts": recomputed,
+        "withdrawn_from_race": _wd_reg,
+        "accrues_note": (
+            "`accrues` = the four conjuncts AND not withdrawn. A withdrawn "
+            "day is ELIGIBLE and does not COUNT; G is counted by this field"),
         "conjuncts": vals,
         "all_pass_quality": rep.get("all_pass"),
         "outcome_note": (
@@ -291,9 +331,18 @@ def _fixture(day="20260829", era="clob_v3_1", closed=True,
             "windows_complete_elapsed": elapsed,
             "affected_over_elapsed": round(affected / elapsed, 4),
             "affected_over_288": round(affected / 288, 4)}
+    # DA24-R1: the fixture's day is 2026-08-29, which the USER has WITHDRAWN
+    # (R-500). So the fixture carries the withdrawn shape -- eligible by the
+    # four conjuncts and NOT counting -- and the checks below read
+    # `eligible_by_four_conjuncts` where they are about eligibility and
+    # `accrues` where they are about the number G is counted by. A fixture
+    # that pretended the day were ordinary would test the wrong artifact.
     split = {"day_closed": True, "post_freeze_pass": True,
              "era_admissible": True, "day_quality_pass": True,
-             "race_accrual_eligible": True, "rule": D.ACCRUAL_RULE,
+             "race_accrual_eligible": True,
+             "withdrawn_from_race": bool(RW.withdrawal_for(day)),
+             "counts_toward_race": not bool(RW.withdrawal_for(day)),
+             "rule": D.ACCRUAL_RULE,
              "era_role": "INTERLOCK, NOT A QUALITY GRADE (USER 2026-09-01)."}
     bar = {"evaluable": True, "P1_pass": True, "P2_pass": True,
            "P3_pass": True, "windows_affected_disclosure": dict(disc)}
@@ -326,14 +375,28 @@ def selftest() -> int:
             raise SystemExit(1)
 
     def named(rep, n):
-        return next(c for c in rep["checks"] if c["check"] == n)
+        # A MISSING CHECK MUST FAIL BY NAME, NOT RAISE. `next(...)` raised
+        # StopIteration when the named check had been deleted, so the suite
+        # went red with a TRACEBACK instead of saying which check was gone
+        # -- the refusal-must-be-by-name class, third instance in this lane.
+        # Every known-bad below asserts `not named(...)["pass"]`, so a
+        # sentinel with pass=False makes a DELETED CONSUMER fail at the
+        # check that names it.
+        return next((c for c in rep["checks"] if c["check"] == n),
+                    {"check": n, "pass": False,
+                     "detail": f"ABSENT: no check named {n!r} was produced"
+                               f" -- the consumer that emits it is gone",
+                     "evidence": {"present": sorted(
+                         c["check"] for c in rep["checks"])}})
 
     base = _fixture()
     good = check_verdict(base, "20260829")
     # POSITIVE CONTROL -- a well-formed closed-day verdict must ADMIT, or
     # every refusal below proves nothing (rule 16).
     ok(good["artifact_complete"] and good["n_failing"] == 0
-       and good["accrues"] is True and good["reads"]["scopes"] == 4,
+       and good["eligible_by_four_conjuncts"] is True
+       and good["accrues"] is False and good["withdrawn_from_race"] is True
+       and good["reads"]["scopes"] == 4,
        "POSITIVE CONTROL: a complete closed-day verdict passes all checks "
        "across 4 scopes")
 
@@ -504,6 +567,51 @@ def selftest() -> int:
     ok(not named(r, "CONTENT_THIN_does_not_silently_veto_HEALTHY")["pass"],
        "KNOWN-BAD: a verdict that adopted the composition without a ruling "
        "fails -- the checker refuses a worker-made policy change")
+
+    # ----------------------------------------------------------------------
+    # DA24-R1: THE FIELD THE RACE IS COUNTED BY, AND ITS CONSUMER.
+    # `counts_toward_race` had no consumer -- a field written and never read
+    # is a comment with a JSON key. These drive the consumer in BOTH
+    # directions, on the withdrawn day and on an ordinary one.
+    # ----------------------------------------------------------------------
+    m = copy.deepcopy(base)
+    m["verdict_split"]["counts_toward_race"] = True          # the doctored day
+    r = check_verdict(m, "20260829")
+    ok(not named(r, "counts_toward_race_EQUALS_conjuncts_AND_not_withdrawn"
+                 )["pass"] and r["artifact_complete"] is False,
+       "DA25-1 KNOWN-BAD: an artifact claiming the WITHDRAWN day counts is "
+       "REFUSED -- recomputed here from the four conjuncts AND the registry, "
+       "never taken from the producer. Delete this consumer and that artifact "
+       "is accepted, which is what `counts_toward_race` having no reader "
+       "meant for four rounds")
+    m = copy.deepcopy(base)
+    m["verdict_split"]["withdrawn_from_race"] = False
+    r = check_verdict(m, "20260829")
+    ok(not named(r, "withdrawal_matches_the_registry")["pass"],
+       "DA25-1b KNOWN-BAD: an artifact that disagrees with the REGISTRY about "
+       "a USER ruling is refused -- a checker that takes the producer's word "
+       "for the policy fact is checking nothing")
+    for _f in ("counts_toward_race", "withdrawn_from_race"):
+        m = copy.deepcopy(base)
+        m["verdict_split"].pop(_f)
+        r = check_verdict(m, "20260829")
+        ok(r["artifact_complete"] is False,
+           f"DA25-1c KNOWN-BAD: a verdict produced WITHOUT {_f} is refusable "
+           f"-- an artifact made by a path that never learned about the "
+           f"withdrawal must not grade as complete")
+    _ord = _fixture(day="20260901", era="clob_v4_1")  # that day's own era
+    _ro = check_verdict(_ord, "20260901")
+    ok(_ro["artifact_complete"] and _ro["accrues"] is True
+       and _ro["withdrawn_from_race"] is False
+       and _ro["eligible_by_four_conjuncts"] is True,
+       "DA25-1d POSITIVE CONTROL: an ORDINARY day still accrues -- the "
+       "consumer discriminates between the two days rather than refusing "
+       "everything, which is what makes the False above mean something")
+    ok("counts_toward_race" in D.ACCRUAL_RULE
+       and "G IS COUNTED BY" in D.ACCRUAL_RULE,
+       "DA25-1e AND THE RULE SAYS SO: ACCRUAL_RULE names `counts_toward_race` "
+       "as the field G is counted by, so the next reader does not have to "
+       "infer which of two booleans is the one")
 
     print(f"da_verdict_check selftests: {checks} checks passed")
     return 0

@@ -276,6 +276,23 @@ def assert_withdrawal_carried(rep: dict, day_token: str) -> dict[str, Any]:
             f"{vs.get('withdrawn_from_race')!r}). One artifact, two answers, "
             f"is how a reader ends up quoting the wrong one.")
     mono = _RW.assert_withdrawals_monotone()      # raises by name on an undo
+    # DA24-R3. THE STATUS WAS RETRIEVED AND NEVER INSPECTED -- absence reading
+    # as a pass, again. `assert_withdrawals_monotone` RAISES on a removal or a
+    # re-cite, but it RETURNS `monotone: None` when the tree is not a
+    # repository, and this function handed that back as if it were a pass. The
+    # canonical-`--out` guard did refuse on it, but THE UNIT DOES NOT WRITE
+    # THAT WAY: `da_midnight_verify.sh` writes to a temp path and installs it
+    # afterwards, so that branch never fires on the production write. The
+    # guarantee now travels with the EMISSION rather than with the output
+    # path's spelling.
+    if mono.get("monotone") is not True:
+        raise ValueError(
+            f"REFUSED to emit a verdict for {day_token}: the race-withdrawal "
+            f"record could not be shown intact (status "
+            f"{mono.get('status')!r}, monotone {mono.get('monotone')!r}). "
+            f"'I could not check' is not 'nothing was undone' -- a withdrawal "
+            f"is one-way (R-500) and a verdict emitted without evidence of "
+            f"that is a verdict nobody can rely on.")
     return {"carried": True, "withdrawn": bool(blk["withdrawn_from_race"]),
             "monotone": mono}
 
@@ -1775,6 +1792,15 @@ def day_era_admission(day_token: str, path: Path | None = None,
 #: false means the day does not count -- and NOT that the day was bad: (2) and
 #: (3) are properties of the clock and the collector, never of the feed.
 #:
+#: AND ONE THING THE FOUR DO NOT DECIDE (R-500, DA24-R1). A day the USER has
+#: WITHDRAWN is eligible by all four and still does not enter the race. So
+#: `race_accrual_eligible` answers "do the four conjuncts hold" and
+#: `counts_toward_race` answers "does this day count toward G" --
+#: **G IS COUNTED BY `counts_toward_race`**, and every consumer reads that
+#: one. A withdrawn day reads eligible TRUE and counts FALSE, which is the
+#: whole point: the day is out by a recorded decision, not by a failed
+#: computation.
+#:
 #: WHAT (3) DOES AND DOES NOT DECIDE -- USER RULING 2026-09-01, recorded here
 #: because it was previously ambiguous and read as a quality judgement:
 #:
@@ -1819,7 +1845,16 @@ ACCRUAL_RULE = ("a day accrues iff FINISHED (closed UTC day) AND AFTER (post "
                 "ruled eras QUALITY ALONE DECIDES (USER 2026-09-01); era "
                 "carries no fidelity claim, since clob_v3_1/v4/v4_1 make NO "
                 "row-stamping change. Cross-era quality comparison stays "
-                "invalid: the bars are era-dependent in magnitude.")
+                "invalid: the bars are era-dependent in magnitude. "
+                "AND ONE THING THE FOUR DO NOT DECIDE (R-500): a day the USER "
+                "has WITHDRAWN is eligible by all four and still does not "
+                "enter the race, so `race_accrual_eligible` answers 'do the "
+                "four conjuncts hold' while `counts_toward_race` answers "
+                "'does this day count toward G'. G IS COUNTED BY "
+                "`counts_toward_race`, and every consumer reads that one; a "
+                "withdrawn day reads eligible TRUE and counts FALSE, which is "
+                "the point -- it is out by a recorded decision, not by a "
+                "failed computation.")
 
 
 def split_verdict(preds: list, regime: str = "count_bar_v1_frozen",
@@ -3058,7 +3093,7 @@ def verify_day(day_token: str, freeze_epoch: float,
 #: 238 / 244 / 238 across three layouts at rc 0, with only the log's presence
 #: differing and nothing saying so. `ran + skipped` must equal this in EVERY
 #: layout, so a vanished check fails the suite instead of shrinking the count.
-EXPECTED_CHECKS = 301
+EXPECTED_CHECKS = 304
 
 
 def _selftests(require_no_skips: bool = False) -> int:
@@ -4651,6 +4686,39 @@ def _selftests(require_no_skips: bool = False) -> int:
            "REFUSES -- one artifact with two answers is how a reader ends up "
            "quoting the wrong one")
 
+    # DA24-R3: the status was RETRIEVED AND NEVER INSPECTED -- absence
+    # reading as a pass. The canonical-`--out` guard did refuse on it, but
+    # THE UNIT DOES NOT WRITE THAT WAY (it writes a temp file and installs it
+    # afterwards), so that branch never fired on a production write. The
+    # guarantee now travels with the EMISSION.
+    _saved_mono = _RW.assert_withdrawals_monotone
+    try:
+        _RW.assert_withdrawals_monotone = lambda *a, **k: {
+            "status": "NO_REPOSITORY", "monotone": None, "vacuous": True}
+        try:
+            assert_withdrawal_carried(_v29, "20260829")
+            ok(False, "DA24-R3: monotone None must refuse")
+        except ValueError as _e:
+            ok("could not be shown intact" in str(_e)
+               and "NO_REPOSITORY" in str(_e)
+               and "not 'nothing was undone'" in str(_e),
+               f"DA24-R3 FALSIFIER: a verdict emitted where the one-way "
+               f"guarantee CANNOT BE EVIDENCED is now REFUSED BY NAME on the "
+               f"emission path ({str(_e)[:80]}...). It used to be handed back "
+               f"as a pass, and the only guard that caught it was keyed on "
+               f"the output path's spelling -- which the unit does not use")
+        _RW.assert_withdrawals_monotone = lambda *a, **k: {
+            "status": "READ", "monotone": True, "vacuous": False}
+        ok(assert_withdrawal_carried(_v29, "20260829")["monotone"]["monotone"]
+           is True,
+           "DA24-R3 POSITIVE CONTROL: with the guarantee EVIDENCED the same "
+           "verdict is admitted -- the guard refuses the unevidenced case, "
+           "not every emission")
+    finally:
+        _RW.assert_withdrawals_monotone = _saved_mono
+    ok(_RW.assert_withdrawals_monotone is _saved_mono,
+       "DA24-R3: and the monotonicity function is restored afterwards")
+
     ok(_PRE in (_bs := (CODE_ROOT / "live/pm_research"
                         / "da_midnight_verify.sh").read_text(
                             encoding="utf-8", errors="replace"))
@@ -5383,6 +5451,21 @@ def _selftests(require_no_skips: bool = False) -> int:
                 _sh7.copy2(_q7, _mtree / _q7.name)
             elif _q7.is_dir() and _q7.name == "fixtures":
                 _sh7.copytree(_q7, _mtree / _q7.name)
+        # DA24-R3 MADE THE EMISSION PATH REFUSE WHEN THE ONE-WAY GUARANTEE
+        # CANNOT BE EVIDENCED, and a bare copied tree is exactly that case --
+        # no history, so nothing can show that no withdrawal was dropped. The
+        # FIXTURE is what was wrong, not the guard: this probe's child emits a
+        # real verdict through the production path, so its tree must be able
+        # to answer the question production's tree answers. Making it a
+        # repository moves the probe CLOSER to production rather than
+        # weakening the guard with an opt-out, and an opt-out is what an
+        # environment variable would have been.
+        import subprocess as _sp7                             # noqa: PLC0415
+        for _cmd7 in (["init", "-q", "."], ["config", "user.email", "t@t"],
+                      ["config", "user.name", "t"], ["add", "-A"],
+                      ["commit", "-q", "-m", "probe tree"]):
+            _sp7.run(["git", *_cmd7], cwd=str(Path(_t7) / "mutant"),
+                     capture_output=True, text=True)
         _mmod = _mtree / Path(__file__).name
         _intact7 = _mmod.read_text(encoding="utf-8")
         _CALL_DAY = "    annotate_governance(preds, regime)\n"

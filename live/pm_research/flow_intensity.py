@@ -1370,6 +1370,7 @@ def selftest() -> int:
         "                  'data_root': str(fi.DATA_ROOT),\n"
         "                  'branch': fi.DATA_ROOT_BRANCH,\n"
         "                  'raw': str(fi.RAW),\n"
+        "                  'register_default': str(fi.REGISTER_DEFAULT),\n"
         "                  'n_paths': len(fi._archive_paths())}))\n")
 
     def _child(tree: Path, prefix_mutant: bool) -> dict:
@@ -1399,6 +1400,9 @@ def selftest() -> int:
            and _fixed["repo"] != str(_tree)
            and _fixed["data_root"] != str(_tree)
            and _fixed["branch"] == "3_canonical"
+           and _fixed["register_default"].startswith(str(_tree))
+           and not _fixed["register_default"].startswith(
+               _fixed["data_root"] + "/orch")
            and _fixed["n_paths"] > 0,
            f"RR12-1 REPAIRED, DRIVEN: imported from a code tree with NO "
            f"`data/`, this module resolves CODE_ROOT to that tree and "
@@ -1423,24 +1427,55 @@ def selftest() -> int:
         _r3 = _child(_own, prefix_mutant=False)
         ok(_r3["repo"] == _r3["data_root"] == _r3["code_root"] == str(_own)
            and _r3["branch"] == "2_code_tree_carries_the_tape"
+           and _r3["register_default"].startswith(str(_own))
            and _r3["n_paths"] > 0,
            f"RR12-1 REGRESSION CONTROL: a code tree that DOES carry the tape "
            f"still resolves to ITSELF (branch {_r3['branch']}, "
            f"{_r3['n_paths']} paths) -- so in the canonical tree, which is "
            f"where the nightly unit runs, the new resolution returns exactly "
            f"the path the old expression returned. The repair changes what a "
-           f"WORKTREE reads and nothing else")
+           f"WORKTREE reads and nothing else. **AND THIS IS THE "
+           f"CONFIGURATION DA24-R2 FOUND RED**: the roots are EQUAL here, "
+           f"which is what broke the register check written as a string "
+           f"prefix -- so the case production runs in is now driven "
+           f"explicitly rather than being whichever tree the suite happened "
+           f"to be launched from")
 
-    ok(str(REGISTER_DEFAULT).startswith(str(CODE_ROOT))
-       and not str(REGISTER_DEFAULT).startswith(str(DATA_ROOT) + "/orch"),
-       f"RR12-1 THE OTHER HALF: the register default follows CODE_ROOT "
-       f"({CODE_ROOT}), not the data root. The register is TRACKED and exists "
-       f"in every worktree; a run from a worktree that filed into the "
-       f"canonical tree's register would be writing to a tree it is not in")
-    ok(CODE_ROOT != DATA_ROOT or (CODE_ROOT / "data/pm_5min/raw").is_dir(),
-       "RR12-1 and the two roots are ALLOWED to be equal -- they are, in the "
-       "canonical tree -- so this check states the property rather than "
-       "asserting a difference that only a worktree has")
+    # DA24-R2, AND IT IS A REGRESSION I SHIPPED AND REPORTED GREEN. This
+    # check first read:
+    #     startswith(CODE_ROOT) and not startswith(DATA_ROOT + "/orch")
+    # which FAILS whenever CODE_ROOT == DATA_ROOT, because then the two
+    # prefixes are the same string -- and the roots are equal in exactly the
+    # configuration production runs in (branch 2, a code tree that carries the
+    # tape, which is what the canonical tree is). Round 24 reported this module
+    # green at 54 from a WORKTREE, where the roots differ; in the canonical
+    # tree it was rc 1 on both launchers. A fix that is green where it was
+    # tested and red where it runs is worse than no fix, and the two checks
+    # here even contradicted each other -- the one below said in as many words
+    # that the roots are allowed to be equal.
+    #
+    # THE PROPERTY, STATED SO IT HOLDS IN BOTH CONFIGURATIONS: the register
+    # default is always under CODE_ROOT, and it is under DATA_ROOT only when
+    # DATA_ROOT *is* CODE_ROOT. `is_relative_to` compares path components, so
+    # it cannot be fooled by a shared string prefix either.
+    _reg_under_code = REGISTER_DEFAULT.is_relative_to(CODE_ROOT)
+    _reg_under_data = REGISTER_DEFAULT.is_relative_to(DATA_ROOT)
+    ok(_reg_under_code
+       and (CODE_ROOT == DATA_ROOT or not _reg_under_data),
+       f"RR12-1 THE OTHER HALF: the register default is under CODE_ROOT "
+       f"({CODE_ROOT}) and under DATA_ROOT only when the two are the same "
+       f"tree (equal={CODE_ROOT == DATA_ROOT}, branch "
+       f"{DATA_ROOT_BRANCH}). The register is TRACKED and exists in every "
+       f"worktree; a run from a worktree that filed into the canonical tree's "
+       f"register would be writing to a tree it is not in")
+    ok((CODE_ROOT == DATA_ROOT) == (DATA_ROOT_BRANCH
+                                    == "2_code_tree_carries_the_tape"),
+       f"RR12-1 and the two roots are equal EXACTLY when the resolver took "
+       f"branch 2 (equal={CODE_ROOT == DATA_ROOT}, branch "
+       f"{DATA_ROOT_BRANCH}) -- so this suite's configuration is a STATED "
+       f"fact rather than an accident of where it was launched, and the "
+       f"discriminating half of the check above is driven in BOTH "
+       f"configurations by the children below")
 
     print(f"flow_intensity selftest: {checks} checks OK")
     return 0

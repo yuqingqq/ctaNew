@@ -56,7 +56,7 @@ DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
 #: This suite's own total, asserted over ran + skipped.
-EXPECTED_CHECKS = 25
+EXPECTED_CHECKS = 30
 
 #: THE REGISTRY. One entry per day the USER has taken out of the race.
 #: EVERY entry carries its authority as DATA -- the same discipline round 22
@@ -85,6 +85,32 @@ RACE_WITHDRAWALS: dict[str, dict[str, Any]] = {
                  "ruling, not impossibility"),
     },
 }
+
+
+#: DA24-R4. WHICH FIELDS OF AN ENTRY MAY NEVER MOVE, DECLARED RATHER THAN
+#: IMPLIED. The first version of the monotonicity check compared `authority`
+#: alone, so `reason` -- the field a reader actually quotes -- was silently
+#: rewritable: an entry could be re-labelled "re-admitted after review" with
+#: `monotone: True`. It could not re-admit the day, so it was not a defeat,
+#: but a withdrawal whose stated reason can be edited without a trace is
+#: weaker than one whose cite cannot.
+#:
+#: Comparing the WHOLE entry was the other option and it is worse: it would
+#: make an honest clarification of DA's own commentary a "violation", and a
+#: guard that fires on legitimate maintenance is a guard people learn to work
+#: around. So the split is declared, and the DEFAULT IS IMMUTABLE:
+#: `_entry_fields_are_classified` refuses an entry carrying a key in neither
+#: set, so a field added later is load-bearing until somebody says otherwise
+#: rather than unguarded until somebody notices.
+IMMUTABLE_FIELDS = ("authority", "reason", "recorded_at",
+                    "era_admissible_at_withdrawal", "era_authority")
+ANNOTATABLE_FIELDS = ("note",)
+
+
+def _entry_fields_are_classified(entry: dict) -> list[str]:
+    """Keys in neither set. Non-empty means the classification is stale."""
+    known = set(IMMUTABLE_FIELDS) | set(ANNOTATABLE_FIELDS)
+    return sorted(k for k in entry if k not in known)
 
 
 class WithdrawalRefused(Exception):
@@ -277,7 +303,7 @@ def assert_withdrawals_monotone(repo: Path | None = None,
             f"'monotone' from an unreadable history is the empty-set trap on "
             f"the check that exists to prevent a quiet undo.")
     commits = [c for c in out.split() if c]
-    versions, violations = [], []
+    versions, violations, annotations_changed = [], [], []
     for c in commits:
         rc2, blob = _git(["show", f"{c}:{path}"], repo)
         if rc2 != 0:
@@ -297,11 +323,30 @@ def assert_withdrawals_monotone(repo: Path | None = None,
                 violations.append({
                     "commit": c, "day": day, "kind": "REMOVED",
                     "was": entry.get("authority")})
-            elif now_entry.get("authority") != entry.get("authority"):
-                violations.append({
-                    "commit": c, "day": day, "kind": "RE_CITED",
-                    "was": entry.get("authority"),
-                    "now": now_entry.get("authority")})
+                continue
+            # DA24-R4: EVERY load-bearing field, not `authority` alone.
+            for _f in IMMUTABLE_FIELDS:
+                if now_entry.get(_f) != entry.get(_f):
+                    violations.append({
+                        "commit": c, "day": day, "kind": "RE_CITED",
+                        "field": _f,
+                        "was": entry.get(_f), "now": now_entry.get(_f)})
+            # An UNCLASSIFIED key is load-bearing by default; a field nobody
+            # has classified must not be silently unguarded.
+            for _f in set(entry) | set(now_entry):
+                if _f in IMMUTABLE_FIELDS or _f in ANNOTATABLE_FIELDS:
+                    continue
+                if now_entry.get(_f) != entry.get(_f):
+                    violations.append({
+                        "commit": c, "day": day, "kind": "RE_CITED_UNCLASSIFIED",
+                        "field": _f, "was": entry.get(_f),
+                        "now": now_entry.get(_f),
+                        "why": "a key in neither IMMUTABLE_FIELDS nor "
+                               "ANNOTATABLE_FIELDS is treated as immutable"})
+            for _f in ANNOTATABLE_FIELDS:
+                if now_entry.get(_f) != entry.get(_f):
+                    annotations_changed.append({
+                        "commit": c, "day": day, "field": _f})
     if violations:
         raise WithdrawalRefused(
             f"REFUSED: a recorded race withdrawal has been REMOVED or "
@@ -316,6 +361,11 @@ def assert_withdrawals_monotone(repo: Path | None = None,
         "prior_versions": versions,
         "n_days_now": len(cur), "days_now": sorted(cur),
         "monotone": True,
+        # REPORTED, not refused: prose may be clarified, and the report says
+        # when it was, so "nothing changed" is never inferred from silence.
+        "annotations_changed": annotations_changed,
+        "immutable_fields": list(IMMUTABLE_FIELDS),
+        "annotatable_fields": list(ANNOTATABLE_FIELDS),
         "vacuous": not versions,
         "why": ("no prior committed version carries the registry, so this "
                 "pass compares nothing -- read n_prior_versions_with_registry, "
@@ -566,6 +616,55 @@ def selftest() -> int:
        "ONE-WAY: and it is explicitly NOT a pass -- the canonical write path "
        "refuses on this status, which is where the guarantee has to hold; an "
        "out-of-tree probe is merely not blocked by it")
+
+    # ---- DA24-R4: WHICH FIELDS MAY MOVE, AND WHICH MAY NOT ---------------
+    ok(_entry_fields_are_classified(RACE_WITHDRAWALS["20260829"]) == [],
+       "DA24-R4: every key of the shipped entry is classified as either "
+       "load-bearing or prose -- an unclassified key is treated as immutable, "
+       "so a field added later is guarded until somebody says otherwise "
+       "rather than unguarded until somebody notices")
+    _V1R = ('RACE_WITHDRAWALS = {"20260829": {"authority": "R-500",\n'
+            '                                 "reason": "development read",\n'
+            '                                 "note": "first wording"}}\n')
+    _r6 = _repo([_V1R])
+    _CUR_OK = {"20260829": {"authority": "R-500",
+                            "reason": "development read",
+                            "note": "first wording"}}
+    ok(assert_withdrawals_monotone(_r6, "reg.py", _CUR_OK)["monotone"] is True,
+       "DA24-R4 POSITIVE CONTROL: an unchanged entry passes")
+    try:
+        assert_withdrawals_monotone(_r6, "reg.py", {"20260829": {
+            "authority": "R-500", "reason": "re-admitted after review",
+            "note": "first wording"}})
+        ok(False, "DA24-R4: a rewritten `reason` must refuse")
+    except WithdrawalRefused as e:
+        ok("RE_CITED" in str(e) and "'field': 'reason'" in str(e)
+           and "re-admitted after review" in str(e),
+           f"DA24-R4 FALSIFIER: rewriting `reason` -- the field a reader "
+           f"QUOTES -- now REFUSES and names the field. It used to pass, "
+           f"because the comparison covered `authority` alone, so a "
+           f"withdrawal could be silently re-labelled 're-admitted after "
+           f"review' with monotone True ({str(e)[:60]}...)")
+    _ann = assert_withdrawals_monotone(_r6, "reg.py", {"20260829": {
+        "authority": "R-500", "reason": "development read",
+        "note": "clarified wording"}})
+    ok(_ann["monotone"] is True and len(_ann["annotations_changed"]) == 1
+       and _ann["annotations_changed"][0]["field"] == "note",
+       "DA24-R4 AND THE OTHER DIRECTION: rewriting `note` -- DA's own "
+       "commentary -- does NOT refuse and IS REPORTED. Comparing the whole "
+       "entry would make an honest clarification a violation, and a guard "
+       "that fires on legitimate maintenance is one people learn to work "
+       "around; 'nothing changed' is still never inferred from silence")
+    try:
+        assert_withdrawals_monotone(_r6, "reg.py", {"20260829": {
+            "authority": "R-500", "reason": "development read",
+            "note": "first wording", "invented_later": "quietly added"}})
+        ok(False, "DA24-R4: an unclassified field must refuse")
+    except WithdrawalRefused as e:
+        ok("RE_CITED_UNCLASSIFIED" in str(e) and "invented_later" in str(e),
+           "DA24-R4b FALSIFIER: a key in NEITHER set is treated as immutable "
+           "and refuses -- the default is guarded, so the classification "
+           "going stale is loud rather than a silent hole")
 
     # ---- the blob parser, both directions --------------------------------
     ok(_registry_in_blob(_V1) == {"20260829": {"authority": "R-500"}},
