@@ -444,13 +444,43 @@ def selftest() -> int:
            f"({rr['n_checks'] - rr['n_failing']}/{rr['n_checks']}, "
            f"{rr['reads']['scopes']} scopes) -- producer and checker are not "
            f"drifting apart behind two green suites")
-        ok(rr["accrues"] is False
-           and rr["conjuncts"]["era_admissible"] is False
-           and rr["conjuncts"]["day_quality_pass"] is True,
-           "END-TO-END: and 08-29 reports the outcome the register records -- "
-           "quality PASSES, era is not admissible, so it does not accrue. A "
-           "checker that graded every day 'complete and accruing' would pass "
-           "the fixture legs above too")
+        # SUPERSEDED BY R-497 (F)(1), AND THE CHECK MOVES WITH THE RULING.
+        # This asserted `era_admissible is False` and `accrues is False` for
+        # 08-29 -- true under the unruled `# pre-O1` default that the USER has
+        # now replaced ("We check the data quality and only use qualifiable
+        # data"). Asserting the old value would pin a ruling that no longer
+        # exists. What the check is FOR survives unchanged: that this checker
+        # discriminates rather than grading every day the same way, which is
+        # why the discriminating leg is kept and driven on the SAME day.
+        # WHY THIS ASSERTS THE ERA CONJUNCT AND NOT `accrues`. The composed
+        # verdict is NOT tree-independent: `entirely_post_freeze` loads its
+        # windows through `warning_window.select_holdout` -> `flow_intensity`,
+        # whose `REPO` is `Path(__file__).resolve().parents[2]` -- RR12-1's
+        # class, unfixed in that module. Run from a worktree the selector is
+        # EMPTY, every day reads `post_freeze_pass` False, and the message
+        # blames the data ("absent from the selector"). Measured: 0 archive
+        # paths from a bare worktree, 29,438 with the tape mirrored, and the
+        # SAME landed code then returns post_freeze True for 09-01/09-02.
+        # Asserting `accrues` here would make this check pass or fail on which
+        # tree ran it. The ERA conjunct is tree-independent (the ledger path is
+        # canonical), and it is the one the ruling moves.
+        ok(rr["conjuncts"]["day_quality_pass"] is True
+           and rr["conjuncts"]["era_admissible"] is True,
+           f"END-TO-END (R-497 (F)(1)): 08-29 reports quality PASS and era "
+           f"ADMISSIBLE -- the conjunct the USER ruling moves, read off a "
+           f"verdict the REAL verify_day just produced rather than off a "
+           f"fixture. It does NOT say the day accrues: the artifact on disk "
+           f"carries the pre-ruling answer and cannot be regenerated with the "
+           f"attribution a score requires (DA22-B)")
+        _r30 = check_verdict(D.verify_day("20260830", 1787897340.0),
+                             "20260830")
+        ok(_r30["accrues"] is False
+           and _r30["conjuncts"]["era_admissible"] is False,
+           f"END-TO-END DISCRIMINATION CONTROL, on the day the ruling does "
+           f"NOT reach: 08-30 still reports era INADMISSIBLE and does not "
+           f"accrue (mid-day boundary). A checker that graded every day "
+           f"'complete and accruing' would pass the 08-29 leg above; it "
+           f"cannot pass both")
 
     # KNOWN-BADS for the frozen-rule legs.
     m = copy.deepcopy(base)

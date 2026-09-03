@@ -171,6 +171,122 @@ def days_needing_verdict(outdir: Path, closed_token: str,
                    f"{len(catchup)} day(s) to catch up"}
 
 
+def accrual_attribution_reachability(
+        day_token: str, outdir: Path | None = None,
+        closed_token: str | None = None, opened_token: str | None = None,
+        ) -> dict[str, Any]:
+    """Can THIS day ever acquire the attribution a forward score requires?
+
+    THE QUESTION, AND WHY IT IS NOT THE ERA QUESTION. R-497 (F)(1) ruled the
+    era; BE13's blocker (a) is a different thing entirely. Scoring a forward
+    day requires TWO independent properties, owned by two seats:
+
+      * DA's four ACCRUAL_RULE conjuncts, computed here (FINISHED, AFTER,
+        ADMISSIBLE, HEALTHY); and
+      * BE's gate 1, which reads the day-verdict ARTIFACT and requires
+        `day_closed_calendar` True AND `write_reason` STARTING WITH the
+        scheduled unit's prefix. That prefix is imported from
+        `da_governed_verdict_preflight`, the same single source BE imports,
+        so this cannot drift from the gate it describes.
+
+    AND ONLY ONE WRITER CAN CONFER THE SECOND. `da_midnight_verify.sh` builds
+    `write_reason` from `/proc/self/cgroup` -- the unit this process is
+    ACTUALLY inside -- precisely so that a presence test on an inherited
+    variable cannot fake it. Any other run falls to `DA_WRITE_REASON` or to
+    "UNATTRIBUTED hand run". So the attribution is not something a seat can
+    supply; it is something the unit either does or does not produce.
+
+    WHICH DAYS THE UNIT TOUCHES IS `days_needing_verdict`'s OWN PREDICATE, and
+    this asks it rather than restating it: a historical day is revisited only
+    when its artifact is ABSENT, UNREADABLE, or was written while the day was
+    still OPEN. A present, closed, readable artifact is never rewritten -- by
+    design, because that is what stops a rerun quietly replacing history.
+
+    THIS FUNCTION DECIDES NOTHING (rule 14). It computes REQUIRED, computes
+    ACHIEVABLE, and reports whether they meet. If they do not, that is a
+    finding about the pipeline, not a licence to widen a gate or to invent an
+    attribution -- and inventing one is exactly what the cgroup test exists to
+    prevent.
+    """
+    import da_governed_verdict_preflight as _PF                # noqa: PLC0415
+    outdir = CANONICAL_VERDICT_DIR if outdir is None else Path(outdir)
+    art = outdir / f"da_dayverdict_{day_token}.json"
+    present = art.is_file()
+    closed = _artifact_closed(art) if present else None
+    wr = None
+    if present:
+        try:
+            wr = json.loads(art.read_text(encoding="utf-8")).get("write_reason")
+        except Exception:                                    # pragma: no cover
+            wr = None
+    attributed = isinstance(wr, str) and wr.startswith(_PF.SCHEDULED_PREFIX)
+
+    if closed_token is None or opened_token is None:
+        raise ValueError(
+            "REFUSED: accrual_attribution_reachability needs explicit "
+            "closed_token and opened_token. Deriving them from the clock "
+            "would make the answer depend on when the question was asked, "
+            "and this answer is quoted in receipts.")
+    _dn = days_needing_verdict(outdir, closed_token, opened_token)
+    _kinds = {t: k for t, k in _dn["days"]}
+    would_revisit = day_token in _kinds
+
+    if attributed and closed is True:
+        verdict = "ATTRIBUTED_ALREADY"
+        why = ("the artifact on disk already carries the scheduled unit's "
+               "prefix and is closed by calendar")
+    elif would_revisit:
+        verdict = "REACHABLE_BY_THE_UNIT"
+        why = (f"the scheduled unit's own day list includes this day as "
+               f"{_kinds[day_token]!r}, so its next run writes it with the "
+               f"cgroup-derived attribution")
+    else:
+        verdict = "UNREACHABLE_BY_ANY_HONEST_ROUTE"
+        why = (f"the artifact is present and reads closed "
+               f"(_artifact_closed={closed!r}), so `days_needing_verdict` "
+               f"excludes it: catch-up fires only for an ABSENT, UNREADABLE "
+               f"or WRITTEN-WHILE-OPEN artifact. The scheduled unit is the "
+               f"only writer that can confer the prefix, and it will never "
+               f"revisit this day. Deleting or truncating the artifact would "
+               f"MANUFACTURE the catch-up condition; setting DA_WRITE_REASON "
+               f"to the prefix would FORGE the identity the cgroup test "
+               f"exists to check. Both are inventions, not routes")
+    return {
+        "day": day_token,
+        "artifact_path": str(art),
+        "required": {
+            "da_conjuncts": ["day_closed", "post_freeze_pass",
+                             "era_admissible", "day_quality_pass"],
+            "be_gate_1": "day_closed_calendar True AND write_reason starts "
+                         "with the scheduled prefix",
+            "prefix": _PF.SCHEDULED_PREFIX,
+            "prefix_source": "da_governed_verdict_preflight.SCHEDULED_PREFIX "
+                             "(the same constant be_forward_day imports)",
+        },
+        "achievable": {
+            "artifact_present": present,
+            "artifact_closed": closed,
+            "write_reason": wr,
+            "attributed_now": attributed,
+            "unit_would_revisit": would_revisit,
+            "revisit_kind": _kinds.get(day_token),
+            "days_the_unit_will_write": [t for t, _ in _dn["days"]],
+            "closed_token": closed_token, "opened_token": opened_token,
+            "only_writer": "da_midnight_verify.sh, attribution derived from "
+                           "/proc/self/cgroup",
+        },
+        "attribution_reachable": verdict != "UNREACHABLE_BY_ANY_HONEST_ROUTE",
+        "verdict": verdict,
+        "why": why,
+        "decides_nothing": ("REPORTED. Whether BE's gate should accept a "
+                            "named historical-recovery attribution, and "
+                            "whether a ruling that changes a past day's "
+                            "answer should trigger a re-verdict, are both "
+                            "policy calls with their own priced trade-offs "
+                            "(rule 14)"),
+    }
+
+
 PER_COIN_RULE_FROM_DAY = "20260828"
 
 #: DAY_BAR_V2 (P1/P2/P3), governing days from this date. Declared in
@@ -891,10 +1007,40 @@ PM_COLLECTOR_RUNS = Path("/home/yuqing/ctaNew/data/pm_5min/collector_runs.jsonl"
 #:
 #: An era absent from this table REFUSES. A new collector version is not
 #: admissible by default, and silence is not a ruling.
+#: THE DEFECT THIS TABLE CARRIED, AND WHAT REPLACED IT (R-497 (F)(1)).
+#: `clob_v3_1` read `False   # pre-O1` -- the ONLY entry with no authority at
+#: all. The register's claim that R-232 ruled it DOES NOT VERIFY: R-232 rules
+#: the O1 package, O2's direction, the freeze and the 011 scope, contains ZERO
+#: occurrences of `clob_v3_1`, and its own text anticipates the opposite --
+#: "before 08-29 begins accruing tonight". A seat introduced the entry at
+#: `4e1133c`, 2026-08-31T03:20:38Z, TWO DAYS AFTER the day it disqualifies, and
+#: the false claim that "every existing entry in that table cites a USER
+#: ruling" is MINE, filed at Q-DA-188. The reviewer found it; I reproduced
+#: every part of it at the artifacts before touching this table.
+#:
+#: THE REPAIR IS NOT THE VALUE, IT IS THE INVARIANT. A value could sit here
+#: with no cite and be read by everyone as ruled. `ERA_AUTHORITY` below now
+#: carries the ruling as DATA, `era_authority_for` REFUSES an entry that has
+#: none, and the cite travels into the emitted verdict -- so the next unruled
+#: default cannot be quoted as a ruling, because it cannot be read at all.
 ERA_ADMISSIBLE = {
-    "clob_v3_1": False,   # pre-O1
+    # USER RULING 2026-09-03 (R-497 (F)(1)), quoted: "We check the data quality
+    # and only use qualifiable data". Collector version is NOT a bar; QUALITY
+    # is the bar. It rests on merits established at R496-R7 and not on 08-29's
+    # attractiveness: fields and stamping IDENTICAL across clob_v3_1 and
+    # clob_v4_1 (verified at the code and on 180,000 tape rows with a planted-
+    # field falsifier), clob_v4_1 being the ROLLBACK to v3_1's own 10/10
+    # keepalive so that clob_v4 is the outlier BETWEEN them, and the v3_1 ->
+    # v4_1 deltas confined to DETECTING AND LABELLING loss (O1b/O1c/O1d),
+    # never the values of surviving rows.
+    #
+    # ADMITTING AN ERA IS NOT ACCRUING A DAY. Era is one of four conjuncts and
+    # the other three are untouched; 08-30 still refuses on its mid-day
+    # boundary WITH this admitted, which is the control that makes the flip a
+    # ruling rather than a blanket mutation (driven in the suite).
+    "clob_v3_1": True,    # quality is the bar, not the version; R-497 (F)(1)
     "clob_v4": False,     # O1 package; ruled never admissible post-O1 (R-340)
-    "clob_v5": True,      # heartbeat repair; admissible once its era starts
+    "clob_v5": True,      # heartbeat repair; NO RULING EXISTS -- see below
     # USER RULING 2026-08-31 ("Yes, admit"), recorded not inferred. DA
     # recommended ADMIT (Q-DA-188) on the ground that admissibility is a
     # question about the DATA: clob_v4_1 changes ONLY the RFC control-ping
@@ -913,6 +1059,142 @@ ERA_ADMISSIBLE = {
     # comparability -- recomputing a pre-registered bar voids it.
     "clob_v4_1": True,    # ping 3/3 -> 10/10 rollback; USER 2026-08-31
 }
+
+#: THE AUTHORITY, AS DATA. Every key of `ERA_ADMISSIBLE` must appear here with
+#: a cite, and an era whose value has NO authority REFUSES rather than
+#: defaulting to its value. A comment is not a cite: a reader can see it and a
+#: checker cannot, which is exactly how `# pre-O1` survived as a ruling for
+#: three days and was quoted as one in this programme's own register.
+#:
+#: `clob_v5` IS ENTERED AS `None` DELIBERATELY, AND THAT IS A FINDING, NOT AN
+#: OVERSIGHT. Applying the invariant uniformly, its `True` above turns out to
+#: rest on nothing either: R-340 rules the v5 DEPLOY TIMING and the work split
+#: (DA the era-admission guard as code), and contains zero occurrences of
+#: `admissib`. Deleting the row would delete the evidence; entering `None`
+#: leaves the value visible AND makes any day touching that era refuse. The
+#: era never started -- `collector_runs.jsonl` holds no v5 row -- so nothing
+#: on disk is affected, and the refusal is the safe direction.
+#:
+#: `clob_v4`'s cite is KEPT AS SHIPPED and its resolution is REPORTED, not
+#: enforced: R-340 exists but does not mention `clob_v4` either. Whether the
+#: R-497 ruling reaches it is the USER's, not mine -- the dispatch named
+#: `clob_v3_1` and I do not widen a ruling to a second era on my own reading.
+#: `era_authority_audit` computes that fact; nothing acts on it (rule 14).
+ERA_AUTHORITY: dict[str, str | None] = {
+    "clob_v3_1": ('USER RULING 2026-09-03, R-497 (F)(1): "We check the data '
+                  'quality and only use qualifiable data" -- collector version '
+                  'is not a bar, quality is; merits at R496-R7'),
+    "clob_v4": ("R-340 -- O1 package, ruled never admissible post-O1. CITE "
+                "KEPT AS SHIPPED; see era_authority_audit, which reports "
+                "whether it resolves and whether the cited entry names this "
+                "era. Not enforced, not amended by this seat"),
+    "clob_v5": None,      # NO RULING EXISTS. Refuses; see the note above
+    "clob_v4_1": ('USER RULING 2026-08-31 ("Yes, admit"), recorded not '
+                  'inferred; verified at the edit in Q-DA-194'),
+}
+
+#: THE SUITE'S SYNTHETIC CITE TABLE, named here rather than copied into three
+#: `with` blocks. Several era checks drive TIMELINE mechanics -- boundaries,
+#: rollbacks, process evidence -- over synthetic ledgers whose eras include
+#: `clob_v5`, whose real entry has no ruling. Supplying cites keeps those
+#: checks about what they are about; it supplies an AUTHORITY, never an
+#: admissibility VALUE, so the thing under test still comes from the code.
+_ERA_AUTHORITY_FOR_TIMELINE_TESTS = {
+    "clob_v3_1": "R-000 synthetic cite (timeline test)",
+    "clob_v4": "R-000 synthetic cite (timeline test)",
+    "clob_v4_1": "R-000 synthetic cite (timeline test)",
+    "clob_v5": "R-000 synthetic cite (timeline test)",
+}
+
+#: A cite must NAME something. Two shapes and no others: a register entry
+#: (`R-<n>`) or a dated USER ruling. Prose alone is not an authority -- "pre-O1"
+#: is a description of a collector, not a decision by anyone.
+_ERA_CITE_RE = re.compile(r"\bR-\d+\b|\bUSER(?:\s+RULING)?\s+\d{4}-\d{2}-\d{2}\b")
+
+
+def era_authority_for(era: str, authority_table: dict | None = None) -> str:
+    """The ruling behind this era's admissibility, or REFUSE by name.
+
+    THE POINT OF THE REFUSAL: before this existed, a `False` with a comment
+    beside it was indistinguishable from a `False` a user had ruled, and the
+    register cited the second while the code held the first. An unruled entry
+    must now be unreadable rather than quietly authoritative.
+    """
+    a = (ERA_AUTHORITY if authority_table is None
+         else authority_table).get(era)
+    if not isinstance(a, str) or not a.strip():
+        raise ValueError(
+            f"REFUSED: era {era!r} carries an admissibility VALUE but NO "
+            f"AUTHORITY. A collector version is not admissible -- or "
+            f"inadmissible -- by default, and a comment is not a ruling. "
+            f"Every entry in ERA_ADMISSIBLE must have a cite in "
+            f"ERA_AUTHORITY; this one has {a!r}.")
+    if not _ERA_CITE_RE.search(a):
+        raise ValueError(
+            f"REFUSED: era {era!r} has an authority string that names no "
+            f"decision: {a[:80]!r}. A cite must be a register entry (R-<n>) "
+            f"or a dated USER ruling; prose describing the collector is a "
+            f"description, not an authority.")
+    return a
+
+
+def era_authority_audit(register: Path | None = None,
+                        admissible_table: dict | None = None,
+                        authority_table: dict | None = None) -> dict[str, Any]:
+    """Do the cites RESOLVE, and does each cited entry NAME its era?
+
+    REPORTED, NEVER ENFORCED (rule 14). Enforcing it would change which eras
+    are admissible on a seat's reading of prose -- and two of the four cites
+    do not survive it, one of them `clob_v4`'s, whose value nobody has asked
+    me to move. So this computes the predicate and stops.
+
+    An absent register REFUSES: "I could not read the register" must never
+    read as "every cite resolves".
+    """
+    tbl = ERA_ADMISSIBLE if admissible_table is None else admissible_table
+    auth = ERA_AUTHORITY if authority_table is None else authority_table
+    reg = (CODE_ROOT / "orchestrator/PROGRAMS/P-2026-003-polymarket-5min"
+           / "workspace/COORDINATION.md") if register is None else register
+    if not reg.is_file():
+        raise ValueError(
+            f"REFUSED: no register at {reg}. A cite audit that cannot read "
+            f"the register must refuse, never report that every cite "
+            f"resolves.")
+    text = reg.read_text(encoding="utf-8", errors="replace")
+    headers = set(re.findall(r"^### (R-\d+) ", text, re.M))
+    bodies = {}
+    for ln in text.split("\n"):
+        m = re.match(r"^### (R-\d+) ", ln)
+        if m:
+            bodies[m.group(1)] = ln
+    out = {}
+    for era in sorted(set(tbl) | set(auth)):
+        a = auth.get(era)
+        cites = re.findall(r"\bR-\d+\b", a) if isinstance(a, str) else []
+        out[era] = {
+            "value": tbl.get(era),
+            "in_value_table": era in tbl,
+            "has_authority": bool(isinstance(a, str) and a.strip()
+                                  and _ERA_CITE_RE.search(a)),
+            "cited_entries": cites,
+            "entries_resolve": {c: (c in headers) for c in cites},
+            "entry_names_this_era": {c: (era in bodies.get(c, ""))
+                                     for c in cites},
+        }
+    return {
+        "register": str(reg), "n_register_entries": len(headers),
+        "key_sets_equal": set(tbl) == set(auth),
+        "eras_without_authority": sorted(
+            e for e, v in out.items() if not v["has_authority"]),
+        "eras_whose_cite_does_not_name_them": sorted(
+            e for e, v in out.items()
+            if v["cited_entries"] and not any(v["entry_names_this_era"].values())),
+        "eras": out,
+        "role": "REPORTED_NOT_ENFORCED -- era_authority_for enforces PRESENCE "
+                "of a cite; whether a cite's entry rules what the comment says "
+                "it rules is prose, and moving an admissibility value on a "
+                "seat's reading of prose is the defect this repair is about",
+    }
 
 
 #: ---------------------------------------------------------------------------
@@ -1246,7 +1528,8 @@ def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
 
 
 def day_era_admission(day_token: str, path: Path | None = None,
-                      admissible_table: dict | None = None) -> dict:
+                      admissible_table: dict | None = None,
+                      authority_table: dict | None = None) -> dict:
     """Is this UTC day ENTIRELY inside ONE ADMISSIBLE EFFECTIVE era?
 
     Two conditions, and BOTH are independent of day quality:
@@ -1256,6 +1539,15 @@ def day_era_admission(day_token: str, path: Path | None = None,
       * ADMISSIBILITY -- the single era it lies in is ruled admissible.
     """
     tbl = ERA_ADMISSIBLE if admissible_table is None else admissible_table
+    # WHEN THE AUTHORITY IS CHECKED, AND WHY THE ANSWER IS RECORDED.
+    # Production passes NO table, so production is ALWAYS checked. A harness
+    # that overrides the value table (three exist: the two v5 chain seams and
+    # the v4_1 boundary preflight) is comparing MALFORMEDNESS, not deciding
+    # admissibility, so it may override without supplying cites -- but the
+    # bypass is STAMPED INTO THE RESULT rather than being invisible, because
+    # an unchecked admission that looks like a checked one is the shape this
+    # whole repair exists to remove.
+    _auth_checked = admissible_table is None or authority_table is not None
     lo, hi = day_bounds(day_token)
     _tl = era_timeline(path)
     spans, _recovered = _tl["spans"], _tl["recovered"]
@@ -1270,6 +1562,21 @@ def day_era_admission(day_token: str, path: Path | None = None,
             f"REFUSED: era(s) {unknown} touch {day_token} but carry NO ruled "
             f"admissibility. A collector version is not admissible by default "
             f"and silence is not a ruling.")
+    # THE SECOND HALF, AND THE ONE THAT WAS MISSING. Above refuses an era with
+    # no VALUE. This refuses an era whose value exists with no RULING -- the
+    # state `clob_v3_1` sat in for three days while the register cited it as
+    # ruled. Silence is not a ruling in either direction.
+    if _auth_checked:
+        _unruled = []
+        for n in touched:
+            try:
+                era_authority_for(n, authority_table)
+            except ValueError as _e:
+                _unruled.append(str(_e))
+        if _unruled:
+            raise ValueError(
+                f"REFUSED: {day_token} touches era(s) whose admissibility "
+                f"value carries no authority. " + " ".join(_unruled))
     # Which era-starts does this day actually sit on or cross?
     starts = {t for t, _ in inside} | {t for i, (t, n) in enumerate(spans)
                                        if t <= lo and (i + 1 == len(spans)
@@ -1297,6 +1604,13 @@ def day_era_admission(day_token: str, path: Path | None = None,
         "era_reconstructed": reconstructed,
         "era_unevidenced_start": unevidenced,
         "era_admissible_ruled": {n: tbl.get(n) for n in touched},
+        # THE CITE TRAVELS INTO THE ARTIFACT. A reader of a verdict meets the
+        # ruling where the value is, instead of having to find a comment in a
+        # module and trust that a register entry says what it claims.
+        "era_authority": {
+            n: ((ERA_AUTHORITY if authority_table is None
+                 else authority_table).get(n)) for n in touched},
+        "era_authority_checked": _auth_checked,
         "race_admissible_by_era": admissible,
         "why": ("a day not lying ENTIRELY inside ONE admissible era cannot "
                 "accrue for ANY coin, whatever its quality -- era admission is "
@@ -2555,7 +2869,7 @@ def verify_day(day_token: str, freeze_epoch: float,
 #: 238 / 244 / 238 across three layouts at rc 0, with only the log's presence
 #: differing and nothing saying so. `ran + skipped` must equal this in EVERY
 #: layout, so a vanished check fails the suite instead of shrinking the count.
-EXPECTED_CHECKS = 266
+EXPECTED_CHECKS = 288
 
 
 def _selftests(require_no_skips: bool = False) -> int:
@@ -3935,6 +4249,99 @@ def _selftests(require_no_skips: bool = False) -> int:
            "need re-verdicting -- a file that cannot say whether it judged a "
            "closed day is not evidence that it did (None is not True)")
 
+    # ----------------------------------------------------------------------
+    # DA22-B: CAN A HISTORICAL DAY EVER ACQUIRE THE ATTRIBUTION A SCORE NEEDS?
+    #
+    # BE13's blocker (a). The question is asked ON A FIXTURE first, so the
+    # answer does not depend on the state of the real derived directory, and
+    # the predicate is driven to EVERY outcome it can return -- a checker that
+    # only ever says "unreachable" would pass the real-tape leg below without
+    # discriminating anything.
+    # ----------------------------------------------------------------------
+    import da_governed_verdict_preflight as _PFX
+    _PRE = _PFX.SCHEDULED_PREFIX
+
+    def _art(td, tok, closed, reason):
+        d = Path(td) / f"da_dayverdict_{tok}.json"
+        d.write_text(json.dumps({"day": tok, "day_closed_calendar": closed,
+                                 "write_reason": reason}), encoding="utf-8")
+
+    with _tfd.TemporaryDirectory() as td:
+        # the 08-29 SHAPE: present, closed, UNATTRIBUTED.
+        _art(td, "20260829", True, "supersedes the pre-era-guard verdict")
+        _art(td, "20260903", True, _PRE + " (INVOCATION_ID=x)")
+        _r = accrual_attribution_reachability(
+            "20260829", Path(td), "20260903", "20260904")
+        ok(_r["verdict"] == "UNREACHABLE_BY_ANY_HONEST_ROUTE"
+           and _r["attribution_reachable"] is False
+           and _r["achievable"]["attributed_now"] is False
+           and _r["achievable"]["unit_would_revisit"] is False,
+           "DA22-B1 THE 08-29 SHAPE ON A FIXTURE: an artifact that is PRESENT, "
+           "CLOSED and UNATTRIBUTED can never be attributed -- the scheduled "
+           "unit is the only writer that confers the prefix and its own day "
+           "list excludes a present closed artifact, by design")
+        # SAME DAY, ARTIFACT ABSENT -> the unit WOULD write it.
+        (Path(td) / "da_dayverdict_20260829.json").unlink()
+        _art(td, "20260826", True, _PRE)
+        _r2 = accrual_attribution_reachability(
+            "20260829", Path(td), "20260903", "20260904")
+        ok(_r2["verdict"] == "REACHABLE_BY_THE_UNIT"
+           and _r2["achievable"]["revisit_kind"] == "catchup_absent",
+           f"DA22-B1b AND THE PREDICATE DISCRIMINATES: with the SAME day's "
+           f"artifact ABSENT the unit's own list includes it as "
+           f"{_r2['achievable']['revisit_kind']!r}, so 'unreachable' is a "
+           f"statement about THIS artifact's state and not about historical "
+           f"days as a class")
+        # written while OPEN -> also reachable.
+        _art(td, "20260829", False, "hand run")
+        ok(accrual_attribution_reachability(
+               "20260829", Path(td), "20260903", "20260904"
+           )["achievable"]["revisit_kind"] == "catchup_was_open",
+           "DA22-B1c and an artifact written while the day was still OPEN is "
+           "reachable too -- the two honest triggers are ABSENT and WAS-OPEN")
+        # closed AND attributed -> already there.
+        _art(td, "20260829", True, _PRE + " (INVOCATION_ID=y) [catch-up]")
+        ok(accrual_attribution_reachability(
+               "20260829", Path(td), "20260903", "20260904"
+           )["verdict"] == "ATTRIBUTED_ALREADY",
+           "DA22-B1d and a closed artifact carrying the prefix reads "
+           "ATTRIBUTED_ALREADY -- including the CATCH-UP form, which starts "
+           "with the prefix and appends its own suffix, so a recovered day is "
+           "attributed exactly as a timely one is")
+
+    ok(accrual_attribution_reachability(
+           "20260829", Path("/nonexistent"), "20260903", "20260904"
+       )["achievable"]["artifact_present"] is False,
+       "DA22-B1e an absent outdir reports artifact_present False rather than "
+       "raising -- the answer is a status, not a crash")
+    try:
+        accrual_attribution_reachability("20260829")
+        ok(False, "DA22-B1f: the tokens must be explicit")
+    except ValueError as _e:
+        ok("depend on when the question was asked" in str(_e),
+           "DA22-B1f FALSIFIER: deriving the day tokens from the clock is "
+           "REFUSED -- an answer that changes with the hour it was asked "
+           "cannot be quoted in a receipt")
+
+    # THE PREFIX IS ONE CONSTANT, IMPORTED BY BOTH SIDES, NEVER RESTATED.
+    _besrc = (CODE_ROOT / "live/pm_research/be_forward_day.py").read_text(
+        encoding="utf-8", errors="replace")
+    ok("from da_governed_verdict_preflight import SCHEDULED_PREFIX" in _besrc
+       and _besrc.count('"scheduled unit run, da-midnight-verify.service"')
+       == 0,
+       "DA22-B2 BE's gate and this reachability check read the SAME constant: "
+       "be_forward_day IMPORTS SCHEDULED_PREFIX and carries no literal copy "
+       "of it, so the two cannot drift into agreeing about different strings")
+    ok(_PRE in (_bs := (CODE_ROOT / "live/pm_research"
+                        / "da_midnight_verify.sh").read_text(
+                            encoding="utf-8", errors="replace"))
+       and 'REASON="${DA_WRITE_REASON:-UNATTRIBUTED hand run' in _bs,
+       "DA22-B3 AND ONLY THE UNIT CAN PRODUCE IT: the launcher emits the "
+       "prefix on the cgroup branch and falls to DA_WRITE_REASON or "
+       "'UNATTRIBUTED hand run' otherwise -- the identity is read from the "
+       "cgroup this process is actually inside, which is why a seat cannot "
+       "supply the attribution and must not try")
+
     with _tfd.TemporaryDirectory() as td:
         _r0 = days_needing_verdict(Path(td), "20260828", "20260829")
         ok(_toks(_r0) == ["20260828", "20260829"] and _r0["floor"] is None,
@@ -4005,7 +4412,19 @@ def _selftests(require_no_skips: bool = False) -> int:
            "inputs gave race_accrual_eligible=TRUE, and the whole day read "
            "false only because BTC failed QUALITY -- eligibility wrong for a "
            "reason quality can never see")
-        _a29 = day_era_admission("20260829", _mixed)
+        # SUPERSEDED BY R-497 (F)(1) AND RESHAPED, NOT DELETED. This check
+        # used to read the SHIPPED table and assert 08-29 inadmissible. The
+        # USER has ruled that era; asserting the old value would enshrine a
+        # ruling that no longer exists, and deleting the check would lose the
+        # property it was actually about. So the PROPERTY -- purity and
+        # admissibility are separate questions -- is driven on an explicit
+        # inadmissible era with its own cite, and the shipped table's new
+        # answer is checked below at DA22-A1.
+        _a29 = day_era_admission("20260829", _mixed,
+                                 admissible_table={"clob_v3_1": False,
+                                                   "clob_v4": False},
+                                 authority_table={"clob_v3_1": "R-000 test",
+                                                  "clob_v4": "R-000 test"})
         ok(_a29["era_pure"] is True
            and _a29["eras_touched"] == ["clob_v3_1"]
            and _a29["race_admissible_by_era"] is False,
@@ -4019,16 +4438,160 @@ def _selftests(require_no_skips: bool = False) -> int:
                               "transitioned": True,
                               "collector_start_recv_ns": 1788159605000000000,
                               "boundary_utc": "2026-08-31T07:00:00Z"}])
-        _a901 = day_era_admission("20260901", _adm)
+        # THE v5 CONTROL NOW NEEDS A CITE, AND THAT IS THE INVARIANT WORKING.
+        # `clob_v5` sits in ERA_ADMISSIBLE as True with NO ruling anywhere
+        # (R-340 rules the v5 DEPLOY and the work split, not admissibility), so
+        # the shipped table refuses any day touching it -- driven immediately
+        # below. The positive control supplies an explicit cite so it still
+        # tests what it was built to test: an admissible era ADMITS.
+        _v5auth = {"clob_v3_1": "R-497 test", "clob_v4": "R-340 test",
+                   "clob_v5": "R-000 test cite", "clob_v4_1": "R-000 test"}
+        _a901 = day_era_admission("20260901", _adm, authority_table=_v5auth)
         ok(_a901["era_pure"] and _a901["eras_touched"] == ["clob_v5"]
            and _a901["race_admissible_by_era"] is True,
            "POSITIVE CONTROL: a day fully inside the ADMISSIBLE v5 era is "
            "admissible -- the guard is not simply refusing everything")
+        try:
+            day_era_admission("20260901", _adm)
+            ok(False, "DA22-A0: an era with a value and NO ruling must REFUSE")
+        except ValueError as _e5:
+            ok("clob_v5" in str(_e5) and "NO AUTHORITY" in str(_e5),
+               f"DA22-A0 THE INVARIANT'S FIRST REAL CATCH IS IN THE SHIPPED "
+               f"TABLE: `clob_v5` carries True with no ruling anywhere, so a "
+               f"day inside that era now REFUSES BY NAME instead of being "
+               f"admitted by a default nobody made ({str(_e5)[:90]}...). The "
+               f"era never started -- the ledger holds no v5 row -- so nothing "
+               f"on disk moves, and refusing is the safe direction")
         ok(split_verdict(_pass_preds, "count_bar_v1_frozen",
                          _a901["race_admissible_by_era"], day_closed=True
                          )["race_accrual_eligible"] is True,
            "and a quality-passing coin on that day IS eligible, so the guard "
            "gates on era rather than replacing the quality question")
+
+        # ------------------------------------------------------------------
+        # DA22-A: THE USER RULING (R-497 (F)(1)) AND THE INVARIANT IT EXPOSED.
+        #
+        # "We check the data quality and only use qualifiable data" --
+        # collector version is not a bar, quality is. Implemented above.
+        # These checks pin the RULING (so a silent revert is red), the
+        # CONTROL that makes it a ruling rather than a blanket mutation, and
+        # the invariant that was the actual defect: a value could exist with
+        # no cite and be read by everyone as ruled.
+        # ------------------------------------------------------------------
+        ok(ERA_ADMISSIBLE["clob_v3_1"] is True
+           and "R-497" in (ERA_AUTHORITY.get("clob_v3_1") or "")
+           and "quality" in (ERA_AUTHORITY.get("clob_v3_1") or "").lower(),
+           "DA22-A1 THE RULING IS PINNED IN THE TABLE AND ITS CITE IS DATA, "
+           "NOT A COMMENT: clob_v3_1 admissible True with R-497 (F)(1) named "
+           "in ERA_AUTHORITY, where a checker can read it. The `# pre-O1` "
+           "that stood here cited nobody and was quoted in the register as a "
+           "USER ruling for three days")
+        _sh29 = day_era_admission("20260829")
+        ok(_sh29["race_admissible_by_era"] is True
+           and _sh29["eras_touched"] == ["clob_v3_1"]
+           and _sh29["era_pure"] is True
+           and _sh29["era_authority_checked"] is True
+           and "R-497" in (_sh29["era_authority"]["clob_v3_1"] or ""),
+           f"DA22-A2 BOUNDARY POSITIVE CONTROL -- IT ADMITS: on the SHIPPED "
+           f"table 2026-08-29 is era-admissible, and the emitted block "
+           f"carries the CITE so a reader of the verdict meets the ruling "
+           f"where the value is. A guard shown only to refuse proves nothing "
+           f"(SEAT_PROTOCOL 16)")
+        _sh30 = day_era_admission("20260830")
+        ok(_sh30["race_admissible_by_era"] is False
+           and _sh30["era_pure"] is False
+           and _sh30["boundaries_inside_day"] == [
+               "2026-08-30T05:30:02.114727Z"],
+           f"DA22-A3 AND IT IS A RULING, NOT A BLANKET MUTATION: with "
+           f"clob_v3_1 ADMITTED, 2026-08-30 still REFUSES on its mid-day "
+           f"boundary {_sh30['boundaries_inside_day']}. Era is one conjunct "
+           f"of four and the other three did not move")
+        _both = day_era_admission(
+            "20260830", admissible_table={"clob_v3_1": True, "clob_v4": True},
+            authority_table={"clob_v3_1": "R-497 test", "clob_v4": "R-497 test"})
+        ok(_both["race_admissible_by_era"] is False,
+           "DA22-A3b and it refuses even with BOTH eras admitted -- purity is "
+           "what 08-30 fails, and no admissibility ruling reaches it")
+
+        # THE INVARIANT, DRIVEN IN BOTH DIRECTIONS ON THE SAME DAY.
+        try:
+            day_era_admission("20260829", authority_table={})
+            ok(False, "DA22-A4: a value with no authority must REFUSE")
+        except ValueError as _e:
+            ok("clob_v3_1" in str(_e) and "NO AUTHORITY" in str(_e)
+               and "comment is not a ruling" in str(_e),
+               f"DA22-A4 FALSIFIER: strip the cite and the SAME day that "
+               f"admits above REFUSES BY NAME -- 'a collector version is not "
+               f"admissible by default, and a comment is not a ruling' "
+               f"({str(_e)[:80]}...)")
+        try:
+            era_authority_for("clob_v3_1", {"clob_v3_1": "pre-O1"})
+            ok(False, "DA22-A5: prose is not a cite")
+        except ValueError as _e:
+            ok("names no decision" in str(_e),
+               "DA22-A5 FALSIFIER: the EXACT string that used to stand here "
+               "-- 'pre-O1' -- is refused as an authority, because it "
+               "describes a collector and names no decision by anyone")
+        for _bad in ("", "   ", None, 7):
+            try:
+                era_authority_for("clob_v3_1", {"clob_v3_1": _bad})
+                ok(False, f"DA22-A5b: {_bad!r} must not pass as an authority")
+            except ValueError:
+                pass
+        ok(True, "DA22-A5b and so are the empty string, whitespace, None and "
+                 "a non-string -- four shapes of 'nobody ruled this' that a "
+                 "presence test alone would have accepted")
+        ok(era_authority_for("clob_v3_1", {"clob_v3_1": "USER 2026-09-03"})
+           == "USER 2026-09-03"
+           and era_authority_for("clob_v3_1", {"clob_v3_1": "see R-497"})
+           == "see R-497",
+           "DA22-A5c AND BOTH LEGAL SHAPES ADMIT -- a dated USER ruling and a "
+           "register entry. The predicate discriminates; it does not simply "
+           "refuse everything that is not one literal")
+
+        # THE BYPASS IS STAMPED, NEVER SILENT.
+        _byp = day_era_admission("20260829",
+                                 admissible_table={"clob_v3_1": True})
+        ok(_byp["era_authority_checked"] is False
+           and _sh29["era_authority_checked"] is True,
+           "DA22-A6 A HARNESS MAY OVERRIDE THE TABLE WITHOUT CITES -- three "
+           "do, comparing malformedness rather than deciding admissibility -- "
+           "but the result then STAMPS era_authority_checked False. An "
+           "unchecked admission that looks like a checked one is the shape "
+           "this whole repair removes, so the bypass announces itself")
+
+        # THE REPORTED AUDIT: computed, and NOT acting on what it finds.
+        _aud = era_authority_audit()
+        ok(_aud["key_sets_equal"] is True
+           and _aud["eras_without_authority"] == ["clob_v5"],
+           f"DA22-A7 the cite audit reads the register and reports: value and "
+           f"authority key sets are equal, and the only era with no authority "
+           f"is {_aud['eras_without_authority']}")
+        ok(_aud["eras"]["clob_v4"]["cited_entries"] == ["R-340"]
+           and _aud["eras"]["clob_v4"]["entries_resolve"]["R-340"] is True
+           and _aud["eras"]["clob_v4"]["entry_names_this_era"]["R-340"]
+           is False,
+           "DA22-A7b AND IT FINDS ONE MORE THAN THE ROUND WAS SENT TO FIX: "
+           "clob_v4's R-340 RESOLVES but does NOT name clob_v4 -- R-340 rules "
+           "the v5 deploy instant and the work split. REPORTED. Whether the "
+           "R-497 ruling reaches clob_v4 is the USER's; a seat moving an "
+           "admissibility value on its own reading of prose is the defect "
+           "this repair is about")
+        ok(era_authority_for("clob_v4").startswith("R-340")
+           and _aud["eras"]["clob_v4"]["entry_names_this_era"]["R-340"]
+           is False,
+           "DA22-A7c THE TWO PREDICATES DISAGREE ON clob_v4 AND THE ENFORCED "
+           "ONE IS WHAT RUNS: era_authority_for ADMITS it (a cite is present) "
+           "while the audit reports the cite does not name it. If anyone "
+           "later makes the audit enforcing, THIS line goes red and the "
+           "change is noticed rather than absorbed")
+        try:
+            era_authority_audit(register=Path("/nonexistent/COORDINATION.md"))
+            ok(False, "DA22-A7d: an absent register must REFUSE")
+        except ValueError as _e:
+            ok("must refuse" in str(_e),
+               "DA22-A7d and an unreadable register REFUSES -- 'I could not "
+               "read it' must never report as 'every cite resolves'")
         # ---- the accrual predicate must read the DAY'S era, never a literal
         # `fi.ERA` was `clob_v3_1`, closed 2026-08-30T05:30:01Z, so every later
         # day was absent from the selector and `entirely_post_freeze` failed by
@@ -4102,7 +4665,9 @@ def _selftests(require_no_skips: bool = False) -> int:
            "whole-day and the per-coin split, and never a constant -- "
            "otherwise an unfinished day accrues no matter what the rule says")
 
-        _a831 = day_era_admission("20260831", _adm)
+        _a831 = day_era_admission(
+            "20260831", _adm,
+            authority_table=_ERA_AUTHORITY_FOR_TIMELINE_TESTS)
         ok(_a831["era_pure"] is False
            and _a831["race_admissible_by_era"] is False,
            "BOUNDARY-DAY KNOWN-BAD: 08-31 carries the v5 transition at 07:00Z, "
@@ -4156,14 +4721,18 @@ def _selftests(require_no_skips: bool = False) -> int:
     def _refusal(rows, day="20260901"):
         with _tfe.TemporaryDirectory() as t:
             try:
-                day_era_admission(day, _ledger(t, rows))
+                day_era_admission(
+                    day, _ledger(t, rows),
+                    authority_table=_ERA_AUTHORITY_FOR_TIMELINE_TESTS)
                 return ""
             except ValueError as e:
                 return str(e)
 
     def _adm_of(rows, day="20260901"):
         with _tfe.TemporaryDirectory() as t:
-            return day_era_admission(day, _ledger(t, rows))
+            return day_era_admission(
+                day, _ledger(t, rows),
+                authority_table=_ERA_AUTHORITY_FOR_TIMELINE_TESTS)
 
     _a = _adm_of([_v4, _ab("restart_failed")])
     ok(_a["eras_touched"] == ["clob_v4"]
