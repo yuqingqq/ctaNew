@@ -1,13 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T01:04Z — **DE round 41 RELEASED (`fcdbb15`)**: DE40-R1/R2/R3
-**CLOSED at the tip**, each driven with **falsifiers that fire**, and the counts
-reproduced by **both** reviewer and coordinator **including the 92 DE could not
-measure**. Two LOW findings, **both in FAILURE PATHS of the selftest** — one of
-them the mutant of the very refusal that closed DE40-R2. **A THIRD register-commit
-provenance wrinkle in three rounds** — I have named the pattern once rather than
-three times. **Nothing moves on the unit path before Fri 2026-09-04 00:06:00
-UTC. USER items: FIVE.**
+Updated: 2026-09-03T01:14Z — **DE 42 LANDED at `5658f24`: both LOWs closed AS
+MEASURED, and the check count did NOT move.** `EXPECTED_CHECKS = 124` unchanged,
+**+19/−6** — **no check was added; two FAILURE PATHS were made legible.** Both
+mutants now die **at the known-bad's own line, zero tracebacks**. **And the
+substrate has a benign face:** DE **rebased onto my round-67 commit rather than
+forcing over it** — `8a31112` is `5658f24`'s **direct parent**. **Nothing moves on
+the unit path before Fri 2026-09-04 00:06:00 UTC. USER items: FIVE.**
 
 ## READ FIRST — current project handoff
 
@@ -866,7 +865,7 @@ launchers at **235/19**.
 | **DE round 40** | **EXECUTED** at `35452c0` (Q-DE-58) — counts **31/119/26/21/26/21/184/92**; rulings (i)(ii)(iii), **DE39-R1** and **DE39-R2** all **driven**, with the **in-suite reordering invariance**. Verified here: runner `3f4bf21da2dfa188` (**3,329** lines, `EXPECTED_CHECKS = 119`), DRAFT `cb693000880c3d94` (**307** lines, **+17 −0** vs `cd93663`) |
 | **DE round 40 review** | **RELEASED** (`c3f8743`, 166 lines, 23:38:26Z) — **ruling (i) YES**; (ii)+(iii) **CONFIRMED CLOSED** on a **21-field measurement (one moves)**; **DE39-R1 CONFIRMED CLOSED**, **DE39-R2 closed in form**; three findings **DE40-R1 (LOW-MED)**, **DE40-R2 (LOW)**, **DE40-R3 (LOW)**. `35452c0` is round 41's base |
 | **DE round 41** | **VERIFIED** at `8479b67` (Q-DE-59) — **124 checks**; **DE40-R1/R2/R3 closed and driven**. Its **review is RELEASED** (`fcdbb15`, 143 lines): all three **CLOSED at the tip**, each driven with **falsifiers that fire**, counts reproduced by **both** reviewer and coordinator **including the 92 DE could not measure**. Two LOW findings **DE41-R1/R2**, both in **failure paths of the selftest** |
-| **DE round 42** | **DISPATCHED** — **DE41-R2 then DE41-R1**, base `8479b67`, **v2 DRAFT untouched** (row Q-DE-60). **Step 5 stays USER-GATED** |
+| **DE round 42** | **LANDED** at `5658f24` (Q-DE-60) — **DE41-R1 and DE41-R2 CLOSED AS MEASURED**, both mutants now **red by name with zero tracebacks**. Runner `bc7c010c41933b85`, **3,468 lines, +19/−6, `EXPECTED_CHECKS = 124` UNCHANGED — no check added, two failure paths made LEGIBLE**. **v2 DRAFT untouched** and the **other seven DE modules byte-identical** to `8479b67` (both verified here). **Step 5 stays USER-GATED** |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -972,8 +971,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on RECORDED STANDBY until DE 42 or BE 12 lands** — **DA 20 is
-HELD and reviewable BY SHA when READY**. **Released so far** include BE rounds
+**The reviewer is on DE round 42** (`REQUEST_DE_ROUND_42_2026-09-03.md`, five
+items — including **RELEASE / HOLD `5658f24` as the runner's resting tip** and
+**whether the DE-40 item-6 answer on ask (5) still holds**). **BE 12 queues for
+the next round; DA 20 is HELD and reviewable BY SHA when READY.** **Released so far** include BE rounds
 9+10 (`a8e88de`), the **BE11+DA18 landings** (`95a0e0e`), and DE rounds 37
 (`3f1d310`), 38 (`0a5a6a7`), 39 (`650569c`), 40 (`c3f8743`) and 41 (`fcdbb15`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
@@ -1790,6 +1791,62 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-03 ~01:14Z (MEM) — A ROUND THAT ADDED NO CHECKS AND FIXED TWO
+
+**R-491 and DE round 42 swept.** Nothing run; every figure taken at the blob.
+
+**The headline is a number that did NOT move.** `EXPECTED_CHECKS` is **124 at both
+`8479b67` and `5658f24`**, with **+19/−6** in the runner and **the runner the only
+source file changed**. **No check was added; two FAILURE PATHS were made
+legible.** *A round that raises the count is easy to praise; a round that fixes
+what a red line says while adding nothing is the harder and rarer one* — and it is
+exactly what these two findings asked for, since both lived in messages nobody
+reads until something breaks.
+
+**DE41-R1 closed at the shape, not the symptom.** The pred#1 guard at `:813` is
+**unchanged** (`if "n_draws_requested" not in c:`), and `:824` now reads
+**`if not c.get("n_draws_requested"):`** — so the guard-only mutant **dies at the
+known-bad's own line** (*"FAIL (no refusal): KNOWN-BAD … REFUSES at pred#1"*)
+where at `8479b67` it died by **`KeyError` at `:820`**. **The fix is a `.get()`,
+and the value of it is entirely in the message.**
+
+**DE41-R2 closed with its reasoning written into the source.** `_diff_fields` is
+computed **AFTER** the comparison with an `object()` sentinel (`:1987-1994`), and
+the FAIL text (`:2010-2016`) now reports **"N of the M `null_population` fields
+DIFFERENT ([names])"**. The comment says why in the module's own voice: reporting
+*"ALL n of m identical"* from the filtered block **asserted the invariant on the
+one path where the message is load-bearing — the RED one.** The coordinator's
+22nd-field mutant now prints **"1 of the 22 … DIFFERENT (['probe_22nd_field'])"**.
+*A failure message that names what differs turns a red line from an alarm into a
+diagnosis.*
+
+**And the substrate property showed its benign face this round, which is worth
+recording precisely because the last three instances were awkward.** DE's push
+**raced mine and was REBASED, not forced**: I checked — **`8a31112`, my round-67
+commit, is `5658f24`'s direct parent.** Rounds 65–67 recorded the ledger's commits
+as substrate that misleads about authorship; **this is the same substrate under a
+discipline that holds, and the cost of the race was one rebase and nothing lost.**
+*The property is not the hazard; forcing over it would have been.*
+
+**Scope held exactly.** The **v2 DRAFT is untouched** (`cb693000880c3d94` at both
+tips) and **all seven other DE modules are byte-identical** to `8479b67` — I
+checked each. **A round told to touch one file touched one file**, which is what
+makes "the runner's resting tip" a question the reviewer can answer at all.
+
+**Counts, with their provenance.** Runner **124/124 both launchers, stderr
+empty** (coordinator); DE's eight-module row **124 / 26 / 31 / 26 / 21 / 21 / 184
+/ 92**, with **the 92 measured in DE's OWN worktree this round** — the figure DE
+could not measure last round is now measured by the seat that owns it.
+**`--run --outdir <scratch>` returns rc 2 and creates nothing**; **worktrees 34,
+`derived/` 178, main tree clean.**
+
+**Sequencing.** The reviewer has **DE round 42** — five items, including
+**RELEASE / HOLD `5658f24` as the runner's resting tip** and **whether the DE-40
+item-6 answer on ask (5) still holds**. **DE is on recorded standby** and the
+**ask-(5) mechanics stay USER-gated**. **BE 12 in flight** (queues for the next
+round); **DA 20 in flight, HELD**. **Nothing moves on the unit path before Fri
+2026-09-04 00:06:00 UTC.** **USER items: FIVE, unchanged.**
 
 ### 2026-09-03 ~01:04Z (MEM) — A COMMIT ID NAMES THE TREE, NOT THE CHANGE
 

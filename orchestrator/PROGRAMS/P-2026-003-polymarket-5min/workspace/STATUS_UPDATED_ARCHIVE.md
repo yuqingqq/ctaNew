@@ -4763,3 +4763,66 @@ Moved in the MEM round-67 true-up of R-490 and the DE-41 filing. Join rule as in
   DATA_ROOT split. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
 ```
+
+## Batch 74 — archived 2026-09-03T01:14Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-68 true-up of R-491 and DE round 42. Join rule as in batch 1.
+
+```yaml
+  2026-09-03T00:36Z (MEM ROUND 65 -- THE NIGHT THE CALENDAR STOPPED BEING A
+  PLAN). R-486, R-487 and the three landings swept; nothing run; every figure
+  re-derived at the blob or the file. THE FIRST GOVERNED VERDICT EXISTS: the
+  00:06Z unit fired with STATUS 0, and I read the artifacts rather than the
+  report -- the 09-02 verdict hashes 6f283262df463957, as_of
+  2026-09-03T00:06:01.399260Z, with race_accrual_eligible TRUE for btc and eth;
+  the mask hashes 0bac652c44fba8f2 and carries 251 MASKED WINDOWS ACROSS 7 COINS,
+  EVERY ONE CONTENT_THIN (btc 40, eth 40, xrp 40, sol 39, bnb 38, doge 38, hype
+  16); the 00:14Z preflight read 10/10 GOVERNED_VERDICT_COMPLETE. After weeks of
+  building the instrument, THE INSTRUMENT RAN ON A REAL DAY AND PRODUCED A
+  VERDICT. AND THE DECISION IT PRODUCES IS NOT OURS: the 09-02 ACCRUAL on its
+  complement is THE USER'S CALL (R-409), and R-486 RECOMMENDS ACCRUE AND IT IS
+  UNRULED -- written in that order, because A RECOMMENDATION RECORDED NEXT TO AN
+  UNRULED ITEM IS ONE CARELESS READ AWAY FROM BECOMING THE DECISION. THE RECEIPTS
+  OF RECORD ARE IN GIT AND BYTE-IDENTICAL: BE round 11 landed 4000106752f816e4
+  (14,022 B) and 0907b0369e14d77b (1,123 B), both RE-HASHED FROM THE COMMIT --
+  the 09-01 race score has moved FROM A SCRATCHPAD UNDER /tmp TO A TRACKED
+  ARTIFACT, which finishes the whole arc of R-442 section 3(c); DA round 18
+  landed the chain REBASED WITH NO CONTENT MOVED plus the tracked verdict and the
+  force-added mask. THE NEW FACT IS A WIRING FACT AND DESERVES ITS ESCALATION:
+  the 09-04 00:06Z run WILL EXECUTE THE LANDED CHAIN (rounds 10-12 are production
+  wiring) and THE INSTALLED UNIT IS UNPINNED -- I DIFFED THEM: the repo's unit
+  file carries Environment=DA_MIDNIGHT_VERIFY_BIN at :51 and THE INSTALLED UNIT
+  HAS NO SUCH LINE, only ExecStart at :47, so tomorrow's run RESOLVES ITS BINARY
+  AT RUN TIME. The coordinator recommends NO PIN AND NO INSTALL and the
+  reviewer's landings round verifies the launcher path first. AN UNPINNED UNIT IS
+  NOT A DEFECT TONIGHT; IT IS A FACT THAT MUST BE KNOWN BEFORE THE NIGHT IT
+  MATTERS. ONE MISMATCH THAT IS EXPECTED, WITH A DETAIL INSIDE IT THAT IS NOT
+  OBVIOUS: the 09-02 mask's producer.module_sha256_prefix is d191695dcff0546e
+  while the working da_blackout_mask.py is 15ea6dcb8c97c72d -- expected, because
+  THE BINDING IS carrying_commit -- and the carrying_commit it records is
+  3eabeeb, MY OWN ROUND-64 STATE-FILE COMMIT. The artifact of record for 09-02 is
+  bound to a bookkeeping commit simply because that was the branch tip at 00:06Z:
+  carrying_commit NAMES THE TREE, NOT THE AUTHOR, worth writing down before
+  someone reads a MEM commit as provenance for a DA artifact. A GATE IS RED OFF
+  THE UNIT PATH AND THE RESPONSE IS THE RIGHT ONE: v5_deploy_gates "host-load
+  join" reads 36/38 because SA25 WAS RECYCLED BY SYSSTAT -- an input that AGED
+  OUT, not a code change -- and RULE 15 RULES OUT A SKIP, so DA round 19 is A
+  PROPOSAL ROW rather than a quiet exclusion: AN ABSENT INPUT IS A STATUS, and
+  the rule that forbids the easy fix is doing exactly what it was written for.
+  AND THE CALENDAR CAUGHT UP WITH A PHRASE: the withdrawn "earliest 09-03" is now
+  DATED HISTORY -- 09-03 ARRIVED AND THE RUN DID NOT. I re-read all five
+  occurrences and REWROTE THE THREE THAT SPOKE IN THE FUTURE TENSE (both
+  phase4_run_* flags and the preconditions block beside the ruling), because
+  their conditions have ALL HAPPENED: DE is at round 41, the reviewer has read
+  through 40, section 5 is settled, the package is FORWARDED, and WHAT GATES THE
+  RUN NOW IS THE USER'S ANSWER. The TWO occurrences inside dated entries I LEFT
+  UNTOUCHED -- true when stamped, the rule I set in round 55 and the second time
+  it has decided a case cleanly. DE ROUND 41 VERIFIED at 8479b67: 124 checks,
+  DE40-R1/R2/R3 closed and driven, four mutants red by name; its review QUEUED
+  behind the landings round. USER ITEMS OPEN: FIVE -- the 09-02 accrual, the
+  Phase-2 winner, the content-liveness v2 freeze, the addendum v2 package, and
+  the 09-04 run on the landed chain (A FACT WITH A RECOMMENDATION, not a request
+  for a number). NOTHING RUNS. UNCHANGED: G is now the race's to count on the
+  09-02 complement once the USER rules; the 011 family 12 of 24 with Q4 failing;
+  the sequencing rule; R-419 revocable.
+```

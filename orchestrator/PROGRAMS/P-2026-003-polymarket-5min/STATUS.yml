@@ -4,6 +4,53 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-03T01:14Z (MEM ROUND 68 -- A ROUND THAT ADDED NO CHECKS AND FIXED TWO).
+  R-491 and DE round 42 swept; nothing run; every figure taken at the blob. THE
+  HEADLINE IS A NUMBER THAT DID NOT MOVE: EXPECTED_CHECKS is 124 AT BOTH 8479b67
+  AND 5658f24, with +19/-6 in the runner and THE RUNNER THE ONLY SOURCE FILE
+  CHANGED -- NO CHECK WAS ADDED, TWO FAILURE PATHS WERE MADE LEGIBLE. A round that
+  raises the count is easy to praise; A ROUND THAT FIXES WHAT A RED LINE SAYS
+  WHILE ADDING NOTHING IS THE HARDER AND RARER ONE, and it is exactly what these
+  two findings asked for, since both lived in messages nobody reads until
+  something breaks. DE41-R1 CLOSED AT THE SHAPE, NOT THE SYMPTOM: the pred#1 guard
+  at :813 is UNCHANGED and :824 now reads `if not c.get("n_draws_requested"):`, so
+  the guard-only mutant DIES AT THE KNOWN-BAD'S OWN LINE ("FAIL (no refusal):
+  KNOWN-BAD ... REFUSES at pred#1") where at 8479b67 it died by KeyError at :820 --
+  THE FIX IS A .get() AND THE VALUE OF IT IS ENTIRELY IN THE MESSAGE. DE41-R2
+  CLOSED WITH ITS REASONING WRITTEN INTO THE SOURCE: _diff_fields is computed
+  AFTER the comparison with an object() sentinel (:1987-1994) and the FAIL text
+  (:2010-2016) reports "N of the M null_population fields DIFFERENT ([names])",
+  the comment saying why in the module's own voice -- reporting "ALL n of m
+  identical" from the FILTERED block ASSERTED THE INVARIANT ON THE ONE PATH WHERE
+  THE MESSAGE IS LOAD-BEARING, THE RED ONE; the coordinator's 22nd-field mutant
+  now prints "1 of the 22 ... DIFFERENT (['probe_22nd_field'])". A FAILURE MESSAGE
+  THAT NAMES WHAT DIFFERS TURNS A RED LINE FROM AN ALARM INTO A DIAGNOSIS. AND THE
+  SUBSTRATE PROPERTY SHOWED ITS BENIGN FACE THIS ROUND, worth recording precisely
+  because the last three instances were awkward: DE's push RACED MINE AND WAS
+  REBASED, NOT FORCED -- I checked, and 8a31112, my round-67 commit, IS 5658f24'S
+  DIRECT PARENT. Rounds 65-67 recorded the ledger's commits as substrate that
+  MISLEADS ABOUT AUTHORSHIP; this is THE SAME SUBSTRATE UNDER A DISCIPLINE THAT
+  HOLDS, the race costing ONE REBASE AND NOTHING LOST: THE PROPERTY IS NOT THE
+  HAZARD, FORCING OVER IT WOULD HAVE BEEN. SCOPE HELD EXACTLY: the v2 DRAFT is
+  UNTOUCHED (cb693000880c3d94 at both tips) and ALL SEVEN OTHER DE MODULES ARE
+  BYTE-IDENTICAL to 8479b67, each checked -- A ROUND TOLD TO TOUCH ONE FILE
+  TOUCHED ONE FILE, which is what makes "the runner's resting tip" a question the
+  reviewer can answer at all. COUNTS WITH THEIR PROVENANCE: runner 124/124 both
+  launchers with stderr EMPTY (coordinator); DE's eight-module row
+  124/26/31/26/21/21/184/92 with THE 92 MEASURED IN DE'S OWN WORKTREE THIS ROUND
+  -- the figure DE could not measure last round is now measured by the seat that
+  owns it; --run --outdir <scratch> returns rc 2 and creates nothing; worktrees
+  34, derived 178, main tree clean. SEQUENCING: the reviewer has DE ROUND 42
+  (REQUEST_DE_ROUND_42_2026-09-03.md, five items including RELEASE / HOLD 5658f24
+  AS THE RUNNER'S RESTING TIP and whether the DE-40 item-6 answer on ask (5) STILL
+  HOLDS); DE on RECORDED STANDBY with the ask-(5) mechanics still USER-GATED; BE
+  12 in flight and queuing for the next round; DA 20 in flight, HELD. NOTHING
+  MOVES ON THE UNIT PATH BEFORE FRI 2026-09-04 00:06:00 UTC. USER ITEMS: FIVE,
+  UNCHANGED -- the 09-02 accrual (R-486 recommends ACCRUE, UNRULED), the Phase-2
+  winner, the content-liveness v2 freeze, the addendum v2 package (five asks), the
+  09-04 run on the landed chain (no pin, no install). UNCHANGED: the 011 family 12
+  of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-03T01:04Z (MEM ROUND 67 -- A COMMIT ID NAMES THE TREE, NOT THE CHANGE).
   R-490 and the reviewer's DE-41 filing swept; nothing run; every figure taken at
   the blob. THE CLOSURES ARE CLEAN AND THE PHRASE THAT CARRIES THEM IS
@@ -116,63 +163,6 @@ updated: >-
   THE REVIEWER'S END-TO-END DRIVE behind the recommendation of NO PIN, NO
   INSTALL. NOTHING RUNS. UNCHANGED: the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-03T00:36Z (MEM ROUND 65 -- THE NIGHT THE CALENDAR STOPPED BEING A
-  PLAN). R-486, R-487 and the three landings swept; nothing run; every figure
-  re-derived at the blob or the file. THE FIRST GOVERNED VERDICT EXISTS: the
-  00:06Z unit fired with STATUS 0, and I read the artifacts rather than the
-  report -- the 09-02 verdict hashes 6f283262df463957, as_of
-  2026-09-03T00:06:01.399260Z, with race_accrual_eligible TRUE for btc and eth;
-  the mask hashes 0bac652c44fba8f2 and carries 251 MASKED WINDOWS ACROSS 7 COINS,
-  EVERY ONE CONTENT_THIN (btc 40, eth 40, xrp 40, sol 39, bnb 38, doge 38, hype
-  16); the 00:14Z preflight read 10/10 GOVERNED_VERDICT_COMPLETE. After weeks of
-  building the instrument, THE INSTRUMENT RAN ON A REAL DAY AND PRODUCED A
-  VERDICT. AND THE DECISION IT PRODUCES IS NOT OURS: the 09-02 ACCRUAL on its
-  complement is THE USER'S CALL (R-409), and R-486 RECOMMENDS ACCRUE AND IT IS
-  UNRULED -- written in that order, because A RECOMMENDATION RECORDED NEXT TO AN
-  UNRULED ITEM IS ONE CARELESS READ AWAY FROM BECOMING THE DECISION. THE RECEIPTS
-  OF RECORD ARE IN GIT AND BYTE-IDENTICAL: BE round 11 landed 4000106752f816e4
-  (14,022 B) and 0907b0369e14d77b (1,123 B), both RE-HASHED FROM THE COMMIT --
-  the 09-01 race score has moved FROM A SCRATCHPAD UNDER /tmp TO A TRACKED
-  ARTIFACT, which finishes the whole arc of R-442 section 3(c); DA round 18
-  landed the chain REBASED WITH NO CONTENT MOVED plus the tracked verdict and the
-  force-added mask. THE NEW FACT IS A WIRING FACT AND DESERVES ITS ESCALATION:
-  the 09-04 00:06Z run WILL EXECUTE THE LANDED CHAIN (rounds 10-12 are production
-  wiring) and THE INSTALLED UNIT IS UNPINNED -- I DIFFED THEM: the repo's unit
-  file carries Environment=DA_MIDNIGHT_VERIFY_BIN at :51 and THE INSTALLED UNIT
-  HAS NO SUCH LINE, only ExecStart at :47, so tomorrow's run RESOLVES ITS BINARY
-  AT RUN TIME. The coordinator recommends NO PIN AND NO INSTALL and the
-  reviewer's landings round verifies the launcher path first. AN UNPINNED UNIT IS
-  NOT A DEFECT TONIGHT; IT IS A FACT THAT MUST BE KNOWN BEFORE THE NIGHT IT
-  MATTERS. ONE MISMATCH THAT IS EXPECTED, WITH A DETAIL INSIDE IT THAT IS NOT
-  OBVIOUS: the 09-02 mask's producer.module_sha256_prefix is d191695dcff0546e
-  while the working da_blackout_mask.py is 15ea6dcb8c97c72d -- expected, because
-  THE BINDING IS carrying_commit -- and the carrying_commit it records is
-  3eabeeb, MY OWN ROUND-64 STATE-FILE COMMIT. The artifact of record for 09-02 is
-  bound to a bookkeeping commit simply because that was the branch tip at 00:06Z:
-  carrying_commit NAMES THE TREE, NOT THE AUTHOR, worth writing down before
-  someone reads a MEM commit as provenance for a DA artifact. A GATE IS RED OFF
-  THE UNIT PATH AND THE RESPONSE IS THE RIGHT ONE: v5_deploy_gates "host-load
-  join" reads 36/38 because SA25 WAS RECYCLED BY SYSSTAT -- an input that AGED
-  OUT, not a code change -- and RULE 15 RULES OUT A SKIP, so DA round 19 is A
-  PROPOSAL ROW rather than a quiet exclusion: AN ABSENT INPUT IS A STATUS, and
-  the rule that forbids the easy fix is doing exactly what it was written for.
-  AND THE CALENDAR CAUGHT UP WITH A PHRASE: the withdrawn "earliest 09-03" is now
-  DATED HISTORY -- 09-03 ARRIVED AND THE RUN DID NOT. I re-read all five
-  occurrences and REWROTE THE THREE THAT SPOKE IN THE FUTURE TENSE (both
-  phase4_run_* flags and the preconditions block beside the ruling), because
-  their conditions have ALL HAPPENED: DE is at round 41, the reviewer has read
-  through 40, section 5 is settled, the package is FORWARDED, and WHAT GATES THE
-  RUN NOW IS THE USER'S ANSWER. The TWO occurrences inside dated entries I LEFT
-  UNTOUCHED -- true when stamped, the rule I set in round 55 and the second time
-  it has decided a case cleanly. DE ROUND 41 VERIFIED at 8479b67: 124 checks,
-  DE40-R1/R2/R3 closed and driven, four mutants red by name; its review QUEUED
-  behind the landings round. USER ITEMS OPEN: FIVE -- the 09-02 accrual, the
-  Phase-2 winner, the content-liveness v2 freeze, the addendum v2 package, and
-  the 09-04 run on the landed chain (A FACT WITH A RECOMMENDATION, not a request
-  for a number). NOTHING RUNS. UNCHANGED: G is now the race's to count on the
-  09-02 complement once the USER rules; the 011 family 12 of 24 with Q4 failing;
-  the sequencing rule; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3864,7 +3854,12 @@ flags:
   de41_r1_r2_open: "both LOW and both in FAILURE PATHS of the selftest. R1 (:815-820): the guard-only mutant of THE REFUSAL THAT CLOSED DE40-R2 is caught by a KeyError at :820 rather than by the known-bad's name -- reproduced in a scratch worktree, restored BYTE-IDENTICAL, 34 worktrees, derived 178. R2 (:1974-2024): the DE40-R3 failure line counts the FILTERED block, printing 'ALL 21 of the 22 ... identical' ON A RED LINE -- the coordinator's own R-487 (A) observation, now filed"
   de41_class_answers: "no order-dependence outside null_population (whole cell 32 fields + predicate row 11 across DESC/ASC; ONLY n_accepted_stream_differs moves); the grouping key (changed_at, file) CANNOT MERGE TWO COMMITS; pred#2 has NO DRIVABLE FALSIFIER BY DESIGN AND SAYS SO IN ITS REFUSAL"
   ask5_answer_one_clause_cheaper: "the DE-40 item-6 answer HOLDS LINE FOR LINE, one clause cheaper: NULL_COLLAPSED is now DERIVED from n_draws_requested so THE SHRUNKEN-POPULATION CASE REPORTS ITSELF -- an artifact that learns to report a case removes the clause that described it. The ask-(5) mechanics stay USER-GATED"
-  de_r42_dispatched: "DE41-R2 THEN DE41-R1, base 8479b67, v2 DRAFT UNTOUCHED, row Q-DE-60"
+  de_r42_landed: "5658f24 (Q-DE-60): DE41-R1 and DE41-R2 CLOSED AS MEASURED, both mutants red BY NAME with ZERO TRACEBACKS. runner bc7c010c41933b85, 3,468 lines, +19/-6, EXPECTED_CHECKS = 124 UNCHANGED -- NO CHECK ADDED, TWO FAILURE PATHS MADE LEGIBLE; the runner the ONLY source file changed; v2 DRAFT untouched (cb693000880c3d94 at both tips) and all seven other DE modules BYTE-IDENTICAL to 8479b67 -- both verified by MEM"
+  de41_r1_closed_shape: "the pred#1 guard at :813 is UNCHANGED and :824 now reads `if not c.get('n_draws_requested')`, so the guard-only mutant dies AT THE KNOWN-BAD'S OWN LINE where at 8479b67 it died by KeyError at :820 -- the fix is a .get() and the value is entirely in the message"
+  de41_r2_closed_with_reasoning_in_source: "_diff_fields computed AFTER the comparison with an object() sentinel (:1987-1994); the FAIL text (:2010-2016) reports N of the M null_population fields DIFFERENT ([names]); the coordinator's 22nd-field mutant prints '1 of the 22 ... DIFFERENT ([probe_22nd_field])'. A FAILURE MESSAGE THAT NAMES WHAT DIFFERS TURNS A RED LINE FROM AN ALARM INTO A DIAGNOSIS"
+  substrate_benign_face: "DE's push RACED MEM's and was REBASED, NOT FORCED -- 8a31112 (MEM round 67) is 5658f24's DIRECT PARENT, verified. Rounds 65-67 recorded the ledger's commits as substrate that misleads about authorship; THIS IS THE SAME SUBSTRATE UNDER A DISCIPLINE THAT HOLDS, the race costing one rebase and nothing lost"
+  de_r42_counts: "runner 124/124 both launchers, stderr EMPTY (coordinator); DE's eight-module row 124/26/31/26/21/21/184/92 with THE 92 MEASURED IN DE'S OWN WORKTREE this round; --run --outdir <scratch> rc 2 creating nothing; worktrees 34, derived 178, main tree clean"
+  reviewer_on_de_r42: "REQUEST_DE_ROUND_42_2026-09-03.md, five items including RELEASE/HOLD 5658f24 AS THE RUNNER'S RESTING TIP and whether the DE-40 item-6 answer on ask (5) STILL HOLDS"
   reviewer_standby_until_de42_or_be12: "DA 20 is HELD and REVIEWABLE BY SHA WHEN READY"
   reviewer_de_r40_released: "c3f8743 23:38:26Z, 166 lines; ruling (i) YES; (ii)+(iii) CONFIRMED CLOSED on a 21-FIELD MEASUREMENT (exactly ONE moves); DE39-R1 CONFIRMED CLOSED; DE39-R2 CLOSED IN FORM (kept verbatim -- closed in form and closed are different claims); 35452c0 = round 41 base, three-step order"
   de40_r1_r2_r3_open: "DE40-R1 LOW-MED (_by_ca has NO FALSIFIER), DE40-R2 LOW (null_status derived FROM ABSENCE rather than FROM REQUEST), DE40-R3 LOW (a six-field enumeration where the block is wider) -> DE round 41, IN FLIGHT at base 35452c0"
@@ -3883,7 +3878,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-03T01:04Z, build and test the offline model mechanism-first
+  As-of 2026-09-03T01:14Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
