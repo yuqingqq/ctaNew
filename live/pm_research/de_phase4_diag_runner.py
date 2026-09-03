@@ -40,7 +40,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 168
+EXPECTED_CHECKS = 178
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -216,23 +216,22 @@ DECLARED_ADDITIVE = {
             "population this diagnostic runs on is 471 windows, measured"},
 }
 
-#: NOT A DECLARATION.  Round 43's wiring reached `_stream_tape_rows` for
-#: the first time and the pin went BLOCKING on it; round 43 then WROTE a
-#: declaration and named the doubt.  R-496's dispatch ruled the doubt:
-#: admitting a fit-vs-tip drift is an ADMISSIBILITY call and admissibility
-#: is the USER's (rule 14), so the declaration is WITHDRAWN and the pin
-#: stays BLOCKING.  What lives here instead is the FACT SHEET the ruling
-#: needs, and not one field of it is consulted by `pin_statuses` -- a
-#: record that the pin read would be a declaration wearing another name.
-#: Every claim in it is COMPUTED by `stream_tape_rows_drift()` (rule 10);
-#: the two strings below are the CANDIDATES that function verifies, not
-#: assertions it repeats.
-UNDECLARED_DRIFT = {
+#: THE FACT SHEET, and it is still not the admission.  Round 43 reached
+#: `_stream_tape_rows` for the first time, the pin went BLOCKING, and
+#: round 43 wrote a declaration and named its own doubt.  R-496 ruled the
+#: doubt (admissibility is the USER's, rule 14) and the declaration was
+#: WITHDRAWN.  R-499 then ADMITTED the drift -- and the admission lives in
+#: `USER_ADMISSIONS` below, with a condition, NOT here.  This stays a
+#: sheet of COMPUTED facts (`stream_tape_rows_drift()`, rule 10); the two
+#: strings below are CANDIDATES that function verifies, never assertions
+#: it repeats.
+DRIFT_FACTS = {
     "file": "phase2_arms.py",
     "function": "_stream_tape_rows",
     "candidate_changed_at": "2e1204f",
     "candidate_commit_subject": "BE: T2 fail-open readers",
     "routed_to": "USER",
+    "ruled": "R-499 -- ADMITTED, conditionally (see USER_ADMISSIONS)",
     "question": (
         "the function differs from the fit-commit bytes and the pin "
         "therefore BLOCKS the run. Whether that difference is ADMISSIBLE "
@@ -244,6 +243,107 @@ UNDECLARED_DRIFT = {
         "_stream_tape_rows), after which `verify_called_code()` proceeds "
         "and the run's only remaining gate is the execution act itself"),
 }
+
+#: THE ADMISSION, AND IT IS A RECORD RATHER THAN A FLIPPED BOOLEAN.
+#:
+#: R-499: the USER admitted the `_stream_tape_rows` drift. An admission
+#: that arrived as a new key in `DECLARED_ADDITIVE` would be
+#: indistinguishable, six commits later, from a declaration a seat wrote
+#: for itself -- which is the ERA_ADMISSIBLE defect this programme spent
+#: a round on: a ruled property that became an unattributed default.
+#:
+#: So each admission carries WHO ruled, WHERE it is recorded, WHAT was
+#: admitted (the sha pair and the commit, verified at both sides), and --
+#: the part that matters -- a CONDITION.
+#:
+#: The ruling admits a drift whose harmlessness is CONDITIONAL on a
+#: computable fact: the added branch fires only at EOF without the rows
+#: array's closing bracket, so it cannot fire for a tape whose array is
+#: closed. That is a fact about THE INPUT, not about the code, and an
+#: input can change after a ruling. `condition` is therefore EVALUATED AT
+#: RUN TIME, on the actual tape, every time. If it returns False the
+#: admission is not in force, the pin BLOCKS, and the run REFUSES --
+#: the USER's ruling notwithstanding, because the ruling was granted on
+#: a condition and the condition is what failed.
+USER_ADMISSIONS = {
+    ("phase2_arms.py", "_stream_tape_rows"): {
+        "admitted_by": "USER",
+        "recorded_at": "R-499",
+        "relayed_by": "coordinator (dispatch of DE round 46)",
+        "changed_at": "2e1204f",
+        "sha_at_fit": "f0741bc4b170fabc",
+        "sha_at_declaring_tip": "f0b3bccfb8ec5b88",
+        "condition_name": "tape_rows_array_closed",
+        "condition_why": (
+            "the difference is confined to the EOF-WITHOUT-CLOSING-BRACKET "
+            "branch (a bare `return` became a `raise`) and the accepting "
+            "path is byte-for-byte unchanged -- established by "
+            "SUBSTITUTION in `stream_tape_rows_drift()`, not asserted. So "
+            "the added branch cannot fire for a tape whose rows array is "
+            "closed, and whether THIS tape's is closed is a fact about "
+            "the input that is re-read at every run"),
+        "reason":
+            "ADMITTED BY THE USER AT R-499, conditionally. The run may "
+            "stream the fit's tape through the tip's "
+            "`_stream_tape_rows` for as long as "
+            "`tape_rows_array_closed()` holds on the actual tape. It is "
+            "checked at run time, not inherited from the ruling",
+    },
+}
+
+
+def admission_conditions() -> list:
+    """Evaluate every admission's condition ON THE REAL ARTIFACT, now.
+
+    One row per admission: what was admitted, by whom, where it is
+    recorded, and whether its condition HOLDS AT THIS MOMENT. Nothing is
+    read from the dispatch that granted it (rule 16)."""
+    rows = []
+    for (fname, fn), a in sorted(USER_ADMISSIONS.items()):
+        row = {"file": fname, "function": fn,
+               "admitted_by": a["admitted_by"],
+               "recorded_at": a["recorded_at"],
+               "condition_name": a["condition_name"],
+               "condition_holds": None, "evidence": None,
+               "error": None}
+        try:
+            if a["condition_name"] == "tape_rows_array_closed":
+                ev = tape_rows_array_closed()
+                row["condition_holds"] = bool(ev["rows_array_closed"])
+                row["evidence"] = ev
+            else:
+                # SITE: admit#1
+                raise DiagRefused(
+                    f"admission {(fname, fn)} names a condition "
+                    f"{a['condition_name']!r} this runner cannot evaluate. "
+                    f"An admission whose condition nobody can compute is "
+                    f"an unconditional admission with a condition-shaped "
+                    f"label on it")
+        except DiagRefused:
+            raise
+        except Exception as exc:                     # noqa: BLE001
+            row["error"] = f"{type(exc).__name__}: {exc}"
+            row["condition_holds"] = False
+        rows.append(row)
+    return rows
+
+
+def admitted_declarations() -> dict:
+    """`DECLARED_ADDITIVE` plus every admission WHOSE CONDITION HOLDS.
+
+    An admission whose condition fails is simply ABSENT, so the pin sees
+    an undeclared change and blocks. That is the belt; `_gate_admissions`
+    is the brace, and it refuses BY NAME so the reason is the condition
+    rather than a bare "undeclared"."""
+    out = dict(DECLARED_ADDITIVE)
+    holds = {(r["file"], r["function"]): r["condition_holds"]
+             for r in admission_conditions()}
+    for key, a in USER_ADMISSIONS.items():
+        if holds.get(key):
+            out[key] = {k: a[k] for k in ("changed_at", "sha_at_fit",
+                                          "sha_at_declaring_tip", "reason")}
+    return out
+
 
 BINDING_FIELDS = ("frozen_protocol_sha256", "addendum_sha256",
                   "head_manifest_shas", "incumbent_manifest_shas",
@@ -585,7 +685,7 @@ def pin_statuses(here: Path | None = None, *,
     granting anything. A hypothetical that the run path could reach is a
     declaration; the run passes neither argument and the suite asserts
     that from the parse."""
-    decl = DECLARED_ADDITIVE if declared is None else declared
+    decl = admitted_declarations() if declared is None else declared
     m = json.loads((FITS / "fit_manifest.json").read_text())
     codes = m.get("fit_code_files") or {}
     ref = m.get("fit_code_ref") or ""
@@ -1741,6 +1841,20 @@ def selftest() -> int:
         raise SystemExit(f"[de_phase4_diag_runner] FAIL (no refusal): "
                          f"{label}")
 
+    def admits(fn, label):
+        """The mirror of `refuses`, and it exists because a BARE CALL IS
+        NOT A CHECK. Round 46's P1 mutant made `_gate_called_code(None)`
+        raise, and because the call stood on its own line the suite died
+        by traceback with no FAIL line -- the DE41-R1 class, in the
+        control that was supposed to prove the gate ADMITS."""
+        try:
+            fn()
+        except REFUSAL_TYPES as exc:
+            raise SystemExit(f"[de_phase4_diag_runner] FAIL (refused, "
+                             f"expected admission): {label} -- {exc}")
+        n[0] += 1
+        print(f"  PASS  {label}")
+
     # ---- the POPULATION is the one 011 used -----------------------------
     pop = population_slugs()
     ok(pop["n_total"] == 471 and pop["n_per_coin"]["btc"] == 234
@@ -2411,18 +2525,25 @@ def selftest() -> int:
             "refuses at the split, before the pin and before any feed -- "
             "the ruling exists and is still not supplied on the caller's "
             "behalf", needle="the split set is UNDECLARED")
+    admits(lambda: _gate_called_code(None),
+           "DE46: THE PIN GATE NOW ADMITS. R-499 admitted the drift, the "
+           "condition holds on the artifact, and `_gate_called_code` "
+           "RETURNS -- the gate that refused every round since 43. Round "
+           "45's version of this line asserted the opposite; it is "
+           "superseded by the ruling, not by an edit that made it true. "
+           "Driven through `admits` rather than as a bare call, because "
+           "a bare call that raises dies by traceback with no FAIL line")
     refuses(lambda: preflight(
         splits=DECLARED_SPLIT_SETS[RULED_SPLIT_SET]),
         "AND THE HONEST STATE OF THE DIAGNOSTIC, DRIVEN AT `preflight()` "
-        "AND DELIBERATELY NOT AT `run()`: with the RULED split set named, "
-        "the split gate PASSES and what refuses is the PIN. Round 44 "
-        "closed the producer half and the split half; what is left is one "
-        "admissibility ruling that belongs to the USER (rule 14). THIS "
-        "CHECK USED TO CALL `run()` AND THAT WAS BE12-S1's DEFECT IN A "
-        "NEW PLACE: a control whose subject is a GATE, which passes the "
-        "day the gate is granted and becomes a ~29-minute feed inside the "
-        "selftest. The mutant that re-declares the drift found it",
-        needle="BLOCKING pin status")
+        "AND DELIBERATELY NOT AT `run()`: with the pin admitted, what "
+        "still refuses IN THIS WORKTREE is `input_roots` -- a property of "
+        "WHERE the run executes, not of the run. From the fit tree it "
+        "passes and preflight is clear. THIS CHECK MUST NEVER CALL "
+        "`run()`: its subject is a GATE, and the day every gate passes it "
+        "would become a multi-hour feed inside the selftest (BE12-S1's "
+        "defect, which round 44's M1 mutant found here)",
+        needle="TWO TREES")
     import tempfile as _tf
     with _tf.TemporaryDirectory() as _d:
         _busy = Path(_d) / "x"
@@ -2713,26 +2834,26 @@ def selftest() -> int:
         "unequal length pairs one row's features with another row's "
         "identity, silently", needle="parallel")
     refuses(lambda: preflight(),
-            "and `preflight()` REFUSES before anything is built -- now at "
-            "the PIN, not at the scorer. Round 44 wired the expensive "
-            "half, so the scorer is satisfied and what stands in the run's "
-            "way is a CALLED function that differs from the fit bytes. "
-            "That is an ADMISSIBILITY question and this seat does not "
-            "answer it (rule 14)",
-            needle="BLOCKING pin status")
+            "and `preflight()` still REFUSES before anything is built -- "
+            "at `input_roots` now that R-499 has admitted the pin. The "
+            "gate order is the message: splits, thresholds, fit_code, "
+            "admissions, called_code, assembly_preconditions, "
+            "input_roots, and the first one that fails is the one you "
+            "hear about",
+            needle="TWO TREES")
     refuses(lambda: preflight(splits=["not_a_split"]),
             "and `preflight(splits=...)` refuses an UNKNOWN split in "
             "milliseconds, before the pin and before any read -- a name "
             "the tape does not carry indexes nothing",
             needle="are not in the tape")
     _pin = pin_statuses()                # the rows, computed
-    refuses(lambda: verify_called_code(),
-            "DE44: `verify_called_code()` REFUSES BY NAME on the "
-            "BLOCKING verdict. Round 43 wrote a declaration for "
-            "`_stream_tape_rows` and named its own doubt; R-496's "
-            "dispatch ruled the doubt -- the declaration is WITHDRAWN and "
-            "the pin stays blocking until the USER grants it",
-            needle="_stream_tape_rows")
+    ok(verify_called_code(_pin) == _pin
+       and not [r for r in _pin if r["verdict"] == "BLOCKING"],
+       f"DE46: `verify_called_code()` PROCEEDS. Rounds 43-45 drove this "
+       f"line as a REFUSAL; R-499 admitted the drift and the condition "
+       f"holds, so it returns its rows. The known-bad that puts it back "
+       f"to BLOCKING is the condition-failure control above -- the "
+       f"refusal is still reachable, and by the route that matters")
     _pv = {r["path"]: r["verdict"] for r in _pin}
     _her = [r for r in _pin if r["path"] == "harmful_exposure_rows.py"][0]
     ok(_her["verdict"] == "ADDITIVE_DECLARED"
@@ -2752,20 +2873,23 @@ def selftest() -> int:
        f"TIP, as R-473 rules")
     _pa = [r for r in _pin if r["path"] == "phase2_arms.py"][0]
     _tc = tape_rows_array_closed()
-    ok(_pa["verdict"] == "BLOCKING"
+    ok(_pa["verdict"] == "ADDITIVE_DECLARED"
        and _pa["n_functions_called"] >= 5
        and _pa["functions_changed"] == ["_stream_tape_rows"]
-       and _pa["undeclared"] == ["_stream_tape_rows"]
-       and ("phase2_arms.py", "_stream_tape_rows") not in DECLARED_ADDITIVE,
-       f"THE PROPHECY OF ROUND 37 CAME TRUE, AND THE PIN IS STILL HOLDING: "
-       f"wiring the expensive half moved `phase2_arms.py` from IDENTICAL "
-       f"at 1 reached entry to {_pa['n_functions_called']} "
-       f"({_pa['entry_points']} and what they call), and one of them -- "
-       f"`_stream_tape_rows` -- DIFFERS from the fit bytes. It is "
-       f"{_pa['verdict']} and UNDECLARED ({_pa['undeclared']}) because "
-       f"admitting a fit-vs-tip drift is an admissibility call and "
-       f"admissibility is the USER's (rule 14). What this round adds is "
-       f"not a declaration but the FACTS, each computed")
+       and not _pa["undeclared"]
+       and ("phase2_arms.py", "_stream_tape_rows") not in DECLARED_ADDITIVE
+       and ("phase2_arms.py", "_stream_tape_rows") in USER_ADMISSIONS,
+       f"THE PROPHECY OF ROUND 37 CAME TRUE, THE PIN HELD FOR THREE "
+       f"ROUNDS, AND R-499 RELEASED IT: wiring the expensive half moved "
+       f"`phase2_arms.py` from IDENTICAL at 1 reached entry to "
+       f"{_pa['n_functions_called']} ({_pa['entry_points']} and what they "
+       f"call), and one of them -- `_stream_tape_rows` -- DIFFERS from "
+       f"the fit bytes. It reads {_pa['verdict']} with "
+       f"{_pa['undeclared']} undeclared, and it gets there through "
+       f"`USER_ADMISSIONS` and NOT through `DECLARED_ADDITIVE` "
+       f"({('phase2_arms.py', '_stream_tape_rows') in DECLARED_ADDITIVE}) "
+       f"-- so the ledger still says a USER admitted it, on a condition, "
+       f"rather than that a seat declared it")
     _drift = stream_tape_rows_drift()
     ok(_drift["differs"] and _drift["accepting_path_unchanged"]
        and _drift["n_substitutions_that_restore_the_fit"] == 1
@@ -2819,15 +2943,17 @@ def selftest() -> int:
        f"control that decides whether the whole fact sheet is worth "
        f"anything (rule 16)")
     _rep = code_drift_report()
-    ok(_rep["run_is_blocked_by_the_pin"] is True
-       and _rep["blocking"] == {"phase2_arms.py": ["_stream_tape_rows"]}
-       and _rep["undeclared_drift"]["routed_to"] == "USER"
+    ok(_rep["run_is_blocked_by_the_pin"] is False
+       and _rep["blocking"] == {}
+       and _rep["undeclared_drift"]["ruled"].startswith("R-499")
        and _rep["undeclared_drift"]["computed"]["accepting_path_unchanged"],
-       f"and the report an operator can read WITHOUT running anything "
-       f"(`--pin-report`) carries the verdict DERIVED from "
-       f"`pin_statuses()` ({_rep['blocking']}) rather than a literal, so "
-       f"a grant changes it on its own and nothing here has to be edited "
-       f"to notice")
+       f"AND THIS IS THE CHECK THAT PROVED ITS OWN DESIGN: `--pin-report` "
+       f"derives its verdict from `pin_statuses()` rather than a literal, "
+       f"and round 44's label promised \"a grant changes it on its own "
+       f"and nothing here has to be edited to notice\". R-499 granted it "
+       f"and the report now reads blocking={_rep['blocking']}, "
+       f"run_blocked={_rep['run_is_blocked_by_the_pin']} -- the assertion "
+       f"moved because the FACT moved")
     # ---- DE44: THE SPLIT IS RULED, AND STILL NOT A DEFAULT ------------
     ok(RULED_SPLIT_SET == "MECHANICS_BOTH_SPLITS"
        and SPLIT_RULING["ruled_by"] == "R-496 (E)"
@@ -3073,15 +3199,17 @@ def selftest() -> int:
        f"The report tells it apart from a clean refusal by TYPE, against "
        f"`REFUSAL_TYPES`, which is the same tuple `main()` catches")
     ok(_pf["n_error_uncaught"] == 0
-       and _pf["blockers"] == ["called_code", "input_roots"]
-       and _pf["blockers_if_run_from_the_fit_tree"] == ["called_code"]
+       and _pf["blockers"] == ["input_roots"]
+       and _pf["blockers_if_run_from_the_fit_tree"] == []
        and _pf["running_in_the_fit_tree"] is False,
-       f"AND THE ANSWER, BY EXECUTION: from THIS worktree "
-       f"{_pf['blockers']} refuse and {_pf['n_error_uncaught']} gates "
-       f"traceback; from the fit tree ({_pf['fit_tree']}), where the "
-       f"ruled run must execute, the blockers are "
-       f"{_pf['blockers_if_run_from_the_fit_tree']} -- the PIN, and "
-       f"nothing else. The projection is COMPUTED, not asserted")
+       f"AND THE ANSWER, BY EXECUTION, AT THE ROUND THAT CLEARS IT: from "
+       f"THIS worktree {_pf['blockers']} refuses and "
+       f"{_pf['n_error_uncaught']} gates traceback; FROM THE FIT TREE "
+       f"({_pf['fit_tree']}), where the ruled run must execute, THE "
+       f"BLOCKERS ARE {_pf['blockers_if_run_from_the_fit_tree']} -- "
+       f"EMPTY. Round 45 read `['called_code']` here on the same "
+       f"instrument; R-499 admitted it and the same instrument now reads "
+       f"clear. The projection is COMPUTED, so it moved on its own")
     ok(input_roots()["archive_raw"] == input_roots()["module_archive_raw"],
        f"and the un-injected `input_roots()` reports the archive path the "
        f"MODULE actually uses ({input_roots()['module_archive_raw']}) -- "
@@ -3102,7 +3230,10 @@ def selftest() -> int:
         "one predicate would have passed a tree that does not exist",
         needle="does not exist")
     _agreed = input_roots(archive_repo=input_roots()["derived_root"])
-    _check_input_roots(_agreed)
+    admits(lambda: _check_input_roots(_agreed),
+           "and the roots gate ADMITS the fit's own tree -- driven "
+           "through `admits`, so a regression that made it refuse would "
+           "be a named failure and not a traceback")
     ok(_agreed["agree"] and _agreed["archive_raw_exists"],
        f"POSITIVE CONTROL: pointed at the fit's own tree the SAME gate "
        f"ADMITS ({_agreed['derived_root']}, raw present) -- the half a "
@@ -3116,17 +3247,18 @@ def selftest() -> int:
        and _ref_b["pin_verdicts"]["phase2_arms.py"] == "BLOCKING"
        and _adm_b["pin_verdicts"]["phase2_arms.py"] == "ADDITIVE_DECLARED"
        and _ref_b["blocking_files"] == ["phase2_arms.py"]
-       and _adm_b["blocking_files"] == [],
-       f"DE45: THE USER IS CHOOSING BETWEEN TWO COMPUTED OUTCOMES, not "
-       f"two adjectives. REFUSED: {_ref_b['blocking_files']} blocks, "
-       f"`--run` exits rc 2, nothing is built. ADMITTED (hypothetical, "
-       f"built and discarded inside the call): "
-       f"{_adm_b['blocking_files']} blocks and the run proceeds to a "
-       f"receipt that carries what was granted. The grant is NARROW -- "
-       f"the verdicts differ in {_out['differs_only_in']} and in nothing "
-       f"else, which is itself computed rather than promised")
+       and _adm_b["blocking_files"] == []
+       and _out["ruled"].startswith("R-499"),
+       f"DE46: THE TWO BRANCHES HAVE INVERTED. What round 45 computed as "
+       f"the hypothetical -- {_adm_b['branch']} -- is now the state, and "
+       f"what was the state is now {_ref_b['branch']}: "
+       f"{_ref_b['blocking_files']} blocks if the condition lapses. That "
+       f"is the branch worth keeping, because an INPUT can change after a "
+       f"ruling and this one is conditional on an input. The difference "
+       f"is still exactly {_out['differs_only_in']} -- the grant is as "
+       f"narrow as it was when it was hypothetical")
     _wrong = dict(DECLARED_ADDITIVE)
-    _wrong[(UNDECLARED_DRIFT["file"], UNDECLARED_DRIFT["function"])] = {
+    _wrong[(DRIFT_FACTS["file"], DRIFT_FACTS["function"])] = {
         "changed_at": "2e1204f", "sha_at_fit": "deadbeefdeadbeef",
         "sha_at_declaring_tip": "f0b3bccfb8ec5b88", "reason": "KNOWN-BAD"}
     _ws = [r for r in pin_statuses(declared=_wrong)
@@ -3192,6 +3324,168 @@ def selftest() -> int:
        f"the price's `arms_per_cell` and the run's head loop cannot "
        f"disagree -- the count is read from the same tuple by both")
 
+    # ---- DE46: THE ADMISSION IS A RECORD WITH A CONDITION -------------
+    _adm = admission_conditions()
+    _key = (DRIFT_FACTS["file"], DRIFT_FACTS["function"])
+    # Every field below is read through `.get()` and the SHAPE is part of
+    # the predicate. A label that indexes a mutant's output crashes
+    # before `ok()` is reached and the check dies NAMELESSLY -- measured
+    # twice in this file's history, and again by round 46's P1 and P3.
+    _a0 = (_adm[0] if _adm else {})
+    _ev = _a0.get("evidence") or {}
+    _rec = USER_ADMISSIONS.get(_key) or {}
+    import phase2_arms as _PA46
+    ok(len(_adm) == 1 and _a0.get("admitted_by") == "USER"
+       and _a0.get("recorded_at") == "R-499"
+       and _a0.get("condition_name") == "tape_rows_array_closed"
+       and _a0.get("condition_holds") is True
+       # THE EVIDENCE MUST COME FROM THE ARTIFACT, and that is a claim
+       # about its shape and its path, not about its verdict: a
+       # hardcoded {"rows_array_closed": True} satisfies the verdict and
+       # fails here.
+       and set(("path", "bytes", "tail", "rows_array_closed"))
+       <= set(_ev)
+       and _ev.get("path") == str(_PA46.TAPE_PATH)
+       and _ev.get("bytes") == Path(_PA46.TAPE_PATH).stat().st_size
+       and _ev.get("rows_array_closed") is True
+       and _rec.get("sha_at_fit") == "f0741bc4b170fabc"
+       and _rec.get("sha_at_declaring_tip") == "f0b3bccfb8ec5b88"
+       and _rec.get("changed_at") == "2e1204f",
+       f"DE46 / R-499: the drift is ADMITTED, and the admission is a "
+       f"RECORD, not a flipped boolean -- who ({_a0.get('admitted_by')}), "
+       f"where ({_a0.get('recorded_at')}), what (the sha pair at "
+       f"{_rec.get('changed_at')}), and a CONDITION "
+       f"({_a0.get('condition_name')}) EVALUATED ON THE ARTIFACT: "
+       f"{_ev.get('tail')!r} at {_ev.get('bytes')} B, read from "
+       f"{_ev.get('path')}. The evidence's PATH AND SIZE are part of the "
+       f"predicate, so a condition answered from the ruling instead of "
+       f"the file fails HERE rather than passing quietly")
+    ok(_key in admitted_declarations()
+       and _key not in DECLARED_ADDITIVE
+       and admitted_declarations()[_key]["sha_at_fit"]
+       == USER_ADMISSIONS[_key]["sha_at_fit"],
+       f"and the admission enters the pin's map ONLY through "
+       f"`admitted_declarations()` -- it is NOT in `DECLARED_ADDITIVE` "
+       f"({_key in DECLARED_ADDITIVE}), so the seat's own declarations "
+       f"and the USER's admissions cannot be confused for one another by "
+       f"anyone reading either list")
+    _held = tape_rows_array_closed
+    try:
+        globals()["tape_rows_array_closed"] = lambda *a, **k: {
+            "path": "fixture", "bytes": 0, "tail": "...truncated",
+            "rows_array_closed": False}
+        _bad_adm = admission_conditions()
+        _bad_map = admitted_declarations()
+        _bad_pin = [r for r in pin_statuses(declared=_bad_map)
+                    if r["path"] == "phase2_arms.py"][0]
+        _gate_err = None
+        try:
+            _gate_admissions(None)
+        except DiagRefused as _e:
+            _gate_err = str(_e)
+    finally:
+        globals()["tape_rows_array_closed"] = _held
+    ok(_bad_adm[0]["condition_holds"] is False
+       and _key not in _bad_map
+       and _bad_pin["verdict"] == "BLOCKING"
+       and _gate_err and "NOT IN FORCE" in _gate_err
+       and "R-499" in _gate_err,
+       f"KNOWN-BAD, AND IT IS THE WHOLE POINT OF THE ADMISSION'S SHAPE: "
+       f"with the tape's array reading NOT CLOSED, the condition fails, "
+       f"the admission DROPS OUT of the map, the pin returns to "
+       f"{_bad_pin['verdict']} and `_gate_admissions` refuses BY NAME "
+       f"citing R-499. **The USER's ruling notwithstanding** -- the "
+       f"ruling admitted a drift whose harmlessness is conditional on a "
+       f"computable fact, so if the fact fails the admission fails with "
+       f"it. Driven by replacing the predicate, then restored")
+    ok(tape_rows_array_closed()["rows_array_closed"] is True
+       and admission_conditions()[0]["condition_holds"] is True,
+       f"POSITIVE CONTROL, after the injection is undone: the real "
+       f"predicate reads True again and the admission is back in force -- "
+       f"so the known-bad above measured the CONDITION and not a "
+       f"permanently broken fixture")
+    _pf46 = preflight_report(splits=DECLARED_SPLIT_SETS[RULED_SPLIT_SET])
+    ok([g["gate"] for g in _pf46["gates"]][:5]
+       == ["splits", "thresholds", "fit_code", "admissions", "called_code"]
+       and _pf46["blockers_if_run_from_the_fit_tree"] == []
+       and _pf46["n_error_uncaught"] == 0,
+       f"and the `admissions` gate runs BEFORE `called_code` "
+       f"({[g['gate'] for g in _pf46['gates']][:5]}) so a lapsed "
+       f"condition refuses with its OWN reason rather than as a bare "
+       f"\"undeclared\". FROM THE FIT TREE THE BLOCKERS ARE NOW "
+       f"{_pf46['blockers_if_run_from_the_fit_tree']} -- the run is "
+       f"clear, and this is the same instrument that said `called_code` "
+       f"last round")
+
+    # ---- DE46: THE RUN'S OWN OPERATIONAL SHAPE ------------------------
+    _sl = slice_memory()
+    ok(isinstance(_sl.get("MemoryCurrent"), int)
+       and isinstance(_sl.get("MemoryMax"), int)
+       and _sl["MemoryMax"] > 0 and "current_gb" in _sl,
+       f"DE46: the SLICE's occupancy is readable and is logged at every "
+       f"stage boundary -- {_sl.get('current_gb')} GB of "
+       f"{_sl.get('max_gb')} GB, headroom {_sl.get('headroom_gb')} GB. A "
+       f"per-process RSS says what this run costs and nothing about what "
+       f"is left; this host's `research.slice` has MemoryPeak == "
+       f"MemoryMax, so it has been driven flat into its ceiling once "
+       f"already, and reclaim thrash at hour four is indistinguishable "
+       f"from a code fault unless the pressure was recorded while it "
+       f"happened")
+    import tempfile as _tf3
+    with _tf3.TemporaryDirectory() as _td3:
+        _lg = Progress(Path(_td3) / "p.log", cap_bytes=12 * 2**30)
+        _r1 = _lg.stage("fixture", note="one")
+        _r2 = _lg.stage("fixture2", note="two")
+        _rows = [json.loads(l) for l in
+                 (Path(_td3) / "p.log").read_text().splitlines()]
+        ok(len(_rows) == 2 and _rows[0]["seq"] == 0 and _rows[1]["seq"] == 1
+           and all("peak_rss_mb" in r and "cap_gb" in r and "utc" in r
+                   for r in _rows)
+           # THE SLICE FIGURE MUST BE A NUMBER, not merely a key. A
+           # mutant that logged `"slice": None` passed the whole suite:
+           # the control asserted PRESENCE where the instruction was to
+           # record OCCUPANCY (round 46, P5).
+           and all(isinstance(r.get("slice"), dict)
+                   and isinstance(r["slice"].get("MemoryCurrent"), int)
+                   and r["slice"]["MemoryCurrent"] > 0
+                   and isinstance(r["slice"].get("MemoryMax"), int)
+                   for r in _rows)
+           and _rows[0]["cap_gb"] == 12.0,
+           f"DRIVEN: the progress log is JSONL, FLUSHED per stage, and "
+           f"every row carries the clock, the elapsed wall, this "
+           f"process's peak RSS against its cap "
+           f"({_rows[0]['peak_rss_fraction_of_cap']:.3f} of "
+           f"{_rows[0]['cap_gb']} GB) and the SLICE's occupancy as a "
+           f"NUMBER ({(_rows[0].get('slice') or {}).get('current_gb')} GB "
+           f"of {(_rows[0].get('slice') or {}).get('max_gb')} GB). The "
+           f"run is longer "
+           f"than a comfortable context; the log is what makes the "
+           f"result recoverable by somebody who is not it, and what lets "
+           f"memory pressure be told from a code fault afterwards")
+    _runsrc46 = _ast.get_source_segment(
+        Path(__file__).read_text(),
+        [nd for nd in _ast.walk(_ast.parse(Path(__file__).read_text()))
+         if isinstance(nd, _ast.FunctionDef) and nd.name == "run"][0])
+    _order = {}
+    for _nd in _ast.walk(_ast.parse(_runsrc46)):
+        if isinstance(_nd, _ast.Call):
+            _nm = getattr(_nd.func, "id", None) or getattr(_nd.func,
+                                                           "attr", "")
+            if _nm not in _order:
+                _order[_nm] = _nd.lineno
+    ok(_order["preflight"] < _order["mkdir"] < _order["Progress"]
+       < _order["feature_blocks"] < _order["build_reference"],
+       f"DE46, THE ORDER THAT MAKES A MEMORY FAILURE CHEAP, asserted from "
+       f"the parse: preflight(L{_order['preflight']}) < "
+       f"mkdir(L{_order['mkdir']}) < Progress(L{_order['Progress']}) < "
+       f"feature_blocks(L{_order['feature_blocks']}) < "
+       f"build_reference(L{_order['build_reference']}). "
+       f"`feature_blocks` needs no reference, so nothing forced it to run "
+       f"second -- and it is the stage that can exhaust the cap. First, a "
+       f"memory failure costs the assembly's own minutes; after the feed "
+       f"it costs those PLUS ~28, and the OUTDIR is already created so a "
+       f"retry refuses")
+
     ok(OUTDIR.exists() is False,
        f"and the DECLARED OUTDIR {OUTDIR.name} STILL DOES NOT EXIST after "
        f"this suite: round 44 is the producer half and the execution is a "
@@ -3203,9 +3497,9 @@ def selftest() -> int:
        "a literal in this file")
     from collections import Counter as _C
     _verd = _C(r["verdict"] for r in _pin)
-    ok(_pv.get("phase2_arms.py") == "BLOCKING"
-       and _verd["IDENTICAL"] == 10 and _verd["ADDITIVE_DECLARED"] == 1
-       and _verd["BLOCKING"] == 1
+    ok(_pv.get("phase2_arms.py") == "ADDITIVE_DECLARED"
+       and _verd["IDENTICAL"] == 10 and _verd["ADDITIVE_DECLARED"] == 2
+       and _verd["BLOCKING"] == 0
        and _verd["NOT_CALLED"] == 0 and sum(_verd.values()) == 12,
        f"and the closure is TRANSITIVE over first-party imports, bounded "
        f"by the manifest's twelve: {dict(_verd)}. THE COUNT MOVED THIS "
@@ -3579,18 +3873,26 @@ def selftest() -> int:
                 "Round 37's falsifier passed a synthetic status ROW, which "
                 "tests the filter and not the path that produces it",
                 needle="BLOCKING pin status")
-    _nonblocking = [r for r in _pin if r["verdict"] != "BLOCKING"]
-    ok(verify_called_code(_nonblocking) == _nonblocking
-       and len(_nonblocking) == len(_pin) - 1
-       and {r["verdict"] for r in _nonblocking} == {"IDENTICAL",
-                                                    "ADDITIVE_DECLARED"},
-       f"POSITIVE CONTROL on the same path, and it MATTERS more now that "
-       f"the real set BLOCKS: the same real rows with the one BLOCKING "
-       f"row dropped ({len(_nonblocking)} of {len(_pin)}) are ADMITTED "
-       f"unchanged. So `called#1` is a FILTER on a verdict and not a wall "
-       f"that refuses everything -- the half a refusal-only control never "
-       f"proves (SEAT_PROTOCOL rule 16). The verdicts are the ones "
-       f"`pin_statuses` computed, never a fabricated clean set")
+    _synth_block = [dict(r) for r in _pin]
+    _synth_block[0] = dict(_synth_block[0], verdict="BLOCKING",
+                           functions_changed=["a_planted_change"])
+    _blocked = None
+    try:
+        verify_called_code(_synth_block)
+    except DiagRefused as _e:
+        _blocked = str(_e)
+    ok(verify_called_code(_pin) == _pin
+       and {r["verdict"] for r in _pin} == {"IDENTICAL",
+                                            "ADDITIVE_DECLARED"}
+       and _blocked and "a_planted_change" in _blocked,
+       f"BOTH DIRECTIONS ON THE SAME PATH: the real rows -- all "
+       f"{len(_pin)} of them, now that R-499 cleared the last BLOCKING "
+       f"one -- are ADMITTED unchanged, and a single planted BLOCKING "
+       f"row still refuses BY NAME ('a_planted_change'). So `called#1` "
+       f"is a FILTER on a verdict and neither a wall nor a rubber stamp. "
+       f"Until this round the admitting half was the one that could not "
+       f"be shown; now it is the refusing half that needs a plant, and "
+       f"both are driven")
 
     # ---- §5 (gamma): P1-P4 COMPUTED on the two streams ----------------
     _t_scores = [{"t": 0.0, "slug": _slug[0], "side": "BUY_UP", "gen": 1,
@@ -3735,8 +4037,82 @@ def selftest() -> int:
     return 0
 
 
+def slice_memory(unit: str = "research.slice") -> dict:
+    """The cgroup slice's own occupancy, read from systemd.
+
+    A per-process RSS says what THIS run costs; it says nothing about
+    what is left. Measured on this host, `research.slice`'s MemoryPeak
+    equals its MemoryMax exactly -- it has been driven flat into its
+    ceiling once already -- and the reclaim that absorbed it put GBs into
+    swap. Losing a multi-hour run to reclaim thrash at hour four is
+    indistinguishable, afterwards, from a code problem unless the
+    pressure was recorded WHILE it happened. So it is recorded at every
+    stage boundary."""
+    import subprocess
+    try:
+        r = subprocess.run(
+            ("systemctl", "--user", "show", unit, "-p", "MemoryCurrent",
+             "-p", "MemoryMax", "-p", "MemoryPeak", "-p",
+             "MemorySwapCurrent"),
+            capture_output=True, text=True, timeout=20)
+    except Exception as exc:                         # noqa: BLE001
+        return {"unit": unit, "error": f"{type(exc).__name__}: {exc}"}
+    out: dict = {"unit": unit}
+    for line in r.stdout.splitlines():
+        if "=" in line:
+            k, v = line.split("=", 1)
+            try:
+                out[k] = int(v)
+            except ValueError:
+                out[k] = v
+    cur, mx = out.get("MemoryCurrent"), out.get("MemoryMax")
+    if isinstance(cur, int) and isinstance(mx, int) and mx:
+        out["current_gb"] = round(cur / 2**30, 2)
+        out["max_gb"] = round(mx / 2**30, 2)
+        out["headroom_gb"] = round((mx - cur) / 2**30, 2)
+        out["fraction_of_max"] = round(cur / mx, 3)
+    return out
+
+
+class Progress:
+    """A JSONL progress log, written into the OUTDIR as the run goes.
+
+    This run is longer than a comfortable context. The log exists so the
+    result is recoverable by somebody who is not the process that made
+    it: one line per stage boundary, flushed, carrying the clock, the
+    wall so far, this process's peak RSS against its cap, and the SLICE's
+    occupancy -- so memory pressure and a code problem can be told apart
+    afterwards rather than guessed at."""
+
+    def __init__(self, path: Path, *, cap_bytes: int | None = None):
+        self.path = Path(path)
+        self.t0 = time.time()
+        self.cap_bytes = cap_bytes
+        self.n = 0
+
+    def stage(self, name: str, **facts) -> dict:
+        import datetime as _dt
+        rss = _peak_rss_mb()
+        row = {"seq": self.n, "stage": name,
+               "utc": _dt.datetime.now(_dt.timezone.utc).isoformat(),
+               "elapsed_s": round(time.time() - self.t0, 1),
+               "peak_rss_mb": rss,
+               "peak_rss_gb": round(rss / 1024.0, 2),
+               "slice": slice_memory()}
+        if self.cap_bytes:
+            row["cap_gb"] = round(self.cap_bytes / 2**30, 2)
+            row["peak_rss_fraction_of_cap"] = round(
+                rss * 2**20 / self.cap_bytes, 3)
+        row.update(facts)
+        self.n += 1
+        with open(self.path, "a") as fh:
+            fh.write(json.dumps(row, sort_keys=True, default=str) + "\n")
+            fh.flush()
+        return row
+
+
 def run(outdir: Path | None = None, *, splits, coins=COINS,
-        limit: int | None = None) -> dict:
+        limit: int | None = None, cap_bytes: int | None = None) -> dict:
     """THE RUN PATH (DE32-C1).  Feed -> assembly -> scores -> arms -> rho ->
     null -> receipt, written once into the declared directory.
 
@@ -3749,20 +4125,47 @@ def run(outdir: Path | None = None, *, splits, coins=COINS,
     set; the ruling is recorded in `SPLIT_RULING` and is still not a
     fallback here, so a caller who names nothing gets a refusal by name
     rather than a run under a value nobody typed."""
+    t_run = time.time()
     out = validate_outdir(outdir or OUTDIR)
     got = validate_splits(splits)
     preflight(splits=got)      # DE34-C1: BEFORE the feed, not after it
+    # The directory is created HERE, not at the receipt write, so the
+    # progress log exists from the first stage. A run this long has to be
+    # recoverable by someone who is not the process that made it.
+    out.mkdir(parents=True, exist_ok=False)
+    log = Progress(out / "phase4_diag_r459_progress.log",
+                   cap_bytes=cap_bytes)
+    log.stage("preflight_passed", splits=list(got),
+              admissions=admission_conditions(),
+              pin_verdicts={r["path"]: r["verdict"]
+                            for r in verify_called_code()})
+    # THE MEMORY-RISKY HALF FIRST, and deliberately BEFORE the feed.
+    # `feature_blocks` needs no reference, so nothing forces it to run
+    # second -- and it is the stage that can exhaust the cap. Run first,
+    # a memory failure costs the assembly's own minutes; run after the
+    # feed, it costs those PLUS the feed's ~28. Round 43's wiring put it
+    # behind a per-(coin, head) call, which would have paid for a 3.2 GB
+    # index and a 1.2 GB pass 108 times (Q-DE-62's correction).
+    t_asm = time.time()
+    fb = feature_blocks(splits=got)
+    asm_s = time.time() - t_asm
+    log.stage("assembly_done", wall_s=round(asm_s, 1),
+              stages=fb["stages"], n_tape_rows=fb["n_tape_rows"],
+              kept_by_coin={c: len(b["kept"])
+                            for c, b in fb["blocks"].items()})
     t_feed = time.time()
     feeds = {c: build_reference(c, limit=limit) for c in coins}
     feed_s = time.time() - t_feed
-    # THE EXPENSIVE HALF, once. It is the same tape index and the same
-    # feature pass for every cell, and round 43's wiring put it behind a
-    # per-(coin, head) call -- 18 cells x 2 heads would have paid for it
-    # 36 times.
-    t_asm = time.time()
+    log.stage("feed_done", wall_s=round(feed_s, 1),
+              windows={c: len(feeds[c]["reference"]) for c in coins},
+              statuses={c: feeds[c]["statuses"] for c in coins})
+    t_join = time.time()
     asm = assemble_gen_scores({c: feeds[c]["reference"] for c in coins},
-                              splits=got, coins=coins)
-    asm_s = time.time() - t_asm
+                              splits=got, coins=coins, blocks=fb)
+    log.stage("join_done", wall_s=round(time.time() - t_join, 1),
+              split_counts=asm["split_counts"],
+              statuses={f"{c}/{h}": asm["by_arm"][(c, h)][1]
+                        for c in coins for h in HEADS_RUN})
     heads = {h: SS.verify_head(h, coins[0]) for h in SS.HEADS}
     cells: list = []
     for coin in coins:
@@ -3815,17 +4218,29 @@ def run(outdir: Path | None = None, *, splits, coins=COINS,
                     "statuses": feeds[coin]["statuses"],
                 }
                 cells.append(cell_out)
+                log.stage("cell_done", n=len(cells), coin=coin,
+                          latency_ms=L, budget=budget,
+                          n_draws_requested=cell_out["n_draws_requested"],
+                          splits=cell_out["splits"],
+                          net_diff_vs_incumbent_cents=cell_out.get(
+                              "net_diff_vs_incumbent_cents"))
     pop = population_slugs()
     rec = build_receipt(cells, pop, heads=heads,
-                        wall_clock_s=time.time() - t_feed)
+                        wall_clock_s=time.time() - t_run)
     rec["feed_seconds"] = feed_s
     rec["assembly_seconds"] = asm_s
     rec["assembly"] = asm["assembly"]
     rec["split_ruling"] = dict(SPLIT_RULING)
+    rec["stage_order"] = ["preflight", "assembly", "feed", "join", "cells"]
+    rec["admissions"] = admission_conditions()
+    rec["progress_log"] = str(log.path)
     validate_receipt(rec)
-    out.mkdir(parents=True, exist_ok=False)
     (out / "phase4_diag_r459_receipt.json").write_text(
-        json.dumps(rec, indent=1, sort_keys=True))
+        json.dumps(rec, indent=1, sort_keys=True, default=str))
+    log.stage("receipt_written",
+              path=str(out / "phase4_diag_r459_receipt.json"),
+              n_cells=len(cells),
+              bytes=(out / "phase4_diag_r459_receipt.json").stat().st_size)
     return rec
 
 
@@ -3983,8 +4398,8 @@ def stream_tape_rows_drift(*, candidate: str | None = None,
     one statement must read `accepting_path_unchanged` False. The run
     passes neither."""
     import ast as _a
-    name = UNDECLARED_DRIFT["function"]
-    fname = UNDECLARED_DRIFT["file"]
+    name = DRIFT_FACTS["function"]
+    fname = DRIFT_FACTS["file"]
     ref = json.loads((FITS / "fit_manifest.json").read_text())["fit_code_ref"]
     fit_src = _git_show(ref, f"live/pm_research/{fname}")
     if fit_src is None:
@@ -4025,10 +4440,10 @@ def stream_tape_rows_drift(*, candidate: str | None = None,
                     st is node for st in nd.body):
                 encl = _a.unparse(nd.test)
                 break
-    at = _fn_asts(_git_show(candidate or UNDECLARED_DRIFT[
+    at = _fn_asts(_git_show(candidate or DRIFT_FACTS[
         "candidate_changed_at"], f"live/pm_research/{fname}") or "")
     before = _fn_asts(_git_show(
-        (candidate or UNDECLARED_DRIFT["candidate_changed_at"]) + "^",
+        (candidate or DRIFT_FACTS["candidate_changed_at"]) + "^",
         f"live/pm_research/{fname}") or "")
     sha_fit = _ast_sha(_fn_asts(fit_src).get(name))
     sha_tip = _ast_sha(_fn_asts(tip_src).get(name))
@@ -4036,7 +4451,7 @@ def stream_tape_rows_drift(*, candidate: str | None = None,
         "file": fname, "function": name, "fit_code_ref": ref,
         "sha_at_fit": sha_fit, "sha_at_tip": sha_tip,
         "differs": sha_fit != sha_tip,
-        "candidate_changed_at": candidate or UNDECLARED_DRIFT[
+        "candidate_changed_at": candidate or DRIFT_FACTS[
             "candidate_changed_at"],
         "changed_at_verified": (at.get(name) is not None
                                 and _ast_sha(at.get(name)) == sha_tip
@@ -4076,24 +4491,16 @@ def pin_decision_outcomes() -> dict:
     What each branch means downstream is then the preflight report's
     answer, not a sentence here."""
     drift = stream_tape_rows_drift()
-    key = (UNDECLARED_DRIFT["file"], UNDECLARED_DRIFT["function"])
-    hypo = dict(DECLARED_ADDITIVE)
-    hypo[key] = {"changed_at": drift["candidate_changed_at"],
-                 "sha_at_fit": drift["sha_at_fit"],
-                 "sha_at_declaring_tip": drift["sha_at_tip"],
-                 "reason": "HYPOTHETICAL -- built inside "
-                           "`pin_decision_outcomes()` to compute the "
-                           "admitted branch. Never a declaration"}
     now = pin_statuses()
-    would = pin_statuses(declared=hypo)
+    would = pin_statuses(declared=DECLARED_ADDITIVE)
     def _v(rows):
         return {r["path"]: r["verdict"] for r in rows}
     def _blocking(rows):
         return sorted(r["path"] for r in rows if r["verdict"] == "BLOCKING")
     refused = {
-        "branch": "REFUSED (today)",
-        "pin_verdicts": _v(now),
-        "blocking_files": _blocking(now),
+        "branch": "IF THE ADMISSION'S CONDITION LAPSED",
+        "pin_verdicts": _v(would),
+        "blocking_files": _blocking(would),
         "preflight": "`called_code` REFUSES by name at `called#1`",
         "what_the_runner_does": (
             "`--run` exits rc 2 with the refusal on stderr. No feed is "
@@ -4111,9 +4518,9 @@ def pin_decision_outcomes() -> dict:
             "code the fit did not run"),
     }
     admitted = {
-        "branch": "ADMITTED (hypothetical, computed here, not declared)",
-        "pin_verdicts": _v(would),
-        "blocking_files": _blocking(would),
+        "branch": "IN FORCE TODAY (R-499, condition holds)",
+        "pin_verdicts": _v(now),
+        "blocking_files": _blocking(now),
         "preflight": "`called_code` PASSES; the remaining gates are "
                      "whatever `preflight_report()` says they are",
         "what_the_runner_does": (
@@ -4140,8 +4547,15 @@ def pin_decision_outcomes() -> dict:
             "the safer failure, and is the direction the fit-commit "
             "bytes lacked"),
     }
-    return {"question": UNDECLARED_DRIFT["question"],
-            "routed_to": UNDECLARED_DRIFT["routed_to"],
+    return {"question": DRIFT_FACTS["question"],
+            "routed_to": DRIFT_FACTS["routed_to"],
+            "ruled": "R-499 -- ADMITTED, conditionally",
+            "admissions": admission_conditions(),
+            "note": ("the two branches INVERTED at R-499. What was the "
+                     "hypothetical is now the state, and what was the "
+                     "state is now what happens if the condition lapses "
+                     "-- which is the branch worth keeping, because an "
+                     "input can change after a ruling"),
             "facts": drift,
             "hypothetical_shas_read_from": "the artifacts, via "
                                            "`stream_tape_rows_drift()`",
@@ -4171,7 +4585,7 @@ def code_drift_report() -> dict:
         "verdicts": {r["path"]: r["verdict"] for r in rows},
         "blocking": blocking,
         "run_is_blocked_by_the_pin": bool(blocking),
-        "undeclared_drift": dict(UNDECLARED_DRIFT, **{"computed": drift}),
+        "undeclared_drift": dict(DRIFT_FACTS, **{"computed": drift}),
         "outcomes": pin_decision_outcomes(),
         "decides": "nothing -- admissibility is the USER's (rule 14); "
                    "these are the facts the ruling needs",
@@ -5041,7 +5455,7 @@ def _peak_rss_mb() -> float:
 
 
 def assemble_gen_scores(refs: dict, *, splits, coins=COINS,
-                        heads=HEADS_RUN) -> dict:
+                        heads=HEADS_RUN, blocks: dict | None = None) -> dict:
     """(coin, head) -> (per-generation scores, exclusion statuses).
 
     The join is to the §3 POPULATION: the feature pass covers the whole
@@ -5049,7 +5463,7 @@ def assemble_gen_scores(refs: dict, *, splits, coins=COINS,
     A generation whose rows the pass dropped is counted under
     NO_ROWS_KEPT and is absent from the scores -- an exclusion with a
     status, never a generation scored from nothing."""
-    fb = feature_blocks(splits=splits)
+    fb = feature_blocks(splits=splits) if blocks is None else blocks
     out = {"assembly": {k: v for k, v in fb.items()
                         if k not in ("blocks", "split_of")},
            "by_arm": {}, "split_by_gen": {}, "split_counts": {}}
@@ -5254,6 +5668,29 @@ def _gate_fit_code(splits) -> None:
     HS.verify_fit_code()
 
 
+def _gate_admissions(splits) -> None:
+    """Every USER admission's condition, evaluated on the real artifact.
+
+    Placed BEFORE `called_code` deliberately. If a condition fails, the
+    pin blocks anyway (the admission drops out of the map) -- but it
+    would block saying "undeclared", which is the wrong reason and hides
+    that a ruling was granted and its condition lapsed. This refuses
+    first, and by name."""
+    bad = [r for r in admission_conditions() if not r["condition_holds"]]
+    if bad:
+        # SITE: admit#2
+        raise DiagRefused(
+            f"a USER ADMISSION IS NOT IN FORCE: {[(r['file'], r['function']) for r in bad]}. "
+            f"Each was admitted CONDITIONALLY -- "
+            f"{[(r['recorded_at'], r['condition_name']) for r in bad]} -- "
+            f"and the condition is evaluated on the artifact at every "
+            f"run, never inherited from the ruling that granted it. It "
+            f"reads FALSE now ({[r.get('evidence') or r.get('error') for r in bad]}). "
+            f"The ruling admitted a drift whose harmlessness is "
+            f"conditional on a computable fact; the fact failed, so the "
+            f"admission fails with it and the run REFUSES")
+
+
 def _gate_called_code(splits) -> None:
     verify_called_code()
 
@@ -5310,6 +5747,7 @@ PREFLIGHT_GATES = (
     ("splits", _gate_splits),
     ("thresholds", _gate_thresholds),
     ("fit_code", _gate_fit_code),
+    ("admissions", _gate_admissions),
     ("called_code", _gate_called_code),
     ("assembly_preconditions", _gate_assembly_preconditions),
     ("input_roots", _gate_input_roots),
@@ -5446,6 +5884,9 @@ def main() -> int:
                     help="price the ruled run end to end into --outdir "
                          "(never data/, never the run's OUTDIR)")
     ap.add_argument("--feed-windows", type=int, default=3)
+    ap.add_argument("--cap-bytes", type=int, default=None,
+                    help="the MemoryMax this run was launched under, so "
+                         "the progress log reports peak RSS AGAINST it")
     ap.add_argument("--measure-slice", action="store_true",
                     help="measure the assembly on a bounded slice into "
                          "--outdir (never data/, never the run's OUTDIR)")
@@ -5492,7 +5933,8 @@ def main() -> int:
         # traceback -- round 33 let every one of them out unhandled.
         try:
             rec = run(Path(a.outdir) if a.outdir else None,
-                      splits=_splits_from_cli(a.splits))
+                      splits=_splits_from_cli(a.splits),
+                      cap_bytes=a.cap_bytes)
         except (DiagRefused, HS.HeadRefused, SS.ScoreStreamRefused,
                 MRC.ControlRefused, RHO.RhoRefused,
                 HSP.ReferenceIntegrityError) as exc:
