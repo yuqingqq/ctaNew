@@ -1,6 +1,20 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T05:55Z (MEM round 73) — **THE RACE WAS NEVER GOING TO
+Updated: 2026-09-03T06:50Z (MEM round 74) — **TWO RULINGS THAT DO NOT CHANGE
+THE STATE A READER WILL ASSUME THEY CHANGED.** **The era ruling did NOT produce
+G = 3** — DA round 22 answered BE13's blocker by computation and 08-29/08-30 read
+`UNREACHABLE_BY_ANY_HONEST_ROUTE`; **G remains 2 of 5 and the earliest G = 5 is
+unchanged at 2026-09-06.** **BE round 17 closed the reviewer's three HIGH fences
+ON the path, and the standing rule that no forward day is scored there is STILL
+IN FORCE — only the reviewer's RELEASE lifts it.** R-498 supersedes R-497's Holm
+denominator: **18, enumerated, not 24 multiplied.** R-499 carries the USER's
+fourth ruling (the `_stream_tape_rows` drift **admitted, conditionally by
+construction** — and the condition is **not yet wired into `run()`**) and
+**dispatches the R-459 diagnostic at 06:41Z** as DE round 46, priced at 2.36 h
+floor. **A new question is OPEN, not found:** whether the race's candidate was
+ever **frozen under rule 12**. **USER items: ONE.**
+
+Previously (MEM round 73) — 2026-09-03T05:55Z — **THE RACE WAS NEVER GOING TO
 ANSWER THE QUESTION, AND NOBODY KNEW UNTIL SOMEONE TRIED TO SPEND A DAY.**
 **Until BE round 14 the forward path could not produce its own decision metric,
 so the two accrued days were never scored on it and reaching G=5 would have
@@ -46,6 +60,131 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-03T06:50Z — MEM round 74: two rulings that do not change the state a reader will assume they changed
+>
+> **TWO THINGS MUST BE READ EXACTLY. Both are one commit away from being read
+> backwards.**
+>
+> **1. THE ERA RULING DID NOT PRODUCE G = 3.** The USER admitted 08-29 on
+> quality (R-497 F(1)). **DA round 22 then answered BE13's blocker (a) by
+> computation, and 08-29 and 08-30 read `UNREACHABLE_BY_ANY_HONEST_ROUTE`.**
+> **That finding is the coordinator's report in dispatch and is NOT LANDED** — I
+> looked at `37adf1d`: the token appears **nowhere** in `COORDINATION.md` or in
+> `live/pm_research/*.py`, the highest DA row in the Q-filing table is
+> **Q-DA-215**, and DA's rounds 20, 21 and 22 are all still unpushed. **The
+> consequence is my own measurement and holds independently of that filing:**
+> `ERA_ADMISSIBLE` at `da_forward_day_verify.py:894` still reads `"clob_v3_1":
+> False   # pre-O1`; the only 08-29 artifact on disk still carries
+> `race_accrual_eligible` **false**; no new day verdict exists. **G remains 2 of
+> 5. The earliest G = 5 is unchanged at 2026-09-06.** Anyone reading *"era ruled,
+> 08-29 admitted"* will assume the race grew. **It did not.**
+>
+> **2. CLOSED FINDINGS ARE NOT A RELEASE.** BE round 17 (`5565e39` + row
+> `e78a710`) closed the reviewer's **three HIGH findings on the path**, in the
+> same commit as the producer half as the filing required, and **four of BE's own
+> controls went red** when the defects they described were fixed — each
+> **inverted** to assert the repaired property rather than deleted. **And the
+> standing rule that NO FORWARD DAY IS SCORED ON THAT PATH is still in force.
+> Only the reviewer's RELEASE lifts it.** The two facts sit one commit apart in
+> the log, which is exactly how a reader conflates them.
+>
+> **R-498 SUPERSEDES R-497'S HOLM DENOMINATOR, and I verified the replacement at
+> the artifact.** Reporting both pairing conventions grows the family **12 → 18 =
+> 1.5×**, not 2×: **`BY_COUNT` carries no operating-point dimension**, so it does
+> not twin the sensitivity arm. At
+> `live/pm_research/declarations/be_forward_family_declaration_v1.json` (3,760 B,
+> `as_of_utc` 2026-09-03T05:55:57Z, `generated_at_head` **`b717340` — the R-497
+> commit itself**): `declared_cell_count` **18**, `holm_denominator` **18**, a
+> `cells` list of exactly **18** members, `cells_by_convention` **BY_THRESHOLD 12
+> / BY_COUNT 6**, and `count_under_each_alternative` pricing **6 / 9 / 12 / 18**.
+> **The coordinator multiplied; BE enumerated** — rule 10 turned on the
+> coordinator's own arithmetic. **The denominator of record is 18.**
+>
+> **MY ROUND-73 CORRECTION WAS ACCEPTED, AND THE EXPLANATION MAKES IT SHARPER
+> THAN I FILED IT.** The R-497 (D) digest `db34da543af6d27f` came from the
+> coordinator's **own grep**, which matched `TOL_EXACT`, `TOL_CENTS_ABS`,
+> `TOL_RATE_REPORTED_ONLY` and **the bare opening line
+> `DECLARED_PREDICATES = {`** — **the predicate bodies are indented and were never
+> captured**, so **every predicate in that block could have changed with that sha
+> unmoved.** Three constants and a brace, reported as *"the tolerance block"*. I
+> filed it as a number that does not reproduce; it is **also a control that could
+> not see what it claimed to watch**. **Second such weakness on the same object,
+> for a different reason:** BEM-R6 found the module's own
+> `tolerances_unchanged_since()` defeasible because its pointer is not inside its
+> own compared block. **One object, two independent ways of appearing to watch
+> something it did not.**
+>
+> **THE FOURTH USER RULING — the `_stream_tape_rows` drift is ADMITTED** (R-499
+> A), the last of the five decisions open at the 03:23Z consolidation. **The
+> admission is conditional by construction — and I checked what that means at the
+> code, because the present tense invites a wrong reading.**
+> `tape_rows_array_closed()` is defined at `de_phase4_diag_runner.py:3924` and
+> called from **`selftest`** (`:2754`) and from **`stream_tape_rows_drift`**
+> (`:4051`) — and from **neither `run()` nor `preflight()` nor
+> `preflight_report()`**. The module says so in its own voice at `:4137`:
+> *"`tape_rows_array_closed()` is checked in the suite, not at the moment of the
+> run. A tape truncated BETWEEN that check and the run would hit the new branch
+> and RAISE."* **So the run-time refusal is a requirement dispatched to DE round
+> 46, not a property of the landed code** — the same shape as the era ruling:
+> **recorded, not yet implemented.**
+>
+> **THE R-459 DIAGNOSTIC IS DISPATCHED** (R-499 D, **06:41Z**, DE round 46) into
+> the declared OUTDIR `data/pm_5min/derived/phase4_diag_r459`, per R-459 as ruled
+> — Q1_arrival of `composed_lgbm` against the incumbent head, 9 latency rungs,
+> **all three budgets reported and none selected**, both coins, splits
+> `MECHANICS_BOTH_SPLITS` labelled per cell, every output stamped
+> `DIAGNOSTIC_NEVER_EVIDENCE`. **Priced 2.36 h floor / ~5.7 h at the fixture
+> rate** (feed 1,695 s, assembly 1,680 s, grid 1,086 s, null floor 4,021 s; **the
+> run refuses past a 20× attempt budget rather than overspending**), progress
+> logged **into the outdir** because at that length the run outlives a comfortable
+> context. **My own read at 06:49:49Z: the OUTDIR did not exist and no
+> `phase4_diag` process was running** — the dispatch was with DE and the run had
+> not started by that clock read. Stated as a measurement, not a contradiction.
+>
+> **DE round 45 corrected round 44 and the coordinator with it.** `preflight()`
+> raises the **first** refusal, so it can only prove *"at least one gate
+> refuses"*. Round 44's *"the pin is the only blocker"* was read off a single
+> refusal **with four gates never reached**, and the coordinator relayed it to the
+> USER as established — recorded as the coordinator's error.
+> `preflight_report()` now runs all six gates independently off the **same list**
+> `preflight()` iterates; from the fit tree the projection is **computed**:
+> `called_code` alone. **The pin is the only blocker, and that is now a
+> measurement.**
+>
+> **The operational signal, which I verified at the cgroup myself:**
+> `research.slice` **`MemoryPeak` equals `MemoryMax` exactly (19,742,269,440)** —
+> the slice has been driven flat into its own ceiling; nothing was OOM-killed
+> because reclaim absorbed it (my 06:49Z read: `MemoryCurrent` 2.69 GB, swap 3.38
+> of 4.29 GB used). **Dispatch rule now: no 12 GB driver run while the slice is
+> above ~8 GB.** The false alarm is kept because the shape matters: a journal grep
+> for `oom` returned **12 hits, every one the string `DISK_HEADROOM`** — rule 16
+> exactly, caught only because the hits were **read** rather than **counted**. The
+> four collectors run **deliberately uncapped**: a cap that kills a collector
+> creates a data gap, which costs more than the memory it saves.
+>
+> **A NEW QUESTION IS OPEN — recorded as being established, not as a finding.**
+> **Was the race's candidate ever FROZEN under rule 12?** (BE round 18.) I
+> verified the binding rather than take it: the 09-01 receipt names
+> `harmful_candidate_manifest_v1.json` at sha256 `eb8733da2c8e2126…`, and
+> `git show 1b53929:data/pm_5min/derived/harmful_candidate_manifest_v1.json`
+> hashes to **exactly** that value. **That blob's `freeze_status` reads, verbatim:
+> *"NOT FROZEN. The freeze is the user's decision and Phase-0 reproduction has not
+> yet run."*** **Two things keep this from being a verdict, both read at the
+> artifacts:** the receipt's own `frozen` block is about **anchors** — code and
+> data files compared by sha and materialised into a run dir — so it means **code
+> bytes materialised reproducibly**, a *different sense of the word* from
+> **candidate committed as a race entrant**; and the manifest nonetheless carries
+> a great deal of freeze-shaped machinery (`declared_nulls` with `net_cents` not
+> harm share, side × hour strata, `n_random` 200; `target_scores_to_reproduce`
+> with `values_read_from_artifact_not_transcribed` true; a
+> `reproduction_contract` with `completed_under_cap` true). **BE establishes; the
+> USER rules. The coordinator asserts nothing and neither do I.**
+>
+> **Nothing spent:** 08-29 and 08-30 unread, no seal opened by any seat.
+> **Sequencing:** DE 46 dispatched; the BE 17 re-review is what releases the path;
+> DA holds 20, 21 and 22 unpushed; BE 18 establishing the freeze question.
+> **USER items: ONE — the Phase-2 winner, and the race decides it.**
 
 > ### 2026-09-03T05:55Z — MEM round 73: the forward path had no decision metric, so the race could not have answered the question
 >

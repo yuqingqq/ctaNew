@@ -5178,3 +5178,45 @@ batch 78's two-entry recovery.
   on the landed chain (no pin, no install). UNCHANGED: the 011 family 12 of 24
   with Q4 failing; the sequencing rule; R-419 revocable.
 ```
+
+## Batch 80 — archived 2026-09-03T06:50Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-74 true-up of R-498 and R-499. Join rule as in batch 1.
+**This one is the coordinator's**, written under the R-495 (J) writer exception
+while MEM was halted; it ages out of the window like any other entry and is
+archived rather than dropped — which is the rule batch 78 had to repair.
+
+```yaml
+  2026-09-03T03:23Z (COORDINATOR, WRITER EXCEPTION R-495 -- FULL STOP AND
+  CONSOLIDATION ON THE USER'S INSTRUCTION). All five seats halted 03:18Z; every
+  seat's context cleared and re-loaded from the state files. STATUS.yml and
+  HANDOFF.md have ONE writer (MEM, SEAT_PROTOCOL); MEM was halted with the
+  others, so the coordinator wrote this header, the HANDOFF consolidation block
+  and two in-band corrections. The exception is logged as R-495 and ENDS THERE:
+  MEM resumes as sole writer at its next round. NEW ENTRY POINT:
+  workspace/RESULTS.md -- a compact artifact-anchored account of what has been
+  tested and what came out of it, single-writer coordinator, read before
+  HANDOFF.md. WHAT THE STOP FOUND: (1) THE R-459 PHASE-4 DIAGNOSTIC HAS NEVER
+  RUN -- de_phase4_diag_runner.preflight() refuses by name, verified read-only
+  at 03:11Z; two blockers, one unbuilt producer step (the coordinator never
+  dispatched it; ten rounds hardened instruments instead) and one undeclared
+  population split (the USER's, open as addendum ask 1a). (2) WIRING THAT STEP
+  TOOK FOUR MINUTES AND IMMEDIATELY SURFACED A FIT-VS-TIP CODE DRIFT in
+  phase2_arms._stream_tape_rows (sha f0741bc4b170fabc -> f0b3bccfb8ec5b88 at
+  2e1204f, the diff confined to the EOF-without-closing-bracket branch, the
+  accepting path byte-identical, and this tape's rows array IS closed so the new
+  refusal cannot fire for it) that no instrument round had found; held unpushed
+  and RED by design at 0d03902. (3) TWO NUMBERS IN THIS PROGRAMME'S OWN DOCS
+  WERE WRONG: HANDOFF's cells_by_status "18 OK + 6 NO_INCUMBENT_COUNTERPART"
+  belongs to a SUPERSEDED 157,455 B artifact -- at the 188,119 B artifact it
+  names, the counts are 12 OK + 6 NO_INCUMBENT_COUNTERPART + 6
+  GATE_PARTIALLY_EVALUATED; and "12 of 24 survive" is 4 DISTINCT surviving
+  results by the artifact's own distinct_results field, every one at the
+  permutation floor p = 1/501 on 500 draws, on a window-clustered null the
+  artifact itself calls optimistic (G=0 complete UTC days against a ruled UTC-day
+  unit). (4) P-2026-002's E2.0/E2-A GATE OPENED TODAY: 14 days of L2 now exist
+  (351 hourly files per Binance symbol, 350 per HL symbol, 44 GB); nothing is
+  dispatched against it. SEAT STATE AT THE STOP: BE clean at 669ef72; DA holds
+  two unpushed commits 3c49cb7 -> a36db71; DE holds one unpushed WIP commit
+  0d03902; MEM clean at d9b85ee; reviewer clean at cc4cfb9.
+```
