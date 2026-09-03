@@ -344,27 +344,358 @@ def what_cuts_the_other_way() -> dict:
     }
 
 
-def phase0_reproduction_status() -> dict:
-    """The manifest's SECOND clause, reported separately and NOT resolved by
-    the freeze. This is the part of the sentence that may still be true."""
-    comparator = Path(__file__).resolve().parent / "repro_compare.py"
-    man = json.loads(_blob(FREEZE_COMMIT, MANIFEST_REL))
-    t = man.get("target_scores_to_reproduce") or {}
-    named = [k for k in t if k.endswith("_PM_PLUS_FINE")]
+# ---------------------------------------------------------------------------
+# A CLASS THIS PROGRAMME HAS NOT NAMED: THE CONSTANT VERDICT
+# ---------------------------------------------------------------------------
+#: SEAT_PROTOCOL 16 names one sign of it -- "a control that cannot fail must
+#: never be mistaken for a control that passed". Round 17's token check was the
+#: OTHER sign: `want` was rebuilt from `provenance_verified` while the token
+#: was taken over the raw `provenance`, so it read False in the honest case and
+#: True in none. It could not pass.
+#:
+#: PROPOSED NAME, and it subsumes both rather than adding a second special
+#: case: **a CONSTANT VERDICT** -- a control whose output does not depend on
+#: its input. Always-pass and always-fail are its two signs, and the test is
+#: the same in both directions: drive it twice and require the verdict to MOVE.
+#:
+#: The always-FAIL sign is not merely useless, which is worth saying because it
+#: sounds like the harmless direction. It manufactures a permanent false alarm:
+#: a reader who trusts the field reads tampering into every honest run, and a
+#: reader who learns to ignore it has been trained to ignore a real one.
+#: Silence is recoverable; a discredited alarm is not.
+CONSTANT_VERDICT = {
+    "name": "a constant verdict",
+    "definition": "a control whose verdict does not depend on its input",
+    "sign_always_pass": ("SEAT_PROTOCOL 16's named case: a fixture supplying "
+                         "what the code should produce; a guard shown only to "
+                         "refuse; an anchor that includes the arm name"),
+    "sign_always_fail": ("round 17's token check: False in the honest case and "
+                         "True in none, because `want` and the token were "
+                         "computed over different objects"),
+    "why_always_fail_is_worse_than_silence": (
+        "it manufactures a permanent false alarm. A reader who trusts it reads "
+        "tampering into every honest run; a reader who learns to ignore it has "
+        "been trained to ignore a real one."),
+    "the_test_is_the_same_in_both_directions": (
+        "drive the control twice, on an input it should accept and one it "
+        "should refuse, and require the VERDICT to MOVE"),
+}
+
+
+def verdict_depends_on_input(fn, good, bad) -> dict:
+    """Does this control's verdict MOVE between an input it should accept and
+    one it should refuse? The operational test for a constant verdict."""
+    def run(x):
+        try:
+            return ("value", fn(x))
+        except Exception as e:                        # noqa: BLE001
+            return ("raised", type(e).__name__)
+    g, b = run(good), run(bad)
+    return {"on_good": g, "on_bad": b, "verdict_moved": g != b,
+            "constant_verdict": g == b,
+            "why": CONSTANT_VERDICT["the_test_is_the_same_in_both_directions"]}
+
+
+def builder_reference_commit(which: str = "freeze_builder") -> dict:
+    """ITEM 3. WHICH COMMIT DOES A DECLARED BUILDER SHA RESOLVE AT? Searched.
+
+    Round 18's false positive made permanent: `freeze_builder_sha256` matches
+    `harmful_freeze_candidate.py` at `git_commit_at_refit` and NOT at the
+    freeze commit, because the freeze commit MODIFIED that same file. Checking
+    the freeze commit alone reports a mismatch that is not there. A note in a
+    filing decays; this searches the file's history and REPORTS where the
+    declared sha actually lives, so the answer is derived rather than
+    remembered."""
+    cand = json.loads(CANDIDATE.read_text())
+    spec = {
+        "builder": {"path": cand.get("builder"),
+                    "sha": cand.get("builder_sha256")},
+        "freeze_builder": {"path": "live/pm_research/harmful_freeze_candidate.py",
+                           "sha": cand.get("freeze_builder_sha256")},
+    }[which]
+    path, want = spec["path"], spec["sha"]
+    refit = cand.get("git_commit_at_refit")
+    hits = []
+    for c in (_git("log", "--format=%H", "--all", "--", path) or "").split():
+        b = _blob(c, path)
+        if b is not None and _sha(b) == want:
+            hits.append(c)
+    at_freeze = _blob(FREEZE_COMMIT, path)
+    at_refit = _blob(refit, path) if refit else None
     return {
-        "comparator_module_exists": comparator.exists(),
-        "comparator": str(comparator) if comparator.exists() else None,
-        "targets_declared": named,
+        "which": which, "path": path, "declared_sha256": want,
+        "matches_at_freeze_commit": bool(at_freeze and _sha(at_freeze) == want),
+        "matches_at_git_commit_at_refit": bool(
+            at_refit and _sha(at_refit) == want),
+        "commits_carrying_this_sha": [h[:12] for h in hits],
+        "n_commits_carrying_this_sha": len(hits),
+        "correct_reference_commit": (
+            refit if (at_refit and _sha(at_refit) == want)
+            else (hits[0] if hits else None)),
+        "trap": ("the freeze commit MODIFIED this file in the same commit that "
+                 "landed the artifact, so the builder that RAN is the one at "
+                 "`git_commit_at_refit`. An auditor checking only the freeze "
+                 "commit sees a mismatch that is not there -- this is that "
+                 "false positive turned into a lookup."),
+    }
+
+
+def manifest_binding_status() -> dict:
+    """ITEM 1. What binds the manifest, and does that binding hold TODAY?
+
+    Two different resolutions exist and both read DISK, not git:
+    `materialise_frozen` uses the manifest's `hashes` to know what to
+    materialise, and `assert_frozen_contract` compares the manifest's OWN sha
+    to the candidate's declared `manifest_sha256`. The second is the binding
+    the question is about."""
+    import ast as _ast
+    cand = json.loads(CANDIDATE.read_text())
+    disk_sha = _sha_file(MANIFEST)
+    bound_sha = cand.get("manifest_sha256")
+    bound = json.loads(_blob(FREEZE_COMMIT, MANIFEST_REL))
+    disk = json.loads(MANIFEST.read_text())
+    differing = sorted(k for k in set(bound) | set(disk)
+                       if bound.get(k) != disk.get(k))
+    tree = _ast.parse((REPO / "live/pm_research/be_forward_day.py").read_text())
+    # REACHABILITY from `run_forward_day`, computed TRANSITIVELY. "Not inside
+    # selftest" is a different question: `assert_frozen_contract` is called by
+    # `anchor_drift_root`, which is itself reached from nowhere but a selftest
+    # fixture string, so counting its caller as production would overstate the
+    # very wiring being measured.
+    edges = {}
+    for n in _ast.walk(tree):
+        if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+            outs = set()
+            for c in _ast.walk(n):
+                if isinstance(c, _ast.Call):
+                    f = c.func
+                    nm = (f.id if isinstance(f, _ast.Name)
+                          else getattr(f, "attr", None))
+                    if nm:
+                        outs.add(nm)
+            edges[n.name] = outs
+    seen, stack = set(), ["run_forward_day"]
+    while stack:
+        cur = stack.pop()
+        if cur in seen:
+            continue
+        seen.add(cur)
+        stack.extend(edges.get(cur, ()))
+    prod = sorted(f for f in ("assert_frozen_contract", "anchor_drift_root")
+                  if f in seen)
+    rec = DERIVED / "be_forward_day_receipt_20260901.json"
+    gates = ([g["gate"] for g in json.loads(rec.read_text())["gates"]]
+             if rec.exists() else [])
+    return {
+        "candidate_declares_manifest_sha256": bound_sha,
+        "manifest_on_disk_sha256": disk_sha,
+        "binding_holds_on_disk_today": disk_sha == bound_sha,
+        "keys_that_differ_bound_vs_disk": differing,
+        "hashes_block_identical": bound.get("hashes") == disk.get("hashes"),
+        "pin_semantics_identical":
+            bound.get("pin_semantics") == disk.get("pin_semantics"),
+        "freeze_status_identical":
+            bound.get("freeze_status") == disk.get("freeze_status"),
+        "drift_is_metadata_only": (bound.get("hashes") == disk.get("hashes")
+                                   and set(differing) <= {"as_of_utc",
+                                                          "git_commit",
+                                                          "git_dirty"}),
+        "reachable_from_run_forward_day": prod,
+        "n_reachable_from_run_forward_day": len(prod),
+        "reachability_note": ("computed TRANSITIVELY from `run_forward_day`; "
+                              "'not inside selftest' would have overstated it"),
+        "frozen_contract_gate_in_the_09_01_receipt":
+            any("contract" in g for g in gates),
+        "gates_actually_run": gates,
+        "finding": ("the candidate's manifest binding ALREADY FAILS on disk, "
+                    "and the only checker that compares them is reachable "
+                    "from the run path in ZERO ways. The drift is "
+                    "metadata-only; the `hashes` a run materialises from are "
+                    "IDENTICAL, so every anchor the forward runs used was the "
+                    "frozen one."),
+    }
+
+
+def would_superseding_break_the_binding() -> dict:
+    """ITEM 1's explicit question, answered as a predicate."""
+    st = manifest_binding_status()
+    rec = DERIVED / "be_forward_day_receipt_20260901.json"
+    fz = (json.loads(rec.read_text()).get("frozen") or {}) if rec.exists() else {}
+    return {
+        "question": ("would superseding harmful_candidate_manifest_v1.json "
+                     "invalidate the binding in "
+                     "be_forward_day_receipt_20260901's frozen block?"),
+        "answer": False,
+        "reason_1_a_supersede_is_a_new_file": (
+            "the receipt records `manifest_sha256_bound` "
+            f"{str(fz.get('manifest_sha256_bound'))[:16]}…, which describes "
+            "the BYTES READ AT RUN TIME. A superseding v2 is a new path; v1's "
+            "bytes are untouched, so what the receipt describes still exists "
+            "and still hashes the same. Editing v1 IN PLACE is the act that "
+            "would break it -- which is why rule 13 forbids exactly that."),
+        "reason_2_the_binding_is_already_untested": (
+            "the disk manifest ALREADY differs from the candidate's declared "
+            "`manifest_sha256`, and `assert_frozen_contract` -- the only "
+            "checker that compares them -- is not reachable from the run "
+            "path. Nothing there reads that binding, so nothing there can be "
+            "broken by superseding it."),
+        "but_this_is_not_a_licence": (
+            "reason 2 is a DEFECT, not a permission: unenforced is not "
+            "unimportant. Wiring `assert_frozen_contract` into the run path "
+            "is the repair, and it is a metric-path edit this round must "
+            "not make."),
+        "receipt_frozen_block_manifest_sha256_bound":
+            fz.get("manifest_sha256_bound"),
+        "binding_holds_on_disk_today": st["binding_holds_on_disk_today"],
+        "drift_is_metadata_only": st["drift_is_metadata_only"],
+    }
+
+
+def superseding_manifest_proposal() -> dict:
+    """ITEM 1. PROPOSED, NOT ENACTED. Returned as data; nothing is written."""
+    bound = json.loads(_blob(FREEZE_COMMIT, MANIFEST_REL))
+    disk = json.loads(MANIFEST.read_text())
+    tl = timeline()
+    corrected = (
+        "FROZEN as a race candidate at 2026-08-26T10:21:49Z, committed as "
+        f"{FREEZE_COMMIT} (\"FREEZE: reduced-fine (PM_PLUS_FINE) frozen as "
+        "PRIMARY candidate, multiplicity 2\") on the USER's explicit yes, "
+        "recorded as register row Q-BE-143. Phase-0 reproduction is a "
+        "SEPARATE gate this manifest imposes on itself, reported separately; "
+        "it is not a rule-12 requirement.")
+    return {
+        "status": "PROPOSED, NOT ENACTED",
+        "proposed_path": str(MANIFEST.parent
+                             / "harmful_candidate_manifest_v2.json"),
+        "why_a_new_file_and_not_an_edit": (
+            "rule 13: the v1 bytes are named by a landed receipt and by the "
+            "candidate's own `manifest_sha256`. A correction supersedes; it "
+            "never edits."),
+        "proposed_supersedes_block": {
+            "supersedes": "harmful_candidate_manifest_v1.json",
+            "supersedes_sha256_at_freeze_commit":
+                _sha(_blob(FREEZE_COMMIT, MANIFEST_REL)),
+            "supersedes_sha256_on_disk": _sha_file(MANIFEST),
+            "why": ("v1's `freeze_status` first clause was TRUE at its "
+                    f"`as_of_utc` {bound.get('as_of_utc')} and became false "
+                    f"{tl['gap_manifest_to_freeze_minutes']} minutes later. "
+                    "v1 is kept byte-identical as provenance."),
+            "v1_edited_after_the_freeze_without_revising_the_sentence": True,
+        },
+        "proposed_freeze_status": corrected,
+        "provenance_of_the_correction": {
+            "established_by": "Q-BE-243 (BE round 18), verified at the artifacts",
+            "freeze_commit": FREEZE_COMMIT,
+            "freeze_commit_time_utc": tl["freeze_commit_time_utc"],
+            "candidate_frozen_at_utc": tl["candidate_frozen_at_utc"],
+            "register_row": "Q-BE-143",
+            "rule12_conjuncts_holding": rule12_conjuncts()["n_holding"],
+        },
+        "everything_else_unchanged": (
+            "the proposal changes ONE sentence; `hashes`, `pin_semantics`, "
+            "`declared_nulls`, `target_scores_to_reproduce` and "
+            "`reproduction_contract` are carried through byte-identical, so "
+            "the anchors a run materialises from cannot move."),
+        "unchanged_keys_carried_through": sorted(
+            k for k in disk if k != "freeze_status"),
+        "who_routes_it": "the coordinator, and possibly the USER (rule 14)",
+        "enacted": False,
+    }
+
+
+def phase0_status() -> dict:
+    """ITEM 2. Has Phase-0 reproduction run, and is it a rule-12 requirement?
+
+    Round 18 reported it UNESTABLISHED because proving a negative over a
+    directory is a search. It is establishable from the other side: run the
+    COMMITTED comparator over every candidate receipt and ask whether any
+    reproduces the frozen targets -- and whether the one that does is a
+    DIFFERENT FILE from the snapshot, or the snapshot compared with itself."""
+    import importlib
+    import re
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    RC = importlib.import_module("repro_compare")
+    man = json.loads(MANIFEST.read_text())
+    t = man.get("target_scores_to_reproduce") or {}
+    snap_sha = t.get("source_sha256_at_snapshot")
+    results = []
+    for f in sorted(DERIVED.glob("harmful_fine_comparison_*.json")):
+        try:
+            r = RC.compare(json.loads(f.read_text()), t)
+        except Exception as e:                        # noqa: BLE001
+            results.append({"file": f.name, "comparable": False,
+                            "why": type(e).__name__})
+            continue
+        h = _sha_file(f)
+        results.append({
+            "file": f.name, "comparable": True, "verdict": r["verdict"],
+            "worst_cent_diff": r["worst_cent_diff"], "sha256": h,
+            "is_the_snapshot_itself": h == snap_sha,
+            "mtime_utc": dt.datetime.fromtimestamp(
+                f.stat().st_mtime, dt.timezone.utc).isoformat()})
+    fct = dt.datetime.fromisoformat(
+        (_git("show", "-s", "--format=%cI", FREEZE_COMMIT) or "").strip())
+    for r in results:
+        if r.get("comparable"):
+            r["post_dates_the_freeze"] = (
+                dt.datetime.fromisoformat(r["mtime_utc"]) > fct)
+    independent = [r for r in results
+                   if r.get("verdict") == "CENT_EXACT"
+                   and not r.get("is_the_snapshot_itself")
+                   and r.get("post_dates_the_freeze")]
+    ancestors = [r["file"] for r in results
+                 if r.get("verdict") == "CENT_EXACT"
+                 and not r.get("post_dates_the_freeze")]
+    m = re.search(r"12\.\s+\*\*A freeze is a commit.*?(?=\n1[34]\.)",
+                  (REPO / "CLAUDE.md").read_text(), re.S)
+    rule = m.group(0) if m else ""
+    rc_ = man.get("reproduction_contract") or {}
+    return {
         "targets_source_receipt": t.get("source_receipt"),
-        "reproduction_receipt_found_in_derived": None,
-        "status": "NOT ESTABLISHED BY THIS MODULE",
-        "why": ("a Phase-0 reproduction receipt would be a separate artifact "
-                "and this module found none by name; but proving a NEGATIVE "
-                "over an artifact directory is a search, not a predicate, so "
-                "this is reported as UNESTABLISHED rather than asserted as "
-                "absent. It is a DIFFERENT gate from the rule-12 freeze and "
-                "does not bear on it."),
-        "bears_on_rule12_freeze": False,
+        "targets_snapshot_sha256": snap_sha,
+        "freeze_commit_time_utc": fct.isoformat(),
+        "receipts_compared": results,
+        "n_reproducing_cent_exact": sum(
+            1 for r in results if r.get("verdict") == "CENT_EXACT"),
+        "independent_reproductions": [r["file"] for r in independent],
+        "pre_freeze_matches_are_ancestors_not_reproductions": ancestors,
+        "values_reproduced_by_a_post_freeze_file_that_is_not_the_snapshot":
+            bool(independent),
+        "what_that_establishes": (
+            "the target VALUES are reproduced cent-exact on all eight fields "
+            "by an artifact whose bytes DIFFER from the frozen snapshot and "
+            "which post-dates the freeze. Comparing the snapshot to itself is "
+            "a tautology and is reported separately."),
+        "what_it_does_NOT_establish": (
+            "that the Phase-0 PROCEDURE ran -- 'a fresh process can load one "
+            "manifest and reproduce the named development scores without "
+            "fitting'. Bytes cannot show which process wrote them, and "
+            "`repro_compare` PRINTS and writes nothing, so no receipt of a "
+            "comparison having been run exists to find."),
+        "rule12_text_mentions_reproduction": "reproduc" in rule.lower(),
+        "rule12_text_mentions_phase0": "phase-0" in rule.lower(),
+        "is_phase0_a_rule12_requirement": False,
+        "answer_to_the_direct_question": (
+            "Phase-0 is a FIFTH requirement the manifest imposes on ITSELF, "
+            "beyond rule 12. Rule 12 asks for a committed builder with hash "
+            "and commit ref, the pipeline in the repo, declared nulls, and "
+            "the multiplicity at freeze time -- and says nothing about "
+            "reproduction. Round 18 found all four holding; none depends on "
+            "Phase-0."),
+        "what_it_would_take": {
+            "comparator": "live/pm_research/repro_compare.py (committed)",
+            "input_needed": ("a receipt produced by a FRESH process from the "
+                             "manifest, in the `paired_arms[coin][arm]` shape "
+                             "`extract()` reads"),
+            "cost_from_the_manifests_own_contract": {
+                "cpu_time_s": rc_.get("cpu_time_s"),
+                "peak_rss_measured_bytes": rc_.get("peak_rss_measured_bytes"),
+                "cap_used_bytes": rc_.get("cap_used_bytes")},
+            "and_a_receipt": ("`repro_compare` writes nothing; closing the "
+                              "gate needs its verdict emitted as an artifact, "
+                              "a one-line change to a module this round must "
+                              "not touch"),
+        },
     }
 
 
@@ -390,7 +721,15 @@ def audit() -> dict:
         "freeze_is_a_commit": fc,
         "rule12_conjuncts": c,
         "what_cuts_the_other_way": what_cuts_the_other_way(),
-        "phase0_reproduction": phase0_reproduction_status(),
+        "phase0_reproduction": phase0_status(),
+        "manifest_binding": manifest_binding_status(),
+        "superseding_proposal": superseding_manifest_proposal(),
+        "would_superseding_break_the_binding":
+            would_superseding_break_the_binding(),
+        "builder_reference_guard": {
+            w: builder_reference_commit(w)
+            for w in ("builder", "freeze_builder")},
+        "constant_verdict_class": CONSTANT_VERDICT,
         "corrections_owed": [
             {"what": ("`harmful_candidate_manifest_v1.json`'s `freeze_status` "
                       "first clause is STALE: the freeze it says has not "
@@ -413,7 +752,7 @@ def audit() -> dict:
 # doctored copy. A freeze audit that could only ever say "frozen" would be
 # worth exactly as much as one that could only ever say "not frozen".
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 24
+EXPECTED_CHECKS = 46
 
 
 def selftest() -> int:
@@ -522,13 +861,118 @@ def selftest() -> int:
     ok(a["decides"] is None and "USER" in a["who_decides"],
        "the audit DECIDES nothing: whether to freeze, what to freeze and what "
        "the read scores are all the USER's (rule 14)")
-    ok(a["phase0_reproduction"]["bears_on_rule12_freeze"] is False
-       and a["phase0_reproduction"]["status"].startswith("NOT ESTABLISHED"),
-       "the manifest's SECOND clause (Phase-0 reproduction) is reported "
-       "SEPARATELY and as UNESTABLISHED -- proving a negative over an "
-       "artifact directory is a search, not a predicate")
+    ok(a["phase0_reproduction"]["is_phase0_a_rule12_requirement"] is False,
+       "the manifest's SECOND clause is reported SEPARATELY, and round 20 "
+       "moved it from UNESTABLISHED to ESTABLISHED FROM THE OTHER SIDE: the "
+       "VALUES are reproduced by a post-freeze artifact, the PROCEDURE is "
+       "not evidenced, and rule 12 never asked for either")
     ok(len(a["corrections_owed"]) == 1,
        "and exactly one correction is owed: the manifest's stale first clause")
+
+    # ---- ITEM 1: the manifest binding, and whether superseding breaks it --
+    mb = manifest_binding_status()
+    ok(mb["binding_holds_on_disk_today"] is False,
+       f"ITEM 1: the candidate's manifest binding ALREADY FAILS on disk "
+       f"({str(mb['candidate_declares_manifest_sha256'])[:12]}… vs "
+       f"{mb['manifest_on_disk_sha256'][:12]}…) -- and has since the 608d71a "
+       f"re-stamp")
+    ok(mb["drift_is_metadata_only"] is True
+       and mb["hashes_block_identical"] is True,
+       f"and the drift is METADATA ONLY {mb['keys_that_differ_bound_vs_disk']} "
+       f"-- the `hashes` a run materialises from are IDENTICAL, so every "
+       f"anchor the forward runs used was the frozen one")
+    ok(mb["freeze_status_identical"] is True,
+       "and the stale sentence is byte-identical across the edit, which is "
+       "what makes it a survival rather than a revision")
+    ok(mb["n_reachable_from_run_forward_day"] == 0,
+       "ITEM 1's SECOND FINDING: `assert_frozen_contract` -- the ONLY checker "
+       "that compares the manifest to its binding -- is reachable from "
+       "`run_forward_day` in ZERO ways, computed transitively. No forward run "
+       "has ever tested that binding (SEAT_PROTOCOL 17's shape)")
+    ok(mb["frozen_contract_gate_in_the_09_01_receipt"] is False,
+       "and the 09-01 receipt's own gate list confirms it: no frozen-contract "
+       "gate ran")
+    wb = would_superseding_break_the_binding()
+    ok(wb["answer"] is False,
+       "ITEM 1 ANSWERED: superseding would NOT invalidate the receipt's "
+       "binding -- a supersede is a new file, so the bytes the receipt "
+       "describes are untouched; editing v1 in place is the act that would "
+       "break it, which is why rule 13 forbids exactly that")
+    ok("not a licence" in wb["but_this_is_not_a_licence"].lower()
+       or "DEFECT" in wb["but_this_is_not_a_licence"],
+       "and the second reason is recorded as a DEFECT rather than a "
+       "permission: unenforced is not unimportant")
+    sp = superseding_manifest_proposal()
+    ok(sp["enacted"] is False
+       and not (MANIFEST.parent / "harmful_candidate_manifest_v2.json").exists(),
+       "ITEM 1: the superseding manifest is PROPOSED and NOT ENACTED -- the "
+       "file does not exist on disk")
+    ok(sp["proposed_supersedes_block"]["supersedes_sha256_at_freeze_commit"]
+       == _sha(_blob(FREEZE_COMMIT, MANIFEST_REL)),
+       "the proposal's supersedes block names v1 by the sha it has AT THE "
+       "FREEZE COMMIT, computed rather than transcribed")
+    ok("freeze_status" not in sp["unchanged_keys_carried_through"]
+       and "hashes" in sp["unchanged_keys_carried_through"],
+       "and it changes ONE sentence: `hashes` is carried through unchanged, "
+       "so the anchors a run materialises from cannot move")
+
+    # ---- ITEM 2: Phase-0 -------------------------------------------------
+    ph = phase0_status()
+    ok(ph["independent_reproductions"] == ["harmful_fine_comparison_v3.json"],
+       f"ITEM 2: exactly ONE post-freeze artifact reproduces the frozen "
+       f"targets cent-exact and is NOT the snapshot itself: "
+       f"{ph['independent_reproductions']}")
+    ok(ph["pre_freeze_matches_are_ancestors_not_reproductions"],
+       f"and the pre-freeze matches are classified as ANCESTORS, not "
+       f"reproductions ({ph['pre_freeze_matches_are_ancestors_not_reproductions']}) "
+       f"-- counting them would be the snapshot-compared-with-itself "
+       f"tautology one step removed")
+    ok(ph["rule12_text_mentions_reproduction"] is False
+       and ph["rule12_text_mentions_phase0"] is False,
+       "ITEM 2 ANSWERED AT RULE 12'S OWN TEXT: it contains no 'reproduc' and "
+       "no 'Phase-0' -- so Phase-0 is a FIFTH requirement the manifest "
+       "imposes on ITSELF, not a gate rule 12 ever asked for")
+    ok(ph["is_phase0_a_rule12_requirement"] is False,
+       "and none of round 18's four holding conjuncts depends on it")
+    ok("PRINTS and writes nothing" in ph["what_it_does_NOT_establish"],
+       "what it does NOT establish is stated: bytes cannot show which process "
+       "wrote them, and `repro_compare` emits no receipt to find")
+    ok(ph["what_it_would_take"]["cost_from_the_manifests_own_contract"]
+       ["cpu_time_s"],
+       "and closing the gate is PRICED from the manifest's own reproduction "
+       "contract rather than estimated")
+
+    # ---- ITEM 3: the false positive as a permanent guard -----------------
+    for _w in ("builder", "freeze_builder"):
+        g = builder_reference_commit(_w)
+        ok(g["correct_reference_commit"] is not None,
+           f"ITEM 3: `{_w}`'s declared sha is LOOKED UP in history -- correct "
+           f"reference commit {str(g['correct_reference_commit'])[:12]}, "
+           f"carried by {g['n_commits_carrying_this_sha']} commit(s)")
+    gf = builder_reference_commit("freeze_builder")
+    ok(gf["matches_at_git_commit_at_refit"] is True
+       and gf["matches_at_freeze_commit"] is False,
+       "ITEM 3: round 18's FALSE POSITIVE is now a lookup, both directions "
+       "driven -- the freeze builder matches at `git_commit_at_refit` and NOT "
+       "at the freeze commit, because that commit modified the same file")
+    gb = builder_reference_commit("builder")
+    ok(gb["matches_at_freeze_commit"] is True,
+       "and the OTHER builder does match at the freeze commit, so the trap is "
+       "specific to the file the freeze commit touched rather than a blanket "
+       "property")
+
+    # ---- THE CONSTANT VERDICT, named and operationalised ------------------
+    ok(CONSTANT_VERDICT["name"] == "a constant verdict"
+       and "always_pass" in "".join(CONSTANT_VERDICT)
+       and "always_fail" in "".join(CONSTANT_VERDICT),
+       "the class is NAMED and carries BOTH signs -- SEAT_PROTOCOL 16's "
+       "always-pass and round 17's always-fail")
+    _moving = verdict_depends_on_input(lambda x: x > 0, 1, -1)
+    _const = verdict_depends_on_input(lambda x: True, 1, -1)
+    ok(_moving["verdict_moved"] is True and _const["constant_verdict"] is True,
+       "and the operational test is driven BOTH ways: a control whose verdict "
+       "moves is distinguished from one that cannot, which is the only check "
+       "that catches either sign")
 
     print(f"\n{checks} checks passed" if not fails
           else f"\n{len(fails)} FAILURES of {checks} checks")
