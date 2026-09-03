@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T02:08Z — **DA 20 is READY and HELD, UNPUSHED** — read here
-**by sha from the shared object store**, `d37c3d9` (+748/−54 across four files,
-`EXPECTED_CHECKS` **247 → 254**) — **HELD, not landed**. **The unit path is
-byte-identical to `b950e55`** on both legs I checked. **And the round that fixed
-four checks that could not FIRE surfaced a fifth that cannot either: deleting
-EITHER production `annotate_governance` call leaves the suite GREEN at 254** — a
-coordinator measurement **DA did not make**, routed to the reviewer **unruled**.
-**USER items: FIVE.**
+Updated: 2026-09-03T02:25Z — **HOLD for ONE item, RELEASE the rest** — the
+narrowest disposition this programme has issued, and DA is **rebuilding the held
+chain unpushed** rather than patching it. **My round-70 measurement is now
+DA20-R2**, filed by the reviewer. **And the row-only-tip property has reached the
+reviewer's own baseline:** at **`5a11ee9` — my round-68 commit, which touches
+ZERO of the four DA files (I counted)** — the **unmutated** pre-round module is
+**red** at the CO-10 precondition, so *"unmutated 38 rc 0"* holds only where
+HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
 
@@ -893,8 +893,9 @@ launchers at **235/19**.
 | **DA round 18** | **LANDED** at `c511750` (Q-DA-214) — the held chain **rebased with no content moved** (`21de639`…`7792fb5`), plus the **tracked 09-02 verdict** and the **force-added 09-02 mask** |
 | **BE11 + DA18 landings review** | **RELEASED** (`95a0e0e`, 215 lines, 00:44:56Z) — **nothing must move before Fri 2026-09-04 00:06:00 UTC**; the unit path driven **end to end, NON-production**, in the reviewer's scratch root; the eight held/landed DA commits are **`=` pairwise by range-diff**, so **the DA-17 RELEASE transfers**. Two findings **off the unit path**: **DA18-R1 (MED)**, **BE11-R1 (LOW)** |
 | **DA round 19** | a **proposal row** — "host-load join" **36/38 OFF the unit path**; **R-488 CORRECTED the ageing premise at the host**: `HISTORY=7`, `sa2` deletes at **00:07Z daily**, so **`sar25` dies at 00:07Z on 09-04** |
-| **DA round 20** | **READY and HELD — UNPUSHED, in DA's worktree**, read here **by sha from the shared object store**: `d37c3d9` (parent `5a11ee9`, 01:18:02Z, **4 files +748/−54**) with row-only child `0cd18ba` (Q-DA-216). `da_blackout_mask` **`10d02c09…`**, `da_forward_day_verify` **`bb7213d6…`** (**`EXPECTED_CHECKS` 247 → 254**), `pm_host_load_join` **`8689db8b…`**, new fixture **31,428 B** `d663ce6b…`. **NOT on the branch — HELD, not landed** |
-| **BE — durable landing** | now **BE round 11**: after the **00:14Z** read **AND** after round 10 lands — **a driver whose selftest fails at its tip cannot produce the artifact of record** |
+| **DA round 20 review** | **HOLD for ONE item, RELEASE the rest** (`cc4cfb9`, 190 lines, 02:16:09Z) — counts confirmed at both tips; **DA18-R1 CLOSED with three falsifiers**; DA17-R1 closed; host-load **FORM** closed; **class scans clean**. Four items: **DA20-R1 (LOW)**, **DA20-R2 (MED — the held item)**, **DA20-R3 (LOW-MED)** and **DA20-R4 (LOW)** |
+| **DA round 20** | **HELD chain: `d37c3d9` + `0cd18ba`, UNPUSHED** — read by sha, **not landed**. **DA is REBUILDING it** (still unpushed) to close **DA20-R2** with two rule-15 falsifiers, tape-independent, plus DA20-R1 as a **row correction keeping the number Q-DA-216** (it never landed), naming the superseded unpushed shas as provenance. **These two shas become SUPERSEDED-UNPUSHED once DA reports the new ones; until then they ARE the held chain** |
+| **DA round 21** | **DA20-R3 and DA20-R4** || **BE — durable landing** | now **BE round 11**: after the **00:14Z** read **AND** after round 10 lands — **a driver whose selftest fails at its tip cannot produce the artifact of record** |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
@@ -972,9 +973,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on DA round 20, HELD** (`REQUEST_DA_ROUND_20_2026-09-03.md`,
-eight items — **the landing is NOT part of the round**). **BE 12 in flight; DE at
-rest at `5658f24`.** **Released so far**
+**The reviewer is on RECORDED STANDBY until DA's REBUILT chain reports READY or
+BE 12 lands, whichever comes first.** **BE 12 in flight; DE at rest at
+`5658f24`.** **Released so far**
 include the **BE11+DA18 landings** (`95a0e0e`) and DE rounds 37–42, the last at
 `1de1761`. **Released so far** include BE rounds
 9+10 (`a8e88de`), the **BE11+DA18 landings** (`95a0e0e`), and DE rounds 37
@@ -1793,6 +1794,66 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-03 ~02:25Z (MEM) — A BASELINE THAT DEPENDS ON WHOSE COMMIT CAME LAST
+
+**R-494 and the DA-20 filing swept.** Nothing run; every check at the blob.
+
+**The disposition is the narrowest this programme has issued and the shape is
+worth naming: HOLD for ONE item, RELEASE the rest.** Not "hold the round" and not
+"release with findings" — **one item held, everything else released**, and **DA
+REBUILDS the held chain (still unpushed) rather than patching on top of it.**
+*A hold that names one item is a hold somebody can clear; a hold on a round is a
+hold on a seat.*
+
+**The row-only-tip property has now reached the reviewer's own baseline, and I
+verified the counterexample is mine.** At **`5a11ee9` — my round-68 commit —
+the diff touches STATUS.yml, COORDINATION.md, HANDOFF.md and the archive, and
+**exactly ZERO of the four DA `.py` files** (I counted the intersection: **0**).
+So at that tip the fixture's `git add` stages nothing, the commit is empty, and
+**the UNMUTATED pre-round module is RED at the CO-10 precondition** — DA18-R1
+live. The reviewer's *"unmutated 38 rc 0"* therefore **holds only where HEAD~1
+differs in those four files.**
+
+**That is the fourth appearance of this property and its most consequential
+form.** Round 65: it named the wrong author on an artifact. Round 66: it emptied a
+fixture commit. Round 67: it labelled a version by a commit that did not author
+it. **Round 71: it decides whether a control's BASELINE is green.** *A measurement
+that is tip-conditional is not wrong — it is under-specified, and the missing
+clause is which commit came last.* Recorded so that any future "it was green
+before" carries the tip it was green at.
+
+**Two premises were corrected in different directions this round, which is the
+system working.** The reviewer **superseded R-493's "run-twice alone" sentence
+in-band** — too strong — and drove **LANDED red** by replacing the fixture's
+`git add` with `git status`. And **DA's own "green before" does NOT reproduce**:
+the CO-10-returning mutant was **already red at the DA16-R1 falsifier in the
+pre-round module** (DA20-R1). *A coordinator sentence narrowed by the reviewer and
+a seat claim that fails to reproduce, in the same filing.*
+
+**My round-70 measurement is now a filed finding.** Both production
+`annotate_governance` wirings remain deletable with **254 green** — **DA20-R2,
+MEDIUM, and the one item held.** It travelled from an unruled coordinator
+measurement to a reviewer finding to the single blocker on a chain, without
+anybody deciding it in passing. **The closure asks for two rule-15 falsifiers,
+tape-independent.**
+
+**DA18-R1 is closed with three falsifiers, and DA17-R1 and the host-load FORM with
+it.** The **class scans came back clean** — **no other silent shrink, no other
+unnoticed wiring** — which is the part that turns three closures into a bounded
+statement rather than three anecdotes.
+
+**One bookkeeping instruction I have implemented exactly, because getting it
+wrong would lose provenance.** `d37c3d9` and `0cd18ba` **remain the held chain
+now**; they become **SUPERSEDED-UNPUSHED only once DA reports the new shas**. And
+**Q-DA-216 keeps its number** — the row never landed, so there is nothing to
+supersede, only to correct, with the superseded unpushed shas named as provenance.
+
+**Unchanged:** **nothing on the unit path moves**; the **09-04 00:06Z run is on
+the landed chain either way**; DA 20's landing is **after Fri 2026-09-04 00:06:00
+UTC, on the REBUILT chain, after the reviewer's one-item round**. **DE rests at
+`5658f24`; BE 12 in flight; the reviewer on standby until DA's rebuilt READY or BE
+12, whichever first.** **USER items: FIVE, unchanged.**
 
 ### 2026-09-03 ~02:08Z (MEM) — FOUR CHECKS THAT COULD NOT FIRE, AND A FIFTH
 ### NOBODY HAD LOOKED FOR

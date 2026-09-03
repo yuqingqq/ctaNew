@@ -4951,3 +4951,56 @@ Moved in the MEM round-70 true-up of R-493 and the DA-20 request. Join rule as i
   (no pin, no install). UNCHANGED: the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
 ```
+
+## Batch 77 — archived 2026-09-03T02:25Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-71 true-up of R-494 and the DA-20 filing. Join rule as in batch 1.
+
+```yaml
+  2026-09-03T01:14Z (MEM ROUND 68 -- A ROUND THAT ADDED NO CHECKS AND FIXED TWO).
+  R-491 and DE round 42 swept; nothing run; every figure taken at the blob. THE
+  HEADLINE IS A NUMBER THAT DID NOT MOVE: EXPECTED_CHECKS is 124 AT BOTH 8479b67
+  AND 5658f24, with +19/-6 in the runner and THE RUNNER THE ONLY SOURCE FILE
+  CHANGED -- NO CHECK WAS ADDED, TWO FAILURE PATHS WERE MADE LEGIBLE. A round that
+  raises the count is easy to praise; A ROUND THAT FIXES WHAT A RED LINE SAYS
+  WHILE ADDING NOTHING IS THE HARDER AND RARER ONE, and it is exactly what these
+  two findings asked for, since both lived in messages nobody reads until
+  something breaks. DE41-R1 CLOSED AT THE SHAPE, NOT THE SYMPTOM: the pred#1 guard
+  at :813 is UNCHANGED and :824 now reads `if not c.get("n_draws_requested"):`, so
+  the guard-only mutant DIES AT THE KNOWN-BAD'S OWN LINE ("FAIL (no refusal):
+  KNOWN-BAD ... REFUSES at pred#1") where at 8479b67 it died by KeyError at :820 --
+  THE FIX IS A .get() AND THE VALUE OF IT IS ENTIRELY IN THE MESSAGE. DE41-R2
+  CLOSED WITH ITS REASONING WRITTEN INTO THE SOURCE: _diff_fields is computed
+  AFTER the comparison with an object() sentinel (:1987-1994) and the FAIL text
+  (:2010-2016) reports "N of the M null_population fields DIFFERENT ([names])",
+  the comment saying why in the module's own voice -- reporting "ALL n of m
+  identical" from the FILTERED block ASSERTED THE INVARIANT ON THE ONE PATH WHERE
+  THE MESSAGE IS LOAD-BEARING, THE RED ONE; the coordinator's 22nd-field mutant
+  now prints "1 of the 22 ... DIFFERENT (['probe_22nd_field'])". A FAILURE MESSAGE
+  THAT NAMES WHAT DIFFERS TURNS A RED LINE FROM AN ALARM INTO A DIAGNOSIS. AND THE
+  SUBSTRATE PROPERTY SHOWED ITS BENIGN FACE THIS ROUND, worth recording precisely
+  because the last three instances were awkward: DE's push RACED MINE AND WAS
+  REBASED, NOT FORCED -- I checked, and 8a31112, my round-67 commit, IS 5658f24'S
+  DIRECT PARENT. Rounds 65-67 recorded the ledger's commits as substrate that
+  MISLEADS ABOUT AUTHORSHIP; this is THE SAME SUBSTRATE UNDER A DISCIPLINE THAT
+  HOLDS, the race costing ONE REBASE AND NOTHING LOST: THE PROPERTY IS NOT THE
+  HAZARD, FORCING OVER IT WOULD HAVE BEEN. SCOPE HELD EXACTLY: the v2 DRAFT is
+  UNTOUCHED (cb693000880c3d94 at both tips) and ALL SEVEN OTHER DE MODULES ARE
+  BYTE-IDENTICAL to 8479b67, each checked -- A ROUND TOLD TO TOUCH ONE FILE
+  TOUCHED ONE FILE, which is what makes "the runner's resting tip" a question the
+  reviewer can answer at all. COUNTS WITH THEIR PROVENANCE: runner 124/124 both
+  launchers with stderr EMPTY (coordinator); DE's eight-module row
+  124/26/31/26/21/21/184/92 with THE 92 MEASURED IN DE'S OWN WORKTREE THIS ROUND
+  -- the figure DE could not measure last round is now measured by the seat that
+  owns it; --run --outdir <scratch> returns rc 2 and creates nothing; worktrees
+  34, derived 178, main tree clean. SEQUENCING: the reviewer has DE ROUND 42
+  (REQUEST_DE_ROUND_42_2026-09-03.md, five items including RELEASE / HOLD 5658f24
+  AS THE RUNNER'S RESTING TIP and whether the DE-40 item-6 answer on ask (5) STILL
+  HOLDS); DE on RECORDED STANDBY with the ask-(5) mechanics still USER-GATED; BE
+  12 in flight and queuing for the next round; DA 20 in flight, HELD. NOTHING
+  MOVES ON THE UNIT PATH BEFORE FRI 2026-09-04 00:06:00 UTC. USER ITEMS: FIVE,
+  UNCHANGED -- the 09-02 accrual (R-486 recommends ACCRUE, UNRULED), the Phase-2
+  winner, the content-liveness v2 freeze, the addendum v2 package (five asks), the
+  09-04 run on the landed chain (no pin, no install). UNCHANGED: the 011 family 12
+  of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+```
