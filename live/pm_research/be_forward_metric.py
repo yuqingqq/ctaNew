@@ -444,28 +444,6 @@ def evaluate_arm(rows, scores, latency_ms, theta_frozen, budgets=AE.BUDGETS,
     return out
 
 
-def increment(rows, cand_scores, inc_scores, theta: float,
-              latency_ms: int) -> dict:
-    """Candidate minus incumbent, per window, at one declared threshold.
-
-    Both arms are valued by `phase2_increment_null.per_window_net` -- the same
-    function, the same rows, the same theta -- so the difference is the arms
-    and nothing else. Rule 9: skill is reported INCREMENTAL to the incumbent,
-    never against a base rate."""
-    import math
-    cb, ct, cn = PIN.per_window_net(rows, cand_scores, theta)
-    ib, it, inn = PIN.per_window_net(rows, inc_scores, theta)
-    windows = PIN.ordered_windows(cb, ib)
-    by_window = {w: cb.get(w, 0.0) - ib.get(w, 0.0) for w in windows}
-    return {"theta": theta, "latency_ms": latency_ms,
-            "candidate_net_cents": ct, "incumbent_net_cents": it,
-            "increment_cents": math.fsum(by_window.values()),
-            "candidate_n_cancelled": cn, "incumbent_n_cancelled": inn,
-            "n_windows": len(windows),
-            "increment_by_window": by_window,
-            "unit": "ACTION", "baseline": "INCUMBENT, not a base rate (rule 9)"}
-
-
 def paired_null(inc_by_window: dict, n_perm: int = I11.N_PERM_011,
                 seed: int = I11.PERM_SEED_011) -> dict:
     """The paired sign-flip null, BORROWED FROM THE INSTRUMENT THAT SORTS.
@@ -487,6 +465,194 @@ def paired_null(inc_by_window: dict, n_perm: int = I11.N_PERM_011,
     ONE-SIDED `p_value` that R-286/R-288 adjudicate, which `sign_flip_p` does
     not compute at all."""
     return I11.sign_flip_null(inc_by_window, n_perm=n_perm, seed=seed)
+
+
+# ---------------------------------------------------------------------------
+# THE TWO PAIRING CONVENTIONS — DIFFERENT ESTIMANDS (R-497 (F)(4))
+# ---------------------------------------------------------------------------
+#: The USER ruled BOTH: by-THRESHOLD is the decision metric, by-COUNT is
+#: reported beside it as a bridge to iteration 011's development number. They
+#: are NOT two views of one quantity. A cell carries its convention as a
+#: top-level field, and `pooled_increment` REFUSES to combine cells that do
+#: not share one, because the failure this guards is not an error a reader
+#: would notice: two plausible numbers averaged into a third plausible number.
+PAIRING_CONVENTIONS = {
+    "BY_THRESHOLD": {
+        "rule": "ONE declared theta applied to BOTH arms; the cancellation "
+                "COUNTS differ between arms",
+        "role": "PRIMARY — the decision metric (R-497 (F)(4))",
+        "theta_source": "DECLARED before the read",
+        "causal": True,
+    },
+    "BY_COUNT": {
+        "rule": "kk = max(1, int(n_actions * budget)); EACH ARM cancels its "
+                "own top-kk, so the two arms use DIFFERENT cutoffs and the "
+                "counts match",
+        "role": "REPORTED BESIDE — a bridge to iteration 011's development "
+                "number, never a forward result (R-497 (F)(4))",
+        "theta_source": "READ OFF THE RANKING OF THE DATA BEING SCORED",
+        "causal": False,
+    },
+}
+
+
+def _gen_index(rows) -> dict:
+    """(slug, side, gen) -> row indices, ordered by t_start. One grouping,
+    shared by both conventions, so they can differ only in SELECTION."""
+    gens: dict = {}
+    for i, r in enumerate(rows):
+        gens.setdefault(tuple(r[k] for k in ACTION_KEY), []).append(i)
+    for k in gens:
+        gens[k].sort(key=lambda i: rows[i]["t_start"])
+    return gens
+
+
+def _cancel_value(rows, gens, scores, chosen, theta, latency_ms) -> dict:
+    """Per-window value of cancelling `chosen` at `theta`. First crossing acts.
+
+    Shared by both conventions: the VALUATION is identical and only the
+    selection differs, so any gap between the two numbers is the pairing rule
+    and never an accounting difference."""
+    L = str(latency_ms)
+    bw: dict = {}
+    for gk in chosen:
+        i = next((j for j in gens[gk] if scores[j] >= theta[gk]), None)
+        if i is None:
+            continue
+        r = rows[i]
+        v = (r["latency"][L]["preventable_value_cents"]
+             if r.get("any_fill_ahead") and "latency" in r else 0.0)
+        bw[gk[0]] = bw.get(gk[0], 0.0) + v
+    return bw
+
+
+def _select_by_threshold(gens, scores, theta: float):
+    """Both arms, one declared theta. Returns (chosen, per-gen theta)."""
+    gmax = {k: max(scores[i] for i in gens[k]) for k in gens}
+    chosen = [k for k in gens if gmax[k] >= theta]
+    return chosen, {k: theta for k in chosen}, theta
+
+
+def _select_by_count(gens, scores, frac: float):
+    """Each arm its own top-kk. The cutoff is a FUNCTION OF THESE SCORES."""
+    gmax = {k: max(scores[i] for i in gens[k]) for k in gens}
+    # TIE-BREAK ON THE KEY, matching `phase2_iter011_run._rank`'s
+    # `sorted(gens, key=lambda k: (-gmax[k], k))` exactly. Under equal maxima
+    # a bare `-gmax` sort falls back to dict order, which is the R-234 defect
+    # in a second place; and a bridge arm that does not reproduce the
+    # implementation it bridges to is not a bridge.
+    order = sorted(gens, key=lambda k: (-gmax[k], k))
+    kk = max(1, int(len(order) * frac))
+    chosen = order[:kk]
+    cut = gmax[chosen[-1]] if chosen else float("inf")
+    return chosen, {k: cut for k in chosen}, cut
+
+
+def increment(rows, cand_scores, inc_scores, theta: float = None,
+              latency_ms: int = 50, convention: str = "BY_THRESHOLD",
+              budget: float = None) -> dict:
+    """Candidate minus incumbent, per window, under ONE NAMED CONVENTION.
+
+    Rule 9: skill is reported INCREMENTAL to the incumbent, never against a
+    base rate. The convention travels in the return value as a field, so a
+    downstream reader cannot lose track of WHICH estimand a number is."""
+    import math
+    if convention not in PAIRING_CONVENTIONS:
+        raise ForwardMetricRefused(
+            f"REFUSED: pairing convention {convention!r} is not one of "
+            f"{sorted(PAIRING_CONVENTIONS)}. A convention named at the call "
+            f"site is an estimand chosen where no ruling can see it.")
+    gens = _gen_index(rows)
+    if convention == "BY_THRESHOLD":
+        if theta is None:
+            raise OperatingPointUndeclared(
+                "REFUSED: BY_THRESHOLD needs a DECLARED theta; that is the "
+                "whole of what makes it causal.")
+        c_sel, c_th, c_cut = _select_by_threshold(gens, cand_scores, theta)
+        i_sel, i_th, i_cut = _select_by_threshold(gens, inc_scores, theta)
+    else:
+        if budget is None:
+            raise ForwardMetricRefused(
+                "REFUSED: BY_COUNT needs a budget fraction; kk is defined "
+                "only relative to one.")
+        c_sel, c_th, c_cut = _select_by_count(gens, cand_scores, budget)
+        i_sel, i_th, i_cut = _select_by_count(gens, inc_scores, budget)
+    cb = _cancel_value(rows, gens, cand_scores, c_sel, c_th, latency_ms)
+    ib = _cancel_value(rows, gens, inc_scores, i_sel, i_th, latency_ms)
+    windows = sorted(set(cb) | set(ib))
+    by_window = {w: cb.get(w, 0.0) - ib.get(w, 0.0) for w in windows}
+    meta = PAIRING_CONVENTIONS[convention]
+    return {
+        "pairing_convention": convention,
+        "pairing_rule": meta["rule"], "pairing_role": meta["role"],
+        "causal": meta["causal"],
+        "theta_source": meta["theta_source"],
+        "theta_declared": theta, "budget": budget,
+        "candidate_cutoff": c_cut, "incumbent_cutoff": i_cut,
+        "cutoffs_equal_between_arms": c_cut == i_cut,
+        "candidate_n_cancelled": len(c_sel),
+        "incumbent_n_cancelled": len(i_sel),
+        "counts_equal_between_arms": len(c_sel) == len(i_sel),
+        "candidate_net_cents": math.fsum(cb.values()),
+        "incumbent_net_cents": math.fsum(ib.values()),
+        "increment_cents": math.fsum(by_window.values()),
+        "n_windows": len(windows), "increment_by_window": by_window,
+        "n_actions": len(gens), "latency_ms": latency_ms,
+        "unit": "ACTION",
+        "baseline": "INCUMBENT, not a base rate (rule 9)",
+    }
+
+
+def cutoff_depends_on_scored_data(convention: str, rows, scores_a, scores_b,
+                                  theta: float = None, budget: float = None,
+                                  latency_ms: int = 50) -> dict:
+    """IS THE CUTOFF A FUNCTION OF THE DATA BEING SCORED? COMPUTED, not stated.
+
+    Rule 10. The claim "by-count is retrospective and therefore not a forward
+    result" is a property of the ARITHMETIC, so it is measured rather than
+    written in a docstring: hold the declared inputs fixed, change ONLY the
+    scores, and see whether the effective cutoff moves. A cutoff that moves
+    with the data is one read off the data, which is exactly what
+    `require_operating_point` refuses for a forward read."""
+    a = increment(rows, scores_a, scores_a, theta=theta, budget=budget,
+                  convention=convention, latency_ms=latency_ms)
+    b = increment(rows, scores_b, scores_b, theta=theta, budget=budget,
+                  convention=convention, latency_ms=latency_ms)
+    moved = a["candidate_cutoff"] != b["candidate_cutoff"]
+    return {
+        "convention": convention,
+        "cutoff_on_scores_a": a["candidate_cutoff"],
+        "cutoff_on_scores_b": b["candidate_cutoff"],
+        "cutoff_moved_with_the_data": moved,
+        "declared_inputs_held_fixed": {"theta": theta, "budget": budget},
+        "forward_eligible": not moved,
+        "why": ("a cutoff that moves when only the scored data changes was "
+                "READ OFF that data. Forward, that is the retrospective "
+                "cutoff `require_operating_point` refuses, so an arm with "
+                "cutoff_moved_with_the_data=True is a BRIDGE TO A "
+                "DEVELOPMENT NUMBER and never a forward result."),
+        "is_bridge_to_development_number": moved,
+    }
+
+
+def pooled_increment(cells) -> dict:
+    """REFUSE to combine cells that do not share one pairing convention.
+
+    The two conventions are different estimands (R-497 (F)(4)). Averaging or
+    summing across them produces a number that is plausible, has no estimand,
+    and cannot be told from a correct one by looking at it."""
+    import math
+    convs = sorted({c["pairing_convention"] for c in cells})
+    if len(convs) != 1:
+        raise ForwardMetricRefused(
+            f"REFUSED: asked to pool cells spanning pairing conventions "
+            f"{convs}. These are DIFFERENT ESTIMANDS (R-497 (F)(4)): "
+            f"by-THRESHOLD holds the cutoff equal and lets the counts differ; "
+            f"by-COUNT holds the counts equal and lets the cutoffs differ. "
+            f"Pooling them yields a plausible number with no estimand.")
+    return {"pairing_convention": convs[0], "n_cells": len(cells),
+            "increment_cents": math.fsum(c["increment_cents"] for c in cells),
+            "pooled_within_one_convention_only": True}
 
 
 def exclusions(rows, *score_vectors) -> dict:
@@ -538,7 +704,7 @@ def cluster_disclosure(rows) -> dict:
 # every control fires on the bad case AND ADMITS the good one -- a named SKIP
 # is not an admission.
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 59
+EXPECTED_CHECKS = 72
 
 _L = 50
 
@@ -845,6 +1011,74 @@ def selftest() -> int:
        "BE15-S1 the difference is located at the SOURCE: one sorts at "
        "consumption, the other does not -- asserted from the code, not from "
        "the two p-values alone")
+
+    # ---- THE TWO PAIRING CONVENTIONS (R-497 (F)(4)) --------------------
+    thr = increment(rows, cand, inc, theta=0.5, latency_ms=_L,
+                    convention="BY_THRESHOLD")
+    cnt = increment(rows, cand, inc, budget=0.5, latency_ms=_L,
+                    convention="BY_COUNT")
+    ok(thr["pairing_convention"] == "BY_THRESHOLD"
+       and cnt["pairing_convention"] == "BY_COUNT",
+       "POSITIVE CONTROL: every cell CARRIES its pairing convention as a "
+       "top-level field a reader cannot miss")
+    ok(thr["cutoffs_equal_between_arms"] is True
+       and thr["counts_equal_between_arms"] is False,
+       f"BY_THRESHOLD holds the CUTOFF equal across arms and lets the counts "
+       f"differ ({thr['candidate_n_cancelled']} vs "
+       f"{thr['incumbent_n_cancelled']}) -- computed, not described")
+    ok(cnt["counts_equal_between_arms"] is True
+       and cnt["cutoffs_equal_between_arms"] is False,
+       f"BY_COUNT holds the COUNT equal ({cnt['candidate_n_cancelled']} vs "
+       f"{cnt['incumbent_n_cancelled']}) and lets the cutoffs differ "
+       f"({cnt['candidate_cutoff']} vs {cnt['incumbent_cutoff']})")
+    ok(thr["increment_cents"] != cnt["increment_cents"],
+       f"THE TWO ARE DIFFERENT ESTIMANDS, shown by a number: the same rows "
+       f"and the same scores give {thr['increment_cents']} under "
+       f"BY_THRESHOLD and {cnt['increment_cents']} under BY_COUNT")
+    ok(thr["causal"] is True and cnt["causal"] is False,
+       "the registry marks exactly the by-count convention non-causal")
+    refuses(lambda: increment(rows, cand, inc, theta=0.5, latency_ms=_L,
+                              convention="WHATEVER"),
+            "is not one of",
+            "KNOWN-BAD: a convention named at the call site REFUSES")
+    refuses(lambda: increment(rows, cand, inc, latency_ms=_L,
+                              convention="BY_THRESHOLD"),
+            "needs a DECLARED theta",
+            "KNOWN-BAD: BY_THRESHOLD without a declared theta REFUSES",
+            exc=OperatingPointUndeclared)
+    refuses(lambda: increment(rows, cand, inc, latency_ms=_L,
+                              convention="BY_COUNT"),
+            "needs a budget fraction",
+            "KNOWN-BAD: BY_COUNT without a budget REFUSES")
+
+    # ---- THE DISQUALIFIER, COMPUTED ON THE ARM (rule 10) ---------------
+    other = [s * 0.5 + 0.02 for s in cand]
+    dt_ = cutoff_depends_on_scored_data("BY_THRESHOLD", rows, cand, other,
+                                        theta=0.5, latency_ms=_L)
+    dc_ = cutoff_depends_on_scored_data("BY_COUNT", rows, cand, other,
+                                        budget=0.5, latency_ms=_L)
+    ok(dt_["cutoff_moved_with_the_data"] is False
+       and dt_["forward_eligible"] is True,
+       "COMPUTED: BY_THRESHOLD's cutoff does NOT move when only the scored "
+       "data changes -- it is an input, so the arm is forward-eligible")
+    ok(dc_["cutoff_moved_with_the_data"] is True
+       and dc_["forward_eligible"] is False
+       and dc_["is_bridge_to_development_number"] is True,
+       f"COMPUTED: BY_COUNT's cutoff MOVES with the scored data "
+       f"({dc_['cutoff_on_scores_a']} -> {dc_['cutoff_on_scores_b']}), so it "
+       f"is read off that data. The disqualifier is a PREDICATE ON THE ARM, "
+       f"not a sentence in a docstring")
+    ok(dt_["declared_inputs_held_fixed"] == {"theta": 0.5, "budget": None},
+       "and the declared inputs were held fixed while the scores changed, "
+       "so the difference above is the convention and nothing else")
+
+    # ---- NEVER POOLED, NEVER SUBSTITUTED -------------------------------
+    ok(pooled_increment([thr, thr])["pairing_convention"] == "BY_THRESHOLD",
+       "POSITIVE CONTROL: pooling WITHIN one convention is allowed")
+    refuses(lambda: pooled_increment([thr, cnt]),
+            "DIFFERENT ESTIMANDS",
+            "KNOWN-BAD: pooling ACROSS conventions REFUSES -- averaging them "
+            "yields a plausible number with no estimand")
 
     # ---- EXCLUSIONS AND CLUSTER DISCLOSURE -----------------------------
     ex = exclusions(rows, cand, inc)

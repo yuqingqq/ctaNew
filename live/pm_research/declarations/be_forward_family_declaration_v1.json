@@ -1,0 +1,100 @@
+{
+ "as_of_utc": "2026-09-03T05:55:57Z",
+ "carrying_commit_note": "the commit that carries this file is a descendant of generated_at_head; ask git for this path's log rather than reading it from a field written before the commit existed",
+ "cells": [
+  "BY_COUNT/NO_OPERATING_POINT/btc/10%",
+  "BY_COUNT/NO_OPERATING_POINT/btc/15%",
+  "BY_COUNT/NO_OPERATING_POINT/btc/5%",
+  "BY_COUNT/NO_OPERATING_POINT/eth/10%",
+  "BY_COUNT/NO_OPERATING_POINT/eth/15%",
+  "BY_COUNT/NO_OPERATING_POINT/eth/5%",
+  "BY_THRESHOLD/FROZEN_FROM_A_CONSUMED_DAY/btc/10%",
+  "BY_THRESHOLD/FROZEN_FROM_A_CONSUMED_DAY/btc/15%",
+  "BY_THRESHOLD/FROZEN_FROM_A_CONSUMED_DAY/btc/5%",
+  "BY_THRESHOLD/FROZEN_FROM_A_CONSUMED_DAY/eth/10%",
+  "BY_THRESHOLD/FROZEN_FROM_A_CONSUMED_DAY/eth/15%",
+  "BY_THRESHOLD/FROZEN_FROM_A_CONSUMED_DAY/eth/5%",
+  "BY_THRESHOLD/FROZEN_FROM_TRAIN_QUANTILE/btc/10%",
+  "BY_THRESHOLD/FROZEN_FROM_TRAIN_QUANTILE/btc/15%",
+  "BY_THRESHOLD/FROZEN_FROM_TRAIN_QUANTILE/btc/5%",
+  "BY_THRESHOLD/FROZEN_FROM_TRAIN_QUANTILE/eth/10%",
+  "BY_THRESHOLD/FROZEN_FROM_TRAIN_QUANTILE/eth/15%",
+  "BY_THRESHOLD/FROZEN_FROM_TRAIN_QUANTILE/eth/5%"
+ ],
+ "cells_by_convention": {
+  "BY_COUNT": 6,
+  "BY_THRESHOLD": 12
+ },
+ "count_under_each_alternative": {
+  "sensitivity_arm_in_family=False,coins=btc": 6,
+  "sensitivity_arm_in_family=False,coins=btc,eth": 12,
+  "sensitivity_arm_in_family=True,coins=btc": 9,
+  "sensitivity_arm_in_family=True,coins=btc,eth": 18
+ },
+ "declared_cell_count": 18,
+ "factors": {
+  "budgets": [
+   "5%",
+   "10%",
+   "15%"
+  ],
+  "budgets_module_sha256_prefix": "aa866f8261677d79",
+  "budgets_source": "phase2_declaration.BUDGETS, cited by sha rather than retyped",
+  "coins": [
+   "btc",
+   "eth"
+  ],
+  "coins_source": "the frozen candidate's own `fits` keys",
+  "convention_takes_operating_point": {
+   "BY_COUNT": false,
+   "BY_THRESHOLD": true
+  },
+  "conventions": [
+   "BY_COUNT",
+   "BY_THRESHOLD"
+  ],
+  "operating_point_arms": [
+   "FROZEN_FROM_TRAIN_QUANTILE",
+   "FROZEN_FROM_A_CONSUMED_DAY"
+  ]
+ },
+ "generated_at_head": "b717340f750c26588f52cc8225c35eee2006885c",
+ "growth_vs_single_convention": {
+  "both_conventions_count": 18,
+  "ratio": 1.5,
+  "ratio_is_2x": false,
+  "ruling_word": "DOUBLES",
+  "single_convention_count": 12,
+  "why_not": "BY_COUNT carries NO operating point -- kk sets its cutoff -- so it does not twin the sensitivity arm. Computed and reported as a disagreement with the framing rather than reconciled to it (rule 10)."
+ },
+ "holm_denominator": 18,
+ "holm_note": "the denominator is the multiplicity argument and is the one input a reader cannot recompute from the reported cells, because unreported cells are invisible. Declared here before any forward score.",
+ "open_factors": {
+  "coins": {
+   "alternatives": [
+    [
+     "btc",
+     "eth"
+    ],
+    [
+     "btc"
+    ]
+   ],
+   "note": "the frozen candidate carries fits for btc and eth only; windows of the other five coins are supplied, replayed and counted and produce NO score (measured 1,269 on 09-02).",
+   "question": "does the forward read cover both coins the freeze carries fits for, or btc alone as iteration 011 did?",
+   "who": "the USER (rule 14)"
+  },
+  "sensitivity_arm_in_family": {
+   "alternatives": [
+    true,
+    false
+   ],
+   "note": "R-497 (F)(2) calls it a declared sensitivity arm and says all cells are reported with Holm over the declared count; whether 'all cells' includes a never-selected arm is not settled by that sentence.",
+   "question": "does the FROZEN_FROM_A_CONSUMED_DAY sensitivity arm consume alpha, or is it reported outside the family?",
+   "who": "the USER (rule 14)"
+  }
+ },
+ "protocol": "BE_FORWARD_FAMILY_DECLARATION_V1",
+ "ruling": "R-497 (F)(4): BOTH pairing conventions reported",
+ "selects_nothing": true
+}
