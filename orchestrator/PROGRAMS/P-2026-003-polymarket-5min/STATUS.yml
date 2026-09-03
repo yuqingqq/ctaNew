@@ -4,6 +4,102 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-03T08:30Z (MEM ROUND 77 -- FIVE ZERO-CONSUMER FINDINGS IN ONE DAY,
+  NONE OF THEM FOUND BY A GREEN SUITE). BE 20 and 21 and the reviewer's DA 23/24
+  filing swept; nothing run but read-only reads and ONE read-only drive of a
+  landed gate in the main tree. THE CLASS IS THE ROUND, AND IT GOES IN HANDOFF AS
+  A STANDING HAZARD WITH ITS INSTANCES NAMED, BECAUSE SEAT_PROTOCOL 17 ALREADY
+  DESCRIBES IT AND WHAT IS NEW IS THE FREQUENCY: FIVE zero-consumer or
+  zero-reachability findings today, EACH FOUND BY A DIFFERENT ROUTE AND NOT ONE
+  OF THEM BY A GREEN SUITE. (i) require_operating_point -- every executable call
+  inside selftest(), found by the reviewer producing a full net-cents result with
+  a p from a cutoff read off the scored data. (ii) THE SIX EVALUATOR FUNCTIONS of
+  I11-2 -- falsifier-proven, zero call sites in the runner, found by counting call
+  sites rather than tests. (iii) assert_frozen_contract -- ONE call, the exception
+  SWALLOWED, found by BE 20 asking what reads the binding. (iv) THE R-486 governs
+  STAMPING -- both production call sites deletable with 254 checks still passing,
+  found by the coordinator deleting them, which nobody had been asked to try.
+  (v) counts_toward_race -- WRITTEN, NEVER READ, found by the reviewer asking
+  which field the race is actually counted by. FOUR OF THE FIVE WERE FOUND BY
+  SOMEBODY DELETING, GREPPING OR ATTACKING RATHER THAN BY RUNNING THE SUITE, AND
+  THE FIFTH BY ASKING WHAT CONSUMES A FIELD -- A GREEN SUITE CANNOT SEE ANY OF
+  THEM BY CONSTRUCTION, and five in one day is not five incidents. THE RELEASE IS
+  STILL NOT GRANTED AND THE GATE IS SHUT: the THIRD release review is in flight,
+  and until it releases NO forward day is scored, which continues to mean THE
+  08-29 READ THE USER'S RULING PRESERVED HAS NOT HAPPENED AND CANNOT YET. BE
+  ROUND 21 CHANGED THE FENCE'S SHAPE AND IT IS A STRONGER PROPERTY THAN THE
+  REVIEWER ASKED FOR, WHICH SHOULD READ AS SUCH RATHER THAN AS COMPLIANCE.
+  BE19-R1 asked that require_operating_point CARRY `verification` and `coin` into
+  what it returns. BE INSTEAD REMOVED THE CALLER'S ABILITY TO SUPPLY THE EVIDENCE
+  AT ALL: at be_forward_metric.py:439-462, which I read, an INLINE `verification`
+  block is REFUSED BY NAME -- the module's own words are "the fence fetches its
+  own evidence; it does not accept evidence handed to it by the caller" and,
+  above it, "SUPPLYING THE EVIDENCE IS THE ACT BEING FORBIDDEN" -- and the
+  declaration must instead name `verification_ref: {path, sha256}`, which the
+  fence OPENS and REHASHES, refusing an unusable ref, a non-existent path
+  ("Nothing was opened, so nothing was verified") and a hash mismatch ("The
+  evidence the fence opened is not the evidence declared"), plus a missing `coin`
+  because both maps are per coin. A FENCE THAT CANNOT BE HANDED ITS OWN EVIDENCE
+  IS A DIFFERENT KIND OF OBJECT FROM ONE THAT CHECKS THE EVIDENCE IT IS HANDED,
+  and it closes the round-76 shape where the positive control passed only by
+  hand-injecting what the code dropped. AND THE FROZEN-CONTRACT GATE IS ON THE
+  RUN PATH -- I DROVE IT READ-ONLY RATHER THAN READING ITS ROW. frozen_contract
+  _gate is defined at be_forward_day.py:560 and CALLED FROM run_forward_day at
+  :1549; its docstring is the design in one line, "it refuses what the run DEPENDS
+  on and discloses what it does not -- and the difference is COMPUTED". Driving
+  it returns contract HOLDS, all_anchors_match_at_freeze_commit TRUE,
+  disclosed_not_waived TRUE, and n_working_tree_drift 4 WITH ALL FOUR NAMED --
+  harmful_action_eval.py 55ea57b995afdd4c -> 2c4e21936e3fc1d2,
+  harmful_exposure_rows.py 8fb34b0319b0d596 -> 1bbd8e7525fc27ac,
+  harmful_hazard_model.py 0091fe75c38af79e -> 58b8a2c08eea3cc9,
+  harmful_rows_loader.py 8b90c48cfe331e71 -> c53c64223474d29c. SURVIVABILITY IS
+  ASSERTED FROM SOURCE, NOT ASSUMED: the gate runs inspect.getsource
+  (materialise_frozen) at :634 and stamps
+  materialise_frozen_sources_from_the_freeze_commit TRUE, with the stated
+  consequence that "if it ever stops doing so, this gate REFUSES instead of
+  disclosing". AND THE ROUND-76 FINDING IS VISIBLY REPAIRED IN THE SAME OBJECT:
+  manifest_drift now reports drifted TRUE with bound_sha256 eb8733da2c8e2126...
+  against disk_sha256 037627531cbe746d... AND THE KEYS THAT DIFFER -- THE SAME
+  DIVERGENCE THAT WAS BEING SWALLOWED BY `except Exception: pass` A ROUND AGO IS
+  NOW A NAMED DISCLOSURE ON THE RUN PATH. BE 20's two halves both stand and both
+  are already in these files from round 76: the zero-reachability finding, and
+  PHASE-0 HALF-ANSWERED -- values reproduced cent-exact on all eight fields from
+  a comparator POST-DATING the freeze by ~4 hours, PROCEDURE NOT EVIDENCED, and
+  v1/v2 EXCLUDED AS ANCESTORS RATHER THAN REPRODUCTIONS. THE REVIEWER'S DA 23/24
+  FILING: ITEM 1 IS BINDING AND THE LIMIT MUST TRAVEL WITH IT OR THE WORD WILL BE
+  MISREAD. The withdrawal cannot be quietly undone -- driven on a REAL git
+  history the reviewer built, with removal, re-citation and DAY SUBSTITUTION each
+  refusing BY NAME as WithdrawalRefused, and THE GUARD PROVED NON-VACUOUS because
+  two prior committed versions already carry the registry, so the comparison has
+  something to compare and `vacuous` is False; adding a day is still allowed,
+  which is right, because the property is ONE-WAY AND NOT FROZEN. BUT DA24-R1
+  (MEDIUM-HIGH) IS THE LIMIT: counts_toward_race HAS NO CONSUMER, while
+  da_verdict_check and da_governed_verdict_preflight still validate
+  race_accrual_eligible, WHICH READS TRUE FOR THE WITHDRAWN DAY AT THE HELD TIP.
+  SO THE WITHDRAWAL IS BINDING AGAINST EDITS AND NOT YET BINDING AGAINST
+  COUNTING, and a reader must not take BINDING to mean the day cannot be counted.
+  ONE PRECISION I MEASURED AND THE FILING DOES NOT STATE, because the on-disk and
+  held-tip answers differ and this programme has been bitten by exactly that
+  before: counts_toward_race APPEARS NOWHERE in live/pm_research at the landed tip
+  (the chain is held; highest landed DA row is still Q-DA-215), and the 08-29
+  verdict ON DISK still reads race_accrual_eligible FALSE with era_admissible
+  FALSE -- the TRUE that DA24-R1 is about is what the HELD code computes once the
+  withdrawal lands and era_admissible is corrected to TRUE. BOTH READINGS ARE
+  RIGHT ABOUT DIFFERENT TREES AND THE FINDING IS ABOUT THE ONE THAT WILL LAND.
+  DA24-R2 IS A ROW CORRECTION AND I RECORD THE ROW'S CLAIM AS SUPERSEDED: DA's
+  RR12-1 fix is a REGRESSION IN THE CANONICAL TREE -- flow_intensity RED ON BOTH
+  LAUNCHERS whenever CODE_ROOT == DATA_ROOT, which is the canonical tree, while
+  the row reports it GREEN AT 54. A SUITE THAT IS RED IN THE CANONICAL TREE WILL
+  BE RED AT LANDING. Two more: DA24-R3, the canonical-write "cannot evidence"
+  refusal is keyed on --out into the canonical dir while THE UNIT WRITES TO A TEMP
+  PATH, so it never fires where it matters; DA24-R4, monotonicity compares
+  presence and `authority` only, so `reason` and `note` stay silently rewritable.
+  DISPOSITION AMEND, with DA24-R1 and DA24-R2 TO LAND BEFORE THE CHAIN DOES.
+  STATE: DA rounds 20 through 24 all HELD (Q-DA-215), DE 48 HELD (Q-DE-62), the
+  R-459 run still ATTEMPTED-AND-FAILED with its outdir still one line and no
+  terminal record, G 2 of 5 BY CHOICE, earliest G=5 2026-09-06. USER ITEMS: ONE
+  -- the Phase-2 winner, and the race decides it.
+  PRIOR:
   2026-09-03T08:05Z (MEM ROUND 76 -- THE GATE IS SHUT, THE BINDING ALREADY
   FAILS AND NOTHING READS IT, AND MY OWN "LAST ENTRY" CLAIM WAS STALE BY SEVEN
   MINUTES). BE 19's review, BE 20, DA 23/24, DE 48 and R-500 swept; nothing run
@@ -199,104 +295,6 @@ updated: >-
   large. NOTHING SPENT AT THE ARTIFACTS: no seal opened, 08-29 and 08-30 unread
   -- and 08-29 is now spent BY THE RULING rather than by a read. USER ITEMS: ONE
   -- the Phase-2 winner, and the race decides it.
-  PRIOR:
-  2026-09-03T06:50Z (MEM ROUND 74 -- TWO RULINGS THAT DO NOT CHANGE THE STATE A
-  READER WILL ASSUME THEY CHANGED). R-498 and R-499 swept; nothing run but
-  read-only reads at the artifacts. TWO THINGS MUST BE READ EXACTLY AND BOTH ARE
-  EASY TO GET WRONG. FIRST: THE ERA RULING DOES NOT PRODUCE G=3. DA round 22
-  answered BE13's blocker (a) BY COMPUTATION and reports 08-29 and 08-30
-  UNREACHABLE_BY_ANY_HONEST_ROUTE -- REPORTED TO ME IN DISPATCH AND NOT LANDED:
-  I looked, and the token appears NOWHERE in the register or in
-  live/pm_research/*.py at 37adf1d, the highest DA row in the Q-table is
-  Q-DA-215, and DA's rounds 20, 21 and 22 are all still unpushed. SO I RECORD THE
-  FINDING AS THE COORDINATOR'S REPORT AND THE CONSEQUENCE AS MY OWN
-  MEASUREMENT: at the tip ERA_ADMISSIBLE at da_forward_day_verify.py:894 STILL
-  READS "clob_v3_1": False # pre-O1, the only 08-29 artifact on disk still reads
-  race_accrual_eligible FALSE, and no new day verdict exists. G REMAINS 2 OF 5
-  AND THE EARLIEST G=5 IS UNCHANGED AT 2026-09-06. ANYONE READING "era ruled,
-  08-29 admitted" WILL ASSUME THE RACE GREW; IT DID NOT. SECOND: BE ROUND 17
-  CLOSED THE REVIEWER'S THREE HIGH FINDINGS ON THE PATH (5565e39 + row e78a710,
-  the fences wired in the same commit as the producer half as the filing
-  required, and four of BE's own controls went red when the defects they
-  described were fixed -- each INVERTED to assert the repaired property rather
-  than deleted), AND THE STANDING RULE THAT NO FORWARD DAY IS SCORED ON THAT PATH
-  IS STILL IN FORCE. ONLY THE REVIEWER'S RELEASE LIFTS IT. CLOSED FINDINGS ARE
-  NOT A RELEASE, and the two are one commit apart in the log, which is exactly
-  how a reader conflates them. THE COORDINATOR SUPERSEDED ITS OWN NUMBER AT R-498
-  AND I VERIFIED THE REPLACEMENT AT THE ARTIFACT: the Holm denominator for the
-  forward read is 18, NOT the 24 R-497 (F)(4) got by multiplying. At
-  live/pm_research/declarations/be_forward_family_declaration_v1.json (3,760 B,
-  as_of_utc 2026-09-03T05:55:57Z, generated_at_head b717340 -- the R-497 commit
-  itself) I read declared_cell_count 18, holm_denominator 18, a cells list of
-  exactly 18 members, cells_by_convention BY_THRESHOLD 12 / BY_COUNT 6, and
-  count_under_each_alternative pricing 6 / 9 / 12 / 18. THE ENUMERATION EXPLAINS
-  THE ARITHMETIC: BY_COUNT CARRIES NO OPERATING-POINT DIMENSION, so it does not
-  twin the sensitivity arm and 12 + 6 = 18 rather than 12 x 2. THE COORDINATOR
-  MULTIPLIED AND BE ENUMERATED -- rule 10 turned on the coordinator's own
-  arithmetic. AND THE COORDINATOR ACCEPTED MY ROUND-73 CORRECTION WITH AN
-  EXPLANATION THAT MAKES IT SHARPER THAN I FILED IT: the R-497 (D) digest
-  db34da543af6d27f came from ITS OWN GREP, which matched TOL_EXACT,
-  TOL_CENTS_ABS, TOL_RATE_REPORTED_ONLY and the BARE OPENING LINE
-  DECLARED_PREDICATES = { -- THE PREDICATE BODIES ARE INDENTED AND WERE NEVER
-  CAPTURED -- so EVERY PREDICATE IN THAT BLOCK COULD HAVE CHANGED WITH THAT SHA
-  UNMOVED. Three constants and a brace, reported as "the tolerance block". I had
-  filed it as a number that does not reproduce; it is also A CONTROL THAT COULD
-  NOT SEE WHAT IT CLAIMED TO WATCH, which is this programme's rule-16 shape and
-  the second such weakness on the same object -- BEM-R6 found the module's own
-  tolerances_unchanged_since() defeasible for a DIFFERENT reason (its pointer is
-  not inside its own compared block). ONE OBJECT, TWO INDEPENDENT WAYS OF
-  APPEARING TO WATCH SOMETHING IT DID NOT. THE FOURTH USER RULING: THE
-  _stream_tape_rows DRIFT IS ADMITTED (R-499 A), the last of the five decisions
-  open at the 03:23Z consolidation. THE ADMISSION IS CONDITIONAL BY
-  CONSTRUCTION -- and I checked what that means AT THE CODE, because the
-  present tense invites a wrong reading: tape_rows_array_closed() is defined at
-  de_phase4_diag_runner.py:3924 and called from selftest (:2754) and from
-  stream_tape_rows_drift (:4051), and from NEITHER run() NOR preflight() NOR
-  preflight_report(). The module says so in its own voice at :4137 --
-  "`tape_rows_array_closed()` is checked in the suite, not at the moment of the
-  run. A tape truncated BETWEEN that check and the run would hit the new branch
-  and RAISE". SO THE RUN-TIME REFUSAL IS A REQUIREMENT DISPATCHED TO DE ROUND 46,
-  NOT A PROPERTY OF THE LANDED CODE -- the same shape as the era ruling, RECORDED
-  AND NOT YET IMPLEMENTED, and it should be read that way until DE lands it. THE
-  R-459 DIAGNOSTIC WAS DISPATCHED AT 06:41Z AS DE ROUND 46 into the declared
-  OUTDIR data/pm_5min/derived/phase4_diag_r459, priced at 2.36 h floor and ~5.7 h
-  at the fixture rate (feed 1,695 s, assembly 1,680 s, grid 1,086 s, null floor
-  4,021 s; the run REFUSES past a 20x attempt budget rather than overspending).
-  AT MY 06:49:49Z READ THE OUTDIR DID NOT EXIST AND NO phase4_diag PROCESS WAS
-  RUNNING, so the dispatch was with DE and the run had not started by that clock
-  read -- stated as a measurement, not as a contradiction. DE ROUND 45 CORRECTED
-  ROUND 44 AND THE COORDINATOR WITH IT: preflight() raises the FIRST refusal, so
-  it can only prove "at least one gate refuses", and round 44's "the pin is the
-  only blocker" was read off one refusal with FOUR GATES NEVER REACHED -- the
-  coordinator relayed it to the USER as established and records that as its own
-  error. preflight_report() now runs all six gates independently off the SAME
-  list preflight() iterates, and from the fit tree the projection is COMPUTED:
-  called_code alone. THE OPERATIONAL SIGNAL I VERIFIED MYSELF: research.slice
-  MemoryPeak EQUALS MemoryMax EXACTLY (19,742,269,440) -- the slice has been
-  driven flat into its own ceiling -- with MemoryCurrent 2.69 GB and swap 3.38 of
-  4.29 GB used at my read; the dispatch rule is now no 12 GB driver run while the
-  slice is above ~8 GB. And the false alarm is worth keeping: a journal grep for
-  "oom" returned 12 hits, EVERY ONE THE STRING DISK_HEADROOM -- rule 16 exactly,
-  caught only because the hits were READ rather than COUNTED. A NEW QUESTION IS
-  BEING ESTABLISHED AND IT IS RECORDED AS OPEN, NOT AS A FINDING: BE round 18 is
-  establishing whether the race's candidate was ever FROZEN under rule 12. I
-  verified the binding myself rather than take it: the 09-01 receipt names
-  harmful_candidate_manifest_v1.json at sha256 eb8733da2c8e2126..., and
-  `git show 1b53929:data/pm_5min/derived/harmful_candidate_manifest_v1.json`
-  hashes to EXACTLY that value; that blob's freeze_status reads, verbatim, "NOT
-  FROZEN. The freeze is the user's decision and Phase-0 reproduction has not yet
-  run." THE COORDINATOR ASSERTS NOTHING AND NEITHER DO I. TWO THINGS KEEP IT
-  FROM BEING A VERDICT: the receipt's own `frozen` block is about ANCHORS --
-  code and data files compared by sha and materialised into a run dir -- so it
-  means CODE BYTES MATERIALISED REPRODUCIBLY, a different sense of the word from
-  CANDIDATE COMMITTED AS A RACE ENTRANT; and the manifest carries a great deal of
-  freeze-shaped machinery I read at the blob (declared_nulls with net_cents NOT
-  harm share, side x hour strata, n_random 200; target_scores_to_reproduce with
-  values_read_from_artifact_not_transcribed true; a reproduction_contract with
-  completed_under_cap true). NOTHING SPENT: 08-29 and 08-30 unread, no seal
-  opened. SEQUENCING: DE 46 dispatched; the BE 17 re-review is what releases the
-  path; DA holds 20, 21 and 22 unpushed; BE 18 establishing the freeze question.
-  USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -4837,8 +4835,120 @@ flags:
     dead run from a live one. R-500 (E) states the fail-cheap ordering is why it
     cost minutes rather than half an hour: feature_blocks runs BEFORE the
     28-minute feed precisely because it is the stage that can exhaust the cap.
+  STANDING_HAZARD_zero_consumer_five_in_one_day: >-
+    A CLASS, NOT FIVE INCIDENTS, AND THE STANDING HAZARD OF THIS PROGRAMME.
+    SEAT_PROTOCOL 17 already names the shape ("suite-green is not
+    pipeline-wired"); WHAT IS NEW IS THE FREQUENCY -- FIVE zero-consumer or
+    zero-reachability findings on 2026-09-03, EACH FOUND BY A DIFFERENT ROUTE
+    AND NOT ONE OF THEM BY A GREEN SUITE. (i) require_operating_point: every
+    executable call inside selftest(); found by the reviewer PRODUCING a full
+    net-cents-vs-incumbent result with a permutation p from a cutoff read off
+    the scored data. (ii) The SIX EVALUATOR FUNCTIONS of I11-2: falsifier-proven,
+    zero call sites in the runner; found by COUNTING CALL SITES rather than
+    tests. (iii) assert_frozen_contract: ONE call, the exception SWALLOWED by
+    `except Exception: pass`; found by BE 20 ASKING WHAT READS THE BINDING.
+    (iv) The R-486 `governs` stamping: BOTH production call sites deletable with
+    254 checks still passing; found by the coordinator DELETING them, which
+    nobody had been asked to try. (v) counts_toward_race: WRITTEN, NEVER READ;
+    found by the reviewer ASKING WHICH FIELD THE RACE IS ACTUALLY COUNTED BY.
+    FOUR OF THE FIVE WERE FOUND BY DELETING, GREPPING OR ATTACKING RATHER THAN
+    BY RUNNING THE SUITE, AND THE FIFTH BY ASKING WHAT CONSUMES A FIELD. A GREEN
+    SUITE CANNOT SEE ANY OF THEM BY CONSTRUCTION. The operational reading: a new
+    checker or disclosure field is not done when its suite is green -- it is done
+    when something on the run path READS it and a deletion of that read turns the
+    suite RED.
+  be21_fence_fetches_rather_than_receives: >-
+    A STRONGER PROPERTY THAN THE REVIEWER SPECIFIED, and it should read as such
+    rather than as compliance. BE19-R1 asked that require_operating_point CARRY
+    `verification` and `coin` into the object it returns. BE ROUND 21 (a27ccfc +
+    row Q-BE-246) INSTEAD REMOVED THE CALLER'S ABILITY TO SUPPLY THE EVIDENCE AT
+    ALL. VERIFIED BY MEM AT be_forward_metric.py:439-462: an INLINE
+    `verification` block is REFUSED BY NAME -- the module's own words are "the
+    fence fetches its own evidence; it does not accept evidence handed to it by
+    the caller", under a comment reading "SUPPLYING THE EVIDENCE IS THE ACT BEING
+    FORBIDDEN" -- and the declaration must instead name `verification_ref:
+    {path, sha256}`, which the fence OPENS and REHASHES, refusing an unusable ref,
+    a non-existent path ("Nothing was opened, so nothing was verified") and a
+    hash mismatch ("The evidence the fence opened is not the evidence declared"),
+    plus a missing `coin` because both maps are per coin. A FENCE THAT CANNOT BE
+    HANDED ITS OWN EVIDENCE IS A DIFFERENT KIND OF OBJECT FROM ONE THAT CHECKS
+    THE EVIDENCE IT IS HANDED -- and it closes the round-76 shape in which the
+    positive control passed only by hand-injecting what the code dropped.
+  be21_frozen_contract_gate_on_the_run_path: >-
+    THE GATE ROUND 20 SAID WAS MISSING IS NOW ON THE RUN PATH, AND MEM DROVE IT
+    READ-ONLY RATHER THAN READING ITS ROW. frozen_contract_gate is defined at
+    be_forward_day.py:560 and CALLED FROM run_forward_day at :1549. Its docstring
+    is the design in one line: "it refuses what the run DEPENDS on and discloses
+    what it does not -- and the difference is COMPUTED." Driven by MEM: contract
+    HOLDS, all_anchors_match_at_freeze_commit TRUE, disclosed_not_waived TRUE,
+    and n_working_tree_drift 4 WITH ALL FOUR NAMED --
+    harmful_action_eval.py 55ea57b995afdd4c -> 2c4e21936e3fc1d2,
+    harmful_exposure_rows.py 8fb34b0319b0d596 -> 1bbd8e7525fc27ac,
+    harmful_hazard_model.py 0091fe75c38af79e -> 58b8a2c08eea3cc9,
+    harmful_rows_loader.py 8b90c48cfe331e71 -> c53c64223474d29c. SURVIVABILITY
+    IS ASSERTED FROM SOURCE, NOT ASSUMED: the gate runs
+    inspect.getsource(materialise_frozen) at :634 and stamps
+    materialise_frozen_sources_from_the_freeze_commit TRUE, with the stated
+    consequence that "if it ever stops doing so, this gate REFUSES instead of
+    disclosing". AND THE ROUND-76 FINDING IS VISIBLY REPAIRED IN THE SAME OBJECT:
+    manifest_drift reports drifted TRUE with bound_sha256 eb8733da2c8e2126...
+    against disk_sha256 037627531cbe746d... and the keys that differ -- THE SAME
+    DIVERGENCE THAT WAS BEING SWALLOWED BY `except Exception: pass` ONE ROUND AGO
+    IS NOW A NAMED DISCLOSURE ON THE RUN PATH.
+  withdrawal_BINDING_against_edits_not_yet_against_counting: >-
+    THE REVIEWER'S DA 23/24 FILING (workspace/reviews/REVIEW_DA_23_24_2026-09-03
+    .md, filed 2026-09-03T08:14Z, chain read by sha from the shared object store,
+    DA's worktree never read): ITEM 1 IS BINDING -- THE USER'S 08-29 WITHDRAWAL
+    CANNOT BE QUIETLY UNDONE. Driven on a REAL git history the reviewer built:
+    entry REMOVED, entry RE-CITED and DAY SUBSTITUTED (08-30 carrying 08-29's
+    entry) each REFUSE BY NAME as WithdrawalRefused, and THE GUARD IS PROVED
+    NON-VACUOUS because two prior committed versions already carry the registry,
+    so the comparison has something to compare and `vacuous` is False. Adding a
+    day is still allowed -- the property is ONE-WAY, NOT FROZEN, which is right.
+    THE LIMIT MUST TRAVEL WITH THE WORD OR IT WILL BE MISREAD -- DA24-R1,
+    MEDIUM-HIGH: counts_toward_race HAS NO CONSUMER, while da_verdict_check and
+    da_governed_verdict_preflight still validate race_accrual_eligible, WHICH
+    READS TRUE FOR THE WITHDRAWN DAY AT THE HELD TIP. THE WITHDRAWAL IS BINDING
+    AGAINST EDITS AND NOT YET BINDING AGAINST COUNTING. A READER MUST NOT TAKE
+    BINDING TO MEAN THE DAY CANNOT BE COUNTED.
+  MEM_precision_on_da24r1_two_trees_two_answers: >-
+    A PRECISION MEM MEASURED THAT THE FILING DOES NOT STATE, recorded because
+    this programme has been bitten by exactly this before (DA22-R1: a verdict
+    about the file on disk read as a verdict about the day). AT THE LANDED TIP,
+    counts_toward_race APPEARS NOWHERE in live/pm_research -- DA's chain is HELD
+    and the highest landed DA row is still Q-DA-215 -- and the 08-29 verdict ON
+    DISK still reads race_accrual_eligible FALSE with era_admissible FALSE. The
+    TRUE that DA24-R1 is about is what the HELD code computes once the withdrawal
+    lands and era_admissible is corrected to TRUE (the era IS admissible under
+    R-497). BOTH READINGS ARE RIGHT ABOUT DIFFERENT TREES, AND THE FINDING IS
+    ABOUT THE ONE THAT WILL LAND.
+  da24r2_row_claim_SUPERSEDED_flow_intensity_red: >-
+    DA24-R2, MEDIUM, AND IT IS A ROW CORRECTION: DA's RR12-1 fix is a REGRESSION
+    IN THE CANONICAL TREE. flow_intensity's selftest is RED AT THE HELD TIP ON
+    BOTH LAUNCHERS -- the check fails whenever CODE_ROOT == DATA_ROOT, which is
+    the canonical tree -- WHILE THE ROW REPORTS IT GREEN AT 54. THE ROW'S CLAIM
+    IS RECORDED HERE AS SUPERSEDED. A SUITE THAT IS RED IN THE CANONICAL TREE
+    WILL BE RED AT LANDING. Reviewer's suites at the held tip, both launchers:
+    da_race_withdrawals 25, da_forward_day_verify 301 (0 skipped), pm_tape_density
+    16, da_verdict_check 22 -- rc 0; flow_intensity rc 1.
+  da24_r3_r4_two_more_open: >-
+    DA24-R3, MEDIUM: the canonical-write "cannot evidence" refusal is keyed on
+    `--out` into the canonical dir, but THE UNIT WRITES TO A TEMP PATH, so it
+    never fires where it matters; and assert_withdrawal_carried IGNORES the
+    `monotone: None` it is handed (the shape a run from a non-git tree produces:
+    status NO_REPOSITORY, monotone None, vacuous True). DA24-R4, LOW: the
+    monotonicity comparison covers PRESENCE and `authority` only, so `reason` and
+    `note` are SILENTLY REWRITABLE. DISPOSITION AMEND, WITH DA24-R1 AND DA24-R2
+    TO LAND BEFORE THE CHAIN DOES.
+  release_gate_still_shut_third_review_in_flight: >-
+    THE RELEASE IS STILL NOT GRANTED. The THIRD release review is in flight (BE
+    rounds 20 and 21 following the BE19 filing's AMEND). UNTIL IT RELEASES, NO
+    FORWARD DAY IS SCORED -- which continues to mean THE 08-29 READ THE USER'S
+    RULING PRESERVED HAS NOT HAPPENED AND CANNOT YET. Two release reviews have
+    now closed findings without granting the release (BE17 fixes, BE19 fixes);
+    RECORD THE GATE AS SHUT UNTIL A FILING SAYS RELEASED IN ITS OWN WORDS.
 focus: >
-  As-of 2026-09-03T08:05Z, build and test the offline model mechanism-first
+  As-of 2026-09-03T08:30Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -5054,7 +5164,16 @@ focus: >
   by check. And Phase-0 is HALF-ANSWERED: the eight declared target values
   reproduce bit-identically in an artifact that post-dates the freeze and is not
   the snapshot, but the PROCEDURE is not evidenced, because bytes cannot show
-  which process wrote them.
+  which process wrote them. ROUND 77: the zero-reachability half is REPAIRED --
+  a frozen-contract gate is now ON the run path, driven read-only by MEM, and the
+  eb8733da/037627 divergence is a NAMED DISCLOSURE instead of a swallowed
+  exception -- while the release GATE REMAINS SHUT with a third review in flight.
+  AND THE STANDING HAZARD OF THIS PROGRAMME IS NOW NAMED WITH ITS INSTANCES: FIVE
+  zero-consumer or zero-reachability findings in one day, each by a different
+  route and NONE by a green suite. The USER's 08-29 withdrawal is BINDING AGAINST
+  EDITS (every undo route refuses by name, the guard proved non-vacuous) and NOT
+  YET BINDING AGAINST COUNTING (counts_toward_race has no consumer while the
+  consumers still validate race_accrual_eligible).
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -5397,8 +5516,19 @@ tasks:
   - id: e3-screen
     phase: 2
     name: Hazard plan §10.9 — unchanged forward scoring on >=5 complete days
-    status: G2-of-5-BY-CHOICE-and-the-RELEASE-GATE-IS-SHUT-BE19-R1-BLOCKING
+    status: G2-of-5-BY-CHOICE-and-the-RELEASE-GATE-IS-SHUT-third-review-in-flight
     notes: |
+      UPDATED 2026-09-03T08:30Z (MEM round 77): THE GATE IS STILL SHUT AND THE
+      THIRD RELEASE REVIEW IS IN FLIGHT. BE round 21 answered BE19-R1 with a
+      STRONGER property than was asked for -- the fence now FETCHES its own
+      evidence via `verification_ref: {path, sha256}` and REFUSES an inline
+      `verification` block, "because supplying the evidence is the act being
+      forbidden" -- and it put the frozen-contract gate ON the run path
+      (frozen_contract_gate at be_forward_day.py:560, called from
+      run_forward_day at :1549). TWO RELEASE REVIEWS HAVE NOW CLOSED FINDINGS
+      WITHOUT GRANTING THE RELEASE. RECORD THE GATE AS SHUT UNTIL A FILING SAYS
+      RELEASED IN ITS OWN WORDS. NO FORWARD DAY IS SCORED, so the 08-29 read the
+      USER's ruling preserved HAS NOT HAPPENED AND CANNOT YET.
       UPDATED 2026-09-03T08:05Z (MEM round 76): THE RELEASE IS STILL NOT
       GRANTED AND THE GATE IS SHUT. The reviewer's BE19 filing (07:58Z, pinned
       cd69879) is AMEND -- NOT RELEASED -- on BE19-R1, BLOCKING: the production
@@ -5581,8 +5711,23 @@ tasks:
   - id: candidate-freeze-status
     phase: 2
     name: Was the race's candidate ever FROZEN under rule 12? — ESTABLISHED YES (BE round 18); the alarm is refuted
-    status: REFUTED-the-candidate-WAS-frozen-but-the-BINDING-is-unread-and-Phase-0-half-answered
+    status: REFUTED-candidate-WAS-frozen-BINDING-now-DISCLOSED-on-the-run-path-Phase-0-half-answered
     notes: |
+      UPDATE 2026-09-03T08:30Z (MEM round 77): THE ZERO-REACHABILITY HALF IS
+      REPAIRED AND THE PHASE-0 HALF IS NOT. BE round 21 put a frozen-contract
+      gate ON the run path (be_forward_day.py:560, called at :1549), and MEM
+      DROVE IT READ-ONLY: contract HOLDS, all_anchors_match_at_freeze_commit
+      TRUE, disclosed_not_waived TRUE, n_working_tree_drift 4 with all four
+      named, and materialise_frozen_sources_from_the_freeze_commit TRUE asserted
+      from inspect.getsource(materialise_frozen) at :634 rather than assumed --
+      with the stated consequence that if it ever stops sourcing from the freeze
+      commit, THE GATE REFUSES INSTEAD OF DISCLOSING. manifest_drift now reports
+      drifted TRUE with bound eb8733da2c8e2126 against disk 037627531cbe746d and
+      the keys that differ: THE SAME DIVERGENCE THAT WAS SWALLOWED BY
+      `except Exception: pass` ONE ROUND AGO IS NOW A NAMED DISCLOSURE ON THE RUN
+      PATH. The gate refuses what the run DEPENDS on and discloses what it does
+      not, and the difference is COMPUTED. PHASE-0 IS STILL HALF-ANSWERED and is
+      unchanged by any of this.
       UPDATE 2026-09-03T08:05Z (MEM round 76): THE ALARM STAYS REFUTED AND TWO
       THINGS BEHIND IT ARE NOT CLEAN. (1) THE BINDING ALREADY FAILS AND NOTHING
       READS IT. assert_frozen_contract -- the ONLY checker comparing the

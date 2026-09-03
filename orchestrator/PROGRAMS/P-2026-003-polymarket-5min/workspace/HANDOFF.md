@@ -1,6 +1,19 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T08:05Z (MEM round 76) — **THE GATE IS SHUT, THE BINDING
+Updated: 2026-09-03T08:30Z (MEM round 77) — **FIVE ZERO-CONSUMER FINDINGS IN
+ONE DAY, NONE OF THEM FOUND BY A GREEN SUITE.** That is a **class, not five
+incidents**, and it is recorded below as a **standing hazard with its instances
+named**. **The release is still NOT granted** — a third review is in flight; two
+have now closed findings without granting it, so **the gate reads shut until a
+filing says RELEASED in its own words**, and the 08-29 read the USER's ruling
+preserved still cannot happen. **BE round 21 answered BE19-R1 with a stronger
+property than was asked for:** the fence now **fetches** its own evidence and
+**refuses** an inline verification block — *supplying the evidence is the act
+being forbidden* — and the frozen-contract gate is **on the run path**, which I
+drove read-only. **The USER's 08-29 withdrawal is BINDING against edits and NOT
+YET binding against counting.** **USER items: ONE.**
+
+Previously (MEM round 76) — 2026-09-03T08:05Z — **THE GATE IS SHUT, THE BINDING
 ALREADY FAILS AND NOTHING READS IT, AND MY OWN "LAST ENTRY" CLAIM WAS STALE BY
 SEVEN MINUTES.** **The release is NOT granted** — the reviewer's BE19 filing is
 **AMEND, NOT RELEASED**: the production accessor chain **refuses its own fence**
@@ -90,6 +103,141 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### STANDING HAZARD — zero-consumer and zero-reachability findings (five in one day, none found by a green suite)
+>
+> **This is a class, not a list of incidents, and it is the standing hazard of
+> this programme.** `SEAT_PROTOCOL` rule 17 already names the shape — *suite-green
+> is not pipeline-wired*. **What is new is the frequency: five on 2026-09-03,
+> each found by a different route, and not one of them by a green suite.**
+>
+> | # | thing | what was wrong | how it was found |
+> |---|---|---|---|
+> | i | `require_operating_point` | every executable call inside `selftest()` | the reviewer **produced** a full net-cents-vs-incumbent result with a permutation p from a cutoff read off the scored data |
+> | ii | the six evaluator functions (I11-2) | falsifier-proven, **zero call sites** in the runner | **counting call sites**, not tests |
+> | iii | `assert_frozen_contract` | one call, the exception **swallowed** by `except Exception: pass` | BE 20 **asking what reads the binding** |
+> | iv | the R-486 `governs` stamping | **both** production call sites deletable with 254 checks still passing | the coordinator **deleting them** — which nobody had been asked to try |
+> | v | `counts_toward_race` | **written, never read** | the reviewer **asking which field the race is actually counted by** |
+>
+> **Four of the five were found by deleting, grepping or attacking rather than by
+> running the suite, and the fifth by asking what consumes a field. A green suite
+> cannot see any of them by construction.**
+>
+> **The operational reading, and it is the reason this sits at the top of the
+> file:** a new checker or disclosure field **is not done when its suite is
+> green** — it is done when something **on the run path reads it** and **a
+> deletion of that read turns the suite red**.
+>
+> ### 2026-09-03T08:30Z — MEM round 77: the fence now fetches, the gate is on the path, and the withdrawal binds against edits only
+>
+> **THE RELEASE IS STILL NOT GRANTED.** The **third** release review is in
+> flight. **Two release reviews have now closed findings without granting the
+> release** (the BE17 fixes, then the BE19 fixes). **Record the gate as shut
+> until a filing says RELEASED in its own words.** Until then **no forward day is
+> scored** — which continues to mean **the 08-29 read the USER's ruling preserved
+> has not happened and cannot yet**.
+>
+> **BE ROUND 21 CHANGED THE FENCE'S SHAPE, AND IT IS A STRONGER PROPERTY THAN THE
+> REVIEWER SPECIFIED — it should read as such rather than as compliance.**
+> BE19-R1 asked that `require_operating_point` **carry** `verification` and `coin`
+> into what it returns. **BE instead removed the caller's ability to supply the
+> evidence at all.** Verified by me at `be_forward_metric.py:439-462`: an **inline
+> `verification` block is REFUSED by name** — the module's own words are *"the
+> fence fetches its own evidence; it does not accept evidence handed to it by the
+> caller"*, under a comment reading **"supplying the evidence is the act being
+> forbidden"** — and the declaration must instead name **`verification_ref:
+> {path, sha256}`**, which the fence **opens and rehashes**, refusing an unusable
+> ref, a non-existent path (*"Nothing was opened, so nothing was verified"*) and a
+> hash mismatch (*"The evidence the fence opened is not the evidence declared"*),
+> plus a missing `coin` because both maps are per coin. **A fence that cannot be
+> handed its own evidence is a different kind of object from one that checks the
+> evidence it is handed** — and it closes the round-76 shape in which the positive
+> control passed only by hand-injecting what the code dropped.
+>
+> **AND THE FROZEN-CONTRACT GATE IS ON THE RUN PATH — I drove it read-only rather
+> than reading its row.** `frozen_contract_gate` is defined at
+> `be_forward_day.py:560` and **called from `run_forward_day` at `:1549`**. Its
+> docstring is the design in one line: *"it refuses what the run DEPENDS on and
+> discloses what it does not — and the difference is COMPUTED."* Driving it
+> returns **`contract` HOLDS**, `all_anchors_match_at_freeze_commit` **true**,
+> `disclosed_not_waived` **true**, and **`n_working_tree_drift` 4 with all four
+> named**:
+>
+> | anchor | bound | in tree |
+> |---|---|---|
+> | `harmful_action_eval.py` | `55ea57b995afdd4c` | `2c4e21936e3fc1d2` |
+> | `harmful_exposure_rows.py` | `8fb34b0319b0d596` | `1bbd8e7525fc27ac` |
+> | `harmful_hazard_model.py` | `0091fe75c38af79e` | `58b8a2c08eea3cc9` |
+> | `harmful_rows_loader.py` | `8b90c48cfe331e71` | `c53c64223474d29c` |
+>
+> **Survivability is asserted from source, not assumed:** the gate runs
+> `inspect.getsource(materialise_frozen)` at `:634` and stamps
+> `materialise_frozen_sources_from_the_freeze_commit` **true**, with the stated
+> consequence that *"if it ever stops doing so, this gate refuses instead of
+> disclosing"*. **And the round-76 finding is visibly repaired in the same
+> object:** `manifest_drift` reports `drifted` **true**, `bound_sha256`
+> **`eb8733da2c8e2126…`** against `disk_sha256` **`037627531cbe746d…`**, and the
+> keys that differ — **the same divergence that was being swallowed by
+> `except Exception: pass` one round ago is now a named disclosure on the run
+> path.**
+>
+> **BE 20's two halves both stand** and are already in these files from round 76:
+> the zero-reachability finding (instance iii above), and **Phase-0
+> half-answered** — values reproduced cent-exact on all eight fields from a
+> comparator **post-dating the freeze by ~4 hours**, **procedure not evidenced**,
+> and v1/v2 **excluded as ancestors rather than reproductions**.
+>
+> ---
+>
+> **THE REVIEWER'S DA 23/24 FILING: ITEM 1 IS BINDING — AND THE LIMIT MUST TRAVEL
+> WITH THE WORD OR IT WILL BE MISREAD.**
+>
+> **The withdrawal cannot be quietly undone.** Driven on a **real git history the
+> reviewer built**: entry **removed**, entry **re-cited**, and **day substituted**
+> (08-30 carrying 08-29's entry) each **refuse by name** as `WithdrawalRefused`.
+> **The guard is proved non-vacuous** — two prior committed versions already carry
+> the registry, so the comparison has something to compare and `vacuous` is false.
+> **Adding a day is still allowed**, which is right: the property is **one-way,
+> not frozen**.
+>
+> **DA24-R1 (MEDIUM-HIGH) is the limit:** `counts_toward_race` **has no
+> consumer**, while `da_verdict_check` and `da_governed_verdict_preflight` still
+> validate `race_accrual_eligible`, **which reads true for the withdrawn day at
+> the held tip**. **So the withdrawal is BINDING AGAINST EDITS and NOT YET BINDING
+> AGAINST COUNTING. A reader must not take BINDING to mean the day cannot be
+> counted.**
+>
+> **One precision I measured that the filing does not state**, recorded because
+> this programme has been bitten by exactly it before (DA22-R1: a verdict about
+> the file on disk read as a verdict about the day): **at the landed tip
+> `counts_toward_race` appears nowhere in `live/pm_research`** — DA's chain is
+> held and the highest landed DA row is still **Q-DA-215** — and **the 08-29
+> verdict on disk still reads `race_accrual_eligible` false with `era_admissible`
+> false**. The **true** DA24-R1 is about is what the **held** code computes once
+> the withdrawal lands and `era_admissible` is corrected to true. **Both readings
+> are right about different trees, and the finding is about the one that will
+> land.**
+>
+> **DA24-R2 is a row correction, and I record the row's claim as superseded:**
+> DA's RR12-1 fix is a **regression in the canonical tree** — `flow_intensity` is
+> **RED on both launchers whenever `CODE_ROOT == DATA_ROOT`**, which is the
+> canonical tree — **while the row reports it green at 54**. **A suite that is red
+> in the canonical tree will be red at landing.** Reviewer's suites at the held
+> tip: `da_race_withdrawals` 25, `da_forward_day_verify` 301 (0 skipped),
+> `pm_tape_density` 16, `da_verdict_check` 22 — rc 0; `flow_intensity` **rc 1**.
+>
+> **Two more open:** **DA24-R3** (MEDIUM) — the canonical-write *"cannot
+> evidence"* refusal is keyed on `--out` into the canonical dir while **the unit
+> writes to a temp path**, so it never fires where it matters, and
+> `assert_withdrawal_carried` **ignores the `monotone: None`** it is handed;
+> **DA24-R4** (LOW) — monotonicity compares **presence and `authority` only**, so
+> `reason` and `note` stay **silently rewritable**. **Disposition AMEND, with
+> DA24-R1 and DA24-R2 to land before the chain does.**
+>
+> **State:** DA rounds 20–24 all **held** (Q-DA-215), DE 48 **held** (Q-DE-62),
+> the R-459 run still **attempted-and-failed** with its outdir still one line and
+> no terminal record, **G 2 of 5 by choice**, earliest G = 5 **2026-09-06**.
+> **USER items: ONE — the Phase-2 winner, and the race decides it.**
 
 > ### 2026-09-03T08:05Z — MEM round 76: the gate is shut, the binding already fails and nothing reads it
 >

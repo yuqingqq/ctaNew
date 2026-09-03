@@ -5421,3 +5421,108 @@ DE 48 and R-500. Join rule as in batch 1.
   cannot see; DE 44 landed and awaits verification. USER ITEMS: ONE -- the
   Phase-2 winner, and the race decides it.
 ```
+
+## Batch 83 — archived 2026-09-03T08:30Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-77 true-up of BE 20/21 and the reviewer's DA 23/24 filing.
+Join rule as in batch 1.
+
+```yaml
+  2026-09-03T06:50Z (MEM ROUND 74 -- TWO RULINGS THAT DO NOT CHANGE THE STATE A
+  READER WILL ASSUME THEY CHANGED). R-498 and R-499 swept; nothing run but
+  read-only reads at the artifacts. TWO THINGS MUST BE READ EXACTLY AND BOTH ARE
+  EASY TO GET WRONG. FIRST: THE ERA RULING DOES NOT PRODUCE G=3. DA round 22
+  answered BE13's blocker (a) BY COMPUTATION and reports 08-29 and 08-30
+  UNREACHABLE_BY_ANY_HONEST_ROUTE -- REPORTED TO ME IN DISPATCH AND NOT LANDED:
+  I looked, and the token appears NOWHERE in the register or in
+  live/pm_research/*.py at 37adf1d, the highest DA row in the Q-table is
+  Q-DA-215, and DA's rounds 20, 21 and 22 are all still unpushed. SO I RECORD THE
+  FINDING AS THE COORDINATOR'S REPORT AND THE CONSEQUENCE AS MY OWN
+  MEASUREMENT: at the tip ERA_ADMISSIBLE at da_forward_day_verify.py:894 STILL
+  READS "clob_v3_1": False # pre-O1, the only 08-29 artifact on disk still reads
+  race_accrual_eligible FALSE, and no new day verdict exists. G REMAINS 2 OF 5
+  AND THE EARLIEST G=5 IS UNCHANGED AT 2026-09-06. ANYONE READING "era ruled,
+  08-29 admitted" WILL ASSUME THE RACE GREW; IT DID NOT. SECOND: BE ROUND 17
+  CLOSED THE REVIEWER'S THREE HIGH FINDINGS ON THE PATH (5565e39 + row e78a710,
+  the fences wired in the same commit as the producer half as the filing
+  required, and four of BE's own controls went red when the defects they
+  described were fixed -- each INVERTED to assert the repaired property rather
+  than deleted), AND THE STANDING RULE THAT NO FORWARD DAY IS SCORED ON THAT PATH
+  IS STILL IN FORCE. ONLY THE REVIEWER'S RELEASE LIFTS IT. CLOSED FINDINGS ARE
+  NOT A RELEASE, and the two are one commit apart in the log, which is exactly
+  how a reader conflates them. THE COORDINATOR SUPERSEDED ITS OWN NUMBER AT R-498
+  AND I VERIFIED THE REPLACEMENT AT THE ARTIFACT: the Holm denominator for the
+  forward read is 18, NOT the 24 R-497 (F)(4) got by multiplying. At
+  live/pm_research/declarations/be_forward_family_declaration_v1.json (3,760 B,
+  as_of_utc 2026-09-03T05:55:57Z, generated_at_head b717340 -- the R-497 commit
+  itself) I read declared_cell_count 18, holm_denominator 18, a cells list of
+  exactly 18 members, cells_by_convention BY_THRESHOLD 12 / BY_COUNT 6, and
+  count_under_each_alternative pricing 6 / 9 / 12 / 18. THE ENUMERATION EXPLAINS
+  THE ARITHMETIC: BY_COUNT CARRIES NO OPERATING-POINT DIMENSION, so it does not
+  twin the sensitivity arm and 12 + 6 = 18 rather than 12 x 2. THE COORDINATOR
+  MULTIPLIED AND BE ENUMERATED -- rule 10 turned on the coordinator's own
+  arithmetic. AND THE COORDINATOR ACCEPTED MY ROUND-73 CORRECTION WITH AN
+  EXPLANATION THAT MAKES IT SHARPER THAN I FILED IT: the R-497 (D) digest
+  db34da543af6d27f came from ITS OWN GREP, which matched TOL_EXACT,
+  TOL_CENTS_ABS, TOL_RATE_REPORTED_ONLY and the BARE OPENING LINE
+  DECLARED_PREDICATES = { -- THE PREDICATE BODIES ARE INDENTED AND WERE NEVER
+  CAPTURED -- so EVERY PREDICATE IN THAT BLOCK COULD HAVE CHANGED WITH THAT SHA
+  UNMOVED. Three constants and a brace, reported as "the tolerance block". I had
+  filed it as a number that does not reproduce; it is also A CONTROL THAT COULD
+  NOT SEE WHAT IT CLAIMED TO WATCH, which is this programme's rule-16 shape and
+  the second such weakness on the same object -- BEM-R6 found the module's own
+  tolerances_unchanged_since() defeasible for a DIFFERENT reason (its pointer is
+  not inside its own compared block). ONE OBJECT, TWO INDEPENDENT WAYS OF
+  APPEARING TO WATCH SOMETHING IT DID NOT. THE FOURTH USER RULING: THE
+  _stream_tape_rows DRIFT IS ADMITTED (R-499 A), the last of the five decisions
+  open at the 03:23Z consolidation. THE ADMISSION IS CONDITIONAL BY
+  CONSTRUCTION -- and I checked what that means AT THE CODE, because the
+  present tense invites a wrong reading: tape_rows_array_closed() is defined at
+  de_phase4_diag_runner.py:3924 and called from selftest (:2754) and from
+  stream_tape_rows_drift (:4051), and from NEITHER run() NOR preflight() NOR
+  preflight_report(). The module says so in its own voice at :4137 --
+  "`tape_rows_array_closed()` is checked in the suite, not at the moment of the
+  run. A tape truncated BETWEEN that check and the run would hit the new branch
+  and RAISE". SO THE RUN-TIME REFUSAL IS A REQUIREMENT DISPATCHED TO DE ROUND 46,
+  NOT A PROPERTY OF THE LANDED CODE -- the same shape as the era ruling, RECORDED
+  AND NOT YET IMPLEMENTED, and it should be read that way until DE lands it. THE
+  R-459 DIAGNOSTIC WAS DISPATCHED AT 06:41Z AS DE ROUND 46 into the declared
+  OUTDIR data/pm_5min/derived/phase4_diag_r459, priced at 2.36 h floor and ~5.7 h
+  at the fixture rate (feed 1,695 s, assembly 1,680 s, grid 1,086 s, null floor
+  4,021 s; the run REFUSES past a 20x attempt budget rather than overspending).
+  AT MY 06:49:49Z READ THE OUTDIR DID NOT EXIST AND NO phase4_diag PROCESS WAS
+  RUNNING, so the dispatch was with DE and the run had not started by that clock
+  read -- stated as a measurement, not as a contradiction. DE ROUND 45 CORRECTED
+  ROUND 44 AND THE COORDINATOR WITH IT: preflight() raises the FIRST refusal, so
+  it can only prove "at least one gate refuses", and round 44's "the pin is the
+  only blocker" was read off one refusal with FOUR GATES NEVER REACHED -- the
+  coordinator relayed it to the USER as established and records that as its own
+  error. preflight_report() now runs all six gates independently off the SAME
+  list preflight() iterates, and from the fit tree the projection is COMPUTED:
+  called_code alone. THE OPERATIONAL SIGNAL I VERIFIED MYSELF: research.slice
+  MemoryPeak EQUALS MemoryMax EXACTLY (19,742,269,440) -- the slice has been
+  driven flat into its own ceiling -- with MemoryCurrent 2.69 GB and swap 3.38 of
+  4.29 GB used at my read; the dispatch rule is now no 12 GB driver run while the
+  slice is above ~8 GB. And the false alarm is worth keeping: a journal grep for
+  "oom" returned 12 hits, EVERY ONE THE STRING DISK_HEADROOM -- rule 16 exactly,
+  caught only because the hits were READ rather than COUNTED. A NEW QUESTION IS
+  BEING ESTABLISHED AND IT IS RECORDED AS OPEN, NOT AS A FINDING: BE round 18 is
+  establishing whether the race's candidate was ever FROZEN under rule 12. I
+  verified the binding myself rather than take it: the 09-01 receipt names
+  harmful_candidate_manifest_v1.json at sha256 eb8733da2c8e2126..., and
+  `git show 1b53929:data/pm_5min/derived/harmful_candidate_manifest_v1.json`
+  hashes to EXACTLY that value; that blob's freeze_status reads, verbatim, "NOT
+  FROZEN. The freeze is the user's decision and Phase-0 reproduction has not yet
+  run." THE COORDINATOR ASSERTS NOTHING AND NEITHER DO I. TWO THINGS KEEP IT
+  FROM BEING A VERDICT: the receipt's own `frozen` block is about ANCHORS --
+  code and data files compared by sha and materialised into a run dir -- so it
+  means CODE BYTES MATERIALISED REPRODUCIBLY, a different sense of the word from
+  CANDIDATE COMMITTED AS A RACE ENTRANT; and the manifest carries a great deal of
+  freeze-shaped machinery I read at the blob (declared_nulls with net_cents NOT
+  harm share, side x hour strata, n_random 200; target_scores_to_reproduce with
+  values_read_from_artifact_not_transcribed true; a reproduction_contract with
+  completed_under_cap true). NOTHING SPENT: 08-29 and 08-30 unread, no seal
+  opened. SEQUENCING: DE 46 dispatched; the BE 17 re-review is what releases the
+  path; DA holds 20, 21 and 22 unpushed; BE 18 establishing the freeze question.
+  USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
+```
