@@ -4,163 +4,46 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
-  2026-09-03T02:25Z (MEM ROUND 71 -- A BASELINE THAT DEPENDS ON WHOSE COMMIT CAME
-  LAST). R-494 and the reviewer's DA-20 filing swept; nothing run; every check at
-  the blob. THE DISPOSITION IS THE NARROWEST THIS PROGRAMME HAS ISSUED AND THE
-  SHAPE IS WORTH NAMING: HOLD FOR ONE ITEM, RELEASE THE REST -- not "hold the
-  round" and not "release with findings" but ONE ITEM HELD, EVERYTHING ELSE
-  RELEASED, with DA REBUILDING THE HELD CHAIN (still unpushed) RATHER THAN
-  PATCHING ON TOP OF IT. A HOLD THAT NAMES ONE ITEM IS A HOLD SOMEBODY CAN CLEAR;
-  A HOLD ON A ROUND IS A HOLD ON A SEAT. THE ROW-ONLY-TIP PROPERTY HAS NOW REACHED
-  THE REVIEWER'S OWN BASELINE AND I VERIFIED THE COUNTEREXAMPLE IS MINE: at
-  5a11ee9, my round-68 commit, the diff touches STATUS.yml, COORDINATION.md,
-  HANDOFF.md and the archive and EXACTLY ZERO of the four DA .py files
-  (intersection counted: 0), so the fixture's git add stages nothing, the commit
-  is EMPTY, and THE UNMUTATED PRE-ROUND MODULE IS RED at the CO-10 precondition
-  (DA18-R1 live) -- the reviewer's "unmutated 38 rc 0" therefore HOLDS ONLY WHERE
-  HEAD~1 DIFFERS IN THOSE FOUR FILES. THAT IS THE FOURTH APPEARANCE OF THIS
-  PROPERTY AND ITS MOST CONSEQUENTIAL FORM: round 65 named the wrong author on an
-  artifact, round 66 emptied a fixture commit, round 67 labelled a version by a
-  commit that did not author it, and ROUND 71 DECIDES WHETHER A CONTROL'S BASELINE
-  IS GREEN. A MEASUREMENT THAT IS TIP-CONDITIONAL IS NOT WRONG, IT IS
-  UNDER-SPECIFIED, AND THE MISSING CLAUSE IS WHICH COMMIT CAME LAST -- recorded so
-  that any future "it was green before" carries the tip it was green at. TWO
-  PREMISES WERE CORRECTED IN DIFFERENT DIRECTIONS THIS ROUND, WHICH IS THE SYSTEM
-  WORKING: the reviewer SUPERSEDED R-493's "run-twice alone" sentence IN-BAND as
-  too strong and drove LANDED RED by replacing the fixture's git add with git
-  status; and DA'S OWN "GREEN BEFORE" DOES NOT REPRODUCE, the CO-10-returning
-  mutant having been ALREADY RED at the DA16-R1 falsifier in the pre-round module
-  (DA20-R1). MY ROUND-70 MEASUREMENT IS NOW A FILED FINDING: both production
-  annotate_governance wirings remain deletable with 254 GREEN -- DA20-R2, MEDIUM,
-  AND THE ONE ITEM HELD -- travelling from an unruled coordinator measurement to a
-  reviewer finding to the single blocker on a chain WITHOUT ANYBODY DECIDING IT IN
-  PASSING; the closure asks for TWO RULE-15 FALSIFIERS, TAPE-INDEPENDENT. DA18-R1
-  IS CLOSED WITH THREE FALSIFIERS, and DA17-R1 and the host-load FORM with it,
-  while THE CLASS SCANS CAME BACK CLEAN -- no other silent shrink, no other
-  unnoticed wiring -- which is what turns three closures into a BOUNDED STATEMENT
-  rather than three anecdotes. ONE BOOKKEEPING INSTRUCTION IMPLEMENTED EXACTLY,
-  because getting it wrong would lose provenance: d37c3d9 and 0cd18ba REMAIN THE
-  HELD CHAIN NOW and become SUPERSEDED-UNPUSHED ONLY ONCE DA REPORTS THE NEW SHAS;
-  and Q-DA-216 KEEPS ITS NUMBER since the row never landed -- nothing to
-  supersede, only to correct, with the superseded unpushed shas named as
-  provenance. UNCHANGED: nothing on the unit path moves; the 09-04 00:06Z run is
-  on the landed chain either way; DA 20's landing is AFTER FRI 2026-09-04 00:06:00
-  UTC, ON THE REBUILT CHAIN, AFTER THE REVIEWER'S ONE-ITEM ROUND; DE rests at
-  5658f24; BE 12 in flight; the reviewer on standby until DA's rebuilt READY or BE
-  12, whichever first. USER ITEMS: FIVE, UNCHANGED -- the 09-02 accrual (R-486
-  recommends ACCRUE, UNRULED), the Phase-2 winner, the content-liveness v2 freeze,
-  the addendum v2 package (five asks; runner at 5658f24, RELEASED), the 09-04 run
-  on the landed chain (no pin, no install). UNCHANGED: the 011 family 12 of 24
-  with Q4 failing; the sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-03T02:08Z (MEM ROUND 70 -- FOUR CHECKS THAT COULD NOT FIRE, AND A FIFTH
-  NOBODY HAD LOOKED FOR). R-493 and the DA-20 request swept; nothing run; the held
-  chain read BY SHA FROM THE SHARED OBJECT STORE, never from DA's worktree.
-  EVERYTHING I COULD CHECK, I CHECKED, AND IT HOLDS: d37c3d9 (01:18:02Z, parent
-  5a11ee9 = my round-68 commit) changes FOUR FILES, +748/-54 --
-  da_blackout_mask 10d02c092939be48, da_forward_day_verify bb7213d6e4f78dee with
-  EXPECTED_CHECKS 247 -> 254 (247 confirmed at b950e55), pm_host_load_join
-  8689db8b34697d4b, and a NEW fixture fixtures/sysstat_parser_control.sa at
-  31,428 B, d663ce6b -- with row-only child 0cd18ba. IT IS NOT ON THE BRANCH:
-  HELD AND UNPUSHED, and the state files say so. AND THE REASON THAT MATTERS
-  TONIGHT: THE UNIT PATH DOES NOT MOVE -- I compared both legs against b950e55,
-  da_midnight_verify.sh 4d79d79a2afc8346 and v5_deploy_gates.py
-  b6e4b23a8180a641, BYTE-IDENTICAL -- so 748 LINES OF NEW WORK SIT BESIDE THE
-  09-04 RUN WITHOUT TOUCHING IT, which is what "builds now, holds the landing"
-  was supposed to mean, DEMONSTRATED RATHER THAN ASSERTED. THE FINDING OF THE
-  ROUND IS ONE DA DID NOT MAKE AND IT IS RULE 17 IN ITS PUREST FORM: deleting
-  EITHER production annotate_governance call -- day level or per coin -- LEAVES
-  THE SUITE GREEN AT 254, so THE WIRING HAS NO FALSIFIER IN THE SUITE. In a round
-  titled for FOUR CHECKS THAT COULD NOT FIRE, the measurement found A FIFTH THING
-  THAT CANNOT FIRE: THE CALL ITSELF. A SUITE CAN PROVE EVERY FUNCTION AND STILL
-  PROVE NOTHING ABOUT WHETHER ANYTHING CALLS THEM, and the only way that surfaces
-  is a deletion nobody was asked to try. Routed to the reviewer as item 5,
-  UNRULED -- the right handling: the coordinator measured it and did not also rule
-  it. DA'S OWN CLOSURES ARE STRONG WHERE THEY LAND: DA18-R1 -- MY round-66
-  finding, whose cause was MY OWN row-only commits -- is reproduced AS A DEFECT by
-  an out-of-module replay (rc 1 "nothing to commit" at the row-only tip; rc 0 with
-  the plant) and CLOSED by the plant plus AN RC CHECK, the fix checking the return
-  code that was discarded; DA17-R1's CO-10-returning mutant is RED at the HEAD~1
-  falsifier; and the host-load regression control was reproduced against the OLD
-  module where the (3b) defect is LIVE -- SEPTEMBER sa01 PRINTED AS 2026-08-01
-  WITH AN UNCONDITIONAL TRAILER -- A REGRESSION CONTROL THAT REPRODUCES THE DEFECT
-  IN THE MODULE IT REPLACES BEING THE STRONGEST FORM OF IT. TWO UNREPAIRED
-  OBSERVATIONS ARE CARRIED AS DA'S OWN, NOT AS CLOSURES: under a TAPELESS
-  PM_DATA_ROOT the preflight goes 39 -> 38 and verdict_check 21 -> 19 with RC 0
-  AND NO SKIP NAMED -- CHECKS DISAPPEARING SILENTLY RATHER THAN BEING NAMED AS
-  SKIPS, this programme's own rule 11 -- and pm_host_load_join resolves data/ from
-  __file__ with NO PM_DATA_ROOT BRANCH. ONE NON-FINDING RECORDED AS A NON-FINDING
-  because otherwise someone rediscovers it at 3 a.m.: BE's transient prunable
-  be-r10-c3-stale worktree entries at c511750 (36-37 at 01:58Z, back to 34 by
-  02:02Z) are BE ROUND 12'S FIXTURES -- a count that returns to normal on its own
-  is a fixture, and saying so costs one line now and an hour later. SEQUENCING:
-  the reviewer has DA 20 HELD (eight items, THE LANDING NOT PART OF THE ROUND); DA
-  holds d37c3d9/0cd18ba until the coordinator calls the landing AFTER FRI
-  2026-09-04 00:06:00 UTC; DE rests at 5658f24; BE 12 in flight. USER ITEMS: FIVE,
-  UNCHANGED -- the 09-02 accrual (R-486 recommends ACCRUE, UNRULED), the Phase-2
-  winner, the content-liveness v2 freeze, the addendum v2 package (five asks;
-  runner at 5658f24, RELEASED), the 09-04 run on the landed chain (no pin, no
-  install) -- AND DA 20 DOES NOT TOUCH THE UNIT PATH, so that recommendation is
-  unaffected by any of it. UNCHANGED: the 011 family 12 of 24 with Q4 failing; the
-  sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-03T01:21Z (MEM ROUND 69 -- THE LANE RAN OUT OF WORK THAT ISN'T A
-  DECISION). R-492 and the reviewer's DE-42 filing swept; nothing run; every
-  figure taken at the blob. DE HAS REACHED A RESTING TIP AND THAT IS A STATE
-  WORTH NAMING AS CLEARLY AS A FINDING: 5658f24 is RELEASED AS THE RUNNER'S
-  RESTING TIP while the package waits on the USER, with DE41-R1 and DE41-R2
-  CLOSED AS MEASURED and NO NEW FINDINGS, and THERE IS NO ROUND 43 UNTIL THE USER
-  RULES ON THE FIVE ASKS. After forty-two rounds the lane's remaining work is not
-  code, it is A DECISION, and the honest thing is to stop rather than to find
-  something to do: A SEAT THAT KEEPS PRODUCING ROUNDS WHILE IT WAITS IS
-  MANUFACTURING MOTION. NOTHING WAS FORCED AND I CHECKED ALL FOUR: c511750,
-  8479b67, fcdbb15 and MY OWN 8a31112 are each ANCESTORS OF 5658f24 -- last round
-  I recorded the rebase-not-force as the substrate's benign face, and this round
-  THE WHOLE HISTORY IS VERIFIABLE IN ONE COMMAND, which is what that discipline
-  buys. ONE THING I WOULD HAVE FLAGGED AND SHOULD NOT HAVE: THE "21" AND THE "22"
-  ARE NOT A DISCREPANCY -- they are ONE LINE AT TWO INJECTION DEPTHS, len(_np_free)
-  at :2012 being the UNFILTERED block, so the denominator differs with where the
-  mutant is injected and BOTH READINGS ARE CORRECT. My standing instinct all
-  session has been to treat two counts of the same thing as a defect until proven
-  otherwise; here the right answer is that they are COUNTS OF TWO DIFFERENT
-  POPULATIONS FROM ONE EXPRESSION -- the rule survives (NAME THE POPULATION) and
-  this time naming it DISSOLVES the discrepancy instead of confirming one. AND THE
-  ONE-SIDE-ONLY KEY IS NAMED, NOT ABSORBED: the reproduction leaves "1 of the 21
-  ... DIFFERENT (['only_on_the_swapped_side'])" -- exactly what round 42's fix was
-  for, A FIELD PRESENT ON ONE SIDE ONLY SHOWING UP BY NAME RATHER THAN VANISHING
-  INTO A COUNT. AN ATTRIBUTION OF MINE WAS CORRECTED AND THE CORRECTION IS THE
-  USEFUL PART: the reviewer isolated DE's raw/ attribution -- a root WITHOUT raw/
-  refuses at CONTENT_LIVENESS_UNRESOLVED for 20260827, WITH raw/ it gives 92 --
-  and corrected the emphasis, DERIVED/ 173 -> 178 IS NOT PART OF THE CAUSE. I
-  carried that 178 in rounds 67 and 68 as housekeeping beside the finding: it was
-  TRUE and it was NOT CAUSAL. A NUMBER REPORTED NEXT TO A CAUSE IS READ AS PART OF
-  IT, which is a caution about my own habit of recording every count in reach.
-  DE41-R1'S CLOSURE IS SMALLER THAN IT LOOKS AND THAT IS THE POINT: .get() MOVES
-  NO STATE FOR A PRESENT FIELD (the value-class table), so THE GUARD IS STILL THE
-  ONLY THING between an absent field and NO_NULL_REQUESTED, which is precisely why
-  the known-bad now fires BY NAME rather than by accident. THE CLASS QUESTION WAS
-  ANSWERED BY TWO AST SCANS AND ONE RESIDUE IS ON THE RECORD RATHER THAN SWEPT: no
-  other ok() computes a verdict before its comparison, and there is ONE
-  GUARD-PROTECTED INDEX of n_draws_requested at :832 inside pred#2's refusal
-  MESSAGE, reachable ONLY through the guard and therefore SAFE -- written down
-  anyway, because AN EXCEPTION THAT IS SAFE AND UNRECORDED BECOMES ONE THAT IS
-  UNEXPLAINED. THE DE-40 ITEM-6 ANSWER ON ASK (5) HOLDS UNCHANGED AT 5658f24, the
-  third consecutive round in which it has survived a tip move, once getting
-  cheaper and never worse. SEQUENCING: DE on RECORDED STANDBY AT THE RESTING TIP;
-  the reviewer on RECORDED STANDBY until BE 12 lands or DA 20 reports READY; BE 12
-  in flight; DA 20 in flight and HELD. NOTHING MOVES ON THE UNIT PATH BEFORE FRI
-  2026-09-04 00:06:00 UTC. USER ITEMS: FIVE, UNCHANGED -- the 09-02 accrual
-  (R-486 recommends ACCRUE, UNRULED), the Phase-2 winner, the content-liveness v2
-  freeze, the addendum v2 package (five asks; THE RUNNER RESTS AT 5658f24,
-  RELEASED), the 09-04 run on the landed chain (no pin, no install). UNCHANGED:
-  the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+  2026-09-03T03:23Z (COORDINATOR, WRITER EXCEPTION R-495 -- FULL STOP AND
+  CONSOLIDATION ON THE USER'S INSTRUCTION). All five seats halted 03:18Z; every
+  seat's context cleared and re-loaded from the state files. STATUS.yml and
+  HANDOFF.md have ONE writer (MEM, SEAT_PROTOCOL); MEM was halted with the
+  others, so the coordinator wrote this header, the HANDOFF consolidation block
+  and two in-band corrections. The exception is logged as R-495 and ENDS THERE:
+  MEM resumes as sole writer at its next round. NEW ENTRY POINT:
+  workspace/RESULTS.md -- a compact artifact-anchored account of what has been
+  tested and what came out of it, single-writer coordinator, read before
+  HANDOFF.md. WHAT THE STOP FOUND: (1) THE R-459 PHASE-4 DIAGNOSTIC HAS NEVER
+  RUN -- de_phase4_diag_runner.preflight() refuses by name, verified read-only
+  at 03:11Z; two blockers, one unbuilt producer step (the coordinator never
+  dispatched it; ten rounds hardened instruments instead) and one undeclared
+  population split (the USER's, open as addendum ask 1a). (2) WIRING THAT STEP
+  TOOK FOUR MINUTES AND IMMEDIATELY SURFACED A FIT-VS-TIP CODE DRIFT in
+  phase2_arms._stream_tape_rows (sha f0741bc4b170fabc -> f0b3bccfb8ec5b88 at
+  2e1204f, the diff confined to the EOF-without-closing-bracket branch, the
+  accepting path byte-identical, and this tape's rows array IS closed so the new
+  refusal cannot fire for it) that no instrument round had found; held unpushed
+  and RED by design at 0d03902. (3) TWO NUMBERS IN THIS PROGRAMME'S OWN DOCS
+  WERE WRONG: HANDOFF's cells_by_status "18 OK + 6 NO_INCUMBENT_COUNTERPART"
+  belongs to a SUPERSEDED 157,455 B artifact -- at the 188,119 B artifact it
+  names, the counts are 12 OK + 6 NO_INCUMBENT_COUNTERPART + 6
+  GATE_PARTIALLY_EVALUATED; and "12 of 24 survive" is 4 DISTINCT surviving
+  results by the artifact's own distinct_results field, every one at the
+  permutation floor p = 1/501 on 500 draws, on a window-clustered null the
+  artifact itself calls optimistic (G=0 complete UTC days against a ruled UTC-day
+  unit). (4) P-2026-002's E2.0/E2-A GATE OPENED TODAY: 14 days of L2 now exist
+  (351 hourly files per Binance symbol, 350 per HL symbol, 44 GB); nothing is
+  dispatched against it. SEAT STATE AT THE STOP: BE clean at 669ef72; DA holds
+  two unpushed commits 3c49cb7 -> a36db71; DE holds one unpushed WIP commit
+  0d03902; MEM clean at d9b85ee; reviewer clean at cc4cfb9.
 
-  ARCHIVED: entries older than these three are moved, never deleted, to
-  workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
-  ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
-  each sweep moves the overflow to the archive in the SAME commit, so it
-  never regrows. Nothing here is dropped -- if a reader needs the full
-  chain it is in the archive and in git history.
+  PREVIOUSLY (MEM ROUND 71, 2026-09-03T02:25Z -- A BASELINE THAT DEPENDS ON
+  WHOSE COMMIT CAME LAST): R-494 and the reviewer's DA-20 filing swept; nothing
+  run; every check at the blob. HOLD FOR ONE ITEM, RELEASE THE REST, with DA
+  REBUILDING THE HELD CHAIN rather than patching on top of it. The row-only-tip
+  property reached the reviewer's own baseline: at 5a11ee9 the diff touches
+  STATUS.yml, COORDINATION.md, HANDOFF.md and the archive and EXACTLY ZERO of
+  the four DA .py files (intersection counted: 0)
 flags:
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-SECTION-10
                              # USER correction, documented 2026-09-01T03:49:46Z.
@@ -3886,6 +3769,92 @@ flags:
                              # are additive from v16; the structural checker and
                              # migration discipline remain authoritative.
 
+  consolidation_2026_09_03_full_stop: >-
+    R-495. Every seat halted 03:18Z on the USER's instruction, contexts cleared
+    and re-loaded from the state files. New entry point workspace/RESULTS.md
+    (single writer: coordinator). Writer exception for STATUS.yml + HANDOFF.md
+    logged and ended in the same entry; MEM resumes as sole writer next round.
+  phase4_diagnostic_never_ran_and_why: >-
+    R-459's diagnostic has never executed. de_phase4_diag_runner.preflight()
+    refuses BY NAME (verified read-only 03:11Z, no --run, nothing written): the
+    feature assembly's expensive half -- PA.tape_index(split) +
+    PA._feature_pass(PA.FRAGMENT, 'phase4_diag', TAPE=...) -- was never wired,
+    and the section-3 population spans BOTH fit splits (1,125,289 train +
+    638,917 score rows), which is a declaration only the USER makes. Rounds
+    33-42 hardened the runner's instruments; the producer half was never
+    dispatched. That omission is the coordinator's, stated as such.
+  de43_pin_fired_on_the_wiring: >-
+    Wiring the expensive half moved phase2_arms.py from 1 reached entry to 5 and
+    verify_called_code() went BLOCKING on _stream_tape_rows: sha_at_fit
+    f0741bc4b170fabc -> sha_at_declaring_tip f0b3bccfb8ec5b88, changed at 2e1204f
+    (BE T2 fail-open readers, 2026-08-29). The diff is confined to the
+    EOF-without-closing-bracket branch; the accepting path is byte-identical;
+    the tape's last bytes are ...}}]} so the new refusal cannot fire for this
+    input (predicate tape_rows_array_closed(), not an assertion). Held unpushed
+    and RED by design at 0d03902 (+248/-27, one file). OPEN, UNRULED: whether
+    declaring _stream_tape_rows is a seat's call or the USER's.
+  iter011_counts_corrected_at_the_artifact: >-
+    HANDOFF's cells_by_status "18 OK + 6 NO_INCUMBENT_COUNTERPART" belongs to
+    the SUPERSEDED 157,455 B / 03:46:59Z artifact. At the 188,119 B / 05:21:34Z
+    artifact it names: 12 OK + 6 NO_INCUMBENT_COUNTERPART + 6
+    GATE_PARTIALLY_EVALUATED, denominator 24. "12 of 24 survive" is 4 DISTINCT
+    surviving results (the artifact's own distinct_results field: budgets
+    replicate Q1/Q2/Q3's single statistic three times). All 18 non-Q4 cells
+    carry p = 0.001996 = 1/501 with at_permutation_floor true on 500 draws, so
+    Holm 0.0479 is 0.0021 under the line and one draw the other way moves it to
+    0.0958. cluster_disclosure: G=0 complete UTC days, unit used 'window'
+    against the ruled 'UTC day', p-values OPTIMISTIC by declaration.
+  iter011_q4_cell_prose_contradicts_its_own_conjuncts: >-
+    OBSERVED TENSION, NOT ADJUDICATED (rule 10 shape). The Q4 cells' prose
+    detail says the incumbent counterpart "was NOT COMPUTED, so only the
+    matched-random conjunct was evaluated"; the structured fields say the
+    opposite -- gate_conjuncts_unevaluated ['matched_random'] and an
+    incumbent-increment p (0.01999, 2000 sign-flip permutations) that plainly
+    was computed. Nothing in RESULTS.md is read off that prose. For a future
+    round to adjudicate.
+  be12_verified_at_669ef72: >-
+    129 checks = 129 PASS lines, rc 0, stderr 0 on BOTH launchers in a detached
+    scratch worktree (03:25:40Z), usage rc 2, driver sha 0d688474a715e899,
+    BE12-S1's 21000101 guard present, AUDIT_KNOWN_UNKILLABLE 3 entries. Main
+    derived/ 178 before and after, diff 0 lines. Q-BE-237's row names code
+    commit a0d0ebd, which the rebase replayed as f47ceb7 -- byte-identical file,
+    so every measurement stands and only the id is stale; BE's own correction,
+    unfiled, carried here.
+  da20_rebuilt_chain_verified_not_reviewed: >-
+    3c49cb7 (code) -> a36db71 (row Q-DA-216), both HELD unpushed in DA's
+    worktree. Coordinator measured at 3c49cb7, both launchers, rc 0: fdv 261
+    (EXPECTED_CHECKS 261, sha 402fafaf47ae28c4) - mask 43 (10d02c092939be48) -
+    host-load 39 (8689db8b34697d4b) - liveness rule 30 - tape density 9 -
+    verdict check 21 - preflight 39 - deploy gates 5; at a36db71, mask 43 and
+    fdv 261. Unit-path blobs equal origin (da_midnight_verify.sh
+    4d79d79a2afc8346, v5_deploy_gates.py b6e4b23a8180a641, frozen rule
+    7196676840304f30). The DA20-R2 unwiring mutants were NOT driven -- the stop
+    arrived first; the reviewer's round on this chain is unstarted.
+  da_fdv_tapeless_traceback: >-
+    NEW, from the same battery: at 3c49cb7, da_forward_day_verify --selftest
+    under an EMPTY PM_DATA_ROOT prints its named SKIPs and then dies rc 1 with
+    an UNHANDLED FileNotFoundError at gap_series -> PM_GAPS.read_text
+    (collector_gaps.jsonl). A refusal must be by name, never a traceback. This
+    is the DA20-R3 class one step further on. Scratch condition, not production.
+  de_landed_from_its_own_worktree_da_landed_in_the_shared_tree: >-
+    Provenance, from .git/logs/HEAD rather than from any row: DA's round-18
+    landing was executed in the MAIN tree (00:25:19Z merge a8165d8 fast-forward,
+    00:26:17Z commit, 00:26:31Z rebase onto origin, 00:26:45Z amend), while
+    Q-DA-214's row says "Discipline: ~/ctaNew-wt-da only". R-397 ruling 5 does
+    put LANDING in the shared tree, so this is not a protocol breach -- but it
+    collided with a coordinator command in flight (a --ff-only pull aborted at
+    00:26:05Z), and BE showed the alternative twice the same night: rebase in
+    its own worktree and push detached HEAD to the branch, touching the shared
+    tree not at all. Recommendation for the next protocol round: seats land by
+    pushing from their own worktree; the shared tree's branch is moved by the
+    coordinator, MEM and the reviewer only.
+  p2026_002_e2_gate_opened_2026_09_03: >-
+    The sister program's E2.0/E2-A gate required 14 days of L2 and it is now
+    MET: data/mm_hf/raw/depth20/BTCUSDT holds 351 hourly files 2026-08-19 12:00
+    -> 2026-09-03 03:00Z, hl_raw/l2Book/BTC holds 350, 16 symbols each, 44 GB,
+    both collectors live. E2.0 is the notional-weighted true-mid recompute that
+    voids or settles ADA; E2-A resolves the overlay bracket with real books.
+    NOTHING IS DISPATCHED AGAINST IT.
 focus: >
   As-of 2026-09-03T02:25Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
@@ -4382,8 +4351,48 @@ tasks:
   - id: e3-screen
     phase: 2
     name: Hazard plan §10.9 — unchanged forward scoring on >=5 complete days
-    status: blocked-awaiting-qualifying-complete-v4_1-days-G0-of-5
+    status: blocked-awaiting-qualifying-complete-v4_1-days-G1-of-5
     notes: |
-      The separate BTC hazard seed is frozen but marked unvalidated; no
-      integrated candidate is frozen. 08-29 is era-inadmissible, 08-30 and
-      08-31 do not accrue, and 09-01 is incomplete as of this update.
+      UPDATED 2026-09-03T03:23Z (R-495): G = 1 of 5. 09-01 ACCRUED -- the
+      first day this race has ever counted, four conjuncts recomputed rather
+      than read back, and BE scored it (610,064 btc + 441,409 eth actions,
+      outcome SCORED; the scores are SEALED and unread per rule 11). 09-02's
+      GOVERNED verdict landed from the 00:06Z unit with race_accrual_eligible
+      true; the accrual itself is the USER's call (R-486 (6)) and is OPEN. The
+      separate BTC hazard seed is frozen but marked unvalidated; no integrated
+      candidate is frozen. 08-29 is era-inadmissible, 08-30 and 08-31 do not
+      accrue. Earliest possible G=5 is ~09-06 and only if every day accrues.
+  - id: phase4-diagnostic
+    phase: 2
+    name: R-459 Phase-4 diagnostic — ONE execution of the frozen protocol on its §3 CONSUMED population
+    status: never-ran-producer-step-unbuilt-and-split-undeclared
+    notes: |
+      RULED BY THE USER AT R-459 ("Yes schedule this test") on 2026-09-02
+      ~17:18Z: ONE diagnostic execution, head under test Q1_arrival of
+      composed_lgbm against the incumbent head, full latency axis (9 rungs),
+      all three budgets reported and none selected, both coins, every output
+      DIAGNOSTIC_NEVER_EVIDENCE, no Phase-2 winner and no race admission.
+      IT HAS NEVER RUN. Verified read-only 2026-09-03T03:11Z by importing
+      de_phase4_diag_runner and calling preflight() (no --run, nothing
+      written): it refuses BY NAME at scorer#1 -- the feature assembly's
+      expensive half (PA.tape_index(split) over the 3.17 GB tape and
+      PA._feature_pass over 1,135,943 rows) has never been executed for this
+      diagnostic, and the §3 population spans BOTH fit splits, a declaration
+      nobody has made.
+      TWO BLOCKERS, ONE OF EACH KIND: (a) the producer step -- the
+      coordinator's omission, never dispatched while rounds 33-42 hardened the
+      runner's instruments (necessary work: round 33 would have fed ~29 min and
+      then crashed on a stub scorer feeding the booster one column against
+      106); dispatched 2026-09-03T03:13:51Z as DE round 43, which wired it and
+      is held unpushed and RED at 0d03902. (b) the split declaration -- the
+      USER's, rule 14: MECHANICS on both splits with the splits labelled per
+      cell, or restricted to the `score` split (population shrinks from
+      1,764,206 to 638,917 rows and §3's counts change). Filed as addendum-v2
+      ask 1a, to be ruled WITH asks 2 and 4.
+      COST, AS FAR AS KNOWN: the feed is MEASURED at ~28.6 min for the §3
+      population, both coins. The feature assembly is UNMEASURED. One
+      arm_result is unmeasured on real data with a floor of 0.007 s; 200 draws
+      is 800 replays plus rejected attempts. DE round 43's step 3 (measure
+      wall + peak RSS per split) was never started.
+      DECLARED OUTDIR data/pm_5min/derived/phase4_diag_r459 DOES NOT EXIST and
+      must not be written by anything but the ruled run.

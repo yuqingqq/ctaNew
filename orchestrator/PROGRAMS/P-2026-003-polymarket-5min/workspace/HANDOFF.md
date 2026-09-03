@@ -1,6 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T02:25Z — **HOLD for ONE item, RELEASE the rest** — the
+Updated: 2026-09-03T03:23Z (coordinator, writer exception R-495) — **FULL STOP
+AND CONSOLIDATION.** All five seats halted 03:18Z, contexts cleared and
+re-loaded from these files. New entry point: **`workspace/RESULTS.md`**. Two
+in-band corrections to this file's own numbers. The R-459 diagnostic has never
+run and the reason is now measured. See the READ FIRST block below.
+
+Previously (MEM round 71) — 2026-09-03T02:25Z — **HOLD for ONE item, RELEASE the rest** — the
 narrowest disposition this programme has issued, and DA is **rebuilding the held
 chain unpushed** rather than patching it. **My round-70 measurement is now
 DA20-R2**, filed by the reviewer. **And the row-only-tip property has reached the
@@ -10,6 +16,39 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-03T03:23Z — FULL STOP AND CONSOLIDATION (coordinator, on the USER's instruction)
+>
+> **Every seat was halted at 03:18Z and every seat's context is being cleared
+> and re-loaded from these files.** Before reading anything else, read
+> **`workspace/RESULTS.md`** — a new, compact, artifact-anchored account of what
+> has been tested and what came out of it. It is the coordinator's file (single
+> writer) and it does not replace this one; it is the five-minute entry point
+> this handoff had stopped being at 11.8k lines.
+>
+> **Writer exception, recorded rather than assumed:** `STATUS.yml` and this file
+> have ONE writer, the MEM seat (SEAT_PROTOCOL). MEM was halted with every other
+> seat, so the coordinator wrote this consolidation block, the `cells_by_status`
+> correction at §Current model state, and the `STATUS.yml` header. The exception
+> is logged in the register as **R-495** and ends there: MEM resumes as sole
+> writer of both files at its next round.
+>
+> **What the stop found, in one line each:**
+> - The R-459 Phase-4 diagnostic **has never run** — its `preflight()` refuses,
+>   verified read-only at 03:11Z. Two blockers: one unbuilt producer step (mine,
+>   now dispatched) and one undeclared population split (the USER's, open).
+> - Wiring that step (DE round 43, four minutes) immediately surfaced a
+>   **fit-vs-tip code drift** in `phase2_arms._stream_tape_rows` that ten
+>   instrument rounds had not found. Held unpushed and RED at `0d03902`.
+> - Two numbers in this file's own §Current model state were wrong; both are
+>   corrected in band below and in `RESULTS.md` §2.
+> - **P-2026-002's E2.0/E2-A gate opened today** (14 days of L2 now exist;
+>   measured 351 hourly files per Binance symbol, 350 per HL symbol). Nothing is
+>   dispatched against it.
+>
+> **Seat state at the stop** — BE clean at `669ef72`; DA holds 2 unpushed
+> commits (`3c49cb7` → `a36db71`); DE holds 1 unpushed WIP commit (`0d03902`,
+> red by design); MEM clean at `d9b85ee`; reviewer clean at `cc4cfb9`.
 
 The governing project TODO is
 `live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10. The
@@ -1564,7 +1603,16 @@ observed rate on n=3, not a forecast.
   also carries its **action-unit** AUC as a range beside the row-level one
   (RR4-3, below), and RR4-1 made Q4's `gate_conjuncts_evaluated` honestly
   **False** over its null conjunct.
-  `cells_by_status` = **18 OK + 6 NO_INCUMBENT_COUNTERPART**, denominator 24.
+  `cells_by_status` = ~~**18 OK + 6 NO_INCUMBENT_COUNTERPART**~~, denominator 24.
+  **SUPERSEDED 2026-09-03T03:23Z (coordinator consolidation, R-495) — those
+  counts belong to the earlier 157,455 B / 03:46:59Z artifact, not to the
+  188,119 B / 05:21:34Z one this paragraph names. Read at the named artifact,
+  `cells_by_status` is `{"OK": 12, "NO_INCUMBENT_COUNTERPART": 6,
+  "GATE_PARTIALLY_EVALUATED": 6}` — the six Q4 cells were counted as OK and are
+  not. And "12 of 24 survive" is 12 cells = `distinct_surviving_results` **4**
+  (the artifact's own field: budgets replicate Q1/Q2/Q3's single statistic three
+  times), every one of them at the permutation floor p = 1/501 with 500 draws.
+  See `workspace/RESULTS.md` §2.**
   **Q1_arrival PASSES ITS COMPLETE GATE, both conjuncts computed**: candidate
   AUC **0.8303** lgbm / **0.7733** linear against the incumbent hazard head's
   **0.7139** — increments **+0.1164 / +0.0594**, `beats_incumbent_hazard_head`
