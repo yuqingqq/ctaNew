@@ -32,8 +32,9 @@ models/*
 # Live paper-trade runtime state
 live/state/
 
-# Claude Code local settings
-.claude/
+# Claude Code local settings (skills are shared, the rest is local)
+.claude/*
+!.claude/skills/
 
 # Editor / OS
 .vscode/
