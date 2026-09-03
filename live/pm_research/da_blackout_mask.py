@@ -490,6 +490,13 @@ def write_mask(day: str, outdir: Path | None = None, **kw) -> Path:
 
 
 # --------------------------------------------------------------------------
+#: The scratch fixture's plant (DA18-R1) and the dirty marker (DA14-R2) are
+#: distinct texts, so a reader of a scratch tree can tell which arrangement
+#: wrote which line. Neither ever reaches a real tree: the worktree they are
+#: written into is detached, unreferenced and removed in the `finally`.
+FIXTURE_PLANT = "\n# DA18-R1 fixture plant (scratch worktree only)\n"
+
+
 def selftest() -> int:
     import gzip
     import tempfile
@@ -861,18 +868,79 @@ def selftest() -> int:
                            "da_forward_day_verify.py"):
                     (_wt_path / "live/pm_research" / _f).write_bytes(
                         (CODE_ROOT / "live/pm_research" / _f).read_bytes())
+                # ---- DA18-R1: THE FIXTURE COMMIT MUST NOT BE EMPTY -----
+                # `git commit` on a tree that already equals HEAD exits
+                # NONZERO and leaves HEAD where it was. The child would then
+                # still be at `_there`, and the failure would surface three
+                # checks later as the CO-10 precondition saying the child's
+                # HEAD is "not a THIRD value" -- true, and about the wrong
+                # thing. The condition is ordinary: it holds at any tip whose
+                # last commit touched none of the four DA files, which is
+                # exactly what a ROW-ONLY commit is, and this suite has to be
+                # green at one.
+                #
+                # Two repairs, both needed. PLANT a difference so the commit
+                # always has content, and CHECK its return code so a future
+                # empty one is refused BY NAME at the act that failed.
+                _plant = _wt_path / "live/pm_research/pm_tape_density.py"
+                _plant.write_text(_plant.read_text() + FIXTURE_PLANT)
                 _sp.run(["git", "-C", str(_wt_path), "add", "--"]
                         + [f"live/pm_research/{_f}" for _f in
                            ("da_blackout_mask.py", "pm_tape_density.py",
                             "da_content_liveness_rule.py",
                             "da_forward_day_verify.py")],
                         capture_output=True)
-                _sp.run(["git", "-C", str(_wt_path),
-                         "-c", "user.name=da-fixture",
-                         "-c", "user.email=da@fixture.invalid",
-                         "commit", "-q", "-m",
-                         "RR12-1 fixture: scratch-worktree commit only"],
-                        capture_output=True)
+                _commit_argv = ["git", "-C", str(_wt_path),
+                                "-c", "user.name=da-fixture",
+                                "-c", "user.email=da@fixture.invalid",
+                                "commit", "-q", "-m",
+                                "RR12-1 fixture: scratch-worktree commit only"]
+                _committed = _sp.run(_commit_argv, capture_output=True,
+                                     text=True)
+
+                def _commit_refusal(cp):
+                    """Why the fixture commit did not land, or None.
+
+                    Stated once so the assertion and its falsifier read the
+                    same text (the DA16-R1 shape).
+                    """
+                    if cp.returncode == 0:
+                        return None
+                    _o = (cp.stdout + cp.stderr).strip()
+                    if ("nothing to commit" in _o
+                            or "no changes added" in _o
+                            or "nothing added to commit" in _o):
+                        return (f"the fixture commit exited {cp.returncode} "
+                                f"with an EMPTY staged tree -- the four DA "
+                                f"files already equalled the child's "
+                                f"checkout, so HEAD did not move")
+                    return (f"the fixture commit exited {cp.returncode}: "
+                            f"{_o[-160:]}")
+
+                ok(_commit_refusal(_committed) is None,
+                   f"DA18-R1: the fixture commit LANDED, checked at the act "
+                   f"rather than inferred from a later precondition "
+                   f"({_commit_refusal(_committed)})")
+                _touched = _sp.run(["git", "-C", str(_wt_path), "show",
+                                    "--name-only", "--format=", "HEAD"],
+                                   capture_output=True, text=True).stdout
+                ok("pm_tape_density.py" in _touched,
+                   "DA18-R1: and the PLANTED file is in the commit -- the "
+                   "fixture's non-emptiness comes from the plant, not from "
+                   "whichever files the parent's last commit happened to "
+                   "touch. That dependence is the whole defect")
+                # KNOWN-BAD, DRIVEN: repeating the commit reproduces the
+                # DA18-R1 condition exactly -- the tree now equals HEAD, so
+                # there is nothing to stage. The checker must NAME it as
+                # empty rather than return None.
+                _again = _sp.run(_commit_argv, capture_output=True, text=True)
+                _why_again = _commit_refusal(_again)
+                ok(_why_again is not None and "EMPTY" in _why_again,
+                   f"DA18-R1 KNOWN-BAD: a commit with nothing staged is "
+                   f"REFUSED and named EMPTY, not silently passed over -- "
+                   f"driven by running the same commit twice, which IS the "
+                   f"failing arrangement rather than a description of it "
+                   f"({_why_again})")
                 # CO-10: THE CHILD'S HEAD, RE-READ AFTER THE FIXTURE COMMIT.
                 # The identity conjunct used to compare against `_there`
                 # (HEAD~1), which WAS the child's HEAD while it stayed
@@ -892,16 +960,27 @@ def selftest() -> int:
                 def _names_the_executing_tree(prod):
                     """THE CONTROL'S PREDICATE, STATED ONCE (DA16-R1).
 
-                    Written as a function so the assertion and its FALSIFIER
+                    Written as a function so the assertion and its FALSIFIERS
                     read the SAME text. Two `!=` lines could enumerate wrong
                     commits forever and still miss the property: with the
                     identity conjunct gone, ANY commit other than the ones
                     named walks through, and nothing notices the removal --
                     which is what a driven falsifier fixes and a further
                     inequality does not.
+
+                    DA17-R1: it is now identity ALONE. The `!= _here`
+                    conjunct could not fail -- the precondition above asserts
+                    `_child_head not in (_here, _there)`, so anything equal to
+                    `_child_head` is already unequal to both, and a conjunct
+                    that cannot be false is a check that cannot fire (rule
+                    15). Deleting it loses nothing REAL, but it would lose the
+                    two named wrong commits, so those move from conjuncts
+                    inside the predicate to FALSIFIERS driven through it: the
+                    same values are still refused, and now the refusal is
+                    exercised instead of asserted about a value that could
+                    not have been wrong.
                     """
-                    return (prod.get("carrying_commit") == _child_head
-                            and prod.get("carrying_commit") != _here)
+                    return prod.get("carrying_commit") == _child_head
                 ok(_child_head and _child_head not in (_here, _there),
                    f"CO-10 precondition: after the fixture commit the child's "
                    f"HEAD ({_child_head[:12]}) is a THIRD value, distinct "
@@ -951,25 +1030,30 @@ def selftest() -> int:
                 ok(_names_the_executing_tree(_prod),
                    f"CO-10 CONTROL: the run from the worktree records the "
                    f"CHILD's own HEAD ({_child_head[:12]}) -- an IDENTITY "
-                   f"with the tree that executed -- and that value is NOT "
-                   f"this tree's HEAD ({_here[:12]}). Two conjuncts on two "
-                   f"DIFFERENT commits: the first is what a producer "
-                   f"answering some other commit fails, the second is what a "
-                   f"producer answering the parent's fails. Got "
+                   f"with the tree that executed. Got "
                    f"{_prod['carrying_commit'][:12]}")
-                # AND THE SPECIFIC WRONG COMMIT, ASSERTED SEPARATELY. Dropping
-                # the identity conjunct above leaves `!= _here` satisfied by an
-                # intact producer, so that mutation alone is silent -- and the
-                # HEAD~1 producer would then walk through again, which is
-                # exactly CO-10 returning. This names the commit a
-                # `rev-parse HEAD~1` producer would report, so the two
-                # assertions have to BOTH be removed for that hole to reopen.
-                ok(_prod["carrying_commit"] != _there,
-                   f"CO-10 KNOWN-BAD, held separately: the recorded commit is "
-                   f"NOT HEAD~1 ({_there[:12]}) -- the value a producer "
-                   f"asking `rev-parse HEAD~1` would report, which passed 32 "
+                # THE TWO WRONG COMMITS, DRIVEN THROUGH THE SAME PREDICATE
+                # (DA17-R1). They used to be inequalities -- one inside the
+                # predicate, one asserted beside it -- and neither could fail
+                # while the precondition held. Fed to the predicate as
+                # producer emissions they are real falsifiers: each is a
+                # commit a broken producer WOULD report, and each is refused
+                # here, by the one predicate the control asserts.
+                ok(not _names_the_executing_tree({"carrying_commit": _here}),
+                   f"CO-10 FALSIFIER: a producer reporting the PARENT's HEAD "
+                   f"({_here[:12]}) -- the original RR12-1 defect, a hardcoded "
+                   f"REPO stamping the main tree -- is REFUSED")
+                ok(not _names_the_executing_tree({"carrying_commit": _there}),
+                   f"CO-10 FALSIFIER: a producer reporting HEAD~1 "
+                   f"({_there[:12]}) is REFUSED. That is the value a "
+                   f"`rev-parse HEAD~1` producer reports, and it passed 32 "
                    f"checks at 8910701 because the identity conjunct had been "
                    f"lost")
+                ok(not _names_the_executing_tree({}),
+                   "CO-10 FALSIFIER: a producer emitting NO carrying_commit "
+                   "at all is REFUSED -- a missing key must not read as "
+                   "agreement, which is the membership-not-`!=` lesson from "
+                   "the data_root_branch check below")
                 # THE FLAG MUST AGREE WITH THE CHILD TREE'S ACTUAL STATE,
                 # which is COMPUTED here rather than assumed. Asserting `True`
                 # encoded the fixture's arrangement: it holds only while the

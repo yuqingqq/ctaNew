@@ -1420,6 +1420,162 @@ def split_verdict(preds: list, regime: str = "count_bar_v1_frozen",
     }
 
 
+#: DA20-R2's subject. The day the wiring probe emits: CLOSED (so the verdict
+#: composes fully), and >= PER_COIN_RULE_FROM_DAY / DAY_BAR_V2_FROM_DAY so the
+#: artifact carries BOTH per_coin blocks and the v2 bars. It names a past day
+#: on purpose -- a past day stays past, so this control does not age.
+WIRING_PROBE_DAY = "20260830"
+WIRING_PROBE_FREEZE_EPOCH = 1787897340.0   # the launcher's governing epoch
+
+
+def build_probe_tape(root: Path, day: str = WIRING_PROBE_DAY) -> Path:
+    """A synthetic 288-window day for both coins under `root`. Returns root.
+
+    A FIXTURE, not the live tape: the probe must fire under a tapeless
+    PM_DATA_ROOT exactly as it does under the canonical one. A positive
+    control that quietly skips itself when an input is missing is the shrink
+    this programme has already named once (DA20-R3's class).
+    """
+    import gzip as _gz
+    (root / "data/pm_5min").mkdir(parents=True, exist_ok=True)
+    (root / "data/pm_5min/collector_gaps.jsonl").write_text("")
+    raw = root / "data/pm_5min/raw" / day
+    raw.mkdir(parents=True, exist_ok=True)
+    base = day_bounds(day)[0]
+    for coin in ("btc", "eth"):
+        for i in range(WINDOWS_PER_DAY):
+            with _gz.open(raw / f"{coin}-updown-5m-"
+                                f"{base + i * WINDOW_S}.jsonl.gz", "wb") as fh:
+                fh.write(b'{"x":1}\n' * 20)
+    return root
+
+
+def governance_wiring_probe(module_path: Path, tape_root: Path,
+                            out_path: Path,
+                            day: str = WIRING_PROBE_DAY) -> dict:
+    """Did the governance stamp reach an EMITTED verdict? CALLABLE on purpose.
+
+    DA20-R2. Every other check on `annotate_governance` runs it on a table
+    built in the suite, so BOTH production call sites -- the day-level one
+    after `compose_all_pass` and the per-coin one inside the coin loop --
+    could be deleted with the suite green. A stamp whose wiring no check
+    would miss is rule 17's shape inside the feature R-486 asked for.
+
+    So this runs `module_path` through the PRODUCTION `--out` path in a
+    subprocess, over `tape_root`, and reads the artifact back. It asserts
+    nothing; the caller does. A parse-level "the call site is present" check
+    would be a call asserted by its text -- the class this programme keeps
+    closing -- and does not appear anywhere in the closure.
+    """
+    import os as _os
+    import subprocess as _sp
+    r = _sp.run([sys.executable, str(module_path), "verify", "--day", day,
+                 "--freeze-epoch", str(WIRING_PROBE_FREEZE_EPOCH),
+                 "--out", str(out_path)],
+                capture_output=True, text=True, timeout=600,
+                env=dict(_os.environ, PM_DATA_ROOT=str(tape_root)))
+    if not out_path.exists():
+        return {"emitted": False, "rc": r.returncode,
+                "why": (r.stderr or r.stdout)[-300:]}
+
+    def stamped(rows):
+        return {"n": len(rows),
+                "all_carry": bool(rows) and all(
+                    "governs" in x and x.get("governs_why") for x in rows),
+                "values": sorted({x.get("governs") for x in rows}, key=str)}
+
+    doc = json.loads(out_path.read_text(encoding="utf-8"))
+    return {"emitted": True, "rc": r.returncode, "doc": doc,
+            "roots": doc.get("roots", {}),
+            "day_level": stamped(doc.get("predicates") or []),
+            "per_coin": {c: stamped(v.get("predicates") or [])
+                         for c, v in (doc.get("per_coin") or {}).items()}}
+
+
+def annotate_governance(preds: list, regime: str, excluder=None) -> list:
+    """Stamp each predicate row with whether it GOVERNS, and why. Callable.
+
+    R-486's observation, at the artifact. The first governed verdict carries
+    `pass: false` rows beside `all_pass: true`, and both are correct -- but
+    telling a VETO from a NOTE required knowing two module constants and the
+    day's regime, none of which are in the row. A reader who does not know
+    them reads the file as self-contradictory, and the two available wrong
+    conclusions are the expensive ones: that the verdict is broken, or that a
+    failing bar was overlooked.
+
+    DERIVED FROM `governing_predicates` -- the same callable
+    `compose_all_pass` uses -- so the annotation cannot drift from the
+    composition it describes. It adds fields and changes none: `all_pass` is
+    computed from `pass`, exactly as before.
+
+    This is a DISCLOSURE, not a bar (rule 14): no row becomes eligible or
+    ineligible for anything by carrying it.
+
+    `excluder` exists ONLY so the falsifier can drive the unnamed-exclusion
+    branch: as the module stands, every exclusion `governing_predicates`
+    makes is named by a constant, so that branch is unreachable from
+    production and would be a check that cannot fire. Production never passes
+    it.
+    """
+    gov = {id(x) for x in (excluder or governing_predicates)(preds, regime)}
+    for x in preds:
+        n = x["predicate"]
+        x["governs"] = id(x) in gov
+        if x["governs"]:
+            x["governs_why"] = (f"governs all_pass under regime {regime!r}: "
+                                f"a false here vetoes the day")
+        elif n in REPORTED_NOT_GOVERNING:
+            x["governs_why"] = (f"REPORTED_NOT_GOVERNING under EVERY regime "
+                                f"({', '.join(REPORTED_NOT_GOVERNING)}): a "
+                                f"false here is a disclosure and vetoes "
+                                f"nothing")
+        elif n in SUPERSEDED_ON_V2:
+            x["governs_why"] = (f"SUPERSEDED_ON_V2 ({', '.join(SUPERSEDED_ON_V2)})"
+                                f": under regime {regime!r} the day_bar_v2 "
+                                f"duration bars replace it, so it is recorded "
+                                f"and does not vote")
+        else:
+            # Not reachable through `governing_predicates` as it stands --
+            # every exclusion it makes is named by one of the two constants.
+            # It is written anyway, and REACHED by the coherence checker's
+            # falsifier below, because the alternative is a branch that says
+            # nothing when a future third exclusion path appears.
+            x["governs_why"] = ("EXCLUDED BUT UNNAMED: this row does not "
+                                "govern and no constant in this module says "
+                                "why. Read that as a defect in the module, "
+                                "not as a property of the day")
+    return preds
+
+
+def governance_annotation_coherent(preds: list, regime: str,
+                                   excluder=None) -> tuple:
+    """Re-derive the annotation independently. (bool, why) -- never a bare
+    bool, so a false carries the row that made it false.
+
+    Two properties, both computed:
+      1. every row's `governs` agrees with `governing_predicates`;
+      2. every non-governing row is NAMED by one of the two constants.
+    The second is what makes the annotation a disclosure rather than a label:
+    a row can be excluded, but not silently.
+    """
+    _g = excluder or governing_predicates
+    gov = {id(x) for x in _g(preds, regime)}
+    named = set(REPORTED_NOT_GOVERNING) | set(SUPERSEDED_ON_V2)
+    for x in preds:
+        want = id(x) in gov
+        if bool(x.get("governs")) != want:
+            return (False, f"{x['predicate']!r} is stamped "
+                           f"governs={x.get('governs')!r} but "
+                           f"governing_predicates says {want} under regime "
+                           f"{regime!r}")
+        if not want and x["predicate"] not in named:
+            return (False, f"{x['predicate']!r} does not govern and no "
+                           f"constant names it -- a silent exclusion")
+    return (True, f"{sum(1 for x in preds if x.get('governs'))} of "
+                  f"{len(preds)} rows govern under regime {regime!r}, and "
+                  f"every exclusion is named")
+
+
 def compose_all_pass(preds: list, per_coin: dict, bars_v2: dict,
                      regime: str) -> bool:
     """The day verdict, composed from EVERY input that governs it.
@@ -2250,6 +2406,7 @@ def verify_day(day_token: str, freeze_epoch: float,
                     cpp(f"{_k}_bar", _cb.get(f"{_k}_pass", False),
                         _cb.get("why") or f"{_k} on this coin's own gaps")
             _gov_cp = governing_predicates(cp, _reg)
+            annotate_governance(cp, _reg)   # R-486, per coin as well
             # SAME era admission for every coin: a mixed-era day is mixed
             # for all of them, and a coin cannot pass its way out of it.
             _csplit = split_verdict(cp, _reg, _era["race_admissible_by_era"],
@@ -2312,6 +2469,10 @@ def verify_day(day_token: str, freeze_epoch: float,
     # actually in the table, never from a snapshot taken earlier.
     _day_all_pass = compose_all_pass(
         preds, per_coin if gran == "per_coin" else {}, bars_v2, regime)
+    # R-486: and every row now SAYS whether it voted. Stamped after the table
+    # is final and after all_pass is composed, so the annotation describes the
+    # table the verdict was computed from rather than an earlier snapshot.
+    annotate_governance(preds, regime)
 
     # CALENDAR closure, not the selector's -- the selector's `day_closed`
     # depends on tape arriving, so a stalled collector would make a finished
@@ -2394,7 +2555,7 @@ def verify_day(day_token: str, freeze_epoch: float,
 #: 238 / 244 / 238 across three layouts at rc 0, with only the log's presence
 #: differing and nothing saying so. `ran + skipped` must equal this in EVERY
 #: layout, so a vanished check fails the suite instead of shrinking the count.
-EXPECTED_CHECKS = 247
+EXPECTED_CHECKS = 261
 
 
 def _selftests(require_no_skips: bool = False) -> int:
@@ -4144,6 +4305,154 @@ def _selftests(require_no_skips: bool = False) -> int:
                         {}, _pass_bar, "day_bar_v2") is False,
        "POSITIVE CONTROL: a GOVERNING predicate still decides -- "
        "governing_predicates is filtering one name, not draining the set")
+
+    # ---- R-486: EVERY ROW SAYS WHETHER IT VOTED -------------------------
+    # The first governed verdict carries `pass: false` rows beside
+    # `all_pass: true`. Both correct; the file did not say why, and the two
+    # available wrong readings were "the verdict is broken" and "a failing
+    # bar was overlooked". The annotation is a DISCLOSURE (rule 14) and is
+    # derived from the same callable that composes the verdict.
+    _ann = [{"predicate": "complete_tape", "pass": True},
+            {"predicate": "tape_density", "pass": False},
+            {"predicate": "gap_rate_under_bar", "pass": False}]
+    _before = compose_all_pass(_ann, {}, _pass_bar, "day_bar_v2")
+    annotate_governance(_ann, "day_bar_v2")
+    _by = {x["predicate"]: x for x in _ann}
+    _fail_tbl = [{"predicate": "complete_tape", "pass": False},
+                 {"predicate": "tape_density", "pass": False}]
+    _fail_before = compose_all_pass(_fail_tbl, {}, _pass_bar, "day_bar_v2")
+    annotate_governance(_fail_tbl, "day_bar_v2")
+    ok(compose_all_pass(_ann, {}, _pass_bar, "day_bar_v2") == _before is True
+       and compose_all_pass(_fail_tbl, {}, _pass_bar,
+                            "day_bar_v2") == _fail_before is False,
+       "R-486: annotating changes NO verdict -- all_pass is identical before "
+       "and after on a table that PASSES and on one that FAILS. Both are "
+       "needed: with only the passing table, a composer that started reading "
+       "`governs_why` and skipped every annotated row would return True "
+       "either way and this check would not notice (measured -- that mutant "
+       "walked through). A disclosure that moved a verdict would be a bar "
+       "(rule 14)")
+    ok(_by["tape_density"]["governs"] is False
+       and "REPORTED_NOT_GOVERNING" in _by["tape_density"]["governs_why"],
+       "R-486 SHAPE, exactly the 09-02 artifact: a FALSE row that vetoes "
+       "nothing is stamped governs=false and its `why` NAMES the constant "
+       "that excluded it — the reader no longer has to know this module")
+    ok(_by["complete_tape"]["governs"] is True
+       and "vetoes the day" in _by["complete_tape"]["governs_why"],
+       "R-486: and a governing row says so in the same field, so `governs` "
+       "is a property of the row rather than a flag on the exceptions")
+    _v1 = [{"predicate": "gap_rate_under_bar", "pass": False}]
+    annotate_governance(_v1, "count_bar_v1_frozen")
+    ok(_v1[0]["governs"] is True
+       and _by["gap_rate_under_bar"]["governs"] is False
+       and "SUPERSEDED_ON_V2" in _by["gap_rate_under_bar"]["governs_why"],
+       "R-486 REGIME SENSITIVITY: the SAME predicate governs under the frozen "
+       "count bar and does not under day_bar_v2 — two regimes, two answers "
+       "from one row, so no constant can stand in for this field")
+    ok(governance_annotation_coherent(_ann, "day_bar_v2")[0] is True,
+       "R-486 POSITIVE CONTROL: an independently re-derived governing set "
+       "agrees with what was stamped")
+    _flip = [dict(x) for x in _ann]
+    _flip[0]["governs"] = False
+    _bad_c = governance_annotation_coherent(_flip, "day_bar_v2")
+    ok(_bad_c[0] is False and "complete_tape" in _bad_c[1],
+       f"R-486 KNOWN-BAD: a row stamped with the WRONG governance is caught "
+       f"and NAMED, so the checker is shown to fire ({_bad_c[1][:70]})")
+    _drop = lambda pr, rg: [x for x in pr if x["predicate"] != "mystery"]
+    _unnamed = [{"predicate": "mystery", "pass": False}]
+    annotate_governance(_unnamed, "day_bar_v2", excluder=_drop)
+    _bad_u = governance_annotation_coherent(_unnamed, "day_bar_v2",
+                                            excluder=_drop)
+    ok(_unnamed[0]["governs"] is False
+       and "EXCLUDED BUT UNNAMED" in _unnamed[0]["governs_why"]
+       and _bad_u[0] is False and "no constant names it" in _bad_u[1],
+       "R-486 KNOWN-BAD: an exclusion no constant names is stamped UNNAMED "
+       "and refused as incoherent. Driven through an injected excluder "
+       "because production has no such path — a branch that could not be "
+       "reached would be a check that cannot fire (rule 15)")
+
+    # ---- DA20-R2: THE STAMP, ASSERTED ON AN EMITTED VERDICT -------------
+    # Everything above exercises `annotate_governance` on SYNTHETIC tables.
+    # The reviewer showed what that misses: deleting EITHER production call
+    # left this suite green at 254. The closure is an assertion on a verdict
+    # that came out of the PRODUCTION `--out` path -- `governance_wiring_probe`
+    # above, which is callable so it can also be driven from outside this
+    # suite (it is, under a tapeless PM_DATA_ROOT, and it fires there because
+    # its tape is a FIXTURE it builds and hands the child).
+    with _tfe.TemporaryDirectory() as _t7:
+        import shutil as _sh7
+        _r2root = build_probe_tape(Path(_t7) / "root")
+        _live7 = governance_wiring_probe(Path(__file__).resolve(), _r2root,
+                                         Path(_t7) / "verdict_intact.json")
+        ok(_live7["emitted"] and _live7["rc"] in (0, 1)
+           and _live7["day_level"]["n"] > 0,
+           f"DA20-R2 PRECONDITION: the module under test EMITS a verdict "
+           f"through the production --out path (rc {_live7.get('rc')}, "
+           f"{_live7.get('day_level', {}).get('n')} day rows). Without this "
+           f"the assertions below could pass on an artifact that was never "
+           f"written ({_live7.get('why', '')})")
+        ok(_live7["roots"].get("data_root") == str(_r2root)
+           and _live7["roots"].get("data_root_branch") == "1_env_PM_DATA_ROOT",
+           f"DA20-R2: and it read THE FIXTURE, not the live tape -- the "
+           f"artifact names the temp root it was handed and the branch that "
+           f"resolved it ({_live7['roots'].get('data_root_branch')!r}). That "
+           f"is what lets this control fire under a tapeless PM_DATA_ROOT "
+           f"instead of shrinking away from it")
+        ok(_live7["day_level"]["all_carry"]
+           and _live7["day_level"]["values"] == [False, True],
+           f"DA20-R2 (day level): EVERY row of the emitted verdict's "
+           f"predicates[] carries `governs` AND a non-empty `governs_why`, "
+           f"and the field takes BOTH values "
+           f"({_live7['day_level']['values']}) -- a constant stamp would "
+           f"satisfy presence and say nothing")
+        ok(set(_live7["per_coin"]) == {"btc", "eth"}
+           and all(v["all_carry"] and v["values"] == [False, True]
+                   for v in _live7["per_coin"].values()),
+           f"DA20-R2 (per coin): BOTH per_coin blocks are present and every "
+           f"row in each carries both fields with both values "
+           f"({ {c: v['values'] for c, v in _live7['per_coin'].items()} }). "
+           f"The two production calls are separate statements and a check on "
+           f"one says nothing about the other")
+
+        # ---- THE TWO FALSIFIERS, DRIVEN ON A COPY ----------------------
+        # Not "if you deleted the call this would fail" -- the call IS
+        # deleted, in a copied tree, and the emitted artifact is read back.
+        # Each mutant must kill its OWN level and leave the other standing,
+        # which no single check could show.
+        _mtree = Path(_t7) / "mutant/live/pm_research"
+        _mtree.mkdir(parents=True)
+        _srcdir = Path(__file__).resolve().parent
+        for _q7 in _srcdir.iterdir():
+            if _q7.suffix == ".py":
+                _sh7.copy2(_q7, _mtree / _q7.name)
+            elif _q7.is_dir() and _q7.name == "fixtures":
+                _sh7.copytree(_q7, _mtree / _q7.name)
+        _mmod = _mtree / Path(__file__).name
+        _intact7 = _mmod.read_text(encoding="utf-8")
+        _CALL_DAY = "    annotate_governance(preds, regime)\n"
+        _CALL_PC = ("            annotate_governance(cp, _reg)"
+                    "   # R-486, per coin as well\n")
+        ok(_intact7.count(_CALL_DAY) == 1 and _intact7.count(_CALL_PC) == 1,
+           "DA20-R2 falsifier precondition: each production call appears "
+           "EXACTLY ONCE in the copied module, so removing one removes that "
+           "wiring and nothing else")
+        for _tag7, _call7, _why7 in (("noday", _CALL_DAY, "day-level"),
+                                     ("nopc", _CALL_PC, "per-coin")):
+            _mmod.write_text(_intact7.replace(_call7, "", 1), encoding="utf-8")
+            _m7 = governance_wiring_probe(_mmod, _r2root,
+                                          Path(_t7) / f"verdict_{_tag7}.json")
+            _mday7 = _m7.get("day_level", {}).get("all_carry")
+            _mpc7 = all(v["all_carry"]
+                        for v in (_m7.get("per_coin") or {}).values())
+            _want_day7, _want_pc7 = _why7 != "day-level", _why7 != "per-coin"
+            ok(_m7["emitted"] and _mday7 is _want_day7 and _mpc7 is _want_pc7,
+               f"DA20-R2 FALSIFIER ({_why7}): with that ONE production call "
+               f"deleted from a copy, the emitted verdict LOSES the stamp at "
+               f"the {_why7} and KEEPS it at the other (day={_mday7}, "
+               f"per_coin={_mpc7}; wanted {_want_day7}/{_want_pc7}). This is "
+               f"what was missing: both calls were deletable with the suite "
+               f"green at 254")
+        _mmod.write_text(_intact7, encoding="utf-8")
     with _tfe.TemporaryDirectory() as _t6:
         _dp = Path(_t6) / "density.json"
         ok(tape_density_for("20260829", _dp)["status"] == "UNMEASURED",
