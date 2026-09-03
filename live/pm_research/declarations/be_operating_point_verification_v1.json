@@ -1,0 +1,80 @@
+{
+ "all_coins_reproduce": true,
+ "as_of_utc": "2026-09-03T07:18:48Z",
+ "counters": {
+  "rows_in_split": 1135943,
+  "rows_scored": 1135930,
+  "rows_seen": 1135943,
+  "rows_without_features": 13,
+  "slugs": 471,
+  "slugs_missing_archive": 0
+ },
+ "days_derived_from_the_rows": [
+  "2026-08-24",
+  "2026-08-25"
+ ],
+ "declared_days": [
+  "2026-08-24",
+  "2026-08-25"
+ ],
+ "declared_days_match_the_rows": true,
+ "per_coin": {
+  "btc": {
+   "declared": {
+    "10%": 0.7230267681941027,
+    "15%": 0.5249913727523682,
+    "5%": 1.0845103653350594
+   },
+   "matches": true,
+   "max_abs_difference": 0.0,
+   "recomputed": {
+    "10%": 0.7230267681941027,
+    "15%": 0.5249913727523682,
+    "5%": 1.0845103653350594
+   }
+  },
+  "eth": {
+   "declared": {
+    "10%": 0.10284589538586741,
+    "15%": 0.07299359367539054,
+    "5%": 0.15486145364009468
+   },
+   "matches": true,
+   "max_abs_difference": 0.0,
+   "recomputed": {
+    "10%": 0.10284589538586741,
+    "15%": 0.07299359367539054,
+    "5%": 0.15486145364009468
+   }
+  }
+ },
+ "protocol": "BE_OPERATING_POINT_VERIFICATION_V1",
+ "recomputed_theta_map": {
+  "btc": {
+   "10%": 0.7230267681941027,
+   "15%": 0.5249913727523682,
+   "5%": 1.0845103653350594
+  },
+  "eth": {
+   "10%": 0.10284589538586741,
+   "15%": 0.07299359367539054,
+   "5%": 0.15486145364009468
+  }
+ },
+ "residual_limitation_stated": "a forged declaration could carry a forged verification block asserting a recomputation that never happened. That is not undetectable: the assertion is FALSIFIABLE by one command (`--verify`) over known bytes, which is a different situation from a claim nobody can check.",
+ "rows_artifact_path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_eraB.json",
+ "rows_artifact_sha256": "19a50195c34d0af21aba81b9f6b9501ea58656212d8448ddd8cc219da26d0f08",
+ "rows_by_coin_day": {
+  "btc": {
+   "2026-08-24": 321770,
+   "2026-08-25": 288005
+  },
+  "eth": {
+   "2026-08-24": 265018,
+   "2026-08-25": 261150
+  }
+ },
+ "rows_sha_matches_declaration": true,
+ "verifies_declaration_theta_map_sha16": "72b61c771efffb50",
+ "what_this_binds": "the NUMBERS to the BYTES. Every other provenance check in this path rehashes an artifact or digests the map against itself; this one derives the map from the artifact and compares."
+}

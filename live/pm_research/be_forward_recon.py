@@ -151,6 +151,55 @@ def _value_lines(text: str) -> list:
     return out
 
 
+def earliest_commit_with_todays_values(path: Path = None) -> dict:
+    """BE17-R4. COMPUTE the anchor instead of declaring it.
+
+    The previous guard defaulted to `TOLERANCE_DECLARING_COMMIT`, a constant in
+    the very file it guards, and absent from the value-lines it compares -- so
+    widening a tolerance and repointing the constant at the widening commit
+    reported `unchanged: True`. The reviewer drove that twice.
+
+    No constant is consulted here. This walks the file's own history and
+    reports the EARLIEST commit whose value-lines equal today's. Repointing a
+    constant cannot move that answer, because nothing reads the constant."""
+    f = Path(path or __file__).resolve()
+    me = Path(__file__).resolve()
+    tree = me.parents[2]
+    rel = str(me.relative_to(tree))
+    now = _value_lines(f.read_text())
+    log = subprocess.run(["git", "-C", str(tree), "log", "--format=%H %cI",
+                          "--reverse", "--", rel],
+                         capture_output=True, text=True)
+    if log.returncode != 0:
+        return {"checked": False, "why": log.stderr[:120]}
+    seen = []
+    for line in log.stdout.splitlines():
+        if not line.strip():
+            continue
+        h, when = line.split(" ", 1)
+        b = subprocess.run(["git", "-C", str(tree), "show", f"{h}:{rel}"],
+                           capture_output=True, text=True)
+        if b.returncode != 0:
+            continue
+        if _value_lines(b.stdout) == now:
+            seen.append((h, when))
+    return {
+        "checked": True,
+        "n_commits_examined": len(log.stdout.splitlines()),
+        "n_commits_carrying_todays_values": len(seen),
+        "earliest_commit_with_todays_values": seen[0][0] if seen else None,
+        "earliest_commit_time_utc": seen[0][1] if seen else None,
+        "values_sha16": hashlib.sha256(
+            "\n".join(now).encode()).hexdigest()[:16],
+        "no_constant_consulted": True,
+        "why": ("the anchor is DERIVED from the file's own history. A "
+                "widening changes today's value-lines, so the earliest commit "
+                "carrying them moves forward to the widening commit itself -- "
+                "which is exactly the signal, and no pointer can be repointed "
+                "to hide it."),
+    }
+
+
 def tolerance_values_unchanged_since(commit: str = None,
                                      path: Path = None) -> dict:
     """Are the TOLERANCE VALUES the ones declared before the first run?
@@ -447,6 +496,8 @@ def reconcile(artifact: Path = None, outdir: Path = None) -> dict:
             "declared_in": declaring_commit(),
             "tolerance_VALUES_unchanged_since_declaration":
                 tolerance_values_unchanged_since(),
+            "computed_anchor_no_constant_consulted":
+                earliest_commit_with_todays_values(),
             "whole_block_unchanged_since_declaration":
                 tolerances_unchanged_since(),
             "block_definition_changed_this_round": (
@@ -521,7 +572,7 @@ def reconcile(artifact: Path = None, outdir: Path = None) -> dict:
 # must be ADMITTED. Without the first half a reconciliation that always
 # passed would be indistinguishable from one that worked.
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 24
+EXPECTED_CHECKS = 27
 
 
 def selftest() -> int:
@@ -559,6 +610,26 @@ def selftest() -> int:
        f"to those committed at {TOLERANCE_DECLARING_COMMIT[:12]} "
        f"({tv.get('n_value_lines')} value lines, sha "
        f"{tv.get('values_sha16_now')})")
+    ca = earliest_commit_with_todays_values()
+    ok(ca["checked"] and ca["no_constant_consulted"] is True
+       and ca["earliest_commit_with_todays_values"],
+       f"BE17-R4 POSITIVE CONTROL: the anchor is COMPUTED from the file's own "
+       f"history -- earliest commit carrying today's values is "
+       f"{str(ca['earliest_commit_with_todays_values'])[:12]} at "
+       f"{ca['earliest_commit_time_utc']}, and NO constant was consulted")
+    ok(ca["earliest_commit_with_todays_values"].startswith(
+           TOLERANCE_DECLARING_COMMIT[:12]),
+       "and it independently derives the SAME commit the constant names -- so "
+       "the constant is now corroborated rather than trusted")
+    with __import__("tempfile").TemporaryDirectory() as _d2:
+        _w = Path(_d2) / "be_forward_recon.py"
+        _w.write_text(Path(__file__).read_text().replace(
+            "TOL_CENTS_ABS = 1e-6", "TOL_CENTS_ABS = 1e6"))
+        _cw = earliest_commit_with_todays_values(path=_w)
+        ok(_cw["checked"] and _cw["n_commits_carrying_todays_values"] == 0,
+           "BE17-R4 KNOWN-BAD (DRIVEN): with a widened tolerance NO commit in "
+           "history carries today's values -- so a widening cannot be hidden "
+           "by repointing anything, because no pointer is read")
     tu = tolerances_unchanged_since()
     ok(tu["checked"] and tu["unchanged"] is False,
        "and the WHOLE-BLOCK comparison against that same commit is False -- "

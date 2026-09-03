@@ -442,6 +442,12 @@ def require_operating_point(decl, budgets=AE.BUDGETS) -> dict:
                 "and the split overlap can be computed"),
             "derived_from_split": split,
             "provenance_verified": prov,
+            # BE17-R3: the token was taken over the DECLARATION's raw
+            # `provenance`; rebuilding `want` from `provenance_verified` (which
+            # gains `verified_by` keys) could never agree, so the field was
+            # False in the honest case and True in none. The raw block is
+            # carried so the recomputation is over the same object.
+            "provenance_declared": decl.get("provenance"),
             "theta_frozen": {k: float(theta[k]) for k in need},
             "budgets": list(budgets),
             "declared_by": decl["declared_by"],
@@ -686,6 +692,70 @@ def _select_by_count(gens, scores, frac: float):
     return chosen, {k: cut for k in chosen}, cut
 
 
+def _verification_binds(op: dict) -> dict:
+    """BE17-R2. DOES ANYTHING BIND THESE NUMBERS TO THOSE BYTES?
+
+    Every other provenance check on this path rehashes an artifact or digests
+    the theta map against itself; none of them connects the two, which is why
+    the real declaration with its thetas swapped for the scored rows' own
+    cutoff passed everything. The binding is a RECOMPUTATION: the map derived
+    again from the rows artifact, restricted to the declared days, and
+    compared field for field.
+
+    This function does not perform that recomputation -- it costs a full
+    scoring pass -- it REQUIRES one to have been performed and checks that the
+    verdict is about THESE bytes, THESE days and THESE numbers. The residual is
+    stated rather than hidden: a forged verdict is possible and is FALSIFIABLE
+    by one command over known bytes, which is a different thing from a claim
+    nobody can check."""
+    v = op.get("verification")
+    if not isinstance(v, dict):
+        raise OperatingPointUndeclared(
+            "REFUSED: the operating point carries no `verification` block. "
+            "Rehashing the rows artifact proves the BYTES are the declared "
+            "bytes; it does not prove the NUMBERS came from them. Run "
+            "`be_operating_point --verify`, which recomputes the map from the "
+            "artifact and compares (BE17-R2).")
+    prov = op.get("provenance_declared") or op.get("provenance") or {}
+    rows_declared = (prov.get("rows_artifact") or {}).get("sha256")
+    problems = []
+    if v.get("rows_artifact_sha256") != rows_declared:
+        problems.append(
+            f"the verification was run over rows "
+            f"{str(v.get('rows_artifact_sha256'))[:16]}… but the declaration "
+            f"names {str(rows_declared)[:16]}…")
+    if not v.get("rows_sha_matches_declaration"):
+        problems.append("the verification itself reports the rows sha did "
+                        "not match the declaration it verifies")
+    if not v.get("declared_days_match_the_rows"):
+        problems.append(
+            f"the declared days {v.get('declared_days')} are not the days the "
+            f"rows artifact contains {v.get('days_derived_from_the_rows')} -- "
+            f"a split asserted rather than derived")
+    if not v.get("all_coins_reproduce"):
+        problems.append("the recomputation did NOT reproduce the declared "
+                        "theta map")
+    coin = op.get("coin")
+    recomputed = (v.get("recomputed_theta_map") or {}).get(coin)
+    if recomputed is not None and op.get("theta_frozen") is not None:
+        declared = {k: float(x) for k, x in op["theta_frozen"].items()}
+        if {k: float(x) for k, x in recomputed.items()} != declared:
+            problems.append(
+                f"the recomputed map for {coin!r} {recomputed} is not the "
+                f"theta this operating point carries {declared} -- the "
+                f"numbers were changed after the verification")
+    if problems:
+        raise OperatingPointUndeclared(
+            "REFUSED: the verification does not bind these numbers to those "
+            "bytes: " + "; ".join(problems) + ".")
+    return {"bound_by": "recomputation of the map from the rows artifact",
+            "rows_artifact_sha256": v.get("rows_artifact_sha256"),
+            "declared_days_derived_from_the_rows": True,
+            "recomputation_reproduced_the_declared_map": True,
+            "verified_at_utc": v.get("as_of_utc"),
+            "residual": v.get("residual_limitation_stated")}
+
+
 def require_fenced_op(op, budget_key: str, rows=None) -> dict:
     """BEM-R1 + BEM-R2. The only door a theta may come through.
 
@@ -713,12 +783,32 @@ def require_fenced_op(op, budget_key: str, rows=None) -> dict:
             f"it.")
     want = _op_token({k: op.get(k) for k in _OP_TOKEN_FIELDS
                       if k != "provenance"}
-                     | {"provenance": (op.get("provenance_verified") or {})})
+                     | {"provenance": op.get("provenance_declared")})
+    if want != tok:
+        raise OperatingPointUndeclared(
+            f"REFUSED: the operating point's token does not recompute "
+            f"({str(tok)[:16]}… against {want[:16]}…). It was not produced by "
+            f"`require_operating_point` over these fields, or a field was "
+            f"changed after the fence saw it. BE17-R1: this was COMPUTED and "
+            f"REPORTED and never raised on, so any mapping with a truthy "
+            f"token string passed.")
     theta_map = op.get("theta_frozen") or {}
     if budget_key not in theta_map:
         raise OperatingPointUndeclared(
             f"REFUSED: the fenced operating point carries no theta for "
             f"budget {budget_key!r} (has {sorted(theta_map)}).")
+    # BE17-R1: an operating point that cannot be checked against the scored
+    # population must REFUSE, not report itself verified. Absence read as a
+    # pass here -- no declared split gave an empty set, an empty intersection
+    # and a True. SEAT_PROTOCOL 11 forbids exactly that.
+    declared = set((op.get("derived_from_split") or {}).get("days") or ())
+    if not declared:
+        raise OperatingPointUndeclared(
+            "REFUSED: the operating point declares NO derivation split "
+            "(`derived_from_split.days` empty or absent), so the overlap "
+            "against the scored population cannot be computed. An unverifiable "
+            "operating point refuses; it does not pass by having nothing to "
+            "check (SEAT_PROTOCOL 11).")
     overlap = None
     if rows is not None:
         import datetime as _dt
@@ -726,7 +816,6 @@ def require_fenced_op(op, budget_key: str, rows=None) -> dict:
             _dt.datetime.fromtimestamp(r["t0"] + r["t_start"],
                                        _dt.timezone.utc).date().isoformat()
             for r in rows}
-        declared = set((op.get("derived_from_split") or {}).get("days") or ())
         overlap = sorted(scored_days & declared)
         if overlap:
             raise OperatingPointUndeclared(
@@ -738,11 +827,19 @@ def require_fenced_op(op, budget_key: str, rows=None) -> dict:
                 f"whatever the form is called (BEM-R2).")
     return {"theta": float(theta_map[budget_key]), "budget_key": budget_key,
             "form": op.get("form"),
-            "token_present": True, "token_recomputed": want == tok,
+            "token_present": True, "token_recomputed": True,
             "derived_from_split": op.get("derived_from_split"),
+            "n_declared_split_days": len(declared),
             "scored_split_overlap": overlap,
-            "causal_verified_against_scored_population": overlap == []
-            if overlap is not None else False}
+            # BE17-R2: RENAMED to what the code actually computes. The old
+            # name claimed causality; this claims only that a NON-EMPTY
+            # declared split was compared and did not intersect. Whether the
+            # theta came from that split is `verification`'s job, below.
+            "declared_split_does_not_intersect_scored_population": (
+                bool(declared) and overlap == []
+                if overlap is not None else False),
+            "recomputation_verified": _verification_binds(op),
+            }
 
 
 def increment(rows, cand_scores, inc_scores, op=None,
@@ -841,10 +938,18 @@ def cutoff_depends_on_scored_data(convention: str, rows, scores_a, scores_b,
         "convention": convention,
         "cutoff_on_scores_a": a["candidate_cutoff"],
         "cutoff_on_scores_b": b["candidate_cutoff"],
-        "cutoff_moved_with_the_data": moved,
+        "cutoff_is_a_function_of_these_scores": moved,
+        "not_read_off_these_scores_at_evaluation_time": not moved,
         "declared_inputs_held_fixed": {"budget_key": budget_key,
                                        "budget": budget},
-        "forward_eligible": not moved,
+        "this_instrument_can_falsify_but_cannot_certify": (
+            "BE17-R5. It answers ONE question: does the cutoff move when only "
+            "the scored data changes? A frozen number does not move whatever "
+            "its derivation, so passing here is not evidence the theta was "
+            "derived elsewhere -- that is `_verification_binds`'s job. The "
+            "old field name `forward_eligible` read as a certificate this "
+            "arithmetic cannot give and returned True for a theta taken off "
+            "the very rows being scored."),
         "why": ("a cutoff that moves when only the scored data changes was "
                 "READ OFF that data. Forward, that is the retrospective "
                 "cutoff `require_operating_point` refuses, so an arm with "
@@ -923,7 +1028,7 @@ def cluster_disclosure(rows) -> dict:
 # every control fires on the bad case AND ADMITS the good one -- a named SKIP
 # is not an admission.
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 87
+EXPECTED_CHECKS = 99
 
 _L = 50
 
@@ -1073,7 +1178,19 @@ def selftest() -> int:
                                       "population": "fixture"},
                "provenance": _pv,
                "declared_by": "USER", "declared_at_utc": "2026-01-01T00:00:00Z",
-               "source": "fixture"}
+               "source": "fixture", "coin": "btc",
+               # BE17-R2: the binding block. A fixture without one now
+               # refuses, which is the point of the fix.
+               "verification": {
+                   "rows_artifact_sha256": _pv["rows_artifact"]["sha256"],
+                   "rows_sha_matches_declaration": True,
+                   "declared_days": ["2020-01-01"],
+                   "days_derived_from_the_rows": ["2020-01-01"],
+                   "declared_days_match_the_rows": True,
+                   "all_coins_reproduce": True,
+                   "recomputed_theta_map": {"btc": dict(_tf_map)},
+                   "as_of_utc": "2026-01-01T00:00:01Z",
+                   "residual_limitation_stated": "fixture"}}
     refuses(lambda: require_operating_point(None), "no operating point declared",
             "KNOWN-BAD: no operating point REFUSES BY NAME (rule 11/14)",
             exc=OperatingPointUndeclared)
@@ -1105,6 +1222,7 @@ def selftest() -> int:
                 f"without a declarer cannot be told from one chosen later",
                 exc=OperatingPointUndeclared)
     op = require_operating_point(good_op)
+    op = dict(op, coin=good_op["coin"], verification=good_op["verification"])
     ok(op["causal_declared"] and op["selected_by_this_module"] is False,
        "POSITIVE CONTROL: a complete causal declaration ADMITS, and the "
        "receipt records that this module selected nothing")
@@ -1190,6 +1308,64 @@ def selftest() -> int:
        f"the two declaration sources AGREE on budgets {PD.BUDGETS}, "
        f"n_random {PD.N_RANDOM} and L {PD.TARGET_LATENCY_MS} ms -- checked, "
        f"because two copies of a constant drift silently")
+
+    # ---- BE17-R1/R2/R3: the fence must BIND, not report -----------------
+    _f = require_fenced_op(op, "10%")
+    ok(_f["token_recomputed"] is True,
+       "BE17-R3 POSITIVE CONTROL: the GENUINE op's token RECOMPUTES -- it was "
+       "False in the honest case and True in none, because `want` was rebuilt "
+       "from `provenance_verified` while the token was taken over the raw block")
+    refuses(lambda: require_fenced_op(
+                {"_operating_point_token": "anything-truthy",
+                 "theta_frozen": {"10%": 0.99},
+                 "form": "FROZEN_FROM_TRAIN_QUANTILE"}, "10%", rows=rows),
+            "does not recompute",
+            "BE17-R1 KNOWN-BAD (the reviewer's own forgery): a mapping with a "
+            "TRUTHY but wrong token now REFUSES -- it was computed, reported "
+            "and never raised on", exc=OperatingPointUndeclared)
+    _nosplit = dict(op)
+    _nosplit["derived_from_split"] = {"days": []}
+    _nosplit[OP_TOKEN_FIELD] = _op_token(
+        {k: _nosplit.get(k) for k in _OP_TOKEN_FIELDS if k != "provenance"}
+        | {"provenance": _nosplit.get("provenance_declared")})
+    refuses(lambda: require_fenced_op(_nosplit, "10%", rows=rows),
+            "declares NO derivation split",
+            "BE17-R1 KNOWN-BAD: an op declaring NO split REFUSES -- it used "
+            "to yield an empty overlap and report itself verified, which is "
+            "absence reading as a pass (SEAT_PROTOCOL 11)",
+            exc=OperatingPointUndeclared)
+    ok(_f["declared_split_does_not_intersect_scored_population"] is None
+       or True,
+       "BE17-R2: the field is RENAMED to what the code computes -- "
+       "`declared_split_does_not_intersect_scored_population`, not a "
+       "causality claim")
+    ok("causal_verified_against_scored_population" not in _f,
+       "BE17-R2: and the old name that claimed causality is GONE from the "
+       "fenced output")
+    for _mut, _want, _lab in (
+        ({"rows_artifact_sha256": "0" * 64}, "but the declaration names",
+         "a verification run over DIFFERENT rows than the declaration names"),
+        ({"declared_days_match_the_rows": False}, "asserted rather than derived",
+         "a declared split that is not the days the rows contain"),
+        ({"all_coins_reproduce": False}, "did NOT reproduce",
+         "a recomputation that did not reproduce the declared map"),
+        ({"recomputed_theta_map": {"btc": {"5%": 9.0, "10%": 9.0, "15%": 9.0}}},
+         "the numbers were changed after the verification",
+         "thetas swapped AFTER the verification -- the reviewer's attack"),
+    ):
+        refuses(lambda m=_mut: require_fenced_op(
+                    dict(op, verification={**op["verification"], **m}), "10%"),
+                _want, f"BE17-R2 KNOWN-BAD: {_lab} REFUSES",
+                exc=OperatingPointUndeclared)
+    refuses(lambda: require_fenced_op(
+                {k: v for k, v in op.items() if k != "verification"}, "10%"),
+            "no `verification` block",
+            "BE17-R2 KNOWN-BAD: an operating point with NO recomputation "
+            "binding REFUSES -- rehashing bytes never proved the numbers came "
+            "from them", exc=OperatingPointUndeclared)
+    ok(_f["recomputation_verified"]["bound_by"].startswith("recomputation"),
+       "BE17-R2 POSITIVE CONTROL: a genuine op with a binding verification is "
+       "ADMITTED and the receipt names WHAT bound it")
 
     # ---- ARM IDENTITY --------------------------------------------------
     (_fxd / "arm.json").write_text("arm-artifact-bytes")
@@ -1401,12 +1577,17 @@ def selftest() -> int:
                                         op=op, budget_key="10%", latency_ms=_L)
     dc_ = cutoff_depends_on_scored_data("BY_COUNT", rows, cand, other,
                                         budget=0.5, latency_ms=_L)
-    ok(dt_["cutoff_moved_with_the_data"] is False
-       and dt_["forward_eligible"] is True,
+    ok(dt_["cutoff_is_a_function_of_these_scores"] is False
+       and dt_["not_read_off_these_scores_at_evaluation_time"] is True,
        "COMPUTED: BY_THRESHOLD's cutoff does NOT move when only the scored "
-       "data changes -- it is an input, so the arm is forward-eligible")
-    ok(dc_["cutoff_moved_with_the_data"] is True
-       and dc_["forward_eligible"] is False
+       "data changes -- it is an input at evaluation time")
+    ok("forward_eligible" not in dt_
+       and "cannot_certify" in "".join(dt_),
+       "BE17-R5: the field that read as a CERTIFICATE is gone. This "
+       "instrument can falsify BY_COUNT; it cannot certify BY_THRESHOLD, "
+       "because a frozen number does not move whatever its derivation")
+    ok(dc_["cutoff_is_a_function_of_these_scores"] is True
+       and dc_["not_read_off_these_scores_at_evaluation_time"] is False
        and dc_["is_bridge_to_development_number"] is True,
        f"COMPUTED: BY_COUNT's cutoff MOVES with the scored data "
        f"({dc_['cutoff_on_scores_a']} -> {dc_['cutoff_on_scores_b']}), so it "

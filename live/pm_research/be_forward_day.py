@@ -3369,12 +3369,21 @@ def selftest() -> int:
     ok(_now["emits_feed"] is True,
        f"BE17 POSITIVE CONTROL: this driver constructs a FeedWriter, writes "
        f"rows through it and records its manifest ({_now})")
-    _unwired = _src_now.replace("feed.write_window(_feed_rows, _feed_scores)",
-                                "pass  # unwired")
-    ok(_emits_feed(_unwired)["emits_feed"] is False,
-       "BE17 KNOWN-BAD: with the emission call removed the same predicate "
-       "returns False -- so the check above can fail, which is what makes it "
-       "a check rather than a description")
+    # BE17 (reviewer, LOW): the known-bad falsified only the `write_window`
+    # conjunct, so two thirds of `emits_feed` were asserted and not driven.
+    # Each conjunct now has its own mutation.
+    for _mut, _key, _lab in (
+        ("feed.write_window(_feed_rows, _feed_scores)",
+         "writes_rows_in_build_and_score", "the row emission"),
+        ("_feed = FeedWriter(day, outdir, _latency_of_record())",
+         "constructs_writer_in_run_forward_day", "the writer construction"),
+        ('rec["feed"] = _feed.manifest()',
+         "records_manifest_in_run_forward_day", "the manifest record"),
+    ):
+        _m = _emits_feed(_src_now.replace(_mut, "pass  # unwired"))
+        ok(_m[_key] is False and _m["emits_feed"] is False,
+           f"BE17 KNOWN-BAD: removing {_lab} turns `{_key}` AND `emits_feed` "
+           f"False -- each of the three conjuncts is driven, not asserted")
     with _tfd.TemporaryDirectory() as _fd:
         _L = _latency_of_record()
         _fr = [{"slug": "btc-updown-5m-1000", "side": "BUY_UP", "gen": 1,

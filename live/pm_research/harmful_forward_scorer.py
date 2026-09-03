@@ -597,9 +597,12 @@ def selftest() -> int:
             ok(_f in str(e) and "look right and are not" in str(e),
                f"BE14-S1 KNOWN-BAD: a declared {_f} that does not match the "
                f"artifact REFUSES BY NAME")
-    # THE REGRESSION THAT MATTERS: the un-declared call must be UNCHANGED,
-    # because `be_forward_day` calls `load_frozen()` with no expectation and
-    # this module sits inside the race's scoring stack.
+    # BE17 (reviewer, LOW): this comment used to say the un-declared call
+    # must be UNCHANGED "because be_forward_day calls load_frozen() with no
+    # expectation". That stopped being true in round 17 -- all four production
+    # call sites now bind `expect` -- and the control immediately below
+    # asserts the OPPOSITE. Prose beside a check that contradicts it is rule
+    # 10's shape, so the prose is corrected rather than left.
     # BEM-R3: the control that USED to live here asserted that an unbound
     # load returns the file unchecked -- a falsifier whose subject was the
     # hole. Replaced with one that FIRES.

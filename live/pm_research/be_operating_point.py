@@ -256,7 +256,7 @@ def build_declaration(days=("2026-08-24", "2026-08-25"),
     }
 
 
-EXPECTED_CHECKS = 17
+EXPECTED_CHECKS = 19
 
 
 def selftest() -> int:
@@ -351,6 +351,17 @@ def selftest() -> int:
             ok(_f["causal_declared"] and _f[_FM.OP_TOKEN_FIELD],
                f"POSITIVE CONTROL: the built declaration for {_c} PASSES the "
                f"fence -- provenance rehashed, theta digest recomputed")
+            if VERIFICATION_PATH.exists():
+                _fo = dict(_f, coin=_c, verification=_op["verification"])
+                _fen = _FM.require_fenced_op(_fo, "10%")
+                ok(_fen["token_recomputed"] is True
+                   and _fen["recomputation_verified"]["bound_by"].startswith(
+                       "recomputation"),
+                   f"BE17-R2 POSITIVE CONTROL: the REAL declaration for {_c} "
+                   f"passes the BINDING fence -- its numbers were recomputed "
+                   f"from the rows artifact it names")
+            else:
+                ok(False, f"no verification artifact for {_c}; run --verify")
         _bad = op_declaration_for(sorted(_d["theta_frozen_by_coin"])[0], _d)
         _bad["theta_frozen"] = {k: v + 1.0 for k, v in _bad["theta_frozen"].items()}
         try:
@@ -375,6 +386,94 @@ def selftest() -> int:
         print(f"FAIL: ran {checks} checks, EXPECTED_CHECKS={EXPECTED_CHECKS}.")
         return 1
     return 1 if fails else 0
+
+
+VERIFICATION_PATH = (Path(__file__).resolve().parent / "declarations"
+                     / "be_operating_point_verification_v1.json")
+
+
+def derive_days_from_rows(rows_path: Path = None, coins=("btc", "eth")) -> dict:
+    """WHICH DAYS DOES THE ROWS ARTIFACT ACTUALLY CONTAIN? Derived, not read.
+
+    BE17-R2 route (ii). `derived_from_split.days` was free text nobody derived
+    from the rows, so a day list that does not describe the rows could be
+    written. This asks the artifact. It reads only `day` and `coin`, so it
+    costs a streaming pass and no feature assembly."""
+    rows_path = Path(rows_path or TRAIN_ROWS)
+    per: dict = {}
+    n = 0
+    for r in stream_rows(rows_path):
+        n += 1
+        c = r.get("coin")
+        if c in coins:
+            per.setdefault(c, {})
+            d = r.get("day")
+            per[c][d] = per[c].get(d, 0) + 1
+    days = sorted({d for v in per.values() for d in v})
+    return {"rows_path": str(rows_path), "n_rows_scanned": n,
+            "days_present": days, "rows_by_coin_day":
+                {c: dict(sorted(v.items())) for c, v in sorted(per.items())},
+            "derived_not_declared": True}
+
+
+def verify_declaration_by_recomputation(declaration: dict = None,
+                                        progress=None) -> dict:
+    """BE17-R2 route (i): RECOMPUTE the map from the bytes and compare.
+
+    This is the only check that binds the NUMBERS to the ARTIFACT. It re-runs
+    the derivation over the rows the declaration names, restricted to the days
+    it names, and reports whether the result reproduces `theta_frozen_by_coin`
+    field for field. Expensive by nature -- that is why it is a receipted act
+    run once rather than something a per-cell fence does."""
+    d = declaration or json.loads(DECLARATION_PATH.read_text())
+    rows_path = Path(d["rows_artifact"]["path"])
+    rows_sha = sha256_file(rows_path)
+    days = tuple(d["derived_from_split"]["days"])
+    coins = tuple(d["derived_from_split"]["coins"])
+    budgets = tuple(float(b.rstrip("%")) / 100.0 for b in d["budgets"])
+    derived = derive_days_from_rows(rows_path, coins)
+    scored = score_training_split(days=days, coins=coins,
+                                  rows_path=rows_path, progress=progress)
+    got = theta_at_budgets(scored["gmax"], coins, budgets)
+    want = d["theta_frozen_by_coin"]
+    per_coin = {}
+    for c in sorted(set(got) | set(want)):
+        gw, ww = got.get(c, {}), want.get(c, {})
+        per_coin[c] = {
+            "recomputed": gw, "declared": ww,
+            "matches": gw == ww,
+            "max_abs_difference": max(
+                (abs(gw[k] - ww[k]) for k in gw if k in ww), default=None),
+        }
+    return {
+        "protocol": "BE_OPERATING_POINT_VERIFICATION_V1",
+        "as_of_utc": dt.datetime.now(dt.timezone.utc).strftime(
+            "%Y-%m-%dT%H:%M:%SZ"),
+        "verifies_declaration_theta_map_sha16": d["theta_map_sha16"],
+        "rows_artifact_path": str(rows_path),
+        "rows_artifact_sha256": rows_sha,
+        "rows_sha_matches_declaration":
+            rows_sha == d["rows_artifact"]["sha256"],
+        "declared_days": list(days),
+        "days_derived_from_the_rows": derived["days_present"],
+        "declared_days_match_the_rows":
+            sorted(days) == sorted(derived["days_present"]),
+        "rows_by_coin_day": derived["rows_by_coin_day"],
+        "per_coin": per_coin,
+        "recomputed_theta_map": got,
+        "all_coins_reproduce": all(v["matches"] for v in per_coin.values()),
+        "counters": scored["counters"],
+        "what_this_binds": ("the NUMBERS to the BYTES. Every other provenance "
+                            "check in this path rehashes an artifact or "
+                            "digests the map against itself; this one derives "
+                            "the map from the artifact and compares."),
+        "residual_limitation_stated": (
+            "a forged declaration could carry a forged verification block "
+            "asserting a recomputation that never happened. That is not "
+            "undetectable: the assertion is FALSIFIABLE by one command "
+            "(`--verify`) over known bytes, which is a different situation "
+            "from a claim nobody can check."),
+    }
 
 
 def op_declaration_for(coin: str, declaration: dict = None,
@@ -404,6 +503,8 @@ def op_declaration_for(coin: str, declaration: dict = None,
             f"be_operating_point --build over {d['derived_from_split']['days']}"
             f" ({d['counters']['rows_scored']:,} rows scored)"),
         "coin": coin,
+        "verification": (json.loads(VERIFICATION_PATH.read_text())
+                         if VERIFICATION_PATH.exists() else None),
     }
 
 
@@ -411,6 +512,18 @@ def main(argv=None) -> int:
     argv = list(sys.argv) if argv is None else list(argv)
     if "--selftest" in argv:
         return selftest()
+    if "--verify" in argv:
+        def prog(c):
+            print(f"  verify: slugs={c['slugs']} scored={c['rows_scored']}",
+                  flush=True)
+        v = verify_declaration_by_recomputation(progress=prog)
+        VERIFICATION_PATH.parent.mkdir(parents=True, exist_ok=True)
+        VERIFICATION_PATH.write_text(
+            json.dumps(v, indent=1, sort_keys=True, default=str))
+        print(json.dumps({k: val for k, val in v.items()
+                          if k not in ("rows_by_coin_day",)},
+                         indent=1, sort_keys=True, default=str))
+        return 0 if v["all_coins_reproduce"] else 1
     if "--build" in argv:
         def prog(c):
             print(f"  slugs={c['slugs']} rows_in_split={c['rows_in_split']} "
@@ -424,7 +537,7 @@ def main(argv=None) -> int:
                          default=str))
         print("counters:", json.dumps(d["counters"]))
         return 0
-    print("usage: be_operating_point.py --selftest | --build")
+    print("usage: be_operating_point.py --selftest | --build | --verify")
     return 2
 
 
