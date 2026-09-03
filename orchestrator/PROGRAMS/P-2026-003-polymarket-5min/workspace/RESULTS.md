@@ -303,6 +303,11 @@ blocked since 2026-08-19 and the calendar has now moved.
 
 ## 9. How to reload this program's context
 
+0. **If you are the coordinator**: `workspace/COORDINATOR_RUNBOOK.md` — the
+   cold-start order, the seat→pane map (re-derived, never hardcoded), dispatch
+   and register mechanics, the verification-battery pattern, what dies when a
+   coordinator session is cleared (the `/loop` wakeup and the commit monitor —
+   nothing in git or `data/`), and the standing prohibitions.
 1. `workspace/SEAT_PROTOCOL.md` — who may write what. **One writer per state
    file.** `STATUS.yml` and `HANDOFF.md` are MEM's; `COORDINATION.md` R-entries
    are append-only; this file is the coordinator's.
