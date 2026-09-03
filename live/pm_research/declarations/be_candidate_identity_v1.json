@@ -1,0 +1,17 @@
+{
+ "coins": [
+  "btc",
+  "eth"
+ ],
+ "declares_what_is_bound_today_not_what_ought_to_be": "this records the artifact the forward path ACTUALLY binds today. R-497 (C) and the reviewer both note it is arm A's frozen LINEAR (PM_PLUS_FINE), not LGBM_PINNED. Whether that is the intended forward candidate is a FREEZE-level ruling and is NOT decided here; what this file does is make any drift from it refuse rather than score quietly.",
+ "frozen_at_utc": "2026-08-26T10:21:49Z",
+ "model_form": "LINEAR",
+ "n_hazard_weights": 61,
+ "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_reduced_fine_candidate_v1.json",
+ "protocol": "BE_CANDIDATE_IDENTITY_DECLARATION_V1",
+ "sha256": "cfc454d62f521d9aecf389b51a6536a4fa9cadb2370a11c19fbce0da9a68c341",
+ "spec": "PM_PLUS_FINE (reduced fine)",
+ "status": "FROZEN",
+ "who_may_change_this": "the USER (rule 12: a freeze is a commit)",
+ "why": "the EXPECTED identity of the artifact the forward path scores with. Declared in a committed file because candidate_identity() hashes whatever CANDIDATE names and is self-consistent by construction, so it can never detect that CANDIDATE names the wrong model (BEM-R3)."
+}

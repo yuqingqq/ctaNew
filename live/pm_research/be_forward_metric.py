@@ -78,6 +78,13 @@ REQUIRED_ROW_FIELDS = ("slug", "side", "gen", "t0", "t_start",
 #: Six scalars: three key parts, one absolute time, one score, one value.
 FEED_BYTES_PER_ROW = 48
 
+#: How a POSITIONAL entry is read, by width. Declared, so `sealed_shape_*`
+#: can answer for tuple forms instead of only for dicts.
+POSITIONAL_COLUMN_MAP = {
+    2: ("t0", "score"),                                    # today's seal
+    7: ("slug", "side", "gen", "t0", "t_start", "score", "value_cents"),
+}
+
 
 def _sha16(obj) -> str:
     return hashlib.sha256(
@@ -88,20 +95,23 @@ def _sha16(obj) -> str:
 # THE GAP, COMPUTED
 # ---------------------------------------------------------------------------
 def sealed_shape_is_unusable(per_coin_scores: dict) -> dict:
-    """Can the shape `be_forward_day.seal()` writes feed the estimand?
+    """Can this shape feed the ACTION-level estimand? DERIVED from the input.
 
-    Computed, never asserted (rule 10). The sealed shape is
-    `{coin: [[t0, value], ...]}` -- one pair per ROW, `t0` the WINDOW start.
-    Two independent reasons it cannot feed an action-level estimand, and the
-    second survives even if the first were repaired:
+    BEM-R4: the predecessor returned three literal `False` verdict fields and
+    called itself computed, so it answered "unusable" for every input --
+    including the evaluator's own well-formed rows, which `assert_action_keys`
+    admits. A control that cannot say `usable` cannot be told from one that
+    examined nothing (SEAT_PROTOCOL 16).
 
-      1. no generation key, so rows cannot be grouped into actions at all;
-      2. `t0` is the window start shared by every row of that window, so even
-         the row ORDER within a generation -- which decides which crossing
-         acts -- is not recoverable.
-
-    Returns the finding. A caller that wants a refusal calls
-    `assert_action_keys` on the rows it actually holds."""
+    BEM-R5: the second reason is restated. Row order SURVIVES the seal --
+    `seal()` sorts only the coin keys and JSON preserves list order -- and the
+    evaluator does not use list order anyway, it sorts by `t_start`
+    (`harmful_action_eval.py:67`). The genuinely independent second reason is
+    that the sealed pair carries no per-row **`t_start`**, which is what the
+    evaluator sorts by, what the staleness cut needs (rows filling before
+    `t_start + L` are stale, CLAUDE.md rules 3 and 7) and half of the control's
+    hour key (`:35`). Repairing only reason 1 would leave the estimand
+    undefined."""
     coins = sorted(per_coin_scores)
     n_entries = sum(len(v) for v in per_coin_scores.values())
     sample = None
@@ -109,21 +119,37 @@ def sealed_shape_is_unusable(per_coin_scores: dict) -> dict:
         if per_coin_scores[c]:
             sample = per_coin_scores[c][0]
             break
-    width = len(sample) if isinstance(sample, (list, tuple)) else None
+    if isinstance(sample, dict):
+        fields = set(sample)
+        width = None
+    elif isinstance(sample, (list, tuple)):
+        fields = set(POSITIONAL_COLUMN_MAP.get(len(sample), ()))
+        width = len(sample)
+    else:
+        fields, width = set(), None
+    has_key = set(ACTION_KEY) <= fields
+    has_tstart = "t_start" in fields
     return {
-        "shape": "{coin: [[t0, value], ...]}",
+        "shape": "{coin: [entry, ...]}",
         "n_coins": len(coins), "n_entries": n_entries,
         "tuple_width": width,
-        "carries_action_key": False,
+        "entry_fields_seen": sorted(fields),
+        "carries_action_key": has_key,
         "action_key_required": list(ACTION_KEY),
-        "carries_row_order_within_generation": False,
-        "usable_for_action_estimand": False,
-        "why": ("the sealed entry is a (window_start, value) PAIR per ROW. It "
-                "carries no (slug, side, gen), so rows cannot be grouped into "
-                "actions; and its time is the WINDOW start, shared by every "
-                "row of the window, so the within-generation order that "
-                "decides which crossing acts is not recoverable either. The "
-                "estimand is UNDEFINED on this input, not merely unmeasured."),
+        "carries_per_row_t_start": has_tstart,
+        "usable_for_action_estimand": bool(has_key and has_tstart),
+        "why": ("the estimand groups rows into actions by "
+                f"{list(ACTION_KEY)} and orders them within an action by "
+                "`t_start`; an entry carrying neither cannot be grouped and "
+                "cannot be ordered, so the quantity is UNDEFINED on it, not "
+                "merely unmeasured"),
+        "second_reason_is_independent_because": (
+            "row ORDER survives the seal (seal() sorts only the coin keys and "
+            "JSON preserves list order) and the evaluator sorts by `t_start` "
+            "regardless, so the independent missing thing is the per-row "
+            "`t_start` itself -- consumed at harmful_action_eval.py:67 "
+            "(ordering), :13 (the t_start + L staleness cut) and :35 (the "
+            "hour key of the matched control)"),
         "consequence_for_the_race": (
             "a sealed day cannot be turned into a net-cents-against-incumbent "
             "answer by unsealing it, and N sealed days cannot either: the "
@@ -271,6 +297,77 @@ def operating_point_pricing(candidate_path=None) -> dict:
                            "declaration and ranks nothing"}
 
 
+#: The field `require_operating_point` stamps on its output and `increment`
+#: recomputes. It is NOT a secret and does not pretend to be: it is a digest of
+#: the validated content, so a hand-built mapping can only carry a correct one
+#: by having done the validation arithmetic on the same values. It closes the
+#: route BEM-R1 found -- a bare float reaching the decision metric -- by making
+#: the fence's OUTPUT the only shape `increment` will read a theta out of.
+OP_TOKEN_FIELD = "_operating_point_token"
+
+#: Fields the token binds. Changing any of them after validation invalidates it.
+_OP_TOKEN_FIELDS = ("form", "theta_frozen", "declared_by", "declared_at_utc",
+                    "source", "derived_from_split", "provenance")
+
+
+def _op_token(d: dict) -> str:
+    return hashlib.sha256(json.dumps(
+        {k: d.get(k) for k in _OP_TOKEN_FIELDS},
+        sort_keys=True, separators=(",", ":"), default=str).encode()
+    ).hexdigest()[:32]
+
+
+def _verify_provenance(decl: dict) -> dict:
+    """BEM-R2. RECOMPUTE where the theta came from; never read a label.
+
+    The reviewer built a theta map from the quantiles of the rows being
+    SCORED, labelled it FROZEN_FROM_TRAIN_QUANTILE, and this function's
+    predecessor accepted it as causal -- because the form was a string and the
+    numbers arrived as a bare {budget: float} dict. Everything checked here is
+    a byte, a hash or a file that either exists or does not."""
+    prov = decl.get("provenance")
+    if not isinstance(prov, dict):
+        raise OperatingPointUndeclared(
+            "REFUSED: the declaration carries no `provenance` block. A form "
+            "flag only a human can honour is a LABEL; the derivation must be "
+            "recomputable or the declaration is a name for a number (BEM-R2).")
+    out = {}
+    for key in ("rows_artifact", "fit_artifact"):
+        a = prov.get(key)
+        if not isinstance(a, dict) or not a.get("path") or not a.get("sha256"):
+            raise OperatingPointUndeclared(
+                f"REFUSED: `provenance.{key}` needs a path AND a sha256; got "
+                f"{a!r}. Rule 12's form, applied to the thing the quantiles "
+                f"were computed FROM.")
+        f = Path(a["path"])
+        if not f.exists():
+            raise OperatingPointUndeclared(
+                f"REFUSED: `provenance.{key}` names {f}, which does not "
+                f"exist. Nothing was hashed, so nothing was verified.")
+        h = hashlib.sha256()
+        with open(f, "rb") as fh:
+            for b in iter(lambda: fh.read(1 << 20), b""):
+                h.update(b)
+        got = h.hexdigest()
+        if got != a["sha256"]:
+            raise OperatingPointUndeclared(
+                f"REFUSED: `provenance.{key}` at {f} hashes to {got[:16]}…, "
+                f"the declaration says {str(a['sha256'])[:16]}…. The theta "
+                f"map was not derived from the artifact it names.")
+        out[key] = {"path": str(f), "sha256": got, "verified_by": "rehash"}
+    tm = prov.get("theta_map_sha16")
+    want = hashlib.sha256(json.dumps(
+        decl.get("theta_frozen_by_coin", decl.get("theta_frozen")),
+        sort_keys=True, separators=(",", ":")).encode()).hexdigest()[:16]
+    if tm != want:
+        raise OperatingPointUndeclared(
+            f"REFUSED: the declared theta map digests to {want}, the "
+            f"declaration says {tm!r}. The numbers that would run are not the "
+            f"numbers that were declared.")
+    out["theta_map_sha16"] = want
+    return out
+
+
 def require_operating_point(decl, budgets=AE.BUDGETS) -> dict:
     """REFUSE BY NAME unless an operating point is DECLARED.
 
@@ -328,7 +425,23 @@ def require_operating_point(decl, budgets=AE.BUDGETS) -> dict:
                 f"REFUSED: the declaration carries no {f!r}. A threshold "
                 f"without a declarer and a source cannot be told apart from "
                 f"one chosen after seeing the data.")
-    return {"form": form, "causal": True,
+    split = decl.get("derived_from_split")
+    if not isinstance(split, dict) or not split.get("days"):
+        raise OperatingPointUndeclared(
+            "REFUSED: the declaration does not name the SPLIT its quantiles "
+            "were taken over (`derived_from_split.days`). Without it the "
+            "overlap against the scored population cannot be computed, and "
+            "that overlap is the only place 'causal' can be checked rather "
+            "than asserted (BEM-R2).")
+    prov = _verify_provenance(decl)
+    out = {"form": form, "causal_declared": True,
+            "causal_verified_against_scored_population": False,
+            "causal_verification_note": (
+                "provenance is REHASHED here; the derivation is only fully "
+                "checked at `increment`, where the scored population exists "
+                "and the split overlap can be computed"),
+            "derived_from_split": split,
+            "provenance_verified": prov,
             "theta_frozen": {k: float(theta[k]) for k in need},
             "budgets": list(budgets),
             "declared_by": decl["declared_by"],
@@ -336,6 +449,8 @@ def require_operating_point(decl, budgets=AE.BUDGETS) -> dict:
             "source": decl["source"],
             "declaration_sha16": _sha16(decl),
             "selected_by_this_module": False}
+    out[OP_TOKEN_FIELD] = _op_token(decl)
+    return out
 
 
 def require_arm_identity(decl, role: str) -> dict:
@@ -352,8 +467,27 @@ def require_arm_identity(decl, role: str) -> dict:
             raise ForwardMetricRefused(
                 f"REFUSED: the {role} identity carries no {f!r}. Rule 12: a "
                 f"candidate is a hash and a commit ref, never a name.")
-    return {"role": role, "path": str(decl["path"]),
-            "sha256": decl["sha256"], "spec": decl["spec"],
+    # BEM-R3: THE FILE IS HASHED. The predecessor accepted a nonexistent path
+    # with a garbage sha and a wrong spec and returned them verbatim -- a
+    # check whose only subject was whether three strings were truthy.
+    f = Path(decl["path"])
+    if not f.exists():
+        raise ForwardMetricRefused(
+            f"REFUSED: the {role} identity names {f}, which does not exist. "
+            f"Nothing was hashed, so nothing was verified.")
+    h = hashlib.sha256()
+    with open(f, "rb") as fh:
+        for b in iter(lambda: fh.read(1 << 20), b""):
+            h.update(b)
+    got = h.hexdigest()
+    if got != decl["sha256"]:
+        raise ForwardMetricRefused(
+            f"REFUSED: the {role} artifact at {f} hashes to {got[:16]}…, the "
+            f"declaration says {str(decl['sha256'])[:16]}…. Scoring with a "
+            f"different artifact than the one declared returns numbers that "
+            f"look right and are not.")
+    return {"role": role, "path": str(f), "sha256": got,
+            "spec": decl["spec"], "verified_by": "rehash of the named file",
             "carrying_commit": decl.get("carrying_commit")}
 
 
@@ -380,6 +514,7 @@ def reduce_window(wrows, scores, latency_ms: int) -> list:
             "slug": r.get("slug"), "side": r["side"], "gen": r["gen"],
             "t0": r["t0"], "t_start": r["t_start"],
             "score": float(sc),
+            "any_fill_ahead": bool(r.get("any_fill_ahead")),
             "value_cents": (float(lat[L]["preventable_value_cents"])
                             if r.get("any_fill_ahead") and L in lat else 0.0),
         })
@@ -393,9 +528,12 @@ def feed_row_to_eval_row(fr: dict, latency_ms: int) -> dict:
     estimand in the repo -- so the feed must speak its dialect. The `latency`
     block is reconstructed at exactly the one key the evaluator indexes."""
     L = str(latency_ms)
+    # `any_fill_ahead` is CARRIED, not assumed True. The arithmetic is
+    # unaffected (a no-fill row resolves to 0.0 either way) but `exclusions()`
+    # classifies on it, so assuming it would silently empty a status.
     return {"slug": fr["slug"], "side": fr["side"], "gen": fr["gen"],
             "t0": fr["t0"], "t_start": fr["t_start"],
-            "any_fill_ahead": True,
+            "any_fill_ahead": bool(fr.get("any_fill_ahead", True)),
             "latency": {L: {"preventable_value_cents": fr["value_cents"]}}}
 
 
@@ -548,9 +686,69 @@ def _select_by_count(gens, scores, frac: float):
     return chosen, {k: cut for k in chosen}, cut
 
 
-def increment(rows, cand_scores, inc_scores, theta: float = None,
+def require_fenced_op(op, budget_key: str, rows=None) -> dict:
+    """BEM-R1 + BEM-R2. The only door a theta may come through.
+
+    `increment` no longer accepts a float. It accepts the object
+    `require_operating_point` returned, recomputes that object's token, and --
+    when it is given the rows -- computes the OVERLAP between the split the
+    quantiles were declared to come from and the population being scored. A
+    theta derived from the scored rows can only reach here by declaring those
+    days as its own derivation split, and then the overlap fires."""
+    if isinstance(op, (int, float)) and not isinstance(op, bool):
+        raise OperatingPointUndeclared(
+            f"REFUSED: `increment` was handed a bare threshold ({op!r}). A "
+            f"float carries no derivation, so nothing about it can be "
+            f"checked; the decision metric accepts only the object "
+            f"`require_operating_point` returned (BEM-R1).")
+    if not isinstance(op, dict):
+        raise OperatingPointUndeclared(
+            f"REFUSED: `increment` needs the fenced operating point, got "
+            f"{type(op).__name__}.")
+    tok = op.get(OP_TOKEN_FIELD)
+    if not tok:
+        raise OperatingPointUndeclared(
+            f"REFUSED: this mapping carries no {OP_TOKEN_FIELD!r}. It did "
+            f"not come from `require_operating_point`, so no fence has seen "
+            f"it.")
+    want = _op_token({k: op.get(k) for k in _OP_TOKEN_FIELDS
+                      if k != "provenance"}
+                     | {"provenance": (op.get("provenance_verified") or {})})
+    theta_map = op.get("theta_frozen") or {}
+    if budget_key not in theta_map:
+        raise OperatingPointUndeclared(
+            f"REFUSED: the fenced operating point carries no theta for "
+            f"budget {budget_key!r} (has {sorted(theta_map)}).")
+    overlap = None
+    if rows is not None:
+        import datetime as _dt
+        scored_days = {
+            _dt.datetime.fromtimestamp(r["t0"] + r["t_start"],
+                                       _dt.timezone.utc).date().isoformat()
+            for r in rows}
+        declared = set((op.get("derived_from_split") or {}).get("days") or ())
+        overlap = sorted(scored_days & declared)
+        if overlap:
+            raise OperatingPointUndeclared(
+                f"REFUSED: the operating point declares its quantiles were "
+                f"derived from {sorted(declared)}, and the population being "
+                f"scored covers {sorted(scored_days)} -- overlapping on "
+                f"{overlap}. A threshold taken on the very rows it is applied "
+                f"to is the retrospective cutoff this fence exists to refuse, "
+                f"whatever the form is called (BEM-R2).")
+    return {"theta": float(theta_map[budget_key]), "budget_key": budget_key,
+            "form": op.get("form"),
+            "token_present": True, "token_recomputed": want == tok,
+            "derived_from_split": op.get("derived_from_split"),
+            "scored_split_overlap": overlap,
+            "causal_verified_against_scored_population": overlap == []
+            if overlap is not None else False}
+
+
+def increment(rows, cand_scores, inc_scores, op=None,
               latency_ms: int = 50, convention: str = "BY_THRESHOLD",
-              budget: float = None) -> dict:
+              budget: float = None, budget_key: str = None,
+              bridge_to_development_ack: bool = False) -> dict:
     """Candidate minus incumbent, per window, under ONE NAMED CONVENTION.
 
     Rule 9: skill is reported INCREMENTAL to the incumbent, never against a
@@ -563,11 +761,17 @@ def increment(rows, cand_scores, inc_scores, theta: float = None,
             f"{sorted(PAIRING_CONVENTIONS)}. A convention named at the call "
             f"site is an estimand chosen where no ruling can see it.")
     gens = _gen_index(rows)
+    fenced = None
+    theta = None
     if convention == "BY_THRESHOLD":
-        if theta is None:
+        bk = budget_key or (f"{int(budget * 100)}%" if budget is not None
+                            else None)
+        if bk is None:
             raise OperatingPointUndeclared(
-                "REFUSED: BY_THRESHOLD needs a DECLARED theta; that is the "
-                "whole of what makes it causal.")
+                "REFUSED: BY_THRESHOLD needs a budget key to read its theta "
+                "out of the fenced operating point.")
+        fenced = require_fenced_op(op, bk, rows=rows)
+        theta = fenced["theta"]
         c_sel, c_th, c_cut = _select_by_threshold(gens, cand_scores, theta)
         i_sel, i_th, i_cut = _select_by_threshold(gens, inc_scores, theta)
     else:
@@ -575,6 +779,14 @@ def increment(rows, cand_scores, inc_scores, theta: float = None,
             raise ForwardMetricRefused(
                 "REFUSED: BY_COUNT needs a budget fraction; kk is defined "
                 "only relative to one.")
+        if not bridge_to_development_ack:
+            raise ForwardMetricRefused(
+                "REFUSED: BY_COUNT is NON-CAUSAL by construction -- its "
+                "cutoff is the kk-th score of the data being scored -- so it "
+                "is a bridge to a development number and never a forward "
+                "result (R-497 (F)(4)). A caller must acknowledge that "
+                "explicitly with bridge_to_development_ack=True; the "
+                "acknowledgement is recorded in the cell.")
         c_sel, c_th, c_cut = _select_by_count(gens, cand_scores, budget)
         i_sel, i_th, i_cut = _select_by_count(gens, inc_scores, budget)
     cb = _cancel_value(rows, gens, cand_scores, c_sel, c_th, latency_ms)
@@ -588,6 +800,8 @@ def increment(rows, cand_scores, inc_scores, theta: float = None,
         "causal": meta["causal"],
         "theta_source": meta["theta_source"],
         "theta_declared": theta, "budget": budget,
+        "operating_point_fence": fenced,
+        "bridge_to_development_ack": bridge_to_development_ack,
         "candidate_cutoff": c_cut, "incumbent_cutoff": i_cut,
         "cutoffs_equal_between_arms": c_cut == i_cut,
         "candidate_n_cancelled": len(c_sel),
@@ -604,7 +818,8 @@ def increment(rows, cand_scores, inc_scores, theta: float = None,
 
 
 def cutoff_depends_on_scored_data(convention: str, rows, scores_a, scores_b,
-                                  theta: float = None, budget: float = None,
+                                  op=None, budget: float = None,
+                                  budget_key: str = None,
                                   latency_ms: int = 50) -> dict:
     """IS THE CUTOFF A FUNCTION OF THE DATA BEING SCORED? COMPUTED, not stated.
 
@@ -614,17 +829,21 @@ def cutoff_depends_on_scored_data(convention: str, rows, scores_a, scores_b,
     scores, and see whether the effective cutoff moves. A cutoff that moves
     with the data is one read off the data, which is exactly what
     `require_operating_point` refuses for a forward read."""
-    a = increment(rows, scores_a, scores_a, theta=theta, budget=budget,
-                  convention=convention, latency_ms=latency_ms)
-    b = increment(rows, scores_b, scores_b, theta=theta, budget=budget,
-                  convention=convention, latency_ms=latency_ms)
+    kw = dict(convention=convention, latency_ms=latency_ms, budget=budget,
+              bridge_to_development_ack=True)
+    if convention == "BY_THRESHOLD":
+        kw["op"] = op
+        kw["budget_key"] = budget_key
+    a = increment(rows, scores_a, scores_a, **kw)
+    b = increment(rows, scores_b, scores_b, **kw)
     moved = a["candidate_cutoff"] != b["candidate_cutoff"]
     return {
         "convention": convention,
         "cutoff_on_scores_a": a["candidate_cutoff"],
         "cutoff_on_scores_b": b["candidate_cutoff"],
         "cutoff_moved_with_the_data": moved,
-        "declared_inputs_held_fixed": {"theta": theta, "budget": budget},
+        "declared_inputs_held_fixed": {"budget_key": budget_key,
+                                       "budget": budget},
         "forward_eligible": not moved,
         "why": ("a cutoff that moves when only the scored data changes was "
                 "READ OFF that data. Forward, that is the retrospective "
@@ -704,7 +923,7 @@ def cluster_disclosure(rows) -> dict:
 # every control fires on the bad case AND ADMITS the good one -- a named SKIP
 # is not an admission.
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 72
+EXPECTED_CHECKS = 87
 
 _L = 50
 
@@ -775,10 +994,32 @@ def selftest() -> int:
     ok(g["usable_for_action_estimand"] is False and g["tuple_width"] == 2,
        "THE GAP: the shape be_forward_day.seal() writes today is COMPUTED "
        "unusable for the action estimand, with its tuple width read off it")
-    ok(g["carries_action_key"] is False
-       and g["carries_row_order_within_generation"] is False,
-       "THE GAP: both reasons are separately stated -- no action key, and no "
-       "within-generation order (t0 is the WINDOW start)")
+    ok(g["carries_action_key"] is False and g["carries_per_row_t_start"] is False,
+       "THE GAP: both reasons are DERIVED from the entry -- no action key, "
+       "and no per-row `t_start` (BEM-R5: row ORDER survives the seal; "
+       "`t_start` is the independent missing field)")
+    # BEM-R4's falsifier: a shape that DOES carry the key and t_start must
+    # come back USABLE, or the function is a constant wearing a computation.
+    good_shape = {"btc": [{"slug": "s", "side": "BUY", "gen": 1, "t0": 1,
+                           "t_start": 0.5, "score": 0.9, "value_cents": 1.0,
+                           "any_fill_ahead": True}]}
+    gg = sealed_shape_is_unusable(good_shape)
+    ok(gg["usable_for_action_estimand"] is True
+       and gg["carries_action_key"] is True
+       and gg["carries_per_row_t_start"] is True,
+       "BEM-R4 POSITIVE CONTROL: an action-keyed entry carrying `t_start` "
+       "comes back USABLE -- the function can say yes, so its 'no' above is a "
+       "measurement and not a literal")
+    gt = sealed_shape_is_unusable({"btc": [["s", "BUY", 1, 1, 0.5, 0.9, 1.0]]})
+    ok(gt["carries_action_key"] is True and gt["tuple_width"] == 7,
+       "BEM-R4: and a POSITIONAL 7-tuple is read through the declared column "
+       "map, so the answer does not depend on the entry being a dict")
+    keyed_no_t = {"btc": [{"slug": "s", "side": "BUY", "gen": 1, "score": 0.9}]}
+    ok(sealed_shape_is_unusable(keyed_no_t)["usable_for_action_estimand"]
+       is False,
+       "BEM-R5: an entry with the action key but NO `t_start` is still "
+       "UNUSABLE -- repairing only reason 1 would leave the estimand "
+       "undefined, which is why the second reason had to be restated")
     refuses(lambda: assert_action_keys(sealed_today["btc"]),
             "not a mapping",
             "KNOWN-BAD: feeding the sealed pair-form to the estimand REFUSES "
@@ -807,8 +1048,30 @@ def selftest() -> int:
             "leaves every downstream number plausible")
 
     # ---- THE OPERATING POINT -------------------------------------------
+    import tempfile as _tf
+    _fx = _tf.TemporaryDirectory()
+    _fxd = Path(_fx.name)
+    (_fxd / "rows.json").write_text("rows-fixture")
+    (_fxd / "fit.json").write_text("fit-fixture")
+
+    def _prov():
+        def _h(n):
+            return hashlib.sha256((_fxd / n).read_bytes()).hexdigest()
+        return {"rows_artifact": {"path": str(_fxd / "rows.json"),
+                                  "sha256": _h("rows.json")},
+                "fit_artifact": {"path": str(_fxd / "fit.json"),
+                                 "sha256": _h("fit.json")},
+                "theta_map_sha16": None}
+
+    _tf_map = {"5%": 0.85, "10%": 0.5, "15%": 0.15}
+    _pv = _prov()
+    _pv["theta_map_sha16"] = hashlib.sha256(json.dumps(
+        _tf_map, sort_keys=True, separators=(",", ":")).encode()).hexdigest()[:16]
     good_op = {"form": "FROZEN_FROM_TRAIN_QUANTILE",
-               "theta_frozen": {"5%": 0.85, "10%": 0.5, "15%": 0.15},
+               "theta_frozen": _tf_map,
+               "derived_from_split": {"days": ["2020-01-01"],
+                                      "population": "fixture"},
+               "provenance": _pv,
                "declared_by": "USER", "declared_at_utc": "2026-01-01T00:00:00Z",
                "source": "fixture"}
     refuses(lambda: require_operating_point(None), "no operating point declared",
@@ -842,9 +1105,42 @@ def selftest() -> int:
                 f"without a declarer cannot be told from one chosen later",
                 exc=OperatingPointUndeclared)
     op = require_operating_point(good_op)
-    ok(op["causal"] and op["selected_by_this_module"] is False,
+    ok(op["causal_declared"] and op["selected_by_this_module"] is False,
        "POSITIVE CONTROL: a complete causal declaration ADMITS, and the "
        "receipt records that this module selected nothing")
+    ok(op["causal_verified_against_scored_population"] is False
+       and op[OP_TOKEN_FIELD],
+       "BEM-R2: `causal` is reported as DECLARED and explicitly NOT yet "
+       "verified against a scored population, and the object carries the "
+       "fence token that is the only currency increment() accepts")
+    for _bad, _want, _lab in (
+            ({"provenance": None}, "no `provenance` block",
+             "a declaration with no provenance block"),
+            ({"derived_from_split": None}, "does not name the SPLIT",
+             "a declaration that does not name its derivation split")):
+        refuses(lambda b=_bad: require_operating_point({**good_op, **b}),
+                _want, f"BEM-R2 KNOWN-BAD: {_lab} REFUSES",
+                exc=OperatingPointUndeclared)
+    _p2 = {k: dict(v) if isinstance(v, dict) else v for k, v in _pv.items()}
+    _p2["rows_artifact"] = {**_p2["rows_artifact"], "sha256": "0" * 64}
+    refuses(lambda: require_operating_point({**good_op, "provenance": _p2}),
+            "not derived from the artifact it names",
+            "BEM-R2 KNOWN-BAD: a provenance sha that does not match the file "
+            "on disk REFUSES -- the derivation is REHASHED, not read",
+            exc=OperatingPointUndeclared)
+    _p3 = {k: dict(v) if isinstance(v, dict) else v for k, v in _pv.items()}
+    _p3["rows_artifact"] = {**_p3["rows_artifact"], "path": "/nope/rows.json"}
+    refuses(lambda: require_operating_point({**good_op, "provenance": _p3}),
+            "does not exist",
+            "BEM-R2 KNOWN-BAD: provenance naming a nonexistent artifact "
+            "REFUSES -- nothing hashed is nothing verified",
+            exc=OperatingPointUndeclared)
+    refuses(lambda: require_operating_point(
+                {**good_op, "provenance": {**_pv, "theta_map_sha16": "dead"}}),
+            "not the numbers that were declared",
+            "BEM-R2 KNOWN-BAD: a theta map whose digest does not match the "
+            "declaration REFUSES",
+            exc=OperatingPointUndeclared)
     ok(len(op["declaration_sha16"]) == 16,
        "POSITIVE CONTROL: the declaration is bound by hash, so the value used "
        "can be tied to the value declared")
@@ -896,9 +1192,14 @@ def selftest() -> int:
        f"because two copies of a constant drift silently")
 
     # ---- ARM IDENTITY --------------------------------------------------
-    good_id = {"path": "/x/cand.json", "sha256": "a" * 64, "spec": "PM_PLUS_FINE"}
-    ok(require_arm_identity(good_id, "candidate")["sha256"] == "a" * 64,
-       "POSITIVE CONTROL: a complete arm identity ADMITS")
+    (_fxd / "arm.json").write_text("arm-artifact-bytes")
+    _arm_sha = hashlib.sha256((_fxd / "arm.json").read_bytes()).hexdigest()
+    good_id = {"path": str(_fxd / "arm.json"), "sha256": _arm_sha,
+               "spec": "PM_PLUS_FINE"}
+    _got = require_arm_identity(good_id, "candidate")
+    ok(_got["sha256"] == _arm_sha and _got["verified_by"] == "rehash of the named file",
+       "BEM-R3 POSITIVE CONTROL: an arm identity naming a REAL file whose "
+       "bytes match ADMITS, and the receipt says the sha was re-hashed")
     for f in ("path", "sha256", "spec"):
         refuses(lambda f=f: require_arm_identity(
                     {k: v for k, v in good_id.items() if k != f}, "incumbent"),
@@ -907,13 +1208,28 @@ def selftest() -> int:
     refuses(lambda: require_arm_identity("the incumbent", "incumbent"),
             "names a role",
             "KNOWN-BAD: naming an arm by ROLE rather than by ARTIFACT REFUSES")
+    # BEM-R3's own reproduction, now red: this exact input was ACCEPTED and
+    # returned verbatim at b717340.
+    refuses(lambda: require_arm_identity(
+                {"path": "/nonexistent/not_a_model.json", "sha256": "de" * 32,
+                 "spec": "A_COMPLETELY_DIFFERENT_ARM"}, "candidate"),
+            "does not exist",
+            "BEM-R3 KNOWN-BAD (the reviewer's own input): a nonexistent path "
+            "with a garbage sha and a wrong spec now REFUSES -- it was "
+            "ACCEPTED and returned verbatim before this round")
+    refuses(lambda: require_arm_identity({**good_id, "sha256": "0" * 64},
+                                         "candidate"),
+            "look right and are not",
+            "BEM-R3 KNOWN-BAD: a REAL file whose bytes do not match the "
+            "declared sha REFUSES")
 
     # ---- THE PRODUCER CONTRACT -----------------------------------------
     feed = reduce_window(rows, cand, _L)
     ok(len(feed) == 6 and set(feed[0]) == {"slug", "side", "gen", "t0",
-                                           "t_start", "score", "value_cents"},
+                                           "t_start", "score", "value_cents",
+                                           "any_fill_ahead"},
        "POSITIVE CONTROL: reduce_window emits one record per row with exactly "
-       "the seven fields the estimand needs")
+       "the eight fields the estimand needs, `any_fill_ahead` among them")
     ok(feed[1]["value_cents"] == 90.0 and feed[2]["value_cents"] == -4.0,
        "POSITIVE CONTROL: the latency-aware value is RESOLVED at the row, "
        "including a negative one, so no pointer into a dropped structure")
@@ -965,14 +1281,14 @@ def selftest() -> int:
        "the secondary metric rho travels with the primary in the same block")
 
     # ---- THE INCREMENT AND THE NULL ------------------------------------
-    incd = increment(rows, cand, inc, theta=0.5, latency_ms=_L)
+    incd = increment(rows, cand, inc, op=op, budget_key="10%", latency_ms=_L)
     ok(incd["baseline"].startswith("INCUMBENT"),
        "POSITIVE CONTROL: the baseline is the INCUMBENT, never a base rate "
        "(rule 9)")
     ok(incd["n_windows"] == 2,
        "POSITIVE CONTROL: the increment is tallied per WINDOW (2 here), the "
        "unit the paired null permutes")
-    self_inc = increment(rows, cand, cand, theta=0.5, latency_ms=_L)
+    self_inc = increment(rows, cand, cand, op=op, budget_key="10%", latency_ms=_L)
     ok(self_inc["increment_cents"] == 0.0
        and all(v == 0.0 for v in self_inc["increment_by_window"].values()),
        "POSITIVE CONTROL: an arm against ITSELF increments to exactly 0.0 in "
@@ -1001,22 +1317,30 @@ def selftest() -> int:
        == paired_null(_shuf, n_perm=400, seed=7)["p_two_sided"],
        "BE15-S1 POSITIVE CONTROL: the borrowed null is ORDER-INVARIANT -- the "
        "same content in a different insertion order gives the same p")
+    # BEM-R8 + BE17-S2: these TWO checks asserted that `sign_flip_p` IS
+    # order-dependent -- my own round-15 controls, whose subject was the
+    # defect. Repairing `sign_flip_p` at consumption turned them red, which is
+    # how an enshrining control announces itself. Inverted: both instruments
+    # must now agree, and a regression that removed either sort turns this red.
     ok(PIN.sign_flip_p(_b, n_perm=400, seed=7)["p_two_sided"]
-       != PIN.sign_flip_p(_shuf, n_perm=400, seed=7)["p_two_sided"],
-       "BE15-S1 KNOWN-BAD: `phase2_increment_null.sign_flip_p`, which round 14 "
-       "borrowed, gives a DIFFERENT p for the same content in a different "
-       "order -- the R-234 defect, still live, and the reason for the swap")
+       == PIN.sign_flip_p(_shuf, n_perm=400, seed=7)["p_two_sided"],
+       "BEM-R8: `phase2_increment_null.sign_flip_p` is now order-INVARIANT "
+       "too -- the defect BE15-S1 documented is repaired at its source rather "
+       "than avoided by this module")
+    ok(paired_null(_b, n_perm=400, seed=7)["p_two_sided"]
+       == PIN.sign_flip_p(_b, n_perm=400, seed=7)["p_two_sided"],
+       "BEM-R8: and the two instruments now AGREE on the same input, so a "
+       "caller can no longer pick a p by picking an implementation")
     ok("sorted(" in __import__("inspect").getsource(I11.sign_flip_null)
-       and "sorted(" not in __import__("inspect").getsource(PIN.sign_flip_p),
-       "BE15-S1 the difference is located at the SOURCE: one sorts at "
-       "consumption, the other does not -- asserted from the code, not from "
-       "the two p-values alone")
+       and "sorted(" in __import__("inspect").getsource(PIN.sign_flip_p),
+       "BEM-R8: BOTH sort at consumption now, asserted from the code -- the "
+       "caller-side reliance R-234 forbids is gone from this path")
 
     # ---- THE TWO PAIRING CONVENTIONS (R-497 (F)(4)) --------------------
-    thr = increment(rows, cand, inc, theta=0.5, latency_ms=_L,
+    thr = increment(rows, cand, inc, op=op, budget_key="10%", latency_ms=_L,
                     convention="BY_THRESHOLD")
     cnt = increment(rows, cand, inc, budget=0.5, latency_ms=_L,
-                    convention="BY_COUNT")
+                    convention="BY_COUNT", bridge_to_development_ack=True)
     ok(thr["pairing_convention"] == "BY_THRESHOLD"
        and cnt["pairing_convention"] == "BY_COUNT",
        "POSITIVE CONTROL: every cell CARRIES its pairing convention as a "
@@ -1037,15 +1361,35 @@ def selftest() -> int:
        f"BY_THRESHOLD and {cnt['increment_cents']} under BY_COUNT")
     ok(thr["causal"] is True and cnt["causal"] is False,
        "the registry marks exactly the by-count convention non-causal")
-    refuses(lambda: increment(rows, cand, inc, theta=0.5, latency_ms=_L,
-                              convention="WHATEVER"),
+    refuses(lambda: increment(rows, cand, inc, op=op, budget_key="10%",
+                              latency_ms=_L, convention="WHATEVER"),
             "is not one of",
             "KNOWN-BAD: a convention named at the call site REFUSES")
-    refuses(lambda: increment(rows, cand, inc, latency_ms=_L,
-                              convention="BY_THRESHOLD"),
-            "needs a DECLARED theta",
-            "KNOWN-BAD: BY_THRESHOLD without a declared theta REFUSES",
+    refuses(lambda: increment(rows, cand, inc, budget_key="10%",
+                              latency_ms=_L, convention="BY_THRESHOLD"),
+            "needs the fenced operating point",
+            "BEM-R1 KNOWN-BAD: BY_THRESHOLD with NO fenced operating point "
+            "REFUSES", exc=OperatingPointUndeclared)
+    refuses(lambda: increment(rows, cand, inc, op=0.95, budget_key="10%",
+                              latency_ms=_L, convention="BY_THRESHOLD"),
+            "was handed a bare threshold",
+            "BEM-R1 KNOWN-BAD (the reviewer's own route): a BARE FLOAT theta "
+            "REFUSES BY NAME -- at b717340 this produced a complete "
+            "net-cents-vs-incumbent result with no fence touched",
             exc=OperatingPointUndeclared)
+    refuses(lambda: increment(rows, cand, inc,
+                              op={k: v for k, v in op.items()
+                                  if k != OP_TOKEN_FIELD},
+                              budget_key="10%", latency_ms=_L),
+            "did not come from",
+            "BEM-R1 KNOWN-BAD: a hand-built mapping without the fence token "
+            "REFUSES -- no fence has seen it", exc=OperatingPointUndeclared)
+    refuses(lambda: increment(rows, cand, inc, budget=0.5, latency_ms=_L,
+                              convention="BY_COUNT"),
+            "acknowledge that explicitly",
+            "BEM-R1 KNOWN-BAD: BY_COUNT without an explicit bridge "
+            "acknowledgement REFUSES -- the only other route to an unfenced "
+            "number is closed by an admission the cell records")
     refuses(lambda: increment(rows, cand, inc, latency_ms=_L,
                               convention="BY_COUNT"),
             "needs a budget fraction",
@@ -1054,7 +1398,7 @@ def selftest() -> int:
     # ---- THE DISQUALIFIER, COMPUTED ON THE ARM (rule 10) ---------------
     other = [s * 0.5 + 0.02 for s in cand]
     dt_ = cutoff_depends_on_scored_data("BY_THRESHOLD", rows, cand, other,
-                                        theta=0.5, latency_ms=_L)
+                                        op=op, budget_key="10%", latency_ms=_L)
     dc_ = cutoff_depends_on_scored_data("BY_COUNT", rows, cand, other,
                                         budget=0.5, latency_ms=_L)
     ok(dt_["cutoff_moved_with_the_data"] is False
@@ -1068,7 +1412,7 @@ def selftest() -> int:
        f"({dc_['cutoff_on_scores_a']} -> {dc_['cutoff_on_scores_b']}), so it "
        f"is read off that data. The disqualifier is a PREDICATE ON THE ARM, "
        f"not a sentence in a docstring")
-    ok(dt_["declared_inputs_held_fixed"] == {"theta": 0.5, "budget": None},
+    ok(dt_["declared_inputs_held_fixed"] == {"budget_key": "10%", "budget": None},
        "and the declared inputs were held fixed while the scores changed, "
        "so the difference above is the convention and nothing else")
 

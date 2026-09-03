@@ -105,8 +105,12 @@ DECLARED_PREDICATES = {
 TOLERANCE_DECLARING_COMMIT = "1e9b6626e23ddab1de10a216cad1d425cd46973f"
 
 #: The lines that constitute the declaration. Compared verbatim.
+#: BEM-R6: `TOLERANCE_DECLARING_COMMIT` is the line that says WHAT to compare
+#: against, and it was not in the compared block -- so repointing it at a
+#: commit carrying a widened tolerance reported `unchanged: True` after a
+#: 1e-6 -> 1e6 change. A guard cannot defend a pointer it does not read.
 _DECL_MARKERS = ("TOL_EXACT =", "TOL_CENTS_ABS =", "TOL_RATE_REPORTED_ONLY =",
-                 "DECLARED_PREDICATES = {")
+                 "TOLERANCE_DECLARING_COMMIT =", "DECLARED_PREDICATES = {")
 
 
 def _declaration_lines(text: str) -> list:
@@ -125,6 +129,58 @@ def _declaration_lines(text: str) -> list:
     return out
 
 
+#: The value lines ALONE -- no pointer. The substantive guarantee ("the
+#: numbers that judged are the numbers declared") must survive a change to the
+#: block's own definition, which is exactly what this round made.
+_VALUE_MARKERS = ("TOL_EXACT =", "TOL_CENTS_ABS =", "TOL_RATE_REPORTED_ONLY =",
+                  "DECLARED_PREDICATES = {")
+
+
+def _value_lines(text: str) -> list:
+    out, inside = [], False
+    for ln in text.splitlines():
+        if ln.startswith("DECLARED_PREDICATES = {"):
+            inside = True
+        if inside:
+            out.append(ln.rstrip())
+            if ln.startswith("}"):
+                inside = False
+            continue
+        if any(ln.startswith(m) for m in _VALUE_MARKERS):
+            out.append(ln.rstrip())
+    return out
+
+
+def tolerance_values_unchanged_since(commit: str = None,
+                                     path: Path = None) -> dict:
+    """Are the TOLERANCE VALUES the ones declared before the first run?
+
+    Separate from the anti-repointing guard below, and BEM-R6 is why. Adding
+    `TOLERANCE_DECLARING_COMMIT` to the compared block -- the fix -- changed
+    the block, so a whole-block comparison against `1e9b662` is now False for
+    a reason that has nothing to do with a tolerance moving. This compares the
+    VALUES only, and they have not moved."""
+    commit = commit or TOLERANCE_DECLARING_COMMIT
+    f = Path(path or __file__).resolve()
+    tree = f.parents[2]
+    rel = str(f.relative_to(tree))
+    r = subprocess.run(["git", "-C", str(tree), "show", f"{commit}:{rel}"],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return {"checked": False, "why": r.stderr[:120]}
+    then, now = _value_lines(r.stdout), _value_lines(f.read_text())
+    return {"checked": True, "commit": commit,
+            "n_value_lines": len(now), "unchanged": then == now,
+            "values_sha16_then": hashlib.sha256(
+                "\n".join(then).encode()).hexdigest()[:16],
+            "values_sha16_now": hashlib.sha256(
+                "\n".join(now).encode()).hexdigest()[:16],
+            "why": ("the TOLERANCE VALUES that judged this reconciliation, "
+                    "compared with the ones committed before it was ever run. "
+                    "The block's DEFINITION changed this round (BEM-R6 put the "
+                    "pointer inside it); the values did not.")}
+
+
 def tolerances_unchanged_since(commit: str = None, path: Path = None) -> dict:
     """Are the tolerances that RAN the ones that were DECLARED?
 
@@ -133,9 +189,15 @@ def tolerances_unchanged_since(commit: str = None, path: Path = None) -> dict:
     re-reads the declaration block out of the declaring commit and compares it
     line for line with the block in the file that just ran."""
     commit = commit or TOLERANCE_DECLARING_COMMIT
+    # `path` names the file whose CURRENT block is compared; the DECLARED
+    # block is always read from this module's own path in git. Separating the
+    # two is what lets the known-bad hand it a tampered copy in a temp dir --
+    # a copy has no git history, and a guard that could only be driven on
+    # itself could not be driven at all.
     f = Path(path or __file__).resolve()
-    tree = f.parents[2]
-    rel = str(f.relative_to(tree))
+    me = Path(__file__).resolve()
+    tree = me.parents[2]
+    rel = str(me.relative_to(tree))
     r = subprocess.run(["git", "-C", str(tree), "show", f"{commit}:{rel}"],
                        capture_output=True, text=True)
     if r.returncode != 0:
@@ -383,8 +445,16 @@ def reconcile(artifact: Path = None, outdir: Path = None) -> dict:
             "predicates": {k: {"statement": v[0], "tolerance": v[1]}
                            for k, v in DECLARED_PREDICATES.items()},
             "declared_in": declaring_commit(),
-            "tolerances_unchanged_since_declaration":
+            "tolerance_VALUES_unchanged_since_declaration":
+                tolerance_values_unchanged_since(),
+            "whole_block_unchanged_since_declaration":
                 tolerances_unchanged_since(),
+            "block_definition_changed_this_round": (
+                "BEM-R6 added TOLERANCE_DECLARING_COMMIT to the compared "
+                "block so repointing it can no longer hide a widening. That "
+                "changes the BLOCK, so the whole-block comparison against the "
+                "original declaring commit is False by construction; the "
+                "VALUES comparison above is the substantive one and is True."),
             "declared_before_the_run": ("the tolerances are constants in "
                                         "be_forward_recon.py and the commit "
                                         "above carries them; this receipt "
@@ -400,6 +470,13 @@ def reconcile(artifact: Path = None, outdir: Path = None) -> dict:
             "n_predicates_evaluated": len(evaluated),
             "n_predicates_true": n_true,
             "n_predicates_false": len(evaluated) - n_true,
+            "n_holm_predicates": len(holm_pred),
+            "n_holm_predicates_true": n_holm_true,
+            "n_predicates_covered_by_all_hold": len(evaluated) + len(holm_pred),
+            "counts_note": ("BEM-R7: `n_predicates_evaluated` counts the "
+                            "per-cell predicates only. `all_hold` ALSO "
+                            "requires the Holm per-cell predicates, so the "
+                            "scope it covers is the third number above."),
             "all_hold": (n_true == len(evaluated)
                          and n_holm_true == len(holm_pred)
                          and len(evaluated) > 0),
@@ -407,6 +484,23 @@ def reconcile(artifact: Path = None, outdir: Path = None) -> dict:
         "NOT_RECONCILED_HERE": {
             "what": ("rows -> actions -> per-window net cents, i.e. "
                      "`reduce_window` feeding `evaluate_policy`"),
+            "the_null_is_a_delegation": (
+                "P4/P5/P7 call `be_forward_metric.paired_null`, which is one "
+                "line delegating to `phase2_iter011.sign_flip_null` -- the "
+                "same function, seed and increments that produced the "
+                "published p. They demonstrate REPLAY DETERMINISM and the "
+                "detection of a doctored artifact; they are not a "
+                "reconciliation of an independent implementation (BEM-R7)."),
+            "new_path_functions_NOT_exercised": [
+                "increment", "evaluate_arm", "reduce_window",
+                "feed_row_to_eval_row", "exclusions", "cluster_disclosure"],
+            "increment_cannot_be_reconciled_here": (
+                "`increment()` computes the BY_THRESHOLD estimand and the "
+                "published cells are BY_COUNT -- this module's own "
+                "PAIRING_CONVENTION_DIVERGENCE establishes they are different "
+                "estimands, so the decision metric R-497 (F)(4) made of "
+                "record is unreconcilable against this artifact by "
+                "construction, not by omission."),
             "why": ("reproducing `increment_by_window` from rows needs the "
                     "tape index and the feature assembly; this module "
                     "reconciles everything DOWNSTREAM of that map"),
@@ -427,7 +521,7 @@ def reconcile(artifact: Path = None, outdir: Path = None) -> dict:
 # must be ADMITTED. Without the first half a reconciliation that always
 # passed would be indistinguishable from one that worked.
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 21
+EXPECTED_CHECKS = 24
 
 
 def selftest() -> int:
@@ -459,17 +553,47 @@ def selftest() -> int:
     dc = declaring_commit()
     ok(dc["file"].endswith("be_forward_recon.py") and dc["head"],
        "the receipt can name the commit the tolerances were declared in")
+    tv = tolerance_values_unchanged_since()
+    ok(tv["checked"] and tv["unchanged"] is True,
+       f"POSITIVE CONTROL: the tolerance VALUES that ran are byte-identical "
+       f"to those committed at {TOLERANCE_DECLARING_COMMIT[:12]} "
+       f"({tv.get('n_value_lines')} value lines, sha "
+       f"{tv.get('values_sha16_now')})")
     tu = tolerances_unchanged_since()
-    ok(tu["checked"] and tu["unchanged"] is True,
-       f"POSITIVE CONTROL: the tolerances that ran are byte-identical to "
-       f"those committed at {TOLERANCE_DECLARING_COMMIT[:12]} "
-       f"({tu.get('n_declaration_lines')} declaration lines)")
-    _tamp = _declaration_lines(
-        Path(__file__).read_text().replace("TOL_CENTS_ABS = 1e-6",
-                                           "TOL_CENTS_ABS = 1e6"))
-    ok(_tamp != _declaration_lines(Path(__file__).read_text()),
-       "KNOWN-BAD: widening a tolerance CHANGES the declaration block, so the "
-       "comparison above would turn False -- the check can fail")
+    ok(tu["checked"] and tu["unchanged"] is False,
+       "and the WHOLE-BLOCK comparison against that same commit is False -- "
+       "because BEM-R6's fix put the pointer INSIDE the block, which changed "
+       "the block. Reported rather than hidden: the values are the "
+       "guarantee, the block identity is the anti-repointing guard")
+    # BEM-R6: the predecessor here compared two strings and INFERRED that the
+    # guard "would" turn False. An inference beside a check is not a check.
+    # This DRIVES the guard against a tampered copy on disk.
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _d:
+        _bad = Path(_d) / "be_forward_recon.py"
+        _bad.write_text(Path(__file__).read_text().replace(
+            "TOL_CENTS_ABS = 1e-6", "TOL_CENTS_ABS = 1e6"))
+        try:
+            _r = tolerances_unchanged_since(path=_bad)
+            _fired = _r["checked"] and _r["unchanged"] is False
+        except Exception:                              # noqa: BLE001
+            _fired = True
+        ok(_fired,
+           "KNOWN-BAD (DRIVEN, not inferred): a 1e-6 -> 1e6 widening in a "
+           "copy on disk makes tolerances_unchanged_since report unchanged "
+           "False -- the guard is called, not reasoned about")
+        _same = Path(_d) / "same.py"
+        _same.write_text(Path(__file__).read_text())
+        _r2 = tolerances_unchanged_since(path=_same)
+        _r3 = tolerances_unchanged_since(path=Path(__file__))
+        ok(_r2 == _r3,
+           "POSITIVE CONTROL: an UNTAMPERED copy compares exactly as the real "
+           "file does, so the refusal above is about the widened tolerance "
+           "and not about being handed a different path")
+    ok("TOLERANCE_DECLARING_COMMIT =" in _DECL_MARKERS,
+       "BEM-R6: the POINTER is now inside its own compared block, so "
+       "repointing it at a commit with a different tolerance changes the "
+       "block and turns the guard False")
 
     # --- POSITIVE CONTROL: a real cell reconciles on every predicate
     r = reconcile_cell(art, "composed_lgbm", "10%")

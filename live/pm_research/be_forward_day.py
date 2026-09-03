@@ -69,6 +69,19 @@ RATIFICATION_REF = "R-419"          # R-419 supersedes R-418 (DE round 9)
 #: commits afterwards. Rule 12: the frozen set is the commit's bytes.
 FROZEN_COMMIT = "1b53929"
 
+#: The feed the action-level estimand consumes. Named here so a checker can
+#: assert the driver emits it without importing the metric module.
+FEED_PROTOCOL = "BE_FORWARD_METRIC_FEED_V1"
+FEED_FIELDS = ("slug", "side", "gen", "t0", "t_start", "score",
+               "any_fill_ahead", "value_cents")
+
+#: The latency the feed resolves its value at. Taken from the FROZEN
+#: candidate's own declaration, never chosen here.
+def _latency_of_record() -> int:
+    return int(json.loads(
+        (DERIVED / "harmful_reduced_fine_candidate_v1.json").read_text()
+    )["target_latency_ms"])
+
 import de_admissible_windows as AW
 import de_ratification_check as RAT
 import ev_replay_seam as SEAM
@@ -866,7 +879,7 @@ def action_count(rows: list) -> int:
     return len({(r.get("slug"), r.get("side"), r.get("gen")) for r in rows})
 
 
-def build_and_score(selected: list, frozen: dict) -> dict:
+def build_and_score(selected: list, frozen: dict, feed=None) -> dict:
     """ONE STREAMING PASS: replay a window, label it, score it, DROP it.
 
     MEASURED, and this is the whole reason the shape changed: holding every
@@ -923,6 +936,7 @@ def build_and_score(selected: list, frozen: dict) -> dict:
         n_rows += len(wrows)
         if fit is not None and not bad:
             stream = hm.window_streams(paths[slug], *tokens[slug])
+            _feed_rows, _feed_scores = [], []
             for r in wrows:
                 actions.add((slug, r.get("side"), r.get("gen")))
                 fp = hm.features(stream, r["t_start"], r["side"],
@@ -932,8 +946,17 @@ def build_and_score(selected: list, frozen: dict) -> dict:
                 if fp is None or ff is None:
                     no_features += 1
                     continue
-                scores[coin].append(
-                    (t0, FS.expected_cancel_value(fit, fp + ff)))
+                _s = FS.expected_cancel_value(fit, fp + ff)
+                scores[coin].append((t0, _s))
+                if feed is not None:
+                    # `t0` is added to the row so the feed carries an ABSOLUTE
+                    # time; `t_start` alone is relative to the window and the
+                    # estimand's hour key needs both (harmful_action_eval:35).
+                    _feed_rows.append(dict(r, slug=slug, t0=t0))
+                    _feed_scores.append(_s)
+            if feed is not None and _feed_rows:
+                feed.write_window(_feed_rows, _feed_scores)
+            del _feed_rows, _feed_scores
             del stream                                # DROP the window
         else:
             for r in wrows:
@@ -965,7 +988,9 @@ def score_rows(rows: list) -> dict:
     in the same order, so there is one feature construction and not a
     second."""
     import harmful_hazard_model as hm
-    frozen = FS.load_frozen()
+    # BEM-R3: bound to the DECLARED identity, never to whatever the
+    # module constant happens to name.
+    frozen = FS.load_frozen(expect=FS.declared_candidate_identity())
     fi = hm.fi
     paths = fi._archive_paths()
     tokens = fi.token_map()
@@ -997,6 +1022,69 @@ def score_rows(rows: list) -> dict:
             f"({skipped} lacked features or a fit). A forward report with no "
             f"scores is a FAILURE, not an empty result (R-141).")
     return dict(out)
+
+
+class FeedWriter:
+    """THE ACTION-KEYED FEED, WRITTEN AS THE DAY IS SCORED.
+
+    The gap rounds 13-16 kept naming in its last remaining form: a scored
+    forward day emitted `(window_start, value)` pairs and nothing the
+    action-level estimand could consume. This writes the estimand's OWN input
+    -- `slug`, `side`, `gen`, `t0`, `t_start`, `any_fill_ahead` and the
+    latency-resolved value -- one JSONL line per row, AS each window is
+    scored, so the 12 G cap is never approached: the rows are still dropped,
+    only their six scalars survive to disk.
+
+    SEALED LIKE THE SCORES (rule 11). It lands in the caller's outdir beside
+    the sealed file, never under `data/pm_5min/derived/`, and the receipt
+    records its path, sha256, byte count and row count and NO value from it.
+    A feed is per-row model output; reading it is the coordinator's or the
+    USER's act exactly as the scores are."""
+
+    def __init__(self, day: str, outdir: Path, latency_ms: int):
+        self.path = outdir / f"be_forward_day_SEALED_feed_{day}.jsonl"
+        self.latency_ms = latency_ms
+        self._fh = None
+        self.n_rows = 0
+        self.n_windows = 0
+
+    def __enter__(self):
+        self._fh = open(self.path, "w")
+        return self
+
+    def write_window(self, wrows, scores):
+        import be_forward_metric as FM
+        recs = FM.reduce_window(wrows, scores, self.latency_ms)
+        for rec in recs:
+            self._fh.write(json.dumps(rec, sort_keys=True,
+                                      separators=(",", ":")) + "\n")
+        self.n_rows += len(recs)
+        self.n_windows += 1
+        return len(recs)
+
+    def __exit__(self, *a):
+        if self._fh is not None:
+            self._fh.close()
+            self._fh = None
+        return False
+
+    def manifest(self) -> dict:
+        return {
+            "protocol": FEED_PROTOCOL,
+            "path": str(self.path),
+            "sha256": _sha_file(self.path) if self.path.exists() else None,
+            "bytes": self.path.stat().st_size if self.path.exists() else 0,
+            "n_rows": self.n_rows, "n_windows": self.n_windows,
+            "latency_ms_resolved": self.latency_ms,
+            "fields": list(FEED_FIELDS),
+            "contents": ("one action-keyed record per scored row: the action "
+                         "key, the times, the score and the latency-resolved "
+                         "preventable value"),
+            "sealed": True,
+            "not_in_receipt": ("no value from the feed appears outside it; "
+                               "this block is paths, counts and hashes only "
+                               "(rule 11)"),
+        }
 
 
 def seal(day: str, outdir: Path, scored: dict, report: dict) -> dict:
@@ -1271,9 +1359,12 @@ def run_forward_day(day: str, outdir: Path) -> int:
         sel, selc = gate("selection_from_specs",
                          lambda: selected_from_specs(pop["specs"]))
         rec["selection"] = selc
-        _frozen = FS.load_frozen()
-        built = gate("rows_and_scores_streamed",
-                     lambda: build_and_score(sel, _frozen))
+        _frozen = FS.load_frozen(expect=FS.declared_candidate_identity())
+        _feed = FeedWriter(day, outdir, _latency_of_record())
+        with _feed:
+            built = gate("rows_and_scores_streamed",
+                         lambda: build_and_score(sel, _frozen, feed=_feed))
+        rec["feed"] = _feed.manifest()
         rec["rows"] = {k: v for k, v in built.items()
                        if k not in ("scores", "windows_with_rows")}
         if built["reconciliation_failures"]:
@@ -1474,7 +1565,10 @@ class _r1_installed:
         sys.modules["harmful_hazard_model"] = self.hm
         self._saved_fs = (FS.expected_cancel_value, FS.load_frozen)
         FS.expected_cancel_value = self.ecv
-        FS.load_frozen = lambda: _R1_FROZEN
+        # BEM-R3: the production signature now REQUIRES an expectation,
+        # so the stub takes it too -- a fixture whose signature drifts
+        # from the thing it replaces stops testing the real call.
+        FS.load_frozen = lambda path=None, expect=None: _R1_FROZEN
         return self
 
     def __exit__(self, *exc):
@@ -2640,7 +2734,8 @@ def selftest() -> int:
        f"failure is scoped to the window, not spread to the coin")
     with _tf.TemporaryDirectory() as tdr1:
         _real_bas = globals()["build_and_score"]
-        globals()["build_and_score"] = lambda sel, fr: dict(_bad)
+        globals()["build_and_score"] = (
+            lambda sel, fr, feed=None: dict(_bad))
         # MEASURED: driving the real chain IMPORTS THE FROZEN ANCHORS from the
         # run dir into sys.modules, and the run dir is a tmpdir that is about
         # to vanish. Left in place they shadow the tree's modules for every
@@ -2680,7 +2775,7 @@ def selftest() -> int:
                       reconciliation_failed_windows=[], scores={},
                       windows_with_rows=set())
         _mods2 = dict(sys.modules)
-        globals()["build_and_score"] = lambda sel, fr: dict(_empty)
+        globals()["build_and_score"] = lambda sel, fr, feed=None: dict(_empty)
         try:
             _rc0 = run_forward_day("20260901", Path(tdr1))
         finally:
@@ -3230,6 +3325,97 @@ def selftest() -> int:
     # BE8-R2: the return value is NOT assigned back — `ok` increments the
     # nonlocal directly, and assigning here would restore the cancelling
     # pair this round removed.
+    # ---- BE17: THE FEED IS EMITTED, AND THE CHECK FAILS ON THE UNWIRED
+    # SOURCE. Rounds 13-16 named this gap; the driver emitted (t0, value)
+    # pairs and nothing the action-level estimand could consume. The
+    # emission is DRIVEN here, and the wiring predicate is driven against a
+    # source with the call removed, so the check can fail.
+    import ast as _ast
+    import tempfile as _tfd
+
+    def _emits_feed(src: str) -> dict:
+        """SCOPED TO THE PRODUCTION FUNCTIONS, not to the file.
+
+        The first version walked the whole module and so counted the
+        SELFTEST's own `write_window` call -- the known-bad below stayed green
+        with the production call deleted, which is the census-scope defect the
+        reviewer found elsewhere in this batch, made here by me."""
+        t = _ast.parse(src)
+        want = {"build_and_score": "write_window",
+                "run_forward_day": "FeedWriter"}
+        found = {k: False for k in want}
+        manifest = False
+        for n in _ast.walk(t):
+            if not isinstance(n, _ast.FunctionDef) or n.name not in want:
+                continue
+            for c in _ast.walk(n):
+                if not isinstance(c, _ast.Call):
+                    continue
+                f = c.func
+                if isinstance(f, _ast.Attribute) and f.attr == want[n.name]:
+                    found[n.name] = True
+                if isinstance(f, _ast.Name) and f.id == want[n.name]:
+                    found[n.name] = True
+                if (n.name == "run_forward_day" and isinstance(f, _ast.Attribute)
+                        and f.attr == "manifest"):
+                    manifest = True
+        return {"writes_rows_in_build_and_score": found["build_and_score"],
+                "constructs_writer_in_run_forward_day": found["run_forward_day"],
+                "records_manifest_in_run_forward_day": manifest,
+                "emits_feed": all(found.values()) and manifest}
+
+    _src_now = Path(__file__).read_text()
+    _now = _emits_feed(_src_now)
+    ok(_now["emits_feed"] is True,
+       f"BE17 POSITIVE CONTROL: this driver constructs a FeedWriter, writes "
+       f"rows through it and records its manifest ({_now})")
+    _unwired = _src_now.replace("feed.write_window(_feed_rows, _feed_scores)",
+                                "pass  # unwired")
+    ok(_emits_feed(_unwired)["emits_feed"] is False,
+       "BE17 KNOWN-BAD: with the emission call removed the same predicate "
+       "returns False -- so the check above can fail, which is what makes it "
+       "a check rather than a description")
+    with _tfd.TemporaryDirectory() as _fd:
+        _L = _latency_of_record()
+        _fr = [{"slug": "btc-updown-5m-1000", "side": "BUY_UP", "gen": 1,
+                "t0": 1000, "t_start": 0.5, "any_fill_ahead": True,
+                "latency": {str(_L): {"preventable_value_cents": 12.5}}},
+               {"slug": "btc-updown-5m-1000", "side": "BUY_UP", "gen": 1,
+                "t0": 1000, "t_start": 1.5, "any_fill_ahead": False,
+                "latency": {str(_L): {"preventable_value_cents": 99.0}}}]
+        with FeedWriter("20260101", Path(_fd), _L) as _w:
+            _w.write_window(_fr, [0.9, 0.2])
+            _man = None
+        _man = _w.manifest()
+        ok(_man["n_rows"] == 2 and _man["n_windows"] == 1
+           and _man["protocol"] == FEED_PROTOCOL,
+           f"BE17 POSITIVE CONTROL: the writer emits one record per scored "
+           f"row ({_man['n_rows']}) and its manifest carries counts, a "
+           f"sha256 and no value")
+        _lines = [json.loads(x) for x in
+                  Path(_man["path"]).read_text().splitlines()]
+        ok(all(set(r) == set(FEED_FIELDS) for r in _lines),
+           f"BE17: every emitted record carries exactly the declared feed "
+           f"fields {list(FEED_FIELDS)}")
+        ok(_lines[0]["value_cents"] == 12.5 and _lines[1]["value_cents"] == 0.0
+           and _lines[1]["any_fill_ahead"] is False,
+           "BE17: the latency value is RESOLVED at the row, and a row with no "
+           "fill ahead resolves to 0.0 while KEEPING any_fill_ahead false -- "
+           "the field `exclusions()` classifies on")
+        import be_forward_metric as _FM
+        _back = [_FM.feed_row_to_eval_row(r, _L) for r in _lines]
+        _ak = _FM.assert_action_keys(_back)
+        ok(_ak["n_rows"] == 2 and _ak["n_actions"] == 1,
+           f"BE17 THE GAP CLOSED, DRIVEN END TO END: the emitted feed "
+           f"re-inflates into rows the estimand's OWN action-key contract "
+           f"ADMITS ({_ak['n_rows']} rows, {_ak['n_actions']} action) -- "
+           f"which the sealed pair form could never do")
+        ok(_FM.sealed_shape_is_unusable(
+            {"btc": _lines})["usable_for_action_estimand"] is True,
+           "BE17: and the shape checker, which answers False for today's "
+           "sealed pairs, answers TRUE for this feed -- the same function, "
+           "two inputs, two answers")
+
     _selftest_launch(checks, ok)
     # BE5-R3: the audit is an ARTIFACT, not a report. Skipped in the audit's
     # own children and in the launch child (both carry BE_FORWARD_AUDIT=1),

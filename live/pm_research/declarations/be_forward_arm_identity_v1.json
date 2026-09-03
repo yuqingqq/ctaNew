@@ -1,0 +1,39 @@
+{
+ "authority": "recorded on the coordinator's round-17 dispatch, which directed BE to declare both arms by path AND sha256. BE RECORDS the artifact iteration 011 already bound; it does not CHOOSE a forward incumbent, which remains a USER-level declaration if a different one is ever intended.",
+ "candidate": {
+  "coins": [
+   "btc",
+   "eth"
+  ],
+  "model_form": "LINEAR",
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_reduced_fine_candidate_v1.json",
+  "role": "candidate",
+  "sha256": "cfc454d62f521d9aecf389b51a6536a4fa9cadb2370a11c19fbce0da9a68c341",
+  "spec": "PM_PLUS_FINE (reduced fine)"
+ },
+ "candidate_is_not_lgbm_pinned": "the candidate above is arm A's frozen LINEAR (PM_PLUS_FINE), which R-497 (C) and the reviewer both note is not LGBM_PINNED. Whether that is the intended forward candidate is a FREEZE-level ruling and is not decided here; what is decided is that any DRIFT from it now refuses.",
+ "incumbent_by_coin": {
+  "btc": {
+   "bytes": 5251,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_fits/linear_d_btc.json",
+   "role": "incumbent",
+   "sha256": "18701008c2bd18c68dc8c8ba38f49ca34ac83a0d9d7587f139f8a03848a6980c",
+   "spec": "INCUMBENT_REWEIGHTED_ONLY (per-coin linear)"
+  },
+  "eth": {
+   "bytes": 5252,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_fits/linear_d_eth.json",
+   "role": "incumbent",
+   "sha256": "fb371f6352214a9245523a5724e7f645b01c78351f728bb82cba27cc2d704797",
+   "spec": "INCUMBENT_REWEIGHTED_ONLY (per-coin linear)"
+  }
+ },
+ "incumbent_provenance": {
+  "bound_by": "iteration 011's own q4_incumbent block, which records artifact 'linear_d_btc.json' at sha256_prefix '18701008c2bd18c6'",
+  "sha_prefix_matches_iter011": true,
+  "why_this_one": "prereg 5.2's increment is candidate MINUS the COMMITTED incumbent on the identical action population; the incumbent is loaded and hash-verified, never re-fitted (a re-fit incumbent is a different incumbent, R-280)"
+ },
+ "protocol": "BE_FORWARD_ARM_IDENTITY_DECLARATION_V1",
+ "who_may_change_this": "the USER (rule 12: a freeze is a commit)",
+ "why": "R-496 (D) names both arms by ROLE and neither by ARTIFACT. This makes 'the incumbent' an object: a path and a sha256 in rule 12's form, which `require_arm_identity` REHASHES at use."
+}

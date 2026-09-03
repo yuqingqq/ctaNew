@@ -1,0 +1,84 @@
+{
+ "as_of_utc": "2026-09-03T06:16:48Z",
+ "budgets": [
+  "5%",
+  "10%",
+  "15%"
+ ],
+ "budgets_module_sha256": "aa866f8261677d799dbf56bcb2feb9a7f99f59db7982820e60fff05db0a54df9",
+ "budgets_source": "phase2_declaration.BUDGETS",
+ "counters": {
+  "rows_in_split": 1135943,
+  "rows_scored": 1135930,
+  "rows_seen": 1135943,
+  "rows_without_features": 13,
+  "slugs": 471,
+  "slugs_missing_archive": 0
+ },
+ "derived_from_split": {
+  "already_consumed": true,
+  "coins": [
+   "btc",
+   "eth"
+  ],
+  "days": [
+   "2026-08-24",
+   "2026-08-25"
+  ],
+  "population": "v3_4_consumed_fragment",
+  "why_free": "the freeze's OWN training split, consumed under CLAUDE.md rule 11; reading it opens no seal and spends no forward day"
+ },
+ "fit_artifact": {
+  "bytes": 16298,
+  "coins": [
+   "btc",
+   "eth"
+  ],
+  "frozen_at_utc": "2026-08-26T10:21:49Z",
+  "model_form": "LINEAR",
+  "model_form_derived_from": [
+   "days_fitted",
+   "feature_vector_contract",
+   "first_slug_t0",
+   "hazard_weights",
+   "last_slug_t0",
+   "n_actions_fitted",
+   "n_positive",
+   "n_rows_fitted",
+   "norm_mu",
+   "norm_sd",
+   "value_weights"
+  ],
+  "n_hazard_weights": 61,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_reduced_fine_candidate_v1.json",
+  "sha256": "cfc454d62f521d9aecf389b51a6536a4fa9cadb2370a11c19fbce0da9a68c341",
+  "spec": "PM_PLUS_FINE (reduced fine)",
+  "status": "FROZEN"
+ },
+ "form": "FROZEN_FROM_TRAIN_QUANTILE",
+ "protocol": "BE_OPERATING_POINT_DECLARATION_V1",
+ "quantile_rule": "theta_b is the k-th largest per-generation MAX score with k = max(1, int(n_generations * b)) -- the same cutoff `_select_by_count` computes, taken on the TRAINING split so it is an INPUT to the forward read rather than a reading of it",
+ "rows_artifact": {
+  "bytes": 1241115096,
+  "manifest_binds_this_sha": true,
+  "manifest_path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_candidate_manifest_v1.json",
+  "manifest_sha256": "19a50195c34d0af21aba81b9f6b9501ea58656212d8448ddd8cc219da26d0f08",
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_eraB.json",
+  "sha256": "19a50195c34d0af21aba81b9f6b9501ea58656212d8448ddd8cc219da26d0f08"
+ },
+ "selected_by_this_module": false,
+ "theta_frozen_by_coin": {
+  "btc": {
+   "10%": 0.7230267681941027,
+   "15%": 0.5249913727523682,
+   "5%": 1.0845103653350594
+  },
+  "eth": {
+   "10%": 0.10284589538586741,
+   "15%": 0.07299359367539054,
+   "5%": 0.15486145364009468
+  }
+ },
+ "theta_map_sha16": "72b61c771efffb50",
+ "who_selects": "nobody: R-497 (F)(2) rules declare-a-grid / report-every-cell / select-none"
+}

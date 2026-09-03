@@ -56,7 +56,7 @@ def synth_rows(coin: str, n_feat: int, seed: int) -> list:
 
 def main() -> int:
     import harmful_action_eval as ae
-    cand = fs.load_frozen()
+    cand = fs.load_frozen(expect=fs.declared_candidate_identity())
     print(f"  frozen candidate loaded: {fs.CANDIDATE.name}, "
           f"frozen_at {cand['frozen_at_utc']}")
     failures = []

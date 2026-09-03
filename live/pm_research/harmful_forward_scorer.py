@@ -85,13 +85,46 @@ def candidate_identity(path: Path = CANDIDATE) -> dict:
     }
 
 
-def load_frozen(path: Path = CANDIDATE, expect: dict | None = None) -> dict:
-    """Load the frozen candidate, optionally BOUND to a declared identity.
+#: The DECLARED expected identity of the scoring artifact. A committed file,
+#: not a self-computed hash: `candidate_identity()` hashes whatever `CANDIDATE`
+#: names and is therefore self-consistent by construction, which is exactly why
+#: it could never detect that `CANDIDATE` names the wrong model (BEM-R3).
+DECLARED_IDENTITY_PATH = (Path(__file__).resolve().parent / "declarations"
+                          / "be_candidate_identity_v1.json")
 
-    ADDITIVE BY CONSTRUCTION: with `expect=None` this is byte-for-byte the
-    behaviour every existing caller already has -- `be_forward_day` calls
-    `FS.load_frozen()` and its result is unchanged. The selftest asserts that
-    equality rather than asserting the intention."""
+
+def declared_candidate_identity(path: Path = None) -> dict:
+    """The expectation, READ FROM A COMMITTED FILE. Refuses if absent."""
+    f = Path(path or DECLARED_IDENTITY_PATH)
+    if not f.exists():
+        raise NotFrozen(
+            f"REFUSED: no declared candidate identity at {f}. Scoring binds "
+            f"to an expectation that was written down, never to the hash of "
+            f"whatever the module constant happens to name.")
+    d = json.loads(f.read_text())
+    for k in ("path", "sha256", "spec", "model_form"):
+        if not d.get(k):
+            raise NotFrozen(
+                f"REFUSED: the declared candidate identity carries no {k!r}.")
+    return d
+
+
+def load_frozen(path: Path = CANDIDATE, expect: dict | None = None) -> dict:
+    """Load the frozen candidate, BOUND to a declared identity.
+
+    BEM-R3, and this is the correction of a control that ENSHRINED the defect.
+    The previous version made `expect` optional and its selftest asserted that
+    the no-expectation call returned the artifact unchecked -- a falsifier
+    whose subject was the hole, the fourth named instance of SEAT_PROTOCOL 16.
+    Absence must never read as a pass (SEAT_PROTOCOL 11), so an unbound load
+    now REFUSES and every production call site supplies the declaration."""
+    if expect is None:
+        raise NotFrozen(
+            "REFUSED: load_frozen was called with no expected identity. An "
+            "unbound load scores with whatever `CANDIDATE` names and returns "
+            "numbers that look exactly like the right ones; that is the worst "
+            "failure available here, so absence refuses rather than passing "
+            "(BEM-R3). Pass expect=declared_candidate_identity().")
     if expect is not None:
         got = candidate_identity(path)
         bad = {k: (expect[k], got.get(k)) for k in ("sha256", "spec",
@@ -567,15 +600,33 @@ def selftest() -> int:
     # THE REGRESSION THAT MATTERS: the un-declared call must be UNCHANGED,
     # because `be_forward_day` calls `load_frozen()` with no expectation and
     # this module sits inside the race's scoring stack.
-    ok(load_frozen() == json.loads(CANDIDATE.read_text()),
-       "BE14-S1 POSITIVE CONTROL: load_frozen() with NO expectation returns "
-       "exactly the artifact's own parsed content -- the existing race call "
-       "path is unchanged, asserted rather than intended")
+    # BEM-R3: the control that USED to live here asserted that an unbound
+    # load returns the file unchecked -- a falsifier whose subject was the
+    # hole. Replaced with one that FIRES.
+    try:
+        load_frozen()
+        raise AssertionError(
+            "BE17-S1 KNOWN-BAD: an UNBOUND load_frozen() was ACCEPTED")
+    except NotFrozen as e:
+        ok("no expected identity" in str(e),
+           "BE17-S1 KNOWN-BAD: load_frozen() with NO expectation now REFUSES "
+           "BY NAME -- absence is not a pass, and the control that used to "
+           "assert the opposite is gone")
+    _di = declared_candidate_identity()
+    ok(load_frozen(expect=_di)["status"] == "FROZEN",
+       "BE17-S1 POSITIVE CONTROL: the DECLARED identity, read from a "
+       "committed file, admits the artifact it names")
+    ok(_di["sha256"] == _id["sha256"] and _di["spec"] == _id["spec"],
+       "BE17-S1 the declaration and the artifact agree today -- so the "
+       "refusals above are about binding, not about a mismatch")
     with _tf.TemporaryDirectory() as _d:
         _p = Path(_d) / "notfrozen.json"
         _p.write_text(json.dumps({"status": "DRAFT", "fits": {}}))
         try:
-            load_frozen(_p)
+            # expect MATCHES this fixture, so the identity gate passes and the
+            # FROZEN gate is the one under test -- otherwise the new refusal
+            # would mask the old one and this control would stop testing it.
+            load_frozen(_p, expect=candidate_identity(_p))
             raise AssertionError("BE14-S1 a non-FROZEN artifact was ACCEPTED")
         except NotFrozen as e:
             ok("not FROZEN" in str(e),
@@ -636,14 +687,15 @@ def selftest() -> int:
         with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
             json.dump(bad, fh); t = Path(fh.name)
         try:
-            load_frozen(t)
+            # a matching expectation, so the LAYOUT gates are what fire
+            load_frozen(t, expect=candidate_identity(t))
             ok(False, f"{why} must be refused")
         except NotFrozen:
             ok(True, f"KNOWN-BAD REFUSED: {why} cannot be used for forward scoring")
 
     # ---- the real artifact loads -----------------------------------------
     if CANDIDATE.exists():
-        c = load_frozen(CANDIDATE)
+        c = load_frozen(CANDIDATE, expect=declared_candidate_identity())
         ok(c["status"] == "FROZEN" and set(c["fits"]) == {"btc", "eth"},
            "the REAL frozen candidate loads and passes the layout check")
         f = c["fits"]["btc"]

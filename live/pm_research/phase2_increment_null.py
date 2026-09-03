@@ -129,7 +129,13 @@ def sign_flip_p(inc_by_window: dict, n_perm: int = N_PERM, seed: int = PERM_SEED
 
     H0: the per-window paired increments are symmetric about zero. Each
     permutation flips each window's sign independently and re-sums."""
-    vals = [v for v in inc_by_window.values()]
+    # BEM-R8: SORT AT CONSUMPTION. This function was order-dependent -- the
+    # same content in two insertion orders gave 0.0719 and 0.0938 on the real
+    # published increments -- and its one live caller was correct only because
+    # it pinned the order first via `ordered_windows`. That is the caller-side
+    # reliance R-234 exists to forbid: the next caller inherits the defect.
+    # `phase2_iter011.sign_flip_null` already sorts here for the same reason.
+    vals = [float(inc_by_window[k]) for k in sorted(inc_by_window)]
     obs = math.fsum(vals)
     rng = random.Random(seed)
     ge = 0
@@ -153,6 +159,7 @@ def sign_flip_p(inc_by_window: dict, n_perm: int = N_PERM, seed: int = PERM_SEED
         # (ge + 1) / (n + 1): the permutation p can never be 0 -- the observed
         # arrangement is itself one of the arrangements under H0.
         "p_two_sided": (ge + 1) / (n_perm + 1),
+        "unit_order": "SORTED KEYS — pinned at consumption (R-234, BEM-R8)",
         "null_abs_p95": null_abs[int(0.95 * len(null_abs))] if null_abs else None,
         "null_max_signed": null_max,
     }
@@ -222,9 +229,23 @@ def selftest() -> int:
     _r1, _r2 = sign_flip_p(_d1, n_perm=500, seed=1), sign_flip_p(_d2, n_perm=500, seed=1)
     ok(_r1["observed_increment_cents"] == _r2["observed_increment_cents"],
        "known-bad: the observed increment is order-INdependent (a sum)")
-    ok(_r1["p_two_sided"] != _r2["p_two_sided"],
-       "known-bad: the permutation p IS order-dependent -- this is the defect "
-       "the sort repairs, and it must keep firing or the repair is untested")
+    # BEM-R8: this check USED to assert that the p IS order-dependent -- a
+    # control whose subject was the hole, kept green by the very defect it
+    # described. The repair now lives at consumption (`sorted(inc_by_window)`),
+    # so the assertion is inverted: the p must be order-INVARIANT, and a
+    # regression that removed the sort would turn this red instead of green.
+    ok(_r1["p_two_sided"] == _r2["p_two_sided"],
+       f"BEM-R8: the permutation p is now order-INVARIANT at consumption "
+       f"({_r1['p_two_sided']}) -- a caller no longer has to know to pin the "
+       f"order first, which is the reliance R-234 forbids")
+    _shuf = {k: _d1[k] for k in sorted(_d1, key=lambda x: _d1[x])}
+    ok(sign_flip_p(_shuf, n_perm=500, seed=1)["p_two_sided"]
+       == _r1["p_two_sided"],
+       "BEM-R8: and a THIRD insertion order agrees too, so the equality above "
+       "is invariance and not a coincidence of reversing")
+    ok(_r1["unit_order"].startswith("SORTED KEYS"),
+       "BEM-R8: the artifact SAYS the order it consumed in, so a reader need "
+       "not infer it from two p-values")
     # THE REPAIR: ordered_windows is a function of the DATA, not of insertion
     ok(ordered_windows(_d1, {}) == ordered_windows(_d2, {}) == sorted(_d1),
        "ordered_windows is identical under any insertion order")
