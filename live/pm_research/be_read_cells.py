@@ -99,6 +99,48 @@ def _select_by_exact_count(gens, scores, k_target: int):
     return chosen, {kk: cut for kk in chosen}, cut
 
 
+def _toxicity(rows, gens, scores, chosen, theta, latency_ms) -> dict:
+    """harm avoided / good flow sacrificed / rho, for ONE arm's selection.
+
+    THE CORRECTED OBJECTIVE (USER, round 27). `net_cents` is
+    harm_avoided MINUS sacrifice, so a model that cancels indiscriminately
+    raises BOTH terms and its net can climb while the SEPARATION gets worse.
+    These are the two terms kept apart.
+
+    WHAT THE QUANTITY IS, read from the builder rather than assumed:
+    `preventable_value_cents` is `sum(-markout_cents_per_share * shares)` over
+    the tranches a cancel at t+L would have prevented, and
+    `markout_cents_per_share` is `sgn * (mid(t_fill + MARKOUT_S) - fill_level)
+    * 100` -- the fill's OWN P&L over the 5 s after it, signed so positive
+    means the fill was good. So a NEGATIVE markout is adverse post-fill drift
+    and enters here as HARM AVOIDED; a positive one is good flow the cancel
+    FORFEITED. rho = adverse drift dodged per cent of good flow given up."""
+    L = str(latency_ms)
+    harm = sac = 0.0
+    n_pos = n_neg = n_zero = 0
+    for gk in chosen:
+        i = next((j for j in gens[gk] if scores[j] >= theta[gk]), None)
+        if i is None:
+            continue
+        r = rows[i]
+        v = (r["latency"][L]["preventable_value_cents"]
+             if r.get("any_fill_ahead") and "latency" in r else 0.0)
+        if v > 0:
+            harm += v; n_pos += 1
+        elif v < 0:
+            sac += -v; n_neg += 1
+        else:
+            n_zero += 1
+    return {"harm_avoided_cents": harm, "sacrifice_cents": sac,
+            "net_cents": harm - sac,
+            "rho_captured_over_sacrificed": (harm / sac) if sac > 0 else None,
+            "n_cancels_avoiding_harm": n_pos,
+            "n_cancels_forfeiting_good_flow": n_neg,
+            "n_cancels_worth_nothing": n_zero,
+            "markout_horizon_s": 5.0,
+            "fill_horizon_s": 1.0}
+
+
 def matched_volume(rows, cand_scores, inc_scores, theta: float,
                    latency_ms: int) -> dict:
     """THE PRIMARY STATISTIC (interim declaration, USER round 26).
@@ -124,6 +166,10 @@ def matched_volume(rows, cand_scores, inc_scores, theta: float,
     cand_net = math.fsum(cb.values())
     inc_net_at_theta = math.fsum(ib.values())
     inc_net_matched = math.fsum(mb.values())
+
+    tox_c = _toxicity(rows, gens, cand_scores, c_sel, c_th, latency_ms)
+    tox_i = _toxicity(rows, gens, inc_scores, i_sel, i_th, latency_ms)
+    tox_m = _toxicity(rows, gens, inc_scores, m_sel, m_th, latency_ms)
 
     quality = cand_net - inc_net_matched          # == the matched-volume stat
     volume = inc_net_matched - inc_net_at_theta   # what volume alone bought
@@ -155,6 +201,16 @@ def matched_volume(rows, cand_scores, inc_scores, theta: float,
         "incumbent_cents_per_cancellation_matched": (
             inc_net_matched / len(m_sel) if m_sel else None),
         "MATCHED_VOLUME_increment_cents": quality,
+        "toxicity_candidate": tox_c,
+        "toxicity_incumbent_at_theta": tox_i,
+        "toxicity_incumbent_matched": tox_m,
+        "rho_candidate": tox_c["rho_captured_over_sacrificed"],
+        "rho_incumbent_matched": tox_m["rho_captured_over_sacrificed"],
+        "rho_advantage_at_matched_volume": (
+            None if (tox_c["rho_captured_over_sacrificed"] is None
+                     or tox_m["rho_captured_over_sacrificed"] is None)
+            else tox_c["rho_captured_over_sacrificed"]
+            - tox_m["rho_captured_over_sacrificed"]),
         "decomposition": {
             "by_threshold_increment_cents": by_threshold,
             "volume_term_cents": volume,
