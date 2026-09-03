@@ -83,6 +83,94 @@ def load_two_arm_feed(path: Path, latency_ms: int) -> dict:
             "n_rows_without_an_incumbent_score": missing}
 
 
+def _select_by_exact_count(gens, scores, k_target: int):
+    """Top-k by this arm's OWN ranking, at a count SET FROM OUTSIDE.
+
+    This is "lower the incumbent's theta until it cancels k actions",
+    expressed the way the module already selects: the incumbent's ranking is
+    untouched and only its cutoff moves. `_select_by_count` takes a FRACTION
+    of the arm's own action count, which is not the same thing when the
+    target count comes from the other arm."""
+    gmax = {kk: max(scores[i] for i in gens[kk]) for kk in gens}
+    order = sorted(gens, key=lambda kk: (-gmax[kk], kk))   # R-234 tie-break
+    k = max(0, min(int(k_target), len(order)))
+    chosen = order[:k]
+    cut = gmax[chosen[-1]] if chosen else float("inf")
+    return chosen, {kk: cut for kk in chosen}, cut
+
+
+def matched_volume(rows, cand_scores, inc_scores, theta: float,
+                   latency_ms: int) -> dict:
+    """THE PRIMARY STATISTIC (interim declaration, USER round 26).
+
+    The candidate acts at its FROZEN theta. The incumbent is then given the
+    candidate's REALISED count by lowering its own cutoff. Both arms spend the
+    same cancellation budget, so what is left is ranking quality.
+
+    It also returns the EXACT decomposition the declaration fixed before the
+    read: BY_THRESHOLD increment == VOLUME + QUALITY. That identity telescopes
+    algebraically and is CHECKED here rather than narrated."""
+    gens = FM._gen_index(rows)
+    c_sel, c_th, c_cut = FM._select_by_threshold(gens, cand_scores, theta)
+    i_sel, i_th, i_cut = FM._select_by_threshold(gens, inc_scores, theta)
+    m_sel, m_th, m_cut = _select_by_exact_count(gens, inc_scores, len(c_sel))
+
+    cb = FM._cancel_value(rows, gens, cand_scores, c_sel, c_th, latency_ms)
+    ib = FM._cancel_value(rows, gens, inc_scores, i_sel, i_th, latency_ms)
+    mb = FM._cancel_value(rows, gens, inc_scores, m_sel, m_th, latency_ms)
+
+    wins = sorted(set(cb) | set(mb))
+    by_window = {w: cb.get(w, 0.0) - mb.get(w, 0.0) for w in wins}
+    cand_net = math.fsum(cb.values())
+    inc_net_at_theta = math.fsum(ib.values())
+    inc_net_matched = math.fsum(mb.values())
+
+    quality = cand_net - inc_net_matched          # == the matched-volume stat
+    volume = inc_net_matched - inc_net_at_theta   # what volume alone bought
+    by_threshold = cand_net - inc_net_at_theta
+    resid = abs((volume + quality) - by_threshold)
+
+    n_act = len(gens)
+    return {
+        "statistic": "MATCHED_VOLUME",
+        "theta_declared": theta,
+        "candidate_n_cancelled": len(c_sel),
+        "incumbent_n_cancelled_at_theta": len(i_sel),
+        "incumbent_n_cancelled_matched": len(m_sel),
+        "counts_matched": len(m_sel) == len(c_sel),
+        "incumbent_cutoff_at_theta": i_cut,
+        "incumbent_cutoff_matched": m_cut,
+        "incumbent_cutoff_was_LOWERED": (m_cut <= i_cut),
+        "n_actions": n_act,
+        "candidate_delivered_rate": len(c_sel) / n_act if n_act else None,
+        "incumbent_delivered_rate_at_theta": (len(i_sel) / n_act if n_act
+                                              else None),
+        "candidate_net_cents": cand_net,
+        "incumbent_net_cents_at_theta": inc_net_at_theta,
+        "incumbent_net_cents_matched": inc_net_matched,
+        "candidate_cents_per_cancellation": (cand_net / len(c_sel)
+                                             if c_sel else None),
+        "incumbent_cents_per_cancellation_at_theta": (
+            inc_net_at_theta / len(i_sel) if i_sel else None),
+        "incumbent_cents_per_cancellation_matched": (
+            inc_net_matched / len(m_sel) if m_sel else None),
+        "MATCHED_VOLUME_increment_cents": quality,
+        "decomposition": {
+            "by_threshold_increment_cents": by_threshold,
+            "volume_term_cents": volume,
+            "quality_term_cents": quality,
+            "identity_residual_cents": resid,
+            "identity_holds": resid < 1e-6,
+            "identity": "BY_THRESHOLD == VOLUME + QUALITY",
+        },
+        "increment_by_window": by_window,
+        "n_windows": len(wins),
+        "latency_ms": latency_ms,
+        "unit": "ACTION",
+        "baseline": "INCUMBENT AT THE CANDIDATE'S OWN CANCELLATION COUNT",
+    }
+
+
 def compute(feed_path: Path, latency_ms: int = None) -> dict:
     L = PD.TARGET_LATENCY_MS if latency_ms is None else latency_ms
     loaded = load_two_arm_feed(feed_path, L)

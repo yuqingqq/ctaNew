@@ -2053,6 +2053,48 @@ def run_forward_day(day: str, outdir: Path) -> int:
                    f"{_fit_coins} only. Windows of the other coins are "
                    "supplied, replayed and counted, and produce NO score. "
                    "The day is not scored whole and this says so."}
+        # READ-R3, CARRIED FROM THE START rather than added after a result
+        # exists. The 08-29 artifacts promised a cluster disclosure in the
+        # pre-declaration and then carried it in NEITHER the receipt nor the
+        # cells, so the artifact understated its own limits -- the one thing
+        # a result must never do. Both blocks are computed here, in the
+        # receipt every run writes.
+        rec["cluster_disclosure"] = {
+            "ruled_cluster_unit": "UTC day",
+            "G_complete_days_in_THIS_run": 1,
+            "bar_for_an_interval": 5,
+            "intervals_claimable_from_this_run_alone": False,
+            "what_this_run_supports": "A POINT ESTIMATE AND NO INTERVAL",
+            "authority": "CLAUDE.md rule 8 -- below G=5 complete days: point "
+                         "estimate, no interval, and say so",
+            "unit_available_below_the_ruled_unit": "window",
+            "n_windows_with_rows": rec["rows"]["n_windows_with_rows"],
+            "weaker_than_ruled": True,
+            "why_a_window_level_p_is_OPTIMISTIC": (
+                "a window-level null treats windows as exchangeable draws. "
+                "Windows inside one UTC day share coin, regime and book "
+                "state, so the null variance is understated and any p "
+                "computed on them is SMALLER than a day-clustered p would "
+                "be. One day cannot be permuted at the ruled unit at all."),
+            "pooling_note": (
+                "G counts COMPLETE UTC DAYS across the runs a claim rests "
+                "on, not windows within one; this field describes THIS run "
+                "and a pooled claim must recompute it over its own days"),
+        }
+        rec["reconciliation_caveat"] = {
+            "claim": ("the decision metric has NEVER been reconciled against "
+                      "any published number, and cannot be from existing "
+                      "artifacts"),
+            "why_not": (
+                "`increment()` computes a BY_THRESHOLD estimand and iteration "
+                "011's published cells are BY_COUNT -- different estimands, "
+                "so there is no published number to reconcile against"),
+            "what_the_36_of_36_did_validate": (
+                "the BRIDGE arm and everything downstream of "
+                "`increment_by_window`, not the primary estimand"),
+            "for_the_reader": ("do not carry the reconciliation's authority "
+                               "onto any number derived from this run"),
+        }
         sealed = seal(day, outdir, scored, rep)
         rec["sealed_file"] = sealed
         rec["outcome"] = "SCORED"
