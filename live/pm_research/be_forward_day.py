@@ -37,6 +37,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 REPO = Path("/home/yuqing/ctaNew")
 
 
+def _exec_tree_is_repo(tree: Path = None) -> bool:
+    """BE10-R4: does the EXECUTING tree IS `REPO`? Named, never implied.
+
+    From the main tree `EXEC_TREE()` and `REPO` are the same path, so a
+    reader of a receipt cannot tell whether a root resolved BY RULE or by
+    coincidence. The receipt now carries the answer as a field, and both
+    directions of this predicate are driven in the selftest -- a constant
+    here would otherwise be invisible from whichever tree agrees with it."""
+    return Path(tree if tree is not None else EXEC_TREE()) == REPO
+
+
 def EXEC_TREE() -> Path:
     """The tree THIS FILE is in — the root for CODE and ANCHORS.
 
@@ -124,7 +135,16 @@ def _provenance(tree: Path = None) -> dict:
                     "this receipt says so rather than implying one root",
                 "git_objects": "shared object store — `git show <ref>:<path>` "
                                "resolves the freeze blobs from any worktree, "
-                               "so `_git_blob` needs no per-tree root"},
+                               "so `_git_blob` needs no per-tree root",
+                # BE10-R4: from the main tree `code_and_anchors` and the
+                # `data` root share a prefix and a reader cannot tell rule
+                # from coincidence. This says which.
+                "exec_tree_is_repo": _exec_tree_is_repo(),
+                "exec_tree_is_repo_means":
+                    "true when this run's EXECUTING tree IS the repo root, "
+                    "so the code/anchor root and the data root coincide by "
+                    "COINCIDENCE; false from a worktree, where they differ "
+                    "by RULE and only `data/` stays absolute"},
             "driver": me.name, "driver_sha256_prefix": _sha_file(me)[:16]}
 
 
@@ -1499,6 +1519,14 @@ AUDIT_KNOWN_UNKILLABLE = {
         "a no-op wherever the two names denote the same path, which is true "
         "in the shared tree; it is observable only from a worktree whose file "
         "differs, and it was executed and killed there",
+    "a `want` in AUDIT_CASES is edited":
+        "an anchor that exists ONLY inside the case table cannot be applied: "
+        "`_audit_apply` requires it to be uniquely locatable OUTSIDE the "
+        "table, precisely so that a case cannot rewrite the table. The "
+        "BE34-R5 want mismatch this round found is therefore NOT expressible "
+        "as a shipped mutant; standing in its place is the table-wide "
+        "assertion that every case died at a line OPENING with its want -- "
+        "which is the check that caught it",
     "a true conjunct is deleted":
         "removing a conjunct that holds whenever the code is correct cannot "
         "be seen by correct code; the conjunct's load-bearing-ness is shown "
@@ -1542,9 +1570,13 @@ AUDIT_CASES = (
      '            "closure_method": "STATIC import walk (ast Import/ImportFrom, "',
      '            "closure_method_UNUSED": "STATIC import walk (ast Import/'
      'ImportFrom, "',
-     "BE34-R5 the closure DECLARES its method"),
+     # BE8-R1: the label OPENS with `R-421(2)/`; as `BE34-R5 …` this want
+     # was a substring of its label but NOT a prefix, and only the substring
+     # test made it read as a kill.
+     "R-421(2)/BE34-R5 the closure DECLARES its method"),
     ("CO-12 the attribution matches the TRANSCRIPT again, not the failure",
-     '    line = _audit_failure_line(stderr)\n    return bool(line) and want in line',
+     '    line = _audit_failure_line(stderr)\n'
+     '    return bool(line) and line.startswith(want)',
      '    line = _audit_failure_line(stderr)\n    return want in stderr',
      "CO-12 KNOWN-BAD: a `want` that appears only on a `  PASS  ` line"),
     ("CO-12 the failure line is taken from the FIRST raise, not the last",
@@ -1616,6 +1648,41 @@ AUDIT_CASES = (
      '        print("usage: be_forward_day.py --selftest | "\n'
      '              "--forward-day <YYYYMMDD> --outdir <dir>")\n        return 0',
      "BE34-R4 a usage error RETURNS 2"),
+    # ---- round 12: BE8-R1/R2 and BE10-R1..R4 -------------------------
+    ("BE8-R1 the attribution is a SUBSTRING test again",
+     "    return bool(line) and line.startswith(want)",
+     "    return bool(line) and want in line",
+     "BE8-R1 attribution is a PREFIX match"),
+    ("BE8-R2 a SECOND incrementer of `checks` reappears",
+     "    # BE8-R2: NO increment here.",
+     "    checks += 1\n    # BE8-R2: NO increment here.",
+     "BE8-R2 `ok` is the ONLY thing that increments"),
+    ("BE10-R1 the git read ignores its return code again",
+     "        if r.returncode != 0 or not _outv:",
+     "        if False:",
+     "BE10-R1 KNOWN-BAD: a git read that FAILS refuses BY NAME"),
+    ("BE10-R2 an empty --git-common-dir resolves again",
+     "    if rc != 0 or not out:\n        raise ForwardDayRefused(\n"
+     "            f\"REFUSED: `git rev-parse --git-common-dir` in {tree} "
+     "exited \"",
+     "    if False:\n        raise ForwardDayRefused(\n"
+     "            f\"REFUSED: `git rev-parse --git-common-dir` in {tree} "
+     "exited \"",
+     "BE10-R2 KNOWN-BAD: an EMPTY or FAILED `--git-common-dir` REFUSES"),
+    ("BE10-R3 the tampered byte is not actually tampered",
+     '        _t.write_bytes(_t.read_bytes() + b"\\n# tampered\\n")',
+     '        _t.write_bytes(_t.read_bytes())',
+     "R-421(2)/BE10-R3 a tampered materialised byte is caught by the SHA"),
+    # The mutant names a day that IS scorable. It dies at the guard, which
+    # runs BEFORE `run_forward_day` -- so the case proves the guard without
+    # any child ever scoring a real day (which is the whole point of it).
+    ("BE12-S1 the real-emission control names a scorable day again",
+     '        _day9 = "21000101"', '        _day9 = "20260902"',
+     "BE12-S1 the real-emission control names a day that CANNOT"),
+    ("BE10-R4 the receipt hardcodes whether the tree is REPO",
+     '                "exec_tree_is_repo": _exec_tree_is_repo(),',
+     '                "exec_tree_is_repo": True,',
+     "BE10-R4 `roots` SAYS whether the executing tree IS `REPO`"),
 )
 
 
@@ -1650,6 +1717,34 @@ def _audit_apply(base: str, old: str, new: str) -> tuple:
 _AUDIT_RAISE = "AssertionError: "
 
 
+def _checks_incrementers(src: str) -> list:
+    """Every function that augments a name called `checks`, from the AST.
+
+    BE8-R2: CO-13 was closed by REMOVAL and nothing said it must stay
+    closed. Two increments existed -- `ok` (nonlocal) and `_selftest_launch`
+    (on its parameter, returned and assigned back over `ok`'s) -- and they
+    CANCELLED by arrangement, so the printed total was right by luck. A
+    second `ok` in that function would have printed two PASS lines and added
+    one. Attribution is to the INNERMOST enclosing function, or `ok`'s own
+    increment would also be reported against `selftest`, which encloses it."""
+    import ast
+    found = []
+
+    def _walk(node, fname):
+        for ch in ast.iter_child_nodes(node):
+            nf = (ch.name if isinstance(ch, (ast.FunctionDef,
+                                             ast.AsyncFunctionDef))
+                  else fname)
+            if (isinstance(ch, ast.AugAssign)
+                    and isinstance(ch.target, ast.Name)
+                    and ch.target.id == "checks"):
+                found.append(nf)
+            _walk(ch, nf)
+
+    _walk(ast.parse(src), "<module>")
+    return sorted(found)
+
+
 def _audit_failure_line(stderr: str) -> str:
     """The label the child DIED on, or None if it did not die at a check.
 
@@ -1666,9 +1761,41 @@ def _audit_failure_line(stderr: str) -> str:
 def _audit_attributed(want: str, stderr: str) -> bool:
     """Did the child die AT the named check? Matched against the failure
     line ALONE -- never against the transcript, where the same text appears
-    on the `  PASS  ` line the check prints when it merely RAN."""
+    on the `  PASS  ` line the check prints when it merely RAN.
+
+    BE8-R1: the match is a PREFIX, not a substring. `want in line` credited
+    a mutant to a case whose `want` merely APPEARED INSIDE another check's
+    label -- the CO-12 control quotes the `died_at` it just measured, so its
+    own failure line contains another case's `want` verbatim, and a mutant
+    killing THAT control would have been credited to the other case. A
+    prefix cannot collide that way, because every `want` is the OPENING of
+    its target's label.
+
+    MEASURED when this changed: one shipped `want` was NOT a prefix of its
+    label (BE34-R5's, whose label opens `R-421(2)/`), so under `startswith`
+    it became a SURVIVOR -- the substring test had been HIDING a mismatch
+    between a case and the check it names. The `want` was corrected, and the
+    prefix property is now asserted across the whole table."""
     line = _audit_failure_line(stderr)
-    return bool(line) and want in line
+    return bool(line) and line.startswith(want)
+
+
+def _resolve_git_common_dir(out: str, rc: int, tree: Path) -> Path:
+    """BE10-R2: an EMPTY `--git-common-dir` REFUSES, never resolves.
+
+    `(tree / "").resolve()` IS `tree`, so an empty answer silently aimed the
+    stale-entry cleanup at the executing tree: the `rmtree` missed,
+    `ignore_errors=True` swallowed the miss, and the worktree entry this
+    selftest PLANTED leaked into shared state -- in the one check whose
+    whole subject is not leaving shared state behind."""
+    out = (out or "").strip()
+    if rc != 0 or not out:
+        raise ForwardDayRefused(
+            f"REFUSED: `git rev-parse --git-common-dir` in {tree} exited "
+            f"{rc} with {out!r}. An empty answer resolves to the tree "
+            f"ITSELF, which would aim this check's cleanup at the wrong "
+            f"path and leak the admin entry it planted.")
+    return Path(out) if out.startswith("/") else (tree / out).resolve()
 
 
 def _audit_tree(src: str, root: Path) -> Path:
@@ -2010,14 +2137,35 @@ def selftest() -> int:
         _t.write_bytes(_t.read_bytes() + b"\n# tampered\n")
         _stems = [Path(k).stem for k in mat["anchors"]
                   if mat["anchors"][k].get("materialised_to")]
+        # BE10-R3. What stood here was a control that COULD NOT FAIL beside
+        # a claim that is FALSE:
+        #     try: import…; ok(False, "must not import cleanly")
+        #     except (ForwardDayRefused, Exception): ok(True, "…")
+        # `ok(False, …)` raises AssertionError; AssertionError IS an
+        # Exception; so the handler caught the control's OWN RED and printed
+        # a PASS for a refusal that never happened. MEASURED at these bytes:
+        # the tampered file imports CLEANLY — appending a comment is valid
+        # Python and `import_frozen_anchors` proves WHERE a module came from
+        # (`__file__` under the run dir) and that the data root resolves; it
+        # never reads the bytes. The claim is WITHDRAWN and replaced by what
+        # is true and computed: the bytes are bound at MATERIALISATION, and
+        # re-materialisation is the step that restores them (next check).
+        _tampered_sha = _sha_file(_t)
+        _bound = mat["anchors"][_py]["sha256"]
         try:
             import_frozen_anchors(Path(mat["root"]), [k for k in mat["anchors"]
                                                       if k.endswith(".py")])
-            ok(False, "a tampered materialised byte must not import cleanly")
-        except (ForwardDayRefused, Exception):
-            ok(True, "R-421(2) a TAMPERED materialised byte does not pass — "
-                     "the sha is checked at materialisation, before any "
-                     "import, so a byte verified after import has not run")
+            _imported_anyway = True
+        except ForwardDayRefused:
+            _imported_anyway = False
+        ok(_tampered_sha != _bound and _imported_anyway,
+           f"R-421(2)/BE10-R3 a tampered materialised byte is caught by the "
+           f"SHA THE MANIFEST BINDS ({_tampered_sha[:12]} != "
+           f"{_bound[:12]}) and NOT by the import — asserted here to SUCCEED "
+           f"({_imported_anyway}), because the import proves provenance, "
+           f"never content. The control this replaces asserted the opposite "
+           f"and passed by catching its own AssertionError in an "
+           f"`except Exception`")
         # re-materialising RESTORES and REFUSES if the source moved
         mat2 = materialise_frozen(o4)
         ok(_sha_file(Path(mat2["anchors"][_py]["materialised_to"]))
@@ -2410,13 +2558,37 @@ def selftest() -> int:
            "leave a partial file behind for a reader to find")
         # THE CONTROL THAT WAS MISSING. Fixtures said the post-condition
         # worked; the REAL receipt carries `gates[].gate` and would have
-        # refused every run. 09-02 refuses at gate 1 in ~0 s, so a real
-        # emission is affordable here and the check now meets one.
-        _rc9 = run_forward_day("20260902", o8)
-        _r9 = json.loads(receipt_path(o8, "20260902").read_text())
+        # refused every run, so this check meets a real emission.
+        #
+        # BE12-S1 -- FOUND BY EXECUTING IT, NOT BY READING IT. This ran
+        # `run_forward_day("20260902")` under the comment "09-02 refuses at
+        # gate 1 in ~0 s, so a real emission is affordable here". That was a
+        # property of the CALENDAR, not of the code. At 00:06Z on 09-03 the
+        # scheduled unit wrote the 09-02 governed verdict; gate 1
+        # (`day_closed_and_attributed`) began to PASS; and this control
+        # started performing a FULL CLOSED-DAY SCORING RUN of 09-02 inside
+        # the selftest -- the run R-486 (6) reserves for the USER. MEASURED
+        # before it was killed: 14 min of full-pipeline execution, ~16 GB
+        # read, in a batch whose dispatch forbids exactly that.
+        #
+        # The day is now one no later event can make scorable, and the
+        # control PROVES that BEFORE it calls the driver: if the day it
+        # names could be scored, it refuses here rather than scoring it.
+        _day9 = "21000101"
+        _v9 = DERIVED / f"da_dayverdict_{_day9}.json"
+        ok(not _v9.exists(),
+           f"BE12-S1 the real-emission control names a day that CANNOT "
+           f"become scorable ({_day9}: no day verdict at {_v9.name}) — "
+           f"checked BEFORE the driver is called, so this control can never "
+           f"turn into a scoring run when a day closes. Its predecessor "
+           f"named 09-02 and did exactly that once DA's unit attributed the "
+           f"day: the refusal it asserted was the CALENDAR's, not the code's")
+        _rc9 = run_forward_day(_day9, o8)
+        _r9 = json.loads(receipt_path(o8, _day9).read_text())
         ok(_rc9 != 0 and _r9["gates"][0]["result"] == "REFUSED"
+           and _r9["gates"][0]["gate"] == "day_closed_and_attributed"
            and isinstance(_r9["gates"][0]["gate"], str),
-           f"R5(5) POSITIVE CONTROL ON A REAL EMISSION: the 09-02 run refuses "
+           f"R5(5) POSITIVE CONTROL ON A REAL EMISSION: the {_day9} run refuses "
            f"at `{_r9['gates'][0]['gate']}` and its receipt WRITES — a "
            f"fixture-only control let the post-condition refuse every real "
            f"receipt without the suite noticing (rule 17)")
@@ -2660,9 +2832,24 @@ def selftest() -> int:
     import shutil as _sh2
     import subprocess as _sp
     _me_tree = Path(__file__).resolve().parents[2]
-    _gcd = _sp.run(("git", "rev-parse", "--git-common-dir"), cwd=str(_me_tree),
-                   capture_output=True, text=True).stdout.strip()
-    _gcd = Path(_gcd) if _gcd.startswith("/") else (_me_tree / _gcd).resolve()
+    _gcd_r = _sp.run(("git", "rev-parse", "--git-common-dir"),
+                     cwd=str(_me_tree), capture_output=True, text=True)
+    _gcd = _resolve_git_common_dir(_gcd_r.stdout, _gcd_r.returncode, _me_tree)
+    _gcd_refused = 0
+    for _bad in (("", 0), ("", 128), ("   \n", 0), (None, 0)):
+        try:
+            _resolve_git_common_dir(_bad[0], _bad[1], _me_tree)
+        except ForwardDayRefused:
+            _gcd_refused += 1
+    ok(_gcd_refused == 4 and _gcd.is_absolute() and _gcd.exists()
+       and _resolve_git_common_dir(".git", 0, _me_tree)
+       == (_me_tree / ".git").resolve(),
+       f"BE10-R2 KNOWN-BAD: an EMPTY or FAILED `--git-common-dir` REFUSES "
+       f"({_gcd_refused}/4 bad forms) instead of resolving to the executing "
+       f"tree — which is how the planted stale entry leaked silently, since "
+       f"`(tree / '').resolve()` IS the tree and the miss was swallowed by "
+       f"`ignore_errors=True`; a real relative answer still resolves "
+       f"({_gcd})")
     _std = _tf.mkdtemp()
     _stale = Path(_std) / "be-r10-c3-stale"
     _sa = _sp.run(("git", "worktree", "add", "--detach", str(_stale), "HEAD"),
@@ -2677,9 +2864,42 @@ def selftest() -> int:
         """Every read below is of the EXECUTING tree, never a fixed one.
 
         BE9-C3: reading HEAD from `REPO` made a selftest's verdict depend on
-        a tree it was not running in."""
-        return _sp.run(("git", *a), cwd=str(root), capture_output=True,
-                       text=True).stdout.strip()
+        a tree it was not running in.
+
+        BE10-R1: the RETURN CODE is checked. Without it a tree with fewer
+        than three commits, or a shallow clone, failed MUTELY two lines
+        later as an unexplained `git worktree add` return code. Worse than
+        empty: `git rev-parse HEAD~999999` exits 128 having printed the
+        LITERAL `HEAD~999999` on stdout, so the old form passed a plausible
+        non-commit on as a commit."""
+        r = _sp.run(("git", *a), cwd=str(root), capture_output=True,
+                    text=True)
+        _outv = r.stdout.strip()
+        if r.returncode != 0 or not _outv:
+            raise ForwardDayRefused(
+                f"REFUSED: `git {' '.join(a)}` in {root} exited "
+                f"{r.returncode} with stdout {_outv[:40]!r} — this check "
+                f"needs three commits of history IN THE EXECUTING TREE, and "
+                f"a shallow clone or a young tree cannot supply HEAD~2. "
+                f"{r.stderr.strip()[-160:]!r}")
+        return _outv
+
+    try:
+        _git_in(_me_tree, "rev-parse", "HEAD~999999")
+        _r1_refused = False
+    except ForwardDayRefused as _e1:
+        _r1_refused = ("exited 128" in str(_e1)
+                       and "three commits of history" in str(_e1))
+    ok(_r1_refused,
+       "BE10-R1 KNOWN-BAD: a git read that FAILS refuses BY NAME, naming "
+       "the command, the tree and the cause — `rev-parse HEAD~999999` exits "
+       "128 having printed the literal ref on stdout, so the old "
+       "code-ignoring form returned that string AS a commit and the suite "
+       "went red two lines later at `git worktree add` with no cause")
+    ok(len(_git_in(_me_tree, "rev-parse", "HEAD")) == 40,
+       "BE10-R1 POSITIVE CONTROL: a git read that SUCCEEDS still returns "
+       "its 40-char answer, so the refusal above is about the return code "
+       "and not about refusing everything")
 
     _exec_head = _git_in(_me_tree, "rev-parse", "HEAD")
     _prev1 = _git_in(_me_tree, "rev-parse", "HEAD~1")
@@ -2957,13 +3177,78 @@ def selftest() -> int:
        "sealing: OUTDIR is a caller parameter and nothing is written under "
        "data/pm_5min/derived/ by this driver")
 
+    # ---- BE8-R1: attribution is a PREFIX, driven both ways -------------
+    # The REAL collision, reproduced: the CO-12 control's own label quotes
+    # the `died_at` it measured, so its failure line CONTAINS another case's
+    # `want`. Under `want in line` a mutant killing that control was
+    # credited to case 12.
+    _coll = ("Traceback (most recent call last):\n"
+             "  File \"be_forward_day.py\", line 1, in <module>\n"
+             "AssertionError: CO-12 the attribution HAS a falsifier: ONE "
+             "edit, TWO names — ... ('BE34-R4 a usage error RETURNS 2')")
+    ok(_audit_attributed("BE34-R4 a usage error RETURNS 2", _coll) is False
+       and _audit_attributed("CO-12 the attribution HAS a falsifier",
+                             _coll) is True,
+       "BE8-R1 attribution is a PREFIX match: a `want` that appears INSIDE "
+       "another check's label — the CO-12 control quotes the died_at it "
+       "measured — no longer credits that check's death to it, while the "
+       "label that OPENS with the want still does. The substring test "
+       "matched BOTH, and the error direction was a false KILL")
+
+    # ---- BE8-R2: `ok` is the ONLY incrementer, from this file's AST -----
+    _inc = _checks_incrementers(Path(__file__).read_text(encoding="utf-8"))
+    _inc_bad = _checks_incrementers(
+        "def selftest():\n"
+        "    checks = 0\n"
+        "    def ok(c, l):\n        checks += 1\n"
+        "    return checks\n\n"
+        "def _selftest_launch(checks, ok):\n    checks += 1\n"
+        "    return checks\n")
+    ok(_inc == ["ok"] and _inc_bad == ["_selftest_launch", "ok"],
+       f"BE8-R2 `ok` is the ONLY thing that increments `checks` — from this "
+       f"file's own AST, attributed to the INNERMOST function ({_inc}) — "
+       f"and the KNOWN-BAD source carrying the second incrementer this "
+       f"round removed is reported as {_inc_bad}. CO-13 was closed by "
+       f"removal; nothing until now said it must STAY closed, and the two "
+       f"increments cancelled only by arrangement")
+
+    # ---- BE10-R4: the receipt says whether the executing tree IS REPO ---
+    _pv_roots = _provenance()["roots"]
+    ok(_exec_tree_is_repo(REPO) is True
+       and _exec_tree_is_repo(Path("/tmp")) is False
+       and _pv_roots["exec_tree_is_repo"] is _exec_tree_is_repo(EXEC_TREE())
+       and _pv_roots["code_and_anchors"] == str(EXEC_TREE())
+       and _pv_roots["data"] == str(REPO / "data"),
+       f"BE10-R4 `roots` SAYS whether the executing tree IS `REPO` "
+       f"(exec_tree_is_repo={_pv_roots['exec_tree_is_repo']}: "
+       f"{EXEC_TREE()} vs {REPO}) — from the main tree the two coincide and "
+       f"a reader could not tell RULE from COINCIDENCE. Both directions of "
+       f"the predicate are driven here, so a constant in it dies in any "
+       f"tree rather than only in the one that disagrees")
+
     _before = checks
-    checks = _selftest_launch(checks, ok)
+    # BE8-R2: the return value is NOT assigned back — `ok` increments the
+    # nonlocal directly, and assigning here would restore the cancelling
+    # pair this round removed.
+    _selftest_launch(checks, ok)
     # BE5-R3: the audit is an ARTIFACT, not a report. Skipped in the audit's
     # own children and in the launch child (both carry BE_FORWARD_AUDIT=1),
     # or every case would re-run the whole sweep inside itself.
     if os.environ.get("BE_FORWARD_AUDIT") != "1":
         _aud = mutation_audit()
+        # BE8-R1: the prefix property the attribution now REQUIRES, asserted
+        # across the whole table instead of assumed. This is what caught the
+        # one shipped `want` that was a substring of its label but not its
+        # opening (BE34-R5's, label `R-421(2)/…`) — under `startswith` that
+        # case became a survivor, and the substring test had hidden it.
+        _applied = [d for d in _aud["per_case"].values() if d.get("applied")]
+        _nonpref = [d["must_go_red"] for d in _applied
+                    if not (d["died_at"] or "").startswith(d["must_go_red"])]
+        ok(_applied and not _nonpref,
+           f"BE8-R1 every one of the {len(_applied)} shipped cases died at a "
+           f"line that OPENS with its `want` — the prefix property asserted "
+           f"over the whole table, not assumed; non-prefix wants: "
+           f"{_nonpref}")
         ok(_aud["survivors"] == [] and _aud["baseline_green"]
            and all(v.get("died_at_named_check")
                    for v in _aud["per_case"].values()),
@@ -3097,7 +3382,12 @@ def _selftest_launch(checks: int, ok) -> int:
        f"needed: in one tree the parent and the child are the same file, so "
        f"the comparison alone is a tautology. Child tail: "
        f"{(r.stdout + r.stderr).strip()[-300:]!r}")
-    checks += 1
+    # BE8-R2: NO increment here. `ok` above already counted this assertion
+    # against the caller's `checks`; the `checks += 1` that stood here
+    # incremented this function's PARAMETER, which the call site then
+    # assigned back OVER `ok`'s increment. The two cancelled, so 121 = 121
+    # by arrangement rather than by rule. `ok` is now the only incrementer
+    # and an AST check asserts it.
     return checks
 
 
