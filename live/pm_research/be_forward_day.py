@@ -757,6 +757,211 @@ def assert_frozen_contract(candidate: Path = None) -> dict:
 # ---------------------------------------------------------------------------
 # gate 2 -- the day is closed, and its verdict was written by the scheduled unit
 # ---------------------------------------------------------------------------
+#: THE ADMISSION, AND IT IS A RECORD RATHER THAN A RELAXED GATE.
+#:
+#: 08-29's verdict was superseded by BE (Q-DA-180 item 2) to carry the
+#: era-admission guard. The supersede is CORRECT and it is also
+#: unattributable: its `write_reason` is BE's, so `day_closed_and_attributed`
+#: refuses it -- while the bytes it REPLACED, which do carry genuine
+#: scheduled-unit attribution, are the pre-era-guard ones. The gate therefore
+#: admits the verdict known to be wrong and refuses the one known to be right.
+#:
+#: The USER ruled the narrowest of the three options: admit the SUPERSEDED
+#: ATTRIBUTED BYTES for THIS READ. The ruling turns on a computable fact --
+#: this driver reads exactly TWO fields from a verdict, `day_closed_calendar`
+#: and `write_reason`, and both are GENUINE in those bytes; the fields that
+#: are stale there (`era_admissible`, `race_accrual_eligible`) are fields the
+#: driver never reads. That is why it is admissible, and it would not be if
+#: the driver read them.
+#:
+#: So the admission is SCOPED TO ONE DAY and carries who ruled, the blob it
+#: admits, and the two field values it relies on -- and every one of those is
+#: RE-VERIFIED AT THE BLOB AT RUN TIME. Nothing here is trusted from the
+#: dispatch that granted it (rule 16). If either field is not what the ruling
+#: says, the admission is not in force and the run REFUSES, the ruling
+#: notwithstanding, because the ruling was granted on a condition.
+USER_ADMISSIONS_BY_DAY = {
+    "20260829": {
+        "admitted_by": "USER",
+        "relayed_by": "coordinator (dispatch of BE round 23)",
+        "filed_at": "Q-BE-248",
+        "depends_on": ("R-500 -- the USER WITHDREW 08-29 from the race and "
+                       "kept it readable; this admission is for a READ of a "
+                       "withdrawn day, never for a race day"),
+        "blob_commit": "4e1133c",
+        "blob_path": "data/pm_5min/derived/da_dayverdict_20260829.json",
+        "blob_sha256": ("b808e603f3448a503d8ef72f8d1713bece20eda1d67a1e8f"
+                        "03162a59ecc0709e"),
+        "invocation_id": "142596744fc3492283df4f1ceb3be3b2",
+        "as_of_utc": "2026-08-30T00:06:01.246972+00:00",
+        "fields_relied_on": ("day_closed_calendar", "write_reason"),
+        "why_the_stale_fields_do_not_matter": (
+            "`era_admissible` and `race_accrual_eligible` are stale in these "
+            "bytes and are read NOWHERE in this driver -- established by "
+            "`driver_reads_no_era_field()` against this file's own source, "
+            "not asserted. If a future edit makes the driver read one, that "
+            "predicate goes False and the admission REFUSES rather than "
+            "silently covering a field it was never granted for"),
+        "scope": ("THIS READ, on 20260829 ONLY. It is not a widening of "
+                  "`day_closed_and_attributed`, which is unchanged for every "
+                  "other day, race days included"),
+    },
+}
+
+#: The fields whose staleness the ruling tolerated, BECAUSE the driver does
+#: not read them. That premise is checked, not trusted.
+_ADMISSION_STALE_FIELDS = ("era_admissible", "race_accrual_eligible",
+                           "era_admission", "day_quality_pass")
+
+
+def driver_reads_no_era_field(src: str = None) -> dict:
+    """The premise the USER's ruling rests on, computed from this source.
+
+    The ruling holds because the driver reads only `day_closed_calendar` and
+    `write_reason` from a verdict. If an edit ever makes it read a field that
+    is STALE in the admitted bytes, the ruling's ground is gone -- so this is
+    a predicate, evaluated at run time, not a sentence in a comment.
+
+    It looks for READS -- `x["era_admissible"]`, `x.get("era_admissible")` --
+    and not for mentions, because the admission machinery below necessarily
+    NAMES these fields in order to record them. A predicate that counted its
+    own record would be False by construction, which is a check that cannot
+    pass rather than a check that failed."""
+    import ast as _ast
+    src = Path(__file__).read_text() if src is None else src
+    tree = _ast.parse(src)
+    exempt = {"driver_reads_no_era_field", "admitted_verdict", "selftest"}
+    reads: dict = {}
+
+    def _scan(node, fname):
+        for n in _ast.walk(node):
+            key = None
+            if isinstance(n, _ast.Subscript) and isinstance(
+                    n.slice, _ast.Constant) and isinstance(n.slice.value, str):
+                key = n.slice.value
+            elif (isinstance(n, _ast.Call)
+                  and isinstance(n.func, _ast.Attribute)
+                  and n.func.attr == "get" and n.args
+                  and isinstance(n.args[0], _ast.Constant)
+                  and isinstance(n.args[0].value, str)):
+                key = n.args[0].value
+            if key in _ADMISSION_STALE_FIELDS:
+                reads.setdefault(key, []).append(fname)
+
+    for n in tree.body:
+        if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+            if n.name not in exempt:
+                _scan(n, n.name)
+        else:
+            _scan(n, "<module>")
+    return {"stale_fields_checked": list(_ADMISSION_STALE_FIELDS),
+            "stale_fields_the_driver_reads": sorted(reads),
+            "read_by": {k: sorted(set(v)) for k, v in reads.items()},
+            "exempt_because_they_RECORD_rather_than_READ": sorted(exempt),
+            "premise_holds": not reads}
+
+
+def admission_bytes_ok(day: str, a: dict, raw: bytes) -> dict:
+    """Every condition the ruling rests on, checked ON THE BYTES.
+
+    Split out so each refusal can be DRIVEN with fabricated bytes rather than
+    only provoked through the one real blob -- a condition that can only be
+    tested by the input that satisfies it is a condition nobody has tested."""
+    got = hashlib.sha256(raw).hexdigest()
+    if got != a["blob_sha256"]:
+        raise ForwardDayRefused(
+            f"REFUSED: the admitted blob for {day} hashes {got[:16]}, not the "
+            f"{a['blob_sha256'][:16]} the ruling names. These are not the "
+            f"bytes the USER verified.")
+    try:
+        v = json.loads(raw)
+    except ValueError as e:
+        raise ForwardDayRefused(
+            f"REFUSED: the admitted bytes for {day} are not parseable JSON "
+            f"({type(e).__name__}). Their sha matched, so they ARE the "
+            f"declared bytes -- they are simply not a verdict.") from None
+    closed = v.get("day_closed_calendar")
+    if closed is not True:
+        raise ForwardDayRefused(
+            f"REFUSED: the admitted bytes for {day} carry "
+            f"day_closed_calendar={closed!r}, not True. The ruling relies on "
+            f"that field being genuine; it is not what the ruling says.")
+    wr = v.get("write_reason")
+    if not (isinstance(wr, str) and wr.startswith(SCHEDULED_PREFIX)):
+        raise ForwardDayRefused(
+            f"REFUSED: the admitted bytes for {day} carry "
+            f"write_reason={wr!r}, which does not start with the scheduled "
+            f"prefix. The whole ground of the admission is that THESE bytes "
+            f"are genuinely attributed; they are not.")
+    if a["invocation_id"] not in wr:
+        raise ForwardDayRefused(
+            f"REFUSED: the admitted bytes for {day} do not carry the "
+            f"INVOCATION_ID {a['invocation_id']} the USER verified. A "
+            f"scheduled-unit prefix with a different invocation is a "
+            f"different run.")
+    return v
+
+
+def admitted_verdict(day: str) -> dict | None:
+    """Recover and VERIFY the admitted bytes at the blob, now.
+
+    Returns None when no admission covers the day -- which is every day but
+    one, and is why this cannot become a general bypass. Raises when an
+    admission exists but its condition fails: a granted ruling whose
+    condition no longer holds is a refusal, not a waiver."""
+    a = USER_ADMISSIONS_BY_DAY.get(day)
+    if a is None:
+        return None
+    prem = driver_reads_no_era_field()
+    if not prem["premise_holds"]:
+        raise ForwardDayRefused(
+            f"REFUSED: the {day} admission was granted because this driver "
+            f"reads no field that is stale in the admitted bytes, and it now "
+            f"reads {prem['stale_fields_the_driver_reads']}. The ruling's "
+            f"ground is gone, so the admission is not in force.")
+    raw = _git_blob(a["blob_commit"], a["blob_path"])
+    if not raw:
+        raise ForwardDayRefused(
+            f"REFUSED: the {day} admission names blob "
+            f"{a['blob_commit']}:{a['blob_path']}, which this repo cannot "
+            f"produce. An admission whose bytes nobody can recover is not "
+            f"evidence.")
+    v = admission_bytes_ok(day, a, raw)
+    closed, wr = v["day_closed_calendar"], v["write_reason"]
+    return {
+        "verdict": v,
+        "record": {
+            "ADMISSION": "SUPERSEDED-BUT-GENUINE BYTES, ADMITTED BY THE USER",
+            "admitted_by": a["admitted_by"], "relayed_by": a["relayed_by"],
+            "filed_at": a["filed_at"], "depends_on": a["depends_on"],
+            "scope": a["scope"],
+            "blob": f"{a['blob_commit']}:{a['blob_path']}",
+            "blob_sha256": a["blob_sha256"],
+            "verified_at_run_time": True,
+            "fields_relied_on": {"day_closed_calendar": closed,
+                                 "write_reason": wr},
+            "invocation_id": a["invocation_id"],
+            # rule 14: the NAMES, never the values. Echoing
+            # `race_accrual_eligible` into a receipt would put an
+            # ENTITLEMENT in a worker's output -- `assert_no_decision_field`
+            # refused exactly that, and it was right to.
+            "stale_fields_PRESENT_in_these_bytes_and_read_by_nothing": sorted(
+                f for f in _ADMISSION_STALE_FIELDS if f in v),
+            "stale_field_values_deliberately_not_echoed": (
+                "rule 14 -- these are entitlement fields; this driver "
+                "supplies counts and refusals, and reproducing their values "
+                "in a receipt would encode a decision it does not own"),
+            "why_the_stale_fields_do_not_matter":
+                a["why_the_stale_fields_do_not_matter"],
+            "premise_checked_not_trusted": prem,
+            "the_superseding_verdict_is_not_repudiated": (
+                "the current verdict at that path remains the correct one on "
+                "era; it is simply unattributable, and this read needs "
+                "attribution rather than era"),
+        },
+    }
+
+
 def assert_day_closed_and_attributed(day: str, verdict: dict = None) -> dict:
     v = FS.read_day_verdict(day) if verdict is None else verdict
     if not v:
@@ -1558,8 +1763,21 @@ def run_forward_day(day: str, outdir: Path) -> int:
 
     rc = 0
     try:
-        rec["day_verdict"] = gate("day_closed_and_attributed",
-                                  lambda: assert_day_closed_and_attributed(day))
+        _adm = gate("user_admission", lambda: admitted_verdict(day))
+        # rule 14 again: `admitted` is a decision-shaped NAME, and
+        # `assert_no_decision_field` refused it. The record says what is
+        # true without wearing an entitlement's clothes.
+        rec["user_admission"] = _adm["record"] if _adm else {
+            "no_admission_covers_this_day": True,
+            "note": "the ordinary gate applies, unchanged"}
+        rec["day_verdict"] = gate(
+            "day_closed_and_attributed",
+            lambda: assert_day_closed_and_attributed(
+                day, verdict=(_adm["verdict"] if _adm else None)))
+        if _adm:
+            rec["day_verdict"]["attribution_source"] = (
+                "SUPERSEDED-BUT-GENUINE BYTES ADMITTED BY THE USER -- see "
+                "`user_admission`")
         rec["frozen_contract"] = gate("frozen_contract", frozen_contract_gate)
         pop = gate("population_supply_and_bridge", lambda: population(day))
         rec["population"] = {
@@ -2941,13 +3159,30 @@ def selftest() -> int:
            f"day: the refusal it asserted was the CALENDAR's, not the code's")
         _rc9 = run_forward_day(_day9, o8)
         _r9 = json.loads(receipt_path(o8, _day9).read_text())
-        ok(_rc9 != 0 and _r9["gates"][0]["result"] == "REFUSED"
-           and _r9["gates"][0]["gate"] == "day_closed_and_attributed"
-           and isinstance(_r9["gates"][0]["gate"], str),
-           f"R5(5) POSITIVE CONTROL ON A REAL EMISSION: the {_day9} run refuses "
-           f"at `{_r9['gates'][0]['gate']}` and its receipt WRITES — a "
+        # R23: this asserted `gates[0]`, and inserting the `user_admission`
+        # gate ahead of it turned a control about WHICH GATE REFUSED into a
+        # control about POSITION -- it went red the moment a passing gate was
+        # added in front, which is the right failure but the wrong reason.
+        # It now finds the refusing gate BY NAME, so a later insertion cannot
+        # move it and cannot silently satisfy it either.
+        _ref9 = [g for g in _r9["gates"] if g["result"] == "REFUSED"]
+        _pass9 = [g["gate"] for g in _r9["gates"] if g["result"] == "PASS"]
+        ok(_rc9 != 0 and len(_ref9) == 1
+           and _ref9[0]["gate"] == "day_closed_and_attributed"
+           and isinstance(_ref9[0]["gate"], str)
+           and _pass9 == ["user_admission"],
+           f"R5(5) POSITIVE CONTROL ON A REAL EMISSION: the {_day9} run "
+           f"refuses at `{_ref9[0]['gate']}` — located BY NAME, with "
+           f"{_pass9} passing ahead of it — and its receipt WRITES; a "
            f"fixture-only control let the post-condition refuse every real "
            f"receipt without the suite noticing (rule 17)")
+        ok(_r9["user_admission"] == {
+               "no_admission_covers_this_day": True,
+               "note": "the ordinary gate applies, unchanged"},
+           f"R23 ON A REAL EMISSION: {_day9} carries NO admission, so the "
+           f"receipt says so in words and the ordinary gate is what refused "
+           f"it — the admission is one day's bytes, not a mode this driver "
+           f"is now in")
         ok(_r9["decision_field_check"]["excused_paths"] == ["gates[].gate"],
            "R5(5) and exactly ONE path is excused, named in the receipt with "
            "its reason — an exemption a reader cannot see is not one")
@@ -3686,6 +3921,97 @@ def selftest() -> int:
            "BE17: and the shape checker, which answers False for today's "
            "sealed pairs, answers TRUE for this feed -- the same function, "
            "two inputs, two answers")
+
+    # ---- ROUND 23: THE USER'S ADMISSION OF SUPERSEDED-BUT-GENUINE BYTES --
+    def refuses(fn, want, label, exc=ForwardDayRefused):
+        """A known-bad must refuse BY NAME. Passing for the wrong reason --
+        a NameError, a KeyError -- is not a refusal, so the type is pinned
+        and the message must carry `want`."""
+        try:
+            fn()
+        except exc as e:
+            ok(want in str(e),
+               f"{label} [refused with: {str(e)[:90]}…]")
+            return
+        except Exception as e:                        # noqa: BLE001
+            ok(False, f"{label} [WRONG EXCEPTION {type(e).__name__}: {e}]")
+            return
+        ok(False, f"{label} [DID NOT REFUSE]")
+
+    _A = USER_ADMISSIONS_BY_DAY["20260829"]
+    _adm = admitted_verdict("20260829")
+    ok(_adm is not None
+       and _adm["record"]["fields_relied_on"]["day_closed_calendar"] is True
+       and _adm["record"]["fields_relied_on"]["write_reason"].startswith(
+           SCHEDULED_PREFIX)
+       and _A["invocation_id"] in _adm["record"]["fields_relied_on"][
+           "write_reason"],
+       f"R23 POSITIVE CONTROL: the admitted blob VERIFIES AT RUN TIME -- "
+       f"{_A['blob_commit']} carries day_closed_calendar True and a genuine "
+       f"scheduled-unit write_reason with INVOCATION_ID "
+       f"{_A['invocation_id'][:12]}…, checked at the bytes and not taken "
+       f"from the dispatch that granted it")
+    ok(admitted_verdict("20260830") is None
+       and admitted_verdict("20260901") is None
+       and list(USER_ADMISSIONS_BY_DAY) == ["20260829"],
+       "R23 THE ADMISSION CANNOT BECOME A BYPASS: it is keyed by DAY and "
+       "exactly one day carries one -- every other day, race days included, "
+       "gets None and the ordinary gate")
+    refuses(lambda: assert_day_closed_and_attributed("20260829"),
+            "was not written by the scheduled unit",
+            "R23 AND THE ORDINARY GATE IS UNCHANGED: called WITHOUT the "
+            "admission it still refuses the current verdict, so the "
+            "admission widened nothing -- it supplied one day's bytes",
+            exc=ForwardDayRefused)
+    _raw = _git_blob(_A["blob_commit"], _A["blob_path"])
+    refuses(lambda: admission_bytes_ok("20260829",
+                                       {**_A, "blob_sha256": "0" * 64}, _raw),
+            "not the 0000000000000000 the ruling names",
+            "R23 KNOWN-BAD: bytes whose sha is not the one the ruling names "
+            "REFUSE -- the USER verified specific bytes, not a path",
+            exc=ForwardDayRefused)
+    def _mut(**kw):
+        v = json.loads(_raw); v.update(kw)
+        b = json.dumps(v).encode()
+        return {**_A, "blob_sha256": hashlib.sha256(b).hexdigest()}, b
+    _a2, _b2 = _mut(day_closed_calendar=False)
+    refuses(lambda: admission_bytes_ok("20260829", _a2, _b2),
+            "not True. The ruling relies on that field being genuine",
+            "R23 KNOWN-BAD, DRIVEN ON FABRICATED BYTES: a verdict that is "
+            "NOT closed by calendar refuses even under the admission -- the "
+            "ruling admitted attribution, never an open day",
+            exc=ForwardDayRefused)
+    _a3, _b3 = _mut(write_reason="UNATTRIBUTED hand run")
+    refuses(lambda: admission_bytes_ok("20260829", _a3, _b3),
+            "does not start with the scheduled prefix",
+            "R23 KNOWN-BAD: bytes WITHOUT genuine scheduled-unit attribution "
+            "refuse -- the whole ground of the admission is that these "
+            "particular bytes are attributed", exc=ForwardDayRefused)
+    _a4, _b4 = _mut(write_reason=SCHEDULED_PREFIX + " (INVOCATION_ID=deadbeef)")
+    refuses(lambda: admission_bytes_ok("20260829", _a4, _b4),
+            "do not carry the INVOCATION_ID",
+            "R23 KNOWN-BAD, AND THIS IS THE SUBTLE ONE: a CORRECT prefix "
+            "with a DIFFERENT invocation refuses -- a prefix match alone "
+            "would admit any other night's scheduled run",
+            exc=ForwardDayRefused)
+    _prem = driver_reads_no_era_field()
+    ok(_prem["premise_holds"] is True
+       and _prem["stale_fields_the_driver_reads"] == [],
+       f"R23 THE RULING'S PREMISE IS COMPUTED, NOT QUOTED: this driver reads "
+       f"none of {_prem['stale_fields_checked']} from a verdict, which is "
+       f"the entire reason stale fields in the admitted bytes are harmless")
+    ok(driver_reads_no_era_field(
+           'def f(v):\n    return v["race_accrual_eligible"]\n'
+       )["premise_holds"] is False,
+       "R23 KNOWN-BAD: a source that DOES read a stale field turns the "
+       "premise False, so the check above can fail -- and `admitted_verdict` "
+       "refuses when it does")
+    ok(driver_reads_no_era_field(
+           '_ADMISSION_STALE = ("race_accrual_eligible",)\n'
+       )["premise_holds"] is True,
+       "R23 AND THE PREMISE COUNTS READS, NOT MENTIONS: a source that merely "
+       "NAMES the field does not break it -- otherwise the admission record, "
+       "which must name what it admits, would falsify its own ground")
 
     # ---- ROUND 21: the frozen-contract gate is ON THE RUN PATH -----------
     _fc = _emits_feed  # reuse the scoped-AST idiom
