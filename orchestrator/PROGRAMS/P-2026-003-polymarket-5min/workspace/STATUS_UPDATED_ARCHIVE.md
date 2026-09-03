@@ -4826,3 +4826,66 @@ Moved in the MEM round-68 true-up of R-491 and DE round 42. Join rule as in batc
   09-02 complement once the USER rules; the 011 family 12 of 24 with Q4 failing;
   the sequencing rule; R-419 revocable.
 ```
+
+## Batch 75 — archived 2026-09-03T01:21Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-69 true-up of R-492 and the DE-42 filing. Join rule as in batch 1.
+
+```yaml
+  2026-09-03T00:54Z (MEM ROUND 66 -- MY OWN COMMITS ARE PART OF THE CONDITION).
+  R-488, R-489 and the landings filing swept; nothing run; every figure from the
+  blobs or from files outside any seat's surface. THE RELEASE COMES WITH A FREEZE
+  AND THE FREEZE HAS A CLOCK, NOT A MOOD: c511750 is RELEASED and NOTHING MUST
+  MOVE BEFORE FRI 2026-09-04 00:06:00 UTC. I verified the unit path's three legs
+  at the release -- da_midnight_verify.sh 4d79d79a2afc8346 ->
+  da_forward_day_verify.py 9e042ec942af6f07 -> da_blackout_mask.py
+  15ea6dcb8c97c72d -- and the third equals the working tree's file, so THE PATH
+  IN THE RELEASE AND THE PATH ON DISK ARE THE SAME BYTES. The reviewer drove it
+  END TO END NON-PRODUCTION in its own scratch root, the refusal leg exiting 6
+  and the rehearsal leg writing into the SCRATCH outdir and LABELLING ITSELF
+  UNATTRIBUTED -- A REHEARSAL THAT DOES NOT LABEL ITSELF IS INDISTINGUISHABLE
+  FROM A RUN, and this one says what it is in its own output. The eight
+  held/landed DA commits are = PAIRWISE BY RANGE-DIFF, which is why THE DA-17
+  RELEASE TRANSFERS rather than needing to be re-earned: a rebase that moves no
+  content should cost nothing, and here it is DEMONSTRATED rather than assumed.
+  DA18-R1 IS THE FINDING I WANT ON THE RECORD WITH ITS CAUSE, BECAUSE THE CAUSE
+  IS ME: at c511750:865-878 the RR12-1 fixture runs git add on four .py files and
+  then git commit, BOTH WITH OUTPUT CAPTURED AND NEITHER rc CHECKED, so AT A
+  ROW-ONLY TIP those files are identical in the child, NOTHING STAGES, THE COMMIT
+  FAILS SILENTLY AND THE FIXTURE COMMIT IS EMPTY; CO-10's re-read then returns an
+  unchanged HEAD, the third-distinct-value precondition fails, and the mask
+  selftest is RED AT THE TIP. A ROW-ONLY TIP IS EXACTLY WHAT MY Q-MEM ROW COMMITS
+  PRODUCE. THAT CLOSES A LOOP WITH LAST ROUND FROM THE OTHER SIDE: I wrote that
+  carrying_commit NAMES THE TREE, NOT THE AUTHOR after finding a DA artifact
+  bound to my bookkeeping commit, and here the same fact bites in the opposite
+  direction -- MY BOOKKEEPING COMMITS ARE PART OF THE CONDITION THAT REDDENS
+  ANOTHER SEAT'S SELFTEST. A LEDGER WRITER WHO TOUCHES NO CODE STILL MOVES THE
+  TREE EVERY SEAT MEASURES AGAINST. It is OFF the unit path (the verifier only
+  IMPORTS the module) so nothing about tonight changes, but the cause belongs
+  beside the finding, not only in DA's round 20. BE11-R1 IS ANSWERED RATHER THAN
+  CARRIED: the sealed 09-01 score does live on a session scratchpad path AND a
+  durable copy exists at ~/.local/state/pm-co/race_record_20260901_fwd5/, which I
+  re-hashed -- aca22317ab06adbf, the same value verified in round 35 and recorded
+  in R-442 -- so NO CHANGE, and the finding is right that the receipt's path field
+  points somewhere volatile. THE HOST-LOAD RED WAS A PREMISE ERROR AND THE
+  CORRECTION IS THE USEFUL PART: DA read it as ageing drift; R-488 corrected it AT
+  THE HOST -- sysstat HISTORY=7, sa2 deleting sa??/sar?? older than seven days AT
+  00:07Z DAILY, so sar25 IS DELETED AT 00:07Z ON 09-04, A SCHEDULED EVENT WITH A
+  TIMESTAMP, NOT A SLOW DECAY -- with a safety copy OUTSIDE THE REPO at
+  ~/.local/state/pm-co/sysstat_preserve_20260903/ (PROVENANCE.txt, SHA256SUMS,
+  sa26), verified present. "IT AGED OUT" AND "A CRON JOB DELETES IT AT 00:07Z"
+  SUPPORT VERY DIFFERENT FIXES. AND THE COMPLETENESS FIGURE IS DERIVED, WHICH IS
+  THE WHOLE POINT: 143 = 24h / 10min - 1 (last sample 23:50Z), NO LITERAL IN THE
+  CODE, arithmetic checked here -- A DERIVED BOUND MOVES WHEN THE SAMPLING
+  INTERVAL MOVES; A LITERAL 143 WOULD BE RIGHT UNTIL SOMEONE CHANGED THE CADENCE
+  AND SILENTLY WRONG AFTER. DA round 20 implements it in the reviewer's order and
+  HOLDS ITS LANDING UNTIL AFTER 00:06Z 09-04. SEQUENCING: the reviewer is on DE
+  ROUND 41 (REQUEST_DE_ROUND_41_2026-09-03.md); DA round 20 BUILDS AND HOLDS; BE
+  round 12 MAY LAND, being NOT on the unit path so the freeze does not bind it.
+  USER ITEMS: FIVE, UNCHANGED -- the 09-02 accrual (R-486 recommends ACCRUE,
+  UNRULED), the Phase-2 winner, the content-liveness v2 freeze, the addendum v2
+  package (five asks), and the 09-04 run on the landed chain, which now carries
+  THE REVIEWER'S END-TO-END DRIVE behind the recommendation of NO PIN, NO
+  INSTALL. NOTHING RUNS. UNCHANGED: the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+```

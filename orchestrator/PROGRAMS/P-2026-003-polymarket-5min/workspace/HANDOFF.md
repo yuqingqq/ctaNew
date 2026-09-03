@@ -1,12 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T01:14Z — **DE 42 LANDED at `5658f24`: both LOWs closed AS
-MEASURED, and the check count did NOT move.** `EXPECTED_CHECKS = 124` unchanged,
-**+19/−6** — **no check was added; two FAILURE PATHS were made legible.** Both
-mutants now die **at the known-bad's own line, zero tracebacks**. **And the
-substrate has a benign face:** DE **rebased onto my round-67 commit rather than
-forcing over it** — `8a31112` is `5658f24`'s **direct parent**. **Nothing moves on
-the unit path before Fri 2026-09-04 00:06:00 UTC. USER items: FIVE.**
+Updated: 2026-09-03T01:21Z — **THE DE LANE IS AT REST.** `5658f24` is RELEASED
+as the runner's **RESTING TIP** with **NO new findings**, and **there is no round
+43 until the USER rules on the five asks** — the lane has run out of work that is
+not a decision. **Nothing was forced**: `c511750`, `8479b67`, `fcdbb15` and my
+`8a31112` are each **ancestors** of the tip, all four checked here. **Two numbers
+that look like a discrepancy are ONE LINE at two injection depths — and both are
+right.** **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
 
@@ -865,8 +865,8 @@ launchers at **235/19**.
 | **DE round 40** | **EXECUTED** at `35452c0` (Q-DE-58) — counts **31/119/26/21/26/21/184/92**; rulings (i)(ii)(iii), **DE39-R1** and **DE39-R2** all **driven**, with the **in-suite reordering invariance**. Verified here: runner `3f4bf21da2dfa188` (**3,329** lines, `EXPECTED_CHECKS = 119`), DRAFT `cb693000880c3d94` (**307** lines, **+17 −0** vs `cd93663`) |
 | **DE round 40 review** | **RELEASED** (`c3f8743`, 166 lines, 23:38:26Z) — **ruling (i) YES**; (ii)+(iii) **CONFIRMED CLOSED** on a **21-field measurement (one moves)**; **DE39-R1 CONFIRMED CLOSED**, **DE39-R2 closed in form**; three findings **DE40-R1 (LOW-MED)**, **DE40-R2 (LOW)**, **DE40-R3 (LOW)**. `35452c0` is round 41's base |
 | **DE round 41** | **VERIFIED** at `8479b67` (Q-DE-59) — **124 checks**; **DE40-R1/R2/R3 closed and driven**. Its **review is RELEASED** (`fcdbb15`, 143 lines): all three **CLOSED at the tip**, each driven with **falsifiers that fire**, counts reproduced by **both** reviewer and coordinator **including the 92 DE could not measure**. Two LOW findings **DE41-R1/R2**, both in **failure paths of the selftest** |
-| **DE round 42** | **LANDED** at `5658f24` (Q-DE-60) — **DE41-R1 and DE41-R2 CLOSED AS MEASURED**, both mutants now **red by name with zero tracebacks**. Runner `bc7c010c41933b85`, **3,468 lines, +19/−6, `EXPECTED_CHECKS = 124` UNCHANGED — no check added, two failure paths made LEGIBLE**. **v2 DRAFT untouched** and the **other seven DE modules byte-identical** to `8479b67` (both verified here). **Step 5 stays USER-GATED** |
-| **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
+| **DE round 42** | **RELEASED** (`1de1761`, 126 lines) — **`5658f24` is the runner's RESTING TIP while the package waits on the USER**; DE41-R1 and DE41-R2 **CLOSED as measured**; **NO new findings**. `c511750`, `8479b67`, `fcdbb15` (and my `8a31112`) are each **ancestors** of it — **nothing forced**, all four checked here |
+| **DE round 43** | **DOES NOT EXIST UNTIL THE USER RULES** on the five asks. **DE is at rest at the resting tip** || **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
 | **DA round 13** | **HELD** at `e384792` (chain `3a89e6c`→`e292439`→`636a455`→`e384792`) — preflight **39**; `freeze_disposition` moves to `ruled`, `still_open == {}`, and a **coherence guard** makes the contradiction unrepresentable |
@@ -971,10 +971,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on DE round 42** (`REQUEST_DE_ROUND_42_2026-09-03.md`, five
-items — including **RELEASE / HOLD `5658f24` as the runner's resting tip** and
-**whether the DE-40 item-6 answer on ask (5) still holds**). **BE 12 queues for
-the next round; DA 20 is HELD and reviewable BY SHA when READY.** **Released so far** include BE rounds
+**The reviewer is on RECORDED STANDBY until BE 12 lands or DA 20 reports
+READY.** **BE 12 in flight; DA 20 in flight and HELD.** **Released so far**
+include the **BE11+DA18 landings** (`95a0e0e`) and DE rounds 37–42, the last at
+`1de1761`. **Released so far** include BE rounds
 9+10 (`a8e88de`), the **BE11+DA18 landings** (`95a0e0e`), and DE rounds 37
 (`3f1d310`), 38 (`0a5a6a7`), 39 (`650569c`), 40 (`c3f8743`) and 41 (`fcdbb15`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
@@ -1791,6 +1791,69 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-03 ~01:21Z (MEM) — THE LANE RAN OUT OF WORK THAT ISN'T A DECISION
+
+**R-492 and the DE-42 filing swept.** Nothing run; every figure taken at the blob.
+
+**DE has reached a resting tip, and that is a state worth naming as clearly as a
+finding.** `5658f24` is **RELEASED as the runner's resting tip while the package
+waits on the USER**, with **DE41-R1 and DE41-R2 closed as measured** and **no new
+findings**. **There is no round 43 until the USER rules on the five asks.** After
+forty-two rounds the lane's remaining work is not code — it is a decision, and the
+honest thing is to stop rather than to find something to do. *A seat that keeps
+producing rounds while it waits is manufacturing motion.*
+
+**Nothing was forced, and I checked all four.** `c511750`, `8479b67`, `fcdbb15`
+and **my own `8a31112`** are each **ancestors of `5658f24`**. Last round I recorded
+the rebase-not-force as the substrate's benign face; **this round the whole
+history is verifiable in one command**, which is what that discipline buys.
+
+**One thing I would have flagged and should not have: the "21" and the "22" are
+not a discrepancy.** They are **one line at two injection depths** — `len(_np_free)`
+at `:2012` is the **unfiltered** block, so the denominator differs with where the
+mutant is injected and **both readings are correct**. My standing instinct all
+session has been to treat two counts of the same thing as a defect until proven
+otherwise; here the right answer is that they are **counts of two different
+populations from one expression**. *The rule survives — name the population — and
+this time naming it dissolves the discrepancy instead of confirming one.*
+
+**And the one-side-only key is NAMED, not absorbed:** the reproduction leaves
+**"1 of the 21 … DIFFERENT (['only_on_the_swapped_side'])"**. That is exactly what
+round 42's fix was for — **a field present on one side only shows up by name
+rather than vanishing into a count.**
+
+**An attribution of mine was corrected, and the correction is the useful part.**
+The reviewer isolated DE's `raw/` attribution — **a root without `raw/` refuses at
+`CONTENT_LIVENESS_UNRESOLVED` for 20260827; with `raw/` it gives 92** — and
+corrected the emphasis: **`derived/` 173 → 178 is NOT part of the cause.** I
+carried that 178 in rounds 67 and 68 as housekeeping beside the finding. It was
+true and it was **not causal**. ***A number reported next to a cause is read as
+part of it***, which is a caution about my own habit of recording every count in
+reach.
+
+**DE41-R1's closure is smaller than it looks and that is the point.** `.get()`
+**moves no state for a present field** — the value-class table shows it — so **the
+guard is still the only thing between an absent field and `NO_NULL_REQUESTED`**,
+which is precisely why the known-bad now fires **by name** rather than by
+accident.
+
+**The class question was answered by two AST scans, and one residue is on the
+record rather than swept.** **No other `ok()` computes a verdict before its
+comparison.** And there is **one guard-protected index of `n_draws_requested` at
+`:832`** — inside **pred#2's refusal MESSAGE**, reachable **only through the
+guard**, therefore **safe** — and it is written down anyway. *An exception that is
+safe and unrecorded becomes an exception that is unexplained.*
+
+**The DE-40 item-6 answer on ask (5) holds unchanged at `5658f24`** — the third
+consecutive round in which that answer has survived a tip move, once getting
+cheaper and never getting worse.
+
+**Sequencing.** **DE: recorded standby at the resting tip.** **Reviewer: recorded
+standby until BE 12 lands or DA 20 reports READY.** **BE 12 in flight; DA 20 in
+flight and HELD.** **Nothing moves on the unit path before Fri 2026-09-04
+00:06:00 UTC.** **USER items: FIVE, unchanged** — and one of them now has a
+resting, released artifact behind it.
 
 ### 2026-09-03 ~01:14Z (MEM) — A ROUND THAT ADDED NO CHECKS AND FIXED TWO
 
