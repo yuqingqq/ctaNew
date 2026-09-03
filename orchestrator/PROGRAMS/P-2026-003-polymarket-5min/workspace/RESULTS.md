@@ -121,7 +121,7 @@ from its own `da_dayverdict_<day>.json`, `verdict_split` and `era_admission`.
 | 08-31 | **false** | `clob_v4`+`clob_v4_1`, boundary 22:00:02Z | false | no | BTC P1 298.52 s/hr against a 120 s bar |
 | **09-01** | true | `clob_v4_1` | true | **ACCRUED** | first day the race ever counted; four conjuncts recomputed, not read back |
 | **09-02** | true | `clob_v4_1` | true | **ACCRUED** | R-496, the USER's call on R-486 (6); first **governed** verdict |
-| 09-03 → | open | — | — | open | earliest possible G=5 is ~09-05, and only if every day accrues |
+| 09-03 → | open | — | — | open | earliest possible G=5 is **2026-09-06** (09-03/04/05 must all accrue; the 09-05 verdict is written 09-06 00:06Z) |
 
 **The partial-data profitability read (R-496 (D)) spends none of this.** 08-29
 is post-freeze, era-pure and quality-passing yet can never accrue, so opening it
