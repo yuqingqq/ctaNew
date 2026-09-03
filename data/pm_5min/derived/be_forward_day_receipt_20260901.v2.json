@@ -1,0 +1,131 @@
+{
+ "as_of_utc": "2026-09-03T04:44:11Z",
+ "day": "20260901",
+ "decision_field_check": {
+  "allowlist": {
+   "gates[].gate": "the NAME of a gate this run ran (a string identifier), not a right to anything. Any non-string here refuses, and the same word at any other path refuses."
+  },
+  "checked_keys": 60,
+  "excused_paths": [],
+  "vocabulary_size": 17,
+  "vocabulary_source": "de_admissible_windows.DECISION_VOCAB, by value, plus named local additions"
+ },
+ "durability_finding": {
+  "all_copies_byte_identical": true,
+  "class": "a sealed artifact whose only durable-looking copies are under /tmp is one sweep from voiding a race day",
+  "copies_found_at_relocation_time": [
+   {
+    "bytes": 54213086,
+    "inode": 13403815,
+    "mount": "/",
+    "path": "/home/yuqing/.local/state/pm-co/race_record_20260901_fwd5/be_forward_day_SEALED_scores_20260901.json",
+    "sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627",
+    "under_tmp": false
+   },
+   {
+    "bytes": 54213086,
+    "inode": 6036317,
+    "mount": "/",
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_forward_day_SEALED_scores_20260901.json",
+    "sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627",
+    "under_tmp": false
+   },
+   {
+    "bytes": 54213086,
+    "inode": 14726792,
+    "mount": "/",
+    "path": "/home/yuqing/ctaNew_sealed_backup/be_forward_day_SEALED_scores_20260901.json",
+    "sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627",
+    "under_tmp": false
+   },
+   {
+    "bytes": 54213086,
+    "inode": 13371413,
+    "mount": "/",
+    "path": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd4/be_forward_day_SEALED_scores_20260901.json",
+    "sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627",
+    "under_tmp": true
+   },
+   {
+    "bytes": 54213086,
+    "inode": 13378387,
+    "mount": "/",
+    "path": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/be_forward_day_SEALED_scores_20260901.json",
+    "sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627",
+    "under_tmp": true
+   },
+   {
+    "bytes": 54213086,
+    "inode": 13415059,
+    "mount": "/",
+    "path": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd6/be_forward_day_SEALED_scores_20260901.json",
+    "sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627",
+    "under_tmp": true
+   }
+  ],
+  "copies_outside_tmp_before_this_act": 2,
+  "correction_to_R496B_in_band": "R-496 (B) says this sealed file 'existed in exactly ONE copy'. MEASURED at relocation time by enumerating every file of this name under /tmp and /home/yuqing: SIX byte-identical copies on six distinct inodes -- three under /tmp (fwd4, fwd5, fwd6), BE's own safety copy at ~/.local/state/pm-co/race_record_20260901_fwd5/ (taken in round 11 and recorded in Q-BE-236), the coordinator's ~/ctaNew_sealed_backup/ copy taken at 03:52:48Z, and this relocation's destination. THE DURABILITY ARGUMENT IS UNCHANGED and the count does not soften it: the three /tmp copies share one boot-time clear, so three are lost by the same event as one. What the count DOES change is the claim that the artifact was ever one sweep from being unrecoverable -- BE's round-11 safety copy outside /tmp already existed when R-496 (B) was written. Only the number and that inference are corrected; the relocation stands on its own reason, which is that a race artifact belongs at a canonical path a consumer can find, not in any operator's backup.",
+  "distinct_inodes": 6,
+  "finding_ref": "R-496 (B)",
+  "n_copies_total": 6,
+  "n_copies_under_tmp": 3,
+  "shared_inodes": false,
+  "tmp_sweep_policy": "D /tmp 1777 root root 30d",
+  "tmp_sweep_reading": "systemd-tmpfiles: `D` clears /tmp's contents at boot and ages entries out after 30d. /tmp here is on the root filesystem, not a tmpfs -- so the exposure is the boot-time clear and the age-out, not volatility."
+ },
+ "identity": {
+  "all_three_equal": true,
+  "declared_by_producing_run": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627",
+  "destination_pre_existing": true,
+  "measured_at_destination": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627",
+  "measured_at_source": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627"
+ },
+ "note": "Relocation dispatched in BE round 13 on the USER's ruling recorded at R-496. The sealed file is the 09-01 forward score of record -- the only day the race has accrued -- and it is NOT opened by this act. Its scores remain unread: unsealing 09-01 is the USER's word alone.",
+ "producing_code": {
+  "carrying_commit": "70d2b45d442b3b339bfb4dc1529aea4cc4eb6278",
+  "carrying_commit_resolved": true,
+  "driver": "be_forward_day.py",
+  "driver_sha256_prefix": "0d688474a715e899",
+  "provenance_root": "/home/yuqing/ctaNew-wt-be",
+  "roots": {
+   "code_and_anchors": "/home/yuqing/ctaNew-wt-be",
+   "data": "/home/yuqing/ctaNew/data",
+   "data_is_absolute_because": "a bare worktree carries no data/; the tape and the market ledger are the repo's, not the checkout's, and this receipt says so rather than implying one root",
+   "exec_tree_is_repo": false,
+   "exec_tree_is_repo_means": "true when this run's EXECUTING tree IS the repo root, so the code/anchor root and the data root coincide by COINCIDENCE; false from a worktree, where they differ by RULE and only `data/` stays absolute",
+   "git_objects": "shared object store \u2014 `git show <ref>:<path>` resolves the freeze blobs from any worktree, so `_git_blob` needs no per-tree root"
+  },
+  "working_tree_dirty": true
+ },
+ "protocol": "BE_FORWARD_DAY_SEAL_RELOCATION_V2",
+ "relocating_code": {
+  "module": "be_seal_relocate.py",
+  "sha256_prefix": "f146c1fe3e64b390"
+ },
+ "seal_state": "SEALED -- NOT OPENED BY THIS ACT",
+ "sealed": true,
+ "sealed_file": {
+  "bytes": 54213086,
+  "contents": "per-action scores and the full complement report",
+  "not_in_receipt": "no metric, rho, net value or sign appears outside this file",
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_forward_day_SEALED_scores_20260901.json",
+  "sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627"
+ },
+ "sealed_file_previous_location": {
+  "bytes": 54213086,
+  "path": "/tmp/claude-1001/-home-yuqing-ctaNew/32b9d1f8-67be-4de0-b959-330c9677da97/scratchpad/fwd5/be_forward_day_SEALED_scores_20260901.json",
+  "sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627",
+  "status": "still present; NOT deleted by this act",
+  "why_not_deleted": "durability is achieved by the presence of the durable copy, not by the absence of the temporary one. Deleting is irreversible and buys nothing; the authoritative path is the one this receipt names."
+ },
+ "sealing_note": "this receipt carries paths, sizes and hashes and NO metric (rule 11). It records a RELOCATION, not a run: no scoring happened, no row was built, and the sealed file was hashed but never parsed. Unsealing remains the coordinator's or the USER's act.",
+ "supersedes_receipt": {
+  "as_of_utc": "2026-09-02T13:24:05Z",
+  "outcome": "SCORED",
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_forward_day_receipt_20260901.json",
+  "sha256_before_this_act": "4000106752f816e4c3ff8ebc6d6057538914e1cefb77d6c7137cf98d6460ae04",
+  "status": "UNTOUCHED, kept as provenance (rule 13). A frozen artifact is never edited; the correction supersedes IN-BAND as this vN+1 receipt, and the v1 receipt remains the record of what the producing run wrote, including the /tmp path it then named."
+ },
+ "supersedes_version": 1,
+ "what_this_receipt_changes": "the DURABLE LOCATION of the sealed artifact, and nothing else. The scores, the run that produced them and the receipt that reported it are unchanged."
+}

@@ -1,0 +1,101 @@
+{
+ "as_of_utc": "2026-09-03T04:44:13Z",
+ "day": "20260902",
+ "decision_field_check": {
+  "allowlist": {
+   "gates[].gate": "the NAME of a gate this run ran (a string identifier), not a right to anything. Any non-string here refuses, and the same word at any other path refuses."
+  },
+  "checked_keys": 55,
+  "excused_paths": [],
+  "vocabulary_size": 17,
+  "vocabulary_source": "de_admissible_windows.DECISION_VOCAB, by value, plus named local additions"
+ },
+ "durability_finding": {
+  "born_durable": true,
+  "copies_before_relocation": [
+   {
+    "bytes": 52911716,
+    "inode": 6036320,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_forward_day_SEALED_scores_20260902.json",
+    "sha256": "7522786db5423574aff39ac1f902b58bdf4e2b3d7248d84591d701f3619b589e",
+    "under_tmp": false
+   },
+   {
+    "bytes": 52911716,
+    "inode": 14729322,
+    "path": "/home/yuqing/ctaNew_forward_runs/20260902_be13/be_forward_day_SEALED_scores_20260902.json",
+    "sha256": "7522786db5423574aff39ac1f902b58bdf4e2b3d7248d84591d701f3619b589e",
+    "under_tmp": false
+   }
+  ],
+  "finding_ref": "R-496 (B)",
+  "n_copies_before_relocation": 2,
+  "tmp_sweep_policy": "D /tmp 1777 root root 30d",
+  "why": "R-496 (B)'s finding applied FORWARD rather than repaired after the fact: this run's --outdir was /home/yuqing/ctaNew_forward_runs (the home filesystem), so the seal was never written to /tmp at any point in its life. The relocation below moves it to the canonical derived/ path a consumer reads; it is not a rescue."
+ },
+ "identity": {
+  "all_three_equal": true,
+  "declared_by_producing_run": "7522786db5423574aff39ac1f902b58bdf4e2b3d7248d84591d701f3619b589e",
+  "destination_pre_existing": true,
+  "measured_at_destination": "7522786db5423574aff39ac1f902b58bdf4e2b3d7248d84591d701f3619b589e",
+  "measured_at_source": "7522786db5423574aff39ac1f902b58bdf4e2b3d7248d84591d701f3619b589e"
+ },
+ "note": "BE round 13 Part 4, on the USER's ruling at R-496 (E) that 09-02 ACCRUES on its non-blackout complement per R-409. The receipt at this canonical path was a REFUSAL written 2026-09-02T13:50:22Z, BEFORE the day closed; it is correct at its stamp, is not edited, and is superseded in band by this v2 (rule 13). THE SCORES ARE SEALED AND HAVE NOT BEEN READ: 09-02 is a race day and unsealing it is the USER's word alone.",
+ "producing_code": {
+  "carrying_commit": "70d2b45d442b3b339bfb4dc1529aea4cc4eb6278",
+  "carrying_commit_resolved": true,
+  "driver": "be_forward_day.py",
+  "driver_sha256_prefix": "0d688474a715e899",
+  "provenance_root": "/home/yuqing/ctaNew-wt-be",
+  "roots": {
+   "code_and_anchors": "/home/yuqing/ctaNew-wt-be",
+   "data": "/home/yuqing/ctaNew/data",
+   "data_is_absolute_because": "a bare worktree carries no data/; the tape and the market ledger are the repo's, not the checkout's, and this receipt says so rather than implying one root",
+   "exec_tree_is_repo": false,
+   "exec_tree_is_repo_means": "true when this run's EXECUTING tree IS the repo root, so the code/anchor root and the data root coincide by COINCIDENCE; false from a worktree, where they differ by RULE and only `data/` stays absolute",
+   "git_objects": "shared object store \u2014 `git show <ref>:<path>` resolves the freeze blobs from any worktree, so `_git_blob` needs no per-tree root"
+  },
+  "working_tree_dirty": true
+ },
+ "protocol": "BE_FORWARD_DAY_SEAL_RELOCATION_V2",
+ "relocating_code": {
+  "module": "be_seal_relocate.py",
+  "sha256_prefix": "f146c1fe3e64b390"
+ },
+ "seal_state": "SEALED -- NOT OPENED BY THIS ACT",
+ "sealed": true,
+ "sealed_file": {
+  "bytes": 52911716,
+  "contents": "per-action scores and the full complement report",
+  "not_in_receipt": "no metric, rho, net value or sign appears outside this file",
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_forward_day_SEALED_scores_20260902.json",
+  "sha256": "7522786db5423574aff39ac1f902b58bdf4e2b3d7248d84591d701f3619b589e"
+ },
+ "sealed_file_previous_location": {
+  "bytes": 52911716,
+  "path": "/home/yuqing/ctaNew_forward_runs/20260902_be13/be_forward_day_SEALED_scores_20260902.json",
+  "sha256": "7522786db5423574aff39ac1f902b58bdf4e2b3d7248d84591d701f3619b589e",
+  "status": "still present; NOT deleted by this act",
+  "why_not_deleted": "durability is achieved by the presence of the durable copy, not by the absence of the temporary one. Deleting is irreversible and buys nothing; the authoritative path is the one this receipt names."
+ },
+ "sealing_note": "this receipt carries paths, sizes and hashes and NO metric (rule 11). It records a RELOCATION, not a run: no scoring happened, no row was built, and the sealed file was hashed but never parsed. Unsealing remains the coordinator's or the USER's act.",
+ "supersedes_receipt": {
+  "as_of_utc": "2026-09-03T04:04:26Z",
+  "outcome": "SCORED",
+  "path": "/home/yuqing/ctaNew_forward_runs/20260902_be13/be_forward_day_receipt_20260902.json",
+  "sha256_before_this_act": "04b23aff569cbf05c92454533eda2ca392f06f276921b346566a428de67f5093",
+  "status": "UNTOUCHED, kept as provenance (rule 13). A frozen artifact is never edited; the correction supersedes IN-BAND as this vN+1 receipt, and the v1 receipt remains the record of what the producing run wrote, including the /tmp path it then named."
+ },
+ "supersedes_receipts_additional": [
+  {
+   "as_of_utc": "2026-09-02T13:50:22Z",
+   "declares_a_sealed_file": false,
+   "outcome": "REFUSED",
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_forward_day_receipt_20260902.json",
+   "sha256": "0907b0369e14d77b974e935ae696f3f5e3a8387c8695508a70c59848e563843a",
+   "status": "UNTOUCHED, kept as provenance (rule 13)"
+  }
+ ],
+ "supersedes_version": 1,
+ "what_this_receipt_changes": "the DURABLE LOCATION of the sealed artifact, and nothing else. The scores, the run that produced them and the receipt that reported it are unchanged."
+}
