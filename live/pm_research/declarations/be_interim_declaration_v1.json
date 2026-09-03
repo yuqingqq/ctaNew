@@ -1,0 +1,207 @@
+{
+ "adjudicates": null,
+ "alpha_spent": {
+  "anticipated_looks": 2,
+  "recorded_before_the_read": true,
+  "the_accounting_is_the_USER_S_TO_DECLARE_not_mine": "how much alpha the full read must give back for this look is a declaration, not a computation, and rule 14 puts it with the USER. What this artifact fixes is that the look HAPPENED, when, and on which days -- so the accounting cannot later be done as if it had not",
+  "the_second": "the full read at G >= 5, currently earliest ~2026-09-06",
+  "this_is_look": 1,
+  "what_an_interim_look_costs": "an unplanned interim inflates the family-wise error of the programme's eventual claim: two opportunities to see a rejection where one was declared",
+  "why_the_cost_here_is_BOUNDED_and_not_open_ended": "the no-choice clause below. Because NOTHING may be chosen on this read and the interim may only recommend STOPPING, this is a stopping-only look: it can end the race early but it cannot change what the race tests, so it cannot bias the estimand"
+ },
+ "as_of_utc": "2026-09-03T12:55:10Z",
+ "cluster_disclosure": {
+  "G_complete_days": 2,
+  "authority": "CLAUDE.md rule 8 -- below G=5 complete days: point estimate, no interval, and say so",
+  "bar_for_an_interval": 5,
+  "intervals_claimable": false,
+  "not_softened": "this is stated as a limit of the interim, not as a caveat to be read past. An interim that understated its own limits would be the one thing a result must never do",
+  "ruled_cluster_unit": "UTC day",
+  "unit_actually_used_for_the_null": "window",
+  "weaker_than_ruled": true,
+  "what_is_reported": "A POINT ESTIMATE AND NO INTERVAL",
+  "why_the_p_is_OPTIMISTIC": "the paired null flips WINDOW signs, and windows inside one UTC day share coin, regime and book state -- they are not exchangeable, so the null variance is understated and the p is smaller than a day-clustered p would be. With G=2 there is no usable day-level permutation either: two days give two sign assignments"
+ },
+ "declared_before_anything_was_opened": true,
+ "declared_in_commit": "7da395cfa31af36e45073d1acdce2845784e4c3c",
+ "decomposition": {
+  "exactness": "algebraic; the two terms telescope, so it must hold to floating-point tolerance and is CHECKED, not asserted",
+  "identity": "BY_THRESHOLD increment  ==  VOLUME term  +  QUALITY term",
+  "quality_term": "candidate_net(at its count) MINUS incumbent_net(at the SAME count) -- which IS the matched-volume statistic, i.e. the part of the increment that is not volume",
+  "volume_term": "incumbent_net(at the candidate's count) MINUS incumbent_net(at the shared theta) -- what the INCUMBENT would have gained purely by acting as often as the candidate did",
+  "why_it_matters": "it splits the headline into the part a bigger budget would have bought anyone and the part that is the model"
+ },
+ "family": {
+  "budgets": [
+   "5%",
+   "10%",
+   "15%"
+  ],
+  "budgets_source": "phase2_declaration.BUDGETS",
+  "coins": [
+   "btc",
+   "eth"
+  ],
+  "holm_denominator": 6,
+  "inferential_cells": [
+   "MATCHED_VOLUME/POOLED/btc/10%",
+   "MATCHED_VOLUME/POOLED/btc/15%",
+   "MATCHED_VOLUME/POOLED/btc/5%",
+   "MATCHED_VOLUME/POOLED/eth/10%",
+   "MATCHED_VOLUME/POOLED/eth/15%",
+   "MATCHED_VOLUME/POOLED/eth/5%"
+  ],
+  "n_cells_total": 54,
+  "n_reported_cells": 48,
+  "populations": [
+   "20260901",
+   "20260902",
+   "POOLED"
+  ],
+  "reported_but_not_in_the_denominator": [
+   "BY_COUNT/20260901/btc/10%",
+   "BY_COUNT/20260901/btc/15%",
+   "BY_COUNT/20260901/btc/5%",
+   "BY_COUNT/20260901/eth/10%",
+   "BY_COUNT/20260901/eth/15%",
+   "BY_COUNT/20260901/eth/5%",
+   "BY_COUNT/20260902/btc/10%",
+   "BY_COUNT/20260902/btc/15%",
+   "BY_COUNT/20260902/btc/5%",
+   "BY_COUNT/20260902/eth/10%",
+   "BY_COUNT/20260902/eth/15%",
+   "BY_COUNT/20260902/eth/5%",
+   "BY_COUNT/POOLED/btc/10%",
+   "BY_COUNT/POOLED/btc/15%",
+   "BY_COUNT/POOLED/btc/5%",
+   "BY_COUNT/POOLED/eth/10%",
+   "BY_COUNT/POOLED/eth/15%",
+   "BY_COUNT/POOLED/eth/5%",
+   "BY_THRESHOLD/20260901/btc/10%",
+   "BY_THRESHOLD/20260901/btc/15%",
+   "BY_THRESHOLD/20260901/btc/5%",
+   "BY_THRESHOLD/20260901/eth/10%",
+   "BY_THRESHOLD/20260901/eth/15%",
+   "BY_THRESHOLD/20260901/eth/5%",
+   "BY_THRESHOLD/20260902/btc/10%",
+   "BY_THRESHOLD/20260902/btc/15%",
+   "BY_THRESHOLD/20260902/btc/5%",
+   "BY_THRESHOLD/20260902/eth/10%",
+   "BY_THRESHOLD/20260902/eth/15%",
+   "BY_THRESHOLD/20260902/eth/5%",
+   "BY_THRESHOLD/POOLED/btc/10%",
+   "BY_THRESHOLD/POOLED/btc/15%",
+   "BY_THRESHOLD/POOLED/btc/5%",
+   "BY_THRESHOLD/POOLED/eth/10%",
+   "BY_THRESHOLD/POOLED/eth/15%",
+   "BY_THRESHOLD/POOLED/eth/5%",
+   "MATCHED_VOLUME/20260901/btc/10%",
+   "MATCHED_VOLUME/20260901/btc/15%",
+   "MATCHED_VOLUME/20260901/btc/5%",
+   "MATCHED_VOLUME/20260901/eth/10%",
+   "MATCHED_VOLUME/20260901/eth/15%",
+   "MATCHED_VOLUME/20260901/eth/5%",
+   "MATCHED_VOLUME/20260902/btc/10%",
+   "MATCHED_VOLUME/20260902/btc/15%",
+   "MATCHED_VOLUME/20260902/btc/5%",
+   "MATCHED_VOLUME/20260902/eth/10%",
+   "MATCHED_VOLUME/20260902/eth/15%",
+   "MATCHED_VOLUME/20260902/eth/5%"
+  ],
+  "statistics": [
+   "MATCHED_VOLUME",
+   "BY_THRESHOLD",
+   "BY_COUNT"
+  ],
+  "why_the_denominator_is_not_everything_reported": "the per-day cells are the SAME comparison disaggregated and the BY_THRESHOLD / BY_COUNT cells are reported beside the primary rather than tested; inflating the denominator with them would make the primary impossible to reject for a reason that has nothing to do with evidence. Declared HERE, before the read, so it cannot be chosen after"
+ },
+ "latency_ms": 50,
+ "no_choice_clause": {
+  "consequence_stated_plainly": "09-01 and 09-02 are CONSUMED. They are no longer untouched days and CANNOT serve as clean forward validation afterwards. That is the price of looking early and the USER is paying it knowingly",
+  "days_consumed_by_this_read": [
+   "20260901",
+   "20260902"
+  ],
+  "days_still_untouched_after_this": "09-03 onward; the full read's clean population is what remains, not what this consumed",
+  "frozen_against_this_read": [
+   "threshold",
+   "budget",
+   "coin set",
+   "candidate",
+   "arm identity",
+   "horizon",
+   "operating point"
+  ],
+  "nothing_may_be_chosen_on_what_this_shows": true,
+  "the_interim_MAY": "recommend STOPPING",
+  "the_interim_MAY_NEVER": "trigger a change to what is being tested -- a stopping rule and a tuning rule look identical in a commit and are opposite in what they cost"
+ },
+ "nulls": {
+  "counts_are_stated_not_ranged": true,
+  "direction_is_prespecified_above": true,
+  "matched_random_null": {
+   "compared_on": "net cents, NOT harm share",
+   "matching": "action count within (side x hour) strata",
+   "n_random": 200,
+   "source": "harmful_action_eval.N_RANDOM"
+  },
+  "paired_incumbent_null": {
+   "a_p_at_the_floor_is_a_BOUND_not_a_measurement": true,
+   "floor_p": 0.0004997501249375312,
+   "n_perm": 2000,
+   "seed": 20260828,
+   "source": "phase2_iter011.N_PERM_011 / PERM_SEED_011",
+   "statistic": "window-level sign flip of the paired increment"
+  },
+  "sidedness": "ONE-SIDED",
+  "sidedness_source": "amendment A2, unchanged from the 08-29 read"
+ },
+ "population": {
+  "coins": [
+   "btc",
+   "eth"
+  ],
+  "days": [
+   "20260901",
+   "20260902"
+  ],
+  "each_day_reported_SEPARATELY_as_well_as_pooled": true,
+  "era": "clob_v4_1 (the race era) -- not the clob_v3_1 of 08-29",
+  "never_only_pooled": true
+ },
+ "prespecified_direction": {
+  "hypothesis_source": "the 08-29 read (Q-BE-250), already consumed",
+  "on_eth": "08-29 found eth null in both arms and its cancel-count ratio was 1.01-1.05x, so eth carries NO directional prediction and is reported without one",
+  "prediction": "the MATCHED_VOLUME increment on btc is NEGATIVE at all three budgets",
+  "this_is_a_test_not_a_survey": true,
+  "what_would_CONFIRM_it": "a negative matched-volume increment on btc reproduced on both days separately, not only pooled",
+  "what_would_REFUTE_it": "a positive matched-volume increment on btc, one-sided p below the declared level after the declared multiplicity"
+ },
+ "primary_statistic": {
+  "attribution": {
+   "adopted_by": "USER ruling, dispatch of BE round 26",
+   "source": "the reviewer's construction on the 08-29 artifacts"
+  },
+  "construction": "lower the INCUMBENT's own theta to the candidate's realised count -- the incumbent's ranking is unchanged, only its cutoff moves, so the comparison is between two policies spending the SAME cancellation budget",
+  "definition": "net cents (candidate at its frozen theta) MINUS net cents (incumbent at the theta that makes the incumbent cancel the SAME NUMBER of actions the candidate actually cancelled)",
+  "name": "MATCHED_VOLUME",
+  "reported_beside_it_and_neither_is_primary": [
+   "BY_THRESHOLD",
+   "BY_COUNT"
+  ],
+  "why_primary": "CLAUDE.md rule 7: controls are matched on the DECISION VARIABLE (action count). BY_THRESHOLD is not matched on it and BY_COUNT matches it only by letting each arm pick its own cutoff from the data being scored, which is non-causal"
+ },
+ "protocol": "BE_INTERIM_DECLARATION_V1",
+ "reconciliation_caveat": {
+  "carried_from_the_start_not_added_after": true,
+  "claim": "this estimand has NEVER been reconciled against any published number, and cannot be from existing artifacts",
+  "for_the_reader": "do not carry the reconciliation's authority onto any number this read produces",
+  "required_in_the_receipt": true,
+  "what_the_36_of_36_did_validate": "the BRIDGE arm and everything downstream of `increment_by_window`, not the primary estimand",
+  "why_not": "`increment()` computes a BY_THRESHOLD estimand and iteration 011's published cells are BY_COUNT -- different estimands, so there is no published number to reconcile against. The primary statistic here, MATCHED_VOLUME, is newer still and has no published counterpart at all"
+ },
+ "ruled_by": "USER, dispatch of BE round 26 (scope change)",
+ "selects_nothing": true,
+ "status": "INTERIM ON AN INCOMPLETE RACE",
+ "who_decides": "the USER (rule 14)"
+}
