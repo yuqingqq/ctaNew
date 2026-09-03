@@ -3093,7 +3093,7 @@ def verify_day(day_token: str, freeze_epoch: float,
 #: 238 / 244 / 238 across three layouts at rc 0, with only the log's presence
 #: differing and nothing saying so. `ran + skipped` must equal this in EVERY
 #: layout, so a vanished check fails the suite instead of shrinking the count.
-EXPECTED_CHECKS = 304
+EXPECTED_CHECKS = 306
 
 
 def _selftests(require_no_skips: bool = False) -> int:
@@ -4979,6 +4979,53 @@ def _selftests(require_no_skips: bool = False) -> int:
             ok("must refuse" in str(_e),
                "DA22-A7d and an unreadable register REFUSES -- 'I could not "
                "read it' must never report as 'every cite resolves'")
+        # ------------------------------------------------------------------
+        # DA26: THE CONTAINMENT OF THE MIXED-ERA SHORT-CIRCUIT.
+        #
+        # `entirely_post_freeze` is the AFTER conjunct -- a property of the
+        # CLOCK -- and on a MIXED-ERA day it returns False for an ERA reason
+        # ("no single era whose windows could be loaded"). That is a name/
+        # definition mismatch, and the only thing that keeps it harmless is
+        # that the branch cannot reach a day which would otherwise be
+        # admissible: `_sel_era is None` requires the day to be impure, and
+        # `race_admissible_by_era` requires it to be pure. Asserted here
+        # rather than argued, because a register entry citing a property of
+        # code carries a check behind it, and because the day this stops
+        # being true is the day the conjunct decides something.
+        # ITS OWN temp dir: `_ledger` writes one fixed filename, so building a
+        # ledger in the shared dir would clobber the one a later check reads.
+        with _tfe.TemporaryDirectory() as _td26:
+            _mix = _ledger(_td26, [{"collector_schema_version": "clob_v4",
+                                    "supersedes": "clob_v3_1",
+                                    "boundary_utc": "2026-08-30T05:30:00Z"}])
+            _AUTH26 = {"clob_v3_1": "R-497 test", "clob_v4": "R-340 test"}
+            _m30 = day_era_admission("20260830", _mix,
+                                     admissible_table={"clob_v3_1": True,
+                                                       "clob_v4": True},
+                                     authority_table=_AUTH26)
+            _sel30 = (_m30["eras_touched"][0]
+                      if (_m30["era_pure"] and len(_m30["eras_touched"]) == 1)
+                      else None)
+            ok(_sel30 is None and _m30["race_admissible_by_era"] is False,
+               f"DA26 CONTAINMENT: a MIXED-ERA day has NO selector era "
+               f"({_sel30!r}), which is what makes `entirely_post_freeze` return "
+               f"False for an ERA reason -- and the SAME day already fails "
+               f"ADMISSIBLE ({_m30['race_admissible_by_era']}) even with BOTH its "
+               f"eras admitted. The mismatch cannot reach a day that would "
+               f"otherwise accrue")
+            _p29 = day_era_admission("20260829", _mix,
+                                     admissible_table={"clob_v3_1": True,
+                                                       "clob_v4": True},
+                                     authority_table=_AUTH26)
+            _sel29 = (_p29["eras_touched"][0]
+                      if (_p29["era_pure"] and len(_p29["eras_touched"]) == 1)
+                      else None)
+            ok(_sel29 == "clob_v3_1" and _p29["race_admissible_by_era"] is True,
+               "DA26 CONTAINMENT, the other direction: a PURE admissible day DOES "
+               "have a selector era, so the short-circuit cannot fire on it -- "
+               "the containment is a property of the two predicates and not an "
+               "accident of which days happen to exist")
+
         # ---- the accrual predicate must read the DAY'S era, never a literal
         # `fi.ERA` was `clob_v3_1`, closed 2026-08-30T05:30:01Z, so every later
         # day was absent from the selector and `entirely_post_freeze` failed by
