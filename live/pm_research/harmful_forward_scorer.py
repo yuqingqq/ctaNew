@@ -42,8 +42,68 @@ class EmptyScoring(RuntimeError):
     """A report with no scored actions is a failure, not an empty result."""
 
 
-def load_frozen(path: Path = CANDIDATE) -> dict:
-    c = json.loads(path.read_text())
+class CandidateIdentityMismatch(NotFrozen):
+    """The artifact loaded is not the artifact the caller declared.
+
+    THE FAILURE THIS EXISTS FOR: `CANDIDATE` is a module-level default. A
+    scoring job pointed at this module gets whatever that constant names --
+    today `harmful_reduced_fine_candidate_v1.json`, whose fits are LINEAR
+    weight vectors (61 hazard_weights, 61 value_weights, norm_mu/norm_sd, and
+    no booster anywhere). Score a job that meant a different arm and it
+    returns numbers that look exactly like the right ones. Clean-looking
+    numbers from the wrong model is the worst failure mode available here, so
+    the identity is COMPUTED and can be BOUND, and a mismatch refuses."""
+
+
+def candidate_identity(path: Path = CANDIDATE) -> dict:
+    """What this artifact IS, computed from its bytes -- never from its name.
+
+    `model_form` is DERIVED from the fit's own keys rather than read from a
+    label, because a label is what a mis-pointed job would also copy."""
+    import hashlib
+    raw = Path(path).read_bytes()
+    c = json.loads(raw)
+    fits = c.get("fits") or {}
+    any_fit = next(iter(fits.values()), {}) if fits else {}
+    linear = all(k in any_fit for k in ("hazard_weights", "value_weights",
+                                        "norm_mu", "norm_sd"))
+    booster = any("booster" in k.lower() or "lgbm" in k.lower()
+                  for k in any_fit)
+    return {
+        "path": str(path),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+        "bytes": len(raw),
+        "spec": c.get("spec"),
+        "status": c.get("status"),
+        "frozen_at_utc": c.get("frozen_at_utc"),
+        "coins": sorted(fits),
+        "model_form": ("LINEAR" if linear and not booster
+                       else "BOOSTER" if booster
+                       else "UNRECOGNISED"),
+        "model_form_derived_from": sorted(any_fit),
+        "n_hazard_weights": len(any_fit.get("hazard_weights") or ()),
+    }
+
+
+def load_frozen(path: Path = CANDIDATE, expect: dict | None = None) -> dict:
+    """Load the frozen candidate, optionally BOUND to a declared identity.
+
+    ADDITIVE BY CONSTRUCTION: with `expect=None` this is byte-for-byte the
+    behaviour every existing caller already has -- `be_forward_day` calls
+    `FS.load_frozen()` and its result is unchanged. The selftest asserts that
+    equality rather than asserting the intention."""
+    if expect is not None:
+        got = candidate_identity(path)
+        bad = {k: (expect[k], got.get(k)) for k in ("sha256", "spec",
+                                                    "model_form")
+               if k in expect and expect[k] != got.get(k)}
+        if bad:
+            raise CandidateIdentityMismatch(
+                f"REFUSED: the artifact at {path} is not the declared "
+                f"candidate. Mismatched (declared, actual): {bad}. Scoring "
+                f"with a different artifact than the one declared returns "
+                f"numbers that look right and are not.")
+    c = json.loads(Path(path).read_text())
     if c.get("status") != "FROZEN":
         raise NotFrozen(f"artifact status is {c.get('status')!r}, not FROZEN. "
                         f"Forward scoring may only use a frozen candidate.")
@@ -476,6 +536,61 @@ def selftest() -> int:
         if not c:
             raise AssertionError(label)
         checks += 1
+
+    # ---- CANDIDATE IDENTITY: the fence, driven in BOTH directions --------
+    # BE14-S1. The failure fenced here is a scoring job pointed at this module
+    # picking up whatever `CANDIDATE` names and returning clean numbers from
+    # the wrong model. Both directions, because a fence that only ever refuses
+    # proves nothing about the artifact we actually ship.
+    import tempfile as _tf
+    _id = candidate_identity()
+    ok(_id["status"] == "FROZEN" and len(_id["sha256"]) == 64,
+       "BE14-S1 POSITIVE CONTROL: the shipped candidate's identity is "
+       "COMPUTED from its bytes and it is FROZEN")
+    ok(_id["model_form"] == "LINEAR" and _id["n_hazard_weights"] == 61,
+       "BE14-S1 the shipped candidate is DERIVED to be LINEAR (61 weights, "
+       "norm_mu/norm_sd, no booster) -- derived from the fit's keys, never "
+       "read off a label")
+    ok(load_frozen(expect=_id)["status"] == "FROZEN",
+       "BE14-S1 POSITIVE CONTROL: load_frozen ADMITS the artifact under its "
+       "own computed identity -- the fence lets the right model through")
+    for _f, _bad in (("sha256", "0" * 64), ("spec", "SOME_OTHER_ARM"),
+                     ("model_form", "BOOSTER")):
+        try:
+            load_frozen(expect={**_id, _f: _bad})
+            raise AssertionError(
+                f"BE14-S1 KNOWN-BAD: a wrong {_f} was ACCEPTED")
+        except CandidateIdentityMismatch as e:
+            ok(_f in str(e) and "look right and are not" in str(e),
+               f"BE14-S1 KNOWN-BAD: a declared {_f} that does not match the "
+               f"artifact REFUSES BY NAME")
+    # THE REGRESSION THAT MATTERS: the un-declared call must be UNCHANGED,
+    # because `be_forward_day` calls `load_frozen()` with no expectation and
+    # this module sits inside the race's scoring stack.
+    ok(load_frozen() == json.loads(CANDIDATE.read_text()),
+       "BE14-S1 POSITIVE CONTROL: load_frozen() with NO expectation returns "
+       "exactly the artifact's own parsed content -- the existing race call "
+       "path is unchanged, asserted rather than intended")
+    with _tf.TemporaryDirectory() as _d:
+        _p = Path(_d) / "notfrozen.json"
+        _p.write_text(json.dumps({"status": "DRAFT", "fits": {}}))
+        try:
+            load_frozen(_p)
+            raise AssertionError("BE14-S1 a non-FROZEN artifact was ACCEPTED")
+        except NotFrozen as e:
+            ok("not FROZEN" in str(e),
+               "BE14-S1 KNOWN-BAD: a non-FROZEN artifact still refuses, and "
+               "the new fence did not weaken the old gate")
+        _b = Path(_d) / "booster.json"
+        _b.write_text(json.dumps({"status": "FROZEN", "spec": "X", "fits": {
+            "btc": {"lgbm_booster": "...", "feature_vector_contract": {}}}}))
+        ok(candidate_identity(_b)["model_form"] == "BOOSTER",
+           "BE14-S1 POSITIVE CONTROL: a booster-shaped artifact is DERIVED as "
+           "BOOSTER -- the discriminator can tell the two forms apart, so the "
+           "LINEAR answer above is a measurement and not a constant")
+    ok(main(["harmful_forward_scorer.py", "--misspelled"]) == 2,
+       "BE14-S2 KNOWN-BAD: a misspelled flag returns 2, not the 0 that let a "
+       "scripted job record a scoring run that never happened (BE34-R4)")
 
     # ---- POSITIVE CONTROL: the scorer must PRODUCE A KNOWN NUMBER ----------
     # Hand-computed, not asserted-as-shape. This is the R-141 arm.
@@ -1103,27 +1218,30 @@ def read_day_verdict(day: str) -> dict:
         return {}
 
 
-def main() -> int:
-    if "--selftest" in sys.argv:
+def main(argv: list | None = None) -> int:
+    # argv is a PARAMETER so the entry point can be driven from the suite.
+    # BE34-R4's fix below is only meaningful if something can call it.
+    argv = list(sys.argv) if argv is None else list(argv)
+    if "--selftest" in argv:
         return selftest()
     # LAUNCHER-SHAPED DRIVE. `--score-day <day> --actions <file>` runs the
     # REAL sequence over a supplied population, so the mask seam is exercised
     # through main() before the production run path exists. It writes no
     # artifact and reads no model: it proves the WIRING, which is the half a
     # component suite cannot see.
-    if "--score-day" in sys.argv:
-        i = sys.argv.index("--score-day")
-        if i + 1 >= len(sys.argv) or sys.argv[i + 1].startswith("-"):
+    if "--score-day" in argv:
+        i = argv.index("--score-day")
+        if i + 1 >= len(argv) or argv[i + 1].startswith("-"):
             print("REFUSED: --score-day needs a day token (YYYYMMDD)")
             return 2
-        day = sys.argv[i + 1]
+        day = argv[i + 1]
         af = None
-        if "--actions" in sys.argv:
-            j = sys.argv.index("--actions")
-            if j + 1 >= len(sys.argv) or sys.argv[j + 1].startswith("-"):
+        if "--actions" in argv:
+            j = argv.index("--actions")
+            if j + 1 >= len(argv) or argv[j + 1].startswith("-"):
                 print("REFUSED: --actions needs a path")
                 return 2
-            af = Path(sys.argv[j + 1])
+            af = Path(argv[j + 1])
         if af is None or not af.exists():
             print(f"REFUSED: --score-day needs --actions <file> holding "
                   f"{{coin: [[window_start, value], ...]}}; got {af}")
@@ -1132,10 +1250,10 @@ def main() -> int:
         sw = {c: [(int(w), float(v)) for w, v in rows]
               for c, rows in raw.items()}
         mf = None
-        if "--mask" in sys.argv:
-            k = sys.argv.index("--mask")
-            if k + 1 < len(sys.argv) and not sys.argv[k + 1].startswith("-"):
-                mf = Path(sys.argv[k + 1])
+        if "--mask" in argv:
+            k = argv.index("--mask")
+            if k + 1 < len(argv) and not argv[k + 1].startswith("-"):
+                mf = Path(argv[k + 1])
         # `--verdict <file>` injects a FIXTURE verdict, mirroring `--mask`.
         # RR10-1: the pre-governed control read whatever verdict happened to
         # be on disk, so its answer moved when DA restored 09-01's bytes and
@@ -1143,23 +1261,27 @@ def main() -> int:
         # in a day is not testing the code. Same shape as `--mask`, no new
         # semantics: `score_day` already took a `verdict` argument.
         vf = None
-        if "--verdict" in sys.argv:
-            k = sys.argv.index("--verdict")
-            if k + 1 < len(sys.argv) and not sys.argv[k + 1].startswith("-"):
-                vf = Path(sys.argv[k + 1])
+        if "--verdict" in argv:
+            k = argv.index("--verdict")
+            if k + 1 < len(argv) and not argv[k + 1].startswith("-"):
+                vf = Path(argv[k + 1])
         try:
             _v = json.loads(vf.read_text()) if vf is not None else None
-            rep = score_day(day, sw, da_verified=("--da-verified" in sys.argv),
+            rep = score_day(day, sw, da_verified=("--da-verified" in argv),
                             mask_file=mf, verdict=_v)
         except (MaskRequired, MaskSchemaDrift, EmptyScoring, NotFrozen) as e:
             print(str(e))
             return 1
         print(json.dumps(rep, indent=1, sort_keys=True))
         return 0
+    # BE34-R4: 0 is what a SUCCESSFUL run returns. This printed usage and
+    # returned SUCCESS, so a scripted job that misspelled a flag recorded a
+    # scoring run that never happened. Every other refusal here returns 1 or
+    # 2; so does this one.
     print("usage: harmful_forward_scorer.py --selftest | "
           "--score-day <YYYYMMDD> --actions <file> [--mask <file>] "
           "[--verdict <file>] [--da-verified]")
-    return 0
+    return 2
 
 
 if __name__ == "__main__":
