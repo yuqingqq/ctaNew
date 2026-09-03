@@ -4,6 +4,114 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-03T05:55Z (MEM ROUND 73 -- THE RACE WAS NEVER GOING TO ANSWER THE
+  QUESTION, AND NOBODY KNEW UNTIL SOMEONE TRIED TO SPEND A DAY). R-496 (as now
+  reviewed) and R-497 swept; nothing run but read-only reads and ONE read-only
+  reconciliation IN MY OWN DETACHED WORKTREE at b717340 (removed; worktrees 34,
+  main tree clean, derived 182 at quiescence). THE FINDING OF THE SESSION, AND
+  IT BELONGS AT THE TOP RATHER THAN IN A FOOTNOTE: UNTIL BE ROUND 14 THE FORWARD
+  PATH COULD NOT PRODUCE ITS OWN DECISION METRIC, SO THE TWO ACCRUED DAYS WERE
+  NEVER SCORED ON THE METRIC AT ALL AND REACHING G=5 WOULD HAVE ANSWERED NOTHING.
+  I VERIFIED IT AT THE CODE, THREE WAYS, WITHOUT OPENING EITHER SEAL: (i)
+  be_forward_day.py (3,428 lines) contains ZERO occurrences of `incumbent`,
+  `net_cents`, `DECISION_METRIC` and `operating_point`, and so does
+  harmful_forward_scorer.py (1,288 lines) -- all four, both files; (ii) the
+  SEAL WRITER itself settles it, `seal()` at :1002 emits
+  per_coin_scores = {coin: [list(x) for x in v]} and the producer at :993 appends
+  `(int(r["t0"]), FS.expected_cancel_value(...))` -- ONE PAIR PER ROW keyed only
+  by the WINDOW START, so NO ACTION KEY SURVIVES INTO THE SEALED FILE; (iii)
+  harmful_action_eval.evaluate_policy is generation-native and needs exactly that
+  key, a UNIQUE (slug, side, gen). RULE 2'S DE-DUPLICATION CANNOT EVEN BE
+  ATTEMPTED ON WHAT WAS SEALED. Unsealing 09-01/09-02 would have answered nothing;
+  the days are not lost, but the metric they were sealed for did not exist when
+  they were sealed. AND THE CORRECTION THAT MATTERS MOST IS TO MY OWN LAST ROUND:
+  THE 08-29 "FREE READ" I RECORDED AS A TASK IS SUPERSEDED. The reviewer's
+  R496-R1 (HIGH, 83ed34e) DROVE the premise rather than arguing it -- one boolean,
+  `ERA_ADMISSIBLE["clob_v3_1"]`, flipped True makes 08-29's OWN split_verdict read
+  race_accrual_eligible TRUE, with a falsifier showing 08-30 still refuses on its
+  mid-day boundary -- so "reading it consumes nothing the race was ever going to
+  use" was AN ASSUMPTION ABOUT A FUTURE RULING PRESENTED AS A PROPERTY OF THE DAY,
+  and I carried it. THE USER THEN RULED, AND TOOK THE OTHER BRANCH: quality is the
+  bar, collector version is not, which ADMITS 08-29 (day_quality_pass true, btc P1
+  32.29 s/hr against a bar of 120 -- I read it at the verdict, THE CLEANEST DAY IN
+  THE RECORD) and does NOT admit 08-30 (quality FAILS). On the reviewer's own
+  disposition that is branch (b): 08-29 BECOMES A RACE DAY AND MUST NOT BE OPENED.
+  NOTHING HAS BEEN SPENT -- both days UNREAD, no seal opened by any seat. BUT
+  08-29 DOES NOT ACCRUE AUTOMATICALLY, and I checked why at the code: at the tip
+  `ERA_ADMISSIBLE` at da_forward_day_verify.py:894 STILL READS "clob_v3_1": False
+  with the unattributed `# pre-O1` comment the reviewer named, so the ruling is
+  recorded and NOT YET IMPLEMENTED (DA's), and BE13's blocker (a) stands -- no
+  08-29 verdict on disk is BOTH scheduled-unit-attributed AND era-guard-correct.
+  G STAYS AT 2 OF 5 with a third day CONTINGENT, not banked. THE OTHER THREE
+  RULINGS, EACH WITH THE COORDINATOR'S OWN ADDITIONS FLAGGED AS ITS OWN: the
+  OPERATING POINT is declare-a-grid / report-all / SELECT NONE, and the choice of
+  FROZEN_FROM_TRAIN_QUANTILE as the form the grid runs on is THE COORDINATOR'S
+  APPLICATION, redirectable by one word -- I verified all four forms exist at
+  be_forward_metric.py:188-216 and that RETROSPECTIVE_TOPK is the refused one; the
+  FUTILITY CHECK is CONFIGURABLE (G, statistic, alpha spend are PARAMETERS), with
+  a declared-in-a-committed-file guard THE USER DID NOT ASK FOR, flagged as the
+  coordinator's; and the PAIRING CONVENTION is BOTH, BY-THRESHOLD PRIMARY with
+  by-count beside it labelled retrospective and non-causal -- WHICH DOUBLES THE
+  CELL COUNT AND THEREFORE THE HOLM DENOMINATOR, declared before any forward
+  number exists, which is the only time that declaration is worth anything. I
+  RE-DROVE THE 36/36 RATHER THAN PASSING IT THROUGH, because I was asked to and
+  because I could do it cheaply: in my own detached worktree at b717340,
+  be_forward_recon --selftest 21 checks rc 0, and --reconcile all_hold TRUE,
+  n_cells 6, n_predicates_evaluated 36, n_predicates_true 36, n_predicates_false
+  0, rc 0, stderr 0 bytes. THE ORDERING HOLDS AT GIT: declaration 1e9b662
+  05:39:05Z, run bc9733b 05:42:17Z, row a584739 05:44:48Z, entry b717340
+  05:49:42Z. ONE CITATION IN R-497 (D) DOES NOT REPRODUCE AND THE CLAIM BEHIND IT
+  DOES: the entry gives the TOL_/DECLARED_PREDICATES block as sha256
+  db34da543af6d27f, and the instrument that computes it reports
+  4a2a28ceb124a3fd -- 25 declaration lines, `unchanged` true, declaring commit
+  1e9b662 -- which is also what I got recomputing the block at 1e9b662, bc9733b
+  and b717340; two natural variants (trailing newline, whole file) give
+  ad18a0b20c8099f9 and dda79c366eb2fe28, and NONE of the three is db34da54. The
+  SUBSTANCE is verified three ways -- the module blob is IDENTICAL across bc9733b,
+  a584739 and b717340, the extracted block is identical at the declaring commit
+  and the tip, and the instrument's own predicate says so -- SO THE BYTE-IDENTITY
+  CLAIM STANDS AND ONLY THE QUOTED IDENTIFIER IS WRONG. Recorded because A READER
+  WHO VERIFIES AT THE ARTIFACT GETS A DIFFERENT NUMBER AND MAY CONCLUDE THE CLAIM
+  FAILED. ONE PRECISION ON THE REVIEWER, IN THE SAME SPIRIT: R496-R8 says
+  da_dayverdict_20260831.json is "not on disk, and never committed" -- THE SECOND
+  HALF HOLDS (zero add-commits across all refs) AND THE FIRST DOES NOT: it is on
+  disk, 19,131 B, mode 600, written by the scheduled unit at 2026-09-01T00:06:02Z,
+  and its fields are exactly the row RESULTS.md quotes (post_freeze_pass false,
+  era MIXED clob_v4+clob_v4_1, boundary 2026-08-31T22:00:02.274534Z). The finding
+  survives in its useful form -- THE ROW'S BASIS IS NOT IN GIT -- and loses the
+  half that would have made it a missing artifact. SEALS VERIFIED WITHOUT BEING
+  OPENED: 09-01 54,213,086 B sha aca22317ab06adbf, 09-02 52,911,716 B sha
+  7522786db5423574, both under data/pm_5min/derived/ with v2 superseding receipts
+  (7,841 B and 5,818 B) beside byte-unchanged v1s. AND A REVIEWER FILING LANDED
+  AT 06:02Z, MID-ROUND, QUALIFYING WHAT I HAD JUST WRITTEN -- FOLDED IN RATHER
+  THAN QUEUED: 7860743, BE 13/14/15 as ONE round, AMEND, recorded as the
+  reviewer's claims and NOT as established. THE THREE HIGHS ARE ONE CLASS AND IT
+  IS RULE 17'S SHAPE -- EVERY FENCE IN THAT ROUND IS REAL, TESTED BOTH WAYS, AND
+  OFF THE PATH, WITH ZERO PRODUCTION CALL SITES: increment() takes a bare theta
+  and is fenced by nothing (a retrospective cutoff produced a full result AND a
+  p), require_operating_point validates the form STRING rather than the
+  derivation, and require_arm_identity's byte fence fires only under `expect`,
+  which no production call passes, with CANDIDATE still resolving to
+  PM_PLUS_FINE/LINEAR. THE REVIEWER'S BAR: NO FORWARD DAY SCORED ON THIS PATH
+  UNTIL BEM-R1..R3 CLOSE. WHAT IT LEAVES STANDING IS WHAT I VERIFIED
+  INDEPENDENTLY -- the sealed day cannot feed an action-level estimand, verified
+  by the reviewer AT seal(), the same place I verified it -- and the
+  reconciliation HOLDS. TWO OF ITS FINDINGS REDUCE THE WEIGHT OF WHAT I JUST
+  REPORTED AND I SAY SO RATHER THAN LET IT READ STRONGER: BEM-R7, the
+  reconciliation names a SMALLER unreconciled half than the truth
+  (n_predicates_evaluated SHORT BY 24), so my 36/36 licenses less than it
+  appears to; and BEM-R6, tolerances_unchanged_since() returns unchanged TRUE
+  after a 1e-6 -> 1e6 widening because its pointer is not inside its own
+  compared block -- SO THE BYTE-IDENTITY CLAIM RESTS ON MY INDEPENDENT CHECKS,
+  not on that predicate. BEM-R5 corrects R-497 on a FIELD, not the conclusion:
+  ROW ORDER SURVIVES THE SEAL and the independent reason is the missing per-row
+  t_start -- I took the property from the writer and never claimed row order was
+  gone, so the paragraph above stands. SEQUENCING: BE 13/14/15 REVIEWED at
+  06:02Z, AMEND, UNVERIFIED; DA holds 20 and 21
+  unpushed, round 21 naming a 105-minute cross-midnight event the gap ledger
+  cannot see; DE 44 landed and awaits verification. USER ITEMS: ONE -- the
+  Phase-2 winner, and the race decides it.
+  PRIOR:
   2026-09-03T04:08Z (MEM ROUND 72 -- THE WRITER EXCEPTION ENDS, AND THE THING IT
   BROKE WAS THE RULE THAT SAYS WHAT THIS FIELD IS). R-495 and R-496 swept; I
   resume as SOLE WRITER of STATUS.yml and HANDOFF.md; nothing run but read-only
@@ -115,55 +223,6 @@ updated: >-
   dispatched against it. SEAT STATE AT THE STOP: BE clean at 669ef72; DA holds
   two unpushed commits 3c49cb7 -> a36db71; DE holds one unpushed WIP commit
   0d03902; MEM clean at d9b85ee; reviewer clean at cc4cfb9.
-  PRIOR:
-  2026-09-03T02:25Z (MEM ROUND 71 -- A BASELINE THAT DEPENDS ON WHOSE COMMIT CAME
-  LAST). R-494 and the reviewer's DA-20 filing swept; nothing run; every check at
-  the blob. THE DISPOSITION IS THE NARROWEST THIS PROGRAMME HAS ISSUED AND THE
-  SHAPE IS WORTH NAMING: HOLD FOR ONE ITEM, RELEASE THE REST -- not "hold the
-  round" and not "release with findings" but ONE ITEM HELD, EVERYTHING ELSE
-  RELEASED, with DA REBUILDING THE HELD CHAIN (still unpushed) RATHER THAN
-  PATCHING ON TOP OF IT. A HOLD THAT NAMES ONE ITEM IS A HOLD SOMEBODY CAN CLEAR;
-  A HOLD ON A ROUND IS A HOLD ON A SEAT. THE ROW-ONLY-TIP PROPERTY HAS NOW REACHED
-  THE REVIEWER'S OWN BASELINE AND I VERIFIED THE COUNTEREXAMPLE IS MINE: at
-  5a11ee9, my round-68 commit, the diff touches STATUS.yml, COORDINATION.md,
-  HANDOFF.md and the archive and EXACTLY ZERO of the four DA .py files
-  (intersection counted: 0), so the fixture's git add stages nothing, the commit
-  is EMPTY, and THE UNMUTATED PRE-ROUND MODULE IS RED at the CO-10 precondition
-  (DA18-R1 live) -- the reviewer's "unmutated 38 rc 0" therefore HOLDS ONLY WHERE
-  HEAD~1 DIFFERS IN THOSE FOUR FILES. THAT IS THE FOURTH APPEARANCE OF THIS
-  PROPERTY AND ITS MOST CONSEQUENTIAL FORM: round 65 named the wrong author on an
-  artifact, round 66 emptied a fixture commit, round 67 labelled a version by a
-  commit that did not author it, and ROUND 71 DECIDES WHETHER A CONTROL'S BASELINE
-  IS GREEN. A MEASUREMENT THAT IS TIP-CONDITIONAL IS NOT WRONG, IT IS
-  UNDER-SPECIFIED, AND THE MISSING CLAUSE IS WHICH COMMIT CAME LAST -- recorded so
-  that any future "it was green before" carries the tip it was green at. TWO
-  PREMISES WERE CORRECTED IN DIFFERENT DIRECTIONS THIS ROUND, WHICH IS THE SYSTEM
-  WORKING: the reviewer SUPERSEDED R-493's "run-twice alone" sentence IN-BAND as
-  too strong and drove LANDED RED by replacing the fixture's git add with git
-  status; and DA'S OWN "GREEN BEFORE" DOES NOT REPRODUCE, the CO-10-returning
-  mutant having been ALREADY RED at the DA16-R1 falsifier in the pre-round module
-  (DA20-R1). MY ROUND-70 MEASUREMENT IS NOW A FILED FINDING: both production
-  annotate_governance wirings remain deletable with 254 GREEN -- DA20-R2, MEDIUM,
-  AND THE ONE ITEM HELD -- travelling from an unruled coordinator measurement to a
-  reviewer finding to the single blocker on a chain WITHOUT ANYBODY DECIDING IT IN
-  PASSING; the closure asks for TWO RULE-15 FALSIFIERS, TAPE-INDEPENDENT. DA18-R1
-  IS CLOSED WITH THREE FALSIFIERS, and DA17-R1 and the host-load FORM with it,
-  while THE CLASS SCANS CAME BACK CLEAN -- no other silent shrink, no other
-  unnoticed wiring -- which is what turns three closures into a BOUNDED STATEMENT
-  rather than three anecdotes. ONE BOOKKEEPING INSTRUCTION IMPLEMENTED EXACTLY,
-  because getting it wrong would lose provenance: d37c3d9 and 0cd18ba REMAIN THE
-  HELD CHAIN NOW and become SUPERSEDED-UNPUSHED ONLY ONCE DA REPORTS THE NEW SHAS;
-  and Q-DA-216 KEEPS ITS NUMBER since the row never landed -- nothing to
-  supersede, only to correct, with the superseded unpushed shas named as
-  provenance. UNCHANGED: nothing on the unit path moves; the 09-04 00:06Z run is
-  on the landed chain either way; DA 20's landing is AFTER FRI 2026-09-04 00:06:00
-  UTC, ON THE REBUILT CHAIN, AFTER THE REVIEWER'S ONE-ITEM ROUND; DE rests at
-  5658f24; BE 12 in flight; the reviewer on standby until DA's rebuilt READY or BE
-  12, whichever first. USER ITEMS: FIVE, UNCHANGED -- the 09-02 accrual (R-486
-  recommends ACCRUE, UNRULED), the Phase-2 winner, the content-liveness v2 freeze,
-  the addendum v2 package (five asks; runner at 5658f24, RELEASED), the 09-04 run
-  on the landed chain (no pin, no install). UNCHANGED: the 011 family 12 of 24
-  with Q4 failing; the sequencing rule; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -4002,22 +4061,21 @@ flags:
     The race stands at G = 2 of 5; earliest possible G=5 is ~09-06 and only if
     every day accrues.
   partial_data_profitability_read_declared: >-
-    R-496 (C)(D). 08-29 PRIMARY: verified at da_dayverdict_20260829.json --
-    day_quality_pass TRUE, post_freeze_pass TRUE, era_pure TRUE on clob_v3_1,
-    boundaries_inside_day [], era_admissible FALSE, race_accrual_eligible FALSE.
-    A GOOD DAY THAT CAN NEVER ACCRUE for a ruled reason unrelated to its
-    economics, so reading it costs the race ZERO days. CAVEAT THAT MUST APPEAR
-    IN THE RESULT: 08-29 runs on collector era clob_v3_1, TWO surface
-    generations behind the race's clob_v4_1. 08-30 SECONDARY, labelled and never
-    pooled: post_freeze TRUE, quality FALSE, era MIXED (clob_v3_1 + clob_v4,
-    boundary 2026-08-30T05:30:02.114727Z). Decision metric = net cents against
-    the incumbent, de-duplicated to ACTIONS, valued only after t + L; secondary
-    rho = adverse/spread; control matched on action count, side and hour;
-    nulls >= 200 draws, target 2,000 sign-flip; cluster disclosure G = 1,
-    unit used window against the ruled UTC day, POINT ESTIMATE AND NO INTERVAL.
-    RULE 11: THIS IS A READ, NOT A SELECTION -- both days are NAMED AS CONSUMED
-    the moment they are opened and no later work may validate on them.
-    09-01 and 09-02 STAY SEALED.
+    SUPERSEDED-BY-partial_read_premise_superseded_08_29_is_a_race_day (MEM
+    round 73). The pre-declaration itself STANDS as declaration text -- decision
+    metric net cents against the incumbent de-duplicated to ACTIONS, valued at
+    own time and level and only after t + L; secondary rho; control matched on
+    action count, side and hour; nulls >= 200 draws, target 2,000 sign-flip;
+    point estimate and NO interval; Holm over a count declared before the read;
+    skill incremental to the INCUMBENT; exclusions as statuses; predicates not
+    verdict strings; and the rule-11 consumed clause. WHAT FELL IS THE
+    POPULATION PREMISE: the reviewer refuted "08-29 is free" (R496-R1, HIGH) and
+    the USER then ADMITTED 08-29 as a race day, so it must not be opened. The
+    reviewer also names sixteen further degrees of freedom (R496-R2..R6), of
+    which R496-R2 is the consequential one: "named as consumed" bars the DAY,
+    not the DECISION, and the read speaks to the single open USER decision.
+    Nothing was read; nothing was spent.
+
   mem72_verified_the_writer_exception_edits: >-
     MEM round 72 checked the coordinator's R-495 (J) edits AT THE ARTIFACT
     rather than against R-495's account of them, because the seat that made them
@@ -4103,8 +4161,208 @@ flags:
     exists yet; the authoritative statement is BE'S RECEIPT, not MEM's listing.
     CLASS: a sealed artifact whose only copy is in a session-scoped temp
     directory is one /tmp sweep from voiding a race day.
+  forward_path_had_no_decision_metric_until_round_14: >-
+    THE FINDING OF THE SESSION, not a footnote. Until BE round 14 the forward
+    path could not produce its own decision metric, so THE TWO ACCRUED DAYS WERE
+    NEVER SCORED ON THE METRIC AT ALL and REACHING G=5 WOULD HAVE ANSWERED
+    NOTHING. Verified by MEM at the code, three ways, without opening either
+    seal: (i) be_forward_day.py (3,428 lines) and harmful_forward_scorer.py
+    (1,288 lines) each contain ZERO occurrences of `incumbent`, `net_cents`,
+    `DECISION_METRIC` and `operating_point` -- all four, both files; (ii) the
+    SEAL WRITER settles it -- seal() at be_forward_day.py:1002 emits
+    per_coin_scores = {coin: [list(x) for x in v]} and the producer at :993
+    appends (int(r["t0"]), FS.expected_cancel_value(...)), ONE PAIR PER ROW keyed
+    only by the WINDOW START, so NO ACTION KEY SURVIVES INTO THE SEALED FILE;
+    (iii) harmful_action_eval.evaluate_policy is generation-native and needs
+    exactly that key, a UNIQUE (slug, side, gen). RULE 2's de-duplication cannot
+    be ATTEMPTED on what was sealed. The days are not lost; the metric they were
+    sealed for did not exist when they were sealed.
+  r497_four_user_rulings: >-
+    R-497, 2026-09-03T05:49Z. (1) THE ERA BOOLEAN ruled on QUALITY -- "We check
+    the data quality and only use qualifiable data": collector version is not a
+    bar. That ADMITS 08-29 and does not admit 08-30. (2) THE OPERATING POINT --
+    declare a grid, report every cell, SELECT NONE. (3) THE FUTILITY CHECK is
+    CONFIGURABLE: G, the statistic and the alpha spend are PARAMETERS, not
+    constants. (4) THE PAIRING CONVENTION is BOTH -- by-THRESHOLD primary,
+    by-COUNT reported beside it labelled retrospective and non-causal. Open USER
+    decisions remain ONE: the Phase-2 winner, which the race decides.
+  era_ruling_recorded_not_yet_implemented: >-
+    VERIFIED BY MEM AT THE CODE at b717340: ERA_ADMISSIBLE at
+    da_forward_day_verify.py:894 STILL READS `"clob_v3_1": False,   # pre-O1` --
+    the unattributed default the reviewer named. So the R-497 (F)(1) ruling is
+    RECORDED AND NOT YET IMPLEMENTED; the implementation is DA's (the cite
+    replaces the `# pre-O1` comment). AND 08-29 DOES NOT ACCRUE AUTOMATICALLY:
+    BE13's blocker (a) stands -- no 08-29 verdict on disk is BOTH
+    scheduled-unit-attributed AND era-guard-correct, so a correctly-attributed
+    verdict must be produced first. G STAYS AT 2 OF 5 with a third day
+    CONTINGENT, not banked.
+  operating_point_grid_the_form_is_the_coordinators: >-
+    The USER ruled the PATTERN (grid, report all, select none). The choice of
+    FROZEN_FROM_TRAIN_QUANTILE as the form the grid runs on is THE COORDINATOR'S
+    APPLICATION, flagged as such in R-497 (F)(2) and redirectable by one word.
+    Verified by MEM at be_forward_metric.py: all four forms exist at :188-216 --
+    FROZEN_FROM_TRAIN_QUANTILE, FIXED_ABSOLUTE, FROZEN_FROM_A_CONSUMED_DAY,
+    RETROSPECTIVE_TOPK -- with OperatingPointUndeclared at :60 and raise sites
+    throughout. The grid is the already-pinned BUDGETS = (0.05, 0.10, 0.15) at
+    phase2_declaration.py:94 (verified), cited by sha rather than retyped.
+    FIXED_ABSOLUTE is excluded (no budget interpretation); RETROSPECTIVE_TOPK
+    stays REFUSED -- it is a cutoff read off the very rows being scored, rule 11
+    on the path this programme was about to run.
+  futility_guard_is_the_coordinators_addition: >-
+    R-497 (F)(3): the USER ruled the futility check CONFIGURABLE. THE
+    COORDINATOR ATTACHED A GUARD THE USER DID NOT ASK FOR and flagged it as its
+    own: a run REFUSES BY NAME unless its configuration is declared in a
+    committed file, the named commit CARRIES it by hash (git show <commit>:<path>
+    re-hashed) and that commit PREDATES the read. Configurable machinery,
+    declared instances. Recorded here as the coordinator's, not the USER's.
+  pairing_convention_doubles_the_holm_denominator: >-
+    R-497 (F)(4). Iteration 011 pairs BY COUNT (kk = int(n*b), each arm cancels
+    its own top-kk, cutoffs differ, action counts match); be_forward_metric
+    .increment() pairs BY THRESHOLD (one declared theta on both arms, counts
+    differ). Under a declared theta grid these are DIFFERENT ESTIMANDS. Ruled:
+    by-threshold is the DECISION metric (the only causal option -- by-count
+    forward requires ranking the day being scored, which is the retrospective
+    cutoff the fence refuses), by-count reported beside it LABELLED
+    RETROSPECTIVE AND NON-CAUSAL to bridge to the development number. THIS
+    DOUBLES THE CELL COUNT AND THEREFORE THE HOLM DENOMINATOR, declared before
+    any forward number exists.
+  r496_predeclaration_review_claim1_does_not_hold: >-
+    Reviewer filing 83ed34e (2026-09-03T04:22Z, pinned 75f68d2, 179 lines), eight
+    findings R496-R1..R8, disposition AMEND. R496-R1 (HIGH) DROVE the premise
+    rather than arguing it: flipping the single boolean
+    ERA_ADMISSIBLE["clob_v3_1"] to True makes 08-29's OWN split_verdict read
+    race_accrual_eligible TRUE, with a falsifier showing 08-30 still refuses on
+    its mid-day boundary. So R-496's "reading 08-29 consumes nothing the race was
+    ever going to use" was AN ASSUMPTION ABOUT A FUTURE RULING PRESENTED AS A
+    PROPERTY OF THE DAY. Supporting facts the reviewer read at the artifacts: the
+    entry carries no ruling; the register's R-232 authority cite does not verify;
+    a seat introduced the boolean at 4e1133c on 2026-08-31, two days after the
+    day it disqualifies; the 08-29 verdict already superseded a predecessor whose
+    race_accrual_eligible was TRUE; and the module's own USER-2026-09-01 text
+    ("i dont care about collector version, as long as the data quality is good")
+    argues for admission. MEM CARRIED THE REFUTED PREMISE IN ROUND 72 AND
+    CORRECTS IT HERE.
+  partial_read_premise_superseded_08_29_is_a_race_day: >-
+    SUPERSEDES the round-72 record of R-496's free read. The USER ruled at R-497
+    (F)(1) and took the reviewer's branch (b): 08-29 is ADMITTED, therefore IT IS
+    A RACE DAY AND MUST NOT BE OPENED -- on the reviewer's own disposition,
+    "nothing else in this filing matters if the answer is ADMITTED". 08-30 is not
+    admitted (day quality FAILS). NOTHING HAS BEEN SPENT: both days remain UNREAD
+    and UNSPENT and no seal has been opened by any seat (R-497 G). The R-496 read
+    as declared therefore does not happen on that population; the pre-declared
+    numbers of record survive as declaration text for whatever population is
+    eventually ruled.
+  be15_reconciliation_36_of_36_redriven_by_mem: >-
+    RE-DRIVEN BY MEM rather than passed through, in MEM's OWN detached worktree
+    at b717340 with the main tree's data (REPO is hardcoded in the module), under
+    systemd-run --scope MemoryMax=8G: be_forward_recon --selftest 21 checks rc 0;
+    --reconcile all_hold TRUE, n_cells 6, n_predicates_evaluated 36,
+    n_predicates_true 36, n_predicates_false 0, rc 0, stderr 0 bytes. Worktree
+    removed; worktrees 34, main tree clean, derived 182 at quiescence. Ordering
+    verified at git: declaration 1e9b662 05:39:05Z, run bc9733b 05:42:17Z, row
+    a584739 05:44:48Z, entry b717340 05:49:42Z. The module's own scope statement
+    is kept: NOT_RECONCILED_HERE says rows -> actions -> per-window net cents is
+    NOT reconciled, so a PASS licenses the aggregation, null, sidedness,
+    multiplicity and disclosure -- not a forward number.
+  r497_declaration_block_sha_does_not_reproduce: >-
+    IN-BAND CORRECTION (rule 13), MEM round 73. R-497 (D) gives the
+    TOL_/DECLARED_PREDICATES block as sha256 `db34da543af6d27f...` across the
+    declaration and the run. THE INSTRUMENT THAT COMPUTES IT REPORTS
+    `4a2a28ceb124a3fd` -- 25 declaration lines, `unchanged` true, declaring
+    commit 1e9b662 -- which is also BE's own row value and what MEM got
+    recomputing the block at 1e9b662, bc9733b and b717340. Two natural variants
+    give ad18a0b20c8099f9 (trailing newline) and dda79c366eb2fe28 (whole file);
+    none of the three is db34da54. THE SUBSTANCE HOLDS AND IS VERIFIED THREE
+    WAYS: the module blob is IDENTICAL across bc9733b / a584739 / b717340, the
+    extracted block is identical at the declaring commit and at the tip, and
+    tolerances_unchanged_since() reports unchanged true. ONLY THE QUOTED
+    IDENTIFIER IS WRONG -- recorded because a reader who verifies at the artifact
+    gets a different number and may conclude the claim failed.
+  dayverdict_20260831_exists_but_is_untracked: >-
+    PRECISION ON REVIEWER FINDING R496-R8, measured by MEM. The finding says
+    da_dayverdict_20260831.json is "not on disk, and never committed". THE SECOND
+    HALF HOLDS -- zero add-commits across all refs. THE FIRST DOES NOT: the file
+    IS on disk, 19,131 B, mode 600, written by the scheduled unit at
+    2026-09-01T00:06:02Z, and its fields are exactly the row RESULTS.md quotes
+    (day_quality_pass false, post_freeze_pass false, era MIXED clob_v4 +
+    clob_v4_1, boundary 2026-08-31T22:00:02.274534Z, race_accrual_eligible
+    false). The finding survives in its useful form -- THE ROW'S BASIS IS NOT IN
+    GIT -- and loses the half that would have made it a missing artifact. The
+    reviewer's separate observation that post_freeze_pass reads false for a day
+    three days after the freeze epoch is UNEXPLAINED and not ruled here.
+  seals_durable_and_unopened_both_days: >-
+    VERIFIED BY MEM WITHOUT OPENING EITHER FILE (hashing is not reading): 09-01
+    at data/pm_5min/derived/be_forward_day_SEALED_scores_20260901.json,
+    54,213,086 B, sha256 aca22317ab06adbf37f8176433c147139da6e4ddd...; 09-02 at
+    ..._20260902.json, 52,911,716 B, sha256 7522786db5423574aff39ac1f902b58b... .
+    Both off /tmp and under data/, each with a v2 SUPERSEDING receipt beside a
+    byte-unchanged v1 (rule 13): receipt_20260901.v2.json 7,841 B and
+    receipt_20260902.v2.json 5,818 B, v1s still 14,022 B and 1,123 B at their
+    original mtimes.
+  be15_s1_signflip_dict_order_determinism: >-
+    BE's own defect, found in its own prior round: round 14 had borrowed
+    phase2_increment_null.sign_flip_p, which consumes windows in DICT ORDER --
+    MEM verified the code property at :132, `vals = [v for v in
+    inc_by_window.values()]`, no sort -- while phase2_iter011.sign_flip_null
+    documents and applies SORTED KEY ORDER at the point of consumption (R-234).
+    A forward p-value that depended on dict insertion order would have been
+    irreproducible. BE measured 0.27680798 vs 0.23690773 on one dict's content in
+    two insertion orders against 0.27680798 both times for the sorted version;
+    MEM DID NOT RE-DRIVE THOSE TWO NUMBERS and says so. The borrow is switched
+    and both directions driven.
+  reviewer_be_metric_path_amend_fences_off_the_path: >-
+    FILED 2026-09-03T06:02Z at `7860743`
+    (workspace/reviews/REVIEW_BE_METRIC_PATH_2026-09-03.md, 238 lines, pinned
+    b717340, no seal opened). BE rounds 13/14/15 reviewed as ONE round.
+    DISPOSITION AMEND. RECORDED AS THE REVIEWER'S CLAIMS, NOT AS ESTABLISHED --
+    the coordinator's verification has not happened. THE THREE HIGHS ARE ONE
+    CLASS AND IT IS SEAT_PROTOCOL RULE 17'S SHAPE: EVERY FENCE IN THIS ROUND IS
+    REAL, TESTED IN BOTH DIRECTIONS, AND OFF THE PATH. BEM-R1: increment() --
+    the decision metric of record -- takes a bare theta and is fenced by
+    nothing; a retrospective cutoff produced a full net-cents-vs-incumbent
+    result plus a p with no fence touched, and every fence has ZERO PRODUCTION
+    CALL SITES. BEM-R2: require_operating_point checks the form STRING, not the
+    derivation -- a theta computed from the scored rows was accepted as
+    causal:True and stamped CAUSAL_FROZEN_FROM_TRAIN. BEM-R3:
+    require_arm_identity accepted a nonexistent file with a garbage sha and
+    wrong spec; the real byte fence fires only under `expect`, which NO
+    PRODUCTION CALL PASSES, and CANDIDATE still resolves to PM_PLUS_FINE /
+    LINEAR. THE REVIEWER'S OWN BAR: NO FORWARD DAY SHOULD BE SCORED ON THIS PATH
+    UNTIL BEM-R1, R2 AND R3 ARE CLOSED, and they should be wired in the same
+    commit as the producer half. Four more: BEM-R4 sealed_shape_is_unusable
+    cannot ever return usable (three verdict fields are literals) and
+    contradicts assert_action_keys on the same rows; BEM-R5 row order SURVIVES
+    the seal -- the genuinely independent reason is the MISSING PER-ROW t_start,
+    so R-497's "even row order is gone" is the wrong field; BEM-R6
+    tolerances_unchanged_since() returns unchanged:True after a 1e-6 -> 1e6
+    widening because its pointer is not inside its own compared block; BEM-R7
+    the reconciliation names a SMALLER unreconciled half than the truth --
+    n_predicates_evaluated short by 24, the null a delegation, six new-path
+    functions untouched. BEM-R8 LOW: no other order-dependent consumption on the
+    path; sign_flip_p still unguarded, reproduced at 0.0719 vs 0.0938 ON REAL
+    INCREMENTS. WHAT THE FILING LEAVES STANDING: claim (a), a sealed day cannot
+    feed an action-level estimand -- VERIFIED BY THE REVIEWER AT seal(), the
+    same place MEM verified it -- and claim (c), the reconciliation HOLDS
+    (36/36 + 24/24 reproduced, hash-seed stable).
+  mem73_own_verifications_qualified_by_the_filing: >-
+    Recorded because a verification whose weight is later reduced should say so
+    in the same file. (1) MEM's re-drive of 36/36 stands as a reproduction of
+    what the instrument evaluates, and the reviewer reproduced it too -- but
+    BEM-R7 says the instrument's declared scope UNDERSTATES what it leaves
+    unreconciled (short by 24), so 36/36 licenses less than it appears to. (2)
+    MEM cited tolerances_unchanged_since() reporting unchanged:True; BEM-R6
+    shows that predicate CAN BE DEFEATED (its pointer is not in its own compared
+    block), so it is NOT a sufficient control on its own -- MEM's independent
+    checks are the ones that carry the byte-identity claim: the module blob is
+    identical across bc9733b / a584739 / b717340 and the extracted block
+    recomputes identically at 1e9b662, bc9733b and b717340. (3) MEM derived the
+    no-action-key property from the WRITER (seal() at :1002 and the producer at
+    :993) rather than from R-497's phrasing, which is the half BEM-R5 leaves
+    standing; MEM never claimed row order was gone. (4) MEM's note that the
+    operating-point fence is "the most valuable thing round 14 produced" is
+    QUALIFIED BY BEM-R1..R3: the fence is real and it is not on the path.
 focus: >
-  As-of 2026-09-03T04:08Z, build and test the offline model mechanism-first
+  As-of 2026-09-03T05:55Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -4264,9 +4522,20 @@ focus: >
   non-blackout complement (USER ruling, R-496 E, verified by MEM at the day
   verdict), so FORWARD REACH IS NOW G = 2 OF 5 and the earliest possible G=5 is
   ~09-06, only if every day accrues. NO FORWARD PROFITABILITY NUMBER HAS BEEN
-  READ: 09-01's scores are SEALED and unopened, and the R-496 partial-data read
-  runs on 08-29 (free, never-accruable) and 08-30 (labelled secondary), both
-  NAMED AS CONSUMED when opened.
+  READ, AND UNTIL BE ROUND 14 NONE COULD HAVE BEEN: THE FORWARD PATH HAD NO
+  DECISION METRIC, so the two accrued days were never scored on it and reaching
+  G=5 would have answered nothing (verified at the code -- zero occurrences of
+  incumbent / net_cents / DECISION_METRIC / operating_point in be_forward_day.py
+  and harmful_forward_scorer.py; the seal carries {coin: [[t0, value], ...]}
+  with NO ACTION KEY, so rule 2 cannot even be attempted on it). 09-01's and
+  09-02's scores are SEALED and UNOPENED. THE R-496 PARTIAL-DATA READ DID NOT
+  HAPPEN AND ITS PREMISE IS SUPERSEDED: the reviewer refuted "08-29 is free"
+  (R496-R1) and the USER then ADMITTED 08-29 on quality (R-497 F(1)), making it
+  a RACE DAY that must not be opened; 08-30 is not admitted because its quality
+  fails. Nothing read, nothing spent. 08-29 does NOT accrue automatically -- the
+  era ruling is recorded and NOT YET IMPLEMENTED (ERA_ADMISSIBLE at
+  da_forward_day_verify.py:894 still reads False for clob_v3_1) and BE13's
+  attribution blocker stands.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -4609,8 +4878,34 @@ tasks:
   - id: e3-screen
     phase: 2
     name: Hazard plan §10.9 — unchanged forward scoring on >=5 complete days
-    status: blocked-awaiting-qualifying-complete-v4_1-days-G2-of-5
+    status: G2-of-5-AND-the-metric-path-only-existed-from-BE-round-14
     notes: |
+      UPDATED 2026-09-03T05:55Z (MEM round 73, sweeping R-497): G = 2 OF 5,
+      AND THE BAR WAS NEVER ONLY DAYS. THE LARGEST FINDING OF THE SESSION:
+      UNTIL BE ROUND 14 THE FORWARD PATH COULD NOT PRODUCE ITS OWN DECISION
+      METRIC, SO THE TWO ACCRUED DAYS WERE NEVER SCORED ON THE METRIC AT ALL
+      AND REACHING G=5 WOULD HAVE ANSWERED NOTHING. Verified by MEM at the code
+      without opening either seal: be_forward_day.py and harmful_forward_scorer
+      .py each carry ZERO occurrences of `incumbent`, `net_cents`,
+      `DECISION_METRIC` and `operating_point`; the seal writer emits
+      {coin: [[t0, value], ...]}, one pair per ROW keyed only by the window
+      start, so NO ACTION KEY survives and rule 2's de-duplication cannot be
+      attempted on what was sealed; and evaluate_policy needs exactly that key.
+      The days are not lost -- but this task's completion bar is now DAYS AND A
+      METRIC PATH, and only the second half moved this session.
+      AND THE SECOND HALF IS NOT YET SAFE TO USE: the reviewer's BE 13/14/15
+      filing (7860743, 06:02Z, AMEND, three HIGHs) finds EVERY FENCE IN THAT
+      ROUND REAL, TESTED BOTH WAYS AND OFF THE PATH -- zero production call
+      sites -- and states its own bar: NO FORWARD DAY SHOULD BE SCORED ON THIS
+      PATH UNTIL BEM-R1, R2 AND R3 ARE CLOSED. Filed, not yet verified by the
+      coordinator.
+      08-29 IS NOT A THIRD DAY YET. The USER ruled the era boolean on QUALITY
+      (R-497 F(1)), which ADMITS 08-29 -- but ERA_ADMISSIBLE at
+      da_forward_day_verify.py:894 still reads `"clob_v3_1": False  # pre-O1`
+      at the tip (verified by MEM), the implementation is DA's, and BE13's
+      blocker (a) stands: no 08-29 verdict on disk is BOTH
+      scheduled-unit-attributed AND era-guard-correct. 08-30 is NOT admitted
+      (day quality FAILS). A third day is CONTINGENT, not banked.
       UPDATED 2026-09-03T04:08Z (MEM round 72, sweeping R-496): G = 2 OF 5.
       09-01 ACCRUED -- the first day this race ever counted, four conjuncts
       recomputed rather than read back, and BE scored it (610,064 btc + 441,409
@@ -4631,8 +4926,26 @@ tasks:
   - id: partial-data-profitability-read
     phase: 2
     name: R-496 partial-data profitability read — 08-29 primary (free), 08-30 labelled secondary
-    status: pre-declared-2026-09-03-dispatched-to-BE-no-result-read
+    status: PREMISE-SUPERSEDED-08-29-admitted-as-a-race-day-nothing-read-nothing-spent
     notes: |
+      SUPERSEDED 2026-09-03T05:55Z (MEM round 73), IN BAND -- THE PROCEDURE
+      STANDS, THE POPULATION PREMISE DOES NOT. The reviewer's R496-R1 (HIGH,
+      filing `83ed34e`) DROVE the premise rather than arguing it: flipping the
+      single boolean ERA_ADMISSIBLE["clob_v3_1"] to True makes 08-29's OWN
+      split_verdict read race_accrual_eligible TRUE, with a falsifier showing
+      08-30 still refuses on its mid-day boundary -- so "reading 08-29 consumes
+      nothing the race was ever going to use" was AN ASSUMPTION ABOUT A FUTURE
+      RULING PRESENTED AS A PROPERTY OF THE DAY, and MEM carried it in round 72.
+      THE USER THEN RULED AND TOOK THE OTHER BRANCH (R-497 F(1)): quality is the
+      bar, which ADMITS 08-29 -- so on the reviewer's own disposition 08-29 IS A
+      RACE DAY AND MUST NOT BE OPENED, and 08-30 is not admitted because its day
+      quality FAILS. NOTHING WAS READ AND NOTHING WAS SPENT (R-497 G): both days
+      remain UNREAD and UNSPENT and no seal has been opened by any seat.
+      The declared numbers of record below survive as DECLARATION TEXT for
+      whatever population is eventually ruled. Sixteen further degrees of
+      freedom are named in R496-R2..R6; the consequential one is R496-R2 --
+      "named as consumed" bars the DAY, not the DECISION, and the read speaks to
+      the single open USER decision (the Phase-2 winner).
       RULED BY THE USER AT R-496 on 2026-09-03 ("i want to launch a round to
       check the profitability first using partial data"), after the coordinator
       answered that NO FORWARD PROFITABILITY NUMBER HAS EVER BEEN READ: the
@@ -4673,7 +4986,7 @@ tasks:
   - id: phase4-diagnostic
     phase: 2
     name: R-459 Phase-4 diagnostic — ONE execution of the frozen protocol on its §3 CONSUMED population
-    status: never-ran-split-DECLARED-at-R-496-producer-step-in-DE-round-44
+    status: producer-half-FINISHED-at-DE-44-awaiting-coordinator-verification-not-yet-run
     notes: |
       RULED BY THE USER AT R-459 ("Yes schedule this test") on 2026-09-02
       ~17:18Z: ONE diagnostic execution, head under test Q1_arrival of
@@ -4687,6 +5000,21 @@ tasks:
       PA._feature_pass over 1,135,943 rows) has never been executed for this
       diagnostic, and the §3 population spans BOTH fit splits, a declaration
       nobody has made.
+      UPDATE 2026-09-03T05:55Z (MEM round 73): BOTH BLOCKERS ARE NOW CLOSED
+      AND THE RUN HAS STILL NOT HAPPENED. DE round 44 LANDED (`9bcce7e`, row
+      Q-DE-61 at `5aa3002`, one file, `de_phase4_diag_runner.py` +1,382 / -83,
+      EXPECTED_CHECKS 125 -> 154, eight modules on both launchers rc 0 with
+      stderr 0 bytes) and it SUPERSEDES the held WIP `0d03902` (rebased to
+      `14477a7`; both shas stay in the object store as provenance). The
+      producer half is FINISHED: `feature_blocks(splits=...)` runs the fit's own
+      PA.tape_index per declared split and its own _feature_pass, and `run()`
+      calls the assembly ONCE -- round 43 had it behind a per-(coin, head) call,
+      which would have paid for a 3.2 GB index and a 1.2 GB pass THIRTY-SIX
+      TIMES. The split ruling is recorded in RULED_SPLIT_SET / SPLIT_RULING with
+      its cite, `run(splits=...)` is keyword-only WITH NO DEFAULT, and
+      validate_splits refuses silence BY NAME, driven both directions.
+      AWAITING COORDINATOR VERIFICATION; the declared OUTDIR must still not be
+      written by anything but the ruled run.
       UPDATE 2026-09-03T04:08Z (MEM round 72): ONE OF THE TWO BLOCKERS IS
       CLOSED. The USER ADOPTED the addendum v2 package in full at R-496 (E) and
       SECTION 1a IS DECLARED: MECHANICS ON BOTH SPLITS, SPLITS LABELLED PER

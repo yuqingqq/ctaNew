@@ -1,6 +1,23 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T04:08Z (MEM round 72) — **THE WRITER EXCEPTION IS CLOSED
+Updated: 2026-09-03T05:55Z (MEM round 73) — **THE RACE WAS NEVER GOING TO
+ANSWER THE QUESTION, AND NOBODY KNEW UNTIL SOMEONE TRIED TO SPEND A DAY.**
+**Until BE round 14 the forward path could not produce its own decision metric,
+so the two accrued days were never scored on it and reaching G=5 would have
+answered nothing** — verified at the code, three ways, without opening either
+seal. R-497's **four USER rulings** swept: the era boolean ruled on **quality**
+(**08-29 admitted — and therefore a race day that must not be opened**; the
+ruling is recorded, **not yet implemented**, and 08-29 does **not** accrue
+automatically), the operating point as **declare-a-grid / report-all / select
+none**, the futility check **configurable**, and the pairing convention **BOTH
+with by-threshold primary — which DOUBLES the Holm denominator.** **My own
+round-72 record is corrected in band: the "free read" premise was refuted by the
+reviewer (R496-R1) before the USER ruled.** I re-drove the 36/36 reconciliation
+myself — and a reviewer filing landed mid-round (**AMEND**, three HIGHs: the
+metric path's fences are **real and off the path**), folded in below.
+**USER items: ONE.**
+
+Previously (MEM round 72) — 2026-09-03T04:08Z — **THE WRITER EXCEPTION IS CLOSED
 and MEM is again the sole writer of `STATUS.yml` and this file.** R-495 and
 R-496 swept. **THREE USER RULINGS:** 09-02 **ACCRUES** (G **1 → 2 of 5**), the
 **addendum v2 package is ADOPTED in full** (§1a declared: MECHANICS on both
@@ -30,6 +47,197 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
 
+> ### 2026-09-03T05:55Z — MEM round 73: the forward path had no decision metric, so the race could not have answered the question
+>
+> **THIS IS THE SESSION'S LARGEST FINDING AND IT IS NOT A FOOTNOTE.** Until BE
+> round 14, `be_forward_day.py` could not produce the decision metric the whole
+> forward race exists to measure. **The two accrued days were never scored on
+> that metric at all, and reaching G = 5 would have answered nothing as the path
+> was then built.** I verified it at the code, three ways, **without opening
+> either seal**:
+>
+> 1. **The vocabulary is simply absent.** `be_forward_day.py` (3,428 lines) and
+>    `harmful_forward_scorer.py` (1,288 lines) each contain **zero** occurrences
+>    of `incumbent`, `net_cents`, `DECISION_METRIC` and `operating_point` — all
+>    four terms, both files.
+> 2. **The seal writer settles it.** `seal()` at `be_forward_day.py:1002` emits
+>    `per_coin_scores = {coin: [list(x) for x in v]}`, and the producer at `:993`
+>    appends `(int(r["t0"]), FS.expected_cancel_value(...))` — **one pair per ROW,
+>    keyed only by the window start.** No action key survives into the sealed
+>    file.
+> 3. **The estimator needs exactly that key.** `harmful_action_eval
+>    .evaluate_policy` is generation-native: the action universe is **unique
+>    `(slug, side, gen)`**. So **rule 2's de-duplication cannot even be attempted
+>    on what was sealed.**
+>
+> The days are not lost. But **the completion bar for `e3-screen` was never only
+> days** — it is days *and* a metric path, and only the second half moved this
+> session. BE's two corrections to the coordinator are accepted and recorded: the
+> estimator was **not** missing (it is already action-native, latency-aware and
+> control-matched), and the 12 G cap was **not** binding (six scalars per row is
+> 127 MB at 09-02's row count). The coordinator's framing overstated the deficit
+> in both places.
+>
+> **THE CORRECTION THAT MATTERS MOST IS TO MY OWN LAST ROUND.** I recorded
+> R-496's 08-29 read as *free*. **The reviewer refuted that premise before the
+> USER ruled** (`83ed34e`, R496-R1, HIGH): flipping the single boolean
+> `ERA_ADMISSIBLE["clob_v3_1"]` to True makes 08-29's **own** `split_verdict`
+> read `race_accrual_eligible` **True** — driven, with a falsifier showing 08-30
+> still refuses on its mid-day boundary. So *"reading it consumes nothing the
+> race was ever going to use"* was **an assumption about a future ruling,
+> presented as a property of the day**, and I carried it. The supporting facts
+> the reviewer read at the artifacts: the table entry carries **no ruling**, the
+> register's R-232 authority cite **does not verify**, a seat introduced the
+> boolean at `4e1133c` on 2026-08-31 — **two days after the day it disqualifies**
+> — the 08-29 verdict already superseded a predecessor whose
+> `race_accrual_eligible` was **true**, and the module's own USER-2026-09-01 text
+> argues for admission.
+>
+> **THE USER THEN RULED, AND TOOK THE OTHER BRANCH.** R-497 (F)(1): *"We check
+> the data quality and only use qualifiable data"* — collector version is not a
+> bar, **quality is**. That **admits 08-29** (`day_quality_pass` true, btc P1
+> **32.29 s/hr** against a bar of 120 — I read it at the verdict; **the cleanest
+> day in the record**) and does **not** admit 08-30 (quality fails). On the
+> reviewer's own disposition that is branch (b): **08-29 becomes a race day and
+> must not be opened.** **Nothing has been spent** — both days remain unread and
+> no seal has been opened by any seat.
+>
+> **But 08-29 does not accrue automatically, and I checked why at the code:** at
+> the tip, `ERA_ADMISSIBLE` at `da_forward_day_verify.py:894` **still reads
+> `"clob_v3_1": False,   # pre-O1`** — the unattributed default the reviewer
+> named. **The ruling is recorded and not yet implemented** (the implementation
+> is DA's), and BE13's blocker (a) stands: no 08-29 verdict on disk is **both**
+> scheduled-unit-attributed **and** era-guard-correct. **G stays at 2 of 5 with a
+> third day contingent, not banked.**
+>
+> **THE OTHER THREE RULINGS, with the coordinator's own additions flagged as its
+> own:**
+> - **Operating point** — declare a grid, report every cell, **select none**. The
+>   choice of **`FROZEN_FROM_TRAIN_QUANTILE`** as the form the grid runs on is
+>   **the coordinator's application, redirectable by one word.** Verified: all
+>   four forms exist at `be_forward_metric.py:188-216`, `OperatingPointUndeclared`
+>   at `:60`, and the grid is the already-pinned `BUDGETS = (0.05, 0.10, 0.15)` at
+>   `phase2_declaration.py:94`. **`RETROSPECTIVE_TOPK` stays refused** — it is a
+>   cutoff read off the very rows being scored, which is rule 11 sitting directly
+>   on the path this programme was about to run. **That fence is the most
+>   valuable thing round 14 produced** — **[QUALIFIED at 06:02Z by the reviewer's
+>   filing, below: the fence is real and it is NOT ON THE PATH.]**
+> - **Futility check — configurable.** G, the statistic and the alpha spend are
+>   **parameters**. The coordinator **attached a guard the USER did not ask for**
+>   (a run refuses unless its configuration is declared in a committed file that
+>   carries it by hash and predates the read) and flagged it as its own.
+> - **Pairing convention — BOTH, by-threshold primary**, by-count beside it
+>   **labelled retrospective and non-causal**. Iteration 011 pairs by count;
+>   `be_forward_metric.increment()` pairs by threshold; under a declared theta
+>   grid **these are different estimands**. **This doubles the cell count and
+>   therefore the Holm denominator — declared before any forward number exists,**
+>   which is the only time such a declaration is worth anything.
+>
+> **I RE-DROVE THE 36/36 RATHER THAN PASSING IT THROUGH.** In my **own** detached
+> worktree at `b717340` (the module hardcodes `REPO`, so it reads the main tree's
+> `data/` either way), under `systemd-run --scope MemoryMax=8G`:
+> `be_forward_recon --selftest` **21 checks, rc 0**; `--reconcile` **`all_hold`
+> true, `n_cells` 6, `n_predicates_evaluated` 36, `n_predicates_true` 36,
+> `n_predicates_false` 0**, rc 0, stderr 0 bytes. Worktree removed; **worktrees
+> 34, main tree clean, `derived/` 182 at quiescence.** Ordering verified at git:
+> declaration `1e9b662` 05:39:05Z → run `bc9733b` 05:42:17Z → row `a584739`
+> 05:44:48Z → entry `b717340` 05:49:42Z. The module's own scope statement is kept
+> in the record: `NOT_RECONCILED_HERE` says rows → actions → per-window net cents
+> is **not** reconciled, so a PASS licenses the aggregation, the null, the
+> sidedness, the multiplicity and the disclosure — **not a forward number**.
+>
+> **ONE CITATION IN R-497 (D) DOES NOT REPRODUCE, AND THE CLAIM BEHIND IT DOES.**
+> The entry gives the `TOL_`/`DECLARED_PREDICATES` block as sha256
+> **`db34da543af6d27f…`**; the instrument that computes it reports
+> **`4a2a28ceb124a3fd`** (25 declaration lines, `unchanged` true, declaring commit
+> `1e9b662`) — which is also BE's own row value, and what I got recomputing the
+> block at `1e9b662`, `bc9733b` and `b717340`. Two natural variants give
+> `ad18a0b20c8099f9` (trailing newline) and `dda79c366eb2fe28` (whole file);
+> **none of the three is `db34da54`.** The **substance holds and is verified three
+> ways** — the module blob is identical across `bc9733b`/`a584739`/`b717340`, the
+> extracted block is identical at the declaring commit and at the tip, and the
+> instrument's own predicate says `unchanged: true`. **Only the quoted identifier
+> is wrong** — recorded in band because a reader who verifies at the artifact gets
+> a different number and may conclude the claim failed.
+>
+> **ONE PRECISION ON THE REVIEWER, in the same spirit.** R496-R8 says
+> `da_dayverdict_20260831.json` is *"not on disk, and never committed"*. **The
+> second half holds** — zero add-commits across all refs. **The first does not:**
+> it is on disk, **19,131 B, mode 600, written by the scheduled unit at
+> 2026-09-01T00:06:02Z**, and its fields are exactly the row `RESULTS.md` quotes
+> (`day_quality_pass` false, `post_freeze_pass` false, era MIXED
+> `clob_v4`+`clob_v4_1`, boundary `2026-08-31T22:00:02.274534Z`). **The finding
+> survives in its useful form — the row's basis is not in git — and loses the half
+> that would have made it a missing artifact.** The reviewer's separate
+> observation that `post_freeze_pass` reads false for a day three days after the
+> freeze epoch is **unexplained and not ruled here**.
+>
+> **SEALS VERIFIED WITHOUT BEING OPENED** (hashing is not reading): 09-01
+> **54,213,086 B** sha `aca22317ab06adbf…`, 09-02 **52,911,716 B** sha
+> `7522786db5423574…`, both under `data/pm_5min/derived/` with **v2 superseding
+> receipts** (7,841 B and 5,818 B) beside byte-unchanged v1s.
+>
+> **BE15-S1, a determinism defect BE found in its own prior round:**
+> `phase2_increment_null.sign_flip_p` consumes windows in **dict order** — I
+> verified the code property at `:132` (`vals = [v for v in
+> inc_by_window.values()]`, no sort) against `phase2_iter011.sign_flip_null`,
+> which sorts **at the point of consumption** (R-234). A forward p-value that
+> depended on dict insertion order would have been irreproducible. **I did not
+> re-drive BE's two measured values** (0.27680798 / 0.23690773) and say so.
+>
+> **A REVIEWER FILING LANDED AT 06:02Z, MID-ROUND, AND IT QUALIFIES THINGS I
+> WROTE ABOVE — folded in rather than left for the next round.**
+> `7860743`, `REVIEW_BE_METRIC_PATH_2026-09-03.md` (238 lines, pinned `b717340`,
+> **no seal opened**), BE rounds 13/14/15 as one round, disposition **AMEND**.
+> **Recorded as the reviewer's claims, not as established** — the coordinator has
+> not verified them.
+>
+> - **The three HIGHs are one class, and it is SEAT_PROTOCOL rule 17's shape:
+>   every fence in this round is real, tested in both directions, and OFF THE
+>   PATH.** **BEM-R1** — `increment()`, the decision metric of record, takes a
+>   bare theta and is fenced by nothing; a retrospective cutoff produced a full
+>   net-cents-vs-incumbent result **plus a p**, no fence touched; **every fence
+>   has zero production call sites**. **BEM-R2** — `require_operating_point`
+>   checks the form **string**, not the derivation: a theta computed from the
+>   scored rows was accepted as `causal: True`. **BEM-R3** —
+>   `require_arm_identity` accepted a nonexistent file with a garbage sha; the
+>   byte fence fires only under `expect`, **which no production call passes**, and
+>   `CANDIDATE` still resolves to `PM_PLUS_FINE`/`LINEAR`.
+> - **The reviewer's own bar: no forward day should be scored on this path until
+>   BEM-R1, R2 and R3 are closed**, and they should be wired **in the same commit
+>   as the producer half**.
+> - **What it leaves standing is what I verified independently:** claim (a) — *a
+>   sealed day cannot feed an action-level estimand* — **holds**, and the reviewer
+>   verified it **at `seal()`**, the same place I did; and claim (c) — the
+>   reconciliation **holds** (36/36 **and** 24/24 reproduced, hash-seed stable).
+> - **Two findings reduce the weight of things I reported above, and I say so
+>   here rather than leave them reading stronger than they are.** **BEM-R7**: the
+>   reconciliation names a **smaller** unreconciled half than the truth —
+>   `n_predicates_evaluated` **short by 24** — so my 36/36 licenses less than it
+>   appears to. **BEM-R6**: `tolerances_unchanged_since()` returns
+>   `unchanged: True` **after a 1e-6 → 1e6 widening**, because its pointer is not
+>   inside its own compared block — so that predicate is **not a sufficient
+>   control**, and the byte-identity claim rests on my **independent** checks (the
+>   module blob identical across `bc9733b`/`a584739`/`b717340`, the extracted
+>   block recomputing identically at all three).
+> - **BEM-R5 corrects R-497 on a field, not on the conclusion:** **row order
+>   SURVIVES the seal**; the genuinely independent reason is the **missing per-row
+>   `t_start`**. I derived the no-action-key property from the writer itself and
+>   never claimed row order was gone, so the paragraph above stands as written.
+>   **BEM-R4**: `sealed_shape_is_unusable` **cannot ever return usable** — three
+>   verdict fields are literals — and contradicts `assert_action_keys` on the same
+>   rows. **BEM-R8**: no other order-dependent consumption on the path;
+>   `sign_flip_p` still unguarded, reproduced at **0.0719 vs 0.0938 on real
+>   increments**.
+>
+> **Sequencing:** BE rounds 13, 14 and 15 landed and are **reviewed as of 06:02Z
+> (AMEND, unverified)**,
+> dispatched to the reviewer as one round; DA holds rounds 20 and 21 unpushed,
+> round 21 naming *"the 105-minute cross-midnight event"* the gap ledger cannot
+> see; DE round 44 landed (`9bcce7e`, `EXPECTED_CHECKS` 125 → 154, superseding the
+> held WIP `0d03902`) and **awaits verification**. **USER items: ONE — the Phase-2
+> winner, and the race decides it.**
+
 > ### 2026-09-03T04:08Z — MEM round 72: the writer exception is closed, three USER rulings land, and the window that carried them was broken
 >
 > **MEM is again the sole writer of `STATUS.yml` and this file.** The R-495 (J)
@@ -51,7 +259,15 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 >   **primary and free** (`day_quality_pass` true, `post_freeze_pass` true,
 >   `era_pure` true on `clob_v3_1`, `race_accrual_eligible` **false**: a good day
 >   that can never accrue, so reading it costs the race nothing), 08-30 a
->   **separately labelled secondary, never pooled**. **Both are NAMED AS CONSUMED
+>   **separately labelled secondary, never pooled**.
+>   **[SUPERSEDED 2026-09-03T05:55Z, MEM round 73 — the "free" half of this
+>   bullet is WRONG and it was mine to check. `race_accrual_eligible` false was a
+>   property of ONE UNATTRIBUTED BOOLEAN, not of the day: the reviewer drove
+>   `ERA_ADMISSIBLE["clob_v3_1"] = True` and 08-29's own split_verdict read
+>   `race_accrual_eligible` TRUE (R496-R1, HIGH). The USER then ruled on quality
+>   (R-497 F(1)) and ADMITTED 08-29, so it is a RACE DAY that must not be opened;
+>   08-30 is not admitted because its quality fails. The read did not happen and
+>   nothing was spent.]** **Both are NAMED AS CONSUMED
 >   the moment they are opened** (rule 11). **09-01 and 09-02 stay sealed.**
 >   Caveat that must travel with the result: **08-29 runs on `clob_v3_1`, two
 >   collector generations behind the race's `clob_v4_1`.**

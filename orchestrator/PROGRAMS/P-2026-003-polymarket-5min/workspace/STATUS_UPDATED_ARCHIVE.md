@@ -5121,3 +5121,60 @@ exist as dated entries in `workspace/HANDOFF.md` and in git history.
   RELEASED), the 09-04 run on the landed chain (no pin, no install). UNCHANGED:
   the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
 ```
+
+## Batch 79 — archived 2026-09-03T05:55Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-73 true-up of R-496 (as reviewed) and R-497. Join rule as
+in batch 1. The window is back to its ordinary one-entry-per-round cadence after
+batch 78's two-entry recovery.
+
+```yaml
+  2026-09-03T02:25Z (MEM ROUND 71 -- A BASELINE THAT DEPENDS ON WHOSE COMMIT CAME
+  LAST). R-494 and the reviewer's DA-20 filing swept; nothing run; every check at
+  the blob. THE DISPOSITION IS THE NARROWEST THIS PROGRAMME HAS ISSUED AND THE
+  SHAPE IS WORTH NAMING: HOLD FOR ONE ITEM, RELEASE THE REST -- not "hold the
+  round" and not "release with findings" but ONE ITEM HELD, EVERYTHING ELSE
+  RELEASED, with DA REBUILDING THE HELD CHAIN (still unpushed) RATHER THAN
+  PATCHING ON TOP OF IT. A HOLD THAT NAMES ONE ITEM IS A HOLD SOMEBODY CAN CLEAR;
+  A HOLD ON A ROUND IS A HOLD ON A SEAT. THE ROW-ONLY-TIP PROPERTY HAS NOW REACHED
+  THE REVIEWER'S OWN BASELINE AND I VERIFIED THE COUNTEREXAMPLE IS MINE: at
+  5a11ee9, my round-68 commit, the diff touches STATUS.yml, COORDINATION.md,
+  HANDOFF.md and the archive and EXACTLY ZERO of the four DA .py files
+  (intersection counted: 0), so the fixture's git add stages nothing, the commit
+  is EMPTY, and THE UNMUTATED PRE-ROUND MODULE IS RED at the CO-10 precondition
+  (DA18-R1 live) -- the reviewer's "unmutated 38 rc 0" therefore HOLDS ONLY WHERE
+  HEAD~1 DIFFERS IN THOSE FOUR FILES. THAT IS THE FOURTH APPEARANCE OF THIS
+  PROPERTY AND ITS MOST CONSEQUENTIAL FORM: round 65 named the wrong author on an
+  artifact, round 66 emptied a fixture commit, round 67 labelled a version by a
+  commit that did not author it, and ROUND 71 DECIDES WHETHER A CONTROL'S BASELINE
+  IS GREEN. A MEASUREMENT THAT IS TIP-CONDITIONAL IS NOT WRONG, IT IS
+  UNDER-SPECIFIED, AND THE MISSING CLAUSE IS WHICH COMMIT CAME LAST -- recorded so
+  that any future "it was green before" carries the tip it was green at. TWO
+  PREMISES WERE CORRECTED IN DIFFERENT DIRECTIONS THIS ROUND, WHICH IS THE SYSTEM
+  WORKING: the reviewer SUPERSEDED R-493's "run-twice alone" sentence IN-BAND as
+  too strong and drove LANDED RED by replacing the fixture's git add with git
+  status; and DA'S OWN "GREEN BEFORE" DOES NOT REPRODUCE, the CO-10-returning
+  mutant having been ALREADY RED at the DA16-R1 falsifier in the pre-round module
+  (DA20-R1). MY ROUND-70 MEASUREMENT IS NOW A FILED FINDING: both production
+  annotate_governance wirings remain deletable with 254 GREEN -- DA20-R2, MEDIUM,
+  AND THE ONE ITEM HELD -- travelling from an unruled coordinator measurement to a
+  reviewer finding to the single blocker on a chain WITHOUT ANYBODY DECIDING IT IN
+  PASSING; the closure asks for TWO RULE-15 FALSIFIERS, TAPE-INDEPENDENT. DA18-R1
+  IS CLOSED WITH THREE FALSIFIERS, and DA17-R1 and the host-load FORM with it,
+  while THE CLASS SCANS CAME BACK CLEAN -- no other silent shrink, no other
+  unnoticed wiring -- which is what turns three closures into a BOUNDED STATEMENT
+  rather than three anecdotes. ONE BOOKKEEPING INSTRUCTION IMPLEMENTED EXACTLY,
+  because getting it wrong would lose provenance: d37c3d9 and 0cd18ba REMAIN THE
+  HELD CHAIN NOW and become SUPERSEDED-UNPUSHED ONLY ONCE DA REPORTS THE NEW SHAS;
+  and Q-DA-216 KEEPS ITS NUMBER since the row never landed -- nothing to
+  supersede, only to correct, with the superseded unpushed shas named as
+  provenance. UNCHANGED: nothing on the unit path moves; the 09-04 00:06Z run is
+  on the landed chain either way; DA 20's landing is AFTER FRI 2026-09-04 00:06:00
+  UTC, ON THE REBUILT CHAIN, AFTER THE REVIEWER'S ONE-ITEM ROUND; DE rests at
+  5658f24; BE 12 in flight; the reviewer on standby until DA's rebuilt READY or BE
+  12, whichever first. USER ITEMS: FIVE, UNCHANGED -- the 09-02 accrual (R-486
+  recommends ACCRUE, UNRULED), the Phase-2 winner, the content-liveness v2 freeze,
+  the addendum v2 package (five asks; runner at 5658f24, RELEASED), the 09-04 run
+  on the landed chain (no pin, no install). UNCHANGED: the 011 family 12 of 24
+  with Q4 failing; the sequencing rule; R-419 revocable.
+```
