@@ -7366,3 +7366,51 @@ Nothing deleted — only moved.
   Nothing of mine turns on it -- I read the register with line RANGES. INSTRUMENT:
   472 flags, 10 CHECKED, 5 RELAYED, 457 UNMARKED, 0 findings.
 ```
+
+## Batch 102 — archived 2026-09-04T13:37Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 96 entered the field.
+Nothing deleted — only moved.
+
+```
+  2026-09-04T13:08Z (MEM ROUND 93 -- SHORT. THE PROGRAMME HAS ITS FIRST ABSOLUTE
+  ECONOMIC NUMBER, AND IT IS RECORDED NON-AUTHORITATIVE ON PURPOSE.) R-517:
+  MARKET-MAKING PAYS AND CANCELLING DOES NOT, ON THE FILLS LEG. Baseline
+  QR_SKEW_ONLY at 0 cancels gives spread capture +10,566.951031c, adverse
+  selection -1,968.1921815c, MAKER P&L +8,598.7588495c; HAZARD at 48 cancels
+  forgoes 198.6861335 and saves 186.1303925 for NET -12.5557c; CONDVALUE_X_SKEW
+  at 333 cancels forgoes 2,933.5822155 and saves 1,979.664098 for NET -953.9181c;
+  adverse_saved_exceeds_spread_forgone FALSE for both, COMPUTED NOT ASSERTED. It
+  lives at de_section81_arms__20260904T125340Z.json -- THE FIRST ARMS ARTIFACT
+  EVER COMMITTED ANYWHERE, landed WITH its producing code at 0e8f40c. I OPENED IT
+  AND EVERY FIGURE REPRODUCES, AND IT IS STILL MARKED RELAYED: every number
+  reached the coordinator through ONE PRODUCER, DA has not reported, and READING
+  A SINGLE-PRODUCER ARTIFACT CONFIRMS ONLY THAT IT SAYS THIS, NEVER THAT IT IS
+  RIGHT. CARRY THE SCOPE OR DO NOT CARRY THE NUMBER, and the artifact states it
+  itself: n=12 WINDOWS -- ONE HOUR -- one coin, ONE latency rung (250 ms), no
+  forward day, FILLS LEG ONLY, EXCLUDING the residual position at window end and
+  any harm beyond the markout horizon, DEVELOPMENT EVIDENCE, POINT ESTIMATE AND
+  NO INTERVAL because 12 windows is below the 5-complete-day cluster floor.
+  ADMITTED 12, BINANCE_GAP_EXCLUDED 3. A DIRECTION, NOT A VERDICT.
+  TWO STANDING RULES ADDED, BOTH THE COORDINATOR'S. RULE 12: A NEGATIVE
+  EXISTENCE CLAIM CARRIES AN AS-OF OR IT IS NOT A CLAIM -- three instances in one
+  day, wrong three DIFFERENT ways (searched the wrong root; one landed after the
+  look; gitignored read as absent), and the general form is that "nothing
+  matched" is a statement about a SEARCH and gets written down as a statement
+  about the WORLD. RULE 13: a result-bearing artifact a receipt or register entry
+  CITES is COMMITTED, with git add -f, BESIDE ITS PRODUCING CODE IN THE SAME
+  COMMIT -- under ~1 MB, receipts and censuses yes, bulk tape and caches never.
+  It also makes my instrument's missing-artifact FINDING meaningful rather than
+  noise. AND ONE FINDING AGAINST MY OWN INSTRUMENT, WHICH IS WHY THE R-517 NUMBER
+  IS AWKWARD TO FILE: PROVENANCE AND CORROBORATION ARE DIFFERENT AXES. Provenance
+  asks WHO READ IT; corroboration asks HOW MANY INDEPENDENT PRODUCERS STAND
+  BEHIND IT; my instrument has only the first, so CHECKED would be literally true
+  here and would also make a single-producer number AUTHORITATIVE. That is
+  R-508(D) from the other side -- independence is a property of the SOURCES, not
+  the READERS. FIX SPECIFIED, NOT APPLIED (coordinator's call, short batch): a
+  corroboration: field REQUIRED on every CHECKED entry, closed value set
+  SINGLE_PRODUCER / INDEPENDENTLY_REPRODUCED / N_A, and NO DEFAULT. Until then a
+  single-producer number is RELAYED, which understates my read and is the safe
+  direction. INSTRUMENT: 474 flags, 11 CHECKED, 6 RELAYED, 457 UNMARKED, 0
+  findings.
+```

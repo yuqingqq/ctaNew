@@ -1,6 +1,92 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T13:25Z (MEM round 95) — **R-520 AND R-521 REVERSE PART OF
+Updated: 2026-09-04T13:37Z (MEM round 96) — **R-523 TURNS THE NEGATIVE RESULT
+INTO A SPECIFICATION. This changes what the programme is for.**
+
+### The threshold — recomputed here, not relayed
+
+**An overlay pays iff `r = adverse/spread >= sigma/alpha`, measured PER LOST
+FILL** (alpha = the adverse multiple of the fills it removes, sigma = the spread
+multiple — the R-521 selection ratios under their proper names).
+
+| arm | alpha | sigma | break-even r |
+|---|---:|---:|---:|
+| CONDVALUE | 3.0140 | 0.8319 | **27.6012%** |
+| HAZARD | 3.8137 | 0.7583 | **19.8836%** |
+| **this book** | | | **18.6259%** |
+
+**HAZARD is 6.7522% of relative adverse from break-even.** Record that, **not**
+*"the overlay does not pay"* — they are different findings and only one is
+actionable.
+
+### The tail — and why neither figure alone is the specification
+
+**18.6259% is a ratio of two totals of which one is 43 fills** (1% of 4,315 =
+43.15). Excluding the top 1%, **r ≥ 110.58% as a hard bound for any split of the
+tail** — with an independent trivial proof needing no decomposition: **the other
+99% sum to −1,117.84c** (= −13% of the baseline's +8,598.7588c, checked), **and a
+negative maker P&L means adverse exceeded spread, so r > 1 there by definition.**
+**On 99% of this book the threshold is already exceeded fourfold** (4.006×).
+
+**Neither figure alone is the specification.** 18.63% **understates the
+opportunity 5.94×** because it describes the **tail** rather than the **book**;
+110.58% **overstates what is capturable** because **"exclude the top 1%" is not an
+available policy**.
+
+> **THE SPECIFICATION IS CONDITIONAL: the overlay pays iff it declines the body
+> without declining the tail.** The decisive quantity is **unmeasured** — **how
+> many of the top 43 fills each arm declined** — dispatched to DE as one pass.
+
+### The cascade reconciles the mechanism with DA's null
+
+The book runs **1.1176 fills per generation**, so a random cancel removes **~1.12
+fills** against **4.32** (CONDVALUE) and **2.23** (HAZARD).
+`cents_per_cancel = cascade × per-fill-cost × mean-generation-P&L` gives CONDVALUE
+**1.29× worse** than random and HAZARD **8.51× better**, reconciling to four
+decimals. **DA's null calls both indistinguishable and is correct — and the two
+point estimates are a factor of seven apart, which the z-statistic hides.** Not a
+contradiction: a dispersion test at this size cannot separate them while the
+decomposition says they differ by an order of magnitude in the term that matters.
+**So the lever is not a better ranker — it is a cancel that does not cascade.**
+
+**And it is testable without spending a day:** `r` is a property of the
+**baseline**, recomputable **from the reference alone with no replay**, and
+**~600 coin-hours** sit between the hf_ws_v2 boundary (2026-08-24T13:48:54Z) and
+the freeze epoch, **already consumed and touching no sealed day**. BE is running
+it. **A distribution of r that never approaches the threshold closes the overlay
+programme on evidence rather than on one hour.**
+
+### The provenance defect — it qualifies every figure I have marked CHECKED against this artifact
+
+`provenance.carrying_commit` is **`b43a9ce`** with
+`working_tree_clean_for_this_file` **false** and `producing_code_path` under
+`ctaNew-wt-de`. **I verified `b43a9ce` is NOT an ancestor of `origin/mm-research`**
+and that **3 of the 7 `code_identity` files differ at it** —
+`de_lane4_real_parity.py`, `de_phase4_diag_runner.py`, `de_section81_arms.py`.
+
+**It does not establish the numbers are wrong** — DA reproduced the baseline
+independently from the reference to **7.3e-12** and the element-wise check was
+clean. **But the artifact cannot be cited as provenance-clean, and it was cited to
+the USER repeatedly.** DE is re-emitting.
+
+**It is also a gap in my own instrument, named rather than patched blind:**
+`mem_flag_provenance.py` checks that a CHECKED flag's artifact **exists**, never
+that it is **provenance-clean** — so an artifact naming a commit outside the
+branch passes silently.
+
+### Standing rule 14 — found by reproducing the error while checking someone else's
+
+**A claim about a moving reference carries the revision it was true at.** R-523's
+*"all 7 match at the tip"* was **true at `9f25483`** and **already stale at
+`b22fb30`** minutes later, DE59 having touched exactly those three files. **My own
+first check compared against `origin/mm-research`, which had moved under me, and
+briefly read a contradiction that was not there.** *"At the tip" is not a pin* —
+the same failure as the round-89 line citations that moved mid-write.
+
+**Instrument:** 490 flags, **20 CHECKED**, 13 RELAYED, 457 UNMARKED, 0 findings.
+
+
+Previously (MEM round 95) — 2026-09-04T13:25Z — **R-520 AND R-521 REVERSE PART OF
 WHAT I RECORDED IN ROUNDS 93 AND 94. THE HEADLINE CHANGES SHAPE, NOT SIGN.**
 
 ### What I did not say and should have
@@ -689,6 +775,26 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T13:37Z — MEM round 96: the negative result is now a specification
+>
+> **Full entry is the `Updated:` block at the top.** **An overlay pays iff
+> `r = adverse/spread >= sigma/alpha` per lost fill** — CONDVALUE breaks even at
+> **27.60%**, HAZARD at **19.88%**, this book reads **18.63%**, so **HAZARD is
+> 6.75% of relative adverse from break-even.** But 18.63% is a ratio whose
+> numerator is **43 fills**: on the other 99%, **r ≥ 110.58%** (those fills sum to
+> **−1,117.84c**, and negative maker P&L means adverse exceeded spread).
+> **Neither figure alone is the specification — the overlay pays iff it declines
+> the body without declining the tail**, and how many of the **top 43 fills** each
+> arm declined is **unmeasured**. **The lever is a cancel that does not cascade.**
+> BE is surveying `r` over ~600 coin-hours touching no sealed day. **Caveat on
+> every figure from that artifact: it names a `carrying_commit` that is NOT an
+> ancestor of the branch** — the numbers reproduce independently, but it is **not
+> provenance-clean.** New **standing rule 14**: a claim about a moving reference
+> carries the revision it was true at.
+>
+> ---
+
 
 > ### 2026-09-04T13:25Z — MEM round 95: the economic reading changes shape, not sign
 >
