@@ -179,6 +179,19 @@ precisely the one that gets believed.
 
 ---
 
+
+**Two things a coordinator must never read as evidence (R-510(B)):**
+
+- **A suite count is not coverage.** "52 checks passed", "129/129 green" report
+  that the SUITE ran, never that the CODE is right. Every serious defect the
+  reviewer found on 2026-09-04 was in code whose suite was green. Quoting a
+  green suite as verification is the counterfactual question failing on the
+  coordinator's own practice.
+- **A reviewer's AGREEMENT is not a second observation.** Route every reviewer
+  finding as **CHECKED** (it went to the artifact — a second observation) or
+  **AGREED** (it read the same summary — the same observation, twice). Only
+  CHECKED counts. The reviewer reads the same artifacts every other seat does.
+
 ## 5. The standing duty and its `/loop` prompt
 
 The coordinator runs a self-paced loop: verify every landed filing at its
