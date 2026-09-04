@@ -1,0 +1,72 @@
+{
+ "budgets": [
+  "5%",
+  "10%",
+  "15%"
+ ],
+ "budgets_source": "phase2_declaration.BUDGETS",
+ "derived_from_split": {
+  "already_consumed": true,
+  "coins": [
+   "btc",
+   "eth"
+  ],
+  "days": [
+   "2026-08-29"
+  ],
+  "population": "the 08-29 two-arm feed (development read)",
+  "rule_11_exposure_STATED": "08-29's results have been seen. The quantile is mechanical at the DECLARED budgets with no free parameter, but the exposure is named rather than argued away",
+  "why_free": "08-29 was WITHDRAWN from the race at R-500 and consumed as development evidence; deriving a quantile from it opens no seal and spends no forward day",
+  "why_this_day_is_FORCED_not_chosen": "09-01 and 09-02 are RACE days and would sit inside any G>=5 population, making a theta derived from them circular. 08-29 is the only consumed day disjoint from the race, so the choice is determined, not preferred"
+ },
+ "fit_artifact": {
+  "bytes": 16298,
+  "coins": [
+   "btc",
+   "eth"
+  ],
+  "frozen_at_utc": "2026-08-26T10:21:49Z",
+  "model_form": "LINEAR",
+  "model_form_derived_from": [
+   "days_fitted",
+   "feature_vector_contract",
+   "first_slug_t0",
+   "hazard_weights",
+   "last_slug_t0",
+   "n_actions_fitted",
+   "n_positive",
+   "n_rows_fitted",
+   "norm_mu",
+   "norm_sd",
+   "value_weights"
+  ],
+  "n_hazard_weights": 61,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_reduced_fine_candidate_v1.json",
+  "sha256": "cfc454d62f521d9aecf389b51a6536a4fa9cadb2370a11c19fbce0da9a68c341",
+  "spec": "PM_PLUS_FINE (reduced fine)",
+  "status": "FROZEN"
+ },
+ "form": "FROZEN_FROM_A_CONSUMED_DAY",
+ "protocol": "BE_OPERATING_POINT_DECLARATION_V1",
+ "rows_artifact": {
+  "bytes": 1241115096,
+  "manifest_binds_this_sha": true,
+  "manifest_path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_candidate_manifest_v1.json",
+  "manifest_sha256": "19a50195c34d0af21aba81b9f6b9501ea58656212d8448ddd8cc219da26d0f08",
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_eraB.json",
+  "sha256": "19a50195c34d0af21aba81b9f6b9501ea58656212d8448ddd8cc219da26d0f08"
+ },
+ "theta_frozen_by_coin": {
+  "btc": {
+   "10%": 0.5028364564928878,
+   "15%": 0.37950925710831407,
+   "5%": 0.6933855179002504
+  },
+  "eth": {
+   "10%": 0.08835902518884033,
+   "15%": 0.06049751203550085,
+   "5%": 0.13684014174562667
+  }
+ },
+ "theta_map_sha16": "c22c57e29d503d9a"
+}
