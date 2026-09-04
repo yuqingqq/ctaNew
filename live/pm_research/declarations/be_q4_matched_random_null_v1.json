@@ -1,0 +1,19 @@
+{
+ "protocol": "BE_Q4_MATCHED_RANDOM_NULL_DECLARATION_V1",
+ "declared_before_any_run": true,
+ "target": "Q4_combined_ev, coin btc, arms composed_lgbm and composed_linear, budgets 5/10/15%",
+ "population": "the 08-25 development eval population, 177,674 actions / 311,640 rows",
+ "design": "draw n matched samples of the SAME cancellation count, STRATIFIED BY (side, hour), compared on NET CENTS",
+ "n_draws": 500,
+ "n_draws_source": "phase2_iter011.N_RANDOM_011 = 500, declared floor MIN_DRAWS_011 = 200",
+ "n_draws_why": "the Q4 family is 6 cells, so the Holm threshold for the smallest p is 0.05/6 = 0.008333. n=200 gives a floor of 1/201 = 0.004975, under 2x headroom below that. n=500 gives 1/501 = 0.001996, over 4x. n=2000 buys resolution the family cannot use.",
+ "n_draws_independently_derived": "500 was chosen from the Holm-headroom argument BEFORE reading N_RANDOM_011; the programme's own constant is also 500",
+ "sidedness": "ONE-SIDED, alternative = the policy BEATS matched-random",
+ "seed": 20260825,
+ "floor_p": 0.001996007984031936,
+ "reported_whatever_it_says": true,
+ "a_pass_changes_the_diagnosis_not_the_verdict": "the declared gate is 'beats matched-random AND beats the incumbent'; the incumbent leg is not satisfied (holm_p 0.1199-0.4463, all above 0.05), so a matched-random pass cannot make the cell survive",
+ "population_is_consumed": "08-25 is the freeze's own training split, already consumed under rule 11 per be_operating_point_declaration_v1.derived_from_split; recomputing a null on it spends no forward day",
+ "is_a_validation": false,
+ "intervals_claimable": false
+}
