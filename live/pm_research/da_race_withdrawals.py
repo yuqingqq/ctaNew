@@ -56,7 +56,7 @@ DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
 #: This suite's own total, asserted over ran + skipped.
-EXPECTED_CHECKS = 32
+EXPECTED_CHECKS = 34
 
 #: THE REGISTRY. One entry per day the USER has taken out of the race.
 #: EVERY entry carries its authority as DATA -- the same discipline round 22
@@ -117,13 +117,23 @@ class WithdrawalRefused(Exception):
     """A withdrawal this module must not record or must not let stand."""
 
 
-def _git(args: list[str], cwd: Path | None = None) -> tuple[int, str]:
+def _git(args: list[str], cwd: Path | None = None
+         ) -> tuple[int | None, str]:
+    """`(returncode, stdout)`; **rc is None when git never ran.**
+
+    It used to return `(127, str(e))`. 127 is a returncode, and a consumer
+    reading one cannot tell "git exited non-zero" from "git was never
+    executed" -- the DA32-R1 codomain predicate, one layer down from the
+    monotonicity guarantee this module exists to make. `None` is not a
+    returncode, so `rc != 0` still refuses (correctly) and a caller that
+    wants the distinction can have it.
+    """
     try:
         r = subprocess.run(["git", *args], capture_output=True, text=True,
                            cwd=str(cwd or CODE_ROOT), timeout=120)
         return r.returncode, r.stdout
     except Exception as e:                                   # pragma: no cover
-        return 127, str(e)
+        return None, str(e)
 
 
 def withdrawal_for(day_token: str, table: dict | None = None
@@ -229,16 +239,38 @@ def assert_withdrawal_admissible(day_token: str, derived: Path | None = None,
     return {"day": day_token, "admissible_to_withdraw": True, **fr}
 
 
+class BlobUnparseable(WithdrawalRefused):
+    """A version of the registry file that could not be read AS a registry.
+
+    Outside the codomain of `dict | None` deliberately: `None` means the name
+    is ABSENT from that version, which is a fact about the history, and this
+    means the version could not be evaluated, which is a fact about the
+    reader. Collapsing them drops a version from the monotonicity walk.
+    """
+
+
 def _registry_in_blob(text: str) -> dict[str, dict] | None:
     """`RACE_WITHDRAWALS` as data, parsed and never executed.
 
     None means the name is absent from that version -- which is different from
     an empty registry, and the caller must not collapse them.
+
+    **DA32-R1, THE OTHER DOOR.** Round 32 stopped a blob git could not READ
+    from being skipped. A blob that reads fine and does not PARSE, or whose
+    value is not a literal, still returned `None` -- and `None` is
+    "the registry did not exist in this version", so the version was dropped
+    from the walk and `monotone: True` was reported over a smaller history
+    for a second reason. Same guarantee, same defect, different route: these
+    now RAISE.
     """
     try:
         tree = ast.parse(text)
-    except SyntaxError:
-        return None
+    except SyntaxError as e:
+        raise BlobUnparseable(
+            f"REFUSED: a version of the registry file does not parse ({e}). "
+            f"That is not the same as the registry being ABSENT in it, and "
+            f"skipping it would evaluate a one-way guarantee over fewer "
+            f"versions than exist.") from e
     for node in tree.body:
         targets = (node.targets if isinstance(node, ast.Assign)
                    else [node.target] if isinstance(node, ast.AnnAssign)
@@ -249,8 +281,12 @@ def _registry_in_blob(text: str) -> dict[str, dict] | None:
                     else node.value
                 try:
                     return ast.literal_eval(value)
-                except Exception:
-                    return None
+                except Exception as e:
+                    raise BlobUnparseable(
+                        f"REFUSED: `RACE_WITHDRAWALS` is present in this "
+                        f"version but is not a literal ({e}); it cannot be "
+                        f"evaluated as data and must not be read as absent."
+                    ) from e
     return None
 
 
@@ -317,7 +353,11 @@ def assert_withdrawals_monotone(repo: Path | None = None,
                 f"not be read (git rc {rc2}). Skipping it would report "
                 f"`monotone` over a smaller history than exists, which is the "
                 f"empty-set trap on the guard against a quiet undo.")
-        reg = _registry_in_blob(blob)
+        try:
+            reg = _registry_in_blob(blob)
+        except BlobUnparseable as e:
+            raise WithdrawalRefused(
+                f"REFUSED at commit {c[:9]} of {path}: {e}") from e
         if reg is None:
             continue
         versions.append(c)
@@ -710,13 +750,51 @@ def selftest() -> int:
        "PARSER: ABSENT and EMPTY are different answers -- None means the name "
        "is not there, {} means it is there and holds nothing, and collapsing "
        "them would make the introducing commit look like a removal")
-    ok(_registry_in_blob("def f(:\n") is None,
-       "PARSER: an unparseable blob returns None rather than raising -- a "
-       "syntax error somewhere in history must not break the guard")
-    ok(_registry_in_blob("RACE_WITHDRAWALS = f()\n") is None,
-       "PARSER: a computed registry is NOT accepted -- if it cannot be read "
-       "as a literal it is not read at all, so no expression can smuggle a "
-       "value past the history walk")
+    # DA32-R1, AND THIS CHECK USED TO ASSERT THE DEFECT. It read "an
+    # unparseable blob returns None rather than raising -- a syntax error
+    # somewhere in history must not break the guard". But `None` is
+    # "the registry is ABSENT from this version", so the version was dropped
+    # from the walk and the guarantee was reported over a smaller history.
+    # Not breaking the guard is not the same as evaluating it.
+    try:
+        _registry_in_blob("def f(:\n")
+        ok(False, "PARSER: an unparseable blob must REFUSE")
+    except BlobUnparseable as e:
+        ok("not the same as the registry being ABSENT" in str(e),
+           "PARSER (DA32-R1): an unparseable version REFUSES. Returning None "
+           "put a fact about the READER inside the codomain of a fact about "
+           "the HISTORY, and the version silently left the monotonicity walk")
+    try:
+        _registry_in_blob("RACE_WITHDRAWALS = f()\n")
+        ok(False, "PARSER: a computed registry must REFUSE")
+    except BlobUnparseable as e2:
+        ok("must not be read as absent" in str(e2),
+           "PARSER: a computed registry is still not ACCEPTED -- no "
+           "expression smuggles a value past the walk -- but it is now "
+           "refused rather than read as a version that had no registry")
+    with tempfile.TemporaryDirectory() as _t:
+        _r = Path(_t)
+        _git(["init", "-q", "."], _r)
+        _git(["config", "user.email", "t@t"], _r)
+        _git(["config", "user.name", "t"], _r)
+        (_r / "reg.py").write_text("RACE_WITHDRAWALS = {}\n", encoding="utf-8")
+        _git(["add", "reg.py"], _r)
+        _git(["commit", "-q", "-m", "v1"], _r)
+        (_r / "reg.py").write_text("RACE_WITHDRAWALS = {\n", encoding="utf-8")
+        _git(["add", "reg.py"], _r)
+        _git(["commit", "-q", "-m", "v2-broken"], _r)
+        try:
+            assert_withdrawals_monotone(repo=_r, path="reg.py")
+            ok(False, "PARSER: the WALK must refuse on an unparseable version")
+        except WithdrawalRefused as e3:
+            ok("does not parse" in str(e3) and "commit" in str(e3),
+               "PARSER: and THE WALK refuses by commit -- the fix is checked "
+               "where the guarantee is made, not only at the parser")
+    _rc_none, _msg = _git(["rev-parse", "HEAD"], Path("/nonexistent/repo/x"))
+    ok(_rc_none is None,
+       "GIT-CODOMAIN (DA32-R1): git that never RAN reports rc None, not 127. "
+       "127 is a returncode, and a consumer could not tell a failed git from "
+       "an absent one -- the same predicate, one layer under the guarantee")
 
     # ---- the block a verdict carries -------------------------------------
     _b = withdrawal_block("20260829")

@@ -128,8 +128,19 @@ def _runs(ws: list[int]) -> list[dict]:
 
 
 def uncompressed_for(p: Path) -> int:
-    """Thin wrapper so the fixture can assert its own window sizes."""
-    return TD.uncompressed_size(p)
+    """Thin wrapper so the fixture can assert its own window sizes.
+
+    DA32-R2: this wrapped `uncompressed_size` OUTSIDE its refusal. While the
+    refusal lived at `scan_day`, an unreadable file reached this caller as a
+    silent 0 -- a thin window that never existed. It propagates now, because
+    the size LEAVES THE CODOMAIN at the source; the re-raise here names this
+    path so a fixture failure says which caller it came through.
+    """
+    try:
+        return TD.uncompressed_size(p)
+    except TD.UnreadableMember as e:
+        raise TD.UnreadableMember(
+            f"REFUSED via uncompressed_for({p}): {e}") from e
 
 
 def _head_commit() -> str | None:

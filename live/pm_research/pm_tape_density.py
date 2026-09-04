@@ -91,7 +91,7 @@ DATA_ROOT_BRANCH: str = "unresolved"
 
 #: DA11-R1: this suite's own total, asserted over ran + skipped so an empty
 #: data root cannot produce the same summary line as a complete one.
-EXPECTED_CHECKS = 18
+EXPECTED_CHECKS = 21
 
 
 def _resolve_data_root() -> Path:
@@ -176,6 +176,14 @@ class Refused(Exception):
 #: Files that could not be READ during the current scan. A truncated archive
 #: is a thin window and belongs in the data; an unreadable one is a fact about
 #: the reader and belongs here. Reset per `scan_day`.
+class UnreadableMember(Refused):
+    """A member whose size could not be READ. Outside the codomain of a byte
+    count, deliberately: 0 would be a measurement and this is the absence of
+    one (the DA32-R1 predicate)."""
+
+
+#: Every member that refused during the current `scan_day`, so the reader is
+#: owed all of them rather than the first. NOT the signal -- the raise is.
 UNREADABLE: list[dict] = []
 
 
@@ -195,17 +203,26 @@ def uncompressed_size(path: Path) -> int:
             fh.seek(-4, os.SEEK_END)
             return struct.unpack("<I", fh.read(4))[0]
     except OSError as e:
-        # PHANTOM FAILURE (named 2026-09-04). Returning 0 here is right for a
-        # TRUNCATED archive -- that genuinely IS a thin window -- and wrong
-        # for a file that could not be READ. A permission error, an I/O error
-        # or a race also lands here, and a 0 from those makes every consumer
-        # report a DARK WINDOW: `da_dark_interval_scan` reports an interval,
-        # `da_blackout_mask` masks it, and a reader chases a blackout that
-        # did not happen. The value stays 0 so no caller changes shape, and
-        # the file is COUNTED in a census `scan_day` surfaces, so the
-        # difference between "empty" and "unreadable" stops being invisible.
+        # PHANTOM FAILURE (named 2026-09-04), CLOSED PROPERLY 2026-09-05.
+        # Returning 0 here is right for a TRUNCATED archive -- that genuinely
+        # IS a thin window -- and wrong for a file that could not be READ: a
+        # permission error, an I/O error or a race also land here, and 0
+        # makes every consumer report a DARK WINDOW.
+        #
+        # ROUND 32 LEFT THE 0 IN PLACE and moved the signal into a module
+        # census that `scan_day` refuses on. **That still fails the codomain
+        # predicate (DA32-R1/R2):** 0 is inside the codomain of a byte count,
+        # so the refusal lived at ONE call site while every other caller --
+        # `da_blackout_mask.uncompressed_for` among them -- got a silent 0
+        # through a module-level list, which is action at a distance. The
+        # value now LEAVES THE CODOMAIN by raising, so no caller can consume
+        # an unreadable file as a measurement whether or not it knew to ask.
         UNREADABLE.append({"path": str(path), "error": repr(e)})
-        return 0
+        raise UnreadableMember(
+            f"REFUSED: {path} could not be READ ({e!r}). Its size is not 0 "
+            f"bytes -- it is unknown, and 0 would read as a DARK window "
+            f"everywhere downstream. An unreadable file is a fact about the "
+            f"reader and must not be summarised as data.") from e
 
 
 def scan_day(day: str, raw_root: Path = RAW) -> dict:
@@ -220,7 +237,14 @@ def scan_day(day: str, raw_root: Path = RAW) -> dict:
     for fn in os.listdir(d):
         m = _FN.match(fn)
         if m:
-            agg[(m.group(1), int(m.group(2)))] += uncompressed_size(d / fn)
+            try:
+                agg[(m.group(1), int(m.group(2)))] += uncompressed_size(d / fn)
+            except UnreadableMember:
+                # Caught so the census is COMPLETE -- a reader is owed every
+                # unreadable file, not the first one -- and refused below.
+                # Nothing is added to the window: an unreadable member makes
+                # its window's total unknown, not smaller.
+                continue
     if not agg:
         raise Refused(f"{day} has a raw directory but NO window files — "
                       f"refusing rather than reporting a clean day")
@@ -619,6 +643,61 @@ def selftest() -> int:
                f"`da_blackout_mask` would mask it -- a BLACKOUT FINDING "
                f"produced by a permission error. A negative verdict from a "
                f"read that never happened ({str(_e32)[:60]}...)")
+
+    # ---- DA32-R1/R2: the value must LEAVE THE CODOMAIN, not be censused --
+    import tempfile as _tfc
+    with _tfc.TemporaryDirectory() as _t:
+        _d = Path(_t)
+        _trunc = _d / "btc_0.jsonl.gz"
+        _trunc.write_bytes(b"\x1f\x8b\x08")          # too short for ISIZE
+        ok(uncompressed_size(_trunc) == 0,
+           "CODOMAIN-1 a TRUNCATED archive still reads 0 and does NOT raise: "
+           "a truncated file genuinely IS a thin window, and the fix must "
+           "not turn a real measurement into a refusal")
+        _bad = _d / "eth_0.jsonl.gz"
+        _bad.write_bytes(b"\x1f\x8b\x08" + b"\x00" * 30)
+        import os as _osc
+        _osc.chmod(_bad, 0o000)
+        if _osc.geteuid() == 0:
+            _osc.chmod(_bad, 0o644)
+            skip("CODOMAIN-2 needs a file chmod can deny (not root)")
+            skip("CODOMAIN-3 needs a file chmod can deny (not root)")
+        else:
+            try:
+                uncompressed_size(_bad)
+                _osc.chmod(_bad, 0o644)
+                ok(False, "CODOMAIN-2 an unreadable member must RAISE")
+            except UnreadableMember as _e:
+                ok("is not 0 bytes -- it is unknown" in str(_e),
+                   "CODOMAIN-2 THE FIX ROUND 32 SHOULD HAVE MADE: an "
+                   "unreadable member RAISES rather than returning 0 into a "
+                   "module census. 0 is INSIDE the codomain of a byte count, "
+                   "so the refusal only protected the one call site that "
+                   "knew to ask; the raise protects every caller, including "
+                   "the ones that do not know this module exists")
+                _osc.chmod(_bad, 0o644)
+            _osc.chmod(_bad, 0o000)
+            try:
+                import da_blackout_mask as _BMc
+                # THE CLASS THE WRAPPER ACTUALLY RAISES. Under --selftest this
+                # module is `__main__`, so `__main__.UnreadableMember` and the
+                # freshly-imported `pm_tape_density.UnreadableMember` are two
+                # different class objects and a bare `except UnreadableMember`
+                # would MISS the raise -- and a missed raise here reads as
+                # "the wrapper did not propagate", which is a phantom failure
+                # inside the check that closes one.
+                _BMc.uncompressed_for(_bad)
+                _osc.chmod(_bad, 0o644)
+                ok(False, "CODOMAIN-3 uncompressed_for must propagate")
+            except _BMc.TD.UnreadableMember as _e3:
+                ok("via uncompressed_for" in str(_e3),
+                   "CODOMAIN-3 (DA32-R2) the wrapper that sat OUTSIDE the "
+                   "refusal now propagates and names its own path -- it used "
+                   "to hand its fixture a silent 0, a thin window that never "
+                   "existed")
+                _osc.chmod(_bad, 0o644)
+            except ImportError:
+                skip("CODOMAIN-3 da_blackout_mask not importable here")
 
     # ---------------------------------------------------------------- RR12-1
     # THE CLASS, NOT THE INSTANCE. The scanner is driven on a planted

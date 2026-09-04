@@ -63,7 +63,7 @@ CODE_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
-EXPECTED_CHECKS = 58
+EXPECTED_CHECKS = 76
 
 #: §8.1's REQUIRED OUTPUT, ENUMERATED HERE INDEPENDENTLY of the producer's own
 #: list. Written from the plan's eleven named quantities, NOT copied from
@@ -153,12 +153,24 @@ def stub_or_real(doc: dict[str, Any],
             f"a released predictor")
 
     score_verdict = "NOT_SUPPLIED"
-    n_reproduced = None
+    n_reproduced = n_unevaluable = None
+    unevaluable_reasons: dict[str, int] = {}
     if scores:
         salt = (stub_block or {}).get("salt", "")
-        n_reproduced = sum(1 for s in scores
-                           if _hash_score_matches(s, salt))
-        if n_reproduced == len(scores):
+        graded = [_hash_score_matches(s, salt) for s in scores]
+        n_reproduced = sum(1 for g in graded if g is True)
+        n_unevaluable = sum(1 for g in graded if g is None)
+        for s, g in zip(scores, graded):
+            if g is None:
+                r = _why_unevaluable(s) or "UNCLASSIFIED"
+                unevaluable_reasons[r] = unevaluable_reasons.get(r, 0) + 1
+        # AN UNEVALUABLE ROW CLAIMS NEITHER DIRECTION. It used to count as
+        # "did not reproduce", which is the evidence for REAL (DA32-R1).
+        if n_unevaluable == len(scores):
+            score_verdict = "NO_SCORE_EVALUABLE"
+        elif n_unevaluable:
+            score_verdict = "UNEVALUABLE_ROWS_PRESENT"
+        elif n_reproduced == len(scores):
             score_verdict = "EVERY_SCORE_REPRODUCED_FROM_IDENTIFIERS"
             evidence.append(
                 f"all {len(scores)} scores reproduce from a hash of "
@@ -191,6 +203,12 @@ def stub_or_real(doc: dict[str, Any],
         "arms_blocked_for_no_released_predictor": blocked_no_predictor,
         "score_test": score_verdict,
         "n_scores_reproduced_from_identifiers": n_reproduced,
+        "n_scores_unevaluable": n_unevaluable,
+        "unevaluable_reasons": unevaluable_reasons,
+        "score_test_note": ("an unevaluable row claims NEITHER direction: it "
+                            "is not evidence the arm read the market and not "
+                            "evidence it hashed. Only a score test with ZERO "
+                            "unevaluable rows can reach REAL_EVIDENCED"),
         "evidence": evidence,
         "note": ("the producer's declaration is READ and never trusted "
                  "alone; `evidence` is what this module computed. A REAL "
@@ -198,20 +216,68 @@ def stub_or_real(doc: dict[str, Any],
     }
 
 
-def _hash_score_matches(s: dict, salt: str) -> bool:
-    """Is this score reproducible from its identifiers alone?
+def _why_unevaluable(s: Any) -> str | None:
+    """Which of the four shapes made a row unevaluable -- named, not counted.
+
+    A count of unevaluable rows says the detector could not do its job; the
+    REASON says whose job it is to fix. Computed separately from the hash so
+    the classification cannot be a restatement of the failure.
+    """
+    if not isinstance(s, dict):
+        return "NOT_A_MAPPING"
+    for k in ("slug", "side", "gen", "score"):
+        if k not in s:
+            return f"MISSING_{k.upper()}"
+    try:
+        int(s["gen"])
+    except (TypeError, ValueError):
+        return "GEN_NOT_AN_INTEGER"
+    try:
+        float(s["score"])
+    except (TypeError, ValueError):
+        return "SCORE_NOT_NUMERIC"
+    return None
+
+
+def _hash_score_matches(s: dict, salt: str) -> bool | None:
+    """Is this score reproducible from its identifiers alone? `None` = unknown.
 
     The form is the one this programme's stubs use: a sha256 over
     `salt|slug|side|gen` mapped into [0, 1). Implemented HERE rather than
     imported -- if it came from the producer it would agree by construction.
+
+    **DA32-R1. THIS RETURNED `False` FOR A ROW IT COULD NOT EVALUATE, AND
+    `False` IS THE VERDICT "THIS SCORE IS GENUINE".** A missing key, a
+    non-numeric score, a `gen` that is not an integer, a row that is not a
+    mapping -- all four landed on the same answer as *judged, and it did not
+    come from the hash*. `stub_or_real` counts those into `n_reproduced == 0`,
+    reads `NO_SCORE_REPRODUCED_FROM_IDENTIFIERS` and concludes
+    **`REAL_EVIDENCED`**: malformed rows would have made the STUB DETECTOR
+    certify the output as REAL, in the instrument built to catch stubs, days
+    before the arms are re-run with real heads.
+
+    THE PREDICATE, WHICH IS GENERAL: **an error or absence path must not
+    return a value inside the CODOMAIN OF THE MEASUREMENT.** Once it does, no
+    consumer can separate *not measured* from *measured and came out this
+    way*, and which named failure you get -- absence-reads-as-a-pass or
+    phantom failure -- depends only on which in-domain value you happen to
+    land on. They are ONE SHAPE seen from two consumers, and the fix is the
+    same both times: leave the codomain, by raising or by a sentinel the
+    consumer must branch on. `None` is outside the codomain of a bool, which
+    is why the many `return None` sites in this seat's instruments are right
+    and `return 0` from a byte count is not.
     """
+    if _why_unevaluable(s) is not None:
+        return None
     try:
         raw = f"{salt}|{s['slug']}|{s['side']}|{int(s['gen'])}"
         h = hashlib.sha256(raw.encode()).digest()
         want = int.from_bytes(h[:8], "big") / float(1 << 64)
         return abs(float(s["score"]) - want) < 1e-12
     except Exception:
-        return False
+        # Anything still landing here is unevaluable for a reason the
+        # classifier did not name; it is STILL not evidence of a real score.
+        return None
 
 
 # ------------------------------------------------------------ question 2
@@ -570,6 +636,290 @@ DA_INSTRUMENTS = (
 )
 
 
+#: IN_CODOMAIN sites judged CORRECT AS THEY STAND, each with the reason.
+#: Keyed by (module, function, returned expression) -- never by line, so a
+#: line moving cannot silently retire an adjudication. Every entry must say
+#: EITHER that the two paths carry the SAME MEANING (so collapsing them loses
+#: nothing) OR name the consumer-visible distinction that survives.
+CODOMAIN_ADJUDICATED: dict[tuple[str, str, str], str] = {
+    ("da_arm_replay_verify", "_hash_score_matches", "None"):
+        "SAME MEANING: the guard path and this handler both mean UNEVALUABLE, "
+        "and `stub_or_real` branches on None for both. Two routes to one "
+        "sentinel is not two meanings on one value.",
+    ("da_race_withdrawals", "_git", "(None, str(e))"):
+        "DISTINCTION SURVIVES: the flagged shape is 'a tuple beside a tuple', "
+        "but the confusable element is the returncode, and `None` is not a "
+        "returncode -- no success path can produce it, because it comes from "
+        "`subprocess.CompletedProcess.returncode`. Callers refuse on "
+        "`rc != 0` unchanged and can now distinguish 'git never ran'.",
+    ("da_forward_day_verify", "_artifact_closed", "None"):
+        "SAME MEANING: the docstring defines None as RE-VERDICT for ANY "
+        "reason the file cannot answer -- unreadable, unparseable, wrong day, "
+        "field absent. The measurement is {True, False}; every non-answer is "
+        "the one sentinel, and the caller re-verdicts on it either way.",
+}
+
+#: Keys whose presence makes a returned mapping a NAMED STATUS rather than a
+#: measurement: a consumer branching on one of these can tell the two apart.
+_STATUS_KEYS = {"status", "verdict", "why", "refused", "kind", "reason",
+                "error", "note", "unreadable", "limits"}
+
+
+def _own(fn) -> list:
+    """Nodes belonging to `fn` itself, not to a function nested inside it."""
+    import ast
+    out, stack = [], list(ast.iter_child_nodes(fn))
+    while stack:
+        n = stack.pop()
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+            continue
+        out.append(n)
+        stack.extend(ast.iter_child_nodes(n))
+    return out
+
+
+def _shape(node) -> tuple:
+    import ast
+    if node is None:
+        return ("const", None)
+    if isinstance(node, ast.Constant):
+        return ("const", node.value)
+    if isinstance(node, ast.Dict):
+        return ("dict", frozenset(k.value for k in node.keys
+                                  if isinstance(k, ast.Constant)))
+    if isinstance(node, (ast.List, ast.ListComp)):
+        return ("list",)
+    if isinstance(node, (ast.Tuple,)):
+        return ("tuple", len(node.elts))
+    if isinstance(node, ast.Call):
+        return ("call",)
+    if isinstance(node, ast.Name):
+        return ("name", node.id)
+    return ("other",)
+
+
+def codomain_census(root: Path | None = None,
+                    modules: tuple = DA_INSTRUMENTS) -> dict[str, Any]:
+    """THE PREDICATE, APPLIED -- not the pattern I happened to think of.
+
+    **An error or absence path must not return a value inside the CODOMAIN OF
+    THE MEASUREMENT.** Once it does, a consumer cannot separate *not measured*
+    from *measured and came out this way*, and which named failure results --
+    absence-reads-as-a-pass or PHANTOM FAILURE -- depends only on which
+    in-domain value the path happens to land on. They are ONE SHAPE seen from
+    two consumers, and the fix is the same both times: leave the codomain, by
+    raising or by a sentinel the consumer must branch on.
+
+    THIS IS WHY ROUND 32'S SWEEP WAS NOT COMPLETE. It scanned for the shapes
+    that had just bitten -- a bare `False`, a bare `None`, a dict with a
+    negative flag -- which is pattern-matching yesterday's instance. The
+    predicate is decidable per site: take the value the handler returns, take
+    the values the SUCCESS paths return, and ask whether the first is among
+    the second.
+
+    Three verdicts, and the middle one is the honest part:
+
+      * `IN_CODOMAIN` -- the handler returns a value the measurement itself
+        can produce. A defect, without needing to know which consumer breaks.
+      * `OUTSIDE_CODOMAIN` -- `None` from a function whose success paths are
+        bools or shas or mappings; a mapping carrying a named status key. The
+        many `return None` sites in this seat's instruments are these.
+      * `UNDECIDABLE_STATICALLY` -- a success path returns a call or a name,
+        so what it can produce is not visible in the source. REPORTED, never
+        counted as clean: a census that quietly resolves its unknowns to
+        "fine" has the shape it is looking for.
+
+    A raising handler is counted separately and is outside the codomain by
+    construction: a raise has no value to confuse with a measurement.
+    """
+    import ast
+    root = (CODE_ROOT / "live" / "pm_research") if root is None else Path(root)
+    if not root.is_dir():
+        raise ArmVerifyRefused(
+            f"REFUSED: no source tree at {root}. A codomain census that "
+            f"cannot read the tree must not report a clean one -- that would "
+            f"be an absence reading as a pass, in the instrument that names "
+            f"the class.")
+    sites: list[dict[str, Any]] = []
+    n_raising = 0
+    scanned: list[str] = []
+    for name in modules:
+        f = root / f"{name}.py"
+        if not f.is_file():
+            continue
+        src = f.read_text(encoding="utf-8", errors="replace")
+        try:
+            tree = ast.parse(src)
+        except SyntaxError:
+            raise ArmVerifyRefused(
+                f"REFUSED: {name}.py does not parse; a module that yields no "
+                f"sites for a reason that is not the predicate must not be "
+                f"counted as clean.")
+        scanned.append(name)
+        lines = src.splitlines()
+        # A HELPER DEFINED INSIDE `selftest` IS STILL A FIXTURE. Attributing
+        # by the function's OWN name counted `refuses()` and `_refusal()` --
+        # closures whose `except` IS the measurement -- as live sites. The
+        # enclosing top-level function decides.
+        owners: list[tuple] = []
+        for top in tree.body:
+            if not isinstance(top, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            for n in ast.walk(top):
+                if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    owners.append((n, top.name))
+        for fn, top_name in owners:
+            own = _own(fn)
+            handlers = [n for n in own if isinstance(n, ast.ExceptHandler)]
+            if not handlers:
+                continue
+            in_handler = set()
+            for h in handlers:
+                for n in ast.walk(h):
+                    in_handler.add(id(n))
+            success = [_shape(n.value) for n in own
+                       if isinstance(n, ast.Return) and id(n) not in in_handler]
+            ann = ast.unparse(fn.returns) if fn.returns is not None else None
+            for h in handlers:
+                rets = [n for n in ast.walk(h) if isinstance(n, ast.Return)]
+                if not rets:
+                    if any(isinstance(n, ast.Raise) for n in ast.walk(h)):
+                        n_raising += 1
+                    continue
+                for r in rets:
+                    sh = _shape(r.value)
+                    verdict, why = _codomain_verdict(sh, success, ann)
+                    sites.append({
+                        "module": name, "function": fn.name, "line": r.lineno,
+                        "returns": (ast.unparse(r.value) if r.value is not None
+                                    else "None (bare return)")[:60],
+                        "annotation": ann,
+                        "success_returns": sorted(
+                            {str(s) for s in success})[:6],
+                        "verdict": verdict, "why": why,
+                        "in_selftest": top_name in ("selftest",
+                                                    "_selftests"),
+                        "top_level_function": top_name,
+                        "text": lines[r.lineno - 1].strip()[:100]})
+    live = [s for s in sites if not s["in_selftest"]]
+    by = lambda v: [s for s in live if s["verdict"] == v]        # noqa: E731
+    # ADJUDICATION, WHICH IS NOT A SUPPRESSION LIST. A site is only ever
+    # moved out of the defect count with a written reason, the raw count
+    # stays visible, and an entry that matches NO live site is reported as
+    # STALE -- otherwise the map becomes the place where a real hit goes to
+    # be forgotten when a line moves.
+    adjudicated, unadjudicated, used = [], [], set()
+    for site in by("IN_CODOMAIN"):
+        key = (site["module"], site["function"], site["returns"])
+        reason = CODOMAIN_ADJUDICATED.get(key)
+        if reason:
+            used.add(key)
+            adjudicated.append({**site, "adjudication": reason})
+        else:
+            unadjudicated.append(site)
+    stale = [list(k) for k in CODOMAIN_ADJUDICATED if k not in used]
+    return {
+        "predicate": ("an error or absence path must not return a value "
+                      "inside the CODOMAIN OF THE MEASUREMENT"),
+        "n_modules_scanned": len(scanned), "modules_scanned": scanned,
+        "n_value_yielding_except_sites": len(live),
+        "n_in_codomain": len(by("IN_CODOMAIN")),
+        "n_in_codomain_adjudicated": len(adjudicated),
+        "n_in_codomain_UNADJUDICATED": len(unadjudicated),
+        "in_codomain_adjudicated": adjudicated,
+        "in_codomain_UNADJUDICATED": unadjudicated,
+        "n_stale_adjudications": len(stale),
+        "stale_adjudications": stale,
+        "n_outside_codomain": len(by("OUTSIDE_CODOMAIN")),
+        "n_undecidable": len(by("UNDECIDABLE_STATICALLY")),
+        "n_raising_handlers": n_raising,
+        "n_sites_in_selftest_fixtures": len(sites) - len(live),
+        "in_codomain": by("IN_CODOMAIN"),
+        "undecidable": by("UNDECIDABLE_STATICALLY"),
+        "outside_codomain": by("OUTSIDE_CODOMAIN"),
+        "denominator_reconciles": (
+            len(by("IN_CODOMAIN")) + len(by("OUTSIDE_CODOMAIN"))
+            + len(by("UNDECIDABLE_STATICALLY")) == len(live)),
+        "role": "REPORTED_NOT_ENFORCED",
+        "limits": ("STATIC. Where a success path returns a call or a name, "
+                   "what it can produce is not visible here and the site is "
+                   "UNDECIDABLE, never clean. A handler that returns `None` "
+                   "from a function whose success paths could themselves "
+                   "return `None` at runtime reads OUTSIDE and is not: that "
+                   "residue is why this reports and does not gate."),
+    }
+
+
+def _codomain_verdict(sh: tuple, success: list, ann: str | None
+                      ) -> tuple[str, str]:
+    """Is the handler's value among the values the measurement can produce?"""
+    kind = sh[0]
+    if kind == "const":
+        v = sh[1]
+        if v is None:
+            if ("const", None) in success:
+                return ("IN_CODOMAIN",
+                        "the success path also returns None, so None means "
+                        "both 'no result' and 'this result'")
+            if ann and ("None" in ann or "Optional" in ann):
+                return ("OUTSIDE_CODOMAIN",
+                        f"None is declared as a distinct outcome ({ann}) and "
+                        f"no success path returns it")
+            if success:
+                return ("OUTSIDE_CODOMAIN",
+                        "None is outside the codomain of every success "
+                        "return in this function")
+            return ("UNDECIDABLE_STATICALLY",
+                    "the function has no visible success return")
+        if any(s[0] == "const" and type(s[1]) is type(v) and s[1] == v
+               for s in success):
+            return ("IN_CODOMAIN",
+                    f"a success path returns the same value ({v!r}) -- the "
+                    f"collision is demonstrable, not inferred")
+        # A `bool` HAS NO ROOM FOR A SENTINEL: its codomain is exactly
+        # {True, False} and both are verdicts, so an error path returning
+        # either is indistinguishable from a judgement by construction. That
+        # is DA32-R1 exactly, and it is the one type where the annotation
+        # alone settles the question.
+        if ann == "bool" and isinstance(v, bool):
+            return ("IN_CODOMAIN",
+                    f"the declared codomain is `bool`, whose only two values "
+                    f"are verdicts; {v!r} cannot be read as 'not measured'")
+        # SAME TYPE IS NOT SAME VALUE, and treating it as such was this
+        # predicate's own over-breadth: an exit code of 3 beside a success 0,
+        # or a reason string beside other reason strings, is distinguishable
+        # by any consumer that branches on the value. Flagging those buries
+        # the real hits in noise, which is how a census stops being read.
+        if success:
+            return ("OUTSIDE_CODOMAIN",
+                    f"{v!r} is not among the shapes the success paths return")
+        return ("UNDECIDABLE_STATICALLY", "no visible success return")
+    if kind == "dict":
+        keys = sh[1]
+        if keys & _STATUS_KEYS:
+            return ("OUTSIDE_CODOMAIN",
+                    f"the mapping carries a named status key "
+                    f"({sorted(keys & _STATUS_KEYS)}) the consumer branches on")
+        succ_keys = [s[1] for s in success if s[0] == "dict"]
+        if any(keys and keys <= k for k in succ_keys):
+            return ("IN_CODOMAIN",
+                    "the mapping has no status key and its keys are a subset "
+                    "of a success mapping's -- indistinguishable from a "
+                    "measurement")
+        return ("UNDECIDABLE_STATICALLY",
+                "a mapping with no status key and no success mapping to "
+                "compare against")
+    if kind in ("list", "tuple"):
+        if any(s[0] == kind for s in success):
+            return ("IN_CODOMAIN",
+                    f"the success path returns a {kind} too; an empty one is "
+                    f"a measurement of nothing, not the absence of one")
+        return ("UNDECIDABLE_STATICALLY", f"a {kind} with nothing to compare")
+    return ("UNDECIDABLE_STATICALLY",
+            "the handler returns a call or a name; its value is not visible "
+            "in the source")
+
+
 def phantom_failure_census(root: Path | None = None,
                            modules: tuple = DA_INSTRUMENTS) -> dict[str, Any]:
     """**PHANTOM FAILURE**: a NEGATIVE verdict produced by a path that did not
@@ -811,8 +1161,16 @@ def _emitting_entry_points(src: Path) -> list[str]:
     import ast
     try:
         tree = ast.parse(src.read_text(encoding="utf-8", errors="replace"))
-    except (OSError, SyntaxError):
-        return []
+    except (OSError, SyntaxError) as e:
+        # `[]` IS A REAL ANSWER HERE -- "this producer emits nothing" -- and
+        # `provenance` reads it as NO_EMITTING_ENTRY_POINT_FOUND. A producer
+        # that does not PARSE would have read as a producer that does not
+        # EMIT. Surfaced by the census's UNDECIDABLE bucket, which is what
+        # that bucket is for: it is reported, never resolved to "fine".
+        raise ArmVerifyRefused(
+            f"REFUSED: {src.name} could not be read as source ({e!r}); "
+            f"'no emitting entry point' is a finding about a producer and "
+            f"this is a fact about the reader.") from e
     out = []
     for node in tree.body:
         if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -876,8 +1234,12 @@ def provenance(artifact_path: Path | str,
 
     call = None
     entry_points: list[str] = []
+    unparseable = False
     if producer and (src_dir / producer).is_file():
-        entry_points = _emitting_entry_points(src_dir / producer)
+        try:
+            entry_points = _emitting_entry_points(src_dir / producer)
+        except ArmVerifyRefused:
+            unparseable = True
         if entry_points:
             call = publication_provenance(producer, entry_points[0],
                                           root=src_dir)
@@ -887,6 +1249,7 @@ def provenance(artifact_path: Path | str,
         else "PRODUCER_NOT_NAMED_BY_ARTIFACT" if not producer
         else "PRODUCER_FILE_ABSENT" if n_absent
         else "SUPERSEDED_CODE" if n_differ
+        else "PRODUCER_DOES_NOT_PARSE" if unparseable
         else "NO_EMITTING_ENTRY_POINT_FOUND" if not entry_points
         else "NO_PRODUCTION_CALL_SITE"
         if call and call["n_production_call_sites"] == 0
@@ -1637,6 +2000,159 @@ def selftest() -> int:
            f"{_dr['n_gates_with_a_denominator']}/{_dr['n_gates']} gates "
            f"carry one, {_dr['n_findings']} findings "
            f"({sorted({f['defect'] for f in _dr['findings']})})")
+
+    # ---- DA32-R1: an unevaluable row must LEAVE THE CODOMAIN -------------
+    _good = {"slug": "btc-1", "side": "bid", "gen": 3, "score": 0.5}
+    for _case, _row in (
+            ("MISSING_SLUG", {k: v for k, v in _good.items() if k != "slug"}),
+            ("SCORE_NOT_NUMERIC", {**_good, "score": "n/a"}),
+            ("GEN_NOT_AN_INTEGER", {**_good, "gen": None}),
+            ("NOT_A_MAPPING", ["btc-1", "bid", 3, 0.5])):
+        ok(_hash_score_matches(_row, "s") is None
+           and _why_unevaluable(_row) == _case,
+           f"DA32-R1 FIRES on {_case}: the row is UNEVALUABLE (None), not "
+           f"False. `False` here is the verdict 'this score did not come "
+           f"from the hash' -- i.e. THIS SCORE IS GENUINE -- so a malformed "
+           f"row was evidence the arm read the market")
+    ok(_hash_score_matches(_good, "s") is False
+       and _why_unevaluable(_good) is None,
+       "DA32-R1 ADMITS: a well-formed row that does not match the stub hash "
+       "still returns False. The fix removes the unevaluable rows from the "
+       "verdict, it does not stop the detector detecting")
+    _salt = "S"
+    import hashlib as _hl
+    _raw = f"{_salt}|btc-1|bid|3"
+    _want = int.from_bytes(_hl.sha256(_raw.encode()).digest()[:8], "big") \
+        / float(1 << 64)
+    ok(_hash_score_matches({**_good, "score": _want}, _salt) is True,
+       "DA32-R1 ADMITS the other way: a score reproduced from "
+       "(salt, slug, side, gen) is True -- the stub test still fires")
+    _doc_real = {"declared_parameters": {}, "arm_runnability": {},
+                 "contract_leg": {}}
+    _bad_rows = [{k: v for k, v in _good.items() if k != "slug"}] * 3
+    _sr = stub_or_real(_doc_real, _bad_rows)
+    ok(_sr["score_test"] == "NO_SCORE_EVALUABLE"
+       and _sr["verdict"] != "REAL_EVIDENCED"
+       and _sr["n_scores_unevaluable"] == 3
+       and _sr["unevaluable_reasons"] == {"MISSING_SLUG": 3},
+       f"DA32-R1 AT THE CONSUMER, WHICH IS WHERE IT WOULD HAVE COST US: "
+       f"three malformed rows used to count as 'none reproduced', read as "
+       f"NO_SCORE_REPRODUCED_FROM_IDENTIFIERS and certify "
+       f"**REAL_EVIDENCED** -- the stub detector calling a stub real, days "
+       f"before the arms are re-run with real heads. Now "
+       f"{_sr['score_test']} -> {_sr['verdict']}, with the reasons named")
+    _mixed = stub_or_real(_doc_real, [_good, {**_good, "gen": None}])
+    ok(_mixed["score_test"] == "UNEVALUABLE_ROWS_PRESENT"
+       and _mixed["verdict"] != "REAL_EVIDENCED",
+       "DA32-R1 and ONE bad row among good ones does not silently dilute: "
+       "the batch claims neither direction, because a verdict over a "
+       "population that was partly unmeasurable is not a verdict")
+    ok(stub_or_real(_doc_real, [{**_good, "score": 0.123456789}])["verdict"]
+       == "REAL_EVIDENCED",
+       "DA32-R1 ADMITS at the consumer too: an all-evaluable batch that does "
+       "not reproduce still reaches REAL_EVIDENCED. A detector that can only "
+       "refuse is not a detector")
+
+    # ---- the sweep, RE-RUN WITH THE PREDICATE rather than by pattern ------
+    with tempfile.TemporaryDirectory() as t:
+        tr = Path(t)
+        (tr / "bad.py").write_text(
+            "def measure(p) -> bool:\n"
+            "    try:\n"
+            "        return open(p).read() == 'x'\n"
+            "    except OSError:\n"
+            "        return False\n", encoding="utf-8")
+        _k = codomain_census(tr, ("bad",))
+        ok(_k["n_in_codomain"] == 1 and _k["n_in_codomain_UNADJUDICATED"] == 1
+           and "only two values are verdicts"
+           in _k["in_codomain_UNADJUDICATED"][0]["why"],
+           "CODOMAIN-CENSUS FIRES on the DA32-R1 shape itself: a `-> bool` "
+           "whose handler returns False. A bool has no room for a sentinel "
+           "-- both its values are verdicts -- so the annotation alone "
+           "settles it")
+        (tr / "sentinel.py").write_text(
+            "def measure(p) -> bool | None:\n"
+            "    try:\n"
+            "        return open(p).read() == 'x'\n"
+            "    except OSError:\n"
+            "        return None\n", encoding="utf-8")
+        _k2 = codomain_census(tr, ("sentinel",))
+        ok(_k2["n_in_codomain"] == 0 and _k2["n_outside_codomain"] == 1,
+           "CODOMAIN-CENSUS ADMITS the fix: the same function returning None "
+           "is OUTSIDE the codomain. This is why the many `return None` "
+           "sites across this seat are correct and `return 0` from a byte "
+           "count was not -- the predicate, not the pattern")
+        (tr / "collide.py").write_text(
+            "def count(p) -> int:\n"
+            "    try:\n"
+            "        if p:\n"
+            "            return 0\n"
+            "        return len(open(p).read())\n"
+            "    except OSError:\n"
+            "        return 0\n", encoding="utf-8")
+        _k3 = codomain_census(tr, ("collide",))
+        ok(_k3["n_in_codomain"] == 1
+           and "same value" in _k3["in_codomain_UNADJUDICATED"][0]["why"],
+           "CODOMAIN-CENSUS FIRES on a DEMONSTRABLE collision: the handler "
+           "returns a value a success path also returns -- `uncompressed_size`"
+           " exactly, where 0 meant both 'truncated' and 'unreadable'")
+        (tr / "status.py").write_text(
+            "def read(p) -> dict:\n"
+            "    try:\n"
+            "        return {'n': len(open(p).read())}\n"
+            "    except OSError as e:\n"
+            "        return {'status': 'UNREADABLE', 'error': repr(e)}\n",
+            encoding="utf-8")
+        _k4 = codomain_census(tr, ("status.py".removesuffix(".py"),))
+        ok(_k4["n_outside_codomain"] == 1 and _k4["n_in_codomain"] == 0,
+           "CODOMAIN-CENSUS ADMITS a named status: a mapping carrying a key "
+           "the consumer branches on is outside the codomain even though a "
+           "mapping is what success returns")
+        (tr / "exitcode.py").write_text(
+            "def main() -> int:\n"
+            "    try:\n"
+            "        return 0\n"
+            "    except OSError:\n"
+            "        return 3\n", encoding="utf-8")
+        ok(codomain_census(tr, ("exitcode",))["n_in_codomain"] == 0,
+           "CODOMAIN-CENSUS DOES NOT fire on an exit code of 3 beside a 0. "
+           "The first cut of this predicate flagged SAME TYPE, which buried "
+           "the real hits under every `main`; same type is not same value")
+        (tr / "broken.py").write_text("def f(:\n", encoding="utf-8")
+        try:
+            codomain_census(tr, ("broken",))
+            ok(False, "CODOMAIN-CENSUS: an unparseable module must REFUSE")
+        except ArmVerifyRefused as e:
+            ok("must not be counted as clean" in str(e),
+               "CODOMAIN-CENSUS refuses an unparseable module: a module that "
+               "yields no sites for a reason that is not the predicate is "
+               "not a module with no sites")
+    try:
+        codomain_census(Path("/nonexistent/tree"))
+        ok(False, "CODOMAIN-CENSUS: an unreadable tree must REFUSE")
+    except ArmVerifyRefused as e:
+        ok("in the instrument that names the class" in str(e),
+           "CODOMAIN-CENSUS refuses an unreadable tree rather than reporting "
+           "a clean one")
+    _stale = codomain_census(modules=("da_arm_replay_verify",))
+    ok(_stale["n_stale_adjudications"] >= 1,
+       f"CODOMAIN-CENSUS reports STALE adjudications ("
+       f"{_stale['n_stale_adjudications']} when only one module is scanned): "
+       f"an adjudication matching no live site is surfaced, so the map "
+       f"cannot become the place a real hit goes to be forgotten")
+    _cc = codomain_census()
+    ok(_cc["denominator_reconciles"]
+       and _cc["n_in_codomain_UNADJUDICATED"] == 0
+       and _cc["n_stale_adjudications"] == 0,
+       f"CODOMAIN-CENSUS ON THIS SEAT, WITH ITS DENOMINATOR: "
+       f"{_cc['n_value_yielding_except_sites']} value-yielding except sites "
+       f"across {_cc['n_modules_scanned']} instruments -- "
+       f"{_cc['n_outside_codomain']} outside the codomain and correct as "
+       f"they stand, {_cc['n_in_codomain']} in-codomain (all adjudicated in "
+       f"source with a written reason), {_cc['n_undecidable']} undecidable "
+       f"and REPORTED rather than resolved to 'fine', plus "
+       f"{_cc['n_raising_handlers']} raising handlers outside by "
+       f"construction and {_cc['n_sites_in_selftest_fixtures']} fixtures")
 
     print(f"\nda_arm_replay_verify selftest: {checks} checks PASSED")
     if checks != EXPECTED_CHECKS:
