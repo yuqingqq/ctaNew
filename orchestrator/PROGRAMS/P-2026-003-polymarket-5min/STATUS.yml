@@ -4,6 +4,47 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T13:08Z (MEM ROUND 93 -- SHORT. THE PROGRAMME HAS ITS FIRST ABSOLUTE
+  ECONOMIC NUMBER, AND IT IS RECORDED NON-AUTHORITATIVE ON PURPOSE.) R-517:
+  MARKET-MAKING PAYS AND CANCELLING DOES NOT, ON THE FILLS LEG. Baseline
+  QR_SKEW_ONLY at 0 cancels gives spread capture +10,566.951031c, adverse
+  selection -1,968.1921815c, MAKER P&L +8,598.7588495c; HAZARD at 48 cancels
+  forgoes 198.6861335 and saves 186.1303925 for NET -12.5557c; CONDVALUE_X_SKEW
+  at 333 cancels forgoes 2,933.5822155 and saves 1,979.664098 for NET -953.9181c;
+  adverse_saved_exceeds_spread_forgone FALSE for both, COMPUTED NOT ASSERTED. It
+  lives at de_section81_arms__20260904T125340Z.json -- THE FIRST ARMS ARTIFACT
+  EVER COMMITTED ANYWHERE, landed WITH its producing code at 0e8f40c. I OPENED IT
+  AND EVERY FIGURE REPRODUCES, AND IT IS STILL MARKED RELAYED: every number
+  reached the coordinator through ONE PRODUCER, DA has not reported, and READING
+  A SINGLE-PRODUCER ARTIFACT CONFIRMS ONLY THAT IT SAYS THIS, NEVER THAT IT IS
+  RIGHT. CARRY THE SCOPE OR DO NOT CARRY THE NUMBER, and the artifact states it
+  itself: n=12 WINDOWS -- ONE HOUR -- one coin, ONE latency rung (250 ms), no
+  forward day, FILLS LEG ONLY, EXCLUDING the residual position at window end and
+  any harm beyond the markout horizon, DEVELOPMENT EVIDENCE, POINT ESTIMATE AND
+  NO INTERVAL because 12 windows is below the 5-complete-day cluster floor.
+  ADMITTED 12, BINANCE_GAP_EXCLUDED 3. A DIRECTION, NOT A VERDICT.
+  TWO STANDING RULES ADDED, BOTH THE COORDINATOR'S. RULE 12: A NEGATIVE
+  EXISTENCE CLAIM CARRIES AN AS-OF OR IT IS NOT A CLAIM -- three instances in one
+  day, wrong three DIFFERENT ways (searched the wrong root; one landed after the
+  look; gitignored read as absent), and the general form is that "nothing
+  matched" is a statement about a SEARCH and gets written down as a statement
+  about the WORLD. RULE 13: a result-bearing artifact a receipt or register entry
+  CITES is COMMITTED, with git add -f, BESIDE ITS PRODUCING CODE IN THE SAME
+  COMMIT -- under ~1 MB, receipts and censuses yes, bulk tape and caches never.
+  It also makes my instrument's missing-artifact FINDING meaningful rather than
+  noise. AND ONE FINDING AGAINST MY OWN INSTRUMENT, WHICH IS WHY THE R-517 NUMBER
+  IS AWKWARD TO FILE: PROVENANCE AND CORROBORATION ARE DIFFERENT AXES. Provenance
+  asks WHO READ IT; corroboration asks HOW MANY INDEPENDENT PRODUCERS STAND
+  BEHIND IT; my instrument has only the first, so CHECKED would be literally true
+  here and would also make a single-producer number AUTHORITATIVE. That is
+  R-508(D) from the other side -- independence is a property of the SOURCES, not
+  the READERS. FIX SPECIFIED, NOT APPLIED (coordinator's call, short batch): a
+  corroboration: field REQUIRED on every CHECKED entry, closed value set
+  SINGLE_PRODUCER / INDEPENDENTLY_REPRODUCED / N_A, and NO DEFAULT. Until then a
+  single-producer number is RELAYED, which understates my read and is the safe
+  direction. INSTRUMENT: 474 flags, 11 CHECKED, 6 RELAYED, 457 UNMARKED, 0
+  findings.
+  PRIOR:
   2026-09-04T13:00Z (MEM ROUND 92 -- SHORT BATCH. A NEW STANDING RULE, AND THE
   Q4 NULL IS NOW KNOWN TO BE DIAGNOSTIC-ONLY BEFORE IT RUNS.) STANDING RULE 11 IS
   RECORDED, AND IT IS THE COORDINATOR'S OWN CORRECTION, NOT MINE: A VERIFICATION
@@ -94,56 +135,6 @@ updated: >-
   claims went in through it, the R-513 correction as CHECKED with what the
   artifact said, the exclusion finding as RELAYED because DA ran it and I did
   not. THAT DISTINCTION IS THE INSTRUMENT DOING ITS JOB ON ITS FIRST REAL ROUND.
-  PRIOR:
-  2026-09-04T12:39Z (MEM ROUND 90 -- DELIBERATELY SHORT. My own R-512(2)
-  finding was that volume is being mistaken for rigour and that what actually
-  governs is the top paragraph; this is the top paragraph, and the previous
-  entry was 246 lines.) THE Q4 GATE'S DECIDING HALF HAS NEVER BEEN COMPUTED,
-  AND I READ THAT AT THE ARTIFACT RATHER THAN TAKING IT ON REPORT. The
-  coordinator handed me the numbers and I re-read every one at
-  data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json (sha256
-  ca311c8f...): all six Q4_combined_ev cells carry increment_beats_incumbent
-  FALSE, matched_random NULL, passed NULL, status GATE_PARTIALLY_EVALUATED,
-  gate_partial_reason "conjuncts never evaluated: ['matched_random']", holm_p
-  0.1199400299850075..0.44627686156921537. The declared gate is a CONJUNCTION --
-  "beats matched-random AND beats the incumbent" -- and ONLY ONE HALF HAS EVER
-  BEEN RUN. BE is computing the other half this round; DA verifies it
-  independently. THE POSITIVE RAW net_cents (7869.67772245 / 12333.50252295 /
-  14476.99327895 at 5/10/15%) IS A PENDING QUANTITY AWAITING ITS NULL, NOT A
-  RESULT, and it does not enter this file as one. Its caveats are not
-  detachable and all six are off the same file: ONE development day
-  (dates_present ["2026-08-25"], 311,640 rows), G_complete_utc_days 0,
-  is_a_validation FALSE, intervals_claimable FALSE, unit_used "window" against
-  ruled_unit "UTC day" with the artifact's own words "these p-values are
-  OPTIMISTIC -- evidence, never a significance certificate", and
-  conditional_cancel_value -1.6364024437050162 -- WHICH I REPRODUCED BIT-EXACT
-  from phase2_iter011.py:266 (p_pos*m_harm - p_neg*m_good), so a cancel drawn at
-  RANDOM from this population LOSES 1.64 cents. The candidate is not being asked
-  to beat zero; it is being asked to beat a matched-random SELECTION, which is
-  precisely the unrun conjunct. AND ONE THING THAT BITES WHEN THE MISSING HALF
-  LANDS: those cells' detail prose says the OPPOSITE way round from the
-  structured conjuncts sitting beside it, so whoever wires BE's result must read
-  declared_gate_outcome.conjuncts and NEVER detail. SECOND -- THE INSTRUMENT I
-  SAID I DID NOT HAVE NOW EXISTS AND RUNS: live/pm_research/mem_flag_provenance.py
-  (dispatched at R-512). Only CHECKED is authoritative, and CHECKED REFUSES
-  without BOTH artifact: and said:, because a bare "VERIFIED AT THE ARTIFACT" is
-  a token that reads identically whether or not the check happened -- R-509's
-  counterfactual question turned on my own habit. FIRST HONEST READING, BEFORE
-  THIS ROUND'S ADDITIONS: 458 flags, ZERO AUTHORITATIVE. AFTER: 463 flags, 5
-  CHECKED, 1 RELAYED, 457 UNMARKED, 0 findings, exit 0. THE BACKLOG IS NOW
-  COUNTED RATHER THAN ASSUMED, and I did NOT back-mark old flags -- I cannot say
-  which were checked, so they stay non-authoritative, which is the ruling.
-  ONE DELIBERATE REFINEMENT OF THE BRIEF, FLAGGED AND NOT SMUGGLED: I was told
-  flags that cannot say should READ RELAYED, and I made them UNMARKED instead --
-  equally non-authoritative to a reader, but distinct so the unassessed backlog
-  stays countable, because collapsing them would put an ABSENCE inside the
-  CODOMAIN OF THE MEASUREMENT, which is R-505's own predicate. If the
-  coordinator prefers the collapse it is one line in the authority rule.
-  THIRD, AND IT IS THE POINT: the instrument is META WORK and the Q4 read is the
-  OBJECT-LEVEL half. R-512 adopted my finding that the correction cadence has
-  become the product; a round that shipped only the instrument would have been
-  that finding happening again, so I checked the economics FIRST and built the
-  instrument around what the check produced.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -6403,8 +6394,56 @@ flags:
     IS STILL A CLAIM ABOUT A POPULATION. Nothing of mine turns on it: I read the
     register with line RANGES, never assuming one line per entry.
 
+  FIRST_ABSOLUTE_ECONOMIC_NUMBER_making_pays_cancelling_does_not_PENDING_VERIFICATION: >-
+    RELAYED FROM R-517 AND MARKED PENDING-VERIFICATION ON THE COORDINATOR'S OWN
+    INSTRUCTION: every number reached them through ONE PRODUCER, it is with DA
+    now, and no seat but DE and the coordinator has checked it. I DID OPEN THE
+    COMMITTED ARTIFACT AND EVERY FIGURE REPRODUCES -- but reading a
+    single-producer artifact confirms only that it SAYS this, never that it is
+    RIGHT, so this stays non-authoritative until DA reports. THE FIRST ABSOLUTE
+    ECONOMIC NUMBER THIS PROGRAMME HAS EVER HAD, at
+    data/pm_5min/derived/de_section81_arms__20260904T125340Z.json -- THE FIRST
+    ARMS ARTIFACT EVER COMMITTED ANYWHERE, landed WITH its producing code at
+    0e8f40c. BASELINE QR_SKEW_ONLY at 0 cancels: spread capture +10,566.951031c,
+    adverse selection -1,968.1921815c, MAKER P&L +8,598.7588495c. HAZARD at 48
+    cancels forgoes 198.6861335 and saves 186.1303925 for NET -12.5557c.
+    CONDVALUE_X_SKEW at 333 cancels forgoes 2,933.5822155 and saves 1,979.664098
+    for NET -953.9181c. adverse_saved_exceeds_spread_forgone is FALSE for both,
+    COMPUTED not asserted, and the identity net == saved - forgone is computed
+    per arm. SO MARKET-MAKING PAYS AND CANCELLING DOES NOT, ON THE FILLS LEG.
+    CARRY THE SCOPE OR DO NOT CARRY THE NUMBER, and the artifact states it
+    itself: n=12 WINDOWS, WHICH IS ONE HOUR; one coin (btc); ONE LATENCY RUNG
+    (latency_ms 250); no forward day; FILLS LEG ONLY, valued at t + MARKOUT_S;
+    EXCLUDING the residual position at window end (inventory_loss_cents, unruled)
+    and any harm landing beyond the markout horizon; DEVELOPMENT EVIDENCE, not a
+    validation; POINT ESTIMATE AND NO INTERVAL because 12 windows is below the
+    5-complete-day cluster floor (rule 8). Exclusions travel with it (rule 4):
+    ADMITTED 12, BINANCE_GAP_EXCLUDED 3. A DIRECTION, NOT A VERDICT. And the
+    artifact says of itself "decides_nothing -- whether the trade-off is worth
+    taking is the policy layer's (rule 14)".
+  CHECKED_DOES_NOT_MEAN_CORROBORATED_my_instruments_vocabulary_is_too_coarse: >-
+    CHECKED BY ME AT MY OWN MODULE, AND IT IS A FINDING AGAINST IT. The R-517
+    number is the second time in three rounds that CHECKED / RELAYED / UNMARKED
+    has been too coarse for what actually needed recording. Round 90 was the
+    first (UNMARKED had to be split off from RELAYED so the unassessed backlog
+    stayed countable). THIS ONE IS SHARPER: I READ the artifact and every figure
+    reproduces, so CHECKED would be literally true -- and CHECKED is the
+    AUTHORITATIVE class, which is exactly what a single-producer number must not
+    be. PROVENANCE AND CORROBORATION ARE DIFFERENT AXES: provenance asks WHO
+    READ IT, corroboration asks HOW MANY INDEPENDENT PRODUCERS STAND BEHIND IT,
+    and my instrument only has the first. R-508(D)'s rule is the same point from
+    the other side -- "independence is a property of the SOURCES, not of the
+    READERS". THE SPECIFIED FIX, NOT APPLIED THIS ROUND BECAUSE IT IS THE
+    COORDINATOR'S CALL AND THIS IS A SHORT BATCH: a `corroboration:` field
+    REQUIRED on every CHECKED entry, with an explicit closed value set
+    (SINGLE_PRODUCER / INDEPENDENTLY_REPRODUCED / N_A) and NO DEFAULT, since a
+    default would put an absence back inside the codomain -- R-505's predicate,
+    which is what my UNMARKED class already exists to respect. Until it lands,
+    a single-producer number is recorded RELAYED, which understates my read and
+    is the safe direction.
+
 focus: >
-  As-of 2026-09-04T13:00Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T13:08Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -6835,6 +6874,13 @@ focus: >
   budget" is the question worth answering. It is INTERNALLY VALID (checked by me
   at de_section81_arms.py) and carries FOUR code defects I read at the source, of
   which the pool being UNRESTRICTED is the one that changes what it tests.
+  ROUND 93 -- THE FIRST ABSOLUTE ECONOMIC NUMBER EXISTS (R-517): market-making
+  pays (+8,598.76c maker P&L at 0 cancels) and cancelling does not (both arms
+  NET NEGATIVE, adverse_saved_exceeds_spread_forgone FALSE, computed). IT IS
+  n=12 WINDOWS -- ONE HOUR, ONE COIN, ONE LATENCY RUNG, FILLS LEG ONLY,
+  NO INTERVAL -- A DIRECTION, NOT A VERDICT, AND IT IS PENDING DA's INDEPENDENT
+  VERIFICATION. Standing rules 12 (a negative existence claim carries an as-of)
+  and 13 (cited artifacts are committed beside their producing code) are in force.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -6966,8 +7012,44 @@ flag_provenance:
   R340_MISSING_CITE_WAS_A_PARSER_ARTIFACT_this_register_carried_it_twice:
     prov: RELAYED
     from: R-514(C)/(D) (DA's parser fix and its own n=2 self-correction)
+  FIRST_ABSOLUTE_ECONOMIC_NUMBER_making_pays_cancelling_does_not_PENDING_VERIFICATION:
+    prov: RELAYED
+    from: >-
+      R-517 (single producer, DE; with DA for independent verification. MEM read
+      the committed artifact and every figure reproduces, but reading a
+      single-producer artifact is not corroboration, so this is recorded RELAYED
+      on the coordinator's instruction until DA reports)
+  CHECKED_DOES_NOT_MEAN_CORROBORATED_my_instruments_vocabulary_is_too_coarse:
+    prov: CHECKED
+    artifact: live/pm_research/mem_flag_provenance.py
+    as_of: 2026-09-04T13:07Z
+    said: >-
+      the module's class set is CHECKED / RELAYED / UNMARKED / MALFORMED and its
+      authority rule makes CHECKED alone authoritative; there is no field
+      anywhere in it recording how many independent producers stand behind a
+      checked claim, so provenance and corroboration cannot be told apart
 
 standing_rules:
+  - "STANDING RULE 12 (R-517, the coordinator's rule about its own claims) --
+    A NEGATIVE EXISTENCE CLAIM CARRIES AN AS-OF OR IT IS NOT A CLAIM. Three
+    instances in one day, wrong three DIFFERENT ways: `no arms artifact exists
+    anywhere` said while they sat under `/tmp` and the search covered
+    `/home/yuqing`; said again while one landed AFTER the look; and said a third
+    time where GITIGNORED was read as ABSENT. The failure is not carelessness,
+    it is that `nothing matched` is a statement about a SEARCH -- its root, its
+    filters and its instant -- and it is written down as a statement about the
+    WORLD. So a negative existence claim names WHERE it looked, WHAT it
+    excluded, and WHEN, or it is not admissible."
+  - "STANDING RULE 13 (R-517, USER-facing practice, coordinator ruling) --
+    A RESULT-BEARING ARTIFACT THAT A RECEIPT OR REGISTER ENTRY CITES IS
+    COMMITTED, with `git add -f` where needed, BESIDE ITS PRODUCING CODE IN THE
+    SAME COMMIT. Individual artifacts under about 1 MB; receipts and censuses
+    YES; bulk tape and caches NEVER. The rule exists because three arms
+    artifacts vanished on 2026-09-04 and a fourth was deleted while under
+    review, so a filing's evidence outlived the filing by nothing at all. It is
+    also what makes `mem_flag_provenance.py`'s missing-artifact FINDING
+    meaningful rather than noise: a CHECKED flag whose artifact is gone is now
+    a repository defect, not an expected condition."
   - "STANDING RULE 11 (R-515(C), the coordinator's own correction; MEM records
     it, MEM does not own it) -- A VERIFICATION YOU PERFORMED YOURSELF IS
     EVIDENCE; A SEAT'S REPORT IS A CLAIM; AND WHEN THEY CONFLICT THE CONFLICT IS

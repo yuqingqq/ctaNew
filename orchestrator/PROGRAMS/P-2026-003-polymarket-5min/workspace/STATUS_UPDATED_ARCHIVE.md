@@ -7204,3 +7204,60 @@ Nothing deleted — only moved.
   coordinator ruled it. THE THREE THAT REMAIN: the Phase-2 winner, the causal
   incumbent operating point, and the G-counting ruling.
 ```
+
+## Batch 99 — archived 2026-09-04T13:08Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 93 entered the field.
+Nothing deleted — only moved.
+
+```
+  2026-09-04T12:39Z (MEM ROUND 90 -- DELIBERATELY SHORT. My own R-512(2)
+  finding was that volume is being mistaken for rigour and that what actually
+  governs is the top paragraph; this is the top paragraph, and the previous
+  entry was 246 lines.) THE Q4 GATE'S DECIDING HALF HAS NEVER BEEN COMPUTED,
+  AND I READ THAT AT THE ARTIFACT RATHER THAN TAKING IT ON REPORT. The
+  coordinator handed me the numbers and I re-read every one at
+  data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json (sha256
+  ca311c8f...): all six Q4_combined_ev cells carry increment_beats_incumbent
+  FALSE, matched_random NULL, passed NULL, status GATE_PARTIALLY_EVALUATED,
+  gate_partial_reason "conjuncts never evaluated: ['matched_random']", holm_p
+  0.1199400299850075..0.44627686156921537. The declared gate is a CONJUNCTION --
+  "beats matched-random AND beats the incumbent" -- and ONLY ONE HALF HAS EVER
+  BEEN RUN. BE is computing the other half this round; DA verifies it
+  independently. THE POSITIVE RAW net_cents (7869.67772245 / 12333.50252295 /
+  14476.99327895 at 5/10/15%) IS A PENDING QUANTITY AWAITING ITS NULL, NOT A
+  RESULT, and it does not enter this file as one. Its caveats are not
+  detachable and all six are off the same file: ONE development day
+  (dates_present ["2026-08-25"], 311,640 rows), G_complete_utc_days 0,
+  is_a_validation FALSE, intervals_claimable FALSE, unit_used "window" against
+  ruled_unit "UTC day" with the artifact's own words "these p-values are
+  OPTIMISTIC -- evidence, never a significance certificate", and
+  conditional_cancel_value -1.6364024437050162 -- WHICH I REPRODUCED BIT-EXACT
+  from phase2_iter011.py:266 (p_pos*m_harm - p_neg*m_good), so a cancel drawn at
+  RANDOM from this population LOSES 1.64 cents. The candidate is not being asked
+  to beat zero; it is being asked to beat a matched-random SELECTION, which is
+  precisely the unrun conjunct. AND ONE THING THAT BITES WHEN THE MISSING HALF
+  LANDS: those cells' detail prose says the OPPOSITE way round from the
+  structured conjuncts sitting beside it, so whoever wires BE's result must read
+  declared_gate_outcome.conjuncts and NEVER detail. SECOND -- THE INSTRUMENT I
+  SAID I DID NOT HAVE NOW EXISTS AND RUNS: live/pm_research/mem_flag_provenance.py
+  (dispatched at R-512). Only CHECKED is authoritative, and CHECKED REFUSES
+  without BOTH artifact: and said:, because a bare "VERIFIED AT THE ARTIFACT" is
+  a token that reads identically whether or not the check happened -- R-509's
+  counterfactual question turned on my own habit. FIRST HONEST READING, BEFORE
+  THIS ROUND'S ADDITIONS: 458 flags, ZERO AUTHORITATIVE. AFTER: 463 flags, 5
+  CHECKED, 1 RELAYED, 457 UNMARKED, 0 findings, exit 0. THE BACKLOG IS NOW
+  COUNTED RATHER THAN ASSUMED, and I did NOT back-mark old flags -- I cannot say
+  which were checked, so they stay non-authoritative, which is the ruling.
+  ONE DELIBERATE REFINEMENT OF THE BRIEF, FLAGGED AND NOT SMUGGLED: I was told
+  flags that cannot say should READ RELAYED, and I made them UNMARKED instead --
+  equally non-authoritative to a reader, but distinct so the unassessed backlog
+  stays countable, because collapsing them would put an ABSENCE inside the
+  CODOMAIN OF THE MEASUREMENT, which is R-505's own predicate. If the
+  coordinator prefers the collapse it is one line in the authority rule.
+  THIRD, AND IT IS THE POINT: the instrument is META WORK and the Q4 read is the
+  OBJECT-LEVEL half. R-512 adopted my finding that the correction cadence has
+  become the product; a round that shipped only the instrument would have been
+  that finding happening again, so I checked the economics FIRST and built the
+  instrument around what the check produced.
+```

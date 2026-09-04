@@ -1,6 +1,70 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T13:00Z (MEM round 92) — **SHORT BATCH: a new standing rule,
+Updated: 2026-09-04T13:08Z (MEM round 93) — **THE PROGRAMME HAS ITS FIRST
+ABSOLUTE ECONOMIC NUMBER, AND IT IS RECORDED NON-AUTHORITATIVE ON PURPOSE.**
+
+**R-517: market-making pays and cancelling does not, on the fills leg.**
+`data/pm_5min/derived/de_section81_arms__20260904T125340Z.json` — **the first
+arms artifact ever committed anywhere**, landed **with its producing code** at
+`0e8f40c`.
+
+| arm | cancels | spread forgone | adverse saved | net |
+|---|---:|---:|---:|---:|
+| **QR_SKEW_ONLY** (baseline) | 0 | — | — | spread capture **+10,566.951031c**, adverse selection **−1,968.1921815c**, **maker P&L +8,598.7588495c** |
+| HAZARD_OVER_SKEWED_REF | 48 | 198.6861335 | 186.1303925 | **−12.5557c** |
+| CONDVALUE_X_SKEW | 333 | 2,933.5822155 | 1,979.664098 | **−953.9181c** |
+
+`adverse_saved_exceeds_spread_forgone` is **FALSE for both**, **computed, not
+asserted**, and the identity `net == saved − forgone` is computed per arm.
+
+**I opened it and every figure reproduces — and it is still marked RELAYED.**
+Every number reached the coordinator through **one producer**, DA has not
+reported, and **reading a single-producer artifact confirms only that it SAYS
+this, never that it is RIGHT.**
+
+**Carry the scope or do not carry the number** — the artifact states it itself:
+**n = 12 windows, which is one hour**; one coin (btc); **one latency rung**
+(250 ms); no forward day; **fills leg only**, valued at `t + MARKOUT_S`;
+**excluding** the residual position at window end (`inventory_loss_cents`,
+unruled) and any harm beyond the markout horizon; **development evidence**;
+**point estimate and no interval**, 12 windows being below the 5-complete-day
+cluster floor. Exclusions travel: **ADMITTED 12, BINANCE_GAP_EXCLUDED 3.**
+**A direction, not a verdict** — and the artifact says of itself
+*"decides_nothing — whether the trade-off is worth taking is the policy layer's
+(rule 14)."*
+
+### Two standing rules, both the coordinator's
+
+**Rule 12 — a negative existence claim carries an as-of or it is not a claim.**
+Three instances in one day, wrong **three different ways**: searched the wrong
+root; one landed **after** the look; **gitignored read as absent.** The general
+form: *"nothing matched" is a statement about a SEARCH — its root, its filters,
+its instant — and it gets written down as a statement about the WORLD.*
+
+**Rule 13 — a result-bearing artifact a receipt or register entry CITES is
+committed, with `git add -f`, beside its producing code in the same commit.**
+Under ~1 MB; receipts and censuses yes; bulk tape and caches never. It also
+makes `mem_flag_provenance.py`'s missing-artifact **finding** meaningful rather
+than noise.
+
+### One finding against my own instrument, which is why R-517 was awkward to file
+
+**Provenance and corroboration are different axes.** Provenance asks *who read
+it*; corroboration asks *how many independent producers stand behind it*. My
+instrument has only the first — so `CHECKED` would be **literally true** here and
+would also make a single-producer number **authoritative**. That is R-508(D)
+from the other side: *independence is a property of the SOURCES, not the
+READERS.* **Fix specified, not applied** (the coordinator's call, and this is a
+short batch): a `corroboration:` field **required** on every `CHECKED` entry,
+closed value set `SINGLE_PRODUCER` / `INDEPENDENTLY_REPRODUCED` / `N_A`, **no
+default** — a default would put an absence back inside the codomain. Until it
+lands a single-producer number is **RELAYED**, which understates my read and is
+the safe direction.
+
+**Instrument:** 474 flags, **11 CHECKED**, 6 RELAYED, 457 UNMARKED, 0 findings.
+
+
+Previously (MEM round 92) — 2026-09-04T13:00Z — **SHORT BATCH: a new standing rule,
 and the Q4 null is known to be DIAGNOSTIC-ONLY before it runs.**
 
 **STANDING RULE 11, and it is the coordinator's own correction, not mine.**
@@ -482,6 +546,22 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T13:08Z — MEM round 93: the first absolute economic number, recorded non-authoritative on purpose
+>
+> **Full entry is the `Updated:` block at the top.** **R-517: market-making pays
+> and cancelling does not, on the fills leg** — baseline maker P&L
+> **+8,598.7588495c** at 0 cancels; HAZARD **−12.5557c** at 48; CONDVALUE_X_SKEW
+> **−953.9181c** at 333; `adverse_saved_exceeds_spread_forgone` **FALSE** for
+> both, computed. **First arms artifact ever committed**, with its producing code
+> at `0e8f40c`. **I read it, every figure reproduces, and it stays RELAYED** —
+> one producer, DA pending. **n = 12 windows, one hour, one coin, one latency
+> rung, fills leg only, no interval. A direction, not a verdict.** Standing
+> rules **12** (a negative existence claim carries an as-of) and **13** (cited
+> artifacts are committed beside their producing code) are in force.
+>
+> ---
+
 
 > ### 2026-09-04T13:00Z — MEM round 92: standing rule 11, and the Q4 null is diagnostic-only before it runs
 >
