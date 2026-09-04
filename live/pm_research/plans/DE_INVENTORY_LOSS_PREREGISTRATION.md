@@ -203,3 +203,81 @@ If P6 fails and the inventory leg is broadly distributed while the fills
 leg is not, that is also informative: the two legs would have different
 statistical characters and could not be summed into one verdict without
 saying so.
+
+---
+
+## RESULT — 2026-09-04, `de_section81_arms__20260904T134055Z.json`
+
+Emitted from a clean tree at `2a3bb30`, which is on the branch, 7/7
+identity files matching. Scored against the predictions above, which were
+committed at `11dd46f` and amended at `2ec1fe9` before any of this
+existed.
+
+| | prediction | observed | verdict |
+|---|---|---|---|
+| **P1** | baseline inventory leg **negative** | **+8,587.54 c** | **REFUTED** |
+| **P2** | cancelling improves it, both arms | +650.38 c / +3,348.32 c | met |
+| **P3** | \|baseline\| in [500, 10 000], point est ~1,500 | 8,587.54 | range met, **point estimate 5.7× off** |
+| **P4** | inventory reverses the fills leg for CONDVALUE | total **+2,394.40 c** | confirmed |
+| **P5** | *decisive against P1: a positive baseline leg* | **positive** | **P5 FIRED** |
+| **P6** | inventory leg also tail-carried, top 1 % > 50 % | top 1 % carry **−0.166** | **FAILED** |
+
+### P1 is refuted by my own declared falsifier, and that is the finding
+
+I predicted the sign of the baseline leg **mechanically**, not as a bet:
+a resting two-sided quote ends net long precisely where price fell
+through its bid, so signed flow is anti-correlated with the mid's
+deviation from the terminal. **It is positive, and by 8,587 c — as large
+as the entire fills leg (8,598.76 c).** The mechanism is wrong, or it is
+swamped by something I did not model. P5 named exactly this outcome as
+decisive against P1 and it fired.
+
+### So P4 "confirming" is worth much less than it looks
+
+P2 and P4 were *derived from* P1's mechanism: cancels help because they
+decline fills that would leave an **adverse** residual. **There is no
+adverse residual.** The delta came out the way I predicted through a
+route I predicted wrongly, which is not a confirmed prediction in any
+useful sense — it is a right sign from a wrong model.
+
+And the actual route is the one I named in advance as untrustworthy.
+CONDVALUE's terminal net does not shrink, it **flips** (+146.74 → −147.28)
+and its inventory leg is *higher* than the baseline's on **fewer fills**.
+That is the directional bet, not risk reduction. From Amendment 1, before
+the number: *"If CONDVALUE's improvement is large, that is the reading I
+distrust."* It is +3,348 c. **I distrust it, as declared.**
+
+### P6 failed as written, and the concentration is one level up
+
+The inventory leg is **not** fill-tail-carried: its top 1 % carry −0.166
+of the net — the extremes work *against* it. But the concentration is
+real at the **window** level, which is the cluster unit rule 8 cares
+about:
+
+| | window | inventory | cum |
+|---|---|---|---|
+| 1 | …1787580600 **(ended in gap)** | 2,422.25 c | 28.2 % |
+| 2 | …1787582400 | 2,391.00 c | 56.0 % |
+| 3 | …1787580300 | 2,178.00 c | 81.4 % |
+
+**Three of twelve windows carry 81.4 %.** So the leg is 12 draws of a
+per-window directional outcome, not 4,315 fills — and the effective
+sample is far smaller than the fill count suggests. Point estimate, no
+interval, and now for a stated reason rather than a formal one.
+
+### The ruling earned its keep
+
+`views_disagree_materially` is **true for all three arms**. The single
+gap-ended window is the largest contributor to the baseline leg: 2,422 c
+of 8,588 (28 %). Under ruling B the baseline is 6,165.28 c over 11
+windows. **P4 survives both rulings** (+773.18 c / +4,543.28 c under B),
+so the conclusion is not ruling-dependent — but the *level* moves by 28 %
+on one window, which is precisely the disagreement (C′) was ruled to make
+visible.
+
+### What I would need to believe P4
+
+Held-out windows. 12 windows, 3 of which carry the leg, cannot separate
+"cancelling avoids adverse residuals" — a mechanism now **refuted at the
+baseline** — from "the flipped position happened to be on the right side
+in this fragment."
