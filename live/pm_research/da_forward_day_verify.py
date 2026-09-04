@@ -1299,6 +1299,54 @@ def era_authority_for(era: str, authority_table: dict | None = None) -> str:
     return a
 
 
+#: Words that mark an AUTHORITATIVE position in a register entry. A subject
+#: named beside one of these is being ruled on; a subject named far from any
+#: of them is being discussed.
+_RULING_MARK = re.compile(r"RULING|RULES\b|I RULE|ADOPTED|ADMIT|ADMISSIBL",
+                          re.I)
+_RULING_WINDOW = 400
+
+
+def _entry_owns(entry: str, subject: str) -> bool:
+    """Does this entry RULE on the subject, or merely mention it?
+
+    R512-R1, and the second cut. A TITLE-only test read R-497 as merely
+    discussing `clob_v3_1` -- but R-497 is a FOUR-RULING entry whose title
+    names the bundle, and its (F)(1) rules on exactly that era. A test that
+    reports a sound cite as unsound is the check-that-fires-on-everything
+    again, so ownership is title-position OR proximity to a ruling marker.
+
+    WHAT NO POSITIONAL TEST CAN DO, stated rather than left implied: it
+    cannot separate "rules on X" from "argues about X". This REPORTS, and a
+    reader still has to read.
+    """
+    if not entry or not subject:
+        return False
+    if subject in _entry_title(entry):
+        return True
+    for m in re.finditer(re.escape(subject), entry):
+        lo = max(0, m.start() - _RULING_WINDOW)
+        if _RULING_MARK.search(entry[lo:m.start() + _RULING_WINDOW]):
+            return True
+    return False
+
+
+def _entry_title(entry: str) -> str:
+    """The register entry's OWN title -- what it is ABOUT.
+
+    R512-R1: a token anywhere in an entry proves the entry MENTIONS it; a
+    token in the entry's title is what the entry RULES on. The register
+    writes `### R-nnn - time - author - **TITLE** <prose>`, so the title is
+    the first bolded span. With no bold span there is no title to own with,
+    and the caller reads DISCUSSES_ONLY rather than inventing one.
+    """
+    i = entry.find("**")
+    if i < 0:
+        return ""
+    j = entry.find("**", i + 2)
+    return entry[:j + 2] if j > 0 else ""
+
+
 def era_authority_audit(register: Path | None = None,
                         admissible_table: dict | None = None,
                         authority_table: dict | None = None) -> dict[str, Any]:
@@ -1323,11 +1371,24 @@ def era_authority_audit(register: Path | None = None,
             f"resolves.")
     text = reg.read_text(encoding="utf-8", errors="replace")
     headers = set(re.findall(r"^### (R-\d+) ", text, re.M))
+    # (see `_entry_title` below: the entry's own title, not its prose)
+    # R512-R1 (second layer): THE ENTRY IS NOT ALWAYS ONE LINE. This stored
+    # only the `###` line, and in round 37 I measured R-497 and R-500, found
+    # both single-line, and concluded the line reader was right and my
+    # criticism of it wrong. THAT WAS A GENERALISATION FROM n=2: R-340 is a
+    # FOUR-LINE entry whose `clob_v4` sits on a continuation line, so this
+    # reader reported the cite as not naming the era when the entry names it
+    # plainly. The flag was a PARSER ARTIFACT, and the cite is better than
+    # reported rather than worse. Continuation lines are accumulated now.
     bodies = {}
+    _cur = None
     for ln in text.split("\n"):
-        m = re.match(r"^### (R-\d+) ", ln)
+        m = re.match(r"^#{2,4} (R-\d+)\b", ln)
         if m:
-            bodies[m.group(1)] = ln
+            _cur = m.group(1)
+            bodies[_cur] = ln
+        elif _cur is not None and not ln.startswith("#"):
+            bodies[_cur] += "\n" + ln
     out = {}
     for era in sorted(set(tbl) | set(auth)):
         a = auth.get(era)
@@ -1339,8 +1400,21 @@ def era_authority_audit(register: Path | None = None,
                                   and _ERA_CITE_RE.search(a)),
             "cited_entries": cites,
             "entries_resolve": {c: (c in headers) for c in cites},
+            # R512-R1 / DE16-R1: OWNERSHIP BY POSITION, NOT PRESENCE. This
+            # asked only whether the era appears ANYWHERE in the cited
+            # entry, so an entry that merely DISCUSSES an era certified the
+            # cite -- and a register entry discussing an era is exactly
+            # where an era gets discussed. The rule carried over from
+            # `de_ratification_check` is that the token must be the entry's
+            # OWN: here, in its bolded TITLE, which is what an entry is
+            # about rather than what it mentions.
             "entry_names_this_era": {c: (era in bodies.get(c, ""))
                                      for c in cites},
+            "entry_OWNS_this_era": {c: _entry_owns(bodies.get(c, ""), era)
+                                    for c in cites},
+            "ownership": {c: ("OWNS" if _entry_owns(bodies.get(c, ""), era)
+                              else "DISCUSSES_ONLY" if era in bodies.get(c, "")
+                              else "ABSENT") for c in cites},
         }
     return {
         "register": str(reg), "n_register_entries": len(headers),
@@ -1350,6 +1424,10 @@ def era_authority_audit(register: Path | None = None,
         "eras_whose_cite_does_not_name_them": sorted(
             e for e, v in out.items()
             if v["cited_entries"] and not any(v["entry_names_this_era"].values())),
+        "eras_whose_cite_only_DISCUSSES_them": sorted(
+            e for e, v in out.items()
+            if v["cited_entries"] and any(v["entry_names_this_era"].values())
+            and not any(v["entry_OWNS_this_era"].values())),
         "eras": out,
         "role": "REPORTED_NOT_ENFORCED -- era_authority_for enforces PRESENCE "
                 "of a cite; whether a cite's entry rules what the comment says "
@@ -3248,7 +3326,7 @@ def verify_day(day_token: str, freeze_epoch: float,
 #: 238 / 244 / 238 across three layouts at rc 0, with only the log's presence
 #: differing and nothing saying so. `ran + skipped` must equal this in EVERY
 #: layout, so a vanished check fails the suite instead of shrinking the count.
-EXPECTED_CHECKS = 314
+EXPECTED_CHECKS = 316
 
 
 def _selftests(require_no_skips: bool = False) -> int:
@@ -5109,24 +5187,51 @@ def _selftests(require_no_skips: bool = False) -> int:
            f"DA22-A7 the cite audit reads the register and reports: value and "
            f"authority key sets are equal, and the only era with no authority "
            f"is {_aud['eras_without_authority']}")
+        # R512-R1: THIS CHECK ASSERTED A PARSER ARTIFACT AS A FACT. It read
+        # `entry_names_this_era["R-340"] is False` and called it "R-340 does
+        # not name clob_v4". R-340 is a FOUR-LINE entry and the old reader
+        # stored only its `###` line, so the era -- which appears on a
+        # continuation line -- was invisible. The cite is BETTER than was
+        # reported, not worse, and the honest flag is the weaker one below.
         ok(_aud["eras"]["clob_v4"]["cited_entries"] == ["R-340"]
            and _aud["eras"]["clob_v4"]["entries_resolve"]["R-340"] is True
            and _aud["eras"]["clob_v4"]["entry_names_this_era"]["R-340"]
-           is False,
-           "DA22-A7b AND IT FINDS ONE MORE THAN THE ROUND WAS SENT TO FIX: "
-           "clob_v4's R-340 RESOLVES but does NOT name clob_v4 -- R-340 rules "
-           "the v5 deploy instant and the work split. REPORTED. Whether the "
-           "R-497 ruling reaches clob_v4 is the USER's; a seat moving an "
-           "admissibility value on its own reading of prose is the defect "
-           "this repair is about")
+           is True
+           and _aud["eras"]["clob_v4"]["ownership"]["R-340"]
+           == "DISCUSSES_ONLY",
+           "DA22-A7b CORRECTED: clob_v4's R-340 resolves AND NAMES the era "
+           "-- on a continuation line the old heading-only reader could not "
+           "see -- but only DISCUSSES it: no ruling marker sits near the "
+           "mention. REPORTED. Whether the R-497 ruling reaches clob_v4 is "
+           "the USER's; a seat moving an admissibility value on its own "
+           "reading of prose is the defect this repair is about")
         ok(era_authority_for("clob_v4").startswith("R-340")
-           and _aud["eras"]["clob_v4"]["entry_names_this_era"]["R-340"]
-           is False,
-           "DA22-A7c THE TWO PREDICATES DISAGREE ON clob_v4 AND THE ENFORCED "
-           "ONE IS WHAT RUNS: era_authority_for ADMITS it (a cite is present) "
-           "while the audit reports the cite does not name it. If anyone "
-           "later makes the audit enforcing, THIS line goes red and the "
-           "change is noticed rather than absorbed")
+           and _aud["eras"]["clob_v4"]["ownership"]["R-340"]
+           == "DISCUSSES_ONLY"
+           and _aud["eras"]["clob_v3_1"]["ownership"]["R-497"] == "OWNS",
+           "DA22-A7c THE TWO PREDICATES STILL DISAGREE ON clob_v4 AND THE "
+           "ENFORCED ONE IS WHAT RUNS: era_authority_for ADMITS it (a cite "
+           "is present) while the audit reports the cite only DISCUSSES it. "
+           "clob_v3_1's R-497 OWNS its era, so the ownership test is not "
+           "merely refusing everything. If anyone later makes the audit "
+           "enforcing, THIS line goes red and the change is noticed")
+        # R512-R1 both directions on the OWNERSHIP predicate itself.
+        _own_t = ("### R-900 - t - a - **a ruling ADMITTING clob_v9** and "
+                  "prose\ncontinuation naming clob_v9 again\n")
+        _own_d = ("### R-901 - t - a - **an unrelated title** and prose that "
+                  "merely mentions clob_v9 far from any verb\n")
+        ok(_entry_owns(_own_t, "clob_v9") is True
+           and _entry_owns(_own_d, "clob_v9") is False
+           and ("clob_v9" in _own_d),
+           "R512-R1 OWNERSHIP BY POSITION: an entry whose title ADMITS the "
+           "era owns it; one that merely mentions it far from any ruling "
+           "marker does not -- and the second entry DOES contain the token, "
+           "which is the whole point (presence is not ownership)")
+        ok(_entry_owns("", "clob_v9") is False
+           and _entry_owns(_own_t, "") is False,
+           "R512-R1b an empty entry and an empty subject own nothing, rather "
+           "than matching everything")
+
         try:
             era_authority_audit(register=Path("/nonexistent/COORDINATION.md"))
             ok(False, "DA22-A7d: an absent register must REFUSE")

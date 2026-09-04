@@ -214,6 +214,65 @@ def parse_status_table(text: str, table_marker: str = "STATUS after iteration") 
     return items
 
 
+def parse_register_provenance(text: str, namespace: str) -> dict:
+    """WHICH parsed rows sit in a real table, and which look like quotations.
+
+    R512-R1 / DE16-R1, reported rather than enforced. `parse_register` asks
+    whether a line LOOKS like a row; this asks whether it is OWNED by a
+    table -- inside a contiguous pipe-run carrying a `|---|` separator. A
+    row outside one is where a SHOWN row would land, and showing a row is
+    exactly what a filing does.
+
+    It reports because enforcing it here suppressed 191 of 231 real rows on
+    this register: the filing table's runs are broken by structural lines,
+    so "outside a separator-bearing run" is common and innocent. A count
+    that moves is the signal; a row named here is a place to LOOK.
+    """
+    lines = text.splitlines()
+    fenced, infence = set(), False
+    for i, ln in enumerate(lines):
+        if ln.lstrip().startswith("```"):
+            infence = not infence
+            fenced.add(i)
+        elif infence:
+            fenced.add(i)
+    in_table: set = set()
+    i = 0
+    while i < len(lines):
+        if lines[i].strip().startswith("|") and i not in fenced:
+            j = i
+            while (j < len(lines) and lines[j].strip().startswith("|")
+                   and j not in fenced):
+                j += 1
+            if any(set(lines[k].strip()) <= set("|-: ") and "-" in lines[k]
+                   for k in range(i, j)):
+                in_table.update(range(i, j))
+            i = j
+        else:
+            i += 1
+    owned, unowned, in_fence = [], [], []
+    for i, ln in enumerate(lines):
+        st = ln.strip()
+        if not (st.startswith("|") and st.endswith("|")):
+            continue
+        rid = st[1:-1].split("|", 1)[0].strip()
+        if not rid.startswith(namespace):
+            continue
+        (in_fence if i in fenced else
+         owned if i in in_table else unowned).append((i + 1, rid))
+    return {"namespace": namespace,
+            "n_in_separator_bearing_table": len(owned),
+            "n_outside_any_separator_run": len(unowned),
+            "n_inside_a_fence": len(in_fence),
+            "rows_inside_a_fence": in_fence[:20],
+            "rows_outside_any_separator_run": unowned[:20],
+            "role": "REPORTED_NOT_ENFORCED",
+            "why": ("a fenced row is NOT parsed -- that half is enforced. A "
+                    "row outside a separator-bearing run is common and "
+                    "innocent on this register, so it is named, not dropped"),
+            "decides_nothing": "REPORTED (rule 14)."}
+
+
 def parse_register(text: str, namespace: str) -> list[tuple[str, str, str]]:
     """(row_id, body, status) for rows in this plane's namespace.
 
@@ -224,9 +283,34 @@ def parse_register(text: str, namespace: str) -> list[tuple[str, str, str]]:
     always the last cell, so the last delimiter is the reliable one; the body is
     everything between the plane column and it, pipes and all.
     """
+    # R512-R1 / DE16-R1: OWNERSHIP BY POSITION, NOT PRESENCE. Any line that
+    # merely LOOKS like a row was parsed as one, so a row SHOWN inside a
+    # filing -- which is exactly where rows get shown -- entered the plane's
+    # namespace as if it had been filed. A real row lives in a table: a
+    # contiguous run of pipe-lines carrying a `|---|` separator, and never
+    # inside a fenced sample.
+    lines = text.splitlines()
+    fenced, infence = set(), False
+    for i, ln in enumerate(lines):
+        if ln.lstrip().startswith("```"):
+            infence = not infence
+            fenced.add(i)
+        elif infence:
+            fenced.add(i)
+    # WHAT IS ENFORCED IS THE FENCE ONLY, AND THAT IS DELIBERATE. My first
+    # cut also required each row to sit in a run carrying a `|---|`
+    # separator; measured against this register it dropped 191 of 231 REAL
+    # rows, because the filing table's runs are broken by structural lines.
+    # A fix that suppresses real data is the check-that-fires-on-everything
+    # in its other direction, and it would have been far worse than the
+    # defect. The separator test is REPORTED by
+    # `parse_register_provenance()` instead, where a surprising row can be
+    # looked at without a reader losing rows it needs.
     out = []
-    for line in text.splitlines():
+    for _i, line in enumerate(lines):
         s = line.strip()
+        if _i in fenced:
+            continue
         if not (s.startswith("|") and s.endswith("|")):
             continue
         cells = s[1:-1]
