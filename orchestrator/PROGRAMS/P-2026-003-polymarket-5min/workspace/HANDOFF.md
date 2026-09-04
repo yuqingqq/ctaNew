@@ -1,6 +1,18 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T11:06Z (MEM round 85) — **THE PREDICATE GOT A DENOMINATOR,
+Updated: 2026-09-04T11:15Z (MEM round 86) — **THE FIRST REAL §8.1 ARM OUTPUT
+EXISTS AND CANNOT YET BE USED — both halves travel together.** Four arms with
+**real** predictors and `all_distinct` true (round 52 had shipped two arms that
+were the **same computation under different names**) — **but the matched control
+is NOT VALID**, so **`RANDOM_MATCHED` is not a floor and no arm-versus-control
+comparison may be drawn.** **The one-way guarantee has now failed by a THIRD
+route, and it needs NO ERROR:** a moved path makes the walk empty, `monotone`
+reports **true** with `vacuous` **true**, and the guard tests `monotone is not
+True`. **It is what makes the USER's 08-29 withdrawal one-way, and R-500 rests on
+it.** **Tonight 09-04 reads NO-GO on three blockers**, and I measured that
+**R-503 does not run inside the scheduled unit**. **G = 3; USER items: TWO.**
+
+Previously (MEM round 85) — 2026-09-04T11:06Z — **THE PREDICATE GOT A DENOMINATOR,
 AND THE ONE-WAY GUARANTEE FAILED BY A SECOND ROUTE.** DA round 34 closed the HIGH
 **at the source** — `REAL_EVIDENCED` now needs a batch with **zero** unevaluable
 rows — and `codomain_census()` reports **26 sites across 12 instruments** with
@@ -214,6 +226,134 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T11:15Z — MEM round 86: the first real arm output, a third route into the one-way guarantee, and tonight's NO-GO
+>
+> **THE FIRST REAL §8.1 ARM OUTPUT EXISTS, AND BOTH HALVES MUST TRAVEL TOGETHER —
+> a reader taking only the first would be badly wrong.**
+>
+> **The good half.** DE round 53 ran **four arms with REAL predictors and legible
+> identity** — each arm records **the artifact and sha it loaded**, and
+> `arm_distinctness` asserts **4 signatures, 4 distinct predictors,
+> `all_distinct` true**. That matters because **round 52 had shipped two arms
+> that were the SAME COMPUTATION under different names, with every arm using a
+> declared synthetic.** Population btc, **12 windows, 31,122 generations**, 3
+> windows Binance-gap-excluded, **0 reconciliation failures**. **Exclusions are
+> statuses, not silent drops: 29,813 scored, 1,309 (4.21%) excluded** because the
+> feature pass dropped every one of their rows — **the scorer refusing to score
+> them from nothing.**
+>
+> **[CORRECTED WITHIN THIS SAME ROUND — read this before the paragraph below.
+> The EMISSION ON DISK says the OPPOSITE of the round's headline:
+> `permutation_ok` TRUE, P2 TRUE, P3 TRUE, `VALID_AS_A_CONTROL` TRUE, P4 `null`
+> — beside a HARDCODED `note` asserting *"permutation_ok False … NOT a valid
+> matched control"*. **The prose contradicts the booleans it sits next to:
+> CLAUDE.md rule 10, fourth instance** (reviewer **DE53-R1, HIGH**, `0516c7d`).
+> **I recorded the headline's direction, not the artifact's, and that is mine to
+> name** — I flagged the figures as *not reproducible from anything landed*,
+> which was exactly the reason I could not check the direction, so I should have
+> marked it **UNVERIFIED** rather than stating it flat. **The operative conclusion
+> stands and is strengthened, for a worse reason: no arm-versus-control comparison
+> may be drawn — not because the control is known invalid, but because THE
+> ARTIFACT AND ITS OWN HEADLINE DISAGREE AND NOTHING LANDED CAN SETTLE IT.** They
+> are not even the same run — filed from 11:06:34Z, artifact on disk 11:11:14Z.
+> The reviewer's framing is the one to carry: *"both readings are bad in different
+> directions — if the note is stale, the round's headline is wrong and a valid
+> control is being disclaimed; if the booleans are stale, a reader takes a
+> comparison against a floor that does not hold."* **DE round 54 (`7f62c0c`) has
+> since fixed P2/P3, and P4 now REFUSES 20/20 — which DE itself calls the
+> finding.**]**
+>
+> **The half that governs how all of it reads — AS THE ROUND'S HEADLINE STATED IT,
+> now corrected above: THE MATCHED CONTROL IS NOT VALID.**
+> `permutation_ok` **false**; **P2** (stratum score multisets equal) and **P3**
+> (drawn carry above, and only drawn) **both false**; the emission carries
+> **`VALID_AS_A_CONTROL` false**. **So `RANDOM_MATCHED` is not a floor, and NO
+> arm-versus-control comparison may be drawn from these numbers. That is the
+> STATUS of the output, not a caveat on it.**
+>
+> Two more beside it: **`HAZARD_OVER_SKEWED_REF` is explicitly NOT §8.1 arm 3**,
+> because arm 3 requires **neutral placement, which is ABSENT** — *a near
+> neighbour under a different name is exactly what round 52 got wrong, so naming
+> the difference is the repair holding*. And **12 of 16 fields are filled**, with
+> **maker P&L, spread capture and inventory loss still `NOT_AVAILABLE` with
+> reasons** — three of the fields the round-83 audit found have **no producer at
+> all**.
+>
+> **One provenance note that is mine — the publication provenance check applied to
+> this round rather than to somebody else's.** DE 53's **code commit is landed**
+> (`1206143`, 11:07:09Z) **but it is +4 / −3 in one file**; **no output artifact
+> exists on disk**; **no DE row is filed** (highest **Q-DE-62**); and **the fields
+> the numbers are quoted from — `arm_distinctness`, `all_distinct`,
+> `permutation_ok`, `VALID_AS_A_CONTROL` — appear nowhere in the landed code.**
+> So the arm figures are **reported and not reproducible from anything landed** at
+> my read. **Not a challenge to DE**, whose round may still be in flight — it is
+> the state of the record, **and it matters most for the good half, which is the
+> half a reader will over-take.** **[CORROBORATED within the same round as
+> **DE53-R2, HIGH** — *"the round has no committed producer; its substance is a
+> commit message and a file in a temp directory"* — the reviewer's own
+> publication-provenance census returning **NONE** for `arm_distinctness`,
+> `VALID_AS_A_CONTROL`, `permutation_ok`, `all_distinct` and `arm_signature`:
+> **the same answer I got independently.**]**
+>
+> ---
+>
+> **⚠ THE ONE-WAY GUARANTEE HAS NOW FAILED BY THREE ROUTES, AND THE THIRD IS THE
+> WORST BECAUSE IT NEEDS NO ERROR AT ALL.** A **moved or renamed path** gives
+> `n_prior_versions_with_registry` **0** and **`monotone` TRUE with `vacuous`
+> TRUE**: `git log --follow` returns nothing, **the loop never runs, no violation
+> CAN be found, and the guarantee reports itself satisfied.**
+>
+> **I verified the whole chain in the landed code rather than taking it:**
+>
+> | where | what |
+> |---|---|
+> | `da_race_withdrawals.py:333` | the walk uses `--follow` |
+> | `:406-424` | the success return sets **`"monotone": True` unconditionally**, with `vacuous = not versions` beside it and a `why` saying *"this pass compares nothing — read `n_prior_versions_with_registry`, not the boolean"* |
+> | `:626-632` | **the module's own selftest PINS the behaviour** — `monotone` True **and** `vacuous` True **and** `n_prior_versions_with_registry` 0 |
+> | `da_forward_day_verify.py:288` | the canonical-write guard tests `if mono.get("monotone") is not True` — **which a vacuous pass satisfies, so the guard does not fire** |
+>
+> **The module knows, and says so in prose — and prose is not a predicate.** **It
+> is the codomain rule applied to a GUARANTEE rather than to a parse:
+> `monotone: True` is reachable from *"compared five versions"* and from
+> *"compared nothing"*, and a consumer cannot tell them apart.** **Not
+> hypothetical:** `--follow` walks **HEAD's ancestry only**, and **this programme
+> rebases held chains routinely.**
+>
+> **The consequence, plainly: this is the property that makes the USER's 08-29
+> withdrawal from the race ONE-WAY, and R-500's binding claim rests on it.** DA is
+> fixing it **and establishing whether the guard has ever run in a state where it
+> could have been vacuous** — the right second question, because **a fix does not
+> tell you what was already reported.**
+>
+> ---
+>
+> **TONIGHT'S BOUNDARY — and I drove it myself.** BE built a **GO/NO-GO
+> preflight** (`be_forward_preflight.py`, landed `7b19434` 11:05:03Z) that asks
+> every precondition **cheaply, before the 28-minute run** — its docstring naming
+> the three things each discovered the expensive way. **09-04 reads NO-GO with
+> three named blockers:**
+> 1. **`day_closed_calendar=False`** — the day is still open.
+> 2. **The MASK IS MISSING on a governed day** — `da_blackout_mask_20260904.json`
+>    absent; the check's own words are *"a governed day REFUSES without it"*, and
+>    **09-01's and 09-03's masks landed about TEN HOURS after their verdicts.**
+> 3. **`gate_1_would_pass`** refuses by name — *scoring an open day scores a
+>    population that is still growing.*
+>
+> **And on the third recurring reason I can do better than "no evidence", because
+> I found the decisive artifact.** The **09-04 verdict was written by the
+> scheduled unit itself** — `write_reason` *"scheduled unit run,
+> da-midnight-verify.service (INVOCATION_ID=56bb4ae1…)"*, `as_of_utc`
+> 2026-09-04T00:06:21.121786Z — **and it carries NO `coverage_complement` and no
+> per-coin `covered_complement` at all**, while **DA's manual 09-03 re-verdict
+> carries both**. **So R-503 does not run inside the scheduled unit: that is
+> MEASURED ABSENCE in the unit's own emission from this morning, not an absence of
+> evidence.** **09-04 will need the same manual admission 09-03 did, and this is a
+> gap between a USER ruling and the machinery that enforces it nightly which will
+> recur every night until closed.**
+>
+> **State:** register **496** entries, last **R-505**; **G = 3**, three days
+> **sealed and unread**. **USER items: TWO.**
 
 > ### 2026-09-04T11:06Z — MEM round 85: the predicate got a denominator, and the one-way guarantee failed by a second route
 >

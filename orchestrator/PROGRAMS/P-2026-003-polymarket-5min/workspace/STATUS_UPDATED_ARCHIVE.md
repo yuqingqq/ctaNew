@@ -6382,3 +6382,80 @@ and the bracket's release. Join rule as in batch 1.
   incumbent operating point or keep the equal-count comparison permanently
   labelled a diagnostic.
 ```
+
+## Batch 92 — archived 2026-09-04T11:15Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-86 true-up of DE 53, DA's third-route monotonicity finding
+and BE's GO/NO-GO preflight. Join rule as in batch 1.
+
+```yaml
+  2026-09-04T10:47Z (MEM ROUND 83 -- A CONSISTENCY AUDIT OF MY OWN FILES, NOT A
+  SWEEP. NO NEW MATERIAL.) The question was whether STATUS.yml and HANDOFF.md are
+  INTERNALLY CONSISTENT WITH THE ARTIFACTS after eight sweeps, three withdrawals
+  and several corrections landing at different times from different rounds. I
+  censused both files programmatically rather than by reading, and I report what
+  I FOUND and not only what I fixed. THE HEADLINE IS A GOOD RESULT: EVERY
+  WITHDRAWN FIGURE IS MARKED. I searched all 24 published figures and their
+  components across both files -- 226,594.26 / 1,801.29 / 0.7949% / 620.58 /
+  +34.5% / 807.29 / 75,531.42 / 600.43 / 2,421.87 / 196,960.93 / 29,633.33 /
+  167.46 / 174.78 / 395.16 / 434.14 / 567.71 / 83.01 / 186.08 / 354.41, plus the
+  corrected pair 2,946.40 / 454,505.94 / 0.648% -- AND EVERY OCCURRENCE CARRIES A
+  WITHDRAWAL MARKER IN ITS OWN BLOCK. NONE STANDS BARE AND NONE WAS SILENTLY
+  DELETED. FIVE DEFECTS FOUND AND FIXED, ALL IN BAND. (1) THE ROUND-80 MARKERS
+  DESCRIBED ONLY THE FIRST WITHDRAWAL AND IMPLIED A REPAIR DIRECTION THAT IS
+  ITSELF WITHDRAWN. All three of them -- the STATUS flag head, the STATUS focus
+  clause and the HANDOFF blockquote -- said the figures fell because prof.py took
+  the first row and the scale was preventable_shares, WHICH POINTS STRAIGHT AT
+  ACTION-NATIVE AGGREGATION AS THE FIX; be_fill_ledger did exactly that and
+  OVER-counts. A reader stopping at any of those three markers would conclude the
+  corrected pair replaced the withdrawn set. EACH NOW CARRIES THE SECOND
+  WITHDRAWAL AND THE INSTRUCTION NOT TO READ IT AS POINTING AT A REPAIR THAT
+  STANDS. THIS IS THE DEFECT THE ROUND EXISTED TO FIND: not a wrong number, but a
+  correction whose own direction had been superseded while the marker stayed
+  still. (2) THE focus: FIELD ASSERTED THE RESULT WITHOUT ITS STRENGTH. focus is
+  read as CURRENT STATE, and its round-78 sentence said flatly "THE PROGRAMME HAS
+  ITS FIRST ECONOMIC RESULTS AND THE CANDIDATE DOES NOT BEAT THE INCUMBENT" with
+  no qualifier anywhere in the field -- the correct-strength statement existed
+  only in the updated: entry and in the task notes. The full strength is now
+  stated at that sentence: A DESCRIPTIVE TWO-DAY RANKING RESULT, matched on
+  cancellation ACTION COUNT and not shares or notional or capital, RETROSPECTIVE
+  comparator, window-level p against a ruled UTC-DAY cluster unit so A HIGH
+  ONE-SIDED p IS FAILURE TO SHOW A WIN AND NOT PROOF OF A LOSS, NOT
+  VALIDATION-GRADE EVIDENCE. (3) THE focus: FIELD CARRIED FOUR SUPERSEDED G
+  STATEMENTS AHEAD OF THE LIVE ONE. Every dated updated: entry and every dated
+  HANDOFF block is chronologically honest and I left them alone; but focus is not
+  a dated log, and a reader scanning it for G met "FORWARD REACH IS NOW G = 2 OF
+  5" three times before reaching round 79's G = 3. The first is now marked
+  SUPERSEDED with the live value named, and the marker says the rest of the field
+  is chronological narrative. (4) THE INTERIM TASK'S name: FIELD OVERSTATED THE
+  RESULT. A task name is what a reader of the task list sees WITHOUT OPENING THE
+  NOTES, and it read "the candidate does NOT beat the incumbent" while the
+  strength sat thirty-nine lines down in the notes. It now reads as a DESCRIPTIVE
+  TWO-DAY RANKING result and NOT validation-grade. (5) ONE OPEN ITEM WAS MISSING
+  FROM BOTH FILES ENTIRELY, AND IT IS THE ONE THE DISPATCH WARNED ABOUT --
+  THREE SECTION 8.1 FIELDS HAVE NO PRODUCER. I read it at the artifact rather
+  than taking it: de_lane4_real_parity.SECTION_8_1_FIELDS carries 16 fields, each
+  with a `source` XOR a `why`, and EXACTLY THREE HAVE source null.
+  maker_pnl_cents -- "the replay values CANCELLATION (harm avoided minus
+  sacrifice), not a maker book ... the replay prices the DECISION, not the book";
+  spread_capture_cents -- "there is no book-level spread capture, and summing
+  rho's denominator would be A DIFFERENT QUANTITY WEARING THE NAME";
+  inventory_loss_cents -- "inventory LOSS needs a TERMINAL MARK, WHICH THE REPLAY
+  NEVER TAKES". AND THE "MAKER P&L ABSENT" OPEN ITEM IS NOT A SEPARATE ITEM: IT
+  IS maker_pnl_cents, THE FIRST OF THE THREE. Both files had been carrying maker
+  P&L only as a QUOTATION OF WHAT SECTION 8.1 DEMANDS, never as a statement that
+  nothing produces it -- which is precisely an open item reading as though it
+  were merely pending. Each is now recorded WITH ITS REASON, because the reason
+  is the point: THESE ARE QUANTITIES THE REPLAY'S OWN CONSTRUCTION CANNOT YIELD,
+  NOT MISSING IMPLEMENTATIONS. THE OTHER OPEN ITEMS WERE ALREADY CORRECTLY
+  RECORDED AS OPEN AND I CHANGED NOTHING: the causal-incumbent-operating-point
+  declaration is listed in both files as the second of TWO USER items, with BE's
+  reason for declining to predeclare one; exactly-once-not-computable is stated
+  in both, explicitly as AN OPEN QUESTION AND NOT A PENDING FIX, with the
+  producer's discarded tranche identity as the cause; and the G = n - 2 counting
+  question is in both, FILED FREEZE-LEVEL AND UNRESOLVED. WHAT I DID NOT DO: I
+  added no new narrative about the programme, moved no history, and left the
+  dated entries in both files chronological. The five fixes are markers and
+  qualifiers on text that was already there. UNCHANGED: G = 3 OF 5; 09-03 is not
+  a third economic read; NO ECONOMIC FIGURE IS PUBLISHABLE; USER ITEMS TWO.
+```
