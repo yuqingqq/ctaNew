@@ -616,6 +616,12 @@ def reduce_window(wrows, scores, latency_ms: int) -> list:
             "any_fill_ahead": bool(r.get("any_fill_ahead")),
             "value_cents": (float(lat[L]["preventable_value_cents"])
                             if r.get("any_fill_ahead") and L in lat else 0.0),
+            # R28: the SCALE. Shares the cancel would have prevented, and the
+            # quote level they sit at, so a NOTIONAL can be formed downstream
+            # and an absolute can become a return.
+            "preventable_shares": (float(lat[L].get("preventable_shares", 0.0))
+                                   if L in lat else 0.0),
+            "level": (None if r.get("level") is None else float(r["level"])),
         })
     return out
 

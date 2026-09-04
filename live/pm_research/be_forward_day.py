@@ -127,7 +127,18 @@ FROZEN_COMMIT = "1b53929"
 #: assert the driver emits it without importing the metric module.
 FEED_PROTOCOL = "BE_FORWARD_METRIC_FEED_V1"
 FEED_FIELDS = ("slug", "side", "gen", "t0", "t_start", "score",
-               "score_incumbent", "any_fill_ahead", "value_cents")
+               "score_incumbent", "any_fill_ahead", "value_cents",
+               "preventable_shares", "level")
+
+#: ROUND 28: THE DENOMINATOR. Every number reported so far has been an
+#: absolute (cents) or a ratio (rho) with NO SCALE beside it, and "$206 a day"
+#: against an unstated notional is not a profitability answer. `shares` and
+#: `level` are both on the row the frozen builder produces -- `latency[L]
+#: ["preventable_shares"]` and the quote `level` -- and neither reached the
+#: feed, so notional could not be formed downstream. They are ADDED HERE, in
+#: the driver, because `harmful_exposure_rows.py` is a FROZEN ANCHOR and the
+#: run executes the freeze commit's bytes: editing the builder would change
+#: nothing at run time and would break the frozen contract for no gain.
 
 #: ROUND 25: THE SECOND ARM. The declared estimand is net cents AGAINST THE
 #: INCUMBENT; `increment()` takes TWO score vectors and the driver emitted
