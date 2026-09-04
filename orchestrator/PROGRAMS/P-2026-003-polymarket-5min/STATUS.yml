@@ -4,6 +4,100 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T05:06Z (MEM ROUND 78 -- THE PROGRAMME HAS ITS FIRST ECONOMIC
+  RESULTS, AND THE CANDIDATE DOES NOT BEAT THE INCUMBENT). The largest sweep yet:
+  28 commits since round 77, R-500/R-501/R-502, the RELEASE, the 08-29 read and
+  its review, the pre-declared interim on 09-01 and 09-02, and BE rounds 22-28.
+  Nothing run but read-only reads and TWO read-only computations of my own.
+  THE GATE OPENED AND THEN THE ANSWER CAME. The reviewer RELEASED scoring a
+  forward day at 51479f1 (08:34Z, pinned a0b0ebb) -- "RELEASED: scoring a forward
+  day on this path", the BEM-R1/R2/R3 standing rule LIFTED, with five items named
+  open so they are not mistaken for cleared, including BE21-R1 (pin
+  verification_ref.path to the canonical committed artifact, wanted BEFORE a
+  second day is scored) and the unchanged fact that THE DECISION METRIC HAS NEVER
+  BEEN RECONCILED AGAINST ANY PUBLISHED NUMBER. The reviewer's own line is the
+  one to carry: "What I am releasing is the instrument, not the decision."
+  THREE DAYS WERE THEN READ: 08-29 as a DEVELOPMENT read (withdrawn from the race
+  at R-500, ratified for development at R-502), then 09-01 and 09-02 under a
+  PRE-DECLARED INTERIM. THE DECLARATION IS THE REASON THIS RESULT CAN BE BELIEVED
+  AND I CHECKED ITS ORDERING AT GIT: be_interim_declaration_v1.json, as_of_utc
+  2026-09-03T12:55:10Z, committed at eeb02ba 12:55:32Z, with
+  declared_before_anything_was_opened TRUE and declared_in_commit 7da395c -- and
+  09-01 was filed at 15:41Z, 09-02 at 16:21Z, so THE HYPOTHESIS WAS FIXED
+  TWO AND THREE HOURS BEFORE THE DAYS WERE OPENED. It names MATCHED_VOLUME as
+  primary (the incumbent's own theta lowered until it cancels the SAME NUMBER the
+  candidate actually cancelled, so both arms spend one budget), pre-specifies the
+  direction ("the MATCHED_VOLUME increment on btc is NEGATIVE at all three
+  budgets") with eth carrying NO prediction, fixes holm_denominator 6 over the six
+  MATCHED_VOLUME/POOLED cells, records this as alpha LOOK 1 OF 2, and states the
+  price in its own no_choice_clause: 09-01 AND 09-02 ARE CONSUMED AND CAN NEVER
+  SERVE AS CLEAN FORWARD VALIDATION. THE RESULT: THE CANDIDATE DOES NOT BEAT THE
+  INCUMBENT. At matched volume btc is NEGATIVE IN ALL NINE net-cents cells --
+  09-01 -789.12 / -2,016.71 / -1,476.01; 09-02 -227.60 / -1,237.84 / -2,975.36;
+  POOLED -1,012.68 / -3,038.75 / -3,949.76 -- BOTH DAYS INDEPENDENTLY AND NOT
+  ONLY POOLED, which is what makes it a reproduced result rather than an average.
+  The declared one-sided test (does the candidate BEAT the incumbent?) fails
+  decisively, p 0.890 / 0.936 / 0.821 on 09-01; BY_COUNT, an independent matching
+  of the same decision variable, AGREES on btc (-836.93 / -2,406.79 / -683.71);
+  and rho -- adverse drift avoided per cent of good flow forfeited -- is LOWER FOR
+  THE CANDIDATE IN ALL TWELVE btc CELLS, falling with volume in 15 of 16 series.
+  eth is a wash and carried no prediction by declaration. HOLM OVER THE DECLARED
+  DENOMINATOR 6: NOTHING SURVIVES, WHICH IS THE CORRECT OUTCOME FOR A ONE-SIDED
+  CANDIDATE-BEATS-INCUMBENT TEST. AND THE MECHANISM MUST TRAVEL WITH THE HEADLINE
+  BECAUSE THE RAW HEADLINE SAYS THE OPPOSITE. BY_THRESHOLD on btc is STRONGLY
+  POSITIVE in every one of the same nine cells -- POOLED +7,536.90 / +15,556.31 /
+  +16,360.94, ALL AT THE PERMUTATION FLOOR 1/2001 AND THEREFORE REPORTED AS
+  BOUNDS. TAKEN ALONE IT WOULD READ AS A DECISIVE WIN. THE EXACT DECOMPOSITION
+  SAYS IT IS VOLUME: +7,536.90 = VOLUME +8,549.58 + QUALITY -1,012.68;
+  +15,556.31 = +18,595.06 + (-3,038.75); +16,360.94 = +20,310.70 + (-3,949.76),
+  with identity residuals 0.0 / 1.8e-12 / 0.0 and identity_holds TRUE in all
+  eighteen cells. THE WHOLE POSITIVE IS THE VOLUME TERM AND MORE; THE QUALITY
+  TERM IS NEGATIVE THROUGHOUT. The cause is one theta calibrated on the
+  candidate's TRAINING distribution applied to BOTH arms, so the candidate
+  cancels about three times as often and NEITHER ARM DELIVERS ITS NOMINAL BUDGET.
+  BY_THRESHOLD IS NOT THE DECISION METRIC; MATCHED VOLUME IS THE ONE THAT ANSWERS
+  THE QUESTION. PROFITABILITY IS NEW AND ITS THREE LIMITS ARE NOT SEPARABLE FROM
+  IT. Filled notional 226,594.26 USD over three days = 75,531.42/day (btc
+  196,960.93 + eth 29,633.33; 394,098 + 59,270 fill shares). THE NO-CANCEL
+  BASELINE BOOK ALREADY MAKES MONEY: 1,801.29 over three days = 600.43/day, which
+  is 0.7949% ON FILLED NOTIONAL -- so the overlay is not propping up a loser. The
+  best overlay adds 174.78 (+9.7%) at 5%, 434.14 (+24.1%) at 10% and 620.58
+  (+34.5%) at 15%, best three-day total 2,421.87 = 807.29/day, REPORTED BESIDE
+  THE BASELINE AND NEVER INSTEAD OF IT. THE THREE LIMITS, WHICH MUST BE QUOTED
+  WITH THE NUMBERS AND NEVER SEPARATELY: (i) IT IS 5-SECOND MARKOUT P&L, NOT
+  REALISED P&L -- mark-to-market five seconds after each fill, on fills within one
+  second of the decision, and nothing says the position is ever closed at that
+  mark; (ii) IT IS GROSS AND THE VENUE DOES CHARGE FEES -- I DECODED THE RECEIPTS
+  MYSELF AND REPRODUCED BE'S COUNT EXACTLY: 901 receipt files under
+  data/pm_5min/onchain/receipts, 1,957 OrderFilled events, 911 (46.6%) CARRYING A
+  NON-ZERO FEE and 1,046 zero, while the repo's only fee assertion,
+  `ok(of.fee == 0)` at da_feeds_polygon.py:435, is made against
+  _FIXTURE_ORDER_FILLED -- ITS OWN SYNTHETIC BYTES, A FIXTURE AND NOT EVIDENCE --
+  and there is no fee model anywhere in live/pm_research (the only FEE-prefixed
+  constants are FEED_*); the rate is CONCENTRATED BUT NOT CONSTANT and no single
+  rate can honestly be applied, so fees are REAL, ROUGHLY HALF OF FILLS, AND
+  UNQUANTIFIED; (iii) THE RETURN IS ON FILLED NOTIONAL, NOT CAPITAL, because the
+  row carries level, resting and qahead but NO QUOTE SIZE -- a stated unknown, not
+  a zero, which makes 75,531/day A THROUGHPUT AND NOT AN EXPOSURE. THE RACE DID
+  NOT ADVANCE. 09-03 DOES NOT ACCRUE and I read the verdict rather than the
+  report: day_quality_pass FALSE and race_accrual_eligible FALSE, with BOTH coins
+  reporting P1_lost_s_per_hr as None and evaluable FALSE -- THE DAY FAILED BECAUSE
+  IT COULD NOT BE EVALUATED, NOT BECAUSE A MEASURED VALUE EXCEEDED A BAR, and
+  era_admissible and post_freeze_pass are both TRUE, so this is a quality
+  failure alone. G REMAINS 2 OF 5. AND BE'S G FINDING IS REAL AND I DROVE IT
+  RATHER THAN READING IT: phase2_increment_null.complete_utc_days calls a date
+  COMPLETE only if the population span BRACKETS it (min(t) <= 00:00:00 AND
+  max(t) >= the next 00:00:00), so ONLY INTERIOR DAYS COUNT. Driven on synthetic
+  spans: 1 day -> G 0, 2 -> 0, 3 -> 1, 5 -> 3, 6 -> 4, 7 -> 5. G = n - 2, AND
+  THE G=5 BAR NEEDS SEVEN DAYS PRESENT. ONE PRECISION THAT IS MINE: BE's row
+  states only the LAST-day half and concludes a five-day pool computes G = 4;
+  BOTH ENDPOINTS FAIL, so it computes 3, and the bar is seven days rather than
+  six. The item is filed FREEZE-LEVEL AND UNRESOLVED and I rule nothing.
+  STATE: register at 493 entries, last R-502; DA's chain still HELD at my read
+  (highest landed row Q-DA-215) and reported to be landing; DE 48/49/51 landed
+  and Q-DE-62 still the highest DE row. USER ITEMS: ONE -- the Phase-2 winner,
+  and the race decides it.
+  PRIOR:
   2026-09-03T08:30Z (MEM ROUND 77 -- FIVE ZERO-CONSUMER FINDINGS IN ONE DAY,
   NONE OF THEM FOUND BY A GREEN SUITE). BE 20 and 21 and the reviewer's DA 23/24
   filing swept; nothing run but read-only reads and ONE read-only drive of a
@@ -196,105 +290,6 @@ updated: >-
   PRECISELY THE DEFECT DE 48 REPAIRS, AND DE 48 IS NOT ON THE BRANCH, so the
   repair is held and the outdir still cannot tell a dead run from a live one.
   USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
-  PRIOR:
-  2026-09-03T07:40Z (MEM ROUND 75 -- THE ALARM IS REFUTED, THE FREE READ IS
-  RETRACTED, AND THE DAY IS SPENT BY CHOICE RATHER THAN BY IMPOSSIBILITY). BE 18
-  and 19, both reviewer filings, DA 22/23 and DE 46 swept; nothing run but
-  read-only reads at the artifacts. THE FREEZE ALARM I CARRIED AS OPEN LAST ROUND
-  IS REFUTED AND MUST READ AS REFUTED, NOT AS OPEN. I re-derived it rather than
-  take BE's row: the freeze commit 1b539292e55f9da8 is dated 2026-08-26T10:49:55Z
-  with the subject "FREEZE: reduced-fine (PM_PLUS_FINE) frozen as PRIMARY
-  candidate, multiplicity 2", and it ADDS
-  data/pm_5min/derived/harmful_reduced_fine_candidate_v1.json as 608 NEW LINES,
-  0 DELETED -- the candidate artifact does not predate its own freeze, it arrives
-  with it. The artifact carries race_multiplicity_at_freeze 2 with two
-  race_members (PM_PLUS_FINE PRIMARY, PM_FINE_EXTENDED HELD),
-  decision_eligible FALSE, and a forward_validation clause reading "Begins at the
-  freeze COMMIT instant" -- which is rule 12's own language. 4 OF 4 CONJUNCTS
-  HOLD (BE's measurement, 24 checks driven BOTH directions with four known-bads
-  flipping the conjuncts). AND I REPRODUCED THE STALENESS TO THE SECOND, BECAUSE
-  THE FIGURE HAS TWO POSSIBLE ANCHORS AND ONLY ONE GIVES 141.8: from the BOUND
-  manifest's as_of_utc 2026-08-26T08:00:04Z to the candidate's frozen_at_utc
-  2026-08-26T10:21:49Z is 141.75 MINUTES; to the freeze COMMIT at 10:49:55Z is
-  169.85. THE 141.8 IS AGAINST frozen_at_utc, NOT THE COMMIT, and a reader
-  reproducing it needs to know which. The sentence also SURVIVED A LATER EDIT --
-  608d71a at 14:47:35Z touches the manifest and the freeze_status string is
-  byte-identical after, and still reads "NOT FROZEN..." at HEAD. IT MUST BE
-  SUPERSEDED RATHER THAN EDITED because a landed receipt binds those bytes by
-  sha. TWO CORRECTIONS TO WHAT THE COORDINATOR TOLD THE USER, WRITTEN AS
-  CORRECTIONS WITH THE SUPERSEDED STATEMENT NAMED. FIRST, RETRACTED: "08-29 can
-  never accrue and is therefore free to read." THE ROUTE EXISTS AND I VERIFIED IT
-  AT GIT. At commit 4e1133c (2026-08-31T03:20:38Z),
-  data/pm_5min/derived/da_dayverdict_20260829.json -- blob
-  79767ca38019a008e1a46c36b090c301bce4c279 -- carries as_of_utc
-  2026-08-30T00:06:01.246972+00:00, day_closed_calendar TRUE,
-  verdict_split.race_accrual_eligible TRUE, day_quality_pass TRUE,
-  post_freeze_pass TRUE, and write_reason "scheduled unit run,
-  da-midnight-verify.service (INVOCATION_ID=142596744fc3492283df4f1ceb3be3b2)" --
-  THE SCHEDULED UNIT'S OWN ATTRIBUTION, WHICH IS EXACTLY WHAT BE13'S GATE 1
-  REQUIRES. DA's own instrument pointed at those bytes returns ATTRIBUTED_ALREADY.
-  SO DA'S UNREACHABLE_BY_ANY_HONEST_ROUTE WAS A STATEMENT ABOUT THE FILE
-  CURRENTLY ON DISK, NOT ABOUT THE DAY -- the reviewer's rename says it exactly,
-  NOT_REACHABLE_FROM_THE_ARTIFACT_NOW_ON_DISK. AND THE SHARPEST FACT IS IN THE
-  SAME COMMIT: 4e1133c is the commit that introduced the unattributed
-  "clob_v3_1": False default, and its numstat shows it REWROTE the original
-  verdict (224 added / 162 deleted) and ADDED da_dayverdict_20260829_v2.json (433
-  lines) carrying era_admissible FALSE and race_accrual_eligible FALSE. THE
-  COMMIT THAT DISQUALIFIED THE DAY IS THE COMMIT THAT PRESERVED THE ELIGIBLE
-  VERDICT AS PROVENANCE. SECOND CORRECTION: the coordinator also told the USER
-  the era ruling would not produce G=3. THAT WAS RIGHT FOR THE WRONG REASON --
-  the day IS reachable. G REMAINS 2 OF 5 AND THE EARLIEST G=5 REMAINS 2026-09-06,
-  BUT NOW BY THE USER'S CHOICE RATHER THAN BY IMPOSSIBILITY, WHICH IS A
-  DIFFERENT STATEMENT AND MUST NOT BE COLLAPSED BACK INTO THE OLD ONE. THE USER'S
-  RULING, AND IT IS A WITHDRAWAL AND NOT AN INADMISSIBILITY: 08-29 IS LEFT OUT OF
-  THE RACE DELIBERATELY AND KEPT READABLE. THE DAY'S ERA IS ADMISSIBLE UNDER
-  R-497 AND THE VERDICT'S era_admissible FALSE IS NOW FALSE AS A CLAIM AND MUST
-  STOP BEING ASSERTED. The withdrawal is recorded BEFORE any read and is BINDING
-  AFTER it: once 08-29's economics are seen, re-admitting it would be selection
-  on the outcome (rule 11), SO THIS GENUINELY SPENDS THE DAY. Implementation is
-  DA's; the state is mine. RELAYED IN DISPATCH AND NOT YET IN THE REGISTER -- the
-  last entry is R-499 and I checked; recorded as the USER's ruling as relayed,
-  awaiting its R-entry. BE ROUND 19 CLOSED BOTH SURVIVING HIGHS: the fence now
-  RAISES, and verify_declaration_by_recomputation RE-DERIVES the quantile map
-  from the rows artifact and compares field for field -- all_coins_reproduce
-  TRUE, btc and eth both matches TRUE at max_abs_difference 0.0, over 1,135,930
-  scored rows / 471 slugs / 0 missing archive, 07:05:39->07:18:50Z, rows sha
-  19a50195c34d0af2 matching the declaration and the days derived FROM the rows
-  equal to the days declared. AND THE STANDING RULE IS STILL IN FORCE: the
-  release review is IN FLIGHT and NO FORWARD DAY MAY BE SCORED UNTIL IT RELEASES.
-  The BE17 re-review says it in its own words -- "the standing rule I set stands:
-  no forward day is scored until BEM-R1 and BEM-R2 are closed. BEM-R3 is closed
-  and I release it" -- so ONE of the three was released there and the other two
-  are what BE 19 answers. A ROUND THAT CLOSES FINDINGS IS NOT A ROUND THAT
-  RELEASES A PATH, and this is the second consecutive round in which that
-  distinction has had to be written down. THE R-459 DIAGNOSTIC RAN AND DIED, AND
-  IT IS RECORDED AS ATTEMPTED-AND-FAILED, NEVER AS RUN. The declared OUTDIR now
-  exists (created 07:01Z) and contains EXACTLY ONE FILE, the progress log, of
-  EXACTLY ONE LINE: seq 0, stage preflight_passed, utc 07:01:37.363125Z,
-  elapsed_s 0.8, peak_rss 0.21 GB of a 12 GB cap. No process was running at my
-  07:38:30Z read and no result artifact exists. THAT IS THE DEFECT AS MUCH AS THE
-  CRASH IS: A DEAD RUN LOOKED ALIVE, because the last thing written was a PASS.
-  The dispatch reports MemoryError at harmful_hazard_model.py:799 about two
-  minutes in, reached through feature_blocks; I READ :799 and it is
-  `with op(fs[0], 'rb') as fh:` -- the OPEN OF A GZIPPED bookTicker ARCHIVE under
-  data/mm_hf/raw/bookTicker/ -- and I DID NOT SEE A TRACEBACK ARTIFACT, so the
-  line is the dispatch's and the death is mine to verify. The repair is in
-  flight. ONE THING I RECORDED LAST ROUND IS NOW SUPERSEDED BY THE ARTIFACT
-  ITSELF, WHICH IS THE RIGHT WAY ROUND: I wrote that the conditional admission
-  was "recorded, not yet implemented" because tape_rows_array_closed() was called
-  from selftest and never from run(). DE ROUND 46 WIRED IT, and the progress log
-  proves it at run time -- admissions carries condition_name
-  tape_rows_array_closed, condition_holds TRUE, admitted_by USER, with evidence
-  (tape 3,170,987,711 B, rows_array_closed true, tail "...}}]}"). THE CONDITION
-  WAS EVALUATED ON THE ACTUAL TAPE AND HELD. STATE: DA holds SIX unpushed commits
-  (3c49cb7 -> a36db71 -> e02267a -> c8550c7 -> 131b1d7 -> 04dccc7, rounds 20, 21
-  and 22; I checked each against origin/mm-research and none is on the branch),
-  its highest landed row is still Q-DA-215, and DE's round-46 filing has not
-  landed either (highest Q-DE-62). The reviewer released DA rounds 20 and 21 on
-  their merits and AMENDED on item 1 alone -- DA22-R1, HIGH, urgent rather than
-  large. NOTHING SPENT AT THE ARTIFACTS: no seal opened, 08-29 and 08-30 unread
-  -- and 08-29 is now spent BY THE RULING rather than by a read. USER ITEMS: ONE
-  -- the Phase-2 winner, and the race decides it.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -4947,8 +4942,140 @@ flags:
     RULING PRESERVED HAS NOT HAPPENED AND CANNOT YET. Two release reviews have
     now closed findings without granting the release (BE17 fixes, BE19 fixes);
     RECORD THE GATE AS SHUT UNTIL A FILING SAYS RELEASED IN ITS OWN WORDS.
+  HEADLINE_candidate_does_NOT_beat_the_incumbent: >-
+    THE PROGRAMME'S FIRST ECONOMIC RESULT, AND IT IS NEGATIVE FOR THE CANDIDATE.
+    At MATCHED VOLUME -- the incumbent's own theta lowered until it cancels the
+    SAME NUMBER the candidate actually cancelled, so both arms spend one budget
+    -- btc is NEGATIVE IN ALL NINE net-cents cells across the three days and
+    pooled: 09-01 -789.12 / -2,016.71 / -1,476.01; 09-02 -227.60 / -1,237.84 /
+    -2,975.36; POOLED -1,012.68 / -3,038.75 / -3,949.76. BOTH DAYS INDEPENDENTLY
+    AND NOT ONLY POOLED, which is what the declaration demanded and what makes it
+    a reproduced result rather than an average. The declared ONE-SIDED test (does
+    the candidate BEAT the incumbent?) fails decisively -- p 0.890 / 0.936 /
+    0.821 on 09-01. BY_COUNT, an INDEPENDENT matching of the same decision
+    variable, AGREES on btc: -836.93 / -2,406.79 / -683.71. rho -- adverse drift
+    avoided per cent of good flow forfeited -- is LOWER FOR THE CANDIDATE IN ALL
+    TWELVE btc CELLS and falls with volume in 15 of 16 series. eth is a wash and
+    carried NO directional prediction by declaration. HOLM OVER THE DECLARED
+    DENOMINATOR 6: NOTHING SURVIVES -- THE CORRECT OUTCOME FOR A ONE-SIDED
+    CANDIDATE-BEATS-INCUMBENT TEST.
+  BY_THRESHOLD_is_NOT_the_decision_metric: >-
+    THE MECHANISM MUST TRAVEL WITH THE HEADLINE, BECAUSE THE RAW HEADLINE SAYS
+    THE OPPOSITE. BY_THRESHOLD on btc is STRONGLY POSITIVE in every one of the
+    same nine cells -- POOLED +7,536.90 / +15,556.31 / +16,360.94, ALL AT THE
+    PERMUTATION FLOOR 1/2001 AND THEREFORE REPORTED AS BOUNDS, NOT MEASUREMENTS.
+    TAKEN ALONE IT WOULD READ AS A DECISIVE WIN. THE EXACT DECOMPOSITION SAYS IT
+    IS VOLUME: +7,536.90 = VOLUME +8,549.58 + QUALITY -1,012.68; +15,556.31 =
+    +18,595.06 + (-3,038.75); +16,360.94 = +20,310.70 + (-3,949.76) -- identity
+    residuals 0.0 / 1.8e-12 / 0.0, identity_holds TRUE in all eighteen cells.
+    THE WHOLE POSITIVE IS THE VOLUME TERM AND MORE, AND THE QUALITY TERM IS
+    NEGATIVE THROUGHOUT. THE CAUSE: one theta calibrated on the CANDIDATE'S
+    TRAINING DISTRIBUTION applied to BOTH arms, so the candidate cancels about
+    THREE TIMES as often and NEITHER ARM DELIVERS ITS NOMINAL BUDGET. RECORD
+    BY_THRESHOLD AS NOT THE DECISION METRIC; MATCHED VOLUME IS THE ONE THAT
+    ANSWERS THE QUESTION.
+  interim_declaration_ordering_verified_at_git: >-
+    THE REASON THE RESULT CAN BE BELIEVED, AND MEM CHECKED THE ORDERING AT GIT
+    RATHER THAN TAKING IT. live/pm_research/declarations/be_interim_declaration
+    _v1.json: as_of_utc 2026-09-03T12:55:10Z, committed at eeb02ba 12:55:32Z,
+    declared_before_anything_was_opened TRUE, declared_in_commit 7da395c -- while
+    09-01 was FILED at 15:41:26Z and 09-02 at 16:21:39Z. THE HYPOTHESIS WAS FIXED
+    TWO AND THREE HOURS BEFORE THE DAYS WERE OPENED. It names MATCHED_VOLUME
+    primary with BY_THRESHOLD and BY_COUNT reported beside it and NEITHER
+    primary; PRE-SPECIFIES the direction ("the MATCHED_VOLUME increment on btc is
+    NEGATIVE at all three budgets") with eth carrying NO prediction; fixes
+    holm_denominator 6 over the six MATCHED_VOLUME/POOLED cells; records this as
+    ALPHA LOOK 1 OF 2 with the accounting declared to be the USER'S; carries the
+    reconciliation caveat FROM THE START; and states the price in its own
+    no_choice_clause -- 09-01 AND 09-02 ARE CONSUMED and can never serve as clean
+    forward validation. status: INTERIM ON AN INCOMPLETE RACE.
+  PROFITABILITY_with_its_denominator_and_three_limits: >-
+    NEW, AND THE THREE LIMITS ARE NOT SEPARABLE FROM THE NUMBERS. FILLED NOTIONAL
+    226,594.26 USD over three days = 75,531.42/day (btc 196,960.93 + eth
+    29,633.33; 394,098 + 59,270 fill shares; per day 76,698 / 80,241 / 69,655).
+    THE NO-CANCEL BASELINE BOOK ALREADY MAKES MONEY: 1,801.29 over three days =
+    600.43/day = 0.7949% ON FILLED NOTIONAL (btc 0.8294%, eth 0.5657%) -- so the
+    overlay is NOT propping up a loser. Best overlay BESIDE it, never instead of
+    it: +174.78 (+9.7%) at 5%, +434.14 (+24.1%) at 10%, +620.58 (+34.5%) at 15%;
+    best three-day total 2,421.87 = 807.29/day. THE THREE LIMITS, TO BE QUOTED
+    WITH THE NUMBERS AND NEVER SEPARATELY: (i) IT IS 5-SECOND MARKOUT P&L, NOT
+    REALISED P&L -- mark-to-market five seconds after each fill, on fills within
+    one second of the decision, and nothing says the position is ever closed at
+    that mark; (ii) IT IS GROSS AND THE VENUE DOES CHARGE FEES; (iii) THE RETURN
+    IS ON FILLED NOTIONAL, NOT CAPITAL -- the row carries level, resting and
+    qahead but NO QUOTE SIZE, a STATED UNKNOWN AND NOT A ZERO, which makes
+    75,531/day A THROUGHPUT AND NOT AN EXPOSURE. Also stated by BE: the candidate
+    is BEATEN BY THE MATCHED INCUMBENT AT EVERY BUDGET in dollars too --
+    5% 167.46 vs 174.78, 10% 395.16 vs 434.14, 15% 567.71 vs 620.58.
+  fees_are_real_and_the_repo_check_is_a_FIXTURE: >-
+    VERIFIED BY MEM'S OWN DECODE, NOT TAKEN FROM THE ROW, AND IT REPRODUCES BE'S
+    COUNT EXACTLY: 901 receipt files under data/pm_5min/onchain/receipts (sharded
+    into 251 two-hex-char directories -- a first `ls | wc -l` counts the SHARDS,
+    not the files), 1,957 OrderFilled events decoded through the module's own
+    orders_filled(), of which 911 (46.6%) CARRY A NON-ZERO FEE and 1,046 carry
+    zero, 0 unreadable. MEANWHILE THE REPO'S ONLY FEE ASSERTION IS A FIXTURE:
+    `ok(of.fee == 0, "of fee")` at da_feeds_polygon.py:435 is made against
+    _FIXTURE_ORDER_FILLED at :355 -- ITS OWN SYNTHETIC BYTES -- and is NOT
+    evidence about the venue. There is NO FEE MODEL anywhere in live/pm_research
+    (the only FEE-prefixed constants are FEED_PROTOCOL / FEED_BYTES_PER_ROW /
+    FEED_FIELDS). The rate is CONCENTRATED BUT NOT CONSTANT (fee/maker_amount
+    median 0.0145; the documented price-dependent form median 0.0525, p10-p90
+    0.039-0.067) and the receipts are not identified as OUR fills, so NO SINGLE
+    RATE CAN HONESTLY BE APPLIED. FEES ARE REAL, ON ROUGHLY HALF OF OBSERVED
+    FILLS, AND UNQUANTIFIED.
+  release_GRANTED_scoring_a_forward_day: >-
+    THE GATE OPENED. Reviewer filing 51479f1
+    (workspace/reviews/REVIEW_BE21_RELEASE_2026-09-03.md, 08:34Z, pinned
+    a0b0ebb): "RELEASED: scoring a forward day on this path" -- assembling a
+    fenced operating point through op_declaration_for -> require_operating_point,
+    computing the decision metric through increment under BY_THRESHOLD, and
+    running the driver's gate sequence including the frozen-contract gate. The
+    BEM-R1/R2/R3 standing rule is LIFTED, all three driven closed. FIVE ITEMS
+    NAMED OPEN SO THEY ARE NOT MISTAKEN FOR CLEARED: BE21-R1 (pin
+    verification_ref.path to the canonical COMMITTED artifact -- wanted BEFORE a
+    second day is scored; it converts the residual from "write any file" into
+    "make a commit"); BE21-R2/R3; THE DECISION METRIC HAS NEVER BEEN RECONCILED
+    AGAINST ANY PUBLISHED NUMBER and cannot be from existing artifacts; WHICH
+    ARTIFACT OUGHT TO BE SCORED is a freeze-level ruling, not reviewed; and THE
+    FOUR WORKING-TREE ANCHOR DRIFTS ARE REAL AND DISCLOSED, NOT REPAIRED. The
+    reviewer's own closing line is the one to carry: "What I am releasing is the
+    instrument, not the decision."
+  race_did_not_advance_0903_unevaluable: >-
+    09-03 DOES NOT ACCRUE, AND MEM READ THE VERDICT RATHER THAN THE REPORT: at
+    data/pm_5min/derived/da_dayverdict_20260903.json, day_quality_pass FALSE and
+    race_accrual_eligible FALSE, with BOTH coins reporting P1_lost_s_per_hr as
+    None and evaluable FALSE and all three predicates False. THE DAY FAILED
+    BECAUSE IT COULD NOT BE EVALUATED, NOT BECAUSE A MEASURED VALUE EXCEEDED A
+    BAR -- a distinction worth keeping, since era_admissible and post_freeze_pass
+    are BOTH TRUE, so this is a quality failure alone. G REMAINS 2 OF 5.
+  G_counts_only_INTERIOR_days_bar_is_seven: >-
+    BE'S FINDING IS REAL AND MEM DROVE IT RATHER THAN READING IT.
+    phase2_increment_null.complete_utc_days calls a UTC date COMPLETE only if the
+    population span BRACKETS it -- min(t) <= D 00:00:00 AND max(t) >= D+1
+    00:00:00 -- so ONLY INTERIOR DAYS COUNT. Driven by MEM on synthetic spans
+    through the real function: 1 day present -> G 0; 2 -> 0; 3 -> 1; 5 -> 3;
+    6 -> 4; 7 -> 5. G = n - 2, AND THE G=5 BAR NEEDS SEVEN DAYS PRESENT.
+    ONE PRECISION THAT IS MEM'S: Q-BE-251 (6) states only the LAST-day half of
+    the bracket and concludes a five-day pool computes G = 4. BOTH ENDPOINTS
+    FAIL -- the first day cannot be complete either, because min(t) lies inside
+    it -- so a five-day pool computes 3, and THE BAR IS SEVEN DAYS RATHER THAN
+    SIX. Nothing in the interim turns on it (intervals were not claimable at
+    either number). FILED FREEZE-LEVEL AND UNRESOLVED; MEM RULES NOTHING.
+  r500_r501_r502_three_rulings: >-
+    R-500 (07:37Z): the USER WITHDRAWS 08-29 from the race and keeps it readable,
+    and the coordinator's "08-29 is free to read" is RETRACTED -- having been
+    wrong twice in opposite directions before the reviewer settled it. R-501
+    (09:30Z): three rulings in forty minutes on the USER's fair question "five
+    hours and no number" -- SCOPE CUT, MACHINE LIMITS TIGHTENED, SUPERSEDED
+    ATTRIBUTION ADMITTED, with the honest accounting that NEITHER test had
+    produced a number and that the coordinator had been conflating the R-459
+    MECHANICS diagnostic with the 08-29 READ the USER actually asked for. R-502
+    (10:11Z): the USER RATIFIES 08-29 FOR A DEVELOPMENT READ -- a separate block,
+    explicitly NOT for race admission and NOT extending R-419, which cost a code
+    round because de_ratification_check's scope vocabulary was CLOSED and BE,
+    hitting the refusal, NAMED THE SHORTCUT AND REFUSED TO PROPOSE IT.
 focus: >
-  As-of 2026-09-03T08:30Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T05:06Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -5173,7 +5300,27 @@ focus: >
   route and NONE by a green suite. The USER's 08-29 withdrawal is BINDING AGAINST
   EDITS (every undo route refuses by name, the guard proved non-vacuous) and NOT
   YET BINDING AGAINST COUNTING (counts_toward_race has no consumer while the
-  consumers still validate race_accrual_eligible).
+  consumers still validate race_accrual_eligible). ROUND 78 -- THE PROGRAMME HAS
+  ITS FIRST ECONOMIC RESULTS AND THE CANDIDATE DOES NOT BEAT THE INCUMBENT. The
+  release was GRANTED (51479f1: "RELEASED: scoring a forward day on this path"),
+  three days were read -- 08-29 as a DEVELOPMENT read, then 09-01 and 09-02 under
+  an interim DECLARED BEFORE EITHER WAS OPENED -- and at MATCHED VOLUME btc is
+  NEGATIVE IN ALL NINE net-cents cells, both days independently, with rho LOWER
+  in all twelve btc cells and NOTHING SURVIVING Holm over the declared
+  denominator 6. BY_THRESHOLD reads +15,556 pooled at the permutation floor and
+  IS NOT THE DECISION METRIC: the exact decomposition puts the whole positive in
+  the VOLUME term with a NEGATIVE quality term throughout, because one theta
+  calibrated on the candidate's training distribution was applied to both arms.
+  PROFITABILITY, WITH ITS THREE INSEPARABLE LIMITS: filled notional $75,531/day,
+  a NO-CANCEL baseline book already making $600.43/day (0.7949% on filled
+  notional), best overlay +$620.58 (+34.5%) at 15% -- but it is 5-SECOND MARKOUT
+  P&L and not realised, it is GROSS while the venue DOES charge fees (911 of
+  1,957 real OrderFilled events carry a non-zero fee; the repo's fee==0 check is
+  a FIXTURE), and the return is on FILLED NOTIONAL rather than capital because
+  quoted size is absent from the row. THE RACE DID NOT ADVANCE: 09-03 is
+  UNEVALUABLE (both coins P1 None), G REMAINS 2 OF 5, and complete_utc_days
+  counts only INTERIOR days so the G=5 bar needs SEVEN days present -- filed
+  freeze-level and unresolved.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -5516,8 +5663,25 @@ tasks:
   - id: e3-screen
     phase: 2
     name: Hazard plan §10.9 — unchanged forward scoring on >=5 complete days
-    status: G2-of-5-BY-CHOICE-and-the-RELEASE-GATE-IS-SHUT-third-review-in-flight
+    status: G2-of-5-RELEASE-GRANTED-09-03-unevaluable-and-the-G-bar-may-need-SEVEN-days
     notes: |
+      UPDATED 2026-09-04T05:06Z (MEM round 78): THE GATE OPENED, THE RACE DID
+      NOT ADVANCE, AND THE BAR ITSELF MAY BE MISCOUNTED. (1) THE RELEASE IS
+      GRANTED -- reviewer filing 51479f1, "RELEASED: scoring a forward day on
+      this path", the BEM-R1/R2/R3 standing rule LIFTED, with five items named
+      open (BE21-R1 wanted BEFORE a second day is scored; the decision metric
+      still never reconciled against any published number; the four working-tree
+      anchor drifts real and DISCLOSED, NOT REPAIRED). The reviewer's own line:
+      "What I am releasing is the instrument, not the decision."
+      (2) 09-03 DOES NOT ACCRUE, read by MEM at the verdict: day_quality_pass
+      FALSE, race_accrual_eligible FALSE, BOTH coins reporting P1_lost_s_per_hr
+      as None and evaluable FALSE -- THE DAY FAILED BECAUSE IT COULD NOT BE
+      EVALUATED, NOT BECAUSE A VALUE EXCEEDED A BAR; era_admissible and
+      post_freeze_pass are both TRUE. G REMAINS 2 OF 5.
+      (3) THE G BAR ITSELF: complete_utc_days counts ONLY INTERIOR DAYS
+      (G = n - 2, DRIVEN BY MEM: 3 days -> 1, 5 -> 3, 6 -> 4, 7 -> 5), SO THE
+      G=5 BAR NEEDS SEVEN DAYS PRESENT, not five. FILED FREEZE-LEVEL AND
+      UNRESOLVED.
       UPDATED 2026-09-03T08:30Z (MEM round 77): THE GATE IS STILL SHUT AND THE
       THIRD RELEASE REVIEW IS IN FLIGHT. BE round 21 answered BE19-R1 with a
       STRONGER property than was asked for -- the fence now FETCHES its own
@@ -5636,8 +5800,16 @@ tasks:
   - id: partial-data-profitability-read
     phase: 2
     name: R-496 partial-data profitability read — 08-29 primary (free), 08-30 labelled secondary
-    status: 08-29-WITHDRAWN-and-readable-but-the-READ-IS-BLOCKED-by-the-shut-gate
+    status: DONE-08-29-read-as-a-DEVELOPMENT-read-08-30-never-opened
     notes: |
+      UPDATED 2026-09-04T05:06Z (MEM round 78): THE READ HAPPENED. 08-29 was
+      RATIFIED FOR A DEVELOPMENT READ at R-502 -- a separate block, explicitly
+      NOT for race admission and NOT extending R-419 -- after the R-500
+      withdrawal, and was SCORED and opened. Its finding became the
+      PRE-SPECIFIED HYPOTHESIS of the 09-01/09-02 interim: at matched volume the
+      candidate loses in every btc cell. 08-30 WAS NEVER OPENED and remains
+      unspent. The read's own limit travels with it: era clob_v3_1, two collector
+      generations behind the race.
       UPDATED 2026-09-03T08:05Z (MEM round 76): THE READ THE RULING PRESERVED
       HAS NOT HAPPENED AND CANNOT YET. The release gate is SHUT (BE19-R1
       BLOCKING), no forward day may be scored on that path, and 08-29 is a
@@ -5796,6 +5968,51 @@ tasks:
       reading is the one that raised this.
       BE ESTABLISHES; THE USER RULES (rule 14). The coordinator asserts nothing
       and neither does MEM.
+  - id: interim-read-09-01-09-02
+    phase: 2
+    name: Pre-declared INTERIM on 09-01 + 09-02 — the candidate does NOT beat the incumbent
+    status: COMPLETE-hypothesis-CONFIRMED-9-of-9-nothing-survives-Holm-6
+    notes: |
+      DECLARED BEFORE EITHER DAY WAS OPENED, AND MEM CHECKED THE ORDERING AT
+      GIT: live/pm_research/declarations/be_interim_declaration_v1.json, as_of_utc
+      2026-09-03T12:55:10Z, committed at eeb02ba 12:55:32Z with
+      declared_before_anything_was_opened TRUE and declared_in_commit 7da395c --
+      while 09-01 was filed at 15:41:26Z and 09-02 at 16:21:39Z. THE HYPOTHESIS
+      WAS FIXED TWO AND THREE HOURS BEFORE THE DAYS WERE OPENED.
+      WHAT WAS DECLARED: MATCHED_VOLUME primary (the incumbent's own theta
+      lowered until it cancels the SAME NUMBER the candidate actually cancelled,
+      so both arms spend ONE budget), with BY_THRESHOLD and BY_COUNT reported
+      beside it and NEITHER primary; the direction PRE-SPECIFIED ("the
+      MATCHED_VOLUME increment on btc is NEGATIVE at all three budgets") with eth
+      carrying NO prediction; holm_denominator 6 over the six
+      MATCHED_VOLUME/POOLED cells; ALPHA LOOK 1 OF 2 with the accounting declared
+      to be the USER'S; the reconciliation caveat carried FROM THE START; and a
+      no_choice_clause stating the price -- 09-01 AND 09-02 ARE CONSUMED and can
+      never serve as clean forward validation. status: INTERIM ON AN INCOMPLETE
+      RACE.
+      THE RESULT: THE CANDIDATE DOES NOT BEAT THE INCUMBENT. btc MATCHED_VOLUME
+      is NEGATIVE IN ALL NINE net-cents cells -- 09-01 -789.12 / -2,016.71 /
+      -1,476.01; 09-02 -227.60 / -1,237.84 / -2,975.36; POOLED -1,012.68 /
+      -3,038.75 / -3,949.76 -- BOTH DAYS INDEPENDENTLY, not only pooled. The
+      declared one-sided test fails decisively (p 0.890 / 0.936 / 0.821 on
+      09-01). BY_COUNT, an INDEPENDENT matching of the same decision variable,
+      AGREES on btc (-836.93 / -2,406.79 / -683.71). rho is LOWER for the
+      candidate in ALL TWELVE btc cells and falls with volume in 15 of 16
+      series. eth is a wash and carried no prediction. HOLM OVER DENOMINATOR 6:
+      NOTHING SURVIVES -- the correct outcome for a one-sided
+      candidate-beats-incumbent test.
+      AND THE MECHANISM MUST TRAVEL WITH IT: BY_THRESHOLD reads POOLED btc
+      +7,536.90 / +15,556.31 / +16,360.94, ALL AT THE PERMUTATION FLOOR 1/2001
+      and therefore BOUNDS, which taken alone would read as a decisive win. The
+      exact decomposition (residuals 0.0 / 1.8e-12 / 0.0, identity_holds TRUE in
+      all eighteen cells) puts the WHOLE positive in the VOLUME term with a
+      NEGATIVE quality term throughout: +15,556.31 = +18,595.06 + (-3,038.75).
+      ONE THETA CALIBRATED ON THE CANDIDATE'S TRAINING DISTRIBUTION WAS APPLIED
+      TO BOTH ARMS, so the candidate cancels about THREE TIMES as often and
+      NEITHER ARM DELIVERS ITS NOMINAL BUDGET. BY_THRESHOLD IS NOT THE DECISION
+      METRIC; MATCHED VOLUME IS THE ONE THAT ANSWERS THE QUESTION.
+      NOT A VALIDATION, AND THE FILE SAYS SO: an INTERIM on an INCOMPLETE race,
+      look 1 of 2, on days that are now CONSUMED.
   - id: phase4-diagnostic
     phase: 2
     name: R-459 Phase-4 diagnostic — ONE execution of the frozen protocol on its §3 CONSUMED population

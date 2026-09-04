@@ -5526,3 +5526,110 @@ Join rule as in batch 1.
   path; DA holds 20, 21 and 22 unpushed; BE 18 establishing the freeze question.
   USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
 ```
+
+## Batch 84 — archived 2026-09-04T05:06Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-78 true-up of R-500/501/502, the RELEASE, the 08-29 read
+and its review, the pre-declared interim on 09-01/09-02, and BE rounds 22-28.
+Join rule as in batch 1.
+
+```yaml
+  2026-09-03T07:40Z (MEM ROUND 75 -- THE ALARM IS REFUTED, THE FREE READ IS
+  RETRACTED, AND THE DAY IS SPENT BY CHOICE RATHER THAN BY IMPOSSIBILITY). BE 18
+  and 19, both reviewer filings, DA 22/23 and DE 46 swept; nothing run but
+  read-only reads at the artifacts. THE FREEZE ALARM I CARRIED AS OPEN LAST ROUND
+  IS REFUTED AND MUST READ AS REFUTED, NOT AS OPEN. I re-derived it rather than
+  take BE's row: the freeze commit 1b539292e55f9da8 is dated 2026-08-26T10:49:55Z
+  with the subject "FREEZE: reduced-fine (PM_PLUS_FINE) frozen as PRIMARY
+  candidate, multiplicity 2", and it ADDS
+  data/pm_5min/derived/harmful_reduced_fine_candidate_v1.json as 608 NEW LINES,
+  0 DELETED -- the candidate artifact does not predate its own freeze, it arrives
+  with it. The artifact carries race_multiplicity_at_freeze 2 with two
+  race_members (PM_PLUS_FINE PRIMARY, PM_FINE_EXTENDED HELD),
+  decision_eligible FALSE, and a forward_validation clause reading "Begins at the
+  freeze COMMIT instant" -- which is rule 12's own language. 4 OF 4 CONJUNCTS
+  HOLD (BE's measurement, 24 checks driven BOTH directions with four known-bads
+  flipping the conjuncts). AND I REPRODUCED THE STALENESS TO THE SECOND, BECAUSE
+  THE FIGURE HAS TWO POSSIBLE ANCHORS AND ONLY ONE GIVES 141.8: from the BOUND
+  manifest's as_of_utc 2026-08-26T08:00:04Z to the candidate's frozen_at_utc
+  2026-08-26T10:21:49Z is 141.75 MINUTES; to the freeze COMMIT at 10:49:55Z is
+  169.85. THE 141.8 IS AGAINST frozen_at_utc, NOT THE COMMIT, and a reader
+  reproducing it needs to know which. The sentence also SURVIVED A LATER EDIT --
+  608d71a at 14:47:35Z touches the manifest and the freeze_status string is
+  byte-identical after, and still reads "NOT FROZEN..." at HEAD. IT MUST BE
+  SUPERSEDED RATHER THAN EDITED because a landed receipt binds those bytes by
+  sha. TWO CORRECTIONS TO WHAT THE COORDINATOR TOLD THE USER, WRITTEN AS
+  CORRECTIONS WITH THE SUPERSEDED STATEMENT NAMED. FIRST, RETRACTED: "08-29 can
+  never accrue and is therefore free to read." THE ROUTE EXISTS AND I VERIFIED IT
+  AT GIT. At commit 4e1133c (2026-08-31T03:20:38Z),
+  data/pm_5min/derived/da_dayverdict_20260829.json -- blob
+  79767ca38019a008e1a46c36b090c301bce4c279 -- carries as_of_utc
+  2026-08-30T00:06:01.246972+00:00, day_closed_calendar TRUE,
+  verdict_split.race_accrual_eligible TRUE, day_quality_pass TRUE,
+  post_freeze_pass TRUE, and write_reason "scheduled unit run,
+  da-midnight-verify.service (INVOCATION_ID=142596744fc3492283df4f1ceb3be3b2)" --
+  THE SCHEDULED UNIT'S OWN ATTRIBUTION, WHICH IS EXACTLY WHAT BE13'S GATE 1
+  REQUIRES. DA's own instrument pointed at those bytes returns ATTRIBUTED_ALREADY.
+  SO DA'S UNREACHABLE_BY_ANY_HONEST_ROUTE WAS A STATEMENT ABOUT THE FILE
+  CURRENTLY ON DISK, NOT ABOUT THE DAY -- the reviewer's rename says it exactly,
+  NOT_REACHABLE_FROM_THE_ARTIFACT_NOW_ON_DISK. AND THE SHARPEST FACT IS IN THE
+  SAME COMMIT: 4e1133c is the commit that introduced the unattributed
+  "clob_v3_1": False default, and its numstat shows it REWROTE the original
+  verdict (224 added / 162 deleted) and ADDED da_dayverdict_20260829_v2.json (433
+  lines) carrying era_admissible FALSE and race_accrual_eligible FALSE. THE
+  COMMIT THAT DISQUALIFIED THE DAY IS THE COMMIT THAT PRESERVED THE ELIGIBLE
+  VERDICT AS PROVENANCE. SECOND CORRECTION: the coordinator also told the USER
+  the era ruling would not produce G=3. THAT WAS RIGHT FOR THE WRONG REASON --
+  the day IS reachable. G REMAINS 2 OF 5 AND THE EARLIEST G=5 REMAINS 2026-09-06,
+  BUT NOW BY THE USER'S CHOICE RATHER THAN BY IMPOSSIBILITY, WHICH IS A
+  DIFFERENT STATEMENT AND MUST NOT BE COLLAPSED BACK INTO THE OLD ONE. THE USER'S
+  RULING, AND IT IS A WITHDRAWAL AND NOT AN INADMISSIBILITY: 08-29 IS LEFT OUT OF
+  THE RACE DELIBERATELY AND KEPT READABLE. THE DAY'S ERA IS ADMISSIBLE UNDER
+  R-497 AND THE VERDICT'S era_admissible FALSE IS NOW FALSE AS A CLAIM AND MUST
+  STOP BEING ASSERTED. The withdrawal is recorded BEFORE any read and is BINDING
+  AFTER it: once 08-29's economics are seen, re-admitting it would be selection
+  on the outcome (rule 11), SO THIS GENUINELY SPENDS THE DAY. Implementation is
+  DA's; the state is mine. RELAYED IN DISPATCH AND NOT YET IN THE REGISTER -- the
+  last entry is R-499 and I checked; recorded as the USER's ruling as relayed,
+  awaiting its R-entry. BE ROUND 19 CLOSED BOTH SURVIVING HIGHS: the fence now
+  RAISES, and verify_declaration_by_recomputation RE-DERIVES the quantile map
+  from the rows artifact and compares field for field -- all_coins_reproduce
+  TRUE, btc and eth both matches TRUE at max_abs_difference 0.0, over 1,135,930
+  scored rows / 471 slugs / 0 missing archive, 07:05:39->07:18:50Z, rows sha
+  19a50195c34d0af2 matching the declaration and the days derived FROM the rows
+  equal to the days declared. AND THE STANDING RULE IS STILL IN FORCE: the
+  release review is IN FLIGHT and NO FORWARD DAY MAY BE SCORED UNTIL IT RELEASES.
+  The BE17 re-review says it in its own words -- "the standing rule I set stands:
+  no forward day is scored until BEM-R1 and BEM-R2 are closed. BEM-R3 is closed
+  and I release it" -- so ONE of the three was released there and the other two
+  are what BE 19 answers. A ROUND THAT CLOSES FINDINGS IS NOT A ROUND THAT
+  RELEASES A PATH, and this is the second consecutive round in which that
+  distinction has had to be written down. THE R-459 DIAGNOSTIC RAN AND DIED, AND
+  IT IS RECORDED AS ATTEMPTED-AND-FAILED, NEVER AS RUN. The declared OUTDIR now
+  exists (created 07:01Z) and contains EXACTLY ONE FILE, the progress log, of
+  EXACTLY ONE LINE: seq 0, stage preflight_passed, utc 07:01:37.363125Z,
+  elapsed_s 0.8, peak_rss 0.21 GB of a 12 GB cap. No process was running at my
+  07:38:30Z read and no result artifact exists. THAT IS THE DEFECT AS MUCH AS THE
+  CRASH IS: A DEAD RUN LOOKED ALIVE, because the last thing written was a PASS.
+  The dispatch reports MemoryError at harmful_hazard_model.py:799 about two
+  minutes in, reached through feature_blocks; I READ :799 and it is
+  `with op(fs[0], 'rb') as fh:` -- the OPEN OF A GZIPPED bookTicker ARCHIVE under
+  data/mm_hf/raw/bookTicker/ -- and I DID NOT SEE A TRACEBACK ARTIFACT, so the
+  line is the dispatch's and the death is mine to verify. The repair is in
+  flight. ONE THING I RECORDED LAST ROUND IS NOW SUPERSEDED BY THE ARTIFACT
+  ITSELF, WHICH IS THE RIGHT WAY ROUND: I wrote that the conditional admission
+  was "recorded, not yet implemented" because tape_rows_array_closed() was called
+  from selftest and never from run(). DE ROUND 46 WIRED IT, and the progress log
+  proves it at run time -- admissions carries condition_name
+  tape_rows_array_closed, condition_holds TRUE, admitted_by USER, with evidence
+  (tape 3,170,987,711 B, rows_array_closed true, tail "...}}]}"). THE CONDITION
+  WAS EVALUATED ON THE ACTUAL TAPE AND HELD. STATE: DA holds SIX unpushed commits
+  (3c49cb7 -> a36db71 -> e02267a -> c8550c7 -> 131b1d7 -> 04dccc7, rounds 20, 21
+  and 22; I checked each against origin/mm-research and none is on the branch),
+  its highest landed row is still Q-DA-215, and DE's round-46 filing has not
+  landed either (highest Q-DE-62). The reviewer released DA rounds 20 and 21 on
+  their merits and AMENDED on item 1 alone -- DA22-R1, HIGH, urgent rather than
+  large. NOTHING SPENT AT THE ARTIFACTS: no seal opened, 08-29 and 08-30 unread
+  -- and 08-29 is now spent BY THE RULING rather than by a read. USER ITEMS: ONE
+  -- the Phase-2 winner, and the race decides it.
+```

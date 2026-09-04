@@ -1,6 +1,19 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-03T08:30Z (MEM round 77) — **FIVE ZERO-CONSUMER FINDINGS IN
+Updated: 2026-09-04T05:06Z (MEM round 78) — **THE PROGRAMME HAS ITS FIRST
+ECONOMIC RESULTS, AND THE CANDIDATE DOES NOT BEAT THE INCUMBENT.** The release
+was **granted**; three days were read — 08-29 as a development read, then 09-01
+and 09-02 under an interim **declared before either was opened**. **At matched
+volume btc is negative in all nine net-cents cells, both days independently; rho
+is lower in all twelve btc cells; nothing survives Holm over the declared
+denominator 6.** **BY_THRESHOLD reads +15,556 pooled at the permutation floor and
+is NOT the decision metric** — the exact decomposition puts the whole positive in
+the **volume** term with a **negative quality term throughout**. **Profitability
+is new and its three limits are inseparable from it.** **The race did not
+advance:** 09-03 is unevaluable, G stays 2 of 5 — **and the G bar itself counts
+only interior days, so it needs seven.** **USER items: ONE.**
+
+Previously (MEM round 77) — 2026-09-03T08:30Z — **FIVE ZERO-CONSUMER FINDINGS IN
 ONE DAY, NONE OF THEM FOUND BY A GREEN SUITE.** That is a **class, not five
 incidents**, and it is recorded below as a **standing hazard with its instances
 named**. **The release is still NOT granted** — a third review is in flight; two
@@ -103,6 +116,145 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T05:06Z — MEM round 78: the first economic results, and the candidate does not beat the incumbent
+>
+> **THE HEADLINE, AND IT IS THE ANSWER THE PROGRAMME WAS BUILT TO GET.** Three
+> days have now been read — **08-29** as a *development* read (withdrawn from the
+> race at R-500, ratified for development at R-502), then **09-01 and 09-02**
+> under a **pre-declared interim**. **The candidate does not beat the
+> incumbent.**
+>
+> **At MATCHED VOLUME** — the incumbent's own theta lowered until it cancels the
+> **same number** the candidate actually cancelled, so both arms spend **one**
+> budget — **btc is negative in all nine net-cents cells**:
+>
+> | population | 5% | 10% | 15% |
+> |---|---|---|---|
+> | 09-01 | −789.12 | −2,016.71 | −1,476.01 |
+> | 09-02 | −227.60 | −1,237.84 | −2,975.36 |
+> | **POOLED** | **−1,012.68** | **−3,038.75** | **−3,949.76** |
+>
+> **Both days independently, not only pooled** — which is what the declaration
+> demanded and what makes this a reproduced result rather than an average. The
+> declared **one-sided** test (*does the candidate beat the incumbent?*) fails
+> decisively — p **0.890 / 0.936 / 0.821** on 09-01. **BY_COUNT, an independent
+> matching of the same decision variable, agrees on btc** (−836.93 / −2,406.79 /
+> −683.71). **rho** — adverse drift avoided per cent of good flow forfeited — is
+> **lower for the candidate in all twelve btc cells**, and falls with volume in
+> 15 of 16 series. **eth is a wash and carried no directional prediction by
+> declaration.** **Holm over the declared denominator 6: nothing survives** —
+> which is the *correct* outcome for a one-sided candidate-beats-incumbent test.
+>
+> **THE MECHANISM MUST TRAVEL WITH THE HEADLINE, BECAUSE THE RAW HEADLINE SAYS
+> THE OPPOSITE.** BY_THRESHOLD on btc is **strongly positive** in every one of
+> the same nine cells — **POOLED +7,536.90 / +15,556.31 / +16,360.94, all at the
+> permutation floor 1/2001 and therefore reported as BOUNDS**. Taken alone it
+> would read as a decisive win. **The exact decomposition says it is volume:**
+>
+> ```
+> +7,536.90 = VOLUME  +8,549.58 + QUALITY  −1,012.68
+> +15,556.31 = VOLUME +18,595.06 + QUALITY −3,038.75
+> +16,360.94 = VOLUME +20,310.70 + QUALITY −3,949.76
+> identity residuals 0.0 / 1.8e-12 / 0.0 · identity_holds TRUE in all 18 cells
+> ```
+>
+> **The whole positive is the volume term and more; the quality term is negative
+> throughout.** The cause is **one theta calibrated on the candidate's *training*
+> distribution applied to both arms**, so the candidate cancels about **three
+> times** as often and **neither arm delivers its nominal budget**. **BY_THRESHOLD
+> is NOT the decision metric. Matched volume is the one that answers the
+> question.**
+>
+> **WHY THIS RESULT CAN BE BELIEVED — I checked the ordering at git.**
+> `be_interim_declaration_v1.json`: `as_of_utc` **2026-09-03T12:55:10Z**,
+> committed at **`eeb02ba` 12:55:32Z**, `declared_before_anything_was_opened`
+> **true**, `declared_in_commit` `7da395c` — while **09-01 was filed at 15:41:26Z
+> and 09-02 at 16:21:39Z**. **The hypothesis was fixed two and three hours before
+> the days were opened.** It pre-specified the direction, fixed
+> `holm_denominator` 6, recorded this as **alpha look 1 of 2** with the accounting
+> declared to be the USER's, carried the reconciliation caveat **from the start**,
+> and stated its own price: **09-01 and 09-02 are CONSUMED and can never serve as
+> clean forward validation.** Status in the file: **INTERIM ON AN INCOMPLETE
+> RACE.**
+>
+> ---
+>
+> **PROFITABILITY — NEW, AND ITS THREE LIMITS ARE NOT SEPARABLE FROM IT.**
+>
+> **Filled notional $226,594.26 over three days = $75,531.42/day** (btc
+> $196,960.93 + eth $29,633.33). **The NO-CANCEL baseline book already makes
+> money: $1,801.29 over three days = $600.43/day = 0.7949% on filled notional** —
+> so the overlay is not propping up a loser. **Best overlay, reported beside the
+> baseline and never instead of it:** +$174.78 (+9.7%) at 5%, +$434.14 (+24.1%)
+> at 10%, **+$620.58 (+34.5%) at 15%** — best three-day total $2,421.87 =
+> $807.29/day. *(And in dollars the candidate is beaten by the matched incumbent
+> at every budget: 5% 167.46 vs 174.78, 10% 395.16 vs 434.14, 15% 567.71 vs
+> 620.58.)*
+>
+> **The three limits, to be quoted with the numbers and never separately:**
+> 1. **It is 5-second markout P&L, not realised P&L** — mark-to-market five
+>    seconds after each fill, on fills within one second of the decision, and
+>    nothing says the position is ever closed at that mark.
+> 2. **It is GROSS, and the venue DOES charge fees.** **I decoded the receipts
+>    myself and reproduced the count exactly:** 901 receipt files under
+>    `data/pm_5min/onchain/receipts` (sharded into 251 directories — a first
+>    `ls | wc -l` counts the *shards*), **1,957 OrderFilled events, of which 911
+>    (46.6%) carry a NON-ZERO fee** and 1,046 carry zero, 0 unreadable.
+>    **Meanwhile the repo's only fee assertion is a fixture:**
+>    `ok(of.fee == 0, "of fee")` at `da_feeds_polygon.py:435` runs against
+>    `_FIXTURE_ORDER_FILLED` — **its own synthetic bytes, not evidence about the
+>    venue** — and there is **no fee model anywhere** in `live/pm_research`. The
+>    rate is concentrated but **not constant**, so no single rate can honestly be
+>    applied: **fees are real, on roughly half of observed fills, and
+>    unquantified.**
+> 3. **The return is on FILLED NOTIONAL, not capital.** The row carries `level`,
+>    `resting` and `qahead` but **no quote size** — a **stated unknown, not a
+>    zero** — which makes $75,531/day **a throughput, not an exposure.**
+>
+> ---
+>
+> **THE RELEASE WAS GRANTED** (`51479f1`, 08:34Z): *"RELEASED: scoring a forward
+> day on this path"*, the BEM-R1/R2/R3 standing rule **lifted**. **Five items
+> named open so they are not mistaken for cleared** — BE21-R1 (pin
+> `verification_ref.path` to the canonical **committed** artifact, wanted *before
+> a second day is scored*); BE21-R2/R3; **the decision metric has never been
+> reconciled against any published number**; which artifact ought to be scored is
+> a **freeze-level** ruling; and **the four working-tree anchor drifts are real
+> and disclosed, not repaired.** The reviewer's own closing line: **"What I am
+> releasing is the instrument, not the decision."**
+>
+> **THE RACE DID NOT ADVANCE, AND THE BAR ITSELF MAY BE MISCOUNTED.** **09-03
+> does not accrue** — I read the verdict rather than the report: `day_quality_pass`
+> **false**, `race_accrual_eligible` **false**, with **both coins reporting
+> `P1_lost_s_per_hr` as `None`** and `evaluable` **false**. **The day failed
+> because it could not be EVALUATED, not because a measured value exceeded a
+> bar** — `era_admissible` and `post_freeze_pass` are both **true**, so this is a
+> quality failure alone. **G remains 2 of 5.**
+>
+> **And BE's G finding is real — I drove it rather than reading it.**
+> `phase2_increment_null.complete_utc_days` calls a UTC date COMPLETE only if the
+> population span **brackets** it (`min(t) <= D 00:00:00` **and**
+> `max(t) >= D+1 00:00:00`), so **only interior days count**. Driven through the
+> real function on synthetic spans:
+>
+> ```
+> days present:  1 → G 0    2 → G 0    3 → G 1    5 → G 3    6 → G 4    7 → G 5
+> ```
+>
+> **G = n − 2, and the G = 5 bar needs SEVEN days present.** **One precision that
+> is mine:** Q-BE-251 (6) states only the **last-day** half of the bracket and
+> concludes a five-day pool computes G = 4; **both endpoints fail** — the first
+> day cannot be complete either, because `min(t)` lies inside it — **so a
+> five-day pool computes 3, and the bar is seven days rather than six.** Filed
+> **freeze-level and unresolved**; I rule nothing.
+>
+> **State:** register at **493 entries**, last **R-502**. R-500 withdrew 08-29 and
+> retracted *"free to read"*; R-501 cut scope, tightened machine limits and
+> admitted a superseded attribution on the USER's fair question *"five hours and
+> no number"*; R-502 ratified 08-29 for a development read. DA's chain still
+> **held** at my read (highest landed row **Q-DA-215**) and reported to be
+> landing. **USER items: ONE — the Phase-2 winner, and the race decides it.**
 
 > ### STANDING HAZARD — zero-consumer and zero-reachability findings (five in one day, none found by a green suite)
 >
