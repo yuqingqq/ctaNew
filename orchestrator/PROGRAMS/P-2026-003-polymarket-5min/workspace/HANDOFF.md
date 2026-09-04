@@ -1,6 +1,21 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T10:13Z (MEM round 80) — **URGENT CORRECTION: THE
+Updated: 2026-09-04T10:23Z (MEM round 81) — **THE RANKING RESULT SURVIVES, AND
+"DIFFERENT PATH" IS NOT WHY.** **The sign is not invariant under the aggregation
+rule** — summing every row from the crossing onward flips it **positive at all
+three budgets**. What settles it is a measurement, not a preference: **91.1% of
+consecutive intra-action row pairs are closer together than the one-second
+horizon each row already sums over**, so the alternatives double-count, and **of
+four rules exactly one counts each prevented fill once — the one shipped.** That
+condition is now **published with the result**, because a reader who re-derives
+prevented value the intuitive way gets the opposite sign. **`baseline_$` IS
+contaminated** (not among the nine) and BE is repairing or removing it. **The
+publication provenance check is standing practice** — and it attaches to
+**publication**, not to review rounds. §8.1 measures **4 of 7 arms runnable**
+(my own run), with **arm 6 blocked on `fairprice_challenger` — exactly what BE is
+building.** **USER items: TWO.**
+
+Previously (MEM round 80) — 2026-09-04T10:13Z — **URGENT CORRECTION: THE
 PROFITABILITY BLOCK IS WITHDRAWN, AND I AM THE SEAT THAT PUT IT IN THESE FILES.**
 The USER audited the released result and withdrew it
 (`RESULT_RELIABILITY_AUDIT_2026-09-04.md` at `0b970c3`). **Every withdrawn figure
@@ -149,6 +164,144 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T10:23Z — MEM round 81: the ranking result survives, and "different path" is not why
+>
+> **THIS IS A CONDITION OF THE RESULT, NOT A FOOTNOTE. THE SIGN IS NOT INVARIANT
+> UNDER THE AGGREGATION RULE.** The reviewer tested the ranking against **four**
+> aggregation rules on the 08-29 two-arm feed (537,881 btc rows, 299,386
+> actions):
+>
+> | budget | SHIPPED first-crossing | A: crossing-onward | B: all rows in the gen | C: `prof.py` first-in-file |
+> |---|---:|---:|---:|---:|
+> | 5% | **−666.38** | **+406.20** | −1,261.32 | −1,043.79 |
+> | 10% | **−601.16** | **+1,210.89** | −702.49 | −463.64 |
+> | 15% | **−1,198.67** | **+681.29** | −1,485.29 | −1,734.38 |
+>
+> **Under variant A — sum every row from the crossing onward, the natural reading
+> of *"a cancellation prevents everything that happens after it acts"* — the
+> statistic goes POSITIVE at all three budgets.** If that were a legitimate
+> estimand, **the ranking result would fall.**
+>
+> **It is not, and what settles it is a measurement rather than a preference.** A
+> "row" here **is not a fill**: `harmful_exposure_rows.py:363-370` **already sums
+> every tranche inside that row's own 1-second horizon** at or after the 50 ms
+> cut, so multiple rows per action are **overlapping decision-time snapshots of
+> the same exposure**. Measured on the real feed:
+>
+> ```
+> rows/action 1.797 | 26.9% of actions have >1 row
+> consecutive-row spacing within an action: median 0.170 s, p75 0.414 s
+> pairs closer than the 1.0 s FILL_HORIZON_S  =>  217,267 of 238,495  (91.1%)
+> ```
+>
+> **91.1% of consecutive row pairs inside an action are closer together than the
+> horizon they each sum over**, so variants A and B add the same tranches two or
+> more times. **The positive sign under A is a double-count, not a rival
+> reading.** **Of the four rules, exactly one counts each prevented fill once, and
+> it is the one shipped** — a cancellation acts **once**, at the crossing, and the
+> row at that instant already aggregates its own horizon. **Variant C preserves
+> the sign only by luck:** it takes the first row by `t_start` **regardless of
+> score**, i.e. a *different decision point* from the one at which the arm
+> actually crossed.
+>
+> **This justification is published with the result, in both files, because a
+> reader who re-derives "prevented value" the intuitive way gets the opposite
+> sign.**
+>
+> **ONE COLUMN IS CONTAMINATED AFTER ALL, AND IT IS NOT AMONG THE NINE VALUES.**
+> **`baseline_$`** — the column printed beside the arms — comes from `prof.py`'s
+> withdrawn first-row `seen` dict (`base = agg[coin][3]/100.0`), **and so does
+> every percentage computed against it.** The `cand_$ / inc@theta_$ /
+> inc_match_$` columns do not: `matched_volume` runs over **all** feed rows from
+> `RC.load_two_arm_feed`, and **`seen` is never passed to it.** **BE is repairing
+> or removing the column**, and **no economic figure is republished** — the new
+> `be_fill_ledger`'s dollar outputs are **withheld pending review**, and **its
+> fixture is the defect itself** (one action, three rows, first-row sees 10 shares
+> where the truth is 60), naming fees, realised exit and settlement, quote size,
+> inventory and capital as **statuses rather than zeros**.
+>
+> ---
+>
+> **STANDING PRACTICE, NOW IN FORCE — THE PUBLICATION PROVENANCE CHECK.** Before
+> any number reaches the USER: **name the producer; census its committed call
+> *and bare-reference* sites, requiring at least one reachable from a committed
+> entry point; confirm the producing path is inside the repo.** One AST pass,
+> seconds.
+>
+> **I ran it rather than quoting its result, and the answer has already changed.**
+> R-504 (F) records *"`matched_volume`: 0 sites"*. **My own AST census at 10:23Z
+> returns one CALL site** at `be_read_cells.py:313` **inside `compute()`**, two
+> bare references at `:488-:489` in the selftest, with `compute()` called by
+> `emit()` and the module carrying a `__main__` — **so the requirement is now met
+> where it was not.** **The practice stands; its answer is dated.**
+>
+> **BE round 31 is what changed it, and I verified the rest of that repair too:**
+> `compute()` (`:280`) now calls `matched_volume` (`:313`) and emits
+> MATCHED_VOLUME beside the others with a short-count refusal; `emit()` (`:400`)
+> writes the durable document; and **`be_read_cells` had no selftest at all** and
+> now carries `EXPECTED_CHECKS = 9` — **including one asserted over the source at
+> `:448` that `compute()` calls `matched_volume`**, with its known-bad at `:454`.
+> **That is the check whose absence let a defined-but-uncalled primary reach a
+> published headline.** `prof.py` is still absent from the repository;
+> `be_fill_ledger.py` is present.
+>
+> **The reviewer's diagnosis belongs with the practice and is the useful half:
+> all six zero-consumer findings surfaced because a ROUND was dispatched, and the
+> released result was never in a round — so the practice attaches to PUBLICATION,
+> not to review rounds.** *That is also the honest account of my own miss: I swept
+> the number in round 78 and no round was ever dispatched against it.*
+>
+> ---
+>
+> **DA's INDEPENDENT VERIFIER IS BUILT AND ALREADY EARNING.**
+> `da_arm_replay_verify.py` (33,306 B) **imports nothing from the producer** and
+> parses its field enumeration with `ast` rather than importing it, because **a
+> checker that shares an expression with the checked agrees by construction**
+> (R-235) — I confirmed at the imports that it pulls only
+> argparse/hashlib/json/re/sys/pathlib plus `pm_tape_density`. **Its default is
+> not "real":** an arm that declares nothing reads
+> `UNVERIFIABLE_NO_EVIDENCE_EITHER_WAY` (`:182`), **never a pass**. On the real
+> artifact it **confirms the stub from independent evidence** (7 arms, 1 distinct
+> predictor `"none"`) and files **two findings**:
+> 1. **All nine gates report failures with NO DENOMINATOR**, so `all_gates_pass`
+>    **cannot distinguish "0 failing" from "0 checked"** (`:248-:274`,
+>    `n_gates_without_denominator`) — and the population carries **no digest**, so
+>    what an arm consumed is **unverifiable**.
+> 2. In its §8.1 audit, all 13 fields are present with a source XOR a reason and
+>    no two sharing a source — **but all seven counters lack a companion
+>    evaluated-flag, so a zero from a path that never ran is indistinguishable
+>    from a counted zero.**
+>
+> **§8.1 STATE — and I drove `arm_runnability()` rather than reading its count,
+> because the count had already moved.** R-504 (H) records **3 of 7**; **my own
+> run at 10:23:11Z returns 4 of 7**:
+>
+> | arm | state |
+> |---|---|
+> | `QR_SKEW_ONLY` | **RUNNABLE** |
+> | `QR_CANCEL_HOLD_X_SKEW` | **RUNNABLE** |
+> | `HAZARD_ONLY_NEUTRAL` | BLOCKED — `neutral_placement` ABSENT |
+> | `CONDVALUE_NEUTRAL` | BLOCKED — `neutral_placement` ABSENT |
+> | `CONDVALUE_X_SKEW` | **RUNNABLE** |
+> | `CONDVALUE_X_SKEW_X_FAIRPRICE` | BLOCKED — `fairprice_challenger` ABSENT |
+> | `RANDOM_MATCHED` | **RUNNABLE** |
+>
+> **Arm 7's blocker was stale** and it is the matched-random floor; **arm 5 is
+> unblocked by the §2.2 ruling that skew is a POLICY INPUT and not a PREDICTOR
+> FEATURE**, which the plan forbids. **And the two direction-change workstreams
+> are one thing, which the dependency makes plain: arm 6's blocker is
+> `fairprice_challenger` — exactly what BE is building under §4.2 — so BE's
+> challengers are literally DE's missing arm.** The function **decides nothing**,
+> as its own `decides` field states, and it replaced a **hand-maintained**
+> `ARM_RUNNABLE` dict of verdict strings.
+>
+> **UNCHANGED: G = 3 of 5** (09-01, 09-02, 09-03), and 09-03's R-503 accrual **is
+> not a third economic read**. **USER items are now TWO:** the Phase-2 winner, and
+> — **new at R-504** — **whether to predeclare a causal incumbent operating point
+> for subsequent days, or keep the equal-count comparison permanently labelled a
+> diagnostic. BE declined to predeclare one and said why: choosing it now would be
+> choosing after seeing every number today produced.**
 
 > ### 2026-09-04T10:13Z — MEM round 80: the profitability block is withdrawn, and I am the seat that put it in these files
 >
