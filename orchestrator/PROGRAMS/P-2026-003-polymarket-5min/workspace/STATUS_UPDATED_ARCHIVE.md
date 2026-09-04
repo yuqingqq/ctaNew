@@ -7310,3 +7310,59 @@ Nothing deleted — only moved.
   artifact said, the exclusion finding as RELAYED because DA ran it and I did
   not. THAT DISTINCTION IS THE INSTRUMENT DOING ITS JOB ON ITS FIRST REAL ROUND.
 ```
+
+## Batch 101 — archived 2026-09-04T13:25Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 95 entered the field.
+Nothing deleted — only moved.
+
+```
+  2026-09-04T13:00Z (MEM ROUND 92 -- SHORT BATCH. A NEW STANDING RULE, AND THE
+  Q4 NULL IS NOW KNOWN TO BE DIAGNOSTIC-ONLY BEFORE IT RUNS.) STANDING RULE 11 IS
+  RECORDED, AND IT IS THE COORDINATOR'S OWN CORRECTION, NOT MINE: A VERIFICATION
+  YOU PERFORMED YOURSELF IS EVIDENCE, A SEAT'S REPORT IS A CLAIM, AND WHEN THEY
+  CONFLICT THE CONFLICT IS ADJUDICATED AT THE ARTIFACT, NEVER BY DEFERRING TO THE
+  SEAT. The instance is R-513(A): the coordinator READ False correctly at the
+  artifact and then accepted BE's contrary report and wrote None. THAT IS A NEW
+  SHAPE -- every other failure today was relaying an UNCHECKED claim; this is
+  discarding a CHECKED one -- and it is the counterpart to
+  mem_flag_provenance.py, which asks whether a claim was ever checked but says
+  nothing about what to do when a check EXISTS and a report disagrees. MY
+  CANDIDATE MECHANISM IS CONFIRMED: both superseded iter011 variants carry
+  increment_beats_incumbent at ZERO sites, so a .get() returns None FOR AN ABSENT
+  KEY -- R-509(B)'s own codomain predicate producing a false correction eleven
+  entries later, in the one field a USER-facing economic claim turned on.
+  THE Q4 NULL, CARRIED WITH ITS PROVENANCE SPLIT RATHER THAN AS ONE BLOCK.
+  DIAGNOSTIC-ONLY (RELAYED, R-515(D)/R-516): no outcome can make Q4 pass, the
+  available gain is exactly six cells moving GATE_PARTIALLY_EVALUATED ->
+  GATE_EVALUATED_AND_FAILED, and IT RUNS ANYWAY because "does cancelling on this
+  signal beat cancelling AT RANDOM at the same budget" is worth answering on its
+  own and is the only thing between this programme and an adjudicated economic
+  number. THE ANSWER IS PINNED BEFORE ANY DRAW (RELAYED, R-516(A)): null means
+  ~ -1,440 / -2,881 / -4,321c against the observed +7,869.68 / +12,333.50 /
+  +14,476.99, p at the 1/501 floor at all three; all five heads already carrying
+  this null returned EXACTLY the floor. A PREDICTION THAT COMES TRUE IS NOT
+  EVIDENCE ABOUT THE MODEL. INTERNALLY VALID (CHECKED BY ME AT THE CODE, NOT
+  relayed): de_section81_arms.py binds cv_ev once at :410, the treated arm
+  replays it at :433, the above-threshold set is built over it at :460, and the
+  control at :512 is permuted_stream(cv_ev, ...) -- the same object on both
+  sides, so R-513(E)'s duration-selectivity threatens EXTERNAL validity only. It
+  does NOT make the exclusion harmless; the long-exposure limit travels with
+  every number. AND FOUR CODE DEFECTS, EACH READ BY ME AT THE SOURCE: the pool is
+  UNRESTRICTED (strata built at :71-75 over every generation, so ~90% of the
+  null's budget goes to actions worth zero to cancel -- the matching itself is
+  right); the candidate values the first CROSSING row while the null values the
+  FIRST row; beats_random_max_on_NET is a BOOLEAN against the MAX of the draws,
+  which Holm cannot consume; and there is NO MINIMUM-DRAWS GUARD in the null
+  about to be used while its sibling refuses below 200 BY NAME. THE DECLARATION
+  IS AMENDED TO A GRID BEFORE ANY DRAW (RELAYED, R-516(C)): both pools declared,
+  both run, both reported, neither selected after seeing. AND ONE CORRECTION THAT
+  BINDS MY OWN READING (RELAYED, R-514(C)/(D)): "R-340 does not name clob_v4" was
+  a PARSER ARTIFACT this register carried TWICE and two selftests asserted as
+  fact; the cite is BETTER than reported. The second-order half matters more --
+  "this register writes each entry as ONE LINE" was a GENERALISATION FROM n=2 and
+  is FALSE, and it is what my own reload brief handed me as established. A
+  CORRECTION VERIFIED ON A SAMPLE OF TWO IS STILL A CLAIM ABOUT A POPULATION.
+  Nothing of mine turns on it -- I read the register with line RANGES. INSTRUMENT:
+  472 flags, 10 CHECKED, 5 RELAYED, 457 UNMARKED, 0 findings.
+```

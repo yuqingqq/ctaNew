@@ -4,6 +4,55 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T13:25Z (MEM ROUND 95 -- R-520 AND R-521 REVERSE PART OF WHAT I
+  RECORDED IN ROUNDS 93 AND 94, AND THE HEADLINE CHANGES SHAPE RATHER THAN SIGN.)
+  WHAT I DID NOT SAY AND SHOULD HAVE: THE "12 WINDOWS" ARE ONE CONTIGUOUS HOUR,
+  2026-08-24 13:50-14:50Z, NOT 12 INDEPENDENT REPLICATES -- and the baseline is a
+  TAIL PHENOMENON: the TOP 1% OF 4,315 FILLS CARRY 113% OF THE NET, so the other
+  99% SUM TO MINUS 13%, and hour 14 of two carries 88.2%. IT SURVIVES EVERY
+  LEAVE-ONE-OUT *AND* IT IS TAIL-CARRIED, AND BOTH HALVES TRAVEL OR NEITHER DOES:
+  robustness alone reads as breadth, concentration alone reads as fragility, and
+  the honest object is the pair. THE FILLS-LEG COST OF CANCELLING IS
+  INDISTINGUISHABLE FROM RANDOM (CONDVALUE -953.92c against -755.88c expected, sd
+  973.19, z -0.20, p 0.43; HAZARD -12.56c against -113.77c, z +0.26, p 0.60), with
+  DA's three limits riding with it and not detachable: POST-HOC ON SEEN DATA so a
+  DISPERSION statement not an adjudication, the 333 are SCORE-SELECTED, and it
+  rests on a counts-and-lookup subset property.
+  R-521 IS THE ONE THAT CHANGES THE READING, AND I RECOMPUTED ALL OF IT FROM THE
+  ARTIFACT GIVEN ONE RELAYED INPUT (1,440 lost fills). 333 CANCELS REMOVED 1,440
+  FILLS -- 4.3243 PER CANCEL, 33.372% OF A 4,315-FILL BOOK -- so cents_per_cancel
+  DIVIDED A WHOLE-BOOK DELTA BY THE WRONG POPULATION, and PER LOST FILL IT IS
+  -0.6624c AND NOT -2.8646c. ON THE CORRECTED DENOMINATOR THE RANKER IS GOOD:
+  removed fills carry 3.01x the average adverse selection at 0.832x the average
+  spread, HAZARD 3.81x at 0.76x -- CORRECT SELECTION ON BOTH AXES AT ONCE. IT
+  STILL LOSES AND THE REASON IS THE BOOK: adverse selection is only 18.626% of
+  gross spread capture and the average fill earns +1.99276c, so cancelling a
+  RANDOM fill costs 1.99c and cancelling one of THESE costs 0.66c -- THREE TIMES
+  BETTER THAN RANDOM AND STILL DECLINING PROFITABLE FILLS. RECORD THAT AS THE
+  MECHANISM: "the overlay destroys value" and "the overlay ranks well on a book
+  with too little adverse selection to harvest" ARE DIFFERENT FINDINGS AND ONLY
+  THE SECOND IS ACTIONABLE -- the first points at the model, the second points at
+  venue, spread regime and horizon.
+  THREE WITHDRAWALS, TWO OF WHICH REACHED THE USER: cents_per_cancel = -2.86 as
+  the economics of a cancellation; THE IDENTITY RESIDUALS AS EVIDENCE OF ANYTHING
+  (adverse is DEFINED as P&L - spread, so the identity is an ALGEBRAIC TAUTOLOGY
+  THAT CANNOT FAIL -- it cannot double-count and it CANNOT DETECT AN OMISSION
+  EITHER); and the printed predicate's PER-FILL ATTRIBUTION, because the code
+  computes a DIFFERENCE OF WHOLE-BOOK TOTALS BETWEEN TWO REPLAYS, which is
+  CLAUDE.md pitfall 4 arriving in the economics summary. That last one QUALIFIES
+  Q-DA-240 and is with DA. AND I CHECKED WHETHER THE SECOND WITHDRAWAL HITS MY
+  OWN ROUND-94 FLAG. IT DOES NOT, AND THE NEAR-MISS IS THE LESSON: the withdrawn
+  residual is identity_residual_cents (6.82e-12 in cancellation_economics), while
+  my flag rests on maker_pnl_reconciliation.difference_cents (-3.64e-12) between
+  reference_tranche_markout_cents and replay_received_markout_cents -- TWO
+  RESIDUALS OF THE SAME ORDER IN ONE ARTIFACT, ONE TAUTOLOGICAL AND ONE
+  EVIDENTIAL, AND NOTHING ABOUT THEIR SIZE DISTINGUISHES THEM. "The residual is
+  tiny, so the numbers agree" is not a safe inference; the question is always
+  WHETHER THE TWO SIDES COULD HAVE DISAGREED. WHAT STILL STANDS: the baseline's
+  FOUR independent reproductions, that MARKET-MAKING PAYS ON THIS HOUR, and that
+  THE RANKER SELECTS CORRECTLY ON BOTH AXES. INSTRUMENT: 484 flags, 16 CHECKED,
+  11 RELAYED, 457 UNMARKED, 0 findings.
+  PRIOR:
   2026-09-04T13:14Z (MEM ROUND 94 -- SHORT. A WITHDRAWAL OF A COORDINATOR RULING
   I RECORDED TWO ROUNDS AGO, AND THE ECONOMIC NUMBER IS NOW VERIFIED.)
   FIRST, A CORRECTION IN BAND TO WHAT THIS FIELD SAID ONE ROUND AGO (rule 13):
@@ -90,55 +139,6 @@ updated: >-
   single-producer number is RELAYED, which understates my read and is the safe
   direction. INSTRUMENT: 474 flags, 11 CHECKED, 6 RELAYED, 457 UNMARKED, 0
   findings.
-  PRIOR:
-  2026-09-04T13:00Z (MEM ROUND 92 -- SHORT BATCH. A NEW STANDING RULE, AND THE
-  Q4 NULL IS NOW KNOWN TO BE DIAGNOSTIC-ONLY BEFORE IT RUNS.) STANDING RULE 11 IS
-  RECORDED, AND IT IS THE COORDINATOR'S OWN CORRECTION, NOT MINE: A VERIFICATION
-  YOU PERFORMED YOURSELF IS EVIDENCE, A SEAT'S REPORT IS A CLAIM, AND WHEN THEY
-  CONFLICT THE CONFLICT IS ADJUDICATED AT THE ARTIFACT, NEVER BY DEFERRING TO THE
-  SEAT. The instance is R-513(A): the coordinator READ False correctly at the
-  artifact and then accepted BE's contrary report and wrote None. THAT IS A NEW
-  SHAPE -- every other failure today was relaying an UNCHECKED claim; this is
-  discarding a CHECKED one -- and it is the counterpart to
-  mem_flag_provenance.py, which asks whether a claim was ever checked but says
-  nothing about what to do when a check EXISTS and a report disagrees. MY
-  CANDIDATE MECHANISM IS CONFIRMED: both superseded iter011 variants carry
-  increment_beats_incumbent at ZERO sites, so a .get() returns None FOR AN ABSENT
-  KEY -- R-509(B)'s own codomain predicate producing a false correction eleven
-  entries later, in the one field a USER-facing economic claim turned on.
-  THE Q4 NULL, CARRIED WITH ITS PROVENANCE SPLIT RATHER THAN AS ONE BLOCK.
-  DIAGNOSTIC-ONLY (RELAYED, R-515(D)/R-516): no outcome can make Q4 pass, the
-  available gain is exactly six cells moving GATE_PARTIALLY_EVALUATED ->
-  GATE_EVALUATED_AND_FAILED, and IT RUNS ANYWAY because "does cancelling on this
-  signal beat cancelling AT RANDOM at the same budget" is worth answering on its
-  own and is the only thing between this programme and an adjudicated economic
-  number. THE ANSWER IS PINNED BEFORE ANY DRAW (RELAYED, R-516(A)): null means
-  ~ -1,440 / -2,881 / -4,321c against the observed +7,869.68 / +12,333.50 /
-  +14,476.99, p at the 1/501 floor at all three; all five heads already carrying
-  this null returned EXACTLY the floor. A PREDICTION THAT COMES TRUE IS NOT
-  EVIDENCE ABOUT THE MODEL. INTERNALLY VALID (CHECKED BY ME AT THE CODE, NOT
-  relayed): de_section81_arms.py binds cv_ev once at :410, the treated arm
-  replays it at :433, the above-threshold set is built over it at :460, and the
-  control at :512 is permuted_stream(cv_ev, ...) -- the same object on both
-  sides, so R-513(E)'s duration-selectivity threatens EXTERNAL validity only. It
-  does NOT make the exclusion harmless; the long-exposure limit travels with
-  every number. AND FOUR CODE DEFECTS, EACH READ BY ME AT THE SOURCE: the pool is
-  UNRESTRICTED (strata built at :71-75 over every generation, so ~90% of the
-  null's budget goes to actions worth zero to cancel -- the matching itself is
-  right); the candidate values the first CROSSING row while the null values the
-  FIRST row; beats_random_max_on_NET is a BOOLEAN against the MAX of the draws,
-  which Holm cannot consume; and there is NO MINIMUM-DRAWS GUARD in the null
-  about to be used while its sibling refuses below 200 BY NAME. THE DECLARATION
-  IS AMENDED TO A GRID BEFORE ANY DRAW (RELAYED, R-516(C)): both pools declared,
-  both run, both reported, neither selected after seeing. AND ONE CORRECTION THAT
-  BINDS MY OWN READING (RELAYED, R-514(C)/(D)): "R-340 does not name clob_v4" was
-  a PARSER ARTIFACT this register carried TWICE and two selftests asserted as
-  fact; the cite is BETTER than reported. The second-order half matters more --
-  "this register writes each entry as ONE LINE" was a GENERALISATION FROM n=2 and
-  is FALSE, and it is what my own reload brief handed me as established. A
-  CORRECTION VERIFIED ON A SAMPLE OF TWO IS STILL A CLAIM ABOUT A POPULATION.
-  Nothing of mine turns on it -- I read the register with line RANGES. INSTRUMENT:
-  472 flags, 10 CHECKED, 5 RELAYED, 457 UNMARKED, 0 findings.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -6502,8 +6502,87 @@ flags:
     trustworthy is HOW MANY INDEPENDENT PRODUCERS STAND BEHIND IT, and the
     signature of independence is agreement TO TOLERANCE rather than to the bit.
 
+  THE_BASELINE_IS_TAIL_CARRIED_AND_THE_12_WINDOWS_ARE_ONE_CONTIGUOUS_HOUR: >-
+    RELAYED FROM R-520 for the decomposition; the counts are CHECKED by me at the
+    artifact (n_fills 4,315, windows 12, coin btc). THE BASELINE IS A TAIL
+    PHENOMENON: the TOP 1% OF 4,315 FILLS CARRY 113% OF THE NET, so the other 99%
+    SUM TO MINUS 13%; hour 14 of two carries 88.2%; and the "12 windows" ARE ONE
+    CONTIGUOUS HOUR, 2026-08-24 13:50-14:50Z -- NOT 12 INDEPENDENT REPLICATES,
+    which is the thing my own round-93 and round-94 entries did not say and
+    should have. IT SURVIVES EVERY LEAVE-ONE-OUT *AND* IT IS TAIL-CARRIED. BOTH
+    HALVES TRAVEL OR NEITHER DOES: leave-one-out robustness quoted alone reads as
+    breadth, and tail-concentration quoted alone reads as fragility, and the
+    honest object is the pair.
+  THE_FILLS_LEG_COST_OF_CANCELLING_IS_INDISTINGUISHABLE_FROM_RANDOM: >-
+    RELAYED FROM R-520 WITH DA's OWN THREE LIMITS ATTACHED, WHICH ARE NOT
+    OPTIONAL. CONDVALUE observed -953.92c against expected-at-random -755.88c
+    (sd 973.19), z = -0.20, p = 0.43; HAZARD -12.56c against -113.77c, z = +0.26,
+    p = 0.60. THE LIMITS: it is POST-HOC ON SEEN DATA, so it is a DISPERSION
+    STATEMENT AND NOT AN ADJUDICATION; the 333 are SCORE-SELECTED, not random;
+    and it rests on a counts-and-lookup SUBSET PROPERTY. Read beside the R-521
+    flag below, not instead of it: this says the fills-leg COST is not separable
+    from chance at this size, while R-521 says the RANKING is.
+  R521_THE_DENOMINATOR_WAS_WRONG_and_the_ranker_is_actually_GOOD: >-
+    CHECKED BY ME: every figure below is recomputed from the committed artifact
+    given ONE RELAYED INPUT (1,440 lost fills, from R-521). 333 CANCELS REMOVED
+    1,440 FILLS -- 4.3243 PER CANCEL, 33.372% OF A 4,315-FILL BOOK. So
+    cents_per_cancel DIVIDED A WHOLE-BOOK DELTA BY THE WRONG POPULATION: the
+    artifact's -2.864618971471453 is net_pnl_delta / n_cancels, and PER LOST FILL
+    IT IS -0.6624c, NOT -2.8646c. ON THE CORRECTED DENOMINATOR THE RANKER IS
+    GOOD (ratios RELAYED): removed fills carry 3.01x the average adverse
+    selection at 0.832x the average spread; HAZARD 3.81x at 0.76x -- CORRECT
+    SELECTION ON BOTH AXES AT ONCE. WITHDRAWN: cents_per_cancel = -2.86 as "the
+    economics of a cancellation".
+  THE_MECHANISM_IS_THE_BOOK_not_the_overlay_and_only_one_of_those_is_actionable: >-
+    CHECKED BY ME AT THE ARTIFACT, and it is the finding to carry. IT STILL LOSES,
+    AND THE REASON IS THE BOOK, NOT THE RANKER: adverse selection is only 18.626%
+    of gross spread capture (1968.1921815 / 10566.951031), and the average fill
+    earns +1.99276c (8598.7588495 / 4,315). SO CANCELLING A RANDOM FILL COSTS
+    1.99c AND CANCELLING ONE OF THESE COSTS 0.66c -- THREE TIMES BETTER THAN
+    RANDOM AND STILL DECLINING PROFITABLE FILLS. "THE OVERLAY DESTROYS VALUE" AND
+    "THE OVERLAY RANKS WELL ON A BOOK WITH TOO LITTLE ADVERSE SELECTION TO
+    HARVEST" ARE DIFFERENT FINDINGS AND ONLY THE SECOND IS ACTIONABLE: the first
+    points at the model, the second points at venue, spread regime and horizon,
+    and says the ranker is worth keeping for a book where the harvestable share
+    is larger.
+  THREE_WITHDRAWALS_FROM_R520_R521_two_of_which_reached_the_USER: >-
+    RELAYED FROM R-520/R-521. (1) cents_per_cancel = -2.86 AS THE ECONOMICS OF A
+    CANCELLATION -- wrong denominator, see above. (2) THE IDENTITY RESIDUALS
+    (6.8e-12 etc) AS EVIDENCE OF ANYTHING: adverse selection is DEFINED as
+    P&L - spread, so the identity is an ALGEBRAIC TAUTOLOGY THAT CANNOT FAIL --
+    SEAT_PROTOCOL 16's shape, a control that cannot fail. IT CANNOT DOUBLE-COUNT
+    AND IT CANNOT DETECT AN OMISSION EITHER, so identity_holds TRUE is worth
+    nothing in either direction. (3) THE PRINTED PREDICATE'S PER-FILL
+    ATTRIBUTION: the code computes a DIFFERENCE OF WHOLE-BOOK TOTALS BETWEEN TWO
+    REPLAYS, which is CLAUDE.md pitfall 4 (path-coupled replay deltas) landing in
+    the economics summary. That QUALIFIES Q-DA-240 and is with DA as a
+    load-bearing check. TWO OF THE THREE REACHED THE USER through the
+    coordinator, which is why they are recorded here as withdrawals rather than
+    as corrections.
+  MY_ROUND_94_TWO_PRODUCER_FLAG_SURVIVES_and_here_is_why_it_is_not_the_tautology: >-
+    CHECKED BY ME AT THE ARTIFACT, AND I CHECKED IT BECAUSE THE WITHDRAWAL LOOKED
+    LIKE IT MIGHT HIT MY OWN ROUND-94 FLAG. IT DOES NOT, AND THE TWO ARE
+    DIFFERENT FIELDS. The WITHDRAWN residual is identity_residual_cents --
+    6.366462912410498e-12 (CONDVALUE), 1.8189894035458565e-12 (HAZARD), 0.0
+    (baseline), and 6.821210263296962e-12 in cancellation_economics, which is the
+    "6.8e-12" named in the withdrawal -- and it is tautological because adverse is
+    DEFINED as P&L - spread. MY FLAG RESTS ON A DIFFERENT FIELD:
+    maker_pnl_reconciliation.difference_cents = -3.637978807091713e-12, comparing
+    reference_tranche_markout_cents 8598.758849499998 against
+    replay_received_markout_cents 8598.758849500002 -- TWO SEPARATELY COMPUTED
+    PATHS OVER THE SAME FILLS, WHICH IS NOT AN ALGEBRAIC REARRANGEMENT. THE
+    NEAR-COLLISION IS ITSELF THE LESSON AND IT IS NEW: two residuals of the same
+    ORDER OF MAGNITUDE sit in one artifact, ~6.8e-12 and ~3.6e-12, ONE
+    TAUTOLOGICAL AND ONE EVIDENTIAL, and NOTHING ABOUT THEIR SIZE DISTINGUISHES
+    THEM -- only reading WHICH TWO QUANTITIES EACH COMPARES does. "The residual is
+    tiny, so the numbers agree" is not a safe inference; the question is always
+    WHETHER THE TWO SIDES COULD HAVE DISAGREED. Note the artifact's own
+    why_not_equality prose on that block ("equality would only hold for an arm
+    that cancels nothing") is the description R-519 CORRECTED -- both sides are
+    over the arm's own fills, so it IS an equality everywhere.
+
 focus: >
-  As-of 2026-09-04T13:14Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T13:25Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -6951,6 +7030,18 @@ focus: >
   killed Q1 and Q3. UNRESTRICTED ADJUDICATES; denominator stays 24; everything
   else REPORTED-NOT-ADJUDICATED. Keep the reason, not just the withdrawal:
   OPPORTUNITY-MATCHING SHARPENS A TEST ONLY IF THE RESTRICTED SET PAYS.
+  ROUND 95 -- THE ECONOMIC READING CHANGES SHAPE, NOT SIGN (R-520/R-521). The
+  "12 windows" are ONE CONTIGUOUS HOUR and the baseline is TAIL-CARRIED (top 1%
+  of fills = 113% of net); it survives every leave-one-out AND is tail-carried,
+  and BOTH HALVES TRAVEL OR NEITHER. cents_per_cancel divided by the wrong
+  population: PER LOST FILL IT IS -0.6624c, NOT -2.8646c, and ON THAT DENOMINATOR
+  THE RANKER IS GOOD (3.01x adverse at 0.832x spread). IT STILL LOSES BECAUSE OF
+  THE BOOK -- adverse is only 18.63% of gross spread capture and the average fill
+  earns +1.99c -- SO THE ACTIONABLE FINDING IS "ranks well on a book with too
+  little adverse selection to harvest", NOT "destroys value". Withdrawn: the
+  -2.86 per-cancel figure, the identity residuals as evidence (an algebraic
+  tautology that cannot fail), and the per-fill attribution (a whole-book
+  difference between two replays = pitfall 4).
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -7127,6 +7218,46 @@ flag_provenance:
   NEAR_IDENTITY_FROM_TWO_PRODUCERS_BEATS_BIT_IDENTITY_FROM_ONE:
     prov: RELAYED
     from: R-519 (DA measured the ~4e-12 disagreement; MEM did not)
+  THE_BASELINE_IS_TAIL_CARRIED_AND_THE_12_WINDOWS_ARE_ONE_CONTIGUOUS_HOUR:
+    prov: RELAYED
+    from: R-520 (DA's decomposition; MEM checked only n_fills 4315 and windows 12 at the artifact)
+  THE_FILLS_LEG_COST_OF_CANCELLING_IS_INDISTINGUISHABLE_FROM_RANDOM:
+    prov: RELAYED
+    from: R-520 (DA's z/p and its three stated limits; MEM did not recompute them)
+  R521_THE_DENOMINATOR_WAS_WRONG_and_the_ranker_is_actually_GOOD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T125340Z.json
+    as_of: 2026-09-04T13:24Z
+    said: >-
+      cancellation_economics.arms.CONDVALUE_X_SKEW carries cents_per_cancel
+      -2.864618971471453 and net_pnl_delta_cents -953.918117499994 over n_cancels
+      333, and arms.QR_SKEW_ONLY.fields.maker_pnl_cents.n_fills is 4315; against
+      the relayed 1,440 lost fills that is 4.3243 fills per cancel, 33.372% of
+      the book, and -0.662443c per lost fill. The 3.01x/0.832x and 3.81x/0.76x
+      selection ratios are relayed and were not recomputed
+  THE_MECHANISM_IS_THE_BOOK_not_the_overlay_and_only_one_of_those_is_actionable:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T125340Z.json
+    as_of: 2026-09-04T13:24Z
+    said: >-
+      adverse selection is 1968.1921814999978 against gross spread capture
+      10566.951030999997, i.e. 18.626%, and maker P&L 8598.758849499998 over
+      4,315 fills is +1.99276c per fill
+  THREE_WITHDRAWALS_FROM_R520_R521_two_of_which_reached_the_USER:
+    prov: RELAYED
+    from: R-520/R-521 (the coordinator's own withdrawals)
+  MY_ROUND_94_TWO_PRODUCER_FLAG_SURVIVES_and_here_is_why_it_is_not_the_tautology:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T125340Z.json
+    as_of: 2026-09-04T13:24Z
+    said: >-
+      identity_residual_cents reads 6.366462912410498e-12 / 1.8189894035458565e-12
+      / 0.0 across the three arms and 6.821210263296962e-12 in
+      cancellation_economics, while maker_pnl_reconciliation.difference_cents is a
+      SEPARATE field reading -3.637978807091713e-12 between
+      reference_tranche_markout_cents 8598.758849499998 and
+      replay_received_markout_cents 8598.758849500002 -- two residuals of the same
+      order in one artifact, comparing different pairs of quantities
 
 standing_rules:
   - "STANDING RULE 12 (R-517, the coordinator's rule about its own claims) --

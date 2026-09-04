@@ -1,6 +1,88 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T13:14Z (MEM round 94) — **A COORDINATOR RULING I RECORDED
+Updated: 2026-09-04T13:25Z (MEM round 95) — **R-520 AND R-521 REVERSE PART OF
+WHAT I RECORDED IN ROUNDS 93 AND 94. THE HEADLINE CHANGES SHAPE, NOT SIGN.**
+
+### What I did not say and should have
+
+**The "12 windows" are ONE CONTIGUOUS HOUR — 2026-08-24 13:50–14:50Z — not 12
+independent replicates.** And the baseline is a **tail phenomenon**: the **top 1%
+of 4,315 fills carry 113% of the net**, so the other 99% sum to **−13%**; hour 14
+of two carries **88.2%**.
+
+**It survives every leave-one-out *and* it is tail-carried. Both halves travel or
+neither does** — robustness alone reads as breadth, concentration alone reads as
+fragility, and the honest object is the pair.
+
+**The fills-leg cost of cancelling is indistinguishable from random:** CONDVALUE
+−953.92c against −755.88c expected (sd 973.19), **z −0.20, p 0.43**; HAZARD
+−12.56c against −113.77c, **z +0.26, p 0.60** — with DA's three limits riding
+along and **not detachable**: post-hoc on seen data, so a **dispersion statement,
+not an adjudication**; the 333 are **score-selected**; and it rests on a
+counts-and-lookup **subset property**.
+
+### R-521 changes the reading — and I recomputed all of it from the artifact
+
+Given one relayed input (**1,440 lost fills**):
+
+| quantity | value |
+|---|---:|
+| fills removed per cancel | 1,440 / 333 = **4.3243** |
+| share of a 4,315-fill book | **33.372%** |
+| `cents_per_cancel` (artifact) | −2.864618971471453 = net / **n_cancels** |
+| **per lost fill** | **−0.662443c** |
+| adverse selection as share of gross spread capture | **18.626%** |
+| average fill earns | **+1.99276c** |
+
+**On the corrected denominator the ranker is good** (ratios relayed): removed
+fills carry **3.01× the average adverse selection at 0.832× the average spread**;
+HAZARD **3.81× at 0.76×** — **correct selection on both axes at once.**
+
+**It still loses, and the reason is the book.** Cancelling a **random** fill costs
+**1.99c**; cancelling one of **these** costs **0.66c** — **three times better than
+random and still declining profitable fills.**
+
+**Record that as the mechanism:** *"the overlay destroys value"* and *"the overlay
+ranks well on a book with too little adverse selection to harvest"* are different
+findings, **and only the second is actionable** — the first points at the model,
+the second at venue, spread regime and horizon.
+
+### Three withdrawals, two of which reached the USER
+
+1. **`cents_per_cancel` = −2.86** as the economics of a cancellation.
+2. **The identity residuals as evidence of anything.** Adverse is **defined** as
+   P&L − spread, so the identity is an **algebraic tautology that cannot fail** —
+   SEAT_PROTOCOL 16's shape. **It cannot double-count and it cannot detect an
+   omission either**, so `identity_holds: true` is worth nothing in either
+   direction.
+3. **The printed predicate's per-fill attribution** — the code computes a
+   **difference of whole-book totals between two replays**, which is **CLAUDE.md
+   pitfall 4** arriving in the economics summary. **Qualifies Q-DA-240**, now with
+   DA as a load-bearing check.
+
+### I checked whether withdrawal 2 hits my own round-94 flag. It does not — and the near-miss is the lesson
+
+| field | value | status |
+|---|---:|---|
+| `identity_residual_cents` (cancellation_economics) | 6.821210263296962e-12 | **withdrawn — tautological** |
+| `maker_pnl_reconciliation.difference_cents` | −3.637978807091713e-12 | **stands — two separately computed paths** |
+
+The second compares `reference_tranche_markout_cents` 8598.758849499998 against
+`replay_received_markout_cents` 8598.758849500002. **Two residuals of the same
+order of magnitude sit in one artifact, one tautological and one evidential, and
+nothing about their size distinguishes them** — only reading *which two
+quantities each compares* does. **"The residual is tiny, so the numbers agree" is
+not a safe inference; the question is always whether the two sides could have
+disagreed.**
+
+**What still stands:** the baseline's **four independent reproductions**, that
+**market-making pays on this hour**, and that **the ranker selects correctly on
+both axes.**
+
+**Instrument:** 484 flags, **16 CHECKED**, 11 RELAYED, 457 UNMARKED, 0 findings.
+
+
+Previously (MEM round 94) — 2026-09-04T13:14Z — **A COORDINATOR RULING I RECORDED
 TWO ROUNDS AGO IS WITHDRAWN, AND THE ECONOMIC NUMBER IS NOW VERIFIED.**
 
 ### 1. In-band correction (rule 13): R-516(C)'s grid amendment is withdrawn
@@ -607,6 +689,25 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T13:25Z — MEM round 95: the economic reading changes shape, not sign
+>
+> **Full entry is the `Updated:` block at the top.** The **"12 windows" are one
+> contiguous hour**, not 12 replicates, and the baseline is **tail-carried** (top
+> 1% of fills = **113%** of net); **it survives every leave-one-out AND is
+> tail-carried — both halves travel or neither.** `cents_per_cancel` divided by
+> the wrong population: **per lost fill −0.6624c, not −2.8646c** (333 cancels
+> removed **1,440 fills**, 33.4% of the book), and on that denominator **the
+> ranker is good** — 3.01× adverse at 0.832× spread. **It still loses because of
+> the book**: adverse is only **18.63%** of gross spread capture and the average
+> fill earns **+1.99c**. **Only "ranks well on a book with too little adverse
+> selection to harvest" is actionable.** Three withdrawals, two of which reached
+> the USER — including **the identity residuals**, an algebraic tautology that
+> cannot fail. **My round-94 two-producer flag survives; it rests on a different
+> field.**
+>
+> ---
+
 
 > ### 2026-09-04T13:14Z — MEM round 94: the grid amendment is withdrawn, and the economic number is verified
 >
