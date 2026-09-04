@@ -6758,3 +6758,87 @@ propagation. Join rule as in batch 1.
   three days sealed and unread. USER ITEMS: TWO -- the Phase-2 winner, and the
   causal incumbent operating point.
 ```
+
+## Batch 96 — archived 2026-09-04T12:39Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 90 entered the field.
+Nothing deleted — only moved.
+
+```
+  2026-09-04T11:30Z (MEM ROUND 87 -- A FENCE STAYS PINNED BY RULING, G COUNTING
+  HAS THREE LIVE READINGS, AND THE ARM EMISSION IS GONE). Nothing run but
+  read-only reads and TWO read-only computations of my own. A USER RULING, AND IT
+  IS A RULED STATE RATHER THAN AN OPEN GAP: THE SENSITIVITY ARM'S FENCE STAYS
+  PINNED. SIX OF EIGHTEEN DECLARED CELLS REMAIN PERMANENTLY NOT COMPUTED, AND THE
+  HOLM DENOMINATOR OF 18 KNOWINGLY CARRIES THEM -- WHICH MAKES EVERY CORRECTION
+  AGAINST IT CONSERVATIVE RATHER THAN WRONG, because a denominator larger than
+  the number of cells actually tested can only RAISE an adjusted p, never lower
+  it. I VERIFIED THE SIX AT THE ARTIFACT: be_forward_family_declaration_v1.json
+  carries declared_cell_count 18 and holm_denominator 18, and EXACTLY SIX CELLS
+  ARE THE FROZEN_FROM_A_CONSUMED_DAY ARM -- BY_THRESHOLD x {btc, eth} x {5%, 10%,
+  15%} -- with count_under_each_alternative pricing 12 WITHOUT the sensitivity
+  arm against 18 WITH it. HOW IT CAME TO BE RULED RATHER THAN FIXED: BE BUILT THE
+  OPERATING POINT FROM 08-29, THE ONLY CONSUMED DAY DISJOINT FROM THE RACE, SO
+  THE CHOICE WAS FORCED AND NOT CHOSEN -- and the artifact says so itself, its
+  derived_from_split carrying already_consumed TRUE and a
+  rule_11_exposure_STATED field naming the exposure rather than burying it.
+  require_operating_point THEN REFUSES IT, because CANONICAL_VERIFICATION_PATH is
+  A SINGLE PINNED PATH (be_forward_metric.py:309-311) whose refusal reads "the
+  fence decides WHERE its evidence lives; a caller-named path -- including a
+  symlink to one -- is receiving a pointer instead of a payload (BE21-R1)". AND
+  BE DECLINED TO WIDEN A GUARD THAT TOOK THREE ROUNDS TO HARDEN IN ORDER TO
+  COMPLETE ITS OWN FAMILY, WHICH IS THE RIGHT REFUSAL AND THE REASON THE RULING
+  IS CLEAN. THE ARTIFACT STAYS COMMITTED AND INERT, SO THE FAMILY COMPLETES
+  IMMEDIATELY IF THE USER EVER REVERSES. ONE PRECISION ON MY OWN CHECK, BECAUSE I
+  DID NOT GET ALL THE WAY THERE: I drove require_operating_point on the
+  declaration's raw JSON and it DID refuse -- but at an EARLIER gate, "form
+  'FROZEN_FROM_A_CONSUMED_DAY' declared with no `theta_frozen` map", since the
+  file carries theta_frozen_by_coin and needs assembly through be_operating_point
+  first. SO THE PINNED-PATH REFUSAL IS VERIFIED TO EXIST AND I DID NOT
+  INDEPENDENTLY CONFIRM IT IS THE ONE THAT FIRES IN THE REAL CALL PATH; recorded
+  as reported for that step. G COUNTING IS UNRULED AND THE USER IS CHECKING IT
+  MANUALLY, SO ALL THREE USAGES GO IN SIDE BY SIDE AND I DO NOT TIDY TO ONE.
+  READING A -- ACCRUED DAYS: G = 3 TODAY, COMPLETION 09-05, AND THE RUNNER'S
+  COUNTER WOULD NEED CHANGING. READING B -- BRACKETED SPAN, WHICH IS WHAT
+  complete_utc_days ACTUALLY COMPUTES: G = 1 TODAY, NEEDS SEVEN ACCRUING DAYS,
+  COMPLETION 09-07, AND THE RUNNER IS ALREADY CORRECT. I COMPUTED READING B
+  MYSELF THROUGH THE REAL FUNCTION RATHER THAN ARGUING IT: three accruing days
+  give G = 1, five give G = 3, SEVEN GIVE G = 5. AND THE INTERIM'S INFORMAL G = 2
+  MATCHES NEITHER AND SHOULD NOT SURVIVE THE RULING. THE SPREAD IS TWO DAYS OF
+  COMPLETION AND A DIFFERENT ANSWER TO "ARE WE THERE", WHICH IS WHY IT IS THE
+  USER'S AND NOT A SEAT'S. THE ARM OUTPUT IS STILL NOT USABLE AND THE REASON HAS
+  CHANGED TWICE, SO ALL THREE STATES ARE RECORDED AND THE HISTORY IS LEGIBLE.
+  FIRST it was reported as AN INVALID CONTROL. THEN the reviewer found THE
+  EMISSION'S OWN FIELDS SAID VALID_AS_A_CONTROL TRUE with a HARDCODED PROSE NOTE
+  BESIDE THEM ASSERTING FALSE -- RULE 10'S FOURTH INSTANCE TODAY, AND THE ONE
+  THAT REACHED THE USER THROUGH THE COORDINATOR. THEN DE53-R2 FOUND THE ROUND HAS
+  NO COMMITTED PRODUCER AT ALL: the provenance census returns NONE for
+  arm_distinctness, VALID_AS_A_CONTROL, permutation_ok, all_distinct,
+  arm_signature and MATCHED_RANDOM_PERMUTATION, THE ONLY HIT BEING A CONSUMER,
+  and the emission being a scratchpad file naming no producer. The coordinator
+  ran DA's instrument directly on arms53.json: verdict NO_DECLARED_CODE_IDENTITY,
+  why SUPERSEDED_CODE. I WENT TO REPRODUCE THAT AND FOUND SOMETHING ONE TURN
+  FURTHER ON: THE FILE NO LONGER EXISTS. arms53.json was in the scratchpad at
+  11:27Z when I located it and was GONE MINUTES LATER; the directory still holds
+  arms53.err and arms52.py, and NO arms*.json REMAINS ANYWHERE UNDER /tmp. SO THE
+  EMISSION THE ROUND'S NUMBERS CAME FROM IS NOT MERELY SUPERSEDED, IT IS GONE --
+  the same durability class as R-496 (B), where the race's only sealed day lived
+  in a dead session's scratchpad. DE ROUND 55 HAS LANDED THE REPAIR AND I READ IT
+  AT THE CODE: de_section81_arms.py now carries PROTOCOL (:57), code_identity()
+  (:70) and emits {"protocol", "code_identity", ...} at :109-110 and :317, with a
+  comment noting DA's _emitting_entry_points finds the emitter BY SHAPE. THE
+  VALIDITY FLAG IS DERIVED AND THE EMISSION NAMES ITS PRODUCER -- AND A
+  RE-EMISSION IS REQUIRED BEFORE ANY ARM NUMBER IS REPORTABLE. NOTHING FROM THE
+  OLD RUN MAY BE QUOTED. STANDING PRACTICE, NOW TWICE-BOUGHT AND RECORDED AS
+  SUCH: THE PUBLICATION PROVENANCE CENSUS RUNS BEFORE ANY NUMBER REACHES THE
+  USER, AND DA'S VERIFIER IS THE INSTRUMENT OF RECORD. IT WAS ADOPTED THIS
+  MORNING AT R-504 (F) AND NOT APPLIED TO THE ARMS, WHICH IS HOW THE
+  CONTRADICTION REACHED THE USER. That is the second purchase of the same rule in
+  one day -- the first was matched_volume's zero call sites -- and the lesson is
+  the one already in the file: THE PRACTICE ATTACHES TO PUBLICATION, NOT TO
+  REVIEW ROUNDS, and an adopted practice that is not run is indistinguishable
+  from one that was never adopted. STATE: register 496 entries, last R-505; G
+  unruled with three readings on the table; three days sealed and unread. USER
+  ITEMS: THREE -- the Phase-2 winner, the causal incumbent operating point, and
+  now the G-counting ruling.
+```

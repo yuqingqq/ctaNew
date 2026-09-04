@@ -4,6 +4,56 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T12:39Z (MEM ROUND 90 -- DELIBERATELY SHORT. My own R-512(2)
+  finding was that volume is being mistaken for rigour and that what actually
+  governs is the top paragraph; this is the top paragraph, and the previous
+  entry was 246 lines.) THE Q4 GATE'S DECIDING HALF HAS NEVER BEEN COMPUTED,
+  AND I READ THAT AT THE ARTIFACT RATHER THAN TAKING IT ON REPORT. The
+  coordinator handed me the numbers and I re-read every one at
+  data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json (sha256
+  ca311c8f...): all six Q4_combined_ev cells carry increment_beats_incumbent
+  FALSE, matched_random NULL, passed NULL, status GATE_PARTIALLY_EVALUATED,
+  gate_partial_reason "conjuncts never evaluated: ['matched_random']", holm_p
+  0.1199400299850075..0.44627686156921537. The declared gate is a CONJUNCTION --
+  "beats matched-random AND beats the incumbent" -- and ONLY ONE HALF HAS EVER
+  BEEN RUN. BE is computing the other half this round; DA verifies it
+  independently. THE POSITIVE RAW net_cents (7869.67772245 / 12333.50252295 /
+  14476.99327895 at 5/10/15%) IS A PENDING QUANTITY AWAITING ITS NULL, NOT A
+  RESULT, and it does not enter this file as one. Its caveats are not
+  detachable and all six are off the same file: ONE development day
+  (dates_present ["2026-08-25"], 311,640 rows), G_complete_utc_days 0,
+  is_a_validation FALSE, intervals_claimable FALSE, unit_used "window" against
+  ruled_unit "UTC day" with the artifact's own words "these p-values are
+  OPTIMISTIC -- evidence, never a significance certificate", and
+  conditional_cancel_value -1.6364024437050162 -- WHICH I REPRODUCED BIT-EXACT
+  from phase2_iter011.py:266 (p_pos*m_harm - p_neg*m_good), so a cancel drawn at
+  RANDOM from this population LOSES 1.64 cents. The candidate is not being asked
+  to beat zero; it is being asked to beat a matched-random SELECTION, which is
+  precisely the unrun conjunct. AND ONE THING THAT BITES WHEN THE MISSING HALF
+  LANDS: those cells' detail prose says the OPPOSITE way round from the
+  structured conjuncts sitting beside it, so whoever wires BE's result must read
+  declared_gate_outcome.conjuncts and NEVER detail. SECOND -- THE INSTRUMENT I
+  SAID I DID NOT HAVE NOW EXISTS AND RUNS: live/pm_research/mem_flag_provenance.py
+  (dispatched at R-512). Only CHECKED is authoritative, and CHECKED REFUSES
+  without BOTH artifact: and said:, because a bare "VERIFIED AT THE ARTIFACT" is
+  a token that reads identically whether or not the check happened -- R-509's
+  counterfactual question turned on my own habit. FIRST HONEST READING, BEFORE
+  THIS ROUND'S ADDITIONS: 458 flags, ZERO AUTHORITATIVE. AFTER: 463 flags, 5
+  CHECKED, 1 RELAYED, 457 UNMARKED, 0 findings, exit 0. THE BACKLOG IS NOW
+  COUNTED RATHER THAN ASSUMED, and I did NOT back-mark old flags -- I cannot say
+  which were checked, so they stay non-authoritative, which is the ruling.
+  ONE DELIBERATE REFINEMENT OF THE BRIEF, FLAGGED AND NOT SMUGGLED: I was told
+  flags that cannot say should READ RELAYED, and I made them UNMARKED instead --
+  equally non-authoritative to a reader, but distinct so the unassessed backlog
+  stays countable, because collapsing them would put an ABSENCE inside the
+  CODOMAIN OF THE MEASUREMENT, which is R-505's own predicate. If the
+  coordinator prefers the collapse it is one line in the authority rule.
+  THIRD, AND IT IS THE POINT: the instrument is META WORK and the Q4 read is the
+  OBJECT-LEVEL half. R-512 adopted my finding that the correction cadence has
+  become the product; a round that shipped only the instrument would have been
+  that finding happening again, so I checked the economics FIRST and built the
+  instrument around what the check produced.
+  PRIOR:
   2026-09-04T11:56Z (MEM ROUND 89 -- I VERIFIED A CITATION AND NOT THE CLAIM IT
   CARRIED; THE MATCHED FLOOR IS RULED UNAVAILABLE BY CONSTRUCTION AND
   THE RULING'S OWN ENTRY IS MARKED PROVISIONAL BECAUSE ITS DECISIVE NUMBER WAS
@@ -351,84 +401,6 @@ updated: >-
   DEFEATS. THE RETRIEVAL FRAMING IS WITHDRAWN. THE CITATIONS BELOW ARE
   CORRECT; THE CONCLUSION DRAWN FROM THEM IS NOT. AND USER ITEMS: FOUR IS
   SUPERSEDED BY THREE.]
-  PRIOR:
-  2026-09-04T11:30Z (MEM ROUND 87 -- A FENCE STAYS PINNED BY RULING, G COUNTING
-  HAS THREE LIVE READINGS, AND THE ARM EMISSION IS GONE). Nothing run but
-  read-only reads and TWO read-only computations of my own. A USER RULING, AND IT
-  IS A RULED STATE RATHER THAN AN OPEN GAP: THE SENSITIVITY ARM'S FENCE STAYS
-  PINNED. SIX OF EIGHTEEN DECLARED CELLS REMAIN PERMANENTLY NOT COMPUTED, AND THE
-  HOLM DENOMINATOR OF 18 KNOWINGLY CARRIES THEM -- WHICH MAKES EVERY CORRECTION
-  AGAINST IT CONSERVATIVE RATHER THAN WRONG, because a denominator larger than
-  the number of cells actually tested can only RAISE an adjusted p, never lower
-  it. I VERIFIED THE SIX AT THE ARTIFACT: be_forward_family_declaration_v1.json
-  carries declared_cell_count 18 and holm_denominator 18, and EXACTLY SIX CELLS
-  ARE THE FROZEN_FROM_A_CONSUMED_DAY ARM -- BY_THRESHOLD x {btc, eth} x {5%, 10%,
-  15%} -- with count_under_each_alternative pricing 12 WITHOUT the sensitivity
-  arm against 18 WITH it. HOW IT CAME TO BE RULED RATHER THAN FIXED: BE BUILT THE
-  OPERATING POINT FROM 08-29, THE ONLY CONSUMED DAY DISJOINT FROM THE RACE, SO
-  THE CHOICE WAS FORCED AND NOT CHOSEN -- and the artifact says so itself, its
-  derived_from_split carrying already_consumed TRUE and a
-  rule_11_exposure_STATED field naming the exposure rather than burying it.
-  require_operating_point THEN REFUSES IT, because CANONICAL_VERIFICATION_PATH is
-  A SINGLE PINNED PATH (be_forward_metric.py:309-311) whose refusal reads "the
-  fence decides WHERE its evidence lives; a caller-named path -- including a
-  symlink to one -- is receiving a pointer instead of a payload (BE21-R1)". AND
-  BE DECLINED TO WIDEN A GUARD THAT TOOK THREE ROUNDS TO HARDEN IN ORDER TO
-  COMPLETE ITS OWN FAMILY, WHICH IS THE RIGHT REFUSAL AND THE REASON THE RULING
-  IS CLEAN. THE ARTIFACT STAYS COMMITTED AND INERT, SO THE FAMILY COMPLETES
-  IMMEDIATELY IF THE USER EVER REVERSES. ONE PRECISION ON MY OWN CHECK, BECAUSE I
-  DID NOT GET ALL THE WAY THERE: I drove require_operating_point on the
-  declaration's raw JSON and it DID refuse -- but at an EARLIER gate, "form
-  'FROZEN_FROM_A_CONSUMED_DAY' declared with no `theta_frozen` map", since the
-  file carries theta_frozen_by_coin and needs assembly through be_operating_point
-  first. SO THE PINNED-PATH REFUSAL IS VERIFIED TO EXIST AND I DID NOT
-  INDEPENDENTLY CONFIRM IT IS THE ONE THAT FIRES IN THE REAL CALL PATH; recorded
-  as reported for that step. G COUNTING IS UNRULED AND THE USER IS CHECKING IT
-  MANUALLY, SO ALL THREE USAGES GO IN SIDE BY SIDE AND I DO NOT TIDY TO ONE.
-  READING A -- ACCRUED DAYS: G = 3 TODAY, COMPLETION 09-05, AND THE RUNNER'S
-  COUNTER WOULD NEED CHANGING. READING B -- BRACKETED SPAN, WHICH IS WHAT
-  complete_utc_days ACTUALLY COMPUTES: G = 1 TODAY, NEEDS SEVEN ACCRUING DAYS,
-  COMPLETION 09-07, AND THE RUNNER IS ALREADY CORRECT. I COMPUTED READING B
-  MYSELF THROUGH THE REAL FUNCTION RATHER THAN ARGUING IT: three accruing days
-  give G = 1, five give G = 3, SEVEN GIVE G = 5. AND THE INTERIM'S INFORMAL G = 2
-  MATCHES NEITHER AND SHOULD NOT SURVIVE THE RULING. THE SPREAD IS TWO DAYS OF
-  COMPLETION AND A DIFFERENT ANSWER TO "ARE WE THERE", WHICH IS WHY IT IS THE
-  USER'S AND NOT A SEAT'S. THE ARM OUTPUT IS STILL NOT USABLE AND THE REASON HAS
-  CHANGED TWICE, SO ALL THREE STATES ARE RECORDED AND THE HISTORY IS LEGIBLE.
-  FIRST it was reported as AN INVALID CONTROL. THEN the reviewer found THE
-  EMISSION'S OWN FIELDS SAID VALID_AS_A_CONTROL TRUE with a HARDCODED PROSE NOTE
-  BESIDE THEM ASSERTING FALSE -- RULE 10'S FOURTH INSTANCE TODAY, AND THE ONE
-  THAT REACHED THE USER THROUGH THE COORDINATOR. THEN DE53-R2 FOUND THE ROUND HAS
-  NO COMMITTED PRODUCER AT ALL: the provenance census returns NONE for
-  arm_distinctness, VALID_AS_A_CONTROL, permutation_ok, all_distinct,
-  arm_signature and MATCHED_RANDOM_PERMUTATION, THE ONLY HIT BEING A CONSUMER,
-  and the emission being a scratchpad file naming no producer. The coordinator
-  ran DA's instrument directly on arms53.json: verdict NO_DECLARED_CODE_IDENTITY,
-  why SUPERSEDED_CODE. I WENT TO REPRODUCE THAT AND FOUND SOMETHING ONE TURN
-  FURTHER ON: THE FILE NO LONGER EXISTS. arms53.json was in the scratchpad at
-  11:27Z when I located it and was GONE MINUTES LATER; the directory still holds
-  arms53.err and arms52.py, and NO arms*.json REMAINS ANYWHERE UNDER /tmp. SO THE
-  EMISSION THE ROUND'S NUMBERS CAME FROM IS NOT MERELY SUPERSEDED, IT IS GONE --
-  the same durability class as R-496 (B), where the race's only sealed day lived
-  in a dead session's scratchpad. DE ROUND 55 HAS LANDED THE REPAIR AND I READ IT
-  AT THE CODE: de_section81_arms.py now carries PROTOCOL (:57), code_identity()
-  (:70) and emits {"protocol", "code_identity", ...} at :109-110 and :317, with a
-  comment noting DA's _emitting_entry_points finds the emitter BY SHAPE. THE
-  VALIDITY FLAG IS DERIVED AND THE EMISSION NAMES ITS PRODUCER -- AND A
-  RE-EMISSION IS REQUIRED BEFORE ANY ARM NUMBER IS REPORTABLE. NOTHING FROM THE
-  OLD RUN MAY BE QUOTED. STANDING PRACTICE, NOW TWICE-BOUGHT AND RECORDED AS
-  SUCH: THE PUBLICATION PROVENANCE CENSUS RUNS BEFORE ANY NUMBER REACHES THE
-  USER, AND DA'S VERIFIER IS THE INSTRUMENT OF RECORD. IT WAS ADOPTED THIS
-  MORNING AT R-504 (F) AND NOT APPLIED TO THE ARMS, WHICH IS HOW THE
-  CONTRADICTION REACHED THE USER. That is the second purchase of the same rule in
-  one day -- the first was matched_volume's zero call sites -- and the lesson is
-  the one already in the file: THE PRACTICE ATTACHES TO PUBLICATION, NOT TO
-  REVIEW ROUNDS, and an adopted practice that is not run is indistinguishable
-  from one that was never adopted. STATE: register 496 entries, last R-505; G
-  unruled with three readings on the table; three days sealed and unread. USER
-  ITEMS: THREE -- the Phase-2 winner, the causal incumbent operating point, and
-  now the G-counting ruling.
-
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -6444,8 +6416,92 @@ flags:
     THE COORDINATOR'S OWN TEST IS THE RIGHT ONE: "conservative, but only if a
     reader can tell it was decided", AND TODAY THEY CANNOT. CONSERVATIVE AND
     LEGIBLE IS THE WHOLE POINT; RIGHT NOW IT IS ONLY CONSERVATIVE.
+  Q4_THE_DECISION_METRIC_ITS_DECIDING_HALF_HAS_NEVER_BEEN_COMPUTED: >-
+    CHECKED BY ME AT THE ARTIFACT THIS ROUND, NOT RELAYED (round 90; the
+    coordinator handed me these numbers and I re-read every one of them at
+    data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json, sha256
+    ca311c8f24e37564e06a0343f7a55e4f48fdd700a813d0904a2562c6100bc3a3). ALL SIX
+    Q4_combined_ev CELLS read survives_joint_reading_at_0_05 FALSE and status
+    GATE_PARTIALLY_EVALUATED. THE DECLARED GATE IS A CONJUNCTION -- "beats
+    matched-random AND beats the incumbent by a preregistered null (section 5)",
+    conjuncts ['matched_random', 'increment_beats_incumbent'] -- AND THE TWO
+    HALVES FAIL DIFFERENTLY: increment_beats_incumbent is FALSE in all six, and
+    matched_random is NULL in all six with gate_partial_reason "conjuncts never
+    evaluated: ['matched_random']". passed reads null, never false, in all six
+    (R-397 ruling 2). holm_p runs 0.1199400299850075 to 0.44627686156921537.
+    SO THE HALF THAT WOULD DECIDE IT HAS NEVER BEEN RUN. BE is computing it now
+    and DA verifies it independently.
+  Q4_RAW_NET_CENTS_IS_A_PENDING_QUANTITY_AWAITING_ITS_NULL_not_a_result: >-
+    CHECKED BY ME AT THE ARTIFACT. results.btc.composed_lgbm.economics carries
+    net_cents 7869.67772245 / 12333.50252295 / 14476.99327895 at 5/10/15% --
+    POSITIVE, AND MEANINGLESS UNTIL THE NULL ADJUDICATES IT. THE CAVEATS ARE
+    NOT DETACHABLE FROM THE NUMBER AND ALL SIX ARE READ OFF THE SAME FILE:
+    eval_population_and_reach.dates_present is ["2026-08-25"] -- ONE DEVELOPMENT
+    DAY, 311,640 rows, span 14.41 h; G_complete_utc_days 0; is_a_validation
+    FALSE ("a development population or too few complete days makes these
+    numbers a development result, whatever their size"); intervals_claimable
+    FALSE; cluster_disclosure says the unit used is the WINDOW against a ruled
+    unit of UTC DAY with weaker_than_ruled TRUE and, in the artifact's own
+    words, "these p-values are OPTIMISTIC -- evidence, never a significance
+    certificate"; and populations.btc.eval_empirical.conditional_cancel_value is
+    -1.6364024437050162. THAT LAST ONE IS THE REASON THE POSITIVE MEANS NOTHING
+    ON ITS OWN: I REPRODUCED IT BIT-EXACT from phase2_iter011.py:266's formula
+    p_pos*m_harm - p_neg*m_good (0.47326155493426925*19.04828093640334 -
+    0.5242103384688597*20.318602509066668), so a cancel drawn at random from
+    this population LOSES 1.64 cents. The candidate is not being asked to beat
+    zero; it is being asked to beat a matched-random SELECTION, and that is the
+    conjunct nobody has computed. NOT REPORTED TO THE USER AND MUST NOT BE
+    QUOTED AS PROFITABILITY.
+  Q4_READ_THE_CONJUNCTS_NOT_THE_DETAIL_STRING_when_matched_random_lands: >-
+    ACTIONABLE NOW, FOUND BY MY OWN READ RATHER THAN RELAYED. The rule-10
+    tension already flagged at iter011_q4_cell_prose_contradicts_its_own_
+    conjuncts is about to become load-bearing: the Q4 cells' detail prose says
+    "The incumbent counterpart EXISTS (comparable=True) and was NOT COMPUTED, so
+    only the matched-random conjunct was evaluated", which is THE OPPOSITE WAY
+    ROUND from the structured fields in the same cell
+    (gate_conjuncts_unevaluated ['matched_random'], increment_beats_incumbent
+    false, and a computed increment p). A reader taking the gate status from the
+    prose gets it BACKWARDS. WHOEVER WIRES BE's MATCHED-RANDOM RESULT MUST READ
+    declared_gate_outcome.conjuncts, NEVER detail. Still not adjudicated; this
+    flag is about which field to read, not about which one is right.
+  MEM_FLAG_PROVENANCE_INSTRUMENT_and_its_first_reading_is_zero_of_458: >-
+    THE INSTRUMENT MEM SAID IT DID NOT HAVE NOW EXISTS AND RUNS:
+    live/pm_research/mem_flag_provenance.py, dispatched at R-512. Every flag is
+    CHECKED (authoritative), RELAYED, UNMARKED or MALFORMED, and ONLY CHECKED IS
+    AUTHORITATIVE. CHECKED REFUSES WITHOUT BOTH artifact: AND said: -- a bare
+    "VERIFIED AT THE ARTIFACT" is a token that would read identically had the
+    check never happened (R-509's counterfactual question), and it is the exact
+    habit MEM found in itself. THE FIRST HONEST READING, RUN AGAINST THE REAL
+    FILE: 458 flags, 0 AUTHORITATIVE, 458 UNMARKED, 0 findings -- the backlog is
+    now COUNTED rather than assumed. UNMARKED and RELAYED are equally
+    non-authoritative to a reader (which is the ruling MEM was given) but are
+    KEPT DISTINCT, because collapsing them would put an absence inside the
+    codomain of the measurement -- R-505's predicate. Selftest runs 20 checks
+    BOTH DIRECTIONS and the count is REPORTED, never asserted against a literal
+    (the EXPECTED_CHECKS = 52 defect MEM filed against another seat's module).
+    IT ALSO GUARDS ITS OWN HAZARDS: an entry naming a flag that no longer exists
+    REFUSES (hand-maintained-map drift); a CHECKED flag whose artifact is GONE
+    is a FINDING (three arms artifacts vanished on 09-04); and a flag whose own
+    PROSE quotes the marker stays UNMARKED, which is R-511's self-arming pin
+    instrumented -- provenance lives in a separate flag_provenance: mapping that
+    no flag body and no other seat's filing can reach.
+
+  committed_60_seed_runner_is_run_to_run_reproducible: >-
+    RELAYED FROM THE COORDINATOR AT R-512, NOT CHECKED BY ME -- and it is
+    carried here marked as such on purpose, as the first production exercise of
+    the RELAYED class. The two 60-seed emissions written 96 seconds apart share
+    1,604 keys with ZERO keys unique to either and exactly SIX differing values
+    (carrying_commit, carrying_commit_short, run_id, population/as_of,
+    working_tree_clean_for_this_file, total_wall_s) -- all run metadata, no
+    measured quantity. So the COMMITTED runner is run-to-run reproducible, which
+    R-510(C)(1) had recorded as never shown. WHAT REMAINS UNMADE, and it is the
+    different question: arms53.py (15,727 B) against de_section81_arms.py
+    (23,893 B) are DIFFERENT FILES and nobody has shown the committed runner
+    reproduces the SCRATCH runner's numbers. Neither emission is committed;
+    all three live under /tmp in another session's scratchpad.
+
 focus: >
-  As-of 2026-09-04T11:56Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T12:39Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -6839,10 +6895,103 @@ focus: >
   attributed the failure to the draw budget anyway. Matching has now failed at TWO
   successive levels for ONE mechanism, which makes the ruling BETTER supported
   than when it was made, and forecloses matching on a third statistic.
+  ROUND 90 -- THE PROGRAMME HAS TURNED TOWARD THE OBJECT-LEVEL WORK, AND THIS IS
+  WHAT THE TURN ACTUALLY IS. The coordinator went to the economics at the
+  artifacts and the finding is that Q4's DECLARED GATE IS A CONJUNCTION WHOSE
+  DECIDING HALF HAS NEVER BEEN COMPUTED: all six Q4_combined_ev cells read
+  increment_beats_incumbent FALSE and matched_random NULL, with
+  gate_partial_reason "conjuncts never evaluated: ['matched_random']" -- verified
+  by me at the artifact this round, not relayed. BE IS COMPUTING THE
+  MATCHED-RANDOM HALF AND DA VERIFIES IT INDEPENDENTLY. The positive raw
+  net_cents that comes with it is A PENDING QUANTITY AWAITING ITS NULL, has NOT
+  been reported to the USER, and must not be quoted as profitability: one
+  development day, G=0, is_a_validation FALSE, no claimable interval,
+  window-clustered p optimistic by the artifact's own disclosure, and a
+  conditional_cancel_value of -1.6364c meaning a RANDOM cancel on this
+  population loses money -- so the candidate must beat a matched-random
+  SELECTION, not zero. WHEN THE MISSING HALF LANDS, READ
+  declared_gate_outcome.conjuncts AND NEVER THE CELL'S detail PROSE, WHICH SAYS
+  THE OPPOSITE WAY ROUND. AND THE ENFORCEMENT GAP MEM NAMED IS NOW AN
+  INSTRUMENT: live/pm_research/mem_flag_provenance.py separates flags CHECKED at
+  an artifact from flags RELAYED from a row, refuses a CHECKED that does not say
+  WHAT the artifact said, and read ZERO AUTHORITATIVE OF 458 on its first run --
+  the backlog is counted, not assumed. THREE THINGS FROM R-510/R-511/R-512 BIND
+  EVERY SEAT: a green suite is WEAK evidence and no entry may quote a check
+  count as evidence of correctness; a reviewer filing is CHECKED or AGREED and
+  only CHECKED is a second observation; and THE REGISTER IS DATA READ BY
+  INSTRUMENTS, so a filing that quotes an instrument's marker is a WRITE to that
+  instrument's input -- the walk floor pinned itself at 5 that way before anyone
+  decided it (ratified deliberately at R-511, and the floor has never in fact
+  moved across both committed versions). USER ITEMS ARE THREE: the Phase-2
+  winner, the causal incumbent operating point, and the G-counting ruling.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
   capacity, promotion or forward verdict is claimable yet.
+
+
+# Provenance of every flag above, read by live/pm_research/mem_flag_provenance.py.
+# ONLY `prov: CHECKED` is authoritative, and it REFUSES without both `artifact:`
+# and `said:` -- a bare confirmation would read identically had the check never
+# happened. A flag with no entry here is UNMARKED: non-authoritative, exactly as
+# RELAYED is, and kept distinct only so the unassessed backlog stays countable.
+# Absence of an entry is the honest default and is NEVER a pass.
+flag_provenance:
+  Q4_THE_DECISION_METRIC_ITS_DECIDING_HALF_HAS_NEVER_BEEN_COMPUTED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json
+    as_of: 2026-09-04T12:37Z
+    said: >-
+      all six Q4_combined_ev cells carry status GATE_PARTIALLY_EVALUATED,
+      survives_joint_reading_at_0_05 false, declared_gate_outcome.conjuncts
+      {increment_beats_incumbent: false, matched_random: null}, passed null, and
+      gate_partial_reason "conjuncts never evaluated: ['matched_random']";
+      holm_p 0.1199400299850075 .. 0.44627686156921537
+  Q4_RAW_NET_CENTS_IS_A_PENDING_QUANTITY_AWAITING_ITS_NULL_not_a_result:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json
+    as_of: 2026-09-04T12:37Z
+    said: >-
+      results.btc.composed_lgbm.economics net_cents 7869.67772245 /
+      12333.50252295 / 14476.99327895 at 5/10/15%;
+      eval_population_and_reach.dates_present ["2026-08-25"] with 311,640 rows,
+      G_complete_utc_days 0, is_a_validation false, intervals_claimable false;
+      cluster_disclosure unit_used "window" against ruled_unit "UTC day",
+      weaker_than_ruled true, "these p-values are OPTIMISTIC -- evidence, never
+      a significance certificate"; eval_empirical.conditional_cancel_value
+      -1.6364024437050162, which I reproduced bit-exact from
+      phase2_iter011.py:266 as p_pos*m_harm - p_neg*m_good
+  Q4_READ_THE_CONJUNCTS_NOT_THE_DETAIL_STRING_when_matched_random_lands:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json
+    as_of: 2026-09-04T12:37Z
+    said: >-
+      the same cell carries detail "The incumbent counterpart EXISTS
+      (comparable=True) and was NOT COMPUTED, so only the matched-random
+      conjunct was evaluated" beside gate_conjuncts_unevaluated
+      ['matched_random'] and increment_beats_incumbent false -- the prose is the
+      opposite way round from the structured fields it sits beside
+  iter011_q4_cell_prose_contradicts_its_own_conjuncts:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json
+    as_of: 2026-09-04T12:37Z
+    said: >-
+      the tension this flag asserts is present and reproduces: I read the detail
+      string and declared_gate_outcome.conjuncts in the same cell dump and they
+      disagree about which conjunct went unevaluated; the p_value 0.01999000499750125
+      over 2000 permutations shows the incumbent increment plainly was computed
+  MEM_FLAG_PROVENANCE_INSTRUMENT_and_its_first_reading_is_zero_of_458:
+    prov: CHECKED
+    artifact: live/pm_research/mem_flag_provenance.py
+    as_of: 2026-09-04T12:37Z
+    said: >-
+      --selftest ran 20 checks in both directions and all passed; --audit on
+      this STATUS.yml reported 458 flags, 0 authoritative, 458 UNMARKED,
+      0 findings, exit 0 (the flag counts above are from before this round's
+      five additions)
+  committed_60_seed_runner_is_run_to_run_reproducible:
+    prov: RELAYED
+    from: R-512 (coordinator ran the diff; MEM did not)
 
 standing_rules:
   - "STANDING RULE 10 (R-478 3, from the reviewer's 5c; DISTINCT from rule 9) --

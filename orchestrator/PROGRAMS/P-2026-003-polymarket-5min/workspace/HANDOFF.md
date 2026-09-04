@@ -1,6 +1,101 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T11:56Z (MEM round 89) — **I VERIFIED A CITATION AND NOT THE
+Updated: 2026-09-04T12:39Z (MEM round 90) — **THE Q4 GATE'S DECIDING HALF HAS
+NEVER BEEN COMPUTED, AND THE ENFORCEMENT GAP I NAMED IS NOW AN INSTRUMENT.**
+**This entry is deliberately short** — my own R-512(2) finding was that volume is
+being mistaken for rigour and that what governs is the top paragraph; the
+previous entry ran 246 lines in `STATUS.yml`.
+
+**Object-level first, because that was the point of R-512.** The coordinator
+handed me the Q4 economics and I re-read every figure at
+`data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json`
+(sha256 `ca311c8f…`) rather than carrying it on report. **All six
+`Q4_combined_ev` cells: `increment_beats_incumbent` FALSE, `matched_random`
+NULL, `passed` NULL, `gate_partial_reason` "conjuncts never evaluated:
+['matched_random']", `holm_p` 0.1199…–0.4463….** The declared gate is a
+**conjunction** — *"beats matched-random AND beats the incumbent"* — and **only
+one half has ever been run.** BE is computing the other half this round; DA
+verifies it independently.
+
+**The positive raw `net_cents` is a PENDING QUANTITY AWAITING ITS NULL, not a
+result, and it does not enter these files as one.** 7869.67772245 /
+12333.50252295 / 14476.99327895 at 5/10/15%, against caveats that are not
+detachable and are all off the same file: **one** development day
+(`dates_present ["2026-08-25"]`, 311,640 rows), `G_complete_utc_days` 0,
+`is_a_validation` **false**, `intervals_claimable` **false**, unit **window**
+against a ruled unit of **UTC day** with the artifact's own words *"these
+p-values are OPTIMISTIC — evidence, never a significance certificate"*, and
+`conditional_cancel_value` **−1.6364024437050162** — which **I reproduced
+bit-exact** from `phase2_iter011.py:266` (`p_pos*m_harm − p_neg*m_good`). **A
+cancel drawn at random from this population loses 1.64 cents.** So the candidate
+is not being asked to beat zero; it is being asked to beat a matched-random
+**selection**, which is precisely the conjunct nobody has computed. **Not
+reported to the USER; must not be quoted as profitability.**
+
+**One thing that bites the moment the missing half lands.** Those cells' `detail`
+prose says the **opposite way round** from the structured conjuncts beside it
+(*"only the matched-random conjunct was evaluated"*). **Whoever wires BE's result
+must read `declared_gate_outcome.conjuncts`, never `detail`.** The tension itself
+stays unadjudicated; this is about which field to read.
+
+---
+
+### The instrument I said I did not have — `live/pm_research/mem_flag_provenance.py`
+
+**Dispatched at R-512, built and wired this round.** Every flag is `CHECKED`,
+`RELAYED`, `UNMARKED` or `MALFORMED`, and **only `CHECKED` is authoritative**.
+
+**`CHECKED` refuses without BOTH `artifact:` and `said:`.** A bare *"VERIFIED AT
+THE ARTIFACT"* is a token that reads identically whether or not the check
+happened — R-509's counterfactual question turned on my own habit, and my own
+back-catalogue is full of exactly that string. The refusal list names the
+content-free confirmations directly, so the shape cannot pass.
+
+| run | reading |
+|---|---|
+| `--audit`, before this round's additions | **458 flags, 0 authoritative, 458 UNMARKED, 0 findings** |
+| `--audit`, after | 463 flags, **5 CHECKED**, 1 RELAYED, 457 UNMARKED, 0 findings, exit 0 |
+| `--selftest` | **20 checks, both directions**, count **reported never asserted** against a literal |
+
+**I did not back-mark old flags.** I cannot say which were checked, so they stay
+non-authoritative — which is the ruling, and the honest default.
+
+**Three hazards it guards, each a real instance from this week:** an entry naming
+a flag that no longer exists **refuses** (hand-maintained-map drift — the
+`EXPECTED_CHECKS = 52` class I filed against another seat); a `CHECKED` flag
+whose **artifact is gone** is a **finding** (three arms artifacts vanished on
+09-04); and **a flag whose own prose quotes the marker stays UNMARKED** —
+R-511's self-arming pin, instrumented. Provenance lives in a separate
+`flag_provenance:` mapping that **no flag body and no other seat's filing can
+reach**, because this instrument reads `STATUS.yml` and nothing else.
+
+**One deliberate refinement of the brief, flagged and not smuggled.** I was told
+flags that cannot say should **read RELAYED**; I made them **UNMARKED** instead.
+They are **equally non-authoritative to a reader** — the ruling is honoured where
+it bites — but kept distinct so the unassessed backlog stays countable.
+Collapsing them would put an **absence inside the codomain of the measurement**,
+which is R-505's own predicate. **If the coordinator prefers the collapse it is
+one line in the authority rule.**
+
+**And the selftest found a real bug in my own code on its first run** — the repo
+root was derived from the status file's path depth, so it raised `IndexError` on
+any status file not four levels deep. Fixed to derive from the module's own
+location, which is the same repair R-509(G) conditioned DE's `flow_intensity`
+admission on.
+
+---
+
+### Why this round is not another meta-finding
+
+**R-512 adopted my finding that the correction cadence has become the product.**
+The instrument is meta work. **A round that shipped only the instrument would
+have been that finding happening again** — so the economics was checked **first**
+and the instrument was built around what the check produced. **USER items remain
+THREE**: the Phase-2 winner, the causal incumbent operating point, the
+G-counting ruling.
+
+
+Previously (MEM round 89) — 2026-09-04T11:56Z — **I VERIFIED A CITATION AND NOT THE
 CLAIM IT CARRIED; THE MATCHED FLOOR IS RULED UNAVAILABLE BY CONSTRUCTION AND THE
 RULING'S OWN ENTRY IS MARKED PROVISIONAL.** **A correction to the entry below, and it is mine (rule 13):**
 **DE36-R3 is the ADJACENT impossibility, not this finding** — it says cancel-set
@@ -283,6 +378,33 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T12:39Z — MEM round 90: the Q4 gate's deciding half has never been computed, and the provenance instrument exists
+>
+> **Short by design, and not duplicated** — the full entry is the `Updated:`
+> block at the top of this file. Kept here to one paragraph because R-512(2)
+> adopted the finding that volume is being mistaken for rigour.
+>
+> **Object level.** All six `Q4_combined_ev` cells, read by me at
+> `data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json`:
+> `increment_beats_incumbent` **FALSE**, `matched_random` **NULL**, `passed`
+> **NULL**, `holm_p` 0.1199…–0.4463…. The declared gate is a **conjunction** and
+> **only one half has ever been run**; BE computes the other half this round, DA
+> verifies it. **The positive raw `net_cents` is a pending quantity awaiting its
+> null, not a result** — one development day, `G` 0, `is_a_validation` false, no
+> claimable interval, window-clustered p optimistic by the artifact's own
+> disclosure, and `conditional_cancel_value` **−1.6364c**, reproduced bit-exact
+> from `phase2_iter011.py:266`, so **a random cancel on this population loses
+> money.** When the missing half lands, read `declared_gate_outcome.conjuncts`
+> and **never** the cell's `detail` prose, which says the opposite way round.
+>
+> **Instrument.** `live/pm_research/mem_flag_provenance.py` (R-512 dispatch):
+> only `CHECKED` is authoritative and it **refuses without both `artifact:` and
+> `said:`**. First honest reading: **458 flags, ZERO authoritative.** Old flags
+> were **not** back-marked.
+>
+> ---
+
 
 > ### 2026-09-04T11:56Z — MEM round 89: a citation check is not a claim check, and the floor ruling is right for a reason that was n=1 until this hour
 >
