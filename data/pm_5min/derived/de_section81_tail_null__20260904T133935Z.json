@@ -1,0 +1,97 @@
+{
+ "as_of": "2026-09-04T13:39:37Z",
+ "body_r_by_ranking": {
+  "abs": {
+   "adverse_cents": -2585.6921814999996,
+   "n": 4272,
+   "pnl_cents": 7741.258849499999,
+   "r_adverse_over_spread": 0.2503829226785456,
+   "spread_cents": 10326.951030999999
+  },
+  "signed": {
+   "adverse_cents": -11458.192181499999,
+   "n": 4272,
+   "pnl_cents": -1113.7411505000007,
+   "r_adverse_over_spread": 1.1076655636110961,
+   "spread_cents": 10344.451030999999
+  },
+  "whole_book": {
+   "adverse_cents": -1968.1921815000005,
+   "n": 4315,
+   "pnl_cents": 8598.758849499998,
+   "r_adverse_over_spread": 0.18625923179978449,
+   "spread_cents": 10566.951030999999
+  }
+ },
+ "by_ranking": {
+  "abs": {
+   "gaussian_book_also_exceeds_1": false,
+   "null": {
+    "by": "abs",
+    "design": "400 books of 4315 iid Gaussian fills with the OBSERVED mean and sd; statistic is the top-43 share of the net under the 'abs' ranking",
+    "draws": 400,
+    "mean": 1.992759872421784,
+    "n_usable": 399,
+    "null_frac_above_1": 0.002506265664160401,
+    "null_frac_net_non_positive": 0.0025,
+    "null_median": 0.06684754925109555,
+    "null_p05": -0.15903850832504335,
+    "null_p95": 0.3160091933325136,
+    "sd": 51.542033468760046
+   },
+   "null_median_share": 0.06684754925109555,
+   "observed": {
+    "body_sum": 7741.258849499999,
+    "body_sum_is_negative": false,
+    "k": 43,
+    "n": 4315,
+    "net": 8598.758849499998,
+    "ranking": "abs",
+    "top_share_of_net": 0.09972369443176811,
+    "top_sum": 857.4999999999998,
+    "what_the_ranking_means": "the k most EXTREME fills, winners and losers together"
+   },
+   "observed_inside_null_90pct": true,
+   "observed_share": 0.09972369443176811
+  },
+  "signed": {
+   "gaussian_book_also_exceeds_1": false,
+   "null": {
+    "by": "signed",
+    "design": "400 books of 4315 iid Gaussian fills with the OBSERVED mean and sd; statistic is the top-43 share of the net under the 'signed' ranking",
+    "draws": 400,
+    "mean": 1.992759872421784,
+    "n_usable": 399,
+    "null_frac_above_1": 0.19298245614035087,
+    "null_frac_net_non_positive": 0.0025,
+    "null_median": 0.6764856414531799,
+    "null_p05": 0.42680987641454776,
+    "null_p95": 2.0600051690674714,
+    "sd": 51.542033468760046
+   },
+   "null_median_share": 0.6764856414531799,
+   "observed": {
+    "body_sum": -1113.7411505000007,
+    "body_sum_is_negative": true,
+    "k": 43,
+    "n": 4315,
+    "net": 8598.758849499998,
+    "ranking": "signed",
+    "top_share_of_net": 1.129523477747578,
+    "top_sum": 9712.5,
+    "what_the_ranking_means": "the k biggest WINNERS -- removing them must leave a smaller remainder, and a negative one whenever they exceed the net"
+   },
+   "observed_inside_null_90pct": true,
+   "observed_share": 1.129523477747578
+  }
+ },
+ "coefficient_of_variation": 25.864648411512547,
+ "decides_nothing": "REPORTED (rule 14).",
+ "k": 43,
+ "mean_cents": 1.992759872421784,
+ "n": 4315,
+ "net_cents": 8598.758849499998,
+ "sd_cents": 51.542033468760046,
+ "source_cache": "/home/yuqing/ctaNew-wt-de/data/pm_5min/derived/de_section81_cache_v2_12.pkl",
+ "the_two_rankings_disagree": true
+}

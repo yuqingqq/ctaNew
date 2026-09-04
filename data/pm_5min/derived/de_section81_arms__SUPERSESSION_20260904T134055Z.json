@@ -1,0 +1,23 @@
+{
+ "as_of": "2026-09-04T13:42:20Z",
+ "numbers_check": "every economic quantity was compared across 125340Z and 133514Z before anything else was done: 26 of 26 bit-identical, delta exactly 0.00e+00 (spread, adverse, maker P&L, post-fill markout, rho, terminal inventory, and all four cancellation-economics fields on both acting arms). THE DEFECT WAS THE RECORD, NOT THE RESULT.",
+ "numbers_moved": false,
+ "old_artifacts_retained": "kept in place as provenance; never edited, never deleted (rule 13).",
+ "record": "SUPERSESSION",
+ "superseded": [
+  {
+   "artifact": "de_section81_arms__20260904T125340Z.json",
+   "reason": "PROVENANCE ONLY, NOT NUMBERS. It self-reports carrying_commit b43a9ce with working_tree_clean_for_this_file false. b43a9ce is the round-57 'WIP HELD (red)' preservation commit and is NOT an ancestor of origin/mm-research, and 3 of its 7 identity files -- including its own producer -- differ at the commit it names. It therefore cannot be CITED as provenance-clean (rule 12)."
+  },
+  {
+   "artifact": "de_section81_arms__20260904T133034Z.json",
+   "reason": "same class: emitted from a dirty tree at an unpushed commit (2ec1fe9) while this fix was in progress."
+  },
+  {
+   "artifact": "de_section81_arms__20260904T133514Z.json",
+   "reason": "provenance-clean and correct, superseded only by content: 134055Z adds the SIGNED tail ranking beside the absolute one."
+  }
+ ],
+ "superseding": "de_section81_arms__20260904T134055Z.json",
+ "what_this_does_not_establish": "that the earlier numbers were wrong. DA reproduced the baseline decomposition independently from the reference alone to 7.3e-12 and the element-wise check ran the same functions against the committed cache with zero fields differing. Those stand."
+}

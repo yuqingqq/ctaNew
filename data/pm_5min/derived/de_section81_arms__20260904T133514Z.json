@@ -1,0 +1,4175 @@
+{
+ "arm_distinctness": {
+  "all_distinct": true,
+  "arms_refused": [
+   "RANDOM_MATCHED"
+  ],
+  "arms_with_values": [
+   "CONDVALUE_X_SKEW",
+   "HAZARD_OVER_SKEWED_REF",
+   "QR_SKEW_ONLY"
+  ],
+  "floor_available": false,
+  "n_arms": 4,
+  "n_distinct": 4,
+  "n_distinct_predictors": 4,
+  "no_arm_vs_floor_comparison_available": true,
+  "predictors": {
+   "CONDVALUE_X_SKEW": "q1_arrival_composed_lgbm",
+   "HAZARD_OVER_SKEWED_REF": "incumbent_linear_d",
+   "QR_SKEW_ONLY": "NONE",
+   "RANDOM_MATCHED": "NONE_REFUSED"
+  },
+  "signatures": {
+   "CONDVALUE_X_SKEW": [
+    333,
+    -1.001502864171414,
+    7644.840732000005
+   ],
+   "HAZARD_OVER_SKEWED_REF": [
+    48,
+    -0.8281234317778965,
+    8586.2031085
+   ],
+   "QR_SKEW_ONLY": [
+    0,
+    -0.8137407682002157,
+    8598.758849500002
+   ],
+   "RANDOM_MATCHED": "REFUSED:REFUSED_NO_MATCHED_DRAW"
+  },
+  "why_no_floor": {
+   "established_and_not_in_question": "DE36-R3 -- cancel-set IDENTITY cannot be matched; its remedy was the per-stratum realised count, whose own criterion this round finds failing. A step BEYOND DE36-R3, not a restatement",
+   "floor": "UNAVAILABLE",
+   "grade": "REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE",
+   "honest_limit": "even a clean answer evidences UNREACHABLE FOR THIS CONSTRUCTION, never NEVER",
+   "localised_to": "P4_realised_action_counts_equal",
+   "not_yet_distinguishable": [
+    "achievable set EXCLUDES the target (unavailable by construction)",
+    "achievable set BRACKETS the target and the budget missed it"
+   ],
+   "one_directionality_evidence": "n=1, from a single seed in a source comment -- NOT emitted evidence, and not sufficient",
+   "what_would_settle_it": "per-draw realised value, signed gap vs the treated arm, and per-stratum breakdown, over several seeds",
+   "why_a_count_cannot_decide": "attempts and a rejection tally carry no realised VALUES, so neither reading can be excluded"
+  }
+ },
+ "arms": {
+  "CONDVALUE_X_SKEW": {
+   "arm": "CONDVALUE_X_SKEW",
+   "fields": {
+    "cancels_effective": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 246
+    },
+    "cancels_stale": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 87
+    },
+    "cancels_unresolved": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 0
+    },
+    "fill_share_retention": {
+     "found_in": "result",
+     "status": "OK",
+     "value": 0.6781603599275761
+    },
+    "hold_seconds_total": {
+     "found_in": "holds",
+     "status": "OK",
+     "value": 2271.7391771389994
+    },
+    "holds_total": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 246
+    },
+    "inventory_loss_cents": {
+     "by_ruling": {
+      "A_held_forward_always": {
+       "inventory_loss_cents": 11935.859308000003,
+       "n_fills_NOT_AVAILABLE": 0,
+       "n_fills_valued": 2875,
+       "n_slugs_NOT_AVAILABLE": 0,
+       "n_slugs_valued": 12,
+       "slugs_NOT_AVAILABLE": []
+      },
+      "B_refuse_when_window_ended_in_gap": {
+       "inventory_loss_cents": 11662.485971000002,
+       "n_fills_NOT_AVAILABLE": 75,
+       "n_fills_valued": 2800,
+       "n_slugs_NOT_AVAILABLE": 1,
+       "n_slugs_valued": 11,
+       "slugs_NOT_AVAILABLE": [
+        "btc-updown-5m-1787580600"
+       ]
+      }
+     },
+     "concentration": {
+      "fills_leg": {
+       "n": 2875,
+       "rest_share_of_net": 0.8848896882421017,
+       "rest_sum_cents": 6764.840732000004,
+       "top_1pct_n": 29,
+       "top_1pct_share_of_net": 0.11511031175789828,
+       "top_1pct_sum_cents": 879.9999999999998,
+       "why": "a share above 1.0 means the remaining fills sum AGAINST the net -- the total is a tail, not a tendency"
+      },
+      "inventory_leg": {
+       "n": 2875,
+       "rest_share_of_net": 1.286112621795994,
+       "rest_sum_cents": 15350.859308000003,
+       "top_1pct_n": 29,
+       "top_1pct_share_of_net": -0.28611262179599406,
+       "top_1pct_sum_cents": -3415.0,
+       "why": "a share above 1.0 means the remaining fills sum AGAINST the net -- the total is a tail, not a tendency"
+      }
+     },
+     "fill_statuses": {
+      "NO_MARKOUT": 0,
+      "NO_SHARES": 0,
+      "NO_SLUG": 0,
+      "NO_TERMINAL_MARK": 0,
+      "VALUED": 2875
+     },
+     "fills_leg_cents": 7644.840732000004,
+     "found_in": "de_phase4_diag_runner.inventory_pnl",
+     "identity": "fills_leg + inventory_leg == total_to_terminal",
+     "identity_holds": true,
+     "identity_residual_cents": 7.275957614183426e-12,
+     "interval": "NONE. Rule 8: intervals only on the correct cluster unit (UTC day). This population is 12 windows, below the 5-complete-day floor, so a POINT ESTIMATE AND NO INTERVAL -- and that is said, not omitted",
+     "per_slug": {
+      "btc-updown-5m-1787579400": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 1142.5674635000003,
+       "inventory_cents": 1177.5811764999996,
+       "n_fills": 293,
+       "net_shares": -108.422666,
+       "staleness_s": 8.32273240500001,
+       "terminal_mark": 0.025,
+       "total_to_terminal_cents": 2320.14864
+      },
+      "btc-updown-5m-1787579700": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 402.92836799999964,
+       "inventory_cents": -320.1996379999997,
+       "n_fills": 106,
+       "net_shares": 18.98727600000001,
+       "staleness_s": 102.91668867199999,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 82.72873000000017
+      },
+      "btc-updown-5m-1787580000": {
+       "ended_in_gap": false,
+       "fills_leg_cents": -1016.4915309999999,
+       "inventory_cents": 1633.035976,
+       "n_fills": 202,
+       "net_shares": 98.70029800000003,
+       "staleness_s": 33.623306883,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 616.5444450000002
+      },
+      "btc-updown-5m-1787580300": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 146.32721399999988,
+       "inventory_cents": 166.45392900000002,
+       "n_fills": 122,
+       "net_shares": -4.026373999999992,
+       "staleness_s": 88.490067393,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 312.78114299999976
+      },
+      "btc-updown-5m-1787580600": {
+       "ended_in_gap": true,
+       "fills_leg_cents": 233.0617179999997,
+       "inventory_cents": 273.37333700000056,
+       "n_fills": 75,
+       "net_shares": -3.0998399999999187,
+       "staleness_s": 87.710639955,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 506.4350550000004
+      },
+      "btc-updown-5m-1787580900": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 411.91040650000025,
+       "inventory_cents": 3777.8337335000006,
+       "n_fills": 290,
+       "net_shares": -52.29196599999999,
+       "staleness_s": 38.35658531399997,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 4189.744140000002
+      },
+      "btc-updown-5m-1787581200": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 3852.6663199999994,
+       "inventory_cents": 933.8963470000008,
+       "n_fills": 583,
+       "net_shares": 4.733316000000002,
+       "staleness_s": 13.041503137999996,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 4786.562666999999
+      },
+      "btc-updown-5m-1787581500": {
+       "ended_in_gap": false,
+       "fills_leg_cents": -339.2714144999996,
+       "inventory_cents": 1286.2797749999997,
+       "n_fills": 264,
+       "net_shares": -48.68177500000001,
+       "staleness_s": 43.24252537000001,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 947.0083605
+      },
+      "btc-updown-5m-1787581800": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 712.2182239999997,
+       "inventory_cents": -338.3507730000004,
+       "n_fills": 175,
+       "net_shares": -5.401540999999995,
+       "staleness_s": 1.1000724579999996,
+       "terminal_mark": 0.97,
+       "total_to_terminal_cents": 373.86745099999985
+      },
+      "btc-updown-5m-1787582100": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 1464.7043924999996,
+       "inventory_cents": -573.8756639999995,
+       "n_fills": 344,
+       "net_shares": -35.316074999999955,
+       "staleness_s": 15.329086355000015,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 890.8287284999985
+      },
+      "btc-updown-5m-1787582400": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 197.90025999999986,
+       "inventory_cents": 3592.5079745000007,
+       "n_fills": 240,
+       "net_shares": -10.533958999999953,
+       "staleness_s": 45.092475017,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 3790.408234500001
+      },
+      "btc-updown-5m-1787582700": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 436.31931099999963,
+       "inventory_cents": 327.3231344999997,
+       "n_fills": 181,
+       "net_shares": -1.9281729999999868,
+       "staleness_s": 26.275324696999974,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 763.6424455000003
+      }
+     },
+     "ruling": "A_held_forward_always",
+     "ruling_provenance": "coordinator ruling, DE59 2026-09-04: (C') -- store the mark, its AGE and the gap flag; report held-forward as primary and the gap refusal as a second view",
+     "ruling_texts": {
+      "A_held_forward_always": "take the mark whatever its age. Never NOT_AVAILABLE after the window's first quote -- and marks the residual at a price the market may have left, SILENTLY, since the value does not say how old it is",
+      "B_refuse_when_window_ended_in_gap": "NOT_AVAILABLE, COUNTED, when the window's end falls in a gap or tick-change interval (`wf.touched(last_quote_t, WINDOW_S)`). Refuses to value the residual exactly where the residual is riskiest -- the gap is WHEN the position became dangerous"
+     },
+     "rulings_available": [
+      "A_held_forward_always",
+      "B_refuse_when_window_ended_in_gap"
+     ],
+     "second_view_disagreement_cents": 273.3733370000009,
+     "second_view_disagreement_share": 0.022903532116600317,
+     "status": "OK",
+     "summed_terminal_net_shares": -147.28147899999976,
+     "summed_terminal_net_shares_status": "REPORTING-ONLY, CARRIES NO DECISION MEANING -- it is a share count across windows with different marks",
+     "terminal_indexes": "WINDOW_S -- THE WINDOW'S END. NOT any generation's `t1`: the residual is a WINDOW-level object, a position left at window end, and `t1` is a generation field in this codebase. Ruled DE59; stated here so the next reader does not re-derive it",
+     "total_to_terminal_cents": 19580.70004,
+     "unit": "per-slug; the sum of per-slug values is well defined, a cross-window net share position is not",
+     "value": 11935.859308000003,
+     "views_disagree_materially": true
+    },
+    "latency_x_cost_sensitivity": {
+     "reason": "needs the 9-rung latency axis; one rung run",
+     "status": "NOT_RUN_THIS_ROUND"
+    },
+    "maker_pnl_cents": {
+     "also": {
+      "adverse_selection_cents": 11.471916499999118
+     },
+     "equals": "post_fill_markout_cents -- the markout is struck from level and already contains the entry edge, so the two are one quantity and their SUM would double-count it",
+     "fill_statuses": {
+      "NO_MARKOUT": 0,
+      "NO_MID_AT_FILL": 0,
+      "NO_SHARES": 0,
+      "VALUED": 2875
+     },
+     "found_in": "de_phase4_diag_runner.maker_pnl_from_fills",
+     "identity_holds": true,
+     "identity_residual_cents": 6.366462912410498e-12,
+     "n_fills": 2875,
+     "shares": 12391.135913000006,
+     "status": "OK",
+     "value": 7644.840732000004
+    },
+    "peak_inventory": {
+     "found_in": "inventory",
+     "status": "OK",
+     "value": 179.913478
+    },
+    "post_fill_markout_cents": {
+     "found_in": "economics",
+     "status": "OK",
+     "value": 7644.840732000005
+    },
+    "queue_reset_cost_cents_total": {
+     "found_in": "economics",
+     "status": "OK",
+     "value": 0.0
+    },
+    "reposts": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 244
+    },
+    "rho": {
+     "status": "OK",
+     "statuses": {
+      "IN_LATENCY_WINDOW": 2237,
+      "NON_FINITE": 0,
+      "NO_MID_AT_FILL": 0,
+      "NO_MID_AT_MARKOUT": 0,
+      "REACHABLE": 638,
+      "ZERO_SIZE": 0
+     },
+     "value": -1.001502864171414
+    },
+    "spread_capture_cents": {
+     "fill_statuses": {
+      "NO_MARKOUT": 0,
+      "NO_MID_AT_FILL": 0,
+      "NO_SHARES": 0,
+      "VALUED": 2875
+     },
+     "found_in": "de_phase4_diag_runner.maker_pnl_from_fills",
+     "identity_holds": true,
+     "identity_residual_cents": 6.366462912410498e-12,
+     "n_fills": 2875,
+     "shares": 12391.135913000006,
+     "status": "OK",
+     "value": 7633.368815499999
+    },
+    "terminal_inventory": {
+     "found_in": "inventory",
+     "status": "OK",
+     "value": -147.28147899999976
+    }
+   },
+   "identity": {
+    "artifacts": {
+     "lgbm_haz_btc.txt": "ec52055214a01ed5",
+     "lgbm_thresholds_btc.json": "0fa2f1f7a5a4c58f"
+    },
+    "n_artifacts": 2,
+    "predictor": "q1_arrival_composed_lgbm",
+    "source": "de_score_stream.verify_head -> the fit manifest"
+   },
+   "maker_pnl_reconciliation": {
+    "difference_cents": -9.094947017729282e-13,
+    "holds": true,
+    "predicate": "|replay| <= |reference| -- the replay's received fills are a SUBSET of the reference's tranches once a policy cancels, so its markout cannot exceed the reference's in magnitude",
+    "reference_tranche_markout_cents": 7644.840732000004,
+    "replay_received_markout_cents": 7644.840732000005,
+    "why_not_equality": "equality would only hold for an arm that cancels nothing; asserting it would make the check fail on every acting arm"
+   },
+   "n_cancels": 333,
+   "semantics": "conditional-value cancellation COMPOSED with frozen skew AT THE POLICY LAYER, without interaction; the predictor carries no skew or inventory state by design (plan \u00a72.2, \u00a710.1)",
+   "theta": 0.32450609461933483
+  },
+  "HAZARD_OVER_SKEWED_REF": {
+   "arm": "HAZARD_OVER_SKEWED_REF",
+   "fields": {
+    "cancels_effective": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 31
+    },
+    "cancels_stale": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 17
+    },
+    "cancels_unresolved": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 0
+    },
+    "fill_share_retention": {
+     "found_in": "result",
+     "status": "OK",
+     "value": 0.9804412035411061
+    },
+    "hold_seconds_total": {
+     "found_in": "holds",
+     "status": "OK",
+     "value": 95.10283019499998
+    },
+    "holds_total": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 31
+    },
+    "inventory_loss_cents": {
+     "by_ruling": {
+      "A_held_forward_always": {
+       "inventory_loss_cents": 9237.923187499999,
+       "n_fills_NOT_AVAILABLE": 0,
+       "n_fills_valued": 4208,
+       "n_slugs_NOT_AVAILABLE": 0,
+       "n_slugs_valued": 12,
+       "slugs_NOT_AVAILABLE": []
+      },
+      "B_refuse_when_window_ended_in_gap": {
+       "inventory_loss_cents": 6951.017175499998,
+       "n_fills_NOT_AVAILABLE": 125,
+       "n_fills_valued": 4083,
+       "n_slugs_NOT_AVAILABLE": 1,
+       "n_slugs_valued": 11,
+       "slugs_NOT_AVAILABLE": [
+        "btc-updown-5m-1787580600"
+       ]
+      }
+     },
+     "concentration": {
+      "fills_leg": {
+       "n": 4208,
+       "rest_share_of_net": 0.8753814711253752,
+       "rest_sum_cents": 7516.203108499996,
+       "top_1pct_n": 42,
+       "top_1pct_share_of_net": 0.12461852887462477,
+       "top_1pct_sum_cents": 1069.9999999999998,
+       "why": "a share above 1.0 means the remaining fills sum AGAINST the net -- the total is a tail, not a tendency"
+      },
+      "inventory_leg": {
+       "n": 4208,
+       "rest_share_of_net": 1.2040501919901894,
+       "rest_sum_cents": 11122.923187500011,
+       "top_1pct_n": 42,
+       "top_1pct_share_of_net": -0.20405019199018942,
+       "top_1pct_sum_cents": -1885.0,
+       "why": "a share above 1.0 means the remaining fills sum AGAINST the net -- the total is a tail, not a tendency"
+      }
+     },
+     "fill_statuses": {
+      "NO_MARKOUT": 0,
+      "NO_SHARES": 0,
+      "NO_SLUG": 0,
+      "NO_TERMINAL_MARK": 0,
+      "VALUED": 4208
+     },
+     "fills_leg_cents": 8586.203108499996,
+     "found_in": "de_phase4_diag_runner.inventory_pnl",
+     "identity": "fills_leg + inventory_leg == total_to_terminal",
+     "identity_holds": true,
+     "identity_residual_cents": 0.0,
+     "interval": "NONE. Rule 8: intervals only on the correct cluster unit (UTC day). This population is 12 windows, below the 5-complete-day floor, so a POINT ESTIMATE AND NO INTERVAL -- and that is said, not omitted",
+     "per_slug": {
+      "btc-updown-5m-1787579400": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 530.1540705,
+       "inventory_cents": -754.2363025,
+       "n_fills": 450,
+       "net_shares": 2.4331479999999885,
+       "staleness_s": 8.32273240500001,
+       "terminal_mark": 0.025,
+       "total_to_terminal_cents": -224.0822320000006
+      },
+      "btc-updown-5m-1787579700": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 550.4182044999997,
+       "inventory_cents": -320.4852029999999,
+       "n_fills": 170,
+       "net_shares": 30.187853000000015,
+       "staleness_s": 102.91668867199999,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 229.9330014999997
+      },
+      "btc-updown-5m-1787580000": {
+       "ended_in_gap": false,
+       "fills_leg_cents": -197.66210499999977,
+       "inventory_cents": 826.8681035000003,
+       "n_fills": 293,
+       "net_shares": 8.624255000000057,
+       "staleness_s": 33.623306883,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 629.2059985000009
+      },
+      "btc-updown-5m-1787580300": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 363.62578649999955,
+       "inventory_cents": 1953.877845,
+       "n_fills": 176,
+       "net_shares": 104.622515,
+       "staleness_s": 88.490067393,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 2317.5036314999998
+      },
+      "btc-updown-5m-1787580600": {
+       "ended_in_gap": true,
+       "fills_leg_cents": 518.9965814999996,
+       "inventory_cents": 2286.906012,
+       "n_fills": 125,
+       "net_shares": 175.17232700000008,
+       "staleness_s": 87.710639955,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 2805.9025935000004
+      },
+      "btc-updown-5m-1787580900": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 1525.1708544999995,
+       "inventory_cents": 2324.204189000001,
+       "n_fills": 407,
+       "net_shares": -42.304327000000015,
+       "staleness_s": 38.35658531399997,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 3849.3750435000006
+      },
+      "btc-updown-5m-1787581200": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 496.61154049999925,
+       "inventory_cents": 587.5827704999994,
+       "n_fills": 745,
+       "net_shares": 33.470562,
+       "staleness_s": 13.041503137999996,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 1084.1943109999977
+      },
+      "btc-updown-5m-1787581500": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 400.0290515000008,
+       "inventory_cents": -128.56320450000072,
+       "n_fills": 417,
+       "net_shares": -127.02329400000002,
+       "staleness_s": 43.24252537000001,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 271.46584700000034
+      },
+      "btc-updown-5m-1787581800": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 861.6807609999995,
+       "inventory_cents": 1068.4463359999988,
+       "n_fills": 270,
+       "net_shares": 51.22912100000001,
+       "staleness_s": 1.1000724579999996,
+       "terminal_mark": 0.97,
+       "total_to_terminal_cents": 1930.1270969999996
+      },
+      "btc-updown-5m-1787582100": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 1461.1552749999996,
+       "inventory_cents": -107.0403870000008,
+       "n_fills": 485,
+       "net_shares": 5.7801020000000065,
+       "staleness_s": 15.329086355000015,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 1354.1148879999985
+      },
+      "btc-updown-5m-1787582400": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 1008.1646924999995,
+       "inventory_cents": 1519.5689215,
+       "n_fills": 358,
+       "net_shares": -75.60202800000005,
+       "staleness_s": 45.092475017,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 2527.733614
+      },
+      "btc-updown-5m-1787582700": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 1067.8583955,
+       "inventory_cents": -19.20589299999999,
+       "n_fills": 312,
+       "net_shares": -71.658311,
+       "staleness_s": 26.275324696999974,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 1048.6525024999994
+      }
+     },
+     "ruling": "A_held_forward_always",
+     "ruling_provenance": "coordinator ruling, DE59 2026-09-04: (C') -- store the mark, its AGE and the gap flag; report held-forward as primary and the gap refusal as a second view",
+     "ruling_texts": {
+      "A_held_forward_always": "take the mark whatever its age. Never NOT_AVAILABLE after the window's first quote -- and marks the residual at a price the market may have left, SILENTLY, since the value does not say how old it is",
+      "B_refuse_when_window_ended_in_gap": "NOT_AVAILABLE, COUNTED, when the window's end falls in a gap or tick-change interval (`wf.touched(last_quote_t, WINDOW_S)`). Refuses to value the residual exactly where the residual is riskiest -- the gap is WHEN the position became dangerous"
+     },
+     "rulings_available": [
+      "A_held_forward_always",
+      "B_refuse_when_window_ended_in_gap"
+     ],
+     "second_view_disagreement_cents": 2286.9060120000004,
+     "second_view_disagreement_share": 0.24755629220802078,
+     "status": "OK",
+     "summed_terminal_net_shares": 94.93192300000008,
+     "summed_terminal_net_shares_status": "REPORTING-ONLY, CARRIES NO DECISION MEANING -- it is a share count across windows with different marks",
+     "terminal_indexes": "WINDOW_S -- THE WINDOW'S END. NOT any generation's `t1`: the residual is a WINDOW-level object, a position left at window end, and `t1` is a generation field in this codebase. Ruled DE59; stated here so the next reader does not re-derive it",
+     "total_to_terminal_cents": 17824.12629600001,
+     "unit": "per-slug; the sum of per-slug values is well defined, a cross-window net share position is not",
+     "value": 9237.923187499999,
+     "views_disagree_materially": true
+    },
+    "latency_x_cost_sensitivity": {
+     "reason": "needs the 9-rung latency axis; one rung run",
+     "status": "NOT_RUN_THIS_ROUND"
+    },
+    "maker_pnl_cents": {
+     "also": {
+      "adverse_selection_cents": -1782.0617889999978
+     },
+     "equals": "post_fill_markout_cents -- the markout is struck from level and already contains the entry edge, so the two are one quantity and their SUM would double-count it",
+     "fill_statuses": {
+      "NO_MARKOUT": 0,
+      "NO_MID_AT_FILL": 0,
+      "NO_SHARES": 0,
+      "VALUED": 4208
+     },
+     "found_in": "de_phase4_diag_runner.maker_pnl_from_fills",
+     "identity_holds": true,
+     "identity_residual_cents": 1.8189894035458565e-12,
+     "n_fills": 4208,
+     "shares": 17914.31780100001,
+     "status": "OK",
+     "value": 8586.203108499996
+    },
+    "peak_inventory": {
+     "found_in": "inventory",
+     "status": "OK",
+     "value": 180.17232700000008
+    },
+    "post_fill_markout_cents": {
+     "found_in": "economics",
+     "status": "OK",
+     "value": 8586.2031085
+    },
+    "queue_reset_cost_cents_total": {
+     "found_in": "economics",
+     "status": "OK",
+     "value": 0.0
+    },
+    "reposts": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 31
+    },
+    "rho": {
+     "status": "OK",
+     "statuses": {
+      "IN_LATENCY_WINDOW": 3032,
+      "NON_FINITE": 0,
+      "NO_MID_AT_FILL": 0,
+      "NO_MID_AT_MARKOUT": 0,
+      "REACHABLE": 1176,
+      "ZERO_SIZE": 0
+     },
+     "value": -0.8281234317778965
+    },
+    "spread_capture_cents": {
+     "fill_statuses": {
+      "NO_MARKOUT": 0,
+      "NO_MID_AT_FILL": 0,
+      "NO_SHARES": 0,
+      "VALUED": 4208
+     },
+     "found_in": "de_phase4_diag_runner.maker_pnl_from_fills",
+     "identity_holds": true,
+     "identity_residual_cents": 1.8189894035458565e-12,
+     "n_fills": 4208,
+     "shares": 17914.31780100001,
+     "status": "OK",
+     "value": 10368.264897499996
+    },
+    "terminal_inventory": {
+     "found_in": "inventory",
+     "status": "OK",
+     "value": 94.93192300000008
+    }
+   },
+   "identity": {
+    "artifacts": {
+     "linear_d_btc.json": "18701008c2bd18c6"
+    },
+    "n_artifacts": 1,
+    "predictor": "incumbent_linear_d",
+    "source": "de_score_stream.verify_head -> the fit manifest"
+   },
+   "maker_pnl_reconciliation": {
+    "difference_cents": -3.637978807091713e-12,
+    "holds": true,
+    "predicate": "|replay| <= |reference| -- the replay's received fills are a SUBSET of the reference's tranches once a policy cancels, so its markout cannot exceed the reference's in magnitude",
+    "reference_tranche_markout_cents": 8586.203108499996,
+    "replay_received_markout_cents": 8586.2031085,
+    "why_not_equality": "equality would only hold for an arm that cancels nothing; asserting it would make the check fail on every acting arm"
+   },
+   "n_cancels": 48,
+   "note": "NOT \u00a78.1 arm 3 -- arm 3 requires NEUTRAL placement, which is ABSENT. This is the hazard head over the SKEWED reference and is named so it cannot be read as arm 3",
+   "theta": 0.43525926488298716
+  },
+  "QR_SKEW_ONLY": {
+   "arm": "QR_SKEW_ONLY",
+   "fields": {
+    "cancels_effective": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 0
+    },
+    "cancels_stale": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 0
+    },
+    "cancels_unresolved": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 0
+    },
+    "fill_share_retention": {
+     "found_in": "result",
+     "status": "OK",
+     "value": 1.0
+    },
+    "hold_seconds_total": {
+     "found_in": "holds",
+     "status": "OK",
+     "value": 0.0
+    },
+    "holds_total": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 0
+    },
+    "inventory_loss_cents": {
+     "by_ruling": {
+      "A_held_forward_always": {
+       "inventory_loss_cents": 8587.538627,
+       "n_fills_NOT_AVAILABLE": 0,
+       "n_fills_valued": 4315,
+       "n_slugs_NOT_AVAILABLE": 0,
+       "n_slugs_valued": 12,
+       "slugs_NOT_AVAILABLE": []
+      },
+      "B_refuse_when_window_ended_in_gap": {
+       "inventory_loss_cents": 6165.283667,
+       "n_fills_NOT_AVAILABLE": 130,
+       "n_fills_valued": 4185,
+       "n_slugs_NOT_AVAILABLE": 1,
+       "n_slugs_valued": 11,
+       "slugs_NOT_AVAILABLE": [
+        "btc-updown-5m-1787580600"
+       ]
+      }
+     },
+     "concentration": {
+      "fills_leg": {
+       "n": 4315,
+       "rest_share_of_net": 0.9002763055682319,
+       "rest_sum_cents": 7741.258849499998,
+       "top_1pct_n": 43,
+       "top_1pct_share_of_net": 0.09972369443176811,
+       "top_1pct_sum_cents": 857.4999999999998,
+       "why": "a share above 1.0 means the remaining fills sum AGAINST the net -- the total is a tail, not a tendency"
+      },
+      "inventory_leg": {
+       "n": 4315,
+       "rest_share_of_net": 1.1659381182309527,
+       "rest_sum_cents": 10012.538627000005,
+       "top_1pct_n": 43,
+       "top_1pct_share_of_net": -0.1659381182309527,
+       "top_1pct_sum_cents": -1425.0,
+       "why": "a share above 1.0 means the remaining fills sum AGAINST the net -- the total is a tail, not a tendency"
+      }
+     },
+     "fill_statuses": {
+      "NO_MARKOUT": 0,
+      "NO_SHARES": 0,
+      "NO_SLUG": 0,
+      "NO_TERMINAL_MARK": 0,
+      "VALUED": 4315
+     },
+     "fills_leg_cents": 8598.758849499998,
+     "found_in": "de_phase4_diag_runner.inventory_pnl",
+     "identity": "fills_leg + inventory_leg == total_to_terminal",
+     "identity_holds": true,
+     "identity_residual_cents": 3.637978807091713e-12,
+     "interval": "NONE. Rule 8: intervals only on the correct cluster unit (UTC day). This population is 12 windows, below the 5-complete-day floor, so a POINT ESTIMATE AND NO INTERVAL -- and that is said, not omitted",
+     "per_slug": {
+      "btc-updown-5m-1787579400": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 572.6540705,
+       "inventory_cents": -284.2363025000002,
+       "n_fills": 458,
+       "net_shares": 7.433147999999981,
+       "staleness_s": 8.32273240500001,
+       "terminal_mark": 0.025,
+       "total_to_terminal_cents": 288.4177679999994
+      },
+      "btc-updown-5m-1787579700": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 444.95726999999977,
+       "inventory_cents": -426.5189429999999,
+       "n_fills": 180,
+       "net_shares": 21.469722000000015,
+       "staleness_s": 102.91668867199999,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 18.43832700000003
+      },
+      "btc-updown-5m-1787580000": {
+       "ended_in_gap": false,
+       "fills_leg_cents": -341.57826399999976,
+       "inventory_cents": 995.5874180000005,
+       "n_fills": 315,
+       "net_shares": -15.602105999999942,
+       "staleness_s": 33.623306883,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 654.0091540000012
+      },
+      "btc-updown-5m-1787580300": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 377.0002324999996,
+       "inventory_cents": 2178.0033990000006,
+       "n_fills": 180,
+       "net_shares": 119.62251499999998,
+       "staleness_s": 88.490067393,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 2555.0036314999998
+      },
+      "btc-updown-5m-1787580600": {
+       "ended_in_gap": true,
+       "fills_leg_cents": 545.5015529999996,
+       "inventory_cents": 2422.25496,
+       "n_fills": 130,
+       "net_shares": 189.63638400000005,
+       "staleness_s": 87.710639955,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 2967.7565130000007
+      },
+      "btc-updown-5m-1787580900": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 1808.7058544999998,
+       "inventory_cents": -438.6708109999993,
+       "n_fills": 421,
+       "net_shares": -7.624327000000026,
+       "staleness_s": 38.35658531399997,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 1370.0350435
+      },
+      "btc-updown-5m-1787581200": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 496.61154049999925,
+       "inventory_cents": 587.5827704999994,
+       "n_fills": 745,
+       "net_shares": 33.470562,
+       "staleness_s": 13.041503137999996,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 1084.1943109999977
+      },
+      "btc-updown-5m-1787581500": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 403.9328935000007,
+       "inventory_cents": 405.93683149999987,
+       "n_fills": 425,
+       "net_shares": -96.29252200000002,
+       "staleness_s": 43.24252537000001,
+       "terminal_mark": 0.985,
+       "total_to_terminal_cents": 809.8697250000007
+      },
+      "btc-updown-5m-1787581800": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 818.4562229999996,
+       "inventory_cents": 467.43286999999947,
+       "n_fills": 278,
+       "net_shares": 51.685487,
+       "staleness_s": 1.1000724579999996,
+       "terminal_mark": 0.97,
+       "total_to_terminal_cents": 1285.8890929999989
+      },
+      "btc-updown-5m-1787582100": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 1505.2022744999992,
+       "inventory_cents": 864.608170999999,
+       "n_fills": 498,
+       "net_shares": -4.674647000000007,
+       "staleness_s": 15.329086355000015,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 2369.8104455000007
+      },
+      "btc-updown-5m-1787582400": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 883.1647059999999,
+       "inventory_cents": 2390.997396500001,
+       "n_fills": 366,
+       "net_shares": -89.88774100000003,
+       "staleness_s": 45.092475017,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 3274.1621025000004
+      },
+      "btc-updown-5m-1787582700": {
+       "ended_in_gap": false,
+       "fills_leg_cents": 1084.1504955,
+       "inventory_cents": -575.4391330000004,
+       "n_fills": 319,
+       "net_shares": -62.498695,
+       "staleness_s": 26.275324696999974,
+       "terminal_mark": 0.015,
+       "total_to_terminal_cents": 508.7113624999997
+      }
+     },
+     "ruling": "A_held_forward_always",
+     "ruling_provenance": "coordinator ruling, DE59 2026-09-04: (C') -- store the mark, its AGE and the gap flag; report held-forward as primary and the gap refusal as a second view",
+     "ruling_texts": {
+      "A_held_forward_always": "take the mark whatever its age. Never NOT_AVAILABLE after the window's first quote -- and marks the residual at a price the market may have left, SILENTLY, since the value does not say how old it is",
+      "B_refuse_when_window_ended_in_gap": "NOT_AVAILABLE, COUNTED, when the window's end falls in a gap or tick-change interval (`wf.touched(last_quote_t, WINDOW_S)`). Refuses to value the residual exactly where the residual is riskiest -- the gap is WHEN the position became dangerous"
+     },
+     "rulings_available": [
+      "A_held_forward_always",
+      "B_refuse_when_window_ended_in_gap"
+     ],
+     "second_view_disagreement_cents": 2422.25496,
+     "second_view_disagreement_share": 0.2820662666231522,
+     "status": "OK",
+     "summed_terminal_net_shares": 146.73778,
+     "summed_terminal_net_shares_status": "REPORTING-ONLY, CARRIES NO DECISION MEANING -- it is a share count across windows with different marks",
+     "terminal_indexes": "WINDOW_S -- THE WINDOW'S END. NOT any generation's `t1`: the residual is a WINDOW-level object, a position left at window end, and `t1` is a generation field in this codebase. Ruled DE59; stated here so the next reader does not re-derive it",
+     "total_to_terminal_cents": 17186.2974765,
+     "unit": "per-slug; the sum of per-slug values is well defined, a cross-window net share position is not",
+     "value": 8587.538627,
+     "views_disagree_materially": true
+    },
+    "latency_x_cost_sensitivity": {
+     "reason": "needs the 9-rung latency axis; one rung run",
+     "status": "NOT_RUN_THIS_ROUND"
+    },
+    "maker_pnl_cents": {
+     "also": {
+      "adverse_selection_cents": -1968.1921814999978
+     },
+     "equals": "post_fill_markout_cents -- the markout is struck from level and already contains the entry edge, so the two are one quantity and their SUM would double-count it",
+     "fill_statuses": {
+      "NO_MARKOUT": 0,
+      "NO_MID_AT_FILL": 0,
+      "NO_SHARES": 0,
+      "VALUED": 4315
+     },
+     "found_in": "de_phase4_diag_runner.maker_pnl_from_fills",
+     "identity_holds": true,
+     "identity_residual_cents": 0.0,
+     "n_fills": 4315,
+     "shares": 18271.690068000014,
+     "status": "OK",
+     "value": 8598.758849499998
+    },
+    "peak_inventory": {
+     "found_in": "inventory",
+     "status": "OK",
+     "value": 194.63638400000005
+    },
+    "post_fill_markout_cents": {
+     "found_in": "economics",
+     "status": "OK",
+     "value": 8598.758849500002
+    },
+    "queue_reset_cost_cents_total": {
+     "found_in": "economics",
+     "status": "OK",
+     "value": 0.0
+    },
+    "reposts": {
+     "found_in": "counters",
+     "status": "OK",
+     "value": 0
+    },
+    "rho": {
+     "status": "OK",
+     "statuses": {
+      "IN_LATENCY_WINDOW": 3069,
+      "NON_FINITE": 0,
+      "NO_MID_AT_FILL": 0,
+      "NO_MID_AT_MARKOUT": 0,
+      "REACHABLE": 1246,
+      "ZERO_SIZE": 0
+     },
+     "value": -0.8137407682002157
+    },
+    "spread_capture_cents": {
+     "fill_statuses": {
+      "NO_MARKOUT": 0,
+      "NO_MID_AT_FILL": 0,
+      "NO_SHARES": 0,
+      "VALUED": 4315
+     },
+     "found_in": "de_phase4_diag_runner.maker_pnl_from_fills",
+     "identity_holds": true,
+     "identity_residual_cents": 0.0,
+     "n_fills": 4315,
+     "shares": 18271.690068000014,
+     "status": "OK",
+     "value": 10566.951030999997
+    },
+    "terminal_inventory": {
+     "found_in": "inventory",
+     "status": "OK",
+     "value": 146.73778
+    }
+   },
+   "identity": {
+    "artifacts": {},
+    "note": "the neutral opportunity population; no cancellation, asserted n_cancels==0",
+    "predictor": "NONE"
+   },
+   "maker_pnl_reconciliation": {
+    "difference_cents": -3.637978807091713e-12,
+    "holds": true,
+    "predicate": "|replay| <= |reference| -- the replay's received fills are a SUBSET of the reference's tranches once a policy cancels, so its markout cannot exceed the reference's in magnitude",
+    "reference_tranche_markout_cents": 8598.758849499998,
+    "replay_received_markout_cents": 8598.758849500002,
+    "why_not_equality": "equality would only hold for an arm that cancels nothing; asserting it would make the check fail on every acting arm"
+   },
+   "n_cancels": 0
+  },
+  "RANDOM_MATCHED": {
+   "VALID_AS_A_CONTROL": false,
+   "arm": "RANDOM_MATCHED",
+   "attempts": 60,
+   "floor_state": {
+    "established_and_not_in_question": "DE36-R3 -- cancel-set IDENTITY cannot be matched; its remedy was the per-stratum realised count, whose own criterion this round finds failing. A step BEYOND DE36-R3, not a restatement",
+    "floor": "UNAVAILABLE",
+    "grade": "REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE",
+    "honest_limit": "even a clean answer evidences UNREACHABLE FOR THIS CONSTRUCTION, never NEVER",
+    "localised_to": "P4_realised_action_counts_equal",
+    "not_yet_distinguishable": [
+     "achievable set EXCLUDES the target (unavailable by construction)",
+     "achievable set BRACKETS the target and the budget missed it"
+    ],
+    "one_directionality_evidence": "n=1, from a single seed in a source comment -- NOT emitted evidence, and not sufficient",
+    "what_would_settle_it": "per-draw realised value, signed gap vs the treated arm, and per-stratum breakdown, over several seeds",
+    "why_a_count_cannot_decide": "attempts and a rejection tally carry no realised VALUES, so neither reading can be excluded"
+   },
+   "p4_observations": [
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 41,
+       "signed_gap": 16,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 193,
+       "signed_gap": 89,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 60,
+       "signed_gap": 27,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 202,
+       "signed_gap": 31,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 496,
+     "realised_total_treated": 333,
+     "seed": 0,
+     "signed_gap_total": 163
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 34,
+       "signed_gap": 9,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 172,
+       "signed_gap": 68,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 45,
+       "signed_gap": 12,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 242,
+       "signed_gap": 71,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 493,
+     "realised_total_treated": 333,
+     "seed": 1,
+     "signed_gap_total": 160
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 37,
+       "signed_gap": 12,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 134,
+       "signed_gap": 30,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 36,
+       "signed_gap": 3,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 261,
+       "signed_gap": 90,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 468,
+     "realised_total_treated": 333,
+     "seed": 2,
+     "signed_gap_total": 135
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 38,
+       "signed_gap": 13,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 221,
+       "signed_gap": 117,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 42,
+       "signed_gap": 9,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 187,
+       "signed_gap": 16,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 488,
+     "realised_total_treated": 333,
+     "seed": 3,
+     "signed_gap_total": 155
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 22,
+       "signed_gap": -3,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 117,
+       "signed_gap": 13,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 59,
+       "signed_gap": 26,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 264,
+       "signed_gap": 93,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 462,
+     "realised_total_treated": 333,
+     "seed": 4,
+     "signed_gap_total": 129
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 38,
+       "signed_gap": 13,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 155,
+       "signed_gap": 51,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 47,
+       "signed_gap": 14,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 234,
+       "signed_gap": 63,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 474,
+     "realised_total_treated": 333,
+     "seed": 5,
+     "signed_gap_total": 141
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 53,
+       "signed_gap": 28,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 161,
+       "signed_gap": 57,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 26,
+       "signed_gap": -7,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 228,
+       "signed_gap": 57,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 468,
+     "realised_total_treated": 333,
+     "seed": 6,
+     "signed_gap_total": 135
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 73,
+       "signed_gap": 48,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 209,
+       "signed_gap": 105,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 10,
+       "signed_gap": -23,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 231,
+       "signed_gap": 60,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 523,
+     "realised_total_treated": 333,
+     "seed": 7,
+     "signed_gap_total": 190
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 56,
+       "signed_gap": 31,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 208,
+       "signed_gap": 104,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 27,
+       "signed_gap": -6,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 180,
+       "signed_gap": 9,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 471,
+     "realised_total_treated": 333,
+     "seed": 8,
+     "signed_gap_total": 138
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 17,
+       "signed_gap": -8,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 169,
+       "signed_gap": 65,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 72,
+       "signed_gap": 39,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 197,
+       "signed_gap": 26,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 455,
+     "realised_total_treated": 333,
+     "seed": 9,
+     "signed_gap_total": 122
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 36,
+       "signed_gap": 11,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 190,
+       "signed_gap": 86,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 43,
+       "signed_gap": 10,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 180,
+       "signed_gap": 9,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 449,
+     "realised_total_treated": 333,
+     "seed": 10,
+     "signed_gap_total": 116
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 50,
+       "signed_gap": 25,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 187,
+       "signed_gap": 83,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 22,
+       "signed_gap": -11,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 195,
+       "signed_gap": 24,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 454,
+     "realised_total_treated": 333,
+     "seed": 11,
+     "signed_gap_total": 121
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 57,
+       "signed_gap": 32,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 136,
+       "signed_gap": 32,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 24,
+       "signed_gap": -9,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 212,
+       "signed_gap": 41,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 429,
+     "realised_total_treated": 333,
+     "seed": 12,
+     "signed_gap_total": 96
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 37,
+       "signed_gap": 12,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 206,
+       "signed_gap": 102,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 29,
+       "signed_gap": -4,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 186,
+       "signed_gap": 15,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 458,
+     "realised_total_treated": 333,
+     "seed": 13,
+     "signed_gap_total": 125
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 34,
+       "signed_gap": 9,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 209,
+       "signed_gap": 105,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 41,
+       "signed_gap": 8,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 172,
+       "signed_gap": 1,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 456,
+     "realised_total_treated": 333,
+     "seed": 14,
+     "signed_gap_total": 123
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 46,
+       "signed_gap": 21,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 183,
+       "signed_gap": 79,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 39,
+       "signed_gap": 6,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 197,
+       "signed_gap": 26,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 465,
+     "realised_total_treated": 333,
+     "seed": 15,
+     "signed_gap_total": 132
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 44,
+       "signed_gap": 19,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 117,
+       "signed_gap": 13,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 32,
+       "signed_gap": -1,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 282,
+       "signed_gap": 111,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 475,
+     "realised_total_treated": 333,
+     "seed": 16,
+     "signed_gap_total": 142
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 27,
+       "signed_gap": 2,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 166,
+       "signed_gap": 62,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 49,
+       "signed_gap": 16,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 226,
+       "signed_gap": 55,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 468,
+     "realised_total_treated": 333,
+     "seed": 17,
+     "signed_gap_total": 135
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 38,
+       "signed_gap": 13,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 161,
+       "signed_gap": 57,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 44,
+       "signed_gap": 11,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 214,
+       "signed_gap": 43,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 457,
+     "realised_total_treated": 333,
+     "seed": 18,
+     "signed_gap_total": 124
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 39,
+       "signed_gap": 14,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 184,
+       "signed_gap": 80,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 46,
+       "signed_gap": 13,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 209,
+       "signed_gap": 38,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 478,
+     "realised_total_treated": 333,
+     "seed": 19,
+     "signed_gap_total": 145
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 35,
+       "signed_gap": 10,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 181,
+       "signed_gap": 77,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 47,
+       "signed_gap": 14,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 224,
+       "signed_gap": 53,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 487,
+     "realised_total_treated": 333,
+     "seed": 20,
+     "signed_gap_total": 154
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 2,
+     "n_strata_control_under": 2,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 48,
+       "signed_gap": 23,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 224,
+       "signed_gap": 120,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 30,
+       "signed_gap": -3,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 164,
+       "signed_gap": -7,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 466,
+     "realised_total_treated": 333,
+     "seed": 21,
+     "signed_gap_total": 133
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 46,
+       "signed_gap": 21,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 140,
+       "signed_gap": 36,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 46,
+       "signed_gap": 13,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 229,
+       "signed_gap": 58,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 461,
+     "realised_total_treated": 333,
+     "seed": 22,
+     "signed_gap_total": 128
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 39,
+       "signed_gap": 14,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 170,
+       "signed_gap": 66,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 38,
+       "signed_gap": 5,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 218,
+       "signed_gap": 47,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 465,
+     "realised_total_treated": 333,
+     "seed": 23,
+     "signed_gap_total": 132
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 47,
+       "signed_gap": 22,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 192,
+       "signed_gap": 88,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 41,
+       "signed_gap": 8,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 213,
+       "signed_gap": 42,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 493,
+     "realised_total_treated": 333,
+     "seed": 24,
+     "signed_gap_total": 160
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 30,
+       "signed_gap": 5,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 205,
+       "signed_gap": 101,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 55,
+       "signed_gap": 22,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 178,
+       "signed_gap": 7,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 468,
+     "realised_total_treated": 333,
+     "seed": 25,
+     "signed_gap_total": 135
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 26,
+       "signed_gap": 1,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 145,
+       "signed_gap": 41,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 53,
+       "signed_gap": 20,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 231,
+       "signed_gap": 60,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 455,
+     "realised_total_treated": 333,
+     "seed": 26,
+     "signed_gap_total": 122
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 49,
+       "signed_gap": 24,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 183,
+       "signed_gap": 79,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 41,
+       "signed_gap": 8,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 180,
+       "signed_gap": 9,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 453,
+     "realised_total_treated": 333,
+     "seed": 27,
+     "signed_gap_total": 120
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 42,
+       "signed_gap": 17,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 157,
+       "signed_gap": 53,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 41,
+       "signed_gap": 8,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 222,
+       "signed_gap": 51,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 462,
+     "realised_total_treated": 333,
+     "seed": 28,
+     "signed_gap_total": 129
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 35,
+       "signed_gap": 10,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 192,
+       "signed_gap": 88,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 48,
+       "signed_gap": 15,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 218,
+       "signed_gap": 47,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 493,
+     "realised_total_treated": 333,
+     "seed": 29,
+     "signed_gap_total": 160
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 62,
+       "signed_gap": 37,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 133,
+       "signed_gap": 29,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 26,
+       "signed_gap": -7,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 250,
+       "signed_gap": 79,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 471,
+     "realised_total_treated": 333,
+     "seed": 30,
+     "signed_gap_total": 138
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 41,
+       "signed_gap": 16,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 149,
+       "signed_gap": 45,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 27,
+       "signed_gap": -6,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 240,
+       "signed_gap": 69,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 457,
+     "realised_total_treated": 333,
+     "seed": 31,
+     "signed_gap_total": 124
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 43,
+       "signed_gap": 18,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 208,
+       "signed_gap": 104,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 35,
+       "signed_gap": 2,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 177,
+       "signed_gap": 6,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 463,
+     "realised_total_treated": 333,
+     "seed": 32,
+     "signed_gap_total": 130
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 43,
+       "signed_gap": 18,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 166,
+       "signed_gap": 62,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 45,
+       "signed_gap": 12,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 228,
+       "signed_gap": 57,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 482,
+     "realised_total_treated": 333,
+     "seed": 33,
+     "signed_gap_total": 149
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 26,
+       "signed_gap": 1,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 116,
+       "signed_gap": 12,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 54,
+       "signed_gap": 21,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 249,
+       "signed_gap": 78,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 445,
+     "realised_total_treated": 333,
+     "seed": 34,
+     "signed_gap_total": 112
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 53,
+       "signed_gap": 28,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 176,
+       "signed_gap": 72,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 32,
+       "signed_gap": -1,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 216,
+       "signed_gap": 45,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 477,
+     "realised_total_treated": 333,
+     "seed": 35,
+     "signed_gap_total": 144
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 49,
+       "signed_gap": 24,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 177,
+       "signed_gap": 73,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 28,
+       "signed_gap": -5,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 197,
+       "signed_gap": 26,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 451,
+     "realised_total_treated": 333,
+     "seed": 36,
+     "signed_gap_total": 118
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 42,
+       "signed_gap": 17,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 235,
+       "signed_gap": 131,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 39,
+       "signed_gap": 6,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 176,
+       "signed_gap": 5,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 492,
+     "realised_total_treated": 333,
+     "seed": 37,
+     "signed_gap_total": 159
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 38,
+       "signed_gap": 13,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 204,
+       "signed_gap": 100,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 42,
+       "signed_gap": 9,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 194,
+       "signed_gap": 23,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 478,
+     "realised_total_treated": 333,
+     "seed": 38,
+     "signed_gap_total": 145
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 34,
+       "signed_gap": 9,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 214,
+       "signed_gap": 110,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 44,
+       "signed_gap": 11,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 213,
+       "signed_gap": 42,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 505,
+     "realised_total_treated": 333,
+     "seed": 39,
+     "signed_gap_total": 172
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 38,
+       "signed_gap": 13,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 136,
+       "signed_gap": 32,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 26,
+       "signed_gap": -7,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 227,
+       "signed_gap": 56,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 427,
+     "realised_total_treated": 333,
+     "seed": 40,
+     "signed_gap_total": 94
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 23,
+       "signed_gap": -2,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 217,
+       "signed_gap": 113,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 62,
+       "signed_gap": 29,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 186,
+       "signed_gap": 15,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 488,
+     "realised_total_treated": 333,
+     "seed": 41,
+     "signed_gap_total": 155
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 51,
+       "signed_gap": 26,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 124,
+       "signed_gap": 20,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 31,
+       "signed_gap": -2,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 251,
+       "signed_gap": 80,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 457,
+     "realised_total_treated": 333,
+     "seed": 42,
+     "signed_gap_total": 124
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 65,
+       "signed_gap": 40,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 224,
+       "signed_gap": 120,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 23,
+       "signed_gap": -10,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 173,
+       "signed_gap": 2,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 485,
+     "realised_total_treated": 333,
+     "seed": 43,
+     "signed_gap_total": 152
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 65,
+       "signed_gap": 40,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 179,
+       "signed_gap": 75,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 24,
+       "signed_gap": -9,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 207,
+       "signed_gap": 36,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 475,
+     "realised_total_treated": 333,
+     "seed": 44,
+     "signed_gap_total": 142
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 30,
+       "signed_gap": 5,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 152,
+       "signed_gap": 48,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 48,
+       "signed_gap": 15,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 218,
+       "signed_gap": 47,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 448,
+     "realised_total_treated": 333,
+     "seed": 45,
+     "signed_gap_total": 115
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 36,
+       "signed_gap": 11,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 203,
+       "signed_gap": 99,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 44,
+       "signed_gap": 11,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 211,
+       "signed_gap": 40,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 494,
+     "realised_total_treated": 333,
+     "seed": 46,
+     "signed_gap_total": 161
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 33,
+       "signed_gap": 8,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 187,
+       "signed_gap": 83,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 48,
+       "signed_gap": 15,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 213,
+       "signed_gap": 42,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 481,
+     "realised_total_treated": 333,
+     "seed": 47,
+     "signed_gap_total": 148
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 41,
+       "signed_gap": 16,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 157,
+       "signed_gap": 53,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 32,
+       "signed_gap": -1,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 207,
+       "signed_gap": 36,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 437,
+     "realised_total_treated": 333,
+     "seed": 48,
+     "signed_gap_total": 104
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 55,
+       "signed_gap": 30,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 198,
+       "signed_gap": 94,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 28,
+       "signed_gap": -5,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 190,
+       "signed_gap": 19,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 471,
+     "realised_total_treated": 333,
+     "seed": 49,
+     "signed_gap_total": 138
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 47,
+       "signed_gap": 22,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 159,
+       "signed_gap": 55,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 34,
+       "signed_gap": 1,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 238,
+       "signed_gap": 67,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 478,
+     "realised_total_treated": 333,
+     "seed": 50,
+     "signed_gap_total": 145
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 57,
+       "signed_gap": 32,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 223,
+       "signed_gap": 119,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 28,
+       "signed_gap": -5,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 186,
+       "signed_gap": 15,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 494,
+     "realised_total_treated": 333,
+     "seed": 51,
+     "signed_gap_total": 161
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 29,
+       "signed_gap": 4,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 222,
+       "signed_gap": 118,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 45,
+       "signed_gap": 12,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 181,
+       "signed_gap": 10,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 477,
+     "realised_total_treated": 333,
+     "seed": 52,
+     "signed_gap_total": 144
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 49,
+       "signed_gap": 24,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 175,
+       "signed_gap": 71,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 36,
+       "signed_gap": 3,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 202,
+       "signed_gap": 31,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 462,
+     "realised_total_treated": 333,
+     "seed": 53,
+     "signed_gap_total": 129
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 26,
+       "signed_gap": 1,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 177,
+       "signed_gap": 73,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 51,
+       "signed_gap": 18,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 194,
+       "signed_gap": 23,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 448,
+     "realised_total_treated": 333,
+     "seed": 54,
+     "signed_gap_total": 115
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 38,
+       "signed_gap": 13,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 168,
+       "signed_gap": 64,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 57,
+       "signed_gap": 24,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 217,
+       "signed_gap": 46,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 480,
+     "realised_total_treated": 333,
+     "seed": 55,
+     "signed_gap_total": 147
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 41,
+       "signed_gap": 16,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 170,
+       "signed_gap": 66,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 27,
+       "signed_gap": -6,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 191,
+       "signed_gap": 20,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 429,
+     "realised_total_treated": 333,
+     "seed": 56,
+     "signed_gap_total": 96
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 2,
+     "n_strata_control_under": 2,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 44,
+       "signed_gap": 19,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 96,
+       "signed_gap": -8,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 20,
+       "signed_gap": -13,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 252,
+       "signed_gap": 81,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 412,
+     "realised_total_treated": 333,
+     "seed": 57,
+     "signed_gap_total": 79
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 3,
+     "n_strata_control_under": 1,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 40,
+       "signed_gap": 15,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 140,
+       "signed_gap": 36,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 28,
+       "signed_gap": -5,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 261,
+       "signed_gap": 90,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 469,
+     "realised_total_treated": 333,
+     "seed": 58,
+     "signed_gap_total": 136
+    },
+    {
+     "P4": false,
+     "n_strata": 4,
+     "n_strata_control_over": 4,
+     "n_strata_control_under": 0,
+     "n_strata_matching": 0,
+     "per_stratum": {
+      "BUY_UP|13": {
+       "above_events": 92,
+       "control": 34,
+       "signed_gap": 9,
+       "suppressed": 67,
+       "suppression_rate": 0.7282608695652174,
+       "treated": 25
+      },
+      "BUY_UP|14": {
+       "above_events": 494,
+       "control": 125,
+       "signed_gap": 21,
+       "suppressed": 390,
+       "suppression_rate": 0.7894736842105263,
+       "treated": 104
+      },
+      "SELL_UP|13": {
+       "above_events": 104,
+       "control": 59,
+       "signed_gap": 26,
+       "suppressed": 71,
+       "suppression_rate": 0.6826923076923077,
+       "treated": 33
+      },
+      "SELL_UP|14": {
+       "above_events": 464,
+       "control": 246,
+       "signed_gap": 75,
+       "suppressed": 293,
+       "suppression_rate": 0.6314655172413793,
+       "treated": 171
+      }
+     },
+     "realised_total_control": 464,
+     "realised_total_treated": 333,
+     "seed": 59,
+     "signed_gap_total": 131
+    }
+   ],
+   "p4_summary": {
+    "DA_LIMIT_QUOTED": "UNREACHABLE FOR THIS CONSTRUCTION, NEVER NEVER",
+    "HEADLINE_per_stratum_sign": {
+     "control_over_is_not_universal": {
+      "draws_with_any_stratum_control_under": 25,
+      "draws_with_every_stratum_control_over": 35,
+      "negative_gaps_by_stratum": {
+       "BUY_UP|13": 3,
+       "BUY_UP|14": 1,
+       "SELL_UP|13": 22,
+       "SELL_UP|14": 1
+      },
+      "negative_per_stratum_gaps": 27
+     },
+     "draws_with_all_strata_matching": 0,
+     "n_draws": 60,
+     "n_strata_per_draw": 4,
+     "stratum_observations_exactly_matching": 0,
+     "stratum_observations_total": 240,
+     "why_this_is_the_headline": "NO STRATUM EVER MATCHED EXACTLY, and P4 requires equality on ALL strata SIMULTANEOUSLY. That is the universal fact. Control-over per stratum is NOT universal and must not be reported as though it were"
+    },
+    "MECHANISM_TEST_gap_vs_suppression": {
+     "if_failed": "a failure is the MORE IMPORTANT result: it would mean the all-positive sign is a repeated observation without the mechanism that licenses reading it as structural",
+     "n_strata": 4,
+     "per_stratum": [
+      {
+       "above_events": 92,
+       "mean_control_over": 16.45,
+       "stratum": "BUY_UP|13",
+       "suppression_rate": 0.7282608695652174,
+       "treated_realised": 25
+      },
+      {
+       "above_events": 494,
+       "mean_control_over": 70.61666666666666,
+       "stratum": "BUY_UP|14",
+       "suppression_rate": 0.7894736842105263,
+       "treated_realised": 104
+      },
+      {
+       "above_events": 104,
+       "mean_control_over": 6.266666666666667,
+       "stratum": "SELL_UP|13",
+       "suppression_rate": 0.6826923076923077,
+       "treated_realised": 33
+      },
+      {
+       "above_events": 464,
+       "mean_control_over": 41.78333333333333,
+       "stratum": "SELL_UP|14",
+       "suppression_rate": 0.6314655172413793,
+       "treated_realised": 171
+      }
+     ],
+     "power_note": "with few strata this statistic is weak; UNDECIDABLE is reported rather than resolved",
+     "prediction": "strata with a HIGHER suppression rate show a LARGER control-over gap",
+     "spearman_rho": 0.3999999999999999,
+     "statistic": "Spearman on ranks -- the prediction is MONOTONE, not linear",
+     "verdict": "PREDICTION_HELD",
+     "why": "a random draw does not reproduce the treated arm's suppression clustering, so the control realises a systematically higher fraction of above events"
+    },
+    "aggregate_observations": {
+     "all_gaps_negative": false,
+     "all_gaps_positive": true,
+     "control_realised_max": 523,
+     "control_realised_min": 412,
+     "extrapolation_required_to_bracket": "target 333, observed minimum 412, observed range 111 wide -- bracketing needs a draw about 0.7 range-widths below the smallest of 60. Not absurd; not established.",
+     "n_draws": 60,
+     "no_draw_in_n_bracketed_the_target": true,
+     "rule_of_three_upper_bound_per_draw": 0.05,
+     "signed_gap_max": 190,
+     "signed_gap_min": 79,
+     "signed_gap_totals": [
+      163,
+      160,
+      135,
+      155,
+      129,
+      141,
+      135,
+      190,
+      138,
+      122,
+      116,
+      121,
+      96,
+      125,
+      123,
+      132,
+      142,
+      135,
+      124,
+      145,
+      154,
+      133,
+      128,
+      132,
+      160,
+      135,
+      122,
+      120,
+      129,
+      160,
+      138,
+      124,
+      130,
+      149,
+      112,
+      144,
+      118,
+      159,
+      145,
+      172,
+      94,
+      155,
+      124,
+      152,
+      142,
+      115,
+      161,
+      148,
+      104,
+      138,
+      145,
+      161,
+      144,
+      129,
+      115,
+      147,
+      96,
+      79,
+      136,
+      131
+     ],
+     "treated_realised": 333,
+     "what_the_count_supports": "0 of 60 draws at or below the target bounds the PER-DRAW probability at ~5.0% (rule of three, one-sided 95%). That is a statement about DRAWS, not about the achievable SET, and it is not exclusion."
+    },
+    "conditional_on": "the draw rule, the stratification, and the frozen protocol's single matched quantity. Without this field a reader inherits 'no matched floor exists' when what was shown is 'no matched floor exists UNDER THIS DRAW'",
+    "honest_limit": "even a clean answer evidences UNREACHABLE FOR THIS CONSTRUCTION, never NEVER",
+    "what_licenses_the_strong_reading": "the MECHANISM, not the count: a random draw does not reproduce the treated arm's suppression clustering, so the control realises a systematically higher fraction of above events. Under that mechanism an all-positive sign is CONFIRMATION OF A PREDICTED SIGN and the count is corroboration, not the argument"
+   },
+   "predicates_last_seen": null,
+   "rejections": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 0,
+    "P4": 60,
+    "PERM_NOT_OK": 0
+   },
+   "status": "REFUSED_NO_MATCHED_DRAW"
+  }
+ },
+ "budget": 0.1,
+ "cancellation_economics": {
+  "arms": {
+   "CONDVALUE_X_SKEW": {
+    "adverse_saved_cents": 1979.664097999997,
+    "adverse_saved_exceeds_spread_forgone": false,
+    "cents_per_cancel": -2.864618971471453,
+    "identity_holds": true,
+    "identity_residual_cents": 6.821210263296962e-12,
+    "n_cancels": 333,
+    "net_pnl_delta_cents": -953.918117499994,
+    "spread_forgone_cents": 2933.582215499998
+   },
+   "HAZARD_OVER_SKEWED_REF": {
+    "adverse_saved_cents": 186.13039249999997,
+    "adverse_saved_exceeds_spread_forgone": false,
+    "cents_per_cancel": -0.2615779375000405,
+    "identity_holds": true,
+    "identity_residual_cents": 6.821210263296962e-13,
+    "n_cancels": 48,
+    "net_pnl_delta_cents": -12.555741000001944,
+    "spread_forgone_cents": 198.68613350000123
+   }
+  },
+  "baseline": {
+   "adverse_selection_cents": -1968.1921814999978,
+   "maker_pnl_cents": 8598.758849499998,
+   "n_cancels": 0,
+   "spread_capture_cents": 10566.951030999997
+  },
+  "baseline_arm": "QR_SKEW_ONLY",
+  "decides_nothing": "REPORTED. Whether the trade-off is worth taking is the policy layer's (rule 14).",
+  "identity": "net_pnl_delta == adverse_saved - spread_forgone (COMPUTED per arm, never asserted)",
+  "predicate": "an arm pays SPREAD FORGONE on the fills it declines and is paid ADVERSE SAVED on the same fills; cancelling adds value iff saved > forgone",
+  "scope_and_limits": "THE FILLS LEG ONLY, valued at t + MARKOUT_S over n=12 windows of 2026-09-04T13:35:14Z. It EXCLUDES the residual position at window end (`inventory_loss_cents`, unruled) and any value of avoiding a fill whose harm lands beyond the markout horizon. DEVELOPMENT EVIDENCE, not a validation: one coin, one latency rung, no forward day, no interval -- 12 windows is below the 5-complete-day cluster floor, so a POINT ESTIMATE AND NO INTERVAL (rule 8)."
+ },
+ "code_identity": {
+  "de_lane4_real_parity.py": "27bcc09e9cfe577e",
+  "de_matched_random_control.py": "f77aaf2bd2f21988",
+  "de_phase4_diag_runner.py": "7749881a0dd0065a",
+  "de_rho_estimator.py": "048b8e077c3d37e8",
+  "de_score_stream.py": "f85be3354610e2ce",
+  "de_section81_arms.py": "dee377648ba0c763",
+  "harmful_stateful_policy.py": "db37f504182628f8"
+ },
+ "coin": "btc",
+ "evidence_class": "DEVELOPMENT_EVIDENCE_NOT_A_VALIDATION",
+ "latency_ms": 250,
+ "peak_rss_gb": 0.61,
+ "population": {
+  "as_of": "2026-09-04T13:35:14Z",
+  "coin": "btc",
+  "feed_wall_s": 0.3,
+  "generations": 31122,
+  "statuses": {
+   "ADMITTED": 12,
+   "BINANCE_GAP_EXCLUDED": 3,
+   "NO_REPLAY": 0,
+   "RECONCILIATION_FAILED": 0,
+   "TERMINAL_MARK_ENDED_IN_GAP": 1,
+   "TERMINAL_MARK_MISSING": 0,
+   "TERMINAL_MARK_OK": 12,
+   "TRANCHE_KEPT": 4315,
+   "TRANCHE_NO_MARKOUT": 0
+  },
+  "windows": 12
+ },
+ "population_exclusions": {
+  "incumbent_linear_d": {
+   "excluded_fraction": 0.0421,
+   "excluded_no_assembled_score": 1309,
+   "reason": "the feature pass dropped every row of these generations; scoring them would be scoring from nothing (rule 4: counted, never dropped)",
+   "reference_generations": 31122,
+   "scored_generations": 29813
+  },
+  "q1_arrival_composed_lgbm": {
+   "excluded_fraction": 0.0421,
+   "excluded_no_assembled_score": 1309,
+   "reason": "the feature pass dropped every row of these generations; scoring them would be scoring from nothing (rule 4: counted, never dropped)",
+   "reference_generations": 31122,
+   "scored_generations": 29813
+  }
+ },
+ "protocol": "de_section81_arms_v1",
+ "provenance": {
+  "carrying_commit": "b22fb305b4bc365c0b6d1f8a31ae29a72338fde7",
+  "carrying_commit_short": "b22fb30",
+  "code_identity": {
+   "de_lane4_real_parity.py": "27bcc09e9cfe577e",
+   "de_matched_random_control.py": "f77aaf2bd2f21988",
+   "de_phase4_diag_runner.py": "7749881a0dd0065a",
+   "de_rho_estimator.py": "048b8e077c3d37e8",
+   "de_score_stream.py": "f85be3354610e2ce",
+   "de_section81_arms.py": "dee377648ba0c763",
+   "harmful_stateful_policy.py": "db37f504182628f8"
+  },
+  "produced_by": "de_section81_arms.py",
+  "producing_code": "dee377648ba0c763",
+  "producing_code_path": "/home/yuqing/ctaNew-wt-de/live/pm_research/de_section81_arms.py",
+  "protocol": "de_section81_arms_v1",
+  "spec": "\u00a78.1 integration ablation",
+  "working_tree_clean_for_this_file": true
+ },
+ "residual_policy_effect": {
+  "arms": {
+   "CONDVALUE_X_SKEW": {
+    "magnitude_ratio_to_baseline": 1.0037052420992043,
+    "n_cancels": 333,
+    "reading": "RISK REDUCTION requires the magnitude to fall; a SIGN FLIP at equal magnitude is a DIRECTIONAL BET, not risk reduction",
+    "reduces_magnitude": false,
+    "reverses_sign": true,
+    "terminal_net_shares": -147.28147899999976
+   },
+   "HAZARD_OVER_SKEWED_REF": {
+    "magnitude_ratio_to_baseline": 0.6469494291108949,
+    "n_cancels": 48,
+    "reading": "RISK REDUCTION requires the magnitude to fall; a SIGN FLIP at equal magnitude is a DIRECTIONAL BET, not risk reduction",
+    "reduces_magnitude": true,
+    "reverses_sign": false,
+    "terminal_net_shares": 94.93192300000008
+   }
+  },
+  "baseline_arm": "QR_SKEW_ONLY",
+  "baseline_terminal_net_shares": 146.73778,
+  "decides_nothing": "REPORTED (rule 14).",
+  "why_this_is_emitted_regardless": "it is read off the terminal net BEFORE any P&L, so it characterises the policy independently of what the inventory leg turns out to be"
+ },
+ "run_id": "20260904T133514Z",
+ "spec": "\u00a78.1",
+ "tail_and_cascade": {
+  "adverse_over_spread": {
+   "CONDVALUE_X_SKEW": {
+    "excluding_top_1pct": {
+     "adverse_cents": -718.5280835000008,
+     "n": 2846,
+     "pnl_cents": 6764.840731999999,
+     "r_adverse_over_spread": 0.09601666057294177,
+     "spread_cents": 7483.3688155,
+     "spread_is_positive": true
+    },
+    "note": "a NEGATIVE ex-tail P&L means adverse exceeded spread there, i.e. r > 1 -- computed, not argued",
+    "top_1pct_n": 29,
+    "whole_book": {
+     "adverse_cents": 11.471916499999091,
+     "n": 2875,
+     "pnl_cents": 7644.840731999999,
+     "r_adverse_over_spread": 0.0015028641714133733,
+     "spread_cents": 7633.3688155,
+     "spread_is_positive": true
+    },
+    "why_both": "the whole-book ratio is a ratio of two totals of which one is carried by the top 1%. The ex-tail ratio is what the other 99% of the book actually faces"
+   },
+   "HAZARD_OVER_SKEWED_REF": {
+    "excluding_top_1pct": {
+     "adverse_cents": -2614.561789000001,
+     "n": 4166,
+     "pnl_cents": 7516.203108499998,
+     "r_adverse_over_spread": 0.2580813803748624,
+     "spread_cents": 10130.7648975,
+     "spread_is_positive": true
+    },
+    "note": "a NEGATIVE ex-tail P&L means adverse exceeded spread there, i.e. r > 1 -- computed, not argued",
+    "top_1pct_n": 42,
+    "whole_book": {
+     "adverse_cents": -1782.0617890000017,
+     "n": 4208,
+     "pnl_cents": 8586.203108499998,
+     "r_adverse_over_spread": 0.1718765682221037,
+     "spread_cents": 10368.2648975,
+     "spread_is_positive": true
+    },
+    "why_both": "the whole-book ratio is a ratio of two totals of which one is carried by the top 1%. The ex-tail ratio is what the other 99% of the book actually faces"
+   },
+   "QR_SKEW_ONLY": {
+    "excluding_top_1pct": {
+     "adverse_cents": -2588.1921815000014,
+     "n": 4272,
+     "pnl_cents": 7741.258849499998,
+     "r_adverse_over_spread": 0.2505643498122511,
+     "spread_cents": 10329.451030999999,
+     "spread_is_positive": true
+    },
+    "note": "a NEGATIVE ex-tail P&L means adverse exceeded spread there, i.e. r > 1 -- computed, not argued",
+    "top_1pct_n": 43,
+    "whole_book": {
+     "adverse_cents": -1968.1921815000017,
+     "n": 4315,
+     "pnl_cents": 8598.758849499998,
+     "r_adverse_over_spread": 0.1862592317997846,
+     "spread_cents": 10566.951030999999,
+     "spread_is_positive": true
+    },
+    "why_both": "the whole-book ratio is a ratio of two totals of which one is carried by the top 1%. The ex-tail ratio is what the other 99% of the book actually faces"
+   }
+  },
+  "cancel_mechanics": {
+   "arms": {
+    "CONDVALUE_X_SKEW": {
+     "better_than_a_random_cancel": false,
+     "cascade_factor": 3.8693432714290195,
+     "cascade_x_selectivity": 1.286266313829057,
+     "cents_per_cancel": 2.8646189714714696,
+     "fills_lost": 1440,
+     "fills_lost_per_cancel": 4.324324324324325,
+     "identity_holds": true,
+     "identity_residual": 2.220446049250313e-16,
+     "mean_pnl_per_removed_fill_cents": 0.6624431371527774,
+     "n_cancels": 333,
+     "ratio_vs_random_cancel": 1.2862663138290569,
+     "selectivity_factor": 0.3324249681662427
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "better_than_a_random_cancel": true,
+     "cascade_factor": 1.9946263035921206,
+     "cascade_x_selectivity": 0.11745327835845018,
+     "cents_per_cancel": 0.26157793750000263,
+     "fills_lost": 107,
+     "fills_lost_per_cancel": 2.2291666666666665,
+     "identity_holds": true,
+     "identity_residual": 1.3877787807814457e-17,
+     "mean_pnl_per_removed_fill_cents": 0.11734337383177687,
+     "n_cancels": 48,
+     "ratio_vs_random_cancel": 0.1174532783584502,
+     "selectivity_factor": 0.05888485384301244
+    }
+   },
+   "baseline_pnl_cents": 8598.758849499998,
+   "book_mean_pnl_per_fill_cents": 1.992759872421784,
+   "decides_nothing": "REPORTED (rule 14).",
+   "fills_per_generation": 1.1175861175861175,
+   "identity": "ratio_vs_random_cancel == cascade x selectivity",
+   "n_baseline_fills": 4315,
+   "n_generations_with_fills": 3861,
+   "random_cancel_cost_cents": 2.2270807691012684,
+   "random_cancel_definition": "a cancel that lands on a generation drawn without regard to its fills removes `fills_per_generation` fills at the book's mean P&L per fill. It is the null a cents_per_cancel must beat, and it is COMPUTED from this book, not assumed"
+  },
+  "decides_nothing": "REPORTED (rule 14).",
+  "tail_decline": {
+   "arms": {
+    "CONDVALUE_X_SKEW": {
+     "declines_body_without_declining_tail": true,
+     "n_body_declined": 1440,
+     "n_top_declined": 0,
+     "net_of_body_declined_cents": 953.9181174999992,
+     "net_of_top_declined_cents": 0,
+     "proportional_top_share_if_indiscriminate": 14.349942062572422,
+     "share_of_top_net": 0.0
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "declines_body_without_declining_tail": true,
+     "n_body_declined": 107,
+     "n_top_declined": 0,
+     "net_of_body_declined_cents": 12.555741000000115,
+     "net_of_top_declined_cents": 0,
+     "proportional_top_share_if_indiscriminate": 1.0662804171494786,
+     "share_of_top_net": 0.0
+    }
+   },
+   "body_net_cents": 7741.258849499998,
+   "body_share_of_net": 0.9002763055682319,
+   "body_sums_against_the_net": false,
+   "n_baseline_fills": 4315,
+   "net_cents": 8598.758849499998,
+   "reading_is_the_callers": "counts and nets are REPORTED; whether an arm's tail behaviour makes the overlay case is the policy layer's (rule 14)",
+   "top_frac": 0.01,
+   "top_k": 43,
+   "top_net_cents": 857.4999999999998,
+   "top_share_of_net": 0.09972369443176811
+  },
+  "why_these_three_together": "the tail says WHERE the book's P&L lives, `r` says what an overlay must beat and what the body already exceeds, and the cascade says whether a cancel's cost is the ranker's PICK or the number of fills the picked generation held. Separately each invites a wrong reading; together they are the specification"
+ },
+ "total_wall_s": 46.6
+}
