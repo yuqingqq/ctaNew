@@ -36,6 +36,8 @@ LOG="${DA_MIDNIGHT_LOG:-/home/yuqing/ctaNew/data/pm_5min/derived/.da_midnight_ve
 SELFDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 V_DEFAULT="$SELFDIR/da_forward_day_verify.py"
 V="${DA_MIDNIGHT_VERIFY_BIN:-$V_DEFAULT}"
+M_DEFAULT="$SELFDIR/da_blackout_mask.py"
+M="${DA_MIDNIGHT_MASK_BIN:-$M_DEFAULT}"
 PY=/home/yuqing/pricer-sol/venv/bin/python3
 cd /home/yuqing/ctaNew/live/pm_research || exit 3
 # THE PAIR GUARD RUNS BEFORE ANY WRITE. Codex batch-2 §7: with only OUTDIR
@@ -277,6 +279,35 @@ sys.exit(0 if d.get("day_token")==sys.argv[2] and d.get("predicates") else 1)'  
     _sha="$(sha256sum "$OUTDIR/da_dayverdict_$d.json" | cut -c1-16)"
     _asof="$("$PY" -c 'import json,sys;print(json.load(open(sys.argv[1])).get("as_of_utc"))' "$OUTDIR/da_dayverdict_$d.json" 2>/dev/null)"
     echo "exit=$rc for $d (verdict artifact written: sha256=$_sha as_of=$_asof reason=$REASON)" >> "$LOG"
+    # THE MASK LANDS IN THE SAME RUN AS THE VERDICT (round 35).
+    #
+    # It was never written here at ALL -- the word did not appear in this
+    # script -- so a day's mask arrived whenever someone ran the builder by
+    # hand, and 09-01's and 09-03's arrived roughly TEN HOURS after their
+    # verdicts. A governed day is UNSCOREABLE until the mask lands, so every
+    # accruing night carried a ten-hour hole for no reason at all: nothing in
+    # the mask's inputs needs the wait, it reads the same closed day the
+    # verdict just read. Incidental, not inherent.
+    #
+    # WRITTEN VIA A TEMP DIR AND MOVED, like the verdict above: a builder
+    # that fails partway must not leave a half-mask at the canonical path,
+    # because the consumer refuses a malformed mask but a truncated-yet-valid
+    # one is worse. A mask failure does NOT undo the verdict -- the verdict
+    # is correct and installed -- but it IS an instrument failure, because a
+    # day that cannot be scored is not a day that was verified. Silence here
+    # would re-create the hole this closes.
+    _mtmp="$(mktemp -d)"
+    if "$PY" "$M" --day "$d" --write --outdir "$_mtmp" >> "$LOG" 2>&1 \
+       && [ -s "$_mtmp/da_blackout_mask_$d.json" ]; then
+      mv -f "$_mtmp/da_blackout_mask_$d.json" \
+            "$OUTDIR/da_blackout_mask_$d.json"
+      _msha="$(sha256sum "$OUTDIR/da_blackout_mask_$d.json" | cut -c1-16)"
+      echo "mask written for $d in the same run (sha256=$_msha)" >> "$LOG"
+    else
+      broke=4
+      echo "MASK NOT WRITTEN for $d  <-- INSTRUMENT FAILURE: the verdict is installed and the day is UNSCOREABLE until a mask lands. The pair must arrive together." >> "$LOG"
+    fi
+    rm -rf "$_mtmp"
   else
     rm -f "$tmp"
     broke=4

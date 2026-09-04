@@ -56,7 +56,7 @@ DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
 #: This suite's own total, asserted over ran + skipped.
-EXPECTED_CHECKS = 34
+EXPECTED_CHECKS = 52
 
 #: THE REGISTRY. One entry per day the USER has taken out of the race.
 #: EVERY entry carries its authority as DATA -- the same discipline round 22
@@ -307,6 +307,12 @@ def assert_withdrawals_monotone(repo: Path | None = None,
     that wants a non-vacuous guarantee can read that number rather than the
     boolean.
     """
+    # THE FLOOR IS A FACT ABOUT THIS FILE'S HISTORY, not about any repository
+    # this walk is pointed at. A fixture repo with one commit is legitimate;
+    # THIS module's history having shrunk to one is a rewrite. Captured before
+    # the defaults are substituted, so "the caller asked for the canonical
+    # walk" is what is recorded rather than "the arguments happen to match".
+    is_canonical = repo is None and path is None
     repo = CODE_ROOT if repo is None else Path(repo)
     path = ("live/pm_research/da_race_withdrawals.py" if path is None
             else path)
@@ -339,6 +345,55 @@ def assert_withdrawals_monotone(repo: Path | None = None,
             f"'monotone' from an unreadable history is the empty-set trap on "
             f"the check that exists to prevent a quiet undo.")
     commits = [c for c in out.split() if c]
+    # ---------------------------------------------------------------------
+    # THE WALK MUST BE ANCHORED AT THE FILE'S CREATION (round 35).
+    #
+    # Every route found so far shortened the walk from INSIDE the loop, and
+    # each was closed where it was found. This closes the class from the
+    # other end: whatever git hands us, the walk is only over the whole
+    # history if it REACHES THE COMMIT THAT ADDED THE FILE. One predicate
+    # subsumes the routes no scan of this function could see, because they
+    # shorten the INPUT rather than the walk --
+    #   * a SHALLOW clone, where `git log` stops at the graft boundary and
+    #     exits 0;
+    #   * a rename `--follow` failed to detect, where history silently
+    #     begins mid-life;
+    #   * a `path` that no longer names this file (the default is a string,
+    #     and a moved module makes `git log` return zero commits, rc 0);
+    #   * an empty repository, or any other reason the list comes back short
+    #     without an error.
+    # All of them present as: the oldest commit we walked is not the one that
+    # created the file. Checked positively, against git's own answer.
+    rc_add, add_out = _git(
+        ["log", "--format=%H", "--diff-filter=A", "--follow", "--", path],
+        repo)
+    add_commits = [c for c in add_out.split() if c]
+    if rc_add != 0 or not add_commits or not commits \
+            or commits[-1] != add_commits[0]:
+        raise WithdrawalRefused(
+            f"REFUSED: the history walk for {path} is not anchored at the "
+            f"file's creation (walked {len(commits)} commit(s), oldest "
+            f"{(commits[-1][:9] if commits else None)!r}; git reports the "
+            f"adding commit as {(add_commits[0][:9] if add_commits else None)!r}"
+            f"). A walk over a SUFFIX of history is not a walk over history: "
+            f"a shallow clone, a rename `--follow` did not detect, or a path "
+            f"that no longer names this file all end here, all exit 0, and "
+            f"all would report `monotone` over the versions that happen to "
+            f"remain visible. This is the route class round 32 and round 34 "
+            f"each closed one member of, closed from the supply side.")
+    shallow_rc, shallow = _git(["rev-parse", "--is-shallow-repository"], repo)
+    rep_rc, replaced = _git(["replace", "-l"], repo)
+    if shallow.strip() == "true":
+        raise WithdrawalRefused(
+            f"REFUSED: {repo} is a SHALLOW repository. Its history is "
+            f"truncated by construction, so a one-way guarantee proved over "
+            f"it is proved over the part that was cloned.")
+    if replaced.strip():
+        raise WithdrawalRefused(
+            f"REFUSED: {repo} carries git REPLACE refs "
+            f"({replaced.split()[:3]}). They rewrite what `git log` reports "
+            f"without changing any commit, which is precisely the quiet undo "
+            f"this guarantee exists to make loud.")
     versions, violations, annotations_changed = [], [], []
     for c in commits:
         rc2, blob = _git(["show", f"{c}:{path}"], repo)
@@ -359,9 +414,26 @@ def assert_withdrawals_monotone(repo: Path | None = None,
             raise WithdrawalRefused(
                 f"REFUSED at commit {c[:9]} of {path}: {e}") from e
         if reg is None:
+            # THE ONE LEGITIMATE SHORTENING: this version predates the
+            # registry, so there is nothing in it to compare. It is the only
+            # `continue` in the walk and `walk_termination_census` accounts
+            # for it by name.
             continue
+        if not isinstance(reg, dict):
+            raise WithdrawalRefused(
+                f"REFUSED: at commit {c[:9]} `RACE_WITHDRAWALS` is a "
+                f"{type(reg).__name__}, not a mapping. Iterating it would "
+                f"raise AttributeError -- a traceback rather than a named "
+                f"refusal -- and a guarantee that dies by traceback tells a "
+                f"reader nothing about what it was checking.")
         versions.append(c)
         for day, entry in reg.items():
+            if not isinstance(entry, dict):
+                raise WithdrawalRefused(
+                    f"REFUSED: at commit {c[:9]} the entry for {day!r} is a "
+                    f"{type(entry).__name__}, not a mapping. Its fields "
+                    f"cannot be compared, and a day whose record cannot be "
+                    f"compared is not a day shown intact.")
             # `cur.get`, not `cur[day]`: the two branches must not depend on
             # each other for their safety. Written with an indexed `elif` a
             # mutation of the first branch raised KeyError instead of failing
@@ -396,6 +468,27 @@ def assert_withdrawals_monotone(repo: Path | None = None,
                 if now_entry.get(_f) != entry.get(_f):
                     annotations_changed.append({
                         "commit": c, "day": day, "field": _f})
+    # AND IT MUST BE *THIS* REPOSITORY, not merely a default-argument call.
+    # `is_canonical` alone fired inside the DA20-R2 mutant tree -- a one-
+    # commit repo the wiring probe builds in /tmp and emits through the
+    # PRODUCTION path, so it calls with defaults too and its single version
+    # is legitimate. The discriminator that survives a rebase (which changes
+    # every hash) and distinguishes a scratch tree is the REMOTE: the
+    # canonical repository has one, a probe tree has none. A fork under a
+    # different remote name does not get the floor, and `floor_applies` says
+    # so rather than leaving it to be discovered.
+    _, _origin = _git(["config", "--get", "remote.origin.url"], repo)
+    floor_applies = is_canonical and CANONICAL_REMOTE in _origin
+    if floor_applies and versions and len(versions) < MIN_PRIOR_VERSIONS:
+        raise WithdrawalRefused(
+            f"REFUSED: the walk found {len(versions)} version(s) of the "
+            f"registry but MIN_PRIOR_VERSIONS pins {MIN_PRIOR_VERSIONS}. "
+            f"History was rewritten under a one-way guarantee: a rebase that "
+            f"dropped or squashed a commit touching {path} shortens this "
+            f"walk with no error, no unreadable blob and no anchor "
+            f"violation, because the replayed add is still an add. The floor "
+            f"is committed in the file whose history is counted and may only "
+            f"be RAISED.")
     if violations:
         raise WithdrawalRefused(
             f"REFUSED: a recorded race withdrawal has been REMOVED or "
@@ -404,12 +497,28 @@ def assert_withdrawals_monotone(repo: Path | None = None,
             f"seen is selection on the outcome (rule 11); a withdrawal that a "
             f"later commit can quietly undo buys nothing.")
     return {
-        "repo": str(repo), "path": path, "status": "READ",
+        "repo": str(repo), "path": path,
+        "status": "READ" if versions else "NO_PRIOR_VERSION_WITH_REGISTRY",
+        "anchored_at_creation": True,
+        "min_prior_versions_pinned": (MIN_PRIOR_VERSIONS if floor_applies
+                                      else None),
+        "floor_applies": floor_applies,
+        "origin_seen": _origin.strip()[:80] or None,
+        "adding_commit": add_commits[0],
+        "shallow": shallow.strip() == "true",
+        "n_replace_refs": len(replaced.split()),
         "n_commits_touching_file": len(commits),
         "n_prior_versions_with_registry": len(versions),
         "prior_versions": versions,
         "n_days_now": len(cur), "days_now": sorted(cur),
-        "monotone": True,
+        # `True` OVER ZERO COMPARISONS IS THE CODOMAIN DEFECT AGAIN (round
+        # 34's predicate, applied to this module's own verdict). It used to
+        # report True with `vacuous: True` beside it and trust the reader to
+        # look; `da_forward_day_verify` reads `monotone is not True` and
+        # would have emitted on a walk that compared nothing. None is not a
+        # failure -- it is "not evaluated" -- and the caller already refuses
+        # to emit on it.
+        "monotone": True if versions else None,
         # REPORTED, not refused: prose may be clarified, and the report says
         # when it was, so "nothing changed" is never inferred from silence.
         "annotations_changed": annotations_changed,
@@ -421,6 +530,234 @@ def assert_withdrawals_monotone(repo: Path | None = None,
                 "not the boolean" if not versions else
                 f"every day in {len(versions)} prior version(s) is still "
                 f"present with the same authority"),
+    }
+
+
+#: THE FLOOR ON THE WALK ITSELF, and the answer to what a REBASE means here.
+#:
+#: `git log --follow` walks HEAD's ANCESTRY ONLY. A rebase replays commits
+#: into new objects and the originals become unreachable, so the file's
+#: history survives only as replayed -- and a rebase that DROPS or SQUASHES a
+#: commit touching this file shortens the walk with no error, no unreadable
+#: blob, and no anchor violation (the replayed add is still an add). Nothing
+#: inside the walk can see it, because the walk is over exactly what git
+#: hands it. This programme rebases held chains routinely.
+#:
+#: So the count is pinned in the file whose history is being counted. It may
+#: only ever be RAISED, by a commit, and a walk that sees fewer versions than
+#: this refuses by name. That is the same one-way property the registry has,
+#: applied to the evidence FOR it.
+MIN_PRIOR_VERSIONS = 5
+
+#: The floor is a claim about THIS repository's history. A probe tree built
+#: in /tmp calls the walk with the same default arguments and its one commit
+#: is legitimate, so the remote -- which a rebase does not change and a
+#: scratch tree does not have -- is what identifies the repository the claim
+#: is about.
+CANONICAL_REMOTE = "ctaNew"
+
+#: How each SOURCE-LEVEL route out of the walk is accounted for. Keyed by
+#: (kind, the nearest enclosing condition as source text) so a line moving
+#: does not retire an entry and a NEW route appears as UNACCOUNTED.
+WALK_ROUTES: dict[tuple[str, str], str] = {
+    ("Return", "rc0 != 0"):
+        "STATUS, NOT A PASS: not a repository -> monotone None. The caller "
+        "refuses to emit on anything that is not True.",
+    ("Raise", "rc != 0"):
+        "REFUSES: the history itself is unreadable.",
+    ("Raise", "rc_add != 0 or not add_commits or (not commits) or "
+              "(commits[-1] != add_commits[0])"):
+        "REFUSES: the walk is not anchored at the file's creation, which is "
+        "how every supply-side truncation presents.",
+    ("Raise", "shallow.strip() == 'true'"):
+        "REFUSES: a shallow clone is truncated by construction.",
+    ("Raise", "replaced.strip()"):
+        "REFUSES: replace refs rewrite what `git log` reports.",
+    ("Raise", "rc2 != 0"):
+        "REFUSES: a blob that cannot be read (closed round 32).",
+    ("Raise", "<except BlobUnparseable>"):
+        "REFUSES: a version that does not parse, or whose registry is not a "
+        "literal (closed round 34).",
+    ("Continue", "reg is None"):
+        "THE ONE LEGITIMATE SHORTENING: this version predates the registry, "
+        "so it holds nothing to compare. Counted: the walked versions are "
+        "reported as n_prior_versions_with_registry.",
+    ("Raise", "not isinstance(reg, dict)"):
+        "REFUSES: a registry that is not a mapping would die by "
+        "AttributeError instead of by name.",
+    ("Raise", "not isinstance(entry, dict)"):
+        "REFUSES: an entry that is not a mapping cannot be compared.",
+    ("Continue", "_f in IMMUTABLE_FIELDS or _f in ANNOTATABLE_FIELDS"):
+        "NOT A SHORTENING OF THE WALK: it skips a field already compared by "
+        "one of the two classified loops, inside the UNCLASSIFIED-key sweep. "
+        "FOUND BY THIS CENSUS, not by me -- I wrote the accounting by hand "
+        "and it was already incomplete, which is the argument for deriving "
+        "the routes rather than listing them.",
+    ("Continue", "not isinstance(now_entry, dict)"):
+        "NOT A SHORTENING: the violation is RECORDED first; this only skips "
+        "the field-by-field comparison of a day already found REMOVED.",
+    ("Raise", "floor_applies and versions and "
+              "(len(versions) < MIN_PRIOR_VERSIONS)"):
+        "REFUSES: fewer versions than the committed floor -- history was "
+        "rewritten under the guarantee (a dropped or squashed commit in a "
+        "rebase), which no check inside the walk can see.",
+    ("Raise", "violations"):
+        "REFUSES: the finding itself.",
+    ("Return", "<unconditional>"):
+        "THE VERDICT: monotone True over >=1 compared version, None over "
+        "zero (a pass over nothing is not a pass).",
+}
+
+#: Routes that shorten the INPUT rather than the walk. **No scan of this
+#: function can find these** -- they happen inside git and exit 0 -- which is
+#: why the census carries them as a declared table with a named guard and a
+#: named driver, rather than deriving them.
+SUPPLY_ROUTES: tuple[dict[str, str], ...] = (
+    {"id": "S1", "route": "the path names no file in this history (a moved "
+                          "or renamed module; the default path is a string)",
+     "presents_as": "git log exits 0 with NO commits",
+     "guard": "anchor: commits[-1] == the adding commit",
+     "driven_by": "WALK-S1"},
+    {"id": "S2", "route": "a SHALLOW clone: history stops at the graft",
+     "presents_as": "git log exits 0 with a truncated list, and the boundary "
+                    "commit reports every file as ADDED, so the anchor check "
+                    "alone PASSES -- the two guards are not redundant",
+     "guard": "rev-parse --is-shallow-repository",
+     "driven_by": "WALK-S2 (and WALK-S2b proves the anchor does not fire)"},
+    {"id": "S3", "route": "a rename `--follow` did not detect",
+     "presents_as": "history silently begins mid-life",
+     "guard": "anchor: the oldest walked commit is not an ADD",
+     "driven_by": "WALK-S3"},
+    {"id": "S4", "route": "git REPLACE refs rewrite what `git log` reports",
+     "presents_as": "a plausible, complete-looking, different history",
+     "guard": "replace -l must be empty",
+     "driven_by": "WALK-S4"},
+    {"id": "S5", "route": "a version that genuinely predates the registry",
+     "presents_as": "the name is absent from the blob",
+     "guard": "NONE -- this one is legitimate and is COUNTED, not guarded",
+     "driven_by": "WALK-S5"},
+    {"id": "S6", "route": "a REBASE that drops or squashes a commit touching "
+                          "the file (this programme rebases held chains)",
+     "presents_as": "a shorter walk with no error, no unreadable blob and no "
+                    "anchor violation -- the replayed add is still an add",
+     "guard": "MIN_PRIOR_VERSIONS, a committed floor that may only be raised",
+     "driven_by": "WALK-S9"},
+)
+
+
+def walk_termination_census(fn_name: str = "assert_withdrawals_monotone"
+                            ) -> dict[str, Any]:
+    """Every way the monotonicity walk can end or shorten, and its method.
+
+    THE GUARANTEE HAS NOW FAILED BY TWO ROUTES NOBODY CLOSED IN ADVANCE
+    (round 32: an unreadable blob was skipped; round 34: an unparseable one
+    was read as "the registry was absent"). Both were found by looking at a
+    defect, not by enumerating the space -- so this enumerates the space, and
+    states how, because "these are all of them" is a claim that needs a
+    method rather than a reading.
+
+    THE METHOD IS TWO-PART, AND NEITHER PART ALONE IS SOUND:
+
+      1. **Source routes, derived.** Every `return`, `raise`, `continue` and
+         `break` in the walk's own body is enumerated from the AST and keyed
+         by its nearest enclosing condition. Each must appear in
+         `WALK_ROUTES` with a written judgement; one that does not is
+         reported as **UNACCOUNTED**. This part cannot be forgotten, because
+         it is derived from the source rather than remembered.
+
+      2. **Supply routes, declared and driven.** A scan of this function can
+         NEVER find a route that shortens its INPUT: a shallow clone, a lost
+         rename, a path that no longer names the file. Those happen inside
+         git, exit 0, and look exactly like a short history. They are carried
+         as `SUPPLY_ROUTES`, each with the guard that catches it and the
+         selftest that drives it.
+
+    WHAT NEITHER PART COVERS, stated rather than implied: a git defect that
+    misreports its own history; a filesystem or index race between the
+    `log` and the `show`; and a version whose registry is syntactically a
+    literal but semantically wrong (a fabricated authority string is
+    monotone-clean and this check will pass it -- that is R-500's business,
+    not this walk's).
+    """
+    import ast
+    src = Path(__file__).read_text(encoding="utf-8", errors="replace")
+    try:
+        tree = ast.parse(src)
+    except SyntaxError as e:                                 # pragma: no cover
+        raise WithdrawalRefused(
+            f"REFUSED: this module does not parse ({e}); an enumeration that "
+            f"cannot read the walk must not report a complete one.")
+    fn = next((n for n in tree.body
+               if isinstance(n, ast.FunctionDef) and n.name == fn_name), None)
+    if fn is None:
+        raise WithdrawalRefused(
+            f"REFUSED: no function {fn_name!r} in this module. An "
+            f"enumeration of a walk that is not there is not an empty "
+            f"enumeration.")
+
+    parent: dict[int, Any] = {}
+    for node in ast.walk(fn):
+        for child in ast.iter_child_nodes(node):
+            parent[id(child)] = node
+
+    def _cond(node) -> str:
+        cur = node
+        while id(cur) in parent:
+            up = parent[id(cur)]
+            if isinstance(up, ast.If) and cur in up.body:
+                return ast.unparse(up.test)
+            if isinstance(up, ast.ExceptHandler):
+                t = ast.unparse(up.type) if up.type is not None else "Exception"
+                return f"<except {t}>"
+            cur = up
+        return "<unconditional>"
+
+    found = []
+    for node in ast.walk(fn):
+        kind = type(node).__name__
+        if kind not in ("Return", "Raise", "Continue", "Break"):
+            continue
+        cond = _cond(node).replace('"', "'")
+        classification = (
+            "REFUSES" if kind == "Raise" else
+            "TERMINATES_THE_WALK" if kind == "Break" else
+            "SHORTENS_THE_WALK" if kind == "Continue" else
+            "EXITS")
+        found.append({"kind": kind, "condition": cond, "line": node.lineno,
+                      "classification": classification,
+                      "accounted": (kind, cond) in WALK_ROUTES,
+                      "judgement": WALK_ROUTES.get((kind, cond))})
+    unaccounted = [f for f in found if not f["accounted"]]
+    stale = [list(k) for k in WALK_ROUTES
+             if k not in {(f["kind"], f["condition"]) for f in found}]
+    silent = [f for f in found
+              if f["classification"] in ("SHORTENS_THE_WALK",
+                                         "TERMINATES_THE_WALK")]
+    return {
+        "function": fn_name,
+        "method": ("source routes DERIVED from the AST and reconciled "
+                   "against a written accounting; supply routes DECLARED "
+                   "with a guard and a driver, because no scan of this "
+                   "function can see them"),
+        "n_source_routes": len(found),
+        "n_refusing": sum(1 for f in found if f["classification"] == "REFUSES"),
+        "n_shortening": len(silent),
+        "n_exits": sum(1 for f in found if f["classification"] == "EXITS"),
+        "n_UNACCOUNTED": len(unaccounted),
+        "UNACCOUNTED": unaccounted,
+        "n_stale_accountings": len(stale), "stale_accountings": stale,
+        "source_routes": found,
+        "n_supply_routes": len(SUPPLY_ROUTES),
+        "supply_routes": list(SUPPLY_ROUTES),
+        "n_shortenings_that_are_silent": len(
+            [f for f in silent if not f["accounted"]]),
+        "complete_for_this_method": not unaccounted and not stale,
+        "residue": ("a git defect misreporting its own history; a race "
+                    "between the `log` and the `show`; and a registry that "
+                    "is a valid literal but a false one -- monotone-clean by "
+                    "construction, and R-500's business rather than this "
+                    "walk's"),
+        "decides_nothing": "REPORTED (rule 14).",
     }
 
 
@@ -487,6 +824,14 @@ def selftest() -> int:
             print(f"FAIL: {label}")
             raise SystemExit(1)
         print(f"PASS: {label}")
+
+    def skip(label):
+        # A SKIP IS COUNTED AND NAMED. A check that silently vanishes when
+        # its precondition is absent makes the total agree while the coverage
+        # falls -- the empty-set trap on the suite itself.
+        nonlocal checks
+        checks += 1
+        print(f"SKIP: {label}")
 
     # ---- the registry itself -------------------------------------------
     ok(set(RACE_WITHDRAWALS) == {"20260829"},
@@ -624,10 +969,16 @@ def selftest() -> int:
 
     _r5 = _repo(["X = 1\n"])
     _m5 = assert_withdrawals_monotone(_r5, "reg.py", {"20260829": {}})
-    ok(_m5["monotone"] is True and _m5["vacuous"] is True
+    # AND THIS CHECK ALSO ASSERTED A PASS OVER ZERO COMPARISONS. It read
+    # `monotone is True and vacuous is True` and defended it as "the number
+    # says so instead of the boolean implying otherwise" -- but the consumer
+    # reads the BOOLEAN (`da_forward_day_verify`: `monotone is not True`), so
+    # the number said so to nobody. Second falsifier today found enshrining
+    # the defect it was written to catch.
+    ok(_m5["monotone"] is None and _m5["vacuous"] is True
        and _m5["n_prior_versions_with_registry"] == 0,
        "ONE-WAY: a history with NO prior registry reports `vacuous: True` "
-       "rather than passing silently -- the introducing commit compares "
+       "AND `monotone: None` rather than passing -- the introducing commit compares "
        "nothing, and the number says so instead of the boolean implying "
        "otherwise")
     # A REPO WHOSE HISTORY CANNOT BE READ (a git that errors for any other
@@ -719,8 +1070,19 @@ def selftest() -> int:
     _real_git2 = globals()["_git"]
     try:
         def _shim(args, cwd=None):
-            if args[:1] == ["rev-parse"]:
+            # ANSWERS THE QUESTION IT WAS ASKED, not the family. It used to
+            # reply "true" to any `rev-parse`, which was fine while the walk
+            # asked only `--is-inside-work-tree`; the moment it also asked
+            # `--is-shallow-repository` the fixture started answering "yes,
+            # shallow" and the shallow guard fired before the blob ever
+            # failed -- a fixture supplying a shape the production path never
+            # emits, which is the hazard I was warned about in round 29.
+            if args[:2] == ["rev-parse", "--is-inside-work-tree"]:
                 return (0, "true")
+            if args[:2] == ["rev-parse", "--is-shallow-repository"]:
+                return (0, "false")
+            if args[:1] == ["replace"]:
+                return (0, "")
             if args[:1] == ["log"]:
                 return (0, "aaaaaaaaaaaa\n")
             return (128, "")          # every `show` fails
@@ -818,6 +1180,246 @@ def selftest() -> int:
        "BLOCK: when reachability is supplied the block says the day IS "
        "reachable -- so a reader sees the race stayed at 2 by the USER's "
        "CHOICE and not by an accident of file state")
+
+    # ---- round 35: EVERY WAY THE WALK CAN END OR SHORTEN, DRIVEN ---------
+    def _repo(d: Path, versions: list[str], name: str = "reg.py") -> Path:
+        d.mkdir(parents=True, exist_ok=True)
+        _git(["init", "-q", "."], d)
+        _git(["config", "user.email", "t@t"], d)
+        _git(["config", "user.name", "t"], d)
+        for i, body in enumerate(versions):
+            (d / name).write_text(body, encoding="utf-8")
+            _git(["add", name], d)
+            _git(["commit", "-q", "-m", f"v{i}"], d)
+        return d
+
+    _cen = walk_termination_census()
+    ok(_cen["n_UNACCOUNTED"] == 0 and _cen["n_stale_accountings"] == 0
+       and _cen["complete_for_this_method"] is True,
+       f"WALK-CENSUS: all {_cen['n_source_routes']} source routes out of the "
+       f"walk are DERIVED from the AST and reconciled against a written "
+       f"accounting -- {_cen['n_refusing']} refuse, {_cen['n_shortening']} "
+       f"shorten (each legitimate and named), {_cen['n_exits']} exit -- with "
+       f"{_cen['n_supply_routes']} supply routes declared separately because "
+       f"no scan of this function can see them")
+    _fake = dict(WALK_ROUTES)
+    _fake.pop(("Continue", "reg is None"))
+    _saved_routes = dict(WALK_ROUTES)
+    try:
+        WALK_ROUTES.clear()
+        WALK_ROUTES.update(_fake)
+        _c2 = walk_termination_census()
+        ok(_c2["n_UNACCOUNTED"] == 1
+           and _c2["UNACCOUNTED"][0]["condition"] == "reg is None"
+           and _c2["complete_for_this_method"] is False,
+           "WALK-CENSUS FIRES: drop one route from the accounting and it is "
+           "reported UNACCOUNTED. The reconciliation is what makes "
+           "'these are all of them' a computed claim rather than a reading "
+           "-- and it already caught a `continue` I had not listed")
+    finally:
+        WALK_ROUTES.clear()
+        WALK_ROUTES.update(_saved_routes)
+    ok(walk_termination_census()["n_UNACCOUNTED"] == 0,
+       "WALK-CENSUS and the accounting is restored")
+    try:
+        walk_termination_census("no_such_function")
+        ok(False, "WALK-CENSUS: an absent walk must REFUSE")
+    except WithdrawalRefused as e:
+        ok("is not an empty enumeration" in str(e),
+           "WALK-CENSUS refuses to enumerate a function that is not there: "
+           "zero routes out of a walk that does not exist is not a clean "
+           "walk")
+
+    with tempfile.TemporaryDirectory() as t:
+        _d = _repo(Path(t), [_V1])
+        try:
+            assert_withdrawals_monotone(repo=_d, path="nosuch.py")
+            ok(False, "WALK-S1: a path with no history must REFUSE")
+        except WithdrawalRefused as e:
+            ok("not anchored at the file's creation" in str(e),
+               "WALK-S1 (supply route): a path that names NO file in this "
+               "history -- a moved or renamed module, and the default path "
+               "is a hardcoded string -- makes `git log` exit 0 with zero "
+               "commits. That used to be `monotone: True, vacuous: True`")
+    with tempfile.TemporaryDirectory() as t:
+        _src = _repo(Path(t) / "src", [_V1, _V1 + "# v2\n", _V1 + "# v3\n"])
+        _dst = Path(t) / "shallow"
+        _rc_c, _ = _git(["clone", "-q", "--depth", "1",
+                         f"file://{_src}", str(_dst)], Path(t))
+        if _rc_c != 0 or not (_dst / ".git").exists():
+            skip("WALK-S2 needs a working `git clone --depth 1`")
+            skip("WALK-S2b needs a working `git clone --depth 1`")
+        else:
+            _, _n_follow = _git(["log", "--format=%H", "--follow", "--",
+                                 "reg.py"], _dst)
+            _, _n_add = _git(["log", "--format=%H", "--diff-filter=A",
+                              "--follow", "--", "reg.py"], _dst)
+            _walked = [c for c in _n_follow.split() if c]
+            _added = [c for c in _n_add.split() if c]
+            ok(len(_walked) == 1 and _added and _walked[-1] == _added[0],
+               f"WALK-S2b THE TWO GUARDS ARE NOT REDUNDANT, shown rather "
+               f"than assumed: in a depth-1 clone the graft boundary reports "
+               f"the file as ADDED, so the anchor check PASSES over "
+               f"{len(_walked)} of 3 commits. The anchor alone would have "
+               f"certified a walk over a third of the history")
+            try:
+                assert_withdrawals_monotone(repo=_dst, path="reg.py")
+                ok(False, "WALK-S2: a shallow repository must REFUSE")
+            except WithdrawalRefused as e:
+                ok("SHALLOW repository" in str(e),
+                   "WALK-S2 (supply route): and the shallow guard catches "
+                   "what the anchor cannot -- a history truncated by "
+                   "construction, proving the guarantee over the part that "
+                   "was cloned")
+    with tempfile.TemporaryDirectory() as t:
+        _d = _repo(Path(t), [_V1, _V1 + "# later\n"])
+        _real3 = globals()["_git"]
+        _, _true = _real3(["log", "--format=%H", "--follow", "--", "reg.py"],
+                          _d)
+        _all = [c for c in _true.split() if c]
+
+        def _lost_rename(args, cwd=None):
+            # STANDS IN FOR A RENAME `--follow` DID NOT DETECT: the walk sees
+            # a history that begins mid-life, and every commit in it is real.
+            if args[:2] == ["log", "--format=%H"] and "--diff-filter=A" \
+                    not in args:
+                return 0, "\n".join(_all[:-1])
+            return _real3(args, cwd)
+        try:
+            globals()["_git"] = _lost_rename
+            assert_withdrawals_monotone(repo=_d, path="reg.py")
+            ok(False, "WALK-S3: a truncated walk must REFUSE")
+        except WithdrawalRefused as e:
+            ok("not anchored at the file's creation" in str(e)
+               and "rename `--follow` did not detect" in str(e),
+               "WALK-S3 (supply route): a history that silently BEGINS "
+               "MID-LIFE is refused. Every commit in it is real and every "
+               "blob reads, so nothing inside the loop could have caught it "
+               "-- this is the class round 32 and round 34 each closed one "
+               "member of, closed from the supply side")
+        finally:
+            globals()["_git"] = _real3
+    with tempfile.TemporaryDirectory() as t:
+        _d = _repo(Path(t), [_V1, _V1 + "# two\n"])
+        _rc_r, _ = _git(["replace", "--graft", "HEAD"], _d)
+        _, _lst = _git(["replace", "-l"], _d)
+        if _rc_r != 0 or not _lst.strip():
+            skip("WALK-S4 needs `git replace --graft`")
+        else:
+            try:
+                assert_withdrawals_monotone(repo=_d, path="reg.py")
+                ok(False, "WALK-S4: a replace ref must REFUSE")
+            except WithdrawalRefused as e:
+                ok("REPLACE refs" in str(e),
+                   "WALK-S4 (supply route): replace refs rewrite what "
+                   "`git log` reports without changing a single commit, "
+                   "which is the quiet undo this guarantee exists to make "
+                   "loud. The history it shows is complete-looking and "
+                   "different")
+    with tempfile.TemporaryDirectory() as t:
+        _d = _repo(Path(t), ["# no registry yet\n", _V1])
+        _r5 = assert_withdrawals_monotone(
+            repo=_d, path="reg.py", current={"20260829": {"authority":
+                                                          "R-500"}})
+        ok(_r5["monotone"] is True and _r5["n_commits_touching_file"] == 2
+           and _r5["n_prior_versions_with_registry"] == 1,
+           "WALK-S5 ADMITS the one legitimate shortening: a version that "
+           "PREDATES the registry is skipped and COUNTED -- 2 commits "
+           "walked, 1 carrying the registry. A guard here would refuse every "
+           "repository whose history starts before the ruling")
+    with tempfile.TemporaryDirectory() as t:
+        _d = _repo(Path(t), ["RACE_WITHDRAWALS = [1, 2]\n"])
+        try:
+            assert_withdrawals_monotone(repo=_d, path="reg.py", current={})
+            ok(False, "WALK-S6: a non-mapping registry must REFUSE")
+        except WithdrawalRefused as e:
+            ok("not a mapping" in str(e) and "AttributeError" in str(e),
+               "WALK-S6: a registry that is a valid LITERAL but not a "
+               "mapping would have died by AttributeError -- a traceback "
+               "rather than a named refusal, which tells a reader nothing "
+               "about what was being checked")
+    with tempfile.TemporaryDirectory() as t:
+        _d = _repo(Path(t), ['RACE_WITHDRAWALS = {"20260829": "R-500"}\n'])
+        try:
+            assert_withdrawals_monotone(repo=_d, path="reg.py", current={})
+            ok(False, "WALK-S7: a non-mapping entry must REFUSE")
+        except WithdrawalRefused as e:
+            ok("not a mapping" in str(e) and "shown intact" in str(e),
+               "WALK-S7: and an ENTRY that is not a mapping is refused by "
+               "name for the same reason, one level down")
+    with tempfile.TemporaryDirectory() as t:
+        _d = _repo(Path(t), ["# nothing here\n"])
+        _r8 = assert_withdrawals_monotone(repo=_d, path="reg.py", current={})
+        ok(_r8["monotone"] is None
+           and _r8["status"] == "NO_PRIOR_VERSION_WITH_REGISTRY",
+           "WALK-S8 (round 34's predicate, applied to this module's OWN "
+           "verdict): a walk that compared NOTHING reports `monotone: None`, "
+           "not True. `True` was inside the codomain of the measurement "
+           "while meaning 'not evaluated', and `da_forward_day_verify` reads "
+           "`monotone is not True` -- so it would have emitted a verdict on "
+           "a guarantee proved over zero versions")
+    _floor = MIN_PRIOR_VERSIONS
+    try:
+        # DRIVEN ON THE CANONICAL PATH, because that is the only place the
+        # floor applies -- raising the pin above the real history is the same
+        # shape as the history shrinking below the pin.
+        globals()["MIN_PRIOR_VERSIONS"] = 99
+        assert_withdrawals_monotone()
+        ok(False, "WALK-S9: a walk under the floor must REFUSE")
+    except WithdrawalRefused as e:
+        ok("History was rewritten under a one-way guarantee" in str(e)
+           and "pins 99" in str(e),
+               f"WALK-S9 (supply route, and the REBASE answer): the "
+               f"canonical walk sees fewer versions than the pin and "
+               f"REFUSES. `--follow` walks HEAD's "
+               f"ancestry only, so a rebase that drops or squashes a commit "
+               f"touching this file shortens the walk with NO error, NO "
+               f"unreadable blob and NO anchor violation -- the replayed add "
+           f"is still an add. The floor is the one thing that survives a "
+           f"rewrite, because it is committed in the file being counted")
+    finally:
+        globals()["MIN_PRIOR_VERSIONS"] = _floor
+    ok(assert_withdrawals_monotone()["monotone"] is True,
+       "WALK-S9b ADMITS: with the real floor restored the canonical walk "
+       "passes -- a guard that only ever refuses is not a guard")
+    ok(assert_withdrawals_monotone(repo=CODE_ROOT, path="live/pm_research/"
+                                   "da_race_withdrawals.py")["floor_applies"]
+       is False,
+       "WALK-S9c and the floor does NOT apply to an explicitly-addressed "
+       "walk, even one naming the same repo and path: a fixture repository "
+       "with one commit is legitimate, and only the CANONICAL walk is a "
+       "claim about this file's own history")
+    with tempfile.TemporaryDirectory() as t:
+        _d = _repo(Path(t), [_V1])
+        _real9 = globals()["_git"]
+
+        def _no_remote(args, cwd=None):
+            if args[:2] == ["config", "--get"]:
+                return 1, ""
+            return _real9(args, cwd)
+        try:
+            globals()["_git"] = _no_remote
+            _r9 = assert_withdrawals_monotone(
+                repo=_d, path="reg.py",
+                current={"20260829": {"authority": "R-500"}})
+            ok(_r9["floor_applies"] is False and _r9["origin_seen"] is None,
+               "WALK-S9d and a tree with NO REMOTE is not this repository: "
+               "the DA20-R2 wiring probe builds a one-commit repo in /tmp "
+               "and emits through the PRODUCTION path, so it calls with the "
+               "same defaults. A floor keyed on 'the caller used defaults' "
+               "fired there and broke a probe that was right -- caught by "
+               "running the dependent suite, not by reading")
+        finally:
+            globals()["_git"] = _real9
+    _rr = assert_withdrawals_monotone()
+    ok(_rr["monotone"] is True and _rr["anchored_at_creation"] is True
+       and _rr["shallow"] is False and _rr["n_replace_refs"] == 0,
+       f"WALK-REAL: and on THIS repository the walk is anchored at the "
+       f"adding commit {_rr['adding_commit'][:9]}, over "
+       f"{_rr['n_commits_touching_file']} commits and "
+       f"{_rr['n_prior_versions_with_registry']} versions carrying the "
+       f"registry, not shallow, no replace refs -- so the guards changed "
+       f"nothing in production, which is how a guard should land")
 
     print(f"\nda_race_withdrawals selftest: {checks} checks PASSED")
     if checks != EXPECTED_CHECKS:

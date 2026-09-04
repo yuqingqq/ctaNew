@@ -63,7 +63,7 @@ CODE_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
-EXPECTED_CHECKS = 76
+EXPECTED_CHECKS = 78
 
 #: §8.1's REQUIRED OUTPUT, ENUMERATED HERE INDEPENDENTLY of the producer's own
 #: list. Written from the plan's eleven named quantities, NOT copied from
@@ -513,6 +513,72 @@ def _producer_fields() -> dict[str, dict]:
         "literal. A computed enumeration cannot be audited as data.")
 
 
+def _reachability(root: Path, symbol: str,
+                  entry_points: tuple = ("main", "emit")) -> dict[str, Any]:
+    """Is `symbol` reachable from an entry point by the CALL GRAPH?
+
+    BE's half of the consolidated census. A call site that is not itself
+    reachable is not a pipeline: `matched_volume` was defined, referenced and
+    never called, and a census that stops at "somebody calls it" passes that.
+    Module-level calls count as entry points too, because that is what runs.
+
+    **BUILT OVER THE WHOLE TREE, not the producer file.** BE's version reads
+    one module, which is right for BE's use and wrong here: this census's
+    call-site half already scans the directory, and a caller in a SIBLING
+    file would have read as unreachable. Merging the two at different scopes
+    would have manufactured false positives -- caught by an existing
+    falsifier whose caller lived in another file, not by reading.
+
+    The graph is keyed by bare name, so two same-named functions in different
+    modules are one node. That over-connects rather than under-connects: it
+    can call something reachable that is not, never the reverse, so the
+    UNREACHABLE verdict stays sound and the reachable one is the weaker
+    claim. Stated rather than left to be discovered.
+    """
+    import ast
+    callers: dict[str, set] = {}
+    top: set = set()
+    n_files = 0
+    for f in sorted(root.glob("*.py")):
+        try:
+            tree = ast.parse(f.read_text(encoding="utf-8", errors="replace"))
+        except (OSError, SyntaxError):
+            continue
+        n_files += 1
+        for node in tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                for c in ast.walk(node):
+                    if isinstance(c, ast.Call):
+                        nm = (getattr(c.func, "id", None)
+                              or getattr(c.func, "attr", None))
+                        if nm:
+                            callers.setdefault(nm, set()).add(node.name)
+            else:
+                for c in ast.walk(node):
+                    if isinstance(c, ast.Call):
+                        nm = (getattr(c.func, "id", None)
+                              or getattr(c.func, "attr", None))
+                        if nm:
+                            top.add(nm)
+    if not n_files:
+        return {"entry_point": None, "entry_points": [],
+                "note": "no readable source in the tree"}
+    eps = sorted(set(entry_points) | top)
+
+    def reaches(sym, seen=frozenset()):
+        for caller in callers.get(sym, ()):
+            if caller in eps:
+                return caller
+            if caller in seen:
+                continue
+            got = reaches(caller, seen | {caller})
+            if got:
+                return got
+        return None
+    return {"entry_point": (symbol if symbol in eps else reaches(symbol)),
+            "entry_points": eps[:20], "n_files_in_graph": n_files}
+
+
 def publication_provenance(producer_path: str, symbol: str,
                            root: Path | None = None) -> dict[str, Any]:
     """The SIMPLER question, for an arbitrary published number.
@@ -599,7 +665,19 @@ def publication_provenance(producer_path: str, symbol: str,
 
     production = [c for c in calls
                   if not c["in_selftest"] and not c["is_definition"]]
+    reach = _reachability(_scan_root, symbol) if src.is_file() else None
     return {
+        "reachable_from_entry_point": (reach or {}).get("entry_point"),
+        "entry_points_considered": (reach or {}).get("entry_points"),
+        "reachability_note": (
+            "ABSORBED FROM BE's `be_read_cells.publication_provenance` "
+            "(round 35 consolidation). A call site outside a selftest is the "
+            "weaker property: a call from a function that is ITSELF never "
+            "called reads as production. This follows the call graph to an "
+            "entry point, which is what caught `matched_volume` defined, "
+            "referenced and never reached. Two implementations that agree "
+            "tell us nothing -- these did not agree, and the merge keeps "
+            "the stronger half."),
         "producer_path": str(src),
         "producer_exists": src.is_file(),
         "producer_inside_repo": inside_repo,
@@ -616,6 +694,8 @@ def publication_provenance(producer_path: str, symbol: str,
             "PRODUCER_NOT_IN_REPO" if not inside_repo or not src.is_file()
             else "SYMBOL_NOT_DEFINED_IN_NAMED_PRODUCER" if not defined
             else "NO_PRODUCTION_CALL_SITE" if not production
+            else "CALLED_BUT_UNREACHABLE_FROM_ANY_ENTRY_POINT"
+            if reach is not None and reach["entry_point"] is None
             else "PRODUCED_AND_CALLED"),
         "why": ("`NO_PRODUCTION_CALL_SITE` is the audit's finding in one "
                 "word: every caller inside a selftest is a green suite with "
@@ -2052,6 +2132,36 @@ def selftest() -> int:
        "DA32-R1 ADMITS at the consumer too: an all-evaluable batch that does "
        "not reproduce still reaches REAL_EVIDENCED. A detector that can only "
        "refuse is not a detector")
+
+    # ---- BE's half, absorbed: reachable, not merely called ---------------
+    with tempfile.TemporaryDirectory() as t:
+        td = Path(t)
+        sd = td / "live" / "pm_research"
+        sd.mkdir(parents=True)
+        (sd / "a").mkdir()
+        (sd / "b").mkdir()
+        (sd / "a" / "orphan.py").write_text(
+            "def measure():\n    return 1\n"
+            "def helper():\n    return measure()\n"       # calls it...
+            "def main():\n    return 0\n", encoding="utf-8")
+        _o = publication_provenance("orphan.py", "measure", root=sd / "a")
+        ok(_o["n_production_call_sites"] == 1
+           and _o["verdict"] == "CALLED_BUT_UNREACHABLE_FROM_ANY_ENTRY_POINT",
+           "REACH-1 FIRES on the property my census DID NOT HAVE: `measure` "
+           "has a real call site outside any selftest, so the old verdict "
+           "was PRODUCED_AND_CALLED -- but its only caller is itself never "
+           "reached. That is `matched_volume` exactly, and it is BE's half "
+           "of the consolidated instrument")
+        (sd / "b" / "wired.py").write_text(
+            "def measure():\n    return 1\n"
+            "def helper():\n    return measure()\n"
+            "def main():\n    return helper()\n", encoding="utf-8")
+        _w = publication_provenance("wired.py", "measure", root=sd / "b")
+        ok(_w["verdict"] == "PRODUCED_AND_CALLED"
+           and _w["reachable_from_entry_point"] == "main",
+           "REACH-2 ADMITS: one edge added and the same symbol is reachable "
+           "from `main` transitively -- the census names the entry point it "
+           "reached rather than reporting a bare boolean")
 
     # ---- the sweep, RE-RUN WITH THE PREDICATE rather than by pattern ------
     with tempfile.TemporaryDirectory() as t:

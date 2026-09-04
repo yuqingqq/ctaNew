@@ -577,6 +577,13 @@ def selftest() -> int:
             print(f"FAIL: {label}")
             raise SystemExit(1)
 
+    def skip(label):
+        # COUNTED AND NAMED: a check that silently vanishes with its
+        # precondition keeps the total agreeing while coverage falls.
+        nonlocal checks
+        checks += 1
+        print(f"SKIP: {label}")
+
     # ---- the v2 seam REFUSES, by name and out loud ------------------------
     try:
         v2_mask_windows("20260902")
@@ -1367,6 +1374,78 @@ def selftest() -> int:
            "DA29-4b and the absent window is NOT in `masked_windows` -- the "
            "two lists are disjoint populations, so a consumer reading either "
            "one alone is not silently double-counting or missing the other")
+
+    # ---- the mask must land in the SAME RUN as the verdict ---------------
+    # BE established the ten-hour lag is INCIDENTAL: `da_midnight_verify.sh`
+    # did not write the mask at all -- the word did not appear in it -- so it
+    # arrived whenever the builder was run by hand. A governed day is
+    # UNSCOREABLE until the mask lands, so every accruing night had a
+    # ten-hour hole for no reason.
+    class _SkipPair(Exception):
+        """The mask fixture is absent; both PAIR-3 checks skip together."""
+
+    _sh = Path(__file__).resolve().parent / "da_midnight_verify.sh"
+    _txt = _sh.read_text(encoding="utf-8") if _sh.is_file() else ""
+    ok(bool(_txt), "PAIR-0 the nightly script is readable (an unreadable one "
+       "must not report a clean pairing)")
+
+    def _pairs(t: str) -> dict:
+        """Does the verdict install and the mask write travel together?"""
+        vline = t.find('mv -f "$tmp" "$OUTDIR/da_dayverdict_$d.json"')
+        mcall = t.find('"$PY" "$M" --day "$d" --write --outdir "$_mtmp"')
+        minst = t.find('"$OUTDIR/da_blackout_mask_$d.json"')
+        return {"verdict_install": vline, "mask_call": mcall,
+                "mask_install": minst,
+                "paired": (vline >= 0 and mcall > vline and minst > mcall),
+                "same_day_token": ('--day "$d"' in t),
+                "failure_is_loud": ("MASK NOT WRITTEN for $d" in t
+                                    and "broke=4" in t)}
+    _pr = _pairs(_txt)
+    ok(_pr["paired"] and _pr["same_day_token"] and _pr["failure_is_loud"],
+       f"PAIR-1 THE MASK NOW LANDS WITH THE VERDICT: the nightly path writes "
+       f"the mask for the SAME day token in the same loop iteration, after "
+       f"the verdict is installed, via a temp dir like the verdict itself, "
+       f"and a failure to write it is a LOUD instrument failure rather than "
+       f"a silent hole ({_pr})")
+    ok(not _pairs(_txt.replace(
+        '"$PY" "$M" --day "$d" --write --outdir "$_mtmp"', "# removed"))
+        ["paired"],
+       "PAIR-2 FALSIFIER: delete that one invocation from a copy of the "
+       "script and the pairing check FAILS -- a static check that has never "
+       "been shown to fire is not evidence the wiring is there (rule 15)")
+    try:
+        import de_admissible_windows as _DE
+        # THE REAL ARTIFACT, not a hand-built envelope. A four-key fixture
+        # refused for a MISSING FIELD and the check passed on a refusal that
+        # was not the one under test -- the round-29 lesson: drive the shape
+        # the production supply path actually emits.
+        _mp = (DATA_ROOT / "data/pm_5min/derived"
+               / "da_blackout_mask_20260902.json")
+        if not _mp.is_file():
+            skip("PAIR-3a needs a real committed mask to mutate")
+            skip("PAIR-3 needs a real committed mask to mutate")
+            raise _SkipPair
+        _good = json.loads(_mp.read_text(encoding="utf-8"))
+        _DE.validate_mask(_good, "20260902")
+        ok(True, "PAIR-3a ADMITS: the real committed mask for 09-02 -- the "
+           "shape this pairing now writes nightly -- validates clean against "
+           "the consumer's contract")
+        try:
+            _DE.validate_mask({**_good, "day_closed_calendar": False},
+                              "20260902")
+            ok(False, "PAIR-3 a stale mask must still be refused")
+        except _DE.AdmissibleWindowsRefused as _e:
+            ok("day_closed_calendar" in str(_e) and "partial mask" in str(_e),
+               "PAIR-3 AND THE CORRECTNESS GUARD IS UNTOUCHED: a mask whose "
+               "`day_closed_calendar` is not True is still refused by "
+               "`de_admissible_windows.validate_mask`, so pairing the write "
+               "with the verdict closes a SCHEDULING gap without loosening "
+               "the check that stops a partial mask being scored")
+    except _SkipPair:
+        pass
+    except ImportError:
+        skip("PAIR-3a needs de_admissible_windows importable")
+        skip("PAIR-3 needs de_admissible_windows importable")
 
     print(f"da_blackout_mask selftests: {checks} checks passed")
     return 0
