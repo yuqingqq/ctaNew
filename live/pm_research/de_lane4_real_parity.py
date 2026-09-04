@@ -197,9 +197,9 @@ ARM_DEPENDENCIES: dict[str, tuple] = {
     "HAZARD_ONLY_NEUTRAL": ("neutral_placement", "hazard_head"),
     "CONDVALUE_NEUTRAL": ("neutral_placement", "condvalue_head"),
     "CONDVALUE_X_SKEW": ("skewed_placement", "condvalue_head",
-                         "skew_state_in_predictor"),
+                         "policy_layer_skew_composition"),
     "CONDVALUE_X_SKEW_X_FAIRPRICE": ("skewed_placement", "condvalue_head",
-                                     "skew_state_in_predictor",
+                                     "policy_layer_skew_composition",
                                      "fairprice_challenger"),
     "RANDOM_MATCHED": ("skewed_placement", "matched_random_control"),
 }
@@ -268,8 +268,71 @@ def _probe_condvalue_head() -> tuple:
         return False, {"error": f"{type(exc).__name__}: {exc}"}
 
 
-def _probe_skew_state_in_predictor() -> tuple:
-    """Does the conditional-value predictor SEE skew or inventory state?
+#: WHAT `X_SKEW` MEANS, RULED AND WRITTEN HERE SO NOBODY RE-ASKS.
+#:
+#: Round 32 escalated: no seven-arm name fitted "condvalue predictor over
+#: the frozen SKEWED reference with no interaction". Round 52 first read
+#: the gap as a MISSING DEPENDENCY -- no skew feature reaches the model,
+#: therefore X_SKEW cannot run -- and that reading was wrong.
+#:
+#: THE PLAN ANSWERS IT AND FORBIDS THE OTHER READING. §2.2: "Inventory and
+#: lifecycle state remain POLICY INPUTS. They price whether a cancel, size
+#: reduction or repost is desirable; THEY DO NOT BECOME PREDICTOR FEATURES
+#: MERELY BECAUSE THEY AFFECT THE ACTION DECISION." §10.1's dependency
+#: diagram composes conditional value, fair price, frozen skew and
+#: latency/cost as FOUR PARALLEL INPUTS converging on the action-value
+#: policy -- composition, not interaction.
+#:
+#: So arm 5 is CONDITIONAL-VALUE CANCELLATION COMPOSED WITH FROZEN SKEW AT
+#: THE POLICY LAYER, WITHOUT INTERACTION, and the predictor carries no
+#: skew state BY DESIGN. Putting skew into the predictor would build the
+#: thing §2.2 forbids and would risk the double-counting §2.2 exists to
+#: prevent.
+#:
+#: (§3 does record inventory and the increases/reduces flag as DATASET ROW
+#: fields. That is consistent: recorded in the row, not fed to the
+#: predictor -- and it is the distinction that made this look like a
+#: missing dependency.)
+ARM_X_SKEW_SEMANTICS = (
+    "conditional-value cancellation COMPOSED with frozen skew AT THE "
+    "POLICY LAYER, without interaction; the predictor carries no skew or "
+    "inventory state by design (plan §2.2, §10.1)")
+
+
+def _probe_policy_layer_skew_composition() -> tuple:
+    """Can the POLICY LAYER compose a conditional-value cancel decision
+    with the frozen skew placement?
+
+    This is the predicate the ruling asks for, and it is deliberately NOT
+    "is there skew state in the predictor" -- that question tests for the
+    thing §2.2 forbids, and answering it False blocked two arms for a
+    design property rather than a gap.
+
+    What composition needs: a placement that carries the frozen skew, a
+    policy that takes a cancel threshold over a score stream, and both
+    protection modes the conjunction is defined over."""
+    import policy_optimizer_queue_realistic as _qr
+    import harmful_stateful_policy as _hsp
+    spec = _qr._qr_spec(_qr.QR_SKEW, latency_ms=0, cancel=True)
+    frozen_skew = spec.get("skew") is True and spec.get("cancel") is True
+    policy = (hasattr(_hsp, "replay_policy")
+              and len(getattr(_hsp, "PROTECTION_MODES", ())) >= 1
+              and len(getattr(_hsp, "REPOST_FILL_MODELS", ())) >= 1)
+    return bool(frozen_skew and policy), {
+        "frozen_skew_placement_with_cancel": frozen_skew,
+        "policy_layer": policy,
+        "protection_modes": list(getattr(_hsp, "PROTECTION_MODES", ())),
+        "repost_fill_models": list(getattr(_hsp, "REPOST_FILL_MODELS", ())),
+        "semantics": ARM_X_SKEW_SEMANTICS,
+        "ruled_by": "plan §2.2 and §10.1, read at the artifact 2026-09-04; "
+                    "closes the round-32 ARM_NAME_COLLISION escalation"}
+
+
+def _probe_skew_state_in_predictor_RETIRED() -> tuple:
+    """RETIRED BY THE §2.2 RULING and kept only as the record of a wrong
+    predicate. It asked whether the predictor SEES skew or inventory
+    state; the plan says it must not, so a False here is the DESIGN and
+    never a blocker. Read by the suite alone.
 
     `CONDVALUE_X_SKEW` asserts an INTERACTION. If no skew or inventory
     feature reaches the model, the name claims something the artifact does
@@ -361,7 +424,8 @@ ARM_DEPENDENCY_PROBES = {
     "cancel_hold_policy": _probe_cancel_hold_policy,
     "hazard_head": _probe_hazard_head,
     "condvalue_head": _probe_condvalue_head,
-    "skew_state_in_predictor": _probe_skew_state_in_predictor,
+    "policy_layer_skew_composition": _probe_policy_layer_skew_composition,
+    "skew_state_in_predictor_RETIRED": _probe_skew_state_in_predictor_RETIRED,
     "fairprice_challenger": _probe_fairprice_challenger,
     "matched_random_control": _probe_matched_random_control,
 }
