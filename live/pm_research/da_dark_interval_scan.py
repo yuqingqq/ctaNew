@@ -123,7 +123,7 @@ DISPOSITION = "REPORTED_NOT_GOVERNING"
 #: the real-tape checks FAIL BY NAME when the tape is absent rather than
 #: quietly shrinking the count (DA20-R3's class), and a named SKIP standing in
 #: for a positive control is ruled out.
-EXPECTED_CHECKS = 37
+EXPECTED_CHECKS = 38
 
 
 class ScanRefused(Exception):
@@ -376,6 +376,21 @@ def sweep(days: list[str] | None = None, frac: float = LOW_FRAC,
         "n_intervals": len(intervals),
         "n_days_with_an_interval": sum(1 for r in judged_rows
                                        if r["n_intervals"]),
+        # DA27/DA24-class: THE EXCLUDED POPULATION, IN THE HEADLINE.
+        # `min_run` is a REPORTING threshold, not a detection one: a
+        # single-window dropout is DETECTED (it reads 0.00% of reference when
+        # every coin's file is absent) and then dropped from `intervals`
+        # because one window is not an "interval". That is defensible as a
+        # definition and indefensible as a silence -- 2026-09-03T15:20:00Z,
+        # the third instance of the class this module exists for, was excluded
+        # exactly this way and nobody saw it. The count was already computed
+        # per day; it is now carried in the sweep, so the number a reader
+        # meets includes what the definition threw away.
+        "n_single_window_dips_excluded": sum(
+            r["n_single_window_dips_excluded"] for r in judged_rows),
+        "single_window_dip_days": sorted(
+            r["day"] for r in judged_rows
+            if r["n_single_window_dips_excluded"]),
         "intervals": intervals,
         "spanning_events": merge_adjacent(intervals),
         "n_spanning_events": len(merge_adjacent(intervals)),
@@ -501,6 +516,11 @@ def _emit(s: dict, as_json: bool) -> None:
           f"  refused {s['n_days_refused']} {s['days_refused']}")
     print(f"  intervals {s['n_intervals']} over "
           f"{s['n_days_with_an_interval']} day(s)")
+    print(f"  single-window dips EXCLUDED by min_run="
+          f"{s['setting']['min_run_windows']}: "
+          f"{s['n_single_window_dips_excluded']} on "
+          f"{s['single_window_dip_days']}  <-- detected, not reported as "
+          f"intervals; re-run with --min-run 1 to see them")
     for i in s["intervals"]:
         print(f"    {i['day']}  {i['start_hhmm']}-{i['end_hhmm']}  "
               f"{i['n_windows']:>3}w {i['span_s']:>6}s  "
@@ -669,6 +689,23 @@ def selftest() -> int:
            f"ACCOUNTED (share {b['ledger_known_share']}, "
            f"{b['n_cells_gap_covered']}/{b['n_cells']} cells) -- the "
            f"attribute takes BOTH values, so it says something")
+
+    # --- FIX-5b: THE EXCLUDED POPULATION IS CARRIED IN THE SWEEP.
+    # A single-window dropout is DETECTED and then dropped from `intervals`
+    # by min_run. The count must reach the headline, or the definition
+    # becomes a silence -- which is what hid 2026-09-03T15:20:00Z.
+    with tempfile.TemporaryDirectory() as t:
+        root = Path(t)
+        build(root, {DAYS[-1]: {12: {c: 200 for c in COINS}}})
+        _sw1 = sweep(DAYS, raw_root=root, gaps={})
+        ok(_sw1["n_intervals"] == 0
+           and _sw1["n_single_window_dips_excluded"] == 1
+           and _sw1["single_window_dip_days"] == [DAYS[-1]],
+           f"FIX-5b THE SWEEP CARRIES WHAT min_run THREW AWAY: 0 intervals "
+           f"and {_sw1['n_single_window_dips_excluded']} single-window dip on "
+           f"{_sw1['single_window_dip_days']}. Detected, excluded by "
+           f"definition, and NOT silent -- the shape that hid the third "
+           f"instance of the class this module exists for")
 
     # --- FIX-5: MIN_RUN is a conjunct that can fail AND pass.
     with tempfile.TemporaryDirectory() as t:
