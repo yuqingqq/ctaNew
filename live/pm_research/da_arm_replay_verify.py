@@ -63,7 +63,7 @@ CODE_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
-EXPECTED_CHECKS = 78
+EXPECTED_CHECKS = 85
 
 #: §8.1's REQUIRED OUTPUT, ENUMERATED HERE INDEPENDENTLY of the producer's own
 #: list. Written from the plan's eleven named quantities, NOT copied from
@@ -294,6 +294,62 @@ def completeness(doc: dict[str, Any]) -> dict[str, Any]:
     pop = doc.get("population") or {}
     wsc = doc.get("window_status_counts") or {}
     gsc = doc.get("generation_status_counts") or {}
+
+    # WHICH ARTIFACT SHAPE IS THIS? Found by pointing this at DE's newest
+    # arms artifact, where every key this reads is absent: it reported
+    # WINDOW_COUNTS_DO_NOT_RECONCILE (null vs 0) and
+    # ADMITTED_HEADLINE_DISAGREES_WITH_HISTOGRAM (null vs null). **Two
+    # findings against a correct artifact, from a check that did not
+    # apply** -- a negative verdict produced by a path that did not run,
+    # which is the shape this seat named, in the instrument that named it.
+    # `null != null` is not a disagreement.
+    #
+    # The arms protocol keeps the same facts under `population.statuses`
+    # and `population.windows`, so the shape is DETECTED and the arms
+    # census reconciled on its own terms rather than graded against the
+    # lane4 one.
+    arms_stat = pop.get("statuses") if isinstance(pop.get("statuses"),
+                                                  dict) else None
+    if not wsc and arms_stat is not None:
+        n_win = pop.get("windows")
+        adm = arms_stat.get("ADMITTED")
+        refused = sum(v for k, v in arms_stat.items()
+                      if k in ("NO_REPLAY", "RECONCILIATION_FAILED")
+                      and isinstance(v, int))
+        rec = (isinstance(n_win, int) and isinstance(adm, int)
+               and n_win == adm + refused)
+        if not rec:
+            findings.append({"kind": "WINDOW_COUNTS_DO_NOT_RECONCILE",
+                             "windows": n_win, "admitted": adm,
+                             "refused": refused})
+        return {
+            "artifact_shape": "SECTION_8_1_ARMS",
+            "n_windows": n_win, "n_admitted": adm, "n_refused": refused,
+            "windows_reconcile": rec,
+            "n_tranches_kept": arms_stat.get("TRANCHE_KEPT"),
+            "n_tranches_without_markout": arms_stat.get(
+                "TRANCHE_NO_MARKOUT"),
+            "excluded_before_selection": {
+                "BINANCE_GAP_EXCLUDED": arms_stat.get(
+                    "BINANCE_GAP_EXCLUDED")},
+            "findings": findings,
+            "complete_and_reconciled": rec and not findings,
+            "note": ("BINANCE_GAP_EXCLUDED is counted BEFORE selection, so "
+                     "it is reported beside the reconciliation rather than "
+                     "inside it -- adding it would make a correct census "
+                     "fail to add up"),
+        }
+    if not wsc and arms_stat is None:
+        return {
+            "artifact_shape": "UNRECOGNISED",
+            "status": "NOT_APPLICABLE_NO_WINDOW_CENSUS",
+            "findings": [],
+            "complete_and_reconciled": None,
+            "why": ("this artifact carries neither `window_status_counts` "
+                    "nor `population.statuses`. Reporting the absent keys "
+                    "as disagreements would be a finding against an "
+                    "artifact this check does not cover"),
+        }
 
     n_sel = pop.get("n_selected_windows")
     w_sum = sum(v for v in wsc.values() if isinstance(v, (int, float)))
@@ -1541,6 +1597,90 @@ def denominator_audit(doc: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def arm_refusal_audit(doc: dict[str, Any]) -> dict[str, Any]:
+    """A REFUSED arm: is its refusal DIAGNOSABLE from what it emitted?
+
+    A refusal can be perfectly correct and still not answer the question a
+    reader has to answer next. `RANDOM_MATCHED` refuses because no draw
+    satisfied P1-P4 inside the attempt budget, and its `rejections`
+    histogram is a proper rule-4 census -- every attempt is accounted, by
+    predicate, with counts. **But a count of failures cannot distinguish the
+    two readings that decide whether the arm can ever run:**
+
+      * UNREACHABLE BY CONSTRUCTION -- the achievable set of realised counts
+        excludes the target, so no budget helps; or
+      * BUDGET-LIMITED -- the achievable set brackets the target and the
+        draws simply missed it.
+
+    Both produce `{P4: N}` and nothing else. Telling them apart needs the
+    REALISED VALUE per draw, not the count of draws that failed: the signed
+    gap between the control's realised count and the treated arm's, over the
+    draws that reached P4. If every gap has the same sign and the target
+    lies outside the observed range, "unreachable for this construction" is
+    EVIDENCED over N draws -- still sampling, so it supports the claim and
+    does not prove it, and this says so rather than rounding up to "never".
+
+    REPORTS. Whether an unmatched control voids the ablation is the policy
+    layer's call (rule 14).
+    """
+    arms = doc.get("arms")
+    if not isinstance(arms, dict) or not arms:
+        return {"status": "NO_ARMS_IN_ARTIFACT", "n_arms": 0,
+                "rows": [], "decides_nothing": "REPORTED (rule 14)."}
+    rows = []
+    for name, a in sorted(arms.items()):
+        if not isinstance(a, dict):
+            continue
+        st = str(a.get("status") or "")
+        refused = "REFUS" in st.upper()
+        rej = a.get("rejections") if isinstance(a.get("rejections"),
+                                                dict) else None
+        attempts = a.get("attempts")
+        if not refused:
+            continue
+        rej_sum = (sum(v for v in rej.values() if isinstance(v, int))
+                   if rej else None)
+        accounted = (isinstance(attempts, int) and rej_sum == attempts)
+        binding = ([k for k, v in rej.items() if isinstance(v, int) and v > 0]
+                   if rej else [])
+        has_values = a.get("predicates_last_seen") is not None
+        verdict = (
+            "REFUSAL_NOT_ACCOUNTED" if not accounted
+            else "REFUSAL_DIAGNOSABLE" if has_values
+            else "REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE"
+            if len(binding) == 1
+            else "REFUSAL_ACCOUNTED_MULTIPLE_CAUSES")
+        rows.append({
+            "arm": name, "status": st, "attempts": attempts,
+            "rejections": rej, "rejections_sum": rej_sum,
+            "every_attempt_accounted": accounted,
+            "binding_predicates": binding,
+            "carries_per_draw_values": has_values,
+            "verdict": verdict,
+            "what_would_decide_it": (
+                None if verdict != "REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE"
+                else ["the realised value per draw that reached the binding "
+                      "predicate, not the count of draws that failed it",
+                      "the SIGNED gap against the treated arm, so "
+                      "one-directionality is computed over N draws rather "
+                      "than read off a single seed",
+                      "the per-stratum breakdown, since the predicate is a "
+                      "per-stratum equality and a near-miss on one stratum "
+                      "is a different fact from a miss on all of them"]),
+        })
+    return {
+        "n_arms": len(arms), "n_refused": len(rows), "rows": rows,
+        "any_refusal_undiagnosable": any(
+            r["verdict"] == "REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE"
+            for r in rows),
+        "limits": ("this grades the EVIDENCE a refusal carries, never "
+                   "whether the refusal was right. A refusal with no "
+                   "per-draw values may still be entirely correct -- it is "
+                   "just not one a reader can act on"),
+        "decides_nothing": "REPORTED (rule 14).",
+    }
+
+
 def verify(path: Path, scores: list[dict] | None = None) -> dict[str, Any]:
     doc = load_artifact(path)
     return {
@@ -1554,6 +1694,7 @@ def verify(path: Path, scores: list[dict] | None = None) -> dict[str, Any]:
         "completeness": completeness(doc),
         "population_consumed": population_consumed(doc),
         "denominator_audit": denominator_audit(doc),
+        "arm_refusal_audit": arm_refusal_audit(doc),
         "enumeration_consumed": enumeration_consumed(),
         "provenance": provenance(path),
         "decides_nothing": ("REPORTED. This says whether the OUTPUT can be "
@@ -2132,6 +2273,74 @@ def selftest() -> int:
        "DA32-R1 ADMITS at the consumer too: an all-evaluable batch that does "
        "not reproduce still reaches REAL_EVIDENCED. A detector that can only "
        "refuse is not a detector")
+
+    # ---- the artifact SHAPE must be detected, not assumed ----------------
+    _arms_doc = {"protocol": "de_section81_arms_v1",
+                 "population": {"windows": 12,
+                                "statuses": {"ADMITTED": 12, "NO_REPLAY": 0,
+                                             "RECONCILIATION_FAILED": 0,
+                                             "BINANCE_GAP_EXCLUDED": 3,
+                                             "TRANCHE_KEPT": 4315,
+                                             "TRANCHE_NO_MARKOUT": 0}},
+                 "arms": {}}
+    _ac = completeness(_arms_doc)
+    ok(_ac["artifact_shape"] == "SECTION_8_1_ARMS"
+       and _ac["complete_and_reconciled"] is True and not _ac["findings"],
+       "SHAPE-1 THE DEFECT WAS MINE: pointed at the ARMS artifact this "
+       "check read lane4's keys, found them absent, and reported "
+       "WINDOW_COUNTS_DO_NOT_RECONCILE (null vs 0) and "
+       "ADMITTED_HEADLINE_DISAGREES_WITH_HISTOGRAM (null vs null) -- two "
+       "findings against a CORRECT artifact from a path that did not apply. "
+       "`null != null` is not a disagreement. The shape is detected now and "
+       "the arms census reconciles on its own terms")
+    ok(completeness({**_arms_doc, "population":
+                     {**_arms_doc["population"], "windows": 11}}
+                    )["findings"][0]["kind"]
+       == "WINDOW_COUNTS_DO_NOT_RECONCILE",
+       "SHAPE-2 FIRES: and the arms reconciliation is real -- 11 windows "
+       "against 12 admitted is caught, so detecting the shape did not "
+       "replace a wrong check with no check")
+    _uk = completeness({"protocol": "something_else"})
+    ok(_uk["artifact_shape"] == "UNRECOGNISED"
+       and _uk["complete_and_reconciled"] is None and not _uk["findings"],
+       "SHAPE-3 an artifact carrying NEITHER census is NOT_APPLICABLE with "
+       "`complete_and_reconciled: None` -- outside the codomain of the "
+       "boolean, so a consumer cannot read 'did not apply' as 'failed'")
+
+    # ---- a refusal that is correct but not diagnosable -------------------
+    _ra = arm_refusal_audit({"arms": {"RANDOM_MATCHED": {
+        "status": "REFUSED_NO_MATCHED_DRAW", "attempts": 20,
+        "predicates_last_seen": None,
+        "rejections": {"PERM_NOT_OK": 0, "P1": 0, "P2": 0, "P3": 0,
+                       "P4": 20}}}})
+    ok(_ra["rows"][0]["verdict"] == "REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE"
+       and _ra["rows"][0]["every_attempt_accounted"] is True
+       and _ra["rows"][0]["binding_predicates"] == ["P4"],
+       "ARMREF-1: every attempt IS accounted by predicate (a proper rule-4 "
+       "census) and the refusal is still not diagnosable -- a COUNT of "
+       "failures cannot separate 'the achievable set excludes the target' "
+       "from 'the draws missed it', and those decide whether the arm can "
+       "ever run")
+    ok(arm_refusal_audit({"arms": {"A": {
+        "status": "REFUSED_X", "attempts": 5,
+        "predicates_last_seen": {"P4_gap": [3, 5, 2, 4, 6]},
+        "rejections": {"P4": 5}}}})["rows"][0]["verdict"]
+       == "REFUSAL_DIAGNOSABLE",
+       "ARMREF-2 ADMITS: the same refusal carrying per-draw VALUES is "
+       "diagnosable -- the audit asks for evidence, not for a different "
+       "verdict")
+    ok(arm_refusal_audit({"arms": {"A": {
+        "status": "REFUSED_X", "attempts": 20,
+        "rejections": {"P4": 3}}}})["rows"][0]["verdict"]
+       == "REFUSAL_NOT_ACCOUNTED",
+       "ARMREF-3 FIRES when the histogram does not sum to the attempts: "
+       "17 attempts refused for no recorded reason is a rule-4 hole, and a "
+       "different failure from an undiagnosable one")
+    ok(arm_refusal_audit({"arms": {"A": {"status": "OK"}}})["n_refused"] == 0
+       and arm_refusal_audit({})["status"] == "NO_ARMS_IN_ARTIFACT",
+       "ARMREF-4 does not fire on a non-refused arm, and an artifact with "
+       "no arms says so by name rather than reporting zero undiagnosable "
+       "refusals")
 
     # ---- BE's half, absorbed: reachable, not merely called ---------------
     with tempfile.TemporaryDirectory() as t:
