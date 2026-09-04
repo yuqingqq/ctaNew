@@ -1147,7 +1147,7 @@ def cluster_disclosure(rows) -> dict:
 # every control fires on the bad case AND ADMITS the good one -- a named SKIP
 # is not an admission.
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 101
+EXPECTED_CHECKS = 102
 
 _L = 50
 
@@ -1570,10 +1570,17 @@ def selftest() -> int:
     ok(len(feed) == 6 and set(feed[0]) == {"slug", "side", "gen", "t0",
                                            "t_start", "score",
                                            "score_incumbent", "value_cents",
-                                           "any_fill_ahead"},
+                                           "any_fill_ahead",
+                                           "preventable_shares", "level"},
        "POSITIVE CONTROL: reduce_window emits one record per row with exactly "
-       "the NINE fields the estimand needs -- `any_fill_ahead` among them and, "
-       "from round 25, `score_incumbent`, because an increment needs TWO arms")
+       "the ELEVEN fields the estimand needs -- `any_fill_ahead` among them, "
+       "`score_incumbent` from round 25 because an increment needs TWO arms, "
+       "and `preventable_shares`/`level` from round 28 because an absolute "
+       "without its denominator is not a profitability answer")
+    ok(all(("preventable_shares" in r and "level" in r) for r in feed),
+       "R28: EVERY record carries the scale fields, not just the filled ones "
+       "-- a denominator present only where it is convenient is a denominator "
+       "a reader cannot sum")
     ok(all(r["score_incumbent"] is None for r in feed),
        "R25: a ONE-ARM caller still gets a well-formed feed, with "
        "`score_incumbent` explicitly None rather than absent -- so a "
