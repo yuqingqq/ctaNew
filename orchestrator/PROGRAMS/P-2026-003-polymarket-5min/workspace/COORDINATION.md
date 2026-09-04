@@ -15,6 +15,11 @@ Precedence unchanged: `FLOW_MODEL_STATE.md` wins on facts · `contracts/contract
 
 ---
 
+
+<!-- DA-WALK-FLOOR-PIN:BEGIN -->
+DA-WALK-FLOOR: min_prior_versions=5
+<!-- DA-WALK-FLOOR-PIN:END -->
+
 ## 0a. OPEN QUESTIONS REGISTER — the coordinator's inbox
 
 **Every request for a coordinator ruling goes HERE, one line, appended by the
