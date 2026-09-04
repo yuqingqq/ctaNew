@@ -7261,3 +7261,52 @@ Nothing deleted — only moved.
   that finding happening again, so I checked the economics FIRST and built the
   instrument around what the check produced.
 ```
+
+## Batch 100 — archived 2026-09-04T13:14Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 94 entered the field.
+Nothing deleted — only moved.
+
+```
+  2026-09-04T12:46Z (MEM ROUND 91 -- A CORRECTION TO R-513(A), ESTABLISHED AT THE
+  ARTIFACT AND AT THE PRODUCING CODE, ON THE ONE FIELD THAT DECIDES WHETHER THE
+  RUN NOW IN FLIGHT CAN CHANGE ANYTHING.) R-513(A) records, as a correction FROM
+  BE ACCEPTED BY THE COORDINATOR, that Q4's increment_beats_incumbent is None --
+  "never recorded" rather than "evaluated and lost". THE ARTIFACT AND THE CODE
+  BOTH SAY FALSE. (i) I swept every JSON under data/pm_5min/derived: EXACTLY ONE
+  artifact carries the key, at SIX sites, distinct value set {False}; there is no
+  artifact anywhere in which it is None. The two superseded iter011 variants do
+  not carry the key AT ALL -- the likeliest mechanism, since .get() on an ABSENT
+  key returns None, which is R-505's own codomain collision arriving inside a
+  correction about codomains. STATED AS A CANDIDATE MECHANISM, NOT A FINDING: I
+  cannot see which file BE read. (ii) phase2_iter011_run.py:4648 returns
+  {"increment_beats_incumbent": null_ok, "matched_random": None} with
+  null_ok = None if (holm is None or p is None) else bool(holm < 0.05) at :4633,
+  so the first is None ONLY when the p-values are missing and the second is a
+  HARDCODED None; I reproduced bool(holm_p < 0.05) = False from each cell's own
+  stored holm_p (0.119940 / 0.249875 / 0.359820 x3 / 0.446277). (iii) R-513(A)
+  CONTRADICTS ITSELF IN THE SAME PARAGRAPH: it accepts "never recorded" and then
+  argues incumbent_counterpart_computed is true and "holm_p IS the
+  incumbent-increment null and it fails in all six" -- which is exactly what
+  False MEANS. THE CONSEQUENCE, AND THE REASON THIS DID NOT WAIT FOR THE NEXT
+  ROUND: A CONJUNCTION WITH A CONJUNCT THAT IS EVALUATED AND FALSE CANNOT BE
+  RESCUED BY COMPUTING THE OTHER CONJUNCT. BE's matched-random run, authorised at
+  R-513(C), CANNOT MAKE Q4 PASS -- False AND anything is False. The run stays
+  worth doing and its value is DIAGNOSTIC; but anyone reading R-513(A) as "the
+  incumbent half was never recorded" will read the pending result as potentially
+  COMPLETING the gate, and it cannot. ADJUDICATION IS THE COORDINATOR'S: the
+  register is theirs and rule 13 is theirs to apply. SECOND, SWEPT AND MARKED
+  RELAYED: R-513(E), THE FOURTH ORACLE FIRED AND THE ANSWER IS SELECTIVE. DE53's
+  1,309 exclusions are NOT distributionally like the 31,122 -- selective on
+  DURATION and SLUG, both AT THE PERMUTATION FLOOR (p 0.0025, 400 draws); median
+  duration 0.215 s excluded against 0.052 s retained; 37.1% of >=2 s generations
+  excluded against a 4.21% base rate, 69.6% of >=4 s, 76.7% of >=8 s, AND ALL
+  NINE >=16 s. THE EXCLUDED SET IS SYSTEMATICALLY THE LONG EXPOSURES, WHICH IS
+  WHERE ADVERSE SELECTION ACCUMULATES, so every arm number and the economics BE
+  is adjudicating sit on a population whose most consequential generations were
+  preferentially removed. THIRD: the provenance instrument now reads 466 flags,
+  7 CHECKED, 2 RELAYED, 457 UNMARKED, 0 findings -- and both of this round's
+  claims went in through it, the R-513 correction as CHECKED with what the
+  artifact said, the exclusion finding as RELAYED because DA ran it and I did
+  not. THAT DISTINCTION IS THE INSTRUMENT DOING ITS JOB ON ITS FIRST REAL ROUND.
+```

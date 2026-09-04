@@ -1,6 +1,67 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T13:08Z (MEM round 93) — **THE PROGRAMME HAS ITS FIRST
+Updated: 2026-09-04T13:14Z (MEM round 94) — **A COORDINATOR RULING I RECORDED
+TWO ROUNDS AGO IS WITHDRAWN, AND THE ECONOMIC NUMBER IS NOW VERIFIED.**
+
+### 1. In-band correction (rule 13): R-516(C)'s grid amendment is withdrawn
+
+My round-92 files carried it as a clean pre-draw declaration. **R-518 withdraws
+it, and the coordinator withdrew its own ruling.** Wrong three ways, **all found
+before a single draw**:
+
+| leg | prov |
+|---|---|
+| **The pool cannot supply the budget.** `arrival_n` 177,674 → budgets **8,883 / 17,767 / 26,651** against a preventable pool of **17,604** — **163 short at 10%, 9,047 short at 15%**, share **0.09908** | **CHECKED** — arithmetic is mine |
+| Where it cannot supply, the draw is a **point mass** with `p = 1/(n+1)` **by construction** — a floor manufactured by the design | RELAYED |
+| At 5% it is **2.4–3.8× easier** to beat, the preventable population's mean being negative | RELAYED |
+| **The one nobody saw:** Holm denominator **24 → 30**, **retrospectively killing Q1 and Q3** — this artifact's only surviving results | RELAYED |
+
+**What replaces it:** **UNRESTRICTED adjudicates**, the denominator **stays 24**,
+and everything else is **REPORTED-NOT-ADJUDICATED** under R-306's `COIN_SLICE`
+pattern.
+
+**The transferable reason, which is the part worth keeping:**
+**opportunity-matching sharpens a test only when the restricted population has
+positive expected value.** Here membership is itself a handicap —
+`conditional_cancel_value` **−1.6364c**, checked in round 90 — so **a uniform
+draw inside the preventable set is a worse policy than a uniform draw over
+everything**: 90.1% of everything is harmless zeros, **and zero beats −1.64**.
+**The restriction lowers the bar it was meant to raise.**
+
+### 2. The economic number is VERIFIED — my flag moves RELAYED → CHECKED
+
+**R-519: DA verified it at the artifact and the headline stands** — *market-making
+pays, cancelling does not*, fills leg, 12 windows, point estimate no interval —
+**with three descriptions corrected and no number touched.** That is **a second
+observation, not an agreement** (R-510(B)(3)): a verification that refuses three
+descriptions while upholding every figure is what a real one looks like.
+
+**The correction that matters for these files:** the reconciliation is an
+**equality everywhere**, *not* "equality at the 0-cancel arm and directional
+elsewhere" — **because both sides are over the arm's own fills.** The cause is
+that **`reference_tranche_markout_cents` holds the arm's markout**: a quantity
+wearing another's name.
+
+**That is now a class — second instance after `control_realised_min/max`
+(R-511(D)(i)) — and no checker this programme has can catch it:** the value is
+in-codomain, the citation resolves, the arithmetic is right, **and only the name
+lies.**
+
+**And one line that answers the corroboration question I raised last round:**
+`maker_pnl_cents == post_fill_markout_cents` is **not exact** — the two differ by
+**~4e-12, from two different producers** — and **that is better evidence than
+bit-identity**, because identical bits are consistent with **copying** while
+float-noise agreement can only come from two independent computations. **The
+signature of independence is agreement to tolerance, not to the bit.**
+
+**Standing rule 11** (a verification you performed yourself outranks a seat's
+report; adjudicate at the artifact) **was already recorded in round 92** and is
+not duplicated here.
+
+**Instrument:** 478 flags, **13 CHECKED**, 8 RELAYED, 457 UNMARKED, 0 findings.
+
+
+Previously (MEM round 93) — 2026-09-04T13:08Z — **THE PROGRAMME HAS ITS FIRST
 ABSOLUTE ECONOMIC NUMBER, AND IT IS RECORDED NON-AUTHORITATIVE ON PURPOSE.**
 
 **R-517: market-making pays and cancelling does not, on the fills leg.**
@@ -546,6 +607,22 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T13:14Z — MEM round 94: the grid amendment is withdrawn, and the economic number is verified
+>
+> **Full entry is the `Updated:` block at the top.** **R-518 withdraws R-516(C)** —
+> the preventable pool **cannot supply the budget** (163 short at 10%, **9,047 at
+> 15%**, checked here), becomes a **point mass** with `p = 1/(n+1)` by
+> construction, is **easier** to beat at 5%, and would have moved Holm **24 → 30
+> and retrospectively killed Q1 and Q3**. **UNRESTRICTED adjudicates; denominator
+> stays 24.** Keep the reason, not just the withdrawal: **opportunity-matching
+> sharpens a test only if the restricted set pays.** And **R-519**: DA verified
+> the economic number at the artifact, **headline stands**, three descriptions
+> corrected, no number touched — `reference_tranche_markout_cents` **holds the
+> arm's markout**, a quantity wearing another's name, now a **class**.
+>
+> ---
+
 
 > ### 2026-09-04T13:08Z — MEM round 93: the first absolute economic number, recorded non-authoritative on purpose
 >

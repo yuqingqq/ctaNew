@@ -4,6 +4,52 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T13:14Z (MEM ROUND 94 -- SHORT. A WITHDRAWAL OF A COORDINATOR RULING
+  I RECORDED TWO ROUNDS AGO, AND THE ECONOMIC NUMBER IS NOW VERIFIED.)
+  FIRST, A CORRECTION IN BAND TO WHAT THIS FIELD SAID ONE ROUND AGO (rule 13):
+  R-516(C)'s GRID AMENDMENT IS WITHDRAWN AT R-518 AND THE COORDINATOR WITHDREW
+  ITS OWN RULING. My round-92 files carried it as a clean pre-draw declaration.
+  It was wrong THREE WAYS, ALL FOUND BEFORE A SINGLE DRAW. I CHECKED THE FIRST
+  MYSELF: arrival_n is 177,674, so budgets of 5/10/15% are 8,883 / 17,767 /
+  26,651 against a preventable pool of 17,604 -- 163 SHORT AT 10% AND 9,047 SHORT
+  AT 15%, share 0.09908. RELAYED: where it cannot supply the budget the draw is a
+  POINT MASS with p = 1/(n+1) BY CONSTRUCTION -- a floor manufactured by the
+  design; at 5% it is 2.4-3.8x EASIER to beat because the preventable
+  population's mean is NEGATIVE; and THE ONE NOBODY SAW, it would have moved the
+  HOLM DENOMINATOR FROM 24 TO 30 AND RETROSPECTIVELY KILLED Q1 AND Q3, this
+  artifact's ONLY surviving results. UNRESTRICTED ADJUDICATES, THE DENOMINATOR
+  STAYS 24, and everything else is REPORTED-NOT-ADJUDICATED under R-306's
+  COIN_SLICE pattern. AND THE TRANSFERABLE REASON, WHICH IS THE PART WORTH
+  KEEPING: OPPORTUNITY-MATCHING SHARPENS A TEST ONLY WHEN THE RESTRICTED
+  POPULATION HAS POSITIVE EXPECTED VALUE. Here membership is itself a handicap --
+  conditional_cancel_value -1.6364c, which I checked in round 90 -- so a uniform
+  draw INSIDE the preventable set is a WORSE policy than a uniform draw over
+  everything: 90.1% of everything is harmless zeros AND ZERO BEATS -1.64. The
+  restriction LOWERS the bar it was meant to raise.
+  SECOND: THE ECONOMIC NUMBER IS VERIFIED AND MY FLAG IS UPGRADED FROM RELAYED TO
+  CHECKED. R-519: DA verified it AT THE ARTIFACT and the HEADLINE STANDS --
+  MARKET-MAKING PAYS, CANCELLING DOES NOT, fills leg, 12 windows, point estimate
+  no interval -- with THREE DESCRIPTIONS CORRECTED AND NO NUMBER TOUCHED. THAT IS
+  A SECOND OBSERVATION AND NOT AN AGREEMENT (R-510(B)(3)): a verification that
+  refuses three descriptions while upholding every figure is what a real one
+  looks like. THE CORRECTION THAT MATTERS FOR THESE FILES: the reconciliation is
+  an EQUALITY EVERYWHERE, not "equality at the 0-cancel arm and directional
+  elsewhere", because BOTH SIDES ARE OVER THE ARM'S OWN FILLS -- and the cause is
+  that reference_tranche_markout_cents HOLDS THE ARM'S MARKOUT, A QUANTITY
+  WEARING ANOTHER'S NAME. THAT IS NOW A CLASS, SECOND INSTANCE AFTER
+  control_realised_min/max (R-511(D)(i)), AND NO CHECKER THIS PROGRAMME HAS CAN
+  CATCH IT: the value is in-codomain, the citation resolves, the arithmetic is
+  right, and ONLY THE NAME LIES. AND ONE LINE THAT ANSWERS THE CORROBORATION
+  QUESTION I RAISED LAST ROUND: maker_pnl_cents == post_fill_markout_cents is NOT
+  exact -- they differ by ~4e-12 FROM TWO DIFFERENT PRODUCERS -- and THAT IS
+  BETTER EVIDENCE THAN BIT-IDENTITY, because identical bits are consistent with
+  COPYING while float-noise agreement can only come from two independent
+  computations. The signature of independence is agreement TO TOLERANCE, not to
+  the bit. STANDING RULE 11 (a verification you performed yourself outranks a
+  seat's report; adjudicate at the artifact) WAS ALREADY RECORDED IN ROUND 92 AND
+  IS NOT DUPLICATED HERE. INSTRUMENT: 478 flags, 13 CHECKED, 8 RELAYED, 457
+  UNMARKED, 0 findings.
+  PRIOR:
   2026-09-04T13:08Z (MEM ROUND 93 -- SHORT. THE PROGRAMME HAS ITS FIRST ABSOLUTE
   ECONOMIC NUMBER, AND IT IS RECORDED NON-AUTHORITATIVE ON PURPOSE.) R-517:
   MARKET-MAKING PAYS AND CANCELLING DOES NOT, ON THE FILLS LEG. Baseline
@@ -93,48 +139,6 @@ updated: >-
   CORRECTION VERIFIED ON A SAMPLE OF TWO IS STILL A CLAIM ABOUT A POPULATION.
   Nothing of mine turns on it -- I read the register with line RANGES. INSTRUMENT:
   472 flags, 10 CHECKED, 5 RELAYED, 457 UNMARKED, 0 findings.
-  PRIOR:
-  2026-09-04T12:46Z (MEM ROUND 91 -- A CORRECTION TO R-513(A), ESTABLISHED AT THE
-  ARTIFACT AND AT THE PRODUCING CODE, ON THE ONE FIELD THAT DECIDES WHETHER THE
-  RUN NOW IN FLIGHT CAN CHANGE ANYTHING.) R-513(A) records, as a correction FROM
-  BE ACCEPTED BY THE COORDINATOR, that Q4's increment_beats_incumbent is None --
-  "never recorded" rather than "evaluated and lost". THE ARTIFACT AND THE CODE
-  BOTH SAY FALSE. (i) I swept every JSON under data/pm_5min/derived: EXACTLY ONE
-  artifact carries the key, at SIX sites, distinct value set {False}; there is no
-  artifact anywhere in which it is None. The two superseded iter011 variants do
-  not carry the key AT ALL -- the likeliest mechanism, since .get() on an ABSENT
-  key returns None, which is R-505's own codomain collision arriving inside a
-  correction about codomains. STATED AS A CANDIDATE MECHANISM, NOT A FINDING: I
-  cannot see which file BE read. (ii) phase2_iter011_run.py:4648 returns
-  {"increment_beats_incumbent": null_ok, "matched_random": None} with
-  null_ok = None if (holm is None or p is None) else bool(holm < 0.05) at :4633,
-  so the first is None ONLY when the p-values are missing and the second is a
-  HARDCODED None; I reproduced bool(holm_p < 0.05) = False from each cell's own
-  stored holm_p (0.119940 / 0.249875 / 0.359820 x3 / 0.446277). (iii) R-513(A)
-  CONTRADICTS ITSELF IN THE SAME PARAGRAPH: it accepts "never recorded" and then
-  argues incumbent_counterpart_computed is true and "holm_p IS the
-  incumbent-increment null and it fails in all six" -- which is exactly what
-  False MEANS. THE CONSEQUENCE, AND THE REASON THIS DID NOT WAIT FOR THE NEXT
-  ROUND: A CONJUNCTION WITH A CONJUNCT THAT IS EVALUATED AND FALSE CANNOT BE
-  RESCUED BY COMPUTING THE OTHER CONJUNCT. BE's matched-random run, authorised at
-  R-513(C), CANNOT MAKE Q4 PASS -- False AND anything is False. The run stays
-  worth doing and its value is DIAGNOSTIC; but anyone reading R-513(A) as "the
-  incumbent half was never recorded" will read the pending result as potentially
-  COMPLETING the gate, and it cannot. ADJUDICATION IS THE COORDINATOR'S: the
-  register is theirs and rule 13 is theirs to apply. SECOND, SWEPT AND MARKED
-  RELAYED: R-513(E), THE FOURTH ORACLE FIRED AND THE ANSWER IS SELECTIVE. DE53's
-  1,309 exclusions are NOT distributionally like the 31,122 -- selective on
-  DURATION and SLUG, both AT THE PERMUTATION FLOOR (p 0.0025, 400 draws); median
-  duration 0.215 s excluded against 0.052 s retained; 37.1% of >=2 s generations
-  excluded against a 4.21% base rate, 69.6% of >=4 s, 76.7% of >=8 s, AND ALL
-  NINE >=16 s. THE EXCLUDED SET IS SYSTEMATICALLY THE LONG EXPOSURES, WHICH IS
-  WHERE ADVERSE SELECTION ACCUMULATES, so every arm number and the economics BE
-  is adjudicating sit on a population whose most consequential generations were
-  preferentially removed. THIRD: the provenance instrument now reads 466 flags,
-  7 CHECKED, 2 RELAYED, 457 UNMARKED, 0 findings -- and both of this round's
-  claims went in through it, the R-513 correction as CHECKED with what the
-  artifact said, the exclusion finding as RELAYED because DA ran it and I did
-  not. THAT DISTINCTION IS THE INSTRUMENT DOING ITS JOB ON ITS FIRST REAL ROUND.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -6442,8 +6446,64 @@ flags:
     a single-producer number is recorded RELAYED, which understates my read and
     is the safe direction.
 
+  GRID_AMENDMENT_WITHDRAWN_the_preventable_pool_cannot_supply_the_budget: >-
+    SUPERSEDES IN BAND (rule 13) WHAT I RECORDED ONE ROUND AGO. My round-92 files
+    carried R-516(C)'s grid amendment as a clean pre-draw declaration -- both
+    pools declared, both run, both reported. R-518 WITHDRAWS IT, AND THE
+    COORDINATOR WITHDREW ITS OWN RULING. Wrong three ways, ALL FOUND BEFORE A
+    SINGLE DRAW. (i) THE POOL CANNOT SUPPLY THE BUDGET, AND I CHECKED THIS
+    ARITHMETIC MYSELF: arrival_n is 177,674 at the artifact, so the budgets are
+    8,883 / 17,767 / 26,651 at 5/10/15% against a preventable pool of 17,604 --
+    163 SHORT AT 10% AND 9,047 SHORT AT 15%, with the preventable share
+    0.09908033814739355. (ii) Where it cannot supply the budget the draw becomes
+    a POINT MASS and p = 1/(n+1) BY CONSTRUCTION -- a floor manufactured by the
+    design, not measured. (iii) At 5% it is 2.4-3.8x EASIER to beat, because the
+    preventable population's mean is NEGATIVE. (iv) AND THE ONE NOBODY SAW: it
+    would have pushed the HOLM DENOMINATOR FROM 24 TO 30 AND RETROSPECTIVELY
+    KILLED Q1 AND Q3 -- this artifact's ONLY surviving results. WHAT REPLACES IT:
+    UNRESTRICTED ADJUDICATES and the denominator STAYS 24; everything else is
+    REPORTED-NOT-ADJUDICATED under the COIN_SLICE pattern from R-306. Items (ii),
+    (iii), (iv) and the pool figure 17,604 are RELAYED from R-518; the shortfall
+    arithmetic is mine.
+  OPPORTUNITY_MATCHING_SHARPENS_A_TEST_ONLY_IF_THE_RESTRICTED_SET_PAYS: >-
+    RELAYED FROM R-518, AND IT IS THE TRANSFERABLE HALF -- record the reason, not
+    just the withdrawal. OPPORTUNITY-MATCHING SHARPENS A TEST ONLY WHEN THE
+    RESTRICTED POPULATION HAS POSITIVE EXPECTED VALUE. The intuition that
+    restricting a null's pool to "the actions that could have mattered" makes it
+    a harder bar is CORRECT ONLY UNDER THAT CONDITION, and it fails here: being
+    in the preventable set is BAD ON AVERAGE (conditional_cancel_value
+    -1.6364024437050162, CHECKED by me in round 90 and reproduced bit-exact from
+    phase2_iter011.py:266), so A UNIFORM DRAW INSIDE THE PREVENTABLE SET IS A
+    WORSE POLICY THAN A UNIFORM DRAW OVER EVERYTHING. 90.1% of everything is
+    harmless zeros, AND ZERO BEATS -1.64. The restriction therefore LOWERS the
+    bar it was meant to raise. This generalises past this programme: a
+    "more relevant" comparison population is only a stronger control if
+    membership in it is not itself a handicap.
+  A_QUANTITY_WEARING_ANOTHER_NAME_recurs_reference_tranche_markout_cents: >-
+    RELAYED FROM R-519. reference_tranche_markout_cents HOLDS THE ARM'S OWN
+    MARKOUT -- a quantity wearing another quantity's name, WHICH IS THE SAME
+    SHAPE AS control_realised_min/max (R-511(D)(i), where the emitted field held
+    the signed-gap extremes and not the control's realisation). SECOND INSTANCE,
+    SO IT IS A CLASS: a field name that describes a DIFFERENT quantity from the
+    one it carries is not caught by any checker this programme has, because the
+    value is in-codomain, the citation resolves and the arithmetic is right --
+    only the NAME lies. It is what made the reconciliation get described wrongly:
+    it is an EQUALITY EVERYWHERE, not "equality at the 0-cancel arm and
+    directional elsewhere", BECAUSE BOTH SIDES ARE OVER THE ARM'S OWN FILLS. The
+    coordinator relayed the wrong version to the USER and has corrected it.
+  NEAR_IDENTITY_FROM_TWO_PRODUCERS_BEATS_BIT_IDENTITY_FROM_ONE: >-
+    RELAYED FROM R-519, AND IT ANSWERS THE CORROBORATION QUESTION I RAISED ONE
+    ROUND AGO WITH A CONCRETE INSTANCE. maker_pnl_cents == post_fill_markout_cents
+    is NOT exact: the two differ by ~4e-12, and they come from TWO DIFFERENT
+    PRODUCERS. THAT IS BETTER EVIDENCE THAN BIT-IDENTITY, because identical bits
+    would be consistent with one value having been COPIED from the other, while a
+    float-noise disagreement can only arise from two independent computations
+    that agree. This is the corroboration axis in one line: what makes a number
+    trustworthy is HOW MANY INDEPENDENT PRODUCERS STAND BEHIND IT, and the
+    signature of independence is agreement TO TOLERANCE rather than to the bit.
+
 focus: >
-  As-of 2026-09-04T13:08Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T13:14Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -6881,6 +6941,16 @@ focus: >
   NO INTERVAL -- A DIRECTION, NOT A VERDICT, AND IT IS PENDING DA's INDEPENDENT
   VERIFICATION. Standing rules 12 (a negative existence claim carries an as-of)
   and 13 (cited artifacts are committed beside their producing code) are in force.
+  ROUND 94 -- THE ECONOMIC NUMBER IS VERIFIED (R-519, DA at the artifact, three
+  descriptions corrected and no number touched), so R-517's headline stands:
+  MARKET-MAKING PAYS AND CANCELLING DOES NOT, fills leg, 12 windows, point
+  estimate and no interval. AND R-516(C)'s GRID AMENDMENT IS WITHDRAWN (R-518):
+  the preventable pool CANNOT SUPPLY THE BUDGET (163 short at 10%, 9,047 at 15%
+  -- checked here), becomes a point mass with p = 1/(n+1) by construction, is
+  EASIER to beat at 5%, and would have moved Holm 24 -> 30 and retrospectively
+  killed Q1 and Q3. UNRESTRICTED ADJUDICATES; denominator stays 24; everything
+  else REPORTED-NOT-ADJUDICATED. Keep the reason, not just the withdrawal:
+  OPPORTUNITY-MATCHING SHARPENS A TEST ONLY IF THE RESTRICTED SET PAYS.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -7013,12 +7083,22 @@ flag_provenance:
     prov: RELAYED
     from: R-514(C)/(D) (DA's parser fix and its own n=2 self-correction)
   FIRST_ABSOLUTE_ECONOMIC_NUMBER_making_pays_cancelling_does_not_PENDING_VERIFICATION:
-    prov: RELAYED
-    from: >-
-      R-517 (single producer, DE; with DA for independent verification. MEM read
-      the committed artifact and every figure reproduces, but reading a
-      single-producer artifact is not corroboration, so this is recorded RELAYED
-      on the coordinator's instruction until DA reports)
+    prov: CHECKED
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T125340Z.json
+    as_of: 2026-09-04T13:14Z
+    said: >-
+      cancellation_economics.baseline reads spread_capture_cents
+      10566.951030999997, adverse_selection_cents -1968.1921814999978,
+      maker_pnl_cents 8598.758849499998 at n_cancels 0; HAZARD_OVER_SKEWED_REF
+      spread_forgone 198.68613350000123 against adverse_saved 186.13039249999997
+      and CONDVALUE_X_SKEW 2933.582215499998 against 1979.664097999997, both with
+      adverse_saved_exceeds_spread_forgone false; population reads windows 12,
+      coin btc, latency_ms 250, ADMITTED 12, BINANCE_GAP_EXCLUDED 3. UPGRADED
+      FROM RELAYED AT R-519: DA verified it independently AT THE ARTIFACT and
+      REFUSED THREE DESCRIPTIONS while upholding every number, which is a second
+      observation rather than an agreement (R-510(B)(3)). The pending-verification
+      condition in the flag NAME is now discharged; the name is left unchanged
+      because a frozen-in name is provenance and renaming it would lose the trail.
   CHECKED_DOES_NOT_MEAN_CORROBORATED_my_instruments_vocabulary_is_too_coarse:
     prov: CHECKED
     artifact: live/pm_research/mem_flag_provenance.py
@@ -7028,6 +7108,25 @@ flag_provenance:
       authority rule makes CHECKED alone authoritative; there is no field
       anywhere in it recording how many independent producers stand behind a
       checked claim, so provenance and corroboration cannot be told apart
+  GRID_AMENDMENT_WITHDRAWN_the_preventable_pool_cannot_supply_the_budget:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json
+    as_of: 2026-09-04T13:14Z
+    said: >-
+      arrival_n is 177674, so budgets of 5/10/15% are 8883 / 17767 / 26651
+      against a preventable pool of 17604 -- 163 short at 10% and 9047 short at
+      15%, preventable share 0.09908033814739355. The withdrawal itself, the
+      point-mass and easier-at-5% legs, and the Holm 24 -> 30 consequence are
+      relayed from R-518
+  OPPORTUNITY_MATCHING_SHARPENS_A_TEST_ONLY_IF_THE_RESTRICTED_SET_PAYS:
+    prov: RELAYED
+    from: R-518 (the reviewer's argument, adopted by the coordinator; the supporting -1.6364c is CHECKED separately)
+  A_QUANTITY_WEARING_ANOTHER_NAME_recurs_reference_tranche_markout_cents:
+    prov: RELAYED
+    from: R-519 (DA's finding; MEM did not open the field)
+  NEAR_IDENTITY_FROM_TWO_PRODUCERS_BEATS_BIT_IDENTITY_FROM_ONE:
+    prov: RELAYED
+    from: R-519 (DA measured the ~4e-12 disagreement; MEM did not)
 
 standing_rules:
   - "STANDING RULE 12 (R-517, the coordinator's rule about its own claims) --
