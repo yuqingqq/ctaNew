@@ -1,5 +1,5 @@
 {
- "as_of_utc": "2026-09-03T05:55:57Z",
+ "as_of_utc": "2026-09-04T11:27:06Z",
  "carrying_commit_note": "the commit that carries this file is a descendant of generated_at_head; ask git for this path's log rather than reading it from a field written before the commit existed",
  "cells": [
   "BY_COUNT/NO_OPERATING_POINT/btc/10%",
@@ -58,7 +58,7 @@
    "FROZEN_FROM_A_CONSUMED_DAY"
   ]
  },
- "generated_at_head": "b717340f750c26588f52cc8225c35eee2006885c",
+ "generated_at_head": "ff44ff65aafb1908b7e487d00d3e3029ee920440",
  "growth_vs_single_convention": {
   "both_conventions_count": 18,
   "ratio": 1.5,
@@ -85,13 +85,19 @@
    "who": "the USER (rule 14)"
   },
   "sensitivity_arm_in_family": {
+   "STATUS": "RULED \u2014 the arm stays IN the family at 18 cells",
    "alternatives": [
     true,
     false
    ],
+   "consequence_for_multiplicity": "the denominator of 18 KNOWINGLY carries six cells that cannot be filled. Every Holm correction against it is therefore CONSERVATIVE -- it divides alpha further than the reportable cells require -- and it is NOT wrong. This was DECIDED, not overlooked",
    "note": "R-497 (F)(2) calls it a declared sensitivity arm and says all cells are reported with Holm over the declared count; whether 'all cells' includes a never-selected arm is not settled by that sentence.",
    "question": "does the FROZEN_FROM_A_CONSUMED_DAY sensitivity arm consume alpha, or is it reported outside the family?",
-   "who": "the USER (rule 14)"
+   "ruled_by": "USER, 2026-09-04, relayed in the dispatch of BE round 38",
+   "ruled_what": "the operating-point fence stays pinned to ONE canonical verification artifact, so no FROZEN_FROM_A_CONSUMED_DAY operating point can pass it and the arm's six cells stay permanently NOT COMPUTED",
+   "the_arm_is_built_and_inert": "the operating point EXISTS at declarations/be_operating_point_declaration_SENSITIVITY_v1.json, derived from 08-29's consumed feed. It is committed and INERT: the fence refuses it by name. If the USER ever reverses the pin ruling the family completes IMMEDIATELY, with no rebuild and no new day",
+   "who": "the USER (rule 14)",
+   "why_the_pin_was_not_widened": "widening the admissibility guard to complete the family that needs it is the move the pin exists to prevent; BE declined to take it and the USER agreed"
   }
  },
  "protocol": "BE_FORWARD_FAMILY_DECLARATION_V1",

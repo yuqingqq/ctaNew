@@ -66,6 +66,32 @@ OPEN_FACTORS = {
                      "consume alpha, or is it reported outside the family?"),
         "alternatives": [True, False],
         "who": "the USER (rule 14)",
+        # RULED 2026-09-04. Kept as an OPEN_FACTORS entry rather than deleted
+        # because the alternatives and their counts are what make the ruling
+        # legible -- a reader must be able to see what was decided AGAINST.
+        "STATUS": "RULED — the arm stays IN the family at 18 cells",
+        "ruled_by": "USER, 2026-09-04, relayed in the dispatch of BE round 38",
+        "ruled_what": (
+            "the operating-point fence stays pinned to ONE canonical "
+            "verification artifact, so no FROZEN_FROM_A_CONSUMED_DAY "
+            "operating point can pass it and the arm's six cells stay "
+            "permanently NOT COMPUTED"),
+        "consequence_for_multiplicity": (
+            "the denominator of 18 KNOWINGLY carries six cells that cannot be "
+            "filled. Every Holm correction against it is therefore "
+            "CONSERVATIVE -- it divides alpha further than the reportable "
+            "cells require -- and it is NOT wrong. This was DECIDED, not "
+            "overlooked"),
+        "the_arm_is_built_and_inert": (
+            "the operating point EXISTS at declarations/"
+            "be_operating_point_declaration_SENSITIVITY_v1.json, derived from "
+            "08-29's consumed feed. It is committed and INERT: the fence "
+            "refuses it by name. If the USER ever reverses the pin ruling the "
+            "family completes IMMEDIATELY, with no rebuild and no new day"),
+        "why_the_pin_was_not_widened": (
+            "widening the admissibility guard to complete the family that "
+            "needs it is the move the pin exists to prevent; BE declined to "
+            "take it and the USER agreed"),
         "note": ("R-497 (F)(2) calls it a declared sensitivity arm and says "
                  "all cells are reported with Holm over the declared count; "
                  "whether 'all cells' includes a never-selected arm is not "

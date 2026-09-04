@@ -981,9 +981,12 @@ USER_ADMISSIONS_BY_DAY = {
                          "judged; the day's data is unchanged and that is "
                          "checked here rather than inherited from the "
                          "dispatch"),
-        "scope": ("THIS DAY ONLY. `assert_day_closed_and_attributed` is "
-                  "unchanged and still refuses this verdict when called "
-                  "without the admission"),
+        # The prose here used to ASSERT that the ordinary gate still refuses
+        # this verdict. That is a verdict about code behaviour that the
+        # artifact did not compute, so it would have kept reading true after
+        # any widening of the gate. It is now MEASURED at emission time in
+        # `ordinary_gate_without_this_admission` and the claim is gone.
+        "scope": "THIS DAY ONLY",
     },
 }
 
@@ -1165,6 +1168,26 @@ def reverdict_data_unchanged(a: dict) -> dict:
             "predecessor_sha256": a["predecessor_sha256"]}
 
 
+def _ordinary_gate_outcome(day: str) -> dict:
+    """What `assert_day_closed_and_attributed` does with NO admission, run.
+
+    Not asserted in prose: called. An artifact that SAYS the ordinary gate
+    still refuses would go on saying it after the gate stopped refusing."""
+    try:
+        assert_day_closed_and_attributed(day)
+        return {"outcome": "ADMITTED",
+                "measured_at_emission": True,
+                "meaning": ("the ordinary gate accepts this day WITHOUT the "
+                            "admission, so the admission is not what makes it "
+                            "scoreable")}
+    except ForwardDayRefused as e:
+        return {"outcome": "REFUSED", "measured_at_emission": True,
+                "refusal": str(e)[:180],
+                "meaning": ("the ordinary gate refuses this day without the "
+                            "admission, so the admission is load-bearing and "
+                            "is not decoration")}
+
+
 def admitted_verdict(day: str) -> dict | None:
     """Recover and VERIFY the admitted bytes at the blob, now.
 
@@ -1221,6 +1244,13 @@ def admitted_verdict(day: str) -> dict | None:
                 "does NOT accrue and refuse the 09:36Z one that says it does"),
             "rule_change_not_data_change": ev,
             "premise_checked_not_trusted": driver_reads_no_era_field(),
+            # RULE 10, and the shape that put three of today's errors in front
+            # of the USER: do not write a verdict beside a computed field.
+            # This RUNS the ordinary gate without the admission and records
+            # what it actually did, so the artifact cannot keep claiming a
+            # refusal that a later edit removed.
+            "ordinary_gate_without_this_admission":
+                _ordinary_gate_outcome(day),
         }}
 
     raw = _git_blob(a["blob_commit"], a["blob_path"])
