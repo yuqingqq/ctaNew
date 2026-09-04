@@ -1,57 +1,100 @@
 # RESULTS — P-2026-003 Polymarket crypto 5-min
 
-Consolidated 2026-09-03T03:23Z, **substantially rewritten 2026-09-03T08:29Z**
-after a day in which the programme's own forward path was found unable to
-produce its decision metric. **Single writer: the coordinator.** This
+Consolidated 2026-09-03T03:23Z, substantially rewritten 2026-09-03T08:29Z,
+and **reliability-corrected 2026-09-04T09:59Z** after an independent review of
+the economic read and its profitability script. **Single writer: the
+coordinator.** This
 file is the compact, artifact-anchored answer to "what has been tested and what
 came out of it". `STATUS.yml` and `workspace/HANDOFF.md` remain the running
 state; `COORDINATION.md` remains the append-only register. Read this first, then
 `HANDOFF.md` for the live detail.
 
-Every number below was read from the artifact named beside it during this
-consolidation, not from a seat report or from an earlier summary. Where a
-previous document disagrees, this file says so explicitly and the disagreement
-is a **correction**, not a restatement.
+Primary result numbers below are retained from the named artifacts used in the
+consolidation. The 2026-09-04 reliability classification, code-path evidence and
+independent checks are recorded separately in
+`RESULT_RELIABILITY_AUDIT_2026-09-04.md`. Where a previous document disagrees,
+this file says so explicitly and the disagreement is a **correction**, not a
+restatement.
 
 ---
 
-## 1. The bottom line — the first economic results, and they are negative
+## 1. Bottom line — credible negative diagnostic; profitability withdrawn
 
-**The candidate does not beat the incumbent, and the book already makes money
-without it.** Three days have now been read: **08-29** as a development read
-(USER-withdrawn from the race at R-500, ratified at R-502) and **09-01 / 09-02**
-as a **pre-declared interim** whose hypothesis was fixed at `eeb02ba` before
-either day was opened.
+**The candidate has not demonstrated an improvement over the incumbent.** The
+narrow result is reproducible: on the two pre-declared economic read days,
+**09-01 and 09-02**, BTC is negative at all three equal-action-count operating
+points. The 08-29 read is development evidence and does not upgrade that
+two-day result to validation.
 
-**At matched volume the candidate loses on btc in every cell tested** — nine
-net-cents cells across the three days and pooled, and **rho** (adverse drift
-avoided per unit of good flow forfeited) **lower in all twelve**. eth is a wash.
-Holm over the declared denominator: **nothing survives**, the correct outcome
-for a one-sided candidate-beats-incumbent test.
+`MATCHED_VOLUME` is the repository label, but it matches the **number of cancel
+actions**, not shares or notional. It is also a **model-vs-model comparison**:
+the candidate and incumbent are both linear harmful-flow predictors over the
+same 54 Polymarket plus six fine-flow inputs. The candidate is the frozen
+`PM_PLUS_FINE` fit; the incumbent is the per-coin,
+generation-reweighted `INCUMBENT_REWEIGHTED_ONLY` fit. It is not a no-prediction
+or no-cancel benchmark.
 
-**The headline says the opposite and would have misled.** BY_THRESHOLD reads
-**+15,556 cents pooled on btc, at the permutation floor**. The exact
-decomposition — identity checked, residual 0 — shows the entire positive is the
-**volume term** with a **negative quality term throughout**: one theta calibrated
-on the candidate's training distribution was applied to both arms, so the
-candidate cancels ~3× as often and neither arm delivers its nominal budget.
-**BY_THRESHOLD is not the decision metric.**
+| population | 5% | 10% | 15% |
+|---|---:|---:|---:|
+| 09-01 | **-789.12c** | **-2,016.71c** | **-1,476.01c** |
+| 09-02 | **-227.60c** | **-1,237.84c** | **-2,975.36c** |
+| pooled | **-1,012.68c** | **-3,038.75c** | **-3,949.76c** |
 
-**Profitability, with its denominator and its baseline** (3 days, both coins):
+A negative value is candidate minus incumbent five-second gross cancel value:
+for example, pooled 10% means the candidate captured **$30.39 less** avoided
+adverse markout than the equal-count incumbent. It is not realised account P&L.
+The declaration ordering was correct and an independent recomputation matched
+all nine cells exactly.
 
-| | |
-|---|---|
-| filled notional | **$226,594** ($75,531/day) |
-| **no-cancel baseline book** | **$1,801.29** — $600.43/day, **0.7949% on filled notional** |
-| best cancel overlay (15% budget) | **+$620.58** — **+34.5% on the book** |
+**Inference remains preliminary.** Only two pre-declared days have been read;
+no day-cluster interval is claimable. The reported p-values use window-level
+sign flips, which the declaration itself labels weaker/optimistic relative to
+the ruled UTC-day cluster. A high one-sided p for `candidate > incumbent` means
+the candidate failed to show a win; it is not proof that the candidate is
+permanently worse. In addition, the incumbent's equal-count cutoff is selected
+retrospectively from the full evaluated population. This isolates descriptive
+ranking quality but is not an executable operating point.
 
-**Three limits, never to be quoted apart from the numbers:** it is **5-second
-markout P&L**, not realised P&L; it is **gross**, and the venue **does** charge
-fees — **911 of 1,957 real on-chain `OrderFilled` events carry a non-zero fee,
-while the repo's `fee == 0` check is a FIXTURE, not evidence**; and the return is
-on **filled notional, not capital**, because quoted size is absent from the row.
+**BY_THRESHOLD remains a misleading headline.** It reads strongly positive on
+BTC because one candidate-calibrated theta makes the candidate cancel about
+three times as often. Its exact decomposition assigns more than the entire
+positive increment to **volume**, with the equal-count **quality** term negative
+throughout. It is not evidence that the candidate ranks cancellations better.
 
-**The race has not advanced: G = 2 of 5.** 09-03 did not accrue — see §3.
+### Profitability correction — all prior dollar/return claims withdrawn
+
+The following previously reported labels are **not reliable and must not be
+quoted as profitability**:
+
+| withdrawn label | previously reported value |
+|---|---:|
+| filled notional | $226,594 ($75,531/day) |
+| no-cancel baseline P&L | $1,801.29 ($600.43/day) |
+| return on filled notional | 0.7949% |
+| best cancel overlay | +$620.58 (+34.5%); $807/day combined |
+
+The scratch `prof.py` calculation retains only the first row for each
+`(slug, side, gen)` action, then treats `preventable_shares` as all fill shares.
+But the producer explicitly defines `preventable_shares` as only the tranches
+inside the one-second action horizon and at or after the 50 ms latency cutoff;
+earlier fills are `stale_shares`, and later fills are outside the population.
+The result is neither total filled notional nor a whole-book no-cancel baseline,
+and the baseline and overlay can use different rows of a multi-row action.
+Fees, realised exits/settlement, quote size, inventory and capital are also
+absent. Therefore **P003 currently has no reliable profitability estimate.**
+
+There is also a durability gap: `matched_volume()` has no committed caller, and
+the canonical `be_read_cells.compute()` still emits only `BY_THRESHOLD` and
+`BY_COUNT`; the interim and profitability reports were assembled by scratch
+scripts. The arithmetic is reproducible today, but the result path is not yet a
+stable in-repo pipeline. Full audit: `RESULT_RELIABILITY_AUDIT_2026-09-04.md`.
+
+**Current race state: G = 3 of 5.** R-503 re-verdicted 09-03 on its covered
+complement (287/288 windows, with 15:20Z named and counted), so 09-01, 09-02 and
+09-03 accrue. This rule was applied after the 09-03 coverage failure was seen;
+that provenance is stamped in the artifact. 09-03 has not become a third
+economic read, and its superseding verdict lost the scheduled-unit attribution
+prefix—an open provenance issue. See §3.
 
 ---
 
@@ -135,36 +178,34 @@ prose.
 ## 3. Forward race — the only path from development evidence to validation
 
 **Bar:** ≥5 complete UTC days, each FINISHED ∧ AFTER ∧ ADMISSIBLE ∧ HEALTHY.
-**State: G = 2 of 5** (R-496, 2026-09-03 — the USER ruled the 09-02 accrual).
+**State: G = 3 of 5** after the R-503 superseding verdict for 09-03
+(`659ed66`, 2026-09-04).
 
 Freeze epoch `1787897340` = **2026-08-28T06:09:00Z**. Every day below is read
 from its own `da_dayverdict_<day>.json`, `verdict_split` and `era_admission`.
 
-| day | post-freeze | era | quality | accrues | note |
-|---|---|---|---|---|---|
-| 08-28 | **false** | — | false | no | freeze falls inside the day |
-| **08-29** | true | `clob_v3_1`, **pure** | **true** | no — era ruled | **the free read.** Healthy, out-of-sample, permanently non-accruable for a *ruled collector* reason: *"era admission is a ruled property of the collector, not a measured property of the feed"* |
-| 08-30 | true | `clob_v3_1`+`clob_v4`, boundary 05:30:02Z | false | no | labelled secondary only, never pooled |
-| 08-31 | **false** | `clob_v4`+`clob_v4_1`, boundary 22:00:02Z | false | no | BTC P1 298.52 s/hr against a 120 s bar |
-| **09-01** | true | `clob_v4_1` | true | **ACCRUED** | first day the race ever counted; four conjuncts recomputed, not read back |
-| **09-02** | true | `clob_v4_1` | true | **ACCRUED** | R-496, the USER's call on R-486 (6); first **governed** verdict |
-| **09-03** | true | `clob_v4_1` | **NOT EVALUABLE** | **no** | **287 of 288 windows era-covered.** One missing 5-minute window refused the whole day *before its quality was evaluated* — on measured rates of btc **95.6 s/hr** against a bar of 120 and eth **9.0**, which would have passed. Not a timing lag: 09-01 and 09-02 both read 288/288 at the same 00:06:01 stamp |
-| 09-04 → | open | — | — | open | earliest G=5 now **2026-09-07 at the soonest**, and only if every remaining day accrues
+| day | current race disposition | note |
+|---|---|---|
+| **08-29** | no — **withdrawn** | Passes the four conjuncts, but R-500 deliberately excludes it from G; its read is development evidence on `clob_v3_1` |
+| 08-30 / 08-31 | no | mixed-era and/or quality failures; neither is decision-bearing |
+| **09-01** | **ACCRUED** | first race day; subsequently opened under the pre-declared interim |
+| **09-02** | **ACCRUED** | first governed verdict; subsequently opened under the pre-declared interim |
+| **09-03** | **ACCRUED under R-503** | 287/288 covered; 15:20Z is named and counted as accounted loss; BTC P1 95.61 s/hr against 120 |
+| 09-04 → | open | two more accruing days are required; earliest G=5 is the **2026-09-06T00:06Z** verdict if 09-04 and 09-05 accrue |
 
-**The coverage bar is brittle, and it is the USER's to set.** `coverage_observed`
-is `counts > 0 AND short <= 0` where `short = 288 − era_covered_windows`, so a
-day missing **one** window of 288 is refused before its quality is measured.
-09-03 was well inside every quality bar and did not accrue. If windows go
-missing at any regular rate, the race advances rarely — and the collectors are
-healthy (all four units active, writing continuously), so this is a bar
-question, not a collection question.
+**R-503 changed the coverage treatment, not the data.** A closed day may now be
+judged on its covered complement when at least the already-ruled 144-of-288
+floor is met. Missing windows are named and counted as accounted loss. For
+09-03 the complement is 287/288, so its previously unevaluable quality becomes
+evaluable and passes. The rule was adopted after this missing-window failure
+was observed; the artifact records that `prompted_by` provenance rather than
+presenting the change as neutral housekeeping.
 
-**The partial-data profitability read (R-496 (D)) spends none of this.** 08-29
-is post-freeze, era-pure and quality-passing yet can never accrue, so opening it
-consumes nothing the race was going to use — 09-01 and 09-02 stay **sealed**.
-The caveat is not a footnote: 08-29 runs on `clob_v3_1`, **two collector
-generations behind** the race's `clob_v4_1`; the read is out-of-sample in *time*
-and free in *race-days*, and is not measured on the surface the race uses.
+**Economic-read state is different from race accrual.** 08-29 was opened as a
+development read. 09-01 and 09-02 were then opened under the pre-declared
+interim and are consumed. 09-03's accrual does not by itself add another
+economic observation: it still must be scored, sealed, and governed by a later
+declared read before its economics can be opened.
 
 **09-02, at `data/pm_5min/derived/da_dayverdict_20260902.json`** (43,449 B,
 sha256 `6f283262df463957…`, `as_of` 2026-09-03T00:06:01.399Z, written by the
@@ -192,14 +233,11 @@ coins thin, 0 unjudgeable** (btc L1 0.138, longest thin run 40 windows; hype
 not inadmissible. The blackout mask artifact is `WRITTEN`, 7 coins, **251 masked
 windows**.
 
-**09-01 was scored.** `be_forward_day_receipt_20260901.json` — outcome
-**SCORED**, `as_of` 2026-09-02T13:24:05Z, **610,064 btc + 441,409 eth actions**,
-masking applied at supply (141 windows masked across 7 coins) so the blackout is
-excluded before rows are built and **counted**, never silently dropped.
-**The scores themselves are SEALED and have not been read** (rule 11: no
-forward metric is opened before ≥5 complete days). 09-02's receipt is a
-**REFUSAL** — "not closed by calendar", written 13:50:22Z, before the day
-closed; it will be re-run after the accrual call.
+**09-01 and 09-02 were scored and read under the interim declaration.** They are
+now consumed and cannot be reused as untouched forward validation. The 09-01
+receipt records **610,064 BTC + 441,409 ETH actions** with masking applied at
+supply (141 windows across seven coins), so exclusions were counted before rows
+were built. 09-03 remains an accrued race day, not an opened economic result.
 
 **Two unexplained outages remain on the record** (09-01): 00:00–01:05Z (65 min)
 and 22:45–23:35Z (50 min) at 0.01–2.2 % of median window content, on all seven
@@ -395,8 +433,8 @@ rounds.**
 
 ## 7. Open USER decisions — **one**, plus one queued
 
-**Seven rulings were taken on 2026-09-03.** Recorded here because several
-changed what earlier sections of this file said.
+**Seven rulings were taken on 2026-09-03, followed by R-503 on 2026-09-04.**
+Recorded here because several changed what earlier sections of this file said.
 
 | ruling | where | consequence |
 |---|---|---|
@@ -407,7 +445,8 @@ changed what earlier sections of this file said.
 | futility check: **configurable** | R-497 | parameterised, with a coordinator-added guard: a run refuses unless its config sits in a commit that provably predates the read |
 | pairing: **both, threshold primary** | R-497 | family 12 → **18**, enumerated (R-498) |
 | `_stream_tape_rows` drift: **ADMIT** | R-499 | conditionally — the condition is re-evaluated at run time and the run refuses if it fails |
-| **08-29 withdrawn from the race, kept readable** | R-500 | **spends the cleanest post-freeze day.** G stays 2; earliest G=5 stays 09-06 |
+| **08-29 withdrawn from the race, kept readable** | R-500 | **spends the cleanest post-freeze day.** G stayed 2 at that ruling; the current G=3 comes from 09-03, not from reversing this withdrawal |
+| uncovered windows judged as accounted loss on the covered complement | R-503 | 09-03 changes from unevaluable to accrued at 287/288; missing 15:20Z window named; G 2 → 3. The rule change records that 09-03 prompted it |
 
 **On the 08-29 withdrawal.** The day is *admissible and deliberately not
 entered* — two separable facts. The verdict stops asserting `era_admissible:
@@ -415,8 +454,10 @@ false` (made false by R-497) and carries the true one instead. **The withdrawal
 is recorded before any read and is binding after it**: re-admitting a day whose
 economics have been seen is selection on the outcome. The reviewer attacked
 removal, re-citation and day-substitution on a real git history; each refuses
-**by name**, and the guard is proved non-vacuous. **Its limit, stated:** binding
-against *edits*, not yet against *counting* (§4b, row 5).
+**by name**, and the guard is proved non-vacuous. The later DA25 repair wired
+`counts_toward_race` into the verdict checker and preflight, so the withdrawal
+now binds both the registry and the count: 08-29 remains eligible on the four
+conjuncts but does not accrue.
 
 | # | still open | status |
 |---|---|---|
