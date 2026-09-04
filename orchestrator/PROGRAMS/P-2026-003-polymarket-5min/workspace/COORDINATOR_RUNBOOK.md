@@ -138,6 +138,47 @@ entries appear and vanish during its rounds).
 
 ---
 
+## 4a. The counterfactual question (standing practice, R-509)
+
+Before accepting **any** token as evidence — a field, a number, a citation, a
+sentence beside a value — ask:
+
+> **Could this token have been produced with the claim FALSE?**
+> If yes, it is not evidence, whatever it is made of.
+
+That single question unifies every reading failure this programme has recorded.
+It is **practice, not a program**: do not try to build one checker for it,
+because what SETTLES the question differs by claim, and a checker can only
+consult one oracle.
+
+| claim is about | oracle — what must be consulted | instrument | status |
+|---|---|---|---|
+| a **value's production** | the function's **own source**, statically: compare the value set reachable on error paths against the set reachable on success paths | codomain check (`monotone None` not `True`; `rc None` not `127`) | **instrumented** |
+| **another document** | the **cited artifact** — nothing in the citing file can settle it | `entry_names_this_era`: resolve the cite AND check the cited text NAMES the subject | **instrumented, ONE table only** |
+| **behaviour** | a **running system** — neither source nor documents suffice | run the behaviour and record what it did (`fd0995c`) | **instrumented** |
+| a **population** | a **statistical comparison of excluded vs retained** | — | **NONE. Live instance: DE53's 4.21% exclusion** |
+| a **human ruling** | the ruling's author | citation check proves it EXISTS, never that it MEANS what is claimed | **not instrumentable; escalate** |
+
+Each oracle has a case the others are structurally blind to, so a merged
+checker misses most of the surface. If a single artifact is ever wanted, build
+a **router**: classify each claim-bearing token by which oracle settles it and
+**refuse a token whose oracle is NONE** — a claim no oracle can settle is
+precisely the one that gets believed.
+
+**Two corollaries the register paid for.**
+
+- **A citation check is not a claim check.** A `grep` landing on the right line
+  proves the line exists, never that it says what the citer said. R-232 carries
+  ZERO occurrences of `clob_v3_1`, and that cite kept 08-29 out of the race for
+  three days.
+- **Agreement between seats is evidence about the seats, not about the claim,
+  unless the seats read different SOURCES.** Independence is a property of the
+  sources, not of the readers. Three seats once produced one overstatement from
+  one summary; this is R-495's non-independence error (replicated statistics)
+  in a second domain (replicated citations).
+
+---
+
 ## 5. The standing duty and its `/loop` prompt
 
 The coordinator runs a self-paced loop: verify every landed filing at its
