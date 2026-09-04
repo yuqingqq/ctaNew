@@ -1,0 +1,34 @@
+{
+ "protocol": "BE_Q4_MATCHED_RANDOM_NULL_DECLARATION_V2",
+ "supersedes": "be_q4_matched_random_null_v1.json",
+ "why_superseded": "v1 justified n=500 against a 6-cell Q4 sub-family. The declared Holm denominator is 24 (verified at the artifact: family.holm_denominator = 24, declared_family.n_cells = 24, 4 heads x 6 cells). Under 24 the threshold is 0.05/24 = 0.0020833 and n=500's floor of 0.0019960 gives only 1.04x headroom.",
+ "amendment_is_legitimate_because": "ZERO DRAWS HAVE BEEN SPENT. The run was stopped in its fit stage before the null executed. This is the only moment an amendment is legitimate (rule 6), and it is made now or not at all.",
+ "n_draws": 2000,
+ "n_draws_why": "floor 1/2001 = 0.00049975 gives 4.17x headroom below 0.05/24. n=500 gives 1.04x; n=200 gives 0.42x and is below the threshold outright.",
+ "min_draws_enforced": 200,
+ "min_draws_source": "phase2_iter011.MIN_DRAWS_011, whose refusal is now PORTED into this null because evaluate_policy has no such guard",
+ "pools_BOTH_DECLARED_NEITHER_SELECTED": {
+  "UNRESTRICTED": "draws from every generation, as the five heads already carrying this null do; keeps comparability with them. Only 9.908% of actions have any preventable value, so ~90% of this pool's budget is spent on actions worth zero to cancel: it tests whether the candidate finds actions with anything to prevent.",
+  "PREVENTABLE": "draws only from generations with some preventable value; tests whether the candidate cancels the RIGHT ones.",
+  "ruling_applied": "declare a grid, report every cell, select none"
+ },
+ "statistic": "rank-based p = (1 + #{draws >= observed}) / (n + 1)",
+ "beats_random_max_is_not_a_p_value": "it is a boolean against an extreme order statistic; Holm cannot consume it and it is emitted under a name that says so",
+ "also_emitted": "the realised preventable-hit rate for BOTH sides, because the candidate values its first CROSSING row and the null values the first row, and btc runs 1.754 rows per action",
+ "sidedness": "ONE-SIDED, alternative = the policy BEATS matched-random",
+ "seed": 20260825,
+ "no_outcome_can_make_Q4_pass": "the incumbent conjunct is EVALUATED AND FALSE in all six cells (R-515). The available gain is moving the cells from GATE_PARTIALLY_EVALUATED to GATE_EVALUATED_AND_FAILED.",
+ "population_caveat_must_travel_in_the_cell": {
+  "excluded_share": 0.0421,
+  "selective_on": ["duration", "slug"],
+  "at_the_permutation_floor": true,
+  "tail": "37.1% of generations >=2s excluded against a 4.21% base rate; 69.6% of >=4s; 76.7% of >=8s; all nine >=16s",
+  "median_duration_excluded_s": 0.215,
+  "median_duration_retained_s": 0.052,
+  "direction_of_bias_on_net_cents": "NOT ESTABLISHED",
+  "internal_validity": "UNAFFECTED — treated and control are drawn from the identical retained population, verified at the code",
+  "external_validity": "THREATENED — the evaluated population is not the population of interest"
+ },
+ "is_a_validation": false,
+ "intervals_claimable": false
+}
