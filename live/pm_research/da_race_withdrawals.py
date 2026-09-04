@@ -56,7 +56,7 @@ DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
 #: This suite's own total, asserted over ran + skipped.
-EXPECTED_CHECKS = 64
+EXPECTED_CHECKS = 66
 
 #: DA39-R1 (MEM): A COUNT CANNOT TELL YOU WHICH CHECKS RAN. A hand-maintained
 #: tally catches an ADDITION and a REMOVAL and is blind to a REPLACEMENT --
@@ -75,7 +75,7 @@ EXPECTED_CHECKS = 64
 #: check inside the suite can distinguish an INTENDED replacement from an
 #: unintended one. The digest makes the swap visible in a diff and hands the
 #: judgement to review, which is where it belongs.
-EXPECTED_CHECK_IDS_SHA = "fb599bcffc661bcd"
+EXPECTED_CHECK_IDS_SHA = "c59445595399fb4b"
 
 #: THE REGISTRY. One entry per day the USER has taken out of the race.
 #: EVERY entry carries its authority as DATA -- the same discipline round 22
@@ -600,6 +600,28 @@ MIN_PRIOR_VERSIONS = 5
 #: takes the emission path down for a line that has not landed yet. It
 #: becomes load-bearing when the coordinator places the marker, and a
 #: DISAGREEMENT between register and module refuses by name from that moment.
+#: R-529(A), USER RULING 2026-09-04: **THE FORWARD RACE IS DIRECTIONAL, NOT
+#: SIGNIFICANCE-BEARING.** G=5 stands and the recorded multiplicity of 2 stands
+#: and is not decorative -- but at G=5 with m=2 the best achievable adjusted p
+#: is 1/2^G x m = 0.0625 > 0.05, so a clustered permutation test's CEILING is
+#: its floor and the bar was one day short of what its own multiplicity
+#: requires. The USER chose honesty about what five days of one-hour-scale data
+#: support over extending the clock.
+#:
+#: SO EVERY EMISSION OF A RACE FIELD FROM THIS SEAT CARRIES THE FRAME. This
+#: module's race fields are ADMISSIBILITY COUNTS -- `withdrawn_from_race`
+#: answers a policy question and `counts_toward_race` counts days -- and none
+#: of them was ever a p-value. That is exactly why the caveat has to be
+#: EMITTED rather than assumed: a reader who finds a day count beside a
+#: verdict is one step from reading it as evidence, and the ruling says the
+#: statement must come first rather than be available on request.
+RACE_READING = ("DIRECTIONAL AND CONSISTENCY ONLY, NEVER A HOLM-CLEARING "
+                "VERDICT (R-529(A), USER 2026-09-04). At G=5 with the "
+                "recorded multiplicity 2 the best achievable adjusted p is "
+                "0.0625 > 0.05: the ceiling of a clustered permutation test "
+                "is its floor, 1/2^G. A race result establishes DIRECTION "
+                "and CONSISTENCY and cannot establish significance.")
+
 #: DA37-R1 -- THE DOCUMENTATION OF A CONTROL SILENTLY BECAME THE CONTROL.
 #: My own filing quoted the marker verbatim while ASKING for it to be placed,
 #: so this reader returned PINNED before anyone wrote a pin: the register is
@@ -973,6 +995,8 @@ def withdrawal_block(day_token: str, table: dict | None = None,
                        "whatever it computes; the withdrawal is a POLICY "
                        "FACT. `counts_toward_race` is derived from both and "
                        "neither is falsified to encode the other"),
+        # FIRST FIELD A READER MEETS AFTER THE COUNTS, by ruling.
+        "race_reading": RACE_READING,
     }
     if reachability is not None:
         out["reachability"] = {
@@ -1725,6 +1749,21 @@ def selftest() -> int:
        f"{_rr['n_prior_versions_with_registry']} versions carrying the "
        f"registry, not shallow, no replace refs -- so the guards changed "
        f"nothing in production, which is how a guard should land")
+
+    # ---- R-529(A): the race frame travels WITH the race fields ----------
+    _wb = withdrawal_block("20260829")
+    ok("race_reading" in _wb
+       and "NEVER A HOLM-CLEARING VERDICT" in _wb["race_reading"]
+       and "0.0625" in _wb["race_reading"],
+       "R-529(A): every race block this seat emits carries the reading with "
+       "it -- DIRECTIONAL AND CONSISTENCY ONLY, with the arithmetic that "
+       "makes it so (at G=5, m=2 the best adjusted p is 0.0625 > 0.05). The "
+       "fields were never p-values, which is precisely why the frame must be "
+       "EMITTED and not assumed: a day count sitting beside a verdict is one "
+       "step from being read as evidence")
+    ok("race_reading" in withdrawal_block("20260901"),
+       "R-529(A) and it travels on a day that was NOT withdrawn too -- the "
+       "frame is a property of the race, not of the withdrawal")
 
     # ---- R512-R1: a pin SHOWN in a fence is a quotation, not a pin ------
     with tempfile.TemporaryDirectory() as t:
