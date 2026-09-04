@@ -63,6 +63,8 @@ from pathlib import Path
 #:       cascade-vs-selectivity separation.
 #:   +1  DE61: the one-way reading and the measured surface pinned
 #:       to the ceiling, after I shipped a false broad claim.
+#:   +3  DE62: the rejection-tally rate bound, its falsifiers in
+#:       both directions, and the required-attempts inverse.
 #:   +4  the reference-level maker-P&L block, 4 checks -> 8: the
 #:       identity, the double-count known-bad, P&L ==
 #:       post_fill_markout, the two legs' denominators, and a
@@ -72,7 +74,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 223
+EXPECTED_CHECKS = 226
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1959,6 +1961,95 @@ def ceiling_capture(observed_delta_cents: float, ceiling: dict) -> dict:
         "reading": "a NEGATIVE fraction is not 'far from the ceiling', "
                    "it is the opposite direction from it",
     }
+
+
+def attempt_bound(n_attempts: int, n_accepted: int = 0,
+                  alpha: float = 0.05) -> dict:
+    """WHAT WOULD IT TAKE -- applied to a REJECTION TALLY.
+
+    THE PATTERN, STATED SO IT CAN BE REUSED. An unmeasurable X is carried
+    as an open question. Instead of measuring X, compute the value X
+    WOULD HAVE TO TAKE for the conclusion to flip, and compare it to a
+    MEASURED reference from the same population. That converts "we
+    cannot tell" into "we can tell, and here is the price".
+
+    THE INSTANCE. `MATCHED_FLOOR_STATE` says a rejection tally "carries
+    no realised VALUES, so neither reading can be excluded" -- the two
+    readings being that the achievable set EXCLUDES the target, or that
+    it BRACKETS it and the budget missed. THAT IS TRUE OF THE VALUES AND
+    FALSE OF THE RATE, and it is my own field. A tally of 0 accepted in
+    n independent draws bounds the acceptance probability directly:
+
+        P(0 accepted | q) = (1-q)^n = alpha   =>   q <= 1 - alpha^(1/n)
+
+    So the budget does not merely "miss"; it EXCLUDES every acceptance
+    rate above that bound. The count cannot decide the VALUE question and
+    it was never claimed to; it decides the RATE question, and the rate
+    question is the one that prices the next run.
+
+    `required_attempts` is the inverse and is the actionable half: how
+    many draws would bound the rate below a target you care about.
+
+    Clopper-Pearson upper limit, so `n_accepted > 0` is handled rather
+    than being a special case nobody could call."""
+    if n_attempts <= 0:
+        return {"status": "NO_ATTEMPTS",
+                "why": "a bound from no draws is not a bound"}
+    if not 0 <= n_accepted <= n_attempts:
+        return {"status": "IMPOSSIBLE_TALLY",
+                "n_attempts": n_attempts, "n_accepted": n_accepted,
+                "why": "accepted must lie in 0..attempts"}
+    if not 0.0 < alpha < 1.0:
+        return {"status": "BAD_ALPHA", "alpha": alpha}
+    if n_accepted == n_attempts:
+        upper = 1.0
+    else:
+        # P(X <= k | q) = alpha, solved by bisection on q. Monotone
+        # decreasing in q, so a plain bisection is exact enough and
+        # brings no dependency.
+        import math
+
+        def cdf(q: float) -> float:
+            tot = 0.0
+            for i in range(n_accepted + 1):
+                tot += math.comb(n_attempts, i) * (q ** i) * \
+                    ((1.0 - q) ** (n_attempts - i))
+            return tot
+        lo, hi = 0.0, 1.0
+        for _ in range(200):
+            mid = 0.5 * (lo + hi)
+            if cdf(mid) > alpha:
+                lo = mid
+            else:
+                hi = mid
+        upper = 0.5 * (lo + hi)
+    return {
+        "status": "OK",
+        "n_attempts": n_attempts, "n_accepted": n_accepted,
+        "alpha": alpha,
+        "acceptance_rate_upper_bound": upper,
+        "reading": (f"{n_accepted} accepted in {n_attempts} draws is "
+                    f"INCONSISTENT with any acceptance rate above "
+                    f"{upper * 100:.3f}% at {int((1 - alpha) * 100)}% "
+                    f"confidence"),
+        "what_it_does_not_decide": "the achievable VALUES. A tally bounds "
+                                   "the RATE and nothing else; whether the "
+                                   "achievable set brackets the target is "
+                                   "still a question about values",
+        "required_attempts": {
+            f"{t}": required_attempts(t, alpha)
+            for t in (0.05, 0.02, 0.01, 0.005)},
+        "decides_nothing": "REPORTED (rule 14).",
+    }
+
+
+def required_attempts(target_rate: float, alpha: float = 0.05) -> int | None:
+    """Draws needed so that ZERO acceptances bounds the rate below
+    `target_rate` -- the actionable half of the bound above."""
+    import math
+    if not 0.0 < target_rate < 1.0 or not 0.0 < alpha < 1.0:
+        return None
+    return math.ceil(math.log(alpha) / math.log(1.0 - target_rate))
 
 
 def reconcile_maker_pnl(mp: dict, replay_result: dict) -> dict:
@@ -4872,6 +4963,36 @@ def selftest() -> int:
        "ceiling for the CANCELLATION-OVERLAY lever -- because the broad "
        "form I shipped was false: `skew_bound.py` and "
        "`policy_bounds_v1.py::bound_table` are ceilings in this same tree")
+
+    # ---- DE62: WHAT WOULD IT TAKE, APPLIED TO MY OWN REJECTION TALLY --
+    _ab = attempt_bound(60, 0)
+    ok(_ab["status"] == "OK"
+       and abs(_ab["acceptance_rate_upper_bound"] - 0.048703) < 1e-5
+       and _ab["required_attempts"]["0.01"] == 299,
+       f"DE62: 0 accepted in 60 draws EXCLUDES every acceptance rate "
+       f"above {_ab['acceptance_rate_upper_bound']*100:.3f}%. My own "
+       f"`why_a_count_cannot_decide` said a tally 'carries no realised "
+       f"VALUES so neither reading can be excluded' -- TRUE OF THE "
+       f"VALUES, FALSE OF THE RATE. Bounding the rate below 1% costs "
+       f"{_ab['required_attempts']['0.01']} draws, which prices the next "
+       f"run instead of calling it undecidable")
+    # BOTH DIRECTIONS: a tally that accepts everything bounds NOTHING,
+    # and an impossible or empty tally is a status rather than a number.
+    ok(attempt_bound(60, 60)["acceptance_rate_upper_bound"] == 1.0
+       and attempt_bound(0)["status"] == "NO_ATTEMPTS"
+       and attempt_bound(10, 11)["status"] == "IMPOSSIBLE_TALLY"
+       and attempt_bound(10, 0, alpha=1.5)["status"] == "BAD_ALPHA"
+       and attempt_bound(20, 5)["acceptance_rate_upper_bound"] > 0.25,
+       "FALSIFIER BOTH WAYS: all-accepted bounds the rate at 1.0 (no "
+       "information), a partial tally gives a bound ABOVE the observed "
+       "proportion, and no-attempts / impossible / bad-alpha are "
+       "STATUSES rather than a division that returns a number")
+    ok(required_attempts(0.05) == 59 and required_attempts(0.005) == 598
+       and required_attempts(0.0) is None
+       and required_attempts(1.0) is None,
+       f"DE62: the inverse is the actionable half -- {required_attempts(0.05)} "
+       f"draws to bound below 5%, {required_attempts(0.005)} to bound "
+       f"below 0.5% -- and a degenerate target is None, not a number")
 
     # ---- DE48: THE LOG MUST NEVER MAKE A DEAD RUN LOOK ALIVE ----------
     import subprocess as _sp
