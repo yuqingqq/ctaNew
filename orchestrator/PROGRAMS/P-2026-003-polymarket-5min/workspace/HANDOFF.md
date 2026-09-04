@@ -1,6 +1,18 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T11:15Z (MEM round 86) — **THE FIRST REAL §8.1 ARM OUTPUT
+Updated: 2026-09-04T11:30Z (MEM round 87) — **A FENCE STAYS PINNED BY RULING, G
+COUNTING HAS THREE LIVE READINGS, AND THE ARM EMISSION IS GONE.** **USER ruling:
+the sensitivity arm's fence stays pinned** — **six of eighteen declared cells are
+permanently NOT COMPUTED** and the Holm denominator of 18 **knowingly carries
+them**, which makes every correction against it **conservative, not wrong**.
+**G counting is UNRULED**: accrued-days **G=3** completing 09-05, bracketed-span
+**G=1** needing **seven** days and completing 09-07, and the interim's informal
+**G=2** matching neither. **The arm output is still not usable and the reason
+changed twice** — and **the emission itself is now gone from the scratchpad**, so
+nothing from that run may be quoted. **The provenance census is twice-bought.**
+**USER items: THREE.**
+
+Previously (MEM round 86) — 2026-09-04T11:15Z — **THE FIRST REAL §8.1 ARM OUTPUT
 EXISTS AND CANNOT YET BE USED — both halves travel together.** Four arms with
 **real** predictors and `all_distinct` true (round 52 had shipped two arms that
 were the **same computation under different names**) — **but the matched control
@@ -226,6 +238,109 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T11:30Z — MEM round 87: a fence stays pinned by ruling, G has three readings, and the arm emission is gone
+>
+> **A USER RULING, AND IT IS A RULED STATE RATHER THAN AN OPEN GAP: THE
+> SENSITIVITY ARM'S FENCE STAYS PINNED.** **Six of eighteen declared cells remain
+> permanently NOT COMPUTED, and the Holm denominator of 18 knowingly carries
+> them** — **which makes every correction against it CONSERVATIVE rather than
+> wrong**, because a denominator larger than the number of cells actually tested
+> can only *raise* an adjusted p, never lower it.
+>
+> **I verified the six at the artifact.** `be_forward_family_declaration_v1.json`
+> carries `declared_cell_count` **18** and `holm_denominator` **18**, and
+> **exactly six cells are the `FROZEN_FROM_A_CONSUMED_DAY` arm** —
+> BY_THRESHOLD × {btc, eth} × {5%, 10%, 15%} — with
+> `count_under_each_alternative` pricing **12 without** the sensitivity arm
+> against **18 with** it.
+>
+> **How it came to be ruled rather than fixed.** BE built the operating point from
+> **08-29, the only consumed day disjoint from the race — so the choice was FORCED
+> and not CHOSEN**, and the artifact says so itself: `derived_from_split` carries
+> `already_consumed` **true** and a **`rule_11_exposure_STATED`** field naming the
+> exposure rather than burying it. `require_operating_point` then **refuses** it,
+> because **`CANONICAL_VERIFICATION_PATH` is a single pinned path**
+> (`be_forward_metric.py:309-311`), whose refusal reads: *"the fence decides WHERE
+> its evidence lives; a caller-named path — including a symlink to one — is
+> receiving a pointer instead of a payload (BE21-R1)."* **And BE declined to widen
+> a guard that took three rounds to harden in order to complete its own family**,
+> which is the right refusal and the reason the ruling is clean. **The artifact
+> stays COMMITTED AND INERT, so the family completes immediately if the USER ever
+> reverses.**
+>
+> **One precision on my own check, because I did not get all the way there:** I
+> drove `require_operating_point` on the declaration's raw JSON and it **did**
+> refuse — but at an **earlier** gate (*"form `FROZEN_FROM_A_CONSUMED_DAY`
+> declared with no `theta_frozen` map"*), since the file carries
+> `theta_frozen_by_coin` and needs assembly through `be_operating_point` first.
+> **So the pinned-path refusal is verified to exist, and I did not independently
+> confirm it is the one that fires in the real call path** — that step is recorded
+> as reported.
+>
+> ---
+>
+> **G COUNTING IS UNRULED AND THE USER IS CHECKING IT MANUALLY — all three usages
+> stand side by side and I have not tidied them to one.**
+>
+> | reading | G today | days needed | completion | runner |
+> |---|---|---|---|---|
+> | **A — accrued days** | **3** | 5 accruing | **09-05** | counter would need changing |
+> | **B — bracketed span** (what `complete_utc_days` computes) | **1** | **7** accruing | **09-07** | already correct |
+> | the interim's informal **G = 2** | — | — | — | **matches neither; should not survive the ruling** |
+>
+> **I computed reading B myself through the real function rather than arguing it:
+> three accruing days give G = 1, five give G = 3, seven give G = 5.** **The
+> spread is two days of completion and a different answer to "are we there" —
+> which is why it is the USER's and not a seat's.**
+>
+> ---
+>
+> **THE ARM OUTPUT IS STILL NOT USABLE, AND THE REASON HAS CHANGED TWICE. All
+> three states are recorded so the history is legible.**
+> 1. **First** it was reported as **an invalid control**.
+> 2. **Then** the reviewer found **the emission's own fields said
+>    `VALID_AS_A_CONTROL` TRUE with a hardcoded prose note beside them asserting
+>    FALSE** — **rule 10's fourth instance today, and the one that reached the USER
+>    through the coordinator**.
+> 3. **Then DE53-R2 found the round has NO COMMITTED PRODUCER at all** — the
+>    provenance census returns **NONE** for `arm_distinctness`,
+>    `VALID_AS_A_CONTROL`, `permutation_ok`, `all_distinct`, `arm_signature` and
+>    `MATCHED_RANDOM_PERMUTATION`, **the only hit being a consumer**, and the
+>    emission being a scratchpad file naming no producer. The coordinator ran DA's
+>    instrument directly on `arms53.json`: verdict **`NO_DECLARED_CODE_IDENTITY`**,
+>    why **`SUPERSEDED_CODE`**.
+>
+> **I went to reproduce that and found something one turn further on: THE FILE NO
+> LONGER EXISTS.** `arms53.json` was in the scratchpad at 11:27Z when I located it
+> and was **gone minutes later**; the directory still holds `arms53.err` and
+> `arms52.py`, and **no `arms*.json` remains anywhere under `/tmp`**. **So the
+> emission the round's numbers came from is not merely superseded — it is gone**,
+> the same durability class as R-496 (B), where the race's only sealed day lived
+> in a dead session's scratchpad. **Nothing from that run may be quoted.**
+>
+> **DE round 55 has landed the repair, and I read it at the code:**
+> `de_section81_arms.py` now carries `PROTOCOL` (`:57`), `code_identity()`
+> (`:70`), and emits `{"protocol", "code_identity", …}` at `:109-110` and `:317`,
+> with a comment noting DA's `_emitting_entry_points` finds the emitter **by
+> shape**. **The validity flag is derived and the emission names its producer —
+> and a RE-EMISSION is required before any arm number is reportable.**
+>
+> ---
+>
+> **STANDING PRACTICE, NOW TWICE-BOUGHT: the publication provenance census runs
+> before any number reaches the USER, and DA's verifier is the instrument of
+> record.** **It was adopted this morning (R-504 F) and NOT applied to the arms,
+> which is how the contradiction reached the USER.** That is **the second purchase
+> of the same rule in one day** — the first was `matched_volume`'s zero call sites
+> — and the lesson is the one already in this file: **the practice attaches to
+> PUBLICATION, not to review rounds.** *An adopted practice that is not run is
+> indistinguishable from one that was never adopted.*
+>
+> **State:** register **496** entries, last **R-505**; **G unruled** with three
+> readings on the table; three days **sealed and unread**. **USER items: THREE** —
+> the Phase-2 winner, the causal incumbent operating point, and now **the
+> G-counting ruling**.
 
 > ### 2026-09-04T11:15Z — MEM round 86: the first real arm output, a third route into the one-way guarantee, and tonight's NO-GO
 >
