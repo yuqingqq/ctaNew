@@ -4,6 +4,89 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T11:06Z (MEM ROUND 85 -- THE PREDICATE GOT A DENOMINATOR, AND THE
+  ONE-WAY GUARANTEE FAILED BY A SECOND ROUTE). DA rounds 33/34, the arms-preflight
+  filing and the bracket's release swept; nothing run but read-only reads and
+  TWO read-only drives of my own. DA ROUND 34 CLOSED THE HIGH AT THE SOURCE AND I
+  VERIFIED IT THERE: _hash_score_matches is now typed `bool | None` (:242) with
+  "None = unknown" in its own signature, and its docstring states the defect in
+  full -- IT RETURNED False FOR A ROW IT COULD NOT EVALUATE, AND False IS THE
+  VERDICT "THIS SCORE IS GENUINE", so a missing key, a non-numeric score, a
+  non-integer gen or a row that is not a mapping ALL LANDED ON "judged, and it did
+  not come from the hash", stub_or_real counted them into n_reproduced == 0, read
+  NO_SCORE_REPRODUCED_FROM_IDENTIFIERS and concluded REAL_EVIDENCED. THE STUB
+  DETECTOR WOULD HAVE CERTIFIED THE OUTPUT AS REAL, IN THE INSTRUMENT BUILT TO
+  CATCH STUBS, DAYS BEFORE THE ARMS RE-RUN WITH REAL HEADS. Now unevaluable LEAVES
+  THE CODOMAIN with a named reason (_why_unevaluable, counted into
+  unevaluable_reasons) AND REAL_EVIDENCED IS REACHABLE ONLY OVER A BATCH WITH ZERO
+  UNEVALUABLE ROWS -- the module's own field says it: "an unevaluable row claims
+  NEITHER direction ... unevaluable rows can reach REAL_EVIDENCED" is exactly what
+  is now forbidden. AND THE THING THAT MAKES THIS A PRACTICE RATHER THAN A HUNT IS
+  THE DENOMINATOR. I DROVE codomain_census() MYSELF AND EVERY FIGURE RECONCILES:
+  26 VALUE-YIELDING except SITES ACROSS 12 INSTRUMENTS = 22 OUTSIDE THE CODOMAIN
+  AND CORRECT + 3 IN-CODOMAIN, ALL THREE ADJUDICATED IN SOURCE WITH WRITTEN
+  REASONS (n_in_codomain_UNADJUDICATED 0) + 1 UNDECIDABLE AND REPORTED; beside
+  them 15 RAISING handlers outside by construction and 2 selftest fixtures; and
+  the artifact's own denominator_reconciles reads TRUE. THAT IS THE POINT AND IT
+  IS WHY ROUND 32'S SWEEP WAS NOT ENOUGH: round 32 scanned for the SHAPES IT HAD
+  THOUGHT OF, and a census with a reconciling denominator scans for the PREDICATE
+  and must account for every site it finds. The map also carries
+  n_stale_adjudications -- 0 at my drive -- SO THE ADJUDICATION MAP CANNOT BECOME
+  WHERE A REAL HIT GOES TO BE FORGOTTEN, and its role field says
+  REPORTED_NOT_ENFORCED and its limits field says the scan is STATIC and that a
+  site whose success path returns a call or a name is UNDECIDABLE, NEVER CLEAN.
+  TWO FURTHER DEFECTS DA FOUND BEYOND ITS BRIEF, AND ONE CARRIES A WARNING I AM
+  RECORDING AS A WARNING. _registry_in_blob RETURNED None -- "absent from this
+  version" -- FOR A BLOB THAT DOES NOT PARSE, so an unparseable version LEFT THE
+  MONOTONICITY WALK SILENTLY and monotone was reported OVER A SMALLER HISTORY
+  AGAIN, BY A SECOND ROUTE THE EARLIER FIX DID NOT CLOSE; it now RAISES
+  BlobUnparseable, and the module's own words are "Same guarantee, same defect,
+  different route." THE WARNING: THE MONOTONICITY GUARANTEE HAS NOW FAILED BY TWO
+  ROUTES FOUND IN ONE DAY, AND IT IS THE PROPERTY THAT MAKES THE USER'S 08-29
+  WITHDRAWAL FROM THE RACE ONE-WAY. WHETHER A THIRD EXISTS IS DISPATCHED TO DA
+  AND OPEN. And _git returned (127, str(e)) where 127 IS A REAL RETURNCODE, so a
+  consumer could not tell "git exited non-zero" from "git was never executed"; it
+  now returns rc None, which is not a returncode, so `rc != 0` still refuses
+  correctly and the distinction is available to a caller that wants it. AND DA'S
+  SENTENCE ABOUT ITS OWN OLD SELFTEST IS THE CLEAREST STATEMENT OF A CLASS THIS
+  PROGRAMME KEEPS HITTING, SO I RECORD IT VERBATIM: the check USED TO ASSERT THE
+  DEFECT -- "an unparseable blob returns None rather than raising: a syntax error
+  somewhere in history must not break the guard" -- and NOT BREAKING THE GUARD IS
+  NOT THE SAME AS EVALUATING IT. The replacement check states the codomain rule
+  in its sharpest form yet: RETURNING None PUT A FACT ABOUT THE READER INSIDE THE
+  CODOMAIN OF A FACT ABOUT THE HISTORY. THE BRACKET IS RELEASED AND PUBLISHED TO
+  THE USER UNDER FOUR CAVEATS, AND NOTHING DERIVED FROM IT IS RELEASED. The
+  caveats: PREVENTABLE POPULATION ONLY; A RANGE AND NEVER A MIDPOINT, btc $79,636
+  to $141,540; NO POOLING WITH eth BECAUSE PRECISION DIFFERS SHARPLY BY COIN;
+  STILL GROSS; and NOT COMPUTABLE FROM HELD ARTIFACTS with the producer re-run
+  named as the fix. NO PROFITABILITY, NO RETURN AND NO IMPROVEMENT IS RELEASED
+  WITH IT -- IT IS A SCALE, NOT A RESULT, and it must never be recorded as one.
+  ONE PROVENANCE NOTE THAT IS MINE: the two bounds appear in NO LANDED ARTIFACT
+  at my read -- not in the register, not in these files, not in RESULTS.md -- so
+  they exist as a coordinator-to-USER publication and a repo reader cannot find
+  them; recorded so the absence is not later mistaken for a withdrawal. AND THE
+  CONTROL THAT MAKES THE BRACKET TRUSTWORTHY, WHICH I DROVE RATHER THAN READ: on
+  a SINGLE-ROW action the bracket COLLAPSES TO EXACT -- upper 10.0, lower 10.0,
+  width 1.0 -- because one window is both bounds. BUT THE MODULE DELIBERATELY
+  DOES NOT COLLAPSE THE MULTI-ROW DISJOINT CASE: three rows spaced BEYOND the
+  horizon with ZERO overlapping pairs still report upper 60.0 against lower 30.0,
+  width 2.0, because -- in its own comment -- "the module cannot know the windows
+  are disjoint without tranche identity". IT NARROWS ONLY WHERE IT CAN PROVE, AND
+  REFUSES TO NARROW ON AN INFERENCE IT CANNOT SUPPORT. That is the reason to
+  trust the width. A COORDINATOR ERROR IS ON THE RECORD AND THE TIMELINE IS
+  VERIFIABLE AT GIT: a review round was dispatched describing DA's fix as LANDED
+  WHILE DA WAS MID-ROUND, and WITH NO PINNED TIP, so the reviewer executed
+  against 7a9e83f -- which is MY OWN round-84 commit at 10:56:19Z -- and DA's fix
+  landed at d96fee5 10:58:20Z, TWO MINUTES AND ONE SECOND LATER, with the row at
+  10:58:54Z and the filing committed 11:00:14Z. SO THE FILING'S HIGH ("DA32-R1 IS
+  NOT FIXED AT THE TIP") WAS TRUE OF THE TIP IT PINNED AND FALSE OF THE TREE BY
+  THE TIME IT LANDED. REVIEW ROUNDS PIN AN EXPLICIT COMMIT FOR EXACTLY THIS
+  REASON. Recorded as the coordinator's error, stated as such, and the reviewer's
+  work is not impeached by it -- IT CHECKED THE INSTRUMENT BEFORE TRUSTING ITS
+  VERDICT ON THE ARMS, WHICH WAS THE RIGHT CALL. STATE: register 496 entries,
+  last R-505; G = 3, three days sealed and unread; 09-04 closes tonight at 00:06Z.
+  USER ITEMS: TWO -- the Phase-2 winner, and the causal incumbent operating point.
+  PRIOR:
   2026-09-04T10:53Z (MEM ROUND 84 -- ONE PREDICATE FOR THE ABSENCE FAMILY, AND
   IT CAUGHT THE INSTRUMENT THAT NAMED THE CLASS). R-505 swept; nothing run but
   read-only reads. THE CENTRE OF R-505 IS THE MOST TRANSFERABLE THING THIS
@@ -157,91 +240,6 @@ updated: >-
   dated entries in both files chronological. The five fixes are markers and
   qualifiers on text that was already there. UNCHANGED: G = 3 OF 5; 09-03 is not
   a third economic read; NO ECONOMIC FIGURE IS PUBLISHABLE; USER ITEMS TWO.
-  PRIOR:
-  2026-09-04T10:36Z (MEM ROUND 82 -- TWO PROFITABILITY ATTEMPTS HAVE NOW FAILED
-  IN OPPOSITE DIRECTIONS, AND EXACTLY-ONCE MAY NOT BE COMPUTABLE AT ALL). R-504
-  and the last several rounds swept; nothing run but read-only reads. NO ECONOMIC
-  FIGURE IS PUBLISHABLE, AND BOTH WITHDRAWALS WITH BOTH REASONS ARE ON THE
-  RECORD. prof.py TOOK THE FIRST ROW PER ACTION AND UNDER-COUNTED -- withdrawn by
-  the USER's audit: $226,594.26 filled notional, $1,801.29 no-cancel P&L, 0.7949%,
-  +$620.58, +34.5%, $807/day. be_fill_ledger SUMS EVERY ROW AND OVER-COUNTS --
-  and THE CORRECTED FIGURES BE PUBLISHED AT Q-BE-258 (10:22Z) TO REPLACE THEM ARE
-  WITHDRAWN TOO, BECAUSE THEY CARRY THE OVER-COUNT: gross markout $2,946.40,
-  preventable notional $454,505.94, ratio 0.648%. THE REASON IS THE SAME
-  MEASUREMENT THAT SAVED THE RANKING RESULT ONE ROUND AGO, POINTING THE OTHER WAY:
-  a row ALREADY sums every tranche in its own one-second horizon, and 217,267 of
-  238,495 intra-action row pairs (91.1%) are CLOSER THAN THAT HORIZON, so summing
-  sibling rows ADDS THE SAME TRANCHES AGAIN. TWO ATTEMPTS, OPPOSITE DIRECTIONS,
-  NEITHER EXACTLY-ONCE -- and I verified the shape at the code: the module's own
-  contract field reads "EVERY ROW OF EVERY ACTION, exactly once"
-  (be_fill_ledger.py:123), WHICH IS NOT THE QUANTITY THE AUDIT ASKED FOR ("every
-  FILL exactly once"). AND ITS FIXTURE ENSHRINES THE OVER-COUNT AS SPEC: I read
-  the three rows at t_start 0.1, 0.2, 0.3 (:164/:168/:172) -- 0.1 s apart, DEEP
-  INSIDE the 1 s horizon -- so the asserted total of 60 IS THE DOUBLE-COUNTED
-  FIGURE, NOT THE TRUTH. THAT IS SEAT_PROTOCOL RULE 16'S FOURTH NAMED INSTANCE
-  (a falsifier that enshrines the defect as spec) IN THE MODULE BUILT TO REPAIR AN
-  AGGREGATION. EXACTLY-ONCE MAY NOT BE COMPUTABLE AT ALL, AND THIS IS RECORDED AS
-  AN OPEN QUESTION AND NOT AS A PENDING FIX: THE FEED CARRIES NO TRANCHE OR FILL
-  IDENTITY, so an exactly-once fill total MAY NOT BE DERIVABLE FROM ANYTHING WE
-  HOLD -- it would need tranche-level identity from harmful_exposure_rows. BE IS
-  ESTABLISHING WHETHER IT IS COMPUTABLE, AND IF IT IS NOT, THE QUANTITY GETS AN
-  HONEST RENAME RATHER THAN A PLAUSIBLE NUMBER -- the reviewer's own proposal is
-  sum_of_row_preventable_shares_WITH_OVERLAP carrying the 91.1% figure. A SECOND
-  HIGH, AND IT IS THE EMPTY-SET TRAP ONE LEVEL IN: the ledger returns $0.00
-  notional on the 08-29 feed BECAUSE THAT FEED PREDATES THE SCALE FIELDS (added at
-  BE round 28, be_forward_metric.py:622-624), so its rows carry no
-  preventable_shares and no level -- WHILE ITS OWN COUNTER READS rows_no_level ==
-  rows_with_fill, 80,929 of 80,929 on btc and 11,348 of 11,348 on eth. THE LEDGER
-  COMPUTED THE COUNTER THAT SAYS EVERY FILLED ROW LACKED A LEVEL, DID NOT CONSULT
-  IT, AND EMITTED $0.00 BESIDE A NON-ZERO MARKOUT. IT REFUSES AN EMPTY FILE AND
-  NOT AN EMPTY FIELD. I verified the counter exists and is incremented at
-  be_fill_ledger.py:102 and asserted in its own suite at :208 -- SO IT IS
-  COMPUTED, TESTED, AND UNCONSULTED BY THE EMITTER, which is the zero-consumer
-  shape inside a single module. AND ONE OBSERVATION THAT IS MINE, FROM PUTTING
-  THE TWO ARTIFACTS SIDE BY SIDE RATHER THAN FROM EITHER ALONE: THE $617.95 BTC
-  MARKOUT THE REVIEWER SHOWS BESIDE THAT $0.00 NOTIONAL IS THE SAME $617.95 BE'S
-  PER-DAY TABLE GIVES FOR 08-29 -- SO 08-29 CONTRIBUTES TO THE NUMERATOR OF THE
-  0.648% RATIO WHILE CONTRIBUTING STRUCTURALLY NOTHING TO ITS DENOMINATOR. I have
-  not recomputed the totals and I do not adjudicate it; I record that the two
-  HIGHs are not independent and that the withdrawn ratio has this shape as well as
-  the over-count. A NEW NAMED CLASS BELONGS IN HANDOFF BESIDE THE ZERO-CONSUMER
-  CLASS: PHANTOM FAILURE -- A NEGATIVE VERDICT PRODUCED BY A PATH THAT DID NOT
-  RUN, THE MIRROR OF ABSENCE-READING-AS-A-PASS. The familiar trap lets a bad
-  thing THROUGH; THIS ONE LETS NOTHING THROUGH AND INVENTS A BUG INSTEAD -- a
-  check that could not execute reports a DISAGREEMENT, a FAILURE, a MISSING
-  window, and a reader spends an afternoon on it. DA named it, swept its own
-  instruments and found THREE MORE, and I read all three at the source
-  (da_arm_replay_verify.py:575-601): battery() defaulted script_dir "." so the
-  determinism children COULD NOT IMPORT and the check read identical false -- A
-  DETERMINISM FAILURE WHEN NEITHER INTERPRETER RAN; a missing sar binary made the
-  independent column reader return nothing and the check read as a
-  COLUMN-BINDING FAILURE, i.e. "your production regex reads the wrong field"; and
-  THE ONE THAT IS A REAL CORRECTNESS BUG IN THE RACE MACHINERY --
-  pm_tape_density.uncompressed_size RETURNED 0 FOR A FILE IT COULD NOT READ, AND
-  0 MEANS DARK, so a permission or I/O error WOULD HAVE SURFACED AS A BLACKOUT
-  THAT da_dark_interval_scan REPORTS AND da_blackout_mask MASKS. I read the fix at
-  pm_tape_density.py:197-208: the value STAYS 0 so no caller changes shape, and
-  the file is COUNTED IN A CENSUS scan_day SURFACES, SO THE DIFFERENCE BETWEEN
-  "EMPTY" AND "UNREADABLE" STOPS BEING INVISIBLE -- a repair that adds a
-  distinction rather than changing a return, which is the right shape when every
-  consumer already reads the old one. THE CENSUS IS HONEST ABOUT ITS OWN LIMITS
-  AND SAYS SO IN ITS DOCSTRING: it is A TEXT SCAN that flags two shapes it can see
-  and CANNOT SEE A SEMANTIC ONE; IT REPORTS, AND A HIT IS A PLACE TO LOOK, NOT A
-  DEFECT. And it applies its own discipline to itself -- it REFUSES when it cannot
-  read the tree, "a census that cannot read the tree must not report a clean one",
-  which is the anti-phantom rule turned on the phantom detector. THE
-  COORDINATOR'S STANDING RULE IS NOW IN FORCE AND IT WAS BOUGHT THREE TIMES OVER:
-  NO NUMBER REACHES THE USER BEFORE IT HAS BEEN REVIEWED. THE EVIDENCE IS THE
-  SESSION ITSELF -- THE RANKING RESULT WENT THROUGH REVIEW AND SURVIVED; BOTH
-  PROFITABILITY FIGURES DID NOT, AND BOTH WERE WRONG. It is the same lesson the
-  publication provenance check carries from the other side: the practice attaches
-  to PUBLICATION, not to review rounds, because the released result was never in
-  a round. STATE: register at 495 entries, last R-504; G = 3 OF 5 unchanged and
-  09-03 IS STILL NOT A THIRD ECONOMIC READ; suites at the reviewed tip both
-  launchers rc 0 -- be_read_cells 9, be_fill_ledger 12, da_arm_replay_verify 26.
-  USER ITEMS: TWO -- the Phase-2 winner, and whether to predeclare a causal
-  incumbent operating point or keep the equal-count comparison permanently
-  labelled a diagnostic.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -5503,8 +5501,96 @@ flags:
     verified the denominators are right BY CONSTRUCTION rather than on today's
     data -- a stronger check than a passing run, because today's data could have
     made a wrong denominator look right.
+  da34_HIGH_closed_and_the_census_has_a_DENOMINATOR: >-
+    DA ROUND 34 (d96fee5, row Q-DA-231 at b5e5f55) CLOSED DA32-R1 AT THE SOURCE,
+    VERIFIED BY MEM THERE: _hash_score_matches is now typed `bool | None` (:242)
+    with "None = unknown" in its own signature, and its docstring states the
+    defect in full -- IT RETURNED False FOR A ROW IT COULD NOT EVALUATE, AND
+    False IS THE VERDICT "THIS SCORE IS GENUINE"; a missing key, a non-numeric
+    score, a non-integer gen or a non-mapping row ALL landed on "judged, and it
+    did not come from the hash", so stub_or_real counted them into n_reproduced
+    == 0, read NO_SCORE_REPRODUCED_FROM_IDENTIFIERS and concluded REAL_EVIDENCED.
+    THE STUB DETECTOR WOULD HAVE CERTIFIED THE OUTPUT AS REAL, IN THE INSTRUMENT
+    BUILT TO CATCH STUBS, DAYS BEFORE THE ARMS RE-RUN WITH REAL HEADS. NOW
+    UNEVALUABLE LEAVES THE CODOMAIN with a named reason (_why_unevaluable,
+    counted into unevaluable_reasons) AND REAL_EVIDENCED IS REACHABLE ONLY OVER A
+    BATCH WITH ZERO UNEVALUABLE ROWS.
+    AND THE DENOMINATOR IS WHAT MAKES THE PREDICATE A PRACTICE RATHER THAN A
+    HUNT. MEM DROVE codomain_census() ITSELF AND EVERY FIGURE RECONCILES: 26
+    VALUE-YIELDING except SITES ACROSS 12 INSTRUMENTS = 22 OUTSIDE THE CODOMAIN
+    AND CORRECT + 3 IN-CODOMAIN, ALL THREE ADJUDICATED IN SOURCE WITH WRITTEN
+    REASONS (n_in_codomain_UNADJUDICATED 0) + 1 UNDECIDABLE AND REPORTED; beside
+    them 15 RAISING handlers outside by construction and 2 selftest fixtures; and
+    the artifact's own denominator_reconciles reads TRUE. THAT IS WHY ROUND 32'S
+    SWEEP WAS NOT ENOUGH: ROUND 32 SCANNED FOR THE SHAPES IT HAD THOUGHT OF, AND
+    A CENSUS WITH A RECONCILING DENOMINATOR SCANS FOR THE PREDICATE AND MUST
+    ACCOUNT FOR EVERY SITE IT FINDS. The map also carries n_stale_adjudications
+    (0 at MEM's drive) SO THE ADJUDICATION MAP CANNOT BECOME WHERE A REAL HIT
+    GOES TO BE FORGOTTEN; its role field reads REPORTED_NOT_ENFORCED and its
+    limits field says the scan is STATIC and that a site whose success path
+    returns a call or a name is UNDECIDABLE, NEVER CLEAN.
+  WARNING_monotonicity_failed_by_TWO_routes_in_one_day: >-
+    RECORDED AS A WARNING, NOT AS A CLOSURE. _registry_in_blob RETURNED None --
+    "absent from this version" -- FOR A BLOB THAT DOES NOT PARSE, so an
+    unparseable version LEFT THE MONOTONICITY WALK SILENTLY and monotone was
+    reported OVER A SMALLER HISTORY AGAIN, BY A SECOND ROUTE THE EARLIER FIX DID
+    NOT CLOSE. It now RAISES BlobUnparseable (da_race_withdrawals.py:266-272,
+    read by MEM), and the module's own words are "Same guarantee, same defect,
+    different route." THE MONOTONICITY GUARANTEE HAS NOW FAILED BY TWO ROUTES
+    FOUND IN ONE DAY, AND IT IS THE PROPERTY THAT MAKES THE USER'S 08-29
+    WITHDRAWAL FROM THE RACE ONE-WAY. WHETHER A THIRD EXISTS IS DISPATCHED TO DA
+    AND OPEN.
+    THE SECOND DEFECT: _git returned (127, str(e)) WHERE 127 IS A REAL
+    RETURNCODE, so a consumer could not tell "git exited non-zero" from "git was
+    never executed"; it now returns rc None -- not a returncode -- so `rc != 0`
+    still refuses correctly and the distinction is available to a caller that
+    wants it.
+    AND DA'S SENTENCE ABOUT ITS OWN OLD SELFTEST IS THE CLEAREST STATEMENT OF A
+    CLASS THIS PROGRAMME KEEPS HITTING, RECORDED VERBATIM: the check USED TO
+    ASSERT THE DEFECT -- "an unparseable blob returns None rather than raising: a
+    syntax error somewhere in history must not break the guard" -- and NOT
+    BREAKING THE GUARD IS NOT THE SAME AS EVALUATING IT. Its replacement states
+    the codomain rule in its sharpest form yet: RETURNING None PUT A FACT ABOUT
+    THE READER INSIDE THE CODOMAIN OF A FACT ABOUT THE HISTORY.
+  bracket_RELEASED_and_published_under_four_caveats: >-
+    THE BRACKET IS RELEASED AND PUBLISHED TO THE USER, AND NOTHING DERIVED FROM
+    IT IS RELEASED. THE CAVEATS, WHICH TRAVEL WITH IT: (1) PREVENTABLE POPULATION
+    ONLY; (2) A RANGE AND NEVER A MIDPOINT -- btc $79,636 to $141,540; (3) NO
+    POOLING WITH eth, BECAUSE PRECISION DIFFERS SHARPLY BY COIN; (4) STILL GROSS;
+    and it is NOT COMPUTABLE FROM HELD ARTIFACTS, with the PRODUCER RE-RUN named
+    as the fix. NO PROFITABILITY, NO RETURN AND NO IMPROVEMENT IS RELEASED WITH
+    IT. IT IS A SCALE, NOT A RESULT, AND MUST NEVER BE RECORDED AS ONE.
+    ONE PROVENANCE NOTE THAT IS MEM'S: the two bounds appear in NO LANDED
+    ARTIFACT at MEM's read -- not in COORDINATION.md, not in STATUS.yml or
+    HANDOFF.md, not in RESULTS.md -- so they exist as a coordinator-to-USER
+    publication and a repo reader cannot find them. Recorded so the absence is
+    not later mistaken for a withdrawal.
+  bracket_control_narrows_only_where_it_can_prove: >-
+    THE CONTROL THAT MAKES THE BRACKET TRUSTWORTHY, DRIVEN BY MEM RATHER THAN
+    READ. On a SINGLE-ROW action the bracket COLLAPSES TO EXACT -- upper 10.0,
+    lower 10.0, width 1.0 -- because one window is both bounds. BUT THE MODULE
+    DELIBERATELY DOES NOT COLLAPSE THE MULTI-ROW DISJOINT CASE: three rows spaced
+    BEYOND the horizon with ZERO overlapping pairs still report upper 60.0
+    against lower 30.0, width 2.0, because -- in the module's own comment -- "the
+    module cannot know the windows are disjoint without tranche identity". IT
+    NARROWS ONLY WHERE IT CAN PROVE, AND REFUSES TO NARROW ON AN INFERENCE IT
+    CANNOT SUPPORT. THAT IS THE REASON TO TRUST THE WIDTH. The same suite also
+    replaced the old fixture that put three rows at 0.1/0.2/0.3 DEEP inside the
+    horizon and asserted their sum was the truth.
+  COORDINATOR_ERROR_review_round_with_no_pinned_tip: >-
+    ON THE RECORD AS THE COORDINATOR'S ERROR, STATED AS SUCH, AND THE TIMELINE IS
+    VERIFIABLE AT GIT (MEM checked). A review round was dispatched DESCRIBING
+    DA'S FIX AS LANDED WHILE DA WAS MID-ROUND, AND WITH NO PINNED TIP -- so the
+    reviewer executed against 7a9e83f, WHICH IS MEM'S OWN ROUND-84 COMMIT AT
+    10:56:19Z, while DA's fix landed at d96fee5 10:58:20Z, TWO MINUTES AND ONE
+    SECOND LATER, its row at 10:58:54Z and the filing committed at 11:00:14Z.
+    SO THE FILING'S HIGH -- "DA32-R1 IS NOT FIXED AT THE TIP" -- WAS TRUE OF THE
+    TIP IT PINNED AND FALSE OF THE TREE BY THE TIME IT LANDED. REVIEW ROUNDS PIN
+    AN EXPLICIT COMMIT FOR EXACTLY THIS REASON. THE REVIEWER'S WORK IS NOT
+    IMPEACHED BY IT: it checked the instrument BEFORE trusting its verdict on the
+    arms, which was the right call, and the instrument was not ready.
 focus: >
-  As-of 2026-09-04T10:53Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T11:06Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -5825,7 +5911,19 @@ focus: >
   (1.785x wide on btc) AND ITS BOUNDS ARE NOT PUBLISHED. AND A PATTERN THREE DEEP:
   exactly-once, the three section 8.1 fields, and a return on capital are ALL
   ABSENT AT THE PRODUCER rather than unbuilt -- each found by trying to compute
-  it and failing, each resolved by naming the producer change.
+  it and failing, each resolved by naming the producer change. ROUND 85 -- THE
+  PREDICATE GOT A DENOMINATOR: 26 value-yielding except sites across 12
+  instruments, 22 outside the codomain and correct, 3 in-codomain ADJUDICATED IN
+  SOURCE, 1 undecidable and reported, and denominator_reconciles TRUE -- which is
+  what makes it a PRACTICE rather than a HUNT, because round 32 scanned for the
+  shapes it had thought of. The HIGH is closed at the source and REAL_EVIDENCED
+  now requires a batch with ZERO unevaluable rows. AND A WARNING: THE
+  MONOTONICITY GUARANTEE HAS FAILED BY TWO ROUTES FOUND IN ONE DAY -- it is the
+  property that makes the USER's 08-29 withdrawal ONE-WAY, and whether a third
+  exists is OPEN. THE BRACKET IS RELEASED under four caveats (preventable
+  population only; a range never a midpoint, btc $79,636-$141,540; no pooling
+  with eth; still gross; not computable from held artifacts) and NOTHING DERIVED
+  FROM IT IS RELEASED -- IT IS A SCALE, NOT A RESULT.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,

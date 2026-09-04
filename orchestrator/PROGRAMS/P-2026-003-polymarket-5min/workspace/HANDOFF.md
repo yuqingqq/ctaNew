@@ -1,6 +1,19 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T10:53Z (MEM round 84) — **ONE PREDICATE FOR THE ABSENCE
+Updated: 2026-09-04T11:06Z (MEM round 85) — **THE PREDICATE GOT A DENOMINATOR,
+AND THE ONE-WAY GUARANTEE FAILED BY A SECOND ROUTE.** DA round 34 closed the HIGH
+**at the source** — `REAL_EVIDENCED` now needs a batch with **zero** unevaluable
+rows — and `codomain_census()` reports **26 sites across 12 instruments** with
+**`denominator_reconciles` true**, which is what makes the rule a **practice**
+rather than a hunt. **WARNING: the monotonicity guarantee has now failed by TWO
+routes found in one day**, and it is the property that makes the USER's 08-29
+withdrawal **one-way**; a third is **open**. **The bracket is released and
+published under four caveats — btc $79,636–$141,540, a range never a midpoint —
+and NOTHING derived from it is released: it is a SCALE, not a result.** **A
+coordinator error is on the record:** a review round dispatched with **no pinned
+tip** while DA was mid-round. **G = 3; USER items: TWO.**
+
+Previously (MEM round 84) — 2026-09-04T10:53Z — **ONE PREDICATE FOR THE ABSENCE
 FAMILY, AND IT CAUGHT THE INSTRUMENT THAT NAMED THE CLASS.** **The error/absence
 path must not return a value inside the codomain of the measurement** — the rule
 that unifies the two standing hazards below and is now recorded above them, **with
@@ -201,6 +214,115 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T11:06Z — MEM round 85: the predicate got a denominator, and the one-way guarantee failed by a second route
+>
+> **DA ROUND 34 CLOSED THE HIGH AT THE SOURCE, and I verified it there.**
+> `_hash_score_matches` is now typed **`bool | None`** (`:242`) with *"None =
+> unknown"* in its own signature, and its docstring states the defect in full:
+> **it returned `False` for a row it could not evaluate, and `False` is the
+> verdict "this score is GENUINE"** — a missing key, a non-numeric score, a
+> non-integer `gen` or a non-mapping row all landed on *judged, and it did not
+> come from the hash*, so `stub_or_real` counted them into `n_reproduced == 0`
+> and concluded **`REAL_EVIDENCED`**. **The stub detector would have certified the
+> output as REAL, in the instrument built to catch stubs, days before the arms
+> re-run with real heads.** **Now unevaluable leaves the codomain with a named
+> reason, and `REAL_EVIDENCED` is reachable only over a batch with ZERO
+> unevaluable rows.**
+>
+> **AND THE DENOMINATOR IS THE POINT — it is what makes the predicate a PRACTICE
+> rather than a HUNT. I drove `codomain_census()` myself and every figure
+> reconciles:**
+>
+> ```
+> 26 value-yielding except sites across 12 instruments
+>    = 22 outside the codomain (correct)
+>    +  3 in-codomain, ALL adjudicated in source   (UNADJUDICATED = 0)
+>    +  1 undecidable and reported
+>   beside: 15 raising handlers (outside by construction), 2 selftest fixtures
+>   denominator_reconciles = TRUE      role = REPORTED_NOT_ENFORCED
+> ```
+>
+> **That is why round 32's sweep was not enough: round 32 scanned for the shapes
+> it had thought of, and a census with a reconciling denominator scans for the
+> PREDICATE and must account for every site it finds.** The map also carries
+> `n_stale_adjudications` (**0** at my drive), **so the adjudication map cannot
+> become where a real hit goes to be forgotten**; and its `limits` field says the
+> scan is **static**, and a site whose success path returns a call or a name is
+> **UNDECIDABLE, never clean**.
+>
+> **⚠ WARNING — THE MONOTONICITY GUARANTEE HAS NOW FAILED BY TWO ROUTES FOUND IN
+> ONE DAY.** `_registry_in_blob` returned `None` — *"absent from this version"* —
+> **for a blob that does not PARSE**, so an unparseable version **left the
+> monotonicity walk silently** and `monotone: True` was reported **over a smaller
+> history again**, by a second route the earlier fix did not close. It now raises
+> `BlobUnparseable`, and the module's own words are: *"Same guarantee, same
+> defect, different route."* **This is the property that makes the USER's 08-29
+> withdrawal from the race ONE-WAY. Whether a third route exists is dispatched to
+> DA and OPEN.**
+>
+> The second defect: **`_git` returned `(127, str(e))` where 127 is a real
+> returncode**, so a consumer could not tell *"git exited non-zero"* from *"git
+> was never executed"*. It now returns `rc None` — not a returncode — so
+> `rc != 0` still refuses correctly and the distinction is available.
+>
+> **AND DA'S SENTENCE ABOUT ITS OWN OLD SELFTEST IS THE CLEAREST STATEMENT OF A
+> CLASS THIS PROGRAMME KEEPS HITTING, recorded verbatim.** The check **used to
+> assert the defect** — *"an unparseable blob returns None rather than raising: a
+> syntax error somewhere in history must not break the guard"* — and **NOT
+> BREAKING THE GUARD IS NOT THE SAME AS EVALUATING IT.** Its replacement states
+> the codomain rule in its sharpest form yet: **"returning `None` put a fact about
+> the READER inside the codomain of a fact about the HISTORY."**
+>
+> ---
+>
+> **THE BRACKET IS RELEASED AND PUBLISHED TO THE USER UNDER FOUR CAVEATS, AND
+> NOTHING DERIVED FROM IT IS RELEASED.**
+> 1. **Preventable population only.**
+> 2. **A range, never a midpoint — btc $79,636 to $141,540.**
+> 3. **No pooling with eth**, because precision differs sharply by coin.
+> 4. **Still gross.** And it is **not computable from held artifacts**, with the
+>    **producer re-run** named as the fix.
+>
+> **No profitability, no return and no improvement is released with it. IT IS A
+> SCALE, NOT A RESULT, and it must never be recorded as one.**
+>
+> **One provenance note that is mine:** the two bounds appear in **no landed
+> artifact** at my read — not in `COORDINATION.md`, not in these files, not in
+> `RESULTS.md` — so they exist as a coordinator-to-USER publication and **a repo
+> reader cannot find them**. Recorded so the absence is not later mistaken for a
+> withdrawal.
+>
+> **THE CONTROL THAT MAKES THE BRACKET TRUSTWORTHY — which I drove rather than
+> read.** On a **single-row** action the bracket **collapses to exact** (upper
+> 10.0, lower 10.0, width 1.0) because one window is both bounds. **But the module
+> deliberately does NOT collapse the multi-row disjoint case:** three rows spaced
+> **beyond** the horizon with **zero** overlapping pairs still report upper 60.0
+> against lower 30.0, width 2.0 — because, in its own comment, *"the module cannot
+> know the windows are disjoint without tranche identity."* **It narrows only
+> where it can prove, and refuses to narrow on an inference it cannot support.
+> That is the reason to trust the width.**
+>
+> **A COORDINATOR ERROR IS ON THE RECORD, and the timeline is verifiable at git —
+> I checked it.** A review round was dispatched **describing DA's fix as landed
+> while DA was mid-round**, and **with no pinned tip**:
+>
+> ```
+> 10:56:19Z  7a9e83f  MEM round 84            <- the tip the reviewer pinned
+> 10:58:20Z  d96fee5  DA round 34, the fix     (+2m01s)
+> 10:58:54Z  b5e5f55  Q-DA-231, the row
+> 11:00:14Z  f2b50e2  the filing: "DA32-R1 is NOT fixed at the tip"
+> ```
+>
+> **So the filing's HIGH was true of the tip it pinned and false of the tree by
+> the time it landed. Review rounds pin an explicit commit for exactly this
+> reason.** Recorded as the coordinator's error, stated as such — **and the
+> reviewer's work is not impeached by it: it checked the instrument before
+> trusting its verdict on the arms, which was the right call, and the instrument
+> was not ready.**
+>
+> **State:** register **496** entries, last **R-505**; **G = 3**, three days
+> **sealed and unread**; 09-04 closes tonight at 00:06Z. **USER items: TWO.**
 
 > ### STANDING RULE — the error/absence path must not return a value inside the codomain of the measurement
 >

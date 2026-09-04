@@ -6290,3 +6290,95 @@ Moved in the MEM round-84 true-up of R-505. Join rule as in batch 1.
   PERMANENTLY LABELLED A DIAGNOSTIC -- BE DECLINED TO PREDECLARE ONE BECAUSE
   CHOOSING IT NOW WOULD BE CHOOSING AFTER SEEING EVERY NUMBER TODAY PRODUCED.
 ```
+
+## Batch 91 — archived 2026-09-04T11:06Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-85 true-up of DA rounds 33/34, the arms-preflight filing
+and the bracket's release. Join rule as in batch 1.
+
+```yaml
+  2026-09-04T10:36Z (MEM ROUND 82 -- TWO PROFITABILITY ATTEMPTS HAVE NOW FAILED
+  IN OPPOSITE DIRECTIONS, AND EXACTLY-ONCE MAY NOT BE COMPUTABLE AT ALL). R-504
+  and the last several rounds swept; nothing run but read-only reads. NO ECONOMIC
+  FIGURE IS PUBLISHABLE, AND BOTH WITHDRAWALS WITH BOTH REASONS ARE ON THE
+  RECORD. prof.py TOOK THE FIRST ROW PER ACTION AND UNDER-COUNTED -- withdrawn by
+  the USER's audit: $226,594.26 filled notional, $1,801.29 no-cancel P&L, 0.7949%,
+  +$620.58, +34.5%, $807/day. be_fill_ledger SUMS EVERY ROW AND OVER-COUNTS --
+  and THE CORRECTED FIGURES BE PUBLISHED AT Q-BE-258 (10:22Z) TO REPLACE THEM ARE
+  WITHDRAWN TOO, BECAUSE THEY CARRY THE OVER-COUNT: gross markout $2,946.40,
+  preventable notional $454,505.94, ratio 0.648%. THE REASON IS THE SAME
+  MEASUREMENT THAT SAVED THE RANKING RESULT ONE ROUND AGO, POINTING THE OTHER WAY:
+  a row ALREADY sums every tranche in its own one-second horizon, and 217,267 of
+  238,495 intra-action row pairs (91.1%) are CLOSER THAN THAT HORIZON, so summing
+  sibling rows ADDS THE SAME TRANCHES AGAIN. TWO ATTEMPTS, OPPOSITE DIRECTIONS,
+  NEITHER EXACTLY-ONCE -- and I verified the shape at the code: the module's own
+  contract field reads "EVERY ROW OF EVERY ACTION, exactly once"
+  (be_fill_ledger.py:123), WHICH IS NOT THE QUANTITY THE AUDIT ASKED FOR ("every
+  FILL exactly once"). AND ITS FIXTURE ENSHRINES THE OVER-COUNT AS SPEC: I read
+  the three rows at t_start 0.1, 0.2, 0.3 (:164/:168/:172) -- 0.1 s apart, DEEP
+  INSIDE the 1 s horizon -- so the asserted total of 60 IS THE DOUBLE-COUNTED
+  FIGURE, NOT THE TRUTH. THAT IS SEAT_PROTOCOL RULE 16'S FOURTH NAMED INSTANCE
+  (a falsifier that enshrines the defect as spec) IN THE MODULE BUILT TO REPAIR AN
+  AGGREGATION. EXACTLY-ONCE MAY NOT BE COMPUTABLE AT ALL, AND THIS IS RECORDED AS
+  AN OPEN QUESTION AND NOT AS A PENDING FIX: THE FEED CARRIES NO TRANCHE OR FILL
+  IDENTITY, so an exactly-once fill total MAY NOT BE DERIVABLE FROM ANYTHING WE
+  HOLD -- it would need tranche-level identity from harmful_exposure_rows. BE IS
+  ESTABLISHING WHETHER IT IS COMPUTABLE, AND IF IT IS NOT, THE QUANTITY GETS AN
+  HONEST RENAME RATHER THAN A PLAUSIBLE NUMBER -- the reviewer's own proposal is
+  sum_of_row_preventable_shares_WITH_OVERLAP carrying the 91.1% figure. A SECOND
+  HIGH, AND IT IS THE EMPTY-SET TRAP ONE LEVEL IN: the ledger returns $0.00
+  notional on the 08-29 feed BECAUSE THAT FEED PREDATES THE SCALE FIELDS (added at
+  BE round 28, be_forward_metric.py:622-624), so its rows carry no
+  preventable_shares and no level -- WHILE ITS OWN COUNTER READS rows_no_level ==
+  rows_with_fill, 80,929 of 80,929 on btc and 11,348 of 11,348 on eth. THE LEDGER
+  COMPUTED THE COUNTER THAT SAYS EVERY FILLED ROW LACKED A LEVEL, DID NOT CONSULT
+  IT, AND EMITTED $0.00 BESIDE A NON-ZERO MARKOUT. IT REFUSES AN EMPTY FILE AND
+  NOT AN EMPTY FIELD. I verified the counter exists and is incremented at
+  be_fill_ledger.py:102 and asserted in its own suite at :208 -- SO IT IS
+  COMPUTED, TESTED, AND UNCONSULTED BY THE EMITTER, which is the zero-consumer
+  shape inside a single module. AND ONE OBSERVATION THAT IS MINE, FROM PUTTING
+  THE TWO ARTIFACTS SIDE BY SIDE RATHER THAN FROM EITHER ALONE: THE $617.95 BTC
+  MARKOUT THE REVIEWER SHOWS BESIDE THAT $0.00 NOTIONAL IS THE SAME $617.95 BE'S
+  PER-DAY TABLE GIVES FOR 08-29 -- SO 08-29 CONTRIBUTES TO THE NUMERATOR OF THE
+  0.648% RATIO WHILE CONTRIBUTING STRUCTURALLY NOTHING TO ITS DENOMINATOR. I have
+  not recomputed the totals and I do not adjudicate it; I record that the two
+  HIGHs are not independent and that the withdrawn ratio has this shape as well as
+  the over-count. A NEW NAMED CLASS BELONGS IN HANDOFF BESIDE THE ZERO-CONSUMER
+  CLASS: PHANTOM FAILURE -- A NEGATIVE VERDICT PRODUCED BY A PATH THAT DID NOT
+  RUN, THE MIRROR OF ABSENCE-READING-AS-A-PASS. The familiar trap lets a bad
+  thing THROUGH; THIS ONE LETS NOTHING THROUGH AND INVENTS A BUG INSTEAD -- a
+  check that could not execute reports a DISAGREEMENT, a FAILURE, a MISSING
+  window, and a reader spends an afternoon on it. DA named it, swept its own
+  instruments and found THREE MORE, and I read all three at the source
+  (da_arm_replay_verify.py:575-601): battery() defaulted script_dir "." so the
+  determinism children COULD NOT IMPORT and the check read identical false -- A
+  DETERMINISM FAILURE WHEN NEITHER INTERPRETER RAN; a missing sar binary made the
+  independent column reader return nothing and the check read as a
+  COLUMN-BINDING FAILURE, i.e. "your production regex reads the wrong field"; and
+  THE ONE THAT IS A REAL CORRECTNESS BUG IN THE RACE MACHINERY --
+  pm_tape_density.uncompressed_size RETURNED 0 FOR A FILE IT COULD NOT READ, AND
+  0 MEANS DARK, so a permission or I/O error WOULD HAVE SURFACED AS A BLACKOUT
+  THAT da_dark_interval_scan REPORTS AND da_blackout_mask MASKS. I read the fix at
+  pm_tape_density.py:197-208: the value STAYS 0 so no caller changes shape, and
+  the file is COUNTED IN A CENSUS scan_day SURFACES, SO THE DIFFERENCE BETWEEN
+  "EMPTY" AND "UNREADABLE" STOPS BEING INVISIBLE -- a repair that adds a
+  distinction rather than changing a return, which is the right shape when every
+  consumer already reads the old one. THE CENSUS IS HONEST ABOUT ITS OWN LIMITS
+  AND SAYS SO IN ITS DOCSTRING: it is A TEXT SCAN that flags two shapes it can see
+  and CANNOT SEE A SEMANTIC ONE; IT REPORTS, AND A HIT IS A PLACE TO LOOK, NOT A
+  DEFECT. And it applies its own discipline to itself -- it REFUSES when it cannot
+  read the tree, "a census that cannot read the tree must not report a clean one",
+  which is the anti-phantom rule turned on the phantom detector. THE
+  COORDINATOR'S STANDING RULE IS NOW IN FORCE AND IT WAS BOUGHT THREE TIMES OVER:
+  NO NUMBER REACHES THE USER BEFORE IT HAS BEEN REVIEWED. THE EVIDENCE IS THE
+  SESSION ITSELF -- THE RANKING RESULT WENT THROUGH REVIEW AND SURVIVED; BOTH
+  PROFITABILITY FIGURES DID NOT, AND BOTH WERE WRONG. It is the same lesson the
+  publication provenance check carries from the other side: the practice attaches
+  to PUBLICATION, not to review rounds, because the released result was never in
+  a round. STATE: register at 495 entries, last R-504; G = 3 OF 5 unchanged and
+  09-03 IS STILL NOT A THIRD ECONOMIC READ; suites at the reviewed tip both
+  launchers rc 0 -- be_read_cells 9, be_fill_ledger 12, da_arm_replay_verify 26.
+  USER ITEMS: TWO -- the Phase-2 winner, and whether to predeclare a causal
+  incumbent operating point or keep the equal-count comparison permanently
+  labelled a diagnostic.
+```
