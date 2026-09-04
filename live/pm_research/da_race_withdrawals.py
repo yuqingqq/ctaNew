@@ -56,7 +56,26 @@ DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
 #: This suite's own total, asserted over ran + skipped.
-EXPECTED_CHECKS = 59
+EXPECTED_CHECKS = 64
+
+#: DA39-R1 (MEM): A COUNT CANNOT TELL YOU WHICH CHECKS RAN. A hand-maintained
+#: tally catches an ADDITION and a REMOVAL and is blind to a REPLACEMENT --
+#: swap one check for another and the suite still reads 59, so "59 checks
+#: passed" is evidence about the arithmetic and not about the coverage. And
+#: this module is the one whose "52 checks passed" was quoted as verification.
+#:
+#: THE FIX IS TO DIGEST THE CHECK IDENTITIES, NOT TO COUNT THEM. Each label's
+#: leading token is its stable id (`DA35-R1`, `WALK-S9`, `PARSER`); the suite
+#: digests the ORDERED id list and asserts it. A replacement changes an id and
+#: therefore the digest; a prose edit to a label's wording does not, so the pin
+#: is not noise. On mismatch the ADDED and REMOVED ids are printed by name --
+#: the "which" a count could never give.
+#:
+#: WHAT NO RUNTIME MECHANISM CAN DO, said plainly rather than left implied: no
+#: check inside the suite can distinguish an INTENDED replacement from an
+#: unintended one. The digest makes the swap visible in a diff and hands the
+#: judgement to review, which is where it belongs.
+EXPECTED_CHECK_IDS_SHA = "fb599bcffc661bcd"
 
 #: THE REGISTRY. One entry per day the USER has taken out of the race.
 #: EVERY entry carries its authority as DATA -- the same discipline round 22
@@ -622,11 +641,26 @@ def floor_from_register(repo: Path | None = None) -> dict[str, Any]:
         return {"status": "REGISTER_UNREADABLE", "pinned": None,
                 "error": repr(e), "path": str(reg)}
     lines = text.splitlines()
+    # R512-R1 / DE16-R1: OWNERSHIP, NOT PRESENCE. A block shown INSIDE a
+    # fenced code sample is a quotation of the control -- which is exactly
+    # where a control gets documented -- and `de_ratification_check` learned
+    # this before the floor marker existed. Fenced regions are excluded so a
+    # filing may SHOW the pin form without becoming a pin.
+    fenced = set()
+    infence = False
+    for i, ln in enumerate(lines):
+        if ln.lstrip().startswith("```"):
+            infence = not infence
+            fenced.add(i)
+        elif infence:
+            fenced.add(i)
     hits, blocks = [], 0
     for i, ln in enumerate(lines):
-        if ln.strip() != FLOOR_BLOCK_BEGIN:
+        if i in fenced or ln.strip() != FLOOR_BLOCK_BEGIN:
             continue
         for j in range(i + 1, min(i + 6, len(lines))):
+            if j in fenced:
+                break
             cand = lines[j].strip()
             if cand == FLOOR_BLOCK_END:
                 blocks += 1
@@ -970,16 +1004,24 @@ def selftest() -> int:
     import tempfile
 
     checks = 0
+    ran_ids: list[str] = []
+
+    def _check_id(label: str) -> str:
+        """The stable identity of a check: its leading token."""
+        head = str(label).split(":")[0].split(" -- ")[0].strip()
+        return head[:32]
 
     def ok(c, label):
         nonlocal checks
         checks += 1
+        ran_ids.append(_check_id(label))
         if not c:
             print(f"FAIL: {label}")
             raise SystemExit(1)
         print(f"PASS: {label}")
 
     def skip(label):
+        ran_ids.append(_check_id(label))
         # A SKIP IS COUNTED AND NAMED. A check that silently vanishes when
         # its precondition is absent makes the total agree while the coverage
         # falls -- the empty-set trap on the suite itself.
@@ -1513,11 +1555,25 @@ def selftest() -> int:
            "`monotone is not True` -- so it would have emitted a verdict on "
            "a guarantee proved over zero versions")
     _floor = MIN_PRIOR_VERSIONS
+    _real_ffr = globals()["floor_from_register"]
     try:
         # DRIVEN ON THE CANONICAL PATH, because that is the only place the
         # floor applies -- raising the pin above the real history is the same
         # shape as the history shrinking below the pin.
+        #
+        # R512-R1: THE LITERAL AND THE PIN MOVE TOGETHER. This mutated only
+        # the literal, which was harmless while the register carried no pin
+        # and became wrong the moment one landed: the walk then refused with
+        # the DISAGREEMENT message instead of the FLOOR one, so the test
+        # failed on a guard that did not exist when it was written. The suite
+        # went red 48 seconds after the code landed with no code change in
+        # between -- a FILING did it. Mutating both keeps this testing the
+        # property it was written for; the disagreement has its own test
+        # below, and neither guard is weakened to make a needle match.
         globals()["MIN_PRIOR_VERSIONS"] = 99
+        globals()["floor_from_register"] = lambda repo=None: {
+            "status": "PINNED", "pinned": 99, "path": "<mutated>",
+            "n_blocks": 1, "stray_marker_lines": []}
         assert_withdrawals_monotone()
         ok(False, "WALK-S9: a walk under the floor must REFUSE")
     except WithdrawalRefused as e:
@@ -1531,6 +1587,24 @@ def selftest() -> int:
                f"unreadable blob and NO anchor violation -- the replayed add "
            f"is still an add. The floor is the one thing that survives a "
            f"rewrite, because it is committed in the file being counted")
+    finally:
+        globals()["MIN_PRIOR_VERSIONS"] = _floor
+        globals()["floor_from_register"] = _real_ffr
+    # R512-R1: AND THE DISAGREEMENT GETS ITS OWN TEST, by name. It is the
+    # MORE important refusal -- a coherent rewrite lowers the literal, and
+    # the pin living in another seat's document is what catches it.
+    try:
+        globals()["MIN_PRIOR_VERSIONS"] = 99
+        assert_withdrawals_monotone()
+        ok(False, "WALK-S9d: a literal disagreeing with the pin must REFUSE")
+    except WithdrawalRefused as e:
+        ok("COHERENT-REWRITE signature" in str(e)
+           and "the register pins the walk floor at" in str(e),
+           f"WALK-S9-DISAGREE (R512-R1): with the register PINNED, moving "
+           f"the module literal alone refuses as a COHERENT REWRITE rather "
+           f"than as a short walk -- the guard the round-38 pin exists for, "
+           f"and the one WALK-S9 was accidentally tripping. It fires only "
+           f"because the pin is real: {str(e)[:70]}...")
     finally:
         globals()["MIN_PRIOR_VERSIONS"] = _floor
     ok(assert_withdrawals_monotone()["monotone"] is True,
@@ -1652,7 +1726,60 @@ def selftest() -> int:
        f"registry, not shallow, no replace refs -- so the guards changed "
        f"nothing in production, which is how a guard should land")
 
+    # ---- R512-R1: a pin SHOWN in a fence is a quotation, not a pin ------
+    with tempfile.TemporaryDirectory() as t:
+        _d2 = Path(t)
+        _r2 = _d2 / REGISTER_PATH
+        _r2.parent.mkdir(parents=True, exist_ok=True)
+        _r2.write_text("```\n" + FLOOR_BLOCK_BEGIN + "\n"
+                       + REGISTER_FLOOR_MARKER + "9\n"
+                       + FLOOR_BLOCK_END + "\n```\n", encoding="utf-8")
+        ok(floor_from_register(_d2)["status"]
+           == "FLOOR_MARKER_OUTSIDE_PIN_BLOCK",
+           "R512-R1 (DE16-R1 carried over): a pin block SHOWN INSIDE A FENCE "
+           "pins nothing -- a fenced sample is exactly where a control gets "
+           "documented, which `de_ratification_check` learned before this "
+           "marker existed. Ownership, not presence")
+        _r2.write_text(FLOOR_BLOCK_BEGIN + "\n" + REGISTER_FLOOR_MARKER
+                       + "9\n" + FLOOR_BLOCK_END + "\n", encoding="utf-8")
+        ok(floor_from_register(_d2)["pinned"] == 9,
+           "R512-R1b ADMITS: the same three lines OUTSIDE a fence still pin, "
+           "so the fence rule did not buy immunity by disabling the reader")
+
+    # ---- DA39-R1 (MEM): a COUNT cannot say WHICH checks ran -------------
+    import hashlib as _hl0
+
+    def _dig0(ids):
+        return _hl0.sha256("\n".join(ids).encode()).hexdigest()[:16]
+
+    _swapped = list(ran_ids)
+    _swapped[0] = "SOME-OTHER-CHECK"
+    ok(len(_swapped) == len(ran_ids) and _dig0(_swapped) != _dig0(ran_ids),
+       f"DA39-R1 (MEM) FIRES: swapping one check id for another leaves the "
+       f"COUNT identical ({len(_swapped)} either way) and moves the digest "
+       f"-- exactly the case a hand-maintained tally is blind to, in the "
+       f"module whose '52 checks passed' was quoted as verification")
+    ok(_dig0(ran_ids[:-1]) != _dig0(ran_ids)
+       and _dig0(ran_ids + ["X"]) != _dig0(ran_ids),
+       "DA39-R1b and it still catches the two a count DID catch -- a "
+       "removal and an addition -- so nothing was traded away for it")
+
     print(f"\nda_race_withdrawals selftest: {checks} checks PASSED")
+    import hashlib as _hl
+
+    def _dig(ids):
+        return _hl.sha256("\n".join(ids).encode()).hexdigest()[:16]
+
+    _sha = _dig(ran_ids)
+    print(f"check-id digest: {_sha} over {len(ran_ids)} ids")
+    if _sha != EXPECTED_CHECK_IDS_SHA:
+        # THE "WHICH", which a tally cannot give.
+        print(f"FAIL: check-id digest {_sha} != pinned "
+              f"{EXPECTED_CHECK_IDS_SHA}. A REPLACED check keeps the count "
+              f"identical and changes this. Current ids in order:")
+        for i, cid in enumerate(ran_ids, 1):
+            print(f"   {i:3d}. {cid}")
+        return 1
     if checks != EXPECTED_CHECKS:
         print(f"FAIL: EXPECTED_CHECKS={EXPECTED_CHECKS} but {checks} ran.")
         return 1

@@ -40,7 +40,7 @@ CODE_ROOT = Path(__file__).resolve().parents[2]
 REGISTER = (CODE_ROOT / "orchestrator/PROGRAMS/P-2026-003-polymarket-5min"
             / "workspace/COORDINATION.md")
 CITE_RE = re.compile(r"\bR-\d+\b")
-EXPECTED_CHECKS = 14
+EXPECTED_CHECKS = 16
 
 
 class CiteAuditRefused(RuntimeError):
@@ -84,12 +84,24 @@ def cite_names_subject(subject_terms: tuple, cites: tuple,
                        entries: dict[str, str]) -> dict[str, Any]:
     """For one claim: does each cited entry's TEXT carry the subject?
 
-    Two strengths are reported because they disagree usefully:
-      * `term_level` -- any declared term for the subject appears anywhere in
-        the entry. Crude, and the crude pass is what most cites survive.
-      * `strict` -- the term appears OUTSIDE the entry's own header line, so
-        a title that merely mentions the subject in passing is not mistaken
-        for the entry ruling on it.
+    THREE strengths, and the third is the one that matters. **R512-R1: this
+    module had the defect it was built to catch** -- an entry that merely
+    DISCUSSES a subject returned true on both of my first two tests, so
+    "the cited text carries the claim" was satisfied by a passing mention.
+    The fix is DE16-R1's, carried over rather than reinvented: that remedy
+    says a quoted block "must be the entry's OWN heading ref", i.e.
+    **ownership is established by POSITION, not by presence.** The general
+    form of the class is not "everything that reads the register" -- it is
+    every reader that asks whether a token is PRESENT rather than whether it
+    is OWNED.
+
+      * `mentions` -- any declared term appears anywhere in the entry. Crude,
+        and the crude pass is what most cites survive.
+      * `in_prose` -- the term appears after the entry's bolded title, so a
+        title-only mention is distinguishable from one in the argument.
+      * `owns` -- the term appears in the entry's OWN TITLE. An entry titled
+        for a subject is ruling on it; an entry that names it in passing is
+        discussing it, and this programme has read one for the other before.
     """
     rows = {}
     for c in cites:
@@ -106,11 +118,20 @@ def cite_names_subject(subject_terms: tuple, cites: tuple,
         # what follows the bolded title.
         title_end = body.find("**", body.find("**") + 2)
         rest = body[title_end + 2:] if title_end > 0 else ""
+        title = body[:title_end + 2] if title_end > 0 else body
+        mentions = any(t in body for t in subject_terms)
+        owns = any(t in title for t in subject_terms)
         rows[c] = {
             "resolves": True,
-            "term_level": any(t in body for t in subject_terms),
+            "term_level": mentions,            # kept: the crude pass
+            "mentions": mentions,
+            "in_prose": (any(t in rest for t in subject_terms)
+                         if rest else None),
             "strict": (any(t in rest for t in subject_terms)
-                       if rest else None),
+                       if rest else None),     # kept: prior name
+            "owns": owns,
+            "ownership": ("OWNS" if owns else
+                          "DISCUSSES_ONLY" if mentions else "ABSENT"),
             "n_chars": len(body), "n_chars_after_title": len(rest),
         }
     return rows
@@ -206,6 +227,14 @@ def audit(register: Path | None = None,
             "cites_failing_term_level": sorted(
                 {c for r in rows.values() for c, v in
                  r.get("per_cite", {}).items() if v["term_level"] is False}),
+            "cites_that_only_DISCUSS_the_subject": sorted(
+                {c for r in rows.values() for c, v in
+                 r.get("per_cite", {}).items()
+                 if v.get("ownership") == "DISCUSSES_ONLY"}),
+            "cites_that_OWN_the_subject": sorted(
+                {c for r in rows.values() for c, v in
+                 r.get("per_cite", {}).items()
+                 if v.get("ownership") == "OWNS"}),
             "cites_failing_strict_only": sorted(
                 {c for r in rows.values() for c, v in
                  r.get("per_cite", {}).items()
@@ -219,9 +248,14 @@ def audit(register: Path | None = None,
         "n_tables": len(tables), "tables": out,
         "n_cites_failing_term_level": n_bad,
         "role": "REPORTED_NOT_ENFORCED",
-        "why": ("a cite that RESOLVES and a cite whose TEXT carries the "
-                "claim are different facts, and only the first is usually "
-                "checked"),
+        "n_cites_that_only_discuss": sum(
+            len(v.get("cites_that_only_DISCUSS_the_subject", []))
+            for v in out.values() if isinstance(v, dict)),
+        "why": ("a cite that RESOLVES, a cite whose TEXT carries the claim, "
+                "and a cite whose entry OWNS the subject are three different "
+                "facts. Usually only the first is checked, and this module "
+                "checked only the first two until it was found to have the "
+                "defect it was built to catch (R512-R1)"),
         "limits": ("term-level matching over prose: a cite can name its "
                    "subject in words this does not list, and an entry can "
                    "mention a subject without ruling on it. A failure here "
@@ -276,6 +310,17 @@ def selftest() -> int:
     e2 = register_entries(_TT)
     r2 = cite_names_subject(("clob_v9",), ("R-200",), e2)
     r3 = cite_names_subject(("widgets",), ("R-200",), e2)
+    ok(r2["R-200"]["ownership"] == "OWNS"
+       and r3["R-200"]["ownership"] == "DISCUSSES_ONLY",
+       "CITE-5 (R512-R1) OWNERSHIP, NOT PRESENCE -- DE16-R1's rule carried "
+       "over rather than reinvented: an entry TITLED for a subject OWNS it, "
+       "and one that names it only in the argument DISCUSSES it. Both "
+       "returned true on my first two tests, so this module had the defect "
+       "it was built to catch")
+    ok(cite_names_subject(("nowhere",), ("R-200",), e2)["R-200"]["ownership"]
+       == "ABSENT",
+       "CITE-6 and a subject the entry never names is ABSENT -- three "
+       "levels, not a boolean, so 'discussed' is never reported as 'ruled'")
     ok(r2["R-200"]["term_level"] is True and r2["R-200"]["strict"] is False
        and r3["R-200"]["strict"] is True,
        "CITE-4 the two strengths DISAGREE usefully: a subject named only in "
