@@ -1153,6 +1153,48 @@ def run_arms(argv=None):
             "decides_nothing": "REPORTED. Whether the trade-off is worth "
                                "taking is the policy layer's (rule 14).",
         }
+    # ---- DE60: THE VALUE CEILING, WHICH NOBODY HAD EVER COMPUTED ------
+    # V_oracle bounds what ANY declining overlay could add. It is one
+    # filter and one sum over `markout_cents_per_share`, which this
+    # repository has carried since 2026-08-25 -- so it was computable on
+    # day one and would have priced the whole overlay line BEFORE any
+    # ranker was fitted. The reviewer searched both programmes and found
+    # NO value ceiling had ever been computed: the only one in the tree
+    # (`skew_bound.py`) is for the SKEW lever, and every `v < 0` site
+    # COUNTS negative windows without SUMMING them.
+    #
+    # IT SHIPS AS A CALL TO A NAMED FUNCTION, not as a number computed
+    # here, so it can never again be the thing nobody ran.
+    _blf = ARM_FILLS.get("QR_SKEW_ONLY") or []
+    if not _blf:
+        OUT["value_ceiling"] = {"status": "NO_BASELINE_FILLS"}
+    else:
+        _fv = [v for v in (R.fill_value_cents(f) for f in _blf)
+               if v is not None]
+        _ceil = R.value_ceiling(_fv, leg="fills")
+        _ceil_inv = (OUT["arms"]["QR_SKEW_ONLY"]["fields"]
+                     ["inventory_loss_cents"].get("value_ceiling"))
+        OUT["value_ceiling"] = {
+            "fills_leg": _ceil,
+            "inventory_leg": _ceil_inv,
+            "arms_against_the_fills_ceiling": {
+                a: R.ceiling_capture(
+                    OUT["cancellation_economics"]["arms"][a]
+                    ["net_pnl_delta_cents"], _ceil)
+                for a in OUT["cancellation_economics"].get("arms", {})},
+            "why_this_exists": (
+                "an overlay can only DECLINE, so the best it could ever "
+                "do is decline every losing fill and keep every winning "
+                "one. That is a ceiling no ranker can exceed, it costs a "
+                "filter and a sum, and it had never been computed in "
+                "either programme"),
+            "read_with_oracle_f": (
+                "a ceiling reachable only by declining a large fraction "
+                "of the book is a different proposition from one "
+                "reachable at 1%, so `oracle_f` is quoted with it"),
+            "decides_nothing": "REPORTED (rule 14).",
+        }
+
     OUT["population_exclusions"] = EXCL
     OUT["peak_rss_gb"] = gb(); OUT["total_wall_s"] = round(time.time()-T0, 1)
     # IMMUTABLE OUTPUT NAME. Round 53 wrote every run to one filename, so a

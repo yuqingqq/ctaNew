@@ -57,6 +57,10 @@ from pathlib import Path
 #:       identity, and its two refusals.
 #:   +1  DE59-C4: the tail ranking made a named parameter after
 #:       the two rankings were found to disagree 1.13 vs 0.10.
+#:   +5  DE60: V_oracle with both falsifiers (all-positive -> 0,
+#:       all-negative -> whole gross), the hand-checked mixed
+#:       case, the SIGNED capture fraction, and the computed
+#:       cascade-vs-selectivity separation.
 #:   +4  the reference-level maker-P&L block, 4 checks -> 8: the
 #:       identity, the double-count known-bad, P&L ==
 #:       post_fill_markout, the two legs' denominators, and a
@@ -66,7 +70,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 217
+EXPECTED_CHECKS = 222
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1359,7 +1363,7 @@ INVENTORY_EMITTED_KEYS: tuple = (
     "by_ruling", "concentration", "interval", "per_slug",
     "summed_terminal_net_shares", "summed_terminal_net_shares_status",
     "fills_leg_cents", "total_to_terminal_cents", "identity_holds",
-    "identity_residual_cents", "fill_statuses")
+    "identity_residual_cents", "fill_statuses", "value_ceiling")
 
 
 def inventory_pnl(fills: list, terminal_marks: dict) -> dict:
@@ -1391,6 +1395,7 @@ def inventory_pnl(fills: list, terminal_marks: dict) -> dict:
           "NO_SHARES": 0, "NO_SLUG": 0}
     per: dict = {}
     inv_contrib: list = []
+    inv_by_slug: dict = {}
     fills_contrib: list = []
     fills_leg = inv_leg = total_leg = 0.0
     for f in fills:
@@ -1428,6 +1433,7 @@ def inventory_pnl(fills: list, terminal_marks: dict) -> dict:
         inv_leg += _i
         fills_leg += _f
         inv_contrib.append(_i)
+        inv_by_slug.setdefault(slug, []).append(_i)
         fills_contrib.append(_f)
         total_leg += sgn * (MT - float(lvl)) * sz
         st["VALUED"] += 1
@@ -1503,6 +1509,20 @@ def inventory_pnl(fills: list, terminal_marks: dict) -> dict:
         "concentration": {
             "inventory_leg": _conc(inv_contrib, inv_leg),
             "fills_leg": _conc(fills_contrib, fills_leg)},
+        # DE60(2): the RESIDUAL leg's own ceiling. Pooled AND PER WINDOW,
+        # because this leg is 12 draws of a per-window directional
+        # outcome with three windows carrying 81.4% -- a pooled ceiling
+        # over it would read as 4,315 fills' worth of evidence when the
+        # cluster unit is the window (rule 8).
+        "value_ceiling": {
+            "pooled": value_ceiling(inv_contrib, leg="inventory"),
+            "per_slug": {k: value_ceiling(v, leg=f"inventory:{k}")
+                         for k, v in inv_by_slug.items()},
+            "unit_warning": "the pooled ceiling is over FILLS; the "
+                            "cluster unit for this leg is the WINDOW, "
+                            "and the per-slug ceilings are what a "
+                            "per-window reading may use",
+        },
         "interval": "NONE. Rule 8: intervals only on the correct cluster "
                     "unit (UTC day). This population is %d windows, "
                     "below the 5-complete-day floor, so a POINT ESTIMATE "
@@ -1747,7 +1767,34 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int
             "better_than_a_random_cancel": (ratio is not None
                                             and abs(ratio) < 1.0),
         }
+    # DE60(3): WHICH FACTOR ACTUALLY SEPARATES THE ARMS -- COMPUTED, so
+    # a summary cannot get the ordering wrong again. I wrote "the
+    # actionable lever is a cancel that does not cascade" in two round
+    # summaries while my OWN emitted numbers said selectivity separates
+    # the arms by more than cascade does. A ratio nobody computes is a
+    # ratio prose will invert.
+    sep = {"status": "NEEDS_TWO_ARMS"}
+    _sel = {a: v.get("selectivity_factor") for a, v in out.items()
+            if v.get("selectivity_factor")}
+    _cas = {a: v.get("cascade_factor") for a, v in out.items()
+            if v.get("cascade_factor")}
+    if len(_sel) >= 2 and len(_cas) >= 2:
+        _sr = max(_sel.values()) / min(_sel.values())
+        _cr = max(_cas.values()) / min(_cas.values())
+        sep = {
+            "status": "OK",
+            "selectivity_spread": _sr, "cascade_spread": _cr,
+            "dominant_factor": ("selectivity" if _sr > _cr else "cascade"),
+            "dominance_ratio": (_sr / _cr if _cr else None),
+            "ordering": ("CHEAP FILLS FIRST, FEW FILLS SECOND"
+                         if _sr > _cr else
+                         "FEW FILLS FIRST, CHEAP FILLS SECOND"),
+            "why_computed": "both factors differ between the arms; which "
+                            "one differs MORE is an arithmetic question "
+                            "and is answered here rather than in prose",
+        }
     return {
+        "separation": sep,
         "n_baseline_fills": n_b, "baseline_pnl_cents": pnl_b,
         "n_generations_with_fills": n_gens_with_fills,
         "fills_per_generation": fpg,
@@ -1761,6 +1808,87 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int
         "identity": "ratio_vs_random_cancel == cascade x selectivity",
         "arms": out,
         "decides_nothing": "REPORTED (rule 14).",
+    }
+
+
+def value_ceiling(values: list, *, leg: str = "unnamed") -> dict:
+    """V_oracle -- THE MOST ANY DECLINING OVERLAY COULD EVER ADD.
+
+    An overlay can only ever DECLINE fills. Declining a fill worth `v`
+    adds `-v`. So the best attainable improvement is achieved by an
+    oracle that declines exactly the fills with `v < 0` and keeps every
+    positive one:
+
+        V_oracle = SUM over fills with v < 0 of |v|
+
+    THAT IS A CEILING NO RANKER CAN EXCEED, and it is one filter and one
+    sum over data this repository has carried since
+    `markout_cents_per_share` landed. NOTHING IN EITHER PROGRAMME HAD
+    EVER COMPUTED IT: the only ceiling in the tree, `skew_bound.py`, is
+    for the SKEW lever, and every `v < 0` site COUNTS negative windows
+    without SUMMING them. A bound that costs a filter and a sum, and that
+    would have priced the whole overlay line before any ranker was
+    fitted, is the cheapest thing this seat can ship -- which is why it
+    ships as a NAMED FUNCTION and not as a number in a message.
+
+    `oracle_f` TRAVELS WITH IT AND IS NOT OPTIONAL. A ceiling reachable
+    only by declining 40% of the book is a different proposition from
+    one reachable at 1%, and a ceiling quoted without the fraction of the
+    book it costs invites the reading that it is free."""
+    vals = [float(v) for v in values if v is not None]
+    n = len(vals)
+    if not n:
+        return {"status": "NO_VALUES", "leg": leg,
+                "why": "a ceiling over an empty book is not a ceiling"}
+    neg = [v for v in vals if v < 0]
+    pos = [v for v in vals if v > 0]
+    net = sum(vals)
+    vo = -sum(neg)
+    return {
+        "leg": leg, "status": "OK",
+        "V_oracle_cents": vo,
+        "n_fills": n, "n_negative": len(neg), "n_positive": len(pos),
+        "n_zero": n - len(neg) - len(pos),
+        "oracle_f": len(neg) / n,
+        "oracle_f_meaning": "the FRACTION OF THE BOOK the oracle must "
+                            "decline to reach the ceiling. A ceiling is "
+                            "not free and this is its price",
+        "gross_positive_cents": sum(pos),
+        "net_cents": net,
+        "V_oracle_pct_of_net": (vo / net * 100.0 if abs(net) > 1e-12
+                                else None),
+        "definition": "V_oracle = SUM |v| over fills with v < 0; the "
+                      "maximum an overlay that can only DECLINE could "
+                      "add, attained only by an oracle that declines "
+                      "every losing fill and no winning one",
+        "decides_nothing": "REPORTED (rule 14).",
+    }
+
+
+def ceiling_capture(observed_delta_cents: float, ceiling: dict) -> dict:
+    """Where an arm sits against `V_oracle` -- and the sign is the point.
+
+    An arm whose delta is NEGATIVE captured a NEGATIVE fraction of the
+    ceiling: it did not fall short of the best possible, it moved the
+    other way. Reporting |delta|/V_oracle would hide that, so the signed
+    fraction is what is returned."""
+    if ceiling.get("status") != "OK":
+        return {"status": "NO_CEILING", "why": ceiling.get("why")}
+    vo = ceiling["V_oracle_cents"]
+    if vo <= 0:
+        return {"status": "CEILING_IS_ZERO",
+                "why": "no fill in this book lost money, so no declining "
+                       "overlay could add anything at all -- a ceiling of "
+                       "0 is a REFUTATION of the lever, not a small number",
+                "observed_delta_cents": observed_delta_cents}
+    return {
+        "status": "OK",
+        "observed_delta_cents": observed_delta_cents,
+        "V_oracle_cents": vo,
+        "fraction_of_ceiling_captured": observed_delta_cents / vo,
+        "moved_the_wrong_way": observed_delta_cents < 0,
+        "reading": "a NEGATIVE fraction is not 'far from the ceiling', "
+                   "it is the opposite direction from it",
     }
 
 
@@ -4602,6 +4730,65 @@ def selftest() -> int:
        and cancel_mechanics([], {}, 50)["status"] == "NO_BASELINE",
        "KNOWN-BAD: an arm with no cancels and an empty baseline are "
        "STATUSES, never a division that returns a number")
+
+    # ---- DE60: V_oracle, AND THE TWO FALSIFIERS IT WAS ASKED FOR ------
+    # ALL POSITIVE -> the ceiling is ZERO. This is the direction that
+    # matters most: a ceiling of 0 REFUTES the lever outright, and an
+    # instrument that cannot return 0 would never be able to say so.
+    _vc_pos = value_ceiling([1.0, 2.0, 3.0, 0.0], leg="all_positive")
+    ok(_vc_pos["V_oracle_cents"] == 0.0
+       and _vc_pos["oracle_f"] == 0.0
+       and _vc_pos["V_oracle_pct_of_net"] == 0.0
+       and _vc_pos["n_zero"] == 1,
+       f"DE60 FALSIFIER: a book where NO fill loses money has "
+       f"V_oracle = {_vc_pos['V_oracle_cents']}c, oracle_f "
+       f"{_vc_pos['oracle_f']}, ceiling {_vc_pos['V_oracle_pct_of_net']}% "
+       f"-- no declining overlay could add anything at all. A zero here "
+       f"is a REFUTATION of the lever, not a small number")
+    # ALL NEGATIVE -> the ceiling is the WHOLE GROSS and f = 1.0.
+    _vc_neg = value_ceiling([-1.0, -2.0, -3.0], leg="all_negative")
+    ok(abs(_vc_neg["V_oracle_cents"] - 6.0) < 1e-9
+       and _vc_neg["oracle_f"] == 1.0
+       and abs(_vc_neg["net_cents"] + 6.0) < 1e-9
+       and _vc_neg["V_oracle_pct_of_net"] == -100.0,
+       f"DE60 FALSIFIER, OTHER DIRECTION: a book where EVERY fill loses "
+       f"has V_oracle = the whole gross ({_vc_neg['V_oracle_cents']}c) at "
+       f"oracle_f = {_vc_neg['oracle_f']} -- reachable only by declining "
+       f"the entire book, which is why f is not optional")
+    _vc = value_ceiling([5.0, -2.0, 3.0, -1.0], leg="mixed")
+    ok(abs(_vc["V_oracle_cents"] - 3.0) < 1e-9
+       and _vc["oracle_f"] == 0.5
+       and abs(_vc["net_cents"] - 5.0) < 1e-9
+       and abs(_vc["V_oracle_pct_of_net"] - 60.0) < 1e-9,
+       f"DE60 hand-checked: losers -2 and -1 give V_oracle 3.0c on a net "
+       f"of 5.0c = {_vc['V_oracle_pct_of_net']}%, at oracle_f "
+       f"{_vc['oracle_f']}")
+    # AND THE SIGN OF THE CAPTURE IS THE POINT.
+    _cap = ceiling_capture(-953.92, _vc)
+    ok(_cap["fraction_of_ceiling_captured"] < 0
+       and _cap["moved_the_wrong_way"] is True
+       and ceiling_capture(1.0, _vc_pos)["status"] == "CEILING_IS_ZERO"
+       and value_ceiling([])["status"] == "NO_VALUES",
+       f"DE60: an arm with a NEGATIVE delta captures a NEGATIVE fraction "
+       f"({_cap['fraction_of_ceiling_captured']:.3f}) -- it did not fall "
+       f"short of the ceiling, it moved AWAY from it. |delta|/V_oracle "
+       f"would have hidden the sign. A zero ceiling and an empty book "
+       f"are STATUSES, never a division")
+    # DE60(3): the separation is COMPUTED, because I got the ordering
+    # wrong in prose twice while my own numbers said otherwise.
+    _sepcm = cancel_mechanics(
+        _base, {"A": (_base[:98], 20), "B": (_base[:99], 5)},
+        n_gens_with_fills=50)["separation"]
+    ok(_sepcm["status"] == "OK"
+       and _sepcm["dominant_factor"] in ("selectivity", "cascade")
+       and _sepcm["ordering"].startswith(
+           "CHEAP" if _sepcm["dominant_factor"] == "selectivity"
+           else "FEW"),
+       f"DE60(3): which factor separates the arms is ARITHMETIC and is "
+       f"computed -- {_sepcm['dominant_factor']}, spread "
+       f"{_sepcm['selectivity_spread']:.3f} vs "
+       f"{_sepcm['cascade_spread']:.3f}. A ratio nobody computes is a "
+       f"ratio prose will invert, and mine did, twice")
 
     # ---- DE48: THE LOG MUST NEVER MAKE A DEAD RUN LOOK ALIVE ----------
     import subprocess as _sp
