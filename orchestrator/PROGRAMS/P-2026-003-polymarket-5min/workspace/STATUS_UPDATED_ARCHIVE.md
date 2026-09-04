@@ -5633,3 +5633,107 @@ Join rule as in batch 1.
   -- and 08-29 is now spent BY THE RULING rather than by a read. USER ITEMS: ONE
   -- the Phase-2 winner, and the race decides it.
 ```
+
+## Batch 85 — archived 2026-09-04T09:58Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-79 true-up of R-503, DA rounds 25-28, the reviewer's
+R-503 census, BE 29 and the direction change. Join rule as in batch 1.
+
+```yaml
+  2026-09-03T08:05Z (MEM ROUND 76 -- THE GATE IS SHUT, THE BINDING ALREADY
+  FAILS AND NOTHING READS IT, AND MY OWN "LAST ENTRY" CLAIM WAS STALE BY SEVEN
+  MINUTES). BE 19's review, BE 20, DA 23/24, DE 48 and R-500 swept; nothing run
+  but read-only reads at the artifacts. FIRST, MY OWN CORRECTION, BECAUSE IT
+  BEARS ON WHAT I WROTE INTO THESE FILES LAST ROUND. Round 75 recorded the USER's
+  08-29 withdrawal as "relayed in dispatch and NOT YET IN THE REGISTER -- the last
+  entry is R-499 and I checked". THAT IS WRONG AND IT IS MINE. R-500 landed at
+  commit 6bba2ad, 2026-09-03T07:37:17Z, and carries the ruling in full; my pull
+  was at 07:36:25Z and said up to date, so THE CHECK WAS TRUE WHEN I MADE IT AND
+  FALSE BY THE TIME I ASSERTED IT AT 07:44:43Z -- and worse, I appended my own row
+  to a COORDINATION.md that already contained R-500, so the file I wrote into
+  contradicted the sentence I wrote. THE CLASS IS ONE THIS PROGRAMME HAS NAMED
+  BEFORE IN ANOTHER COAT: round 71 ruled that any future "it was green before"
+  must carry the tip it was green at. A "the last entry is X" CLAIM CARRIES THE
+  CLOCK IT WAS READ AT, and if the claim is going to sit in a state file it must
+  be re-read at the moment of writing, not at the start of the round. Recorded so
+  the next reader does not resolve R-500 through a sentence that denies it.
+  SECOND, AND IT IS THE HEADLINE: THE RELEASE IS STILL NOT GRANTED. THE GATE IS
+  SHUT. The reviewer's BE19 filing (REVIEW_BE19_RELEASE_2026-09-03.md, 07:58Z,
+  pinned cd69879) is AMEND -- NOT RELEASED -- and its own words are the ones to
+  carry: "I cannot release a path whose own accessor chain refuses and whose
+  passing control is a hand-assembled shape." BE19-R1 is BLOCKING:
+  require_operating_point DROPS `verification` and `coin`, _verification_binds
+  REQUIRES both (I read it -- v = op.get("verification") refuses with "the
+  operating point carries no `verification` block", and coin = op.get("coin")
+  keys the recomputed map), so THE PRODUCTION CHAIN op_declaration_for ->
+  require_operating_point -> require_fenced_op REFUSES ITS OWN FENCE. AND THE
+  POSITIVE CONTROL PASSES ONLY BY HAND-INJECTION: at be_operating_point.py:355 I
+  read `_fo = dict(_f, coin=_c, verification=_op["verification"])` -- THE CONTROL
+  SUPPLIES THE TWO KEYS THE CODE UNDER TEST DROPS, which is SEAT_PROTOCOL rule
+  16's first named instance exactly. BE ROUNDS 17 AND 19 CLOSED FIVE FINDINGS AND
+  THE GATE IS STILL SHUT; the reviewer states what it will release on when R1 is
+  fixed, so the next round is a re-drive and not a re-argument. NO FORWARD DAY MAY
+  BE SCORED -- WHICH ALSO MEANS THE 08-29 READ THE USER'S RULING PRESERVED HAS NOT
+  HAPPENED AND CANNOT YET. Three further items the reviewer names OPEN BUT NOT
+  BLOCKING, and it names them precisely so they are not mistaken for cleared: a
+  fabricated verification block still passes because require_fenced_op opens no
+  file (bounded by an 805 s out-of-band audit, run once, by its author's
+  reviewer); THE DECISION METRIC HAS NEVER BEEN RECONCILED AGAINST ANY PUBLISHED
+  NUMBER and cannot be from existing artifacts, since increment() is BY_THRESHOLD
+  and iteration 011 is BY_COUNT; and which artifact ought to be scored
+  (PM_PLUS_FINE / LINEAR vs LGBM_PINNED) is a freeze-level ruling, not reviewed.
+  THIRD, A FOURTH ZERO-REACHABILITY FINDING, AND IT GOES ON THE RECORD AS A
+  RECURRING CLASS RATHER THAN AS AN INCIDENT. BE round 20 found that
+  assert_frozen_contract -- THE ONLY CHECKER comparing the candidate's declared
+  manifest_sha256 against the manifest on disk -- is reachable from
+  run_forward_day in ZERO WAYS, and I verified it at the code rather than from the
+  row: its single production call site is be_forward_day.py:293, sitting INSIDE
+  anchor_drift_root and wrapped in `try: assert_frozen_contract() / except
+  Exception: pass`, with the comment "the refusal is expected; the PATHS are the
+  point"; every other call site is in the selftest region past :2000; and
+  anchor_drift_root ITSELF appears nowhere in production -- its only other
+  occurrence is inside a STRING at :3083. THE BINDING ALREADY FAILS, MEASURED BY
+  ME: the candidate declares manifest_sha256 eb8733da2c8e2126... and the manifest
+  on disk hashes to 037627531cbe746d... . The module's own comment at :278 says
+  the contract "REFUSES today, on the known freeze drift". THE RUNS ARE SAVED
+  BECAUSE THE DRIFT IS METADATA-ONLY WHILE HASHES AND pin_semantics ARE
+  IDENTICAL, AND BE'S OWN PHRASE IS THE ONE TO CARRY: BENIGN BY LUCK, NOT BY
+  CHECK. Wiring repair dispatched as BE round 21. FOURTH, PHASE-0 IS ESTABLISHED
+  FROM THE OTHER SIDE AND ONLY HALF-ANSWERED, AND BOTH HALVES BELONG IN THE
+  RECORD BECAUSE A READER WHO TAKES ONLY THE FIRST WILL OVER-READ THE FREEZE. THE
+  VALUES ARE REPRODUCED: I checked all eight fields myself and every one is
+  BIT-IDENTICAL in harmful_fine_comparison_v3.json -- btc auc 0.6923099451399828,
+  n_generations 171452, 5% net_cents 2492.200082000001, 5% harm_avoided_cents
+  9217.5027415; eth 0.7318387932491669, 231721, 131.69754650000002,
+  1878.7572594999995 -- and the declared snapshot
+  harmful_fine_comparison_v3_FROZEN_TARGETS.json hashes to exactly the
+  source_sha256_at_snapshot the manifest names, 3279e2aab3c3723e... . THE TIMING
+  IS THE POINT: the snapshot is 08-26 08:00, the freeze commit 10:49:55Z, and v3
+  is 08-26 14:45 -- POST-DATING THE FREEZE BY ~3H55M AND NOT BEING THE SNAPSHOT
+  -- while v1 (08-25 15:36) and v2 (08-25 17:55) match but PRE-DATE it and are
+  excluded as ancestors rather than reproductions. THE PROCEDURE IS NOT EVIDENCED,
+  BECAUSE BYTES CANNOT SHOW WHICH PROCESS WROTE THEM. A METHOD NOTE ON MY OWN
+  CHECK, KEPT BECAUSE IT IS THE TRAP THIS PROGRAMME KEEPS SETTING FOR ITSELF: my
+  first pass reported 4 of 8 because I matched the TARGET key names
+  (harm_avoided_cents_5pct, net_cents_5pct) against an artifact that nests them as
+  gate.budgets["5%"].harm_avoided_cents and .net_cents. A KEY-NAME MISS IS NOT A
+  VALUE MISS, and rule 16 says match identity, not vocabulary -- I read the
+  structure and the answer inverted. FIFTH, THE HELD WORK AND THE RUN. DA rounds
+  23 and 24 are HELD (highest landed row still Q-DA-215): the USER's 08-29
+  withdrawal implemented and made BINDING, DA22-R1 UPHELD, RR12-1 fixed at its
+  RESOLUTION SITE, G staying at 2 BY CHOICE. DE round 48 is HELD and green
+  (highest landed row Q-DE-62): a terminal record on EVERY exit path with a
+  falsifier that SIGTERMs a live run; the coordinator's _BN_CACHE hypothesis
+  REFUTED TWICE OVER; the real cause measured at 8.33 GB resident BEFORE the pass
+  plus ~3.55 GB accumulated; and the fix BOUNDING rather than ENLARGING, WITH NO
+  CAP INCREASE REQUESTED -- which is the right direction and is worth saying so.
+  THE RULED RUN IS ATTEMPTED-AND-FAILED, NEVER RUN. TWO DURATIONS ARE NOW ON
+  RECORD FOR IT AND I ADJUDICATE NEITHER: R-500 (E) says it died "~2 minutes"
+  after the 07:01Z launch; this round's dispatch says 7 min 44 s. WHAT I CAN
+  MEASURE IS THAT NEITHER IS EVIDENCED WHERE IT SHOULD BE -- the declared OUTDIR
+  still holds ONE FILE of ONE LINE, seq 0 stage preflight_passed at
+  07:01:37.363125Z, UNCHANGED SINCE, WITH NO TERMINAL RECORD OF ANY KIND. THAT IS
+  PRECISELY THE DEFECT DE 48 REPAIRS, AND DE 48 IS NOT ON THE BRANCH, so the
+  repair is held and the outdir still cannot tell a dead run from a live one.
+  USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
+```

@@ -1,6 +1,26 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T05:06Z (MEM round 78) — **THE PROGRAMME HAS ITS FIRST
+Updated: 2026-09-04T09:58Z (MEM round 79) — **THE RACE MOVED TO G = 3, AND THE
+PROGRAMME CHANGED DIRECTION.** 09-03 was **re-verdicted under R-503** and now
+**accrues on its covered complement** — 287 of 288, the **15:20:00Z** window
+marked and counted, the floor **imported** from R-424, three superseded
+predecessors preserved. The missing window is the **third instance of the
+unexplained low-content class**. The reviewer's census **bounds the rule** — four
+days carry a shortfall, two clear the floor, and 08-26 is excluded **pre-freeze**
+regardless — while **R-503's own defence of the floor does not reproduce** and is
+corrected here. **Two defects stay open** and must not read as closed. **And on
+the USER's instruction the programme has turned from data-collection machinery to
+the work the plan always named:** DE builds the **seven-arm integration ablation**
+(§8.1, never run), BE builds the **fair-price challengers** (§4.2, never built).
+**USER items: ONE.**
+
+Reliability addendum, 2026-09-04T09:59Z: the matched-count BTC arithmetic is
+reproducible, but it is a two-day retrospective model-vs-model diagnostic. The
+published profitability block is **withdrawn**, not merely caveated: its scratch
+aggregation is not total filled notional or a whole-book no-cancel baseline.
+See `RESULT_RELIABILITY_AUDIT_2026-09-04.md` and the corrected `RESULTS.md` §1.
+
+Previously (MEM round 78) — 2026-09-04T05:06Z — **THE PROGRAMME HAS ITS FIRST
 ECONOMIC RESULTS, AND THE CANDIDATE DOES NOT BEAT THE INCUMBENT.** The release
 was **granted**; three days were read — 08-29 as a development read, then 09-01
 and 09-02 under an interim **declared before either was opened**. **At matched
@@ -116,6 +136,193 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T09:58Z — MEM round 79: the race moved to G = 3, and the programme changed direction
+>
+> **THE RACE MOVED. G = 3 OF 5.** 09-03 was **re-verdicted under R-503 at
+> 09:36:44.731072Z and now ACCRUES** — I read the verdict rather than the report:
+> `race_accrual_eligible` **true**, `day_quality_pass` **true**, all four
+> conjuncts true, **btc P1 95.61** against a bar of 120 and **eth 8.97**, both
+> evaluable. **Three superseded predecessors are preserved on disk.**
+>
+> **It accrues on its COVERED COMPLEMENT**, and the artifact says so in its own
+> fields: `n_covered` **287**, `n_expected` **288**,
+> `n_uncovered_MASKED_AS_ACCOUNTED_LOSS` **1**, `uncovered_windows_utc`
+> **["15:20:00Z"]**, `complement_meets_floor` **true** against `floor_windows`
+> **144** — and **the floor is imported, not invented**: `floor_source`
+> `da_blackout_mask.G_MIN_COMPLEMENT_WINDOWS`, `floor_ruling` *"R-424 §4 (USER,
+> 2026-09-02), applying R-411(i)"*, the whole ruled by *"R-503 (USER,
+> 2026-09-04), applying R-409"*. **One discipline point worth carrying because it
+> is the opposite of the easy move:** the **governing P1 remains the frozen
+> calendar-24h form** — *"recomputing a pre-registered bar voids it"* — with the
+> per-covered-hour form reported beside it. **The rule changes what is ADMITTED,
+> not how the bar is COMPUTED.**
+>
+> **The missing window's cause is the THIRD instance of the unexplained
+> low-content class** (after 09-01's two outages). From the collector's own log:
+> 74,731 / 79,960 / 82,274 / 68,432 messages per minute through 15:18, **27,460**
+> into 15:20, then **2,604 / 1,369 / 1,077 / 2,901** across 15:20–15:24 — **~1.5%
+> of normal, a ~98% collapse for ~5 minutes** — recovering on its own, with the
+> collector reporting **`health_err` 0 and NO GAP ROW throughout**. Absent for
+> **both** btc and eth, so **total coverage loss, not a market-specific miss.**
+>
+> **R-503 IS A USER RULING AND IT IS NEW STATE:** a day accrues on its covered
+> complement, uncovered windows **marked and counted**. *"using 287 windows should
+> be fine for forward test? can we just mark it, and we just use this day's
+> data"*. **It is not a new principle** — it is built on **R-409's existing
+> accounting**, and the 15:20Z window is functionally a blackout window. What the
+> coverage predicate had been doing is refusing the day **before its quality was
+> ever evaluated**, which is why `day_bar_v2` returned `evaluable: false` rather
+> than a failing value. **The rule-11 risk is stated rather than managed away**,
+> and two facts bound it: what had been seen of 09-03 was its **quality and never
+> its economics** — the day had never been scored, precisely because it never
+> accrued — and the change was declared **before** any race day's economics were
+> read.
+>
+> **THE REVIEWER CENSUSED IT FOR RATCHET AND FOUND NO HIGH — and that census is
+> what makes the rule not a ratchet.** **Exactly four days carry any shortfall and
+> exactly two clear the 144 floor: 08-26 (279) and 09-03 (287).** 08-19 (115) is
+> below the floor and pre-freeze; 09-04 is open under the unchanged open-day
+> predicate. **No other day can move.** And **08-26 is excluded on a ground no
+> coverage rule can touch**: its day ends 2026-08-27T00:00:00Z against a freeze
+> epoch of 2026-08-28T06:09:00Z, so it is **entirely pre-freeze** and the only
+> thing keeping it out is the **AFTER** conjunct — **a property of the clock**.
+> **The reach is two `complete_tape` flips and one admission.**
+>
+> **DA28-R1 — a correction to R-503's stated evidence, and the third time this
+> session a claim's substance has outlived the evidence given for it.** R-503 (D)
+> defends the floor by citing coverage of **08-30 66** and **08-31 0** and a
+> *"natural gap between 99.65% and 23%"*. **Neither figure is coverage** — 66 is
+> the count of windows *before* 08-30's era boundary, and 0 does not reproduce as
+> anything. **I censused coverage independently, by counting distinct window files
+> on disk, and every load-bearing number reproduces:**
+>
+> ```
+> 08-19  115 · 08-30  288 · 08-31  288 · 09-02  288 · 09-03  287
+> ```
+>
+> So the **"natural gap" does not exist in the quantity the floor is applied to**
+> — the real distribution is 115 / 279 / 287 / 288×12 — and at the floor actually
+> used (144) **08-26's `complete_tape` flips too**, which is what DA's own
+> selftest DA28-7 asserts. **The conclusion survives and the sentence defending it
+> does not.** The honest version is stronger: the floor moves **two coverage
+> predicates and one admission**, and the second day is excluded by the freeze
+> regardless.
+>
+> **One delta of my own that I do not adjudicate:** my file census gives **08-26
+> as 282** distinct windows (281 with content) against the reviewer's **279** from
+> two agreeing methods. **Nothing turns on it** — both are far above the 144 floor
+> and 08-26 is pre-freeze either way — and I record the difference rather than
+> pick. My 09-04 count is **121** against the reviewer's **113**, which is **not a
+> discrepancy: an open day grows**, and each number is right at its own clock.
+>
+> **TWO DEFECTS ARE OPEN AND MUST NOT READ AS CLOSED.**
+> 1. **The supply layer cannot distinguish coverage-absent from blackout-masked** —
+>    an absent window **silently lowers `n_present` with no status**, which is
+>    rule 4 in the one place the new rule leans on.
+> 2. **The gate-1 prefix is lost on a supersede, and I saw it in the bytes:** the
+>    re-verdict's `write_reason` now begins *"DA re-verdict under R-503 (USER,
+>    2026-09-04)…"* rather than the scheduled-unit prefix gate 1 requires — **so a
+>    correctly re-verdicted day is refused while its stale predecessor would be
+>    admitted.** (BE filed it as Q-BE-254: 09-03 not scored, its verdict predating
+>    R-503 by five hours and still saying the day does not accrue.)
+>
+> **Both were dispatched to DA — and the state moved while I was writing this
+> round, so I record it as it stands rather than as the dispatch described it.**
+> **The reviewer confirmed both open** at tip `659ed66` (filing 10:06Z) — **and DA
+> then landed the rule-4 fix at `589af56`** (Q-DA-226). **So (1) is now ADDRESSED
+> AND UNREVIEWED**, verified by me at `da_blackout_mask.py`: `n_coverage_absent`
+> (`:257`), `coverage_absent_windows` (`:258`, bounded at 64 with a truncation
+> count), `total_coverage_absent_windows` (`:340`), a `coverage_accounting` block
+> (`:342`), a selftest at `:1287`, and two mutants red by name — **because a
+> BLACKOUT is a file that exists and is dark, while a COVERAGE-ABSENT window is no
+> file at all: different causes, different remedies.** **(2) remains OPEN — DA
+> proposes and has not touched BE's gate** — and DA's own formulation is the one
+> to carry: **the state is INVERTED**, 09-03's *stale* predecessor satisfies gate
+> 1 and the *correct* re-verdict does not, and **"a gate that admits the wrong
+> answer and refuses the right one is worse than one that refuses both."** What
+> the prefix actually certifies, read at the launcher, is that the process ran
+> inside the `da-midnight-verify.service` cgroup — the unattended nightly duty at
+> a fixed time — which a rule-driven re-verdict is not and should not claim to be.
+> **The prefix is not the wrong idea; it is the wrong test for this case.**
+>
+> **THE DARK-INTERVAL CHECKER DID NOT FIRE ON THE CLASS'S THIRD INSTANCE — and DA
+> established that this is not a detection failure.** The dip **was detected** at
+> `worst_frac_of_reference` **0.0** and then **dropped by `MIN_RUN_WINDOWS = 2`**
+> (verified at `da_dark_interval_scan.py:104`) because **one window is not an
+> interval**; and the exclusion is **structural rather than marginal**, because the
+> neighbours run **158–272%** and **95–257%** of reference — no threshold nudge
+> reaches it. **DA refused to move the threshold** (choosing after seeing is rule
+> 11) **and surfaced `n_single_window_dips_excluded` instead** (`:318`, `:389`).
+> **A checker that declines to widen itself to catch the case that just embarrassed
+> it, and discloses the excluded count instead, is the right answer.**
+>
+> ---
+>
+> **THE PROGRAMME HAS CHANGED DIRECTION ON THE USER'S INSTRUCTION.** Rather than
+> accruing further data-collection machinery, **DE is now building the SEVEN-ARM
+> INTEGRATION ABLATION** (§8.1) and **BE is building the FAIR-PRICE CHALLENGERS**
+> (§4.2). Both targets have stood **unbuilt** in this programme's own task list —
+> `hazard-integrated-replay` as *"contracts and stubs only, real integration
+> pending"* and `hazard-fair-price` as *"Identity built, challenger protocol not
+> freeze-ready"*. **§8.1 has never run; neither challenger has ever been built.**
+>
+> **The reason is in the plan's own words, and I read it there: §8.1 ends
+> *"`net_cancel_cents` alone is not a strategy-P&L verdict"* — which is precisely
+> the metric the three completed reads measured.** §8.1 names the seven arms on
+> **one** neutral `QR_SKEW_ONLY` opportunity population with an **independent event
+> clock per arm**, plus the marginal deltas *hazard → conditional value*, *cancel →
+> cancel × skew* and *Identity → fair-price challenger*, so that **"the full arm
+> cannot hide a failed component behind another module's gain"** — and it demands
+> complete maker P&L, spread capture, post-fill markout, retention, rho, cancel
+> outcomes, traffic, inventory and per-day latency × cost sensitivity. §4.2 names
+> the challengers: **"PM microprice and at most one cross-venue forecast may be
+> predeclared challengers"**, `Identity` the **mandatory** baseline, scored
+> **incrementally to Identity**, and **"a failed challenger does not block
+> integration"**.
+>
+> **USER items: ONE — the Phase-2 winner, and the race decides it.**
+
+> ### 2026-09-04T09:59Z — independent reliability correction
+>
+> **WHAT HOLDS.** The 09-01 and 09-02 BTC `MATCHED_VOLUME` cells reproduce
+> exactly at all three budgets, and the declaration predates both reads. The
+> name means **matched cancellation-action count**, not matched shares or
+> notional. Negative is candidate minus incumbent five-second gross cancel
+> value; it is not realised P&L. The defensible conclusion is **candidate
+> improvement not demonstrated**, not “candidate proven permanently worse.”
+>
+> **THE BENCHMARK IS ALSO PREDICTIVE.** Both arms are linear harmful-flow models
+> over the same 54 Polymarket plus six fine-flow inputs. The candidate is the
+> frozen `PM_PLUS_FINE` fit; the incumbent is the per-coin,
+> generation-reweighted `INCUMBENT_REWEIGHTED_ONLY` fit. This read does not
+> compare prediction with no cancellation, random cancellation, or a simple
+> non-predictive rule.
+>
+> **WHY IT IS PRELIMINARY.** There are only two pre-declared economic days; the
+> 08-29 read is development. No day-cluster interval is available, and the
+> reported window sign-flip p-values are optimistic by the declaration's own
+> terms. The incumbent's equal-count cutoff is chosen retrospectively from the
+> full evaluated population, so this is a ranking diagnostic, not an executable
+> operating point. `matched_volume()` also has no committed caller; the
+> published read came through a scratch runner.
+>
+> **PROFITABILITY IS WITHDRAWN.** The previously reported `$226,594` filled
+> notional, `$1,801.29` no-cancel P&L, `0.7949%`, `+$620.58`, `+34.5%`, and
+> `$807/day` do not have those meanings. `prof.py` keeps only the first row per
+> action and sums `preventable_shares`; the producer defines that as only fills
+> within one second and after the 50 ms cancellation latency. That is not total
+> fill volume or a whole-book baseline. Fees, realised exits/settlement, quote
+> size, inventory and capital are also absent. **P003 currently has no reliable
+> profitability estimate.**
+>
+> **RACE STATE REMAINS THE NEW MEM-79 STATE: G=3.** 09-03's R-503 accrual does
+> not turn it into a third economic read. The manual supersede's lost
+> scheduled-unit attribution prefix remains open. Full audit:
+> `RESULT_RELIABILITY_AUDIT_2026-09-04.md`.
+>
+> The MEM round-78 section below is retained as history. Its profitability
+> block and G=2 statement are **superseded**.
 
 > ### 2026-09-04T05:06Z — MEM round 78: the first economic results, and the candidate does not beat the incumbent
 >
