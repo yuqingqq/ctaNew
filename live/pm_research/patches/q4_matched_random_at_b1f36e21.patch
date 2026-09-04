@@ -1,0 +1,179 @@
+diff --git a/live/pm_research/phase2_iter011_run.py b/live/pm_research/phase2_iter011_run.py
+index 20fcad7..12c7b20 100644
+--- a/live/pm_research/phase2_iter011_run.py
++++ b/live/pm_research/phase2_iter011_run.py
+@@ -435,6 +435,8 @@ def q4_economics(pred: dict, rows: list, budgets=None,
+         kk = max(1, int(len(order) * frac))
+         cand_bw = _net_by_window(ecv, gmax, order, kk)
+         net = sum(cand_bw.values())
++        _mr = {kind: _q4_matched_random(rows, gens, order[:kk], net, kind)
++               for kind in ("UNRESTRICTED", "MATCHED_OPPORTUNITY")}
+         if inc_ecv is None:
+             # NOT an increment. Named for what it is, so no caller can label a
+             # sign-flip of the candidate's own value "increment vs incumbent".
+@@ -446,6 +448,13 @@ def q4_economics(pred: dict, rows: list, budgets=None,
+                          for w in set(cand_bw) | set(inc_bw)}
+         out[b] = {"budget": b, "n_actions_total": len(order),
+                   "n_cancelled_actions": kk, "net_cents": net,
++                  "matched_random": _mr,
++                  "matched_random_note": (
++                      "a PASS here changes the DIAGNOSIS and not the VERDICT: "
++                      "the declared gate is a CONJUNCTION of matched-random "
++                      "AND beating the incumbent, and the incumbent leg is "
++                      "evidenced-and-failing at holm_p 0.1199-0.4463. No "
++                      "reader may infer a win from this conjunct alone."),
+                   "incumbent_net_cents": incumbent_net,
+                   "paired_against_incumbent": inc_ecv is not None,
+                   ("increment_by_window" if inc_ecv is not None
+@@ -454,6 +463,151 @@ def q4_economics(pred: dict, rows: list, budgets=None,
+     return out
+ 
+ 
++
++def _q4_matched_random(rows, gens, chosen, observed_net, pool_kind,
++                       n_draws=2000, seed=20260825, min_draws=200):
++    """Q4's MATCHED-RANDOM null -- the SET-DRAWING form (rule 7).
++
++    TWO CONSTRUCTIONS, AND ONLY ONE ADJUDICATES.
++
++      UNRESTRICTED  -- the ADJUDICATING cell. Draws from every generation,
++        exactly as the five heads already carrying this null do, so the number
++        stays comparable with them AND the declared Holm denominator stays 24.
++
++      MATCHED_OPPORTUNITY -- REPORTED, NEVER ADJUDICATED, the way COIN_SLICE
++        already reports eth under R-306. Holds the candidate's REALISED
++        preventable count h_b: within each (side, hour) stratum it draws that
++        stratum's share of h_b from the preventable pool and the remainder
++        from the non-preventable pool. It removes the "found preventables"
++        component and leaves the sign discrimination alone.
++
++    RULE 9, STATED RATHER THAN GLOSSED: MATCHED_OPPORTUNITY conditions on
++    h_b, which is OUTCOME-DERIVED. That makes it legitimate as a CONDITIONAL
++    DECOMPOSITION -- "given the opportunity it got, did it choose well within
++    it?" -- and NEVER as the gate's null. The gate's null is UNRESTRICTED.
++
++    A PREVENTABLE-ONLY POOL WAS DECLARED AND WITHDRAWN BEFORE ANY DRAW, and
++    the reason is recorded because measurement beats a defence: it is
++    INFEASIBLE at 10% and 15% (17,604 preventable actions against budgets of
++    17,767 and 26,651), DEGENERATE where it is infeasible (consuming ~100% of
++    the pool every draw leaves no variance -- the `movable == 0` failure
++    `matched_random_null` guards by name), WEAKER at 5% because the
++    preventable population's mean is NEGATIVE so forcing the null to spend
++    inside it guarantees a large loss, and it would have ENLARGED THE
++    DECLARED FAMILY from 24 to 30, at which the artifact's own floor p of
++    0.001996 fails Holm and this artifact's only surviving results die.
++    We amended toward a stronger null and measurement showed the amendment
++    weakens it.
++    """
++    import random as _random
++    if n_draws < min_draws:
++        raise RuntimeError(
++            f"REFUSED: {n_draws} draws is below the declared floor of "
++            f"{min_draws} (rule 6). `matched_random_null` refuses this by "
++            f"name and this null must too.")
++
++    def _key(gk):
++        r = rows[gens[gk][0]]
++        t, t0 = r.get("t_start"), r.get("t0")
++        if t is None or t0 is None:
++            return (r.get("side"), None)
++        return (r.get("side"), int(((float(t0) + float(t)) // 3600) % 24))
++
++    def _prev(gk):
++        return any(I11.signed_v_cancel(rows[i]) != 0.0 for i in gens[gk])
++
++    prev_pool, non_pool = {}, {}
++    for gk in gens:
++        (prev_pool if _prev(gk) else non_pool).setdefault(
++            _key(gk), []).append(gk)
++    all_pool = {}
++    for d in (prev_pool, non_pool):
++        for k, v in d.items():
++            all_pool.setdefault(k, []).extend(v)
++
++    use, use_prev = {}, {}
++    for gk in chosen:
++        k = _key(gk)
++        use[k] = use.get(k, 0) + 1
++        if _prev(gk):
++            use_prev[k] = use_prev.get(k, 0) + 1
++
++    def _need(pool, k, cnt, what):
++        have = len(pool.get(k, ()))
++        if have == 0:
++            raise RuntimeError(
++                f"REFUSED: stratum {k} has NO {what} generation, so the match "
++                f"cannot be held there (rule 7).")
++        if have < cnt:
++            # THE SECOND GUARD. `harmful_action_eval:180` hands back the WHOLE
++            # pool when short, so the null silently cancels FEWER actions than
++            # the candidate and the count match breaks without saying so.
++            # TOO FEW and NONE are different failures and both must refuse.
++            raise RuntimeError(
++                f"REFUSED: stratum {k} needs {cnt} {what} generations and has "
++                f"only {have}. Sampling would return the whole pool and the "
++                f"null would cancel FEWER actions than the candidate -- rule "
++                f"7's count match broken silently by the arm built to hold it.")
++        return pool[k]
++
++    rng = _random.Random(seed)
++    nets, hits = [], []
++    for _ in range(n_draws):
++        tot, hit = 0.0, 0
++        for k, cnt in use.items():
++            if pool_kind == "UNRESTRICTED":
++                pick = rng.sample(_need(all_pool, k, cnt, "eligible"), cnt)
++            else:
++                hp = use_prev.get(k, 0)
++                pick = rng.sample(_need(prev_pool, k, hp, "preventable"), hp) \
++                    if hp else []
++                rest = cnt - hp
++                if rest:
++                    pick = pick + rng.sample(
++                        _need(non_pool, k, rest, "non-preventable"), rest)
++            for g in pick:
++                v = I11.signed_v_cancel(rows[gens[g][0]])
++                tot += v
++                if v != 0.0:
++                    hit += 1
++        nets.append(tot)
++        hits.append(hit / max(1, len(chosen)))
++    nets.sort()
++    n_ge = sum(1 for v in nets if v >= observed_net)
++    cand_hits = sum(1 for g in chosen if _prev(g))
++    return {
++        "pool": pool_kind,
++        "role": ("ADJUDICATING" if pool_kind == "UNRESTRICTED"
++                 else "REPORTED, NEVER ADJUDICATED (R-306 pattern)"),
++        "conditions_on_an_outcome_derived_quantity": pool_kind != "UNRESTRICTED",
++        "rule_9_status": (
++            "the gate's null" if pool_kind == "UNRESTRICTED" else
++            "a CONDITIONAL DECOMPOSITION conditioning on the candidate's "
++            "realised preventable count h_b, which is outcome-derived; "
++            "legitimate as a decomposition and NEVER as the gate's null"),
++        "n_draws": n_draws, "seed": seed, "min_draws_enforced": min_draws,
++        "matched_on": ("action count within (side, hour) strata"
++                       if pool_kind == "UNRESTRICTED" else
++                       "action count AND realised preventable count h_b, "
++                       "within (side, hour) strata"),
++        "observed_net_cents": observed_net,
++        "random_net_mean": sum(nets) / len(nets),
++        "random_net_p95": nets[int(0.95 * len(nets))],
++        "random_net_max": nets[-1],
++        "p_value": (1 + n_ge) / (n_draws + 1),
++        "floor_p": 1.0 / (n_draws + 1),
++        "sided": "one",
++        "beats_random_max_NOT_A_P_VALUE": observed_net > nets[-1],
++        "candidate_preventable_hit_rate": cand_hits / max(1, len(chosen)),
++        "null_preventable_hit_rate_mean": sum(hits) / len(hits),
++        "note": ("a PASS changes the DIAGNOSIS and not the VERDICT: the gate "
++                 "is a CONJUNCTION and the incumbent conjunct is EVALUATED "
++                 "AND FALSE in all six cells (R-515), so no outcome here can "
++                 "make Q4 pass. It can move GATE_PARTIALLY_EVALUATED to "
++                 "GATE_EVALUATED_AND_FAILED."),
++    }
++
++
+ def _strata(rows, idx):
+     """The decision variable, per prereg §5.1: side and hour. Hour comes from
+     the row's OWN t_start, never a nearby proxy (rule 3)."""
