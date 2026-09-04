@@ -16,7 +16,7 @@ computation, and every arm used `_pricing_scorer` -- a declared synthetic.
 Here each arm records WHICH predictor it loaded, by artifact and sha, so
 "is this arm real or a stub" is answered by evidence in the emission
 rather than by trusting the name."""
-import json, resource, sys, time
+import hashlib, json, resource, sys, time
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import flow_intensity as fi
@@ -32,12 +32,130 @@ import de_score_stream as SS
 import harmful_hazard_model as hm
 
 def gb(): return round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/2**20, 2)
-COIN = "btc"; LIMIT = int(sys.argv[1]) if len(sys.argv) > 1 else 12
+
+
+#: THE CONTROL PREDICATES, named once. `VALID_AS_A_CONTROL` is DERIVED
+#: from these and is never a literal: round 53 emitted the flag as a
+#: hardcoded True beside booleans that said otherwise, and a note beside
+#: it asserting the opposite of its own fields. A verdict a reader can
+#: disagree with its own data is worse than no verdict (rule 10).
+CONTROL_PREDICATES = ("P1_key_multisets_equal",
+                      "P2_stratum_score_multisets_equal",
+                      "P3_drawn_carry_above_and_only_drawn",
+                      "P4_realised_action_counts_equal")
+
+
+def control_is_valid(predicates: dict) -> bool:
+    """A control is valid when EVERY declared predicate is True.
+
+    A None (undecided) predicate is NOT True: P4 reads null until the
+    control has been replayed, and a control whose match was never
+    checked is not a matched control."""
+    return all(predicates.get(k) is True for k in CONTROL_PREDICATES)
+
+
+def provenance() -> dict:
+    """WHO PRODUCED THIS EMISSION -- so a provenance census finds it.
+
+    Round 53's arm results lived in a 14 kB scratchpad file naming no
+    producer: no `produced_by`, no `producing_code`, no
+    `carrying_commit`. DA's census over committed modules returned NONE
+    for every field the filing quoted, and the only hit was a CONSUMER.
+    An emission that cannot say what made it is not a result."""
+    import subprocess
+    me = Path(__file__).resolve()
+    def _git(*a):
+        try:
+            r = subprocess.run(("git",) + a, cwd=str(me.parents[2]),
+                               capture_output=True, text=True, timeout=20)
+            return r.stdout.strip() if r.returncode == 0 else None
+        except Exception:                            # noqa: BLE001
+            return None
+    return {
+        "produced_by": me.name,
+        "producing_code": hashlib.sha256(me.read_bytes()).hexdigest()[:16],
+        "producing_code_path": str(me),
+        "carrying_commit": _git("rev-parse", "HEAD"),
+        "carrying_commit_short": _git("rev-parse", "--short", "HEAD"),
+        "working_tree_clean_for_this_file": (
+            _git("status", "--porcelain", "--", str(me)) == ""),
+        "spec": "§8.1 integration ablation",
+    }
+if "--selftest" in sys.argv:
+    pass
+EXPECTED_CHECKS = 10
+
+
+def selftest() -> int:
+    """Falsifiers for the two things round 53 got wrong: a validity flag
+    that was a literal, and an emission that named no producer."""
+    n = [0]
+
+    def ok(cond, label):
+        if not cond:
+            raise SystemExit(f"[de_section81_arms] FAIL: {label}")
+        n[0] += 1
+        print(f"  PASS  {label}")
+
+    allp = {k: True for k in CONTROL_PREDICATES}
+    ok(control_is_valid(allp) is True,
+       f"POSITIVE CONTROL: every declared predicate True -> the control "
+       f"is VALID ({list(CONTROL_PREDICATES)}). The admitting direction, "
+       f"which a refusal-only check never proves")
+    for k in CONTROL_PREDICATES:
+        bad = dict(allp, **{k: False})
+        ok(control_is_valid(bad) is False,
+           f"KNOWN-BAD: {k} False -> the control is NOT valid. Each "
+           f"predicate is load-bearing on its own; round 53 emitted "
+           f"VALID_AS_A_CONTROL as a hardcoded True beside booleans that "
+           f"said otherwise")
+    ok(control_is_valid(dict(allp, P4_realised_action_counts_equal=None))
+       is False,
+       "and a NULL predicate is not True: P4 reads null until the control "
+       "has been replayed, and a control whose match was never checked is "
+       "not a matched control")
+    ok(control_is_valid({}) is False,
+       "and an EMPTY predicate set is not valid -- a refused draw has no "
+       "predicates and must not inherit a passing flag")
+    pr = provenance()
+    ok(pr["produced_by"] == "de_section81_arms.py"
+       and len(pr["producing_code"]) == 16
+       and pr["carrying_commit"] is not None,
+       f"DE53-R2: the emission NAMES ITS PRODUCER -- produced_by "
+       f"{pr['produced_by']}, producing_code {pr['producing_code']}, "
+       f"carrying_commit {pr['carrying_commit_short']}. Round 53's arm "
+       f"results lived in a scratchpad file naming none of these, so a "
+       f"provenance census over committed modules returned NOTHING for "
+       f"every field the filing quoted")
+    _src = Path(__file__).read_text()
+    # THE NEEDLE IS BUILT, NEVER WRITTEN. Spelt out, the check finds
+    # ITSELF in its own source and fails on a file that is correct --
+    # a falsifier that cannot pass is as useless as one that cannot fail.
+    _flag = "VALID_AS" + "_A_CONTROL"
+    _lit = [f'"{_flag}": {v}' for v in ("True", "False")]
+    ok(not any(x in _src for x in _lit),
+       f"and the validity flag is NEVER A LITERAL in this file "
+       f"({_lit} absent) -- read from its own source, so a future edit "
+       f"that hardcodes it fails HERE rather than being caught by a "
+       f"reviewer, which is how round 53 shipped it")
+    ok(n[0] + 1 == EXPECTED_CHECKS,
+       f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
+    print(f"[de_section81_arms] selftest OK -- {n[0]} checks")
+    return 0
+
+
+if "--selftest" in sys.argv:
+    raise SystemExit(selftest())
+
+
+COIN = "btc"; LIMIT = (int(sys.argv[1])
+                       if len(sys.argv) > 1 and sys.argv[1].isdigit() else 12)
 BUDGET, LAT, NO_CANCEL_THETA = 0.10, 250, 2.0
 T0 = time.time()
 
 import pickle
-CACHE = Path(f"{Path(__file__).parent}/arms53_cache_{LIMIT}.pkl")
+SCRATCH = Path(sys.argv[2]) if len(sys.argv) > 2 else Path(__file__).parent
+CACHE = SCRATCH / f"de_section81_cache_{LIMIT}.pkl"
 if CACHE.exists():
     _c = pickle.loads(CACHE.read_bytes())
     fr, asm = _c["fr"], _c["asm"]
@@ -58,7 +176,7 @@ if _c is None:
   t = time.time(); tape = R.build_tape_index(splits)
   print(json.dumps({"tape_index_s": round(time.time()-t,1),
                     "rows": tape["n_tape_rows"], "peak_gb": gb()}), flush=True)
-  frag = Path(f"{Path(__file__).parent}/arms53_frag.json")
+  frag = SCRATCH / "de_section81_frag.json"
   R.fragment_slice(frag, n_windows=LIMIT, only_slugs=list(ref))
   t = time.time()
   asm = R.assemble_streaming({COIN: ref}, splits=splits, coins=(COIN,),
@@ -158,7 +276,10 @@ def replay(scores, *, cancel, theta):
     f = R.received_fills(res, ref, R._decision_times(scores))
     return res, RHO.rho(f, LAT, proxy={"rho_captured_over_sacrificed": None})
 
-OUT = {"population": POP, "arms": {}, "spec": "§8.1", "coin": COIN,
+PROV = provenance()
+RUN_ID = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+OUT = {"provenance": PROV, "run_id": RUN_ID,
+       "population": POP, "arms": {}, "spec": "§8.1", "coin": COIN,
        "latency_ms": LAT, "budget": BUDGET,
        "evidence_class": "DEVELOPMENT_EVIDENCE_NOT_A_VALIDATION"}
 
@@ -284,7 +405,8 @@ if chosen is None:
     OUT["arms"]["RANDOM_MATCHED"] = {
         "arm": "RANDOM_MATCHED", "status": "REFUSED_NO_MATCHED_DRAW",
         "attempts": attempts, "rejections": rej,
-        "VALID_AS_A_CONTROL": False}
+        "predicates_last_seen": None,
+        "VALID_AS_A_CONTROL": control_is_valid({})}
 else:
     drawn, ctrl, r7, h7, post, seed_used = chosen
     add("RANDOM_MATCHED", r7, h7,
@@ -295,7 +417,8 @@ else:
         matched={"above_threshold_demand": len(treated), "drawn": len(drawn),
                  "seed_accepted": seed_used, "attempts": attempts,
                  "rejections": rej, "predicates": post,
-                 "VALID_AS_A_CONTROL": True,
+                 "VALID_AS_A_CONTROL": control_is_valid(post),
+                 "predicates_required": list(CONTROL_PREDICATES),
                  "demand": DEMAND})
 
 # DISTINCTNESS, ASSERTED: identical outputs across arms is what round 52
@@ -326,6 +449,16 @@ OUT["arm_distinctness"] = {
                            for v in OUT["arms"].values())}
 OUT["population_exclusions"] = EXCL
 OUT["peak_rss_gb"] = gb(); OUT["total_wall_s"] = round(time.time()-T0, 1)
-json.dump(OUT, open(f"{Path(__file__).parent}/arms53.json","w"), indent=1, default=str)
+# IMMUTABLE OUTPUT NAME. Round 53 wrote every run to one filename, so a
+# later run overwrote the one that had been filed from and the two could
+# not be told apart afterwards -- which is why "the artifact on disk" and
+# "the artifact I filed from" were different runs.
+_dst = SCRATCH / f"de_section81_arms__{RUN_ID}.json"
+json.dump(OUT, open(_dst, "w"), indent=1, default=str)
+print(json.dumps({"emitted": str(_dst), "run_id": RUN_ID,
+                  "produced_by": PROV["produced_by"],
+                  "producing_code": PROV["producing_code"],
+                  "carrying_commit": PROV["carrying_commit_short"]}),
+      flush=True)
 print(json.dumps(OUT["arm_distinctness"]), flush=True)
 print("ARMS53 COMPLETE peak_gb=%s wall=%ss" % (OUT["peak_rss_gb"], OUT["total_wall_s"]), flush=True)
