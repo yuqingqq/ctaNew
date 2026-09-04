@@ -109,10 +109,26 @@ NOT_A_NET_RETURN = {
 }
 
 
-def ledger(feed_path: Path) -> dict:
+def ledger(feed_path: Path, latency_ms: int = None) -> dict:
     """The computable BRACKET, plus the overlap that makes it a bracket."""
     if not feed_path.exists():
         raise FillLedgerRefused(f"REFUSED: no feed at {feed_path}.")
+    # R40: EVERY QUANTITY HERE DEPENDS ON L AND THE FEED DOES NOT CARRY IT.
+    # The iteration-011 artifact was found carrying zero occurrences of
+    # `latency` while every value in it was computed at TARGET_LATENCY_MS --
+    # rule 7 satisfied in the estimand and invisible in the artifact. The same
+    # gap was here: this module emitted a markout and a notional and recorded
+    # the markout/fill HORIZONS but never the resolved LATENCY. It cannot be
+    # read from the feed, so it must be SUPPLIED, and a number without it does
+    # not leave.
+    if latency_ms is None:
+        raise FillLedgerRefused(
+            "REFUSED: no `latency_ms`. Every quantity this module emits is "
+            "computed from `preventable_shares` and `value_cents`, which are "
+            "resolved at a LATENCY the feed does not record. Reporting them "
+            "without naming L is the defect found in the iteration-011 "
+            "artifact -- a value whose computed_over a reader cannot see. "
+            "Supply it, from the producing receipt's `feed.latency_ms_resolved`.")
     acts = collections.defaultdict(list)     # action -> [(t_start, sh, lv, v)]
     per_meta = collections.defaultdict(
         lambda: {"n_rows": 0, "rows_with_fill": 0, "rows_no_level": 0,
@@ -217,13 +233,26 @@ def ledger(feed_path: Path) -> dict:
                         "window per action"),
         "explicitly_not_first_row_per_action": True,
         "explicitly_not_claiming_exactly_once": True,
-        "population": POPULATION_NOTE,
+        "population": {**POPULATION_NOTE,
+                       "latency_ms_RESOLVED": latency_ms,
+                       "latency_is_not_in_the_feed": (
+                           "the feed carries no latency field, so L is "
+                           "SUPPLIED by the caller and must match the "
+                           "producing receipt's feed.latency_ms_resolved. "
+                           "Emitting it here is the computed_over half of "
+                           "the contract"),
+                       "every_quantity_below_depends_on_it": [
+                           "shares_UPPER_BOUND_row_window_sum",
+                           "shares_LOWER_BOUND_largest_single_window",
+                           "notional_UPPER_BOUND_dollars",
+                           "notional_LOWER_BOUND_dollars",
+                           "gross_markout_cents_UPPER_BOUND"]},
         "not_a_net_return_because": NOT_A_NET_RETURN,
         "per_coin": out,
     }
 
 
-EXPECTED_CHECKS = 13
+EXPECTED_CHECKS = 15
 
 
 def selftest() -> int:
@@ -270,7 +299,7 @@ def selftest() -> int:
         # know the windows are disjoint without tranche identity.
         fa = write("beyond.jsonl", [row(0.0, 10.0), row(5.0, 20.0),
                                     row(10.0, 30.0)])
-        A = ledger(fa)["per_coin"]["btc"]
+        A = ledger(fa, 50)["per_coin"]["btc"]
         ok(A["intra_action_row_pairs"] == 2
            and A["pairs_closer_than_the_horizon"] == 0
            and A["pct_pairs_overlapping"] == 0.0,
@@ -289,7 +318,7 @@ def selftest() -> int:
         # FIXTURE B: rows INSIDE the horizon -- the over-counting case.
         fb = write("inside.jsonl", [row(0.1, 10.0), row(0.2, 20.0),
                                     row(0.3, 30.0)])
-        B = ledger(fb)["per_coin"]["btc"]
+        B = ledger(fb, 50)["per_coin"]["btc"]
         ok(B["pairs_closer_than_the_horizon"] == 2
            and B["pct_pairs_overlapping"] == 100.0,
            "FIXTURE INSIDE THE HORIZON: 100% of pairs overlap, so summing "
@@ -306,7 +335,7 @@ def selftest() -> int:
            "field, because the feed carries no tranche identity")
 
         # statuses, still counted
-        C = ledger(write("nofill.jsonl", [row(0.0, 10.0, fill=False, v=0.0)]))
+        C = ledger(write("nofill.jsonl", [row(0.0, 10.0, fill=False, v=0.0)]), 50)
         ok(C["per_coin"]["btc"]["rows_with_fill"] == 0
            and C["per_coin"]["btc"]["n_rows"] == 1,
            "a row with NO fill ahead is COUNTED and contributes nothing — "
@@ -315,24 +344,34 @@ def selftest() -> int:
         # BE31-R3: the empty FIELD refuses, and the counter is consulted
         refuses(lambda: ledger(write("nolevel.jsonl",
                                      [row(0.0, 10.0, lv=None),
-                                      row(5.0, 20.0, lv=None)])),
+                                      row(5.0, 20.0, lv=None)]), 50),
                 "carries NO `level`",
                 "BE31-R3 KNOWN-BAD: a feed whose fill-bearing rows ALL lack "
                 "`level` REFUSES BY NAME — the counter was computed and never "
                 "consulted, and a zero there means 'field absent', not 'no "
                 "size'")
         ok(ledger(write("mixed.jsonl", [row(0.0, 10.0, lv=None),
-                                        row(5.0, 20.0, lv=0.5)])
+                                        row(5.0, 20.0, lv=0.5)]), 50
                   )["per_coin"]["btc"]["rows_no_level"] == 1,
            "BE31-R3 POSITIVE CONTROL: a feed where only SOME rows lack the "
            "field is ADMITTED with the omission counted — the refusal fires "
            "on absence of the field, not on any missing value")
-        refuses(lambda: ledger(td / "nope.jsonl"), "no feed at",
+        refuses(lambda: ledger(fa), "no `latency_ms`",
+                "R40 KNOWN-BAD: a ledger asked for numbers WITHOUT its "
+                "resolved L REFUSES — every quantity it emits is computed at "
+                "a latency the feed does not record, and that is exactly the "
+                "gap found in the iteration-011 artifact")
+        ok(ledger(fa, 50)["population"]["latency_ms_RESOLVED"] == 50
+           and ledger(fa, 50)["population"]["every_quantity_below_depends_on_it"],
+           "R40 POSITIVE CONTROL: with L supplied it is RECORDED beside the "
+           "quantities that depend on it, which are enumerated rather than "
+           "left for a reader to infer")
+        refuses(lambda: ledger(td / "nope.jsonl", 50), "no feed at",
                 "KNOWN-BAD: a missing feed REFUSES by name")
         (td / "empty.jsonl").write_text("")
-        refuses(lambda: ledger(td / "empty.jsonl"), "is a FAILURE, not a zero",
+        refuses(lambda: ledger(td / "empty.jsonl", 50), "is a FAILURE, not a zero",
                 "KNOWN-BAD: an EMPTY feed REFUSES rather than reporting zeros")
-        L = ledger(fa)
+        L = ledger(fa, 50)
         ok(L["explicitly_not_claiming_exactly_once"] is True
            and "BRACKET" in L["aggregation"],
            "the emission SAYS it reports a bracket and does NOT claim "

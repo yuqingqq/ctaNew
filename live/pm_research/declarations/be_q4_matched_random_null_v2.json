@@ -1,34 +1,55 @@
 {
- "protocol": "BE_Q4_MATCHED_RANDOM_NULL_DECLARATION_V2",
- "supersedes": "be_q4_matched_random_null_v1.json",
- "why_superseded": "v1 justified n=500 against a 6-cell Q4 sub-family. The declared Holm denominator is 24 (verified at the artifact: family.holm_denominator = 24, declared_family.n_cells = 24, 4 heads x 6 cells). Under 24 the threshold is 0.05/24 = 0.0020833 and n=500's floor of 0.0019960 gives only 1.04x headroom.",
+ "STATUS": "DECLARED-NOT-RUN",
+ "also_emitted": "the realised preventable-hit rate for BOTH sides, because the candidate values its first CROSSING row and the null values the first row, and btc runs 1.754 rows per action",
  "amendment_is_legitimate_because": "ZERO DRAWS HAVE BEEN SPENT. The run was stopped in its fit stage before the null executed. This is the only moment an amendment is legitimate (rule 6), and it is made now or not at all.",
- "n_draws": 2000,
- "n_draws_why": "floor 1/2001 = 0.00049975 gives 4.17x headroom below 0.05/24. n=500 gives 1.04x; n=200 gives 0.42x and is below the threshold outright.",
+ "beats_random_max_is_not_a_p_value": "it is a boolean against an extreme order statistic; Holm cannot consume it and it is emitted under a name that says so",
+ "becomes_runnable_when": [
+  "the pipeline's fit stage gets cheaper for an unrelated reason",
+  "the USER rules the cap",
+  "a later iteration recomputes this head anyway"
+ ],
+ "cost_of_the_ruling_recorded": "the reviewer's floor-p prediction (R-516(A)) covers the UNRESTRICTED construction only. MATCHED_OPPORTUNITY is the one whose answer was NOT predicted and the only one genuinely harder than unrestricted, so declining the run also declines the construction with the most information in it. Recorded as a cost, not as an argument to overturn.",
+ "design_is_preserved_at": "live/pm_research/patches/q4_matched_random_at_b1f36e21.patch \u2014 applies to the pinned commit and runs as declared",
+ "intervals_claimable": false,
+ "is_a_validation": false,
+ "measured_floor": {
+  "died_at_stage": "[fragment/btc] kept 578,917 rows \u2014 the fit stage, before Q4",
+  "instrument": "the scope's cgroup memory.current, which counts descendants; /proc VmHWM on the systemd-run wrapper read 3,772 kB and was wrong",
+  "is_a_floor_not_a_requirement": true,
+  "memory_current_max_bytes": 10737319936,
+  "memory_current_max_gib": 10.0,
+  "upper_bound": "UNKNOWN; establishing it requires exceeding the cap"
+ },
  "min_draws_enforced": 200,
  "min_draws_source": "phase2_iter011.MIN_DRAWS_011, whose refusal is now PORTED into this null because evaluate_policy has no such guard",
+ "n_draws": 2000,
+ "n_draws_why": "floor 1/2001 = 0.00049975 gives 4.17x headroom below 0.05/24. n=500 gives 1.04x; n=200 gives 0.42x and is below the threshold outright.",
+ "no_outcome_can_make_Q4_pass": "the incumbent conjunct is EVALUATED AND FALSE in all six cells (R-515). The available gain is moving the cells from GATE_PARTIALLY_EVALUATED to GATE_EVALUATED_AND_FAILED.",
+ "not_an_oversight": "this declaration exists so the conjunct's absence is a RECORDED DECISION and not a gap. Nobody should re-derive it; it is designed, committed and unrun.",
  "pools_BOTH_DECLARED_NEITHER_SELECTED": {
-  "UNRESTRICTED": "draws from every generation, as the five heads already carrying this null do; keeps comparability with them. Only 9.908% of actions have any preventable value, so ~90% of this pool's budget is spent on actions worth zero to cancel: it tests whether the candidate finds actions with anything to prevent.",
   "PREVENTABLE": "draws only from generations with some preventable value; tests whether the candidate cancels the RIGHT ones.",
+  "UNRESTRICTED": "draws from every generation, as the five heads already carrying this null do; keeps comparability with them. Only 9.908% of actions have any preventable value, so ~90% of this pool's budget is spent on actions worth zero to cancel: it tests whether the candidate finds actions with anything to prevent.",
   "ruling_applied": "declare a grid, report every cell, select none"
  },
- "statistic": "rank-based p = (1 + #{draws >= observed}) / (n + 1)",
- "beats_random_max_is_not_a_p_value": "it is a boolean against an extreme order statistic; Holm cannot consume it and it is emitted under a name that says so",
- "also_emitted": "the realised preventable-hit rate for BOTH sides, because the candidate values its first CROSSING row and the null values the first row, and btc runs 1.754 rows per action",
- "sidedness": "ONE-SIDED, alternative = the policy BEATS matched-random",
- "seed": 20260825,
- "no_outcome_can_make_Q4_pass": "the incumbent conjunct is EVALUATED AND FALSE in all six cells (R-515). The available gain is moving the cells from GATE_PARTIALLY_EVALUATED to GATE_EVALUATED_AND_FAILED.",
  "population_caveat_must_travel_in_the_cell": {
-  "excluded_share": 0.0421,
-  "selective_on": ["duration", "slug"],
   "at_the_permutation_floor": true,
-  "tail": "37.1% of generations >=2s excluded against a 4.21% base rate; 69.6% of >=4s; 76.7% of >=8s; all nine >=16s",
+  "direction_of_bias_on_net_cents": "NOT ESTABLISHED",
+  "excluded_share": 0.0421,
+  "external_validity": "THREATENED \u2014 the evaluated population is not the population of interest",
+  "internal_validity": "UNAFFECTED \u2014 treated and control are drawn from the identical retained population, verified at the code",
   "median_duration_excluded_s": 0.215,
   "median_duration_retained_s": 0.052,
-  "direction_of_bias_on_net_cents": "NOT ESTABLISHED",
-  "internal_validity": "UNAFFECTED — treated and control are drawn from the identical retained population, verified at the code",
-  "external_validity": "THREATENED — the evaluated population is not the population of interest"
+  "selective_on": [
+   "duration",
+   "slug"
+  ],
+  "tail": "37.1% of generations >=2s excluded against a 4.21% base rate; 69.6% of >=4s; 76.7% of >=8s; all nine >=16s"
  },
- "is_a_validation": false,
- "intervals_claimable": false
+ "protocol": "BE_Q4_MATCHED_RANDOM_NULL_DECLARATION_V2",
+ "seed": 20260825,
+ "sidedness": "ONE-SIDED, alternative = the policy BEATS matched-random",
+ "statistic": "rank-based p = (1 + #{draws >= observed}) / (n + 1)",
+ "status_reason": "RULED 2026-09-04 by the coordinator, inside their own surface: the cap is NOT raised and this conjunct stays uncomputed. The pinned pipeline needs >10.00 GiB in a fit stage nobody is otherwise changing, the upper bound is UNKNOWN, and the conjunct CANNOT change the verdict \u2014 increment_beats_incumbent is evaluated and FALSE, and a conjunction with a false conjunct is not rescuable. The available gain was GATE_PARTIALLY_EVALUATED -> GATE_EVALUATED_AND_FAILED.",
+ "supersedes": "be_q4_matched_random_null_v1.json",
+ "why_superseded": "v1 justified n=500 against a 6-cell Q4 sub-family. The declared Holm denominator is 24 (verified at the artifact: family.holm_denominator = 24, declared_family.n_cells = 24, 4 heads x 6 cells). Under 24 the threshold is 0.05/24 = 0.0020833 and n=500's floor of 0.0019960 gives only 1.04x headroom."
 }
