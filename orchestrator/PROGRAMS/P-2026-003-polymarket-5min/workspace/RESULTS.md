@@ -26,6 +26,31 @@ candidate-versus-incumbent, model against model, with no no-cancel baseline
 anywhere. §1's "profitability withdrawn" was correct and is now superseded by a
 measurement rather than by a restatement.
 
+> **READ THIS BEFORE THE NUMBERS.** This section states its current frame with
+> confidence. **Two previous frames were stated with the same confidence today
+> and both were withdrawn within hours:** *"cancelling does not pay"* →
+> *"the book has too little adverse selection to harvest"* → *"the lever is not
+> exhausted, the rankers do not work"*. **Five coordinator rulings were reversed
+> in about two hours** (R-513→R-515, R-516(C)→R-518, R-520/521's three
+> withdrawals, R-523→R-528, R-528→R-529). Every reversal was caught by a seat
+> checking at an artifact — which is the system working — but **the rate of
+> correction is itself a fact about how much weight this section can bear**, and
+> a reader who takes the current frame as settled is making the mistake the
+> previous two frames' readers would have made.
+>
+> **Two further objections are OPEN and unanswered, raised independently by two
+> seats:** the **701% ceiling has NO NULL** — `Σ|P&L|` over losing fills is
+> large for *any* noisy book, and the comparison that matters is against what a
+> **random or naive policy captures**, not against the net; and **`V_oracle` may
+> have `r`'s disease** — it counts every negative fill as capturable, is
+> unattainable under the cascade, and nobody has tried to construct two books
+> with identical `V_oracle` and different **attainable** value. **Until those are
+> answered, treat the ceiling figures as PENDING A NULL.**
+>
+> **And the whole of this section is ONE HOUR** — twelve contiguous 300 s
+> windows of one coin. Every ratio, the cascade decomposition, the break-even
+> and `V_oracle` have **n = 1 in the only unit that clusters**.
+
 **All figures: btc, ONE CONTIGUOUS HOUR (2026-08-24 13:50–14:50Z, 12 windows,
 4,315 fills), development evidence, point estimate and NO interval** — 12
 windows is below the 5-complete-day cluster floor. `is_a_validation` false.
