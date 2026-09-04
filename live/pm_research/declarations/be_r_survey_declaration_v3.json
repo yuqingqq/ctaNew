@@ -1,0 +1,51 @@
+{
+ "protocol": "BE_ORACLE_SURVEY_DECLARATION_V3",
+ "supersedes": "be_r_survey_declaration_v2.json",
+ "why_superseded": "v2's bar was written for 138 coin-hours. The measured scope is ~40, over TWO instruments and ONE contiguous 19.8-hour span, and a bar written for 138 must not ride unchanged onto 40.",
+ "declared_before_any_measurement": true,
+ "MEASURED_SCOPE": {
+  "span": "2026-08-24T13:48:54Z to 2026-08-25T09:35:10Z",
+  "hours": 19.8,
+  "coins": ["btc", "eth"],
+  "why_only_two": "binance_continuity_ok maps only btc->BTCUSDT and eth->ETHUSDT and returns False for every other coin, so bnb/doge/hype/sol/xrp are EXCLUDED AT SELECTION and can never enter this reference. They are structurally absent, not slow.",
+  "cells": 40,
+  "measured_hour_share_of_its_own_survey": 0.025,
+  "was_at_600_cells": 0.0017
+ },
+ "WHAT_40_CELLS_LICENSE": {
+  "CAN_refute": "that the measured hour is UNUSUAL WITHIN THIS SPAN. If V_oracle is large across most of the 40, the measured hour is typical of its span and the single-cell result is not an artefact of picking the first admissible hour.",
+  "CAN_characterise": "the ceiling's level and dispersion ON THIS SPAN, descriptively, for these two instruments.",
+  "CANNOT_close_the_lever": "a near-zero distribution over 40 cells CANNOT establish that the cancellation lever is dead. Forty cells drawn from TWO instruments over ONE contiguous span are not forty independent observations of 'a book'.",
+  "why_not": [
+   "TWO instruments is at most two independent instrument draws; the other five coins are structurally absent, so no amount of running buys them",
+   "TWENTY CONSECUTIVE HOURS are serially correlated — one regime, one partial day-part cycle — so the effective sample is far below 40",
+   "BY THE PROGRAMME'S OWN CLUSTER RULE THE SPAN IS G = 0 COMPLETE UTC DAYS: it starts 13:48Z on 08-24 (after that date's midnight) and ends 09:35Z on 08-25 (before the next), so it BRACKETS NEITHER DATE. That is the same counter that returns 0 for a single forward day.",
+   "the measured hour is now 1 of 40 = 2.5% of its own survey rather than 0.17%, so it is a much larger share of what it is being compared against"
+  ],
+  "the_honest_form": "this survey can REFUTE 'this book is unusual' and can DESCRIBE this span. It cannot CLOSE the lever, and no result from it may be stated as closing it."
+ },
+ "PRIMARY_STATISTIC": {
+  "name": "V_oracle",
+  "definition": "sum of |P&L| over fills whose P&L is NEGATIVE, per coin-hour",
+  "instrument_of_record": "de_phase4_diag_runner.value_ceiling (USER ruling 2026-09-04); this seat delegates and refuses rather than re-implementing",
+  "reported_as": ["cents", "percentage of that cell's maker P&L"],
+  "oracle_f_reported_beside_it": "the fraction of fills the oracle would decline"
+ },
+ "r_KEPT_AS_A_REPORTED_COLUMN": true,
+ "TAIL_EXCLUDED_PER_CELL_NEVER_GLOBAL": true,
+ "BOTH_TAIL_RANKINGS_EMITTED": {
+  "BY_SIGNED_PNL_TOP": "removes only winners and flatters what remains",
+  "BY_ABS_PNL_SYMMETRIC": "removes extremes on both sides; the defensible one",
+  "why_both": "DE established they disagree violently — 43 biggest winners carry 1.13 of net while the 43 most extreme carry 0.10 — and the reviewer withdrew its counterweight because of it. A tail measurement that does not say WHICH tail is not a measurement."
+ },
+ "WHAT_COUNTS_restated_for_40_cells": {
+  "the_measured_hour_is_typical": "the median cell's V_oracle within a factor of 3 of the measured hour's, on the percentage-of-maker-P&L scale",
+  "the_measured_hour_is_an_outlier": "the measured hour above the 90th percentile of the 40",
+  "the_ceiling_is_materially_large_on_this_span": "median V_oracle >= 5% of maker P&L with oracle f <= 10%",
+  "NOT_DECLARED": "any criterion that would close the overlay lever, because 40 cells cannot support one",
+  "indeterminate": "anything else, reported as indeterminate"
+ },
+ "the_measured_hour_is_one_cell": "2026-08-24 13:50-14:50Z btc appears as ONE CELL and is not a reference point the others are compared against",
+ "memory_ceiling": "10G, not raised (R-174)",
+ "touches_nothing_sealed": true
+}
