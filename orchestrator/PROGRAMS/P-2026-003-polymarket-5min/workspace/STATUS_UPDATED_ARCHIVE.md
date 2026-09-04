@@ -6842,3 +6842,111 @@ Nothing deleted — only moved.
   ITEMS: THREE -- the Phase-2 winner, the causal incumbent operating point, and
   now the G-counting ruling.
 ```
+
+## Batch 97 — archived 2026-09-04T12:46Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 91 entered the field.
+Nothing deleted — only moved.
+
+```
+  2026-09-04T11:41Z (MEM ROUND 88 -- TWO OF THE THREE MISSING FIELDS ARE
+  BUILDABLE AFTER ALL, AND THE MATCHED FLOOR MAY BE UNACHIEVABLE BY
+  CONSTRUCTION). Nothing run but read-only reads. A CORRECTION TO A CLAIM THE
+  COORDINATOR CARRIED TO THE USER, AND IT IS A CORRECTION TO WHAT THESE FILES SAY
+  TOO: THE RECORD HAS SAID SINCE ROUND 83 THAT ALL THREE OF SECTION 8.1'S MISSING
+  FIELDS ARE NOT PRODUCIBLE BY ANYTHING IN THIS REPOSITORY. DE HAS CORRECTED
+  ITSELF AND TWO OF THE THREE ARE BUILDABLE. I read the scoping document at the
+  artifact (DE_SECTION81_MISSING_FIELDS_SCOPING.md, committed 477c064, 119 lines,
+  "No build is proposed and none has been started"). spread_capture_cents AND
+  maker_pnl_cents ARE BUILDABLE FROM INPUTS ALREADY ON EVERY TRANCHE -- level,
+  mid_at_fill, shares, side and markout_cents_per_share -- NEEDING NO PRODUCER
+  CHANGE AND WORKING ON DAYS ALREADY SEALED, "because the fields are in them".
+  The construction is the producer's own formula moved in time: it already
+  computes markout_cents_per_share = sgn * (later - level) * 100, and SPREAD
+  CAPTURE IS THE SAME FORMULA AT THE FILL'S OWN TIME. Cost: one function plus
+  its falsifiers. One caveat carried as a STATUS, never a zero: mid_at() returns
+  None before a window's first quote, so NO_MID_AT_FILL is a real exclusion and
+  must be COUNTED (rule 4). AND DE'S OWN DIAGNOSIS OF ITS ERROR IS THE PART TO
+  RECORD, BECAUSE IT NAMES A CLASS RATHER THAN AN OVERSIGHT: "the error was that
+  I described what the replay REPORTS rather than checking what its inputs
+  SUPPORT." A capability audit that reads the OUTPUT contract will always
+  understate the INPUTS, and this programme has now paid for that once at
+  programme scale. THE THIRD FIELD, inventory_loss_cents, DOES HAVE THE PRODUCER
+  SHAPE -- wf.mid_at() is live inside build_reference's loop and is CALLED TWICE
+  ALREADY, once for mid_at_fill and once for the markout's `later`, while NO
+  WINDOW-END MID IS EVER STORED, so the value exists for the length of one
+  function and is discarded before anything downstream sees it. BUT THE
+  CONSEQUENCE DIFFERS FROM BE'S TRANCHE IDENTITY AND THAT IS WHAT THE DECISION
+  TURNS ON: BE's tranche identity is discarded inside a producer over CAPTURED
+  data, so sealed days cannot recover it and a fix has a LEAD TIME. THIS PRODUCER
+  IS THE FEED BUILDER, A DERIVATION OVER RETAINED RAW CAPTURE, SO RE-RUNNING IT
+  RECONSTRUCTS THE FIELD FOR ANY DAY WHOSE WINDOW ARCHIVE SURVIVES. NO LEAD TIME,
+  SEALED DAYS NOT LOST, ~28 MINUTES FOR THE FULL 471-WINDOW POPULATION (~250 s
+  per 12 windows measured), AND THE BINDING CONSTRAINT IS ARCHIVE RETENTION
+  RATHER THAN COLLECTION. It is a RE-GENERATION rather than a patch, because
+  every existing reference artifact lacks the field. AND IT NEEDS A RULING, NOT A
+  BUILD: WHAT "TERMINAL" MEANS WHEN A WINDOW ENDS IN A GAP -- with a recorded
+  failure to avoid, cross_window_correlation's terminal_mid that DEFAULTED TO
+  EXACTLY 0.5, "a default, not an observation". THE MOST CONSEQUENTIAL THING IN
+  THE PHASE: THE MATCHED FLOOR MAY BE UNACHIEVABLE BY CONSTRUCTION. The reviewer
+  adjudicates P4's 20/20 refusal as STRUCTURAL AND NOT A BUDGET SHORTFALL, with
+  both directions of P4 in committed code. THE ARGUMENT: P2 AND P3 REQUIRE THE
+  DRAW TO MATCH THE TREATED ARM'S ABOVE-EVENT MULTISET PER STRATUM, WHILE P4
+  REQUIRES IT TO MATCH THE REALISED-ACTION COUNT PER STRATUM -- AND UNDER A
+  STATEFUL POLICY, WHERE A HELD SIDE SUPPRESSES LATER CROSSINGS, REALISATION IS A
+  FUNCTION OF THE DRAW'S ORDER, SO THE TWO ARE OVER-DETERMINED: satisfying P2/P3
+  essentially fixes what P4 will be, and it will not in general be the treated
+  arm's number. THE NUMBERS SAY THE SAME: treated realises 333 OF 1,154
+  above-events (28.9%) against the control's 496 (43.0%) on the first seed -- A
+  LARGE ONE-DIRECTIONAL GAP, NOT DISPERSION AROUND A MATCHED TARGET, AND A LARGER
+  BUDGET DOES NOT CLOSE A SYSTEMATIC OFFSET. IF IT HOLDS, VALID_AS_A_CONTROL CAN
+  NEVER BE TRUE FOR THIS CONSTRUCTION AND floor_available FALSE IS A FACT ABOUT
+  THE DESIGN RATHER THAN ABOUT THIS POPULATION -- and it is "not a decision
+  another 20 draws can inform". The reviewer's own line: the programme should
+  STOP DRAWING AND RULE ON P4, and refusing rather than reporting a weaker
+  control was the right call. AND THE PART THAT MUST BE RECORDED BECAUSE IT IS
+  THE EXPENSIVE ONE: DE'S OWN DE36-R3 REACHED THIS CONCLUSION ON 2026-09-03 AND
+  WROTE IT DOWN, AND I FOUND IT IN THREE PLACES -- the register at :19184
+  (control#2 refusing on set identity, WITHDRAWN), de_phase4_diag_runner.py:1572
+  ("the frozen text asks for matching on ACTION COUNT, not on identity -- so
+  control#2 ... is WITHDRAWN (DE36-R3)"), AND, SHARPEST OF ALL, INSIDE THE
+  ASSERTION MESSAGE OF THE VERY CHECK THAT NOW FAILS 20/20, AT :4128-4129: "a
+  stateful policy CANNOT BE MADE TO CANCEL EXACTLY THE DRAWN SET -- which is why
+  control#2 is withdrawn (DE36-R3)". SO THE CODE THAT PRODUCES THE 20/20 REFUSAL
+  CARRIES, IN ITS OWN ASSERTION TEXT, THE REASON THE REFUSAL IS STRUCTURAL -- AND
+  ROUND 54 ATTRIBUTED IT TO THE BUDGET ANYWAY. A CONCLUSION REACHED, WRITTEN
+  DOWN, AND RE-ENCOUNTERED AS A MYSTERY EIGHTEEN ROUNDS LATER IS A RETRIEVAL
+  FAILURE, NOT AN ANALYSIS FAILURE, AND IT IS THE FAILURE THESE FILES EXIST TO
+  PREVENT. TWO MORE. FIRST: THE ARM EMISSION WAS DELETED WHILE UNDER REVIEW,
+  DESTROYING THE EVIDENCE FOR AN OPEN HIGH (DE53-R1) -- which is the answer to
+  what I observed one round ago, when I went to reproduce the coordinator's
+  instrument run on arms53.json and found the file gone minutes after I had
+  located it. IT WAS NOT ATTRITION; IT WAS A DELETION DURING REVIEW. A STANDING
+  INSTRUCTION NOW EXISTS: AN ARTIFACT A FILING CITES IS EVIDENCE, AND IS MOVED
+  ASIDE WITH A TIMESTAMP, NEVER REMOVED. SECOND, BE37-R1, AND I VERIFIED IT AT
+  THE ARTIFACT: THE FAMILY DECLARATION DOES NOT YET RECORD THE USER'S FENCE
+  RULING. Its as_of_utc is 2026-09-03T05:55:57Z, PREDATING THE RULING ENTIRELY;
+  the six FROZEN_FROM_A_CONSUMED_DAY cells sit inside declared_cell_count 18 and
+  holm_denominator 18; and the arm is still filed under
+  open_factors.sensitivity_arm_in_family with who "the USER (rule 14)" and the
+  question "does the FROZEN_FROM_A_CONSUMED_DAY sensitivity arm consume alpha, or
+  is it reported outside the family?" -- which IS NOT THE QUESTION THE USER
+  RULED. There is no `ruled` block, I checked. SO A READER OPENING IT TODAY SEES
+  SIX UNFILLABLE CELLS IN A DENOMINATOR OF 18 BESIDE AN UNANSWERED QUESTION
+  ADDRESSED TO THE USER, AND BOTH LIKELY READINGS ARE WRONG -- that the gap is
+  still to be filled, or that the fence should be widened to fill it. The
+  coordinator's own test is the right one: "conservative, but only if a reader
+  can tell it was decided", AND TODAY THEY CANNOT. CONSERVATIVE AND LEGIBLE IS
+  THE WHOLE POINT; RIGHT NOW IT IS ONLY CONSERVATIVE. STATE: register 496
+  entries, last R-505; G unruled with three readings; three days sealed and
+  unread. USER ITEMS: FOUR -- the Phase-2 winner, the causal incumbent operating
+  point, the G-counting ruling, and now P4's definition for a stateful policy;
+  with the section 8.1 build decision priced and waiting beside them.
+  [CORRECTED IN BAND BY MEM ROUND 89 ABOVE (rule 13): THE DE36-R3 PARAGRAPH IN
+  THIS ENTRY OVERSTATES WHAT DE36-R3 SAYS. DE36-R3 IS THE ADJACENT
+  IMPOSSIBILITY -- cancel-set IDENTITY cannot be matched -- AND ITS REMEDY WAS
+  MATCHING ON REALISED COUNT, WHICH IS PRECISELY WHAT THE 20/20 FINDING
+  DEFEATS. THE RETRIEVAL FRAMING IS WITHDRAWN. THE CITATIONS BELOW ARE
+  CORRECT; THE CONCLUSION DRAWN FROM THEM IS NOT. AND USER ITEMS: FOUR IS
+  SUPERSEDED BY THREE.]
+```

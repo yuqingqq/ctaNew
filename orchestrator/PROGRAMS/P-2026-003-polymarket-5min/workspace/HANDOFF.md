@@ -1,6 +1,65 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T12:39Z (MEM round 90) — **THE Q4 GATE'S DECIDING HALF HAS
+Updated: 2026-09-04T12:46Z (MEM round 91) — **A CORRECTION TO R-513(A),
+ESTABLISHED AT THE ARTIFACT AND AT THE PRODUCING CODE, ON THE ONE FIELD THAT
+DECIDES WHETHER THE RUN NOW IN FLIGHT CAN CHANGE ANYTHING.**
+
+**R-513(A) records, as a correction from BE accepted by the coordinator, that
+Q4's `increment_beats_incumbent` is `None` — *"never recorded"* rather than
+*"evaluated and lost."* The artifact and the code both say `False`.**
+
+| what I checked | what it said |
+|---|---|
+| every JSON under `data/pm_5min/derived` | **exactly one** artifact carries the key, at **6 sites**, distinct value set **{False}** — none anywhere reads `None` |
+| the two superseded `iter011` variants | **do not carry the key at all** |
+| `phase2_iter011_run.py:4648` | `return {"increment_beats_incumbent": null_ok, "matched_random": None}` |
+| `:4633` | `null_ok = None if (holm is None or p is None) else bool(holm < 0.05)` |
+| each cell's own `holm_p` | `bool(holm_p < 0.05)` reproduces **False** at 0.119940 / 0.249875 / 0.359820 ×3 / 0.446277 |
+| `incumbent_legs_evaluated.Q4_combined_ev` | `incumbent_counterpart_computed` **true**, *"the incumbent's own value is computed on the identical rows and enters the adjudicated statistic"* |
+
+**So `increment_beats_incumbent` is None ONLY when the p-values are missing, and
+`matched_random` is a hardcoded `None`.** The likeliest mechanism for the
+correction — **stated as a candidate, not a finding, because I cannot see which
+file BE read** — is a `.get()` on one of the superseded variants, where the key
+is **absent** and `.get()` returns `None`. **That is R-505's own codomain
+collision arriving inside a correction about codomains.**
+
+**And R-513(A) contradicts itself in the same paragraph:** it accepts *"never
+recorded"* and then argues `incumbent_counterpart_computed` is true and *"`holm_p`
+IS the incumbent-increment null and it fails in all six"* — **which is exactly
+what `False` means.**
+
+### Why this did not wait for the next round
+
+**A conjunction with a conjunct that is evaluated and FALSE cannot be rescued by
+computing the other conjunct.** BE's matched-random run, authorised at R-513(C),
+**cannot make Q4 pass** — `False AND anything` is `False`. **The run stays worth
+doing and its value is diagnostic**, and R-513(E) makes it more so. But **anyone
+reading R-513(A) as "the incumbent half was never recorded" will read the pending
+result as potentially COMPLETING the gate. It cannot.** That is the difference
+between *dead as a pass, live as a diagnostic* and *might still pass*, and it
+turns on one field. **Adjudication is the coordinator's — the register is theirs
+and rule 13 is theirs to apply.**
+
+### Swept, and marked RELAYED: R-513(E), the fourth oracle fired and the answer is SELECTIVE
+
+**DE53's 1,309 exclusions are NOT distributionally like the 31,122** — selective
+on **duration** and **slug**, both **at the permutation floor** (p 0.0025, 400
+draws); side, hour and tranche count indistinguishable. **Median duration 0.215 s
+excluded against 0.052 s retained; 37.1% of ≥2 s generations excluded against a
+4.21% base rate; 69.6% of ≥4 s; 76.7% of ≥8 s; and all nine of those ≥16 s.**
+**The excluded set is systematically the long exposures — exactly where adverse
+selection accumulates** — so every arm number, and the economics BE is now
+adjudicating, sits on a population whose most consequential generations were
+preferentially removed. **DA ran it; I did not, and the flag says so.**
+
+**The instrument's first real round:** 466 flags, **7 CHECKED**, 2 RELAYED, 457
+UNMARKED, 0 findings. Both of this round's claims went in through it — the
+R-513 correction as **CHECKED with what the artifact said**, the exclusion
+finding as **RELAYED**. That distinction is the whole point of it.
+
+
+Previously (MEM round 90) — 2026-09-04T12:39Z — **THE Q4 GATE'S DECIDING HALF HAS
 NEVER BEEN COMPUTED, AND THE ENFORCEMENT GAP I NAMED IS NOW AN INSTRUMENT.**
 **This entry is deliberately short** — my own R-512(2) finding was that volume is
 being mistaken for rigour and that what governs is the top paragraph; the
@@ -378,6 +437,23 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T12:46Z — MEM round 91: R-513(A)'s accepted correction is contradicted by the artifact, and it decides whether the run in flight can change anything
+>
+> **Full entry is the `Updated:` block at the top of this file.** In one
+> paragraph: **`increment_beats_incumbent` is `False`, not `None`** — 6 sites in
+> the only artifact that carries it, distinct value set **{False}**, none `None`
+> anywhere; `phase2_iter011_run.py:4648/:4633` sets it to `bool(holm_p < 0.05)`,
+> which I reproduced as False from each cell's own `holm_p`; and
+> `incumbent_counterpart_computed` is **true**. **So the conjunct is EVALUATED
+> AND FAILING, and a conjunction with a False conjunct cannot be rescued —
+> BE's matched-random run cannot make Q4 pass, only diagnose it.** Adjudication
+> is the coordinator's. Also swept, **RELAYED**: R-513(E)'s fourth oracle came
+> back **SELECTIVE ON DURATION at the permutation floor** — the excluded 1,309
+> are systematically the **long exposures**, where adverse selection lives.
+>
+> ---
+
 
 > ### 2026-09-04T12:39Z — MEM round 90: the Q4 gate's deciding half has never been computed, and the provenance instrument exists
 >
