@@ -45,6 +45,72 @@ CONTROL_PREDICATES = ("P1_key_multisets_equal",
                       "P4_realised_action_counts_equal")
 
 
+#: THE FLOOR IS UNAVAILABLE, AND WHY IT CANNOT YET BE DIAGNOSED.
+#:
+#: DA REFUSED TO CONFIRM THE STRUCTURAL CLAIM FROM THIS ARTIFACT, and DA
+#: is right. What the emission carried was a COUNT -- attempts 20,
+#: rejections {P4: 20} -- and a count cannot separate the two readings
+#: that decide the question:
+#:
+#:   (a) the ACHIEVABLE SET of realised counts EXCLUDES the target, in
+#:       which case no budget ever helps and the floor is unavailable BY
+#:       CONSTRUCTION; or
+#:   (b) it BRACKETS the target and twenty draws missed, in which case
+#:       the refusal is a BUDGET FACT.
+#:
+#: The 333-vs-496 figures that were carried as decisive came from a
+#: SINGLE SEED recorded in a source comment: one-directionality rested on
+#: n=1, not on emitted evidence.
+#:
+#: SO THE REASON IS NOT WRITTEN AS SETTLED. The grade is DA's:
+#: REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE -- the refusal is localised to
+#: P4 (P1-P3 pass on every draw) and the mechanism is not yet
+#: distinguishable from a budget miss.
+#:
+#: WHAT WOULD SETTLE IT, and it is emitted below: for EVERY draw that
+#: reaches P4, the REALISED VALUE, the SIGNED GAP against the treated
+#: arm, and the PER-STRATUM BREAKDOWN. P4 is a per-stratum equality, so a
+#: near-miss on ONE stratum is a different fact from a miss on ALL of
+#: them, and only the signed gap shows whether the misses are
+#: one-directional or scattered.
+#:
+#: THE HONEST LIMIT, kept in the emission: even a clean answer would
+#: evidence UNREACHABLE FOR THIS CONSTRUCTION, never NEVER.
+#:
+#: WHAT IS ESTABLISHED, and is not in question: DE36-R3 showed cancel-set
+#: IDENTITY cannot be matched, and its remedy was to match the
+#: per-stratum REALISED COUNT instead. This round finds that remedy's own
+#: criterion failing too. That is a step BEYOND DE36-R3, not a
+#: restatement -- the finding was not previously recorded. The DE36-R3
+#: sentence sits inside the assertion message of P4's own positive
+#: control (`de_phase4_diag_runner.py:4322-4326`).
+MATCHED_FLOOR_STATE = {
+    "floor": "UNAVAILABLE",
+    "grade": "REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE",
+    "localised_to": "P4_realised_action_counts_equal",
+    "not_yet_distinguishable": [
+        "achievable set EXCLUDES the target (unavailable by construction)",
+        "achievable set BRACKETS the target and the budget missed it"],
+    "why_a_count_cannot_decide": "attempts and a rejection tally carry no "
+                                 "realised VALUES, so neither reading can "
+                                 "be excluded",
+    "one_directionality_evidence": "n=1, from a single seed in a source "
+                                   "comment -- NOT emitted evidence, and "
+                                   "not sufficient",
+    "what_would_settle_it": "per-draw realised value, signed gap vs the "
+                            "treated arm, and per-stratum breakdown, over "
+                            "several seeds",
+    "honest_limit": "even a clean answer evidences UNREACHABLE FOR THIS "
+                    "CONSTRUCTION, never NEVER",
+    "established_and_not_in_question": "DE36-R3 -- cancel-set IDENTITY "
+                                       "cannot be matched; its remedy was "
+                                       "the per-stratum realised count, "
+                                       "whose own criterion this round "
+                                       "finds failing. A step BEYOND "
+                                       "DE36-R3, not a restatement",
+}
+
+
 def control_is_valid(predicates: dict) -> bool:
     """A control is valid when EVERY declared predicate is True.
 
@@ -119,7 +185,7 @@ def provenance() -> dict:
     }
 if "--selftest" in sys.argv:
     pass
-EXPECTED_CHECKS = 10
+EXPECTED_CHECKS = 12
 
 
 def selftest() -> int:
@@ -153,6 +219,26 @@ def selftest() -> int:
     ok(control_is_valid({}) is False,
        "and an EMPTY predicate set is not valid -- a refused draw has no "
        "predicates and must not inherit a passing flag")
+    _mfu = MATCHED_FLOOR_STATE
+    ok(_mfu["floor"] == "UNAVAILABLE"
+       and _mfu["grade"] == "REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE"
+       and len(_mfu["not_yet_distinguishable"]) == 2
+       and "n=1" in _mfu["one_directionality_evidence"]
+       and "never NEVER" in _mfu["honest_limit"]
+       and "step BEYOND" in _mfu["established_and_not_in_question"],
+       f"THE FLOOR IS UNAVAILABLE AND THE REASON IS NOT WRITTEN AS "
+       f"SETTLED: grade {_mfu['grade']}, localised to "
+       f"{_mfu['localised_to']}, with TWO readings still "
+       f"indistinguishable ({len(_mfu['not_yet_distinguishable'])}). A "
+       f"COUNT cannot separate them, and the one-directionality that was "
+       f"carried as decisive rests on {_mfu['one_directionality_evidence'][:24]}. "
+       f"What IS established stands: {_mfu['established_and_not_in_question'][:70]}")
+    _fa = Path(__file__).read_text()
+    _key = "floor_" + "available"
+    ok(f'"{_key}": True' not in _fa and f'"{_key}": False' not in _fa,
+       f"and `{_key}` is DERIVED from the predicates, never a literal -- "
+       f"read from this file's own source, the same guard the validity "
+       f"flag carries")
     pr = provenance()
     ok(pr["produced_by"] == "de_section81_arms.py"
        and len(pr["producing_code"]) == 16
@@ -412,7 +498,15 @@ rc_treated = realised(r5)
 attempts = accepted = 0
 rej = {"PERM_NOT_OK": 0, "P1": 0, "P2": 0, "P3": 0, "P4": 0}
 chosen = None
-for seed in range(R.DRAW_ATTEMPT_BUDGET):
+# DA's specification: a COUNT cannot separate "the achievable set
+# excludes the target" from "it brackets the target and the budget
+# missed". Every draw that REACHES P4 records its realised value, the
+# SIGNED gap against the treated arm, and the per-stratum breakdown --
+# because P4 is a per-stratum equality and a near-miss on one stratum is
+# a different fact from a miss on all of them.
+P4_OBSERVATIONS = []
+N_SEEDS = int(sys.argv[3]) if len(sys.argv) > 3 else 60
+for seed in range(N_SEEDS):
     attempts += 1
     d_ = MRC.draw(pool, treated, seed=seed)
     c_, ok_ = R.permuted_stream(cv_ev, d_, theta_cv, gidx)
@@ -429,6 +523,25 @@ for seed in range(R.DRAW_ATTEMPT_BUDGET):
     rc_ctrl = realised(r_)
     post = R.stream_predicates(cv_ev, c_, d_, theta_cv, gidx,
                                rc_treated=rc_treated, rc_control=rc_ctrl)
+    _strata = sorted(set(rc_treated) | set(rc_ctrl))
+    _per = {f"{st[0]}|{st[1]}": {
+        "treated": rc_treated.get(st, 0), "control": rc_ctrl.get(st, 0),
+        "signed_gap": rc_ctrl.get(st, 0) - rc_treated.get(st, 0)}
+        for st in _strata}
+    _obs = {"seed": seed,
+            "realised_total_control": sum(rc_ctrl.values()),
+            "realised_total_treated": sum(rc_treated.values()),
+            "signed_gap_total": sum(rc_ctrl.values()) - sum(rc_treated.values()),
+            "n_strata": len(_strata),
+            "n_strata_matching": sum(1 for v in _per.values()
+                                     if v["signed_gap"] == 0),
+            "n_strata_control_over": sum(1 for v in _per.values()
+                                         if v["signed_gap"] > 0),
+            "n_strata_control_under": sum(1 for v in _per.values()
+                                          if v["signed_gap"] < 0),
+            "per_stratum": _per,
+            "P4": bool(post["P4_realised_action_counts_equal"])}
+    P4_OBSERVATIONS.append(_obs)
     if not post["P4_realised_action_counts_equal"]:
         rej["P4"] += 1; continue
     accepted += 1; chosen = (d_, c_, r_, h_, post, seed); break
@@ -439,11 +552,35 @@ if chosen is None:
                                 "matched is refused, never reported as a "
                                 "weaker control",
                       "attempts": attempts, "rejections": rej}), flush=True)
+    _tot = [o["signed_gap_total"] for o in P4_OBSERVATIONS]
+    _allpos = all(g > 0 for g in _tot) if _tot else None
+    _allneg = all(g < 0 for g in _tot) if _tot else None
     OUT["arms"]["RANDOM_MATCHED"] = {
         "arm": "RANDOM_MATCHED", "status": "REFUSED_NO_MATCHED_DRAW",
         "attempts": attempts, "rejections": rej,
         "predicates_last_seen": None,
-        "VALID_AS_A_CONTROL": control_is_valid({})}
+        "VALID_AS_A_CONTROL": control_is_valid({}),
+        "floor_state": dict(MATCHED_FLOOR_STATE),
+        "p4_observations": P4_OBSERVATIONS,
+        "p4_summary": {
+            "n_draws_reaching_p4": len(P4_OBSERVATIONS),
+            "treated_realised": (P4_OBSERVATIONS[0]["realised_total_treated"]
+                                 if P4_OBSERVATIONS else None),
+            "control_realised_min": min(_tot) if _tot else None,
+            "control_realised_max": max(_tot) if _tot else None,
+            "signed_gap_totals": _tot,
+            "all_gaps_positive": _allpos,
+            "all_gaps_negative": _allneg,
+            "one_directional": bool(_allpos or _allneg) if _tot else None,
+            "target_bracketed_by_observed_gaps": (
+                (min(_tot) <= 0 <= max(_tot)) if _tot else None),
+            "reading": ("ACHIEVABLE SET APPEARS TO EXCLUDE THE TARGET -- "
+                        "every observed gap has the same sign"
+                        if (_allpos or _allneg)
+                        else "OBSERVED GAPS STRADDLE ZERO -- the target "
+                             "may be reachable and the budget missed it")
+            if _tot else "no draw reached P4",
+            "honest_limit": MATCHED_FLOOR_STATE["honest_limit"]}}
 else:
     drawn, ctrl, r7, h7, post, seed_used = chosen
     add("RANDOM_MATCHED", r7, h7,
@@ -481,9 +618,15 @@ OUT["arm_distinctness"] = {
                                if "fields" in v),
     "arms_refused": sorted(a for a, v in OUT["arms"].items()
                            if "fields" not in v),
-    "floor_available": any("fields" in v and
-                           v.get("matched", {}).get("VALID_AS_A_CONTROL")
-                           for v in OUT["arms"].values())}
+    # DERIVED from the predicates, never a constant: a floor exists only
+    # if some arm is a control whose four predicates all hold.
+    "floor_available": any(
+        control_is_valid((v.get("matched") or {}).get("predicates") or {})
+        for v in OUT["arms"].values()),
+    "no_arm_vs_floor_comparison_available": not any(
+        control_is_valid((v.get("matched") or {}).get("predicates") or {})
+        for v in OUT["arms"].values()),
+    "why_no_floor": dict(MATCHED_FLOOR_STATE)}
 OUT["population_exclusions"] = EXCL
 OUT["peak_rss_gb"] = gb(); OUT["total_wall_s"] = round(time.time()-T0, 1)
 # IMMUTABLE OUTPUT NAME. Round 53 wrote every run to one filename, so a

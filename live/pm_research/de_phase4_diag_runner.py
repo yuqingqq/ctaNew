@@ -41,7 +41,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 189
+EXPECTED_CHECKS = 193
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1038,6 +1038,115 @@ def evaluate_predicates(cells: list) -> dict:
     return out
 
 
+#: THE SIGN CONVENTION, DECLARED (USER ruling 2, 2026-09-04).
+#:
+#: The producer already values a fill's adverse selection as
+#: `markout_cents_per_share = sgn * (later - level) * 100.0`, where
+#: `sgn = +1` for BUY_UP and `-1` otherwise and `later` is the mid at
+#: `t + MARKOUT_S`. POSITIVE therefore means the mid moved the maker's
+#: way after the fill.
+#:
+#: Spread capture uses THE SAME EXPRESSION AT THE FILL'S OWN TIME:
+#: `sgn * (mid_at_fill - level) * 100.0`. Positive means the fill was
+#: struck on the favourable side of the prevailing mid -- edge earned at
+#: entry.
+#:
+#: Maker P&L is their SUM: edge at entry plus what the mid did afterwards,
+#: both already signed the same way, both in cents per share, multiplied
+#: by shares. No second convention is introduced; if this one is wrong,
+#: it is wrong for the markout the programme has been reporting all
+#: along, which is why the reconciliation below exists.
+MAKER_PNL_SIGN_CONVENTION = (
+    "sgn = +1 for BUY_UP, -1 otherwise; value_cents_per_share = "
+    "sgn * (mid - level) * 100.0. Spread capture takes mid = mid_at_fill; "
+    "the markout takes mid = mid at t + MARKOUT_S. POSITIVE is in the "
+    "maker's favour in both. Maker P&L = (spread + markout) * shares")
+
+
+def maker_pnl(reference: dict) -> dict:
+    """Spread capture, post-fill markout and maker P&L over the reference's
+    received fills -- from fields the producer ALREADY KEEPS.
+
+    Round 52 reported these as not producible. That was wrong, and the
+    error is worth naming: I described what the REPLAY REPORTS rather
+    than what its INPUTS SUPPORT. `level`, `mid_at_fill` (EST-R1),
+    `shares` and the side are on every tranche.
+
+    SCOPE, and it travels with the number: this is maker P&L ON RECEIVED
+    FILLS WITHIN THE REFERENCE'S TRANCHE POPULATION. It is not a
+    book-wide P&L over unfilled quotes -- there is nothing to value there
+    -- and it excludes any position left at window end, which is
+    `inventory_loss` and needs a terminal mark.
+
+    `NO_MID_AT_FILL` IS A COUNTED STATUS, NEVER A ZERO: `mid_at()`
+    returns None before a window's first quote, and a fill whose entry
+    mid is unknown has an UNKNOWN spread, not a zero one."""
+    st = {"VALUED": 0, "NO_MID_AT_FILL": 0, "NO_MARKOUT": 0,
+          "NO_SHARES": 0}
+    spread = markout = 0.0
+    shares_valued = 0.0
+    for slug, sides in reference.items():
+        for side in HSP.SIDES:
+            sgn = 1.0 if side == "BUY_UP" else -1.0
+            for g in sides[side]:
+                for t in g.get("tranches", ()):
+                    sh = t.get("shares")
+                    if not sh:
+                        st["NO_SHARES"] += 1
+                        continue
+                    mk = t.get("markout_cents_per_share")
+                    mid = t.get("mid_at_fill")
+                    lvl = t.get("level")
+                    if mid is None or lvl is None:
+                        st["NO_MID_AT_FILL"] += 1
+                        continue
+                    if mk is None:
+                        st["NO_MARKOUT"] += 1
+                        continue
+                    spread += sgn * (float(mid) - float(lvl)) * 100.0 * sh
+                    markout += float(mk) * sh
+                    shares_valued += sh
+                    st["VALUED"] += 1
+    return {
+        "spread_capture_cents": spread,
+        "post_fill_markout_cents": markout,
+        "maker_pnl_cents": spread + markout,
+        "shares_valued": shares_valued,
+        "tranche_statuses": st,
+        "n_tranches": sum(st.values()),
+        "sign_convention": MAKER_PNL_SIGN_CONVENTION,
+        "scope": "received fills within the reference's tranche "
+                 "population; NOT book-wide and EXCLUDING the residual "
+                 "position at window end (see inventory_loss)",
+    }
+
+
+def reconcile_maker_pnl(mp: dict, replay_result: dict) -> dict:
+    """The new markout against the one the replay already reports.
+
+    Ruled with the build: the two numbers must not be able to disagree
+    silently. They are NOT expected to be equal -- the replay's
+    `received_markout_cents` covers the fills the POLICY received, which
+    under cancellation is a subset of the reference's tranches -- so the
+    predicate is DIRECTIONAL and stated, not an equality nobody checked."""
+    got = float((replay_result.get("economics") or {})
+                .get("received_markout_cents") or 0.0)
+    mine = float(mp["post_fill_markout_cents"])
+    return {
+        "reference_tranche_markout_cents": mine,
+        "replay_received_markout_cents": got,
+        "difference_cents": mine - got,
+        "predicate": "|replay| <= |reference| -- the replay's received "
+                     "fills are a SUBSET of the reference's tranches once "
+                     "a policy cancels, so its markout cannot exceed the "
+                     "reference's in magnitude",
+        "holds": abs(got) <= abs(mine) + 1e-6,
+        "why_not_equality": "equality would only hold for an arm that "
+                            "cancels nothing; asserting it would make the "
+                            "check fail on every acting arm",
+    }
+
+
 def _tranche_index(reference: dict) -> dict:
     """(slug, side, gen, round(t, 9)) -> the tranche record, so a fill is
     valued at the mid MEASURED at its own time (EST-R1) and never at a
@@ -1933,7 +2042,19 @@ def selftest() -> int:
     _rp = rec["fit_code_pin"]
     _rper = [r for r in _rp if r["path"] == "harmful_exposure_rows.py"][0]
     _rwhole = [r for r in _rp if r["comparison"] == "whole-file"]
-    ok(len(_rp) == 12 and len(_rwhole) == 10
+    # THE INVARIANT, NOT THE TALLY. This asserted `len(_rwhole) == 10`,
+    # which is not a property of this runner at all: it moves whenever
+    # ANOTHER SEAT edits a pinned fit file, and DA's round-25 change to
+    # `flow_intensity.py` moved it to 9. A hardcoded tally is the
+    # hand-maintained-map class again -- a claim about code that drifts
+    # without either the claim or the code noticing. What must hold is
+    # the SHAPE: every whole-file row has no reached set (the bytes match,
+    # so the set cannot change the answer) and every per-function row
+    # names the set its verdict was computed over.
+    ok(len(_rp) == 12 and 1 <= len(_rwhole) <= 12
+       and all(r["reached"] is None for r in _rwhole)
+       and all(r.get("reached") for r in _rp
+               if r.get("comparison") == "per-function over the reached set")
        and _rper["comparison"] == "per-function over the reached set"
        and "select_v2_era" in _rper["reached"]
        and all(r["reached"] is None for r in _rwhole),
@@ -2526,25 +2647,39 @@ def selftest() -> int:
             "refuses at the split, before the pin and before any feed -- "
             "the ruling exists and is still not supplied on the caller's "
             "behalf", needle="the split set is UNDECLARED")
-    admits(lambda: _gate_called_code(None),
-           "DE46: THE PIN GATE NOW ADMITS. R-499 admitted the drift, the "
-           "condition holds on the artifact, and `_gate_called_code` "
-           "RETURNS -- the gate that refused every round since 43. Round "
-           "45's version of this line asserted the opposite; it is "
-           "superseded by the ruling, not by an edit that made it true. "
-           "Driven through `admits` rather than as a bare call, because "
-           "a bare call that raises dies by traceback with no FAIL line")
+    # WHAT MUST HOLD IS THE R-499 ADMISSION, NOT THE WHOLE GATE.
+    # Round 46 asserted `_gate_called_code` ADMITS. That is not a property
+    # of this runner: the gate compares TWELVE pinned fit files, and any
+    # seat editing any of them flips it. DA's round-25 commit c9fec2e
+    # changed `flow_intensity.py` (182 insertions since the fit ref) and
+    # the gate went BLOCKING again -- correctly. Asserting the gate's
+    # verdict made this suite a tripwire on other seats' work; asserting
+    # the ADMISSION keeps the thing round 46 actually established.
+    _pa46 = [r for r in pin_statuses() if r["path"] == "phase2_arms.py"][0]
+    _blk46 = {r["path"]: r["functions_changed"]
+              for r in pin_statuses() if r["verdict"] == "BLOCKING"}
+    ok(_pa46["verdict"] == "ADDITIVE_DECLARED"
+       and not _pa46["undeclared"]
+       and "phase2_arms.py" not in _blk46
+       and all(v for v in _blk46.values()),
+       f"DE46/DE56: THE R-499 ADMISSION STILL HOLDS -- `phase2_arms.py` "
+       f"reads {_pa46['verdict']} with {_pa46['undeclared']} undeclared, "
+       f"through USER_ADMISSIONS and its run-time condition. Any OTHER "
+       f"blocking file is NAMED with its functions ({_blk46}) rather than "
+       f"refused anonymously. The gate's overall verdict is NOT asserted "
+       f"here: it spans twelve pinned files and any seat editing one "
+       f"flips it, which is what DA's c9fec2e did to `flow_intensity.py`")
     refuses(lambda: preflight(
         splits=DECLARED_SPLIT_SETS[RULED_SPLIT_SET]),
         "AND THE HONEST STATE OF THE DIAGNOSTIC, DRIVEN AT `preflight()` "
-        "AND DELIBERATELY NOT AT `run()`: with the pin admitted, what "
-        "still refuses IN THIS WORKTREE is `input_roots` -- a property of "
-        "WHERE the run executes, not of the run. From the fit tree it "
-        "passes and preflight is clear. THIS CHECK MUST NEVER CALL "
-        "`run()`: its subject is a GATE, and the day every gate passes it "
-        "would become a multi-hour feed inside the selftest (BE12-S1's "
-        "defect, which round 44's M1 mutant found here)",
-        needle="TWO TREES")
+        "AND DELIBERATELY NOT AT `run()`: with the ruled split set named, "
+        "preflight still REFUSES -- by name, before any expensive stage. "
+        "WHICH gate refuses is not asserted: it depends on twelve pinned "
+        "files and on which tree this runs from. THIS CHECK MUST NEVER "
+        "CALL `run()`: its subject is a GATE, and the day every gate "
+        "passes it would become a multi-hour feed inside the selftest "
+        "(BE12-S1's defect, which round 44's M1 mutant found here)",
+        needle=None)
     import tempfile as _tf
     with _tf.TemporaryDirectory() as _d:
         _busy = Path(_d) / "x"
@@ -2835,26 +2970,33 @@ def selftest() -> int:
         "unequal length pairs one row's features with another row's "
         "identity, silently", needle="parallel")
     refuses(lambda: preflight(),
-            "and `preflight()` still REFUSES before anything is built -- "
-            "at `input_roots` now that R-499 has admitted the pin. The "
-            "gate order is the message: splits, thresholds, fit_code, "
-            "admissions, called_code, assembly_preconditions, "
-            "input_roots, and the first one that fails is the one you "
-            "hear about",
-            needle="TWO TREES")
+            "and `preflight()` REFUSES before anything is built. WHICH "
+            "gate refuses first is not asserted -- it depends on the "
+            "state of twelve pinned files and on which tree this runs "
+            "from, both of which other seats move. That preflight "
+            "refuses AT ALL, by name and before any expensive stage, is "
+            "the property this line is about",
+            needle=None)
     refuses(lambda: preflight(splits=["not_a_split"]),
             "and `preflight(splits=...)` refuses an UNKNOWN split in "
             "milliseconds, before the pin and before any read -- a name "
             "the tape does not carry indexes nothing",
             needle="are not in the tape")
     _pin = pin_statuses()                # the rows, computed
-    ok(verify_called_code(_pin) == _pin
-       and not [r for r in _pin if r["verdict"] == "BLOCKING"],
-       f"DE46: `verify_called_code()` PROCEEDS. Rounds 43-45 drove this "
-       f"line as a REFUSAL; R-499 admitted the drift and the condition "
-       f"holds, so it returns its rows. The known-bad that puts it back "
-       f"to BLOCKING is the condition-failure control above -- the "
-       f"refusal is still reachable, and by the route that matters")
+    # `_blk` is already a fixture-builder in this suite; shadowing it
+    # with a list turned a later call into TypeError. Named distinctly.
+    _nonblk_rows = [r for r in _pin if r["verdict"] != "BLOCKING"]
+    _blk_rows = [r for r in _pin if r["verdict"] == "BLOCKING"]
+    ok(verify_called_code(_nonblk_rows) == _nonblk_rows
+       and all(r["functions_changed"] for r in _blk_rows),
+       f"DE46/DE56: `verify_called_code` is a FILTER ON A VERDICT, driven "
+       f"on the real rows -- the non-blocking set is ADMITTED unchanged "
+       f"({len(_nonblk_rows)} of {len(_pin)}), and every blocking row "
+       f"NAMES the functions that moved "
+       f"({ {r['path']: r['functions_changed'] for r in _blk_rows} }). "
+       f"Whether "
+       f"the real set contains a blocking row is NOT asserted: it spans "
+       f"twelve pinned fit files and any seat editing one changes it")
     _pv = {r["path"]: r["verdict"] for r in _pin}
     _her = [r for r in _pin if r["path"] == "harmful_exposure_rows.py"][0]
     ok(_her["verdict"] == "ADDITIVE_DECLARED"
@@ -2944,8 +3086,8 @@ def selftest() -> int:
        f"control that decides whether the whole fact sheet is worth "
        f"anything (rule 16)")
     _rep = code_drift_report()
-    ok(_rep["run_is_blocked_by_the_pin"] is False
-       and _rep["blocking"] == {}
+    ok(_rep["run_is_blocked_by_the_pin"] == bool(_rep["blocking"])
+       and "phase2_arms.py" not in _rep["blocking"]
        and _rep["undeclared_drift"]["ruled"].startswith("R-499")
        and _rep["undeclared_drift"]["computed"]["accepting_path_unchanged"],
        f"AND THIS IS THE CHECK THAT PROVED ITS OWN DESIGN: `--pin-report` "
@@ -2953,8 +3095,11 @@ def selftest() -> int:
        f"and round 44's label promised \"a grant changes it on its own "
        f"and nothing here has to be edited to notice\". R-499 granted it "
        f"and the report now reads blocking={_rep['blocking']}, "
-       f"run_blocked={_rep['run_is_blocked_by_the_pin']} -- the assertion "
-       f"moved because the FACT moved")
+       f"run_blocked={_rep['run_is_blocked_by_the_pin']} -- DERIVED from "
+       f"each other, and `phase2_arms.py` is absent from the blocking set "
+       f"because R-499's admission holds. Whether the set is EMPTY is not "
+       f"asserted: another seat editing a pinned fit file changes it, and "
+       f"DA's c9fec2e did")
     # ---- DE44: THE SPLIT IS RULED, AND STILL NOT A DEFAULT ------------
     ok(RULED_SPLIT_SET == "MECHANICS_BOTH_SPLITS"
        and SPLIT_RULING["ruled_by"] == "R-496 (E)"
@@ -3203,18 +3348,31 @@ def selftest() -> int:
        f"first-refusal check and would surface at minute 29 of a feed. "
        f"The report tells it apart from a clean refusal by TYPE, against "
        f"`REFUSAL_TYPES`, which is the same tuple `main()` catches")
+    # THE INVARIANT, NOT THE WORLD. This asserted that `input_roots`
+    # blocks HERE and not from the fit tree -- true when I wrote it and
+    # FALSE NOW, because DA's c9fec2e made `flow_intensity.REPO =
+    # DATA_ROOT`, so the archive root no longer follows the code's tree
+    # and the two-root problem of round 45 is GONE. What must hold is
+    # that the gate TRACKS THE FACT: `input_roots` blocks exactly when
+    # the roots disagree.
+    _ir = input_roots()
     ok(_pf["n_error_uncaught"] == 0
-       and _pf["blockers"] == ["input_roots"]
-       and _pf["blockers_if_run_from_the_fit_tree"] == []
-       and _pf["running_in_the_fit_tree"] is False,
+       and (("input_roots" in _pf["blockers"]) == (not _ir["agree"]))
+       and (("input_roots" in _pf["blockers"])
+            == (not _ir["archive_raw_exists"] or not _ir["agree"])),
        f"AND THE ANSWER, BY EXECUTION, AT THE ROUND THAT CLEARS IT: from "
        f"THIS worktree {_pf['blockers']} refuses and "
        f"{_pf['n_error_uncaught']} gates traceback; FROM THE FIT TREE "
-       f"({_pf['fit_tree']}), where the ruled run must execute, THE "
-       f"BLOCKERS ARE {_pf['blockers_if_run_from_the_fit_tree']} -- "
-       f"EMPTY. Round 45 read `['called_code']` here on the same "
-       f"instrument; R-499 admitted it and the same instrument now reads "
-       f"clear. The projection is COMPUTED, so it moved on its own")
+       f"({_pf['fit_tree']}) the blockers are "
+       f"{_pf['blockers_if_run_from_the_fit_tree']}. WHAT IS ASSERTED is "
+       f"that the gate TRACKS THE FACT: `input_roots` blocks exactly when "
+       f"the roots disagree (agree={_ir['agree']}), and no gate dies by "
+       f"traceback. DA's c9fec2e set `flow_intensity.REPO = DATA_ROOT`, "
+       f"so the archive root no longer follows the code's tree and ROUND "
+       f"45's TWO-ROOT PROBLEM IS GONE -- the same commit put "
+       f"`flow_intensity.py` into the fit pin's BLOCKING set. The blocker "
+       f"set itself is not asserted: it spans twelve pinned files other "
+       f"seats edit")
     ok(input_roots()["archive_raw"] == input_roots()["module_archive_raw"],
        f"and the un-injected `input_roots()` reports the archive path the "
        f"MODULE actually uses ({input_roots()['module_archive_raw']}) -- "
@@ -3251,13 +3409,15 @@ def selftest() -> int:
     ok(_out["differs_only_in"] == ["phase2_arms.py"]
        and _ref_b["pin_verdicts"]["phase2_arms.py"] == "BLOCKING"
        and _adm_b["pin_verdicts"]["phase2_arms.py"] == "ADDITIVE_DECLARED"
-       and _ref_b["blocking_files"] == ["phase2_arms.py"]
-       and _adm_b["blocking_files"] == []
+       and "phase2_arms.py" in _ref_b["blocking_files"]
+       and "phase2_arms.py" not in _adm_b["blocking_files"]
        and _out["ruled"].startswith("R-499"),
        f"DE46: THE TWO BRANCHES HAVE INVERTED. What round 45 computed as "
        f"the hypothetical -- {_adm_b['branch']} -- is now the state, and "
        f"what was the state is now {_ref_b['branch']}: "
-       f"{_ref_b['blocking_files']} blocks if the condition lapses. That "
+       f"{_ref_b['blocking_files']} blocks if the condition lapses "
+       f"(other entries there belong to other seats' edits, not to this "
+       f"grant). That "
        f"is the branch worth keeping, because an INPUT can change after a "
        f"ruling and this one is conditional on an input. The difference "
        f"is still exactly {_out['differs_only_in']} -- the grant is as "
@@ -3412,15 +3572,68 @@ def selftest() -> int:
     _pf46 = preflight_report(splits=DECLARED_SPLIT_SETS[RULED_SPLIT_SET])
     ok([g["gate"] for g in _pf46["gates"]][:5]
        == ["splits", "thresholds", "fit_code", "admissions", "called_code"]
-       and _pf46["blockers_if_run_from_the_fit_tree"] == []
+       and "admissions" not in _pf46["blockers"]
        and _pf46["n_error_uncaught"] == 0,
        f"and the `admissions` gate runs BEFORE `called_code` "
        f"({[g['gate'] for g in _pf46['gates']][:5]}) so a lapsed "
        f"condition refuses with its OWN reason rather than as a bare "
-       f"\"undeclared\". FROM THE FIT TREE THE BLOCKERS ARE NOW "
-       f"{_pf46['blockers_if_run_from_the_fit_tree']} -- the run is "
-       f"clear, and this is the same instrument that said `called_code` "
-       f"last round")
+       f"\"undeclared\". The `admissions` gate itself PASSES "
+       f"(R-499's condition holds), which is what this line is about; "
+       f"the rest of the blocker set "
+       f"({_pf46['blockers_if_run_from_the_fit_tree']} from the fit tree) "
+       f"is not asserted, because it spans twelve pinned files other "
+       f"seats edit")
+
+    # ---- DE56 / USER ruling 2: maker P&L and spread capture -----------
+    _mpref = {"w1": {HSP.SIDES[0]: [{"gen": 0, "t0": 0.0, "tranches": [
+        {"t": 1.0, "shares": 10.0, "level": 0.50, "mid_at_fill": 0.52,
+         "markout_cents_per_share": 3.0},
+        {"t": 2.0, "shares": 5.0, "level": 0.60, "mid_at_fill": None,
+         "markout_cents_per_share": 1.0},
+        {"t": 3.0, "shares": 4.0, "level": 0.40, "mid_at_fill": 0.41,
+         "markout_cents_per_share": None},
+        {"t": 4.0, "shares": 0.0, "level": 0.40, "mid_at_fill": 0.41,
+         "markout_cents_per_share": 1.0}]}],
+        HSP.SIDES[1]: [{"gen": 1, "t0": 5.0, "tranches": [
+            {"t": 6.0, "shares": 8.0, "level": 0.70, "mid_at_fill": 0.68,
+             "markout_cents_per_share": 2.0}]}]}}
+    _mp = maker_pnl(_mpref)
+    # BUY_UP  : +1 * (0.52 - 0.50) * 100 * 10 = +20.0
+    # SELL/dn : -1 * (0.68 - 0.70) * 100 *  8 = +16.0
+    ok(abs(_mp["spread_capture_cents"] - 36.0) < 1e-9
+       and abs(_mp["post_fill_markout_cents"] - (3.0 * 10 + 2.0 * 8)) < 1e-9
+       and abs(_mp["maker_pnl_cents"]
+               - (36.0 + 46.0)) < 1e-9,
+       f"DE56: SPREAD CAPTURE AND MAKER P&L, hand-checked on both sides: "
+       f"BUY_UP +1*(0.52-0.50)*100*10 = +20, the other side "
+       f"-1*(0.68-0.70)*100*8 = +16, spread "
+       f"{_mp['spread_capture_cents']}, markout "
+       f"{_mp['post_fill_markout_cents']}, P&L {_mp['maker_pnl_cents']}. "
+       f"The sign convention is the MARKOUT'S OWN, evaluated at the "
+       f"fill's time -- no second convention is introduced")
+    ok(_mp["tranche_statuses"]["NO_MID_AT_FILL"] == 1
+       and _mp["tranche_statuses"]["NO_MARKOUT"] == 1
+       and _mp["tranche_statuses"]["NO_SHARES"] == 1
+       and _mp["tranche_statuses"]["VALUED"] == 2
+       and _mp["n_tranches"] == 5,
+       f"KNOWN-BAD, EACH A COUNTED STATUS AND NEVER A ZERO: "
+       f"{_mp['tranche_statuses']}. A fill whose entry mid is unknown has "
+       f"an UNKNOWN spread, not a zero one -- `mid_at()` returns None "
+       f"before a window's first quote, and folding that into the sum "
+       f"would report an absence as a measurement (rule 4)")
+    _rec = reconcile_maker_pnl(
+        _mp, {"economics": {"received_markout_cents": 20.0}})
+    ok(_rec["holds"] is True and _rec["difference_cents"] == 46.0 - 20.0,
+       f"and the RECONCILIATION against the replay's own "
+       f"`received_markout_cents` is DIRECTIONAL, not an equality: "
+       f"{_rec['predicate']}. Equality would hold only for an arm that "
+       f"cancels nothing, so asserting it would fail on every acting arm")
+    ok(reconcile_maker_pnl(
+        _mp, {"economics": {"received_markout_cents": 999.0}})["holds"]
+       is False,
+       "KNOWN-BAD: a replay markout LARGER in magnitude than the "
+       "reference's whole tranche population refuses -- the received "
+       "fills are a subset, so it cannot exceed it")
 
     # ---- DE48: THE LOG MUST NEVER MAKE A DEAD RUN LOOK ALIVE ----------
     import subprocess as _sp
@@ -3668,9 +3881,9 @@ def selftest() -> int:
        "a literal in this file")
     from collections import Counter as _C
     _verd = _C(r["verdict"] for r in _pin)
+    # THE CLOSURE'S SIZE IS THE PROPERTY; the verdict MIX is not, because
+    # any seat editing a pinned fit file moves it (DA's c9fec2e did).
     ok(_pv.get("phase2_arms.py") == "ADDITIVE_DECLARED"
-       and _verd["IDENTICAL"] == 10 and _verd["ADDITIVE_DECLARED"] == 2
-       and _verd["BLOCKING"] == 0
        and _verd["NOT_CALLED"] == 0 and sum(_verd.values()) == 12,
        f"and the closure is TRANSITIVE over first-party imports, bounded "
        f"by the manifest's twelve: {dict(_verd)}. THE COUNT MOVED THIS "
@@ -4052,13 +4265,14 @@ def selftest() -> int:
         verify_called_code(_synth_block)
     except DiagRefused as _e:
         _blocked = str(_e)
-    ok(verify_called_code(_pin) == _pin
-       and {r["verdict"] for r in _pin} == {"IDENTICAL",
-                                            "ADDITIVE_DECLARED"}
+    _pass_rows = [r for r in _pin if r["verdict"] != "BLOCKING"]
+    ok(verify_called_code(_pass_rows) == _pass_rows
+       and {r["verdict"] for r in _pass_rows} <= {"IDENTICAL",
+                                                  "ADDITIVE_DECLARED"}
        and _blocked and "a_planted_change" in _blocked,
-       f"BOTH DIRECTIONS ON THE SAME PATH: the real rows -- all "
-       f"{len(_pin)} of them, now that R-499 cleared the last BLOCKING "
-       f"one -- are ADMITTED unchanged, and a single planted BLOCKING "
+       f"BOTH DIRECTIONS ON THE SAME PATH: the real NON-BLOCKING rows "
+       f"({len(_pass_rows)} of {len(_pin)}) are ADMITTED unchanged, and a "
+       f"single planted BLOCKING "
        f"row still refuses BY NAME ('a_planted_change'). So `called#1` "
        f"is a FILTER on a verdict and neither a wall nor a rubber stamp. "
        f"Until this round the admitting half was the one that could not "
