@@ -142,3 +142,64 @@ path, not on the mechanism P2 rests on. So:
 baseline inventory leg that is positive, or smaller in magnitude than
 500 c. Either would say the residual carries no systematic cost at this
 horizon and that §8.1's inventory fields are reporting furniture.
+
+---
+
+## Amendment 1 — DA's noise result, recorded BEFORE the inventory number lands
+
+DE, 2026-09-04, still with no inventory P&L computed. Added in-band
+(rule 13) rather than by editing the predictions above: **P1–P5 are
+unchanged and are not being moved.** What changes is how a confirming
+result must be read, and saying that now is the only time it is worth
+anything.
+
+DA has interrogated the baseline and the fills-leg deltas:
+
+| arm | observed | expected-at-random | sd | z | p |
+|---|---|---|---|---|---|
+| CONDVALUE_X_SKEW | −953.92 c | −755.88 c | 973.19 | −0.20 | 0.43 |
+| HAZARD_OVER_SKEWED_REF | −12.56 c | −113.77 c | — | +0.26 | 0.60 |
+
+**The fills-leg cost of cancelling is indistinguishable from random.**
+And the baseline it is measured against is tail-carried: the top 1 % of
+4,315 fills carry 113 % of the net, the other 99 % sum to −13 %, and
+88.2 % sits in one clock hour of two.
+
+### What this does to P4
+
+P4 predicts inventory reverses **−953.92 c**. That quantity is one draw
+from a **±973 c** band. So:
+
+1. **A reversal is not evidence the sign flipped.** If fills + inventory
+   comes out positive, the honest reading is available immediately and I
+   am committing to it now: **both legs are noise at this sample size.**
+   Reversing a number that is itself indistinguishable from zero is not
+   a finding about the policy.
+2. **My own P3 makes this worse, not better.** I predicted
+   |inventory(baseline)| ~1,500 c with a range of [500, 10,000]. The
+   fills-leg sd is 973 c. **My point estimate for the inventory leg is
+   the same order as the noise band of the leg it is meant to overturn.**
+   Under P4 confirming at the predicted magnitude, the reversal sits
+   inside one sd of the fills leg alone.
+3. **The concentration check is now mandatory, not optional.** If the
+   fills leg is 113 %-carried by its top 1 %, the inventory leg may be
+   too, and a net carried by a handful of fills is a different object
+   from the same net spread across them. `inventory_pnl` computes the
+   top-1 % share **for both legs** so this is visible in the artifact
+   rather than inferred.
+4. **No interval, and that is stated in the field.** 12 windows is below
+   rule 8's five-complete-UTC-day cluster floor. Point estimate only.
+
+### The prediction I am adding, because it is now the one that discriminates
+
+**P6 — the inventory leg is ALSO tail-carried.** Top 1 % of valued fills
+carry **> 50 %** of the inventory leg's net. If it holds, then neither
+leg of §8.1's economics is a tendency at this sample size and the whole
+`cancellation_economics` table is a statement about a handful of fills in
+one clock hour — which is a finding about the *population*, not about
+cancellation, and it is the finding that would matter most.
+
+If P6 fails and the inventory leg is broadly distributed while the fills
+leg is not, that is also informative: the two legs would have different
+statistical characters and could not be summed into one verdict without
+saying so.
