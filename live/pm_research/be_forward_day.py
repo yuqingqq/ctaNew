@@ -929,6 +929,61 @@ USER_ADMISSIONS_BY_DAY = {
         "scope": ("THIS READ, on 20260829 ONLY. It is not a widening of "
                   "`day_closed_and_attributed`, which is unchanged for every "
                   "other day, race days included"),
+        "kind": "SUPERSEDED_ATTRIBUTED_BLOB",
+    },
+    #: R-503 + the USER's directive ("dont waste time in ruling, just mark it
+    #: missing a window"). DA re-verdicted 09-03 under R-503 so the day
+    #: accrues on its COVERED COMPLEMENT -- and the scheduled-unit prefix was
+    #: LOST on the supersede, which DA flagged rather than papered over. So
+    #: the gate-1 shape of 08-29 recurs exactly: the ordinary gate would admit
+    #: the 00:06Z verdict that says the day does NOT accrue, and refuse the
+    #: 09:36Z one that says it does.
+    #:
+    #: The condition here is STRONGER than 08-29's, because the risk is
+    #: different. 08-29's question was "are these bytes genuinely attributed";
+    #: this one's is "did the RULE change, or did the DAY change". So the
+    #: admission verifies, at run time, that every raw measurement is
+    #: IDENTICAL between the re-verdict and its predecessor and that only
+    #: rule-derived fields moved. If the day's data moved, the admission
+    #: REFUSES -- a re-verdict is allowed to reinterpret evidence, never to
+    #: restate it.
+    "20260903": {
+        "admitted_by": "USER",
+        "relayed_by": "coordinator (dispatch of BE round 29)",
+        "filed_at": "Q-BE-255",
+        "depends_on": ("R-503 -- a day accrues on its COVERED COMPLEMENT, "
+                       "287 of 288 with the uncovered window marked and "
+                       "counted, built on R-409's accounting"),
+        "kind": "RE_VERDICT_UNDER_RULING",
+        "verdict_path": "data/pm_5min/derived/da_dayverdict_20260903.json",
+        "verdict_sha256": ("727a4dcd5e2d4c4ded866f5e4f1977a22146d280db6b"
+                           "fdbe42e38732f84ac8a1"),
+        "verdict_as_of": "2026-09-04T09:36:44.731072+00:00",
+        "predecessor_path": ("data/pm_5min/derived/da_dayverdict_20260903."
+                             "superseded_20260904T000601.304982+0000.json"),
+        "predecessor_sha256": ("89a70af147c1226dd2bea969af7836737ab7f7fae9"
+                               "7ea9895fc2bec29a040e0d"),
+        "ruling_token": "R-503",
+        #: Raw MEASUREMENTS of the day. These must not move.
+        "data_fields_that_must_be_identical": (
+            "windows_gap_affected", "tape_density"),
+        "per_coin_measurements_that_must_be_identical": (
+            "lost_seconds", "coin_level_gap_intervals"),
+        #: The ONE difference allowed inside `gap_series`, with its reason.
+        "gap_series_fields_allowed_to_differ": ("ledger_lines",),
+        "why_ledger_lines_may_differ": (
+            "it is the LINE COUNT of a live append-only gap ledger read at a "
+            "later instant (11,545 at 00:06Z, 11,702 at 09:36Z), not a "
+            "measurement of 09-03. Every derived gap quantity in the same "
+            "block -- causes, gaps_per_hour, hours_over_bar -- is identical, "
+            "and so are lost_seconds and coin_level_gap_intervals per coin"),
+        "why_this_day": ("R-503 changed the RULE by which coverage is "
+                         "judged; the day's data is unchanged and that is "
+                         "checked here rather than inherited from the "
+                         "dispatch"),
+        "scope": ("THIS DAY ONLY. `assert_day_closed_and_attributed` is "
+                  "unchanged and still refuses this verdict when called "
+                  "without the admission"),
     },
 }
 
@@ -1026,6 +1081,90 @@ def admission_bytes_ok(day: str, a: dict, raw: bytes) -> dict:
     return v
 
 
+def reverdict_data_unchanged(a: dict) -> dict:
+    """R-503 ADMISSION: did the RULE change, or did the DAY change?
+
+    A re-verdict may reinterpret evidence. It may NOT restate it. So this
+    compares the re-verdict against the predecessor it superseded and refuses
+    unless every raw measurement is IDENTICAL -- with exactly one exemption,
+    named in the admission with its reason, for a live ledger's line count.
+
+    It also requires that something rule-derived DID move: a re-verdict that
+    changes nothing is not the re-verdict the admission was granted for."""
+    cur = REPO / a["verdict_path"]
+    pre = REPO / a["predecessor_path"]
+    for label, f, want in (("re-verdict", cur, a["verdict_sha256"]),
+                           ("predecessor", pre, a["predecessor_sha256"])):
+        if not f.exists():
+            raise ForwardDayRefused(
+                f"REFUSED: the {label} named by the 20260903 admission is not "
+                f"at {f}. An admission whose artifact nobody can read is not "
+                f"evidence.")
+        got = hashlib.sha256(f.read_bytes()).hexdigest()
+        if got != want:
+            raise ForwardDayRefused(
+                f"REFUSED: the {label} at {f} hashes {got[:16]}, not the "
+                f"{want[:16]} the admission names. These are not the bytes "
+                f"the USER's directive was given on.")
+    new = json.loads(cur.read_text())
+    old = json.loads(pre.read_text())
+
+    moved = []
+    for k in a["data_fields_that_must_be_identical"]:
+        if json.dumps(new.get(k), sort_keys=True) != json.dumps(
+                old.get(k), sort_keys=True):
+            moved.append(k)
+    for coin in sorted(set(new.get("per_coin") or {})
+                       & set(old.get("per_coin") or {})):
+        nb = (new["per_coin"][coin].get("day_bar_v2") or {})
+        ob = (old["per_coin"][coin].get("day_bar_v2") or {})
+        for f in a["per_coin_measurements_that_must_be_identical"]:
+            if nb.get(f) != ob.get(f):
+                moved.append(f"per_coin.{coin}.day_bar_v2.{f}")
+    ng, og = new.get("gap_series") or {}, old.get("gap_series") or {}
+    allowed = set(a["gap_series_fields_allowed_to_differ"])
+    for f in sorted(set(ng) | set(og)):
+        if f in allowed:
+            continue
+        if json.dumps(ng.get(f), sort_keys=True) != json.dumps(
+                og.get(f), sort_keys=True):
+            moved.append(f"gap_series.{f}")
+    if moved:
+        raise ForwardDayRefused(
+            f"REFUSED: the 20260903 re-verdict differs from its predecessor "
+            f"in MEASUREMENTS, not only in rule: {sorted(set(moved))}. The "
+            f"admission was granted for a RULE change under "
+            f"{a['ruling_token']}; a re-verdict that restates the day's data "
+            f"is a different act and is not admitted.")
+
+    # And it must actually have DONE something.
+    rule_moved = {}
+    for coin in sorted(set(new.get("per_coin") or {})):
+        nb = (new["per_coin"][coin].get("day_bar_v2") or {})
+        ob = ((old.get("per_coin") or {}).get(coin, {}).get("day_bar_v2") or {})
+        if nb.get("evaluable") != ob.get("evaluable"):
+            rule_moved[coin] = {"evaluable": [ob.get("evaluable"),
+                                              nb.get("evaluable")]}
+    if not rule_moved:
+        raise ForwardDayRefused(
+            f"REFUSED: the 20260903 re-verdict moved NO rule-derived field. "
+            f"An admission for a rule change that changed nothing is an "
+            f"admission for nothing.")
+    return {"data_identical": True,
+            "measurements_compared": sorted(
+                list(a["data_fields_that_must_be_identical"])
+                + [f"per_coin.*.day_bar_v2.{f}" for f in
+                   a["per_coin_measurements_that_must_be_identical"]]
+                + ["gap_series.* (except "
+                   + ",".join(a["gap_series_fields_allowed_to_differ"]) + ")"]),
+            "exempted_with_reason": {
+                f: a["why_ledger_lines_may_differ"]
+                for f in a["gap_series_fields_allowed_to_differ"]},
+            "rule_derived_fields_that_moved": rule_moved,
+            "predecessor": a["predecessor_path"],
+            "predecessor_sha256": a["predecessor_sha256"]}
+
+
 def admitted_verdict(day: str) -> dict | None:
     """Recover and VERIFY the admitted bytes at the blob, now.
 
@@ -1043,6 +1182,47 @@ def admitted_verdict(day: str) -> dict | None:
             f"reads no field that is stale in the admitted bytes, and it now "
             f"reads {prem['stale_fields_the_driver_reads']}. The ruling's "
             f"ground is gone, so the admission is not in force.")
+    if a.get("kind") == "RE_VERDICT_UNDER_RULING":
+        ev = reverdict_data_unchanged(a)
+        v = json.loads((REPO / a["verdict_path"]).read_text())
+        closed, wr = v.get("day_closed_calendar"), v.get("write_reason")
+        if closed is not True:
+            raise ForwardDayRefused(
+                f"REFUSED: the {day} re-verdict carries "
+                f"day_closed_calendar={closed!r}, not True.")
+        if v.get("race_accrual_eligible") is not True:
+            raise ForwardDayRefused(
+                f"REFUSED: the {day} re-verdict does not accrue "
+                f"(race_accrual_eligible={v.get('race_accrual_eligible')!r}). "
+                f"The admission was granted for a day that DOES.")
+        if not (isinstance(wr, str) and a["ruling_token"] in wr):
+            raise ForwardDayRefused(
+                f"REFUSED: the {day} re-verdict's write_reason does not name "
+                f"{a['ruling_token']}, so it is not the re-verdict the "
+                f"admission was granted for. Got {wr!r}.")
+        return {"verdict": v, "record": {
+            "ADMISSION": "RE-VERDICT UNDER A USER RULING, ADMITTED BY THE USER",
+            "admitted_by": a["admitted_by"], "relayed_by": a["relayed_by"],
+            "filed_at": a["filed_at"], "depends_on": a["depends_on"],
+            "scope": a["scope"], "kind": a["kind"],
+            # rule 14, THIRD time this guard has caught this record's
+            # NAMING and third time it was right: `verdict` reads as
+            # decision-shaped. The path is a path; say so.
+            "artifact_path": a["verdict_path"],
+            "artifact_sha256": a["verdict_sha256"],
+            "artifact_as_of": a["verdict_as_of"],
+            "verified_at_run_time": True,
+            "fields_relied_on": {"day_closed_calendar": closed,
+                                 "write_reason": wr},
+            "the_lost_prefix": (
+                "the scheduled-unit prefix was LOST on DA's supersede and DA "
+                "flagged it rather than papering over it; the ordinary gate "
+                "would therefore admit the 00:06Z verdict that says the day "
+                "does NOT accrue and refuse the 09:36Z one that says it does"),
+            "rule_change_not_data_change": ev,
+            "premise_checked_not_trusted": driver_reads_no_era_field(),
+        }}
+
     raw = _git_blob(a["blob_commit"], a["blob_path"])
     if not raw:
         raise ForwardDayRefused(
@@ -1086,7 +1266,8 @@ def admitted_verdict(day: str) -> dict | None:
     }
 
 
-def assert_day_closed_and_attributed(day: str, verdict: dict = None) -> dict:
+def assert_day_closed_and_attributed(day: str, verdict: dict = None,
+                                     admission: dict = None) -> dict:
     v = FS.read_day_verdict(day) if verdict is None else verdict
     if not v:
         raise ForwardDayRefused(
@@ -1100,16 +1281,57 @@ def assert_day_closed_and_attributed(day: str, verdict: dict = None) -> dict:
             f"(day_closed_calendar={closed!r}). Scoring an OPEN day scores a "
             f"population that is still growing.")
     wr = v.get("write_reason")
-    if not (isinstance(wr, str) and wr.startswith(SCHEDULED_PREFIX)):
-        raise ForwardDayRefused(
-            f"REFUSED: {day}'s verdict was not written by the scheduled unit "
-            f"— write_reason={wr!r} does not start with the required prefix "
-            f"(imported from da_governed_verdict_preflight, matched as a "
-            f"PREFIX exactly as DA's preflight matches it; a substring test "
-            f"would accept an unattributed hand run).")
-    return {"day_closed_calendar": True, "write_reason": wr,
-            "write_reason_prefix_source": "da_governed_verdict_preflight."
-                                          "SCHEDULED_PREFIX"}
+    if isinstance(wr, str) and wr.startswith(SCHEDULED_PREFIX):
+        return {"day_closed_calendar": True, "write_reason": wr,
+                "attribution": "SCHEDULED UNIT",
+                "write_reason_prefix_source": "da_governed_verdict_preflight."
+                                              "SCHEDULED_PREFIX"}
+    # ROUND 29: THE ONE OTHER WAY A DAY MAY BE ATTRIBUTED, AND IT IS NOT A
+    # WEAKENING BECAUSE IT CANNOT BE REACHED BY OMISSION.
+    #
+    # DA's R-503 re-verdict LOST the scheduled prefix on the supersede. The
+    # prefix check is therefore satisfied by the verdict that says the day
+    # does NOT accrue and refused by the one that says it does -- the 08-29
+    # shape again. The USER admitted it rather than re-ruling.
+    #
+    # `admission` DEFAULTS TO None, so every caller that does not name one
+    # gets EXACTLY the old behaviour: the refusal below. It is not a flag on
+    # a path that would otherwise pass; it is a second, narrower door that a
+    # caller must hold a VERIFIED admission record to open.
+    if admission is not None:
+        if admission.get("kind") != "RE_VERDICT_UNDER_RULING":
+            raise ForwardDayRefused(
+                f"REFUSED: {day} was given an admission of kind "
+                f"{admission.get('kind')!r}, which does not attest "
+                f"attribution. Only a verified RE_VERDICT_UNDER_RULING "
+                f"record may stand in for the scheduled-unit prefix.")
+        if admission.get("verified_at_run_time") is not True:
+            raise ForwardDayRefused(
+                f"REFUSED: {day}'s admission record was not verified at run "
+                f"time. An unverified attestation is a claim, not evidence.")
+        if str(admission.get("artifact_sha256")) != hashlib.sha256(
+                (REPO / admission["artifact_path"]).read_bytes()).hexdigest():
+            raise ForwardDayRefused(
+                f"REFUSED: {day}'s admission attests bytes that are not the "
+                f"bytes now on disk at {admission['artifact_path']}.")
+        return {"day_closed_calendar": True, "write_reason": wr,
+                "attribution": "USER ADMISSION, NOT THE SCHEDULED UNIT",
+                "why_the_prefix_is_absent": (
+                    "DA's supersede under R-503 lost the scheduled-unit "
+                    "prefix and flagged it; the prefix check would otherwise "
+                    "admit the superseded verdict that says this day does not "
+                    "accrue and refuse the re-verdict that says it does"),
+                "admission": {k: admission.get(k) for k in
+                              ("admitted_by", "filed_at", "depends_on",
+                               "artifact_path", "artifact_sha256",
+                               "artifact_as_of")},
+                "write_reason_prefix_source": "NOT USED -- see `attribution`"}
+    raise ForwardDayRefused(
+        f"REFUSED: {day}'s verdict was not written by the scheduled unit "
+        f"— write_reason={wr!r} does not start with the required prefix "
+        f"(imported from da_governed_verdict_preflight, matched as a "
+        f"PREFIX exactly as DA's preflight matches it; a substring test "
+        f"would accept an unattributed hand run).")
 
 
 # ---------------------------------------------------------------------------
@@ -1920,7 +2142,8 @@ def run_forward_day(day: str, outdir: Path) -> int:
         rec["day_verdict"] = gate(
             "day_closed_and_attributed",
             lambda: assert_day_closed_and_attributed(
-                day, verdict=(_adm["verdict"] if _adm else None)))
+                day, verdict=(_adm["verdict"] if _adm else None),
+                admission=(_adm["record"] if _adm else None)))
         if _adm:
             rec["day_verdict"]["attribution_source"] = (
                 "SUPERSEDED-BUT-GENUINE BYTES ADMITTED BY THE USER -- see "
@@ -4207,6 +4430,55 @@ def selftest() -> int:
        "R23 AND THE PREMISE COUNTS READS, NOT MENTIONS: a source that merely "
        "NAMES the field does not break it -- otherwise the admission record, "
        "which must name what it admits, would falsify its own ground")
+
+    # ---- ROUND 29: THE R-503 RE-VERDICT ADMISSION ------------------------
+    _A3 = USER_ADMISSIONS_BY_DAY["20260903"]
+    _a3 = admitted_verdict("20260903")
+    _ev3 = _a3["record"]["rule_change_not_data_change"]
+    ok(_a3 is not None and _ev3["data_identical"] is True
+       and _a3["record"]["fields_relied_on"]["day_closed_calendar"] is True,
+       f"R29 POSITIVE CONTROL: the 09-03 re-verdict VERIFIES at run time -- "
+       f"sha {_a3['record']['artifact_sha256'][:16]} matches, the day is "
+       f"closed, it accrues, and its write_reason names "
+       f"{_A3['ruling_token']}")
+    ok(_ev3["rule_derived_fields_that_moved"]
+       and all("evaluable" in v for v in
+               _ev3["rule_derived_fields_that_moved"].values()),
+       f"R29: and something rule-derived ACTUALLY MOVED "
+       f"({_ev3['rule_derived_fields_that_moved']}) -- an admission for a "
+       f"rule change that changed nothing is an admission for nothing")
+    refuses(lambda: assert_day_closed_and_attributed("20260903"),
+            "was not written by the scheduled unit",
+            "R29 THE ORDINARY GATE IS UNCHANGED: without the admission it "
+            "still refuses the re-verdict, because DA's supersede LOST the "
+            "scheduled prefix -- this is an admission, not a weakened gate",
+            exc=ForwardDayRefused)
+    ok(sorted(USER_ADMISSIONS_BY_DAY) == ["20260829", "20260903"]
+       and admitted_verdict("20260901") is None
+       and admitted_verdict("20260902") is None,
+       "R29 STILL KEYED BY DAY: two days carry an admission and every other "
+       "day -- 09-01 and 09-02 included -- gets None and the ordinary gate")
+    refuses(lambda: reverdict_data_unchanged(
+                {**_A3, "verdict_sha256": "0" * 64}),
+            "not the 0000000000000000 the admission names",
+            "R29 KNOWN-BAD: a re-verdict whose bytes are not the admitted "
+            "bytes REFUSES", exc=ForwardDayRefused)
+    refuses(lambda: reverdict_data_unchanged(
+                {**_A3, "gap_series_fields_allowed_to_differ": ()}),
+            "differs from its predecessor in MEASUREMENTS",
+            "R29 KNOWN-BAD, AND IT DRIVES THE EXEMPTION ITSELF: with the "
+            "`ledger_lines` exemption REMOVED the comparison REFUSES -- so "
+            "the exemption is load-bearing and is not a clause nobody tests",
+            exc=ForwardDayRefused)
+    refuses(lambda: reverdict_data_unchanged(
+                {**_A3, "data_fields_that_must_be_identical":
+                 tuple(_A3["data_fields_that_must_be_identical"])
+                 + ("per_coin",)}),
+            "differs from its predecessor in MEASUREMENTS",
+            "R29 KNOWN-BAD: widening the must-be-identical set to a field "
+            "the RULE legitimately changed (`per_coin`) REFUSES -- the "
+            "comparison fires on real difference, not on a fixed list",
+            exc=ForwardDayRefused)
 
     # ---- ROUND 21: the frozen-contract gate is ON THE RUN PATH -----------
     _fc = _emits_feed  # reuse the scoped-AST idiom

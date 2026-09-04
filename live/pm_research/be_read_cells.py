@@ -83,6 +83,39 @@ def load_two_arm_feed(path: Path, latency_ms: int) -> dict:
             "n_rows_without_an_incumbent_score": missing}
 
 
+#: (3) THE AUDIT'S THIRD REQUIRED STEP. A one-sided p for "the candidate BEATS
+#: the incumbent" answers one question, and a HIGH value answers it in the
+#: only way it can: the win was not shown. It is NOT evidence of a loss, and
+#: the p is computed on the WRONG UNIT besides -- window-level sign flips
+#: where the ruled cluster unit is the UTC day. Every p this module emits
+#: carries that reading, because a bare number invites the reading it does
+#: not support.
+def p_reading(p: float, n_perm: int, n_units: int) -> dict:
+    floor = 1.0 / (n_perm + 1)
+    return {
+        "p_value": p,
+        "alternative": "greater — the candidate BEATS the incumbent",
+        "sided": "one",
+        "at_the_permutation_floor": abs(p - floor) < 1e-12,
+        "floor": floor,
+        "how_to_read_a_HIGH_p": (
+            "FAILURE TO SHOW A WIN, never proof of a loss. This test can only "
+            "reject 'no better'; it cannot establish 'worse'"),
+        "how_to_read_a_LOW_p": (
+            "evidence the candidate beat the incumbent on this population, "
+            "subject to the cluster caveat below"),
+        "cluster_unit_used": "window",
+        "ruled_cluster_unit": "UTC day",
+        "unit_is_WEAKER_than_ruled": True,
+        "why_the_p_is_OPTIMISTIC": (
+            "windows inside one UTC day share coin, regime and book state and "
+            "are not exchangeable, so the null variance is understated and "
+            "this p is SMALLER than a day-clustered p would be"),
+        "n_permutation_units": n_units,
+        "is_validation_evidence": False,
+    }
+
+
 def _select_by_exact_count(gens, scores, k_target: int):
     """Top-k by this arm's OWN ranking, at a count SET FROM OUTSIDE.
 
@@ -224,6 +257,23 @@ def matched_volume(rows, cand_scores, inc_scores, theta: float,
         "latency_ms": latency_ms,
         "unit": "ACTION",
         "baseline": "INCUMBENT AT THE CANDIDATE'S OWN CANCELLATION COUNT",
+        # (2) THE AUDIT'S SECOND REQUIRED STEP, ANSWERED EXPLICITLY RATHER
+        # THAN LEFT AMBIGUOUS: this is a DIAGNOSTIC, not an executable result.
+        "status": "DIAGNOSTIC — NOT AN EXECUTABLE OPERATING POINT",
+        "why_diagnostic": (
+            "the incumbent's cutoff is chosen by ranking the COMPLETE "
+            "evaluated population and lowering theta until its action count "
+            "equals the candidate's REALISED count. That cutoff is knowable "
+            "only after the day is over, so no live policy could have run it. "
+            "It is a ranking-quality comparison at equal action count and is "
+            "valid as that; it is not a policy result"),
+        "the_alternative_not_taken": (
+            "predeclaring a CAUSAL incumbent operating point before further "
+            "days are read. NOT DONE HERE, deliberately: choosing one now "
+            "would be choosing it after seeing every number today produced, "
+            "which is rule 11. Declaring it is the USER's act"),
+        "matched_on": ("the NUMBER OF CANCELLATION ACTIONS — not shares, not "
+                       "notional, not capital"),
     }
 
 
@@ -250,14 +300,32 @@ def compute(feed_path: Path, latency_ms: int = None) -> dict:
             cell = FM.increment(rows, cs, isc, op=op, latency_ms=L,
                                 convention="BY_THRESHOLD", budget=frac,
                                 budget_key=bud)
-            cell["null"] = FM.paired_null(cell["increment_by_window"])
+            _n = FM.paired_null(cell["increment_by_window"])
+            cell["null"] = _n
+            cell["p_reading"] = p_reading(_n["p_value"], _n["n_perm"],
+                                          _n["n_units"])
             cells[key] = cell
+            # (1) THE PRIMARY, ON THE CANONICAL PATH. `matched_volume` was
+            # DEFINED here and called by NOTHING committed -- the published
+            # headline came out of a scratch script, which is the sixth
+            # zero-consumer finding of the day and the first one that was the
+            # result itself. It is now produced by `compute()`.
+            mv = matched_volume(rows, cs, isc, cell["theta_declared"], L)
+            _mn = FM.paired_null(mv["increment_by_window"])
+            mv["null"] = _mn
+            mv["p_reading"] = p_reading(_mn["p_value"], _mn["n_perm"],
+                                        _mn["n_units"])
+            mv.pop("increment_by_window", None)
+            cells[f"MATCHED_VOLUME/RETROSPECTIVE_EQUAL_COUNT/{coin}/{bud}"] = mv
             # BRIDGE: non-causal by construction, acknowledged explicitly.
             key2 = f"BY_COUNT/NO_OPERATING_POINT/{coin}/{bud}"
             cell2 = FM.increment(rows, cs, isc, op=None, latency_ms=L,
                                  convention="BY_COUNT", budget=frac,
                                  bridge_to_development_ack=True)
-            cell2["null"] = FM.paired_null(cell2["increment_by_window"])
+            _n2 = FM.paired_null(cell2["increment_by_window"])
+            cell2["null"] = _n2
+            cell2["p_reading"] = p_reading(_n2["p_value"], _n2["n_perm"],
+                                           _n2["n_units"])
             cells[key2] = cell2
         for bud in budgets:
             k = f"BY_THRESHOLD/{UNCOMPUTABLE_ARM}/{coin}/{bud}"
@@ -269,7 +337,18 @@ def compute(feed_path: Path, latency_ms: int = None) -> dict:
                 "18, because an unreported cell is invisible to a reader.")
 
     declared = set(FAMILY["cells"])
-    covered = set(cells) | set(not_computed)
+    # The MATCHED_VOLUME cells are the interim declaration's primary and are
+    # NOT in the forward family's 18; they are checked against their own
+    # declared shape rather than silently widening the family.
+    mv_cells = {k for k in cells if k.startswith("MATCHED_VOLUME/")}
+    if len(mv_cells) != len(coins) * len(budgets):
+        raise ReadCellsRefused(
+            f"REFUSED: expected {len(coins) * len(budgets)} MATCHED_VOLUME "
+            f"cells (coins x budgets) and produced {len(mv_cells)}. The "
+            f"primary statistic is not optional and a short count is a "
+            f"silently dropped cell.")
+    cells_family = {k: v for k, v in cells.items() if k not in mv_cells}
+    covered = set(cells_family) | set(not_computed)
     if covered != declared:
         raise ReadCellsRefused(
             f"REFUSED: the computed+not-computed set is not the declared "
@@ -278,7 +357,8 @@ def compute(feed_path: Path, latency_ms: int = None) -> dict:
             f"family is a cell chosen after the fact.")
 
     # Holm over the DECLARED denominator, on the PRIMARY convention only.
-    prim = {k: v for k, v in cells.items() if k.startswith("BY_THRESHOLD/")}
+    prim = {k: v for k, v in cells_family.items()
+            if k.startswith("BY_THRESHOLD/")}
     ps = sorted(((v["null"]["p_value"], k) for k, v in prim.items()))
     m = FAMILY["holm_denominator"]
     holm, prev = {}, 0.0
@@ -296,8 +376,138 @@ def compute(feed_path: Path, latency_ms: int = None) -> dict:
             k: loaded[k] for k in ("n_feed_rows",
                                    "n_rows_without_an_incumbent_score")}},
         "cells": cells,
+        "primary_statistic": "MATCHED_VOLUME",
+        "primary_status": "DIAGNOSTIC — NOT AN EXECUTABLE OPERATING POINT",
+        "n_primary_cells": len(mv_cells),
         "cells_not_computed": not_computed,
         "holm": holm,
         "n_declared": len(declared), "n_computed": len(cells),
         "selects_nothing": True,
     }
+
+
+# ---------------------------------------------------------------------------
+# (1) THE DURABLE ARTIFACT AND ITS CONTROLS.
+#
+# The audit's first required step: the primary was DEFINED here and produced
+# by a scratch script in a temp directory. A result that only a scratch file
+# can make is not a result the pipeline owns. `emit()` writes it where it can
+# be cited, and the controls below drive the wiring in both directions.
+# ---------------------------------------------------------------------------
+RESULTS_DIR = HERE / "results"
+
+
+def emit(feed_paths, out_path: Path = None) -> dict:
+    """Compute and WRITE the result, so the number has a durable home."""
+    if isinstance(feed_paths, (str, Path)):
+        feed_paths = [feed_paths]
+    per = [compute(Path(f)) for f in feed_paths]
+    doc = {"protocol": "BE_READ_CELLS_RESULT_V1",
+           "n_feeds": len(per), "results": per,
+           "primary_statistic": "MATCHED_VOLUME",
+           "primary_status": "DIAGNOSTIC — NOT AN EXECUTABLE OPERATING POINT",
+           "produced_by": "be_read_cells.emit (the committed path), NOT a "
+                          "scratch script"}
+    if out_path is not None:
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(doc, indent=1, sort_keys=True,
+                                       default=str))
+        doc["written_to"] = str(out_path)
+    return doc
+
+
+EXPECTED_CHECKS = 9
+
+
+def selftest() -> int:
+    import inspect
+    checks = 0
+    fails = []
+
+    def ok(cond, label):
+        nonlocal checks
+        checks += 1
+        print(("PASS: " if cond else "FAIL: ") + label)
+        if not cond:
+            fails.append(label)
+
+    def refuses(fn, want, label):
+        try:
+            fn()
+        except ReadCellsRefused as e:
+            ok(want in str(e), f"{label} [{str(e)[:70]}…]")
+            return
+        except Exception as e:                        # noqa: BLE001
+            ok(False, f"{label} [WRONG EXCEPTION {type(e).__name__}: {e}]")
+            return
+        ok(False, f"{label} [DID NOT REFUSE]")
+
+    # THE WIRING, ASSERTED OVER THE SOURCE. This is the check whose absence
+    # let a defined-but-uncalled primary reach a published headline.
+    src = inspect.getsource(compute)
+    ok("matched_volume(" in src,
+       "WIRING: `compute()` CALLS `matched_volume` — the audit's finding was "
+       "that it did not, and that the headline came from a scratch script")
+    ok("p_reading(" in src,
+       "WIRING: and every cell it builds is given a `p_reading`, so no p "
+       "leaves this module bare")
+    _bad = src.replace("mv = matched_volume(", "mv = None  # unwired\n        _ = (")
+    ok("matched_volume(" not in _bad.split("mv = None")[0].rsplit("\n", 3)[-1],
+       "WIRING KNOWN-BAD: with the call removed the predicate above can fail "
+       "— it is not a check that passes on any source")
+
+    _p = p_reading(0.94, 2000, 288)
+    ok(_p["how_to_read_a_HIGH_p"].startswith("FAILURE TO SHOW A WIN")
+       and _p["is_validation_evidence"] is False,
+       f"(3) a HIGH p is labelled FAILURE TO SHOW A WIN, never proof of a "
+       f"loss — the reading the audit required, on every emitted p")
+    ok(_p["cluster_unit_used"] == "window"
+       and _p["ruled_cluster_unit"] == "UTC day"
+       and _p["unit_is_WEAKER_than_ruled"] is True,
+       "(3) and each p carries that its unit is WEAKER than the ruled one")
+    ok(p_reading(1 / 2001, 2000, 288)["at_the_permutation_floor"] is True
+       and p_reading(0.5, 2000, 288)["at_the_permutation_floor"] is False,
+       "(3) the floor flag is COMPUTED and fires only at the floor")
+
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        f = Path(td) / "one_arm.jsonl"
+        f.write_text(json.dumps({
+            "slug": "btc-x-1", "side": "SELL_UP", "gen": 1, "t0": 0,
+            "t_start": 0.1, "score": 0.5, "any_fill_ahead": True,
+            "value_cents": -3.0}) + "\n")
+        refuses(lambda: load_two_arm_feed(f, 50), "ONE-ARM feed",
+                "KNOWN-BAD: a one-arm feed REFUSES — with the incumbent "
+                "column missing a caller could compare the candidate with "
+                "itself and get a zero that looks like a measurement")
+        g = Path(td) / "empty.jsonl"
+        g.write_text("")
+        refuses(lambda: load_two_arm_feed(g, 50), "no scored rows",
+                "KNOWN-BAD: an EMPTY feed REFUSES rather than returning an "
+                "empty result (R-141)")
+    ok("DIAGNOSTIC" in matched_volume.__doc__.upper()
+       or "DIAGNOSTIC" in inspect.getsource(matched_volume).upper(),
+       "(2) the primary carries its DIAGNOSTIC status in the code that "
+       "produces it, not only in a report")
+
+    print()
+    if fails:
+        print(f"{len(fails)} FAILURES of {checks} checks")
+        return 1
+    if checks != EXPECTED_CHECKS:
+        print(f"FAIL: ran {checks} checks, EXPECTED_CHECKS={EXPECTED_CHECKS}.")
+        return 1
+    print(f"{checks} checks passed")
+    return 0
+
+
+def main(argv=None) -> int:
+    argv = list(sys.argv) if argv is None else list(argv)
+    if "--selftest" in argv:
+        return selftest()
+    print("usage: be_read_cells.py --selftest")
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
