@@ -186,38 +186,41 @@ SECTION_8_1_FIELDS: dict[str, dict] = {
         "source": "counters.queue_reset_cost_cents_total"},
     "terminal_inventory": {"source": "inventory.terminal_net"},
     "peak_inventory": {"source": "inventory.peak_abs_net"},
-    # DE58: the BLOCKER MOVED, and saying so is the point of updating
-    # this reason. It is no longer a capability gap -- `wf.mid_at()` is
-    # live inside `build_reference`'s loop and already called twice, so
-    # storing a window-end mid is one line at a site that holds the
-    # object. WHAT IS MISSING IS A RULING ON WHAT "TERMINAL" MEANS, and
-    # the two candidates are not interchangeable:
-    #   (A) THE MID AT t1 -- the window's end instant. Absent inside a
-    #       gap, which is a counted NOT_AVAILABLE, never 0.5 and never a
-    #       default (the failure `cross_window_correlation` recorded).
-    #   (B) THE LAST OBSERVED MID BEFORE t1 -- always present whenever
-    #       any quote was seen, so it never returns NOT_AVAILABLE, but it
-    #       marks the position at a stale price whose staleness is
-    #       exactly the length of the gap.
-    # THEY DIFFER EXACTLY WHEN THE GAP MATTERS: (A) refuses to value the
-    # residual precisely in the windows where the residual is riskiest,
-    # (B) values it there at a price the market has already left. Also
-    # unruled: whether the loss is PER-SLUG or SUMMED -- the emission
-    # calls the summed terminal net "reporting-only, carries no decision
-    # meaning", which points at per-slug but was never confirmed.
+    # DE59: BUILT. `build_reference` now stores the window's terminal
+    # mark WITH ITS AGE AND ITS GAP FLAG -- one line at the site that
+    # already calls `wf.mid_at()` twice -- and `inventory_pnl` values the
+    # residual by CONTINUING the mark from where the fills leg stopped:
+    #     total = SUM sgn.shares.(M_T - level)
+    #     fills = SUM sgn.shares.(m_i - level)
+    #     inv   = SUM sgn.shares.(M_T - m_i)
+    # so `fills + inv == total` is a CHECKED identity and round 58's
+    # double-count cannot recur under a new name.
+    #
+    # STILL RULING_REQUIRED, AND THAT IS THE POINT. My original pair --
+    # the mid AT t1 versus the LAST OBSERVED mid before t1 -- COLLAPSES:
+    # `mid_at` is held forward and returns None only before a window's
+    # first quote, never inside a gap, so the two are one expression. The
+    # choice that actually exists is about STALENESS, and BOTH readings
+    # are computed and emitted:
+    #   (A) held forward always -- never NOT_AVAILABLE, and marks the
+    #       residual at a price the market may have left, silently
+    #   (B) NOT_AVAILABLE, COUNTED, when the window ends in a gap --
+    #       refuses exactly where the residual is riskiest
+    # Neither is the answer here. A single value quoted without naming
+    # its ruling is a value whose exclusion rule nobody declared.
+    #
+    # THE UNIT IS THE SLUG: each window carries its own mark, so a
+    # mark-to-market on a net position summed ACROSS windows would price
+    # a position no book ever held. Per-slug values and their sum are
+    # emitted; the summed terminal SHARE count keeps its
+    # reporting-only status.
     "inventory_loss_cents": {
-        "source": None,
-        "why": "NOT a capability gap and no longer a re-feed question: "
-               "the terminal mark is one stored line at a site that "
-               "already calls `wf.mid_at()` twice. It awaits a USER "
-               "RULING on which mark is meant -- (A) the mid AT t1, "
-               "NOT_AVAILABLE inside a gap, or (B) the last observed mid "
-               "BEFORE t1, always present but stale by the gap's length "
-               "-- and on whether the loss is per-slug or summed. "
-               "Choosing one silently would put a number on the residual "
-               "position whose meaning nobody declared",
-        "candidates": ("mid_at_t1", "last_observed_mid_before_t1"),
-        "also_unruled": "per-slug vs summed"},
+        "source": "de_phase4_diag_runner.inventory_pnl",
+        "ruling_required": ("A_held_forward_always",
+                            "B_refuse_when_window_ended_in_gap"),
+        "unit": "per-slug; the sum of per-slug values is well defined, a "
+                "cross-window net share position is not",
+        "identity": "fills_leg + inventory_leg == total_to_terminal"},
     "latency_x_cost_sensitivity": {
         "source": "the caller, by replaying the arm across the frozen "
                   "latency axis and cost levels"},

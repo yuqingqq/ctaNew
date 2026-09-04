@@ -355,7 +355,12 @@ def run_arms(argv=None):
     SCRATCH = (Path(sys.argv[2]) if len(sys.argv) > 2
                else Path(__file__).resolve().parents[2]
                / "data/pm_5min/derived")
-    CACHE = SCRATCH / f"de_section81_cache_{LIMIT}.pkl"
+    # DE59: VERSIONED. The cached `fr` gained `terminal_marks`, so a v1
+    # cache would silently feed an arms run a reference with no
+    # window-end mark and every fill would read NO_TERMINAL_MARK. A
+    # schema change that reuses its predecessor's filename is a
+    # stale-cache bug that looks like a measurement.
+    CACHE = SCRATCH / f"de_section81_cache_v2_{LIMIT}.pkl"
     if CACHE.exists():
         _c = pickle.loads(CACHE.read_bytes())
         fr, asm = _c["fr"], _c["asm"]
@@ -427,7 +432,7 @@ def run_arms(argv=None):
                 "n_artifacts": len(verified),
                 "source": "de_score_stream.verify_head -> the fit manifest"}
 
-    def fields(res, rho_out, mp_arm):
+    def fields(res, rho_out, mp_arm, inv_arm):
         e, c = res["economics"], res["counters"]
         inv = e.get("inventory", {}) or {}
         out = {}
@@ -440,6 +445,55 @@ def run_arms(argv=None):
                 for k in ("candidates", "also_unruled"):
                     if spec.get(k) is not None:
                         out[f][k] = spec[k]
+            elif src == "de_phase4_diag_runner.inventory_pnl":
+                # DE59: BOTH RULINGS EMITTED, NEITHER CHOSEN. The status
+                # is neither OK nor NOT_AVAILABLE, because a single value
+                # cannot honestly be quoted until the ruling lands -- and
+                # a field that reports one reading while another is live
+                # is the field a reader would cite without knowing what
+                # it excluded.
+                out[f] = {
+                    # RULED DE59: (C'). The held-forward mark is the
+                    # PRIMARY reading; the gap refusal is a SECOND
+                    # COMPUTABLE VIEW, not a branch. The status is OK
+                    # because a value can now be quoted -- and it names
+                    # its ruling, because a value quoted without one is
+                    # a value whose exclusion rule nobody declared.
+                    "status": "OK",
+                    "value": inv_arm["primary_inventory_loss_cents"],
+                    "ruling": inv_arm["primary_ruling"],
+                    "ruling_provenance": inv_arm["ruling_provenance"],
+                    "terminal_indexes": inv_arm["terminal_indexes"],
+                    "second_view_disagreement_cents":
+                        inv_arm["second_view_disagreement_cents"],
+                    "second_view_disagreement_share":
+                        inv_arm["second_view_disagreement_share"],
+                    "views_disagree_materially":
+                        inv_arm["views_disagree_materially"],
+                    "concentration": inv_arm["concentration"],
+                    "interval": inv_arm["interval"],
+                    "rulings_available": list(spec["ruling_required"]),
+                    "by_ruling": {
+                        k: {kk: vv for kk, vv in v.items()
+                            if kk != "ruling_text"}
+                        for k, v in inv_arm["by_ruling"].items()},
+                    "ruling_texts": {k: v["ruling_text"] for k, v
+                                     in inv_arm["by_ruling"].items()},
+                    "unit": spec["unit"],
+                    "per_slug": inv_arm["per_slug"],
+                    "summed_terminal_net_shares":
+                        inv_arm["summed_terminal_net_shares"],
+                    "summed_terminal_net_shares_status":
+                        inv_arm["summed_terminal_net_shares_status"],
+                    "fills_leg_cents": inv_arm["fills_leg_cents"],
+                    "total_to_terminal_cents":
+                        inv_arm["total_to_terminal_cents"],
+                    "identity": spec["identity"],
+                    "identity_holds": inv_arm["identity_holds"],
+                    "identity_residual_cents":
+                        inv_arm["identity_residual_cents"],
+                    "fill_statuses": inv_arm["fill_statuses"],
+                    "found_in": "de_phase4_diag_runner.inventory_pnl"}
             elif src.startswith("de_phase4_diag_runner.maker_pnl_from_fills."):
                 # DE58: the per-arm maker-P&L decomposition, over the
                 # fills THIS ARM received. `maker_pnl(reference)` would
@@ -492,6 +546,13 @@ def run_arms(argv=None):
                                            "economics", "result"]}
         return out
 
+    # DE59-C3: an arm's received fills, kept so the CROSS-ARM set
+    # differences can be taken. "Which fills did this arm decline" is a
+    # set difference against the baseline and cannot be recovered from
+    # any arm's own summary.
+    FILLS = {}
+    ARM_FILLS = {}
+
     def replay(scores, *, cancel, theta):
         params = R.cell_params(
             {"coin": COIN, "latency_ms": LAT, "budget": BUDGET,
@@ -502,9 +563,11 @@ def run_arms(argv=None):
             repost_fill_model=HSP.REPOST_FILL_MODELS[0])
         res = HSP.replay_policy(ref, scores, params)
         f = R.received_fills(res, ref, R._decision_times(scores))
+        FILLS[id(res)] = f
         return (res, RHO.rho(f, LAT,
                              proxy={"rho_captured_over_sacrificed": None}),
-                R.maker_pnl_from_fills(f))
+                R.maker_pnl_from_fills(f),
+                R.inventory_pnl(f, fr.get("terminal_marks") or {}))
 
     PROV = provenance()
     RUN_ID = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
@@ -522,11 +585,12 @@ def run_arms(argv=None):
     _mx = max((float(e["score"]) for e in cv_ev), default=0.0)
     assert _mx < NO_CANCEL_THETA, f"arm 1 would cancel: max score {_mx}"
 
-    def add(name, res, rho_out, mp_arm, identity, **extra):
+    def add(name, res, rho_out, mp_arm, inv_arm, identity, **extra):
+        ARM_FILLS[name] = FILLS.get(id(res), [])
         OUT["arms"][name] = dict(
             {"arm": name, "n_cancels": res["counters"].get("cancels_issued", 0),
              "identity": identity,
-             "fields": fields(res, rho_out, mp_arm),
+             "fields": fields(res, rho_out, mp_arm, inv_arm),
              # DE58: the reconciliation, RUN AGAINST THIS REAL REPLAY and
              # not against a fixture. It is DIRECTIONAL -- |replay| <=
              # |reference| -- and degenerates to an EQUALITY on the
@@ -538,19 +602,19 @@ def run_arms(argv=None):
                           "predictor": identity["predictor"],
                           "rho": rho_out["rho"]}), flush=True)
 
-    r1, h1, m1 = replay(cv_ev, cancel=False, theta=theta_cv)
-    add("QR_SKEW_ONLY", r1, h1, m1,
+    r1, h1, m1, i1 = replay(cv_ev, cancel=False, theta=theta_cv)
+    add("QR_SKEW_ONLY", r1, h1, m1, i1,
         {"predictor": "NONE", "artifacts": {},
          "note": "the neutral opportunity population; no cancellation, "
                  "asserted n_cancels==0"})
     assert OUT["arms"]["QR_SKEW_ONLY"]["n_cancels"] == 0
 
-    r5, h5, m5 = replay(cv_ev, cancel=True, theta=theta_cv)
-    add("CONDVALUE_X_SKEW", r5, h5, m5, ident(CV, cv_v),
+    r5, h5, m5, i5 = replay(cv_ev, cancel=True, theta=theta_cv)
+    add("CONDVALUE_X_SKEW", r5, h5, m5, i5, ident(CV, cv_v),
         semantics=L.ARM_X_SKEW_SEMANTICS, theta=theta_cv)
 
-    rH, hH, mH = replay(hz_ev, cancel=True, theta=theta_hz)
-    add("HAZARD_OVER_SKEWED_REF", rH, hH, mH, ident(HZ, hz_v),
+    rH, hH, mH, iH = replay(hz_ev, cancel=True, theta=theta_hz)
+    add("HAZARD_OVER_SKEWED_REF", rH, hH, mH, iH, ident(HZ, hz_v),
         note="NOT §8.1 arm 3 -- arm 3 requires NEUTRAL placement, which is "
              "ABSENT. This is the hazard head over the SKEWED reference and "
              "is named so it cannot be read as arm 3", theta=theta_hz)
@@ -642,7 +706,7 @@ def run_arms(argv=None):
                if not pre[k]]
         if bad:
             rej[bad[0][:2]] += 1; continue
-        r_, h_, m_ = replay(c_, cancel=True, theta=theta_cv)
+        r_, h_, m_, i_ = replay(c_, cancel=True, theta=theta_cv)
         rc_ctrl = realised(r_)
         post = R.stream_predicates(cv_ev, c_, d_, theta_cv, gidx,
                                    rc_treated=rc_treated, rc_control=rc_ctrl)
@@ -674,7 +738,7 @@ def run_arms(argv=None):
         P4_OBSERVATIONS.append(_obs)
         if not post["P4_realised_action_counts_equal"]:
             rej["P4"] += 1; continue
-        accepted += 1; chosen = (d_, c_, r_, h_, m_, post, seed); break
+        accepted += 1; chosen = (d_, c_, r_, h_, m_, i_, post, seed); break
     if chosen is None:
         print(json.dumps({"RANDOM_MATCHED": "REFUSED",
                           "reason": "no draw satisfied P1-P4 within the "
@@ -890,8 +954,8 @@ def run_arms(argv=None):
                 "shown is 'no matched floor exists UNDER THIS DRAW'"),
             "honest_limit": MATCHED_FLOOR_STATE["honest_limit"]}}
     else:
-        drawn, ctrl, r7, h7, m7, post, seed_used = chosen
-        add("RANDOM_MATCHED", r7, h7, m7,
+        drawn, ctrl, r7, h7, m7, i7, post, seed_used = chosen
+        add("RANDOM_MATCHED", r7, h7, m7, i7,
             {"predictor": "MATCHED_RANDOM_PERMUTATION", "artifacts": cv_v,
              "note": "the CONDVALUE stream's above-threshold values permuted "
                      "within (side, hour); shares CONDVALUE's artifacts BY "
@@ -935,6 +999,88 @@ def run_arms(argv=None):
             control_is_valid((v.get("matched") or {}).get("predicates") or {})
             for v in OUT["arms"].values()),
         "why_no_floor": dict(MATCHED_FLOOR_STATE)}
+    # ---- DE59-C3: THE TAIL, THE BREAK-EVEN RATIO, AND THE CASCADE -----
+    # THE QUESTION THAT DECIDES THE OVERLAY CASE, AND IT IS A SET
+    # DIFFERENCE RATHER THAN AN INFERENCE. The book's maker P&L is
+    # carried by its extreme fills; if the body sums AGAINST the net then
+    # `r = adverse/spread` is already past any plausible break-even on
+    # 99% of the book, and the overlay pays IFF IT DECLINES THE BODY
+    # WITHOUT DECLINING THE TAIL. Whether each arm does that was never
+    # measured -- it was inferred from the aggregate ("it evidently did
+    # not remove many, or the delta would be more negative"). An
+    # inference from an aggregate is not a count.
+    _bl = ARM_FILLS.get("QR_SKEW_ONLY") or []
+    if not _bl:
+        OUT["tail_and_cascade"] = {"status": "NO_BASELINE_FILLS"}
+    else:
+        _acting = {a: ARM_FILLS[a] for a in ARM_FILLS
+                   if a != "QR_SKEW_ONLY" and ARM_FILLS[a]}
+        OUT["tail_and_cascade"] = {
+            "tail_decline": R.tail_decline(_bl, _acting),
+            "adverse_over_spread": {
+                a: R.adverse_over_spread(f)
+                for a, f in [("QR_SKEW_ONLY", _bl)] + sorted(_acting.items())},
+            "cancel_mechanics": R.cancel_mechanics(
+                _bl,
+                {a: (f, OUT["arms"][a]["n_cancels"])
+                 for a, f in _acting.items()},
+                R.generations_with_fills(ref)),
+            "why_these_three_together": (
+                "the tail says WHERE the book's P&L lives, `r` says what "
+                "an overlay must beat and what the body already exceeds, "
+                "and the cascade says whether a cancel's cost is the "
+                "ranker's PICK or the number of fills the picked "
+                "generation held. Separately each invites a wrong "
+                "reading; together they are the specification"),
+            "decides_nothing": "REPORTED (rule 14).",
+        }
+
+    # ---- DE59: WHAT THE POLICY DOES TO THE RESIDUAL -------------------
+    # RULED INTO THE EMISSION whatever the inventory leg turns out to be,
+    # because it characterises what the policy DOES rather than what it
+    # EARNS -- and the two are not the same claim. Read off the terminal
+    # net BEFORE any P&L: an arm that CUTS the residual's magnitude is
+    # reducing risk; an arm that FLIPS ITS SIGN at the same magnitude is
+    # taking a DIRECTIONAL BET, whose payoff depends on the realised path
+    # and not on the mechanism. A number that improves because of the
+    # second is not evidence the policy manages inventory.
+    _bn = (OUT["arms"].get("QR_SKEW_ONLY", {}).get("fields", {})
+           .get("terminal_inventory", {}).get("value"))
+    if _bn is None:
+        OUT["residual_policy_effect"] = {
+            "status": "NO_BASELINE_TERMINAL_NET"}
+    else:
+        _re = {}
+        for _a, _v in OUT["arms"].items():
+            if _a == "QR_SKEW_ONLY" or "fields" not in _v:
+                continue
+            _n = _v["fields"].get("terminal_inventory", {}).get("value")
+            if _n is None:
+                _re[_a] = {"status": "NO_TERMINAL_NET"}
+                continue
+            _re[_a] = {
+                "n_cancels": _v["n_cancels"],
+                "terminal_net_shares": _n,
+                "magnitude_ratio_to_baseline": (abs(_n) / abs(_bn)
+                                                if abs(_bn) > 1e-12
+                                                else None),
+                "reduces_magnitude": abs(_n) < abs(_bn),
+                "reverses_sign": (_n * _bn) < 0,
+                "reading": ("RISK REDUCTION requires the magnitude to "
+                            "fall; a SIGN FLIP at equal magnitude is a "
+                            "DIRECTIONAL BET, not risk reduction"),
+            }
+        OUT["residual_policy_effect"] = {
+            "baseline_arm": "QR_SKEW_ONLY",
+            "baseline_terminal_net_shares": _bn,
+            "arms": _re,
+            "why_this_is_emitted_regardless": (
+                "it is read off the terminal net BEFORE any P&L, so it "
+                "characterises the policy independently of what the "
+                "inventory leg turns out to be"),
+            "decides_nothing": "REPORTED (rule 14).",
+        }
+
     # ---- DE58: IS CANCELLING WORTH DOING AT ALL? ----------------------
     # §8.1 closes "`net_cancel_cents` alone is not a strategy-P&L
     # verdict." Until this round every field an arm filled was a

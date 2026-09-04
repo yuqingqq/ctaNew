@@ -44,6 +44,17 @@ from pathlib import Path
 #: RAISED BY HAND, NEVER BY THE RUN. 193 -> 201 for DE58, and the
 #: delta is ACCOUNTED FOR rather than observed -- a pin that moves to
 #: whatever the run produced is a pin that sets itself (DA37-R1).
+#:   +5  DE59's inventory leg: the hand-checked identity, ruling B's
+#:       exclusion firing by name, the counted statuses, the
+#:       no-gap negative control, and per-slug as the unit.
+#:   +3  DE59's RULED shape: primary-plus-second-view with the
+#:       terminal index stated, the disagreement flag driven in
+#:       BOTH directions, and per-leg concentration.
+#:   +2  DE59-C1's producer/consumer key contract, after the
+#:       emission died on a key the producer no longer returns.
+#:   +5  DE59-C3: the tail set-difference driven in BOTH
+#:       directions, the ex-tail r, the cascade x selectivity
+#:       identity, and its two refusals.
 #:   +4  the reference-level maker-P&L block, 4 checks -> 8: the
 #:       identity, the double-count known-bad, P&L ==
 #:       post_fill_markout, the two legs' denominators, and a
@@ -53,7 +64,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 201
+EXPECTED_CHECKS = 216
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -470,9 +481,12 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
         selected = selected[:limit]
     ref: dict = {}
     rows: list = []
+    terminal: dict = {}
     statuses = {"ADMITTED": 0, "NO_REPLAY": 0, "RECONCILIATION_FAILED": 0,
                 "BINANCE_GAP_EXCLUDED": n_bn_gap,
-                "TRANCHE_NO_MARKOUT": 0, "TRANCHE_KEPT": 0}
+                "TRANCHE_NO_MARKOUT": 0, "TRANCHE_KEPT": 0,
+                "TERMINAL_MARK_OK": 0, "TERMINAL_MARK_MISSING": 0,
+                "TERMINAL_MARK_ENDED_IN_GAP": 0}
     for ent in selected:
         slug = ent[0]
         out = HER.replay_with_recorder(ent[1], ent[2], ent[3], ent[4], spec)
@@ -491,6 +505,43 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
             statuses["RECONCILIATION_FAILED"] += 1
             continue
         statuses["ADMITTED"] += 1
+        # DE59: THE TERMINAL MARK, stored where the object already is.
+        # `wf.mid_at()` is live in this loop and already called twice
+        # (`mid_at_fill`, and the markout's `later`); the window-end mid
+        # was computed for the length of the function and discarded, so
+        # `inventory_loss_cents` had no mark to value the residual at.
+        #
+        # SHAPE (C') FROM THE PRE-REGISTRATION, AND ON PURPOSE: the mark
+        # is stored WITH ITS AGE AND ITS GAP FLAG rather than already
+        # filtered, so BOTH candidate rulings -- take it always, or
+        # refuse it when the window ends in a gap -- are computable from
+        # THIS ONE re-feed instead of one each. Choosing here would be
+        # choosing silently, and it would cost a second re-feed to undo.
+        #
+        # AND "TERMINAL" INDEXES THE WINDOW, NOT A GENERATION: inventory
+        # is a per-window residual, so the mark is at `WINDOW_S`. `t1` is
+        # also a generation field in this codebase, which is why the
+        # index is named rather than assumed.
+        _ws = float(qr.base.fi.WINDOW_S)
+        _mk = wf.mid_at(_ws)
+        _lastt = wf.mid_t[-1] if getattr(wf, "mid_t", None) else None
+        _gap = (bool(wf.touched(_lastt, _ws)) if _lastt is not None
+                else None)
+        terminal[slug] = {
+            "mark": _mk, "at_s": _ws, "last_quote_t": _lastt,
+            "staleness_s": (None if _lastt is None else _ws - _lastt),
+            "ended_in_gap": _gap,
+            # `mid_at` returns None ONLY before a window's first quote --
+            # never inside a gap, where it holds the last value forward.
+            # So this status is rare by construction and is counted
+            # rather than assumed away (rule 4).
+            "status": ("OK" if _mk is not None
+                       else "NO_MID_AT_WINDOW_END"),
+        }
+        statuses["TERMINAL_MARK_OK" if _mk is not None
+                 else "TERMINAL_MARK_MISSING"] += 1
+        if _gap:
+            statuses["TERMINAL_MARK_ENDED_IN_GAP"] += 1
         wrows = HER.label_rows(arm.segments, gens, wf, qr.base.fi.WINDOW_S)
         for r in wrows:
             r["slug"] = slug
@@ -537,6 +588,7 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
         if any(sides[s] for s in HSP.SIDES):
             ref[slug] = sides
     return {"reference": ref, "rows": rows, "statuses": statuses,
+            "terminal_marks": terminal,
             "n_slugs": len(ref), "population": population}
 
 
@@ -1262,6 +1314,438 @@ def maker_pnl_from_fills(fills: list) -> dict:
     }
 
 
+#: THE TWO CANDIDATE RULINGS ON THE TERMINAL MARK -- BOTH COMPUTED,
+#: NEITHER CHOSEN HERE (the choice is the USER's; DE59 pre-registration).
+#:
+#: My original pair -- "the mid AT t1" versus "the LAST OBSERVED mid
+#: before t1" -- COLLAPSES at the implementation. `mid_at` is a step
+#: function held forward (edge_layer1.py:108-113); it returns None only
+#: BEFORE a window's first quote, never inside a gap, and
+#: `advance(WINDOW_S)` is the last call, so `mid_at(WINDOW_S)` IS the
+#: last observed mid before window end. One expression, not two.
+#:
+#: What remains, and it is a real choice about STALENESS:
+TERMINAL_MARK_RULINGS: dict[str, str] = {
+    "A_held_forward_always":
+        "take the mark whatever its age. Never NOT_AVAILABLE after the "
+        "window's first quote -- and marks the residual at a price the "
+        "market may have left, SILENTLY, since the value does not say "
+        "how old it is",
+    "B_refuse_when_window_ended_in_gap":
+        "NOT_AVAILABLE, COUNTED, when the window's end falls in a gap or "
+        "tick-change interval (`wf.touched(last_quote_t, WINDOW_S)`). "
+        "Refuses to value the residual exactly where the residual is "
+        "riskiest -- the gap is WHEN the position became dangerous",
+}
+
+
+#: THE KEYS THE §8.1 EMISSION CARRIES OUT OF `inventory_pnl`, DECLARED
+#: IN ONE PLACE so producer and consumer cannot drift apart.
+#:
+#: DE59-C1, and it is round 57's defect in a new file: the ruling
+#: replaced `RULING_REQUIRED`/`why_ruling_required` with the primary
+#: reading, and `de_section81_arms.fields()` still read the removed key.
+#: The suite was GREEN at 209 checks throughout, because it exercises
+#: `inventory_pnl` DIRECTLY and never through the emission -- so the run
+#: path was unproven and died with a KeyError on a real replay. A
+#: contract asserted against this tuple catches the next one without
+#: needing a replay to do it.
+INVENTORY_EMITTED_KEYS: tuple = (
+    "primary_ruling", "primary_inventory_loss_cents", "ruling_provenance",
+    "terminal_indexes", "second_view_disagreement_cents",
+    "second_view_disagreement_share", "views_disagree_materially",
+    "by_ruling", "concentration", "interval", "per_slug",
+    "summed_terminal_net_shares", "summed_terminal_net_shares_status",
+    "fills_leg_cents", "total_to_terminal_cents", "identity_holds",
+    "identity_residual_cents", "fill_statuses")
+
+
+def inventory_pnl(fills: list, terminal_marks: dict) -> dict:
+    """The residual position's mark-to-market, CONTINUING the mark from
+    where the fills leg stopped -- so nothing is counted twice.
+
+    THE TRAP THIS AVOIDS IS ROUND 58'S, WEARING A NEW NAME. Valuing the
+    residual FROM ENTRY would re-count what `markout_cents_per_share`
+    already valued, exactly as `spread + markout` did. The split is an
+    identity, not a convention:
+
+        total to terminal = SUM sgn * shares * (M_T - level)
+        fills leg         = SUM sgn * shares * (m_i - level)
+        inventory leg     = SUM sgn * shares * (M_T - m_i)
+
+    where `m_i` is the mid at `t_i + MARKOUT_S` (carried on the fill as
+    `mid_cents_at_markout`, so it needs no re-feed) and `M_T` is THE
+    FILL'S OWN WINDOW'S terminal mark. `fills + inventory == total` is
+    CHECKED here, not asserted (rule 10).
+
+    THE UNIT IS THE SLUG. Each window has its own mark, so a
+    mark-to-market on a net position summed ACROSS windows would price a
+    position no book ever held. Per-slug values are emitted and their SUM
+    is well-defined; the summed terminal SHARE count is reported with the
+    status that it carries no decision meaning.
+
+    BOTH RULINGS ARE COMPUTED AND NEITHER IS THE ANSWER."""
+    st = {"VALUED": 0, "NO_TERMINAL_MARK": 0, "NO_MARKOUT": 0,
+          "NO_SHARES": 0, "NO_SLUG": 0}
+    per: dict = {}
+    inv_contrib: list = []
+    fills_contrib: list = []
+    fills_leg = inv_leg = total_leg = 0.0
+    for f in fills:
+        sz = float(f.get("size") or 0.0)
+        if not sz:
+            st["NO_SHARES"] += 1
+            continue
+        slug = f.get("slug")
+        if slug is None:
+            st["NO_SLUG"] += 1
+            continue
+        tm = terminal_marks.get(slug)
+        lvl, mkt = f.get("px_cents"), f.get("mid_cents_at_markout")
+        if mkt is None or lvl is None:
+            st["NO_MARKOUT"] += 1
+            continue
+        if tm is None or tm.get("mark") is None:
+            st["NO_TERMINAL_MARK"] += 1
+            continue
+        sgn = 1.0 if f.get("side") == HSP.SIDES[0] else -1.0
+        MT = float(tm["mark"]) * 100.0
+        b = per.setdefault(slug, {
+            "inventory_cents": 0.0, "fills_leg_cents": 0.0,
+            "total_to_terminal_cents": 0.0, "n_fills": 0,
+            "net_shares": 0.0, "terminal_mark": tm.get("mark"),
+            "staleness_s": tm.get("staleness_s"),
+            "ended_in_gap": tm.get("ended_in_gap")})
+        _i = sgn * (MT - float(mkt)) * sz
+        _f = sgn * (float(mkt) - float(lvl)) * sz
+        b["inventory_cents"] += _i
+        b["fills_leg_cents"] += _f
+        b["total_to_terminal_cents"] += sgn * (MT - float(lvl)) * sz
+        b["net_shares"] += sgn * sz
+        b["n_fills"] += 1
+        inv_leg += _i
+        fills_leg += _f
+        inv_contrib.append(_i)
+        fills_contrib.append(_f)
+        total_leg += sgn * (MT - float(lvl)) * sz
+        st["VALUED"] += 1
+    resid = abs(fills_leg + inv_leg - total_leg)
+    # CONCENTRATION (rule 8 companion): a net carried by a handful of
+    # fills is a different object from the same net spread over all of
+    # them, and the reader cannot see which from the total. Computed for
+    # BOTH legs so neither is flattered by the other's shape.
+    def _conc(xs: list, net: float) -> dict:
+        if not xs:
+            return {"status": "NO_CONTRIBUTIONS"}
+        k = max(1, int(round(0.01 * len(xs))))
+        top = sorted(xs, key=lambda v: -abs(v))[:k]
+        return {"n": len(xs), "top_1pct_n": k,
+                "top_1pct_sum_cents": sum(top),
+                "top_1pct_share_of_net": (sum(top) / net
+                                          if abs(net) > 1e-12 else None),
+                "rest_sum_cents": net - sum(top),
+                "rest_share_of_net": ((net - sum(top)) / net
+                                      if abs(net) > 1e-12 else None),
+                "why": "a share above 1.0 means the remaining fills sum "
+                       "AGAINST the net -- the total is a tail, not a "
+                       "tendency"}
+    by_ruling = {}
+    for name in TERMINAL_MARK_RULINGS:
+        if name == "A_held_forward_always":
+            keep = list(per)
+        else:
+            keep = [k for k, v in per.items() if not v["ended_in_gap"]]
+        drop = [k for k in per if k not in keep]
+        by_ruling[name] = {
+            "inventory_loss_cents": sum(per[k]["inventory_cents"]
+                                        for k in keep),
+            "n_slugs_valued": len(keep),
+            "n_slugs_NOT_AVAILABLE": len(drop),
+            "slugs_NOT_AVAILABLE": sorted(drop),
+            "n_fills_valued": sum(per[k]["n_fills"] for k in keep),
+            "n_fills_NOT_AVAILABLE": sum(per[k]["n_fills"] for k in drop),
+            "ruling_text": TERMINAL_MARK_RULINGS[name],
+        }
+    # RULED 2026-09-04 (coordinator, DE59): take (C') -- held forward
+    # PLUS its age and its gap flag. The held-forward value is the
+    # PRIMARY reading and the gap refusal is emitted as a SECOND
+    # COMPUTABLE VIEW rather than as a branch, so nobody has to choose
+    # between marking the residual silently at a price the market may
+    # have left and refusing exactly where the residual is riskiest.
+    # IF THE TWO VIEWS DISAGREE MATERIALLY THAT IS ITSELF THE FINDING,
+    # and it costs one field to be able to see it -- so the
+    # disagreement is COMPUTED here rather than left to a reader.
+    _A = by_ruling["A_held_forward_always"]["inventory_loss_cents"]
+    _B = by_ruling["B_refuse_when_window_ended_in_gap"][
+        "inventory_loss_cents"]
+    return {
+        "primary_ruling": "A_held_forward_always",
+        "primary_inventory_loss_cents": _A,
+        "ruling_provenance": "coordinator ruling, DE59 2026-09-04: (C') "
+                             "-- store the mark, its AGE and the gap "
+                             "flag; report held-forward as primary and "
+                             "the gap refusal as a second view",
+        "terminal_indexes": "WINDOW_S -- THE WINDOW'S END. NOT any "
+                            "generation's `t1`: the residual is a "
+                            "WINDOW-level object, a position left at "
+                            "window end, and `t1` is a generation field "
+                            "in this codebase. Ruled DE59; stated here "
+                            "so the next reader does not re-derive it",
+        "second_view_disagreement_cents": _A - _B,
+        "second_view_disagreement_share": ((_A - _B) / _A
+                                           if abs(_A) > 1e-12 else None),
+        "views_disagree_materially": (abs(_A - _B) > 0.01 * abs(_A)
+                                      if abs(_A) > 1e-12
+                                      else (abs(_A - _B) > 1e-12)),
+        "by_ruling": by_ruling,
+        "concentration": {
+            "inventory_leg": _conc(inv_contrib, inv_leg),
+            "fills_leg": _conc(fills_contrib, fills_leg)},
+        "interval": "NONE. Rule 8: intervals only on the correct cluster "
+                    "unit (UTC day). This population is %d windows, "
+                    "below the 5-complete-day floor, so a POINT ESTIMATE "
+                    "AND NO INTERVAL -- and that is said, not omitted"
+                    % len(per),
+        "per_slug": per,
+        "unit": "SLUG. Each window carries its own mark; a "
+                "mark-to-market on a net position summed ACROSS windows "
+                "would price a position no book ever held",
+        "summed_terminal_net_shares": sum(v["net_shares"]
+                                          for v in per.values()),
+        "summed_terminal_net_shares_status":
+            "REPORTING-ONLY, CARRIES NO DECISION MEANING -- it is a share "
+            "count across windows with different marks",
+        "fills_leg_cents": fills_leg,
+        "total_to_terminal_cents": total_leg,
+        "identity_residual_cents": resid,
+        "identity_holds": resid <= MAKER_PNL_IDENTITY_TOL_CENTS,
+        "identity": "fills_leg + inventory_leg == total_to_terminal "
+                    "(COMPUTED over the same fills, never asserted)",
+        "fill_statuses": st,
+        "n_fills": sum(st.values()),
+        "sign_convention": "the markout's own: POSITIVE is in the "
+                           "maker's favour. `inventory_loss_cents` is "
+                           "§8.1's field NAME, not a claim about sign",
+        "scope": "the residual left by THIS ARM's received fills, marked "
+                 "from each fill's markout horizon to its own window's "
+                 "terminal mark",
+    }
+
+
+def fill_key(f: dict) -> tuple:
+    """A fill's identity ACROSS ARMS -- (slug, side, ref_gen, t).
+
+    An arm's received set is a SUBSET of the baseline's, so "which fills
+    did this arm decline" is a set difference and needs a key that is
+    stable between two independent replays. `fill_ns` is derived from the
+    same recorded `t`, so it is exact rather than reconstructed."""
+    return (f.get("slug"), f.get("side"), f.get("ref_gen"),
+            round(float(f.get("fill_ns") or 0.0) / 1e9, 9))
+
+
+def fill_value_cents(f: dict) -> float | None:
+    """One fill's maker P&L, in the convention DE58 fixed: the
+    level-to-markout move, NEVER that plus the entry edge it contains."""
+    lvl, mkt, sz = (f.get("px_cents"), f.get("mid_cents_at_markout"),
+                    float(f.get("size") or 0.0))
+    if lvl is None or mkt is None or not sz:
+        return None
+    sgn = 1.0 if f.get("side") == HSP.SIDES[0] else -1.0
+    return sgn * (float(mkt) - float(lvl)) * sz
+
+
+def tail_decline(baseline: list, arms: dict, *, top_frac: float = 0.01
+                 ) -> dict:
+    """WHICH fills did each arm decline -- the TAIL, or the BODY?
+
+    THE QUESTION THIS EXISTS TO SETTLE. The baseline book's maker P&L is
+    carried by its extreme fills: at 1% the top slice can exceed 100% of
+    the net, meaning the other 99% sum AGAINST it. When that is so, an
+    overlay's break-even ratio is already exceeded on the body, and the
+    whole result lives in the tail. THE SPECIFICATION IS THEREFORE
+    CONDITIONAL: the overlay pays iff it DECLINES THE BODY WITHOUT
+    DECLINING THE TAIL -- and whether it does is a set difference nobody
+    had taken.
+
+    An INFERENCE from the aggregate is not this measurement. "It
+    evidently did not remove many, because the delta would otherwise be
+    more negative" is an argument; the set difference is a count."""
+    vals = {}
+    for f in baseline:
+        v = fill_value_cents(f)
+        if v is not None:
+            vals[fill_key(f)] = v
+    n = len(vals)
+    if not n:
+        return {"status": "NO_VALUED_BASELINE_FILLS",
+                "why": "a tail cannot be identified in an empty book"}
+    k = max(1, int(round(top_frac * n)))
+    order = sorted(vals, key=lambda kk: -abs(vals[kk]))
+    top, body = set(order[:k]), set(order[k:])
+    top_net = sum(vals[x] for x in top)
+    body_net = sum(vals[x] for x in body)
+    net = top_net + body_net
+    out = {}
+    for name, fl in arms.items():
+        kept = {fill_key(f) for f in fl}
+        d_top = sorted(top - kept, key=lambda kk: -abs(vals[kk]))
+        d_body = body - kept
+        out[name] = {
+            "n_top_declined": len(d_top),
+            "net_of_top_declined_cents": sum(vals[x] for x in d_top),
+            "share_of_top_net": (sum(vals[x] for x in d_top) / top_net
+                                 if abs(top_net) > 1e-12 else None),
+            "n_body_declined": len(d_body),
+            "net_of_body_declined_cents": sum(vals[x] for x in d_body),
+            "declines_body_without_declining_tail": len(d_top) == 0,
+            "proportional_top_share_if_indiscriminate":
+                len(top) * (len(top - kept) + len(d_body)) / n,
+        }
+    return {
+        "top_frac": top_frac, "n_baseline_fills": n, "top_k": k,
+        "top_net_cents": top_net, "body_net_cents": body_net,
+        "net_cents": net,
+        "top_share_of_net": (top_net / net if abs(net) > 1e-12 else None),
+        "body_share_of_net": (body_net / net if abs(net) > 1e-12
+                              else None),
+        "body_sums_against_the_net": body_net < 0 < net,
+        "arms": out,
+        "reading_is_the_callers": "counts and nets are REPORTED; whether "
+                                  "an arm's tail behaviour makes the "
+                                  "overlay case is the policy layer's "
+                                  "(rule 14)",
+    }
+
+
+def adverse_over_spread(fills: list) -> dict:
+    """`r = adverse / spread`, the ratio an overlay's break-even is
+    stated against -- and the same ratio with the tail removed.
+
+    A ratio of two totals of which one is carried by a handful of fills
+    is not the ratio the other 99% face. Both are computed."""
+    rows = []
+    for f in fills:
+        lvl, mkt, mid = (f.get("px_cents"), f.get("mid_cents_at_markout"),
+                         f.get("mid_cents_at_fill"))
+        sz = float(f.get("size") or 0.0)
+        if lvl is None or mkt is None or mid is None or not sz:
+            continue
+        sgn = 1.0 if f.get("side") == HSP.SIDES[0] else -1.0
+        sp = sgn * (float(mid) - float(lvl)) * sz
+        pl = sgn * (float(mkt) - float(lvl)) * sz
+        rows.append((sp, pl - sp, pl))
+
+    def _r(rs):
+        sp = sum(x[0] for x in rs)
+        ad = sum(x[1] for x in rs)
+        return {"n": len(rs), "spread_cents": sp,
+                "adverse_cents": ad, "pnl_cents": sum(x[2] for x in rs),
+                "r_adverse_over_spread": (abs(ad) / sp if sp > 0
+                                          else None),
+                "spread_is_positive": sp > 0}
+
+    if not rows:
+        return {"status": "NO_VALUED_FILLS"}
+    k = max(1, int(round(0.01 * len(rows))))
+    body = sorted(rows, key=lambda x: -abs(x[2]))[k:]
+    return {"whole_book": _r(rows), "excluding_top_1pct": _r(body),
+            "top_1pct_n": k,
+            "why_both": "the whole-book ratio is a ratio of two totals "
+                        "of which one is carried by the top 1%. The "
+                        "ex-tail ratio is what the other 99% of the "
+                        "book actually faces",
+            "note": "a NEGATIVE ex-tail P&L means adverse exceeded "
+                    "spread there, i.e. r > 1 -- computed, not argued"}
+
+
+def generations_with_fills(reference: dict) -> int:
+    """Generations that produced at least one valued tranche -- the
+    denominator a RANDOM cancel is priced against, since a cancel lands
+    on a generation and takes whatever fills that generation held."""
+    return sum(1 for sides in reference.values() for gens in sides.values()
+               for g in gens if g.get("tranches"))
+
+
+def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int
+                     ) -> dict:
+    """WHAT A CANCEL COSTS, SPLIT INTO THE TWO THINGS IT IS MADE OF.
+
+    `cents_per_cancel` alone cannot separate a policy that picks BAD
+    fills from one that picks fills whose generation happened to hold
+    MANY. The split is exact:
+
+        ratio vs a random cancel = CASCADE x SELECTIVITY
+
+    CASCADE     = fills the arm removed per cancel / fills the book runs
+                  per generation. 1.0 means a cancel removed a typical
+                  generation's worth; above 1.0 the arm is cancelling
+                  generations that were about to fill repeatedly.
+    SELECTIVITY = mean P&L of the fills it removed / mean P&L of a book
+                  fill. Below 1.0 means the ranker is picking fills worth
+                  less than average -- which is the ranker WORKING.
+
+    A ranking edge and a cascade penalty can cancel each other out
+    exactly, and then `cents_per_cancel` reports a wash while two
+    opposite mechanisms are running. The identity is CHECKED (rule 10)."""
+    def _agg(fl):
+        vs = [v for v in (fill_value_cents(f) for f in fl) if v is not None]
+        return len(vs), sum(vs)
+    n_b, pnl_b = _agg(baseline)
+    if not n_b or not n_gens_with_fills:
+        return {"status": "NO_BASELINE", "n_baseline_fills": n_b,
+                "n_generations_with_fills": n_gens_with_fills}
+    fpg = n_b / n_gens_with_fills
+    mean_b = pnl_b / n_b
+    rnd = fpg * mean_b
+    out = {}
+    for name, (fl, ncx) in arms.items():
+        n_a, pnl_a = _agg(fl)
+        lost, removed = n_b - n_a, pnl_b - pnl_a
+        if not ncx:
+            out[name] = {"status": "NO_CANCELS", "n_cancels": ncx,
+                         "fills_lost": lost}
+            continue
+        flpc = lost / ncx
+        cascade = flpc / fpg if fpg else None
+        mean_r = removed / lost if lost else None
+        sel = (mean_r / mean_b) if (mean_r is not None and mean_b) else None
+        cpc = removed / ncx
+        ratio = (cpc / rnd) if rnd else None
+        prod = (cascade * sel) if (cascade is not None and sel is not None) else None
+        out[name] = {
+            "n_cancels": ncx, "fills_lost": lost,
+            "fills_lost_per_cancel": flpc,
+            "cascade_factor": cascade,
+            "mean_pnl_per_removed_fill_cents": mean_r,
+            "selectivity_factor": sel,
+            "cents_per_cancel": cpc,
+            "ratio_vs_random_cancel": ratio,
+            "cascade_x_selectivity": prod,
+            "identity_residual": (abs(ratio - prod)
+                                  if ratio is not None and prod is not None
+                                  else None),
+            "identity_holds": (ratio is not None and prod is not None
+                               and abs(ratio - prod) <= 1e-9),
+            "better_than_a_random_cancel": (ratio is not None
+                                            and abs(ratio) < 1.0),
+        }
+    return {
+        "n_baseline_fills": n_b, "baseline_pnl_cents": pnl_b,
+        "n_generations_with_fills": n_gens_with_fills,
+        "fills_per_generation": fpg,
+        "book_mean_pnl_per_fill_cents": mean_b,
+        "random_cancel_cost_cents": rnd,
+        "random_cancel_definition":
+            "a cancel that lands on a generation drawn without regard to "
+            "its fills removes `fills_per_generation` fills at the book's "
+            "mean P&L per fill. It is the null a cents_per_cancel must "
+            "beat, and it is COMPUTED from this book, not assumed",
+        "identity": "ratio_vs_random_cancel == cascade x selectivity",
+        "arms": out,
+        "decides_nothing": "REPORTED (rule 14).",
+    }
+
+
 def reconcile_maker_pnl(mp: dict, replay_result: dict) -> dict:
     """The new markout against the one the replay already reports.
 
@@ -1338,6 +1822,12 @@ def received_fills(res: dict, reference: dict,
                         "gen_start_ns": float(rec["t"]) * 1e9,
                         "side": rec["side"], "px_cents": 0.0,
                         "size": float(rec.get("shares", 0.0)),
+                        # DE59: the SLUG travels with the fill. Without
+                        # it a fill cannot find its own window's terminal
+                        # mark, and marking it at another window's would
+                        # be rule 3's proxy in a new place.
+                        "slug": rec.get("slug"),
+                        "ref_gen": rec.get("ref_gen"),
                         "mid_cents_at_fill": None,
                         "mid_cents_at_markout": None})
             continue
@@ -1361,6 +1851,13 @@ def received_fills(res: dict, reference: dict,
             "side": rec["side"],
             "px_cents": lvl,
             "size": float(rec.get("shares", 0.0)),
+            "slug": rec.get("slug"),
+            # DE59-C2: the fill's EXACT identity across arms.
+            # Keying on (slug, side, t) alone would merge two fills
+            # sharing an instant in different generations, and the
+            # tail measurement asks WHICH fills an arm declined --
+            # a question a merged key cannot answer.
+            "ref_gen": rec.get("ref_gen"),
             # The mid at fill is the level less the half-spread the quote
             # earned; the markout moves it by the per-share markout, signed
             # favourable-positive, so an adverse fill reads adverse here.
@@ -3877,6 +4374,204 @@ def selftest() -> int:
        f"decompositions agree -- {_fromref['maker_pnl_cents']} vs "
        f"{_refp['maker_pnl_cents']}. Two constructions of one quantity "
        f"that disagree would mean one of them is not that quantity")
+
+    # ---- DE59: THE INVENTORY LEG, and BOTH rulings ---------------------
+    _tmk = {"w1": {"mark": 0.60, "staleness_s": 0.1, "ended_in_gap": False},
+            "w2": {"mark": 0.40, "staleness_s": 41.0, "ended_in_gap": True},
+            "w3": {"mark": None, "staleness_s": None, "ended_in_gap": None}}
+    _ivf = [
+        # w1 BUY_UP  level 50, markout mid 52, M_T 60, 10 sh
+        #   fills +1*(52-50)*10 = +20 ; inv +1*(60-52)*10 = +80 ; tot +100
+        {"slug": "w1", "side": HSP.SIDES[0], "px_cents": 50.0, "size": 10.0,
+         "mid_cents_at_fill": 51.0, "mid_cents_at_markout": 52.0},
+        # w2 other side, level 70, markout mid 68, M_T 40, 8 sh
+        #   fills -1*(68-70)*8 = +16 ; inv -1*(40-68)*8 = +224 ; tot +240
+        {"slug": "w2", "side": HSP.SIDES[1], "px_cents": 70.0, "size": 8.0,
+         "mid_cents_at_fill": 69.0, "mid_cents_at_markout": 68.0},
+        {"slug": "w3", "side": HSP.SIDES[0], "px_cents": 50.0, "size": 5.0,
+         "mid_cents_at_fill": 51.0, "mid_cents_at_markout": 52.0},
+        {"slug": "w9", "side": HSP.SIDES[0], "px_cents": 50.0, "size": 5.0,
+         "mid_cents_at_fill": 51.0, "mid_cents_at_markout": 52.0},
+        {"slug": "w1", "side": HSP.SIDES[0], "px_cents": 50.0, "size": 5.0,
+         "mid_cents_at_fill": 51.0, "mid_cents_at_markout": None},
+        {"slug": None, "side": HSP.SIDES[0], "px_cents": 50.0, "size": 5.0,
+         "mid_cents_at_fill": 51.0, "mid_cents_at_markout": 52.0},
+        {"slug": "w1", "side": HSP.SIDES[0], "px_cents": 50.0, "size": 0.0,
+         "mid_cents_at_fill": 51.0, "mid_cents_at_markout": 52.0},
+    ]
+    _iv = inventory_pnl(_ivf, _tmk)
+    ok(abs(_iv["by_ruling"]["A_held_forward_always"]["inventory_loss_cents"]
+           - 304.0) < 1e-9
+       and abs(_iv["fills_leg_cents"] - 36.0) < 1e-9
+       and abs(_iv["total_to_terminal_cents"] - 340.0) < 1e-9
+       and _iv["identity_holds"] is True,
+       f"DE59, hand-checked on both sides: inventory "
+       f"{_iv['by_ruling']['A_held_forward_always']['inventory_loss_cents']} "
+       f"+ fills {_iv['fills_leg_cents']} == total "
+       f"{_iv['total_to_terminal_cents']}, residual "
+       f"{_iv['identity_residual_cents']}. THE SPLIT IS AN IDENTITY, so "
+       f"round 58's double-count cannot recur under a new name")
+    # THE SECOND RULING MUST BE ABLE TO FIRE. A ruling that excludes
+    # nothing on a fixture built to trip it is not a ruling, it is
+    # ruling A wearing a second name (rule 15).
+    _B = _iv["by_ruling"]["B_refuse_when_window_ended_in_gap"]
+    ok(abs(_B["inventory_loss_cents"] - 80.0) < 1e-9
+       and _B["n_slugs_NOT_AVAILABLE"] == 1
+       and _B["slugs_NOT_AVAILABLE"] == ["w2"]
+       and _B["n_fills_NOT_AVAILABLE"] == 1,
+       f"FALSIFIER: ruling B EXCLUDES the gap-ended window BY NAME and "
+       f"counts it -- {_B['inventory_loss_cents']} over "
+       f"{_B['n_slugs_valued']} slugs, {_B['slugs_NOT_AVAILABLE']} "
+       f"NOT_AVAILABLE. The two rulings differ by 224c here, which is "
+       f"why choosing one silently would be choosing a number")
+    ok(_iv["fill_statuses"] == {"VALUED": 2, "NO_TERMINAL_MARK": 2,
+                                "NO_MARKOUT": 1, "NO_SHARES": 1,
+                                "NO_SLUG": 1}
+       and _iv["n_fills"] == 7,
+       f"KNOWN-BAD, EACH COUNTED AND NEVER A ZERO: {_iv['fill_statuses']}. "
+       f"A mark of None (w3) and a window with NO mark at all (w9) are "
+       f"BOTH NO_TERMINAL_MARK -- an absent mark is not a mark of 0.5, "
+       f"which is the default `cross_window_correlation` recorded")
+    # NEGATIVE CONTROL: with no window ending in a gap the two rulings
+    # must AGREE. If they differed here, B would be excluding on
+    # something other than the gap.
+    _iv2 = inventory_pnl(
+        _ivf, {**_tmk, "w2": {**_tmk["w2"], "ended_in_gap": False}})
+    ok(abs(_iv2["by_ruling"]["A_held_forward_always"]["inventory_loss_cents"]
+           - _iv2["by_ruling"]["B_refuse_when_window_ended_in_gap"]
+           ["inventory_loss_cents"]) < 1e-9,
+       "NEGATIVE CONTROL: with no window ending in a gap the two rulings "
+       "AGREE -- so B's exclusion above is the gap and not the fixture")
+    # THE UNIT IS THE SLUG, and the cross-window share count says so.
+    ok(_iv["per_slug"]["w1"]["net_shares"] == 10.0
+       and _iv["per_slug"]["w2"]["net_shares"] == -8.0
+       and "NO DECISION MEANING" in
+           _iv["summed_terminal_net_shares_status"],
+       f"DE59: per-slug is the unit -- each window carries its own mark, "
+       f"so the summed net share count across windows "
+       f"({_iv['summed_terminal_net_shares']}) is reporting-only and "
+       f"says so in its own status")
+
+    # ---- DE59 RULED: (C') primary + second view, and the disagreement --
+    ok(_iv["primary_ruling"] == "A_held_forward_always"
+       and abs(_iv["primary_inventory_loss_cents"] - 304.0) < 1e-9
+       and "WINDOW_S" in _iv["terminal_indexes"]
+       and "not any generation" in _iv["terminal_indexes"].lower(),
+       f"DE59 RULED: the held-forward mark is PRIMARY "
+       f"({_iv['primary_inventory_loss_cents']}c) and the emission "
+       f"STATES that terminal indexes the WINDOW'S end, so the next "
+       f"reader does not re-derive it from `t1` being a generation field")
+    # THE DISAGREEMENT MUST BE ABLE TO FIRE, AND MUST BE ABLE NOT TO.
+    # A "views agree" that can never say otherwise is not a check.
+    ok(abs(_iv["second_view_disagreement_cents"] - 224.0) < 1e-9
+       and _iv["views_disagree_materially"] is True
+       and _iv2["views_disagree_materially"] is False
+       and abs(_iv2["second_view_disagreement_cents"]) < 1e-12,
+       f"FALSIFIER BOTH WAYS: with one gap-ended window the two views "
+       f"differ by {_iv['second_view_disagreement_cents']}c "
+       f"({_iv['second_view_disagreement_share']:.3f} of the primary) and "
+       f"the disagreement flag is TRUE; with no gap it is FALSE and the "
+       f"difference is exactly 0. The ruling says a material "
+       f"disagreement IS the finding, so it is computed, not left to a "
+       f"reader")
+    # CONCENTRATION, ON BOTH LEGS. A net carried by one fill is a
+    # different object from the same net spread over all of them.
+    _c = _iv["concentration"]["inventory_leg"]
+    ok(_c["n"] == 2 and _c["top_1pct_n"] == 1
+       and abs(_c["top_1pct_sum_cents"] - 224.0) < 1e-9
+       and abs(_c["top_1pct_share_of_net"] - 224.0 / 304.0) < 1e-9
+       and _iv["concentration"]["fills_leg"]["n"] == 2
+       and _iv["interval"].startswith("NONE"),
+       f"DE59: the leg's concentration is COMPUTED for both legs -- top "
+       f"{_c['top_1pct_n']} of {_c['n']} carry "
+       f"{_c['top_1pct_share_of_net']:.3f} of the net -- and the "
+       f"interval field says NONE with rule 8's reason rather than "
+       f"omitting the question")
+
+    # ---- DE59-C1: THE PRODUCER/CONSUMER CONTRACT ----------------------
+    _missing = [k for k in INVENTORY_EMITTED_KEYS if k not in _iv]
+    ok(not _missing,
+       f"DE59-C1: every key the §8.1 emission carries out of "
+       f"`inventory_pnl` is PRESENT in what it returns -- missing "
+       f"{_missing}. The ruling removed `why_ruling_required` from the "
+       f"producer while `fields()` still read it, and the suite stayed "
+       f"green at 209 checks because it exercises the producer DIRECTLY "
+       f"and never through the emission. That is round 57's KeyError in "
+       f"a new file, and this line is what makes it impossible to ship "
+       f"again without a replay to find it")
+    ok(all(k in _iv for k in ("primary_ruling", "terminal_indexes"))
+       and "why_ruling_required" not in INVENTORY_EMITTED_KEYS,
+       "KNOWN-BAD PINNED: the superseded keys are NOT in the contract, "
+       "so re-adding a reader for one fails here rather than at runtime")
+
+    # ---- DE59-C3: the TAIL question, and the cancel's two factors ------
+    def _mkf(slug, gen, t, lvl, mkt, sz=1.0, mid=None,
+             side=None):
+        return {"slug": slug, "side": side or HSP.SIDES[0],
+                "ref_gen": gen, "fill_ns": t * 1e9, "px_cents": lvl,
+                "mid_cents_at_fill": lvl if mid is None else mid,
+                "mid_cents_at_markout": mkt, "size": sz}
+    # A book of 100 fills: 99 worth -1c each, one worth +200c. The tail
+    # carries 200/101 = 1.98 of the net and the body sums AGAINST it.
+    _base = ([_mkf("w1", i, float(i), 50.0, 49.0) for i in range(99)]
+             + [_mkf("w1", 99, 99.0, 50.0, 250.0)])
+    _keeps_tail = [f for f in _base if f["ref_gen"] != 5]
+    _eats_tail = [f for f in _base if f["ref_gen"] not in (5, 99)]
+    _td = tail_decline(_base, {"KEEPS_TAIL": _keeps_tail,
+                               "EATS_TAIL": _eats_tail})
+    ok(_td["top_k"] == 1 and abs(_td["top_net_cents"] - 200.0) < 1e-9
+       and abs(_td["body_net_cents"] + 99.0) < 1e-9
+       and _td["body_sums_against_the_net"] is True
+       and abs(_td["top_share_of_net"] - 200.0 / 101.0) < 1e-9,
+       f"DE59-C3: the tail carries {_td['top_share_of_net']:.3f} of the "
+       f"net and the BODY SUMS AGAINST IT ({_td['body_net_cents']}c) -- "
+       f"the shape that makes the specification conditional")
+    # BOTH DIRECTIONS, and this is the whole point of the measurement:
+    # an arm that declines only body fills and one that eats the tail
+    # must be DISTINGUISHED, not inferred from an aggregate.
+    ok(_td["arms"]["KEEPS_TAIL"]["n_top_declined"] == 0
+       and _td["arms"]["KEEPS_TAIL"]["declines_body_without_declining_tail"]
+       is True
+       and _td["arms"]["EATS_TAIL"]["n_top_declined"] == 1
+       and abs(_td["arms"]["EATS_TAIL"]["net_of_top_declined_cents"]
+               - 200.0) < 1e-9
+       and _td["arms"]["EATS_TAIL"][
+           "declines_body_without_declining_tail"] is False,
+       f"FALSIFIER BOTH WAYS: an arm that declines ONLY body fills reads "
+       f"0 top declined; one that takes the tail reads 1 worth 200c. "
+       f"'It evidently did not remove many, or the delta would be more "
+       f"negative' is an INFERENCE FROM AN AGGREGATE -- this is the set "
+       f"difference, and the two are not the same evidence")
+    _r = adverse_over_spread(
+        [_mkf("w1", 0, 0.0, 50.0, 49.0, mid=51.0),
+         _mkf("w1", 1, 1.0, 50.0, 250.0, mid=51.0)])
+    ok(abs(_r["whole_book"]["spread_cents"] - 2.0) < 1e-9
+       and abs(_r["whole_book"]["adverse_cents"] - 197.0) < 1e-9
+       and _r["excluding_top_1pct"]["pnl_cents"] < 0
+       and _r["excluding_top_1pct"]["r_adverse_over_spread"] > 1.0,
+       f"DE59-C3: `r = adverse/spread` is computed whole-book AND "
+       f"ex-tail, and a NEGATIVE ex-tail P&L gives r > 1 "
+       f"({_r['excluding_top_1pct']['r_adverse_over_spread']:.2f}) BY "
+       f"ARITHMETIC -- adverse exceeded spread there. Computed, not argued")
+    # CASCADE x SELECTIVITY: constructed so the two factors are known and
+    # OPPOSITE, which is the case `cents_per_cancel` alone cannot see.
+    _cm = cancel_mechanics(
+        _base, {"CASCADER": (_eats_tail, 1)}, n_gens_with_fills=50)
+    ok(abs(_cm["fills_per_generation"] - 2.0) < 1e-9
+       and _cm["arms"]["CASCADER"]["fills_lost"] == 2
+       and abs(_cm["arms"]["CASCADER"]["fills_lost_per_cancel"] - 2.0) < 1e-9
+       and abs(_cm["arms"]["CASCADER"]["cascade_factor"] - 1.0) < 1e-9
+       and _cm["arms"]["CASCADER"]["identity_holds"] is True,
+       f"DE59-C3: ratio vs a random cancel == CASCADE x SELECTIVITY, "
+       f"checked: {_cm['arms']['CASCADER']['ratio_vs_random_cancel']:.6f} "
+       f"vs {_cm['arms']['CASCADER']['cascade_x_selectivity']:.6f}. A "
+       f"ranking edge and a cascade penalty can cancel EXACTLY, and then "
+       f"cents_per_cancel reports a wash while two opposite mechanisms run")
+    ok(cancel_mechanics(_base, {"X": (_base, 0)}, 50)["arms"]["X"]["status"]
+       == "NO_CANCELS"
+       and cancel_mechanics([], {}, 50)["status"] == "NO_BASELINE",
+       "KNOWN-BAD: an arm with no cancels and an empty baseline are "
+       "STATUSES, never a division that returns a number")
 
     # ---- DE48: THE LOG MUST NEVER MAKE A DEAD RUN LOOK ALIVE ----------
     import subprocess as _sp
