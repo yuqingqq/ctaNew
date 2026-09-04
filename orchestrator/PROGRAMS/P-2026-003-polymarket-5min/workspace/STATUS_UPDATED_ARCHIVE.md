@@ -6640,3 +6640,121 @@ P4 structural adjudication and BE37-R1. Join rule as in batch 1.
   last R-505; G = 3, three days sealed and unread; 09-04 closes tonight at 00:06Z.
   USER ITEMS: TWO -- the Phase-2 winner, and the causal incumbent operating point.
 ```
+
+## Batch 95 — archived 2026-09-04T11:56Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-89 true-up of R-506 and R-507 — the two USER rulings,
+the in-band correction to my own DE36-R3 reading, and common-source
+propagation. Join rule as in batch 1.
+
+```yaml
+  2026-09-04T11:15Z (MEM ROUND 86 -- THE FIRST REAL ARM OUTPUT EXISTS AND CANNOT
+  YET BE USED, AND THE ONE-WAY GUARANTEE HAS NOW FAILED BY A THIRD ROUTE THAT
+  NEEDS NO ERROR). DE 53, DA's third-route finding and BE's GO/NO-GO preflight
+  swept; nothing run but read-only reads and TWO read-only drives of my own.
+  THE FIRST REAL SECTION 8.1 ARM OUTPUT EXISTS, AND BOTH HALVES MUST TRAVEL
+  TOGETHER BECAUSE A READER TAKING ONLY THE FIRST WOULD BE BADLY WRONG. THE GOOD
+  HALF: DE round 53 ran FOUR arms with REAL predictors and LEGIBLE IDENTITY --
+  each arm records the artifact and sha it loaded, and arm_distinctness asserts 4
+  signatures and 4 distinct predictors with all_distinct TRUE. That matters
+  because ROUND 52 HAD SHIPPED TWO ARMS THAT WERE THE SAME COMPUTATION UNDER
+  DIFFERENT NAMES, WITH EVERY ARM USING A DECLARED SYNTHETIC. Population btc, 12
+  windows, 31,122 generations, 3 windows Binance-gap-excluded, 0 reconciliation
+  failures. EXCLUSIONS ARE STATUSES, NOT SILENT DROPS: 29,813 scored and 1,309
+  (4.21%) EXCLUDED because the feature pass dropped every one of their rows, THE
+  SCORER REFUSING TO SCORE THEM FROM NOTHING -- which is the right refusal.
+  AND THE HALF THAT GOVERNS HOW ALL OF IT READS: THE MATCHED CONTROL IS NOT
+  VALID. permutation_ok FALSE, with P2 (stratum score multisets equal) and P3
+  (drawn carry above, and only drawn) BOTH FALSE, and the emission carries
+  VALID_AS_A_CONTROL FALSE. SO RANDOM_MATCHED IS NOT A FLOOR AND NO
+  ARM-VERSUS-CONTROL COMPARISON MAY BE DRAWN FROM THESE NUMBERS. THAT IS THE
+  STATUS OF THE OUTPUT, NOT A CAVEAT ON IT. Two more that belong beside it:
+  HAZARD_OVER_SKEWED_REF IS EXPLICITLY NOT SECTION 8.1 ARM 3, because arm 3
+  requires NEUTRAL PLACEMENT WHICH IS ABSENT -- a near neighbour under a
+  different name is exactly what round 52 got wrong, and naming the difference is
+  the repair holding; and 12 OF 16 FIELDS ARE FILLED, with maker P&L, spread
+  capture and inventory loss STILL NOT_AVAILABLE WITH REASONS, which are three of
+  the four the round-83 audit found have no producer at all. ONE PROVENANCE NOTE
+  THAT IS MINE, AND IT IS THE PUBLICATION PROVENANCE CHECK APPLIED TO THIS ROUND
+  RATHER THAN TO SOMEBODY ELSE'S: DE 53'S CODE COMMIT IS LANDED (1206143,
+  11:07:09Z) BUT IT IS +4 / -3 IN ONE FILE, NO OUTPUT ARTIFACT EXISTS ON DISK, NO
+  DE ROW IS FILED (highest Q-DE-62), AND THE FIELDS THE NUMBERS ARE QUOTED FROM
+  -- arm_distinctness, all_distinct, permutation_ok, VALID_AS_A_CONTROL --
+  APPEAR NOWHERE IN THE LANDED CODE. So the arm figures above are REPORTED AND
+  NOT REPRODUCIBLE FROM ANYTHING LANDED at my read. That is not a challenge to
+  DE, whose round may still be in flight; it is the state of the record, and it
+  matters MOST FOR THE GOOD HALF, WHICH IS THE HALF A READER WILL OVER-TAKE.
+  THE ONE-WAY GUARANTEE HAS NOW FAILED BY THREE ROUTES, AND THE THIRD IS THE
+  WORST BECAUSE IT NEEDS NO ERROR AT ALL. A MOVED OR RENAMED PATH GIVES
+  n_prior_versions_with_registry 0 AND monotone TRUE WITH vacuous TRUE: git log
+  --follow returns nothing, THE LOOP NEVER RUNS, NO VIOLATION CAN BE FOUND, AND
+  THE GUARANTEE REPORTS ITSELF SATISFIED. I VERIFIED THE WHOLE CHAIN IN THE
+  LANDED CODE RATHER THAN TAKING IT: da_race_withdrawals.py:333 walks with
+  --follow; the success return at :406-424 sets "monotone": True UNCONDITIONALLY
+  and carries vacuous = not versions BESIDE it with a why that says in prose
+  "this pass compares nothing -- read n_prior_versions_with_registry, not the
+  boolean"; THE MODULE'S OWN SELFTEST AT :626-632 PINS THE BEHAVIOUR, asserting
+  monotone True AND vacuous True AND n_prior_versions_with_registry 0 on a
+  history with no prior registry; and the canonical-write guard at
+  da_forward_day_verify.py:288 tests `if mono.get("monotone") is not True`, WHICH
+  A VACUOUS PASS SATISFIES, SO THE GUARD DOES NOT FIRE. THE MODULE KNOWS AND SAYS
+  SO IN PROSE -- AND PROSE IS NOT A PREDICATE. IT IS THE CODOMAIN RULE APPLIED TO
+  A GUARANTEE RATHER THAN TO A PARSE: monotone TRUE IS REACHABLE FROM "COMPARED
+  FIVE VERSIONS" AND FROM "COMPARED NOTHING", AND A CONSUMER CANNOT TELL THEM
+  APART. IT IS NOT HYPOTHETICAL -- --follow WALKS HEAD'S ANCESTRY ONLY, AND THIS
+  PROGRAMME REBASES HELD CHAINS ROUTINELY. THE CONSEQUENCE, RECORDED PLAINLY:
+  THIS IS THE PROPERTY THAT MAKES THE USER'S 08-29 WITHDRAWAL FROM THE RACE
+  ONE-WAY, AND R-500'S BINDING CLAIM RESTS ON IT. DA is fixing it AND
+  ESTABLISHING WHETHER THE GUARD HAS EVER RUN IN A STATE WHERE IT COULD HAVE BEEN
+  VACUOUS -- which is the right second question, because a fix does not tell you
+  what was already reported. TONIGHT'S BOUNDARY: BE BUILT A GO/NO-GO PREFLIGHT
+  (be_forward_preflight.py, landed 7b19434 11:05:03Z) THAT ASKS EVERY
+  PRECONDITION CHEAPLY BEFORE THE 28-MINUTE RUN, AND I DROVE IT MYSELF ON 09-04.
+  IT READS NO-GO WITH THREE NAMED BLOCKERS: day_closed_calendar FALSE, the day
+  still being open; MASK MISSING ON A GOVERNED DAY --
+  da_blackout_mask_20260904.json absent, and the check's own words are "a
+  governed day REFUSES without it", with 09-01's and 09-03's masks having landed
+  ABOUT TEN HOURS AFTER THEIR VERDICTS; and gate_1_would_pass refusing by name
+  because scoring an open day scores a population that is still growing. AND THE
+  THIRD REASON IS THE ONE THAT RECURS, WHERE I CAN DO BETTER THAN "NO EVIDENCE"
+  BECAUSE I FOUND THE DECISIVE ARTIFACT: THE 09-04 VERDICT WAS WRITTEN BY THE
+  SCHEDULED UNIT ITSELF -- write_reason "scheduled unit run,
+  da-midnight-verify.service (INVOCATION_ID=56bb4ae1...)", as_of_utc
+  2026-09-04T00:06:21.121786Z -- AND IT CARRIES NO coverage_complement AND NO
+  PER-COIN covered_complement AT ALL, WHILE DA'S MANUAL 09-03 RE-VERDICT CARRIES
+  BOTH. SO R-503 DOES NOT RUN INSIDE THE SCHEDULED UNIT: THAT IS MEASURED
+  ABSENCE IN THE UNIT'S OWN EMISSION FROM THIS MORNING, NOT AN ABSENCE OF
+  EVIDENCE. 09-04 WILL NEED THE SAME MANUAL ADMISSION 09-03 DID, AND THIS IS A
+  GAP BETWEEN A USER RULING AND THE MACHINERY THAT ENFORCES IT NIGHTLY THAT WILL
+  RECUR EVERY NIGHT UNTIL CLOSED.
+  CORRECTION APPENDED IN THE SAME ROUND, BECAUSE TWO COMMITS LANDED WHILE I WAS
+  COMMITTING AND ONE INVERTS WHAT I WROTE ABOVE. THE REVIEWER'S DE53 FILING
+  (0516c7d, 11:18:00Z, pinned 0d0e61e) READS THE EMISSION ON DISK AND IT SAYS THE
+  CONTROL IS VALID: permutation_ok TRUE, P2 TRUE, P3 TRUE, VALID_AS_A_CONTROL
+  TRUE, P4 null -- BESIDE A HARDCODED note ASSERTING "permutation_ok False ...
+  NOT a valid matched control". THE PROSE CONTRADICTS THE BOOLEANS IT SITS NEXT
+  TO: CLAUDE.md RULE 10, FOURTH INSTANCE. SO THE DIRECTION I RECORDED ABOVE
+  FOLLOWED THE ROUND'S HEADLINE AND NOT THE ARTIFACT, AND THAT IS MY ERROR TO
+  NAME -- I flagged the figures as NOT REPRODUCIBLE FROM ANYTHING LANDED, WHICH
+  WAS EXACTLY THE REASON I COULD NOT CHECK THE DIRECTION, AND I SHOULD THEREFORE
+  HAVE MARKED THE DIRECTION UNVERIFIED RATHER THAN STATING IT FLAT. THE OPERATIVE
+  CONCLUSION STANDS AND IS STRENGTHENED, FOR A WORSE REASON: NO
+  ARM-VERSUS-CONTROL COMPARISON MAY BE DRAWN -- NOT BECAUSE THE CONTROL IS KNOWN
+  INVALID, BUT BECAUSE THE ARTIFACT AND ITS OWN HEADLINE DISAGREE AND NOTHING
+  LANDED CAN SETTLE IT. They are not even the same run: the round was filed from
+  an 11:06:34Z run and the artifact on disk is an 11:11:14Z run that answers
+  differently. THE REVIEWER'S FRAMING IS THE ONE TO CARRY: "both readings are bad
+  in different directions -- if the note is stale, the round's headline is wrong
+  and a valid control is being disclaimed; if the booleans are stale, a reader
+  takes a comparison against a floor that does not hold." AND MY PROVENANCE NOTE
+  IS INDEPENDENTLY CORROBORATED AS DE53-R2, HIGH -- "the round has no committed
+  producer; its substance is a commit message and a file in a temp directory" --
+  the reviewer's own publication-provenance census returning NONE for
+  arm_distinctness, VALID_AS_A_CONTROL, permutation_ok, all_distinct and
+  arm_signature, WHICH IS THE SAME ANSWER I GOT INDEPENDENTLY. DE ROUND 54 HAS
+  SINCE LANDED (7f62c0c, 11:18:26Z): the matched control's P2/P3 FIXED AND
+  DRIVEN, and P4 NOW REFUSES 20 OF 20 -- which DE itself calls the finding.
+  STATE: register 496 entries, last R-505; G = 3,
+  three days sealed and unread. USER ITEMS: TWO -- the Phase-2 winner, and the
+  causal incumbent operating point.
+```

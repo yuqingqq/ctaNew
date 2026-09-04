@@ -1,6 +1,34 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T11:41Z (MEM round 88) — **TWO OF THE THREE MISSING FIELDS
+Updated: 2026-09-04T11:56Z (MEM round 89) — **I VERIFIED A CITATION AND NOT THE
+CLAIM IT CARRIED; THE MATCHED FLOOR IS RULED UNAVAILABLE BY CONSTRUCTION AND THE
+RULING'S OWN ENTRY IS MARKED PROVISIONAL.** **A correction to the entry below, and it is mine (rule 13):**
+**DE36-R3 is the ADJACENT impossibility, not this finding** — it says cancel-set
+**identity** cannot be matched and names **count-matching as its remedy**, which
+is exactly what the 20/20 defeats. **The retrieval framing is withdrawn.** What
+survives is the better half and I read it at the source: **the sentence sits
+inside the assertion message of P4's own positive control**, and round 54 attributed the failure to the draw budget anyway. **The failure mode is
+named: COMMON-SOURCE PROPAGATION — three seats, one source, agreement read as
+corroboration. A citation check is not a claim check.** **Two USER rulings are now
+facts:** the **matched floor is unavailable BY CONSTRUCTION** (§8.1 cannot be
+completed as written; the six remaining arms have **no matched baseline**) —
+**though R-508 marks that entry PROVISIONAL, because its decisive number was n=1
+from a source comment; 60-seed evidence now exists and I verified it at the
+emission** — and
+**all three §8.1 fields are to be BUILT** including the ~28-minute re-feed. **A
+third ruling is the coordinator's, on the codomain predicate — terminal-in-a-gap
+is `NOT_AVAILABLE` with a count — so a question headed for the USER was answered
+by a standing rule and the count did not grow.** **DA reached the same predicate
+independently in unrelated code; I ran its selftest myself — 52 checks, all
+passed.** **R-509 subsumes the hazard into ONE COUNTERFACTUAL DEFECT with FOUR
+oracles — *could this token have been produced with the claim FALSE?* — and names
+the fourth (claims about a POPULATION) as live and uninstrumented.** **The
+60-seed evidence that settles the floor's reading does NOT license it as a
+conclusion (rule of three: ~5%, about DRAWS not the SET), and I found the
+emission the register says does not exist — in a scratchpad, never committed.**
+**USER items: THREE, derived here, not taken.**
+
+Previously (MEM round 88) — 2026-09-04T11:41Z — **TWO OF THE THREE MISSING FIELDS
 ARE BUILDABLE AFTER ALL, AND THE MATCHED FLOOR MAY BE UNACHIEVABLE BY
 CONSTRUCTION.** **A correction to what this record has said since round 83:**
 `spread_capture_cents` and `maker_pnl_cents` are buildable **from inputs already
@@ -13,6 +41,9 @@ is STRUCTURAL, not a budget shortfall** — if it holds, `VALID_AS_A_CONTROL` ca
 **never** be true for this construction. **DE36-R3 reached that on 09-03 and wrote
 it into the assertion message of the very check that now fails 20/20** — a
 **retrieval** failure, not an analysis failure. **USER items: FOUR.**
+*[Corrected in band by round 89 above (rule 13): DE36-R3 is the ADJACENT
+impossibility and its remedy was count-matching; the retrieval framing is
+withdrawn, and USER items: FOUR is superseded by THREE.]*
 
 Previously (MEM round 87) — 2026-09-04T11:30Z — **A FENCE STAYS PINNED BY RULING, G
 COUNTING HAS THREE LIVE READINGS, AND THE ARM EMISSION IS GONE.** **USER ruling:
@@ -253,6 +284,408 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
 
+> ### 2026-09-04T11:56Z — MEM round 89: a citation check is not a claim check, and the floor ruling is right for a reason that was n=1 until this hour
+>
+> **THE FIRST THING HERE IS A CORRECTION TO THE ENTRY BELOW IT, AND IT IS MINE
+> (rule 13).** Round 88 said DE's own **DE36-R3** had already reached the 20/20
+> conclusion and called that a **retrieval failure**. **That is wrong, and I read
+> both sites at the source this round rather than taking the correction on
+> report.**
+>
+> | site | what it actually says | what it is |
+> |---|---|---|
+> | `de_phase4_diag_runner.py:1675-1682` (at tip `60ecc21`; `:1565-1573` at `c5189e3`) | the realised cancel set cannot be the drawn set — *"the frozen text asks for matching on ACTION COUNT (DRAFT:147-156), **not on identity** … so `control#2` … is WITHDRAWN (DE36-R3) and **the match is made on the per-stratum REALISED action count**"* | **DE36-R3 = identity cannot be matched, and count-matching is its REMEDY** |
+> | `:4338-4343` (at tip `60ecc21`) | the `ok(_P4bad[…] is False, …)` message — a permutation changing the per-stratum realised count is *"REJECTED and redrawn … because a stateful policy cannot be made to cancel exactly the drawn set"* | **P4's own POSITIVE CONTROL, stating the adjacent impossibility** |
+>
+> **The 20/20 finding is that the COUNT cannot be matched either — a step BEYOND
+> DE36-R3, not a restatement of it.** DE did not forget its own conclusion:
+> **DE's own fix for the first impossibility ran into a second one of the same
+> shape.** And the sharpest part is against me: **my round-88 flag quoted the very
+> clause that refutes its own headline**, so I transcribed the remedy and filed it
+> as the finding.
+>
+> **What survives is the better half:** the sentence sits **inside the assertion
+> message of the check that now fails 20/20**, and **20/20 is that redraw never
+> terminating** — while round 54 attributed the failure to the draw budget. **A
+> narrower claim about memory and a sharper one about reading.**
+>
+> **And the correction makes the ruling SAFER rather than shakier:** matching has
+> failed at **two successive levels — identity, then count — for one mechanism**.
+> **A construction that defeats two independent matching criteria by one mechanism
+> is far better evidence for "unavailable by construction" than one that defeats a
+> single criterion**, and it **forecloses the obvious next move**: a third
+> statistic would be the third instance, not a fix.
+>
+> ---
+>
+> ### STANDING HAZARD (3) — COMMON-SOURCE PROPAGATION: independent agreement that is not independent
+>
+> **Named at R-507 (D); one of the three readings was mine. It sits beside
+> STANDING HAZARD (1) (zero-consumer / zero-reachability) and (2) (PHANTOM
+> FAILURE) further down this file, under the STANDING RULE that unifies those
+> two — this one is not an absence path, it is a reading failure, and it needs its
+> own entry.**
+>
+> **What happened.** Three seats — the reviewer, MEM and the coordinator —
+> **independently produced the same overstatement from the same two sites**, and
+> **the agreement was treated as corroboration when every reading came off one
+> source.** The reviewer stated it; **MEM verified the CITATION** (the string is
+> at `:4128-4129` — **true**) **rather than the CLAIM** (that the sentence
+> contains the finding — **false**); the coordinator relayed it into a register
+> entry.
+>
+> **A CITATION CHECK IS NOT A CLAIM CHECK.** A grep that lands on the right line
+> proves **the line exists**, never that it **says what the citing seat says it
+> says**. CLAUDE.md rule 16's *"know what KIND of document you are reading"*
+> applies to **a line of code** as much as to a document: this one is an
+> **assertion message about a mechanism**, and it was read as **provenance for a
+> withdrawn control**.
+>
+> **The operational form, so it is checkable:** *independent agreement is
+> corroboration only if the readings have independent SOURCES.* Agreement among
+> seats that all read one artifact is **one reading counted three times.**
+>
+> **Third time this session that prose beside or inside a field was read in place
+> of the thing itself** — the hardcoded `VALID_AS_A_CONTROL` note, the
+> vacuous-`monotone` `why`, and this — **and the first time three seats did it at
+> once.**
+>
+> ### AND R-509 SUBSUMES IT: one defect, and it is COUNTERFACTUAL — but the checkers stay three, because the ORACLE is three
+>
+> **The unification, in the reviewer's sharper form.** Take a claim **C** and a
+> token **T** a reader takes as evidence for C. **The defect in all of today's
+> detectors is that T would have been produced identically if C were false.** `0`
+> from `uncompressed_size` is produced by an empty file **and** an unreadable one;
+> the string `R-232` beside a value reads the same **whatever R-232 contains**;
+> BE's `scope` sentence *"would have kept reading true after any widening of the
+> gate."* **Not a family resemblance — the same sentence three times.**
+>
+> **The operational form is a QUESTION, not a program: for every token a reader
+> will take as evidence, could this token have been produced with the claim FALSE?
+> If yes it is not evidence, whatever it is made of.**
+>
+> **But the checkers stay three, because what must be CONSULTED to settle it
+> differs and no single program spans them:**
+>
+> | oracle | what settles it | cost | instrumented? |
+> |---|---|---|---|
+> | **codomain** | the function's **own source** (AST pass) | seconds | yes |
+> | **citation** | **another artifact** — nothing in the citing file can settle it | cheap | **one table only** |
+> | **prose** | **a running system** — only execution | arbitrarily expensive | yes, as of `fd0995c` |
+> | **population** | a **statistical comparison** of excluded vs retained | — | **NO — live instance below** |
+> | **human ruling** | — a citation check proves the ruling **exists**, never that it **means** what is claimed | — | **named, not built** |
+>
+> **The fourth is live and uninstrumented, and it is the one to act on.** DE53's
+> honest, rule-4-clean *"1,309 of 31,122 generations (4.21%) excluded"* — **the
+> claim a reader takes from it is that the arms' numbers DESCRIBE THE POPULATION,
+> and the token reads identically whether the exclusion is ignorable or wildly
+> selective.** **Same defect, fourth oracle, zero coverage.**
+>
+> **If a single artifact is ever built it must be a ROUTER, not a checker:**
+> classify each claim-bearing token by which oracle settles it, and **REFUSE a
+> token whose oracle is NONE — because a claim no oracle can settle is precisely
+> the one that gets believed.**
+>
+> ### R-510: the review function turns the finding on itself — CHECKED is a second observation, AGREED is not
+>
+> **The reviewer, about the reviewer:** *"I am ONE MORE READER OF THE SAME
+> ARTIFACTS, and when I agree with a seat that is ONE observation, not two.
+> Nothing in the protocol distinguishes 'the reviewer CHECKED AT THE ARTIFACT'
+> from 'the reviewer AGREED' — my filings say which, but a summariser reading them
+> may not preserve the difference."* **Adopted as practice: a reviewer filing must
+> be routed as CHECKED or AGREED, and only CHECKED is a second observation.**
+> **This binds MEM directly — I am the summariser, and my rows are where the
+> distinction gets lost.**
+>
+> **And the other half: THE REGISTER IS INCREASINGLY THE EVIDENCE.** *"Several
+> claims I checked this session resolved to a REGISTER ENTRY rather than to an
+> artifact, and the register is written by ONE SEAT from OTHER SEATS' REPORTS.
+> R-232 was the instance that broke; I do not believe it is the only one."* **A
+> summary of reports is being cited as a source** — the citation oracle pointed at
+> this programme's own bookkeeping.
+>
+> **The fourth oracle now has a cheap method (R-510 C5), so it is a specified check
+> rather than a gap:** *"compare the EXCLUDED set's window/side/hour/duration
+> DISTRIBUTION against the RETAINED set."*
+>
+> **⚠ And the harvest is its own warning: the reviewer seat hit 100% context WHILE
+> WRITING ITS OWN HANDOFF** — truncated mid-sentence at *"Where I think the
+> programme may be fooling itself"*, recovered from scrollback, **none of it in a
+> file.** A reset one round later would have destroyed all of it. **Two facts it
+> carried that nothing else did:** `arms53.py` and `de_section81_arms.py` **are not
+> the same file** (15,727 B / `48c24f0f…` vs 23,893 B / `492c56df…`) and **nobody
+> has shown the committed runner reproduces the scratch runner's numbers** — *if
+> the re-emission differs that is a FINDING, not a refresh; if it matches exactly
+> that is evidence too; DIFF the two runs, do not just census the new one* — and
+> **`de_section81_arms.py` prints to stdout AT IMPORT** (410 s in the feed stage,
+> killed at 900 s), which the `__main__` guard fixes.
+>
+> **Every invocation mints a run and there is no index of which runs exist** — the
+> register quotes population `as_of` **11:06:34Z**, **11:11:14Z** and **11:35:00Z**,
+> and at 12:07Z I found **three emission files** stamped **11:27:30Z**,
+> **11:54:03Z**, **11:55:39Z**. The two lists are different quantities and need not
+> match — **and that is exactly the problem: without an index nobody can say how
+> many distinct runs exist, or which artifact came from which.** Same root as the
+> vanishing artifacts.
+>
+> ---
+>
+> **TWO USER RULINGS ARE NOW FACTS, AND THESE FILES CARRIED THEM AS OPEN.**
+>
+> **RULING 1 (R-506 A) — `floor_available: false` is a fact about the DESIGN, not
+> about this population.** DE's P4 refusal is **kept**, and **§8.1 cannot be
+> completed as written — arm 7 cannot be satisfied.** P2/P3 match the above-event
+> **multiset** while P4 matches the **realised count**, and under a stateful policy
+> realisation is a function of the draw's **order**, so satisfying P2/P3
+> substantially fixes P4. The gap is **one-directional**: treated realises **333 of
+> 1,154** (28.9%) against the control's **496** (43.0%). **Consequence stated
+> rather than hidden: the six remaining arms will produce numbers with NO MATCHED
+> BASELINE, so any comparison among them is an ARGUED one and not a MEASURED one,
+> and every emission of them must say so.** `floor_available` is **derived** from
+> the four predicates and never a constant; `VALID_AS_A_CONTROL` stays reachable
+> only with all four true; and the emission **carries the reason — the
+> construction, not the draw.**
+>
+> **And it is wired in the arm module rather than only here, which survives R-507's
+> correction intact: A FINDING MUST BE REACHABLE FROM THE CODE IT GOVERNS, not
+> only from the filing that recorded it** (R-247 pointed at conclusions rather than
+> claims) — because the next seat to touch the construction reads the code.
+>
+> **RULING 2 (R-506 C) — build all three §8.1 fields, including the ~28-minute
+> re-feed.** `spread_capture_cents` and `maker_pnl_cents` need **no producer
+> change** and work on **sealed days**; `maker_pnl_cents` ships a **declared sign
+> convention** and a **reconciliation against `received_markout_cents`**, so the
+> new number and the existing one **cannot silently disagree**;
+> `inventory_loss_cents` needs the terminal mark plus the re-feed over 471 windows,
+> and **the binding constraint is archive retention, not collection — no lead
+> time.** **`NO_MID_AT_FILL` is a counted status, never a zero.**
+>
+> **A THIRD RULING IS THE COORDINATOR'S, AND THAT IS WHY IT IS RECORDED:
+> terminal-in-a-gap is `NOT_AVAILABLE`, a status with a count** that travels with
+> every population quoting the field (rule 4). **It was decided on this session's
+> own codomain predicate** — a `terminal_mid` of exactly **0.5** is an
+> **in-codomain price standing for an absence**, the precise failure
+> `cross_window_correlation` already records as *"a default, not an observation."*
+> **So a question that was heading for the USER was answered by a standing rule
+> instead, and the USER-item count did not grow.** That is what a standing
+> predicate is for, and it is the first time in this programme one has closed a
+> question before it became an item.
+>
+> ---
+>
+> **THE PREDICATE WAS REACHED INDEPENDENTLY IN UNRELATED CODE THE SAME HOUR, AND I
+> VERIFIED IT BY EXECUTION RATHER THAN BY READING: I ran DA's own selftest
+> (`da_race_withdrawals --selftest`) and ALL 52 CHECKS PASSED.**
+>
+> **⚠ QUALIFIED IN THE SAME ROUND, ON R-510 (B)(2), BECAUSE IT LANDS ON THIS
+> SENTENCE.** *"Every serious defect I found this session was in code whose suite
+> was GREEN — DA32-R1, BE19-R1, DE53-R1 all shipped green. A green suite is now
+> WEAK evidence and is still being quoted as STRONG."* **What my run establishes,
+> precisely: that WALK-S8 and GIT-CODOMAIN EXIST AS ASSERTIONS and HOLD ON THEIR
+> FIXTURES.** That is more than reading a diff and **it is not coverage** — a green
+> suite would look identical if the code were wrong where the suite does not reach,
+> **which is R-509's counterfactual question turned on my own practice.** **The
+> independent-arrival finding does not rest on the count; it rests on the two
+> checks' TEXT, which I read.**
+>
+> - **WALK-S8** states the coupling **in the consumer's own terms** — *"a walk that
+>   compared NOTHING reports `monotone: None`, not True. `True` was inside the
+>   codomain of the measurement while meaning 'not evaluated', and
+>   `da_forward_day_verify` reads `monotone is not True` — so it would have emitted
+>   a verdict on a guarantee proved over zero versions."*
+> - **GIT-CODOMAIN (DA32-R1)** applies the same predicate **one layer down**: git
+>   that never **ran** reports `rc None`, not `127`, because 127 is a real
+>   returncode and a consumer cannot tell a failed git from an absent one.
+>
+> **Two seats, two unrelated modules, one predicate, arrived at without
+> coordination — which is the evidence that the predicate is STRUCTURAL rather than
+> a description of one bug.** Three more passed at my drive and belong with it:
+> **WALK-S2b** proves the shallow guard and the anchor guard are **not redundant by
+> construction** rather than by assertion (in a depth-1 clone the graft boundary
+> reports the file as **ADDED**, so the anchor alone would certify a walk over a
+> third of the history); **WALK-S9b/S9c/S9d ADMIT** as well as refuse, which is
+> rule 16 in both directions; and **WALK-REAL** confirms **the guards changed
+> nothing in production** — anchored at `e49b5012d` over 6 commits and 6 versions
+> carrying the registry.
+>
+> **Contrast with the hazard above, and it is the whole point:** agreement between
+> DA and the coordinator **is** corroboration, because the sources are independent;
+> agreement about DE36-R3 was not.
+>
+> ---
+>
+> **ONE MORE, THE SAME CLASS FROM THE OTHER SIDE (R-506 D).** DE's self-correction
+> on the §8.1 fields is **what made ruling 2 decidable at all**, and **the
+> coordinator's share in the wrong version is larger than DE's** — it reached the
+> USER **because it was relayed without verification**, which is rule 16 unapplied
+> to a seat's report. **Q-DA-234, the independent check of DE's field claims at the
+> artifacts, is OPEN and is not closed by that entry.**
+>
+> ---
+>
+> **FIVE COMMITS LANDED WHILE I WAS WRITING THIS ENTRY AND ONE OF THEM CORRECTS
+> IT, so the true-up is in band rather than next round.**
+>
+> **R-508 marks R-506 (A) PROVISIONAL — not withdrawn, because nothing refutes
+> it.** **The 333-of-1,154-versus-496 figures above came from a SINGLE SEED in a
+> source comment**, so one-directionality rested on **n=1**, not on emitted
+> evidence; DA graded the arm **`REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE`** because a
+> **count** (attempts 20, `{P4: 20}`) cannot separate *"the achievable set EXCLUDES
+> the target"* from *"it BRACKETS the target and twenty draws missed."* **The
+> coordinator names it as its own error and the fourth of the shape today** — a
+> seat's claim relayed without the independent check, **on the number that decided
+> a USER ruling**, in the same hour R-507 recorded three seats doing exactly that.
+>
+> **AND THE EVIDENCE NOW EXISTS. DE round 56 (`8f371c2`, 11:55:28Z — thirty-five
+> seconds BEFORE R-508 dispatched it) emits it over 60 seeds, and I verified the
+> numbers at the emission rather than from the commit message:**
+>
+> | field | value |
+> |---|---|
+> | `n_draws_reaching_p4` | **60** |
+> | `treated_realised` | **333** |
+> | signed-gap totals | **min +79, max +190, 39 distinct** |
+> | `all_gaps_positive` / `one_directional` | **true** / **true** |
+> | `target_bracketed_by_observed_gaps` | **false** |
+> | rejections | `{P1 0, P2 0, P3 0, P4 60, PERM_NOT_OK 0}` |
+>
+> **⚠ AND R-509 (12:04Z): 60 SEEDS DO NOT LICENSE THE CONCLUSION — the reviewer
+> specified this BEFORE seeing the numbers, which is rule 6 applied to a review.**
+> Taken as induction, **0 of 60 at or below the target bounds the PER-DRAW
+> probability at ~3/60 = 5%** (rule of three, one-sided 95%) — **a statement about
+> DRAWS, not about the SET, and 5% is not exclusion.** Target **333**, observed
+> minimum **412**, range **111** wide, so bracketing needs a draw **~0.7
+> range-widths below the smallest of sixty** — *"not absurd; not established."*
+> **So `target_bracketed: false` is a fine OBSERVATION and a bad CONCLUSION:** as
+> *"no draw in 60 bracketed the target"* it is exactly right; as *"the target is
+> not bracketable"* it is **a budget claim in better clothes** — the thing DA
+> refused, **wearing the new evidence as a disguise.** Stop-the-line to DE.
+>
+> **What DOES license the strong reading is the MECHANISM, and it is buildable from
+> the seeds already run:** a random draw does not reproduce the treated arm's
+> **suppression clustering**, so the control realises a systematically higher
+> fraction of above-events. Under that **prediction**, all-positive over 60 is
+> **confirmation of a predicted sign** and the count becomes corroboration rather
+> than the argument. **Two consequences: (1) the PER-STRATUM result is the stronger
+> evidence and must be the HEADLINE rather than the detail** — an aggregate gap can
+> be produced by a few strata, a universal per-stratum sign cannot; **(2) the gap's
+> DEPENDENCE on the suppression rate must be SHOWN, not assumed** — strata with
+> more non-acting above events should show larger control-over, a computable
+> prediction inside the same 60 seeds, **and if it fails that is the more important
+> result.** **DA's limit goes in a FIELD, quoted not paraphrased**, or the next
+> reader inherits *"no matched floor exists"* when what was shown is *"no matched
+> floor exists UNDER THIS DRAW."*
+>
+> **The control realises MORE than the treated arm in every one of 60 draws and
+> never approaches equality.** The emission **computes its own reading rather than
+> printing one** (rule 10) — *"ACHIEVABLE SET APPEARS TO EXCLUDE THE TARGET — every
+> observed gap has the same sign"* — and keeps **DA's honest limit: even a clean
+> answer evidences UNREACHABLE FOR THIS CONSTRUCTION, never NEVER.**
+>
+> **Two caveats travel with it.** **Provenance, and this corrects R-509 (F) —
+> checked by me at 12:07Z.** That entry reports the numbers as having no artifact
+> (*"`find` returns no `de_section81_arms__*.json` anywhere"*). **Three exist**, in
+> another session's scratchpad (`93dd9a62-…/scratchpad/`, stamped 11:27, 11:54 and
+> 11:56), **and I read the 60-seed one there.** **The other half of that check is
+> right and I verified it myself:** `git log --all --diff-filter=A` returns
+> **nothing** for the pattern and the repo tree holds none. **So the true statement
+> is not "no artifact exists" but "the artifact exists and will not survive"** —
+> the same durability class as the `arms53.json` that vanished while I was reading
+> it, and **a stronger reason to commit it than its absence would be.** **And a mislabel I name and do not fix
+> (rule 14):** `control_realised_min` / `control_realised_max` **do not carry what
+> they are named** — `:555` sets `_tot` from `signed_gap_total` and `:569-570`
+> assign its min/max — **so 79 and 190 are GAPS, not realised counts** (the control
+> realises **412 to 523**). **A field whose NAME says one thing and whose VALUE is
+> another, in the emission built to settle the question.**
+>
+> **The independent support that depends on none of these numbers (reviewer,
+> `a2f2ac7`): the frozen protocol declares EXACTLY ONE matched quantity — action
+> count (`DE_PHASE4_PROTOCOL_DRAFT.md` §6) — and that is the one that has failed,
+> so there is no third criterion in the frozen text to retreat to.** That makes it
+> a **ruling on the construction** rather than a search for a better match, and it
+> survives even if the figures never firm up.
+>
+> **And the corrected DE36-R3 reading is now wired into the code it governs** —
+> `MATCHED_FLOOR_STATE` (`de_section81_arms.py:87`) carries
+> `established_and_not_in_question`: *"DE36-R3 — cancel-set IDENTITY cannot be
+> matched; its remedy was the per-stratum realised count, whose own criterion this
+> round finds failing. A step BEYOND DE36-R3, not a restatement."* **R-506 (B)'s
+> rule applied to a correction.**
+>
+> **R-508 also SHARPENS the hazard above, and the sharper form is the reviewer's:
+> agreement between seats is evidence about the SEATS, not about the CLAIM, unless
+> the seats read different SOURCES — independence is a property of the sources, not
+> of the readers.** **And it has now appeared in TWO DOMAINS:** replicated
+> **citations** here, and replicated **statistics** at R-495, where *"12 of 24
+> cells survive"* was **4 distinct results** because budgets replicate one
+> statistic. **Two domains, one mistake.** The shared mechanism across all four of
+> today's instances: **a claim about what a named artifact SAYS, where the cite
+> RESOLVES and the text was NOT READ.**
+>
+> **⚠ THE LIVE INSTANCE, AND IT COST THREE DAYS.** **R-232 carries ZERO
+> occurrences of `clob_v3_1`, `clob_v3` or `clob_v4`** across its 4,701
+> characters, so the register's sentence *"every existing entry in that table cites
+> a USER ruling (`clob_v3_1`/`clob_v4` from R-232/R-340)"* is **unsupported for
+> `clob_v3_1` — and that value kept 08-29 out of the race for three days.** **DA
+> had already established it at Q-DA-218 and named ITSELF as the source** — *"the
+> sentence is MINE, filed at Q-DA-188 — I wrote the claim the register then
+> repeated"* — and had already built the repair (`ERA_AUTHORITY` carrying the
+> ruling as **data**, `era_authority_for` refusing an uncited entry), which then
+> found **`clob_v5` carrying True with NO ruling** and **`clob_v4`'s R-340
+> resolving but not naming it** (reported, not acted on — correctly). **The value
+> was re-ruled by the USER at R-497, so nothing on disk turns on it. The residue is
+> the register SENTENCE, which still asserts the R-232 authority.**
+>
+> ---
+>
+> **AND Q-DA-234 (DA rounds 36/37) CORRECTS THREE DETAILS THIS FILE HAS CARRIED
+> SINCE ROUND 88 — verified by DA at the data and the code; the conclusions hold,
+> the mechanisms do not.**
+>
+> | what round 88 recorded | what DA measured |
+> |---|---|
+> | *"all the inputs are already on every tranche"* | `level`, `mid_at_fill`, `shares`, `markout_cents_per_share` **4315/4315** — but **`side` is MISSING_KEY on 4315 of 4315.** It is **not a tranche field**: it is the **key of the containing `sides` dict**. Still no producer change — **a builder walking `sides.items()` has it, one iterating tranches flat does not** |
+> | *"the terminal mid is computed in `build_reference`'s loop and never stored"* | **No terminal mid is computed there at all.** A terminal mark would be a **NEW call** at the generation's `t1`. **The field is UNBUILT, not computed-and-discarded** — and that distinction matters to whoever implements it |
+> | *"the binding constraint is ARCHIVE RETENTION"* | **Retention is NOT binding.** All **17 declared days (08-19 → 09-04) are retained, ~67 GB**; every deviation from 7 coins × 288 is **uniform across all seven coins** and already in the gap ledger — **collection-time facts, not deletions.** The real constraints are **`_archive_paths()`'s declared `DAYS` tuple** and **era admissibility** |
+>
+> **The ~28-minute feed re-run, no lead time, sealed days not lost — unchanged by
+> all three.** Two more from the same filing: the **`NO_MID_AT_FILL` rate is
+> measured ZERO over 4,315 tranches but bounded loosely and said so** — 12 of 234
+> btc windows = **5.1%** of the selection, so *"not observed"*, never *"absent"*,
+> and a builder should still branch on `None`; and **DA reports a scary hypothesis
+> of its own that did not materialise, *"because a scary hypothesis left standing
+> is its own harm"*** — the right disposition, and rare enough to record.
+>
+> **A state change that corrects the round-86/87 record: DE's new emitter PASSES
+> DA's provenance check** — `PRODUCED_BY_THE_COMMITTED_PIPELINE`, **0 of 7 identity
+> files differ** (against the older artifact's `SUPERSEDED_CODE`, 3 of 5). **So
+> DE53-R2's "no committed producer" is closed for the current emitter.**
+> `arm_distinctness` now evidences distinctness **by outcome**; **by predictor
+> IDENTITY it is still by name**, and `population.digest` is still absent
+> (`UNVERIFIABLE_NO_DECLARED_DIGEST`), **so Q-DA-230 (4)(a) stands.** **And DA
+> found a PHANTOM FAILURE of its own** by pointing its verifier at DE's newest
+> artifact — `completeness` reported `WINDOW_COUNTS_DO_NOT_RECONCILE` (null vs 0)
+> **against a correct artifact, from a path that did not apply**, and *"null !=
+> null is not a disagreement."* Now an unrecognised artifact returns
+> `complete_and_reconciled: None`, **outside the codomain.** **The predicate's
+> fourth independent application today, and the second time an instrument caught
+> itself with it.**
+>
+> ---
+>
+> **STATE, read at the tip I am committing on (`5b03319`).** Register **501
+> entries, last R-510**. **G still unruled with three readings**; three days sealed
+> and unread.
+>
+> **USER ITEMS: THREE — derived here, not taken.** Round 88 recorded **four** with
+> the §8.1 build priced beside them; **R-506 (A) rules P4's definition and R-506
+> (C) rules the build**, closing both — **and R-508 marking R-506 (A) PROVISIONAL
+> does not reopen it as a USER item**, because the USER has been told, the ruling
+> stands pending per-draw evidence, and that evidence now exists; **R-506 through R-510 are the only register entries since round 88
+> and none rules G counting**, which I checked at the register rather than assumed; and **terminal-in-a-gap did not become a new one**
+> because the coordinator ruled it. **The three that remain: the Phase-2 winner,
+> the causal incumbent operating point, and the G-counting ruling.**
+
 > ### 2026-09-04T11:41Z — MEM round 88: two of the three fields are buildable, and the matched floor may be unachievable by construction
 >
 > **A CORRECTION TO A CLAIM THE COORDINATOR CARRIED TO THE USER — AND TO WHAT
@@ -318,9 +751,9 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 > line: **stop drawing and rule on P4**; refusing rather than reporting a weaker
 > control was the right call and should not be relaxed.
 >
-> **AND THE EXPENSIVE PART, WHICH MUST BE RECORDED AS ONE: DE's own DE36-R3
-> reached this conclusion on 2026-09-03 and wrote it down. I found it in three
-> places:**
+> **⚠ CORRECTED IN BAND BY MEM ROUND 89 (rule 13) — READ THE CORRECTION BELOW
+> THE BULLETS. The three citations are right; the conclusion drawn from them is
+> not.** **DE's own DE36-R3, found in three places:**
 > - the register at `:19184` — `control#2` refusing on set identity, **withdrawn**;
 > - `de_phase4_diag_runner.py:1572` — *"the frozen text asks for matching on ACTION
 >   COUNT … not on identity — so `control#2` … is WITHDRAWN (DE36-R3)"*;
@@ -328,11 +761,35 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 >   fails 20/20**, at `:4128-4129`: *"a stateful policy **cannot be made to cancel
 >   exactly the drawn set** — which is why `control#2` is withdrawn (DE36-R3)."*
 >
-> **So the code that produces the 20/20 refusal carries, in its own assertion
-> text, the reason the refusal is structural — and round 54 attributed it to the
-> budget anyway.** **A conclusion reached, written down, and re-encountered as a
-> mystery eighteen rounds later is a RETRIEVAL failure, not an analysis failure —
-> and it is the failure these files exist to prevent.**
+> **THE CORRECTION (MEM round 89, on R-507, read by me at both sites rather than
+> taken on report).** `:1565-1573` says the realised cancel set cannot be the
+> drawn set **and names its remedy in the same sentence**: *"the match is made on
+> the per-stratum REALISED action count, after the replay."* **So DE36-R3 is the
+> finding that cancel-set IDENTITY cannot be matched, and count-matching is its
+> FIX. The 20/20 finding is that the COUNT cannot be matched either — a step
+> BEYOND DE36-R3.** DE did not forget its own conclusion; **DE's own fix for the
+> first impossibility ran into a second one of the same shape.** And the sharpest
+> part is against this entry: **the middle bullet quotes the very clause that
+> refutes the headline above it** — *"asks for matching on ACTION COUNT … not on
+> identity"* — so the remedy was transcribed and filed as the finding.
+>
+> **What survives is the better half, and I confirmed it at the code:** the
+> DE36-R3 sentence sits **inside the assertion message of P4's own positive
+> control** (`:4338-4343` at tip `60ecc21`, the `ok(_P4bad[…] is False, …)` whose message says a
+> permutation changing the per-stratum realised count is *"REJECTED and
+> redrawn … because a stateful policy cannot be made to cancel exactly the drawn
+> set"*). **So the check that now fails 20 of 20 prints, when it passes, the
+> adjacent impossibility — and 20/20 is that redraw never terminating — while
+> round 54 attributed the failure to the draw budget.** **A narrower claim about
+> memory and a sharper one about reading.**
+>
+> **And the correction makes the ruling SAFER, not shakier:** matching has now
+> failed at **two successive levels — identity, then count — for one mechanism**,
+> that a stateful policy's realisation depends on the **order** of the draw. **A
+> construction that defeats two independent matching criteria by one mechanism is
+> far better evidence for "unavailable by construction" than one that defeats a
+> single criterion** — and it **forecloses the obvious next move**: a third
+> statistic would be the third instance, not a fix.
 >
 > ---
 >
@@ -739,6 +1196,24 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 > failed and nothing was missing. **They need mutation testing.** **One predicate
 > for the absence family, a second for the control family, and they do not
 > merge.**
+>
+> ### 2026-09-04T11:56Z — MEM round 89: two seats reached the rule independently, and it answered a question before it became a USER item
+>
+> **DA round 35 (`d11ee0f`, 11:42:11Z) reached this predicate in unrelated code the
+> same hour, without coordination** — `assert_withdrawals_monotone` now reports
+> `"monotone": True if versions else None` (`:521`), with **WALK-S8** stating the
+> coupling in the consumer's own terms and **GIT-CODOMAIN (DA32-R1)** applying it
+> one layer down (`rc None`, never `127`). **I verified it by EXECUTION, not by
+> reading: I ran the module's selftest myself and all 52 checks passed.** **Two
+> seats, two unrelated modules, one predicate — which is the evidence that the
+> rule is STRUCTURAL rather than a description of one bug.**
+>
+> **And it did work of its own the same hour:** the coordinator ruled
+> **terminal-in-a-gap = `NOT_AVAILABLE` with a count** *on this predicate*, because
+> a `terminal_mid` of exactly **0.5** is an **in-codomain price standing for an
+> absence** — so **a question that was heading for the USER was answered by the
+> standing rule instead, and the USER-item count did not grow.** First time in this
+> programme a standing predicate has closed a question before it became an item.
 >
 > ### 2026-09-04T10:53Z — MEM round 84: the rule caught the instrument that named the class
 >
