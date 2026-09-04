@@ -1780,6 +1780,104 @@ def day_era_admission(day_token: str, path: Path | None = None,
     }
 
 
+def covered_complement(coin: str, n_covered: int, n_expected: int,
+                       windows_present: set | None = None,
+                       lo: int | None = None,
+                       calendar_closed: bool = True) -> dict[str, Any]:
+    """The day's COVERED COMPLEMENT, and whether it is enough to judge on.
+
+    USER RULING R-503: *"using 287 windows should be fine for forward test?
+    can we just mark it, and we just use this day's data"* -- a day ACCRUES ON
+    ITS COVERED COMPLEMENT, with the uncovered windows MARKED and COUNTED.
+
+    IT IS NOT A NEW PRINCIPLE AND IS NOT BUILT AS ONE. R-409 already ruled, in
+    the USER's own words, that a day with a blackout is not excluded wholesale
+    -- it accrues if the frozen bars pass on the non-blackout windows and the
+    blackout windows are masked as ACCOUNTED LOSS, counted and reported, never
+    silently dropped (rule 4). An UNCOVERED window is functionally a blackout
+    window: its content is absent. What R-503 corrects is that the coverage
+    predicate was a SEPARATE gate that refused BEFORE masking was ever
+    considered, so a one-window shortfall refused a day before its quality was
+    evaluated.
+
+    NO FLOOR IS INVENTED HERE. The bound is the one the USER already ruled at
+    R-424 §4 and it is IMPORTED, never restated: a coin-day counts toward the
+    >=5-day bar only if its unmasked complement covers >= 144 of 288 windows.
+    That floor was declared for blackout-masked complements; an uncovered
+    window enters the SAME accounting, so it is bounded by the SAME number.
+    Measured across the record the choice is not delicate: coverage runs
+    08-29 288, 08-30 66, 08-31 0, 09-01 288, 09-02 288, 09-03 287, so there is
+    a natural gap between 99.65 % and 23 % and ANY floor in that range admits
+    09-03 and nothing else.
+
+    PROVENANCE IS STAMPED, NOT NEUTRALISED (R-503 (C)). A bar changed because
+    a day we wanted failed it is the shape rule 11 exists to prevent, so the
+    emitted block SAYS it was prompted by 2026-09-03 rather than presenting a
+    neutral-looking constant. Two facts bound the risk and both are on the
+    record: what has been seen of 09-03 is its QUALITY, never its ECONOMICS
+    (it has never been scored, because it never accrued), and the rule is
+    declared before any race day's economics are read.
+    """
+    import da_blackout_mask as _BM                            # noqa: PLC0415
+    floor = _BM.G_MIN_COMPLEMENT_WINDOWS
+    n_unc = max(0, n_expected - n_covered)
+    unc_list = None
+    if windows_present is not None and lo is not None and n_unc:
+        unc_list = [
+            dt.datetime.fromtimestamp(lo + i * WINDOW_S,
+                                      dt.timezone.utc).strftime("%H:%M:%SZ")
+            for i in range(n_expected)
+            if (lo + i * WINDOW_S) not in windows_present]
+    covered_h = n_covered * WINDOW_S / 3600.0
+    # THE FLOOR IS DEFINED AGAINST THE CALENDAR DAY, AND ONLY AGAINST IT.
+    # R-424 §4 says ">= 50% of the calendar day -- >= 144 of 288 windows", so
+    # it is a statement about a day that has FINISHED. Applying it to an OPEN
+    # day's elapsed count would fail every morning before 12:00Z for a reason
+    # the ruling never made -- measured: 2026-09-04 at 63 elapsed windows,
+    # complete on its own terms, would have failed a 144 floor. On an open day
+    # the predicate is therefore UNCHANGED (no shortfall against elapsed); the
+    # complement rule governs the object it was ruled about.
+    if calendar_closed:
+        judgeable = n_covered > 0 and n_covered >= floor
+        basis = f"closed day: covered {n_covered} >= floor {floor} of 288"
+    else:
+        judgeable = n_covered > 0 and n_unc <= 0
+        basis = (f"OPEN day: the R-424 floor is defined against the 288-window "
+                 f"CALENDAR day and says nothing about an elapsed count, so "
+                 f"this is the unchanged predicate -- no shortfall against "
+                 f"{n_expected} elapsed")
+    return {
+        "coin": coin,
+        "n_expected": n_expected,
+        "n_covered": n_covered,
+        "n_uncovered_MASKED_AS_ACCOUNTED_LOSS": n_unc,
+        "uncovered_windows_utc": unc_list,
+        "covered_hours": round(covered_h, 4),
+        "floor_windows": floor,
+        "floor_source": "da_blackout_mask.G_MIN_COMPLEMENT_WINDOWS",
+        "floor_ruling": _BM.G_MIN_COMPLEMENT_RULING,
+        "complement_meets_floor": n_covered >= floor,
+        "calendar_closed": calendar_closed,
+        "judgeable_on_complement": judgeable,
+        "judgeable_basis": basis,
+        "ruling": "R-503 (USER, 2026-09-04), applying R-409",
+        "prompted_by": ("2026-09-03, which lost ONE window of 288 (15:20:00Z, "
+                        "all seven coins) and was refused before its quality "
+                        "was measured -- btc 95.6 s/hr against a bar of 120. "
+                        "Recorded as provenance, not presented as neutral "
+                        "housekeeping (R-503 (C))"),
+        "accounting": ("uncovered windows are MASKED AS ACCOUNTED LOSS under "
+                       "R-409 -- counted and reported here, never silently "
+                       "dropped (rule 4). The day is judged on the windows it "
+                       "has; the ones it does not have are named"),
+        "p1_denominator_note": (
+            "the GOVERNING P1 remains the frozen calendar-24h form -- "
+            "recomputing a pre-registered bar voids it. R-424 §4's "
+            "per-UNMASKED-hour form is REPORTED beside it as "
+            "`P1_lost_s_per_covered_hour`"),
+    }
+
+
 #: THE ACCRUAL RULE, in one place and in plain words. A day accrues when all
 #: FOUR are true, and each is a different question:
 #:
@@ -2783,10 +2881,32 @@ def verify_day(day_token: str, freeze_epoch: float,
     disagree = (day_closed is not None and bool(day_closed) != calendar_closed)
     # An empty expectation must NEVER pass: 0 present of 0 expected is the
     # empty-set-passes trap, and it PASSED on the 08-27 arm at 00:00:30.
+    # R-503: THE DAY IS JUDGED ON ITS COVERED COMPLEMENT, and this predicate
+    # is where the old rule bit hardest -- `short <= 0` for EVERY coin, so one
+    # uncovered window of 288 failed the day outright. Under R-409's existing
+    # accounting an uncovered window is a blackout window: MASKED and COUNTED,
+    # never silently dropped. The bound is R-424 §4's floor, IMPORTED from
+    # `da_blackout_mask` rather than restated, so no new threshold is invented
+    # here (R-503 (G)).
+    #
+    # THE EMPTY-EXPECTATION TRAP IS UNCHANGED: `expect > 0` still guards, so a
+    # day with nothing elapsed cannot pass on 0 of 0.
+    _ccs = {c: covered_complement(
+        c, counts.get(c, 0), expect,
+        windows_present={x for x in w.get(c, []) if lo <= x < hi}, lo=lo,
+        calendar_closed=calendar_closed)
+        for c in coins}
+    _short_ok = all(v["judgeable_on_complement"] for v in _ccs.values())
+    _tot_unc = sum(v["n_uncovered_MASKED_AS_ACCOUNTED_LOSS"]
+                   for v in _ccs.values())
     p("complete_tape",
-      expect > 0 and all(v <= 0 for v in short.values()),
+      expect > 0 and _short_ok,
       f"expect {expect} ({basis}); "
       + ", ".join(f"{c} {counts[c]} (short {short[c]})" for c in coins)
+      + (f"  [R-503: judged on the COVERED COMPLEMENT -- {_tot_unc} uncovered "
+         f"window(s) MASKED AS ACCOUNTED LOSS and counted (R-409); floor "
+         f"{_ccs[coins[0]]['floor_windows']}/{expect} from R-424 §4, met by "
+         f"every coin: {_short_ok}]" if _tot_unc else "")
       + ("" if expect > 0 else "  <-- NOTHING ELAPSED: cannot pass on an empty "
                               "expectation")
       + (f"  [selector day_closed={day_closed} DISAGREES with the calendar; "
@@ -2890,8 +3010,16 @@ def verify_day(day_token: str, freeze_epoch: float,
 
             # completeness, this coin's own window count
             _n, _short = counts.get(coin, 0), expect - counts.get(coin, 0)
-            cpp("complete_tape", expect > 0 and _short <= 0,
+            cpp("complete_tape",
+                expect > 0 and _ccs[coin]["judgeable_on_complement"],
                 f"expect {expect} ({basis}); {coin} {_n} (short {_short})"
+                + (f"  [R-503 covered complement: "
+                   f"{_ccs[coin]['n_uncovered_MASKED_AS_ACCOUNTED_LOSS']} "
+                   f"uncovered MASKED AND COUNTED; floor "
+                   f"{_ccs[coin]['floor_windows']} met="
+                   f"{_ccs[coin]['complement_meets_floor']}]"
+                   if _ccs[coin]["n_uncovered_MASKED_AS_ACCOUNTED_LOSS"]
+                   else "")
                 + ("" if expect > 0 else "  <-- NOTHING ELAPSED"))
 
             # gap bars computed on THIS COIN's gaps -- the substance of R-211(3)
@@ -2955,9 +3083,22 @@ def verify_day(day_token: str, freeze_epoch: float,
     bars_v2: dict[str, Any] = {}
     if regime == "day_bar_v2":
         for coin in coins:
-            _cov = counts.get(coin, 0) > 0 and short.get(coin, 1) <= 0
+            # R-503: JUDGE THE DAY ON ITS COVERED COMPLEMENT. This gate used
+            # to read `short <= 0`, so ONE uncovered window of 288 refused the
+            # day before any bar was computed. It now asks the question R-409
+            # already answers for blackout windows: is there enough covered
+            # data to judge on? The bound is R-424 §4's floor, imported.
+            _cc = _ccs[coin]
+            _cov = _cc["judgeable_on_complement"]
             b = day_bar_v2(lo, hi, coin, gs["hours_elapsed"],
                            coverage_observed=_cov)
+            b["covered_complement"] = _cc
+            if b.get("evaluable") and _cc["covered_hours"] > 0:
+                # R-424 §4's complement form, REPORTED beside the frozen bar.
+                b["P1_lost_s_per_covered_hour"] = round(
+                    b["lost_seconds"] / _cc["covered_hours"], 2)
+                b["P1_denominator_governing"] = "calendar_24h (frozen bar)"
+                b["P1_denominator_reported"] = "per_covered_hour (R-424 §4)"
             b["all_pass"] = bool(b["P1_pass"] and b["P2_pass"] and b["P3_pass"])
             b["partial_day"] = not calendar_closed
             if not calendar_closed:
@@ -3021,6 +3162,15 @@ def verify_day(day_token: str, freeze_epoch: float,
         # lacks what a consumer reads -- which is how a 238-check run happened
         # with nothing saying why.
         "roots": _TDROOT.data_root_provenance(),
+        "coverage_complement": {
+            "ruling": "R-503 (USER, 2026-09-04), applying R-409",
+            "per_coin": _ccs,
+            "total_uncovered_MASKED_AS_ACCOUNTED_LOSS": _tot_unc,
+            "note": ("uncovered windows are MASKED AS ACCOUNTED LOSS and "
+                     "COUNTED here (rule 4); the day is judged on the "
+                     "windows it has. The floor is R-424 §4's, imported, not "
+                     "declared here"),
+        },
         "verdict_split": _split,
         # R-500. THE POLICY FACT, ON EVERY DAY, so absence never has to be
         # interpreted (rule 4). Carries the reachability beside it because
@@ -3093,7 +3243,7 @@ def verify_day(day_token: str, freeze_epoch: float,
 #: 238 / 244 / 238 across three layouts at rc 0, with only the log's presence
 #: differing and nothing saying so. `ran + skipped` must equal this in EVERY
 #: layout, so a vanished check fails the suite instead of shrinking the count.
-EXPECTED_CHECKS = 306
+EXPECTED_CHECKS = 314
 
 
 def _selftests(require_no_skips: bool = False) -> int:
@@ -4979,6 +5129,85 @@ def _selftests(require_no_skips: bool = False) -> int:
             ok("must refuse" in str(_e),
                "DA22-A7d and an unreadable register REFUSES -- 'I could not "
                "read it' must never report as 'every cite resolves'")
+        # ------------------------------------------------------------------
+        # DA28 / R-503: THE COVERED COMPLEMENT. A day accrues on the windows
+        # it HAS, with the uncovered ones masked and COUNTED (R-409). Driven
+        # at the floor in both directions, because a floor shown only to
+        # refuse proves nothing (SEAT_PROTOCOL 16).
+        # ------------------------------------------------------------------
+        import da_blackout_mask as _BM28
+        ok(covered_complement("btc", 287, 288)["floor_windows"]
+           == _BM28.G_MIN_COMPLEMENT_WINDOWS == 144,
+           f"DA28-1 NO FLOOR IS INVENTED: the bound is R-424 §4's, IMPORTED "
+           f"from da_blackout_mask.G_MIN_COMPLEMENT_WINDOWS "
+           f"({_BM28.G_MIN_COMPLEMENT_WINDOWS}), never restated here. An "
+           f"uncovered window enters the SAME accounting as a blackout "
+           f"window, so it is bounded by the SAME number the USER already "
+           f"ruled")
+        _c287 = covered_complement("btc", 287, 288)
+        ok(_c287["judgeable_on_complement"] is True
+           and _c287["n_uncovered_MASKED_AS_ACCOUNTED_LOSS"] == 1
+           and "R-503" in _c287["ruling"]
+           and "2026-09-03" in _c287["prompted_by"],
+           "DA28-2 287 of 288 IS judgeable, the uncovered window is COUNTED "
+           "as accounted loss, and the block STAMPS that the change was "
+           "prompted by 09-03 -- provenance, not a neutral-looking constant "
+           "(R-503 (C))")
+        ok(covered_complement("btc", 144, 288)["judgeable_on_complement"]
+           is True
+           and covered_complement("btc", 143, 288)["judgeable_on_complement"]
+           is False,
+           "DA28-3 THE FLOOR BITES AND ADMITS: 144 of 288 is judgeable, 143 "
+           "is not. A floor demonstrated only refusing is not a floor that "
+           "was shown to discriminate")
+        ok(covered_complement("btc", 0, 288)["judgeable_on_complement"]
+           is False,
+           "DA28-4 zero covered windows is NOT judgeable -- 0 of 0 passing is "
+           "the empty-set trap, and it stays closed")
+        _open_ok = covered_complement("btc", 63, 63, calendar_closed=False)
+        _open_bad = covered_complement("btc", 62, 63, calendar_closed=False)
+        ok(_open_ok["judgeable_on_complement"] is True
+           and _open_bad["judgeable_on_complement"] is False
+           and "CALENDAR day" in _open_ok["judgeable_basis"],
+           f"DA28-5 AN OPEN DAY IS UNCHANGED: R-424's floor is defined "
+           f"against the 288-window CALENDAR day, so applying it to an "
+           f"elapsed count would fail every morning before 12:00Z for a "
+           f"reason nobody ruled -- measured, 2026-09-04 at 63 elapsed "
+           f"windows. The open-day predicate stays 'no shortfall against "
+           f"elapsed'")
+        ok(covered_complement("btc", 144, 288,
+                              calendar_closed=False)["judgeable_on_complement"]
+           is False,
+           "DA28-5b and the floor does NOT leak into the open-day branch: 144 "
+           "of an expected 288 on an OPEN day is a shortfall, not a "
+           "complement")
+
+        # THE REAL DAYS. Exactly two in the record have any shortfall.
+        _r03 = verify_day("20260903", 1787897340.0)
+        _ct03 = [x for x in _r03["predicates"]
+                 if x["predicate"] == "complete_tape"][0]
+        _cc03 = _r03["coverage_complement"]["per_coin"]["btc"]
+        ok(_ct03["pass"] is True
+           and _cc03["n_covered"] == 287
+           and _cc03["n_uncovered_MASKED_AS_ACCOUNTED_LOSS"] == 1
+           and _cc03["uncovered_windows_utc"] == ["15:20:00Z"]
+           and _r03["verdict_split"]["counts_toward_race"] is True,
+           f"DA28-6 THE RULED CASE, ON THE REAL DAY: 2026-09-03 is judged on "
+           f"287 covered windows, the ONE uncovered window is NAMED "
+           f"({_cc03['uncovered_windows_utc']}) and counted, and the day now "
+           f"COUNTS toward the race")
+        _r26 = verify_day("20260826", 1787897340.0)
+        _ct26 = [x for x in _r26["predicates"]
+                 if x["predicate"] == "complete_tape"][0]
+        ok(_ct26["pass"] is True
+           and _r26["verdict_split"]["race_accrual_eligible"] is False
+           and _r26["verdict_split"]["counts_toward_race"] is False,
+           "DA28-7 THE OTHER DAY WITH A SHORTFALL, AND IT IS WHY THIS IS NOT "
+           "A RATCHET: 2026-08-26 (short 9) also has complete_tape flip to "
+           "True under the uniform rule -- and it STILL does not accrue, "
+           "failing on its own merits. The rule admits days on their data, "
+           "not the days we wanted")
+
         # ------------------------------------------------------------------
         # DA26: THE CONTAINMENT OF THE MIXED-ERA SHORT-CIRCUIT.
         #
