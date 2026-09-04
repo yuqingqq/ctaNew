@@ -5737,3 +5737,111 @@ R-503 census, BE 29 and the direction change. Join rule as in batch 1.
   repair is held and the outdir still cannot tell a dead run from a live one.
   USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
 ```
+
+## Batch 86 — archived 2026-09-04T10:13Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-80 CORRECTION sweep (the USER's withdrawal of the
+profitability block). Join rule as in batch 1. **The dispatch for round 80 said
+"STATUS.yml and HANDOFF.md only"; this file is included because the `updated:`
+field is a ruled rolling window of three whose overflow must move in the SAME
+commit (coordinator ruling 2026-08-28T10:02Z) — the discipline MEM round 72 had
+to repair. Nothing else was touched here, and `RESULTS.md` was not touched at
+all.**
+
+```yaml
+  2026-09-03T08:30Z (MEM ROUND 77 -- FIVE ZERO-CONSUMER FINDINGS IN ONE DAY,
+  NONE OF THEM FOUND BY A GREEN SUITE). BE 20 and 21 and the reviewer's DA 23/24
+  filing swept; nothing run but read-only reads and ONE read-only drive of a
+  landed gate in the main tree. THE CLASS IS THE ROUND, AND IT GOES IN HANDOFF AS
+  A STANDING HAZARD WITH ITS INSTANCES NAMED, BECAUSE SEAT_PROTOCOL 17 ALREADY
+  DESCRIBES IT AND WHAT IS NEW IS THE FREQUENCY: FIVE zero-consumer or
+  zero-reachability findings today, EACH FOUND BY A DIFFERENT ROUTE AND NOT ONE
+  OF THEM BY A GREEN SUITE. (i) require_operating_point -- every executable call
+  inside selftest(), found by the reviewer producing a full net-cents result with
+  a p from a cutoff read off the scored data. (ii) THE SIX EVALUATOR FUNCTIONS of
+  I11-2 -- falsifier-proven, zero call sites in the runner, found by counting call
+  sites rather than tests. (iii) assert_frozen_contract -- ONE call, the exception
+  SWALLOWED, found by BE 20 asking what reads the binding. (iv) THE R-486 governs
+  STAMPING -- both production call sites deletable with 254 checks still passing,
+  found by the coordinator deleting them, which nobody had been asked to try.
+  (v) counts_toward_race -- WRITTEN, NEVER READ, found by the reviewer asking
+  which field the race is actually counted by. FOUR OF THE FIVE WERE FOUND BY
+  SOMEBODY DELETING, GREPPING OR ATTACKING RATHER THAN BY RUNNING THE SUITE, AND
+  THE FIFTH BY ASKING WHAT CONSUMES A FIELD -- A GREEN SUITE CANNOT SEE ANY OF
+  THEM BY CONSTRUCTION, and five in one day is not five incidents. THE RELEASE IS
+  STILL NOT GRANTED AND THE GATE IS SHUT: the THIRD release review is in flight,
+  and until it releases NO forward day is scored, which continues to mean THE
+  08-29 READ THE USER'S RULING PRESERVED HAS NOT HAPPENED AND CANNOT YET. BE
+  ROUND 21 CHANGED THE FENCE'S SHAPE AND IT IS A STRONGER PROPERTY THAN THE
+  REVIEWER ASKED FOR, WHICH SHOULD READ AS SUCH RATHER THAN AS COMPLIANCE.
+  BE19-R1 asked that require_operating_point CARRY `verification` and `coin` into
+  what it returns. BE INSTEAD REMOVED THE CALLER'S ABILITY TO SUPPLY THE EVIDENCE
+  AT ALL: at be_forward_metric.py:439-462, which I read, an INLINE `verification`
+  block is REFUSED BY NAME -- the module's own words are "the fence fetches its
+  own evidence; it does not accept evidence handed to it by the caller" and,
+  above it, "SUPPLYING THE EVIDENCE IS THE ACT BEING FORBIDDEN" -- and the
+  declaration must instead name `verification_ref: {path, sha256}`, which the
+  fence OPENS and REHASHES, refusing an unusable ref, a non-existent path
+  ("Nothing was opened, so nothing was verified") and a hash mismatch ("The
+  evidence the fence opened is not the evidence declared"), plus a missing `coin`
+  because both maps are per coin. A FENCE THAT CANNOT BE HANDED ITS OWN EVIDENCE
+  IS A DIFFERENT KIND OF OBJECT FROM ONE THAT CHECKS THE EVIDENCE IT IS HANDED,
+  and it closes the round-76 shape where the positive control passed only by
+  hand-injecting what the code dropped. AND THE FROZEN-CONTRACT GATE IS ON THE
+  RUN PATH -- I DROVE IT READ-ONLY RATHER THAN READING ITS ROW. frozen_contract
+  _gate is defined at be_forward_day.py:560 and CALLED FROM run_forward_day at
+  :1549; its docstring is the design in one line, "it refuses what the run DEPENDS
+  on and discloses what it does not -- and the difference is COMPUTED". Driving
+  it returns contract HOLDS, all_anchors_match_at_freeze_commit TRUE,
+  disclosed_not_waived TRUE, and n_working_tree_drift 4 WITH ALL FOUR NAMED --
+  harmful_action_eval.py 55ea57b995afdd4c -> 2c4e21936e3fc1d2,
+  harmful_exposure_rows.py 8fb34b0319b0d596 -> 1bbd8e7525fc27ac,
+  harmful_hazard_model.py 0091fe75c38af79e -> 58b8a2c08eea3cc9,
+  harmful_rows_loader.py 8b90c48cfe331e71 -> c53c64223474d29c. SURVIVABILITY IS
+  ASSERTED FROM SOURCE, NOT ASSUMED: the gate runs inspect.getsource
+  (materialise_frozen) at :634 and stamps
+  materialise_frozen_sources_from_the_freeze_commit TRUE, with the stated
+  consequence that "if it ever stops doing so, this gate REFUSES instead of
+  disclosing". AND THE ROUND-76 FINDING IS VISIBLY REPAIRED IN THE SAME OBJECT:
+  manifest_drift now reports drifted TRUE with bound_sha256 eb8733da2c8e2126...
+  against disk_sha256 037627531cbe746d... AND THE KEYS THAT DIFFER -- THE SAME
+  DIVERGENCE THAT WAS BEING SWALLOWED BY `except Exception: pass` A ROUND AGO IS
+  NOW A NAMED DISCLOSURE ON THE RUN PATH. BE 20's two halves both stand and both
+  are already in these files from round 76: the zero-reachability finding, and
+  PHASE-0 HALF-ANSWERED -- values reproduced cent-exact on all eight fields from
+  a comparator POST-DATING the freeze by ~4 hours, PROCEDURE NOT EVIDENCED, and
+  v1/v2 EXCLUDED AS ANCESTORS RATHER THAN REPRODUCTIONS. THE REVIEWER'S DA 23/24
+  FILING: ITEM 1 IS BINDING AND THE LIMIT MUST TRAVEL WITH IT OR THE WORD WILL BE
+  MISREAD. The withdrawal cannot be quietly undone -- driven on a REAL git
+  history the reviewer built, with removal, re-citation and DAY SUBSTITUTION each
+  refusing BY NAME as WithdrawalRefused, and THE GUARD PROVED NON-VACUOUS because
+  two prior committed versions already carry the registry, so the comparison has
+  something to compare and `vacuous` is False; adding a day is still allowed,
+  which is right, because the property is ONE-WAY AND NOT FROZEN. BUT DA24-R1
+  (MEDIUM-HIGH) IS THE LIMIT: counts_toward_race HAS NO CONSUMER, while
+  da_verdict_check and da_governed_verdict_preflight still validate
+  race_accrual_eligible, WHICH READS TRUE FOR THE WITHDRAWN DAY AT THE HELD TIP.
+  SO THE WITHDRAWAL IS BINDING AGAINST EDITS AND NOT YET BINDING AGAINST
+  COUNTING, and a reader must not take BINDING to mean the day cannot be counted.
+  ONE PRECISION I MEASURED AND THE FILING DOES NOT STATE, because the on-disk and
+  held-tip answers differ and this programme has been bitten by exactly that
+  before: counts_toward_race APPEARS NOWHERE in live/pm_research at the landed tip
+  (the chain is held; highest landed DA row is still Q-DA-215), and the 08-29
+  verdict ON DISK still reads race_accrual_eligible FALSE with era_admissible
+  FALSE -- the TRUE that DA24-R1 is about is what the HELD code computes once the
+  withdrawal lands and era_admissible is corrected to TRUE. BOTH READINGS ARE
+  RIGHT ABOUT DIFFERENT TREES AND THE FINDING IS ABOUT THE ONE THAT WILL LAND.
+  DA24-R2 IS A ROW CORRECTION AND I RECORD THE ROW'S CLAIM AS SUPERSEDED: DA's
+  RR12-1 fix is a REGRESSION IN THE CANONICAL TREE -- flow_intensity RED ON BOTH
+  LAUNCHERS whenever CODE_ROOT == DATA_ROOT, which is the canonical tree, while
+  the row reports it GREEN AT 54. A SUITE THAT IS RED IN THE CANONICAL TREE WILL
+  BE RED AT LANDING. Two more: DA24-R3, the canonical-write "cannot evidence"
+  refusal is keyed on --out into the canonical dir while THE UNIT WRITES TO A TEMP
+  PATH, so it never fires where it matters; DA24-R4, monotonicity compares
+  presence and `authority` only, so `reason` and `note` stay silently rewritable.
+  DISPOSITION AMEND, with DA24-R1 and DA24-R2 TO LAND BEFORE THE CHAIN DOES.
+  STATE: DA rounds 20 through 24 all HELD (Q-DA-215), DE 48 HELD (Q-DE-62), the
+  R-459 run still ATTEMPTED-AND-FAILED with its outdir still one line and no
+  terminal record, G 2 of 5 BY CHOICE, earliest G=5 2026-09-06. USER ITEMS: ONE
+  -- the Phase-2 winner, and the race decides it.
+```

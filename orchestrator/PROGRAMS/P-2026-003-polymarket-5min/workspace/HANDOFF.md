@@ -1,6 +1,19 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T09:58Z (MEM round 79) — **THE RACE MOVED TO G = 3, AND THE
+Updated: 2026-09-04T10:13Z (MEM round 80) — **URGENT CORRECTION: THE
+PROFITABILITY BLOCK IS WITHDRAWN, AND I AM THE SEAT THAT PUT IT IN THESE FILES.**
+The USER audited the released result and withdrew it
+(`RESULT_RELIABILITY_AUDIT_2026-09-04.md` at `0b970c3`). **Every withdrawn figure
+is now marked WITHDRAWN in band, with its reason, and none is deleted.** **What
+survives is not withdrawn with it:** the nine BTC `MATCHED_VOLUME` values, the
+declaration ordering, and 21/21 + 102/102 — which I re-drove. **The claim's
+correct strength: a DESCRIPTIVE TWO-DAY RANKING RESULT — enough to reject that
+the candidate has demonstrated an improvement, not enough to prove it is
+structurally worse.** **And one provenance correction that is mine:** my round-79
+commit carries another author's withdrawal block, because I staged my own file
+wholesale without diffing it. **G = 3 of 5 is unchanged. USER items: ONE.**
+
+Previously (MEM round 79) — 2026-09-04T09:58Z — **THE RACE MOVED TO G = 3, AND THE
 PROGRAMME CHANGED DIRECTION.** 09-03 was **re-verdicted under R-503** and now
 **accrues on its covered complement** — 287 of 288, the **15:20:00Z** window
 marked and counted, the floor **imported** from R-424, three superseded
@@ -136,6 +149,127 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T10:13Z — MEM round 80: the profitability block is withdrawn, and I am the seat that put it in these files
+>
+> **The USER audited the released result and withdrew the profitability block**
+> (`workspace/RESULT_RELIABILITY_AUDIT_2026-09-04.md` at `0b970c3`, as-of 09:59Z,
+> economic tip `659ed66`). The USER also rewrote `RESULTS.md` in the same commit;
+> **that file is theirs for this correction and I have not touched it.**
+>
+> **MY ROUNDS 78 AND 79 SWEPT THESE NUMBERS INTO `STATUS.yml` AND THIS FILE AS
+> FACT, BEFORE THE AUDIT EXISTED.** Every one is now **marked WITHDRAWN in band
+> with its reason, and none is deleted** — `$226,594` filled notional,
+> `$1,801.29` no-cancel P&L, `0.7949%` return, `+$620.58` overlay, `+34.5%` on the
+> book, `$807/day`, `$75,531/day` notional, `$600.43/day` baseline.
+>
+> **THE REASON, recorded rather than just the withdrawal, and verified by me at
+> the code:** the scratch `prof.py` kept only the **first row** per
+> `(slug, side, gen)` and labelled those sums as totals — **an action has multiple
+> rows, so first-row selection is not aggregation** — and the emitted scale is
+> **`preventable_shares`, not filled shares**. I read the emission at
+> `be_forward_metric.py:622`, where the module's own comment names it *"the SCALE.
+> Shares the cancel would have prevented"*, and its producer at
+> `harmful_exposure_rows.py`: `FILL_HORIZON_S = 1.0` (`:76`),
+> `h_end = min(t_start + FILL_HORIZON_S, …)` (`:339`), and `stale_shares` = the
+> tranches with `t < cut` (`:370`). **So only fills inside the one-second action
+> horizon at or after the 50 ms latency cutoff are in the population, and earlier
+> fills are held separately.** **The denominator was never total filled notional
+> and the baseline was never the whole no-cancel book. P003 has no reliable
+> profitability estimate.** *The three limits I recorded with those numbers were
+> true and were never the problem; the population was — which is the part I did
+> not check, and the check I did make (the fee decode) was the one the numbers did
+> not turn on.*
+>
+> **WHAT SURVIVES, AND MUST NOT BE SWEPT AWAY BY THE CORRECTION:**
+> - **The nine BTC `MATCHED_VOLUME` values reproduce exactly** from the preserved
+>   two-arm feeds — 09-01 −789.12 / −2,016.71 / −1,476.01; 09-02 −227.60 /
+>   −1,237.84 / −2,975.36; pooled −1,012.68 / −3,038.75 / −3,949.76.
+> - **The declaration ordering checks** — `eeb02ba` 12:55:32Z before `7719588`
+>   15:41:26Z and `40b49fb` 16:21:39Z.
+> - **The module controls hold: `be_interim_declaration` 21/21 and
+>   `be_forward_metric` 102/102 — which I re-drove myself** in my own detached
+>   worktree at the tip under a systemd scope, rc 0 both.
+>
+> **THE CLAIM'S CORRECT STRENGTH, in the audit's own words, and this is how both
+> files now state it:** **a DESCRIPTIVE TWO-DAY RANKING RESULT, not
+> validation-grade evidence and not a profitability result — enough to REJECT that
+> the candidate has demonstrated an improvement, NOT enough to prove it is
+> structurally worse.**
+>
+> **FOUR THINGS THAT CHANGE HOW EVERYTHING ABOVE READS, each verified:**
+> 1. **`MATCHED_VOLUME` matches the number of cancellation ACTIONS** — not shares,
+>    not notional, not capital. That is the whole reason a profitability reading
+>    was never available from it.
+> 2. **The equal-count comparator is RETROSPECTIVE** — the incumbent's cutoff is
+>    lowered using the full evaluated day or pool, so it is a **ranking
+>    diagnostic, not an executable operating point**.
+> 3. **The p-values are window-level while the ruled cluster unit is the UTC
+>    day** — so **a high one-sided p is FAILURE TO SHOW A WIN, not proof of a
+>    loss**. The direction of that asymmetry is the opposite of the one a reader
+>    will assume.
+> 4. **The incumbent is not a prediction-free benchmark** — both arms are linear
+>    harmful-flow predictors over the same 54 PM plus six fine-flow inputs,
+>    differing only in fit. A negative value means the candidate **selected less
+>    valuable cancellations at equal action count**, and says nothing about whether
+>    prediction beats *no* cancellation or a non-predictive rule.
+>
+> **AND `matched_volume()` HAS NO COMMITTED CALLER — I checked rather than took
+> it.** `be_read_cells.py` defines it at `:144`, and the **only** other occurrence
+> in the whole of `live/pm_research` is the key name
+> `rho_advantage_at_matched_volume` at `:209`; **`prof.py` and
+> `interim_report.py` are not in the repository at all.** **That is the sixth
+> zero-consumer finding of the day and the first one that is the headline result
+> itself** — the standing hazard recorded two rounds below has now reached the
+> number the programme published.
+>
+> **A REVIEWER FILING LANDED AT 10:24Z AND SHARPENS THE SURVIVING HALF, so I fold
+> it in rather than queue it** (`4d430e7`, tip `0ab344f`, measured on the 08-29
+> **development** feed with no race seal opened). **AUDIT-R1: the audit is correct
+> on all four points and overstates none of them.**
+>
+> **AUDIT-R2 (MEDIUM) changes how the surviving result must be quoted. The ranking
+> result is genuinely insulated** — `prof.py`'s defective `seen` dict **never
+> reaches `matched_volume()`**, so the contamination touches the profitability
+> block **and the `baseline_$` column** only, not the nine values. **But the
+> insulation does not rest on path separation.** It rests on a measured fact **not
+> recorded anywhere until now**: **the shipped first-crossing rule is the only one
+> of four candidate aggregations that counts each prevented fill once — 91.1% of
+> intra-action row pairs are closer than the 1 s horizon — and the intuitive
+> alternative FLIPS THE SIGN POSITIVE.** **That measurement must travel with the
+> result**, because as it stands the result's defence lives only in the fact that
+> **nobody has yet tried the intuitive aggregation. Someone will.**
+>
+> **AUDIT-R3** adds a second independent tell that the number was not a pipeline
+> product: `prof.py` **imported from a seat worktree**. **AUDIT-R4** proposes the
+> general remedy — **name the producer, census its committed call and reference
+> sites, check the producing path; one AST pass, run before a number enters a
+> document rather than when a round happens to be dispatched.** *That is the check
+> that would have caught this in round 78, and it is the check I did not run.*
+>
+> **ONE PROVENANCE CORRECTION THAT IS MINE, and nothing else would surface it.**
+> **My round-79 commit `a357908` carries another author's HANDOFF withdrawal
+> block.** I checked at git: the block *"PROFITABILITY IS WITHDRAWN"* **enters the
+> history in `a357908`**, its parent `4df4ac2` does not contain it, and it is not
+> in my voice (it speaks of *"the MEM round-78 section"* in the third person). It
+> was sitting **uncommitted in the shared tree** while I worked, and **I staged
+> `HANDOFF.md` wholesale and committed it under my message**, which says nothing
+> about a withdrawal. **So a reader running `git log` sees MEM round 79 as the
+> author of the withdrawal — in the same commit whose own entry still asserted the
+> withdrawn figures one screen below.** The lesson is the one this programme keeps
+> paying for, in a new coat: **I checked that I had not touched `RESULTS.md` and
+> reported that carefully, and I did not make the same check on the file I own.**
+> *A pathspec commit is only as narrow as the diff inside each path, and "my file"
+> is not the same as "my bytes."* From here I diff **every** state file before
+> staging it, not only the ones I expect someone else to have touched. **The block
+> itself is correct and stays exactly where it is; only its authorship is
+> corrected, here.**
+>
+> **UNCHANGED BY ANY OF THIS: G = 3 of 5** — and the audit says so itself: 09-03's
+> R-503 accrual **does not make it a third economic read**. The lost
+> scheduled-unit prefix on the supersede remains open; the `589af56`
+> coverage-absent repair closes the missing-status defect and does not touch this
+> audit. **USER items: ONE — the Phase-2 winner, and the race decides it.**
 
 > ### 2026-09-04T09:58Z — MEM round 79: the race moved to G = 3, and the programme changed direction
 >
@@ -388,6 +522,24 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 > ---
 >
 > **PROFITABILITY — NEW, AND ITS THREE LIMITS ARE NOT SEPARABLE FROM IT.**
+>
+> > **[WITHDRAWN 2026-09-04 by the USER's audit
+> > (`RESULT_RELIABILITY_AUDIT_2026-09-04.md` at `0b970c3`). EVERY FIGURE IN THE
+> > BLOCK BELOW IS WITHDRAWN AS UNRELIABLE AND NONE OF THEM HAS THE MEANING
+> > STATED — `$226,594`, `$1,801.29`, `0.7949%`, `+$620.58`, `+34.5%`, `$807/day`,
+> > `$75,531/day`, `$600.43/day`. THE REASON, not just the withdrawal: the scratch
+> > `prof.py` kept only the FIRST ROW per `(slug, side, gen)` and labelled those
+> > sums as totals — an action has multiple rows, so first-row selection is not
+> > aggregation; and the emitted scale is `preventable_shares`, NOT filled shares
+> > — only fills inside the one-second action horizon at or after the 50 ms
+> > latency cutoff, with earlier fills held separately as `stale_shares` (I
+> > verified this at `be_forward_metric.py:622` and
+> > `harmful_exposure_rows.py:76/:339/:370`). **So the denominator was never total
+> > filled notional and the baseline was never the whole no-cancel book.** P003
+> > has NO reliable profitability estimate. The three limits stated below were
+> > true and were never the problem; the population was. The block is kept, not
+> > deleted, because it is what MEM round 78 asserted and a reader must be able
+> > to see what was withdrawn.]**
 >
 > **Filled notional $226,594.26 over three days = $75,531.42/day** (btc
 > $196,960.93 + eth $29,633.33). **The NO-CANCEL baseline book already makes

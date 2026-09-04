@@ -4,6 +4,109 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T10:13Z (MEM ROUND 80 -- URGENT CORRECTION: THE PROFITABILITY BLOCK
+  IS WITHDRAWN, AND I AM THE SEAT THAT PUT IT IN THESE FILES). The USER audited
+  the released result and WITHDREW the profitability block
+  (RESULT_RELIABILITY_AUDIT_2026-09-04.md at 0b970c3, as-of 09:59Z, economic tip
+  659ed66); the USER also rewrote RESULTS.md in the same commit and I DID NOT
+  TOUCH IT. MY ROUNDS 78 AND 79 SWEPT THOSE NUMBERS INTO STATUS.yml AND
+  HANDOFF.md AS FACT, BEFORE THE AUDIT EXISTED, SO THESE FILES HAVE BEEN
+  ASSERTING WITHDRAWN FIGURES. EVERY ONE IS NOW MARKED WITHDRAWN IN BAND WITH ITS
+  REASON AND NONE IS DELETED: 226,594 filled notional, 1,801.29 no-cancel P&L,
+  0.7949% return on filled notional, 620.58 overlay, +34.5% on the book, 807/day,
+  75,531/day notional, 600.43/day baseline. THE REASON, RECORDED RATHER THAN JUST
+  THE WITHDRAWAL, AND VERIFIED BY ME AT THE CODE: the scratch prof.py KEPT ONLY
+  THE FIRST ROW per (slug, side, gen) and labelled those sums as TOTALS -- AN
+  ACTION HAS MULTIPLE ROWS, SO FIRST-ROW SELECTION IS NOT AGGREGATION -- and the
+  emitted scale is preventable_shares AND NOT FILLED SHARES. I read the emission
+  at be_forward_metric.py:622, where the field is named in the module's own
+  comment as "the SCALE. Shares the cancel would have prevented", and its
+  producer at harmful_exposure_rows.py: FILL_HORIZON_S = 1.0 (:76), h_end =
+  min(t_start + FILL_HORIZON_S, ...) (:339), and stale_shares = the tranches with
+  t < cut (:370) -- SO ONLY FILLS INSIDE THE ONE-SECOND ACTION HORIZON AT OR
+  AFTER THE 50 ms LATENCY CUTOFF ARE IN THE POPULATION, AND EARLIER FILLS ARE
+  HELD SEPARATELY. THE DENOMINATOR WAS NEVER TOTAL FILLED NOTIONAL AND THE
+  BASELINE WAS NEVER THE WHOLE NO-CANCEL BOOK. P003 HAS NO RELIABLE PROFITABILITY
+  ESTIMATE. THE THREE LIMITS I RECORDED WITH THOSE NUMBERS WERE TRUE AND WERE
+  NEVER THE PROBLEM; THE POPULATION WAS -- which is the part I did not check, and
+  the check I did make (the fee decode) was the one the numbers did not turn on.
+  WHAT SURVIVES AND IS NOT WITHDRAWN WITH IT, and it must not be swept away by
+  the correction: THE NINE btc MATCHED_VOLUME VALUES REPRODUCE EXACTLY from the
+  preserved two-arm feeds -- 09-01 -789.12 / -2,016.71 / -1,476.01; 09-02 -227.60
+  / -1,237.84 / -2,975.36; POOLED -1,012.68 / -3,038.75 / -3,949.76; THE
+  DECLARATION ORDERING CHECKS (eeb02ba 12:55:32Z before 7719588 15:41:26Z and
+  40b49fb 16:21:39Z); and the module controls hold -- be_interim_declaration
+  21/21 and be_forward_metric 102/102, WHICH I RE-DROVE MYSELF in my own detached
+  worktree at the tip under a systemd scope, rc 0 both. THE CLAIM'S CORRECT
+  STRENGTH, IN THE AUDIT'S OWN WORDS, AND THIS IS HOW BOTH FILES NOW STATE IT: A
+  DESCRIPTIVE TWO-DAY RANKING RESULT, NOT VALIDATION-GRADE EVIDENCE AND NOT A
+  PROFITABILITY RESULT -- ENOUGH TO REJECT THAT THE CANDIDATE HAS DEMONSTRATED AN
+  IMPROVEMENT, NOT ENOUGH TO PROVE IT IS STRUCTURALLY WORSE. FOUR THINGS THAT
+  CHANGE HOW EVERYTHING ABOVE READS, EACH VERIFIED: (1) MATCHED_VOLUME MATCHES
+  THE NUMBER OF CANCELLATION ACTIONS -- NOT SHARES, NOT NOTIONAL, NOT CAPITAL,
+  which is the whole reason a profitability reading was never available from it.
+  (2) THE EQUAL-COUNT COMPARATOR IS RETROSPECTIVE: the incumbent's cutoff is
+  lowered using the FULL evaluated day or pool, so it is a RANKING DIAGNOSTIC AND
+  NOT AN EXECUTABLE OPERATING POINT. (3) THE p-VALUES ARE WINDOW-LEVEL WHILE THE
+  RULED CLUSTER UNIT IS THE UTC DAY, so A HIGH ONE-SIDED p IS FAILURE TO SHOW A
+  WIN AND NOT PROOF OF A LOSS -- the direction of that asymmetry is the opposite
+  of the one a reader will assume. (4) THE INCUMBENT IS NOT A PREDICTION-FREE
+  BENCHMARK: both arms are linear harmful-flow predictors over the same 54 PM
+  plus six fine-flow inputs and differ only in fit, so a negative value means the
+  candidate SELECTED LESS VALUABLE CANCELLATIONS AT EQUAL ACTION COUNT and says
+  NOTHING about whether prediction beats no cancellation or a non-predictive
+  rule. AND matched_volume() HAS NO COMMITTED CALLER -- I checked rather than
+  took it: be_read_cells.py DEFINES it at :144 and the ONLY other occurrence in
+  the whole of live/pm_research is the KEY NAME
+  rho_advantage_at_matched_volume at :209, while prof.py and interim_report.py
+  ARE NOT IN THE REPOSITORY AT ALL. THAT IS THE SIXTH ZERO-CONSUMER FINDING OF
+  THE DAY AND THE FIRST ONE THAT IS THE HEADLINE RESULT ITSELF -- the class I
+  wrote into HANDOFF as a standing hazard two rounds ago has now reached the
+  number the programme published. AND ONE PROVENANCE CORRECTION THAT IS MINE AND
+  THAT NOTHING ELSE WOULD SURFACE: MY ROUND-79 COMMIT a357908 CARRIES ANOTHER
+  AUTHOR'S HANDOFF WITHDRAWAL BLOCK. I checked at git -- the block "PROFITABILITY
+  IS WITHDRAWN" enters the history in a357908, its parent 4df4ac2 does not
+  contain it, and it is not in my voice (it speaks of "the MEM round-78 section"
+  in the third person). It was sitting UNCOMMITTED in the shared tree while I
+  worked, and I STAGED HANDOFF.md WHOLESALE AND COMMITTED IT UNDER MY MESSAGE,
+  which says nothing about a withdrawal. SO A READER RUNNING git log SEES MEM
+  ROUND 79 AS THE AUTHOR OF THE WITHDRAWAL, IN THE SAME COMMIT WHOSE OWN ENTRY
+  STILL ASSERTED THE WITHDRAWN FIGURES ONE SCREEN BELOW. The lesson is the one
+  this programme keeps paying for in a new coat: I checked that I had not touched
+  RESULTS.md and reported that carefully, AND I DID NOT MAKE THE SAME CHECK ON
+  THE FILE I OWN -- a pathspec commit is only as narrow as the diff inside each
+  path, and "my file" is not the same as "my bytes". FROM HERE I DIFF EVERY
+  STATE FILE BEFORE STAGING IT, NOT ONLY THE ONES I EXPECT SOMEONE ELSE TO HAVE
+  TOUCHED. The block itself is CORRECT AND STAYS EXACTLY WHERE IT IS; only its
+  authorship is corrected, here.
+  AND A REVIEWER FILING LANDED AT 10:24Z THAT SHARPENS THE SURVIVING HALF, SO
+  I FOLD IT IN RATHER THAN QUEUE IT (4d430e7, tip 0ab344f, audit at 0b970c3,
+  measured on the 08-29 DEVELOPMENT feed with no race seal opened). AUDIT-R1:
+  THE AUDIT IS CORRECT ON ALL FOUR POINTS AND OVERSTATES NONE OF THEM.
+  AUDIT-R2 (MEDIUM) IS THE ONE THAT MATTERS FOR HOW THE SURVIVING RESULT MUST
+  BE QUOTED: THE RANKING RESULT IS GENUINELY INSULATED -- prof.py's defective
+  `seen` dict NEVER REACHES matched_volume(), so the contamination touches the
+  profitability block AND THE baseline_$ COLUMN ONLY, not the nine values. BUT
+  THE INSULATION DOES NOT REST ON PATH SEPARATION: it rests on a measured fact
+  NOT RECORDED ANYWHERE UNTIL NOW -- THE SHIPPED FIRST-CROSSING RULE IS THE
+  ONLY ONE OF FOUR CANDIDATE AGGREGATIONS THAT COUNTS EACH PREVENTED FILL ONCE
+  (91.1% OF INTRA-ACTION ROW PAIRS ARE CLOSER THAN THE 1 s HORIZON), AND THE
+  INTUITIVE ALTERNATIVE FLIPS THE SIGN POSITIVE. THAT MEASUREMENT MUST TRAVEL
+  WITH THE RESULT, because as it stands the result's defence lives only in the
+  fact that NOBODY HAS YET TRIED THE INTUITIVE AGGREGATION -- and someone
+  will. AUDIT-R3 adds a second independent tell that the number was not a
+  pipeline product: prof.py IMPORTED FROM A SEAT WORKTREE. AUDIT-R4 proposes
+  the general remedy -- name the producer, census its committed call and
+  reference sites, check the producing path, ONE AST PASS, RUN BEFORE A NUMBER
+  ENTERS A DOCUMENT RATHER THAN WHEN A ROUND HAPPENS TO BE DISPATCHED. That is
+  the check that would have caught this in round 78, and it is the check I did
+  not run.
+  UNCHANGED BY ANY OF THIS: G = 3 OF 5, and the
+  audit says so itself -- 09-03's R-503 accrual DOES NOT MAKE IT A THIRD ECONOMIC
+  READ. The lost scheduled-unit prefix on the supersede remains open; the 589af56
+  coverage-absent repair closes the missing-status defect and does not touch this
+  audit. USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
+  PRIOR:
   2026-09-04T09:59Z (CODEX RELIABILITY CORRECTION). THE TWO-DAY BTC
   EQUAL-ACTION-COUNT ARITHMETIC REPRODUCES, BUT IT IS A RETROSPECTIVE
   MODEL-VS-MODEL DIAGNOSTIC, NOT VALIDATION OR REALISED P&L. THE INCUMBENT IS
@@ -172,7 +275,19 @@ updated: >-
   cancels about three times as often and NEITHER ARM DELIVERS ITS NOMINAL BUDGET.
   BY_THRESHOLD IS NOT THE DECISION METRIC; MATCHED VOLUME IS THE ONE THAT ANSWERS
   THE QUESTION. PROFITABILITY IS NEW AND ITS THREE LIMITS ARE NOT SEPARABLE FROM
-  IT. Filled notional 226,594.26 USD over three days = 75,531.42/day (btc
+  IT.
+  [WITHDRAWN 2026-09-04, USER AUDIT RESULT_RELIABILITY_AUDIT_2026-09-04.md at
+  0b970c3 -- EVERY FIGURE IN THIS PASSAGE IS WITHDRAWN AS UNRELIABLE AND NONE
+  OF THEM HAS THE MEANING STATED. THE SCRATCH prof.py KEPT ONLY THE FIRST ROW
+  PER (slug, side, gen) AND LABELLED THOSE SUMS AS TOTALS -- AN ACTION HAS
+  MULTIPLE ROWS, SO FIRST-ROW SELECTION IS NOT AGGREGATION; AND THE EMITTED
+  SCALE IS preventable_shares, NOT FILLED SHARES -- only fills inside the one-
+  second action horizon at or after the 50 ms latency cutoff, with earlier
+  fills held separately as stale_shares (verified by MEM at
+  be_forward_metric.py:622 and harmful_exposure_rows.py:76/:339/:370). SO THE
+  DENOMINATOR WAS NEVER TOTAL FILLED NOTIONAL AND THE BASELINE WAS NEVER THE
+  WHOLE NO-CANCEL BOOK. P003 HAS NO RELIABLE PROFITABILITY ESTIMATE. The three
+  limits below were true and were never the problem; the population was.] Filled notional 226,594.26 USD over three days = 75,531.42/day (btc
   196,960.93 + eth 29,633.33; 394,098 + 59,270 fill shares). THE NO-CANCEL
   BASELINE BOOK ALREADY MAKES MONEY: 1,801.29 over three days = 600.43/day, which
   is 0.7949% ON FILLED NOTIONAL -- so the overlay is not propping up a loser. The
@@ -212,102 +327,6 @@ updated: >-
   (highest landed row Q-DA-215) and reported to be landing; DE 48/49/51 landed
   and Q-DE-62 still the highest DE row. USER ITEMS: ONE -- the Phase-2 winner,
   and the race decides it.
-  PRIOR:
-  2026-09-03T08:30Z (MEM ROUND 77 -- FIVE ZERO-CONSUMER FINDINGS IN ONE DAY,
-  NONE OF THEM FOUND BY A GREEN SUITE). BE 20 and 21 and the reviewer's DA 23/24
-  filing swept; nothing run but read-only reads and ONE read-only drive of a
-  landed gate in the main tree. THE CLASS IS THE ROUND, AND IT GOES IN HANDOFF AS
-  A STANDING HAZARD WITH ITS INSTANCES NAMED, BECAUSE SEAT_PROTOCOL 17 ALREADY
-  DESCRIBES IT AND WHAT IS NEW IS THE FREQUENCY: FIVE zero-consumer or
-  zero-reachability findings today, EACH FOUND BY A DIFFERENT ROUTE AND NOT ONE
-  OF THEM BY A GREEN SUITE. (i) require_operating_point -- every executable call
-  inside selftest(), found by the reviewer producing a full net-cents result with
-  a p from a cutoff read off the scored data. (ii) THE SIX EVALUATOR FUNCTIONS of
-  I11-2 -- falsifier-proven, zero call sites in the runner, found by counting call
-  sites rather than tests. (iii) assert_frozen_contract -- ONE call, the exception
-  SWALLOWED, found by BE 20 asking what reads the binding. (iv) THE R-486 governs
-  STAMPING -- both production call sites deletable with 254 checks still passing,
-  found by the coordinator deleting them, which nobody had been asked to try.
-  (v) counts_toward_race -- WRITTEN, NEVER READ, found by the reviewer asking
-  which field the race is actually counted by. FOUR OF THE FIVE WERE FOUND BY
-  SOMEBODY DELETING, GREPPING OR ATTACKING RATHER THAN BY RUNNING THE SUITE, AND
-  THE FIFTH BY ASKING WHAT CONSUMES A FIELD -- A GREEN SUITE CANNOT SEE ANY OF
-  THEM BY CONSTRUCTION, and five in one day is not five incidents. THE RELEASE IS
-  STILL NOT GRANTED AND THE GATE IS SHUT: the THIRD release review is in flight,
-  and until it releases NO forward day is scored, which continues to mean THE
-  08-29 READ THE USER'S RULING PRESERVED HAS NOT HAPPENED AND CANNOT YET. BE
-  ROUND 21 CHANGED THE FENCE'S SHAPE AND IT IS A STRONGER PROPERTY THAN THE
-  REVIEWER ASKED FOR, WHICH SHOULD READ AS SUCH RATHER THAN AS COMPLIANCE.
-  BE19-R1 asked that require_operating_point CARRY `verification` and `coin` into
-  what it returns. BE INSTEAD REMOVED THE CALLER'S ABILITY TO SUPPLY THE EVIDENCE
-  AT ALL: at be_forward_metric.py:439-462, which I read, an INLINE `verification`
-  block is REFUSED BY NAME -- the module's own words are "the fence fetches its
-  own evidence; it does not accept evidence handed to it by the caller" and,
-  above it, "SUPPLYING THE EVIDENCE IS THE ACT BEING FORBIDDEN" -- and the
-  declaration must instead name `verification_ref: {path, sha256}`, which the
-  fence OPENS and REHASHES, refusing an unusable ref, a non-existent path
-  ("Nothing was opened, so nothing was verified") and a hash mismatch ("The
-  evidence the fence opened is not the evidence declared"), plus a missing `coin`
-  because both maps are per coin. A FENCE THAT CANNOT BE HANDED ITS OWN EVIDENCE
-  IS A DIFFERENT KIND OF OBJECT FROM ONE THAT CHECKS THE EVIDENCE IT IS HANDED,
-  and it closes the round-76 shape where the positive control passed only by
-  hand-injecting what the code dropped. AND THE FROZEN-CONTRACT GATE IS ON THE
-  RUN PATH -- I DROVE IT READ-ONLY RATHER THAN READING ITS ROW. frozen_contract
-  _gate is defined at be_forward_day.py:560 and CALLED FROM run_forward_day at
-  :1549; its docstring is the design in one line, "it refuses what the run DEPENDS
-  on and discloses what it does not -- and the difference is COMPUTED". Driving
-  it returns contract HOLDS, all_anchors_match_at_freeze_commit TRUE,
-  disclosed_not_waived TRUE, and n_working_tree_drift 4 WITH ALL FOUR NAMED --
-  harmful_action_eval.py 55ea57b995afdd4c -> 2c4e21936e3fc1d2,
-  harmful_exposure_rows.py 8fb34b0319b0d596 -> 1bbd8e7525fc27ac,
-  harmful_hazard_model.py 0091fe75c38af79e -> 58b8a2c08eea3cc9,
-  harmful_rows_loader.py 8b90c48cfe331e71 -> c53c64223474d29c. SURVIVABILITY IS
-  ASSERTED FROM SOURCE, NOT ASSUMED: the gate runs inspect.getsource
-  (materialise_frozen) at :634 and stamps
-  materialise_frozen_sources_from_the_freeze_commit TRUE, with the stated
-  consequence that "if it ever stops doing so, this gate REFUSES instead of
-  disclosing". AND THE ROUND-76 FINDING IS VISIBLY REPAIRED IN THE SAME OBJECT:
-  manifest_drift now reports drifted TRUE with bound_sha256 eb8733da2c8e2126...
-  against disk_sha256 037627531cbe746d... AND THE KEYS THAT DIFFER -- THE SAME
-  DIVERGENCE THAT WAS BEING SWALLOWED BY `except Exception: pass` A ROUND AGO IS
-  NOW A NAMED DISCLOSURE ON THE RUN PATH. BE 20's two halves both stand and both
-  are already in these files from round 76: the zero-reachability finding, and
-  PHASE-0 HALF-ANSWERED -- values reproduced cent-exact on all eight fields from
-  a comparator POST-DATING the freeze by ~4 hours, PROCEDURE NOT EVIDENCED, and
-  v1/v2 EXCLUDED AS ANCESTORS RATHER THAN REPRODUCTIONS. THE REVIEWER'S DA 23/24
-  FILING: ITEM 1 IS BINDING AND THE LIMIT MUST TRAVEL WITH IT OR THE WORD WILL BE
-  MISREAD. The withdrawal cannot be quietly undone -- driven on a REAL git
-  history the reviewer built, with removal, re-citation and DAY SUBSTITUTION each
-  refusing BY NAME as WithdrawalRefused, and THE GUARD PROVED NON-VACUOUS because
-  two prior committed versions already carry the registry, so the comparison has
-  something to compare and `vacuous` is False; adding a day is still allowed,
-  which is right, because the property is ONE-WAY AND NOT FROZEN. BUT DA24-R1
-  (MEDIUM-HIGH) IS THE LIMIT: counts_toward_race HAS NO CONSUMER, while
-  da_verdict_check and da_governed_verdict_preflight still validate
-  race_accrual_eligible, WHICH READS TRUE FOR THE WITHDRAWN DAY AT THE HELD TIP.
-  SO THE WITHDRAWAL IS BINDING AGAINST EDITS AND NOT YET BINDING AGAINST
-  COUNTING, and a reader must not take BINDING to mean the day cannot be counted.
-  ONE PRECISION I MEASURED AND THE FILING DOES NOT STATE, because the on-disk and
-  held-tip answers differ and this programme has been bitten by exactly that
-  before: counts_toward_race APPEARS NOWHERE in live/pm_research at the landed tip
-  (the chain is held; highest landed DA row is still Q-DA-215), and the 08-29
-  verdict ON DISK still reads race_accrual_eligible FALSE with era_admissible
-  FALSE -- the TRUE that DA24-R1 is about is what the HELD code computes once the
-  withdrawal lands and era_admissible is corrected to TRUE. BOTH READINGS ARE
-  RIGHT ABOUT DIFFERENT TREES AND THE FINDING IS ABOUT THE ONE THAT WILL LAND.
-  DA24-R2 IS A ROW CORRECTION AND I RECORD THE ROW'S CLAIM AS SUPERSEDED: DA's
-  RR12-1 fix is a REGRESSION IN THE CANONICAL TREE -- flow_intensity RED ON BOTH
-  LAUNCHERS whenever CODE_ROOT == DATA_ROOT, which is the canonical tree, while
-  the row reports it GREEN AT 54. A SUITE THAT IS RED IN THE CANONICAL TREE WILL
-  BE RED AT LANDING. Two more: DA24-R3, the canonical-write "cannot evidence"
-  refusal is keyed on --out into the canonical dir while THE UNIT WRITES TO A TEMP
-  PATH, so it never fires where it matters; DA24-R4, monotonicity compares
-  presence and `authority` only, so `reason` and `note` stay silently rewritable.
-  DISPOSITION AMEND, with DA24-R1 and DA24-R2 TO LAND BEFORE THE CHAIN DOES.
-  STATE: DA rounds 20 through 24 all HELD (Q-DA-215), DE 48 HELD (Q-DE-62), the
-  R-459 run still ATTEMPTED-AND-FAILED with its outdir still one line and no
-  terminal record, G 2 of 5 BY CHOICE, earliest G=5 2026-09-06. USER ITEMS: ONE
-  -- the Phase-2 winner, and the race decides it.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -5007,7 +5026,21 @@ flags:
     reconciliation caveat FROM THE START; and states the price in its own
     no_choice_clause -- 09-01 AND 09-02 ARE CONSUMED and can never serve as clean
     forward validation. status: INTERIM ON AN INCOMPLETE RACE.
-  PROFITABILITY_with_its_denominator_and_three_limits: >-
+  PROFITABILITY_WITHDRAWN_by_user_audit_was_with_its_denominator_and_three_limits: >-
+    [WITHDRAWN 2026-09-04, USER AUDIT RESULT_RELIABILITY_AUDIT_2026-09-04.md
+    at 0b970c3 -- EVERY FIGURE IN THIS PASSAGE IS WITHDRAWN AS UNRELIABLE AND
+    NONE OF THEM HAS THE MEANING STATED. THE SCRATCH prof.py KEPT ONLY THE
+    FIRST ROW PER (slug, side, gen) AND LABELLED THOSE SUMS AS TOTALS -- AN
+    ACTION HAS MULTIPLE ROWS, SO FIRST-ROW SELECTION IS NOT AGGREGATION; AND
+    THE EMITTED SCALE IS preventable_shares, NOT FILLED SHARES -- only fills
+    inside the one-second action horizon at or after the 50 ms latency cutoff,
+    with earlier fills held separately as stale_shares (verified by MEM at
+    be_forward_metric.py:622 and harmful_exposure_rows.py:76/:339/:370). SO
+    THE DENOMINATOR WAS NEVER TOTAL FILLED NOTIONAL AND THE BASELINE WAS NEVER
+    THE WHOLE NO-CANCEL BOOK. P003 HAS NO RELIABLE PROFITABILITY ESTIMATE. The
+    three limits below were true and were never the problem; the population
+    was.]
+    THE WITHDRAWN PASSAGE, KEPT AS PROVENANCE:
     NEW, AND THE THREE LIMITS ARE NOT SEPARABLE FROM THE NUMBERS. FILLED NOTIONAL
     226,594.26 USD over three days = 75,531.42/day (btc 196,960.93 + eth
     29,633.33; 394,098 + 59,270 fill shares; per day 76,698 / 80,241 / 69,655).
@@ -5472,9 +5505,13 @@ focus: >
   IS NOT THE DECISION METRIC: the exact decomposition puts the whole positive in
   the VOLUME term with a NEGATIVE quality term throughout, because one theta
   calibrated on the candidate's training distribution was applied to both arms.
-  PROFITABILITY, WITH ITS THREE INSEPARABLE LIMITS: filled notional $75,531/day,
-  a NO-CANCEL baseline book already making $600.43/day (0.7949% on filled
-  notional), best overlay +$620.58 (+34.5%) at 15% -- but it is 5-SECOND MARKOUT
+  PROFITABILITY [ALL FIGURES IN THIS SENTENCE WITHDRAWN 2026-09-04 BY USER AUDIT
+  -- the population summed was first-row-per-action over preventable_shares, so
+  the denominator was never total filled notional and the baseline was never the
+  whole no-cancel book; P003 HAS NO RELIABLE PROFITABILITY ESTIMATE]: filled
+  notional $75,531/day, a NO-CANCEL baseline book already making $600.43/day
+  (0.7949% on filled notional), best overlay +$620.58 (+34.5%) at 15% -- but it
+  is 5-SECOND MARKOUT
   P&L and not realised, it is GROSS while the venue DOES charge fees (911 of
   1,957 real OrderFilled events carry a non-zero fee; the repo's fee==0 check is
   a FIXTURE), and the return is on FILLED NOTIONAL rather than capital because
@@ -6232,6 +6269,59 @@ tasks:
       METRIC; MATCHED VOLUME IS THE ONE THAT ANSWERS THE QUESTION.
       NOT A VALIDATION, AND THE FILE SAYS SO: an INTERIM on an INCOMPLETE race,
       look 1 of 2, on days that are now CONSUMED.
+      THE CLAIM'S CORRECT STRENGTH, RULED BY THE USER'S AUDIT 2026-09-04
+      (RESULT_RELIABILITY_AUDIT_2026-09-04.md at 0b970c3) AND TO BE STATED THIS
+      WAY WHEREVER THIS RESULT IS QUOTED: A DESCRIPTIVE TWO-DAY RANKING RESULT,
+      NOT VALIDATION-GRADE EVIDENCE AND NOT A PROFITABILITY RESULT -- ENOUGH TO
+      REJECT THAT THE CANDIDATE HAS DEMONSTRATED AN IMPROVEMENT, NOT ENOUGH TO
+      PROVE IT IS STRUCTURALLY WORSE.
+      WHAT SURVIVES THE AUDIT AND IS NOT WITHDRAWN WITH THE PROFITABILITY BLOCK:
+      the NINE btc MATCHED_VOLUME values reproduce EXACTLY from the preserved
+      two-arm feeds; the declaration ordering checks (eeb02ba 12:55:32Z before
+      7719588 15:41:26Z and 40b49fb 16:21:39Z); and the module controls --
+      be_interim_declaration 21/21 and be_forward_metric 102/102, BOTH RE-DRIVEN
+      BY MEM IN ITS OWN DETACHED WORKTREE, rc 0.
+      FOUR THINGS THAT CHANGE HOW ALL OF THE ABOVE READS, each verified at the
+      artifacts: (1) MATCHED_VOLUME MATCHES THE NUMBER OF CANCELLATION ACTIONS
+      -- not shares, not notional, not capital. (2) THE EQUAL-COUNT COMPARATOR IS
+      RETROSPECTIVE: the incumbent's cutoff is lowered using the FULL evaluated
+      day/pool, which is a ranking diagnostic and NOT AN EXECUTABLE OPERATING
+      POINT. (3) THE p-VALUES ARE WINDOW-LEVEL WHILE THE RULED CLUSTER UNIT IS
+      THE UTC DAY, so a high one-sided p is FAILURE TO SHOW A WIN AND NOT PROOF
+      OF A LOSS. (4) THE INCUMBENT IS NOT A PREDICTION-FREE BENCHMARK: both arms
+      are linear harmful-flow predictors over the same 54 PM plus six fine-flow
+      inputs, differing only in fit, so a negative value means the candidate
+      selected LESS VALUABLE CANCELLATIONS AT EQUAL ACTION COUNT -- it does not
+      answer whether prediction beats NO cancellation or a non-predictive rule.
+      AND matched_volume() HAS NO COMMITTED CALLER: MEM verified that
+      be_read_cells.py defines it at :144 and that its only other occurrence in
+      live/pm_research is the KEY NAME rho_advantage_at_matched_volume at :209 --
+      the published headline was assembled by a scratch interim_report.py, which
+      is NOT IN THE REPOSITORY. THAT IS THE SIXTH ZERO-CONSUMER FINDING OF THE
+      DAY AND THE FIRST ONE THAT IS THE HEADLINE RESULT ITSELF.
+      AND A REVIEWER FILING LANDED AT 10:24Z THAT SHARPENS THE SURVIVING HALF,
+      SO I FOLD IT IN RATHER THAN QUEUE IT (4d430e7, tip 0ab344f, audit at
+      0b970c3, measured on the 08-29 DEVELOPMENT feed with no race seal
+      opened). AUDIT-R1: THE AUDIT IS CORRECT ON ALL FOUR POINTS AND
+      OVERSTATES NONE OF THEM. AUDIT-R2 (MEDIUM) IS THE ONE THAT MATTERS FOR
+      HOW THE SURVIVING RESULT MUST BE QUOTED: THE RANKING RESULT IS GENUINELY
+      INSULATED -- prof.py's defective `seen` dict NEVER REACHES
+      matched_volume(), so the contamination touches the profitability block
+      AND THE baseline_$ COLUMN ONLY, not the nine values. BUT THE INSULATION
+      DOES NOT REST ON PATH SEPARATION: it rests on a measured fact NOT
+      RECORDED ANYWHERE UNTIL NOW -- THE SHIPPED FIRST-CROSSING RULE IS THE
+      ONLY ONE OF FOUR CANDIDATE AGGREGATIONS THAT COUNTS EACH PREVENTED FILL
+      ONCE (91.1% OF INTRA-ACTION ROW PAIRS ARE CLOSER THAN THE 1 s HORIZON),
+      AND THE INTUITIVE ALTERNATIVE FLIPS THE SIGN POSITIVE. THAT MEASUREMENT
+      MUST TRAVEL WITH THE RESULT, because as it stands the result's defence
+      lives only in the fact that NOBODY HAS YET TRIED THE INTUITIVE
+      AGGREGATION -- and someone will. AUDIT-R3 adds a second independent tell
+      that the number was not a pipeline product: prof.py IMPORTED FROM A SEAT
+      WORKTREE. AUDIT-R4 proposes the general remedy -- name the producer,
+      census its committed call and reference sites, check the producing path,
+      ONE AST PASS, RUN BEFORE A NUMBER ENTERS A DOCUMENT RATHER THAN WHEN A
+      ROUND HAPPENS TO BE DISPATCHED. That is the check that would have caught
+      this in round 78, and it is the check I did not run.
   - id: phase4-diagnostic
     phase: 2
     name: R-459 Phase-4 diagnostic — ONE execution of the frozen protocol on its §3 CONSUMED population
