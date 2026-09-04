@@ -167,13 +167,21 @@ free and each cluster costs a calendar day. The cheap resource was tuned to
 An earlier version of this section said **no value ceiling had ever been
 computed in either programme. That is FALSE as stated and is withdrawn.** An
 independent AST search for the *structural signature* of a ceiling — **as-of
-2026-09-04T13:54:40Z over 189 files / 3,421 functions** — found **two, both in
+2026-09-04T13:54:40Z over 189 files / 3,421 functions** — found **three, all in
 P-2026-003's own code**: `state_gate_v1.bound_over_bins → bound_cents` (landed
-2026-08-23) and `adverse_move_fast.py:234 → oracle_upper_bound_cents_per_decision`,
-whose name contains two of the original search words. The first search's
+2026-08-23), `adverse_move_fast.py:234 → oracle_upper_bound_cents_per_decision`
+— whose name contains two of the original search words — and
+`policy_bounds_v1.py::bound_table`, "the 16-bin all-gates bound", an upper bound
+for the TIME-GATE lever, found by DE on its own surface (186 files, 3,378
+functions, as-of 2026-09-04T14:03:33Z). The first search's
 **method was sound and its SURFACE was the defect** — `live/pm_research/` was
 never enumerated, and the conclusion was generalised to "either programme"
 anyway.
+
+**The claim also shipped inside a DOCSTRING and the arms emission before it was
+checked** — *"where it becomes citable"* — which is worse than a wrong message
+because it is harder to correct. **A negative existence claim carries a SURFACE
+and an AS-OF or it is not a claim.**
 
 **What survives and is citable:** no value ceiling in `live/mm_research/`
 (11 files) or the registers, **and none anywhere for the CANCELLATION-OVERLAY
