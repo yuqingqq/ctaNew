@@ -1,6 +1,20 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T11:30Z (MEM round 87) — **A FENCE STAYS PINNED BY RULING, G
+Updated: 2026-09-04T11:41Z (MEM round 88) — **TWO OF THE THREE MISSING FIELDS
+ARE BUILDABLE AFTER ALL, AND THE MATCHED FLOOR MAY BE UNACHIEVABLE BY
+CONSTRUCTION.** **A correction to what this record has said since round 83:**
+`spread_capture_cents` and `maker_pnl_cents` are buildable **from inputs already
+on every tranche**, no producer change, **on days already sealed** — DE's own
+diagnosis is that it *"described what the replay REPORTS rather than checking what
+its inputs SUPPORT."* The third has the producer shape, but its producer is the
+**feed builder over retained raw capture**, so a ~28-minute re-run recovers it —
+**the binding constraint is archive retention, not collection.** **And P4's 20/20
+is STRUCTURAL, not a budget shortfall** — if it holds, `VALID_AS_A_CONTROL` can
+**never** be true for this construction. **DE36-R3 reached that on 09-03 and wrote
+it into the assertion message of the very check that now fails 20/20** — a
+**retrieval** failure, not an analysis failure. **USER items: FOUR.**
+
+Previously (MEM round 87) — 2026-09-04T11:30Z — **A FENCE STAYS PINNED BY RULING, G
 COUNTING HAS THREE LIVE READINGS, AND THE ARM EMISSION IS GONE.** **USER ruling:
 the sensitivity arm's fence stays pinned** — **six of eighteen declared cells are
 permanently NOT COMPUTED** and the Holm denominator of 18 **knowingly carries
@@ -238,6 +252,117 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T11:41Z — MEM round 88: two of the three fields are buildable, and the matched floor may be unachievable by construction
+>
+> **A CORRECTION TO A CLAIM THE COORDINATOR CARRIED TO THE USER — AND TO WHAT
+> THESE FILES HAVE SAID SINCE ROUND 83.** The record said all three of §8.1's
+> missing fields are not producible by anything in this repository. **DE has
+> corrected itself and two of the three are BUILDABLE.** Read at the artifact
+> (`DE_SECTION81_MISSING_FIELDS_SCOPING.md`, `477c064`, 119 lines, opening *"No
+> build is proposed and none has been started"*):
+>
+> | field | verdict | why |
+> |---|---|---|
+> | `spread_capture_cents` | **BUILD** | all four inputs already on **every tranche** (`level`, `mid_at_fill`, `shares`, side); the construction is the producer's own formula **at the fill's own time** |
+> | `maker_pnl_cents` | **BUILD** | same inputs, same function |
+> | `inventory_loss_cents` | **PRODUCER SHAPE** | the terminal mark is computed inside `build_reference`'s loop and **never stored** |
+>
+> **No producer change, no re-feed, and it works on artifacts already sealed —
+> "because the fields are in them."** One caveat carried as a **status, never a
+> zero**: `mid_at()` returns `None` before a window's first quote, so
+> **`NO_MID_AT_FILL` is a real exclusion and must be counted** (rule 4).
+>
+> **DE's own diagnosis of its error is the part to record, because it names a
+> class rather than an oversight:** *"the error was that I described what the
+> replay **reports** rather than checking what its inputs **support**."* **A
+> capability audit that reads the OUTPUT contract will always understate the
+> INPUTS** — and this programme has now paid for that once at programme scale.
+>
+> **THE THIRD FIELD'S CONSEQUENCE DIFFERS FROM BE'S TRANCHE IDENTITY, AND THAT IS
+> WHAT THE DECISION TURNS ON.** `wf.mid_at()` is live inside `build_reference`'s
+> loop and is **called twice already**, yet **no window-end mid is ever stored**.
+> Same shape as BE's tranche identity — **but BE's is discarded inside a producer
+> over CAPTURED data**, so sealed days cannot recover it and a fix has a **lead
+> time**. **This producer is the FEED BUILDER — a derivation over RETAINED RAW
+> CAPTURE — so re-running it reconstructs the field for any day whose window
+> archive survives. No lead time, sealed days not lost, ~28 minutes for the full
+> 471-window population, and the binding constraint is ARCHIVE RETENTION rather
+> than collection.** It is a **re-generation, not a patch**. **And it needs a
+> RULING, not a build: what "terminal" means when a window ends in a gap** — with
+> a recorded failure to avoid, a `terminal_mid` that **defaulted to exactly 0.5**,
+> *"a default, not an observation."*
+>
+> ---
+>
+> **⚠ THE MOST CONSEQUENTIAL THING IN THE PHASE: THE MATCHED FLOOR MAY BE
+> UNACHIEVABLE BY CONSTRUCTION.** The reviewer adjudicates P4's **20/20 refusal as
+> STRUCTURAL, not a budget shortfall**, with **both directions of P4 in committed
+> code**.
+>
+> **The argument:** P2 and P3 require the draw to match the treated arm's
+> **above-event multiset** per stratum; **P4 requires it to match the REALISED
+> action count** per stratum. **Under a stateful policy — where a held side
+> suppresses later crossings — realisation is a function of the draw's ORDER, so
+> the two are over-determined.** Satisfying P2/P3 essentially fixes what P4 will
+> be, and it will not in general be the treated arm's number.
+>
+> **The numbers agree:** treated realises **333 of 1,154** above-events (**28.9%**)
+> against the control's **496** (**43.0%**) on the first seed — **a large,
+> one-directional gap, not dispersion around a matched target, and a larger budget
+> does not close a systematic offset.**
+>
+> **If it holds, `VALID_AS_A_CONTROL` can NEVER be True for this construction, and
+> `floor_available: false` is a fact about the DESIGN rather than about this
+> population** — *"not a decision another 20 draws can inform."* The reviewer's
+> line: **stop drawing and rule on P4**; refusing rather than reporting a weaker
+> control was the right call and should not be relaxed.
+>
+> **AND THE EXPENSIVE PART, WHICH MUST BE RECORDED AS ONE: DE's own DE36-R3
+> reached this conclusion on 2026-09-03 and wrote it down. I found it in three
+> places:**
+> - the register at `:19184` — `control#2` refusing on set identity, **withdrawn**;
+> - `de_phase4_diag_runner.py:1572` — *"the frozen text asks for matching on ACTION
+>   COUNT … not on identity — so `control#2` … is WITHDRAWN (DE36-R3)"*;
+> - and **sharpest of all, inside the assertion message of the very check that now
+>   fails 20/20**, at `:4128-4129`: *"a stateful policy **cannot be made to cancel
+>   exactly the drawn set** — which is why `control#2` is withdrawn (DE36-R3)."*
+>
+> **So the code that produces the 20/20 refusal carries, in its own assertion
+> text, the reason the refusal is structural — and round 54 attributed it to the
+> budget anyway.** **A conclusion reached, written down, and re-encountered as a
+> mystery eighteen rounds later is a RETRIEVAL failure, not an analysis failure —
+> and it is the failure these files exist to prevent.**
+>
+> ---
+>
+> **THE ARM EMISSION WAS DELETED WHILE UNDER REVIEW, destroying the evidence for
+> an open HIGH (DE53-R1).** That is the answer to what I observed one round ago —
+> going to reproduce the coordinator's instrument run on `arms53.json` and finding
+> the file gone minutes after locating it. **It was not attrition; it was a
+> deletion during review.** **A standing instruction now exists: an artifact a
+> filing cites is EVIDENCE, and is moved aside with a timestamp, never removed.**
+>
+> **BE37-R1 — the family artifact does not yet record the USER's fence ruling, and
+> I verified it at the artifact.** `as_of_utc` **2026-09-03T05:55:57Z**, predating
+> the ruling entirely; the six cells sit inside `declared_cell_count` 18 and
+> `holm_denominator` 18; the arm is **still filed under
+> `open_factors.sensitivity_arm_in_family`** with `who: "the USER (rule 14)"` and
+> the question *"does the FROZEN_FROM_A_CONSUMED_DAY sensitivity arm consume
+> alpha, or is it reported outside the family?"* — **which is not the question the
+> USER ruled** — and **there is no `ruled` block** (I checked). **A reader opening
+> it today sees six unfillable cells in a denominator of 18 beside an unanswered
+> question addressed to the USER, and both likely readings are wrong:** that the
+> gap is still to be filled, or that the fence should be widened to fill it. **The
+> coordinator's own test is the right one — *"conservative, but only if a reader
+> can tell it was decided"* — and today they cannot. Conservative and LEGIBLE is
+> the whole point; right now it is only conservative.**
+>
+> **State:** register **496** entries, last **R-505**; **G unruled** with three
+> readings; three days **sealed and unread**. **USER items: FOUR** — the Phase-2
+> winner, the causal incumbent operating point, the G-counting ruling, and now
+> **P4's definition for a stateful policy** — with the **§8.1 build decision**
+> priced and waiting beside them.
 
 > ### 2026-09-04T11:30Z — MEM round 87: a fence stays pinned by ruling, G has three readings, and the arm emission is gone
 >

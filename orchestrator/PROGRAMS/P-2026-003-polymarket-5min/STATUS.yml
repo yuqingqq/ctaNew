@@ -4,6 +4,100 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T11:41Z (MEM ROUND 88 -- TWO OF THE THREE MISSING FIELDS ARE
+  BUILDABLE AFTER ALL, AND THE MATCHED FLOOR MAY BE UNACHIEVABLE BY
+  CONSTRUCTION). Nothing run but read-only reads. A CORRECTION TO A CLAIM THE
+  COORDINATOR CARRIED TO THE USER, AND IT IS A CORRECTION TO WHAT THESE FILES SAY
+  TOO: THE RECORD HAS SAID SINCE ROUND 83 THAT ALL THREE OF SECTION 8.1'S MISSING
+  FIELDS ARE NOT PRODUCIBLE BY ANYTHING IN THIS REPOSITORY. DE HAS CORRECTED
+  ITSELF AND TWO OF THE THREE ARE BUILDABLE. I read the scoping document at the
+  artifact (DE_SECTION81_MISSING_FIELDS_SCOPING.md, committed 477c064, 119 lines,
+  "No build is proposed and none has been started"). spread_capture_cents AND
+  maker_pnl_cents ARE BUILDABLE FROM INPUTS ALREADY ON EVERY TRANCHE -- level,
+  mid_at_fill, shares, side and markout_cents_per_share -- NEEDING NO PRODUCER
+  CHANGE AND WORKING ON DAYS ALREADY SEALED, "because the fields are in them".
+  The construction is the producer's own formula moved in time: it already
+  computes markout_cents_per_share = sgn * (later - level) * 100, and SPREAD
+  CAPTURE IS THE SAME FORMULA AT THE FILL'S OWN TIME. Cost: one function plus
+  its falsifiers. One caveat carried as a STATUS, never a zero: mid_at() returns
+  None before a window's first quote, so NO_MID_AT_FILL is a real exclusion and
+  must be COUNTED (rule 4). AND DE'S OWN DIAGNOSIS OF ITS ERROR IS THE PART TO
+  RECORD, BECAUSE IT NAMES A CLASS RATHER THAN AN OVERSIGHT: "the error was that
+  I described what the replay REPORTS rather than checking what its inputs
+  SUPPORT." A capability audit that reads the OUTPUT contract will always
+  understate the INPUTS, and this programme has now paid for that once at
+  programme scale. THE THIRD FIELD, inventory_loss_cents, DOES HAVE THE PRODUCER
+  SHAPE -- wf.mid_at() is live inside build_reference's loop and is CALLED TWICE
+  ALREADY, once for mid_at_fill and once for the markout's `later`, while NO
+  WINDOW-END MID IS EVER STORED, so the value exists for the length of one
+  function and is discarded before anything downstream sees it. BUT THE
+  CONSEQUENCE DIFFERS FROM BE'S TRANCHE IDENTITY AND THAT IS WHAT THE DECISION
+  TURNS ON: BE's tranche identity is discarded inside a producer over CAPTURED
+  data, so sealed days cannot recover it and a fix has a LEAD TIME. THIS PRODUCER
+  IS THE FEED BUILDER, A DERIVATION OVER RETAINED RAW CAPTURE, SO RE-RUNNING IT
+  RECONSTRUCTS THE FIELD FOR ANY DAY WHOSE WINDOW ARCHIVE SURVIVES. NO LEAD TIME,
+  SEALED DAYS NOT LOST, ~28 MINUTES FOR THE FULL 471-WINDOW POPULATION (~250 s
+  per 12 windows measured), AND THE BINDING CONSTRAINT IS ARCHIVE RETENTION
+  RATHER THAN COLLECTION. It is a RE-GENERATION rather than a patch, because
+  every existing reference artifact lacks the field. AND IT NEEDS A RULING, NOT A
+  BUILD: WHAT "TERMINAL" MEANS WHEN A WINDOW ENDS IN A GAP -- with a recorded
+  failure to avoid, cross_window_correlation's terminal_mid that DEFAULTED TO
+  EXACTLY 0.5, "a default, not an observation". THE MOST CONSEQUENTIAL THING IN
+  THE PHASE: THE MATCHED FLOOR MAY BE UNACHIEVABLE BY CONSTRUCTION. The reviewer
+  adjudicates P4's 20/20 refusal as STRUCTURAL AND NOT A BUDGET SHORTFALL, with
+  both directions of P4 in committed code. THE ARGUMENT: P2 AND P3 REQUIRE THE
+  DRAW TO MATCH THE TREATED ARM'S ABOVE-EVENT MULTISET PER STRATUM, WHILE P4
+  REQUIRES IT TO MATCH THE REALISED-ACTION COUNT PER STRATUM -- AND UNDER A
+  STATEFUL POLICY, WHERE A HELD SIDE SUPPRESSES LATER CROSSINGS, REALISATION IS A
+  FUNCTION OF THE DRAW'S ORDER, SO THE TWO ARE OVER-DETERMINED: satisfying P2/P3
+  essentially fixes what P4 will be, and it will not in general be the treated
+  arm's number. THE NUMBERS SAY THE SAME: treated realises 333 OF 1,154
+  above-events (28.9%) against the control's 496 (43.0%) on the first seed -- A
+  LARGE ONE-DIRECTIONAL GAP, NOT DISPERSION AROUND A MATCHED TARGET, AND A LARGER
+  BUDGET DOES NOT CLOSE A SYSTEMATIC OFFSET. IF IT HOLDS, VALID_AS_A_CONTROL CAN
+  NEVER BE TRUE FOR THIS CONSTRUCTION AND floor_available FALSE IS A FACT ABOUT
+  THE DESIGN RATHER THAN ABOUT THIS POPULATION -- and it is "not a decision
+  another 20 draws can inform". The reviewer's own line: the programme should
+  STOP DRAWING AND RULE ON P4, and refusing rather than reporting a weaker
+  control was the right call. AND THE PART THAT MUST BE RECORDED BECAUSE IT IS
+  THE EXPENSIVE ONE: DE'S OWN DE36-R3 REACHED THIS CONCLUSION ON 2026-09-03 AND
+  WROTE IT DOWN, AND I FOUND IT IN THREE PLACES -- the register at :19184
+  (control#2 refusing on set identity, WITHDRAWN), de_phase4_diag_runner.py:1572
+  ("the frozen text asks for matching on ACTION COUNT, not on identity -- so
+  control#2 ... is WITHDRAWN (DE36-R3)"), AND, SHARPEST OF ALL, INSIDE THE
+  ASSERTION MESSAGE OF THE VERY CHECK THAT NOW FAILS 20/20, AT :4128-4129: "a
+  stateful policy CANNOT BE MADE TO CANCEL EXACTLY THE DRAWN SET -- which is why
+  control#2 is withdrawn (DE36-R3)". SO THE CODE THAT PRODUCES THE 20/20 REFUSAL
+  CARRIES, IN ITS OWN ASSERTION TEXT, THE REASON THE REFUSAL IS STRUCTURAL -- AND
+  ROUND 54 ATTRIBUTED IT TO THE BUDGET ANYWAY. A CONCLUSION REACHED, WRITTEN
+  DOWN, AND RE-ENCOUNTERED AS A MYSTERY EIGHTEEN ROUNDS LATER IS A RETRIEVAL
+  FAILURE, NOT AN ANALYSIS FAILURE, AND IT IS THE FAILURE THESE FILES EXIST TO
+  PREVENT. TWO MORE. FIRST: THE ARM EMISSION WAS DELETED WHILE UNDER REVIEW,
+  DESTROYING THE EVIDENCE FOR AN OPEN HIGH (DE53-R1) -- which is the answer to
+  what I observed one round ago, when I went to reproduce the coordinator's
+  instrument run on arms53.json and found the file gone minutes after I had
+  located it. IT WAS NOT ATTRITION; IT WAS A DELETION DURING REVIEW. A STANDING
+  INSTRUCTION NOW EXISTS: AN ARTIFACT A FILING CITES IS EVIDENCE, AND IS MOVED
+  ASIDE WITH A TIMESTAMP, NEVER REMOVED. SECOND, BE37-R1, AND I VERIFIED IT AT
+  THE ARTIFACT: THE FAMILY DECLARATION DOES NOT YET RECORD THE USER'S FENCE
+  RULING. Its as_of_utc is 2026-09-03T05:55:57Z, PREDATING THE RULING ENTIRELY;
+  the six FROZEN_FROM_A_CONSUMED_DAY cells sit inside declared_cell_count 18 and
+  holm_denominator 18; and the arm is still filed under
+  open_factors.sensitivity_arm_in_family with who "the USER (rule 14)" and the
+  question "does the FROZEN_FROM_A_CONSUMED_DAY sensitivity arm consume alpha, or
+  is it reported outside the family?" -- which IS NOT THE QUESTION THE USER
+  RULED. There is no `ruled` block, I checked. SO A READER OPENING IT TODAY SEES
+  SIX UNFILLABLE CELLS IN A DENOMINATOR OF 18 BESIDE AN UNANSWERED QUESTION
+  ADDRESSED TO THE USER, AND BOTH LIKELY READINGS ARE WRONG -- that the gap is
+  still to be filled, or that the fence should be widened to fill it. The
+  coordinator's own test is the right one: "conservative, but only if a reader
+  can tell it was decided", AND TODAY THEY CANNOT. CONSERVATIVE AND LEGIBLE IS
+  THE WHOLE POINT; RIGHT NOW IT IS ONLY CONSERVATIVE. STATE: register 496
+  entries, last R-505; G unruled with three readings; three days sealed and
+  unread. USER ITEMS: FOUR -- the Phase-2 winner, the causal incumbent operating
+  point, the G-counting ruling, and now P4's definition for a stateful policy;
+  with the section 8.1 build decision priced and waiting beside them.
+  PRIOR:
   2026-09-04T11:30Z (MEM ROUND 87 -- A FENCE STAYS PINNED BY RULING, G COUNTING
   HAS THREE LIVE READINGS, AND THE ARM EMISSION IS GONE). Nothing run but
   read-only reads and TWO read-only computations of my own. A USER RULING, AND IT
@@ -190,89 +284,6 @@ updated: >-
   STATE: register 496 entries, last R-505; G = 3,
   three days sealed and unread. USER ITEMS: TWO -- the Phase-2 winner, and the
   causal incumbent operating point.
-  PRIOR:
-  2026-09-04T11:06Z (MEM ROUND 85 -- THE PREDICATE GOT A DENOMINATOR, AND THE
-  ONE-WAY GUARANTEE FAILED BY A SECOND ROUTE). DA rounds 33/34, the arms-preflight
-  filing and the bracket's release swept; nothing run but read-only reads and
-  TWO read-only drives of my own. DA ROUND 34 CLOSED THE HIGH AT THE SOURCE AND I
-  VERIFIED IT THERE: _hash_score_matches is now typed `bool | None` (:242) with
-  "None = unknown" in its own signature, and its docstring states the defect in
-  full -- IT RETURNED False FOR A ROW IT COULD NOT EVALUATE, AND False IS THE
-  VERDICT "THIS SCORE IS GENUINE", so a missing key, a non-numeric score, a
-  non-integer gen or a row that is not a mapping ALL LANDED ON "judged, and it did
-  not come from the hash", stub_or_real counted them into n_reproduced == 0, read
-  NO_SCORE_REPRODUCED_FROM_IDENTIFIERS and concluded REAL_EVIDENCED. THE STUB
-  DETECTOR WOULD HAVE CERTIFIED THE OUTPUT AS REAL, IN THE INSTRUMENT BUILT TO
-  CATCH STUBS, DAYS BEFORE THE ARMS RE-RUN WITH REAL HEADS. Now unevaluable LEAVES
-  THE CODOMAIN with a named reason (_why_unevaluable, counted into
-  unevaluable_reasons) AND REAL_EVIDENCED IS REACHABLE ONLY OVER A BATCH WITH ZERO
-  UNEVALUABLE ROWS -- the module's own field says it: "an unevaluable row claims
-  NEITHER direction ... unevaluable rows can reach REAL_EVIDENCED" is exactly what
-  is now forbidden. AND THE THING THAT MAKES THIS A PRACTICE RATHER THAN A HUNT IS
-  THE DENOMINATOR. I DROVE codomain_census() MYSELF AND EVERY FIGURE RECONCILES:
-  26 VALUE-YIELDING except SITES ACROSS 12 INSTRUMENTS = 22 OUTSIDE THE CODOMAIN
-  AND CORRECT + 3 IN-CODOMAIN, ALL THREE ADJUDICATED IN SOURCE WITH WRITTEN
-  REASONS (n_in_codomain_UNADJUDICATED 0) + 1 UNDECIDABLE AND REPORTED; beside
-  them 15 RAISING handlers outside by construction and 2 selftest fixtures; and
-  the artifact's own denominator_reconciles reads TRUE. THAT IS THE POINT AND IT
-  IS WHY ROUND 32'S SWEEP WAS NOT ENOUGH: round 32 scanned for the SHAPES IT HAD
-  THOUGHT OF, and a census with a reconciling denominator scans for the PREDICATE
-  and must account for every site it finds. The map also carries
-  n_stale_adjudications -- 0 at my drive -- SO THE ADJUDICATION MAP CANNOT BECOME
-  WHERE A REAL HIT GOES TO BE FORGOTTEN, and its role field says
-  REPORTED_NOT_ENFORCED and its limits field says the scan is STATIC and that a
-  site whose success path returns a call or a name is UNDECIDABLE, NEVER CLEAN.
-  TWO FURTHER DEFECTS DA FOUND BEYOND ITS BRIEF, AND ONE CARRIES A WARNING I AM
-  RECORDING AS A WARNING. _registry_in_blob RETURNED None -- "absent from this
-  version" -- FOR A BLOB THAT DOES NOT PARSE, so an unparseable version LEFT THE
-  MONOTONICITY WALK SILENTLY and monotone was reported OVER A SMALLER HISTORY
-  AGAIN, BY A SECOND ROUTE THE EARLIER FIX DID NOT CLOSE; it now RAISES
-  BlobUnparseable, and the module's own words are "Same guarantee, same defect,
-  different route." THE WARNING: THE MONOTONICITY GUARANTEE HAS NOW FAILED BY TWO
-  ROUTES FOUND IN ONE DAY, AND IT IS THE PROPERTY THAT MAKES THE USER'S 08-29
-  WITHDRAWAL FROM THE RACE ONE-WAY. WHETHER A THIRD EXISTS IS DISPATCHED TO DA
-  AND OPEN. And _git returned (127, str(e)) where 127 IS A REAL RETURNCODE, so a
-  consumer could not tell "git exited non-zero" from "git was never executed"; it
-  now returns rc None, which is not a returncode, so `rc != 0` still refuses
-  correctly and the distinction is available to a caller that wants it. AND DA'S
-  SENTENCE ABOUT ITS OWN OLD SELFTEST IS THE CLEAREST STATEMENT OF A CLASS THIS
-  PROGRAMME KEEPS HITTING, SO I RECORD IT VERBATIM: the check USED TO ASSERT THE
-  DEFECT -- "an unparseable blob returns None rather than raising: a syntax error
-  somewhere in history must not break the guard" -- and NOT BREAKING THE GUARD IS
-  NOT THE SAME AS EVALUATING IT. The replacement check states the codomain rule
-  in its sharpest form yet: RETURNING None PUT A FACT ABOUT THE READER INSIDE THE
-  CODOMAIN OF A FACT ABOUT THE HISTORY. THE BRACKET IS RELEASED AND PUBLISHED TO
-  THE USER UNDER FOUR CAVEATS, AND NOTHING DERIVED FROM IT IS RELEASED. The
-  caveats: PREVENTABLE POPULATION ONLY; A RANGE AND NEVER A MIDPOINT, btc $79,636
-  to $141,540; NO POOLING WITH eth BECAUSE PRECISION DIFFERS SHARPLY BY COIN;
-  STILL GROSS; and NOT COMPUTABLE FROM HELD ARTIFACTS with the producer re-run
-  named as the fix. NO PROFITABILITY, NO RETURN AND NO IMPROVEMENT IS RELEASED
-  WITH IT -- IT IS A SCALE, NOT A RESULT, and it must never be recorded as one.
-  ONE PROVENANCE NOTE THAT IS MINE: the two bounds appear in NO LANDED ARTIFACT
-  at my read -- not in the register, not in these files, not in RESULTS.md -- so
-  they exist as a coordinator-to-USER publication and a repo reader cannot find
-  them; recorded so the absence is not later mistaken for a withdrawal. AND THE
-  CONTROL THAT MAKES THE BRACKET TRUSTWORTHY, WHICH I DROVE RATHER THAN READ: on
-  a SINGLE-ROW action the bracket COLLAPSES TO EXACT -- upper 10.0, lower 10.0,
-  width 1.0 -- because one window is both bounds. BUT THE MODULE DELIBERATELY
-  DOES NOT COLLAPSE THE MULTI-ROW DISJOINT CASE: three rows spaced BEYOND the
-  horizon with ZERO overlapping pairs still report upper 60.0 against lower 30.0,
-  width 2.0, because -- in its own comment -- "the module cannot know the windows
-  are disjoint without tranche identity". IT NARROWS ONLY WHERE IT CAN PROVE, AND
-  REFUSES TO NARROW ON AN INFERENCE IT CANNOT SUPPORT. That is the reason to
-  trust the width. A COORDINATOR ERROR IS ON THE RECORD AND THE TIMELINE IS
-  VERIFIABLE AT GIT: a review round was dispatched describing DA's fix as LANDED
-  WHILE DA WAS MID-ROUND, and WITH NO PINNED TIP, so the reviewer executed
-  against 7a9e83f -- which is MY OWN round-84 commit at 10:56:19Z -- and DA's fix
-  landed at d96fee5 10:58:20Z, TWO MINUTES AND ONE SECOND LATER, with the row at
-  10:58:54Z and the filing committed 11:00:14Z. SO THE FILING'S HIGH ("DA32-R1 IS
-  NOT FIXED AT THE TIP") WAS TRUE OF THE TIP IT PINNED AND FALSE OF THE TREE BY
-  THE TIME IT LANDED. REVIEW ROUNDS PIN AN EXPLICIT COMMIT FOR EXACTLY THIS
-  REASON. Recorded as the coordinator's error, stated as such, and the reviewer's
-  work is not impeached by it -- IT CHECKED THE INSTRUMENT BEFORE TRUSTING ITS
-  VERDICT ON THE ARMS, WHICH WAS THE RIGHT CALL. STATE: register 496 entries,
-  last R-505; G = 3, three days sealed and unread; 09-04 closes tonight at 00:06Z.
-  USER ITEMS: TWO -- the Phase-2 winner, and the causal incumbent operating point.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -5324,6 +5335,18 @@ flags:
     claim about code kept in a comment drifts from the code without either
     noticing.
   OPEN_three_section_8_1_fields_have_NO_PRODUCER: >-
+    [CORRECTED 2026-09-04T11:41Z (MEM round 88): TWO OF THE THREE ARE BUILDABLE
+    AFTER ALL, AND THIS ENTRY'S HEADLINE IS WRONG AS WRITTEN. DE has corrected
+    itself: spread_capture_cents and maker_pnl_cents ARE BUILDABLE from inputs
+    ALREADY ON EVERY TRANCHE (level, mid_at_fill, shares, side,
+    markout_cents_per_share), NEEDING NO PRODUCER CHANGE AND WORKING ON DAYS
+    ALREADY SEALED. Only inventory_loss_cents has the producer shape -- and even
+    there the producer is the FEED BUILDER over RETAINED RAW CAPTURE, so a
+    re-run reconstructs it for any day whose archive survives. See
+    SECTION_8_1_two_of_three_fields_are_BUILDABLE. The reasons recorded below --
+    each field's `why` from SECTION_8_1_FIELDS -- are accurate about what the
+    REPLAY REPORTS and were read as claims about what its INPUTS SUPPORT, which
+    is DE's own diagnosis of the error.]
     AN OPEN ITEM THAT NEITHER STATE FILE CARRIED UNTIL THIS CONSISTENCY PASS
     FOUND IT MISSING (MEM round 83), and it is recorded because AN OPEN ITEM
     RECORDED AS DONE IS WORSE THAN ONE NOT RECORDED. Read by MEM at
@@ -5797,8 +5820,100 @@ flags:
     ALREADY IN THIS FILE: THE PRACTICE ATTACHES TO PUBLICATION, NOT TO REVIEW
     ROUNDS. AN ADOPTED PRACTICE THAT IS NOT RUN IS INDISTINGUISHABLE FROM ONE
     THAT WAS NEVER ADOPTED.
+  SECTION_8_1_two_of_three_fields_are_BUILDABLE: >-
+    A CORRECTION TO A CLAIM THE COORDINATOR CARRIED TO THE USER AND THAT THESE
+    FILES HAVE CARRIED SINCE ROUND 83. Read by MEM at the artifact
+    (live/pm_research/plans/DE_SECTION81_MISSING_FIELDS_SCOPING.md, committed
+    477c064, 119 lines, opening "No build is proposed and none has been
+    started"). spread_capture_cents AND maker_pnl_cents ARE BUILDABLE FROM INPUTS
+    ALREADY ON EVERY TRANCHE -- level, mid_at_fill, shares, side and
+    markout_cents_per_share -- NEEDING NO PRODUCER CHANGE AND WORKING ON DAYS
+    ALREADY SEALED, "because the fields are in them". The construction is the
+    producer's own formula moved in time: it already computes
+    markout_cents_per_share = sgn * (later - level) * 100, and SPREAD CAPTURE IS
+    THE SAME FORMULA AT THE FILL'S OWN TIME. Cost: one function plus its
+    falsifiers. ONE CAVEAT CARRIED AS A STATUS, NEVER A ZERO: mid_at() returns
+    None before a window's first quote, so NO_MID_AT_FILL is a REAL EXCLUSION and
+    must be COUNTED (rule 4).
+    AND DE'S OWN DIAGNOSIS OF ITS ERROR IS THE PART TO RECORD, BECAUSE IT NAMES A
+    CLASS RATHER THAN AN OVERSIGHT: "the error was that I described what the
+    replay REPORTS rather than checking what its inputs SUPPORT." A CAPABILITY
+    AUDIT THAT READS THE OUTPUT CONTRACT WILL ALWAYS UNDERSTATE THE INPUTS, and
+    this programme has now paid for that once at programme scale.
+  inventory_loss_PRODUCER_SHAPE_but_recoverable: >-
+    THE THIRD FIELD DOES HAVE THE PRODUCER SHAPE -- wf.mid_at() is live inside
+    build_reference's loop and is CALLED TWICE ALREADY, once for mid_at_fill and
+    once for the markout's `later`, while NO WINDOW-END MID IS EVER STORED, so
+    the value exists for the length of one function and is discarded before
+    anything downstream sees it. BUT THE CONSEQUENCE DIFFERS FROM BE'S TRANCHE
+    IDENTITY, AND THAT IS WHAT THE DECISION TURNS ON: BE's tranche identity is
+    discarded inside a producer over CAPTURED data, so sealed days cannot recover
+    it and a fix has a LEAD TIME. THIS PRODUCER IS THE FEED BUILDER, A DERIVATION
+    OVER RETAINED RAW CAPTURE, SO RE-RUNNING IT RECONSTRUCTS THE FIELD FOR ANY
+    DAY WHOSE WINDOW ARCHIVE SURVIVES. NO LEAD TIME, SEALED DAYS NOT LOST, ~28
+    MINUTES FOR THE FULL 471-WINDOW POPULATION (~250 s per 12 windows measured),
+    AND THE BINDING CONSTRAINT IS ARCHIVE RETENTION RATHER THAN COLLECTION. It is
+    a RE-GENERATION rather than a patch, because every existing reference
+    artifact lacks the field. AND IT NEEDS A RULING, NOT A BUILD: WHAT "TERMINAL"
+    MEANS WHEN A WINDOW ENDS IN A GAP -- with a recorded failure to avoid,
+    cross_window_correlation's terminal_mid that DEFAULTED TO EXACTLY 0.5, "a
+    default, not an observation".
+  MATCHED_FLOOR_MAY_BE_UNACHIEVABLE_BY_CONSTRUCTION: >-
+    THE MOST CONSEQUENTIAL THING IN THE PHASE. The reviewer adjudicates P4's
+    20/20 refusal as STRUCTURAL AND NOT A BUDGET SHORTFALL, with both directions
+    of P4 in committed code. THE ARGUMENT: P2 AND P3 REQUIRE THE DRAW TO MATCH
+    THE TREATED ARM'S ABOVE-EVENT MULTISET PER STRATUM, WHILE P4 REQUIRES IT TO
+    MATCH THE REALISED-ACTION COUNT PER STRATUM -- AND UNDER A STATEFUL POLICY,
+    WHERE A HELD SIDE SUPPRESSES LATER CROSSINGS, REALISATION IS A FUNCTION OF
+    THE DRAW'S ORDER, SO THE TWO ARE OVER-DETERMINED: satisfying P2/P3
+    essentially fixes what P4 will be, and it will not in general be the treated
+    arm's number. THE NUMBERS AGREE: treated realises 333 OF 1,154 above-events
+    (28.9%) against the control's 496 (43.0%) on the first seed -- A LARGE
+    ONE-DIRECTIONAL GAP, NOT DISPERSION AROUND A MATCHED TARGET, AND A LARGER
+    BUDGET DOES NOT CLOSE A SYSTEMATIC OFFSET. IF IT HOLDS, VALID_AS_A_CONTROL
+    CAN NEVER BE TRUE FOR THIS CONSTRUCTION AND floor_available FALSE IS A FACT
+    ABOUT THE DESIGN RATHER THAN ABOUT THIS POPULATION -- and it is "not a
+    decision another 20 draws can inform". The reviewer's line: STOP DRAWING AND
+    RULE ON P4; refusing rather than reporting a weaker control was the right
+    call and should not be relaxed.
+  RETRIEVAL_FAILURE_DE36_R3_reached_this_conclusion_on_09_03: >-
+    THE EXPENSIVE PART, AND IT MUST BE RECORDED AS ONE. DE'S OWN DE36-R3 REACHED
+    THIS CONCLUSION ON 2026-09-03 AND WROTE IT DOWN, AND MEM FOUND IT IN THREE
+    PLACES: the register at :19184 (control#2 refusing on set identity,
+    WITHDRAWN); de_phase4_diag_runner.py:1572 ("the frozen text asks for matching
+    on ACTION COUNT ... not on identity -- so control#2 ... is WITHDRAWN
+    (DE36-R3)"); AND, SHARPEST OF ALL, INSIDE THE ASSERTION MESSAGE OF THE VERY
+    CHECK THAT NOW FAILS 20/20, AT :4128-4129 -- "a stateful policy CANNOT BE
+    MADE TO CANCEL EXACTLY THE DRAWN SET -- which is why control#2 is withdrawn
+    (DE36-R3)". SO THE CODE THAT PRODUCES THE 20/20 REFUSAL CARRIES, IN ITS OWN
+    ASSERTION TEXT, THE REASON THE REFUSAL IS STRUCTURAL -- AND ROUND 54
+    ATTRIBUTED IT TO THE BUDGET ANYWAY. A CONCLUSION REACHED, WRITTEN DOWN, AND
+    RE-ENCOUNTERED AS A MYSTERY EIGHTEEN ROUNDS LATER IS A RETRIEVAL FAILURE, NOT
+    AN ANALYSIS FAILURE, AND IT IS THE FAILURE THESE FILES EXIST TO PREVENT.
+  EVIDENCE_DELETED_UNDER_REVIEW_standing_instruction: >-
+    THE ARM EMISSION WAS DELETED WHILE UNDER REVIEW, DESTROYING THE EVIDENCE FOR
+    AN OPEN HIGH (DE53-R1). That is the answer to what MEM observed one round ago
+    -- going to reproduce the coordinator's instrument run on arms53.json and
+    finding the file gone minutes after locating it. IT WAS NOT ATTRITION; IT WAS
+    A DELETION DURING REVIEW. A STANDING INSTRUCTION NOW EXISTS: AN ARTIFACT A
+    FILING CITES IS EVIDENCE, AND IS MOVED ASIDE WITH A TIMESTAMP, NEVER REMOVED.
+  BE37_R1_the_family_artifact_does_not_record_the_ruling: >-
+    VERIFIED BY MEM AT THE ARTIFACT. be_forward_family_declaration_v1.json has
+    as_of_utc 2026-09-03T05:55:57Z, PREDATING THE USER'S FENCE RULING ENTIRELY;
+    the six FROZEN_FROM_A_CONSUMED_DAY cells sit inside declared_cell_count 18
+    and holm_denominator 18; the arm is STILL FILED UNDER
+    open_factors.sensitivity_arm_in_family with who "the USER (rule 14)" and the
+    question "does the FROZEN_FROM_A_CONSUMED_DAY sensitivity arm consume alpha,
+    or is it reported outside the family?" -- WHICH IS NOT THE QUESTION THE USER
+    RULED; and THERE IS NO `ruled` BLOCK (MEM checked). SO A READER OPENING IT
+    TODAY SEES SIX UNFILLABLE CELLS IN A DENOMINATOR OF 18 BESIDE AN UNANSWERED
+    QUESTION ADDRESSED TO THE USER, AND BOTH LIKELY READINGS ARE WRONG -- that
+    the gap is still to be filled, or that the fence should be widened to fill it.
+    THE COORDINATOR'S OWN TEST IS THE RIGHT ONE: "conservative, but only if a
+    reader can tell it was decided", AND TODAY THEY CANNOT. CONSERVATIVE AND
+    LEGIBLE IS THE WHOLE POINT; RIGHT NOW IT IS ONLY CONSERVATIVE.
 focus: >
-  As-of 2026-09-04T11:30Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T11:41Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -6160,7 +6275,22 @@ focus: >
   scratchpad, so nothing from that run may be quoted; DE 55 names the producer
   and a RE-EMISSION IS REQUIRED. AND THE PROVENANCE CENSUS IS TWICE-BOUGHT: it
   was adopted this morning and NOT applied to the arms, which is how the
-  contradiction reached the USER.
+  contradiction reached the USER. ROUND 88 -- A CORRECTION: TWO OF THE THREE
+  SECTION 8.1 FIELDS ARE BUILDABLE AFTER ALL (spread_capture_cents and
+  maker_pnl_cents, from inputs already on every tranche, no producer change, on
+  days ALREADY SEALED), and DE's diagnosis of its own error names the class --
+  IT DESCRIBED WHAT THE REPLAY REPORTS RATHER THAN WHAT ITS INPUTS SUPPORT. The
+  third has the producer shape but the producer is the FEED BUILDER over RETAINED
+  RAW CAPTURE, so a ~28-minute re-run reconstructs it for any day whose archive
+  survives -- the binding constraint is ARCHIVE RETENTION, not collection -- and
+  it needs a RULING on what "terminal" means at a gap. AND THE MATCHED FLOOR MAY
+  BE UNACHIEVABLE BY CONSTRUCTION: P4's 20/20 is STRUCTURAL, because P2/P3 match
+  the above-event multiset while P4 matches the REALISED count and realisation is
+  a function of the draw's ORDER -- 333 of 1,154 against 496, one-directional, no
+  budget closes it. If it holds, VALID_AS_A_CONTROL can NEVER be True for this
+  construction. AND DE36-R3 REACHED THAT CONCLUSION ON 09-03 AND WROTE IT INTO
+  THE ASSERTION MESSAGE OF THE VERY CHECK THAT NOW FAILS 20/20 -- a RETRIEVAL
+  failure, not an analysis failure.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,

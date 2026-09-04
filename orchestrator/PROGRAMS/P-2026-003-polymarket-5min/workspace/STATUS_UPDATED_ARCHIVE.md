@@ -6550,3 +6550,93 @@ readings and the arm emission's provenance. Join rule as in batch 1.
   ITEMS: TWO -- the Phase-2 winner, and the causal incumbent operating point,
   which BE CORRECTLY REFUSED TO CHOOSE AFTER SEEING TODAY'S NUMBERS.
 ```
+
+## Batch 94 — archived 2026-09-04T11:41Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-88 true-up of DE's §8.1 scoping correction, the reviewer's
+P4 structural adjudication and BE37-R1. Join rule as in batch 1.
+
+```yaml
+  2026-09-04T11:06Z (MEM ROUND 85 -- THE PREDICATE GOT A DENOMINATOR, AND THE
+  ONE-WAY GUARANTEE FAILED BY A SECOND ROUTE). DA rounds 33/34, the arms-preflight
+  filing and the bracket's release swept; nothing run but read-only reads and
+  TWO read-only drives of my own. DA ROUND 34 CLOSED THE HIGH AT THE SOURCE AND I
+  VERIFIED IT THERE: _hash_score_matches is now typed `bool | None` (:242) with
+  "None = unknown" in its own signature, and its docstring states the defect in
+  full -- IT RETURNED False FOR A ROW IT COULD NOT EVALUATE, AND False IS THE
+  VERDICT "THIS SCORE IS GENUINE", so a missing key, a non-numeric score, a
+  non-integer gen or a row that is not a mapping ALL LANDED ON "judged, and it did
+  not come from the hash", stub_or_real counted them into n_reproduced == 0, read
+  NO_SCORE_REPRODUCED_FROM_IDENTIFIERS and concluded REAL_EVIDENCED. THE STUB
+  DETECTOR WOULD HAVE CERTIFIED THE OUTPUT AS REAL, IN THE INSTRUMENT BUILT TO
+  CATCH STUBS, DAYS BEFORE THE ARMS RE-RUN WITH REAL HEADS. Now unevaluable LEAVES
+  THE CODOMAIN with a named reason (_why_unevaluable, counted into
+  unevaluable_reasons) AND REAL_EVIDENCED IS REACHABLE ONLY OVER A BATCH WITH ZERO
+  UNEVALUABLE ROWS -- the module's own field says it: "an unevaluable row claims
+  NEITHER direction ... unevaluable rows can reach REAL_EVIDENCED" is exactly what
+  is now forbidden. AND THE THING THAT MAKES THIS A PRACTICE RATHER THAN A HUNT IS
+  THE DENOMINATOR. I DROVE codomain_census() MYSELF AND EVERY FIGURE RECONCILES:
+  26 VALUE-YIELDING except SITES ACROSS 12 INSTRUMENTS = 22 OUTSIDE THE CODOMAIN
+  AND CORRECT + 3 IN-CODOMAIN, ALL THREE ADJUDICATED IN SOURCE WITH WRITTEN
+  REASONS (n_in_codomain_UNADJUDICATED 0) + 1 UNDECIDABLE AND REPORTED; beside
+  them 15 RAISING handlers outside by construction and 2 selftest fixtures; and
+  the artifact's own denominator_reconciles reads TRUE. THAT IS THE POINT AND IT
+  IS WHY ROUND 32'S SWEEP WAS NOT ENOUGH: round 32 scanned for the SHAPES IT HAD
+  THOUGHT OF, and a census with a reconciling denominator scans for the PREDICATE
+  and must account for every site it finds. The map also carries
+  n_stale_adjudications -- 0 at my drive -- SO THE ADJUDICATION MAP CANNOT BECOME
+  WHERE A REAL HIT GOES TO BE FORGOTTEN, and its role field says
+  REPORTED_NOT_ENFORCED and its limits field says the scan is STATIC and that a
+  site whose success path returns a call or a name is UNDECIDABLE, NEVER CLEAN.
+  TWO FURTHER DEFECTS DA FOUND BEYOND ITS BRIEF, AND ONE CARRIES A WARNING I AM
+  RECORDING AS A WARNING. _registry_in_blob RETURNED None -- "absent from this
+  version" -- FOR A BLOB THAT DOES NOT PARSE, so an unparseable version LEFT THE
+  MONOTONICITY WALK SILENTLY and monotone was reported OVER A SMALLER HISTORY
+  AGAIN, BY A SECOND ROUTE THE EARLIER FIX DID NOT CLOSE; it now RAISES
+  BlobUnparseable, and the module's own words are "Same guarantee, same defect,
+  different route." THE WARNING: THE MONOTONICITY GUARANTEE HAS NOW FAILED BY TWO
+  ROUTES FOUND IN ONE DAY, AND IT IS THE PROPERTY THAT MAKES THE USER'S 08-29
+  WITHDRAWAL FROM THE RACE ONE-WAY. WHETHER A THIRD EXISTS IS DISPATCHED TO DA
+  AND OPEN. And _git returned (127, str(e)) where 127 IS A REAL RETURNCODE, so a
+  consumer could not tell "git exited non-zero" from "git was never executed"; it
+  now returns rc None, which is not a returncode, so `rc != 0` still refuses
+  correctly and the distinction is available to a caller that wants it. AND DA'S
+  SENTENCE ABOUT ITS OWN OLD SELFTEST IS THE CLEAREST STATEMENT OF A CLASS THIS
+  PROGRAMME KEEPS HITTING, SO I RECORD IT VERBATIM: the check USED TO ASSERT THE
+  DEFECT -- "an unparseable blob returns None rather than raising: a syntax error
+  somewhere in history must not break the guard" -- and NOT BREAKING THE GUARD IS
+  NOT THE SAME AS EVALUATING IT. The replacement check states the codomain rule
+  in its sharpest form yet: RETURNING None PUT A FACT ABOUT THE READER INSIDE THE
+  CODOMAIN OF A FACT ABOUT THE HISTORY. THE BRACKET IS RELEASED AND PUBLISHED TO
+  THE USER UNDER FOUR CAVEATS, AND NOTHING DERIVED FROM IT IS RELEASED. The
+  caveats: PREVENTABLE POPULATION ONLY; A RANGE AND NEVER A MIDPOINT, btc $79,636
+  to $141,540; NO POOLING WITH eth BECAUSE PRECISION DIFFERS SHARPLY BY COIN;
+  STILL GROSS; and NOT COMPUTABLE FROM HELD ARTIFACTS with the producer re-run
+  named as the fix. NO PROFITABILITY, NO RETURN AND NO IMPROVEMENT IS RELEASED
+  WITH IT -- IT IS A SCALE, NOT A RESULT, and it must never be recorded as one.
+  ONE PROVENANCE NOTE THAT IS MINE: the two bounds appear in NO LANDED ARTIFACT
+  at my read -- not in the register, not in these files, not in RESULTS.md -- so
+  they exist as a coordinator-to-USER publication and a repo reader cannot find
+  them; recorded so the absence is not later mistaken for a withdrawal. AND THE
+  CONTROL THAT MAKES THE BRACKET TRUSTWORTHY, WHICH I DROVE RATHER THAN READ: on
+  a SINGLE-ROW action the bracket COLLAPSES TO EXACT -- upper 10.0, lower 10.0,
+  width 1.0 -- because one window is both bounds. BUT THE MODULE DELIBERATELY
+  DOES NOT COLLAPSE THE MULTI-ROW DISJOINT CASE: three rows spaced BEYOND the
+  horizon with ZERO overlapping pairs still report upper 60.0 against lower 30.0,
+  width 2.0, because -- in its own comment -- "the module cannot know the windows
+  are disjoint without tranche identity". IT NARROWS ONLY WHERE IT CAN PROVE, AND
+  REFUSES TO NARROW ON AN INFERENCE IT CANNOT SUPPORT. That is the reason to
+  trust the width. A COORDINATOR ERROR IS ON THE RECORD AND THE TIMELINE IS
+  VERIFIABLE AT GIT: a review round was dispatched describing DA's fix as LANDED
+  WHILE DA WAS MID-ROUND, and WITH NO PINNED TIP, so the reviewer executed
+  against 7a9e83f -- which is MY OWN round-84 commit at 10:56:19Z -- and DA's fix
+  landed at d96fee5 10:58:20Z, TWO MINUTES AND ONE SECOND LATER, with the row at
+  10:58:54Z and the filing committed 11:00:14Z. SO THE FILING'S HIGH ("DA32-R1 IS
+  NOT FIXED AT THE TIP") WAS TRUE OF THE TIP IT PINNED AND FALSE OF THE TREE BY
+  THE TIME IT LANDED. REVIEW ROUNDS PIN AN EXPLICIT COMMIT FOR EXACTLY THIS
+  REASON. Recorded as the coordinator's error, stated as such, and the reviewer's
+  work is not impeached by it -- IT CHECKED THE INSTRUMENT BEFORE TRUSTING ITS
+  VERDICT ON THE ARMS, WHICH WAS THE RIGHT CALL. STATE: register 496 entries,
+  last R-505; G = 3, three days sealed and unread; 09-04 closes tonight at 00:06Z.
+  USER ITEMS: TWO -- the Phase-2 winner, and the causal incumbent operating point.
+```
