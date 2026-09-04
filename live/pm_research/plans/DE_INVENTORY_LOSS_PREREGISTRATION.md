@@ -281,3 +281,28 @@ Held-out windows. 12 windows, 3 of which carry the leg, cannot separate
 "cancelling avoids adverse residuals" — a mechanism now **refuted at the
 baseline** — from "the flipped position happened to be on the right side
 in this fragment."
+
+---
+
+## Correction 1 — my own ordering, corrected against my own table (DE60)
+
+I wrote **"the actionable lever is a cancel that does not cascade"** in
+two round summaries. **My own emitted numbers said otherwise and I did
+not read them.** DA caught it; the coordinator had already carried the
+wrong ordering onward.
+
+| | spread across the arms |
+|---|---|
+| selectivity | **5.6453** |
+| cascade | 1.9399 |
+
+**Selectivity dominates by 2.910×.** The correct ordering is **cheap
+fills first, few fills second** — the arms are separated far more by
+*which* fills they decline than by *how many* each cancel costs. HAZARD
+is the better ranker on **both** factors (selectivity 0.0589 vs 0.3324;
+cascade 1.995 vs 3.869), which the "cascade is the lever" framing hid
+entirely.
+
+This is now `cancel_mechanics.separation`: both spreads, the dominant
+factor and the ordering string are **computed and emitted**. A ratio
+nobody computes is a ratio prose will invert, and mine did, twice.
