@@ -1,6 +1,64 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T13:37Z (MEM round 96) — **R-523 TURNS THE NEGATIVE RESULT
+Updated: 2026-09-04T13:51Z (MEM round 97) — **STATE ONLY. The economics now live
+in `workspace/RESULTS.md` §0 — the coordinator's file — and these files point at
+it rather than duplicating it.**
+
+### The finding of the day is not a number
+
+**No value ceiling has ever been computed in either programme.** Searched across
+`live/pm_research/` (entire) and `live/mm_research/` (**all 11 files**), both
+registers, both `RESULTS.md`, on the full vocabulary **and separately on the
+shape rather than the words** — **P-2026-002 returns zero hits across all 11
+files**; both registers and both `RESULTS.md` return zero; and the four `v < 0`
+sites all **count** negative windows **without summing them**.
+
+**The one exception sharpens it:** `skew_bound.py` **is** a real ceiling, for the
+**skew** lever, built well. **So this programme knows how to build a ceiling and
+spent months on the cancellation lever without building one** — *"not a
+capability gap, a gap in what got asked."* **And it has been a filter and a sum
+for ten days:** `markout_cents_per_share` at `harmful_exposure_rows.py:309-313`
+**is** the per-fill P&L and has existed since **2026-08-25 08:21**, so `V_oracle`
+was computable on day one and **would have bounded the whole overlay case before
+any ranker was fitted.**
+
+**`V_oracle` replaces `r`, which is refuted as a survey statistic** — three books
+holding N, total spread and total P&L exactly (so `r` is identical) have overlay
+ceilings of **0.00%, 10.61%, 21.66%**. **The survey is the live decision path:
+`V_oracle ≈ 0` closes the overlay line because NO POLICY COULD HAVE PAID** — a
+different and better reason than *"this policy did not"*. It touches **no sealed
+day**. **Watch-out recorded:** a non-zero `V_oracle` does **not** open the line;
+it only puts the ceiling above zero.
+
+### Four of my own flags superseded in band — text kept as provenance, never edited away
+
+| flag | why |
+|---|---|
+| the **r-threshold** flag | `r` refuted as a survey statistic; **σ/α is per-book, not a constant** |
+| the **43-fill-tail** flag | the bound **does not weaken, it FLIPS** — de-tailing must be symmetric by \|P&L\|, so winner-ranked **r_ex ≥ 110.58%** becomes extreme-ranked **r_ex ≤ 26.76%**, *below* CONDVALUE's 27.60% break-even; same book reads **1.1077 / 0.2504 / 0.1863**. **And the premise fails too** — the concentration sits **inside a no-tail Gaussian null's 90% band**, so it measures **dispersion**, not tail-dependence |
+| the **cascade-lever** flag | **misnamed** — the arms differ 10.95×, splitting as **per-fill cost 5.643× and cascade 1.940×**: **cheap fills first, few fills second** |
+| the **provenance-defect** flag | **RESOLVED** — re-emitted from a clean tree on the branch, 7/7 identity files matching, **26 of 26 economic quantities bit-identical**: **the defect was the record, not the result** |
+
+### The inventory leg, as state rather than as a result
+
+**The pre-registered prediction resolved badly for the model even though the sign
+came out right.** **P1 was refuted by its author's own falsifier** — the baseline
+inventory leg is **+8,587.54c**, as large as the whole fills leg, where DE
+predicted negative — and **P4 was confirmed through a mechanism that does not
+exist**, P2/P4 having been derived from P1's adverse-residual mechanism when
+there is no adverse residual. *"A right sign from a wrong model is not a confirmed
+prediction."*
+
+**Both legs turn CONDVALUE from −953.92c to +2,394.40c and it must not be
+banked:** three of twelve windows carry **81.4%** of the inventory leg, one
+gap-ended window carries **28%** of the baseline leg, **the cluster unit for that
+leg is twelve, not 4,315**, and the route is a **directional bet** (terminal net
+**flips** +146.74 → −147.28) that **DE pre-committed to distrusting**.
+
+**Instrument:** 494 flags, **21 CHECKED**, 16 RELAYED, 457 UNMARKED, 0 findings.
+
+
+Previously (MEM round 96) — 2026-09-04T13:37Z — **R-523 TURNS THE NEGATIVE RESULT
 INTO A SPECIFICATION. This changes what the programme is for.**
 
 ### The threshold — recomputed here, not relayed
@@ -775,6 +833,25 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T13:51Z — MEM round 97: state only; the economics live in RESULTS.md §0
+>
+> **The numbers are in `workspace/RESULTS.md` §0 (the coordinator's file). These
+> files carry the STATE and point at it.** **The finding of the day is not a
+> number: no value ceiling has ever been computed in either programme** — zero
+> hits across all 11 P-2026-002 files, both registers, both `RESULTS.md`, on
+> vocabulary **and** on shape; the four `v < 0` sites **count** without
+> **summing**. `skew_bound.py` shows the programme knows how; **`V_oracle` has
+> been a filter and a sum since 2026-08-25**. **`V_oracle` replaces `r`** (refuted
+> as a survey statistic) and **the survey is the live decision path** —
+> `V_oracle ≈ 0` closes the overlay line **because no policy could have paid**.
+> **Four of my flags superseded in band**, text kept: r-threshold, 43-fill-tail
+> (**the bound FLIPS** to r_ex ≤ 26.76%, below break-even), cascade-lever (**cheap
+> fills first, few fills second**), provenance-defect (**RESOLVED** — 26/26
+> bit-identical). **The inventory reversal is not bankable.**
+>
+> ---
+
 
 > ### 2026-09-04T13:37Z — MEM round 96: the negative result is now a specification
 >

@@ -7414,3 +7414,56 @@ Nothing deleted — only moved.
   direction. INSTRUMENT: 474 flags, 11 CHECKED, 6 RELAYED, 457 UNMARKED, 0
   findings.
 ```
+
+## Batch 103 — archived 2026-09-04T13:51Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 97 entered the field.
+Nothing deleted — only moved.
+
+```
+  2026-09-04T13:14Z (MEM ROUND 94 -- SHORT. A WITHDRAWAL OF A COORDINATOR RULING
+  I RECORDED TWO ROUNDS AGO, AND THE ECONOMIC NUMBER IS NOW VERIFIED.)
+  FIRST, A CORRECTION IN BAND TO WHAT THIS FIELD SAID ONE ROUND AGO (rule 13):
+  R-516(C)'s GRID AMENDMENT IS WITHDRAWN AT R-518 AND THE COORDINATOR WITHDREW
+  ITS OWN RULING. My round-92 files carried it as a clean pre-draw declaration.
+  It was wrong THREE WAYS, ALL FOUND BEFORE A SINGLE DRAW. I CHECKED THE FIRST
+  MYSELF: arrival_n is 177,674, so budgets of 5/10/15% are 8,883 / 17,767 /
+  26,651 against a preventable pool of 17,604 -- 163 SHORT AT 10% AND 9,047 SHORT
+  AT 15%, share 0.09908. RELAYED: where it cannot supply the budget the draw is a
+  POINT MASS with p = 1/(n+1) BY CONSTRUCTION -- a floor manufactured by the
+  design; at 5% it is 2.4-3.8x EASIER to beat because the preventable
+  population's mean is NEGATIVE; and THE ONE NOBODY SAW, it would have moved the
+  HOLM DENOMINATOR FROM 24 TO 30 AND RETROSPECTIVELY KILLED Q1 AND Q3, this
+  artifact's ONLY surviving results. UNRESTRICTED ADJUDICATES, THE DENOMINATOR
+  STAYS 24, and everything else is REPORTED-NOT-ADJUDICATED under R-306's
+  COIN_SLICE pattern. AND THE TRANSFERABLE REASON, WHICH IS THE PART WORTH
+  KEEPING: OPPORTUNITY-MATCHING SHARPENS A TEST ONLY WHEN THE RESTRICTED
+  POPULATION HAS POSITIVE EXPECTED VALUE. Here membership is itself a handicap --
+  conditional_cancel_value -1.6364c, which I checked in round 90 -- so a uniform
+  draw INSIDE the preventable set is a WORSE policy than a uniform draw over
+  everything: 90.1% of everything is harmless zeros AND ZERO BEATS -1.64. The
+  restriction LOWERS the bar it was meant to raise.
+  SECOND: THE ECONOMIC NUMBER IS VERIFIED AND MY FLAG IS UPGRADED FROM RELAYED TO
+  CHECKED. R-519: DA verified it AT THE ARTIFACT and the HEADLINE STANDS --
+  MARKET-MAKING PAYS, CANCELLING DOES NOT, fills leg, 12 windows, point estimate
+  no interval -- with THREE DESCRIPTIONS CORRECTED AND NO NUMBER TOUCHED. THAT IS
+  A SECOND OBSERVATION AND NOT AN AGREEMENT (R-510(B)(3)): a verification that
+  refuses three descriptions while upholding every figure is what a real one
+  looks like. THE CORRECTION THAT MATTERS FOR THESE FILES: the reconciliation is
+  an EQUALITY EVERYWHERE, not "equality at the 0-cancel arm and directional
+  elsewhere", because BOTH SIDES ARE OVER THE ARM'S OWN FILLS -- and the cause is
+  that reference_tranche_markout_cents HOLDS THE ARM'S MARKOUT, A QUANTITY
+  WEARING ANOTHER'S NAME. THAT IS NOW A CLASS, SECOND INSTANCE AFTER
+  control_realised_min/max (R-511(D)(i)), AND NO CHECKER THIS PROGRAMME HAS CAN
+  CATCH IT: the value is in-codomain, the citation resolves, the arithmetic is
+  right, and ONLY THE NAME LIES. AND ONE LINE THAT ANSWERS THE CORROBORATION
+  QUESTION I RAISED LAST ROUND: maker_pnl_cents == post_fill_markout_cents is NOT
+  exact -- they differ by ~4e-12 FROM TWO DIFFERENT PRODUCERS -- and THAT IS
+  BETTER EVIDENCE THAN BIT-IDENTITY, because identical bits are consistent with
+  COPYING while float-noise agreement can only come from two independent
+  computations. The signature of independence is agreement TO TOLERANCE, not to
+  the bit. STANDING RULE 11 (a verification you performed yourself outranks a
+  seat's report; adjudicate at the artifact) WAS ALREADY RECORDED IN ROUND 92 AND
+  IS NOT DUPLICATED HERE. INSTRUMENT: 478 flags, 13 CHECKED, 8 RELAYED, 457
+  UNMARKED, 0 findings.
+```

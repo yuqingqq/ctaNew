@@ -4,6 +4,60 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T13:51Z (MEM ROUND 97 -- STATE ONLY. THE ECONOMICS NOW LIVE IN
+  workspace/RESULTS.md SECTION 0, WHICH IS THE COORDINATOR'S, AND THESE FILES
+  POINT AT IT RATHER THAN DUPLICATING IT.) THE FINDING OF THE DAY IS NOT A
+  NUMBER: NO VALUE CEILING HAS EVER BEEN COMPUTED IN EITHER PROGRAMME. Searched
+  across live/pm_research entire and live/mm_research ALL 11 FILES, both
+  registers, both RESULTS.md, on the full vocabulary AND separately ON THE SHAPE
+  RATHER THAN THE WORDS -- P-2026-002 returns ZERO HITS ACROSS ALL 11 FILES, both
+  registers and both RESULTS.md return zero, and the four `v < 0` sites all COUNT
+  negative windows WITHOUT SUMMING THEM. THE ONE EXCEPTION SHARPENS IT:
+  skew_bound.py IS a real ceiling, for the SKEW lever, built well. SO THIS
+  PROGRAMME KNOWS HOW TO BUILD A CEILING AND SPENT MONTHS ON THE CANCELLATION
+  LEVER WITHOUT BUILDING ONE -- "not a capability gap, a gap in what got asked" --
+  AND IT HAS BEEN A FILTER AND A SUM FOR TEN DAYS: markout_cents_per_share at
+  harmful_exposure_rows.py:309-313 IS the per-fill P&L and has existed since
+  2026-08-25 08:21, so V_oracle WAS COMPUTABLE ON DAY ONE AND WOULD HAVE BOUNDED
+  THE WHOLE OVERLAY CASE BEFORE ANY RANKER WAS FITTED.
+  V_oracle -- the sum of |P&L| over fills whose P&L is NEGATIVE, one filter and
+  one sum -- REPLACES r, WHICH IS REFUTED AS A SURVEY STATISTIC (three books
+  holding N, total spread and total P&L exactly, so r is identical, have overlay
+  ceilings of 0.00%, 10.61% and 21.66%). THE SURVEY IS THE LIVE DECISION PATH: A
+  DISTRIBUTION WHERE V_oracle ~ 0 CLOSES THE OVERLAY LINE BECAUSE NO POLICY COULD
+  HAVE PAID -- a DIFFERENT AND BETTER REASON than "this policy did not". It runs
+  over the admissible development window and TOUCHES NO SEALED DAY. WATCH-OUT
+  RECORDED: a NON-zero V_oracle does NOT open the line, it only puts the ceiling
+  above zero.
+  FOUR OF MY OWN FLAGS ARE SUPERSEDED IN BAND THIS ROUND, TEXT KEPT AS
+  PROVENANCE, NEVER EDITED AWAY. (i) THE r-THRESHOLD FLAG -- r is refuted as a
+  survey statistic; sigma/alpha is a PER-BOOK quantity, not a constant, and the
+  per-book arithmetic still holds only for this book. (ii) THE 43-FILL-TAIL FLAG
+  -- the "99% clears break-even fourfold" bound DOES NOT WEAKEN, IT FLIPS:
+  de-tailing must be SYMMETRIC by |P&L|, and winner-ranked r_ex >= 110.58% becomes
+  extreme-ranked r_ex <= 26.76%, BELOW CONDVALUE's 27.60% break-even; the same
+  book reads 1.1077 / 0.2504 / 0.1863. AND THE PREMISE UNDER IT ALSO FAILS: the
+  concentration sits INSIDE a no-tail Gaussian null's 90% band, so it measures
+  DISPERSION, not tail-dependence. (iii) THE CASCADE-LEVER FLAG -- misnamed: the
+  arms differ 10.95x, splitting as PER-FILL COST 5.643x and CASCADE 1.940x, so it
+  is CHEAP FILLS FIRST, FEW FILLS SECOND. (iv) THE PROVENANCE-DEFECT FLAG --
+  RESOLVED: re-emitted from a clean tree on the branch, 7/7 identity files
+  matching, and 26 OF 26 ECONOMIC QUANTITIES BIT-IDENTICAL, SO THE DEFECT WAS THE
+  RECORD AND NOT THE RESULT.
+  AND THE INVENTORY LEG, AS STATE RATHER THAN AS A RESULT: the pre-registered
+  prediction RESOLVED BADLY FOR THE MODEL EVEN THOUGH THE SIGN CAME OUT RIGHT --
+  P1 REFUTED BY ITS AUTHOR'S OWN FALSIFIER (the baseline leg is +8,587.54c, as
+  large as the whole fills leg, where DE predicted negative) and P4 CONFIRMED
+  THROUGH A MECHANISM THAT DOES NOT EXIST, P2/P4 having been derived from P1's
+  adverse-residual mechanism when there is no adverse residual. "A right sign from
+  a wrong model is not a confirmed prediction." BOTH LEGS TURN CONDVALUE FROM
+  -953.92c TO +2,394.40c AND IT MUST NOT BE BANKED: three of twelve windows carry
+  81.4% of the inventory leg, one gap-ended window carries 28% of the baseline
+  leg, the cluster unit for that leg is TWELVE not 4,315, and the route is a
+  DIRECTIONAL BET (terminal net FLIPS +146.74 -> -147.28) THAT DE PRE-COMMITTED TO
+  DISTRUSTING. INSTRUMENT: 494 flags, 21 CHECKED, 16 RELAYED, 457 UNMARKED, 0
+  findings.
+  PRIOR:
   2026-09-04T13:37Z (MEM ROUND 96 -- R-523 TURNS THE NEGATIVE RESULT INTO A
   SPECIFICATION, AND IT CHANGES WHAT THE PROGRAMME IS FOR.) THE THRESHOLD, AND I
   RECOMPUTED ALL OF IT: AN OVERLAY PAYS IFF r = adverse/spread >= sigma/alpha,
@@ -105,52 +159,6 @@ updated: >-
   FOUR independent reproductions, that MARKET-MAKING PAYS ON THIS HOUR, and that
   THE RANKER SELECTS CORRECTLY ON BOTH AXES. INSTRUMENT: 484 flags, 16 CHECKED,
   11 RELAYED, 457 UNMARKED, 0 findings.
-  PRIOR:
-  2026-09-04T13:14Z (MEM ROUND 94 -- SHORT. A WITHDRAWAL OF A COORDINATOR RULING
-  I RECORDED TWO ROUNDS AGO, AND THE ECONOMIC NUMBER IS NOW VERIFIED.)
-  FIRST, A CORRECTION IN BAND TO WHAT THIS FIELD SAID ONE ROUND AGO (rule 13):
-  R-516(C)'s GRID AMENDMENT IS WITHDRAWN AT R-518 AND THE COORDINATOR WITHDREW
-  ITS OWN RULING. My round-92 files carried it as a clean pre-draw declaration.
-  It was wrong THREE WAYS, ALL FOUND BEFORE A SINGLE DRAW. I CHECKED THE FIRST
-  MYSELF: arrival_n is 177,674, so budgets of 5/10/15% are 8,883 / 17,767 /
-  26,651 against a preventable pool of 17,604 -- 163 SHORT AT 10% AND 9,047 SHORT
-  AT 15%, share 0.09908. RELAYED: where it cannot supply the budget the draw is a
-  POINT MASS with p = 1/(n+1) BY CONSTRUCTION -- a floor manufactured by the
-  design; at 5% it is 2.4-3.8x EASIER to beat because the preventable
-  population's mean is NEGATIVE; and THE ONE NOBODY SAW, it would have moved the
-  HOLM DENOMINATOR FROM 24 TO 30 AND RETROSPECTIVELY KILLED Q1 AND Q3, this
-  artifact's ONLY surviving results. UNRESTRICTED ADJUDICATES, THE DENOMINATOR
-  STAYS 24, and everything else is REPORTED-NOT-ADJUDICATED under R-306's
-  COIN_SLICE pattern. AND THE TRANSFERABLE REASON, WHICH IS THE PART WORTH
-  KEEPING: OPPORTUNITY-MATCHING SHARPENS A TEST ONLY WHEN THE RESTRICTED
-  POPULATION HAS POSITIVE EXPECTED VALUE. Here membership is itself a handicap --
-  conditional_cancel_value -1.6364c, which I checked in round 90 -- so a uniform
-  draw INSIDE the preventable set is a WORSE policy than a uniform draw over
-  everything: 90.1% of everything is harmless zeros AND ZERO BEATS -1.64. The
-  restriction LOWERS the bar it was meant to raise.
-  SECOND: THE ECONOMIC NUMBER IS VERIFIED AND MY FLAG IS UPGRADED FROM RELAYED TO
-  CHECKED. R-519: DA verified it AT THE ARTIFACT and the HEADLINE STANDS --
-  MARKET-MAKING PAYS, CANCELLING DOES NOT, fills leg, 12 windows, point estimate
-  no interval -- with THREE DESCRIPTIONS CORRECTED AND NO NUMBER TOUCHED. THAT IS
-  A SECOND OBSERVATION AND NOT AN AGREEMENT (R-510(B)(3)): a verification that
-  refuses three descriptions while upholding every figure is what a real one
-  looks like. THE CORRECTION THAT MATTERS FOR THESE FILES: the reconciliation is
-  an EQUALITY EVERYWHERE, not "equality at the 0-cancel arm and directional
-  elsewhere", because BOTH SIDES ARE OVER THE ARM'S OWN FILLS -- and the cause is
-  that reference_tranche_markout_cents HOLDS THE ARM'S MARKOUT, A QUANTITY
-  WEARING ANOTHER'S NAME. THAT IS NOW A CLASS, SECOND INSTANCE AFTER
-  control_realised_min/max (R-511(D)(i)), AND NO CHECKER THIS PROGRAMME HAS CAN
-  CATCH IT: the value is in-codomain, the citation resolves, the arithmetic is
-  right, and ONLY THE NAME LIES. AND ONE LINE THAT ANSWERS THE CORROBORATION
-  QUESTION I RAISED LAST ROUND: maker_pnl_cents == post_fill_markout_cents is NOT
-  exact -- they differ by ~4e-12 FROM TWO DIFFERENT PRODUCERS -- and THAT IS
-  BETTER EVIDENCE THAN BIT-IDENTITY, because identical bits are consistent with
-  COPYING while float-noise agreement can only come from two independent
-  computations. The signature of independence is agreement TO TOLERANCE, not to
-  the bit. STANDING RULE 11 (a verification you performed yourself outranks a
-  seat's report; adjudicate at the artifact) WAS ALREADY RECORDED IN ROUND 92 AND
-  IS NOT DUPLICATED HERE. INSTRUMENT: 478 flags, 13 CHECKED, 8 RELAYED, 457
-  UNMARKED, 0 findings.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -6594,6 +6602,14 @@ flags:
     over the arm's own fills, so it IS an equality everywhere.
 
   THE_OVERLAY_THRESHOLD_r_ge_sigma_over_alpha_HAZARD_IS_6_7_PERCENT_AWAY: >-
+    SUPERSEDED 2026-09-04T13:51Z (round 97), TEXT KEPT AS PROVENANCE. r IS
+    REFUTED AS A SURVEY STATISTIC: three books holding N, total spread and
+    total P&L exactly -- so r is identical at 18.6259% -- have overlay ceilings
+    of 0.00%, 10.61% and 21.66%. sigma/alpha is a PER-BOOK quantity, not a
+    constant, and a ratio of totals discards the joint distribution of
+    (spread, adverse) that decides the question. THE REPLACEMENT IS V_oracle.
+    The per-book arithmetic below still holds FOR THIS BOOK. Authority:
+    workspace/RESULTS.md section 0. ORIGINAL TEXT FOLLOWS.
     CHECKED BY ME -- I recomputed every figure below rather than relaying it.
     THE NEGATIVE RESULT IS NOW A SPECIFICATION (R-523). AN OVERLAY PAYS IFF
     r = adverse/spread >= sigma/alpha, MEASURED PER LOST FILL, where alpha is the
@@ -6606,6 +6622,17 @@ flags:
     FINDINGS AND ONLY THE SECOND IS ACTIONABLE. alpha and sigma are the R-521
     selection ratios under their proper names.
   THE_43_FILL_TAIL_and_why_NEITHER_FIGURE_ALONE_IS_THE_SPECIFICATION: >-
+    SUPERSEDED 2026-09-04T13:51Z (round 97), TEXT KEPT AS PROVENANCE. THE
+    "99% CLEARS BREAK-EVEN FOURFOLD" BOUND IS WITHDRAWN AND IT DOES NOT WEAKEN,
+    IT FLIPS: de-tailing must be SYMMETRIC by |P&L|, and ranking by SIGNED net
+    removes only the GOOD outliers, which is selection. Same algebra, opposite
+    direction -- winner-ranked r_ex >= 110.58% becomes extreme-ranked
+    r_ex <= 26.76%, BELOW CONDVALUE's 27.60% break-even. Body r reads 1.1077 /
+    0.2504 / 0.1863 on the SAME BOOK. The reviewer withdrew it as "wrong
+    ranking and wrong statistic". AND THE PREMISE UNDER IT ALSO FAILS: the
+    concentration sits INSIDE a no-tail Gaussian null's 90% band, so it
+    measures DISPERSION, not tail-dependence. Authority:
+    workspace/RESULTS.md section 0. ORIGINAL TEXT FOLLOWS.
     CHECKED BY ME for the arithmetic; the >=110.58% hard bound is RELAYED.
     18.6259% IS A RATIO OF TWO TOTALS OF WHICH ONE IS 43 FILLS (1% of 4,315 is
     43.15). Excluding the top 1%, r >= 110.58% AS A HARD BOUND FOR ANY SPLIT OF
@@ -6622,6 +6649,11 @@ flags:
     UNMEASURED -- HOW MANY OF THE TOP 43 FILLS EACH ARM DECLINED -- and it is
     dispatched to DE as one pass.
   THE_LEVER_IS_A_CANCEL_THAT_DOES_NOT_CASCADE_not_a_better_ranker: >-
+    SUPERSEDED 2026-09-04T13:51Z (round 97), TEXT KEPT AS PROVENANCE. THE LEVER
+    WAS MISNAMED (R-524): the arms differ 10.95x, splitting as PER-FILL COST
+    5.643x and CASCADE 1.940x -- so it is CHEAP FILLS FIRST, FEW FILLS SECOND,
+    and the cascade is the smaller half. Authority: workspace/RESULTS.md
+    section 0. ORIGINAL TEXT FOLLOWS.
     RELAYED FROM R-523. THE CASCADE RECONCILES THE MECHANISM WITH DA's NULL. The
     book runs 1.1176 fills per generation, so A RANDOM CANCEL REMOVES ~1.12 FILLS
     against 4.32 for CONDVALUE and 2.23 for HAZARD. Decomposing
@@ -6645,6 +6677,12 @@ flags:
     EVIDENCE RATHER THAN ON ONE HOUR; a distribution that straddles it makes the
     tail-versus-body question the whole programme.
   PROVENANCE_DEFECT_the_economic_artifact_names_a_RED_WIP_COMMIT: >-
+    RESOLVED 2026-09-04T13:51Z (round 97), TEXT KEPT AS PROVENANCE. DE
+    re-emitted from a CLEAN TREE ON THE BRANCH with 7/7 identity files
+    matching, and 26 OF 26 ECONOMIC QUANTITIES ARE BIT-IDENTICAL ACROSS THE TWO
+    EMISSIONS -- THE DEFECT WAS THE RECORD, NOT THE RESULT. The flags that cite
+    the 125340Z file keep their caveat; the numbers are unaffected. Authority:
+    workspace/RESULTS.md section 0. ORIGINAL TEXT FOLLOWS.
     CHECKED BY ME AT THE ARTIFACT AND IN GIT, AND IT QUALIFIES EVERY FIGURE I HAVE
     MARKED CHECKED AGAINST THIS FILE. provenance.carrying_commit is
     b43a9ce9a2fa1aa1c78bf9d33a5c110a7fbbfba2 with
@@ -6677,8 +6715,68 @@ flags:
     CITATION WITHOUT A PINNED REF IS NOT A CITATION, whether the moving thing is a
     line number or a branch head.
 
+  NO_VALUE_CEILING_HAS_EVER_BEEN_COMPUTED_IN_EITHER_PROGRAMME: >-
+    RELAYED FROM R-528, AND IT IS THE FINDING OF THE DAY. Searched across
+    live/pm_research (entire) and live/mm_research (ALL 11 FILES), both registers
+    and both RESULTS.md, on the full vocabulary (oracle, perfect foresight, upper
+    bound, ceiling, headroom, best possible, max achievable, attainable) AND
+    SEPARATELY ON THE SHAPE RATHER THAN THE WORDS (pnl < 0, sums over losing
+    fills): P-2026-002 RETURNS ZERO HITS ACROSS ALL 11 FILES; both registers and
+    both RESULTS.md return zero; and the four `v < 0` sites all COUNT negative
+    windows WITHOUT SUMMING THEM. THE ONE EXCEPTION SHARPENS IT: skew_bound.py IS
+    a real ceiling, for the SKEW lever, built well by attacking a generous
+    idealisation. SO THIS PROGRAMME KNOWS HOW TO BUILD A CEILING AND SPENT MONTHS
+    ON THE CANCELLATION LEVER WITHOUT BUILDING ONE -- "not a capability gap, a gap
+    in what got asked", and the coordinator records the asking as its own. AND IT
+    HAS BEEN A FILTER AND A SUM FOR TEN DAYS: markout_cents_per_share at
+    harmful_exposure_rows.py:309-313 IS the per-fill P&L and has existed since
+    2026-08-25 08:21, so V_oracle WAS COMPUTABLE ON DAY ONE AND WOULD HAVE BOUNDED
+    THE WHOLE OVERLAY CASE BEFORE ANY RANKER WAS FITTED. THIS IS A STATE FACT
+    ABOUT WHAT THE PROGRAMME ASKS, NOT A RESULT; the numbers live in
+    workspace/RESULTS.md section 0.
+  V_ORACLE_REPLACES_r_AND_THE_SURVEY_IS_THE_LIVE_DECISION_PATH: >-
+    RELAYED FROM R-528. V_oracle = the sum of |P&L| over fills whose P&L is
+    NEGATIVE. Model-free, one filter and one sum, and EXACTLY THE CEILING ANY
+    OVERLAY COULD REACH. IT REPLACES r, WHICH IS REFUTED AS A SURVEY STATISTIC.
+    THE DECISION SHAPE IS WHAT MAKES THIS THE LIVE PATH: A SURVEY WHERE
+    V_oracle ~ 0 CLOSES THE OVERLAY LINE BECAUSE NO POLICY COULD HAVE PAID --
+    which is a DIFFERENT AND BETTER REASON than "this policy did not". The survey
+    runs across the admissible development window (hf_ws_v2 boundary
+    2026-08-24T13:48:54Z to the freeze epoch), TOUCHING NO SEALED DAY, and the
+    measured hour is ONE CELL of it. WATCH-OUT: a non-zero V_oracle does NOT open
+    the line either -- it only means the ceiling is above zero, and what a policy
+    can actually reach is a separate question.
+  THE_INVENTORY_LEG_REVERSES_THE_SIGN_AND_MUST_NOT_BE_BANKED: >-
+    RELAYED FROM R-527. The pre-registered inventory prediction RESOLVED, and it
+    resolved badly for the model even though the sign came out right. P1 WAS
+    REFUTED BY ITS AUTHOR'S OWN FALSIFIER -- the baseline inventory leg is
+    +8,587.54c, AS LARGE AS THE WHOLE FILLS LEG, where DE predicted negative --
+    and P4 WAS CONFIRMED THROUGH A MECHANISM THAT DOES NOT EXIST, because P2/P4
+    were DERIVED from P1's adverse-residual mechanism and there is no adverse
+    residual. DE's own words: "a right sign from a wrong model is not a confirmed
+    prediction". BOTH LEGS TOGETHER TURN CONDVALUE FROM -953.92c TO +2,394.40c AND
+    IT MUST NOT BE BANKED: three of twelve windows carry 81.4% of the inventory
+    leg, one gap-ended window carries 28% of the baseline leg, and the route is a
+    DIRECTIONAL BET (terminal net FLIPS +146.74 -> -147.28) THAT DE PRE-COMMITTED
+    TO DISTRUSTING. Cluster unit for that leg is 12, not 4,315. Numbers and their
+    caveats: workspace/RESULTS.md section 0.
+  RESULTS_MD_SECTION_0_IS_THE_AUTHORITY_FOR_THE_ECONOMICS_these_files_point: >-
+    STATE RULE, RECORDED SO THE NEXT MEM ROUND DOES NOT RE-DUPLICATE. The
+    coordinator has written the 2026-09-04 economics into workspace/RESULTS.md
+    section 0 -- the first absolute economics this programme has produced -- and
+    that file is the COORDINATOR'S, single-writer. STATUS.yml AND HANDOFF.md CARRY
+    THE STATE, NOT THE RESULTS: what is open, what is running, what was withdrawn,
+    what the USER owes a decision on. WHERE MY EARLIER FLAGS CARRY THE NUMBERS
+    THEY ARE KEPT AS PROVENANCE WITH SUPERSEDED HEADERS POINTING HERE, NEVER
+    EDITED AWAY. Four of mine were superseded this round: the r-threshold flag
+    (r refuted as a survey statistic), the 43-fill-tail flag (the bound FLIPS to
+    r_ex <= 26.76%, below break-even), the cascade-lever flag (misnamed; it is
+    cheap fills first, few fills second, 5.643x against 1.940x), and the
+    provenance-defect flag (RESOLVED -- re-emitted clean, 26 of 26 quantities
+    bit-identical, the defect was the record and not the result).
+
 focus: >
-  As-of 2026-09-04T13:37Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T13:51Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -7153,6 +7251,20 @@ focus: >
   that is NOT an ancestor of the branch, with working_tree_clean FALSE -- the
   numbers reproduce independently but it is NOT provenance-clean, and DE is
   re-emitting.
+  ROUND 97 -- THE ECONOMICS NOW LIVE IN workspace/RESULTS.md SECTION 0 (the
+  coordinator's, single-writer). THESE FILES CARRY THE STATE AND POINT AT IT;
+  they do not duplicate the numbers. THE FINDING OF THE DAY IS NOT A NUMBER: NO
+  VALUE CEILING HAS EVER BEEN COMPUTED IN EITHER PROGRAMME -- zero hits across
+  all 11 P-2026-002 files, both registers and both RESULTS.md, on vocabulary AND
+  on shape -- while skew_bound.py shows the programme knows how to build one, and
+  markout_cents_per_share has made V_oracle a filter and a sum SINCE 2026-08-25.
+  V_oracle REPLACES r (refuted as a survey statistic) and THE SURVEY IS THE LIVE
+  DECISION PATH: V_oracle ~ 0 CLOSES THE OVERLAY LINE BECAUSE NO POLICY COULD HAVE
+  PAID. Superseded in band this round, text kept: the r-threshold flag, the
+  43-fill-tail flag (the bound FLIPS to r_ex <= 26.76%, below break-even), the
+  cascade-lever flag (cheap fills first, few fills second), and the
+  provenance-defect flag (RESOLVED, 26 of 26 quantities bit-identical). The
+  inventory reversal is NOT BANKABLE.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -7413,6 +7525,26 @@ flag_provenance:
       the same code_identity check run at three pinned refs gives 3 of 7 differing
       at b43a9ce, 0 of 7 at 9f25483, and 3 of 7 again at b22fb30, where DE59
       touched exactly those three files
+  NO_VALUE_CEILING_HAS_EVER_BEEN_COMPUTED_IN_EITHER_PROGRAMME:
+    prov: RELAYED
+    from: R-528 (the coordinator's own search across both programmes; MEM did not re-run it)
+  V_ORACLE_REPLACES_r_AND_THE_SURVEY_IS_THE_LIVE_DECISION_PATH:
+    prov: RELAYED
+    from: R-528 (BE is running the survey; nothing measured yet)
+  THE_INVENTORY_LEG_REVERSES_THE_SIGN_AND_MUST_NOT_BE_BANKED:
+    prov: RELAYED
+    from: R-527 (DE's pre-registered prediction and its own falsifier)
+  RESULTS_MD_SECTION_0_IS_THE_AUTHORITY_FOR_THE_ECONOMICS_these_files_point:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-04T13:51Z
+    said: >-
+      section 0 "2026-09-04 - the first absolute economics, and what they say"
+      exists at line 21 with subsections "What is established" (45), "What is NOT
+      established, and these are the load-bearing caveats" (64), "The
+      specification, and the statistic that replaced it" (92) and "The finding to
+      carry out of today, ahead of any number in it" (115); it states it
+      SUPERSEDES section 1 wherever they disagree
 
 standing_rules:
   - "STANDING RULE 14 (MEM, from checking R-523's provenance claim; the twin of
