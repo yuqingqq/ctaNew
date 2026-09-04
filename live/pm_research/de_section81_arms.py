@@ -427,7 +427,7 @@ def run_arms(argv=None):
                 "n_artifacts": len(verified),
                 "source": "de_score_stream.verify_head -> the fit manifest"}
 
-    def fields(res, rho_out):
+    def fields(res, rho_out, mp_arm):
         e, c = res["economics"], res["counters"]
         inv = e.get("inventory", {}) or {}
         out = {}
@@ -435,6 +435,34 @@ def run_arms(argv=None):
             src = spec.get("source")
             if src is None:
                 out[f] = {"status": "NOT_AVAILABLE", "reason": spec["why"]}
+                # DE58: an UNRULED field must carry what the ruling is
+                # BETWEEN, or the reader is told only that it is missing.
+                for k in ("candidates", "also_unruled"):
+                    if spec.get(k) is not None:
+                        out[f][k] = spec[k]
+            elif src.startswith("de_phase4_diag_runner.maker_pnl_from_fills."):
+                # DE58: the per-arm maker-P&L decomposition, over the
+                # fills THIS ARM received. `maker_pnl(reference)` would
+                # be the same number for every arm -- the baseline under
+                # four names -- so the per-arm construction is used and
+                # the leg it was computed over travels with it.
+                leaf = src.rsplit(".", 1)[1]
+                out[f] = {"status": "OK", "value": mp_arm[leaf],
+                          "found_in": "de_phase4_diag_runner."
+                                      "maker_pnl_from_fills",
+                          "n_fills": mp_arm["decomposition_n_fills"],
+                          "shares": mp_arm["decomposition_shares"],
+                          "fill_statuses": mp_arm["fill_statuses"],
+                          "identity_holds": mp_arm["identity_holds"],
+                          "identity_residual_cents":
+                              mp_arm["identity_residual_cents"]}
+                for extra in spec.get("also", ()):
+                    if extra.startswith("de_phase4_diag_runner."):
+                        out[f].setdefault("also", {})[
+                            extra.rsplit(".", 1)[1]] = mp_arm[
+                                extra.rsplit(".", 1)[1]]
+                if spec.get("equals"):
+                    out[f]["equals"] = spec["equals"]
             elif src == "de_rho_estimator.rho":
                 out[f] = {"status": "OK", "value": rho_out["rho"],
                           "statuses": rho_out["statuses"]}
@@ -474,7 +502,9 @@ def run_arms(argv=None):
             repost_fill_model=HSP.REPOST_FILL_MODELS[0])
         res = HSP.replay_policy(ref, scores, params)
         f = R.received_fills(res, ref, R._decision_times(scores))
-        return res, RHO.rho(f, LAT, proxy={"rho_captured_over_sacrificed": None})
+        return (res, RHO.rho(f, LAT,
+                             proxy={"rho_captured_over_sacrificed": None}),
+                R.maker_pnl_from_fills(f))
 
     PROV = provenance()
     RUN_ID = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
@@ -492,28 +522,35 @@ def run_arms(argv=None):
     _mx = max((float(e["score"]) for e in cv_ev), default=0.0)
     assert _mx < NO_CANCEL_THETA, f"arm 1 would cancel: max score {_mx}"
 
-    def add(name, res, rho_out, identity, **extra):
+    def add(name, res, rho_out, mp_arm, identity, **extra):
         OUT["arms"][name] = dict(
             {"arm": name, "n_cancels": res["counters"].get("cancels_issued", 0),
-             "identity": identity, "fields": fields(res, rho_out)}, **extra)
+             "identity": identity,
+             "fields": fields(res, rho_out, mp_arm),
+             # DE58: the reconciliation, RUN AGAINST THIS REAL REPLAY and
+             # not against a fixture. It is DIRECTIONAL -- |replay| <=
+             # |reference| -- and degenerates to an EQUALITY on the
+             # no-cancel arm, which is the strongest form it takes.
+             "maker_pnl_reconciliation": R.reconcile_maker_pnl(
+                 mp_arm, res)}, **extra)
         print(json.dumps({"arm": name,
                           "n_cancels": res["counters"].get("cancels_issued", 0),
                           "predictor": identity["predictor"],
                           "rho": rho_out["rho"]}), flush=True)
 
-    r1, h1 = replay(cv_ev, cancel=False, theta=theta_cv)
-    add("QR_SKEW_ONLY", r1, h1,
+    r1, h1, m1 = replay(cv_ev, cancel=False, theta=theta_cv)
+    add("QR_SKEW_ONLY", r1, h1, m1,
         {"predictor": "NONE", "artifacts": {},
          "note": "the neutral opportunity population; no cancellation, "
                  "asserted n_cancels==0"})
     assert OUT["arms"]["QR_SKEW_ONLY"]["n_cancels"] == 0
 
-    r5, h5 = replay(cv_ev, cancel=True, theta=theta_cv)
-    add("CONDVALUE_X_SKEW", r5, h5, ident(CV, cv_v),
+    r5, h5, m5 = replay(cv_ev, cancel=True, theta=theta_cv)
+    add("CONDVALUE_X_SKEW", r5, h5, m5, ident(CV, cv_v),
         semantics=L.ARM_X_SKEW_SEMANTICS, theta=theta_cv)
 
-    rH, hH = replay(hz_ev, cancel=True, theta=theta_hz)
-    add("HAZARD_OVER_SKEWED_REF", rH, hH, ident(HZ, hz_v),
+    rH, hH, mH = replay(hz_ev, cancel=True, theta=theta_hz)
+    add("HAZARD_OVER_SKEWED_REF", rH, hH, mH, ident(HZ, hz_v),
         note="NOT §8.1 arm 3 -- arm 3 requires NEUTRAL placement, which is "
              "ABSENT. This is the hazard head over the SKEWED reference and "
              "is named so it cannot be read as arm 3", theta=theta_hz)
@@ -605,7 +642,7 @@ def run_arms(argv=None):
                if not pre[k]]
         if bad:
             rej[bad[0][:2]] += 1; continue
-        r_, h_ = replay(c_, cancel=True, theta=theta_cv)
+        r_, h_, m_ = replay(c_, cancel=True, theta=theta_cv)
         rc_ctrl = realised(r_)
         post = R.stream_predicates(cv_ev, c_, d_, theta_cv, gidx,
                                    rc_treated=rc_treated, rc_control=rc_ctrl)
@@ -637,7 +674,7 @@ def run_arms(argv=None):
         P4_OBSERVATIONS.append(_obs)
         if not post["P4_realised_action_counts_equal"]:
             rej["P4"] += 1; continue
-        accepted += 1; chosen = (d_, c_, r_, h_, post, seed); break
+        accepted += 1; chosen = (d_, c_, r_, h_, m_, post, seed); break
     if chosen is None:
         print(json.dumps({"RANDOM_MATCHED": "REFUSED",
                           "reason": "no draw satisfied P1-P4 within the "
@@ -853,8 +890,8 @@ def run_arms(argv=None):
                 "shown is 'no matched floor exists UNDER THIS DRAW'"),
             "honest_limit": MATCHED_FLOOR_STATE["honest_limit"]}}
     else:
-        drawn, ctrl, r7, h7, post, seed_used = chosen
-        add("RANDOM_MATCHED", r7, h7,
+        drawn, ctrl, r7, h7, m7, post, seed_used = chosen
+        add("RANDOM_MATCHED", r7, h7, m7,
             {"predictor": "MATCHED_RANDOM_PERMUTATION", "artifacts": cv_v,
              "note": "the CONDVALUE stream's above-threshold values permuted "
                      "within (side, hour); shares CONDVALUE's artifacts BY "
@@ -898,6 +935,74 @@ def run_arms(argv=None):
             control_is_valid((v.get("matched") or {}).get("predicates") or {})
             for v in OUT["arms"].values()),
         "why_no_floor": dict(MATCHED_FLOOR_STATE)}
+    # ---- DE58: IS CANCELLING WORTH DOING AT ALL? ----------------------
+    # §8.1 closes "`net_cancel_cents` alone is not a strategy-P&L
+    # verdict." Until this round every field an arm filled was a
+    # CANCELLATION quantity -- markout, retention, rho, cancel counts --
+    # and QR_SKEW_ONLY at 0 cancels was called the baseline while
+    # producing no P&L, so nothing here measured whether cancelling was
+    # worth doing. It does now, and only because the maker-P&L
+    # decomposition landed: an arm that cancels gives up ENTRY EDGE on
+    # the fills it declines and saves ADVERSE SELECTION on the same
+    # fills, and those two are separable only once the markout is split.
+    #
+    # THE PREDICATE IS COMPUTED, NEVER PRINTED (rule 10). The identity
+    # net == saved - forgone is CHECKED, not asserted.
+    _base = OUT["arms"].get("QR_SKEW_ONLY", {}).get("fields")
+    if _base is None:
+        OUT["cancellation_economics"] = {
+            "status": "NO_BASELINE",
+            "why": "the 0-cancel arm produced no fields, so there is "
+                   "nothing to price cancellation against"}
+    else:
+        _b_sp = _base["spread_capture_cents"]["value"]
+        _b_ad = _base["maker_pnl_cents"]["also"]["adverse_selection_cents"]
+        _b_pl = _base["maker_pnl_cents"]["value"]
+        _rows = {}
+        for _a, _v in OUT["arms"].items():
+            if _a == "QR_SKEW_ONLY" or "fields" not in _v:
+                continue
+            _sp = _v["fields"]["spread_capture_cents"]["value"]
+            _ad = _v["fields"]["maker_pnl_cents"]["also"][
+                "adverse_selection_cents"]
+            _pl = _v["fields"]["maker_pnl_cents"]["value"]
+            _forgone, _saved, _net = _b_sp - _sp, _ad - _b_ad, _pl - _b_pl
+            _rows[_a] = {
+                "n_cancels": _v["n_cancels"],
+                "spread_forgone_cents": _forgone,
+                "adverse_saved_cents": _saved,
+                "net_pnl_delta_cents": _net,
+                "adverse_saved_exceeds_spread_forgone": _saved > _forgone,
+                "identity_residual_cents": abs(_saved - _forgone - _net),
+                "identity_holds":
+                    abs(_saved - _forgone - _net) <= 1e-6,
+                "cents_per_cancel": (_net / _v["n_cancels"]
+                                     if _v["n_cancels"] else None),
+            }
+        OUT["cancellation_economics"] = {
+            "baseline_arm": "QR_SKEW_ONLY",
+            "baseline": {"n_cancels": 0, "spread_capture_cents": _b_sp,
+                         "adverse_selection_cents": _b_ad,
+                         "maker_pnl_cents": _b_pl},
+            "arms": _rows,
+            "predicate": "an arm pays SPREAD FORGONE on the fills it "
+                         "declines and is paid ADVERSE SAVED on the same "
+                         "fills; cancelling adds value iff saved > forgone",
+            "identity": "net_pnl_delta == adverse_saved - spread_forgone "
+                        "(COMPUTED per arm, never asserted)",
+            "scope_and_limits": (
+                "THE FILLS LEG ONLY, valued at t + MARKOUT_S over "
+                "n=%d windows of %s. It EXCLUDES the residual position "
+                "at window end (`inventory_loss_cents`, unruled) and any "
+                "value of avoiding a fill whose harm lands beyond the "
+                "markout horizon. DEVELOPMENT EVIDENCE, not a validation: "
+                "one coin, one latency rung, no forward day, no interval "
+                "-- 12 windows is below the 5-complete-day cluster floor, "
+                "so a POINT ESTIMATE AND NO INTERVAL (rule 8)."
+                % (POP["windows"], POP["as_of"])),
+            "decides_nothing": "REPORTED. Whether the trade-off is worth "
+                               "taking is the policy layer's (rule 14).",
+        }
     OUT["population_exclusions"] = EXCL
     OUT["peak_rss_gb"] = gb(); OUT["total_wall_s"] = round(time.time()-T0, 1)
     # IMMUTABLE OUTPUT NAME. Round 53 wrote every run to one filename, so a

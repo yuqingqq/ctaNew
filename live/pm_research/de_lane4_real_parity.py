@@ -146,19 +146,30 @@ ARM_NAME_COLLISION = (
 #: `source` is the producer; None means nothing in this repo produces it
 #: and the arm reports NOT_AVAILABLE with that reason rather than a zero.
 SECTION_8_1_FIELDS: dict[str, dict] = {
+    # DE58: these two were `None` on the reasoning that the replay prices
+    # the DECISION and not the book. That described what the replay
+    # REPORTS, not what its inputs SUPPORT. `received_fills` carries the
+    # level, the measured mid at the fill and the mid at the markout for
+    # every fill an arm received, which is the whole decomposition.
+    #
+    # AND THE TOTAL WAS ALREADY HERE UNDER ANOTHER NAME.
+    # `markout_cents_per_share` is struck FROM `level`
+    # (harmful_exposure_rows.py:307-312), so per share it IS the maker
+    # P&L at t + MARKOUT_S. `maker_pnl_cents` and
+    # `post_fill_markout_cents` are therefore ONE NUMBER; what these
+    # fields add is its split into entry edge and post-fill drift, which
+    # is the part §8.1 could not previously see.
     "maker_pnl_cents": {
-        "source": None,
-        "why": "the replay values CANCELLATION (harm avoided minus "
-               "sacrifice), not a maker book. A complete maker P&L needs "
-               "spread earned on every fill minus adverse selection on "
-               "every fill, over the whole opportunity population -- the "
-               "replay prices the DECISION, not the book"},
+        "source": "de_phase4_diag_runner.maker_pnl_from_fills."
+                  "maker_pnl_cents",
+        "also": ("de_phase4_diag_runner.maker_pnl_from_fills."
+                 "adverse_selection_cents",),
+        "equals": "post_fill_markout_cents -- the markout is struck from "
+                  "level and already contains the entry edge, so the two "
+                  "are one quantity and their SUM would double-count it"},
     "spread_capture_cents": {
-        "source": None,
-        "why": "`de_rho_estimator` computes a spread denominator PER "
-               "RECEIVED FILL for rho; there is no book-level spread "
-               "capture, and summing rho's denominator would be a "
-               "different quantity wearing the name"},
+        "source": "de_phase4_diag_runner.maker_pnl_from_fills."
+                  "spread_capture_cents"},
     "post_fill_markout_cents": {
         "source": "economics.received_markout_cents",
         "also": ("economics.stale_markout_cents",)},
@@ -175,12 +186,38 @@ SECTION_8_1_FIELDS: dict[str, dict] = {
         "source": "counters.queue_reset_cost_cents_total"},
     "terminal_inventory": {"source": "inventory.terminal_net"},
     "peak_inventory": {"source": "inventory.peak_abs_net"},
+    # DE58: the BLOCKER MOVED, and saying so is the point of updating
+    # this reason. It is no longer a capability gap -- `wf.mid_at()` is
+    # live inside `build_reference`'s loop and already called twice, so
+    # storing a window-end mid is one line at a site that holds the
+    # object. WHAT IS MISSING IS A RULING ON WHAT "TERMINAL" MEANS, and
+    # the two candidates are not interchangeable:
+    #   (A) THE MID AT t1 -- the window's end instant. Absent inside a
+    #       gap, which is a counted NOT_AVAILABLE, never 0.5 and never a
+    #       default (the failure `cross_window_correlation` recorded).
+    #   (B) THE LAST OBSERVED MID BEFORE t1 -- always present whenever
+    #       any quote was seen, so it never returns NOT_AVAILABLE, but it
+    #       marks the position at a stale price whose staleness is
+    #       exactly the length of the gap.
+    # THEY DIFFER EXACTLY WHEN THE GAP MATTERS: (A) refuses to value the
+    # residual precisely in the windows where the residual is riskiest,
+    # (B) values it there at a price the market has already left. Also
+    # unruled: whether the loss is PER-SLUG or SUMMED -- the emission
+    # calls the summed terminal net "reporting-only, carries no decision
+    # meaning", which points at per-slug but was never confirmed.
     "inventory_loss_cents": {
         "source": None,
-        "why": "the inventory block carries NET and PEAK ABS shares and "
-               "the increasing/reducing split, but no valuation of the "
-               "position it leaves behind. Inventory LOSS needs a "
-               "terminal mark, which the replay never takes"},
+        "why": "NOT a capability gap and no longer a re-feed question: "
+               "the terminal mark is one stored line at a site that "
+               "already calls `wf.mid_at()` twice. It awaits a USER "
+               "RULING on which mark is meant -- (A) the mid AT t1, "
+               "NOT_AVAILABLE inside a gap, or (B) the last observed mid "
+               "BEFORE t1, always present but stale by the gap's length "
+               "-- and on whether the loss is per-slug or summed. "
+               "Choosing one silently would put a number on the residual "
+               "position whose meaning nobody declared",
+        "candidates": ("mid_at_t1", "last_observed_mid_before_t1"),
+        "also_unruled": "per-slug vs summed"},
     "latency_x_cost_sensitivity": {
         "source": "the caller, by replaying the arm across the frozen "
                   "latency axis and cost levels"},

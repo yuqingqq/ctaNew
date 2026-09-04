@@ -1,0 +1,87 @@
+{
+ "as_of": "2026-09-04T12:43:47Z",
+ "census": {
+  "NO_MARKOUT": 0,
+  "NO_MID_AND_NO_MARKOUT": 0,
+  "NO_MID_AT_FILL": 0,
+  "VALUED_BY_MAKER_PNL": 4315,
+  "n_tranches": 4315,
+  "no_markout_rate": 0.0,
+  "no_mid_rate": 0.0,
+  "shares_no_mid": 0,
+  "shares_no_mid_rate": 0.0,
+  "shares_total": 18271.690068,
+  "unit": "TRANCHE (not generation); DE53's exclusion counts GENERATIONS and the two are not comparable term-by-term",
+  "why_not_a_zero": "a fill whose entry mid is unknown has an UNKNOWN spread, not a zero one (rule 4)"
+ },
+ "decides_nothing": "REPORTED (rule 14).",
+ "denominators": {
+  "legs_share_a_denominator": true,
+  "n_markout_dropped_by_the_mid_guard": 0,
+  "n_with_markout": 4315,
+  "n_with_markout_and_mid": 4315,
+  "predicate": "the markout leg is complete iff no tranche with a markout is dropped by the mid guard",
+  "why_it_matters": "`reconcile_maker_pnl` compares the reference's markout to the replay's received markout. If the mid guard truncates the reference leg, the directional predicate |replay| <= |reference| can fail for a reason that is not the policy's"
+ },
+ "duration_tail": {
+  "base_rate": 0.0,
+  "median_duration_s_excluded": null,
+  "median_duration_s_retained": 0.127668,
+  "reading_is_the_callers": "rates are REPORTED; whether the tail differs is the permutation test below (rule 10 -- no verdict is printed here)",
+  "rows": [
+   {
+    "n_at_or_above": 75,
+    "n_excluded": 0,
+    "rate": 0.0,
+    "status": "OK",
+    "threshold_s": 2.0
+   },
+   {
+    "n_at_or_above": 13,
+    "n_excluded": 0,
+    "rate": 0.0,
+    "status": "OK",
+    "threshold_s": 4.0
+   },
+   {
+    "n_at_or_above": 8,
+    "n_excluded": 0,
+    "rate": 0.0,
+    "status": "OK",
+    "threshold_s": 8.0
+   },
+   {
+    "n_at_or_above": 2,
+    "n_excluded": 0,
+    "rate": 0.0,
+    "status": "OK",
+    "threshold_s": 16.0
+   }
+  ]
+ },
+ "population": {
+  "build_reference_statuses": {
+   "ADMITTED": 12,
+   "BINANCE_GAP_EXCLUDED": 3,
+   "NO_REPLAY": 0,
+   "RECONCILIATION_FAILED": 0,
+   "TRANCHE_KEPT": 4315,
+   "TRANCHE_NO_MARKOUT": 0
+  },
+  "n_generations": 31122,
+  "n_tranches": 4315,
+  "n_windows": 12,
+  "name": "v3_4_consumed_fragment",
+  "scope_limit": "THIS IS THE 12-WINDOW ARMS FRAGMENT, not the full \u00a73 population; every rate below is over it (rule 8: n and as-of travel with it)"
+ },
+ "selectivity": {
+  "attributes": {},
+  "decides_nothing": "REPORTED (rule 14).",
+  "n_excluded": 0,
+  "n_retained": 4315,
+  "selective_attributes": [],
+  "status": "NOTHING_EXCLUDED",
+  "why": "nothing was excluded, so no exclusion can be selective. This is a STATUS, not a pass -- it says the question did not arise"
+ },
+ "source_cache": "/home/yuqing/ctaNew-wt-de/data/pm_5min/derived/de_section81_cache_12.pkl"
+}

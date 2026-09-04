@@ -117,3 +117,89 @@ observation"* — which is the failure mode to avoid.
 Two of the three are a function I can write against already-sealed data.
 The third changes what the producer keeps and costs a ~28-minute re-feed,
 recoverable for any day whose archive is retained.
+
+---
+
+## Correction and outcome — DE58, 2026-09-04
+
+Both buildable fields were built, and then **the build was wrong in a way
+that doubled the answer**. Recorded here in-band because this document is
+what the ruling was made from.
+
+### The double-count
+
+The first build returned `maker_pnl = spread_capture + markout`. Read at
+the producer (`harmful_exposure_rows.py:307-312`, not from memory):
+
+```python
+sgn = 1.0 if f["side"] == "BUY_UP" else -1.0
+later = wf.mid_at(f["t"] + MARKOUT_S)
+"markout_cents_per_share": sgn * (later - f["level"]) * 100.0
+```
+
+The markout is struck **from `level`**, not from the mid at the fill, so
+it **already contains the entry edge**. Adding the spread to it counts
+that edge twice. On the real 12-window fragment it reported
+**19,165.71 cents where the figure is 8,598.76**.
+
+The correct decomposition, all three in the markout's own convention:
+
+| quantity | formula | 12-window value (cents) |
+|---|---|---|
+| spread capture | `sgn*(mid_at_fill − level)*100` | 10,566.95 |
+| adverse selection | `sgn*(mid_at_markout − mid_at_fill)*100` | −1,968.19 |
+| **maker P&L** | `sgn*(mid_at_markout − level)*100` | **8,598.76** |
+
+**The total was already in the artifact under another name.** Per share,
+`markout_cents_per_share` *is* the maker P&L at `t + MARKOUT_S`, so
+`maker_pnl_cents == post_fill_markout_cents`. What the new fields add is
+not a new total but **its split** into entry edge and post-fill drift —
+which is the part §8.1 could not previously see. The identity is checked
+in code, not asserted, and the double-count is a named regression
+falsifier in the suite.
+
+### The caveat, measured
+
+`NO_MID_AT_FILL` — flagged in §1 as a real exclusion of unknown size —
+is **0 of 4,315 tranches** on this population (`de_section81_mid_census`,
+as-of 2026-09-04T12:43:47Z). Not 0.1%, not 20%. `da_population_audit`
+returns `NOTHING_EXCLUDED`, a status rather than a pass, so no second
+selective filter stacks on DE53's duration axis here.
+
+The zero is consistent with a mechanism rather than luck: a fill requires
+`buy.level`/`sell.level` to be set, which happens only inside
+`resync()`, which calls `record_mid()` at that same instant — so
+`mid_t[0] <= t_fill` for any fill. The census is that claim's falsifier
+and would catch it on a larger population.
+
+The two legs' denominators were checked and **do** agree here — but only
+because the rate is zero. The first build accumulated both legs inside
+one `mid is None` guard, which would have silently truncated the P&L leg
+to the decomposition's denominator. Dormant, not absent; removed so it
+cannot wake.
+
+### `inventory_loss_cents` — the blocker moved
+
+Not a capability gap and no longer a re-feed question first: the terminal
+mark is one stored line at a site that already calls `wf.mid_at()` twice.
+**It awaits a ruling on which mark is meant**, and the two candidates are
+not interchangeable:
+
+| | (A) mid AT `t1` | (B) last observed mid BEFORE `t1` |
+|---|---|---|
+| in a gap | `NOT_AVAILABLE`, counted | always present |
+| what it marks | the window's end instant | a price the market has already left |
+| fails when | the residual is riskiest | the gap is long |
+
+They differ **exactly when the gap matters**. Also unruled: whether the
+loss is **per-slug or summed** — the emission calls the summed terminal
+net "reporting-only, carries no decision meaning", which points at
+per-slug but was never confirmed. Both are carried in
+`SECTION_8_1_FIELDS` and emitted with the field, so a reader sees what
+the ruling is *between* rather than only that it is missing.
+
+### What the fields then answered
+
+With the decomposition in place, §8.1's closing sentence becomes
+checkable for the first time. See `cancellation_economics` in
+`de_section81_arms__20260904T125340Z.json`.

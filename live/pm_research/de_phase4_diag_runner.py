@@ -41,7 +41,19 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 193
+#: RAISED BY HAND, NEVER BY THE RUN. 193 -> 201 for DE58, and the
+#: delta is ACCOUNTED FOR rather than observed -- a pin that moves to
+#: whatever the run produced is a pin that sets itself (DA37-R1).
+#:   +4  the reference-level maker-P&L block, 4 checks -> 8: the
+#:       identity, the double-count known-bad, P&L ==
+#:       post_fill_markout, the two legs' denominators, and a
+#:       zero-spread control (the statuses and the two
+#:       reconciliation checks carry over).
+#:   +4  the PER-ARM block (`maker_pnl_from_fills`): the hand-checked
+#:       decomposition, its counted statuses, the per-arm
+#:       double-count known-bad, and the agreement of the two
+#:       constructions over one set of fills.
+EXPECTED_CHECKS = 201
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1038,53 +1050,84 @@ def evaluate_predicates(cells: list) -> dict:
     return out
 
 
-#: THE SIGN CONVENTION, DECLARED (USER ruling 2, 2026-09-04).
+#: THE SIGN CONVENTION, DECLARED (USER ruling 2, 2026-09-04) -- AND ITS
+#: CORRECTION (DE58, 2026-09-04), because the version this constant
+#: carried was WRONG IN A WAY THAT DOUBLED THE ANSWER.
 #:
-#: The producer already values a fill's adverse selection as
-#: `markout_cents_per_share = sgn * (later - level) * 100.0`, where
-#: `sgn = +1` for BUY_UP and `-1` otherwise and `later` is the mid at
-#: `t + MARKOUT_S`. POSITIVE therefore means the mid moved the maker's
-#: way after the fill.
+#: `harmful_exposure_rows.py:307-312` -- read at the producer, not from
+#: memory (rule 16) -- values a fill as
+#:     sgn = +1 for BUY_UP, -1 otherwise
+#:     later = wf.mid_at(f["t"] + MARKOUT_S)
+#:     markout_cents_per_share = sgn * (later - f["level"]) * 100.0
+#: THE MARKOUT IS MEASURED FROM `level`, NOT FROM THE MID AT THE FILL. It
+#: therefore ALREADY CONTAINS THE ENTRY EDGE.
 #:
-#: Spread capture uses THE SAME EXPRESSION AT THE FILL'S OWN TIME:
-#: `sgn * (mid_at_fill - level) * 100.0`. Positive means the fill was
-#: struck on the favourable side of the prevailing mid -- edge earned at
-#: entry.
+#: The first version of this constant said maker P&L was "spread capture
+#: PLUS the markout ... edge at entry plus what the mid did afterwards".
+#: Both terms are struck from `level`, so their sum COUNTS THE ENTRY EDGE
+#: TWICE. On the real 12-window fragment that reported 19,165.71 cents
+#: where the true figure is 8,598.76.
 #:
-#: Maker P&L is their SUM: edge at entry plus what the mid did afterwards,
-#: both already signed the same way, both in cents per share, multiplied
-#: by shares. No second convention is introduced; if this one is wrong,
-#: it is wrong for the markout the programme has been reporting all
-#: along, which is why the reconciliation below exists.
+#: The correct decomposition, all three in the markout's own convention
+#: (POSITIVE is in the maker's favour):
+#:     spread capture   = sgn * (mid_at_fill - level)      * 100
+#:     adverse selection= sgn * (mid_at_markout - mid_at_fill) * 100
+#:     maker P&L        = sgn * (mid_at_markout - level)   * 100
+#:                      = spread capture + adverse selection
+#: and the third is EXACTLY `markout_cents_per_share`. So maker P&L on
+#: received fills IS the number the programme has been reporting all
+#: along as `post_fill_markout_cents`; what the new fields add is not a
+#: new total but ITS DECOMPOSITION into entry edge and post-fill drift.
 MAKER_PNL_SIGN_CONVENTION = (
-    "sgn = +1 for BUY_UP, -1 otherwise; value_cents_per_share = "
-    "sgn * (mid - level) * 100.0. Spread capture takes mid = mid_at_fill; "
-    "the markout takes mid = mid at t + MARKOUT_S. POSITIVE is in the "
-    "maker's favour in both. Maker P&L = (spread + markout) * shares")
+    "sgn = +1 for BUY_UP, -1 otherwise; POSITIVE is in the maker's "
+    "favour. spread_capture = sgn*(mid_at_fill - level)*100; "
+    "adverse_selection = sgn*(mid_at_markout - mid_at_fill)*100; "
+    "maker_pnl = sgn*(mid_at_markout - level)*100 = spread + adverse, "
+    "and maker_pnl per share IS `markout_cents_per_share`. The markout "
+    "is struck FROM level and already contains the entry edge, so "
+    "spread + markout would double-count it")
+
+#: The identity above is CHECKED, not asserted (rule 10).
+MAKER_PNL_IDENTITY_TOL_CENTS = 1e-6
 
 
 def maker_pnl(reference: dict) -> dict:
-    """Spread capture, post-fill markout and maker P&L over the reference's
-    received fills -- from fields the producer ALREADY KEEPS.
+    """Maker P&L over the reference's received fills, DECOMPOSED into the
+    edge earned at entry and the drift after it.
 
     Round 52 reported these as not producible. That was wrong, and the
     error is worth naming: I described what the REPLAY REPORTS rather
     than what its INPUTS SUPPORT. `level`, `mid_at_fill` (EST-R1),
     `shares` and the side are on every tranche.
 
-    SCOPE, and it travels with the number: this is maker P&L ON RECEIVED
-    FILLS WITHIN THE REFERENCE'S TRANCHE POPULATION. It is not a
-    book-wide P&L over unfilled quotes -- there is nothing to value there
-    -- and it excludes any position left at window end, which is
-    `inventory_loss` and needs a terminal mark.
+    DE58 CORRECTION: the first build returned `spread + markout` as the
+    P&L. Both are struck from `level` (see the constant above), so that
+    DOUBLE-COUNTED THE ENTRY EDGE. The P&L is the markout alone; the
+    spread is a COMPONENT of it, not an addend.
 
-    `NO_MID_AT_FILL` IS A COUNTED STATUS, NEVER A ZERO: `mid_at()`
-    returns None before a window's first quote, and a fill whose entry
-    mid is unknown has an UNKNOWN spread, not a zero one."""
+    TWO LEGS, TWO DENOMINATORS, REPORTED SEPARATELY. The P&L leg needs
+    only `markout_cents_per_share`, which `build_reference` already
+    filters on, so it arrives complete. The DECOMPOSITION leg needs
+    `mid_at_fill` as well, and `mid_at()` returns None before a window's
+    first quote. Accumulating both inside one `mid is None` guard -- what
+    the first build did -- silently truncated the P&L leg to the
+    decomposition's denominator. Measured 0/4315 on the 12-window
+    fragment (`de_section81_mid_census`), so the truncation was DORMANT
+    rather than absent; it is removed here so it cannot wake.
+
+    SCOPE, and it travels with the number: this is maker P&L ON RECEIVED
+    FILLS WITHIN THE REFERENCE'S TRANCHE POPULATION, valued at
+    `t + MARKOUT_S`. It is not a book-wide P&L over unfilled quotes --
+    there is nothing to value there -- and it excludes any position left
+    at window end, which is `inventory_loss` and needs a terminal mark.
+
+    EVERY EXCLUSION IS A COUNTED STATUS, NEVER A ZERO (rule 4)."""
     st = {"VALUED": 0, "NO_MID_AT_FILL": 0, "NO_MARKOUT": 0,
-          "NO_SHARES": 0}
-    spread = markout = 0.0
-    shares_valued = 0.0
+          "NO_LEVEL": 0, "NO_SHARES": 0}
+    pnl = 0.0            # over every tranche carrying a markout
+    pnl_shares = 0.0
+    spread = adverse = pnl_dec = 0.0     # over the mid-known SUBSET only
+    dec_shares = 0.0
     for slug, sides in reference.items():
         for side in HSP.SIDES:
             sgn = 1.0 if side == "BUY_UP" else -1.0
@@ -1095,29 +1138,127 @@ def maker_pnl(reference: dict) -> dict:
                         st["NO_SHARES"] += 1
                         continue
                     mk = t.get("markout_cents_per_share")
-                    mid = t.get("mid_at_fill")
                     lvl = t.get("level")
-                    if mid is None or lvl is None:
-                        st["NO_MID_AT_FILL"] += 1
-                        continue
                     if mk is None:
                         st["NO_MARKOUT"] += 1
                         continue
-                    spread += sgn * (float(mid) - float(lvl)) * 100.0 * sh
-                    markout += float(mk) * sh
-                    shares_valued += sh
+                    if lvl is None:
+                        # A markout without the level it was struck from
+                        # cannot be decomposed and must not be folded in
+                        # under a different name.
+                        st["NO_LEVEL"] += 1
+                        continue
+                    # THE P&L LEG -- needs the markout only.
+                    pnl += float(mk) * sh
+                    pnl_shares += sh
+                    mid = t.get("mid_at_fill")
+                    if mid is None:
+                        # Valued for P&L, NOT decomposable: an unknown
+                        # entry mid is an UNKNOWN spread, not a zero one.
+                        st["NO_MID_AT_FILL"] += 1
+                        continue
+                    sp = sgn * (float(mid) - float(lvl)) * 100.0
+                    spread += sp * sh
+                    adverse += (float(mk) - sp) * sh
+                    pnl_dec += float(mk) * sh
+                    dec_shares += sh
                     st["VALUED"] += 1
+    resid = abs(spread + adverse - pnl_dec)
     return {
+        # THE TOTAL, over every tranche with a markout.
+        "maker_pnl_cents": pnl,
+        "post_fill_markout_cents": pnl,
+        "pnl_leg_n_tranches": st["VALUED"] + st["NO_MID_AT_FILL"],
+        "pnl_leg_shares": pnl_shares,
+        "maker_pnl_equals_post_fill_markout": True,
+        "why_they_are_one_number": (
+            "`markout_cents_per_share` is struck FROM `level`, so per "
+            "share it IS the maker P&L at t + MARKOUT_S. The new fields "
+            "add a DECOMPOSITION, not a new total"),
+        # THE DECOMPOSITION, over the mid-known subset.
         "spread_capture_cents": spread,
-        "post_fill_markout_cents": markout,
-        "maker_pnl_cents": spread + markout,
-        "shares_valued": shares_valued,
+        "adverse_selection_cents": adverse,
+        "pnl_on_decomposed_subset_cents": pnl_dec,
+        "decomposition_n_tranches": st["VALUED"],
+        "decomposition_shares": dec_shares,
+        "identity_residual_cents": resid,
+        "identity_holds": resid <= MAKER_PNL_IDENTITY_TOL_CENTS,
+        "identity": "spread_capture + adverse_selection == P&L on the "
+                    "decomposed subset (COMPUTED, not asserted -- rule 10)",
+        "legs_share_a_denominator":
+            st["VALUED"] + st["NO_MID_AT_FILL"] == st["VALUED"],
         "tranche_statuses": st,
         "n_tranches": sum(st.values()),
         "sign_convention": MAKER_PNL_SIGN_CONVENTION,
         "scope": "received fills within the reference's tranche "
-                 "population; NOT book-wide and EXCLUDING the residual "
-                 "position at window end (see inventory_loss)",
+                 "population, valued at t + MARKOUT_S; NOT book-wide and "
+                 "EXCLUDING the residual position at window end (see "
+                 "inventory_loss)",
+    }
+
+
+def maker_pnl_from_fills(fills: list) -> dict:
+    """The SAME decomposition, over an ARM'S RECEIVED FILLS rather than the
+    reference's tranches -- which is the PER-ARM §8.1 quantity.
+
+    `maker_pnl(reference)` values the neutral no-cancel population and is
+    therefore IDENTICAL FOR EVERY ARM; reporting it as an arm's economics
+    would be reporting the baseline four times under four names. An arm's
+    own P&L is over the fills IT received, which is what `received_fills`
+    returns and what this values.
+
+    The fill records carry `px_cents` (the level, in cents),
+    `mid_cents_at_fill` and `mid_cents_at_markout`, so the three
+    quantities are the same differences in the same convention:
+        spread   = sgn * (mid_at_fill    - level)
+        P&L      = sgn * (mid_at_markout - level)
+        adverse  = P&L - spread
+    EVERY ABSENCE IS A COUNTED STATUS (rule 4)."""
+    st = {"VALUED": 0, "NO_MID_AT_FILL": 0, "NO_MARKOUT": 0, "NO_SHARES": 0}
+    pnl = spread = adverse = pnl_dec = 0.0
+    pnl_shares = dec_shares = 0.0
+    for f in fills:
+        sz = float(f.get("size") or 0.0)
+        if not sz:
+            st["NO_SHARES"] += 1
+            continue
+        sgn = 1.0 if f.get("side") == HSP.SIDES[0] else -1.0
+        lvl = f.get("px_cents")
+        mkt = f.get("mid_cents_at_markout")
+        if mkt is None or lvl is None:
+            st["NO_MARKOUT"] += 1
+            continue
+        v = sgn * (float(mkt) - float(lvl))
+        pnl += v * sz
+        pnl_shares += sz
+        mid = f.get("mid_cents_at_fill")
+        if mid is None:
+            st["NO_MID_AT_FILL"] += 1
+            continue
+        sp = sgn * (float(mid) - float(lvl))
+        spread += sp * sz
+        adverse += (v - sp) * sz
+        pnl_dec += v * sz
+        dec_shares += sz
+        st["VALUED"] += 1
+    resid = abs(spread + adverse - pnl_dec)
+    return {
+        "maker_pnl_cents": pnl,
+        "post_fill_markout_cents": pnl,
+        "spread_capture_cents": spread,
+        "adverse_selection_cents": adverse,
+        "pnl_on_decomposed_subset_cents": pnl_dec,
+        "pnl_leg_n_fills": st["VALUED"] + st["NO_MID_AT_FILL"],
+        "decomposition_n_fills": st["VALUED"],
+        "pnl_leg_shares": pnl_shares,
+        "decomposition_shares": dec_shares,
+        "identity_residual_cents": resid,
+        "identity_holds": resid <= MAKER_PNL_IDENTITY_TOL_CENTS,
+        "fill_statuses": st,
+        "n_fills": sum(st.values()),
+        "sign_convention": MAKER_PNL_SIGN_CONVENTION,
+        "scope": "the fills THIS ARM received, valued at t + MARKOUT_S; "
+                 "not the reference population and not book-wide",
     }
 
 
@@ -3584,7 +3725,7 @@ def selftest() -> int:
        f"is not asserted, because it spans twelve pinned files other "
        f"seats edit")
 
-    # ---- DE56 / USER ruling 2: maker P&L and spread capture -----------
+    # ---- DE56/DE58: maker P&L, its DECOMPOSITION, and the double-count
     _mpref = {"w1": {HSP.SIDES[0]: [{"gen": 0, "t0": 0.0, "tranches": [
         {"t": 1.0, "shares": 10.0, "level": 0.50, "mid_at_fill": 0.52,
          "markout_cents_per_share": 3.0},
@@ -3593,37 +3734,68 @@ def selftest() -> int:
         {"t": 3.0, "shares": 4.0, "level": 0.40, "mid_at_fill": 0.41,
          "markout_cents_per_share": None},
         {"t": 4.0, "shares": 0.0, "level": 0.40, "mid_at_fill": 0.41,
+         "markout_cents_per_share": 1.0},
+        {"t": 7.0, "shares": 3.0, "level": None, "mid_at_fill": 0.41,
          "markout_cents_per_share": 1.0}]}],
         HSP.SIDES[1]: [{"gen": 1, "t0": 5.0, "tranches": [
             {"t": 6.0, "shares": 8.0, "level": 0.70, "mid_at_fill": 0.68,
              "markout_cents_per_share": 2.0}]}]}}
     _mp = maker_pnl(_mpref)
-    # BUY_UP  : +1 * (0.52 - 0.50) * 100 * 10 = +20.0
-    # SELL/dn : -1 * (0.68 - 0.70) * 100 *  8 = +16.0
+    # BUY_UP  t=1: spread +1*(0.52-0.50)*100*10 = +20; P&L 3*10 = +30
+    # BUY_UP  t=2: NO MID -- P&L 1*5 = +5, NOT decomposable
+    # SELL/dn t=6: spread -1*(0.68-0.70)*100*8  = +16; P&L 2*8 = +16
     ok(abs(_mp["spread_capture_cents"] - 36.0) < 1e-9
-       and abs(_mp["post_fill_markout_cents"] - (3.0 * 10 + 2.0 * 8)) < 1e-9
-       and abs(_mp["maker_pnl_cents"]
-               - (36.0 + 46.0)) < 1e-9,
-       f"DE56: SPREAD CAPTURE AND MAKER P&L, hand-checked on both sides: "
-       f"BUY_UP +1*(0.52-0.50)*100*10 = +20, the other side "
-       f"-1*(0.68-0.70)*100*8 = +16, spread "
-       f"{_mp['spread_capture_cents']}, markout "
-       f"{_mp['post_fill_markout_cents']}, P&L {_mp['maker_pnl_cents']}. "
-       f"The sign convention is the MARKOUT'S OWN, evaluated at the "
-       f"fill's time -- no second convention is introduced")
+       and abs(_mp["adverse_selection_cents"] - 10.0) < 1e-9
+       and abs(_mp["pnl_on_decomposed_subset_cents"] - 46.0) < 1e-9
+       and _mp["identity_holds"] is True,
+       f"DE58 IDENTITY, hand-checked on both sides: spread "
+       f"{_mp['spread_capture_cents']} + adverse "
+       f"{_mp['adverse_selection_cents']} == decomposed P&L "
+       f"{_mp['pnl_on_decomposed_subset_cents']}, residual "
+       f"{_mp['identity_residual_cents']}")
+    # THE DOUBLE-COUNT, AS A REGRESSION FALSIFIER. The first build
+    # returned `spread + markout`. Both are struck from `level`, so that
+    # sum counts the entry edge TWICE; on the real fragment it reported
+    # 19,165.71 where the figure is 8,598.76. If this line ever passes
+    # with the wrong total, the correction has been reverted.
+    ok(abs(_mp["maker_pnl_cents"] - 51.0) < 1e-9
+       and abs(_mp["maker_pnl_cents"] - (36.0 + 51.0)) > 1e-9,
+       f"DE58 KNOWN-BAD: maker P&L is the MARKOUT ALONE ({51.0}), never "
+       f"spread + markout ({36.0 + 51.0}) -- `markout_cents_per_share` "
+       f"is struck FROM `level` "
+       f"(harmful_exposure_rows.py:307-312) and already contains the "
+       f"entry edge. Got {_mp['maker_pnl_cents']}")
+    ok(abs(_mp["maker_pnl_cents"]
+           - _mp["post_fill_markout_cents"]) < 1e-12
+       and _mp["maker_pnl_equals_post_fill_markout"] is True,
+       "DE58: maker P&L on received fills IS `post_fill_markout_cents` -- "
+       "the number the programme has reported all along. The new fields "
+       "add a DECOMPOSITION, not a new total")
     ok(_mp["tranche_statuses"]["NO_MID_AT_FILL"] == 1
        and _mp["tranche_statuses"]["NO_MARKOUT"] == 1
+       and _mp["tranche_statuses"]["NO_LEVEL"] == 1
        and _mp["tranche_statuses"]["NO_SHARES"] == 1
        and _mp["tranche_statuses"]["VALUED"] == 2
-       and _mp["n_tranches"] == 5,
+       and _mp["n_tranches"] == 6,
        f"KNOWN-BAD, EACH A COUNTED STATUS AND NEVER A ZERO: "
-       f"{_mp['tranche_statuses']}. A fill whose entry mid is unknown has "
-       f"an UNKNOWN spread, not a zero one -- `mid_at()` returns None "
-       f"before a window's first quote, and folding that into the sum "
-       f"would report an absence as a measurement (rule 4)")
+       f"{_mp['tranche_statuses']}. Every one of the four is exercised "
+       f"by this fixture, so a zero from any of them on real data is a "
+       f"zero from a counter that has proved it can fire (rule 15)")
+    # TWO LEGS, TWO DENOMINATORS -- and the P&L leg is NOT truncated to
+    # the decomposition's. The first build accumulated both inside one
+    # `mid is None` guard and lost the t=2 tranche's 5 cents.
+    ok(_mp["pnl_leg_n_tranches"] == 3
+       and _mp["decomposition_n_tranches"] == 2
+       and _mp["legs_share_a_denominator"] is False
+       and abs(_mp["pnl_leg_shares"] - 23.0) < 1e-9,
+       f"DE58: the P&L leg needs only the markout and so is WIDER than "
+       f"the decomposition leg, which also needs `mid_at_fill`: "
+       f"{_mp['pnl_leg_n_tranches']} vs {_mp['decomposition_n_tranches']}. "
+       f"Folding them into one guard truncated the P&L silently")
     _rec = reconcile_maker_pnl(
         _mp, {"economics": {"received_markout_cents": 20.0}})
-    ok(_rec["holds"] is True and _rec["difference_cents"] == 46.0 - 20.0,
+    ok(_rec["holds"] is True and abs(_rec["difference_cents"]
+                                     - (51.0 - 20.0)) < 1e-9,
        f"and the RECONCILIATION against the replay's own "
        f"`received_markout_cents` is DIRECTIONAL, not an equality: "
        f"{_rec['predicate']}. Equality would hold only for an arm that "
@@ -3634,6 +3806,77 @@ def selftest() -> int:
        "KNOWN-BAD: a replay markout LARGER in magnitude than the "
        "reference's whole tranche population refuses -- the received "
        "fills are a subset, so it cannot exceed it")
+    # A ZERO-SPREAD POPULATION: every fill struck AT the mid. Spread must
+    # be exactly 0 and the P&L must be UNCHANGED -- the check that the
+    # decomposition is a split of the total and not an addition to it.
+    _z = {"w1": {HSP.SIDES[0]: [{"gen": 0, "t0": 0.0, "tranches": [
+        {"t": 1.0, "shares": 10.0, "level": 0.50, "mid_at_fill": 0.50,
+         "markout_cents_per_share": 3.0}]}], HSP.SIDES[1]: []}}
+    _zp = maker_pnl(_z)
+    ok(_zp["spread_capture_cents"] == 0.0
+       and abs(_zp["adverse_selection_cents"] - 30.0) < 1e-9
+       and abs(_zp["maker_pnl_cents"] - 30.0) < 1e-9,
+       f"DE58: struck AT the mid, the entry edge is 0 and the whole P&L "
+       f"is post-fill drift -- {_zp['spread_capture_cents']}, "
+       f"{_zp['adverse_selection_cents']}, {_zp['maker_pnl_cents']}")
+
+    # ---- DE58: THE PER-ARM DECOMPOSITION, over received fills ---------
+    # BUY_UP: level 50c, mid at fill 52c, mid at markout 53c
+    #         spread +1*(52-50) = +2 /sh * 10 = +20; P&L +1*(53-50)*10 = +30
+    # other side: level 70c, mid at fill 68c, mid at markout 68c
+    #         spread -1*(68-70) = +2 /sh *  8 = +16; P&L -1*(68-70)*8 = +16
+    _af = [
+        {"side": HSP.SIDES[0], "px_cents": 50.0, "size": 10.0,
+         "mid_cents_at_fill": 52.0, "mid_cents_at_markout": 53.0},
+        {"side": HSP.SIDES[1], "px_cents": 70.0, "size": 8.0,
+         "mid_cents_at_fill": 68.0, "mid_cents_at_markout": 68.0},
+        {"side": HSP.SIDES[0], "px_cents": 60.0, "size": 5.0,
+         "mid_cents_at_fill": None, "mid_cents_at_markout": 61.0},
+        {"side": HSP.SIDES[0], "px_cents": 60.0, "size": 5.0,
+         "mid_cents_at_fill": 60.0, "mid_cents_at_markout": None},
+        {"side": HSP.SIDES[0], "px_cents": 60.0, "size": 0.0,
+         "mid_cents_at_fill": 60.0, "mid_cents_at_markout": 61.0},
+    ]
+    _ap = maker_pnl_from_fills(_af)
+    ok(abs(_ap["spread_capture_cents"] - 36.0) < 1e-9
+       and abs(_ap["adverse_selection_cents"] - 10.0) < 1e-9
+       and abs(_ap["pnl_on_decomposed_subset_cents"] - 46.0) < 1e-9
+       and abs(_ap["maker_pnl_cents"] - 51.0) < 1e-9
+       and _ap["identity_holds"] is True,
+       f"DE58 PER-ARM, hand-checked on both sides: spread "
+       f"{_ap['spread_capture_cents']} + adverse "
+       f"{_ap['adverse_selection_cents']} == "
+       f"{_ap['pnl_on_decomposed_subset_cents']}, and the P&L leg "
+       f"({_ap['maker_pnl_cents']}) is WIDER by the no-mid fill's 5c")
+    ok(_ap["fill_statuses"] == {"VALUED": 2, "NO_MID_AT_FILL": 1,
+                                "NO_MARKOUT": 1, "NO_SHARES": 1}
+       and _ap["n_fills"] == 5,
+       f"KNOWN-BAD, EACH COUNTED: {_ap['fill_statuses']}. All three "
+       f"absences are exercised, so a zero from any of them on a real "
+       f"arm is a zero from a counter that has proved it can fire")
+    ok(abs(_ap["maker_pnl_cents"] - (36.0 + 51.0)) > 1e-9,
+       "DE58 KNOWN-BAD, PER-ARM: the same double-count is refused here "
+       "-- an arm's P&L is the level-to-markout move, never that plus "
+       "the entry edge it already contains")
+    # WHY THIS FUNCTION EXISTS AT ALL: `maker_pnl(reference)` is the same
+    # number for every arm, so reporting it per-arm would report the
+    # baseline N times under N names. On a NO-CANCEL arm the two must
+    # agree exactly, and that equality is the reconciliation this round
+    # ran against a real replay.
+    _refp = maker_pnl(_mpref)
+    _fromref = maker_pnl_from_fills([
+        {"side": HSP.SIDES[0], "px_cents": 50.0, "size": 10.0,
+         "mid_cents_at_fill": 52.0, "mid_cents_at_markout": 53.0},
+        {"side": HSP.SIDES[0], "px_cents": 60.0, "size": 5.0,
+         "mid_cents_at_fill": None, "mid_cents_at_markout": 61.0},
+        {"side": HSP.SIDES[1], "px_cents": 70.0, "size": 8.0,
+         "mid_cents_at_fill": 68.0, "mid_cents_at_markout": 68.0}])
+    ok(abs(_fromref["maker_pnl_cents"]
+           - _refp["maker_pnl_cents"]) < 1e-9,
+       f"DE58: over the SAME fills the reference-level and per-arm "
+       f"decompositions agree -- {_fromref['maker_pnl_cents']} vs "
+       f"{_refp['maker_pnl_cents']}. Two constructions of one quantity "
+       f"that disagree would mean one of them is not that quantity")
 
     # ---- DE48: THE LOG MUST NEVER MAKE A DEAD RUN LOOK ALIVE ----------
     import subprocess as _sp
