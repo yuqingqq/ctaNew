@@ -1016,7 +1016,11 @@ def run_arms(argv=None):
         _acting = {a: ARM_FILLS[a] for a in ARM_FILLS
                    if a != "QR_SKEW_ONLY" and ARM_FILLS[a]}
         OUT["tail_and_cascade"] = {
-            "tail_decline": R.tail_decline(_bl, _acting),
+            # BOTH RANKINGS. The answer to "did it decline the tail?"
+            # must not depend on which tail we mean, and on this book
+            # the two tails carry 1.13 and 0.10 of the net.
+            "tail_decline": {b: R.tail_decline(_bl, _acting, by=b)
+                             for b in ("abs", "signed")},
             "adverse_over_spread": {
                 a: R.adverse_over_spread(f)
                 for a, f in [("QR_SKEW_ONLY", _bl)] + sorted(_acting.items())},

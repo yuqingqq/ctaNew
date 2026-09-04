@@ -55,6 +55,8 @@ from pathlib import Path
 #:   +5  DE59-C3: the tail set-difference driven in BOTH
 #:       directions, the ex-tail r, the cascade x selectivity
 #:       identity, and its two refusals.
+#:   +1  DE59-C4: the tail ranking made a named parameter after
+#:       the two rankings were found to disagree 1.13 vs 0.10.
 #:   +4  the reference-level maker-P&L block, 4 checks -> 8: the
 #:       identity, the double-count known-bad, P&L ==
 #:       post_fill_markout, the two legs' denominators, and a
@@ -64,7 +66,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 216
+EXPECTED_CHECKS = 217
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1554,8 +1556,8 @@ def fill_value_cents(f: dict) -> float | None:
     return sgn * (float(mkt) - float(lvl)) * sz
 
 
-def tail_decline(baseline: list, arms: dict, *, top_frac: float = 0.01
-                 ) -> dict:
+def tail_decline(baseline: list, arms: dict, *, top_frac: float = 0.01,
+                 by: str = "abs") -> dict:
     """WHICH fills did each arm decline -- the TAIL, or the BODY?
 
     THE QUESTION THIS EXISTS TO SETTLE. The baseline book's maker P&L is
@@ -1580,7 +1582,18 @@ def tail_decline(baseline: list, arms: dict, *, top_frac: float = 0.01
         return {"status": "NO_VALUED_BASELINE_FILLS",
                 "why": "a tail cannot be identified in an empty book"}
     k = max(1, int(round(top_frac * n)))
-    order = sorted(vals, key=lambda kk: -abs(vals[kk]))
+    # THE RANKING IS A PARAMETER AND IT IS NAMED IN THE OUTPUT, because
+    # the two answers differ violently on this book: the 43 biggest
+    # WINNERS carry 1.13 of the net (so the remainder must be negative),
+    # while the 43 most EXTREME fills carry 0.10. A tail measurement that
+    # does not say which tail is not a measurement.
+    if by not in ("abs", "signed"):
+        return {"status": "UNNAMED_RANKING", "by": by,
+                "why": "'abs' (most extreme) or 'signed' (biggest "
+                       "winners); an unnamed ranking is not a tail"}
+    _key = ((lambda kk: -abs(vals[kk])) if by == "abs"
+            else (lambda kk: -vals[kk]))
+    order = sorted(vals, key=_key)
     top, body = set(order[:k]), set(order[k:])
     top_net = sum(vals[x] for x in top)
     body_net = sum(vals[x] for x in body)
@@ -1602,6 +1615,11 @@ def tail_decline(baseline: list, arms: dict, *, top_frac: float = 0.01
                 len(top) * (len(top - kept) + len(d_body)) / n,
         }
     return {
+        "ranking": by,
+        "ranking_meaning": ("the k most EXTREME fills, winners and losers "
+                            "together" if by == "abs" else
+                            "the k biggest WINNERS -- removing them must "
+                            "leave a smaller remainder"),
         "top_frac": top_frac, "n_baseline_fills": n, "top_k": k,
         "top_net_cents": top_net, "body_net_cents": body_net,
         "net_cents": net,
@@ -4518,7 +4536,9 @@ def selftest() -> int:
     _keeps_tail = [f for f in _base if f["ref_gen"] != 5]
     _eats_tail = [f for f in _base if f["ref_gen"] not in (5, 99)]
     _td = tail_decline(_base, {"KEEPS_TAIL": _keeps_tail,
-                               "EATS_TAIL": _eats_tail})
+                               "EATS_TAIL": _eats_tail}, by="abs")
+    _tds = tail_decline(_base, {"KEEPS_TAIL": _keeps_tail,
+                                "EATS_TAIL": _eats_tail}, by="signed")
     ok(_td["top_k"] == 1 and abs(_td["top_net_cents"] - 200.0) < 1e-9
        and abs(_td["body_net_cents"] + 99.0) < 1e-9
        and _td["body_sums_against_the_net"] is True
@@ -4542,6 +4562,16 @@ def selftest() -> int:
        f"'It evidently did not remove many, or the delta would be more "
        f"negative' is an INFERENCE FROM AN AGGREGATE -- this is the set "
        f"difference, and the two are not the same evidence")
+    ok(_td["ranking"] == "abs" and _tds["ranking"] == "signed"
+       and _tds["top_k"] == 1
+       and abs(_tds["top_net_cents"] - 200.0) < 1e-9
+       and tail_decline(_base, {}, by="nope")["status"]
+       == "UNNAMED_RANKING",
+       "DE59-C4: the ranking is a PARAMETER, NAMED in the output, and an "
+       "unnamed one is refused -- because the two tails answer "
+       "differently and a tail measurement that does not say which tail "
+       "is not a measurement")
+
     _r = adverse_over_spread(
         [_mkf("w1", 0, 0.0, 50.0, 49.0, mid=51.0),
          _mkf("w1", 1, 1.0, 50.0, 250.0, mid=51.0)])
