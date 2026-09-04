@@ -67,10 +67,15 @@ bit-identical across the two — the defect was the record, not the result.**
   concentration **sits inside a no-tail Gaussian null's 90% band** (observed
   1.1295, null median 0.6765, band [0.427, 2.060]; **19% of Gaussian books
   exceed 1**). It is a statement about **dispersion**, not tail-dependence.
-- **"99% of this book clears break-even fourfold" is an artifact of which tail
-  was removed.** Body r is **1.1077** removing the winners, **0.2504** removing
-  the extremes, **0.1863** whole-book. **Same book, three answers.** Selecting
-  the top k by outcome and evaluating the remainder conditions on the outcome.
+- **"99% of this book clears break-even fourfold" is WITHDRAWN — the bound
+  FLIPS.** De-tailing must be symmetric, by |P&L|; ranking by signed net removes
+  only the *good* outliers, which is selection. Same algebra, opposite
+  direction: **winner-ranked r_ex ≥ 110.58%, extreme-ranked r_ex ≤ 26.76%** —
+  and **26.76% is BELOW CONDVALUE's 27.60% break-even**. Body r is 1.1077
+  removing the winners, 0.2504 removing the extremes, 0.1863 whole-book: **same
+  book, three answers.** That the two rankings disagree **1.13 against 0.10 on
+  the same 43-fill budget** is itself a measurement — the extreme set contains
+  large **losers** roughly offsetting the large winners.
 - **The inventory reversal runs through a mechanism its author refuted.** The
   prediction was pre-registered: **P1 (baseline leg negative) was REFUTED by its
   own falsifier** — the leg is +8,587.54c — and **P4 was derived from P1**, so
@@ -107,6 +112,30 @@ sealed day**. The measured hour is **one cell** of it.
 
 ---
 
+### The finding to carry out of today, ahead of any number in it
+
+**No value ceiling has ever been computed in either programme.** Searched across
+`live/pm_research/` (entire) and `live/mm_research/` (**all 11 files**), both
+registers and both `RESULTS.md`, on the full vocabulary — `oracle`,
+`perfect foresight`, `upper bound`, `ceiling`, `headroom`, `best possible`,
+`max achievable`, `attainable` — **and separately on the SHAPE rather than the
+words** (`pnl < 0`, sums over losing fills). **P-2026-002 returns ZERO hits
+across all 11 files.** Both registers and both `RESULTS.md`: zero. The four
+`v < 0` sites all **count** negative windows; **none sums them.**
+
+**The one exception sharpens it.** `skew_bound.py` **is** a real ceiling — for
+the **skew** lever, bounding the published 15× claim by attacking a generous
+re-post idealisation. Built well. **So this programme knows how to build a
+ceiling; it spent months on the cancellation lever and never built one there.**
+*"That is not a capability gap; it is a gap in what got asked."*
+
+**And it has been a filter and a sum for ten days.** `markout_cents_per_share`
+(`harmful_exposure_rows.py:309-313`) **is** the per-fill P&L, present since
+**2026-08-25 08:21** — the dataset every subsequent result is built on. So
+`V_oracle` was computable on day one and **would have bounded the entire overlay
+case before any ranker was fitted.**
+
+---
 ## 1. Bottom line — credible negative diagnostic; profitability withdrawn
 
 **The candidate has not demonstrated an improvement over the incumbent.** The
