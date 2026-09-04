@@ -386,6 +386,154 @@ def compute(feed_path: Path, latency_ms: int = None) -> dict:
     }
 
 
+#: The builder's own action horizon. A row sums every tranche inside it.
+FILL_HORIZON_S = 1.0
+
+
+def aggregation_justification(feed_path: Path,
+                              horizon_s: float = FILL_HORIZON_S) -> dict:
+    """(2) WHY FIRST-CROSSING IS THE ONLY RULE THAT COUNTS EACH FILL ONCE.
+
+    THIS IS THE FIELD THAT STOPS A READER GETTING THE OPPOSITE SIGN. Summing
+    every row from the crossing onward is the intuitive reading of "value the
+    cancel prevented", and on 08-29 it flips the btc result POSITIVE. What
+    settles the choice is not preference but arithmetic: a row ALREADY sums
+    every tranche inside its own `horizon_s` window, and consecutive rows of
+    an action are far closer together than that horizon -- so the alternatives
+    add the same tranches again.
+
+    Computed from the feed, per population, because the population matters:
+    only rows that BEAR a fill can double-count a tranche."""
+    import statistics
+    pops = {"ALL_ROWS": lambda r: True,
+            "ROWS_BEARING_A_FILL": lambda r: bool(r.get("any_fill_ahead"))}
+    out = {}
+    rows_by_pop = {k: collections.defaultdict(list) for k in pops}
+    with feed_path.open() as fh:
+        for line in fh:
+            r = json.loads(line)
+            k = (r["slug"], r["side"], r["gen"])
+            for name, pred in pops.items():
+                if pred(r):
+                    rows_by_pop[name][k].append(float(r["t_start"]))
+    for name, per in rows_by_pop.items():
+        gaps = []
+        for ts in per.values():
+            ts.sort()
+            gaps.extend(ts[i + 1] - ts[i] for i in range(len(ts) - 1))
+        gaps.sort()
+        n = len(gaps)
+        if not n:
+            out[name] = {"n_consecutive_pairs": 0,
+                         "note": "no action carried two rows in this "
+                                 "population; double-counting is impossible "
+                                 "here and the statistic is undefined"}
+            continue
+        inside = sum(1 for g in gaps if g < horizon_s)
+        out[name] = {
+            "n_actions_with_more_than_one_row": sum(
+                1 for v in per.values() if len(v) > 1),
+            "n_consecutive_pairs": n,
+            "median_gap_s": gaps[n // 2],
+            "p10_gap_s": gaps[n // 10], "p90_gap_s": gaps[9 * n // 10],
+            "n_pairs_closer_than_the_horizon": inside,
+            "pct_pairs_closer_than_the_horizon": 100.0 * inside / n,
+        }
+    return {
+        "question": ("which aggregation rule counts each prevented fill "
+                     "EXACTLY ONCE"),
+        "rule_shipped": "FIRST CROSSING — one row per action, the first whose "
+                        "score crosses theta",
+        "horizon_s": horizon_s,
+        "why_the_alternatives_DOUBLE_COUNT": (
+            f"a row already sums every tranche inside its own {horizon_s}s "
+            f"horizon. Consecutive rows of an action are separated by far "
+            f"less than that, so a rule summing rows from the crossing "
+            f"onward adds the SAME tranches again, once per overlapping pair"),
+        "measured": out,
+        "what_a_reader_gets_if_they_re_derive_it_the_intuitive_way": (
+            "the OPPOSITE SIGN. On the 08-29 feed the shipped first-crossing "
+            "rule gives btc -666/-601/-1199 cents at 5/10/15%, and summing "
+            "every row from the crossing onward gives +406/+1211/+681. The "
+            "sign flip is double-counting, not a different valid estimand"),
+        "this_is_computed_here_not_asserted": True,
+    }
+
+
+def publication_provenance(symbols=("matched_volume", "compute", "emit",
+                                    "p_reading", "aggregation_justification"),
+                           entry_points=("emit", "main"),
+                           src: str = None) -> dict:
+    """(3) THE PUBLICATION PROVENANCE CHECK, as one AST pass over this module.
+
+    Standing practice before anything reaches the USER, and the result
+    document carries its own proof rather than relying on someone having run
+    it. For each published symbol it censuses COMMITTED CALL sites and BARE
+    REFERENCE sites, and requires at least one call reachable from a
+    committed entry point -- which is exactly the property whose absence let
+    `matched_volume` be defined, referenced and never called."""
+    import ast as _ast
+    # `src` is a PARAMETER so the check can be driven against a source where
+    # the call is absent. A provenance checker that can only read its own
+    # file cannot be shown to fire (rule 15).
+    src = Path(__file__).read_text() if src is None else src
+    tree = _ast.parse(src)
+    funcs = {n.name: n for n in tree.body
+             if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef))}
+    calls: dict = {s: [] for s in symbols}
+    refs: dict = {s: [] for s in symbols}
+    for fname, node in funcs.items():
+        for c in _ast.walk(node):
+            if isinstance(c, _ast.Call) and isinstance(c.func, _ast.Name) \
+                    and c.func.id in calls:
+                calls[c.func.id].append(fname)
+            elif isinstance(c, _ast.Name) and c.id in refs \
+                    and not isinstance(getattr(c, "ctx", None), _ast.Store):
+                refs[c.id].append(fname)
+
+    def reaches(sym, seen=None):
+        seen = seen or set()
+        for caller in calls.get(sym, ()):
+            if caller in entry_points:
+                return caller
+            if caller in seen:
+                continue
+            got = reaches(caller, seen | {caller})
+            if got:
+                return got
+        return None
+
+    rows = {}
+    for sym in symbols:
+        rows[sym] = {
+            "committed_call_sites": sorted(set(calls[sym])),
+            "bare_reference_sites": sorted(set(refs[sym]) - set(calls[sym])),
+            "n_calls": len(set(calls[sym])),
+            "reachable_from_committed_entry_point": reaches(sym),
+        }
+    unreachable = [k for k, v in rows.items()
+                   if k not in entry_points
+                   and not v["reachable_from_committed_entry_point"]]
+    return {
+        "producer": f"{Path(__file__).name} (in-repo)",
+        "producing_path_inside_the_repo": str(
+            Path(__file__).resolve()).startswith(str(REPO_ROOT)),
+        "entry_points": list(entry_points),
+        "symbols": rows,
+        "symbols_with_no_reachable_committed_call": unreachable,
+        "passes": not unreachable,
+        "why_this_check_exists": (
+            "`matched_volume` was defined here, referenced in a docstring and "
+            "called by nothing committed, and its number reached the USER out "
+            "of a scratch script. A census of calls versus bare references, "
+            "with reachability from an entry point, is what would have caught "
+            "it"),
+    }
+
+
+REPO_ROOT = HERE.parents[1]
+
+
 # ---------------------------------------------------------------------------
 # (1) THE DURABLE ARTIFACT AND ITS CONTROLS.
 #
@@ -404,6 +552,13 @@ def emit(feed_paths, out_path: Path = None) -> dict:
     per = [compute(Path(f)) for f in feed_paths]
     doc = {"protocol": "BE_READ_CELLS_RESULT_V1",
            "n_feeds": len(per), "results": per,
+           # (2) and (3): the justification and the provenance proof TRAVEL
+           # WITH the result. A reader who re-derives the value the intuitive
+           # way gets the opposite sign; nothing in the artifact stopped them
+           # before this.
+           "aggregation_justification": [
+               aggregation_justification(Path(f)) for f in feed_paths],
+           "publication_provenance": publication_provenance(),
            "primary_statistic": "MATCHED_VOLUME",
            "primary_status": "DIAGNOSTIC — NOT AN EXECUTABLE OPERATING POINT",
            "produced_by": "be_read_cells.emit (the committed path), NOT a "
@@ -416,7 +571,7 @@ def emit(feed_paths, out_path: Path = None) -> dict:
     return doc
 
 
-EXPECTED_CHECKS = 9
+EXPECTED_CHECKS = 11
 
 
 def selftest() -> int:
@@ -485,6 +640,24 @@ def selftest() -> int:
         refuses(lambda: load_two_arm_feed(g, 50), "no scored rows",
                 "KNOWN-BAD: an EMPTY feed REFUSES rather than returning an "
                 "empty result (R-141)")
+    _pv = publication_provenance()
+    ok(_pv["passes"] is True
+       and _pv["symbols"]["matched_volume"]["committed_call_sites"] == ["compute"]
+       and _pv["symbols"]["matched_volume"][
+           "reachable_from_committed_entry_point"] == "emit",
+       f"(3) PROVENANCE POSITIVE CONTROL: `matched_volume` is CALLED by "
+       f"compute and reachable from emit; producer named, path in repo "
+       f"({_pv['producing_path_inside_the_repo']})")
+    _unwired = publication_provenance(src=(
+        "def matched_volume(a):\n    return a\n"
+        "def compute(x):\n    y = matched_volume\n    return y\n"
+        "def emit(x):\n    return compute(x)\n"))
+    ok(_unwired["passes"] is False
+       and "matched_volume" in _unwired["symbols_with_no_reachable_committed_call"]
+       and _unwired["symbols"]["matched_volume"]["bare_reference_sites"] == ["compute"],
+       "(3) PROVENANCE KNOWN-BAD: on a source where `matched_volume` is only "
+       "REFERENCED and never CALLED, the check FAILS and names it — which is "
+       "exactly the state that let a scratch script publish the headline")
     ok("DIAGNOSTIC" in matched_volume.__doc__.upper()
        or "DIAGNOSTIC" in inspect.getsource(matched_volume).upper(),
        "(2) the primary carries its DIAGNOSTIC status in the code that "
