@@ -4,6 +4,67 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T14:26Z (MEM ROUND 100 -- THE TRUE-UP TO THE HALT. Five things, all
+  of them corrections to these files rather than new findings, and the record of
+  the day is NOT here: it is R-531 and workspace/RESULTS.md section 0.)
+  (1) THE PROVENANCE POINTERS ARE FIXED, AND I MOVED THEM BY IDENTITY RATHER THAN
+  ON THE "26 OF 26". Six CHECKED flags pointed at
+  de_section81_arms__20260904T125340Z.json, whose carrying_commit is not on the
+  branch; they now point at ...134055Z.json, and I verified THAT file myself:
+  carrying_commit 2a3bb303, working_tree_clean_for_this_file TRUE, AN ANCESTOR OF
+  origin/mm-research by git merge-base, 0 OF 7 identity files differing at it, and
+  EVERY numeric I cite IDENTICAL -- 16 of 16 in cancellation_economics, 39/41/41
+  shared numerics across the three arms, ZERO differing, windows 12 / btc / 250 ms
+  unchanged. TWO OF THE EIGHT WERE DELIBERATELY NOT MOVED, WHICH IS THE PART A
+  SCRIPT GETS WRONG: PROVENANCE_DEFECT_... and A_CLAIM_ABOUT_THE_TIP_... make
+  claims ABOUT 125340Z ITSELF, so repointing them would have destroyed the claim.
+  REPOINTING IS NOT MECHANICAL. AND THE INSTRUMENT GAP IS THE FINDING: MY OWN
+  CHECKER PASSED ALL SIX STALE POINTERS FOR HOURS BECAUSE IT CHECKS THAT THE
+  ARTIFACT EXISTS AND NEVER THAT IT IS THE RIGHT ONE. AN INSTRUMENT THAT CHECKS
+  EXISTENCE AND NOT IDENTITY IS THE CODOMAIN SHAPE ONE MORE TIME -- "the file is
+  there" and "the file is the one this claim was checked against" are different
+  questions, and answering the first inside the codomain of the second is exactly
+  R-505's predicate. Named, not built.
+  (2) TWO STALE VALUE FLAGS TRUED UP, ONE OF THEM BY REFUSING TO GUESS.
+  hazard_forward_reach read G-1-OF-5 as-of 09-02 and now reads G-5-OF-5 REACHED
+  AND RULED DIRECTIONAL -- RELAYED from R-529(A), NOT RE-DERIVED: I tried to
+  recompute G from the day verdicts with a recursive field lookup, saw it return
+  values I could not trust (a generic search returns the first match ANYWHERE in a
+  nested document -- the quantity-wearing-another-name shape), AND DISCARDED IT
+  RATHER THAN FILE A CHECK THAT IS NOT ONE. v41_collector_live was three days
+  stale and is now MARKED STALE AND ROUTED, not updated: verifying a collector's
+  liveness is the coordinator's surface, and A STALE VALUE MARKED STALE IS
+  RECOVERABLE WHILE A FRESH VALUE I GUESSED IS NOT.
+  (3) THE NAMING QUESTION IS RULED AND EXECUTED. A flag whose provenance is
+  CHECKED must not be NAMED ..._PENDING_VERIFICATION, because A COLD READER TAKES
+  THE NAME AS THE STATUS. Renamed to ..._VERIFIED_by_DA with the old name kept in
+  the body so the trail survives. The instrument's ORPHAN check is what would have
+  caught a half-rename -- flag renamed and provenance key not -- and it reports
+  zero.
+  (4) THE THIRD AXIS IS RECORDED AS A FINDING IN ITS OWN RIGHT. PROVENANCE,
+  CORROBORATION AND CURRENCY ARE THREE AXES AND MY INSTRUMENT HAS ONE. It answers
+  WHO READ IT. It cannot express HOW MANY INDEPENDENT PRODUCERS STAND BEHIND IT
+  (Q-MEM-81, specified, never ruled, unbuilt) and it cannot express IS IT STILL
+  TRUE. "CHECKED" IS A STATEMENT ABOUT AN ACT IN THE PAST AND IS READ AS A
+  STATEMENT ABOUT THE PRESENT -- standing rule 14 pointed at my own flag file,
+  where the moving reference is THE WORLD. 457 OF 499 FLAGS ARE UNMARKED AND HAVE
+  NEVER BEEN AUDITED FOR STALENESS; today alone six of mine needed superseding
+  within the hour, two more were still asserting a superseded artifact, and two
+  carried values days out of date while reading as established. A PROVENANCE PASS
+  AND A CURRENCY PASS ARE DIFFERENT SWEEPS AND I HAVE ONLY EVER RUN THE FIRST.
+  Not built tonight by instruction; NAMED so it survives.
+  (5) AND THE RECORD OF THE DAY IS NOT IN THESE FILES. R-531 carries the harvest,
+  including my two observations about how the programme has been run -- FIVE
+  COORDINATOR RULINGS REVERSED IN ABOUT TWO HOURS, and the question nobody asked,
+  WHETHER THE RULING CADENCE SHOULD SLOW TO MATCH THE RATE AT WHICH RULINGS CAN BE
+  CHECKED. RESULTS.md section 0 carries the economics AND NOW OPENS WITH A BOX
+  NAMING BOTH PRIOR FRAMES, THE FIVE REVERSALS, THE TWO OPEN OBJECTIONS TO THE
+  701%, AND THAT THE WHOLE SECTION IS ONE HOUR WITH n=1 IN THE ONLY CLUSTERING
+  UNIT. That closes the gap I named -- the file recorded corrections but not THE
+  RATE OF THEM -- and it was only ever fixable by its single writer. THESE FILES
+  POINT AT BOTH AND COPY NEITHER. INSTRUMENT: 502 flags, 25 CHECKED, 20 RELAYED,
+  457 UNMARKED, 0 findings.
+  PRIOR:
   2026-09-04T14:13Z (MEM ROUND 99 -- A DEFECT OF MINE, ITS MEASURED SCOPE, AND
   THE GUARD THAT MAKES IT A PROGRAM RATHER THAN A HABIT.) MY ROUND-98 COMMIT
   5277b63 LANDED MERGE CONFLICT MARKERS INSIDE THE REGISTER, at
@@ -94,60 +155,6 @@ updated: >-
   levers where a bound is cheap and absent. THE ECONOMICS REMAIN IN
   workspace/RESULTS.md SECTION 0 AND THESE FILES STILL POINT RATHER THAN COPY.
   INSTRUMENT: 497 flags, 21 CHECKED, 19 RELAYED, 457 UNMARKED, 0 findings.
-  PRIOR:
-  2026-09-04T13:51Z (MEM ROUND 97 -- STATE ONLY. THE ECONOMICS NOW LIVE IN
-  workspace/RESULTS.md SECTION 0, WHICH IS THE COORDINATOR'S, AND THESE FILES
-  POINT AT IT RATHER THAN DUPLICATING IT.) THE FINDING OF THE DAY IS NOT A
-  NUMBER: NO VALUE CEILING HAS EVER BEEN COMPUTED IN EITHER PROGRAMME. Searched
-  across live/pm_research entire and live/mm_research ALL 11 FILES, both
-  registers, both RESULTS.md, on the full vocabulary AND separately ON THE SHAPE
-  RATHER THAN THE WORDS -- P-2026-002 returns ZERO HITS ACROSS ALL 11 FILES, both
-  registers and both RESULTS.md return zero, and the four `v < 0` sites all COUNT
-  negative windows WITHOUT SUMMING THEM. THE ONE EXCEPTION SHARPENS IT:
-  skew_bound.py IS a real ceiling, for the SKEW lever, built well. SO THIS
-  PROGRAMME KNOWS HOW TO BUILD A CEILING AND SPENT MONTHS ON THE CANCELLATION
-  LEVER WITHOUT BUILDING ONE -- "not a capability gap, a gap in what got asked" --
-  AND IT HAS BEEN A FILTER AND A SUM FOR TEN DAYS: markout_cents_per_share at
-  harmful_exposure_rows.py:309-313 IS the per-fill P&L and has existed since
-  2026-08-25 08:21, so V_oracle WAS COMPUTABLE ON DAY ONE AND WOULD HAVE BOUNDED
-  THE WHOLE OVERLAY CASE BEFORE ANY RANKER WAS FITTED.
-  V_oracle -- the sum of |P&L| over fills whose P&L is NEGATIVE, one filter and
-  one sum -- REPLACES r, WHICH IS REFUTED AS A SURVEY STATISTIC (three books
-  holding N, total spread and total P&L exactly, so r is identical, have overlay
-  ceilings of 0.00%, 10.61% and 21.66%). THE SURVEY IS THE LIVE DECISION PATH: A
-  DISTRIBUTION WHERE V_oracle ~ 0 CLOSES THE OVERLAY LINE BECAUSE NO POLICY COULD
-  HAVE PAID -- a DIFFERENT AND BETTER REASON than "this policy did not". It runs
-  over the admissible development window and TOUCHES NO SEALED DAY. WATCH-OUT
-  RECORDED: a NON-zero V_oracle does NOT open the line, it only puts the ceiling
-  above zero.
-  FOUR OF MY OWN FLAGS ARE SUPERSEDED IN BAND THIS ROUND, TEXT KEPT AS
-  PROVENANCE, NEVER EDITED AWAY. (i) THE r-THRESHOLD FLAG -- r is refuted as a
-  survey statistic; sigma/alpha is a PER-BOOK quantity, not a constant, and the
-  per-book arithmetic still holds only for this book. (ii) THE 43-FILL-TAIL FLAG
-  -- the "99% clears break-even fourfold" bound DOES NOT WEAKEN, IT FLIPS:
-  de-tailing must be SYMMETRIC by |P&L|, and winner-ranked r_ex >= 110.58% becomes
-  extreme-ranked r_ex <= 26.76%, BELOW CONDVALUE's 27.60% break-even; the same
-  book reads 1.1077 / 0.2504 / 0.1863. AND THE PREMISE UNDER IT ALSO FAILS: the
-  concentration sits INSIDE a no-tail Gaussian null's 90% band, so it measures
-  DISPERSION, not tail-dependence. (iii) THE CASCADE-LEVER FLAG -- misnamed: the
-  arms differ 10.95x, splitting as PER-FILL COST 5.643x and CASCADE 1.940x, so it
-  is CHEAP FILLS FIRST, FEW FILLS SECOND. (iv) THE PROVENANCE-DEFECT FLAG --
-  RESOLVED: re-emitted from a clean tree on the branch, 7/7 identity files
-  matching, and 26 OF 26 ECONOMIC QUANTITIES BIT-IDENTICAL, SO THE DEFECT WAS THE
-  RECORD AND NOT THE RESULT.
-  AND THE INVENTORY LEG, AS STATE RATHER THAN AS A RESULT: the pre-registered
-  prediction RESOLVED BADLY FOR THE MODEL EVEN THOUGH THE SIGN CAME OUT RIGHT --
-  P1 REFUTED BY ITS AUTHOR'S OWN FALSIFIER (the baseline leg is +8,587.54c, as
-  large as the whole fills leg, where DE predicted negative) and P4 CONFIRMED
-  THROUGH A MECHANISM THAT DOES NOT EXIST, P2/P4 having been derived from P1's
-  adverse-residual mechanism when there is no adverse residual. "A right sign from
-  a wrong model is not a confirmed prediction." BOTH LEGS TURN CONDVALUE FROM
-  -953.92c TO +2,394.40c AND IT MUST NOT BE BANKED: three of twelve windows carry
-  81.4% of the inventory leg, one gap-ended window carries 28% of the baseline
-  leg, the cluster unit for that leg is TWELVE not 4,315, and the route is a
-  DIRECTIONAL BET (terminal net FLIPS +146.74 -> -147.28) THAT DE PRE-COMMITTED TO
-  DISTRUSTING. INSTRUMENT: 494 flags, 21 CHECKED, 16 RELAYED, 457 UNMARKED, 0
-  findings.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -161,7 +168,20 @@ flags:
                              # the overall project order. The stateful cancel x
                              # skew TODO is a subordinate implementation sheet;
                              # 39/113 is not total project completion.
-  v41_collector_live: ACTIVE-RUNNING-FIRST-PURE-DAY-INCOMPLETE
+  v41_collector_live: STALE-AS-OF-2026-09-01-NOT-REVERIFIED-THIS-ROUND
+                             # MARKED STALE 2026-09-04T14:26Z (MEM round 100),
+                             # NOT UPDATED. The value below is as-of
+                             # 2026-09-01T09:29:39Z -- THREE DAYS OLD -- and its
+                             # note describes 08-31/09-01 as the live question,
+                             # which four race days have since passed.
+                             # I DID NOT INVENT A CURRENT VALUE: verifying a
+                             # collector's liveness means reading systemd and
+                             # the collector surface, which is the
+                             # COORDINATOR'S (R-110/R-181/R-182), not mine. A
+                             # stale value marked stale is recoverable; a fresh
+                             # value I guessed is not. ROUTED, not resolved.
+                             # EARLIER VALUE (rule 13):
+                             # ACTIVE-RUNNING-FIRST-PURE-DAY-INCOMPLETE
                              # As-of 2026-09-01T09:29:39Z: systemd active/
                              # running, PID 1108125, NRestarts=0, start
                              # 2026-08-31T22:00:01Z, clob_v4_1. 08-31 is
@@ -169,7 +189,31 @@ flags:
                              # 09-01 is era-pure/admissible and provisionally
                              # passes its governing v2 quality bars, but is not
                              # a complete UTC day and therefore has not accrued.
-  hazard_forward_reach: G-1-OF-5-COMPLETE-QUALIFYING-DAYS
+  hazard_forward_reach: G-5-OF-5-REACHED-AND-RULED-DIRECTIONAL-NOT-SIGNIFICANCE-BEARING
+                             # TRUED UP 2026-09-04T14:26Z (MEM round 100). The
+                             # value below read G-1-OF-5 as-of 2026-09-02 and
+                             # was TWO DAYS AND FOUR DAYS-OF-RACE STALE while
+                             # reading as established -- the CURRENCY axis my
+                             # instrument does not cover, found by audit and
+                             # not by any check.
+                             # RELAYED FROM R-529(A) AND RESULTS.md section 0,
+                             # NOT RE-DERIVED BY ME. I attempted to recompute G
+                             # from the day verdicts this round with a recursive
+                             # field lookup, saw it return values I could not
+                             # trust (a generic search returns the first match
+                             # ANYWHERE in a nested document -- the quantity-
+                             # wearing-another-name shape), and DISCARDED IT
+                             # rather than file a check that is not one.
+                             # THE USER HAS RULED THE RACE DIRECTIONAL: it
+                             # establishes DIRECTION AND CONSISTENCY and NEVER a
+                             # Holm-clearing verdict, because at G=5 with the
+                             # recorded multiplicity of 2 the best possible
+                             # adjusted p is 0.0625 > 0.05 -- the bar was exactly
+                             # one day short of what its own multiplicity
+                             # requires. See standing rule 15. The multiplicity
+                             # of 2 stands and is NOT decorative.
+                             # EARLIER VALUE (rule 13):
+                             # G-1-OF-5-COMPLETE-QUALIFYING-DAYS
                              # ADVANCED 2026-09-02T00:21Z (MEM): 2026-09-01 is
                              # the FIRST day the forward race has ever counted.
                              # All four ACCRUAL_RULE conjuncts true at
@@ -6407,7 +6451,14 @@ flags:
     IS STILL A CLAIM ABOUT A POPULATION. Nothing of mine turns on it: I read the
     register with line RANGES, never assuming one line per entry.
 
-  FIRST_ABSOLUTE_ECONOMIC_NUMBER_making_pays_cancelling_does_not_PENDING_VERIFICATION: >-
+  FIRST_ABSOLUTE_ECONOMIC_NUMBER_making_pays_cancelling_does_not_VERIFIED_by_DA: >-
+    RENAMED 2026-09-04T14:26Z (round 100) BY COORDINATOR RULING, FROM
+    ..._PENDING_VERIFICATION. The condition was discharged at R-519 and the
+    NAME kept asserting it; I raised it twice and the ruling is that A FLAG
+    WHOSE PROVENANCE IS CHECKED MUST NOT BE NAMED PENDING -- A COLD READER
+    TAKES THE NAME AS THE STATUS. Old name recorded here so the trail survives
+    the rename. ITS ARTIFACT POINTER ALSO MOVED THIS ROUND, 125340Z ->
+    134055Z; see PROVENANCE_POINTERS_REPOINTED_BY_IDENTITY below.
     RELAYED FROM R-517 AND MARKED PENDING-VERIFICATION ON THE COORDINATOR'S OWN
     INSTRUCTION: every number reached them through ONE PRODUCER, it is with DA
     now, and no seat but DE and the coordinator has checked it. I DID OPEN THE
@@ -6874,8 +6925,63 @@ flags:
     count REPORTED, never asserted against a literal. Undecodable blobs are
     reported as NOT SCANNED, never counted as clean.
 
+  PROVENANCE_POINTERS_REPOINTED_BY_IDENTITY_and_the_instrument_gap_it_exposes: >-
+    CHECKED BY ME, AND THE SECOND HALF IS A FINDING AGAINST MY OWN INSTRUMENT.
+    SIX of my CHECKED flags carried artifact:
+    de_section81_arms__20260904T125340Z.json -- the emission whose
+    carrying_commit b43a9ce is NOT an ancestor of the branch. THEY NOW POINT AT
+    de_section81_arms__20260904T134055Z.json, AND I VERIFIED THE MOVE BY IDENTITY
+    RATHER THAN TAKING THE "26 OF 26" ON REPORT: 134055Z self-reports
+    carrying_commit 2a3bb303 with working_tree_clean_for_this_file TRUE, git
+    merge-base confirms it IS an ancestor of origin/mm-research, 0 OF 7 identity
+    files differ at it, and EVERY numeric quantity I cite is IDENTICAL -- 16 of 16
+    in cancellation_economics and 39/41/41 shared numerics across the three arms,
+    ZERO differing, with population windows 12, coin btc, latency 250 unchanged.
+    TWO OF THE EIGHT WERE DELIBERATELY NOT MOVED, AND THAT IS THE PART A SCRIPT
+    WOULD HAVE GOT WRONG: PROVENANCE_DEFECT_... and
+    A_CLAIM_ABOUT_THE_TIP_... make claims ABOUT 125340Z ITSELF -- its bad
+    carrying commit, its code_identity at three refs -- so repointing them would
+    have destroyed the claim. REPOINTING IS NOT MECHANICAL.
+    THE INSTRUMENT GAP, NAMED: mem_flag_provenance.py CHECKS THAT A CHECKED
+    FLAG'S ARTIFACT EXISTS AND NEVER THAT IT IS THE RIGHT ONE. It passed all six
+    stale pointers for hours. AN INSTRUMENT THAT CHECKS EXISTENCE AND NOT
+    IDENTITY IS THE CODOMAIN SHAPE ONE MORE TIME -- "the file is there" and "the
+    file is the one this claim was checked against" are different questions, and
+    returning a pass for the first inside the codomain of the second is exactly
+    R-505's predicate. NOT BUILT TONIGHT; NAMED SO IT SURVIVES.
+  PROVENANCE_CORROBORATION_AND_CURRENCY_ARE_THREE_AXES_and_I_have_ONE: >-
+    THE FINDING IN ITS OWN RIGHT, RECORDED SO IT SURVIVES THE HALT. My instrument
+    answers ONE question -- WHO READ IT. Two more decide whether a flag can be
+    relied on and NEITHER IS INSTRUMENTED. (i) CORROBORATION: how many
+    INDEPENDENT PRODUCERS stand behind it (raised at Q-MEM-81 with a specified
+    corroboration: field, never ruled, still unbuilt). (ii) CURRENCY: IS IT STILL
+    TRUE. "CHECKED" IS A STATEMENT ABOUT AN ACT IN THE PAST AND IS READ AS A
+    STATEMENT ABOUT THE PRESENT -- which is standing rule 14 (a claim about a
+    moving reference carries the revision it was true at) pointed at my own flag
+    file, where the moving reference is THE WORLD. THIS IS THE ONE BITING
+    HARDEST: 457 OF 499 FLAGS ARE UNMARKED AND HAVE NEVER BEEN AUDITED FOR
+    STALENESS, and today alone SIX of my own flags needed superseding within the
+    hour, TWO more were still asserting a superseded artifact, and TWO
+    (hazard_forward_reach, v41_collector_live) were carrying values days out of
+    date while reading as established. A PROVENANCE PASS AND A CURRENCY PASS ARE
+    DIFFERENT SWEEPS AND I HAVE ONLY EVER RUN THE FIRST. Not built tonight by
+    instruction; NAMED.
+  THE_RECORD_FOR_2026_09_04_IS_R531_AND_RESULTS_MD_SECTION_0: >-
+    POINTER, NOT A RESTATEMENT. The day's harvest is at R-531 and the economics
+    at workspace/RESULTS.md section 0, both written by the coordinator, and THESE
+    FILES DO NOT DUPLICATE THEM. R-531 carries the full stop-and-harvest including
+    my two observations about how the programme has been run -- FIVE COORDINATOR
+    RULINGS REVERSED IN ABOUT TWO HOURS, and the question nobody asked, WHETHER
+    THE RULING CADENCE SHOULD SLOW TO MATCH THE RATE AT WHICH RULINGS CAN BE
+    CHECKED. The coordinator has ACTED on the second observation: RESULTS.md
+    section 0 now OPENS with a box naming BOTH PRIOR FRAMES, the five reversals,
+    the two open objections to the 701%, and that the whole section is ONE HOUR
+    WITH n=1 IN THE ONLY CLUSTERING UNIT. That closes the gap I named -- the file
+    recorded corrections but not THE RATE OF THEM -- and it was only ever fixable
+    by its single writer.
+
 focus: >
-  As-of 2026-09-04T14:13Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T14:26Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -7383,6 +7489,17 @@ focus: >
   one level down, a pathspec commit being only as CLEAN as the content inside each
   path. The guard reads the INDEX, fires on the real 5277b63 blob, admits the
   repair, and admits a Markdown setext heading so it does not fire on every title.
+  ROUND 100 -- TRUED UP TO THE HALT. Provenance pointers moved 125340Z -> 134055Z
+  BY VERIFIED IDENTITY (0 of 7 identity files differing, every cited numeric
+  identical), with TWO deliberately left because their claim is ABOUT the
+  defective file. hazard_forward_reach now reads G-5-OF-5 RULED DIRECTIONAL
+  (relayed, not re-derived); v41_collector_live is MARKED STALE AND ROUTED rather
+  than guessed. The PENDING_VERIFICATION name is ruled away. AND THE GAP THAT
+  MATTERS MOST IS NAMED: PROVENANCE, CORROBORATION AND CURRENCY ARE THREE AXES AND
+  THE INSTRUMENT HAS ONE -- 457 of 499 flags have never been audited for staleness,
+  and "CHECKED" is a statement about the past read as a statement about the
+  present. THE DAY'S RECORD IS R-531 AND workspace/RESULTS.md SECTION 0; these
+  files point and do not copy.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -7514,9 +7631,9 @@ flag_provenance:
   R340_MISSING_CITE_WAS_A_PARSER_ARTIFACT_this_register_carried_it_twice:
     prov: RELAYED
     from: R-514(C)/(D) (DA's parser fix and its own n=2 self-correction)
-  FIRST_ABSOLUTE_ECONOMIC_NUMBER_making_pays_cancelling_does_not_PENDING_VERIFICATION:
+  FIRST_ABSOLUTE_ECONOMIC_NUMBER_making_pays_cancelling_does_not_VERIFIED_by_DA:
     prov: CHECKED
-    artifact: data/pm_5min/derived/de_section81_arms__20260904T125340Z.json
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T134055Z.json
     as_of: 2026-09-04T13:14Z
     said: >-
       cancellation_economics.baseline reads spread_capture_cents
@@ -7567,7 +7684,7 @@ flag_provenance:
     from: R-520 (DA's z/p and its three stated limits; MEM did not recompute them)
   R521_THE_DENOMINATOR_WAS_WRONG_and_the_ranker_is_actually_GOOD:
     prov: CHECKED
-    artifact: data/pm_5min/derived/de_section81_arms__20260904T125340Z.json
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T134055Z.json
     as_of: 2026-09-04T13:24Z
     said: >-
       cancellation_economics.arms.CONDVALUE_X_SKEW carries cents_per_cancel
@@ -7578,7 +7695,7 @@ flag_provenance:
       selection ratios are relayed and were not recomputed
   THE_MECHANISM_IS_THE_BOOK_not_the_overlay_and_only_one_of_those_is_actionable:
     prov: CHECKED
-    artifact: data/pm_5min/derived/de_section81_arms__20260904T125340Z.json
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T134055Z.json
     as_of: 2026-09-04T13:24Z
     said: >-
       adverse selection is 1968.1921814999978 against gross spread capture
@@ -7589,7 +7706,7 @@ flag_provenance:
     from: R-520/R-521 (the coordinator's own withdrawals)
   MY_ROUND_94_TWO_PRODUCER_FLAG_SURVIVES_and_here_is_why_it_is_not_the_tautology:
     prov: CHECKED
-    artifact: data/pm_5min/derived/de_section81_arms__20260904T125340Z.json
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T134055Z.json
     as_of: 2026-09-04T13:24Z
     said: >-
       identity_residual_cents reads 6.366462912410498e-12 / 1.8189894035458565e-12
@@ -7601,7 +7718,7 @@ flag_provenance:
       order in one artifact, comparing different pairs of quantities
   THE_OVERLAY_THRESHOLD_r_ge_sigma_over_alpha_HAZARD_IS_6_7_PERCENT_AWAY:
     prov: CHECKED
-    artifact: data/pm_5min/derived/de_section81_arms__20260904T125340Z.json
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T134055Z.json
     as_of: 2026-09-04T13:36Z
     said: >-
       adverse 1968.1921814999978 over gross spread capture 10566.951030999997 is
@@ -7611,7 +7728,7 @@ flag_provenance:
       NOT provenance-clean -- see PROVENANCE_DEFECT_the_economic_artifact_names_a_RED_WIP_COMMIT
   THE_43_FILL_TAIL_and_why_NEITHER_FIGURE_ALONE_IS_THE_SPECIFICATION:
     prov: CHECKED
-    artifact: data/pm_5min/derived/de_section81_arms__20260904T125340Z.json
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T134055Z.json
     as_of: 2026-09-04T13:36Z
     said: >-
       n_fills 4315 makes the top 1% 43.15 fills, and -13% of the baseline maker
@@ -7691,6 +7808,29 @@ flag_provenance:
       it admits a Markdown setext heading and admits its own source; run against
       the real 5277b63 blob it reports markers at 708/710/712 and against the
       repaired HEAD blob it reports clean
+  PROVENANCE_POINTERS_REPOINTED_BY_IDENTITY_and_the_instrument_gap_it_exposes:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/de_section81_arms__20260904T134055Z.json
+    as_of: 2026-09-04T14:26Z
+    said: >-
+      provenance.carrying_commit 2a3bb303 with working_tree_clean_for_this_file
+      true, an ancestor of origin/mm-research by git merge-base, 0 of 7
+      code_identity files differing at it; and against 125340Z every numeric is
+      identical -- 16 of 16 in cancellation_economics, 39/41/41 shared numerics
+      across QR_SKEW_ONLY / HAZARD_OVER_SKEWED_REF / CONDVALUE_X_SKEW, zero
+      differing, population windows 12 coin btc latency_ms 250 unchanged
+  PROVENANCE_CORROBORATION_AND_CURRENCY_ARE_THREE_AXES_and_I_have_ONE:
+    prov: CHECKED
+    artifact: live/pm_research/mem_flag_provenance.py
+    as_of: 2026-09-04T14:26Z
+    said: >-
+      the module's class set is CHECKED / RELAYED / UNMARKED / MALFORMED, its
+      authority rule makes CHECKED alone authoritative, and it carries no field
+      for how many producers stand behind a claim NOR any re-verification date --
+      so neither corroboration nor currency is expressible in it
+  THE_RECORD_FOR_2026_09_04_IS_R531_AND_RESULTS_MD_SECTION_0:
+    prov: RELAYED
+    from: R-531 and workspace/RESULTS.md section 0 (both the coordinator's; MEM points, never copies)
 
 standing_rules:
   - "STANDING RULE 16 (coordinator's form, MEM's defect; instrumented at

@@ -1,6 +1,88 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T14:13Z (MEM round 99) — **A DEFECT OF MINE, ITS MEASURED
+Updated: 2026-09-04T14:26Z (MEM round 100) — **THE TRUE-UP TO THE HALT.** All
+corrections to these files, no new findings. **The record of the day is not here:
+it is R-531 and `workspace/RESULTS.md` §0.**
+
+### 1. Provenance pointers fixed — moved by IDENTITY, not on the "26 of 26"
+
+Six CHECKED flags pointed at `de_section81_arms__20260904T125340Z.json`, whose
+carrying commit is not on the branch. They now point at **`…134055Z.json`**, and
+I verified **that** file myself:
+
+| check | result |
+|---|---|
+| `carrying_commit` | `2a3bb303`, `working_tree_clean_for_this_file` **true** |
+| ancestor of `origin/mm-research` | **yes**, by `git merge-base` |
+| `code_identity` at its own carrying commit | **0 of 7 differ** |
+| every numeric I cite, vs 125340Z | **16/16** in `cancellation_economics`, **39/41/41** shared numerics across the three arms, **zero differing**; windows 12 / btc / 250 ms unchanged |
+
+**Two of the eight were deliberately NOT moved — the part a script gets wrong.**
+`PROVENANCE_DEFECT_…` and `A_CLAIM_ABOUT_THE_TIP_…` make claims **about 125340Z
+itself**, so repointing would have destroyed the claim. **Repointing is not
+mechanical.**
+
+**And the instrument gap is the finding:** **my own checker passed all six stale
+pointers for hours, because it checks that the artifact EXISTS and never that it
+is the RIGHT one.** *"The file is there"* and *"the file is the one this claim was
+checked against"* are different questions, and answering the first inside the
+codomain of the second is **R-505's predicate, one more time.** Named, not built.
+
+### 2. Two stale value flags trued up — one by refusing to guess
+
+`hazard_forward_reach` read **G-1-OF-5 as-of 09-02**; it now reads **G-5-OF-5,
+RULED DIRECTIONAL** — **relayed from R-529(A), not re-derived.** I tried to
+recompute G from the day verdicts with a recursive field lookup, saw it return
+values I could not trust (**a generic search returns the first match anywhere in a
+nested document** — the quantity-wearing-another-name shape), **and discarded it
+rather than file a check that is not one.**
+
+`v41_collector_live` was three days stale and is now **marked stale and routed,
+not updated**: collector liveness is the coordinator's surface, and **a stale
+value marked stale is recoverable while a fresh value I guessed is not.**
+
+### 3. The naming question, ruled and executed
+
+**A flag whose provenance is CHECKED must not be named `…_PENDING_VERIFICATION`
+— a cold reader takes the name as the status.** Renamed to `…_VERIFIED_by_DA`,
+old name kept in the body so the trail survives. **The instrument's ORPHAN check
+is what would have caught a half-rename** (flag renamed, provenance key not); it
+reports zero.
+
+### 4. The third axis, recorded as a finding in its own right
+
+> **Provenance, corroboration and CURRENCY are three axes, and my instrument has
+> one.**
+
+It answers **who read it**. It cannot express **how many independent producers
+stand behind it** (Q-MEM-81 — specified, never ruled, unbuilt), and it cannot
+express **is it still true**. **"CHECKED" is a statement about an act in the past
+and is read as a statement about the present** — standing rule 14 pointed at my
+own flag file, where the moving reference is **the world**.
+
+**457 of 499 flags are UNMARKED and have never been audited for staleness.** Today
+alone: six of mine needed superseding within the hour, two more were still
+asserting a superseded artifact, and two carried values days out of date while
+reading as established. **A provenance pass and a currency pass are different
+sweeps and I have only ever run the first.** Not built tonight by instruction —
+**named so it survives.**
+
+### 5. The record of the day is elsewhere, and these files point at it
+
+**R-531** carries the harvest, including my two observations about how the
+programme has been run — **five coordinator rulings reversed in about two hours**,
+and the question nobody asked: **whether the ruling cadence should slow to match
+the rate at which rulings can be checked.** **`RESULTS.md` §0** carries the
+economics and **now opens with a box naming both prior frames, the five reversals,
+the two open objections to the 701%, and that the whole section is one hour with
+n=1 in the only clustering unit.** That closes the gap I named — the file recorded
+corrections but **not the rate of them** — and it was only ever fixable by its
+single writer.
+
+**Instrument:** 502 flags, **25 CHECKED**, 20 RELAYED, 457 UNMARKED, 0 findings.
+
+
+Previously (MEM round 99) — 2026-09-04T14:13Z — **A DEFECT OF MINE, ITS MEASURED
 SCOPE, AND THE GUARD THAT MAKES IT A PROGRAM RATHER THAN A HABIT.**
 
 ### What happened
@@ -966,6 +1048,23 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T14:26Z — MEM round 100: the true-up to the halt
+>
+> **Full entry is the `Updated:` block at the top; the day's record is R-531 and
+> `RESULTS.md` §0, which these files point at and do not copy.** Provenance
+> pointers moved **125340Z → 134055Z by verified identity** (0 of 7 identity files
+> differing, every cited numeric identical), with **two deliberately left** because
+> their claim is *about* the defective file. **The instrument gap is the finding:
+> it checks EXISTENCE, not IDENTITY** — the codomain shape again.
+> `hazard_forward_reach` now reads **G-5-OF-5 RULED DIRECTIONAL** (relayed, not
+> re-derived); `v41_collector_live` is **marked stale and routed**, not guessed.
+> `…_PENDING_VERIFICATION` renamed by ruling. **And the gap that matters most is
+> named: PROVENANCE, CORROBORATION and CURRENCY are three axes and the instrument
+> has one** — 457 of 499 flags have never been audited for staleness.
+>
+> ---
+
 
 > ### 2026-09-04T14:13Z — MEM round 99: I committed conflict markers into the register, and the fix is a program
 >

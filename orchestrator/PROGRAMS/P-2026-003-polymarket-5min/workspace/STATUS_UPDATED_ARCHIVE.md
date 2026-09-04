@@ -7583,3 +7583,64 @@ Nothing deleted — only moved.
   a contradiction that was not there. "AT THE TIP" IS NOT A PIN. INSTRUMENT: 490
   flags, 20 CHECKED, 13 RELAYED, 457 UNMARKED, 0 findings.
 ```
+
+## Batch 106 — archived 2026-09-04T14:26Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 100 entered the field.
+Nothing deleted — only moved.
+
+```
+  2026-09-04T13:51Z (MEM ROUND 97 -- STATE ONLY. THE ECONOMICS NOW LIVE IN
+  workspace/RESULTS.md SECTION 0, WHICH IS THE COORDINATOR'S, AND THESE FILES
+  POINT AT IT RATHER THAN DUPLICATING IT.) THE FINDING OF THE DAY IS NOT A
+  NUMBER: NO VALUE CEILING HAS EVER BEEN COMPUTED IN EITHER PROGRAMME. Searched
+  across live/pm_research entire and live/mm_research ALL 11 FILES, both
+  registers, both RESULTS.md, on the full vocabulary AND separately ON THE SHAPE
+  RATHER THAN THE WORDS -- P-2026-002 returns ZERO HITS ACROSS ALL 11 FILES, both
+  registers and both RESULTS.md return zero, and the four `v < 0` sites all COUNT
+  negative windows WITHOUT SUMMING THEM. THE ONE EXCEPTION SHARPENS IT:
+  skew_bound.py IS a real ceiling, for the SKEW lever, built well. SO THIS
+  PROGRAMME KNOWS HOW TO BUILD A CEILING AND SPENT MONTHS ON THE CANCELLATION
+  LEVER WITHOUT BUILDING ONE -- "not a capability gap, a gap in what got asked" --
+  AND IT HAS BEEN A FILTER AND A SUM FOR TEN DAYS: markout_cents_per_share at
+  harmful_exposure_rows.py:309-313 IS the per-fill P&L and has existed since
+  2026-08-25 08:21, so V_oracle WAS COMPUTABLE ON DAY ONE AND WOULD HAVE BOUNDED
+  THE WHOLE OVERLAY CASE BEFORE ANY RANKER WAS FITTED.
+  V_oracle -- the sum of |P&L| over fills whose P&L is NEGATIVE, one filter and
+  one sum -- REPLACES r, WHICH IS REFUTED AS A SURVEY STATISTIC (three books
+  holding N, total spread and total P&L exactly, so r is identical, have overlay
+  ceilings of 0.00%, 10.61% and 21.66%). THE SURVEY IS THE LIVE DECISION PATH: A
+  DISTRIBUTION WHERE V_oracle ~ 0 CLOSES THE OVERLAY LINE BECAUSE NO POLICY COULD
+  HAVE PAID -- a DIFFERENT AND BETTER REASON than "this policy did not". It runs
+  over the admissible development window and TOUCHES NO SEALED DAY. WATCH-OUT
+  RECORDED: a NON-zero V_oracle does NOT open the line, it only puts the ceiling
+  above zero.
+  FOUR OF MY OWN FLAGS ARE SUPERSEDED IN BAND THIS ROUND, TEXT KEPT AS
+  PROVENANCE, NEVER EDITED AWAY. (i) THE r-THRESHOLD FLAG -- r is refuted as a
+  survey statistic; sigma/alpha is a PER-BOOK quantity, not a constant, and the
+  per-book arithmetic still holds only for this book. (ii) THE 43-FILL-TAIL FLAG
+  -- the "99% clears break-even fourfold" bound DOES NOT WEAKEN, IT FLIPS:
+  de-tailing must be SYMMETRIC by |P&L|, and winner-ranked r_ex >= 110.58% becomes
+  extreme-ranked r_ex <= 26.76%, BELOW CONDVALUE's 27.60% break-even; the same
+  book reads 1.1077 / 0.2504 / 0.1863. AND THE PREMISE UNDER IT ALSO FAILS: the
+  concentration sits INSIDE a no-tail Gaussian null's 90% band, so it measures
+  DISPERSION, not tail-dependence. (iii) THE CASCADE-LEVER FLAG -- misnamed: the
+  arms differ 10.95x, splitting as PER-FILL COST 5.643x and CASCADE 1.940x, so it
+  is CHEAP FILLS FIRST, FEW FILLS SECOND. (iv) THE PROVENANCE-DEFECT FLAG --
+  RESOLVED: re-emitted from a clean tree on the branch, 7/7 identity files
+  matching, and 26 OF 26 ECONOMIC QUANTITIES BIT-IDENTICAL, SO THE DEFECT WAS THE
+  RECORD AND NOT THE RESULT.
+  AND THE INVENTORY LEG, AS STATE RATHER THAN AS A RESULT: the pre-registered
+  prediction RESOLVED BADLY FOR THE MODEL EVEN THOUGH THE SIGN CAME OUT RIGHT --
+  P1 REFUTED BY ITS AUTHOR'S OWN FALSIFIER (the baseline leg is +8,587.54c, as
+  large as the whole fills leg, where DE predicted negative) and P4 CONFIRMED
+  THROUGH A MECHANISM THAT DOES NOT EXIST, P2/P4 having been derived from P1's
+  adverse-residual mechanism when there is no adverse residual. "A right sign from
+  a wrong model is not a confirmed prediction." BOTH LEGS TURN CONDVALUE FROM
+  -953.92c TO +2,394.40c AND IT MUST NOT BE BANKED: three of twelve windows carry
+  81.4% of the inventory leg, one gap-ended window carries 28% of the baseline
+  leg, the cluster unit for that leg is TWELVE not 4,315, and the route is a
+  DIRECTIONAL BET (terminal net FLIPS +146.74 -> -147.28) THAT DE PRE-COMMITTED TO
+  DISTRUSTING. INSTRUMENT: 494 flags, 21 CHECKED, 16 RELAYED, 457 UNMARKED, 0
+  findings.
+```
