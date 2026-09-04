@@ -1,6 +1,51 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T12:46Z (MEM round 91) — **A CORRECTION TO R-513(A),
+Updated: 2026-09-04T13:00Z (MEM round 92) — **SHORT BATCH: a new standing rule,
+and the Q4 null is known to be DIAGNOSTIC-ONLY before it runs.**
+
+**STANDING RULE 11, and it is the coordinator's own correction, not mine.**
+*A verification you performed yourself is EVIDENCE; a seat's report is a CLAIM;
+when they conflict the conflict is adjudicated AT THE ARTIFACT, never by
+deferring to the seat.* The instance is R-513(A) — read `False` correctly at the
+artifact, then accepted BE's contrary report and wrote `None`. **That is a new
+shape: every other failure today was relaying an UNCHECKED claim; this is
+discarding a CHECKED one.** It is the counterpart to `mem_flag_provenance.py` —
+the instrument asks whether a claim was ever checked and says nothing about what
+to do when a check **exists** and a report disagrees with it.
+
+**My candidate mechanism is confirmed.** Both superseded `iter011` variants carry
+`increment_beats_incumbent` at **zero sites**, so `.get()` returns `None` for an
+**absent** key — **R-509(B)'s own codomain predicate producing a false correction
+eleven entries later**, in the one field a USER-facing economic claim turned on.
+
+### The Q4 null, carried with its provenance split rather than as one block
+
+| claim | prov |
+|---|---|
+| **Diagnostic-only.** No outcome can make Q4 pass; the gain is six cells `GATE_PARTIALLY_EVALUATED` → `GATE_EVALUATED_AND_FAILED`; **it runs anyway** because *"does cancelling on this signal beat cancelling at random at the same budget"* is worth answering on its own | **RELAYED** — R-515(D)/R-516 |
+| **The answer is pinned before any draw:** null means ≈ −1,440 / −2,881 / −4,321c against the observed +7,869.68 / +12,333.50 / +14,476.99, p at the 1/501 floor at all three; all five heads already carrying this null returned **exactly** the floor. **A prediction that comes true is not evidence about the model** | **RELAYED** — R-516(A) |
+| **Internally valid.** `de_section81_arms.py` binds `cv_ev` once at `:410`; the treated arm replays it at `:433`; the above-threshold set is built over it at `:460`; the control at `:512` is `permuted_stream(cv_ev, …)` — the **same object on both sides** | **CHECKED at the code** |
+| **Four code defects**, read at the source: the pool is **unrestricted** (`strata` built at `:71-75` over every generation, so ~90% of the budget goes to actions worth zero to cancel — **the matching itself is right**); the candidate values the first **crossing** row, the null the **first** row; `beats_random_max_on_NET` is a **boolean against the max of the draws**, which Holm cannot consume; and there is **no minimum-draws guard** while the sibling refuses below 200 **by name** | **CHECKED at the code** |
+| Declaration **amended to a grid before any draw** — both pools declared, both run, both reported, neither selected after seeing | **RELAYED** — R-516(C) |
+
+**R-513(E) is downgraded, not dismissed:** the selectivity threatens **external**
+validity only. The arm numbers still describe a population with its long
+exposures preferentially removed, **and that limit travels with every number.**
+
+### One correction that binds my own reading
+
+*"R-340 does not name `clob_v4`"* was a **parser artifact** this register carried
+**twice** and two selftests asserted as fact; the cite is **better** than
+reported. The second-order half matters more: **"this register writes each entry
+as ONE LINE" was a generalisation from n=2 and is false** — and it is what my own
+reload brief handed me as established. **A correction verified on a sample of two
+is still a claim about a population.** Nothing of mine turns on it — I read the
+register with line **ranges**.
+
+**Instrument:** 472 flags, **10 CHECKED**, 5 RELAYED, 457 UNMARKED, 0 findings.
+
+
+Previously (MEM round 91) — 2026-09-04T12:46Z — **A CORRECTION TO R-513(A),
 ESTABLISHED AT THE ARTIFACT AND AT THE PRODUCING CODE, ON THE ONE FIELD THAT
 DECIDES WHETHER THE RUN NOW IN FLIGHT CAN CHANGE ANYTHING.**
 
@@ -437,6 +482,21 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T13:00Z — MEM round 92: standing rule 11, and the Q4 null is diagnostic-only before it runs
+>
+> **Full entry is the `Updated:` block at the top.** **STANDING RULE 11:** *a
+> verification you performed yourself is EVIDENCE, a seat's report is a CLAIM,
+> and the conflict is adjudicated AT THE ARTIFACT.* New shape — every other
+> failure today relayed an **unchecked** claim; R-513(A) discarded a **checked**
+> one. **The Q4 null: no outcome can make Q4 pass** (gain = six cells to
+> `GATE_EVALUATED_AND_FAILED`), it **runs anyway**, its answer is **pinned before
+> any draw**, it is **internally valid** (checked at the code), and it carries
+> **four code defects** — the unrestricted pool being the one that changes what
+> it tests. R-513(E) is downgraded to **external validity only**, not dismissed.
+>
+> ---
+
 
 > ### 2026-09-04T12:46Z — MEM round 91: R-513(A)'s accepted correction is contradicted by the artifact, and it decides whether the run in flight can change anything
 >
