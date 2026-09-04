@@ -1,8 +1,8 @@
 # RESULTS — P-2026-003 Polymarket crypto 5-min
 
 Consolidated 2026-09-03T03:23Z, substantially rewritten 2026-09-03T08:29Z,
-and **reliability-corrected 2026-09-04T09:59Z** after an independent review of
-the economic read and its profitability script. **Single writer: the
+reliability-corrected 2026-09-04T09:59Z, and **extended 2026-09-04T13:48Z with
+§0, the first absolute economics this programme has produced**. **Single writer: the
 coordinator.** This
 file is the compact, artifact-anchored answer to "what has been tested and what
 came out of it". `STATUS.yml` and `workspace/HANDOFF.md` remain the running
@@ -15,6 +15,95 @@ independent checks are recorded separately in
 `RESULT_RELIABILITY_AUDIT_2026-09-04.md`. Where a previous document disagrees,
 this file says so explicitly and the disagreement is a **correction**, not a
 restatement.
+
+---
+
+## 0. 2026-09-04 — the first absolute economics, and what they say
+
+**This section supersedes §1 wherever they disagree.** Until today this
+programme had **no absolute economic number at all** — every result was
+candidate-versus-incumbent, model against model, with no no-cancel baseline
+anywhere. §1's "profitability withdrawn" was correct and is now superseded by a
+measurement rather than by a restatement.
+
+**All figures: btc, ONE CONTIGUOUS HOUR (2026-08-24 13:50–14:50Z, 12 windows,
+4,315 fills), development evidence, point estimate and NO interval** — 12
+windows is below the 5-complete-day cluster floor. `is_a_validation` false.
+Artifact `de_section81_arms__20260904T131*Z.json`, emitted from a clean tree on
+the branch with 7/7 identity files matching; the earlier `125340Z` emission named
+a carrying commit **not on the branch**, and **26 of 26 economic quantities are
+bit-identical across the two — the defect was the record, not the result.**
+
+| leg | baseline (0 cancels) | CONDVALUE (333) | HAZARD (48) |
+|---|---:|---:|---:|
+| spread capture | +10,566.95c | — | — |
+| adverse selection | −1,968.19c | — | — |
+| **fills leg (maker P&L)** | **+8,598.76c** | **−953.92c** | **−12.56c** |
+| **inventory leg** | **+8,587.54c** | **+3,348c** | **+650c** |
+| **both legs** | | **+2,394.40c** | **+637.83c** |
+
+### What is established
+
+- **Market-making pays on this hour.** Reproduced by **four independent
+  producers**, one of which recomputes the whole decomposition from the
+  reference alone without any replay (Δ 7.3e-12).
+- **The ranker selects correctly on both axes.** Per **lost fill** (not per
+  cancel), removed fills carry **3.01× the average adverse at 0.832× the average
+  spread**; HAZARD is sharper at **3.81× / 0.76×**.
+- **The ranker avoids the biggest winners.** Of the 43 largest-P&L fills,
+  **CONDVALUE declined 1 where chance says 14.35; HAZARD declined 0** — and 0
+  under the extreme-|P&L| ranking too.
+- **No path effect.** Every retained fill is **bit-identical in both replays**,
+  across both heads, three budgets and three latency rungs (6 non-vacuous cells);
+  the strongest removes 82.6% of the book and re-prices nothing. So the delta
+  **is** the declined fills' value. CLAUDE.md pitfall 4 does not fire here.
+- **The two arms differ 10.95×**, splitting as **per-fill cost 5.643× and
+  cascade 1.940×**. A cancel removes **4.32 and 2.23 fills**, against **1.12 for
+  a random cancel**. Direction: **cheap fills first, few fills second.**
+
+### What is NOT established, and these are the load-bearing caveats
+
+- **That the book has harvestable structure at all.** The "top 1% carry 113%"
+  concentration **sits inside a no-tail Gaussian null's 90% band** (observed
+  1.1295, null median 0.6765, band [0.427, 2.060]; **19% of Gaussian books
+  exceed 1**). It is a statement about **dispersion**, not tail-dependence.
+- **"99% of this book clears break-even fourfold" is an artifact of which tail
+  was removed.** Body r is **1.1077** removing the winners, **0.2504** removing
+  the extremes, **0.1863** whole-book. **Same book, three answers.** Selecting
+  the top k by outcome and evaluating the remainder conditions on the outcome.
+- **The inventory reversal runs through a mechanism its author refuted.** The
+  prediction was pre-registered: **P1 (baseline leg negative) was REFUTED by its
+  own falsifier** — the leg is +8,587.54c — and **P4 was derived from P1**, so
+  a right sign came from a wrong model. The real route is a **directional bet**:
+  CONDVALUE's terminal net **flips** (+146.74 → −147.28) rather than shrinking.
+- **The inventory leg has a cluster unit of 12, not 4,315.** Three of twelve
+  windows carry **81.4%**; one gap-ended window carries **28%** of the baseline
+  leg. The conclusion survives both terminal-mark views (+773c / +4,543c) but the
+  **level moves 28% on one window**.
+- **Neither arm is distinguishable from random cancellation** on the fills leg
+  (CONDVALUE z = −0.20, p = 0.43; HAZARD z = +0.26, p = 0.60) — though the two
+  **point estimates are a factor of seven apart** and the z-statistic hides it.
+
+### The specification, and the statistic that replaced it
+
+An overlay pays iff **r = adverse/spread ≥ σ/α**: **27.60% for CONDVALUE,
+19.88% for HAZARD**, against this book's **18.63%**. **Both lose; HAZARD by
+6.7% of relative adverse.**
+
+**But `r` is REFUTED as a survey statistic.** Three books holding N, total
+spread and total P&L **exactly** — so `r` is identical at 18.6259% — have
+overlay ceilings of **0.00%, 10.61% and 21.66%**, and α ceilings of 1.00, 10.01
+and 100.35. Whether an overlay can pay is a property of the **joint distribution
+of (spread, adverse) across fills**, which a ratio of totals discards. **σ/α is a
+per-book quantity, not a constant.**
+
+**The replacement is `V_oracle`** — the sum of |P&L| over fills whose P&L is
+negative. Model-free, exactly the ceiling **any** overlay could reach, one filter
+and one sum. **A survey where `V_oracle` ≈ 0 closes the overlay line because NO
+POLICY COULD HAVE PAID**, which is a different and better reason than "this
+policy did not". That survey is running across the admissible development window
+(the hf_ws_v2 boundary 2026-08-24T13:48:54Z to the freeze epoch), touching **no
+sealed day**. The measured hour is **one cell** of it.
 
 ---
 
