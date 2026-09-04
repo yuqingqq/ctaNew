@@ -462,72 +462,54 @@ def aggregation_justification(feed_path: Path,
 
 def publication_provenance(symbols=("matched_volume", "compute", "emit",
                                     "p_reading", "aggregation_justification"),
-                           entry_points=("emit", "main"),
-                           src: str = None) -> dict:
-    """(3) THE PUBLICATION PROVENANCE CHECK, as one AST pass over this module.
+                           root: Path = None) -> dict:
+    """(3) THE PROVENANCE CENSUS — DELEGATED TO DA'S INSTRUMENT OF RECORD.
 
-    Standing practice before anything reaches the USER, and the result
-    document carries its own proof rather than relying on someone having run
-    it. For each published symbol it censuses COMMITTED CALL sites and BARE
-    REFERENCE sites, and requires at least one call reachable from a
-    committed entry point -- which is exactly the property whose absence let
-    `matched_volume` be defined, referenced and never called."""
-    import ast as _ast
-    # `src` is a PARAMETER so the check can be driven against a source where
-    # the call is absent. A provenance checker that can only read its own
-    # file cannot be shown to fire (rule 15).
-    src = Path(__file__).read_text() if src is None else src
-    tree = _ast.parse(src)
-    funcs = {n.name: n for n in tree.body
-             if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef))}
-    calls: dict = {s: [] for s in symbols}
-    refs: dict = {s: [] for s in symbols}
-    for fname, node in funcs.items():
-        for c in _ast.walk(node):
-            if isinstance(c, _ast.Call) and isinstance(c.func, _ast.Name) \
-                    and c.func.id in calls:
-                calls[c.func.id].append(fname)
-            elif isinstance(c, _ast.Name) and c.id in refs \
-                    and not isinstance(getattr(c, "ctx", None), _ast.Store):
-                refs[c.id].append(fname)
+    BE33-R2: this seat and DA each grew a census of the same thing. Two
+    implementations that AGREE tell you nothing and two that DISAGREE tell you
+    which to trust only after an argument, so there is one instrument and it
+    is DA's: `da_arm_replay_verify.publication_provenance` reads a producer's
+    source with `ast` WITHOUT importing it, censuses the WHOLE tree rather
+    than one file, and separates production call sites from selftest ones --
+    all strictly more than the local version did.
 
-    def reaches(sym, seen=None):
-        seen = seen or set()
-        for caller in calls.get(sym, ()):
-            if caller in entry_points:
-                return caller
-            if caller in seen:
-                continue
-            got = reaches(caller, seen | {caller})
-            if got:
-                return got
-        return None
-
+    IT REFUSES RATHER THAN FALLING BACK. If DA's module cannot be imported
+    this raises, because a silent fallback to a second implementation is the
+    exact condition the finding is about."""
+    try:
+        import da_arm_replay_verify as DAV
+    except Exception as e:                            # noqa: BLE001
+        raise ReadCellsRefused(
+            f"REFUSED: the provenance instrument of record "
+            f"(`da_arm_replay_verify.publication_provenance`) could not be "
+            f"imported ({type(e).__name__}). A local re-implementation is "
+            f"what BE33-R2 removed; this does not fall back to one.") from None
     rows = {}
     for sym in symbols:
+        r = DAV.publication_provenance("be_read_cells.py", sym, root=root)
         rows[sym] = {
-            "committed_call_sites": sorted(set(calls[sym])),
-            "bare_reference_sites": sorted(set(refs[sym]) - set(calls[sym])),
-            "n_calls": len(set(calls[sym])),
-            "reachable_from_committed_entry_point": reaches(sym),
+            "symbol_defined_in_producer": r["symbol_defined_in_producer"],
+            "n_call_sites": r["n_call_sites"],
+            "n_production_call_sites": r["n_production_call_sites"],
+            "production_call_sites": [
+                f"{c['file']}:{c['line']}" for c in r["production_call_sites"]],
+            "producer_inside_repo": r["producer_inside_repo"],
         }
-    unreachable = [k for k, v in rows.items()
-                   if k not in entry_points
-                   and not v["reachable_from_committed_entry_point"]]
+    unwired = [k for k, v in rows.items()
+               if v["symbol_defined_in_producer"]
+               and v["n_production_call_sites"] == 0]
     return {
-        "producer": f"{Path(__file__).name} (in-repo)",
-        "producing_path_inside_the_repo": str(
-            Path(__file__).resolve()).startswith(str(REPO_ROOT)),
-        "entry_points": list(entry_points),
+        "instrument": "da_arm_replay_verify.publication_provenance "
+                      "(INSTRUMENT OF RECORD, BE33-R2)",
+        "producer": "be_read_cells.py",
         "symbols": rows,
-        "symbols_with_no_reachable_committed_call": unreachable,
-        "passes": not unreachable,
+        "symbols_defined_with_no_production_call_site": unwired,
+        "passes": not unwired,
         "why_this_check_exists": (
-            "`matched_volume` was defined here, referenced in a docstring and "
+            "`matched_volume` was defined here, referenced in a comment and "
             "called by nothing committed, and its number reached the USER out "
-            "of a scratch script. A census of calls versus bare references, "
-            "with reachability from an entry point, is what would have caught "
-            "it"),
+            "of a scratch script. `n_production_call_sites == 0` is that "
+            "defect stated as a predicate"),
     }
 
 
@@ -571,7 +553,7 @@ def emit(feed_paths, out_path: Path = None) -> dict:
     return doc
 
 
-EXPECTED_CHECKS = 11
+EXPECTED_CHECKS = 9
 
 
 def selftest() -> int:
@@ -605,30 +587,42 @@ def selftest() -> int:
     # before a marker it had just inserted rather than RE-EVALUATING the
     # predicate, so the control that proves the check can fail did not.
     # Both halves are now the AST census, driven on modified source.
+    import tempfile as _tf
     _wired = publication_provenance()
-    ok(_wired["symbols"]["matched_volume"]["committed_call_sites"] == ["compute"],
-       "WIRING: `compute()` CALLS `matched_volume` -- an AST Call node, not a "
-       "substring a comment could satisfy")
-    _mention = publication_provenance(src=(
-        "def matched_volume(a):\n    return a\n"
-        "def compute(x):\n"
-        "    # this line mentions matched_volume( and calls nothing\n"
-        "    return x\n"
-        "def emit(x):\n    return compute(x)\n"))
-    ok(_mention["symbols"]["matched_volume"]["committed_call_sites"] == []
-       and _mention["passes"] is False,
-       "WIRING KNOWN-BAD, RE-EVALUATED: on a source whose only occurrence of "
-       "`matched_volume(` is INSIDE A COMMENT, the predicate returns NO call "
-       "sites and the check FAILS -- the substring test it replaced passed "
-       "this source")
-    _refonly = publication_provenance(src=(
-        "def matched_volume(a):\n    return a\n"
-        "def compute(x):\n    y = matched_volume\n    return y\n"
-        "def emit(x):\n    return compute(x)\n"))
-    ok(_refonly["symbols"]["matched_volume"]["bare_reference_sites"] == ["compute"]
-       and _refonly["symbols"]["matched_volume"]["committed_call_sites"] == [],
-       "WIRING KNOWN-BAD: a BARE REFERENCE is counted as a reference and NOT "
-       "as a call -- the distinction the whole finding turns on")
+    ok(_wired["passes"] is True
+       and _wired["symbols"]["matched_volume"]["n_production_call_sites"] >= 1
+       and "da_arm_replay_verify" in _wired["instrument"],
+       f"WIRING: `matched_volume` has "
+       f"{_wired['symbols']['matched_volume']['n_production_call_sites']} "
+       f"PRODUCTION call site(s), censused by DA's instrument of record "
+       f"(BE33-R2) rather than a second local copy")
+    # The known-bads drive THE SAME instrument over fixture trees, so there
+    # is still exactly one implementation and it can still be shown to fire.
+    with _tf.TemporaryDirectory() as _td:
+        _td = Path(_td)
+        (_td / "be_read_cells.py").write_text(
+            "def matched_volume(a):\n    return a\n"
+            "def compute(x):\n"
+            "    # mentions matched_volume( in a comment only\n"
+            "    return x\n")
+        _c = publication_provenance(symbols=("matched_volume",), root=_td)
+        ok(_c["passes"] is False
+           and _c["symbols"]["matched_volume"]["n_production_call_sites"] == 0,
+           "WIRING KNOWN-BAD, ON THE SAME INSTRUMENT: a tree whose only "
+           "occurrence of `matched_volume(` is inside a COMMENT has ZERO "
+           "production call sites and FAILS — the substring test this "
+           "replaced passed that source")
+    with _tf.TemporaryDirectory() as _td2:
+        _td2 = Path(_td2)
+        (_td2 / "be_read_cells.py").write_text(
+            "def matched_volume(a):\n    return a\n"
+            "def compute(x):\n    y = matched_volume\n    return y\n")
+        _r = publication_provenance(symbols=("matched_volume",), root=_td2)
+        ok(_r["symbols"]["matched_volume"]["n_production_call_sites"] == 0
+           and _r["symbols"]["matched_volume"]["symbol_defined_in_producer"],
+           "WIRING KNOWN-BAD: a BARE REFERENCE is not a call — defined, "
+           "referenced, zero production call sites, which is exactly the "
+           "state that let a scratch script publish the headline")
 
     _p = p_reading(0.94, 2000, 288)
     ok(_p["how_to_read_a_HIGH_p"].startswith("FAILURE TO SHOW A WIN")
@@ -659,24 +653,6 @@ def selftest() -> int:
         refuses(lambda: load_two_arm_feed(g, 50), "no scored rows",
                 "KNOWN-BAD: an EMPTY feed REFUSES rather than returning an "
                 "empty result (R-141)")
-    _pv = publication_provenance()
-    ok(_pv["passes"] is True
-       and _pv["symbols"]["matched_volume"]["committed_call_sites"] == ["compute"]
-       and _pv["symbols"]["matched_volume"][
-           "reachable_from_committed_entry_point"] == "emit",
-       f"(3) PROVENANCE POSITIVE CONTROL: `matched_volume` is CALLED by "
-       f"compute and reachable from emit; producer named, path in repo "
-       f"({_pv['producing_path_inside_the_repo']})")
-    _unwired = publication_provenance(src=(
-        "def matched_volume(a):\n    return a\n"
-        "def compute(x):\n    y = matched_volume\n    return y\n"
-        "def emit(x):\n    return compute(x)\n"))
-    ok(_unwired["passes"] is False
-       and "matched_volume" in _unwired["symbols_with_no_reachable_committed_call"]
-       and _unwired["symbols"]["matched_volume"]["bare_reference_sites"] == ["compute"],
-       "(3) PROVENANCE KNOWN-BAD: on a source where `matched_volume` is only "
-       "REFERENCED and never CALLED, the check FAILS and names it — which is "
-       "exactly the state that let a scratch script publish the headline")
     ok("DIAGNOSTIC" in matched_volume.__doc__.upper()
        or "DIAGNOSTIC" in inspect.getsource(matched_volume).upper(),
        "(2) the primary carries its DIAGNOSTIC status in the code that "

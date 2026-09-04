@@ -195,7 +195,14 @@ def ledger(feed_path: Path) -> dict:
             "notional_UPPER_BOUND_dollars": up_no,
             "notional_LOWER_BOUND_dollars": lo_no,
             "bracket_width_ratio_shares": (up_sh / lo_sh) if lo_sh else None,
-            "exactly_once_total": "NOT COMPUTABLE — no tranche identity",
+            # BE33-R1: this read as uncomputable IN PRINCIPLE, which would
+            # make the producer change look pointless. The quantity IS
+            # computable -- just not from what we KEPT. Scoped here, where a
+            # reader actually sees it, not only in POPULATION_NOTE.
+            "exactly_once_total":
+                "NOT COMPUTABLE FROM HELD ARTIFACTS — the feed carries no "
+                "tranche identity. It IS computable from the builder, which "
+                "has it; recovering it is a PRODUCER change and a re-run",
             "gross_markout_cents_UPPER_BOUND": m["markout_cents"],
             "intra_action_row_pairs": pairs,
             "pairs_closer_than_the_horizon": inside,
