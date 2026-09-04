@@ -61,6 +61,8 @@ from pathlib import Path
 #:       all-negative -> whole gross), the hand-checked mixed
 #:       case, the SIGNED capture fraction, and the computed
 #:       cascade-vs-selectivity separation.
+#:   +1  DE61: the one-way reading and the measured surface pinned
+#:       to the ceiling, after I shipped a false broad claim.
 #:   +4  the reference-level maker-P&L block, 4 checks -> 8: the
 #:       identity, the double-count known-bad, P&L ==
 #:       post_fill_markout, the two legs' denominators, and a
@@ -70,7 +72,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 222
+EXPECTED_CHECKS = 223
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1823,13 +1825,48 @@ def value_ceiling(values: list, *, leg: str = "unnamed") -> dict:
 
     THAT IS A CEILING NO RANKER CAN EXCEED, and it is one filter and one
     sum over data this repository has carried since
-    `markout_cents_per_share` landed. NOTHING IN EITHER PROGRAMME HAD
-    EVER COMPUTED IT: the only ceiling in the tree, `skew_bound.py`, is
-    for the SKEW lever, and every `v < 0` site COUNTS negative windows
-    without SUMMING them. A bound that costs a filter and a sum, and that
-    would have priced the whole overlay line before any ranker was
-    fitted, is the cheapest thing this seat can ship -- which is why it
-    ships as a NAMED FUNCTION and not as a number in a message.
+    `markout_cents_per_share` landed.
+
+    THE CLAIM THAT SHIPPED WITH THE FIRST VERSION OF THIS DOCSTRING --
+    "nothing in either programme had ever computed it" -- IS FALSE, AND I
+    PROPAGATED IT WITHOUT CHECKING MY OWN SURFACE. It came to me as a
+    finding and I wrote it into a docstring, where it becomes citable. A
+    negative existence claim carries a SURFACE and an AS-OF or it is not
+    a claim, and mine carried neither.
+
+    MEASURED, on the surface nobody had enumerated -- `live/pm_research/`,
+    186 files, 3,378 functions, 0 unparsable, as-of 2026-09-04T14:03:33Z,
+    by an AST pass for the structural signature (a value tested against
+    zero AND accumulated, not merely counted):
+
+      * `skew_bound.py`                     -- ceiling for the SKEW lever
+      * `policy_bounds_v1.py::bound_table`  -- the 16-bin all-gates bound
+                                               for LEVER T (the time gate)
+
+    plus two more DA found in this programme's own code. So the citable
+    form is NOT "no ceiling exists" and not even "none in
+    `live/pm_research/`" -- there are at least two here. It is:
+
+        NO CEILING HAS EVER BEEN COMPUTED FOR THE CANCELLATION-OVERLAY
+        LEVER.
+
+    And that is the sharper statement, because it says the programme
+    ALREADY HAD THIS PATTERN and applied it to two other levers. What was
+    missing was not a capability. It was this lever's turn.
+
+    ONE-WAY, AND THE PRECEDENT IS IN THIS REPO. `policy_bounds_v1`'s own
+    bound says it: "a positive bound is an in-sample maximum, bounds
+    nothing." The same holds here. `V_oracle` is an ORACLE bound on THIS
+    REALISED BOOK -- it says what a rule with perfect foresight could have
+    taken, not what any implementable rule can expect. A large V_oracle
+    therefore REFUTES "the lever is arithmetically exhausted" and
+    establishes nothing about attainability; a V_oracle of ZERO is the
+    one-way direction that DOES close the lever outright.
+
+    `oracle_f` TRAVELS WITH IT AND IS NOT OPTIONAL. A ceiling reachable
+    only by declining 40% of the book is a different proposition from
+    one reachable at 1%, and a ceiling quoted without the fraction of the
+    book it costs invites the reading that it is free.
 
     `oracle_f` TRAVELS WITH IT AND IS NOT OPTIONAL. A ceiling reachable
     only by declining 40% of the book is a different proposition from
@@ -1861,6 +1898,23 @@ def value_ceiling(values: list, *, leg: str = "unnamed") -> dict:
                       "maximum an overlay that can only DECLINE could "
                       "add, attained only by an oracle that declines "
                       "every losing fill and no winning one",
+        "in_sample_maximum": True,
+        "bounds_out_of_sample": False,
+        "one_way": "a LARGE V_oracle refutes 'the lever is "
+                   "arithmetically exhausted' and establishes NOTHING "
+                   "about attainability -- it is an oracle's take on THIS "
+                   "realised book. A ZERO V_oracle is the direction that "
+                   "closes the lever outright. Same discipline as "
+                   "`policy_bounds_v1.bound_table` ('a positive bound is "
+                   "an in-sample maximum, bounds nothing'), which is the "
+                   "in-repo precedent for this lever's sibling",
+        "prior_ceilings_in_this_tree": (
+            "skew_bound.py (SKEW lever); "
+            "policy_bounds_v1.py::bound_table (LEVER T, the time gate). "
+            "Surface live/pm_research/, 186 files / 3378 functions, "
+            "as-of 2026-09-04T14:03:33Z. The citable claim is that no "
+            "ceiling had been computed FOR THE CANCELLATION-OVERLAY "
+            "LEVER -- never the broad form"),
         "decides_nothing": "REPORTED (rule 14).",
     }
 
@@ -4789,6 +4843,20 @@ def selftest() -> int:
        f"{_sepcm['selectivity_spread']:.3f} vs "
        f"{_sepcm['cascade_spread']:.3f}. A ratio nobody computes is a "
        f"ratio prose will invert, and mine did, twice")
+
+    # ---- DE61: THE ONE-WAY DISCIPLINE TRAVELS WITH THE CEILING --------
+    ok(_vc["in_sample_maximum"] is True
+       and _vc["bounds_out_of_sample"] is False
+       and "arithmetically exhausted" in _vc["one_way"]
+       and "policy_bounds_v1" in _vc["prior_ceilings_in_this_tree"]
+       and "CANCELLATION-OVERLAY" in _vc["prior_ceilings_in_this_tree"],
+       "DE61: V_oracle carries its ONE-WAY reading and its SURFACE. A "
+       "large ceiling refutes 'the lever is arithmetically exhausted' "
+       "and says nothing about attainability; only a ZERO closes a "
+       "lever. And the negative existence claim is the NARROW one -- no "
+       "ceiling for the CANCELLATION-OVERLAY lever -- because the broad "
+       "form I shipped was false: `skew_bound.py` and "
+       "`policy_bounds_v1.py::bound_table` are ceilings in this same tree")
 
     # ---- DE48: THE LOG MUST NEVER MAKE A DEAD RUN LOOK ALIVE ----------
     import subprocess as _sp

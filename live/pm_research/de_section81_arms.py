@@ -1171,10 +1171,16 @@ def run_arms(argv=None):
     # filter and one sum over `markout_cents_per_share`, which this
     # repository has carried since 2026-08-25 -- so it was computable on
     # day one and would have priced the whole overlay line BEFORE any
-    # ranker was fitted. The reviewer searched both programmes and found
-    # NO value ceiling had ever been computed: the only one in the tree
-    # (`skew_bound.py`) is for the SKEW lever, and every `v < 0` site
-    # COUNTS negative windows without SUMMING them.
+    # ranker was fitted. CORRECTED (DE61): the claim that shipped here --
+    # that no value ceiling had ever been computed in either programme --
+    # IS FALSE, and I propagated it without checking my own surface.
+    # Measured on `live/pm_research/` (186 files, 3,378 functions, as-of
+    # 2026-09-04T14:03:33Z): `skew_bound.py` bounds the SKEW lever and
+    # `policy_bounds_v1.py::bound_table` is the 16-bin all-gates bound
+    # for LEVER T, plus two more DA found. THE CITABLE CLAIM IS NARROWER
+    # AND SHARPER: no ceiling had ever been computed FOR THE
+    # CANCELLATION-OVERLAY LEVER -- the programme already had the pattern
+    # and had applied it to two other levers.
     #
     # IT SHIPS AS A CALL TO A NAMED FUNCTION, not as a number computed
     # here, so it can never again be the thing nobody ran.
@@ -1198,9 +1204,16 @@ def run_arms(argv=None):
             "why_this_exists": (
                 "an overlay can only DECLINE, so the best it could ever "
                 "do is decline every losing fill and keep every winning "
-                "one. That is a ceiling no ranker can exceed, it costs a "
-                "filter and a sum, and it had never been computed in "
-                "either programme"),
+                "one. That is a ceiling no ranker can exceed and it costs "
+                "a filter and a sum. It had never been computed FOR THE "
+                "CANCELLATION-OVERLAY LEVER -- not the broad claim, which "
+                "is false: `skew_bound.py` and "
+                "`policy_bounds_v1.py::bound_table` are ceilings in this "
+                "same tree for the SKEW and time-gate levers"),
+            "one_way_reading": (
+                "V_oracle is an ORACLE bound on THIS REALISED BOOK. Large "
+                "means the lever is not arithmetically exhausted; it says "
+                "NOTHING about attainability. Only a ZERO closes a lever"),
             "read_with_oracle_f": (
                 "a ceiling reachable only by declining a large fraction "
                 "of the book is a different proposition from one "
