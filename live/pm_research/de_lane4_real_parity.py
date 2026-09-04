@@ -1120,11 +1120,31 @@ def run(limit: int | None = None, out: Path | None = None) -> dict:
         "n_cancels_issued_active_stub": n_cancel,
         "n_windows_where_the_policy_acted": acted_windows,
         "n_stale_charged_fills": n_stale,
-        "gates": {k: {"pass": not gate_fail[k],
+        # DA's routed finding, and it is the phantom-determinism class:
+        # `pass: not gate_fail[k]` with NO DENOMINATOR reads True when
+        # ZERO windows were admitted, which is indistinguishable from
+        # every window passing. DA hit the same shape in its own battery
+        # and it reported children that could not import as
+        # `identical: false` -- nondeterminism, when neither interpreter
+        # had run. A gate evaluated on nothing is UNEVALUATED, never
+        # passed.
+        "gates": {k: {"pass": (None if win["ADMITTED"] == 0
+                               else not gate_fail[k]),
+                      "status": ("UNEVALUATED_NO_ADMITTED_WINDOWS"
+                                 if win["ADMITTED"] == 0
+                                 else "PASS" if not gate_fail[k]
+                                 else "FAIL"),
+                      "n_evaluated_windows": win["ADMITTED"],
                       "n_failing_windows": len(gate_fail[k]),
+                      "n_passing_windows": win["ADMITTED"]
+                      - len(gate_fail[k]),
                       "failing_slugs": gate_fail[k][:20]}
                   for k in GATE_KEYS},
-        "all_gates_pass": all(not gate_fail[k] for k in GATE_KEYS),
+        # `all` over an empty evaluation is True in Python and that is
+        # exactly the wrong answer here, so the denominator gates it.
+        "all_gates_pass": (None if win["ADMITTED"] == 0
+                           else all(not gate_fail[k] for k in GATE_KEYS)),
+        "n_evaluated_windows": win["ADMITTED"],
         "aggregate_gate_digest": hashlib.sha256(
             "".join(per_slug_digest).encode()).hexdigest(),
         "arm_runnability": dict(ARM_RUNNABLE_LEGACY),

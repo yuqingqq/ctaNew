@@ -107,7 +107,7 @@ import json
 import math
 from typing import Any, Sequence
 
-EXPECTED_CHECKS = 89          # asserted by selftest(); update together
+EXPECTED_CHECKS = 90          # asserted by selftest(); update together
 
 SIDES = ("BUY_UP", "SELL_UP")
 RANK_GEN_START, RANK_FILL, RANK_GEN_END, RANK_SCORE = 0, 1, 2, 3
@@ -1071,6 +1071,10 @@ def replay_policy(reference: dict[str, Any],
     p = validate_params(params)
     validate_reference(reference)
     validate_scores(scores)
+    # THE DENOMINATOR EVERY CANCEL COUNTER IS COUNTED OVER. Taken at the
+    # top, from the stream as supplied, so a zero counter below can be
+    # told apart from a path that never ran (DA's routed finding).
+    n_score_events = len(scores)
     counters = {k: 0 for k in _COUNTER_NAMES}
     trajectory: list[dict] = []
     cancel_records: list[dict] = []
@@ -1122,15 +1126,42 @@ def replay_policy(reference: dict[str, Any],
         "n_reference_generations": n_ref_gens,
         "n_actions_cancel": counters["cancels_issued"],
         "counters": counters,
+        # DA's routed finding: a COUNTER WITH NO COMPANION DENOMINATOR
+        # makes "the path ran and counted nothing" indistinguishable from
+        # "the path never ran". DA hit the same shape in its own battery
+        # and it produced a PHANTOM DETERMINISM FAILURE -- children that
+        # could not import, reported as `identical: false`, which reads as
+        # nondeterminism when neither interpreter had run. Every counter
+        # block below now carries what it was counted OVER, and a block
+        # whose denominator is zero says UNEVALUATED rather than reporting
+        # a zero that looks like a measurement.
+        "counters_evaluated": {
+            "n_reference_generations": n_ref_gens,
+            "n_slugs": len(reference),
+            "n_score_events": n_score_events,
+            "cancellation_was_reachable": n_score_events > 0
+            and n_ref_gens > 0,
+            "why": "zeros in `rate_limit`, `cancel_lifecycle` and `holds` "
+                   "are only measurements when these are non-zero; with "
+                   "no score events no cancel decision was ever taken and "
+                   "every cancel counter is UNEVALUATED, not zero"},
         "rate_limit": {"requested": counters["cancels_requested"],
                        "passed": counters["cancels_rate_passed"],
                        "suppressed":
-                           counters["cancels_suppressed_rate_limited"]},
+                           counters["cancels_suppressed_rate_limited"],
+                       "evaluated_over_score_events": n_score_events,
+                       "status": ("UNEVALUATED_NO_SCORE_EVENTS"
+                                  if n_score_events == 0 else "COUNTED")},
         "cancel_lifecycle": {"issued": counters["cancels_issued"],
                              "effective": counters["cancels_effective"],
                              "stale": counters["cancels_stale"],
                              "zero_value": counters["cancels_zero_value"],
-                             "unresolved": counters["cancels_unresolved"]},
+                             "unresolved": counters["cancels_unresolved"],
+                             "evaluated_over_score_events": n_score_events,
+                             "evaluated_over_generations": n_ref_gens,
+                             "status": ("UNEVALUATED_NO_SCORE_EVENTS"
+                                        if n_score_events == 0
+                                        else "COUNTED")},
         "economics": {
             "harm_avoided_cents": harm,
             "sacrifice_cents": sac,
@@ -1153,7 +1184,11 @@ def replay_policy(reference: dict[str, Any],
                   "permanent": counters["permanent_holds"],
                   "total_s": econ["hold_seconds_total"],
                   "max_s": econ["hold_seconds_max"],
-                  "records": econ["holds"]},
+                  "records": econ["holds"],
+                  "evaluated_over_score_events": n_score_events,
+                  "evaluated_over_generations": n_ref_gens,
+                  "status": ("UNEVALUATED_NO_SCORE_EVENTS"
+                             if n_score_events == 0 else "COUNTED")},
         # REPORTING-ONLY cross-slug aggregate over the per-slug
         # inventories (decisions read only each slug's own dict; the
         # per-slug terminal nets are what settle at expiry, so the summed
@@ -1379,6 +1414,15 @@ def _fake_result(evs: list, stale_sh: float = 0.0,
             "economics": {"queue_reset_cost_cents_total": reset}}
 
 
+#: The COUNTER keys, named once. The emission also carries denominators
+#: and a status beside them (DA's routed finding), so a check that
+#: compares the whole block by equality breaks the moment a denominator
+#: is added -- and a denominator should be addable without editing five
+#: assertions.
+_CNT = ("requested", "passed", "suppressed")
+_LC = ("issued", "effective", "stale", "zero_value", "unresolved")
+
+
 def selftest() -> int:
     checks = 0
 
@@ -1432,10 +1476,29 @@ def selftest() -> int:
     # ---- group B: the enabled run's hand-checkable lifecycle ------------
     c = ena["counters"]
     lc = ena["cancel_lifecycle"]
-    ok(ena["rate_limit"] == {"requested": 1, "passed": 1, "suppressed": 0}
-       and lc == {"issued": 1, "effective": 1, "stale": 0, "zero_value": 0,
-                  "unresolved": 0},
+    ok({k: ena["rate_limit"][k] for k in _CNT}
+       == {"requested": 1, "passed": 1, "suppressed": 0}
+       and {k: lc[k] for k in _LC}
+       == {"issued": 1, "effective": 1, "stale": 0, "zero_value": 0,
+           "unresolved": 0},
        "enabled run: one requested, one issued, one effective cancel")
+    # DA's routed finding, driven: the counters carry WHAT THEY WERE
+    # COUNTED OVER, so a zero from a path that never ran is not a zero
+    # that was measured.
+    ok(lc["evaluated_over_score_events"] > 0
+       and lc["status"] == "COUNTED"
+       and ena["rate_limit"]["status"] == "COUNTED"
+       and ena["holds"]["status"] == "COUNTED"
+       and ena["counters_evaluated"]["cancellation_was_reachable"] is True,
+       f"and every cancel counter carries its DENOMINATOR: counted over "
+       f"{lc['evaluated_over_score_events']} score events and "
+       f"{lc['evaluated_over_generations']} generations, status "
+       f"{lc['status']}. A counter with no denominator makes 'the path "
+       f"ran and counted nothing' indistinguishable from 'the path never "
+       f"ran' -- the shape that reported DA's non-importing children as "
+       f"`identical: false`, which reads as nondeterminism when neither "
+       f"interpreter had run")
+
     ec = ena["economics"]
     ok(abs(ec["harm_avoided_cents"] - 25.0) < 1e-9
        and ec["sacrifice_cents"] == 0.0,
@@ -1742,12 +1805,14 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
             {"t": 8.0, "slug": "w1", "side": "BUY_UP", "score": 0.1},
             {"t": 12.0, "slug": "w1", "side": "BUY_UP", "score": 0.9}]
     lim = replay_policy(ref, sc_r, _params(max_cancels_per_minute=1.0))
-    ok(lim["rate_limit"] == {"requested": 2, "passed": 1, "suppressed": 1}
+    ok({k: lim["rate_limit"][k] for k in _CNT}
+       == {"requested": 2, "passed": 1, "suppressed": 1}
        and lim["cancel_lifecycle"]["issued"] == 1,
        "rate limiter: second in-window request suppressed, all three "
        "counts reported separately")
     unlim = replay_policy(ref, sc_r, _params())
-    ok(unlim["rate_limit"] == {"requested": 2, "passed": 2, "suppressed": 0}
+    ok({k: unlim["rate_limit"][k] for k in _CNT}
+       == {"requested": 2, "passed": 2, "suppressed": 0}
        and unlim["cancel_lifecycle"]["issued"] == 2,
        "with an explicit unlimited declaration both requests issue")
     ok(lim["counters"]["reposts_at_generation_start"] == 1
