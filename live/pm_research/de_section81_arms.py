@@ -54,6 +54,40 @@ def control_is_valid(predicates: dict) -> bool:
     return all(predicates.get(k) is True for k in CONTROL_PREDICATES)
 
 
+#: The protocol name DA's `provenance` resolves the producer from: it
+#: strips a trailing _vN and appends .py, so this must name this file.
+PROTOCOL = "de_section81_arms_v1"
+
+#: Every file whose bytes decide what these numbers are. Recomputed by
+#: the instrument from the tree; a DIFFER means the artifact was made by
+#: a program that is no longer there.
+IDENTITY_FILES = ("de_section81_arms.py", "de_phase4_diag_runner.py",
+                  "harmful_stateful_policy.py", "de_matched_random_control.py",
+                  "de_rho_estimator.py", "de_score_stream.py",
+                  "de_lane4_real_parity.py")
+
+
+def code_identity() -> dict:
+    """`{file: sha16}` in the instrument's own scheme."""
+    d = Path(__file__).resolve().parent
+    return {f: hashlib.sha256((d / f).read_bytes()).hexdigest()[:16]
+            for f in IDENTITY_FILES if (d / f).is_file()}
+
+
+def emit(doc: dict, dst: Path) -> Path:
+    """THE EMITTING ENTRY POINT -- a TOP-LEVEL function that serialises.
+
+    DA's `_emitting_entry_points` finds the emitter BY SHAPE (`json.dump`
+    / `write_text`) among top-level functions, then censuses its call
+    sites. This module wrote its artifact at module level, so the census
+    found no entry point at all and could not ask the question it exists
+    to ask. The write lives here and is called from the run body, which
+    is a PRODUCTION call site and not a selftest one."""
+    dst = Path(dst)
+    dst.write_text(json.dumps(doc, indent=1, sort_keys=True, default=str))
+    return dst
+
+
 def provenance() -> dict:
     """WHO PRODUCED THIS EMISSION -- so a provenance census finds it.
 
@@ -72,6 +106,8 @@ def provenance() -> dict:
         except Exception:                            # noqa: BLE001
             return None
     return {
+        "protocol": PROTOCOL,
+        "code_identity": code_identity(),
         "produced_by": me.name,
         "producing_code": hashlib.sha256(me.read_bytes()).hexdigest()[:16],
         "producing_code_path": str(me),
@@ -278,7 +314,8 @@ def replay(scores, *, cancel, theta):
 
 PROV = provenance()
 RUN_ID = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
-OUT = {"provenance": PROV, "run_id": RUN_ID,
+OUT = {"protocol": PROTOCOL, "code_identity": code_identity(),
+       "provenance": PROV, "run_id": RUN_ID,
        "population": POP, "arms": {}, "spec": "§8.1", "coin": COIN,
        "latency_ms": LAT, "budget": BUDGET,
        "evidence_class": "DEVELOPMENT_EVIDENCE_NOT_A_VALIDATION"}
@@ -453,8 +490,7 @@ OUT["peak_rss_gb"] = gb(); OUT["total_wall_s"] = round(time.time()-T0, 1)
 # later run overwrote the one that had been filed from and the two could
 # not be told apart afterwards -- which is why "the artifact on disk" and
 # "the artifact I filed from" were different runs.
-_dst = SCRATCH / f"de_section81_arms__{RUN_ID}.json"
-json.dump(OUT, open(_dst, "w"), indent=1, default=str)
+_dst = emit(OUT, SCRATCH / f"de_section81_arms__{RUN_ID}.json")
 print(json.dumps({"emitted": str(_dst), "run_id": RUN_ID,
                   "produced_by": PROV["produced_by"],
                   "producing_code": PROV["producing_code"],
