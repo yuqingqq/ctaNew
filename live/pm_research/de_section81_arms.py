@@ -494,6 +494,19 @@ def run_arms(argv=None):
                         inv_arm["identity_residual_cents"],
                     "fill_statuses": inv_arm["fill_statuses"],
                     "found_in": "de_phase4_diag_runner.inventory_pnl"}
+                # DE60-C1: THE EMISSION IS BUILT FROM THE CONTRACT, not
+                # beside it. DE59-C1 closed producer-vs-contract drift
+                # and I then shipped the SAME defect in the other
+                # direction -- `value_ceiling` was added to the contract
+                # and to the producer, and this hand-written dict simply
+                # did not carry it, so the field emitted as null while
+                # every check stayed green. Copying from the contract
+                # makes the emission structurally complete: a key added
+                # to `INVENTORY_EMITTED_KEYS` now reaches the artifact
+                # without anyone remembering to add it here.
+                out[f].update({k: inv_arm[k]
+                               for k in R.INVENTORY_EMITTED_KEYS
+                               if k in inv_arm and k not in out[f]})
             elif src.startswith("de_phase4_diag_runner.maker_pnl_from_fills."):
                 # DE58: the per-arm maker-P&L decomposition, over the
                 # fills THIS ARM received. `maker_pnl(reference)` would
