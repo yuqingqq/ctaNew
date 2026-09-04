@@ -765,6 +765,7 @@ def publication_provenance(producer_path: str, symbol: str,
 #: The instruments this seat owns, censused for the PHANTOM FAILURE shape.
 DA_INSTRUMENTS = (
     "da_cite_audit",
+    "da_population_audit",
     "da_replay_parity_battery", "da_arm_replay_verify",
     "da_dark_interval_scan", "da_forward_day_verify", "da_blackout_mask",
     "da_race_withdrawals", "da_verdict_check",

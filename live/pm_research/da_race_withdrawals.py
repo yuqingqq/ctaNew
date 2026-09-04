@@ -56,7 +56,7 @@ DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
 #: This suite's own total, asserted over ran + skipped.
-EXPECTED_CHECKS = 57
+EXPECTED_CHECKS = 59
 
 #: THE REGISTRY. One entry per day the USER has taken out of the race.
 #: EVERY entry carries its authority as DATA -- the same discipline round 22
@@ -581,6 +581,25 @@ MIN_PRIOR_VERSIONS = 5
 #: takes the emission path down for a line that has not landed yet. It
 #: becomes load-bearing when the coordinator places the marker, and a
 #: DISAGREEMENT between register and module refuses by name from that moment.
+#: DA37-R1 -- THE DOCUMENTATION OF A CONTROL SILENTLY BECAME THE CONTROL.
+#: My own filing quoted the marker verbatim while ASKING for it to be placed,
+#: so this reader returned PINNED before anyone wrote a pin: the register is
+#: DATA READ BY AN INSTRUMENT, and a filing that names the token an
+#: instrument scans for is a WRITE to that instrument's input. It was
+#: harmless only by luck of the value -- a different number in the
+#: illustration would have made the register carry two differing pins and
+#: read UNPINNED, and a WRONG number would have guarded the walk at a floor
+#: nobody decided.
+#:
+#: SO THE PIN NOW HAS A FORM PROSE CANNOT PRODUCE BY ACCIDENT: three
+#: consecutive LINES -- an opening marker alone on its line, the value alone
+#: on its line in strict form, a closing marker alone on its line. Every
+#: entry in this register is a SINGLE LINE, so no filing, quotation or table
+#: row can produce it; only a deliberate multi-line edit can. And a marker
+#: appearing ANYWHERE outside such a block is reported by name rather than
+#: ignored, because the next accidental quote should be loud.
+FLOOR_BLOCK_BEGIN = "<!-- " + "DA-WALK-FLOOR-PIN:BEGIN" + " -->"
+FLOOR_BLOCK_END = "<!-- " + "DA-WALK-FLOOR-PIN:END" + " -->"
 REGISTER_FLOOR_MARKER = "DA-WALK-FLOOR: min_prior_versions="
 REGISTER_PATH = ("orchestrator/PROGRAMS/P-2026-003-polymarket-5min/"
                  "workspace/COORDINATION.md")
@@ -602,31 +621,46 @@ def floor_from_register(repo: Path | None = None) -> dict[str, Any]:
     except OSError as e:
         return {"status": "REGISTER_UNREADABLE", "pinned": None,
                 "error": repr(e), "path": str(reg)}
-    hits = []
-    for ln in text.splitlines():
-        i = ln.find(REGISTER_FLOOR_MARKER)
-        if i < 0:
+    lines = text.splitlines()
+    hits, blocks = [], 0
+    for i, ln in enumerate(lines):
+        if ln.strip() != FLOOR_BLOCK_BEGIN:
             continue
-        tail = ln[i + len(REGISTER_FLOOR_MARKER):].strip()
-        num = ""
-        for ch in tail:
-            if ch.isdigit():
-                num += ch
-            else:
+        for j in range(i + 1, min(i + 6, len(lines))):
+            cand = lines[j].strip()
+            if cand == FLOOR_BLOCK_END:
+                blocks += 1
                 break
-        if num:
-            hits.append(int(num))
+            if cand.startswith(REGISTER_FLOOR_MARKER):
+                num = cand[len(REGISTER_FLOOR_MARKER):].strip()
+                if num.isdigit():
+                    hits.append(int(num))
+    # EVERY OTHER MENTION IS REPORTED, so the next accidental quote is loud
+    # rather than silent -- including this module's own docstrings.
+    stray = [i + 1 for i, ln in enumerate(lines)
+             if REGISTER_FLOOR_MARKER in ln
+             and ln.strip() != REGISTER_FLOOR_MARKER + str(
+                 hits[0] if hits else "")]
     if not hits:
-        return {"status": "FLOOR_NOT_PINNED_IN_REGISTER", "pinned": None,
-                "path": str(reg),
-                "why": ("the register carries no `" + REGISTER_FLOOR_MARKER
-                        + "N` line, so nothing outside this file pins the "
-                          "floor and a coherent rewrite is still unguarded")}
+        return {"status": ("FLOOR_MARKER_OUTSIDE_PIN_BLOCK" if stray
+                           else "FLOOR_NOT_PINNED_IN_REGISTER"),
+                "pinned": None, "path": str(reg),
+                "n_blocks": blocks, "stray_marker_lines": stray,
+                "why": (("the marker appears at line(s) " + str(stray) +
+                         " but NOT inside a pin block, so it is prose "
+                         "quoting a control rather than a control. Nothing "
+                         "is pinned and nothing is enforced")
+                        if stray else
+                        "the register carries no pin block, so nothing "
+                        "outside this file pins the floor and a coherent "
+                        "rewrite is still unguarded")}
     if len(set(hits)) > 1:
         return {"status": "FLOOR_PINNED_INCONSISTENTLY", "pinned": None,
                 "values": sorted(set(hits)), "path": str(reg),
+                "n_blocks": blocks, "stray_marker_lines": stray,
                 "why": "two different pins is not a pin"}
-    return {"status": "PINNED", "pinned": hits[0], "path": str(reg)}
+    return {"status": "PINNED", "pinned": hits[0], "path": str(reg),
+            "n_blocks": blocks, "stray_marker_lines": stray}
 
 #: The floor is a claim about THIS repository's history. A probe tree built
 #: in /tmp calls the walk with the same default arguments and its one commit
@@ -1534,6 +1568,7 @@ def selftest() -> int:
     # ---- DA35-R1: the floor pinned where this walk does not count -------
     _fr = floor_from_register()
     ok(_fr["status"] in ("PINNED", "FLOOR_NOT_PINNED_IN_REGISTER",
+                         "FLOOR_MARKER_OUTSIDE_PIN_BLOCK",
                          "REGISTER_NOT_FOUND", "REGISTER_UNREADABLE",
                          "FLOOR_PINNED_INCONSISTENTLY"),
        f"DA35-R1 the register pin READS: {_fr['status']}. A missing "
@@ -1543,19 +1578,48 @@ def selftest() -> int:
         _d = Path(t)
         _reg = _d / REGISTER_PATH
         _reg.parent.mkdir(parents=True, exist_ok=True)
-        _reg.write_text(f"| x | {REGISTER_FLOOR_MARKER}7 | y |\n",
+        _blk = (FLOOR_BLOCK_BEGIN + "\n" + REGISTER_FLOOR_MARKER + "7\n"
+                + FLOOR_BLOCK_END + "\n")
+        _reg.write_text(_blk, encoding="utf-8")
+        _p1 = floor_from_register(_d)
+        ok(_p1["status"] == "PINNED" and _p1["pinned"] == 7
+           and _p1["n_blocks"] == 1,
+           "DA35-R1 FIRES: a DELIBERATE pin block pins the floor from "
+           "OUTSIDE this file, so lowering the module literal in a coherent "
+           "rewrite must also alter another seat's document to pass")
+        # DA37-R1: THE SHAPE THAT ACTUALLY HAPPENED. My own filing quoted the
+        # marker while ASKING for it to be placed, and the first reader
+        # returned PINNED before anyone wrote a pin -- documentation of a
+        # control silently becoming the control.
+        _reg.write_text(f"| Q-DA-235 | DA | place `{REGISTER_FLOOR_MARKER}5` "
+                        f"somewhere in this register | OPEN |\n",
                         encoding="utf-8")
-        ok(floor_from_register(_d) == {"status": "PINNED", "pinned": 7,
-                                       "path": str(_reg)},
-           "DA35-R1 FIRES: a register carrying the marker pins the floor "
-           "from OUTSIDE this file, so lowering the module literal in a "
-           "coherent rewrite must also lower a line in another seat's "
-           "document to pass")
-        _reg.write_text(f"{REGISTER_FLOOR_MARKER}7\n"
-                        f"{REGISTER_FLOOR_MARKER}9\n", encoding="utf-8")
+        _p2 = floor_from_register(_d)
+        ok(_p2["status"] == "FLOOR_MARKER_OUTSIDE_PIN_BLOCK"
+           and _p2["pinned"] is None and _p2["stray_marker_lines"] == [1],
+           "DA37-R1 FIRES: a FILING that quotes the marker while asking for "
+           "it to be placed does NOT pin anything. The register is data read "
+           "by an instrument, so naming the token it scans for is a WRITE to "
+           "its input -- harmless last round only by luck of the value, and "
+           "a wrong number would have guarded the walk at a floor nobody "
+           "decided. The stray is reported by LINE so the next one is loud")
+        _reg.write_text(FLOOR_BLOCK_BEGIN + "\n" + REGISTER_FLOOR_MARKER
+                        + "7\n" + FLOOR_BLOCK_END + "\n"
+                        + FLOOR_BLOCK_BEGIN + "\n" + REGISTER_FLOOR_MARKER
+                        + "9\n" + FLOOR_BLOCK_END + "\n", encoding="utf-8")
         ok(floor_from_register(_d)["status"] == "FLOOR_PINNED_INCONSISTENTLY",
            "DA35-R1 two different pins is NOT a pin -- it reads as unpinned "
            "with both values named, never as the first one found")
+        _reg.write_text(f"| a table row mentioning {FLOOR_BLOCK_BEGIN} and "
+                        f"{REGISTER_FLOOR_MARKER}5 and {FLOOR_BLOCK_END} all "
+                        f"on ONE line |\n", encoding="utf-8")
+        ok(floor_from_register(_d)["status"]
+           == "FLOOR_MARKER_OUTSIDE_PIN_BLOCK",
+           "DA37-R1b AND THE FORM IS ONE PROSE CANNOT PRODUCE: every entry "
+           "in this register is a SINGLE LINE, and a row naming all three "
+           "tokens inline pins nothing. Only a deliberate multi-line edit "
+           "can, which is what makes the control distinguishable from a "
+           "quotation of it")
         _reg.write_text("nothing here\n", encoding="utf-8")
         ok(floor_from_register(_d)["status"] == "FLOOR_NOT_PINNED_IN_REGISTER"
            and floor_from_register(_d)["pinned"] is None,
