@@ -63,7 +63,7 @@ CODE_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
-EXPECTED_CHECKS = 37
+EXPECTED_CHECKS = 58
 
 #: §8.1's REQUIRED OUTPUT, ENUMERATED HERE INDEPENDENTLY of the producer's own
 #: list. Written from the plan's eleven named quantities, NOT copied from
@@ -655,14 +655,28 @@ def phantom_failure_census(root: Path | None = None,
                         except_hits.append({
                             "module": name, "line": r.lineno,
                             "function": fn.name, "shape": bad,
+                            "in_selftest": fn.name in ("selftest",
+                                                       "_selftests"),
                             "text": lines[r.lineno - 1].strip()[:100]})
+        # A HIT INSIDE A SELFTEST IS A CONTROL, NOT A SITE. This scan is
+        # textual, so the PLANTED FIXTURES that prove the census can fire
+        # were being counted as real hits in the real tree -- a reported
+        # number produced by a path that is not production code, which is
+        # this census's own shape turned on itself. Found by reading the
+        # census's own output rather than by a check, so: separated, both
+        # counts kept, headline excludes controls.
+        in_selftest = False
         for i, ln in enumerate(lines, 1):
+            m = re.match(r"^def (\w+)", ln)
+            if m:
+                in_selftest = m.group(1) in ("selftest", "_selftests")
             if not re.search(r"(subprocess|_sp\d*)\.run\(|=\s*_git\(", ln):
                 continue
             window = "\n".join(lines[i - 1:i + 8])
             if not re.search(r"returncode|\brc\b|if not \w+|bool\(\w+\[0\]\)"
                              r"|n_interpreters|\.stdout\s*or\b", window):
                 subprocess_hits.append({"module": name, "line": i,
+                                        "in_selftest": in_selftest,
                                         "text": ln.strip()[:100]})
     return {
         "shape": "PHANTOM_FAILURE",
@@ -670,10 +684,18 @@ def phantom_failure_census(root: Path | None = None,
                        "run -- the mirror image of absence-reads-as-a-pass. "
                        "It lets nothing through and invents a bug instead"),
         "n_modules_scanned": len(scanned), "modules_scanned": scanned,
-        "n_except_returning_a_bare_negative": len(except_hits),
-        "except_returning_a_bare_negative": except_hits,
-        "n_unguarded_subprocess_results": len(subprocess_hits),
-        "unguarded_subprocess_results": subprocess_hits,
+        "n_except_returning_a_bare_negative": len(
+            [h for h in except_hits if not h["in_selftest"]]),
+        "except_returning_a_bare_negative": [
+            h for h in except_hits if not h["in_selftest"]],
+        "n_unguarded_subprocess_results": len(
+            [h for h in subprocess_hits if not h["in_selftest"]]),
+        "unguarded_subprocess_results": [
+            h for h in subprocess_hits if not h["in_selftest"]],
+        "n_hits_in_selftest_fixtures": len(
+            [h for h in except_hits + subprocess_hits if h["in_selftest"]]),
+        "hits_in_selftest_fixtures": [
+            h for h in except_hits + subprocess_hits if h["in_selftest"]],
         "role": "REPORTED_NOT_ENFORCED",
         "limits": ("a TEXT scan: it sees an `except` returning a bare "
                    "negative and a subprocess result consumed without a "
@@ -681,7 +703,398 @@ def phantom_failure_census(root: Path | None = None,
                    "comparison, or a query whose emptiness means 'absent' to "
                    "one reader and 'not found' to another. A zero here is "
                    "not a clean surface, it is a clean surface FOR TWO "
-                   "SHAPES"),
+                   "SHAPES. Hits inside `selftest` are separated as "
+                   "`hits_in_selftest_fixtures`: those are the planted "
+                   "controls, and counting them in the headline is a "
+                   "reported number from a path that is not production "
+                   "code. A `selftest`-nested inner function is attributed "
+                   "to itself, so a fixture inside one is still counted "
+                   "in the headline"),
+    }
+
+
+# ------------------------------------------------------------ DA30-R1 ----
+def enumeration_consumed(name: str = "SECTION_8_1_FIELDS",
+                         src: Path | None = None) -> dict[str, Any]:
+    """DA30-R1: an enumeration that EXISTS is not an enumeration that is USED.
+
+    `section_8_1_audit` reads the producer's `SECTION_8_1_FIELDS` literal and
+    grades it. That grades a DECLARATION. If nothing in the producer ever
+    READS the name, the enumeration is a comment with syntax: the emitted
+    artifact may drift field by field while every audit against the literal
+    keeps passing, and the audit reports on a list the producer no longer
+    consults. That is the zero-consumer class one level up -- inside the
+    module built to catch that class.
+
+    Read with `ast`, never imported, for the reason `_producer_fields` gives.
+    A Load-context `Name` is a use; the assignment target is a Store and is
+    not. Sibling modules that import the name are uses too, so a literal read
+    only by a downstream consumer is CONSUMED rather than dead.
+    """
+    import ast
+    src = ((CODE_ROOT / "live" / "pm_research" / "de_lane4_real_parity.py")
+           if src is None else Path(src))
+    # Siblings OF THE SOURCE UNDER TEST, not of the real producer: a fixture
+    # graded against the repo's neighbours is graded against the wrong tree,
+    # which is the shape that hid `publication_provenance`'s verdict.
+    root = src.parent
+    if not src.is_file():
+        raise ArmVerifyRefused(
+            f"REFUSED: no producer source at {src}; a consumer census that "
+            f"cannot read the producer must not report zero consumers -- "
+            f"zero would be indistinguishable from the defect it hunts.")
+    try:
+        tree = ast.parse(src.read_text(encoding="utf-8", errors="replace"))
+    except SyntaxError as e:
+        raise ArmVerifyRefused(
+            f"REFUSED: {src.name} does not parse ({e}); an unparseable "
+            f"producer yields no Load sites for reasons that are not the "
+            f"defect.") from e
+
+    stores, loads = [], []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and node.id == name:
+            ctx = getattr(node, "ctx", None)
+            (stores if isinstance(ctx, ast.Store) else loads).append(
+                node.lineno)
+        elif isinstance(node, ast.Attribute) and node.attr == name:
+            loads.append(node.lineno)
+
+    importers = []
+    stem = src.stem
+    for f in sorted(root.glob("*.py")):
+        if f == src:
+            continue
+        try:
+            t2 = ast.parse(f.read_text(encoding="utf-8", errors="replace"))
+        except (OSError, SyntaxError):
+            continue
+        for node in ast.walk(t2):
+            if isinstance(node, ast.ImportFrom) and any(
+                    a.name == name for a in node.names):
+                importers.append({"file": f.name, "line": node.lineno})
+            elif isinstance(node, ast.Attribute) and node.attr == name:
+                importers.append({"file": f.name, "line": node.lineno})
+
+    consumed = bool(loads) or bool(importers)
+    return {
+        "name": name,
+        "producer": src.name,
+        "n_declarations": len(stores),
+        "declaration_lines": sorted(stores),
+        "n_load_sites_in_producer": len(loads),
+        "load_lines_in_producer": sorted(loads)[:20],
+        "n_importing_modules": len({i["file"] for i in importers}),
+        "importers": importers[:20],
+        "consumed": consumed,
+        "verdict": (
+            "NOT_DECLARED" if not stores
+            else "REDECLARED" if len(stores) > 1
+            else "DECLARED_BUT_UNCONSUMED" if not consumed
+            else "CONSUMED"),
+        "why": ("`DECLARED_BUT_UNCONSUMED` means the emitted artifact and "
+                "the audited enumeration are joined by nothing but "
+                "intention: they can diverge without any check going red. "
+                "`REDECLARED` means a second assignment silently wins and "
+                "the audit may be reading the losing one."),
+        "decides_nothing": "REPORTED (rule 14).",
+    }
+
+
+def _emitting_entry_points(src: Path) -> list[str]:
+    """Top-level functions in `src` that WRITE a document -- read as data.
+
+    A published artifact names its protocol, not its function. The function
+    that emitted it is the one that serialises: found by shape (`write_text`,
+    `json.dump`) rather than by a name this module would have to guess.
+    """
+    import ast
+    try:
+        tree = ast.parse(src.read_text(encoding="utf-8", errors="replace"))
+    except (OSError, SyntaxError):
+        return []
+    out = []
+    for node in tree.body:
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        for sub in ast.walk(node):
+            if isinstance(sub, ast.Call):
+                fn = sub.func
+                nm = getattr(fn, "attr", None) or getattr(fn, "id", None)
+                if nm in ("write_text", "dump", "write_bytes"):
+                    out.append(node.name)
+                    break
+    return out
+
+
+def provenance(artifact_path: Path | str,
+               root: Path | None = None) -> dict[str, Any]:
+    """ONE instrument, both questions.
+
+    Q1 (`stub_or_real`, `completeness`) asks whether an arm's OUTPUT can be
+    believed. This asks the other half: **was the published number produced
+    by the committed pipeline** -- the shape the USER's audit found, where a
+    headline came from a scratch script with no committed caller.
+
+    Given only the artifact, it resolves the producer the artifact NAMES
+    (rule 16: verify at the artifact a claim names), recomputes each declared
+    code identity from the tree, and censuses the emitting entry point's call
+    sites via `publication_provenance`.
+
+    `SUPERSEDED_CODE` is the verdict this earns its place for: the artifact
+    still parses, still reads as a result, and was produced by source that no
+    longer exists in the tree -- so every claim about what the CODE now does
+    is a claim about a different program than the one that made the number.
+    """
+    root = CODE_ROOT if root is None else Path(root)
+    src_dir = root / "live" / "pm_research"
+    path = Path(artifact_path)
+    doc = load_artifact(path)
+
+    ident = doc.get("code_identity")
+    protocol = doc.get("protocol")
+    stem = re.sub(r"_v\d+$", "", protocol) if isinstance(protocol, str) else None
+    producer = f"{stem}.py" if stem else None
+
+    files: list[dict[str, Any]] = []
+    if isinstance(ident, dict) and ident:
+        for f, declared in sorted(ident.items()):
+            p = src_dir / f
+            now = None
+            if p.is_file():
+                # The producer's own scheme, RESTATED rather than imported --
+                # importing it to check it couples the two. If the producer
+                # ever changes the scheme this reads as DIFFER, which is why
+                # `limits` says so rather than leaving it to be discovered.
+                now = hashlib.sha256(p.read_bytes()).hexdigest()[:16]
+            files.append({"file": f, "declared": declared, "now": now,
+                          "state": ("ABSENT" if now is None
+                                    else "MATCH" if now == declared
+                                    else "DIFFER")})
+    n_absent = sum(1 for f in files if f["state"] == "ABSENT")
+    n_differ = sum(1 for f in files if f["state"] == "DIFFER")
+
+    call = None
+    entry_points: list[str] = []
+    if producer and (src_dir / producer).is_file():
+        entry_points = _emitting_entry_points(src_dir / producer)
+        if entry_points:
+            call = publication_provenance(producer, entry_points[0],
+                                          root=src_dir)
+
+    verdict = (
+        "NO_DECLARED_CODE_IDENTITY" if not files
+        else "PRODUCER_NOT_NAMED_BY_ARTIFACT" if not producer
+        else "PRODUCER_FILE_ABSENT" if n_absent
+        else "SUPERSEDED_CODE" if n_differ
+        else "NO_EMITTING_ENTRY_POINT_FOUND" if not entry_points
+        else "NO_PRODUCTION_CALL_SITE"
+        if call and call["n_production_call_sites"] == 0
+        else "PRODUCED_BY_THE_COMMITTED_PIPELINE")
+    return {
+        "artifact": str(path),
+        "protocol_claimed": protocol,
+        "producer_implied": producer,
+        "n_identity_files": len(files),
+        "n_match": len(files) - n_absent - n_differ,
+        "n_differ": n_differ, "n_absent": n_absent,
+        "identity": files,
+        "emitting_entry_points": entry_points,
+        "call_site_census": call,
+        "verdict": verdict,
+        "why": ("`SUPERSEDED_CODE`: the artifact was produced by source that "
+                "is no longer in the tree, so no statement about the current "
+                "code describes the published number. Re-run or re-read; do "
+                "not reconcile the two by argument."),
+        "limits": ("identity is recomputed with sha256[:16] over file bytes, "
+                   "the producer's own scheme RESTATED here; a producer that "
+                   "changed its digest scheme would read DIFFER for that "
+                   "reason and not for a code change"),
+        "decides_nothing": ("REPORTED. Whether a superseded number may still "
+                            "be quoted is the policy layer's (rule 14)."),
+    }
+
+
+#: Keys a gate may use to carry its denominator. Written from what a
+#: denominator IS rather than copied from the producer, so a rename on the
+#: producer's side is caught as a missing denominator rather than absorbed.
+DENOMINATOR_KEYS = ("n_evaluated_windows", "n_evaluated", "n_windows_evaluated",
+                    "denominator", "n_admitted_windows")
+
+
+def _den_of(g: dict) -> tuple[str | None, int | None]:
+    for k in DENOMINATOR_KEYS:
+        v = g.get(k)
+        if isinstance(v, int) and not isinstance(v, bool):
+            return k, v
+    return None, None
+
+
+def denominator_audit(doc: dict[str, Any]) -> dict[str, Any]:
+    """Is each denominator PRESENT -- and is it RIGHT?
+
+    A denominator that is present but wrong is worse than one that is absent,
+    because absence reads as an open defect and a wrong number reads as
+    rigour. So this does not stop at presence. It reconciles:
+
+      * passing + failing == evaluated, per gate;
+      * the gate denominator against one INDEPENDENTLY recomputed from the
+        artifact's own window census (selected - refusals), which is the
+        only check that can catch a denominator carried from the wrong
+        variable;
+      * `pass: true` over a zero denominator -- `all()` over an empty
+        evaluation is True in Python and that is the defect this closure
+        exists to prevent;
+      * a status that contradicts its own denominator;
+      * `failing_slugs` longer than the failing count.
+
+    Counters are graded wherever they appear, by SHAPE (`evaluated_over_*`)
+    rather than by DE's block names, so a counter block added later is
+    audited without this module being told about it.
+    """
+    findings: list[dict[str, Any]] = []
+    gates = doc.get("gates")
+    wsc = doc.get("window_status_counts")
+    pop = doc.get("population") if isinstance(doc.get("population"), dict) else {}
+    n_sel = pop.get("n_selected_windows")
+    recomputed = None
+    census = None
+    if isinstance(wsc, dict) and isinstance(n_sel, int):
+        refused = sum(v for k, v in wsc.items()
+                      if k != "ADMITTED" and isinstance(v, int)
+                      and not isinstance(v, bool))
+        recomputed = n_sel - refused
+        census = {"n_selected_windows": n_sel, "n_refused": refused,
+                  "recomputed_admitted": recomputed,
+                  "declared_admitted": wsc.get("ADMITTED"),
+                  "reconciles": wsc.get("ADMITTED") == recomputed}
+        if not census["reconciles"]:
+            findings.append({"where": "window_census",
+                             "defect": "CENSUS_DOES_NOT_RECONCILE",
+                             "detail": census})
+
+    n_gates = 0
+    if isinstance(gates, dict):
+        for k, g in sorted(gates.items()):
+            n_gates += 1
+            if not isinstance(g, dict):
+                findings.append({"where": k, "defect": "GATE_NOT_A_MAPPING"})
+                continue
+            key, den = _den_of(g)
+            fail, pas = g.get("n_failing_windows"), g.get("n_passing_windows")
+            vp, status = g.get("pass"), g.get("status")
+            if den is None:
+                findings.append({
+                    "where": k, "defect": "NO_DENOMINATOR",
+                    "detail": ("`pass` is reported over an unstated "
+                               "population; recoverable from the census as "
+                               f"{recomputed}, but not carried at the point "
+                               "of the claim")})
+            else:
+                if isinstance(fail, int) and fail > den:
+                    findings.append({"where": k,
+                                     "defect": "NUMERATOR_EXCEEDS_DENOMINATOR",
+                                     "detail": {"failing": fail, key: den}})
+                if isinstance(fail, int) and isinstance(pas, int) \
+                        and pas + fail != den:
+                    findings.append({
+                        "where": k, "defect": "DOES_NOT_RECONCILE",
+                        "detail": {"passing": pas, "failing": fail, key: den,
+                                   "sum": pas + fail}})
+                if den == 0 and vp is True:
+                    findings.append({"where": k, "defect": "PASS_OVER_EMPTY"})
+                if den == 0 and isinstance(status, str) \
+                        and not status.startswith("UNEVALUATED"):
+                    findings.append({"where": k,
+                                     "defect": "STATUS_CONTRADICTS_ZERO",
+                                     "detail": status})
+                if den > 0 and isinstance(status, str) \
+                        and status.startswith("UNEVALUATED"):
+                    findings.append({"where": k,
+                                     "defect": "STATUS_CONTRADICTS_DENOMINATOR",
+                                     "detail": {"status": status, key: den}})
+                if recomputed is not None and den != recomputed:
+                    findings.append({
+                        "where": k, "defect": "DENOMINATOR_DISAGREES_WITH_CENSUS",
+                        "detail": {key: den, "from_census": recomputed}})
+            slugs = g.get("failing_slugs")
+            if isinstance(slugs, list) and isinstance(fail, int) \
+                    and len(slugs) > fail:
+                findings.append({"where": k,
+                                 "defect": "FAILING_SLUGS_EXCEED_COUNT",
+                                 "detail": {"listed": len(slugs),
+                                            "counted": fail}})
+
+    top_key, top = _den_of(doc)
+    agp = doc.get("all_gates_pass")
+    if agp is True and top is None:
+        findings.append({"where": "all_gates_pass",
+                         "defect": "AGGREGATE_PASS_WITH_NO_DENOMINATOR",
+                         "detail": ("`all()` over an empty evaluation is "
+                                    "True; nothing here says it was not")})
+    if isinstance(top, int) and recomputed is not None and top != recomputed:
+        findings.append({"where": "all_gates_pass",
+                         "defect": "DENOMINATOR_DISAGREES_WITH_CENSUS",
+                         "detail": {top_key: top, "from_census": recomputed}})
+
+    counters = []
+
+    def _walk(node, path):
+        if isinstance(node, dict):
+            dens = {k: v for k, v in node.items()
+                    if k.startswith("evaluated_over_")
+                    and isinstance(v, int) and not isinstance(v, bool)}
+            if dens:
+                counts = {k: v for k, v in node.items()
+                          if isinstance(v, int) and not isinstance(v, bool)
+                          and k not in dens}
+                st = node.get("status")
+                counters.append({"path": path, "denominators": dens,
+                                 "status": st})
+                if max(dens.values()) == 0 and any(v > 0 for v in counts.values()):
+                    findings.append({
+                        "where": path, "defect": "COUNT_WITHOUT_AN_EVALUATION",
+                        "detail": {"counts": counts, "denominators": dens}})
+                if max(dens.values()) == 0 and st == "COUNTED":
+                    findings.append({"where": path,
+                                     "defect": "STATUS_CONTRADICTS_ZERO",
+                                     "detail": dens})
+                if max(dens.values()) > 0 and isinstance(st, str) \
+                        and st.startswith("UNEVALUATED"):
+                    findings.append({"where": path,
+                                     "defect": "STATUS_CONTRADICTS_DENOMINATOR",
+                                     "detail": {"status": st, **dens}})
+            for k, v in node.items():
+                _walk(v, f"{path}.{k}" if path else k)
+        elif isinstance(node, list):
+            for i, v in enumerate(node):
+                _walk(v, f"{path}[{i}]")
+
+    _walk(doc, "")
+    return {
+        "n_gates": n_gates,
+        "n_gates_with_a_denominator": sum(
+            1 for g in (gates or {}).values()
+            if isinstance(g, dict) and _den_of(g)[1] is not None)
+        if isinstance(gates, dict) else 0,
+        "window_census": census,
+        "n_counter_blocks": len(counters),
+        "counter_blocks": counters,
+        "n_findings": len(findings),
+        "findings": findings,
+        "verdict": ("NO_GATES_IN_ARTIFACT" if not isinstance(gates, dict)
+                    else "EVERY_DENOMINATOR_PRESENT_AND_RECONCILES"
+                    if not findings else "DEFECTS"),
+        "why": ("a denominator that is present but wrong is worse than one "
+                "that is absent: absence reads as an open defect, a wrong "
+                "number reads as rigour. Presence is checked, then "
+                "reconciled against a count recomputed from the artifact's "
+                "own census."),
+        "limits": ("counter blocks are found by the shape "
+                   "`evaluated_over_*`; a counter that carries its "
+                   "denominator under some other name is NOT audited here "
+                   "and would read as absent, not as clean"),
+        "decides_nothing": "REPORTED (rule 14).",
     }
 
 
@@ -697,6 +1110,9 @@ def verify(path: Path, scores: list[dict] | None = None) -> dict[str, Any]:
         "stub_or_real": stub_or_real(doc, scores),
         "completeness": completeness(doc),
         "population_consumed": population_consumed(doc),
+        "denominator_audit": denominator_audit(doc),
+        "enumeration_consumed": enumeration_consumed(),
+        "provenance": provenance(path),
         "decides_nothing": ("REPORTED. This says whether the OUTPUT can be "
                             "believed; whether an arm may be used is the "
                             "policy layer's (rule 14)"),
@@ -1022,6 +1438,22 @@ def selftest() -> int:
            "PHANTOM-C4 an unreadable source tree REFUSES rather than "
            "reporting zero hits -- the census must not commit the shape it "
            "hunts")
+    with tempfile.TemporaryDirectory() as t:
+        tr = Path(t)
+        (tr / "ctl.py").write_text(
+            "import subprocess\n"
+            "def selftest():\n"
+            "    fixture = (\"import subprocess\\n\"\n"
+            "               \"out = subprocess.run(['x']).stdout\\n\")\n"
+            "    return fixture\n", encoding="utf-8")
+        _c6 = phantom_failure_census(tr, ("ctl",))
+        ok(_c6["n_unguarded_subprocess_results"] == 0
+           and _c6["n_hits_in_selftest_fixtures"] == 1,
+           "PHANTOM-C6 a PLANTED FIXTURE inside a selftest is separated from "
+           "the headline -- counting the controls that prove the census can "
+           "fire as real hits is a reported number from a path that is not "
+           "production code, this census's own shape turned on itself "
+           "(found in its own output, +1 to the real tree's count)")
     _cr = phantom_failure_census()
     ok(_cr["n_modules_scanned"] == 12 and _cr["role"]
        == "REPORTED_NOT_ENFORCED",
@@ -1031,6 +1463,180 @@ def selftest() -> int:
        f"bare negative and {_cr['n_unguarded_subprocess_results']} unguarded "
        f"subprocess results are places to LOOK, not defects -- and its own "
        f"`limits` says a zero would be clean for TWO SHAPES, not clean")
+
+    # ---- DA30-R1: the enumeration must be USED, not merely declared -------
+    with tempfile.TemporaryDirectory() as t:
+        td = Path(t)
+        dead = td / "dead.py"
+        dead.write_text("SECTION_8_1_FIELDS = {'a': {'source': 's'}}\n"
+                        "def emit():\n    return {'a': 1}\n", encoding="utf-8")
+        _e = enumeration_consumed(src=dead)
+        ok(_e["verdict"] == "DECLARED_BUT_UNCONSUMED"
+           and _e["n_declarations"] == 1
+           and _e["n_load_sites_in_producer"] == 0,
+           "DA30-R1 FIRES: a producer that DECLARES the enumeration and "
+           "never reads it is DECLARED_BUT_UNCONSUMED -- the artifact and "
+           "the audited list are joined by nothing but intention, and both "
+           "can drift with every check still green")
+        live = td / "live_.py"
+        live.write_text("SECTION_8_1_FIELDS = {'a': {'source': 's'}}\n"
+                        "def emit():\n"
+                        "    return {k: 1 for k in SECTION_8_1_FIELDS}\n",
+                        encoding="utf-8")
+        ok(enumeration_consumed(src=live)["verdict"] == "CONSUMED",
+           "DA30-R1 does NOT fire on a producer that reads its own "
+           "enumeration -- the check distinguishes a Load from a Store "
+           "rather than counting occurrences of the name")
+        twice = td / "twice.py"
+        twice.write_text("SECTION_8_1_FIELDS = {'a': 1}\n"
+                         "x = SECTION_8_1_FIELDS\n"
+                         "SECTION_8_1_FIELDS = {'b': 2}\n", encoding="utf-8")
+        ok(enumeration_consumed(src=twice)["verdict"] == "REDECLARED",
+           "DA30-R1 REDECLARED: a second assignment silently wins and the "
+           "audit may be grading the losing one")
+    try:
+        enumeration_consumed(src=Path("/nonexistent/p.py"))
+        ok(False, "DA30-R1: an unreadable producer must REFUSE")
+    except ArmVerifyRefused as e:
+        ok("must not report zero consumers" in str(e),
+           "DA30-R1 an unreadable producer REFUSES: zero consumers from a "
+           "file that could not be read is the PHANTOM FAILURE shape in the "
+           "check that hunts the empty-set one")
+    _er = enumeration_consumed()
+    ok(_er["verdict"] in ("CONSUMED", "DECLARED_BUT_UNCONSUMED",
+                          "REDECLARED", "NOT_DECLARED"),
+       f"DA30-R1 on the REAL producer: SECTION_8_1_FIELDS is "
+       f"{_er['verdict']} ({_er['n_load_sites_in_producer']} load sites in "
+       f"{_er['producer']}, {_er['n_importing_modules']} importing modules)")
+
+    # ---- provenance: was the published number produced by THIS code? -----
+    with tempfile.TemporaryDirectory() as t:
+        td = Path(t)
+        sd = td / "live" / "pm_research"
+        sd.mkdir(parents=True)
+        prod = sd / "prod.py"
+        prod.write_text("from pathlib import Path\n"
+                        "def emit(out):\n"
+                        "    Path(out).write_text('{}')\n"
+                        "def run():\n"
+                        "    emit('x')\n", encoding="utf-8")
+        good = {"protocol": "prod_v1", "gates": {},
+                "code_identity": {"prod.py": hashlib.sha256(
+                    prod.read_bytes()).hexdigest()[:16]}}
+        _p = provenance(art(td, good), root=td)
+        ok(_p["verdict"] == "PRODUCED_BY_THE_COMMITTED_PIPELINE"
+           and _p["emitting_entry_points"] == ["emit"]
+           and _p["call_site_census"]["n_production_call_sites"] == 1,
+           "PROV-1 does NOT fire when the artifact's declared identity "
+           "matches the tree and the emitting entry point has a call site "
+           "outside its own selftest")
+        prod.write_text(prod.read_text() + "# changed\n", encoding="utf-8")
+        _p2 = provenance(art(td, good), root=td)
+        ok(_p2["verdict"] == "SUPERSEDED_CODE" and _p2["n_differ"] == 1
+           and _p2["identity"][0]["declared"] != _p2["identity"][0]["now"],
+           "PROV-2 FIRES: one byte changed in the producer and the artifact "
+           "is SUPERSEDED_CODE -- it still parses and still reads as a "
+           "result, but no statement about the current code describes it")
+        _p3 = provenance(art(td, {"protocol": "prod_v1", "gates": {},
+                                  "code_identity": {"gone.py": "0" * 16}}),
+                         root=td)
+        ok(_p3["verdict"] == "PRODUCER_FILE_ABSENT",
+           "PROV-3 FIRES: an identity naming a file that is not in the tree "
+           "is ABSENT, never a silent match")
+        _p4 = provenance(art(td, {"protocol": "prod_v1", "gates": {}}),
+                         root=td)
+        ok(_p4["verdict"] == "NO_DECLARED_CODE_IDENTITY"
+           and _p4["n_identity_files"] == 0,
+           "PROV-4 an artifact that declares no code identity cannot be "
+           "graded as matching -- absence is a named verdict, not a pass")
+    if REAL.is_file():
+        _pr = provenance(REAL)
+        ok(_pr["n_identity_files"] > 0,
+           f"PROV-5 on the PUBLISHED artifact: {_pr['verdict']} "
+           f"({_pr['n_differ']}/{_pr['n_identity_files']} identity files "
+           f"differ from the tree today)")
+
+    # ---- the denominators DE closed, checked rather than accepted --------
+    _base = {"population": {"n_selected_windows": 10},
+             "window_status_counts": {"ADMITTED": 8, "REPLAY_NONE": 2},
+             "n_evaluated_windows": 8, "all_gates_pass": True,
+             "gates": {"g": {"pass": True, "n_evaluated_windows": 8,
+                             "n_failing_windows": 0, "n_passing_windows": 8,
+                             "failing_slugs": [], "status": "PASS"}}}
+    ok(denominator_audit(_base)["verdict"]
+       == "EVERY_DENOMINATOR_PRESENT_AND_RECONCILES",
+       "DEN-1 does NOT fire on a gate whose passing+failing equals a "
+       "denominator that agrees with the window census")
+    _b2 = copy.deepcopy(_base)
+    _b2["gates"]["g"]["n_passing_windows"] = 7
+    ok(any(f["defect"] == "DOES_NOT_RECONCILE"
+           for f in denominator_audit(_b2)["findings"]),
+       "DEN-2 FIRES: passing + failing != evaluated. A denominator that is "
+       "present but does not reconcile reads as rigour and is worse than "
+       "one that is absent")
+    _b3 = copy.deepcopy(_base)
+    _b3["gates"]["g"].update({"n_evaluated_windows": 0,
+                              "n_passing_windows": 0})
+    _f3 = [f["defect"] for f in denominator_audit(_b3)["findings"]]
+    ok("PASS_OVER_EMPTY" in _f3 and "STATUS_CONTRADICTS_ZERO" in _f3,
+       "DEN-3 FIRES on `pass: true` over a ZERO denominator -- `all()` over "
+       "an empty evaluation is True, which is the exact defect the closure "
+       "exists to prevent, and the PASS status contradicts it too")
+    _b4 = copy.deepcopy(_base)
+    _b4["gates"]["g"].update({"n_evaluated_windows": 471,
+                              "n_passing_windows": 471})
+    ok(any(f["defect"] == "DENOMINATOR_DISAGREES_WITH_CENSUS"
+           for f in denominator_audit(_b4)["findings"]),
+       "DEN-4 FIRES: a self-consistent gate whose denominator disagrees "
+       "with the count recomputed from the artifact's OWN census -- the "
+       "only check that catches a denominator carried from the wrong "
+       "variable, which is what 'present but wrong' looks like")
+    _b5 = copy.deepcopy(_base)
+    del _b5["gates"]["g"]["n_evaluated_windows"]
+    del _b5["n_evaluated_windows"]
+    _f5 = [f["defect"] for f in denominator_audit(_b5)["findings"]]
+    ok("NO_DENOMINATOR" in _f5
+       and "AGGREGATE_PASS_WITH_NO_DENOMINATOR" in _f5,
+       "DEN-5 FIRES on the pre-fix shape: `pass` and `all_gates_pass` "
+       "reported over an unstated population")
+    _b6 = copy.deepcopy(_base)
+    _b6["gates"]["g"]["failing_slugs"] = ["a", "b"]
+    ok(any(f["defect"] == "FAILING_SLUGS_EXCEED_COUNT"
+           for f in denominator_audit(_b6)["findings"]),
+       "DEN-6 FIRES when the listed failures outnumber the counted ones -- "
+       "truncation downward is honest, inflation is not")
+    _b7 = copy.deepcopy(_base)
+    _b7["rate_limit"] = {"requested": 3, "evaluated_over_score_events": 0,
+                         "status": "COUNTED"}
+    _f7 = [f["defect"] for f in denominator_audit(_b7)["findings"]]
+    ok("COUNT_WITHOUT_AN_EVALUATION" in _f7
+       and "STATUS_CONTRADICTS_ZERO" in _f7,
+       "DEN-7 FIRES on a counter that counted 3 over ZERO evaluations and "
+       "still calls itself COUNTED -- found by SHAPE "
+       "(`evaluated_over_*`), so a counter block added later is audited "
+       "without this module being told about it")
+    _b8 = copy.deepcopy(_base)
+    _b8["rate_limit"] = {"requested": 0, "evaluated_over_score_events": 0,
+                         "status": "UNEVALUATED_NO_SCORE_EVENTS"}
+    _r8 = denominator_audit(_b8)
+    ok(_r8["verdict"] == "EVERY_DENOMINATOR_PRESENT_AND_RECONCILES"
+       and _r8["n_counter_blocks"] == 1,
+       "DEN-8 does NOT fire on a zero counter that says UNEVALUATED over a "
+       "zero denominator -- which is what DE now emits")
+    _b9 = copy.deepcopy(_base)
+    _b9["window_status_counts"]["REPLAY_NONE"] = 3
+    ok(any(f["defect"] == "CENSUS_DOES_NOT_RECONCILE"
+           for f in denominator_audit(_b9)["findings"]),
+       "DEN-9 FIRES when the census itself does not add up: selected minus "
+       "refusals != admitted, so no denominator taken from it can be "
+       "trusted either")
+    if REAL.is_file():
+        _dr = denominator_audit(load_artifact(REAL))
+        ok(_dr["n_gates"] > 0,
+           f"DEN-10 on the PUBLISHED artifact: {_dr['verdict']}, "
+           f"{_dr['n_gates_with_a_denominator']}/{_dr['n_gates']} gates "
+           f"carry one, {_dr['n_findings']} findings "
+           f"({sorted({f['defect'] for f in _dr['findings']})})")
 
     print(f"\nda_arm_replay_verify selftest: {checks} checks PASSED")
     if checks != EXPECTED_CHECKS:
