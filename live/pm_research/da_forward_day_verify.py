@@ -3041,7 +3041,12 @@ def verify_day(day_token: str, freeze_epoch: float,
             # all_pass: I fixed one consumer and left its twin. The coin's bars
             # are computed HERE and appended to its own table before anything
             # is composed.
-            _cov_c = counts.get(coin, 0) > 0 and short.get(coin, 1) <= 0
+            # R-503, THE PER-COIN TWIN. The day-level bars moved to the
+            # covered complement and this one did not -- the same
+            # fixed-one-consumer-left-its-twin defect the comment above
+            # records, repeated on the same predicate. Caught by running the
+            # real re-verdict rather than by reading.
+            _cov_c = _ccs[coin]["judgeable_on_complement"]
             _cb = (day_bar_v2(lo, hi, coin, gs["hours_elapsed"],
                               coverage_observed=_cov_c)
                    if _reg == "day_bar_v2" else None)
