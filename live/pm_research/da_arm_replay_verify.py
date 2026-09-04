@@ -63,7 +63,7 @@ CODE_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
-EXPECTED_CHECKS = 26
+EXPECTED_CHECKS = 32
 
 #: §8.1's REQUIRED OUTPUT, ENUMERATED HERE INDEPENDENTLY of the producer's own
 #: list. Written from the plan's eleven named quantities, NOT copied from
@@ -447,6 +447,119 @@ def _producer_fields() -> dict[str, dict]:
         "literal. A computed enumeration cannot be audited as data.")
 
 
+def publication_provenance(producer_path: str, symbol: str,
+                           root: Path | None = None) -> dict[str, Any]:
+    """The SIMPLER question, for an arbitrary published number.
+
+    The USER's audit found the programme's headline number had no committed
+    caller and came from a scratch script. The standing practice is now a
+    provenance check before any number reaches the USER: **producer named,
+    call and bare-reference sites censused, producing path inside the repo.**
+
+    That is a weaker question than this module's Q1/Q3 -- those ask whether a
+    path really RAN and whether it consumed what it CLAIMS -- so the same
+    shapes answer it, and the answer is one function rather than a second
+    tool. The three shapes are already proven elsewhere in this seat's stack:
+    a call-site census (`da_dark_interval_scan.no_module_imports_this`), a
+    source census read as data (`pm_tape_density.data_root_resolution_audit`),
+    and reading a producer's source with `ast` rather than importing it.
+
+    THE VERDICT THAT MATTERS is `production_call_sites == 0`: a producer whose
+    every caller is inside its own selftest is exactly the defect the audit
+    found -- green suite, no pipeline, and a number that came from somewhere
+    else entirely.
+    """
+    root = (CODE_ROOT / "live" / "pm_research") if root is None else Path(root)
+    if not root.is_dir():
+        raise ArmVerifyRefused(
+            f"REFUSED: no source tree at {root}. A provenance census that "
+            f"cannot read the tree must not report a clean one -- a silent "
+            f"regex mismatch once reported exactly that.")
+    src = Path(producer_path)
+    if not src.is_absolute():
+        src = root / producer_path
+    # INSIDE WHICH TREE? The question the practice asks is whether the
+    # producing path is inside the tree being censused -- for the real case
+    # that is the repo, and for a fixture it is the fixture. Testing against
+    # CODE_ROOT unconditionally made every fixture read PRODUCER_NOT_IN_REPO
+    # and hid the verdict under test; caught by running the control.
+    _scan_root = root.resolve()
+    inside_repo = False
+    try:
+        inside_repo = src.resolve().is_relative_to(_scan_root)
+    except Exception:
+        inside_repo = False
+
+    defined = False
+    if src.is_file():
+        import ast
+        try:
+            tree = ast.parse(src.read_text(encoding="utf-8", errors="replace"))
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef,
+                                     ast.ClassDef)) and node.name == symbol:
+                    defined = True
+                elif isinstance(node, ast.Name) and isinstance(
+                        getattr(node, "ctx", None), ast.Store)                         and node.id == symbol:
+                    defined = True
+        except SyntaxError:
+            defined = False
+
+    calls, refs = [], []
+    for f in sorted(root.glob("*.py")):
+        try:
+            txt = f.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        in_selftest = False
+        for n, line in enumerate(txt.splitlines(), 1):
+            if re.match(r"^def (selftest|_selftests|main)\b", line):
+                in_selftest = line.startswith(("def selftest",
+                                               "def _selftests"))
+            elif re.match(r"^def \w", line):
+                in_selftest = False
+            st = line.strip()
+            if st.startswith("#"):
+                continue
+            if re.search(rf"\b{re.escape(symbol)}\s*\(", st):
+                calls.append({"file": f.name, "line": n,
+                              "in_selftest": in_selftest,
+                              "is_definition": st.startswith(
+                                  ("def ", "async def ")),
+                              "text": st[:110]})
+            elif re.search(rf"\b{re.escape(symbol)}\b", st):
+                refs.append({"file": f.name, "line": n,
+                             "in_selftest": in_selftest, "text": st[:110]})
+
+    production = [c for c in calls
+                  if not c["in_selftest"] and not c["is_definition"]]
+    return {
+        "producer_path": str(src),
+        "producer_exists": src.is_file(),
+        "producer_inside_repo": inside_repo,
+        "symbol": symbol,
+        "symbol_defined_in_producer": defined,
+        "n_call_sites": len([c for c in calls if not c["is_definition"]]),
+        "n_production_call_sites": len(production),
+        "production_call_sites": production,
+        "n_selftest_call_sites": len([c for c in calls if c["in_selftest"]]),
+        "n_bare_references": len(refs),
+        "bare_references": refs[:20],
+        "n_files_scanned": len(list(root.glob("*.py"))),
+        "verdict": (
+            "PRODUCER_NOT_IN_REPO" if not inside_repo or not src.is_file()
+            else "SYMBOL_NOT_DEFINED_IN_NAMED_PRODUCER" if not defined
+            else "NO_PRODUCTION_CALL_SITE" if not production
+            else "PRODUCED_AND_CALLED"),
+        "why": ("`NO_PRODUCTION_CALL_SITE` is the audit's finding in one "
+                "word: every caller inside a selftest is a green suite with "
+                "no pipeline, and a number attributed to it came from "
+                "somewhere else"),
+        "decides_nothing": ("REPORTED. Whether a number may be published is "
+                            "the policy layer's (rule 14)"),
+    }
+
+
 def verify(path: Path, scores: list[dict] | None = None) -> dict[str, Any]:
     doc = load_artifact(path)
     return {
@@ -684,6 +797,57 @@ def selftest() -> int:
        "REAL-4 and whether it consumed the population it names is "
        "UNVERIFIABLE -- the artifact names days, coins and an era, and "
        "carries no digest of what was read")
+
+    # ---- (4) THE SIMPLER QUESTION, FOR AN ARBITRARY PUBLISHED NUMBER -----
+    with tempfile.TemporaryDirectory() as t:
+        tr = Path(t)
+        (tr / "prod.py").write_text(
+            "def headline_number():\n    return 42\n"
+            "def selftest():\n    return headline_number()\n",
+            encoding="utf-8")
+        _pp = publication_provenance("prod.py", "headline_number", root=tr)
+        ok(_pp["verdict"] == "NO_PRODUCTION_CALL_SITE"
+           and _pp["symbol_defined_in_producer"] is True
+           and _pp["n_selftest_call_sites"] == 1
+           and _pp["n_production_call_sites"] == 0,
+           "PROV-1 THE AUDIT'S FINDING IN ONE WORD: a producer whose ONLY "
+           "caller is inside its own selftest reads NO_PRODUCTION_CALL_SITE "
+           "-- a green suite with no pipeline, and a number attributed to it "
+           "came from somewhere else")
+        (tr / "caller.py").write_text(
+            "import prod\nx = prod.headline_number()\n", encoding="utf-8")
+        _pp2 = publication_provenance("prod.py", "headline_number", root=tr)
+        ok(_pp2["verdict"] == "PRODUCED_AND_CALLED"
+           and _pp2["n_production_call_sites"] == 1,
+           "PROV-2 AND IT ADMITS: add one real caller outside a selftest and "
+           "the same producer reads PRODUCED_AND_CALLED. A verdict that only "
+           "ever refuses is not a census")
+        ok(publication_provenance("nope.py", "x", root=tr)["verdict"]
+           == "PRODUCER_NOT_IN_REPO",
+           "PROV-3 a named producer that is not in the repo is refused by "
+           "name -- the scratch-script case the audit found")
+        ok(publication_provenance("prod.py", "not_defined_here",
+                                  root=tr)["verdict"]
+           == "SYMBOL_NOT_DEFINED_IN_NAMED_PRODUCER",
+           "PROV-4 and a symbol the named producer does not define is a "
+           "distinct verdict from one it defines but nobody calls -- two "
+           "different failures that must not share an answer")
+    try:
+        publication_provenance("x.py", "y", root=Path("/nonexistent/tree"))
+        ok(False, "PROV-5: an unreadable tree must REFUSE")
+    except ArmVerifyRefused as e:
+        ok("must not report a clean one" in str(e),
+           "PROV-5 an unreadable source tree REFUSES rather than reporting a "
+           "clean census -- a silent regex mismatch once reported exactly "
+           "that")
+    _real = publication_provenance("da_arm_replay_verify.py",
+                                   "publication_provenance")
+    ok(_real["producer_inside_repo"] is True
+       and _real["symbol_defined_in_producer"] is True,
+       f"PROV-6 pointed at ITSELF the census resolves: producer in the repo, "
+       f"symbol defined, {_real['n_call_sites']} call site(s) over "
+       f"{_real['n_files_scanned']} files -- so the instrument can answer the "
+       f"practice's question for an arbitrary number and is not a second tool")
 
     print(f"\nda_arm_replay_verify selftest: {checks} checks PASSED")
     if checks != EXPECTED_CHECKS:
