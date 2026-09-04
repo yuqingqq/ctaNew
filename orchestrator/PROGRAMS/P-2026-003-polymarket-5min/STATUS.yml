@@ -4,6 +4,43 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T14:13Z (MEM ROUND 99 -- A DEFECT OF MINE, ITS MEASURED SCOPE, AND
+  THE GUARD THAT MAKES IT A PROGRAM RATHER THAN A HABIT.) MY ROUND-98 COMMIT
+  5277b63 LANDED MERGE CONFLICT MARKERS INSIDE THE REGISTER, at
+  COORDINATION.md lines 708 / 710 / 712, between Q-BE-271 and Q-MEM-86 -- read by
+  me at the committed blob, not taken from the report. THE ORIGIN IS SHARED AND
+  THE COMMIT IS MINE: a rebase with autostash on the shared tree lifted my
+  uncommitted edits, the restore conflicted because BE and I had both appended to
+  the SAME TABLE (the R-397 hazard), AND THEN I COMMITTED THE RESULT BY PATHSPEC
+  WITHOUT LOOKING AT IT. THE REGISTER IS THE WORST FILE FOR THIS: four
+  instruments parse it, and a marker inside a table row is exactly the shape that
+  makes a parser RETURN SOMETHING PLAUSIBLE AND WRONG rather than fail.
+  SCOPE MEASURED RATHER THAN ASSUMED, AND WIDER THAN I WAS ASKED TO CHECK: the
+  coordinator checked the register and stopped; I SCANNED EVERY FILE OF EVERY MEM
+  COMMIT TODAY -- ROUNDS 78 THROUGH 98, 21 COMMITS -- AND 5277b63 IS THE ONLY
+  ONE. One commit, one file, three marker lines. REPAIRED AT HEAD BY THE
+  COORDINATOR WITH BOTH ROWS KEPT, VERIFIED BY ME: Q-BE-271 and Q-MEM-86 both
+  present, whole repo marker-free.
+  THE FIX IS A PROGRAM, NOT A DISCIPLINE: live/pm_research/mem_commit_guard.py IS
+  NOW MY COMMIT PATH -- it stages, scans and commits ONLY IF CLEAN, so forgetting
+  to run it is not a failure mode. IT INSPECTS THE INDEX, NOT THE WORKING TREE,
+  because the index is what gets committed and a working-tree check would pass
+  while a stale staged blob carried the markers. RED-FIRST ON THE REAL DATA: run
+  against the actual 5277b63 blob it reports 708 / 710 / 712 and WOULD HAVE
+  REFUSED THE COMMIT; run against the repaired HEAD blob it reports CLEAN. AND IT
+  DELIBERATELY DOES NOT CREATE THE OBVIOUS FALSE POSITIVE: a bare run of `=` on
+  its own line is A MARKDOWN SETEXT H1 UNDERLINE, so that pattern counts only when
+  an open or close marker is also in the same file -- A CHECK THAT FIRES ON EVERY
+  HEADING IS A CHECK THAT GETS TURNED OFF. IT ALSO ADMITS ITS OWN SOURCE, asserted
+  in its selftest, which is R-511's self-arming shape instrumented. 13 checks,
+  both directions, count REPORTED never asserted.
+  STANDING RULE 16 RECORDS THE GENERAL FORM, WHICH IS THE COORDINATOR'S AND IS
+  THE PART THAT TRANSFERS: A COMMIT THAT DOES NOT LOOK AT WHAT IT IS COMMITTING
+  WILL EVENTUALLY COMMIT A MERGE ARTEFACT. IT IS MY OWN ROUND-80 LESSON ONE LEVEL
+  DOWN -- a pathspec commit is only as NARROW as the diff inside each path, AND
+  ONLY AS CLEAN AS THE CONTENT INSIDE EACH PATH. INSTRUMENT: 499 flags, 23
+  CHECKED, 19 RELAYED, 457 UNMARKED, 0 findings.
+  PRIOR:
   2026-09-04T14:04Z (MEM ROUND 98 -- A USER RULING, A MEASURED CEILING THAT
   REVERSES THE DAY'S DIRECTION OF TRAVEL, AND A CORRECTION TO WHAT I RECORDED AS
   THE FINDING OF THE DAY ONE ROUND AGO.)
@@ -111,59 +148,6 @@ updated: >-
   DIRECTIONAL BET (terminal net FLIPS +146.74 -> -147.28) THAT DE PRE-COMMITTED TO
   DISTRUSTING. INSTRUMENT: 494 flags, 21 CHECKED, 16 RELAYED, 457 UNMARKED, 0
   findings.
-  PRIOR:
-  2026-09-04T13:37Z (MEM ROUND 96 -- R-523 TURNS THE NEGATIVE RESULT INTO A
-  SPECIFICATION, AND IT CHANGES WHAT THE PROGRAMME IS FOR.) THE THRESHOLD, AND I
-  RECOMPUTED ALL OF IT: AN OVERLAY PAYS IFF r = adverse/spread >= sigma/alpha,
-  MEASURED PER LOST FILL. CONDVALUE breaks even at 0.8319/3.0140 = 27.6012%;
-  HAZARD at 0.7583/3.8137 = 19.8836%; THIS BOOK READS 18.6259%, SO HAZARD IS
-  6.7522% OF RELATIVE ADVERSE FROM BREAK-EVEN. RECORD THAT AND NOT "THE OVERLAY
-  DOES NOT PAY" -- they are different findings and only one is actionable.
-  THE TAIL: 18.6259% IS A RATIO OF TWO TOTALS OF WHICH ONE IS 43 FILLS (1% of
-  4,315 = 43.15). Excluding the top 1%, r >= 110.58% AS A HARD BOUND for any
-  split of the tail, with an INDEPENDENT TRIVIAL PROOF -- the other 99% SUM TO
-  MINUS 1,117.84c (= -13% of +8,598.7588c, checked) and A NEGATIVE MAKER P&L
-  MEANS ADVERSE EXCEEDED SPREAD, SO r > 1 THERE BY DEFINITION. ON 99% OF THIS
-  BOOK THE THRESHOLD IS EXCEEDED FOURFOLD (4.006x). NEITHER FIGURE ALONE IS THE
-  SPECIFICATION: 18.63% UNDERSTATES THE OPPORTUNITY 5.94x BECAUSE IT DESCRIBES THE
-  TAIL RATHER THAN THE BOOK, AND 110.58% OVERSTATES WHAT IS CAPTURABLE BECAUSE
-  "EXCLUDE THE TOP 1%" IS NOT AN AVAILABLE POLICY. SO THE SPECIFICATION IS
-  CONDITIONAL: THE OVERLAY PAYS IFF IT DECLINES THE BODY WITHOUT DECLINING THE
-  TAIL, and the decisive quantity is UNMEASURED -- HOW MANY OF THE TOP 43 FILLS
-  EACH ARM DECLINED -- dispatched to DE as one pass.
-  THE CASCADE RECONCILES THE MECHANISM WITH DA's NULL (relayed): the book runs
-  1.1176 fills per generation, so a RANDOM cancel removes ~1.12 fills against 4.32
-  and 2.23; cents_per_cancel = cascade x per-fill-cost x mean-generation-P&L gives
-  CONDVALUE 1.29x WORSE than random and HAZARD 8.51x BETTER, reconciling to four
-  decimals. DA'S NULL CALLS BOTH INDISTINGUISHABLE AND IS CORRECT -- AND THE TWO
-  POINT ESTIMATES ARE A FACTOR OF SEVEN APART, WHICH THE z-STATISTIC HIDES. Not a
-  contradiction: a dispersion test at this size cannot separate them while the
-  decomposition says they differ by an order of magnitude in the term that
-  matters. THE LEVER IS NOT A BETTER RANKER -- IT IS A CANCEL THAT DOES NOT
-  CASCADE. AND IT IS TESTABLE WITHOUT SPENDING A DAY: r IS A PROPERTY OF THE
-  BASELINE, RECOMPUTABLE FROM THE REFERENCE ALONE WITH NO REPLAY, and ~600
-  COIN-HOURS SIT BETWEEN THE hf_ws_v2 BOUNDARY AND THE FREEZE EPOCH, ALREADY
-  CONSUMED AND TOUCHING NO SEALED DAY. BE IS RUNNING IT. A DISTRIBUTION OF r THAT
-  NEVER APPROACHES THE THRESHOLD CLOSES THE OVERLAY PROGRAMME ON EVIDENCE RATHER
-  THAN ON ONE HOUR.
-  AND THE PROVENANCE DEFECT, WHICH QUALIFIES EVERY FIGURE I HAVE MARKED CHECKED
-  AGAINST THIS ARTIFACT. provenance.carrying_commit is b43a9ce with
-  working_tree_clean_for_this_file FALSE and producing_code_path under
-  ctaNew-wt-de; I VERIFIED b43a9ce IS NOT AN ANCESTOR OF origin/mm-research AND
-  THAT 3 OF 7 code_identity FILES DIFFER AT IT. IT DOES NOT ESTABLISH THE NUMBERS
-  ARE WRONG -- DA reproduced the baseline independently from the reference to
-  7.3e-12 and the element-wise check was clean -- BUT THE ARTIFACT CANNOT BE CITED
-  AS PROVENANCE-CLEAN AND IT WAS CITED TO THE USER REPEATEDLY. DE is re-emitting.
-  IT IS ALSO A GAP IN MY OWN INSTRUMENT, NAMED NOT PATCHED BLIND: it checks that a
-  CHECKED flag's artifact EXISTS, never that it is PROVENANCE-CLEAN, so an
-  artifact naming a commit outside the branch passes silently. FINALLY, STANDING
-  RULE 14, WHICH I FOUND BY REPRODUCING THE ERROR WHILE CHECKING SOMEONE ELSE'S: A
-  CLAIM ABOUT A MOVING REFERENCE CARRIES THE REVISION IT WAS TRUE AT. R-523's
-  "all 7 match at the tip" was TRUE at 9f25483 and ALREADY STALE at b22fb30
-  minutes later, DE59 having touched exactly those three files; my own first check
-  compared against origin/mm-research, which had moved under me, and briefly read
-  a contradiction that was not there. "AT THE TIP" IS NOT A PIN. INSTRUMENT: 490
-  flags, 20 CHECKED, 13 RELAYED, 457 UNMARKED, 0 findings.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -6851,8 +6835,47 @@ flags:
     levers where a bound is cheap and absent. RECORDED AS STATE SO A LATER ROUND
     DOES NOT RE-DERIVE THE PRIORITY ORDER FROM THE NEWEST ENTRY.
 
+  ROUND_98_COMMITTED_CONFLICT_MARKERS_INTO_THE_REGISTER_scope_measured: >-
+    CHECKED BY ME, AND THE DEFECT IS MINE TO OWN. Commit 5277b63 landed merge
+    conflict markers inside workspace/COORDINATION.md between Q-BE-271 and
+    Q-MEM-86, at lines 708 (open), 710 (mid) and 712 (close) -- I read them at
+    the committed blob rather than from the report. THE ORIGIN IS SHARED:
+    the coordinator ran a rebase with autostash on the shared tree while my
+    round-98 edits were uncommitted, the restore conflicted because BE and I had
+    both appended to the SAME TABLE (the R-397 shared-tree hazard), and THEN I
+    COMMITTED THE RESULT BY PATHSPEC WITHOUT LOOKING AT IT. A pathspec commit
+    does not inspect content, so nothing stopped me. THE REGISTER IS THE WORST
+    FILE FOR THIS: floor_from_register, da_cite_audit, parse_register and
+    era_authority_audit all parse it, and a marker inside a table row is exactly
+    the shape that makes a parser return SOMETHING PLAUSIBLE AND WRONG rather
+    than fail. REPAIRED AT HEAD BY THE COORDINATOR WITH BOTH ROWS KEPT --
+    verified by me: Q-BE-271 and Q-MEM-86 are both present and the whole repo is
+    marker-free at HEAD. SCOPE MEASURED, NOT ASSUMED: I scanned EVERY FILE OF
+    EVERY MEM COMMIT TODAY (rounds 78 through 98, 21 commits), not just the one
+    the coordinator checked. 5277b63 IS THE ONLY ONE. One commit, one file, three
+    marker lines, already repaired.
+  MEM_COMMIT_GUARD_it_fires_on_the_real_defect_and_admits_the_repair: >-
+    CHECKED BY ME BY RUNNING IT. live/pm_research/mem_commit_guard.py refuses to
+    commit staged content containing conflict markers, and IT IS MY COMMIT PATH
+    RATHER THAN A HABIT -- `--commit -m MSG -- PATHS` stages, scans and commits
+    ONLY IF CLEAN, so forgetting to run it is not a failure mode. IT INSPECTS THE
+    INDEX, NOT THE WORKING TREE, because the index is what gets committed and a
+    working-tree check would pass while a stale staged blob carried the markers.
+    RED-FIRST ON THE REAL DATA: run against the actual 5277b63 blob it reports
+    MARKER at 708/710/712 and WOULD HAVE REFUSED THE COMMIT; run against the same
+    file at HEAD after the repair it reports CLEAN. THE FALSE POSITIVE IT
+    DELIBERATELY DOES NOT CREATE: a bare `=` run on its own line is a MARKDOWN
+    SETEXT H1 UNDERLINE, so that pattern is a finding ONLY when an open or close
+    marker also appears in the same file -- a check that fires on every heading
+    is a check that gets turned off (SEAT_PROTOCOL 16 from the side that matters
+    here). AND IT ADMITS ITS OWN SOURCE, asserted in its selftest, which is
+    R-511's self-arming shape instrumented: a guard that refuses the file
+    documenting it arms itself. Selftest runs 13 checks BOTH DIRECTIONS with the
+    count REPORTED, never asserted against a literal. Undecodable blobs are
+    reported as NOT SCANNED, never counted as clean.
+
 focus: >
-  As-of 2026-09-04T14:04Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T14:13Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -7352,6 +7375,14 @@ focus: >
   FALSE AS STATED; the citable form is NO CEILING IN live/mm_research/, NONE IN
   THE REGISTERS, AND NONE ANYWHERE FOR THE CANCELLATION-OVERLAY LEVER. BE's
   138-cell V_oracle survey is the decision-bearing measurement.
+  ROUND 99 -- MEM COMMITS THROUGH live/pm_research/mem_commit_guard.py FROM NOW
+  ON. Round 98's commit landed conflict markers in the register (lines 708/710/712,
+  repaired at HEAD with both rows kept); a scan of all 21 MEM commits today shows
+  5277b63 is THE ONLY ONE. STANDING RULE 16: A COMMIT THAT DOES NOT LOOK AT WHAT
+  IT IS COMMITTING WILL EVENTUALLY COMMIT A MERGE ARTEFACT -- the round-80 lesson
+  one level down, a pathspec commit being only as CLEAN as the content inside each
+  path. The guard reads the INDEX, fires on the real 5277b63 blob, admits the
+  repair, and admits a Markdown setext heading so it does not fire on every title.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -7641,8 +7672,38 @@ flag_provenance:
   STANDING_PRIORITIES_the_V_oracle_survey_is_the_decision_bearing_measurement:
     prov: RELAYED
     from: R-529(4) (coordinator's dispatch to all seats)
+  ROUND_98_COMMITTED_CONFLICT_MARKERS_INTO_THE_REGISTER_scope_measured:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-04T14:12Z
+    said: >-
+      the blob at 5277b63 carries an open marker at line 708, a bare-equals line
+      at 710 and a close marker at 712; the same file at HEAD carries none, and
+      both `| Q-BE-271` and `| Q-MEM-86` rows are present. A scan of every file
+      of every MEM commit today (rounds 78-98, 21 commits) finds markers in
+      5277b63 alone
+  MEM_COMMIT_GUARD_it_fires_on_the_real_defect_and_admits_the_repair:
+    prov: CHECKED
+    artifact: live/pm_research/mem_commit_guard.py
+    as_of: 2026-09-04T14:12Z
+    said: >-
+      --selftest ran 13 checks in both directions and all passed, including that
+      it admits a Markdown setext heading and admits its own source; run against
+      the real 5277b63 blob it reports markers at 708/710/712 and against the
+      repaired HEAD blob it reports clean
 
 standing_rules:
+  - "STANDING RULE 16 (coordinator's form, MEM's defect; instrumented at
+    live/pm_research/mem_commit_guard.py) -- A COMMIT THAT DOES NOT LOOK AT WHAT
+    IT IS COMMITTING WILL EVENTUALLY COMMIT A MERGE ARTEFACT. This is MEM's
+    round-80 lesson one level down: a pathspec commit is only as NARROW as the
+    diff inside each path, and only as CLEAN as the CONTENT inside each path.
+    The instance is 5277b63, which landed conflict markers into the register --
+    the one file four instruments parse, where a marker inside a table row makes
+    a parser return SOMETHING PLAUSIBLE AND WRONG rather than fail. The remedy
+    is a program and not a discipline: MEM's commit path stages, scans the INDEX
+    and commits only if clean, so forgetting is not a failure mode. Its own
+    falsifier fires on the real 5277b63 blob and admits the repaired one."
   - "STANDING RULE 15 (USER ruling, R-529(A)) -- EVERY STATEMENT OF A FORWARD-RACE
     RESULT SAYS UP FRONT THAT IT ESTABLISHES DIRECTION AND CONSISTENCY, AND NEVER
     A HOLM-CLEARING VERDICT. G=5 stands and the recorded multiplicity of 2 stands

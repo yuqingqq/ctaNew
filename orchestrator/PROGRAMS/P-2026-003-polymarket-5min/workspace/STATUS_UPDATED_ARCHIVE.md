@@ -7523,3 +7523,63 @@ Nothing deleted — only moved.
   THE RANKER SELECTS CORRECTLY ON BOTH AXES. INSTRUMENT: 484 flags, 16 CHECKED,
   11 RELAYED, 457 UNMARKED, 0 findings.
 ```
+
+## Batch 105 — archived 2026-09-04T14:13Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 99 entered the field.
+Nothing deleted — only moved.
+
+```
+  2026-09-04T13:37Z (MEM ROUND 96 -- R-523 TURNS THE NEGATIVE RESULT INTO A
+  SPECIFICATION, AND IT CHANGES WHAT THE PROGRAMME IS FOR.) THE THRESHOLD, AND I
+  RECOMPUTED ALL OF IT: AN OVERLAY PAYS IFF r = adverse/spread >= sigma/alpha,
+  MEASURED PER LOST FILL. CONDVALUE breaks even at 0.8319/3.0140 = 27.6012%;
+  HAZARD at 0.7583/3.8137 = 19.8836%; THIS BOOK READS 18.6259%, SO HAZARD IS
+  6.7522% OF RELATIVE ADVERSE FROM BREAK-EVEN. RECORD THAT AND NOT "THE OVERLAY
+  DOES NOT PAY" -- they are different findings and only one is actionable.
+  THE TAIL: 18.6259% IS A RATIO OF TWO TOTALS OF WHICH ONE IS 43 FILLS (1% of
+  4,315 = 43.15). Excluding the top 1%, r >= 110.58% AS A HARD BOUND for any
+  split of the tail, with an INDEPENDENT TRIVIAL PROOF -- the other 99% SUM TO
+  MINUS 1,117.84c (= -13% of +8,598.7588c, checked) and A NEGATIVE MAKER P&L
+  MEANS ADVERSE EXCEEDED SPREAD, SO r > 1 THERE BY DEFINITION. ON 99% OF THIS
+  BOOK THE THRESHOLD IS EXCEEDED FOURFOLD (4.006x). NEITHER FIGURE ALONE IS THE
+  SPECIFICATION: 18.63% UNDERSTATES THE OPPORTUNITY 5.94x BECAUSE IT DESCRIBES THE
+  TAIL RATHER THAN THE BOOK, AND 110.58% OVERSTATES WHAT IS CAPTURABLE BECAUSE
+  "EXCLUDE THE TOP 1%" IS NOT AN AVAILABLE POLICY. SO THE SPECIFICATION IS
+  CONDITIONAL: THE OVERLAY PAYS IFF IT DECLINES THE BODY WITHOUT DECLINING THE
+  TAIL, and the decisive quantity is UNMEASURED -- HOW MANY OF THE TOP 43 FILLS
+  EACH ARM DECLINED -- dispatched to DE as one pass.
+  THE CASCADE RECONCILES THE MECHANISM WITH DA's NULL (relayed): the book runs
+  1.1176 fills per generation, so a RANDOM cancel removes ~1.12 fills against 4.32
+  and 2.23; cents_per_cancel = cascade x per-fill-cost x mean-generation-P&L gives
+  CONDVALUE 1.29x WORSE than random and HAZARD 8.51x BETTER, reconciling to four
+  decimals. DA'S NULL CALLS BOTH INDISTINGUISHABLE AND IS CORRECT -- AND THE TWO
+  POINT ESTIMATES ARE A FACTOR OF SEVEN APART, WHICH THE z-STATISTIC HIDES. Not a
+  contradiction: a dispersion test at this size cannot separate them while the
+  decomposition says they differ by an order of magnitude in the term that
+  matters. THE LEVER IS NOT A BETTER RANKER -- IT IS A CANCEL THAT DOES NOT
+  CASCADE. AND IT IS TESTABLE WITHOUT SPENDING A DAY: r IS A PROPERTY OF THE
+  BASELINE, RECOMPUTABLE FROM THE REFERENCE ALONE WITH NO REPLAY, and ~600
+  COIN-HOURS SIT BETWEEN THE hf_ws_v2 BOUNDARY AND THE FREEZE EPOCH, ALREADY
+  CONSUMED AND TOUCHING NO SEALED DAY. BE IS RUNNING IT. A DISTRIBUTION OF r THAT
+  NEVER APPROACHES THE THRESHOLD CLOSES THE OVERLAY PROGRAMME ON EVIDENCE RATHER
+  THAN ON ONE HOUR.
+  AND THE PROVENANCE DEFECT, WHICH QUALIFIES EVERY FIGURE I HAVE MARKED CHECKED
+  AGAINST THIS ARTIFACT. provenance.carrying_commit is b43a9ce with
+  working_tree_clean_for_this_file FALSE and producing_code_path under
+  ctaNew-wt-de; I VERIFIED b43a9ce IS NOT AN ANCESTOR OF origin/mm-research AND
+  THAT 3 OF 7 code_identity FILES DIFFER AT IT. IT DOES NOT ESTABLISH THE NUMBERS
+  ARE WRONG -- DA reproduced the baseline independently from the reference to
+  7.3e-12 and the element-wise check was clean -- BUT THE ARTIFACT CANNOT BE CITED
+  AS PROVENANCE-CLEAN AND IT WAS CITED TO THE USER REPEATEDLY. DE is re-emitting.
+  IT IS ALSO A GAP IN MY OWN INSTRUMENT, NAMED NOT PATCHED BLIND: it checks that a
+  CHECKED flag's artifact EXISTS, never that it is PROVENANCE-CLEAN, so an
+  artifact naming a commit outside the branch passes silently. FINALLY, STANDING
+  RULE 14, WHICH I FOUND BY REPRODUCING THE ERROR WHILE CHECKING SOMEONE ELSE'S: A
+  CLAIM ABOUT A MOVING REFERENCE CARRIES THE REVISION IT WAS TRUE AT. R-523's
+  "all 7 match at the tip" was TRUE at 9f25483 and ALREADY STALE at b22fb30
+  minutes later, DE59 having touched exactly those three files; my own first check
+  compared against origin/mm-research, which had moved under me, and briefly read
+  a contradiction that was not there. "AT THE TIP" IS NOT A PIN. INSTRUMENT: 490
+  flags, 20 CHECKED, 13 RELAYED, 457 UNMARKED, 0 findings.
+```

@@ -1,6 +1,61 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T14:04Z (MEM round 98) — **A USER RULING, A MEASURED CEILING
+Updated: 2026-09-04T14:13Z (MEM round 99) — **A DEFECT OF MINE, ITS MEASURED
+SCOPE, AND THE GUARD THAT MAKES IT A PROGRAM RATHER THAN A HABIT.**
+
+### What happened
+
+**My round-98 commit `5277b63` landed merge conflict markers inside the
+register** — `COORDINATION.md` lines **708 / 710 / 712**, between Q-BE-271 and
+Q-MEM-86. Read at the committed blob, not taken from the report.
+
+**The origin is shared; the commit is mine.** A rebase with `--autostash` on the
+shared tree lifted my uncommitted edits, the restore conflicted because BE and I
+had both appended to the **same table** (the R-397 hazard), **and then I
+committed the result by pathspec without looking at it.**
+
+**The register is the worst file for this.** `floor_from_register`,
+`da_cite_audit`, `parse_register` and `era_authority_audit` all parse it, and **a
+marker inside a table row is exactly the shape that makes a parser return
+something plausible and wrong rather than fail.**
+
+### Scope measured, and wider than I was asked to check
+
+The coordinator checked the register and stopped. **I scanned every file of every
+MEM commit today — rounds 78 through 98, 21 commits — and `5277b63` is the only
+one.** One commit, one file, three marker lines. **Repaired at HEAD by the
+coordinator with both rows kept**, verified here: Q-BE-271 and Q-MEM-86 both
+present, whole repo marker-free.
+
+### The fix is a program, not a discipline
+
+**`live/pm_research/mem_commit_guard.py` is now my commit path** —
+`--commit -m MSG -- PATHS` stages, scans and commits **only if clean**, so
+forgetting to run it is not a failure mode. **It inspects the INDEX, not the
+working tree**, because the index is what gets committed and a working-tree check
+would pass while a stale staged blob carried the markers.
+
+| control | result |
+|---|---|
+| **red-first, real data**: the actual `5277b63` blob | reports **708 / 710 / 712** — **would have refused the commit** |
+| the same file at HEAD after the repair | **clean — admits it** |
+| a Markdown **setext H1 underline** (`=` run on its own line) | **admitted** — that pattern counts only when an open/close marker is also in the file, because **a check that fires on every heading is a check that gets turned off** |
+| **its own source** | **admitted**, asserted in the selftest — **R-511's self-arming shape instrumented** |
+| selftest | **13 checks, both directions**, count **reported**, never asserted against a literal |
+
+### Standing rule 16 — the coordinator's form, and the part that transfers
+
+> **A commit that does not look at what it is committing will eventually commit a
+> merge artefact.**
+
+**It is my own round-80 lesson one level down:** a pathspec commit is only as
+**narrow** as the diff inside each path — **and only as CLEAN as the content
+inside each path.**
+
+**Instrument:** 499 flags, **23 CHECKED**, 19 RELAYED, 457 UNMARKED, 0 findings.
+
+
+Previously (MEM round 98) — 2026-09-04T14:04Z — **A USER RULING, A MEASURED CEILING
 THAT REVERSES THE DAY'S DIRECTION OF TRAVEL, AND A CORRECTION TO WHAT I RECORDED
 AS THE FINDING OF THE DAY ONE ROUND AGO.**
 
@@ -911,6 +966,22 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T14:13Z — MEM round 99: I committed conflict markers into the register, and the fix is a program
+>
+> **Full entry is the `Updated:` block at the top.** `5277b63` landed markers at
+> `COORDINATION.md` **708 / 710 / 712**; origin shared (an `--autostash` rebase on
+> the shared tree, BE and MEM appending to the same table — the R-397 hazard),
+> **the commit mine**. **Scope measured: all 21 MEM commits today scanned,
+> `5277b63` is the only one**; repaired at HEAD with both rows kept.
+> **`live/pm_research/mem_commit_guard.py` is now MEM's commit path** — it reads
+> the **index**, fires on the real `5277b63` blob, admits the repair, and admits a
+> Markdown setext heading so it does not fire on every title. **STANDING RULE 16:
+> a commit that does not look at what it is committing will eventually commit a
+> merge artefact** — the round-80 lesson one level down.
+>
+> ---
+
 
 > ### 2026-09-04T14:04Z — MEM round 98: the race is directional, the ceiling reverses the direction of travel, and my round-97 headline was false as stated
 >
