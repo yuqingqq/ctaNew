@@ -168,12 +168,13 @@ SECTION_8_1_FIELDS: dict[str, dict] = {
     "cancels_stale": {"source": "counters.cancels_stale"},
     "cancels_unresolved": {"source": "counters.cancels_unresolved"},
     "holds_total": {"source": "counters.holds_total"},
-    "hold_seconds_total": {"source": "counters.hold_seconds_total"},
+    "hold_seconds_total": {"source": "holds.total_s",
+                           "also": ("holds.max_s", "holds.n")},
     "reposts": {"source": "counters.reposts"},
     "queue_reset_cost_cents_total": {
         "source": "counters.queue_reset_cost_cents_total"},
-    "terminal_inventory": {"source": "economics.inventory.net"},
-    "peak_inventory": {"source": "economics.inventory.peak_abs_net"},
+    "terminal_inventory": {"source": "inventory.terminal_net"},
+    "peak_inventory": {"source": "inventory.peak_abs_net"},
     "inventory_loss_cents": {
         "source": None,
         "why": "the inventory block carries NET and PEAK ABS shares and "
