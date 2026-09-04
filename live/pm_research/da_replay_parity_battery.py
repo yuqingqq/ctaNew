@@ -498,11 +498,26 @@ def anchor_parity(opps: list[dict[str, Any]]) -> dict[str, Any]:
 def infinite_threshold_parity(opps) -> dict[str, Any]:
     """An INFINITE cancel threshold cancels nothing, so an arm with its
     predictor ENABLED must still be bit-identical to QR_SKEW_ONLY."""
-    base = run_stub_arm("QR_SKEW_ONLY", opps).digest()
-    got = run_stub_arm("CONDVALUE_X_SKEW", opps, predictor_enabled=True,
-                       cancel_threshold=float("inf")).digest()
+    _b = run_stub_arm("QR_SKEW_ONLY", opps)
+    _g = run_stub_arm("CONDVALUE_X_SKEW", opps, predictor_enabled=True,
+                      cancel_threshold=float("inf"))
+    base, got = _b.digest(), _g.digest()
+    # DA31: A DENOMINATOR, so a pass says how much was compared. My own
+    # verifier found nine gates in the producer's artifact reporting failures
+    # with no count of what was checked -- "0 failing" and "0 checked" are the
+    # same bytes -- and the first place to apply that finding is here, where a
+    # bit-identical digest over ZERO opportunities would also have passed.
+    _n = len(opps)
     return {"baseline_digest": base, "digest": got,
-            "bit_identical": got == base, "pass": got == base}
+            "n_opportunities_compared": _n,
+            "n_events_baseline": len(getattr(_b, "events", []) or []),
+            "n_events_arm": len(getattr(_g, "events", []) or []),
+            "bit_identical": got == base,
+            "pass": bool(_n) and got == base,
+            "denominator_note": ("a bit-identical digest over an EMPTY "
+                                 "population is not a parity result; the "
+                                 "count is carried so a reader never has to "
+                                 "infer it")}
 
 
 def per_window_effective(tr: Trajectory) -> dict[int, int]:
@@ -608,13 +623,40 @@ def permanent_hold_anchor(opps: list[dict[str, Any]], *,
                           cancel_threshold=cancel_threshold,
                           hold_after_first_cancel=True, fill_at=0.010)
     pn, ph = prof(normal), prof(holder)
+    # DA31: the same denominator discipline. `flagged` over zero generations
+    # is not an anchor; the counts are carried and the pass requires them.
+    # The profile's own key is `opportunities`; reading `n` returned None and
+    # turned a passing anchor red. Caught by running the battery rather than
+    # by reading the edit -- a denominator taken from the wrong key is not a
+    # denominator.
+    _n_norm = pn.get("opportunities", 0)
+    _n_hold = ph.get("opportunities", 0)
     return {"normal": pn, "permanent_hold": ph,
             "threshold": PERMANENT_HOLD_WITHHELD_SHARE,
+            "n_generations_normal": _n_norm,
+            "n_generations_permanent_hold": _n_hold,
+            "n_generations_compared": _n_norm + _n_hold,
             "holder_flagged": ph["flagged"],
             "normal_not_flagged": not pn["flagged"],
             "holder_trades_less": ph["fills"] < pn["fills"],
-            "pass": ph["flagged"] and not pn["flagged"]
-                    and ph["fills"] < pn["fills"]}
+            "pass": bool(_n_norm) and bool(_n_hold)
+                    and ph["flagged"] and not pn["flagged"]
+                    and ph["fills"] < pn["fills"],
+            "denominator_note": ("both arms must have replayed something; a "
+                                 "flag raised over an empty population is a "
+                                 "flag about nothing")}
+
+
+def _own_dir(script_dir: str | None) -> str:
+    """This module's own directory when the caller named none.
+
+    The old default was `"."`, which made the child's `sys.path.insert(0, ".")`
+    depend on the CALLER'S working directory -- see the note in
+    `determinism_across_hashseed`.
+    """
+    import os.path
+    return script_dir if script_dir is not None else os.path.dirname(
+        os.path.abspath(__file__))
 
 
 def determinism_across_hashseed(script_dir: str) -> dict[str, Any]:
@@ -639,7 +681,40 @@ def determinism_across_hashseed(script_dir: str) -> dict[str, Any]:
         outs.append(subprocess.run([sys.executable, "-c", prog], env=env,
                                    capture_output=True, text=True).stdout.strip())
     same = bool(outs[0]) and outs[0] == outs[1]
-    return {"outputs": outs, "identical": same, "pass": same}
+    # DA31: a denominator here too. `bool(outs[0])` already refuses a pair of
+    # empty strings -- two crashed children agree -- but the COUNT was not
+    # reported, so a reader could not see how many interpreters answered. Two
+    # is the whole population and it is now stated rather than assumed.
+    _n_ok = sum(1 for o in outs if o)
+    # DA31, AND THIS IS THE FINDING THE DENOMINATOR PRODUCED. `battery()`
+    # defaulted `script_dir` to "." , so unless the caller happened to be IN
+    # `live/pm_research` the children could not import this module, produced
+    # NOTHING, and this check returned `identical: false` -- which reads as a
+    # DETERMINISM FAILURE, a serious result, when the truth is that neither
+    # interpreter ran. That is the empty-set trap's mirror image: instead of
+    # "0 failing" reading as a pass, "not identical" reads as a real failure
+    # and sends a reader chasing nondeterminism that does not exist. The
+    # default is now this module's own directory, and a child that does not
+    # answer is a NAMED STATUS rather than a disagreement.
+    if _n_ok != len(outs):
+        return {"status": "DID_NOT_RUN",
+                "outputs": outs,
+                "identical": None,
+                "n_interpreters_run": len(outs),
+                "n_interpreters_that_answered": _n_ok,
+                "pass": False,
+                "why": (f"{len(outs) - _n_ok} of {len(outs)} child "
+                        f"interpreter(s) produced no output from "
+                        f"script_dir={script_dir!r}, so this check did not "
+                        f"execute. `identical` is None, NOT false: a check "
+                        f"that never ran must not report a disagreement")}
+    return {"status": "RAN", "outputs": outs, "identical": same,
+            "n_interpreters_run": len(outs),
+            "n_interpreters_that_answered": _n_ok,
+            "pass": _n_ok == len(outs) == 2 and same,
+            "denominator_note": ("two interpreters must both ANSWER before "
+                                 "their agreement means anything; two silent "
+                                 "children also agree")}
 
 
 # ---------------------------------------------------------------------------
@@ -1176,7 +1251,7 @@ REQUIRED_CHECKS = (
 
 
 def battery(opps: list[dict[str, Any]] | None = None,
-            script_dir: str = ".", *,
+            script_dir: str | None = None, *,
             skip: Iterable[str] = ()) -> dict[str, Any]:
     """Run the battery and emit an EVALUATED RECEIPT.
 
@@ -1217,7 +1292,7 @@ def battery(opps: list[dict[str, Any]] | None = None,
         "rate_limit_accounting": lambda: rate_limit_accounting(opps),
         "permanent_hold_anchor": lambda: permanent_hold_anchor(opps),
         "determinism_across_hashseed":
-            lambda: determinism_across_hashseed(script_dir),
+            lambda: determinism_across_hashseed(_own_dir(script_dir)),
     }
     checks: dict[str, Any] = {}
     for name, fn in runners.items():
@@ -1924,6 +1999,41 @@ def _selftests() -> int:
        "and a STATED value reaching the same number is recorded differently -- "
        "a freeze artifact can never read as a stated policy that was actually "
        "inherited from a ruling made in another context")
+
+    # ---- DA31: the battery must work from ANY working directory ---------
+    # `battery()` defaulted script_dir to "." , so from anywhere but this
+    # directory the determinism children could not import and the check
+    # reported `identical: false` -- a phantom DETERMINISM FAILURE. Driven
+    # from a different cwd, which is the only place the defect was visible.
+    import os as _os31
+    import tempfile as _tf31
+    _cwd31 = _os31.getcwd()
+    try:
+        with _tf31.TemporaryDirectory() as _t31:
+            _os31.chdir(_t31)
+            _b31 = battery()
+        _d31 = _b31["checks"]["determinism_across_hashseed"]
+        ok(_d31.get("status") == "RAN"
+           and _d31.get("n_interpreters_that_answered") == 2
+           and _b31["all_pass"] is True,
+           f"DA31 THE BATTERY RUNS FROM ANY DIRECTORY: called with the cwd "
+           f"somewhere else entirely, determinism reports status "
+           f"{_d31.get('status')!r} with "
+           f"{_d31.get('n_interpreters_that_answered')} interpreters "
+           f"answering and the receipt is all_pass "
+           f"{_b31['all_pass']}. It used to read `identical: false` from "
+           f"anywhere but this directory -- a check that never ran reporting "
+           f"a disagreement, which is the empty-set trap's mirror image and "
+           f"sends a reader chasing nondeterminism that does not exist")
+    finally:
+        _os31.chdir(_cwd31)
+    _dn31 = determinism_across_hashseed("/nonexistent/dir")
+    ok(_dn31.get("status") == "DID_NOT_RUN"
+       and _dn31.get("identical") is None
+       and _dn31.get("pass") is False,
+       "DA31 AND A CHILD THAT CANNOT RUN IS A NAMED STATUS: `identical` is "
+       "None, not False -- a check that did not execute must not report a "
+       "disagreement it never observed")
 
     # ---- determinism across processes ------------------------------------
     d = determinism_across_hashseed(here)
