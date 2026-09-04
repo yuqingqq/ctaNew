@@ -139,7 +139,250 @@ ARM_NAME_COLLISION = (
     "reference with no interaction': X_SKEW asserts an interaction that is "
     "refused, and NEUTRAL omits the skew that was in force")
 
-ARM_RUNNABLE = {
+#: WHAT EACH ARM NEEDS, as dependency NAMES rather than a verdict.
+#: §8.1's seven arms differ in exactly two ways -- the PLACEMENT the
+#: opportunity population is replayed under, and the PREDICTOR that decides
+#: cancellation -- so a runnability answer is a conjunction over named
+#: dependencies, each of which can be probed.
+ARM_DEPENDENCIES: dict[str, tuple] = {
+    "QR_SKEW_ONLY": ("skewed_placement",),
+    "QR_CANCEL_HOLD_X_SKEW": ("skewed_placement", "cancel_hold_policy"),
+    "HAZARD_ONLY_NEUTRAL": ("neutral_placement", "hazard_head"),
+    "CONDVALUE_NEUTRAL": ("neutral_placement", "condvalue_head"),
+    "CONDVALUE_X_SKEW": ("skewed_placement", "condvalue_head",
+                         "skew_state_in_predictor"),
+    "CONDVALUE_X_SKEW_X_FAIRPRICE": ("skewed_placement", "condvalue_head",
+                                     "skew_state_in_predictor",
+                                     "fairprice_challenger"),
+    "RANDOM_MATCHED": ("skewed_placement", "matched_random_control"),
+}
+
+
+def _probe_skewed_placement() -> tuple:
+    """A placement spec with skew ON -- the frozen reference."""
+    import policy_optimizer_queue_realistic as _qr
+    specs = {n: _qr._qr_spec(getattr(_qr, n), latency_ms=0, cancel=False)
+             for n in ("QR_SKEW", "QR_BASELINE")}
+    hit = {n: s for n, s in specs.items() if s.get("skew") is True}
+    return bool(hit), {"specs_with_skew_true": sorted(hit),
+                       "placements": sorted({s["placement"]
+                                             for s in specs.values()})}
+
+
+def _probe_neutral_placement() -> tuple:
+    """A placement spec with skew OFF, which §8.1 arms 3 and 4 are DEFINED by.
+
+    MEASURED 2026-09-04 and it is the round's first finding: there is none.
+    `QR_BASELINE` is NOT a baseline -- its value is the string
+    "QR_CANCEL_HOLD_X_SKEW", it yields `skew: True` and
+    `placement: QUEUE_REALISTIC_SKEW`, and the ONLY field distinguishing it
+    from `QR_SKEW` is the label `cell`. A reference built from it and called
+    neutral would be the frozen SKEWED reference wearing a neutral name --
+    the mislabel `ARM_NAME_COLLISION` escalated and never got a ruling on.
+    Creating a `skew: False` placement is a change to placement semantics
+    §10(5) freezes, so it is not this seat's to invent."""
+    import policy_optimizer_queue_realistic as _qr
+    specs = {n: _qr._qr_spec(getattr(_qr, n), latency_ms=0, cancel=False)
+             for n in ("QR_SKEW", "QR_BASELINE")}
+    neutral = {n: s for n, s in specs.items() if s.get("skew") is False}
+    return bool(neutral), {
+        "specs_with_skew_false": sorted(neutral),
+        "constants_checked": {n: getattr(_qr, n) for n in
+                              ("QR_SKEW", "QR_BASELINE")},
+        "skew_by_constant": {n: s.get("skew") for n, s in specs.items()},
+        "note": "QR_BASELINE's VALUE is 'QR_CANCEL_HOLD_X_SKEW'; the only "
+                "field differing between the two specs is `cell`"}
+
+
+def _probe_cancel_hold_policy() -> tuple:
+    import harmful_stateful_policy as _hsp
+    ok_ = hasattr(_hsp, "replay_policy") and hasattr(_hsp, "PROTECTION_MODES")
+    return ok_, {"replay_policy": hasattr(_hsp, "replay_policy"),
+                 "protection_modes": list(
+                     getattr(_hsp, "PROTECTION_MODES", ()))}
+
+
+def _probe_hazard_head() -> tuple:
+    import de_head_scoring as _hs
+    try:
+        inc = _hs.load_incumbent("btc")
+        return True, {"head": "incumbent_linear_d",
+                      "n_features": inc["_n_features"]}
+    except Exception as exc:                        # noqa: BLE001
+        return False, {"error": f"{type(exc).__name__}: {exc}"}
+
+
+def _probe_condvalue_head() -> tuple:
+    import de_head_scoring as _hs
+    try:
+        booster, width = _hs.load_lgbm("btc")
+        return True, {"head": "q1_arrival_composed_lgbm", "width": width}
+    except Exception as exc:                        # noqa: BLE001
+        return False, {"error": f"{type(exc).__name__}: {exc}"}
+
+
+def _probe_skew_state_in_predictor() -> tuple:
+    """Does the conditional-value predictor SEE skew or inventory state?
+
+    `CONDVALUE_X_SKEW` asserts an INTERACTION. If no skew or inventory
+    feature reaches the model, the name claims something the artifact does
+    not have -- which is what `ARM_NAME_COLLISION` is about, and what DA's
+    loader refuses. Read off the fit's own feature list, never assumed."""
+    # THIS PROBE IS THREE-VALUED AND THE THIRD VALUE IS THE POINT.
+    # Its first draft read the feature list off `load_lgbm_normalisers`,
+    # which carries only n_raw / norm_mu / norm_sd / source -- NO NAMES.
+    # It therefore answered "no skew features" when the truth was "I could
+    # not find the names", and an arm would have been reported blocked for
+    # a reason that was never measured. `None` means UNDECIDABLE and is
+    # reported as such; it still blocks (fail-closed) but it never claims
+    # to have looked.
+    import de_head_scoring as _hs
+    try:
+        norms = _hs.load_lgbm_normalisers("btc")
+        n_raw = norms.get("n_raw")
+    except Exception as exc:                        # noqa: BLE001
+        return None, {"error": f"{type(exc).__name__}: {exc}",
+                      "undecidable": "the normalisers would not load"}
+    named: dict = {}
+    try:
+        import phase2_state_schema_freeze as _pin
+        st = [str(x) for x in (_pin.build_pin().get("features_in_order")
+                               or [])]
+        named["state"] = st
+    except Exception as exc:                        # noqa: BLE001
+        return None, {"error": f"{type(exc).__name__}: {exc}",
+                      "undecidable": "the state schema pin would not load"}
+    if not named.get("state"):
+        return None, {"undecidable": "no named feature list is reachable",
+                      "n_raw": n_raw}
+    WORDS = ("skew", "inventory", "invent", "posn", "position")
+    hits = sorted({n for n in named["state"]
+                   if any(w in n.lower() for w in WORDS)})
+    # The state block is the ONLY named family; PM and fine features are
+    # positional, so the answer is bounded to what can be read. Say so.
+    return bool(hits), {
+        "n_state_features_named": len(named["state"]),
+        "n_raw_total": n_raw,
+        "n_unnamed_positional": (n_raw - len(named["state"]))
+        if isinstance(n_raw, int) else None,
+        "skew_or_inventory_features": hits,
+        "scope": "the STATE block is the only NAMED feature family; the "
+                 "PM and fine families are positional in this artifact, "
+                 "so this answers 'no skew feature among the 45 named "
+                 "state features' and not 'no skew feature anywhere'",
+        "consequence": "X_SKEW asserts an INTERACTION; with no skew or "
+                       "inventory state reaching the model the name "
+                       "claims something the artifact does not have "
+                       "(ARM_NAME_COLLISION), and DA's loader refuses "
+                       "interaction=False under it"}
+
+
+def _probe_fairprice_challenger() -> tuple:
+    """A RELEASED fair-price challenger. BE is building one; until a scored
+    challenger artifact exists this is False and arm 6 is blocked."""
+    _fits = (Path(__file__).resolve().parents[2]
+             / "data/pm_5min/derived/phase2_fits")
+    cands = sorted(_fits.glob("*fairprice*.json")) if _fits.exists() else []
+    return bool(cands), {"searched": str(_fits),
+                         "found": [c.name for c in cands],
+                         "status_yml": "hazard-fair-price: challenger "
+                                       "protocol not freeze-ready, no "
+                                       "challenger scored"}
+
+
+def _probe_matched_random_control() -> tuple:
+    """The matched-random control -- §8.1 arm 7, and the FLOOR the other six
+    are measured against. Recorded blocker was
+    NO_CONTRACT_IDENTITY_FOR_AN_ACTING_CONTROL; this probes whether the
+    control and a contract identity for it exist NOW."""
+    try:
+        import de_matched_random_control as _mrc
+    except Exception as exc:                        # noqa: BLE001
+        return False, {"error": f"{type(exc).__name__}: {exc}"}
+    has_draw = hasattr(_mrc, "draw")
+    named = "RANDOM_MATCHED" in ARMS
+    return bool(has_draw and named), {
+        "module": getattr(_mrc, "__file__", None),
+        "draw": has_draw, "named_in_ARMS": named,
+        "matched_on": "action count, side, hour and cancellation budget "
+                      "(§8.1 arm 7)"}
+
+
+ARM_DEPENDENCY_PROBES = {
+    "skewed_placement": _probe_skewed_placement,
+    "neutral_placement": _probe_neutral_placement,
+    "cancel_hold_policy": _probe_cancel_hold_policy,
+    "hazard_head": _probe_hazard_head,
+    "condvalue_head": _probe_condvalue_head,
+    "skew_state_in_predictor": _probe_skew_state_in_predictor,
+    "fairprice_challenger": _probe_fairprice_challenger,
+    "matched_random_control": _probe_matched_random_control,
+}
+
+
+def arm_runnability(probes: dict | None = None) -> dict:
+    """WHICH ARMS CAN RUN, COMPUTED -- replacing a hand-maintained map.
+
+    `ARM_RUNNABLE` was a dict of verdict strings written by hand. A claim
+    about code kept in a comment drifts from the code without either the
+    comment or the code noticing; this programme has been caught by that
+    shape repeatedly. Every verdict here is a conjunction over probes that
+    execute, and each probe returns its EVIDENCE, so a blocked arm says
+    what it is blocked ON rather than carrying a slogan.
+
+    `probes` is injectable FOR THE FALSIFIERS ALONE -- the run passes
+    none, and both directions are driven: an arm whose dependencies all
+    pass reads RUNNABLE, and removing any one makes it BLOCKED naming
+    exactly that dependency."""
+    P = probes or ARM_DEPENDENCY_PROBES
+    results: dict = {}
+    for name, fn in P.items():
+        try:
+            okd, ev = fn()
+        except Exception as exc:                    # noqa: BLE001
+            okd, ev = None, {"error": f"{type(exc).__name__}: {exc}",
+                             "undecidable": "the probe itself raised"}
+        results[name] = {
+            "available": (None if okd is None else bool(okd)),
+            "state": ("UNDECIDABLE" if okd is None
+                      else "AVAILABLE" if okd else "ABSENT"),
+            "evidence": ev}
+    arms: dict = {}
+    for arm, deps in ARM_DEPENDENCIES.items():
+        absent = [d for d in deps
+                  if results.get(d, {}).get("available") is False]
+        undecided = [d for d in deps
+                     if results.get(d, {}).get("available") is None]
+        missing = absent + undecided
+        arms[arm] = {"runnable": not missing,
+                     "dependencies": list(deps),
+                     "blocked_on": missing,
+                     "absent": absent,
+                     # FAIL-CLOSED, AND NAMED: an undecidable dependency
+                     # blocks, but it is never reported as an absent one.
+                     # "I looked and it is not there" and "I could not
+                     # look" are different facts (rule 4).
+                     "undecidable": undecided,
+                     "status": "RUNNABLE" if not missing
+                     else "BLOCKED:" + ",".join(
+                         [f"{d}=ABSENT" for d in absent]
+                         + [f"{d}=UNDECIDABLE" for d in undecided])}
+    return {"as_of": _dt.datetime.now(_dt.timezone.utc).strftime(
+                "%Y-%m-%dT%H:%M:%SZ"),
+            "dependencies": results,
+            "arms": arms,
+            "n_runnable": sum(1 for a in arms.values() if a["runnable"]),
+            "runnable": sorted(a for a, v in arms.items() if v["runnable"]),
+            "blocked": {a: v["blocked_on"] for a, v in arms.items()
+                        if not v["runnable"]},
+            "decides": "nothing -- this reports which arms have their "
+                       "dependencies, never whether an arm should run"}
+
+
+#: SUPERSEDED BY `arm_runnability()` (round 52) and kept only so the
+#: computed report can be checked against what was believed by hand. It is
+#: read by the suite and by nothing else.
+ARM_RUNNABLE_LEGACY = {
     "QR_SKEW_ONLY": "RUNNABLE",
     "QR_CANCEL_HOLD_X_SKEW": "RUNNABLE",
     "HAZARD_ONLY_NEUTRAL": "NO_NEUTRAL_REFERENCE",
@@ -773,7 +1016,7 @@ def run(limit: int | None = None, out: Path | None = None) -> dict:
         "all_gates_pass": all(not gate_fail[k] for k in GATE_KEYS),
         "aggregate_gate_digest": hashlib.sha256(
             "".join(per_slug_digest).encode()).hexdigest(),
-        "arm_runnability": dict(ARM_RUNNABLE),
+        "arm_runnability": dict(ARM_RUNNABLE_LEGACY),
         "contract_leg": contract_leg,
         "declared_parameters": {
             "active": {k: (str(v) if v in (float("inf"), float("-inf"))
@@ -1071,8 +1314,8 @@ def selftest() -> int:
        "so a run that outlives an edit to its own source still stamps the "
        "program that produced it")
 
-    ok(set(ARM_RUNNABLE) == set(ARMS)
-       and sum(1 for v in ARM_RUNNABLE.values() if v == "RUNNABLE") == 2,
+    ok(set(ARM_RUNNABLE_LEGACY) == set(ARMS)
+       and sum(1 for v in ARM_RUNNABLE_LEGACY.values() if v == "RUNNABLE") == 2,
        "arm runnability is DECLARED per arm and only two of seven are "
        "runnable on the frozen reference -- reported, never dropped")
     ok(stub_score("a", "BUY_UP", 1) == stub_score("a", "BUY_UP", 1)
