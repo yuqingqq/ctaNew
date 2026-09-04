@@ -6316,8 +6316,16 @@ def main() -> int:
                 "prior_bytes_tracked_in_git": _tracked,
                 "prior_bytes_preserved_at": _copy,
                 "note": ("the artifact this write replaced. Its bytes are "
-                         + ("in git history AND " if _tracked else
-                            "NOT in git (this path is gitignored) but ARE ")
+                         # PHANTOM FAILURE: `_is_tracked` returns None when
+                         # git could not be asked, and None used to read as
+                         # "NOT in git" -- a negative PROVENANCE claim
+                         # produced by a check that did not run.
+                         + ("in git history AND " if _tracked is True else
+                            "NOT in git (this path is gitignored) but ARE "
+                            if _tracked is False else
+                            "of UNKNOWN git status (the tracking check could "
+                            "not be run; this is not a claim that they are "
+                            "untracked) and ARE ")
                          + "preserved beside this file at "
                          f"{_copy!r}. This path is a CACHE of the current "
                          "verdict, not a receipt."),

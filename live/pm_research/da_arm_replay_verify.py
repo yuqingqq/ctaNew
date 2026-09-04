@@ -63,7 +63,7 @@ CODE_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
-EXPECTED_CHECKS = 32
+EXPECTED_CHECKS = 37
 
 #: §8.1's REQUIRED OUTPUT, ENUMERATED HERE INDEPENDENTLY of the producer's own
 #: list. Written from the plan's eleven named quantities, NOT copied from
@@ -560,6 +560,131 @@ def publication_provenance(producer_path: str, symbol: str,
     }
 
 
+#: The instruments this seat owns, censused for the PHANTOM FAILURE shape.
+DA_INSTRUMENTS = (
+    "da_replay_parity_battery", "da_arm_replay_verify",
+    "da_dark_interval_scan", "da_forward_day_verify", "da_blackout_mask",
+    "da_race_withdrawals", "da_verdict_check",
+    "da_governed_verdict_preflight", "pm_tape_density", "pm_host_load_join",
+    "da_cross_venue_forensics", "da_hf_pm_alignment",
+)
+
+
+def phantom_failure_census(root: Path | None = None,
+                           modules: tuple = DA_INSTRUMENTS) -> dict[str, Any]:
+    """**PHANTOM FAILURE**: a NEGATIVE verdict produced by a path that did not
+    run. Named here 2026-09-04, because it is not the trap this programme
+    already knows.
+
+    THE FAMILIAR TRAP IS ABSENCE READING AS A PASS -- "0 failing" from a gate
+    that checked nothing, an empty mask read as a clean day, a `monotone` from
+    a history nobody could read. That one lets a bad thing THROUGH.
+
+    THIS ONE IS ITS MIRROR IMAGE AND IT LETS NOTHING THROUGH -- it invents a
+    bug. A check that could not execute reports a DISAGREEMENT, a FAILURE, a
+    MISSING window, and a reader spends an afternoon on it. Three instances
+    found in this seat's own instruments on the day it was named:
+
+      * `battery()` defaulted `script_dir="."`, so the determinism children
+        could not import and the check read `identical: false` -- a
+        DETERMINISM FAILURE, when neither interpreter ran;
+      * `uncompressed_size` returned 0 for a file it could not READ, and 0 is
+        DARK, so a permission error surfaced as a BLACKOUT;
+      * a missing `sar` binary made the independent column reader return
+        nothing, and the check read as a COLUMN-BINDING FAILURE -- i.e. "your
+        production regex reads the wrong field".
+
+    THE CENSUS IS A TEXT SCAN AND SAYS SO. It flags the two shapes it can
+    see -- an `except` returning a bare negative from a function that touches
+    the outside world, and a subprocess result consumed with no check that it
+    ran -- and it cannot see a semantic one. It REPORTS; a hit is a place to
+    look, not a defect.
+    """
+    root = (CODE_ROOT / "live" / "pm_research") if root is None else Path(root)
+    if not root.is_dir():
+        raise ArmVerifyRefused(
+            f"REFUSED: no source tree at {root}. A census that cannot read "
+            f"the tree must not report a clean one.")
+    import ast
+    except_hits, subprocess_hits = [], []
+    NEG_KEYS = {"pass", "identical", "ok", "match", "bit_identical", "clean",
+                "all_pass", "unwired", "monotone"}
+    STATUS_KEYS = {"status", "verdict", "why", "refused", "kind"}
+    scanned = []
+    for name in modules:
+        f = root / f"{name}.py"
+        if not f.is_file():
+            continue
+        scanned.append(name)
+        src = f.read_text(encoding="utf-8", errors="replace")
+        lines = src.splitlines()
+        try:
+            tree = ast.parse(src)
+        except SyntaxError:
+            continue
+        for fn in [n for n in ast.walk(tree)
+                   if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]:
+            seg = ast.get_source_segment(src, fn) or ""
+            if not any(t in seg for t in ("subprocess", "_git(", ".read_text(",
+                                          ".read_bytes(", "open(", ".glob(")):
+                continue
+            for h in ast.walk(fn):
+                if not isinstance(h, ast.ExceptHandler):
+                    continue
+                for r in ast.walk(h):
+                    if not isinstance(r, ast.Return):
+                        continue
+                    v = r.value
+                    bad = None
+                    if v is None:
+                        bad = "bare return"
+                    elif isinstance(v, ast.Constant) and v.value in (False,
+                                                                    None, 0):
+                        bad = repr(v.value)
+                    elif isinstance(v, ast.Dict):
+                        ks = {str(k.value) for k in v.keys
+                              if isinstance(k, ast.Constant)}
+                        neg = [str(k.value) for k, val in zip(v.keys, v.values)
+                               if isinstance(k, ast.Constant)
+                               and str(k.value) in NEG_KEYS
+                               and isinstance(val, ast.Constant)
+                               and val.value is False]
+                        if neg and not (ks & STATUS_KEYS):
+                            bad = f"dict {{{neg[0]}: False}} with no status"
+                    if bad:
+                        except_hits.append({
+                            "module": name, "line": r.lineno,
+                            "function": fn.name, "shape": bad,
+                            "text": lines[r.lineno - 1].strip()[:100]})
+        for i, ln in enumerate(lines, 1):
+            if not re.search(r"(subprocess|_sp\d*)\.run\(|=\s*_git\(", ln):
+                continue
+            window = "\n".join(lines[i - 1:i + 8])
+            if not re.search(r"returncode|\brc\b|if not \w+|bool\(\w+\[0\]\)"
+                             r"|n_interpreters|\.stdout\s*or\b", window):
+                subprocess_hits.append({"module": name, "line": i,
+                                        "text": ln.strip()[:100]})
+    return {
+        "shape": "PHANTOM_FAILURE",
+        "definition": ("a NEGATIVE verdict produced by a path that did not "
+                       "run -- the mirror image of absence-reads-as-a-pass. "
+                       "It lets nothing through and invents a bug instead"),
+        "n_modules_scanned": len(scanned), "modules_scanned": scanned,
+        "n_except_returning_a_bare_negative": len(except_hits),
+        "except_returning_a_bare_negative": except_hits,
+        "n_unguarded_subprocess_results": len(subprocess_hits),
+        "unguarded_subprocess_results": subprocess_hits,
+        "role": "REPORTED_NOT_ENFORCED",
+        "limits": ("a TEXT scan: it sees an `except` returning a bare "
+                   "negative and a subprocess result consumed without a "
+                   "guard. It cannot see a semantic instance -- an empty "
+                   "comparison, or a query whose emptiness means 'absent' to "
+                   "one reader and 'not found' to another. A zero here is "
+                   "not a clean surface, it is a clean surface FOR TWO "
+                   "SHAPES"),
+    }
+
+
 def verify(path: Path, scores: list[dict] | None = None) -> dict[str, Any]:
     doc = load_artifact(path)
     return {
@@ -848,6 +973,64 @@ def selftest() -> int:
        f"symbol defined, {_real['n_call_sites']} call site(s) over "
        f"{_real['n_files_scanned']} files -- so the instrument can answer the "
        f"practice's question for an arbitrary number and is not a second tool")
+
+    # ---- PHANTOM FAILURE census, both directions -------------------------
+    with tempfile.TemporaryDirectory() as t:
+        tr = Path(t)
+        (tr / "clean.py").write_text(
+            "from pathlib import Path\n"
+            "def f(p):\n"
+            "    try:\n        return p.read_text()\n"
+            "    except OSError as e:\n"
+            "        return {'status': 'UNREADABLE', 'why': repr(e)}\n",
+            encoding="utf-8")
+        _c0 = phantom_failure_census(tr, ("clean",))
+        ok(_c0["n_except_returning_a_bare_negative"] == 0,
+           "PHANTOM-C1 ADMITS: an `except` that returns a NAMED STATUS is not "
+           "a phantom failure -- the census discriminates on whether the "
+           "failure path says what happened, not on whether it exists")
+        (tr / "guilty.py").write_text(
+            "from pathlib import Path\n"
+            "def g(p):\n"
+            "    try:\n        return p.read_text() == 'x'\n"
+            "    except OSError:\n        return False\n",
+            encoding="utf-8")
+        _c1 = phantom_failure_census(tr, ("clean", "guilty"))
+        ok(_c1["n_except_returning_a_bare_negative"] == 1
+           and _c1["except_returning_a_bare_negative"][0]["module"] == "guilty"
+           and _c1["except_returning_a_bare_negative"][0]["shape"] == "False",
+           f"PHANTOM-C2 FIRES: a read that fails and returns a bare False is "
+           f"flagged with its module, line and function "
+           f"({_c1['except_returning_a_bare_negative'][0]['function']}) -- "
+           f"the caller cannot tell 'the file said no' from 'the file could "
+           f"not be read'")
+        (tr / "sub.py").write_text(
+            "import subprocess\n"
+            "def h():\n"
+            "    out = subprocess.run(['x'], capture_output=True).stdout\n"
+            "    return out == b'y'\n", encoding="utf-8")
+        _c2 = phantom_failure_census(tr, ("sub",))
+        ok(_c2["n_unguarded_subprocess_results"] == 1,
+           "PHANTOM-C3 and a subprocess result compared with no check that "
+           "the child RAN is flagged -- the exact shape that made "
+           "`battery()` report a determinism failure from two silent children")
+    try:
+        phantom_failure_census(Path("/nonexistent/tree"))
+        ok(False, "PHANTOM-C4: an unreadable tree must REFUSE")
+    except ArmVerifyRefused as e:
+        ok("must not report a clean one" in str(e),
+           "PHANTOM-C4 an unreadable source tree REFUSES rather than "
+           "reporting zero hits -- the census must not commit the shape it "
+           "hunts")
+    _cr = phantom_failure_census()
+    ok(_cr["n_modules_scanned"] == 12 and _cr["role"]
+       == "REPORTED_NOT_ENFORCED",
+       f"PHANTOM-C5 the real census covers all {_cr['n_modules_scanned']} of "
+       f"this seat's instruments and REPORTS: "
+       f"{_cr['n_except_returning_a_bare_negative']} except-sites returning a "
+       f"bare negative and {_cr['n_unguarded_subprocess_results']} unguarded "
+       f"subprocess results are places to LOOK, not defects -- and its own "
+       f"`limits` says a zero would be clean for TWO SHAPES, not clean")
 
     print(f"\nda_arm_replay_verify selftest: {checks} checks PASSED")
     if checks != EXPECTED_CHECKS:

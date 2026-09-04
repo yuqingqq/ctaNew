@@ -91,7 +91,7 @@ DATA_ROOT_BRANCH: str = "unresolved"
 
 #: DA11-R1: this suite's own total, asserted over ran + skipped so an empty
 #: data root cannot produce the same summary line as a complete one.
-EXPECTED_CHECKS = 16
+EXPECTED_CHECKS = 18
 
 
 def _resolve_data_root() -> Path:
@@ -173,6 +173,12 @@ class Refused(Exception):
     """A population this instrument must not summarise."""
 
 
+#: Files that could not be READ during the current scan. A truncated archive
+#: is a thin window and belongs in the data; an unreadable one is a fact about
+#: the reader and belongs here. Reset per `scan_day`.
+UNREADABLE: list[dict] = []
+
+
 def uncompressed_size(path: Path) -> int:
     """Bytes the member expands to, from the gzip trailer.
 
@@ -188,7 +194,17 @@ def uncompressed_size(path: Path) -> int:
         with path.open("rb") as fh:
             fh.seek(-4, os.SEEK_END)
             return struct.unpack("<I", fh.read(4))[0]
-    except OSError:
+    except OSError as e:
+        # PHANTOM FAILURE (named 2026-09-04). Returning 0 here is right for a
+        # TRUNCATED archive -- that genuinely IS a thin window -- and wrong
+        # for a file that could not be READ. A permission error, an I/O error
+        # or a race also lands here, and a 0 from those makes every consumer
+        # report a DARK WINDOW: `da_dark_interval_scan` reports an interval,
+        # `da_blackout_mask` masks it, and a reader chases a blackout that
+        # did not happen. The value stays 0 so no caller changes shape, and
+        # the file is COUNTED in a census `scan_day` surfaces, so the
+        # difference between "empty" and "unreadable" stops being invisible.
+        UNREADABLE.append({"path": str(path), "error": repr(e)})
         return 0
 
 
@@ -199,6 +215,7 @@ def scan_day(day: str, raw_root: Path = RAW) -> dict:
         raise Refused(f"no raw directory for {day} — an absent day is not a "
                       f"clean day, and reporting 0 thinned windows for it "
                       f"would be the empty-set trap")
+    UNREADABLE.clear()
     agg: dict[tuple[str, int], int] = collections.defaultdict(int)
     for fn in os.listdir(d):
         m = _FN.match(fn)
@@ -207,6 +224,17 @@ def scan_day(day: str, raw_root: Path = RAW) -> dict:
     if not agg:
         raise Refused(f"{day} has a raw directory but NO window files — "
                       f"refusing rather than reporting a clean day")
+    if UNREADABLE:
+        # A DARKNESS THAT IS OURS, NOT THE FEED'S. Refusing here rather than
+        # returning zeros keeps an I/O problem from being reported as a
+        # blackout by every consumer downstream.
+        raise Refused(
+            f"REFUSED for {day}: {len(UNREADABLE)} window file(s) could not "
+            f"be READ ({[u['path'] for u in UNREADABLE[:3]]}). Their size "
+            f"would read as 0 bytes and every consumer would report a DARK "
+            f"window -- a blackout finding produced by an I/O error rather "
+            f"than by the feed. An unreadable file is a fact about the "
+            f"reader and must not be summarised as data.")
     return agg
 
 
@@ -558,6 +586,40 @@ def selftest() -> int:
     else:
         skip("resolved-root-carries-days",
              f"{DATA_ROOT}/data/pm_5min/raw (branch {DATA_ROOT_BRANCH})")
+    # ---- PHANTOM FAILURE: an unreadable file is not an empty one ---------
+    import os as _os32
+    import tempfile as _tf32
+    with _tf32.TemporaryDirectory() as _t32:
+        _r32 = Path(_t32) / "20300301"
+        _r32.mkdir()
+        import gzip as _gz32
+        for _i in range(2):
+            (_r32 / f"aaa-updown-5m-{1900000000 + _i * 300}.jsonl.gz"
+             ).write_bytes(_gz32.compress(b"x" * 5000))
+        _agg32 = scan_day("20300301", Path(_t32))
+        ok(len(_agg32) == 2 and all(v > 0 for v in _agg32.values()),
+           "PHANTOM-1 POSITIVE CONTROL: a readable day scans and every window "
+           "carries a positive size")
+        _bad32 = _r32 / "aaa-updown-5m-1900000600.jsonl.gz"
+        _bad32.write_bytes(_gz32.compress(b"y" * 5000))
+        _os32.chmod(_bad32, 0o000)
+        try:
+            scan_day("20300301", Path(_t32))
+            _os32.chmod(_bad32, 0o644)
+            ok(_os32.geteuid() == 0,
+               "PHANTOM-2 an UNREADABLE window file must make scan_day REFUSE "
+               "(skipped only when running as root, where chmod cannot deny)")
+        except Refused as _e32:
+            _os32.chmod(_bad32, 0o644)
+            ok("could not be READ" in str(_e32)
+               and "blackout finding produced by an I/O error" in str(_e32),
+               f"PHANTOM-2 AN UNREADABLE FILE REFUSES BY NAME rather than "
+               f"reading as 0 bytes. Before this it returned 0, and 0 is "
+               f"DARK: `da_dark_interval_scan` would report an interval and "
+               f"`da_blackout_mask` would mask it -- a BLACKOUT FINDING "
+               f"produced by a permission error. A negative verdict from a "
+               f"read that never happened ({str(_e32)[:60]}...)")
+
     # ---------------------------------------------------------------- RR12-1
     # THE CLASS, NOT THE INSTANCE. The scanner is driven on a planted
     # violation before its zero on the real tree is allowed to mean anything

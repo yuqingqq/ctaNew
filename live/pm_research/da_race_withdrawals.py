@@ -56,7 +56,7 @@ DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
 #: This suite's own total, asserted over ran + skipped.
-EXPECTED_CHECKS = 30
+EXPECTED_CHECKS = 32
 
 #: THE REGISTRY. One entry per day the USER has taken out of the race.
 #: EVERY entry carries its authority as DATA -- the same discipline round 22
@@ -307,7 +307,16 @@ def assert_withdrawals_monotone(repo: Path | None = None,
     for c in commits:
         rc2, blob = _git(["show", f"{c}:{path}"], repo)
         if rc2 != 0:
-            continue
+            # PHANTOM PASS, the classic direction, on the guarantee that must
+            # not weaken: a blob this cannot read used to `continue`, so the
+            # version vanished from the walk and `monotone: True` was reported
+            # over a SMALLER set. A one-way guarantee evaluated over fewer
+            # versions than exist is not the guarantee.
+            raise WithdrawalRefused(
+                f"REFUSED: commit {c[:9]} touches {path} but its blob could "
+                f"not be read (git rc {rc2}). Skipping it would report "
+                f"`monotone` over a smaller history than exists, which is the "
+                f"empty-set trap on the guard against a quiet undo.")
         reg = _registry_in_blob(blob)
         if reg is None:
             continue
@@ -665,6 +674,31 @@ def selftest() -> int:
            "DA24-R4b FALSIFIER: a key in NEITHER set is treated as immutable "
            "and refuses -- the default is guarded, so the classification "
            "going stale is loud rather than a silent hole")
+
+    # ---- PHANTOM PASS on the one-way guarantee ---------------------------
+    _real_git2 = globals()["_git"]
+    try:
+        def _shim(args, cwd=None):
+            if args[:1] == ["rev-parse"]:
+                return (0, "true")
+            if args[:1] == ["log"]:
+                return (0, "aaaaaaaaaaaa\n")
+            return (128, "")          # every `show` fails
+        globals()["_git"] = _shim
+        try:
+            assert_withdrawals_monotone(_r1, "reg.py", {})
+            ok(False, "an unreadable blob must REFUSE, not vanish")
+        except WithdrawalRefused as e:
+            ok("could not be read" in str(e) and "smaller history" in str(e),
+               f"PHANTOM-3 A BLOB THIS CANNOT READ NOW REFUSES: it used to "
+               f"`continue`, so the version vanished from the walk and "
+               f"`monotone: True` was reported over a SMALLER history than "
+               f"exists. A one-way guarantee evaluated over fewer versions "
+               f"than exist is not the guarantee ({str(e)[:60]}...)")
+    finally:
+        globals()["_git"] = _real_git2
+    ok(globals()["_git"] is _real_git2,
+       "PHANTOM-3b and the git shim is restored")
 
     # ---- the blob parser, both directions --------------------------------
     ok(_registry_in_blob(_V1) == {"20260829": {"authority": "R-500"}},

@@ -95,7 +95,7 @@ PARSER_FIXTURE_NOTE = ("sysstat 12.6.1 binary; the format is versioned, so a "
 #: House pattern (`de_*`): the check count is ASSERTED at run time, so a
 #: check that stops running is a failure rather than a smaller number nobody
 #: reads. It moved 6 -> 39 when the calendar-bound control was split.
-EXPECTED_CHECKS = 39
+EXPECTED_CHECKS = 40
 
 SYSSTAT_TIMER = "sysstat-collect.timer"
 SECONDS_PER_DAY = 86400
@@ -610,10 +610,24 @@ def selftest() -> int:
     # COLUMN BINDING, read INDEPENDENTLY of the production regex: group 9 is
     # %idle. Bound to %steal instead, every busy_pct in this repo would be
     # ~100 and the R-366 table would have read the opposite way round.
-    _txt = subprocess.run(["sar", "-f", str(PARSER_FIXTURE), "-u"],
-                          capture_output=True, text=True).stdout
+    _r2 = subprocess.run(["sar", "-f", str(PARSER_FIXTURE), "-u"],
+                         capture_output=True, text=True)
+    _txt = _r2.stdout
     _indep = [ln.split() for ln in _txt.splitlines()
               if re.match(r"\d\d:\d\d:\d\d\s+all\b", ln)]
+    # PHANTOM FAILURE (named 2026-09-04). Unguarded, a MISSING or erroring
+    # `sar` produced an empty `_txt`, so `_indep` was [] and the check below
+    # went red as "COLUMN BINDING ... does not agree row for row" -- which
+    # reads as *the production regex reads the wrong column*, a serious and
+    # alarming result, when the truth is that the SECOND reader never ran.
+    # The independent reader must show it RAN before its disagreement means
+    # anything.
+    ok(_r2.returncode == 0 and bool(_indep),
+       f"COLUMN BINDING PRECONDITION: the INDEPENDENT reader ran -- `sar` "
+       f"exited {_r2.returncode} and yielded {len(_indep)} data row(s). "
+       f"Without this, a missing `sar` would report a column-binding FAILURE "
+       f"rather than an unrun check, and send a reader to audit a regex that "
+       f"is fine")
     ok(len(_indep) == len(_fx)
        and all(abs(float(f[-1]) - v) < 1e-9
                for f, (_, v) in zip(_indep, _fx)),
