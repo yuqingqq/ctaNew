@@ -6082,3 +6082,115 @@ DA 32. Join rule as in batch 1.
   THE METRIC THE THREE COMPLETED READS MEASURED. USER ITEMS: ONE -- the Phase-2
   winner, and the race decides it.
 ```
+
+## Batch 89 — archived 2026-09-04T10:47Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-83 CONSISTENCY AUDIT. Join rule as in batch 1. The round
+added no new material about the programme; this file is touched only because the
+`updated:` window is a ruled rolling three whose overflow must move in the same
+commit.
+
+```yaml
+  2026-09-04T10:13Z (MEM ROUND 80 -- URGENT CORRECTION: THE PROFITABILITY BLOCK
+  IS WITHDRAWN, AND I AM THE SEAT THAT PUT IT IN THESE FILES). The USER audited
+  the released result and WITHDREW the profitability block
+  (RESULT_RELIABILITY_AUDIT_2026-09-04.md at 0b970c3, as-of 09:59Z, economic tip
+  659ed66); the USER also rewrote RESULTS.md in the same commit and I DID NOT
+  TOUCH IT. MY ROUNDS 78 AND 79 SWEPT THOSE NUMBERS INTO STATUS.yml AND
+  HANDOFF.md AS FACT, BEFORE THE AUDIT EXISTED, SO THESE FILES HAVE BEEN
+  ASSERTING WITHDRAWN FIGURES. EVERY ONE IS NOW MARKED WITHDRAWN IN BAND WITH ITS
+  REASON AND NONE IS DELETED: 226,594 filled notional, 1,801.29 no-cancel P&L,
+  0.7949% return on filled notional, 620.58 overlay, +34.5% on the book, 807/day,
+  75,531/day notional, 600.43/day baseline. THE REASON, RECORDED RATHER THAN JUST
+  THE WITHDRAWAL, AND VERIFIED BY ME AT THE CODE: the scratch prof.py KEPT ONLY
+  THE FIRST ROW per (slug, side, gen) and labelled those sums as TOTALS -- AN
+  ACTION HAS MULTIPLE ROWS, SO FIRST-ROW SELECTION IS NOT AGGREGATION -- and the
+  emitted scale is preventable_shares AND NOT FILLED SHARES. I read the emission
+  at be_forward_metric.py:622, where the field is named in the module's own
+  comment as "the SCALE. Shares the cancel would have prevented", and its
+  producer at harmful_exposure_rows.py: FILL_HORIZON_S = 1.0 (:76), h_end =
+  min(t_start + FILL_HORIZON_S, ...) (:339), and stale_shares = the tranches with
+  t < cut (:370) -- SO ONLY FILLS INSIDE THE ONE-SECOND ACTION HORIZON AT OR
+  AFTER THE 50 ms LATENCY CUTOFF ARE IN THE POPULATION, AND EARLIER FILLS ARE
+  HELD SEPARATELY. THE DENOMINATOR WAS NEVER TOTAL FILLED NOTIONAL AND THE
+  BASELINE WAS NEVER THE WHOLE NO-CANCEL BOOK. P003 HAS NO RELIABLE PROFITABILITY
+  ESTIMATE. THE THREE LIMITS I RECORDED WITH THOSE NUMBERS WERE TRUE AND WERE
+  NEVER THE PROBLEM; THE POPULATION WAS -- which is the part I did not check, and
+  the check I did make (the fee decode) was the one the numbers did not turn on.
+  WHAT SURVIVES AND IS NOT WITHDRAWN WITH IT, and it must not be swept away by
+  the correction: THE NINE btc MATCHED_VOLUME VALUES REPRODUCE EXACTLY from the
+  preserved two-arm feeds -- 09-01 -789.12 / -2,016.71 / -1,476.01; 09-02 -227.60
+  / -1,237.84 / -2,975.36; POOLED -1,012.68 / -3,038.75 / -3,949.76; THE
+  DECLARATION ORDERING CHECKS (eeb02ba 12:55:32Z before 7719588 15:41:26Z and
+  40b49fb 16:21:39Z); and the module controls hold -- be_interim_declaration
+  21/21 and be_forward_metric 102/102, WHICH I RE-DROVE MYSELF in my own detached
+  worktree at the tip under a systemd scope, rc 0 both. THE CLAIM'S CORRECT
+  STRENGTH, IN THE AUDIT'S OWN WORDS, AND THIS IS HOW BOTH FILES NOW STATE IT: A
+  DESCRIPTIVE TWO-DAY RANKING RESULT, NOT VALIDATION-GRADE EVIDENCE AND NOT A
+  PROFITABILITY RESULT -- ENOUGH TO REJECT THAT THE CANDIDATE HAS DEMONSTRATED AN
+  IMPROVEMENT, NOT ENOUGH TO PROVE IT IS STRUCTURALLY WORSE. FOUR THINGS THAT
+  CHANGE HOW EVERYTHING ABOVE READS, EACH VERIFIED: (1) MATCHED_VOLUME MATCHES
+  THE NUMBER OF CANCELLATION ACTIONS -- NOT SHARES, NOT NOTIONAL, NOT CAPITAL,
+  which is the whole reason a profitability reading was never available from it.
+  (2) THE EQUAL-COUNT COMPARATOR IS RETROSPECTIVE: the incumbent's cutoff is
+  lowered using the FULL evaluated day or pool, so it is a RANKING DIAGNOSTIC AND
+  NOT AN EXECUTABLE OPERATING POINT. (3) THE p-VALUES ARE WINDOW-LEVEL WHILE THE
+  RULED CLUSTER UNIT IS THE UTC DAY, so A HIGH ONE-SIDED p IS FAILURE TO SHOW A
+  WIN AND NOT PROOF OF A LOSS -- the direction of that asymmetry is the opposite
+  of the one a reader will assume. (4) THE INCUMBENT IS NOT A PREDICTION-FREE
+  BENCHMARK: both arms are linear harmful-flow predictors over the same 54 PM
+  plus six fine-flow inputs and differ only in fit, so a negative value means the
+  candidate SELECTED LESS VALUABLE CANCELLATIONS AT EQUAL ACTION COUNT and says
+  NOTHING about whether prediction beats no cancellation or a non-predictive
+  rule. AND matched_volume() HAS NO COMMITTED CALLER -- I checked rather than
+  took it: be_read_cells.py DEFINES it at :144 and the ONLY other occurrence in
+  the whole of live/pm_research is the KEY NAME
+  rho_advantage_at_matched_volume at :209, while prof.py and interim_report.py
+  ARE NOT IN THE REPOSITORY AT ALL. THAT IS THE SIXTH ZERO-CONSUMER FINDING OF
+  THE DAY AND THE FIRST ONE THAT IS THE HEADLINE RESULT ITSELF -- the class I
+  wrote into HANDOFF as a standing hazard two rounds ago has now reached the
+  number the programme published. AND ONE PROVENANCE CORRECTION THAT IS MINE AND
+  THAT NOTHING ELSE WOULD SURFACE: MY ROUND-79 COMMIT a357908 CARRIES ANOTHER
+  AUTHOR'S HANDOFF WITHDRAWAL BLOCK. I checked at git -- the block "PROFITABILITY
+  IS WITHDRAWN" enters the history in a357908, its parent 4df4ac2 does not
+  contain it, and it is not in my voice (it speaks of "the MEM round-78 section"
+  in the third person). It was sitting UNCOMMITTED in the shared tree while I
+  worked, and I STAGED HANDOFF.md WHOLESALE AND COMMITTED IT UNDER MY MESSAGE,
+  which says nothing about a withdrawal. SO A READER RUNNING git log SEES MEM
+  ROUND 79 AS THE AUTHOR OF THE WITHDRAWAL, IN THE SAME COMMIT WHOSE OWN ENTRY
+  STILL ASSERTED THE WITHDRAWN FIGURES ONE SCREEN BELOW. The lesson is the one
+  this programme keeps paying for in a new coat: I checked that I had not touched
+  RESULTS.md and reported that carefully, AND I DID NOT MAKE THE SAME CHECK ON
+  THE FILE I OWN -- a pathspec commit is only as narrow as the diff inside each
+  path, and "my file" is not the same as "my bytes". FROM HERE I DIFF EVERY
+  STATE FILE BEFORE STAGING IT, NOT ONLY THE ONES I EXPECT SOMEONE ELSE TO HAVE
+  TOUCHED. The block itself is CORRECT AND STAYS EXACTLY WHERE IT IS; only its
+  authorship is corrected, here.
+  AND A REVIEWER FILING LANDED AT 10:24Z THAT SHARPENS THE SURVIVING HALF, SO
+  I FOLD IT IN RATHER THAN QUEUE IT (4d430e7, tip 0ab344f, audit at 0b970c3,
+  measured on the 08-29 DEVELOPMENT feed with no race seal opened). AUDIT-R1:
+  THE AUDIT IS CORRECT ON ALL FOUR POINTS AND OVERSTATES NONE OF THEM.
+  AUDIT-R2 (MEDIUM) IS THE ONE THAT MATTERS FOR HOW THE SURVIVING RESULT MUST
+  BE QUOTED: THE RANKING RESULT IS GENUINELY INSULATED -- prof.py's defective
+  `seen` dict NEVER REACHES matched_volume(), so the contamination touches the
+  profitability block AND THE baseline_$ COLUMN ONLY, not the nine values. BUT
+  THE INSULATION DOES NOT REST ON PATH SEPARATION: it rests on a measured fact
+  NOT RECORDED ANYWHERE UNTIL NOW -- THE SHIPPED FIRST-CROSSING RULE IS THE
+  ONLY ONE OF FOUR CANDIDATE AGGREGATIONS THAT COUNTS EACH PREVENTED FILL ONCE
+  (91.1% OF INTRA-ACTION ROW PAIRS ARE CLOSER THAN THE 1 s HORIZON), AND THE
+  INTUITIVE ALTERNATIVE FLIPS THE SIGN POSITIVE. THAT MEASUREMENT MUST TRAVEL
+  WITH THE RESULT, because as it stands the result's defence lives only in the
+  fact that NOBODY HAS YET TRIED THE INTUITIVE AGGREGATION -- and someone
+  will. AUDIT-R3 adds a second independent tell that the number was not a
+  pipeline product: prof.py IMPORTED FROM A SEAT WORKTREE. AUDIT-R4 proposes
+  the general remedy -- name the producer, census its committed call and
+  reference sites, check the producing path, ONE AST PASS, RUN BEFORE A NUMBER
+  ENTERS A DOCUMENT RATHER THAN WHEN A ROUND HAPPENS TO BE DISPATCHED. That is
+  the check that would have caught this in round 78, and it is the check I did
+  not run.
+  UNCHANGED BY ANY OF THIS: G = 3 OF 5, and the
+  audit says so itself -- 09-03's R-503 accrual DOES NOT MAKE IT A THIRD ECONOMIC
+  READ. The lost scheduled-unit prefix on the supersede remains open; the 589af56
+  coverage-absent repair closes the missing-status defect and does not touch this
+  audit. USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
+```

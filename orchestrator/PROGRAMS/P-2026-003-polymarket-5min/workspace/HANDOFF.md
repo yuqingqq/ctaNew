@@ -1,6 +1,17 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T10:36Z (MEM round 82) — **TWO PROFITABILITY ATTEMPTS HAVE
+Updated: 2026-09-04T10:47Z (MEM round 83) — **A CONSISTENCY AUDIT OF THESE TWO
+FILES, NOT A SWEEP. NO NEW MATERIAL.** **The headline is a good result: every
+withdrawn figure is marked** — all 24 published figures and their components,
+plus the corrected pair, censused across both files, **none standing bare, none
+silently deleted.** **Five defects found and fixed in band**, the most important
+being that **the round-80 markers described only the first withdrawal and pointed
+at a repair direction that is itself withdrawn**. **And one open item was missing
+from both files entirely: three §8.1 fields have no producer** — and the "maker
+P&L absent" item **is** one of them, not a separate item. **G = 3 of 5
+unchanged; no economic figure is publishable; USER items: TWO.**
+
+Previously (MEM round 82) — 2026-09-04T10:36Z — **TWO PROFITABILITY ATTEMPTS HAVE
 NOW FAILED IN OPPOSITE DIRECTIONS, AND NO ECONOMIC FIGURE IS PUBLISHABLE.**
 `prof.py` took the **first row** and **under**-counted; `be_fill_ledger` sums
 **every row** and **over**-counts — so **the corrected figures are withdrawn
@@ -180,6 +191,70 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
 
+> ### 2026-09-04T10:47Z — MEM round 83: a consistency audit of these two files
+>
+> **This round changed no facts. It asked whether these files are internally
+> consistent with the artifacts after eight sweeps, three withdrawals and several
+> corrections landing at different times from different rounds. I censused both
+> files programmatically rather than by reading, and I report what I FOUND, not
+> only what I fixed.**
+>
+> **THE HEADLINE IS A GOOD RESULT: EVERY WITHDRAWN FIGURE IS MARKED.** All 24
+> published figures and their components — 226,594.26 / 1,801.29 / 0.7949% /
+> 620.58 / +34.5% / 807.29 / 75,531.42 / 600.43 / 2,421.87 / 196,960.93 /
+> 29,633.33 / 167.46 / 174.78 / 395.16 / 434.14 / 567.71 / 83.01 / 186.08 /
+> 354.41 — **plus the corrected pair** 2,946.40 / 454,505.94 / 0.648%. **Every
+> occurrence carries a withdrawal marker in its own block. None stands bare and
+> none was silently deleted.**
+>
+> **FIVE DEFECTS FOUND AND FIXED, ALL IN BAND:**
+>
+> 1. **The round-80 markers described only the FIRST withdrawal and implied a
+>    repair direction that is itself withdrawn.** All three — the STATUS flag
+>    head, the STATUS `focus:` clause and the HANDOFF blockquote — said the
+>    figures fell because `prof.py` took the first row and the scale was
+>    `preventable_shares`, **which points straight at action-native aggregation as
+>    the fix**; `be_fill_ledger` did exactly that and **over**-counts. **A reader
+>    stopping at any of those three would conclude the corrected pair replaced the
+>    withdrawn set.** Each now carries the second withdrawal and the instruction
+>    not to read it as pointing at a repair that stands. **This is the defect the
+>    round existed to find: not a wrong number, but a correction whose own
+>    direction had been superseded while the marker stayed still.**
+> 2. **`focus:` asserted the result without its strength.** `focus` is read as
+>    **current state**, and its round-78 sentence said flatly *"the candidate does
+>    not beat the incumbent"* with no qualifier anywhere in the field — the
+>    correct-strength statement lived only in `updated:` and in the task notes.
+>    The full strength is now stated at that sentence.
+> 3. **`focus:` carried four superseded `G = 2 of 5` statements ahead of the live
+>    one.** Every dated `updated:` entry and every dated HANDOFF block is
+>    chronologically honest and I left them alone — **but `focus` is not a dated
+>    log**, and a reader scanning it for G met G = 2 three times before reaching
+>    round 79's G = 3. The first is now marked SUPERSEDED with the live value
+>    named.
+> 4. **The interim task's `name:` overstated the result.** A task name is what a
+>    reader of the task list sees **without opening the notes**, and it read *"the
+>    candidate does NOT beat the incumbent"* while the strength sat 39 lines down.
+>    It now reads as a **descriptive two-day ranking** result and **not
+>    validation-grade**.
+> 5. **One open item was missing from both files entirely** — the three §8.1
+>    fields with no producer, recorded above. **And the "maker P&L absent" item is
+>    not separate: it IS `maker_pnl_cents`, the first of the three.** Both files
+>    had been carrying maker P&L only as a **quotation of what §8.1 demands**,
+>    never as a statement that nothing produces it — precisely an open item
+>    reading as though it were merely pending.
+>
+> **THE OTHER OPEN ITEMS WERE ALREADY CORRECTLY RECORDED AS OPEN, and I changed
+> nothing:** the **causal-incumbent-operating-point declaration** is listed in
+> both files as the second of **two** USER items, with BE's reason for declining
+> to predeclare one; **exactly-once-not-computable** is stated in both, explicitly
+> as **an open question and not a pending fix**, with the producer's discarded
+> tranche identity as the cause; and the **G = n − 2 counting question** is in
+> both, **filed freeze-level and unresolved**.
+>
+> **What I did not do:** I added no new narrative about the programme, moved no
+> history, and left the dated entries in both files chronological. **The five
+> fixes are markers and qualifiers on text that was already there.**
+
 > ### STANDING HAZARD (2) — PHANTOM FAILURE: a negative verdict from a path that did not run
 >
 > **Named 2026-09-04. It belongs beside the zero-consumer class, and it is its
@@ -273,6 +348,21 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 > was never in a round. **Together they are one discipline with two halves: a
 > number must have a producer reachable from a committed entry point, AND it must
 > have been reviewed before a reader sees it.**
+>
+> **OPEN ITEM NEITHER FILE CARRIED UNTIL THIS PASS FOUND IT MISSING (round 83):
+> THREE §8.1 FIELDS HAVE NO PRODUCER.** Read at
+> `de_lane4_real_parity.SECTION_8_1_FIELDS` — 16 fields, each with a `source`
+> XOR a `why`, and **exactly three have `source: null`**, each with its reason:
+>
+> | field | why nothing produces it |
+> |---|---|
+> | `maker_pnl_cents` | *"the replay values CANCELLATION … not a maker book … the replay prices the DECISION, not the book"* — **this is also the "maker P&L absent" open item; the two are one field** |
+> | `spread_capture_cents` | *"there is no book-level spread capture, and summing rho's denominator would be a different quantity wearing the name"* |
+> | `inventory_loss_cents` | *"inventory LOSS needs a terminal mark, which the replay never takes"* |
+>
+> **§8.1 demands all three. They are open, they are not scheduled, and naming the
+> reason is the point** — each is a quantity the replay's own construction cannot
+> yield, not a missing implementation.
 >
 > **State:** register at **495 entries**, last **R-504**; **G = 3 of 5**
 > unchanged and **09-03 is still not a third economic read**; suites at the
@@ -808,7 +898,11 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 > > has NO reliable profitability estimate. The three limits stated below were
 > > true and were never the problem; the population was. The block is kept, not
 > > deleted, because it is what MEM round 78 asserted and a reader must be able
-> > to see what was withdrawn.]**
+> > to see what was withdrawn. **AND THE CORRECTION THAT FOLLOWED IS WITHDRAWN
+> > TOO** (MEM round 82): `be_fill_ledger`'s action-native replacement —
+> > `$2,946.40` markout, `$454,505.94` notional, `0.648%` — **over-counts for the
+> > mirror-image reason**, so **do not read this marker as pointing at a repair
+> > that stands**.]**
 >
 > **Filled notional $226,594.26 over three days = $75,531.42/day** (btc
 > $196,960.93 + eth $29,633.33). **The NO-CANCEL baseline book already makes

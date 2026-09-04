@@ -4,6 +4,76 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T10:47Z (MEM ROUND 83 -- A CONSISTENCY AUDIT OF MY OWN FILES, NOT A
+  SWEEP. NO NEW MATERIAL.) The question was whether STATUS.yml and HANDOFF.md are
+  INTERNALLY CONSISTENT WITH THE ARTIFACTS after eight sweeps, three withdrawals
+  and several corrections landing at different times from different rounds. I
+  censused both files programmatically rather than by reading, and I report what
+  I FOUND and not only what I fixed. THE HEADLINE IS A GOOD RESULT: EVERY
+  WITHDRAWN FIGURE IS MARKED. I searched all 24 published figures and their
+  components across both files -- 226,594.26 / 1,801.29 / 0.7949% / 620.58 /
+  +34.5% / 807.29 / 75,531.42 / 600.43 / 2,421.87 / 196,960.93 / 29,633.33 /
+  167.46 / 174.78 / 395.16 / 434.14 / 567.71 / 83.01 / 186.08 / 354.41, plus the
+  corrected pair 2,946.40 / 454,505.94 / 0.648% -- AND EVERY OCCURRENCE CARRIES A
+  WITHDRAWAL MARKER IN ITS OWN BLOCK. NONE STANDS BARE AND NONE WAS SILENTLY
+  DELETED. FIVE DEFECTS FOUND AND FIXED, ALL IN BAND. (1) THE ROUND-80 MARKERS
+  DESCRIBED ONLY THE FIRST WITHDRAWAL AND IMPLIED A REPAIR DIRECTION THAT IS
+  ITSELF WITHDRAWN. All three of them -- the STATUS flag head, the STATUS focus
+  clause and the HANDOFF blockquote -- said the figures fell because prof.py took
+  the first row and the scale was preventable_shares, WHICH POINTS STRAIGHT AT
+  ACTION-NATIVE AGGREGATION AS THE FIX; be_fill_ledger did exactly that and
+  OVER-counts. A reader stopping at any of those three markers would conclude the
+  corrected pair replaced the withdrawn set. EACH NOW CARRIES THE SECOND
+  WITHDRAWAL AND THE INSTRUCTION NOT TO READ IT AS POINTING AT A REPAIR THAT
+  STANDS. THIS IS THE DEFECT THE ROUND EXISTED TO FIND: not a wrong number, but a
+  correction whose own direction had been superseded while the marker stayed
+  still. (2) THE focus: FIELD ASSERTED THE RESULT WITHOUT ITS STRENGTH. focus is
+  read as CURRENT STATE, and its round-78 sentence said flatly "THE PROGRAMME HAS
+  ITS FIRST ECONOMIC RESULTS AND THE CANDIDATE DOES NOT BEAT THE INCUMBENT" with
+  no qualifier anywhere in the field -- the correct-strength statement existed
+  only in the updated: entry and in the task notes. The full strength is now
+  stated at that sentence: A DESCRIPTIVE TWO-DAY RANKING RESULT, matched on
+  cancellation ACTION COUNT and not shares or notional or capital, RETROSPECTIVE
+  comparator, window-level p against a ruled UTC-DAY cluster unit so A HIGH
+  ONE-SIDED p IS FAILURE TO SHOW A WIN AND NOT PROOF OF A LOSS, NOT
+  VALIDATION-GRADE EVIDENCE. (3) THE focus: FIELD CARRIED FOUR SUPERSEDED G
+  STATEMENTS AHEAD OF THE LIVE ONE. Every dated updated: entry and every dated
+  HANDOFF block is chronologically honest and I left them alone; but focus is not
+  a dated log, and a reader scanning it for G met "FORWARD REACH IS NOW G = 2 OF
+  5" three times before reaching round 79's G = 3. The first is now marked
+  SUPERSEDED with the live value named, and the marker says the rest of the field
+  is chronological narrative. (4) THE INTERIM TASK'S name: FIELD OVERSTATED THE
+  RESULT. A task name is what a reader of the task list sees WITHOUT OPENING THE
+  NOTES, and it read "the candidate does NOT beat the incumbent" while the
+  strength sat thirty-nine lines down in the notes. It now reads as a DESCRIPTIVE
+  TWO-DAY RANKING result and NOT validation-grade. (5) ONE OPEN ITEM WAS MISSING
+  FROM BOTH FILES ENTIRELY, AND IT IS THE ONE THE DISPATCH WARNED ABOUT --
+  THREE SECTION 8.1 FIELDS HAVE NO PRODUCER. I read it at the artifact rather
+  than taking it: de_lane4_real_parity.SECTION_8_1_FIELDS carries 16 fields, each
+  with a `source` XOR a `why`, and EXACTLY THREE HAVE source null.
+  maker_pnl_cents -- "the replay values CANCELLATION (harm avoided minus
+  sacrifice), not a maker book ... the replay prices the DECISION, not the book";
+  spread_capture_cents -- "there is no book-level spread capture, and summing
+  rho's denominator would be A DIFFERENT QUANTITY WEARING THE NAME";
+  inventory_loss_cents -- "inventory LOSS needs a TERMINAL MARK, WHICH THE REPLAY
+  NEVER TAKES". AND THE "MAKER P&L ABSENT" OPEN ITEM IS NOT A SEPARATE ITEM: IT
+  IS maker_pnl_cents, THE FIRST OF THE THREE. Both files had been carrying maker
+  P&L only as a QUOTATION OF WHAT SECTION 8.1 DEMANDS, never as a statement that
+  nothing produces it -- which is precisely an open item reading as though it
+  were merely pending. Each is now recorded WITH ITS REASON, because the reason
+  is the point: THESE ARE QUANTITIES THE REPLAY'S OWN CONSTRUCTION CANNOT YIELD,
+  NOT MISSING IMPLEMENTATIONS. THE OTHER OPEN ITEMS WERE ALREADY CORRECTLY
+  RECORDED AS OPEN AND I CHANGED NOTHING: the causal-incumbent-operating-point
+  declaration is listed in both files as the second of TWO USER items, with BE's
+  reason for declining to predeclare one; exactly-once-not-computable is stated
+  in both, explicitly as AN OPEN QUESTION AND NOT A PENDING FIX, with the
+  producer's discarded tranche identity as the cause; and the G = n - 2 counting
+  question is in both, FILED FREEZE-LEVEL AND UNRESOLVED. WHAT I DID NOT DO: I
+  added no new narrative about the programme, moved no history, and left the
+  dated entries in both files chronological. The five fixes are markers and
+  qualifiers on text that was already there. UNCHANGED: G = 3 OF 5; 09-03 is not
+  a third economic read; NO ECONOMIC FIGURE IS PUBLISHABLE; USER ITEMS TWO.
+  PRIOR:
   2026-09-04T10:36Z (MEM ROUND 82 -- TWO PROFITABILITY ATTEMPTS HAVE NOW FAILED
   IN OPPOSITE DIRECTIONS, AND EXACTLY-ONCE MAY NOT BE COMPUTABLE AT ALL). R-504
   and the last several rounds swept; nothing run but read-only reads. NO ECONOMIC
@@ -178,109 +248,6 @@ updated: >-
   OPERATING POINT FOR SUBSEQUENT DAYS OR KEEP THE EQUAL-COUNT COMPARISON
   PERMANENTLY LABELLED A DIAGNOSTIC -- BE DECLINED TO PREDECLARE ONE BECAUSE
   CHOOSING IT NOW WOULD BE CHOOSING AFTER SEEING EVERY NUMBER TODAY PRODUCED.
-  PRIOR:
-  2026-09-04T10:13Z (MEM ROUND 80 -- URGENT CORRECTION: THE PROFITABILITY BLOCK
-  IS WITHDRAWN, AND I AM THE SEAT THAT PUT IT IN THESE FILES). The USER audited
-  the released result and WITHDREW the profitability block
-  (RESULT_RELIABILITY_AUDIT_2026-09-04.md at 0b970c3, as-of 09:59Z, economic tip
-  659ed66); the USER also rewrote RESULTS.md in the same commit and I DID NOT
-  TOUCH IT. MY ROUNDS 78 AND 79 SWEPT THOSE NUMBERS INTO STATUS.yml AND
-  HANDOFF.md AS FACT, BEFORE THE AUDIT EXISTED, SO THESE FILES HAVE BEEN
-  ASSERTING WITHDRAWN FIGURES. EVERY ONE IS NOW MARKED WITHDRAWN IN BAND WITH ITS
-  REASON AND NONE IS DELETED: 226,594 filled notional, 1,801.29 no-cancel P&L,
-  0.7949% return on filled notional, 620.58 overlay, +34.5% on the book, 807/day,
-  75,531/day notional, 600.43/day baseline. THE REASON, RECORDED RATHER THAN JUST
-  THE WITHDRAWAL, AND VERIFIED BY ME AT THE CODE: the scratch prof.py KEPT ONLY
-  THE FIRST ROW per (slug, side, gen) and labelled those sums as TOTALS -- AN
-  ACTION HAS MULTIPLE ROWS, SO FIRST-ROW SELECTION IS NOT AGGREGATION -- and the
-  emitted scale is preventable_shares AND NOT FILLED SHARES. I read the emission
-  at be_forward_metric.py:622, where the field is named in the module's own
-  comment as "the SCALE. Shares the cancel would have prevented", and its
-  producer at harmful_exposure_rows.py: FILL_HORIZON_S = 1.0 (:76), h_end =
-  min(t_start + FILL_HORIZON_S, ...) (:339), and stale_shares = the tranches with
-  t < cut (:370) -- SO ONLY FILLS INSIDE THE ONE-SECOND ACTION HORIZON AT OR
-  AFTER THE 50 ms LATENCY CUTOFF ARE IN THE POPULATION, AND EARLIER FILLS ARE
-  HELD SEPARATELY. THE DENOMINATOR WAS NEVER TOTAL FILLED NOTIONAL AND THE
-  BASELINE WAS NEVER THE WHOLE NO-CANCEL BOOK. P003 HAS NO RELIABLE PROFITABILITY
-  ESTIMATE. THE THREE LIMITS I RECORDED WITH THOSE NUMBERS WERE TRUE AND WERE
-  NEVER THE PROBLEM; THE POPULATION WAS -- which is the part I did not check, and
-  the check I did make (the fee decode) was the one the numbers did not turn on.
-  WHAT SURVIVES AND IS NOT WITHDRAWN WITH IT, and it must not be swept away by
-  the correction: THE NINE btc MATCHED_VOLUME VALUES REPRODUCE EXACTLY from the
-  preserved two-arm feeds -- 09-01 -789.12 / -2,016.71 / -1,476.01; 09-02 -227.60
-  / -1,237.84 / -2,975.36; POOLED -1,012.68 / -3,038.75 / -3,949.76; THE
-  DECLARATION ORDERING CHECKS (eeb02ba 12:55:32Z before 7719588 15:41:26Z and
-  40b49fb 16:21:39Z); and the module controls hold -- be_interim_declaration
-  21/21 and be_forward_metric 102/102, WHICH I RE-DROVE MYSELF in my own detached
-  worktree at the tip under a systemd scope, rc 0 both. THE CLAIM'S CORRECT
-  STRENGTH, IN THE AUDIT'S OWN WORDS, AND THIS IS HOW BOTH FILES NOW STATE IT: A
-  DESCRIPTIVE TWO-DAY RANKING RESULT, NOT VALIDATION-GRADE EVIDENCE AND NOT A
-  PROFITABILITY RESULT -- ENOUGH TO REJECT THAT THE CANDIDATE HAS DEMONSTRATED AN
-  IMPROVEMENT, NOT ENOUGH TO PROVE IT IS STRUCTURALLY WORSE. FOUR THINGS THAT
-  CHANGE HOW EVERYTHING ABOVE READS, EACH VERIFIED: (1) MATCHED_VOLUME MATCHES
-  THE NUMBER OF CANCELLATION ACTIONS -- NOT SHARES, NOT NOTIONAL, NOT CAPITAL,
-  which is the whole reason a profitability reading was never available from it.
-  (2) THE EQUAL-COUNT COMPARATOR IS RETROSPECTIVE: the incumbent's cutoff is
-  lowered using the FULL evaluated day or pool, so it is a RANKING DIAGNOSTIC AND
-  NOT AN EXECUTABLE OPERATING POINT. (3) THE p-VALUES ARE WINDOW-LEVEL WHILE THE
-  RULED CLUSTER UNIT IS THE UTC DAY, so A HIGH ONE-SIDED p IS FAILURE TO SHOW A
-  WIN AND NOT PROOF OF A LOSS -- the direction of that asymmetry is the opposite
-  of the one a reader will assume. (4) THE INCUMBENT IS NOT A PREDICTION-FREE
-  BENCHMARK: both arms are linear harmful-flow predictors over the same 54 PM
-  plus six fine-flow inputs and differ only in fit, so a negative value means the
-  candidate SELECTED LESS VALUABLE CANCELLATIONS AT EQUAL ACTION COUNT and says
-  NOTHING about whether prediction beats no cancellation or a non-predictive
-  rule. AND matched_volume() HAS NO COMMITTED CALLER -- I checked rather than
-  took it: be_read_cells.py DEFINES it at :144 and the ONLY other occurrence in
-  the whole of live/pm_research is the KEY NAME
-  rho_advantage_at_matched_volume at :209, while prof.py and interim_report.py
-  ARE NOT IN THE REPOSITORY AT ALL. THAT IS THE SIXTH ZERO-CONSUMER FINDING OF
-  THE DAY AND THE FIRST ONE THAT IS THE HEADLINE RESULT ITSELF -- the class I
-  wrote into HANDOFF as a standing hazard two rounds ago has now reached the
-  number the programme published. AND ONE PROVENANCE CORRECTION THAT IS MINE AND
-  THAT NOTHING ELSE WOULD SURFACE: MY ROUND-79 COMMIT a357908 CARRIES ANOTHER
-  AUTHOR'S HANDOFF WITHDRAWAL BLOCK. I checked at git -- the block "PROFITABILITY
-  IS WITHDRAWN" enters the history in a357908, its parent 4df4ac2 does not
-  contain it, and it is not in my voice (it speaks of "the MEM round-78 section"
-  in the third person). It was sitting UNCOMMITTED in the shared tree while I
-  worked, and I STAGED HANDOFF.md WHOLESALE AND COMMITTED IT UNDER MY MESSAGE,
-  which says nothing about a withdrawal. SO A READER RUNNING git log SEES MEM
-  ROUND 79 AS THE AUTHOR OF THE WITHDRAWAL, IN THE SAME COMMIT WHOSE OWN ENTRY
-  STILL ASSERTED THE WITHDRAWN FIGURES ONE SCREEN BELOW. The lesson is the one
-  this programme keeps paying for in a new coat: I checked that I had not touched
-  RESULTS.md and reported that carefully, AND I DID NOT MAKE THE SAME CHECK ON
-  THE FILE I OWN -- a pathspec commit is only as narrow as the diff inside each
-  path, and "my file" is not the same as "my bytes". FROM HERE I DIFF EVERY
-  STATE FILE BEFORE STAGING IT, NOT ONLY THE ONES I EXPECT SOMEONE ELSE TO HAVE
-  TOUCHED. The block itself is CORRECT AND STAYS EXACTLY WHERE IT IS; only its
-  authorship is corrected, here.
-  AND A REVIEWER FILING LANDED AT 10:24Z THAT SHARPENS THE SURVIVING HALF, SO
-  I FOLD IT IN RATHER THAN QUEUE IT (4d430e7, tip 0ab344f, audit at 0b970c3,
-  measured on the 08-29 DEVELOPMENT feed with no race seal opened). AUDIT-R1:
-  THE AUDIT IS CORRECT ON ALL FOUR POINTS AND OVERSTATES NONE OF THEM.
-  AUDIT-R2 (MEDIUM) IS THE ONE THAT MATTERS FOR HOW THE SURVIVING RESULT MUST
-  BE QUOTED: THE RANKING RESULT IS GENUINELY INSULATED -- prof.py's defective
-  `seen` dict NEVER REACHES matched_volume(), so the contamination touches the
-  profitability block AND THE baseline_$ COLUMN ONLY, not the nine values. BUT
-  THE INSULATION DOES NOT REST ON PATH SEPARATION: it rests on a measured fact
-  NOT RECORDED ANYWHERE UNTIL NOW -- THE SHIPPED FIRST-CROSSING RULE IS THE
-  ONLY ONE OF FOUR CANDIDATE AGGREGATIONS THAT COUNTS EACH PREVENTED FILL ONCE
-  (91.1% OF INTRA-ACTION ROW PAIRS ARE CLOSER THAN THE 1 s HORIZON), AND THE
-  INTUITIVE ALTERNATIVE FLIPS THE SIGN POSITIVE. THAT MEASUREMENT MUST TRAVEL
-  WITH THE RESULT, because as it stands the result's defence lives only in the
-  fact that NOBODY HAS YET TRIED THE INTUITIVE AGGREGATION -- and someone
-  will. AUDIT-R3 adds a second independent tell that the number was not a
-  pipeline product: prof.py IMPORTED FROM A SEAT WORKTREE. AUDIT-R4 proposes
-  the general remedy -- name the producer, census its committed call and
-  reference sites, check the producing path, ONE AST PASS, RUN BEFORE A NUMBER
-  ENTERS A DOCUMENT RATHER THAN WHEN A ROUND HAPPENS TO BE DISPATCHED. That is
-  the check that would have caught this in round 78, and it is the check I did
-  not run.
-  UNCHANGED BY ANY OF THIS: G = 3 OF 5, and the
-  audit says so itself -- 09-03's R-503 accrual DOES NOT MAKE IT A THIRD ECONOMIC
-  READ. The lost scheduled-unit prefix on the supersede remains open; the 589af56
-  coverage-absent repair closes the missing-status defect and does not touch this
-  audit. USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -4993,7 +4960,11 @@ flags:
     THE DENOMINATOR WAS NEVER TOTAL FILLED NOTIONAL AND THE BASELINE WAS NEVER
     THE WHOLE NO-CANCEL BOOK. P003 HAS NO RELIABLE PROFITABILITY ESTIMATE. The
     three limits below were true and were never the problem; the population
-    was.]
+    was. AND THE CORRECTION THAT FOLLOWED IS WITHDRAWN TOO
+    (MEM round 82): be_fill_ledger's action-native replacement -- gross markout
+    $2,946.40, preventable notional $454,505.94, ratio 0.648% -- OVER-counts for
+    the mirror-image reason, so DO NOT READ THIS MARKER AS POINTING AT A REPAIR
+    THAT STANDS.]
     THE WITHDRAWN PASSAGE, KEPT AS PROVENANCE:
     NEW, AND THE THREE LIMITS ARE NOT SEPARABLE FROM THE NUMBERS. FILLED NOTIONAL
     226,594.26 USD over three days = 75,531.42/day (btc 196,960.93 + eth
@@ -5327,6 +5298,28 @@ flags:
     replaced a HAND-MAINTAINED ARM_RUNNABLE dict of verdict strings, because a
     claim about code kept in a comment drifts from the code without either
     noticing.
+  OPEN_three_section_8_1_fields_have_NO_PRODUCER: >-
+    AN OPEN ITEM THAT NEITHER STATE FILE CARRIED UNTIL THIS CONSISTENCY PASS
+    FOUND IT MISSING (MEM round 83), and it is recorded because AN OPEN ITEM
+    RECORDED AS DONE IS WORSE THAN ONE NOT RECORDED. Read by MEM at
+    de_lane4_real_parity.SECTION_8_1_FIELDS: 16 fields, each carrying a `source`
+    XOR a `why`, and EXACTLY THREE HAVE source null -- NOTHING IN THIS REPOSITORY
+    PRODUCES THEM, each with its own stated reason.
+    (1) maker_pnl_cents -- "the replay values CANCELLATION (harm avoided minus
+    sacrifice), not a maker book. A complete maker P&L needs spread earned on
+    every fill minus adverse selection on every fill, over the whole opportunity
+    population -- the replay prices the DECISION, not the book". THIS IS ALSO THE
+    "MAKER P&L ABSENT" OPEN ITEM: the two are one field.
+    (2) spread_capture_cents -- "de_rho_estimator computes a spread denominator
+    PER RECEIVED FILL for rho; there is no book-level spread capture, and summing
+    rho's denominator would be A DIFFERENT QUANTITY WEARING THE NAME".
+    (3) inventory_loss_cents -- "the inventory block carries NET and PEAK ABS
+    shares and the increasing/reducing split, but no valuation of the position it
+    leaves behind. Inventory LOSS needs a TERMINAL MARK, WHICH THE REPLAY NEVER
+    TAKES".
+    THE PLAN'S SECTION 8.1 DEMANDS ALL THREE. They are OPEN, they are NOT
+    scheduled, and NAMING THE REASON IS THE POINT -- each is a quantity the
+    replay's own construction cannot yield, not a missing implementation.
   USER_items_TWO_operating_point_declaration_open: >-
     THE OPEN USER ITEMS ARE NOW TWO. (1) The Phase-2 winner, which the race
     decides. (2) NEW AT R-504: WHETHER TO PREDECLARE A CAUSAL INCUMBENT OPERATING
@@ -5591,7 +5584,10 @@ focus: >
   2026-08-31T22:00Z. 08-31 is a mixed-era BTC quality failure. 09-01 was the
   first era-pure admissible v4.1 day and ACCRUED; 09-02 ACCRUES TOO on its
   non-blackout complement (USER ruling, R-496 E, verified by MEM at the day
-  verdict), so FORWARD REACH IS NOW G = 2 OF 5 and the earliest possible G=5 is
+  verdict), so FORWARD REACH IS NOW G = 2 OF 5 [SUPERSEDED -- G = 3 OF 5 since
+  the R-503 re-verdict of 09-03; every G=2 sentence below in this field is
+  CHRONOLOGICAL NARRATIVE and the live value is the ROUND 79 one] and the
+  earliest possible G=5 is
   ~09-06, only if every day accrues. NO FORWARD PROFITABILITY NUMBER HAS BEEN
   READ, AND UNTIL BE ROUND 14 NONE COULD HAVE BEEN: THE FORWARD PATH HAD NO
   DECISION METRIC, so the two accrued days were never scored on it and reaching
@@ -5659,7 +5655,13 @@ focus: >
   EDITS (every undo route refuses by name, the guard proved non-vacuous) and NOT
   YET BINDING AGAINST COUNTING (counts_toward_race has no consumer while the
   consumers still validate race_accrual_eligible). ROUND 78 -- THE PROGRAMME HAS
-  ITS FIRST ECONOMIC RESULTS AND THE CANDIDATE DOES NOT BEAT THE INCUMBENT. The
+  ITS FIRST ECONOMIC RESULTS AND THE CANDIDATE DOES NOT BEAT THE INCUMBENT, AT
+  ITS CORRECT STRENGTH [stated here because this field is read as CURRENT STATE]:
+  A DESCRIPTIVE TWO-DAY RANKING RESULT, matched on cancellation ACTION COUNT and
+  not shares or notional or capital, on a RETROSPECTIVE comparator, with
+  window-level p against a ruled UTC-DAY cluster unit so a high one-sided p is
+  FAILURE TO SHOW A WIN AND NOT PROOF OF A LOSS -- NOT VALIDATION-GRADE EVIDENCE.
+  The
   release was GRANTED (51479f1: "RELEASED: scoring a forward day on this path"),
   three days were read -- 08-29 as a DEVELOPMENT read, then 09-01 and 09-02 under
   an interim DECLARED BEFORE EITHER WAS OPENED -- and at MATCHED VOLUME btc is
@@ -5672,7 +5674,10 @@ focus: >
   PROFITABILITY [ALL FIGURES IN THIS SENTENCE WITHDRAWN 2026-09-04 BY USER AUDIT
   -- the population summed was first-row-per-action over preventable_shares, so
   the denominator was never total filled notional and the baseline was never the
-  whole no-cancel book; P003 HAS NO RELIABLE PROFITABILITY ESTIMATE]: filled
+  whole no-cancel book; P003 HAS NO RELIABLE PROFITABILITY ESTIMATE -- AND THE
+  CORRECTION THAT FOLLOWED IS WITHDRAWN TOO, MEM round 82: be_fill_ledger
+  OVER-counts for the mirror-image reason, so this marker does not point at a
+  repair that stands]: filled
   notional $75,531/day, a NO-CANCEL baseline book already making $600.43/day
   (0.7949% on filled notional), best overlay +$620.58 (+34.5%) at 15% -- but it
   is 5-SECOND MARKOUT
@@ -6423,7 +6428,7 @@ tasks:
       and neither does MEM.
   - id: interim-read-09-01-09-02
     phase: 2
-    name: Pre-declared INTERIM on 09-01 + 09-02 — the candidate does NOT beat the incumbent
+    name: Pre-declared INTERIM on 09-01 + 09-02 — a DESCRIPTIVE TWO-DAY RANKING result (the candidate does NOT beat the incumbent) — NOT validation-grade
     status: COMPLETE-hypothesis-CONFIRMED-9-of-9-nothing-survives-Holm-6
     notes: |
       DECLARED BEFORE EITHER DAY WAS OPENED, AND MEM CHECKED THE ORDERING AT
