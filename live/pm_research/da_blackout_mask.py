@@ -97,6 +97,11 @@ class MaskRefused(Exception):
     """The mask cannot be produced honestly."""
 
 
+def _hhmm(ts: float) -> str:
+    """HH:MM:SSZ -- the form a reader compares against a verdict's detail."""
+    return dt.datetime.fromtimestamp(ts, dt.timezone.utc).strftime("%H:%M:%SZ")
+
+
 def _iso(ts: float) -> str:
     return dt.datetime.fromtimestamp(ts, dt.timezone.utc).strftime(
         "%Y-%m-%dT%H:%M:%SZ")
@@ -194,6 +199,25 @@ def build_mask(day: str, raw_root: Path | None = None, gaps=None
     for (c, w), b in agg.items():
         per[c].append((w, b))
 
+    # DA29 / rule 4. TWO DIFFERENT EXCLUSIONS, AND THEY MUST NOT SHARE A
+    # SILENCE. A BLACKOUT-masked window is PRESENT and dark -- a file exists,
+    # its content is near-zero, and it is counted in `n_masked`. A
+    # COVERAGE-ABSENT window has NO FILE AT ALL: `TD.scan_day` never sees it,
+    # so before this it simply lowered `n_windows_total` and appeared nowhere.
+    # BE found that on the supply seam (`n_masked_applied` carries a count,
+    # `n_present` silently shrinks), and it is rule 4 exactly -- exclusions
+    # are statuses, never silent drops. 2026-09-03T15:20:00Z is the instance.
+    #
+    # THE SPAN, NOT THE CALENDAR. The grid runs from the day's first observed
+    # window to its last, so a day still in progress is not charged for hours
+    # that have not happened yet -- the same rule `da_dark_interval_scan` uses,
+    # and for the same reason.
+    _all_obs = sorted({w for v in per.values() for w, _ in v})
+    _grid = (list(range(_all_obs[0], _all_obs[-1] + WINDOW_S, WINDOW_S))
+             if _all_obs else [])
+    _day_lo = day_bounds(day)[0]
+    _grid = [w for w in _grid if w >= _day_lo]
+
     coins: dict[str, Any] = {}
     for c, wins in sorted(per.items()):
         wins.sort()
@@ -221,9 +245,23 @@ def build_mask(day: str, raw_root: Path | None = None, gaps=None
                 f"population L1 already counts; a different one would mask "
                 f"windows the bars still charge for, or charge for windows "
                 f"the scorer has dropped.")
+        _have = {w for w, _ in wins}
+        _absent = [w for w in _grid if w not in _have]
         coins[c] = {
             "status": fz.get("status"),
             "n_windows_total": len(wins),
+            # DA29: the COVERED/EXPECTED pair, so a shrinking denominator is
+            # visible as a fact rather than inferable from its own absence.
+            "n_windows_covered": len(wins),
+            "n_windows_expected_in_span": len(_grid),
+            "n_coverage_absent": len(_absent),
+            "coverage_absent_windows": [_hhmm(w) for w in _absent[:64]],
+            "coverage_absent_truncated": max(0, len(_absent) - 64),
+            "coverage_absent_note": (
+                "NO FILE AT ALL for this (coin, window) -- a different "
+                "exclusion from a blackout, which is a file that EXISTS and "
+                "is dark. Counted here so it is an accounted exclusion and "
+                "not a quietly smaller denominator (rule 4)"),
             "n_masked": len(masked),
             "masked_fraction": round(len(masked) / len(wins), 4),
             "masked_fraction_of_288": round(len(masked) / WINDOWS_PER_DAY, 4),
@@ -298,6 +336,25 @@ def build_mask(day: str, raw_root: Path | None = None, gaps=None
         "n_coins": len(coins),
         "total_masked_windows": sum(v.get("n_masked") or 0
                                     for v in coins.values()),
+        # DA29 / rule 4: the second exclusion, counted at the top level too.
+        "total_coverage_absent_windows": sum(
+            v.get("n_coverage_absent") or 0 for v in coins.values()),
+        "coverage_accounting": {
+            "blackout_masked": ("the file EXISTS and its content is below the "
+                                "frozen detector's threshold; counted in "
+                                "`n_masked` and listed in `masked_windows`"),
+            "coverage_absent": ("NO FILE AT ALL; counted in "
+                                "`n_coverage_absent` and listed in "
+                                "`coverage_absent_windows`"),
+            "why_separate": ("different causes and different remedies -- a "
+                             "dark file is a feed that thinned, an absent "
+                             "file is a window that was never written. A "
+                             "consumer that adds them cannot tell which "
+                             "happened, and one that counts neither reads a "
+                             "smaller denominator as a clean day"),
+            "ruling": "rule 4 (exclusions are statuses, never silent drops); "
+                      "found by BE on the supply seam, 2026-09-04",
+        },
         "coins": coins,
     }
 
@@ -1213,6 +1270,92 @@ def selftest() -> int:
        f"empty because the day was TOO dark to see are the same bytes to a "
        f"consumer -- which is the fact the v2 seam was built for and the "
        f"reason its disposition is a USER ruling, not this module's")
+
+    # ----------------------------------------------------------------------
+    # DA29 / rule 4: A COVERAGE-ABSENT WINDOW IS AN EXCLUSION AND MUST BE A
+    # STATUS. BE found the defect on the supply seam: a blackout-masked window
+    # lands in `n_masked_applied` WITH A COUNT, while an absent window
+    # silently lowered `n_present` with no status at all -- so 09-03's
+    # 15:20:00Z vanished into a smaller denominator. The two have DIFFERENT
+    # CAUSES (a file that exists and is dark vs no file at all) and a reader
+    # must be able to tell them apart.
+    #
+    # THE PRIMARY CONTROL IS THE REAL DAY, not a fixture: it asserts the shape
+    # the production supply path actually reads.
+    # ----------------------------------------------------------------------
+    _m29 = build_mask("20260903")
+    ok(_m29["total_coverage_absent_windows"] == 7,
+       f"DA29-1 PRODUCTION SHAPE: the real 2026-09-03 mask counts "
+       f"{_m29.get('total_coverage_absent_windows')} coverage-absent "
+       f"coin-windows (one window x seven coins) -- the exclusion is now a "
+       f"COUNT, where before it was a silently smaller denominator")
+    for _c29 in ("btc", "eth"):
+        _v29 = _m29["coins"][_c29]
+        ok(_v29["n_coverage_absent"] == 1
+           and _v29["coverage_absent_windows"] == ["15:20:00Z"]
+           and _v29["n_windows_covered"] == 287
+           and _v29["n_windows_expected_in_span"] == 288,
+           f"DA29-1b {_c29}: the absent window is NAMED (15:20:00Z), counted "
+           f"1, and the covered/expected pair is carried (287/288) -- a "
+           f"reader can see WHICH window is missing, not merely that one is")
+    ok(_m29["coins"]["btc"]["n_masked"] == 40
+       and _m29["coins"]["btc"]["n_coverage_absent"] == 1,
+       "DA29-2 THE TWO POPULATIONS DO NOT COLLAPSE: on the same coin-day, 40 "
+       "windows are BLACKOUT-MASKED (a file exists and is dark) and 1 is "
+       "COVERAGE-ABSENT (no file at all). Different causes, separate counts")
+
+    # BOTH DIRECTIONS ON A FIXTURE, because the real day only shows the
+    # firing case. A clean day must read ZERO, and a DARK window must be
+    # counted as MASKED and NOT as absent -- otherwise the new count would
+    # just be the old one under a new name.
+    import gzip as _gz29
+    import tempfile as _tf29
+    _D29 = ["20300201", "20300202"]
+
+    def _mk29(root, dark_idx=(), absent_idx=()):
+        for _d in _D29:
+            _rd = root / _d
+            _rd.mkdir(parents=True, exist_ok=True)
+            _b0 = day_bounds(_d)[0]
+            for _i in range(40):
+                if _d == _D29[-1] and _i in absent_idx:
+                    continue
+                _n = 200 if (_d == _D29[-1] and _i in dark_idx) else 20000
+                for _c in ("btc", "eth"):
+                    with _gz29.open(_rd / f"{_c}-updown-5m-"
+                                          f"{_b0 + _i * WINDOW_S}.jsonl.gz",
+                                    "wb") as _fh:
+                        _fh.write(b"x" * _n)
+        return root
+
+    with _tf29.TemporaryDirectory() as _t29:
+        _r29 = _mk29(Path(_t29) / "clean")
+        _mc = build_mask(_D29[-1], raw_root=_r29, gaps={})
+        ok(_mc["total_coverage_absent_windows"] == 0
+           and _mc["coins"]["btc"]["n_coverage_absent"] == 0
+           and _mc["coins"]["btc"]["n_windows_covered"]
+           == _mc["coins"]["btc"]["n_windows_expected_in_span"] == 40,
+           "DA29-3 ADMITTING DIRECTION: a day with every window written reads "
+           "ZERO coverage-absent, with covered == expected. A count that is "
+           "never zero is not a count")
+        _r29b = _mk29(Path(_t29) / "mixed", dark_idx=(5, 6), absent_idx=(20,))
+        _mm = build_mask(_D29[-1], raw_root=_r29b, gaps={})
+        _vb = _mm["coins"]["btc"]
+        ok(_vb["n_coverage_absent"] == 1
+           and _vb["n_masked"] == 2
+           and _vb["n_windows_covered"] == 39
+           and _vb["n_windows_expected_in_span"] == 40,
+           f"DA29-4 THE DISTINCTION, DRIVEN: on one fixture day two DARK "
+           f"windows are counted as MASKED ({_vb['n_masked']}) and one "
+           f"ABSENT window as COVERAGE-ABSENT ({_vb['n_coverage_absent']}). "
+           f"Neither is folded into the other, and the covered/expected pair "
+           f"(39/40) makes the shrinking denominator a stated fact")
+        ok(len(_vb["coverage_absent_windows"]) == 1
+           and _vb["coverage_absent_windows"][0]
+           not in [_hhmm(x) for x in _vb["masked_windows"]],
+           "DA29-4b and the absent window is NOT in `masked_windows` -- the "
+           "two lists are disjoint populations, so a consumer reading either "
+           "one alone is not silently double-counting or missing the other")
 
     print(f"da_blackout_mask selftests: {checks} checks passed")
     return 0
