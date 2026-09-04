@@ -111,7 +111,7 @@ def preflight(day: str) -> dict:
     return out
 
 
-EXPECTED_CHECKS = 6
+EXPECTED_CHECKS = 11
 
 
 def selftest() -> int:
@@ -150,6 +150,40 @@ def selftest() -> int:
        == "scheduled-unit prefix present",
        "CONTRAST: 09-02 passes attribution on its OWN prefix, so the "
        "admission path is not doing the work for days that do not need it")
+
+    # (2) THE RUNNER'S THREE REFUSAL PATHS, DRIVEN. A path whose first real
+    # execution is the night it matters is untested.
+    import subprocess, tempfile, os
+    sh = str(HERE / "be_score_forward_day.sh")
+    env = {**os.environ, "SCORE_DEADLINE_S": "1", "SCORE_RETRY_INTERVAL_S": "1"}
+    with tempfile.TemporaryDirectory() as td:
+        full = Path(td) / "full"
+        full.mkdir()
+        (full / "already_here.json").write_text("{}")
+        r = subprocess.run([sh, "20260903", str(full)], capture_output=True,
+                           text=True, env=env, timeout=120)
+        ok(r.returncode == 2 and "is not empty" in (r.stdout + r.stderr),
+           f"RUNNER PATH 1 DRIVEN: a NON-EMPTY outdir refuses with rc="
+           f"{r.returncode} and says why -- reusing one is how a half-written "
+           f"feed gets read as a day")
+        r2 = subprocess.run([sh, "20260904", str(Path(td) / "new")],
+                            capture_output=True, text=True, env=env,
+                            timeout=180)
+        out2 = r2.stdout + r2.stderr
+        ok(r2.returncode == 3,
+           f"RUNNER PATH 2 DRIVEN: a day that is NOT ready exits 3 at the "
+           f"deadline (got {r2.returncode}) -- it does NOT wait silently and "
+           f"it does NOT score")
+        ok("mask" in out2.lower() and "NO-GO" in out2,
+           "RUNNER PATH 3 DRIVEN: the MASK blocker is NAMED on every attempt, "
+           "so a watcher sees which blocker clears and which persists")
+        ok("NOTHING WAS SCORED" in out2,
+           "and the give-up line SAYS nothing was scored -- a run that waits "
+           "through the night and reports nothing is indistinguishable from "
+           "one that never started")
+        ok(not (Path(td) / "new").exists()
+           or not any((Path(td) / "new").iterdir()),
+           "and it wrote NO artifact for the day it refused")
 
     print()
     if fails:

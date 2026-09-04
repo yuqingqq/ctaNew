@@ -399,6 +399,19 @@ def era_caveat() -> dict:
     }
 
 
+def _conventions_differ() -> dict:
+    """increment()'s primary convention vs iteration 011's, compared."""
+    import be_forward_metric as FM
+    primary = next(k for k, v in FM.PAIRING_CONVENTIONS.items()
+                   if v["role"].startswith("PRIMARY"))
+    bridge = next(k for k, v in FM.PAIRING_CONVENTIONS.items()
+                  if not v["role"].startswith("PRIMARY"))
+    return {"increment_primary_convention": primary,
+            "iteration_011_convention": bridge,
+            "they_differ": primary != bridge,
+            "so_no_published_number_shares_this_estimand": primary != bridge}
+
+
 def reconciliation_caveat() -> dict:
     """THE ONE THAT MUST TRAVEL WITH EVERY NUMBER. Not an amendment — a
     standing statement the receipt is required to carry."""
@@ -419,6 +432,9 @@ def reconciliation_caveat() -> dict:
         "what_it_did_not": (
             "the primary estimand, and the producer half beneath it"),
         "required_in_the_receipt": True,
+        # R39: the claim above rests on the two conventions DIFFERING, which
+        # is comparable at the constants rather than asserted in prose.
+        "conventions_differ_COMPUTED": _conventions_differ(),
         "for_the_reader": ("do not carry the reconciliation's authority onto "
                            "the number this read produces"),
     }

@@ -776,8 +776,19 @@ def frozen_contract_gate(candidate: Path = None) -> dict:
             "REFUSED: anchors have drifted in the working tree AND "
             "`materialise_frozen` no longer sources them from the freeze "
             "commit. The reason tree drift was survivable has gone.")
+    # R39, found by `be_prose_audit`: this was the literal "HOLDS". It is
+    # reached only when the checks above have passed, so it was never WRONG --
+    # but the STRING asserted nothing, and a check added later whose failure
+    # did not raise would leave it still reading HOLDS. It is now DERIVED from
+    # the conjuncts in this same dict, which is rule 10 applied to my own
+    # emission rather than to someone else's.
+    _conj = {"all_anchors_match_at_freeze_commit": all(at_freeze.values()),
+             "at_least_one_anchor_verified": len(at_freeze) > 0,
+             "drift_is_survivable": (not tree_drift) or sources_from_freeze}
     return {
-        "contract": "HOLDS",
+        "contract": "HOLDS" if all(_conj.values()) else "DOES NOT HOLD",
+        "contract_conjuncts": _conj,
+        "contract_is_derived_not_asserted": True,
         "manifest": mname, "manifest_drift": md,
         "load_bearing_keys": manifest_keys_read_by_run_path(),
         "anchors_verified_at_freeze_commit": len(at_freeze),
@@ -790,6 +801,8 @@ def frozen_contract_gate(candidate: Path = None) -> dict:
             "the bytes the run executes are the freeze's whatever the tree "
             "holds. Asserted from that function's own source, not stated: if "
             "it ever stops doing so, this gate refuses instead of disclosing."),
+        # the prose above is BACKED by this computed field, which is read from
+        # `materialise_frozen`'s own source at call time
         "materialise_frozen_sources_from_the_freeze_commit": sources_from_freeze,
         "disclosed_not_waived": True,
     }

@@ -268,6 +268,19 @@ def no_choice_clause() -> dict:
     }
 
 
+def _conventions_differ() -> dict:
+    """increment()'s primary convention vs iteration 011's, compared."""
+    import be_forward_metric as FM
+    primary = next(k for k, v in FM.PAIRING_CONVENTIONS.items()
+                   if v["role"].startswith("PRIMARY"))
+    bridge = next(k for k, v in FM.PAIRING_CONVENTIONS.items()
+                  if not v["role"].startswith("PRIMARY"))
+    return {"increment_primary_convention": primary,
+            "iteration_011_convention": bridge,
+            "they_differ": primary != bridge,
+            "so_no_published_number_shares_this_estimand": primary != bridge}
+
+
 def reconciliation_caveat() -> dict:
     """READ-R3, carried from the START rather than added afterwards."""
     return {
@@ -285,6 +298,9 @@ def reconciliation_caveat() -> dict:
         "for_the_reader": ("do not carry the reconciliation's authority onto "
                            "any number this read produces"),
         "required_in_the_receipt": True,
+        # R39: the claim above rests on the two conventions DIFFERING, which
+        # is comparable at the constants rather than asserted in prose.
+        "conventions_differ_COMPUTED": _conventions_differ(),
         "carried_from_the_start_not_added_after": True,
     }
 

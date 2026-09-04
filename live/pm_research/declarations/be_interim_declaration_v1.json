@@ -9,7 +9,7 @@
   "what_an_interim_look_costs": "an unplanned interim inflates the family-wise error of the programme's eventual claim: two opportunities to see a rejection where one was declared",
   "why_the_cost_here_is_BOUNDED_and_not_open_ended": "the no-choice clause below. Because NOTHING may be chosen on this read and the interim may only recommend STOPPING, this is a stopping-only look: it can end the race early but it cannot change what the race tests, so it cannot bias the estimand"
  },
- "as_of_utc": "2026-09-03T12:55:10Z",
+ "as_of_utc": "2026-09-04T12:02:44Z",
  "cluster_disclosure": {
   "G_complete_days": 2,
   "authority": "CLAUDE.md rule 8 -- below G=5 complete days: point estimate, no interval, and say so",
@@ -23,7 +23,7 @@
   "why_the_p_is_OPTIMISTIC": "the paired null flips WINDOW signs, and windows inside one UTC day share coin, regime and book state -- they are not exchangeable, so the null variance is understated and the p is smaller than a day-clustered p would be. With G=2 there is no usable day-level permutation either: two days give two sign assignments"
  },
  "declared_before_anything_was_opened": true,
- "declared_in_commit": "7da395cfa31af36e45073d1acdce2845784e4c3c",
+ "declared_in_commit": "60ecc2162a24e1254b3b876e803a077fd8cfe659",
  "decomposition": {
   "exactness": "algebraic; the two terms telescope, so it must hold to floating-point tolerance and is CHECKED, not asserted",
   "identity": "BY_THRESHOLD increment  ==  VOLUME term  +  QUALITY term",
@@ -195,6 +195,12 @@
  "reconciliation_caveat": {
   "carried_from_the_start_not_added_after": true,
   "claim": "this estimand has NEVER been reconciled against any published number, and cannot be from existing artifacts",
+  "conventions_differ_COMPUTED": {
+   "increment_primary_convention": "BY_THRESHOLD",
+   "iteration_011_convention": "BY_COUNT",
+   "so_no_published_number_shares_this_estimand": true,
+   "they_differ": true
+  },
   "for_the_reader": "do not carry the reconciliation's authority onto any number this read produces",
   "required_in_the_receipt": true,
   "what_the_36_of_36_did_validate": "the BRIDGE arm and everything downstream of `increment_by_window`, not the primary estimand",

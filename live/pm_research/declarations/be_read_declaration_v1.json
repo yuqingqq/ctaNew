@@ -32,7 +32,7 @@
   }
  },
  "amends": "R-496 (D), as amended by the reviewer at R496-R2..R7",
- "as_of_utc": "2026-09-03T09:11:59Z",
+ "as_of_utc": "2026-09-04T12:02:43Z",
  "cluster_disclosure": {
   "G_complete_days": 1,
   "authority": "CLAUDE.md rule 8 -- below G=5 complete days: point estimate, no interval, and say so. G=1 here.",
@@ -44,7 +44,7 @@
   "why_the_window_unit_does_not_rescue_it": "windows within one day are not independent draws of the day effect, so a window-clustered interval would be narrower than the ruled unit permits -- it is disclosed as WEAKER, never substituted for the ruled unit"
  },
  "day_status": "WITHDRAWN FROM THE RACE and KEPT READABLE by the USER (R-500). This read does not make it a race day.",
- "declared_in_commit": "23b338a91ec1f1b829edf4cd9f78f93265cc2ea9",
+ "declared_in_commit": "60ecc2162a24e1254b3b876e803a077fd8cfe659",
  "era_caveat": {
   "not_resizable_after_the_fact": true,
   "supersedes": "08-29 runs on collector era clob_v3_1, TWO surface generations behind the race's clob_v4_1 ... whether the surface moves the economics is unknown and is not assumed in either direction",
@@ -100,7 +100,7 @@
    "eth"
   ],
   "declared_cell_count": 18,
-  "declared_cell_count_cited_by_sha256": "60c6cad7eb448a39ddb2fe830e5f42f0cdbd04c34c26a4be3a30fb6567b5c25c",
+  "declared_cell_count_cited_by_sha256": "f87eb13b7d67909b8a7ffc110481f64df6f56c5b74290df131d932abb2f925e1",
   "incumbent": {
    "btc": {
     "bytes": 5251,
@@ -141,7 +141,8 @@
   "mask_artifact_exists": false,
   "masks_that_do_exist": [
    "da_blackout_mask_20260901.json",
-   "da_blackout_mask_20260902.json"
+   "da_blackout_mask_20260902.json",
+   "da_blackout_mask_20260903.json"
   ],
   "redirectable": "the coordinator or the USER may order a mask instead",
   "the_consequence_is_stated_not_hidden": "an undetected stall would leave the last book standing, so adverse selection is measured smaller and the spread frozen \u2014 biasing rho toward the flattering side. Direction argued from the code path; magnitude unknown and not asserted (R496-R5).",
@@ -182,6 +183,12 @@
  "read_day": "20260829",
  "reconciliation_caveat": {
   "claim": "the decision metric has NEVER been reconciled against any published number, and cannot be from existing artifacts",
+  "conventions_differ_COMPUTED": {
+   "increment_primary_convention": "BY_THRESHOLD",
+   "iteration_011_convention": "BY_COUNT",
+   "so_no_published_number_shares_this_estimand": true,
+   "they_differ": true
+  },
   "for_the_reader": "do not carry the reconciliation's authority onto the number this read produces",
   "required_in_the_receipt": true,
   "what_it_did_not": "the primary estimand, and the producer half beneath it",
@@ -208,8 +215,8 @@
   "first_completed_run_is_the_result_of_record": true,
   "frozen_for_the_duration_of_the_race": true,
   "modules": {
-   "be_forward_day.py": "9aebeb276d17c152545b56722c96123af4c22b1a5ef8368a2e382a1616899033",
-   "be_forward_metric.py": "4b77dff32a1785707ce8d024132a476675d4dc50833b5756be2eeef429078498",
+   "be_forward_day.py": "8ddcd41e9f5a148e6a4ebc01cc962ae1be50a939c5d0314b26e0e73367696d24",
+   "be_forward_metric.py": "bad177c949294152bfe55f041fd81f140a178da3b0a390b24247017e2c2239e8",
    "be_operating_point.py": "874f821cdfd728bc4ef0367d2c5831c19fc8e089257f8ca9a5a316f57f88f173",
    "de_admissible_windows.py": "4d8f622075b0447fb0b9f80c5a5b5201a243edd7a2afe882430358ce42cefc1d",
    "ev_replay_seam.py": "d63612a2a7b26c4846f7bad503ac7474bd0c3d87ea31c295442747a414ea02fd",
@@ -225,7 +232,7 @@
   },
   "n_modules": 14,
   "opened_and_sealed_use_distinct_outdir_ROOTS": "not merely distinct filenames within one outdir (R496-R6)",
-  "stack_digest": "d492255ef9469f5f"
+  "stack_digest": "915d54e16e1872c5"
  },
  "selects_nothing": true,
  "skipped_deliberately": {
