@@ -4,6 +4,91 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T10:36Z (MEM ROUND 82 -- TWO PROFITABILITY ATTEMPTS HAVE NOW FAILED
+  IN OPPOSITE DIRECTIONS, AND EXACTLY-ONCE MAY NOT BE COMPUTABLE AT ALL). R-504
+  and the last several rounds swept; nothing run but read-only reads. NO ECONOMIC
+  FIGURE IS PUBLISHABLE, AND BOTH WITHDRAWALS WITH BOTH REASONS ARE ON THE
+  RECORD. prof.py TOOK THE FIRST ROW PER ACTION AND UNDER-COUNTED -- withdrawn by
+  the USER's audit: $226,594.26 filled notional, $1,801.29 no-cancel P&L, 0.7949%,
+  +$620.58, +34.5%, $807/day. be_fill_ledger SUMS EVERY ROW AND OVER-COUNTS --
+  and THE CORRECTED FIGURES BE PUBLISHED AT Q-BE-258 (10:22Z) TO REPLACE THEM ARE
+  WITHDRAWN TOO, BECAUSE THEY CARRY THE OVER-COUNT: gross markout $2,946.40,
+  preventable notional $454,505.94, ratio 0.648%. THE REASON IS THE SAME
+  MEASUREMENT THAT SAVED THE RANKING RESULT ONE ROUND AGO, POINTING THE OTHER WAY:
+  a row ALREADY sums every tranche in its own one-second horizon, and 217,267 of
+  238,495 intra-action row pairs (91.1%) are CLOSER THAN THAT HORIZON, so summing
+  sibling rows ADDS THE SAME TRANCHES AGAIN. TWO ATTEMPTS, OPPOSITE DIRECTIONS,
+  NEITHER EXACTLY-ONCE -- and I verified the shape at the code: the module's own
+  contract field reads "EVERY ROW OF EVERY ACTION, exactly once"
+  (be_fill_ledger.py:123), WHICH IS NOT THE QUANTITY THE AUDIT ASKED FOR ("every
+  FILL exactly once"). AND ITS FIXTURE ENSHRINES THE OVER-COUNT AS SPEC: I read
+  the three rows at t_start 0.1, 0.2, 0.3 (:164/:168/:172) -- 0.1 s apart, DEEP
+  INSIDE the 1 s horizon -- so the asserted total of 60 IS THE DOUBLE-COUNTED
+  FIGURE, NOT THE TRUTH. THAT IS SEAT_PROTOCOL RULE 16'S FOURTH NAMED INSTANCE
+  (a falsifier that enshrines the defect as spec) IN THE MODULE BUILT TO REPAIR AN
+  AGGREGATION. EXACTLY-ONCE MAY NOT BE COMPUTABLE AT ALL, AND THIS IS RECORDED AS
+  AN OPEN QUESTION AND NOT AS A PENDING FIX: THE FEED CARRIES NO TRANCHE OR FILL
+  IDENTITY, so an exactly-once fill total MAY NOT BE DERIVABLE FROM ANYTHING WE
+  HOLD -- it would need tranche-level identity from harmful_exposure_rows. BE IS
+  ESTABLISHING WHETHER IT IS COMPUTABLE, AND IF IT IS NOT, THE QUANTITY GETS AN
+  HONEST RENAME RATHER THAN A PLAUSIBLE NUMBER -- the reviewer's own proposal is
+  sum_of_row_preventable_shares_WITH_OVERLAP carrying the 91.1% figure. A SECOND
+  HIGH, AND IT IS THE EMPTY-SET TRAP ONE LEVEL IN: the ledger returns $0.00
+  notional on the 08-29 feed BECAUSE THAT FEED PREDATES THE SCALE FIELDS (added at
+  BE round 28, be_forward_metric.py:622-624), so its rows carry no
+  preventable_shares and no level -- WHILE ITS OWN COUNTER READS rows_no_level ==
+  rows_with_fill, 80,929 of 80,929 on btc and 11,348 of 11,348 on eth. THE LEDGER
+  COMPUTED THE COUNTER THAT SAYS EVERY FILLED ROW LACKED A LEVEL, DID NOT CONSULT
+  IT, AND EMITTED $0.00 BESIDE A NON-ZERO MARKOUT. IT REFUSES AN EMPTY FILE AND
+  NOT AN EMPTY FIELD. I verified the counter exists and is incremented at
+  be_fill_ledger.py:102 and asserted in its own suite at :208 -- SO IT IS
+  COMPUTED, TESTED, AND UNCONSULTED BY THE EMITTER, which is the zero-consumer
+  shape inside a single module. AND ONE OBSERVATION THAT IS MINE, FROM PUTTING
+  THE TWO ARTIFACTS SIDE BY SIDE RATHER THAN FROM EITHER ALONE: THE $617.95 BTC
+  MARKOUT THE REVIEWER SHOWS BESIDE THAT $0.00 NOTIONAL IS THE SAME $617.95 BE'S
+  PER-DAY TABLE GIVES FOR 08-29 -- SO 08-29 CONTRIBUTES TO THE NUMERATOR OF THE
+  0.648% RATIO WHILE CONTRIBUTING STRUCTURALLY NOTHING TO ITS DENOMINATOR. I have
+  not recomputed the totals and I do not adjudicate it; I record that the two
+  HIGHs are not independent and that the withdrawn ratio has this shape as well as
+  the over-count. A NEW NAMED CLASS BELONGS IN HANDOFF BESIDE THE ZERO-CONSUMER
+  CLASS: PHANTOM FAILURE -- A NEGATIVE VERDICT PRODUCED BY A PATH THAT DID NOT
+  RUN, THE MIRROR OF ABSENCE-READING-AS-A-PASS. The familiar trap lets a bad
+  thing THROUGH; THIS ONE LETS NOTHING THROUGH AND INVENTS A BUG INSTEAD -- a
+  check that could not execute reports a DISAGREEMENT, a FAILURE, a MISSING
+  window, and a reader spends an afternoon on it. DA named it, swept its own
+  instruments and found THREE MORE, and I read all three at the source
+  (da_arm_replay_verify.py:575-601): battery() defaulted script_dir "." so the
+  determinism children COULD NOT IMPORT and the check read identical false -- A
+  DETERMINISM FAILURE WHEN NEITHER INTERPRETER RAN; a missing sar binary made the
+  independent column reader return nothing and the check read as a
+  COLUMN-BINDING FAILURE, i.e. "your production regex reads the wrong field"; and
+  THE ONE THAT IS A REAL CORRECTNESS BUG IN THE RACE MACHINERY --
+  pm_tape_density.uncompressed_size RETURNED 0 FOR A FILE IT COULD NOT READ, AND
+  0 MEANS DARK, so a permission or I/O error WOULD HAVE SURFACED AS A BLACKOUT
+  THAT da_dark_interval_scan REPORTS AND da_blackout_mask MASKS. I read the fix at
+  pm_tape_density.py:197-208: the value STAYS 0 so no caller changes shape, and
+  the file is COUNTED IN A CENSUS scan_day SURFACES, SO THE DIFFERENCE BETWEEN
+  "EMPTY" AND "UNREADABLE" STOPS BEING INVISIBLE -- a repair that adds a
+  distinction rather than changing a return, which is the right shape when every
+  consumer already reads the old one. THE CENSUS IS HONEST ABOUT ITS OWN LIMITS
+  AND SAYS SO IN ITS DOCSTRING: it is A TEXT SCAN that flags two shapes it can see
+  and CANNOT SEE A SEMANTIC ONE; IT REPORTS, AND A HIT IS A PLACE TO LOOK, NOT A
+  DEFECT. And it applies its own discipline to itself -- it REFUSES when it cannot
+  read the tree, "a census that cannot read the tree must not report a clean one",
+  which is the anti-phantom rule turned on the phantom detector. THE
+  COORDINATOR'S STANDING RULE IS NOW IN FORCE AND IT WAS BOUGHT THREE TIMES OVER:
+  NO NUMBER REACHES THE USER BEFORE IT HAS BEEN REVIEWED. THE EVIDENCE IS THE
+  SESSION ITSELF -- THE RANKING RESULT WENT THROUGH REVIEW AND SURVIVED; BOTH
+  PROFITABILITY FIGURES DID NOT, AND BOTH WERE WRONG. It is the same lesson the
+  publication provenance check carries from the other side: the practice attaches
+  to PUBLICATION, not to review rounds, because the released result was never in
+  a round. STATE: register at 495 entries, last R-504; G = 3 OF 5 unchanged and
+  09-03 IS STILL NOT A THIRD ECONOMIC READ; suites at the reviewed tip both
+  launchers rc 0 -- be_read_cells 9, be_fill_ledger 12, da_arm_replay_verify 26.
+  USER ITEMS: TWO -- the Phase-2 winner, and whether to predeclare a causal
+  incumbent operating point or keep the equal-count comparison permanently
+  labelled a diagnostic.
+  PRIOR:
   2026-09-04T10:23Z (MEM ROUND 81 -- THE RANKING RESULT SURVIVES, AND "DIFFERENT
   PATH" IS NOT WHY). R-503 and R-504 swept; nothing run but read-only reads and
   TWO read-only computations of my own. THE ITEM THAT MATTERS MOST, AND IT IS A
@@ -196,121 +281,6 @@ updated: >-
   READ. The lost scheduled-unit prefix on the supersede remains open; the 589af56
   coverage-absent repair closes the missing-status defect and does not touch this
   audit. USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
-  PRIOR:
-  2026-09-04T09:59Z (CODEX RELIABILITY CORRECTION). THE TWO-DAY BTC
-  EQUAL-ACTION-COUNT ARITHMETIC REPRODUCES, BUT IT IS A RETROSPECTIVE
-  MODEL-VS-MODEL DIAGNOSTIC, NOT VALIDATION OR REALISED P&L. THE INCUMBENT IS
-  ALSO A HARMFUL-FLOW PREDICTOR. THE PUBLISHED PROFITABILITY BLOCK IS WITHDRAWN:
-  ITS SCRATCH SCRIPT KEEPS THE FIRST ROW PER ACTION AND SUMS
-  `preventable_shares`, A ONE-SECOND POST-LATENCY SUBSET, AS THOUGH IT WERE TOTAL
-  FILLED NOTIONAL. P003 CURRENTLY HAS NO RELIABLE PROFITABILITY ESTIMATE. THE
-  CANONICAL RESULT PATH ALSO DOES NOT CALL `matched_volume()`. FULL FINDINGS:
-  workspace/RESULT_RELIABILITY_AUDIT_2026-09-04.md. RACE STATE REMAINS G=3;
-  09-03 IS NOT A THIRD ECONOMIC READ. PRIOR:
-  2026-09-04T09:58Z (MEM ROUND 79 -- THE RACE MOVED TO G=3, AND THE PROGRAMME
-  CHANGED DIRECTION). R-503, DA rounds 25-28, the reviewer's R-503 census, BE 29
-  and the direction change swept; nothing run but read-only reads and ONE
-  read-only census of my own. THE RACE MOVED. 09-03 WAS RE-VERDICTED UNDER R-503
-  AT 09:36:44.731072Z AND NOW ACCRUES -- I read the verdict rather than the
-  report: race_accrual_eligible TRUE, day_quality_pass TRUE, all four conjuncts
-  true, btc P1 95.61 against a bar of 120 and eth 8.97, both evaluable. THREE
-  SUPERSEDED PREDECESSORS ARE PRESERVED ON DISK (00:06:05Z on 09-03, 00:06:01Z
-  and 09:36:17Z on 09-04). G = 3 OF 5. THE DAY ACCRUES ON ITS COVERED COMPLEMENT
-  AND THE ARTIFACT SAYS SO IN ITS OWN FIELDS: n_covered 287, n_expected 288,
-  n_uncovered_MASKED_AS_ACCOUNTED_LOSS 1, uncovered_windows_utc ["15:20:00Z"],
-  complement_meets_floor TRUE against floor_windows 144 -- and the floor is
-  IMPORTED RATHER THAN INVENTED, floor_source da_blackout_mask
-  .G_MIN_COMPLEMENT_WINDOWS with floor_ruling "R-424 section 4 (USER,
-  2026-09-02), applying R-411(i)", the whole thing ruled by "R-503 (USER,
-  2026-09-04), applying R-409". ONE DISCIPLINE POINT IN THE ARTIFACT WORTH
-  CARRYING BECAUSE IT IS THE OPPOSITE OF THE EASY MOVE: THE GOVERNING P1 REMAINS
-  THE FROZEN CALENDAR-24H FORM -- "recomputing a pre-registered bar voids it" --
-  with the per-covered-hour form REPORTED BESIDE IT, so the rule changes what is
-  ADMITTED and not how the bar is COMPUTED. THE MISSING WINDOW'S CAUSE IS THE
-  THIRD INSTANCE OF THE UNEXPLAINED LOW-CONTENT CLASS: from the collector's own
-  log, messages per minute ran 74,731 / 79,960 / 82,274 / 68,432 through 15:18,
-  fell to 27,460 into 15:20, then 2,604 / 1,369 / 1,077 / 2,901 across 15:20-15:24
-  -- ROUGHLY 1.5% OF NORMAL, ABOUT A 98% COLLAPSE FOR ABOUT FIVE MINUTES -- and
-  recovered on its own, with the collector reporting health_err 0 AND NO GAP ROW
-  THROUGHOUT. The window is absent for BOTH btc and eth, so it is total coverage
-  loss and not a market-specific miss. R-503 IS A USER RULING AND IT IS NEW
-  STATE: a day accrues on its covered complement, uncovered windows MARKED AND
-  COUNTED, built on R-409's EXISTING accounting rather than a new principle -- the
-  USER's own earlier words were "if the data quality is good over the
-  non-blackout time, we should use that data", and the 15:20Z window is
-  functionally a blackout window. The coverage predicate had been a SEPARATE gate
-  refusing the day BEFORE its quality was ever evaluated, which is why day_bar_v2
-  returned evaluable FALSE rather than a failing value. THE RULE-11 RISK IS
-  STATED RATHER THAN MANAGED AWAY, and two facts bound it: what had been seen of
-  09-03 was its QUALITY AND NEVER ITS ECONOMICS -- the day had never been scored,
-  precisely because it never accrued -- and the change was declared BEFORE any
-  race day's economics were read. THE REVIEWER CENSUSED THE RULE FOR RATCHET AND
-  FOUND NO HIGH, AND THAT CENSUS IS WHAT MAKES IT NOT A RATCHET: EXACTLY FOUR
-  DAYS CARRY ANY SHORTFALL AND EXACTLY TWO CLEAR THE 144 FLOOR -- 08-26 at 279
-  and 09-03 at 287 -- with 08-19 (115) below the floor and pre-freeze and 09-04
-  open under the unchanged open-day predicate. NO OTHER DAY CAN MOVE. AND 08-26
-  IS EXCLUDED ON A GROUND NO COVERAGE RULE CAN TOUCH: its day ends
-  2026-08-27T00:00:00Z against a freeze epoch of 2026-08-28T06:09:00Z, so it is
-  ENTIRELY PRE-FREEZE and the only thing keeping it out is the AFTER conjunct,
-  WHICH IS A PROPERTY OF THE CLOCK. So the reach is TWO complete_tape FLIPS AND
-  ONE ADMISSION. I CENSUSED COVERAGE MYSELF BY COUNTING DISTINCT WINDOW FILES ON
-  DISK, AND EVERY LOAD-BEARING NUMBER REPRODUCES: 08-19 115, 08-30 288, 08-31
-  288, 09-02 288, 09-03 287. THAT CONFIRMS THE REVIEWER'S CORRECTION OF R-503 (D)
-  AND IT IS A CORRECTION WORTH RECORDING AS ONE: the entry defends the floor by
-  citing coverage of 08-30 66 and 08-31 0 and a "natural gap between 99.65% and
-  23%", and NEITHER FIGURE IS COVERAGE -- 66 is the count of windows BEFORE
-  08-30's era boundary and 0 does not reproduce as anything -- so THE NATURAL GAP
-  DOES NOT EXIST IN THE QUANTITY THE FLOOR IS APPLIED TO, the real distribution
-  is 115 / 279 / 287 / 288x12, and at the floor actually used 08-26's
-  complete_tape FLIPS TOO. THE CONCLUSION SURVIVES AND THE SENTENCE DEFENDING IT
-  DOES NOT -- the third time this session a claim's substance has outlived its
-  stated evidence -- and the honest version is stronger: the floor moves two
-  coverage predicates and ONE admission, and the second day is excluded by the
-  freeze regardless. ONE DELTA OF MY OWN THAT I DO NOT ADJUDICATE: my file census
-  gives 08-26 as 282 distinct windows (281 with content), against the reviewer's
-  279 from two agreeing methods; NOTHING TURNS ON IT -- both are far above the
-  144 floor and 08-26 is pre-freeze either way -- and I record the difference
-  rather than pick. My 09-04 count is 121 against the reviewer's 113, WHICH IS
-  NOT A DISCREPANCY: AN OPEN DAY GROWS, and each number is right at its own
-  clock. TWO DEFECTS ARE OPEN AND MUST NOT READ AS CLOSED. (i) THE SUPPLY LAYER
-  CANNOT DISTINGUISH COVERAGE-ABSENT FROM BLACKOUT-MASKED -- an absent window
-  silently lowers n_present with NO STATUS, which is rule 4 in the one place the
-  new rule leans on. (ii) THE GATE-1 PREFIX IS LOST ON A SUPERSEDE, and I saw it
-  in the bytes: the re-verdict's write_reason now begins "DA re-verdict under
-  R-503 (USER, 2026-09-04)..." rather than the scheduled-unit prefix gate 1
-  requires, SO A CORRECTLY RE-VERDICTED DAY IS REFUSED WHILE ITS STALE
-  PREDECESSOR WOULD BE ADMITTED. Both were dispatched to DA. AND THE STATE MOVED
-  WHILE I WAS WRITING, SO I RECORD IT AS IT STANDS RATHER THAN AS THE DISPATCH
-  DESCRIBED IT: THE REVIEWER CONFIRMED BOTH OPEN at 659ed66 (10:06Z), AND DA THEN
-  LANDED THE RULE-4 FIX at 589af56 -- (i) IS NOW ADDRESSED AND UNREVIEWED,
-  verified by me at da_blackout_mask.py (n_coverage_absent :257,
-  coverage_absent_windows :258, total_coverage_absent_windows :340,
-  coverage_accounting :342, selftest :1287, two mutants red by name), BECAUSE A
-  BLACKOUT IS A FILE THAT EXISTS AND IS DARK WHILE A COVERAGE-ABSENT WINDOW IS NO
-  FILE AT ALL. (ii) REMAINS OPEN -- DA PROPOSES AND HAS NOT TOUCHED BE'S GATE --
-  and DA's own formulation is the one to carry: THE STATE IS INVERTED, the STALE
-  predecessor satisfies gate 1 and the CORRECT re-verdict does not, and "A GATE
-  THAT ADMITS THE WRONG ANSWER AND REFUSES THE RIGHT ONE IS WORSE THAN ONE THAT
-  REFUSES BOTH".
-  THE DARK-INTERVAL CHECKER DID NOT FIRE ON THE CLASS'S THIRD INSTANCE, AND DA
-  ESTABLISHED THAT THIS IS NOT A DETECTION FAILURE: the dip was DETECTED at
-  worst_frac_of_reference 0.0 and then DROPPED BY MIN_RUN_WINDOWS = 2 (verified
-  at da_dark_interval_scan.py:104) because ONE WINDOW IS NOT AN INTERVAL, and the
-  exclusion is structural rather than marginal because the neighbours run 158-272
-  and 95-257 percent of reference. DA REFUSED TO MOVE THE THRESHOLD -- choosing
-  after seeing -- AND SURFACED n_single_window_dips_excluded INSTEAD (:318,
-  :389). A CHECKER THAT DECLINES TO WIDEN ITSELF TO CATCH THE CASE THAT JUST
-  EMBARRASSED IT, AND DISCLOSES THE EXCLUDED COUNT INSTEAD, IS THE RIGHT ANSWER.
-  AND THE PROGRAMME HAS CHANGED DIRECTION ON THE USER'S INSTRUCTION: RATHER THAN
-  ACCRUING FURTHER DATA-COLLECTION MACHINERY, DE IS NOW BUILDING THE SEVEN-ARM
-  INTEGRATION ABLATION (section 8.1, recorded until now as "contracts and stubs
-  only, real integration pending" and NEVER RUN) AND BE IS BUILDING THE
-  FAIR-PRICE CHALLENGERS (section 4.2 names them: PM MICROPRICE AND AT MOST ONE
-  CROSS-VENUE FORECAST, scored incrementally to Identity, NEITHER EVER BUILT).
-  THE REASON IS IN THE PLAN'S OWN WORDS AND I READ IT THERE: section 8.1 ends
-  "net_cancel_cents alone is not a strategy-P&L verdict" -- WHICH IS PRECISELY
-  THE METRIC THE THREE COMPLETED READS MEASURED. USER ITEMS: ONE -- the Phase-2
-  winner, and the race decides it.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -5364,8 +5334,106 @@ flags:
     LABELLED A DIAGNOSTIC. BE DECLINED TO PREDECLARE ONE AND SAID WHY: CHOOSING
     IT NOW WOULD BE CHOOSING AFTER SEEING EVERY NUMBER TODAY PRODUCED. The
     declaration is the USER'S and is OPEN.
+  TWO_PROFITABILITY_ATTEMPTS_FAILED_IN_OPPOSITE_DIRECTIONS: >-
+    NO ECONOMIC FIGURE IS PUBLISHABLE, AND BOTH WITHDRAWALS CARRY BOTH REASONS.
+    ATTEMPT ONE, prof.py: TOOK THE FIRST ROW PER ACTION AND UNDER-COUNTED --
+    withdrawn by the USER's audit 2026-09-04 ($226,594.26 filled notional,
+    $1,801.29 no-cancel P&L, 0.7949%, +$620.58, +34.5%, $807/day). ATTEMPT TWO,
+    be_fill_ledger: SUMS EVERY ROW AND OVER-COUNTS -- SO THE CORRECTED FIGURES BE
+    PUBLISHED AT Q-BE-258 (10:22Z) TO REPLACE THEM ARE WITHDRAWN TOO, BECAUSE
+    THEY CARRY THE OVER-COUNT: gross markout $2,946.40, preventable notional
+    $454,505.94, ratio 0.648%. THE REASON IS THE SAME MEASUREMENT THAT SAVED THE
+    RANKING RESULT ONE ROUND AGO, POINTING THE OTHER WAY: a row ALREADY sums
+    every tranche in its own one-second horizon, and 217,267 of 238,495
+    intra-action row pairs (91.1%) are CLOSER THAN THAT HORIZON, so summing
+    sibling rows ADDS THE SAME TRANCHES AGAIN. TWO ATTEMPTS, OPPOSITE DIRECTIONS,
+    NEITHER EXACTLY-ONCE. VERIFIED BY MEM AT THE CODE: the module's own contract
+    field reads "EVERY ROW OF EVERY ACTION, exactly once"
+    (be_fill_ledger.py:123), WHICH IS NOT THE QUANTITY THE AUDIT ASKED FOR
+    ("every FILL exactly once"); and ITS FIXTURE ENSHRINES THE OVER-COUNT AS SPEC
+    -- three rows at t_start 0.1 / 0.2 / 0.3 (:164/:168/:172), 0.1 s apart and
+    DEEP INSIDE the 1 s horizon, so the asserted total of 60 IS THE
+    DOUBLE-COUNTED FIGURE, NOT THE TRUTH. THAT IS SEAT_PROTOCOL RULE 16'S FOURTH
+    NAMED INSTANCE, IN THE MODULE BUILT TO REPAIR AN AGGREGATION.
+  EXACTLY_ONCE_MAY_NOT_BE_COMPUTABLE_open_question: >-
+    AN OPEN QUESTION, NOT A PENDING FIX. THE FEED CARRIES NO TRANCHE OR FILL
+    IDENTITY, so AN EXACTLY-ONCE FILL TOTAL MAY NOT BE DERIVABLE FROM ANYTHING WE
+    HOLD -- it would need tranche-level identity from harmful_exposure_rows, which
+    the feed does not carry. BE IS ESTABLISHING WHETHER IT IS COMPUTABLE AT ALL.
+    IF IT IS NOT, THE QUANTITY GETS AN HONEST RENAME RATHER THAN A PLAUSIBLE
+    NUMBER -- the reviewer's own proposal is
+    sum_of_row_preventable_shares_WITH_OVERLAP, carrying the 91.1% figure with
+    it. RECORD IT THIS WAY: the blocker is NOT a caveat that can be attached, it
+    is that THE QUANTITY IS NOT THE ONE CLAIMED. Publishable only after (i) the
+    empty-field refusal below, (ii) either de-duplication at tranche identity OR
+    the rename, and (iii) the fixture's t_starts spaced BEYOND the horizon so its
+    60 is a genuine sum of distinct tranches.
+  BE31_R3_HIGH_empty_field_is_not_an_empty_file: >-
+    THE SECOND HIGH, AND IT IS THE EMPTY-SET TRAP ONE LEVEL IN. The ledger
+    returns $0.00 notional on the 08-29 feed BECAUSE THAT FEED PREDATES THE SCALE
+    FIELDS (added at BE round 28, be_forward_metric.py:622-624), so its rows
+    carry no preventable_shares and no level -- WHILE ITS OWN COUNTER READS
+    rows_no_level == rows_with_fill, 80,929 of 80,929 on btc and 11,348 of 11,348
+    on eth. THE LEDGER COMPUTED THE COUNTER THAT SAYS EVERY FILLED ROW LACKED A
+    LEVEL, DID NOT CONSULT IT, AND EMITTED $0.00 BESIDE A NON-ZERO MARKOUT. IT
+    REFUSES AN EMPTY FILE (R-141) AND NOT AN EMPTY FIELD. VERIFIED BY MEM: the
+    counter is incremented at be_fill_ledger.py:102 and asserted in the module's
+    own suite at :208 -- SO IT IS COMPUTED, TESTED, AND UNCONSULTED BY THE
+    EMITTER, which is the zero-consumer shape inside a single module. The clause:
+    refuse BY NAME when rows_no_level > 0, or when shares == 0 while
+    rows_with_fill > 0. The counter already exists; it needs a consumer.
+  MEM_observation_the_two_HIGHs_are_not_independent: >-
+    AN OBSERVATION THAT IS MEM'S, FROM PUTTING TWO ARTIFACTS SIDE BY SIDE RATHER
+    THAN FROM EITHER ALONE, AND NOT ADJUDICATED. The $617.95 btc markout the
+    reviewer shows BESIDE that $0.00 notional (BE31-R3's run on the 08-29 feed)
+    IS THE SAME $617.95 BE's per-day table at Q-BE-258 gives for 08-29. SO 08-29
+    CONTRIBUTES TO THE NUMERATOR OF THE WITHDRAWN 0.648% RATIO WHILE CONTRIBUTING
+    STRUCTURALLY NOTHING TO ITS DENOMINATOR. MEM has NOT recomputed the totals and
+    rules nothing; what is recorded is that THE TWO HIGHs ARE NOT INDEPENDENT and
+    that the withdrawn ratio has this shape AS WELL AS the over-count.
+  CLASS_PHANTOM_FAILURE_named_2026_09_04: >-
+    A NEW NAMED CLASS, AND IT BELONGS BESIDE THE ZERO-CONSUMER CLASS. PHANTOM
+    FAILURE: A NEGATIVE VERDICT PRODUCED BY A PATH THAT DID NOT RUN -- THE MIRROR
+    OF ABSENCE-READING-AS-A-PASS. The familiar trap lets a bad thing THROUGH;
+    THIS ONE LETS NOTHING THROUGH AND INVENTS A BUG INSTEAD: a check that could
+    not execute reports a DISAGREEMENT, a FAILURE, a MISSING window, and a reader
+    spends an afternoon on it. Named by DA 2026-09-04 at
+    da_arm_replay_verify.py:575, with a census at :977-1019 driven BOTH
+    DIRECTIONS (PHANTOM-C1 ADMITS an `except` that returns a NAMED STATUS;
+    PHANTOM-C2 FIRES on a bare False; C3 on an unchecked subprocess result; C4
+    requires an unreadable tree to REFUSE). DA SWEPT ITS OWN INSTRUMENTS AND
+    FOUND THREE MORE, all read at the source by MEM (:575-601): (i) battery()
+    defaulted script_dir "." so the determinism children COULD NOT IMPORT and the
+    check read identical false -- A DETERMINISM FAILURE WHEN NEITHER INTERPRETER
+    RAN; (ii) a missing `sar` binary made the independent column reader return
+    nothing and the check read as a COLUMN-BINDING FAILURE, i.e. "your production
+    regex reads the wrong field"; (iii) THE ONE THAT IS A REAL CORRECTNESS BUG IN
+    THE RACE MACHINERY -- pm_tape_density.uncompressed_size RETURNED 0 FOR A FILE
+    IT COULD NOT READ, AND 0 MEANS DARK, so a permission or I/O error WOULD HAVE
+    SURFACED AS A BLACKOUT THAT da_dark_interval_scan REPORTS AND
+    da_blackout_mask MASKS. THE FIX, read by MEM at pm_tape_density.py:197-208:
+    the value STAYS 0 so no caller changes shape, and the file is COUNTED IN A
+    CENSUS scan_day SURFACES -- so the difference between "empty" and
+    "unreadable" STOPS BEING INVISIBLE. A repair that ADDS A DISTINCTION rather
+    than changing a return, which is the right shape when every consumer already
+    reads the old one. AND THE CENSUS IS HONEST ABOUT ITS OWN LIMITS IN ITS OWN
+    DOCSTRING: it is A TEXT SCAN that flags the two shapes it can see and CANNOT
+    SEE A SEMANTIC ONE; IT REPORTS, AND A HIT IS A PLACE TO LOOK, NOT A DEFECT.
+    It also applies its own discipline to itself -- it REFUSES when it cannot read
+    the tree, "a census that cannot read the tree must not report a clean one".
+  STANDING_RULE_no_number_reaches_the_user_before_review: >-
+    THE COORDINATOR'S STANDING RULE, NOW IN FORCE, AND IT WAS BOUGHT THREE TIMES
+    OVER: NO NUMBER REACHES THE USER BEFORE IT HAS BEEN REVIEWED. THE EVIDENCE IS
+    THE SESSION ITSELF -- THE RANKING RESULT WENT THROUGH REVIEW AND SURVIVED;
+    BOTH PROFITABILITY FIGURES DID NOT, AND BOTH WERE WRONG, in opposite
+    directions. It is the same lesson the PUBLICATION PROVENANCE CHECK carries
+    from the other side: the practice attaches to PUBLICATION and not to review
+    rounds, because the released result was never in a round. TAKEN TOGETHER THEY
+    ARE ONE DISCIPLINE WITH TWO HALVES -- a number must have a producer that is
+    reachable from a committed entry point, AND it must have been reviewed before
+    a reader sees it.
 focus: >
-  As-of 2026-09-04T10:23Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T10:36Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -5645,7 +5713,23 @@ focus: >
   run), with arm 6 blocked on fairprice_challenger -- EXACTLY WHAT BE IS BUILDING
   -- so the two direction-change workstreams are one. USER items are now TWO: the
   Phase-2 winner, and whether to predeclare a causal incumbent operating point or
-  keep the equal-count comparison permanently labelled a diagnostic.
+  keep the equal-count comparison permanently labelled a diagnostic. ROUND 82 --
+  TWO PROFITABILITY ATTEMPTS HAVE NOW FAILED IN OPPOSITE DIRECTIONS AND NO
+  ECONOMIC FIGURE IS PUBLISHABLE: prof.py took the FIRST ROW and UNDER-counted;
+  be_fill_ledger sums EVERY ROW and OVER-counts, so the corrected figures
+  ($2,946.40 markout, $454,505.94 notional, 0.648%) are WITHDRAWN TOO. AND
+  EXACTLY-ONCE MAY NOT BE COMPUTABLE AT ALL -- the feed carries NO TRANCHE
+  IDENTITY, which is an OPEN QUESTION and not a pending fix; if it is not
+  computable the quantity gets an honest rename rather than a plausible number.
+  A SECOND HIGH: the ledger emits $0.00 notional on a feed that predates the
+  scale fields while its own rows_no_level == rows_with_fill counter is computed
+  and never consulted -- it refuses an empty FILE and not an empty FIELD. A NEW
+  NAMED CLASS, PHANTOM FAILURE (a NEGATIVE verdict from a path that did not run,
+  the mirror of absence-reading-as-a-pass), with three more instances found in
+  DA's own instruments, one a REAL CORRECTNESS BUG in the race machinery. AND THE
+  STANDING RULE NOW IN FORCE: NO NUMBER REACHES THE USER BEFORE IT HAS BEEN
+  REVIEWED -- the ranking result went through review and survived; both
+  profitability figures did not, and both were wrong.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,

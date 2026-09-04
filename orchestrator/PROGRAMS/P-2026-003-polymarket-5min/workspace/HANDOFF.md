@@ -1,6 +1,21 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T10:23Z (MEM round 81) — **THE RANKING RESULT SURVIVES, AND
+Updated: 2026-09-04T10:36Z (MEM round 82) — **TWO PROFITABILITY ATTEMPTS HAVE
+NOW FAILED IN OPPOSITE DIRECTIONS, AND NO ECONOMIC FIGURE IS PUBLISHABLE.**
+`prof.py` took the **first row** and **under**-counted; `be_fill_ledger` sums
+**every row** and **over**-counts — so **the corrected figures are withdrawn
+too** (`$2,946.40` markout, `$454,505.94` notional, `0.648%`). **Exactly-once may
+not be computable at all** — the feed carries **no tranche identity** — recorded
+as an **open question**, not a pending fix. **A second HIGH:** the ledger emits
+`$0.00` notional on a feed predating the scale fields while its own
+`rows_no_level == rows_with_fill` counter is computed and never consulted — it
+refuses an empty **file**, not an empty **field**. **A new named class:
+PHANTOM FAILURE**, with three more instances in DA's own instruments, one a
+**real correctness bug in the race machinery**. **And the standing rule now in
+force: NO NUMBER REACHES THE USER BEFORE IT HAS BEEN REVIEWED.** **USER items:
+TWO.**
+
+Previously (MEM round 81) — 2026-09-04T10:23Z — **THE RANKING RESULT SURVIVES, AND
 "DIFFERENT PATH" IS NOT WHY.** **The sign is not invariant under the aggregation
 rule** — summing every row from the crossing onward flips it **positive at all
 three budgets**. What settles it is a measurement, not a preference: **91.1% of
@@ -164,6 +179,107 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### STANDING HAZARD (2) — PHANTOM FAILURE: a negative verdict from a path that did not run
+>
+> **Named 2026-09-04. It belongs beside the zero-consumer class, and it is its
+> mirror image.** The familiar trap is **absence reading as a pass** — "0 failing"
+> from a gate that checked nothing, an empty mask read as a clean day. **That one
+> lets a bad thing THROUGH.** **PHANTOM FAILURE lets nothing through and invents
+> a bug instead:** a check that could not execute reports a **disagreement**, a
+> **failure**, a **missing window** — and a reader spends an afternoon on it.
+>
+> **DA named it, swept its own instruments, and found three more — one of them a
+> real correctness bug in the race machinery:**
+>
+> | instance | what it reported | what had actually happened |
+> |---|---|---|
+> | `battery()` | `identical: false` — a **determinism failure** | `script_dir` defaulted to `"."`, so **neither interpreter ran** |
+> | `pm_tape_density.uncompressed_size` | **0 bytes ⇒ a DARK window ⇒ a BLACKOUT** that `da_dark_interval_scan` reports and `da_blackout_mask` masks | a permission or **I/O error** on a file it could not read |
+> | independent column reader | a **column-binding failure** — *"your production regex reads the wrong field"* | the `sar` **binary was missing** |
+>
+> **The repair to the real bug is the right shape and worth copying:** the value
+> **stays 0** so no caller changes shape, and the file is **counted in a census
+> `scan_day` surfaces**, so **the difference between "empty" and "unreadable"
+> stops being invisible** (`pm_tape_density.py:197-208`). *Add a distinction
+> rather than change a return, when every consumer already reads the old one.*
+>
+> **The census is honest about its own limits, in its own docstring:** it is **a
+> text scan**, it flags the two shapes it can see, it **cannot see a semantic
+> one**, and **it REPORTS — a hit is a place to look, not a defect**. It also
+> turns the rule on itself: it **refuses when it cannot read the tree**, because
+> *"a census that cannot read the tree must not report a clean one."*
+>
+> ### 2026-09-04T10:36Z — MEM round 82: two profitability attempts, opposite directions, neither exactly-once
+>
+> **NO ECONOMIC FIGURE IS PUBLISHABLE, AND BOTH WITHDRAWALS CARRY BOTH REASONS.**
+>
+> | attempt | rule | direction | figures | status |
+> |---|---|---|---|---|
+> | `prof.py` | **first row** per action | **UNDER**-counts | $226,594.26 · $1,801.29 · 0.7949% · +$620.58 · +34.5% · $807/day | **WITHDRAWN** (USER audit) |
+> | `be_fill_ledger` | **every row** | **OVER**-counts | $2,946.40 markout · $454,505.94 notional · **0.648%** | **WITHDRAWN** (BE31-R4) |
+>
+> **The reason is the same measurement that saved the ranking result one round
+> ago, pointing the other way:** a row **already** sums every tranche in its own
+> one-second horizon, and **217,267 of 238,495 intra-action row pairs (91.1%) are
+> closer than that horizon**, so summing sibling rows **adds the same tranches
+> again**. **Two attempts, opposite directions, neither exactly-once.**
+>
+> Verified at the code: the module's own contract field reads
+> **`"aggregation": "EVERY ROW OF EVERY ACTION, exactly once"`**
+> (`be_fill_ledger.py:123`) — **which is not the quantity the audit asked for**
+> (*"every FILL exactly once"*). **And its fixture enshrines the over-count as
+> spec:** three rows at `t_start` **0.1 / 0.2 / 0.3** (`:164/:168/:172`) — 0.1 s
+> apart, **deep inside** the 1 s horizon — so **the asserted total of 60 is the
+> double-counted figure, not the truth.** **SEAT_PROTOCOL rule 16's fourth named
+> instance, in the module built to repair an aggregation.**
+>
+> **EXACTLY-ONCE MAY NOT BE COMPUTABLE AT ALL — an open question, not a pending
+> fix.** **The feed carries no tranche or fill identity**, so an exactly-once
+> fill total **may not be derivable from anything we hold**; it would need
+> tranche-level identity from `harmful_exposure_rows`. **BE is establishing
+> whether it is computable. If it is not, the quantity gets an honest rename
+> rather than a plausible number** — the reviewer's own proposal is
+> `sum_of_row_preventable_shares_WITH_OVERLAP`, carrying the 91.1% figure with it.
+> **The blocker is not a caveat that can be attached; it is that the quantity is
+> not the one claimed.**
+>
+> **THE SECOND HIGH — the empty-set trap one level in.** The ledger returns
+> **`$0.00` notional** on the 08-29 feed **because that feed predates the scale
+> fields** (added at BE round 28, `be_forward_metric.py:622-624`) — while **its
+> own counter reads `rows_no_level == rows_with_fill`: 80,929 of 80,929 on btc,
+> 11,348 of 11,348 on eth.** **The ledger computed the counter that says every
+> filled row lacked a level, did not consult it, and emitted `$0.00` beside a
+> non-zero markout. It refuses an empty FILE and not an empty FIELD.** I verified
+> the counter is incremented at `be_fill_ledger.py:102` **and asserted in the
+> module's own suite at `:208`** — **computed, tested, and unconsulted by the
+> emitter**: the zero-consumer shape *inside a single module*.
+>
+> **One observation that is mine, from putting the two artifacts side by side —
+> and I do not adjudicate it.** The **$617.95** btc markout the reviewer shows
+> beside that `$0.00` notional is **the same $617.95** BE's per-day table gives
+> for 08-29. **So 08-29 contributes to the NUMERATOR of the withdrawn 0.648%
+> ratio while contributing structurally nothing to its DENOMINATOR.** I have not
+> recomputed the totals; what I record is that **the two HIGHs are not
+> independent**, and that the withdrawn ratio has this shape *as well as* the
+> over-count.
+>
+> **THE STANDING RULE, NOW IN FORCE, AND IT WAS BOUGHT THREE TIMES OVER: NO
+> NUMBER REACHES THE USER BEFORE IT HAS BEEN REVIEWED.** **The evidence is this
+> session: the ranking result went through review and survived; both
+> profitability figures did not, and both were wrong.** It is the same lesson the
+> **publication provenance check** carries from the other side — that practice
+> attaches to **publication**, not to review rounds, because the released result
+> was never in a round. **Together they are one discipline with two halves: a
+> number must have a producer reachable from a committed entry point, AND it must
+> have been reviewed before a reader sees it.**
+>
+> **State:** register at **495 entries**, last **R-504**; **G = 3 of 5**
+> unchanged and **09-03 is still not a third economic read**; suites at the
+> reviewed tip, both launchers, rc 0 — `be_read_cells` **9**, `be_fill_ledger`
+> **12**, `da_arm_replay_verify` **26**. **USER items: TWO** — the Phase-2 winner,
+> and whether to predeclare a causal incumbent operating point or keep the
+> equal-count comparison permanently labelled a diagnostic.
 
 > ### 2026-09-04T10:23Z — MEM round 81: the ranking result survives, and "different path" is not why
 >
