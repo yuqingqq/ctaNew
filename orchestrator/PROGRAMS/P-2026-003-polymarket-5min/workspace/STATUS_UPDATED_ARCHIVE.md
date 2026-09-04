@@ -7467,3 +7467,59 @@ Nothing deleted — only moved.
   IS NOT DUPLICATED HERE. INSTRUMENT: 478 flags, 13 CHECKED, 8 RELAYED, 457
   UNMARKED, 0 findings.
 ```
+
+## Batch 104 — archived 2026-09-04T14:04Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 98 entered the field.
+Nothing deleted — only moved.
+
+```
+  2026-09-04T13:25Z (MEM ROUND 95 -- R-520 AND R-521 REVERSE PART OF WHAT I
+  RECORDED IN ROUNDS 93 AND 94, AND THE HEADLINE CHANGES SHAPE RATHER THAN SIGN.)
+  WHAT I DID NOT SAY AND SHOULD HAVE: THE "12 WINDOWS" ARE ONE CONTIGUOUS HOUR,
+  2026-08-24 13:50-14:50Z, NOT 12 INDEPENDENT REPLICATES -- and the baseline is a
+  TAIL PHENOMENON: the TOP 1% OF 4,315 FILLS CARRY 113% OF THE NET, so the other
+  99% SUM TO MINUS 13%, and hour 14 of two carries 88.2%. IT SURVIVES EVERY
+  LEAVE-ONE-OUT *AND* IT IS TAIL-CARRIED, AND BOTH HALVES TRAVEL OR NEITHER DOES:
+  robustness alone reads as breadth, concentration alone reads as fragility, and
+  the honest object is the pair. THE FILLS-LEG COST OF CANCELLING IS
+  INDISTINGUISHABLE FROM RANDOM (CONDVALUE -953.92c against -755.88c expected, sd
+  973.19, z -0.20, p 0.43; HAZARD -12.56c against -113.77c, z +0.26, p 0.60), with
+  DA's three limits riding with it and not detachable: POST-HOC ON SEEN DATA so a
+  DISPERSION statement not an adjudication, the 333 are SCORE-SELECTED, and it
+  rests on a counts-and-lookup subset property.
+  R-521 IS THE ONE THAT CHANGES THE READING, AND I RECOMPUTED ALL OF IT FROM THE
+  ARTIFACT GIVEN ONE RELAYED INPUT (1,440 lost fills). 333 CANCELS REMOVED 1,440
+  FILLS -- 4.3243 PER CANCEL, 33.372% OF A 4,315-FILL BOOK -- so cents_per_cancel
+  DIVIDED A WHOLE-BOOK DELTA BY THE WRONG POPULATION, and PER LOST FILL IT IS
+  -0.6624c AND NOT -2.8646c. ON THE CORRECTED DENOMINATOR THE RANKER IS GOOD:
+  removed fills carry 3.01x the average adverse selection at 0.832x the average
+  spread, HAZARD 3.81x at 0.76x -- CORRECT SELECTION ON BOTH AXES AT ONCE. IT
+  STILL LOSES AND THE REASON IS THE BOOK: adverse selection is only 18.626% of
+  gross spread capture and the average fill earns +1.99276c, so cancelling a
+  RANDOM fill costs 1.99c and cancelling one of THESE costs 0.66c -- THREE TIMES
+  BETTER THAN RANDOM AND STILL DECLINING PROFITABLE FILLS. RECORD THAT AS THE
+  MECHANISM: "the overlay destroys value" and "the overlay ranks well on a book
+  with too little adverse selection to harvest" ARE DIFFERENT FINDINGS AND ONLY
+  THE SECOND IS ACTIONABLE -- the first points at the model, the second points at
+  venue, spread regime and horizon.
+  THREE WITHDRAWALS, TWO OF WHICH REACHED THE USER: cents_per_cancel = -2.86 as
+  the economics of a cancellation; THE IDENTITY RESIDUALS AS EVIDENCE OF ANYTHING
+  (adverse is DEFINED as P&L - spread, so the identity is an ALGEBRAIC TAUTOLOGY
+  THAT CANNOT FAIL -- it cannot double-count and it CANNOT DETECT AN OMISSION
+  EITHER); and the printed predicate's PER-FILL ATTRIBUTION, because the code
+  computes a DIFFERENCE OF WHOLE-BOOK TOTALS BETWEEN TWO REPLAYS, which is
+  CLAUDE.md pitfall 4 arriving in the economics summary. That last one QUALIFIES
+  Q-DA-240 and is with DA. AND I CHECKED WHETHER THE SECOND WITHDRAWAL HITS MY
+  OWN ROUND-94 FLAG. IT DOES NOT, AND THE NEAR-MISS IS THE LESSON: the withdrawn
+  residual is identity_residual_cents (6.82e-12 in cancellation_economics), while
+  my flag rests on maker_pnl_reconciliation.difference_cents (-3.64e-12) between
+  reference_tranche_markout_cents and replay_received_markout_cents -- TWO
+  RESIDUALS OF THE SAME ORDER IN ONE ARTIFACT, ONE TAUTOLOGICAL AND ONE
+  EVIDENTIAL, AND NOTHING ABOUT THEIR SIZE DISTINGUISHES THEM. "The residual is
+  tiny, so the numbers agree" is not a safe inference; the question is always
+  WHETHER THE TWO SIDES COULD HAVE DISAGREED. WHAT STILL STANDS: the baseline's
+  FOUR independent reproductions, that MARKET-MAKING PAYS ON THIS HOUR, and that
+  THE RANKER SELECTS CORRECTLY ON BOTH AXES. INSTRUMENT: 484 flags, 16 CHECKED,
+  11 RELAYED, 457 UNMARKED, 0 findings.
+```

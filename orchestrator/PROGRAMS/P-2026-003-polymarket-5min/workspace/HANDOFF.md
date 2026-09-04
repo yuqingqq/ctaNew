@@ -1,6 +1,84 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T13:51Z (MEM round 97) — **STATE ONLY. The economics now live
+Updated: 2026-09-04T14:04Z (MEM round 98) — **A USER RULING, A MEASURED CEILING
+THAT REVERSES THE DAY'S DIRECTION OF TRAVEL, AND A CORRECTION TO WHAT I RECORDED
+AS THE FINDING OF THE DAY ONE ROUND AGO.**
+
+### 1. USER ruling — standing rule 15: the forward race is DIRECTIONAL, not significance-bearing
+
+**Every future statement of a race result says UP FRONT that it establishes
+DIRECTION AND CONSISTENCY, and never a Holm-clearing verdict.** G=5 stands; the
+recorded multiplicity of 2 stands and **is not made decorative**.
+
+**I checked the arithmetic:** the ceiling of a clustered permutation test is its
+**floor, 1/2^G**. At G=5 that is **0.03125**, so the best possible adjusted p at
+m=2 is **0.0625 — above 0.05**. **The bar was exactly one day short of what its
+own recorded multiplicity requires** (G=6 gives 0.03125 and clears). **The USER
+chose honesty about what five days of one-hour-scale data can support over
+extending the clock.**
+
+**I did not move the USER-item count.** Whether this discharges the G-counting
+item is the coordinator's call; it is flagged, not recounted.
+
+### 2. The ceiling is measured, and it reverses the direction of travel
+
+**V_oracle = 60,303.76c against a baseline net of 8,598.76c — 701% of the book**
+(recomputed here) — at `oracle_f` 0.4802, and **both arms capture a NEGATIVE
+fraction**: CONDVALUE **−1.58%**, HAZARD **−0.02%**.
+
+> **They are not far from the best possible. They are on the other side of zero
+> from it.** 48% of fills lose money and they total **seven times the book's whole
+> net**. **The lever is not exhausted** — the information is there in enormous
+> quantity and **neither ranker finds any of it.**
+
+**"The overlay does not pay" is not the finding. The finding is that the rankers
+do not work relative to what is available.**
+
+**Two of my own flags go with it.** `THE_MECHANISM_IS_THE_BOOK…` is **superseded**
+— it said the book has too little adverse selection to harvest, and the opposite
+is now measured. R-521's *"the ranker is actually GOOD"* is **qualified**: the
+per-lost-fill ratios still hold and **the summary does not**, because a ranker can
+pick above-average adverse and still pick **net-profitable** fills. **Both were
+mine, and both were the wrong statistic for the question.**
+
+### 3. The correction that lands hardest on me
+
+**My round-97 headline — *"no value ceiling has ever been computed in either
+programme"* — is FALSE AS STATED.** DA found **two counterexamples in
+P-2026-003's own code** with a **third** method: an AST pass for the **structural
+signature** of a ceiling over **189 files and 3,421 functions, with an as-of.**
+
+**The method was fine; the SURFACE was the defect** — `live/pm_research/` was
+never enumerated **and the claim was generalised to "either programme" anyway.**
+
+> **The citable form, and the only one to use: no ceiling in
+> `live/mm_research/`, none in the registers, and none anywhere for the
+> CANCELLATION-OVERLAY lever.** Never the broad one.
+
+**What survives is the part that mattered:** nothing bounded the cancellation
+lever, `markout_cents_per_share` made `V_oracle` a filter and a sum from
+2026-08-25, **and it was never run.**
+
+**This is my own standing rule 12 failing at a seam the rule did not name**, so I
+have **amended it and flagged the amendment to the coordinator rather than
+assuming it** (rule 12 is theirs): **the claim's scope may not exceed the surface
+actually enumerated.** An as-of, a root and filters are **necessary and not
+sufficient** — **a method can be sound while the sentence is still false, because
+the defect was the surface, not the search.**
+
+### 4. Priorities, recorded as state
+
+**BE's 138-cell `V_oracle` survey is the decision-bearing measurement** and
+everything else supports it. **DE holds the reusable `value_ceiling` /
+`ceiling_capture` functions so this can never again be the thing nobody ran.** DA
+verifies what lands. The reviewer enumerates the **other levers** where a bound is
+cheap and absent. **The economics remain in `workspace/RESULTS.md` §0 and these
+files still point rather than copy.**
+
+**Instrument:** 497 flags, **21 CHECKED**, 19 RELAYED, 457 UNMARKED, 0 findings.
+
+
+Previously (MEM round 97) — 2026-09-04T13:51Z — **STATE ONLY. The economics now live
 in `workspace/RESULTS.md` §0 — the coordinator's file — and these files point at
 it rather than duplicating it.**
 
@@ -833,6 +911,24 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### 2026-09-04T14:04Z — MEM round 98: the race is directional, the ceiling reverses the direction of travel, and my round-97 headline was false as stated
+>
+> **Full entry is the `Updated:` block at the top.** **STANDING RULE 15 (USER):
+> the forward race establishes DIRECTION AND CONSISTENCY, never a Holm-clearing
+> verdict — said FIRST, not after the number.** At G=5 with m=2 the best possible
+> adjusted p is **0.0625 > 0.05**; the bar was **exactly one day short** of its own
+> recorded multiplicity. **The ceiling is measured: `V_oracle` 60,303.76c against
+> a baseline net of 8,598.76c = 701% of the book, and BOTH ARMS CAPTURE A NEGATIVE
+> FRACTION.** They are not near the best possible — **they are on the other side of
+> zero from it.** **The lever is not exhausted; the rankers do not work relative to
+> what is available.** And **my round-97 "no ceiling in either programme" is FALSE
+> AS STATED** — citable form: **none in `live/mm_research/`, none in the registers,
+> none anywhere for the cancellation-overlay lever.** The defect was **the surface,
+> not the search**; rule 12 amended accordingly and flagged to the coordinator.
+>
+> ---
+
 
 > ### 2026-09-04T13:51Z — MEM round 97: state only; the economics live in RESULTS.md §0
 >

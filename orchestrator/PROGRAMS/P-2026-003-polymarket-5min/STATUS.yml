@@ -4,6 +4,60 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T14:04Z (MEM ROUND 98 -- A USER RULING, A MEASURED CEILING THAT
+  REVERSES THE DAY'S DIRECTION OF TRAVEL, AND A CORRECTION TO WHAT I RECORDED AS
+  THE FINDING OF THE DAY ONE ROUND AGO.)
+  (1) USER RULING, NOW STANDING RULE 15: THE FORWARD RACE IS DIRECTIONAL, NOT
+  SIGNIFICANCE-BEARING. Every future statement of a race result SAYS UP FRONT
+  that it establishes DIRECTION AND CONSISTENCY and NEVER a Holm-clearing
+  verdict. G=5 stands; the recorded multiplicity of 2 stands and is NOT made
+  decorative. I CHECKED THE ARITHMETIC: the ceiling of a clustered permutation
+  test is its FLOOR, 1/2^G; at G=5 that is 0.03125, so the best possible adjusted
+  p at m=2 is 0.0625, ABOVE 0.05 -- THE BAR WAS EXACTLY ONE DAY SHORT OF WHAT ITS
+  OWN RECORDED MULTIPLICITY REQUIRES (G=6 gives 0.03125 and clears). The USER
+  chose honesty over extending the clock. I DID NOT MOVE THE USER-ITEM COUNT:
+  whether this discharges the G-counting item is the coordinator's call and is
+  flagged, not recounted.
+  (2) THE CEILING IS MEASURED AND IT REVERSES THE DIRECTION OF TRAVEL.
+  V_oracle = 60,303.76c against a baseline net of 8,598.76c -- 701% OF THE BOOK,
+  which I recomputed -- at oracle_f 0.4802, and BOTH ARMS CAPTURE A NEGATIVE
+  FRACTION (CONDVALUE -1.58%, HAZARD -0.02%). THEY ARE NOT NEAR THE BEST
+  POSSIBLE; THEY ARE ON THE OTHER SIDE OF ZERO FROM IT. 48% of fills lose money
+  and total SEVEN TIMES the book's whole net. THE LEVER IS NOT EXHAUSTED: the
+  information is present in enormous quantity and NEITHER RANKER FINDS ANY OF IT.
+  "THE OVERLAY DOES NOT PAY" IS NOT THE FINDING; THE FINDING IS THAT THE RANKERS
+  DO NOT WORK RELATIVE TO WHAT IS AVAILABLE. TWO OF MY OWN FLAGS GO WITH IT:
+  THE_MECHANISM_IS_THE_BOOK is SUPERSEDED -- it said the book has too little
+  adverse selection to harvest, and the opposite is measured -- and R521's
+  "the ranker is actually GOOD" is QUALIFIED: the per-lost-fill ratios still hold
+  and the SUMMARY does not, because a ranker can pick above-average adverse and
+  still pick net-profitable fills. Both were mine, both were the wrong statistic
+  for the question.
+  (3) AND THE CORRECTION THAT LANDS ON ME HARDEST: MY ROUND-97 HEADLINE,
+  "no value ceiling has ever been computed in EITHER PROGRAMME", IS FALSE AS
+  STATED. DA found TWO COUNTEREXAMPLES IN P-2026-003's OWN CODE with a THIRD
+  method -- an AST pass for the STRUCTURAL SIGNATURE of a ceiling over 189 files
+  and 3,421 functions, WITH AN AS-OF. THE METHOD WAS FINE; THE SURFACE WAS THE
+  DEFECT: live/pm_research/ WAS NEVER ENUMERATED and the claim was generalised to
+  "either programme" anyway. THE CITABLE FORM, AND THE ONLY ONE TO USE: NO
+  CEILING IN live/mm_research/, NONE IN THE REGISTERS, AND NONE ANYWHERE FOR THE
+  CANCELLATION-OVERLAY LEVER. NEVER THE BROAD ONE. What survives is the part that
+  mattered: nothing bounded the cancellation lever, markout_cents_per_share made
+  V_oracle a filter and a sum from 2026-08-25, and it was never run. THIS IS MY
+  OWN STANDING RULE 12 FAILING AT A SEAM THE RULE DID NOT NAME, so I have
+  AMENDED IT AND FLAGGED THE AMENDMENT TO THE COORDINATOR RATHER THAN ASSUMING
+  IT: THE CLAIM'S SCOPE MAY NOT EXCEED THE SURFACE ACTUALLY ENUMERATED -- an
+  as-of, a root and filters are NECESSARY AND NOT SUFFICIENT, and A METHOD CAN BE
+  SOUND WHILE THE SENTENCE IS STILL FALSE, because the defect was THE SURFACE and
+  not the search.
+  (4) PRIORITIES RECORDED AS STATE: BE's 138-CELL V_oracle SURVEY IS THE
+  DECISION-BEARING MEASUREMENT and everything else supports it; DE holds the
+  reusable value_ceiling / ceiling_capture functions SO THIS CAN NEVER AGAIN BE
+  THE THING NOBODY RAN; DA verifies what lands; the reviewer enumerates the OTHER
+  levers where a bound is cheap and absent. THE ECONOMICS REMAIN IN
+  workspace/RESULTS.md SECTION 0 AND THESE FILES STILL POINT RATHER THAN COPY.
+  INSTRUMENT: 497 flags, 21 CHECKED, 19 RELAYED, 457 UNMARKED, 0 findings.
+  PRIOR:
   2026-09-04T13:51Z (MEM ROUND 97 -- STATE ONLY. THE ECONOMICS NOW LIVE IN
   workspace/RESULTS.md SECTION 0, WHICH IS THE COORDINATOR'S, AND THESE FILES
   POINT AT IT RATHER THAN DUPLICATING IT.) THE FINDING OF THE DAY IS NOT A
@@ -110,55 +164,6 @@ updated: >-
   compared against origin/mm-research, which had moved under me, and briefly read
   a contradiction that was not there. "AT THE TIP" IS NOT A PIN. INSTRUMENT: 490
   flags, 20 CHECKED, 13 RELAYED, 457 UNMARKED, 0 findings.
-  PRIOR:
-  2026-09-04T13:25Z (MEM ROUND 95 -- R-520 AND R-521 REVERSE PART OF WHAT I
-  RECORDED IN ROUNDS 93 AND 94, AND THE HEADLINE CHANGES SHAPE RATHER THAN SIGN.)
-  WHAT I DID NOT SAY AND SHOULD HAVE: THE "12 WINDOWS" ARE ONE CONTIGUOUS HOUR,
-  2026-08-24 13:50-14:50Z, NOT 12 INDEPENDENT REPLICATES -- and the baseline is a
-  TAIL PHENOMENON: the TOP 1% OF 4,315 FILLS CARRY 113% OF THE NET, so the other
-  99% SUM TO MINUS 13%, and hour 14 of two carries 88.2%. IT SURVIVES EVERY
-  LEAVE-ONE-OUT *AND* IT IS TAIL-CARRIED, AND BOTH HALVES TRAVEL OR NEITHER DOES:
-  robustness alone reads as breadth, concentration alone reads as fragility, and
-  the honest object is the pair. THE FILLS-LEG COST OF CANCELLING IS
-  INDISTINGUISHABLE FROM RANDOM (CONDVALUE -953.92c against -755.88c expected, sd
-  973.19, z -0.20, p 0.43; HAZARD -12.56c against -113.77c, z +0.26, p 0.60), with
-  DA's three limits riding with it and not detachable: POST-HOC ON SEEN DATA so a
-  DISPERSION statement not an adjudication, the 333 are SCORE-SELECTED, and it
-  rests on a counts-and-lookup subset property.
-  R-521 IS THE ONE THAT CHANGES THE READING, AND I RECOMPUTED ALL OF IT FROM THE
-  ARTIFACT GIVEN ONE RELAYED INPUT (1,440 lost fills). 333 CANCELS REMOVED 1,440
-  FILLS -- 4.3243 PER CANCEL, 33.372% OF A 4,315-FILL BOOK -- so cents_per_cancel
-  DIVIDED A WHOLE-BOOK DELTA BY THE WRONG POPULATION, and PER LOST FILL IT IS
-  -0.6624c AND NOT -2.8646c. ON THE CORRECTED DENOMINATOR THE RANKER IS GOOD:
-  removed fills carry 3.01x the average adverse selection at 0.832x the average
-  spread, HAZARD 3.81x at 0.76x -- CORRECT SELECTION ON BOTH AXES AT ONCE. IT
-  STILL LOSES AND THE REASON IS THE BOOK: adverse selection is only 18.626% of
-  gross spread capture and the average fill earns +1.99276c, so cancelling a
-  RANDOM fill costs 1.99c and cancelling one of THESE costs 0.66c -- THREE TIMES
-  BETTER THAN RANDOM AND STILL DECLINING PROFITABLE FILLS. RECORD THAT AS THE
-  MECHANISM: "the overlay destroys value" and "the overlay ranks well on a book
-  with too little adverse selection to harvest" ARE DIFFERENT FINDINGS AND ONLY
-  THE SECOND IS ACTIONABLE -- the first points at the model, the second points at
-  venue, spread regime and horizon.
-  THREE WITHDRAWALS, TWO OF WHICH REACHED THE USER: cents_per_cancel = -2.86 as
-  the economics of a cancellation; THE IDENTITY RESIDUALS AS EVIDENCE OF ANYTHING
-  (adverse is DEFINED as P&L - spread, so the identity is an ALGEBRAIC TAUTOLOGY
-  THAT CANNOT FAIL -- it cannot double-count and it CANNOT DETECT AN OMISSION
-  EITHER); and the printed predicate's PER-FILL ATTRIBUTION, because the code
-  computes a DIFFERENCE OF WHOLE-BOOK TOTALS BETWEEN TWO REPLAYS, which is
-  CLAUDE.md pitfall 4 arriving in the economics summary. That last one QUALIFIES
-  Q-DA-240 and is with DA. AND I CHECKED WHETHER THE SECOND WITHDRAWAL HITS MY
-  OWN ROUND-94 FLAG. IT DOES NOT, AND THE NEAR-MISS IS THE LESSON: the withdrawn
-  residual is identity_residual_cents (6.82e-12 in cancellation_economics), while
-  my flag rests on maker_pnl_reconciliation.difference_cents (-3.64e-12) between
-  reference_tranche_markout_cents and replay_received_markout_cents -- TWO
-  RESIDUALS OF THE SAME ORDER IN ONE ARTIFACT, ONE TAUTOLOGICAL AND ONE
-  EVIDENTIAL, AND NOTHING ABOUT THEIR SIZE DISTINGUISHES THEM. "The residual is
-  tiny, so the numbers agree" is not a safe inference; the question is always
-  WHETHER THE TWO SIDES COULD HAVE DISAGREED. WHAT STILL STANDS: the baseline's
-  FOUR independent reproductions, that MARKET-MAKING PAYS ON THIS HOUR, and that
-  THE RANKER SELECTS CORRECTLY ON BOTH AXES. INSTRUMENT: 484 flags, 16 CHECKED,
-  11 RELAYED, 457 UNMARKED, 0 findings.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -6543,6 +6548,15 @@ flags:
     flag below, not instead of it: this says the fills-leg COST is not separable
     from chance at this size, while R-521 says the RANKING is.
   R521_THE_DENOMINATOR_WAS_WRONG_and_the_ranker_is_actually_GOOD: >-
+    QUALIFIED 2026-09-04T14:03Z (round 98) -- THE ARITHMETIC STANDS AND THE
+    SUMMARY "THE RANKER IS GOOD" DOES NOT. TEXT KEPT AS PROVENANCE. The
+    per-lost-fill selection ratios are unchanged, and BOTH ARMS CAPTURE A
+    NEGATIVE FRACTION OF THE CEILING (CONDVALUE -1.58%, HAZARD -0.02%). Those
+    are consistent -- a ranker can pick fills with above-average adverse and
+    still pick NET-PROFITABLE ones -- and together they say the ratios were
+    measuring the wrong thing. THEY ARE NOT NEAR THE BEST POSSIBLE; THEY ARE
+    ON THE OTHER SIDE OF ZERO FROM IT. Authority: R-529(B). ORIGINAL TEXT
+    FOLLOWS.
     CHECKED BY ME: every figure below is recomputed from the committed artifact
     given ONE RELAYED INPUT (1,440 lost fills, from R-521). 333 CANCELS REMOVED
     1,440 FILLS -- 4.3243 PER CANCEL, 33.372% OF A 4,315-FILL BOOK. So
@@ -6554,6 +6568,17 @@ flags:
     SELECTION ON BOTH AXES AT ONCE. WITHDRAWN: cents_per_cancel = -2.86 as "the
     economics of a cancellation".
   THE_MECHANISM_IS_THE_BOOK_not_the_overlay_and_only_one_of_those_is_actionable: >-
+    SUPERSEDED 2026-09-04T14:03Z (round 98) -- REVERSED BY THE MEASURED
+    CEILING, IN ITS MAIN CLAIM. TEXT KEPT AS PROVENANCE. This flag said the
+    book has TOO LITTLE ADVERSE SELECTION TO HARVEST and that the ranker is
+    the good half. THE CEILING SAYS THE OPPOSITE ON BOTH COUNTS: V_oracle is
+    60,303.76c against a baseline net of 8,598.76c -- 701% OF THE BOOK, which
+    I recomputed -- at oracle_f 0.4802, so 48% OF FILLS LOSE MONEY AND THEY
+    TOTAL SEVEN TIMES THE BOOK'S WHOLE NET. THE INFORMATION IS THERE IN
+    ENORMOUS QUANTITY. THE LEVER IS NOT EXHAUSTED. The 18.626% adverse-share
+    arithmetic below remains correct and was the WRONG STATISTIC for the
+    question. Authority: R-529(B) and workspace/RESULTS.md section 0. ORIGINAL
+    TEXT FOLLOWS.
     CHECKED BY ME AT THE ARTIFACT, and it is the finding to carry. IT STILL LOSES,
     AND THE REASON IS THE BOOK, NOT THE RANKER: adverse selection is only 18.626%
     of gross spread capture (1968.1921815 / 10566.951031), and the average fill
@@ -6716,6 +6741,21 @@ flags:
     line number or a branch head.
 
   NO_VALUE_CEILING_HAS_EVER_BEEN_COMPUTED_IN_EITHER_PROGRAMME: >-
+    SUPERSEDED 2026-09-04T14:03Z (round 98) -- FALSE AS STATED, AND I RECORDED
+    IT AS THE FINDING OF THE DAY ONE ROUND AGO. TEXT KEPT AS PROVENANCE.
+    DA FOUND TWO COUNTEREXAMPLES IN P-2026-003's OWN CODE by searching a THIRD
+    way -- an AST pass for the STRUCTURAL SIGNATURE of a ceiling, over 189
+    files and 3,421 functions, WITH AN AS-OF. THE METHOD WAS FINE; THE SURFACE
+    WAS THE DEFECT: live/pm_research/ WAS NEVER ENUMERATED and the claim was
+    GENERALISED TO "EITHER PROGRAMME" ANYWAY. THE CITABLE FORM, AND THE ONLY
+    ONE TO USE: no ceiling in live/mm_research/, none in the registers, and
+    NONE ANYWHERE FOR THE CANCELLATION-OVERLAY LEVER. NEVER THE BROAD ONE.
+    THE PART THAT SURVIVES INTACT IS THE PART THAT MATTERED: nothing bounded
+    the cancellation lever, markout_cents_per_share made V_oracle a filter and
+    a sum from 2026-08-25, and it was never run. THIS IS MY OWN STANDING RULE
+    12 FAILING AT A SEAM THE RULE DID NOT NAME -- see the amendment recorded
+    with it. Authority: R-529(C) and workspace/RESULTS.md section 0. ORIGINAL
+    TEXT FOLLOWS.
     RELAYED FROM R-528, AND IT IS THE FINDING OF THE DAY. Searched across
     live/pm_research (entire) and live/mm_research (ALL 11 FILES), both registers
     and both RESULTS.md, on the full vocabulary (oracle, perfect foresight, upper
@@ -6775,8 +6815,44 @@ flags:
     provenance-defect flag (RESOLVED -- re-emitted clean, 26 of 26 quantities
     bit-identical, the defect was the record and not the result).
 
+  USER_RULING_THE_FORWARD_RACE_IS_DIRECTIONAL_NOT_SIGNIFICANCE_BEARING: >-
+    RELAYED FROM R-529(A); THE ARITHMETIC IS RECOMPUTED BY ME. THE USER RULES
+    THAT THE FORWARD RACE ESTABLISHES DIRECTION AND CONSISTENCY AND NEVER A
+    HOLM-CLEARING VERDICT. G=5 STANDS. THE RECORDED MULTIPLICITY OF 2 STANDS AND
+    IS NOT MADE DECORATIVE. THE REASON, WHICH I CHECKED: the ceiling of a
+    clustered permutation test is its floor, 1/2^G, so at G=5 the floor is
+    0.03125 and the best possible adjusted p at m=2 is 0.0625, WHICH IS ABOVE
+    0.05 -- THE BAR WAS EXACTLY ONE DAY SHORT OF WHAT ITS OWN RECORDED
+    MULTIPLICITY REQUIRES (G=6 gives 0.03125, which clears). THE USER CHOSE
+    HONESTY ABOUT WHAT FIVE DAYS OF ONE-HOUR-SCALE DATA CAN SUPPORT OVER
+    EXTENDING THE CLOCK. Now standing rule 15. NOT DECIDED HERE AND FLAGGED TO
+    THE COORDINATOR RATHER THAN RECOUNTED: whether this discharges the
+    G-COUNTING item from the three open USER items is the coordinator's call, not
+    mine -- I do not move that count on my own reading.
+  THE_CEILING_IS_MEASURED_AND_BOTH_ARMS_CAPTURE_A_NEGATIVE_FRACTION: >-
+    RELAYED FROM R-529(B); THE 701% IS RECOMPUTED BY ME (60,303.76 / 8,598.7588 =
+    7.0131). V_oracle = 60,303.76c AGAINST A BASELINE NET OF 8,598.76c AT
+    oracle_f 0.4802, AND BOTH ARMS CAPTURE A NEGATIVE FRACTION -- CONDVALUE
+    -1.58%, HAZARD -0.02%. THEY ARE NOT FAR FROM THE BEST POSSIBLE; THEY ARE ON
+    THE OTHER SIDE OF ZERO FROM IT. 48% of fills lose money and they total SEVEN
+    TIMES the book's whole net. THIS REVERSES THE DAY'S DIRECTION OF TRAVEL: THE
+    LEVER IS NOT EXHAUSTED, the information is present in enormous quantity, and
+    NEITHER RANKER FINDS ANY OF IT. STOP TREATING "THE OVERLAY DOES NOT PAY" AS
+    THE FINDING -- THE FINDING IS THAT THE RANKERS DO NOT WORK RELATIVE TO WHAT
+    IS AVAILABLE. Numbers and caveats: workspace/RESULTS.md section 0. NOTE FOR A
+    LATER READER: this is ONE HOUR, one coin, development evidence -- the ceiling
+    being large HERE is not yet the survey, which is BE's 138 cells.
+  STANDING_PRIORITIES_the_V_oracle_survey_is_the_decision_bearing_measurement: >-
+    RELAYED FROM R-529(4). BE's 138-CELL V_oracle SURVEY IS THE DECISION-BEARING
+    MEASUREMENT AND EVERYTHING ELSE SUPPORTS IT. DE holds the reusable
+    value_ceiling / ceiling_capture functions SO THIS CAN NEVER AGAIN BE THE
+    THING NOBODY RAN -- which is the durable half of R-528's finding surviving its
+    own correction. DA verifies what lands. The reviewer is enumerating the OTHER
+    levers where a bound is cheap and absent. RECORDED AS STATE SO A LATER ROUND
+    DOES NOT RE-DERIVE THE PRIORITY ORDER FROM THE NEWEST ENTRY.
+
 focus: >
-  As-of 2026-09-04T13:51Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T14:04Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -7265,6 +7341,17 @@ focus: >
   cascade-lever flag (cheap fills first, few fills second), and the
   provenance-defect flag (RESOLVED, 26 of 26 quantities bit-identical). The
   inventory reversal is NOT BANKABLE.
+  ROUND 98 -- THREE THINGS CHANGE THE FRAME. (i) USER RULING, STANDING RULE 15:
+  THE FORWARD RACE IS DIRECTIONAL, NOT SIGNIFICANCE-BEARING -- say it FIRST, never
+  after the number. At G=5 with m=2 the best possible adjusted p is 0.0625 > 0.05,
+  the bar being exactly one day short of its own recorded multiplicity. (ii) THE
+  CEILING IS MEASURED AND REVERSES THE DIRECTION OF TRAVEL: V_oracle 60,303.76c
+  against a baseline net of 8,598.76c = 701% OF THE BOOK, and BOTH ARMS CAPTURE A
+  NEGATIVE FRACTION. THE LEVER IS NOT EXHAUSTED -- the rankers do not work
+  relative to what is available. (iii) "No value ceiling in EITHER programme" IS
+  FALSE AS STATED; the citable form is NO CEILING IN live/mm_research/, NONE IN
+  THE REGISTERS, AND NONE ANYWHERE FOR THE CANCELLATION-OVERLAY LEVER. BE's
+  138-cell V_oracle survey is the decision-bearing measurement.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,
@@ -7545,8 +7632,27 @@ flag_provenance:
       specification, and the statistic that replaced it" (92) and "The finding to
       carry out of today, ahead of any number in it" (115); it states it
       SUPERSEDES section 1 wherever they disagree
+  USER_RULING_THE_FORWARD_RACE_IS_DIRECTIONAL_NOT_SIGNIFICANCE_BEARING:
+    prov: RELAYED
+    from: R-529(A) (USER ruling; MEM recomputed only the 1/2^5 x 2 = 0.0625 arithmetic)
+  THE_CEILING_IS_MEASURED_AND_BOTH_ARMS_CAPTURE_A_NEGATIVE_FRACTION:
+    prov: RELAYED
+    from: R-529(B) (BE's measurement; MEM recomputed only 60303.76/8598.7588 = 7.0131)
+  STANDING_PRIORITIES_the_V_oracle_survey_is_the_decision_bearing_measurement:
+    prov: RELAYED
+    from: R-529(4) (coordinator's dispatch to all seats)
 
 standing_rules:
+  - "STANDING RULE 15 (USER ruling, R-529(A)) -- EVERY STATEMENT OF A FORWARD-RACE
+    RESULT SAYS UP FRONT THAT IT ESTABLISHES DIRECTION AND CONSISTENCY, AND NEVER
+    A HOLM-CLEARING VERDICT. G=5 stands and the recorded multiplicity of 2 stands
+    and is NOT made decorative. The reason is arithmetic and was verified: THE
+    CEILING OF A CLUSTERED PERMUTATION TEST IS ITS FLOOR, 1/2^G -- at G=5 that is
+    0.03125, so the best possible adjusted p at m=2 is 0.0625, ABOVE 0.05. The
+    bar was EXACTLY ONE DAY SHORT of what its own recorded multiplicity requires,
+    and the USER chose honesty about what five days of one-hour-scale data can
+    support over extending the clock. A caveat placed after the number is not
+    this rule; it goes FIRST."
   - "STANDING RULE 14 (MEM, from checking R-523's provenance claim; the twin of
     rule 12) -- A CLAIM ABOUT A MOVING REFERENCE CARRIES THE REVISION IT WAS TRUE
     AT, OR IT IS NOT A CLAIM. Rule 12 covers negative existence; this covers any
@@ -7569,7 +7675,17 @@ standing_rules:
     it is that `nothing matched` is a statement about a SEARCH -- its root, its
     filters and its instant -- and it is written down as a statement about the
     WORLD. So a negative existence claim names WHERE it looked, WHAT it
-    excluded, and WHEN, or it is not admissible."
+    excluded, and WHEN, or it is not admissible.
+    AMENDMENT 2026-09-04T14:03Z (MEM, from R-529(C); RULE 12 IS THE
+    COORDINATOR'S AND THIS AMENDMENT IS FLAGGED TO THEM RATHER THAN ASSUMED) --
+    THE CLAIM'S SCOPE MAY NOT EXCEED THE SURFACE ACTUALLY ENUMERATED. R-528
+    searched a real surface with a real vocabulary and a real shape test, and
+    then stated its conclusion over BOTH PROGRAMMES when only one had been
+    enumerated: live/pm_research/ was never walked, and DA found two
+    counterexamples inside it with a third method. So the as-of, the root and
+    the filters are NECESSARY AND NOT SUFFICIENT -- the sentence must not
+    generalise past them. A METHOD CAN BE SOUND AND THE SENTENCE STILL FALSE,
+    because the defect was THE SURFACE, not the search."
   - "STANDING RULE 13 (R-517, USER-facing practice, coordinator ruling) --
     A RESULT-BEARING ARTIFACT THAT A RECEIPT OR REGISTER ENTRY CITES IS
     COMMITTED, with `git add -f` where needed, BESIDE ITS PRODUCING CODE IN THE
