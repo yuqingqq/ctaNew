@@ -1,0 +1,27 @@
+{
+ "protocol": "BE_R_SURVEY_DECLARATION_V1",
+ "declared_before_any_measurement": true,
+ "quantity": "r = adverse / spread, per coin-hour, over the reference's kept tranches at zero cancels",
+ "why_it_needs_no_replay": "at zero cancels the baseline's fills ARE the reference's kept tranches, so r is a property of the BASELINE and not of any arm: no policy, no replay, no arm, no threshold",
+ "thresholds_being_tested": {
+  "CONDVALUE_break_even_r": 0.2760,
+  "HAZARD_break_even_r": 0.1988,
+  "measured_single_hour_r": 0.1863,
+  "source": "R-523(A), derived not fitted"
+ },
+ "WHAT_COUNTS_AS_REACHING_THE_THRESHOLD_declared_now": {
+  "primary": "the fraction of admissible coin-hours whose TAIL-EXCLUDED r is at or above each threshold",
+  "why_tail_excluded_is_primary": "r is a ratio of sums and inherits exactly the tail sensitivity that made the single-hour 18.63% misleading; a survey reporting only raw r reproduces the artefact it exists to escape",
+  "reaches_HAZARD": "at least 25% of admissible coin-hours with tail-excluded r >= 0.1988",
+  "reaches_CONDVALUE": "at least 25% of admissible coin-hours with tail-excluded r >= 0.2760",
+  "closes_the_overlay_programme": "fewer than 5% of coin-hours at or above 0.1988 on tail-excluded r, AND the 90th percentile below it — a distribution that never approaches the lower threshold",
+  "indeterminate": "anything between; reported as indeterminate rather than argued either way",
+  "dispersion_reported": ["p10", "p25", "median", "p75", "p90", "IQR", "n_cells"],
+  "why_25_percent": "a quarter of coin-hours is the weakest claim that could support 'this book sometimes clears the bar'; it is set now, before any histogram exists, and is not adjusted afterwards"
+ },
+ "reported_per_cell": ["r_raw", "r_tail_excluded", "tail_share_of_spread", "tail_share_of_adverse", "n_fills", "spread_cents", "adverse_cents"],
+ "tail_definition": "top 1% of fills by absolute contribution, matching the fill-level decomposition R-523(B) used",
+ "the_measured_hour_is_one_cell": "2026-08-24 13:50-14:50Z btc appears as ONE CELL among the others and is NOT a reference point the others are compared against. If it is an outlier that is the finding.",
+ "memory_ceiling": "10G, not raised (R-174)",
+ "touches_nothing_sealed": "09-01 and 09-02 are consumed economic reads and 09-03 is accrued and unopened; none is read"
+}
