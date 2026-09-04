@@ -6194,3 +6194,99 @@ commit.
   coverage-absent repair closes the missing-status defect and does not touch this
   audit. USER ITEMS: ONE -- the Phase-2 winner, and the race decides it.
 ```
+
+## Batch 90 — archived 2026-09-04T10:53Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-84 true-up of R-505. Join rule as in batch 1.
+
+```yaml
+  2026-09-04T10:23Z (MEM ROUND 81 -- THE RANKING RESULT SURVIVES, AND "DIFFERENT
+  PATH" IS NOT WHY). R-503 and R-504 swept; nothing run but read-only reads and
+  TWO read-only computations of my own. THE ITEM THAT MATTERS MOST, AND IT IS A
+  CONDITION OF THE RESULT RATHER THAN A FOOTNOTE: THE SIGN IS NOT INVARIANT UNDER
+  THE AGGREGATION RULE. The reviewer tested the ranking against FOUR aggregation
+  rules on the 08-29 two-arm feed (537,881 btc rows, 299,386 actions): the SHIPPED
+  first-crossing gives -666.38 / -601.16 / -1,198.67; variant A, SUMMING EVERY ROW
+  FROM THE CROSSING ONWARD -- which is the natural reading of "a cancellation
+  prevents everything that happens after it acts" -- gives +406.20 / +1,210.89 /
+  +681.29, THE SIGN FLIPS POSITIVE AT ALL THREE BUDGETS; variant B (all rows in
+  the gen) -1,261.32 / -702.49 / -1,485.29; variant C (prof.py's first-in-file)
+  -1,043.79 / -463.64 / -1,734.38. IF VARIANT A WERE A LEGITIMATE ESTIMAND THE
+  RANKING RESULT WOULD FALL. WHAT SETTLES IT IS A MEASUREMENT AND NOT A
+  PREFERENCE: A ROW IS NOT A FILL -- harmful_exposure_rows.py:363-370 already sums
+  EVERY TRANCHE INSIDE THAT ROW'S OWN ONE-SECOND HORIZON at or after the 50 ms
+  cut, so multiple rows per action are OVERLAPPING DECISION-TIME SNAPSHOTS OF THE
+  SAME EXPOSURE. Measured on the real feed: 1.797 rows/action, 26.9% of actions
+  carry more than one row, consecutive-row spacing within an action MEDIAN 0.170 s
+  and p75 0.414 s, and 217,267 OF 238,495 PAIRS (91.1%) ARE CLOSER TOGETHER THAN
+  THE 1.0 s HORIZON THEY EACH SUM OVER. SO VARIANTS A AND B ADD THE SAME TRANCHES
+  TWO OR MORE TIMES: THE POSITIVE SIGN UNDER A IS A DOUBLE-COUNT, NOT A RIVAL
+  READING. OF THE FOUR RULES EXACTLY ONE COUNTS EACH PREVENTED FILL ONCE, AND IT
+  IS THE ONE SHIPPED -- a cancellation acts ONCE, at the crossing, and the row at
+  that instant already aggregates its own horizon. AND VARIANT C PRESERVES THE
+  SIGN ONLY BY LUCK: it takes the first row by t_start REGARDLESS OF SCORE, i.e. a
+  DIFFERENT DECISION POINT from the one at which the arm actually crossed. THIS
+  JUSTIFICATION IS NOW PUBLISHED WITH THE RESULT IN BOTH FILES, BECAUSE A READER
+  WHO RE-DERIVES PREVENTED VALUE THE INTUITIVE WAY GETS THE OPPOSITE SIGN. ONE
+  COLUMN IS CONTAMINATED AFTER ALL AND IT IS NOT AMONG THE NINE VALUES:
+  baseline_$ COMES FROM prof.py's WITHDRAWN FIRST-ROW `seen` DICT, AND SO DOES
+  EVERY PERCENTAGE COMPUTED AGAINST IT; the cand_$ / inc@theta_$ / inc_match_$
+  columns do not. BE IS REPAIRING OR REMOVING IT, AND NO ECONOMIC FIGURE IS
+  REPUBLISHED -- the new be_fill_ledger's dollar outputs are WITHHELD PENDING
+  REVIEW, and its FIXTURE IS THE DEFECT ITSELF (one action, three rows, first-row
+  sees 10 shares where the truth is 60). THE STANDING PRACTICE NOW IN FORCE, AND
+  I RAN IT MYSELF RATHER THAN QUOTING ITS RESULT: THE PUBLICATION PROVENANCE
+  CHECK -- before any number reaches the USER, NAME THE PRODUCER, CENSUS ITS
+  COMMITTED CALL AND BARE-REFERENCE SITES WITH AT LEAST ONE REACHABLE FROM A
+  COMMITTED ENTRY POINT, AND CONFIRM THE PRODUCING PATH IS INSIDE THE REPO. ONE
+  AST PASS, SECONDS. AND ITS ANSWER HAS ALREADY CHANGED, WHICH IS WHY I RAN IT:
+  R-504 (F) records "matched_volume: 0 sites", and MY OWN AST CENSUS AT 10:23Z
+  RETURNS ONE CALL SITE at be_read_cells.py:313 INSIDE compute(), two bare
+  references at :488-:489 in the selftest, with compute() called by emit() and the
+  module carrying a __main__ -- SO THE PRACTICE'S REQUIREMENT IS NOW MET WHERE IT
+  WAS NOT. BE ROUND 31 IS WHAT CHANGED IT, and I verified the rest of that repair
+  too: compute() at :280 emits MATCHED_VOLUME beside the others, emit() at :400
+  writes the durable document, be_read_cells HAD NO SELFTEST AT ALL and now has
+  EXPECTED_CHECKS = 9 including one ASSERTED OVER THE SOURCE at :448 that
+  compute() calls matched_volume, with its known-bad at :454 -- THE CHECK WHOSE
+  ABSENCE LET A DEFINED-BUT-UNCALLED PRIMARY REACH A PUBLISHED HEADLINE. prof.py
+  is still absent from the repository; be_fill_ledger.py is present. THE
+  REVIEWER'S DIAGNOSIS OF WHY IT WAS MISSED IS THE USEFUL HALF AND IT BELONGS
+  WITH THE PRACTICE: ALL SIX ZERO-CONSUMER FINDINGS SURFACED BECAUSE A ROUND WAS
+  DISPATCHED, AND THE RELEASED RESULT WAS NEVER IN A ROUND -- SO THE PRACTICE
+  ATTACHES TO PUBLICATION, NOT TO REVIEW ROUNDS. That is also the honest account
+  of my own miss: I swept the number in round 78 and no round was ever dispatched
+  against it. DA'S INDEPENDENT VERIFIER IS BUILT AND ALREADY EARNING:
+  da_arm_replay_verify.py (33,306 B) IMPORTS NOTHING FROM THE PRODUCER and parses
+  its field enumeration with `ast` rather than importing it, because A CHECKER
+  THAT SHARES AN EXPRESSION WITH THE CHECKED AGREES BY CONSTRUCTION (R-235); I
+  confirmed at the imports that it pulls only argparse/hashlib/json/re/sys/pathlib
+  plus pm_tape_density. ITS DEFAULT IS NOT "REAL": an arm that declares nothing
+  reads UNVERIFIABLE_NO_EVIDENCE_EITHER_WAY (:182), never a pass. On the real
+  artifact it CONFIRMS THE STUB FROM INDEPENDENT EVIDENCE (7 arms, 1 distinct
+  predictor "none") and files two findings: ALL NINE GATES REPORT FAILURES WITH NO
+  DENOMINATOR, so all_gates_pass CANNOT DISTINGUISH "0 FAILING" FROM "0 CHECKED"
+  (the predicate is at :248-:274, n_gates_without_denominator), and the population
+  carries NO DIGEST so what an arm consumed is UNVERIFIABLE; and in its section
+  8.1 audit, all 13 fields are present with a source XOR a reason and no two
+  sharing a source, but ALL SEVEN COUNTERS LACK A COMPANION EVALUATED-FLAG, SO A
+  ZERO FROM A PATH THAT NEVER RAN IS INDISTINGUISHABLE FROM A COUNTED ZERO. THE
+  SECTION 8.1 STATE, AND I DROVE arm_runnability() RATHER THAN READING ITS COUNT,
+  BECAUSE THE COUNT HAD ALREADY MOVED: R-504 (H) records 3 OF 7 RUNNABLE and MY
+  OWN RUN AT 10:23:11Z RETURNS 4 OF 7 -- RUNNABLE are QR_SKEW_ONLY,
+  QR_CANCEL_HOLD_X_SKEW, CONDVALUE_X_SKEW and RANDOM_MATCHED; BLOCKED are
+  HAZARD_ONLY_NEUTRAL and CONDVALUE_NEUTRAL on neutral_placement ABSENT, and
+  CONDVALUE_X_SKEW_X_FAIRPRICE on fairprice_challenger ABSENT. Arm 7's blocker was
+  STALE and it is the matched-random floor; arm 5 is unblocked by the section 2.2
+  ruling that SKEW IS A POLICY INPUT AND NOT A PREDICTOR FEATURE, which the plan
+  forbids. AND THE TWO DIRECTION-CHANGE WORKSTREAMS ARE ONE THING, WHICH THE
+  DEPENDENCY MAKES PLAIN: ARM 6'S BLOCKER IS fairprice_challenger -- EXACTLY WHAT
+  BE IS NOW BUILDING UNDER SECTION 4.2 -- so BE's challengers are literally DE's
+  missing arm. The function reports dependencies and DECIDES NOTHING, which its
+  own `decides` field says. UNCHANGED: G = 3 OF 5 (09-01, 09-02, 09-03), and
+  09-03's R-503 accrual IS NOT A THIRD ECONOMIC READ. USER ITEMS: TWO -- the
+  Phase-2 winner, and NEW AT R-504, WHETHER TO PREDECLARE A CAUSAL INCUMBENT
+  OPERATING POINT FOR SUBSEQUENT DAYS OR KEEP THE EQUAL-COUNT COMPARISON
+  PERMANENTLY LABELLED A DIAGNOSTIC -- BE DECLINED TO PREDECLARE ONE BECAUSE
+  CHOOSING IT NOW WOULD BE CHOOSING AFTER SEEING EVERY NUMBER TODAY PRODUCED.
+```

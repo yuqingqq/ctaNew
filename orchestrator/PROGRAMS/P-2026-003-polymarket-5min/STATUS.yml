@@ -4,6 +4,90 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-04T10:53Z (MEM ROUND 84 -- ONE PREDICATE FOR THE ABSENCE FAMILY, AND
+  IT CAUGHT THE INSTRUMENT THAT NAMED THE CLASS). R-505 swept; nothing run but
+  read-only reads. THE CENTRE OF R-505 IS THE MOST TRANSFERABLE THING THIS
+  PROGRAMME HAS PRODUCED AND I HAVE PUT IT IN HANDOFF AS A STANDING RULE RATHER
+  THAN LEFT IT IN A ROUND: THE ERROR/ABSENCE PATH MUST NOT RETURN A VALUE INSIDE
+  THE CODOMAIN OF THE MEASUREMENT. Once it does, A CONSUMER CANNOT SEPARATE "NOT
+  MEASURED" FROM "MEASURED AND CAME OUT THIS WAY" -- and WHICH NAMED SHAPE
+  APPEARS DEPENDS ONLY ON WHICH IN-DOMAIN VALUE YOU LAND ON: the success value
+  gives ABSENCE-AS-A-PASS, the failure value gives PHANTOM FAILURE. THEY ARE ONE
+  SHAPE SEEN FROM TWO CONSUMERS, AND THE FIX IS IDENTICAL IN BOTH DIRECTIONS --
+  LEAVE THE CODOMAIN, BY RAISING OR BY A SENTINEL THE CONSUMER MUST BRANCH ON.
+  That is why the many `return None` sites are CORRECT where the codomain is a
+  bool, a sha or a registry dict, AND WHY `return 0` FROM A BYTE COUNT IS NOT --
+  0 is a legal byte count, so it lands inside the measurement and reads as DARK.
+  IT IS MECHANICALLY CHECKABLE, degrading to a shape test for rich returns, and
+  where an in-domain return is unavoidable IT FALLS BACK TO THE ZERO-CONSUMER
+  CENSUS. AND I RECORD THE BOUNDARY WITH IT, BECAUSE AN OVER-STATED RULE IS WORSE
+  THAN NONE: IT DOES NOT COVER THE CONTROL FAMILY. Controls that cannot fail, a
+  literal verdict field, a map asserting its own length, a control whose subject
+  was the calendar, a p that agreed because both sides called the same function
+  -- NONE OF THESE IS AN ABSENCE PATH, and they need MUTATION TESTING instead.
+  ONE PREDICATE FOR THE ABSENCE FAMILY, A SECOND FOR THE CONTROL FAMILY, AND THEY
+  DO NOT MERGE. Adopted as standing practice alongside the publication provenance
+  census. IT PROVED ITSELF IMMEDIATELY, AND AGAINST THE INSTRUMENT THAT NAMED THE
+  CLASS. DA had named PHANTOM FAILURE, swept its own instruments and fixed three
+  more -- including the real correctness bug where uncompressed_size returned 0
+  for a file it could not READ, verified in both directions on a real chmod-000
+  file. BUT THE SWEEP WAS NOT COMPLETE: the reviewer's STRUCTURAL SCAN found 25
+  VALUE-YIELDING except HANDLERS across DA's instruments where round 32 had
+  touched FIVE FILES, MOST OF THEM CORRECT BY THE CODOMAIN TEST, AND ONE NOT.
+  DA32-R1, HIGH, AND I VERIFIED IT AT THE CODE: da_arm_replay_verify
+  ._hash_score_matches (:201) asks "is this score reproducible from its
+  identifiers alone?", so TRUE MEANS IT IS A STUB -- and its handler at :213-214
+  is `except Exception: return False`, SO A ROW IT CANNOT EVALUATE RETURNS THE
+  VERDICT "THIS SCORE IS GENUINE". Driven four ways by the reviewer (missing
+  slug, non-numeric score, gen None, not a mapping). A MALFORMED ROW MAKES THE
+  STUB DETECTOR CERTIFY THE OUTPUT AS REAL -- IN THE MODULE BUILT TO CATCH STUBS,
+  DAYS BEFORE THE ARMS RE-RUN WITH REAL HEADS. AND THE SHARPEST PART IS IN ITS
+  OWN DOCSTRING, WHICH I READ: the function is "Implemented HERE rather than
+  imported -- if it came from the producer it would agree by construction", SO
+  THE MODULE GOT R-235 RIGHT AND STILL LANDED THE ABSENCE BUG. Two disciplines,
+  one module, one of them missing. Dispatched. THE THIRD PROFITABILITY ATTEMPT
+  ENDS IN AN HONEST BRACKET, AND THE SHAPE OF THE THREE IS THE RECORD:
+  UNDER-COUNT (prof.py, first row per action), then OVER-COUNT (be_fill_ledger,
+  every row, with a fixture placing three rows at 0.1/0.2/0.3 DEEP INSIDE THE
+  HORIZON and asserting their sum as truth -- a falsifier enshrining the defect
+  as spec, the second such today), THEN A BRACKET. BE ESTABLISHED AT THE CODE
+  THAT IT IS NOT FIXABLE DOWNSTREAM AND I CONFIRMED IT THERE: at
+  harmful_exposure_rows.py:365-372 the tranche lists are LOCAL and only the SUMS
+  reach the row -- preventable_value_cents, preventable_shares, stale_shares --
+  SO THE FEED CARRIES NO TRANCHE IDENTITY AND NO TRANCHE TIMESTAMP AND THE
+  OVERLAP CANNOT BE SUBTRACTED. So the quantity is RENAMED and a BRACKET
+  reported: UPPER every row summed, LOWER the largest single window per action,
+  with exactly_once_total reading "NOT COMPUTABLE -- no tranche identity"
+  (be_fill_ledger.py:198), why_not_computable naming the builder lines, the
+  overlap percentage beside it, and THE FIX NAMED AS A PRODUCER CHANGE RATHER
+  THAN A DOWNSTREAM REPAIR. THE BRACKET IS 1.785x WIDE ON btc. ITS BOUNDS ARE NOT
+  PUBLISHED AND MUST NOT BE RECORDED AS PUBLISHED -- THEY WAIT ON THE REVIEWER,
+  UNDER R-504 (F)'s RULE THAT NO NUMBER REACHES THE USER BEFORE IT HAS BEEN
+  REVIEWED. THIS IS THE FIRST OF THE THREE ATTEMPTS THAT DOES NOT OVERSTATE, AND
+  IT DOES SO BY REPORTING A WIDTH INSTEAD OF A NUMBER. AND A PATTERN IS NOW THREE
+  DEEP AND GETS ITS OWN ENTRY: THREE QUANTITIES ARE ABSENT AT THE PRODUCER RATHER
+  THAN UNBUILT. The EXACTLY-ONCE FILL TOTAL (tranche identity discarded before
+  the feed); the THREE SECTION 8.1 FIELDS maker_pnl_cents, spread_capture_cents
+  and inventory_loss_cents (not producible by anything in this repository, AND
+  PRECISELY WHAT SEPARATES A STRATEGY-P&L VERDICT FROM AN OVERLAY INCREMENT --
+  the plan's own closing sentence); and A RETURN ON CAPITAL (quoted size absent
+  from the row). EACH WAS FOUND BY TRYING TO COMPUTE IT AND FAILING, NOT BY
+  READING A PLAN -- and in each case THE HONEST RESOLUTION IS THE SAME: NAME THE
+  PRODUCER CHANGE, DO NOT ATTEMPT A DOWNSTREAM REPAIR. DE is scoping what the
+  three section 8.1 fields would take, AS A PRICED DECISION FOR THE USER. R-505
+  (E) records my own round 83 and I note only the part that is a fact about these
+  files: all 24 published figures censused clean, five defects fixed in band, and
+  the one the round existed to find was the three round-80 markers pointing at a
+  repair direction that is itself withdrawn. STATE: register at 496 entries, last
+  R-505; G = 3, THREE DAYS SEALED AND UNREAD, and 09-04 closes tonight with its
+  verdict at 00:06Z. Section 8.1: DE is RE-RUNNING the arms with real heads AFTER
+  FINDING THE ARM IDENTITIES WERE WRONG AND REFUSING TO FILE THEM AS RESULTS --
+  the run is live at 5.8 GB inside the USER's 14 G / 12 G / 8-core limits. DE
+  round 53 closed DA's routed defect in both its files and the reviewer verified
+  the denominators are right BY CONSTRUCTION rather than on today's data. USER
+  ITEMS: TWO -- the Phase-2 winner, and the causal incumbent operating point,
+  which BE CORRECTLY REFUSED TO CHOOSE AFTER SEEING TODAY'S NUMBERS.
+  PRIOR:
   2026-09-04T10:47Z (MEM ROUND 83 -- A CONSISTENCY AUDIT OF MY OWN FILES, NOT A
   SWEEP. NO NEW MATERIAL.) The question was whether STATUS.yml and HANDOFF.md are
   INTERNALLY CONSISTENT WITH THE ARTIFACTS after eight sweeps, three withdrawals
@@ -158,96 +242,6 @@ updated: >-
   USER ITEMS: TWO -- the Phase-2 winner, and whether to predeclare a causal
   incumbent operating point or keep the equal-count comparison permanently
   labelled a diagnostic.
-  PRIOR:
-  2026-09-04T10:23Z (MEM ROUND 81 -- THE RANKING RESULT SURVIVES, AND "DIFFERENT
-  PATH" IS NOT WHY). R-503 and R-504 swept; nothing run but read-only reads and
-  TWO read-only computations of my own. THE ITEM THAT MATTERS MOST, AND IT IS A
-  CONDITION OF THE RESULT RATHER THAN A FOOTNOTE: THE SIGN IS NOT INVARIANT UNDER
-  THE AGGREGATION RULE. The reviewer tested the ranking against FOUR aggregation
-  rules on the 08-29 two-arm feed (537,881 btc rows, 299,386 actions): the SHIPPED
-  first-crossing gives -666.38 / -601.16 / -1,198.67; variant A, SUMMING EVERY ROW
-  FROM THE CROSSING ONWARD -- which is the natural reading of "a cancellation
-  prevents everything that happens after it acts" -- gives +406.20 / +1,210.89 /
-  +681.29, THE SIGN FLIPS POSITIVE AT ALL THREE BUDGETS; variant B (all rows in
-  the gen) -1,261.32 / -702.49 / -1,485.29; variant C (prof.py's first-in-file)
-  -1,043.79 / -463.64 / -1,734.38. IF VARIANT A WERE A LEGITIMATE ESTIMAND THE
-  RANKING RESULT WOULD FALL. WHAT SETTLES IT IS A MEASUREMENT AND NOT A
-  PREFERENCE: A ROW IS NOT A FILL -- harmful_exposure_rows.py:363-370 already sums
-  EVERY TRANCHE INSIDE THAT ROW'S OWN ONE-SECOND HORIZON at or after the 50 ms
-  cut, so multiple rows per action are OVERLAPPING DECISION-TIME SNAPSHOTS OF THE
-  SAME EXPOSURE. Measured on the real feed: 1.797 rows/action, 26.9% of actions
-  carry more than one row, consecutive-row spacing within an action MEDIAN 0.170 s
-  and p75 0.414 s, and 217,267 OF 238,495 PAIRS (91.1%) ARE CLOSER TOGETHER THAN
-  THE 1.0 s HORIZON THEY EACH SUM OVER. SO VARIANTS A AND B ADD THE SAME TRANCHES
-  TWO OR MORE TIMES: THE POSITIVE SIGN UNDER A IS A DOUBLE-COUNT, NOT A RIVAL
-  READING. OF THE FOUR RULES EXACTLY ONE COUNTS EACH PREVENTED FILL ONCE, AND IT
-  IS THE ONE SHIPPED -- a cancellation acts ONCE, at the crossing, and the row at
-  that instant already aggregates its own horizon. AND VARIANT C PRESERVES THE
-  SIGN ONLY BY LUCK: it takes the first row by t_start REGARDLESS OF SCORE, i.e. a
-  DIFFERENT DECISION POINT from the one at which the arm actually crossed. THIS
-  JUSTIFICATION IS NOW PUBLISHED WITH THE RESULT IN BOTH FILES, BECAUSE A READER
-  WHO RE-DERIVES PREVENTED VALUE THE INTUITIVE WAY GETS THE OPPOSITE SIGN. ONE
-  COLUMN IS CONTAMINATED AFTER ALL AND IT IS NOT AMONG THE NINE VALUES:
-  baseline_$ COMES FROM prof.py's WITHDRAWN FIRST-ROW `seen` DICT, AND SO DOES
-  EVERY PERCENTAGE COMPUTED AGAINST IT; the cand_$ / inc@theta_$ / inc_match_$
-  columns do not. BE IS REPAIRING OR REMOVING IT, AND NO ECONOMIC FIGURE IS
-  REPUBLISHED -- the new be_fill_ledger's dollar outputs are WITHHELD PENDING
-  REVIEW, and its FIXTURE IS THE DEFECT ITSELF (one action, three rows, first-row
-  sees 10 shares where the truth is 60). THE STANDING PRACTICE NOW IN FORCE, AND
-  I RAN IT MYSELF RATHER THAN QUOTING ITS RESULT: THE PUBLICATION PROVENANCE
-  CHECK -- before any number reaches the USER, NAME THE PRODUCER, CENSUS ITS
-  COMMITTED CALL AND BARE-REFERENCE SITES WITH AT LEAST ONE REACHABLE FROM A
-  COMMITTED ENTRY POINT, AND CONFIRM THE PRODUCING PATH IS INSIDE THE REPO. ONE
-  AST PASS, SECONDS. AND ITS ANSWER HAS ALREADY CHANGED, WHICH IS WHY I RAN IT:
-  R-504 (F) records "matched_volume: 0 sites", and MY OWN AST CENSUS AT 10:23Z
-  RETURNS ONE CALL SITE at be_read_cells.py:313 INSIDE compute(), two bare
-  references at :488-:489 in the selftest, with compute() called by emit() and the
-  module carrying a __main__ -- SO THE PRACTICE'S REQUIREMENT IS NOW MET WHERE IT
-  WAS NOT. BE ROUND 31 IS WHAT CHANGED IT, and I verified the rest of that repair
-  too: compute() at :280 emits MATCHED_VOLUME beside the others, emit() at :400
-  writes the durable document, be_read_cells HAD NO SELFTEST AT ALL and now has
-  EXPECTED_CHECKS = 9 including one ASSERTED OVER THE SOURCE at :448 that
-  compute() calls matched_volume, with its known-bad at :454 -- THE CHECK WHOSE
-  ABSENCE LET A DEFINED-BUT-UNCALLED PRIMARY REACH A PUBLISHED HEADLINE. prof.py
-  is still absent from the repository; be_fill_ledger.py is present. THE
-  REVIEWER'S DIAGNOSIS OF WHY IT WAS MISSED IS THE USEFUL HALF AND IT BELONGS
-  WITH THE PRACTICE: ALL SIX ZERO-CONSUMER FINDINGS SURFACED BECAUSE A ROUND WAS
-  DISPATCHED, AND THE RELEASED RESULT WAS NEVER IN A ROUND -- SO THE PRACTICE
-  ATTACHES TO PUBLICATION, NOT TO REVIEW ROUNDS. That is also the honest account
-  of my own miss: I swept the number in round 78 and no round was ever dispatched
-  against it. DA'S INDEPENDENT VERIFIER IS BUILT AND ALREADY EARNING:
-  da_arm_replay_verify.py (33,306 B) IMPORTS NOTHING FROM THE PRODUCER and parses
-  its field enumeration with `ast` rather than importing it, because A CHECKER
-  THAT SHARES AN EXPRESSION WITH THE CHECKED AGREES BY CONSTRUCTION (R-235); I
-  confirmed at the imports that it pulls only argparse/hashlib/json/re/sys/pathlib
-  plus pm_tape_density. ITS DEFAULT IS NOT "REAL": an arm that declares nothing
-  reads UNVERIFIABLE_NO_EVIDENCE_EITHER_WAY (:182), never a pass. On the real
-  artifact it CONFIRMS THE STUB FROM INDEPENDENT EVIDENCE (7 arms, 1 distinct
-  predictor "none") and files two findings: ALL NINE GATES REPORT FAILURES WITH NO
-  DENOMINATOR, so all_gates_pass CANNOT DISTINGUISH "0 FAILING" FROM "0 CHECKED"
-  (the predicate is at :248-:274, n_gates_without_denominator), and the population
-  carries NO DIGEST so what an arm consumed is UNVERIFIABLE; and in its section
-  8.1 audit, all 13 fields are present with a source XOR a reason and no two
-  sharing a source, but ALL SEVEN COUNTERS LACK A COMPANION EVALUATED-FLAG, SO A
-  ZERO FROM A PATH THAT NEVER RAN IS INDISTINGUISHABLE FROM A COUNTED ZERO. THE
-  SECTION 8.1 STATE, AND I DROVE arm_runnability() RATHER THAN READING ITS COUNT,
-  BECAUSE THE COUNT HAD ALREADY MOVED: R-504 (H) records 3 OF 7 RUNNABLE and MY
-  OWN RUN AT 10:23:11Z RETURNS 4 OF 7 -- RUNNABLE are QR_SKEW_ONLY,
-  QR_CANCEL_HOLD_X_SKEW, CONDVALUE_X_SKEW and RANDOM_MATCHED; BLOCKED are
-  HAZARD_ONLY_NEUTRAL and CONDVALUE_NEUTRAL on neutral_placement ABSENT, and
-  CONDVALUE_X_SKEW_X_FAIRPRICE on fairprice_challenger ABSENT. Arm 7's blocker was
-  STALE and it is the matched-random floor; arm 5 is unblocked by the section 2.2
-  ruling that SKEW IS A POLICY INPUT AND NOT A PREDICTOR FEATURE, which the plan
-  forbids. AND THE TWO DIRECTION-CHANGE WORKSTREAMS ARE ONE THING, WHICH THE
-  DEPENDENCY MAKES PLAIN: ARM 6'S BLOCKER IS fairprice_challenger -- EXACTLY WHAT
-  BE IS NOW BUILDING UNDER SECTION 4.2 -- so BE's challengers are literally DE's
-  missing arm. The function reports dependencies and DECIDES NOTHING, which its
-  own `decides` field says. UNCHANGED: G = 3 OF 5 (09-01, 09-02, 09-03), and
-  09-03's R-503 accrual IS NOT A THIRD ECONOMIC READ. USER ITEMS: TWO -- the
-  Phase-2 winner, and NEW AT R-504, WHETHER TO PREDECLARE A CAUSAL INCUMBENT
-  OPERATING POINT FOR SUBSEQUENT DAYS OR KEEP THE EQUAL-COUNT COMPARISON
-  PERMANENTLY LABELLED A DIAGNOSTIC -- BE DECLINED TO PREDECLARE ONE BECAUSE
-  CHOOSING IT NOW WOULD BE CHOOSING AFTER SEEING EVERY NUMBER TODAY PRODUCED.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -5425,8 +5419,92 @@ flags:
     ARE ONE DISCIPLINE WITH TWO HALVES -- a number must have a producer that is
     reachable from a committed entry point, AND it must have been reviewed before
     a reader sees it.
+  RULE_error_path_must_leave_the_codomain: >-
+    THE MOST TRANSFERABLE THING THIS PROGRAMME HAS PRODUCED, ADOPTED AT R-505 (A)
+    AS STANDING PRACTICE ALONGSIDE THE PUBLICATION PROVENANCE CENSUS: THE
+    ERROR/ABSENCE PATH MUST NOT RETURN A VALUE INSIDE THE CODOMAIN OF THE
+    MEASUREMENT. Once it does, A CONSUMER CANNOT SEPARATE "NOT MEASURED" FROM
+    "MEASURED AND CAME OUT THIS WAY" -- and WHICH NAMED SHAPE APPEARS DEPENDS
+    ONLY ON WHICH IN-DOMAIN VALUE YOU LAND ON: the SUCCESS value gives
+    ABSENCE-AS-A-PASS, the FAILURE value gives PHANTOM FAILURE. THEY ARE ONE
+    SHAPE SEEN FROM TWO CONSUMERS, AND THE FIX IS IDENTICAL IN BOTH DIRECTIONS --
+    LEAVE THE CODOMAIN, BY RAISING OR BY A SENTINEL THE CONSUMER MUST BRANCH ON.
+    That is why the many `return None` sites ARE CORRECT where the codomain is a
+    bool, a sha or a registry dict, and why `return 0` FROM A BYTE COUNT IS NOT:
+    0 is a legal byte count, so it lands inside the measurement and reads as
+    DARK. MECHANICALLY CHECKABLE, degrading to a shape test for rich returns, and
+    where an in-domain return is unavoidable IT FALLS BACK TO THE ZERO-CONSUMER
+    CENSUS.
+  RULE_codomain_BOUNDARY_does_not_cover_the_control_family: >-
+    THE BOUNDARY IS RECORDED WITH THE RULE BECAUSE AN OVER-STATED RULE IS WORSE
+    THAN NONE. The codomain predicate DOES NOT COVER THE CONTROL FAMILY: a
+    control that cannot fail; a literal verdict field; a map asserting its own
+    length; a control whose subject was the CALENDAR rather than the code; a p
+    that agreed because both sides called the same function. NONE OF THESE IS AN
+    ABSENCE PATH -- nothing failed and nothing was missing -- and they need
+    MUTATION TESTING instead. ONE PREDICATE FOR THE ABSENCE FAMILY, A SECOND FOR
+    THE CONTROL FAMILY, AND THEY DO NOT MERGE.
+  DA32_R1_HIGH_the_stub_detector_certifies_stubs_as_real: >-
+    THE RULE PROVED ITSELF IMMEDIATELY AND AGAINST THE INSTRUMENT THAT NAMED THE
+    CLASS. DA had named PHANTOM FAILURE and swept its own instruments, fixing
+    three more -- including uncompressed_size returning 0 for a file it could not
+    READ, verified in both directions on a real chmod-000 file. BUT THE SWEEP WAS
+    NOT COMPLETE: the reviewer's STRUCTURAL SCAN found 25 VALUE-YIELDING except
+    HANDLERS across DA's instruments where round 32 had touched FIVE FILES, MOST
+    CORRECT BY THE CODOMAIN TEST AND ONE NOT. DA32-R1, HIGH, VERIFIED BY MEM AT
+    THE CODE: da_arm_replay_verify._hash_score_matches (:201) asks "is this score
+    reproducible from its identifiers alone?", so TRUE MEANS IT IS A STUB -- and
+    its handler at :213-214 is `except Exception: return False`, SO A ROW IT
+    CANNOT EVALUATE RETURNS THE VERDICT "THIS SCORE IS GENUINE". Driven four ways
+    by the reviewer (missing slug, non-numeric score, gen None, not a mapping).
+    A MALFORMED ROW MAKES THE STUB DETECTOR CERTIFY THE OUTPUT AS REAL -- IN THE
+    MODULE BUILT TO CATCH STUBS, DAYS BEFORE THE ARMS RE-RUN WITH REAL HEADS.
+    AND THE SHARPEST PART IS IN ITS OWN DOCSTRING, READ BY MEM: the function is
+    "Implemented HERE rather than imported -- if it came from the producer it
+    would agree by construction", SO THE MODULE GOT R-235 RIGHT AND STILL LANDED
+    THE ABSENCE BUG. Two disciplines, one module, one of them missing.
+    DISPATCHED.
+  third_profitability_attempt_is_an_HONEST_BRACKET_unpublished: >-
+    THE SHAPE OF THE THREE ATTEMPTS IS THE RECORD: UNDER-COUNT (prof.py, first
+    row per action), then OVER-COUNT (be_fill_ledger, every row, its fixture
+    placing three rows at 0.1/0.2/0.3 DEEP INSIDE THE HORIZON and asserting their
+    sum as truth -- a falsifier enshrining the defect as spec, the second such
+    that day), THEN A BRACKET. BE ESTABLISHED AT THE CODE THAT IT IS NOT FIXABLE
+    DOWNSTREAM AND MEM CONFIRMED IT THERE: at harmful_exposure_rows.py:365-372
+    the tranche lists are LOCAL and ONLY THE SUMS REACH THE ROW
+    (preventable_value_cents, preventable_shares, stale_shares), so THE FEED
+    CARRIES NO TRANCHE IDENTITY AND NO TRANCHE TIMESTAMP and the overlap cannot
+    be subtracted. So the quantity is RENAMED and a BRACKET reported -- UPPER
+    every row summed, LOWER the largest single window per action -- with
+    exactly_once_total reading "NOT COMPUTABLE -- no tranche identity"
+    (be_fill_ledger.py:198), why_not_computable naming the builder lines, the
+    overlap percentage beside it, and THE FIX NAMED AS A PRODUCER CHANGE RATHER
+    THAN A DOWNSTREAM REPAIR. THE BRACKET IS 1.785x WIDE ON btc. ITS BOUNDS ARE
+    NOT PUBLISHED AND MUST NOT BE RECORDED AS PUBLISHED -- THEY WAIT ON THE
+    REVIEWER, under R-504 (F). THIS IS THE FIRST OF THE THREE THAT DOES NOT
+    OVERSTATE, AND IT DOES SO BY REPORTING A WIDTH INSTEAD OF A NUMBER.
+  PATTERN_three_quantities_ABSENT_AT_THE_PRODUCER: >-
+    A PATTERN NOW THREE DEEP AND WORTH ITS OWN ENTRY (R-505 D): THREE QUANTITIES
+    ARE ABSENT AT THE PRODUCER RATHER THAN UNBUILT. (1) THE EXACTLY-ONCE FILL
+    TOTAL -- tranche identity discarded before the feed. (2) THE THREE SECTION
+    8.1 FIELDS maker_pnl_cents, spread_capture_cents and inventory_loss_cents --
+    not producible by anything in this repository, AND PRECISELY WHAT SEPARATES A
+    STRATEGY-P&L VERDICT FROM AN OVERLAY INCREMENT, which is the plan's own
+    closing sentence. (3) A RETURN ON CAPITAL -- quoted size absent from the row.
+    EACH WAS FOUND BY TRYING TO COMPUTE IT AND FAILING, NOT BY READING A PLAN;
+    AND IN EACH CASE THE HONEST RESOLUTION IS THE SAME -- NAME THE PRODUCER
+    CHANGE, DO NOT ATTEMPT A DOWNSTREAM REPAIR. DE is scoping what the three
+    section 8.1 fields would take, AS A PRICED DECISION FOR THE USER.
+  section_8_1_arms_rerunning_with_real_heads: >-
+    DE IS RE-RUNNING THE ARMS WITH REAL HEADS AFTER FINDING THE ARM IDENTITIES
+    WERE WRONG -- AND REFUSING TO FILE THEM AS RESULTS, which is the right order.
+    The run is live at 5.8 GB inside the USER's 14 G / 12 G / 8-core limits. DE
+    round 53 closed DA's routed defect in BOTH its files, and the reviewer
+    verified the denominators are right BY CONSTRUCTION rather than on today's
+    data -- a stronger check than a passing run, because today's data could have
+    made a wrong denominator look right.
 focus: >
-  As-of 2026-09-04T10:36Z, build and test the offline model mechanism-first
+  As-of 2026-09-04T10:53Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -5734,7 +5812,20 @@ focus: >
   DA's own instruments, one a REAL CORRECTNESS BUG in the race machinery. AND THE
   STANDING RULE NOW IN FORCE: NO NUMBER REACHES THE USER BEFORE IT HAS BEEN
   REVIEWED -- the ranking result went through review and survived; both
-  profitability figures did not, and both were wrong.
+  profitability figures did not, and both were wrong. ROUND 84 -- ONE PREDICATE
+  FOR THE ABSENCE FAMILY: THE ERROR/ABSENCE PATH MUST NOT RETURN A VALUE INSIDE
+  THE CODOMAIN OF THE MEASUREMENT, because once it does a consumer cannot
+  separate "not measured" from "measured and came out this way", and WHICH named
+  shape appears -- absence-as-a-pass or phantom failure -- depends only on which
+  in-domain value you land on. ONE SHAPE, TWO CONSUMERS, ONE FIX: leave the
+  codomain. ITS BOUNDARY IS RECORDED WITH IT -- it does NOT cover the CONTROL
+  family, which needs mutation testing. IT CAUGHT THE INSTRUMENT THAT NAMED THE
+  CLASS: DA32-R1 HIGH, the stub detector's `except: return False` certifying a
+  malformed row as GENUINE. THE THIRD PROFITABILITY ATTEMPT IS AN HONEST BRACKET
+  (1.785x wide on btc) AND ITS BOUNDS ARE NOT PUBLISHED. AND A PATTERN THREE DEEP:
+  exactly-once, the three section 8.1 fields, and a return on capital are ALL
+  ABSENT AT THE PRODUCER rather than unbuilt -- each found by trying to compute
+  it and failing, each resolved by naming the producer change.
   Collector era is an interlock, not a quality grade. Keep all 08-20..25
   model-development days consumed; the 08-29 fragment diagnostic is never
   evidence; never tune on a later day and then score that same day. No PnL,

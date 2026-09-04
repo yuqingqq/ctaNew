@@ -1,6 +1,17 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T10:47Z (MEM round 83) — **A CONSISTENCY AUDIT OF THESE TWO
+Updated: 2026-09-04T10:53Z (MEM round 84) — **ONE PREDICATE FOR THE ABSENCE
+FAMILY, AND IT CAUGHT THE INSTRUMENT THAT NAMED THE CLASS.** **The error/absence
+path must not return a value inside the codomain of the measurement** — the rule
+that unifies the two standing hazards below and is now recorded above them, **with
+its boundary**, because it does **not** cover the control family. **It proved
+itself at once: DA32-R1 (HIGH) — the stub detector's `except: return False`
+certifies a malformed row as GENUINE.** **The third profitability attempt ends in
+an honest BRACKET** (1.785× wide on btc) whose **bounds are NOT published**. **And
+a pattern three deep: exactly-once, the three §8.1 fields and a return on capital
+are all ABSENT AT THE PRODUCER rather than unbuilt.** **G = 3; USER items: TWO.**
+
+Previously (MEM round 83) — 2026-09-04T10:47Z — **A CONSISTENCY AUDIT OF THESE TWO
 FILES, NOT A SWEEP. NO NEW MATERIAL.** **The headline is a good result: every
 withdrawn figure is marked** — all 24 published figures and their components,
 plus the corrected pair, censused across both files, **none standing bare, none
@@ -190,6 +201,114 @@ ZERO of the four DA files (I counted)** — the **unmutated** pre-round module i
 HEAD~1 differs in those files. **USER items: FIVE.**
 
 ## READ FIRST — current project handoff
+
+> ### STANDING RULE — the error/absence path must not return a value inside the codomain of the measurement
+>
+> **Adopted 2026-09-04 (R-505 A) as standing practice alongside the publication
+> provenance census. It is the most transferable thing this programme has
+> produced, and it UNIFIES the two standing hazards recorded below.**
+>
+> **The rule.** Once an error or absence path returns a value that is *inside*
+> the codomain of the measurement, **a consumer cannot separate "not measured"
+> from "measured and came out this way".** And **which named shape appears
+> depends only on which in-domain value you land on**:
+>
+> | the error path returns… | the consumer sees | the named shape |
+> |---|---|---|
+> | the **success** value | a clean result | **absence reading as a PASS** — it lets a bad thing through |
+> | the **failure** value | a defect | **PHANTOM FAILURE** — it invents a bug |
+>
+> **They are one shape seen from two consumers, and the fix is identical in both
+> directions: leave the codomain — by raising, or by a sentinel the consumer must
+> branch on.** That is why the many `return None` sites **are correct** where the
+> codomain is a bool, a sha or a registry dict, and why **`return 0` from a byte
+> count is not**: 0 is a legal byte count, so it lands inside the measurement and
+> reads as **DARK**.
+>
+> **It is mechanically checkable**, degrading to a shape test for rich returns;
+> where an in-domain return is unavoidable it **falls back to the zero-consumer
+> census**.
+>
+> **THE BOUNDARY, recorded with the rule because an over-stated rule is worse than
+> none.** It does **NOT** cover the **control family** — a control that cannot
+> fail, a literal verdict field, a map asserting its own length, a control whose
+> subject was the **calendar** rather than the code, a p that agreed because both
+> sides called the same function. **None of these is an absence path**: nothing
+> failed and nothing was missing. **They need mutation testing.** **One predicate
+> for the absence family, a second for the control family, and they do not
+> merge.**
+>
+> ### 2026-09-04T10:53Z — MEM round 84: the rule caught the instrument that named the class
+>
+> **DA had named PHANTOM FAILURE, swept its own instruments and fixed three
+> more** — including the real correctness bug where `uncompressed_size` returned
+> 0 for a file it could not **read**, verified in both directions on a real
+> `chmod-000` file. **But the sweep was not complete.** The reviewer's
+> **structural scan** found **25 value-yielding `except` handlers** across DA's
+> instruments where round 32 had touched **five files** — **most of them correct
+> by the codomain test, and one not.**
+>
+> **DA32-R1 — HIGH — verified by me at the code.**
+> `da_arm_replay_verify._hash_score_matches` (`:201`) asks *"is this score
+> reproducible from its identifiers alone?"* — so **True means it IS a stub** —
+> and its handler at `:213-214` is `except Exception: return False`, **so a row it
+> cannot evaluate returns the verdict "this score is GENUINE."** Driven four ways
+> by the reviewer (missing slug, non-numeric score, `gen` None, not a mapping).
+> **A malformed row makes the STUB DETECTOR certify the output as REAL — in the
+> module built to catch stubs, days before the arms re-run with real heads.**
+>
+> **And the sharpest part is in its own docstring, which I read:** the function is
+> *"Implemented HERE rather than imported — if it came from the producer it would
+> agree by construction."* **So the module got R-235 right and still landed the
+> absence bug.** *Two disciplines, one module, one of them missing.* Dispatched.
+>
+> **THE THIRD PROFITABILITY ATTEMPT ENDS IN AN HONEST BRACKET, and the shape of
+> the three is the record:**
+>
+> | attempt | rule | outcome |
+> |---|---|---|
+> | `prof.py` | first row per action | **under**-count — withdrawn |
+> | `be_fill_ledger` | every row | **over**-count — withdrawn; its fixture put three rows at 0.1/0.2/0.3 **inside** the horizon and asserted their sum as truth |
+> | the bracket | UPPER = every row, LOWER = largest single window per action | **an honest width, not a number** |
+>
+> **BE established at the code that it is not fixable downstream, and I confirmed
+> it there:** at `harmful_exposure_rows.py:365-372` the tranche lists are
+> **local**, and **only the sums reach the row** (`preventable_value_cents`,
+> `preventable_shares`, `stale_shares`) — **so the feed carries no tranche
+> identity and no tranche timestamp, and the overlap cannot be subtracted.**
+> `exactly_once_total` now reads **"NOT COMPUTABLE — no tranche identity"**
+> (`be_fill_ledger.py:198`), with `why_not_computable` naming the builder lines,
+> the overlap percentage beside it, and **the fix named as a PRODUCER change
+> rather than a downstream repair**. **The bracket is 1.785× wide on btc. Its
+> bounds are NOT published and must not be recorded as published — they wait on
+> the reviewer** (R-504 F). **This is the first of the three attempts that does
+> not overstate, and it does so by reporting a width instead of a number.**
+>
+> **A PATTERN NOW THREE DEEP, AND IT GETS ITS OWN ENTRY: three quantities are
+> ABSENT AT THE PRODUCER rather than unbuilt.**
+> 1. **The exactly-once fill total** — tranche identity discarded before the feed.
+> 2. **The three §8.1 fields** — `maker_pnl_cents`, `spread_capture_cents`,
+>    `inventory_loss_cents`, not producible by anything in this repository, **and
+>    precisely what separates a strategy-P&L verdict from an overlay increment**,
+>    which is the plan's own closing sentence.
+> 3. **A return on capital** — quoted size absent from the row.
+>
+> **Each was found by trying to compute it and failing, not by reading a plan —
+> and in each case the honest resolution is the same: name the producer change,
+> do not attempt a downstream repair.** DE is scoping what the three §8.1 fields
+> would take, **as a priced decision for the USER**.
+>
+> **State:** register at **496 entries**, last **R-505**; **G = 3**, three days
+> **sealed and unread**, and **09-04 closes tonight** with its verdict at 00:06Z.
+> **§8.1: DE is re-running the arms with real heads after finding the arm
+> identities were WRONG — and refusing to file them as results**, which is the
+> right order; the run is live at 5.8 GB inside the USER's 14 G / 12 G / 8-core
+> limits. DE round 53 closed DA's routed defect in **both** its files, and the
+> reviewer verified the denominators are right **by construction** rather than on
+> today's data — a stronger check than a passing run, because today's data could
+> have made a wrong denominator look right. **USER items: TWO** — the Phase-2
+> winner, and the causal incumbent operating point, **which BE correctly refused
+> to choose after seeing today's numbers.**
 
 > ### 2026-09-04T10:47Z — MEM round 83: a consistency audit of these two files
 >
