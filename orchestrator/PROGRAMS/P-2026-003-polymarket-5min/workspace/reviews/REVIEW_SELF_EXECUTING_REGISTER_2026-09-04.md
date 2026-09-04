@@ -413,3 +413,49 @@ I did not open DE's worktree, did not run `de_section81_arms.py` (importing it
 runs the arms; measured pre-reset at 410 s to the feed stage, killed at 900 s),
 and did not re-derive R-511(A). Everything above is static analysis, fixture
 drives and execution of committed instruments in my own worktree at `7c50926`.
+
+---
+
+## POSTSCRIPT — re-tested at `3f7f133` (2026-09-04T12:33Z, clock read)
+
+The tip moved while I was filing: **DA round 38 (`039aacc`) and the
+coordinator's `a0e6e57` fixed the pin mechanism in parallel with this round.**
+I re-ran both affected findings against the new code rather than leave a stale
+claim in the file. Both directions, CHECKED.
+
+**R512-R2 is FIXED and is now history, not a defect.** `floor_from_register`
+requires a designated pin block. Measured at the new code:
+
+| fixture | old result | **new result** |
+|---|---|---|
+| marker quoted in prose | `PINNED 5` | **`FLOOR_MARKER_OUTSIDE_PIN_BLOCK`, `pinned: None`** |
+| two values on ONE line | `PINNED 3` | **`FLOOR_MARKER_OUTSIDE_PIN_BLOCK`, `pinned: None`** |
+
+On the real register it reads `PINNED 5`, `n_blocks: 1`, and correctly reports
+`stray_marker_lines: [295, 296, 19528]` — the quotations, seen and not obeyed.
+That is recommendation 2 of this filing, reached independently by DA. **My
+one-hit-per-line finding is superseded before it was read**; the two-differing-
+values case is closed by the same fix.
+
+**R512-R1 SURVIVES UNCHANGED at `3f7f133`.** `da_race_withdrawals --selftest`:
+**rc 1, 47 PASS, FAIL at WALK-S9**, identical refusal:
+
+```
+REFUSED: the register pins the walk floor at 5 and this module's literal
+says 99.
+```
+
+Neither needle (`pins 99`, `History was rewritten…`) matches. The mechanism was
+repaired; **the falsifier the repair sits behind is still red, and it is red in
+a round whose explicit subject was this guard.** Recommendation 3 stands
+unchanged and is now the only outstanding item from R512-R1/R512-R2.
+
+**And this is R-510(B)(2) a second time in one hour, on the same module**: a
+fix landed, its commit message reports the work, and the suite that would have
+said "the guard's own falsifier no longer fires" was not what got consulted.
+The count is not the coverage; running it is.
+
+Findings R512-R3 through R512-R7 are unaffected — `git diff --name-only
+7c50926 3f7f133` touches `da_arm_replay_verify.py` (+1 line, a census entry)
+and `da_race_withdrawals.py` only; `da_cite_audit.py`,
+`da_forward_day_verify.py` and `de_section81_arms.py` are unchanged.
