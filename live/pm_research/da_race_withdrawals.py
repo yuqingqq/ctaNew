@@ -56,7 +56,7 @@ DATA_ROOT = _TDROOT.DATA_ROOT
 DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
 #: This suite's own total, asserted over ran + skipped.
-EXPECTED_CHECKS = 52
+EXPECTED_CHECKS = 57
 
 #: THE REGISTRY. One entry per day the USER has taken out of the race.
 #: EVERY entry carries its authority as DATA -- the same discipline round 22
@@ -479,7 +479,22 @@ def assert_withdrawals_monotone(repo: Path | None = None,
     # so rather than leaving it to be discovered.
     _, _origin = _git(["config", "--get", "remote.origin.url"], repo)
     floor_applies = is_canonical and CANONICAL_REMOTE in _origin
-    if floor_applies and versions and len(versions) < MIN_PRIOR_VERSIONS:
+    _reg_floor = floor_from_register(repo if not is_canonical else None)
+    # DA35-R1: the register PIN beats the module literal, and a disagreement
+    # is the coherent-rewrite signature -- lowering the literal now has to
+    # lower a line in another file, in another seat's document, to pass.
+    _floor = MIN_PRIOR_VERSIONS
+    if floor_applies and _reg_floor["status"] == "PINNED":
+        if _reg_floor["pinned"] != MIN_PRIOR_VERSIONS:
+            raise WithdrawalRefused(
+                f"REFUSED: the register pins the walk floor at "
+                f"{_reg_floor['pinned']} and this module's literal says "
+                f"{MIN_PRIOR_VERSIONS}. A floor that disagrees with its own "
+                f"pin is the COHERENT-REWRITE signature: history dropped and "
+                f"the floor lowered in one pass reads as a clean walk unless "
+                f"the pin lives where this walk does not count it.")
+        _floor = _reg_floor["pinned"]
+    if floor_applies and versions and len(versions) < _floor:
         raise WithdrawalRefused(
             f"REFUSED: the walk found {len(versions)} version(s) of the "
             f"registry but MIN_PRIOR_VERSIONS pins {MIN_PRIOR_VERSIONS}. "
@@ -500,8 +515,10 @@ def assert_withdrawals_monotone(repo: Path | None = None,
         "repo": str(repo), "path": path,
         "status": "READ" if versions else "NO_PRIOR_VERSION_WITH_REGISTRY",
         "anchored_at_creation": True,
-        "min_prior_versions_pinned": (MIN_PRIOR_VERSIONS if floor_applies
-                                      else None),
+        "min_prior_versions_pinned": (_floor if floor_applies else None),
+        "floor_pin": _reg_floor,
+        "floor_is_load_bearing": (floor_applies
+                                  and _reg_floor["status"] == "PINNED"),
         "floor_applies": floor_applies,
         "origin_seen": _origin.strip()[:80] or None,
         "adding_commit": add_commits[0],
@@ -548,6 +565,68 @@ def assert_withdrawals_monotone(repo: Path | None = None,
 #: this refuses by name. That is the same one-way property the registry has,
 #: applied to the evidence FOR it.
 MIN_PRIOR_VERSIONS = 5
+
+#: DA35-R1. THE LITERAL ABOVE IS NOT A FLOOR, IT IS A NUMBER IN THE FILE THE
+#: FLOOR PROTECTS. "May only be RAISED" was prose and nothing enforced it, so
+#: the guard caught an ACCIDENTAL rewrite and not a COHERENT one: a rewrite
+#: that drops history AND lowers this literal in the same pass presents as a
+#: clean walk with a satisfied floor -- and that is exactly the rewrite class
+#: WALK-S9 exists for, because it is the one that can carry the file.
+#:
+#: So the floor is pinned WHERE THIS WALK DOES NOT COUNT: the register. That
+#: is the honest home for the same reason deriving it from the module's own
+#: history is circular. The reader below is DEGRADED-SAFE by design -- while
+#: the register carries no pin it REPORTS `FLOOR_NOT_PINNED_IN_REGISTER` and
+#: enforces nothing, because a guard that refuses the moment it is installed
+#: takes the emission path down for a line that has not landed yet. It
+#: becomes load-bearing when the coordinator places the marker, and a
+#: DISAGREEMENT between register and module refuses by name from that moment.
+REGISTER_FLOOR_MARKER = "DA-WALK-FLOOR: min_prior_versions="
+REGISTER_PATH = ("orchestrator/PROGRAMS/P-2026-003-polymarket-5min/"
+                 "workspace/COORDINATION.md")
+
+
+def floor_from_register(repo: Path | None = None) -> dict[str, Any]:
+    """The pinned floor, read from the register. REPORTS; never synthesises.
+
+    A missing register, an unreadable one and an unpinned one are THREE
+    different facts and none of them is a number.
+    """
+    root = CODE_ROOT if repo is None else Path(repo)
+    reg = root / REGISTER_PATH
+    if not reg.is_file():
+        return {"status": "REGISTER_NOT_FOUND", "pinned": None,
+                "path": str(reg)}
+    try:
+        text = reg.read_text(encoding="utf-8", errors="replace")
+    except OSError as e:
+        return {"status": "REGISTER_UNREADABLE", "pinned": None,
+                "error": repr(e), "path": str(reg)}
+    hits = []
+    for ln in text.splitlines():
+        i = ln.find(REGISTER_FLOOR_MARKER)
+        if i < 0:
+            continue
+        tail = ln[i + len(REGISTER_FLOOR_MARKER):].strip()
+        num = ""
+        for ch in tail:
+            if ch.isdigit():
+                num += ch
+            else:
+                break
+        if num:
+            hits.append(int(num))
+    if not hits:
+        return {"status": "FLOOR_NOT_PINNED_IN_REGISTER", "pinned": None,
+                "path": str(reg),
+                "why": ("the register carries no `" + REGISTER_FLOOR_MARKER
+                        + "N` line, so nothing outside this file pins the "
+                          "floor and a coherent rewrite is still unguarded")}
+    if len(set(hits)) > 1:
+        return {"status": "FLOOR_PINNED_INCONSISTENTLY", "pinned": None,
+                "values": sorted(set(hits)), "path": str(reg),
+                "why": "two different pins is not a pin"}
+    return {"status": "PINNED", "pinned": hits[0], "path": str(reg)}
 
 #: The floor is a claim about THIS repository's history. A probe tree built
 #: in /tmp calls the walk with the same default arguments and its one commit
@@ -596,8 +675,10 @@ WALK_ROUTES: dict[tuple[str, str], str] = {
     ("Continue", "not isinstance(now_entry, dict)"):
         "NOT A SHORTENING: the violation is RECORDED first; this only skips "
         "the field-by-field comparison of a day already found REMOVED.",
-    ("Raise", "floor_applies and versions and "
-              "(len(versions) < MIN_PRIOR_VERSIONS)"):
+    ("Raise", "_reg_floor['pinned'] != MIN_PRIOR_VERSIONS"):
+        "REFUSES: the register pin and the module literal disagree, which is "
+        "the coherent-rewrite signature (DA35-R1).",
+    ("Raise", "floor_applies and versions and (len(versions) < _floor)"):
         "REFUSES: fewer versions than the committed floor -- history was "
         "rewritten under the guarantee (a dropped or squashed commit in a "
         "rebase), which no check inside the walk can see.",
@@ -727,6 +808,37 @@ def walk_termination_census(fn_name: str = "assert_withdrawals_monotone"
                       "classification": classification,
                       "accounted": (kind, cond) in WALK_ROUTES,
                       "judgement": WALK_ROUTES.get((kind, cond))})
+    # DA35-R2: A ROUTE OUT OF THE WALK NEED NOT BE IN THE WALK. Part 1
+    # enumerated this function's OWN exits, so an exception raised by a
+    # callee -- `_registry_in_blob` raising BlobUnparseable, by design since
+    # round 34 -- was neither a source route nor a supply route. It is safe
+    # today only because the single production caller does not swallow it,
+    # which rests on a CALLER rather than on the enumeration; the next callee
+    # that raises need not be so lucky. The callees the walk names are
+    # followed one level and their raises enumerated, each with whether the
+    # walk HANDLES it (an except naming that type) or lets it PROPAGATE.
+    callee_routes = []
+    handled_types = set()
+    for h in [n for n in ast.walk(fn) if isinstance(n, ast.ExceptHandler)]:
+        if h.type is None:
+            handled_types.add("BareExcept")
+        else:
+            handled_types.add(ast.unparse(h.type).split(".")[-1])
+    called = {getattr(c.func, "id", None) or getattr(c.func, "attr", None)
+              for c in ast.walk(fn) if isinstance(c, ast.Call)}
+    bodies = {nd.name: nd for nd in tree.body
+              if isinstance(nd, (ast.FunctionDef, ast.AsyncFunctionDef))}
+    for name_ in sorted(x for x in called if x in bodies):
+        for nd in ast.walk(bodies[name_]):
+            if not isinstance(nd, ast.Raise) or nd.exc is None:
+                continue
+            exc = ast.unparse(nd.exc).split("(")[0].split(".")[-1]
+            callee_routes.append({
+                "callee": name_, "raises": exc, "line": nd.lineno,
+                "handled_by_the_walk": exc in handled_types,
+                "effect": ("CAUGHT AND RE-RAISED WITH CONTEXT"
+                           if exc in handled_types
+                           else "PROPAGATES OUT OF THE WALK")})
     unaccounted = [f for f in found if not f["accounted"]]
     stale = [list(k) for k in WALK_ROUTES
              if k not in {(f["kind"], f["condition"]) for f in found}]
@@ -736,7 +848,9 @@ def walk_termination_census(fn_name: str = "assert_withdrawals_monotone"
     return {
         "function": fn_name,
         "method": ("source routes DERIVED from the AST and reconciled "
-                   "against a written accounting; supply routes DECLARED "
+                   "against a written accounting; CALLEE raises followed one "
+                   "level and marked handled or propagating (DA35-R2); "
+                   "supply routes DECLARED "
                    "with a guard and a driver, because no scan of this "
                    "function can see them"),
         "n_source_routes": len(found),
@@ -747,12 +861,18 @@ def walk_termination_census(fn_name: str = "assert_withdrawals_monotone"
         "UNACCOUNTED": unaccounted,
         "n_stale_accountings": len(stale), "stale_accountings": stale,
         "source_routes": found,
+        "n_callee_raise_routes": len(callee_routes),
+        "callee_raise_routes": callee_routes,
+        "n_callee_raises_unhandled": len(
+            [c for c in callee_routes if not c["handled_by_the_walk"]]),
         "n_supply_routes": len(SUPPLY_ROUTES),
         "supply_routes": list(SUPPLY_ROUTES),
         "n_shortenings_that_are_silent": len(
             [f for f in silent if not f["accounted"]]),
         "complete_for_this_method": not unaccounted and not stale,
-        "residue": ("a git defect misreporting its own history; a race "
+        "residue": ("a callee TWO levels down, since callees are followed "
+                    "one level only; a git defect misreporting its own "
+                    "history; a race "
                     "between the `log` and the `show`; and a registry that "
                     "is a valid literal but a false one -- monotone-clean by "
                     "construction, and R-500's business rather than this "
@@ -1411,6 +1531,53 @@ def selftest() -> int:
                "running the dependent suite, not by reading")
         finally:
             globals()["_git"] = _real9
+    # ---- DA35-R1: the floor pinned where this walk does not count -------
+    _fr = floor_from_register()
+    ok(_fr["status"] in ("PINNED", "FLOOR_NOT_PINNED_IN_REGISTER",
+                         "REGISTER_NOT_FOUND", "REGISTER_UNREADABLE",
+                         "FLOOR_PINNED_INCONSISTENTLY"),
+       f"DA35-R1 the register pin READS: {_fr['status']}. A missing "
+       f"register, an unreadable one and an unpinned one are three "
+       f"different facts and none of them is a number")
+    with tempfile.TemporaryDirectory() as t:
+        _d = Path(t)
+        _reg = _d / REGISTER_PATH
+        _reg.parent.mkdir(parents=True, exist_ok=True)
+        _reg.write_text(f"| x | {REGISTER_FLOOR_MARKER}7 | y |\n",
+                        encoding="utf-8")
+        ok(floor_from_register(_d) == {"status": "PINNED", "pinned": 7,
+                                       "path": str(_reg)},
+           "DA35-R1 FIRES: a register carrying the marker pins the floor "
+           "from OUTSIDE this file, so lowering the module literal in a "
+           "coherent rewrite must also lower a line in another seat's "
+           "document to pass")
+        _reg.write_text(f"{REGISTER_FLOOR_MARKER}7\n"
+                        f"{REGISTER_FLOOR_MARKER}9\n", encoding="utf-8")
+        ok(floor_from_register(_d)["status"] == "FLOOR_PINNED_INCONSISTENTLY",
+           "DA35-R1 two different pins is NOT a pin -- it reads as unpinned "
+           "with both values named, never as the first one found")
+        _reg.write_text("nothing here\n", encoding="utf-8")
+        ok(floor_from_register(_d)["status"] == "FLOOR_NOT_PINNED_IN_REGISTER"
+           and floor_from_register(_d)["pinned"] is None,
+           "DA35-R1 DEGRADED-SAFE: with no marker the reader returns None "
+           "and the walk enforces NOTHING. A guard that refused the moment "
+           "it was installed would take the emission path down for a line "
+           "that has not landed")
+    # ---- DA35-R2: a route out of the walk need not be IN the walk --------
+    _cc = walk_termination_census()
+    _br = [r for r in _cc["callee_raise_routes"]
+           if r["raises"] == "BlobUnparseable"]
+    ok(len(_br) >= 1 and all(r["handled_by_the_walk"] for r in _br)
+       and _cc["n_callee_raises_unhandled"] == 0,
+       f"DA35-R2 the census now FOLLOWS THE CALLEES: "
+       f"{_cc['n_callee_raise_routes']} raise route(s) reached through the "
+       f"functions the walk calls, including `_registry_in_blob` raising "
+       f"BlobUnparseable by design since round 34 -- neither a source route "
+       f"nor a supply route, and safe only because the one production "
+       f"caller does not swallow it. That safety now rests on the "
+       f"enumeration rather than on a caller, and the residue says callees "
+       f"are followed ONE level")
+
     _rr = assert_withdrawals_monotone()
     ok(_rr["monotone"] is True and _rr["anchored_at_creation"] is True
        and _rr["shallow"] is False and _rr["n_replace_refs"] == 0,

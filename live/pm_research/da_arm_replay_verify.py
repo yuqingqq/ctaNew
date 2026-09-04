@@ -764,6 +764,7 @@ def publication_provenance(producer_path: str, symbol: str,
 
 #: The instruments this seat owns, censused for the PHANTOM FAILURE shape.
 DA_INSTRUMENTS = (
+    "da_cite_audit",
     "da_replay_parity_battery", "da_arm_replay_verify",
     "da_dark_interval_scan", "da_forward_day_verify", "da_blackout_mask",
     "da_race_withdrawals", "da_verdict_check",
@@ -1597,6 +1598,125 @@ def denominator_audit(doc: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def p4_evidence_audit(arm: dict[str, Any]) -> dict[str, Any]:
+    """RECOMPUTE the P4 summary from the raw draws; never read it.
+
+    When a refusal starts carrying per-draw values, the summary beside them
+    becomes the thing a reader quotes -- so the summary is exactly what must
+    not be trusted. Everything here is recomputed from `p4_observations` and
+    then COMPARED with the emitted `p4_summary`; a disagreement is reported
+    against the summary, not against the data.
+
+    THE HONEST LIMIT IS PART OF THE OUTPUT, not a caveat someone may drop:
+    observations bound what was SEEN. A target outside the observed range
+    over N draws evidences UNREACHABLE FOR THIS CONSTRUCTION. It never
+    evidences NEVER, and no field here says it does.
+    """
+    obs = arm.get("p4_observations")
+    if not isinstance(obs, list) or not obs:
+        return {"status": "NO_PER_DRAW_OBSERVATIONS",
+                "n_observations": 0,
+                "why": ("without per-draw values a refusal count cannot "
+                        "separate an excluded target from a missed one"),
+                "decides_nothing": "REPORTED (rule 14)."}
+    gaps, ctrl, treated = [], [], set()
+    strata_dir: dict[str, dict[str, int]] = {}
+    n_all_over = n_any_equal = 0
+    malformed = 0
+    for o in obs:
+        if not isinstance(o, dict):
+            malformed += 1
+            continue
+        g, c = o.get("signed_gap_total"), o.get("realised_total_control")
+        t = o.get("realised_total_treated")
+        if not all(isinstance(x, (int, float)) for x in (g, c, t)):
+            malformed += 1
+            continue
+        gaps.append(g); ctrl.append(c); treated.add(t)
+        ps = o.get("per_stratum") if isinstance(o.get("per_stratum"),
+                                                dict) else {}
+        over = eq = 0
+        for k, v in ps.items():
+            sg = (v or {}).get("signed_gap")
+            d = strata_dir.setdefault(k, {"over": 0, "equal": 0, "under": 0})
+            if not isinstance(sg, (int, float)):
+                continue
+            if sg > 0:
+                d["over"] += 1; over += 1
+            elif sg == 0:
+                d["equal"] += 1; eq += 1
+            else:
+                d["under"] += 1
+        if ps and over == len(ps):
+            n_all_over += 1
+        if eq:
+            n_any_equal += 1
+    n = len(gaps)
+    if not n:
+        return {"status": "NO_USABLE_OBSERVATIONS", "n_observations": 0,
+                "n_malformed": malformed,
+                "decides_nothing": "REPORTED (rule 14)."}
+    recomputed = {
+        "n_draws_reaching_p4": n,
+        "treated_realised": (sorted(treated)[0] if len(treated) == 1
+                             else sorted(treated)),
+        "treated_is_constant": len(treated) == 1,
+        "signed_gap_min": min(gaps), "signed_gap_max": max(gaps),
+        "n_distinct_signed_gaps": len(set(gaps)),
+        "control_realised_min": min(ctrl), "control_realised_max": max(ctrl),
+        "all_gaps_positive": all(g > 0 for g in gaps),
+        "all_gaps_negative": all(g < 0 for g in gaps),
+        "zero_bracketed_by_observed_gaps": min(gaps) <= 0 <= max(gaps),
+        "n_draws_control_over_on_EVERY_stratum": n_all_over,
+        "n_draws_with_any_stratum_equal": n_any_equal,
+        "per_stratum_direction": strata_dir,
+    }
+    # THE SUMMARY IS COMPARED, NOT COPIED. A field whose NAME says one
+    # quantity and whose VALUE is another is the defect DE itself named as
+    # "a quantity wearing a matching rule's name"; it survives every
+    # arithmetic check and misleads the one reader who trusts the label.
+    emitted = arm.get("p4_summary") if isinstance(arm.get("p4_summary"),
+                                                  dict) else {}
+    disagreements = []
+    for k in ("n_draws_reaching_p4", "treated_realised", "all_gaps_positive",
+              "all_gaps_negative", "control_realised_min",
+              "control_realised_max"):
+        if k in emitted and emitted[k] != recomputed.get(k):
+            disagreements.append({
+                "field": k, "emitted": emitted[k],
+                "recomputed": recomputed.get(k),
+                "also_equals": [kk for kk, vv in recomputed.items()
+                                if vv == emitted[k] and kk != k]})
+    if "target_bracketed_by_observed_gaps" in emitted and \
+            emitted["target_bracketed_by_observed_gaps"] != \
+            recomputed["zero_bracketed_by_observed_gaps"]:
+        disagreements.append({
+            "field": "target_bracketed_by_observed_gaps",
+            "emitted": emitted["target_bracketed_by_observed_gaps"],
+            "recomputed": recomputed["zero_bracketed_by_observed_gaps"]})
+    excluded = (recomputed["all_gaps_positive"]
+                or recomputed["all_gaps_negative"]) \
+        and not recomputed["zero_bracketed_by_observed_gaps"] \
+        and recomputed["n_draws_with_any_stratum_equal"] == 0
+    return {
+        "status": "RECOMPUTED_FROM_DRAWS",
+        "n_observations": len(obs), "n_malformed": malformed,
+        "recomputed": recomputed,
+        "n_summary_disagreements": len(disagreements),
+        "summary_disagreements": disagreements,
+        "reading": (
+            "TARGET OUTSIDE THE OBSERVED ACHIEVABLE SET" if excluded
+            else "TARGET INSIDE THE OBSERVED RANGE -- the budget, not the "
+                 "construction, is what refused"),
+        "honest_limit": (
+            f"evidences UNREACHABLE FOR THIS CONSTRUCTION over "
+            f"{n} draws; it does not evidence NEVER, and no larger N would "
+            f"change that -- sampling bounds what was seen"),
+        "decides_nothing": ("REPORTED. Whether an unmatched control voids "
+                            "the ablation is the policy layer's (rule 14)."),
+    }
+
+
 def arm_refusal_audit(doc: dict[str, Any]) -> dict[str, Any]:
     """A REFUSED arm: is its refusal DIAGNOSABLE from what it emitted?
 
@@ -1643,9 +1763,20 @@ def arm_refusal_audit(doc: dict[str, Any]) -> dict[str, Any]:
         accounted = (isinstance(attempts, int) and rej_sum == attempts)
         binding = ([k for k, v in rej.items() if isinstance(v, int) and v > 0]
                    if rej else [])
-        has_values = a.get("predicates_last_seen") is not None
+        p4 = p4_evidence_audit(a)
+        has_values = (a.get("predicates_last_seen") is not None
+                      or p4["status"] == "RECOMPUTED_FROM_DRAWS")
         verdict = (
             "REFUSAL_NOT_ACCOUNTED" if not accounted
+            # THE UPGRADE, and it is EARNED BY THE EVIDENCE rather than by
+            # the count growing. Per-draw values turn "every draw failed" into
+            # a measured achievable set, and the two readings a count could
+            # not separate become separable.
+            else "REFUSAL_DIAGNOSABLE_TARGET_OUTSIDE_OBSERVED_SET"
+            if p4["status"] == "RECOMPUTED_FROM_DRAWS"
+            and p4["reading"].startswith("TARGET OUTSIDE")
+            else "REFUSAL_DIAGNOSABLE_BUDGET_LIMITED"
+            if p4["status"] == "RECOMPUTED_FROM_DRAWS"
             else "REFUSAL_DIAGNOSABLE" if has_values
             else "REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE"
             if len(binding) == 1
@@ -1656,6 +1787,7 @@ def arm_refusal_audit(doc: dict[str, Any]) -> dict[str, Any]:
             "every_attempt_accounted": accounted,
             "binding_predicates": binding,
             "carries_per_draw_values": has_values,
+            "p4_evidence": p4,
             "verdict": verdict,
             "what_would_decide_it": (
                 None if verdict != "REFUSAL_LOCALISED_BUT_NOT_DIAGNOSABLE"
@@ -2039,10 +2171,13 @@ def selftest() -> int:
            "production code, this census's own shape turned on itself "
            "(found in its own output, +1 to the real tree's count)")
     _cr = phantom_failure_census()
-    ok(_cr["n_modules_scanned"] == 12 and _cr["role"]
+    # DERIVED, NOT HARDCODED: pinning the literal 12 made adding an
+    # instrument fail a check about the census rather than about the
+    # instrument -- the same lesson this seat keeps applying to denominators.
+    ok(_cr["n_modules_scanned"] == len(DA_INSTRUMENTS) and _cr["role"]
        == "REPORTED_NOT_ENFORCED",
        f"PHANTOM-C5 the real census covers all {_cr['n_modules_scanned']} of "
-       f"this seat's instruments and REPORTS: "
+       f"this seat's {len(DA_INSTRUMENTS)} instruments and REPORTS: "
        f"{_cr['n_except_returning_a_bare_negative']} except-sites returning a "
        f"bare negative and {_cr['n_unguarded_subprocess_results']} unguarded "
        f"subprocess results are places to LOOK, not defects -- and its own "
