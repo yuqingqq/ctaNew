@@ -15,30 +15,43 @@ is a **correction**, not a restatement.
 
 ---
 
-## 1. The bottom line, in four sentences
+## 1. The bottom line — the first economic results, and they are negative
 
-The **ranking model works, the economics do not yet clear their own bar, and
-until 2026-09-03 the forward race could not have answered the question it
-exists to answer.** Iteration 011's arrival head beats the incumbent hazard head
-by a wide margin (AUC 0.8303 vs 0.7139), but every surviving cell sits **at its
-permutation floor** with 500 draws on a null the artifact itself discloses as
-optimistic, and the decision metric — net cents against the incumbent — does not
-survive multiplicity (best Holm 0.1199).
+**The candidate does not beat the incumbent, and the book already makes money
+without it.** Three days have now been read: **08-29** as a development read
+(USER-withdrawn from the race at R-500, ratified at R-502) and **09-01 / 09-02**
+as a **pre-declared interim** whose hypothesis was fixed at `eeb02ba` before
+either day was opened.
 
-**The finding of 2026-09-03, and it is the largest of the programme so far: the
-forward path could not produce its own decision metric.** A sealed day held
-per-ROW candidate values with no action key and no incumbent leg; nothing
-downstream read a sealed day at all; and every module computing net cents read
-**development** rows. Unsealing 09-01 or 09-02 would have answered nothing, and
-**reaching G=5 would have answered nothing** — five sealed days of per-row
-scores is not a net-cents-against-incumbent answer. Established at the code
-without opening a seal (BE rounds 13–14). The estimator itself was **not**
-missing: `evaluate_policy` is action-native, latency-aware and control-matched;
-what was missing was a feed and three declarations.
+**At matched volume the candidate loses on btc in every cell tested** — nine
+net-cents cells across the three days and pooled, and **rho** (adverse drift
+avoided per unit of good flow forfeited) **lower in all twelve**. eth is a wash.
+Holm over the declared denominator: **nothing survives**, the correct outcome
+for a one-sided candidate-beats-incumbent test.
 
-**The race stands at G = 2 of 5**, earliest G=5 **2026-09-06**. **No forward
-profitability number has ever been read**, and none can be until the release
-gate below opens.
+**The headline says the opposite and would have misled.** BY_THRESHOLD reads
+**+15,556 cents pooled on btc, at the permutation floor**. The exact
+decomposition — identity checked, residual 0 — shows the entire positive is the
+**volume term** with a **negative quality term throughout**: one theta calibrated
+on the candidate's training distribution was applied to both arms, so the
+candidate cancels ~3× as often and neither arm delivers its nominal budget.
+**BY_THRESHOLD is not the decision metric.**
+
+**Profitability, with its denominator and its baseline** (3 days, both coins):
+
+| | |
+|---|---|
+| filled notional | **$226,594** ($75,531/day) |
+| **no-cancel baseline book** | **$1,801.29** — $600.43/day, **0.7949% on filled notional** |
+| best cancel overlay (15% budget) | **+$620.58** — **+34.5% on the book** |
+
+**Three limits, never to be quoted apart from the numbers:** it is **5-second
+markout P&L**, not realised P&L; it is **gross**, and the venue **does** charge
+fees — **911 of 1,957 real on-chain `OrderFilled` events carry a non-zero fee,
+while the repo's `fee == 0` check is a FIXTURE, not evidence**; and the return is
+on **filled notional, not capital**, because quoted size is absent from the row.
+
+**The race has not advanced: G = 2 of 5.** 09-03 did not accrue — see §3.
 
 ---
 
@@ -135,7 +148,16 @@ from its own `da_dayverdict_<day>.json`, `verdict_split` and `era_admission`.
 | 08-31 | **false** | `clob_v4`+`clob_v4_1`, boundary 22:00:02Z | false | no | BTC P1 298.52 s/hr against a 120 s bar |
 | **09-01** | true | `clob_v4_1` | true | **ACCRUED** | first day the race ever counted; four conjuncts recomputed, not read back |
 | **09-02** | true | `clob_v4_1` | true | **ACCRUED** | R-496, the USER's call on R-486 (6); first **governed** verdict |
-| 09-03 → | open | — | — | open | earliest possible G=5 is **2026-09-06** (09-03/04/05 must all accrue; the 09-05 verdict is written 09-06 00:06Z) |
+| **09-03** | true | `clob_v4_1` | **NOT EVALUABLE** | **no** | **287 of 288 windows era-covered.** One missing 5-minute window refused the whole day *before its quality was evaluated* — on measured rates of btc **95.6 s/hr** against a bar of 120 and eth **9.0**, which would have passed. Not a timing lag: 09-01 and 09-02 both read 288/288 at the same 00:06:01 stamp |
+| 09-04 → | open | — | — | open | earliest G=5 now **2026-09-07 at the soonest**, and only if every remaining day accrues
+
+**The coverage bar is brittle, and it is the USER's to set.** `coverage_observed`
+is `counts > 0 AND short <= 0` where `short = 288 − era_covered_windows`, so a
+day missing **one** window of 288 is refused before its quality is measured.
+09-03 was well inside every quality bar and did not accrue. If windows go
+missing at any regular rate, the race advances rarely — and the collectors are
+healthy (all four units active, writing continuously), so this is a bar
+question, not a collection question.
 
 **The partial-data profitability read (R-496 (D)) spends none of this.** 08-29
 is post-freeze, era-pure and quality-passing yet can never accrue, so opening it
