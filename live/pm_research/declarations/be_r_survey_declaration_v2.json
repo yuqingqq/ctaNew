@@ -1,0 +1,46 @@
+{
+ "protocol": "BE_ORACLE_SURVEY_DECLARATION_V2",
+ "supersedes": "be_r_survey_declaration_v1.json",
+ "why_superseded": "r is a ratio of two sums and DOES NOT DETERMINE whether an overlay can pay. The reviewer constructed three books on this book's own totals, varying only how adverse is DISTRIBUTED: r 18.63/18.65/18.99% with oracle ceilings of 0.00/10.62/22.19% and break-even thresholds of ~100/10.0/1.0%. Same r, opposite verdicts. A survey of r would have returned a distribution that answers nothing.",
+ "declared_before_any_measurement": true,
+ "PRIMARY_STATISTIC": {
+  "name": "V_oracle",
+  "definition": "the sum of |P&L| over fills whose P&L is NEGATIVE, per coin-hour",
+  "why": "MODEL-FREE, and exactly the CEILING any overlay could reach on that book. V_oracle near zero means NO POLICY COULD HAVE PAID, which closes the line for the right reason rather than because this policy did not.",
+  "reported_as": ["cents", "percentage of that cell's maker P&L"],
+  "why_percentage": "the only form comparable across cells of different size"
+ },
+ "ORACLE_F_REPORTED_BESIDE_IT": {
+  "definition": "the fraction of fills the oracle would decline",
+  "why": "a ceiling reachable only by declining 40% of the book is a different proposition from one reachable at 1%"
+ },
+ "r_KEPT_AS_A_REPORTED_COLUMN": "not dropped: it is what the specification was written against, the per-cell comparison between r and V_oracle is itself informative, and dropping it would leave this survey unable to correct the record",
+ "TAIL_EXCLUDED_r_IS_PER_CELL_NEVER_GLOBAL": "a global tail excludes the whole survey's largest fills, which concentrate in whichever cells happen to be extreme, so a global r_ex answers a question about the POOLED book rather than about whether ANY CELL clears break-even",
+ "WHAT_COUNTS_declared_now_for_the_NEW_statistic": {
+  "the_overlay_has_somewhere_to_live": "at least 25% of admissible coin-hours with V_oracle >= 5% of that cell's maker P&L AND oracle f <= 10% — a ceiling that is both material and reachable without declining most of the book",
+  "closes_the_overlay_line": "the 90th percentile of V_oracle below 1% of maker P&L — near zero everywhere, meaning no policy could have paid",
+  "indeterminate": "anything between, reported as indeterminate rather than argued either way",
+  "dispersion_reported": ["p10", "p25", "median", "p75", "p90", "IQR", "n_cells", "n_fills per cell"],
+  "why_these_numbers": "5% of maker P&L is the smallest ceiling that could survive any realistic sigma; f <= 10% is the reachability side. Both are set now, before any histogram exists, and are not adjusted afterwards."
+ },
+ "alpha_is_not_a_model_property": "it is BOUNDED ABOVE by the book's adverse dispersion, so sigma/alpha is per-book and the 27.60% break-even is THIS book's number, not a constant",
+ "the_measured_hour_is_one_cell": "2026-08-24 13:50-14:50Z btc appears as ONE CELL and is not a reference point the others are compared against",
+ "MEASURED_SIZING_not_estimated": {
+  "per_selected_window_s": 8.78,
+  "peak_memory_bytes": 1084338176,
+  "peak_memory_gib": 1.01,
+  "cap_gib": 10,
+  "memory_fits": true,
+  "projected_selected_windows": 1663,
+  "projected_compute_hours": 4.1,
+  "constraint": "TIME, not memory — and it had not been costed"
+ },
+ "WINDOW_CORRECTION_verified_at_the_code": {
+  "claimed_in_dispatch": "~88 hours x 7 coins = ~600 coin-hours",
+  "measured": "v2_era_bounds('v3_4_consumed_fragment') = 2026-08-24T13:48:54Z to 2026-08-25T09:35:10Z = 19.8 hours x 7 = 138 coin-hours",
+  "why": "the era END is a DECLARED LITERAL per population (DECLARED_ERA_END_S), not the extent of the tape. The tape runs later — collector pids start 2026-08-26 — but this population does not declare it.",
+  "consequence": "the extra ~470 coin-hours are NOT already-consumed development evidence; they are outside the declared population, and surveying them would require a NEW declared era end, which is a declaration act and not mine"
+ },
+ "memory_ceiling": "10G, not raised (R-174)",
+ "touches_nothing_sealed": "09-01, 09-02 consumed economic reads; 09-03 accrued and unopened; none read"
+}
