@@ -139,6 +139,53 @@ ARM_NAME_COLLISION = (
     "reference with no interaction': X_SKEW asserts an interaction that is "
     "refused, and NEUTRAL omits the skew that was in force")
 
+#: §8.1's REQUIRED OUTPUT, field by field, with WHERE each comes from.
+#: The plan ends "net_cancel_cents alone is not a strategy-P&L verdict",
+#: so an arm that reports a subset must say WHICH subset -- a partial
+#: reported as complete is the failure this list exists to prevent.
+#: `source` is the producer; None means nothing in this repo produces it
+#: and the arm reports NOT_AVAILABLE with that reason rather than a zero.
+SECTION_8_1_FIELDS: dict[str, dict] = {
+    "maker_pnl_cents": {
+        "source": None,
+        "why": "the replay values CANCELLATION (harm avoided minus "
+               "sacrifice), not a maker book. A complete maker P&L needs "
+               "spread earned on every fill minus adverse selection on "
+               "every fill, over the whole opportunity population -- the "
+               "replay prices the DECISION, not the book"},
+    "spread_capture_cents": {
+        "source": None,
+        "why": "`de_rho_estimator` computes a spread denominator PER "
+               "RECEIVED FILL for rho; there is no book-level spread "
+               "capture, and summing rho's denominator would be a "
+               "different quantity wearing the name"},
+    "post_fill_markout_cents": {
+        "source": "economics.received_markout_cents",
+        "also": ("economics.stale_markout_cents",)},
+    "fill_share_retention": {"source": "retention_share_fraction"},
+    "rho": {"source": "de_rho_estimator.rho"},
+    "cancels_effective": {"source": "counters.cancels_effective"},
+    "cancels_stale": {"source": "counters.cancels_stale"},
+    "cancels_unresolved": {"source": "counters.cancels_unresolved"},
+    "holds_total": {"source": "counters.holds_total"},
+    "hold_seconds_total": {"source": "counters.hold_seconds_total"},
+    "reposts": {"source": "counters.reposts"},
+    "queue_reset_cost_cents_total": {
+        "source": "counters.queue_reset_cost_cents_total"},
+    "terminal_inventory": {"source": "economics.inventory.net"},
+    "peak_inventory": {"source": "economics.inventory.peak_abs_net"},
+    "inventory_loss_cents": {
+        "source": None,
+        "why": "the inventory block carries NET and PEAK ABS shares and "
+               "the increasing/reducing split, but no valuation of the "
+               "position it leaves behind. Inventory LOSS needs a "
+               "terminal mark, which the replay never takes"},
+    "latency_x_cost_sensitivity": {
+        "source": "the caller, by replaying the arm across the frozen "
+                  "latency axis and cost levels"},
+}
+
+
 #: WHAT EACH ARM NEEDS, as dependency NAMES rather than a verdict.
 #: §8.1's seven arms differ in exactly two ways -- the PLACEMENT the
 #: opportunity population is replayed under, and the PREDICTOR that decides
