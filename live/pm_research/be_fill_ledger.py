@@ -34,6 +34,31 @@ class FillLedgerRefused(RuntimeError):
     """A named refusal."""
 
 
+#: WHY THERE IS NO "EXACTLY ONCE" NUMBER HERE, established at the builder.
+#:
+#: `prof.py` kept the FIRST ROW of an action and UNDER-counted. Replacing it
+#: with "every row exactly once" OVER-counts, and by the same mechanism: a row
+#: already sums every tranche inside its OWN 1s horizon, and consecutive rows
+#: of an action sit far closer than that, so the same tranche is summed once
+#: per covering row. "Every row exactly once" is NOT "every fill exactly once".
+#:
+#: AND THE DIFFERENCE IS NOT REPAIRABLE FROM WHAT WE HOLD. Tranches exist only
+#: inside `harmful_exposure_rows` as `gens[k]["tranches"]` with their own `t`,
+#: `shares` and `level`; the ROW receives only the SUMS
+#: (`harmful_exposure_rows.py:369-370`), and the feed carries only those. There
+#: is NO TRANCHE IDENTITY and no tranche timestamp anywhere downstream, so the
+#: overlap cannot be subtracted and a de-duplicated total cannot be computed.
+#:
+#: So this module does NOT report a fill total. It reports the BRACKET that IS
+#: computable, and names the quantity for what it measures:
+#:   * LOWER BOUND  = sum over actions of the LARGEST single row's window
+#:                    (the union of an action's windows contains any one of
+#:                     them, so the distinct total is at least this)
+#:   * UPPER BOUND  = sum over every row (each distinct tranche is counted at
+#:                    least once, so the distinct total is at most this)
+#: The true de-duplicated total lies between them and is NOT COMPUTABLE HERE.
+#: An honest name for an uncomputable quantity beats a plausible number for it.
+
 #: What `preventable_shares` actually covers, transcribed from the builder.
 POPULATION_NOTE = {
     "unit": "one row per (slug, side, gen, t_start) — EVERY row, not the first",
@@ -50,7 +75,19 @@ POPULATION_NOTE = {
     "therefore_this_is_NOT": (
         "total filled shares, total filled notional, or the whole no-cancel "
         "book. It is the PREVENTABLE WINDOW only"),
+    "exactly_once_total": "NOT COMPUTABLE FROM HELD ARTIFACTS",
+    "why_not_computable": (
+        "the feed carries no tranche identity and no tranche timestamp -- "
+        "only per-row SUMS over each row's own horizon "
+        "(harmful_exposure_rows.py:369-370). Overlapping rows of one action "
+        "therefore cannot be de-duplicated, so a distinct-fill total cannot "
+        "be formed. A BRACKET is reported instead"),
+    "what_would_make_it_computable": (
+        "emitting tranche identity (t, shares, level) or a per-action "
+        "de-duplicated total from the BUILDER, which is a producer change and "
+        "a re-run, not a downstream repair"),
     "markout_horizon_s": 5.0,
+    "fill_horizon_s": 1.0,
     "source": "harmful_exposure_rows.label_rows, FILL_HORIZON_S / MARKOUT_S",
 }
 
@@ -73,62 +110,113 @@ NOT_A_NET_RETURN = {
 
 
 def ledger(feed_path: Path) -> dict:
-    """Aggregate EVERY row of EVERY action. Nothing is taken first."""
+    """The computable BRACKET, plus the overlap that makes it a bracket."""
     if not feed_path.exists():
         raise FillLedgerRefused(f"REFUSED: no feed at {feed_path}.")
-    per = collections.defaultdict(
-        lambda: {"n_rows": 0, "n_actions": 0, "shares": 0.0,
-                 "notional": 0.0, "markout_cents": 0.0,
-                 "rows_with_fill": 0, "rows_no_level": 0})
-    actions = collections.defaultdict(set)
+    acts = collections.defaultdict(list)     # action -> [(t_start, sh, lv, v)]
+    per_meta = collections.defaultdict(
+        lambda: {"n_rows": 0, "rows_with_fill": 0, "rows_no_level": 0,
+                 "rows_no_shares_field": 0, "markout_cents": 0.0})
     n_lines = 0
     for line in feed_path.open():
         r = json.loads(line)
         n_lines += 1
         coin = r["slug"].split("-", 1)[0]
-        b = per[coin]
-        b["n_rows"] += 1
-        actions[coin].add((r["slug"], r["side"], r["gen"]))
+        m = per_meta[coin]
+        m["n_rows"] += 1
         if not r.get("any_fill_ahead"):
             continue
         v = r.get("value_cents")
         if v is None or not math.isfinite(float(v)):
             continue
-        b["rows_with_fill"] += 1
+        m["rows_with_fill"] += 1
+        m["markout_cents"] += -float(v)
+        if "preventable_shares" not in r:
+            m["rows_no_shares_field"] += 1
         sh = float(r.get("preventable_shares") or 0.0)
         lv = r.get("level")
-        b["shares"] += sh
         if lv is None:
-            b["rows_no_level"] += 1
-        else:
-            b["notional"] += sh * float(lv)
-        # book P&L of those tranches = +markout*shares = -preventable_value
-        b["markout_cents"] += -float(v)
+            m["rows_no_level"] += 1
+        acts[(coin, r["slug"], r["side"], r["gen"])].append(
+            (float(r["t_start"]), sh, lv))
     if not n_lines:
         raise FillLedgerRefused(
             f"REFUSED: {feed_path} is empty. An empty ledger is a FAILURE, "
             f"not a zero (R-141).")
+
+    # BE31-R3: REFUSE THE EMPTY FIELD, not only the empty FILE. The counters
+    # below were computed and never consulted, and a feed predating the scale
+    # fields printed 0.0 shares beside a non-zero markout as though the day
+    # had no size.
+    for coin, m in sorted(per_meta.items()):
+        if m["rows_with_fill"] and m["rows_no_level"] == m["rows_with_fill"]:
+            raise FillLedgerRefused(
+                f"REFUSED: every one of {coin}'s {m['rows_with_fill']} "
+                f"fill-bearing rows carries NO `level`, so no notional can be "
+                f"formed and a zero here would mean 'field absent', not 'no "
+                f"size'. This feed predates the scale fields; re-score it "
+                f"before asking it for a denominator.")
+        if m["rows_with_fill"] and \
+                m["rows_no_shares_field"] == m["rows_with_fill"]:
+            raise FillLedgerRefused(
+                f"REFUSED: every one of {coin}'s {m['rows_with_fill']} "
+                f"fill-bearing rows lacks a `preventable_shares` FIELD. "
+                f"Absence is not zero (rule 11).")
+
     out = {}
-    for coin, b in sorted(per.items()):
-        b["n_actions"] = len(actions[coin])
-        b["rows_per_action"] = (b["n_rows"] / b["n_actions"]
-                                if b["n_actions"] else None)
-        b["gross_markout_dollars"] = b["markout_cents"] / 100.0
-        b["preventable_notional_dollars"] = b["notional"]
-        out[coin] = b
+    n_actions = collections.Counter()
+    for (coin, *_), rows in acts.items():
+        n_actions[coin] += 1
+    for coin, m in sorted(per_meta.items()):
+        up_sh = lo_sh = up_no = lo_no = 0.0
+        pairs = inside = 0
+        for (c, *_), rows in acts.items():
+            if c != coin:
+                continue
+            rows.sort()
+            up_sh += sum(sh for _, sh, _ in rows)
+            lo_sh += max((sh for _, sh, _ in rows), default=0.0)
+            up_no += sum(sh * lv for _, sh, lv in rows if lv is not None)
+            lo_no += max((sh * lv for _, sh, lv in rows if lv is not None),
+                         default=0.0)
+            for i in range(len(rows) - 1):
+                pairs += 1
+                if rows[i + 1][0] - rows[i][0] < POPULATION_NOTE[
+                        "fill_horizon_s"]:
+                    inside += 1
+        out[coin] = {
+            "n_rows": m["n_rows"], "n_actions": n_actions[coin],
+            "rows_per_action": (m["n_rows"] / n_actions[coin]
+                                if n_actions[coin] else None),
+            "rows_with_fill": m["rows_with_fill"],
+            "rows_no_level": m["rows_no_level"],
+            "shares_UPPER_BOUND_row_window_sum": up_sh,
+            "shares_LOWER_BOUND_largest_single_window": lo_sh,
+            "notional_UPPER_BOUND_dollars": up_no,
+            "notional_LOWER_BOUND_dollars": lo_no,
+            "bracket_width_ratio_shares": (up_sh / lo_sh) if lo_sh else None,
+            "exactly_once_total": "NOT COMPUTABLE — no tranche identity",
+            "gross_markout_cents_UPPER_BOUND": m["markout_cents"],
+            "intra_action_row_pairs": pairs,
+            "pairs_closer_than_the_horizon": inside,
+            "pct_pairs_overlapping": (100.0 * inside / pairs) if pairs else None,
+        }
     return {
-        "protocol": "BE_FILL_LEDGER_V1",
+        "protocol": "BE_FILL_LEDGER_V2",
         "feed": str(feed_path),
         "n_feed_rows": n_lines,
-        "aggregation": "EVERY ROW OF EVERY ACTION, exactly once",
+        "aggregation": ("A BRACKET, because exactly-once is not computable: "
+                        "UPPER = every row summed, LOWER = the largest single "
+                        "window per action"),
         "explicitly_not_first_row_per_action": True,
+        "explicitly_not_claiming_exactly_once": True,
         "population": POPULATION_NOTE,
         "not_a_net_return_because": NOT_A_NET_RETURN,
         "per_coin": out,
     }
 
 
-EXPECTED_CHECKS = 12
+EXPECTED_CHECKS = 13
 
 
 def selftest() -> int:
@@ -156,75 +244,97 @@ def selftest() -> int:
 
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
-        # THE FIXTURE IS THE DEFECT: one action, THREE rows. First-row
-        # selection would see 10 shares; the truth is 60.
-        f = td / "feed.jsonl"
-        rows = [
-            {"slug": "btc-x-1", "side": "SELL_UP", "gen": 1, "t0": 0,
-             "t_start": 0.1, "score": 0.5, "score_incumbent": 0.4,
-             "any_fill_ahead": True, "value_cents": -3.0,
-             "preventable_shares": 10.0, "level": 0.5},
-            {"slug": "btc-x-1", "side": "SELL_UP", "gen": 1, "t0": 0,
-             "t_start": 0.2, "score": 0.6, "score_incumbent": 0.4,
-             "any_fill_ahead": True, "value_cents": -5.0,
-             "preventable_shares": 20.0, "level": 0.5},
-            {"slug": "btc-x-1", "side": "SELL_UP", "gen": 1, "t0": 0,
-             "t_start": 0.3, "score": 0.7, "score_incumbent": 0.4,
-             "any_fill_ahead": True, "value_cents": 2.0,
-             "preventable_shares": 30.0, "level": 0.5},
-        ]
-        f.write_text("".join(json.dumps(r) + "\n" for r in rows))
-        L = ledger(f)
-        b = L["per_coin"]["btc"]
-        ok(b["n_rows"] == 3 and b["n_actions"] == 1,
-           f"POSITIVE CONTROL: three rows, ONE action "
-           f"({b['rows_per_action']:.1f} rows/action) — the shape the audit "
-           f"says first-row selection destroys")
-        ok(abs(b["shares"] - 60.0) < 1e-9,
-           f"THE DEFECT, DRIVEN: every row's shares are summed "
-           f"({b['shares']}), not the first row's 10.0 — this check FAILS on "
-           f"the code the USER withdrew")
-        ok(abs(b["notional"] - 30.0) < 1e-9,
-           f"notional is shares x level summed over ALL rows "
-           f"({b['notional']}), not 5.0 from the first row alone")
-        ok(abs(b["markout_cents"] - 6.0) < 1e-9,
-           f"book markout is -(sum of preventable value) over ALL rows "
-           f"({b['markout_cents']}), not 3.0 from the first")
-        ok(b["rows_with_fill"] == 3 and b["rows_no_level"] == 0,
-           "row statuses are counted, not inferred")
-        # a no-fill row contributes nothing but is still counted as a row
-        f2 = td / "feed2.jsonl"
-        f2.write_text(json.dumps({**rows[0], "any_fill_ahead": False,
-                                  "value_cents": 0.0}) + "\n")
-        L2 = ledger(f2)
-        b2 = L2["per_coin"]["btc"]
-        ok(b2["n_rows"] == 1 and b2["rows_with_fill"] == 0
-           and b2["shares"] == 0.0,
-           "a row with NO fill ahead is COUNTED as a row and contributes no "
-           "shares — quiet and empty are different (rule 11)")
-        f3 = td / "feed3.jsonl"
-        f3.write_text(json.dumps({**rows[0], "level": None}) + "\n")
-        b3 = ledger(f3)["per_coin"]["btc"]
-        ok(b3["rows_no_level"] == 1 and b3["shares"] == 10.0
-           and b3["notional"] == 0.0,
-           "a row with NO level contributes SHARES but not NOTIONAL, and the "
-           "omission is COUNTED — a silently smaller denominator is the "
-           "defect this module exists to end")
+
+        def row(t, sh, lv=0.5, v=-3.0, slug="btc-x-1", fill=True):
+            return {"slug": slug, "side": "SELL_UP", "gen": 1, "t0": 0,
+                    "t_start": t, "score": 0.5, "score_incumbent": 0.4,
+                    "any_fill_ahead": fill, "value_cents": v,
+                    "preventable_shares": sh, "level": lv}
+
+        def write(name, rows):
+            f = td / name
+            f.write_text("".join(json.dumps(r) + "\n" for r in rows))
+            return f
+
+        # FIXTURE A: rows spaced BEYOND the 1s horizon. Their windows cannot
+        # overlap, so no tranche can be double-counted and the bracket must
+        # COLLAPSE only in the sense that the upper bound is the honest total
+        # -- the lower bound is still one window, because the module cannot
+        # know the windows are disjoint without tranche identity.
+        fa = write("beyond.jsonl", [row(0.0, 10.0), row(5.0, 20.0),
+                                    row(10.0, 30.0)])
+        A = ledger(fa)["per_coin"]["btc"]
+        ok(A["intra_action_row_pairs"] == 2
+           and A["pairs_closer_than_the_horizon"] == 0
+           and A["pct_pairs_overlapping"] == 0.0,
+           "FIXTURE SPACED BEYOND THE HORIZON: zero overlapping pairs, so "
+           "these rows genuinely cannot double-count — the old fixture put "
+           "three rows at 0.1/0.2/0.3, DEEP inside the horizon, and asserted "
+           "their sum was the truth, which enshrined the over-count as spec")
+        ok(abs(A["shares_UPPER_BOUND_row_window_sum"] - 60.0) < 1e-9
+           and abs(A["shares_LOWER_BOUND_largest_single_window"] - 30.0) < 1e-9,
+           f"and the BRACKET is reported, not a point: upper "
+           f"{A['shares_UPPER_BOUND_row_window_sum']} (every row) and lower "
+           f"{A['shares_LOWER_BOUND_largest_single_window']} (largest single "
+           f"window) — the true distinct total lies between and is NOT "
+           f"computable here")
+
+        # FIXTURE B: rows INSIDE the horizon -- the over-counting case.
+        fb = write("inside.jsonl", [row(0.1, 10.0), row(0.2, 20.0),
+                                    row(0.3, 30.0)])
+        B = ledger(fb)["per_coin"]["btc"]
+        ok(B["pairs_closer_than_the_horizon"] == 2
+           and B["pct_pairs_overlapping"] == 100.0,
+           "FIXTURE INSIDE THE HORIZON: 100% of pairs overlap, so summing "
+           "every row counts the same tranches repeatedly — the emission SAYS "
+           "so rather than leaving a reader to assume exactness")
+        ok(B["shares_UPPER_BOUND_row_window_sum"]
+           > B["shares_LOWER_BOUND_largest_single_window"]
+           and abs(B["bracket_width_ratio_shares"] - 2.0) < 1e-9,
+           f"and the bracket is WIDE exactly where overlap is total "
+           f"({B['bracket_width_ratio_shares']:.2f}x) — width is the honest "
+           f"signal that the number is not knowable, not a defect")
+        ok(B["exactly_once_total"].startswith("NOT COMPUTABLE"),
+           "and every coin block says EXACTLY-ONCE IS NOT COMPUTABLE, in a "
+           "field, because the feed carries no tranche identity")
+
+        # statuses, still counted
+        C = ledger(write("nofill.jsonl", [row(0.0, 10.0, fill=False, v=0.0)]))
+        ok(C["per_coin"]["btc"]["rows_with_fill"] == 0
+           and C["per_coin"]["btc"]["n_rows"] == 1,
+           "a row with NO fill ahead is COUNTED and contributes nothing — "
+           "quiet and empty are different (rule 11)")
+
+        # BE31-R3: the empty FIELD refuses, and the counter is consulted
+        refuses(lambda: ledger(write("nolevel.jsonl",
+                                     [row(0.0, 10.0, lv=None),
+                                      row(5.0, 20.0, lv=None)])),
+                "carries NO `level`",
+                "BE31-R3 KNOWN-BAD: a feed whose fill-bearing rows ALL lack "
+                "`level` REFUSES BY NAME — the counter was computed and never "
+                "consulted, and a zero there means 'field absent', not 'no "
+                "size'")
+        ok(ledger(write("mixed.jsonl", [row(0.0, 10.0, lv=None),
+                                        row(5.0, 20.0, lv=0.5)])
+                  )["per_coin"]["btc"]["rows_no_level"] == 1,
+           "BE31-R3 POSITIVE CONTROL: a feed where only SOME rows lack the "
+           "field is ADMITTED with the omission counted — the refusal fires "
+           "on absence of the field, not on any missing value")
         refuses(lambda: ledger(td / "nope.jsonl"), "no feed at",
                 "KNOWN-BAD: a missing feed REFUSES by name")
         (td / "empty.jsonl").write_text("")
         refuses(lambda: ledger(td / "empty.jsonl"), "is a FAILURE, not a zero",
                 "KNOWN-BAD: an EMPTY feed REFUSES rather than reporting zeros")
-        ok(L["explicitly_not_first_row_per_action"] is True
-           and "EVERY ROW" in L["aggregation"],
-           "the emission SAYS how it aggregates, in a field")
+        L = ledger(fa)
+        ok(L["explicitly_not_claiming_exactly_once"] is True
+           and "BRACKET" in L["aggregation"],
+           "the emission SAYS it reports a bracket and does NOT claim "
+           "exactly-once, in fields")
         ok("PREVENTABLE WINDOW" in L["population"]["therefore_this_is_NOT"]
-           and "total filled notional" in
-           L["population"]["therefore_this_is_NOT"]
-           and L["population"]["shares_field"] == "preventable_shares",
-           "and it SAYS in the VALUE, not just the key, that its population "
-           "is the PREVENTABLE WINDOW and NOT total filled notional — the "
-           "exact overstatement that was withdrawn")
+           and L["population"]["exactly_once_total"].startswith("NOT COMPUTABLE")
+           and "no tranche identity" in L["population"]["why_not_computable"],
+           "and the population block names WHY exactly-once is uncomputable: "
+           "no tranche identity survives the builder")
         ok(set(L["not_a_net_return_because"]) >= {
                "fees", "realised_exit_and_settlement", "quote_size",
                "inventory", "capital"},

@@ -4369,12 +4369,18 @@ def selftest() -> int:
        f"scheduled-unit write_reason with INVOCATION_ID "
        f"{_A['invocation_id'][:12]}…, checked at the bytes and not taken "
        f"from the dispatch that granted it")
+    # R29: this asserted the admission set was EXACTLY ["20260829"], so it
+    # went red the moment a second day was legitimately admitted. Membership
+    # is the R29 control's job; this one asserts the PROPERTY that makes an
+    # admission an admission -- a day without one gets None and the ordinary
+    # gate, however many days have one.
     ok(admitted_verdict("20260830") is None
        and admitted_verdict("20260901") is None
-       and list(USER_ADMISSIONS_BY_DAY) == ["20260829"],
-       "R23 THE ADMISSION CANNOT BECOME A BYPASS: it is keyed by DAY and "
-       "exactly one day carries one -- every other day, race days included, "
-       "gets None and the ordinary gate")
+       and admitted_verdict("20260902") is None
+       and "20260829" in USER_ADMISSIONS_BY_DAY,
+       f"R23 THE ADMISSION CANNOT BECOME A BYPASS: it is keyed by DAY, and "
+       f"days outside the {len(USER_ADMISSIONS_BY_DAY)}-day admission set -- "
+       f"race days included -- get None and the ordinary gate")
     refuses(lambda: assert_day_closed_and_attributed("20260829"),
             "was not written by the scheduled unit",
             "R23 AND THE ORDINARY GATE IS UNCHANGED: called WITHOUT the "

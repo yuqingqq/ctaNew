@@ -599,17 +599,36 @@ def selftest() -> int:
 
     # THE WIRING, ASSERTED OVER THE SOURCE. This is the check whose absence
     # let a defined-but-uncalled primary reach a published headline.
-    src = inspect.getsource(compute)
-    ok("matched_volume(" in src,
-       "WIRING: `compute()` CALLS `matched_volume` — the audit's finding was "
-       "that it did not, and that the headline came from a scratch script")
-    ok("p_reading(" in src,
-       "WIRING: and every cell it builds is given a `p_reading`, so no p "
-       "leaves this module bare")
-    _bad = src.replace("mv = matched_volume(", "mv = None  # unwired\n        _ = (")
-    ok("matched_volume(" not in _bad.split("mv = None")[0].rsplit("\n", 3)[-1],
-       "WIRING KNOWN-BAD: with the call removed the predicate above can fail "
-       "— it is not a check that passes on any source")
+    # BE31-R1: this WAS three substring tests over `compute`'s source, and a
+    # substring does not distinguish a CALL from a MENTION -- `"matched_volume("`
+    # is satisfied by a comment. Worse, the known-bad inspected the lines
+    # before a marker it had just inserted rather than RE-EVALUATING the
+    # predicate, so the control that proves the check can fail did not.
+    # Both halves are now the AST census, driven on modified source.
+    _wired = publication_provenance()
+    ok(_wired["symbols"]["matched_volume"]["committed_call_sites"] == ["compute"],
+       "WIRING: `compute()` CALLS `matched_volume` -- an AST Call node, not a "
+       "substring a comment could satisfy")
+    _mention = publication_provenance(src=(
+        "def matched_volume(a):\n    return a\n"
+        "def compute(x):\n"
+        "    # this line mentions matched_volume( and calls nothing\n"
+        "    return x\n"
+        "def emit(x):\n    return compute(x)\n"))
+    ok(_mention["symbols"]["matched_volume"]["committed_call_sites"] == []
+       and _mention["passes"] is False,
+       "WIRING KNOWN-BAD, RE-EVALUATED: on a source whose only occurrence of "
+       "`matched_volume(` is INSIDE A COMMENT, the predicate returns NO call "
+       "sites and the check FAILS -- the substring test it replaced passed "
+       "this source")
+    _refonly = publication_provenance(src=(
+        "def matched_volume(a):\n    return a\n"
+        "def compute(x):\n    y = matched_volume\n    return y\n"
+        "def emit(x):\n    return compute(x)\n"))
+    ok(_refonly["symbols"]["matched_volume"]["bare_reference_sites"] == ["compute"]
+       and _refonly["symbols"]["matched_volume"]["committed_call_sites"] == [],
+       "WIRING KNOWN-BAD: a BARE REFERENCE is counted as a reference and NOT "
+       "as a call -- the distinction the whole finding turns on")
 
     _p = p_reading(0.94, 2000, 288)
     ok(_p["how_to_read_a_HIGH_p"].startswith("FAILURE TO SHOW A WIN")
