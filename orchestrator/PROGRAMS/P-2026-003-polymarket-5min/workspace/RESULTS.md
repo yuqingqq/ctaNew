@@ -112,30 +112,78 @@ sealed day**. The measured hour is **one cell** of it.
 
 ---
 
-### The finding to carry out of today, ahead of any number in it
+### The ceiling, measured at last — and it says the lever is NOT exhausted
 
-**No value ceiling has ever been computed in either programme.** Searched across
-`live/pm_research/` (entire) and `live/mm_research/` (**all 11 files**), both
-registers and both `RESULTS.md`, on the full vocabulary — `oracle`,
-`perfect foresight`, `upper bound`, `ceiling`, `headroom`, `best possible`,
-`max achievable`, `attainable` — **and separately on the SHAPE rather than the
-words** (`pnl < 0`, sums over losing fills). **P-2026-002 returns ZERO hits
-across all 11 files.** Both registers and both `RESULTS.md`: zero. The four
-`v < 0` sites all **count** negative windows; **none sums them.**
+**`V_oracle` for the measured hour = 60,303.76c against a baseline net of
+8,598.76c — 701% of the book — at `oracle_f` 0.4802 (2,072 of 4,315 fills are
+losers).** An overlay can only decline, so the most it could ever add is
+achieved by declining every losing fill and keeping every winning one.
 
-**The one exception sharpens it.** `skew_bound.py` **is** a real ceiling — for
-the **skew** lever, bounding the published 15× claim by attacking a generous
-re-post idealisation. Built well. **So this programme knows how to build a
-ceiling; it spent months on the cancellation lever and never built one there.**
-*"That is not a capability gap; it is a gap in what got asked."*
+| arm | fills-leg delta | **share of the ceiling captured** |
+|---|---:|---:|
+| CONDVALUE | −953.92c | **−1.58%** |
+| HAZARD | −12.56c | **−0.02%** |
 
-**And it has been a filter and a sum for ten days.** `markout_cents_per_share`
-(`harmful_exposure_rows.py:309-313`) **is** the per-fill P&L, present since
-**2026-08-25 08:21** — the dataset every subsequent result is built on. So
-`V_oracle` was computable on day one and **would have bounded the entire overlay
-case before any ranker was fitted.**
+**Both arms captured a NEGATIVE fraction. They are not "far from the best
+possible" — they are on the other side of zero from it.** 48% of fills lose
+money and they total **seven times the book's whole net**: the information is
+there in enormous quantity and neither ranker finds any of it. **The ceiling
+costs declining nearly half the book, which is why `oracle_f` is quoted with it
+and never without.** `ceiling_capture` returns a **signed** fraction for exactly
+this reason — `|delta|/V_oracle` would have hidden the sign.
+
+**The inventory leg's ceiling is the finding rather than the number.** Pooled
+`V_oracle` 302,934c against a leg net of 8,587.54c — **a ratio of 35×**, so
+that net is the RESIDUE of ~300,000c of offsetting per-fill contributions, and
+CONDVALUE's +3,348c reversal is **1.1% of that gross**. A near-cancellation of
+huge two-sided terms moves enormously on small changes in which fills are
+received — **independent support for distrusting the P4 reversal, from the
+opposite direction to DE's own pre-registered doubt.** Per window (the correct
+unit) ceilings run 109%–11,883% of each window's net.
+
+### The forward race is DIRECTIONAL, not significance-bearing — USER ruling, 2026-09-04
+
+**The ceiling of a clustered permutation test is its floor: G clusters admit
+2^G sign assignments, so the smallest achievable one-sided p is 1/2^G.** Read at
+the artifacts: cluster unit **UTC day** (ruled), bar **G = 5**, multiplicity
+**2** (executed: `race_multiplicity_at_freeze: 2`, members `PM_PLUS_FINE` and
+`PM_FINE_EXTENDED`, `recorded_in_the_frozen_bytes: true`). **At G = 5 with
+m = 2 the best possible adjusted p is 0.0625 > 0.05. The smallest G that clears
+is 6.**
+
+**THE USER RULES: the race stands at G = 5 and establishes DIRECTION AND
+CONSISTENCY, never a Holm-clearing verdict.** The recorded multiplicity of 2
+stands and is not made decorative. Every future statement of a race result must
+say so up front.
+
+**Why nobody computed it:** this programme applied permutation-floor reasoning
+intensively **to the number of DRAWS** (1/501; n raised 500 → 2,000 because 500
+gave only 1.04× headroom) and **never to the number of CLUSTERS**. *"Draws are
+free and each cluster costs a calendar day. The cheap resource was tuned to
+4.17× headroom; the expensive one was set to a round number and never checked."*
+
+### On ceilings generally — a corrected claim, with its as-of
+
+An earlier version of this section said **no value ceiling had ever been
+computed in either programme. That is FALSE as stated and is withdrawn.** An
+independent AST search for the *structural signature* of a ceiling — **as-of
+2026-09-04T13:54:40Z over 189 files / 3,421 functions** — found **two, both in
+P-2026-003's own code**: `state_gate_v1.bound_over_bins → bound_cents` (landed
+2026-08-23) and `adverse_move_fast.py:234 → oracle_upper_bound_cents_per_decision`,
+whose name contains two of the original search words. The first search's
+**method was sound and its SURFACE was the defect** — `live/pm_research/` was
+never enumerated, and the conclusion was generalised to "either programme"
+anyway.
+
+**What survives and is citable:** no value ceiling in `live/mm_research/`
+(11 files) or the registers, **and none anywhere for the CANCELLATION-OVERLAY
+lever** — the claim that bears on the survey. `skew_bound.py` is **not** a value
+ceiling either. And `markout_cents_per_share` (`harmful_exposure_rows.py:309-313`)
+**is** the per-fill P&L and has existed since **2026-08-25 08:21**, so
+`V_oracle` was computable on day one of this dataset.
 
 ---
+
 ## 1. Bottom line — credible negative diagnostic; profitability withdrawn
 
 **The candidate has not demonstrated an improvement over the incumbent.** The
