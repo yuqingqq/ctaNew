@@ -141,6 +141,31 @@ received — **independent support for distrusting the P4 reversal, from the
 opposite direction to DE's own pre-registered doubt.** Per window (the correct
 unit) ceilings run 109%–11,883% of each window's net.
 
+### The specification a modeller can aim at — the actionable form of the ceiling
+
+*"−1.58% of the ceiling"* is true and hard to act on. Translated into what a
+ranker must **do**: the book's P&L is **bimodal at roughly ±30c around a mean of
++2c** — losers average **−29.104c**, winners **+30.719c**, book **+1.993c**. A
+declined set that is `q` losers has mean `q·(−29.104) + (1−q)·(+30.719)`.
+Inverting, at CONDVALUE's own budget of 1,440 fills:
+
+| | loser-rate `q` | **lift over the 48.02% base** | capture |
+|---|---:|---:|---:|
+| random | 48.02% | — | −4.76% |
+| **CONDVALUE (observed)** | 50.24% | **+2.2 pp** | −1.58% |
+| **HAZARD (observed)** | 51.15% | **+3.1 pp** | −0.02% |
+| **break-even** | **51.35%** | **+3.3 pp** | **0%** |
+| +10% of ceiling | 58.35% | **+10.3 pp** | +10% |
+| +25% | 68.85% | +20.8 pp | +25% |
+| +50% | 86.35% | +38.3 pp | +50% |
+| perfect ranker at this budget | 100% | +52.0 pp | +69.50% |
+
+**HAZARD is 0.2 points of loser-rate lift short of break-even; a 10% capture
+needs +10.3 points, about three times its current discrimination.** This is the
+first statement in the programme of what the model must **achieve** rather than
+what it failed to achieve, and it is computed from the ceiling rather than from
+a comparison to another model.
+
 ### The forward race is DIRECTIONAL, not significance-bearing — USER ruling, 2026-09-04
 
 **The ceiling of a clustered permutation test is its floor: G clusters admit
