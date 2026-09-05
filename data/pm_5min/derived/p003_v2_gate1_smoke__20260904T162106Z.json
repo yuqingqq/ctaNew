@@ -1,0 +1,26 @@
+{
+  "as_of": "2026-09-04T16:25:59.247728+00:00",
+  "declared_before_run": {
+    "coin": "btc",
+    "n_draws": 200,
+    "null_seed": 20260904,
+    "policy_params": {
+      "cancel_effective_latency_ms": 250.0,
+      "charge_reset_cost_at_generation_start": false,
+      "max_cancels_per_minute": 1000000.0,
+      "predictor_enabled": true,
+      "protection_mode": "ALL_ORDERS_OVERRIDE",
+      "queue_reset_cost_cents": 0.0,
+      "repost_dwell_s": 2.0,
+      "repost_fill_model": "REFERENCE_FILLS",
+      "theta_cancel": 0.8,
+      "theta_repost": 0.3
+    },
+    "population": "v3_4_consumed_fragment",
+    "window_limit": 1
+  },
+  "error": "only 1 of 200 acting draws matched the treated realised count in 4000 proposals; refused rather than publishing a smaller/changed null; rejections={'realised_action_count_mismatch': 3999}",
+  "error_type": "ActingControlRefused",
+  "protocol": "P003_V2_GATE1_ONE_WINDOW_ACTING_CONTROL_SMOKE_V1",
+  "status": "REFUSED_OR_FAILED"
+}

@@ -1,0 +1,55 @@
+{
+  "as_of": "2026-09-05T05:49:48.289740+00:00",
+  "decision_metric": null,
+  "declared_candidate": "data/pm_5min/owned_execution/manifest.json",
+  "gate1_exit_cleared": false,
+  "gate2_authorized": false,
+  "interpretation": "input-acquisition audit only; no economic field was computed or reinterpreted and no live-trading code is present",
+  "owned_execution_admission": {
+    "candidate": "data/pm_5min/owned_execution/manifest.json",
+    "candidate_exists": false,
+    "economic_result": null,
+    "gate1_retroactively_cleared": false,
+    "gate2_authorized": false,
+    "status": "REFUSED_NO_OWNED_EXECUTION_SOURCE"
+  },
+  "protocol": "P003_V2_GATE1F_OWNED_EXECUTION_SOURCE_AUDIT_V1",
+  "public_surface_audit": {
+    "computed_predicates": {
+      "collector_records_public_last_trade_fee_field": true,
+      "collector_uses_public_market_websocket": true,
+      "historical_audit_says_venue_ack_lag_not_observed_without_orders": true,
+      "tier1_trade_schema_has_no_client_order_id": true,
+      "tier1_trade_schema_has_public_transaction_hash": true
+    },
+    "conclusion": "public market/trade/on-chain surfaces do not bind the simulated fill to an owned submitted-and-acknowledged order; additional public tape does not satisfy the owned execution contract",
+    "raw_public_day_range": {
+      "first": "20260819",
+      "last": "20260905",
+      "n": 18
+    },
+    "source_sha256": {
+      "live/pm_research/FLOW_UNCERTAINTY_LOOP.md": "47696355b1673b98a10284d933213bf2d567ff77cde5cf18a5cf4637959cdb26",
+      "live/pm_research/collect_pm.py": "4d15d2dde80a1b80ee6f2b1daaaaecff50e3b81e69a64d28938d4f19e6739128",
+      "live/pm_research/tier1_pipeline.py": "dd19c259a82b1ac16365033d40016819b83320277989bd429d78a969abfaf906"
+    },
+    "tier1_public_trade_day_range": {
+      "first": "2026-08-20",
+      "last": "2026-09-02",
+      "n": 13
+    }
+  },
+  "resource_observation": {
+    "external_cap_required": true,
+    "max_rss_kib": 19760,
+    "system_cpu_seconds": 0.014017,
+    "user_cpu_seconds": 0.031038,
+    "wall_seconds": 0.006020069122314453
+  },
+  "status": "REFUSED_NO_OWNED_EXECUTION_SOURCE",
+  "supersedes": {
+    "correction": "Tier-1 manifests are nested under distiller directories; the first path-only census reported a null Tier-1 range. The owned-source refusal and every gate field are unchanged",
+    "path": "data/pm_5min/derived/p003_v2_gate1f_owned_source_audit__20260905T054848Z.json",
+    "sha256": "bf3d01fa61ee799860ec8bbc764645b0e034162f1611a54879b146d99b292022"
+  }
+}
