@@ -7,6 +7,16 @@ steps under `systemd-run --user --scope --slice=research.slice -p MemoryMax=8G`
 files contain · no sealed forward day opened, no write under `data/`, no other
 seat's worktree opened.
 
+> **STATUS — `CHECKED` as of 2026-09-05T15:01:14Z.** This document was committed
+> at `8f08387` labelled **DRAFT-PENDING-CITATION-CHECK** — a label that lived in
+> the commit message only, which is itself the defect rule 13 warns about, since
+> a reader of the artifact could not see its status. The check was run at tip
+> `1404302` and is recorded in **§6 below** and in
+> `REVIEW_GATE1F_NEGATIVE_EXISTENCE_2026-09-05.md` §5. **The specification's
+> load-bearing claim reproduces at a 6.5% larger population and the argument is
+> unchanged. Three illustrative numbers did not survive and are corrected in
+> §6 — the body below is left EXACTLY as filed, as provenance.**
+
 **ROUTING.** Every statement about the data is **CHECKED** at the files this
 round. The specification itself is a proposal for the USER/coordinator, not a
 finding.
@@ -183,3 +193,75 @@ data is from schema inspection: one `markets.jsonl` record, the whole of
 `resolutions.jsonl` (32,150 records — the only full pass, and it is 6.9 MB), one
 `prices/` listing, and the first snapshot of one pre-freeze raw window
 (20260826). **No settlement was reconstructed and no value was summed.**
+
+---
+
+## 6. CITATION CHECK — run 2026-09-05T15:01:14Z at tip `1404302` (appended in band; §0–§5 unaltered)
+
+**Verdict: the specification stands. Its central claim reproduces on a population
+6.5% larger than the one it was written against. Three illustrative numbers fail
+and are corrected here rather than in the body.**
+
+### 6.1 The load-bearing claim — RE-VERIFIED, not merely re-read
+
+Every structural predicate of §0 recomputed over the whole of
+`resolutions.jsonl`:
+
+| predicate | as filed (09-04) | as-of 2026-09-05T15:01:14Z | verdict |
+|---|---|---|---|
+| records / distinct slugs | 32,150 / 32,139 | **34,224 / 34,213** | population grew |
+| `closed == True` on distinct slugs | 32,139 of 32,139 | **34,213 of 34,213** | **holds** |
+| `outcomePrices` `None` on every closed record | all 32,139 | **all 34,213** | **holds** |
+| `umaResolutionStatus` `None` | all 32,150 | **all 34,224** | **holds** |
+| open snapshots carrying `outcomePrices` | 8 slugs | **8 slugs** | **identical** |
+
+**"The repository does not record the realised settlement of any market" is
+confirmed at the larger n.** The consequence — specify L4 against the terminal
+mark, not settlement — is therefore unchanged, and remains indifferent to
+R-253 / Q-DA-142/146 by construction.
+
+### 6.2 Citations that resolve by identity
+
+* **R-253** (`COORDINATION.md:17248`) — the Chainlink settlement-source
+  correction. Resolves.
+* **R-506(E)** — exists; its subject is *"COORDINATOR RULING — TERMINAL-IN-A-GAP
+  IS `NOT_AVAILABLE`, A STATUS WITH A COUNT"*, which is the exact shape both §1.4
+  and §4.3 cite it for. Resolves.
+* **R-500** (`COORDINATION.md:19452`) — withdraws 08-29 from the race and keeps
+  it readable; its own block says *"development read"* twice, so §2's phrasing is
+  sound. Resolves.
+* **Q-DA-142 / Q-DA-146** — both present in the register. Resolve.
+* **RESULTS.md §0 capture ladder** (lines 383–389) — base **48.02%**, CONDVALUE
+  **+2.2 pp**, HAZARD **+3.1 pp**, break-even **+3.3 pp**, 10% capture
+  **+10.3 pp**. Cited exactly. Resolves.
+* **`prices/` directories** — `crypto_prices`, `crypto_prices_twap_thirty`,
+  `crypto_prices_twap_sixty`, all three present. Resolves.
+* **Raw tape schema** — `recv_ns \t [ {market, asset_id, timestamp, hash,
+  bids:[{price,size}], asks:[…]} ]`, full depth ladders per side per snapshot.
+  Confirmed by decoding a first snapshot. **`20260826` holds 1,974 files —
+  exact.** Resolves.
+
+### 6.3 THREE NUMBERS THAT FAIL — corrected
+
+1. **`resolutions.jsonl` 32,150 records / 32,139 distinct slugs** → **34,224 /
+   34,213** as-of 2026-09-05T15:01:14Z. The file is a live symlink into the main
+   tree and grows continuously. **The document carried a filing timestamp but the
+   population line carried no as-of of its own — CLAUDE.md rule 8, broken by the
+   reviewer.**
+2. **"17 day-directories"** → **18** (`20260819`…`20260905`). Same cause.
+3. **"sample: 99,460 snapshots in one btc window; a bid level of 95,290.49 size
+   at price 0.01"** → **UNVERIFIABLE AS WRITTEN: the window is not named.** The
+   nearest available check, the largest btc window in `20260826`
+   (`btc-updown-5m-1787751600.jsonl.gz`), gives **228,036 lines** and a maximum
+   size at price 0.01 of **98,687.3** (94,999.26 in its first snapshot).
+   **The penny tail is real and of the stated magnitude — §1.2's hazard and the
+   price-band restriction stand — but the exact figures cannot be reproduced.**
+   A quoted population needs its surface, not only its number.
+
+### 6.4 What this does not change
+
+All three failures are **illustrative**, appearing in §1's restriction rationale
+and §4's named failure modes. None enters the definition of `V_L4`, the five
+restrictions, the A/B/C reporting requirement, or the declared population. **The
+specification is unchanged and the label moves from DRAFT-PENDING-CITATION-CHECK
+to CHECKED.**
