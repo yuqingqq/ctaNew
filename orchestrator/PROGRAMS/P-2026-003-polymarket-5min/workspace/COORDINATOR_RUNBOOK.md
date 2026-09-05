@@ -392,8 +392,11 @@ recorded as R-495.
 SCOPE** — verification, closure and the ceiling's missing null; NO model fit,
 broad replay, survey, grid, cache rebuild or Gate-2. Seats: all five reloaded
 (R-533) and now carrying one batch each (BE 42, DA 49, DE 63, REV, MEM 101).
-The seat monitor (`seatwatch.sh`) is **RE-ARMED**. The V2 Gate-1f blocker
-ruling goes to the USER WITH the reviewer's and DE's evidence, not before it.
+The seat monitor (`seatwatch.sh`) is **RE-ARMED**. **The V2 Gate-1f blocker is DISSOLVED (R-535/R-536): the maker fee is
+published at zero by the venue and confirmed on-chain. USER RULING R-537: Gate 1e
+is RE-RUN at three fee endpoints (0, +0.07·p(1−p), −rebate) reporting invariance;
+the reviewer specifies, DE runs, DA verifies. Gate 1's three sampler refusals
+stand.** R-536's header time is wrong (16:04Z; true 15:51Z) — see R-537(A).
 
 - **Tip:** `917d743` (R-532). Next register entry after R-533: **R-534**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):

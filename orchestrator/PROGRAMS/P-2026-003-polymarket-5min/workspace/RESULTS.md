@@ -410,7 +410,7 @@ expected maker "fee" is NEGATIVE.** A separate Liquidity Rewards program pays
 resting orders within a per-market max spread; **its eligibility for crypto
 5-minute markets is UNSTATED.** **V2's Gate 1e nulled its decision metric on a
 term the venue publishes at zero** (R-535, R-536); the bound-endpoint re-run
-now carries three endpoints — 0, +0.07·p(1−p), −rebate.
+now carries three endpoints — 0, +0.07·p(1−p), −rebate. **USER RULING (R-537): Gate 1e IS RE-RUN at those three endpoints, reporting invariance instead of a null. It does not clear Gate 1 — the three sampler refusals stand.**
 
 ### The forward race is DIRECTIONAL, not significance-bearing — USER ruling, 2026-09-04
 
