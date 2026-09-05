@@ -4,7 +4,6 @@
   "declared_at": "2026-09-05T15:02Z",
   "declared_by": "BE, round 42, on the USER's resumed loop",
   "why_this_exists": "R-531(C). The 701% ceiling has NO NULL. MEM: 'V_oracle = sum |P&L| over losing fills is LARGE FOR ANY NOISY BOOK -- the comparison that matters is V_oracle against WHAT A RANDOM OR NAIVE POLICY CAPTURES, not against the net.' DA, independently: 'V_oracle may have r's disease -- it counts every negative fill as capturable.' Two seats reached this and neither filed it. A big number with no comparison is the exact defect this programme spent 09-04 removing from everything else.",
-
   "WHAT_THIS_CANNOT_BE": {
     "not_a_validation": "the null is computed on DATA ALREADY CONSUMED (2026-08-24 13:50-14:50Z btc, the measured hour, seen many times over). Rule 11: seen days are consumed. This is a DISPERSION STATEMENT ABOUT THIS HOUR and can never be a validation of any policy.",
     "cluster_unit": "ONE HOUR. n = 1 in the only unit that clusters (UTC day). By the programme's own counter the span is G = 0 COMPLETE UTC DAYS.",
@@ -12,7 +11,6 @@
     "one_coin_one_latency_one_budget_arm_run": "btc, latency 250 ms, the arms were run at budget 0.10 only. Cells at 0.05 and 0.15 are NULL cells only; no arm was run there and none is implied.",
     "the_hour_stratum_is_degenerate": "matching on HOUR is VACUOUS here because there is exactly one hour. The finest stratum the book actually offers is the WINDOW (slug), of which there are 12. Stated here so the 'count/side/hour' construction is not read as having done work it did not do."
   },
-
   "SURFACE_AND_AS_OF": {
     "book": "the QR_SKEW_ONLY baseline book of the measured hour",
     "n_fills": 4315,
@@ -21,13 +19,11 @@
     "REPRODUCTION_GATE_ALREADY_PASSED": "the cached book reproduces the FILED artifact de_section81_arms__20260904T140543Z.json EXACTLY on ten fields -- V_oracle 60303.760723, n_fills 4315, n_negative 2072, n_positive 2234, n_zero 9, net 8598.7588495, gross_positive 68902.5195725, oracle_f 0.4801853997682503, spread 10566.951031, adverse -1968.1921815. Checked 2026-09-05T15:00Z, before this declaration was written.",
     "as_of": "2026-09-05T15:02Z"
   },
-
   "INSTRUMENT_OF_RECORD": {
     "V_oracle": "de_phase4_diag_runner.value_ceiling -- DELEGATED, never re-implemented (USER ruling 2026-09-04; Q-BE-271 is the time I caught myself duplicating it)",
     "capture": "de_phase4_diag_runner.ceiling_capture -- DELEGATED. It returns a SIGNED fraction and the sign is the point.",
     "this_seat_adds": "only the sampling and the ranking. No second copy of either function."
   },
-
   "THE_STATISTIC": {
     "definition": "for a decline set D of size k, delta(D) = -sum of v over D, and capture(D) = delta(D) / V_oracle. This is the SAME axis as the filed arm captures (-1.58%, -0.02%): the arms' delta is adverse_saved - spread_forgone over the fills their cancels removed, and that identity equals -sum v over those fills (verified in the artifact: identity_holds true, residual 6.8e-12).",
     "V_oracle_cents": 60303.760723,
@@ -35,7 +31,6 @@
     "rank_location": "p = (1 + #{draws >= observed}) / (n + 1), ONE-SIDED, alternative = the policy BEATS matched-random. Same form as be_q4_matched_random_null_v2.",
     "reported_as": "a LOCATION in the null, NOT a validation p-value -- see WHAT_THIS_CANNOT_BE."
   },
-
   "N_DRAWS_AND_ITS_HEADROOM": {
     "n_draws": 10000,
     "min_draws_enforced": 200,
@@ -46,42 +41,86 @@
     "headroom": "floor 1/10001 = 9.999e-05 against 0.05/27 = 1.8519e-03 gives 18.5x headroom. n=200 would give a floor of 4.975e-03, which is ABOVE the threshold outright; n=2000 gives 3.7x.",
     "the_binding_constraint_is_not_n": "the floor is not what limits this result. CONSUMED DATA is. The headroom is declared so the denominator is on the record, not because a small p would license anything."
   },
-
   "THE_DECLARED_GRID_report_every_cell_select_none": {
     "k_rule": "k = int(round(b * 4315))",
     "cells": [
-      {"name": "BUDGET_0.05", "k": 216, "why": "declared budget grid BUDGETS[0]"},
-      {"name": "BUDGET_0.10", "k": 432, "why": "declared budget grid BUDGETS[1]; the budget the arms were run at"},
-      {"name": "BUDGET_0.15", "k": 647, "why": "declared budget grid BUDGETS[2]"},
-      {"name": "MATCHED_CONDVALUE", "k": 1440, "why": "CONDVALUE_X_SKEW's REALISED fills_lost, read from the filed artifact. NOT its n_cancels (333): the cascade means 333 cancels removed 1440 fills, and the count that matches the delta axis is the FILLS removed."},
-      {"name": "MATCHED_HAZARD", "k": 107, "why": "HAZARD_OVER_SKEWED_REF's REALISED fills_lost. Its n_cancels is 48."}
+      {
+        "name": "BUDGET_0.05",
+        "k": 216,
+        "why": "declared budget grid BUDGETS[0]"
+      },
+      {
+        "name": "BUDGET_0.10",
+        "k": 432,
+        "why": "declared budget grid BUDGETS[1]; the budget the arms were run at"
+      },
+      {
+        "name": "BUDGET_0.15",
+        "k": 647,
+        "why": "declared budget grid BUDGETS[2]"
+      },
+      {
+        "name": "MATCHED_CONDVALUE",
+        "k": 1440,
+        "why": "CONDVALUE_X_SKEW's REALISED fills_lost, read from the filed artifact. NOT its n_cancels (333): the cascade means 333 cancels removed 1440 fills, and the count that matches the delta axis is the FILLS removed."
+      },
+      {
+        "name": "MATCHED_HAZARD",
+        "k": 107,
+        "why": "HAZARD_OVER_SKEWED_REF's REALISED fills_lost. Its n_cancels is 48."
+      }
     ],
     "stratification": [
-      {"mode": "UNSTRATIFIED", "draw": "k of 4315 uniformly without replacement", "is_primary": true},
-      {"mode": "SIDE_PROPORTIONAL", "draw": "k split between BUY_UP (2145) and SELL_UP (2170) in proportion to the book, drawn within side", "why": "removes side-mix sampling variation; it is the closest available thing to the reviewer's count/side/hour construction"}
+      {
+        "mode": "UNSTRATIFIED",
+        "draw": "k of 4315 uniformly without replacement",
+        "is_primary": true
+      },
+      {
+        "mode": "SIDE_PROPORTIONAL",
+        "draw": "k split between BUY_UP (2145) and SELL_UP (2170) in proportion to the book, drawn within side",
+        "why": "removes side-mix sampling variation; it is the closest available thing to the reviewer's count/side/hour construction"
+      }
     ],
     "SIDE_MATCHING_TO_THE_ARM_IS_UNAVAILABLE": "the filed artifact carries fills_lost as a TOTAL, not by side. Exact side-matching to what each ARM declined would need a replay, which is out of this batch's scope. Named as a limit, not skipped in silence.",
     "POOL_IS_UNRESTRICTED_BY_RULING": "R-518. Draws come from the WHOLE book, never from a preventable-restricted pool: membership in that pool is itself a handicap (conditional_cancel_value -1.6364c), so restricting LOWERS the bar it was meant to raise."
   },
-
   "THE_NAIVE_POLICIES_named_in_advance": {
     "why_both_directions_of_each": "naming only the direction that fails stacks the deck. Each ordering is declared with its mirror.",
     "policies": [
-      {"name": "SPREAD_WIDEST_FIRST", "rule": "decline the k fills with the LARGEST spread captured", "a_reader_would_think": "wide-spread fills are where the maker is most exposed"},
-      {"name": "SPREAD_NARROWEST_FIRST", "rule": "decline the k fills with the SMALLEST spread captured", "a_reader_would_think": "decline where you earn least -- the mirror, and the more plausible of the two"},
-      {"name": "EARLIEST_FIRST", "rule": "decline the k earliest fills by t within the book", "a_reader_would_think": "early quotes are the stalest"},
-      {"name": "LATEST_FIRST", "rule": "decline the k latest fills by t", "a_reader_would_think": "fills near expiry are the most adversely selected"},
-      {"name": "SIZE_LARGEST_FIRST", "rule": "decline the k largest fills by shares", "a_reader_would_think": "value scales with size, so the big fills are where the money is -- the strongest naive contender and the one most likely to threaten the story"}
+      {
+        "name": "SPREAD_WIDEST_FIRST",
+        "rule": "decline the k fills with the LARGEST spread captured",
+        "a_reader_would_think": "wide-spread fills are where the maker is most exposed"
+      },
+      {
+        "name": "SPREAD_NARROWEST_FIRST",
+        "rule": "decline the k fills with the SMALLEST spread captured",
+        "a_reader_would_think": "decline where you earn least -- the mirror, and the more plausible of the two"
+      },
+      {
+        "name": "EARLIEST_FIRST",
+        "rule": "decline the k earliest fills by t within the book",
+        "a_reader_would_think": "early quotes are the stalest"
+      },
+      {
+        "name": "LATEST_FIRST",
+        "rule": "decline the k latest fills by t",
+        "a_reader_would_think": "fills near expiry are the most adversely selected"
+      },
+      {
+        "name": "SIZE_LARGEST_FIRST",
+        "rule": "decline the k largest fills by shares",
+        "a_reader_would_think": "value scales with size, so the big fills are where the money is -- the strongest naive contender and the one most likely to threaten the story"
+      }
     ],
     "deterministic": "each naive policy yields ONE point, not a distribution. It is located IN the random null rather than given a null of its own, and the emission says so."
   },
-
   "THE_TWO_AXES_AND_WHICH_QUESTION_EACH_ANSWERS": {
     "FILL_AXIS_this_null": "declines k FILLS directly. Answers: DOES THE RANKER FIND THE LOSING FILLS? It is NOT implementable -- a real overlay cancels ORDERS and loses whatever fills follow by cascade.",
     "CANCEL_AXIS_already_in_the_filed_artifact": "tail_and_cascade.cancel_mechanics already carries an ANALYTIC per-cancel random null: random_cancel_cost_cents 2.2270807691, defined as fills_per_generation (1.1175861) x book_mean_pnl_per_fill (1.9927599). Answers: CAN AN OVERLAY PAY? That is the implementable one and it is DE's, not mine -- it is reported here beside the fill axis and NOT recomputed.",
     "why_both_must_travel": "they can disagree, and if they do the disagreement is the finding rather than a problem. Declared before the numbers are known."
   },
-
   "WHAT_WOULD_COUNT": {
     "the_ceiling_was_never_the_story": "a random policy captures a LARGE POSITIVE fraction of V_oracle. Then 701% says nothing that noise does not.",
     "the_ceiling_survives_and_the_rankers_are_indicted": "random captures ~0 or NEGATIVE while both arms are also NEGATIVE AND NOT ABOVE their matched nulls.",
@@ -90,16 +129,30 @@
     "indeterminate": "anything else, reported as indeterminate.",
     "NOT_DECLARED": "any criterion that would CLOSE or OPEN the cancellation lever. One consumed hour cannot support one, and no result here may be stated as doing so."
   },
-
   "FALSIFIERS_BOTH_DIRECTIONS": {
     "must_flag_ORACLE": "declining the k WORST fills must land at the extreme good end of the null (p at the floor). An instrument that cannot detect the oracle cannot detect anything.",
     "must_flag_ANTI_ORACLE": "declining the k BEST fills must land at the extreme bad end (p = 1.0).",
-    "must_refuse": ["k <= 0", "k > n_fills", "n_draws < 200", "V_oracle <= 0 (capture undefined, and 0 would read as 'no opportunity' when it means 'no losing fill')", "a decline-index set whose size is not k"],
+    "must_refuse": [
+      "k <= 0",
+      "k > n_fills",
+      "n_draws < 200",
+      "V_oracle <= 0 (capture undefined, and 0 would read as 'no opportunity' when it means 'no losing fill')",
+      "a decline-index set whose size is not k"
+    ],
     "determinism": "the same seed must reproduce the same draws, checked in the selftest"
   },
-
-  "resources": {"memory_ceiling": "8G, not raised (R-174)", "expected_wall_s": "< 60"},
+  "resources": {
+    "memory_ceiling": "8G, not raised (R-174)",
+    "expected_wall_s": "< 60"
+  },
   "touches_nothing_sealed": true,
   "opens_no_forward_day": true,
-  "decides_nothing": "REPORTED (rule 14). Whether the lever is worth further work is the USER's."
+  "decides_nothing": "REPORTED (rule 14). Whether the lever is worth further work is the USER's.",
+  "SUPERSEDED_BY": {
+    "by": "be_ceiling_null_declaration_v2.json",
+    "what_changed": "the NAIVE arm only. v1 declared five naive orderings as DETERMINISTIC points. On the real book three of them are decided at a TIED key value -- SIZE_LARGEST_FIRST is 100% tie-decided at every k (3,098 of 4,315 fills have size exactly 5.0), so it was not ordering by size at all. v2 draws the boundary tie group and reports each naive ordering as a DISTRIBUTION with its tie share and an identification flag.",
+    "what_did_NOT_change": "the ceiling, the random null, the grid, n, the seed, the family, and both ARM locations. The correction touches the naive baselines only.",
+    "when": "after v1's naive numbers had been seen -- recorded, not hidden",
+    "rule": "13 -- corrections supersede in-band; this file stays as provenance and is not edited in substance"
+  }
 }

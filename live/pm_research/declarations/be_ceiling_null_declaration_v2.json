@@ -1,0 +1,51 @@
+{
+  "protocol": "BE_CEILING_NULL_DECLARATION_V2",
+  "supersedes": "be_ceiling_null_declaration_v1.json",
+  "supersedes_commit": "0eb1297",
+  "why_superseded": "v1 declared the five naive orderings as DETERMINISTIC points. On the real book three of them are decided at a TIED key value. SIZE_LARGEST_FIRST is 100% TIE-DECIDED AT EVERY k -- 3,098 of the 4,315 fills have size exactly 5.0 -- so `argsort(kind='stable')` was returning the reference's iteration order, not a size ordering. It scored +1.29% / +1.15% / +0.90% and flipped sign twice across k, which is the signature of an arbitrary ordering. Those numbers are WITHDRAWN.",
+
+  "AMENDED_AFTER_SEEING_v1_NAIVE_OUTPUT_AND_SAYING_SO": {
+    "what_was_seen": "v1's five naive capture points at all five k",
+    "why_this_is_not_outcome_selection": "the amendment removes an INSTRUMENT DEFECT -- an ordering that does not identify its own decline set -- and does not choose among outcomes. The tie treatment is applied to ALL five orderings by one rule, not to the ones whose numbers were disliked.",
+    "what_the_amendment_could_NOT_touch_and_did_not": "the ceiling, the random null, the k grid, n_draws, the seed, the declared family, and BOTH ARM LOCATIONS are byte-identical in v1 and v2 runs. The correction is confined to the naive arm.",
+    "recorded_not_hidden": true
+  },
+
+  "THE_TIE_TREATMENT": {
+    "rule": "sort by the key; the fills STRICTLY better than the boundary value are taken whole; the remainder is DRAWN at random from the boundary tie group, n_draws times. A naive ordering therefore reports a DISTRIBUTION whose width is exactly the ambiguity in its own definition.",
+    "no_threshold_decides_the_treatment": "an ordering with no boundary tie yields a degenerate distribution, which is its point. The same code path serves both.",
+    "tie_decided_share_of_k": "reported for every naive ordering in every cell",
+    "ordering_is_identified": "FALSE when more than half the decline set is chosen at the tied boundary. A not-identified ordering is reported and flagged, never quoted as a policy result.",
+    "TIE_SHARE_NOT_IDENTIFIED": 0.5,
+    "falsifiers_added_both_ways": [
+      "a strictly-ordered key must report tie share 0.0, a degenerate distribution and identified TRUE",
+      "a key that is ONE tied value must report tie share 1.0, identified FALSE, a positive spread, AND land where the random null lands -- because that is all it is"
+    ]
+  },
+
+  "INFORMATION_AT_DECISION_TIME_added_after_the_run": {
+    "why_it_is_flagged_as_late": "this was NOT declared in advance. It is added because the results made it decisive, and it is labelled in the artifact so no reader takes it for a pre-registration.",
+    "the_point": "a cancel is decided BEFORE the fill. Realised spread and realised size are POST-DECISION quantities. A naive ordering that beats a decision-time ranker using post-decision information is NOT an indictment of that ranker -- it is the oracle's error in a smaller size.",
+    "decision_time_TRUE": ["EARLIEST_FIRST", "LATEST_FIRST"],
+    "decision_time_FALSE": ["SPREAD_WIDEST_FIRST", "SPREAD_NARROWEST_FIRST", "SIZE_LARGEST_FIRST"],
+    "and_the_time_ordering_is_a_known_lever": "a time ordering IS implementable as a decision-time gate (decline after T). That is LEVER T, which `policy_bounds_v1.py::bound_table` already bounds in this same tree -- so it is not a new lever, it is one with a bound already on it."
+  },
+
+  "EVERYTHING_ELSE_CARRIES_FORWARD_UNCHANGED_FROM_v1": {
+    "n_draws": 10000, "seed": 20260905, "min_draws_enforced": 200,
+    "declared_family_m": 27,
+    "grid": {"BUDGET_0.05": 216, "BUDGET_0.10": 432, "BUDGET_0.15": 647,
+             "MATCHED_CONDVALUE": 1440, "MATCHED_HAZARD": 107},
+    "pool": "UNRESTRICTED, by R-518 -- never a preventable-restricted pool",
+    "stratification": ["UNSTRATIFIED (primary)", "SIDE_PROPORTIONAL"],
+    "instruments_of_record": "de_phase4_diag_runner.value_ceiling / .ceiling_capture, DELEGATED",
+    "is_a_validation": false,
+    "cluster_unit_n": 1,
+    "complete_utc_days": 0,
+    "intervals_claimable": false,
+    "data_is_consumed": true
+  },
+
+  "decides_nothing": "REPORTED (rule 14).",
+  "declared_at": "2026-09-05T15:20Z"
+}
