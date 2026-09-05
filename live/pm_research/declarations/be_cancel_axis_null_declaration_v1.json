@@ -1,0 +1,113 @@
+{
+  "protocol": "BE_CANCEL_AXIS_NULL_DECLARATION_V1",
+  "declared_before_any_draw": true,
+  "declared_at": "2026-09-05T16:09Z",
+  "declared_by": "BE, round 43",
+  "sibling": "be_ceiling_null_declaration_v2.json (the FILL axis, round 42, R-535(D))",
+
+  "why_this_exists": "Round 42 gave the FILL axis a null and found the two axes disagree: CONDVALUE beats matched-random per fill and is worse than a blind cancel per cancel (2.865 vs 2.227 c/cancel). But the 2.227 figure is a POINT with no dispersion -- it is DE's analytic construction, `fills_per_generation` (1.1175861) x `book_mean_pnl_per_fill` (1.9927599). '1.29x worse than a blind cancel' therefore cannot be told from noise, which is the same defect the -953.92c delta carried before it got a null. The cancel axis now gets the same treatment the fill axis got.",
+
+  "THE_QUESTION_THIS_EXISTS_TO_ANSWER": "IS THE CASCADE A PROPERTY OF CONDVALUE'S SELECTION, OR OF THE POLICY MACHINERY? CONDVALUE loses 4.32 fills per cancel and HAZARD 2.23, against DE's ASSUMED blind-cancel rate of 1.1176 fills per generation. If random cancel DECISIONS replayed through the same stateful policy also cascade at ~4x, the cascade is machinery and not selection, and the round-42 lever finding changes again. That is the decisive cell and it is named before the draw.",
+
+  "SURFACE": {
+    "book": "the cached reference, 12 slugs, one hour -- data/pm_5min/derived/de_section81_cache_12.pkl",
+    "generation_population": 29813,
+    "population_is": "the generations the assembly SCORED, which is exactly the population the arms decided over -- not the reference's full generation set",
+    "by_side": {"BUY_UP": 14217, "SELL_UP": 15596},
+    "hour": "2026-08-24T13:50-14:50Z", "coin": "btc", "latency_ms": 250, "budget": 0.10,
+    "as_of": "2026-09-05T16:09Z"
+  },
+
+  "REPRODUCTION_GATE_ALREADY_PASSED_BEFORE_THIS_WAS_WRITTEN": {
+    "when": "2026-09-05T16:07Z",
+    "baseline": "all-zero scores through HSP.replay_policy give cancels_issued 0 and 4315 fills -- the same book the 701% ceiling was computed over",
+    "CONDVALUE_X_SKEW": "theta 0.32450609461933483 -> realised cancels 333 (filed 333) and fills_lost 1440 (filed 1440)",
+    "HAZARD_OVER_SKEWED_REF": "theta 0.43525926488298716 -> realised cancels 48 (filed 48) and fills_lost 107 (filed 107)",
+    "meaning": "BOTH ARMS REPRODUCE EXACTLY through the harness this null runs on. The null and the arms are on identical machinery, checked rather than argued.",
+    "and_it_refuses": "the instrument refuses to draw if the baseline or either arm fails to reproduce"
+  },
+
+  "THE_MATCHED_UNIT_IS_THE_DECISION_COUNT_AND_HERE_IS_WHY_IT_MATTERS": {
+    "ruling": "R-521 -- the decision is the unit; rows are actions (CLAUDE.md rule 2)",
+    "measured_divergence": "a decision count does NOT equal a realised cancel count. CONDVALUE makes 1,154 DECISIONS and issues 333 cancels (28.9%); HAZARD makes 106 and issues 48 (45.3%). A probe flagging 333 generations issued only 160 cancels. Matching the realised count would require solving for a decision count, which is the exact-set matching the V2 samplers could not do.",
+    "what_is_matched": "the DECISION COUNT, per side",
+    "what_is_NOT_matched": "the realised cancel count, the realised cancel SET, and the fills lost. All three are OUTCOMES here and are reported as distributions.",
+    "denominator_of_the_reported_statistic": "cents_per_cancel divides by each draw's OWN realised cancels_issued, exactly as the arms' 2.8646 = 953.918/333 does. The ratio therefore remains comparable even though the counts differ."
+  },
+
+  "STRATA": {
+    "side": "matched to each arm's OWN per-side decision counts -- CONDVALUE {BUY_UP 586, SELL_UP 568}, HAZARD {BUY_UP 41, SELL_UP 65}",
+    "hour": "DEGENERATE -- there is exactly one hour, so matching on hour is vacuous. Said here so the 'count/side/hour' construction is not read as having done work it did not do.",
+    "note": "this null CAN do the side matching the round-42 fill null could not: the arm's own event stream carries side, whereas the filed artifact carried fills_lost only as a total."
+  },
+
+  "CELLS": [
+    {"name": "MATCHED_CONDVALUE_DECISIONS", "decisions": 1154, "by_side": {"BUY_UP": 586, "SELL_UP": 568}, "arm_observed": {"cents_per_cancel": 2.8646189714714696, "fills_lost_per_cancel": 4.324324324324325, "n_cancels": 333, "fills_lost": 1440}},
+    {"name": "MATCHED_HAZARD_DECISIONS", "decisions": 106, "by_side": {"BUY_UP": 41, "SELL_UP": 65}, "arm_observed": {"cents_per_cancel": 0.26157793750000263, "fills_lost_per_cancel": 2.2291666666666665, "n_cancels": 48, "fills_lost": 107}}
+  ],
+
+  "N_AND_ITS_HEADROOM_DECLARED_FROM_A_MEASUREMENT_NOT_AFTER_SEEING": {
+    "n_draws_per_cell": 500,
+    "cells": 2,
+    "measured_cost_per_replay_s": 0.35,
+    "measured_peak_gb": 0.29,
+    "projected_wall_s": "500 x 2 x ~0.35 = ~350 s plus overhead; inside the ten-minute bar",
+    "why_not_larger": "n = 1000 per cell projects to ~12 minutes, over the bar. n = 500 is the largest round number that fits, and it is declared BEFORE the draw rather than shrunk after seeing.",
+    "memory_ceiling": "8G, this seat's cap, NOT raised (R-174). Measured peak 0.29 GB leaves the cap far from binding; the binding constraint is WALL TIME.",
+    "min_draws_enforced": 200,
+    "seed": 20260905,
+    "declared_family_m": 6,
+    "family_composition": "2 arms x 3 statistics (cents_per_cancel, fills_lost_per_cancel, fills_lost). Every cell reported; none selected.",
+    "headroom": "floor 1/501 = 0.001996 against 0.05/6 = 0.008333 gives 4.17x headroom. n = 200 gives a floor of 0.004975 and only 1.68x.",
+    "the_binding_constraint_is_not_n": "as in round 42: the floor is not what limits this. CONSUMED DATA is."
+  },
+
+  "THE_STATISTICS": {
+    "primary": "cents_per_cancel = (spread_forgone - adverse_saved) / cancels_issued, i.e. the cost of a cancel. LOWER IS BETTER, so the rank is one-sided in the LOW direction.",
+    "secondary": "fills_lost_per_cancel -- the cascade. Reported with NO directional alternative because the question is whether the arm's 4.32 is UNUSUAL, not whether it is good.",
+    "tertiary": "fills_lost, the raw cascade volume",
+    "also_recorded_per_draw": ["cancels_issued", "decision_to_realised_conversion", "net_pnl_delta_cents", "spread_forgone_cents", "adverse_saved_cents"],
+    "rank_location": "p = (1 + #{draws at least as extreme as observed}) / (n + 1), direction stated per statistic",
+    "reported_as": "a LOCATION in a dispersion, NEVER a validation p-value"
+  },
+
+  "INSTRUMENTS_OF_RECORD_DELEGATED_NOT_COPIED": {
+    "replay": "harmful_stateful_policy.replay_policy -- the cascade is REALISED by the machinery, never assumed",
+    "fills": "de_phase4_diag_runner.received_fills",
+    "params": "de_phase4_diag_runner.cell_params",
+    "separation": "de_phase4_diag_runner.cancel_mechanics -- its cascade/selectivity decomposition and its `separation` block are CALLED, not reimplemented",
+    "capture": "de_phase4_diag_runner.ceiling_capture",
+    "this_seat_adds": "the random decision draw and the ranking. Q-BE-271 is the round this seat caught itself keeping a second copy of a DE instrument; it does not keep one here."
+  },
+
+  "NO_HEAD_IS_VERIFIED_FOR_A_RANDOM_STREAM_AND_THAT_IS_SAID_OUT_LOUD": "de_score_stream.score_events REQUIRES a verified head manifest, correctly -- an adapter that could score without one could score an unbound file. A random policy HAS no head, so this module builds the event list directly in the shape HSP.validate_scores demands and passes it to HSP.validate_scores explicitly. Borrowing a real head's manifest to get through the adapter would be a FALSE PROVENANCE CLAIM, and is refused.",
+
+  "WHAT_WOULD_COUNT": {
+    "the_cascade_is_MACHINERY_not_selection": "the null's fills_lost_per_cancel distribution contains 4.32. Then CONDVALUE's cascade is unremarkable and the round-42 cancel-axis reading needs correcting.",
+    "the_cascade_is_SELECTION": "4.32 sits outside the null's distribution. Then CONDVALUE cancels generations with unusually many downstream fills, and that is a property of what it picks.",
+    "DEs_analytic_blind_rate_is_vindicated": "the null's fills_lost_per_cancel centres near 1.1176",
+    "DEs_analytic_blind_rate_is_WRONG": "the null centres materially away from 1.1176, in which case the 2.227 c/cancel figure that round 42 compared against is itself mis-specified and BOTH arms' cancel-axis readings move",
+    "the_arm_is_worse_than_random_cancelling": "CONDVALUE's 2.8646 sits in the BAD tail of the null's cents_per_cancel",
+    "indeterminate": "anything else, reported as indeterminate",
+    "NOT_DECLARED": "any criterion that would close or open the cancellation lever. One consumed hour cannot support one."
+  },
+
+  "FALSIFIERS_BOTH_DIRECTIONS": {
+    "must_reproduce": "baseline 0 cancels / 4315 fills, CONDVALUE 333/1440, HAZARD 48/107 -- or REFUSE before drawing",
+    "must_flag_a_degenerate_policy": "flagging ZERO generations must yield 0 cancels, 0 fills lost and a REFUSAL on cents_per_cancel (0/0 is undefined, and returning 0.0 would read as 'a free cancel')",
+    "must_flag_the_saturated_policy": "flagging EVERY generation must issue strictly more cancels than any matched draw",
+    "must_refuse": ["decisions <= 0", "decisions > population", "n_draws < 200", "a per-side allocation not realisable in its stratum", "a draw whose realised cancels is 0 when cents_per_cancel is requested"],
+    "determinism": "same seed reproduces the same draws"
+  },
+
+  "LIMITS_CARRIED_IN_THE_EMISSION": {
+    "cluster_unit_n": 1, "complete_utc_days": 0, "intervals_claimable": false,
+    "is_a_validation": false, "data_is_consumed": true,
+    "one_coin_one_hour_one_latency_one_budget": true,
+    "dispersion_statement_only": "about THIS hour, never a validation of any policy"
+  },
+  "touches_nothing_sealed": true,
+  "opens_no_forward_day": true,
+  "forward_scorer_untouched": "be_score_forward_day.sh is not read or written by this batch",
+  "decides_nothing": "REPORTED (rule 14)."
+}
