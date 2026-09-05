@@ -388,10 +388,12 @@ recorded as R-495.
 
 ## 7. State at this writing (2026-09-05T11:38Z) — verify, don't trust
 
-**Programme: USER-HALTED (R-531, 2026-09-04T14:19Z). Seats: RESET COMPLETE
-(R-533), all five reloaded and standing by, nothing dispatched.** The seat
-monitor (`seatwatch.sh`) is **NOT re-armed** — five standing-by seats would
-only produce IDLE noise; re-arm it when the USER resumes the programme.
+**Programme: RESUMED by the USER at 2026-09-05T14:54Z (R-534), WITHIN THE V2
+SCOPE** — verification, closure and the ceiling's missing null; NO model fit,
+broad replay, survey, grid, cache rebuild or Gate-2. Seats: all five reloaded
+(R-533) and now carrying one batch each (BE 42, DA 49, DE 63, REV, MEM 101).
+The seat monitor (`seatwatch.sh`) is **RE-ARMED**. The V2 Gate-1f blocker
+ruling goes to the USER WITH the reviewer's and DE's evidence, not before it.
 
 - **Tip:** `917d743` (R-532). Next register entry after R-533: **R-534**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
