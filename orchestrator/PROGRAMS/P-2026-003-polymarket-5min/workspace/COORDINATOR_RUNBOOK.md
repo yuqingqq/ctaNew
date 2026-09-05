@@ -391,7 +391,8 @@ recorded as R-495.
 **Programme: RESUMED by the USER at 2026-09-05T14:54Z (R-534), WITHIN THE V2
 SCOPE** — verification, closure and the ceiling's missing null; NO model fit,
 broad replay, survey, grid, cache rebuild or Gate-2. Seats: all five reloaded
-(R-533) and now carrying one batch each (BE 42, DA 49, DE 63, REV, MEM 101).
+(R-533) and ALL carrying batches — USER: "make all modules work" (R-539), no
+standby seats while the loop runs (BE 43, DA 51, DE 63b, REV spec, MEM 103).
 The seat monitor (`seatwatch.sh`) is **RE-ARMED**. **The V2 Gate-1f blocker is DISSOLVED (R-535/R-536): the maker fee is
 published at zero by the venue and confirmed on-chain. USER RULING R-537: Gate 1e
 is RE-RUN at three fee endpoints (0, +0.07·p(1−p), −rebate) reporting invariance;
