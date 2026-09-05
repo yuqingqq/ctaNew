@@ -519,7 +519,7 @@ the canonical `be_read_cells.compute()` still emits only `BY_THRESHOLD` and
 scripts. The arithmetic is reproducible today, but the result path is not yet a
 stable in-repo pipeline. Full audit: `RESULT_RELIABILITY_AUDIT_2026-09-04.md`.
 
-**Current race state: G = 3 of 5.** R-503 re-verdicted 09-03 on its covered
+**Current race state: G = 4 of 5** (09-04 accrued at the 00:06:01Z scheduled unit, `counts_toward_race: True`; the race is DIRECTIONAL, not significance-bearing — R-529(A)). R-503 re-verdicted 09-03 on its covered
 complement (287/288 windows, with 15:20Z named and counted), so 09-01, 09-02 and
 09-03 accrue. This rule was applied after the 09-03 coverage failure was seen;
 that provenance is stamped in the artifact. 09-03 has not become a third
@@ -608,7 +608,7 @@ prose.
 ## 3. Forward race — the only path from development evidence to validation
 
 **Bar:** ≥5 complete UTC days, each FINISHED ∧ AFTER ∧ ADMISSIBLE ∧ HEALTHY.
-**State: G = 3 of 5** after the R-503 superseding verdict for 09-03
+**State: G = 4 of 5** — 09-04 accrued 2026-09-05T00:06:01Z (R-532(G)); 09-03 by the R-503 superseding verdict
 (`659ed66`, 2026-09-04).
 
 Freeze epoch `1787897340` = **2026-08-28T06:09:00Z**. Every day below is read
