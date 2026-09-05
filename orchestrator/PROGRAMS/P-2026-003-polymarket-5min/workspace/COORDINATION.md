@@ -19950,7 +19950,7 @@ supersedes: null
 
 **(G) THE V2 PLAN's OWN FEE PARAGRAPH IS NOW WRONG ON ITS FACE** — it lists *"maker fee, rebates and liquidity rewards explicitly out of scope"* and then stops the programme for want of the first. **Routed to DE as the plan's owner by prefix: a dated "Fee treatment — corrected 2026-09-05 (R-536)" annotation citing (B)–(E), in band, superseding nothing frozen (the plan says NOT FROZEN).** RESULTS.md §0 carries the pointer in this commit.
 
-### R-537 — 2026-09-05T15Z — coordinator — **USER RULING: RE-RUN GATE 1e AT THE THREE FEE ENDPOINTS. Plus a correction to R-536's own timestamp, which was estimated rather than read.**
+### R-537 — 2026-09-05T15:53Z — coordinator — **USER RULING: RE-RUN GATE 1e AT THE THREE FEE ENDPOINTS. Plus a correction to R-536's own timestamp, which was estimated rather than read.**
 
 **(A) THE CORRECTION FIRST, BECAUSE IT IS MINE.** R-536 is headed **16:04Z**. It was written and committed at **15:51:43Z** — the clock read in the same call says so. I composed the time from an estimate of when the fetches ran instead of from the `date` read, twelve minutes into the future. That is the slip R-466/R-467 already cost two corrections, and my own memory file says *"never write a time into an entry that was not read from `date`."* R-536 stands as written (rule 13 — never edit a landed entry); **its true as-of is 2026-09-05T15:51Z.**
 
