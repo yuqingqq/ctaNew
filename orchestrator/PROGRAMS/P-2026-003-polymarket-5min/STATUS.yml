@@ -20,9 +20,16 @@ status: resumed-2026-09-05T15:01:22Z-USER
                                # were never placed -- SO THERE IS NOTHING TO
                                # PROCURE. The USER's question is now the
                                # reviewer's section 7 form: should Gate 1e be
-                               # re-run reporting the fee INTERVAL
-                               # [0, 1.75 c/share] the repository already owns,
-                               # instead of nulling its decision metric?
+                               # re-run reporting the fee INTERVAL instead of
+                               # nulling its decision metric? RULED YES BY THE
+                               # USER AT R-537(B), AT THREE ENDPOINTS.
+                               # [SUPERSEDED-BY-R-538: this line read
+                               # "[0, 1.75 c/share] the repository already
+                               # owns". THE INTERVAL FOR US IS [-rebate, 0] --
+                               # the maker fee is a SIGNED ORDER PARAMETER and a
+                               # maker who signs 0 pays 0, so the sign flips and
+                               # the + endpoint's shape is the reviewer's to
+                               # re-derive. Do not quote 1.75 c/share.]
                                # GATE 1'S OTHER THREE REFUSALS ARE UNTOUCHED
                                # AND STILL STAND (DA reproduced all three
                                # bit-for-bit on bars declared before the run),
@@ -56,6 +63,47 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-05T15:56:56Z (MEM ROUND 103 -- THE FEE, SWEPT FROM THREE ENTRIES.
+  STATE ONLY.
+  (1) THE VENUE'S OWN DOCS, FETCHED LIVE ON THE USER'S INSTRUCTION (R-536, whose
+  TRUE AS-OF IS 15:51Z -- ITS HEADER READS 16:04Z AND I CHECKED THAT MYSELF:
+  the commit carrying it, 78b5c80, is stamped 15:51:44Z, so the header is
+  THIRTEEN MINUTES AHEAD OF ITS OWN EXISTENCE; corrected in band at R-537(A),
+  and R-536 stands as written under rule 13). TWO VENUE PAGES, ONE UPDATED
+  2026-07-10, BOTH SAY "MAKERS ARE NEVER CHARGED FEES. ONLY TAKERS PAY FEES."
+  Taker C*0.07*p(1-p) in crypto. Maker rebate 20% of the crypto taker-fee pool,
+  PER MARKET, pro-rata by fee-equivalent on FILLED orders, daily pUSD, $1
+  minimum, AND DISCRETIONARY. A THIRD PROGRAM, Liquidity Rewards, IS SEPARATE
+  AND ITS ELIGIBILITY FOR CRYPTO 5-MINUTE MARKETS IS UNSTATED -- recorded as a
+  status, not assumed either way. WE ARE THE MAKER: charge zero, net of rebate
+  NEGATIVE.
+  (2) THE USER RULES (R-537(B)): GATE 1e IS RE-RUN AT THREE FEE ENDPOINTS --
+  0, +0.07*p(1-p), -rebate with the per-market share as an interval [0, 20%] --
+  REPORTING INVARIANCE INSTEAD OF A NULL. IT DOES NOT CLEAR GATE 1: the three
+  sampler refusals stand. Sequencing (R-537(C)): the reviewer SPECIFIES, DE
+  RUNS, DA VERIFIES, and NOTHING RUNS BEFORE THE BAR IS DECLARED.
+  (3) DA WENT TO THE CHAIN (R-538) AND SHARPENED THE VENUE'S ABSOLUTE: 901
+  receipts decoded from raw with the ABI DERIVED BY KECCAK rather than copied;
+  1,046 of 1,056 maker legs at exactly zero; AND THE TEN CHARGED ARE A
+  MECHANISM -- all at p = 0.99, across 6 addresses, EACH PAYING EXACTLY ITS OWN
+  SIGNED RATE (seven at 1000 bps, three at 5000 bps). SO THE MAKER FEE IS A
+  SIGNED ORDER PARAMETER: a maker who signs 0 pays 0, and FOR US THE FEE IS
+  WHAT WE SIGN -- a stronger footing than a venue promise.
+  (4) SO MY ROUND-102 INTERVAL IS SUPERSEDED-BY-R-538. [0, 1.75 c/share] priced
+  the 1.3% exception AS AN INCIDENCE RATE; it is a PARAMETER WE SET, and an
+  incidence-weighted average over a parameter we set is not a bound on us. THE
+  INTERVAL IS [-rebate, 0], with the + endpoint's shape under the reviewer's
+  re-derivation. THE PART I CHECKED SURVIVED -- the three cites read at the
+  artifacts; THE PART I RELAYED DID NOT.
+  (5) ALSO FROM R-538, CARRIED AS OPEN EXCEPTIONS, NOT SMOOTHED: the taker
+  formula is floor(C*0.07*p(1-p)/10 uUSDC)*10 uUSDC, exact 879/901, with 22
+  charged MORE, mechanism unknown; ITER1_M's two transactions ARE NOT IN THE
+  CACHE, so that decisive test IS NOT REPRODUCIBLE from this repository -- I
+  corroborated that with my own grep surface -- and the finding now rests on the
+  901-decode, which IS reproducible; and Gate 1f's negative predicate is
+  FAIL-OPEN with 86% of its block outside the window, so the instrument is
+  weaker than its conclusion, which still survives on a wider check.
+  PRIOR CHECKPOINT:
   2026-09-05T15:47:09Z (MEM ROUND 102 -- THE FIRST LOOP ROUND SWEPT. STATE ONLY;
   I PRODUCED NO RESULT AND ADJUDICATED NOTHING.
   (1) THE V2 BLOCKER'S LABEL IS WITHDRAWN, SUPERSEDED-BY-R-535. Gate 1f's
@@ -478,10 +526,27 @@ flags:
                              # at line 426, INSIDE THAT LITERAL. The module that
                              # terminated the programme prints its verdict --
                              # CLAUDE.md rule 10, in the one place it decided.
-                             # THE TERM IS BOUNDED AND SIGNED: 0.0232 c/share at
-                             # measured incidence, 1.75 c/share at the absolute
-                             # bound (RELAYED from R-535(B); I did not recompute
-                             # the arithmetic).
+                             # THE BOUNDS SENTENCE THIS FLAG CARRIED IS
+                             # SUPERSEDED-BY-R-538 AT 2026-09-05T15:56:56Z. It read:
+                             # "THE TERM IS BOUNDED AND SIGNED: 0.0232 c/share
+                             # at measured incidence, 1.75 c/share at the
+                             # absolute bound (RELAYED from R-535(B); I did not
+                             # recompute the arithmetic)."
+                             # WHY IT IS WRONG-SHAPED, NOT JUST STALE: both
+                             # numbers priced the 1.3% exception AS AN INCIDENCE
+                             # RATE -- as though some maker legs are charged at
+                             # random and the bound is "what if all of them
+                             # were". R-538(B) shows THE EXCEPTION IS A SIGNED
+                             # ORDER PARAMETER: the ten charged legs each paid
+                             # EXACTLY THEIR OWN SIGNED RATE (1000 or 5000 bps,
+                             # all at p = 0.99), and an order that signs 0 HAS
+                             # NO EXPOSURE AT ALL. An incidence-weighted average
+                             # over a parameter WE SET is not a bound on us.
+                             # THE THREE CITES IN THIS FLAG ARE UNAFFECTED AND
+                             # STAY CHECKED -- I read them at the artifacts and
+                             # they say what they say. It is only the arithmetic
+                             # I RELAYED that R-538 reshapes. THE PART I
+                             # CHECKED SURVIVED; THE PART I RELAYED DID NOT.
                              # I AM THE SECOND READER AFTER THE COORDINATOR.
                              # DA ROUND 50 IS THE THIRD AND THE ONLY ONE THAT
                              # GOES TO THE CHAIN -- repo cites establish what
@@ -506,7 +571,196 @@ flags:
                              # Carry this flag with the one above or the pair
                              # reads as a restart. In the reviewer's own words,
                              # adopted: "It does not restart the programme."
-  users_question_is_now_the_fee_interval_rerun: GATE-1E-RERUN-ON-[0,1.75]-c-PER-SHARE
+  venue_docs_makers_are_never_charged: FETCHED-LIVE-2026-09-05T15:51Z-R-536
+                             # RELAYED from R-536(B)-(E). Four venue pages
+                             # fetched live on the USER's instruction and read
+                             # AT THE SOURCE, not from search snippets. I did
+                             # not fetch them and cannot: an external fetch is
+                             # the coordinator's act, and re-fetching would be a
+                             # second outward call, not a check of the first.
+                             # THE SCHEDULE: docs.polymarket.com/trading/fees --
+                             # "fee = C * feeRate * p * (1 - p)", TAKER feeRate
+                             # Crypto 0.07, and "Makers are never charged fees.
+                             # Only takers pay fees." No date on the page.
+                             # help.polymarket.com/en/articles/13364478-trading-fees,
+                             # LAST UPDATED 2026-07-10 -- the SAME sentence on a
+                             # second venue page. Neither page defines
+                             # maker/taker by order type.
+                             # THE REBATE (docs .../programs/maker-rebates):
+                             # taker fees fund a daily redistribution, CRYPTO
+                             # 20% of the pool, computed PER MARKET, rebate =
+                             # (your fee_equivalent / total fee_equivalent) *
+                             # pool, with fee_equivalent = C*feeRate*p*(1-p) on
+                             # each maker's FILLED orders -- so it scales with
+                             # the SAME p(1-p) shape as the taker fee it
+                             # refunds. Paid daily in pUSD, $1 minimum accrual,
+                             # AND "at the sole discretion of Polymarket and may
+                             # change over time." No effective-from date.
+                             # A THIRD TERM, SEPARATE, AND ITS ELIGIBILITY IS
+                             # UNSTATED: Liquidity Rewards
+                             # (help .../13364466-liquidity-rewards, 2026-06-15)
+                             # pays RESTING limit orders within a per-market max
+                             # spread, NO FORMULA DISCLOSED, per-market totals
+                             # varying by market, daily ~00:00Z, $1/day minimum,
+                             # no roll-over. CRYPTO 5-MINUTE UP/DOWN MARKETS ARE
+                             # NOT MENTIONED -- eligibility is UNSTATED, NOT
+                             # established either way. RECORDED AS A STATUS, NOT
+                             # ASSUMED, which is rule 4's shape.
+                             # WHAT IT MEANS FOR US, IN THE USER'S OWN FRAMING:
+                             # we quote resting two-sided limit orders on the
+                             # neutral no-cancel reference path, SO WE ARE THE
+                             # MAKER. Charge zero by the published schedule; net
+                             # of the crypto rebate the expected maker "fee" is
+                             # NEGATIVE.
+                             # THREE INDEPENDENT SOURCES NOW BOUND THIS TERM AND
+                             # THEY AGREE: the venue's docs (declared), this
+                             # repository's own established-facts table
+                             # (measured, n=600), and DA's chain decode
+                             # (realised, 901 receipts). See
+                             # the_maker_fee_is_a_signed_order_parameter, which
+                             # is the sharpest of the three.
+  r536_header_time_was_estimated_not_read: HEADER-16:04Z-COMMIT-15:51:44Z-CHECKED-BY-ME
+                             # CHECKED 2026-09-05T15:56:56Z, and I checked it
+                             # because it is a TIME CLAIM in my own read-order
+                             # file and because my memory carries "never write a
+                             # time into an entry that was not read from date".
+                             # THE HEADER READS "### R-536 -
+                             # 2026-09-05T16:04Z". THE COMMIT THAT CARRIES IT,
+                             # 78b5c80, IS STAMPED author = commit =
+                             # 2026-09-05T15:51:44+00:00. THE HEADER IS 13
+                             # MINUTES AHEAD OF THE COMMIT THAT LANDED IT --
+                             # i.e. ahead of its own existence.
+                             # CORRECTED IN BAND BY THE COORDINATOR AT R-537(A),
+                             # self-reported: the time was composed from an
+                             # estimate of when the fetches ran rather than from
+                             # a date read. R-536 STANDS AS WRITTEN (rule 13 --
+                             # never edit a landed entry); ITS TRUE AS-OF IS
+                             # 2026-09-05T15:51Z, and every reader of R-536
+                             # should carry that, not its header.
+                             # THIS IS THE THIRD TIME-SLIP OF THIS CLASS
+                             # (R-466/R-467 cost two corrections). A rule that
+                             # has to be remembered three times is a rule
+                             # without an instrument.
+  iter1m_two_transactions_are_not_in_the_cache: CORROBORATED-BY-ME-WITH-A-SURFACE
+                             # CHECKED 2026-09-05T15:56:56Z, corroborating
+                             # R-538(D)'s negative existence claim rather than
+                             # relaying it, because this programme has been
+                             # wrong about that class repeatedly.
+                             # SURFACE: grep -rl over the ENTIRE working tree
+                             # excluding .git for the two truncated prefixes
+                             # "c42c0919" and "33a2a0bc". FULL OUTPUT, NOT
+                             # TRUNCATED -- EXACTLY TWO FILES, both markdown:
+                             # workspace/COORDINATION.md (the register quoting
+                             # the claim) and live/pm_research/
+                             # PM_SKETCH_REVIEW_ITER1_M.md (the document making
+                             # it). ZERO hits anywhere under data/.
+                             # LIMIT OF MY CHECK, STATED: a text grep would miss
+                             # a hash stored in binary or in a different
+                             # encoding, so this corroborates DA's finding and
+                             # does not independently establish it.
+                             # WHAT IT COSTS: ITER1_M's "decisive test" IS NOT
+                             # REPRODUCIBLE FROM THIS REPOSITORY, as-of
+                             # 2026-09-05T15:53Z. The finding it supported is
+                             # now carried by the 901-receipt decode instead,
+                             # WHICH IS REPRODUCIBLE -- the right repair, and
+                             # worth noting that the replacement is stronger
+                             # evidence than the thing it replaces.
+  taker_formula_is_quantised_and_22_legs_exceed_it: FLOOR-TO-10-uUSDC-EXACT-879-OF-901
+                             # RELAYED from R-538(C). The taker fee is
+                             # floor(C*0.07*p(1-p) / 10 uUSDC) * 10 uUSDC --
+                             # exact on 879 of 901 (97.6%), and all 901 fees are
+                             # divisible by 10 uUSDC, which IS the quantisation.
+                             # THE 22 EXCEPTIONS ARE CHARGED MORE THAN
+                             # PREDICTED, NEVER LESS, ratios 1.03-20.05,
+                             # MECHANISM NOT IDENTIFIED. Carried as an open
+                             # exception, not smoothed away.
+                             # AND ITER1_M's "exact to 6 decimals" HOLDS FOR ITS
+                             # TWO WORKED EXAMPLES AND NOT AT THAT TOLERANCE IN
+                             # GENERAL (110 of 901 miss it) -- a claim calibrated
+                             # rather than repeated.
+  gate1f_negative_predicate_is_fail_open_quantified: 86-PERCENT-OF-THE-BLOCK-OUTSIDE-THE-WINDOW
+                             # RELAYED from R-538(E). Of Gate 1f's five
+                             # predicates EXACTLY ONE is a negative assertion
+                             # and it is the scoped one: TRADE_SCHEMA spans
+                             # 13,048 bytes, the window covers 1,800, SO 11,248
+                             # BYTES (86%) OF THE BLOCK IT NAMES SIT OUTSIDE THE
+                             # CHECK. The other four are positive whole-file
+                             # assertions that fail CLOSED.
+                             # THE CONCLUSION SURVIVES ON A WIDER CHECK --
+                             # client_order_id occurs nowhere in the
+                             # 90,831-byte file -- SO THE INSTRUMENT IS WEAKER
+                             # THAN ITS CONCLUSION, uniquely on the negative
+                             # predicate. Both readings hold at once, which is
+                             # DA's own framing and the honest one.
+                             # DA ALSO CONFIRMS THE FEE-INTERVAL RE-RUN IS
+                             # RUNNABLE UNMODIFIED: the seam exists.
+  the_maker_fee_is_a_signed_order_parameter: WE-SIGN-IT-SO-FOR-US-IT-IS-ZERO
+                             # RELAYED from R-538(B), DA round 50, the only
+                             # check that decoded the chain. NOT verified by me
+                             # and NOT yet verified by a third party.
+                             # 901 cached Polygon receipts decoded from raw hex
+                             # with the OrderFilled/OrdersMatched topic0 values
+                             # DERIVED BY KECCAK-256 from their signature
+                             # strings rather than copied -- both match the
+                             # shipped constants, so THE ABI IS CONFIRMED, NOT
+                             # ASSUMED. 1,957 legs: 901 taker legs 100%
+                             # charged; 1,056 maker legs, 1,046 at EXACTLY zero
+                             # (0.947% charged).
+                             # THE TEN CHARGED ARE A MECHANISM, NOT NOISE, AND
+                             # THAT IS THE FINDING: all ten sit at p = 0.9900,
+                             # across 5 transactions and 6 addresses, and each
+                             # pays EXACTLY ITS OWN SIGNED RATE on the same
+                             # C*rate*p(1-p) formula -- SEVEN at 1000 bps (max
+                             # deviation 8.2e-5) and THREE at 5000 bps (max
+                             # deviation 2.5e-6). Every maker leg those six
+                             # addresses appear on is charged; none appears at
+                             # zero.
+                             # SO "MAKERS ARE NEVER CHARGED" IS THE VENUE'S
+                             # STATEMENT AND THE CHAIN SHOWS WHAT IT MEANS: a
+                             # maker who signs 0 bps pays 0; a maker who signs a
+                             # rate pays it. FOR US, THE MAKERS, THE FEE IS WHAT
+                             # WE SIGN -- a stronger footing than a venue
+                             # promise, because it does not depend on the venue
+                             # keeping one.
+  users_question_is_now_the_fee_interval_rerun: SUPERSEDED-BY-R-538-INTERVAL-IS-NOW-[-rebate,0]
+                             # SUPERSEDED IN BAND AT 2026-09-05T15:56:56Z. THE OLD
+                             # VALUE BELOW -- GATE-1E-RERUN-ON-[0,1.75]-c-PER-SHARE
+                             # -- IS WITHDRAWN AS THE INTERVAL'S SHAPE, AND I
+                             # WROTE ITS UPPER ENDPOINT AS PART OF A FLAG I
+                             # MARKED CHECKED AT ROUND 102.
+                             # WHAT IS NOW RULED (R-537(B), the USER): GATE 1e
+                             # IS RE-RUN AT THREE FEE ENDPOINTS, REPORTING
+                             # WHETHER THE GATE-1 VERDICT IS INVARIANT TO THE
+                             # INTERVAL INSTEAD OF NULLING THE DECISION METRIC.
+                             # ENDPOINT 1: fee = 0 -- the venue's schedule and,
+                             # per R-538(B), what a maker who signs 0 actually
+                             # pays.
+                             # ENDPOINT 2: fee = +0.07*p(1-p) on every maker
+                             # leg. THIS ENDPOINT IS NOW MIS-SHAPED AND R-538(B)
+                             # SAYS SO: the observed non-zero maker rates are
+                             # 1000 and 5000 bps ON ORDERS THAT SIGNED THEM, and
+                             # AN ORDER THAT SIGNS 0 HAS NO SUCH EXPOSURE. Its
+                             # re-derivation is the REVIEWER'S, in flight; DO
+                             # NOT QUOTE 1.75 c/share AS THIS ENDPOINT.
+                             # ENDPOINT 3: fee = -rebate -- the venue's
+                             # published formula, the maker's actual
+                             # expectation, with the PER-MARKET SHARE carried as
+                             # an interval [0, 20%] because it is the one
+                             # quantity a counterfactual replay CANNOT KNOW.
+                             # SO THE INTERVAL FOR US IS [-rebate, 0], NOT
+                             # [0, 1.75 c/share]: the sign is flipped and the
+                             # magnitude's upper end is a different quantity.
+                             # RELAYED FROM R-536/R-537/R-538 AND STAYS RELAYED
+                             # UNTIL DA VERIFIES THE RE-RUN AT ITS ARTIFACT.
+                             # ONE THING RULED THAT IS NOT ABOUT THE NUMBER:
+                             # THIS DOES NOT CLEAR GATE 1. The three sampler
+                             # refusals stand (R-535(C), R-537(B)). It replaces
+                             # a null with a bounded number; it does not move
+                             # the gate. Sequencing, R-537(C): the reviewer
+                             # SPECIFIES, DE RUNS, DA VERIFIES, and NOTHING RUNS
+                             # BEFORE THE BAR IS DECLARED (rule 6).
+                             # EARLIER VALUE (rule 13):
+                             # GATE-1E-RERUN-ON-[0,1.75]-c-PER-SHARE
                              # RELAYED from R-535(C)/(H). The question put to
                              # the USER is no longer "acquire an owned-execution
                              # export, redesign, or close the route" but the
@@ -7667,6 +7921,27 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-05T15:56:56Z, THE FEE IS ANSWERED FROM THREE INDEPENDENT
+  DIRECTIONS AND THEY AGREE. The venue's own docs, fetched live, say "MAKERS ARE
+  NEVER CHARGED FEES" on two pages, one updated 2026-07-10; this repository's
+  established-facts table measured it at n=600; and DA's decode of 901 chain
+  receipts sharpens it into the form that matters -- THE MAKER FEE IS A SIGNED
+  ORDER PARAMETER. The ten charged maker legs are a MECHANISM, not noise: all at
+  p = 0.99, each paying exactly its own signed rate (1000 or 5000 bps). A MAKER
+  WHO SIGNS 0 PAYS 0, AND WE ARE THE MAKER, SO FOR US THE FEE IS WHAT WE SIGN --
+  and net of the venue's 20% crypto rebate the expected maker fee is NEGATIVE.
+  THE USER HAS RULED (R-537(B)): GATE 1e IS RE-RUN AT THREE FEE ENDPOINTS
+  reporting INVARIANCE instead of nulling its decision metric. IT DOES NOT CLEAR
+  GATE 1 -- the three sampler refusals stand and the route is still 1/7. The
+  reviewer specifies, DE runs, DA verifies, and nothing runs before the bar is
+  declared. MY ROUND-102 INTERVAL [0, 1.75 c/share] IS SUPERSEDED: it priced a
+  parameter we SET as if it were an incidence we SUFFER. The interval is
+  [-rebate, 0]. OPEN AND CARRIED, NOT SMOOTHED: 22 taker legs charged more than
+  the formula with mechanism unknown; ITER1_M's decisive test not reproducible
+  from this repository; Gate 1f's negative predicate fail-open at 86%; and
+  Liquidity Rewards eligibility for our markets UNSTATED. The economics stay in
+  workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-05T15:47:09Z, RETAINED BELOW --
   AS-OF 2026-09-05T15:47:09Z, THE FIRST LOOP ROUND HAS REVERSED TWO OF
   YESTERDAY'S READINGS AND WITHDRAWN THE LABEL ON THE BLOCKER V2 STOPPED ON.
   V2 IS STILL STOPPED AT 1/7 -- Gate 1's other three refusals stand, reproduced
@@ -8320,6 +8595,54 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 103, 2026-09-05T15:56:56Z ------------------------------
+  r536_header_time_was_estimated_not_read:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-05T15:56:56Z
+    said: >-
+      the header reads "### R-536 - 2026-09-05T16:04Z" and `git log -1
+      --format=%aI/%cI 78b5c80`, the commit that carries it, returns
+      2026-09-05T15:51:44+00:00 for both author and commit date -- so the header
+      stands thirteen minutes ahead of the commit that landed it. R-537(A)
+      self-reports the cause (a time composed from an estimate rather than read
+      from `date`) and fixes the true as-of at 15:51Z; R-536 is not edited,
+      per rule 13.
+  iter1m_two_transactions_are_not_in_the_cache:
+    prov: CHECKED
+    artifact: live/pm_research/PM_SKETCH_REVIEW_ITER1_M.md
+    as_of: 2026-09-05T15:56:56Z
+    said: >-
+      grep -rl over the entire working tree excluding .git for the truncated
+      prefixes "c42c0919" and "33a2a0bc" returns EXACTLY TWO FILES, full output
+      not truncated: workspace/COORDINATION.md (the register quoting the claim)
+      and this file (the document making it). Zero hits anywhere under data/.
+      STATED LIMIT: a text grep would miss a hash stored in binary or another
+      encoding, so this CORROBORATES R-538(D) and does not independently
+      establish it.
+  venue_docs_makers_are_never_charged:
+    prov: RELAYED
+    from: >-
+      R-536(B)-(E). Four venue pages fetched live by the coordinator on the
+      USER's instruction. I did not fetch them and did not re-fetch: an external
+      call is the coordinator's act, and repeating it would be a second outward
+      request, not a check of the first.
+  the_maker_fee_is_a_signed_order_parameter:
+    prov: RELAYED
+    from: R-538(A)-(B), DA round 50 -- the only check that decoded the chain
+  users_question_is_now_the_fee_interval_rerun:
+    prov: RELAYED
+    from: >-
+      R-537(B) for the USER's ruling and R-538(B) for the endpoint reshaping.
+      Stays RELAYED until DA verifies the re-run at its artifact. My round-102
+      CHECKED marking covered the three repository cites, which survive; it did
+      NOT cover the arithmetic, which is what R-538 reshaped.
+  taker_formula_is_quantised_and_22_legs_exceed_it:
+    prov: RELAYED
+    from: R-538(C)
+  gate1f_negative_predicate_is_fail_open_quantified:
+    prov: RELAYED
+    from: R-538(E)
   # --- MEM round 102, 2026-09-05T15:47:09Z ------------------------------
   gate1f_blocker_is_a_never_checked_negative_existence_claim:
     prov: CHECKED
@@ -9243,6 +9566,32 @@ tasks:
     name: V2 Gates 0-3 — control-first action value and stateful replay
     status: V2-STOPPED-1-OF-7-ON-GATE1-THREE-REFUSALS-GATE1F-LABEL-WITHDRAWN-R535
     notes: |
+      MEM ROUND 103, 2026-09-05T15:56:56Z -- THE FEE IS ANSWERED AND THE
+      RE-RUN IS RULED, AND NEITHER MOVES THIS TASK OFF 1/7.
+      THE USER RULES (R-537(B)): GATE 1e IS RE-RUN AT THREE FEE ENDPOINTS --
+      fee = 0 (the venue's schedule and what a maker signing 0 actually pays);
+      fee = +0.07*p(1-p) on every maker leg (MIS-SHAPED per R-538(B) and under
+      the reviewer's re-derivation -- the observed non-zero maker rates are 1000
+      and 5000 bps ON ORDERS THAT SIGNED THEM, and an order signing 0 has no
+      such exposure; DO NOT QUOTE 1.75 c/share); and fee = -rebate (the venue's
+      published formula, with the per-market share carried as an interval
+      [0, 20%] because it is the one quantity a counterfactual replay cannot
+      know). ONE CAPPED RE-RUN ON THE CONSUMED 202-ARM GATE-1E POPULATION,
+      REPORTING INVARIANCE INSTEAD OF A NULL.
+      IT DOES NOT CLEAR GATE 1. The three sampler refusals stand. This replaces
+      a null with a bounded number the venue publishes and the chain confirms;
+      it does not move the gate, and the task's status still reads 1 of 7.
+      SEQUENCING (R-537(C)), so nobody runs before the bar is declared: the
+      REVIEWER specifies with the three endpoints, DE RUNS (owner of the V2
+      surface by prefix) ONLY once the specification has landed with its bar
+      declared -- rule 6 -- and DA VERIFIES at the artifact. DA has already
+      confirmed the re-run is RUNNABLE UNMODIFIED: the seam exists (R-538(E)).
+      THE FEE ITSELF, FROM THREE AGREEING DIRECTIONS: the venue's docs ("Makers
+      are never charged fees", two pages, one updated 2026-07-10); this
+      repository's established-facts table (n=600); and DA's decode of 901 chain
+      receipts, which is the sharpest -- THE MAKER FEE IS A SIGNED ORDER
+      PARAMETER, and for us it is what we sign. All RELAYED; I verified only
+      R-536's timestamp and the ITER1_M grep surface myself.
       MEM ROUND 102, 2026-09-05T15:47:09Z -- THE STOP STANDS, ITS STATED
       REASON DOES NOT. SUPERSEDED-BY-R-535: the "NO-OWNED-EXECUTION-EXPORT"
       status this task carried is WITHDRAWN as a label. Gate 1f's audit
