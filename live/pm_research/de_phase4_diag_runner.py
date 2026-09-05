@@ -1422,7 +1422,12 @@ INVENTORY_EMITTED_KEYS: tuple = (
     "by_ruling", "concentration", "interval", "per_slug",
     "summed_terminal_net_shares", "summed_terminal_net_shares_status",
     "fills_leg_cents", "total_to_terminal_cents", "identity_holds",
-    "identity_residual_cents", "fill_statuses", "value_ceiling")
+    "identity_residual_cents", "fill_statuses", "value_ceiling",
+    # R-524(E): the honest identity label and its flag TRAVEL. Relabelling
+    # the producer while the emission read a spec table would have left
+    # the artifact saying the old thing -- DE60-C1 in the other
+    # direction, and it is what the first re-emission actually did.
+    "identity", "identity_is_tautological")
 
 
 def inventory_pnl(fills: list, terminal_marks: dict) -> dict:

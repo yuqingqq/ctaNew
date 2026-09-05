@@ -220,7 +220,7 @@ def per_unit_figures(net_cents: float, n_cancels: int, n_lost: int) -> dict:
 
 if "--selftest" in sys.argv:
     pass
-EXPECTED_CHECKS = 17
+EXPECTED_CHECKS = 19
 
 
 def selftest() -> int:
@@ -401,6 +401,36 @@ def selftest() -> int:
        "is 0, a measurement) and MUST NOT be assumed to -- the "
        "known-bad shows the emitted `n_fills` running 15 short of the "
        "population the numerator was summed over")
+    # ---- R-524(E) / DE60-C1: THE LABEL MUST REACH THE EMISSION ------
+    # The first re-emission (15:31:42Z) proved this can fail silently: I
+    # relabelled `inventory_pnl`'s identity in the producer and the
+    # artifact still carried the OLD text, because `fields()` read
+    # `spec["identity"]` from a separate table. Green producer, stale
+    # artifact, no check anywhere.
+    #
+    # WHAT THIS CHECK IS AND IS NOT: `fields()` is a CLOSURE inside
+    # `run_arms`, so it cannot be called from here -- this is a SOURCE
+    # PIN over its AST, not a driven emission. It is weaker than running
+    # the function and it is the strongest thing available without
+    # lifting `fields` to module scope, which is not this round's work.
+    # It is safe as a substring test only because `ast.unparse` DROPS
+    # COMMENTS: the prose above cannot match its own needle -- the
+    # failure mode this file hit three times in one day.
+    _fields_fn = [_n for _n in _ast.walk(_tree)
+                  if isinstance(_n, _ast.FunctionDef) and _n.name == "fields"]
+    ok(len(_fields_fn) == 1, "the emission function `fields` is findable "
+                             "in the AST exactly once")
+    _fsrc = _ast.unparse(_fields_fn[0])
+    ok("inv_arm.get('identity'" in _fsrc
+       and "'identity': mp_arm['identity']" in _fsrc
+       and "'identity_is_tautological': mp_arm['identity_is_tautological']"
+           in _fsrc
+       and "'identity': spec['identity']," not in _fsrc,
+       "R-524(E): the emission takes BOTH identity labels from the "
+       "PRODUCER (`inv_arm` / `mp_arm`), with the spec table only as a "
+       "fallback. The known-bad is the withdrawn form `'identity': "
+       "spec['identity']` standing alone, which is what shipped the "
+       "stale label into the 15:31:42Z artifact")
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
     print(f"[de_section81_arms] selftest OK -- {n[0]} checks")
@@ -569,7 +599,15 @@ def run_arms(argv=None):
                     "fills_leg_cents": inv_arm["fills_leg_cents"],
                     "total_to_terminal_cents":
                         inv_arm["total_to_terminal_cents"],
-                    "identity": spec["identity"],
+                    # R-524(E) / DE60-C1: THE PRODUCER IS AUTHORITATIVE.
+                    # This read `spec["identity"]`, so relabelling
+                    # `inventory_pnl`'s identity did NOT reach the
+                    # artifact -- the 15:31:42Z emission still said
+                    # "fills_leg + inventory_leg == total_to_terminal"
+                    # with no hint it cannot fail. The spec text is the
+                    # fallback now, not the source.
+                    "identity": inv_arm.get("identity",
+                                            spec["identity"]),
                     "identity_holds": inv_arm["identity_holds"],
                     "identity_residual_cents":
                         inv_arm["identity_residual_cents"],
@@ -603,7 +641,14 @@ def run_arms(argv=None):
                           "fill_statuses": mp_arm["fill_statuses"],
                           "identity_holds": mp_arm["identity_holds"],
                           "identity_residual_cents":
-                              mp_arm["identity_residual_cents"]}
+                              mp_arm["identity_residual_cents"],
+                          # R-524(E): `identity_holds: true` shipped with
+                          # NO statement of what it means. A bare boolean
+                          # beside the numbers is the thing rule 10
+                          # forbids; the label travels with it now.
+                          "identity": mp_arm["identity"],
+                          "identity_is_tautological":
+                              mp_arm["identity_is_tautological"]}
                 for extra in spec.get("also", ()):
                     if extra.startswith("de_phase4_diag_runner."):
                         out[f].setdefault("also", {})[
