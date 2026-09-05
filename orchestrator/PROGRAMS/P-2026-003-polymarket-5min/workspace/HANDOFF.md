@@ -1,8 +1,138 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-05T15:47:09Z — **THE FIRST LOOP ROUND REVERSED TWO OF YESTERDAY'S
+READINGS AND WITHDREW THE LABEL ON THE BLOCKER V2 STOPPED ON. V2 IS STILL
+STOPPED AT 1/7 — on Gate 1's other three refusals, which stand.** MEM round 102
+is a state sweep; I produced no result and adjudicated nothing. Economics:
+`workspace/RESULTS.md` §0 — **read its opening box before its numbers.**
+
+## READ FIRST — round 102
+
+### 1. The blocker's label is withdrawn. The stop is not.
+
+**Both halves must be carried together or the pair reads as a restart.**
+
+- **WITHDRAWN (SUPERSEDED-BY-R-535):** Gate 1f's terminal stop rests on a
+  **negative existence claim never checked against this programme's own
+  measurement.** Its audit enumerated three files with five substring
+  predicates and returned its `conclusion` as a **constant string literal no
+  predicate evaluates** — CLAUDE.md **rule 10, in the module that terminated the
+  programme**. Meanwhile the quantity it declared unavailable sits in this
+  repository's own established-facts table, measured, with an n and a signed
+  bound. **I read all three cites at the artifacts myself and each reads exactly
+  as filed:** `FLOW_MODEL_STATE.md:78` (*"Taker pays the fee, maker does not ·
+  `0.07·p·(1−p)` $/share to 4 dp · 600/600 taker legs charged, 744/754 maker
+  legs zero · n=600"*); `MEASUREMENT_PLAN.md:945` (*"IS UNBLOCKED AS OF
+  ITERATION 6 — BOTH PRECONDITIONS ARE DISCHARGED"*, fee *"measured on-chain"*);
+  `de_v2_owned_execution_input.py:425–428` (the literal) — **and I counted:
+  "on-chain" appears in that module exactly once, inside it.** I am the
+  **second** reader; **DA round 50 is the third and the only one that goes to
+  the chain** — repo cites establish what this repository *records*, not what
+  the chain says.
+- **AND THERE IS NOTHING TO PROCURE.** The reviewer's §2.3, both premises
+  checked: an owned per-fill ledger is defined only on a **realised** path, and
+  this population is **counterfactual** — these fills were never placed. **No
+  acquisition, not even live trading, could produce one for this population.**
+  *"Acquire an owned-execution export" was never an available move.*
+- **NOT WITHDRAWN — the route is still stopped.** Gate 1's other three refusals
+  are untouched: iid **1/200 in 4,000**; exact-fiber **ESS 10.53 < 100**;
+  sequential quota **16/1,000 with 16 distinct states**. DA reproduced all three
+  **bit-for-bit** on bars declared before the run. In the reviewer's own words,
+  adopted: ***"It does not restart the programme."***
+- **The USER's question is now narrower and cheaper:** not *acquire an export,
+  redesign, or close the route*, but **"should Gate 1e be re-run reporting the
+  fee INTERVAL [0, 1.75 ¢/share] the repository already owns, instead of nulling
+  its decision metric?"** It goes up once DE answers whether a maker-fee term is
+  computable from its own tranche fields; **not** held for DA's third check,
+  which refines rather than gates it.
+
+### 2. The ceiling's zero was wrong — and it answers my own objection, NO
+
+My round-100 objection was *"a pure-noise book would also show a huge ceiling."*
+**BE's null (declared before the run) answers it: NO.** A matched-count
+**random** decline captures a **negative** fraction of `V_oracle` at every k —
+**−0.35% / −0.70% / −1.42% / −2.13% / −4.75%** at k = 107/216/432/647/1,440 —
+because the book's mean fill is **+1.9928c** and a decline-only overlay drawing
+at random **destroys** value.
+
+**But the zero point used yesterday was the net, and the correct zero is matched
+random.** Against it **CONDVALUE +3.16 pp** (p_loc 0.115) and **HAZARD
++0.33 pp** (p_loc 0.358). **Neither clears p95 — a direction, not a result** —
+and **R-529(C)'s filed *"neither ranker finds any of it"* is NOT SUPPORTED** and
+is marked so in `STATUS.yml`.
+
+**The two axes disagree, and that is the finding:** CONDVALUE **beats random on
+the FILL axis** and is **worse than a blind cancel on the CANCEL axis**
+(2.865 vs 2.227 ¢/cancel), because its cascade removes **4.32 fills per cancel**
+against 1.12 — DA's *"unattainable under the cascade"*, made quantitative.
+
+### 3. `V_oracle` has `r`'s disease — and the corollary does not transfer
+
+DA built **two books** with identical N, value multiset, total and budget —
+**identical `V_oracle` to the bit (600.0c)** — whose **attainable** value is
+**600.0 vs 300.0**. They are lineage-label permutations, so **no function of
+what `V_oracle` sees can tell them apart.** On the real Gate-0 book at 2.0 s
+dwell: attainable **767.405** vs oracle **852.407**, a **10.0% overstatement**.
+
+**The part a careless reader will get wrong:** BE reproduced those figures and
+then established the limit — **the surfaces differ** (355 actions of
+`static_cancel_value` vs 4,315 fills of markout×shares), so **the 10.0% must NOT
+be carried onto the 701%.** DA's *structural* claim survives; only its
+*corollary* is local. **Standing: every ceiling figure now carries an
+attainable-value companion**, and R-529(C)/R-530(C) are read against matched
+random from now on.
+
+### 4. Two claims I relayed at round 101 are false as stated — and I checked both myself
+
+| R-532 said | what is true | how I know |
+|---|---|---|
+| *every* V2 receipt is provenance-honest | **five of eight**; **three carry no provenance block** — `gate1_smoke` (the headline Gate-1 refusal) and **both** `gate1f` audits | I loaded all eight and searched each for `freeze_status`: 5 return `NOT_FROZEN_UNCOMMITTED_V2_WORK`, 3 return nothing |
+| the code the receipts name is what landed at `9b37088` | 53/58 digests match; **the two earliest name a runner at `e3a1f088…` that exists nowhere in git** | `git cat-file -t e3a1f088` → *"not a valid object name"*; and that blob's digest appears in **zero** commits touching the file across **all** refs |
+
+**Three of the eight are the receipts behind the very stop this round
+dissolved.** The listing sizes (20/24/26/28/30, not "20 and 30") are **relayed**
+— my own key probe found nothing under the names I guessed, **which is my probe
+failing and is not evidence of absence**, so I claim nothing there.
+
+### 5. Process, recorded as state
+
+- **The coordinator stalled forty minutes** — nine commits landed 15:08–15:23Z,
+  the monitor fired fifteen events including three IDLE stalls, and nothing was
+  acted on until the USER asked at 15:38Z. Recorded **against the coordinator**
+  the way R-378/R-381 record it against seats, at its own request. **This is my
+  R-531(G) observation from the other side:** that one said the ruling cadence
+  outran the checking rate; this one says the checking rate went to **zero**
+  while nine commits sat. *A monitor that fires and is not read is not an
+  instrument, it is a log.*
+- **Waiters do not survive the turn that arms them** — third instance. DE's
+  re-emission landed at 15:32:49Z, nine minutes after DE stopped, and DE has not
+  seen it. **Rule: poll from `ps` at the top of the next turn, observer
+  excluded.** *A pattern that fails three times is a missing rule, not three
+  careless seats.*
+- **BE is on recorded standby** pending tonight's 00:06Z verdict. **A recorded
+  standby is not idleness (R-381)** — named wait, named trigger.
+- **`RESULTS.md`'s "G = 3 of 5" is fixed to 4** in `0c56940` — checked at the
+  artifact (lines 522 and 611). **Round 101 routed it rather than editing a file
+  that is not mine, and the owner fixed it. Routing a defect in someone else's
+  file is not deferring it.**
+
+### Still open, still mine
+
+The **CURRENCY** axis and the **RELAY FIDELITY** axis are both named and neither
+is built; **455 of 520 flags have never been audited for staleness.** This round
+is evidence for both: two values I relayed at round 101 turned out false as
+stated within a day, and **I only found it because someone else checked.**
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-05T15:01:22Z — **THE USER RESUMED THE LOOP AT 14:54Z. RESUMED IS NOT
 REOPENED: the scope is V2's own, V2 is still terminally stopped 1/7 on the
-Gate-1f data-acquisition blocker, and only a USER ruling moves that.** MEM
+Gate-1f data-acquisition blocker, and only a USER ruling moves that.**
+[SUPERSEDED 2026-09-05T15:47:09Z: the "data-acquisition blocker" LABEL is
+withdrawn — see §1 above. The stop stands, on Gate 1's other three refusals.]
+MEM
 round 101 is a state sweep, not a result. The economics live in
 `workspace/RESULTS.md` §0 — **read its opening box before its numbers** — and
 these files point at it and copy none of it.
@@ -143,6 +273,10 @@ chain I split on a guessed boundary is not.
 
 ### What did NOT change
 
+[SUPERSEDED 2026-09-05T15:47:09Z: "the Gate-1f blocker" belongs in the CHANGED
+column now — its label is withdrawn, though the 1/7 stop itself did not move.
+The two open objections to the 701% ceiling are likewise ANSWERED: BE built the
+null, and DA proved the `r`-disease by construction.]
 The Gate-1f blocker; the 1/7 gate count; the Phase-2 winner; the causal
 incumbent operating point; the two open objections to the 701% ceiling (it has
 no null, and `V_oracle` may have `r`'s disease); the three unexplained data
