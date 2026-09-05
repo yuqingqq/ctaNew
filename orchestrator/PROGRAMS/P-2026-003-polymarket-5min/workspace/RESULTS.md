@@ -397,6 +397,21 @@ first statement in the programme of what the model must **achieve** rather than
 what it failed to achieve, and it is computed from the ceiling rather than from
 a comparison to another model.
 
+### The maker fee, from the venue (fetched live 2026-09-05, R-536)
+
+**We are the maker, and makers are never charged.** `docs.polymarket.com/trading/fees`
+and the help-center fee page (updated 2026-07-10) both state *"Makers are never
+charged fees. Only takers pay fees"* — taker fee `C × 0.07 × p(1−p)` in crypto,
+at match, USDC. Our on-chain decoding agrees at the realised level: **744/754
+and 1,046/1,056 maker legs zero** (the 1.3% exception is open). **Net of the
+crypto maker rebate — 20% of the taker-fee pool, per market, pro-rata by
+`C·0.07·p(1−p)` on filled maker orders, daily, $1 minimum, discretionary — our
+expected maker "fee" is NEGATIVE.** A separate Liquidity Rewards program pays
+resting orders within a per-market max spread; **its eligibility for crypto
+5-minute markets is UNSTATED.** **V2's Gate 1e nulled its decision metric on a
+term the venue publishes at zero** (R-535, R-536); the bound-endpoint re-run
+now carries three endpoints — 0, +0.07·p(1−p), −rebate.
+
 ### The forward race is DIRECTIONAL, not significance-bearing — USER ruling, 2026-09-04
 
 **The ceiling of a clustered permutation test is its floor: G clusters admit
