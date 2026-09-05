@@ -1,0 +1,93 @@
+{
+  "budget_by_stratum": {
+    "BUY_UP|13": 191,
+    "SELL_UP|13": 164
+  },
+  "budget_is_binding": false,
+  "by_dwell_s": {
+    "0": {
+      "attainable_share_of_oracle": 1.0,
+      "attainable_value_cents": 852.4071429999999,
+      "gap_cents": 0.0,
+      "per_stratum": {
+        "BUY_UP|13": 472.41276000000005,
+        "SELL_UP|13": 379.99438299999986
+      }
+    },
+    "0.05": {
+      "attainable_share_of_oracle": 1.0,
+      "attainable_value_cents": 852.4071429999999,
+      "gap_cents": 0.0,
+      "per_stratum": {
+        "BUY_UP|13": 472.41276000000005,
+        "SELL_UP|13": 379.99438299999986
+      }
+    },
+    "0.25": {
+      "attainable_share_of_oracle": 1.0,
+      "attainable_value_cents": 852.4071429999999,
+      "gap_cents": 0.0,
+      "per_stratum": {
+        "BUY_UP|13": 472.41276000000005,
+        "SELL_UP|13": 379.99438299999986
+      }
+    },
+    "1": {
+      "attainable_share_of_oracle": 0.9882656432643244,
+      "attainable_value_cents": 842.4046934999999,
+      "gap_cents": 10.002449500000012,
+      "per_stratum": {
+        "BUY_UP|13": 472.41276000000005,
+        "SELL_UP|13": 369.99193349999985
+      }
+    },
+    "2": {
+      "attainable_share_of_oracle": 0.9002795199476644,
+      "attainable_value_cents": 767.4046935,
+      "gap_cents": 85.0024494999999,
+      "per_stratum": {
+        "BUY_UP|13": 434.9127600000001,
+        "SELL_UP|13": 332.4919334999999
+      }
+    },
+    "5": {
+      "attainable_share_of_oracle": 0.8354044183555135,
+      "attainable_value_cents": 712.1046934999999,
+      "gap_cents": 140.30244949999997,
+      "per_stratum": {
+        "BUY_UP|13": 409.9127600000001,
+        "SELL_UP|13": 302.1919334999999
+      }
+    }
+  },
+  "declared_repost_dwell_s": 2.0,
+  "limits": [
+    "the blocking model is one parameter (a dwell during which a cancelled lineage cannot be cancelled again); the real cascade also changes WHICH generations exist, which can only widen the gap, never narrow it",
+    "values are the receipt's gross five-second markout, unchanged; no fee, queue reset or terminal inventory enters here",
+    "one window, one slug, one hour: this is a structural demonstration, not a population estimate"
+  ],
+  "n_eligible": 3557,
+  "n_oracle_selected": 355,
+  "n_positive_value_actions": 38,
+  "one_sided_randomization_p": 0.2885572139303483,
+  "oracle_value_cents": 852.4071429999999,
+  "protocol": "P003_DA_ORACLE_ATTAINABILITY_V1",
+  "reimplementation_matches_shipped": true,
+  "role": "REPORTED, NOT ENFORCED -- this module falsifies a reading of V_oracle. It promotes nothing and decides nothing (rule 14).",
+  "shipped_oracle_cents": 852.4071429999999,
+  "source_identity": {
+    "freeze_status": "NOT_FROZEN_DIAGNOSTIC_INSTRUMENT",
+    "git_head": "e8066aa54e5468b96e013f545d25f7b65568b336",
+    "producing_module": "live/pm_research/da_oracle_attainability.py",
+    "producing_module_sha256": "9e8eaabb6c76a32a69326ad79cd53e3c608b170366041bebb2ebfe40e1f83b36",
+    "working_tree_clean": false,
+    "working_tree_status": [
+      "M live/pm_research/da_cite_audit.py",
+      "?? live/pm_research/da_oracle_attainability.py"
+    ]
+  },
+  "source_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_v2_gate0_smoke__20260904T160623Z.json",
+  "source_receipt_sha256": "d63ccc59bae1e733a2fa4c840ce2b1c2bdc33494ce989df55f3816f4fd906be7",
+  "sum_positive_value_cents": 852.4071429999999,
+  "treated_value_cents": 49.52459550000002
+}

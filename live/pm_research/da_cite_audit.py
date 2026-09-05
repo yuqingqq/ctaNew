@@ -40,7 +40,20 @@ CODE_ROOT = Path(__file__).resolve().parents[2]
 REGISTER = (CODE_ROOT / "orchestrator/PROGRAMS/P-2026-003-polymarket-5min"
             / "workspace/COORDINATION.md")
 CITE_RE = re.compile(r"\bR-\d+\b")
-EXPECTED_CHECKS = 16
+#: ROUND 49, AND THIS IS THE FIX TO A DEFECT DA FILED AGAINST ITSELF.
+#: `EXPECTED_CHECKS` was a single hand-pinned integer, and DA re-pinned its
+#: sibling digest TWICE IN ONE DAY by pasting the value the failure printed
+#: -- "a pin whose maintainer updates it reflexively from the error output is
+#: a tally again". Adding nine tables here would have demanded exactly that
+#: paste a third time.
+#:
+#: So the pin is SPLIT along the line that makes the reflex unnecessary. The
+#: per-table checks are one per audited table and MUST move when `TABLES`
+#: moves; that part is derived, never pinned. Everything else is fixed
+#: behaviour, and `EXPECTED_FIXED_CHECKS` still fails if a check is deleted
+#: or replaced. Growing the declared input no longer requires touching a
+#: pin -- which is the only way a pin stays meaningful.
+EXPECTED_FIXED_CHECKS = 20
 
 
 class CiteAuditRefused(RuntimeError):
@@ -167,6 +180,21 @@ def subject_variants(key: str) -> tuple:
 #: claim lives, the SUBJECT it is about, and the terms that would show the
 #: cited text is about that subject. Declared as data so adding a table is a
 #: line, not a code change -- and so the coverage is legible.
+#: ROUND 49 -- THE DEFECT DA FILED AGAINST ITSELF, AND WHY TWO MORE ENTRIES
+#: WOULD NOT HAVE CLOSED IT. At R-531(E) DA reported "both tables come back
+#: clean" while `TABLES` held exactly TWO of the FOUR surfaces it had been
+#: asked to cover. Adding the two missing ones by hand reproduces the same
+#: failure one surface later: a HAND-ENUMERATED coverage list cannot report
+#: what it omits, which is the identical shape as the check-id digest DA
+#: re-pinned twice in a day from the value the failure printed.
+#:
+#: So the list is no longer the coverage claim. `discover_tables` walks the
+#: package by AST and finds EVERY module-level upper-case dict whose source
+#: carries an `R-nnn` cite, and the audit reports any discovered table that
+#: this tuple does not name. The declared tuple still exists -- it carries
+#: the per-table subject terms, which cannot be inferred -- but a surface
+#: added tomorrow shows up as `undeclared_authority_tables` instead of
+#: silently not being audited.
 TABLES: tuple = (
     {"id": "race_withdrawals.authority",
      "module": "da_race_withdrawals", "attr": "RACE_WITHDRAWALS",
@@ -176,7 +204,109 @@ TABLES: tuple = (
      "module": "da_forward_day_verify", "attr": "ERA_AUTHORITY",
      "field": None, "subject_terms_from_key": True,
      "extra_terms": ()},
+    # THE FREEZE SURFACE, owed since round 37. The split ruling is the
+    # freeze-side ruling that carries a register cite in a `ruled_by` field.
+    {"id": "split_ruling",
+     "module": "de_phase4_diag_runner", "attr": "SPLIT_RULING",
+     "field": None, "subject_terms_from_key": True,
+     "extra_terms": ("split", "splits", "mechanics", "score", "train")},
+    # THE FAMILY SURFACE, owed since round 37.
+    {"id": "forward_family.open_factors",
+     "module": "be_forward_family", "attr": "OPEN_FACTORS",
+     "field": "ruled_by", "subject_terms_from_key": True,
+     "extra_terms": ("family", "arm", "cells", "multiplicity")},
+    # The remaining cite-bearing surfaces AST discovery found. Named so the
+    # audit covers them, not because any of them was asked for.
+    {"id": "forward_day.user_admissions_by_day",
+     "module": "be_forward_day", "attr": "USER_ADMISSIONS_BY_DAY",
+     "field": "authority", "subject_terms_from_key": True,
+     "extra_terms": ("admit", "admission", "day")},
+    {"id": "forward_day.development_read_ratifications",
+     "module": "be_forward_day", "attr": "DEVELOPMENT_READ_RATIFICATIONS",
+     "field": "authority", "subject_terms_from_key": True,
+     "extra_terms": ("development", "read", "ratif")},
+    {"id": "forward_metric.pairing_conventions",
+     "module": "be_forward_metric", "attr": "PAIRING_CONVENTIONS",
+     "field": "authority", "subject_terms_from_key": True,
+     "extra_terms": ("pairing", "convention", "operating point")},
+    {"id": "fragment_diagnostic.governed_states",
+     "module": "be_fragment_diagnostic", "attr": "GOVERNED_STATES",
+     "field": "authority", "subject_terms_from_key": True,
+     "extra_terms": ("fragment", "governed", "state")},
+    {"id": "phase4.arm_spec",
+     "module": "de_phase4_diag_runner", "attr": "ARM_SPEC",
+     "field": "authority", "subject_terms_from_key": True,
+     "extra_terms": ("arm", "phase 4", "phase-4")},
+    {"id": "phase4.user_admissions",
+     "module": "de_phase4_diag_runner", "attr": "USER_ADMISSIONS",
+     "field": "authority", "subject_terms_from_key": True,
+     "extra_terms": ("admission", "admit")},
+    {"id": "phase2_arms.registration_provenance",
+     "module": "phase2_arms", "attr": "REGISTRATION_PROVENANCE",
+     "field": None, "subject_terms_from_key": True,
+     "extra_terms": ("registration", "provenance", "arm")},
 )
+
+#: Tables AST discovery is expected to find and that are deliberately NOT
+#: audited, each with the reason. An entry here is a decision on the record,
+#: not an omission -- and the audit prints them, so the list is visible.
+NOT_AUDITED: dict = {
+    "da_forward_day_verify._ERA_AUTHORITY_FOR_TIMELINE_TESTS":
+        "a test fixture whose cites are deliberately fake (R-000); auditing "
+        "it would require the register to contain an entry invented to fail",
+    "be_forward_recon.DECLARED_PREDICATES":
+        "prose predicates, not per-key authorities: the cite governs the "
+        "whole table rather than any one row",
+    "be_fragment_diagnostic.DIAGNOSTIC_PREDICATE_EXCLUSIONS":
+        "same shape as DECLARED_PREDICATES -- one table-level cite",
+    "da_state_tape_verify.PERMITTED_NA":
+        "same shape -- one table-level cite",
+    "de_phase4_diag_runner.DRIFT_FACTS":
+        "facts about a drift, cited once at table level",
+    "replay_canary.R7_LICENSE":
+        "a licence text block, cited at table level",
+    "da_cite_audit.NOT_AUDITED":
+        "this table itself -- discovery finds it because its REASONS quote "
+        "cites. Excusing it is the honest move and it is recorded here "
+        "rather than filtered out in the finder, where it would become an "
+        "invisible special case",
+}
+
+
+def discover_tables(pkg: Path | None = None) -> dict:
+    """Every module-level upper-case dict whose source carries an `R-nnn`.
+
+    THE POINT: coverage is MEASURED, never asserted. This is what makes the
+    hand-written `TABLES` tuple auditable instead of self-certifying."""
+    import ast
+    root = Path(pkg) if pkg is not None else Path(__file__).resolve().parent
+    found = {}
+    for path in sorted(root.glob("*.py")):
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8",
+                                            errors="replace"))
+        except SyntaxError:
+            continue
+        for node in tree.body:
+            if isinstance(node, ast.AnnAssign):
+                targets = [node.target]
+            elif isinstance(node, ast.Assign):
+                targets = node.targets
+            else:
+                continue
+            name = getattr(targets[0], "id", None)
+            if not name or not name.isupper() or node.value is None:
+                continue
+            if not isinstance(node.value, ast.Dict):
+                continue
+            try:
+                src = ast.unparse(node.value)
+            except Exception:                            # noqa: BLE001
+                continue
+            if CITE_RE.search(src):
+                found[f"{path.stem}.{name}"] = sorted(
+                    set(CITE_RE.findall(src)))
+    return found
 
 
 def audit(register: Path | None = None,
@@ -242,11 +372,29 @@ def audit(register: Path | None = None,
         }
     n_bad = sum(len(v.get("cites_failing_term_level", []))
                 for v in out.values() if isinstance(v, dict))
+    # COVERAGE IS MEASURED, NOT ASSERTED (round 49). Anything AST discovery
+    # finds that is neither audited nor explicitly excused is reported.
+    discovered = discover_tables()
+    declared = {f"{s['module']}.{s['attr']}" for s in tables}
+    undeclared = sorted(set(discovered) - declared - set(NOT_AUDITED))
     return {
         "instrument": "da_cite_audit", "register": str(reg),
         "n_register_entries": len(entries),
         "n_tables": len(tables), "tables": out,
         "n_cites_failing_term_level": n_bad,
+        "coverage": {
+            "n_authority_tables_discovered": len(discovered),
+            "n_declared_in_TABLES": len(declared),
+            "n_excused_in_NOT_AUDITED": len(NOT_AUDITED),
+            "undeclared_authority_tables": undeclared,
+            "coverage_complete": not undeclared,
+            "discovered": discovered,
+            "why": ("round 37 asked for four surfaces and TABLES carried "
+                    "two; DA reported 'both tables come back clean' without "
+                    "saying both was two of four. A hand-enumerated list "
+                    "cannot report what it omits, so the list is now audited "
+                    "against AST discovery rather than trusted"),
+        },
         "role": "REPORTED_NOT_ENFORCED",
         "n_cites_that_only_discuss": sum(
             len(v.get("cites_that_only_DISCUSS_the_subject", []))
@@ -377,9 +525,52 @@ def selftest() -> int:
        and audit(tables=())["n_tables"] == 0,
        "EMPTY: an audit over NO tables reports zero tables, so a zero "
        "failure count is never mistaken for a clean surface")
-    print(f"\nda_cite_audit selftest: {checks} checks PASSED")
-    if checks != EXPECTED_CHECKS:
-        print(f"FAIL: EXPECTED_CHECKS={EXPECTED_CHECKS} but {checks} ran.")
+
+    # ---- COVERAGE, both directions (round 49) -------------------------
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _d:
+        _p = Path(_d)
+        (_p / "m_hit.py").write_text(
+            'X = {"k": {"authority": "R-123 says so"}}\n')
+        (_p / "m_miss.py").write_text('Y = {"k": {"authority": "no cite"}}\n')
+        (_p / "m_lower.py").write_text('z = {"k": "R-124"}\n')
+        (_p / "m_broken.py").write_text('def (\n')
+        _f = discover_tables(_p)
+    ok(set(_f) == {"m_hit.X"} and _f["m_hit.X"] == ["R-123"],
+       f"DISCOVERY POSITIVE CONTROL: finds the cite-bearing table and "
+       f"reports its cites ({_f}) -- an instrument that has never been "
+       f"shown to fire is not evidence (rule 15)")
+    ok("m_miss.Y" not in _f and "m_lower.z" not in _f,
+       "DISCOVERY KNOWN-BAD: a table with no cite, and a lower-case name, "
+       "are NOT reported -- the finder is not firing on everything, which "
+       "is the other way a check gets turned off")
+    ok("m_broken" not in str(_f),
+       "DISCOVERY: an unparseable module is skipped, never crashing the "
+       "audit that must still report the rest")
+    _cov = audit()["coverage"]
+    ok(_cov["n_authority_tables_discovered"] >= len(TABLES),
+       f"COVERAGE: discovery finds {_cov['n_authority_tables_discovered']} "
+       f"authority-bearing tables against {_cov['n_declared_in_TABLES']} "
+       f"declared and {_cov['n_excused_in_NOT_AUDITED']} excused")
+    ok(_cov["coverage_complete"] and not _cov["undeclared_authority_tables"],
+       f"COVERAGE COMPLETE: nothing discovered is silently unaudited "
+       f"(undeclared={_cov['undeclared_authority_tables']}) -- this is the "
+       f"check that would have caught 'two of four' at round 37")
+    _stale = audit(tables=TABLES[:1])["coverage"]
+    ok(_stale["undeclared_authority_tables"]
+       and not _stale["coverage_complete"],
+       f"COVERAGE FALSIFIER: dropping tables makes coverage INCOMPLETE and "
+       f"names {len(_stale['undeclared_authority_tables'])} surface(s) -- "
+       f"the guard moves with its input rather than always passing")
+    expected = EXPECTED_FIXED_CHECKS + len(TABLES)
+    print(f"\nda_cite_audit selftest: {checks} checks PASSED "
+          f"({EXPECTED_FIXED_CHECKS} fixed + {len(TABLES)} per-table)")
+    if checks != expected:
+        print(f"FAIL: expected {expected} checks "
+              f"({EXPECTED_FIXED_CHECKS} fixed + {len(TABLES)} per-table) "
+              f"but {checks} ran. If you ADDED a table this number moves on "
+              f"its own; if it still mismatches, a FIXED check was deleted "
+              f"or replaced -- read it, do not re-pin it.")
         return 1
     return 0
 
