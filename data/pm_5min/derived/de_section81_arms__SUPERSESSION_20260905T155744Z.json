@@ -1,0 +1,46 @@
+{
+ "as_of": "2026-09-05T15:58Z",
+ "determinism_check": "FOUR independent runs of this code (153142Z cold, 154901Z, 155417Z, 155744Z) reproduce every economic leaf bit-identically; consecutive pairs differ at exactly five shared leaves -- run_id, population.as_of, the two carrying_commit fields, and the run-id embedded in cancellation_economics.scope_and_limits.",
+ "numbers_check": "leaf-wise against de_section81_arms__20260904T140543Z: 4,050 old leaves, 4,097 new, 4,044 shared, EVERY shared leaf compared, volatile provenance/resource fields excluded by name. MOVED shared leaves: 7, and all seven are STRING LABELS -- three maker_pnl_reconciliation.predicate, three inventory_loss_cents.identity, one cancellation_economics.identity. ZERO numeric leaves moved. Arm signatures reproduce exactly: QR_SKEW_ONLY 8598.758849500002, CONDVALUE_X_SKEW 7644.840732000005, HAZARD_OVER_SKEWED_REF 8586.2031085.",
+ "numbers_moved": false,
+ "record": "SUPERSESSION",
+ "still_open_on_this_surface": [
+  "the declined fills' keys are still not emitted, so the arm-subset argument remains counts-and-lookup rather than element-wise (R-519(F) item 4, DA's offer)",
+  "attempt_bound/required_attempts exist in de_phase4_diag_runner and are NOT wired: MATCHED_FLOOR_STATE and the RANDOM_MATCHED emission are untouched, so this artifact carries no rejection-rate bound. RANDOM_MATCHED is still REFUSED at 60 attempts, all 60 rejected at P4.",
+  "fields() is a closure inside run_arms and cannot be driven by a selftest, so the emission-level guards are AST SOURCE PINS, not driven checks. Lifting fields() to module scope would make a real emission falsifier possible.",
+  "this artifact carries NO fee term of any kind. R-536/R-538 establish the maker fee at zero by the venue's schedule; nothing in this emission depends on that, and nothing in it should be read as a fee-adjusted net."
+ ],
+ "superseded": [
+  {
+   "artifact": "de_section81_arms__20260904T140543Z.json",
+   "committed": true,
+   "reason": "content only: it carries the withdrawn field name, the directional predicate, the three unlabelled tautologies, and cents_per_cancel with no companion. Its NUMBERS stand unchanged; retained in place as provenance (rule 13).",
+   "sha256": "2f08bdb57d334cc214d8bff60a816d20ca12d99bf7df0e959b8bdd6dd40cf073"
+  },
+  {
+   "artifact": "de_section81_arms__20260905T153142Z.json",
+   "committed": false,
+   "reason": "KEPT ON DISK AS THE EVIDENCE FOR ITS OWN DEFECT, DELIBERATELY NOT COMMITTED. Provenance-clean (0 of 7 at its carrying commit) but the producer's corrected identity labels DID NOT REACH IT: fields() read spec['identity'] from a table beside the producer, so inventory_loss_cents.identity still read the bare 'fills_leg + inventory_leg == total_to_terminal' and maker_pnl_cents emitted identity_holds:true with NO identity string at all. Closed in the DE63b commit. Not committed, so it cannot be cited; pinned here by digest so the finding stays checkable.",
+   "sha256": "48a25ee46bf7a17660cd96de9f37d995c103be98881b94ec98504f65527f0504"
+  },
+  {
+   "artifact": "de_section81_arms__20260905T154901Z.json",
+   "committed": false,
+   "reason": "PROVENANCE ONLY, AND A SELF-CAUGHT INSTANCE OF R-523(G). Content-identical bar run_id/as_of. It named a carrying commit that a rebase onto R-536 rewrote out of existence, so it would have shipped an artifact naming a commit not on the branch -- the exact defect 125340Z was superseded for.",
+   "sha256": "d35836674d9537c0e6369f4809a78c5166e0388112484fb0c46cc3419b4e0d89"
+  },
+  {
+   "artifact": "de_section81_arms__20260905T155417Z.json",
+   "committed": false,
+   "reason": "SAME CAUSE, SECOND OCCURRENCE, AND IT IS WHY THE ORDER OF OPERATIONS CHANGED. Re-emitted after the R-536 rebase, then invalidated again by the R-538 rebase before it could be pushed. THE RULE THIS ESTABLISHES: an artifact's carrying_commit is only stable once that commit is PUBLISHED. Push the producing code FIRST, then emit against the published commit, then commit the artifact -- rather than emitting against a local commit that the next fetch can rewrite.",
+   "sha256": "3b3f59c9c4660e055bd001befc24f1337d7b2ad8cca2c3108dc634f0835332cf"
+  }
+ ],
+ "superseding": "de_section81_arms__20260905T155744Z.json",
+ "superseding_carrying_commit": "641cfb6",
+ "superseding_carrying_commit_is_published": "yes -- an ancestor of origin/mm-research at emission time, so no later rebase can rewrite it",
+ "superseding_code_identity_differences_at_that_commit": "0 of 7",
+ "superseding_sha256": "8bd8481c318d4f8584833a419f230ba353da77605db3306f395cae8748ea14a8",
+ "what_changed_vs_140543Z": "R-519(F)/R-521(E)/R-524(E), wording and denominators only. (1) reference_tranche_markout_cents -> arm_recomputed_markout_cents, and the reconciliation predicate from a directional |replay|<=|reference| that could not fail to an EQUALITY at 1e-6; why_not_equality withdrawn as refuted by the artifact's own three equalities. (2) the three tautological identities now SAY they are tautological and carry identity_is_tautological. (3) cents_per_lost_fill, n_fills_lost, n_fills_arm, n_fills_baseline, fills_lost_per_cancel, pnl_leg_equals_decomposition_leg and a computed the_two_denominators emitted beside cents_per_cancel.",
+ "what_this_does_not_establish": "that any earlier number was wrong. No economic quantity moved in either direction; the defects were a name, a predicate that could not fail, three labels and a missing denominator. The 12-window one-hour population, the absence of any interval, and every load-bearing caveat in RESULTS.md section 0 are unchanged by this emission."
+}
