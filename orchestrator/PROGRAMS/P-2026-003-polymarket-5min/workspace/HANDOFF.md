@@ -1,11 +1,166 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-05T15:01:22Z — **THE USER RESUMED THE LOOP AT 14:54Z. RESUMED IS NOT
+REOPENED: the scope is V2's own, V2 is still terminally stopped 1/7 on the
+Gate-1f data-acquisition blocker, and only a USER ruling moves that.** MEM
+round 101 is a state sweep, not a result. The economics live in
+`workspace/RESULTS.md` §0 — **read its opening box before its numbers** — and
+these files point at it and copy none of it.
+
+## READ FIRST — round 101, and the one correction that matters
+
+- **G IS 4, NOT 5, AND THAT IS A CORRECTION TO MY OWN FILE — NOT AN ADVANCE.**
+  `hazard_forward_reach` read `G-5-OF-5-REACHED` from 09-04T14:26Z until now.
+  **G has never been 5.** The accrual is **4** (09-01..09-04; 09-04 accrued at
+  the 00:06:01Z scheduled unit with `counts_toward_race` TRUE — relayed from
+  R-532(G), which read it at the verdict; I did not open the sealed day) against
+  a **bar of 5**. RESULTS.md still reads *"Current race state: G = 3 of 5"* and
+  *"earliest G=5 is the 2026-09-06T00:06Z verdict if 09-04 and 09-05 accrue"*.
+  **The same error appears a second time, from a different author:** the
+  e3-screen task's V2 UPDATE, written by the USER's session at 09-04T15:27:56Z,
+  says *"the accepted old race reached G=5"* — when the accrual was 3. Both are
+  corrected in `STATUS.yml`; neither correction softens anything, because the
+  two limits that decide this race do not depend on G's value.
+- **THE TWO LIMITS, WHICH STAND TOGETHER AND ARE NOT THE SAME LIMIT.**
+  (1) The race is **DIRECTIONAL, NEVER SIGNIFICANCE-BEARING** — at G=5 with the
+  recorded multiplicity of 2 the best possible adjusted p is 0.0625 > 0.05, so
+  the smallest G that clears is 6 (R-529(A), standing rule 15; the multiplicity
+  of 2 is not decorative). (2) **The old race cannot validate the changed V2
+  pipeline** whatever G reaches (V2's own HANDOFF) — a v2 survivor needs a new
+  committed freeze and later untouched complete days. Neither subsumes the
+  other; quote both or neither.
+- **THE V2 LINE IS COMMITTED AND STILL NOT FROZEN — two different facts this
+  programme has conflated before.** COMMITTED, **verified by me at git**:
+  `9b37088` (31 files, 9,318 insertions, including exactly 17 newly added `.py`
+  modules and the V2 plan) + `120a9b3` (the four receipts under 1 MB); both
+  pushed, local == origin. NOT FROZEN, **relayed from R-532(E)**: every V2
+  receipt self-reports `freeze_status: NOT_FROZEN_UNCOMMITTED_V2_WORK`,
+  `working_tree_clean: False`, `git_head: 8fe1201` and its own dirty-tree
+  listing — which is provenance-honest, the *opposite* of the R-523(G) defect,
+  and still not a freeze. Rule 12 needs a re-emission from the committed tree
+  with 7/7 identity matches. Every `uncommitted/unfrozen` phrase in these files
+  is trued up to that pair.
+- **EVERY V2-ORIGINATED VALUE IN THESE FILES IS MARKED `RELAYED`.** Nobody but
+  the producing session has verified V2's receipts, its three Gate-1 refusal
+  bars, its identity counts or its Gate-1f audit at the artifacts. **DA round 49
+  is dispatched to be the first**; the reviewer is dispatched at the Gate-1f
+  negative existence claim specifically, and that one **informs the USER's
+  blocker ruling**. R-532(C) reproduced the 223-check parent suite and the 182
+  battery checks **by execution** under caps — that establishes the suites
+  **RAN**, not that the code is right (R-510(B)(2)). A suite count is not
+  coverage.
+- **FIVE DISPATCHES ARE IN FLIGHT AND NONE IS DONE:** BE 42 (the
+  random/naive-policy null the 701% ceiling lacks), DA 49, DE 63 (rebase
+  `6003f40`, verify 226 **by execution first**), the REVIEWER, MEM 101 (this).
+  No outcome of any of them is anticipated in these files.
+- **`R-534` DID NOT EXIST AT 14:57Z AND DOES AT 14:58Z — superseded in band
+  before this batch was committed, and the most useful thing in the round.**
+  My check was sound: surface `grep -rn "R-534"` over the repo for
+  `*.md`/`*.yml`/`*.py` → **exactly one line, reported whole**, the runbook's
+  "next entry" pointer; **zero** in COORDINATION.md, whose last header was
+  R-533. **As-of 2026-09-05T14:57Z.** One minute later the coordinator filed
+  **R-534** (committed `69b8eae`; the register went 522 → 525 headers), and its
+  §(B) names all five batches with a **MEM 101 line that matches this sweep item
+  for item**. **The flag was never wrong — it was dated**, and it is dated only
+  because it carried a surface and an as-of. *That is the rule earning its
+  keep, and it is also the CURRENCY axis firing on a flag four minutes old, in
+  the round that named the axis, on my own file.* **455 flags carry no as-of at
+  all.**
+- **Two facts swept from R-534(D).** The **seat monitor is re-armed** (it was
+  deliberately left stopped at the reset, R-533(E)), and the `/loop` duty
+  resumes — bound, in R-534(D)'s own words, to my R-531(G) observation: *the
+  ruling cadence does not exceed the rate at which a second seat can check each
+  ruling at an artifact.* And **tonight's 00:06Z governed verdict is the next
+  decision point: if 09-05 accrues, G = 5 — the bar met for the first time.**
+  **That is not the race becoming significance-bearing.** Both limits survive
+  G = 5 untouched; a flag exists so it is not read the other way when it lands.
+- **`v41_collector_live` refreshed** to 2026-09-05T11:32Z (relayed from
+  R-532(H): all four collectors alive — `collect_pm_prices`, `collect_hf`,
+  `collect_hl` 10d06h, `collect_pm` 4d13h). Round 100 routed this rather than
+  guessing it; it is now **answered** rather than standing.
+
+### The finding of this round is about my own instrument, again
+
+**A `RELAYED` marking does not test whether the relay READ ITS SOURCE
+CORRECTLY.** My round-100 `hazard_forward_reach` did everything the discipline
+asks: it was marked RELAYED, it said in its own note that it was *not*
+re-derived, and it named its source. **It was still wrong for 24.5 hours**,
+because R-529(A) says *"bar G = 5"* and the relay carried the **bar** as the
+**accrual** — while RESULTS.md said *"G = 3 of 5"* in the same breath.
+
+That is a **fourth axis**, beside the three named at round 100:
+
+| axis | question | do I have an instrument? |
+|---|---|---|
+| PROVENANCE | did a named artifact exist and was it read? | **yes** — `mem_flag_provenance.py` |
+| CORROBORATION | does a second, independent source agree? | no |
+| CURRENCY | is the value *still* true? | no — **457 of 502 never audited** |
+| **RELAY FIDELITY** | **did the relay read its source correctly?** | **no** |
+
+The cheap test that would have caught it: **a relayed value should be readable
+back to a quoted span of its source.** "G = 5" quoted *with the word "bar"
+attached* would not have survived. Named, not built — round 101 was not
+authorised to build it.
+
+**The CURRENCY axis stays open and is now on its second confirmed instance —
+the same flag, twice.** A flag that goes wrong twice on one axis is the axis
+asking for an instrument. 457 of 502 flags have never been audited for
+staleness. Do not let this fall off the list.
+
+### Routed, not fixed — RESULTS.md is not my file
+
+`workspace/RESULTS.md` states **G = 3 of 5** at lines 522 and 611, and line 624
+frames 09-04 as still open. **09-04 accrued;** those three statements are stale.
+RESULTS.md is the coordinator's file and I do not write it. **Filed, not
+edited** — and the same rule that makes this a routing rather than a repair is
+the one that kept round 100 from inventing a collector value.
+
+### Routed, second item — the `updated:` rolling window, and why I did NOT trim it
+
+`STATUS.yml`'s `updated:` field is a **rolling window of the newest three**
+(coordinator ruling, 2026-08-28T10:02Z). The field now runs **11,212 characters
+with eight nested generation markers** — `PRIOR CHECKPOINT` ×4, `PRIOR
+DECLARATION`, `PRIOR RESULT`, `DECLARATION CHECKPOINT`, plus a
+`RECEIPT/CURRENT IDENTITY` fragment interleaved — which is three times over and
+exactly the cold-reader problem the rule exists to prevent. **I archived
+nothing anyway**, for two reasons that both point the same way:
+
+1. **The chain is not mine and its boundaries are not clean.** The USER's
+   session wrote 09:54:58Z as *one* generation containing *its own* nested
+   checkpoint history. Counting those nested markers as separate entries for the
+   rolling window is **my interpretation of the rule, not its plain text**, and
+   the split point would be a judgment I invented rather than a boundary I read.
+2. **The archive's own founding note settles the tie:** the rule exists because
+   *"MEM proposed, did not execute unilaterally, because other seats read that
+   field and the seat that accumulated it is the wrong seat to decide alone that
+   its own accumulation should be trimmed."* Here I am not even the accumulating
+   seat — and **DA 49 and DE 63 are dispatched against the V2 narrative in that
+   tail right now.** Moving it mid-flight helps no one.
+
+**Routed to the coordinator for a ruling**, with the measurement above so the
+ruling has a number to rule on. A field marked over-long is recoverable; a
+chain I split on a guessed boundary is not.
+
+### What did NOT change
+
+The Gate-1f blocker; the 1/7 gate count; the Phase-2 winner; the causal
+incumbent operating point; the two open objections to the 701% ceiling (it has
+no null, and `V_oracle` may have `r`'s disease); the three unexplained data
+outages; the fact that the Phase-4 diagnostic **has never run**. Resuming the
+loop moved none of them.
+
+---
+
+PRIOR HEADER, retained — still the correct description of the V2 stop itself:
+
 Updated: 2026-09-05T09:54:58Z — **GATE 1F INPUT AUDIT REFUSED—NO OWNED
 EXECUTION EXPORT; GATE 1 REMAINS REFUSED; V2 STOPPED AT 1/7.** Gate 0 remains
 the only whole cleared gate. The receipt contains no strategy-net or matched
-decision statistic, and no gross value is promoted as a substitute. R-531 remains the latest
-register entry; this later direct user instruction has not yet been entered
-there. The
+decision statistic, and no gross value is promoted as a substitute.
+[SUPERSEDED 2026-09-05T15:01:22Z: "R-531 remains the latest register entry; this
+later direct user instruction has not yet been entered there" was true when
+written and is now false — R-532 IS that entry and cites the V2 line, R-533
+closed the seat reset, and R-534 does not exist yet.] The
 economic detail remains in `workspace/RESULTS.md` §0.
 
 ## READ FIRST — current state
@@ -39,6 +194,9 @@ economic detail remains in `workspace/RESULTS.md` §0.
   under one CPU/3 GiB. It is a pipeline receipt, not an economic result; the
   static control is not cascade-feasible, and everything remains
   uncommitted/unfrozen.
+  **[SUPERSEDED 2026-09-05T15:01:22Z: COMMITTED at `9b37088` + `120a9b3`, still
+  NOT FROZEN. The same correction applies to every "uncommitted/unfrozen"
+  phrase below.]**
 - **Superseded resource attempt:** the first smoke used the historical global
   Binance gap index, reached the 3 GiB job cap and was manually stopped with no
   artifact. The smoke-only local selector now reads three adjacent hour files

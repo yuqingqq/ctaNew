@@ -1,9 +1,72 @@
 program: P-2026-003-polymarket-5min
 name: Polymarket Crypto 5-min Markets
-phase: stopped
-status: halted                 # Gate 1 refused at the prospectively fixed economic-completeness stop
-branch: mm-research            # current v2 edits are local, uncommitted/unpushed
+phase: resumed-loop-within-v2-scope
+status: resumed-2026-09-05T15:01:22Z-USER
+                               # THE USER RESUMED THE LOOP at 2026-09-05T14:54Z.
+                               # RESUMED IS NOT REOPENED. The scope is V2's own
+                               # and is NAMED, not assumed: documentation,
+                               # source, synthetic selftests and required
+                               # one-window capped smokes only. STILL NOT
+                               # AUTHORISED: model fit, broad raw-tape replay,
+                               # survey, grid, cache rebuild, Gate 2.
+                               # V2 ITSELF REMAINS TERMINALLY STOPPED AT 1/7 on
+                               # the Gate-1f data-acquisition blocker; only a
+                               # USER ruling moves that (V2 plan section 6.7).
+                               # EARLIER VALUE (rule 13): phase stopped /
+                               # status halted -- "Gate 1 refused at the
+                               # prospectively fixed economic-completeness
+                               # stop", written by the USER's own session at
+                               # 09:57Z and true until 14:54Z.
+branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN --
+                               # two different facts. Committed: 9b37088 (17 .py
+                               # modules, the V2 plan, seven re-annotated docs,
+                               # 31 files) + 120a9b3 (the four receipts under
+                               # 1 MB), both pushed; the four larger receipts
+                               # are pinned by sha256 at R-532(D). VERIFIED BY
+                               # ME AT GIT this round. NOT frozen: every V2
+                               # receipt self-reports
+                               # freeze_status NOT_FROZEN_UNCOMMITTED_V2_WORK
+                               # with working_tree_clean False and git_head
+                               # 8fe1201, so rule 12 needs a re-emission from
+                               # the committed tree with 7/7 identity matches
+                               # before any of them is citable as frozen
+                               # (RELAYED from R-532(E), not re-read by me).
+                               # EARLIER COMMENT (rule 13): "current v2 edits
+                               # are local, uncommitted/unpushed" -- true when
+                               # the USER's session wrote it at 09:57Z, false
+                               # from 9b37088 onward.
 updated: >-
+  2026-09-05T15:01:22Z (MEM ROUND 101 -- STATE SWEEP ON THE USER'S RESUMPTION
+  OF THE LOOP AT 14:54Z. NO NEW RESULT; THIS IS A STATE BATCH.
+  (1) PHASE/STATUS MOVE stopped/halted -> resumed-loop-within-v2-scope, WITH
+  THE AUTHORISED AND UNAUTHORISED SCOPE NAMED RATHER THAN ASSUMED.
+  (2) THE V2 LINE IS COMMITTED (9b37088 + 120a9b3, VERIFIED BY ME AT GIT) AND
+  STILL NOT FROZEN (RELAYED FROM R-532(E)); EVERY FLAG THAT READ
+  "uncommitted/unfrozen" IS TRUED UP TO THAT PAIR.
+  (3) hazard_forward_reach IS CORRECTED, NOT ADVANCED: IT READ
+  G-5-OF-5-REACHED AND G HAS NEVER BEEN 5. THE ACCRUAL IS 4 (09-01..09-04;
+  09-04 ACCRUED AT THE 00:06:01Z SCHEDULED UNIT WITH counts_toward_race TRUE,
+  RELAYED FROM R-532(G)) AGAINST A BAR OF 5. MY ROUND-100 VALUE READ R-529(A)'s
+  *BAR* AS AN *ACCRUAL*; RESULTS.md SAID "G = 3 of 5" AT THAT MOMENT AND STILL
+  DOES. THE RACE STAYS DIRECTIONAL, NOT SIGNIFICANCE-BEARING (R-529(A)), AND
+  THE OLD RACE CANNOT VALIDATE THE CHANGED V2 PIPELINE (V2 HANDOFF) -- TWO
+  SEPARATE LIMITS THAT STAND TOGETHER.
+  (4) EVERY V2-ORIGINATED FLAG IS MARKED RELAYED UNTIL A SEAT CHECKS IT AT AN
+  ARTIFACT; DA ROUND 49 IS DISPATCHED TO BE THAT SEAT. NOBODY BUT THE PRODUCING
+  SESSION HAS VERIFIED V2's RECEIPTS OR ITS THREE GATE-1 REFUSALS.
+  (5) v41_collector_live REFRESHED FROM R-532(H) (RELAYED): ALL FOUR COLLECTORS
+  ALIVE AT 2026-09-05T11:32Z.
+  (6) R-534 DOES NOT EXIST: the register's last entry is R-533 and the runbook
+  names R-534 as the NEXT one, so facts my dispatch attributes to R-534 are
+  carried here as DISPATCH-RELAYED, not as register citations.
+  (7) FIVE DISPATCHES ARE IN FLIGHT AND NONE IS DONE: BE 42, DA 49, DE 63,
+  REVIEWER, MEM 101.
+  (8) THE CURRENCY AXIS REMAINS NAMED AND NOT BUILT -- 457 of 502 flags have
+  never been audited for staleness -- AND THIS ROUND ADDS ITS SECOND CONFIRMED
+  INSTANCE AND A FOURTH AXIS: RELAY FIDELITY. A FLAG MARKED RELAYED IS HONEST
+  ABOUT NOT BEING RE-DERIVED AND STILL SAYS NOTHING ABOUT WHETHER IT READ ITS
+  SOURCE CORRECTLY, WHICH IS HOW G-5-OF-5 SURVIVED 24.5 HOURS.
+  PRIOR CHECKPOINT:
   2026-09-05T09:54:58Z (DOCUMENT/REGRESSION RECONCILIATION AFTER THE
   2026-09-05T05:50:05Z USER-CONTINUED GATE-1 BLOCKER AUDIT;
   GATE-1F INPUT ADMISSION REFUSED_NO_OWNED_EXECUTION_SOURCE; V2 REMAINS
@@ -317,7 +380,164 @@ flags:
                              # stateful cancel x skew TODO remain historical
                              # provenance; neither checkbox count is current
                              # programme completion.
-  v41_collector_live: ACTIVE-RUNNING-AS-OF-2026-09-04T14:19Z-R531
+  loop_resumed_within_v2_scope: RESUMED-2026-09-05T14:54Z-SCOPE-NAMED-NOT-ASSUMED
+                             # RELAYED from the USER's resumption dispatch,
+                             # 2026-09-05T15:01:22Z. Authorised: documentation,
+                             # source, synthetic selftests, required one-window
+                             # capped smokes. NOT authorised: model fit, broad
+                             # replay, survey, grid, cache rebuild, Gate 2.
+                             # RESUMING THE LOOP DID NOT UNSTOP V2: the Gate-1f
+                             # data-acquisition blocker is unchanged and only a
+                             # USER ruling moves it (V2 plan section 6.7).
+  v2_line_is_committed: YES-9b37088-AND-120a9b3-VERIFIED-BY-ME-AT-GIT
+                             # CHECKED 2026-09-05T15:01:22Z. 9b37088: 31 files,
+                             # 9,318 insertions, including 17 newly added .py
+                             # modules (de_action_bundle_control,
+                             # de_action_economic_ledger,
+                             # de_canonical_action_population and 14 de_v2_*),
+                             # the V2 plan (tracked), and seven re-annotated
+                             # docs. 120a9b3: the four receipts under 1 MB.
+                             # Both pushed; local == origin.
+  v2_line_is_still_not_frozen: NOT-FROZEN-COMMITTED-IS-NOT-FROZEN
+                             # RELAYED from R-532(E), not re-read by me. Every
+                             # V2 receipt self-reports freeze_status
+                             # NOT_FROZEN_UNCOMMITTED_V2_WORK,
+                             # working_tree_clean False, git_head 8fe1201 and
+                             # its own dirty-tree listing. That is
+                             # provenance-honest -- the OPPOSITE of the R-523(G)
+                             # defect where an artifact named a red WIP commit
+                             # as if it were clean -- and it is still not a
+                             # freeze. Rule 12 needs a re-emission from the
+                             # committed tree with 7/7 identity matches.
+                             # COMMITTED and FROZEN are two different facts and
+                             # this programme has conflated them before.
+  every_v2_flag_is_relayed_until_a_seat_checks_it: MARKED-RELAYED-DA-49-DISPATCHED
+                             # CHECKED at this file 2026-09-05T15:01:22Z. Nobody
+                             # but the producing session has verified V2's
+                             # receipts, its three Gate-1 refusals, or its
+                             # Gate-1f negative existence claim. DA round 49 is
+                             # dispatched to be the first; the reviewer is
+                             # dispatched at the Gate-1f claim specifically.
+                             # Until then every V2-originated value in this file
+                             # -- the gate progress, the identity counts, the
+                             # refusal bars, the receipt hashes -- is RELAYED.
+                             # THE SUITE COUNTS ARE THE CLEAREST CASE: R-532(C)
+                             # reproduced 223 = 223 and 182 = 182 BY EXECUTION,
+                             # which establishes that the suites RAN and not
+                             # that the code is right (R-510(B)(2)). A suite
+                             # count is not coverage.
+  r534_does_not_exist_yet: SUPERSEDED-R-534-WAS-FILED-14:58Z-ONE-MINUTE-AFTER-MY-CHECK
+                             # SUPERSEDED IN BAND (rule 13) at 2026-09-05T15:07:20Z,
+                             # BEFORE THIS BATCH WAS COMMITTED AND WITHOUT
+                             # EDITING THE CLAIM BELOW.
+                             # WHAT IS NOW TRUE: R-534 exists -- filed
+                             # 2026-09-05T14:58Z, committed at 69b8eae, "THE
+                             # USER RESUMES THE LOOP, WITHIN THE V2 SCOPE. Five
+                             # batches dispatched; the monitor re-armed; the
+                             # Gate-1f blocker ruling is to be put to the USER
+                             # WITH evidence, not before it." Its (B) names all
+                             # five batches, and its MEM 101 line matches this
+                             # sweep item for item. The register now has 525
+                             # "### R-" headers, was 522 at R-532.
+                             # THE FLAG BELOW WAS NOT WRONG. It carried a
+                             # SURFACE and an AS-OF, so it is DATED, not false --
+                             # which is the whole point of that rule, and the
+                             # reason a superseded claim of this class stays
+                             # recoverable.
+                             # AND IT IS THE CURRENCY AXIS FIRING ON A FLAG
+                             # FOUR MINUTES OLD -- the sharpest instance yet,
+                             # on my own file, in the same round that named the
+                             # axis. Every unmarked flag ages the same way; 455
+                             # of them have never been looked at.
+                             # ORIGINAL CLAIM (rule 13, text kept, never edited):
+                             # LAST-REGISTER-ENTRY-IS-R-533-AS-OF-2026-09-05T14:57Z
+                             # CHECKED 2026-09-05T15:01:22Z, and filed because my
+                             # own dispatch attributed facts to R-534.
+                             # SURFACE: grep -rn "R-534" over /home/yuqing/ctaNew
+                             # for *.md, *.yml, *.py. ONE hit, the whole output,
+                             # not truncated: COORDINATOR_RUNBOOK.md:396 naming
+                             # R-534 as the NEXT entry after R-533. ZERO hits in
+                             # COORDINATION.md. AS-OF 2026-09-05T14:57Z at tip
+                             # 1404302. So facts my dispatch cites to R-534 are
+                             # carried as DISPATCH-RELAYED, never as register
+                             # citations, and a citation check is not a claim
+                             # check either way.
+  seat_monitor_rearmed: RE-ARMED-AT-R-534-2026-09-05T14:58Z
+                             # RELAYED from R-534(D). seatwatch.sh (landings and
+                             # stalls) was deliberately NOT re-armed at the reset
+                             # (R-533(E)) and is re-armed on the resumption; the
+                             # /loop standing duty resumes as the coordinator's
+                             # cadence. R-534(D) also binds that cadence to my
+                             # own R-531(G) observation: the ruling rate does not
+                             # exceed the rate at which a second seat can check
+                             # each ruling at an artifact.
+  race_next_decision_point: 09-05-VERDICT-AT-TONIGHT-00:06Z-WOULD-MAKE-G-5
+                             # RELAYED from R-534(D). If 09-05 accrues at the
+                             # governed 00:06Z verdict, G = 5 -- MEETING THE BAR
+                             # FOR THE FIRST TIME. It changes nothing about what
+                             # the race can establish: still DIRECTIONAL, still
+                             # unable to validate the changed V2 pipeline. The
+                             # bar being met is not the race becoming
+                             # significance-bearing, and this flag exists so that
+                             # G = 5 is not read that way when it lands.
+  five_dispatches_in_flight_none_done: BE-42-DA-49-DE-63-REVIEWER-MEM-101
+                             # RELAYED from the resumption dispatch and CONFIRMED
+                             # AT R-534(B), which names all five and whose MEM
+                             # 101 line matches this sweep item for item,
+                             # 2026-09-05T15:01:22Z. BE 42: the random/naive-policy
+                             # null the 701% ceiling lacks. DA 49: verify V2's
+                             # receipts and three Gate-1 refusals, the two
+                             # missing cite-audit tables, the V_oracle
+                             # "r's disease" construction. DE 63: rebase 6003f40
+                             # and verify 226 BY EXECUTION FIRST, read its
+                             # inherited V2 surface, the section 8.1 wording
+                             # fixes. REVIEWER: attack Gate 1f's negative
+                             # existence claim about data -- this INFORMS the
+                             # USER's blocker ruling -- plus the L4 citation
+                             # check and the arms-diff closure. MEM 101: this
+                             # sweep. NONE IS DONE AT THIS WRITING and no
+                             # outcome of any of them is anticipated here.
+  relayed_does_not_protect_against_misreading_the_source: FOURTH-AXIS-RELAY-FIDELITY
+                             # CHECKED 2026-09-05T15:01:22Z at COORDINATION.md
+                             # R-529(A) and workspace/RESULTS.md. My round-100
+                             # hazard_forward_reach was marked RELAYED, said in
+                             # its own note that it was NOT re-derived, named
+                             # its source honestly -- AND WAS WRONG, for 24.5
+                             # hours, because it read R-529(A)'s "bar G = 5" as
+                             # an accrual while RESULTS.md said "G = 3 of 5" in
+                             # the same breath. RELAYED marks WHERE a value came
+                             # from. It says nothing about whether the relay
+                             # READ ITS SOURCE CORRECTLY. That is a fourth axis
+                             # beside PROVENANCE, CORROBORATION and CURRENCY,
+                             # and my instrument covers none of the last three.
+                             # THE CHEAP TEST IT WOULD HAVE FAILED: a relayed
+                             # value should be readable back to a QUOTED SPAN of
+                             # its source, and "G = 5" quoted with the word
+                             # "bar" attached would not have survived.
+  currency_axis_still_named_still_not_built: 457-OF-502-NEVER-AUDITED-FOR-STALENESS
+                             # CHECKED 2026-09-05T15:01:22Z by running the
+                             # instrument: 502 flags, 25 CHECKED, 20 RELAYED,
+                             # 457 UNMARKED, 0 findings, exit 0. Round 101 was
+                             # NOT authorised to build it and did not.
+                             # ITS SECOND CONFIRMED INSTANCE LANDED THIS ROUND:
+                             # hazard_forward_reach again, wrong for 24.5 hours
+                             # while reading as established, found by a cold
+                             # re-read and not by any check. The first instance
+                             # was the same flag at round 100. A flag that goes
+                             # wrong twice on the same axis is the axis asking
+                             # for an instrument.
+  v41_collector_live: ACTIVE-RUNNING-AS-OF-2026-09-05T11:32Z-R532H
+                             # REFRESHED 2026-09-05T15:01:22Z (MEM round 101).
+                             # RELAYED FROM R-532(H), which verified it at the
+                             # reset: collect_pm_prices 10d06h, collect_hf and
+                             # collect_hl 10d06h, collect_pm 4d13h, all alive.
+                             # NOT independently rechecked by me -- collector
+                             # liveness means reading systemd and the collector
+                             # surface, which is the COORDINATOR's
+                             # (R-110/R-181/R-182), not mine. The routing at
+                             # round 100 is now ANSWERED rather than standing.
+                             # EARLIER VALUE (rule 13):
+                             # ACTIVE-RUNNING-AS-OF-2026-09-04T14:19Z-R531
                              # RELAYED FROM R-531, not independently rechecked
                              # in this documentation-only sweep. At the halt,
                              # collect_pm had run 3d16h; collect_hf and
@@ -344,8 +564,49 @@ flags:
                              # 09-01 is era-pure/admissible and provisionally
                              # passes its governing v2 quality bars, but is not
                              # a complete UTC day and therefore has not accrued.
-  hazard_forward_reach: G-5-OF-5-REACHED-AND-RULED-DIRECTIONAL-NOT-SIGNIFICANCE-BEARING
-                             # TRUED UP 2026-09-04T14:26Z (MEM round 100). The
+  hazard_forward_reach: G-4-OF-5-ACCRUED-BAR-NOT-REACHED-RACE-RULED-DIRECTIONAL
+                             # CORRECTED 2026-09-05T15:01:22Z (MEM round 101), and
+                             # this is a CORRECTION, not an advance: the value
+                             # below read G-5-OF-5-REACHED and G HAS NEVER
+                             # BEEN 5.
+                             # WHAT IS TRUE. ACCRUAL 4 -- 09-01, 09-02, 09-03,
+                             # 09-04. 09-04 accrued at the 00:06:01Z scheduled
+                             # unit with all four ACCRUAL_RULE conjuncts and
+                             # counts_toward_race TRUE. RELAYED FROM R-532(G),
+                             # which read it at da_dayverdict_20260904.json; I
+                             # did NOT open the sealed day. My own corroboration
+                             # is a FILENAME CENSUS ONLY (18 da_dayverdict_*
+                             # files, current verdicts for 08-26..09-05, 09-05
+                             # open): it establishes the DAY SET and says
+                             # nothing about counts_toward_race.
+                             # BAR 5, NOT REACHED. RESULTS.md still reads
+                             # "Current race state: G = 3 of 5" and "earliest
+                             # G=5 is the 2026-09-06T00:06Z verdict if 09-04 and
+                             # 09-05 accrue" -- read by me at the artifact this
+                             # round. So the earliest the bar can be met is the
+                             # 09-06T00:06Z verdict, and only if 09-05 accrues.
+                             # HOW THE ERROR HAPPENED, because it is the useful
+                             # part: R-529(A) says "bar G = 5" and "G = 5
+                             # stands", meaning THE BAR. Round 100 relayed it as
+                             # THE ACCRUAL. The flag was marked RELAYED and the
+                             # marking did not help -- the defect was in READING
+                             # the source, not in trusting it. See
+                             # RELAYED_DOES_NOT_PROTECT_AGAINST_MISREADING.
+                             # TWO SEPARATE LIMITS STAND TOGETHER. (1) The USER
+                             # has ruled the race DIRECTIONAL: it establishes
+                             # DIRECTION AND CONSISTENCY and NEVER a
+                             # Holm-clearing verdict, because at G=5 with the
+                             # recorded multiplicity of 2 the best possible
+                             # adjusted p is 0.0625 > 0.05; the smallest G that
+                             # clears is 6. Standing rule 15. The multiplicity
+                             # of 2 stands and is NOT decorative. (2) V2's own
+                             # HANDOFF adds that THE PRIOR RACE CANNOT VALIDATE
+                             # THE CHANGED V2 PIPELINE -- a v2 survivor needs a
+                             # new committed freeze and later untouched days.
+                             # Neither limit subsumes the other.
+                             # EARLIER VALUE (rule 13):
+                             # G-5-OF-5-REACHED-AND-RULED-DIRECTIONAL-NOT-SIGNIFICANCE-BEARING
+                             # Written 2026-09-04T14:26Z (MEM round 100). The
                              # value below read G-1-OF-5 as-of 2026-09-02 and
                              # was TWO DAYS AND FOUR DAYS-OF-RACE STALE while
                              # reading as established -- the CURRENCY axis my
@@ -7136,6 +7397,28 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-05T15:01:22Z THE USER HAS RESUMED THE LOOP (14:54Z) WITHIN V2's
+  OWN SCOPE. RESUMED IS NOT REOPENED AND V2 IS NOT UNSTOPPED: the Gate-1f
+  data-acquisition blocker is unchanged, and no model fit, broad raw-tape
+  replay, survey, grid, cache rebuild or Gate-2 work is authorised. FIVE
+  DISPATCHES ARE IN FLIGHT AND NONE IS DONE -- BE 42 (the random/naive-policy
+  null the 701% ceiling lacks), DA 49 (verify V2's receipts and its three
+  Gate-1 refusals at the artifacts), DE 63 (rebase 6003f40 and verify 226 BY
+  EXECUTION), the REVIEWER (attack Gate 1f's negative existence claim about
+  data, which INFORMS the USER's blocker ruling), and MEM 101 (this sweep).
+  THE V2 LINE IS COMMITTED (9b37088 + 120a9b3, verified at git) AND STILL NOT
+  FROZEN (R-532(E)); every V2-originated value in this file is RELAYED until DA
+  checks it, and R-532(C)'s reproduced 223 and 182 establish that the suites RAN
+  and not that the code is right. THE RACE: G = 4 ACCRUED AGAINST A BAR OF 5 --
+  my round-100 flag read the bar as the accrual and is CORRECTED here, not
+  advanced -- and two separate limits stand together: the race is DIRECTIONAL
+  and never Holm-clearing (R-529(A)), and the old race cannot validate the
+  changed V2 pipeline (V2's HANDOFF). The economic detail is in
+  workspace/RESULTS.md section 0, whose opening box names two withdrawn frames,
+  five reversed rulings, two open objections to the 701% ceiling and its n=1
+  clustering unit; THESE FILES POINT AT IT AND COPY NONE OF IT.
+  PRIOR FOCUS, 2026-09-05T09:54:58Z, RETAINED BELOW AND STILL DESCRIBING THE V2
+  STOP CORRECTLY --
   As-of 2026-09-05T09:54:58Z, GATE 1F'S ACQUISITION AUDIT CONFIRMS THAT THE
   DECLARED OFFLINE OWNED-EXECUTION EXPORT IS ABSENT. GATE 1E'S LIFECYCLE LEDGER
   IS COMPLETE AND GATE 1 REFUSES BECAUSE OWNED-ORDER PER-FILL MAKER FEES AND
@@ -7143,16 +7426,23 @@ focus: >
   Baseline, treatment and 200 controls passed all gross identities, but all
   202 strategy nets and the matched decision statistic are null. The v2 route
   is stopped at 1 of 7; Gates 2-6 did not start and broad/heavy runs remain
-  off. This is an input-identification refusal, not negative P&L. R-531 is
-  still the latest register entry, so the later direct instruction/result
-  awaits coordinator reconciliation. Resumption requires a reliable
+  off. This is an input-identification refusal, not negative P&L.
+  [SUPERSEDED 2026-09-05T15:01:22Z: "R-531 is still the latest register entry, so
+  the later direct instruction/result awaits coordinator reconciliation" was
+  true when written at 09:54:58Z and is now false. R-532 IS that reconciliation
+  and cites the V2 line; R-533 closed the seat reset; the last register entry
+  is R-533 and R-534 does not exist yet.]
+  Resumption requires a reliable
   owned-order maker-fee/ack/fill source, prospective amendment and fresh data.
   All 17 current v2 batteries (182 checks) and the 223-check parent suite pass
   under the one-CPU/1-GiB/no-swap cap; this verification changes no gate.
   PRIOR 05:14 GATE-1D/GATE-1E CHECKPOINT NARRATIVE RETAINED BELOW. Current work is the v2
   Gate-0/1 chain: canonical exact-tranche actions, a >=200-draw null matched on
-  action count/side/UTC hour, then acting stateful cascade economics. The two
-  Gate-0 instruments are uncommitted and unfrozen. The
+  action count/side/UTC hour, then acting stateful cascade economics.
+  [SUPERSEDED 2026-09-05T15:01:22Z: "The two Gate-0 instruments are uncommitted and
+  unfrozen" is now half false and half true -- COMMITTED at 9b37088, still NOT
+  FROZEN. The same correction applies to every "uncommitted/unfrozen" phrase
+  below.] The
   opt-in source-retention seam, canonical adapter and composed Gate-0 runner
   are built, and a real one-window pipeline smoke has cleared Gate 0: 3,557
   actions, 458 exact fill identities, 200 matched draws and all six computed
@@ -7739,6 +8029,102 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 101, 2026-09-05T15:01:22Z -------------------------------
+  hazard_forward_reach:
+    prov: RELAYED
+    from: >-
+      R-532(G) for the ACCRUAL (the coordinator read counts_toward_race True at
+      da_dayverdict_20260904.json; I did not open the sealed day), and
+      workspace/RESULTS.md for the BAR, which I did read myself. Filed RELAYED
+      and not CHECKED because the deciding half -- that 09-04 accrued -- is the
+      coordinator's reading and not mine, and a seat's report is a claim.
+      MY OWN CORROBORATION IS A FILENAME CENSUS ONLY: 18 da_dayverdict_* files,
+      current verdicts for 08-26..09-05, which fixes the DAY SET and nothing
+      about accrual.
+  v41_collector_live:
+    prov: RELAYED
+    from: >-
+      R-532(H), which verified all four collectors alive at 2026-09-05T11:32Z.
+      Collector liveness is the coordinator's surface (R-110/R-181/R-182).
+  loop_resumed_within_v2_scope:
+    prov: RELAYED
+    from: >-
+      the USER's resumption dispatch at 2026-09-05T14:54Z. Not a register
+      citation -- see r534_does_not_exist_yet.
+  v2_line_is_still_not_frozen:
+    prov: RELAYED
+    from: >-
+      R-532(E). I did not open the eight V2 receipts to re-read freeze_status
+      myself; four of them are on disk only and three are multi-MB.
+  five_dispatches_in_flight_none_done:
+    prov: RELAYED
+    from: the USER's resumption dispatch at 2026-09-05T14:54Z
+  v2_line_is_committed:
+    prov: CHECKED
+    artifact: live/pm_research/de_v2_gate0_runner.py
+    as_of: 2026-09-05T15:01:22Z
+    said: >-
+      git show --stat 9b37088 reads "31 files changed, 9318 insertions(+), 94
+      deletions(-)"; its added .py set is exactly 17 files
+      (de_action_bundle_control, de_action_economic_ledger,
+      de_canonical_action_population and 14 de_v2_*), this file among them;
+      git show --stat 120a9b3 reads "4 files changed, 14006 insertions(+)", all
+      four p003_v2_* receipts; git ls-files --error-unmatch resolves the V2
+      plan; git log origin/mm-research..HEAD is empty at tip 1404302
+  every_v2_flag_is_relayed_until_a_seat_checks_it:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-05T15:01:22Z
+    said: >-
+      the V2-originated surface in this file is the hazard-integrated-replay
+      task's V2 UPDATE block, the e3-screen task's V2 UPDATE block, the
+      governing_todo value and the focus/updated V2 narrative, and each now
+      carries an explicit RELAYED marking naming DA round 49 as the seat
+      dispatched to check it; no V2 value in this file is marked CHECKED
+  seat_monitor_rearmed:
+    prov: RELAYED
+    from: R-534(D)
+  race_next_decision_point:
+    prov: RELAYED
+    from: R-534(D)
+  r534_does_not_exist_yet:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-05T14:57Z  # SUPERSEDED 15:07:20Z -- R-534 filed 14:58Z. The
+                              # as-of is what makes this dated rather than false.
+    said: >-
+      grep -rn "R-534" over /home/yuqing/ctaNew for *.md/*.yml/*.py returned
+      exactly ONE line, reported whole and not truncated:
+      workspace/COORDINATOR_RUNBOOK.md:396 "Tip: 917d743 (R-532). Next register
+      entry after R-533: R-534." Zero hits in COORDINATION.md, whose last
+      "### R-" header is R-533 at 2026-09-05T11:38Z. Surface and as-of stated
+      because this is a negative existence claim.
+  relayed_does_not_protect_against_misreading_the_source:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-05T15:01:22Z
+    said: >-
+      RESULTS.md line 522 reads "Current race state: G = 3 of 5", line 611
+      "State: G = 3 of 5", and line 624 "earliest G=5 is the 2026-09-06T00:06Z
+      verdict if 09-04 and 09-05 accrue"; COORDINATION.md R-529(A) reads "bar
+      G = 5" and "G = 5 stands", the BAR. My round-100 flag read
+      G-5-OF-5-REACHED. The relay was honestly marked and still wrong, so the
+      RELAYED marking does not test relay fidelity.
+      SECOND-ORDER, AND ROUTED NOT FIXED: RESULTS.md's three G = 3 statements
+      are themselves now stale after 09-04 accrued. RESULTS.md is the
+      coordinator's file; I do not write it.
+  currency_axis_still_named_still_not_built:
+    prov: CHECKED
+    artifact: live/pm_research/mem_flag_provenance.py
+    as_of: 2026-09-05T15:01:22Z
+    said: >-
+      --selftest ran 20 checks in both directions, all passed; --audit on this
+      STATUS.yml before my round-101 edits read "flags: 502  authoritative
+      (CHECKED): 25  non-authoritative: 477" with CHECKED 25 / RELAYED 20 /
+      UNMARKED 457 and findings 0, exit 0. The instrument tests PROVENANCE
+      only: it asks whether a cited artifact exists, never whether the value is
+      still true, whether a second source agrees, or whether the relay read its
+      source correctly.
   Q4_THE_DECISION_METRIC_ITS_DECIDING_HALF_HAS_NEVER_BEEN_COMPUTED:
     prov: CHECKED
     artifact: data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json
@@ -8478,8 +8864,25 @@ tasks:
   - id: hazard-integrated-replay
     phase: 2
     name: V2 Gates 0-3 — control-first action value and stateful replay
-    status: V2-STOPPED-1-OF-7-GATE1F-REFUSED-NO-OWNED-EXECUTION-EXPORT
+    status: V2-STOPPED-1-OF-7-GATE1F-REFUSED-NO-OWNED-EXECUTION-EXPORT-ALL-RELAYED
     notes: |
+      MEM ROUND 101, 2026-09-05T15:01:22Z -- TWO MARKINGS ON EVERYTHING BELOW,
+      NEITHER OF WHICH CHANGES A NUMBER.
+      (1) RELAYED, NOT CHECKED. Every V2 value in this task came from the
+      producing session. Nobody else has verified the receipts, the three
+      Gate-1 refusal bars, the identity counts or the Gate-1f audit at the
+      artifacts. DA ROUND 49 IS DISPATCHED TO BE THE FIRST. R-532(C) reproduced
+      the 223-check parent suite and the 182 battery checks BY EXECUTION under
+      caps, which establishes that the suites RAN, not that the code is right
+      (R-510(B)(2)); a suite count is not coverage.
+      (2) COMMITTED, STILL NOT FROZEN. The 17 modules and the plan are at
+      9b37088 and the four sub-MB receipts at 120a9b3 (verified at git by MEM);
+      the four larger receipts are on disk, pinned by sha256 at R-532(D). Every
+      receipt self-reports freeze_status NOT_FROZEN_UNCOMMITTED_V2_WORK with
+      git_head 8fe1201, so none is citable as frozen until it is re-emitted from
+      the committed tree with 7/7 identity matches (rule 12, R-532(E)).
+      The Gate-1f blocker is unchanged by the USER's 14:54Z resumption of the
+      loop: only a USER ruling moves it (V2 plan section 6.7).
       V2 UPDATE THROUGH 2026-09-05T09:54:58Z: Gate 1f's corrected repository
       audit confirms the declared offline owned-execution export is absent.
       Public raw/tier1 coverage cannot supply an owned order/ack/fill/fee join.
@@ -8567,8 +8970,24 @@ tasks:
   - id: e3-screen
     phase: 2
     name: V2 Gate 6 — new-freeze unchanged forward scoring
-    status: OLD-RACE-G5-DIRECTIONAL-ONLY-INVALID-FOR-CHANGED-V2-PIPELINE
+    status: OLD-RACE-G4-OF-5-ACCRUED-DIRECTIONAL-ONLY-INVALID-FOR-CHANGED-V2-PIPELINE
     notes: |
+      CORRECTION, MEM ROUND 101, 2026-09-05T15:01:22Z: THE V2 UPDATE BELOW SAYS
+      "the accepted old race reached G=5". IT HAS NOT. The accrual is 4
+      (09-01..09-04, 09-04 accruing at the 00:06:01Z scheduled unit with
+      counts_toward_race TRUE, relayed from R-532(G)) against a BAR of 5, and at
+      15:27:56Z on 09-04 -- when that line was written -- the accrual was 3 and
+      RESULTS.md said so. This is the SAME bar-read-as-accrual error my own
+      round-100 flag made, from a different author, on the same day. Both are
+      corrected here.
+      WHAT THE LINE BELOW GETS RIGHT, AND IT IS THE DECIDING PART: the race is
+      DIRECTIONAL ONLY (multiplicity 2, attainable adjusted floor 0.0625,
+      R-529(A)), and IT CANNOT VALIDATE THE CHANGED V2 PIPELINE whatever G
+      reaches. A v2 survivor needs a new committed freeze and later untouched
+      complete days; G>=6 is needed if the same multiplicity/test family is
+      intended to permit Holm clearing. THE CORRECTION TO G DOES NOT SOFTEN
+      EITHER LIMIT -- it removes a claim the task did not need.
+      This whole V2 UPDATE block is RELAYED until a seat checks it (DA 49).
       V2 UPDATE 2026-09-04T15:27:56Z: the accepted old race reached G=5 but is
       directional only; with multiplicity 2 its attainable adjusted floor is
       0.0625. It cannot validate the changed v2 pipeline. Any v2 survivor needs
