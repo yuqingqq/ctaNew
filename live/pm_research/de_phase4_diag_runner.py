@@ -74,7 +74,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 226
+EXPECTED_CHECKS = 230
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1247,7 +1247,19 @@ def maker_pnl(reference: dict) -> dict:
         "post_fill_markout_cents": pnl,
         "pnl_leg_n_tranches": st["VALUED"] + st["NO_MID_AT_FILL"],
         "pnl_leg_shares": pnl_shares,
-        "maker_pnl_equals_post_fill_markout": True,
+        # R-519(F): the hardcoded `maker_pnl_equals_post_fill_markout:
+        # True` that stood here is REMOVED. Both keys above are the same
+        # accumulator `pnl`, so no input could ever make them differ --
+        # SEAT_PROTOCOL 16, a control that cannot fail, printed beside a
+        # table (CLAUDE.md rule 10). It is replaced by a statement of
+        # WHY they are one number and a pointer to the check that CAN
+        # fail.
+        "maker_pnl_and_post_fill_markout_are_one_variable": (
+            "TRUE BY CONSTRUCTION, NOT A CHECK: the two keys above are "
+            "the same accumulator, so no input can separate them. The "
+            "cross-producer evidence lives in `reconcile_maker_pnl`, "
+            "which compares this number against the replay\'s "
+            "independently accumulated `received_markout_cents`"),
         "why_they_are_one_number": (
             "`markout_cents_per_share` is struck FROM `level`, so per "
             "share it IS the maker P&L at t + MARKOUT_S. The new fields "
@@ -1260,8 +1272,26 @@ def maker_pnl(reference: dict) -> dict:
         "decomposition_shares": dec_shares,
         "identity_residual_cents": resid,
         "identity_holds": resid <= MAKER_PNL_IDENTITY_TOL_CENTS,
+        # R-521(E)/R-524(E): the label "COMPUTED, not asserted -- rule
+        # 10" was true and MISLEADING. The residual IS computed, but it
+        # CANNOT BE NON-ZERO: `adverse` is DEFINED three lines above as
+        # (markout - spread) per share, so spread + adverse collapses to
+        # the markout algebraically and only float rounding survives.
+        # Naming it under rule 10 invited it to be read as evidence that
+        # the decomposition is RIGHT. It is not that; it is an
+        # arithmetic round-trip (SEAT_PROTOCOL 16).
         "identity": "spread_capture + adverse_selection == P&L on the "
-                    "decomposed subset (COMPUTED, not asserted -- rule 10)",
+                    "decomposed subset -- AN ARITHMETIC ROUND-TRIP, NOT "
+                    "EVIDENCE: `adverse` is DEFINED as (markout - "
+                    "spread), so this sum cannot differ from the markout "
+                    "by more than float rounding, for ANY input. It "
+                    "detects a broken accumulator, never a wrong "
+                    "decomposition",
+        "identity_is_tautological": True,
+        "what_would_test_the_decomposition": "an independently produced "
+            "spread or adverse series -- the mid at fill from a second "
+            "reader, or the venue\'s own trade print -- which this "
+            "function does not have",
         "legs_share_a_denominator":
             st["VALUED"] + st["NO_MID_AT_FILL"] == st["VALUED"],
         "tranche_statuses": st,
@@ -1331,6 +1361,16 @@ def maker_pnl_from_fills(fills: list) -> dict:
         "decomposition_shares": dec_shares,
         "identity_residual_cents": resid,
         "identity_holds": resid <= MAKER_PNL_IDENTITY_TOL_CENTS,
+        # R-521(E)/R-524(E): stated at the same honesty as `maker_pnl`\'s.
+        # `adverse` is DEFINED as (markout - spread) per share, so this
+        # sum collapses to the markout for ANY input and only float
+        # rounding survives. It is an arithmetic round-trip
+        # (SEAT_PROTOCOL 16), NOT evidence that the split is right.
+        "identity": "spread_capture + adverse_selection == P&L on the "
+                    "decomposed subset -- AN ARITHMETIC ROUND-TRIP, NOT "
+                    "EVIDENCE: `adverse` is DEFINED as (markout - "
+                    "spread), so it cannot fail on any input",
+        "identity_is_tautological": True,
         "fill_statuses": st,
         "n_fills": sum(st.values()),
         "sign_convention": MAKER_PNL_SIGN_CONVENTION,
@@ -1560,8 +1600,21 @@ def inventory_pnl(fills: list, terminal_marks: dict) -> dict:
         "total_to_terminal_cents": total_leg,
         "identity_residual_cents": resid,
         "identity_holds": resid <= MAKER_PNL_IDENTITY_TOL_CENTS,
-        "identity": "fills_leg + inventory_leg == total_to_terminal "
-                    "(COMPUTED over the same fills, never asserted)",
+        # R-521(E)/R-524(E): same class as the maker-P&L identity, and
+        # said so rather than left to be read as corroboration. Per fill
+        # the inventory leg is sgn*(MT - markout)*sz and the fills leg is
+        # sgn*(markout - level)*sz, so the two TELESCOPE to
+        # sgn*(MT - level)*sz -- the total -- for ANY input. Float
+        # rounding is the only thing the residual can see.
+        "identity": "fills_leg + inventory_leg == total_to_terminal -- A "
+                    "TELESCOPING SUM, NOT EVIDENCE: the two legs are "
+                    "defined as the two halves of the same difference, "
+                    "so the residual is float rounding and cannot detect "
+                    "a wrong mark, a wrong markout or a wrong sign",
+        "identity_is_tautological": True,
+        "what_would_test_the_legs": "an independently produced terminal "
+            "mark or markout -- a second reader of the tape, or the "
+            "venue\'s own settlement -- which this function does not have",
         "fill_statuses": st,
         "n_fills": sum(st.values()),
         "sign_convention": "the markout's own: POSITIVE is in the "
@@ -2053,28 +2106,66 @@ def required_attempts(target_rate: float, alpha: float = 0.05) -> int | None:
 
 
 def reconcile_maker_pnl(mp: dict, replay_result: dict) -> dict:
-    """The new markout against the one the replay already reports.
+    """THIS ARM's markout recomputed here, against THE SAME ARM's running
+    total inside the replay -- two independent producers of one quantity.
 
-    Ruled with the build: the two numbers must not be able to disagree
-    silently. They are NOT expected to be equal -- the replay's
-    `received_markout_cents` covers the fills the POLICY received, which
-    under cancellation is a subset of the reference's tranches -- so the
-    predicate is DIRECTIONAL and stated, not an equality nobody checked."""
+    CORRECTED IN BAND (R-519(C)/(F), from DA's Q-DA-240(4)); no number
+    moved. The previous rationale said the two were "NOT expected to be
+    equal" because the replay's received fills are "a SUBSET of the
+    reference's tranches", and emitted the left side as
+    `reference_tranche_markout_cents`. BOTH ARE WRONG AT THIS CALL SITE:
+    `de_section81_arms.add()` passes `maker_pnl_from_fills(THIS arm's
+    received fills)` together with THIS arm's own replay result, so both
+    sides range over the same fill set of the same arm. The name held the
+    ARM's markout under the REFERENCE's name, and the directional
+    predicate `|replay| <= |reference|` could not fail for any arm --
+    SEAT_PROTOCOL 16, a control that cannot fail.
+
+    MEASURED, NOT ARGUED. All three committed arms reconcile as
+    EQUALITIES: -9.09e-13 (CONDVALUE_X_SKEW, 333 cancels), -3.64e-12
+    (HAZARD_OVER_SKEWED_REF, 48) and -3.64e-12 (QR_SKEW_ONLY, 0) in
+    `de_section81_arms__20260904T134055Z.json`. The ACTING arms are equal
+    too, which is exactly what the old prose said could not happen.
+
+    So the predicate is now an EQUALITY AT TOLERANCE. Agreement to ~4e-12
+    on ~8.6e3 cents -- relative ~4e-16 -- is STRONGER evidence than bit
+    identity, not weaker: identical bits are consistent with one side
+    being COPIED from the other, while float-noise agreement can only come
+    from two separate computations (Q-MEM-83(4)).
+
+    WHAT THIS IS NOT: the reference-vs-arm reconciliation the old name
+    advertised -- the arm's received fills against the neutral no-cancel
+    tranche population. That would be the stronger check and IS NOT
+    PERFORMED HERE."""
     got = float((replay_result.get("economics") or {})
                 .get("received_markout_cents") or 0.0)
     mine = float(mp["post_fill_markout_cents"])
+    diff = mine - got
+    scale = max(abs(mine), abs(got))
     return {
-        "reference_tranche_markout_cents": mine,
+        "arm_recomputed_markout_cents": mine,
         "replay_received_markout_cents": got,
-        "difference_cents": mine - got,
-        "predicate": "|replay| <= |reference| -- the replay's received "
-                     "fills are a SUBSET of the reference's tranches once "
-                     "a policy cancels, so its markout cannot exceed the "
-                     "reference's in magnitude",
-        "holds": abs(got) <= abs(mine) + 1e-6,
-        "why_not_equality": "equality would only hold for an arm that "
-                            "cancels nothing; asserting it would make the "
-                            "check fail on every acting arm",
+        "difference_cents": diff,
+        "relative_difference": (abs(diff) / scale) if scale else None,
+        "tolerance_cents": MAKER_PNL_IDENTITY_TOL_CENTS,
+        "predicate": "EQUALITY at tolerance -- both sides are the SAME "
+                     "arm's received fills, so they must agree; the "
+                     "evidence is that two independent producers reach "
+                     "one number",
+        "holds": abs(diff) <= MAKER_PNL_IDENTITY_TOL_CENTS,
+        "populations_compared": "left: recomputed by "
+                                "`maker_pnl_from_fills` over this arm's "
+                                "received fills; right: accumulated by "
+                                "`harmful_stateful_policy` during this "
+                                "arm's own replay. SAME arm, SAME fills",
+        "what_this_is_not": "NOT a reference-vs-arm reconciliation. The "
+                            "arm's fills against the neutral no-cancel "
+                            "tranche population is a DIFFERENT and "
+                            "stronger check that this function does not "
+                            "make",
+        "supersedes": "the directional `|replay| <= |reference|` "
+                      "predicate and the `reference_tranche_markout_cents` "
+                      "field name, both withdrawn at R-519(F)",
     }
 
 
@@ -4570,10 +4661,21 @@ def selftest() -> int:
        f"entry edge. Got {_mp['maker_pnl_cents']}")
     ok(abs(_mp["maker_pnl_cents"]
            - _mp["post_fill_markout_cents"]) < 1e-12
-       and _mp["maker_pnl_equals_post_fill_markout"] is True,
-       "DE58: maker P&L on received fills IS `post_fill_markout_cents` -- "
-       "the number the programme has reported all along. The new fields "
-       "add a DECOMPOSITION, not a new total")
+       and "maker_pnl_equals_post_fill_markout" not in _mp
+       and _mp["maker_pnl_and_post_fill_markout_are_one_variable"]
+           .startswith("TRUE BY CONSTRUCTION"),
+       "DE58 + R-519(F): maker P&L on received fills IS "
+       "`post_fill_markout_cents`, and the HARDCODED boolean that used "
+       "to assert it is GONE. Both keys are one accumulator, so the "
+       "flag could not fail for any input -- SEAT_PROTOCOL 16. What "
+       "replaces it says so and points at the check that CAN fail")
+    ok(_mp["identity_is_tautological"] is True
+       and "ARITHMETIC ROUND-TRIP" in _mp["identity"]
+       and "COMPUTED, not asserted" not in _mp["identity"],
+       "R-521(E)/R-524(E): the spread+adverse identity is LABELLED as "
+       "the arithmetic round-trip it is. `adverse` is DEFINED as "
+       "(markout - spread), so the residual is float rounding and the "
+       "old rule-10 label invited it to be read as corroboration")
     ok(_mp["tranche_statuses"]["NO_MID_AT_FILL"] == 1
        and _mp["tranche_statuses"]["NO_MARKOUT"] == 1
        and _mp["tranche_statuses"]["NO_LEVEL"] == 1
@@ -4595,20 +4697,42 @@ def selftest() -> int:
        f"the decomposition leg, which also needs `mid_at_fill`: "
        f"{_mp['pnl_leg_n_tranches']} vs {_mp['decomposition_n_tranches']}. "
        f"Folding them into one guard truncated the P&L silently")
+    # R-519(F), CORRECTED IN BAND. The reconciliation compares THE SAME
+    # ARM against ITSELF -- `maker_pnl_from_fills(this arm's fills)` and
+    # this arm's own replay total -- so the predicate is an EQUALITY, and
+    # the artifact says so: all three committed arms reconcile at
+    # -9.09e-13 / -3.64e-12 / -3.64e-12, the two ACTING arms included.
     _rec = reconcile_maker_pnl(
+        _mp, {"economics": {"received_markout_cents": 51.0}})
+    ok(_rec["holds"] is True
+       and abs(_rec["difference_cents"]) < 1e-12
+       and _rec["arm_recomputed_markout_cents"] == 51.0
+       and "reference_tranche_markout_cents" not in _rec
+       and "EQUALITY" in _rec["predicate"],
+       f"POSITIVE CONTROL, and it ADMITS (SEAT_PROTOCOL 16): two "
+       f"producers of the SAME arm's markout agree, so the "
+       f"reconciliation holds and the left field is named for what it "
+       f"holds -- `arm_recomputed_markout_cents`, not "
+       f"`reference_tranche_markout_cents`. {_rec['predicate']}")
+    _rec_bad = reconcile_maker_pnl(
         _mp, {"economics": {"received_markout_cents": 20.0}})
-    ok(_rec["holds"] is True and abs(_rec["difference_cents"]
-                                     - (51.0 - 20.0)) < 1e-9,
-       f"and the RECONCILIATION against the replay's own "
-       f"`received_markout_cents` is DIRECTIONAL, not an equality: "
-       f"{_rec['predicate']}. Equality would hold only for an arm that "
-       f"cancels nothing, so asserting it would fail on every acting arm")
+    ok(_rec_bad["holds"] is False
+       and abs(_rec_bad["difference_cents"] - 31.0) < 1e-9,
+       "KNOWN-BAD THAT THE OLD PREDICATE PASSED: a replay reporting "
+       "20.0 against a recomputed 51.0 is a 31-cent DISAGREEMENT between "
+       "two producers of one number, and the withdrawn directional test "
+       "`|replay| <= |reference|` called it a PASS. It refuses now")
     ok(reconcile_maker_pnl(
         _mp, {"economics": {"received_markout_cents": 999.0}})["holds"]
        is False,
-       "KNOWN-BAD: a replay markout LARGER in magnitude than the "
-       "reference's whole tranche population refuses -- the received "
-       "fills are a subset, so it cannot exceed it")
+       "KNOWN-BAD, the other side: a replay markout far ABOVE the "
+       "recomputed one refuses too. The old predicate caught only this "
+       "direction, which is why it could not fail on real arms")
+    ok(_rec["what_this_is_not"].startswith("NOT a reference-vs-arm")
+       and "supersedes" in _rec,
+       "and the emission carries its own limit: this is NOT the "
+       "reference-vs-arm reconciliation the withdrawn field name "
+       "advertised, and it names what it supersedes (rule 13, in band)")
     # A ZERO-SPREAD POPULATION: every fill struck AT the mid. Spread must
     # be exactly 0 and the P&L must be UNCHANGED -- the check that the
     # decomposition is a split of the total and not an addition to it.
@@ -4717,6 +4841,24 @@ def selftest() -> int:
        f"{_iv['total_to_terminal_cents']}, residual "
        f"{_iv['identity_residual_cents']}. THE SPLIT IS AN IDENTITY, so "
        f"round 58's double-count cannot recur under a new name")
+    # R-521(E)/R-524(E). BOTH remaining identity labels, pinned together
+    # because they are one defect: a residual that CANNOT be non-zero was
+    # published under rule 10's "COMPUTED, never asserted", which reads
+    # as corroboration. A string pin is a SPEC PIN, not a measurement --
+    # said here so nobody counts it as evidence. What it does buy is that
+    # the label cannot silently revert to the reading DA and MEM both
+    # objected to.
+    ok(_ap["identity_is_tautological"] is True
+       and "ARITHMETIC ROUND-TRIP" in _ap["identity"]
+       and _iv["identity_is_tautological"] is True
+       and "TELESCOPING SUM" in _iv["identity"]
+       and "COMPUTED over the same fills, never asserted"
+           not in _iv["identity"],
+       "R-524(E): BOTH tautological identities now say so -- "
+       "spread+adverse is an arithmetic round-trip (`adverse` IS "
+       "markout-spread) and fills+inventory is a telescoping sum (the "
+       "two legs ARE the halves of one difference). Neither can detect "
+       "a wrong mark, markout or sign, and neither is corroboration")
     # THE SECOND RULING MUST BE ABLE TO FIRE. A ruling that excludes
     # nothing on a fixture built to trip it is not a ruling, it is
     # ruling A wearing a second name (rule 15).

@@ -184,9 +184,43 @@ def provenance() -> dict:
             _git("status", "--porcelain", "--", str(me)) == ""),
         "spec": "§8.1 integration ablation",
     }
+# ---- R-524(E): THE TWO PER-UNIT FIGURES, AS A TESTABLE SEAM ----------
+# `cents_per_cancel` shipped alone and was quoted (-2.86) where the
+# per-lost-fill figure (-0.66) was meant. Both are correct; they have
+# DIFFERENT DENOMINATORS. Pulled out of the emission loop so a falsifier
+# can drive them, because a number computed only inside a run path is a
+# number no check can reach (SEAT_PROTOCOL 17).
+
+def pnl_leg_n_fills(fields: dict) -> tuple:
+    """(P&L-leg n, decomposition n) for one arm's `maker_pnl_cents`.
+
+    THE NUMERATOR'S POPULATION, not a nearby one. `maker_pnl_cents` is
+    summed over every fill WITH A MARKOUT; the decomposition also needs
+    `mid_at_fill`, so it is narrower. The `n_fills` emitted beside the
+    value is the DECOMPOSITION count -- using it as the denominator of a
+    P&L-leg delta silently mixes two populations. They coincide iff
+    NO_MID_AT_FILL is 0, which is a MEASUREMENT (it is 0 for all three
+    arms in the 2026-08-24 hour), never an assumption."""
+    st = fields["maker_pnl_cents"]["fill_statuses"]
+    return (st.get("VALUED", 0) + st.get("NO_MID_AT_FILL", 0),
+            st.get("VALUED", 0))
+
+
+def per_unit_figures(net_cents: float, n_cancels: int, n_lost: int) -> dict:
+    """Both per-unit readings of one net delta, and the factor between.
+
+    A zero denominator is a STATUS (None), never a division -- and the
+    two are never emitted apart."""
+    cpc = (net_cents / n_cancels) if n_cancels else None
+    cplf = (net_cents / n_lost) if n_lost else None
+    flpc = (n_lost / n_cancels) if n_cancels else None
+    return {"cents_per_cancel": cpc, "cents_per_lost_fill": cplf,
+            "fills_lost_per_cancel": flpc}
+
+
 if "--selftest" in sys.argv:
     pass
-EXPECTED_CHECKS = 13
+EXPECTED_CHECKS = 17
 
 
 def selftest() -> int:
@@ -320,6 +354,53 @@ def selftest() -> int:
        f"emit default is read from the ASSIGNMENT "
        f"({[d[:60] for d in _scratch_defaults]}), not from a substring "
        f"that the docstring explaining the fix would itself match")
+    # ---- R-524(E): the two per-unit figures cannot ship apart -------
+    # Driven on THE ARTIFACT'S OWN NUMBERS (`de_section81_arms__
+    # 20260904T134055Z.json`, CONDVALUE_X_SKEW): net -953.918117499994
+    # over 333 cancels and 1,440 lost fills. -2.86 was quoted in prose
+    # where -0.66 was meant; the falsifier is that the two figures
+    # DIFFER, by exactly `fills_lost_per_cancel`.
+    _pu = per_unit_figures(-953.918117499994, 333, 1440)
+    ok(abs(_pu["cents_per_cancel"] - -2.864618971471453) < 1e-12
+       and abs(_pu["cents_per_lost_fill"] - -0.6624431371527736) < 1e-12
+       and abs(_pu["fills_lost_per_cancel"] - 4.324324324324325) < 1e-12
+       and abs(_pu["cents_per_cancel"]
+               - _pu["cents_per_lost_fill"]
+               * _pu["fills_lost_per_cancel"]) < 1e-12,
+       f"POSITIVE CONTROL, and it ADMITS: on the committed artifact's own "
+       f"CONDVALUE numbers the per-cancel figure is "
+       f"{_pu['cents_per_cancel']:.6f} and the per-LOST-FILL figure is "
+       f"{_pu['cents_per_lost_fill']:.6f} -- a factor of "
+       f"{_pu['fills_lost_per_cancel']:.4f} apart, COMPUTED, so the "
+       f"identity between them cannot be inverted in prose")
+    ok(abs(_pu["cents_per_cancel"] - _pu["cents_per_lost_fill"]) > 1.0,
+       "KNOWN-BAD, THE CONFUSION ITSELF: if the two figures were "
+       "interchangeable this check would fail. They differ by 2.20 "
+       "cents on the real arm, which is why quoting one for the other "
+       "misstated the cost of a lost fill by 4.3x")
+    _z = per_unit_figures(-10.0, 0, 0)
+    ok(_z["cents_per_cancel"] is None and _z["cents_per_lost_fill"] is None
+       and _z["fills_lost_per_cancel"] is None
+       and per_unit_figures(-10.0, 5, 0)["cents_per_lost_fill"] is None
+       and per_unit_figures(-10.0, 5, 0)["cents_per_cancel"] == -2.0,
+       "KNOWN-BAD, the other direction: an empty denominator is a "
+       "STATUS (None), never a division -- and a zero LOST count does "
+       "not suppress the per-cancel figure, which is still defined")
+    # ---- and the denominator comes from the NUMERATOR'S population ---
+    _fok = {"maker_pnl_cents": {"fill_statuses": {
+        "VALUED": 4315, "NO_MID_AT_FILL": 0, "NO_MARKOUT": 0,
+        "NO_SHARES": 0}}}
+    _fbad = {"maker_pnl_cents": {"fill_statuses": {
+        "VALUED": 4300, "NO_MID_AT_FILL": 15, "NO_MARKOUT": 0,
+        "NO_SHARES": 0}}}
+    ok(pnl_leg_n_fills(_fok) == (4315, 4315)
+       and pnl_leg_n_fills(_fbad) == (4315, 4300),
+       "R-524(E) denominator population: the P&L leg counts every fill "
+       "WITH A MARKOUT and the decomposition only those that also have "
+       "`mid_at_fill`. They coincide on the real arms (NO_MID_AT_FILL "
+       "is 0, a measurement) and MUST NOT be assumed to -- the "
+       "known-bad shows the emitted `n_fills` running 15 short of the "
+       "population the numerator was summed over")
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
     print(f"[de_section81_arms] selftest OK -- {n[0]} checks")
@@ -1121,6 +1202,16 @@ def run_arms(argv=None):
         _b_sp = _base["spread_capture_cents"]["value"]
         _b_ad = _base["maker_pnl_cents"]["also"]["adverse_selection_cents"]
         _b_pl = _base["maker_pnl_cents"]["value"]
+
+        # R-524(E): THE NUMERATOR'S OWN POPULATION. `_net` is a delta of
+        # `maker_pnl_cents`, which is summed over the P&L LEG (every fill
+        # with a markout) -- NOT over the decomposition leg, which also
+        # needs `mid_at_fill`. The `n_fills` emitted beside the value is
+        # the DECOMPOSITION count, so taking it would put a numerator and
+        # a denominator from two populations in one ratio. Computed from
+        # the statuses, and the two counts are emitted so a reader can
+        # see whether they coincide (they do iff NO_MID_AT_FILL is 0).
+        _b_n, _b_dec_n = pnl_leg_n_fills(_base)
         _rows = {}
         for _a, _v in OUT["arms"].items():
             if _a == "QR_SKEW_ONLY" or "fields" not in _v:
@@ -1130,6 +1221,9 @@ def run_arms(argv=None):
                 "adverse_selection_cents"]
             _pl = _v["fields"]["maker_pnl_cents"]["value"]
             _forgone, _saved, _net = _b_sp - _sp, _ad - _b_ad, _pl - _b_pl
+            _n_arm, _dec_arm = pnl_leg_n_fills(_v["fields"])
+            _lost = _b_n - _n_arm
+            _pu = per_unit_figures(_net, _v["n_cancels"], _lost)
             _rows[_a] = {
                 "n_cancels": _v["n_cancels"],
                 "spread_forgone_cents": _forgone,
@@ -1139,8 +1233,33 @@ def run_arms(argv=None):
                 "identity_residual_cents": abs(_saved - _forgone - _net),
                 "identity_holds":
                     abs(_saved - _forgone - _net) <= 1e-6,
-                "cents_per_cancel": (_net / _v["n_cancels"]
-                                     if _v["n_cancels"] else None),
+                # R-524(E): THE TWO PER-UNIT FIGURES, SIDE BY SIDE. They
+                # differ by `fills_lost_per_cancel` and were confused
+                # once in prose (-2.86 quoted where the per-lost-fill
+                # figure is -0.66). Emitting one without the other is
+                # what made that possible, so neither ships alone and
+                # their ratio is COMPUTED here rather than left to be
+                # divided by a reader (CLAUDE.md rule 10).
+                "n_fills_baseline": _b_n,
+                "n_fills_arm": _n_arm,
+                "n_fills_lost": _lost,
+                **_pu,
+                "the_two_denominators": (
+                    "`cents_per_cancel` divides by ACTIONS (%d) and "
+                    "`cents_per_lost_fill` by the FILLS those actions "
+                    "removed (%d). One cancel removes %s fills, so the "
+                    "first figure is that factor LARGER in magnitude. "
+                    "The per-cancel figure prices a DECISION; the "
+                    "per-lost-fill figure prices what the decision "
+                    "COST. They are not interchangeable"
+                    % (_v["n_cancels"], _lost,
+                       ("%.4f" % _pu["fills_lost_per_cancel"])
+                       if _pu["fills_lost_per_cancel"] is not None
+                       else "n/a")),
+                "pnl_leg_equals_decomposition_leg": (
+                    _n_arm == _dec_arm and _b_n == _b_dec_n),
+                "decomposition_n_fills": {"baseline": _b_dec_n,
+                                          "arm": _dec_arm},
             }
         OUT["cancellation_economics"] = {
             "baseline_arm": "QR_SKEW_ONLY",
@@ -1151,8 +1270,24 @@ def run_arms(argv=None):
             "predicate": "an arm pays SPREAD FORGONE on the fills it "
                          "declines and is paid ADVERSE SAVED on the same "
                          "fills; cancelling adds value iff saved > forgone",
+            # R-521(E)/R-524(E), and MEM caught this one first
+            # (Q-MEM-83(4)): this residual is TAUTOLOGICAL. `adverse` is
+            # DEFINED as P&L - spread, so saved - forgone collapses to
+            # the net delta algebraically and only float rounding
+            # survives. It sits in the same artifact as
+            # `maker_pnl_reconciliation.difference_cents`, which is
+            # EVIDENTIAL -- two residuals of the same magnitude, one
+            # meaning nothing and one meaning agreement between two
+            # producers, and NOTHING ABOUT THEIR SIZE TELLS THEM APART.
             "identity": "net_pnl_delta == adverse_saved - spread_forgone "
-                        "(COMPUTED per arm, never asserted)",
+                        "-- AN ALGEBRAIC REARRANGEMENT, NOT EVIDENCE: "
+                        "`adverse` is DEFINED as P&L - spread, so this "
+                        "cannot fail on any input",
+            "identity_is_tautological": True,
+            "the_evidential_residual_in_this_artifact_is": (
+                "arms[*].maker_pnl_reconciliation.difference_cents -- "
+                "two independent producers of one number, which CAN "
+                "disagree"),
             "scope_and_limits": (
                 "THE FILLS LEG ONLY, valued at t + MARKOUT_S over "
                 "n=%d windows of %s. It EXCLUDES the residual position "
