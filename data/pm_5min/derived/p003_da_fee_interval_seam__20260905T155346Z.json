@@ -1,0 +1,128 @@
+{
+  "arms": {
+    "baseline_qr_skew_only": {
+      "computed_predicates": {
+        "both_endpoints_priced": true,
+        "gross_already_negative_before_any_fee": false,
+        "interval_excludes_zero": false,
+        "sign_is_invariant_across_the_interval": false
+      },
+      "endpoint_worst_case": {
+        "cents_per_share": 1.7500000000000002,
+        "maker_fee_cents": 3362.7278300000007,
+        "status": "OK",
+        "strategy_net_cents": -3074.3100620000014
+      },
+      "endpoint_zero": {
+        "maker_fee_cents": 0.0,
+        "status": "OK",
+        "strategy_net_cents": 288.4177679999994
+      },
+      "gross_before_fees_cents": 288.4177679999994,
+      "guards_still_refuse": {
+        "incomplete_ledger_fee_is_none": true,
+        "incomplete_ledger_status": "INCOMPLETE_PER_FILL_MAKER_FEE",
+        "non_finite_fee": "REFUSED",
+        "unknown_fill_id": "REFUSED"
+      },
+      "n_fills": 458,
+      "shares": 1921.5587600000001,
+      "shipped_fee_status": "UNAVAILABLE_NO_PER_FILL_MAKER_FEE",
+      "shipped_strategy_net": null,
+      "strategy_net_interval_cents": [
+        -3074.3100620000014,
+        288.4177679999994
+      ]
+    },
+    "treatment": {
+      "computed_predicates": {
+        "both_endpoints_priced": true,
+        "gross_already_negative_before_any_fee": true,
+        "interval_excludes_zero": true,
+        "sign_is_invariant_across_the_interval": true
+      },
+      "endpoint_worst_case": {
+        "cents_per_share": 1.7500000000000002,
+        "maker_fee_cents": 2318.2081965,
+        "status": "OK",
+        "strategy_net_cents": -6245.6725855
+      },
+      "endpoint_zero": {
+        "maker_fee_cents": 0.0,
+        "status": "OK",
+        "strategy_net_cents": -3927.4643889999998
+      },
+      "gross_before_fees_cents": -3927.4643889999998,
+      "guards_still_refuse": {
+        "incomplete_ledger_fee_is_none": true,
+        "incomplete_ledger_status": "INCOMPLETE_PER_FILL_MAKER_FEE",
+        "non_finite_fee": "REFUSED",
+        "unknown_fill_id": "REFUSED"
+      },
+      "n_fills": 313,
+      "shares": 1324.690398,
+      "shipped_fee_status": "UNAVAILABLE_NO_PER_FILL_MAKER_FEE",
+      "shipped_strategy_net": null,
+      "strategy_net_interval_cents": [
+        -6245.6725855,
+        -3927.4643889999998
+      ]
+    }
+  },
+  "call_sites": {
+    "n_production": 3,
+    "n_production_passing_maker_fees": 0,
+    "n_selftest_passing_maker_fees": 3,
+    "production_call_sites": [
+      {
+        "line": 256,
+        "passes_maker_fees": false
+      },
+      {
+        "line": 258,
+        "passes_maker_fees": false
+      },
+      {
+        "line": 293,
+        "passes_maker_fees": false
+      }
+    ],
+    "selftest_call_sites": [
+      {
+        "line": 467,
+        "passes_maker_fees": false
+      },
+      {
+        "line": 477,
+        "passes_maker_fees": true
+      },
+      {
+        "line": 487,
+        "passes_maker_fees": true
+      },
+      {
+        "line": 492,
+        "passes_maker_fees": true
+      }
+    ]
+  },
+  "computed_predicates": {
+    "arms_whose_bracket_straddles_zero": [
+      "baseline_qr_skew_only"
+    ],
+    "endpoints_run_without_modifying_any_module": true,
+    "precedented_selftest_already_drives_the_OK_path": true,
+    "seam_exists_in_shipped_signature": true,
+    "sign_invariant_on_every_arm_probed": false,
+    "unrun_no_production_call_site_passes_it": true
+  },
+  "limits": [
+    "the upper endpoint is the ABSOLUTE worst case (0.07*p(1-p) at p=0.5, on EVERY maker leg); measured incidence is 10 charged legs in 1,056, so it is a bound and never an estimate",
+    "maker rebates and liquidity rewards are outside the ledger's own sign convention and are not netted here",
+    "two arms, one window: the full 202-arm re-run needs the replay and one fee dict per arm, which is caller work this probe does not do",
+    "a bracket that straddles zero does so AT THE UPPER BOUND, which charges 1.75 c/share on EVERY maker leg; measured incidence is 10 charged legs in 1,056, so the straddle says the interval is wide, NOT that the arm is likely negative"
+  ],
+  "protocol": "P003_DA_FEE_INTERVAL_SEAM_V1",
+  "role": "REPORTED, NOT ENFORCED (rule 14). This says the bound-endpoint re-run is runnable and what it yields on the two arms the receipt carries. It clears no gate and promotes nothing.",
+  "source_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_v2_gate1_economics_smoke__20260905T052605Z.json"
+}

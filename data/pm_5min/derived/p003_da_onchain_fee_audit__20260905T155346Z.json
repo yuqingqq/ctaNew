@@ -1,0 +1,158 @@
+{
+  "formula": "C * 0.07 * p * (1-p)",
+  "limits": [
+    "the 901 receipts are a SAMPLE of our own recorded trades, not a population; incidence here bounds observed volume only",
+    "leg roles come from OrdersMatched.takerOrderMaker; a transaction carrying fills with no OrdersMatched is counted and reported",
+    "fees are read from the OrderFilled fee word, never from the websocket fee_rate_bps field, which is unpopulated"
+  ],
+  "maker_charged_address_total_maker_legs": {
+    "0x0fd0ebb1ba539a114c311dcbb9823dd7385c46b6": 1,
+    "0x18b0b7105413c622c44ffb3f4bc34b30808b995c": 1,
+    "0x2277c18fb73d4cfbd61384be80ef9339a9496604": 3,
+    "0x8d009282a7572026ec03f2dbd6e627ad7ac00121": 1,
+    "0xb3b0780f2877882047a22ef99c7ea0f195fb8501": 2,
+    "0xbdf221228d7c75697bbbe8293d203c43e1a513c6": 2
+  },
+  "maker_charged_by_address": {
+    "0x0fd0ebb1ba539a114c311dcbb9823dd7385c46b6": 1,
+    "0x18b0b7105413c622c44ffb3f4bc34b30808b995c": 1,
+    "0x2277c18fb73d4cfbd61384be80ef9339a9496604": 3,
+    "0x8d009282a7572026ec03f2dbd6e627ad7ac00121": 1,
+    "0xb3b0780f2877882047a22ef99c7ea0f195fb8501": 2,
+    "0xbdf221228d7c75697bbbe8293d203c43e1a513c6": 2
+  },
+  "maker_charged_detail": [
+    {
+      "block": 92318226,
+      "fee_cents_per_share": 0.09899149070280491,
+      "fee_usdc": 0.03141,
+      "maker": "0xb3b0780f2877882047a22ef99c7ea0f195fb8501",
+      "predicted_taker_fee_usdc": 0.02198889000000002,
+      "price": 0.99,
+      "size": 31.73,
+      "taker": "0xd093a6cddcd9db272d47d45125c836729c18767e",
+      "tx": "0x5abe7fee24432fa13c28596b637dc46f6476d1eb38e77ab2d590a53ebb36990d"
+    },
+    {
+      "block": 92342639,
+      "fee_cents_per_share": 0.099,
+      "fee_usdc": 0.12672,
+      "maker": "0x2277c18fb73d4cfbd61384be80ef9339a9496604",
+      "predicted_taker_fee_usdc": 0.08870400000000007,
+      "price": 0.99,
+      "size": 128.0,
+      "taker": "0x0c7c5204404e9d5402d258fedac59c7212bae4cb",
+      "tx": "0x47a14514ed4350f7bdb06262a00de7ffa1889003ed621fbd03d39b7f011ec092"
+    },
+    {
+      "block": 92342639,
+      "fee_cents_per_share": 0.099,
+      "fee_usdc": 0.12672,
+      "maker": "0x2277c18fb73d4cfbd61384be80ef9339a9496604",
+      "predicted_taker_fee_usdc": 0.08870400000000007,
+      "price": 0.99,
+      "size": 128.0,
+      "taker": "0x0c7c5204404e9d5402d258fedac59c7212bae4cb",
+      "tx": "0x47a14514ed4350f7bdb06262a00de7ffa1889003ed621fbd03d39b7f011ec092"
+    },
+    {
+      "block": 92356862,
+      "fee_cents_per_share": 0.09898682877406281,
+      "fee_usdc": 0.00977,
+      "maker": "0x2277c18fb73d4cfbd61384be80ef9339a9496604",
+      "predicted_taker_fee_usdc": 0.0068399100000000055,
+      "price": 0.99,
+      "size": 9.87,
+      "taker": "0xb55fa1296e6ec55d0ce53d93b9237389f11764d4",
+      "tx": "0x4b19dc8ccde409c74ab78ff88670fad80c61352db47f3ae1130548fef2b64bbe"
+    },
+    {
+      "block": 92356862,
+      "fee_cents_per_share": 0.09892367906066535,
+      "fee_usdc": 0.01011,
+      "maker": "0x8d009282a7572026ec03f2dbd6e627ad7ac00121",
+      "predicted_taker_fee_usdc": 0.007082460000000007,
+      "price": 0.99,
+      "size": 10.22,
+      "taker": "0xb55fa1296e6ec55d0ce53d93b9237389f11764d4",
+      "tx": "0x4b19dc8ccde409c74ab78ff88670fad80c61352db47f3ae1130548fef2b64bbe"
+    },
+    {
+      "block": 92356862,
+      "fee_cents_per_share": 0.0989897681647455,
+      "fee_usdc": 0.07643,
+      "maker": "0xb3b0780f2877882047a22ef99c7ea0f195fb8501",
+      "predicted_taker_fee_usdc": 0.05350653000000005,
+      "price": 0.99,
+      "size": 77.21,
+      "taker": "0xb55fa1296e6ec55d0ce53d93b9237389f11764d4",
+      "tx": "0x4b19dc8ccde409c74ab78ff88670fad80c61352db47f3ae1130548fef2b64bbe"
+    },
+    {
+      "block": 92356862,
+      "fee_cents_per_share": 0.09891891891891891,
+      "fee_usdc": 0.00366,
+      "maker": "0x18b0b7105413c622c44ffb3f4bc34b30808b995c",
+      "predicted_taker_fee_usdc": 0.002564100000000003,
+      "price": 0.99,
+      "size": 3.7,
+      "taker": "0xb55fa1296e6ec55d0ce53d93b9237389f11764d4",
+      "tx": "0x4b19dc8ccde409c74ab78ff88670fad80c61352db47f3ae1130548fef2b64bbe"
+    },
+    {
+      "block": 92364466,
+      "fee_cents_per_share": 0.4949974987493747,
+      "fee_usdc": 0.09895,
+      "maker": "0xbdf221228d7c75697bbbe8293d203c43e1a513c6",
+      "predicted_taker_fee_usdc": 0.013853070000000012,
+      "price": 0.99,
+      "size": 19.99,
+      "taker": "0x75cc3b63a2f2423085e10706c78b494017b93ce1",
+      "tx": "0x199a071b279a92c0fb43d4f51c630493e70e7db495b9d0d7993474befeadb387"
+    },
+    {
+      "block": 92374262,
+      "fee_cents_per_share": 0.495,
+      "fee_usdc": 0.495,
+      "maker": "0xbdf221228d7c75697bbbe8293d203c43e1a513c6",
+      "predicted_taker_fee_usdc": 0.06930000000000007,
+      "price": 0.99,
+      "size": 100.0,
+      "taker": "0x5d4aba8ad45bb5eab3499a0294b42da5d1e455d3",
+      "tx": "0x785f51e5b47bc8af9d8d23f7cdcacaefe953185dd81266ca68e16e02e5851d82"
+    },
+    {
+      "block": 92374262,
+      "fee_cents_per_share": 0.495,
+      "fee_usdc": 0.0693,
+      "maker": "0x0fd0ebb1ba539a114c311dcbb9823dd7385c46b6",
+      "predicted_taker_fee_usdc": 0.00970200000000001,
+      "price": 0.99,
+      "size": 14.0,
+      "taker": "0x5d4aba8ad45bb5eab3499a0294b42da5d1e455d3",
+      "tx": "0x785f51e5b47bc8af9d8d23f7cdcacaefe953185dd81266ca68e16e02e5851d82"
+    }
+  ],
+  "maker_charged_distinct_blocks": 5,
+  "maker_charged_distinct_tx": 5,
+  "maker_charged_share": 0.00946969696969697,
+  "n_legs": 1957,
+  "n_maker_legs": 1056,
+  "n_maker_legs_charged": 10,
+  "n_maker_legs_zero": 1046,
+  "n_receipt_files": 901,
+  "n_taker_charged_matching_formula_to_1e6": 110,
+  "n_taker_legs": 901,
+  "n_taker_legs_charged": 901,
+  "n_tx_with_fills_but_no_ordersmatched": 0,
+  "n_unreadable": 0,
+  "protocol": "P003_DA_ONCHAIN_FEE_AUDIT_V1",
+  "role": "REPORTED, NOT ENFORCED (rule 14). This measures what the chain records; it promotes nothing and clears no gate.",
+  "taker_all_charged": true,
+  "taker_formula_match_share": 0.1220865704772475,
+  "taker_residual_usdc": {
+    "max": 0.51021345,
+    "p50": 5.9400000000000685e-06
+  },
+  "unreadable": []
+}
