@@ -35,7 +35,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-EXPECTED_CHECKS = 15
+EXPECTED_CHECKS = 17
 MIN_PERMUTATIONS = 200
 
 #: Integer attributes with at most this many distinct values are compared
@@ -261,6 +261,21 @@ def selftest() -> int:
         ok("below the declared minimum" in str(e),
            "POP-6 fewer than 200 permutations REFUSES (rule 6): an "
            "under-sampled correct null flatters as much as a wrong one")
+    # POP-6b ADDED ROUND 51, AND IT WAS FOUND BY A PEER INSTRUMENT, NOT BY ME.
+    # `da_mutation_audit` (the pre-existing refusal-deletion harness, R-347)
+    # deleted the type guard at `compare` L103 and this suite STAYED GREEN --
+    # an unasserted refusal is a comment that raises. Reported SURVIVED by an
+    # instrument DA did not write, which is the point of the exercise.
+    for bad_e, bad_r, what in (
+            ({"side": "BUY_UP"}, pop, "a dict where a list of records is due"),
+            (pop[:10], "not-a-list", "a string as the retained set")):
+        try:
+            compare(bad_e, bad_r, n_permutations=MIN_PERMUTATIONS)
+            ok(False, f"POP-6b {what} must refuse")
+        except PopulationAuditRefused as e:
+            ok("must be lists of records" in str(e),
+               f"POP-6b {what} REFUSES by name -- the type guard is now "
+               f"ASSERTED, not merely present")
     r4 = compare([{"side": "BUY_UP"}] * 20, [{"side": "SELL_UP"}] * 200,
                  attrs=("side", "hour"), seed=1)
     ok(r4["attributes"]["hour"]["status"] == "ATTRIBUTE_ABSENT"

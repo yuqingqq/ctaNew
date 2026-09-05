@@ -1,0 +1,372 @@
+{
+  "attainable_at_declared_policy": {
+    "V_oracle_cents": 60303.760722999985,
+    "by_budget": {
+      "107": {
+        "attainable_capture_of_V": 0.2717679391883986,
+        "attainable_cents": 16388.628776999998,
+        "attainable_share_of_oracle_at_k": 0.8925013908819094,
+        "k_fills": 107,
+        "oracle_capture_of_V": 0.3045014181096748,
+        "oracle_cents": 18362.580657500002,
+        "overstatement_pct_of_oracle_at_k": 10.749860911809062
+      },
+      "1440": {
+        "attainable_capture_of_V": 0.7359291353876316,
+        "attainable_cents": 44379.2944895,
+        "attainable_share_of_oracle_at_k": 0.7607243109315188,
+        "k_fills": 1440,
+        "oracle_capture_of_V": 0.9674058325893055,
+        "oracle_cents": 58338.209850500054,
+        "overstatement_pct_of_oracle_at_k": 23.92756890684812
+      },
+      "216": {
+        "attainable_capture_of_V": 0.40961422156510513,
+        "attainable_cents": 24701.278006,
+        "attainable_share_of_oracle_at_k": 0.8737292760707205,
+        "k_fills": 216,
+        "oracle_capture_of_V": 0.46881137302299863,
+        "oracle_cents": 28271.088863,
+        "overstatement_pct_of_oracle_at_k": 12.627072392927946
+      },
+      "4315": {
+        "attainable_capture_of_V": 0.7359291353876316,
+        "attainable_cents": 44379.2944895,
+        "attainable_share_of_oracle_at_k": 0.7359291353876305,
+        "k_fills": 4315,
+        "oracle_capture_of_V": 1.0000000000000016,
+        "oracle_cents": 60303.76072300007,
+        "overstatement_pct_of_oracle_at_k": 26.407086461236943
+      },
+      "432": {
+        "attainable_capture_of_V": 0.5543138389750674,
+        "attainable_cents": 33427.209111000004,
+        "attainable_share_of_oracle_at_k": 0.8455467119088468,
+        "k_fills": 432,
+        "oracle_capture_of_V": 0.6555685583871379,
+        "oracle_cents": 39533.24948250001,
+        "overstatement_pct_of_oracle_at_k": 15.445328809115319
+      },
+      "647": {
+        "attainable_capture_of_V": 0.6343507539308398,
+        "attainable_cents": 38253.736079500006,
+        "attainable_share_of_oracle_at_k": 0.8221034401386927,
+        "k_fills": 647,
+        "oracle_capture_of_V": 0.771619145425084,
+        "oracle_cents": 46531.536315,
+        "overstatement_pct_of_oracle_at_k": 17.78965598613073
+      }
+    },
+    "cascade": true,
+    "dwell_s": 2.0,
+    "latency_s": 0.25
+  },
+  "book": {
+    "V_oracle_cents": 60303.760722999985,
+    "fills_per_generation_with_fills": 1.1175861175861175,
+    "mean_cents_per_fill": 1.992759872421784,
+    "n_fills": 4315,
+    "n_generations": 31122,
+    "n_generations_with_fills": 3861,
+    "n_lineages": 24,
+    "n_negative": 2072,
+    "n_positive": 2234,
+    "n_zero": 9,
+    "net_cents": 8598.758849499998,
+    "source": "/home/yuqing/ctaNew/data/pm_5min/derived/de_section81_cache_12.pkl",
+    "source_sha256": "ee1f150b263c1c9a869c2623db242e46d7fd94c4485e5b4f5681b7ca2a8baa22"
+  },
+  "cross_check_against_BE": {
+    "BUDGET_0.05": {
+      "BE_ORACLE_at_this_k": 0.4688113730229986,
+      "DA_attainable_capture_of_V": 0.40961422156510513,
+      "DA_oracle_capture_of_V": 0.46881137302299863,
+      "agree_to_1e_9": true,
+      "k": 216
+    },
+    "BUDGET_0.10": {
+      "BE_ORACLE_at_this_k": 0.6555685583871377,
+      "DA_attainable_capture_of_V": 0.5543138389750674,
+      "DA_oracle_capture_of_V": 0.6555685583871379,
+      "agree_to_1e_9": true,
+      "k": 432
+    },
+    "BUDGET_0.15": {
+      "BE_ORACLE_at_this_k": 0.7716191454250839,
+      "DA_attainable_capture_of_V": 0.6343507539308398,
+      "DA_oracle_capture_of_V": 0.771619145425084,
+      "agree_to_1e_9": true,
+      "k": 647
+    },
+    "MATCHED_CONDVALUE": {
+      "BE_ORACLE_at_this_k": 0.9674058325893043,
+      "DA_attainable_capture_of_V": 0.7359291353876316,
+      "DA_oracle_capture_of_V": 0.9674058325893055,
+      "agree_to_1e_9": true,
+      "k": 1440
+    },
+    "MATCHED_HAZARD": {
+      "BE_ORACLE_at_this_k": 0.3045014181096747,
+      "DA_attainable_capture_of_V": 0.2717679391883986,
+      "DA_oracle_capture_of_V": 0.3045014181096748,
+      "agree_to_1e_9": true,
+      "k": 107
+    }
+  },
+  "declared": {
+    "cancel_effective_latency_s": 0.25,
+    "repost_dwell_s": 2.0
+  },
+  "headline_unbudgeted": {
+    "V_oracle_cents": 60303.760722999985,
+    "V_oracle_pct_of_net": 701.3077326445379,
+    "attainable_cents": 44379.2944895,
+    "attainable_pct_of_net": 516.1127933257551,
+    "attainable_share_of_oracle": 0.7359291353876305,
+    "ceiling_overstatement_pct": 26.407086461236943,
+    "k_fills": 4315,
+    "net_cents": 8598.758849499998,
+    "reading": "the filed ceiling is 701.31% of net; the most any overlay could attain once a cancel silences its lineage for the declared latency+dwell is 516.11% of net. Both are ORACLE bounds on a realised book and neither is a forecast"
+  },
+  "limits": [
+    "one hour, 12 windows, G=0 complete UTC days, cluster n=1 -- a structural companion, never a population estimate",
+    "the blocking model is the declared latency plus dwell; the real cascade also changes WHICH generations exist and what they would have filled, which can only widen the gap, never narrow it",
+    "budget k counts FILLS REMOVED so the axis matches BE's cells; an overlay's real budget is in CANCELS and is not the same axis -- and because of that unit, attainable RISES with dwell here (one cancel sweeps more losers) rather than falling as it does when the budget is in cancels. The cascade's COST is isolated by the cascade-off control, not by the dwell sweep",
+    "values are the book's own markout x shares, unchanged; no fee, queue reset or terminal inventory enters here"
+  ],
+  "oracle_curve_agrees_with_BE_at_every_cell": true,
+  "positive_control_cascade_off": {
+    "V_oracle_cents": 60303.760722999985,
+    "by_budget": {
+      "107": {
+        "attainable_capture_of_V": 0.3045014181096748,
+        "attainable_cents": 18362.580657500002,
+        "attainable_share_of_oracle_at_k": 1.0,
+        "k_fills": 107,
+        "oracle_capture_of_V": 0.3045014181096748,
+        "oracle_cents": 18362.580657500002,
+        "overstatement_pct_of_oracle_at_k": 0.0
+      },
+      "1440": {
+        "attainable_capture_of_V": 0.9674058325893045,
+        "attainable_cents": 58338.209850499996,
+        "attainable_share_of_oracle_at_k": 0.999999999999999,
+        "k_fills": 1440,
+        "oracle_capture_of_V": 0.9674058325893055,
+        "oracle_cents": 58338.209850500054,
+        "overstatement_pct_of_oracle_at_k": 9.977622052961996e-14
+      },
+      "216": {
+        "attainable_capture_of_V": 0.4688113730229987,
+        "attainable_cents": 28271.088863000004,
+        "attainable_share_of_oracle_at_k": 1.0000000000000002,
+        "k_fills": 216,
+        "oracle_capture_of_V": 0.46881137302299863,
+        "oracle_cents": 28271.088863,
+        "overstatement_pct_of_oracle_at_k": -1.286819487116729e-14
+      },
+      "432": {
+        "attainable_capture_of_V": 0.6555685583871378,
+        "attainable_cents": 39533.2494825,
+        "attainable_share_of_oracle_at_k": 0.9999999999999998,
+        "k_fills": 432,
+        "oracle_capture_of_V": 0.6555685583871379,
+        "oracle_cents": 39533.24948250001,
+        "overstatement_pct_of_oracle_at_k": 1.8404653574971716e-14
+      },
+      "647": {
+        "attainable_capture_of_V": 0.7716191454250841,
+        "attainable_cents": 46531.536315000005,
+        "attainable_share_of_oracle_at_k": 1.0000000000000002,
+        "k_fills": 647,
+        "oracle_capture_of_V": 0.771619145425084,
+        "oracle_cents": 46531.536315,
+        "overstatement_pct_of_oracle_at_k": -1.5636615917703825e-14
+      }
+    },
+    "cascade": false,
+    "dwell_s": 2.0,
+    "latency_s": 0.25
+  },
+  "protocol": "P003_DA_CEILING_ATTAINABLE_701_V1",
+  "reproduction_gate": {
+    "fields": {
+      "V_oracle_cents": {
+        "got": 60303.760722999985,
+        "match": true,
+        "want": 60303.760723
+      },
+      "n_fills": {
+        "got": 4315,
+        "match": true,
+        "want": 4315
+      },
+      "n_negative": {
+        "got": 2072,
+        "match": true,
+        "want": 2072
+      },
+      "n_positive": {
+        "got": 2234,
+        "match": true,
+        "want": 2234
+      },
+      "n_zero": {
+        "got": 9,
+        "match": true,
+        "want": 9
+      },
+      "net_cents": {
+        "got": 8598.758849499998,
+        "match": true,
+        "want": 8598.758849499998
+      }
+    },
+    "n_fields_checked": 6,
+    "status": "PASS"
+  },
+  "role": "REPORTED, NOT ENFORCED (rule 14). This is the attainable companion R-535(E) requires beside a ceiling figure. It promotes nothing and clears no gate.",
+  "sensitivity_dwell_s": {
+    "0.25": {
+      "107": {
+        "attainable_capture_of_V": 0.2008976324983884,
+        "attainable_cents": 12114.88276,
+        "attainable_share_of_oracle_at_k": 0.6597592672820639,
+        "k_fills": 107,
+        "oracle_capture_of_V": 0.3045014181096748,
+        "oracle_cents": 18362.580657500002,
+        "overstatement_pct_of_oracle_at_k": 34.02407327179361
+      },
+      "1440": {
+        "attainable_capture_of_V": 0.32783123743822973,
+        "attainable_cents": 19769.4565,
+        "attainable_share_of_oracle_at_k": 0.33887663935287077,
+        "k_fills": 1440,
+        "oracle_capture_of_V": 0.9674058325893055,
+        "oracle_cents": 58338.209850500054,
+        "overstatement_pct_of_oracle_at_k": 66.11233606471292
+      },
+      "216": {
+        "attainable_capture_of_V": 0.2695074633513086,
+        "attainable_cents": 16252.313583000001,
+        "attainable_share_of_oracle_at_k": 0.5748739874066308,
+        "k_fills": 216,
+        "oracle_capture_of_V": 0.46881137302299863,
+        "oracle_cents": 28271.088863,
+        "overstatement_pct_of_oracle_at_k": 42.512601259336925
+      },
+      "432": {
+        "attainable_capture_of_V": 0.32212897178551975,
+        "attainable_cents": 19425.588436499995,
+        "attainable_share_of_oracle_at_k": 0.49137343099253766,
+        "k_fills": 432,
+        "oracle_capture_of_V": 0.6555685583871379,
+        "oracle_cents": 39533.24948250001,
+        "overstatement_pct_of_oracle_at_k": 50.86265690074623
+      },
+      "647": {
+        "attainable_capture_of_V": 0.32783123743822973,
+        "attainable_cents": 19769.4565,
+        "attainable_share_of_oracle_at_k": 0.4248614609706553,
+        "k_fills": 647,
+        "oracle_capture_of_V": 0.771619145425084,
+        "oracle_cents": 46531.536315,
+        "overstatement_pct_of_oracle_at_k": 57.51385390293447
+      }
+    },
+    "1.0": {
+      "107": {
+        "attainable_capture_of_V": 0.2591126717498468,
+        "attainable_cents": 15625.4685575,
+        "attainable_share_of_oracle_at_k": 0.8509407718308887,
+        "k_fills": 107,
+        "oracle_capture_of_V": 0.3045014181096748,
+        "oracle_cents": 18362.580657500002,
+        "overstatement_pct_of_oracle_at_k": 14.905922816911126
+      },
+      "1440": {
+        "attainable_capture_of_V": 0.5992864173264807,
+        "attainable_cents": 36139.224715000004,
+        "attainable_share_of_oracle_at_k": 0.6194777797880994,
+        "k_fills": 1440,
+        "oracle_capture_of_V": 0.9674058325893055,
+        "oracle_cents": 58338.209850500054,
+        "overstatement_pct_of_oracle_at_k": 38.052222021190055
+      },
+      "216": {
+        "attainable_capture_of_V": 0.38299437780654255,
+        "attainable_cents": 23096.0013175,
+        "attainable_share_of_oracle_at_k": 0.8169477104126351,
+        "k_fills": 216,
+        "oracle_capture_of_V": 0.46881137302299863,
+        "oracle_cents": 28271.088863,
+        "overstatement_pct_of_oracle_at_k": 18.30522895873649
+      },
+      "432": {
+        "attainable_capture_of_V": 0.49736464921765017,
+        "attainable_cents": 29992.958798499996,
+        "attainable_share_of_oracle_at_k": 0.7586767895661305,
+        "k_fills": 432,
+        "oracle_capture_of_V": 0.6555685583871379,
+        "oracle_cents": 39533.24948250001,
+        "overstatement_pct_of_oracle_at_k": 24.132321043386952
+      },
+      "647": {
+        "attainable_capture_of_V": 0.5572881025425399,
+        "attainable_cents": 33606.568389500004,
+        "attainable_share_of_oracle_at_k": 0.7222320828179173,
+        "k_fills": 647,
+        "oracle_capture_of_V": 0.771619145425084,
+        "oracle_cents": 46531.536315,
+        "overstatement_pct_of_oracle_at_k": 27.776791718208273
+      }
+    },
+    "5.0": {
+      "107": {
+        "attainable_capture_of_V": 0.2633973164204644,
+        "attainable_cents": 15883.8487445,
+        "attainable_share_of_oracle_at_k": 0.8650117889618314,
+        "k_fills": 107,
+        "oracle_capture_of_V": 0.3045014181096748,
+        "oracle_cents": 18362.580657500002,
+        "overstatement_pct_of_oracle_at_k": 13.49882110381686
+      },
+      "1440": {
+        "attainable_capture_of_V": 0.8591926174471335,
+        "attainable_cents": 51812.5460175,
+        "attainable_share_of_oracle_at_k": 0.8881408282886466,
+        "k_fills": 1440,
+        "oracle_capture_of_V": 0.9674058325893055,
+        "oracle_cents": 58338.209850500054,
+        "overstatement_pct_of_oracle_at_k": 11.185917171135346
+      },
+      "216": {
+        "attainable_capture_of_V": 0.4161982332127994,
+        "attainable_cents": 25098.318669,
+        "attainable_share_of_oracle_at_k": 0.8877733288103952,
+        "k_fills": 216,
+        "oracle_capture_of_V": 0.46881137302299863,
+        "oracle_cents": 28271.088863,
+        "overstatement_pct_of_oracle_at_k": 11.222667118960484
+      },
+      "432": {
+        "attainable_capture_of_V": 0.5865972266056082,
+        "attainable_cents": 35374.018793999996,
+        "attainable_share_of_oracle_at_k": 0.894791580683466,
+        "k_fills": 432,
+        "oracle_capture_of_V": 0.6555685583871379,
+        "oracle_cents": 39533.24948250001,
+        "overstatement_pct_of_oracle_at_k": 10.520841931653406
+      },
+      "647": {
+        "attainable_capture_of_V": 0.6890879239170068,
+        "attainable_cents": 41554.593280999994,
+        "attainable_share_of_oracle_at_k": 0.8930415062956856,
+        "k_fills": 647,
+        "oracle_capture_of_V": 0.771619145425084,
+        "oracle_cents": 46531.536315,
+        "overstatement_pct_of_oracle_at_k": 10.695849370431437
+      }
+    }
+  }
+}

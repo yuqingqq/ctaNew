@@ -1,0 +1,144 @@
+{
+  "baseline": {
+    "da_population_audit": {
+      "green": true,
+      "module": "da_population_audit",
+      "named_failures": [],
+      "rc": 0,
+      "stderr_tail": ""
+    },
+    "de_section81_mid_census": {
+      "green": true,
+      "module": "de_section81_mid_census",
+      "named_failures": [],
+      "rc": 0,
+      "stderr_tail": ""
+    }
+  },
+  "baseline_all_green": true,
+  "computed_predicates": {
+    "every_applied_mutant_caught_by_its_own_suite": true,
+    "every_applied_mutant_caught_by_the_consumer": false,
+    "every_applied_mutant_caught_everywhere": false,
+    "n_surviving": 4,
+    "surviving_mutants": [
+      "STATISTIC_returns_zero",
+      "STATISTIC_drops_abs",
+      "NULL_does_not_permute",
+      "STATUS_always_nothing_excluded"
+    ]
+  },
+  "limits": [
+    "four mutants on three surfaces is a SAMPLE of the ways this instrument could be wrong, never a proof that it is right",
+    "a mutant caught by a suite says the suite discriminates on that line, not that the line is correct",
+    "the consumer is run at its own selftest, which is not the same as the production census it performs on real data"
+  ],
+  "n_applied": 4,
+  "n_mutants": 4,
+  "protocol": "P003_DA_POPULATION_MUTATION_AUDIT_V1",
+  "results": [
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "named_failures": [
+            "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 0.0, p 1.0) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+          ],
+          "rc": 1,
+          "went_red": true
+        },
+        "de_section81_mid_census": {
+          "named_failures": [],
+          "rc": 0,
+          "went_red": false
+        }
+      },
+      "caught_everywhere": false,
+      "mutant": "STATISTIC_returns_zero",
+      "status": "APPLIED",
+      "surface": "statistic",
+      "survived_in": [
+        "de_section81_mid_census"
+      ],
+      "why_it_matters": "TVD always 0: every exclusion looks perfectly representative, so NOTHING is ever flagged selective -- the always-PASS direction"
+    },
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "named_failures": [
+            "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 0.0, p 0.487562) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+          ],
+          "rc": 1,
+          "went_red": true
+        },
+        "de_section81_mid_census": {
+          "named_failures": [],
+          "rc": 0,
+          "went_red": false
+        }
+      },
+      "caught_everywhere": false,
+      "mutant": "STATISTIC_drops_abs",
+      "status": "APPLIED",
+      "surface": "statistic",
+      "survived_in": [
+        "de_section81_mid_census"
+      ],
+      "why_it_matters": "signed differences cancel to ~0 for any distribution, so a real imbalance reads as agreement -- silent and plausible"
+    },
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "named_failures": [
+            "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 1.0, p 1.0) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+          ],
+          "rc": 1,
+          "went_red": true
+        },
+        "de_section81_mid_census": {
+          "named_failures": [],
+          "rc": 0,
+          "went_red": false
+        }
+      },
+      "caught_everywhere": false,
+      "mutant": "NULL_does_not_permute",
+      "status": "APPLIED",
+      "surface": "null",
+      "survived_in": [
+        "de_section81_mid_census"
+      ],
+      "why_it_matters": "the null draws become the observed split every time, so the p-value collapses and every exclusion looks extreme or none does"
+    },
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "named_failures": [],
+          "rc": 1,
+          "went_red": true
+        },
+        "de_section81_mid_census": {
+          "named_failures": [],
+          "rc": 0,
+          "went_red": false
+        }
+      },
+      "caught_everywhere": false,
+      "mutant": "STATUS_always_nothing_excluded",
+      "status": "APPLIED",
+      "surface": "status",
+      "survived_in": [
+        "de_section81_mid_census"
+      ],
+      "why_it_matters": "the exact string DE's artifact cites is emitted unconditionally -- the certification would be produced for a population that WAS filtered"
+    }
+  ],
+  "role": "REPORTED, NOT ENFORCED (rule 14). A surviving mutant is a hole in a certification another seat relies on; this names it and decides nothing.",
+  "suites": [
+    "da_population_audit",
+    "de_section81_mid_census"
+  ],
+  "target": "live/pm_research/da_population_audit.py",
+  "target_restored_byte_exact": true,
+  "target_sha256_after": "f8b7dfa7a01826050c1e2a3a58ebbcd91fd6318f6149ae7b42e464a0b9095b91",
+  "target_sha256_before": "f8b7dfa7a01826050c1e2a3a58ebbcd91fd6318f6149ae7b42e464a0b9095b91"
+}
