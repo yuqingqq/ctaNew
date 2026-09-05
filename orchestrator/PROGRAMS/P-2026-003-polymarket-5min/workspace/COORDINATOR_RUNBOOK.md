@@ -386,29 +386,33 @@ recorded as R-495.
 
 ---
 
-## 7. State at this writing (2026-09-03T04:00Z) — verify, don't trust
+## 7. State at this writing (2026-09-05T11:38Z) — verify, don't trust
 
-Superseded whenever a round lands; the artifacts are the authority.
+**Programme: USER-HALTED (R-531, 2026-09-04T14:19Z). Seats: RESET COMPLETE
+(R-533), all five reloaded and standing by, nothing dispatched.** The seat
+monitor (`seatwatch.sh`) is **NOT re-armed** — five standing-by seats would
+only produce IDLE noise; re-arm it when the USER resumes the programme.
 
-- Branch tip after R-496 and the doc corrections. Register: **487** `### R-`
-  headers, one ratification fence. **Next entry R-497.** Next Q numbers:
-  **Q-BE-239, Q-DA-218, Q-DE-62, Q-MEM-61** (238/217/61/60 are in flight).
-- **Round dispatched 2026-09-03 ~04:00Z, all five seats working**: BE 13 (seal
-  relocation + the 08-29 free read + the 08-30 labelled secondary + the 09-02
-  sealed accrual run), DE 44 (Phase-4 producer half, split now declared), DA 21
-  (low-content-without-gap-rows detector + the read-only 09-04 preflight; its
-  round-20 chain stays HELD), MEM 72 (resumes sole writership), reviewer on
-  BE round 12.
-- Held and unpushed: **DA** `3c49cb7` → `a36db71` (round 20; all three files sit
-  on the path the 00:06Z unit executes, so it lands only AFTER the 09-04 run);
-  **DE** `0d03902` (round 43 WIP, RED by design) — being built on in round 44.
-- **G = 2 of 5.** The USER ruled the 09-02 accrual at R-496.
-- **ONE USER decision open**: the Phase-2 winner, which the race decides. See
-  `RESULTS.md` §7 — three were ruled at R-496 and one was never open.
-- **A sealed race artifact was found living only in a dead session's `/tmp`**
-  (R-496 (B)). Backup at `~/ctaNew_sealed_backup/`; BE is relocating the
-  authoritative copy under `data/` with a superseding receipt. **Check this
-  class whenever a sealed artifact is produced: a receipt whose `sealed_file.path`
-  starts with `/tmp` is one sweep from voiding a race day.**
-- Sister program **P-2026-002's E2.0/E2-A gate opened 2026-09-03** and nothing
-  is dispatched against it.
+- **Tip:** `917d743` (R-532). Next register entry after R-533: **R-534**.
+- **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
+  USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
+  + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
+  blocker (Gate 1f: no owned execution export; no public substitute satisfies
+  the owned-order join). Further work needs a NEW USER RULING (plan §6.7).
+  Receipts self-report NOT_FROZEN; nothing V2 produced is citable as frozen.
+- **Race:** G = 4 (09-01..09-04 accrued; 09-04 by the scheduled unit at
+  00:06:01Z). 09-05 open. **DIRECTIONAL, NOT SIGNIFICANCE-BEARING** (R-529(A));
+  and per V2's HANDOFF the old race cannot validate the changed pipeline.
+- **Economics:** RESULTS.md §0 — read its opening box first. The 701% ceiling
+  and `V_oracle` are **PENDING A NULL** (two seats, independently, R-531(C)).
+- **Seat worktrees:** all clean; BE/DA/REV detached HEADs sit at their own
+  last landings BEHIND the tip (expected; each reported it, none fixed it under
+  DO NOT START WORK — the first act on resume is `checkout --detach mm-research`).
+  **DE holds `6003f40` unpushed** (+122 to `de_phase4_diag_runner.py`); V2's
+  `9b37088` touched the same file at non-overlapping hunks — **predicted clean
+  rebase to 226 checks, to be verified by execution first thing (R-532(F)).**
+- **Worktree count at quiescence: 35 with 0–1 prunable** (the BE fixture churn
+  comes and goes). Collectors: 4 alive (10d / 4.5d uptimes).
+- **Open USER items:** the V2 blocker ruling; the Phase-2 winner; the causal
+  incumbent operating point; G-counting (USER said manual).
+
