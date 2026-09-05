@@ -43,7 +43,7 @@ STATEMENT ABOUT THIS HOUR. It validates nothing and may not be stated as
 closing or opening the cancellation lever.
 
 Declared before it was run: `declarations/be_ceiling_null_declaration_v1.json`,
-committed at 0eb1297 -- which is the point of committing it separately.
+committed at a165d19 -- which is the point of committing it separately.
 """
 from __future__ import annotations
 
@@ -74,7 +74,7 @@ FILED_ARMS = DERIVED / "de_section81_arms__20260904T140543Z.json"
 #: forward pointer to v2.
 DECLARATION = HERE / "declarations/be_ceiling_null_declaration_v2.json"
 DECLARATION_V1 = HERE / "declarations/be_ceiling_null_declaration_v1.json"
-DECLARATION_V1_COMMIT = "0eb1297"
+DECLARATION_V1_COMMIT = "a165d19"
 
 #: DECLARED, and the instrument refuses to depart from them.
 N_DRAWS = 10000

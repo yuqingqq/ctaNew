@@ -1,7 +1,7 @@
 {
   "protocol": "BE_CEILING_NULL_DECLARATION_V2",
   "supersedes": "be_ceiling_null_declaration_v1.json",
-  "supersedes_commit": "0eb1297",
+  "supersedes_commit": "a165d19",
   "why_superseded": "v1 declared the five naive orderings as DETERMINISTIC points. On the real book three of them are decided at a TIED key value. SIZE_LARGEST_FIRST is 100% TIE-DECIDED AT EVERY k -- 3,098 of the 4,315 fills have size exactly 5.0 -- so `argsort(kind='stable')` was returning the reference's iteration order, not a size ordering. It scored +1.29% / +1.15% / +0.90% and flipped sign twice across k, which is the signature of an arbitrary ordering. Those numbers are WITHDRAWN.",
 
   "AMENDED_AFTER_SEEING_v1_NAIVE_OUTPUT_AND_SAYING_SO": {

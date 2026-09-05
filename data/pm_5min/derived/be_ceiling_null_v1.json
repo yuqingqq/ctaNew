@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-05T15:12:39Z",
+ "as_of": "2026-09-05T15:15:22Z",
  "book": {
   "coin": "btc",
   "hour": "2026-08-24T13:50-14:50Z",
@@ -1175,7 +1175,7 @@
  "decides_nothing": "REPORTED (rule 14).",
  "declaration": "live/pm_research/declarations/be_ceiling_null_declaration_v2.json",
  "declaration_v1_committed_before_any_draw": {
-  "commit": "0eb1297",
+  "commit": "a165d19",
   "path": "live/pm_research/declarations/be_ceiling_null_declaration_v1.json",
   "superseded_for": "the naive arm only; the ceiling, the random null, the grid, n, the seed, the family and both arm locations are unchanged"
  },
@@ -1336,6 +1336,6 @@
   "n_fields_checked": 10,
   "status": "PASS"
  },
- "wall_s": 9.5,
+ "wall_s": 9.6,
  "why_random_capture_is_negative_in_expectation": "the book's MEAN fill P&L is POSITIVE (+1.992760 c). An overlay can only DECLINE, so a random decline removes a positive contribution in expectation and its capture is NEGATIVE BY CONSTRUCTION. This is arithmetic, not a result -- and it is exactly why 'capture > 0' is the wrong bar and 'capture > the matched random null' is the right one."
 }

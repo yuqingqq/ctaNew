@@ -154,5 +154,11 @@
     "what_did_NOT_change": "the ceiling, the random null, the grid, n, the seed, the family, and both ARM locations. The correction touches the naive baselines only.",
     "when": "after v1's naive numbers had been seen -- recorded, not hidden",
     "rule": "13 -- corrections supersede in-band; this file stays as provenance and is not edited in substance"
+  },
+  "THIS_FILES_OWN_COMMIT": {
+    "commit": "a165d19",
+    "was_written_as": "0eb1297",
+    "why_it_changed": "this commit was REBASED onto DA's 73a306f before it reached the branch, which rewrote its hash. The pre-run declaration is still a separate commit that PRECEDES the run commit -- that property is what rule 6 needs and it survived the rebase -- but a citation that does not resolve is a defect, so every pointer to it was repaired rather than left.",
+    "verify": "git log --oneline a165d19 -1"
   }
 }
