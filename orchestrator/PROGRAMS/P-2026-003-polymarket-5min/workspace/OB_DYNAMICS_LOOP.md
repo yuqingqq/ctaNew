@@ -1,5 +1,20 @@
 # OB dynamics optimization loop — charter
 
+> **HISTORICAL CHARTER; NOT A LIVE DISPATCH.** R-531 halted P003. The user
+> later resumed offline v2 planning/lightweight implementation at
+> 2026-09-04T15:27:56Z, but did not revive this outcome-driven optimization
+> loop. New work follows
+> `live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`;
+> current evidence and caveats are in `RESULTS.md` §0 and
+> `HANDOFF.md`.
+> Current checkpoint (verified 2026-09-05T09:54:58Z): Gate 1f confirms the fixed
+> external owned-execution export is absent. Public raw/Tier-1 tape cannot bind
+> client order, venue ack, maker fill and exact fee. Its offline contract passes
+> 11 checks, but the decision metric remains null; v2 is stopped at 1/7,
+> Gates 2–6 did not start, and this loop remains closed. All 17 current v2
+> batteries (182 checks) and the 223-check parent suite pass under the
+> one-CPU/1-GiB/no-swap cap; no gate changed.
+
 User directive (2026-08-25): "do more tests (reliable tests) on Orderbook
 dynamics, check the results to improve the current model, double confirm the
 results, proceed with a long loop to keep optimizing."

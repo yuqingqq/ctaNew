@@ -1,4 +1,20 @@
 # COORDINATOR DISPATCH — P-2026-003, STATEFUL harmful-cancel phase
+
+> **HISTORICAL — DO NOT EXECUTE.** This 2026-08-26 phase dispatch was superseded
+> by the coordinator runbook and the R-531 halt. The user later resumed only
+> offline planning/lightweight implementation at 2026-09-04T15:27:56Z under
+> `live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`;
+> that instruction does not
+> revive this dispatch or authorise heavy work. Read `RESULTS.md` §0 and
+> `HANDOFF.md` first.
+> Current checkpoint (verified 2026-09-05T09:54:58Z): Gate 1f confirms the fixed
+> external owned-execution export is absent. Public raw/Tier-1 tape cannot bind
+> client order, venue ack, maker fill and exact fee. Its offline contract passes
+> 11 checks, but the decision metric remains null; v2 is stopped at 1/7,
+> Gates 2–6 did not start, and this dispatch remains historical. All 17 current
+> v2 batteries (182 checks) and the 223-check parent suite pass under the
+> one-CPU/1-GiB/no-swap cap; no gate changed.
+
 **As-of 2026-08-26 ~03:0x UTC (supersedes the 08-25 dispatch; prior text in git
 history). Coordinator: tmux `pmmm-coordinator` (session ctanew-b9). THE
 INTERFACE IS FILES: each plane reads this dispatch + the governing plan, works

@@ -1,13 +1,32 @@
-# FLOW MODEL — CURRENT STATE
+# FLOW MODEL — HISTORICAL FACT STATE
 
-**Read this first, and read nothing else to find out what we currently believe.**
-Updated 2026-08-23 (§1f: the published sample populations are corrected). Supersedes every other flow document *for the question "what
-is true now"*. The others remain valid as provenance — how we got here, and why
-particular things were withdrawn — but they argue with each other by
-construction, because they were written in sequence as claims were corrected.
+> **Currency notice — 2026-09-04T15:27:56Z:** this file remains evidence for
+> the flow facts it establishes, but it is no longer the programme-wide current
+> status or governing plan. Read P003 `workspace/RESULTS.md` §0 and
+> `workspace/HANDOFF.md`, then
+> `plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`. New offline work is
+> control-first; no heavy run is authorised by this notice.
+> Current checkpoint (verified 2026-09-05T09:54:58Z): Gate 1f confirms the fixed
+> external owned-execution export is absent. Public raw/Tier-1 tape cannot bind
+> client order, venue ack, maker fill and exact fee. Its offline contract passes
+> 11 checks, but the decision metric remains null; v2 is stopped at 1/7 and
+> Gates 2–6 did not start. All 17 current v2 batteries (182 checks) and the
+> 223-check parent suite pass under the one-CPU/1-GiB/no-swap cap. This is an
+> input-identification refusal, not P&L.
 
-If a statement anywhere else conflicts with this page, **this page wins** and
-the other document is stale. Say so rather than reconciling it privately.
+**Historical instruction retained:** “Read this first, and read nothing else
+to find out what we currently believe” applied to the 2026-08-23 flow-model
+state and is superseded by the currency notice above.
+
+Updated 2026-08-23 (§1f: the published sample populations are corrected). At
+that date it superseded every earlier flow document for the flow facts below.
+Those older documents remain provenance — how we got here, and why particular
+things were withdrawn — but they argue with each other by construction because
+they were written in sequence as claims were corrected.
+
+For the historical flow facts and scopes below, this page remains the compact
+source. For current programme state, plan order or result reliability, the
+current RESULTS/HANDOFF/v2-plan surfaces named above win.
 
 ---
 

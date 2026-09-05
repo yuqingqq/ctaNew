@@ -472,7 +472,9 @@ def cell_params(cell: dict, *, theta_cancel: float, protection_mode: str,
 
 
 def build_reference(coin: str, *, population: str = POPULATION_NAME,
-                    limit: int | None = None) -> dict:
+                    limit: int | None = None,
+                    retain_unvalued_tranches: bool = False,
+                    selector=None) -> dict:
     """The §3 population's generations, in the shape `replay_policy` takes.
 
     Built from `harmful_exposure_rows`' OWN pieces -- its selection, its
@@ -484,7 +486,16 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
     import harmful_exposure_rows as HER
     qr = HER.qr
     spec = qr._qr_spec(qr.QR_SKEW, latency_ms=0, cancel=False)
-    selected, n_bn_gap = HER.select_v2_era((coin,), population)
+    # Keep the historical/default call explicit: the parent runner's static
+    # reached-function pin must continue to see `select_v2_era`.  The v2 smoke
+    # injection is an opt-in branch, not a dynamic alias that makes the
+    # historical call disappear from its own code-identity surface.
+    if selector is None:
+        selected, n_bn_gap = HER.select_v2_era((coin,), population)
+    else:
+        selected, n_bn_gap = selector((coin,), population)
+    if not isinstance(selected, list) or not selected:
+        raise DiagRefused("reference selector returned no selected entries")
     if limit is not None:
         selected = selected[:limit]
     ref: dict = {}
@@ -561,6 +572,9 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
             if seg["level"] is None:
                 continue
             first.setdefault((seg["side"], seg["gen"]), seg)
+        # V2 producer seam is lazy-imported. The default keeps the historical
+        # filtered tranche shape; the opt-in path retains null identities.
+        import de_action_economic_ledger as AEL
         for (side, gen), g in sorted(gens.items()):
             seg = first.get((side, gen))
             if seg is None:
@@ -576,28 +590,29 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
                 # carrying it is what removes my constant from rho's
                 # denominator. `mid_at` returning None is a STATUS
                 # downstream (NO_MID_AT_FILL), never a synthesised number.
-                "tranches": [{"t": t["t"], "shares": t["shares"],
-                              "markout_cents_per_share":
-                                  t["markout_cents_per_share"],
-                              "mid_at_fill": wf.mid_at(t["t"]),
-                              "level": t.get("level")}
-                             for t in g["tranches"]
-                             if t["markout_cents_per_share"] is not None],
+                "tranches": AEL.emit_reference_tranches(
+                    g["tranches"], mid_at=wf.mid_at,
+                    retain_unvalued=retain_unvalued_tranches),
             })
         # DE33-C9: a tranche with no markout was dropped in silence; it
         # is COUNTED under its own name (rule 4).
         for _side in HSP.SIDES:
             for _g in sides[_side]:
-                statuses["TRANCHE_KEPT"] += len(_g["tranches"])
+                statuses["TRANCHE_KEPT"] += sum(
+                    1 for _t in _g["tranches"]
+                    if _t["markout_cents_per_share"] is not None)
         for _k0, _g0 in gens.items():
             statuses["TRANCHE_NO_MARKOUT"] += sum(
                 1 for t in _g0["tranches"]
                 if t["markout_cents_per_share"] is None)
         if any(sides[s] for s in HSP.SIDES):
             ref[slug] = sides
-    return {"reference": ref, "rows": rows, "statuses": statuses,
-            "terminal_marks": terminal,
-            "n_slugs": len(ref), "population": population}
+    out = {"reference": ref, "rows": rows, "statuses": statuses,
+           "terminal_marks": terminal,
+           "n_slugs": len(ref), "population": population}
+    if retain_unvalued_tranches:
+        out["reference_includes_unvalued_tranches"] = True
+    return out
 
 
 def _direct_imports(src: str) -> set:

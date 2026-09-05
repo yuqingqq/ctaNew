@@ -1,12 +1,22 @@
 # Stateful harmful-flow cancel x skew — TODO plan
 
-**Role:** subordinate implementation worksheet only. Overall project progress
-and ordering are governed by `HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10; do not
-use this file's checkbox count as the total project completion figure.
+**Role:** historical subordinate implementation worksheet. Overall new-work
+progress and ordering are governed by
+`HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`; do not use this file's
+checkbox count as the total project completion figure.
+
+**Current checkpoint — verified 2026-09-05T09:54:58Z:** Gate 1f confirms the fixed
+external owned-execution export is absent. Public raw/Tier-1 tape cannot bind
+client order, venue ack, maker fill and exact fee. Its offline contract passes
+11 checks, but the decision metric remains null; v2 is stopped at 1/7 and
+Gates 2–6 did not start. All 17 current v2 batteries (182 checks) and the
+223-check parent suite pass under the one-CPU/1-GiB/no-swap cap. The historical
+checklist below is not reopened.
 
 **Recorded:** 2026-08-26T02:43:12Z, after the I5 lead control completed  
-**Status:** ACTIVE / PHASE-2 DEVELOPMENT RECEIPT COMPLETE / NOT FROZEN
-**Parent plan:** `HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md`  
+**Status:** SUPERSEDED FOR PROSPECTIVE ORDER / RETAINED AS IMPLEMENTATION
+PROVENANCE / PHASE-2 DEVELOPMENT RECEIPT COMPLETE / NOT FROZEN
+**Parent plan:** `HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`
 **Working comparators:** `QR_SKEW_ONLY`, `QR_CANCEL_HOLD_X_SKEW` and the
 Phase-2 v2.2 linear/state/LightGBM arms on the unchanged neutral shadow
 trajectory

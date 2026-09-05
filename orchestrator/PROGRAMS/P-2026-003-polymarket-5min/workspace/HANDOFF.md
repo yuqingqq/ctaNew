@@ -1,8 +1,179 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-04T14:26Z (MEM round 100) — **THE TRUE-UP TO THE HALT.** All
-corrections to these files, no new findings. **The record of the day is not here:
-it is R-531 and `workspace/RESULTS.md` §0.**
+Updated: 2026-09-05T09:54:58Z — **GATE 1F INPUT AUDIT REFUSED—NO OWNED
+EXECUTION EXPORT; GATE 1 REMAINS REFUSED; V2 STOPPED AT 1/7.** Gate 0 remains
+the only whole cleared gate. The receipt contains no strategy-net or matched
+decision statistic, and no gross value is promoted as a substitute. R-531 remains the latest
+register entry; this later direct user instruction has not yet been entered
+there. The
+economic detail remains in `workspace/RESULTS.md` §0.
+
+## READ FIRST — current state
+
+- **Programme: offline v2 recovery route stopped; broad/heavy work off.** R-531
+  halted the programme at 14:19Z. At 15:27:56Z the user directly authorised a
+  rewritten plan and long-loop build. That loop reached its declared Gate-1e
+  stopping condition. No model fit, broad raw-tape replay, survey, grid, cache
+  rebuild or Gate-2 work is authorised.
+- **Governing prospective plan:**
+  `live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`.
+  The v1 plan, old seven-arm dispatch and optimization loops are historical
+  provenance and must not be resumed as current instructions.
+- **Plan change:** prove canonical action identity and a matched control first;
+  then put the control and rankers through the stateful cancellation cascade
+  and full economics. Fair-price challengers are deferred until the core
+  ranker clears those gates. The prior G5 race cannot validate the changed
+  pipeline.
+- **Gate-0 build and proof:** the canonical action adapter passes 11 synthetic
+  checks; the exact-tranche ledger 14; the matched static control 12; the
+  composed runner nine; and the local selector and smoke driver seven each.
+  The producer has an opt-in v2 mode that retains missing-markout tranche
+  identities without changing its historical/default filtered shape.
+- **Real Gate-0 smoke passed:**
+  `p003_v2_gate0_smoke__20260904T160623Z.json`, sha256
+  `d63ccc59bae1e733a2fa4c840ce2b1c2bdc33494ce989df55f3816f4fd906be7`.
+  One BTC consumed-development window produced 3,557 canonical actions equal
+  to 3,557 reference generations, 458 exact fill identities, 355 deterministic
+  probe actions, 200 count/side/hour-matched null draws and six of six true
+  reconciliation predicates. Runtime was 11.70 s with 347,080 KiB maximum RSS
+  under one CPU/3 GiB. It is a pipeline receipt, not an economic result; the
+  static control is not cascade-feasible, and everything remains
+  uncommitted/unfrozen.
+- **Superseded resource attempt:** the first smoke used the historical global
+  Binance gap index, reached the 3 GiB job cap and was manually stopped with no
+  artifact. The smoke-only local selector now reads three adjacent hour files
+  and performs the same exact interval coverage/max-gap predicate. Host memory
+  remained protected; no economic output was created by the failed attempt.
+- **Overall v2 gate progress: 1 of 7 gates cleared.** Gate 0 cleared pipeline
+  identity/null wiring. Gates 1–6 have not cleared. This count is engineering
+  progress, not strategy performance or validation.
+- **Gate-1 iid acting-control attempt refused:** the adapter passes 18
+  synthetic checks and the fixed smoke wrapper seven, but the capped real
+  receipt `p003_v2_gate1_smoke__20260904T162106Z.json` (sha256
+  `ede26d60fdb425e9d760adca48e24191620c2fb15a5fe70028e124e758b1ebc9`)
+  found only 1 exact realised-count match in 4,000 uniform score-permutation
+  proposals; 200 were required and 3,999 were rejected. It used one CPU for
+  4m44s and peaked at 250.5 MiB. No partial null or economic statistic was
+  published. Gate 1 remains open.
+- **First plan response (completed/refused):** the iid rejection budget was not
+  raised. A symmetric
+  within-side/hour high/low switch chain constrained to the exact realised
+  action-count fiber, with burn-in/thinning/multiple-chain/support diagnostics
+  was declared in code, targeting only the connected component it could reach
+  and refusing on inadequate support or mixing.
+- **Constrained switch retry also refused:**
+  `p003_v2_gate1_switch_smoke__20260904T163438Z.json`, sha256
+  `cdff1a14de7ecff3351dc90da224e2d44bad43d13ef67e66934b859d777a36a9`.
+  The module passes 13 synthetic checks and its wrapper seven in both
+  invocation modes. On real data, 5,000 proposals yielded 2,443 exact-fiber
+  moves; all four chains left treatment and 400 samples held 399 distinct
+  states, with every identity green. But ESS for distance from treatment was
+  only 10.53 versus the declared 100 minimum. First-20 to last-20 mean distance
+  rose from 114–129 to 237–251 in every chain, confirming inadequate burn-in.
+  The receipt is `REFUSED_INADEQUATE_CONSTRAINED_NULL_SUPPORT_OR_MIXING` and
+  emits no aggregate matched-null comparison. Runtime 249.89 s, one CPU;
+  receipt max RSS 333,856 KiB (systemd cgroup peak 250.8 MiB), safely below
+  3 GiB.
+- **User-resumed Gate 1c:** overall progress remains **1 of 7**. At
+  2026-09-05T00:58:42Z, before any new output, the v2 plan fixed a genuinely
+  different sequential random action-quota estimand. Uniform score proposals
+  are replayed statefully; proposals below the treated actual-issued quota in
+  any side/hour are rejected, while later above-cancel crossings after the
+  target-th issued cancel are suppressed with a fixed between-threshold score.
+  Require 200 accepted draws in at most 1,000 proposals. No force-cancel or
+  fill/markout/P&L-guided selection is allowed. This does not reopen either
+  failed sampler and does not authorise Gates 2–6.
+- **Gate-1c support result refused:** the controller passes 14 synthetic checks
+  and its wrapper eight under one CPU/1 GiB. The single fixed real receipt is
+  `p003_v2_gate1_quota_smoke__20260905T010921Z.json`, sha256
+  `e10dec7167a1b61a17c87b3ff0d19cd6c11692a6280035181e9cf5f1985a2ab8f`.
+  Treatment issued 150 BUY_UP and 110 SELL_UP cancels in UTC hour 13. Only 16
+  of 1,000 independent proposals reached both quotas versus 200 required; all
+  984 rejections were `UNDER_QUOTA`, and there were only 16 distinct realised
+  action sets versus the declared 50. All accepted draw identities were true,
+  but the matched null is absent and its aggregate partial metric is null.
+  Runtime was 82.81 s and process max RSS 337,028 KiB under one CPU/3 GiB.
+- **User-resumed Gate 1d:** at 2026-09-05T05:03:29Z the plan fixed a finite
+  cyclic-phase null before output. It enumerates every within-side/hour circular
+  rotation of the complete clustered treated score sequence, retains only
+  actual issued-count matches, deduplicates full assignments and requires at
+  least 200 distinct joint phases. A sufficient support is sampled uniformly
+  without replacement for exactly 200 full replays. No quota suppression,
+  force-cancel, proposal budget or economic-outcome selection is used. This is
+  now built and does not authorise Gate 2.
+- **Gate-1d finite support passed:** receipt
+  `p003_v2_gate1_cyclic_smoke__20260905T051116Z.json`, sha256
+  `8a97102cc11f5f8c94f1545deb0df75a82d6bb44a6970fd5fc4faaf723074650`.
+  All 1,891 BUY and 1,666 SELL offsets were enumerated; 18 and 40 exact phases
+  give 720 joint assignments. All fixed 200 distinct full replays matched the
+  actual 150/110 action quota and passed every identity. Runtime 99.85 s,
+  process max RSS 338,448 KiB. This is acting-support evidence only; economics
+  remain incomplete and no partial value is interpreted.
+- **Gate-1e ledger complete / Gate 1 refused:** receipt
+  `p003_v2_gate1_economics_smoke__20260905T052605Z.json`, sha256
+  `e78fe495846cf22e834b63e04aea445cf1616563cb932a11f304d3a7ba2abd42`.
+  It rebuilt the same 5,869-row / 3,557-action population and reproduced the
+  pinned Gate-1d SHA, 720-phase support, all 200 offsets, score assignments and
+  realised action identities. QR_SKEW_ONLY, treatment and 200 controls passed
+  every gross fill, spread/adverse, five-second/terminal, rho, lifecycle, rate
+  and population identity. All 202 per-fill maker-fee ledgers are explicitly
+  `UNAVAILABLE_NO_PER_FILL_MAKER_FEE`; therefore all 202 strategy nets, the
+  treatment decision value and matched decision null are null. Public
+  taker/trade fees were not substituted, and owned-order ack/fill causality is
+  explicitly unobservable. Runtime 22.98 s, process max RSS 338,556 KiB, one
+  CPU/3 GiB with swap off. This is an input-identification refusal, not a
+  negative P&L finding.
+- **Gate-1f acquisition audit also refused:** the offline validator passes
+  11 synthetic checks under one CPU/512 MiB, including explicit schedule-bound
+  zero-fee acceptance and public/orphan/pre-ack/missing-fee/hash/freeze-day/
+  taker refusals. Corrected receipt
+  `p003_v2_gate1f_owned_source_audit__20260905T054941Z.json`, sha256
+  `c99109943de37d37d2fc8358628640214d489752e96bb8ca4f86e144bf197f47`,
+  supersedes `...T054848Z.json` (`bf3d01fa...b292022`), whose path-only census
+  missed Tier-1's intermediate distiller directory; every gate field and the
+  refusal were unchanged. The fixed owned-export manifest is absent. Public
+  raw date directories reach September 5 and Tier-1 public trades September 2,
+  but neither binds a simulated fill to an owned submitted/acknowledged order
+  and exact maker fee. Decision metric remains null; Gate 2 remains off.
+- **Final verification (2026-09-05T09:54:58Z):** all 17 current v2
+  module/wrapper batteries pass (182 checks total), and the parent diagnostic
+  suite passes 223/223, under one CPU/1 GiB with swap off. This adds the Gate-1f
+  input-contract battery and changes no gate or economic conclusion.
+  The Gate-1e run itself verified zero named source-code drift from Gate 1d;
+  only the v2 plan differed because it was extended after Gate 1d with the
+  prospective Gate-1e declaration. The Gate-1d and Gate-1e receipts retain
+  their immutable hashes and everything remains uncommitted/unfrozen.
+- **Latest economic evidence:** one BTC development hour, 2026-08-24
+  13:50–14:50Z, 12 windows and 4,315 fills. It is a point estimate with no
+  day-cluster interval and is not validation or a net-profitability result.
+- **Survey status:** no broad `V_oracle` survey result exists. `survey.py`
+  failed with `AttributeError`, rc 1, after assuming `ref[slug]` was a dict
+  rather than a list. The corrected candidate population was ~40 cells, not
+  138 or 600, and spans **G = 0 complete UTC days**.
+- **Reliability status:** the 701% `V_oracle`-to-net ratio is pending a random
+  or naive-policy null, and `V_oracle` is not yet shown to track attainable
+  value under the cancellation cascade. It must not carry a decision by itself.
+- **Forward race:** the accepted `G = 5` bar establishes direction and
+  consistency only. With multiplicity 2 its best possible adjusted p is
+  0.0625, so it cannot produce a Holm-clearing verdict.
+- **Next action / blocker:** preserve the terminal receipts and do not start
+  Gate 2. The remaining four-arm runner, integrated candidate, freeze and
+  forward scorer are deliberately unbuilt because Gate 1 did not clear.
+  Resumption requires a reliable owned-order per-fill maker-fee and ack/fill
+  data source supplied as the Gate-1f offline manifest/order/fill contract, a
+  prospective plan amendment, and at least five post-freeze complete UTC days.
+  Public taker fees, another maker's tier or assumed-zero maker fees are not
+  acceptable. Do not add credentials or order/cancel code to this repo.
+- **Document currency:** `COORDINATION.md` is the append-only authority;
+  its latest entry is still R-531. `RESULTS.md`, this handoff,
+  `STATUS.yml`, `PROGRAM.md`, the v2 plan and coordinator
+  runbook carry the later user-directed offline scope. Dated reviews, frozen
+  declarations, the v1 plan, old coordinator dispatch and status archive remain
+  historical records and are not rewritten into present tense.
+
+Previously (MEM round 100) — 2026-09-04T14:26Z — **THE TRUE-UP TO THE HALT.**
+All corrections to these files, no new findings. **The record of the day is not
+here: it is R-531 and `workspace/RESULTS.md` §0.**
 
 ### 1. Provenance pointers fixed — moved by IDENTITY, not on the "26 of 26"
 
@@ -203,10 +374,15 @@ actually enumerated.** An as-of, a root and filters are **necessary and not
 sufficient** — **a method can be sound while the sentence is still false, because
 the defect was the surface, not the search.**
 
-### 4. Priorities, recorded as state
+### 4. Priorities, recorded as state — SUPERSEDED BY R-531
 
-**BE's 138-cell `V_oracle` survey is the decision-bearing measurement** and
-everything else supports it. **DE holds the reusable `value_ceiling` /
+**Superseding correction:** the survey below never ran, produced no result, and
+could not be decision-bearing because its corrected span contains G = 0 complete
+UTC days. The paragraph is retained only as the round-98 historical state.
+
+At round 98, **BE's 138-cell `V_oracle` survey was called the decision-bearing
+measurement** and everything else supported it. **That current-state claim is
+withdrawn by R-531.** **DE holds the reusable `value_ceiling` /
 `ceiling_capture` functions so this can never again be the thing nobody ran.** DA
 verifies what lands. The reviewer enumerates the **other levers** where a bound is
 cheap and absent. **The economics remain in `workspace/RESULTS.md` §0 and these
@@ -324,10 +500,11 @@ decomposition says they differ by an order of magnitude in the term that matters
 
 **And it is testable without spending a day:** `r` is a property of the
 **baseline**, recomputable **from the reference alone with no replay**, and
-**~600 coin-hours** sit between the hf_ws_v2 boundary (2026-08-24T13:48:54Z) and
-the freeze epoch, **already consumed and touching no sealed day**. BE is running
-it. **A distribution of r that never approaches the threshold closes the overlay
-programme on evidence rather than on one hour.**
+**~600 coin-hours** were initially thought to sit between the hf_ws_v2 boundary
+(2026-08-24T13:48:54Z) and the freeze epoch, **already consumed and touching no
+sealed day**. **Superseded by R-531:** the population corrected 600 → 138 →
+~40 cells, the survey failed before output, and no distribution exists. The
+original close condition is retained here only as historical design intent.
 
 ### The provenance defect — it qualifies every figure I have marked CHECKED against this artifact
 
@@ -1130,7 +1307,9 @@ HEAD~1 differs in those files. **USER items: FIVE.**
 > **Neither figure alone is the specification — the overlay pays iff it declines
 > the body without declining the tail**, and how many of the **top 43 fills** each
 > arm declined is **unmeasured**. **The lever is a cancel that does not cascade.**
-> BE is surveying `r` over ~600 coin-hours touching no sealed day. **Caveat on
+> HISTORICAL, SUPERSEDED BY R-531: BE was described as surveying `r` over ~600
+> coin-hours touching no sealed day; the population later corrected to ~40 and
+> the survey failed before output. **Caveat on
 > every figure from that artifact: it names a `carrying_commit` that is NOT an
 > ancestor of the branch** — the numbers reproduce independently, but it is **not
 > provenance-clean.** New **standing rule 14**: a claim about a moving reference

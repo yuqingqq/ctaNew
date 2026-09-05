@@ -1,9 +1,158 @@
 program: P-2026-003-polymarket-5min
 name: Polymarket Crypto 5-min Markets
-phase: in-progress
-status: active
-branch: mm-research            # all work lives here, not main; pushed to origin
+phase: stopped
+status: halted                 # Gate 1 refused at the prospectively fixed economic-completeness stop
+branch: mm-research            # current v2 edits are local, uncommitted/unpushed
 updated: >-
+  2026-09-05T09:54:58Z (DOCUMENT/REGRESSION RECONCILIATION AFTER THE
+  2026-09-05T05:50:05Z USER-CONTINUED GATE-1 BLOCKER AUDIT;
+  GATE-1F INPUT ADMISSION REFUSED_NO_OWNED_EXECUTION_SOURCE; V2 REMAINS
+  TERMINALLY STOPPED AT 1/7. CORRECTED RECEIPT
+  p003_v2_gate1f_owned_source_audit__20260905T054941Z.json SHA256
+  c99109943de37d37d2fc8358628640214d489752e96bb8ca4f86e144bf197f47
+  SUPERSEDES ...T054848Z.json SHA256
+  bf3d01fa61ee799860ec8bbc764645b0e034162f1611a54879b146d99b292022;
+  THE FIRST RECEIPT'S TIER1 RANGE WAS NULL BECAUSE ITS PATH CENSUS MISSED THE
+  DISTILLER DIRECTORY, WHILE ALL GATE FIELDS/CONCLUSIONS WERE UNCHANGED. THE
+  FIXED OWNED-EXECUTION MANIFEST IS ABSENT. PUBLIC RAW DATE DIRECTORIES REACH
+  2026-09-05 AND TIER1 PUBLIC TRADES REACH 2026-09-02, BUT THE PUBLIC COLLECTOR
+  AND TIER1 SCHEMA HAVE NO OWNED CLIENT-ORDER->VENUE-ACK->MAKER-FILL->EXACT-FEE
+  JOIN. MORE PUBLIC TAPE CANNOT SUPPLY IT. THE OFFLINE CONTRACT MODULE PASSES
+  11 CHECKS UNDER ONE CPU/512 MiB; IT ACCEPTS EXPLICIT SCHEDULE-BOUND ZERO FEES
+  BUT REFUSES MISSING FEES, PUBLIC/TAKER FILLS, ORPHANS, PRE-ACK FILLS, HASH
+  DRIFT AND SEEN/FREEZE-DAY REUSE. AUDIT 0.006 S / 19,760 KiB RSS. DECISION
+  METRIC NULL; GATE 1 STILL REFUSED; GATE 2 OFF. REQUIRED NEXT INPUT IS AN
+  AUTHENTICATED OFFLINE OWNED-EXECUTION EXPORT PRODUCED OUTSIDE THIS RESEARCH
+  REPO OVER >=5 POST-FREEZE COMPLETE UTC DAYS. DO NOT ADD CREDENTIALS, SIGNING
+  OR LIVE ORDER/CANCEL CODE HERE. LATEST BOUNDED REGRESSION: ALL 17 CURRENT V2
+  MODULE/WRAPPER BATTERIES PASS (182 CHECKS TOTAL) AND THE PARENT SUITE PASSES
+  223/223, SEQUENTIALLY UNDER ONE CPU/1 GiB, SWAP OFF; NO GATE CHANGED.)
+  PRIOR CHECKPOINT:
+  2026-09-05T05:28:23Z (GATE 1E LIFECYCLE LEDGER AUDIT COMPLETE; GATE 1
+  REFUSED; V2 ROUTE TERMINALLY STOPPED AT 1/7. RECEIPT
+  p003_v2_gate1_economics_smoke__20260905T052605Z.json SHA256
+  e78fe495846cf22e834b63e04aea445cf1616563cb932a11f304d3a7ba2abd42.
+  THE PINNED GATE-1D SHA, 720-PHASE SUPPORT, EXACT 200 OFFSETS AND ALL 200
+  SCORE/ACTION IDENTITIES REPRODUCED ON 5,869 SOURCE ROWS / 3,557 ACTIONS.
+  QR_SKEW_ONLY, TREATMENT AND 200 CONTROLS PASSED EVERY GROSS FILL,
+  SPREAD/ADVERSE, FIVE-SECOND/TERMINAL, RHO, CANCEL-LIFECYCLE, RATE AND
+  POPULATION IDENTITY. ALL 202 PER-FILL MAKER-FEE LEDGERS ARE
+  UNAVAILABLE_NO_PER_FILL_MAKER_FEE, SO ALL 202 STRATEGY NETS, THE TREATMENT
+  DECISION VALUE AND MATCHED DECISION NULL ARE NULL. PUBLIC TAKER/TRADE FEES
+  WERE NOT SUBSTITUTED; OWNED ACK/FILL CAUSALITY REMAINS UNOBSERVABLE. THIS IS
+  AN IDENTIFICATION/INPUT REFUSAL, NOT A NEGATIVE P&L RESULT. 22.98 S,
+  338,556 KiB PROCESS MAX RSS UNDER ONE CPU/3 GiB, SWAP OFF. NO NAMED GATE-1D
+  SOURCE CODE DRIFTED; ONLY THE EXPECTED POST-RECEIPT PLAN DOCUMENT CHANGED.
+  GATE 2 AND GATES 3-6 DID NOT START. RESUMPTION REQUIRES A NEW RELIABLE
+  OWNED-ORDER MAKER-FEE/ACK/FILL SOURCE, PROSPECTIVE AMENDMENT AND FRESH DATA;
+  NO LIVE TRADING IS AUTHORISED. AT THIS PRIOR CHECKPOINT, ALL 16 THEN-EXISTING
+  V2 MODULE/WRAPPER BATTERIES AND THE 223-CHECK PARENT SUITE PASSED UNDER ONE
+  CPU/1 GiB, SWAP OFF.)
+  PRIOR CHECKPOINT:
+  2026-09-05T05:14:39Z (GATE 1D FINITE ACTING SUPPORT CLEARED; GATE 1E
+  LIFECYCLE-ECONOMIC COMPLETENESS AUDIT DECLARED BEFORE OUTPUT. RECEIPT
+  p003_v2_gate1_cyclic_smoke__20260905T051116Z.json SHA256
+  8a97102cc11f5f8c94f1545deb0df75a82d6bb44a6970fd5fc4faaf723074650.
+  COMPLETE ENUMERATION: BUY 1,891 OFFSETS / 18 EXACT; SELL 1,666 / 40 EXACT;
+  720 DISTINCT JOINT PHASES, THEN 200 UNIFORM WITHOUT-REPLACEMENT DISTINCT
+  FULL REPLAYS. ALL SOURCE/SCORE/SEPARABILITY/ACTUAL-COUNT/STATEFUL IDENTITIES
+  TRUE. 99.85 S, 338,448 KiB PROCESS MAX RSS UNDER ONE CPU/3 GiB, SWAP OFF.
+  THIS CLEARS ONLY THE ACTING-CONTROL SEAM: ECONOMICS REMAIN
+  INCOMPLETE_NOT_STRATEGY_NET AND NO PARTIAL VALUE IS INTERPRETED. GATE 1E NOW
+  PINS THE RECEIPT/PHASES, REPLAYS BASELINE/TREATMENT/200 CONTROLS, RECONCILES
+  FILL P&L, SPREAD, ADVERSE, RHO, TERMINAL INVENTORY AND LIFECYCLE COUNTERS,
+  BUT MUST REFUSE WITH NULL DECISION METRIC IF A PER-FILL MAKER-FEE LEDGER OR
+  ANY REQUIRED TERM IS UNAVAILABLE. ONE CPU/1 GiB SYNTHETIC; ONE CPU/3 GiB,
+  SWAP OFF, FIVE-MINUTE REAL AUDIT. GATE 2 REMAINS OFF.)
+  PRIOR DECLARATION:
+  2026-09-05T05:03:29Z (USER RESUMED ONLY A DIFFERENT GATE-1D CONTROL
+  ESTIMAND. BEFORE ANY OUTPUT, THE PLAN FIXED COMPLETE CYCLIC-PHASE
+  ENUMERATION WITHIN SIDE/HOUR: PRESERVE THE FULL CLUSTERED SCORE SEQUENCE AND
+  MULTISET, ROTATE ITS PHASE AGAINST THE SAME CANONICAL OPPORTUNITIES, RETAIN
+  ONLY ACTUAL CANCEL_ISSUED COUNT MATCHES, DEDUPLICATE FULL ASSIGNMENTS, AND
+  REQUIRE AT LEAST 200 DISTINCT JOINT PHASES. IF SUFFICIENT, SAMPLE EXACTLY 200
+  UNIFORMLY WITHOUT REPLACEMENT WITH SEED 20260905 AND FULL-REPLAY EVERY DRAW.
+  NO QUOTA SUPPRESSION, FORCE-CANCEL, PROPOSAL LIMIT, FILL/MARKOUT/P&L
+  SELECTION OR CHANGE TO THE THREE CONSUMED FAILURES. SYNTHETICS: ONE CPU/1
+  GiB. ONE FIXED INTERVAL-LOCAL REAL SMOKE: ONE CPU/3 GiB, SWAP OFF, TEN-MINUTE
+  CEILING. DECLARED, NOT YET RUN; GATE 2 AND HEAVY/BROAD WORK REMAIN OFF.)
+  PRIOR RESULT:
+  2026-09-05T01:10:57Z (USER-RESUMED GATE 1C REACHED ITS FIXED SUPPORT STOP.
+  THE SEQUENTIAL RANDOM ACTION-QUOTA CONTROLLER PASSES 14 SYNTHETIC CHECKS AND
+  ITS WRAPPER EIGHT UNDER ONE CPU/1 GiB. THE ONE AUTHORISED REAL SMOKE REFUSED:
+  TREATED ACTUAL CANCEL_ISSUED QUOTA BUY_UP 150 / SELL_UP 110 IN UTC HOUR 13;
+  ONLY 16 OF 1,000 INDEPENDENT PROPOSALS REACHED BOTH QUOTAS VERSUS 200
+  REQUIRED, ALL 984 REJECTIONS WERE UNDER_QUOTA, AND ONLY 16 DISTINCT REALISED
+  ACTION SETS EXISTED VERSUS 50 REQUIRED. ALL ACCEPTED STATE/SOURCE/QUOTA
+  IDENTITIES WERE TRUE, BUT MATCHED_NULL IS ABSENT AND ITS AGGREGATE METRIC IS
+  NULL. RECEIPT p003_v2_gate1_quota_smoke__20260905T010921Z.json SHA256
+  e10dec7167a1b61a17c87b3ff0d19cd6c11692a6280035181e9cf5f1985a2ab8f;
+  82.81 S, 337,028 KiB PROCESS MAX RSS UNDER ONE CPU/3 GiB. DO NOT WIDEN OR
+  MODIFY THIS CONTROL ON THE CONSUMED WINDOW. OVERALL PROGRESS REMAINS 1/7;
+  GATE 1 AND GATES 2-6 DO NOT CLEAR/START. NO NEW ECONOMIC RESULT.)
+  RECEIPT/CURRENT IDENTITY: 11 OF 12 NAMED FILES ARE BYTE-IDENTICAL; ONLY THE
+  V2 PLAN DIFFERS BECAUSE ITS HASHED PROSPECTIVE DECLARATION WAS EXTENDED
+  POST-RUN WITH THE RESULT/STATUS. NO NAMED SOURCE FILE CHANGED.
+  DECLARATION CHECKPOINT: 2026-09-05T00:58:42Z (USER RESUMED ONLY A DIFFERENT
+  GATE-1C CONTROL ESTIMAND; ITS 200-OF-1,000 AND 50-DISTINCT BARS WERE FIXED
+  BEFORE OUTPUT.)
+  PRIOR CHECKPOINT: 2026-09-04T16:44:23Z (LONG LOOP REACHED ITS GATED STOP;
+  V2 GATE 0 CLEARED;
+  BOTH DECLARED GATE-1 NULLS REFUSED; NO NEW ECONOMIC RESULT.)
+  R-531 REMAINS THE LATEST REGISTER
+  ENTRY, BUT THE USER LATER AUTHORISED A REWRITTEN PROSPECTIVE PLAN AND BUILD.
+  CURRENT SCOPE IS DOCUMENTATION, SOURCE, SYNTHETIC SELFTESTS AND REQUIRED
+  ONE-WINDOW CAPPED SMOKES ONLY; NO MODEL FIT, BROAD RAW-TAPE REPLAY, SURVEY,
+  GRID OR CACHE REBUILD. THE V2 PLAN IS CONTROL-FIRST:
+  CANONICAL ONE-ACTION-PER-GENERATION IDENTITY, A >=200-DRAW RANDOM NULL MATCHED
+  ON ACTION COUNT/SIDE/UTC HOUR, THEN ACTING STATEFUL CASCADE ECONOMICS; FAIR
+  PRICE IS DEFERRED. de_action_economic_ledger.py AND
+  de_action_bundle_control.py ARE BUILT; THEIR SYNTHETIC BATTERIES PASS 14 AND
+  12 CHECKS RESPECTIVELY. THE CANONICAL ACTION ADAPTER PASSES 11 AND THE
+  COMPOSED GATE-0 RUNNER NINE. THE OPT-IN V2 REFERENCE PRODUCER RETAINS
+  MISSING-MARKOUT TRANCHE IDENTITIES WITHOUT CHANGING ITS HISTORICAL DEFAULT.
+  THE CAPPED REAL GATE-0 SMOKE RECONCILED 3,557 ACTIONS, 458 EXACT FILLS AND
+  200 MATCHED NULL DRAWS WITH ALL SIX COMPUTED PREDICATES TRUE; IT USED 347,080
+  KiB MAXIMUM RSS IN 11.70 S UNDER ONE CPU/3 GiB. THIS IS A PIPELINE RECEIPT,
+  NOT AN ECONOMIC RESULT, AND IS NOT FROZEN WHILE UNCOMMITTED. A FIRST ATTEMPT
+  HIT ITS 3 GiB JOB CAP IN THE HISTORICAL GLOBAL GAP INDEX AND WAS STOPPED WITH
+  NO ARTIFACT; THE SUCCESSFUL RETRY USES AN EXACT THREE-FILE LOCAL SELECTOR.
+  THE LATEST
+  ECONOMIC EVIDENCE AND ALL R-531 CAVEATS ARE UNCHANGED: ONE BTC DEVELOPMENT
+  HOUR, NO BROAD SURVEY RESULT, G=0 FOR THAT PROPOSED SURVEY, AND V_oracle
+  PENDING A NULL/ATTAINABILITY PROOF. OVERALL V2 PROGRESS IS 1 OF 7 GATES.
+  THE IID ACTING ADAPTER PASSES 18 SYNTHETIC CHECKS AND ITS WRAPPER SEVEN, BUT
+  THE CAPPED REAL GATE-1 SMOKE REFUSED: 1 OF 4,000 PERMUTATIONS MATCHED THE
+  TREATED REALISED SIDE/HOUR COUNTS, VERSUS 200 REQUIRED; 3,999 WERE REJECTED,
+  4M44S ON ONE CPU, 250.5 MiB PEAK. NO NULL OR ECONOMIC STATISTIC WAS
+  PUBLISHED. THE EXACT-FIBER SWITCH REPLACEMENT PASSES 13 SYNTHETIC CHECKS AND
+  ITS WRAPPER SEVEN, BUT ITS CAPPED REAL RETRY ALSO REFUSED: 2,443 OF 5,000
+  PROPOSALS MOVED ON THE FIBER, ALL FOUR CHAINS LEFT TREATMENT, AND 400 SAMPLES
+  HELD 399 DISTINCT STATES WITH EVERY IDENTITY TRUE, BUT ESS WAS 10.53 VERSUS
+  THE DECLARED 100 MINIMUM. THE AGGREGATE NULL IS ABSENT; ECONOMICS REMAIN
+  EXPLICITLY INCOMPLETE. DO NOT INCREASE IID ATTEMPTS, BURN-IN OR THINNING OR
+  CHANGE THE KERNEL ON THIS CONSUMED WINDOW. OVERALL PROGRESS REMAINS 1 OF 7.
+  GATES 2-6 DO NOT START; A DIFFERENT CONTROL ESTIMAND REQUIRES USER RULING.
+  FINAL VERIFICATION: ALL TEN V2 MODULE BATTERIES PASS UNDER ONE CPU/1 GiB AND
+  THE PARENT DIAGNOSTIC SUITE PASSES 223/223. A POST-RECEIPT PARENT PIN FIX
+  LEAVES EXACTLY ONE CURRENT-TREE IDENTITY FILE DIFFERENT FROM EACH SUCCESSFUL
+  SMOKE RECEIPT; THE RECEIPTS RETAIN THEIR OWN HASHES AND WERE NOT RERUN.
+  GOVERNING PROSPECTIVE
+  PLAN:
+  live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md.
+previous_updates: >-
+  2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
+  RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
+  WORK IS AUTHORISED BY THIS FILE. The collectors continued running at the
+  14:19Z halt and all work was preserved. THE ONLY ABSOLUTE ECONOMIC EVIDENCE IS
+  ONE BTC DEVELOPMENT HOUR -- 12 windows, 4,315 fills, point estimate, no
+  day-cluster interval, not validation and not net profitability. THE BROAD
+  V_oracle SURVEY NEVER RAN: survey.py treated ref[slug] as a dict when it is a
+  list, raised AttributeError and exited rc 1. THERE IS NO ~40-CELL OR 138-CELL
+  RESULT, and the corrected span contains G=0 complete UTC days. The measured
+  701% V_oracle-to-net ratio is PENDING A RANDOM/NAIVE-POLICY NULL and a proof
+  that the statistic tracks attainable value under the cascade. Current
+  authorities: R-531 and workspace/RESULTS.md section 0. PREVIOUS LIVE SWEEP:
   2026-09-04T14:26Z (MEM ROUND 100 -- THE TRUE-UP TO THE HALT. Five things, all
   of them corrections to these files rather than new findings, and the record of
   the day is NOT here: it is R-531 and workspace/RESULTS.md section 0.)
@@ -162,15 +311,21 @@ updated: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
-  governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-SECTION-10
-                             # USER correction, documented 2026-09-01T03:49:46Z.
-                             # plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md is
-                             # the overall project order. The stateful cancel x
-                             # skew TODO is a subordinate implementation sheet;
-                             # 39/113 is not total project completion.
-  v41_collector_live: STALE-AS-OF-2026-09-01-NOT-REVERIFIED-THIS-ROUND
-                             # MARKED STALE 2026-09-04T14:26Z (MEM round 100),
-                             # NOT UPDATED. The value below is as-of
+  governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
+                             # USER-DIRECTED prospective supersession at
+                             # 2026-09-04T15:27:56Z. The v1 §10 order and the
+                             # stateful cancel x skew TODO remain historical
+                             # provenance; neither checkbox count is current
+                             # programme completion.
+  v41_collector_live: ACTIVE-RUNNING-AS-OF-2026-09-04T14:19Z-R531
+                             # RELAYED FROM R-531, not independently rechecked
+                             # in this documentation-only sweep. At the halt,
+                             # collect_pm had run 3d16h; collect_hf and
+                             # collect_hl 9d08h; collect_pm_prices 9d09h.
+                             # EARLIER STALE MARKER (rule 13):
+                             # STALE-AS-OF-2026-09-01-NOT-REVERIFIED-THIS-ROUND
+                             # Marked stale 2026-09-04T14:26Z (MEM round 100).
+                             # The value below is as-of
                              # 2026-09-01T09:29:39Z -- THREE DAYS OLD -- and its
                              # note describes 08-31/09-01 as the live question,
                              # which four race days have since passed.
@@ -6981,6 +7136,74 @@ flags:
     by its single writer.
 
 focus: >
+  As-of 2026-09-05T09:54:58Z, GATE 1F'S ACQUISITION AUDIT CONFIRMS THAT THE
+  DECLARED OFFLINE OWNED-EXECUTION EXPORT IS ABSENT. GATE 1E'S LIFECYCLE LEDGER
+  IS COMPLETE AND GATE 1 REFUSES BECAUSE OWNED-ORDER PER-FILL MAKER FEES AND
+  ACK/FILL CAUSALITY ARE UNAVAILABLE.
+  Baseline, treatment and 200 controls passed all gross identities, but all
+  202 strategy nets and the matched decision statistic are null. The v2 route
+  is stopped at 1 of 7; Gates 2-6 did not start and broad/heavy runs remain
+  off. This is an input-identification refusal, not negative P&L. R-531 is
+  still the latest register entry, so the later direct instruction/result
+  awaits coordinator reconciliation. Resumption requires a reliable
+  owned-order maker-fee/ack/fill source, prospective amendment and fresh data.
+  All 17 current v2 batteries (182 checks) and the 223-check parent suite pass
+  under the one-CPU/1-GiB/no-swap cap; this verification changes no gate.
+  PRIOR 05:14 GATE-1D/GATE-1E CHECKPOINT NARRATIVE RETAINED BELOW. Current work is the v2
+  Gate-0/1 chain: canonical exact-tranche actions, a >=200-draw null matched on
+  action count/side/UTC hour, then acting stateful cascade economics. The two
+  Gate-0 instruments are uncommitted and unfrozen. The
+  opt-in source-retention seam, canonical adapter and composed Gate-0 runner
+  are built, and a real one-window pipeline smoke has cleared Gate 0: 3,557
+  actions, 458 exact fill identities, 200 matched draws and all six computed
+  predicates true. It used 347,080 KiB RSS in 11.70 s under one CPU/3 GiB.
+  The first attempt hit that job cap in a global gap-index build and was
+  stopped without an artifact; the successful retry used an exact local
+  three-file selector. This is pipeline evidence only, not an economic result.
+  Overall v2 progress is 1 of 7 gates. The Gate-1 iid acting-control adapter
+  passes 18 synthetic checks and its wrapper seven, but the real capped smoke
+  refused after only 1 of 4,000 proposals matched the treated realised
+  side/hour counts (200 required; 3,999 rejected; 4m44s one CPU; 250.5 MiB
+  peak). It published no partial null or economic statistic. Increasing the
+  rejection budget is prohibited. The symmetric constrained switch replacement
+  passes 13 synthetic checks, but its real retry also refused: 2,443/5,000
+  exact-fiber moves, four of four chains left treatment, 399 distinct states
+  in 400 samples and every identity true, but ESS 10.53 < 100. No aggregate
+  null comparison was emitted. The user then authorised a prospectively
+  declared sequential action-quota control. Its 14 module and eight wrapper
+  synthetic checks pass, but the fixed real smoke also refused: the treated
+  quota was BUY_UP 150 / SELL_UP 110 in UTC hour 13; only 16/1,000 proposals
+  reached both counts versus 200 required, all 984 rejections were UNDER_QUOTA,
+  and only 16 distinct action sets existed versus 50 required. Every accepted
+  mechanics/source/quota identity held, but the aggregate matched null is
+  absent. Receipt sha256 e10dec7167a1b61a17c87b3ff0d19cd6c11692a6280035181e9cf5f1985a2ab8f.
+  The run used 337,028 KiB process max RSS in 82.81 s under one CPU/3 GiB.
+  Gates 2-6 do not start, and adapting attempts, the quota rule, burn-in,
+  thinning or either kernel on this consumed window is prohibited. Fair price is
+  deferred. The current result surface
+  remains workspace/RESULTS.md:
+  one BTC development hour, 12 windows and 4,315 fills, with no day-cluster
+  interval and no reliable net-profitability estimate. The broad V_oracle
+  survey FAILED BEFORE OUTPUT (AttributeError, rc 1); no ~40-cell or 138-cell
+  result exists, and its corrected span contains G=0 complete UTC days. The 701%
+  ceiling ratio remains PENDING A NULL and a stateful attainable-value check.
+  Prior closure verification was ten of ten v2 module batteries and 223/223
+  parent diagnostic checks under one CPU/1 GiB; the two new batteries add
+  14/14 and 8/8 passing checks. A post-receipt parent pin fix creates
+  one disclosed current-tree identity-file difference versus the successful
+  smoke receipts; their source hashes remain recorded and no rerun was made.
+  Gate 1d enumerated all BUY 1,891 and SELL 1,666 offsets, found 18 and 40
+  exact phases (720 joint), and full-replayed 200 distinct uniform phases with
+  every identity true. Receipt sha256 8a97102cc11f5f8c94f1545deb0df75a82d6bb44a6970fd5fc4faaf723074650;
+  99.85 s and 338,448 KiB process RSS under the cap. At that checkpoint the
+  declared next step was to build/run Gate 1e
+  against the pinned receipt and exact recorded phases, reconciling received
+  fills, spread/adverse, rho, terminal inventory and lifecycle counters. If a
+  per-fill maker fee or any required monetary term is unavailable, emit its
+  counted status and refuse with a null decision metric. Gate 2 remains
+  unauthorised until all of Gate 1 clears. That step is now complete and
+  refused as recorded at the start of this field.
+  HISTORICAL PRE-HALT FOCUS RETAINED BELOW:
   As-of 2026-09-04T14:26Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
@@ -7450,9 +7673,9 @@ focus: >
   SPECIFICATION -- THE OVERLAY PAYS IFF IT DECLINES THE BODY WITHOUT DECLINING THE
   TAIL, and how many of the top 43 fills each arm declined is UNMEASURED and
   dispatched to DE. THE LEVER IS A CANCEL THAT DOES NOT CASCADE, not a better
-  ranker. BE is surveying r over ~600 coin-hours that touch no sealed day; a
-  distribution never approaching the threshold CLOSES the overlay programme on
-  evidence. CAVEAT ON EVERY FIGURE FROM THAT ARTIFACT: it names a carrying_commit
+  ranker. HISTORICAL, SUPERSEDED BY R-531: BE was described as surveying r over
+  ~600 coin-hours, the population later corrected to ~40, and the survey failed
+  before output. CAVEAT ON EVERY FIGURE FROM THAT ARTIFACT: it names a carrying_commit
   that is NOT an ancestor of the branch, with working_tree_clean FALSE -- the
   numbers reproduce independently but it is NOT provenance-clean, and DE is
   re-emitting.
@@ -7465,7 +7688,8 @@ focus: >
   markout_cents_per_share has made V_oracle a filter and a sum SINCE 2026-08-25.
   V_oracle REPLACES r (refuted as a survey statistic) and THE SURVEY IS THE LIVE
   DECISION PATH: V_oracle ~ 0 CLOSES THE OVERLAY LINE BECAUSE NO POLICY COULD HAVE
-  PAID. Superseded in band this round, text kept: the r-threshold flag, the
+  PAID. SUPERSEDED BY R-531: the survey never ran, produced no result and could
+  not carry a day-cluster decision. Superseded in band this round, text kept: the
   43-fill-tail flag (the bound FLIPS to r_ex <= 26.76%, below break-even), the
   cascade-lever flag (cheap fills first, few fills second), and the
   provenance-defect flag (RESOLVED, 26 of 26 quantities bit-identical). The
@@ -7479,8 +7703,10 @@ focus: >
   NEGATIVE FRACTION. THE LEVER IS NOT EXHAUSTED -- the rankers do not work
   relative to what is available. (iii) "No value ceiling in EITHER programme" IS
   FALSE AS STATED; the citable form is NO CEILING IN live/mm_research/, NONE IN
-  THE REGISTERS, AND NONE ANYWHERE FOR THE CANCELLATION-OVERLAY LEVER. BE's
-  138-cell V_oracle survey is the decision-bearing measurement.
+  THE REGISTERS, AND NONE ANYWHERE FOR THE CANCELLATION-OVERLAY LEVER. At round
+  98, BE's 138-cell V_oracle survey was called the decision-bearing measurement.
+  SUPERSEDED BY R-531: the population corrected again to ~40 cells, the script
+  crashed before output, and the span has G=0 complete UTC days.
   ROUND 99 -- MEM COMMITS THROUGH live/pm_research/mem_commit_guard.py FROM NOW
   ON. Round 98's commit landed conflict markers in the register (lines 708/710/712,
   repaired at HEAD with both rows kept); a scan of all 21 MEM commits today shows
@@ -8208,9 +8434,13 @@ tasks:
       identity and population checks.
   - id: hazard-fair-price
     phase: 1
-    name: Hazard plan §10.4 — timestamped fair-price lane
-    status: ACTIVE-BE-is-building-the-two-challengers-on-the-USER-s-instruction
+    name: V2 Gate 4 — optional timestamped fair-price increment
+    status: DEFERRED-BY-V2-UNTIL-CORE-RANKER-CLEARS-CASCADE-ECONOMICS
     notes: |
+      V2 UPDATE 2026-09-04T15:27:56Z: Identity and build-only challenger
+      machinery are retained, but scoring is deferred to Gate 4. Fair price
+      cannot rescue a core ranker that has not beaten acting matched random and
+      the incumbent on full stateful economics.
       Typed point-in-time Identity and build-only machinery exist. No
       challenger is frozen or scored; Identity remains the supported baseline.
       DIRECTION CHANGE 2026-09-04 (USER instruction, swept by MEM round 79): BE
@@ -8247,12 +8477,57 @@ tasks:
       semantics, it does not evidence the parity.
   - id: hazard-integrated-replay
     phase: 2
-    name: Hazard plan §10.6-8 — action-value integration and stateful replay
-    status: ACTIVE-DE-is-building-the-seven-arm-ablation-on-the-USER-s-instruction
+    name: V2 Gates 0-3 — control-first action value and stateful replay
+    status: V2-STOPPED-1-OF-7-GATE1F-REFUSED-NO-OWNED-EXECUTION-EXPORT
     notes: |
+      V2 UPDATE THROUGH 2026-09-05T09:54:58Z: Gate 1f's corrected repository
+      audit confirms the declared offline owned-execution export is absent.
+      Public raw/tier1 coverage cannot supply an owned order/ack/fill/fee join.
+      Its contract passes 11 synthetic checks; decision metric null, Gate 2 off.
+      All 17 current v2 batteries pass (182 checks total), and the parent suite
+      passes 223/223 under one CPU/1 GiB with swap off; no gate changed.
+      Gate 1d established 720 finite
+      cyclic phases and replayed the fixed 200. Gate 1e reproduced every
+      phase/action identity and all gross lifecycle identities for baseline,
+      treatment and 200 controls, but all 202 owned-order per-fill maker-fee
+      ledgers and strategy nets are unavailable and the matched decision null
+      is absent. Gate 1 therefore refuses and the route is stopped at 1/7;
+      Gates 2-6 did not start. Receipt sha256
+      e78fe495846cf22e834b63e04aea445cf1616563cb932a11f304d3a7ba2abd42.
+      The seven-arm-first route is superseded.
+      Canonical exact-tranche action ledger and a static action-bundle matched
+      null are built with 14 and 12 synthetic checks respectively. Gate 0 is
+      cleared by a capped one-window real pipeline smoke: 3,557 actions, 458
+      exact fills, 200 matched draws and six of six computed identities true.
+      It is not an economic result. The static screen cannot be called
+      cascade-feasible. The first iid-permutation acting-control real smoke
+      then refused: only 1 of 4,000 proposals matched the treated realised
+      side/hour counts, versus 200 required. No partial null or economic
+      statistic was published. Do not widen its rejection budget. The
+      symmetric exact-fiber switch-chain replacement passes 13 synthetic
+      checks but its real retry also refused: its support was large and every
+      identity held, while ESS 10.53 missed the declared 100 minimum. Do not
+      adapt its burn-in/thinning/kernel on the consumed window. The user then
+      ratified a sequential random action-quota control, declared before its
+      first output. Its 14 module and eight wrapper checks pass, but its fixed
+      real support gate refused: only 16/1,000 proposals reached the treated
+      issued-action quota (200 required), all 984 rejections were UNDER_QUOTA,
+      and only 16 distinct action sets existed (50 required). Every accepted
+      identity held; the aggregate null metric is absent. Do not widen or alter
+      that construction on the consumed window. Gates 2-6 do not start pending
+      another explicit user ruling and prospective design. The intended
+      endpoint remains an acting
+      side/hour/action-count-matched control on independent stateful clocks,
+      then the four-arm core ablation. See the v2 module map.
       Seven-arm contracts, parity stubs and inert trajectories exist. There is
       no completed real queue-integrated replay, latency/cost grid, or full
       strategy-performance receipt.
+      USER CONTINUATION 2026-09-05T05:03:29Z: Gate 1d is a different finite
+      cyclic-phase estimand, declared before output. It preserves score
+      clustering/multisets, enumerates every side/hour rotation, conditions on
+      actual issued counts, requires >=200 distinct joint phases, then samples
+      200 uniformly without replacement. It does not alter or pool the three
+      prior failures and does not authorise Gate 2.
       DIRECTION CHANGE 2026-09-04 (USER instruction, swept by MEM round 79):
       RATHER THAN ACCRUING FURTHER DATA-COLLECTION MACHINERY, DE IS NOW BUILDING
       THIS. Plan section 8.1 names the seven arms (QR_SKEW_ONLY;
@@ -8291,9 +8566,14 @@ tasks:
       artifacts -- is OPEN.
   - id: e3-screen
     phase: 2
-    name: Hazard plan §10.9 — unchanged forward scoring on >=5 complete days
-    status: G3-of-5-09-03-ACCRUES-on-its-covered-complement-R-503
+    name: V2 Gate 6 — new-freeze unchanged forward scoring
+    status: OLD-RACE-G5-DIRECTIONAL-ONLY-INVALID-FOR-CHANGED-V2-PIPELINE
     notes: |
+      V2 UPDATE 2026-09-04T15:27:56Z: the accepted old race reached G=5 but is
+      directional only; with multiplicity 2 its attainable adjusted floor is
+      0.0625. It cannot validate the changed v2 pipeline. Any v2 survivor needs
+      a new committed freeze and later untouched complete days; G>=6 is needed
+      if the same multiplicity/test family is intended to permit Holm clearing.
       UPDATED 2026-09-04T09:58Z (MEM round 79): THE RACE MOVED. G = 3 OF 5.
       09-03 WAS RE-VERDICTED UNDER R-503 AT 09:36:44.731072Z AND NOW ACCRUES --
       read by MEM at the verdict: race_accrual_eligible TRUE, day_quality_pass

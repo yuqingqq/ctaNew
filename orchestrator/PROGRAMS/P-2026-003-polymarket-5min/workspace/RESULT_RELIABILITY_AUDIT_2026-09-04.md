@@ -1,5 +1,22 @@
 # P003 preliminary-result reliability audit
 
+> **Historical-scope notice (added 2026-09-04T15:10Z).** This audit remains the
+> reliability record for the two-arm read available at 09:59Z. It does **not**
+> describe the later one-hour absolute-economics result or current programme
+> state. For those, read `RESULTS.md` §0 and R-531. As of R-531 the programme is
+> USER-HALTED, the proposed broad survey never ran, and no ~40-cell or 138-cell
+> survey result exists. The user subsequently authorised an offline v2
+> recovery-plan build at 2026-09-04T15:27:56Z. That creates no new economic
+> result and does not alter this historical audit; see the v2 plan and current
+> HANDOFF.
+> Current checkpoint (verified 2026-09-05T09:54:58Z): Gate 1f confirms the fixed
+> external owned-execution export is absent. Public raw/Tier-1 tape cannot bind
+> client order, venue ack, maker fill and exact fee. Its offline contract passes
+> 11 checks, but the decision metric remains null; v2 is stopped at 1/7,
+> Gates 2–6 did not start, and this audit's historical verdict remains unchanged.
+> All 17 current v2 batteries (182 checks) and the 223-check parent suite pass
+> under the one-CPU/1-GiB/no-swap cap; no gate changed.
+
 As of: **2026-09-04T09:59Z**  
 Economic-result tip inspected: **`659ed66`**; race/coverage status refreshed
 through **`ad68601`**  
@@ -117,7 +134,7 @@ Even after repairing that aggregation, any profitability result must still add
 fees, realised exit/settlement economics, quote size, inventory, and capital.
 The current five-second gross markout is not a net return.
 
-## Current programme state
+## Programme state at the 09:59Z audit cutoff (historical)
 
 R-503 re-admitted 09-03 on its covered complement: 287/288 windows, with the
 missing 15:20Z window named and counted as accounted loss. The latest verdict
@@ -129,7 +146,11 @@ coverage-absent windows as their own named/countable status, distinct from
 blackout-masked windows. That closes the missing-status defect but does not
 change this economic-result audit.
 
-## Required next steps before stronger claims
+**Later supersession:** the programme subsequently accepted the five-day race
+as directional and consistency-bearing only, not Holm-clearing. This paragraph
+must not be used as the current progress counter.
+
+## Next steps identified at 09:59Z (historical; not a live dispatch)
 
 1. Wire `matched_volume()` into a committed result runner, with a positive
    control, known-bad refusal, and durable result artifact.

@@ -1,13 +1,33 @@
-# Harmful-fill hazard × toxicity optimization plan
+# Harmful-fill hazard × toxicity optimization plan (historical v1)
 
-**Status:** ACTIVE / BTC HAZARD SEED FROZEN-UNVALIDATED / FULL ROUTE NOT FROZEN
+**Status:** SUPERSEDED FOR PROSPECTIVE WORK on 2026-09-04 by
+HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md / RETAINED AS PROVENANCE
 **Scope:** offline research only; no venue adapter, live cancellation path, or
 execution server  
 **Incentives:** maker rebates and liquidity rewards excluded from the primary
 economics, by current user direction
 
-**Role:** this is the governing project TODO. The stateful cancel x skew TODO is
-a subordinate implementation worksheet, not the overall progress tracker.
+**Role:** this was the governing project TODO. It remains the historical record
+for work declared and performed under v1. The v2 plan is the governing order for
+new work; no old artifact, result or seen-day status is changed retroactively.
+V2 Gate 0 later cleared a capped one-window pipeline smoke; the Gate-1 iid
+acting null then refused at 1 exact match in 4,000 proposals; its constrained
+replacement found support but failed mixing (ESS 10.53 < 100). A subsequently
+authorised, prospectively declared sequential action-quota control also
+refused. Gate 1d later established 720 finite cyclic phases and replayed 200,
+but Gate 1e reached its prospective stop: all gross identities passed across
+baseline, treatment and 200 controls, while all 202 owned-order per-fill
+maker-fee ledgers, strategy nets and the matched decision statistic remained
+unavailable/null. Gate 1f subsequently confirmed that the fixed external owned-
+execution export is absent: public raw and Tier-1 feeds cannot bind a client
+order to venue acknowledgement, maker fill, and exact fee. Its offline input
+contract passes 11/11 self-checks, but the decision metric remains null. V2 is
+therefore remains stopped at 1/7 as of 2026-09-05T05:50:05Z; Gates 2–6 did not
+start. This input-identification refusal does not reopen this historical
+plan or permit public trades, modeled fees, or implicit zero fees as substitutes.
+Latest bounded verification at 2026-09-05T09:54:58Z passes all 17 current v2
+module/wrapper batteries (182 checks) and the 223-check parent suite under one
+CPU/1 GiB with swap disabled; this does not reopen the historical route.
 
 **2026-09-01T09:43:00Z progress map (repository HEAD `19cd9c7`):**
 

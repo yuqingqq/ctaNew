@@ -1,9 +1,22 @@
 # RESULTS — P-2026-003 Polymarket crypto 5-min
 
 Consolidated 2026-09-03T03:23Z, substantially rewritten 2026-09-03T08:29Z,
-reliability-corrected 2026-09-04T09:59Z, and **extended 2026-09-04T13:48Z with
-§0, the first absolute economics this programme has produced**. **Single writer: the
-coordinator.** This
+reliability-corrected 2026-09-04T09:59Z, extended 2026-09-04T13:48Z with
+§0, **reconciled through R-531 at 2026-09-04T14:25Z**, and annotated for the
+user-directed v2 build at 2026-09-04T15:27:56Z, pipeline-status updated at
+2026-09-04T16:44:23Z, and prospectively resumed for Gate 1c at
+2026-09-05T00:58:42Z, returned to a fixed Gate-1c support stop at
+2026-09-05T01:10:57Z, then prospectively resumed for Gate 1d at
+2026-09-05T05:03:29Z, and advanced to the declared Gate-1e accounting audit at
+2026-09-05T05:14:39Z, which reached its fixed refusal at
+2026-09-05T05:28:23Z; the continued Gate-1f input audit refused at
+2026-09-05T05:50:05Z, with bounded regression reconciliation completed at
+2026-09-05T09:54:58Z. **Current state: the lifecycle gross ledger is complete,
+but Gate 1 refused because owned-order per-fill maker fees are unavailable;
+the v2 route is stopped at 1/7. No strategy-net or matched decision statistic
+exists, no gross value is promoted as its substitute, and no broad survey
+result exists. Single writer remains the coordinator; the later
+user instruction is not yet a register entry.** This
 file is the compact, artifact-anchored answer to "what has been tested and what
 came out of it". `STATUS.yml` and `workspace/HANDOFF.md` remain the running
 state; `COORDINATION.md` remains the append-only register. Read this first, then
@@ -16,6 +29,177 @@ independent checks are recorded separately in
 this file says so explicitly and the disagreement is a **correction**, not a
 restatement.
 
+> **PLANNING/BUILD UPDATE — NOT A RESULT.** The prospective governing plan is
+> now `live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`.
+> It moves canonical action identity and a >=200-draw side/hour/action-count
+> matched control ahead of broad integration, requires stateful cascade
+> economics before promotion, and defers fair price. Two Gate-0 instruments
+> were added and passed synthetic batteries only: the exact-tranche action
+> ledger and static action-bundle control. No artifact below was changed,
+> re-scored or upgraded by this work.
+>
+> **15:50Z continuation, still not a result:** the opt-in reference producer
+> now retains missing-markout tranche identities, the canonical earliest-row
+> action adapter is built, and the composed Gate-0 runner passes its synthetic
+> seams. No real-data receipt or economic conclusion was created by these
+> additions.
+>
+> **16:06:44Z Gate-0 pipeline smoke, still not an economic result:** under a
+> one-CPU/3 GiB cap, the one-window BTC consumed-development receipt
+> `p003_v2_gate0_smoke__20260904T160623Z.json` (sha256
+> `d63ccc59bae1e733a2fa4c840ce2b1c2bdc33494ce989df55f3816f4fd906be7`)
+> reconciled 3,557 canonical actions to 3,557 reference generations and 458
+> exact fill identities. All six identity/partition/matched-null predicates
+> were true; the static null contained 200 count/side/hour-matched draws.
+> Maximum in-process RSS was 347,080 KiB and wall time 11.70 s. The 355 treated
+> actions are a deterministic hash-ranked wiring probe declared without fill
+> values, not a predictor or benchmark. The static screen is not
+> cascade-feasible and no economic values from it are interpreted here.
+>
+> The first capped attempt reached its 3 GiB job limit while the historical
+> selector built a global Binance gap index and was manually stopped; it wrote
+> no artifact. The successful receipt supersedes that attempt with an exact
+> interval-local selector reading three adjacent hourly files. This is retained
+> as a resource-path correction, not omitted as an unsuccessful result.
+>
+> **16:25:59Z Gate-1 control refusal, also not an economic result:** the acting
+> iid-permutation adapter passes 18 synthetic checks and its smoke wrapper
+> seven, including the required stateful mismatch falsifier. On the same
+> one-window consumed-development population, only 1 of 4,000 proposals
+> matched treatment's realised `CANCEL_ISSUED` counts by maker side/UTC hour;
+> 200 accepted draws were required, so the module refused and published no
+> smaller null or economic comparison. Failure receipt
+> `p003_v2_gate1_smoke__20260904T162106Z.json`, sha256
+> `ede26d60fdb425e9d760adca48e24191620c2fb15a5fe70028e124e758b1ebc9`.
+> Runtime was 4m44s on one CPU with a 250.5 MiB peak under 3 GiB. The result is
+> a control-design finding: uniformly redistributing high-score events changes
+> hold/repost suppression and therefore the action count. The plan now forbids
+> raising that rejection budget and routes to a constrained exact-fiber switch
+> null with explicit support/mixing diagnostics. Gate 1 remains uncleared.
+>
+> **16:39:29Z constrained-null refusal, still not an economic result:** the
+> replacement module passes 13 synthetic checks and its wrapper seven in both
+> invocation modes. Its capped real receipt
+> `p003_v2_gate1_switch_smoke__20260904T163438Z.json` (sha256
+> `cdff1a14de7ecff3351dc90da224e2d44bad43d13ef67e66934b859d777a36a9`)
+> found a traversable exact-count component: 2,443 of 5,000 symmetric proposals
+> moved, all four chains left treatment, and 400 retained samples contained 399
+> distinct states with every stateful/count/score/source identity true. It
+> nevertheless failed its predeclared mixing bar: ESS for distance from
+> treatment was 10.53 versus 100 required. Every chain's last 20 samples also
+> sat much farther from treatment than its first 20 (means 237–251 versus
+> 114–129), directly showing inadequate burn-in. The aggregate null comparison
+> is absent. Individual audit-trail state values remain explicitly partial and
+> are not interpreted. Runtime was 249.89 s on one CPU; receipt max RSS was
+> 333,856 KiB (systemd cgroup peak 250.8 MiB), both below 3 GiB.
+>
+> The plan's stop applies: Gate 1 is not cleared, overall progress remains 1/7,
+> and Gates 2–6 do not start. Extending attempts/burn-in/thinning or changing
+> the switch kernel after viewing this consumed path is prohibited. Resumption
+> needs a new prospective control estimand and user ruling, not another retry.
+>
+> **Post-receipt code verification:** all ten v2 batteries pass under one
+> CPU/1 GiB and the parent diagnostic suite passes 223/223. The parent suite
+> initially exposed a missing static reached-function edge caused by the
+> injectable selector seam; the direct historical call was restored without
+> changing the smoke's injected branch. Consequently the current working tree
+> differs from each successful smoke receipt at exactly one recorded identity
+> file, `de_phase4_diag_runner.py`. The receipts retain their own source hashes,
+> remain uncommitted/unfrozen, and were not rerun after the stop.
+>
+> **2026-09-05T00:58:42Z prospective continuation — not a result:** the user
+> authorised a genuinely different Gate-1c estimand. The plan now fixes a
+> sequential hard quota on actual state-machine cancels after uniform random
+> score proposals: under-quota proposals refuse; above-quota proposals suppress
+> later cancel crossings using a fixed between-threshold score, without
+> force-cancels or economic outcomes in selection. The fixed gate is 200
+> accepted draws in at most 1,000 proposals, with synthetic work capped at one
+> CPU/1 GiB and one consumed-window smoke at one CPU/3 GiB. It has not yet been
+> built or run. The iid and switch failures remain consumed; their budgets and
+> kernels are unchanged. Gate 2 remains unauthorised.
+>
+> **2026-09-05T01:10:57Z Gate-1c support refusal — not an economic result:**
+> the new controller passes 14 synthetic checks and its wrapper eight. The
+> fixed one-window receipt
+> `p003_v2_gate1_quota_smoke__20260905T010921Z.json` (sha256
+> `e10dec7167a1b61a17c87b3ff0d19cd6c11692a6280035181e9cf5f1985a2ab8f`)
+> set the treated actual-action quota at BUY_UP 150 / SELL_UP 110 in UTC hour
+> 13. Only 16 of 1,000 independent proposals reached both counts versus 200
+> required; all 984 rejections were `UNDER_QUOTA`, and only 16 distinct realised
+> action sets existed versus the fixed 50 minimum. All accepted mechanics,
+> source and exact-quota identities were true. The matched-null status is
+> `ABSENT_REFUSED_SUPPORT_GATE` and its aggregate partial metric is null; the 16
+> retained draws are audit records, not a smaller null. Runtime was 82.81 s,
+> process max RSS 337,028 KiB, under one CPU/3 GiB. No profitability, harm or
+> benchmark-performance inference follows. The budget/rule cannot be changed
+> on this consumed window, Gate 1 remains refused, and Gates 2–6 do not start.
+> Final consolidated verification: all 12 v2 module/wrapper batteries and the
+> 223-check parent diagnostic suite pass under one CPU/1 GiB. Exact identity
+> comparison finds 11/12 Gate-1c receipt files byte-identical to the current
+> tree; only the governing plan differs because the prospectively hashed
+> declaration was extended after execution with this result/status. No named
+> source-code file changed after the receipt.
+>
+> **2026-09-05T05:03:29Z prospective continuation — not a result:** the user
+> authorised a different Gate-1d estimand. Before output, the plan fixed full
+> enumeration of within-side/hour cyclic rotations of the complete clustered
+> treated score sequence, exact actual-issued-count conditioning, assignment
+> deduplication, a minimum 200 distinct joint phases, and a 200-draw uniform
+> without-replacement full replay. It uses no quota suppression, force-cancel,
+> proposal limit or economic outcome in selection. Synthetic work is capped at
+> one CPU/1 GiB and the only real one-window smoke at one CPU/3 GiB with a
+> ten-minute ceiling. It has not yet been built or run; Gate 2 remains off.
+>
+> **2026-09-05T05:13:04Z Gate-1d support result — not an economic result:**
+> receipt `p003_v2_gate1_cyclic_smoke__20260905T051116Z.json`, sha256
+> `8a97102cc11f5f8c94f1545deb0df75a82d6bb44a6970fd5fc4faaf723074650`.
+> Complete enumeration covered 1,891 BUY and 1,666 SELL offsets; 18 and 40
+> exact-count phases produced 720 joint assignments. The fixed 200 uniform
+> without-replacement full replays were distinct and every source, action-count,
+> score-clustering, separability and stateful identity was true. Runtime 99.85
+> s, process max RSS 338,448 KiB under one CPU/3 GiB. Economics remain
+> `INCOMPLETE_NOT_STRATEGY_NET`; no partial value is interpreted.
+>
+> **05:14:39Z Gate-1e declaration — not a result:** pin that receipt and its
+> 200 phases; reconcile baseline/treatment/control received fills, five-second
+> P&L, spread/adverse, rho, terminal inventory, cancel/hold/repost/reset paths
+> and required fees. A missing per-fill maker-fee ledger or other required term
+> makes strategy net and the aggregate decision null unavailable and refuses
+> Gate 1. Gate 2 remains off.
+>
+> **05:28:23Z Gate-1e result — accounting complete, Gate 1 refused:** receipt
+> `p003_v2_gate1_economics_smoke__20260905T052605Z.json`, sha256
+> `e78fe495846cf22e834b63e04aea445cf1616563cb932a11f304d3a7ba2abd42`.
+> The 5,869-row / 3,557-action population, Gate-1d receipt SHA, complete
+> 720-phase support, exact 200 offsets, all score-assignment hashes and all
+> realised-action identities reproduced. QR_SKEW_ONLY, treatment and 200
+> controls passed every gross fill/decomposition/terminal/rho/lifecycle/rate
+> identity. All 202 maker-fee ledgers are
+> `UNAVAILABLE_NO_PER_FILL_MAKER_FEE`; all 202 fee-adjusted strategy nets, the
+> treatment decision value and matched decision null are therefore null.
+> Public taker/trade fees were not substituted, and owned-order ack/fill
+> causality remains explicitly unobservable. Runtime 22.98 s, process max RSS
+> 338,556 KiB, one CPU/3 GiB, swap off. This is an identification refusal—not
+> a negative P&L result—and triggers the declared stop. Gate 2 and Gates 3–6
+> did not start; overall progress is terminal at 1/7.
+> Gate-1e checkpoint regression closure: all 16 then-existing v2
+> module/wrapper batteries and the 223-check parent diagnostic suite passed
+> under one CPU/1 GiB with swap off.
+>
+> **05:50:05Z Gate-1f acquisition result — no economic result:** corrected
+> receipt `p003_v2_gate1f_owned_source_audit__20260905T054941Z.json`, sha256
+> `c99109943de37d37d2fc8358628640214d489752e96bb8ca4f86e144bf197f47`,
+> supersedes `...T054848Z.json` (`bf3d01fa...b292022`), whose path census missed
+> Tier-1's distiller directory; every gate field/refusal was unchanged. The
+> fixed external owned-execution manifest is absent. Public raw date directories
+> span August 19–September 5 and Tier-1 public trades August 20–September 2,
+> but no public source binds client order, venue ack, maker fill and exact fee.
+> The contract module passes 11 checks under one CPU/512 MiB. Decision metric
+> null, Gate 1 refused, Gate 2 off. More public tape cannot close this join.
+> Latest bounded regression at 2026-09-05T09:54:58Z: all 17 current v2
+> batteries pass (182 checks total), and the parent suite passes 223/223, under
+> one CPU/1 GiB with swap off. No result or gate changed.
+
 ---
 
 ## 0. 2026-09-04 — the first absolute economics, and what they say
@@ -25,6 +209,21 @@ programme had **no absolute economic number at all** — every result was
 candidate-versus-incumbent, model against model, with no no-cancel baseline
 anywhere. §1's "profitability withdrawn" was correct and is now superseded by a
 measurement rather than by a restatement.
+
+> **REGISTERED RESULT STATE (R-531, 2026-09-04T14:25Z): HALTED.** All heavy work stopped
+> on the USER's instruction; the collectors continued running and the work was
+> preserved. The only absolute-economics evidence remains the one BTC
+> development hour below. The proposed broad `V_oracle` survey **did not run**:
+> `survey.py` raised `AttributeError` because it treated `ref[slug]` as a dict
+> when it is a list, and exited rc 1. There is no ~40-cell or 138-cell result.
+> The declared survey span contains **G = 0 complete UTC days**, so it could not
+> have produced decision-bearing day-cluster evidence even if the script had
+> completed. Do not describe that survey as running, completed, or
+> decision-bearing.
+>
+> **Later scope update:** at 15:27:56Z the user authorised the prospective v2
+> plan and lightweight build. Heavy result-bearing work remains off. This
+> changes the next plan, not any number or reliability classification here.
 
 > **READ THIS BEFORE THE NUMBERS.** This section states its current frame with
 > confidence. **Two previous frames were stated with the same confidence today
@@ -54,10 +253,15 @@ measurement rather than by a restatement.
 **All figures: btc, ONE CONTIGUOUS HOUR (2026-08-24 13:50–14:50Z, 12 windows,
 4,315 fills), development evidence, point estimate and NO interval** — 12
 windows is below the 5-complete-day cluster floor. `is_a_validation` false.
-Artifact `de_section81_arms__20260904T131*Z.json`, emitted from a clean tree on
-the branch with 7/7 identity files matching; the earlier `125340Z` emission named
-a carrying commit **not on the branch**, and **26 of 26 economic quantities are
-bit-identical across the two — the defect was the record, not the result.**
+Base economics artifact
+`data/pm_5min/derived/de_section81_arms__20260904T134055Z.json`; ceiling
+extension
+`data/pm_5min/derived/de_section81_arms__20260904T135755Z.json`. Both were
+emitted from clean trees and their carrying commits are ancestors of the branch;
+the base artifact has 0 of 7 code-identity differences at its carrying commit.
+The earlier `125340Z` emission named a carrying commit **not on the branch**, and
+the shared economic quantities are bit-identical — the defect was the record,
+not the result.
 
 | leg | baseline (0 cancels) | CONDVALUE (333) | HAZARD (48) |
 |---|---:|---:|---:|
@@ -127,13 +331,15 @@ and 100.35. Whether an overlay can pay is a property of the **joint distribution
 of (spread, adverse) across fills**, which a ratio of totals discards. **σ/α is a
 per-book quantity, not a constant.**
 
-**The replacement is `V_oracle`** — the sum of |P&L| over fills whose P&L is
-negative. Model-free, exactly the ceiling **any** overlay could reach, one filter
-and one sum. **A survey where `V_oracle` ≈ 0 closes the overlay line because NO
-POLICY COULD HAVE PAID**, which is a different and better reason than "this
-policy did not". That survey is running across the admissible development window
-(the hf_ws_v2 boundary 2026-08-24T13:48:54Z to the freeze epoch), touching **no
-sealed day**. The measured hour is **one cell** of it.
+**The replacement proposed that day was `V_oracle`** — the sum of |P&L| over
+fills whose P&L is negative. It is model-free and is an unattainable
+perfect-foresight ceiling for an overlay that can only decline fills. **R-531
+qualifies it pending two missing checks:** a null against random or naive-policy
+capture, and a test that separates equal `V_oracle` books with different
+attainable value under the cascade. The planned development-window survey
+**never ran**: `survey.py` failed with `AttributeError`, rc 1, before producing a
+~40-cell or 138-cell result. The measured hour below is therefore the entire
+observed `V_oracle` population, not one completed cell of a broader survey.
 
 ---
 
@@ -729,10 +935,11 @@ blocked since 2026-08-19 and the calendar has now moved.
    and the Q-filing table, not the whole file.
 3. This file, then `workspace/HANDOFF.md` (11.8k lines — read the dated entries
    at the top and the sections you need).
-4. `STATUS.yml` — 15 tasks with statuses, 317 flags, 10 standing rules.
-5. `live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10 — the
-   governing TODO. The stateful cancel×skew worksheet's 47/113 checkbox count is
-   **not** project completion.
+4. `STATUS.yml` — current task/flag state; do not rely on historical
+   counts quoted elsewhere.
+5. `live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md` —
+   the prospective governing gates. The v1 plan and stateful cancel×skew
+   worksheet remain provenance; neither checkbox count is project completion.
 
 **The reliability rules in `CLAUDE.md` are not style.** Each was bought with
 dissolved work: rule 11 (choosing after seeing voids the test), rule 12 (a

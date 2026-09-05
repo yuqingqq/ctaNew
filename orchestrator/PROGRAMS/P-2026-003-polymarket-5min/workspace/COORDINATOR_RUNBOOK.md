@@ -8,6 +8,140 @@ the re-read. `COORDINATOR_DISPATCH.md` is the 2026-08-26 phase dispatch and is
 has been superseded); it is kept as provenance. This file supersedes it for
 operations.
 
+> **Operational override — R-531, 2026-09-04T14:25Z:** the programme is
+> USER-HALTED. Do not dispatch or start heavy work from this runbook unless the
+> USER explicitly resumes the programme. The collectors continue running. The
+> broad `V_oracle` survey never produced a result and must not be described as
+> active or decision-bearing.
+
+> **Later user-directed override — 2026-09-04T15:27:56Z:** offline planning and
+> lightweight implementation have resumed under
+> `live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`.
+> This does not authorise a
+> raw-tape replay, model fit, survey, grid or other heavy run. The direct
+> instruction is newer than R-531 but has no coordinator-register citation
+> yet. Before any dispatch, reconcile it into the register and use the v2
+> gates; do not resume the stale seven-arm/fair-price dispatch below. The v2
+> plan/modules/docs are currently uncommitted, so the main-tree clean-worktree
+> expectation below does not apply until they are reviewed and landed.
+
+> **Long-loop checkpoint — 2026-09-04T16:08:46Z:** Gate 0 cleared with the
+> capped pipeline-only receipt
+> `p003_v2_gate0_smoke__20260904T160623Z.json` (3,557 canonical actions, 458
+> exact fills, 200 matched draws, all six identities true; 347,080 KiB maximum
+> RSS, 11.70 s, one CPU/3 GiB). The first global-index attempt reached its job
+> cap and was stopped without an artifact; the successful retry used the exact
+> interval-local three-file selector. Do not read either event as an economic
+> result. Overall v2 progress is 1/7; next is the synthetic acting matched
+> stateful control and then at most one equally capped Gate-1 smoke.
+
+> **Gate-1 correction — 2026-09-04T16:27:24Z:** the iid-permutation acting
+> control passed 18 synthetic checks, but its capped real smoke correctly
+> refused after only 1 of 4,000 proposals matched the treated realised
+> side/hour action counts (200 required; 3,999 rejected; 4m44s one CPU;
+> 250.5 MiB peak). Failure receipt sha256
+> `ede26d60fdb425e9d760adca48e24191620c2fb15a5fe70028e124e758b1ebc9`.
+> Do not increase that rejection budget. Current work is the constrained
+> exact-fiber switch null with declared mixing/support falsifiers; Gate 1 and
+> all later gates remain uncleared.
+
+> **Gated-stop checkpoint — 2026-09-04T16:39:29Z:** the constrained switch
+> replacement also refused. Its 5,000 proposals yielded 2,443 exact-fiber
+> moves, all four chains left treatment and 400 samples held 399 distinct
+> states with every identity true, but ESS was 10.53 against the declared 100
+> minimum. Receipt sha256
+> `cdff1a14de7ecff3351dc90da224e2d44bad43d13ef67e66934b859d777a36a9`.
+> Do not extend/tune the sampler on this consumed window. Overall progress is
+> 1/7; Gates 2–6 do not start. A new control estimand requires user ruling and
+> a fresh prospective declaration.
+
+> **Verification closure — 2026-09-04T16:44:23Z:** all ten v2 module batteries
+> pass under one CPU/1 GiB and the parent suite passes 223/223. The post-receipt
+> parent static-pin compatibility fix leaves exactly one current-tree identity
+> file different from each successful smoke receipt; the receipts retain their
+> own source hashes and no real rerun followed the gated stop.
+
+> **User-resumed Gate 1c — 2026-09-05T00:58:42Z:** the user authorised only a
+> genuinely different control estimand. Before any new output, the governing
+> plan fixed the sequential random action-quota construction, a planted-harm
+> positive control, an under-quota known-bad refusal, exact action/source/
+> lifecycle identities, 200 accepted draws in at most 1,000 proposals, and
+> one-CPU/1 GiB synthetic plus one-CPU/3 GiB real-smoke caps. Do not increase or
+> tune either failed sampler. Do not start Gate 2, a fit, broad replay, survey,
+> grid or cache rebuild. A quota-smoke pass is only the acting comparator; Gate
+> 1 still needs the complete lifecycle economic ledger.
+
+> **Gate-1c fixed support refusal — 2026-09-05T01:10:57Z:** the new module's
+> 14 checks and wrapper's eight checks pass, but the one authorised real smoke
+> produced only 16 accepted proposals out of 1,000 versus 200 required; all 984
+> rejections were `UNDER_QUOTA`, and only 16 distinct action sets existed versus
+> 50 required. Receipt
+> `p003_v2_gate1_quota_smoke__20260905T010921Z.json`, sha256
+> `e10dec7167a1b61a17c87b3ff0d19cd6c11692a6280035181e9cf5f1985a2ab8f`.
+> Every accepted mechanics/source/quota identity was true, but the matched null
+> and aggregate metric are absent. Do not widen or alter the control on this
+> consumed window and do not interpret the 16 audit draws. Overall progress is
+> 1/7; Gate 1 remains refused and Gates 2–6 do not start without another direct
+> user ruling and prospective design.
+> Final consolidated verification at 01:16:00Z: all 12 v2 module/wrapper
+> batteries and the 223-check parent diagnostic suite pass under one CPU/1 GiB.
+> Receipt/current identity is 11/12: only the v2 plan differs because its
+> prospectively hashed declaration was extended after the run with the result;
+> no named source-code file changed.
+
+> **User-resumed Gate 1d — 2026-09-05T05:03:29Z:** before output, the v2 plan
+> fixed a different finite cyclic-phase acting control. Enumerate every
+> within-side/hour rotation of the complete clustered score sequence, retain
+> exact actual-issued-count phases, deduplicate assignments and require at least
+> 200 distinct joint phases; then sample exactly 200 uniformly without
+> replacement and full-replay them. No quota suppression, force-cancel,
+> proposal limit or economic selection. Synthetic cap one CPU/1 GiB; one fixed
+> real smoke one CPU/3 GiB, swap off, ten minutes. Do not change or pool the
+> prior three failures, and do not start Gate 2.
+
+> **Gate-1d green / Gate-1e declared — 2026-09-05T05:14:39Z:** complete real
+> enumeration found 18 BUY and 40 SELL exact-count phases (720 joint), and all
+> fixed 200 uniform without-replacement full replays passed. Receipt sha256
+> `8a97102cc11f5f8c94f1545deb0df75a82d6bb44a6970fd5fc4faaf723074650`;
+> 99.85 s, 338,448 KiB process RSS. This clears acting support only. Gate 1e is
+> prospectively fixed to those exact phases and must reconcile fills,
+> spread/adverse, rho, terminal inventory, lifecycle counters and per-fill maker
+> fees. Missing required monetary terms force null strategy net and Gate-1
+> refusal. One CPU/1 GiB synthetic; one CPU/3 GiB/no-swap/five-minute audit.
+
+> **Gate-1e terminal stop — 2026-09-05T05:28:23Z:** the accounting core passes
+> 12 synthetic checks and the pinned wrapper 11. Real receipt
+> `p003_v2_gate1_economics_smoke__20260905T052605Z.json`, sha256
+> `e78fe495846cf22e834b63e04aea445cf1616563cb932a11f304d3a7ba2abd42`,
+> reproduced the 5,869-row / 3,557-action population, Gate-1d SHA, 720 support,
+> exact 200 offsets and every score/action identity. Baseline, treatment and
+> all 200 controls passed every gross ledger identity. All 202 per-fill maker
+> fee ledgers are unavailable, so all strategy nets and the matched decision
+> null are null; no public taker/trade fee or zero was substituted. Runtime
+> 22.98 s, process max RSS 338,556 KiB under one CPU/3 GiB, swap off. Gate 1
+> refuses at its prospective stop and overall progress remains 1/7. Do not
+> start Gate 2 or dispatch the historical loops below. Resumption requires a
+> reliable owned-order maker-fee/ack/fill source, a prospective amendment and
+> fresh data. Gate-1e checkpoint regression: all 16 then-existing v2
+> module/wrapper batteries and the 223-check parent suite passed under one
+> CPU/1 GiB, swap off. R-531 remains the
+> latest append-only register entry.
+
+> **Gate-1f acquisition stop — 2026-09-05T05:50:05Z:** the offline input
+> contract passes 11 synthetic checks under one CPU/512 MiB. Corrected receipt
+> `p003_v2_gate1f_owned_source_audit__20260905T054941Z.json`, sha256
+> `c99109943de37d37d2fc8358628640214d489752e96bb8ca4f86e144bf197f47`,
+> supersedes `...T054848Z.json` after correcting only its Tier-1 distiller-path
+> census. The fixed owned-execution manifest is absent. Public raw data reaches
+> 09-05 and Tier-1 public trades 09-02, but neither binds an owned client order,
+> venue ack, maker fill and exact fee. Decision metric null; Gate 1 refused;
+> Gate 2 off. Do not dispatch more public-tape work as a remedy. Await an
+> authenticated offline export produced outside this repo over at least five
+> post-freeze complete UTC days; never add credentials/signing/order code here.
+> Latest bounded regression at 2026-09-05T09:54:58Z: all 17 current v2
+> batteries pass (182 checks total), and the parent suite passes 223/223,
+> sequentially under one CPU/1 GiB with swap off. No gate changed.
+
 ---
 
 ## 0. Cold start — do these in order

@@ -1,6 +1,20 @@
 # PM strategy optimization loop
 
-**Status: ACTIVE — launched 2026-08-24T11:08:17Z. Research only.**
+**Status: HISTORICAL / SUPERSEDED FOR PROSPECTIVE WORK — launched
+2026-08-24T11:08:17Z. Research only.**
+
+> **Current route — 2026-09-04T15:27:56Z:** do not continue this
+> outcome-driven loop on seen data. Offline work now follows
+> `plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`: canonical action
+> identity, matched control, then stateful cascade economics. Heavy runs remain
+> off.
+> Current checkpoint (verified 2026-09-05T09:54:58Z): Gate 1f confirms the fixed
+> external owned-execution export is absent. Public raw/Tier-1 tape cannot bind
+> client order, venue ack, maker fill and exact fee. Its offline contract passes
+> 11 checks, but the decision metric remains null; v2 is stopped at 1/7,
+> Gates 2–6 did not start, and this historical optimization loop remains closed.
+> All 17 current v2 batteries (182 checks) and the 223-check parent suite pass
+> under the one-CPU/1-GiB/no-swap cap; no gate changed.
 
 This is the persistent, single-agent optimization ledger for the Polymarket
 five-minute market-making research. It does not authorize live trading,
@@ -88,12 +102,12 @@ must later be frozen and scored unchanged on new complete days.
 | 012 | timestamped fair-price successor + frozen skew interfaces | preserve `Identity`, test only predeclared point-in-time challengers, and keep skew as inventory/placement control | PLANNED IN PARALLEL; no scoring authorized |
 | 013 | common action-value seven-arm replay | integrate hazard, conditional value, fair-price residual, skew and lifecycle costs only after standalone gates | BLOCKED ON 011/012 artifacts |
 
-Iterations 011--013 are governed by
-`plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` and
-`plans/STATEFUL_HARMFUL_CANCEL_TODO.md`. Parallel status means implementation,
-selftests and preregistration may overlap. It does not permit tuning multiple
-modules against the same visible outcomes or admitting a day that predates a
-candidate's committed freeze.
+Iterations 011--013 are historical. Prospective work is governed by
+`plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`;
+`plans/STATEFUL_HARMFUL_CANCEL_TODO.md` is implementation provenance.
+The v2 order permits implementation, selftests and preregistration, but not
+tuning multiple modules against the same visible outcomes or admitting a day
+that predates a candidate's committed freeze.
 
 ## Stop and continuation rules
 

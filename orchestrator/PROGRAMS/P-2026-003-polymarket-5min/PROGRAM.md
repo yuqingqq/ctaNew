@@ -1,5 +1,57 @@
 # P-2026-003: Polymarket Crypto 5-min Markets
 
+> **Current state (updated 2026-09-05T09:54:58Z): GATE 1F INPUT AUDIT REFUSED—
+> NO OWNED EXECUTION EXPORT; GATE 1 REFUSED FOR UNAVAILABLE OWNED MAKER FEES;
+> V2 TERMINALLY
+> STOPPED AT 1/7; GATE 0 ONLY FULLY CLEARED; BROAD/HEAVY RUNS OFF.**
+> The R-531 halt remains the
+> last registered state; the later direct user instruction authorises the
+> prospective plan, lightweight implementation and required one-window capped
+> smokes but has not yet been entered
+> in the coordinator register. This file is the original research charter, not
+> live status. The latest
+> economic evidence is one BTC development hour (12 windows, 4,315 fills), not
+> validation or net profitability. The planned broad `V_oracle` survey failed
+> before producing a result; no ~40-cell or 138-cell result exists. The Gate-0
+> smoke is pipeline evidence only, not an economic result; overall v2 progress
+> is 1 of 7 gates. The iid stateful sampler produced only 1 of 200 required
+> exact matched draws in 4,000 proposals, so it published no null. The
+> constrained exact-fiber replacement found 399 distinct states but failed its
+> mixing bar (ESS 10.53 < 100). Overall v2 progress remains 1/7. The user has
+> ratified a different sequential random action-quota estimand with a fixed
+> 200-of-1,000 one-window gate and unchanged one-CPU/3 GiB ceiling. That gate
+> also refused: only 16 proposals reached the actual issued-action quota and
+> only 16 distinct action sets existed versus the fixed 50 minimum. The
+> matched null is absent; this does not reopen any failed sampler or authorise
+> Gate 2. New work is
+> governed by `live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`.
+> All 17 current v2 module/wrapper batteries pass (182 checks total), and the
+> 223-check parent suite passes under one-CPU/1-GiB/no-swap caps;
+> the Gate-1c receipt has 11/12 current-tree identity matches, with only its
+> prospectively hashed plan changed by the post-run result annotation; no named
+> source file drifted. Full identity detail is disclosed in the handoff.
+> Gate 1d now preserves the clustered score sequence and enumerates every
+> cyclic phase, requiring at least 200 distinct exact-count joint phases before
+> 200 uniform without-replacement full replays. It changes none of the prior
+> failures and does not authorise Gate 2.
+> The complete enumeration found 18 BUY and 40 SELL exact-count phases, 720
+> joint assignments, and all fixed 200 distinct full replays passed identities.
+> Gate 1e pinned and reproduced those phases. QR_SKEW_ONLY, treatment and all
+> 200 controls passed every gross accounting/population identity, but all 202
+> owned-order per-fill maker-fee ledgers are unavailable. Receipt
+> `p003_v2_gate1_economics_smoke__20260905T052605Z.json`, sha256
+> `e78fe495846cf22e834b63e04aea445cf1616563cb932a11f304d3a7ba2abd42`.
+> All strategy nets and the matched decision statistic are null; no public
+> taker fee or assumed zero was substituted. This is an input-identification
+> refusal, not negative P&L. Gate 2 and Gates 3–6 did not start.
+> The subsequent bounded acquisition audit found no
+> `data/pm_5min/owned_execution/manifest.json`. Corrected receipt
+> `p003_v2_gate1f_owned_source_audit__20260905T054941Z.json`, sha256
+> `c99109943de37d37d2fc8358628640214d489752e96bb8ca4f86e144bf197f47`.
+> Public raw/Tier-1 coverage cannot supply the missing owned order/ack/fill/fee
+> join; decision metric remains null and Gate 2 remains off.
+> Read `workspace/RESULTS.md` §0, then `workspace/HANDOFF.md`.
+
 ## Goal
 
 Determine whether the P-2026-002 fair-value machinery (flow-aware fair value
