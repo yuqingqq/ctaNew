@@ -1,5 +1,128 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-05T16:10:57Z — **NO SEAT STANDS BY (the USER's "make all modules
+work"). The ruled Gate-1e run is EXECUTING under a bar declared before it — two
+endpoints, not three — as a SIDE-CAR that emits no `gate1_exit`.** Gate 1 is
+unmoved: three sampler refusals, **1 of 7**. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 104
+
+### 1. Our maker-fee setting is three values in three places — read at the code
+
+| where | setting | what it actually means |
+|---|---|---|
+| **V2 Gate-1e** `de_v2_lifecycle_economics.py:55–56` | **NULL** | `maker_fees: dict \| None`, run passed `None`. Declared rule: *"never substitute public taker/trade fee **or zero**."* **The decision metric was WITHHELD, not computed at zero.** |
+| **§8.1 fills leg** `de_phase4_diag_runner.py:1307` | **ZERO BY OMISSION** | `maker_pnl = sgn·(mid_at_markout − level)·shares`. **I counted: "fee" occurs ZERO times in that function.** So **+8,598.76c is GROSS.** |
+| **the venue** (R-536/R-538) | **ZERO charge, NEGATIVE net** | we sign zero; the 20% crypto rebate makes the expectation negative |
+
+**None of the three is the venue's**, and a null is a *refusal* while a zero is
+an *answer* — they are not the same, and the receipt says which. The R-537
+ruling moves **only V2's**; §8.1's omission stays a separate open item.
+
+### 2. The declared bar: TWO endpoints, not three
+
+- **The charge endpoint collapses into zero by construction.** The maker fee is
+  what an order **signs**, ours signs zero, so the 1000/5000-bps residual is a
+  **signing defect** (a client copying `maker_base_fee = 1000` into the fee
+  field) and becomes a **build-time GUARD**, not an economic endpoint. *My
+  round-102 upper endpoint was not merely mis-sized — there is no such
+  endpoint.*
+- **`E0`** = 0.0 on every fill. **`E−R`** = −0.20·fe per fill, with
+  `fe_arm = Σ 7·p·(1−p)·shares`. **The per-market share CANCELS in the delta, so
+  E−R is a POINT** — which supersedes the *"[0, 20%] carried as an interval"* I
+  recorded at round 103. `D(E−R) = gross_delta − 0.20·Δfe`, one-sided, downward,
+  **against the treatment**.
+- **INVARIANT** ≡ same sign at both ∧ `|Δp| ≤ 0.05` ∧ both p one side of 0.5.
+  **MATERIAL** ≡ `0.20·Δfe/|gross_delta| > 0.10`. Honestly labelled
+  **thresholds on a DESCRIPTION, not a test** — G = 0, n = 1, consumed,
+  `matched_null` hardcoded `None`. And honest about what is already run: DA drove
+  both level endpoints at 15:53Z, **so the bar is post-hoc to that**; the 202-arm
+  delta, the control p-locations and the rebate endpoint are genuinely unrun.
+
+### 3. The trap — checked at the code, and the cleanest instance we have
+
+`de_v2_lifecycle_economics.py:333` reads
+`gate1_green = every_gross_identity and every_fee_complete`, consumed at :334,
+:359, :380. **Every gross identity is already green, so the conjunction turns on
+the fee half alone** — and therefore **supplying ANY complete ledger, even a
+ledger of zeros supplied only to measure sensitivity, flips
+`gate1_exit.cleared` TRUE and EMPTIES `reasons_not_cleared`, deleting the
+causality caveat as a side effect of a measurement.**
+
+The run therefore **must not emit `gate1_exit` at all**: side-car, status
+**`FEE_ENDPOINT_SENSITIVITY_NOT_A_GATE_RESULT`**, carrying the three sampler
+refusals by name. *This was found by reading the code before running it, rather
+than by noticing a changed verdict afterwards.*
+
+### 4. A line nobody had cited — and it lands on DA's artifact
+
+`FLOW_MODEL_STATE.md:79`, **read by me**, in full:
+
+> *"Crossing costs ~2.25 ¢/share ATM — **TAKER LEG ONLY**. 0.50 ¢ half-spread +
+> 1.75 ¢ fee ≈ 225 bps on a $1 binary. **BOTH TERMS ARE THE SAME SIDE. DO NOT
+> SUBTRACT THIS FROM A MAKER NET.**"*
+
+It is **the row immediately below the fee row at :78 that R-536, R-538 and
+Q-DA-252 each quote.** Three citations of line 78; nobody had read line 79.
+**That is rule 16 exactly — the artifact carried its own contraindication one
+line down.**
+
+DE reports Q-DA-252's straddle **[−3,074.3, +288.4]** is produced by doing what
+that row forbids, and the reviewer's §1.5.1 caught the same straddle
+independently as *"a quantity that does not decide."* **Two seats, two routes,
+one finding against DA's artifact.** It is marked **PENDING-ADJUDICATION, not
+CHECKED**: I verified only that line 79 says what it says — **I did not open
+Q-DA-252 and make no claim about how its straddle was built.**
+
+### 5. In flight, none done
+
+**BE 43** — the CANCEL-axis null replayed **through the stateful policy so the
+cascade is realised**. *The question it exists to answer:* **if random cancels
+also cascade at ~4×, the cascade is a property of the MACHINERY, not of
+CONDVALUE's selection** — which would relocate R-535(D)'s cancel-axis finding
+from the ranker to the mechanism. **DA 51** — the attainable companion on the
+**4,315-fill** surface (Q-DA-249's 10.0% lives on the 355-action book and does
+not transfer); the 22 over-charged taker legs; and a **mutation audit of
+`da_population_audit`, which DE imported unchanged to certify `NOTHING_EXCLUDED`
+and which nobody but DA has ever verified.** **DE 64** — running the ruled run.
+**REV** — self-attack on *"the share cancels"*; adjudicating the straddle.
+
+### 6. DE 63 verified
+
+226 on **three** launchers, then 230; **DE reported the number it observed, not
+the one that was predicted for it.** 4,044 leaves compared, **7 moved, all
+strings, no number**; artifact `…155744Z` with `carrying_commit 641cfb6`
+**on the branch**. DE63b found **by re-emitting and diffing, not by reading**,
+that its relabelled identities never reached the artifact — **the third instance
+of the producer/emission contract class in one file**, now closed **as a class**.
+DE's own line: *"I closed two instances before and said so; I had not closed the
+class."* Its seam answer — **the tranche record carries four fields and none is a
+fee** — was reached **independently of Q-DA-252**, which makes it a **second
+observation**, not a restatement. `attempt_bound` remains unwired; the orphaned
+`153142Z` artifact is still on disk, routed to DE.
+
+### 7. My instrument fired twice this round, both on me
+
+- **MALFORMED:** I invented `prov: PENDING-ADJUDICATION`; the instrument refused
+  it — *"expected CHECKED or RELAYED"*. **I took the refusal rather than widen
+  the vocabulary while it was flagging me.** The gap is real and it is the
+  **CORROBORATION** axis again: *"two seats reported this independently and
+  nobody has adjudicated it"* is neither of my two words.
+- **ORPHAN:** I renamed `be_is_on_recorded_standby` → `no_seat_stands_by` in
+  `flags:` and left the old provenance key behind. **This is exactly the
+  half-rename that check was built to catch, and the first time it has caught
+  one** — round 100 recorded it as reporting zero and untested in anger. It is
+  tested now, on me. Both fixed; the audit closes at **0 findings**.
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY** and now **CORROBORATION** — three named axes,
+none built; **455 of 533 flags never audited for staleness.**
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-05T15:56:56Z — **THE FEE IS ANSWERED FROM THREE INDEPENDENT
 DIRECTIONS AND THEY AGREE. The maker fee is a SIGNED ORDER PARAMETER — we are
 the maker, so for us it is what we sign, and net of rebate it is NEGATIVE. The

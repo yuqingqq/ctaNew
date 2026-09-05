@@ -63,6 +63,50 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-05T16:10:57Z (MEM ROUND 104 -- R-539 AND R-540 SWEPT. STATE ONLY.
+  (1) NO SEAT STANDS BY. The USER's "make all modules work" WITHDRAWS the
+  recorded-standby reading of R-381 while the loop runs. BE 43 (the CANCEL-axis
+  null replayed THROUGH THE STATEFUL POLICY so the cascade is REALISED -- and
+  the question it answers: IF RANDOM CANCELS ALSO CASCADE AT ~4x, THE CASCADE IS
+  THE MACHINERY'S PROPERTY, NOT CONDVALUE'S), DA 51 (the attainable companion on
+  the 4,315-FILL surface; the 22 over-charged taker legs; a MUTATION AUDIT of
+  da_population_audit, imported unchanged by DE and NEVER VERIFIED BY ANYONE BUT
+  DA), DE 64 (the ruled run, RUNNING) and REV are in flight; NONE IS DONE.
+  (2) THE MAKER-FEE SETTING, READ BY ME AT THE CODE: THREE VALUES IN THREE
+  PLACES. V2's Gate-1e is NULL AND DELIBERATELY SO -- de_v2_lifecycle_economics.py
+  :55 takes maker_fees: dict | None and :56 branches on None, and the declared
+  rule was "never substitute public taker/trade fee OR ZERO", so THE DECISION
+  METRIC WAS WITHHELD, NOT COMPUTED AT ZERO. Section 8.1 is ZERO BY OMISSION --
+  maker_pnl_from_fills at :1307 has NO fee term and the string "fee" occurs ZERO
+  times in it, so the +8,598.76c IS GROSS. The venue is ZERO CHARGE, NEGATIVE
+  NET. NONE OF THE THREE IS THE VENUE'S, and the R-537 ruling moves only V2's.
+  (3) THE DECLARED BAR (R-540(A)) IS TWO ENDPOINTS, NOT THREE. The charge
+  endpoint COLLAPSES INTO ZERO BY CONSTRUCTION -- the fee is what an order SIGNS
+  and ours signs zero, so the 1000/5000-bps residual is a SIGNING DEFECT and
+  becomes a BUILD-TIME GUARD, not an endpoint. AND THE REBATE'S PER-MARKET SHARE
+  CANCELS IN THE DELTA, so E-R IS A POINT -- which supersedes the "[0, 20%]
+  carried as an interval" I recorded at round 103.
+  (4) THE TRAP, CHECKED BY ME AT THE CODE: de_v2_lifecycle_economics.py:333 is
+  gate1_green = every_gross_identity and every_fee_complete, and every gross
+  identity is already green -- SO SUPPLYING ANY COMPLETE LEDGER, EVEN A LEDGER
+  OF ZEROS SUPPLIED ONLY TO MEASURE SENSITIVITY, FLIPS gate1_exit.cleared TRUE
+  AND EMPTIES reasons_not_cleared, DELETING THE CAUSALITY CAVEAT AS A SIDE
+  EFFECT OF A MEASUREMENT. The run is a SIDE-CAR, status
+  FEE_ENDPOINT_SENSITIVITY_NOT_A_GATE_RESULT, and EMITS NO gate1_exit.
+  (5) A LINE NOBODY HAD CITED, AND I READ IT MYSELF: FLOW_MODEL_STATE.md:79 --
+  "TAKER LEG ONLY ... BOTH TERMS ARE THE SAME SIDE. DO NOT SUBTRACT THIS FROM A
+  MAKER NET." It sits IMMEDIATELY BELOW the fee row that R-536, R-538 and
+  Q-DA-252 all quote. DE found it and the reviewer's 1.5.1 caught the same
+  straddle independently. DA'S STRADDLE [-3,074.3, +288.4] IS MARKED
+  PENDING-ADJUDICATION, NOT CHECKED; the reviewer adjudicates, DA takes it next
+  round. I verified only that line 79 says what it says.
+  (6) DE 63 VERIFIED: 226 on THREE launchers then 230, artifact 155744Z with
+  carrying_commit 641cfb6 ON THE BRANCH, seven strings moved and NO NUMBER, and
+  the producer/emission contract class CLOSED AS A CLASS at its third instance.
+  DE's seam answer -- the tranche record carries NO fee field -- was reached
+  INDEPENDENTLY of Q-DA-252, which makes it a SECOND OBSERVATION.
+  (7) MY OWN ROUND-102 INTERVAL STAYS WITHDRAWN, citable form [-rebate, 0].
+  PRIOR CHECKPOINT:
   2026-09-05T15:56:56Z (MEM ROUND 103 -- THE FEE, SWEPT FROM THREE ENTRIES.
   STATE ONLY.
   (1) THE VENUE'S OWN DOCS, FETCHED LIVE ON THE USER'S INSTRUCTION (R-536, whose
@@ -571,6 +615,101 @@ flags:
                              # Carry this flag with the one above or the pair
                              # reads as a restart. In the reviewer's own words,
                              # adopted: "It does not restart the programme."
+  maker_fee_setting_is_three_values_in_three_places: NULL-ZERO_BY_OMISSION-NEGATIVE
+                             # CHECKED 2026-09-05T16:10:57Z -- I READ ALL THREE
+                             # AT THE CODE, not from R-539(B).
+                             # (1) V2's GATE-1e ECONOMICS: NULL, DELIBERATELY.
+                             # de_v2_lifecycle_economics.py:55 declares
+                             # `_fee_ledger(fill_ids, maker_fees: dict | None)`
+                             # and :56 is `if maker_fees is None`, so the fee is
+                             # a REAL PER-FILL PARAMETER, keyed by fill id, and
+                             # the Gate-1e run passed None. The receipt records
+                             # the consequence: n_fees_priced 0, status
+                             # NOT_AVAILABLE_REQUIRED_MAKER_FEES_UNPRICED
+                             # (RELAYED -- I did not reopen the receipt).
+                             # THE DISTINCTION THAT MATTERS: THE DECISION METRIC
+                             # WAS WITHHELD, NOT COMPUTED AT ZERO. Its declared
+                             # rule was "never substitute public taker/trade fee
+                             # or zero". A null is a refusal; a zero would have
+                             # been an answer. They are not the same and the
+                             # receipt says which one it is.
+                             # (2) THE SECTION 8.1 FILLS LEG: ZERO BY OMISSION.
+                             # de_phase4_diag_runner.maker_pnl_from_fills (:1307)
+                             # computes P&L = sgn*(mid_at_markout - level) and
+                             # spread and adverse as the same differences -- AND
+                             # I COUNTED: the string "fee" occurs ZERO times
+                             # anywhere in that function. THERE IS NO FEE TERM.
+                             # SO THE +8,598.76c BASELINE IS GROSS OF ANY FEE,
+                             # and the setting there is zero because nobody
+                             # modelled it, which is a different thing from zero
+                             # because the venue charges zero.
+                             # (3) AT THE VENUE: ZERO CHARGE, NEGATIVE NET after
+                             # the 20% crypto rebate (R-536/R-538, relayed).
+                             # THREE PLACES, THREE VALUES -- null,
+                             # zero-unmodelled, negative -- AND NONE OF THEM IS
+                             # THE VENUE'S. The USER's R-537 ruling is what
+                             # moves V2's from null to the declared interval; it
+                             # does NOT touch section 8.1's omission, which
+                             # stays a separate open item.
+  gate1_exit_trap_any_complete_ledger_flips_cleared: CHECKED-AT-THE-CODE-LINE-333
+                             # CHECKED 2026-09-05T16:10:57Z at
+                             # de_v2_lifecycle_economics.py:333, which reads
+                             # `gate1_green = every_gross_identity and
+                             # every_fee_complete` and is consumed at :334,
+                             # :359 and :380.
+                             # WHY IT IS A TRAP AND NOT A BUG: every gross
+                             # identity is ALREADY green (relayed from R-540(A)),
+                             # so the conjunction turns on the fee half alone --
+                             # AND THEREFORE SUPPLYING ANY COMPLETE LEDGER, EVEN
+                             # A LEDGER OF ZEROS SUPPLIED ONLY TO MEASURE
+                             # SENSITIVITY, FLIPS gate1_exit.cleared TO TRUE AND
+                             # EMPTIES reasons_not_cleared -- DELETING THE
+                             # CAUSALITY CAVEAT AS A SIDE EFFECT OF A
+                             # MEASUREMENT.
+                             # THE GUARD, DECLARED BEFORE THE RUN: the ruled run
+                             # MUST NOT EMIT gate1_exit AT ALL. It is a SIDE-CAR
+                             # with status
+                             # FEE_ENDPOINT_SENSITIVITY_NOT_A_GATE_RESULT,
+                             # carrying the three sampler refusals BY NAME.
+                             # THIS IS THE CLEANEST INSTANCE THIS PROGRAMME HAS
+                             # OF A MEASUREMENT THAT WOULD HAVE SILENTLY
+                             # REWRITTEN A VERDICT, and it was found by reading
+                             # the code before running it rather than by
+                             # noticing the verdict afterwards.
+  flow_model_state_79_forbids_the_subtraction: TAKER-LEG-ONLY-DO-NOT-SUBTRACT-FROM-A-MAKER-NET
+                             # CHECKED 2026-09-05T16:10:57Z at
+                             # live/pm_research/FLOW_MODEL_STATE.md:79, quoted
+                             # whole: "| **Crossing costs ~2.25 c/share ATM --
+                             # TAKER LEG ONLY** | 0.50 c half-spread + 1.75 c
+                             # fee ~ **225 bps** on a $1 binary. **BOTH TERMS
+                             # ARE THE SAME SIDE. DO NOT SUBTRACT THIS FROM A
+                             # MAKER NET.** | btc/eth; n=600 transactions,
+                             # as-of 2026-08-23 |".
+                             # IT IS THE ROW IMMEDIATELY BELOW THE FEE ROW THAT
+                             # R-536, R-538 AND Q-DA-252 ALL QUOTE. Three
+                             # citations of line 78; nobody had cited line 79.
+                             # THAT IS RULE 16's SHAPE EXACTLY -- verify at the
+                             # artifact a claim names, and know what KIND of
+                             # document you are reading -- and here the artifact
+                             # carried its own contraindication one line down.
+  da_straddle_pending_adjudication: NOT-CHECKED-TWO-SEATS-SAY-IT-USES-THE-FORBIDDEN-SUBTRACTION
+                             # PENDING-ADJUDICATION as of 2026-09-05T16:10:57Z.
+                             # NOT a finding I am asserting and NOT a flag I am
+                             # marking CHECKED.
+                             # Q-DA-252's baseline straddle [-3,074.3, +288.4]
+                             # is reported by DE to be produced by doing what
+                             # FLOW_MODEL_STATE.md:79 forbids, and the
+                             # reviewer's own section 1.5.1 caught the same
+                             # straddle independently as "on a quantity that
+                             # does not decide". TWO SEATS, TWO ROUTES, ONE
+                             # FINDING AGAINST DA'S ARTIFACT.
+                             # ROUTED TO THE REVIEWER TO ADJUDICATE; DA TAKES IT
+                             # NEXT ROUND. I verified only that line 79 says
+                             # what it says -- I did NOT open Q-DA-252 and I
+                             # make no claim about how its straddle was built.
+                             # UNTIL THE ADJUDICATION LANDS, ANY FLAG OR
+                             # DOCUMENT LEANING ON THAT STRADDLE IS
+                             # PENDING-ADJUDICATION, NOT CHECKED.
   venue_docs_makers_are_never_charged: FETCHED-LIVE-2026-09-05T15:51Z-R-536
                              # RELAYED from R-536(B)-(E). Four venue pages
                              # fetched live on the USER's instruction and read
@@ -722,7 +861,97 @@ flags:
                              # WE SIGN -- a stronger footing than a venue
                              # promise, because it does not depend on the venue
                              # keeping one.
-  users_question_is_now_the_fee_interval_rerun: SUPERSEDED-BY-R-538-INTERVAL-IS-NOW-[-rebate,0]
+  ruled_run_declared_bar_two_endpoints: E0-AND-E_MINUS_R-CHARGE-ENDPOINT-COLLAPSED
+                             # RELAYED from R-540(A), the reviewer's
+                             # specification at 01edfd2, ADOPTED AS THE DECLARED
+                             # BAR for the USER's R-537 ruling. The reviewer
+                             # moved TWICE on the direction and says so.
+                             # TWO ENDPOINTS, NOT THREE. THE CHARGE ENDPOINT
+                             # COLLAPSES INTO ZERO BY CONSTRUCTION: the maker fee
+                             # is what an order SIGNS and ours signs zero, so the
+                             # 1000/5000-bps residual is a SIGNING DEFECT (a
+                             # client copying maker_base_fee = 1000 into the fee
+                             # field) and becomes a BUILD-TIME GUARD
+                             # (signed_feeRateBps == 0, known-bad 1000) FOR ANY
+                             # FUTURE SIGNING PATH -- NOT AN ECONOMIC ENDPOINT.
+                             # THIS IS WHY MY ROUND-102 UPPER ENDPOINT WAS NOT
+                             # MERELY MIS-SIZED: THERE IS NO SUCH ENDPOINT.
+                             # E0 = 0.0 on every fill (the venue's default, our
+                             # signed rate, V2's declared estimand).
+                             # E-R = -0.20*fe per fill, fe_arm = sum of
+                             # 7*p*(1-p)*shares cents over an arm's received
+                             # fills (1.75 c at p = 0.5, one share) -- AND THE
+                             # PER-MARKET SHARE CANCELS IN THE DELTA, SO E-R IS
+                             # A POINT, NOT AN INTERVAL. That is the part that
+                             # supersedes my round-103 "[0, 20%] carried as an
+                             # interval": the quantity I recorded as the one a
+                             # counterfactual replay cannot know DROPS OUT of
+                             # the delta.
+                             # D(E0) = gross_delta; D(E-R) = gross_delta -
+                             # 0.20*delta_fe, ONE-SIDED, DOWNWARD, AGAINST THE
+                             # TREATMENT.
+                             # THE BAR, DECLARED BEFORE THE RUN: report both
+                             # endpoints, SELECT NOTHING; the treatment's p among
+                             # its 200 controls at each, (1 + #{controls >=
+                             # treatment})/201 one-sided; fe_T, fe_B, every
+                             # control's fe; materiality = 0.20*delta_fe /
+                             # |gross_delta|.
+                             # INVARIANT = sign(D(E0)) == sign(D(E-R)) AND
+                             # |p(E-R) - p(E0)| <= 0.05 AND both p on one side of
+                             # 0.5. MATERIAL = materiality > 0.10.
+                             # AND THE HONEST LABEL ON THOSE THRESHOLDS:
+                             # THRESHOLDS ON A DESCRIPTION, NOT A TEST -- G = 0,
+                             # n = 1, consumed, matched_null hardcoded None.
+                             # HONEST ABOUT WHAT IS ALREADY RUN: DA drove both
+                             # LEVEL endpoints at 15:53Z and the reviewer read
+                             # them, SO THE BAR IS POST-HOC TO THAT. Genuinely
+                             # unrun: the delta on all 202 arms, the control
+                             # p-locations, and the rebate endpoint.
+                             # PREDICATES COMPUTED NOT PRINTED (fe_T <= fe_B per
+                             # arm; at E0 fee_adjusted_strategy_net ==
+                             # gross_after_queue_reset EXACTLY on all 202 arms OR
+                             # THE RUN IS VOID). FALSIFIERS BOTH WAYS. The
+                             # 9b37088 pin constraint holds with the drift guard
+                             # NOT defeated.
+  de63_verified_at_230_and_the_contract_class_closed: THREE-LAUNCHERS-SEVEN-STRINGS-NO-NUMBER
+                             # RELAYED from R-540(B). Rebase clean; 226 observed
+                             # on THREE launchers, 230 after the four new checks,
+                             # re-verified at the published commit -- DE REPORTED
+                             # THE NUMBER IT OBSERVED, NOT THE ONE THE
+                             # COORDINATOR PREDICTED at R-532(F).
+                             # 4,044 leaves compared: SEVEN MOVED, ALL STRINGS,
+                             # NO NUMBER. Artifact
+                             # de_section81_arms__20260905T155744Z.json with
+                             # carrying_commit 641cfb6 ON THE BRANCH --
+                             # yesterday's provenance defect not repeated.
+                             # THE PART WORTH KEEPING: DE63b found BY RE-EMITTING
+                             # AND DIFFING, NOT BY READING, that its relabelled
+                             # identities had NOT REACHED THE ARTIFACT because
+                             # fields() read a stale spec table -- the THIRD
+                             # instance of the producer/emission contract class
+                             # in one file (DE59-C1, DE60-C1, now this).
+                             # DE's own words: "I closed two instances before and
+                             # said so; I had not closed the class." NOW CLOSED
+                             # AS A CLASS via INVENTORY_EMITTED_KEYS, with the
+                             # new checks honestly labelled SOURCE PINS OVER AN
+                             # AST -- weaker than a driven emission, because
+                             # fields() is a closure. attempt_bound remains
+                             # UNWIRED. The orphaned 153142Z artifact (naming
+                             # 07f0553, no longer on any branch) is still on disk,
+                             # routed to DE.
+  de_seam_answer_tranche_record_carries_no_fee_field: SECOND-OBSERVATION-REACHED-INDEPENDENTLY
+                             # RELAYED from R-540(B). The tranche record carries
+                             # FOUR fields and NONE IS A FEE -- so round 63's
+                             # question as put is answered NO -- while
+                             # economic_arm(..., maker_fees) and _fee_ledger are
+                             # a COMPLETE SEAM whose THREE PRODUCTION CALL SITES
+                             # PASS NOTHING.
+                             # WHY IT COUNTS AS A SECOND OBSERVATION AND NOT A
+                             # RESTATEMENT: DE reached it INDEPENDENTLY OF
+                             # Q-DA-252. Two seats, two routes, same seam --
+                             # which is corroboration, the axis my instrument
+                             # does not measure.
+  users_question_is_now_the_fee_interval_rerun: SUPERSEDED-BY-R-538-AND-R-540-TWO-ENDPOINTS-NOT-THREE
                              # SUPERSEDED IN BAND AT 2026-09-05T15:56:56Z. THE OLD
                              # VALUE BELOW -- GATE-1E-RERUN-ON-[0,1.75]-c-PER-SHARE
                              # -- IS WITHDRAWN AS THE INTERVAL'S SHAPE, AND I
@@ -923,7 +1152,35 @@ flags:
                              # TURN FROM `ps`, WITH THE OBSERVER EXCLUDED.
                              # A pattern that fails three times is a rule
                              # missing, not three seats being careless.
-  be_is_on_recorded_standby: RECORDED-STANDBY-PENDING-TONIGHT-00:06Z-VERDICT
+  no_seat_stands_by: USER-MAKE-ALL-MODULES-WORK-R-539(A)
+                             # RELAYED from R-539(A). The USER's instruction was
+                             # "Make all modules work." THE RECORDED-STANDBY
+                             # READING OF R-381 IS WITHDRAWN FOR THIS PROGRAMME
+                             # WHILE THE USER'S LOOP RUNS: every seat carries a
+                             # complete batch.
+                             # IN FLIGHT AT THIS WRITING, NONE DONE: BE 43 (the
+                             # CANCEL-axis null, replayed THROUGH THE STATEFUL
+                             # POLICY so the cascade is REALISED, with per-draw
+                             # fills-lost / fills-per-cancel / cents-per-cancel);
+                             # DA 51 (the attainable-value companion on the
+                             # 4,315-FILL surface, since Q-DA-249's 10.0% lives
+                             # on the 355-action Gate-0 book and does not
+                             # transfer; the 22 over-charged taker legs; and a
+                             # MUTATION AUDIT of da_population_audit, which DE
+                             # imported unchanged to certify NOTHING_EXCLUDED
+                             # and which NOBODY BUT DA HAS EVER VERIFIED);
+                             # DE 64 (the ruled run, RUNNING NOW); REV (self-
+                             # attack on "the share CANCELS", and adjudicating
+                             # the straddle).
+                             # THE QUESTION BE 43 EXISTS TO ANSWER IS THE ONE
+                             # WORTH CARRYING: IF RANDOM CANCELS THROUGH THE
+                             # STATEFUL POLICY ALSO CASCADE AT ~4x, THE CASCADE
+                             # IS A PROPERTY OF THE MACHINERY, NOT OF
+                             # CONDVALUE'S SELECTION -- which would relocate
+                             # R-535(D)'s cancel-axis finding from the ranker to
+                             # the mechanism.
+                             # EARLIER VALUE (rule 13):
+                             # RECORDED-STANDBY-PENDING-TONIGHT-00:06Z-VERDICT
                              # RELAYED from R-535(G). BE waits on the governed
                              # 00:06Z verdict for 09-05; its scoring path is
                              # untouched. A RECORDED STANDBY IS NOT IDLENESS
@@ -7921,6 +8178,27 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-05T16:10:57Z, NO SEAT STANDS BY (the USER's "make all modules
+  work", R-539) AND THE RULED GATE-1e RUN IS EXECUTING UNDER A BAR DECLARED
+  BEFORE IT. BE 43, DA 51, DE 64 and the reviewer are in flight; none is done.
+  THE BAR IS TWO ENDPOINTS, NOT THREE: the charge endpoint COLLAPSES INTO ZERO
+  because the maker fee is what an order SIGNS and ours signs zero (the
+  1000/5000-bps residual becomes a BUILD-TIME GUARD), and the rebate's
+  per-market share CANCELS IN THE DELTA so E-R is a POINT. INVARIANT and
+  MATERIAL are declared, and honestly labelled THRESHOLDS ON A DESCRIPTION, NOT
+  A TEST (G = 0, n = 1). THE RUN IS A SIDE-CAR THAT EMITS NO gate1_exit, because
+  :333's gate1_green turns on the fee half alone -- SO ANY COMPLETE LEDGER,
+  EVEN ONE OF ZEROS, WOULD FLIP cleared TRUE AND DELETE THE CAUSALITY CAVEAT.
+  OUR MAKER-FEE SETTING IS THREE VALUES IN THREE PLACES, read at the code: V2's
+  Gate-1e NULL AND DELIBERATELY SO (withheld, not computed at zero), section
+  8.1 ZERO BY OMISSION (so +8,598.76c is GROSS), the venue ZERO CHARGE AND
+  NEGATIVE NET. None is the venue's; the ruling moves only V2's.
+  AND A LINE NOBODY HAD CITED NOW BEARS ON AN ARTIFACT: FLOW_MODEL_STATE.md:79
+  says "DO NOT SUBTRACT THIS FROM A MAKER NET", one row below the fee row three
+  entries quote. DA's straddle is PENDING-ADJUDICATION, not checked.
+  Gate 1 is unmoved: three sampler refusals, 1 of 7. Economics stay in
+  workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-05T15:56:56Z, RETAINED BELOW --
   AS-OF 2026-09-05T15:56:56Z, THE FEE IS ANSWERED FROM THREE INDEPENDENT
   DIRECTIONS AND THEY AGREE. The venue's own docs, fetched live, say "MAKERS ARE
   NEVER CHARGED FEES" on two pages, one updated 2026-07-10; this repository's
@@ -8595,6 +8873,79 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 104, 2026-09-05T16:10:57Z ------------------------------
+  maker_fee_setting_is_three_values_in_three_places:
+    prov: CHECKED
+    artifact: live/pm_research/de_v2_lifecycle_economics.py
+    as_of: 2026-09-05T16:10:57Z
+    said: >-
+      line 55 declares `def _fee_ledger(fill_ids: list[str], maker_fees: dict |
+      None) -> dict:` and line 56 is `if maker_fees is None:`, with :64-:96
+      validating the dict and `economic_arm(..., maker_fees: dict | None = None)`
+      at :96 -- so the maker fee is a real per-fill parameter and the Gate-1e run
+      passed None. Separately at
+      live/pm_research/de_phase4_diag_runner.py:1307, `maker_pnl_from_fills`
+      computes spread/P&L/adverse as sgn*(mid - level) with NO fee term, and a
+      case-insensitive count of "fee" over that function returns ZERO. The
+      receipt fields (n_fees_priced 0, status
+      NOT_AVAILABLE_REQUIRED_MAKER_FEES_UNPRICED) and the venue's negative net
+      are RELAYED from R-539(B)/R-536; I did not reopen the receipt.
+  gate1_exit_trap_any_complete_ledger_flips_cleared:
+    prov: CHECKED
+    artifact: live/pm_research/de_v2_lifecycle_economics.py
+    as_of: 2026-09-05T16:10:57Z
+    said: >-
+      line 333 reads `gate1_green = every_gross_identity and every_fee_complete`
+      and is consumed at :334, :359 and :380. That every gross identity is
+      already green is RELAYED from R-540(A) -- which is the half that turns the
+      conjunction into a trap, so the flag is checked on the code and relayed on
+      the state.
+  flow_model_state_79_forbids_the_subtraction:
+    prov: CHECKED
+    artifact: live/pm_research/FLOW_MODEL_STATE.md
+    as_of: 2026-09-05T16:10:57Z
+    said: >-
+      line 79 reads in full "| **Crossing costs ~2.25 c/share ATM -- TAKER LEG
+      ONLY** | 0.50 c half-spread + 1.75 c fee ~ **225 bps** on a $1 binary.
+      **BOTH TERMS ARE THE SAME SIDE. DO NOT SUBTRACT THIS FROM A MAKER NET.** |
+      btc/eth; n=600 transactions, as-of 2026-08-23 |" -- the row immediately
+      below the fee row at :78 that R-536, R-538 and Q-DA-252 each quote.
+  da_straddle_pending_adjudication:
+    prov: RELAYED
+    from: >-
+      [MY INSTRUMENT REFUSED `prov: PENDING-ADJUDICATION` AS MALFORMED --
+      "unknown prov 'PENDING-ADJUDICATION' (expected CHECKED or RELAYED)" -- and
+      I TOOK THE REFUSAL RATHER THAN WIDEN THE VOCABULARY WHILE IT WAS FLAGGING
+      ME. The pending status lives in the flag's VALUE, which reads
+      NOT-CHECKED-TWO-SEATS-SAY-IT-USES-THE-FORBIDDEN-SUBTRACTION, and in this
+      note. The gap it exposes is real and is the CORROBORATION axis again: my
+      vocabulary has two words, and "two seats reported this independently and
+      nobody has adjudicated it" is neither of them. Named, not built --
+      instrument work is not this round's authorisation.]
+      DE (R-540(C)) and the reviewer's section 1.5.1, independently. I did NOT
+      open Q-DA-252 and make no claim about how its straddle was built; I
+      verified only that FLOW_MODEL_STATE.md:79 says what it says. The reviewer
+      adjudicates; DA takes it next round. Deliberately not CHECKED.
+  no_seat_stands_by:
+    prov: RELAYED
+    from: >-
+      R-539(A), the USER's instruction "Make all modules work". RENAMED FROM
+      `be_is_on_recorded_standby` (R-535(G)) at 2026-09-05T16:10:57Z; the old
+      flag's text is kept under rule 13 inside the flag body. THE RENAME IS WHY
+      THIS ENTRY EXISTS AT ALL: my instrument's ORPHAN check fired on the stale
+      `be_is_on_recorded_standby` provenance key -- "provenance for a flag that
+      does not exist" -- which is EXACTLY the half-rename it was built to catch
+      and the first time it has caught one. Round 100 recorded that check as
+      reporting zero and untested in anger; it is tested now, on me.
+  ruled_run_declared_bar_two_endpoints:
+    prov: RELAYED
+    from: R-540(A), the reviewer's specification at 01edfd2
+  de63_verified_at_230_and_the_contract_class_closed:
+    prov: RELAYED
+    from: R-540(B)
+  de_seam_answer_tranche_record_carries_no_fee_field:
+    prov: RELAYED
+    from: R-540(B)
   # --- MEM round 103, 2026-09-05T15:56:56Z ------------------------------
   r536_header_time_was_estimated_not_read:
     prov: CHECKED
@@ -8724,9 +9075,6 @@ flag_provenance:
     prov: RELAYED
     from: R-535(A), self-reported by the coordinator and recorded at its request
   waiters_do_not_survive_the_turn_that_arms_them:
-    prov: RELAYED
-    from: R-535(G)
-  be_is_on_recorded_standby:
     prov: RELAYED
     from: R-535(G)
   # --- MEM round 101, 2026-09-05T15:01:22Z -------------------------------
