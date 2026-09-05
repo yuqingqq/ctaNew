@@ -1,0 +1,510 @@
+{
+ "as_of": "2026-09-05T16:25:47Z",
+ "cells": {
+  "CONDVALUE_X_SKEW": {
+   "arm_filed": {
+    "decisions": 1154,
+    "filed_cents_per_cancel": 2.8646189714714696,
+    "filed_fills_lost": 1440,
+    "filed_fills_lost_per_cancel": 4.324324324324325,
+    "filed_n_cancels": 333,
+    "head": "q1_arrival_composed_lgbm",
+    "theta": 0.32450609461933483
+   },
+   "by_side": {
+    "BUY_UP": 586,
+    "SELL_UP": 568
+   },
+   "decisions": 1154,
+   "locations": {
+    "cents_per_cancel": {
+     "direction": "LOWER_IS_BETTER",
+     "floor": 0.001996007984031936,
+     "inside_the_null_range": true,
+     "is_a_validation": false,
+     "n_draws": 500,
+     "null_max": 15.285753234800838,
+     "null_mean": 2.1074760075366092,
+     "null_min": -13.140203177966102,
+     "null_p05": -3.4525124995029812,
+     "null_p50": 1.8902072900149811,
+     "null_p95": 9.07492996019215,
+     "null_sd": 3.8083742321348155,
+     "observed": 2.8646189714714696,
+     "p_at_least_as_good": 0.6227544910179641,
+     "quantile_of_observed": 0.622,
+     "why_not": "one CONSUMED hour; n = 1 in the clustering unit and G = 0 complete UTC days (rules 8 and 11)"
+    },
+    "fills_lost": {
+     "direction": "LOWER_IS_BETTER",
+     "floor": 0.001996007984031936,
+     "inside_the_null_range": false,
+     "is_a_validation": false,
+     "n_draws": 500,
+     "null_max": 414.0,
+     "null_mean": 240.942,
+     "null_min": 145.0,
+     "null_p05": 187.95,
+     "null_p50": 239.0,
+     "null_p95": 303.04999999999995,
+     "null_sd": 35.94070261150186,
+     "observed": 1440.0,
+     "p_at_least_as_good": 1.0,
+     "quantile_of_observed": 1.0,
+     "why_not": "one CONSUMED hour; n = 1 in the clustering unit and G = 0 complete UTC days (rules 8 and 11)"
+    },
+    "fills_lost_per_cancel": {
+     "direction": "LOWER_IS_BETTER",
+     "floor": 0.001996007984031936,
+     "inside_the_null_range": false,
+     "is_a_validation": false,
+     "n_draws": 500,
+     "null_max": 0.8181818181818182,
+     "null_mean": 0.4969748944984966,
+     "null_min": 0.30982905982905984,
+     "null_p05": 0.3894501018329939,
+     "null_p50": 0.4930097758626234,
+     "null_p95": 0.6198034448300008,
+     "null_sd": 0.0723329691964029,
+     "observed": 4.324324324324325,
+     "p_at_least_as_good": 1.0,
+     "quantile_of_observed": 1.0,
+     "why_not": "one CONSUMED hour; n = 1 in the clustering unit and G = 0 complete UTC days (rules 8 and 11)"
+    }
+   },
+   "n_draws": 500,
+   "n_draws_with_zero_cancels": 0,
+   "null": {
+    "cancels_issued": {
+     "field": "cancels_issued",
+     "max": 537.0,
+     "mean": 484.854,
+     "min": 435.0,
+     "n": 500,
+     "p05": 458.0,
+     "p50": 484.0,
+     "p95": 516.0,
+     "sd": 17.099165093471306
+    },
+    "cascade_factor": {
+     "field": "cascade_factor",
+     "max": 0.7320973348783315,
+     "mean": 0.4446859948224091,
+     "min": 0.27723059096176134,
+     "n": 500,
+     "p05": 0.34847435531336957,
+     "p50": 0.44113806363976577,
+     "p95": 0.5545912167992197,
+     "sd": 0.06472250152197256
+    },
+    "cents_per_cancel": {
+     "field": "cents_per_cancel",
+     "max": 15.285753234800838,
+     "mean": 2.1074760075366092,
+     "min": -13.140203177966102,
+     "n": 500,
+     "p05": -3.4525124995029812,
+     "p50": 1.8902072900149811,
+     "p95": 9.07492996019215,
+     "sd": 3.808374232134816
+    },
+    "conversion": {
+     "field": "conversion",
+     "max": 0.46533795493934144,
+     "mean": 0.4201507798960139,
+     "min": 0.37694974003466203,
+     "n": 500,
+     "p05": 0.3968804159445407,
+     "p50": 0.4194107452339688,
+     "p95": 0.44714038128249567,
+     "sd": 0.014817300774238566
+    },
+    "fills_lost": {
+     "field": "fills_lost",
+     "max": 414.0,
+     "mean": 240.942,
+     "min": 145.0,
+     "n": 500,
+     "p05": 187.95,
+     "p50": 239.0,
+     "p95": 303.04999999999995,
+     "sd": 35.94070261150186
+    },
+    "fills_lost_per_cancel": {
+     "field": "fills_lost_per_cancel",
+     "max": 0.8181818181818182,
+     "mean": 0.4969748944984966,
+     "min": 0.30982905982905984,
+     "n": 500,
+     "p05": 0.3894501018329939,
+     "p50": 0.4930097758626234,
+     "p95": 0.6198034448300008,
+     "sd": 0.0723329691964029
+    },
+    "ratio_vs_random_cancel": {
+     "field": "ratio_vs_random_cancel",
+     "max": 6.863582788229705,
+     "mean": 0.9462952744130042,
+     "min": -5.900191569284122,
+     "n": 500,
+     "p05": -1.5502412608484926,
+     "p50": 0.8487376462676604,
+     "p95": 4.074809538162512,
+     "sd": 1.7100296877295895
+    },
+    "selectivity_factor": {
+     "field": "selectivity_factor",
+     "max": 15.621314370818602,
+     "mean": 2.0983735430767325,
+     "min": -13.244063290107386,
+     "n": 500,
+     "p05": -3.539893301167363,
+     "p50": 1.9846746917629492,
+     "p95": 8.75732594523854,
+     "sd": 3.6886343105711985
+    }
+   },
+   "seed": 20260905
+  },
+  "HAZARD_OVER_SKEWED_REF": {
+   "arm_filed": {
+    "decisions": 106,
+    "filed_cents_per_cancel": 0.26157793750000263,
+    "filed_fills_lost": 107,
+    "filed_fills_lost_per_cancel": 2.2291666666666665,
+    "filed_n_cancels": 48,
+    "head": "incumbent_linear_d",
+    "theta": 0.43525926488298716
+   },
+   "by_side": {
+    "BUY_UP": 41,
+    "SELL_UP": 65
+   },
+   "decisions": 106,
+   "locations": {
+    "cents_per_cancel": {
+     "direction": "LOWER_IS_BETTER",
+     "floor": 0.001996007984031936,
+     "inside_the_null_range": true,
+     "is_a_validation": false,
+     "n_draws": 500,
+     "null_max": 40.26834875000001,
+     "null_mean": 1.627833961931054,
+     "null_min": -30.841021336734695,
+     "null_p05": -7.571473788366072,
+     "null_p50": 1.0783525261324067,
+     "null_p95": 12.025011542144274,
+     "null_sd": 6.7205397453823625,
+     "observed": 0.26157793750000263,
+     "p_at_least_as_good": 0.4111776447105788,
+     "quantile_of_observed": 0.41,
+     "why_not": "one CONSUMED hour; n = 1 in the clustering unit and G = 0 complete UTC days (rules 8 and 11)"
+    },
+    "fills_lost": {
+     "direction": "LOWER_IS_BETTER",
+     "floor": 0.001996007984031936,
+     "inside_the_null_range": false,
+     "is_a_validation": false,
+     "n_draws": 500,
+     "null_max": 49.0,
+     "null_mean": 17.27,
+     "null_min": 2.0,
+     "null_p05": 6.950000000000003,
+     "null_p50": 17.0,
+     "null_p95": 32.0,
+     "null_sd": 7.535161399374884,
+     "observed": 107.0,
+     "p_at_least_as_good": 1.0,
+     "quantile_of_observed": 1.0,
+     "why_not": "one CONSUMED hour; n = 1 in the clustering unit and G = 0 complete UTC days (rules 8 and 11)"
+    },
+    "fills_lost_per_cancel": {
+     "direction": "LOWER_IS_BETTER",
+     "floor": 0.001996007984031936,
+     "inside_the_null_range": false,
+     "is_a_validation": false,
+     "n_draws": 500,
+     "null_max": 1.0425531914893618,
+     "null_mean": 0.40032701534077214,
+     "null_min": 0.041666666666666664,
+     "null_p05": 0.16666666666666666,
+     "null_p50": 0.3883219954648526,
+     "null_p95": 0.6878472222222219,
+     "null_sd": 0.16233976983401005,
+     "observed": 2.2291666666666665,
+     "p_at_least_as_good": 1.0,
+     "quantile_of_observed": 1.0,
+     "why_not": "one CONSUMED hour; n = 1 in the clustering unit and G = 0 complete UTC days (rules 8 and 11)"
+    }
+   },
+   "n_draws": 500,
+   "n_draws_with_zero_cancels": 0,
+   "null": {
+    "cancels_issued": {
+     "field": "cancels_issued",
+     "max": 59.0,
+     "mean": 42.9,
+     "min": 27.0,
+     "n": 500,
+     "p05": 35.0,
+     "p50": 43.0,
+     "p95": 52.0,
+     "sd": 5.1795419981520805
+    },
+    "cascade_factor": {
+     "field": "cascade_factor",
+     "max": 0.932861615837874,
+     "mean": 0.358206861235393,
+     "min": 0.037282734646581696,
+     "n": 500,
+     "p05": 0.14913093858632678,
+     "p50": 0.3474649419443328,
+     "p95": 0.6154758111239859,
+     "sd": 0.1452592934714051
+    },
+    "cents_per_cancel": {
+     "field": "cents_per_cancel",
+     "max": 40.26834875000001,
+     "mean": 1.6278339619310533,
+     "min": -30.841021336734695,
+     "n": 500,
+     "p05": -7.571473788366072,
+     "p50": 1.0783525261324067,
+     "p95": 12.025011542144274,
+     "sd": 6.7205397453823625
+    },
+    "conversion": {
+     "field": "conversion",
+     "max": 0.5566037735849056,
+     "mean": 0.4047169811320755,
+     "min": 0.25471698113207547,
+     "n": 500,
+     "p05": 0.330188679245283,
+     "p50": 0.4056603773584906,
+     "p95": 0.49056603773584906,
+     "sd": 0.0488636037561517
+    },
+    "fills_lost": {
+     "field": "fills_lost",
+     "max": 49.0,
+     "mean": 17.27,
+     "min": 2.0,
+     "n": 500,
+     "p05": 6.950000000000003,
+     "p50": 17.0,
+     "p95": 32.0,
+     "sd": 7.535161399374884
+    },
+    "fills_lost_per_cancel": {
+     "field": "fills_lost_per_cancel",
+     "max": 1.0425531914893618,
+     "mean": 0.40032701534077203,
+     "min": 0.041666666666666664,
+     "n": 500,
+     "p05": 0.16666666666666666,
+     "p50": 0.3883219954648526,
+     "p95": 0.6878472222222219,
+     "sd": 0.16233976983401005
+    },
+    "ratio_vs_random_cancel": {
+     "field": "ratio_vs_random_cancel",
+     "max": 18.08122512155236,
+     "mean": 0.7309272229888458,
+     "min": -13.848182681394395,
+     "n": 500,
+     "p05": -3.3997302178768836,
+     "p50": 0.48420000796269846,
+     "p95": 5.399450127260956,
+     "sd": 3.0176452684715227
+    },
+    "selectivity_factor": {
+     "field": "selectivity_factor",
+     "max": 33.08853259869525,
+     "mean": 1.955749680616142,
+     "min": -25.051213305951567,
+     "n": 500,
+     "p05": -9.29325014395425,
+     "p50": 1.4558214959291838,
+     "p95": 13.991381260159494,
+     "sd": 7.346604292484792
+    }
+   },
+   "seed": 20260905
+  }
+ },
+ "decides_nothing": "REPORTED (rule 14).",
+ "declaration": {
+  "commit_that_last_touched_it": "6eaa538a630c30a6b69738d972bea251ebf496f7",
+  "path": "live/pm_research/declarations/be_cancel_axis_null_declaration_v1.json",
+  "resolved_at_emit_time": true,
+  "sha256": "aabefbde2f4bbc3c68dbeddf168858342d0f2a1cfe5a141a82e3f37999427489",
+  "the_invariant_rule_6_needs": "the declaration commit PRECEDES the run commit -- an ordering, which no rebase disturbs",
+  "why_not_hardcoded": "a hardcoded hash dangles across a rebase; round 42's did, and repairing it cost a commit. The digest cannot be moved by a rebase and the commit is looked up."
+ },
+ "declared_before_any_draw": true,
+ "instruments_of_record": {
+  "fills": "de_phase4_diag_runner.received_fills",
+  "mechanics": "de_phase4_diag_runner.cancel_mechanics (DELEGATED -- cascade/selectivity and separation are DE's)",
+  "params": "de_phase4_diag_runner.cell_params",
+  "replay": "harmful_stateful_policy.replay_policy (the cascade is REALISED, never assumed)",
+  "validation": "harmful_stateful_policy.validate_scores, called EXPLICITLY -- this stream did not come through de_score_stream.score_events because a RANDOM policy has no head to verify, and borrowing one would be a false provenance claim"
+ },
+ "limits": {
+  "cluster_unit_n": 1,
+  "complete_utc_days": 0,
+  "data_is_consumed": true,
+  "dispersion_statement_only": "about THIS hour",
+  "forward_scorer_untouched": true,
+  "intervals_claimable": false,
+  "is_a_validation": false,
+  "one_coin_one_hour_one_latency_one_budget": true
+ },
+ "matched_unit": {
+  "hour_stratum_is_degenerate": "there is exactly one hour",
+  "matched": "the DECISION COUNT, per side",
+  "not_matched": [
+   "realised cancel count",
+   "realised cancel set",
+   "fills lost"
+  ],
+  "why": "a decision is not a cancel: CONDVALUE converts 1,154 decisions to 333 cancels (28.9%), HAZARD 106 to 48 (45.3%). The decision is the unit (R-521, rule 2); the realised count is an OUTCOME and is reported as one."
+ },
+ "monotonicity_probe": {
+  "added_after": "the saturated positive control failed, revealing non-monotonicity",
+  "cancels_issued_is_monotone_in_decisions": false,
+  "declared_in_advance": false,
+  "peak_cancels_at_decisions": 10000,
+  "rungs": [
+   {
+    "cancels_issued": 40,
+    "conversion": 0.37735849056603776,
+    "decisions": 106,
+    "fills_lost": 15,
+    "fills_lost_per_cancel": 0.375
+   },
+   {
+    "cancels_issued": 151,
+    "conversion": 0.45345345345345345,
+    "decisions": 333,
+    "fills_lost": 64,
+    "fills_lost_per_cancel": 0.423841059602649
+   },
+   {
+    "cancels_issued": 478,
+    "conversion": 0.41421143847487,
+    "decisions": 1154,
+    "fills_lost": 206,
+    "fills_lost_per_cancel": 0.4309623430962343
+   },
+   {
+    "cancels_issued": 1077,
+    "conversion": 0.359,
+    "decisions": 3000,
+    "fills_lost": 1016,
+    "fills_lost_per_cancel": 0.9433611884865367
+   },
+   {
+    "cancels_issued": 1527,
+    "conversion": 0.1527,
+    "decisions": 10000,
+    "fills_lost": 2814,
+    "fills_lost_per_cancel": 1.842829076620825
+   },
+   {
+    "cancels_issued": 147,
+    "conversion": 0.004930734914299131,
+    "decisions": 29813,
+    "fills_lost": 4127,
+    "fills_lost_per_cancel": 28.07482993197279
+   }
+  ],
+  "seed": 20260905,
+  "why_it_matters": "if cancels_issued is not monotone in the decision count, an exact realised-count match cannot be reached by walking the decision count -- which is the structural reason the V2 samplers refused, measured rather than argued"
+ },
+ "population": {
+  "baseline_fills": 4315,
+  "budget": 0.1,
+  "coin": "btc",
+  "generations": 29813,
+  "hour": "2026-08-24T13:50-14:50Z",
+  "latency_ms": 250,
+  "n_generations_with_fills": 3861,
+  "source": "/home/yuqing/ctaNew-wt-be/data/pm_5min/derived/de_section81_cache_12.pkl"
+ },
+ "predicates": {
+  "DEs_ASSUMED_blind_cost": 2.2270807691012684,
+  "DEs_ASSUMED_blind_rate": 1.1175861175861175,
+  "DEs_assumed_cost_is_inside_every_drawn_range": true,
+  "DEs_assumed_rate_is_inside_every_drawn_range": false,
+  "both_arms_agree_between_the_drawn_and_assumed_nulls": true,
+  "decision_to_realised_conversion": {
+   "CONDVALUE_X_SKEW": 0.4194107452339688,
+   "HAZARD_OVER_SKEWED_REF": 0.4056603773584906
+  },
+  "per_arm": {
+   "CONDVALUE_X_SKEW": {
+    "CASCADE_IS_INSIDE_THE_NULL_RANGE": false,
+    "COST_IS_INSIDE_THE_NULL_RANGE": true,
+    "arm_beat_DEs_ASSUMED_blind_cancel": false,
+    "arm_beats_the_drawn_null_on_cost": false,
+    "arm_cents_per_cancel": 2.8646189714714696,
+    "arm_fills_lost_per_cancel": 4.324324324324325,
+    "null_cents_per_cancel_p50": 1.8902072900149811,
+    "null_fills_lost_per_cancel_p50": 0.4930097758626234,
+    "null_fills_lost_per_cancel_range": [
+     0.30982905982905984,
+     0.8181818181818182
+    ],
+    "p_at_least_as_cheap": 0.6227544910179641,
+    "the_two_nulls_AGREE_on_this_arm": true
+   },
+   "HAZARD_OVER_SKEWED_REF": {
+    "CASCADE_IS_INSIDE_THE_NULL_RANGE": false,
+    "COST_IS_INSIDE_THE_NULL_RANGE": true,
+    "arm_beat_DEs_ASSUMED_blind_cancel": true,
+    "arm_beats_the_drawn_null_on_cost": true,
+    "arm_cents_per_cancel": 0.26157793750000263,
+    "arm_fills_lost_per_cancel": 2.2291666666666665,
+    "null_cents_per_cancel_p50": 1.0783525261324067,
+    "null_fills_lost_per_cancel_p50": 0.3883219954648526,
+    "null_fills_lost_per_cancel_range": [
+     0.041666666666666664,
+     1.0425531914893618
+    ],
+    "p_at_least_as_cheap": 0.4111776447105788,
+    "the_two_nulls_AGREE_on_this_arm": true
+   }
+  },
+  "the_cascade_is_machinery_not_selection": false
+ },
+ "protocol": "BE_CANCEL_AXIS_NULL_V1",
+ "reproduction_gate": {
+  "checks": {
+   "CONDVALUE_X_SKEW": {
+    "cancels": 333,
+    "fills_lost": 1440,
+    "match": true,
+    "want_cancels": 333,
+    "want_fills_lost": 1440
+   },
+   "HAZARD_OVER_SKEWED_REF": {
+    "cancels": 48,
+    "fills_lost": 107,
+    "match": true,
+    "want_cancels": 48,
+    "want_fills_lost": 107
+   },
+   "baseline": {
+    "cancels": 0,
+    "fills": 4315,
+    "match": true,
+    "want_cancels": 0,
+    "want_fills": 4315
+   }
+  },
+  "meaning": "the baseline and BOTH arms come out of this harness with their filed numbers -- checked, not argued",
+  "status": "PASS"
+ },
+ "sibling_artifact": "be_ceiling_null_v1.json (the FILL axis)",
+ "wall_s": 290.9
+}
