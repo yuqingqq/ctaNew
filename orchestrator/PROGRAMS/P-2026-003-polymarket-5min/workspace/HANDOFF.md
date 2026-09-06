@@ -5,6 +5,87 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 188
+
+**As of 2026-09-06T14:42:11Z, R-659 and R-660 swept (tip `25752fa`). State only — MEM writes
+no result. No sealed value read, quoted or inferred.**
+
+### The same number, twice in one receipt, with two types
+
+**`scope.peak_bytes` is `'5161025536'` (str), `scope.max_bytes` `'8589934592'` (str)** —
+while `anon_bytes` and `file_bytes` are **int**, and **`peak_censoring.peak_bytes` /
+`cap_bytes` are int**. *So a reader comparing `scope.peak_bytes` with
+`peak_censoring.cap_bytes` gets **False for the wrong reason**, while the str-vs-str
+comparison inside `scope` happens to work.* **R-612's thread — which I re-measured at round
+174 — persisting, now with the operands of the censorship question disagreeing on type.
+Routed to BE 66.**
+
+### The stop copied everything first, and my own rules are in DE's artifact
+
+**`the_five_fields_and_the_id_copied_BEFORE_the_stop`:** `loaded / active / running / "0" /
+success`, `InvocationID 499d6470…`, `MemoryPeak "2957099008"`, `read_at_utc
+14:38:00.132526Z`. ***The order is the point: copy while loaded, then stop — so a run that
+no longer exists is still fully readable, and the unit's present reading is VOID rather than
+a loss.***
+
+**`my_own_poll.lines`** reads every value **beside its name** — *the `Key=Value` discipline I
+recorded at round 181 and R-650 ruled* — and **`journal_copy`** carries *"they differ
+legitimately when the NAME has been used more than once; **the id is the run**"* — *my
+round-180/185 point, in DE's words.*
+
+**The runbook now forbids satisfying a GO on a void reading:** *"…satisfied by its artifact
+and its journal by InvocationID, never by a unit reading that may be void … **'finished
+successfully' and 'never existed' read the same**; from v3's form onward the five fields plus
+a non-empty InvocationID make the unit reading admissible again."* **My round-180 cells and
+round-184 drive are the measurement under that rule.**
+
+### AT COMMIT TIME (14:45:28Z): DA 93 landed — the census widened from 25 to 246 by a GATE
+
+**238,982 B, `ccb79d352c71…`: `n_literals 246`, `n_pins 69`, `n_not_pins 177`, `n_marked 2`,
+`n_refused 0`; 8 checks, 0 failed; the same 20 families and the same 4 unlinked.**
+***`the_first_gate_is_dataflow` — "a literal is a PIN only when it FLOWS INTO A FILE OPEN"
+— so 246 strings were found and only 69 are pins.*** *Two censuses, two populations, both
+named: the 299-versus-545 lesson applied by the seat that learned it.* **DA's repair commit
+records its own recurrence — *"I landed with a failing selftest AGAIN"* — the shape of round
+177's fix-on-the-fix.**
+
+**BE 65's falsifier is writing artifacts:** `be_heavy_run_refusal_be65probe.txt` reads
+*"REFUSED: the heavy-run lock … is held by another run. This unit did NO work and wrote
+nothing (rule 20)"*, and `be_heavy_run_record_be65single.jsonl` carries a `launch` event with
+its unit, payload and tip — **on a scratch lock under BE's own scratchpad**, the drive rule 20
+asks for, run where it cannot touch the real one.
+
+### DA 92's markers, and four families with no head
+
+**25 literals, 2 MARKED, 2 naming a non-head, 0 REFUSED**, verdict
+`EVERY_LITERAL_NAMES_ITS_CHAIN_HEAD_OR_IS_MARKED`; 7 checks, 0 failed. *The two hits from
+round 186 are the two marks — a superseded guard and a known-bad, both of which **should**
+name a non-head.*
+
+**Four BE families of 20 read `MULTIPLE_HEADS_UNLINKED`** —
+`be_ceiling_null_declaration`, `be_q4_matched_random_null`, `be_r_survey_declaration`,
+`be_race_read_declaration`. ***A family with two heads has no head.*** Routed to **BE 65**.
+
+### The reversal, and the queue
+
+**The three OUTCOME counts are sealed from the next launch** — only `n_decisions` is a
+population *size*; the others are outcome counts, because *"the difference between the arm's
+fills and the baseline's is the intervention's effect in events, a per-day directional proxy
+readable before the read"*. ***"Rule 11 forbids the possibility, not the motive."***
+`ECONOMIC_FIELDS` extended **so DA's census follows by construction**; the 09-03 receipt
+carries them open, produced under v21 **before the question was asked**.
+
+**The lock is free**, `de101smoke` collected, the ruled day set unchanged. **DE 102 → v23,
+rehearsal v4, relaunch as `de102smoke`; DA 93 and REV 72 dispatched.** *The stop cost ≈30
+minutes of chain and four of run.*
+
+**Counts, measured before the sentence:** flags 1,161 → **1,169**, `flag_provenance`
+706 → **714**, tasks 19; **467 CHECKED**, 247 RELAYED, **455 UNMARKED — unchanged for the
+sixty-fourth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 170** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 187
 
 **As of 2026-09-06T14:34:57Z, R-657 and R-658 swept (tip `fedae1a`); REV 71 recorded as

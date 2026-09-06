@@ -14329,3 +14329,75 @@ directions.
   sixtieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
   new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 170 — archived 2026-09-06T14:42:11Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 188 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T14:21:55Z (MEM ROUND 185 -- R-655 SWEPT, tip `20db97a`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED.**
+  (1) ***THE PARTIAL RIGHT ONE IS WORSE THAN A ZERO, AND THE CODE SAYS SO IN ITS OWN
+  MEASUREMENT:*** **"`_SYSTEMD_INVOCATION_ID` alone returned 1 line of 4 and
+  `USER_INVOCATION_ID` alone 3 of 4 -- NON-EMPTY, so both were" plausible.** *A zero
+  announces itself; a wrong-sized non-empty result does not.* **The remedy is a SHAPE CHECK
+  ON THE QUERY: any incomplete field set is `REFUSED_INCOMPLETE_FIELD_SET` BEFORE a line is
+  read.** **My drive on the live `be64book`: BOTH → `COPIED`, `n_lines_copied 64`; each
+  single field → REFUSED with `n_lines_copied None` -- `None`, not 0, the same discipline as
+  the failed read.**
+  (2) **AND THE SAME COPY SHOWS THE "LAUNCHED ONCE" QUALIFIER IN NUMBERS:** `n_lines_copied
+  64` for the CURRENT invocation against `n_lines_for_the_unit 287` for the NAME across all
+  its launches. ***The by-id scoping is what makes a copy belong to A RUN rather than to a
+  NAME -- and this name has been reused sixty-odd times.***
+  (3) **ONE C-UNQUOTING HELPER, BOTH PATH FIELDS, DRIVEN.** `?? "caf\\303\\251.py"` →
+  **`café.py`** with `path_was_c_quoted: True`; `R  "old name.py" -> "new name.py"` →
+  `new name.py` with `renamed_from: 'old name.py'`, **both unquoted, each with its own
+  flag**; a plain rename unchanged. *The asymmetry that would have been the next defect --
+  unquoting the path and not the rename source -- is closed by construction.*
+  (4) **THE OPEN-BOOK PATH IS BLOCKED ON A DECLARATION, NOT ON WORK:**
+  `BOOK_MAPPING_AWAITS_BES_DECLARATION`, its known-bads ready; BE 65 declares the
+  structure, DA 91 then runs it heavy on the lock. ***And the seed/per-side recompute is
+  still NOT DONE, BY NAME*** -- *carried for the third round rather than aging quietly out
+  of the entries.*
+  (5) **DA CAUGHT TWO OF ITS OWN: A CELL PINNED TO A UNIT THAT WAS COLLECTED BETWEEN
+  ROUNDS, and a third unquoted heredoc.** ***The first is the perishability class biting an
+  INSTRUMENT'S FIXTURE: a test that names a live unit now has an expiry measured in
+  MINUTES, because a successful transient unit is collected at once.***
+  (6) **REV 70's INDEPENDENT CENSUS HOLDS THE SEAL AT 545 LEAVES:** 0 of the eight names as
+  a KEY at any depth; **no `admissibility.reasons` key exists at all**; 0 leaves whose NAME
+  is rank/quantile/exceedance-shaped. ***And the two counts are RECONCILED rather than
+  contested -- "the receipt's census was never over 299" -- both denominators named.*** *A
+  number that disagrees with another number is a defect only when nobody says what each one
+  counted.*
+  (7) ***AND THE REVIEWER CAUGHT ITS OWN PROBE TOO:*** "the 40 string hits are … MY probe's
+  fault, since `Z` matches inside every ISO timestamp; I SAY SO RATHER THAN REPORTING 40
+  HITS." **The same shape as my round-184 listing, where `tail` showed the highest STRINGS
+  and not the highest VERSIONS.** *Two seats, two rounds, two probes caught by their own
+  authors before the sentence.*
+  (8) **THE BOOK AT 19:36 AND FOUR GIGABYTES:** `loaded / active / running / 0 / success`,
+  `InvocationID e1460575980f488f…`, `MemoryCurrent` 4,064,149,504 B, `MemoryPeak`
+  4,150,992,896 B -- **the first BE run past 4 GB** -- payload RSS 3,424,412 KiB. **DE 100
+  landed: "the declaration RESOLVED instead of pinned, FIVE fields instead of three, the
+  `-E` half decided AT RUNTIME".** *Resolved-not-pinned is the chain-head rule reaching the
+  runner: a reader that pins a filename goes stale at the next supersession.*
+  **AT COMMIT TIME, 2026-09-06T14:25:11Z: DE 100 FILED READY-AND-BLOCKED -- AND THE
+  REHEARSAL IS THE DAY'S DECLARATIONS IN ONE STRING.**
+  **`p003_de_gate1_smoke_rehearsal_09_04_v2__20260906T142116Z.json` (14,295 B,
+  `862252360579b779…`): `status READY`, `blocking []`, `THE_ONE_COMMAND` carrying `-p
+  RemainAfterExit=yes`, `flock -n -E 75`, `--unit=`, and NO `--scope`.** ***Every rule ruled
+  since 12:35Z is in that one line -- and the run has NOT started, because the lock is
+  BE's.*** **DE filed READY-AND-BLOCKED rather than launching, which is R-654's gate working
+  as written and the record distinguishing READY from LAUNCHED** -- *the distinction three
+  lost runs were argued over.* **DE 101 will be a separate GO.** *The book meanwhile:
+  `MemoryPeak` 4,700,561,408 B at 22:52, still `loaded/active/running`.*
+  **FLAG WORDS: the field set REFUSED-IF-INCOMPLETE (partial is worse than empty); the
+  09-05 book PAST-FOUR-GIGABYTES-ON-THE-LOCK; the seal HELD-AT-545-LEAVES; DE 100
+  LANDED-AWAITING-THE-LOCK.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,136 -> 1,144, flag_provenance 681 -> 689,
+  tasks 19; **444 CHECKED**, 245 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-first round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
