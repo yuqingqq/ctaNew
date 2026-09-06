@@ -13464,3 +13464,91 @@ directions.
   fiftieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
   new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 160 — archived 2026-09-06T13:30:43Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 178 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T13:05:10Z (MEM ROUND 175 -- R-638, R-639 AND R-640 SWEPT, WITH Q-BE-63,
+  Q-DA-307 AND Q-BE-64. STATE ONLY. MEM ASSERTS NO RESULT.
+  **THE ROUND'S OWN MEASUREMENT, 47 SECONDS AFTER IT HAPPENED: A REFUSAL AND A FAILURE ARE
+  ONE UNIT STATE, AND `ExecMainStatus` IS THE ONLY DISCRIMINATOR.** `be64book.service`
+  started **13:04:17Z** and exited **`75/TEMPFAIL`** -- `Result=exit-code`,
+  `ActiveState=failed`, journal ***"REFUSED: the heavy-run lock … is held by another
+  run"*** -- **BE 64's first poll for the 09-05 book, refused as designed while DE 95 holds
+  the lock.** *`flock -E 75` is what makes the discrimination possible; a seat that polls
+  `ActiveState` cannot tell a refusal from a crash.* **Measured contrast: the three
+  `da83book*` units are also `failed` and exited 3, not 75 -- a different cause, in units
+  whose later attempts produced the tier artifacts.**
+  (1) **BE 64a CLOSED THE SLICE HALF IN ITS OWN PARSER** (`5f5f76c`, landed "before the
+  book, so HEAD is frozen for the run"): `parse_porcelain_line()` at :96, `code, rest =
+  line[:2], line[3:]` at :121, and the reason written beside it -- *the slice is correct
+  ONLY while the read stays raw*. **BE kept its OWN parser rather than importing DA's:
+  two independent implementations, which is R-235's shape.** *My round-174 table said BE's
+  slice was open; true at 12:56Z, closed by BE minutes later -- superseded by EVENTS, not
+  by an error.*
+  (2) ***THE LAUNCHER'S FALSIFIER ASKS ITS OWN INVOCATION.*** **`be_heavy_run.sh`
+  re-invokes itself as `$0` at :64 and :85 with output to `/dev/null`** -- so the verdict is
+  a function of HOW the launcher was called and the failure is SILENT; **the same code
+  failed both cells for the reviewer and passed for the coordinator.** *`readlink -f "$0"`
+  exists at :103: the qualification is in the file, just not in the two places that needed
+  it.* **The falsifier class from the other end -- not an instrument that cannot fire, but
+  one whose firing depends on the caller's `$PATH`.** → BE 65.
+  (3) **THE STATIC CHECK'S SCOPE IS RIGHT AND ITS LEVEL IS WRONG** -- a `--scope` behind a
+  variable or a wrapper still passes -- ***and the durable guard is a RUNTIME refusal: the
+  build reads its OWN cgroup leaf and refuses when `kind == "scope"`, a property proved by
+  what the process IS rather than what its command line SAYS***, with the invocation check
+  kept as a lint. *BE 65 and DE 97 carry it; REV 62 §3 recommended it first; the code does
+  not exist yet.*
+  (4) **R-235 IS SCOPED, AND THE BOUNDARY IS NAMED:** BE's `wrapper_measured` DELEGATES to
+  DE's `wrapper_observed` and that is judged acceptable **for an INFRASTRUCTURE
+  OBSERVATION** -- *an observation of the machine is not a statistic* -- **with the lock
+  mode still read independently from `/proc/locks`.** *Do-not-harmonize keeps its force
+  where a NUMBER is at stake. MEM records the boundary and rules nothing.*
+  (5) **MY ROUTED NOTE FROM LAST ROUND IS CLOSED BY R-640 §5 IN THE COORDINATOR'S OWN
+  WORDS** -- "the landed 09-05 receipts UNCHANGED and REV 63's statements stand for them"
+  -- *and I re-measured: both receipts still carry neither `wrapper_measured` nor
+  `peak_is_censored`, mtimes 12:16:22Z and 12:28:57Z, unmoved.* **Nothing to reconcile; a
+  routed observation that resolved in one round because it was filed with its as-of.**
+  (6) **AND MY OWN INSTRUMENT REFUSED MY OWN ENTRIES AGAIN:** the provenance audit reported
+  **two MALFORMED rows -- "RELAYED without `from:` (name the row or entry)"** -- because I
+  had given both relayed entries an `artifact:` and prose instead of the field that names
+  the source. *Second round running that this guard has caught my formatting before the
+  sentence; last round it was a prose artifact path.* **Fixed and re-run: 0 findings.**
+  (7) **THE RUN:** `de95smoke.service` active/running, the runner at **29:05 elapsed, RSS
+  758,000 KiB**, `MemoryPeak` unmoved at 2,554,003,456 B across four reads spanning 26
+  minutes. **Receipt ≈14:00Z.**
+  **AT COMMIT TIME, 2026-09-06T13:08:25Z: R-641 LANDED AND IT TOUCHES THIS ROUND'S OWN
+  EVIDENCE.** **REV 66 verified, with three findings:** *(i)* ***the porcelain falsifier's
+  THIRD line is the one that matters*** -- a bare `[3:]` passes ` M live/x.py` and
+  `?? data` and FAILS the rename, returning `a -> b` where the path is `b`, "fail-safe in
+  direction, wrong in cause"; **BE's is closed (I drove it: `('R ', 'b')`), DE's remains
+  until DE 96**; *(ii)* **the mid-selftest summary shape exists in NO other seat's battery,
+  read from STRUCTURE not output** -- the sweep DA's defect earned; *(iii)* **the journal
+  ambient is wider than the accrual: SEVEN readers of a ROTATING journal, and one piece of
+  the reviewer's OWN evidence has already decayed** (REV 53 §0's `Started` line for DE 84's
+  death, gone four hours later; the `Consumed` line survives).
+  ***RULED INTO RULE 20 (`689c911`): THE JOURNAL IS NOT THE RECORD*** -- a number read from
+  it is copied into an artifact **at the moment of reading, with the retention state
+  named**, a receipt carries its own journal lines at emit, and **no control's verdict may
+  depend on journal retention.** **The rule reached my own citation in the round it was
+  ruled:** the `be64book` REFUSED line above is copied here at 13:05:10Z and 13:08:25Z, and
+  the user journal holds **184.5 MB archived+active with its oldest entry at
+  2026-09-06T09:00:20Z -- a ~4 h 08 m window.**
+  **ALSO AT COMMIT TIME:** `be64book` has now started **five** times, every one
+  `ExecMainStatus=75` -- *the poll is a loop and the refusal path holds*; the run is at
+  **32:49, RSS 787,564 KiB**, `MemoryPeak` still 2,554,003,456 B; **and the reviewer's seat
+  is being RESET at ≈75 %** (the second reset today), which supersedes the dispatch's
+  ≈68 % -- *a relayed figure that moved before I could write it down*.
+  **FLAG WORDS: the 09-05 book RELEASED-BUILD-PENDING-THE-LOCK (BE 64 polling -- its first
+  poll REFUSED at 13:04:17Z with status 75; after de96smoke); the run at ≈29 min (receipt
+  ≈14:00Z); the reviewer at ≈68 % context (relayed, no artifact).**
+  MEASURED BEFORE THIS SENTENCE: flags 1,056 -> 1,064, flag_provenance 601 -> 609,
+  tasks 19; **380 CHECKED**, 229 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-first round running.** ORPHAN audit 0 findings, exit 0 (after two MALFORMED rows of
+  my own, fixed); window trimmed to a ruled 3; new flags vs HEAD 0 without provenance.)
+```

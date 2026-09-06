@@ -63,6 +63,85 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T13:30:43Z (MEM ROUND 178 -- R-644 SWEPT, tip `60d7aa9`. STATE ONLY. MEM
+  ASSERTS NO RESULT.
+  (1) ***DE'S RUNTIME REFUSAL, DRIVEN THREE WAYS FROM MY OWN SHELL.*** **A real day with
+  my own cgroup leaf raises `RunnerRefused`: "REFUSED DAY 2026-09-03 BEFORE ANY STAGE:
+  this process is in a `.scope` (`run-rdb87…scope`) … that is how the 09-03 re-run lost 35
+  minutes with nothing written. Nothing was read." A fixture day is ADMITTED with `checked:
+  false`; a synthetic `observed={'kind':'service'}` is ADMITTED with `checked: true`.**
+  *The coordinator drove the same cells under a scratch scope, a scratch service and the
+  bare tool shell; two seats, same verdicts.* **R-628 stops being a rule seats must
+  remember.**
+  (2) **AND I NEARLY ROUTED A PARTIAL READ.** *Stopping at the refusal branch, I had a
+  candidate finding: a real date with `fixture=True` bypasses while
+  `SCOPE_EXEMPT_FIXTURE_DAYS` is never consulted.* **Reading the whole function answered
+  it: `exempt` is REPORTED, not enforced, and the record returns `checked: not fixture`
+  AND `fixture_exemption_by_name` as separate fields.** ***A record that states what it
+  did NOT check is not a hole -- third time in three rounds that a candidate finding of
+  mine dissolved in the part I had not read yet.***
+  (3) **THE DECAY CASE RE-MEASURED, AND ITS LAST LINE IS MINUTES FROM GONE.**
+  `de84smoke.scope` still holds **exactly one line** -- `Consumed 1h 24min 20.439s CPU
+  time` at **09:46:29Z** -- matching DE's report and the reviewer's before it. **The
+  boundary has moved again: oldest user-journal entry now `09:25:57Z`.** *My four
+  readings: 09:00:20Z (13:05:10Z) → 09:05:56Z (13:16:43Z) → 09:09:57Z (13:19:51Z) →
+  09:25:57Z (13:30:43Z).* **Rotation is size-driven, so I assert NO RATE -- four readings
+  and one gap: that unit's last line sits ~20 minutes ahead of the boundary, after which
+  the run's entire journal record is GONE.** *Which is exactly why DE now copies the
+  unit's own lines into the receipt AT EMIT.*
+  (4) ***NO COMMIT HOLDS THE PRESERVED BYTES -- which is what makes "preserved, not
+  committed" load-bearing.*** **The committed `params_v6.json` hashes `1af1befb…` and
+  wt-de's on-disk copy matches it after the refresh to `55a5c3a`; the preserved digest
+  R-644 names, `f80d0a51…`, is held by NO COMMIT** -- *I walked every commit touching that
+  path; the only one (`f27298f`, DE 86) carries `1af1befb`.* **So those bytes exist in
+  exactly one place: a SESSION SCRATCH file.** *Routed to DE: if they matter they need a
+  home that is not scratch.*
+  (5) **AND THE FILE WAS UNTRACKED ONLY BY A STALE HEAD** -- `git ls-files
+  --error-unmatch` succeeds in the shared tree and in wt-de now that wt-de is at
+  `55a5c3a`. ***The same class as the wt-da FOUR (R-643) and the 235 artifacts read as
+  deleted behind the symlink (R-629): a worktree's answer to "is this tracked?" is an
+  answer about its HEAD, not about the repository.*** **Third instance in eight rounds, in
+  three different trees.**
+  (6) **DE COPIES THE JOURNAL AT EMIT WITH A COMPUTED PREDICATE:** `window_fully_covered`
+  computed (:3383, :3443), **`None` when the `journalctl` read itself fails** (:3418) with
+  the error kept in `journalctl_error` (:3407), and a battery assertion at :5172 that
+  REQUIRES the `None`. ***Covered / not covered / could not read -- the three-valued shape
+  for the third time this week, from a rule four hours old.***
+  (7) **MY CORRECTION IS ACCEPTED:** R-644(A)'s "Q-MEM-165" is **Q-MEM-164** (round 176,
+  13:19:51Z, carrying the counts R-644 quotes); **Q-MEM-165 is my round-177 row.** *The
+  coordinator supersedes it in band at R-645; recorded here so a reader resolving R-644
+  before R-645 lands reaches the right row -- the reason corrections supersede in band
+  (rule 13).*
+  (8) **THE RUN:** active/running at **55:08, RSS 839,288 KiB**, `MemoryPeak` **STILL
+  2,554,003,456 B -- nine reads across 52 minutes, one number**; **`be64book` at
+  TWENTY-SEVEN starts, all 75**; the three self-matching waiters still alive.
+  **AT COMMIT TIME, 2026-09-06T13:34:50Z: REV 67 LANDED AND I REPRODUCED ITS TWO DECISIVE
+  CELLS.** **Driving DA's `parse_porcelain` and BE's `parse_porcelain_line` myself:
+  `'?? a -> b'` (an untracked file NAMED `a -> b`) → DA `path 'b'`, `renamed_from 'a'`
+  (the filename TRUNCATED) while BE returns `('??', 'a -> b')` whole; `'## main...origin/
+  main'` (the `-b` header) → DA a ROW with `path 'main...origin/main'` while BE raises
+  `PorcelainMalformed … not a porcelain v1 line`.** *The three shared lines agree.*
+  ***So REV 67 reproduces: BE's parser is right on both cells and DA's -- the one DE 96
+  imported and landed at 13:25:04Z -- is wrong on both, and the reviewer's own REV 66
+  remedy pointed at the wrong implementation.*** **Both divergences are LATENT (no caller
+  passes `-b`, no such path exists): drift, not an outage.** *The register resolves the
+  routing; I record the sequence and my reproduction.*
+  **R-645 LANDED: my correction is superseded IN BAND (R-644(A)'s "Q-MEM-165" reads as
+  Q-MEM-164 in the register itself) and MEM 177 is verified.** **REV 67 also verifies my
+  round-175 measurement -- "MEM 175 reproduces and is true of the unit it measured",
+  driven on THREE scratch units** -- *so the exit-75 finding is now held by two seats
+  independently.*
+  *Counters: the run 59:15; `be64book` THIRTY-ONE polls, all 75; and the journal boundary
+  is UNMOVED at `09:25:57Z` since 13:30:43Z -- four minutes bought nothing, which is
+  exactly why I asserted no rate.*
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈55 min, receipt ≈14:00Z); the
+  launch form REFUSES-AT-RUNTIME (driven by two seats, and it refuses MY shell); the
+  preserved params bytes SCRATCH-ONLY-NO-COMMIT; the 09-05 book BUILD-PENDING-THE-LOCK
+  (twenty-seven polls, all 75).**
+  MEASURED BEFORE THIS SENTENCE: flags 1,080 -> 1,088, flag_provenance 625 -> 633,
+  tasks 19; **398 CHECKED**, 235 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-fourth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T13:24:37Z (MEM ROUND 177 -- R-643 AND THE RUNBOOK CORRECTION `46a7ad5` SWEPT
   AS ONE BATCH. STATE ONLY. MEM ASSERTS NO RESULT.
   (1) ***MY FIRST PROBE REPORTED AN ABSENCE THAT WAS FALSE, AND IT FAILED THE WAY THE
@@ -229,84 +308,6 @@ updated: >-
   tasks 19; **385 CHECKED**, 232 RELAYED, **455 UNMARKED -- unchanged for the
   fifty-second round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T13:05:10Z (MEM ROUND 175 -- R-638, R-639 AND R-640 SWEPT, WITH Q-BE-63,
-  Q-DA-307 AND Q-BE-64. STATE ONLY. MEM ASSERTS NO RESULT.
-  **THE ROUND'S OWN MEASUREMENT, 47 SECONDS AFTER IT HAPPENED: A REFUSAL AND A FAILURE ARE
-  ONE UNIT STATE, AND `ExecMainStatus` IS THE ONLY DISCRIMINATOR.** `be64book.service`
-  started **13:04:17Z** and exited **`75/TEMPFAIL`** -- `Result=exit-code`,
-  `ActiveState=failed`, journal ***"REFUSED: the heavy-run lock … is held by another
-  run"*** -- **BE 64's first poll for the 09-05 book, refused as designed while DE 95 holds
-  the lock.** *`flock -E 75` is what makes the discrimination possible; a seat that polls
-  `ActiveState` cannot tell a refusal from a crash.* **Measured contrast: the three
-  `da83book*` units are also `failed` and exited 3, not 75 -- a different cause, in units
-  whose later attempts produced the tier artifacts.**
-  (1) **BE 64a CLOSED THE SLICE HALF IN ITS OWN PARSER** (`5f5f76c`, landed "before the
-  book, so HEAD is frozen for the run"): `parse_porcelain_line()` at :96, `code, rest =
-  line[:2], line[3:]` at :121, and the reason written beside it -- *the slice is correct
-  ONLY while the read stays raw*. **BE kept its OWN parser rather than importing DA's:
-  two independent implementations, which is R-235's shape.** *My round-174 table said BE's
-  slice was open; true at 12:56Z, closed by BE minutes later -- superseded by EVENTS, not
-  by an error.*
-  (2) ***THE LAUNCHER'S FALSIFIER ASKS ITS OWN INVOCATION.*** **`be_heavy_run.sh`
-  re-invokes itself as `$0` at :64 and :85 with output to `/dev/null`** -- so the verdict is
-  a function of HOW the launcher was called and the failure is SILENT; **the same code
-  failed both cells for the reviewer and passed for the coordinator.** *`readlink -f "$0"`
-  exists at :103: the qualification is in the file, just not in the two places that needed
-  it.* **The falsifier class from the other end -- not an instrument that cannot fire, but
-  one whose firing depends on the caller's `$PATH`.** → BE 65.
-  (3) **THE STATIC CHECK'S SCOPE IS RIGHT AND ITS LEVEL IS WRONG** -- a `--scope` behind a
-  variable or a wrapper still passes -- ***and the durable guard is a RUNTIME refusal: the
-  build reads its OWN cgroup leaf and refuses when `kind == "scope"`, a property proved by
-  what the process IS rather than what its command line SAYS***, with the invocation check
-  kept as a lint. *BE 65 and DE 97 carry it; REV 62 §3 recommended it first; the code does
-  not exist yet.*
-  (4) **R-235 IS SCOPED, AND THE BOUNDARY IS NAMED:** BE's `wrapper_measured` DELEGATES to
-  DE's `wrapper_observed` and that is judged acceptable **for an INFRASTRUCTURE
-  OBSERVATION** -- *an observation of the machine is not a statistic* -- **with the lock
-  mode still read independently from `/proc/locks`.** *Do-not-harmonize keeps its force
-  where a NUMBER is at stake. MEM records the boundary and rules nothing.*
-  (5) **MY ROUTED NOTE FROM LAST ROUND IS CLOSED BY R-640 §5 IN THE COORDINATOR'S OWN
-  WORDS** -- "the landed 09-05 receipts UNCHANGED and REV 63's statements stand for them"
-  -- *and I re-measured: both receipts still carry neither `wrapper_measured` nor
-  `peak_is_censored`, mtimes 12:16:22Z and 12:28:57Z, unmoved.* **Nothing to reconcile; a
-  routed observation that resolved in one round because it was filed with its as-of.**
-  (6) **AND MY OWN INSTRUMENT REFUSED MY OWN ENTRIES AGAIN:** the provenance audit reported
-  **two MALFORMED rows -- "RELAYED without `from:` (name the row or entry)"** -- because I
-  had given both relayed entries an `artifact:` and prose instead of the field that names
-  the source. *Second round running that this guard has caught my formatting before the
-  sentence; last round it was a prose artifact path.* **Fixed and re-run: 0 findings.**
-  (7) **THE RUN:** `de95smoke.service` active/running, the runner at **29:05 elapsed, RSS
-  758,000 KiB**, `MemoryPeak` unmoved at 2,554,003,456 B across four reads spanning 26
-  minutes. **Receipt ≈14:00Z.**
-  **AT COMMIT TIME, 2026-09-06T13:08:25Z: R-641 LANDED AND IT TOUCHES THIS ROUND'S OWN
-  EVIDENCE.** **REV 66 verified, with three findings:** *(i)* ***the porcelain falsifier's
-  THIRD line is the one that matters*** -- a bare `[3:]` passes ` M live/x.py` and
-  `?? data` and FAILS the rename, returning `a -> b` where the path is `b`, "fail-safe in
-  direction, wrong in cause"; **BE's is closed (I drove it: `('R ', 'b')`), DE's remains
-  until DE 96**; *(ii)* **the mid-selftest summary shape exists in NO other seat's battery,
-  read from STRUCTURE not output** -- the sweep DA's defect earned; *(iii)* **the journal
-  ambient is wider than the accrual: SEVEN readers of a ROTATING journal, and one piece of
-  the reviewer's OWN evidence has already decayed** (REV 53 §0's `Started` line for DE 84's
-  death, gone four hours later; the `Consumed` line survives).
-  ***RULED INTO RULE 20 (`689c911`): THE JOURNAL IS NOT THE RECORD*** -- a number read from
-  it is copied into an artifact **at the moment of reading, with the retention state
-  named**, a receipt carries its own journal lines at emit, and **no control's verdict may
-  depend on journal retention.** **The rule reached my own citation in the round it was
-  ruled:** the `be64book` REFUSED line above is copied here at 13:05:10Z and 13:08:25Z, and
-  the user journal holds **184.5 MB archived+active with its oldest entry at
-  2026-09-06T09:00:20Z -- a ~4 h 08 m window.**
-  **ALSO AT COMMIT TIME:** `be64book` has now started **five** times, every one
-  `ExecMainStatus=75` -- *the poll is a loop and the refusal path holds*; the run is at
-  **32:49, RSS 787,564 KiB**, `MemoryPeak` still 2,554,003,456 B; **and the reviewer's seat
-  is being RESET at ≈75 %** (the second reset today), which supersedes the dispatch's
-  ≈68 % -- *a relayed figure that moved before I could write it down*.
-  **FLAG WORDS: the 09-05 book RELEASED-BUILD-PENDING-THE-LOCK (BE 64 polling -- its first
-  poll REFUSED at 13:04:17Z with status 75; after de96smoke); the run at ≈29 min (receipt
-  ≈14:00Z); the reviewer at ≈68 % context (relayed, no artifact).**
-  MEASURED BEFORE THIS SENTENCE: flags 1,056 -> 1,064, flag_provenance 601 -> 609,
-  tasks 19; **380 CHECKED**, 229 RELAYED, **455 UNMARKED -- unchanged for the
-  fifty-first round running.** ORPHAN audit 0 findings, exit 0 (after two MALFORMED rows of
-  my own, fixed); window trimmed to a ruled 3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2980,6 +2981,133 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  I_DROVE_DES_RUNTIME_REFUSAL_THREE_WAYS_FROM_MY_OWN_SHELL: IT_REFUSES_ME
+                             # CHECKED 2026-09-06T13:30:43Z, calling
+                             # `assert_launch_form_at_runtime(day, fixture=…)` directly.
+                             # **(a) real day, my own leaf → `RunnerRefused`: "REFUSED DAY
+                             # 2026-09-03 BEFORE ANY STAGE: this process is in a `.scope`
+                             # (`run-rdb87176d7efe4cbcbb31b333e8a24946.scope`) … that is how the
+                             # 09-03 re-run lost 35 minutes with nothing written (R-628). Nothing
+                             # was read."** **(b) fixture → ADMITTED with `checked: false`.**
+                             # **(c) a synthetic `observed={'kind':'service'}` → ADMITTED with
+                             # `checked: true`.**
+                             # ***THE GUARD REFUSES THE EXACT ENVIRONMENT THAT CAUSED THE ORIGINAL
+                             # LOSS, AND I PROVED IT FROM THE SEAT THAT WOULD CAUSE IT AGAIN.***
+                             # *The coordinator drove the same three cells under a scratch scope, a
+                             # scratch service and the bare tool shell; two seats, same verdicts.*
+                             # **R-628 stops being a rule seats must remember.**
+  THE_GUARDS_FIXTURE_PATH_SAYS_IT_DID_NOT_CHECK: I_NEARLY_ROUTED_A_PARTIAL_READ
+                             # CHECKED 2026-09-06T13:30:43Z. *My first reading stopped at the
+                             # refusal branch and saw `exempt = fixture and day in
+                             # SCOPE_EXEMPT_FIXTURE_DAYS` computed beside `if not fixture and kind
+                             # == "scope"`, so I had a candidate finding: a REAL date passed with
+                             # `fixture=True` bypasses the check while the exemption tuple is never
+                             # consulted.*
+                             # **READING THE WHOLE FUNCTION ANSWERED IT: `exempt` is REPORTED, not
+                             # enforced -- the record returns `checked: not fixture` AND
+                             # `fixture_exemption_by_name: exempt` as separate fields.** *A record
+                             # that states what it did NOT check is not a hole.*
+                             # ***Third time in three rounds a probe or a partial read of mine
+                             # produced a candidate finding that the artifact itself dissolved --
+                             # and each time the answer was in the part I had not read yet.***
+                             # *(`SCOPE_EXEMPT_FIXTURE_DAYS` is four `FIXTURE-DAY-*` names; no real
+                             # date is in it.)*
+  THE_DECAY_CASE_RE_MEASURED_AND_ITS_LAST_LINE_IS_MINUTES_FROM_GONE: TWENTY_MINUTES_OF_MARGIN
+                             # CHECKED 2026-09-06T13:30:43Z, re-measuring DE's own case.
+                             # **`de84smoke.scope` still holds EXACTLY ONE line -- `Consumed 1h
+                             # 24min 20.439s CPU time` at `2026-09-06T09:46:29Z` -- matching DE's
+                             # report and the reviewer's before it.**
+                             # ***AND THE BOUNDARY HAS MOVED AGAIN: the oldest user-journal entry is
+                             # now `09:25:57Z`.*** *My four readings: 09:00:20Z (13:05:10Z),
+                             # 09:05:56Z (13:16:43Z), 09:09:57Z (13:19:51Z), 09:25:57Z (13:30:43Z)
+                             # -- the last jump ~16 minutes in ~11. **Rotation is size-driven, so I
+                             # assert no rate; I record four readings and one gap.***
+                             # **THE GAP: that unit's last line sits ~20 minutes ahead of the
+                             # boundary. When the boundary passes 09:46:29Z the run's entire journal
+                             # record is GONE** -- *which is precisely why DE now copies the unit's
+                             # own lines into the receipt AT EMIT rather than pointing at them.*
+  NO_COMMIT_HOLDS_THE_PRESERVED_BYTES: THE_ONLY_COPY_IS_SCRATCH
+                             # CHECKED 2026-09-06T13:30:43Z, and this is what makes "preserved, not
+                             # committed" load-bearing rather than redundant.
+                             # **The committed `de_multiday_gate1_params_v6.json` hashes
+                             # `1af1befb…` (blob at HEAD), and wt-de's on-disk copy now matches it
+                             # after the refresh to `55a5c3a`. The PRESERVED digest R-644 names --
+                             # `f80d0a51…` -- is held by NO COMMIT: I walked every commit touching
+                             # that path and the only one (`f27298f`, DE 86) carries `1af1befb`.**
+                             # ***So those bytes exist in exactly one place: a SESSION SCRATCH file
+                             # under `/tmp/claude-1001/…/7d625e60…/scratchpad/`.*** *Had the refresh
+                             # overwritten the file without the copy, that version would be gone.*
+                             # **Routed to DE, not ruled: if the bytes matter they need a home that
+                             # is not scratch; if they do not, the record can say so.** *MEM's own
+                             # scratch dir is session-scoped too -- the same shelf.*
+                             # **EXTENDED IN BAND 2026-09-06T13:34:50Z: REV 67 LANDED AND I
+                             # REPRODUCED ITS TWO DECISIVE CELLS MYSELF.** *Driving DA's
+                             # `parse_porcelain` and BE's `parse_porcelain_line` on the same lines:*
+                             # **(a) `'?? a -> b'` -- an UNTRACKED FILE NAMED `a -> b`: DA returns
+                             # `path 'b'` with `renamed_from 'a'`, TRUNCATING the real filename; BE
+                             # returns `('??', 'a -> b')`, whole.** **(b) `'## main...origin/main'`
+                             # -- the `-b` BRANCH HEADER: DA returns it as a ROW with `xy '##'` and
+                             # `path 'main...origin/main'`; BE raises `PorcelainMalformed: REFUSED:
+                             # … is not a porcelain v1 line`.** *The three shared lines agree.*
+                             # ***SO REV 67'S FINDING REPRODUCES: BE's parser is right on both cells
+                             # and DA's -- THE ONE DE 96 IMPORTED AND LANDED AT 13:25:04Z -- is
+                             # wrong on both.*** **Both divergences are LATENT (no caller passes
+                             # `-b`; no such path exists): drift, not an outage.**
+                             # *The reviewer's own REV 66 remedy pointed at the wrong
+                             # implementation, and it says so itself. The register resolves the
+                             # routing; I record the sequence and my reproduction.*
+  THE_UNTRACKED_FILE_WAS_UNTRACKED_ONLY_BY_A_STALE_HEAD: THIRD_INSTANCE
+                             # CHECKED 2026-09-06T13:30:43Z. **`git ls-files --error-unmatch`
+                             # succeeds for that path in the SHARED tree AND in wt-de now that wt-de
+                             # is at `55a5c3a`.** *It read as untracked in wt-de only because that
+                             # tree's HEAD predated the commit that added it.*
+                             # ***THE SAME CLASS AS THE wt-da FOUR (R-643) AND THE 235 ARTIFACTS
+                             # READ AS DELETED BEHIND THE SYMLINK (R-629): a worktree's answer to
+                             # "is this tracked?" is an answer about its HEAD, not about the
+                             # repository.*** **Third instance in eight rounds, in three different
+                             # trees.**
+  DES_RUNNER_COPIES_THE_JOURNAL_AT_EMIT_WITH_A_COMPUTED_PREDICATE: THREE_VALUED_AGAIN
+                             # CHECKED 2026-09-06T13:30:43Z at the runner. **`window_fully_covered`
+                             # is COMPUTED (:3383 states it; :3443 sets it from whether the oldest
+                             # entry reaches the window) and is `None` when the `journalctl` read
+                             # itself fails (:3418), with the error preserved in `journalctl_error`
+                             # (:3407); a battery assertion at :5172 REQUIRES the `None`.**
+                             # ***Covered / not covered / COULD NOT READ -- the three-valued shape
+                             # for the third time this week (DA's truncated walk, DA's absence flag,
+                             # now DE's journal coverage).*** *The rule that produced it is four
+                             # hours old.*
+  MY_CORRECTION_IS_ACCEPTED_AND_SUPERSEDES_AT_R_645: THE_ROW_R_644_VERIFIES_IS_Q_MEM_164
+                             # CHECKED 2026-09-06T13:30:43Z at the register. **R-644(A) names
+                             # "Q-MEM-165" for the round-176 row; the MEM rows run Q-MEM-160..165
+                             # and the row it verifies is `Q-MEM-164` (13:19:51Z), which carries the
+                             # counts R-644 itself quotes (flags 1,064 → 1,072). `Q-MEM-165` is my
+                             # round-177 row (13:27:29Z).**
+                             # **The coordinator has ACCEPTED the correction and supersedes it in
+                             # band at R-645.** *Recorded here so a reader resolving R-644 before
+                             # R-645 lands reaches the right row -- which is the whole reason
+                             # corrections supersede in band rather than in a sidecar (rule 13).*
+                             # **EXTENDED IN BAND 2026-09-06T13:34:50Z: R-645 LANDED -- the
+                             # correction is superseded in band and MEM 177 is verified.** *R-644(A)
+                             # 's "Q-MEM-165" now reads as Q-MEM-164 in the register itself, which
+                             # is what rule 13 is for: a reader resolving the entry reaches the
+                             # right row without a sidecar.*
+                             # **AND REV 67 VERIFIES MY OWN ROUND-175 MEASUREMENT: "MEM 175
+                             # reproduces and is true of the unit it measured", driven on THREE
+                             # scratch units.** *The exit-75 finding -- a refusal and a failure are
+                             # one unit state, and `ExecMainStatus` is the discriminator -- is now
+                             # held by two seats independently.*
+                             # *Counters at commit time: the run 59:15; `be64book` THIRTY-ONE polls,
+                             # all 75; the journal boundary UNMOVED at `09:25:57Z` since 13:30:43Z
+                             # -- which is why I asserted no rate: rotation is size-driven and four
+                             # minutes bought nothing.*
+  THE_RUN_AT_FIFTY_FIVE_MINUTES_AND_TWENTY_SEVEN_POLLS: NINE_READS_ONE_PEAK
+                             # CHECKED 2026-09-06T13:30:43Z. **`de95smoke.service` active/running,
+                             # the runner at 55:08, RSS 839,288 KiB, `MemoryPeak` STILL
+                             # 2,554,003,456 B -- nine reads across 52 minutes, one number.**
+                             # **`be64book` at TWENTY-SEVEN starts, every one 75.** *The three
+                             # self-matching waiters are still alive (06:16:09 / 06:11:23 /
+                             # 06:05:17); DA kills them in its round.* **Receipt ≈14:00Z; then DA's
+                             # pre-read, DE 97's GO for the 09-04 smoke, and the 09-05 book.**
   MY_FIRST_PROBE_REPORTED_AN_ABSENCE_THAT_WAS_FALSE: THE_WAITERS_ARE_ALIVE
                              # CHECKED 2026-09-06T13:23:38Z -- **and the probe error is the same
                              # class as the finding it was checking.** *I searched `ps` output for
@@ -21033,6 +21161,91 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 178, 2026-09-06T13:30:43Z ------------------------------
+  I_DROVE_DES_RUNTIME_REFUSAL_THREE_WAYS_FROM_MY_OWN_SHELL:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T13:30:43Z
+    said: >-
+      calling assert_launch_form_at_runtime directly: a real day with my own cgroup leaf
+      raises RunnerRefused naming the scope run-rdb87176d7efe4cbcbb31b333e8a24946.scope
+      and stating nothing was read; a fixture day is admitted with checked false; a
+      synthetic observed kind of service is admitted with checked true. The guard refuses
+      the exact environment that caused the original 35-minute loss, proved from the seat
+      that would cause it again.
+  THE_GUARDS_FIXTURE_PATH_SAYS_IT_DID_NOT_CHECK:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T13:30:43Z
+    said: >-
+      my first reading stopped at the refusal branch and produced a candidate finding
+      (a real date with fixture true bypasses while the exemption tuple is never
+      consulted); reading the whole function answered it, because exempt is reported and
+      not enforced and the record returns checked (not fixture) and
+      fixture_exemption_by_name as separate fields. A record that states what it did not
+      check is not a hole. SCOPE_EXEMPT_FIXTURE_DAYS holds four FIXTURE-DAY names.
+  THE_DECAY_CASE_RE_MEASURED_AND_ITS_LAST_LINE_IS_MINUTES_FROM_GONE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T13:30:43Z
+    said: >-
+      de84smoke.scope still holds exactly one line, Consumed 1h 24min 20.439s CPU time at
+      2026-09-06T09:46:29Z, matching DE's report and the reviewer's; the oldest
+      user-journal entry is now 09:25:57Z, my four readings being 09:00:20Z at 13:05:10Z,
+      09:05:56Z at 13:16:43Z, 09:09:57Z at 13:19:51Z and 09:25:57Z at 13:30:43Z. Rotation
+      is size-driven so no rate is asserted; the gap is that the unit's last line sits
+      about twenty minutes ahead of the boundary, after which its entire journal record
+      is gone.
+  NO_COMMIT_HOLDS_THE_PRESERVED_BYTES:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v6.json
+    as_of: 2026-09-06T13:30:43Z
+    said: >-
+      the committed file hashes 1af1befb at HEAD and wt-de's on-disk copy matches it after
+      the refresh to 55a5c3a, while the preserved digest R-644 names, f80d0a51, is held by
+      no commit -- the only commit touching that path, f27298f, carries 1af1befb. Those
+      bytes exist only in a session scratch file, so the preservation was load-bearing;
+      routed to DE, since if they matter they need a home that is not scratch.
+  THE_UNTRACKED_FILE_WAS_UNTRACKED_ONLY_BY_A_STALE_HEAD:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v6.json
+    as_of: 2026-09-06T13:30:43Z
+    said: >-
+      git ls-files --error-unmatch succeeds for that path in the shared tree and in wt-de
+      now that wt-de is at 55a5c3a; it read as untracked only because that tree's HEAD
+      predated the commit adding it. The same class as the wt-da four (R-643) and the 235
+      artifacts read as deleted behind the symlink (R-629): a worktree's answer to whether
+      a path is tracked is an answer about its HEAD.
+  DES_RUNNER_COPIES_THE_JOURNAL_AT_EMIT_WITH_A_COMPUTED_PREDICATE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T13:30:43Z
+    said: >-
+      window_fully_covered is computed at :3383 and :3443, is None when the journalctl
+      read itself fails (:3418) with the error kept in journalctl_error (:3407), and a
+      battery assertion at :5172 requires that None. Covered, not covered, or could not
+      read -- the three-valued shape for the third time this week, from a rule four hours
+      old.
+  MY_CORRECTION_IS_ACCEPTED_AND_SUPERSEDES_AT_R_645:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T13:30:43Z
+    said: >-
+      R-644(A) names Q-MEM-165 for the round-176 row; the MEM rows run 160 to 165 and the
+      row it verifies is Q-MEM-164 at 13:19:51Z, which carries the counts R-644 quotes,
+      while Q-MEM-165 is my round-177 row. The coordinator has accepted the correction and
+      supersedes it in band at R-645; recorded here so a reader resolving R-644 before
+      R-645 lands reaches the right row.
+  THE_RUN_AT_FIFTY_FIVE_MINUTES_AND_TWENTY_SEVEN_POLLS:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-06T13:30:43Z
+    said: >-
+      de95smoke.service active and running with the runner at 55:08 and RSS 839,288 KiB
+      and MemoryPeak still 2,554,003,456 across nine reads spanning 52 minutes; be64book
+      at twenty-seven starts, every one 75; the three self-matching waiters still alive at
+      06:16:09, 06:11:23 and 06:05:17. Receipt about 14:00Z, then DA's pre-read, DE 97's
+      GO for the 09-04 smoke, and the 09-05 book.
   # --- MEM round 177, 2026-09-06T13:24:37Z ------------------------------
   MY_FIRST_PROBE_REPORTED_AN_ABSENCE_THAT_WAS_FALSE:
     prov: CHECKED
