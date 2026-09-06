@@ -1,0 +1,586 @@
+{
+  "IS_A_VERIFICATION": false,
+  "digest_chain": {
+    "all_checked_inputs_match": true,
+    "book_path": "data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+    "bytes_declared": 290758834,
+    "bytes_match": true,
+    "bytes_on_disk": 290758834,
+    "chain_holds": true,
+    "declared_and_readback_agree": true,
+    "inputs": {
+      "fragment": {
+        "bytes": 604605715,
+        "declared_sha256": "2860832a66e820cad0b2ee039740692d4d17f3fec11ee4874ef6ef9b244f0764",
+        "matches": true,
+        "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260903_btc.json",
+        "sha256_recomputed": "2860832a66e820cad0b2ee039740692d4d17f3fec11ee4874ef6ef9b244f0764",
+        "status": "HASHED"
+      },
+      "tape": {
+        "bytes": 991078272,
+        "declared_sha256": "9de88da950598e8603f913a4166491e1a3d0da7c3c355f0ebaef8383b63310bf",
+        "matches": true,
+        "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260903_btc.json",
+        "sha256_recomputed": "9de88da950598e8603f913a4166491e1a3d0da7c3c355f0ebaef8383b63310bf",
+        "status": "HASHED"
+      }
+    },
+    "matches_declared": true,
+    "matches_readback": true,
+    "n_inputs": 2,
+    "n_inputs_absent": 0,
+    "n_inputs_checked": 2,
+    "readback_sha256_declared": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+    "sha256_declared": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+    "sha256_recomputed": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+    "why_both": "the write-side digest is of the buffer that was written and the readback is a SECOND, independent statement of the same bytes. Checking one and calling it the chain would leave the other unchecked -- and they can disagree"
+  },
+  "economic_census_of_the_book": {
+    "NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK": false,
+    "budget": 400000,
+    "economic_markers_tested": 22,
+    "field_names": [
+      "10",
+      "100",
+      "150",
+      "20",
+      "250",
+      "30",
+      "5",
+      "50",
+      "75",
+      "ADMITTED",
+      "BINANCE_GAP_EXCLUDED",
+      "BUY_UP",
+      "NO_REPLAY",
+      "RECONCILIATION_FAILED",
+      "SELL_UP",
+      "TERMINAL_MARK_ENDED_IN_GAP",
+      "TERMINAL_MARK_MISSING",
+      "TERMINAL_MARK_OK",
+      "TRANCHE_KEPT",
+      "TRANCHE_NO_MARKOUT",
+      "absorption_bound_scope",
+      "adopted",
+      "any_fill_ahead",
+      "ask",
+      "asm",
+      "assembly",
+      "at_s",
+      "bn_cache_clear_s",
+      "bn_cache_cleared",
+      "btc",
+      "btc-updown-5m-1788393600",
+      "btc-updown-5m-1788393900",
+      "btc-updown-5m-1788394200",
+      "btc-updown-5m-1788394500",
+      "btc-updown-5m-1788394800",
+      "btc-updown-5m-1788395100",
+      "btc-updown-5m-1788395400",
+      "btc-updown-5m-1788395700",
+      "btc-updown-5m-1788396000",
+      "btc-updown-5m-1788396300",
+      "btc-updown-5m-1788396600",
+      "btc-updown-5m-1788396900",
+      "btc-updown-5m-1788397200",
+      "btc-updown-5m-1788397500",
+      "btc-updown-5m-1788397800",
+      "btc-updown-5m-1788398100",
+      "btc-updown-5m-1788398400",
+      "btc-updown-5m-1788398700",
+      "btc-updown-5m-1788399000",
+      "btc-updown-5m-1788399300",
+      "btc-updown-5m-1788399600",
+      "btc-updown-5m-1788399900",
+      "btc-updown-5m-1788400200",
+      "btc-updown-5m-1788400500",
+      "btc-updown-5m-1788400800",
+      "btc-updown-5m-1788401100",
+      "btc-updown-5m-1788401400",
+      "btc-updown-5m-1788401700",
+      "btc-updown-5m-1788402000",
+      "btc-updown-5m-1788402300",
+      "btc-updown-5m-1788402600",
+      "btc-updown-5m-1788402900",
+      "btc-updown-5m-1788403200",
+      "btc-updown-5m-1788403500",
+      "btc-updown-5m-1788403800",
+      "btc-updown-5m-1788404100",
+      "btc-updown-5m-1788404400",
+      "btc-updown-5m-1788404700",
+      "btc-updown-5m-1788405000",
+      "btc-updown-5m-1788405300",
+      "btc-updown-5m-1788405600",
+      "btc-updown-5m-1788405900",
+      "btc-updown-5m-1788406200",
+      "btc-updown-5m-1788406500",
+      "btc-updown-5m-1788406800",
+      "btc-updown-5m-1788407100",
+      "btc-updown-5m-1788407400",
+      "btc-updown-5m-1788407700",
+      "btc-updown-5m-1788408000",
+      "btc-updown-5m-1788408300",
+      "btc-updown-5m-1788408600",
+      "btc-updown-5m-1788408900",
+      "btc-updown-5m-1788409200",
+      "btc-updown-5m-1788409500",
+      "btc-updown-5m-1788409800",
+      "btc-updown-5m-1788410100",
+      "btc-updown-5m-1788410400",
+      "btc-updown-5m-1788410700",
+      "btc-updown-5m-1788411000",
+      "btc-updown-5m-1788411300",
+      "btc-updown-5m-1788411600",
+      "btc-updown-5m-1788411900",
+      "btc-updown-5m-1788412200",
+      "btc-updown-5m-1788412500",
+      "btc-updown-5m-1788412800",
+      "btc-updown-5m-1788413100",
+      "btc-updown-5m-1788413400",
+      "btc-updown-5m-1788413700",
+      "btc-updown-5m-1788414000",
+      "btc-updown-5m-1788414300",
+      "btc-updown-5m-1788414600",
+      "btc-updown-5m-1788414900",
+      "btc-updown-5m-1788415200",
+      "btc-updown-5m-1788415500",
+      "btc-updown-5m-1788415800",
+      "btc-updown-5m-1788416100",
+      "btc-updown-5m-1788416400",
+      "btc-updown-5m-1788416700",
+      "btc-updown-5m-1788417000",
+      "btc-updown-5m-1788417300",
+      "btc-updown-5m-1788417600",
+      "btc-updown-5m-1788417900",
+      "btc-updown-5m-1788418200",
+      "btc-updown-5m-1788418500",
+      "btc-updown-5m-1788418800",
+      "btc-updown-5m-1788419100",
+      "btc-updown-5m-1788419400",
+      "btc-updown-5m-1788419700",
+      "btc-updown-5m-1788420000",
+      "btc-updown-5m-1788420300",
+      "btc-updown-5m-1788420600",
+      "btc-updown-5m-1788420900",
+      "btc-updown-5m-1788421200",
+      "btc-updown-5m-1788421500",
+      "btc-updown-5m-1788421800",
+      "btc-updown-5m-1788422100",
+      "btc-updown-5m-1788422400",
+      "btc-updown-5m-1788422700",
+      "btc-updown-5m-1788423000",
+      "btc-updown-5m-1788423300",
+      "btc-updown-5m-1788423600",
+      "btc-updown-5m-1788423900",
+      "btc-updown-5m-1788424200",
+      "btc-updown-5m-1788424500",
+      "btc-updown-5m-1788424800",
+      "btc-updown-5m-1788425100",
+      "btc-updown-5m-1788425400",
+      "btc-updown-5m-1788425700",
+      "btc-updown-5m-1788426000",
+      "btc-updown-5m-1788426300",
+      "btc-updown-5m-1788426600",
+      "btc-updown-5m-1788426900",
+      "btc-updown-5m-1788427200",
+      "btc-updown-5m-1788427500",
+      "btc-updown-5m-1788427800",
+      "btc-updown-5m-1788428100",
+      "btc-updown-5m-1788428400",
+      "btc-updown-5m-1788428700",
+      "btc-updown-5m-1788429000",
+      "btc-updown-5m-1788429300",
+      "btc-updown-5m-1788429600",
+      "btc-updown-5m-1788429900",
+      "btc-updown-5m-1788430200",
+      "btc-updown-5m-1788430500",
+      "btc-updown-5m-1788430800",
+      "btc-updown-5m-1788431100",
+      "btc-updown-5m-1788431400",
+      "btc-updown-5m-1788431700",
+      "btc-updown-5m-1788432000",
+      "btc-updown-5m-1788432300",
+      "btc-updown-5m-1788432600",
+      "btc-updown-5m-1788432900",
+      "btc-updown-5m-1788433200",
+      "btc-updown-5m-1788433500",
+      "btc-updown-5m-1788433800",
+      "btc-updown-5m-1788434100",
+      "btc-updown-5m-1788434400",
+      "btc-updown-5m-1788434700",
+      "btc-updown-5m-1788435000",
+      "btc-updown-5m-1788435300",
+      "btc-updown-5m-1788435600",
+      "btc-updown-5m-1788435900",
+      "btc-updown-5m-1788436200",
+      "btc-updown-5m-1788436500",
+      "btc-updown-5m-1788436800",
+      "btc-updown-5m-1788437100",
+      "btc-updown-5m-1788437400",
+      "btc-updown-5m-1788437700",
+      "btc-updown-5m-1788438000",
+      "btc-updown-5m-1788438300",
+      "btc-updown-5m-1788438600",
+      "btc-updown-5m-1788438900",
+      "btc-updown-5m-1788439200",
+      "btc-updown-5m-1788439500",
+      "btc-updown-5m-1788439800",
+      "btc-updown-5m-1788440100",
+      "btc-updown-5m-1788440400",
+      "btc-updown-5m-1788441900",
+      "btc-updown-5m-1788442200",
+      "btc-updown-5m-1788442500",
+      "btc-updown-5m-1788442800",
+      "btc-updown-5m-1788443100",
+      "btc-updown-5m-1788443400",
+      "btc-updown-5m-1788443700",
+      "btc-updown-5m-1788444000",
+      "btc-updown-5m-1788444300",
+      "btc-updown-5m-1788444600",
+      "btc-updown-5m-1788444900",
+      "btc-updown-5m-1788445200",
+      "btc-updown-5m-1788445500"
+    ],
+    "leaf_type_census": {
+      "NoneType": 1,
+      "bool": 314,
+      "float": 265764,
+      "int": 32870,
+      "str": 31965
+    },
+    "matching_field_names": [
+      "TRANCHE_NO_MARKOUT",
+      "markout_cents_per_share",
+      "preventable_value_cents"
+    ],
+    "n_distinct_string_field_names": 357,
+    "n_field_names_matching_an_economic_marker": 3,
+    "nodes_visited": 400000,
+    "truncated": true,
+    "what_it_cannot_establish": "that a float under an innocent name is not secretly a price. Names and shapes are checkable; intent is not",
+    "what_this_establishes": "the set of NAMED fields the book carries and that none of them names an economic quantity -- the book is arm SCORES and the arms' thetas; D(E0), the null and the ratio live in the day receipt, which is sealed"
+  },
+  "flags": [
+    "book.incumbent_linear_d.theta_matches",
+    "book.q1_arrival_composed_lgbm.theta_matches",
+    "book.an_economic_field_name_is_present"
+  ],
+  "identity": {
+    "coin": "btc",
+    "day": "20260903",
+    "is_BEs_declared_shape": true,
+    "protocol": "BE_DAYBOOK_V1"
+  },
+  "launch_capture": {
+    "closure_drift": [],
+    "closure_unchanged_during_the_run": true,
+    "digest_taken_at": "MODULE IMPORT, before any work",
+    "head_at_emit": {
+      "dirty": false,
+      "dirty_paths": [],
+      "head": "711f43c3e6a40150ebf196b376e6d93a18cb07fa",
+      "worktree": "/home/yuqing/ctaNew"
+    },
+    "head_at_import": {
+      "dirty": false,
+      "dirty_paths": [],
+      "head": "711f43c3e6a40150ebf196b376e6d93a18cb07fa",
+      "worktree": "/home/yuqing/ctaNew"
+    },
+    "head_unchanged_during_the_run": true,
+    "import_closure": {
+      "capture_points": [
+        {
+          "n_added": 1,
+          "n_modules_after": 1,
+          "where": "module import"
+        },
+        {
+          "n_added": 0,
+          "n_modules_after": 1,
+          "where": "after the book was unpickled"
+        }
+      ],
+      "digested": "from the bytes each module held when it FIRST entered this run -- never re-read",
+      "modules": [
+        [
+          "da_book_verify.py",
+          "a17b538b1bf004199f75f4cff3421e949640af6d2fbe156b816bb2122b3bb50f"
+        ]
+      ],
+      "n_modules": 1,
+      "root": "/home/yuqing/ctaNew/live"
+    },
+    "launch_time_utc": "2026-09-06T11:28:13Z",
+    "on_disk_sha256_at_emit": "a17b538b1bf004199f75f4cff3421e949640af6d2fbe156b816bb2122b3bb50f",
+    "producing_code": "da_book_verify.py",
+    "producing_code_sha256": "a17b538b1bf004199f75f4cff3421e949640af6d2fbe156b816bb2122b3bb50f",
+    "source_unchanged_during_the_run": true,
+    "worktree_was_dirty_at_import": false
+  },
+  "n_flags": 3,
+  "population_from_the_book": {
+    "by_arm_keys": [
+      [
+        "btc",
+        "incumbent_linear_d"
+      ],
+      [
+        "btc",
+        "q1_arrival_composed_lgbm"
+      ]
+    ],
+    "heads_in_the_book": [
+      "incumbent_linear_d",
+      "q1_arrival_composed_lgbm"
+    ],
+    "n_heads": 2,
+    "per_head": {
+      "incumbent_linear_d": {
+        "coverage_declared": 0.949746737609944,
+        "coverage_matches": true,
+        "coverage_recomputed": 0.949746737609944,
+        "matches": true,
+        "n_scored_keys_declared": 297379,
+        "n_scored_keys_recomputed": 297379,
+        "theta_declared": 0.43525926488298716,
+        "theta_in_the_book": {
+          "NO_ROWS_KEPT": 12853409,
+          "PARTIAL_ROWS": 0,
+          "SCORED": 297379
+        },
+        "theta_matches": false
+      },
+      "q1_arrival_composed_lgbm": {
+        "coverage_declared": 0.949746737609944,
+        "coverage_matches": true,
+        "coverage_recomputed": 0.949746737609944,
+        "matches": true,
+        "n_scored_keys_declared": 297379,
+        "n_scored_keys_recomputed": 297379,
+        "theta_declared": 0.32450609461933483,
+        "theta_in_the_book": {
+          "NO_ROWS_KEPT": 12853409,
+          "PARTIAL_ROWS": 0,
+          "SCORED": 297379
+        },
+        "theta_matches": false
+      }
+    },
+    "reference_generations_in_the_book": 313114,
+    "set_equality": {
+      "agrees_with_the_receipt": true,
+      "declared": true,
+      "difference_sized": 0,
+      "n_only_in_incumbent_linear_d": 0,
+      "n_only_in_q1_arrival_composed_lgbm": 0,
+      "n_shared_declared": 297379,
+      "n_shared_recomputed": 297379,
+      "recomputed": true,
+      "why_recomputed": "`sets_are_equal: true` is the builder's own claim about its own output. Two heads scoring different key sets is exactly the precondition the null rests on, so it is compared, not read"
+    }
+  },
+  "population_from_the_receipt": {
+    "NOTE": "these hold the receipt to ITSELF. Set equality and the scored keys are RECOMPUTED only in the BOOK tier -- `sets_are_equal: true` is a claim until the keys are compared",
+    "admitted_plus_excluded": 247,
+    "admitted_plus_excluded_equals_windows": true,
+    "both_heads_present_declared": true,
+    "generations": 313114,
+    "n_heads_in_coverage": 2,
+    "n_shared_keys_declared": 297379,
+    "n_terminal_marks_equals_windows": true,
+    "per_head": {
+      "incumbent_linear_d": {
+        "coverage_declared": 0.949746737609944,
+        "coverage_matches": true,
+        "coverage_recomputed": 0.949746737609944,
+        "covered_plus_uncovered_equals_generations": true,
+        "n_covered": 297379,
+        "n_reference_generations": 313114,
+        "n_scored_keys_equals_n_covered": true,
+        "n_uncovered": 15735,
+        "reference_generations_matches_the_reference_block": true,
+        "theta": 0.43525926488298716
+      },
+      "q1_arrival_composed_lgbm": {
+        "coverage_declared": 0.949746737609944,
+        "coverage_matches": true,
+        "coverage_recomputed": 0.949746737609944,
+        "covered_plus_uncovered_equals_generations": true,
+        "n_covered": 297379,
+        "n_reference_generations": 313114,
+        "n_scored_keys_equals_n_covered": true,
+        "n_uncovered": 15735,
+        "reference_generations_matches_the_reference_block": true,
+        "theta": 0.32450609461933483
+      }
+    },
+    "sets_are_equal_declared": true,
+    "terminal_mark_ok_plus_missing": 247,
+    "terminal_marks_equal_windows": true,
+    "windows": 247,
+    "windows_equals_n_supplied_slugs": true,
+    "windows_equals_reference_n_slugs": true,
+    "windows_equals_reference_windows": true
+  },
+  "protocol": "P003_DA_BOOK_VERIFIER_V1_FULL",
+  "provenance_incomplete": true,
+  "receipt": {
+    "path": "be_daybook_receipt_20260903_btc.json",
+    "sha256": "70d583d87090def40c6aad852f4549438b3d526d2490daf52684c2f52e49ee85"
+  },
+  "resource_observation": {
+    "book_loaded_from": "data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+    "book_was_opened": true,
+    "declared_cap_gb": 4.0,
+    "expected_peak_gb": 2.0,
+    "load_delta_gb": 1.919,
+    "rss_gb_after_load": 1.961,
+    "rss_gb_at_end": 0.042,
+    "rss_gb_before_load": 0.042
+  },
+  "resources": {
+    "THESE_ARE_FACTS_NOT_VERDICTS": "budgets are the builder's own and are reported against its own measurements. Nothing here passes or fails the run; a reader who wants a verdict has the numbers to form one",
+    "declared_agrees_with_recomputed": true,
+    "every_stage_within_its_budget": true,
+    "index_release": {
+      "freed_gb_declared": 1.156,
+      "freed_gb_recomputed": 1.156,
+      "measured_on": "ru_maxrss is a high-water mark and cannot show a release; this is VmRSS",
+      "release_fraction": 0.28222656250000006
+    },
+    "n_stages": 5,
+    "peak_gb": 5.317,
+    "stages": [
+      {
+        "budget_gb": 3.0,
+        "peak_gb": 2.006,
+        "stage": "A0_reference",
+        "wall_s": 555.9,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 6.5,
+        "peak_gb": 3.19,
+        "stage": "A1_index",
+        "wall_s": 118.0,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 7.5,
+        "peak_gb": 5.317,
+        "stage": "A2_assemble",
+        "wall_s": 1420.4,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 7.5,
+        "peak_gb": 5.317,
+        "stage": "A3_release_index",
+        "wall_s": 1.5,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 7.5,
+        "peak_gb": 5.317,
+        "stage": "A4_write_book",
+        "wall_s": 6.2,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      }
+    ],
+    "wall_s": 2115.7,
+    "wall_s_equals_sum_of_stages": false
+  },
+  "seam": {
+    "builder_commit": null,
+    "contradicts_the_code": null,
+    "front_door": "de_phase4_diag_runner.day_assembly_inputs",
+    "front_door_check": {
+      "checked": true,
+      "commit": "6f134a6",
+      "function": "day_assembly_inputs",
+      "module": "live/pm_research/de_phase4_diag_runner.py",
+      "resolves": true,
+      "why": "the front door is defined in DE's module at the commit the receipt names"
+    },
+    "keywords_the_literal_claims": [
+      "tape_path"
+    ],
+    "literal_in_the_receipt": "build_tape_index(splits, tape_path=\u2026)",
+    "seam_commit": "6f134a6",
+    "status": "PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT",
+    "the_literal_was_NOT_judged": true,
+    "what_seam_commit_NAMES": "DE's front door's commit -- NOT the builder's. Reading BE's builder there is reading a different object at a real commit",
+    "why": "the receipt names no builder commit (R-387's carrying_commit), so the code that produced it cannot be located and its literal cannot be checked against the call it describes. This is a PROVENANCE GAP, not a false statement -- and computing a contradiction against HEAD or another seat's commit would be an answer about code the receipt never ran"
+  },
+  "status": "FLAGGED",
+  "the_book_tier_is_HEAVY": {
+    "declared_cap_gb": 4.0,
+    "expected_peak_gb": 2.0,
+    "rule_20": "over 60 s or 1 GiB, so it takes the heavy lock and runs under the wrapper; the real 09-03 run is a coordinator GO, not this module's own initiative",
+    "why": "the book is a pickle of 290758834 bytes and unpickling it is expected to cost about 2.0 GB resident"
+  },
+  "tier": "FULL",
+  "verifier_identity": {
+    "commit_best_effort": "711f43c3e6a40150ebf196b376e6d93a18cb07fa",
+    "path": "live/pm_research/da_book_verify.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "a17b538b1bf004199f75f4cff3421e949640af6d2fbe156b816bb2122b3bb50f",
+    "source_identity": {
+      "closure_drift": [],
+      "closure_unchanged_during_the_run": true,
+      "digest_taken_at": "MODULE IMPORT, before any work",
+      "head_at_emit": {
+        "dirty": false,
+        "dirty_paths": [],
+        "head": "711f43c3e6a40150ebf196b376e6d93a18cb07fa",
+        "worktree": "/home/yuqing/ctaNew"
+      },
+      "head_at_import": {
+        "dirty": false,
+        "dirty_paths": [],
+        "head": "711f43c3e6a40150ebf196b376e6d93a18cb07fa",
+        "worktree": "/home/yuqing/ctaNew"
+      },
+      "head_unchanged_during_the_run": true,
+      "import_closure": {
+        "capture_points": [
+          {
+            "n_added": 1,
+            "n_modules_after": 1,
+            "where": "module import"
+          },
+          {
+            "n_added": 0,
+            "n_modules_after": 1,
+            "where": "after the book was unpickled"
+          }
+        ],
+        "digested": "from the bytes each module held when it FIRST entered this run -- never re-read",
+        "modules": [
+          [
+            "da_book_verify.py",
+            "a17b538b1bf004199f75f4cff3421e949640af6d2fbe156b816bb2122b3bb50f"
+          ]
+        ],
+        "n_modules": 1,
+        "root": "/home/yuqing/ctaNew/live"
+      },
+      "launch_time_utc": "2026-09-06T11:28:13Z",
+      "on_disk_sha256_at_emit": "a17b538b1bf004199f75f4cff3421e949640af6d2fbe156b816bb2122b3bb50f",
+      "producing_code": "da_book_verify.py",
+      "producing_code_sha256": "a17b538b1bf004199f75f4cff3421e949640af6d2fbe156b816bb2122b3bb50f",
+      "source_unchanged_during_the_run": true,
+      "worktree_was_dirty_at_import": false
+    },
+    "tree_head": "711f43c3e6a40150ebf196b376e6d93a18cb07fa"
+  },
+  "what_incomplete_means": "every group that COULD be checked was, and they hold; the seam literal was not judged because the receipt names no builder commit. A gap, not a defect -- and not a verification either",
+  "what_this_tier_cannot_say": "that the day's TAPE and FRAGMENT were built correctly -- schema, splits, coverage. Those are the builder's own guards. This verifies WHICH BYTES reached the pass and what the book says about itself"
+}

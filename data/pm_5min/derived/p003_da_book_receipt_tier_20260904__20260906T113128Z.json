@@ -1,0 +1,280 @@
+{
+  "IS_A_VERIFICATION": false,
+  "digest_chain": {
+    "all_checked_inputs_match": true,
+    "book_path": "data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+    "bytes_declared": 340969199,
+    "bytes_match": true,
+    "bytes_on_disk": 340969199,
+    "chain_holds": true,
+    "declared_and_readback_agree": true,
+    "inputs": {
+      "fragment": {
+        "bytes": 711128106,
+        "declared_sha256": "839e5377b6666e59d68563025ffb8b8be28c183070382c0f783b16e5201d4b2a",
+        "matches": true,
+        "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260904_btc.json",
+        "sha256_recomputed": "839e5377b6666e59d68563025ffb8b8be28c183070382c0f783b16e5201d4b2a",
+        "status": "HASHED"
+      },
+      "tape": {
+        "bytes": 1165058495,
+        "declared_sha256": "3727de65337120576a1cb4f9c6ab197d377c8aced36d419bd5fb3f9cdc1614a0",
+        "matches": true,
+        "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260904_btc.json",
+        "sha256_recomputed": "3727de65337120576a1cb4f9c6ab197d377c8aced36d419bd5fb3f9cdc1614a0",
+        "status": "HASHED"
+      }
+    },
+    "matches_declared": true,
+    "matches_readback": true,
+    "n_inputs": 2,
+    "n_inputs_absent": 0,
+    "n_inputs_checked": 2,
+    "readback_sha256_declared": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+    "sha256_declared": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+    "sha256_recomputed": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+    "why_both": "the write-side digest is of the buffer that was written and the readback is a SECOND, independent statement of the same bytes. Checking one and calling it the chain would leave the other unchecked -- and they can disagree"
+  },
+  "flags": [],
+  "identity": {
+    "coin": "btc",
+    "day": "20260904",
+    "is_BEs_declared_shape": true,
+    "protocol": "BE_DAYBOOK_V1"
+  },
+  "launch_capture": {
+    "closure_drift": [],
+    "closure_unchanged_during_the_run": true,
+    "digest_taken_at": "MODULE IMPORT, before any work",
+    "head_at_emit": {
+      "dirty": false,
+      "dirty_paths": [],
+      "head": "8f94230e4157f40afa71fcd1df1a48ea67798cd2",
+      "worktree": "/home/yuqing/ctaNew"
+    },
+    "head_at_import": {
+      "dirty": false,
+      "dirty_paths": [],
+      "head": "8f94230e4157f40afa71fcd1df1a48ea67798cd2",
+      "worktree": "/home/yuqing/ctaNew"
+    },
+    "head_unchanged_during_the_run": true,
+    "import_closure": {
+      "capture_points": [
+        {
+          "n_added": 1,
+          "n_modules_after": 1,
+          "where": "module import"
+        }
+      ],
+      "digested": "from the bytes each module held when it FIRST entered this run -- never re-read",
+      "modules": [
+        [
+          "da_book_verify.py",
+          "ef2cfe63c2c2872c0a3cc3d850d8905e0374c492a0ce10e6cc3aa794a0491e2a"
+        ]
+      ],
+      "n_modules": 1,
+      "root": "/home/yuqing/ctaNew/live"
+    },
+    "launch_time_utc": "2026-09-06T11:31:28Z",
+    "on_disk_sha256_at_emit": "ef2cfe63c2c2872c0a3cc3d850d8905e0374c492a0ce10e6cc3aa794a0491e2a",
+    "producing_code": "da_book_verify.py",
+    "producing_code_sha256": "ef2cfe63c2c2872c0a3cc3d850d8905e0374c492a0ce10e6cc3aa794a0491e2a",
+    "source_unchanged_during_the_run": true,
+    "worktree_was_dirty_at_import": false
+  },
+  "n_flags": 0,
+  "population_from_the_receipt": {
+    "NOTE": "these hold the receipt to ITSELF. Set equality and the scored keys are RECOMPUTED only in the BOOK tier -- `sets_are_equal: true` is a claim until the keys are compared",
+    "admitted_plus_excluded": 288,
+    "admitted_plus_excluded_equals_windows": true,
+    "both_heads_present_declared": true,
+    "generations": 358107,
+    "n_heads_in_coverage": 2,
+    "n_shared_keys_declared": 338444,
+    "n_terminal_marks_equals_windows": true,
+    "per_head": {
+      "incumbent_linear_d": {
+        "coverage_declared": 0.9450918300954743,
+        "coverage_matches": true,
+        "coverage_recomputed": 0.9450918300954743,
+        "covered_plus_uncovered_equals_generations": true,
+        "n_covered": 338444,
+        "n_reference_generations": 358107,
+        "n_scored_keys_equals_n_covered": true,
+        "n_uncovered": 19663,
+        "reference_generations_matches_the_reference_block": true,
+        "theta": 0.43525926488298716
+      },
+      "q1_arrival_composed_lgbm": {
+        "coverage_declared": 0.9450918300954743,
+        "coverage_matches": true,
+        "coverage_recomputed": 0.9450918300954743,
+        "covered_plus_uncovered_equals_generations": true,
+        "n_covered": 338444,
+        "n_reference_generations": 358107,
+        "n_scored_keys_equals_n_covered": true,
+        "n_uncovered": 19663,
+        "reference_generations_matches_the_reference_block": true,
+        "theta": 0.32450609461933483
+      }
+    },
+    "sets_are_equal_declared": true,
+    "terminal_mark_ok_plus_missing": 288,
+    "terminal_marks_equal_windows": true,
+    "windows": 288,
+    "windows_equals_n_supplied_slugs": true,
+    "windows_equals_reference_n_slugs": true,
+    "windows_equals_reference_windows": true
+  },
+  "protocol": "P003_DA_BOOK_VERIFIER_V1_RECEIPT_TIER",
+  "provenance_incomplete": true,
+  "receipt": {
+    "path": "be_daybook_receipt_20260904_btc.json",
+    "sha256": "1f15d54f6101041bd1f86cd2bf0e89f2c8c2dc4d3116eda8ec802402a374171c"
+  },
+  "resource_observation": {
+    "book_was_opened": false,
+    "rss_gb_at_end": 0.043
+  },
+  "resources": {
+    "THESE_ARE_FACTS_NOT_VERDICTS": "budgets are the builder's own and are reported against its own measurements. Nothing here passes or fails the run; a reader who wants a verdict has the numbers to form one",
+    "declared_agrees_with_recomputed": true,
+    "every_stage_within_its_budget": true,
+    "index_release": {
+      "freed_gb_declared": 1.38,
+      "freed_gb_recomputed": 1.38,
+      "measured_on": "ru_maxrss is a high-water mark and cannot show a release; this is VmRSS",
+      "release_fraction": 0.30503978779840846
+    },
+    "n_stages": 5,
+    "peak_gb": 4.913,
+    "stages": [
+      {
+        "budget_gb": 3.0,
+        "peak_gb": 2.307,
+        "stage": "A0_reference",
+        "wall_s": 664.4,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 6.5,
+        "peak_gb": 3.701,
+        "stage": "A1_index",
+        "wall_s": 140.4,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 7.5,
+        "peak_gb": 4.913,
+        "stage": "A2_assemble",
+        "wall_s": 1560.8,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 7.5,
+        "peak_gb": 4.913,
+        "stage": "A3_release_index",
+        "wall_s": 1.7,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 7.5,
+        "peak_gb": 4.913,
+        "stage": "A4_write_book",
+        "wall_s": 6.8,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      }
+    ],
+    "wall_s": 2379.8,
+    "wall_s_equals_sum_of_stages": false
+  },
+  "seam": {
+    "builder_commit": null,
+    "contradicts_the_code": null,
+    "front_door": "de_phase4_diag_runner.day_assembly_inputs",
+    "front_door_check": {
+      "checked": true,
+      "commit": "6f134a6",
+      "function": "day_assembly_inputs",
+      "module": "live/pm_research/de_phase4_diag_runner.py",
+      "resolves": true,
+      "why": "the front door is defined in DE's module at the commit the receipt names"
+    },
+    "keywords_the_literal_claims": [
+      "inputs"
+    ],
+    "literal_in_the_receipt": "build_tape_index(splits, inputs=inp)",
+    "seam_commit": "6f134a6",
+    "status": "PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT",
+    "the_literal_was_NOT_judged": true,
+    "what_seam_commit_NAMES": "DE's front door's commit -- NOT the builder's. Reading BE's builder there is reading a different object at a real commit",
+    "why": "the receipt names no builder commit (R-387's carrying_commit), so the code that produced it cannot be located and its literal cannot be checked against the call it describes. This is a PROVENANCE GAP, not a false statement -- and computing a contradiction against HEAD or another seat's commit would be an answer about code the receipt never ran"
+  },
+  "status": "PROVENANCE_INCOMPLETE",
+  "the_book_tier_is_HEAVY": {
+    "declared_cap_gb": 4.0,
+    "expected_peak_gb": 2.0,
+    "rule_20": "over 60 s or 1 GiB, so it takes the heavy lock and runs under the wrapper; the real 09-03 run is a coordinator GO, not this module's own initiative",
+    "why": "the book is a pickle of 340969199 bytes and unpickling it is expected to cost about 2.0 GB resident"
+  },
+  "tier": "RECEIPT",
+  "verifier_identity": {
+    "commit_best_effort": "a1b727abbe02353528f660f7e6aed0b1bfdb8244",
+    "path": "live/pm_research/da_book_verify.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "ef2cfe63c2c2872c0a3cc3d850d8905e0374c492a0ce10e6cc3aa794a0491e2a",
+    "source_identity": {
+      "closure_drift": [],
+      "closure_unchanged_during_the_run": true,
+      "digest_taken_at": "MODULE IMPORT, before any work",
+      "head_at_emit": {
+        "dirty": false,
+        "dirty_paths": [],
+        "head": "8f94230e4157f40afa71fcd1df1a48ea67798cd2",
+        "worktree": "/home/yuqing/ctaNew"
+      },
+      "head_at_import": {
+        "dirty": false,
+        "dirty_paths": [],
+        "head": "8f94230e4157f40afa71fcd1df1a48ea67798cd2",
+        "worktree": "/home/yuqing/ctaNew"
+      },
+      "head_unchanged_during_the_run": true,
+      "import_closure": {
+        "capture_points": [
+          {
+            "n_added": 1,
+            "n_modules_after": 1,
+            "where": "module import"
+          }
+        ],
+        "digested": "from the bytes each module held when it FIRST entered this run -- never re-read",
+        "modules": [
+          [
+            "da_book_verify.py",
+            "ef2cfe63c2c2872c0a3cc3d850d8905e0374c492a0ce10e6cc3aa794a0491e2a"
+          ]
+        ],
+        "n_modules": 1,
+        "root": "/home/yuqing/ctaNew/live"
+      },
+      "launch_time_utc": "2026-09-06T11:31:28Z",
+      "on_disk_sha256_at_emit": "ef2cfe63c2c2872c0a3cc3d850d8905e0374c492a0ce10e6cc3aa794a0491e2a",
+      "producing_code": "da_book_verify.py",
+      "producing_code_sha256": "ef2cfe63c2c2872c0a3cc3d850d8905e0374c492a0ce10e6cc3aa794a0491e2a",
+      "source_unchanged_during_the_run": true,
+      "worktree_was_dirty_at_import": false
+    },
+    "tree_head": "8f94230e4157f40afa71fcd1df1a48ea67798cd2"
+  },
+  "what_incomplete_means": "every group that COULD be checked was, and they hold; the seam literal was not judged because the receipt names no builder commit. A gap, not a defect -- and not a verification either",
+  "what_this_tier_cannot_say": "the set equality and the scored-key counts are the BOOK's, and this tier never opens it. `sets_are_equal: true` stays a claim until the BOOK tier compares the keys"
+}
