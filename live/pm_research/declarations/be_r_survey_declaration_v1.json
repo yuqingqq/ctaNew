@@ -32,6 +32,8 @@
   "adverse_cents"
  ],
  "superseded_by": "be_r_survey_declaration_v3.json (via v2)",
+ "supersedes": null,
+ "supersedes_note": "the oldest version of this family: it names no predecessor. A null here is a STATEMENT, not an absence (R-657/DA 91: four BE families carried no resolvable chain, so no reader could resolve a head).",
  "tail_definition": "top 1% of fills by absolute contribution, matching the fill-level decomposition R-523(B) used",
  "the_measured_hour_is_one_cell": "2026-08-24 13:50-14:50Z btc appears as ONE CELL among the others and is NOT a reference point the others are compared against. If it is an outlier that is the finding.",
  "thresholds_being_tested": {

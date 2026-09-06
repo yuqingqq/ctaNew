@@ -277,13 +277,54 @@ def _provenance(tree: Path = None) -> dict:
         except Exception:                            # noqa: BLE001
             return None
 
+    def git_raw(*a):
+        """LEADING WHITESPACE PRESERVED. `git status --porcelain` puts the
+        index state in column 1, so a tracked modification begins with a
+        SPACE; `.strip()` on the whole output eats it and every subsequent
+        slice is off by one (R-637)."""
+        try:
+            r = subprocess.run(("git", *a), cwd=str(root),
+                               capture_output=True, text=True, timeout=20)
+            return r.stdout.rstrip("\n") if r.returncode == 0 else None
+        except Exception:                            # noqa: BLE001
+            return None
+
     head = git("rev-parse", "HEAD")
-    status = git("status", "--porcelain")
+    # RAW, so the first line keeps its leading space (R-637's READ half).
+    status = git_raw("status", "--porcelain")
     me = Path(__file__).resolve()
+    # REV 67 §1.4: `bool(status.strip())` over the whole tree is TRUE in
+    # EVERY seat worktree structurally -- R-553 requires `data` to be an
+    # untracked symlink to the ledger, and that is one porcelain line. So
+    # this field said "dirty" on a pristine code tree, named no paths, and
+    # the provenance cells that drove it ran in a `git worktree add` scratch
+    # tree with no symlink: the control ran where the ambient was absent.
+    _rows = []
+    if status is not None:
+        import be_rule22 as _R22F
+        _cap = _R22F.Capture(worktree=str(root))
+        for _ln in [x for x in status.split("\n") if x]:
+            try:
+                _rows.append(_cap.classify_dirt(_ln))
+            except _R22F.PorcelainMalformed as _e:
+                _rows.append({"path": None, "exempt": False,
+                              "malformed": str(_e)})
+    _code_rows = [r for r in _rows if not r.get("exempt")]
     return {"carrying_commit": head or "UNAVAILABLE",
             "carrying_commit_resolved": bool(head),
             "working_tree_dirty": ("unknown" if status is None
-                                   else bool(status.strip())),
+                                   else bool(_rows)),
+            "working_tree_CODE_dirty": ("unknown" if status is None
+                                        else bool(_code_rows)),
+            "dirty_paths": [r.get("path") for r in _rows][:20],
+            "dirty_paths_code": [r.get("path") for r in _code_rows][:20],
+            "exempt_entries": [r for r in _rows if r.get("exempt")][:20],
+            "what_the_two_dirty_fields_mean":
+                "`working_tree_dirty` is git's raw answer and includes the "
+                "ledger symlink every seat worktree carries by R-553; "
+                "`working_tree_CODE_dirty` excludes entries PROVEN to be "
+                "that symlink (untracked AND a real symlink AND resolving "
+                "to the ledger). Provenance asks the second one",
             "provenance_root": str(root),
             "roots": {
                 "code_and_anchors": str(EXEC_TREE()),

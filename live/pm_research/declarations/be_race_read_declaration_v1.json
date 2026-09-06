@@ -289,6 +289,8 @@
   "per_day_quantity": "NET CENTS against the INCUMBENT",
   "per_day_unit_of_analysis": "the ACTION (slug, side, gen), de-duplicated"
  },
+ "supersedes": null,
+ "supersedes_note": "the oldest version of this family: it names no predecessor. A null here is a STATEMENT, not an absence (R-657/DA 91: four BE families carried no resolvable chain, so no reader could resolve a head).",
  "what_is_opened": {
   "NOT_OPENED_BY_FILING_THIS": "filing a declaration is not reading. Nothing above is opened by this artifact; the opening is the coordinator's or the USER's act after the reviewer has seen this.",
   "OPENED_BY_THE_READ": {

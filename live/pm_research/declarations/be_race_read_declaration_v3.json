@@ -118,11 +118,17 @@
   "why": "they were opened under the interim and this read does not un-open them"
  },
  "supersedes": {
-  "artifacts": [
-   "be_race_read_declaration_v1.json",
-   "be_race_read_declaration_v2.json"
-  ],
-  "rule": "13 -- vN+1; v1 and v2 are NOT edited",
-  "what_changes": "WHICH FILE THE READ OPENS, and which of the two statistics v2 carried is the one. No number moves; nothing has been read."
+  "path": "live/pm_research/declarations/be_race_read_declaration_v2.json",
+  "rule": "13 -- vN+1 by the {path, sha256} PAIR",
+  "sha256": "f6c344a47cf01b3ce71ee8721c15b5a1201b6b52f917a6e7d2596e4c40111b87",
+  "was_before_this_link": {
+   "artifacts": [
+    "be_race_read_declaration_v1.json",
+    "be_race_read_declaration_v2.json"
+   ],
+   "rule": "13 -- vN+1; v1 and v2 are NOT edited",
+   "what_changes": "WHICH FILE THE READ OPENS, and which of the two statistics v2 carried is the one. No number moves; nothing has been read."
+  },
+  "why_the_pair": "a bare filename cannot be verified and a resolver cannot follow it -- DE's resolver CRASHED on a bare-string supersedes (REV 54) and DA 91's census refuses to invent the link. Content is otherwise unchanged."
  }
 }

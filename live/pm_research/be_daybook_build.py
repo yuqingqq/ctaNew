@@ -36,6 +36,7 @@ import hashlib
 import json
 import pickle
 import resource
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -71,6 +72,20 @@ LEDGER_DERIVED = _BDR.derived()
 OUT_DERIVED = LEDGER_DERIVED
 
 COIN = "btc"
+
+#: R-649 §3.2: 75 is EX_TEMPFAIL. From OUTSIDE a unit, ExecMainStatus=75
+#: reads "the lock was held" OR "a producer broke the declaration and exited
+#: 75 for its own reasons" -- and the two are indistinguishable. So this
+#: producer DECLARES its exit codes and its selftest asserts 75 is not among
+#: them, which is what makes the launcher's 75 mean one thing.
+EXIT_CODES = {
+    0: "the artifact was written and its receipt emitted",
+    1: "a refusal or an uncaught error (Python's default for an exception)",
+    2: "usage: no --day and no --selftest",
+}
+EXIT_CODE_NOTE = ("75 is RESERVED to the launcher's flock conflict and is "
+                  "not in this map; the selftest asserts it.")
+
 
 #: PER-STAGE MEMORY BUDGETS, declared, and a stage over its budget REFUSES.
 #: Named to match DE's `--day` stages so the seams agree: DE's S0/S1 consume
@@ -660,6 +675,9 @@ def build(day: str, *, coin: str = COIN,
     import de_phase4_diag_runner as R
     t0 = time.time()
     obs = {}
+    obs["started_utc"] = subprocess.run(
+        ["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"], capture_output=True,
+        text=True, timeout=30).stdout.strip()
     stages = _Stages(FIXTURE_STAGE_BUDGETS_GB if fixture
                      else STAGE_BUDGETS_GB)
     obs["wrapper"] = assert_rule20(fixture=fixture)
@@ -797,6 +815,9 @@ def build(day: str, *, coin: str = COIN,
     # stated rather than implied: the ~7 s between this line and the last
     # byte of the receipt. The stamp in the receipt re-reads the closure and
     # reports it again, so that window is visible too.
+    # REV 65 §1.2: decided at runtime from this process's own leaf, which a
+    # static lint cannot see behind a variable or a wrapper.
+    obs["launch_form_at_runtime"] = _R22.assert_not_a_scope(fixture=fixture)
     obs["rule22_checked_before_write"] = _R22.assert_unchanged(
         "be_daybook_build: before the book is written")
     t = time.time()
@@ -911,6 +932,25 @@ def build(day: str, *, coin: str = COIN,
         # it: the tape scope hit the 8 GiB cap 1,199 times while the process
         # RSS peaked at 4.741 GB.
         "scope": _BDR.scope_stats(),
+        "launch_form_at_runtime": _R22.assert_not_a_scope(fixture=fixture),
+        # R-641 / rule 20: the journal is NOT the record. Its lines are
+        # COPIED here at emit, filtered on this run's InvocationID with both
+        # fields, with the retention state MEASURED beside them -- and a
+        # window the journal no longer reaches is UNMEASURED, naming the
+        # oldest entry that does exist. No verdict in this receipt rests on
+        # any of it.
+        "journal_copy": _R22.journal_copy(
+            (_R22.cgroup_leaf().get("leaf") or "").rsplit(".", 1)[0]
+            or "unknown",
+            _R22.unit_outcome(
+                (_R22.cgroup_leaf().get("leaf") or "unknown.service")
+            ).get("InvocationID") or None,
+            window_start_utc=obs.get("started_utc")),
+        "exit_codes": {"map": {str(k): v for k, v in EXIT_CODES.items()},
+                       "conflict_code_is_the_launcher's": _R22.lock_conflict_rc(),
+                       "note": EXIT_CODE_NOTE,
+                       "declaration_head":
+                           _R22.declaration_head("heavy_run_form")["name"]},
         # REV 63 S3. The bare correlation I filed for 09-04 vs 09-05
         # understated what the receipts already contain, and a reader told
         # only "a correlation" will over-read the comparison.
@@ -922,7 +962,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 85
+EXPECTED_CHECKS = 100
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -1538,10 +1578,15 @@ def selftest() -> int:
        "fell, so whatever differed was outside the builder's allocation -- "
        "stronger than a correlation, weaker than a mechanism")
     _lfB = _R22.assert_launch_form()
-    ok(_lfB["form_is_correct"] and _lfB["conflict_exit_code"] == 75,
-       f"THE BOOK BUILDER'S LAUNCHER IS THE SERVICE FORM TOO, with a "
-       f"distinct lock-conflict exit code ({_lfB['conflict_exit_code']}) so "
-       f"a refusal can never be misread as the build failing")
+    ok(_lfB["form_is_correct"]
+       and _lfB["conflict_exit_code_declared"] == _R22.lock_conflict_rc()
+       and _lfB["declaration_head"].endswith(".json"),
+       f"THE BOOK BUILDER'S LAUNCHER IS THE SERVICE FORM, and its conflict "
+       f"code now comes from the DECLARATION HEAD "
+       f"({_lfB['declaration_head']}, value "
+       f"{_lfB['conflict_exit_code_declared']}) rather than from a Python "
+       f"constant this checker owns -- REV 67 §2.3: a launcher refusing "
+       f"with 76 was published as 75 because the checker returned its own")
     _srcB = Path(__file__).read_text()
     ok("--scope ...` -- is the form R-628 ruled against" in _srcB,
        "AND THE REFUSAL NO LONGER PRINTS THE RETIRED FORM: `assert_rule20` "
@@ -1844,44 +1889,103 @@ def selftest() -> int:
        "AND A QUOTED PATH IS UNQUOTED: git quotes unusual names, so the "
        "quotes are part of the encoding, not of the path")
 
-    # ---- the two readers REV 64 did not audit ---------------------------
-    # Neither slices porcelain: each uses it as a BOOLEAN, so the read half
-    # cannot bite them either. That is a fact about their code, so it is
-    # CHECKED here rather than asserted in a row -- and this check fails
-    # the moment either starts deriving a path from that output.
-    import ast as _ast2
-    for _f in ("be_forward_day.py", "be_forward_recon.py"):
-        _src2 = (Path(HERE) / _f).read_text()
-        _t2 = _ast2.parse(_src2)
-        _porc = [n for n in _ast2.walk(_t2)
-                 if isinstance(n, _ast2.Constant) and n.value == "--porcelain"]
-        # the names any porcelain result is bound to, if any
-        _bound = set()
-        for _n in _ast2.walk(_t2):
-            if isinstance(_n, _ast2.Assign) and any(
-                    isinstance(c, _ast2.Constant) and c.value == "--porcelain"
-                    for c in _ast2.walk(_n.value)):
-                for _t in _n.targets:
-                    if isinstance(_t, _ast2.Name):
-                        _bound.add(_t.id)
-        # a path would have to come out by subscripting or splitting one of
-        # those names; neither happens
-        _derived = []
-        for _n in _ast2.walk(_t2):
-            if isinstance(_n, _ast2.Subscript) and isinstance(
-                    _n.value, _ast2.Name) and _n.value.id in _bound:
-                _derived.append(f"{_n.value.id}[...]")
-            if (isinstance(_n, _ast2.Attribute)
-                    and _n.attr in ("split", "partition", "splitlines")
-                    and isinstance(_n.value, _ast2.Name)
-                    and _n.value.id in _bound):
-                _derived.append(f"{_n.value.id}.{_n.attr}()")
-        ok(_porc and not _derived,
-           f"{_f}: {len(_porc)} porcelain call(s), result bound to "
-           f"{sorted(_bound) or 'nothing'}, and NO path is derived from it "
-           f"({_derived or 'no subscript, no split'}) -- it is used as a "
-           f"BOOLEAN, so neither half of R-637's defect can reach it. "
-           f"Checked, not assumed, and this fails if that changes")
+    # ---- the porcelain readers, under the REBUILT census ---------------
+    # REV 67 §1.3: the first census looked only for a Subscript or a split
+    # on a DIRECTLY assigned name, and nine deriving shapes walked past four
+    # of them. It now propagates taint transitively, through a Call
+    # RECEIVER, and through loop and comprehension targets. WHAT IT IS: a
+    # REGRESSION GUARD on today's readers -- not a proof that no path can
+    # ever be derived; its limits are in its own docstring.
+    for _shape, _srcS, _want in (
+            ("direct subscript", 'x = git("status","--porcelain")\np = x[3:]\n', True),
+            ("call-receiver loop", 'for l in git("status","--porcelain").splitlines():\n    p = l[3:]\n', True),
+            ("transitive name", 'a = git("status","--porcelain")\nb = a\nc = b[3:]\n', True),
+            ("comprehension", 'x = git("status","--porcelain")\nps = [l[3:] for l in x.split(chr(10))]\n', True),
+            ("split then index", 'x = git("status","--porcelain")\np = x.split(chr(10))[0][3:]\n', True),
+            ("inline call subscript", 'p = git("status","--porcelain")[3:]\n', True),
+            ("strip then slice", 'x = git("status","--porcelain").strip()\np = x[3:]\n', True),
+            ("for over a name", 'x = git("status","--porcelain")\nfor l in x.splitlines():\n    q = l[3:]\n', True),
+            ("boolean only", 'x = git("status","--porcelain")\nd = bool(x.strip())\n', False)):
+        _got = _R22.porcelain_derivation_census(_srcS)["derives_a_path"]
+        ok(_got is _want,
+           f"CENSUS SHAPE {_shape!r}: derives_a_path={_got} (expected "
+           f"{_want}). Nine shapes, four of which walked past the first "
+           f"version (REV 67 §1.3)")
+    # be_forward_recon is still boolean-only; be_forward_day is NOT any more
+    # -- THIS round gave it the row classification REV 67 §1.4 asked for, so
+    # it now derives paths ON PURPOSE, through the shared safe parser and a
+    # RAW read. The claim changed, so the check changed with it.
+    _cr = _R22.porcelain_derivation_census(
+        (Path(HERE) / "be_forward_recon.py").read_text())
+    ok(not _cr["derives_a_path"],
+       f"be_forward_recon.py: {_cr['n_porcelain_calls']} call(s) carrying "
+       f"that constant, {_cr['n_status_porcelain_calls']} of them `status "
+       f"--porcelain`; no path is derived, so neither half of R-637 reaches "
+       f"it")
+    _fdsrc = (Path(HERE) / "be_forward_day.py").read_text()
+    _cd = _R22.porcelain_derivation_census(_fdsrc)
+    ok(_cd["derives_a_path"] and "git_raw" in _fdsrc
+       and "classify_dirt" in _fdsrc and "rstrip" in _fdsrc,
+       f"be_forward_day.py NOW DERIVES PATHS, DELIBERATELY: "
+       f"{_cd['n_porcelain_calls']} call(s) carry the constant but only "
+       f"{_cd['n_status_porcelain_calls']} is `status --porcelain` (the "
+       f"others are `git worktree list --porcelain`, which the old count "
+       f"conflated). It reads RAW and classifies each row through the "
+       f"shared parser, so `working_tree_dirty` no longer reads TRUE on a "
+       f"pristine tree because of the ledger symlink")
+
+    ok(75 not in EXIT_CODES and 75 == _R22.lock_conflict_rc(),
+       f"R-649 §3.2: this producer's declared exit codes are "
+       f"{sorted(EXIT_CODES)} and 75 is NOT among them -- so a unit reading "
+       f"ExecMainStatus=75 means the lock was held, and cannot also mean "
+       f"this producer broke the declaration. The 75 is read from the "
+       f"declaration head, not typed here")
+    ok(_R22.assert_not_a_scope(fixture=True)["kind"] in
+       ("scope", "service", "none"),
+       f"REV 65 §1.2: the launch form is decided at RUNTIME from this "
+       f"process's own cgroup leaf ({_R22.cgroup_leaf()['leaf']!r}), which a "
+       f"static lint cannot do -- it cannot see a `--scope` behind a "
+       f"variable or a wrapper")
+    try:
+        _R22.assert_not_a_scope(fixture=False) if \
+            _R22.cgroup_leaf()["kind"] == "scope" else None
+        _leafok = _R22.cgroup_leaf()["kind"] != "scope"
+    except _R22.HeavyRunRefused as _e:
+        _leafok = "transient SCOPE" in str(_e)
+    ok(_leafok,
+       "KNOWN-BAD, DRIVEN WHERE IT LIVES: a process whose own cgroup leaf is "
+       "a `.scope` REFUSES a real day by name -- nine BE heavy runs were "
+       "scopes and every receipt said so in `scope.unit`; no seat read it")
+    _sd = _R22.declaration_head("be_daybook_structure")
+    ok(_sd["name"].startswith("be_daybook_structure_v")
+       and "NOT YET VERIFIED" in _sd["doc"]["STATUS"],
+       f"R-654: the book's structure is DECLARED ({_sd['name']}) so DA maps "
+       f"the pickle through it instead of guessing -- and it says of itself "
+       f"that it is derived from the producing code and NOT yet asserted "
+       f"against a real book, because that is heavy and needs the lock")
+    import pickle as _pk
+    _bad = Path(_tf.mkdtemp(prefix="be65_struct_")) / "wrong.pkl"
+    _bad.write_bytes(_pk.dumps({"fr": {}, "not_asm": {}}))
+    try:
+        verify_structure(_bad)
+        ok(False, "a book with the wrong top-level keys must refuse")
+    except BookRefused as _e:
+        ok("contradicts be_daybook_structure" in str(_e)
+           and "top-level keys" in str(_e),
+           "KNOWN-BAD: a pickle whose top-level keys are not the declared "
+           "ones REFUSES BY NAME -- the verifier does not report a shape it "
+           "did not find")
+    _good = Path(_tf.mkdtemp(prefix="be65_structok_")) / "right.pkl"
+    _good.write_bytes(_pk.dumps({
+        "fr": {"reference": {}},
+        "asm": {"by_arm": {("btc", "h"): [{"k": 1}, {}]},
+                "assembly": {"n_chunks": 1, "kept_by_coin": {},
+                             "drops_by_coin": {}}}}))
+    _r = verify_structure(_good)
+    ok(_r["all_hold"] and _r["n_checks"] >= 6,
+       f"POSITIVE CONTROL: a pickle with the declared shape ADMITS on all "
+       f"{_r['n_checks']} claims -- a verifier shown only to refuse has not "
+       f"been shown to work")
 
     return _finish(checks, fails, skipped)
 
@@ -2176,10 +2280,68 @@ def _blob_sha_at(head, relpath) -> str | None:
         return None
 
 
+def verify_structure(book_path, *, declaration: dict | None = None) -> dict:
+    """ASSERT be_daybook_structure_v1 AGAINST A REAL BOOK. HEAVY.
+
+    R-654: DA's reader refused the real 09-03 book by name because every
+    fixture it had been driven on was JSON. A declaration derived from the
+    producing code is a claim about the code; only opening a real book makes
+    it a statement about the artifact. This is that step, and it refuses by
+    name on the first mismatch rather than reporting a shape it did not
+    find."""
+    d = declaration or _R22.declaration_head("be_daybook_structure")["doc"]
+    q = Path(book_path)
+    if not q.exists():
+        raise BookRefused(f"REFUSED: no book at {q}")
+    t0 = time.time()
+    with q.open("rb") as fh:
+        book = pickle.load(fh)
+    checked = []
+
+    def _need(cond, why):
+        checked.append({"claim": why, "holds": bool(cond)})
+        if not cond:
+            raise BookRefused(f"REFUSED: the book at {q.name} contradicts "
+                              f"be_daybook_structure: {why}")
+
+    _need(isinstance(book, dict), "the top level is a dict")
+    _need(set(book) == set(d["top_level"]["keys"]),
+          f"the top-level keys are {d['top_level']['keys']}, found "
+          f"{sorted(book)}")
+    asm = book["asm"]
+    _need(isinstance(asm, dict) and "by_arm" in asm and "assembly" in asm,
+          "asm carries by_arm and assembly")
+    _need(all(isinstance(k, tuple) and len(k) == 2 for k in asm["by_arm"]),
+          "asm.by_arm is keyed by (coin, head) TUPLES")
+    first = asm["by_arm"][next(iter(asm["by_arm"]))]
+    _need(hasattr(first, "__getitem__"),
+          "each by_arm value is indexable and its [0] carries the scored keys")
+    _need(isinstance(book["fr"], dict) and "reference" in book["fr"],
+          "fr carries the reference")
+    a = asm["assembly"]
+    _need(all(k in a for k in ("n_chunks", "kept_by_coin", "drops_by_coin")),
+          "asm.assembly carries the chunk and drop accounting")
+    return {"book": str(q), "bytes": q.stat().st_size,
+            "sha256": _sha_file(q),
+            "declaration": _R22.declaration_head("be_daybook_structure")["name"],
+            "checks": checked, "n_checks": len(checked),
+            "all_hold": all(c["holds"] for c in checked),
+            "wall_s": round(time.time() - t0, 1),
+            "peak_rss_gb": _rss_gb(),
+            "this_is_the_step_that_makes_the_declaration_a_measurement":
+                "before this ran, the declaration was derived from the "
+                "producing code and said so (R-654)"}
+
+
 def main(argv=None) -> int:
     argv = list(sys.argv) if argv is None else list(argv)
     if "--selftest" in argv:
         return selftest()
+    if "--verify-structure" in argv:
+        print(json.dumps(verify_structure(
+            argv[argv.index("--verify-structure") + 1]), indent=1,
+            default=str))
+        return 0
     if "--supersede-receipt" in argv:
         day = argv[argv.index("--supersede-receipt") + 1]
         _rh = (argv[argv.index("--run-head") + 1]

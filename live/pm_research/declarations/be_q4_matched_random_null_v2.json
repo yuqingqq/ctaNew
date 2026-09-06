@@ -50,6 +50,12 @@
  "sidedness": "ONE-SIDED, alternative = the policy BEATS matched-random",
  "statistic": "rank-based p = (1 + #{draws >= observed}) / (n + 1)",
  "status_reason": "RULED 2026-09-04 by the coordinator, inside their own surface: the cap is NOT raised and this conjunct stays uncomputed. The pinned pipeline needs >10.00 GiB in a fit stage nobody is otherwise changing, the upper bound is UNKNOWN, and the conjunct CANNOT change the verdict \u2014 increment_beats_incumbent is evaluated and FALSE, and a conjunction with a false conjunct is not rescuable. The available gain was GATE_PARTIALLY_EVALUATED -> GATE_EVALUATED_AND_FAILED.",
- "supersedes": "be_q4_matched_random_null_v1.json",
+ "supersedes": {
+  "path": "live/pm_research/declarations/be_q4_matched_random_null_v1.json",
+  "rule": "13 -- vN+1 by the {path, sha256} PAIR",
+  "sha256": "1edb54bee9ef0ea67d4d7235bef4d7c53c5f08d440bd435f94b2928e9bc6408e",
+  "was_before_this_link": "be_q4_matched_random_null_v1.json",
+  "why_the_pair": "a bare filename cannot be verified and a resolver cannot follow it -- DE's resolver CRASHED on a bare-string supersedes (REV 54) and DA 91's census refuses to invent the link. Content is otherwise unchanged."
+ },
  "why_superseded": "v1 justified n=500 against a 6-cell Q4 sub-family. The declared Holm denominator is 24 (verified at the artifact: family.holm_denominator = 24, declared_family.n_cells = 24, 4 heads x 6 cells). Under 24 the threshold is 0.05/24 = 0.0020833 and n=500's floor of 0.0019960 gives only 1.04x headroom."
 }

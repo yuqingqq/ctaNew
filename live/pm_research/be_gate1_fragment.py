@@ -60,6 +60,20 @@ sys.path.insert(0, str(HERE))
 import be_data_root as _BDR
 import be_rule22 as _R22
 
+#: R-649 §3.2: 75 is EX_TEMPFAIL. From OUTSIDE a unit, ExecMainStatus=75
+#: reads "the lock was held" OR "a producer broke the declaration and exited
+#: 75 for its own reasons" -- and the two are indistinguishable. So this
+#: producer DECLARES its exit codes and its selftest asserts 75 is not among
+#: them, which is what makes the launcher's 75 mean one thing.
+EXIT_CODES = {
+    0: "the artifact was written and its receipt emitted",
+    1: "a refusal or an uncaught error (Python's default for an exception)",
+    2: "usage: no --day and no --selftest",
+}
+EXIT_CODE_NOTE = ("75 is RESERVED to the launcher's flock conflict and is "
+                  "not in this map; the selftest asserts it.")
+
+
 #: RULE 22 AS AMENDED (R-605): the closure and HEAD are captured HERE, at
 #: import, before any work. This producer carried NO provenance stamp at
 #: all until round 60 (R-613) -- a landing to it mid-run would have been
@@ -314,6 +328,12 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
                   "required_stem": GATE1_STEM},
         "data_root": _BDR.receipt_block(),
         "scope": _BDR.scope_stats(),
+        "launch_form_at_runtime": _R22.assert_not_a_scope(fixture=fixture),
+        "exit_codes": {"map": {str(k): v for k, v in EXIT_CODES.items()},
+                       "conflict_code_is_the_launcher's": _R22.lock_conflict_rc(),
+                       "note": EXIT_CODE_NOTE,
+                       "declaration_head":
+                           _R22.declaration_head("heavy_run_form")["name"]},
         "wrapper_measured": _wrapper,
         "producing_code": _R22.stamp(__file__),
         "rule22_checked_at_emit": _R22.assert_unchanged(
@@ -324,7 +344,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
     }
 
 
-EXPECTED_CHECKS = 19
+EXPECTED_CHECKS = 22
 
 
 def selftest() -> int:
@@ -469,6 +489,29 @@ def selftest() -> int:
        and any("--scope" in x for x in _bad_lf["problems"]),
        "KNOWN-BAD: the exact form BE used for six heavy runs is REFUSED by "
        "name")
+
+    ok(75 not in EXIT_CODES and 75 == _R22.lock_conflict_rc(),
+       f"R-649 §3.2: this producer's declared exit codes are "
+       f"{sorted(EXIT_CODES)} and 75 is NOT among them -- so a unit reading "
+       f"ExecMainStatus=75 means the lock was held, and cannot also mean "
+       f"this producer broke the declaration. The 75 is read from the "
+       f"declaration head, not typed here")
+    ok(_R22.assert_not_a_scope(fixture=True)["kind"] in
+       ("scope", "service", "none"),
+       f"REV 65 §1.2: the launch form is decided at RUNTIME from this "
+       f"process's own cgroup leaf ({_R22.cgroup_leaf()['leaf']!r}), which a "
+       f"static lint cannot do -- it cannot see a `--scope` behind a "
+       f"variable or a wrapper")
+    try:
+        _R22.assert_not_a_scope(fixture=False) if \
+            _R22.cgroup_leaf()["kind"] == "scope" else None
+        _leafok = _R22.cgroup_leaf()["kind"] != "scope"
+    except _R22.HeavyRunRefused as _e:
+        _leafok = "transient SCOPE" in str(_e)
+    ok(_leafok,
+       "KNOWN-BAD, DRIVEN WHERE IT LIVES: a process whose own cgroup leaf is "
+       "a `.scope` REFUSES a real day by name -- nine BE heavy runs were "
+       "scopes and every receipt said so in `scope.unit`; no seat read it")
 
     print()
     if fails:

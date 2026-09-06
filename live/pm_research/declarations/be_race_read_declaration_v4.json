@@ -45,10 +45,16 @@
   "unchanged_from_v3": true
  },
  "supersedes": {
-  "artifact": "be_race_read_declaration_v3.json",
-  "rule": "13 -- vN+1; v3 is NOT edited",
-  "sha256": "603c684784b148b6b6770ae2755676cbb4b3d80bafe2c23c75ad2df904bfd5d6",
-  "what_changes": "the POPULATION and G. The estimand, the statistic and the no-re-seal ruling are unchanged."
+  "path": "live/pm_research/declarations/be_race_read_declaration_v3.json",
+  "rule": "13 -- vN+1 by the {path, sha256} PAIR",
+  "sha256": "3a2fdb28d87d77d926ec617b75889e3b83fe58ed074818d948021684fddc699a",
+  "was_before_this_link": {
+   "artifact": "be_race_read_declaration_v3.json",
+   "rule": "13 -- vN+1; v3 is NOT edited",
+   "sha256": "603c684784b148b6b6770ae2755676cbb4b3d80bafe2c23c75ad2df904bfd5d6",
+   "what_changes": "the POPULATION and G. The estimand, the statistic and the no-re-seal ruling are unchanged."
+  },
+  "why_the_pair": "a bare filename cannot be verified and a resolver cannot follow it -- DE's resolver CRASHED on a bare-string supersedes (REV 54) and DA 91's census refuses to invent the link. Content is otherwise unchanged."
  },
  "why_G_is_3": "it is v2's OWN `PESSIMISTIC_only_the_three_first_openings_are_fresh` branch, now the only branch the artifacts support -- not a choice made after seeing anything"
 }

@@ -329,15 +329,21 @@
   "per_day_unit_of_analysis": "the ACTION (slug, side, gen), de-duplicated"
  },
  "supersedes": {
-  "artifact": "live/pm_research/declarations/be_race_read_declaration_v1.json",
-  "changes_nothing_the_read_may_conclude": true,
-  "closes": "the reviewer's three v2 items at R-563(A) / \u00a7B.7",
-  "items": [
-   "B.3 the permutation floor at BOTH readings, with the CONSERVATIVE one in the field a reader resolves",
-   "B.4 what the read WRITES, and the SEALED_scores digests pinned for a REQUIRED post-read byte-identity check",
-   "B.6 an explicit FIELD asserting no Gate-1 book or arm artifact is on the read's path"
-  ],
-  "rule": "13 -- vN+1; v1 is NOT edited and stays at its bytes"
+  "path": "live/pm_research/declarations/be_race_read_declaration_v1.json",
+  "rule": "13 -- vN+1 by the {path, sha256} PAIR",
+  "sha256": "8ba84927ac35cf800f3ef1e9b8ee8b83a20dd11dc82acee8080fb7ac10fbec35",
+  "was_before_this_link": {
+   "artifact": "live/pm_research/declarations/be_race_read_declaration_v1.json",
+   "changes_nothing_the_read_may_conclude": true,
+   "closes": "the reviewer's three v2 items at R-563(A) / \u00a7B.7",
+   "items": [
+    "B.3 the permutation floor at BOTH readings, with the CONSERVATIVE one in the field a reader resolves",
+    "B.4 what the read WRITES, and the SEALED_scores digests pinned for a REQUIRED post-read byte-identity check",
+    "B.6 an explicit FIELD asserting no Gate-1 book or arm artifact is on the read's path"
+   ],
+   "rule": "13 -- vN+1; v1 is NOT edited and stays at its bytes"
+  },
+  "why_the_pair": "a bare filename cannot be verified and a resolver cannot follow it -- DE's resolver CRASHED on a bare-string supersedes (REV 54) and DA 91's census refuses to invent the link. Content is otherwise unchanged."
  },
  "what_is_opened": {
   "NOT_OPENED_BY_FILING_THIS": "filing a declaration is not reading. Nothing above is opened by this artifact; the opening is the coordinator's or the USER's act after the reviewer has seen this.",

@@ -17,5 +17,7 @@
  "seed": 20260825,
  "sidedness": "ONE-SIDED, alternative = the policy BEATS matched-random",
  "superseded_by": "be_q4_matched_random_null_v2.json",
+ "supersedes": null,
+ "supersedes_note": "the oldest version of this family: it names no predecessor. A null here is a STATEMENT, not an absence (R-657/DA 91: four BE families carried no resolvable chain, so no reader could resolve a head).",
  "target": "Q4_combined_ev, coin btc, arms composed_lgbm and composed_linear, budgets 5/10/15%"
 }

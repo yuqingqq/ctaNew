@@ -29,6 +29,8 @@ WHAT IS AND IS NOT COVERED, stated rather than implied:
 from __future__ import annotations
 
 import hashlib
+import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -131,7 +133,306 @@ class HeavyRunRefused(RuntimeError):
 
 
 LAUNCHER = Path(__file__).with_name("be_heavy_run.sh")
-LOCK_CONFLICT_RC = 75
+DECLARATIONS = Path(__file__).with_name("declarations")
+
+
+class DeclarationAbsent(RuntimeError):
+    """A check that depends on a declaration FAILS when it is gone.
+
+    R-649 §3.1(1): it never skips. A skipped check reads as a pass to
+    everything downstream, and the declaration is the thing being relied
+    on."""
+
+
+def declaration_head(family: str) -> dict:
+    """The HEAD of a declaration chain, resolved by {path, sha256}.
+
+    R-653: resolve the CHAIN, never a filename -- a filename is a guess
+    about which version governs. A chain of one resolves to itself; a
+    version whose predecessor's digest does not match on disk is refused
+    rather than silently accepted."""
+    import hashlib as _h
+    cands = sorted(DECLARATIONS.glob(f"{family}_v*.json"))
+    if not cands:
+        raise DeclarationAbsent(
+            f"REFUSED: no declaration of family {family!r} under "
+            f"{DECLARATIONS}. This check depends on it and therefore FAILS; "
+            f"it does not skip (R-649).")
+    loaded = {}
+    for q in cands:
+        b = q.read_bytes()
+        loaded[q.name] = {"path": q, "sha256": _h.sha256(b).hexdigest(),
+                          "doc": json.loads(b)}
+    superseded = set()
+    for name, e in loaded.items():
+        sup = e["doc"].get("supersedes")
+        if isinstance(sup, dict) and sup.get("path"):
+            prev = Path(sup["path"]).name
+            if prev in loaded and loaded[prev]["sha256"] != sup.get("sha256"):
+                raise DeclarationAbsent(
+                    f"REFUSED: {name} supersedes {prev} by a digest that "
+                    f"does not match the file on disk -- the chain is "
+                    f"broken and no head can be resolved.")
+            superseded.add(prev)
+    heads = [n for n in loaded if n not in superseded]
+    if len(heads) != 1:
+        raise DeclarationAbsent(
+            f"REFUSED: {family} resolves to {len(heads)} heads ({heads}); a "
+            f"declaration family with two heads has no governing version.")
+    h = loaded[heads[0]]
+    return {"name": heads[0], "sha256": h["sha256"], "doc": h["doc"],
+            "path": str(h["path"]), "n_versions": len(loaded)}
+
+
+def lock_conflict_rc() -> int:
+    """THE conflict code, from the declaration -- never a literal here.
+
+    REV 67 §2.3: the code was a literal in the launcher AND a constant in
+    this module, and `assert_launch_form` returned THIS one -- so a
+    launcher refusing with 76 was published as 75."""
+    return int(declaration_head("heavy_run_form")["doc"]["lock_conflict_rc"])
+
+
+def unit_outcome(unit: str) -> dict:
+    """The unit's outcome as the DECLARATION defines it: five fields + the id.
+
+    R-653: `LoadState: not-found` is VOID, never a verdict -- a unit that
+    was collected reads exactly like a unit that never ran. And the
+    InvocationID is what makes two polls distinguishable: a unit NAME names
+    every run ever launched under it, and a failed unit's properties
+    persist until `reset-failed`, so a repeated id is the SAME refusal."""
+    d = declaration_head("heavy_run_form")["doc"]
+    fields = list(d["unit_outcome_minimum_read"]) + ["InvocationID"]
+    out = {}
+    for f in fields:
+        r = subprocess.run(["systemctl", "--user", "show",
+                            unit if unit.endswith(".service")
+                            else f"{unit}.service", "-p", f, "--value"],
+                           capture_output=True, text=True, timeout=30)
+        out[f] = r.stdout.strip() if r.returncode == 0 else None
+    out["fields_from"] = "declaration head unit_outcome_minimum_read + id"
+    out["void"] = out.get("LoadState") == "not-found"
+    if out["void"]:
+        out["why_void"] = ("the unit is not loaded: a collected unit and a "
+                           "unit that never ran are indistinguishable here, "
+                           "so this is VOID and not a verdict (R-653)")
+    return out
+
+
+def porcelain_derivation_census(src: str) -> dict:
+    """WHAT THIS IS: a REGRESSION GUARD on the two readers that use
+    `git status --porcelain` as a BOOLEAN today -- not a general proof that
+    no path can ever be derived from porcelain in any code.
+
+    REV 67 §1.3 drove nine deriving shapes past the first version, which
+    only looked for a Subscript or a `.split` on a directly-assigned name.
+    It now propagates taint: through assignment (transitively), through a
+    Call RECEIVER (`git(...).splitlines()`), through for-loop and
+    comprehension targets, and through subscripting. A derivation is a
+    Subscript on anything tainted, or a tainted value reaching a slice.
+
+    Its limits, stated rather than left to be discovered: it does not follow
+    values across function boundaries, through containers, or through
+    `eval`/`getattr`; a determined path derivation can still evade it. That
+    is why it is named a regression guard."""
+    import ast as _a
+    tree = _a.parse(src)
+    tainted, derived = set(), []
+
+    def _is_porc_call(n):
+        return isinstance(n, _a.Call) and any(
+            isinstance(c, _a.Constant) and c.value == "--porcelain"
+            for c in _a.walk(n))
+
+    def _tainted_expr(n):
+        if _is_porc_call(n):
+            return True
+        if isinstance(n, _a.Name):
+            return n.id in tainted
+        if isinstance(n, _a.Attribute):          # git(...).splitlines
+            return _tainted_expr(n.value)
+        if isinstance(n, _a.Call):               # x.split(...) / f(x)
+            return _tainted_expr(n.func)
+        if isinstance(n, _a.Subscript):
+            return _tainted_expr(n.value)
+        if isinstance(n, _a.BinOp):
+            return _tainted_expr(n.left) or _tainted_expr(n.right)
+        return False
+
+    # taint to a fixed point: assignments, loops, comprehensions
+    for _ in range(6):
+        before = len(tainted)
+        for n in _a.walk(tree):
+            if isinstance(n, _a.Assign) and _tainted_expr(n.value):
+                for t in n.targets:
+                    if isinstance(t, _a.Name):
+                        tainted.add(t.id)
+            if isinstance(n, (_a.For, _a.AsyncFor)) and _tainted_expr(n.iter):
+                if isinstance(n.target, _a.Name):
+                    tainted.add(n.target.id)
+            if isinstance(n, _a.comprehension) and _tainted_expr(n.iter):
+                if isinstance(n.target, _a.Name):
+                    tainted.add(n.target.id)
+        if len(tainted) == before:
+            break
+
+    for n in _a.walk(tree):
+        if isinstance(n, _a.Subscript) and _tainted_expr(n.value):
+            derived.append({"kind": "subscript", "line": n.lineno})
+        if (isinstance(n, _a.Attribute)
+                and n.attr in ("split", "splitlines", "partition",
+                               "rpartition", "rsplit")
+                and _tainted_expr(n.value)):
+            # splitting is only a derivation if the pieces are then used;
+            # the taint walk above will have caught that as a subscript or
+            # a loop target, so this is recorded as a SPLIT, not a verdict
+            derived.append({"kind": f"split:{n.attr}", "line": n.lineno})
+    # how many porcelain CALLS (not string constants: `git worktree list
+    # --porcelain` carries the same constant and is a different command)
+    calls = [n for n in _a.walk(tree) if _is_porc_call(n)]
+    status_calls = [n for n in calls if any(
+        isinstance(c, _a.Constant) and c.value == "status"
+        for c in _a.walk(n))]
+    return {"what_this_is": "a regression guard on today's readers, not a "
+                            "general proof",
+            "n_porcelain_calls": len(calls),
+            "n_status_porcelain_calls": len(status_calls),
+            "note_on_the_count": "the earlier count counted the STRING "
+                                 "CONSTANT; two of be_forward_day's three "
+                                 "are `git worktree list --porcelain`, a "
+                                 "different command entirely",
+            "tainted_names": sorted(tainted),
+            "derivations": derived,
+            "derives_a_path": bool([d for d in derived
+                                    if d["kind"] == "subscript"])}
+
+
+def journal_copy(unit: str, invocation_id: str | None = None, *,
+                 window_start_utc: str | None = None,
+                 max_lines: int = 40) -> dict:
+    """COPY journal lines into an artifact AT THE MOMENT OF READING, with
+    the source's RETENTION STATE MEASURED beside them (R-641, rule 20).
+
+    The journal is not the record: it rotates within hours (DE 84's Started
+    line was gone four hours later, and the window's start advanced ~15 min
+    in 18 min on 09-06). So a number read from it is copied here and now;
+    the retention state is a MEASUREMENT with its own query and as-of, never
+    a typed string; and no verdict below depends on retention -- a window
+    the journal no longer reaches is reported UNMEASURED, naming the oldest
+    entry that does exist.
+
+    Lines are filtered on the run's InvocationID with BOTH fields, because a
+    unit NAME names every run ever launched under it (99 manager lines for
+    be64book by 13:37Z). `_SYSTEMD_INVOCATION_ID` carries the payload's
+    lines and `USER_INVOCATION_ID` the user manager's Started/Consumed
+    lines; `INVOCATION_ID` is the SYSTEM manager's field and matches nothing
+    here."""
+    u = unit if unit.endswith(".service") else f"{unit}.service"
+    now = subprocess.run(["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"],
+                         capture_output=True, text=True, timeout=30
+                         ).stdout.strip()
+
+    def _run(args):
+        r = subprocess.run(args, capture_output=True, text=True, timeout=60)
+        return r.stdout if r.returncode == 0 else ""
+
+    # RETENTION, MEASURED -- and measured CORRECTLY. The first form of this
+    # used `-n 1 --reverse`, which returns the NEWEST entry: it labelled the
+    # newest as the oldest, which is the same class of defect as every other
+    # value here that looked right. `-n` takes the TAIL; the oldest is the
+    # FIRST line of the unfiltered listing.
+    _first = _run(["journalctl", "--user", "--no-pager", "-o",
+                   "short-iso"]).split("\n", 1)[0]
+    oldest_measured = _first.split(" ")[0] if _first.strip() else None
+    by_unit = [l for l in _run(["journalctl", "--user", "-u", u, "--no-pager",
+                                "-o", "cat"]).split("\n") if l]
+    by_id = []
+    if invocation_id:
+        for field in ("_SYSTEMD_INVOCATION_ID", "USER_INVOCATION_ID"):
+            by_id += [l for l in _run(["journalctl", "--user",
+                                       f"{field}={invocation_id}",
+                                       "--no-pager", "-o", "cat"]
+                                      ).split("\n") if l]
+    out = {
+        "unit": u, "invocation_id": invocation_id, "as_of": now,
+        "query_by_id": [f"journalctl --user _SYSTEMD_INVOCATION_ID={invocation_id}",
+                        f"journalctl --user USER_INVOCATION_ID={invocation_id}"],
+        "query_by_unit": f"journalctl --user -u {u} -o cat",
+        "n_lines_by_unit": len(by_unit),
+        "n_lines_by_id": len(by_id) if invocation_id else None,
+        "lines": (by_id or by_unit)[-max_lines:],
+        "copied_at_the_moment_of_reading": True,
+        "retention": {
+            "oldest_entry_the_journal_holds": oldest_measured,
+            "query": "journalctl --user --no-pager -o short-iso | first line",
+            "as_of": now,
+            "is_a_measurement_not_a_string": True,
+            "note": "the window's start advanced ~15 min in 18 min on "
+                    "09-06, so a retention state named once and re-quoted "
+                    "later is stale",
+        },
+        "why_the_field_names": "INVOCATION_ID is the SYSTEM manager's field "
+                               "and matches nothing under --user; the user "
+                               "manager's Started/Consumed lines carry "
+                               "USER_INVOCATION_ID",
+    }
+    if window_start_utc:
+        covered = bool(oldest_measured and oldest_measured <= window_start_utc)
+        out["window_start_utc"] = window_start_utc
+        out["window_fully_covered"] = covered
+        if not covered:
+            out["status"] = "UNMEASURED"
+            out["why_unmeasured"] = (
+                f"the journal's oldest entry is {oldest_measured}, which is "
+                f"AFTER the window's start {window_start_utc}: those lines "
+                f"have rotated out. This is UNMEASURED, not absent and not "
+                f"zero -- no verdict may rest on it.")
+    if invocation_id and by_unit and not by_id:
+        out["status"] = "COPY_REFUSED"
+        out["why_refused"] = (
+            f"the by-id query returned 0 lines where `-u {u}` has "
+            f"{len(by_unit)}: a copy that finds nothing where the unit has "
+            f"lines is a refusal of the copy, never a record (rule 20).")
+    return out
+
+
+def cgroup_leaf() -> dict:
+    """This process's own cgroup leaf, and what KIND of unit it is.
+
+    REV 65 §1.2: the lint cannot see a `--scope` behind a variable or a
+    wrapper, and it should not be asked to. The property is not "the string
+    is absent from a line", it is "this run's unit is a .service" -- and
+    that is decidable HERE, at runtime, from the leaf the producers already
+    report."""
+    try:
+        leaf = open("/proc/self/cgroup").read().strip().rsplit("/", 1)[-1]
+    except OSError:
+        return {"leaf": None, "kind": "UNKNOWN"}
+    kind = ("scope" if leaf.endswith(".scope")
+            else "service" if leaf.endswith(".service")
+            else "none")
+    return {"leaf": leaf, "kind": kind,
+            "why_this_and_not_the_lint": "a static scan cannot see a "
+                                         "`--scope` behind a variable or a "
+                                         "wrapper; the leaf is what the run "
+                                         "actually got"}
+
+
+def assert_not_a_scope(*, fixture: bool = False) -> dict:
+    """REFUSE a real day whose own unit is a transient SCOPE (R-628).
+
+    Nine BE heavy runs were scopes and every receipt said so in
+    `scope.unit`; no seat read it. This reads it."""
+    c = cgroup_leaf()
+    if not fixture and c["kind"] == "scope":
+        raise HeavyRunRefused(
+            f"REFUSED: this process's cgroup leaf is {c['leaf']!r} -- a "
+            f"transient SCOPE. A scope's payload sits in the launching "
+            f"shell's process tree and dies with it (R-628). Launch through "
+            f"{LAUNCHER.name}, which runs a transient SERVICE. The static "
+            f"lint cannot catch a `--scope` behind a variable; this can, "
+            f"because it reads what the run actually got.")
+    return c
 
 
 def flock_mode(lock_path) -> str | None:
@@ -246,12 +547,84 @@ def assert_launch_form(text: str | None = None) -> dict:
     if not inside:
         problems.append("takes the lock OUTSIDE the unit, so the lock dies "
                         "with the launching shell")
+    # REV 67 §2.3: this returned the PYTHON constant as `conflict_exit_code`,
+    # so a launcher refusing with 76 was published as 75 (driven on a scratch
+    # copy). The value is now PARSED OUT OF THE LAUNCHER and asserted equal
+    # to the declaration's -- and if the launcher sources it from the
+    # declaration rather than assigning a literal, that is recorded as the
+    # stronger form rather than as a missing token.
+    declared = lock_conflict_rc()
+    m = re.search(r"^LOCK_CONFLICT_RC=(.+)$", raw, re.M)
+    assigned = m.group(1).strip() if m else None
+    sourced = bool(assigned and "heavy_run_form" in raw
+                   and not assigned.lstrip("$").isdigit()
+                   and assigned.startswith("$("))
+    literal = None
+    if assigned and assigned.isdigit():
+        literal = int(assigned)
+        if literal != declared:
+            problems.append(
+                f"declares LOCK_CONFLICT_RC={literal} while the declaration "
+                f"head says {declared}: a launcher refusing with one code "
+                f"while its checker publishes another is exactly REV 67 "
+                f"§2.3's defect")
+    elif not sourced:
+        problems.append("assigns LOCK_CONFLICT_RC from neither a literal nor "
+                        "the declaration, so no reader can know what it "
+                        "refuses with")
     return {"launcher": str(LAUNCHER), "problems": problems,
             "scanned": "the systemd-run invocation itself",
             "launch_line": src[:400],
             "form_is_correct": not problems,
             "lock_is_inside_the_unit": inside,
-            "conflict_exit_code": LOCK_CONFLICT_RC}
+            "conflict_exit_code_declared": declared,
+            "conflict_exit_code_in_launcher": literal,
+            "launcher_sources_it_from_the_declaration": sourced,
+            "declaration_head": declaration_head("heavy_run_form")["name"]}
+
+
+def running_unit_exec_start(unit: str | None = None) -> dict:
+    """THE BYTES THAT ARE RUNNING, not the importing tree's copy.
+
+    R-653: `LAUNCHER` resolves relative to whichever worktree imported this
+    module, so a check on "the launcher's bytes" can inspect a file that is
+    not the one the unit is executing. Read the unit's own `ExecStart`, or
+    -- from inside the run -- this process's parent command line."""
+    import hashlib as _h
+    out = {"asked_for": unit}
+    if unit:
+        r = subprocess.run(["systemctl", "--user", "show",
+                            unit if unit.endswith(".service")
+                            else f"{unit}.service", "-p", "ExecStart",
+                            "--value"], capture_output=True, text=True,
+                           timeout=30)
+        out["ExecStart"] = r.stdout.strip() or None
+    else:
+        try:
+            ppid = int(open("/proc/self/status").read()
+                       .split("PPid:")[1].split()[0])
+            out["ppid"] = ppid
+            out["ppid_cmdline"] = open(f"/proc/{ppid}/cmdline").read(
+                ).replace("\x00", " ").strip()
+        except (OSError, IndexError, ValueError):
+            out["ppid_cmdline"] = None
+    # the path the RUNNING command names, and that file's digest now
+    txt = out.get("ExecStart") or out.get("ppid_cmdline") or ""
+    m = re.search(r"(/\S*be_heavy_run\.sh)", txt)
+    out["launcher_path_in_the_running_command"] = m.group(1) if m else None
+    if m:
+        try:
+            out["launcher_sha256_on_disk"] = _h.sha256(
+                Path(m.group(1)).read_bytes()).hexdigest()
+        except OSError:
+            out["launcher_sha256_on_disk"] = None
+    out["importing_tree_launcher"] = str(LAUNCHER)
+    out["same_file"] = (out.get("launcher_path_in_the_running_command")
+                        == str(LAUNCHER))
+    out["why"] = ("`LAUNCHER` is relative to the importing worktree; a claim "
+                  "about the launcher's bytes must name the file the UNIT "
+                  "is executing (R-653)")
+    return out
 
 
 class Capture:
