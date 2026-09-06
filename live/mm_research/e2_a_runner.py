@@ -1327,7 +1327,8 @@ def decision_time_quote_age(bt_t: np.ndarray, day: str) -> dict:
             "max_ms": float(ages.max())}
 
 
-def census(symbols, out_path: Path | None = None) -> dict:
+def census(symbols, out_path: Path | None = None,
+           light: bool = False) -> dict:
     """The admission table and the gap PROFILE, per symbol-day.
 
     A population census, not a gate read: no episode is simulated and no
@@ -1342,6 +1343,14 @@ def census(symbols, out_path: Path | None = None) -> dict:
            "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
                            "sha256": DECL_SHA},
            "admission_leg": "v6 -- COLLECTOR LIVENESS, not book activity",
+           "light": bool(light),
+           "light_means": ("no tape is opened: admission needs only the "
+                           "hour-file census and the collector's heartbeat "
+                           "ledger, which is the whole point of v6. The "
+                           "REPORTED-not-gated statuses (gap fraction, gap "
+                           "profile, decision-time quote age) are omitted, "
+                           "and their absence is why this is not a "
+                           "substitute for the full census."),
            "collector_heartbeats_seen": int(beats.size),
            "collector_restarts_seen": int(restarts.size),
            "symbols": {}}
@@ -1354,7 +1363,7 @@ def census(symbols, out_path: Path | None = None) -> dict:
             counts = stream_file_counts(sym, day)
             health = collector_health(day, beats, restarts)
             prof, gap, age = None, None, None
-            if counts["bookTicker"] == HOURS_PER_DAY_FILES:
+            if (not light) and counts["bookTicker"] == HOURS_PER_DAY_FILES:
                 bk, _, _ = E20.read_book(sym, day, extend=False)
                 if bk is not None:
                     prof = gap_profile(bk[0], day)
@@ -1672,6 +1681,7 @@ def main() -> int:
     ap.add_argument("--census", nargs="*", default=None)
     ap.add_argument("--mechanism-check", default=None)
     ap.add_argument("--e1-resolver-parity", action="store_true")
+    ap.add_argument("--light", action="store_true")
     ap.add_argument("--output", type=Path, default=None)
     a = ap.parse_args()
     if a.selftest or a.fixture:
@@ -1686,7 +1696,8 @@ def main() -> int:
         mechanism_check(a.mechanism_check, a.output)
         return 0
     if a.census is not None:
-        census(a.census or list(SYMBOLS_IN_SCOPE), a.output)
+        census(a.census or list(SYMBOLS_IN_SCOPE), a.output,
+               light=a.light)
         return 0
     if a.diagnose_tick is not None:
         syms = a.diagnose_tick or ["FILUSDT"]
