@@ -1,0 +1,501 @@
+{
+  "IS_A_VERIFICATION_OF_THE_ECONOMICS": false,
+  "arms": {},
+  "book": {
+    "book": "data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+    "sha256": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+    "verified": true
+  },
+  "builder_receipt": {
+    "agrees_with_the_day_receipt": true,
+    "book_digest_in_the_builder_receipt": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+    "path": "be_daybook_receipt_20260903_btc.json",
+    "sha256": "70d583d87090def40c6aad852f4549438b3d526d2490daf52684c2f52e49ee85",
+    "supplied": true
+  },
+  "code_is_committed": true,
+  "day": "2026-09-03",
+  "economic_absence": {
+    "economic_fields_declared": [
+      "D_E0",
+      "D_E_MINUS_R",
+      "Z",
+      "p_location",
+      "null_mean",
+      "null_sd",
+      "null_draws_summary",
+      "sd_over_abs_mean"
+    ],
+    "leaked_field_paths": [],
+    "n_leaked_fields": 0,
+    "n_receipt_leaves_walked": 545,
+    "not_to_be_confused_with": "`emitted_census.n_leaves_emitted`, which walks THIS RECORD -- the anti-echo control on what this seat itself publishes",
+    "sealed": true,
+    "values_were_not_read": true,
+    "walks": "THE RECEIPT under test",
+    "why_paths_only": "a leak is reported BY NAME. Echoing the value would publish the number the seal exists to withhold, which is the failure this check exists to prevent -- not a lesser one"
+  },
+  "emitted_census": {
+    "clean": true,
+    "economic_field_names_in_the_emission": [],
+    "n_declared_thresholds_excluded": 0,
+    "n_economic_field_names_in_the_emission": 0,
+    "n_leaves_emitted": 315,
+    "n_of_them_carrying_a_watched_number_AS_TEXT": 0,
+    "n_of_them_echoed_as_a_NUMERIC_LEAF": 0,
+    "n_string_fields_scanned": 179,
+    "n_watched_from_numeric_leaves": 0,
+    "n_watched_from_the_receipts_PROSE": 0,
+    "n_watched_values_from_the_receipt": 0,
+    "receipt_string_paths_that_may_not_be_echoed": [],
+    "string_hits_by_path_only": [],
+    "values_are_never_reproduced_here": "a hit is reported by PATH and by HOW. Printing the value would publish what the seal withholds, in the very field that exists to prevent it",
+    "why_declared_thresholds_are_excluded": "0.25, 30, 500 and the rest are public BY DECLARATION and appear in honest prose everywhere. Watching them made this census refuse its own correct output on the first attempt",
+    "why_the_prose_matters": "a SEALED receipt has no economic numeric leaves, so a watch list built from them alone is EMPTY -- and a number hidden in prose has nothing to be compared against. The census could then only catch a leak in a receipt that had already leaked, which is no catch at all",
+    "why_three_checks": "a name check alone passes while the NUMBER rides out under a different key; a leaf check alone passes while the number rides out INSIDE A STRING -- REV 49 section 2.4, and the exact class DE 85 found. The third check reads the prose, as WHOLE TOKENS: matching textual forms as raw substrings flagged this verifier's own honest output, because '3.2' sits inside '63.21'"
+  },
+  "exit_code_meaning": {
+    "FLAGGED": 1,
+    "INCOMPLETE": 3,
+    "PRE_READ_VERIFIED": 0,
+    "PROVENANCE_INCOMPLETE": 3,
+    "why": "the four-state scheme this seat already uses (DA 71)"
+  },
+  "gate_state_recorded_not_enforced": {
+    "no_override_flag_exists": true,
+    "now_utc": "2026-09-06T14:27:49.788027+00:00",
+    "open": false,
+    "predicate": {
+      "conjuncts": [
+        {
+          "bar": "2026-09-09T00:06:00Z",
+          "binding": "bound by ID",
+          "conjunct": "now >= read_not_before_utc. A GENUINE conjunct: six receipts before the bar must NOT open the read",
+          "evaluator": "clock_at_or_after_read_not_before_utc",
+          "holds": false,
+          "id": "clock_ge_read_not_before",
+          "now": "2026-09-06T14:27:49.770805+00:00"
+        },
+        {
+          "binding": "bound by ID",
+          "conjunct": "the six RULED days come from THIS file, never 'six receipts present' -- a receipt for another day fills no hole",
+          "evaluator": "every_ruled_day_has_exactly_one_sealed_receipt",
+          "holds": false,
+          "id": "six_ruled_days_from_params",
+          "per_day": {
+            "20260903": {
+              "chain": [
+                "p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json"
+              ],
+              "head": "p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json",
+              "n_matches": 1,
+              "resolves": true,
+              "status": "ONE",
+              "why": "zero is a day that never ran; two UNCHAINED is a day that ran twice, which a read refuses rather than resolving by picking the newest; a chained pair resolves to its HEAD"
+            },
+            "20260904": {
+              "chain": null,
+              "head": null,
+              "n_matches": 0,
+              "resolves": false,
+              "status": "NO_RECEIPT",
+              "why": "zero is a day that never ran; two UNCHAINED is a day that ran twice, which a read refuses rather than resolving by picking the newest; a chained pair resolves to its HEAD"
+            },
+            "20260905": {
+              "chain": null,
+              "head": null,
+              "n_matches": 0,
+              "resolves": false,
+              "status": "NO_RECEIPT",
+              "why": "zero is a day that never ran; two UNCHAINED is a day that ran twice, which a read refuses rather than resolving by picking the newest; a chained pair resolves to its HEAD"
+            },
+            "20260906": {
+              "chain": null,
+              "head": null,
+              "n_matches": 0,
+              "resolves": false,
+              "status": "NO_RECEIPT",
+              "why": "zero is a day that never ran; two UNCHAINED is a day that ran twice, which a read refuses rather than resolving by picking the newest; a chained pair resolves to its HEAD"
+            },
+            "20260907": {
+              "chain": null,
+              "head": null,
+              "n_matches": 0,
+              "resolves": false,
+              "status": "NO_RECEIPT",
+              "why": "zero is a day that never ran; two UNCHAINED is a day that ran twice, which a read refuses rather than resolving by picking the newest; a chained pair resolves to its HEAD"
+            },
+            "20260908": {
+              "chain": null,
+              "head": null,
+              "n_matches": 0,
+              "resolves": false,
+              "status": "NO_RECEIPT",
+              "why": "zero is a day that never ran; two UNCHAINED is a day that ran twice, which a read refuses rather than resolving by picking the newest; a chained pair resolves to its HEAD"
+            }
+          },
+          "resolution": "supersedes-chain, head-of-chain wins"
+        },
+        {
+          "binding": "bound by ID",
+          "conjunct": "each day's sealed receipt digest equals the one DA's pre-read recorded WHEN THE DAY LANDED; a re-run after landing REFUSES -- waiting must not become re-rolling. A superseding vN is admitted only when its chain reaches the landed digest",
+          "evaluator": "every_sealed_receipt_matches_its_LANDING_RECORD",
+          "holds": false,
+          "id": "receipt_at_landing_digest",
+          "per_day": {
+            "20260903": {
+              "chain_head": "p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json",
+              "chain_status": "ONE",
+              "landing_record_exists": true,
+              "landing_record_status": "ONE",
+              "matches": true,
+              "recorded_by": "p003_da_gate1_pre_read_20260903__20260906T140810Z.json",
+              "status": "MATCH"
+            },
+            "20260904": {
+              "chain_head": null,
+              "chain_status": "NO_RECEIPT",
+              "landing_record_exists": false,
+              "landing_record_status": "NO_LANDING_RECORD",
+              "matches": null,
+              "recorded_by": null,
+              "status": "NO_LANDING_RECORD"
+            },
+            "20260905": {
+              "chain_head": null,
+              "chain_status": "NO_RECEIPT",
+              "landing_record_exists": false,
+              "landing_record_status": "NO_LANDING_RECORD",
+              "matches": null,
+              "recorded_by": null,
+              "status": "NO_LANDING_RECORD"
+            },
+            "20260906": {
+              "chain_head": null,
+              "chain_status": "NO_RECEIPT",
+              "landing_record_exists": false,
+              "landing_record_status": "NO_LANDING_RECORD",
+              "matches": null,
+              "recorded_by": null,
+              "status": "NO_LANDING_RECORD"
+            },
+            "20260907": {
+              "chain_head": null,
+              "chain_status": "NO_RECEIPT",
+              "landing_record_exists": false,
+              "landing_record_status": "NO_LANDING_RECORD",
+              "matches": null,
+              "recorded_by": null,
+              "status": "NO_LANDING_RECORD"
+            },
+            "20260908": {
+              "chain_head": null,
+              "chain_status": "NO_RECEIPT",
+              "landing_record_exists": false,
+              "landing_record_status": "NO_LANDING_RECORD",
+              "matches": null,
+              "recorded_by": null,
+              "status": "NO_LANDING_RECORD"
+            }
+          },
+          "the_digest_is_the_CHAIN_HEADS": "REV 51 (a): a superseded receipt's landing digest is the digest of the chain HEAD, because the head is what a read would use. A v1 whose v2 supersedes it is not the artifact under test",
+          "the_record_is_this_seats_pre_read": true
+        },
+        {
+          "binding": "bound by ID",
+          "conjunct": "each day has >= 1 arm with admissibility.admissible true, read from the SEALED artifact. Six all-inadmissible days satisfy existence and contribute ZERO SIGNS",
+          "evaluator": "every_day_has_at_least_one_admissible_arm",
+          "holds": false,
+          "id": "at_least_one_admissible_arm",
+          "per_day": {
+            "20260903": {
+              "holds": true,
+              "n_admissible_arms": 2,
+              "status": "COUNTED"
+            },
+            "20260904": {
+              "n_admissible_arms": null,
+              "status": "NO_SINGLE_RECEIPT"
+            },
+            "20260905": {
+              "n_admissible_arms": null,
+              "status": "NO_SINGLE_RECEIPT"
+            },
+            "20260906": {
+              "n_admissible_arms": null,
+              "status": "NO_SINGLE_RECEIPT"
+            },
+            "20260907": {
+              "n_admissible_arms": null,
+              "status": "NO_SINGLE_RECEIPT"
+            },
+            "20260908": {
+              "n_admissible_arms": null,
+              "status": "NO_SINGLE_RECEIPT"
+            }
+          }
+        },
+        {
+          "binding": "bound by ID",
+          "conjunct": "day_quality_pass AND era_pure AND counts_toward_race -- R-555's membership. A sealed receipt is DE's own artifact and is not a day verdict",
+          "evaluator": "the_ledger_verdict_stands_for_every_day",
+          "holds": false,
+          "id": "ledger_verdict",
+          "per_day": {
+            "20260903": {
+              "present": true,
+              "verdict_artifact": "da_dayverdict_20260903.json"
+            },
+            "20260904": {
+              "present": true,
+              "verdict_artifact": "da_dayverdict_20260904.json"
+            },
+            "20260905": {
+              "present": true,
+              "verdict_artifact": "da_dayverdict_20260905.json"
+            },
+            "20260906": {
+              "present": true,
+              "verdict_artifact": "da_dayverdict_20260906.json"
+            },
+            "20260907": {
+              "present": false,
+              "verdict_artifact": null
+            },
+            "20260908": {
+              "present": false,
+              "verdict_artifact": null
+            }
+          },
+          "why": "the ledger's own day verdict, one per ruled day"
+        },
+        {
+          "binding": "bound by ID",
+          "conjunct": "producing_code_sha256 equals the runner's blob at the receipt's carrying_commit. For 2026-09-03 the .v2 supersession is what makes this hold: v1 was stamped from a file replaced mid-run (R-603)",
+          "evaluator": "every_receipt_names_locatable_producing_code",
+          "holds": false,
+          "id": "producing_code_locatable",
+          "per_day": {
+            "20260903": {
+              "commit": "b741352451f942e663261913a34408852de39a82",
+              "commit_resolves": true,
+              "locatable": true,
+              "producing_code_sha256": "f6071f1245ca0742"
+            },
+            "20260904": {
+              "locatable": null,
+              "status": "NO_SINGLE_RECEIPT"
+            },
+            "20260905": {
+              "locatable": null,
+              "status": "NO_SINGLE_RECEIPT"
+            },
+            "20260906": {
+              "locatable": null,
+              "status": "NO_SINGLE_RECEIPT"
+            },
+            "20260907": {
+              "locatable": null,
+              "status": "NO_SINGLE_RECEIPT"
+            },
+            "20260908": {
+              "locatable": null,
+              "status": "NO_SINGLE_RECEIPT"
+            }
+          }
+        },
+        {
+          "THE_FALLBACK_OUTCOME_IF_IT_PASSES": {
+            "G": 5,
+            "NEVER_APPLIED_SILENTLY": "past the horizon the declared fallback is G = 5, DIRECTIONAL -- a different claim from the six-day test, and this verifier NAMES it rather than quietly reading the smaller G as though it were the ruled one. Whether to take the fallback is the coordinator's act",
+            "applies_now": false,
+            "reading": "directional"
+          },
+          "binding": "bound by ID",
+          "conjunct": "if the sixth ruled day has not landed by horizon_utc the read opens at G = 5 over the five LANDED ruled days, DIRECTIONAL ONLY (2^-5 = 0.03125 is not significant at m = 2), with the sixth disclosed as UNBUILT",
+          "evaluator": "clock_at_or_before_horizon",
+          "holds": true,
+          "horizon": "2026-09-09T12:00:00Z",
+          "horizon_passed": false,
+          "id": "horizon_fallback_G5_directional",
+          "now": "2026-09-06T14:27:49.770805+00:00"
+        },
+        {
+          "binding": "bound by ID",
+          "conjunct": "a params file lacking this list REFUSES before any day is examined. DA's gate reads the SAME field; two implementations of one bar must not disagree silently",
+          "evaluator": "the_params_field_is_present",
+          "holds": true,
+          "id": "params_field_required",
+          "why": "the conjunction was read from `read_gate.the_bar_is_a_CONJUNCTION` -- had it been absent this predicate would have REFUSED before any conjunct was evaluated, so reaching here IS the conjunct holding"
+        }
+      ],
+      "conjuncts_not_evaluable": [],
+      "failing_conjuncts_by_name": [
+        "clock_at_or_after_read_not_before_utc",
+        "every_ruled_day_has_exactly_one_sealed_receipt",
+        "every_sealed_receipt_matches_its_LANDING_RECORD",
+        "every_day_has_at_least_one_admissible_arm",
+        "the_ledger_verdict_stands_for_every_day",
+        "every_receipt_names_locatable_producing_code"
+      ],
+      "n_conjuncts_declared": 8,
+      "n_evaluated": 8,
+      "n_holding": 2,
+      "no_override_flag_exists": true,
+      "open": false,
+      "params_protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V14",
+      "source_field": "read_gate.the_bar_is_a_CONJUNCTION",
+      "why_unevaluable_is_not_a_pass": "a conjunct no evaluator matches is reported and CLOSES the gate. Params growing from two conjuncts to eight cannot widen what this verifier silently accepts"
+    },
+    "read_not_before_utc": "2026-09-09T00:06:00Z",
+    "seconds_until_the_clock_conjunct": 207490.211973,
+    "the_bar_is_a_CONJUNCTION_not_a_clock": "R-604. Reading `read_not_before_utc` alone would open on a bar weaker than the one DE declares"
+  },
+  "incomplete_because": [
+    "the receipt names no params declaration, so a conjunct's INPUT is missing (PROVENANCE_INCOMPLETE_NO_PARAMS_NAMED)",
+    "the design pin declares no digest to verify against (NOT_PINNED_HERE -- the pin runs design -> params)",
+    "the population half was REFUSED BY NAME and NOT ATTEMPTED: BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON"
+  ],
+  "is_the_declared_LANDING_RECORD": true,
+  "landing_digest_fields": {
+    "authoritative": "landing_record.receipt_sha256",
+    "equality_is_asserted": "at write time, and again at every read",
+    "mirror": "receipt.sha256",
+    "named_in_DEs_design": {
+      "agrees_with_DA": true,
+      "field": "landing_record.receipt_sha256",
+      "source": "p003_de_multiday_gate1_design_v21.json",
+      "status": "NAMED"
+    },
+    "what_DEs_design_must_name": "the same field. Until DE's design names one, this is DA's declaration alone and says so",
+    "why_the_authority_is_that_one": "DE's `landing_record_for` reads `receipt.sha256`; this seat used to read only its own `landing_record.receipt_sha256`. Two copies written by two calls agree until they do not, and the conjunct that stops a re-roll resolves through the copy nobody was checking (REV 54 section 1.3)",
+    "written_from": "ONE hashlib.sha256(receipt bytes) call"
+  },
+  "landing_record": {
+    "THIS_FIELD_IS_A_MIRROR": "receipt.sha256",
+    "day": "2026-09-03",
+    "receipt_path": "p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json",
+    "receipt_sha256": "5dd3a8f3f5818379f3ce4bf74fc8093a8557f771f357839cd3d7f320cb62156d",
+    "recorded_at_utc": "2026-09-06T14:27:50Z",
+    "the_authoritative_field_is": "landing_record.receipt_sha256",
+    "what_it_is_for": "the read gate's `sealed receipts at their LANDING digests` conjunct compares the receipt on disk against THIS digest. A receipt re-emitted after the pre-read moves the digest and the conjunct fails by name"
+  },
+  "landing_record_naming": {
+    "clock_token": "a UTC stamp %Y%m%dT%H%M%SZ, read from a clock",
+    "correction_path": "in band as `.v2`, carrying supersedes = {path, sha256} of the record it replaces (R-608's PAIR). A chained pair resolves to the v2; two UNCHAINED records for one day are AMBIGUOUS and the landing conjunct refuses rather than picking one",
+    "day_comes_from": "the artifact's `day` FIELD, never the filename",
+    "day_field_required": true,
+    "glob": "p003_da_gate1_pre_read_*.json",
+    "template": "p003_da_gate1_pre_read_<YYYYMMDD>__<clock>.json",
+    "why_declared": "REV 52 section 2.4: an artifact this verifier's own read gate depends on had no declared name and no correction path, so a mistaken pre-read could not be superseded -- only shadowed"
+  },
+  "mode": "PRE_READ",
+  "n_arms_agreeing": null,
+  "n_arms_declared": 2,
+  "n_arms_with_a_recomputed_population": 0,
+  "null_drawn": false,
+  "population_recomputed_from_the_book": false,
+  "protocol": "P003_DA_GATE1_DAY_VERDICT_VERIFIER_V1_PRE_READ_AND_LANDING_RECORD",
+  "provenance": {
+    "design": {
+      "found": true,
+      "matches": false,
+      "named_by": "the params declaration (the receipt names none)",
+      "path": "p003_de_multiday_gate1_design_v21.json",
+      "protocol_declared": null,
+      "sha256": "a52b463c89498332875c18fd758a18464c4f409196ac9eecb1605579e3614771",
+      "sha256_declared": "NOT_PINNED_HERE -- the pin runs design -> params",
+      "version_from_the_name": "v21",
+      "why": "the digest of the file the receipt NAMES, against the digest the receipt DECLARES -- not against a version hardcoded in the verifier"
+    },
+    "params": {
+      "is_the_newest_present": true,
+      "matches": true,
+      "path": "de_multiday_gate1_params_v14.json",
+      "sha256": "2da40f4e7b2305df31ee995480b96236eed29915aa72139395d646305bc236c9",
+      "versions_present": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    "params_named_by_the_receipt": {
+      "matches": null,
+      "named_by_the_receipt": false,
+      "status": "PROVENANCE_INCOMPLETE_NO_PARAMS_NAMED",
+      "why": "the receipt names no params declaration, so the bars it was produced against cannot be identified. This verifier does NOT substitute its own choice: the newest present is not what ran"
+    },
+    "runner_economic_field_list": {
+      "fields": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary",
+        "sd_over_abs_mean"
+      ],
+      "read_by": "ast, at the source; not imported and not copied",
+      "source_path": "live/pm_research/de_multiday_gate1_runner.py",
+      "source_sha256": "412a7342ff786d95ed132b253eaabe457f02a02df5f67e0ef80313d6f0241fec",
+      "stripper_references_the_same_name": true
+    },
+    "verifier": {
+      "commit_best_effort": "3ba339c1f3c47835d6e3b7fd9e85b7e002dcb574",
+      "path": "live/pm_research/da_gate1_day_verdict.py",
+      "producing_code_is_the_committed_bytes": true,
+      "sha256": "2069bab298cfc46b3414f296cdd7a5e99fe80e7f0224dd5ad05da7799f7aee04",
+      "tree_head": "3ba339c1f3c47835d6e3b7fd9e85b7e002dcb574"
+    }
+  },
+  "provenance_all_matched": false,
+  "provenance_mismatches": null,
+  "provenance_unpinned": [
+    "design"
+  ],
+  "receipt": {
+    "path": "p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json",
+    "sha256": "5dd3a8f3f5818379f3ce4bf74fc8093a8557f771f357839cd3d7f320cb62156d"
+  },
+  "replay_engine_used": false,
+  "runs_before_the_bar_by_design": true,
+  "seal_holds": true,
+  "status": "INCOMPLETE",
+  "supersedes": {
+    "chain": [
+      [
+        "p003_da_gate1_pre_read_20260903__20260906T140810Z.json",
+        "24f2191009177b4abe3aa3b29bb4df5344e85cbceeebc48c4d841ec8af3737fc"
+      ]
+    ],
+    "path": "p003_da_gate1_pre_read_20260903__20260906T140810Z.json",
+    "sha256": "24f2191009177b4abe3aa3b29bb4df5344e85cbceeebc48c4d841ec8af3737fc",
+    "the_link_is_the_PAIR": [
+      "path",
+      "sha256"
+    ],
+    "v1_untouched": true,
+    "what_changed": "the STATUS and one field, not a fact about the day: FLAGGED became INCOMPLETE (a clean seal beside a half that was not attempted is not a flag IN THE DAY), and n_arms_agreeing became None because nothing was compared -- 0 read as two arms disagreeing (REV 70 section 2)",
+    "what_did_NOT_change": "the receipt digest this record exists to carry. Conjunct 3 reads the CHAIN HEAD, and the head still carries 5dd3a8f3f5818379f3ce4bf74fc8093a8557f771f357839cd3d7f320cb62156d"
+  },
+  "verifier_sha256": "2069bab298cfc46b3414f296cdd7a5e99fe80e7f0224dd5ad05da7799f7aee04",
+  "why_committed_bytes_is_reported_not_gating": "the durable citation is the verifier's CONTENT DIGEST, carried here either way; a commit id can be rewritten by a rebase and a worktree's HEAD is whatever it was last detached at. The flag is in front of the reader rather than folded silently into a verdict",
+  "why_n_arms_agreeing_is_none": "no population was recomputed, so no arm was compared. 0 would read as two arms DISAGREEING",
+  "why_never_a_verification_of_the_economics": "this mode reads no economic field and computes no economic quantity. It is a verification of the POPULATION, the SEED, the STATUSES and the PROVENANCE, and saying so is the point: a pre-read reported as a verification would be the sealed-receipt error in a new place",
+  "why_no_bar_here": "the bar schedules the READ of the economics. This mode reads none, before or after it -- the two gates are independent and this is on the far side of neither",
+  "why_that_is_structural": "decisions and per-side counts are arithmetic on the book's own scores against the declared thetas. D(E0), the null and everything downstream need the replay, and this path never resolves one -- so it cannot compute an economic value, let alone emit it",
+  "why_the_population_was_not_recomputed": "REFUSED: BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON -- be_daybook_20260903_btc.pkl is BE's pickled day book (290758834 bytes). This reader consumes `rows` + `scores_by_arm`; the pickle carries `asm.by_arm` and `fr`. The population half of the pre-read CANNOT be recomputed until that mapping is read from BE's declaration, and opening the pickle is ~2 GB, which is HEAVY under rule 20 and cannot ride in a light run.",
+  "why_this_status": "FLAGGED is reserved for a flag IN THE DAY -- an arm COMPARED and disagreeing, a DECLARED digest its file does not have, or a seal that leaked. A clean seal beside an unevaluated half and a missing provenance INPUT is INCOMPLETE, and a reader must be able to tell those apart (REV 70 section 2)"
+}
