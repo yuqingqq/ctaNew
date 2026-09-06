@@ -396,6 +396,61 @@ def _parse_z(t: str) -> datetime.datetime:
         tzinfo=datetime.timezone.utc)
 
 
+#: R-641 IN PRACTICE, TWICE OVER. Round 84 handled the journal losing the
+#: smoke's `Started` line; by 13:5xZ it had lost the `Consumed` line too,
+#: and the cost was gone from the journal entirely. THE ARTIFACT IS THE
+#: RECORD: the value was COPIED INTO A LANDED RECEIPT at the moment it was
+#: read, and it is carried forward from there -- with the receipt's own
+#: path, digest and as-of -- rather than re-measured from a store that no
+#: longer holds it. Nothing is re-derived and nothing is typed.
+SMOKE_COST_CARRIERS = (
+    "p003_p002_da_accrual_report__20260906T090001Z.v4.json",
+    "p003_p002_da_accrual_report__20260906T090001Z.v3.json",
+)
+
+
+def smoke_cost_carried(derived: Path | None = None) -> dict:
+    """The smoke's cost as COPIED INTO a landed receipt, with provenance."""
+    der = Path(derived) if derived else data_root() / "data/pm_5min/derived"
+    for name in SMOKE_COST_CARRIERS:
+        f = der / name
+        if not f.is_file():
+            continue
+        try:
+            o = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        blk = ((o.get("the_smoke_has_a_measured_cost_now") or {})
+               .get("detail") or {})
+        cpu = blk.get("cpu_s") or blk.get("wall_s")
+        if not cpu:
+            continue
+        return {
+            "status": "CARRIED_FROM_A_LANDED_RECEIPT",
+            "wall_s": cpu, "cpu_s": blk.get("cpu_s"),
+            "memory_peak_gb": blk.get("memory_peak_gb"),
+            "is_a_lower_bound": True,
+            "carried_from": {
+                "path": f.name,
+                "sha256_16": hashlib.sha256(f.read_bytes()).hexdigest()[:16],
+                "as_of_utc": o.get("as_of_utc"),
+                "the_status_it_recorded": blk.get("status")},
+            "why_carried": (
+                "the journal no longer holds the run at all -- neither the "
+                "Started nor the Consumed line. The number was COPIED INTO "
+                "THAT RECEIPT at the moment it was read (R-641), and this "
+                "report carries it forward with its provenance rather than "
+                "re-measuring a store that has forgotten it"),
+            "what_it_does_NOT_show": [
+                "anything new: this is the SAME measurement, carried, not a "
+                "fresh one",
+            ],
+        }
+    return {"status": "NO_CARRIER_RECEIPT_EITHER", "wall_s": None,
+            "why": ("the journal has forgotten the run and no landed "
+                    "receipt carries its cost. No number is invented")}
+
+
 def smoke_cost(scopes: dict | None = None) -> dict:
     """THE SMOKE'S COST, as a LOWER BOUND, with what the record does and
     does NOT establish stated separately.
@@ -448,11 +503,14 @@ def smoke_cost(scopes: dict | None = None) -> dict:
             ],
         }
     if not sc or sc.get("wall_s") is None:
+        carried = smoke_cost_carried()
+        if carried.get("wall_s"):
+            return carried
         return {"status": "NO_JOURNAL_RECORD_OF_THE_SMOKE",
                 "wall_s": None, "is_a_lower_bound": None,
                 "why": ("the scope's accounting is not in the journal "
-                        "window, and this report does not type a cost it "
-                        "did not read")}
+                        "window and no landed receipt carries it; this "
+                        "report does not type a cost it did not read")}
     return {
         "status": "MEASURED_ONCE_AND_REFUSED",
         "scope": SMOKE_SCOPE,
@@ -1376,15 +1434,28 @@ def selftest() -> tuple:                                      # noqa: C901
        f"wall {sm['wall_s']} s, cpu {sm['cpu_s']} s, peak "
        f"{sm['memory_peak_gb']} GB; the running job parses to "
        f"{rh['day']}/{rh['stage']} from its own command line")
-    ck("AND WITH NO JOURNAL RECORD THE COST IS A NAMED ABSENCE, never an "
-       "estimate: ***a typed cost would be the one number in this report "
-       "nobody measured***",
-       smoke_cost({})["status"] == "NO_JOURNAL_RECORD_OF_THE_SMOKE"
-       and smoke_cost({})["wall_s"] is None
-       and sm["what_it_does_NOT_show"]
-       and any("per-arm" in x for x in sm["what_it_does_NOT_show"]),
-       f"empty journal -> {smoke_cost({})['status']}; and the record's "
-       f"limits are stated: {len(sm['what_it_does_NOT_show'])} of them")
+    _carried = smoke_cost({})
+    _no_carrier = smoke_cost_carried(td / "no_receipts_here")
+    ck("AND WHEN THE JOURNAL HAS FORGOTTEN THE RUN, THE COST IS CARRIED "
+       "FROM THE ARTIFACT THAT COPIED IT -- with the receipt's own path, "
+       "digest and as-of -- and with NO carrier it is a NAMED ABSENCE. "
+       "***R-641 arrived twice: round 84 handled the journal losing the "
+       "Started line, and by 13:5xZ it had lost the Consumed line too. The "
+       "ARTIFACT is the record; a typed cost would be the one number in "
+       "this report nobody measured***",
+       _carried["status"] == "CARRIED_FROM_A_LANDED_RECEIPT"
+       and _carried["wall_s"] == 5060.439
+       and _carried["carried_from"]["path"].startswith(
+           "p003_p002_da_accrual_report__")
+       and _carried["carried_from"]["as_of_utc"]
+       and _no_carrier["status"] == "NO_CARRIER_RECEIPT_EITHER"
+       and _no_carrier["wall_s"] is None
+       and sm["what_it_does_NOT_show"],
+       f"empty journal -> {_carried['status']} "
+       f"({_carried['wall_s']} s from "
+       f"{_carried['carried_from']['path']}, as-of "
+       f"{_carried['carried_from']['as_of_utc']}); empty journal AND no "
+       f"carrier -> {_no_carrier['status']} with no number")
 
     # -- 13. A PLANTED SCHEDULE WITH A KNOWN BINDING DAY REPRODUCES -------
     PD = {d: {"artifacts": {k: {"present": False} for k in
@@ -1478,8 +1549,12 @@ def selftest() -> tuple:                                      # noqa: C901
        and all(v is not None for v in rs["stage_costs_s"].values())
        #: the smoke's cost must be MEASURED -- by a complete journal
        #: record or by the surviving CPU line -- and the state is NAMED
+       #: MEASURED from the journal, or CARRIED from the receipt that
+       #: copied it when the journal still held it -- and the state is
+       #: NAMED either way. The journal has now forgotten the run
+       #: entirely, which is R-641's own point arriving twice.
        and real["stage_costs"]["smoke"]["detail"]["status"].startswith(
-           "MEASURED")
+           ("MEASURED", "CARRIED"))
        and d8.get("before_the_horizon") is True
        and d8.get("before_the_seal_open_bar") is False
        and rs["the_binding_day"] == "20260908"

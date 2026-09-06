@@ -33,14 +33,40 @@ LOG="${DA_MIDNIGHT_LOG:-/home/yuqing/ctaNew/data/pm_5min/derived/.da_midnight_ve
 # REFUSED is the opposite act, and it goes to a different file from both
 # the verdict artifacts and $LOG.
 RUNREC="${DA_MIDNIGHT_RUNREC:-/home/yuqing/ctaNew/data/pm_5min/derived/.da_midnight_run_record.jsonl}"
+# RC 9 -- THE RUN HAPPENED AND ITS RECORD DID NOT. Distinct from every
+# verdict code, because "verified" and "verified but unrecorded" are
+# different states and a caller must be able to tell them apart.
+REC_UNWRITABLE_RC=9
+_REC_FAILED=0
 _rec() {  # _rec <event> <detail...>
   _e="$1"; shift
   _t="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   _d="$(printf '%s ' "$@" | sed 's/"/\\"/g; s/[[:space:]]*$//')"
-  printf '{"at_utc":"%s","event":"%s","pid":%s,"detail":"%s"}\n' \
-    "$_t" "$_e" "$$" "$_d" >> "$RUNREC" 2>/dev/null || true
+  # NEVER `|| true` ON THE ONLY EVIDENCE (REV 68 finding 3). This line
+  # ended `2>/dev/null || true`, so against an unwritable derived/ a
+  # REFUSAL left no record and exited 0 -- the exact absence this record
+  # was built to prevent. The append's failure is now REPORTED and CARRIED.
+  if ! printf '{"at_utc":"%s","event":"%s","pid":%s,"detail":"%s"}\n' \
+       "$_t" "$_e" "$$" "$_d" >> "$RUNREC" 2>/dev/null; then
+    _REC_FAILED=1
+    echo "RUN_RECORD_UNWRITABLE: could not append event '$_e' to $RUNREC." \
+         "The run's own record does NOT exist for this event; rc" \
+         "$REC_UNWRITABLE_RC carries that. FIX: make the directory" \
+         "writable, or point DA_MIDNIGHT_RUNREC somewhere that is." >&2
+  fi
 }
-_rec_exit() { _rec run_finished "exit=$1"; }
+_rec_exit() {
+  _rc="$1"
+  _rec run_finished "exit=$_rc"
+  if [ "$_REC_FAILED" -eq 1 ]; then
+    echo "RUN_RECORD_UNWRITABLE: this run's record was NOT written." \
+         "Underlying outcome rc=$_rc." >&2
+    # A refusal's own code is the stronger signal and is kept; a run that
+    # would otherwise have SUCCEEDED exits $REC_UNWRITABLE_RC instead, so
+    # "verified" and "verified, unrecorded" are never the same code.
+    [ "$_rc" -eq 0 ] && exit "$REC_UNWRITABLE_RC"
+  fi
+}
 trap '_rec_exit "$?"' EXIT
 _rec run_started "$0"
 # Overridable ONLY inside a FULLY isolated rehearsal (see the pair guard

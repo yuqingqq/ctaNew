@@ -120,6 +120,130 @@ def parse_porcelain(stdout: str) -> dict:
             "algorithm_from": "be_rule22.parse_porcelain_line (R-646 R1)"}
 
 
+#: REV 68 FINDING 2 / R-649. THE COVERAGE PREDICATE IS TWO MEASURED CLOCKS,
+#: and it is SHARED FORM: DE 99 imports or mirrors this rather than keeping
+#: a text search. `oldest_available <= w0` compares the UNIT'S oldest
+#: retained line with a window start -- which is right ONLY for a
+#: CONTINUOUS logger, where the unit's first retained line IS the journal's
+#: horizon, and wrong for a BURSTY unit: `de95smoke.service` has ONE line
+#: at 12:35:35Z, so a window starting a minute earlier read UNCOVERED for a
+#: unit whose journal is complete.
+#:
+#: The portable question is: DOES THE JOURNAL STILL REACH BACK PAST THE
+#: THING BEING ASKED ABOUT? Two clocks, both measured, neither searched
+#: for in text:
+#:   the HOST's oldest retained entry   (the journal's horizon), and
+#:   the REFERENCE moment -- the unit's own `ExecMainStartTimestamp` for a
+#:   bursty unit, or the window's start for a continuous logger.
+#: Covered iff horizon <= reference.
+import subprocess as _sp                                     # noqa: E402
+import datetime as _dtm                                      # noqa: E402
+
+CONTINUOUS = "CONTINUOUS_LOGGER__the_reference_is_the_window_start"
+BURSTY = "BURSTY_UNIT__the_reference_is_the_unit_start"
+
+
+def _stamp(text: str):
+    """A journalctl `short-iso` stamp or a systemd timestamp, parsed."""
+    text = (text or "").strip()
+    for fmt in ("%Y-%m-%dT%H:%M:%S%z", "%a %Y-%m-%d %H:%M:%S %Z",
+                "%Y-%m-%d %H:%M:%S %Z"):
+        try:
+            t = _dtm.datetime.strptime(text[:25] if "T" in text[:11]
+                                       else text, fmt)
+            return t if t.tzinfo else t.replace(
+                tzinfo=_dtm.timezone.utc)
+        except ValueError:
+            continue
+    return None
+
+
+def host_journal_horizon() -> dict:
+    """The OLDEST entry the user journal still holds, for ANY unit."""
+    argv = ["journalctl", "--user", "-o", "short-iso", "--no-pager", "--utc"]
+    try:
+        r = _sp.run(argv, capture_output=True, text=True, timeout=180)
+    except Exception as e:                                    # noqa: BLE001
+        return {"status": "JOURNALCTL_FAILED", "why": repr(e),
+                "oldest_utc": None, "query": " ".join(argv)}
+    if r.returncode != 0:
+        return {"status": "JOURNALCTL_FAILED", "returncode": r.returncode,
+                "stderr": (r.stderr or "").strip()[:400],
+                "oldest_utc": None, "query": " ".join(argv)}
+    first = next((ln for ln in r.stdout.splitlines()
+                  if not ln.startswith("-- ")), "")
+    t = _stamp(first[:25])
+    return {"status": "MEASURED" if t else "NO_READABLE_STAMP",
+            "oldest_utc": (t.strftime("%Y-%m-%dT%H:%M:%SZ") if t else None),
+            "oldest_epoch": (t.timestamp() if t else None),
+            "query": " ".join(argv),
+            "read_at_utc": _dtm.datetime.now(
+                _dtm.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+
+
+def unit_start(unit: str) -> dict:
+    """The unit's own `ExecMainStartTimestamp`, from systemd."""
+    argv = ["systemctl", "--user", "show", unit, "-p",
+            "ExecMainStartTimestamp", "--value"]
+    try:
+        r = _sp.run(argv, capture_output=True, text=True, timeout=60)
+    except Exception as e:                                    # noqa: BLE001
+        return {"status": "SYSTEMCTL_FAILED", "why": repr(e),
+                "start_utc": None, "query": " ".join(argv)}
+    t = _stamp(r.stdout)
+    return {"status": "MEASURED" if t else "NO_START_TIMESTAMP",
+            "unit": unit, "raw": r.stdout.strip(),
+            "start_utc": (t.strftime("%Y-%m-%dT%H:%M:%SZ") if t else None),
+            "start_epoch": (t.timestamp() if t else None),
+            "query": " ".join(argv)}
+
+
+def journal_coverage(*, unit: str | None = None,
+                     window_start_epoch: float | None = None,
+                     regime: str = BURSTY,
+                     _horizon: dict | None = None,
+                     _start: dict | None = None) -> dict:
+    """DOES THE JOURNAL STILL REACH BACK PAST THE REFERENCE MOMENT?
+
+    Two MEASURED clocks and no text search. The regime is NAMED in the
+    output because the answer depends on it: for a CONTINUOUS logger the
+    reference is the window's start; for a BURSTY unit it is the unit's own
+    start, and its silence between bursts is not a gap in the record."""
+    hz = _horizon if _horizon is not None else host_journal_horizon()
+    ref_epoch, ref_kind, st = None, None, None
+    if regime == CONTINUOUS:
+        ref_epoch, ref_kind = window_start_epoch, "the window start"
+    else:
+        st = _start if _start is not None else (unit_start(unit) if unit
+                                                else None)
+        if st and st.get("start_epoch"):
+            ref_epoch, ref_kind = st["start_epoch"], "the unit's own start"
+        elif window_start_epoch is not None:
+            ref_epoch, ref_kind = window_start_epoch, (
+                "the window start (the unit has no start timestamp)")
+    out = {"regime": regime, "host_horizon": hz, "unit_start": st,
+           "reference_is": ref_kind,
+           "reference_utc": (None if ref_epoch is None else
+                             _dtm.datetime.fromtimestamp(
+                                 ref_epoch, _dtm.timezone.utc).strftime(
+                                     "%Y-%m-%dT%H:%M:%SZ")),
+           "two_clocks_no_text_search": True}
+    if hz.get("oldest_epoch") is None or ref_epoch is None:
+        out["covered"] = None
+        out["status"] = "NOT_DETERMINABLE"
+        out["why"] = ("one of the two clocks is unreadable, so coverage is "
+                      "UNKNOWN -- never assumed either way")
+        return out
+    out["covered"] = hz["oldest_epoch"] <= ref_epoch
+    out["status"] = "MEASURED"
+    out["why"] = (
+        f"the journal's oldest retained entry is {hz['oldest_utc']} and "
+        f"{ref_kind} is {out['reference_utc']}; the journal "
+        f"{'reaches back past it' if out['covered'] else 'does NOT reach it'}"
+    )
+    return out
+
+
 class RootRefused(RuntimeError):
     """The resolved root is not the ledger this programme records into."""
 
@@ -341,6 +465,50 @@ def selftest() -> tuple:
                  + ("MALFORMED" if t[1] == "malformed"
                     else repr(got_rows.get(t[3], {}).get("path")))
                  for t in TABLE))
+
+    #: REV 68 FINDING 2: the two-clock coverage form, both regimes.
+    hz = host_journal_horizon()
+    st = unit_start("de95smoke.service")
+    if hz.get("oldest_epoch") and st.get("start_epoch"):
+        bursty = journal_coverage(unit="de95smoke.service",
+                                  _horizon=hz, _start=st)
+        one_min_earlier = journal_coverage(
+            regime=CONTINUOUS, window_start_epoch=st["start_epoch"] - 60,
+            _horizon=hz)
+        before = journal_coverage(
+            regime=CONTINUOUS,
+            window_start_epoch=hz["oldest_epoch"] - 3600, _horizon=hz)
+        ck("R-649 / REV 68 FINDING 2 -- COVERAGE IS TWO MEASURED CLOCKS, "
+           "NOT THE UNIT'S OWN OLDEST LINE. ***`de95smoke.service` has ONE "
+           "line, so `oldest_available <= w0` called a window a minute "
+           "earlier UNCOVERED for a journal that is COMPLETE.*** The host's "
+           "horizon against the unit's own start says covered; a window "
+           "before the horizon says UNCOVERED and NAMES it; and neither "
+           "answer comes from searching text",
+           bursty["covered"] is True
+           and one_min_earlier["covered"] is True
+           and before["covered"] is False
+           and hz["oldest_utc"] in before["why"]
+           and bursty["regime"] == BURSTY
+           and one_min_earlier["regime"] == CONTINUOUS,
+           f"horizon {hz['oldest_utc']}; de95smoke starts "
+           f"{st['start_utc']} -> covered {bursty['covered']}; a window one "
+           f"minute before its single line -> {one_min_earlier['covered']}; "
+           f"a window an hour before the horizon -> {before['covered']}")
+    else:
+        ck("the two clocks are readable", False,
+           f"horizon {hz.get('status')}, unit start {st.get('status')}")
+    unread = journal_coverage(
+        regime=CONTINUOUS, window_start_epoch=0.0,
+        _horizon={"status": "JOURNALCTL_FAILED", "oldest_epoch": None,
+                  "oldest_utc": None})
+    ck("AND AN UNREADABLE CLOCK MAKES COVERAGE **UNKNOWN**, never covered "
+       "and never uncovered: a failed read is not a measurement in either "
+       "direction",
+       unread["covered"] is None
+       and unread["status"] == "NOT_DETERMINABLE",
+       f"a failed horizon read -> covered {unread['covered']}, status "
+       f"{unread['status']}")
 
     ck("AND A LINE IT CANNOT READ IS NAMED, NOT DROPPED: an unreadable "
        "status line is a status, and a caller that treated silence as a "

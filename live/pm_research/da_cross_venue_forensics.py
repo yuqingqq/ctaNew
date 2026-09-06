@@ -343,7 +343,27 @@ def journal_retention(unit: str, *, _lines: list | None = None) -> dict:
             r = subprocess.run(
                 argv,
                 capture_output=True, text=True, timeout=120)
-            lines = r.stdout.splitlines() if r.returncode == 0 else []
+            if r.returncode != 0:
+                #: REV 68 FINDING 1: A FAILED READ IS NOT AN ABSENCE. This
+                #: fell through to `lines = []` and then to
+                #: ABSENT_NO_JOURNAL_LINES_FOR_THIS_UNIT with `available
+                #: False` -- ***inside the function whose docstring exists
+                #: to stop absences being read as measurements.*** The
+                #: EXCEPTION path already had the right shape; the non-zero
+                #: path now has the same one: no number, `available None`,
+                #: and the rc and stderr COPIED so the failure can be read.
+                return {"unit": unit, "available": None,
+                        "read_at_utc": read_at, "query": " ".join(argv),
+                        "status": "JOURNALCTL_FAILED",
+                        "returncode": r.returncode,
+                        "stderr": (r.stderr or "").strip()[:400],
+                        "n_lines_available": None,
+                        "oldest_available_utc": None,
+                        "why": ("journalctl exited non-zero: the journal "
+                                "was NOT read, so nothing is known about "
+                                "this unit's retention. An unread journal "
+                                "is not an empty one")}
+            lines = r.stdout.splitlines()
         except Exception as e:                              # noqa: BLE001
             return {"unit": unit, "available": None, "read_at_utc": read_at,
                     "status": "JOURNALCTL_FAILED", "why": repr(e),
@@ -430,15 +450,34 @@ def copy_journal_lines(unit: str, *, invocation_id: str | None = None,
         q.append(f"{f}={invocation_id}")
     q += ["--no-pager", "-o", "short-iso", "--utc"]
     def _run(argv):
+        """(lines, failure) -- a FAILED READ is never an empty one."""
         try:
             r = subprocess.run(argv, capture_output=True, text=True,
                                timeout=120)
-            return ([x for x in r.stdout.splitlines()
-                     if not x.startswith("-- No entries")]
-                    if r.returncode == 0 else [])
-        except Exception:                                   # noqa: BLE001
-            return []
-    unit_lines, lines = _run(unit_argv), _run(q)
+        except Exception as e:                              # noqa: BLE001
+            return None, {"returncode": None, "stderr": repr(e)}
+        if r.returncode != 0:
+            return None, {"returncode": r.returncode,
+                          "stderr": (r.stderr or "").strip()[:400]}
+        return [x for x in r.stdout.splitlines()
+                if not x.startswith("-- No entries")], None
+    unit_lines, unit_fail = _run(unit_argv)
+    lines, copy_fail = _run(q)
+    if unit_fail or copy_fail:
+        return {"unit": unit, "invocation_id": invocation_id,
+                "fields": list(fields), "query": " ".join(q),
+                "unit_query": " ".join(unit_argv),
+                "read_at_utc": read_at,
+                "status": "JOURNALCTL_FAILED",
+                "failure": unit_fail or copy_fail,
+                "which_query_failed": ("the unit count" if unit_fail
+                                       else "the invocation copy"),
+                "n_lines_for_the_unit": None, "n_lines_copied": None,
+                "lines": None,
+                "why": ("journalctl exited non-zero, so no count and no "
+                        "copy exist. A failed read reported as 0 lines "
+                        "would be an absence invented from an error "
+                        "(REV 68 finding 1)")}
     out = {"unit": unit, "invocation_id": invocation_id,
            "fields": list(fields), "query": " ".join(q),
            "unit_query": " ".join(unit_argv),
@@ -480,6 +519,30 @@ def host_window(w0: float, w1: float) -> dict[str, Any]:
                else ret["oldest_available_epoch"] <= w0)
     ret["window_fully_covered"] = covered
     ret["window_start_utc"] = _iso(w0)
+    #: REV 68 FINDING 2: the line above compares the UNIT's oldest retained
+    #: line with the window start, which is right HERE and only here --
+    #: `resource-monitor` logs every ~60 s, so its oldest retained line IS
+    #: the journal's horizon. The REGIME IS NAMED because the function is
+    #: general and the name is not, and the portable TWO-CLOCK form travels
+    #: beside it (shared: DE 99 imports `da_root.journal_coverage`).
+    try:
+        import da_root as _R                                # noqa: PLC0415
+        ret["coverage_two_clock"] = _R.journal_coverage(
+            regime=_R.CONTINUOUS, window_start_epoch=w0)
+        ret["regime"] = _R.CONTINUOUS
+        ret["why_this_regime"] = (
+            "resource-monitor logs continuously (~60 s), so its oldest "
+            "retained line is the journal's horizon and the unit-oldest "
+            "form agrees with the two-clock form here. For a BURSTY unit "
+            "they disagree: de95smoke.service has ONE line, and the "
+            "unit-oldest form calls a window a minute earlier UNCOVERED "
+            "for a journal that is complete")
+        if ret["coverage_two_clock"].get("covered") is not None:
+            covered = ret["coverage_two_clock"]["covered"]
+            ret["window_fully_covered"] = covered
+    except Exception as _e:                                 # noqa: BLE001
+        ret["coverage_two_clock"] = {"status": "UNAVAILABLE",
+                                     "why": repr(_e)}
     if ret.get("available") is False:
         return {"status": "UNMEASURED", "n_rows": 0, "retention": ret,
                 "why": ("the journal holds NO lines for "
@@ -846,6 +909,39 @@ def selftest() -> int:
         ok(both.get("status") in ("NO_INVOCATION_ID", "SYSTEMCTL_FAILED"),
            "the unit has not run under this manager; the copy is a NAMED "
            f"status ({both.get('status')}) and no lines are quoted")
+
+    # -- REV 68 FINDING 1: A FAILED READ IS NOT AN ABSENCE ---------------
+    class _NZ:
+        returncode = 1
+        stdout = ""
+        stderr = "journalctl: Failed to open journal: Permission denied"
+
+    _orig = subprocess.run
+    try:
+        subprocess.run = lambda *a, **k: _NZ()
+        failed = journal_retention("resource-monitor")
+        failed_copy = copy_journal_lines("x", invocation_id="deadbeef")
+    finally:
+        subprocess.run = _orig
+    ok(failed["status"] == "JOURNALCTL_FAILED"
+       and failed["available"] is None
+       and failed["n_lines_available"] is None
+       and failed["returncode"] == 1
+       and "Permission denied" in failed["stderr"],
+       "KNOWN-BAD: a NON-ZERO journalctl exit is a FAILED READ, not an "
+       "ABSENCE -- status JOURNALCTL_FAILED, `available: None`, NO number, "
+       "and the rc and stderr COPIED. ***It used to fall through to "
+       "ABSENT_NO_JOURNAL_LINES_FOR_THIS_UNIT with `available: False`, "
+       "inside the very function whose docstring exists to stop absences "
+       "being read as measurements***")
+    ok(failed_copy["status"] == "JOURNALCTL_FAILED"
+       and failed_copy["n_lines_copied"] is None
+       and failed_copy["n_lines_for_the_unit"] is None
+       and failed_copy["lines"] is None,
+       "and the same in the COPY path: a failed read reported as 0 lines "
+       "would be an absence INVENTED FROM AN ERROR -- and a 0-line copy is "
+       "exactly what the cross-check treats as a refusal, so an error "
+       "would have been laundered into a finding")
 
     print(f"da_cross_venue_forensics selftests: {checks} checks passed")
     return 0
