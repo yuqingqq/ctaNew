@@ -54,10 +54,67 @@ class ReadRefused(RuntimeError):
     """A named refusal."""
 
 
+PINS = HERE / "declarations" / "be_race_read_feed_pins_v1.json"
+
+
 def sealed_feeds() -> dict:
-    """The FEED paths, from the declaration's own score paths."""
-    return {d: p.replace("SEALED_scores", "SEALED_feed").replace(
-        ".json", ".jsonl") for d, p in DECL.SEALED_SCORES.items()}
+    """The FEED paths, derived with `with_name` on the SCORES paths.
+
+    REV 44 A.5: the string form (`.replace("SEALED_scores", ...)`) rewrites
+    ANY occurrence, so a directory that happened to contain the token would
+    be corrupted silently. `with_name` touches the FILENAME only."""
+    out = {}
+    for d, sp in DECL.SEALED_SCORES.items():
+        q = Path(sp)
+        out[d] = str(q.with_name(
+            q.name.replace("SEALED_scores", "SEALED_feed")
+                  .replace(".json", ".jsonl")))
+    return out
+
+
+def pins() -> dict:
+    """The pinned feed digests, taken BEFORE the read."""
+    if not PINS.exists():
+        raise ReadRefused(f"REFUSED: no pin file at {PINS}. A read that "
+                          f"cannot check what it opens against a pin taken "
+                          f"beforehand is not the declared read.")
+    return json.loads(PINS.read_text())["per_day"]
+
+
+def assert_pinned(day: str, path, per_day: dict | None = None) -> dict:
+    """Compare against the pin BEFORE parsing; refuse absent or mismatched.
+
+    REV 44 A.3: `exists: false` must be ACTIONABLE. A day the pin marks
+    absent is refused BY NAME rather than discovered as a missing file."""
+    import hmac
+    pd = pins() if per_day is None else per_day
+    pin = pd.get(day)
+    if pin is None:
+        raise ReadRefused(f"REFUSED: {day} has no pin. Every day the read "
+                          f"opens must have been pinned before it.")
+    if not pin.get("exists"):
+        raise ReadRefused(
+            f"REFUSED: the pin marks {day}'s feed ABSENT "
+            f"(`exists: false`, no digest). There is nothing to read for "
+            f"that day, and a read that silently skipped it would report a "
+            f"smaller G as though it were the declared one.")
+    want = str(pin.get("sha256") or "")
+    if len(want) != 64 or any(c not in "0123456789abcdef" for c in want):
+        raise ReadRefused(f"REFUSED: {day}'s pin is not a 64-hex digest "
+                          f"({want[:20]!r}).")
+    h = hashlib.sha256()
+    n = 0
+    with Path(path).open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+            n += len(chunk)
+    got = h.hexdigest()
+    if not hmac.compare_digest(got, want):
+        raise ReadRefused(
+            f"REFUSED: {day}'s feed digests {got[:16]}…, not the pinned "
+            f"{want[:16]}…. The bytes changed between the pin and the read.")
+    return {"day": day, "pinned_sha256": want, "bytes": n,
+            "checked_before_parsing": True, "n_hex_compared": len(want)}
 
 
 def theta_for(coin: str, budget_label: str = "10%") -> float:
@@ -84,10 +141,50 @@ def assert_separation(opened) -> dict:
             "n_paths_checked": len(paths), "matches": []}
 
 
+class _HashingPath:
+    """A path whose `.open()` hashes every byte the READER consumes.
+
+    REV 44 A.4: the digest must be over the stream that was PARSED, not over
+    a separate read of the same name. This wraps the file so
+    `load_two_arm_feed` -- unchanged, the interim's own code -- parses the
+    same bytes this hash covers, in ONE pass. The three-read form is gone."""
+
+    def __init__(self, path):
+        self._p = Path(path)
+        self.h = hashlib.sha256()
+        self.n = 0
+        self.name = self._p.name
+
+    def __str__(self):
+        return str(self._p)
+
+    def open(self, *a, **kw):
+        outer = self
+
+        class _F:
+            def __init__(self, fh):
+                self.fh = fh
+
+            def __iter__(self):
+                for line in self.fh:
+                    outer.h.update(line.encode())
+                    outer.n += len(line.encode())
+                    yield line
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *e):
+                return self.fh.__exit__(*e)
+
+        return _F(self._p.open(*a, **kw))
+
+
 def day_matched_volume(path, *, latency_ms: int = LATENCY_MS) -> dict:
     """MATCHED_VOLUME per day, through the INTERIM'S OWN functions."""
     import be_read_cells as C
-    feed = C.load_two_arm_feed(Path(path), latency_ms)
+    hp = _HashingPath(path)
+    feed = C.load_two_arm_feed(hp, latency_ms)
     per_coin, net = {}, 0.0
     # the loader returns {"per_coin": {...}, "n_feed_rows": ...}: the coins
     # are NESTED, and iterating the top level would silently find none.
@@ -110,6 +207,8 @@ def day_matched_volume(path, *, latency_ms: int = LATENCY_MS) -> dict:
                           f"rows; a day with no action is a STATUS, not a "
                           f"zero increment.")
     return {"status": "OK", "per_coin": per_coin,
+            "parsed_stream_sha256": hp.h.hexdigest(),
+            "parsed_stream_bytes": hp.n,
             "day_increment_cents": net,
             "day_sign": (1 if net > 0 else (-1 if net < 0 else 0)),
             "n_feed_rows": feed["n_feed_rows"],
@@ -130,18 +229,43 @@ def floors(g_opt: int, g_pess: int, m: int = 2) -> dict:
             "neither_clears_0_05": min(o, p) > 0.05}
 
 
-def read(paths: dict, *, outdir: Path = None, write: bool = True) -> dict:
+def read(paths: dict, *, outdir: Path = None, write: bool = True,
+         per_day_pins: dict | None = None) -> dict:
     opened = [Path(v) for v in paths.values()]
     sep = assert_separation(opened)
     missing = [str(p) for p in opened if not Path(p).exists()]
     if missing:
         raise ReadRefused(f"REFUSED: sealed feed(s) absent: {missing}")
-    per_day, before = {}, {}
+    per_day, before, pinned = {}, {}, {}
+    pd = per_day_pins if per_day_pins is not None else pins()
     for d, p in sorted(paths.items()):
-        before[d] = hashlib.sha256(Path(p).read_bytes()).hexdigest()
+        # A.3: the pin is checked BEFORE a byte is parsed.
+        pinned[d] = assert_pinned(d, p, pd)
+        before[d] = pinned[d]["pinned_sha256"]
         per_day[d] = day_matched_volume(p)
     after = {d: hashlib.sha256(Path(p).read_bytes()).hexdigest()
              for d, p in paths.items()}
+    # A.4: the claim "the digest is of the bytes parsed" is now a COMPUTED
+    # predicate -- the parsed stream's own hash against the file's -- not a
+    # literal beside a table (rule 10). A stream mutated mid-parse makes
+    # these disagree and VOIDS the read.
+    covers = {d: {"parsed_stream_sha256": per_day[d]["parsed_stream_sha256"],
+                  "file_sha256_after": after[d],
+                  "parsed_bytes": per_day[d]["parsed_stream_bytes"],
+                  "file_bytes": Path(paths[d]).stat().st_size,
+                  "digest_covers_every_byte_parsed":
+                      (per_day[d]["parsed_stream_sha256"] == after[d]
+                       and per_day[d]["parsed_stream_bytes"]
+                       == Path(paths[d]).stat().st_size)}
+              for d in paths}
+    bad_cover = sorted(d for d, c in covers.items()
+                       if not c["digest_covers_every_byte_parsed"])
+    if bad_cover:
+        raise ReadVoid(
+            f"REFUSED — THE READ IS VOID: for {bad_cover} the hash of the "
+            f"stream THAT WAS PARSED does not equal the file's. The bytes "
+            f"moved under the parser, so the number was computed over "
+            f"something other than what is on disk. No result is emitted.")
     moved = sorted(d for d in before if before[d] != after[d])
     if moved:
         raise ReadVoid(
@@ -174,9 +298,14 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True) -> dict:
         "n_negative": sum(1 for v in signs.values() if v == -1),
         "n_zero": sum(1 for v in signs.values() if v == 0),
         "permutation_floors": floors(len(paths), len(fresh)),
-        "byte_identity": {"before": before, "after": after,
+        "byte_identity": {"pinned_before": before, "after": after,
                           "all_unchanged": True,
-                          "digest_is_of_the_bytes_parsed": True,
+                          "pins": pinned,
+                          "digest_covers_every_byte_parsed": covers,
+                          "computed_not_asserted": "the coverage claim is a "
+                                                   "predicate over the "
+                                                   "parsed stream's own "
+                                                   "hash, not a literal",
                           "on_mismatch": "the read is VOID -- enforced"},
         "gate1_separation": sep,
         "writes": {"artifact": OUT_NAME, "and_nothing_else": True},
@@ -191,7 +320,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True) -> dict:
     return out
 
 
-EXPECTED_CHECKS = 10
+EXPECTED_CHECKS = 14
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -286,17 +415,49 @@ def selftest() -> int:
                _row(2, 0.1, 2.0, 8.0), _row(3, 0.1, 2.0, 9.0)]
         paths = {"20260901": _feed(d, "20260901", pos),
                  "20260902": _feed(d, "20260902", neg)}
-        r = read(paths, outdir=d)
+        def _pin(pp):
+            return {dd: {"exists": True,
+                         "sha256": hashlib.sha256(
+                             Path(q).read_bytes()).hexdigest(),
+                         "bytes": Path(q).stat().st_size}
+                    for dd, q in pp.items()}
+        _pins = _pin(paths)
+        # A.3 KNOWN-BADS, driven
+        try:
+            read(paths, outdir=d, per_day_pins=dict(
+                _pins, **{"20260901": dict(_pins["20260901"],
+                                           sha256="0" * 64)}))
+            ok(False, "a tampered pin must refuse")
+        except ReadRefused as ex:
+            ok("not the pinned" in str(ex),
+               "KNOWN-BAD: a TAMPERED pin REFUSES before a byte is parsed -- "
+               "the bytes changed between the pin and the read")
+        try:
+            read(paths, outdir=d, per_day_pins=dict(
+                _pins, **{"20260901": {"exists": False, "sha256": None}}))
+            ok(False, "a pin-absent day must refuse by name")
+        except ReadRefused as ex:
+            ok("marks 20260901's feed ABSENT" in str(ex)
+               and "smaller G as though it were the declared one" in str(ex),
+               "KNOWN-BAD: a day the pin marks ABSENT REFUSES **by name** -- "
+               "`exists: false` is actionable, and skipping it would report "
+               "a smaller G as though it were the declared one")
+        r = read(paths, outdir=d, per_day_pins=_pins)
+        ok(all(c["digest_covers_every_byte_parsed"]
+               for c in r["byte_identity"]["digest_covers_every_byte_parsed"]
+               .values()),
+           "A.4 COMPUTED, NOT ASSERTED: the hash of the stream THAT WAS "
+           "PARSED equals the file's, over every byte -- one pass, and the "
+           "old literal `digest_is_of_the_bytes_parsed` is gone")
         ok(r["n_positive"] == 1 and r["n_negative"] == 1,
            f"and the two fixture days give OPPOSITE signs "
            f"({r['day_signs']}) -- the statistic tracks the data, not a "
            f"constant")
         ok(r["byte_identity"]["all_unchanged"]
-           and r["byte_identity"]["digest_is_of_the_bytes_parsed"]
            and (d / OUT_NAME).exists()
            and sorted(x.name for x in d.glob("be_race_read_*")) == [OUT_NAME],
-           "A CLEAN READ ADMITS, digests taken on THE BYTES PARSED, and it "
-           "writes THE ONE declared artifact and nothing else")
+           "A CLEAN READ ADMITS against matching pins, and it writes THE "
+           "ONE declared artifact and nothing else")
         f = r["permutation_floors"]
         ok(f["resolved_best_possible_adjusted_p"] ==
            max(f["optimistic"]["best_possible_adjusted_p"],
@@ -309,20 +470,27 @@ def selftest() -> int:
         _orig = _g["day_matched_volume"]
 
         def _mut(p, **kw):
-            # append a VALID JSONL line: the bytes must change (so the
-            # digest moves) without breaking the parse, or the falsifier
-            # would be testing the JSON decoder instead of the guard.
-            with Path(paths["20260902"]).open("a") as fh:
+            # MUTATE AFTER THE PARSE, on the file just parsed. The pin has
+            # already passed and the parser has already consumed the stream,
+            # so the parsed-stream hash is pre-mutation and the file's is
+            # post -- which is exactly what A.4's coverage predicate is for.
+            # (Mutating BEFORE the parse is caught one step earlier by the
+            # pin, which is also correct but is A.3's case, not A.4's.)
+            r = _orig(p, **kw)
+            with Path(p).open("a") as fh:
                 fh.write(json.dumps(_row(99, 5.0, 1.0, -9.0)) + "\n")
-            return _orig(p, **kw)
+            return r
         _g["day_matched_volume"] = _mut
         try:
-            read(paths, outdir=d)
+            read(paths, outdir=d, per_day_pins=_pins)
             ok(False, "a tampered feed must VOID the read")
         except ReadVoid as e:
-            ok("THE READ IS VOID" in str(e),
-               "KNOWN-BAD: bytes mutated between the parse-digest and the "
-               "after-digest VOID the read; no result is emitted")
+            ok("THE READ IS VOID" in str(e)
+               and "moved under the parser" in str(e),
+               "KNOWN-BAD, A.4's OWN CASE: a stream mutated MID-READ makes "
+               "the parsed-stream hash disagree with the file's, and the "
+               "read is VOIDED -- the number would have been computed over "
+               "something other than what is on disk")
         finally:
             _g["day_matched_volume"] = _orig
 
@@ -334,6 +502,17 @@ def selftest() -> int:
             ok("Gate-1 object is on this read's path" in str(e),
                "KNOWN-BAD: a Gate-1 object planted into the OPENED set "
                "REFUSES -- the haystack is what this run opened")
+
+    # ---- A.5: the derivation touches the FILENAME only --------------------
+    _bad = Path("/tmp/SEALED_scores_dir/be_forward_day_SEALED_scores_1.json")
+    _got = str(_bad.with_name(_bad.name.replace("SEALED_scores", "SEALED_feed")
+                              .replace(".json", ".jsonl")))
+    ok("/tmp/SEALED_scores_dir/" in _got and _got.endswith(
+           "be_forward_day_SEALED_feed_1.jsonl"),
+       f"KNOWN-BAD FOR THE STRING FORM: a directory containing the token "
+       f"'SEALED_scores' is LEFT INTACT by `with_name` ({_got}); the old "
+       f"`str.replace` would have rewritten the directory too and pointed "
+       f"the read at a path that does not exist")
 
     print()
     if fails:

@@ -1,0 +1,54 @@
+{
+ "G": 3,
+ "R_529_A_UP_FRONT": "THIS READ ESTABLISHES DIRECTION AND CONSISTENCY AND NEVER A HOLM-CLEARING VERDICT (R-529(A)).",
+ "as_of_utc": "2026-09-06T08:17:37Z",
+ "cites_no_receipt_for_a_number_it_does_not_carry": true,
+ "decides_nothing": "REPORTED (rule 14).",
+ "opens_nothing": true,
+ "permutation_floor": {
+  "G": 3,
+  "best_possible_adjusted_p": 0.25,
+  "clears_0_05": false,
+  "computed_here_not_quoted": true,
+  "multiplicity": 2
+ },
+ "population": {
+  "READABLE": [
+   "20260903",
+   "20260904",
+   "20260905"
+  ],
+  "READ_BUT_UNRECOVERABLE": [
+   "20260901",
+   "20260902"
+  ],
+  "the_five_named_days": [
+   "20260901",
+   "20260902",
+   "20260903",
+   "20260904",
+   "20260905"
+  ],
+  "the_pins_say_so_too": "be_race_read_feed_pins_v1.json marks both `exists: false` with no digest; the reader REFUSES such a day BY NAME rather than skipping it",
+  "why_unrecoverable": "09-01 and 09-02 were OPENED under the interim (R-549), so they are consumed under rule 11 -- but their surviving receipts are SEAL-RELOCATION receipts, which carry no economics, and NO interim OUTPUT artifact exists. Verified independently by REV 44 \u00a7B and DA 65. Consumed and unavailable are different facts and both hold."
+ },
+ "protocol": "BE_RACE_READ_DECLARATION_V4",
+ "re_seal": {
+  "recommended": false,
+  "why": "every field the estimand names is already in the feed by design (v3); and a re-seal could not recover 09-01/02's economics, because the interim's OUTPUT was never written"
+ },
+ "statistic": {
+  "BY_THRESHOLD": "REPORTED, never primary (rule 7, as the interim states it)",
+  "definition": "net cents (candidate at its frozen theta) MINUS net cents (incumbent at the theta that makes the incumbent cancel the SAME NUMBER of actions the candidate actually cancelled)",
+  "latency_ms": 50,
+  "primary": "MATCHED_VOLUME",
+  "unchanged_from_v3": true
+ },
+ "supersedes": {
+  "artifact": "be_race_read_declaration_v3.json",
+  "rule": "13 -- vN+1; v3 is NOT edited",
+  "sha256": "603c684784b148b6b6770ae2755676cbb4b3d80bafe2c23c75ad2df904bfd5d6",
+  "what_changes": "the POPULATION and G. The estimand, the statistic and the no-re-seal ruling are unchanged."
+ },
+ "why_G_is_3": "it is v2's OWN `PESSIMISTIC_only_the_three_first_openings_are_fresh` branch, now the only branch the artifacts support -- not a choice made after seeing anything"
+}
