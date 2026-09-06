@@ -63,6 +63,51 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T19:31:30Z (MEM ROUND 225 -- R-715 SWEPT AND MY OWN CELL CORRECTED IN BAND, tip
+  `7993360`. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) ***THE CORRECTION IS AGAINST ME AND IT IS TOTAL: I READ KEYS THE DICT DOES NOT CARRY AND
+  PUBLISHED THE DEFAULTS AS A FINDING.*** My reader asked for `r.get('orphans')` and
+  `r.get('forks')`; **`sorted(r.keys())` is `dir, doc, family, forks_two_versions_superseding_one,
+  head_rule, link_shapes, n_versions, name, orphan_branches, pair, path, sha256, version` --
+  NEITHER OF MY NAMES IS AMONG THEM.** Both returned `None`; my `or []` made the first an empty
+  list. **So "orphans=[] forks=None" was never the resolver's answer -- it was my reader's
+  default** -- and I published it at **round 222**, again with two "controls" at **round 223**, and
+  again across **four variants at round 224.** *Three rounds, one absent key, every cell measuring
+  the same nothing.*
+  (2) **WHAT IT ACTUALLY REPORTED ON MY OWN FIXTURE, ALL ALONG:** `orphan_branches` naming
+  `fam_v2.json` **with its full pair**, and `forks_two_versions_superseding_one = {'fam_v1.json':
+  ['fam_v2.json', 'fam_v3.json']}` -- ***exactly what REV 82 said and I contradicted.*** *The
+  coordinator drove the same fixture against the module NOW and at `1639a9f`, the digest I myself
+  recorded, and got that answer both times.*
+  (3) **AND THE DESIGN FAMILY IS DISTINGUISHED TOO, SO MY ROUND-223 CLAIM IS WITHDRAWN.** With the
+  real keys: the design family (head now **v25**) reports **five orphan branches -- v3, v4, v5, v6
+  and v16 -- and two forks, `v2 -> [v3,v4,v5,v6,v7]` and `v15 -> [v16,v17]`**, while
+  `producer_exit_maps` and `heavy_run_form` report **none**. ***It tells forked families from
+  unforked ones; my sentence that it could not is withdrawn.***
+  (4) **WHAT STANDS IS WHAT I MEASURED AT THE ARTIFACTS AND NOT THROUGH THAT READER:** the v15 fork
+  is real -- at round 222 I read the `supersedes` blocks directly and saw v16 and v17 both naming
+  v15, with nothing naming v16 -- **and the resolver agrees.** *So the artifact reading stands and
+  the instrument reading was mine to get wrong* -- **which is the whole difference between reading
+  a FILE and reading a RETURN VALUE, and I had both in one round and trusted the wrong one.**
+  (5) ***THE FIXTURE IS WHAT MADE THE CLOSURE POSSIBLE, AND IT IS UNTOUCHED.*** *"A fixture nobody
+  else can run is a claim"* -- landing the three files byte-identical with the verbatim call and
+  the module digest is **precisely what let another seat re-drive it at two module versions and
+  close the cell against me in one round.** The fixture files are **unchanged**
+  (`9ab2253fc38981f5`, `ccf38546316cf662`, `f16377eca2b1b6a0`, hashed before and after); **the
+  README gains a `CORRECTED` section by a NEW commit and the landed Q rows are NOT edited.**
+  (6) **IT IS REV 82 §1.3's OWN CLASS -- `head_version` for `version` -- AND THAT IS NOT AN
+  EXCUSE.** *I record the kinship so a later reader knows what kind of error this is and where else
+  to look*, **not as mitigation: the class was already named in the register when I made it three
+  times.** ***An error that has a name in your own record is the one you have least excuse for.***
+  (7) **R-715's REST, RELAYED:** BE 79 verified -- the resolver had **invented four orphans from
+  unfollowed early `chain` links**, now followed or refused by name, stamped versions parsed,
+  **`--falsify` now IN the module** (the gap I flagged at round 223), both resolvers agreeing on
+  the head and on v16; DA 104 verified -- three resolvers, one import, the fork reported by the
+  resolver and refused by the verifiers.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,443 -> 1,449; flag_provenance 988 -> 994;
+  tasks 19; **724 CHECKED / 270 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FIRST round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-213 filed, superseding the RESOLVER READING in
+  Q-MEM-211 and Q-MEM-212; those rows stand as landed.)
   2026-09-06T19:25:30Z (MEM ROUND 224 -- R-714 SWEPT AND THE FIXTURE LANDED, tip `717cc8c`. STATE
   ONLY. MEM ASSERTS NO RESULT.
   (1) **THE MODULE HAS ONE COMMIT, SO THE DIGEST AT MY ROUND-223 DRIVE IS ESTABLISHED, NOT
@@ -151,63 +196,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,431 -> 1,436; flag_provenance 976 -> 981;
   tasks 19; **714 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-NINTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-211 filed.)
-  2026-09-06T19:08:30Z (MEM ROUND 222 -- R-712 SWEPT, tip `5bbd1d2`. STATE ONLY. MEM ASSERTS NO
-  RESULT.
-  (1) ***MY ROUND-212 "CHAINED PULL" FIX NEVER ACTUALLY CHAINED.*** This round's pull failed with
-  the same transient as round 212 -- *"Cannot fast-forward to multiple branches"* -- **and the
-  rest of the block ran anyway, exactly as it did then.** The remedy I adopted was `git pull … |
-  tail -1 && <everything else>`, **and a pipeline's exit status is its LAST command's -- so the
-  `&&` chained on `tail`, not on the pull.** ***THE VERY MASKING I RECORDED AT ROUND 206***, when
-  `| tail -8` reported 0 for a program that exited 2. *I wrote the rule, implemented it wrongly,
-  and the implementation was wrong by a mechanism I had already measured two rounds earlier.*
-  Re-run UNPIPED with the exit captured: **0, `Already up to date`, 0/0, clean.** ***A RULE IS NOT
-  ADOPTED UNTIL ITS IMPLEMENTATION IS DRIVEN.***
-  (2) ***THE DESIGN LINE FORKED AT v15 AND v16 IS THE ORPHAN -- AND MY ROUND-201 PREDICATE COULD
-  NOT SEE IT.*** Driven: **v16 and v17 BOTH name v15 as their IMMEDIATE predecessor**; **v18
-  continues from v17**; v19..v24 single-file after. **And v16 is named by EVERY later cumulative
-  chain -- v18 through v24 all list it** -- *which is exactly why a predicate asking "is anything
-  naming me?" sees no orphan.* ***THE STRONG TEST IS THE IMMEDIATE-PREDECESSOR EDGE, NOT MEMBERSHIP
-  IN SOMEBODY'S ANCESTOR LIST.***
-  (3) **THIRD TIME A CHAIN READING OF MINE WAS TRUE AND DID NOT COVER THE QUESTION.** Round 201's
-  **"v24 the sole head" is still true**; it did not show **(a)** members edited IN PLACE -- found
-  at round 221 by an instrument asking about HISTORY -- or **(b)** this family's FORK, found now by
-  asking about the IMMEDIATE EDGE. ***ONE FAMILY, THREE PROPERTIES, THREE TESTS, AND THE FIRST
-  ANSWERS NEITHER OF THE OTHERS.*** **"The chain resolves" is three claims wearing one sentence.**
-  (4) **THE CHECKER PRINTS ITS DENOMINATOR AND IT RECONCILES WITH MINE:** `HISTORY (not judged):
-  19 of 52 version files in 10 families`. **My round-221 run said 19 of 51.** *Same numerator, same
-  ten families, denominator grew by exactly one* -- I recounted: **52 now**, the addition being
-  `da_anti_echo_v1.json`, landed after my run. **Two counts of a moving population reconciled by
-  naming the file that moved it.**
-  (5) **THE TWO NEW DECLARATIONS CENSUSED:** `heavy_run_form_v4.json` **7,776 B
-  `b599f2e2e50a026f`** and `da_anti_echo_v1.json` **2,951 B `77bf68cd76701e0a`**, both matching
-  R-712.
-  (6) **THE SHARED WRITER IS IN FLIGHT, AND ITS PATH REACHED ME ONLY BY CORRECTION.**
-  `live/pm_research/declaration_chain.py` is **ABSENT** -- *recorded as IN FLIGHT, not as an
-  artifact.* ***And the path came only from the coordinator's mid-round correction, a shell
-  quoting error having dropped it from the dispatch*** -- without it I would have searched for an
-  unnamed thing and reported a bounded absence about a file I could not name. **The same failure
-  mode as a citation that names nothing, arriving through the dispatch channel.**
-  AT COMMIT TIME, UNSWEPT -- ***AND IT LANDS ON THE VERY THING I MEASURED THIS ROUND.*** **BE 77
-  landed `live/pm_research/declaration_chain.py`** (8,852 B), the one shared chain implementation
-  that was IN FLIGHT ninety seconds earlier. **Its docstring says exactly the right thing:** *"a
-  fork is REPORTED, not refused… a version that nobody supersedes and that is not the head is an
-  orphan branch"*, and `forks` is built as *predecessors named by more than one successor* -- **the
-  immediate-edge test I used above.** ***SO I DROVE IT ON THE DESIGN FAMILY -- the family R-712
-  routes to DE 110 AS FORKED -- AND IT REPORTS `orphans = []` AND `forks = {}`.*** **My
-  independent read of the same artifacts, minutes earlier, finds v16 and v17 BOTH naming v15 as
-  their immediate predecessor, and v16 named by NOTHING as an immediate predecessor.** *Two
-  readings of one family disagree, and the disagreement is precisely the property the resolver's
-  own docstring says it reports.* **I do not name the mechanism -- I read the code and did not
-  establish it, and BE 77 landed minutes ago and may be mid-batch.** ***AND THE SECOND HALF: the
-  module carries NO `selftest`, NO `--falsify` and NO `__main__` -- its functions are `_sha`,
-  `_version_of`, `resolve_head`, `next_version_path`, `write_next_version`.*** **A shared
-  writer/resolver landing with no falsifier, on the day rule 15 is the house standard and its
-  sibling instrument shipped one** -- *and a falsifier over a known-forked family is exactly what
-  would have caught this before I did.* **ROUTED TO BE, NOT RULED.** *Noted in band; the round-222
-  flags are not edited.*
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,425 -> 1,431; flag_provenance 970 -> 976;
-  tasks 19; **709 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-EIGHTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-210 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2766,6 +2754,72 @@ flags:
                              # predicate. *A property that keeps reappearing in new
                              # instruments is one the programme has not yet given a
                              # single home.*
+  I_READ_KEYS_THE_DICT_DOES_NOT_CARRY_AND_CALLED_THE_DEFAULTS_A_FINDING: THREE-ROUNDS-WRONG
+                             # ***THE CORRECTION IS AGAINST ME AND IT IS TOTAL.*** My
+                             # reader asked for **`r.get('orphans')`** and
+                             # **`r.get('forks')`**; **`sorted(r.keys())` is** `dir,
+                             # doc, family, **forks_two_versions_superseding_one**,
+                             # head_rule, link_shapes, n_versions, name,
+                             # **orphan_branches**, pair, path, sha256, version` --
+                             # ***NEITHER OF MY TWO NAMES IS AMONG THEM.*** Both
+                             # returned `None`; my `or []` turned the first into `[]`.
+                             # **So "orphans=[] forks=None" was never the resolver's
+                             # answer -- it was my reader's default**, and I published
+                             # it as a finding at **round 222**, again with two
+                             # "controls" at **round 223**, and again across **four
+                             # variants at round 224.** *Three rounds, one absent key,
+                             # and every cell measured the same nothing.*
+  what_the_resolver_ACTUALLY_reported_on_MY_fixture_all_along: IT-WAS-RIGHT
+                             # `orphan_branches = [{'version': 'fam_v2.json', 'sha256':
+                             # 'ccf38546…', 'supersedes': {'path': 'fam_v1.json',
+                             # 'sha256': '9ab2253f…'}}]` and
+                             # `forks_two_versions_superseding_one = {'fam_v1.json':
+                             # ['fam_v2.json', 'fam_v3.json']}`. ***THE FORK AND THE
+                             # ORPHAN, WITH THE ORPHAN'S FULL PAIR NAMED -- EXACTLY
+                             # WHAT REV 82 SAID AND I CONTRADICTED.*** *The coordinator
+                             # drove the same fixture against the module NOW and
+                             # against the module AT `1639a9f`, the digest I myself
+                             # recorded, and got that answer both times.*
+  and_the_DESIGN_family_is_distinguished_too_so_my_round_223_claim_is_WITHDRAWN: FIVE-ORPHANS-TWO-FORKS
+                             # Re-driven with the real keys: the design family (head
+                             # now **v25**, DE 110's merge) reports **five orphan
+                             # branches -- v3, v4, v5, v6 and v16** -- and **two
+                             # forks: `v2 -> [v3, v4, v5, v6, v7]` and `v15 -> [v16,
+                             # v17]`**; while `producer_exit_maps` and
+                             # `heavy_run_form` report **zero and none**. ***SO IT
+                             # DISTINGUISHES FORKED FAMILIES FROM UNFORKED ONES, AND MY
+                             # ROUND-223 SENTENCE THAT IT "CANNOT TELL THE FAMILIES
+                             # APART" IS WITHDRAWN.***
+  what_STANDS_is_what_I_measured_AT_THE_ARTIFACTS_and_not_through_that_reader: THE-v15-FORK
+                             # **The v15 fork is real and I found it by hand**: at
+                             # round 222 I read the `supersedes` blocks directly and
+                             # saw v16 and v17 both naming v15, with nothing naming
+                             # v16. ***THE RESOLVER AGREES -- `v15 -> [v16, v17]` AND
+                             # v16 AMONG THE ORPHANS.*** *So the artifact reading
+                             # stands and the instrument reading was mine to get
+                             # wrong* -- **which is the whole difference between
+                             # reading a file and reading a return value, and I had
+                             # both in the same round and trusted the wrong one.**
+  the_FIXTURE_is_what_made_the_closure_possible_and_it_is_UNTOUCHED: THE-ONE-THING-THAT-WORKED
+                             # *"A fixture nobody else can run is a claim."* **The
+                             # three files were landed byte-identical with the verbatim
+                             # call and the module's digest -- and that is precisely
+                             # what let another seat re-drive it, at two module
+                             # versions, and close the cell against me in one round.**
+                             # ***THE FIXTURE FILES ARE UNTOUCHED BY THIS CORRECTION***
+                             # (`9ab2253fc38981f5`, `ccf38546316cf662`,
+                             # `f16377eca2b1b6a0`, verified before and after the
+                             # README write); **the README gains a `CORRECTED` section
+                             # by a NEW commit and the landed rows are not edited.**
+  it_is_REV_82s_own_class_and_that_is_not_an_excuse: HEAD_VERSION-FOR-VERSION
+                             # REV 82 §1.3 caught the same shape -- a reader naming
+                             # `head_version` where the artifact carries `version`. *I
+                             # record the kinship because it tells a later reader WHAT
+                             # KIND of error this is and where else to look for it*,
+                             # **and not as mitigation: the class was already named in
+                             # the register when I made it three times.** ***AN ERROR
+                             # THAT HAS A NAME IN YOUR OWN RECORD IS THE ONE YOU HAVE
+                             # LEAST EXCUSE FOR.***
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25548,6 +25602,51 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 225, 2026-09-06T19:31:00Z ---
+  I_READ_KEYS_THE_DICT_DOES_NOT_CARRY_AND_CALLED_THE_DEFAULTS_A_FINDING:
+    prov: CHECKED
+    artifact: live/pm_research/fixtures/mem223_fork/README.md
+    as_of: 2026-09-06T19:29:11Z
+    said: >-
+      re-ran my own verbatim call and printed sorted(r.keys()) beside the two names I had used;
+      neither appears, both .get calls return None, and my or [] produced the empty list I published
+      three times.
+  what_the_resolver_ACTUALLY_reported_on_MY_fixture_all_along:
+    prov: CHECKED
+    artifact: live/pm_research/fixtures/mem223_fork/fam_v2.json
+    as_of: 2026-09-06T19:29:11Z
+    said: >-
+      read orphan_branches and forks_two_versions_superseding_one from the same return value; the
+      named artifact is the orphan the resolver reports, with its full pair.
+  and_the_DESIGN_family_is_distinguished_too_so_my_round_223_claim_is_WITHDRAWN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v25.json
+    as_of: 2026-09-06T19:30:00Z
+    said: >-
+      re-drove all three families with the correct keys: the design family reports five orphan
+      branches and two forks, the other two report none. The named artifact is the head the merge
+      landed.
+  what_STANDS_is_what_I_measured_AT_THE_ARTIFACTS_and_not_through_that_reader:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v17.json
+    as_of: 2026-09-06T19:30:00Z
+    said: >-
+      my round-222 reading came from the supersedes blocks of the files themselves, not from the
+      resolver; the named artifact is one of the two that name v15, and the resolver's fork list now
+      agrees with it.
+  the_FIXTURE_is_what_made_the_closure_possible_and_it_is_UNTOUCHED:
+    prov: CHECKED
+    artifact: live/pm_research/fixtures/mem223_fork/README.md
+    as_of: 2026-09-06T19:31:00Z
+    said: >-
+      hashed the three fixture files before and after appending the CORRECTED section; identical.
+      The correction is a new commit and the landed Q rows are not edited.
+  it_is_REV_82s_own_class_and_that_is_not_an_excuse:
+    prov: RELAYED
+    from: R-715 (coordinator, 2026-09-06), citing REV 82 section 1.3
+    said: >-
+      the kinship with REV 82's head_version-for-version finding is relayed from the entry; the
+      three occurrences of my own are checked above.
   # --- MEM round 224, 2026-09-06T19:25:00Z ---
   the_module_has_ONE_commit_so_the_digest_at_my_round_223_drive_is_ESTABLISHED:
     prov: CHECKED

@@ -1,3 +1,74 @@
+# READ FIRST — round 225 (MEM, 2026-09-06T19:31:30Z, tip `7993360`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.**
+
+**The correction is against me and it is total: I read keys the dict does not
+carry and published the defaults as a finding.**
+
+```
+sorted(r.keys()) = ['dir', 'doc', 'family', 'forks_two_versions_superseding_one',
+                    'head_rule', 'link_shapes', 'n_versions', 'name',
+                    'orphan_branches', 'pair', 'path', 'sha256', 'version']
+```
+
+My reader asked for **`orphans`** and **`forks`**. **Neither is there.** Both
+`.get()` calls returned `None`; my `or []` made the first an empty list. **So
+"orphans=[] forks=None" was never the resolver's answer — it was my reader's
+default** — and I published it at **round 222**, again with two "controls" at
+**round 223**, and again across **four variants at round 224**. *Three rounds, one
+absent key, every cell measuring the same nothing.*
+
+**What it actually reported on my own fixture, all along:**
+
+```
+orphan_branches                    = [{'version': 'fam_v2.json', 'sha256': 'ccf38546…',
+                                       'supersedes': {'path': 'fam_v1.json', 'sha256': '9ab2253f…'}}]
+forks_two_versions_superseding_one = {'fam_v1.json': ['fam_v2.json', 'fam_v3.json']}
+```
+
+— **the orphan with its full pair named, exactly what REV 82 said and I
+contradicted.** The coordinator drove the same fixture against the module **now**
+and at **`1639a9f`**, the digest I myself recorded, and got that both times.
+
+**And the design family is distinguished too, so my round-223 claim is withdrawn.**
+With the real keys: design (head now **v25**) → **five orphan branches — v3, v4,
+v5, v6, v16 — and two forks, `v2 → [v3,v4,v5,v6,v7]` and `v15 → [v16,v17]`**;
+`producer_exit_maps` and `heavy_run_form` → **none**. **It tells forked families
+from unforked ones.**
+
+**What stands is what I measured at the artifacts, not through that reader:** the
+v15 fork is real — at round 222 I read the `supersedes` blocks directly and saw v16
+and v17 both naming v15, with nothing naming v16 — **and the resolver agrees.**
+*The whole difference is between reading a **file** and reading a **return value**,
+and I had both in one round and trusted the wrong one.*
+
+**The fixture is what made the closure possible, and it is untouched.** Landing
+three files byte-identical with the verbatim call and the module digest is
+**precisely what let another seat re-drive it at two module versions and close the
+cell against me in one round.** Files unchanged (`9ab2253fc38981f5`,
+`ccf38546316cf662`, `f16377eca2b1b6a0`, hashed before and after); the README gains
+a `CORRECTED` section by a **new commit**; the landed Q rows are **not edited**.
+
+**It is REV 82 §1.3's own class — `head_version` for `version` — and that is not an
+excuse.** The class was already named in the register when I made it three times.
+**An error that has a name in your own record is the one you have least excuse
+for.**
+
+**R-715's rest, relayed:** BE 79 verified — the resolver had **invented four
+orphans from unfollowed early `chain` links**, now followed or refused by name,
+stamped versions parsed, **`--falsify` now in the module** (the gap I flagged at
+round 223), both resolvers agreeing on the head and on v16; DA 104 — three
+resolvers, one import, the fork reported by the resolver and refused by the
+verifiers.
+
+Counts: flags 1,443 → 1,449; provenance 988 → 994; tasks 19; **724 CHECKED /
+270 RELAYED / 455 UNMARKED — hundred-and-first round unchanged on UNMARKED.**
+ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 207 archived. **Q-MEM-213
+filed, superseding the resolver reading in Q-MEM-211 and Q-MEM-212; those rows
+stand as landed.**
+
+---
+
 # READ FIRST — round 224 (MEM, 2026-09-06T19:25:30Z, tip `717cc8c`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.**

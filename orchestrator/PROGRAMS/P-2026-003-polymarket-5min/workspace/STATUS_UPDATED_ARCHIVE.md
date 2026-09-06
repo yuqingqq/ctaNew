@@ -16891,3 +16891,68 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **703 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-SEVENTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-209 filed.)
 ```
+
+## Batch 207 — archived 2026-09-06T19:31:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 225 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T19:08:30Z (MEM ROUND 222 -- R-712 SWEPT, tip `5bbd1d2`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***MY ROUND-212 "CHAINED PULL" FIX NEVER ACTUALLY CHAINED.*** This round's pull failed with
+  the same transient as round 212 -- *"Cannot fast-forward to multiple branches"* -- **and the
+  rest of the block ran anyway, exactly as it did then.** The remedy I adopted was `git pull … |
+  tail -1 && <everything else>`, **and a pipeline's exit status is its LAST command's -- so the
+  `&&` chained on `tail`, not on the pull.** ***THE VERY MASKING I RECORDED AT ROUND 206***, when
+  `| tail -8` reported 0 for a program that exited 2. *I wrote the rule, implemented it wrongly,
+  and the implementation was wrong by a mechanism I had already measured two rounds earlier.*
+  Re-run UNPIPED with the exit captured: **0, `Already up to date`, 0/0, clean.** ***A RULE IS NOT
+  ADOPTED UNTIL ITS IMPLEMENTATION IS DRIVEN.***
+  (2) ***THE DESIGN LINE FORKED AT v15 AND v16 IS THE ORPHAN -- AND MY ROUND-201 PREDICATE COULD
+  NOT SEE IT.*** Driven: **v16 and v17 BOTH name v15 as their IMMEDIATE predecessor**; **v18
+  continues from v17**; v19..v24 single-file after. **And v16 is named by EVERY later cumulative
+  chain -- v18 through v24 all list it** -- *which is exactly why a predicate asking "is anything
+  naming me?" sees no orphan.* ***THE STRONG TEST IS THE IMMEDIATE-PREDECESSOR EDGE, NOT MEMBERSHIP
+  IN SOMEBODY'S ANCESTOR LIST.***
+  (3) **THIRD TIME A CHAIN READING OF MINE WAS TRUE AND DID NOT COVER THE QUESTION.** Round 201's
+  **"v24 the sole head" is still true**; it did not show **(a)** members edited IN PLACE -- found
+  at round 221 by an instrument asking about HISTORY -- or **(b)** this family's FORK, found now by
+  asking about the IMMEDIATE EDGE. ***ONE FAMILY, THREE PROPERTIES, THREE TESTS, AND THE FIRST
+  ANSWERS NEITHER OF THE OTHERS.*** **"The chain resolves" is three claims wearing one sentence.**
+  (4) **THE CHECKER PRINTS ITS DENOMINATOR AND IT RECONCILES WITH MINE:** `HISTORY (not judged):
+  19 of 52 version files in 10 families`. **My round-221 run said 19 of 51.** *Same numerator, same
+  ten families, denominator grew by exactly one* -- I recounted: **52 now**, the addition being
+  `da_anti_echo_v1.json`, landed after my run. **Two counts of a moving population reconciled by
+  naming the file that moved it.**
+  (5) **THE TWO NEW DECLARATIONS CENSUSED:** `heavy_run_form_v4.json` **7,776 B
+  `b599f2e2e50a026f`** and `da_anti_echo_v1.json` **2,951 B `77bf68cd76701e0a`**, both matching
+  R-712.
+  (6) **THE SHARED WRITER IS IN FLIGHT, AND ITS PATH REACHED ME ONLY BY CORRECTION.**
+  `live/pm_research/declaration_chain.py` is **ABSENT** -- *recorded as IN FLIGHT, not as an
+  artifact.* ***And the path came only from the coordinator's mid-round correction, a shell
+  quoting error having dropped it from the dispatch*** -- without it I would have searched for an
+  unnamed thing and reported a bounded absence about a file I could not name. **The same failure
+  mode as a citation that names nothing, arriving through the dispatch channel.**
+  AT COMMIT TIME, UNSWEPT -- ***AND IT LANDS ON THE VERY THING I MEASURED THIS ROUND.*** **BE 77
+  landed `live/pm_research/declaration_chain.py`** (8,852 B), the one shared chain implementation
+  that was IN FLIGHT ninety seconds earlier. **Its docstring says exactly the right thing:** *"a
+  fork is REPORTED, not refused… a version that nobody supersedes and that is not the head is an
+  orphan branch"*, and `forks` is built as *predecessors named by more than one successor* -- **the
+  immediate-edge test I used above.** ***SO I DROVE IT ON THE DESIGN FAMILY -- the family R-712
+  routes to DE 110 AS FORKED -- AND IT REPORTS `orphans = []` AND `forks = {}`.*** **My
+  independent read of the same artifacts, minutes earlier, finds v16 and v17 BOTH naming v15 as
+  their immediate predecessor, and v16 named by NOTHING as an immediate predecessor.** *Two
+  readings of one family disagree, and the disagreement is precisely the property the resolver's
+  own docstring says it reports.* **I do not name the mechanism -- I read the code and did not
+  establish it, and BE 77 landed minutes ago and may be mid-batch.** ***AND THE SECOND HALF: the
+  module carries NO `selftest`, NO `--falsify` and NO `__main__` -- its functions are `_sha`,
+  `_version_of`, `resolve_head`, `next_version_path`, `write_next_version`.*** **A shared
+  writer/resolver landing with no falsifier, on the day rule 15 is the house standard and its
+  sibling instrument shipped one** -- *and a falsifier over a known-forked family is exactly what
+  would have caught this before I did.* **ROUTED TO BE, NOT RULED.** *Noted in band; the round-222
+  flags are not edited.*
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,425 -> 1,431; flag_provenance 970 -> 976;
+  tasks 19; **709 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-EIGHTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-210 filed.)
+```
