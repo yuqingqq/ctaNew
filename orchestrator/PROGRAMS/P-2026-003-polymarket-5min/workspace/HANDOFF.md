@@ -5,6 +5,108 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 146
+
+**As of 2026-09-06T09:04:15Z. State only — MEM writes no result.**
+
+### STOP THE LINE is open (REV 49, filed 08:57:50Z) — recorded, not ruled
+
+**The running smoke will stamp a digest for code that did not run.** Every fact
+reproduced under my own drive: pid **3049132**, cwd `/home/yuqing/ctaNew-wt-de`,
+started **08:22:03Z**; that worktree's runner has **mtime 08:35:20Z** — thirteen
+minutes *into* the run — and **sha256 `ba65c248…`**, which is `a7e28e6`'s blob,
+while the bytes on disk at launch were `a7e28e6^` = **`2089d74e…`**. The stamp sits
+inside `_main_day`, **after** the day is computed:
+`producing_code_sha256 = sha256(Path(__file__).resolve().read_bytes())`. Output
+artifact absent at my read. **And the guard passes because the replacement is
+committed** — `carrying_commit_block(...)` beside it, with `committed_bytes_policy`
+recording that `producing_code_is_the_committed_bytes` "MAY be false and is
+RECORDED, never refused." DE 85 *is* committed, so the predicate comes out **true,
+on the wrong object**: not a control that cannot fail, one that **passes correctly
+on the wrong thing**. The decision is the coordinator's and DE's, not MEM's.
+
+**At commit time (2026-09-06T09:07:54Z) two things moved.** **Rule 22 landed**
+(`2ef2186`, R-603): "a heavy run's code is **frozen** until its receipt lands — a
+worktree whose HEAD is not moved and whose files are not edited until the run's
+receipt has landed." **And I measure that worktree dirty:** `~/ctaNew-wt-de` at
+`ae9df8d` with **`M live/pm_research/de_multiday_gate1_runner.py`** and an untracked
+`de_multiday_gate1_params_v6.json`, while pid 3049132 runs from it — the runner file
+is now a **third** digest, `19f55b33…`, against the launch bytes `2089d74e…` and DE
+85's `ba65c248…`. So the stamped value is a function of the file **at emit**, it has
+changed **twice**, neither candidate is what ran, and the committed-bytes flag flips
+with it (true against a landing, false against an uncommitted edit). **Routed, not
+ruled — the coordinator and DE own it.** The likeliest reading is DE 86's params
+work landing in the same tree, not a seat ignoring a rule it has not been shown.
+
+**My round-145 flag named this class one round before it fired** — routed then on
+BE's builder (`Path(__file__).read_text()` at emit time reports the *file*, not the
+*bytes that ran*, "with an instance this morning"). The instance was this smoke. The
+class transferred across seats and modules unchanged: **a long-lived process, a
+mutable file, an identity field read at the end.**
+
+### The ruling: the seal-open bar is a predicate, not a clock
+
+**The aggregate read opens when BOTH hold — clock ≥ 2026-09-09T00:06Z AND all six
+ruled days' sealed day receipts exist, verified by digest at read time.** Population
+is R-555's; statistic, null and multiplicity unchanged; **G = 6 kept**; no day read
+before the bar; **nothing chosen on data**. Declared before the data by **DE 86
+(params v6, design v14)**. "The bar was a schedule, and the schedule is now computed
+from artifacts instead of typed" — rule 10 applied to a deadline. A clock alone
+would have left **G = 5, and 2⁻⁵ = 0.03125 fails Holm at m = 2** — the same hazard
+REV 44 §B named for the reader ("a silently smaller G reported as the declared
+one"), one layer out: there in the **day set**, here in the **calendar**.
+**USER-PENDING for overrule; the alternative is G = 5 and a directional-only Gate 1.**
+
+### What's next — the pipeline runs CONTINUOUSLY from here
+
+One heavy run at a time (rule 20), under
+`flock -n data/.heavy_run.lock systemd-run --user --scope --slice=research.slice`.
+Per day the chain is **inputs → book → smoke**, and a day cannot start before it is
+calendar-complete:
+
+| when | day | step | owner | measured cost |
+|---|---|---|---|---|
+| now | 09-03 | smoke (RUNNING, holds the lock) | DE 84 | ~1.5 h projected; 2,531 s at my read |
+| now → next | 09-04 | inputs: fragment → tape | BE 58 (**polling the lock**) | 608.4 s + 1,471.6 s |
+| then | 09-04 | book | BE 59 (**released**) | 2,115.7 s |
+| then | 09-04 | smoke | DE | unmeasured on a real day |
+| as each completes | 09-05, 09-06, 09-07 | the same chain | BE → DE | 1.165 h + smoke per day |
+| from **09-09T00:00Z** | 09-08 | the same chain, immediately | BE → DE | 1.165 h + smoke |
+| ≈ **09-09 03:00–04:00Z** | — | the aggregate read, once the predicate holds | coordinator | — |
+
+**The measured 1.165 h/day is a LOWER BOUND** — the smoke's wall is `None`,
+`NEVER_RUN_ON_A_REAL_DAY`, and the accrual receipt says so in its own `IMPORTANT`
+field. Anything that slips only widens the gap. Also queued: BE 59's reader fix
+(REV 48 §1.6/§1.7) and the 09-03 receipt `.v2`; DA idle behind two GOs (the pre-read
+on the real receipt, the heavy book tier) until the smoke lands.
+
+### State (measured at the accrual receipt)
+
+- **Gate 1:** `n_ruled_days 6`, **`n_complete_by_calendar 3`**,
+  **`n_with_all_four_inputs 0`** — 09-03 holds **3 of 4** (fragment, tape, book);
+  **no day holds a sealed day receipt.** `hours_until_the_bar 63.1`.
+  **`days_that_CANNOT_fit = ['20260908']`** — completes 09-09T00:00:00Z, 0.1 h
+  against 1.165 h.
+- **The ruled day set UNCHANGED:** 09-03 … 09-08.
+- **E2-A:** 11 admissible post-boundary, **3 still needed** (09-06/07/08); first
+  G ≥ 14 at **2026-09-09T00:00:00Z** if every remaining day admits; both collectors
+  alive (heartbeats 22.3 s / 16.3 s); 2 collector events since 08-26; later days'
+  era leg marked `UNMEASURED_AFTER_THE_SMOKES_AS_OF` rather than assumed. **The two
+  headline dates coincide by arithmetic, not by design.**
+- **DA 71:** the probe corrected — the error named ("a commit id names a specific
+  object; using it to locate a different object returns something **true of
+  nothing**"); the real 09-03 v1 receipt is **`PROVENANCE_INCOMPLETE`, zero flags,
+  exit 3**; the round-70 refusal **retracted in band**.
+- **The instrument decides nothing and says so in a field** — `decides_nothing`,
+  and per day `why_not_a_verdict_here`. Rule 14 in the payload.
+
+**Counts, measured before the sentence:** flags 818 → 827, `flag_provenance`
+363 → 372, tasks 19; **219 CHECKED**, 153 RELAYED, **455 UNMARKED — unchanged for
+the twenty-second round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 128 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 145
 
 **As of 2026-09-06T08:51:30Z. State only — MEM writes no result.**

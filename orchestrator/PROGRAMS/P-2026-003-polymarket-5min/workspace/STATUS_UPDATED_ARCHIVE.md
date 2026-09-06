@@ -10781,3 +10781,97 @@ directions.
   round running.** ORPHAN audit 0 findings, exit 0 **after it caught my rename**;
   window 3 of a ruled 3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 128 — archived 2026-09-06T09:04:15Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 146 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T08:33:00Z (MEM ROUND 143 -- R-598, R-599 AND REV 47 SWEPT. STATE ONLY.
+  THE FINDING IS A SEAL THAT REMOVES TWO QUANTITIES AND KEEPS THEIR RATIO.
+  **FIRST, THE COMMIT-TIME RE-READ CHANGED THIS SENTENCE.** Re-reading the CLAIMS
+  before committing -- not the tip -- found **DE 85 landed `a7e28e6` between my read
+  and my commit**: `sd_over_abs_mean` **is in the sealed tuple now** and
+  `DAY_PATH_CHECKS` **is 82, not 75**. ***The finding below HELD when R-599 was
+  filed and is FIXED at commit time, and I record both*** -- *third round the
+  re-read has changed what I was about to write, and the first where it caught a
+  FIX rather than an error of mine; the flag it prevented was not wrong but
+  TRUE-WHEN-READ, which is worse in a file other seats read first.*
+  (1) **A DERIVED RATIO SURVIVED A SEAL THAT REMOVES BOTH ITS PARTS.** I read the
+  list: `ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location", "null_mean",
+  "null_sd", "null_draws_summary")` -- **`null_sd` and `null_mean` sealed,
+  `admissibility.sd_over_abs_mean` NOT** (as filed; **sealed at commit time**).** ***The seal is a NAME list, and a derived
+  quantity has a different name. Sealing the parts does not seal the whole*** --
+  and nothing in the mechanism could have noticed, because the stripper did exactly
+  what it was told.
+  (2) **AND IT EXTENDS MY OWN ROUND-137 FLAG, AGAINST IT.** I recorded then that
+  "the emitter and the guard now share ONE name list … so they cannot disagree
+  again", and called it the right fix. ***It is -- and it solves DISAGREEMENT, not
+  INCOMPLETENESS. Two consumers agreeing perfectly on a list that is missing an
+  entry agree perfectly and leak.*** **AND THE FIX PROVES IT HARDER THAN I ARGUED
+  IT:** DE's message records that *fixing the ratio exposed a **SECOND LEAK OF THE
+  SAME CLASS, in a string rather than a key** -- the refusal REASONS carried sd and
+  mean as **TEXT**, and the stripper removes **KEYS, NOT SUBSTRINGS**, firing only
+  on a REFUSED arm-day, exactly where the numbers are most tempting to quote.*
+  ***So the list cannot see a value carried in PROSE at all; adding an entry closes
+  one instance of a class the mechanism cannot enumerate.*** **And DE's falsifier
+  for it was wrong first time in my own recurring shape** -- it matched the string
+  `"sd_over_abs_mean"` against a payload that contains `sealed_field_names`, *the
+  needle-matching-its-own-prose failure that module's docstring warns about, walked
+  into inside the check written to close a leak.* **Eleventh "suspect the probe
+  first", the first I swept from another seat's commit message rather than found in
+  my own run.** *DA 66's container census -- counting by
+  CONTAINER rather than by NAME, which I swept at round 140 -- is the shape that
+  would catch this, and it lives in a different instrument in a different seat.*
+  (3) **THE RULING IS A CONDUCT RULE WHERE AN EDIT WAS AVAILABLE.** Nobody quotes
+  the ratio from the 09-03 receipt -- DE omits it, DA's pre-read records **presence
+  only**, the coordinator does not read it -- and DE 85 seals it from 09-04 with
+  **the sd half published as a VERDICT ONLY** and the stripper's falsifier
+  **planting the ratio at depth.** ***And v12 is untouched because the RUNNING SMOKE
+  CITES IT*** -- *rule 13 extended from artifacts to declarations-in-use.* **Twice
+  in two rounds the answer to "this artifact is wrong" was "leave it and bind what
+  people may do with it."**
+  (4) **THE PRE-READ PROVES ITS EMISSION CLEAN TWO WAYS -- AND SAYS WHAT EACH ONE
+  MISSES:** no economic field NAME in the output AND none of its economic VALUES
+  anywhere, ***because "a name check alone lets the number ride out under another
+  key, a value check alone passes an empty economic key."*** **The first time in
+  this programme two checks are paired with an explicit account of each one's blind
+  spot** -- *contrast the lock predicate's "two independent mechanisms" (round 132),
+  which shared a blind spot precisely because nobody wrote that down.* And it cannot
+  leak structurally: the statistic is never called, **asserted at the source by
+  AST**, and a leaked field is named **with its value appearing 0 times.**
+  (5) **THE RUNNER'S DIGEST MOVED, AND "A COPIED FIELD TUPLE WOULD NOT HAVE
+  NOTICED"** (`2089d74e…` against `645f8509…`). *A consumer that COPIES a producer's
+  constant is correct until the producer changes and then silently wrong; one that
+  READS it at the source is wrong only if the producer is.* **And
+  `producing_code_is_the_committed_bytes` no longer gates the verdict, "because a
+  commit id can be rewritten out from under a citation"** -- ***DA's own round-138
+  incident, now load-bearing on a design decision.***
+  (6) **THE PEAK-STAGE REFUSAL WAS WRITTEN BEFORE DE 84'S RECEIPT EXISTS** -- a
+  declaration act, never widen, never raise the cap. **Third instance this session
+  of a rule written before the thing it governs produces a number** (the read order,
+  v7's ICP form, this) -- *and each says so IN the artifact rather than leaving a
+  reader to compare timestamps.*
+  (7) **AND THE "23" THREAD CLOSES PROPERLY: `DAY_PATH_CHECKS = 82` (75 when I
+  read it; +7 from DE 85, runner battery 152 -> 159), and the
+  constant now GENERATES the offline skip list with the online run asserting they
+  agree** -- *"a check added without updating this REFUSES rather than silently
+  shrinking the offline battery."* **23 in prose -> 49 -> 75, and the number stopped
+  mattering the moment nothing could disagree with it -- which is why it moving
+  under me mid-round cost nothing but this clause.**
+  (8) **THE REVIEWER'S DE LEDGER HAS NO OPEN ITEM**, §1.6 closed **on the reviewer's
+  own constructed case** -- *the first seat column to empty since the ledger was
+  built at R-582, and closed on a case the reviewer built rather than the seat's own
+  fixture, which is what makes the closure the reviewer's to declare.*
+  **FLAG WORDS: the smoke RUNNING (`de84smoke.scope` since 08:21:55Z; I measure 688
+  s and 841,224 KiB current RSS); `sd_over_abs_mean` UNQUOTED-BY-RULING; the
+  reviewer's DE ledger CLEAR; the race read NOT READ, v4 UNDER REVIEW (REV 48); the
+  09-04 inputs IN PROGRESS behind the lock poll, the 09-04 book NOT STARTED.**
+  MEASURED BEFORE THIS SENTENCE: flags 794 -> 802, flag_provenance 339 -> 347,
+  tasks 19; **201 CHECKED**, 146 RELAYED, **455 UNMARKED -- unchanged for the
+  nineteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
