@@ -240,65 +240,122 @@ def check_identity(receipt: dict, *, day: str | None = None,
                 receipt.get("protocol") == BE_RECEIPT_PROTOCOL}
 
 
-def check_seam(receipt: dict) -> dict:
-    """`seam.index` against the call the builder actually makes.
+SEAM_STATUS_VERIFIED = "SEAM_VERIFIED"
+SEAM_STATUS_INCOMPLETE = "PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT"
 
-    REFUSES on a contradiction. A literal that describes a different call
-    than the code makes is the defect rule 10 exists for, and a verifier
-    that shrugged at it would be certifying the prose."""
+
+def front_door_at(front_door: str | None, commit: str | None) -> dict:
+    """`seam.commit` names DE's FRONT DOOR, so it is checked against DE's
+    module -- which is what it names.
+
+    THIS IS THE HALF OF MY ROUND-70 PROBE THAT WAS WRONG, and the error is
+    worth stating exactly: I read BE's BUILDER at `seam.commit` and reported
+    a contradiction. `seam.commit` is DE's commit (`6f134a6` is a Q-DE-80
+    register entry touching only COORDINATION.md), so reading BE's builder
+    there gave me a real file at a real commit that had nothing to do with
+    the field. ***A commit id names a specific object; using it to locate a
+    DIFFERENT object returns something true and tells you nothing.***"""
+    if not front_door or not commit:
+        return {"checked": False,
+                "why": "no front door or no seam commit named"}
+    mod, _, fn = front_door.rpartition(".")
+    rel = f"live/pm_research/{mod}.py"
+    r = subprocess.run(["git", "show", f"{commit}:{rel}"],
+                       capture_output=True, text=True, cwd=str(HERE))
+    if r.returncode != 0 or not r.stdout:
+        return {"checked": True, "resolves": False, "module": rel,
+                "commit": commit,
+                "why": f"{rel} is not readable at {commit}"}
+    try:
+        tree = ast.parse(r.stdout)
+    except SyntaxError:
+        return {"checked": True, "resolves": False, "module": rel,
+                "commit": commit, "why": "unparseable at that commit"}
+    has = any(isinstance(n, ast.FunctionDef) and n.name == fn
+              for n in ast.walk(tree))
+    return {"checked": True, "resolves": has, "module": rel, "function": fn,
+            "commit": commit,
+            "why": ("the front door is defined in DE's module at the commit "
+                    "the receipt names" if has else
+                    f"{fn} is not defined in {rel} at {commit}")}
+
+
+def builder_commit_of(receipt: dict) -> str | None:
+    """The receipt's OWN builder commit (R-387's carrying_commit).
+
+    Only these fields count. `seam.commit` is DE's and is NOT a fallback:
+    falling back to it is precisely the mistake this function exists to
+    prevent."""
+    seam = receipt.get("seam") or {}
+    for k in ("builder_commit", "carrying_commit", "producing_commit"):
+        v = receipt.get(k) or seam.get(k)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+    return None
+
+
+def check_seam(receipt: dict) -> dict:
+    """`seam.index` against the builder's call AT THE RECEIPT'S OWN BUILDER
+    COMMIT -- and nowhere else.
+
+    R-601. A receipt that names no builder commit gets
+    PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT **by name**. It does NOT get a
+    contradiction verdict computed against another seat's commit or against
+    HEAD: a receipt is a historical record, and judging its literal by code
+    it never ran is not a check, it is a coincidence of the tree. That gap
+    is a PROVENANCE gap, not a false statement."""
     seam = receipt.get("seam") or {}
     literal = seam.get("index")
-    commit = seam.get("commit")
-    at_commit = builder_index_call(at_commit=commit) if commit else None
-    at_head = builder_index_call()
-    kw_in_literal = sorted({
+    seam_commit = seam.get("commit")
+    b_commit = builder_commit_of(receipt)
+    front = front_door_at(seam.get("front_door"), seam_commit)
+    kw_claimed = sorted({
         tok.split("=")[0].strip()
         for tok in (literal or "").split("(", 1)[-1].rstrip(")").split(",")
         if "=" in tok})
-    def _agrees(block):
-        if block is None or block["n_calls"] == 0:
-            return None
-        return any(sorted(c["keywords"]) == kw_in_literal
-                   for c in block["calls"])
-    agrees_commit = _agrees(at_commit)
-    agrees_head = _agrees(at_head)
     out = {
         "literal_in_the_receipt": literal,
-        "keywords_the_literal_claims": kw_in_literal,
-        "seam_commit_named_by_the_receipt": commit,
-        "call_at_that_commit": at_commit,
-        "call_at_head": at_head,
-        "agrees_with_the_call_at_its_own_commit": agrees_commit,
-        "agrees_with_the_call_at_head": agrees_head,
-        #: THE RULE, and the hole my own known-bad found. With a readable
-        #: seam commit the fair comparison is against the code OF THAT
-        #: MOMENT, and a contradiction needs BOTH that and HEAD to disagree
-        #: -- a receipt is a historical record. WITHOUT a commit there is no
-        #: historical code to be fair to, so HEAD is the only comparison
-        #: there is. The first version returned None in that branch and let
-        #: a contradicting literal through: an unreadable provenance field
-        #: became a free pass.
-        "contradicts_the_code": (
-            (agrees_commit is False and agrees_head is not True)
-            if agrees_commit is not None else (agrees_head is False)),
-        "how_the_contradiction_was_decided": (
-            "against the call at the receipt's own seam commit"
-            if agrees_commit is not None else
-            "against the call at HEAD -- the receipt names no seam commit, "
-            "so there is no historical code to be fair to"),
+        "keywords_the_literal_claims": kw_claimed,
+        "seam_commit": seam_commit,
+        "what_seam_commit_NAMES": (
+            "DE's front door's commit -- NOT the builder's. Reading BE's "
+            "builder there is reading a different object at a real commit"),
+        "front_door": seam.get("front_door"),
+        "front_door_check": front,
+        "builder_commit": b_commit,
     }
-    if out["contradicts_the_code"]:
+    if not b_commit:
+        out.update({
+            "status": SEAM_STATUS_INCOMPLETE,
+            "the_literal_was_NOT_judged": True,
+            "why": ("the receipt names no builder commit (R-387's "
+                    "carrying_commit), so the code that produced it cannot "
+                    "be located and its literal cannot be checked against "
+                    "the call it describes. This is a PROVENANCE GAP, not a "
+                    "false statement -- and computing a contradiction "
+                    "against HEAD or another seat's commit would be an "
+                    "answer about code the receipt never ran"),
+            "contradicts_the_code": None,
+        })
+        return out
+    call = builder_index_call(at_commit=b_commit)
+    agrees = (None if call["n_calls"] == 0
+              else any(sorted(c["keywords"]) == kw_claimed
+                       for c in call["calls"]))
+    out.update({"call_at_the_builder_commit": call,
+                "agrees_with_the_call_at_the_builder_commit": agrees,
+                "contradicts_the_code": agrees is False,
+                "status": (SEAM_STATUS_VERIFIED if agrees
+                           else "SEAM_CALL_NOT_FOUND" if agrees is None
+                           else "CONTRADICTS")})
+    if agrees is False:
         raise BookVerifyRefused(
-            f"REFUSED: `seam.index` is a LITERAL that contradicts the call. "
-            f"The receipt says {literal!r}, claiming keyword(s) "
-            f"{kw_in_literal}; the builder at the receipt's OWN seam commit "
-            f"{commit} calls it with "
-            f"{[c['keywords'] for c in (at_commit or {}).get('calls', [])]} "
-            f"and at HEAD with "
-            f"{[c['keywords'] for c in at_head['calls']]}. A literal "
-            f"describing a call the code does not make is rule 10's shape, "
-            f"and a verifier that accepted it would be certifying the prose "
-            f"beside the number.")
+            f"REFUSED: `seam.index` is a LITERAL that contradicts the call "
+            f"AT THE RECEIPT'S OWN BUILDER COMMIT {b_commit}. The receipt "
+            f"says {literal!r}, claiming keyword(s) {kw_claimed}; the "
+            f"builder at that commit calls it with "
+            f"{[c['keywords'] for c in call['calls']]}. A literal describing "
+            f"a call the producing code does not make is rule 10's shape.")
     return out
 
 
@@ -511,11 +568,26 @@ def verify_receipt_tier(book_path, receipt_path, *,
         flags.append("resources.declared_agrees_with_recomputed")
     if not ident["is_BEs_declared_shape"]:
         flags.append("identity.is_BEs_declared_shape")
+    if seam.get("front_door_check", {}).get("resolves") is False:
+        flags.append("seam.front_door_does_not_resolve")
+    #: THREE STATES, NOT TWO (R-601). A receipt whose producing code cannot
+    #: be located is INCOMPLETE, not wrong: the groups that were checked
+    #: stand, and the seam literal was not judged at all. Collapsing that
+    #: into FLAGGED would report a defect where there is a gap.
+    incomplete = seam.get("status") == SEAM_STATUS_INCOMPLETE
+    status = ("FLAGGED" if flags
+              else "PROVENANCE_INCOMPLETE" if incomplete else "VERIFIED")
     out = {
         "protocol": PROTOCOL + "_RECEIPT_TIER",
         "tier": "RECEIPT",
-        "status": "VERIFIED" if not flags else "FLAGGED",
-        "IS_A_VERIFICATION": not flags,
+        "status": status,
+        "provenance_incomplete": incomplete,
+        "what_incomplete_means": (
+            "every group that COULD be checked was, and they hold; the seam "
+            "literal was not judged because the receipt names no builder "
+            "commit. A gap, not a defect -- and not a verification either"
+            if incomplete else None),
+        "IS_A_VERIFICATION": bool(not flags and not incomplete),
         "what_this_tier_cannot_say": (
             "the set equality and the scored-key counts are the BOOK's, and "
             "this tier never opens it. `sets_are_equal: true` stays a claim "
@@ -595,13 +667,15 @@ def verify_full(book_path, receipt_path, *, day: str | None = None,
                 flags.append(f"book.{head}.{k}")
         if blk.get("theta_matches_params") is False:
             flags.append(f"book.{head}.theta_matches_params")
+    incomplete = bool(out.get("provenance_incomplete"))
     out.update({
         "protocol": PROTOCOL + "_FULL",
         "tier": "FULL",
         "population_from_the_book": bp,
         "flags": flags, "n_flags": len(flags),
-        "status": "VERIFIED" if not flags else "FLAGGED",
-        "IS_A_VERIFICATION": not flags,
+        "status": ("FLAGGED" if flags
+                   else "PROVENANCE_INCOMPLETE" if incomplete else "VERIFIED"),
+        "IS_A_VERIFICATION": bool(not flags and not incomplete),
         "what_this_tier_cannot_say": (
             "that the day's TAPE and FRAGMENT were built correctly -- schema, "
             "splits, coverage. Those are the builder's own guards. This "
@@ -623,7 +697,9 @@ def synthetic_book_and_receipt(d: Path, *, windows: int = 12,
                                       "incumbent_linear_d"),
                                thetas=(0.32450609461933483,
                                        0.43525926488298716),
-                               unequal_sets: bool = False) -> tuple:
+                               unequal_sets: bool = False,
+                               builder_commit: str | None = "HEAD",
+                               seam_commit: str | None = "HEAD") -> tuple:
     """A book of BE's OWN shape -- {"fr": …, "asm": {"by_arm": {(coin, head):
     (scored, theta)}}} -- with a receipt of BE_DAYBOOK_V1's shape built from
     it, so every predicate has something true to be true OF."""
@@ -649,7 +725,7 @@ def synthetic_book_and_receipt(d: Path, *, windows: int = 12,
     #: the seam literal is DERIVED from the builder's real call so the
     #: fixture's receipt is HONEST by construction; the known-bad plants a
     #: contradicting one.
-    call = builder_index_call()
+    call = builder_index_call(at_commit=builder_commit)
     lit = (call["calls"][0]["rendered"] if call["calls"]
            else "build_tape_index(splits)")
     receipt = {
@@ -663,8 +739,9 @@ def synthetic_book_and_receipt(d: Path, *, windows: int = 12,
             "fragment": {"path": str(frag),
                          "sha256": hashlib.sha256(
                              frag.read_bytes()).hexdigest()}},
-        "seam": {"commit": None, "index": lit,
+        "seam": {"commit": seam_commit, "index": lit,
                  "front_door": "de_phase4_diag_runner.day_assembly_inputs"},
+        "builder_commit": builder_commit,
         "selection": {"n_supplied_slugs": windows},
         "reference": {"windows": windows, "n_slugs": windows,
                       "generations": gens, "n_terminal_marks": windows,
@@ -848,7 +925,7 @@ def selftest() -> tuple:                                      # noqa: C901
        and "coin" in why_coin and "'eth'" in why_coin,
        f"day: '{why_day[:64]}...'; coin: '{why_coin[:56]}...'")
 
-    # -- 10. THE SEAM LITERAL, read by AST --------------------------------
+    # -- 10. THE SEAM, REBUILT UNDER R-601 --------------------------------
     call = builder_index_call()
     ck("THE BUILDER'S `build_tape_index` CALL IS READ BY AST FROM ITS OWN "
        "SOURCE -- argument names off the syntax tree, not a regex over text "
@@ -857,30 +934,74 @@ def selftest() -> tuple:                                      # noqa: C901
        and all("rendered" in c for c in call["calls"]),
        f"{call['n_calls']} call(s) at line(s) "
        f"{[c['line'] for c in call['calls']]}, keywords "
-       f"{call['keyword_names']}, rendered "
-       f"{call['calls'][0]['rendered']!r}")
-    r4 = json.loads(rp.read_text())
-    r4["seam"]["index"] = "build_tape_index(splits, tape_path=…)"
-    rp4 = td / "receipt_bad_seam.json"
-    rp4.write_text(json.dumps(r4, default=str))
+       f"{call['keyword_names']}")
+
+    #: A RECEIPT NAMING NO BUILDER COMMIT: incomplete, NEVER a contradiction.
+    r_nb = json.loads(rp.read_text())
+    r_nb.pop("builder_commit", None)
+    r_nb["seam"]["index"] = "build_tape_index(splits, tape_path=…)"
+    rp_nb = td / "receipt_no_builder_commit.json"
+    rp_nb.write_text(json.dumps(r_nb, default=str))
+    nb = verify_receipt_tier(bp, rp_nb, day="20260903", coin="btc")
+    ck("R-601, THE CORRECTION TO MY OWN PROBE: a receipt naming NO BUILDER "
+       "COMMIT gets PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT BY NAME, and its "
+       "literal is NOT JUDGED -- even a literal that would contradict HEAD. "
+       "***Computing a contradiction against HEAD or another seat's commit "
+       "is an answer about code the receipt never ran.*** A gap, not a "
+       "defect",
+       nb["seam"]["status"] == SEAM_STATUS_INCOMPLETE
+       and nb["seam"]["contradicts_the_code"] is None
+       and nb["seam"]["the_literal_was_NOT_judged"] is True
+       and nb["status"] == "PROVENANCE_INCOMPLETE"
+       and nb["n_flags"] == 0
+       and nb["IS_A_VERIFICATION"] is False,
+       f"literal {nb['seam']['literal_in_the_receipt']!r} left unjudged; "
+       f"status {nb['status']} with {nb['n_flags']} flags -- incomplete is a "
+       f"THIRD state, neither VERIFIED nor FLAGGED")
+
+    #: naming a builder commit whose call MATCHES -> verified.
+    ck("A RECEIPT NAMING A BUILDER COMMIT WHOSE CALL MATCHES IS VERIFIED: "
+       "the literal is judged against the code that actually produced the "
+       "receipt, and nowhere else",
+       r_tier["seam"]["status"] == SEAM_STATUS_VERIFIED
+       and r_tier["seam"]["agrees_with_the_call_at_the_builder_commit"] is True
+       and r_tier["seam"]["builder_commit"] is not None
+       and r_tier["status"] == "VERIFIED",
+       f"builder_commit {r_tier['seam']['builder_commit']}, literal "
+       f"{r_tier['seam']['literal_in_the_receipt']!r} agrees with the call "
+       f"there")
+
+    #: naming a builder commit whose call CONTRADICTS -> refuses.
+    r_bad = json.loads(rp.read_text())
+    r_bad["seam"]["index"] = "build_tape_index(splits, tape_path=…)"
+    rp_bad = td / "receipt_contradicting.json"
+    rp_bad.write_text(json.dumps(r_bad, default=str))
     why_seam = ""
     try:
-        verify_receipt_tier(bp, rp4, day="20260903", coin="btc")
+        verify_receipt_tier(bp, rp_bad, day="20260903", coin="btc")
     except BookVerifyRefused as e:
         why_seam = str(e)
-    ck("KNOWN-BAD: A `seam.index` LITERAL THAT CONTRADICTS THE CALL REFUSES "
-       "-- a literal describing a call the code does not make is rule 10's "
-       "shape, and a verifier that shrugged would be certifying the prose "
-       "beside the number",
-       "contradicts the call" in why_seam and "tape_path" in why_seam,
-       f"'{why_seam[:120]}...'")
-    ck("AND THE POSITIVE CONTROL: the fixture's own literal is DERIVED from "
-       "the builder's real call, and it passes -- so the check admits a "
-       "truthful receipt and is not a wall",
-       r_tier["seam"]["contradicts_the_code"] is False
-       and r_tier["seam"]["agrees_with_the_call_at_head"] is True,
-       f"literal {r_tier['seam']['literal_in_the_receipt']!r} agrees with the "
-       f"call at HEAD")
+    ck("KNOWN-BAD: A LITERAL CONTRADICTING THE CALL **AT THE RECEIPT'S OWN "
+       "BUILDER COMMIT** REFUSES -- the check still has teeth, it is just "
+       "pointed at the right object now",
+       "contradicts the call" in why_seam
+       and "BUILDER COMMIT" in why_seam and "tape_path" in why_seam,
+       f"'{why_seam[:112]}...'")
+
+    #: and seam.commit is checked against DE's module, which is what it names
+    fd = r_tier["seam"]["front_door_check"]
+    ck("AND `seam.commit` IS CHECKED AGAINST DE's MODULE -- WHICH IS WHAT IT "
+       "NAMES. My round-70 probe read BE's BUILDER there and reported a "
+       "contradiction: `6f134a6` is a Q-DE-80 register entry touching only "
+       "COORDINATION.md, so reading BE's builder at it returned a real file "
+       "at a real commit with nothing to do with the field. ***A commit id "
+       "names a specific object; using it to locate a different one returns "
+       "something true and tells you nothing.***",
+       fd["checked"] is True and fd["resolves"] is True
+       and fd["function"] == "day_assembly_inputs"
+       and "de_phase4_diag_runner" in fd["module"],
+       f"{fd['module']} at {fd['commit']} defines {fd['function']}: "
+       f"{fd['resolves']}")
 
     # -- 11. THE RESOURCES AS FACTS ---------------------------------------
     rf = r_tier["resources"]
@@ -972,7 +1093,15 @@ def main() -> int:
         return 2
     print(f"{r['tier']} tier: {r['status']} -- IS_A_VERIFICATION="
           f"{r['IS_A_VERIFICATION']}, {r['n_flags']} flag(s) {r['flags']}")
-    return 0 if r["IS_A_VERIFICATION"] else 1
+    #: FOUR OUTCOMES, FOUR EXIT CODES. 2 refused (the instrument declined to
+    #: run), 3 PROVENANCE_INCOMPLETE (it ran, everything checkable holds, and
+    #: something could not be located), 1 FLAGGED (it ran and disagrees), 0
+    #: verified. A caller that could not tell 3 from 1 would read "the
+    #: producing commit is missing" as "the receipt is wrong" -- which is the
+    #: exact conflation R-601 corrected in my own round-70 probe.
+    if r["IS_A_VERIFICATION"]:
+        return 0
+    return 3 if r["status"] == "PROVENANCE_INCOMPLETE" else 1
 
 
 if __name__ == "__main__":
