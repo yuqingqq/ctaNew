@@ -5,6 +5,102 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 154
+
+**As of 2026-09-06T10:07:14Z. State only — MEM writes no result.**
+
+### The 09-03 smoke: FIX LANDED, RE-RUN PENDING REVIEW THEN GO
+
+**DE 89 closed the seam red-first** (201 checks): the budget is **this run's growth
+from its own baseline, checked at every stage, refusing at the first crossing**;
+the real day's budget is **derived** — `REAL_DAY_PEAK_RSS_MB_BUDGET = 4000.0`, with
+`REAL_DAY_BUDGET_DERIVATION` naming cap **8192**, BE's reference **2008**, observed
+**2426**, headroom **1500**, and **`fraction_of_cap: 4000.0 / 8192.0` as an
+expression** (I evaluate it: **48.83 %**). It states its own negatives: *"a budget
+equal to the cap is the cap with a second name; it can only fire once the kernel is
+already reclaiming"*; *"that is a budget derived from the run it is meant to bound."*
+The observed 2,426 MB is a **check** on the derivation, never its source.
+
+**And the control proves its own discriminating power:** beside the admit-case sits
+`ok(_hw_after > _mp["growth_rss_mb"] + 100, …"same fixture, same budget"…)` — the two
+measures must differ by **≥100 MB**, so the control cannot pass trivially on a cold
+process. Rule 16 answered by **construction**.
+
+**The `.v2` item is MOOT — remove it from every open list.**
+`glob(p003_de_gate1_day_run_*20260903*)` returns exactly **one** file: the REFUSED
+record. There is no v1 to supersede; the R-603 provenance problem disappears with a
+clean re-run from a frozen worktree.
+
+**At commit time (2026-09-06T10:10:12Z) R-611 landed** (`a96854c`): REV 54 finds
+R-608 holds on **seven of eight** shapes and that **DE's resolver crashes on a
+bare-string `supersedes`**; DA 76 approved; **DE 90 is dispatched before the re-run**,
+so the order is **DE 90 → review → GO**. *And the crash is visible in the two lines I
+swept at round 152* — I recorded DE's
+`sup_of[p] = ((rec.get("supersedes") or {}).get("sha256"))` beside DA's
+`elif isinstance(sup, str): ref = sup` and read them as a difference in **how each
+seat resolves**; they are also a difference in **what each seat survives**. Driven
+just now: `(s or {}).get("sha256")` on a `str` raises
+`AttributeError: 'str' object has no attribute 'get'`. **A type mismatch does not
+disagree — it stops.**
+
+### The GO procedure (harvested from the DE seat's reset — it was in no file)
+
+1. Rehearsal for 09-03 **READY**, `blocking: []`.
+2. Run from **`~/ctaNew-wt-de2`**, and **land nothing anywhere while it runs**
+   (rule 22). **`wt-de` is the frozen evidence of the refused run — leave it.**
+3. **`flock -n` first**; if held, **refuse and report — do not wait.**
+4. The command from the rehearsal receipt's own `THE_ONE_COMMAND`, with
+   `--unit=de90smoke` and the output stamp substituted.
+5. Before Enter: unit name unused; book digest still `aad816d6…`; **worktree clean
+   and committed** (a real day **refuses on a dirty worktree at import**); **the
+   output stamp from `date`, not typed.**
+6. Launch in the background and poll; **~85 min**. Expect the emit to succeed: the
+   budget is 4,000 MB on **growth**, checked per stage.
+
+**Report from the receipt:** population/decision counts, statuses,
+`admissibility.decisions_meet_bar` and `sd_meets_floor`, seed and draw provenance,
+the scope's anon/file/peak/events, per-stage highwater deltas and the peak-stage
+predicate, wall, wrapper, closure. **Never quote:** `D_E0`, `D_E_MINUS_R`, `Z`,
+`p_location`, `null_mean`, `null_sd`, `null_draws_summary`, `sd_over_abs_mean` —
+**and note a 09-03 receipt produced by pre-v13 code would carry the ratio and still
+must not be quoted.**
+
+### The pin thread closes at v10/v17
+
+Design v17's `parameters.path` is `…/de_multiday_gate1_params_v10.json` — the right
+file — and its `parameters.sha256` is `6ee79b5e…`, **which I computed as v10's actual
+digest**. **Forward resolves: true.** Params v10 names the real v17 filename with
+`NOT_PINNED_HERE -- the pin runs design -> params` (the one-way shape established at
+round 150). Round 149 called it broken both ways; 150 corrected that; 151–152 it
+still named v2 at v15 and v16. **Closed.**
+
+### State
+
+- **The DE seat RELOADED** (reset at 97 %; `wt-de2` clean at `8c20f1b` on origin,
+  `wt-de` frozen at `ae9df8d`).
+- **The 09-04 tape BUILDING** (`be58tape.scope`, measured active); BE 59's book next,
+  then the 09-03 re-run in the first heavy slot.
+- **DA 76** (52 + 32): the link **pair** is DA's too — *a half-written link is not
+  "no link"* (`SUPERSESSION_TARGET_DIGEST_MISMATCH`); the landing record declared
+  `p003_da_gate1_pre_read_<YYYYMMDD>__<clock>.json`, **the day from the field, never
+  the filename**; `matches` true only in the MATCH state. DA's own find: two design
+  picks sorted **lexicographically** (v9 after v16) — numeric now.
+- **DE's five soft spots, harvested:** `run_day` still calls the full battery **at
+  emit** on a real day — safe now, but ~15 s of fixture work and a 13-module closure
+  re-capture *after* 85 minutes, and **"if it ever refuses again, the day is lost
+  again"** → **DE 91** queued after the re-run; the **G = 5 horizon has never been
+  exercised on real receipts**; read-gate conjunct 3 depends on DA's pre-read naming
+  (globs `p003_da_gate1_pre_read*`); **the pin flip removed digest churn, not path
+  churn** (a params bump per design version); `wt-de` must eventually be un-frozen,
+  20+ commits behind.
+
+**Counts, measured before the sentence:** flags 887 → 895, `flag_provenance`
+432 → 440, tasks 19; **267 CHECKED**, 173 RELAYED, **455 UNMARKED — unchanged for
+the thirtieth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3
+(Batch 136 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 153
 
 **As of 2026-09-06T10:00:40Z. State only — MEM writes no result.**

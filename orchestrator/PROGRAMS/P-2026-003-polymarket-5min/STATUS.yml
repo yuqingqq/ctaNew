@@ -63,6 +63,85 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T10:07:14Z (MEM ROUND 154 -- R-610, Q-DE-89 AND Q-DA-298 SWEPT. STATE
+  ONLY. A FIVE-ROUND THREAD CLOSES AND ONE OPEN ITEM GOES MOOT.
+  (1) **THE PIN CLOSES AT v10/v17, AND THE CLOSING EVIDENCE IS A HASH I COMPUTED.**
+  **Design v17's `parameters.path` is `…/params_v10.json` -- THE RIGHT FILE -- and its
+  `parameters.sha256` is `6ee79b5e…`, v10's ACTUAL digest. FORWARD RESOLVES: TRUE.**
+  Params v10 names the real `…design_v17.json` with `NOT_PINNED_HERE -- the pin runs
+  design -> params`, the one-way shape I established at round 150. ***Round 149 I
+  called it broken BOTH ways; round 150 I corrected myself; 151-152 it still named v2
+  at v15 and v16; here path and digest name the SAME FILE.*** **Five rounds, closed by
+  one line of arithmetic -- which is the argument for the pin having been a computed
+  field all along, and now it is.**
+  (2) **AND THE NEW BUDGET IS A DECLARATION THAT CANNOT DRIFT.**
+  `REAL_DAY_PEAK_RSS_MB_BUDGET = 4000.0`, with `REAL_DAY_BUDGET_DERIVATION` beside it
+  -- cap **8192**, BE's reference **2008**, observed **2426**, headroom **1500**,
+  declared **4000**, and ***`fraction_of_cap: 4000.0 / 8192.0` -- AN EXPRESSION***,
+  which I evaluate at **48.83 %**. **A derivation whose ratio is CODE cannot disagree
+  with its own numbers.** *It states its own negatives -- "a budget equal to the cap
+  is the cap with a second name; it can only fire once the kernel is already
+  reclaiming", and "that is a budget derived from the run it is meant to bound" -- and
+  the observed 2,426 MB is a CHECK on the derivation, never its source.*
+  (3) **AND THE CONTROL PROVES ITS OWN DISCRIMINATING POWER:** beside the admit-case
+  sits **`ok(_hw_after > _mp["growth_rss_mb"] + 100, …"same fixture, same
+  budget"…)`** -- ***the two measures must differ by at least 100 MB, so the control
+  cannot pass trivially on a cold process where high-water and growth are the same
+  number.*** **Rule 16 answered by CONSTRUCTION rather than by inspection** -- the
+  first instance in this programme where a control's discriminating power is itself a
+  checked predicate.
+  (4) **THE `.v2` IS MOOT, AND I MEASURED WHY:** `glob(p003_de_gate1_day_run_*20260903*)`
+  returns exactly **ONE** file -- the REFUSED record. ***There is no v1 to supersede;
+  the correction ruled in R-603 has nothing to correct, and the provenance problem it
+  existed to fix disappears with a clean re-run from a frozen worktree.*** **REMOVE
+  IT FROM EVERY OPEN LIST** -- *an item live for five rounds, now moot not because it
+  was fixed but because its artifact never existed.*
+  (5) **THE INSTRUMENT THAT WOULD HAVE CAUGHT IT WAS ALREADY THERE:** the budget
+  "fired at the end because it was checked ONCE, after S5 -- **the highwater series
+  had existed since DE 83 and nobody read it until the emit, so 84 minutes of draws
+  ran after the fact was already true**." *The same shape as my own round-151 miss,
+  where the systemd peak I quoted every round was the very quantity the budget was
+  compared against.* **Two more instances found by RUNNING: growth first measured on
+  the highwater (zero on a warm process, so the budget could never fire), and an old
+  check comparing the process peak that surfaced only because the round's own
+  inflation pushed it past 700.**
+  (6) **THE DE SEAT RESET AT 97 %, AND ITS HARVEST IS THE GO PROCEDURE** -- six
+  numbered steps, verbatim because none of it was in a file: the rehearsal READY with
+  `blocking: []`; run from **wt-de2**, landing NOTHING while it runs, because ***wt-de
+  is the frozen evidence of the refused run***; `flock -n` FIRST, and if held REFUSE
+  and report, never wait; the command from the rehearsal receipt's own
+  `THE_ONE_COMMAND` with `--unit=de90smoke`; before Enter -- unit unused, book digest
+  still `aad816d6…`, worktree clean (**a real day REFUSES on a dirty worktree at
+  import**), ***the output stamp from `date`, not typed***; ~85 min. *And the field
+  lists: what to report, and what must NOT be quoted -- noting that **a 09-03 receipt
+  from pre-v13 code would carry `sd_over_abs_mean` and still must not be quoted**.*
+  (7) **DA 76 MAKES THE LINK PAIR DA'S TOO** (52 + 32): ***a half-written link is NOT
+  "no link"*** -- it would make a botched supersession look like a day that ran twice
+  -- so `SUPERSESSION_TARGET_DIGEST_MISMATCH`; the landing record declared
+  `p003_da_gate1_pre_read_<YYYYMMDD>__<clock>.json` with **the day from the FIELD,
+  never the filename**; `matches` True ONLY in the MATCH state. *And DA's own find:
+  **two design picks sorted LEXICOGRAPHICALLY, so v9 came after v16** -- numeric now.*
+  **The same class as my round-145 "latest is not a citation": an ordering that looks
+  total and is not.**
+  **AT COMMIT TIME, 2026-09-06T10:10:12Z: R-611 LANDED (`a96854c`) -- REV 54 finds
+  R-608 holds on SEVEN OF EIGHT shapes and that ***DE's resolver CRASHES on a
+  bare-string `supersedes`***; DA 76 approved; **DE 90 is dispatched BEFORE the
+  re-run**, so the order is DE 90 -> review -> GO.
+  ***AND THE CRASH IS VISIBLE IN THE TWO LINES I SWEPT AT ROUND 152.*** I recorded
+  DE's `sup_of[p] = ((rec.get("supersedes") or {}).get("sha256"))` beside DA's
+  `elif isinstance(sup, str): ref = sup` and read them as a difference in HOW each
+  seat RESOLVES. **They are also a difference in what each seat SURVIVES: on a bare
+  string DA takes it as a path and DE RAISES** -- *I drove it just now:
+  `(s or {}).get("sha256")` on a `str` is `AttributeError: 'str' object has no
+  attribute 'get'`.* **I had the evidence and read only one of its two meanings; a
+  type mismatch does not disagree, it STOPS.** *Recorded unswept.*
+  **FLAG WORDS: the 09-03 smoke FIX-LANDED, RE-RUN-PENDING-REVIEW-THEN-GO; the DE
+  seat RELOADED; the `.v2` MOOT (removed from the open list); the 09-04 tape BUILDING
+  (`be58tape.scope`, measured active).**
+  MEASURED BEFORE THIS SENTENCE: flags 887 -> 895, flag_provenance 432 -> 440,
+  tasks 19; **267 CHECKED**, 173 RELAYED, **455 UNMARKED -- unchanged for the
+  thirtieth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+  new flags vs HEAD 0 without provenance.)
   2026-09-06T10:00:40Z (MEM ROUND 153 -- R-609 AND REV 53'S FILING SWEPT. STATE ONLY.
   THE MECHANISM IS KNOWN, LIVE AT THE TIP, AND THE FIX IS IN FLIGHT.
   (1) **I CHECKED ALL FOUR PIECES AT THE CURRENT FILE, NOT THE REPORT.**
@@ -207,89 +286,6 @@ updated: >-
   tasks 19; **257 CHECKED**, 167 RELAYED, **455 UNMARKED -- unchanged for the
   twenty-eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T09:46:40Z (MEM ROUND 151 -- R-607 AND Q-DE-88 SWEPT. STATE ONLY.
-  THE FINDING IS A MESSAGE THAT ASSERTS MORE THAN ITS PREDICATE TESTS.
-  (1) **THE QUESTION I ROUTED AT ROUND 150 IS SETTLED AS A DEFECT, AND IT IS STILL
-  THERE AT v16.** `p003_de_multiday_gate1_design_v16.json` (version-only name,
-  `as_of 09:42:16Z`) has **`parameters.path = …/params_v2.json`, `supersedes =
-  …params_v1.json`, `what_v2_changed = [v2's prose]` -- and `sha256 = 4e624ba7…`,
-  which I hashed as v9's** (v2 `ce46b577…`, v8 `8c3f2676…`, v9 `4e624ba7…`).
-  ***Path, supersedes and prose name ONE file; the digest names ANOTHER*** -- REV 51
-  SS0's shape at v14, **surviving v15 and v16, each emitted after a round that
-  discussed it.** DE 89 dispatched.
-  (2) **AND HERE IS WHY IT SURVIVED: THE WALK'S MESSAGE ASSERTS MORE THAN ITS
-  PREDICATE TESTS.** The code is
-  **`_walk["closes"] = _walk["design_pins"] == _here`** -- *a DIGEST equality against
-  the params file at `PARAMS_REL`, nothing else* -- while the assertion beside it
-  reads ***"AND THE WALK CLOSES: params name the design at {…}, and that design pins
-  THIS params file by …"***. **The message claims the NAMING relation; the check
-  tests only the DIGEST.** *Rule 10 in its exact form* -- **and `P3_design` passed
-  twice on the strength of the sentence.**
-  (3) **MY ROUND-150 CENSUS NOW DATES THE FIX AS WELL AS THE ONSET.** Re-run:
-  **design v13 -9 s, fixture v14 -11 s, design v14 -10 s, fixture v15 -11 s; design
-  v15 +730 s, fixture v16 +1,024 s, rehearsal 09-04 +1,024 s; FIXTURE v17 -1 s** --
-  and **design v16 carries NO STAMP AT ALL**, version-only, which the new assertion
-  admits by name: *"a path that must be known in advance cannot carry an honest
-  stamp; the time lives in `as_of`."* ***The anomaly is exactly THREE ARTIFACTS
-  WIDE, bounded on both sides by the same instrument*** -- **a census built to date
-  an onset dating its own repair.**
-  (4) **AND THE GUARD'S TOLERANCE IS 23x THE BAND THE CENSUS MEASURES.**
-  `assert_name_stamp_is_the_clock(..., tolerance_s: int = 300)`: **the honest band is
-  -1 to -13 s and the anomalies were +730/+1,024**, so the guard admits any stamp up
-  to **five minutes ahead** and would not have fired on a four-minute-ahead one.
-  ***ROUTED, NOT RULED*** -- *300 s is DE's number and defensible for a slow
-  emission; what I can supply is the empirical band a tighter bound would rest on.*
-  **And its known-bad is `Path("x__20260906T094500Z.json")` -- v15's OWN stamp** --
-  *rule 15's falsifier taken from the incident rather than invented.*
-  (5) **THE SMOKE IS BUSY, NOT STUCK -- BY MY OWN MEASUREMENT:** pid 3049132,
-  **elapsed 5,050 s against CPU time 01:24:05 (5,045 s) at 99.9 %**, RSS **809,108
-  KiB**, output absent. ***Essentially every wall second is a CPU second*** -- not
-  blocked on I/O, not swapping, inside its 12 h deadline. *DE's 1-1.5 h estimate is
-  exceeded at the low end: an ESTIMATE OVERRUN, not a stall, and the two read very
-  differently in a state file.*
-  (6) **THE CAPTURE IS THE CLOSURE NOW, NOT ONE FILE:** 190 checks; **every module
-  under `live/` in `sys.modules`, digested from the LOADED BYTES, plus HEAD, captured
-  at import and stamped, with the emit refused BY NAME when a sibling module is
-  rewritten mid-run** -- *"this is not hypothetical: DE 85 committed this file at
-  08:35:20Z while…"* -- and R-387 driven both ways (True at `9e9d4849…`; False for a
-  producer HEAD does not hold).
-  (7) **AND DE NAMED THE CAUSE, NOT ONLY THE FAULT:** *"those two are numbers I
-  typed"* -- **the params must name the design's path BEFORE the design is emitted,
-  so a rounded stamp was chosen instead of a clock, and then the habit was reused
-  where no such constraint existed.** ***A real constraint in one place became a
-  practice in another***, and the three fixes match it: the clock, the assertion at
-  all three emit paths, and **no stamp at all where the path must be known in
-  advance.**
-  **AT COMMIT TIME, 2026-09-06T09:49:19Z, THE SMOKE ENDED -- AND IT REFUSED.**
-  ***`RunnerRefused: REFUSED DAY FIXTURE-DAY-1: peak RSS 2426 MB exceeds the declared
-  budget 700 MB. The DAY refuses -- the cap is never raised and the draw count is
-  never cut (R-174).`*** **pid gone, scope `inactive/dead`, log stops 09:46:29Z, and
-  NO day-run artifact exists anywhere.** *The rule held exactly as written, and the
-  cost of holding it is the whole 84-minute run.*
-  ***AND THE BREACH WAS VISIBLE FROM OUTSIDE FOR EIGHTY-TWO MINUTES.*** **The refusal
-  reports 2,426 MB against 700 MB; the systemd `MemoryPeak` I have quoted EVERY ROUND
-  SINCE 143 -- 2,532,151,296 B, "unmoved since 08:24:41Z" -- is the same quantity,
-  ~3.5x the fixture budget from 08:24 onward.** *One `systemctl show` compared to one
-  declared constant would have said so at minute two. I quoted the number and never
-  compared it.* **MEM's own miss, and the cheapest possible watch.**
-  **AND THE TRACEBACK IS UNREADABLE AS A LOCATION:** its frames carry v12's line
-  numbers while the source text is read from the v13+ file at report time -- *the same
-  mid-run-rewrite class, now in the ERROR REPORT.* **Only the exception's message,
-  which travels in the object, is authoritative.**
-  **BE 58 TOOK THE LOCK THE MOMENT IT DIED** -- `be_gate1_fragment.py --day 20260904`
-  at 168 s -- *the continuous schedule working with no seat noticing.* **But the lock
-  was released by a REFUSAL, not a receipt: DA's pre-read GO and DE's `.v2` still wait
-  on an artifact that does not exist.**
-  **FLAG WORDS AS DISPATCHED, WITH THE SMOKE'S CORRECTED: the declaration chain
-  PATH-HALF-UNCHECKED (pending DE 89); stamps FIXED-FROM-v16; the smoke ***REFUSED AT
-  09:46:29Z, NO ARTIFACT*** (it was RUNNING and cpu-bound when this round's sentence
-  was composed at 09:46:40Z -- the two readings are 11 seconds apart and I record
-  both); the 09-04 preflight blocking on the BOOK ONLY, and its fragment now
-  building.**
-  MEASURED BEFORE THIS SENTENCE: flags 859 -> 871, flag_provenance 404 -> 416,
-  tasks 19; **252 CHECKED**, 164 RELAYED, **455 UNMARKED -- unchanged for the
-  twenty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a
-  ruled 3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2962,6 +2958,104 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_PIN_THREAD_CLOSES_AT_V10_V17_AND_I_HASHED_IT_MYSELF: FIVE_ROUNDS_ONE_LINE
+                             # CHECKED 2026-09-06T10:07:14Z. **Design v17's `parameters.path` is
+                             # `…/de_multiday_gate1_params_v10.json` -- THE RIGHT FILE -- and its
+                             # `parameters.sha256` is `6ee79b5e…`, which I computed as v10's ACTUAL digest.
+                             # FORWARD RESOLVES: TRUE.** *And params v10 names the real
+                             # `p003_de_multiday_gate1_design_v17.json` with `sha256: "NOT_PINNED_HERE --
+                             # the pin runs design -> params"`* -- **declared absent, which is the one-way
+                             # shape I established at round 150.**
+                             # ***The thread closes: round 149 I called it broken BOTH ways; round 150 I
+                             # corrected myself (the reverse is DECLARED absent); rounds 151-152 it still
+                             # named v2 at v15 and v16; here at v10/v17 path and digest name the SAME
+                             # FILE.*** **Five rounds, and the closing evidence is one hash I can compute
+                             # in a line -- which is exactly why the pin should have been a computed field
+                             # from the start, and now is.**
+  THE_DERIVATION_IS_A_COMPUTED_FIELD_NOT_PROSE: A_DECLARATION_THAT_CANNOT_DRIFT
+                             # CHECKED 2026-09-06T10:07:14Z: **`REAL_DAY_PEAK_RSS_MB_BUDGET = 4000.0`
+                             # with `REAL_DAY_BUDGET_DERIVATION` beside it -- `cgroup_cap_mb 8192.0`,
+                             # `be_day_reference_measured_mb 2008.0`, `observed_peak_09_03_mb 2426.0`,
+                             # `headroom_for_null_and_seal_mb 1500.0`, `declared_mb 4000.0`, and
+                             # `fraction_of_cap: 4000.0 / 8192.0` -- AN EXPRESSION, evaluated at emit.**
+                             # *I computed it: **48.83 %**.* ***A derivation whose ratio is CODE cannot
+                             # disagree with its own numbers*** -- **rule 10 applied to a declaration
+                             # rather than to a result.** And it states its own negatives:
+                             # *"a budget equal to the cap is the cap with a second name; it can only fire
+                             # once the kernel is already reclaiming"*, and *"that is a budget derived from
+                             # the run it is meant to bound."* **The observed 2,426 MB is a CHECK on the
+                             # derivation, never its source.**
+  THE_CONTROL_PROVES_ITS_OWN_DISCRIMINATING_POWER: PLUS_ONE_HUNDRED_MEGABYTES
+                             # CHECKED 2026-09-06T10:07:14Z in the selftest: beside the admit-case
+                             # (`_hw_after > FIXTURE_DAY_PEAK_RSS_MB_BUDGET and _mp["growth_rss_mb"] <
+                             # FIXTURE_DAY_PEAK_RSS_MB_BUDGET`) sits **`ok(_hw_after >
+                             # _mp["growth_rss_mb"] + 100, …"same fixture, same budget"…)`**.
+                             # ***The control asserts that the two measures DIFFER BY AT LEAST 100 MB, so
+                             # it cannot pass trivially on a cold process where high-water and growth are
+                             # the same number.*** **Rule 16's "a control that cannot fail" answered by
+                             # CONSTRUCTION rather than by inspection** -- *the first instance I have seen
+                             # in this programme where a control's own discriminating power is a checked
+                             # predicate beside it.*
+  THE_CLOSURE_RECORDS_WHERE_IT_WAS_CAPTURED: THREE_POINTS_NOT_ONE
+                             # CHECKED 2026-09-06T10:07:14Z at fixture v18: **`import_closure.captured_at`
+                             # lists three points -- "module import", "the cascade's first import", and
+                             # "after the cascade's first `load()`, which imports harmful_stateful_policy
+                             # and de_phase4_diag_runner LAZILY" -- with `closure_drift: []` and
+                             # `closure_unchanged_during_the_run: true`.**
+                             # ***A capture that records WHERE it was taken is auditable; one that reports
+                             # only its contents is not*** -- *and the third point exists because the
+                             # modules that do the replaying arrive after the ones that do the loading,
+                             # which is the finding I swept at round 153 and the fix is broader than what
+                             # was filed.*
+  THE_V2_IS_MOOT_AND_I_MEASURED_WHY: ONE_ARTIFACT_AND_IT_IS_THE_REFUSAL
+                             # CHECKED 2026-09-06T10:07:14Z: **`glob(p003_de_gate1_day_run_*20260903*)`
+                             # returns exactly ONE file --
+                             # `p003_de_gate1_day_run_20260903_REFUSED__20260906T095058Z.json`.**
+                             # ***There is no v1 receipt to supersede: the run refused and wrote nothing,
+                             # so the `.v2` correction ruled in R-603 has nothing to correct, and the
+                             # provenance problem it existed to fix disappears with a clean re-run from a
+                             # frozen worktree.*** **REMOVE IT FROM EVERY OPEN LIST** -- *an item that was
+                             # live for five rounds and is now moot not because it was fixed but because
+                             # the artifact it applied to never existed.*
+  THE_BUDGET_WAS_CHECKED_ONCE_AND_THE_SERIES_HAD_EXISTED_SINCE_DE_83: NOBODY_READ_IT_UNTIL_THE_EMIT
+                             # RELAYED from R-610(A), 2026-09-06T10:07:14Z. **The budget "fired at the
+                             # end because it was checked ONCE, after S5 -- the highwater series had
+                             # existed since DE 83 and nobody read it until the emit, so 84 minutes of
+                             # draws ran after the fact was already true."**
+                             # ***The instrument that would have caught it at minute two was already
+                             # there*** -- *which is the same shape as my own round-151 miss, where the
+                             # systemd peak I quoted every round was the very quantity the budget was
+                             # compared against.* **And two more instances found by RUNNING: growth first
+                             # measured on the highwater (so on a warm process growth read ZERO and the
+                             # budget could never fire), and an old check comparing the process peak that
+                             # surfaced only because the round's own inflation pushed it past 700.**
+  THE_DE_SEAT_RESET_AT_97_PERCENT_AND_ITS_HARVEST_IS_THE_GO_PROCEDURE: SIX_STEPS_AND_A_FROZEN_WORKTREE
+                             # RELAYED from R-610(C), 2026-09-06T10:07:14Z. **Six numbered steps,
+                             # verbatim because none of it was in a file: the rehearsal READY with
+                             # `blocking: []`; run from `~/ctaNew-wt-de2` and land NOTHING while it runs
+                             # (rule 22), because ***wt-de is the frozen evidence of the refused run --
+                             # leave it***; `flock -n` FIRST and if held REFUSE and report, never wait;
+                             # the command from the rehearsal receipt's own `THE_ONE_COMMAND` with
+                             # `--unit=de90smoke`; before Enter -- unit name unused, book digest still
+                             # `aad816d6…`, worktree clean and committed (a real day REFUSES on a dirty
+                             # worktree at import), ***the output stamp from `date`, not typed***; launch
+                             # in the background and poll, ~85 min.**
+                             # *And the fields: what to report, and what must NOT be quoted -- with the
+                             # note that **a 09-03 receipt produced by pre-v13 code would carry
+                             # `sd_over_abs_mean` and still must not be quoted**.*
+  DA_76_MAKES_THE_LINK_PAIR_DA_S_TOO_AND_FINDS_A_LEXICOGRAPHIC_SORT: V9_AFTER_V16
+                             # RELAYED from R-610(B), 2026-09-06T10:07:14Z. **52 + 32 checks. The link
+                             # pair read from DE's design (`supersedes.chain`, v16 the head, 15 entries);
+                             # ***a half-written link is NOT "no link"*** -- it would make a botched
+                             # supersession look like a day that ran twice -- so
+                             # `SUPERSESSION_TARGET_DIGEST_MISMATCH` for a named file with other bytes;
+                             # one resolver serving DE's sealed receipts and DA's own records. The landing
+                             # record declared: `p003_da_gate1_pre_read_<YYYYMMDD>__<clock>.json`, **the
+                             # day from the FIELD never the filename**, corrections as `.v2` by the pair,
+                             # `matches` True ONLY in the MATCH state.**
+                             # *And DA's own find: **two design picks sorted LEXICOGRAPHICALLY, so v9 came
+                             # after v16** -- numeric now.* ***The same class as my round-145 "latest is
+                             # not a citation": an ordering that looks total and is not.***
   THE_MECHANISM_IS_LIVE_AT_THE_TIP_AND_I_CHECKED_ALL_FOUR_PIECES: A-RE-RUN-FAILS-IDENTICALLY
                              # CHECKED 2026-09-06T10:00:40Z at the current file, piece by piece.
                              # **(a) `_peak_rss_mb()` (:2158) is
@@ -18673,6 +18767,73 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 154, 2026-09-06T10:07:14Z ------------------------------
+  THE_PIN_THREAD_CLOSES_AT_V10_V17_AND_I_HASHED_IT_MYSELF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v17.json
+    as_of: 2026-09-06T10:07:14Z
+    said: >-
+      design v17's parameters.path is .../de_multiday_gate1_params_v10.json and its
+      parameters.sha256 is 6ee79b5e..., which I computed as v10's actual digest --
+      forward resolves True; params v10 names the real design v17 filename with
+      sha256 "NOT_PINNED_HERE -- the pin runs design -> params", the one-way shape
+      established at round 150. The thread from round 149 (broken both ways), 150 (my
+      correction), 151-152 (v15 and v16 still naming v2) closes here: path and digest
+      name the same file.
+  THE_DERIVATION_IS_A_COMPUTED_FIELD_NOT_PROSE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T10:07:14Z
+    said: >-
+      REAL_DAY_PEAK_RSS_MB_BUDGET = 4000.0 with REAL_DAY_BUDGET_DERIVATION beside it:
+      cgroup_cap_mb 8192.0, be_day_reference_measured_mb 2008.0, observed_peak_09_03_mb
+      2426.0, headroom_for_null_and_seal_mb 1500.0, declared_mb 4000.0, and
+      fraction_of_cap as the expression 4000.0 / 8192.0, which I computed as 48.83 %.
+      It states its own negatives -- a budget equal to the cap is the cap with a second
+      name, and a measured peak plus a margin is a budget derived from the run it is
+      meant to bound -- and the observed 2,426 MB is a check on the derivation, never
+      its source.
+  THE_CONTROL_PROVES_ITS_OWN_DISCRIMINATING_POWER:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T10:07:14Z
+    said: >-
+      beside the admit-case (_hw_after > FIXTURE_DAY_PEAK_RSS_MB_BUDGET and
+      _mp["growth_rss_mb"] < FIXTURE_DAY_PEAK_RSS_MB_BUDGET) sits ok(_hw_after >
+      _mp["growth_rss_mb"] + 100, "same fixture, same budget"), so the control asserts
+      that the two measures differ by at least 100 MB and cannot pass trivially on a
+      cold process where high-water and growth are the same number.
+  THE_CLOSURE_RECORDS_WHERE_IT_WAS_CAPTURED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_fixture_run_v18__20260906T100105Z.json
+    as_of: 2026-09-06T10:07:14Z
+    said: >-
+      import_closure.captured_at lists three points -- module import, the cascade's
+      first import, and after the cascade's first load() which imports
+      harmful_stateful_policy and de_phase4_diag_runner lazily -- with closure_drift []
+      and closure_unchanged_during_the_run true.
+  THE_V2_IS_MOOT_AND_I_MEASURED_WHY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260903_REFUSED__20260906T095058Z.json
+    as_of: 2026-09-06T10:07:14Z
+    said: >-
+      glob(p003_de_gate1_day_run_*20260903*) returns exactly one file, the REFUSED
+      record; there is no v1 receipt to supersede, so the .v2 correction ruled in
+      R-603 has nothing to correct and the provenance problem it existed to fix
+      disappears with a clean re-run from a frozen worktree. Remove it from every open
+      list.
+  THE_BUDGET_WAS_CHECKED_ONCE_AND_THE_SERIES_HAD_EXISTED_SINCE_DE_83:
+    prov: RELAYED
+    from: R-610(A)
+    as_of: 2026-09-06T10:07:14Z
+  THE_DE_SEAT_RESET_AT_97_PERCENT_AND_ITS_HARVEST_IS_THE_GO_PROCEDURE:
+    prov: RELAYED
+    from: R-610(C)
+    as_of: 2026-09-06T10:07:14Z
+  DA_76_MAKES_THE_LINK_PAIR_DA_S_TOO_AND_FINDS_A_LEXICOGRAPHIC_SORT:
+    prov: RELAYED
+    from: R-610(B)
+    as_of: 2026-09-06T10:07:14Z
   # --- MEM round 153, 2026-09-06T10:00:40Z ------------------------------
   THE_MECHANISM_IS_LIVE_AT_THE_TIP_AND_I_CHECKED_ALL_FOUR_PIECES:
     prov: CHECKED
