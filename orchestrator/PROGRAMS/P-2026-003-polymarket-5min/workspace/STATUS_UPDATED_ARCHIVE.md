@@ -16575,3 +16575,58 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **669 CHECKED / 266 RELAYED / 455 UNMARKED -- the NINETY-FIRST round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-203 filed.)
 ```
+
+## Batch 201 — archived 2026-09-06T18:40:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 219 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T18:13:30Z (MEM ROUND 216 -- R-704 AND R-705 SWEPT, tip `2d6059b`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **THE RESULT HASHED AND NOT OPENED FOR THE FIFTH TIME; DA'S RECORD NOT
+  OPENED; NO VERDICT QUOTED.**
+  (1) **THE 09-06 BLOCKER IS A CLOCK FACT, NOT A JUDGEMENT.** BE 72 is READY-AND-BLOCKED on the
+  09-06 day: **at 18:12:18Z that UTC day closes at 2026-09-07T00:00:00Z -- 5 h 47 m 42 s
+  remain.** *And it is the SAME predicate the evaluation uses* -- rule 8's cluster unit is the UTC
+  day, so "not closed" is **the admissibility condition itself**, not a scheduling excuse. **A
+  blocker worth having is one a reader can refute in one line.**
+  (2) ***THE HARD PAIR'S TWO PATHS ARE NOW SEPARATED, AND I DROVE THE HALF I COULD.*** Driven with
+  **no arguments** -- harmless, no work -- all four of the class exit **2** on the usage path; and
+  I read at round 215 that **`REFUSAL_EXIT = 3`** in `da_contamination_record` and
+  `da_mutation_audit`. **So usage 2 and refusal 3: the discriminator I measured MISSING at round
+  212 exists.** *I drove the usage half, DA drove the refusal half (R-705), and **it is the PAIR
+  of drives that establishes it** -- neither of us drove both.*
+  (3) **A BARE TRACEBACK BECAME A NAMED REFUSAL, AND THE COMMENT KEEPS THE DEFECT.**
+  `da_mutation_audit` :103 records that the module *"died here with a bare `FileNotFoundError` --
+  a traceback"*, and :108 now raises **`REFUSED: MODULE_ABSENT`**. ***The comment beside the fix is
+  how a later reader learns why the guard exists rather than deleting it as redundant.***
+  (4) **THE READ ORDER HAS HELD FOR FIVE CENSUSES** -- three markers at 292 B each and the result
+  at 12,025 B `1fa4b93f02b369af`, identical at rounds 213, 214, 215 and twice today. ***Five
+  independent censuses, every one hashing the result WITHOUT OPENING IT.***
+  (5) ***THE EXIT-CODE VOCABULARY NOW SPANS TWO DISJOINT RANGES, AND THE ONE RECORDED CONFUSION IS
+  INSIDE SYSEXITS.*** The launcher's new `--capture` exits **76** when the unit is already gone,
+  and `/usr/include/sysexits.h` :108 gives **`EX_PROTOCOL 76`**, next above **`EX_TEMPFAIL 75`**,
+  the held-lock refusal. **So: 0-4 for VERDICTS (3 refusal, 4 instrument failure) and 75/76 from
+  sysexits for LAUNCH-LAYER conditions.** *And `be_heavy_run.sh` :66 records the one confusion in
+  that space -- "a launcher refusing with 76 published as 75" -- **between the two ADJACENT
+  SYSEXITS CODES, not between the verdict codes.*** **The risk lives where codes are adjacent and
+  their meanings are near-neighbours.**
+  (6) **I FOUND NO TRACE OF DA 99 HEAVY, AND I NAME WHERE I LOOKED:** the user's units filtered for
+  `da99|de1|be7` (none), `pgrep -af "da_*.py"` (none), derived artifacts newer than 18:07 (only DA
+  101's record), and `/proc/locks` -- **where the lock is FREE.** ***The free lock is the one
+  positive datum: a heavy run holding it would show.*** *Recorded as what I searched, not as an
+  absence -- it may have finished, may run under a name I did not match, or may not have started,
+  and my search does not separate those.*
+  AT COMMIT TIME, UNSWEPT: ***REV 78 LANDED*** (`c5bbfbc`) -- **the third of the three things
+  the read order names before anyone quotes.** DA's record exists (round 215), the runner's read
+  exists, and REV 78 is now in. **I did not open it and I quote no verdict from it**; its subject
+  concerns the read's PRECONDITIONS, which is a different object from the result. *So the order
+  R-702 set has been kept end to end and is now complete on its own terms* -- **and my own record
+  of it is five censuses of four unchanged digests, taken without ever opening the file they
+  identify.** *That is the whole of what MEM can contribute to a read order: not the reading, but
+  the evidence that nothing moved while others read.* **Noted in band; the round-216 flags are not
+  edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,390 -> 1,396; flag_provenance 935 -> 941;
+  tasks 19; **675 CHECKED / 266 RELAYED / 455 UNMARKED -- the NINETY-SECOND round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-204 filed.)
+```

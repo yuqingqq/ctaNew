@@ -63,6 +63,43 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T18:40:30Z (MEM ROUND 219 -- R-709 SWEPT, tip `4afa849`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***MY THIRTEEN READINGS AND DE's SIDECAR ARE ONE INSTRUMENT READ TWICE.*** R-709 measures
+  `be74struct04b`'s **cgroup leaf `memory.peak` at 2,578,067,456** against **systemd's
+  `MemoryPeak` property at 847,671,296** -- *a factor of 3.04 on one unit*. **My thirteen readings
+  of de104smoke were `systemctl show -p MemoryPeak` -- THE PROPERTY -- and DE's sidecar carried
+  THE SAME PROPERTY.** ***So my round-214 sentence, "thirteen live readings and the run's own
+  record agree to the byte", is agreement between TWO READERS OF ONE INSTRUMENT, not two
+  measurements of the peak.*** **It is the same shape as the at-load digest tautology R-703 found
+  in DE's receipt -- a read compared with itself -- arriving in my own record.** *Precision kept:
+  R-709's discrepancy is measured AFTER EXIT and my readings were WHILE RUNNING, so this does not
+  show my numbers wrong -- it shows my corroboration was not corroboration.*
+  (2) **AND I CANNOT RE-DRIVE IT: THE CGROUPS ARE GONE.** All four `be74*` units read `not-found /
+  inactive / dead` with `MemoryPeak [not set]`, and **a cgroup's `memory.peak` does not outlive the
+  cgroup.** *The half I verified is systemd's 847,671,296, read from BE's OWN RECORD; the leaf is
+  RELAYED.* **A discrepancy between two instruments must be captured while both are alive, and
+  this one was -- by BE, in-process, which is why it exists at all.**
+  (3) **TWO RUNS OF THE SAME JOB DIFFER BY 38x IN THE PROPERTY, FROM THE RECORDS ALONE:**
+  `be74struct04` **21,946,368** against `be74struct04b` **847,671,296** -- the same verification of
+  the same 09-04 book, **38.6x apart.** *Evidence that the property is not measuring what a reader
+  assumes, needing no comparison with the leaf to make the point.*
+  (4) **BE 74's RECORDS CARRY ONLY THE PROPERTY AND NOT THE LEAF** -- every row scanned; only
+  `outcome.MemoryPeak` appears. ***So a later reader of these records gets the property alone --
+  the very number now in question -- and the reading that would settle it is the one that does not
+  survive.*** *An observation for whoever fixes the record's fields.*
+  (5) **THE STRUCTURE DECLARATION CHAIN GOES 0 -> 1 -> 3 DAYS:** v1 names **no** day, v2 names
+  **09-03 only** (my round-218 finding), v3 (`f6d3e8315259bd88`) names **all three.** *The limit
+  R-708 named is closed, and each version was tested against all three days, so "names all three"
+  is a positive on three rather than an absence of negatives.*
+  (6) **`producer_exit_maps_v1.json` VERIFIED AT THE DIGEST** -- 3,374 B, **`c4e9438019ff88c5`**.
+  *A sibling chain of `heavy_run_form`: 75 reserved, a declared code is a verdict BY NAME, and an
+  **UNMAPPED code does not satisfy a GO** -- all seven producers currently UNDECLARED, including
+  DA 99's rc 3.* **The rc 3 I watched become a verdict last round is UNMAPPED until DA declares
+  it**, which is a declaration doing exactly what it is for.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,407 -> 1,413; flag_provenance 952 -> 958;
+  tasks 19; **691 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-FIFTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-207 filed.)
   2026-09-06T18:30:30Z (MEM ROUND 218 -- R-708 SWEPT, tip `b217ae0`. STATE ONLY. MEM ASSERTS NO
   RESULT. **NEITHER READ ARTIFACT OPENED -- v1 FOR THE SEVENTH CENSUS, THE NEW `.v2` HASHED ON
   ARRIVAL.**
@@ -142,53 +179,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,396 -> 1,401; flag_provenance 941 -> 946;
   tasks 19; **679 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-THIRD round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-205 filed.)
-  2026-09-06T18:13:30Z (MEM ROUND 216 -- R-704 AND R-705 SWEPT, tip `2d6059b`. STATE ONLY. MEM
-  ASSERTS NO RESULT. **THE RESULT HASHED AND NOT OPENED FOR THE FIFTH TIME; DA'S RECORD NOT
-  OPENED; NO VERDICT QUOTED.**
-  (1) **THE 09-06 BLOCKER IS A CLOCK FACT, NOT A JUDGEMENT.** BE 72 is READY-AND-BLOCKED on the
-  09-06 day: **at 18:12:18Z that UTC day closes at 2026-09-07T00:00:00Z -- 5 h 47 m 42 s
-  remain.** *And it is the SAME predicate the evaluation uses* -- rule 8's cluster unit is the UTC
-  day, so "not closed" is **the admissibility condition itself**, not a scheduling excuse. **A
-  blocker worth having is one a reader can refute in one line.**
-  (2) ***THE HARD PAIR'S TWO PATHS ARE NOW SEPARATED, AND I DROVE THE HALF I COULD.*** Driven with
-  **no arguments** -- harmless, no work -- all four of the class exit **2** on the usage path; and
-  I read at round 215 that **`REFUSAL_EXIT = 3`** in `da_contamination_record` and
-  `da_mutation_audit`. **So usage 2 and refusal 3: the discriminator I measured MISSING at round
-  212 exists.** *I drove the usage half, DA drove the refusal half (R-705), and **it is the PAIR
-  of drives that establishes it** -- neither of us drove both.*
-  (3) **A BARE TRACEBACK BECAME A NAMED REFUSAL, AND THE COMMENT KEEPS THE DEFECT.**
-  `da_mutation_audit` :103 records that the module *"died here with a bare `FileNotFoundError` --
-  a traceback"*, and :108 now raises **`REFUSED: MODULE_ABSENT`**. ***The comment beside the fix is
-  how a later reader learns why the guard exists rather than deleting it as redundant.***
-  (4) **THE READ ORDER HAS HELD FOR FIVE CENSUSES** -- three markers at 292 B each and the result
-  at 12,025 B `1fa4b93f02b369af`, identical at rounds 213, 214, 215 and twice today. ***Five
-  independent censuses, every one hashing the result WITHOUT OPENING IT.***
-  (5) ***THE EXIT-CODE VOCABULARY NOW SPANS TWO DISJOINT RANGES, AND THE ONE RECORDED CONFUSION IS
-  INSIDE SYSEXITS.*** The launcher's new `--capture` exits **76** when the unit is already gone,
-  and `/usr/include/sysexits.h` :108 gives **`EX_PROTOCOL 76`**, next above **`EX_TEMPFAIL 75`**,
-  the held-lock refusal. **So: 0-4 for VERDICTS (3 refusal, 4 instrument failure) and 75/76 from
-  sysexits for LAUNCH-LAYER conditions.** *And `be_heavy_run.sh` :66 records the one confusion in
-  that space -- "a launcher refusing with 76 published as 75" -- **between the two ADJACENT
-  SYSEXITS CODES, not between the verdict codes.*** **The risk lives where codes are adjacent and
-  their meanings are near-neighbours.**
-  (6) **I FOUND NO TRACE OF DA 99 HEAVY, AND I NAME WHERE I LOOKED:** the user's units filtered for
-  `da99|de1|be7` (none), `pgrep -af "da_*.py"` (none), derived artifacts newer than 18:07 (only DA
-  101's record), and `/proc/locks` -- **where the lock is FREE.** ***The free lock is the one
-  positive datum: a heavy run holding it would show.*** *Recorded as what I searched, not as an
-  absence -- it may have finished, may run under a name I did not match, or may not have started,
-  and my search does not separate those.*
-  AT COMMIT TIME, UNSWEPT: ***REV 78 LANDED*** (`c5bbfbc`) -- **the third of the three things
-  the read order names before anyone quotes.** DA's record exists (round 215), the runner's read
-  exists, and REV 78 is now in. **I did not open it and I quote no verdict from it**; its subject
-  concerns the read's PRECONDITIONS, which is a different object from the result. *So the order
-  R-702 set has been kept end to end and is now complete on its own terms* -- **and my own record
-  of it is five censuses of four unchanged digests, taken without ever opening the file they
-  identify.** *That is the whole of what MEM can contribute to a read order: not the reading, but
-  the evidence that nothing moved while others read.* **Noted in band; the round-216 flags are not
-  edited.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,390 -> 1,396; flag_provenance 935 -> 941;
-  tasks 19; **675 CHECKED / 266 RELAYED / 455 UNMARKED -- the NINETY-SECOND round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-204 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2334,6 +2324,74 @@ flags:
                              # records carry `PROVENANCE_INCOMPLETE` -- and relay the
                              # ruling.* **A code space with three meanings needs the
                              # declaration more than one with two.**
+  MY_THIRTEEN_READINGS_AND_THE_SIDECAR_ARE_ONE_INSTRUMENT_READ_TWICE: THE-TAUTOLOGY-ARRIVES-IN-MY-OWN-RECORD
+                             # R-709: for `be74struct04b` the **cgroup leaf's
+                             # `memory.peak` is 2,578,067,456** against **systemd's
+                             # `MemoryPeak` property 847,671,296** -- ***a factor of
+                             # 3.04 on one unit.*** **MY THIRTEEN READINGS OF
+                             # de104smoke WERE `systemctl show -p MemoryPeak` -- THE
+                             # PROPERTY -- AND DE's SIDECAR CARRIED THE SAME
+                             # PROPERTY.** *So my round-214 sentence, "thirteen live
+                             # readings and the run's own record agree to the byte",
+                             # is **agreement between TWO READERS OF ONE INSTRUMENT**,
+                             # not two measurements of the peak.* ***IT IS THE SAME
+                             # SHAPE AS THE AT-LOAD DIGEST TAUTOLOGY R-703 FOUND IN
+                             # DE's RECEIPT -- A READ COMPARED WITH ITSELF -- ARRIVING
+                             # IN MY OWN RECORD.*** **The series is still a series;
+                             # what it does not establish is that the number is the
+                             # peak.** *Precision kept: R-709's discrepancy is
+                             # measured AFTER EXIT, and my readings were WHILE
+                             # RUNNING, so this does not show my numbers wrong -- it
+                             # shows my corroboration was not corroboration.*
+  and_I_CANNOT_re_drive_it_because_the_cgroups_are_GONE: THE-LEAF-DIES-WITH-THE-UNIT
+                             # **All four `be74*` units read `not-found / inactive /
+                             # dead` with `MemoryPeak [not set]`** -- collected -- and
+                             # ***a cgroup's `memory.peak` file dies with the cgroup***,
+                             # so the leaf figure cannot be re-read by me at any clock.
+                             # **The half I verified is systemd's 847,671,296, which I
+                             # read from BE's OWN RECORD**; the leaf's 2,578,067,456 is
+                             # **RELAYED**. *A discrepancy between two instruments is
+                             # exactly the kind of thing that must be captured while
+                             # both are alive, and this one was -- by BE, in-process,
+                             # which is why it exists at all.*
+  TWO_RUNS_OF_THE_SAME_JOB_DIFFER_BY_38x_IN_THE_PROPERTY: FROM-THE-RECORDS-ALONE
+                             # `be74struct04`'s `outcome.MemoryPeak` is **21,946,368**
+                             # (20.9 MiB) and `be74struct04b`'s is **847,671,296** (808
+                             # MiB) -- ***the same verification of the same 09-04 book,
+                             # 38.6x apart.*** **This is evidence FROM THE ARTIFACTS
+                             # ALONE that the property is not measuring what a reader
+                             # assumes**, and it needs no comparison with the leaf to
+                             # make the point. *R-709 names the 21.9 MB as an anomaly;
+                             # the ratio is what makes it one.*
+  BE_74s_records_carry_ONLY_the_property_and_not_the_leaf: WHAT-A-LATER-READER-GETS
+                             # All four records carry **`outcome.MemoryPeak`** and
+                             # **no leaf figure**: the in-process `memory.peak` BE read
+                             # is in its report, not in the artifact I can read. ***SO
+                             # A LATER READER OF THESE RECORDS GETS THE PROPERTY
+                             # ALONE*** -- the very number now known to be
+                             # questionable -- **and the reading that would settle it
+                             # is the one that does not survive.** *Recorded as an
+                             # observation for whoever fixes the record's fields; MEM
+                             # does not rule.*
+  the_structure_declaration_chain_goes_ZERO_then_ONE_then_THREE_days: THE-LIMIT-CLOSED
+                             # Driven across the family: **v1 (`ea1e88595844e800`)
+                             # names NO day; v2 (`0fa3c6db8750857f`) names 09-03 ONLY
+                             # -- my round-218 finding; v3 (`f6d3e8315259bd88`) names
+                             # ALL THREE.** *The limit R-708 named is closed, and the
+                             # progression is visible in one table rather than in three
+                             # entries.* **Each version tested against all three days,
+                             # so "names all three" is a positive on three and not an
+                             # absence of negatives.**
+  producer_exit_maps_v1_verified_at_the_digest: C4E94380-MATCHES
+                             # `live/pm_research/declarations/producer_exit_maps_v1.json`,
+                             # **3,374 B, `c4e9438019ff88c5`** -- matching the digest
+                             # R-709 names. *A sibling chain of `heavy_run_form`: 75
+                             # reserved, a declared code is a verdict BY NAME, and an
+                             # **UNMAPPED code does not satisfy a GO** -- with all seven
+                             # producers currently UNDECLARED, including DA 99's rc 3.*
+                             # **The rc 3 I watched become a verdict last round is
+                             # UNMAPPED until DA declares it**, which is the ruling
+                             # doing exactly what a declaration is for.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25116,6 +25174,51 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 219, 2026-09-06T18:40:00Z ---
+  MY_THIRTEEN_READINGS_AND_THE_SIDECAR_ARE_ONE_INSTRUMENT_READ_TWICE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be74struct04b.jsonl
+    as_of: 2026-09-06T18:39:38Z
+    said: >-
+      read this record's outcome.MemoryPeak, 847,671,296, which is the systemd half of the
+      discrepancy R-709 reports; set it beside my own thirteen readings of de104smoke, all taken
+      with systemctl show -p MemoryPeak, and DE's sidecar, which carries the same property. The leaf
+      figure is relayed.
+  and_I_CANNOT_re_drive_it_because_the_cgroups_are_GONE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be74struct04b.jsonl
+    as_of: 2026-09-06T18:39:38Z
+    said: >-
+      read the four be74 units' five fields: all collected, MemoryPeak [not set]. A cgroup's
+      memory.peak file does not outlive the cgroup, so the leaf cannot be re-read.
+  TWO_RUNS_OF_THE_SAME_JOB_DIFFER_BY_38x_IN_THE_PROPERTY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be74struct04.jsonl
+    as_of: 2026-09-06T18:39:38Z
+    said: >-
+      read outcome.MemoryPeak from this record and from be74struct04b's and divided: 847,671,296
+      over 21,946,368 is 38.6. Both records describe a verification of the same 09-04 book.
+  BE_74s_records_carry_ONLY_the_property_and_not_the_leaf:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be74struct05.jsonl
+    as_of: 2026-09-06T18:39:38Z
+    said: >-
+      scanned every row of all four records for any key containing mem or peak; only
+      outcome.MemoryPeak appears.
+  the_structure_declaration_chain_goes_ZERO_then_ONE_then_THREE_days:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_daybook_structure_v3.json
+    as_of: 2026-09-06T18:39:38Z
+    said: >-
+      hashed each version and searched each one's serialised text for all three day strings, so each
+      row is three tests rather than one.
+  producer_exit_maps_v1_verified_at_the_digest:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/producer_exit_maps_v1.json
+    as_of: 2026-09-06T18:39:38Z
+    said: >-
+      located the file and recomputed its sha256, comparing against the digest R-709 names; the
+      rulings it carries are relayed from that entry.
   # --- MEM round 218, 2026-09-06T18:30:00Z ---
   the_09_03_pre_read_chain_is_FIVE_DEEP_UNBROKEN_and_DRIVEN:
     prov: CHECKED
