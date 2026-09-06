@@ -63,6 +63,64 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T03:47:19Z (MEM ROUND 111 -- R-549 SWEPT. STATE ONLY, AND IT LEADS
+  WITH A CORRECTION TO A PREMISE I BUILT ON LAST ROUND.
+  (1) "EVERY SCORE IS SEALED AND UNREAD" WAS FALSE FOR 09-01 AND 09-02.
+  CHECKED BY ME AT THE ARTIFACT: RESULTS.md line 681 reads "09-01 and 09-02 were
+  scored and read under the interim declaration" and 682 "They are now consumed
+  and cannot be reused as untouched forward validation." THE PROGRAMME'S OWN
+  RESULTS DOC SAID SO ALL ALONG. BE 44's "not opened" was TRUE OF THAT SESSION'S
+  RUN and was generalised into a property of the data. I CARRIED IT AT ROUND 110
+  AND BUILT ON IT -- "the unseal hold now protects Gate 1's design" -- AN
+  ARGUMENT THAT WAS SOUND ON A PREMISE THAT WAS FALSE FOR TWO DAYS.
+  WHAT SURVIVES: the arms' thetas were fixed on the 08-24 hour and NOTHING ABOUT
+  THEM WAS CHOSEN on 09-01/02; what was read there was the FROZEN CANDIDATE. But
+  the record marks those days consumed and WHETHER THAT COUNTS AGAINST A GATE-1
+  TEST IS NOT A CALL TO MAKE AFTER SEEING.
+  (2) TWO OPTIONS ARE WITH THE USER: (i) 09-01..09-05 with the prior opening
+  disclosed in every receipt; (ii) THE UNTOUCHED SIX -- 09-03..09-05 plus
+  09-06..09-08 as they accrue, complete at the 2026-09-09T00:06Z verdict.
+  RECOMMENDED (ii), AND NOT ONLY FOR CLEANLINESS.
+  (3) BECAUSE I COMPUTED THE ARITHMETIC MYSELF: the smallest attainable
+  one-sided sign-test p at G days is 2^-G. AT G = 5 THAT IS 0.031250 AGAINST
+  HOLM'S FIRST BAR OF 0.025 AT m = 2 -- NO ARM CAN CLEAR EVEN IF EVERY DAY GOES
+  ITS WAY. AT G = 6 IT IS 0.015625 AND IT CLEARS. SO OPTION (ii) CONVERTS A
+  DIRECTIONAL RESULT INTO A POTENTIALLY SIGNIFICANCE-BEARING ONE FOR THE PRICE
+  OF THREE DAYS. DE computed this INSIDE THE DECLARATION BEFORE ANY DATA WAS
+  TOUCHED -- the difference between a design and an excuse.
+  (4) MY ROUND-110 "THE 08-24 HOUR PREDATES clob_v4_1, A LIMIT ON EVERY ECONOMIC
+  NUMBER" IS WITHDRAWN. The hour IS clob_v3_1, established at TWO SOURCES
+  including collector_version on ALL 36,566 ROWS -- but ERA_AUTHORITY carries the
+  USER's R-497(F)(1), "COLLECTOR VERSION IS NOT A BAR, QUALITY IS", so THE HOUR
+  IS NOT INADMISSIBLE BY ERA AND THE "LIMIT" IMPORTED A BAR THE USER NEVER SET.
+  What binds it: CONSUMED, G = 0 / n = 1, and rule 5 belongs to another
+  collector. An admissibility question got answered with a version comparison
+  twice -- in the draft and again by me relaying it.
+  (5) MY OWN ROUND-110 FINDING IS NOW ROUTABLE: NINE .py FILES under
+  live/pm_research/ carry the Binance literal (14 occurrences), and the two name
+  collisions are harmful_candidate_manifest.py:38 ERA_BOUNDARY_NS -- ASSERTED AT
+  :201 WITH THE STRING "the era boundary is a pinned literal", so the collision
+  is IN A CHECK -- and da_topup_receipt.py:71 ERA_FLOOR_RECV_NS, asserted at
+  :437. Worth a seat's eye and NOT a defect I assert:
+  da_era_status_0824_hour.py, the module that established the hour is clob_v3_1,
+  ALSO carries the literal.
+  (6) THE REVIEWER'S A-2 QUALIFIES WHAT I SWEPT AT ROUND 109: DE's CORRECTED
+  moved-set was ITSELF WRONG -- 14 leaves, and BOTH identity_residual leaves
+  MOVED, against DE's "no residual moved" which I carried. A correction wrong on
+  the very axis it corrected. AND A-1 QUALIFIES WHAT I PRAISED: adoption "BY
+  CITATION" is 21 HARDCODED LITERALS under a file digest -- THE DIGEST GUARDS THE
+  FILE, NOT THE TRANSCRIPTION. B-1: the receipt field meant to prove which bytes
+  ran DIGESTS THE DISK, NOT THE INTERPRETER -- my round-109 finding one level
+  deeper.
+  (7) ALL FIVE RACE DAYS NOW CARRY SEALED SCORES (09-03 9aec99cf, 09-04
+  8f08b089, both from BE's run logs and NOT yet verified at both copies). THE
+  HOLD DOES NOT SIMPLY LIFT: A DECLARED READ MUST BE FILED AND REVIEWED FIRST.
+  Two gates on the opening, not one.
+  (8) DA HARVESTED AND RESET. The item to carry is (4) of five: THE
+  MAIN-TREE/ExecStart COUPLING IS UNRULED, NO SEAT OWNS IT, NO INSTRUMENT CHECKS
+  IT -- the third distinct way this nightly path can be GREEN WHILE WRONG, and
+  the only one with no owner.
+  PRIOR CHECKPOINT:
   2026-09-06T03:12:12Z (MEM ROUND 110 -- R-547 AND R-548 SWEPT. STATE ONLY.
   (1) USER RULING, VERBATIM IN R-547(A): V2 GATE 1'S CONTROL IS THE REPLAY NULL
   -- random decisions, same count and side split, drawn from THE ARM'S OWN
@@ -1630,6 +1688,105 @@ flags:
                              # (26 per-check label strings -- a copied count
                              # cannot fabricate them), which closes the
                              # reviewer's own section 1.7 gap from two rounds ago.
+  all_five_race_days_carry_sealed_scores_and_a_DECLARED-READ-PRECEDES-OPENING: BE-46
+                             # RELAYED from R-549(F). BE 45 sealed 09-03 (rc 0
+                             # at 03:09:15Z, receipt 9aec99cff1cfc9e6) and 09-04
+                             # (rc 0 at 03:42:28Z, receipt 8f08b089c5989dfe),
+                             # read from BE's run logs; verification at both
+                             # copies waits on BE's commit -- NOT YET VERIFIED AT
+                             # THE ARTIFACT, unlike 09-05 which I hashed myself.
+                             # WITH 09-05 (d65cadbc...) ALL FIVE RACE DAYS NOW
+                             # CARRY A SEALED SCORE. The condition my round-108
+                             # hold flag named is MET.
+                             # AND THE HOLD DOES NOT SIMPLY LIFT: THE RACE READ
+                             # NEEDS A DECLARED READ FIRST (be_read_declaration.py;
+                             # RESULTS section 3: "governed by a later declared
+                             # read before its economics can be opened"). BE 46
+                             # files the declaration for the G = 5 DIRECTIONAL
+                             # read -- m = 2 and the USER's R-529(A) wording UP
+                             # FRONT -- and the opening is the coordinator's or
+                             # the USER's act AFTER THE REVIEWER HAS SEEN THE
+                             # DECLARATION.
+                             # SO THERE ARE NOW TWO GATES ON THE OPENING, NOT
+                             # ONE: five sealed scores (met) AND a declared read
+                             # reviewed (not met). Recorded so "all five are
+                             # sealed" is not read as "it can be opened".
+  de69_the_moved_set_and_the_transcription: A-CORRECTION-THAT-WAS-WRONG-ON-ITS-OWN-AXIS
+                             # RELAYED from R-549(D), two of three findings
+                             # REPRODUCED by the coordinator's own leaf diff.
+                             # A-2: DE's "CORRECTED" moved-set (8 + 2 + 1, no
+                             # residual moved) WAS ITSELF WRONG. The coordinator's
+                             # diff 024425Z -> 025943Z: 19 non-provenance leaves,
+                             # 14 excluding code_identity/as_of/run_id/wall, 11
+                             # numeric, AND BOTH identity_residual LEAVES MOVED
+                             # (3.55e-15 -> 4.44e-16; 1.11e-16 -> 0.0), plus
+                             # dominance_ratio 2.9101 -> 3.6127.
+                             # A CORRECTION THAT IS WRONG ON THE VERY AXIS IT
+                             # CORRECTED IS THE SHARPEST VERSION OF THIS
+                             # PROGRAMME'S RECURRING SHAPE -- and I swept "no
+                             # residual moved" at round 109 without reading the
+                             # diff. FIX: the moved-set becomes a COMPUTED LEAF
+                             # DIFF INSIDE THE EMITTER, refusing any prose count
+                             # it did not produce. DE 69.
+                             # A-1: BE_CANCEL_AXIS_NULL
+                             # (de_phase4_diag_runner.py:1789-1818) is 21
+                             # HARDCODED LITERALS. load_cited_be_null() verifies
+                             # BE's sha256 and refuses on mismatch -- and then
+                             # every number used comes from the LITERAL DICT.
+                             # 0 mismatches today. THE DIGEST GUARDS THE FILE,
+                             # NOT THE TRANSCRIPTION. I confirmed the block's
+                             # shape myself at :1789 (BE_EXPECTED_VALUES with the
+                             # artifact path, the sha256 split across two string
+                             # literals, and the per_arm dict).
+                             # THIS QUALIFIES THE THING I PRAISED AT ROUND 109:
+                             # "adopted BY CITATION rather than recomputation" is
+                             # only as good as the read, and a citation that is
+                             # TRANSCRIBED under a file digest is a copy wearing
+                             # a provenance check. DE 69 reads at the JSON path,
+                             # which makes the transcription the falsifier.
+                             # B-1: source_sha256_while_the_child_ran DIGESTS THE
+                             # DISK, NOT WHAT THE INTERPRETER RAN -- so of DA's
+                             # three pycache measures ONLY rmtree DOES ANYTHING.
+                             # That is my round-109 finding one level deeper: I
+                             # showed the variable does nothing; the reviewer
+                             # shows the RECEIPT FIELD meant to prove which bytes
+                             # ran does not prove it either. Queued for DA after
+                             # its reset.
+  da_harvested_and_reset_five_held_items: THE-UNRULED-MAIN-TREE-COUPLING-IS-THE-ONE
+                             # RELAYED from R-549(E). DA reset at its own 80%
+                             # report; worktree clean, 0 unpushed, tip 6e9c000.
+                             # FIVE ITEMS HARVESTED, NONE OF WHICH WAS IN A FILE.
+                             # (1) THE 22 OVER-CHARGED TAKER LEGS -- DA's
+                             # untested suspicion: implied rates cluster just
+                             # above 0.07 at mid-price and JUMP AT p >= 0.95
+                             # where p(1-p) is smallest -- "smells like an
+                             # ADDITIVE OR FLOOR TERM rather than a rate". That
+                             # is a testable hypothesis that existed only in a
+                             # context.
+                             # (2) THE CEILING'S COMPLETENESS LEG CANNOT CLOSE
+                             # from the current cache: it needs a
+                             # tranche->transaction-hash join THAT DOES NOT EXIST,
+                             # and the route to building one IS WRITTEN NOWHERE.
+                             # (3) da_cite_audit's coverage guard fires on any
+                             # new authority-bearing table; the fix is ONE ENTRY
+                             # in TABLES.
+                             # (4) AN UNRULED BOUNDARY, FILED TWICE AND BITTEN
+                             # ONCE -- THE MAIN-TREE/ExecStart COUPLING: NO SEAT
+                             # OWNS THE MAIN TREE AND NO INSTRUMENT CHECKS IT. If
+                             # it drifts before 00:06Z THE UNIT SILENTLY RUNS OLD
+                             # CODE UNDER A GREEN SuccessExitStatus. THIS IS THE
+                             # ONE TO CARRY: it is the third distinct way this
+                             # nightly path can be green while wrong, after the
+                             # prose match and the SIGKILL, and unlike those two
+                             # IT HAS NO OWNER AND NO CHECK.
+                             # (5) the 00:06Z fire on 2026-09-07 is the FIRST
+                             # PRODUCTION TEST of the rc-2/rc-4 classification.
+                             # DA's first fresh batch is (4) as a design item --
+                             # a deploy worktree pinned by an EXPLICIT ACT, with
+                             # the unit REFUSING TO RUN if the deployed tree is
+                             # not at the recorded commit -- plus B-1.
+                             # P-2026-002 E2.0 follows as its second.
+                             # NUMBERS MEASURED AND UNFILED: NONE.
   da_is_at_75_percent_context: LIGHT-BATCH-THEN-RESET-AT-80
                              # RELAYED from R-548(B). DA reports ~75% context;
                              # its next batch is LIGHT, it STOPS AT 80% for a
@@ -1938,6 +2095,37 @@ flags:
                              # 582.5587255292 -- DE's arithmetic correction to
                              # the specification's sizing, carried in the receipt
                              # rather than argued in prose.
+  the_0824_hour_is_clob_v3_1_and_VERSION_IS_NOT_THE_BAR: A-BAR-THE-USER-NEVER-SET
+                             # RELAYED from R-549(C), and it corrects a framing
+                             # I swept from R-547(C) at round 110.
+                             # THE FACT: the consumed 08-24 development hour is
+                             # stamped clob_v3_1, established AT TWO SOURCES --
+                             # the ledger boundaries AND the tape's own
+                             # collector_version on ALL 36,566 ROWS
+                             # (p003_da_era_status_0824_hour__20260906T031650Z.json).
+                             # IT PREDATES clob_v4_1.
+                             # BUT "PREDATES" IS NOT THE RULING. ERA_AUTHORITY
+                             # carries the USER's R-497(F)(1) -- "COLLECTOR
+                             # VERSION IS NOT A BAR, QUALITY IS" -- SO THE HOUR
+                             # IS NOT INADMISSIBLE BY ERA.
+                             # WHAT I WROTE AT ROUND 110 AND WITHDRAW: "the
+                             # consumed 08-24 hour PREDATES clob_v4_1 and its era
+                             # status is unrecorded -- a limit on EVERY economic
+                             # number this programme currently has." The era
+                             # status is now RECORDED, and the "limit" IMPORTED A
+                             # BAR THE USER NEVER SET. I carried the
+                             # coordinator's framing and it manufactured a
+                             # constraint out of a version number.
+                             # WHAT ACTUALLY BINDS THAT HOUR, AND IT IS ENOUGH:
+                             # IT IS CONSUMED (rule 11), G = 0 WITH CLUSTER
+                             # n = 1, and rule 5's boundary belongs to a
+                             # DIFFERENT COLLECTOR. Both facts are PREDICATES so
+                             # NEITHER CAN BE QUOTED ALONE.
+                             # THE SHAPE: an admissibility question got answered
+                             # with a version comparison, twice -- once in the
+                             # ruling draft, once by me relaying it -- and the
+                             # USER had already ruled that version is not the
+                             # question.
   p003_admissibility_is_the_ERA_ruling_not_the_binance_boundary: AND-THE-NAME-COLLIDES-IN-P003-CODE
                              # CHECKED 2026-09-06T03:12:12Z, and this is the
                              # distinction the brief asked me to flag so nobody
@@ -1984,6 +2172,88 @@ flags:
                              # FINDING THE BINANCE ONE. That is how the
                              # coordinator's drafting error happened, and the
                              # source makes it easy to repeat.
+                             # ROUTABLE SURFACE, PINNED 2026-09-06T03:47:19Z SO A
+                             # SEAT CAN ACT ON IT WITHOUT REDISCOVERING IT.
+                             # NINE .py FILES UNDER live/pm_research/ carry the
+                             # literal (14 occurrences): da_hf_pm_alignment (3),
+                             # harmful_candidate_manifest (2), da_topup_receipt
+                             # (2), da_fair_price_identity (2),
+                             # harmful_hazard_model, da_topup_population_verify,
+                             # da_fragment_censoring_v1, da_era_status_0824_hour,
+                             # build_state_tape_v2 (1 each). My round-110 count
+                             # of 27 spanned .py/.json/.md including this
+                             # workspace; THE .py SURFACE IS THE ONE THAT RUNS.
+                             # THE TWO NAME COLLISIONS, EXACT:
+                             # harmful_candidate_manifest.py:38
+                             # ERA_BOUNDARY_NS = 1787579334881534478, asserted at
+                             # :201 WITH THE STRING "the era boundary is a pinned
+                             # literal" -- THE SELFTEST ITSELF CALLS THE BINANCE
+                             # INSTANT "THE ERA BOUNDARY", so the collision is
+                             # not just a variable name, IT IS ASSERTED IN A
+                             # CHECK; and da_topup_receipt.py:71
+                             # ERA_FLOOR_RECV_NS = 1787579334881534478, asserted
+                             # at :437.
+                             # WORTH A SEAT'S EYE AND NOT A DEFECT I ASSERT:
+                             # da_era_status_0824_hour.py -- THE MODULE THAT
+                             # ESTABLISHED THE HOUR IS clob_v3_1 -- ALSO CARRIES
+                             # THE BINANCE LITERAL. It may cite both boundaries
+                             # deliberately; I HAVE NOT READ ITS CALL SITES AND
+                             # CLAIM NOTHING. It is simply the one file where
+                             # both vocabularies provably meet.
+  two_options_for_the_gate1_day_set_are_with_the_user: SIX-UNTOUCHED-DAYS-RECOMMENDED
+                             # RELAYED from R-549(A), OPEN AND AWAITING THE USER.
+                             # (i) RUN ON 09-01..09-05 AS NAMED, with 09-01/02's
+                             # prior opening DISCLOSED IN EVERY RECEIPT.
+                             # (ii) RUN ON THE UNTOUCHED DAYS ONLY -- 09-03,
+                             # 09-04, 09-05 PLUS 09-06, 09-07, 09-08 as they
+                             # accrue: SIX DAYS, complete at the
+                             # 2026-09-09T00:06Z verdict. RECOMMENDED.
+                             # AND THE RECOMMENDATION IS NOT ONLY ABOUT
+                             # CLEANLINESS -- IT CHANGES WHAT THE RUN CAN
+                             # ESTABLISH. See
+                             # de68_design_no_arm_can_clear_holm_at_G5: at G = 5
+                             # a unanimous pass CANNOT clear Holm at m = 2, and
+                             # at G = 6 IT CAN. Option (ii) converts a
+                             # directional result into a potentially
+                             # significance-bearing one AT NO COST BUT THREE
+                             # DAYS.
+                             # NEITHER OPTION CHANGES THE DESIGN, and BE's
+                             # book-building starts with 09-03 EITHER WAY -- so
+                             # the work is not blocked on the ruling.
+  de68_design_no_arm_can_clear_holm_at_G5: AND-SIX-DAYS-WOULD-CLEAR-IT-COMPUTED-BY-ME
+                             # CHECKED 2026-09-06T03:47:19Z -- the arithmetic
+                             # computed by me, the rest RELAYED from R-549(B).
+                             # MY OWN COMPUTATION: the smallest attainable
+                             # one-sided sign-test p at G days is 2^-G. G = 5 ->
+                             # 0.031250, AGAINST HOLM'S FIRST BAR AT m = 2 OF
+                             # 0.025 -> DOES NOT CLEAR. G = 6 -> 0.015625 ->
+                             # CLEARS. G = 7 -> 0.007813 -> clears.
+                             # SO AT G = 5, EVEN IF EVERY DAY GOES AN ARM'S WAY,
+                             # NO ARM CAN CLEAR HOLM. A PASS IS DIRECTIONAL AND
+                             # CONSISTENT AND NEVER SIGNIFICANCE-BEARING; A FAIL
+                             # NEEDS NO POWER. THE SMALLEST CLEARING G IS 6 --
+                             # ONE MORE ADMISSIBLE DAY.
+                             # THAT IS THE SAME 2^-G FLOOR AS R-529(A), REACHED
+                             # BY A DIFFERENT ROUTE AND FOR A DIFFERENT TEST --
+                             # and DE COMPUTED IT INSIDE THE DECLARATION BEFORE
+                             # ANY DATA WAS TOUCHED, which is the difference
+                             # between a design and an excuse.
+                             # THE REST OF THE DECLARATION, RELAYED: status
+                             # DESIGN_DECLARATION_NO_DATA_TOUCHED; days from the
+                             # ERA-ADMISSION BLOCK, explicitly NOT CLAUDE.md rule
+                             # 5's mm_hf boundary; theta pinned with
+                             # theta_is_not_refitted_on_any_of_the_five_days =
+                             # true; >=500 draws per arm per day with the seed
+                             # derived from sha256(day_book_sha256 || arm ||
+                             # 'P003_GATE1_MULTIDAY') -- THE SEED PINS THE DATA
+                             # BY DIGEST; the exact sign test over the day signs
+                             # as THE test, NO normal approximation at n = 5, and
+                             # POOLING OVER DRAWS REFUSED because it would make
+                             # the draw the cluster.
+                             # RESOURCES, AN ESTIMATE FROM ONE HOUR: ~19 min
+                             # replay and ~2 HOURS OF NULL PER ARM-DAY at one CPU
+                             # under 8G -- the first day runs ALONE AS A SMOKE.
+                             # At six days x two arms that is ~24 hours of null.
   v2_gate1_control_is_the_replay_null: USER-RULING-R-547-EXACT-FIBER-SAMPLER-WITHDRAWN
                              # RELAYED from R-547(A), the USER's ruling, quoted
                              # verbatim in the entry: "Rule as drafted."
@@ -2023,7 +2293,41 @@ flags:
                              # declaration reviewed before any draw is the only
                              # thing separating this from the three consumed
                              # windows behind it.
-  the_five_named_days_are_the_only_admissible_days_that_exist: 09-01-TO-09-05-AND-GATES-2-6-NEED-FIVE-MORE
+  the_five_named_days_are_the_only_admissible_days_that_exist: CORRECTED-09-01-AND-09-02-ARE-CONSUMED
+                             # CORRECTED 2026-09-06T03:47:19Z, AND THIS IS THE
+                             # LEAD OF THE ROUND: R-547(C) SAID "every score is
+                             # SEALED and unread, so nothing has been chosen on
+                             # them." THAT WAS FALSE FOR TWO OF THE FIVE.
+                             # CHECKED BY ME AT THE ARTIFACT. RESULTS.md line
+                             # 681 reads "**09-01 and 09-02 were scored and read
+                             # under the interim declaration.**" and 682 "They
+                             # are now consumed and cannot be reused as untouched
+                             # forward validation." Line 650 records them
+                             # "opened under the pre-declared" interim read.
+                             # THE PROGRAMME'S OWN RESULTS DOC SAID SO ALL ALONG.
+                             # HOW IT HAPPENED: BE 44's "09-01..09-04 not opened"
+                             # was TRUE OF THAT SESSION'S RUN and was generalised
+                             # into a claim about the days themselves. A
+                             # session-local statement became a property of the
+                             # data.
+                             # AND I CARRIED IT AT ROUND 110 AND BUILT ON IT: I
+                             # wrote that the days "stay usable only because the
+                             # race scored a different object on them and every
+                             # score is SEALED AND UNREAD -- so the unseal hold
+                             # now protects Gate 1's design." THE ARGUMENT WAS
+                             # SOUND AND ITS PREMISE WAS FALSE FOR 09-01/09-02.
+                             # WHAT IS ACTUALLY TRUE AND STILL LOAD-BEARING: what
+                             # was read on those two days was THE FROZEN
+                             # CANDIDATE'S economics, not the arms; the arms'
+                             # thetas (CONDVALUE 0.3245, HAZARD 0.4353) were
+                             # fixed on the consumed 08-24 hour and NOTHING ABOUT
+                             # THEM WAS CHOSEN ON 09-01/02. But the programme's
+                             # own record marks those days CONSUMED, and whether
+                             # "consumed by a read of a different object" counts
+                             # against a Gate-1 TEST IS NOT A CALL TO MAKE AFTER
+                             # SEEING. Put to the USER.
+                             # EARLIER VALUE (rule 13):
+                             # 09-01-TO-09-05-AND-GATES-2-6-NEED-FIVE-MORE
                              # RELAYED from R-547(C), read by the coordinator at
                              # the day verdicts at 03:06Z; I did not open them.
                              # 08-26..08-28 carry NO era-admission block
@@ -9613,6 +9917,31 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T03:47:19Z, THE PREMISE UNDER THE FIVE NAMED DAYS IS
+  CORRECTED: 09-01 AND 09-02 WERE OPENED UNDER THE INTERIM READ AND ARE
+  CONSUMED -- RESULTS.md says so at lines 681-682, read by me. "Every score is
+  sealed and unread" was a session-local statement generalised into a property
+  of the data, and I built on it last round.
+  TWO OPTIONS ARE WITH THE USER: run 09-01..09-05 with the opening disclosed, or
+  run the UNTOUCHED SIX (09-03..09-08, complete 2026-09-09). RECOMMENDED THE
+  SIX -- AND THE ARITHMETIC IS THE REASON, COMPUTED BY ME: the smallest
+  attainable one-sided sign-test p is 2^-G, so at G = 5 it is 0.03125 against
+  Holm's 0.025 and NO ARM CAN CLEAR EVEN UNANIMOUS; AT G = 6 IT IS 0.015625 AND
+  IT CLEARS. Three more days convert a directional run into a
+  significance-bearing one.
+  ALL FIVE RACE DAYS NOW CARRY SEALED SCORES -- and the hold does NOT simply
+  lift: a DECLARED READ must be filed and reviewed first. Two gates, not one.
+  THE 08-24 HOUR IS clob_v3_1 AND VERSION IS NOT THE BAR (R-497(F)(1)), so my
+  round-110 "a limit on every economic number" is WITHDRAWN; what binds that
+  hour is CONSUMED and n = 1. The reviewer qualifies two things these files
+  carried: DE's corrected moved-set was wrong on its own axis, and "adopted by
+  citation" is 21 transcribed literals under a file digest -- the digest guards
+  the file, not the transcription.
+  DA has harvested and reset; the item to carry is THE UNRULED
+  MAIN-TREE/ExecStart COUPLING -- the third way this nightly path can be green
+  while wrong, and the only one with no owner and no check.
+  Gate 1 is 1 of 7. Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T03:12:12Z, RETAINED BELOW --
   AS-OF 2026-09-06T03:12:12Z, THE USER HAS RULED V2 GATE 1'S CONTROL: THE
   REPLAY NULL, ON FIVE NAMED DAYS, DECIDING THE SECTION 7 STOPPING RULE AND
   NOTHING ELSE. The exact-fiber sampler is WITHDRAWN. >=500 draws per arm per
@@ -10425,6 +10754,73 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 111, 2026-09-06T03:47:19Z ------------------------------
+  the_five_named_days_are_the_only_admissible_days_that_exist:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-06T03:47:19Z
+    said: >-
+      line 681 reads "**09-01 and 09-02 were scored and read under the interim
+      declaration.**" and line 682 "They are now consumed and cannot be reused as
+      untouched forward validation."; line 650 records them "opened under the
+      pre-declared" interim read. So R-547(C)'s "every score is SEALED and
+      unread" is false for two of the five named days, and I carried it at round
+      110. The era-admissibility of the five days themselves is unchanged and
+      still RELAYED from R-547(C).
+  de68_design_no_arm_can_clear_holm_at_G5:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design__20260906T031853Z.json
+    as_of: 2026-09-06T03:47:19Z
+    said: >-
+      I computed the deciding arithmetic myself: the smallest attainable
+      one-sided sign-test p over G day-signs is 2^-G, giving 0.031250 at G = 5,
+      0.015625 at G = 6 and 0.007813 at G = 7, against Holm's first bar of 0.025
+      at m = 2 -- so no arm can clear at G = 5 and G = 6 is the smallest that
+      can. The declaration's other contents (status
+      DESIGN_DECLARATION_NO_DATA_TOUCHED, theta pinned and not refitted, >=500
+      draws with the seed derived from sha256(day_book_sha256 || arm ||
+      'P003_GATE1_MULTIDAY'), the exact sign test as THE test, pooling over draws
+      refused, ~2 h of null per arm-day) are RELAYED from R-549(B).
+  p003_admissibility_is_the_ERA_ruling_not_the_binance_boundary:
+    prov: CHECKED
+    artifact: live/pm_research/harmful_candidate_manifest.py
+    as_of: 2026-09-06T03:47:19Z
+    said: >-
+      unchanged from round 110 and now pinned to a routable surface: nine .py
+      files under live/pm_research/ carry 1787579334881534478 across 14
+      occurrences (da_hf_pm_alignment 3; harmful_candidate_manifest 2;
+      da_topup_receipt 2; da_fair_price_identity 2; harmful_hazard_model,
+      da_topup_population_verify, da_fragment_censoring_v1,
+      da_era_status_0824_hour, build_state_tape_v2 one each). This file's line 38
+      is ERA_BOUNDARY_NS = 1787579334881534478 and its line 201 asserts
+      ok(ERA_BOUNDARY_NS == 1787579334881534478, "the era boundary is a pinned
+      literal") -- the collision is asserted inside a check, not only carried in
+      a variable name; da_topup_receipt.py:71 is ERA_FLOOR_RECV_NS with the same
+      value asserted at :437. I claim nothing about whether any use is wrong.
+  two_options_for_the_gate1_day_set_are_with_the_user:
+    prov: RELAYED
+    from: R-549(A) -- open, awaiting the USER; the coordinator recommends option (ii)
+  the_0824_hour_is_clob_v3_1_and_VERSION_IS_NOT_THE_BAR:
+    prov: RELAYED
+    from: >-
+      R-549(C), which corrects the R-547(C) framing I swept at round 110. The era
+      fact rests on DA's two sources; the ruling that version is not a bar is the
+      USER's R-497(F)(1).
+  all_five_race_days_carry_sealed_scores_and_a_DECLARED-READ-PRECEDES-OPENING:
+    prov: RELAYED
+    from: >-
+      R-549(F). The 09-03 and 09-04 receipts are read from BE's run logs and are
+      NOT yet verified at both copies, unlike 09-05 which I hashed myself at
+      round 108.
+  de69_the_moved_set_and_the_transcription:
+    prov: RELAYED
+    from: >-
+      R-549(D). A-2 and A-1 were reproduced by the coordinator; I confirmed only
+      the shape of the BE_EXPECTED_VALUES block at de_phase4_diag_runner.py:1789
+      and did not recount the literals or re-diff the leaves.
+  da_harvested_and_reset_five_held_items:
+    prov: RELAYED
+    from: R-549(E)
   # --- MEM round 110, 2026-09-06T03:12:12Z ------------------------------
   p003_admissibility_is_the_ERA_ruling_not_the_binance_boundary:
     prov: CHECKED

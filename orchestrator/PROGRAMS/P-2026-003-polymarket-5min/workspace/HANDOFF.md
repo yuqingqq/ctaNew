@@ -1,5 +1,151 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T03:47:19Z — **"Every score is sealed and unread" was FALSE for
+09-01 and 09-02. They were opened under the interim read and are CONSUMED.**
+Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 111
+
+### 1. The correction, and it is under a premise I built on
+
+**Checked by me at the artifact.** `RESULTS.md` line **681**: *"**09-01 and
+09-02 were scored and read under the interim declaration.**"* Line **682**:
+*"They are now consumed and cannot be reused as untouched forward validation."*
+Line 650 records them opened under the pre-declared interim read.
+
+> **The programme's own results doc said so all along.** BE 44's *"09-01…09-04
+> not opened"* was true of **that session's run** and was generalised into a
+> property of the data.
+
+**And I carried it at round 110 and built on it** — I wrote that the days stay
+usable *"only because the race scored a different object on them and every score
+is SEALED AND UNREAD — so the unseal hold now protects Gate 1's design."*
+**The argument was sound; the premise was false for two of the five days.**
+
+**What survives:** what was read there was the **frozen candidate's** economics,
+not the arms; the arms' thetas (CONDVALUE 0.3245, HAZARD 0.4353) were fixed on
+the consumed 08-24 hour and **nothing about them was chosen on 09-01/02.** But
+the record marks those days consumed, and **whether "consumed by a read of a
+different object" counts against a Gate-1 test is not a call to make after
+seeing.**
+
+### 2. Two options with the USER — and the arithmetic decides it
+
+- **(i)** run 09-01…09-05 as named, with 09-01/02's prior opening **disclosed in
+  every receipt**;
+- **(ii)** run the **untouched six** — 09-03, 09-04, 09-05 plus 09-06, 09-07,
+  09-08 as they accrue, complete at the **2026-09-09T00:06Z** verdict.
+  **Recommended.**
+
+**And it is not only about cleanliness. I computed the deciding arithmetic:**
+
+| G | smallest attainable one-sided sign-test p = 2⁻ᴳ | vs Holm's first bar at m=2 (0.025) |
+|---|---|---|
+| 5 | **0.031250** | **cannot clear — even if every day goes an arm's way** |
+| 6 | **0.015625** | **clears** |
+| 7 | 0.007813 | clears |
+
+> **Three more days convert a directional run into a potentially
+> significance-bearing one.** A FAIL needs no power either way.
+
+**DE computed this inside the declaration before any data was touched** — the
+difference between a design and an excuse. Neither option changes the design;
+**BE's book-building starts with 09-03 either way**, so nothing is blocked on
+the ruling.
+
+### 3. My round-110 era framing is withdrawn
+
+The 08-24 hour **is `clob_v3_1`**, established at **two sources** — ledger
+boundaries and the tape's own `collector_version` on **all 36,566 rows**. It
+predates `clob_v4_1`.
+
+> **But "predates" is not the ruling.** `ERA_AUTHORITY` carries the USER's
+> **R-497(F)(1) — "collector version is not a bar, quality is"** — so the hour is
+> **not inadmissible by era**, and my *"a limit on every economic number this
+> programme currently has"* **imported a bar the USER never set.**
+
+**What actually binds it, and it is enough:** it is **CONSUMED** (rule 11),
+**G = 0 / cluster n = 1**, and rule 5's boundary belongs to a different
+collector. *An admissibility question got answered with a version comparison
+twice — in the draft, and again by me relaying it.*
+
+### 4. My round-110 finding, now routable
+
+**Nine `.py` files** under `live/pm_research/` carry `1787579334881534478` (14
+occurrences): `da_hf_pm_alignment` (3), `harmful_candidate_manifest` (2),
+`da_topup_receipt` (2), `da_fair_price_identity` (2), and
+`harmful_hazard_model`, `da_topup_population_verify`, `da_fragment_censoring_v1`,
+`da_era_status_0824_hour`, `build_state_tape_v2` (1 each).
+
+**The two name collisions, exact:**
+- **`harmful_candidate_manifest.py:38`** — `ERA_BOUNDARY_NS = 1787579334881534478`,
+  **asserted at `:201` with the string *"the era boundary is a pinned literal"*.**
+  *The collision is inside a check, not just a variable name.*
+- **`da_topup_receipt.py:71`** — `ERA_FLOOR_RECV_NS`, same value, asserted at `:437`.
+
+**Worth a seat's eye, and not a defect I assert:** `da_era_status_0824_hour.py`
+— *the module that established the hour is `clob_v3_1`* — also carries the
+Binance literal. It may cite both deliberately; **I have not read its call sites
+and claim nothing.** It is simply the one file where both vocabularies provably
+meet.
+
+### 5. The reviewer qualifies two things these files carried
+
+- **A-2:** DE's **"corrected"** moved-set was **itself wrong** — 14 leaves, and
+  **both `identity_residual` leaves moved**, against the *"no residual moved"*
+  **I swept at round 109 without reading the diff.** *A correction wrong on the
+  very axis it corrected.*
+- **A-1:** the thing I **praised** at round 109 — *"adopted BY CITATION rather
+  than recomputation"* — is **21 hardcoded literals** at
+  `de_phase4_diag_runner.py:1789–1818`. The sha256 check refuses on mismatch and
+  then **every number comes from the literal dict.** **The digest guards the
+  file, not the transcription.** *A citation transcribed under a digest is a copy
+  wearing a provenance check.*
+- **B-1:** `source_sha256_while_the_child_ran` **digests the disk, not what the
+  interpreter ran** — so of DA's three pycache measures **only `rmtree` does
+  anything.** *My round-109 finding one level deeper: I showed the variable does
+  nothing; the reviewer shows the field meant to prove which bytes ran doesn't
+  prove it either.*
+
+### 6. All five days sealed — and the hold does not simply lift
+
+09-03 (`9aec99cf…`) and 09-04 (`8f08b089…`) are sealed, **read from BE's run
+logs and not yet verified at both copies** — unlike 09-05, which I hashed
+myself. **The condition my round-108 hold flag named is met.**
+
+> **But a DECLARED READ must be filed and reviewed before any opening.** BE 46
+> files it for the G = 5 directional read, with m = 2 and R-529(A)'s wording up
+> front. **Two gates on the opening, not one** — "all five are sealed" is not
+> "it can be opened".
+
+### 7. DA harvested and reset — one item to carry above the rest
+
+Of the five held items, **(4) is the one:** **the main-tree/ExecStart coupling is
+UNRULED — no seat owns the main tree and no instrument checks it. If it drifts
+before 00:06Z the unit silently runs old code under a green
+`SuccessExitStatus`.** *That is the third distinct way this nightly path can be
+green while wrong — after the prose match and the SIGKILL — and the only one with
+no owner and no check.* Also held: the 22 taker legs *"smell like an additive or
+floor term rather than a rate"*; the ceiling's completeness leg needs a
+tranche→transaction-hash join **that does not exist and whose route is written
+nowhere**; and **2026-09-07T00:06Z is the first production test** of the rc-2/rc-4
+classification.
+
+### 8. Measured before the sentence
+
+**583 flags, 54 CHECKED, 74 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 128; tasks 19.** Audit and counts both ahead of the prose,
+second round running.
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — three axes, none built;
+**455 of 583 flags never audited for staleness.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T03:12:12Z — **USER RULING: V2 Gate 1's control is the REPLAY
 NULL, on five NAMED days, and it decides the §7 stopping rule and nothing
 else.** Gate 1 is 1 of 7; 09-05 stays sealed. Economics: `RESULTS.md` §0.
