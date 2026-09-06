@@ -63,6 +63,7 @@ FEE_TAKER = D.FEE_TAKER_VIP0
 THRESHOLD = D.CAPSTONE_THRESHOLD_BPS
 GAP_MAX = 0.05
 HOURS_PER_DAY_FILES = 24
+SEC_PER_DAY_MS = 86_400_000
 N_LEVELS = 20
 BOOT_SEED = EP.BOOT_SEED
 BOOT_B = EP.BOOT_B
@@ -1009,6 +1010,99 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
     return receipt
 
 
+def gap_profile(bt_t: np.ndarray, day: str) -> dict:
+    """WHAT the missing seconds ARE -- an outage or a quiet book.
+
+    `gap_fraction` counts seconds with no bookTicker message. That number
+    cannot tell a collector outage from a symbol whose best quote simply did
+    not change, and the two demand opposite readings: an outage is missing
+    DATA, quietness is present data about a still book. The run-length
+    profile separates them: an outage is a few LONG contiguous runs, and
+    quietness is many one-second holes.
+    """
+    day0 = int(pd.Timestamp(day, tz="UTC").timestamp()) * 1000
+    inday = bt_t[(bt_t >= day0) & (bt_t < day0 + SEC_PER_DAY_MS)]
+    if len(inday) == 0:
+        return {"n_quotes_in_day": 0, "gap_fraction": 1.0}
+    present = np.zeros(86_400, bool)
+    present[((inday - day0) // 1000).astype(np.int64)] = True
+    missing = ~present
+    idx = np.flatnonzero(missing)
+    if idx.size == 0:
+        runs = np.zeros(0, np.int64)
+    else:
+        brk = np.flatnonzero(np.diff(idx) != 1)
+        starts = np.concatenate(([0], brk + 1))
+        ends = np.concatenate((brk, [idx.size - 1]))
+        runs = (idx[ends] - idx[starts] + 1).astype(np.int64)
+    n_missing = int(missing.sum())
+    long_runs = runs[runs >= 60]
+    return {
+        "n_quotes_in_day": int(len(inday)),
+        "gap_fraction": float(n_missing / 86_400),
+        "n_missing_seconds": n_missing,
+        "n_gap_runs": int(runs.size),
+        "max_gap_run_s": int(runs.max()) if runs.size else 0,
+        "median_gap_run_s": float(np.median(runs)) if runs.size else 0.0,
+        "share_of_missing_seconds_in_runs_ge_60s":
+            float(long_runs.sum() / n_missing) if n_missing else 0.0,
+        "n_runs_ge_60s": int(long_runs.size),
+        "reading": ("OUTAGE-SHAPED: most missing seconds sit in runs of a "
+                    "minute or more"
+                    if n_missing and long_runs.sum() / n_missing > 0.5
+                    else "QUIET-BOOK-SHAPED: the missing seconds are "
+                         "scattered short holes, i.e. seconds in which the "
+                         "best quote did not change"),
+    }
+
+
+def census(symbols, out_path: Path | None = None) -> dict:
+    """The admission table and the gap PROFILE, per symbol-day.
+
+    A population census, not a gate read: no episode is simulated and no
+    threshold is applied to anything but the DECLARED admission predicate.
+    """
+    root = E20.require_canonical_root("P-2026-002 E2-A admission census")
+    out = {"protocol": PROTOCOL + "_CENSUS",
+           "carrying_commit": carrying_commit(),
+           "data_root_check": root,
+           "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
+                           "sha256": DECL_SHA},
+           "gap_threshold": GAP_MAX, "symbols": {}}
+    for sym in symbols:
+        require_symbol_in_scope(sym)
+        days = sorted({f.name.split("_")[0]
+                       for f in (RAW / "bookTicker" / sym).glob("*.csv*")})
+        rows = []
+        for day in days:
+            counts = stream_file_counts(sym, day)
+            prof, gap = None, None
+            if counts["bookTicker"] == HOURS_PER_DAY_FILES:
+                bk, _, _ = E20.read_book(sym, day, extend=False)
+                if bk is not None:
+                    prof = gap_profile(bk[0], day)
+                    gap = prof["gap_fraction"]
+            adm = day_admission(sym, day, counts, gap)
+            adm["gap_profile"] = prof
+            rows.append(adm)
+        n_adm = sum(1 for r in rows if r["admissible"])
+        n_complete = sum(1 for r in rows
+                         if all(r["streams_complete"].values()))
+        out["symbols"][sym] = {
+            "days": rows, "n_days_seen": len(rows),
+            "n_days_all_three_streams_complete": n_complete,
+            "n_admissible": n_adm,
+            "n_excluded_by_gap_alone": n_complete - n_adm,
+            "min_complete_days": D.MIN_COMPLETE_DAYS,
+            "meets_minimum": bool(n_adm >= D.MIN_COMPLETE_DAYS)}
+        print(f"{sym}: {n_complete} days with all three streams complete, "
+              f"{n_adm} admissible, {n_complete - n_adm} excluded by the gap "
+              f"leg alone (threshold {GAP_MAX})")
+    if out_path:
+        out_path.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
+    return out
+
+
 def diagnose_tick(sym: str, out_path: Path | None = None) -> dict:
     """R-570(D): WHY E1's tick_size returns 1e-6 for FIL, at the mechanism.
 
@@ -1111,12 +1205,16 @@ def main() -> int:
     ap.add_argument("--min-days", type=int, default=None)
     ap.add_argument("--no-repro", action="store_true")
     ap.add_argument("--diagnose-tick", nargs="*", default=None)
+    ap.add_argument("--census", nargs="*", default=None)
     ap.add_argument("--output", type=Path, default=None)
     a = ap.parse_args()
     if a.selftest or a.fixture:
         r = fixture(a.output)
         return 1 if r["n_failed"] or not r["data_free_proof"][
             "no_path_under_data_mm_hf_was_opened"] else 0
+    if a.census is not None:
+        census(a.census or list(SYMBOLS_IN_SCOPE), a.output)
+        return 0
     if a.diagnose_tick is not None:
         syms = a.diagnose_tick or ["FILUSDT"]
         outs = [diagnose_tick(sy, None) for sy in syms]
