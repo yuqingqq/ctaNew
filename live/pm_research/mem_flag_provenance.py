@@ -45,6 +45,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -135,6 +136,66 @@ _GEN_RE = re.compile(r"^  20\d\d-\d\d-\d\dT[\d:]+Z \(MEM ROUND", re.M)
 _TOPKEY_RE = re.compile(r"^[a-z_]+:", re.M)
 
 
+def flags_and_prov(text: str) -> tuple[set, set]:
+    """Parse one STATUS.yml text into (flag names, provenance names).
+
+    Returns empty sets rather than raising on unparseable input, because the
+    caller distinguishes "no new flags" from "could not compare" by its own
+    status field, never by an empty result.
+    """
+    try:
+        doc = yaml.safe_load(text)
+    except yaml.YAMLError:
+        return set(), set()
+    if not isinstance(doc, dict):
+        return set(), set()
+    f = doc.get(FLAGS_KEY) or {}
+    p = doc.get(PROV_KEY) or {}
+    return (set(f) if isinstance(f, dict) else set(),
+            set(p) if isinstance(p, dict) else set())
+
+
+def new_flags_without_provenance(now_text: str, base_text: str) -> list[str]:
+    """Flags added since `base_text` that carry no provenance entry.
+
+    WHY THIS EXISTS. The reviewer's currency audit (R-566(B)) found 27 of 40
+    sampled flags citing nothing, and MEM's disposition was a RULE: every NEW
+    flag carries a provenance entry at the moment it is written, with the 455
+    already-uncited left to attrition rather than bulk retro-citation. That rule
+    has held for six consecutive rounds -- UNMARKED has not moved off 455 -- but
+    it held as a HABIT. Nothing enforced it, which is the same shape as the
+    `updated:` window bar that drifted sevenfold while a ruling sat in a file
+    (SEAT_PROTOCOL 15). R-582 lists it as MEM's open item. This is the
+    instrument.
+
+    It compares against a BASE TEXT the caller supplies rather than reading git
+    itself, so the comparison can be driven on authored fixtures AND on the real
+    working-tree-versus-HEAD pair. The selftest does both, because a fixture-only
+    control is how this seat's probes have failed before.
+    """
+    now_f, now_p = flags_and_prov(now_text)
+    base_f, _ = flags_and_prov(base_text)
+    return sorted(n for n in (now_f - base_f) if n not in now_p)
+
+
+def _head_status_text(status_path: Path) -> tuple[str, str]:
+    """(text, status) for the committed STATUS.yml. Never raises.
+
+    `status` is COMPARED or a reason. An unavailable base must READ as unknown
+    and never as "no new flags" -- absence is not a pass (SEAT_PROTOCOL 11).
+    Every git call names its tree with -C (rule 21, as amended after the orphan).
+    """
+    try:
+        rel = status_path.resolve().relative_to(_REPO)
+    except ValueError:
+        return "", "NOT_IN_REPO"
+    r = subprocess.run(["git", "-C", str(_REPO), "show", f"HEAD:{rel}"],
+                       capture_output=True)
+    if r.returncode != 0:
+        return "", "NO_GIT_BASE"
+    return r.stdout.decode("utf-8", errors="replace"), "COMPARED"
+
+
 def window_generations(text: str) -> int:
     """Count generation headers in `updated:`, reading the RAW file text.
 
@@ -212,14 +273,20 @@ def audit(status_path: Path = STATUS) -> dict:
     checked = by_class.get(AUTHORITATIVE, [])
     gens = window_generations(_raw)
     window_over = max(0, gens - RULED_WINDOW)
+    _base, _base_status = _head_status_text(status_path)
+    uncited_new = (new_flags_without_provenance(_raw, _base)
+                   if _base_status == "COMPARED" else [])
     findings = (len(by_class.get("MALFORMED", [])) + len(orphans)
-                + len(missing_artifact) + (1 if window_over else 0))
+                + len(missing_artifact) + (1 if window_over else 0)
+                + len(uncited_new))
     return {
         "status_file": str(status_path),
         "n_flags": n,
         "window_generations": gens,
         "window_ruled": RULED_WINDOW,
         "window_over_by": window_over,
+        "new_flags_without_provenance": uncited_new,
+        "new_flag_base": _base_status,
         "counts": {k: len(v) for k, v in sorted(by_class.items())},
         "orphan_entries": sorted(orphans),
         "checked_artifact_missing": sorted(missing_artifact),
@@ -253,6 +320,12 @@ def render(rep: dict) -> None:
         print(f"  ORPHAN    {name}: provenance for a flag that does not exist")
     print(f"updated: window {rep['window_generations']} generations "
           f"(ruled {rep['window_ruled']})")
+    print(f"new flags vs HEAD: {rep['new_flag_base']}"
+          + (f" -- {len(rep['new_flags_without_provenance'])} without provenance"
+             if rep['new_flag_base'] == 'COMPARED' else ""))
+    for n in rep["new_flags_without_provenance"]:
+        print(f"  FINDING   {n}: added since HEAD with no flag_provenance entry "
+              f"-- every NEW flag carries one when written (R-566(B) rule)")
     if rep["window_over_by"]:
         print(f"  FINDING   the `updated:` rolling window is over its ruled "
               f"size by {rep['window_over_by']} -- move the older generations "
@@ -342,6 +415,43 @@ def selftest() -> int:
         f"{PROV_KEY}:\n  a:\n    prov: CHECKED\n    artifact: data/vanished.json\n"
         "    said: it read 333 of 1154\n")
     r = audit(d / "gone.yml")
+    # --- the NEW-FLAG provenance rule, BOTH directions (R-566(B), MEM 131)
+    _base_fx = "flags:\n  a: x\nflag_provenance:\n  a:\n    prov: RELAYED\n    from: R-1\n"
+    ok(new_flags_without_provenance(_base_fx, _base_fx) == [],
+       "ADMITS an unchanged file -- no new flags is not a finding, and a check "
+       "that fires on every round is a check that gets turned off")
+    _added_ok = ("flags:\n  a: x\n  b: y\nflag_provenance:\n"
+                 "  a:\n    prov: RELAYED\n    from: R-1\n"
+                 "  b:\n    prov: RELAYED\n    from: R-2\n")
+    ok(new_flags_without_provenance(_added_ok, _base_fx) == [],
+       "ADMITS a new flag that carries its provenance entry -- the rule is "
+       "'cite when written', not 'do not add flags'")
+    _added_bad = _base_fx.replace("flags:\n  a: x\n", "flags:\n  a: x\n  b: y\n")
+    ok(new_flags_without_provenance(_added_bad, _base_fx) == ["b"],
+       "KNOWN-BAD: a flag added with no provenance entry is named -- the rule "
+       "that held for six rounds as a habit now has an instrument")
+    ok(new_flags_without_provenance("flags:\n  a: x\n", "") == ["a"]
+       and new_flags_without_provenance(_base_fx, "") == []
+       and new_flags_without_provenance("not: [yaml", _base_fx) == [],
+       "an EMPTY base makes every UNCITED flag new -- so the caller must never "
+       "pass one silently -- while a cited flag stays admitted even against an "
+       "empty base, and unparseable input yields no names rather than raising")
+    # THE CONTROL ON THE REAL FILE, because authored fixtures are how this
+    # seat's probes have passed while measuring nothing (rounds 126 and 127).
+    if STATUS.exists():
+        _real = STATUS.read_text(encoding="utf-8")
+        _doc = yaml.safe_load(_real)
+        _name = "ZZZ_selftest_planted_flag_not_in_any_commit"
+        _planted = _real.replace("\nflags:\n", f"\nflags:\n  {_name}: planted\n", 1)
+        ok(_name in flags_and_prov(_planted)[0]
+           and new_flags_without_provenance(_planted, _real) == [_name],
+           "POSITIVE CONTROL ON THE REAL STATUS.yml: a flag planted into the "
+           "live file is detected as new and uncited -- the check is proven to "
+           "fire on the artifact it governs, not only on fixtures")
+        ok(new_flags_without_provenance(_real, _real) == [],
+           "and the live file against itself is clean, so the control above is "
+           "the plant and not a standing failure")
+
     # --- the `updated:` window guard, BOTH directions (R-542(E), MEM 126)
     # The fixtures are RAW FILE TEXT, because the field is a folded scalar and
     # the first version of this check counted 0 on a 23-generation file while

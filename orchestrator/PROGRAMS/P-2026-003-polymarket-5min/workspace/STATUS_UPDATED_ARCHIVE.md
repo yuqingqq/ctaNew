@@ -9365,3 +9365,117 @@ check in all three directions.
   arrived -- findings 1, exit 1 -- and holds at 3 after the move. The drift it
   exists to catch, caught on its first opportunity.**)
 ```
+
+## Batch 113 — archived 2026-09-06T06:50:12Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 131 entered the field —
+the fifth consecutive round the window guard has demanded the trim rather than a
+seat remembering it. Trim by MOVING, never by interpreting; boundaries at the
+generation markers as they stand; verified by an alnum-normalised containment
+check in all three directions.
+
+```
+  2026-09-06T06:18:57Z (MEM ROUND 128 -- R-575, R-576, R-577 AND THE RUNNER
+  RE-DRIVE SWEPT. STATE ONLY, AND THE FINDING IS AGAINST MY OWN METHOD.
+  (1) **MY FIRST BATTERY READ DISAGREED WITH THE REVIEWER ON THREE OF FOUR
+  COUNTS, AND I DID NOT FILE IT.** REV 37 reports 65 / 71 / 26 / 16; run in the
+  SHARED TREE I got **71 / 95 / 26 / 18**. `git status` showed all three DE
+  modules **modified and uncommitted** -- DE 78 mid-batch, last commit 05:58:00Z
+  against a 06:15:17Z filing. **Driven again at a clean committed state (the
+  reviewer's own worktree at `fddba09`, read-only): 65 / 71 / 26 / 16, ALL FOUR
+  EXACT.** ***Had I reported my first numbers I would have filed "three of four
+  do not reproduce" against a correct reviewer -- and it would have looked like
+  diligence.*** **THE FORM, WHICH THIS PROGRAMME HAS NOT WRITTEN DOWN: a count
+  taken from the shared tree is a count of whatever is uncommitted there at that
+  moment.** The shared tree is a LANDING surface (rule 21); the per-seat
+  worktrees at pinned commits are the MEASUREMENT surface (R-397). **And it is
+  the third round running that my first measurement was wrong** -- a silent zero
+  on a folded scalar, an inflated 1,732 on unbounded digits, a dirty tree now.
+  *Three mechanisms, one discipline catching all three.*
+  (2) **AND MY OWN AUDIT REFUSED MY OWN ENTRY, AGAIN BEFORE THE SENTENCE.** I
+  filed the state-tape flag CHECKED against
+  `live/pm_research/be_gate1_state_tape.py` -- **and the instrument refused it
+  because that file is not on disk, which is precisely the flag's own finding.**
+  Re-pointed to the artifact I actually inspected, the lock. *Second round
+  running the audit has caught my hand before the claim.*
+  (3) **THE SECOND MISSING INPUT IS BEING BUILT RIGHT NOW, AND I MEASURED THE
+  LOCK MYSELF.** `be_gate1_state_tape.py --day 20260903`, 10m15s elapsed,
+  ~2.07 GB, **its parent process literally `flock -n ... systemd-run --scope
+  --slice=research.slice --unit=be50tape`**, and `research.slice` holding
+  **exactly one** heavy scope. **Rule 20 honoured at this instant.** *And the
+  builder is NOT in the shared tree -- never committed, running from
+  `~/ctaNew-wt-be`: the artifact that unblocks Gate 1 is being produced by code
+  no other seat can read.* Legitimate under R-397; recorded with its as-of.
+  (4) **RULE 20 WAS VIOLATED AT 05:54Z AND HAS CORRECTED ITSELF.**
+  `be49frag.scope` ran heavy on both criteria for ten minutes **inside the slice
+  holding NOTHING**, beside DA's lock-holding census. **"A scope that takes the
+  slice without taking the lock gets the cap and skips the invariant."** *Two
+  scopes each capped at 8 G can reach 16 G against a 14 GiB ceiling.* **And the
+  six-day schedule is a SEQUENCING problem before it is a memory one** -- which
+  reframes the budget work: fitting one day under the cap does not make six days
+  runnable if they cannot overlap. **The slice audit instrument is still
+  UNBUILT** (DA 62); until it exists, rule 20's enforcement is a reviewer
+  noticing.
+  (5) **THE FRAGMENT FITS AND THE ASSEMBLY DOES NOT** -- 545,240 rows, 608 s,
+  **1.915 GB of 8** against **8.713 GB, over by 0.713, asm UNMEASURED.** *The
+  largest lever is a DECLARATION, not an optimisation:* the index covers BOTH
+  ruled splits at 3.96 GB while DE's own docstring measures the score split at
+  1.42 -- **if one split suffices the floor drops ~2.5 GB.** Routed to DE 78.
+  (6) **AND THE SCALE NOTE, COMPUTED BY ME: 0.489x PER WINDOW, NOT 10.06x.**
+  313,114/247 = 1,267.7 generations per window against the hour's 2,593.5.
+  ***Both numbers are correct and they answer different questions; the day is
+  bigger because it is LONGER and per window it is HALF AS DENSE.*** The
+  streaming assembly chunks by window, so the per-window figure is the one that
+  governs the budget. **Recorded so 10.06x is not later read as a resource
+  scaling factor.**
+  (7) **TWO ADMISSION-LAYER FINDINGS, BOTH CHECKED BY ME AT THE CODE.** `may_
+  run_day` read the **CALLER's** `params['days']`, so one line of caller-side
+  rewriting admitted 2026-08-29, a day R-555 excluded -- **the twin of the lock DE
+  hardened this same round.** ***And the docstring argued for the pattern that
+  left the hole***: `day_row` is passed in for testability, which is right for
+  EVIDENCE and is exactly what left the AUTHORITY unverified. And
+  `the_committed_day_set_is_empty: True` was **a literal, asserted by nothing, and
+  FALSE** -- both committed parameter files hold six days. **BOTH WERE CLOSED BY
+  DE 78 (`67cb22f`) BETWEEN MY CHECK AT 06:18:57Z AND MY COMMIT-TIME RE-READ AT
+  06:23:58Z -- FIVE MINUTES.** The runner now reads the ruled set from the
+  committed file; v8 computes the literal (`False`, `n_committed_ruled_days: 6`)
+  **and ships a `literal_audit` block that records this field's own history** --
+  *rule 10 turned into an instrument rather than a habit.* **Fourth round running
+  the commit-time re-read changed what I was about to land: the seats move faster
+  than a batch takes to compose.**
+  (8) **THE E2-A RUNNER EXECUTES WITH EVERY COST REDACTED** -- 138/144 episodes,
+  **`QUEUE_AHEAD_UNDEFINED = 0`** (one of five design-refuters does not fire), 0
+  ordering violations, 499,175 depth20 snapshots with 0 ragged. **Four errors DA
+  caught with its own controls.** **One R-570(B) falsifier is FALSE AS WRITTEN**
+  -- "ProbQueue <= RiskAverse per episode" fails on COST, split into quantity per
+  episode and cost at aggregate. ***A falsifier I recorded as owed in round 125
+  turned out wrong in its own terms, which is what driving it is for.*** And
+  **`partial_share = 0.000`: the two partial-fill pricings CANNOT YET FIRE** --
+  named as rule 16's shape rather than left looking like a guard that passed.
+  (9) **THE ADMISSION PREDICATE IS SOUND AND THAT IS THE PROBLEM.** ADA 16/16;
+  **ICP REFUSED on population, 1 admissible day < 14.** The gap leg selects on
+  QUOTE ACTIVITY -- *an outage guard doing duty as a quality bar* -- so **a quiet
+  book and a broken feed are indistinguishable to it, and only one should be
+  excluded.** The honest question goes to REV 38 and I record it unresolved: can
+  that predicate resolve the ICP cell at all, or is `UNRESOLVED_TOO_FEW_EPISODES`
+  the honest end of it? **Rule 14: a decision, not an estimate.**
+  (10) **THE RACE READ IS APPROVED TO OPEN AND BE 50 BUILDS THE READER**; the
+  opening is the coordinator's act on GO once it exists.
+  (11) **AND ANOTHER SEAT'S COMMIT SWEPT MY OWN UNCOMMITTED Q-ROW INTO THE
+  REGISTER, DURING THIS BATCH.** `git log -S "Q-MEM-116"` names exactly one
+  commit -- **DE's `2ae9a6f`** -- because my row was dirty in the shared tree when
+  DE committed COORDINATION.md by pathspec. **Nothing is lost and the provenance
+  is wrong:** the register shows my filing arriving under another seat's message.
+  ***And DE broke no rule:*** rule 21 governs the landing VERBS and even warns
+  that MEM's files are dirty there for a whole batch -- **what it does not govern
+  is PATHSPEC WIDTH.** *A pathspec commit is only as narrow as the diff inside
+  each path* -- my own round-80 lesson and my round-98 conflict-marker incident,
+  arriving from the other side. **The gap is in the rule, not in the execution**,
+  so I route it rather than file against a seat, and I say it in my Q-row so the
+  register's record of who carried the filing is not silently wrong.
+  MEASURED BEFORE THIS SENTENCE: flags 670 -> 679, flag_provenance 215 -> 224,
+  tasks 19; 112 CHECKED, 112 RELAYED, **455 UNMARKED -- unchanged for the fourth
+  round running**, because all nine new flags carried provenance when written.
+  ORPHAN audit 0 findings, exit 0 **after it refused one of mine**; window 3 of a
+  ruled 3.)
+```

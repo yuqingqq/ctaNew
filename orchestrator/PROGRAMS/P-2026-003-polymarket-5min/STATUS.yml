@@ -63,6 +63,68 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T06:50:12Z (MEM ROUND 131 -- R-581 AND R-582 SWEPT. STATE ONLY, AND
+  THE ROUND CLOSES ONE OF MY OWN OPEN ITEMS WITH AN INSTRUMENT THAT FIRED ON ME.
+  (1) **THE RACE READ IS BLOCKED ON READER -- NOT "APPROVED TO OPEN".** Carried
+  since REV 36 as approved-and-waiting; **the reader exists and computes the wrong
+  quantity, which is a different and worse state than not existing.** The
+  reviewer's words: **"my BE-48 C.2 residual is now WORSE, NOT BETTER, because the
+  code exists and computes something else."** *An absent reader blocks; a present
+  wrong one invites.* **BE 52 rebuilds it to the declared estimand; the opening
+  stays HELD.** *I record the word because "approved to open" and "blocked on
+  reader" resolve to opposite actions for anyone reading this file for a GO, and
+  the five days are consumed the moment one is taken.*
+  (2) **THE REGISTER RECORDS ITS OWN AVERTED ERROR, BY NAME, IN THE ENTRY AFTER
+  THE PLAN.** R-580(D): "REV 40 … then the race read opens on GO". R-581: ***"Had
+  the coordinator opened the read with this reader, ALL FIVE RACE DAYS WOULD HAVE
+  BEEN CONSUMED on a degenerate statistic, with no sixth day"*** -- and "the
+  coordinator's plan is what the review protocol exists to interrupt". **The cost
+  is asymmetric and that is why the order matters: a review before the read costs
+  one round; a read on a wrong statistic costs the population, permanently.**
+  *And the finding came from asking which REGIME the data is in, not from
+  re-reading the code -- the same question that withdrew the 08-29/30 control.*
+  (3) **THE REVIEWER'S LEDGER NAMES TWO MEM ITEMS; ONE IS STALE AND ONE IS
+  EXACTLY RIGHT.** **All three STALE flags were dispositioned in band at round
+  125** -- verified in my own file, each with a re-measurement BY SYMBOL. *Closed
+  on my surface and unseen by the reviewer: a communication gap, not a
+  disagreement.* **The other half is the half I would have defended wrongly:** I
+  censused the unauditable axis at round 125 and treated it as closed. ***MEASURING
+  A RATE IS NOT MAKING THE FLAGS AUDITABLE.*** The answering rule -- every NEW flag
+  carries provenance when written -- **had held six consecutive rounds AS A HABIT,
+  with nothing enforcing it.** *The identical shape as my `updated:` window bar: a
+  ruling in a file, drifting until an instrument existed.*
+  (4) **SO I BUILT THE INSTRUMENT, AND IT FIRED ON ME FIRST.**
+  `new_flags_without_provenance` compares the working file against `git -C <repo>
+  show HEAD:<path>` and raises a FINDING per uncited new flag. **Driven on this
+  round's own six flags before their entries existed: 6 findings, exit 1 -- then 0
+  once written.** *A live positive control on the artifact, produced by my own
+  batch rather than planted.* **And the absence path is a STATUS, not a pass:** an
+  unreadable base reports `NO_GIT_BASE` and raises nothing, printed every run --
+  *because "could not compare" reading as "nothing new" is the absence-as-a-pass
+  defect by another door.* **31 checks, up from 25** -- and **my first fixture was
+  WRONG and the selftest caught it**: *a battery that only ever confirms its author
+  is not a battery.* **The 455 already-uncited stay on attrition, unchanged.**
+  (5) **AND ONE OF THE REVIEWER'S FOUR HARVESTED CONVENTIONS IS THE RULE I HAVE
+  BEEN DERIVING FROM MY OWN MISTAKES FOR FOUR ROUNDS: "when your own probe
+  contradicts a seat's claim, SUSPECT THE PROBE FIRST."** *A silent zero on a
+  folded scalar (126), an inflated 1,732 on unbounded digits (127), battery counts
+  from a dirty tree (128), a zero-occurrence claim false at the tip (129) -- four
+  mechanisms, one rule, and it was already the reviewer's convention while I was
+  paying for it.* **And its third convention -- "never accept an artifact's own
+  summary field where the rows are readable" -- is precisely what my round-129
+  receipt-split relay violated.**
+  (6) **THE LEDGER'S UNOWNED ITEM, RECORDED HERE BECAUSE A STATE FILE IS WHERE AN
+  OWNERLESS ITEM SHOULD SURFACE:** "the race read has no reader that computes the
+  declared estimand" sat under no seat's name until BE 52. *An unowned row in a
+  per-seat ledger is the one nobody sweeps, because every seat reads its own row.*
+  Other rows: **DE** closed 5 / open 2; **BE** closed 3 / open 4; **DA** closed 2 /
+  open 4, all in DA 63's v7. **REV 39's `--day` approval stands** (three wiring
+  items, DE 79).
+  MEASURED BEFORE THIS SENTENCE: flags 700 -> 706, flag_provenance 245 -> 251,
+  tasks 19; 132 CHECKED, 119 RELAYED, **455 UNMARKED -- unchanged for the seventh
+  round running, and from this round it is enforced rather than remembered.**
+  ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new flags vs HEAD 0
+  without provenance.)
   2026-09-06T06:41:49Z (MEM ROUND 130 -- R-580 AND THE ROUND'S LANDINGS SWEPT.
   STATE ONLY. THE HEADLINE IS A POPULATION COLLAPSE THAT NOBODY LOWERED A BAR TO
   ESCAPE.
@@ -288,109 +350,6 @@ updated: >-
   tasks 19; 122 CHECKED, 114 RELAYED, **455 UNMARKED -- unchanged for the fifth
   round running**, because all twelve new flags carried provenance when written.
   ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3.)
-  2026-09-06T06:18:57Z (MEM ROUND 128 -- R-575, R-576, R-577 AND THE RUNNER
-  RE-DRIVE SWEPT. STATE ONLY, AND THE FINDING IS AGAINST MY OWN METHOD.
-  (1) **MY FIRST BATTERY READ DISAGREED WITH THE REVIEWER ON THREE OF FOUR
-  COUNTS, AND I DID NOT FILE IT.** REV 37 reports 65 / 71 / 26 / 16; run in the
-  SHARED TREE I got **71 / 95 / 26 / 18**. `git status` showed all three DE
-  modules **modified and uncommitted** -- DE 78 mid-batch, last commit 05:58:00Z
-  against a 06:15:17Z filing. **Driven again at a clean committed state (the
-  reviewer's own worktree at `fddba09`, read-only): 65 / 71 / 26 / 16, ALL FOUR
-  EXACT.** ***Had I reported my first numbers I would have filed "three of four
-  do not reproduce" against a correct reviewer -- and it would have looked like
-  diligence.*** **THE FORM, WHICH THIS PROGRAMME HAS NOT WRITTEN DOWN: a count
-  taken from the shared tree is a count of whatever is uncommitted there at that
-  moment.** The shared tree is a LANDING surface (rule 21); the per-seat
-  worktrees at pinned commits are the MEASUREMENT surface (R-397). **And it is
-  the third round running that my first measurement was wrong** -- a silent zero
-  on a folded scalar, an inflated 1,732 on unbounded digits, a dirty tree now.
-  *Three mechanisms, one discipline catching all three.*
-  (2) **AND MY OWN AUDIT REFUSED MY OWN ENTRY, AGAIN BEFORE THE SENTENCE.** I
-  filed the state-tape flag CHECKED against
-  `live/pm_research/be_gate1_state_tape.py` -- **and the instrument refused it
-  because that file is not on disk, which is precisely the flag's own finding.**
-  Re-pointed to the artifact I actually inspected, the lock. *Second round
-  running the audit has caught my hand before the claim.*
-  (3) **THE SECOND MISSING INPUT IS BEING BUILT RIGHT NOW, AND I MEASURED THE
-  LOCK MYSELF.** `be_gate1_state_tape.py --day 20260903`, 10m15s elapsed,
-  ~2.07 GB, **its parent process literally `flock -n ... systemd-run --scope
-  --slice=research.slice --unit=be50tape`**, and `research.slice` holding
-  **exactly one** heavy scope. **Rule 20 honoured at this instant.** *And the
-  builder is NOT in the shared tree -- never committed, running from
-  `~/ctaNew-wt-be`: the artifact that unblocks Gate 1 is being produced by code
-  no other seat can read.* Legitimate under R-397; recorded with its as-of.
-  (4) **RULE 20 WAS VIOLATED AT 05:54Z AND HAS CORRECTED ITSELF.**
-  `be49frag.scope` ran heavy on both criteria for ten minutes **inside the slice
-  holding NOTHING**, beside DA's lock-holding census. **"A scope that takes the
-  slice without taking the lock gets the cap and skips the invariant."** *Two
-  scopes each capped at 8 G can reach 16 G against a 14 GiB ceiling.* **And the
-  six-day schedule is a SEQUENCING problem before it is a memory one** -- which
-  reframes the budget work: fitting one day under the cap does not make six days
-  runnable if they cannot overlap. **The slice audit instrument is still
-  UNBUILT** (DA 62); until it exists, rule 20's enforcement is a reviewer
-  noticing.
-  (5) **THE FRAGMENT FITS AND THE ASSEMBLY DOES NOT** -- 545,240 rows, 608 s,
-  **1.915 GB of 8** against **8.713 GB, over by 0.713, asm UNMEASURED.** *The
-  largest lever is a DECLARATION, not an optimisation:* the index covers BOTH
-  ruled splits at 3.96 GB while DE's own docstring measures the score split at
-  1.42 -- **if one split suffices the floor drops ~2.5 GB.** Routed to DE 78.
-  (6) **AND THE SCALE NOTE, COMPUTED BY ME: 0.489x PER WINDOW, NOT 10.06x.**
-  313,114/247 = 1,267.7 generations per window against the hour's 2,593.5.
-  ***Both numbers are correct and they answer different questions; the day is
-  bigger because it is LONGER and per window it is HALF AS DENSE.*** The
-  streaming assembly chunks by window, so the per-window figure is the one that
-  governs the budget. **Recorded so 10.06x is not later read as a resource
-  scaling factor.**
-  (7) **TWO ADMISSION-LAYER FINDINGS, BOTH CHECKED BY ME AT THE CODE.** `may_
-  run_day` read the **CALLER's** `params['days']`, so one line of caller-side
-  rewriting admitted 2026-08-29, a day R-555 excluded -- **the twin of the lock DE
-  hardened this same round.** ***And the docstring argued for the pattern that
-  left the hole***: `day_row` is passed in for testability, which is right for
-  EVIDENCE and is exactly what left the AUTHORITY unverified. And
-  `the_committed_day_set_is_empty: True` was **a literal, asserted by nothing, and
-  FALSE** -- both committed parameter files hold six days. **BOTH WERE CLOSED BY
-  DE 78 (`67cb22f`) BETWEEN MY CHECK AT 06:18:57Z AND MY COMMIT-TIME RE-READ AT
-  06:23:58Z -- FIVE MINUTES.** The runner now reads the ruled set from the
-  committed file; v8 computes the literal (`False`, `n_committed_ruled_days: 6`)
-  **and ships a `literal_audit` block that records this field's own history** --
-  *rule 10 turned into an instrument rather than a habit.* **Fourth round running
-  the commit-time re-read changed what I was about to land: the seats move faster
-  than a batch takes to compose.**
-  (8) **THE E2-A RUNNER EXECUTES WITH EVERY COST REDACTED** -- 138/144 episodes,
-  **`QUEUE_AHEAD_UNDEFINED = 0`** (one of five design-refuters does not fire), 0
-  ordering violations, 499,175 depth20 snapshots with 0 ragged. **Four errors DA
-  caught with its own controls.** **One R-570(B) falsifier is FALSE AS WRITTEN**
-  -- "ProbQueue <= RiskAverse per episode" fails on COST, split into quantity per
-  episode and cost at aggregate. ***A falsifier I recorded as owed in round 125
-  turned out wrong in its own terms, which is what driving it is for.*** And
-  **`partial_share = 0.000`: the two partial-fill pricings CANNOT YET FIRE** --
-  named as rule 16's shape rather than left looking like a guard that passed.
-  (9) **THE ADMISSION PREDICATE IS SOUND AND THAT IS THE PROBLEM.** ADA 16/16;
-  **ICP REFUSED on population, 1 admissible day < 14.** The gap leg selects on
-  QUOTE ACTIVITY -- *an outage guard doing duty as a quality bar* -- so **a quiet
-  book and a broken feed are indistinguishable to it, and only one should be
-  excluded.** The honest question goes to REV 38 and I record it unresolved: can
-  that predicate resolve the ICP cell at all, or is `UNRESOLVED_TOO_FEW_EPISODES`
-  the honest end of it? **Rule 14: a decision, not an estimate.**
-  (10) **THE RACE READ IS APPROVED TO OPEN AND BE 50 BUILDS THE READER**; the
-  opening is the coordinator's act on GO once it exists.
-  (11) **AND ANOTHER SEAT'S COMMIT SWEPT MY OWN UNCOMMITTED Q-ROW INTO THE
-  REGISTER, DURING THIS BATCH.** `git log -S "Q-MEM-116"` names exactly one
-  commit -- **DE's `2ae9a6f`** -- because my row was dirty in the shared tree when
-  DE committed COORDINATION.md by pathspec. **Nothing is lost and the provenance
-  is wrong:** the register shows my filing arriving under another seat's message.
-  ***And DE broke no rule:*** rule 21 governs the landing VERBS and even warns
-  that MEM's files are dirty there for a whole batch -- **what it does not govern
-  is PATHSPEC WIDTH.** *A pathspec commit is only as narrow as the diff inside
-  each path* -- my own round-80 lesson and my round-98 conflict-marker incident,
-  arriving from the other side. **The gap is in the rule, not in the execution**,
-  so I route it rather than file against a seat, and I say it in my Q-row so the
-  register's record of who carried the filing is not silently wrong.
-  MEASURED BEFORE THIS SENTENCE: flags 670 -> 679, flag_provenance 215 -> 224,
-  tasks 19; 112 CHECKED, 112 RELAYED, **455 UNMARKED -- unchanged for the fourth
-  round running**, because all nine new flags carried provenance when written.
-  ORPHAN audit 0 findings, exit 0 **after it refused one of mine**; window 3 of a
-  ruled 3.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2772,6 +2731,149 @@ flags:
                              # is touched -- **a coordinator ruling, not mine.**
                              # *I state it in my own Q-row too, so the register's own
                              # record of who carried it is not silently wrong.*
+  THE_RACE_READ_IS_BLOCKED_ON_READER_NOT_APPROVED_TO_OPEN: THE-STATE-WORD-CHANGES-AND-SO-DOES-THE-RISK
+                             # CHECKED 2026-09-06T06:50:12Z at R-581 and the filing, and this
+                             # is the STATE correction the round exists to land.
+                             # **From REV 36 through R-580 the race read was carried as
+                             # "APPROVED TO OPEN, waiting on a reader". IT IS NOW BLOCKED
+                             # ON READER.** The reader exists and computes the wrong
+                             # quantity, which is a different and worse state than not
+                             # existing.
+                             # The reviewer's own words: **"my BE-48 section C.2 residual
+                             # is now WORSE, NOT BETTER, because the code exists and
+                             # computes something else."** *An absent reader blocks; a
+                             # present wrong one invites.*
+                             # **BE 52 rebuilds it to the DECLARED estimand** -- the
+                             # statistic read from the declaration's own fields, with the
+                             # reviewer's collapsing-series +/-1e-9 known-bad and a
+                             # synthetic positive control whose net cents are KNOWN --
+                             # queued behind BE 51's book. **The opening stays HELD.**
+                             # *I record the word because "approved to open" and "blocked
+                             # on reader" resolve to opposite actions for anyone reading
+                             # this file for a GO decision, and the five days are
+                             # consumed the moment one is taken.*
+  THE_PROTOCOL_INTERRUPTED_THE_COORDINATORS_OWN_PLAN: THE-STRONGEST-EVIDENCE-THE-REVIEW-CYCLE-IS-LOAD-BEARING
+                             # CHECKED 2026-09-06T06:50:12Z at R-581(A).
+                             # R-580(D) stated the plan in the register: **"REV 40 … then
+                             # the race read opens on GO."** R-581 records what that would
+                             # have cost: ***"Had the coordinator opened the read with
+                             # this reader, ALL FIVE RACE DAYS WOULD HAVE BEEN CONSUMED
+                             # (rule 11) on a degenerate statistic, with no sixth day."***
+                             # **And the entry says so about itself: "The coordinator's
+                             # plan is what the review protocol exists to interrupt."**
+                             # *A register that records its own averted error, by name, in
+                             # the entry immediately after stating the plan, is the
+                             # strongest evidence in this programme that the review cycle
+                             # is load-bearing rather than ceremonial.* **The cost is
+                             # asymmetric and that is why the order matters: a review
+                             # before the read costs one round; a read on a wrong
+                             # statistic costs the population, permanently.**
+                             # AND IT LANDS ON A SEQUENCE I HAVE BEEN COUNTING: the
+                             # reviewer's finding came from **asking which REGIME the data
+                             # is in** -- on the writer's real shape the day sign is
+                             # forced -- rather than from re-reading the code. *The same
+                             # question that withdrew the 08-29/30 control.*
+  THE_REVIEWERS_MEM_LEDGER_IS_HALF_STALE_AND_HALF_RIGHT: THE-THREE-STALE-CLOSED-AT-ROUND-125-THE-RULE-HAD-NO-INSTRUMENT
+                             # CHECKED 2026-09-06T06:50:12Z against my own file, because a
+                             # ledger naming my items is a claim about MY surface and I
+                             # check those.
+                             # R-582(C) lists **"MEM open: the three STALE flags and the
+                             # unauditable-flag rule."**
+                             # **HALF IS STALE: ALL THREE STALE FLAGS WERE DISPOSITIONED
+                             # IN BAND AT ROUND 125** -- verified just now, each carries
+                             # `SUPERSEDED-IN-BAND` with a re-measurement **by SYMBOL**
+                             # (EXPECTED_CHECKS 66 not 52; G = 5 by R-529(A) with the
+                             # independent count 3; `evaluate_predicates` moved, so that
+                             # finding is UNVERIFIED rather than withdrawn). *They are
+                             # closed on my surface and the reviewer has not seen it --
+                             # which is a communication gap, not a disagreement.*
+                             # **HALF IS EXACTLY RIGHT, AND IT IS THE HALF I WOULD HAVE
+                             # DEFENDED WRONGLY.** I censused the unauditable-flag axis at
+                             # round 125 (357 of 637 bare, and the cross-tab reversing the
+                             # premise) and treated it as closed. ***MEASURING A RATE IS
+                             # NOT MAKING THE FLAGS AUDITABLE.*** The rule that answers it
+                             # -- every NEW flag carries provenance when written -- has
+                             # held for **six consecutive rounds** (UNMARKED unmoved at
+                             # 455), **and it held as a HABIT with nothing enforcing it.**
+                             # *Which is the identical shape as my `updated:` window bar:
+                             # a ruling in a file, drifting until an instrument existed.*
+                             # **CLOSED THIS ROUND WITH AN INSTRUMENT** -- see the flag
+                             # below. **The 455 already-uncited stay on attrition; that
+                             # disposition is unchanged and is not what the reviewer's
+                             # item asks about.**
+  THE_NEW_FLAG_RULE_NOW_HAS_AN_INSTRUMENT_AND_IT_FIRES_ON_THE_REAL_FILE: 31-CHECKS-INCLUDING-A-PLANT-INTO-THE-LIVE-STATUS
+                             # CHECKED 2026-09-06T06:50:12Z by building it and driving it
+                             # both directions, on fixtures AND on the live artifact.
+                             # `mem_flag_provenance.py` gains
+                             # **`new_flags_without_provenance(now_text, base_text)`** --
+                             # flags present now and absent from the committed base that
+                             # carry no provenance entry -- wired into `audit()` as a
+                             # FINDING, with the base read via `git -C <repo> show
+                             # HEAD:<path>` (**every git call names its tree, rule 21 as
+                             # amended**).
+                             # **AND THE ABSENCE PATH IS A STATUS, NOT A PASS:** when the
+                             # base cannot be read the report carries `new_flag_base:
+                             # NO_GIT_BASE` or `NOT_IN_REPO` and raises no finding --
+                             # ***because "could not compare" reading as "nothing new" is
+                             # precisely the absence-as-a-pass defect this programme has
+                             # named repeatedly.*** The status is printed every run, not
+                             # only when bad.
+                             # **FALSIFIERS, BOTH DIRECTIONS:** it ADMITS an unchanged
+                             # file and a new flag that carries its entry (*the rule is
+                             # "cite when written", not "do not add flags"*); it NAMES a
+                             # new uncited flag; an empty base makes every UNCITED flag
+                             # new while a cited one stays admitted; unparseable input
+                             # yields no names rather than raising.
+                             # **AND THE CONTROL THAT MATTERS: A PLANT INTO THE LIVE
+                             # STATUS.yml.** A flag inserted into the real file is
+                             # detected as new and uncited, and the real file against
+                             # itself is clean -- ***so the control is the plant and not a
+                             # standing failure.*** *I added it because rounds 126 and 127
+                             # are two instances of my probes passing on authored input
+                             # while measuring nothing on the artifact.*
+                             # **31 checks pass, up from 25.** *And my first fixture was
+                             # WRONG -- I asserted an empty base would report a CITED flag
+                             # -- and the selftest caught it. A battery that only ever
+                             # confirms the author is not a battery.*
+  THE_REVIEWERS_FOUR_HARVESTED_CONVENTIONS: ONE-OF-THEM-IS-THE-RULE-I-HAVE-HIT-FOUR-ROUNDS-RUNNING
+                             # RELAYED from R-582(B) 2026-09-06T06:50:12Z.
+                             # Four conventions no filing states: **run a light suite
+                             # without the lock and SAY the measurement that makes it
+                             # light**; **report a refused `flock` rather than waiting**;
+                             # **never accept an artifact's own summary field where the
+                             # rows are readable -- measure the rows**; **when a control
+                             # passes, ask which REGIME the data is actually in before
+                             # crediting it** (three of today's findings came from that
+                             # one question); and **when your own probe contradicts a
+                             # seat's claim, suspect the probe first.**
+                             # ***THE LAST ONE IS THE RULE I HAVE ARRIVED AT
+                             # INDEPENDENTLY, FOUR ROUNDS RUNNING, EACH TIME THE HARD
+                             # WAY:*** a silent zero on a folded scalar (126), an inflated
+                             # 1,732 on unbounded digits (127), battery counts from a
+                             # dirty tree (128), a zero-occurrence claim false at the tip
+                             # (129). **Four different mechanisms, one rule -- and it was
+                             # already the reviewer's convention while I was deriving it
+                             # from my own mistakes.**
+                             # *And the third convention is the one my round-129 entry
+                             # violated, in the receipt-split relay: an artifact's summary
+                             # field is not the rows.*
+  THE_UNOWNED_UNCLOSED_ITEM_IS_THE_READERS_ESTIMAND: NO-SEAT-HELD-IT-UNTIL-BE-52
+                             # RELAYED from R-582(C) 2026-09-06T06:50:12Z.
+                             # The reviewer's ledger closes with an item under **no seat's
+                             # name**: *"the race read has no reader that computes the
+                             # declared estimand."* **BE 52 now holds it** (R-581(A)),
+                             # but it sat unowned across the ledger's construction.
+                             # *An UNOWNED item in a per-seat ledger is the one nobody
+                             # will sweep, because every seat reads its own row.* **I
+                             # record it under my own axis rather than leaving it in the
+                             # reviewer's closing paragraph**, since a state file is
+                             # exactly where an ownerless item should surface.
+                             # THE LEDGER'S OTHER ROWS, RELAYED for the fresh reviewer:
+                             # **DE** closed 5 / open 2 (the three `--day` wiring items in
+                             # DE 79, the high-water memory instrument); **BE** closed 3 /
+                             # open 4 (the reader's estimand, the B-1 three-read digest,
+                             # the worktree selftest's count arithmetic, the split label);
+                             # **DA** closed 2 / open 4, all four in DA 63's v7.
   THE_PYCACHE_DIRTYING_CANNOT_RECUR_AND_THIS_IS_WHAT_DID_IT: UNGUARDED-INTERPRETER-ON-THEN-TRACKED-BYTECODE
                              # CHECKED 2026-09-06T06:41:49Z by DRIVING THE RECURRENCE TEST,
                              # because the USER asked what did it so it does not recur and
@@ -15385,6 +15487,63 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 131, 2026-09-06T06:50:12Z ------------------------------
+  THE_RACE_READ_IS_BLOCKED_ON_READER_NOT_APPROVED_TO_OPEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T06:50:12Z
+    said: >-
+      R-581(A) records REV 40 as NOT APPROVED and states that the opening stays
+      held with BE 52 rebuilding the reader to the declared estimand, queued
+      behind BE 51's book; the reviewer's own words are that its BE-48 section
+      C.2 residual "is now worse, not better, because the code exists and
+      computes something else". So the state carried since REV 36 -- approved to
+      open, waiting on a reader -- is superseded by blocked on reader.
+  THE_PROTOCOL_INTERRUPTED_THE_COORDINATORS_OWN_PLAN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T06:50:12Z
+    said: >-
+      R-580(D) states the plan "REV 40 ... then the race read opens on GO"; R-581
+      states that opening with this reader would have consumed all five race days
+      on a degenerate statistic with no sixth day, and says of itself that the
+      coordinator's plan "is what the review protocol exists to interrupt". The
+      two entries are adjacent, so the register records its own averted error by
+      name.
+  THE_REVIEWERS_MEM_LEDGER_IS_HALF_STALE_AND_HALF_RIGHT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T06:50:12Z
+    said: >-
+      R-582(C) lists MEM open as the three STALE flags and the unauditable-flag
+      rule. Checked in my own file: all three STALE flags carry SUPERSEDED-IN-BAND
+      with symbol-based re-measurements landed at round 125, so that half is
+      stale. The other half is right: I censused the unauditable axis and treated
+      it as closed, but measuring a rate is not making the flags auditable, and
+      the answering rule -- every new flag carries provenance when written -- had
+      held six rounds as a habit with nothing enforcing it.
+  THE_NEW_FLAG_RULE_NOW_HAS_AN_INSTRUMENT_AND_IT_FIRES_ON_THE_REAL_FILE:
+    prov: CHECKED
+    artifact: live/pm_research/mem_flag_provenance.py
+    as_of: 2026-09-06T06:50:12Z
+    said: >-
+      new_flags_without_provenance(now_text, base_text) is wired into audit() as a
+      finding, with the base read via git -C <repo> show HEAD:<path> and an
+      unavailable base reported as new_flag_base NO_GIT_BASE or NOT_IN_REPO rather
+      than raising no finding silently; the status prints every run. Falsifiers
+      both directions including a plant into the live STATUS.yml, which is
+      detected as new and uncited while the live file against itself is clean. 31
+      checks pass, up from 25, and the selftest caught my own wrong fixture on the
+      empty-base case. Driven on this round's own six new flags before their
+      entries existed: six findings, exit 1.
+  THE_REVIEWERS_FOUR_HARVESTED_CONVENTIONS:
+    prov: RELAYED
+    from: R-582(B)
+    as_of: 2026-09-06T06:50:12Z
+  THE_UNOWNED_UNCLOSED_ITEM_IS_THE_READERS_ESTIMAND:
+    prov: RELAYED
+    from: R-582(C)
+    as_of: 2026-09-06T06:50:12Z
   # --- MEM round 130, 2026-09-06T06:41:49Z ------------------------------
   THE_PYCACHE_DIRTYING_CANNOT_RECUR_AND_THIS_IS_WHAT_DID_IT:
     prov: CHECKED
