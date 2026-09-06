@@ -361,6 +361,8 @@ recorded as R-495.
 
 ## 6. Standing prohibitions (coordinator)
 
+**EVERY LAUNCH IS A SEPARATE GO (R-620).** After any refusal of a real run, the fix is reviewed BEFORE the next launch; a seat does not fix-and-relaunch inside one batch. The coordinator issues GO per launch, naming the commit the run executes from. A launch made without it stays up only by the coordinator's explicit ruling, and a NO-GO from the reviewer stops it.
+
 **THE THREE-PATH READ CONSUMES (reviewer's harvest, R-600).** `be_race_reader.read()` handed the three REAL feed paths parses them and consumes the race days; only the five-path call refuses (on the absent pins). Nobody "just checks the reader works" on real paths — synthetic feeds in scratch only. BE 59 gates `--open` on the coordinator's explicit GO so this cannot happen by accident.
 
 - **Never** run `da_midnight_verify.sh` in production mode; never set
