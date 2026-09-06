@@ -1,0 +1,72 @@
+{
+  "carrying_commit": "9723ccbd22422b66b3b3c660c6aa5f7513ea73ae",
+  "protocol": "P002_E2_A_OVERLAY_RUNNER_V1_TICK_DIAGNOSIS",
+  "symbols": [
+    {
+      "carrying_commit": "9723ccbd22422b66b3b3c660c6aa5f7513ea73ae",
+      "control_both_directions": {
+        "the_diagnosis_must_be_able_NOT_to_fire": "reported per symbol; a symbol whose prints are all on grid returns gcd_fallback_fired = false"
+      },
+      "data_root_check": {
+        "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+        "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+        "adopted_from": "live/pm_research/de_data_root.py, imported not copied",
+        "branch": "1_env_PM_DATA_ROOT",
+        "data_root": "/home/yuqing/ctaNew/data",
+        "data_root_resolved": "/home/yuqing/ctaNew/data",
+        "fixture": false,
+        "is_canonical": true,
+        "mm_hf_tape_present": true,
+        "purpose": "P-2026-002 E1_RESULTS record-defect diagnosis",
+        "refusal": null,
+        "repo_root": "/home/yuqing/ctaNew",
+        "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+        "tape_present": true
+      },
+      "fallback_threshold": 0.999,
+      "frac_diffs_that_are_integer_multiples_of_the_modal": 0.9094890510948905,
+      "gcd_fallback_fired": true,
+      "gcd_fallback_value": 1e-06,
+      "modal_diff_the_FIX_produces": 0.0001,
+      "n_day_files": 31,
+      "n_distinct_prices": 1371,
+      "protocol": "P002_E2_A_OVERLAY_RUNNER_V1_TICK_DIAGNOSIS",
+      "symbol": "FILUSDT",
+      "the_finding": "the modal-diff FIX is present and produces 0.0001; the RETAINED GCD fallback fires (0.909489 < 0.999) and overrides it with 1e-06, which is what tick_size() returns (1e-06). The record's 'FIXED post-audit' describes a state the code does not reach on this input -- not because the fix is missing, but because the fallback the same docstring says was 'kept' supersedes it on exactly the input the fix was written for.",
+      "tick_size_actually_returns": 1e-06
+    },
+    {
+      "carrying_commit": "9723ccbd22422b66b3b3c660c6aa5f7513ea73ae",
+      "control_both_directions": {
+        "the_diagnosis_must_be_able_NOT_to_fire": "reported per symbol; a symbol whose prints are all on grid returns gcd_fallback_fired = false"
+      },
+      "data_root_check": {
+        "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+        "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+        "adopted_from": "live/pm_research/de_data_root.py, imported not copied",
+        "branch": "1_env_PM_DATA_ROOT",
+        "data_root": "/home/yuqing/ctaNew/data",
+        "data_root_resolved": "/home/yuqing/ctaNew/data",
+        "fixture": false,
+        "is_canonical": true,
+        "mm_hf_tape_present": true,
+        "purpose": "P-2026-002 E1_RESULTS record-defect diagnosis",
+        "refusal": null,
+        "repo_root": "/home/yuqing/ctaNew",
+        "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+        "tape_present": true
+      },
+      "fallback_threshold": 0.999,
+      "frac_diffs_that_are_integer_multiples_of_the_modal": 1.0,
+      "gcd_fallback_fired": false,
+      "gcd_fallback_value": 0.0001,
+      "modal_diff_the_FIX_produces": 0.0001,
+      "n_day_files": 31,
+      "n_distinct_prices": 586,
+      "protocol": "P002_E2_A_OVERLAY_RUNNER_V1_TICK_DIAGNOSIS",
+      "symbol": "ADAUSDT",
+      "the_finding": "the GCD fallback did NOT fire on this symbol, so the modal diff stands and tick_size() returns 0.0001",
+      "tick_size_actually_returns": 0.0001
+    }
+  ]
+}

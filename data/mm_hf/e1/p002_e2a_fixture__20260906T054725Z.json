@@ -1,0 +1,141 @@
+{
+  "both_directions": true,
+  "carrying_commit": "f926ee3835baf366a9d325dc00591f1bd8421302",
+  "checks": [
+    {
+      "check": "INTERIOR RiskAverse",
+      "detail": "clip(1005-1000,0,10) = 5.0 against the hand-derived 5.0",
+      "passed": true
+    },
+    {
+      "check": "INTERIOR ProbQueue-f3",
+      "detail": "f(70)/(f(30)+f(70)) = 0.927027027027027 against 343000/370000",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE alone-at-level identical under both models",
+      "detail": "queue_ahead 0, one opposite trade of 5: RiskAverse 1.0, ProbQueue 1.0 -- with nothing ahead the probability is 1 by the declared branch, so they cannot differ",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD queue > all subsequent volume never fills (RiskAverse)",
+      "detail": "queue_ahead 1e9 against 10 units of volume fills 0.0 -- if this were positive the queue would not be being counted",
+      "passed": true
+    },
+    {
+      "check": "ORDERING per EPISODE on QUANTITY (400 randomised episodes)",
+      "detail": "0 episodes where ProbQueue filled LESS than RiskAverse. The ordering is arithmetic on quantity -- RiskAverse fills only once front reaches 0, and at front = 0 ProbQueue's probability is 1",
+      "passed": true
+    },
+    {
+      "check": "R-570(B) SHARPENED: per-episode COST can invert with no defect",
+      "detail": "an episode whose mid ran AWAY over T_p costs -6.0 chased against 1.0 filled -- filling MORE costs MORE, so a per-episode cost inversion is the winner's curse, not an implementation defect. This is why the arithmetic check is on quantity.",
+      "passed": true
+    },
+    {
+      "check": "AT-L POSITIVE (reviewer REVIEW_DA60 section 2): a trade at EXACTLY L fills",
+      "detail": "one opposite print at exactly L with 100 units against a queue of 10 fills phi = 1.0",
+      "passed": true
+    },
+    {
+      "check": "AT-L KNOWN-BAD: a print one tick ABOVE L (away from the buy) does NOT fill",
+      "detail": "the same print one tick on the wrong side of L fills phi = 0.0 -- which is what makes the at-or-through rule a direction with a check rather than a comment",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 1 KNOWN-BAD: L absent from the snapshot is QUEUE_AHEAD_UNDEFINED and in NEITHER model's population",
+      "detail": "144 of 144 episodes carry the status and 0 resolve -- never a queue-ahead of zero, which would read as the best queue position there is",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 1 POSITIVE: an L that IS in the book is ADMITTED",
+      "detail": "144 of 144 resolve -- the status can NOT fire, so it is a status and not a filter",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 2 POSITIVE: phi = 0.5 prices STRICTLY between c_fill and c_chase under the gate-bearing rule",
+      "detail": "residual_chased 3.0 strictly inside (1.0, 5.0); whole_leg_charged 5.0 exactly at the chase",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 2 KNOWN-BAD: the two pricings straddling 8.0 is a FAIL, never their mean",
+      "detail": "(7.0, 9.0) -> FAIL_PARTIAL_FILL_PRICING_STRADDLES even though the mean is exactly 8.0 and would have passed; (6.0, 7.0) -> PARTIAL_FILL_PRICING_AGREES",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 3 POSITIVE: three complete streams and no gaps is ADMITTED",
+      "detail": "[]",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 3 KNOWN-BAD: a day missing depth20 ALONE is EXCLUDED",
+      "detail": "['depth20_files=23'] -- the third stream is a real requirement, not decoration",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 3 KNOWN-BAD: a complete day with a 20% gap is EXCLUDED",
+      "detail": "['gap_fraction=0.2000>=0.05']",
+      "passed": true
+    },
+    {
+      "check": "SCOPE both directions: a symbol outside the twelve is REFUSED by name, one inside is admitted",
+      "detail": "ATOMUSDT refused (collected but not in E1-A's XS set), ICPUSDT admitted",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE the closed form: a touch fill with no adverse drift costs fee_maker - half_spread",
+      "detail": "c_fill = 1.700000 bps = 1.8 -0.100000 (the half-spread earned, hence negative)",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE the chase: an unfilled episode pays the TAKER fee plus the realised drift over T_p",
+      "detail": "phi = 0, c_chase = 4.6000 bps against a taker fee of 4.5 -- the mid ran 10 ticks against the maker and the winner's curse is charged in full",
+      "passed": true
+    },
+    {
+      "check": "q IS MEASURED: a tape of 0.25 multiples returns 0.25, and ONE off-grid print does not drag it",
+      "detail": "qty_step_mode gives 0.25 on grid and 0.25 with one off-grid quantity",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD, AND IT IS E1's OWN FALLBACK: the GCD fallback kept in `tick_size` collapses on a single off-grid value",
+      "detail": "EP.tick_mode on the same tape returns 1e-05 instead of 0.25 -- the modal-diff fix is present and the retained GCD fallback overrides it, which is the FIL 1e-6-vs-1e-4 mechanism. The price tick is NOT changed here: it is pinned by the E1-A reproduction control.",
+      "passed": true
+    },
+    {
+      "check": "PARSE: twenty levels a side land at the right sizes",
+      "detail": "bid0 2.4@100.0, ask0 2.401@200.0",
+      "passed": true
+    },
+    {
+      "check": "PARSE KNOWN-BAD: a row without twenty levels a side is RAGGED, counted and EXCLUDED -- never padded with zeros",
+      "detail": "1 ragged of 2 raw -- a padded zero level is an invented queue position",
+      "passed": true
+    },
+    {
+      "check": "THE DECLARATION IS PINNED: the runner refuses if its sha256 moves",
+      "detail": "90a9a99f6cb2a2cc matches on disk",
+      "passed": true
+    },
+    {
+      "check": "THE SIZE-AWARE ARM REFUSES rather than defaulting to min-size and calling it E2-A",
+      "detail": "the arm that runs is labelled MIN_SIZE_NOT_THE_E2A_GATE",
+      "passed": true
+    }
+  ],
+  "data_free_proof": {
+    "instrument": "builtins.open + gzip.open + pandas.read_csv + Path.read_bytes + Path.read_text, wrapped for the duration of the fixture and restored after",
+    "n_paths_opened": 3,
+    "no_path_under_data_mm_hf_was_opened": true,
+    "tape_paths_opened": [],
+    "why": "a fixture that says it touched no data and cannot show it is a claim, not a control"
+  },
+  "declaration": {
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v5.json",
+    "sha256": "90a9a99f6cb2a2cc4c8f45f211177695355859e157643e854a34ef77ccc7b593"
+  },
+  "n_checks": 24,
+  "n_failed": 0,
+  "protocol": "P002_E2_A_OVERLAY_RUNNER_V1_FIXTURE",
+  "status": "FIXTURE_NO_DATA_TOUCHED"
+}
