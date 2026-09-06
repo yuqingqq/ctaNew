@@ -43,9 +43,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 10
+VERSION = 11
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 76
+EXPECTED_CHECKS = 80
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -76,11 +76,16 @@ V9_DECLARATION = ("p003_de_multiday_gate1_design_v9__20260906T062115Z"
                   ".json",
                   "fe4b0db4ddfdcc3a942fef9a35cd702646a9c020704ca81b5f28ff"
                   "175f7aff2e")
+V10_DECLARATION = ("p003_de_multiday_gate1_design_v10__20260906T064720Z"
+                   ".json",
+                   "0c8445983f2e43c83e16a9f0be502274328b68642664e15ac02483"
+                   "79e95f72d7")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
-                    V7_DECLARATION, V8_DECLARATION, V9_DECLARATION)
+                    V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
+                    V10_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -1234,6 +1239,71 @@ def declaration() -> dict:
                 "declares only the consumer's requirement, which is the "
                 "half BE was waiting on"),
         },
+        "R16_the_days_tape_and_fragment_are_PARAMETERS": {
+            "why": "BE 51 built the streaming assembly to R11 and the "
+                   "09-03 book was BLOCKED on DE's surface: the assembly "
+                   "could not be pointed at the day's inputs because the "
+                   "paths were CONSTANTS. The reviewer's BE-48 routed item "
+                   "2 -- 'a path parameter, DE's surface'",
+            "the_constants": {
+                "tape": "phase2_arms.TAPE_PATH -- the CONSUMED-ERA state "
+                        "tape the heads were FITTED on",
+                "fragment": "phase2_arms.FRAGMENT -- "
+                            "harmful_exposure_rows_v3_eraB.json, which "
+                            "spans 2026-08-24..25 and contains NO "
+                            "September slug (R-573)",
+                "kept_as": "the DEFAULT for the consumed hour, and only "
+                           "that. `day=None` reproduces the previous "
+                           "behaviour byte for byte, manifest identity "
+                           "check included",
+                "refused_for": "any day in the committed ruled set -- a "
+                               "Gate-1 day scored off the consumed era's "
+                               "tape is the development hour wearing the "
+                               "day's name",
+            },
+            "THE_CALL_BE_MAKES": {
+                "front_door": "de_phase4_diag_runner.day_assembly_inputs("
+                              "day, tape={'path','sha256'}, "
+                              "fragment={'path','sha256'})",
+                "then": ["build_tape_index(splits, tape_path=inp['tape']"
+                         "['path'])",
+                         "fragment_slice(dst, n_windows=..., "
+                         "only_slugs=..., source=inp['fragment']['path'])",
+                         "assemble_streaming(..., source=frag, tape=tape)"],
+                "or_in_one_step": "feature_blocks(splits=..., day=day, "
+                                  "inputs=inp) threads both",
+            },
+            "what_is_verified_and_in_which_order": [
+                "the input kind is one this seam knows",
+                "a RULED day may not use the consumed-era constant",
+                "the path resolves UNDER THE LEDGER (de_data_root)",
+                "the bytes hash to the DECLARED digest, recomputed at read "
+                "time",
+            ],
+            "the_manifest_identity_check_is_not_skipped_it_is_REPLACED": (
+                "assembly_preconditions refuses when the live path differs "
+                "from the fit manifest's. For a ruled day it MUST differ -- "
+                "the manifest names the fit's inputs. So for a ruled day "
+                "the manifest IDENTITY check is replaced by identity "
+                "against the DAY's declared digest, and the substitution "
+                "is a reported field (`manifest_identity_check_applies`), "
+                "never silent. The feature WIDTHS still come from the fit "
+                "and are still checked"),
+            "OWNERSHIP_BETWEEN_TWO_SEATS": (
+                "the `path` PARAMETER on `phase2_arms.tape_index` is BE's "
+                "(BE 52); phase2_arms is BE's module and DE does not edit "
+                "it. DE owns the THREADING and the VERIFICATION. Until the "
+                "parameter lands, the runner threads the path by SCOPED "
+                "REBIND -- the mechanism this module already uses at "
+                "`slice_probe` -- chosen BY SIGNATURE so BE's parameter is "
+                "adopted the moment it exists, and the mechanism travels "
+                "in the return"),
+            "what_this_does_not_check": "that the day's tape was BUILT "
+                                        "correctly -- schema, splits, "
+                                        "coverage are the builder's guards. "
+                                        "This verifies WHICH BYTES reach "
+                                        "the pass",
+        },
         "R14_the_fixture_real_lock_is_ONE_function": {
             "reviewer": "REVIEW_DAY_PATH_DE78 S1.4",
             "the_defect": "`--synthetic-day 2026-09-03` emitted a SEALED "
@@ -1304,6 +1374,28 @@ def declaration() -> dict:
                                          "holder' test would reject a "
                                          "legitimately wrapped run",
                 "the_fd_is_corroboration_now": True,
+                "AND_IT_DID_NOT_TEST_EXCLUSIVITY_EITHER": {
+                    "reviewer": "REV 41",
+                    "the_defect": "two concurrent `flock -s` (SHARED) "
+                                  "holders both certified themselves as "
+                                  "holding the lock. Rule 20's invariant "
+                                  "is ONE heavy run at a time, and only an "
+                                  "EXCLUSIVE lock enforces it",
+                    "now": "a THIRD conjunct -- a fresh-fd LOCK_SH|LOCK_NB "
+                           "probe that FAILS proves the holder is "
+                           "exclusive (a shared request conflicts only "
+                           "with an exclusive hold), corroborated by the "
+                           "/proc/locks entry's mode being WRITE and not "
+                           "READ",
+                    "driven": ["a shared holder is REFUSED",
+                               "two concurrent shared holders, in two "
+                               "processes, are BOTH refused",
+                               "an exclusive holder ADMITS"],
+                    "the_runbook_is_unchanged": "`flock -n` is exclusive "
+                                                "by default, so the "
+                                                "prescribed wrapper still "
+                                                "certifies",
+                },
             },
         },
         "R15_a_real_days_battery_is_the_FULL_battery": {
@@ -2193,6 +2285,37 @@ def selftest(*, quiet: bool = False) -> int:
        "peak flatly, the measurement says S4_null on the fixture, and the "
        "claim is restated as conditional on the book dominating rather "
        "than quietly dropped")
+
+    # ---- v11: the day-inputs seam, as a field BE can cite ---------------
+    import de_phase4_diag_runner as _PD2
+    _r16 = d["R16_the_days_tape_and_fragment_are_PARAMETERS"]
+    _sig = _i2.signature(_PD2.day_assembly_inputs).parameters
+    ok(set(_sig) == {"day", "tape", "fragment"}
+       and "day_assembly_inputs" in _r16["THE_CALL_BE_MAKES"]["front_door"]
+       and "tape_path=" in _r16["THE_CALL_BE_MAKES"]["then"][0],
+       f"R16: the call BE makes is a FIELD, and its arguments match the "
+       f"function's real signature {sorted(_sig)} -- a declaration that "
+       f"named a call BE could not make would be worse than none")
+    ok("tape_path" in _i2.signature(_PD2.build_tape_index).parameters
+       and "day" in _i2.signature(_PD2.assembly_preconditions).parameters,
+       "and the two seam functions carry the parameters the field names -- "
+       "checked at the signatures, not at the prose")
+    _pre_default = _PD2.assembly_preconditions()
+    ok(_pre_default["manifest_identity_check_applies"] is True
+       and _pre_default["regime"] == "CONSUMED_HOUR_DEFAULT"
+       and _pre_default["tape_path"] == str(
+           _PD2.consumed_era_inputs()["tape"]),
+       "THE CONSUMED HOUR IS UNCHANGED, checked by running it: day=None "
+       "still resolves the two constants and still applies the fit "
+       "manifest's IDENTITY check -- the seam is additive, and a "
+       "parameterisation that quietly loosened the consumed path would be "
+       "a worse defect than the one it fixes")
+    _excl = d["R12_wrapper_is_measured"][
+        "AND_THE_INSTRUMENT_WAS_DEFEATED_BY_open"][
+        "AND_IT_DID_NOT_TEST_EXCLUSIVITY_EITHER"]
+    ok(len(_excl["driven"]) == 3 and "LOCK_SH" in _excl["now"],
+       "and REV 41's exclusivity finding is in the declaration with the "
+       "three cases it is driven on")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")

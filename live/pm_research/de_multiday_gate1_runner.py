@@ -47,7 +47,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 115
+EXPECTED_CHECKS = 126
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -65,7 +65,7 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 38
+DAY_PATH_CHECKS = 49
 
 
 class RunnerRefused(RuntimeError):
@@ -1597,37 +1597,76 @@ def _flock_holders(lock_path: str) -> dict:
             try:
                 if int(f[5].rsplit(":", 1)[-1]) != ino:
                     continue
-                pids.append(int(f[4]))
+                # f[3] is READ (a SHARED hold) or WRITE (an EXCLUSIVE one).
+                # REV 41: rule 20's invariant is ONE heavy run at a time,
+                # and only an exclusive lock enforces it -- two concurrent
+                # `flock -s` holders would both have certified themselves.
+                pids.append((int(f[4]), f[3]))
             except (ValueError, IndexError):
                 continue
     except OSError:
         ok_read = False
     anc = set(_ancestor_pids())
-    return {"readable": ok_read, "inode": ino, "pids": sorted(set(pids)),
-            "by_self_or_ancestor": any(p in anc for p in pids),
+    mine = [(p, m) for p, m in pids if p in anc]
+    return {"readable": ok_read, "inode": ino,
+            "pids": sorted({p for p, _ in pids}),
+            "modes": sorted({m for _, m in pids}),
+            "holders": sorted(set(pids)),
+            "by_self_or_ancestor": bool(mine),
+            "self_or_ancestor_modes": sorted({m for _, m in mine}),
+            "self_or_ancestor_holds_EXCLUSIVE": any(m == "WRITE"
+                                                    for _, m in mine),
+            "n_holders": len(set(pids)),
             "ancestors_considered": sorted(anc)}
 
 
 def _fresh_probe_fails(lock_path: str) -> dict:
-    """A FRESH-FD LOCK_EX|LOCK_NB attempt. If it FAILS, somebody holds the
-    flock. If it succeeds we took it by accident and release it at once --
-    and its success proves nobody held it."""
+    """TWO fresh-fd probes, because "held" and "held EXCLUSIVELY" are
+    different facts and rule 20 needs the second (REV 41).
+
+      LOCK_EX|LOCK_NB fails  -> somebody holds it, shared OR exclusive
+      LOCK_SH|LOCK_NB fails  -> the holder is EXCLUSIVE; a shared request
+                                conflicts only with an exclusive hold
+      LOCK_SH|LOCK_NB succeeds -> the holder is SHARED, or absent
+
+    Two concurrent `flock -s` holders would both pass an EX-only probe and
+    both certify themselves, and rule 20's invariant is ONE heavy run at a
+    time. Each probe takes its own fd and releases anything it acquired."""
     import fcntl as _fc
+    import os as _os
     try:
-        fd = __import__("os").open(lock_path, __import__("os").O_RDWR)
+        fd = _os.open(lock_path, _os.O_RDWR)
     except OSError as exc:
         return {"probed": False, "why": f"cannot open the lock: {exc}",
-                "someone_holds_it": None}
+                "someone_holds_it": None, "holder_is_exclusive": None}
     try:
+        held = True
         try:
             _fc.flock(fd, _fc.LOCK_EX | _fc.LOCK_NB)
+            _fc.flock(fd, _fc.LOCK_UN)
+            held = False
         except OSError:
-            return {"probed": True, "someone_holds_it": True}
-        _fc.flock(fd, _fc.LOCK_UN)
-        return {"probed": True, "someone_holds_it": False,
-                "acquired_and_released_immediately": True}
+            held = True
+        excl = False
+        if held:
+            fd2 = _os.open(lock_path, _os.O_RDWR)
+            try:
+                try:
+                    _fc.flock(fd2, _fc.LOCK_SH | _fc.LOCK_NB)
+                    _fc.flock(fd2, _fc.LOCK_UN)
+                    excl = False       # a SHARED request got in
+                except OSError:
+                    excl = True        # only an EXCLUSIVE hold blocks it
+            finally:
+                _os.close(fd2)
+        return {"probed": True, "someone_holds_it": held,
+                "holder_is_exclusive": excl if held else None,
+                "probes": ["LOCK_EX|LOCK_NB", "LOCK_SH|LOCK_NB"],
+                "why_two": "a shared hold blocks an exclusive request and "
+                           "admits a shared one; only an exclusive hold "
+                           "blocks both. Rule 20 needs exclusivity"}
     finally:
-        __import__("os").close(fd)
+        _os.close(fd)
 
 
 def wrapper_observed(*, lock_path: str = HEAVY_RUN_LOCK) -> dict:
@@ -1656,11 +1695,27 @@ def wrapper_observed(*, lock_path: str = HEAVY_RUN_LOCK) -> dict:
     fds = _lock_fd_held(lock_path)
     probe = _fresh_probe_fails(lock_path)
     holders = _flock_holders(lock_path)
-    held = bool(probe.get("someone_holds_it")) and holders[
-        "by_self_or_ancestor"]
+    # THREE conjuncts now (REV 41): somebody holds it, that hold is
+    # EXCLUSIVE, and the holder is this process or an ancestor. Two
+    # concurrent `flock -s` holders satisfied the old two and both
+    # certified themselves, while rule 20's invariant is one heavy run at
+    # a time -- which only an exclusive lock enforces.
+    held = (bool(probe.get("someone_holds_it"))
+            and bool(probe.get("holder_is_exclusive"))
+            and holders["by_self_or_ancestor"]
+            and holders["self_or_ancestor_holds_EXCLUSIVE"])
     return {
         "heavy_run_lock_held": held,
         "lock_is_held_by_someone": probe.get("someone_holds_it"),
+        "holder_is_exclusive": probe.get("holder_is_exclusive"),
+        "self_or_ancestor_holds_EXCLUSIVE": holders[
+            "self_or_ancestor_holds_EXCLUSIVE"],
+        "flock_modes_on_the_inode": holders["modes"],
+        "n_flock_holders": holders["n_holders"],
+        "a_SHARED_hold_does_not_satisfy_rule_20": (
+            "rule 20 is ONE heavy run at a time. `flock -s` lets two "
+            "holders in at once, and both would have read `held: true` "
+            "under the previous two-conjunct test (REV 41)"),
         "flock_holder_pids": holders["pids"],
         "held_by_self_or_ancestor": holders["by_self_or_ancestor"],
         "ancestor_pids": holders["ancestors_considered"],
@@ -3051,6 +3106,164 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
             ok(_after["heavy_run_lock_held"] is False,
                "and it goes back to False once the flock is released -- the "
                "field tracks the lock's state and not a fact about startup")
+
+        # ---- REV 41: the lock must be EXCLUSIVE, not merely held --------
+        import fcntl as _fc2
+        import os as _os2
+        with _tfl.TemporaryDirectory() as _sd:
+            _sl = str(Path(_sd) / "shared.lock")
+            Path(_sl).write_text("")
+            _f1 = _os2.open(_sl, _os2.O_RDWR)
+            try:
+                _fc2.flock(_f1, _fc2.LOCK_SH | _fc2.LOCK_NB)
+                _sh = wrapper_observed(lock_path=_sl)
+                ok(_sh["lock_is_held_by_someone"] is True
+                   and _sh["holder_is_exclusive"] is False
+                   and _sh["held_by_self_or_ancestor"] is True
+                   and _sh["heavy_run_lock_held"] is False,
+                   f"REV 41, THE FINDING: a SHARED hold (`flock -s`) is "
+                   f"held, and held BY ME, and is still REFUSED -- modes "
+                   f"{_sh['flock_modes_on_the_inode']}. Rule 20's "
+                   f"invariant is ONE heavy run at a time and only an "
+                   f"EXCLUSIVE lock enforces it; the previous two-conjunct "
+                   f"test would have certified this")
+                # A SECOND PROCESS, because /proc/locks counts HOLDERS
+                # by pid: two shared fds in one process is one holder, and
+                # a check that could not tell them apart would not be
+                # showing the state rule 20 forbids.
+                import subprocess as _sp2
+                _child = _sp2.Popen(["flock", "-s", _sl, "sleep", "5"])
+                try:
+                    _t0 = time.time()
+                    while time.time() - _t0 < 5.0:
+                        _two = wrapper_observed(lock_path=_sl)
+                        if _two["n_flock_holders"] >= 2:
+                            break
+                        time.sleep(0.05)
+                    ok(_two["n_flock_holders"] >= 2
+                       and _two["heavy_run_lock_held"] is False
+                       and _two["holder_is_exclusive"] is False,
+                       f"AND TWO CONCURRENT SHARED HOLDERS ARE BOTH "
+                       f"REFUSED: {_two['n_flock_holders']} distinct "
+                       f"holders on the inode at once -- this process and "
+                       f"a second one -- which is precisely the state rule "
+                       f"20 forbids, and neither certifies")
+                finally:
+                    # `flock -s <lock> sleep` execs sleep IN the flock
+                    # process, so terminating it releases the lock -- but
+                    # not instantly. The next check takes an EXCLUSIVE
+                    # lock and would raise BlockingIOError against a
+                    # lingering hold, so WAIT for the release rather than
+                    # assume it (it caught me once).
+                    _child.terminate()
+                    _child.wait(timeout=5)
+                    _t1 = time.time()
+                    while (time.time() - _t1 < 5.0
+                           and wrapper_observed(
+                               lock_path=_sl)["n_flock_holders"] > 1):
+                        time.sleep(0.02)
+            finally:
+                _fc2.flock(_f1, _fc2.LOCK_UN)
+                _os2.close(_f1)
+            _f3 = _os2.open(_sl, _os2.O_RDWR)
+            try:
+                _fc2.flock(_f3, _fc2.LOCK_EX | _fc2.LOCK_NB)
+                _ex = wrapper_observed(lock_path=_sl)
+                ok(_ex["heavy_run_lock_held"] is True
+                   and _ex["holder_is_exclusive"] is True
+                   and _ex["flock_modes_on_the_inode"] == ["WRITE"],
+                   "POSITIVE CONTROL, AND IT ADMITS: an EXCLUSIVE hold by "
+                   "this process certifies -- the fix refuses a shared "
+                   "hold without refusing the wrapper the runbook "
+                   "prescribes (`flock -n`, exclusive by default)")
+            finally:
+                _fc2.flock(_f3, _fc2.LOCK_UN)
+                _os2.close(_f3)
+
+        # ---- DE 80: the day's tape and fragment are PARAMETERS -----------
+        import de_phase4_diag_runner as _PD
+        _consumed = _PD.consumed_era_inputs()
+        _ruled_d = live["days"][0]
+        _dref = lambda k, p, h, d: _PD.day_assembly_inputs(
+            d, tape={"path": p if k == "tape" else str(_consumed["tape"]),
+                     "sha256": h},
+            fragment={"path": p if k == "fragment"
+                      else str(_consumed["fragment"]), "sha256": h})
+        try:
+            _PD.verify_assembly_input("tape", _consumed["tape"], "x" * 64,
+                                      day=_ruled_d)
+            ok(False, "the consumed constant was ADMITTED on a ruled day")
+        except _PD.DiagRefused as _e:
+            ok("CONSUMED-ERA constant" in str(_e),
+               f"DE 80 KNOWN-BAD, THE BLOCKER ITSELF: the CONSUMED-ERA "
+               f"tape constant is REFUSED for ruled day {_ruled_d} -- that "
+               f"file is what the heads were FITTED on and does not "
+               f"contain the day at all, so a day scored off it is the "
+               f"development hour wearing the day's name")
+        # THE LEDGER'S copy, not this worktree's. The worktree path is
+        # correctly refused as off-ledger, which is the check above -- so
+        # the digest known-bad must be given a path that gets PAST it, or
+        # it would be passing for the wrong reason.
+        _real = (Path(DR.resolve()["data_root"]) / "pm_5min/derived"
+                 / "p003_de_multiday_gate1_design_v10__20260906T064720Z"
+                   ".json").resolve()
+        _rh = hashlib.sha256(_real.read_bytes()).hexdigest()
+        try:
+            _PD.verify_assembly_input("tape", _real, "0" * 64, day=_ruled_d)
+            ok(False, "a wrong digest was ADMITTED")
+        except _PD.DiagRefused as _e:
+            ok("hashes to" in str(_e),
+               "DE 80 KNOWN-BAD: a day input whose bytes do not hash to "
+               "the DECLARED digest REFUSES -- recomputed at read time, "
+               "never taken from the caller's word")
+        _adm = _PD.verify_assembly_input("tape", _real, _rh, day=_ruled_d)
+        ok(_adm["sha256"] == _rh and _adm["day_is_in_the_ruled_set"] is True
+           and _adm["is_the_consumed_era_constant"] is False
+           and _adm["digest_recomputed_at_read_time"] is True,
+           f"DE 80 POSITIVE CONTROL, AND IT ADMITS: a ledger path whose "
+           f"bytes hash to the declared digest passes for a ruled day. "
+           f"STATED PRECISELY: this admits the VERIFICATION path -- the "
+           f"file stands in for a day tape and is not one, and nothing "
+           f"here claims BE's tape is well-formed")
+        try:
+            _PD.verify_assembly_input("tape", "/etc/hostname", "0" * 64,
+                                      day=_ruled_d)
+            ok(False, "an off-ledger path was ADMITTED")
+        except _PD.DiagRefused as _e:
+            ok("not under the ledger" in str(_e),
+               "and an input outside the ledger REFUSES before its digest "
+               "is even considered -- a file read from a seat's worktree "
+               "is not the input a receipt can name (R-559(C))")
+        try:
+            _PD.verify_assembly_input("tape", _real, None, day=_ruled_d)
+            ok(False, "a digest-less input was ADMITTED")
+        except _PD.DiagRefused as _e:
+            ok("no declared sha256" in str(_e),
+               "and a path with NO declared digest refuses -- a path alone "
+               "is a claim about a filename and the file behind it moves")
+        try:
+            _PD.day_assembly_inputs(_ruled_d)
+            ok(False, "a ruled day with nothing supplied was ADMITTED")
+        except _PD.DiagRefused as _e:
+            ok("not supplied" in str(_e),
+               "and a RULED day that supplies nothing REFUSES rather than "
+               "falling back to the constants -- which is the whole point "
+               "of the seam")
+        _dflt = _PD.day_assembly_inputs(None)
+        ok(_dflt["regime"] == "CONSUMED_HOUR_DEFAULT"
+           and _dflt["tape"]["path"] == str(_consumed["tape"])
+           and _dflt["fragment"]["path"] == str(_consumed["fragment"]),
+           "AND THE CONSUMED HOUR IS UNCHANGED: day=None still returns the "
+           "two constants, so the seam is additive and the consumed-era "
+           "path keeps the behaviour it had")
+        _mech = _PD.tape_path_mechanism()
+        ok(_mech["mechanism"] in ("PARAMETER", "SCOPED_REBIND_PENDING_BE52")
+           and _mech["parameter_available"] is (
+               _mech["mechanism"] == "PARAMETER"),
+           f"and HOW the path reaches phase2_arms is decided by SIGNATURE "
+           f"and recorded: {_mech['mechanism']}. BE 52 owns that "
+           f"parameter; the moment it exists this adopts it without an "
+           f"edit here, and until then the receipt says which ran")
 
         # ---- reviewer §4.3: the peak stage is a PREDICATE -------------------
         _ps = _open["memory_plan"]["peak_stage"]

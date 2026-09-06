@@ -7104,7 +7104,181 @@ def score_events_for(reference: dict, *, coin: str, head: str,
                            verified=v)
 
 
-def assembly_preconditions() -> dict:
+# ============ THE DAY'S TAPE AND FRAGMENT ARE PARAMETERS OF THIS SEAM ====
+#
+# The reviewer's BE-48 routed item 2, and BE 51's blocker: the assembly
+# could not be pointed at a ruled day's inputs because the paths were
+# CONSTANTS. `phase2_arms.TAPE_PATH` and `PA.FRAGMENT` name the CONSUMED-ERA
+# state tape and fragment -- the ones the heads were fitted on -- and this
+# file reached for them at eight sites.
+#
+# THE CONSTANTS ARE KEPT, AND THEY ARE KEPT AS WHAT THEY ARE: the default
+# for the CONSUMED HOUR. For any day in the committed ruled set they are
+# REFUSED, because a Gate-1 day scored off the consumed era's tape is not
+# that day measured -- it is the development hour wearing the day's name.
+#
+# OWNERSHIP, stated because two seats are working one seam: the `path`
+# PARAMETER on `phase2_arms.tape_index` is BE's (BE 52). What is DE's is
+# the THREADING and the VERIFICATION -- which paths reach the seam, that
+# they are on the ledger, that their bytes are the declared ones, and that
+# a ruled day cannot silently take the consumed default.
+
+CONSUMED_ERA_INPUT_NAMES = ("tape", "fragment")
+
+
+def consumed_era_inputs() -> dict:
+    """The two constants, named as the consumed hour's defaults."""
+    import phase2_arms as PA
+    return {"tape": Path(PA.TAPE_PATH), "fragment": Path(PA.FRAGMENT)}
+
+
+def _ruled_day_set_imported() -> list:
+    """ONE implementation of the ruled set, IMPORTED not copied.
+
+    A second reader of the parameter file is a second ruled set, which is
+    the defect this programme has closed twice (R-559(C) on the data root,
+    DE 79 on the fixture/real lock). Imported lazily so this module keeps
+    no import-time dependency on the Gate-1 runner."""
+    import de_multiday_gate1_runner as _G
+    return _G.ruled_day_set()
+
+
+def verify_assembly_input(kind: str, path, sha256: str | None, *,
+                          day: str | None) -> dict:
+    """One assembly input, verified before anything expensive starts.
+
+    FOUR THINGS, in the order a wrong one costs least to catch:
+      1. `kind` is one this seam knows about;
+      2. a RULED day may not use the consumed-era constant;
+      3. the path resolves UNDER THE LEDGER (`de_data_root`), so an input
+         from a seat's worktree cannot be scored as if it were the ledger's;
+      4. the bytes hash to the DECLARED digest -- recomputed here, at read
+         time, from the file itself."""
+    import de_data_root as _DR
+    if kind not in CONSUMED_ERA_INPUT_NAMES:
+        raise DiagRefused(
+            f"unknown assembly input {kind!r}; this seam knows "
+            f"{CONSUMED_ERA_INPUT_NAMES}")
+    p = Path(path)
+    consumed = consumed_era_inputs()[kind]
+    ruled = _ruled_day_set_imported()
+    is_ruled = day in ruled
+    if is_ruled and p.resolve() == Path(consumed).resolve():
+        raise DiagRefused(
+            f"REFUSED for day {day}: the {kind} is the CONSUMED-ERA "
+            f"constant {consumed}. That file is the input the heads were "
+            f"FITTED on, and it does not contain {day} at all -- a ruled "
+            f"day scored off it is the development hour wearing the day's "
+            f"name. Pass the day's own {kind} path and digest.")
+    if not is_ruled and day is not None:
+        raise DiagRefused(
+            f"REFUSED: day {day!r} is not in the committed ruled set "
+            f"{ruled}. Pass day=None for the consumed hour.")
+    if not p.is_file():
+        raise DiagRefused(
+            f"REFUSED: the {kind} at {p} does not exist, so the pass would "
+            f"build features from an input nobody can read")
+    root = Path(_DR.resolve()["data_root"]).resolve()
+    try:
+        p.resolve().relative_to(root)
+    except ValueError:
+        raise DiagRefused(
+            f"REFUSED: the {kind} at {p.resolve()} is not under the ledger "
+            f"{root}. An input read from a seat's worktree is not the "
+            f"input a receipt can name (R-559(C))")
+    if sha256 is None:
+        raise DiagRefused(
+            f"REFUSED: the {kind} arrived with no declared sha256. A path "
+            f"without a digest is a claim about a filename, and the file "
+            f"behind it can move")
+    got = hashlib.sha256(p.read_bytes()).hexdigest()
+    if got != sha256:
+        raise DiagRefused(
+            f"REFUSED: the {kind} at {p} hashes to {got[:16]} and the "
+            f"declaration says {str(sha256)[:16]}. THE DAY refuses; these "
+            f"are not the bytes that were declared")
+    return {"kind": kind, "path": str(p), "sha256": got,
+            "bytes": p.stat().st_size,
+            "digest_recomputed_at_read_time": True,
+            "is_the_consumed_era_constant": p.resolve()
+            == Path(consumed).resolve(),
+            "day": day, "day_is_in_the_ruled_set": is_ruled,
+            "ledger_root": str(root)}
+
+
+def day_assembly_inputs(day: str | None, *, tape: dict | None = None,
+                        fragment: dict | None = None) -> dict:
+    """THE FRONT DOOR BE'S ASSEMBLY CALLS.
+
+        R.day_assembly_inputs("2026-09-03",
+                              tape={"path": ..., "sha256": ...},
+                              fragment={"path": ..., "sha256": ...})
+
+    `day=None` returns the consumed hour's constants, unverified against a
+    digest because the fit manifest already pins them and
+    `assembly_preconditions` checks that pin. Any RULED day must supply
+    both pairs and gets all four checks."""
+    ruled = _ruled_day_set_imported()
+    if day is None:
+        c = consumed_era_inputs()
+        return {"day": None, "regime": "CONSUMED_HOUR_DEFAULT",
+                "tape": {"path": str(c["tape"]), "sha256": None},
+                "fragment": {"path": str(c["fragment"]), "sha256": None},
+                "why_no_digest_here": "the fit manifest pins both and "
+                                      "assembly_preconditions compares "
+                                      "them; a second digest would be a "
+                                      "second pin",
+                "ruled_day_set": ruled}
+    missing = [k for k, v in (("tape", tape), ("fragment", fragment))
+               if not v or not v.get("path")]
+    if missing:
+        raise DiagRefused(
+            f"REFUSED for day {day}: {missing} not supplied. A ruled day "
+            f"may not fall back to the consumed-era constants -- that is "
+            f"the whole point of this seam")
+    return {
+        "day": day, "regime": "RULED_DAY_INPUTS_SUPPLIED",
+        "tape": verify_assembly_input("tape", tape["path"],
+                                      tape.get("sha256"), day=day),
+        "fragment": verify_assembly_input("fragment", fragment["path"],
+                                          fragment.get("sha256"), day=day),
+        "ruled_day_set": ruled,
+        "what_this_does_not_check": (
+            "that the day's tape was BUILT correctly -- schema, splits, "
+            "coverage. Those are the builder's own guards; this verifies "
+            "WHICH BYTES reach the pass"),
+    }
+
+
+def tape_path_mechanism() -> dict:
+    """HOW a tape path reaches `phase2_arms.tape_index`.
+
+    BE 52 adds a `path` parameter to that function. Until it lands, this
+    file threads the path by SCOPED REBIND -- the mechanism already used at
+    `slice_probe` in this module -- and the receipt says which was used, so
+    a reader never has to guess. The preference is checked by SIGNATURE,
+    not by a version number, so the parameter is adopted the moment it
+    exists."""
+    import inspect as _i
+    import phase2_arms as PA
+    params = _i.signature(PA.tape_index).parameters
+    named = [p for p in ("tape_path", "path") if p in params]
+    return {
+        "parameter_available": bool(named),
+        "parameter_name": named[0] if named else None,
+        "mechanism": ("PARAMETER" if named else "SCOPED_REBIND_PENDING_BE52"),
+        "owner_of_the_parameter": "BE (BE 52) -- phase2_arms is BE's module "
+                                  "and DE does not edit it",
+        "rebind_limitation_stated": (
+            "a scoped rebind mutates a module global for the duration of "
+            "the call. It is single-process and restored in a `finally`, "
+            "and it is the mechanism this module already uses; it is still "
+            "the weaker of the two and is why the parameter is preferred"),
+    }
+
+
+def assembly_preconditions(*, day: str | None = None,
+                           inputs: dict | None = None) -> dict:
     """Everything about the feature assembly that is knowable in
     milliseconds, MEASURED off the artifacts the fit named.
 
@@ -7115,13 +7289,35 @@ def assembly_preconditions() -> dict:
     literal in this file."""
     import phase2_arms as PA
     man = json.loads((FITS / "fit_manifest.json").read_text())
-    out: dict = {"fragment_path": str(PA.FRAGMENT),
-                 "tape_path": str(PA.TAPE_PATH)}
+    # THE INPUTS ARE PARAMETERS. `day=None` keeps the consumed hour's
+    # behaviour byte for byte: the constants, checked against the fit
+    # manifest. A RULED day supplies its own, and the manifest IDENTITY
+    # check does not apply to them -- the manifest names the fit's inputs
+    # and a day's tape is a different file by construction. What still
+    # applies is that the file exists and that its bytes are the DECLARED
+    # ones, which `day_assembly_inputs` has already recomputed.
+    inp = inputs if inputs is not None else day_assembly_inputs(day)
+    _tape_p, _frag_p = Path(inp["tape"]["path"]), Path(inp["fragment"]["path"])
+    _ruled_regime = inp["regime"] == "RULED_DAY_INPUTS_SUPPLIED"
+    out: dict = {"fragment_path": str(_frag_p),
+                 "tape_path": str(_tape_p),
+                 "day": inp["day"], "regime": inp["regime"],
+                 "manifest_identity_check_applies": not _ruled_regime,
+                 "why": ("the fit manifest names the CONSUMED inputs; a "
+                         "ruled day's tape is a different file by "
+                         "construction, so identity against the manifest "
+                         "is replaced by identity against the DAY's "
+                         "declared digest -- which is checked in "
+                         "day_assembly_inputs, not skipped"
+                         if _ruled_regime else
+                         "the consumed hour's inputs must BE the fit's")}
     for what, live, declared_p, declared_b in (
-            ("fragment", PA.FRAGMENT, man.get("fragment_path"),
+            ("fragment", _frag_p, man.get("fragment_path"),
              man.get("fragment_bytes")),
-            ("tape", PA.TAPE_PATH, man.get("tape_path"),
+            ("tape", _tape_p, man.get("tape_path"),
              man.get("tape_bytes"))):
+        if _ruled_regime:
+            declared_p, declared_b = str(live), None
         if not Path(live).exists():
             # SITE: assembly#2
             raise DiagRefused(
@@ -7488,7 +7684,8 @@ def split_set_name(splits) -> str:
 
 
 def feature_blocks(*, splits, fragment: Path | None = None,
-                   tape: dict | None = None) -> dict:
+                   tape: dict | None = None, day: str | None = None,
+                   inputs: dict | None = None) -> dict:
     """THE EXPENSIVE HALF, wired: the fit's own tape index over the
     DECLARED splits, and the fit's own feature pass over the fragment.
 
@@ -7501,14 +7698,18 @@ def feature_blocks(*, splits, fragment: Path | None = None,
     which splits it consumed), the timings, and the pass's own drop
     counts -- exclusions are STATUSES here, never silent (rule 4)."""
     got = validate_splits(splits)
-    pre = assembly_preconditions()
+    pre = assembly_preconditions(day=day, inputs=inputs)
     import phase2_arms as PA
-    frag = Path(fragment) if fragment is not None else PA.FRAGMENT
+    frag = (Path(fragment) if fragment is not None
+            else Path(pre["fragment_path"]))
     if tape is not None:
         stages, TAPE, split_of = dict(tape["stages"]), tape["TAPE"], \
             tape["split_of"]
     else:
-        _t = build_tape_index(got)
+        _t = build_tape_index(
+            got, tape_path=(Path(pre["tape_path"])
+                            if pre.get("regime")
+                            == "RULED_DAY_INPUTS_SUPPLIED" else None))
         stages, TAPE, split_of = dict(_t["stages"]), _t["TAPE"], \
             _t["split_of"]
     t1 = time.time()
@@ -7526,8 +7727,7 @@ def feature_blocks(*, splits, fragment: Path | None = None,
             "n_tape_rows": len(TAPE)}
 
 
-def build_tape_index(splits, *, path=None, day: str | None = None,
-                     expect_sha256: str | None = None) -> dict:
+def build_tape_index(splits, *, tape_path=None) -> dict:
     """THE TAPE INDEX, built ONCE and reusable across feature passes.
 
     MEASURED at full scale, which the price never did: the score split is
@@ -7538,13 +7738,25 @@ def build_tape_index(splits, *, path=None, day: str | None = None,
     fragment be consumed in chunks against ONE index."""
     got = validate_splits(splits)
     import phase2_arms as PA
+    mech = tape_path_mechanism()
+    _restore = None
+    if tape_path is not None and not mech["parameter_available"]:
+        # SCOPED REBIND, until BE 52's `path` parameter lands. Restored in
+        # the `finally` below; the mechanism travels in the return so a
+        # reader is never left guessing which one ran.
+        _restore = PA.TAPE_PATH
+        PA.TAPE_PATH = Path(tape_path)
     stages: dict = {}
     TAPE: dict = {}
     split_of: dict = {}
-    for sp in got:
+    try:
+      for sp in got:
         t0 = time.time()
-        idx = PA.tape_index(sp, path=path, day=day,
-                            expect_sha256=expect_sha256)
+        if tape_path is not None and mech["parameter_available"]:
+            idx = PA.tape_index(sp, **{mech["parameter_name"]:
+                                       Path(tape_path)})
+        else:
+            idx = PA.tape_index(sp)
         dup = [k for k in idx if k in TAPE]
         if dup:
             # SITE: assembly#5
@@ -7560,8 +7772,15 @@ def build_tape_index(splits, *, path=None, day: str | None = None,
             "wall_s": round(time.time() - t0, 2),
             "rows_indexed": len(idx),
             "peak_rss_mb_highwater": _peak_rss_mb()}
+    finally:
+        if _restore is not None:
+            PA.TAPE_PATH = _restore
     return {"TAPE": TAPE, "split_of": split_of, "stages": stages,
-            "n_tape_rows": len(TAPE), "splits": got}
+            "n_tape_rows": len(TAPE), "splits": got,
+            "tape_path": str(tape_path) if tape_path is not None
+            else str(PA.TAPE_PATH),
+            "tape_path_was_a_parameter": tape_path is not None,
+            "tape_path_mechanism": mech}
 
 
 def _check_assembled_widths(blocks: dict, pre: dict) -> None:
