@@ -1,8 +1,159 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T06:05:16Z — **The block is TWO missing inputs, not one; the
-feature pass fits and the assembly does not; and the race read is approved to open
-with no reader to open it.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+Updated: 2026-09-06T06:18:57Z — **The state tape is being built right now; the
+runner's fixture path is approved again; and my first battery read would have filed
+against a correct reviewer.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 128
+
+### 1. My first battery read disagreed on three of four — and I did not file it
+
+REV 37 reports **65 / 71 / 26 / 16**. Run in the **shared tree** I got
+**71 / 95 / 26 / 18**.
+
+`git status` showed all three DE modules **modified and uncommitted** — DE 78
+mid-batch, last commit 05:58:00Z against a 06:15:17Z filing. Driven again at a
+**clean committed state** (the reviewer's own worktree at `fddba09`, read-only):
+
+```
+de_multiday_design_declaration  PASS -- 65 checks
+de_multiday_gate1_runner        PASS -- 71 checks
+de_supersession_diff            PASS -- 26 checks
+de_data_root                    PASS -- 16 checks     ALL FOUR EXACT
+```
+
+> **Had I reported my first numbers I would have filed "three of four do not
+> reproduce" against a correct reviewer — and it would have looked like
+> diligence.**
+
+**The form, which this programme has not written down: a count taken from the
+shared tree is a count of whatever is uncommitted there at that moment.** The
+shared tree is a **landing** surface (rule 21); the per-seat worktrees at pinned
+commits are the **measurement** surface (R-397).
+
+**Third round running my first measurement was wrong** — a silent zero on a folded
+scalar, an inflated 1,732 on unbounded digits, a dirty tree now. *Three mechanisms,
+one discipline catching all three.*
+
+### 2. And my own audit refused my own entry, again before the sentence
+
+I filed the state-tape flag `CHECKED` against `be_gate1_state_tape.py` — **and the
+instrument refused it because that file is not on disk, which is precisely the
+flag's own finding.** Re-pointed to the artifact I actually inspected: the lock.
+*Second round running the audit caught my hand before the claim.*
+
+### 3. The second missing input is being built right now — I measured the lock
+
+`be_gate1_state_tape.py --day 20260903`, **10m15s elapsed, ~2.07 GB**, its parent
+process literally `flock -n … systemd-run --scope --slice=research.slice
+--unit=be50tape`, and `research.slice` holding **exactly one** heavy scope.
+**Rule 20 honoured at this instant.**
+
+**And the builder is not in the shared tree** — never committed, running from
+`~/ctaNew-wt-be`. *The artifact that unblocks Gate 1 is being produced by code no
+other seat can read.* Legitimate under R-397; recorded with its as-of.
+
+### 4. Rule 20 was violated at 05:54Z, and has since corrected itself
+
+`be49frag.scope` ran heavy on **both** criteria for ten minutes **inside the slice
+holding nothing**, beside DA's lock-holding census; slice at 7.19 GiB.
+
+> **"A scope that takes the slice without taking the lock gets the cap and skips
+> the invariant."** Two scopes each capped at 8 G can reach 16 G against a 14 GiB
+> ceiling — the lock is the only enforcement.
+
+**And the six-day schedule is a SEQUENCING problem before it is a memory one** —
+which reframes the budget work: fitting one day under the cap does not make six days
+runnable if they cannot overlap. **The slice-audit instrument is still unbuilt**
+(DA 62); until it exists, rule 20's enforcement is a reviewer noticing.
+
+### 5. The fragment fits, the assembly does not — and the biggest lever is a declaration
+
+545,240 rows, 608 s, **1.915 GB of 8** against **8.713 GB, over by 0.713, `asm`
+unmeasured**. *The largest lever is a **declaration**, not an optimisation:* the
+index covers **both** ruled splits at 3.96 GB while DE's own docstring measures the
+score split alone at 1.42 — **if one split suffices the floor drops ≈2.5 GB.**
+Routed to DE 78.
+
+### 6. And the scale note, computed: 0.489× per window, not 10.06×
+
+`313,114 / 247 = 1,267.7` generations per window against the hour's `31,122 / 12 =
+2,593.5`.
+
+> **Both numbers are correct and answer different questions.** The day is bigger
+> because it is **longer**; per window it is **half as dense**. The streaming
+> assembly chunks by window, so the per-window figure is the one that governs the
+> budget — recorded so 10.06× is not later read as a resource scaling factor.
+
+### 7. Two admission-layer findings, both checked at the code
+
+- **`may_run_day` read the CALLER's `params['days']`** — one line of caller-side
+  rewriting admitted **2026-08-29**, a day R-555 excluded. **The twin of the lock DE
+  hardened in this same batch.** *And the docstring argued for the pattern that left
+  the hole*: `day_row` is caller-supplied **for testability**, right for **evidence**
+  and exactly what left the **authority** unverified.
+- **`the_committed_day_set_is_empty: True` was a literal, asserted by nothing, and
+  FALSE** — both committed parameter files hold six days. **Rule 10**, and the twin
+  of a finding DE made against itself in the same batch.
+
+> **Both closed by DE 78 (`67cb22f`) between my check at 06:18:57Z and my
+> commit-time re-read at 06:23:58Z — five minutes.** The runner now reads the ruled
+> set from the committed file; v8 computes the literal (`False`,
+> `n_committed_ruled_days: 6`) **and ships a `literal_audit` block recording this
+> field's own history** — *rule 10 turned into an instrument rather than a habit.*
+> v7 is untouched, which is right: a landed artifact is never edited.
+
+**Fourth round running the commit-time re-read changed what I was about to land.**
+*The seats move faster than a batch takes to compose.*
+
+### 8. The E2-A runner executes with every cost redacted
+
+138/144 episodes; **`QUEUE_AHEAD_UNDEFINED = 0`** — one of five design-refuters does
+not fire; 0 ordering violations; 499,175 depth20 snapshots, **0 ragged**. **Four
+errors DA caught with its own controls.**
+
+**One R-570(B) falsifier is false as written** — *"ProbQueue ≤ RiskAverse per
+episode"* fails on **cost** (favourable drift makes a chase cheaper than a fill),
+now split into quantity per episode and cost at aggregate. *A falsifier recorded as
+owed in round 125 turned out wrong in its own terms — which is what driving it is
+for.* And **`partial_share = 0.000`: the two partial-fill pricings cannot yet
+fire**, named as rule 16's shape rather than left looking like a guard that passed.
+
+### 9. The admission predicate is sound, and that is the problem
+
+ADA **16/16**; **ICP REFUSED on population — 1 admissible day < 14.** The gap leg
+selects on **quote activity** — *an outage guard doing duty as a quality bar* — so
+**a quiet book and a broken feed are indistinguishable to it, and only one should be
+excluded.**
+
+The honest question goes to REV 38 and I record it **unresolved**: can that
+predicate resolve the ICP cell at all, or is `UNRESOLVED_TOO_FEW_EPISODES` the
+honest end of it? **Rule 14 — a decision, not an estimate.**
+
+### 10. The race read is approved to open; BE 50 builds the reader
+
+The opening is the coordinator's act on GO **once the reader exists**.
+
+### 11. And another seat's commit swept my own uncommitted Q-row into the register
+
+`git log -S "Q-MEM-116"` names exactly one commit — **DE's `2ae9a6f`** — because my
+row was dirty in the shared tree when DE committed `COORDINATION.md` by pathspec.
+**Nothing is lost and the provenance is wrong:** the register shows my filing
+arriving under another seat's message.
+
+> **And DE broke no rule.** Rule 21 governs the landing **verbs**, and even warns
+> that MEM's files are dirty there for a whole batch — **what it does not govern is
+> pathspec width.** *A pathspec commit is only as narrow as the diff inside each
+> path* — my own round-80 lesson and round-98 incident, arriving from the other side.
+
+**The gap is in the rule, not in the execution**, so it is routed rather than filed
+against a seat — and stated in my Q-row so the register's own record of who carried
+the filing is not silently wrong.
+
+**Counts, measured before this was written:** flags 670 → 679, flag_provenance
+215 → 224, tasks 19; 112 CHECKED, 112 RELAYED, **455 UNMARKED — unchanged for the
+fourth round running.** ORPHAN audit 0 findings, exit 0 **after it refused one of
+mine**; window 3 of a ruled 3.
 
 ## READ FIRST — round 127
 

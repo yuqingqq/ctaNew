@@ -9061,3 +9061,93 @@ an alnum-normalised containment check in all three directions.
   replaced rather than explained.
   PRIOR CHECKPOINT:
 ```
+
+## Batch 110 — archived 2026-09-06T06:18:57Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 128 entered the field.
+The window guard reported `window 4 generations (ruled 3)` with a finding and
+exit 1 before this move — the second consecutive round it has demanded the trim
+rather than a seat remembering to make it. Trim by MOVING, never by
+interpreting; boundaries at the generation markers as they stand; verified by an
+alnum-normalised containment check in all three directions.
+
+```
+  2026-09-06T05:37:30Z (MEM ROUND 125 -- R-570, R-571, R-572 AND THE REVIEWER'S
+  DA-60 FILING SWEPT; R-569 WAS ALREADY IN THESE FILES. STATE ONLY, AND THE
+  HEADLINE IS THAT THE BOUNDARY CONTROL DID NOT MISS THE INVERSION -- IT CAUGHT
+  IT AND WAS READ PAST.
+  (1) **THE REVIEWER FILED ITS OWN REFUTATION AS A CONFIRMATION, FOUND IT
+  ITSELF, AND LED WITH IT.** Checked by me at the prior filing: the sentence
+  computes that v2's declared form gives 0 where the positive control requires
+  1 -- "A model that never fills an unqueued order fails that control" -- and
+  the bullet is marked with a tick. **So R-568/R-569's account ("a boundary-only
+  battery would have carried it into the first smoke") is not the whole defect.
+  THE BATTERY FIRED. THE READING DISCARDED THE CATCH** -- and an instrument that
+  fires and is read past cannot be fixed by adding instruments.
+  (2) **I RECOMPUTED THE ORIENTATION TABLE AND IT DID NOT MATCH AT THREE OF FIVE
+  ROWS -- BECAUSE ITS SECOND VARIABLE IS UNSTATED.** Under the natural reading
+  (back = 100 - front) I get 0.072973 where it prints 0.500000. **Holding back
+  at 70 reproduces all ten printed figures exactly.** The table is right and
+  under-specified. **AND THE CONCLUSION IS INVARIANT** -- strict monotonicity
+  computed TRUE under both parameterisations -- so this is a presentation
+  defect, filed with its scope attached, not a scare.
+  (3) **THE E1 RECORD DEFECT IS REAL AND THE PROPOSED FIX WOULD PUT A FALSEHOOD
+  ON THE RECORD.** I read the function body, which is the half neither DA nor
+  the reviewer read: at the symbol tick_size the mode-of-diffs fix **IS
+  IMPLEMENTED** (vals[cnts.argmax()], the frac_int >= 0.999 check, the GCD
+  fallback). So "fix DESIGNED and NOT LANDED" is false in its first half. **What
+  is unreproducible is the CONSEQUENCE, not the fix.** Why execution still
+  returns 1e-6 has two candidate paths and **I DID NOT RUN IT, SO I ASSERT
+  NEITHER.** Routed to DA (P-002's surface), not fixed by me.
+  (4) **R-572's SEED HARVEST IS WRONG IN ITS PREMISE AND THE RULING WOULD ADD A
+  FOURTH COPY.** The convention is NOT "only in seed_for()": it is already a
+  declaration field and a plan bullet. **And the two documentary copies write a
+  CONCATENATION OPERATOR where the code has a PIPE DELIMITER inside the hashed
+  string -- I computed both: 4162527236 vs 1457097641. DIFFERENT SEEDS.** Which
+  defeats the declaration's own stated reason that the sequence "is reproducible
+  from the artifact alone". Routed to DE: assert the formula, do not restate it.
+  (5) **THE STRUCTURAL ITEM ROUTED TO ME IS CLOSED, BY CENSUS AND AGAINST MY OWN
+  SAMPLE'S RATE.** 357 of 646 flag values carry no address -- **56.0%, where the
+  40-flag sample read two thirds.** And the cross-tab reverses the premise: the
+  bare-valued flags are the BETTER-cited half (35% carry provenance against
+  20%). "Can never be found wrong" is a property of the VALUE, not of the FLAG,
+  because provenance lives in its own mapping. **The axis underneath is the one
+  I already report: 455 UNCITED.**
+  (6) **THE THREE STALE FLAGS ARE DISPOSITIONED IN BAND, EACH RE-MEASURED BY
+  SYMBOL** -- EXPECTED_CHECKS is 66 not 52; G is 5 by R-529(A) with the
+  independent count 3 and the day set still on a USER parameter; and
+  evaluate_predicates has moved, so that finding is UNVERIFIED, not withdrawn.
+  (7) **AND A DEFECT OF MINE NO INSTRUMENT CAN SEE: THE RULED updated: WINDOW IS
+  THREE AND IT HOLDS TWENTY-ONE.** Met once at R-542(E), then drifted for
+  eighteen consecutive rounds because nothing audits the SHAPE of the file my
+  instruments audit the flags of. **NOT TRIMMED THIS ROUND, DELIBERATELY** --
+  moving 18 generations verbatim is a batch, not a step, and it would swamp the
+  diff the commit guard exists to let me read. **QUEUED AS ROUND 126, with the
+  window guard that stops the next drift.**
+  (8) **AND THE COMMIT-TIME RE-READ CAUGHT THREE OF MY OWN CLAIMS GOING FALSE
+  WHILE I WROTE.** DA landed `0718fea` and `8e6b753` in the shared tree and HEAD
+  moved a669bb0 -> 8e6b753 under me. **(a) The at-L item COMMITTED** -- the flag
+  I wrote saying "uncommitted" is superseded in band, ***which is R-571(B)'s
+  named gap in my own rule firing on the very flag whose body predicted it.***
+  **(b) MY E1 FINDING WAS REACHED INDEPENDENTLY BY DA WITHIN MINUTES, FROM THE
+  OPPOSITE END** (a quantity-step control failing on v5's fixture, against my
+  reading of the body) -- **and DA MEASURED the mechanism I refused to assert:**
+  a tape of 0.25 multiples plus ONE off-grid 3.14159 returns 1e-5, so the GCD
+  fallback is what overrides the landed fix. *Two routes, one mechanism --
+  corroboration, the axis I carry as open.* **My bounding was right rather than
+  merely cautious: I named two paths and would have been correct BY LUCK had I
+  picked.** **(c) AND IT IS NOW LIVE ON THE RECORD, NOT IN A FILING:** `0718fea`
+  landed the reviewer's wording into E1_RESULTS.md verbatim -- "NOT LANDED" and
+  "the committed comment still describes the UNFIXED behaviour", **both refuted
+  by this round** -- and DA's own v5 message declares the re-amendment "in the
+  next commit", **not yet landed.**
+  MEASURED BEFORE THIS SENTENCE: flags 637 -> 647, flag_provenance 182 -> 192,
+  tasks 19; 86 CHECKED, 106 RELAYED, **455 UNMARKED -- UNCHANGED, because every
+  one of the ten new flags carried its provenance entry when written.** ORPHAN
+  audit 0 findings, exit 0 -- **after it REFUSED my own first RELAYED entry for
+  having an artifact: where from: belongs**, which is the whole reason the audit
+  runs before the sentence and not after.
+  E2.0 stands SETTLED, cited to **ed14c87** -- the commit that holds
+  REVIEW_P002_E20_RESULT_2026-09-06.md, re-read from the log this round, not
+  carried from the brief.)
+```
