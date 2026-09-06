@@ -50,8 +50,55 @@ ROOT = E20.ROOT
 VISION = E20.VISION
 E1_OUT = ROOT / "data" / "mm_hf" / "e1"
 PROTOCOL = "P002_E2_A_E1A_REPRODUCTION_V1"
-DECL_PATH = HERE / "declarations" / "p002_e2_a_declaration_v2.json"
-DECL_SHA = "6567a25f04d7fb892d001da3dee7d7db00f3df342197d7ab9663e8a2f8e03ed1"
+#: DA 96, found by this seat's own non-head census (Q-DA-317): this pin
+#: named `_v2` while the family's pair-verified chain head was `_v7` --
+#: five supersessions back, READ (`json.loads`) rather than merely named.
+#: The one field it reads, `reproduction_control_inherited`, is
+#: BYTE-IDENTICAL in v2 and v7 (canonical JSON digest
+#: 0de161a999246f011dc16c648ec76535), so nothing computed under the old
+#: pin differs -- ***the defect was that nothing enforced that***, and the
+#: receipt below cited a superseded declaration as the thing it ran under.
+#: v2 sha 6567a25f04d7fb89… -> v7 sha 57c92c9e899eb691….
+#: WHAT v7 ADDS IS NOT IMPORTED BY THIS CONTROL: v7 carries R-584's
+#: BTC-ONLY scope for the FORWARD line, and this module reproduces E1-A's
+#: PUBLISHED twelve-symbol control (`e1a_gate_summary.csv`, row tp_s=600).
+#: Reproducing a published number is not running the forward line, and the
+#: inherited symbol list is E1-A's, not a scope choice made here.
+DECL_PATH = HERE / "declarations" / "p002_e2_a_declaration_v7.json"
+DECL_SHA = "57c92c9e899eb6912c659de3bb84f31994b8143bc79ba3f4fd7131d82d5bcfa0"
+
+
+def declaration_is_the_chain_head(path: Path = None) -> dict:
+    """Is the pinned declaration the HEAD of its family?
+
+    THE PIN WENT STALE SILENTLY FIVE TIMES OVER. A digest pin proves the
+    file has not moved; it says nothing about whether a LATER version
+    supersedes it. So the siblings are read: a family member whose
+    `supersedes` names this file by the R-608 PAIR ({path, sha256}, both
+    halves landing on this present file) is a successor, and any successor
+    means this pin is not the head."""
+    import hashlib as _h                                      # noqa: PLC0415
+    p = Path(path or DECL_PATH)
+    fam = p.name.rsplit("_v", 1)[0]
+    mine = _h.sha256(p.read_bytes()).hexdigest() if p.is_file() else None
+    successors = []
+    for f in sorted(p.parent.glob(f"{fam}_v*.json")):
+        if f.name == p.name:
+            continue
+        try:
+            blk = (json.loads(f.read_text()).get("supersedes") or {})
+        except (OSError, ValueError):
+            continue
+        if not isinstance(blk, dict):
+            continue
+        if (Path(str(blk.get("path") or "")).name == p.name
+                and blk.get("sha256") == mine):
+            successors.append(f.name)
+    return {"pinned": p.name, "sha256": mine,
+            "successors_naming_it_by_the_PAIR": successors,
+            "is_the_chain_head": not successors,
+            "why": ("a digest pin proves the file has not moved; only the "
+                    "absence of a successor proves it is the one in force")}
 
 EPS = 1e-12
 TP_GRID_S = (60, 600, 3600)
@@ -503,6 +550,23 @@ def selftest() -> int:
        f"implementation against a number produced under another input")
     ok(DECL_PATH.is_file() and E20.digest(DECL_PATH) == DECL_SHA,
        f"DECLARATION PINNED: {DECL_SHA[:16]} verified before anything runs")
+    _head = declaration_is_the_chain_head()
+    ok(_head["is_the_chain_head"],
+       f"AND IT IS THE CHAIN HEAD: {_head['pinned']} is superseded by "
+       f"nothing ({len(_head['successors_naming_it_by_the_PAIR'])} "
+       f"successor(s) name it by the R-608 pair). A DIGEST PIN GOES STALE "
+       f"SILENTLY -- it proves the file has not moved, never that a later "
+       f"version has not replaced it, and this one named _v2 while the "
+       f"head was _v7")
+    _stale_known_bad = declaration_is_the_chain_head(
+        DECL_PATH.parent / "p002_e2_a_declaration_v2.json")
+    ok(_stale_known_bad["is_the_chain_head"] is False
+       and "p002_e2_a_declaration_v3.json"
+       in _stale_known_bad["successors_naming_it_by_the_PAIR"],
+       f"KNOWN-BAD, DRIVEN: the version this module used to pin is refused "
+       f"by the same check -- v2 is named by "
+       f"{_stale_known_bad['successors_naming_it_by_the_PAIR']} through the PAIR, so "
+       f"a check that could not fire is not what is passing above")
 
     print(f"\n{'selftest OK' if not fails else 'SELFTEST FAILED'} -- "
           f"{len(fails)} failure(s)")

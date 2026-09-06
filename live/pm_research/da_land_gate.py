@@ -120,7 +120,16 @@ def land_command(*after_the_gate: str) -> str:
 def run_module(mod: str, *, timeout_s: int = 180) -> dict:
     """Run one selftest. Script form first; `-m` when the script form
     cannot import `live` (two legacy modules only run that way)."""
-    f = HERE / f"{mod}.py"
+    #: A MODULE OR A PATH. A round that touches a module outside
+    #: `pm_research` -- DA 96 repinned `mm_research/e2_a_episodes.py` --
+    #: must be able to put THAT selftest in front of the commit too, or
+    #: the gate is green about files the commit does not contain.
+    if mod.endswith(".py") or "/" in mod:
+        f = Path(mod) if Path(mod).is_absolute() else (
+            HERE.parent.parent / mod)
+        mod = f.stem
+    else:
+        f = HERE / f"{mod}.py"
     if not f.is_file():
         return {"module": mod, "status": "MODULE_ABSENT", "rc": None}
     if "--selftest" not in f.read_text():
@@ -132,8 +141,9 @@ def run_module(mod: str, *, timeout_s: int = 180) -> dict:
                        cwd=str(root))
     form = "script"
     if r.returncode != 0 and "No module named 'live'" in (r.stderr or ""):
+        pkg = str(f.parent.relative_to(root)).replace("/", ".")
         r = subprocess.run(
-            [sys.executable, "-m", f"live.pm_research.{mod}", "--selftest"],
+            [sys.executable, "-m", f"{pkg}.{mod}", "--selftest"],
             capture_output=True, text=True, timeout=timeout_s, cwd=str(root))
         form = "-m"
     tail = [x for x in (r.stdout or "").splitlines() if x.strip()]
@@ -244,6 +254,25 @@ def selftest() -> tuple:
        run_module("no_such_module")["status"] == "MODULE_ABSENT"
        and gate(("no_such_module",))["n_green"] == 0,
        f"absent -> {run_module('no_such_module')['status']}")
+    (tmp / "sub").mkdir()
+    (tmp / "sub" / "outside.py").write_text(
+        "import sys\nif '--selftest' in sys.argv:\n"
+        "    print('SELFTEST OK'); sys.exit(0)\n")
+    _rh = HERE
+    try:
+        HERE = tmp
+        _out = run_module(str(tmp / "sub" / "outside.py"))
+    finally:
+        HERE = _rh
+    ck("AND THE GATE REACHES A MODULE OUTSIDE ITS OWN DIRECTORY: a round "
+       "that touches `mm_research/e2_a_episodes.py` must put THAT selftest "
+       "in front of the commit too, or ***the gate is green about files "
+       "the commit does not contain***. A path is accepted where a module "
+       "name is, and it is labelled by its stem",
+       _out["status"] == "GREEN" and _out["module"] == "outside",
+       f"a path outside the gate's own directory -> {_out['status']} as "
+       f"`{_out['module']}`")
+
     good = land_command("git -C /repo commit -F - -- a.py",
                         "git -C /repo push -q origin HEAD")
     semi = good.replace(" && git -C /repo commit", " ; git -C /repo commit")
@@ -283,6 +312,9 @@ def main() -> int:
                     help="every da_*.py -- runs past 60 s, which is rule "
                          "20's heavy threshold: for a round holding the "
                          "lock, not for a light batch")
+    ap.add_argument("--also", action="append", default=[],
+                    help="an extra module or path to gate on -- the "
+                         "modules THIS round touches, wherever they live")
     ap.add_argument("--output", type=Path, default=None)
     a = ap.parse_args()
     if a.selftest:
@@ -294,7 +326,7 @@ def main() -> int:
         return 1 if n_fail else 0
     if a.gate or a.all:
         mods = (tuple(sorted(p.stem for p in HERE.glob("da_*.py")))
-                if a.all else ACTIVE)
+                if a.all else ACTIVE) + tuple(a.also)
         if a.all:
             print("NOTE: the full sweep runs past 60 s -- rule 20 heavy.")
         g = gate(mods)
