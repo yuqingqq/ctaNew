@@ -4,45 +4,26 @@ phase: in-progress        # planning / in-progress / review / done
 status: active            # not-started / active / blocked / deployed / stopped
 
 updated: >-
-  2026-09-06T06:05Z (DA seat). THE E2-A RUNNER EXISTS AND HAS RUN, AND IT REFUSED ON
-  THE POPULATION RATHER THAN THE GATE. The inherited E1-A reproduction
-  control ran FIRST and gated the smoke, reproducing 6.264473 / 3.448489
-  exactly; then ICPUSDT returned 1 admissible day against a declared minimum
-  of 14, so NO eff_RT exists and there is nothing to seal. The census shows
-  the predicate is SOUND -- ADA is 16 of 16 under the same code -- and that
-  ICP's exclusion is a QUIET BOOK (median gap run 1 s, 0.0000 of missing
-  seconds in runs >= 60 s) rather than an outage, while the decision-time
-  quote age it correlates with (p50 up to 902 ms, p90 up to 3.3 s) is a real
-  limit on placing at "the real touch" for a thin name. The bar is NOT
-  touched: a ruling is escalated, and ADA and ICP over 08-20..09-05 are
-  CONSUMED for any re-choice of the predicate. Declaration v5 supersedes v4
-  in band after the runner's own fixture refuted two things v4 declared.
-  R-570(D) is answered at the MECHANISM: E1's mode-of-diffs tick fix IS
-  landed and is OVERRIDDEN by the retained GCD fallback on FIL.
-  PRIOR ENTRY, unchanged in substance:
-  2026-09-06T05:04:52Z (DA seat). E2.0 IS VERIFIED BY THE COORDINATOR AT THE
-  RECEIPT (R-565) AND REVIEWED (ed14c87): the result is SETTLED as a
-  program-level fact -- every number reproduces, the kill survives
-  leave-one-out on all 16 days, and E1-B is empty. The reviewer's one gap was
-  that P-002 had NO data-root resolver; it now imports DE's
-  (de_data_root.require_canonical), which refuses a result-bearing emission
-  off the canonical ledger -- the partial-shell case my own tape-exists check
-  would have admitted. E2-A IS DECLARED (declaration only, no data).
-  PRIOR ENTRY, unchanged in substance:
-  2026-09-06T04:47:21Z (DA seat, E2.0 RUN AND READ ON ADA). E2.0's declared
-  purpose was to VOID or SETTLE the ADA result. IT SETTLES IT, AND THE VERDICT
-  IS DEAD: notional-weighted rs(30 s) on TRUE bookTicker mids = -0.5552 bps
-  over 16 admissible UTC days (2026-08-20..09-05, 2,077,916 sweeps), below the
-  1.8 bps VIP0 death bar, with CI95 [-1.86, +0.12] so the kill is
-  INTERVAL-ROBUST. Delta_rs on the intersection = -0.0066 bps against a +1.0
-  voiding threshold, so E1's print-based mid was NOT optimistic and E1's
-  measurement stands -- ADA was a WEIGHTING artifact, not a mid artifact, and
-  that is now confirmed against real books. Verdict NOT_VOIDED+DEAD.
-  E1-B is now EMPTY WITH NO PENDING CELL; `pending_e1x` is resolved and E1x is
-  moot. All four readable section 1.5 gates fail. Receipt
-  data/mm_hf/e1/p002_e2_0_smoke_ADAUSDT__20260906T044455Z.json
-  (sha256 6942eb5ff574a42e, carrying_commit 2cf2029), declaration v2
-  054ff4e7536291ee (reviewer 46030b1's three findings carried in band).
+  2026-09-06T07:29Z (DA seat). DECLARATION v7 AND THE SEALED BTC SMOKE. The
+  ordering property is restated as E[filled_ProbQueue] >= filled_RiskAverse
+  with `some trade reaches front = 0` as the per-episode testability
+  predicate, and REFUTES_THE_BRACKET narrowed to that regime -- because the
+  half v4 KEPT was false and a correct model disagreement was suppressing the
+  gate. Measuring the reviewer's own proposed fix showed the EXPECTATION is
+  violable in the marginal regime too (E[ProbQueue] 9.986301369863014 against
+  RiskAverse 10 at queue 100 / one trade of 110 / depth 1000), so the
+  front = 0 predicate is doing all the work. CLAUDE.md rule 5's era boundary
+  is now an admission leg of its own, measured ROW-WISE on recv_ns, and it
+  takes BTC from 15 admissible days to 11 -- BELOW the declared minimum of 14,
+  so under R-580(C)(2) NO GATE IS READ and no threshold is moved: the
+  mechanism ran as a SEALED SMOKE and the gate opens at G >= 14
+  post-boundary days, about 2026-09-09. R-584 (USER): scope is BTC; the twelve
+  are context; the thin-name cell is DEFERRED, NOT RESOLVED. Two defects in my
+  own instruments were found by enumeration rather than by a failing check:
+  the seal's leak scan shared its blind spot with the redactor and would have
+  certified two eff_RT values in a receipt labelled SEALED, and a rebase
+  rewrote the commit a declaration was about to name -- both artifacts now
+  cite their producing code by CONTENT DIGEST.
 
 flags:
   e1_passed: overlay-only # FINAL (post results-audit): E1-A PASS audit-robust
@@ -107,24 +88,126 @@ flags:
                           # 880b87f82fd0d3dc: 24 checks BOTH DIRECTIONS, 0
                           # failures, and the no-data claim PRODUCED in
                           # process -- 3 paths opened, 0 under data/mm_hf.
-  e2_a_smoke: REFUSED_ON_POPULATION
-                          # ICPUSDT, receipt data/mm_hf/e1/
-                          # p002_e2a_smoke_ICPUSDT__20260906T055050Z.json,
-                          # sha256 ad722557872b837a, carrying b5bf558,
-                          # declaration v5 90a9a99f6cb2a2cc. 33.55 s wall,
-                          # 1,124 MiB RSS, one CPU under the rule-20 wrapper.
-                          # THE INHERITED CONTROL RAN FIRST AND GATED THE RUN
-                          # and it PASSED: sweep 6.264472967929728, touch
-                          # 3.4484893715577347, matching e1a_gate_summary.csv
-                          # row tp_s=600 to full printed precision.
-                          # THEN 1 ADMISSIBLE DAY AGAINST A DECLARED MINIMUM
-                          # OF 14, so NO GATE WAS READ: there is no eff_RT in
-                          # the receipt, no overlay verdict and NOTHING TO
-                          # SEAL. All 16 complete days carry 24 hour-files on
-                          # all THREE streams, so the depth20 requirement is
-                          # met everywhere; what excludes 15 of them is the
-                          # bookTicker gap-fraction leg (0.109-0.219 against
-                          # a 0.05 bar).
+  e2_a_smoke: SEALED_NO_GATE_READ
+                          # BTCUSDT, 2026-09-06T07:18:09Z, under R-580(C)(2)
+                          # and R-584. Open receipt data/mm_hf/e1/
+                          # p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z
+                          # .json sha256 ec50c88809bdaa3f; SEALED payload
+                          # data/mm_hf/e1/sealed/p002_e2a_SEALED_BTCUSDT__
+                          # 20260906T071809Z.json sha256 0e8b832924ddc5e6,
+                          # 123,014 bytes -- WRITTEN, DIGESTED, NOT READ.
+                          # Declaration v7 57c92c9e899eb691; runner digest
+                          # 2d813fe4267ebcf5 carrying 77644ed with
+                          # producing_code_is_the_committed_bytes TRUE.
+                          # THE INHERITED E1-A CONTROL RAN FIRST AND GATED
+                          # THE RUN: reproduced true, 31 days, both regimes.
+                          # POPULATION: 15 admissible on streams+liveness;
+                          # the rule-5 era leg takes it to 11 (08-20..23 are
+                          # legacy_share EXACTLY 1.0, measured row-wise --
+                          # 08-23 is 34,147,812 of 34,147,812 rows); 08-24
+                          # out on liveness (158 s gap, 2 restarts), 08-26
+                          # out on 23 bookTicker hour-files. 11 < 14, so
+                          # gate_read FALSE and the cap is NOT relaxed.
+                          # MECHANISM (costs sealed): 1,548 RESOLVED, 36
+                          # QUEUE_AHEAD_UNDEFINED, 0 NO_QUOTE_BEFORE_T0, 0
+                          # NO_BOOK_AT_TP; ordering
+                          # ORDERING_HOLDS_WHERE_TESTABLE with 1,287
+                          # testable / 0 violations and 261 marginal / 0
+                          # violations. 261 of 1,548 = 16.9% of a real
+                          # symbol's population sits in the regime where the
+                          # PRE-v7 runner would have refuted on any
+                          # violation -- exposure measured, not argued.
+                          # QUOTE AGE p50 29 ms, p90 123 ms, max 591 ms,
+                          # ZERO over the declared 1,000 ms bar, so readings
+                          # A and B are the SAME population on BTC.
+                          # RESOURCES: 11 days, 631.8 s total, peak RSS
+                          # 2.717 GiB against the declared 6.0 GiB cap.
+                          # SEAL: 431 keys removed over 25 names; marker
+                          # scan 0 leaks, independent second net 0 leaks,
+                          # 91 surviving numeric key names PUBLISHED in the
+                          # receipt so the seal is auditable.
+  e2_a_declaration: v7
+                          # p002_e2_a_declaration_v7.json sha256
+                          # 57c92c9e899eb691, emitter digest
+                          # 5f582817af054724, emitter commit 7a1e582.
+                          # v6 127e0a56ddee775e UNTOUCHED and still cited by
+                          # its landed receipt (11f12371...), so rule 13
+                          # forbids editing it -- v7 supersedes in band
+                          # (R-580(C)(3)).
+  e2_a_ordering_property: EXPECTATION-WITH-FRONT-ZERO-PREDICATE
+                          # E[filled_ProbQueue] >= filled_RiskAverse,
+                          # testable per episode iff some trade reaches
+                          # front = 0; the rest carried as the counted
+                          # status ORDERING_NOT_TESTABLE_MARGINAL;
+                          # REFUTES_THE_BRACKET narrowed to the arithmetic
+                          # regime so a correct model disagreement can no
+                          # longer silence the gate (REVIEW_DA61_E2A A.5).
+                          # THE REVIEWER'S PROPOSED RESTATEMENT IS NOT
+                          # SUFFICIENT ON ITS OWN: at queue 100, order 10,
+                          # one trade of 110, depth 1000 the EXPECTATION is
+                          # violated too (9.986301369863014 < 10) with no
+                          # defect present -- declared as a regime with its
+                          # hand derivation and driven as a known-bad.
+  e2_a_era_leg: RULE5-PER-SYMBOL-DAY-ROW-WISE
+                          # a symbol-day is era-admissible iff EVERY
+                          # bookTicker row carries recv_ns >=
+                          # 1787579334881534478 (2026-08-24 13:48:54 UTC).
+                          # Measured row-wise, never inferred from the date:
+                          # the boundary falls INSIDE 08-24, which is
+                          # 56.0459% legacy on ADA. Absence is not a pass --
+                          # an unevaluated leg REFUSES with
+                          # ERA_LEG_NOT_EVALUATED.
+  e2_a_gate_opens_at: G>=14-POST-BOUNDARY-DAYS
+                          # ~2026-09-09. R-580(C)(2): the minimum stays 14
+                          # and NO threshold is changed after seeing; what
+                          # changes is what may be READ.
+  e2_a_scope: BTC-ONLY
+                          # R-584 (USER, 2026-09-06). Gate symbol BTCUSDT;
+                          # the twelve-symbol census is CONTEXT; the
+                          # thin-name (ICP) cell is DEFERRED, NOT RESOLVED
+                          # -- v7 declares HOW it would be reported
+                          # (NOT_COMPARABLE_ON_PLACEMENT_QUALITY with its
+                          # mechanism) so the label cannot be chosen after
+                          # seeing, but E2-A under this scope does not
+                          # answer it.
+  e2_a_memory_discipline: STREAMED-PER-HOUR-FILE-CAP-6GiB
+                          # R-584. The bookTicker day is streamed hour-file
+                          # by hour-file keeping only the episode grid; a
+                          # day over the cap REFUSES and the cap is never
+                          # raised nor the population made smaller. Cap is
+                          # 75% of the rule-20 wrapper's own 8 GiB because a
+                          # cgroup kill is silent. Streaming parity is a
+                          # control: identical quotes to a whole-day book at
+                          # all 24 decision times and 72 T_p ends.
+                          # MEASURED CAVEAT: the scope's MemoryPeak hit
+                          # 7.79 GiB of 8 GiB, but memory.stat read anon
+                          # 1.13 GiB against file 5.17 GiB (reclaimable page
+                          # cache) with memory.events max 0 / oom 0. Rule
+                          # 20's cap counts cache; the guard counts
+                          # residency; on a streaming run they differ ~5x.
+  artifacts_cite_code_by_content_digest: true
+                          # DA 63: the v7 emitter was landed as cd212f9,
+                          # v7 emitted against it, and another seat's
+                          # landing REBASED it to acd393a -- byte-identical
+                          # content (14b3d9ee20f2b2f6), a commit id
+                          # reachable from NO branch. And carrying_commit is
+                          # the TREE's HEAD: this seat measured its own
+                          # worktree THREE LANDINGS behind while running the
+                          # module. Declaration and runner now carry
+                          # emitter_sha256 / runner_sha256 as the durable
+                          # citation, commit ids labelled best-effort, and a
+                          # computed producing_code_is_the_committed_bytes.
+  e2_a_seal_audited: true
+                          # the sealed emission runs TWO nets of different
+                          # shape. The first (marker list) shared its blind
+                          # spot with the redactor and would have certified
+                          # staleness_sensitivity.reading_A_all_episodes_bps
+                          # -- eff_RT at the gate row -- as clean. Found by
+                          # enumerating the emitted keys, before any sealed
+                          # run emitted. The second net censuses numeric
+                          # LEAVES by name shape, ignores the marker list and
+                          # fails CLOSED. Both read 0 on the BTC smoke and
+                          # the 91 surviving numeric key names are published.
   e2_a_admission_leg: v6-COLLECTOR-OUTAGE
                           # RE-DECLARED 2026-09-06 (coordinator addendum to
                           # DA 62, on DA 61's census8 finding).

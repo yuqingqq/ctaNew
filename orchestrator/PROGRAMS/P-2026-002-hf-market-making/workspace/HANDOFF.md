@@ -1,14 +1,254 @@
 # HANDOFF — P-2026-002 HF Market Making
 
-Updated: 2026-09-06T06:24Z (DA seat). **THE ADMISSION LEG IS RE-DECLARED AS
-AN OUTAGE DETECTOR (declaration v6).** DA 61's census8 showed the inherited
-gap-fraction leg selects on *how often the best quote changes* — exclusion
-monotone in activity, ICP cut from 16 structurally complete days to 1 — so
-E2-A was dropping precisely the thin cell it exists to resolve. Admissibility
-is now a property of **the collector being live**; book activity is REPORTED,
-never gated. Nothing has been read for a gate under v6: the reviewer files on
-v6 (REV 38) before the smoke re-runs, and **the ICP smoke's reading stays
-SEALED.** Read this section, then E2.0's below it.
+Updated: 2026-09-06T07:29Z (DA seat). **DECLARATION v7 — R-580's three rulings and
+R-584's BTC scope — AND THE SEALED BTC SMOKE.** The ordering property is
+restated as an expectation with a computable testability predicate; rule 5's
+era boundary becomes an admission leg of its own, which collapses the
+population below the declared minimum; the scope is BTC. **Nothing has been
+read for a gate: the smoke is SEALED, and the gate opens only at G ≥ 14
+admissible post-boundary days (~2026-09-09).** Read this section, then E2.0's
+restatement rule, then v6 below (superseded, kept as provenance).
+
+## E2.0's RESTATEMENT RULE — write this down, it now applies twice
+
+E2.0's kill (`ADAUSDT`, **16 admissible UTC days 2026-08-20..09-05**,
+τ\* = 30 s, 2,077,916 sweeps, Δrs −0.006570, receipt `…044455Z`, sha256
+`6942eb5ff574a42e`) was settled by the reviewer under the **v1–v5 admission
+leg**. v6 replaced that leg; v7 adds a second (rule 5's era predicate). Both
+change which days are admissible. The rule, in three parts:
+
+1. **Apply a new leg FORWARD only.** v6 and v7 govern E2-A. E2.0 is not
+   re-run under them.
+2. **Restate E2.0's n and its as-of whenever it is cited** — "16 admissible
+   days, 2026-08-20..09-05, under the v1–v5 leg" — because the phrase
+   "admissible days" now denotes a different set. A number quoted without the
+   leg that produced it is an address travelling without its object.
+3. **Never re-derive a settled kill.** E2.0 is SETTLED (REV 33: every number
+   recomputed; the kill survives leave-one-day-out on all 16 days).
+   Re-running it under a new leg would produce a *second* number for a closed
+   question, and the first re-derivation that disagreed would reopen it on
+   nothing but a population change.
+
+*Why this is a rule and not a note:* E2.0 reads the exchange stamp `T` and is
+indifferent to the era boundary; E2-A reads `recv_ns` and is not. The two
+steps legitimately admit different days, and the only thing that keeps that
+legible is stating the leg beside the n.
+
+## v7 — the ordering property, and why the reviewer's own fix was not enough
+
+**REVIEW_DA61_E2A §A.5** showed the half of the ordering property v4 *kept*
+was false. RiskAverse fills `clip(total − queue_ahead, 0, q)` — positive as
+soon as the **cumulative** volume passes the queue — while ProbQueue fills
+with certainty only once a trade arrives with `front = 0`. Between them is a
+**marginal regime** where RiskAverse fills a sliver and ProbQueue is still a
+coin flip. And the runner's response to a violation was to declare its own
+instrument refuted, so **a correct model disagreement suppressed the gate.**
+
+v7 restates it as **E[filled_ProbQueue] ≥ filled_RiskAverse**, makes
+testability the computable predicate *some trade has `front = 0`*, carries
+the rest as the counted status `ORDERING_NOT_TESTABLE_MARGINAL`, and narrows
+`REFUTES_THE_BRACKET` to the arithmetic regime.
+
+**And measuring the reviewer's proposed restatement showed it is not
+sufficient on its own.** Constructed and driven through the runner:
+
+| regime | case | RiskAverse | E[ProbQueue] | testable | may refute |
+|---|---|---:|---:|---|---|
+| testable | qa 50, q 10, two trades of 60 | 10.0 | 10.0 | yes | **yes** |
+| marginal (A.5) | qa 100, q 10, one trade 105, depth 200 | 5.0 | 5.0 | no | no |
+| marginal (DA 63) | qa 100, q 10, one trade 110, **depth 1000** | **10.0** | **9.986301369863014** | no | no |
+
+The third row is new: **the expectation ordering is violated too**, in the
+same marginal regime, with no defect present. So the expectation is not a
+weaker-but-always-true restatement — it is true *exactly where the
+realisation ordering is true*, i.e. on the testable set. **The `front = 0`
+predicate is doing all the work.** The runner reproduces the hand derivation
+`10 · 900³/(100³+900³)` to 1e-12, and the reviewer's own measurement
+(993/2000 = 0.4965 seeds violating) reproduces exactly in this code.
+
+## v7 — rule 5's era leg, and the population collapse it causes
+
+E2-A's estimand *is* sub-second arrival order on `recv_ns`, so CLAUDE.md
+rule 5 binds here in a way it did not bind E2.0 (which reads the exchange
+stamp `T`). A symbol-day is era-admissible iff **every** bookTicker row
+carries `recv_ns ≥ 1787579334881534478` (2026-08-24 13:48:54 UTC),
+**measured row-wise, never inferred from the date** — the boundary falls
+*inside* 08-24, which is **56.0% legacy-stamped** on ADA, measured.
+
+**The consequence, stated rather than solved:** post-boundary complete days
+are 08-25..09-05 = 12, of which 08-26 is out on the collector reboot →
+**at most 11 admissible post-boundary days per symbol against the declared
+minimum of 14.** Under R-580(C)(2) **no threshold is changed after seeing.**
+The mechanism runs as a **SEALED SMOKE** — economics sealed and never read,
+statuses and resources published — and the gate is read only at **G ≥ 14**
+(~2026-09-09).
+
+**Absence is not a pass:** a day whose era leg was not evaluated is REFUSED
+with `ERA_LEG_NOT_EVALUATED`, never quietly admitted. The census passes
+`require_era=False` and every one of its rows says `era_leg_enforced: false`.
+
+## v7 — the liveness leg's controls are the RULED ones
+
+R-580(C)(1) **withdrew** the reviewer's 08-29/30 positive control on the
+collector's own ledger: zero restarts (all four are 08-24 and 08-26), 1,439
+of 1,440 heartbeats each day, max gap 61 s (one cadence) against 158 s and
+4,656 s, zero WebSocket drops — and decisively, **the event-driven streams
+fell ≈40% while the fixed-cadence depth20 held at 92–93%.** An outage
+suppresses every stream; a quiet market only the event-driven ones.
+
+- **positive controls (must REFUSE):** 2026-08-24, 2026-08-26
+- **negative control (must ADMIT):** 2026-08-29/30 — a quiet weekend
+
+Requiring the leg to flag a quiet weekend would have rebuilt the
+activity-selecting defect v6 removed — *through the control instead of the
+predicate.*
+
+## v7 — quote age is a status, and the gate is read both ways
+
+Decision-time quote age is reported **per symbol-day and per episode**, never
+gated (filtering on it selects on activity — the defect v6 removed). The gate
+is read twice: **A** over all resolved episodes, **B** over episodes whose
+quote is no older than a declared **1,000 ms** bar. The bar is *not* ICP's
+measured 517 ms median — it is **rule 5's own "≥ 1 s bars only" line**, the
+granularity at which this programme already says a stamp is trustworthy. A
+straddle of 8.0 bps between A and B is reported
+`STRADDLES_THE_STALENESS_BAR` and **never averaged**.
+
+## R-584 (USER) — scope is BTC, and BTC needed a resource boundary
+
+The smoke and the gate are **BTCUSDT**. The twelve-symbol census stays as
+**context**; the thin-name (ICP) cell is **DEFERRED, NOT RESOLVED** — v7
+declares *how* it would be reported (`NOT_COMPARABLE_ON_PLACEMENT_QUALITY`
+with its mechanism: a resting order at a stale touch, swept by later prints,
+inflates both fill rate and apparent capture) so the label cannot be chosen
+after seeing, but **E2-A under this scope does not answer it.** A reader must
+not take a BTC number for a thin name: BTC is the most active symbol in the
+set, so the placement-quality problem is at its **weakest** there.
+
+**The resource boundary.** BTC's bookTicker is 8.5 GB, 621 MB gzipped on a
+single day. The day read now **streams hour-file by hour-file and keeps only
+the episode grid** — 24 decision-time quotes and their T_p ends. Measured on
+2026-08-25:
+
+| stage | wall | resident after |
+|---|---:|---:|
+| era leg (47,944,227 rows, legacy share 0.0) | 22.9 s | 0.18 GiB |
+| streamed book (49,891,066 rows, 25 hour-files) | 25.7 s | 0.15 GiB |
+| trades (5,743,178) | 3.1 s | 0.29 GiB |
+| depth20 (822,268 snapshots) | 5.5 s | 0.96 GiB |
+| episodes | 1.4 s | 0.96 GiB |
+| **peak** | | **1.83 GiB** against a **6.0 GiB** cap |
+
+Peak residency of a *single* hour-file: **0.351 GiB** — the 50 M-row day is
+never resident. **The cap is 75% of the rule-20 wrapper's own 8 GiB
+`MemoryMax`**, because a cgroup kill is silent and leaves nothing written, so
+the guard must fire while there is still room to write the refusal. It is not
+tuned on BTC. **On a breach the day REFUSES: the cap is never raised and the
+population is never made smaller to fit it.**
+
+**Streaming parity is a control, not a hope:** the streamed book returns the
+*identical* quote to a whole-day book at all 24 decision times and 72 T_p
+ends over 40,000 quotes fed in 10 chunks, with the same `t_max` and row
+count. And a target the stream was not built for **refuses** rather than
+returning nothing — silence there would have read as `NO_QUOTE`, a wrong
+*exclusion*.
+
+## An address that was rewritten out from under a declaration
+
+DA 63 landed the v7 emitter as `cd212f9`, emitted v7 against it, and another
+seat's landing **rebased that commit to `acd393a`** — byte-identical content
+(`14b3d9ee20f2b2f6`), a commit id reachable from **no branch**. The
+declaration was ~40 s from being published with a `carrying_commit` nobody
+could resolve. Caught before publication; **the smoke was stopped and re-run
+rather than the receipt annotated.**
+
+The same hazard is worse for the runner: `carrying_commit` is the *tree's*
+HEAD, and in a per-seat worktree that is whatever it was last detached at —
+**this seat measured its own worktree three landings behind while running the
+module.** Both now carry a **content digest**:
+
+| field | declaration | runner |
+|---|---|---|
+| durable citation | `emitter_sha256` `5f582817af054724` | `runner_sha256` `13ae1e7b8f19f58a` |
+| commit, best-effort | `7a1e582` | `5eb91f0` |
+| tree head at run | — | recorded |
+| computed | — | `producing_code_is_the_committed_bytes` |
+
+A rebase rewrites commit ids and leaves the bytes alone. **Resolve the digest
+first**; treat a missing commit id as a rewritten history, not a missing
+artifact.
+
+## THE SEALED BTC SMOKE — it ran, and NO GATE WAS READ
+
+Open receipt `data/mm_hf/e1/p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json`
+(sha256 `ec50c88809bdaa3f`); sealed payload
+`data/mm_hf/e1/sealed/p002_e2a_SEALED_BTCUSDT__20260906T071809Z.json`
+(sha256 `0e8b832924ddc5e6`, 123,014 bytes) — **written, digested and NOT
+read.** Declaration v7 `57c92c9e899eb691`; runner digest `2d813fe4267ebcf5`
+carrying `77644ed`, `producing_code_is_the_committed_bytes: true`. The
+inherited E1-A control ran FIRST and **gated** the run: `reproduced: true`
+over 31 days, both regimes.
+
+**The population, and what each leg removed:**
+
+| | days | removed by |
+|---|---:|---|
+| complete streams + collector live | **15** | — |
+| 2026-08-24 | out | liveness: max heartbeat gap **158 s** vs a 120 s bar, **2 restarts** |
+| 2026-08-26 | out | streams: **23** bookTicker hour-files |
+| 2026-08-20..23 | out | **rule-5 era leg**, `legacy_share` exactly **1.0** each (08-23: 34,147,812 of 34,147,812 rows) |
+| **admissible post-boundary** | **11** | **< the declared minimum 14 → `gate_read: false`** |
+
+The four days the era leg removes are *measured* at 1.0, not assumed from the
+date. **11 < 14, so no gate is read and the cap is not relaxed.**
+
+**The mechanism, all costs sealed.** 1,548 `RESOLVED`, 36
+`QUEUE_AHEAD_UNDEFINED`, 0 `NO_QUOTE_BEFORE_T0`, 0 `NO_BOOK_AT_TP`. Ordering:
+`ORDERING_HOLDS_WHERE_TESTABLE` — **1,287 testable, 0 violations; 261
+marginal, 0 violations**; the population expectation holds.
+
+> **261 of 1,548 episodes — 16.9% — sit in the marginal regime**, the regime
+> where the pre-v7 runner would have declared itself refuted on any violation.
+> None violated here, so the old code would have survived *this* run. The
+> exposure is now measured rather than argued.
+
+**Quote age: p50 29 ms, p90 123 ms, max 591 ms, and ZERO episodes over the
+1,000 ms bar** — so reading A and reading B are the *same population* on BTC
+and the staleness machinery does not bite here. That is R-584's own point,
+measured: BTC is where the placement-quality problem is weakest.
+
+**Resources.** 11 days, **631.8 s** total (531.3 s in the symbol), whole-run
+peak RSS **2.717 GiB against the declared 6.0 GiB cap**. Per day the streamed
+book is 5.6–25.2 s over 25 hour-files for 11.0 M–49.9 M rows.
+
+*A field name that overstates itself:* `peak_single_hour_file_rss_gib`
+(1.113–1.514 GiB) is **process residency observed while streaming a file**,
+not that file's own footprint — it includes the trade and depth20 tapes
+already resident.
+
+### A resource fact the wrapper's own number hides
+
+The scope's `MemoryPeak` reached **7.79 GiB of its 8 GiB `MemoryMax`** — 97%.
+But `memory.stat` at the time reads **anon 1.13 GiB against file 5.17 GiB**
+(reclaimable page cache from the gz tapes), and `memory.events` shows
+`max 0, oom 0, oom_kill 0`. **The process never exceeded 2.72 GiB.** A reader
+taking `MemoryCurrent` for the run's memory would conclude it nearly died.
+**Rule 20's cap counts page cache; the guard counts residency, and on a
+tape-streaming run the two differ by roughly 5×.** Worth knowing before
+anyone reasons about rule 20's headroom from a scope's reported memory.
+
+### The seal, audited at the artifact rather than asserted
+
+**431 keys removed across 25 distinct names** — every `eff_rt` variant, both
+fresh readings, `ci_lo`/`ci_hi`, `verdict`, `aggregate_by_tp`, `fill_rate`,
+`mean_phi`, `staleness_sensitivity`. **Marker scan: 0 leaks. The independent
+second net: 0 leaks. 91 numeric key names survive and are PUBLISHED in the
+receipt**, so the seal can be checked instead of believed.
+
+The redaction is deliberately over-broad on `gate` and `aggregate`, so some
+non-economic metadata goes with it (`gate_symbol`,
+`is_the_gate_symbol_under_R584`, `REPORTED_not_gated`). The trade is
+intentional: it fails toward removing.
 
 ## v6 — admission is the COLLECTOR, not the book
 
