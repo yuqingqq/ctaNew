@@ -160,14 +160,25 @@ def declaration_head(family: str) -> dict:
     cands = sorted(DECLARATIONS.glob(f"{family}_v*.json"))
     if not cands:
         raise DeclarationAbsent(
-            f"REFUSED: no declaration of family {family!r} under "
-            f"{DECLARATIONS}. This check depends on it and therefore FAILS; "
-            f"it does not skip (R-649).")
+            f"REFUSED: DECLARATION_ABSENT -- no file matching the {family!r} "
+            f"glob exists under {DECLARATIONS}. This check depends on it and "
+            f"therefore FAILS; it does not skip (R-649).")
     loaded = {}
     for q in cands:
         b = q.read_bytes()
+        try:
+            doc = json.loads(b)
+        except json.JSONDecodeError as e:
+            # REV 74 §2(a): an UNPARSEABLE file, a CORRUPTED link and an
+            # ABSENT declaration all arrived as "... is absent". Three
+            # different states, three different repairs, one message.
+            raise DeclarationAbsent(
+                f"REFUSED: DECLARATION_UNPARSEABLE -- {q.name} matches the "
+                f"{family} glob but is not valid JSON ({e}). It is PRESENT "
+                f"and unreadable, which is not the same as absent: the file "
+                f"is there to be fixed.") from e
         loaded[q.name] = {"path": q, "sha256": _h.sha256(b).hexdigest(),
-                          "doc": json.loads(b)}
+                          "doc": doc}
     superseded = set()
     for name, e in loaded.items():
         sup = e["doc"].get("supersedes")
@@ -175,9 +186,11 @@ def declaration_head(family: str) -> dict:
             prev = Path(sup["path"]).name
             if prev in loaded and loaded[prev]["sha256"] != sup.get("sha256"):
                 raise DeclarationAbsent(
-                    f"REFUSED: {name} supersedes {prev} by a digest that "
-                    f"does not match the file on disk -- the chain is "
-                    f"broken and no head can be resolved.")
+                    f"REFUSED: DECLARATION_LINK_CORRUPTED -- {name} "
+                    f"supersedes {prev} by a digest that does not match the "
+                    f"file on disk. Every version is PRESENT and readable; "
+                    f"it is the LINK that is wrong, so the repair is the "
+                    f"link, not the files.")
             superseded.add(prev)
     heads = [n for n in loaded if n not in superseded]
     if len(heads) != 1:
@@ -499,7 +512,26 @@ def lock_evidence(*, fixture: bool = False, refuse: bool = True) -> dict:
     return w
 
 
-def assert_launch_form(text: str | None = None) -> dict:
+def declaration_head_near(launcher: Path, family: str) -> dict:
+    """The chain head in the DECLARATIONS DIRECTORY BESIDE A GIVEN LAUNCHER.
+
+    REV 74 §2(b): `assert_launch_form` resolved `declarations/` relative to
+    THIS module, not to the launcher it was checking -- so a launcher copied
+    somewhere with no declarations beside it still reported
+    `form_is_correct: True`, judged against a declaration it would never
+    read at run time. The launcher resolves its own `DECLDIR` from its own
+    path; the checker must do the same, and report both trees."""
+    global DECLARATIONS
+    saved = DECLARATIONS
+    try:
+        DECLARATIONS = Path(launcher).resolve().parent / "declarations"
+        return declaration_head(family)
+    finally:
+        DECLARATIONS = saved
+
+
+def assert_launch_form(text: str | None = None,
+                       launcher: Path | str | None = None) -> dict:
     """THE LAUNCHER'S SHAPE IS A PREDICATE, read from the script itself.
 
     The scope form survived six BE runs because it lived in prose that
@@ -558,7 +590,17 @@ def assert_launch_form(text: str | None = None) -> dict:
     # to the declaration's -- and if the launcher sources it from the
     # declaration rather than assigning a literal, that is recorded as the
     # stronger form rather than as a missing token.
-    declared = lock_conflict_rc()
+    # the declaration the LAUNCHER UNDER TEST would read, from beside it
+    _lp = Path(launcher) if launcher else LAUNCHER
+    try:
+        _near = declaration_head_near(_lp, "heavy_run_form")
+        declared = int(_near["doc"]["lock_conflict_rc"])
+        near_err = None
+    except DeclarationAbsent as _e:
+        _near, declared, near_err = None, None, str(_e)
+        problems.append(
+            f"no readable heavy_run_form declaration beside the launcher "
+            f"under test ({_lp.parent / 'declarations'}): {str(_e)[:120]}")
     m = re.search(r"^LOCK_CONFLICT_RC=(.+)$", raw, re.M)
     assigned = m.group(1).strip() if m else None
     sourced = bool(assigned and "heavy_run_form" in raw
@@ -567,7 +609,7 @@ def assert_launch_form(text: str | None = None) -> dict:
     literal = None
     if assigned and assigned.isdigit():
         literal = int(assigned)
-        if literal != declared:
+        if declared is not None and literal != declared:
             problems.append(
                 f"declares LOCK_CONFLICT_RC={literal} while the declaration "
                 f"head says {declared}: a launcher refusing with one code "
@@ -577,7 +619,21 @@ def assert_launch_form(text: str | None = None) -> dict:
         problems.append("assigns LOCK_CONFLICT_RC from neither a literal nor "
                         "the declaration, so no reader can know what it "
                         "refuses with")
-    return {"launcher": str(LAUNCHER), "problems": problems,
+    return {"launcher": str(_lp), "problems": problems,
+            "importing_tree_declarations": str(DECLARATIONS),
+            "declarations_beside_the_launcher": str(
+                _lp.resolve().parent / "declarations"),
+            "both_trees_reported_because": "REV 74 §2(b): a launcher copied "
+                                           "elsewhere was judged against "
+                                           "THIS module's declarations, "
+                                           "which it would never read",
+            "declaration_error_beside_the_launcher": near_err,
+            "conflict_exit_code_in_launcher_is_None_when":
+                "the launcher SOURCES the code from the declaration instead "
+                "of assigning a literal -- there is no literal left to "
+                "read, which is the fix working. "
+                "`launcher_sources_it_from_the_declaration` carries the "
+                "content in that case (REV 74 §4)",
             "scanned": "the systemd-run invocation itself",
             "launch_line": src[:400],
             "form_is_correct": not problems,
@@ -585,7 +641,7 @@ def assert_launch_form(text: str | None = None) -> dict:
             "conflict_exit_code_declared": declared,
             "conflict_exit_code_in_launcher": literal,
             "launcher_sources_it_from_the_declaration": sourced,
-            "declaration_head": declaration_head("heavy_run_form")["name"]}
+            "declaration_head": _near["name"] if _near else None}
 
 
 def running_unit_exec_start(unit: str | None = None) -> dict:

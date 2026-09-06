@@ -962,7 +962,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 120
+EXPECTED_CHECKS = 124
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -1990,6 +1990,20 @@ def selftest() -> int:
         "asm": {"by_arm": {("btc", "h"): [{"k": 1}, {}]},
                 "assembly": {"n_chunks": 1, "kept_by_coin": {},
                              "drops_by_coin": {}}}})
+    _empty = _fixture_book(_tf.mkdtemp(prefix="be66_structempty_"), {
+        "fr": {"reference": {}},
+        "asm": {"by_arm": {}, "assembly": {"n_chunks": 0,
+                                           "kept_by_coin": {},
+                                           "drops_by_coin": {}}}})
+    _re = verify_structure(_empty)
+    ok(_re.get("status", "").startswith(
+        "STRUCTURE_DECLARED_BUT_THE_BOOK_IS_EMPTY_AT")
+       and _re["all_hold"] is None,
+       f"REV 74 §3: THE DECLARED SHAPE MINIMALLY POPULATED IS A NAMED "
+       f"STATUS, NOT A CRASH -- `next(iter({{}}))` raised StopIteration and "
+       f"exited 1, which on the real book would have read as a structural "
+       f"failure. It now returns {_re['status'].split(' ')[0]} with "
+       f"all_hold None: not a failure and not a pass")
     _r = verify_structure(_good)
     ok(_r["all_hold"] and _r["n_checks"] >= 6,
        f"POSITIVE CONTROL: a pickle with the declared shape ADMITS on all "
@@ -2072,6 +2086,66 @@ def selftest() -> int:
        "this seat's algorithm with DA's row structure. Three "
        "implementations disagreed on four of twelve lines and no two were "
        "wrong in the same place")
+
+    # ---- REV 74 §2(a): three declaration states, named apart ------------
+    import shutil as _sh
+    _dd = Path(_tf.mkdtemp(prefix="be66_decl_"))
+    (_dd / "declarations").mkdir()
+    _saveD = _R22.DECLARATIONS
+    try:
+        _R22.DECLARATIONS = _dd / "declarations"
+        try:
+            _R22.declaration_head("heavy_run_form"); _m1 = ""
+        except _R22.DeclarationAbsent as _e:
+            _m1 = str(_e)
+        (_dd / "declarations" / "heavy_run_form_v1.json").write_text("{ not json")
+        try:
+            _R22.declaration_head("heavy_run_form"); _m2 = ""
+        except _R22.DeclarationAbsent as _e:
+            _m2 = str(_e)
+        (_dd / "declarations" / "heavy_run_form_v1.json").write_text(
+            json.dumps({"lock_conflict_rc": 75, "supersedes": None}))
+        (_dd / "declarations" / "heavy_run_form_v2.json").write_text(
+            json.dumps({"lock_conflict_rc": 75, "supersedes": {
+                "path": "live/pm_research/declarations/heavy_run_form_v1.json",
+                "sha256": "0" * 64}}))
+        try:
+            _R22.declaration_head("heavy_run_form"); _m3 = ""
+        except _R22.DeclarationAbsent as _e:
+            _m3 = str(_e)
+    finally:
+        _R22.DECLARATIONS = _saveD
+    ok("DECLARATION_ABSENT" in _m1 and "DECLARATION_UNPARSEABLE" in _m2
+       and "DECLARATION_LINK_CORRUPTED" in _m3
+       and len({_m1[:40], _m2[:40], _m3[:40]}) == 3,
+       "REV 74 §2(a): THE THREE DECLARATION STATES ARE NAMED APART -- "
+       "ABSENT (no file), UNPARSEABLE (present and unreadable, so the file "
+       "is there to be fixed) and LINK_CORRUPTED (every version present and "
+       "readable, the LINK wrong). All three used to arrive as `... is "
+       "absent`: three states, three repairs, one message")
+    # ---- REV 74 §2(b): the declarations BESIDE the launcher under test ---
+    _ld = Path(_tf.mkdtemp(prefix="be66_launch_"))
+    _sh.copy(_R22.LAUNCHER, _ld / "be_heavy_run.sh")
+    _lf2 = _R22.assert_launch_form(Path(_R22.LAUNCHER).read_text(),
+                                   launcher=_ld / "be_heavy_run.sh")
+    ok(_lf2["form_is_correct"] is False
+       and any("beside the launcher under test" in x
+               for x in _lf2["problems"])
+       and _lf2["declarations_beside_the_launcher"] != _lf2[
+           "importing_tree_declarations"],
+       f"REV 74 §2(b): A LAUNCHER COPIED ELSEWHERE, WITH NO DECLARATIONS "
+       f"BESIDE IT, IS REFUSED -- it used to report form_is_correct True, "
+       f"judged against THIS module's declarations, which it would never "
+       f"read at run time. Both trees are reported now")
+    _lf3 = _R22.assert_launch_form()
+    ok(_lf3["form_is_correct"]
+       and _lf3["conflict_exit_code_in_launcher"] is None
+       and _lf3["launcher_sources_it_from_the_declaration"] is True,
+       "REV 74 §4: `conflict_exit_code_in_launcher` is None because there "
+       "is NO LITERAL LEFT TO READ -- the launcher sources the code from "
+       "the declaration, which is the fix working; "
+       "`launcher_sources_it_from_the_declaration` carries the content, and "
+       "the receipt says so in the field itself")
 
     return _finish(checks, fails, skipped)
 
@@ -2440,6 +2514,23 @@ def verify_structure(book_path, *, declaration: dict | None = None) -> dict:
           "asm carries by_arm and assembly")
     _need(all(isinstance(k, tuple) and len(k) == 2 for k in asm["by_arm"]),
           "asm.by_arm is keyed by (coin, head) TUPLES")
+    # REV 74 §3: the DECLARED shape MINIMALLY POPULATED raised StopIteration
+    # here -- `next(iter({}))` -- which exits 1 and reads as a structural
+    # failure. A crash is not a verdict: an empty book is a NAMED status, so
+    # that on the real book a StopIteration can never be mistaken for one.
+    if not asm["by_arm"]:
+        return {"book": str(q), "bytes": q.stat().st_size,
+                "sha256": _pin["sha256"], "digest_pin": _pin,
+                "status": f"STRUCTURE_DECLARED_BUT_THE_BOOK_IS_EMPTY_AT {q}",
+                "why": "asm.by_arm carries no arms, so there is nothing to "
+                       "check the per-arm claims against. The keys that ARE "
+                       "present matched the declaration; this is not a "
+                       "structural failure and not a pass",
+                "checks": checked, "n_checks": len(checked),
+                "all_hold": None,
+                "declaration": _R22.declaration_head(
+                    "be_daybook_structure")["name"],
+                "wall_s": round(time.time() - t0, 1)}
     first = asm["by_arm"][next(iter(asm["by_arm"]))]
     _need(hasattr(first, "__getitem__"),
           "each by_arm value is indexable and its [0] carries the scored keys")
