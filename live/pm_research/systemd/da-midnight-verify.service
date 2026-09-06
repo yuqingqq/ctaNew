@@ -26,6 +26,16 @@ Description=DA forward-day verdict (P-2026-003) -- nightly day-quality verificat
 # systemd should wait for it and report its status rather than treat launch as
 # success.
 Type=oneshot
+# ROUND 52: 2 IS A SUCCESS, AND THAT IS WHY THIS LINE EXISTS. The script's
+# exit code is three-valued (0 clean / 2 OPEN_DAY_MASK_DEFERRED / 4 instrument
+# failure). The open day that always sits in `days_needing_verdict` cannot
+# have a mask six minutes after midnight -- the frozen detector refuses, which
+# is correct -- so without this line the unit reports `failed` EVERY night
+# while nothing is wrong, and a reader cannot distinguish that from a night
+# when something is. Measured: rc=4 on 2026-09-05T00:06:29Z and again on
+# 2026-09-06T00:06:41Z, both with the CLOSED day perfect. 4 is deliberately
+# NOT listed here: a real instrument failure must still turn the unit red.
+SuccessExitStatus=2
 # RR9-3(a): NAME THE CANONICAL WRITE. The script refuses a run that
 # identifies itself as neither this unit (by cgroup) nor an explicit
 # production hand run, because a MIS-NAMED override sets neither

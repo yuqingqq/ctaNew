@@ -34,10 +34,50 @@ REPO = Path("/home/yuqing/ctaNew")
 ECON = (REPO / "data/pm_5min/derived"
         / "p003_v2_gate1_economics_smoke__20260905T052605Z.json")
 MODULE = REPO / "live/pm_research/de_v2_lifecycle_economics.py"
-#: The absolute worst-case taker-rate equivalent: 0.07 * p(1-p) maximised at
-#: p = 0.5, in cents per share. An UPPER BOUND on cost, never an estimate --
-#: 99.05% of observed maker legs are charged exactly zero (da_onchain_fee_audit).
-WORST_CASE_CENTS_PER_SHARE = 0.07 * 0.25 * 100.0
+#: WITHDRAWN AT v2, AND THE ROW THAT FORBIDS IT IS NAMED.
+#:
+#: v1 priced a lower endpoint at 1.75 c/share -- 0.07 * p(1-p) at p = 0.5 --
+#: and SUBTRACTED it from a maker net. `FLOW_MODEL_STATE.md:79` is a row of
+#: the frozen facts table and it forbids exactly that, in its own words:
+#:
+#:   "Crossing costs ~2.25 c/share ATM -- TAKER LEG ONLY | 0.50 c half-spread
+#:    + 1.75 c fee ~= 225 bps on a $1 binary. BOTH TERMS ARE THE SAME SIDE.
+#:    DO NOT SUBTRACT THIS FROM A MAKER NET."
+#:
+#: The 1.75 c IS that row's fee term. Charging it against a MAKER net prices
+#: the counterparty's cost as if it were ours, so the quantity is not merely
+#: conservative -- it is NOT AN ECONOMIC QUANTITY AT ALL, and an interval
+#: whose lower end is not economic is not an interval. Two seats found this
+#: independently and the reviewer confirmed it by execution (9e5d62f 3.2).
+#:
+#: The bracket therefore COLLAPSES TO ITS UPPER POINT, which is E0, the
+#: zero-maker-fee endpoint -- the venue's default, our signed rate, and the
+#: estimand V2 declares. `arms_whose_bracket_straddles_zero` is consequently
+#: EMPTY: there is no bracket left to straddle anything.
+#:
+#: Kept as a named constant rather than deleted so the withdrawn number stays
+#: legible to a reader of the v1 receipt, which stands as provenance (rule 13).
+WITHDRAWN_LOWER_ENDPOINT_CENTS_PER_SHARE = 0.07 * 0.25 * 100.0
+WITHDRAWAL_AUTHORITY = "FLOW_MODEL_STATE.md:79"
+WITHDRAWAL_ROW = (
+    "Crossing costs ~2.25 c/share ATM -- TAKER LEG ONLY | 0.50 c half-spread "
+    "+ 1.75 c fee ~= 225 bps on a $1 binary. BOTH TERMS ARE THE SAME SIDE. "
+    "DO NOT SUBTRACT THIS FROM A MAKER NET.")
+SUPERSEDES = {
+    "path": "data/pm_5min/derived/"
+            "p003_da_fee_interval_seam__20260905T155346Z.json",
+    "sha256": "a7b562f0ab4673160aa8757083a721c9c90d8b317"
+              "a36beb538674cf22db624f8",
+    "what_changed": (
+        "the lower endpoint is WITHDRAWN as a non-economic quantity and "
+        "`arms_whose_bracket_straddles_zero` is now EMPTY. The E0 endpoint, "
+        "the call-site AST counts, the guard behaviour and every other field "
+        "are unchanged -- v1's arithmetic was right and its ESTIMAND was "
+        "wrong"),
+    "correction_is_in_band": (
+        "rule 13: this is v2, a superseding receipt. The v1 artifact is not "
+        "edited and stands as provenance"),
+}
 
 
 class SeamRefused(RuntimeError):
@@ -91,7 +131,10 @@ def drive_endpoints(fill_ids: list, gross_cents: float,
     if not fill_ids:
         raise SeamRefused("REFUSED: no fill identities to price")
     zero = L._fee_ledger(fill_ids, {f: 0.0 for f in fill_ids})
-    per = WORST_CASE_CENTS_PER_SHARE * shares / len(fill_ids)
+    # v2: the lower endpoint is priced ONLY to show it still prices -- the
+    # seam is the finding -- and its VALUE is reported as withdrawn, never as
+    # an endpoint of a decision interval.
+    per = WITHDRAWN_LOWER_ENDPOINT_CENTS_PER_SHARE * shares / len(fill_ids)
     upper = L._fee_ledger(fill_ids, {f: per for f in fill_ids})
     guards = {}
     inc = L._fee_ledger(fill_ids, {f: 0.0 for f in fill_ids[:-1]})
@@ -108,6 +151,7 @@ def drive_endpoints(fill_ids: list, gross_cents: float,
             guards[label] = "REFUSED"
     lo = gross_cents - upper["maker_fee_cents"]
     hi = gross_cents - zero["maker_fee_cents"]
+    # THE ADMISSIBLE READING (v2): a point at E0, not an interval.
     return {
         "n_fills": len(fill_ids),
         "shares": shares,
@@ -115,19 +159,30 @@ def drive_endpoints(fill_ids: list, gross_cents: float,
         "endpoint_zero": {"status": zero["status"],
                           "maker_fee_cents": zero["maker_fee_cents"],
                           "strategy_net_cents": hi},
-        "endpoint_worst_case": {
+        "endpoint_WITHDRAWN_lower": {
             "status": upper["status"],
-            "cents_per_share": WORST_CASE_CENTS_PER_SHARE,
+            "cents_per_share": WITHDRAWN_LOWER_ENDPOINT_CENTS_PER_SHARE,
             "maker_fee_cents": upper["maker_fee_cents"],
-            "strategy_net_cents": lo},
-        "strategy_net_interval_cents": [lo, hi],
+            "would_have_given_strategy_net_cents": lo,
+            "WITHDRAWN": True,
+            "authority": WITHDRAWAL_AUTHORITY,
+            "row": WITHDRAWAL_ROW,
+            "why": ("this charges the TAKER's fee against a MAKER net, which "
+                    "the named row forbids in terms. It is not a conservative "
+                    "endpoint; it is not an economic quantity"),
+        },
+        "admissible_reading_cents": hi,
+        "admissible_reading_is": "A POINT AT E0, NOT AN INTERVAL",
         "computed_predicates": {
             "both_endpoints_priced": zero["status"] == "OK"
                                      and upper["status"] == "OK",
-            "interval_excludes_zero": (lo < 0 and hi < 0) or (lo > 0 and hi > 0),
-            "sign_is_invariant_across_the_interval":
-                (lo < 0) == (hi < 0),
-            "gross_already_negative_before_any_fee": gross_cents < 0,
+            "lower_endpoint_withdrawn": True,
+            "bracket_straddles_zero": False,
+            "why_not": ("there is no bracket: the lower endpoint is "
+                        "withdrawn, so nothing straddles anything"),
+            "E0_sign": (0 if hi == 0 else (1 if hi > 0 else -1)),
+            "gross_equals_E0_because_the_maker_fee_is_zero":
+                abs(hi - gross_cents) < 1e-12,
         },
         "guards_still_refuse": guards,
     }
@@ -163,14 +218,17 @@ def probe() -> dict:
             cs["n_selftest_passing_maker_fees"] > 0,
         "unrun_no_production_call_site_passes_it":
             cs["n_production_passing_maker_fees"] == 0,
-        "sign_invariant_on_every_arm_probed": all(
-            a["computed_predicates"]["sign_is_invariant_across_the_interval"]
+        # v2: EMPTY BY CONSTRUCTION, and that is the correction. v1 reported
+        # baseline_qr_skew_only here on a bracket whose lower end charged a
+        # taker fee to a maker net. With that endpoint withdrawn there is no
+        # bracket, so nothing can straddle: the list is empty because the
+        # QUANTITY is gone, not because a number moved.
+        "arms_whose_bracket_straddles_zero": [],
+        "every_arm_reads_as_a_POINT_at_E0": all(
+            not a["computed_predicates"]["bracket_straddles_zero"]
             for a in arms.values()),
-        "arms_whose_bracket_straddles_zero": sorted(
-            n for n, a in arms.items()
-            if not a["computed_predicates"][
-                "sign_is_invariant_across_the_interval"]),
     }
+    out["supersedes"] = SUPERSEDES
     out["role"] = ("REPORTED, NOT ENFORCED (rule 14). This says the "
                    "bound-endpoint re-run is runnable and what it yields on "
                    "the two arms the receipt carries. It clears no gate and "
@@ -255,24 +313,25 @@ def selftest() -> int:
                f"REAL/{name}: the ledger's guards are UNWEAKENED by pricing "
                f"the endpoints -- unknown id and NaN still refuse, an "
                f"incomplete ledger still yields no fee")
-            lo, hi = a["strategy_net_interval_cents"]
-            inv = a["computed_predicates"][
-                "sign_is_invariant_across_the_interval"]
-            # MEASURED, NEVER ASSERTED. The first cut of this check asserted
-            # sign-invariance as a pass condition and went RED on
-            # baseline_qr_skew_only -- whose interval genuinely straddles
-            # zero. That was rule 10 on my own instrument: a conclusion
-            # printed beside a table instead of a predicate evaluated from
-            # it. The check now requires the interval to be COMPUTED and
-            # ORDERED, and REPORTS which way the sign falls.
-            ok(lo <= hi and a["computed_predicates"][
-                   "both_endpoints_priced"],
-               f"REAL/{name}: strategy net interval [{lo:.1f}, {hi:.1f}] "
-               f"cents, ordered and priced at both ends -- sign invariant "
-               f"across the interval: {inv}"
-               + ("" if inv else "  <-- THE BRACKET STRADDLES ZERO: the fee "
-                                 "term is DECISION-RELEVANT for this arm at "
-                                 "the worst-case endpoint"))
+            hi = a["admissible_reading_cents"]
+            lo = a["endpoint_WITHDRAWN_lower"][
+                "would_have_given_strategy_net_cents"]
+            # v2, AND THIS IS A SECOND CORRECTION ON THE SAME CHECK. v1 had
+            # already been fixed once here -- I had ASSERTED sign-invariance
+            # and the falsifier caught it, so the check began MEASURING the
+            # straddle instead. That fix was right about the arithmetic and
+            # wrong about the estimand: there was never an admissible
+            # interval to measure, because its lower end charged a TAKER fee
+            # to a MAKER net. FLOW_MODEL_STATE.md:79 forbids that in terms.
+            # So the straddle is not re-measured, it is GONE.
+            ok(a["computed_predicates"]["both_endpoints_priced"]
+               and a["computed_predicates"]["lower_endpoint_withdrawn"]
+               and not a["computed_predicates"]["bracket_straddles_zero"],
+               f"REAL/{name}: v2 reads as a POINT at E0 = {hi:.4f} cents. "
+               f"The withdrawn lower endpoint would have given {lo:.1f} -- "
+               f"a taker fee charged to a maker net, forbidden by "
+               f"{WITHDRAWAL_AUTHORITY}. Nothing straddles zero because "
+               f"there is no bracket left to straddle it.")
     else:
         ok(False, f"REAL: no Gate-1e receipt at {ECON}")
 

@@ -1,0 +1,140 @@
+{
+  "arms": {
+    "baseline_qr_skew_only": {
+      "admissible_reading_cents": 288.4177679999994,
+      "admissible_reading_is": "A POINT AT E0, NOT AN INTERVAL",
+      "computed_predicates": {
+        "E0_sign": 1,
+        "both_endpoints_priced": true,
+        "bracket_straddles_zero": false,
+        "gross_equals_E0_because_the_maker_fee_is_zero": true,
+        "lower_endpoint_withdrawn": true,
+        "why_not": "there is no bracket: the lower endpoint is withdrawn, so nothing straddles anything"
+      },
+      "endpoint_WITHDRAWN_lower": {
+        "WITHDRAWN": true,
+        "authority": "FLOW_MODEL_STATE.md:79",
+        "cents_per_share": 1.7500000000000002,
+        "maker_fee_cents": 3362.7278300000007,
+        "row": "Crossing costs ~2.25 c/share ATM -- TAKER LEG ONLY | 0.50 c half-spread + 1.75 c fee ~= 225 bps on a $1 binary. BOTH TERMS ARE THE SAME SIDE. DO NOT SUBTRACT THIS FROM A MAKER NET.",
+        "status": "OK",
+        "why": "this charges the TAKER's fee against a MAKER net, which the named row forbids in terms. It is not a conservative endpoint; it is not an economic quantity",
+        "would_have_given_strategy_net_cents": -3074.3100620000014
+      },
+      "endpoint_zero": {
+        "maker_fee_cents": 0.0,
+        "status": "OK",
+        "strategy_net_cents": 288.4177679999994
+      },
+      "gross_before_fees_cents": 288.4177679999994,
+      "guards_still_refuse": {
+        "incomplete_ledger_fee_is_none": true,
+        "incomplete_ledger_status": "INCOMPLETE_PER_FILL_MAKER_FEE",
+        "non_finite_fee": "REFUSED",
+        "unknown_fill_id": "REFUSED"
+      },
+      "n_fills": 458,
+      "shares": 1921.5587600000001,
+      "shipped_fee_status": "UNAVAILABLE_NO_PER_FILL_MAKER_FEE",
+      "shipped_strategy_net": null
+    },
+    "treatment": {
+      "admissible_reading_cents": -3927.4643889999998,
+      "admissible_reading_is": "A POINT AT E0, NOT AN INTERVAL",
+      "computed_predicates": {
+        "E0_sign": -1,
+        "both_endpoints_priced": true,
+        "bracket_straddles_zero": false,
+        "gross_equals_E0_because_the_maker_fee_is_zero": true,
+        "lower_endpoint_withdrawn": true,
+        "why_not": "there is no bracket: the lower endpoint is withdrawn, so nothing straddles anything"
+      },
+      "endpoint_WITHDRAWN_lower": {
+        "WITHDRAWN": true,
+        "authority": "FLOW_MODEL_STATE.md:79",
+        "cents_per_share": 1.7500000000000002,
+        "maker_fee_cents": 2318.2081965,
+        "row": "Crossing costs ~2.25 c/share ATM -- TAKER LEG ONLY | 0.50 c half-spread + 1.75 c fee ~= 225 bps on a $1 binary. BOTH TERMS ARE THE SAME SIDE. DO NOT SUBTRACT THIS FROM A MAKER NET.",
+        "status": "OK",
+        "why": "this charges the TAKER's fee against a MAKER net, which the named row forbids in terms. It is not a conservative endpoint; it is not an economic quantity",
+        "would_have_given_strategy_net_cents": -6245.6725855
+      },
+      "endpoint_zero": {
+        "maker_fee_cents": 0.0,
+        "status": "OK",
+        "strategy_net_cents": -3927.4643889999998
+      },
+      "gross_before_fees_cents": -3927.4643889999998,
+      "guards_still_refuse": {
+        "incomplete_ledger_fee_is_none": true,
+        "incomplete_ledger_status": "INCOMPLETE_PER_FILL_MAKER_FEE",
+        "non_finite_fee": "REFUSED",
+        "unknown_fill_id": "REFUSED"
+      },
+      "n_fills": 313,
+      "shares": 1324.690398,
+      "shipped_fee_status": "UNAVAILABLE_NO_PER_FILL_MAKER_FEE",
+      "shipped_strategy_net": null
+    }
+  },
+  "call_sites": {
+    "n_production": 3,
+    "n_production_passing_maker_fees": 0,
+    "n_selftest_passing_maker_fees": 3,
+    "production_call_sites": [
+      {
+        "line": 256,
+        "passes_maker_fees": false
+      },
+      {
+        "line": 258,
+        "passes_maker_fees": false
+      },
+      {
+        "line": 293,
+        "passes_maker_fees": false
+      }
+    ],
+    "selftest_call_sites": [
+      {
+        "line": 467,
+        "passes_maker_fees": false
+      },
+      {
+        "line": 477,
+        "passes_maker_fees": true
+      },
+      {
+        "line": 487,
+        "passes_maker_fees": true
+      },
+      {
+        "line": 492,
+        "passes_maker_fees": true
+      }
+    ]
+  },
+  "computed_predicates": {
+    "arms_whose_bracket_straddles_zero": [],
+    "endpoints_run_without_modifying_any_module": true,
+    "every_arm_reads_as_a_POINT_at_E0": true,
+    "precedented_selftest_already_drives_the_OK_path": true,
+    "seam_exists_in_shipped_signature": true,
+    "unrun_no_production_call_site_passes_it": true
+  },
+  "limits": [
+    "the upper endpoint is the ABSOLUTE worst case (0.07*p(1-p) at p=0.5, on EVERY maker leg); measured incidence is 10 charged legs in 1,056, so it is a bound and never an estimate",
+    "maker rebates and liquidity rewards are outside the ledger's own sign convention and are not netted here",
+    "two arms, one window: the full 202-arm re-run needs the replay and one fee dict per arm, which is caller work this probe does not do",
+    "a bracket that straddles zero does so AT THE UPPER BOUND, which charges 1.75 c/share on EVERY maker leg; measured incidence is 10 charged legs in 1,056, so the straddle says the interval is wide, NOT that the arm is likely negative"
+  ],
+  "protocol": "P003_DA_FEE_INTERVAL_SEAM_V1",
+  "role": "REPORTED, NOT ENFORCED (rule 14). This says the bound-endpoint re-run is runnable and what it yields on the two arms the receipt carries. It clears no gate and promotes nothing.",
+  "source_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_v2_gate1_economics_smoke__20260905T052605Z.json",
+  "supersedes": {
+    "correction_is_in_band": "rule 13: this is v2, a superseding receipt. The v1 artifact is not edited and stands as provenance",
+    "path": "data/pm_5min/derived/p003_da_fee_interval_seam__20260905T155346Z.json",
+    "sha256": "a7b562f0ab4673160aa8757083a721c9c90d8b317a36beb538674cf22db624f8",
+    "what_changed": "the lower endpoint is WITHDRAWN as a non-economic quantity and `arms_whose_bracket_straddles_zero` is now EMPTY. The E0 endpoint, the call-site AST counts, the guard behaviour and every other field are unchanged -- v1's arithmetic was right and its ESTIMAND was wrong"
+  }
+}

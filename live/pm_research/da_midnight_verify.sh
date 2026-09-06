@@ -170,6 +170,42 @@ OPENED=$(date -u +%Y%m%d)
 # is never success, the same rule the tape gate learned about skip counters.
 # Written to a temp path and PROMOTED only after it validates -- nothing
 # pre-existing is deleted, and a stale file cannot masquerade as tonight's run.
+# THE CLASSIFICATION, AS A NAMED FUNCTION SO IT CAN BE DRIVEN DIRECTLY
+# (round 52). Inline, this decision could only be exercised by reproducing a
+# whole night; as a function a falsifier can plant a CLOSED day with a real
+# mask failure and show rc 4 still fires. Two arguments, no globals: closed
+# ("1"/"0"/"?") and a path to the mask builder's captured output.
+#
+# DEFERRED requires BOTH conjuncts. `?` (verdict unreadable) is NOT "0", so an
+# unreadable verdict can never be deferred -- it falls through to FAILURE,
+# which is the safe direction.
+classify_mask_failure() {
+  _c="$1"; _l="$2"
+  if [ "$_c" = "0" ] \
+     && grep -qE 'CONTENT_LIVENESS_(UNRESOLVED|UNJUDGEABLE)' "$_l" 2>/dev/null
+  then
+    echo "DEFERRED"
+  else
+    echo "FAILURE"
+  fi
+}
+
+# THE UNIT'S EXIT CODE, DECLARED IN ONE PLACE (round 52). `broke` is the
+# process exit status and it is a THREE-VALUED health signal, not a boolean:
+#
+#   0  every day needing a verdict got one, and every mask landed
+#   2  OPEN_DAY_MASK_DEFERRED -- an EXPECTED status. The day that just began
+#      has a correct open-day verdict and no mask yet, because the frozen
+#      detector cannot judge a six-minute-old day. Nothing is wrong. The unit
+#      declares `SuccessExitStatus=2` so `systemctl` reports success.
+#   4  INSTRUMENT FAILURE -- a verdict that is not a verdict outcome, no
+#      parseable verdict at all, or a CLOSED day whose mask did not land.
+#
+# `broke` is RAISED and never lowered, so a 4 anywhere in the night survives a
+# 2 later in the same run. Before this existed the unit exited 4 EVERY NIGHT
+# on the open day's correct refusal, which is why 2 had to become a distinct
+# value rather than being folded into 0: folding it would have hidden the
+# deferral instead of naming it, and rule 4 says exclusions are statuses.
 broke=0
 # R-255(4): WHICH DAYS. Persistent=true recovers a missed night, but the day
 # list used to be exactly `date -d yesterday` and `date -d today` RELATIVE TO
@@ -296,18 +332,63 @@ sys.exit(0 if d.get("day_token")==sys.argv[2] and d.get("predicates") else 1)'  
     # is correct and installed -- but it IS an instrument failure, because a
     # day that cannot be scored is not a day that was verified. Silence here
     # would re-create the hole this closes.
+    #
+    # ROUND 52: AN OPEN DAY'S MASK REFUSAL IS AN EXPECTED STATUS, NOT AN
+    # INSTRUMENT FAILURE (rule 4) -- and the reason is that this unit was
+    # RED EVERY SINGLE NIGHT.
+    #
+    # `days_needing_verdict` always includes the day that just began. Its
+    # verdict is written correctly as an open-day write (exit=1), and then the
+    # mask builder is asked for a mask of a day that is ~6 minutes old. The
+    # frozen detector refuses -- CONTENT_LIVENESS_UNJUDGEABLE ("no coin had
+    # enough windows for a median") or CONTENT_LIVENESS_UNRESOLVED ("a raw
+    # directory but NO window files") -- which is exactly right and must not
+    # be weakened. The defect was HERE: that correct refusal was classified as
+    # INSTRUMENT FAILURE and set worst_instrument_rc=4.
+    #
+    # Measured, both nights: 2026-09-05T00:06:29Z rc=4 with 20260905's mask
+    # UNRESOLVED; 2026-09-06T00:06:41Z rc=4 with 20260906's mask UNJUDGEABLE.
+    # On BOTH nights the CLOSED day was perfect -- 20260905 accrued at
+    # exit=0 with its mask written, G=5. So `systemctl` has shown `failed`
+    # every night while nothing was wrong, and a reader cannot tell that from
+    # a night when something IS. An alarm that fires every night is one that
+    # gets turned off: SEAT_PROTOCOL 16's shape on this unit's own status.
+    #
+    # THE FIX IS IN THE CLASSIFICATION AND NOWHERE ELSE. `MaskRefused` is
+    # untouched; the detector still refuses; the mask is still not written.
+    # What changes is that an OPEN day refusing FOR WANT OF WINDOWS carries
+    # rc 2 (OPEN_DAY_MASK_DEFERRED) which never raises `broke` to 4. A CLOSED
+    # day that cannot produce a mask is still rc 4, and so is an open day that
+    # fails for ANY OTHER REASON -- the two conditions are ANDed, so this
+    # cannot swallow a real failure that happens to land on an open day.
     _mtmp="$(mktemp -d)"
-    if "$PY" "$M" --day "$d" --write --outdir "$_mtmp" >> "$LOG" 2>&1 \
-       && [ -s "$_mtmp/da_blackout_mask_$d.json" ]; then
+    _mlog="$(mktemp)"
+    "$PY" "$M" --day "$d" --write --outdir "$_mtmp" > "$_mlog" 2>&1
+    _mrc=$?
+    cat "$_mlog" >> "$LOG"
+    if [ "$_mrc" -eq 0 ] && [ -s "$_mtmp/da_blackout_mask_$d.json" ]; then
       mv -f "$_mtmp/da_blackout_mask_$d.json" \
             "$OUTDIR/da_blackout_mask_$d.json"
       _msha="$(sha256sum "$OUTDIR/da_blackout_mask_$d.json" | cut -c1-16)"
       echo "mask written for $d in the same run (sha256=$_msha)" >> "$LOG"
     else
-      broke=4
-      echo "MASK NOT WRITTEN for $d  <-- INSTRUMENT FAILURE: the verdict is installed and the day is UNSCOREABLE until a mask lands. The pair must arrive together." >> "$LOG"
+      # CLOSED-ness is read from the verdict this run just installed, not
+      # guessed from the date: the artifact is the authority on its own day.
+      _closed="$("$PY" -c 'import json,sys
+try:
+    print("1" if json.load(open(sys.argv[1])).get("day_closed_calendar") is True else "0")
+except Exception:
+    print("?")' "$OUTDIR/da_dayverdict_$d.json" 2>/dev/null)"
+      if [ "$(classify_mask_failure "$_closed" "$_mlog")" = "DEFERRED" ]; then
+        if [ "$broke" -lt 2 ]; then broke=2; fi
+        echo "MASK DEFERRED for $d  <-- OPEN_DAY_MASK_DEFERRED (rc=2, EXPECTED STATUS, not an instrument failure): the day is not closed and the frozen detector cannot judge it yet for want of windows. The refusal is CORRECT and the mask will land at the next 00:06Z run, when this day is closed. Counted and reported, never silent (rule 4)." >> "$LOG"
+      else
+        broke=4
+        echo "MASK NOT WRITTEN for $d  <-- INSTRUMENT FAILURE: the verdict is installed and the day is UNSCOREABLE until a mask lands. The pair must arrive together. (day_closed_calendar=$_closed, mask rc=$_mrc)" >> "$LOG"
+      fi
     fi
     rm -rf "$_mtmp"
+    rm -f "$_mlog"
   else
     rm -f "$tmp"
     broke=4
