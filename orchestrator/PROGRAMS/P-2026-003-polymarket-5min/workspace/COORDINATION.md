@@ -21071,6 +21071,117 @@ The USER's assessment, verbatim in substance: *"yellow, not green: the methodolo
 **(B) Routed.** BE 65 (after the book): the launcher's `$0`; the runtime scope-leaf refusal; the falsifier's journal dependency removed (the refusal line read from the unit's own result and copied at once); (`classify_dirt` already rename-correct at BE 64a). DE 96/97: the same for `_is_the_shared_data_link` and `de_launch_form_probe`; the runner copying its own journal lines at emit. DA 86: `da_cross_venue_forensics.py` and `da_midnight_verify.sh` labelling the retention state. **Rule 20 amended (this entry's commit).** The reviewer's decayed evidence stands corrected in this entry: DE 84 started 08:22:04Z and ended 09:46:29Z per R-608, which copied the lines when they existed.
 
 **(C) THE REVIEWER'S RESET.** Stop at 13:06Z; wt-rev verified from the main tree: clean at `d4c190b`, nothing unpushed. The four answers, the harvest and the reload follow in R-642. In flight: DE 95 (≈31 min), BE 64 (polling the lock for the 09-05 book), MEM 175; DA READY.
+
+### R-642 — 2026-09-06T13:15Z — coordinator — **THE REVIEWER SEAT WAS RESET a second time today (≈75 % crossing at 13:04Z), harvested and reloaded; its harvest is below VERBATIM because nothing else retains it. The one register statement the reviewer's ledger asked for — BE's two 09-05 INPUT receipts (rows `50318a3a…`, tape `0650e213…`) carry NO lock evidence and a raw `dirty: true`, ACCEPTED AS-IS, the new fields starting with the book (REV 63 §4) — was ALREADY made at R-640(A) §5; the reloaded reviewer found it there itself, and it is restated here by digest so no reader of those two receipts is told they carry evidence they do not. Everything in the reviewer's ledger is owned: REV 65 §1.2 / REV 62 §3 → BE 65 and DE 97; REV 66 §1.1 → closed at BE 64a, DE 96; REV 66 §3.1 → BE 65, DE 96/97, DA 86 (dispatched 13:12Z).**
+
+**(A) The stop.** STOP sent 13:06:03Z; the four answers at 13:06Z ("Standing by"); the pane's scrollback overwrote the head of item (4) and the reviewer re-sent it verbatim at 13:10Z (small cost, no revision). Verified from the main tree, never from the pane: wt-rev clean at `d4c190b`, `origin/mm-research..HEAD` empty. Nothing held, nothing in flight. Cleared 13:11:52Z; brief v2 sent at tip `7864cb8` (12.4 kB: the read order, the standing rules, its ledger by owner, its own harvest appended). **Reloaded and CONFIRMED at 13:14Z from the files, not the brief:** worktree refreshed by the script to `7864cb8`, clean, nothing unpushed (verified from the main tree); three deltas reported, all in the register's favour — the brief's filing list was one short (REV 66 is the newest; its content was in the brief), DA is no longer nothing-open (DA 86), and REV 63 §4 was already said at R-640(A) §5. The sealed-receipt rules re-stated by the reviewer unprompted.
+
+**(B) The harvest, verbatim (the reviewer's item (4), 13:06Z/13:10Z).**
+
+```text
+REV's harvest at the 13:06Z stop (item (4), verbatim from the pane; the first line of the ledger is REV 65 §1.2; the bullet 'Driving a launcher safely' continues across the join):
+  item: REV 65 §1.2 — the launch-form checker is a lint at the right scope but cannot
+  see a --scope behind a variable or a wrapper; the property is decidable at runtime
+  from the cgroup leaf, which both seats already compute
+  owner: BE 65, and DE for the same guard I recommended in REV 62 §3
+  state: open on both sides
+  ────────────────────────────────────────
+  item: REV 66 §1.1 — the rename line: raw + [3:] returns a -> b where the path is b; a
+  rename makes a real day refuse with a nonsense path
+  owner: DE 96 and BE 64
+  state: open; fix = import DA's parse_porcelain (R-235-safe: infrastructure, not a
+  statistic)
+  ────────────────────────────────────────
+  item: REV 66 §3.1 — seven journal readers (be_daybook_build, da_accrual_report,
+  da_cross_venue_forensics, de_multiday_gate1_runner, de_launch_form_probe,
+  be_heavy_run.sh, da_midnight_verify.sh); only DA's accrual labels retention
+  owner: unassigned — this needs an owner. DA holds the pattern (it found it); BE's
+  falsifier cell 2 and BE's "the journal is the log" are the live exposures
+  state: open, unrouted
+  ────────────────────────────────────────
+  item: REV 62 §3 — is_the_declared_launch_form is reported and gates nothing; a real
+  day under --scope runs and only says so in its receipt
+  owner: DE
+  state: open, recommendation not a condition
+  ────────────────────────────────────────
+  item: REV 63 §4 — BE's 09-05 input receipts carry no lock evidence and a raw dirty:
+  true; BE's note is that the new fields start with the book
+  owner: BE
+  state: accepted-as-is; the register should say so, or a reader of those two will be
+  told they carry evidence they do not
+  ────────────────────────────────────────
+  item: REV 55 §5 / R-633 — one unexplained non-zero exit of the GO-gating runner
+  battery
+  owner: recorded as unexplained
+  state: if it recurs, there is now a prior
+  ────────────────────────────────────────
+  item: Unfiled
+  owner: —
+  state: nothing. Every finding I hold is in a filing.
+  Attack paths I hold that are not in any filing as a method
+  New since R-600's harvest:
+  - Scope vs service, measured by parentage, not argued. Read the payload's PPid: under
+    --scope it is the harness process (claude); under a transient service it is 1004
+    (systemd --user). This is the whole of R-628 in one measurement. A kill -TERM
+    -<pgid> aimed at "the launcher's group" under a scope reaches the harness's own
+    tree — it killed my tool shell twice. Never repeat that to demonstrate it; take the
+    PPid instead.
+  - Driving a launcher safely: scratch unit names, and a scratch lock passed in by
+    --setenv. systemd-run forwards only what --setenv names — a unit that re-resolves a
+    lock path from an empty environment lands on the real one and returns the right
+    exit code for the wrong reason.
+  - Whether a knob can misdirect a real run: check whether the verifier's path is
+    env-derived or a module constant. HEAVY_RUN_LOCK is a constant, so BE_HEAVY_LOCK
+    moves what the unit takes and never what the producer verifies. Two knobs,
+    independent — that is the shape to look for.
+  - 1-byte-file digest attacks: a predicate that validates an expectation rather than
+    bytes can be driven on a 1-byte file; that is how the digest known-bads are
+    re-driven without touching a 991 MB tape (from R-600's harvest, still the cheapest
+    tool I have).
+  - The porcelain three-line block  M live/x.py / ?? data / R  a -> b — the strip half,
+    the slice half, and the rename. Any porcelain reader in the programme can be
+    judged in one call with it.
+  - Journal decay as an ambient: journalctl --user -u <unit> | wc -l before quoting it.
+    de84smoke.scope is down to one line — the Consumed line survives, the Started line
+    is gone, and it is evidence I myself quoted in REV 53. Copy a journal number into
+    an artifact at the moment you read it, with the source's state named.
+  - Census by AST, never by regex — for battery structure (last check call vs last
+    print call) and for call graphs. My regex pass this round produced a false finding
+    against DA and I caught it only by redoing it structurally.
+  Judgements a fresh reviewer needs that R-600's harvest does not carry
+  - BE — the class has moved. The old one (a literal that must track something that
+    moves) is largely closed; the new one is a control whose verdict comes from ambient
+    state: the falsifier's invocation path, its journal grep, the .scope launches that
+    survived by luck for six runs. BE fixes thoroughly once named, and BE finds its
+    own defects by running things — trust its self-reports and check the half it did
+    not fix.
+  - DE — unchanged in kind but now the fastest to generalise: when told an instance, DE
+    ships the class (the launch form, the import closure, the three-valued flag). DE's
+    design and DE's code have disagreed once — check the artifact, not the design,
+    when they seem to differ.
+  - DA — still the strongest instruments and the most honest about limits. Two new
+    facts: DA now reads other seats' declarations rather than typing them (the pair
+    definition, the root, the field list), which makes divergence structurally
+    impossible on DA's side and one-way — nothing checks DE's code against DE's design.
+    And DA's own recurring shape is a summary or flag that cannot see its own inputs
+    (the truncated-walk None, the mid-function count).
+  - The seam is still the highest-yield place, and it has moved up a level: it is no
+    longer two seats' code, it is one artifact read by two seats with different rules
+    (the supersession pair, the landing digest, the data root, the porcelain parse).
+    Four instances in eight rounds.
+  - On me. I have been wrong twice in ways worth carrying: REV 58 §2.3 — I quoted a DA
+    function's return value as the content of DE's artifact and filed a contradiction
+    that did not exist (rule 16, broken by the seat whose job it is); and REV 59 §8 →
+    DE 94 — my own remedy (the ledger symlink) collided with a guard I had verified and
+    made GO impossible. Two of my own recommendations, each right alone, wrong
+    together. A fresh reviewer should: open both artifacts when two seats appear to
+    disagree, and ask of every recommendation "what does this make dirty, absent, or
+    slower for someone else?" before filing it.
+```
+
+**(C) Read against the register.** The ledger's one unrouted item (§3.1's seven readers) was routed at R-641 before this entry: BE 65 owns `be_daybook_build.py` and `be_heavy_run.sh` (cell 2 journal-independent; "the journal is the log" line retired for a receipt-side record); DE 96/97 own the runner and the launch probe; DA 86 owns the forensics reader and the midnight verifier (in flight). The PPid measurement (payload's parent 1004 under a service, the harness under a scope) is the runbook's test for rule 20 from here: it enters §6 with this entry. The "census by AST, never by regex" line is a method, not a rule; it stands in the harvest. The reviewer's self-correction (REV 58 §2.3; REV 59 §8 → DE 94) is already in band at R-630 and R-631 respectively — nothing to add.
+
+In flight at 2026-09-06T13:15Z: DE 95 (de95smoke.service, ≈ 37 min at the stop, receipt ≈ 14:00Z), BE 64 (polling the lock for the 09-05 book), DA 86, REV reloading; MEM 175 landed at `7864cb8`; DE idle by design until the receipt.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
