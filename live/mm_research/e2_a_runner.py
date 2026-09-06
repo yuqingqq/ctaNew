@@ -1056,6 +1056,30 @@ def gap_profile(bt_t: np.ndarray, day: str) -> dict:
     }
 
 
+def decision_time_quote_age(bt_t: np.ndarray, day: str) -> dict:
+    """Quote AGE at the 24 decision times -- the quantity E2-A actually rests
+    on, which the day-level gap fraction is a poor proxy for.
+
+    Placement takes the touch from the last bookTicker STRICTLY BEFORE t0. A
+    day can have 15% of its seconds carry no message and still have a quote
+    milliseconds old at every decision time; conversely a fresh-looking day
+    could be stale exactly on the hour. E2.0's own TrueMid records that a
+    quote stands until the next one and that filtering on age would SELECT ON
+    ACTIVITY -- so this reports the age rather than filtering on it.
+    """
+    day0 = int(pd.Timestamp(day, tz="UTC").timestamp()) * 1000
+    t0s = day0 + np.arange(24, dtype=np.int64) * 3_600_000
+    i = np.searchsorted(bt_t, t0s, "left") - 1
+    ok = i >= 0
+    ages = (t0s[ok] - bt_t[np.clip(i, 0, None)][ok]).astype(float)
+    if ages.size == 0:
+        return {"n_decision_times_with_a_prior_quote": 0}
+    return {"n_decision_times_with_a_prior_quote": int(ages.size),
+            "p50_ms": float(np.percentile(ages, 50)),
+            "p90_ms": float(np.percentile(ages, 90)),
+            "max_ms": float(ages.max())}
+
+
 def census(symbols, out_path: Path | None = None) -> dict:
     """The admission table and the gap PROFILE, per symbol-day.
 
@@ -1076,14 +1100,16 @@ def census(symbols, out_path: Path | None = None) -> dict:
         rows = []
         for day in days:
             counts = stream_file_counts(sym, day)
-            prof, gap = None, None
+            prof, gap, age = None, None, None
             if counts["bookTicker"] == HOURS_PER_DAY_FILES:
                 bk, _, _ = E20.read_book(sym, day, extend=False)
                 if bk is not None:
                     prof = gap_profile(bk[0], day)
                     gap = prof["gap_fraction"]
+                    age = decision_time_quote_age(bk[0], day)
             adm = day_admission(sym, day, counts, gap)
             adm["gap_profile"] = prof
+            adm["decision_time_quote_age_ms"] = age
             rows.append(adm)
         n_adm = sum(1 for r in rows if r["admissible"])
         n_complete = sum(1 for r in rows
