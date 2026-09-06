@@ -913,6 +913,41 @@ def sha256_file(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
+def emitter_identity() -> dict:
+    """WHO EMITTED THIS DECLARATION, in a form a rebase cannot invalidate.
+
+    DA 63 landed the v7 emitter as `cd212f9`, emitted v7 against it, and then
+    another seat's landing REBASED that commit to `acd393a` -- byte-identical
+    content, a commit id that no longer exists on any branch. A declaration
+    carrying only a commit id is an address that can be rewritten out from
+    under it, which is the same class as an address travelling without its
+    object.
+
+    So the DURABLE citation is the emitter's CONTENT DIGEST: the sha256 of
+    this module's bytes, which no rebase can change. The commit id is kept
+    beside it as a convenience and LABELLED best-effort.
+    """
+    src = Path(__file__).resolve()
+    r = subprocess.run(["git", "log", "-1", "--format=%H", "--", str(src)],
+                       capture_output=True, text=True, cwd=str(src.parent))
+    last = r.stdout.strip() if r.returncode == 0 else ""
+    return {
+        "emitter_path": "live/mm_research/e2_a_declare.py",
+        "emitter_sha256": hashlib.sha256(src.read_bytes()).hexdigest(),
+        "emitter_sha256_is_the_durable_citation": (
+            "a rebase rewrites commit ids and leaves the bytes alone. The "
+            "digest identifies the code that produced this declaration "
+            "whatever happens to the history above it."),
+        "emitter_commit_best_effort": last or None,
+        "emitter_commit_caveat": (
+            "the last commit touching the emitter AT EMIT TIME. A later "
+            "rebase can rewrite it; the digest cannot be rewritten. Resolve "
+            "the digest first and treat a missing commit id as a rewritten "
+            "history, not as a missing declaration."),
+        "tree_head_at_emit": carrying_commit(),
+    }
+
+
 def carrying_commit() -> str:
     r = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
                        text=True, cwd=str(HERE))
@@ -1065,6 +1100,7 @@ def declaration() -> dict:
         "step": "E2-A -- overlay bracket resolution on real books under the "
                 "queue-model bracket",
         "carrying_commit": carrying_commit(),
+        "emitter_identity": emitter_identity(),
         "declared_by": "DA seat (pm-da), single-seat program",
         "sources": {
             "prereg_episode_design": "live/mm_research/EXPERIMENT_PLAN.md "
@@ -2188,6 +2224,19 @@ def selftest() -> int:                                        # noqa: C901
        "AND THE STREAM IS DECLARED AS A RULE WITH A TWO-WAY FALSIFIER: only "
        "the episode grid is kept, and a cap below the measured residency "
        "must REFUSE while the real cap ADMITS the same day")
+
+    # ---- the emitter is cited by CONTENT, which a rebase cannot rewrite --
+    eid = declaration()["emitter_identity"]
+    import hashlib as _h
+    live_digest = _h.sha256(Path(__file__).resolve().read_bytes()).hexdigest()
+    ok(eid["emitter_sha256"] == live_digest and len(live_digest) == 64
+       and "rebase" in eid["emitter_sha256_is_the_durable_citation"]
+       and "best_effort" in "".join(eid.keys()),
+       "THE EMITTER IS CITED BY CONTENT DIGEST, NOT ONLY BY COMMIT: DA 63 "
+       "landed the v7 emitter, emitted against it, and another seat's "
+       "landing REBASED that commit to a new id with byte-identical content "
+       "-- a declaration carrying only a commit id had an address that was "
+       "rewritten out from under it. The digest cannot be rewritten")
 
     print(f"\n{'selftest OK' if not fails else 'SELFTEST FAILED'} -- "
           f"{len(fails)} failure(s)")
