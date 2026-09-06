@@ -100,7 +100,15 @@ def _rss_gb() -> float:
     return round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 2**20, 3)
 
 
-def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
+def build(day: str, *, coin: str = COIN, progress: bool = True,
+          fixture: bool = False) -> dict:
+    # RULE 20, MEASURED BEFORE ANY WORK (REV 63 S4). This receipt mentioned
+    # the lock in NO field at all, so "the lock was taken and held across
+    # both steps" was a claim only a register row carried -- its own
+    # artifacts could not support it. The evidence is DE's, delegated rather
+    # than reimplemented (Q-BE-271), and a real build without an EXCLUSIVE
+    # hold refuses HERE rather than after ten minutes of work.
+    _wrapper = _R22.lock_evidence(fixture=fixture)
     t0 = time.time()
     dst = out_path(day, coin)
     guard_output(dst)
@@ -237,6 +245,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
         "build_ref": ref,
         "data_root": _BDR.receipt_block(),
         "scope": _BDR.scope_stats(),
+        "wrapper_measured": _wrapper,
         "producing_code": _R22.stamp(__file__),
         "rule22_checked_at_emit": _R22.assert_unchanged(
             "be_gate1_state_tape receipt emit"),
@@ -245,7 +254,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
     }
 
 
-EXPECTED_CHECKS = 10
+EXPECTED_CHECKS = 16
 
 
 def selftest() -> int:
@@ -276,14 +285,68 @@ def selftest() -> int:
     except TapeRefused as e:
         ok("not a Gate-1 tape name" in str(e),
            "KNOWN-BAD: any name outside the Gate-1 tape stem REFUSES")
+    # THE LOCK IS CHECKED FIRST NOW, so this case declares itself a fixture
+    # -- otherwise it would exercise the lock refusal and never reach the
+    # refusal it exists to drive. The lock's own refusal is driven below.
     try:
-        build("19700101")
+        build("19700101", fixture=True)
         ok(False, "a day with no fragment must refuse")
     except TapeRefused as e:
         ok("does not exist" in str(e) and "fragment" in str(e),
            "KNOWN-BAD, AND IT REACHES ITS OWN REFUSAL: a day whose Gate-1 "
            "FRAGMENT is absent refuses HERE, in this module, naming the "
            "fragment -- not by some upstream module refusing first")
+    # ---- RULE 20: the lock, MEASURED, and refused before any work -------
+    try:
+        build("19700101")
+        ok(False, "a real build without the heavy lock must refuse")
+    except _R22.HeavyRunRefused as e:
+        ok("does not hold" in str(e) and "be_heavy_run.sh" in str(e),
+           "KNOWN-BAD, REV 63 S4: a REAL build that does not hold the "
+           "heavy-run lock REFUSES before any work, and the refusal names "
+           "the launcher that takes it. This receipt carried no lock field "
+           "at all, so `the lock was held` was a claim only a register row "
+           "could make")
+    _we = _R22.lock_evidence(fixture=True)
+    ok(_we["delegated_to"] == "de_multiday_gate1_runner.wrapper_observed"
+       and "lock_mode" in _we and "exclusive" in _we
+       and _we["launch_form"].startswith("systemd-run --user transient"),
+       f"POSITIVE CONTROL: the evidence block is DE's own, with the MODE "
+       f"read from /proc/locks ({_we['lock_mode']!r}) -- two `flock -s` "
+       f"holders would both report the fd and both certify, so held is not "
+       f"exclusive. One implementation, delegated, not a second one")
+    _srcT = Path(__file__).read_text()
+    ok('"wrapper_measured": _wrapper,' in _srcT
+       and "_R22.lock_evidence(fixture=fixture)" in _srcT,
+       "AND IT IS WIRED INTO THE EMITTED RECEIPT: read from this module's "
+       "own source, not asserted in prose")
+    _lf = _R22.assert_launch_form()
+    ok(_lf["form_is_correct"] and _lf["lock_is_inside_the_unit"],
+       f"THE LAUNCHER IS THE SERVICE FORM: {_lf['problems'] or 'no problems'}"
+       f" -- no `--scope`, a named unit, both caps, the data root and "
+       f"working directory set inside the unit, and the lock taken INSIDE "
+       f"it. Every BE heavy run through 09-05 was a transient scope, whose "
+       f"payload dies with the launching shell; they survived because "
+       f"nothing signalled it")
+    _bad_lf = _R22.assert_launch_form(
+        "flock -n /l systemd-run --user --scope --slice=research.slice "
+        "-p MemoryMax=8G -p CPUQuota=100% --setenv=PM_DATA_ROOT=/r "
+        "--working-directory=/w -- cmd")
+    ok(_bad_lf["form_is_correct"] is False
+       and any("--scope" in x for x in _bad_lf["problems"])
+       and any("--unit=" in x for x in _bad_lf["problems"]),
+       f"KNOWN-BAD: the exact form BE used for six heavy runs is REFUSED "
+       f"by name, on both counts -- {len(_bad_lf['problems'])} problems")
+    _lsrc = _R22.LAUNCHER.read_text()
+    ok('--falsify' in _lsrc and "PASS cell 1" in _lsrc
+       and "PASS cell 2" in _lsrc and _R22.LAUNCHER.exists(),
+       "RULE 15: THE LAUNCHER SHIPS ITS OWN FALSIFIER -- `--falsify` drives "
+       "both cells against real systemd units: a TERM to the launching "
+       "shell's process group leaves the unit ALIVE on the same MainPID "
+       "(parented by systemd, not by any shell of mine), and a HELD lock "
+       "refuses with the distinct conflict code 75 having done no work, "
+       "with the refusal in the journal. Nothing short of a real unit can "
+       "show a claim about process ownership")
     ok(BUILD := True,
        "usage: --day builds one day only; the split assignment is recorded "
        "as PROVISIONAL and routed to DE (R-574)")

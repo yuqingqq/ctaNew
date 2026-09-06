@@ -185,6 +185,34 @@ def scope_stats() -> dict:
                 out["cap_was_hit"] = bool(d.get("max", 0) or d.get("oom", 0))
         except OSError:
             out[key] = None
+    # REV 63 S3: A PEAK EQUAL TO THE CAP IS A FLOOR, NOT A MEASUREMENT.
+    # 09-04's tape reported peak_bytes == max_bytes with 1,199 reclaims that
+    # pinned it there; 09-05's reported 7.555 GB and was never throttled.
+    # Read side by side those two numbers invite "09-04 needed more", which
+    # the first one cannot say: it is a bound the kernel imposed. The
+    # censoring is now a FIELD, so a reader does not have to notice that two
+    # numbers happen to be equal.
+    try:
+        _pk = int(out.get("peak_bytes") or 0)
+        _mx = int(out.get("max_bytes") or 0)
+        _ev = (out.get("events") or {}).get("max", 0)
+        out["peak_is_censored"] = bool(_pk and _mx and _pk >= _mx)
+        out["peak_censoring"] = {
+            "peak_bytes": _pk, "cap_bytes": _mx, "reclaim_events_max": _ev,
+            "what_this_peak_supports": (
+                "demand was AT LEAST the cap and was throttled "
+                f"{_ev} times; the peak is a bound, not a measurement of "
+                "demand" if out["peak_is_censored"] else
+                "demand peaked here and was never throttled; the peak is a "
+                "measurement"),
+            "not_comparable_to": ("an uncensored peak from another run -- a "
+                                  "floor and a measurement are not "
+                                  "commensurable, and differencing them "
+                                  "reads as a demand difference that the "
+                                  "numbers do not support"),
+        }
+    except (TypeError, ValueError):
+        out["peak_is_censored"] = None
     return out
 
 

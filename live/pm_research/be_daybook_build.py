@@ -96,6 +96,28 @@ CHUNK_WINDOWS = 6             # as declared in be_assembly_budget
 MIN_RELEASE_FRACTION = 0.10
 
 
+#: REV 63 S3. Lifted out of the receipt literal so the battery can read the
+#: VALUE rather than the source: the sentence below spans several Python
+#: string literals, so a source scan for it found nothing while the receipt
+#: carried it perfectly well. Test the thing, not its spelling.
+SCOPE_NUMBERS_SUPPORT = {
+    "a_peak_equal_to_the_cap_is_a_floor":
+        "09-04's tape reported peak_bytes == max_bytes with 1,199 reclaims "
+        "that pinned it there. That is a bound, not a measurement of "
+        "demand: it supports `demand was AT LEAST the cap and was throttled "
+        "1,199 times`, and it is not commensurable with an unthrottled peak "
+        "from another run",
+    "what_the_two_days_constrain":
+        "the builder's own footprint did not move (peak_rss_gb identical to "
+        "three decimals across a 31% row spread, from a field that varies "
+        "sensibly elsewhere); the whole cgroup difference sits in page "
+        "cache, which ROSE on the smaller day as anon FELL -- so whatever "
+        "differed was outside the builder's own allocation. Stronger than a "
+        "correlation, weaker than a mechanism, and asserted as neither",
+    "the_field_that_says_so": "scope.peak_is_censored",
+}
+
+
 def _index_call_made() -> str:
     """The seam call, READ FROM THIS MODULE'S SOURCE, never restated.
 
@@ -403,24 +425,10 @@ def assert_day_tape(day: str, coin: str = COIN, *,
 
 
 def _flock_mode(lock_path) -> str | None:
-    """WRITE (exclusive) or READ (shared), read from /proc/locks.
-
-    `flock -n` takes LOCK_EX; `flock -s -n` takes LOCK_SH and TWO holders
-    then coexist. The fd is present either way, so holding it is not
-    evidence of exclusion."""
-    import os
-    try:
-        st = os.stat(str(lock_path))
-        want = f"{st.st_dev >> 8:02x}:{st.st_dev & 0xff:02x}:{st.st_ino}"
-        for line in open("/proc/locks"):
-            f = line.split()
-            if len(f) >= 6 and f[1] == "FLOCK" and f[3] in ("READ", "WRITE"):
-                if f[5].endswith(f":{st.st_ino}") or f[5] == want:
-                    return f[3]
-    except OSError:
-        pass
-    return None
-
+    """DELEGATED to `be_rule22.flock_mode` -- moved there so all three
+    producers read the lock the same way. Kept as a name because this
+    module's battery drives it."""
+    return _R22.flock_mode(lock_path)
 
 def assert_rule20(*, fixture: bool = False) -> dict:
     """DELEGATED to DE's `wrapper_observed` -- MEASURED, not declared.
@@ -453,13 +461,16 @@ def assert_rule20(*, fixture: bool = False) -> dict:
             f"exclusively (`flock -n`, the default).")
     if not fixture and not w.get("heavy_run_lock_held"):
         raise BookRefused(
-            "REFUSED: a real day is HEAVY BY CONSTRUCTION and this process "
-            "does not hold /home/yuqing/ctaNew/data/.heavy_run.lock. Run it "
-            "as `flock -n <lock> systemd-run --user --scope "
-            "--slice=research.slice -p MemoryMax=8G -p CPUQuota=100% ...`. "
-            "At 05:54Z on 2026-09-06 this seat ran a heavy build beside "
-            "another heavy run because it used the scope without the lock; "
-            "this refuses that before any work.")
+            f"REFUSED: a real day is HEAVY BY CONSTRUCTION and this "
+            f"process does not hold the heavy-run lock. Launch it with "
+            f"`{_R22.LAUNCHER.name} <unit> be_daybook_build.py --day <day>`, "
+            f"which runs the lock INSIDE a transient service. The command "
+            f"this refusal used to print -- `flock -n <lock> systemd-run "
+            f"--user --scope ...` -- is the form R-628 ruled against: the "
+            f"payload sits in the launching shell's process tree and dies "
+            f"with it, and every BE heavy run through 09-05 used it. At "
+            f"05:54Z on 2026-09-06 this seat ran a heavy build beside "
+            f"another heavy run; this refuses that before any work.")
     return w
 
 
@@ -900,6 +911,10 @@ def build(day: str, *, coin: str = COIN,
         # it: the tape scope hit the 8 GiB cap 1,199 times while the process
         # RSS peaked at 4.741 GB.
         "scope": _BDR.scope_stats(),
+        # REV 63 S3. The bare correlation I filed for 09-04 vs 09-05
+        # understated what the receipts already contain, and a reader told
+        # only "a correlation" will over-read the comparison.
+        "WHAT_THE_SCOPE_NUMBERS_SUPPORT": SCOPE_NUMBERS_SUPPORT,
         "no_scoring_of_arms": True,
         "no_null_draws": True,
         "no_economics": True,
@@ -907,7 +922,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 73
+EXPECTED_CHECKS = 78
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -1492,6 +1507,47 @@ def selftest() -> int:
        f"carried it since round 58 and the book's did not, so round 59's "
        f"cap answer rested on my poll and systemd's stop line, not on the "
        f"artifact")
+    ok(_sc3.get("peak_is_censored") is False
+       and "measurement" in _sc3["peak_censoring"]["what_this_peak_supports"],
+       f"POSITIVE CONTROL, REV 63 S3: this scope's peak "
+       f"({_sc3['peak_censoring']['peak_bytes']}) is BELOW its cap "
+       f"({_sc3['peak_censoring']['cap_bytes']}) and was never throttled, "
+       f"so the block reports it as a MEASUREMENT")
+    _cen = dict(_sc3)
+    _cen["peak_bytes"], _cen["max_bytes"] = "8589934592", "8589934592"
+    _cen["events"] = {"max": 1199}
+    _reb = _BDR.scope_stats.__wrapped__ if hasattr(
+        _BDR.scope_stats, "__wrapped__") else None
+    _pk, _mx = int(_cen["peak_bytes"]), int(_cen["max_bytes"])
+    ok(_pk >= _mx and _cen["events"]["max"] == 1199,
+       "KNOWN-BAD INPUT, 09-04's OWN NUMBERS: peak == cap with 1,199 "
+       "reclaims is the shape the field exists to flag -- a FLOOR reported "
+       "beside an uncensored 7.555 GB would read as `09-04 needed more`, "
+       "which those numbers cannot say")
+    # read the EMITTED block, not the whole module: the check should test
+    # what a receipt will carry, not that the words appear somewhere.
+    _txtS = " ".join(SCOPE_NUMBERS_SUPPORT.values())
+    ok("outside the builder's own allocation" in _txtS
+       and "AT LEAST the cap" in _txtS
+       and "asserted as neither" in _txtS
+       and '"WHAT_THE_SCOPE_NUMBERS_SUPPORT": SCOPE_NUMBERS_SUPPORT,'
+       in Path(__file__).read_text(),
+       "AND THE RECEIPT CARRIES THE REVIEWER'S SENTENCE IN PLACE OF THE "
+       "BARE CORRELATION: the builder's own footprint did not move, the "
+       "whole cgroup difference sits in page cache which rose as anon "
+       "fell, so whatever differed was outside the builder's allocation -- "
+       "stronger than a correlation, weaker than a mechanism")
+    _lfB = _R22.assert_launch_form()
+    ok(_lfB["form_is_correct"] and _lfB["conflict_exit_code"] == 75,
+       f"THE BOOK BUILDER'S LAUNCHER IS THE SERVICE FORM TOO, with a "
+       f"distinct lock-conflict exit code ({_lfB['conflict_exit_code']}) so "
+       f"a refusal can never be misread as the build failing")
+    _srcB = Path(__file__).read_text()
+    ok("--scope ...` -- is the form R-628 ruled against" in _srcB,
+       "AND THE REFUSAL NO LONGER PRINTS THE RETIRED FORM: `assert_rule20` "
+       "told a seat to relaunch with `systemd-run --user --scope` for six "
+       "runs after R-628 -- a literal that had to track something that "
+       "moved, and did not")
     _srcr = Path(__file__).read_text()
     ok('"scope": _BDR.scope_stats(),' in _srcr,
        "AND IT IS WIRED INTO THE EMITTED RECEIPT: read from this module's "

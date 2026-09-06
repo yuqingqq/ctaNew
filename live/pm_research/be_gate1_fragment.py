@@ -254,7 +254,15 @@ def declaration() -> dict:
     }
 
 
-def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
+def build(day: str, *, coin: str = COIN, progress: bool = True,
+          fixture: bool = False) -> dict:
+    # RULE 20, MEASURED BEFORE ANY WORK (REV 63 S4). This receipt mentioned
+    # the lock in NO field at all, so "the lock was taken and held across
+    # both steps" was a claim only a register row carried -- its own
+    # artifacts could not support it. The evidence is DE's, delegated rather
+    # than reimplemented (Q-BE-271), and a real build without an EXCLUSIVE
+    # hold refuses HERE rather than after ten minutes of work.
+    _wrapper = _R22.lock_evidence(fixture=fixture)
     import harmful_exposure_rows as HER
     t0 = time.time()
     dst = out_path(day, coin)
@@ -306,6 +314,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
                   "required_stem": GATE1_STEM},
         "data_root": _BDR.receipt_block(),
         "scope": _BDR.scope_stats(),
+        "wrapper_measured": _wrapper,
         "producing_code": _R22.stamp(__file__),
         "rule22_checked_at_emit": _R22.assert_unchanged(
             "be_gate1_fragment receipt emit"),
@@ -315,7 +324,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
     }
 
 
-EXPECTED_CHECKS = 14
+EXPECTED_CHECKS = 19
 
 
 def selftest() -> int:
@@ -425,6 +434,41 @@ def selftest() -> int:
        and '"rule22_checked_at_emit": _R22.assert_unchanged(' in _src22,
        "AND IT IS WIRED INTO THE EMITTED RECEIPT: both the stamp and the "
        "refusal, read from this module's own source rather than claimed")
+
+    # ---- RULE 20: the lock, MEASURED, and refused before any work -------
+    try:
+        build("19700101")
+        ok(False, "a real build without the heavy lock must refuse")
+    except _R22.HeavyRunRefused as e:
+        ok("does not hold" in str(e) and "be_heavy_run.sh" in str(e),
+           "KNOWN-BAD, REV 63 S4: a REAL build that does not hold the "
+           "heavy-run lock REFUSES before any work, naming the launcher "
+           "that takes it. This receipt carried no lock field at all")
+    _we = _R22.lock_evidence(fixture=True)
+    ok(_we["delegated_to"] == "de_multiday_gate1_runner.wrapper_observed"
+       and "lock_mode" in _we and "exclusive" in _we,
+       f"POSITIVE CONTROL: the evidence is DE's own with the MODE read from "
+       f"/proc/locks ({_we['lock_mode']!r}) -- held is not exclusive, and "
+       f"two shared holders would both certify")
+    _srcF = Path(__file__).read_text()
+    ok('"wrapper_measured": _wrapper,' in _srcF
+       and "_R22.lock_evidence(fixture=fixture)" in _srcF,
+       "AND IT IS WIRED INTO THE EMITTED RECEIPT: read from this module's "
+       "own source, not asserted in prose")
+    _lf = _R22.assert_launch_form()
+    ok(_lf["form_is_correct"] and _lf["lock_is_inside_the_unit"],
+       f"THE LAUNCHER IS THE SERVICE FORM ({_lf['problems']}): "
+       f"no `--scope`, a named unit, both caps, and the lock "
+       f"INSIDE the unit. Every BE heavy run through 09-05 was a transient "
+       f"scope whose payload dies with the launching shell")
+    _bad_lf = _R22.assert_launch_form(
+        "flock -n /l systemd-run --user --scope --slice=research.slice "
+        "-p MemoryMax=8G -p CPUQuota=100% --setenv=PM_DATA_ROOT=/r "
+        "--working-directory=/w -- cmd")
+    ok(_bad_lf["form_is_correct"] is False
+       and any("--scope" in x for x in _bad_lf["problems"]),
+       "KNOWN-BAD: the exact form BE used for six heavy runs is REFUSED by "
+       "name")
 
     print()
     if fails:

@@ -81,6 +81,134 @@ def module_commit(path) -> dict:
                           "than restating a constant"}
 
 
+class HeavyRunRefused(RuntimeError):
+    """This process is not entitled to run heavy work right now."""
+
+
+LAUNCHER = Path(__file__).with_name("be_heavy_run.sh")
+LOCK_CONFLICT_RC = 75
+
+
+def flock_mode(lock_path) -> str | None:
+    """WRITE (exclusive) or READ (shared), read from /proc/locks.
+
+    `flock -n` takes LOCK_EX; `flock -s -n` takes LOCK_SH and TWO holders
+    then coexist. The fd is present either way, so holding it is not
+    evidence of exclusion. Moved here from `be_daybook_build` so all three
+    producers read the lock the same way."""
+    import os
+    try:
+        st = os.stat(str(lock_path))
+        want = f"{st.st_dev >> 8:02x}:{st.st_dev & 0xff:02x}:{st.st_ino}"
+        for line in open("/proc/locks"):
+            f = line.split()
+            if len(f) >= 6 and f[1] == "FLOCK" and f[3] in ("READ", "WRITE"):
+                if f[5].endswith(f":{st.st_ino}") or f[5] == want:
+                    return f[3]
+    except OSError:
+        pass
+    return None
+
+
+def lock_evidence(*, fixture: bool = False, refuse: bool = True) -> dict:
+    """THE HEAVY LOCK, MEASURED -- and refused if a real build lacks it.
+
+    REV 63 S4: BE's fragment and tape receipts mentioned the lock in no
+    field at all, so "the lock was taken and held across both steps" was a
+    claim in a register row that its own artifacts could not support. DE's
+    runner has recorded this for rounds and refuses a real day without it;
+    this DELEGATES to that rather than writing a second implementation of
+    one check (Q-BE-271), and adds the mode, which is what tells an
+    exclusive hold from a shared one."""
+    import de_multiday_gate1_runner as RUN
+    w = dict(RUN.wrapper_observed())
+    w["delegated_to"] = "de_multiday_gate1_runner.wrapper_observed"
+    w["fixture"] = fixture
+    w["lock_mode"] = flock_mode(RUN.HEAVY_RUN_LOCK)
+    w["exclusive"] = w["lock_mode"] == "WRITE"
+    w["why_mode_not_just_held"] = ("two `flock -s` holders would both report "
+                                   "the fd and both certify; only WRITE is "
+                                   "mutual exclusion")
+    w["launch_form"] = "systemd-run --user transient SERVICE (never --scope)"
+    if fixture or not refuse:
+        return w
+    if not w.get("heavy_run_lock_held"):
+        raise HeavyRunRefused(
+            f"REFUSED: this build is HEAVY BY CONSTRUCTION and this process "
+            f"does not hold {RUN.HEAVY_RUN_LOCK}. Launch it with "
+            f"`{LAUNCHER.name} <unit> <module.py> ...`, which runs the lock "
+            f"INSIDE a transient service (R-628). A heavy build beside "
+            f"another heavy run is what rule 20 exists to prevent.")
+    if not w["exclusive"]:
+        raise HeavyRunRefused(
+            f"REFUSED: the heavy-run lock is held in mode "
+            f"{w['lock_mode']!r}, not WRITE. A SHARED (`flock -s`) lock lets "
+            f"a second heavy run take it at the same time and both would "
+            f"certify -- which is not one-heavy-run-at-a-time.")
+    return w
+
+
+def assert_launch_form(text: str | None = None) -> dict:
+    """THE LAUNCHER'S SHAPE IS A PREDICATE, read from the script itself.
+
+    The scope form survived six BE runs because it lived in prose that
+    nobody executed. This reads the artifact that actually launches the
+    work, so the command and the check on it cannot become two facts."""
+    raw = text if text is not None else LAUNCHER.read_text()
+    # SCAN THE LAUNCH COMMAND, NOT THE SCRIPT. Two earlier forms of this
+    # check refused this very launcher: first on its header comment
+    # explaining what a `--scope` does wrong, then on its falsifier's own
+    # PASS message, which names the form it disproves. Stripping comments
+    # was not enough -- a checker that names a forbidden token contains it,
+    # wherever it puts it. So the search space is now the systemd-run
+    # invocation itself (its line plus backslash continuations), which is
+    # the only place the token could do harm.
+    lines, launch, grabbing = raw.split("\n"), [], False
+    for ln in lines:
+        st = ln.strip()
+        if not grabbing and ("systemd-run" in st
+                             and not st.startswith("#")):
+            grabbing = True
+        if grabbing:
+            launch.append(st)
+            if not st.endswith("\\"):
+                break
+    src = " ".join(launch) if launch else raw
+    # the lock is INSIDE the unit iff the launch line hands the payload to
+    # this script's own --inner role, which is where the flock is taken.
+    body = "\n".join(ln for ln in lines if not ln.lstrip().startswith("#"))
+    inside = "--inner" in src and "flock -n" in body
+    problems = []
+    if not launch:
+        problems.append("contains no systemd-run invocation at all")
+    if "--scope" in src:
+        problems.append("carries `--scope`: the payload would run in the "
+                        "CALLING shell's process tree and die with it "
+                        "(R-628, measured)")
+    for token, why in (("--unit=", "names no `--unit=`, so the run could "
+                                   "only be polled by a child PID"),
+                       ("--slice=research.slice", "is not in research.slice"),
+                       ("MemoryMax=8G", "declares no memory cap"),
+                       ("CPUQuota=100%", "declares no CPU cap"),
+                       ("--setenv=PM_DATA_ROOT=", "does not set the data "
+                                                  "root inside the unit"),
+                       ("--working-directory=", "does not set the working "
+                                                "directory inside the unit"),
+                       ("flock -n", "does not take the heavy-run lock")):
+        if token not in src and not (token == "flock -n" and inside):
+            problems.append(why)
+    # the lock must be INSIDE the unit: after the `--` separator
+    if not inside:
+        problems.append("takes the lock OUTSIDE the unit, so the lock dies "
+                        "with the launching shell")
+    return {"launcher": str(LAUNCHER), "problems": problems,
+            "scanned": "the systemd-run invocation itself",
+            "launch_line": src[:400],
+            "form_is_correct": not problems,
+            "lock_is_inside_the_unit": inside,
+            "conflict_exit_code": LOCK_CONFLICT_RC}
+
+
 class Capture:
     """One run's view of the code that is producing it."""
 
