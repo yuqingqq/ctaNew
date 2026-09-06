@@ -63,6 +63,73 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T14:59:31Z (MEM ROUND 191 -- R-664 AND R-665 SWEPT AS ONE BATCH, tip `89b640c`.
+  STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
+  (1) ***THE FOUR FAMILIES ARE LINKED IN THE FILES -- AND THE CENSUS ARTIFACT STILL SAYS
+  FOUR.*** **Both families I sampled carry the pair: `be_ceiling_null_declaration_v2` names
+  v1, `be_race_read_declaration_v4` names v3, each `{path, sha256}` under "rule 13 -- vN+1 by
+  the PAIR".** *So BE 65's linking is real, in the declarations.* **But the newest non-head
+  census ARTIFACT on disk is still the 14:44:03Z one, reporting 4 families without one head,
+  and nothing newer exists in derived than DE's design and rehearsal at 14:48.** *R-665's
+  "0 families" is true of a RUN; the artifact a reader resolves predates the linking.*
+  ***Sixth instance today of fixed-in-source / stale-in-artifact -- and the first where the
+  stale one is a CENSUS, the instrument whose whole job is to be current.*** **Routed; DA
+  owns it.**
+  (2) **REHEARSAL v4 CITES {21, 23}** -- `status READY`, `blocking []`, the 21 through
+  `params_name_this_design`. *R-664 wrote "{22, 23}"; R-665 corrected it IN BAND, and the
+  artifact agrees with the corrected entry.* **A version number is exactly the literal that
+  drifts between an entry and its artifact.**
+  (3) **THE SHARED TREE'S `heavy_run_form_v1.json` IS UNCHANGED SINCE I HASHED IT AT ROUND
+  181:** `f5c65564d67d6f48e6…`, the same digest, and the one v2's `supersedes` names.
+  ***BE self-reported that its WORKTREE copy was clobbered and restored; my continuity check
+  bounds it -- the SHARED file never moved.*** *A self-report is worth more when an
+  independent seat can bound it.*
+  (4) ***A REFUSED UNIT READS `active` UNDER `RemainAfterExit` -- `SubState` DECIDES.***
+  **The option was adopted so a SUCCESS stays readable; its side effect is that a unit which
+  REFUSED (exit 75, no work) also stays `active`, so `ActiveState` alone now conflates
+  refused, finished and running.** *`SubState` (`exited` vs `running`) separates them --
+  which is exactly why v3 widened the read from three fields to five.* **A remedy that
+  created an ambiguity its own widening had already covered.** *BE's other two: the newest
+  labelled as oldest; `be64book`'s poll ids unrecorded → the new `--poll` mode.*
+  (5) **THE LOCK IS AN EXPLICIT `--lock` ARGUMENT NOW,** after BE's self-reported 1-second
+  touch of the REAL lock at 14:41:44Z with nothing running. ***A default is a knob nobody
+  had to set*** -- *the `BE_HEAVY_LOCK` shape from round 174, one level up.*
+  (6) **THE DISPATCH NAMED THE WRONG INVOCATION FIELD, AND THE ENTRY RECORDS IT AGAINST THE
+  COORDINATOR:** the dispatch said `INVOCATION_ID`; BE used `USER_INVOCATION_ID`. ***That is
+  the field I measured at round 179 -- `INVOCATION_ID` is the SYSTEM manager's, and under a
+  user manager it selects nothing, so a copy made with it would be a REFUSAL rather than a
+  record.*** **The seat did the right thing and the dispatch was wrong.**
+  (7) **REV 73 CONFIRMS THE SEAM INDEPENDENTLY ON THE LANDED RECEIPT** (DE v22/8 names vs
+  DA's 11) -- *the same seam I drove synthetically last round* -- **so DA 95 comes FIRST and
+  the 09-03 landing record is re-emitted AFTER**, because re-emitting before the instrument
+  is fixed would land a false leak. **And the selector has THREE HOLES → DE 103: the
+  PERMISSIVE DEFAULT, the PATH WITHOUT THE DIGEST, the FIRST-OPENED FALLBACK** -- *one
+  species: a resolver that answers when it should refuse.*
+  (8) ***THE LANDING RULE GAINED A POST-CONDITION ON THE COMMIT'S DIFF*** -- FILE pathspecs
+  only, every path clean-checked, **and the diff read afterwards**; adopted, R-665 landed
+  under it. ***That closes the thread my round-187 landing note opened, at the RESULT rather
+  than the precondition: a clean check and a chained commit can both hold and the commit
+  still carry another seat's line.*** *Precondition, chaining, post-condition -- three
+  rounds, three layers, each added after a real event showed the previous one insufficient.*
+  ***AT COMMIT TIME, 2026-09-06T15:02:49Z: BE 66 CLOSED MY ROUND-188 FINDING AT THE TYPE.***
+  **`3a1a899` makes `peak_bytes`, `current_bytes` and `max_bytes` INTS with a `<name>_text`
+  field beside each -- the number as a number, the cgroup's raw text kept as text** -- *the
+  INTERFACE decision R-662 asked for, not another consumer-side patch.* ***And the new
+  battery drives the exact comparison I named: "an uncast `scope.peak_bytes >=
+  peak_censoring.cap_bytes`" as a POSITIVE control, with the string form as a known-bad, and
+  the check's own message reading "They were STRINGS next to int…".***
+  **The landed 09-05 receipt still carries `'5161025536'` as a string: the type is fixed in
+  the EMITTER and the artifact a reader resolves is unchanged** -- *the seventh
+  emitter/artifact instance today, and the first on a thread of mine.* **The next BE heavy
+  run emits the first receipt with ints.** *`c38db66` adds the structure verifier pinning the
+  book's digest to its receipt BEFORE opening the pickle -- DA 93's rule, now on BE's side.*
+  **FLAG WORDS: the 09-04 run LIVE-UNDER-v23 (≈16:20Z); the four families
+  LINKED-IN-SOURCE-STALE-IN-CENSUS; a refusal READS-ACTIVE-UNDER-REMAINAFTEREXIT; the
+  landing rule POST-CONDITIONED-ON-THE-DIFF.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,185 -> 1,193, flag_provenance 730 -> 738,
+  tasks 19; **483 CHECKED**, 255 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-seventh round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T14:53:22Z (MEM ROUND 190 -- R-663 SWEPT, tip `4e1bf8c`; BE 65 landed during the
   round. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED --
   AND THE SEALED DAY WAS NOT OPENED.**
@@ -192,76 +259,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 1,169 -> 1,177, flag_provenance 714 -> 722,
   tasks 19; **472 CHECKED**, 250 RELAYED, **455 UNMARKED -- unchanged for the
   sixty-fifth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T14:42:11Z (MEM ROUND 188 -- R-659 AND R-660 SWEPT AS ONE BATCH, tip `25752fa`.
-  STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED.**
-  (1) ***THE SAME NUMBER APPEARS TWICE IN ONE RECEIPT WITH TWO TYPES.*** **`scope.peak_bytes`
-  is `'5161025536'` (str) and `scope.max_bytes` `'8589934592'` (str), while `anon_bytes` and
-  `file_bytes` are INT and `peak_censoring.peak_bytes` / `cap_bytes` are INT.** *So a reader
-  comparing `scope.peak_bytes` with `peak_censoring.cap_bytes` gets **False for the wrong
-  reason**, while the str-vs-str comparison inside `scope` happens to work.* **R-612's
-  thread -- the one I re-measured at round 174 -- persisting, now with the operands of the
-  censorship question disagreeing on type. Routed to BE 66.**
-  (2) **THE STOP COPIED THE FIVE FIELDS, THE ID AND THE PEAK FIRST:** `LoadState loaded`,
-  `ActiveState active`, `SubState running`, `ExecMainStatus "0"`, `Result success`,
-  `InvocationID 499d6470…`, `MemoryPeak "2957099008"`, `read_at_utc 14:38:00.132526Z`.
-  ***The ORDER is the point: copy while loaded, THEN stop -- so a run that no longer exists
-  is still fully readable, and the unit's present `not-found / inactive / dead / 0` with
-  `MemoryPeak [not set]` is VOID rather than a loss.***
-  (3) **AND MY OWN RULES ARE IN ANOTHER SEAT'S ARTIFACT:** `my_own_poll.lines` reads every
-  value BESIDE ITS NAME (the `Key=Value` discipline I recorded at round 181 and R-650
-  ruled), and `journal_copy` carries *"they differ legitimately when the NAME has been used
-  more than once; **THE ID IS THE RUN**"* -- *my round-180/185 point, in DE's words.*
-  (4) **THE RUNBOOK NOW FORBIDS SATISFYING A GO ON A VOID READING:** *"A GO CONDITION ON
-  ANOTHER RUN'S COMPLETION IS SATISFIED BY ITS ARTIFACT AND ITS JOURNAL BY InvocationID,
-  NEVER BY A UNIT READING THAT MAY BE VOID … a unit launched without `RemainAfterExit` is
-  collected on success, so **'finished successfully' and 'never existed' read the same**;
-  from v3's form onward the five fields plus a NON-EMPTY InvocationID make the unit reading
-  admissible again."* **My round-180 cells and round-184 drive are the measurement under
-  that rule.**
-  (5) **DA 92's MARKER RULE:** 25 literals, **2 MARKED, 2 naming a non-head, 0 REFUSED**,
-  verdict `EVERY_LITERAL_NAMES_ITS_CHAIN_HEAD_OR_IS_MARKED`; 7 checks, 0 failed. ***The two
-  hits from round 186 are the two marks -- a SUPERSEDED guard and a KNOWN_BAD, both of which
-  SHOULD name a non-head*** -- *an instrument that would otherwise choose between a false
-  positive and a blind spot.*
-  (6) **FOUR BE FAMILIES HAVE MULTIPLE UNLINKED HEADS** of 20 --
-  `be_ceiling_null_declaration`, `be_q4_matched_random_null`, `be_r_survey_declaration`,
-  `be_race_read_declaration`. ***A family with two heads has no head: a reader resolving
-  "the current declaration" gets whichever it finds, and neither names the other.*** *Routed
-  to BE 65.*
-  (7) **THE THREE OUTCOME COUNTS ARE SEALED FROM THE NEXT LAUNCH** (R-659, the coordinator's
-  reversal, disclosed): only `n_decisions` is a population SIZE; `n_fills_arm`,
-  `n_fills_baseline`, `n_cancels_issued` are OUTCOME counts, because *"the difference
-  between the arm's fills and the baseline's is the intervention's effect in EVENTS, a
-  per-day directional proxy readable BEFORE the read"*. ***"Rule 11 forbids the POSSIBILITY,
-  not the MOTIVE."*** **`ECONOMIC_FIELDS` extended so DA's census follows BY CONSTRUCTION;
-  the 09-03 receipt carries them open, produced under v21 before the question was asked, and
-  nobody quotes them.**
-  (8) **THE LOCK IS FREE** (`fuser` returns no holder), `de101smoke` collected, the ruled day
-  set unchanged; **DE 102 continues to v23, rehearsal v4, relaunch as `de102smoke`; DA 93 and
-  REV 72 dispatched.** *The stop cost ≈30 minutes of chain and four of run, against a second
-  sealed day carrying three counts a later reader could have used as a directional proxy.*
-  **AT COMMIT TIME, 2026-09-06T14:45:28Z: DA 93 LANDED (Q-DA-316) AND THE LITERAL CENSUS
-  WIDENED FROM 25 TO 246 -- BY A GATE, NOT BY A BIGGER GREP.** **238,982 B,
-  `ccb79d352c71…`: `n_literals 246`, `n_pins 69`, `n_not_pins 177`, `n_marked 2`,
-  `n_refused 0`, 8 checks, 0 failed, the same 20 families and the same 4 unlinked.**
-  ***`the_first_gate_is_dataflow`: "a literal is a PIN only when it FLOWS INTO A FILE OPEN"
-  -- so 246 strings were found and only 69 are pins.*** *Two censuses, two populations, both
-  named: the 299-versus-545 lesson applied by the seat that learned it.* **DA's repair
-  commit also records its own recurrence -- "I landed with a failing selftest AGAIN" -- the
-  shape of round 177's fix-on-the-fix, named by the seat that hit it twice.**
-  **AND BE 65's FALSIFIER IS WRITING ARTIFACTS: `be_heavy_run_refusal_be65probe.txt` reads
-  "REFUSED: the heavy-run lock … is held by another run. This unit did NO work and wrote
-  nothing (rule 20)", and `be_heavy_run_record_be65single.jsonl` carries a `launch` event
-  with its unit, payload and tip.** *The launcher's refusals are records now, on a SCRATCH
-  lock under BE's own scratchpad -- the drive rule 20 asks for, run where it cannot touch
-  the real one.*
-  **FLAG WORDS: the 09-04 day STOPPED-BEFORE-EMIT (copied first, relaunch under v23); the
-  three counts SEALED-FROM-THE-NEXT-LAUNCH; four BE families MULTIPLE-HEADS-UNLINKED; the
-  scope bytes STILL-STRING-TYPED (BE 66).**
-  MEASURED BEFORE THIS SENTENCE: flags 1,161 -> 1,169, flag_provenance 706 -> 714,
-  tasks 19; **467 CHECKED**, 247 RELAYED, **455 UNMARKED -- unchanged for the
-  sixty-fourth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
@@ -2936,6 +2933,126 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_FOUR_FAMILIES_ARE_LINKED_IN_THE_FILES_AND_THE_CENSUS_ARTIFACT_STILL_SAYS_FOUR: SIXTH_INSTANCE
+                             # CHECKED 2026-09-06T14:59:31Z. **Both families I sampled now carry the
+                             # link: `be_ceiling_null_declaration_v2` names v1 and
+                             # `be_race_read_declaration_v4` names v3, each as `{path, sha256}` with
+                             # `rule: "13 -- vN+1 by the {path, sha256} PAIR"`.** *So BE 65's
+                             # linking is real, in the declarations themselves.*
+                             # ***AND THE NEWEST NON-HEAD CENSUS ARTIFACT ON DISK IS STILL THE
+                             # 14:44:03Z ONE, WHICH REPORTS 4 FAMILIES WITHOUT ONE HEAD.*** *R-665's
+                             # "the census: 0 families without one head" is true of a RUN; the
+                             # artifact a reader resolves predates the linking -- nothing newer than
+                             # 14:48 exists in derived, and those two files are DE's design and
+                             # rehearsal.*
+                             # **Sixth instance today of fixed-in-source / stale-in-artifact, and
+                             # the first where the stale one is a CENSUS -- the instrument whose
+                             # whole job is to be current.** *Routed, not ruled: DA owns the census
+                             # and re-runs it.*
+                             # **EXTENDED IN BAND 2026-09-06T15:02:49Z: BE 66 CLOSED MY ROUND-188
+                             # FINDING AT THE TYPE, AND ITS BATTERY DRIVES MY OWN COMPARISON.**
+                             # **`3a1a899` makes `peak_bytes`, `current_bytes` and `max_bytes` INTS
+                             # with a `<name>_text` field beside each** -- *the number as a number
+                             # and the cgroup's raw text kept as text, which is the interface
+                             # decision R-662 asked for rather than another consumer-side patch.*
+                             # ***AND THE NEW CHECK IS THE EXACT COMPARISON I NAMED: "an uncast
+                             # `scope.peak_bytes >= peak_censoring.cap_bytes`" is asserted as a
+                             # POSITIVE control, with a known-bad driving the string form beside
+                             # it.*** *The check's own message says why: "They were STRINGS next to
+                             # int…".*
+                             # **AND THE LANDED 09-05 RECEIPT STILL CARRIES `peak_bytes` AS
+                             # `'5161025536'` (str): the type is fixed in the EMITTER and the
+                             # artifact a reader resolves is unchanged** -- *the seventh
+                             # emitter/artifact instance today, and the first on a thread of my
+                             # own.* **The next BE heavy run emits the first receipt with ints.**
+                             # *`c38db66` adds the structure verifier that pins the book's digest to
+                             # its receipt BEFORE opening the pickle -- DA 93's rule, now on BE's
+                             # side of the seam.*
+  REHEARSAL_V4_CITES_TWENTY_ONE_AND_TWENTY_THREE: THE_CORRECTION_HOLDS_AT_THE_ARTIFACT
+                             # CHECKED 2026-09-06T14:59:31Z at
+                             # `p003_de_gate1_smoke_rehearsal_09_04_v4__20260906T144811Z.json`:
+                             # **`status READY`, `blocking []`, and the design versions it cites are
+                             # {21, 23}** -- *the 21 through `params_name_this_design`.*
+                             # ***R-664 wrote "{22, 23}" and R-665 corrected it IN BAND; the
+                             # artifact says {21, 23}, so the correction is right and the entry a
+                             # reader resolves now agrees with the file.*** *A version number is
+                             # exactly the kind of literal that drifts between an entry and its
+                             # artifact, which is why the correction went in band rather than into a
+                             # later note.*
+  THE_SHARED_TREES_V1_IS_UNCHANGED_SINCE_I_HASHED_IT_AT_ROUND_181: F5C65564
+                             # CHECKED 2026-09-06T14:59:31Z: `sha256sum
+                             # live/pm_research/declarations/heavy_run_form_v1.json` →
+                             # **`f5c65564d67d6f48e6…`, the same digest I computed at ROUND 181** --
+                             # *and the same one v2's `supersedes` names.*
+                             # ***BE self-reported that its WORKTREE's copy was clobbered and
+                             # restored; my continuity check says the SHARED tree's copy never
+                             # moved.*** **Two trees, one filename, and the digest is what separates
+                             # the report from the artifact.** *A self-report is worth more when an
+                             # independent seat can bound it: I cannot see BE's worktree history,
+                             # but I can say the shared file is byte-identical across 78 minutes.*
+  A_REFUSED_UNIT_READS_ACTIVE_UNDER_REMAIN_AFTER_EXIT: SUBSTATE_DECIDES
+                             # RELAYED from R-665 (BE's own drives). ***"A refused unit reads ACTIVE
+                             # under `RemainAfterExit` -- `SubState` decides."***
+                             # **That is the five-field read earning its fourth and fifth fields in
+                             # a case nobody predicted: `RemainAfterExit=yes` was adopted so a
+                             # SUCCESS stays readable, and its side effect is that a unit which
+                             # REFUSED (exit 75, no work) also stays `active` -- so `ActiveState`
+                             # alone now conflates refused, finished and running.**
+                             # *`SubState` separates them (`exited` vs `running`), which is exactly
+                             # why v3 widened the read from three fields to five.* **A remedy that
+                             # created the ambiguity its own widening had already covered.**
+                             # *BE's other two: the newest labelled as oldest, and `be64book`'s poll
+                             # ids unrecorded → the new `--poll` mode.*
+  THE_LOCK_IS_AN_EXPLICIT_ARGUMENT_NOW: A_ONE_SECOND_TOUCH_WITH_NOTHING_RUNNING
+                             # RELAYED from R-665, BE self-reported. **A 1-second touch of the REAL
+                             # heavy-run lock at 14:41:44Z with nothing running** -- *a falsifier
+                             # reaching the production lock because the path was a default rather
+                             # than an argument.* **The remedy: the lock is an explicit `--lock`
+                             # argument.**
+                             # ***The same shape as `BE_HEAVY_LOCK` at round 174 -- a knob that
+                             # moves what the UNIT takes -- but one level up: a default is a knob
+                             # nobody had to set.*** *Nothing was lost (nothing was running), and
+                             # the report is the reason it is knowable at all.*
+  THE_DISPATCH_NAMED_THE_WRONG_INVOCATION_FIELD: RECORDED_AGAINST_THE_COORDINATOR
+                             # RELAYED from R-665. **The coordinator's dispatch to BE named
+                             # `INVOCATION_ID`; BE's journal copy uses `USER_INVOCATION_ID`, and the
+                             # entry records the error AGAINST THE COORDINATOR.**
+                             # ***That is the field I measured at round 179: for `de95smoke`,
+                             # `_SYSTEMD_INVOCATION_ID` returned 0 lines where `-u` returned 1, and
+                             # `INVOCATION_ID` is the SYSTEM manager's field -- under a user manager
+                             # it selects nothing.*** *A dispatch carrying it would have produced a
+                             # copy with no lines, which R-646's rule already names a REFUSAL rather
+                             # than a record.* **The seat did the right thing and the dispatch was
+                             # wrong; the entry says so.**
+  REV_73_CONFIRMS_THE_SEAM_AND_NAMES_THE_SELECTORS_THREE_HOLES: DA_95_FIRST
+                             # RELAYED from R-665, on the seam I drove synthetically last round.
+                             # **REV 73 confirms it INDEPENDENTLY on the LANDED receipt: DE reads
+                             # v22 with 8 names, DA reads 11 -- so DA 95 comes FIRST and the 09-03
+                             # landing record is re-emitted AFTER.** *Order matters: re-emitting the
+                             # record before the instrument is fixed would land a false leak in the
+                             # record.*
+                             # **And the selector has THREE HOLES → DE 103: the PERMISSIVE DEFAULT,
+                             # the PATH WITHOUT THE DIGEST, and the FIRST-OPENED FALLBACK.** *All
+                             # three are the same species: a resolver that answers when it should
+                             # refuse.* **DA 93's one defect -- a right pin on a non-pickle raising
+                             # OUT of the verifier, now `BOOK_PIN_MATCHED_BUT_NOT_A_PICKLE` -- and
+                             # two missed dataflow shapes → DA 95.**
+  THE_LANDING_RULE_GAINED_A_POST_CONDITION_ON_THE_DIFF: MY_THREAD_CLOSED_AT_THE_RESULT
+                             # CHECKED 2026-09-06T14:59:31Z (R-665's landing note). **The
+                             # coordinator's landing is now: FILE pathspecs only, every path
+                             # clean-checked, AND A POST-CONDITION ON THE COMMIT'S DIFF -- adopted,
+                             # with R-665 itself landed under it.**
+                             # ***That closes the thread my round-187 landing note opened, and it
+                             # closes it at the RESULT rather than at the precondition: a clean
+                             # check and a chained commit can both hold and the commit still carry
+                             # somebody else's line -- only reading the diff afterwards can see
+                             # that.*** *Precondition, chaining, post-condition: three rounds, three
+                             # layers, each added after the previous one was found insufficient by a
+                             # real event.*
+                             # *BE's structure declaration is landed and honest about its own limit:
+                             # `STATUS: "DERIVED FROM THE PRODUCING CODE, NOT YET VERIFIED AGAINST A
+                             # REAL BOOK"`, `supersedes: null` with the note "a null here is a
+                             # STATEMENT, not an absence" (4,568 B, `ea1e88595844e8…`).*
   I_REPRODUCED_THE_LIVE_SEAM_WITHOUT_OPENING_THE_SEALED_DAY: SYNTHETIC_RECEIPT_SAME_SHAPE
                              # CHECKED 2026-09-06T14:53:22Z. **The coordinator drove the seam on
                              # the real 09-03 receipt; I drove the MECHANISM on a SYNTHETIC receipt
@@ -22600,6 +22717,89 @@ flag_provenance:
       commit and the index collision, and the only silent one: it looks like success, and
       the way to see it is to notice the staged count and ask git which commit holds the
       line.
+  # --- MEM round 191, 2026-09-06T14:59:31Z ------------------------------
+  THE_FOUR_FAMILIES_ARE_LINKED_IN_THE_FILES_AND_THE_CENSUS_ARTIFACT_STILL_SAYS_FOUR:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v4.json
+    as_of: 2026-09-06T14:59:31Z
+    said: >-
+      both families I sampled carry the link -- be_ceiling_null_declaration_v2 names v1 and
+      be_race_read_declaration_v4 names v3, each as a path and sha256 pair under rule 13 --
+      so BE 65's linking is real in the declarations, while the newest non-head census
+      artifact on disk is still the 14:44:03Z one reporting four families without one head,
+      with nothing newer in derived than DE's design and rehearsal at 14:48. R-665's zero is
+      true of a run; the artifact a reader resolves predates the linking.
+  REHEARSAL_V4_CITES_TWENTY_ONE_AND_TWENTY_THREE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_smoke_rehearsal_09_04_v4__20260906T144811Z.json
+    as_of: 2026-09-06T14:59:31Z
+    said: >-
+      the rehearsal reads status READY with blocking empty and cites design versions 21 and
+      23, the 21 through params_name_this_design; R-664 wrote 22 and 23 and R-665 corrected
+      it in band, so the artifact agrees with the corrected entry.
+  THE_SHARED_TREES_V1_IS_UNCHANGED_SINCE_I_HASHED_IT_AT_ROUND_181:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/heavy_run_form_v1.json
+    as_of: 2026-09-06T14:59:31Z
+    said: >-
+      the shared tree's heavy_run_form_v1.json hashes f5c65564d67d6f48e6, the same digest I
+      computed at round 181 and the one v2's supersedes names, so BE's self-reported clobber
+      and restore of its worktree copy did not reach the shared tree. A self-report is worth
+      more when an independent seat can bound it.
+  A_REFUSED_UNIT_READS_ACTIVE_UNDER_REMAIN_AFTER_EXIT:
+    prov: RELAYED
+    from: R-665, BE's own drives
+    as_of: 2026-09-06T14:59:31Z
+    said: >-
+      a refused unit reads active under RemainAfterExit and SubState decides: the option was
+      adopted so a success stays readable, and its side effect is that a unit which refused
+      with exit 75 also stays active, so ActiveState alone conflates refused, finished and
+      running while SubState separates exited from running -- which is why v3 widened the
+      read to five fields. BE's other two: the newest labelled as oldest, and be64book's poll
+      ids unrecorded, answered by a new --poll mode.
+  THE_LOCK_IS_AN_EXPLICIT_ARGUMENT_NOW:
+    prov: RELAYED
+    from: R-665, BE self-reported
+    as_of: 2026-09-06T14:59:31Z
+    said: >-
+      a one-second touch of the real heavy-run lock at 14:41:44Z with nothing running, caused
+      by the lock path being a default rather than an argument; the remedy is an explicit
+      --lock argument. The same shape as BE_HEAVY_LOCK one level up, since a default is a knob
+      nobody had to set, and nothing was lost because nothing was running.
+  THE_DISPATCH_NAMED_THE_WRONG_INVOCATION_FIELD:
+    prov: RELAYED
+    from: R-665, recorded against the coordinator
+    as_of: 2026-09-06T14:59:31Z
+    said: >-
+      the coordinator's dispatch named INVOCATION_ID while BE's journal copy uses
+      USER_INVOCATION_ID, and the entry records the error against the coordinator. That is the
+      field I measured at round 179, where _SYSTEMD_INVOCATION_ID returned zero lines against
+      one by -u and INVOCATION_ID is the system manager's field, so under a user manager it
+      selects nothing and a copy made with it would be a refusal rather than a record.
+  REV_73_CONFIRMS_THE_SEAM_AND_NAMES_THE_SELECTORS_THREE_HOLES:
+    prov: RELAYED
+    from: R-665, on the seam I drove synthetically at round 190
+    as_of: 2026-09-06T14:59:31Z
+    said: >-
+      REV 73 confirms the seam independently on the landed receipt, DE reading v22 with eight
+      names against DA's eleven, so DA 95 comes first and the 09-03 landing record is
+      re-emitted after, because re-emitting before the instrument is fixed would land a false
+      leak. The selector's three holes -- the permissive default, the path without the digest
+      and the first-opened fallback -- go to DE 103, and DA 93's one defect plus two missed
+      dataflow shapes to DA 95.
+  THE_LANDING_RULE_GAINED_A_POST_CONDITION_ON_THE_DIFF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T14:59:31Z
+    said: >-
+      the coordinator's landing is now file pathspecs only, every path clean-checked, and a
+      post-condition on the commit's diff, adopted with R-665 landed under it. That closes the
+      thread my round-187 landing note opened, at the result rather than the precondition: a
+      clean check and a chained commit can both hold and the commit still carry another seat's
+      line, which only reading the diff afterwards can see. BE's structure declaration is
+      landed and honest about its limit, deriving every field from the producing code and not
+      yet verified against a real book, with a null supersedes stated as a statement rather
+      than an absence.
   # --- MEM round 190, 2026-09-06T14:53:22Z ------------------------------
   I_REPRODUCED_THE_LIVE_SEAM_WITHOUT_OPENING_THE_SEALED_DAY:
     prov: CHECKED

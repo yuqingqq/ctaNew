@@ -5,6 +5,80 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 191
+
+**As of 2026-09-06T14:59:31Z, R-664 and R-665 swept (tip `89b640c`). State only — MEM writes
+no result. No sealed value read; the sealed day not opened.**
+
+### The four families are linked in the files — and the census artifact still says four
+
+**Both families I sampled carry the pair:** `be_ceiling_null_declaration_v2` names v1,
+`be_race_read_declaration_v4` names v3, each `{path, sha256}` under *"rule 13 — vN+1 by the
+PAIR"*. *So BE 65's linking is real, in the declarations.* **But the newest non-head census
+artifact on disk is still the 14:44:03Z one, reporting 4 families without one head** —
+nothing newer exists in derived than DE's design and rehearsal at 14:48. *R-665's "0
+families" is true of a **run**; the artifact a reader resolves predates the linking.*
+***Sixth instance today of fixed-in-source / stale-in-artifact — and the first where the
+stale one is a census.*** Routed; DA owns it.
+
+### AT COMMIT TIME (15:02:49Z): BE 66 closed my round-188 finding at the TYPE
+
+**`3a1a899` makes `peak_bytes`, `current_bytes` and `max_bytes` INTS with a `<name>_text`
+field beside each** — *the number as a number, the cgroup's raw text kept as text*: **the
+interface decision R-662 asked for, not another consumer-side patch.** ***And the new
+battery drives the exact comparison I named*** — *"an uncast `scope.peak_bytes >=
+peak_censoring.cap_bytes`"* as a **positive control**, with the string form as a known-bad
+and the message *"They were STRINGS next to int…"*.
+
+**The landed 09-05 receipt still carries `'5161025536'` as a string** — the type is fixed in
+the **emitter** and the artifact a reader resolves is unchanged: *the seventh
+emitter/artifact instance today, and the first on a thread of mine.* **The next BE heavy run
+emits the first receipt with ints.** *`c38db66` adds the structure verifier pinning the
+book's digest to its receipt **before** opening the pickle — DA 93's rule, now on BE's side.*
+
+### Verified at the artifacts
+
+- **Rehearsal v4 cites {21, 23}** — `READY`, `blocking []`. *R-664 wrote "{22, 23}"; R-665
+  corrected it in band, and the artifact agrees with the corrected entry.*
+- **The shared tree's `heavy_run_form_v1.json` is unchanged since I hashed it at round 181**
+  (`f5c65564d67d6f48e6…`). ***BE self-reported a worktree clobber and restore; my continuity
+  check bounds it — the shared file never moved.***
+
+### Three findings worth carrying
+
+- ***A refused unit reads `active` under `RemainAfterExit` — `SubState` decides.*** The
+  option was adopted so a **success** stays readable; its side effect is that a unit which
+  **refused** (75, no work) also stays `active`. *`SubState` separates `exited` from
+  `running` — which is exactly why v3 widened the read to five fields.* **A remedy that
+  created an ambiguity its own widening had already covered.**
+- **The lock is an explicit `--lock` argument now**, after a self-reported 1-second touch of
+  the **real** lock with nothing running. ***A default is a knob nobody had to set.***
+- **The dispatch named the wrong invocation field** (`INVOCATION_ID` vs
+  `USER_INVOCATION_ID`) — **recorded against the coordinator**. *That is the field I measured
+  at round 179: under a user manager it selects nothing, so a copy made with it would be a
+  **refusal**, not a record.*
+
+### REV 73, and the landing rule's third layer
+
+**REV 73 confirms the seam independently on the landed receipt** (DE v22/8 vs DA's 11) —
+*the seam I drove synthetically last round* — **so DA 95 comes first and the 09-03 landing
+record is re-emitted after.** **The selector's three holes → DE 103:** the permissive
+default, the path without the digest, the first-opened fallback — *one species: a resolver
+that answers when it should refuse.*
+
+***The landing rule gained a post-condition on the commit's diff*** — file pathspecs only,
+every path clean-checked, **and the diff read afterwards** (R-665 landed under it).
+***That closes the thread my round-187 landing note opened, at the result rather than the
+precondition.*** *Precondition, chaining, post-condition — three rounds, three layers, each
+added after a real event showed the previous one insufficient.*
+
+**Counts, measured before the sentence:** flags 1,185 → **1,193**, `flag_provenance`
+730 → **738**, tasks 19; **483 CHECKED**, 255 RELAYED, **455 UNMARKED — unchanged for the
+sixty-seventh round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 173** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 190
 
 **As of 2026-09-06T14:53:22Z, R-663 swept (tip `4e1bf8c`); BE 65 landed during the round.

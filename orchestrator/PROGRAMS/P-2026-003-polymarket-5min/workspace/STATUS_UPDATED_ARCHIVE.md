@@ -14564,3 +14564,83 @@ directions.
   sixty-third round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 173 — archived 2026-09-06T14:59:31Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 191 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T14:42:11Z (MEM ROUND 188 -- R-659 AND R-660 SWEPT AS ONE BATCH, tip `25752fa`.
+  STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED.**
+  (1) ***THE SAME NUMBER APPEARS TWICE IN ONE RECEIPT WITH TWO TYPES.*** **`scope.peak_bytes`
+  is `'5161025536'` (str) and `scope.max_bytes` `'8589934592'` (str), while `anon_bytes` and
+  `file_bytes` are INT and `peak_censoring.peak_bytes` / `cap_bytes` are INT.** *So a reader
+  comparing `scope.peak_bytes` with `peak_censoring.cap_bytes` gets **False for the wrong
+  reason**, while the str-vs-str comparison inside `scope` happens to work.* **R-612's
+  thread -- the one I re-measured at round 174 -- persisting, now with the operands of the
+  censorship question disagreeing on type. Routed to BE 66.**
+  (2) **THE STOP COPIED THE FIVE FIELDS, THE ID AND THE PEAK FIRST:** `LoadState loaded`,
+  `ActiveState active`, `SubState running`, `ExecMainStatus "0"`, `Result success`,
+  `InvocationID 499d6470…`, `MemoryPeak "2957099008"`, `read_at_utc 14:38:00.132526Z`.
+  ***The ORDER is the point: copy while loaded, THEN stop -- so a run that no longer exists
+  is still fully readable, and the unit's present `not-found / inactive / dead / 0` with
+  `MemoryPeak [not set]` is VOID rather than a loss.***
+  (3) **AND MY OWN RULES ARE IN ANOTHER SEAT'S ARTIFACT:** `my_own_poll.lines` reads every
+  value BESIDE ITS NAME (the `Key=Value` discipline I recorded at round 181 and R-650
+  ruled), and `journal_copy` carries *"they differ legitimately when the NAME has been used
+  more than once; **THE ID IS THE RUN**"* -- *my round-180/185 point, in DE's words.*
+  (4) **THE RUNBOOK NOW FORBIDS SATISFYING A GO ON A VOID READING:** *"A GO CONDITION ON
+  ANOTHER RUN'S COMPLETION IS SATISFIED BY ITS ARTIFACT AND ITS JOURNAL BY InvocationID,
+  NEVER BY A UNIT READING THAT MAY BE VOID … a unit launched without `RemainAfterExit` is
+  collected on success, so **'finished successfully' and 'never existed' read the same**;
+  from v3's form onward the five fields plus a NON-EMPTY InvocationID make the unit reading
+  admissible again."* **My round-180 cells and round-184 drive are the measurement under
+  that rule.**
+  (5) **DA 92's MARKER RULE:** 25 literals, **2 MARKED, 2 naming a non-head, 0 REFUSED**,
+  verdict `EVERY_LITERAL_NAMES_ITS_CHAIN_HEAD_OR_IS_MARKED`; 7 checks, 0 failed. ***The two
+  hits from round 186 are the two marks -- a SUPERSEDED guard and a KNOWN_BAD, both of which
+  SHOULD name a non-head*** -- *an instrument that would otherwise choose between a false
+  positive and a blind spot.*
+  (6) **FOUR BE FAMILIES HAVE MULTIPLE UNLINKED HEADS** of 20 --
+  `be_ceiling_null_declaration`, `be_q4_matched_random_null`, `be_r_survey_declaration`,
+  `be_race_read_declaration`. ***A family with two heads has no head: a reader resolving
+  "the current declaration" gets whichever it finds, and neither names the other.*** *Routed
+  to BE 65.*
+  (7) **THE THREE OUTCOME COUNTS ARE SEALED FROM THE NEXT LAUNCH** (R-659, the coordinator's
+  reversal, disclosed): only `n_decisions` is a population SIZE; `n_fills_arm`,
+  `n_fills_baseline`, `n_cancels_issued` are OUTCOME counts, because *"the difference
+  between the arm's fills and the baseline's is the intervention's effect in EVENTS, a
+  per-day directional proxy readable BEFORE the read"*. ***"Rule 11 forbids the POSSIBILITY,
+  not the MOTIVE."*** **`ECONOMIC_FIELDS` extended so DA's census follows BY CONSTRUCTION;
+  the 09-03 receipt carries them open, produced under v21 before the question was asked, and
+  nobody quotes them.**
+  (8) **THE LOCK IS FREE** (`fuser` returns no holder), `de101smoke` collected, the ruled day
+  set unchanged; **DE 102 continues to v23, rehearsal v4, relaunch as `de102smoke`; DA 93 and
+  REV 72 dispatched.** *The stop cost ≈30 minutes of chain and four of run, against a second
+  sealed day carrying three counts a later reader could have used as a directional proxy.*
+  **AT COMMIT TIME, 2026-09-06T14:45:28Z: DA 93 LANDED (Q-DA-316) AND THE LITERAL CENSUS
+  WIDENED FROM 25 TO 246 -- BY A GATE, NOT BY A BIGGER GREP.** **238,982 B,
+  `ccb79d352c71…`: `n_literals 246`, `n_pins 69`, `n_not_pins 177`, `n_marked 2`,
+  `n_refused 0`, 8 checks, 0 failed, the same 20 families and the same 4 unlinked.**
+  ***`the_first_gate_is_dataflow`: "a literal is a PIN only when it FLOWS INTO A FILE OPEN"
+  -- so 246 strings were found and only 69 are pins.*** *Two censuses, two populations, both
+  named: the 299-versus-545 lesson applied by the seat that learned it.* **DA's repair
+  commit also records its own recurrence -- "I landed with a failing selftest AGAIN" -- the
+  shape of round 177's fix-on-the-fix, named by the seat that hit it twice.**
+  **AND BE 65's FALSIFIER IS WRITING ARTIFACTS: `be_heavy_run_refusal_be65probe.txt` reads
+  "REFUSED: the heavy-run lock … is held by another run. This unit did NO work and wrote
+  nothing (rule 20)", and `be_heavy_run_record_be65single.jsonl` carries a `launch` event
+  with its unit, payload and tip.** *The launcher's refusals are records now, on a SCRATCH
+  lock under BE's own scratchpad -- the drive rule 20 asks for, run where it cannot touch
+  the real one.*
+  **FLAG WORDS: the 09-04 day STOPPED-BEFORE-EMIT (copied first, relaunch under v23); the
+  three counts SEALED-FROM-THE-NEXT-LAUNCH; four BE families MULTIPLE-HEADS-UNLINKED; the
+  scope bytes STILL-STRING-TYPED (BE 66).**
+  MEASURED BEFORE THIS SENTENCE: flags 1,161 -> 1,169, flag_provenance 706 -> 714,
+  tasks 19; **467 CHECKED**, 247 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-fourth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
