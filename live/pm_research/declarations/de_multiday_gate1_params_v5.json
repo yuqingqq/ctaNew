@@ -1,0 +1,161 @@
+{
+  "alpha": 0.05,
+  "arms": {
+    "CONDVALUE_X_SKEW": {
+      "head": "q1_arrival_composed_lgbm",
+      "model_digests": {
+        "lgbm_haz_btc.txt": "ec52055214a01ed5",
+        "lgbm_thresholds_btc.json": "0fa2f1f7a5a4c58f"
+      },
+      "theta": 0.32450609461933483
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+      "head": "incumbent_linear_d",
+      "model_digests": {
+        "linear_d_btc.json": "18701008c2bd18c6"
+      },
+      "theta": 0.43525926488298716
+    }
+  },
+  "be_module": {
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "sha256": "93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef"
+  },
+  "be_module_repoint": {
+    "AND_A_GAP_IN_MY_OWN_METHOD_CLOSED_HERE": "DE 77's justification compared top-level DEFINITIONS only. THIS change moved NO definition at all -- it would have passed that check in silence. `ARMS` (both thetas), `SEED`, `N_DRAWS` and `COIN` are module-level ASSIGNMENTS, so a refitted theta or a changed seed is exactly the class of change that method could not see. Both axes are compared now, and the pinned constants are named and checked one by one",
+    "changed_by_commit": "68b34bd",
+    "compared_against": "ab75b41",
+    "draw_path_functions_changed": [],
+    "draw_path_functions_checked": [
+      "draw_null",
+      "draw_flags",
+      "_alloc",
+      "replay",
+      "flagged_stream",
+      "arm_stream",
+      "mechanics",
+      "base_fills_lost",
+      "params_for",
+      "load"
+    ],
+    "module_level_assignments_changed": {
+      "OUT_DERIVED": {
+        "new": "_BDR.derived()",
+        "old": "ROOT / 'data/pm_5min/derived'"
+      }
+    },
+    "n_top_level_definitions_unchanged": 20,
+    "new_sha256": "93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef",
+    "old_sha256": "2b164df2ec0653a51c6db71fd69db052564b1dcc6c8956ea576d9840d89d9274",
+    "pinned_constants_changed": [],
+    "pinned_constants_checked": [
+      "SEED",
+      "N_DRAWS",
+      "MIN_DRAWS",
+      "COIN",
+      "ARMS",
+      "BASELINE_CANCELS",
+      "BASELINE_FILLS",
+      "LAT",
+      "BUDGET"
+    ],
+    "the_only_thing_that_moved": "OUT_DERIVED, BE's WRITE root -- from `ROOT / 'data/pm_5min/derived'` to `_BDR.derived()`. DE's day path never uses it: it calls load, arm_stream, flagged_stream, replay, _alloc, draw_flags and draw_null, and never BE's run() or main()",
+    "top_level_definitions_changed": [],
+    "why": "the runner's own guard REFUSED on reload for the SECOND round running: BE's cascade changed at 68b34bd (round 50) and the pin was stale. The guard fired on a real change, which is what it is for"
+  },
+  "candidate_sets": {
+    "SET_A_reads_do_not_consume": [
+      "2026-08-29",
+      "2026-09-01",
+      "2026-09-02",
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ],
+    "SET_B_reads_consume": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ]
+  },
+  "coin": "btc",
+  "day_runs_allowed_for_closed_qualifying_days": true,
+  "days": [
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06",
+    "2026-09-07",
+    "2026-09-08"
+  ],
+  "design_declaration": {
+    "carrying_commit": "c7422c6ce55e4899cb062dbf8fe17638e40373f5",
+    "note": "the pin runs params -> design in ONE direction only; the design cites params by PATH, because two digest pins would be circular",
+    "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v12__20260906T074622Z.json",
+    "protocol": "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V12",
+    "sha256": "c32c72455b26ac3ea5dfa1b3c27bcea2585b72f36f6774d38a05ef5e73923ff5",
+    "supersedes": "data/pm_5min/derived/p003_de_multiday_gate1_design_v11__20260906T071214Z.json"
+  },
+  "expected_G": 6,
+  "head_overlap_floor": 0.9,
+  "min_decisions_per_arm_day": 30,
+  "min_draws_per_arm_day": 500,
+  "multiplicity_m": 2,
+  "note": "G IS DERIVED FROM len(days) AND IS NEVER A CONSTANT; `expected_G` below is a CROSS-CHECK the loader must satisfy, not the source of G. THE VERSION TRAVELS IN `version`; v1's protocol string said V2 while its filename said v1.",
+  "per_day_deadline_s": 43200,
+  "protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V5",
+  "read_not_before_utc": "2026-09-09T00:06:00Z",
+  "required_previously_opened_for": "none",
+  "ruling": {
+    "authority": "R-555 (USER): untouched days only",
+    "completion": "the 2026-09-09T00:06Z verdict; the run does not start before it",
+    "if_a_future_day_fails_its_verdict": "the set waits for the next qualifying CLOSED day in calendar order. G STAYS 6 and nothing is chosen",
+    "rule": "the four ledger conjuncts AND day-quality, on COMPLETE days only, AND previously_opened_for == none",
+    "smoke_day": "2026-09-03",
+    "smoke_publishes": "resource observations only; its economic fields are SEALED until all 6 days are complete",
+    "why_not_SET_A": "SET A included 08-29, 09-01 and 09-02, whose previously_opened_for is development_read or interim_read_of_frozen_candidate. The USER ruled untouched days only"
+  },
+  "sd_floor_fraction": 0.25,
+  "status": "DAY_SET_RULED_R555_USER",
+  "supersedes": {
+    "chain": [
+      {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v1.json",
+        "sha256": "b06125e9e10b9652ebb5130fe0f08e5d7b1d312828dac219b7e7ac0496130138"
+      },
+      {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v2.json",
+        "sha256": "ce46b5775d8f17a4b417640b620db275868a9efec19abdde6caaecd4dbd405dd"
+      },
+      {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v3.json",
+        "sha256": "d6368dcef76795aa9f626dc38d327ea8261882fea8d7610d79448f357913229c"
+      },
+      {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v4.json",
+        "sha256": "03e5cd029f69e660b07d3eb7214e4b8b80f54736105353c60227ef6e96c5261d"
+      }
+    ],
+    "fields_changed": [
+      "design_declaration -> design v12 (R16's call form after REV 43 item 1)"
+    ],
+    "path": "live/pm_research/declarations/de_multiday_gate1_params_v4.json",
+    "rule": "13 -- a superseding declaration, vN+1; v4 stays as provenance",
+    "sha256": "03e5cd029f69e660b07d3eb7214e4b8b80f54736105353c60227ef6e96c5261d",
+    "v4_untouched": true
+  },
+  "timing": {
+    "day_runs_allowed_for": "any CLOSED, QUALIFYING day in the ruled set",
+    "enforced_by": [
+      "de_multiday_gate1_runner.may_run_day()",
+      "de_multiday_gate1_runner.may_read_aggregate()"
+    ],
+    "read_not_before_utc_governs": "the AGGREGATE READ only: the unseal of the economic fields and the section-7 verdict",
+    "ruling": "R-572(B)(2) (coordinator)",
+    "superseded_field": "run_not_before_utc",
+    "what_v1_said": "2026-09-09T00:06:00Z",
+    "why_it_was_wrong": "one whole-set field did two jobs and read as a bar on every run. A per-day run is SEALED -- resources, counts and statuses, no economic field -- so it cannot inform a later choice, and holding 09-03 behind 2026-09-09 bought nothing and cost the calendar"
+  },
+  "version": 5,
+  "wrapper": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100%"
+}
