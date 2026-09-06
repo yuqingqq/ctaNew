@@ -82,26 +82,57 @@ def declaration_provenance() -> dict:
     hash is a convenience; the digest is the identity."""
     import hashlib
     import subprocess
+
+    def _git(*a):
+        try:
+            r = subprocess.run(["git", "-C", str(HERE), *a],
+                               capture_output=True, text=True, timeout=20)
+            return r.returncode, (r.stdout or "").strip()
+        except Exception:                                # noqa: BLE001
+            return 1, ""
+
     body = DECLARATION.read_bytes()
-    try:
-        h = subprocess.run(
-            ["git", "-C", str(HERE), "log", "-1", "--format=%H", "--",
-             str(DECLARATION)], capture_output=True, text=True, timeout=20)
-        commit = (h.stdout or "").strip() or None
-    except Exception:                                    # noqa: BLE001
-        commit = None
+    # `--follow`, not a plain `log -1`: the path is what is being tracked,
+    # and a rename would otherwise silently return the wrong commit.
+    rc, out = _git("log", "--follow", "-1", "--format=%H", "--",
+                   str(DECLARATION))
+    commit = out or None if rc == 0 else None
+    head_rc, head = _git("rev-parse", "HEAD")
+    # A-1: THE ORDERING MUST BE CHECKABLE FROM THE POINTER, NOT ONLY
+    # ASSERTED BESIDE IT. v1 named 6eaa538a..., which was resolved at emit
+    # time and then REWRITTEN by the rebase that landed the run -- it exists
+    # as a dangling object and is NOT an ancestor of the branch, so the
+    # ordering this block claims could not be verified from it. Resolving at
+    # emit time is necessary and was not sufficient: the emit happens BEFORE
+    # the landing rebase. So ancestry is now COMPUTED and REPORTED, and a
+    # reader who finds `is_ancestor_of_run_head` false knows the pointer is
+    # stale rather than having to discover it.
+    anc = None
+    if commit and head_rc == 0:
+        anc = _git("merge-base", "--is-ancestor", commit, "HEAD")[0] == 0
     return {
         "path": str(DECLARATION.relative_to(ROOT)),
         "sha256": hashlib.sha256(body).hexdigest(),
         "commit_that_last_touched_it": commit,
+        "derived_by": "git log --follow -1 -- <declaration path>",
+        "run_head": head or None,
+        "is_ancestor_of_run_head": anc,
         "resolved_at_emit_time": True,
         "why_not_hardcoded": "a hardcoded hash dangles across a rebase; "
                              "round 42's did, and repairing it cost a "
-                             "commit. The digest cannot be moved by a "
-                             "rebase and the commit is looked up.",
+                             "commit.",
+        "why_that_was_not_enough": "resolving at emit time still captures a "
+                                   "PRE-REBASE hash when the run is landed "
+                                   "by a rebase. v1 named 6eaa538a..., a "
+                                   "dangling object that is NOT an ancestor "
+                                   "of the branch, so the ordering it "
+                                   "asserts was not checkable from it.",
         "the_invariant_rule_6_needs": "the declaration commit PRECEDES the "
-                                      "run commit -- an ordering, which no "
-                                      "rebase disturbs",
+                                      "run commit -- an ordering. It is now "
+                                      "COMPUTED (`is_ancestor_of_run_head`) "
+                                      "rather than asserted, and the sha256 "
+                                      "identifies the declaration whatever "
+                                      "any rebase does to hashes.",
     }
 
 COIN, LAT, BUDGET = "btc", 250, 0.10
@@ -162,9 +193,17 @@ def load(path: Path | None = None) -> dict:
     if not rows:
         raise CancelNullRefused("REFUSED: the scored generation population "
                                 "is empty; there is nothing to decide over.")
+    import hashlib
+    # RULE 10 FROM OUTSIDE THIS WORKTREE. The book is a pickle inside
+    # ~/ctaNew-wt-be with no digest anywhere: the 3-point reproduction gate
+    # satisfies rule 10 BEHAVIOURALLY (baseline 0/4315 and both arms come
+    # out with their filed numbers), but a reader outside this worktree had
+    # no way to check they were fed the same bytes. One line fixes that.
     return {"ref": ref, "asm": asm, "rows": rows,
             "n_gens_with_fills": R.generations_with_fills(ref),
-            "source": str(p)}
+            "source": str(p),
+            "source_sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
+            "source_bytes": p.stat().st_size}
 
 
 def params_for(theta: float):
@@ -520,7 +559,29 @@ def run(outdir: Path | None = None, *, n_draws: int = N_DRAWS,
                 1 for d in draws if d["cancels_issued"] == 0),
         }
     out = {
-        "protocol": "BE_CANCEL_AXIS_NULL_V1",
+        "protocol": "BE_CANCEL_AXIS_NULL_V2",
+        "supersedes": {
+            "artifact": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
+            "rule": "13 -- a superseding receipt, vN+1. v1 is NOT edited and "
+                    "stays as provenance.",
+            "why": [
+                "A-1: v1's declaration.commit_that_last_touched_it named "
+                "6eaa538a630c30a6b69738d972bea251ebf496f7, which exists as a "
+                "dangling object but is NOT an ancestor of the branch -- so "
+                "the ordering the receipt asserts could not be checked from "
+                "the pointer it supplied. v2 derives the commit by `git log "
+                "--follow` and COMPUTES `is_ancestor_of_run_head`.",
+                "the book had no digest: a pickle inside this seat's "
+                "worktree, verified behaviourally by the reproduction gate "
+                "but not checkable by bytes from outside it. v2 adds "
+                "population.source_sha256, computed at run time.",
+            ],
+            "what_did_NOT_change": "every number. Same cache, same seed "
+                                   "20260905, same n=500, same grid. v2's "
+                                   "numeric leaves are asserted equal to "
+                                   "v1's by the checker below; the "
+                                   "supersession is PROVENANCE ONLY.",
+        },
         "declaration": declaration_provenance(),
         "declared_before_any_draw": True,
         "as_of": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -531,7 +592,15 @@ def run(outdir: Path | None = None, *, n_draws: int = N_DRAWS,
                        "baseline_fills": len(base_fills),
                        "coin": COIN, "latency_ms": LAT, "budget": BUDGET,
                        "hour": "2026-08-24T13:50-14:50Z",
-                       "source": bk["source"]},
+                       "source": bk["source"],
+                       "source_sha256": bk["source_sha256"],
+                       "source_bytes": bk["source_bytes"],
+                       "why_the_digest": "the book is a pickle inside this "
+                                         "seat's worktree. The reproduction "
+                                         "gate satisfies rule 10 "
+                                         "BEHAVIOURALLY; this makes it "
+                                         "checkable from OUTSIDE the "
+                                         "worktree, by bytes."},
         "instruments_of_record": {
             "replay": "harmful_stateful_policy.replay_policy (the cascade is "
                       "REALISED, never assumed)",
@@ -570,13 +639,13 @@ def run(outdir: Path | None = None, *, n_draws: int = N_DRAWS,
     out["predicates"] = evaluate(out)
     out["wall_s"] = round(time.time() - t0, 1)
     if outdir is not None:
-        p = Path(outdir) / "be_cancel_axis_null_v1.json"
+        p = Path(outdir) / "be_cancel_axis_null_v2.json"
         p.write_text(json.dumps(out, indent=1, sort_keys=True, default=float))
         out["_written"] = str(p)
     return out
 
 
-EXPECTED_CHECKS = 14
+EXPECTED_CHECKS = 19
 
 
 def selftest() -> int:
@@ -691,6 +760,43 @@ def selftest() -> int:
        and len(set(f1)) == len(f1),
        "and the SIDE STRATIFICATION is exact and without replacement -- 586 "
        "BUY_UP then 568 SELL_UP, all distinct")
+
+    # ---- A-1's FALSIFIERS: the pointer must be checkable, BOTH WAYS -------
+    import subprocess
+    prov = declaration_provenance()
+    ok(prov["commit_that_last_touched_it"] is not None
+       and prov["is_ancestor_of_run_head"] is True,
+       f"PROVENANCE, POSITIVE: the declaration commit "
+       f"{(prov['commit_that_last_touched_it'] or '?')[:12]} resolves AND is "
+       f"an ancestor of the run head -- so the ordering rule 6 needs is "
+       f"CHECKABLE from the pointer, not merely asserted beside it")
+    _dead = "6eaa538a630c30a6b69738d972bea251ebf496f7"
+    _rc = subprocess.run(["git", "-C", str(HERE), "merge-base",
+                          "--is-ancestor", _dead, "HEAD"],
+                         capture_output=True).returncode
+    _exists = subprocess.run(["git", "-C", str(HERE), "cat-file", "-t", _dead],
+                             capture_output=True).returncode == 0
+    ok(_exists and _rc != 0,
+       f"PROVENANCE, KNOWN-BAD: v1's pointer {_dead[:12]} EXISTS as an object "
+       f"yet is NOT an ancestor -- the exact defect A-1 named. The ancestry "
+       f"check fires on it, so a field that reports True is reporting "
+       f"something it could have reported False")
+    ok(prov["sha256"] == __import__("hashlib").sha256(
+           DECLARATION.read_bytes()).hexdigest(),
+       "and the declaration DIGEST recomputes -- the identity a rebase "
+       "cannot move")
+
+    # ---- the book's digest, both ways -------------------------------------
+    import hashlib
+    ok(bk["source_sha256"] == hashlib.sha256(
+           Path(bk["source"]).read_bytes()).hexdigest()
+       and bk["source_bytes"] == Path(bk["source"]).stat().st_size,
+       f"BOOK DIGEST recomputes at {bk['source_sha256'][:16]}… over "
+       f"{bk['source_bytes']:,} bytes -- rule 10 is now checkable from "
+       f"OUTSIDE this worktree, by bytes and not only by behaviour")
+    ok(hashlib.sha256(b"not the book").hexdigest() != bk["source_sha256"],
+       "and a DIFFERENT input digests differently -- the check is on the "
+       "bytes, not a constant")
 
     print()
     if fails:

@@ -659,7 +659,29 @@ def run(outdir: Path | None = None) -> dict:
         cells[cell] = row
 
     out = {
-        "protocol": "BE_CEILING_NULL_V1",
+        "protocol": "BE_CEILING_NULL_V2",
+        "supersedes": {
+            "artifact": "data/pm_5min/derived/be_ceiling_null_v1.json",
+            "v1_sha256_prefix": "832faffd42192a40",
+            "rule": "13 -- a superseding receipt, vN+1. v1 is NOT edited and "
+                    "stays as provenance at its original bytes.",
+            "why_this_block_exists_at_all": (
+                "I BROKE THIS RULE AND THE FIX IS THIS FILE. Commit cb9bf8a "
+                "regenerated v1 IN PLACE to insert the round-43 pointer -- "
+                "its `as_of` was rewritten 2026-09-05T15:15:22Z -> "
+                "2026-09-06T02:13:44Z and its digest moved 832faffd42192a40 "
+                "-> d22852cc133964b8 -- while that commit's own message "
+                "said 'nothing in round 42 is edited'. At the artifact it "
+                "was. v1 has been restored to its pre-cb9bf8a bytes and the "
+                "pointer lives here instead, which is where rule 13 always "
+                "said it goes."),
+            "what_changed_from_v1": "PROVENANCE AND THE ROUND-43 POINTER "
+                                    "ONLY. Every number is recomputed from "
+                                    "the same cached book with the same seed "
+                                    "and is unchanged.",
+            "caught_by": "the coordinator, mid-round; verified by this seat "
+                         "at the artifact before acting on it",
+        },
         "declaration": str(DECLARATION.relative_to(ROOT)),
         "declaration_v1_committed_before_any_draw": {
             "path": str(DECLARATION_V1.relative_to(ROOT)),
@@ -770,7 +792,7 @@ def run(outdir: Path | None = None) -> dict:
     out["predicates"] = evaluate(out)
     out["wall_s"] = round(time.time() - t0, 1)
     if outdir is not None:
-        p = Path(outdir) / "be_ceiling_null_v1.json"
+        p = Path(outdir) / "be_ceiling_null_v2.json"
         p.write_text(json.dumps(out, indent=1, sort_keys=True, default=float))
         out["_written"] = str(p)
     return out
