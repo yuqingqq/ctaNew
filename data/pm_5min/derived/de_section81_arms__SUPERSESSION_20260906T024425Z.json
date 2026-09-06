@@ -1,0 +1,29 @@
+{
+ "record": "SUPERSESSION",
+ "as_of": "2026-09-06T02:46Z",
+ "superseding": "de_section81_arms__20260906T024425Z.json",
+ "superseding_sha256": "48effdb5bd81e714961bd98e3c1c085e777103e501fc969146ed930bcf557a84",
+ "superseding_carrying_commit": "96ce1ba",
+ "superseding_carrying_commit_is_published": "yes -- pushed before the emission",
+ "superseding_code_identity_differences_at_that_commit": "0 of 7",
+ "numbers_moved": false,
+ "numbers_check": "leaf-wise against de_section81_arms__20260906T022701Z.json: 4,109 shared leaves compared, volatile provenance/resource fields excluded by name. MOVED: 0. ADDED 42, REMOVED 12 -- the 12 removed are the be_replayed_random_null_4c17646 block, replaced in place by the wider cascade_baseline_candidates block that supersedes it. NO ECONOMIC NUMBER MOVED IN EITHER DIRECTION; this emission adds a table and removes nothing but the narrower version of it.",
+ "what_changed": "the cascade baseline question is answered, and the answer is that the baseline is NOT A COUNT. Five candidate denominators are emitted with lands_in_BE_range COMPUTED for each and ZERO land: filling generations 1.1176, all-cancellable (this cache) 0.1386, all generations (BE's population block) 0.1447, and the DECISION POPULATION BE itself draws from -- 4,315/1,154 = 3.7392 for CONDVALUE and 4,315/106 = 40.7075 for HAZARD, the furthest of all. BE's 0.497 is fills_lost_per_cancel measured by REPLAY, per arm, and no count can price the latency, holds, reposts and queue resets between a decision and its fills.",
+ "and_it_is_per_arm": "BE measures 0.4970 (CONDVALUE, 1,154 decisions) and 0.4003 (HAZARD, 106 decisions), so no single book-wide fills_per_generation can be the baseline for both arms. That is a defect in this function's SHAPE, not only in its denominator, and it is emitted rather than fixed silently.",
+ "computed_and_NOT_adopted": "adopting BE's per-arm replayed rate would give cascade 8.7013 (CONDVALUE) and 5.5684 (HAZARD). 8.70 is exactly BE's own published headline, which is the cross-check that this reading is right. Importing another seat's measured constant into this emission is a coordinator/USER call (rule 14), so it is computed and left unadopted.",
+ "a_disagreement_emitted_rather_than_reconciled": "BE's population block reports 29,813 generations from de_section81_cache_12.pkl; this module counts 31,122 from de_section81_cache_v2_12.pkl. Two caches, two counts, both reported, neither silently preferred.",
+ "what_is_settled": "the FILLING rate is refuted as the random-cancel baseline, and separation's ordering is INVARIANT to the choice -- cascade_spread 1.9398838090426878 under both baselines, computed and compared inside the emission. 'CHEAP FILLS FIRST, FEW FILLS SECOND' is citable; the cascade LEVEL is not.",
+ "superseded": [
+  {"artifact": "de_section81_arms__20260906T022701Z.json",
+   "sha256": "d77e97b176c80fdf890597542899994891bfa26428ab10357a93b704603e2f1a",
+   "committed": true,
+   "reason": "content only: it carries the narrower be_replayed_random_null block, which named the disagreement but did not enumerate the candidate populations or show that the decision population is the furthest from BE's rate. Every number in it stands unchanged. Retained in place as provenance (rule 13)."}
+ ],
+ "still_open_on_this_surface": [
+  "whether to ADOPT BE's per-arm replayed rate as the cascade baseline -- computed here, not adopted; a coordinator/USER ruling",
+  "cancel_mechanics takes ONE fills_per_generation for all arms while the correct baseline is per-arm; the shape is wrong even once the rate is ruled",
+  "the declined fills' keys are still not emitted (R-519(F) item 4)",
+  "attempt_bound/required_attempts remain UNWIRED; RANDOM_MATCHED still REFUSED at 60 attempts, all 60 rejected at P4",
+  "fields() is a closure inside run_arms, so its emission guards are AST source pins rather than driven checks"
+ ]
+}
