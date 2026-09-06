@@ -1022,6 +1022,68 @@ def own_family_chain(derived=None) -> dict:
                     "directory, so nothing was looking")}
 
 
+#: R-723. ***ONE REAL FAMILY THE REGRESSION HID, MARKED AND NOT
+#: REPAIRED.*** BE 82's sweep found `phase2_four_arm` in the LEDGER's
+#: derived tree -- BE's Phase-2 receipt chain of 2026-08-28, written
+#: under the PRE-PAIR convention (`sha256_prefix`, no full digest) -- and
+#: the fixed resolver refuses it by name. It is not repaired: rewriting a
+#: landed 2026-08-28 receipt to satisfy a rule made in September would be
+#: editing the past to make the present tidy. It is MARKED here, the way
+#: the E2-A known-bad drive is marked, and the two literal references to
+#: `phase2_four_arm_v2.json` stay as they are because ***nothing resolves
+#: that family through the chain***.
+MARKED_PRE_R608_FAMILIES = {
+    "phase2_four_arm": {
+        "where": "the LEDGER's derived tree, not a declarations directory",
+        "why_marked": ("BE's Phase-2 receipt chain of 2026-08-28, written "
+                       "under the pre-R-608 convention: the supersession "
+                       "blocks carry `sha256_prefix` and no full digest, "
+                       "so the fixed resolver refuses them by name"),
+        "why_not_repaired": ("R-723: rewriting a landed receipt to satisfy "
+                             "a rule made after it was written would be "
+                             "editing the past to make the present tidy"),
+        "who_reads_it_through_the_chain": "nobody",
+        "the_two_literals": ["live/pm_research/da_forward_day_verify.py",
+                             "live/pm_research/phase2_*.py"],
+    },
+}
+
+
+def marked_families(derived: Path | None = None) -> dict:
+    """The pre-R-608 families, and what the resolver says about each."""
+    import declaration_chain as _DC                           # noqa: PLC0415
+    ix = derived_index()
+    d = Path(derived) if derived else (
+        Path(ix["dir"]) if ix.get("status") == "INDEXED" else None)
+    out = {}
+    for fam, note in sorted(MARKED_PRE_R608_FAMILIES.items()):
+        row = dict(note)
+        if d is None:
+            row["resolver_says"] = "THE_DERIVED_TREE_IS_NOT_READABLE"
+        else:
+            try:
+                r = _DC.resolve_head(d, fam)
+                row["resolver_says"] = "RESOLVED"
+                row["head"] = r["name"]
+                row["orphan_branches"] = [o["version"]
+                                          for o in r["orphan_branches"]]
+            except _DC.ChainRefused as e:
+                row["resolver_says"] = str(e).split(":")[0]
+                row["refusal"] = str(e)[:400]
+            except OSError as e:
+                row["resolver_says"] = f"UNREADABLE: {e!r}"
+        row["status"] = ("MARKED_PRE_R608_NOT_REPAIRED"
+                         if row["resolver_says"] != "RESOLVED"
+                         else "MARKED_BUT_THE_RESOLVER_NOW_ADMITS_IT")
+        out[fam] = row
+    return {"families": out, "n_marked": len(out),
+            "the_mark_is_not_a_repair": (
+                "a marked family is REPORTED with the resolver's own "
+                "refusal beside it; nothing here rewrites a landed "
+                "artifact, and a mark that started admitting would say so "
+                "in its own status")}
+
+
 def build_report(root: Path | None = None,
                  prior: Path | None = None,
                  chain_over=(), what_changed=None) -> dict:
@@ -1051,6 +1113,7 @@ def build_report(root: Path | None = None,
         "n_families_without_exactly_one_head": len(multi),
         "chains": chains,
         "literal_census": lits,
+        "marked_pre_R608_families": marked_families(),
         "this_census_s_own_family": own,
         "composed_declaration_names": composed,
         "n_composed_declaration_names": len(composed),
