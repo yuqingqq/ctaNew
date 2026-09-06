@@ -1,0 +1,75 @@
+{
+  "as_of": "2026-09-06T14:02:58.865352+00:00",
+  "day": "2026-09-03",
+  "invocation_id": "1fe1699cfd3a46f18206ec01d1cef1b0",
+  "invocation_id_provenance": "read from the unit's own `InvocationID` property at launch (12:35:35Z) and again at 13:56:49Z, WHILE LoadState=loaded. It cannot be read now: the unit was launched under heavy_run_form v1, without `RemainAfterExit=yes`, so it was COLLECTED at exit",
+  "journal_copy": {
+    "copied_at_the_moment_of_reading": true,
+    "counts_agree": true,
+    "counts_note": "they differ legitimately when the NAME has been used more than once; the id is the run",
+    "cross_check": "the by-id count against `-u <unit>`; a unit NAME names every run ever launched under it, an id names ONE",
+    "field_not_used_here": "INVOCATION_ID -- the SYSTEM manager's field; it matches nothing under --user",
+    "fields_matched": [
+      "_SYSTEMD_INVOCATION_ID (the payload's lines)",
+      "USER_INVOCATION_ID (the user manager's lines: Started, Consumed, Failed)"
+    ],
+    "how_that_is_computed": "the run's own `Started` line is still present, so this copy reaches the beginning of the run. False means the beginning has already rotated -- which happened to DE 84's within four hours",
+    "invocation_id": "1fe1699cfd3a46f18206ec01d1cef1b0",
+    "invocation_id_source": "the unit's own `InvocationID` property",
+    "journalctl_error_by_id": null,
+    "journalctl_error_by_unit": null,
+    "lines": [
+      "2026-09-06T12:35:35.639421+00:00 ip-172-31-78-41 systemd[1004]: Started de95smoke.service - /usr/bin/flock -n /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-03 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.",
+      "2026-09-06T14:01:55.561326+00:00 ip-172-31-78-41 flock[3384218]: {\"emitted\": \"/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json\", \"status\": \"DAY_RUN_SEALED\", \"day\": \"2026-09-03\", \"arms\": {\"CONDVALUE_X_SKEW\": \"OK\", \"HAZARD_OVER_SKEWED_REF\": \"OK\"}, \"decisions\": {\"CONDVALUE_X_SKEW\": 15935, \"HAZARD_OVER_SKEWED_REF\": 1398}, \"peak_rss_mb\": 2437.6, \"wall_s\": 5179.5, \"lock_held\": true, \"heavy_by_measurement\": true, \"no_tape_artifact_opened\": true, \"battery\": \"PASS\"}",
+      "2026-09-06T14:01:55.605081+00:00 ip-172-31-78-41 systemd[1004]: de95smoke.service: Consumed 1h 26min 12.243s CPU time, 2.3G memory peak, 0B memory swap peak."
+    ],
+    "n_lines_by_id": 3,
+    "n_lines_by_unit_name": 3,
+    "oldest_line_raw": "2026-09-06T12:35:35.639421+00:00",
+    "oldest_line_utc": "2026-09-06T12:35:35.639421+00:00",
+    "query": "journalctl --user _SYSTEMD_INVOCATION_ID=1fe1699cfd3a46f18206ec01d1cef1b0 + USER_INVOCATION_ID=1fe1699cfd3a46f18206ec01d1cef1b0",
+    "read_at_utc": "2026-09-06T14:02:58.893810+00:00",
+    "retention": {
+      "it_is_a_MEASUREMENT_not_a_property": "five reads across one hour walked the window's start from 08:45Z to 09:29:57Z -- about as fast as the clock. A retention state named once is stale within minutes, so it carries its own as-of and query (R-646 R4)",
+      "measured_at_utc": "2026-09-06T14:02:58.893810+00:00",
+      "oldest_entry_from": "the entry's OWN clock, as journald printed it -- never typed, never a policy setting",
+      "oldest_entry_raw": "2026-09-06T09:53:58.457593+00:00",
+      "oldest_user_journal_entry_utc": "2026-09-06T09:53:58.457593+00:00",
+      "query": "journalctl --user --no-pager -o short-iso-precise (first line = the oldest entry retained)"
+    },
+    "status": "PRESENT",
+    "unit": "de95smoke.service",
+    "window_fully_covered": true
+  },
+  "protocol": "P003_DE_GATE1_RUN_JOURNAL_SIDECAR_V1",
+  "receipt_it_accompanies": {
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json",
+    "sha256": "5dd3a8f3f5818379f3ce4bf74fc8093a8557f771f357839cd3d7f320cb62156d"
+  },
+  "the_coordinators_earlier_copy": {
+    "path": "data/pm_5min/derived/p003_co_journal_copy_de95smoke__20260906T133932Z.json",
+    "why_both": "the coordinator copied the Started line at 13:39Z, while the run was live; this copies what the journal holds for the same invocation at the run's END. Two reads of a rotating store at two moments, each with its own as-of"
+  },
+  "the_unit_reading_after_exit_is_VOID": {
+    "ActiveState": "inactive",
+    "ExecMainStatus": "0",
+    "LoadState": "not-found",
+    "Result": "success",
+    "outcome_readable": false,
+    "read_at_utc": "2026-09-06T14:02:59.056207+00:00",
+    "ruling": "R-648 (R3')",
+    "status": "VOID",
+    "the_triple": [
+      "not-found",
+      "inactive",
+      "0"
+    ],
+    "why": "LoadState is `not-found`: the unit was collected and every field above is a DEFAULT. `ExecMainStatus=0` and `Result=success` here are NOT this run's outcome and are not quoted as one. The RECEIPT is the record"
+  },
+  "unit": "de95smoke.service",
+  "what_this_is_not": {
+    "a_result": false,
+    "an_economic_reading": "NONE"
+  },
+  "why_this_sidecar_exists": "the sealed receipt's producing code predates DE 96, so it cannot carry its own launch record. Rule 20 as amended (R-641): the journal is NOT the record -- a number read from it is copied into an artifact at the moment of reading with the source's retention state named"
+}
