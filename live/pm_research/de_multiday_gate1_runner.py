@@ -47,14 +47,14 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 190
+EXPECTED_CHECKS = 201
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
 #: stays as provenance (rule 13).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v9.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v10.json"
 SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v8.json")
+                        "de_multiday_gate1_params_v9.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -72,7 +72,7 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 96
+DAY_PATH_CHECKS = 99
 
 
 #: R-603 / REV 49 §0 -- THE DIGEST OF THE BYTES THAT ARE RUNNING, taken
@@ -198,6 +198,14 @@ def source_identity_at_launch() -> dict:
                         "entered THIS run -- never a second read, because "
                         "import_module can return a cached module whose "
                         "file has since moved",
+            "captured_at": ["module import",
+                            "the cascade's first import",
+                            "after the cascade's first load(), which "
+                            "imports harmful_stateful_policy and "
+                            "de_phase4_diag_runner LAZILY -- the closure "
+                            "reached the cascade and stopped there, and "
+                            "the two modules that do the REPLAYING were "
+                            "outside it (REV 53 S1.1)"],
         },
         "closure_drift": drift,
         "closure_unchanged_during_the_run": not drift,
@@ -601,6 +609,11 @@ def generate_draws_in_process(params: dict, *, day: str, arm: str,
     mod, cite = import_be_cascade(params, module=module)
     seed = seed_for(book_sha, arm)
     bk = mod.load(Path(book_path))
+    # REV 53 S1.1: `load()` imports `harmful_stateful_policy` and
+    # `de_phase4_diag_runner` LAZILY, so a closure captured at the
+    # cascade's import misses the two modules that do the replaying. The
+    # capture is repeated HERE -- after the first load, before any emit.
+    _capture_closure()
     loaded_sha = bk.get("source_sha256")
     if loaded_sha != book_sha:
         raise RunnerRefused(
@@ -1012,7 +1025,12 @@ def find_sealed_day_receipt(day: str, root: Path) -> dict:
     if not hits:
         return {"day": day, "present": False, "status": "MISSING",
                 "expected_glob": str(d / pat), "n_matches": 0}
-    by_digest, sup_of, recs = {}, {}, {}
+    # R-608: A SUPERSESSION LINK IS THE PAIR {path, sha256}, and BOTH
+    # must match a present file. DE resolved links by DIGEST and DA by
+    # NAME, so on the same bytes exactly one seat refused -- and nothing
+    # declared which was right. A name without the digest is not a link; a
+    # matching digest under a DIFFERENT name is a MOVED file and refuses.
+    by_digest, by_name, sup_of, recs = {}, {}, {}, {}
     for p in hits:
         try:
             rec = json.loads(p.read_text())
@@ -1020,7 +1038,9 @@ def find_sealed_day_receipt(day: str, root: Path) -> dict:
             rec = {}
         recs[p] = rec
         by_digest[sha256_streamed(p)] = p
-        sup_of[p] = ((rec.get("supersedes") or {}).get("sha256"))
+        by_name[p.name] = p
+        _sup = rec.get("supersedes") or {}
+        sup_of[p] = {"path": _sup.get("path"), "sha256": _sup.get("sha256")}
     if len(hits) == 1:
         p = hits[0]
         return {"day": day, "present": True, "status": "PRESENT",
@@ -1028,14 +1048,36 @@ def find_sealed_day_receipt(day: str, root: Path) -> dict:
                 "chain_head_is": "the only receipt"}
     # every supersedes.sha256 that names a present receipt is an edge
     superseded = set()
-    dangling = []
+    dangling, moved, half = [], [], []
     for p, sup in sup_of.items():
-        if sup is None:
+        sp, sh = sup.get("path"), sup.get("sha256")
+        if sp is None and sh is None:
             continue
-        if sup in by_digest:
-            superseded.add(by_digest[sup])
+        if sp is None or sh is None:
+            # HALF A LINK IS NOT A LINK (R-608).
+            half.append({"path": str(p), "supersedes": sup,
+                         "why": "a supersession link is the PAIR "
+                                "{path, sha256}; one field alone does not "
+                                "bind"})
+            continue
+        name = Path(sp).name
+        hit_d = by_digest.get(sh)
+        hit_n = by_name.get(name)
+        if hit_d is not None and hit_n is not None and hit_d == hit_n:
+            superseded.add(hit_d)
+        elif hit_d is not None and hit_n is None:
+            moved.append({"path": str(p), "supersedes": sup,
+                          "found_digest_under": str(hit_d),
+                          "why": "the digest is present under a DIFFERENT "
+                                 "name -- a MOVED file, not a link"})
         else:
-            dangling.append({"path": str(p), "supersedes_sha256": sup})
+            dangling.append({"path": str(p), "supersedes": sup})
+    if half or moved:
+        return {"day": day, "present": False,
+                "status": "LINK_NOT_A_PAIR" if half else "SUPERSEDES_MOVED",
+                "n_matches": len(hits), "half_links": half, "moved": moved,
+                "why": "R-608: a supersession link is the pair "
+                       "{path, sha256} and BOTH must match a present file"}
     if dangling:
         return {"day": day, "present": False, "status": "DANGLING_SUPERSEDES",
                 "n_matches": len(hits), "dangling": dangling,
@@ -2126,10 +2168,45 @@ TAPE_ARTIFACT_MARKERS = ("pm_5min/raw", "harmful_exposure_rows",
                          "tape_index", "_fragment", "fragment_",
                          "state_tape", "/tape")
 
-#: MEASURED on the synthetic day (see the fixture receipt's
-#: `day_run.resources`), then declared with headroom. A fixture that
-#: exceeds it REFUSES: the point of a budget nobody enforces is nothing.
+#: MEASURED on the synthetic day, then declared with headroom. A fixture
+#: that exceeds it REFUSES: the point of a budget nobody enforces is
+#: nothing.
 FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0
+
+#: THE REAL DAY'S BUDGET, DERIVED -- not "the measured peak plus a margin".
+#: R-608's declaration act. The derivation, in order:
+#:
+#:   the cgroup cap                            8192 MB   (rule 20, never raised)
+#:   BE's day reference, measured (R-573)      2008 MB   the S1 book load
+#:   the 09-03 run's own observed peak         2426 MB   (journalctl, 2.3G)
+#:   headroom for the null loop and the seal   ~1500 MB
+#:   ------------------------------------------------
+#:   DECLARED per-day budget                   4000 MB   = 48.8% of the cap
+#:
+#: The number is BELOW the cap on purpose: a budget equal to the cap is not
+#: a budget, it is the cap with a second name, and it can only fire after
+#: the kernel has already begun reclaiming. 4000 MB leaves the cap as the
+#: outer guard and gives this run a bar it can cross while the machine is
+#: still healthy.
+REAL_DAY_PEAK_RSS_MB_BUDGET = 4000.0
+REAL_DAY_BUDGET_DERIVATION = {
+    "cgroup_cap_mb": 8192.0,
+    "be_day_reference_measured_mb": 2008.0,
+    "observed_peak_09_03_mb": 2426.0,
+    "headroom_for_null_and_seal_mb": 1500.0,
+    "declared_mb": 4000.0,
+    "fraction_of_cap": 4000.0 / 8192.0,
+    "why_not_the_cap": "a budget equal to the cap is the cap with a second "
+                       "name; it can only fire once the kernel is already "
+                       "reclaiming",
+    "why_not_measured_peak_plus_margin_alone": (
+        "that is a budget derived from the run it is meant to bound. The "
+        "cap and BE's measured reference are the independent terms; the "
+        "observed peak is a CHECK on them, not their source"),
+    "on_an_overrun": "THE DAY REFUSES at the FIRST STAGE that crosses it. "
+                     "The cap is never raised and the draw count is never "
+                     "cut (R-174)",
+}
 
 #: The real day's ceiling is the cap itself and the response is R-174's:
 #: the DAY refuses. Never a raised cap, never fewer draws.
@@ -2921,10 +2998,44 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     # THE BASELINE, so S0's delta is a measurement and not the whole
     # process's history. Without it the first stage's delta is everything
     # that ever ran, and the argmax is decided before the day starts.
+    budget = (peak_rss_mb_budget if peak_rss_mb_budget is not None
+              else (FIXTURE_DAY_PEAK_RSS_MB_BUDGET if fixture
+                    else REAL_DAY_PEAK_RSS_MB_BUDGET))
+
     def _mark(name):
+        # THE CLOSURE IS RE-CAPTURED AT EVERY STAGE. `load()` imports
+        # harmful_stateful_policy lazily and `replay()` imports
+        # de_phase4_diag_runner later still, so a capture taken once -- at
+        # import, or even after the first load -- misses the modules that
+        # do the REPLAYING. Already-seen modules are skipped, so this costs
+        # a dict lookup per stage.
+        _capture_closure()
         stages[name] = {"peak_rss_mb_highwater": _peak_rss_mb(),
                         "rss_mb_current": _current_rss_mb(),
                         "elapsed_s": round(time.time() - t_start, 3)}
+        # THE BUDGET FIRES AT THE FIRST STAGE THAT CROSSES IT. It was
+        # checked ONCE, after S5 -- so a day that crossed its ceiling while
+        # loading the book still ran 84 minutes of null draws before being
+        # told. A budget that refuses only at emit wastes the whole run it
+        # exists to protect. The highwater series was already there; nobody
+        # was reading it until the end.
+        # THE GROWTH IS MEASURED ON CURRENT RSS, WHICH FALLS. Measuring
+        # it on `ru_maxrss` reproduced the defect one level down: after an
+        # earlier run in the SAME process had pushed the high-water to its
+        # maximum, a later run's high-water did not rise at all, so its
+        # growth read ZERO and the budget could never fire. A budget
+        # measured with an instrument that cannot fall is a budget that
+        # only works once per process.
+        _b = stages.get("S_start", {}).get("rss_mb_current")
+        _g = (stages[name]["rss_mb_current"] - _b
+              if isinstance(_b, float) else None)
+        if _g is not None and _g > budget:
+            raise RunnerRefused(
+                f"REFUSED DAY {day} AT STAGE {name}: this run has GREWN "
+                f"{_g:.0f} MB over its baseline, past the declared budget "
+                f"{budget:.0f} MB. Refused HERE, at the first stage that "
+                f"crossed it, not at the emit -- the cap is never raised "
+                f"and the draw count is never cut (R-174).")
 
     # THE FIXTURE/REAL LOCK, ON THE DAY PATH ITSELF (reviewer §1.4).
     # `--synthetic-day 2026-09-03` used to emit a SEALED artifact stamped
@@ -3055,14 +3166,25 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     peak_pred = peak_stage_predicate(stages,
                                      declared=declared_peak_stage())
     peak_shape = assert_peak_stage(peak_pred, fixture=fixture, day=day)
-    budget = (peak_rss_mb_budget if peak_rss_mb_budget is not None
-              else (FIXTURE_DAY_PEAK_RSS_MB_BUDGET if fixture else
-                    REAL_DAY_PEAK_RSS_GB_CEILING * 1024.0))
-    if peak > budget:
+    # THE BUDGET IS THIS RUN'S GROWTH, NOT THE PROCESS HIGH-WATER, and it
+    # cost the 09-03 smoke 85 minutes. `_peak_rss_mb()` is `ru_maxrss` --
+    # non-decreasing for the life of the PROCESS. A REAL day runs the full
+    # battery at emit (REV 49 S3.4), the battery runs FIXTURE days in the
+    # SAME process, and those fixture days inherited the real day's 2.4 GB
+    # peak and blew a 700 MB fixture budget. The day's own work was
+    # finished; the receipt was never written.
+    _base = stages.get("S_start", {}).get("rss_mb_current")
+    _cur = [v.get("rss_mb_current") for v in stages.values()
+            if isinstance(v.get("rss_mb_current"), float)]
+    growth = ((max(_cur) - _base) if (_cur and isinstance(_base, float))
+              else peak)
+    if growth > budget:
         raise RunnerRefused(
-            f"REFUSED DAY {day}: peak RSS {peak:.0f} MB exceeds the "
-            f"declared budget {budget:.0f} MB. The DAY refuses -- the cap "
-            f"is never raised and the draw count is never cut (R-174).")
+            f"REFUSED DAY {day}: this run GREW {growth:.0f} MB (process "
+            f"peak {peak:.0f} MB over a {_base if _base else 0:.0f} MB "
+            f"baseline), exceeding the declared budget {budget:.0f} MB. "
+            f"The DAY refuses -- the cap is never raised and the draw "
+            f"count is never cut (R-174).")
     scope_mem = scope_memory_observation()
     import os as _os3
     return {
@@ -3103,8 +3225,21 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             "stages": [{"stage": k, "holds": v} for k, v in DAY_STAGES],
             "observed": stages,
             "peak_rss_mb": peak,
+            "baseline_rss_mb": _base,
+            "growth_rss_mb": growth,
             "budget_mb": budget,
-            "within_budget": peak <= budget,
+            "growth_is_process_history_dependent": (
+                "a warm process grows less than a cold one -- the "
+                "allocator already holds what an earlier run took. The "
+                "REAL day runs in a FRESH process, which is the regime the "
+                "4000 MB budget is derived against"),
+            "budget_is_on_GROWTH_not_the_process_peak": (
+                "ru_maxrss never falls, so a fixture day run inside a real "
+                "day's process inherits that day's peak. It cost the 09-03 "
+                "smoke 85 minutes: the day's work finished and the emit-"
+                "time battery refused its own fixture on the real day's "
+                "high-water"),
+            "within_budget": growth <= budget,
             "peak_stage": peak_pred,
             "peak_stage_assertion": peak_shape,
             "index_splits": INDEX_SPLITS_NEEDED_BY_DAY,
@@ -3672,7 +3807,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"fixture run opens {len(_seen)} paths, ZERO of them under "
            f"`data/`. It reads only its own module source and the "
            f"committed parameter file, so it runs from a shell worktree")
-        ok(any(x.endswith("de_multiday_gate1_params_v9.json")
+        ok(any(x.endswith("de_multiday_gate1_params_v10.json")
                for x in _seen),
            "and the instrument is not vacuous -- it DID observe the "
            "parameter file being read, so a zero above is a measurement "
@@ -3953,12 +4088,24 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
             _here = hashlib.sha256(
                 (Path(__file__).resolve().parents[2] / PARAMS_REL
                  ).read_bytes()).hexdigest()
-            _walk["design_pins"] = (_dj.get("parameters") or {}).get("sha256")
-            _walk["closes"] = _walk["design_pins"] == _here
+            _pin = _dj.get("parameters") or {}
+            _walk["design_pins"] = _pin.get("sha256")
+            _walk["design_pins_path"] = _pin.get("path")
+            # PATH **AND** DIGEST. This compared the digest only, so a
+            # design whose pin named params v2 by PATH while its DIGEST was
+            # v9's closed the walk and P3_design passed. The path half had
+            # no control at all.
+            _walk["path_matches"] = (
+                str(_pin.get("path", "")).rsplit("/", 1)[-1]
+                == PARAMS_REL.rsplit("/", 1)[-1])
+            _walk["closes"] = bool(_walk["design_pins"] == _here
+                                   and _walk["path_matches"])
             ok(_walk["closes"] is True,
-               f"AND THE WALK CLOSES: params name the design at "
-               f"{_dpath.name}, and that design pins THIS params file by "
-               f"digest -- params -> design -> params, by path AND digest. "
+               f"AND THE WALK CLOSES ON BOTH HALVES: params name the design "
+               f"at {_dpath.name}; that design's pin names "
+               f"{str(_walk['design_pins_path']).rsplit('/', 1)[-1]} AND "
+               f"hashes to this params file. Comparing the digest alone let "
+               f"design v16 pass with v2's PATH beside v9's DIGEST. "
                f"design v14 named params at v2's PATH with v6's DIGEST, so "
                f"it resolved in neither direction")
         else:
@@ -3968,13 +4115,20 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                f"it is, and the placeholder check above has already run")
 
     # ---- REV 51 S1.5: rule 13's own form must not read as AMBIGUOUS ---
-    def _add_v2(rootp, day, *, chained=True):
+    def _add_v2(rootp, day, *, chained=True, half=None, moved=False):
         der = rootp / "pm_5min/derived"
         compact = [x for x in sorted(day_forms(day)) if "-" not in x][0]
         v1 = sorted(der.glob(sealed_day_receipt_glob(day)))[0]
         rec = json.loads(v1.read_text())
-        rec["supersedes"] = {"sha256": (sha256_streamed(v1) if chained
-                                        else "0" * 64)}
+        _pair = {"path": v1.name,
+                 "sha256": (sha256_streamed(v1) if chained else "0" * 64)}
+        if moved:
+            _pair["path"] = "some_other_name.json"
+        if half == "path":
+            _pair.pop("sha256")
+        elif half == "digest":
+            _pair.pop("path")
+        rec["supersedes"] = _pair
         rec["note"] = "the .v2 correction"
         (der / f"{SEALED_DAY_RECEIPT_PREFIX}{compact}"
                f"{SEALED_DAY_RECEIPT_MIDFIX}20260906T999999Z.json"
@@ -3996,6 +4150,90 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        "OWN FORM -- resolves to the CHAIN HEAD. It returned AMBIGUOUS "
        "before, so the .v2 correction of the 09-03 receipt would have "
        "CLOSED THE GATE on 09-03")
+    # ---- REV 53 S0.3: the fixture check inside a real-day process ---
+    # ~800 MB, enough to pass the 700 MB fixture budget on the
+    # PROCESS-WIDE high-water -- which is the comparison that refused the
+    # smoke. Freed immediately; the cap is 8 GiB and this is transient.
+    _inflate = [bytearray(100 * 1024 * 1024) for _ in range(8)]
+    for _b8 in _inflate:
+        _b8[::4096] = b"\x01" * len(_b8[::4096])
+    _hw_after = _peak_rss_mb()
+    del _inflate
+    _mk3 = write_synthetic_day(
+        "FIXTURE-DAY-1", _tfr.mkdtemp(prefix="de89rev53_"),
+        params=live, n_slugs=12)
+    _post = run_day("FIXTURE-DAY-1", _mk3["book_path"], params=live,
+                    fixture=True)
+    _mp = _post["memory_plan"]
+    ok(_hw_after > FIXTURE_DAY_PEAK_RSS_MB_BUDGET
+       and _mp["growth_rss_mb"] < FIXTURE_DAY_PEAK_RSS_MB_BUDGET
+       and _mp["within_budget"] is True,
+       f"REV 53 S0.3 REPRODUCED AND CLOSED: after inflating the process to "
+       f"{_hw_after:.0f} MB -- past the 700 MB fixture budget -- a FIXTURE "
+       f"day still ADMITS, because the budget is now this run's GROWTH "
+       f"({_mp['growth_rss_mb']:.1f} MB) and not the process-wide "
+       f"high-water. That comparison is exactly what refused the 09-03 "
+       f"smoke after 84 minutes: a seam between two correct decisions")
+    ok(_hw_after > _mp["growth_rss_mb"] + 100,
+       f"and the OLD comparison is shown to have refused: the process-wide "
+       f"high-water is {_hw_after:.0f} MB against a growth of "
+       f"{_mp['growth_rss_mb']:.1f} MB -- same fixture, same budget, "
+       f"opposite verdicts")
+    _cl = source_identity_at_launch()["import_closure"]
+    ok("de_phase4_diag_runner.py" in _cl["modules"]
+       and "harmful_stateful_policy.py" in _cl["modules"]
+       and len(_cl["captured_at"]) == 3,
+       f"REV 53 S1.1: the closure reaches what `load()` and `replay()` "
+       f"import LAZILY -- {_cl['n_modules']} modules including "
+       f"de_phase4_diag_runner and harmful_stateful_policy, which DO THE "
+       f"REPLAYING. It reached the cascade and stopped there, so nine of "
+       f"thirteen were outside it")
+    _v2root = _synth_ledger(_D6)
+    _der2 = _v2root / "pm_5min/derived"
+    _c1 = [x for x in sorted(day_forms(_D6[0])) if "-" not in x][0]
+    _v1p = sorted(_der2.glob(sealed_day_receipt_glob(_D6[0])))[0]
+    _v2rec = json.loads(_v1p.read_text())
+    _v2rec["supersedes"] = {"path": _v1p.name,
+                            "sha256": sha256_streamed(_v1p)}
+    _own = emission_stamp()
+    _v2p = (_der2 / f"{SEALED_DAY_RECEIPT_PREFIX}{_c1}"
+                    f"{SEALED_DAY_RECEIPT_MIDFIX}{_own}.json")
+    _v2p.write_text(json.dumps(_v2rec))
+    _res2 = find_sealed_day_receipt(_D6[0], _v2root)
+    ok(_res2["present"] is True
+       and _res2["status"] == "PRESENT_CHAIN_HEAD"
+       and Path(_res2["path"]).name == _v2p.name
+       and _res2["n_matches"] == 2,
+       f"THE .v2 NAMING TRAP, DRIVEN: the .v2 carries ITS OWN clock stamp "
+       f"({_own}) -- it must, or the clock guard refuses it -- so the "
+       f"day's glob matches TWO files, and its identity as the "
+       f"supersession comes from the {{path, sha256}} LINK, which the "
+       f"chain resolver reduces to ONE head")
+    ok(assert_name_stamp_is_the_clock(
+           _v2p, datetime.datetime.now(
+               datetime.timezone.utc).isoformat())["stamp_is_the_clock"]
+       is True,
+       "and the .v2's OWN stamp passes the clock guard, which is why it "
+       "cannot keep v1's -- the two requirements meet at the LINK, not at "
+       "the filename")
+    # ---- R-608: a link is the PAIR {path, sha256}, both required -----
+    _hp = _synth_ledger(_D6); _add_v2(_hp, _D6[0], half="path")
+    _r_hp = find_sealed_day_receipt(_D6[0], _hp)
+    ok(_r_hp["present"] is False and _r_hp["status"] == "LINK_NOT_A_PAIR",
+       "R-608 KNOWN-BAD, PATH ONLY: a `supersedes` carrying a name and no "
+       "digest is NOT a link. DE resolved links by DIGEST and DA by NAME, "
+       "so on the same bytes exactly one seat refused and nothing declared "
+       "which was right")
+    _hd = _synth_ledger(_D6); _add_v2(_hd, _D6[0], half="digest")
+    ok(find_sealed_day_receipt(_D6[0], _hd)["status"] == "LINK_NOT_A_PAIR",
+       "and DIGEST ONLY is not a link either -- the pair is the link, in "
+       "both directions")
+    _mv = _synth_ledger(_D6); _add_v2(_mv, _D6[0], moved=True)
+    _r_mv = find_sealed_day_receipt(_D6[0], _mv)
+    ok(_r_mv["present"] is False and _r_mv["status"] == "SUPERSEDES_MOVED",
+       "R-608 KNOWN-BAD, MOVED: a matching DIGEST under a DIFFERENT NAME "
+       "refuses as a moved file rather than binding as a link")
+
     _unch = _synth_ledger(_D6)
     _add_v2(_unch, _D6[0], chained=False)
     _f3 = find_sealed_day_receipt(_D6[0], _unch)
@@ -4467,19 +4705,29 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
                "heavy_by_measurement"] is True,
            "and a heavy run that DID hold the lock admits, marked heavy -- the "
            "rule is about the lock, not about being small")
+        # A budget of ZERO, because on a WARM process the second day run
+        # grows only ~0.5 MB -- the allocator already holds what the first
+        # one took. Growth is process-history dependent, so a known-bad
+        # pinned to "1 MB must be crossed" passes or fails on how many
+        # runs came before it. Zero is crossed by any allocation at all.
         refuses(lambda: run_day(_DAY, _made["book_path"], params=_DAYP,
-                                fixture=True, peak_rss_mb_budget=1.0),
-                "AND THE FIXTURE BUDGET BITES: a day run whose peak exceeds "
-                "its DECLARED budget REFUSES rather than reporting a number "
-                "over the line -- the cap is never raised and the draws are "
-                "never cut (R-174)", "exceeds the declared budget")
-        ok(_open["memory_plan"]["peak_rss_mb"]
+                                fixture=True, peak_rss_mb_budget=0.0),
+                "AND THE FIXTURE BUDGET BITES, NOW AT A STAGE: a day run that "
+                "grows past its DECLARED budget REFUSES at the FIRST stage "
+                "that crosses it, not at the emit -- the cap is never raised "
+                "and the draws are never cut (R-174)",
+                "past the declared budget")
+        # GROWTH, not the process peak -- this check compared the
+        # PROCESS-WIDE peak against the budget, which is the retired
+        # comparison itself. It only showed up because this round's own
+        # 800 MB inflation pushed that peak past 700 MB.
+        ok(_open["memory_plan"]["growth_rss_mb"]
            < FIXTURE_DAY_PEAK_RSS_MB_BUDGET
            and _open["memory_plan"]["within_budget"] is True
            and set(_open["memory_plan"]["observed"])
            == {k for k, _ in DAY_STAGES} | {"S_start"},
-           f"and the real fixture run sits at "
-           f"{_open['memory_plan']['peak_rss_mb']:.0f} MB against the declared "
+           f"and the real fixture run GREW "
+           f"{_open['memory_plan']['growth_rss_mb']:.0f} MB against the declared "
            f"{FIXTURE_DAY_PEAK_RSS_MB_BUDGET:.0f} MB, with a high-water "
            f"recorded at each of the {len(DAY_STAGES)} stages PLUS the S_start "
            f"baseline -- without which the first stage's delta is everything "
@@ -5029,6 +5277,44 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            "AND THE POSITIVE CONTROL: with the file restored the emit "
            "admits again -- the guard fires on the change, not on the run")
 
+        # ---- R-608's DECLARATION ACT: the budget and the label ----------
+        ok(REAL_DAY_PEAK_RSS_MB_BUDGET == 4000.0
+           and REAL_DAY_BUDGET_DERIVATION["declared_mb"] == 4000.0
+           and REAL_DAY_BUDGET_DERIVATION["cgroup_cap_mb"] == 8192.0
+           and "not their source" in REAL_DAY_BUDGET_DERIVATION[
+               "why_not_measured_peak_plus_margin_alone"],
+           f"R-608 DECLARATION ACT: the real day's budget is DERIVED -- "
+           f"{REAL_DAY_BUDGET_DERIVATION['declared_mb']:.0f} MB, "
+           f"{REAL_DAY_BUDGET_DERIVATION['fraction_of_cap']:.1%} of the 8192 "
+           f"MB cap, from the cap and BE's measured 2008 MB reference, with "
+           f"the observed 2426 MB peak as a CHECK on them and not their "
+           f"source. Never the cap itself: a budget equal to the cap can only "
+           f"fire once the kernel is already reclaiming")
+        _made2 = write_synthetic_day(
+            "FIXTURE-DAY-1", _tfr.mkdtemp(prefix="de89_"), params=live,
+            n_slugs=24)
+        refuses(lambda: run_day("FIXTURE-DAY-1", _made2["book_path"],
+                                params=live, fixture=True,
+                                peak_rss_mb_budget=0.001),
+                "AND IT FIRES AT THE FIRST STAGE THAT CROSSES IT, not at the "
+                "emit: a budget of 0.001 MB refuses AT A STAGE. The 09-03 run "
+                "was told at 09:46 what was true at 08:22 -- 84 minutes of "
+                "null draws after the fact, because the check ran once, after "
+                "S5", "AT STAGE")
+        _open2 = run_day("FIXTURE-DAY-1", _made2["book_path"], params=live,
+                         fixture=True, n_days_complete=live["G"])
+        ok(_open2["day"] == "FIXTURE-DAY-1"
+           and _open2["memory_plan"]["budget_mb"]
+           == FIXTURE_DAY_PEAK_RSS_MB_BUDGET,
+           f"and the DAY LABEL IS THE ARGUMENT and the budget follows the "
+           f"fixture flag: {_open2['day']} against "
+           f"{_open2['memory_plan']['budget_mb']:.0f} MB. THE 09-03 REFUSAL "
+           f"WAS NOT A MISLABELLED REAL DAY -- it was the emit-time battery's "
+           f"OWN synthetic day, correctly labelled and correctly given the "
+           f"fixture budget, judged against a PROCESS-WIDE high-water the real "
+           f"day had already driven to 2426 MB")
+
+
         # ---- DE 82 (1): the scope's anon and file, read APART ------------
         _sm = scope_memory_observation()
         ok(_sm["status"] in ("MEASURED", "AMBIENT_SCOPE_NOT_THE_RUNS_OWN",
@@ -5398,6 +5684,10 @@ def main() -> int:
         if a.output is not None:
             if a.output.exists():
                 raise RunnerRefused(f"output already exists: {a.output}")
+            # REV 53 S1.4: the --ledger path was the one emit that could
+            # still carry a typed stamp.
+            payload["name_stamp"] = assert_name_stamp_is_the_clock(
+                a.output, payload["as_of"])
             a.output.parent.mkdir(parents=True, exist_ok=True)
             a.output.write_text(
                 json.dumps(payload, indent=2, sort_keys=True) + "\n")

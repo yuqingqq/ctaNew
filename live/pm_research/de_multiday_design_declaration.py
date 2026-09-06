@@ -45,7 +45,7 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: agree.
 VERSION = 16
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 91
+EXPECTED_CHECKS = 94
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -393,6 +393,47 @@ def seed_from_convention(day_book_sha256: str, arm: str,
     return int(digest[:c["hex_truncation_chars"]], c["int_base"])
 
 
+def verify_params_pin(pin: dict, root: Path | None = None) -> dict:
+    """THE PIN WALKED BOTH WAYS -- path AND digest.
+
+    The digest alone had no control on the path: a block whose `path` named
+    params v2 while its `sha256` was v9's passed every check there was. Both
+    halves must name the SAME file, and the file must exist."""
+    base = Path(root) if root is not None else Path(
+        __file__).resolve().parents[2]
+    p = base / str(pin.get("path", ""))
+    problems = []
+    if not str(pin.get("path", "")):
+        problems.append("the pin carries no path")
+    elif not p.is_file():
+        problems.append(f"the path it names does not exist: {p}")
+    else:
+        got = hashlib.sha256(p.read_bytes()).hexdigest()
+        if got != pin.get("sha256"):
+            problems.append(
+                f"PATH AND DIGEST NAME DIFFERENT FILES: the path "
+                f"{pin['path']} hashes to {got[:16]} and the pin's sha256 "
+                f"is {str(pin.get('sha256'))[:16]}")
+        doc = json.loads(p.read_text())
+        if pin.get("version") not in (None, doc.get("version")):
+            problems.append(
+                f"the pin says version {pin.get('version')} and the file "
+                f"says {doc.get('version')}")
+        sup = (doc.get("supersedes") or {}).get("path")
+        if pin.get("supersedes") not in (None, sup):
+            problems.append(
+                f"the pin's supersedes {pin.get('supersedes')} is not the "
+                f"file's own {sup}")
+    if problems:
+        raise DesignRefused(
+            f"REFUSED: the params pin does not resolve: {problems}. A pin "
+            f"whose halves name different files is not a pin -- and the "
+            f"chain check compared the DIGEST ONLY, so the path half had "
+            f"no control at all.")
+    return {"resolves": True, "path": pin["path"], "sha256": pin["sha256"],
+            "walked": "path AND digest, both ways"}
+
+
 def verify_declaration_chain(root: Path | None = None,
                              chain=None) -> dict:
     """Every chain entry's digest READ from the file, never trusted typed.
@@ -437,13 +478,65 @@ MEASURED_CADENCE_S = {"fragment": 608.4, "tape_index": 1471.6,
 SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 
 
+#: The params file this design pins. ONE name, and everything in the pin
+#: block is derived from it.
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v10.json"
+
+
+def _params_path() -> Path:
+    return Path(__file__).resolve().parents[2] / PARAMS_REL
+
+
 def _params_digest() -> str:
     """The params file's digest, READ at emission -- the design is emitted
     last, so the params are already final and can be pinned here."""
-    p = (Path(__file__).resolve().parents[2]
-         / "live/pm_research/declarations/de_multiday_gate1_params_v9.json")
+    p = _params_path()
     return (hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file()
             else "ABSENT")
+
+
+def params_pin_block() -> dict:
+    """THE PIN, COMPUTED FROM THE FILE IT PINS -- every field of it.
+
+    THE DEFECT THIS CLOSES. The block carried `path`, `supersedes` and a
+    `what_v2_changed` prose list FROZEN AT PARAMS v2, beside a `sha256`
+    computed from whatever `PARAMS_REL` names -- v9 by then. Path,
+    supersedes and prose named one file; the digest named another. And the
+    chain check compared the DIGEST ONLY, so the path half had no control
+    and `P3_design` passed on a pin that was internally inconsistent.
+
+    A pin whose halves can name different files is not a pin. Nothing here
+    is carried forward as prose: the path is the file, the digest is its
+    bytes, and the supersession notes are read from that file's OWN
+    `supersedes` block."""
+    p = _params_path()
+    if not p.is_file():
+        return {"path": PARAMS_REL, "sha256": "ABSENT",
+                "status": "PARAMS_FILE_ABSENT"}
+    doc = json.loads(p.read_text())
+    sup = doc.get("supersedes") or {}
+    return {
+        "path": PARAMS_REL,
+        "sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
+        "version": doc.get("version"),
+        "protocol": doc.get("protocol"),
+        "supersedes": sup.get("path"),
+        "supersedes_sha256": sup.get("sha256"),
+        "what_changed": sup.get("fields_changed"),
+        "pin_direction": "design -> params (flipped at v14)",
+        "every_field_here_is_READ_from_the_file_it_pins": True,
+        "why_flipped": (
+            "each digest cannot depend on the other. Pinning "
+            "params -> design cost a params version per design bump for a "
+            "pointer alone; pinning design -> params costs nothing, "
+            "because the design is emitted after the code and the params "
+            "are already final"),
+        "why_computed": (
+            "the block carried v2's path, v2's supersedes and v2's prose "
+            "beside v9's DIGEST -- three fields naming one file and one "
+            "naming another -- and the chain check compared the digest "
+            "only, so the path half had no control and P3_design passed"),
+    }
 
 
 def serial_schedule(smoke_wall_s=None, days=None) -> dict:
@@ -1281,35 +1374,7 @@ def declaration() -> dict:
                                 "detectable and does not detect it",
         },
         "R7_the_day_set": day_sets_from_the_ledger(),
-        "parameters": {
-            "path": "live/pm_research/declarations/"
-                    "de_multiday_gate1_params_v2.json",
-            "supersedes": "live/pm_research/declarations/"
-                          "de_multiday_gate1_params_v1.json",
-            # THE PIN DIRECTION, FLIPPED at design v14. params cited the
-            # design BY DIGEST, so every design bump forced a params
-            # version whose only change was a pointer -- twice, and a
-            # third was due this round. The design is emitted LAST (it
-            # needs the code committed for its carrying_commit), so the
-            # DESIGN pins the params and the params names the design by
-            # path. One direction, no churn, and the senior document
-            # holds the pin.
-            "sha256": _params_digest(),
-            "pin_direction": "design -> params (flipped at v14)",
-            "why_flipped": (
-                "each digest cannot depend on the other. Pinning "
-                "params -> design cost a params version per design bump "
-                "for a pointer alone; pinning design -> params costs "
-                "nothing, because the design is emitted after the code "
-                "and the params are already final"),
-            "what_v2_changed": [
-                "run_not_before_utc split into read_not_before_utc + "
-                "day_runs_allowed_for_closed_qualifying_days (R-572(B)(2))",
-                "BE's cascade digest re-pointed at ab75b41, justified by a "
-                "COMPUTED per-definition diff rather than by BE's commit "
-                "message -- see params v2 `be_module_repoint`",
-            ],
-        },
+        "parameters": params_pin_block(),
         "R9_timing": TIMING_RULE,
         "R11_memory_and_index_residency": {
             "why": "R-573: BE's 09-03 build reached 6.4 GB of the 8 GB cap "
@@ -2709,13 +2774,44 @@ def selftest(*, quiet: bool = False) -> int:
 
     import hashlib as _h4
     _pp = (Path(__file__).resolve().parents[2] / "live/pm_research/"
-           "declarations/de_multiday_gate1_params_v9.json")
+           "declarations/de_multiday_gate1_params_v10.json")
     ok(d["parameters"]["sha256"] == _h4.sha256(_pp.read_bytes()).hexdigest()
        and d["parameters"]["pin_direction"].startswith("design -> params"),
        "THE PIN DIRECTION IS FLIPPED AND THE PIN IS REAL: the design pins "
        "the params file by a digest READ at emission. params -> design "
        "cost a params version per design bump for a pointer alone, twice, "
        "and a third was due this round")
+
+    _pin = d["parameters"]
+    ok(verify_params_pin(_pin)["resolves"] is True
+       and _pin["every_field_here_is_READ_from_the_file_it_pins"] is True
+       and _pin["path"].endswith(PARAMS_REL.rsplit("/", 1)[1]),
+       f"THE PARAMS PIN RESOLVES BOTH WAYS: path {_pin['path'].rsplit('/')[-1]} "
+       f"and digest {_pin['sha256'][:16]} name the SAME file, and every "
+       f"field of the block is READ from it")
+    _bad_pin = dict(_pin)
+    _bad_pin["path"] = ("live/pm_research/declarations/"
+                        "de_multiday_gate1_params_v2.json")
+    try:
+        verify_params_pin(_bad_pin)
+        ok(False, "a pin naming v2 with v9's digest was ADMITTED")
+    except DesignRefused as _e:
+        ok("PATH AND DIGEST NAME DIFFERENT FILES" in str(_e)
+           and "params_v2" in str(_e),
+           "KNOWN-BAD, AND IT IS design v16's OWN BLOCK: `path` naming "
+           "params v2 while `sha256` is v9's REFUSES, naming both. v16 "
+           "shipped exactly that -- v2's path, v2's supersedes and v2's "
+           "prose beside v9's digest -- and passed, because the chain "
+           "check compared the digest ONLY")
+    _bad2 = dict(_pin); _bad2["supersedes"] = "nowhere.json"
+    try:
+        verify_params_pin(_bad2)
+        ok(False, "a pin whose supersedes disagrees was ADMITTED")
+    except DesignRefused as _e:
+        ok("is not the file's own" in str(_e),
+           "and a pin whose `supersedes` is not the file's OWN refuses too "
+           "-- the field was prose carried forward from v2 for seven "
+           "versions")
 
     _r22 = d["R22_the_launch_capture_is_the_IMPORT_CLOSURE"]
     _live_closure = set(
