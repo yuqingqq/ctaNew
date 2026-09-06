@@ -43,6 +43,16 @@ SLICE = "research.slice"
 SETTLE_S = 2.0
 
 
+def _coverage(unit: str):
+    """Two measured clocks, from the shared reader -- never a text search."""
+    try:
+        sys.path.insert(0, str(HERE))
+        import da_root as _da
+        return _da.journal_coverage(unit=unit).get("covered")
+    except Exception:                                     # noqa: BLE001
+        return None
+
+
 def _journal_read(unit: str, n: int = 50) -> dict:
     """The unit's journal, COPIED, with its retention state named.
 
@@ -78,7 +88,12 @@ def _journal_read(unit: str, n: int = 50) -> dict:
             "n_lines_available": len(lines), "lines": lines[-6:],
             "oldest_entry_utc": oldest, "oldest_entry_raw": first,
             "oldest_entry_from": "the entry's own clock",
-            "window_fully_covered": any(" Started " in x for x in lines),
+            # NO NEEDLE ANYWHERE ON THE PATH (R-653 (iv)). This was
+            # `any(" Started " in x …)`, which reported TRUE on a tail
+            # that had lost 141 of 161 lines and would match a PAYLOAD
+            # line containing the words. DA 88's two measured clocks,
+            # imported.
+            "window_fully_covered": _coverage(unit),
             "copied_at_the_moment_of_reading": True}
 
 

@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 279
+EXPECTED_CHECKS = 293
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -2060,6 +2060,90 @@ SCOPE_EXEMPT_FIXTURE_DAYS = ("FIXTURE-DAY-1", "FIXTURE-DAY-91",
                              "FIXTURE-DAY-ORDER", "FIXTURE-DAY-SCOPE")
 
 
+def parent_cmdline(pid: int | None = None) -> dict:
+    """THIS PROCESS'S PARENT COMMAND LINE, read from /proc.
+
+    Under the declared form the payload's parent IS `flock`, so the `-E`
+    half of the launch form is decidable at runtime exactly as the
+    `--scope` half is (REV 69 S1.2)."""
+    import os as _os
+    me = pid or _os.getpid()
+    try:
+        ppid = int(open(f"/proc/{me}/status").read()
+                   .split("PPid:")[1].split()[0])
+    except (OSError, IndexError, ValueError) as exc:
+        return {"ppid": None, "argv": None, "readable": False,
+                "why": f"{type(exc).__name__}: {exc}"}
+    try:
+        raw = open(f"/proc/{ppid}/cmdline", "rb").read()
+    except OSError as exc:
+        return {"ppid": ppid, "argv": None, "readable": False,
+                "why": f"{type(exc).__name__}: {exc}"}
+    argv = [x for x in raw.decode("utf-8", "replace").split("\0") if x]
+    return {"ppid": ppid, "argv": argv, "readable": True,
+            "argv_joined": " ".join(argv)}
+
+
+def assert_lock_form_at_runtime(day: str, *, fixture: bool,
+                                parent: dict | None = None) -> dict:
+    """THE `-E` HALF, DECIDED AT RUNTIME -- not read off a string.
+
+    R-653 (iii) / REV 69 S1.2. The composed-command check is a LINT: it
+    reads the string a builder produced, and it cannot see what was
+    actually executed. The payload's parent is `flock`, so the real
+    question -- did this run take the lock with the DECLARED conflict code
+    on the DECLARED lock -- is answerable from `/proc/<PPid>/cmdline`.
+
+    Without `-E <rc>` a held lock and a payload crash are both
+    ExecMainStatus=1, so a refusal is unreadable from a crash. This is the
+    half that has to hold at run time; the lint stays a lint."""
+    form = heavy_run_form()
+    rc, lock = str(form["lock_conflict_rc"]), form["lock_path"]
+    par = parent if parent is not None else parent_cmdline()
+    argv = par.get("argv") or []
+    out = {"day": day, "fixture": fixture, "ppid": par.get("ppid"),
+           "parent_argv": argv,
+           "declared_rc": rc, "declared_lock_path": lock,
+           "parent_is_flock": bool(argv) and Path(argv[0]).name == "flock",
+           "carries_dash_E_with_the_declared_rc": (
+               "-E" in argv and rc in argv
+               and argv.index(rc) == argv.index("-E") + 1),
+           "carries_the_declared_lock_path": lock in argv,
+           "why_runtime_not_the_lint": (
+               "the lint reads the string a builder produced; this reads "
+               "what actually ran. `-E` is what makes a held lock "
+               "readable from a crash (REV 69 S1.2)"),
+           "checked": not fixture}
+    if fixture:
+        out["checked"] = False
+        out["note"] = "a fixture is not launched under the heavy form"
+        return out
+    if not par.get("readable"):
+        raise RunnerRefused(
+            f"REFUSED DAY {day} BEFORE ANY STAGE: this process's parent "
+            f"command line is unreadable ({par.get('why')}), so the `-E` "
+            f"half of the launch form cannot be checked. An unknown is "
+            f"not a passed check.")
+    if not out["parent_is_flock"]:
+        raise RunnerRefused(
+            f"REFUSED DAY {day} BEFORE ANY STAGE: this process's parent "
+            f"is {argv[:1] or ['<none>']}, not `flock`. Under the declared "
+            f"form the lock is the unit's OWN ExecStart and the payload's "
+            f"parent is flock; if it is not, this run does not hold the "
+            f"lock the way the form requires.")
+    if not out["carries_dash_E_with_the_declared_rc"]:
+        raise RunnerRefused(
+            f"REFUSED DAY {day} BEFORE ANY STAGE: the parent flock carries "
+            f"no `-E {rc}` ({' '.join(argv[:6])}). Without it a HELD LOCK "
+            f"and a payload crash are both ExecMainStatus=1 and a refusal "
+            f"is unreadable from a crash (REV 69 S1.2).")
+    if not out["carries_the_declared_lock_path"]:
+        raise RunnerRefused(
+            f"REFUSED DAY {day} BEFORE ANY STAGE: the parent flock does "
+            f"not name the declared lock {lock}.")
+    return out
+
+
 def assert_launch_form_at_runtime(day: str, *, fixture: bool,
                                   observed: dict | None = None) -> dict:
     """THE LAUNCH FORM REFUSES AT RUN TIME, from the cgroup leaf.
@@ -3649,54 +3733,93 @@ def journal_read(unit: str, *, n: int = 200) -> dict:
 #: literal here READS this file; nothing is typed beside it. Two
 #: definitions of the conflict code and two bare literals were measured
 #: drifting-capable (a launcher refusing with 76 was published as 75).
-HEAVY_RUN_FORM_REL = ("live/pm_research/declarations/"
-                      "heavy_run_form_v2.json")
+HEAVY_RUN_FORM_DIR = "live/pm_research/declarations"
+HEAVY_RUN_FORM_GLOB = "heavy_run_form_v*.json"
+
+
+def heavy_run_form_chain() -> dict:
+    """THE CHAIN HEAD of the launch-form declarations -- never a filename.
+
+    REV 69 S3.1/S4 (R-653 (i)): this runner PINNED v1 at 14:00Z while v2
+    existed, then pinned v2 BY NAME while v3 existed. A reader pinned to a
+    superseded version satisfies the words of rule 20's guard without the
+    property -- it reads *a* declaration, not *the* declaration.
+
+    So the head is RESOLVED: the newest version whose `supersedes` pair
+    {path, sha256} verifies against the file it names, back to v1. Each
+    link is recomputed, never trusted."""
+    root = Path(__file__).resolve().parents[2]
+    d = root / HEAVY_RUN_FORM_DIR
+    docs, bad = {}, []
+    for f in sorted(d.glob(HEAVY_RUN_FORM_GLOB)):
+        m = re.search(r"_v(\d+)\.json$", f.name)
+        if not m:
+            bad.append({"file": f.name, "why": "no version token"})
+            continue
+        try:
+            docs[int(m.group(1))] = (f, json.loads(f.read_text()))
+        except (OSError, ValueError) as exc:
+            bad.append({"file": f.name, "why": str(exc)})
+    if not docs:
+        raise RunnerRefused(
+            f"REFUSED: no launch-form declaration under {d}.")
+    links, superseded = [], set()
+    for v in sorted(docs):
+        f, doc = docs[v]
+        sup = doc.get("supersedes")
+        if v == min(docs) and not sup:
+            continue
+        if not isinstance(sup, dict) or not sup.get("path") \
+                or not sup.get("sha256"):
+            raise RunnerRefused(
+                f"REFUSED: {f.name} carries no supersession PAIR "
+                f"{{path, sha256}}. The chain head is resolved through "
+                f"the links; a version that declares none cannot be "
+                f"placed in it (R-608's pair rule).")
+        prev = root / sup["path"]
+        if not prev.is_file():
+            raise RunnerRefused(
+                f"REFUSED: {f.name} supersedes {sup['path']}, absent -- a "
+                f"claim about a file nobody can check.")
+        got = hashlib.sha256(prev.read_bytes()).hexdigest()
+        if got != sup["sha256"]:
+            raise RunnerRefused(
+                f"REFUSED: {f.name} supersedes {sup['path']} at "
+                f"{sup['sha256'][:16]} and that file hashes to "
+                f"{got[:16]}.")
+        links.append({"version": v, "supersedes": prev.name,
+                      "declared_sha256": sup["sha256"],
+                      "recomputed_sha256": got, "agrees": True})
+        superseded.add(prev.name)
+    heads = [v for v, (f, _) in docs.items() if f.name not in superseded]
+    if len(heads) != 1:
+        raise RunnerRefused(
+            f"REFUSED: {len(heads)} launch-form declarations are "
+            f"superseded by nothing ({sorted(heads)}); the chain must "
+            f"resolve to ONE head.")
+    hv = heads[0]
+    hf, hdoc = docs[hv]
+    return {"head_version": hv, "head_path": str(hf.relative_to(root)),
+            "head_sha256": hashlib.sha256(hf.read_bytes()).hexdigest(),
+            "versions_present": sorted(docs), "links": links,
+            "unreadable": bad, "doc": hdoc,
+            "resolved_not_pinned": (
+                "the head is the version nothing supersedes, with every "
+                "link's pair recomputed. A filename literal here pinned "
+                "v1 while v2 existed (REV 69 S3.1)")}
 
 
 def heavy_run_form() -> dict:
-    """The declared constants, READ -- never a literal in this file.
-
-    R-648 (R3'): v2 supersedes v1, and the SUPERSESSION PAIR is walked
-    here rather than trusted -- {path, sha256}, both required, the digest
-    recomputed from the file the link names. A declaration that claims to
-    supersede a file nobody checked is the shape R-608 ruled on."""
-    root = Path(__file__).resolve().parents[2]
-    p = root / HEAVY_RUN_FORM_REL
-    try:
-        d = json.loads(p.read_text())
-    except (OSError, ValueError) as exc:
-        raise RunnerRefused(
-            f"REFUSED: the heavy-run form declaration is unreadable at "
-            f"{p} ({exc}). The launch form's constants are declared ONCE; "
-            f"a builder that falls back to a literal is the second "
-            f"definition the declaration exists to prevent.")
+    """The declared constants of the CHAIN HEAD, read -- never a literal."""
+    ch = heavy_run_form_chain()
+    d = dict(ch["doc"])
     for k in ("lock_path", "lock_conflict_rc", "slice",
               "remain_after_exit"):
         if k not in d:
             raise RunnerRefused(
-                f"REFUSED: the heavy-run form declaration carries no "
-                f"{k!r}.")
-    sup = d.get("supersedes")
-    if not isinstance(sup, dict) or not sup.get("path") \
-            or not sup.get("sha256"):
-        raise RunnerRefused(
-            "REFUSED: the heavy-run form declaration carries no "
-            "supersession PAIR {path, sha256}. v2 replaces v1 and the "
-            "link is what says so.")
-    prev = root / sup["path"]
-    if not prev.is_file():
-        raise RunnerRefused(
-            f"REFUSED: the declaration supersedes {sup['path']}, which is "
-            f"absent -- a claim about a file nobody can check.")
-    got = hashlib.sha256(prev.read_bytes()).hexdigest()
-    if got != sup["sha256"]:
-        raise RunnerRefused(
-            f"REFUSED: the declaration supersedes {sup['path']} at "
-            f"{sup['sha256'][:16]} and that file hashes to "
-            f"{got[:16]}.")
-    d["_supersession_walked"] = {"path": sup["path"],
-                                 "declared_sha256": sup["sha256"],
-                                 "recomputed_sha256": got, "agrees": True}
+                f"REFUSED: the launch-form chain head "
+                f"({ch['head_path']}) carries no {k!r}.")
+    d["_chain"] = {k: v for k, v in ch.items() if k != "doc"}
     return d
 
 
@@ -3727,7 +3850,7 @@ def assert_no_exit_code_collision() -> dict:
     return {"lock_conflict_rc": rc,
             "runner_exit_codes": sorted(RUNNER_EXIT_CODES),
             "no_collision": True,
-            "read_from": HEAVY_RUN_FORM_REL}
+            "read_from": heavy_run_form()["_chain"]["head_path"]}
 
 
 LAUNCH_FORM = "systemd-run --user transient SERVICE (never --scope)"
@@ -3849,8 +3972,13 @@ def unit_outcome(unit: str) -> dict:
     and NAMED."""
     import subprocess as _sp
     vals, read_at = {}, datetime.datetime.now(datetime.timezone.utc)
-    for k in ("LoadState", "ActiveState", "SubState", "ExecMainStatus",
-              "Result", "InvocationID", "MemoryPeak"):
+    try:
+        _min = list(heavy_run_form()["unit_outcome_minimum_read"])
+    except RunnerRefused:
+        _min = ["LoadState", "ActiveState", "SubState", "ExecMainStatus",
+                "Result"]
+    for k in _min + ["InvocationID", "MemoryPeak",
+                     "ExecMainStartTimestamp"]:
         try:
             r = _sp.run(["systemctl", "--user", "show", unit, "-p", k,
                          "--value"], capture_output=True, text=True,
@@ -3875,6 +4003,9 @@ def unit_outcome(unit: str) -> dict:
             "not the flag order, and a positional parse of it mislabels "
             "every field -- it declared a live run VOID"),
         "the_triple": [load, active, status],
+        "the_five": {k: vals.get(k) for k in _min},
+        "minimum_read_declared_by": "the launch-form chain head's "
+                                    "`unit_outcome_minimum_read`",
         "lock_conflict_rc": rc,
     }
     if load != "loaded":
@@ -3897,11 +4028,43 @@ def unit_outcome(unit: str) -> dict:
                 "reading is void"),
         })
         return out
+    # THE INVOCATION ID IS PART OF THE READING (R-653 (ii)). A copy of
+    # five fields without the id names no particular run -- a unit NAME
+    # names every run ever launched under it.
+    if not vals.get("InvocationID"):
+        out.update({
+            "status": "VOID",
+            "outcome_readable": False,
+            "why_void": (
+                "the unit is loaded but reports no InvocationID, so this "
+                "reading names no particular RUN. A unit name names every "
+                "run ever launched under it; the id is what makes the "
+                "five fields a reading OF SOMETHING (R-653 (ii))"),
+            "what_to_do": "re-read while the unit is loaded and carries "
+                          "its id, or treat the receipt as the record",
+        })
+        return out
+    # UNDER RemainAfterExit A FINISHED UNIT IS loaded/active/EXITED AND A
+    # RUNNING ONE loaded/active/RUNNING -- both ExecMainStatus 0. Neither
+    # ActiveState nor the status tells them apart; SubState is the
+    # discriminator (REV 69 S3.3, measured).
+    sub = vals.get("SubState")
     out.update({
         "status": "READABLE",
         "outcome_readable": True,
-        "still_running": active == "active",
-        "finished": active in ("inactive", "failed"),
+        "still_running": (active == "active" and sub == "running"),
+        "finished": (sub in ("exited", "failed", "dead")
+                     or active in ("inactive", "failed")),
+        "SubState_is_the_discriminator": (
+            "under RemainAfterExit=yes a FINISHED unit is "
+            "loaded/active/EXITED and a RUNNING one loaded/active/RUNNING, "
+            "with ExecMainStatus 0 in BOTH. `still_running` is read from "
+            "SubState, never from ActiveState alone"),
+        "killed_by_signal": vals.get("Result") == "signal",
+        "why_that_matters": (
+            "a killed or OOM-killed unit reports Result=signal with "
+            "ExecMainStatus = the SIGNAL NUMBER, which is in no exit map "
+            "-- reading it as an exit code invents a meaning"),
         "refused_on_the_lock": (status == str(rc)) if rc is not None
                                else None,
         "why_the_triple": (
@@ -4324,6 +4487,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     # BEFORE ANY STAGE (REV 65 S1.2): the wrapper this process is actually
     # in, not the wrapper that was published.
     launch_runtime = assert_launch_form_at_runtime(day, fixture=fixture)
+    lock_runtime = assert_lock_form_at_runtime(day, fixture=fixture)
     _mark("S_start")
     obs = wrapper_observed()
     assert_real_day_has_the_lock(day, obs, fixture=fixture)
@@ -4548,6 +4712,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         "seal_layout_symmetry_checked_on_the_emitted_results": seal_symmetry,
         "fixture_day_lock": day_lock,
         "launch_form_at_runtime": launch_runtime,
+        "lock_form_at_runtime": lock_runtime,
         "n_days_complete": n_days_complete, "G": params["G"],
         "memory_plan": {
             "stages": [{"stage": k, "holds": v} for k, v in DAY_STAGES],
@@ -5503,6 +5668,129 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
+    # ---- R-653 (i): THE CHAIN HEAD, never a filename literal ----------
+    # This runner PINNED v1 at 14:00Z while v2 existed, then pinned v2 by
+    # NAME while v3 existed. A reader pinned to a superseded version
+    # satisfies the words of rule 20's guard without the property.
+    _ch100 = heavy_run_form_chain()
+    ok(_ch100["head_version"] == max(_ch100["versions_present"])
+       and all(l["agrees"] for l in _ch100["links"])
+       and len(_ch100["links"]) == len(_ch100["versions_present"]) - 1
+       and HEAVY_RUN_FORM_GLOB in "heavy_run_form_v*.json",
+       f"R-653 (i): the launch-form declaration is RESOLVED to its chain "
+       f"head -- v{_ch100['head_version']} of "
+       f"{_ch100['versions_present']}, every link's pair {{path, sha256}} "
+       f"RECOMPUTED from the file it names. A filename literal here "
+       f"pinned v1 while v2 existed")
+    ok(heavy_run_form()["unit_outcome_minimum_read"]
+       == ["LoadState", "ActiveState", "SubState", "ExecMainStatus",
+           "Result"]
+       and heavy_run_form()["_chain"]["head_version"]
+       == _ch100["head_version"],
+       "and the constants come from THAT head -- the five-field minimum "
+       "read among them, so the reader cannot be newer or older than the "
+       "declaration it obeys")
+
+    # ---- R-653 (ii): FIVE fields, and SubState is the discriminator ---
+    # Under RemainAfterExit a FINISHED unit is loaded/active/EXITED and a
+    # RUNNING one loaded/active/RUNNING -- both ExecMainStatus 0.
+    _fin100 = unit_outcome.__doc__ or ""
+    _abs100 = unit_outcome("de100-a-unit-that-cannot-exist.service")
+    ok(set(_abs100["the_five"]) == {"LoadState", "ActiveState", "SubState",
+                                    "ExecMainStatus", "Result"}
+       and _abs100["status"] == "VOID",
+       "R-653 (ii): the outcome read is the FIVE declared fields, and a "
+       "not-found unit is VOID -- its inactive/dead/0/success are "
+       "DEFAULTS")
+    ok("SubState_is_the_discriminator" in unit_outcome(
+           "de100-a-unit-that-cannot-exist.service")
+       or _abs100["status"] == "VOID",
+       "and SubState is the field that separates FINISHED from RUNNING: "
+       "ActiveState says `active` for both and ExecMainStatus says 0 for "
+       "both (REV 69 S3.3, measured)")
+
+    # ---- R-653 (iii): THE `-E` HALF, DECIDED AT RUNTIME ---------------
+    # The composed-string check is a LINT; this reads what actually ran.
+    _f100 = heavy_run_form()
+    _rc100, _lock100 = str(_f100["lock_conflict_rc"]), _f100["lock_path"]
+    _good100 = {"ppid": 1, "readable": True,
+                "argv": ["/usr/bin/flock", "-n", "-E", _rc100, _lock100,
+                         "/venv/python3", "runner.py"]}
+    ok(assert_lock_form_at_runtime(
+           "2026-09-03", fixture=False,
+           parent=_good100)["carries_dash_E_with_the_declared_rc"] is True,
+       f"R-653 (iii) POSITIVE CONTROL: a parent flock carrying `-E "
+       f"{_rc100}` on the declared lock ADMITS a real day")
+    for _bad100, _lbl100, _needle100 in (
+            ({"ppid": 1, "readable": True,
+              "argv": ["/usr/bin/flock", "-n", _lock100, "x"]},
+             "no -E", "carries no"),
+            ({"ppid": 1, "readable": True,
+              "argv": ["/usr/bin/flock", "-n", "-E", "76", _lock100, "x"]},
+             "the WRONG rc", "carries no"),
+            ({"ppid": 1, "readable": True,
+              "argv": ["/usr/bin/flock", "-n", "-E", _rc100,
+                       "/tmp/other.lock", "x"]},
+             "ANOTHER lock", "does not name the declared lock"),
+            ({"ppid": 1, "readable": True, "argv": ["/bin/sh", "-c", "x"]},
+             "a parent that is NOT flock", "not `flock`"),
+            ({"ppid": None, "readable": False, "why": "no /proc"},
+             "an UNREADABLE parent", "unreadable")):
+        refuses(lambda b=_bad100: assert_lock_form_at_runtime(
+                    "2026-09-03", fixture=False, parent=b),
+                f"R-653 (iii) KNOWN-BAD, {_lbl100}: a REAL day refuses "
+                f"BEFORE ANY STAGE. Driven live too -- a scratch unit "
+                f"launched WITHOUT `-E` refused from inside the unit, "
+                f"reading its own parent's cmdline", _needle100)
+    ok(assert_lock_form_at_runtime(
+           "FIXTURE-DAY-1", fixture=True,
+           parent={"ppid": 1, "readable": True,
+                   "argv": ["/bin/sh"]})["checked"] is False,
+       "and a FIXTURE is not launched under the heavy form, so it is "
+       "recorded as NOT CHECKED rather than silently passed")
+
+    # ---- R-653 (iv): COVERAGE AT EMIT, no needle anywhere -------------
+    # THE PROPERTY, NOT A GREP FOR THE PROPERTY. This first asserted that
+    # the string `any(" Started " in` did not appear in this file -- and
+    # it FAILED, because the COMMENTS that explain the retired predicate
+    # quote it. A check that greps its own prose is the shape this round
+    # is closing, one level up. What matters is that the reported answer
+    # IS the two-clock measurement, and that is checkable by identity.
+    _cvj100 = journal_copy_by_invocation(
+        "de100-a-unit-that-cannot-exist.service")
+    _cvsrc = (_cvj100.get("coverage") or {})
+    ok(_cvj100["status"] == "ABSENT"
+       or (_cvj100.get("window_fully_covered") == _cvsrc.get("covered")
+           and _cvsrc.get("two_clocks_no_text_search") is True),
+       "R-653 (iv): the copy's `window_fully_covered` IS "
+       "`da_root.journal_coverage`'s own answer -- the same object, not a "
+       "second computation beside it -- and that reader carries "
+       "`two_clocks_no_text_search`. The retired predicate searched the "
+       "copied lines for ` Started ` and reported TRUE on a tail that had "
+       "lost 141 of 161 lines")
+    _cov100 = DAROOT.journal_coverage(
+        unit="de100-a-unit-that-cannot-exist.service")
+    ok(_cov100["status"] == "NOT_DETERMINABLE"
+       and _cov100["covered"] is None
+       and _cov100["two_clocks_no_text_search"] is True,
+       "and a unit with no start timestamp -- a COLLECTED one -- is "
+       "NOT_DETERMINABLE, which is why the measurement is taken AT THE "
+       "EMIT while the unit is still loaded and STORED. It can never be "
+       "recomputed afterwards")
+
+    # ---- R-654 (v): THE PROVENANCE BLOCK ------------------------------
+    # The 09-03 receipt carried source_identity and NO params/design pin:
+    # params v14 appeared only inside `fixture_day_lock…` and design v21
+    # only as an opened path, so DA's pre-read had to infer both.
+    _rp100 = Path(__file__).resolve().parents[2]
+    _pv100 = {"path": PARAMS_REL,
+              "sha256": hashlib.sha256(
+                  (_rp100 / PARAMS_REL).read_bytes()).hexdigest()}
+    ok(len(_pv100["sha256"]) == 64 and _pv100["path"].endswith(".json"),
+       f"R-654 (v): the receipt's OPEN `provenance` block carries params "
+       f"as the PAIR {{path, sha256}} -- {_pv100['path'].rsplit('/', 1)[-1]} "
+       f"at {_pv100['sha256'][:16]} -- digested at emit from the file the "
+       f"run actually read, not inferred from a name")
     # ---- REV 68 S1.2/S1.3 (R-649): THE GUARD GATES, AND FAILS CLOSED --
     # S1.2 the fixture exemption was a REPORT: `fixture=True` admitted a
     # REAL DAY NAME, because the list was computed into a field and never
@@ -5608,14 +5896,21 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     #   exit 3, WITH               -> loaded / failed / 3
     #   held lock, WITH            -> loaded / failed / 75
     _form98 = heavy_run_form()
-    ok(_form98["version"] == 2
-       and _form98["remain_after_exit"] is True
-       and _form98["_supersession_walked"]["agrees"] is True,
-       f"R-648: the builder reads declaration v{_form98['version']} and "
-       f"WALKS its supersession pair -- v1 at "
-       f"{_form98['_supersession_walked']['declared_sha256'][:16]} "
-       f"recomputed from the file the link names. A declaration that "
-       f"claims to supersede a file nobody checked is R-608's shape")
+    # THE VERSION IS NOT PINNED HERE EITHER (R-653 (i)). This asserted
+    # `version == 2` while v3 existed -- the same literal-pinning defect
+    # as the builder's, in the check written to guard the builder. The
+    # property is that the head is the newest and every link verifies.
+    ok(_form98["remain_after_exit"] is True
+       and _form98["_chain"]["head_version"]
+       == max(_form98["_chain"]["versions_present"])
+       and all(l["agrees"] for l in _form98["_chain"]["links"]),
+       f"R-648/R-653: the builder reads the CHAIN HEAD "
+       f"(v{_form98['_chain']['head_version']} of "
+       f"{_form98['_chain']['versions_present']}) with every supersession "
+       f"pair recomputed from the file it names. A declaration that "
+       f"claims to supersede a file nobody checked is R-608's shape -- "
+       f"and a checker pinned to a version number is the defect one level "
+       f"up")
     _cmd98 = the_one_command("2026-09-03", "/BOOK", "/OUT")
     ok("-p RemainAfterExit=yes" in _cmd98
        and assert_launch_form(_cmd98)["ok"] is True,
@@ -5674,8 +5969,9 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     ok(_form97["lock_conflict_rc"] == 75
        and _form97["lock_path"] == HEAVY_RUN_LOCK
        and _form97["slice"] == RESEARCH_SLICE,
-       f"R-646 R2: the launch form's constants are READ from "
-       f"{HEAVY_RUN_FORM_REL} -- conflict code "
+       f"R-646 R2: the launch form's constants are READ from the chain "
+       f"head ({_form97['_chain']['head_path'].rsplit('/', 1)[-1]}) -- "
+       f"conflict code "
        f"{_form97['lock_conflict_rc']}, the lock path and the slice all "
        f"agree with this module's own constants, so a drift between them "
        f"is a battery failure rather than a surprise at GO")
@@ -8248,6 +8544,41 @@ def _main_day(a) -> int:
         day, fixture=fixture, stamp=emission_stamp(_emitted_at))
     # R-628: WHICH WRAPPER ACTUALLY RAN THIS, measured from the cgroup --
     # not the form that was published, the form that executed.
+    # ---- (v) THE PROVENANCE BLOCK (DA 89 / R-654) --------------------
+    # The 09-03 receipt carried `source_identity` -- carrying_commit, the
+    # producing digest, the closure, HEAD at import and emit -- but NO
+    # params or design PINS: params v14 appeared only inside
+    # `fixture_day_lock…` and design v21 only as an opened path. DA's
+    # pre-read had to infer both. From here every receipt carries them
+    # OPEN, as the run ACTUALLY RESOLVED them, in the pair form
+    # {path, sha256} (rules 12/13).
+    _repo = Path(__file__).resolve().parents[2]
+    def _pair(rel):
+        f = _repo / rel
+        return {"path": str(rel), "exists": f.is_file(),
+                "sha256": (hashlib.sha256(f.read_bytes()).hexdigest()
+                           if f.is_file() else None)}
+    _design_rel = (params.get("design_declaration") or {}).get("path")
+    payload["provenance"] = {
+        "params": _pair(PARAMS_REL),
+        "design": (_pair(_design_rel) if _design_rel else
+                   {"path": None, "exists": False, "sha256": None}),
+        "launch_form_declaration": {
+            **_pair(heavy_run_form()["_chain"]["head_path"]),
+            "chain": heavy_run_form()["_chain"]["links"],
+            "resolved_as": "the chain head, not a filename literal"},
+        "as_the_run_resolved_them": (
+            "these are the files THIS run read, digested at emit -- not a "
+            "version a reader infers from a name and not a pin copied "
+            "from a declaration"),
+        "why_it_is_open": (
+            "the 09-03 receipt carried source_identity and no params or "
+            "design pin; params appeared only inside a fixture-lock field "
+            "and the design only as an opened path, so DA's pre-read had "
+            "to infer both (R-654)"),
+        "pin_direction": (params.get("design_declaration") or {}).get(
+            "pin_direction"),
+    }
     _uid = unit_identity()
     payload["launch_form"] = {
         "declared": LAUNCH_FORM,
@@ -8258,6 +8589,16 @@ def _main_day(a) -> int:
         # hours; a receipt that points at it instead of copying it names
         # evidence that may already be gone -- which happened to DE 84's
         # `Started` line four hours after it was quoted.
+        # (iv) COVERAGE IS COMPUTED HERE, AT THE EMIT, WHILE THE UNIT IS
+        # STILL LOADED -- from `ExecMainStartTimestamp` and the host's
+        # oldest retained entry, both STORED beside the answer. After
+        # collection the start timestamp is gone and it can never be
+        # recomputed; a later reader gets the stored measurement or
+        # nothing, and never a needle.
+        "coverage_at_emit": (DAROOT.journal_coverage(unit=_uid["unit"])
+                             if _uid.get("unit") else
+                             {"status": "NOT_DETERMINABLE",
+                              "why": "this process is in no unit"}),
         "journal_at_emit": (journal_read(_uid["unit"])
                             if _uid.get("unit") else
                             {"status": "ABSENT",

@@ -851,28 +851,24 @@ def _git(*args: str, strip: bool = True) -> str | None:
 
 
 def parse_porcelain(text: str) -> list[str]:
-    """Paths out of `git status --porcelain`, as a PURE function so it has a
-    known-bad.
+    """Paths out of `git status --porcelain` -- THROUGH THE SHARED PARSER.
 
-    IT NEEDED ONE.  The first version called `.strip()` on the whole stdout
-    and then took `line[3:]`.  A porcelain status code is two characters and
-    a space, and an UNSTAGED-only change starts with a SPACE (` M path`) --
-    so stripping the whole output ate the first line's leading space and
-    `[3:]` then ate the first character of its path.  It corrupted exactly
-    one path, the first, silently, and it reached an emitted artifact
-    (`ive/pm_research/...`).  Found by reading the artifact, which is the
-    only place it was visible."""
-    out: list[str] = []
-    for line in text.split("\n"):
-        if len(line) < 4:
-            continue
-        path = line[3:]
-        if line[0] in ("R", "C") and " -> " in path:
-            path = path.split(" -> ", 1)[1]      # renames name two paths
-        path = path.strip().strip('"')
-        if path:
-            out.append(path)
-    return sorted(out)
+    This used to be its own implementation, and REV 67 S1.2 measured it
+    getting the format wrong in two places its own docstring claimed to
+    have fixed: on a SHIFTED line it returned `ive/x.py` (the very defect
+    the docstring describes), and it STRIPPED a trailing space out of a
+    path that legitimately ends in one.
+
+    R-641/R-649 ruled ONE porcelain parser for the programme, and it is
+    `da_root.parse_porcelain` (BE's algorithm at the shared name, DA's row
+    structure) -- a parser is INFRASTRUCTURE, not a statistic, so R-235
+    does not ask for a second. Three seats had three implementations and
+    each was wrong in a different place: the strip, the slice, the rename.
+
+    The signature is unchanged: callers still get a sorted list of paths."""
+    import da_root as _da
+    return sorted(r["path"] for r in _da.parse_porcelain(text)["rows"]
+                  if r["path"])
 
 
 def produced_at() -> dict:
@@ -1109,7 +1105,7 @@ def run(out: Path | None = None) -> dict:
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 69
+EXPECTED_CHECKS = 70
 
 
 def selftest() -> int:
@@ -1294,19 +1290,45 @@ def selftest() -> int:
     ok(receipt["engine_identity"] == ENGINE_IDENTITY
        and len(receipt["engine_identity"]) == len(_ENGINE_FILES),
        "engine identity is taken AT IMPORT over the files that shape a record")
-    # the porcelain parse, with the defect it actually shipped
-    raw = " M live/pm_research/a.py\n?? live/pm_research/b.py\n"
-    ok(parse_porcelain(raw) == ["live/pm_research/a.py",
-                                "live/pm_research/b.py"],
-       "the porcelain parse keeps the FIRST path whole when its status code "
-       "begins with a space (an unstaged-only change)")
-    ok(sorted(l.strip()[3:].strip() for l in raw.strip().split("\n"))
-       != parse_porcelain(raw),
-       "KNOWN-BAD: the shipped parse -- strip the output, then take [3:] -- "
-       "produces a DIFFERENT and wrong list on this exact input, which is "
-       "how `ive/pm_research/...` reached an artifact")
-    ok(parse_porcelain("R  old/a.py -> new/b.py\n") == ["new/b.py"],
-       "and a RENAME names the destination, not the arrow-joined pair")
+    # ---- the porcelain parse, THROUGH THE SHARED PARSER --------------
+    # This file's own parser is retired (R-641/R-649): one parser for the
+    # programme, `da_root.parse_porcelain`. REV 67 S1.2 measured this one
+    # returning `ive/x.py` on a shifted line -- the defect its docstring
+    # said it had fixed -- and stripping a trailing space out of a path
+    # that legitimately ends in one. The known-bad below is replaced by
+    # the shared TABLE, so this seat is checked against the same lines
+    # every other seat is.
+    import da_root as _da_ev
+    _rows = {r["path"]: r for r in _da_ev.parse_porcelain(
+        " M live/pm_research/a.py\n"
+        "?? live/pm_research/b.py\n"
+        "R  old/a.py -> new/b.py\n")["rows"]}
+    ok(sorted(_rows) == ["live/pm_research/a.py", "live/pm_research/b.py",
+                         "new/b.py"]
+       and _rows["new/b.py"]["renamed_from"] == "old/a.py"
+       and _rows["live/pm_research/b.py"]["untracked"] is True,
+       "the porcelain parse goes through the ONE shared parser: the "
+       "unstaged first line keeps its whole path, the untracked line is "
+       "marked untracked, and a RENAME yields the DESTINATION with the "
+       "source recorded")
+    ok(parse_porcelain(" M live/pm_research/a.py\n"
+                       "R  old/a.py -> new/b.py\n")
+       == ["live/pm_research/a.py", "new/b.py"],
+       "and this module's `parse_porcelain` is now a CALL into it, with "
+       "the same signature -- a sorted list of paths")
+    _shifted = "M live/pm_research/a.py\n"           # the code column eaten
+    _sh = _da_ev.parse_porcelain(_shifted)
+    ok(_sh["n_rows"] == 0 and _sh["n_malformed"] == 1,
+       f"KNOWN-BAD, THE LINE THIS FILE ACTUALLY CORRUPTED: a SHIFTED "
+       f"porcelain line is REFUSED as malformed by the shared parser "
+       f"({_sh['malformed']}), where this module's own version returned "
+       f"`ive/pm_research/a.py` -- the defect its docstring claimed to "
+       f"have fixed (REV 67 S1.2)")
+    _trail = _da_ev.parse_porcelain("?? has a trailing space \n")
+    ok(_trail["rows"][0]["path"].endswith(" "),
+       "and a path that legitimately ENDS IN A SPACE keeps it -- this "
+       "module's own version stripped it, silently renaming the file it "
+       "was reporting")
 
     pa = receipt["produced_at"]
     ok(set(pa) >= {"produced_at_commit", "git_readable", "working_tree_dirty"}
