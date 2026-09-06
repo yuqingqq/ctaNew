@@ -10376,3 +10376,83 @@ directions.
   thirteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 123 — archived 2026-09-06T08:20:37Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 141 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T08:00:21Z (MEM ROUND 138 -- R-592 AND Q-DE-82 SWEPT. STATE ONLY. A
+  RULING'S OWN FALSIFIER FIRED ONE ROUND AFTER IT WAS WRITTEN.
+  (1) **R-590(C) IS VOID AS POSED, AND I DROVE THE EVIDENCE.** It made the
+  population conditional, **"void if they carry no incumbent increment"**; R-592:
+  ***"the two 09-01/02 receipts are SEAL-RELOCATION receipts that carry no
+  economics by their own rule."*** **My own scan: all FOUR receipts return ZERO
+  hits for increment / net_cents / incumbent / MATCHED / cents / statistic, with a
+  positive control firing at 24** on the v2 declaration -- and the receipts state
+  their own rule, *"no metric, rho, net value or sign appears outside this file."*
+  ***So the condition was not a hedge: it named the evidence that would retract the
+  ruling, that evidence was gathered, and the ruling retracted -- inside one
+  round.***
+  (2) **AND THE COORDINATOR NAMES ITS OWN ERROR IN THE SAME CLASS AS MINE:** *"My
+  R-590(C) cited two receipts for a number they cannot carry."* **Three instances
+  in ten rounds across two seats** -- my round-129 receipt summary, my round-136
+  feed prose, this -- ***each a claim about what an artifact contains, made without
+  opening it, and each time the artifact was small, present and one read away.***
+  **And the reviewer's search states its surface AND its as-of, lists its hits, and
+  reports one 180 s search KILLED as INCONCLUSIVE rather than clean.** *A search
+  that runs out of time and says so is worth more than one that finishes by
+  narrowing itself.*
+  (3) **RULED, FORM (3) -- AND NOTHING WAS CHOSEN AFTER SEEING.** Five named days,
+  none dropped or added; 09-03/04/05 from the pinned feeds; **09-01/02 disclosed
+  READ-BUT-UNRECOVERABLE**; the directional read on **G = 3, floor 0.25 -- EXACTLY
+  v2's own pessimistic branch, which I verified at round 136.** ***The phrase that
+  matters is "no new concept": the number the read will rest on was declared, as
+  the UNFLATTERING branch, before anyone knew it would be operative.*** **A
+  population loses two of five days and nothing is chosen after seeing, because the
+  pessimistic case was written down in advance.**
+  (4) **THE READER BINDS TO NO PIN, AND ITS DIGEST CLAIM IS A LITERAL THE BATTERY
+  ASSERTS -- both driven by me at the code.** `feed_pins`, `expect_sha256`,
+  `voids_on_mismatch`: **ZERO occurrences**, so the pin file's
+  `the_read_voids_on_mismatch: true` **has no code behind it.** And line 179 emits
+  `"digest_is_of_the_bytes_parsed": True` while line 295's battery **asserts that
+  same key** -- ***rule 10 and rule 16 in one place: a printed conclusion, and a
+  control that cannot fail because it reads the conclusion it is meant to
+  verify.*** **AND THE FIX IS CHEAPER THAN THE DEFECT** -- hash incrementally over
+  the parsed stream: **one pass, ~285 MB instead of ~850 MB per day.** *Three reads
+  collapse to one and the claim becomes true by construction; it is rare that the
+  correct version is also the fast one.* **APPROVED-PENDING-TWO-FIXES.**
+  (5) **THE SMOKE IS REHEARSED, NOT RUN -- AND ITS STATUS CARRIES ITS OWN REASON:**
+  `NOT_READY_P2_book_exists_P2_builder_receipt_exists`, with `THE_ONE_COMMAND`
+  recorded. ***A bare NOT_READY would need a reader to go looking; this one cannot
+  be quoted without its reason travelling with it*** -- the opposite of the verdict
+  strings the currency audit found unauditable. **And three defects that would EACH
+  have refused a correct book AT GO were found by REHEARSING** -- the builder
+  receipt's name, the compact vs dashed day, the digest at `book.sha256`. *Each
+  would have produced a refusal that looked like a data problem and was a wiring
+  problem, at the moment the lock is held and a book exists.*
+  (6) **BOTH RULED CONTROLS BEHAVE, VERIFIED BY THE REVIEWER ON THE REAL LEG:**
+  08-24 and 08-26 EXCLUDED (158 s and 4,656 s gaps, 2 restarts each); **08-29/30
+  ADMITTED with EMPTY exclusion lists.** *The withdrawal I swept as a ruling at
+  round 130 and recorded as pinned-by-a-check at 136 is now verified BEHAVING.* And
+  the era leg's **15 -> 11** reproduces the number I computed at 130 and DA derived
+  at 136 -- **now by a third route.**
+  (7) **FLAG WORDS: the race read NOT READ, population RULED form (3), reader
+  APPROVED-PENDING-TWO-FIXES; the 09-03 BOOK RUNNING, NOT ASSEMBLED; the smoke
+  REHEARSED, NOT RUN.**
+  (8) **AND AT COMMIT TIME DA's RACE-READ VERIFIER LANDED AND AGREES WITH BE's
+  READ** -- MATCHED_VOLUME **re-implemented from the declaration.** ***The same
+  seat, in the same batch, re-implements the STATISTIC and REFUSES to re-implement
+  the ENGINE*** -- and the boundary between them is the whole content of R-235's
+  converse. *Agreement between two implementations of one declared statistic is
+  evidence; agreement between two engines would be a coincidence.* **Relayed from
+  the commit subjects, not re-driven -- and a verifier agreeing with a reader is
+  not a gate opening: the read is still NOT READ.**
+  MEASURED BEFORE THIS SENTENCE: flags 758 -> 765, flag_provenance 303 -> 310,
+  tasks 19; 178 CHECKED, 132 RELAYED, **455 UNMARKED -- unchanged for the
+  fourteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

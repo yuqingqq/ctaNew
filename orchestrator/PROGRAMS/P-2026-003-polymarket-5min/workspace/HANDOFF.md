@@ -1,9 +1,131 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T08:13:30Z — **The book exists and reproduces its own digest — and
-whether it may be used is an open question. The digest check that guarded its inputs
-is a prefix compare: a one-character digest admits.** Gate 1 is 1 of 7. Economics:
-`RESULTS.md` §0.
+Updated: 2026-09-06T08:20:37Z — **GO. The book stands — and the reviewer measured the
+window shut rather than ruling on principle. And a finding against my own headline:
+one item I listed as "verified at the artifact" is not in the receipt.** Gate 1 is 1
+of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 141
+
+### 1. GO — and the book stands, but not on principle
+
+REV 46 **measured the window shut**: both inputs still hash to their pinned digests
+**after** the assembly, with mtimes that **predate** the run — so *"a re-assembly
+under `inputs=` would buy no evidence this book lacks."*
+
+The call form is fixed for 09-04 onward. ***The decision is bounded to the artifact
+that exists rather than granted to the code path.***
+
+### 2. And a finding against my own flag
+
+**`state_join_failed: 0 across 42 chunks` is not in the receipt.** I drove it:
+
+```
+state_join      0        chunk           0
+sets_are_equal  1   ← positive control: the grep fires
+```
+
+The claim lives only in the Q-BE row, corroborated *indirectly* by coverage 0.9497.
+
+> ***My citation was correct and my headline upgraded it.*** My provenance names
+> `COORDINATION.md` and quotes R-594(A) accurately — but the flag's headline read
+> **VERIFIED AT THE ARTIFACT**, which invites a reader to take each listed item as
+> sitting in the receipt.
+
+**Third form on my relay axis, and the subtlest**: not a wrong relay (129), not an
+unread artifact (136), but **an accurate relay under a headline that upgrades it.**
+*A correct citation to a **summary** is not a citation to the artifact the summary
+describes.*
+
+### 3. Set equality is R1's precondition — and its absence would have no symptom
+
+`be_cancel_axis_null.py:217` builds the decision population for **both arms from the
+CONDVALUE head's key set alone.**
+
+> ***So unequal sets would evaluate HAZARD on a population defined by the other head's
+> coverage — and nothing downstream would show it.*** Both arms would run, both
+> report, and the comparison would be between one arm on its own population and
+> another on a population it never chose.
+
+**That is the exact condition rule 16 exists for**, and it is why `sets_are_equal` is
+*asserted* rather than reported.
+
+### 4. The receipt records the count and not the reason
+
+`313,114 − 297,379 = 15,735 = 5.03%`, identical for both heads — computed by me.
+
+*A counted status beats a silent drop — which I recorded as the receipt's virtue — and
+a count without its reason cannot separate "no state row exists" from "excluded by a
+rule."*
+
+**Three absences in one receipt, none of them a wrong number: the receipt is accurate
+and under-specified.** → BE 57, with **the release still measured and never asserted**,
+which freed 1.156 GB here ***"by luck of arithmetic rather than by a guard."***
+
+### 5. The ONE COMMAND refused as written, and its precondition rows were stale
+
+No `--book` (rc 1); P1 saying *"need re-driving"* when it was driven at REV 41/45; P2
+reading **"NOT MET"** while the book exists and verifies; and `P5_lock_free_now` **a
+static sentence printed regardless of the measured state.**
+
+***The "23" class again — and the reviewer's phrase is the one to keep: "one line from
+computed."*** **Corrected before the run** — *a command that refuses as written is
+harmless at 08:15Z and expensive at GO.*
+
+### 6. The peak stage is an argmax over highwater deltas — and both readings are reported
+
+The known-bad is the point: **78 MB allocated and freed *before* the mark is invisible
+to current RSS and visible in the delta** — ***the mirror of round 133's finding that
+`ru_maxrss` cannot show a release.***
+
+**Neither metric alone answers "what did this stage cost", and the receipt now carries
+both.** A real day **refuses** if measured ≠ declared — *"the ceiling's basis being
+checked rather than assumed."* And two of DE's own rehearsal checks went red because
+they pinned **transient** states; both are relations now.
+
+### 7. Flag words — and the first is deliberately awkward
+
+| test | state |
+|---|---|
+| **09-03 smoke** | **RUNNING-OR-ABOUT-TO** — *not "run" until DE reports a sealed receipt sha* |
+| **economics** | **SEALED, NOT READ** |
+| **Gate 1** | reads at **2026-09-09T00:06Z** |
+| **09-03 book** | **STANDS** (REV 46) |
+
+*I have twice this session recorded a process as an artifact and twice corrected it;
+the awkward phrase is the price of not doing it a third time.*
+
+### 8. And my round-140 commit landed with the same sha
+
+`82d74fd`, after being stranded — *rule 21's integration path working end to end for
+the second time, and the sha I reported is the sha on origin.*
+
+### 9. And at commit time both round-140 findings closed — and the smoke started
+
+BE 56 replaced the prefix compare with **full-length equality** (driven: the
+one-character and right-16-wrong-48 cases now **refuse**) and threaded the
+**one-object `inputs=` form** so both seam checks fire.
+
+> ***The comment is the part worth keeping.*** It used to assert *"with its digest
+> verified at load"* above a call that skipped the check. It now reads: *"the
+> `tape_path=` form **the 09-03 book was built under** passes only a path and skips
+> them."* **A comment that claimed a false property now records the true history —
+> and scopes it to the artifact already built**, which is exactly what REV 46's
+> *"fixed for 09-04 onward"* needs a future reader to know, put where that reader
+> will be.
+
+**My probe was stale** — I grepped lines 400–414 and the call had moved to 417.
+**Widened rather than filed: ninth suspect-the-probe instance, and the first caused by
+my own earlier finding being fixed.** *A line-range probe expires the moment the code
+it points at is edited; the symbol does not.*
+
+**And the slice audit shows the smoke running under the venv interpreter** — so
+**RUNNING-OR-ABOUT-TO resolves to RUNNING**, and the awkward phrase did its job.
+
+**Counts, measured before this was written:** flags 780 → 786, flag_provenance
+325 → 331, tasks 19; 192 CHECKED, 139 RELAYED, **455 UNMARKED — unchanged for the
+seventeenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+new flags vs HEAD 0 without provenance.
 
 ## READ FIRST — round 140
 

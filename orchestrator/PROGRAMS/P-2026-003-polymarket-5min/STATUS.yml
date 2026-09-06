@@ -63,6 +63,83 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T08:20:37Z (MEM ROUND 141 -- R-595, R-596, REV 46 AND Q-DE-83 SWEPT.
+  STATE ONLY. GO -- AND A FINDING AGAINST MY OWN HEADLINE.
+  (1) **GO, AND THE BOOK STANDS -- BUT NOT ON PRINCIPLE.** REV 46 **MEASURED THE
+  WINDOW SHUT**: both inputs still hash to their pinned digests AFTER the assembly,
+  with mtimes that PREDATE the run, so *"a re-assembly under `inputs=` would buy no
+  evidence this book lacks."* **The call form is fixed for 09-04 onward** -- ***the
+  decision is bounded to the artifact that exists rather than granted to the code
+  path.***
+  (2) **AND A FINDING AGAINST MY OWN FLAG: `state_join_failed: 0 across 42 chunks`
+  IS NOT IN THE RECEIPT.** I drove it -- `state_join` ×0, `chunk` ×0, with
+  `sets_are_equal` present as a **positive control** proving the grep fires. **The
+  claim lives only in the Q-BE row**, corroborated indirectly by coverage 0.9497.
+  ***MY CITATION WAS CORRECT AND MY HEADLINE UPGRADED IT:*** my provenance names
+  COORDINATION.md and quotes R-594(A) accurately -- **but the flag's headline read
+  VERIFIED AT THE ARTIFACT, which invites a reader to take each listed item as
+  sitting in the receipt.** **Third form on my relay axis and the subtlest: not a
+  wrong relay (129), not an unread artifact (136), but AN ACCURATE RELAY UNDER A
+  HEADLINE THAT UPGRADES IT.** *A correct citation to a SUMMARY is not a citation to
+  the artifact the summary describes.*
+  (3) **SET EQUALITY IS R1's PRECONDITION, AND ITS ABSENCE WOULD HAVE NO SYMPTOM.**
+  `be_cancel_axis_null.py:217` builds the decision population for **BOTH arms from
+  the CONDVALUE head's key set alone** -- ***so unequal sets would evaluate HAZARD
+  on a population defined by the OTHER head's coverage, and nothing downstream would
+  show it.*** *Both arms would run, both report, and the comparison would be between
+  one arm on its own population and another on a population it never chose.* **That
+  is the exact condition rule 16 exists for.**
+  (4) **THE RECEIPT RECORDS THE COUNT AND NOT THE REASON.** I computed 313,114 −
+  297,379 = **15,735 = 5.03%**, identical for both heads. *A counted status beats a
+  silent drop -- which I recorded as the receipt's virtue -- and a count without its
+  reason cannot separate "no state row exists" from "excluded by a rule."* **Three
+  absences in one receipt, none of them a wrong number: the receipt is ACCURATE AND
+  UNDER-SPECIFIED.** -> BE 57, with the release **still measured and never
+  asserted**, which freed 1.156 GB here ***"by luck of arithmetic rather than by a
+  guard."***
+  (5) **THE ONE COMMAND REFUSED AS WRITTEN, AND ITS PRECONDITION ROWS WERE STALE**
+  -- no `--book` (rc 1); P1 saying "need re-driving" when driven at REV 41/45; P2
+  reading "NOT MET" while the book exists and verifies; `P5_lock_free_now` **a
+  static sentence printed regardless of the measured state.** ***The "23" class
+  again, and the reviewer's phrase is the one to keep: "one line from computed."***
+  **Corrected before the run** -- *a command that refuses as written is harmless at
+  08:15Z and expensive at GO.*
+  (6) **THE PEAK STAGE IS AN ARGMAX OVER HIGHWATER DELTAS, AND BOTH READINGS ARE
+  REPORTED.** The known-bad is the point: **78 MB allocated and freed BEFORE the
+  mark is INVISIBLE to current RSS and VISIBLE in the delta** -- ***the mirror of
+  round 133's finding that `ru_maxrss` cannot show a RELEASE.*** **Neither metric
+  alone answers "what did this stage cost", and the receipt now carries both.** And
+  a real day **REFUSES** if measured ≠ declared -- *"the ceiling's basis being
+  checked rather than assumed."* **Two of DE's own rehearsal checks went RED because
+  they pinned TRANSIENT states; both are relations now.**
+  (7) **FLAG WORDS, AND THE FIRST IS DELIBERATELY AWKWARD: the 09-03 smoke is
+  RUNNING-OR-ABOUT-TO -- NOT "run" until DE reports a sealed receipt sha.** *I have
+  twice this session recorded a process as an artifact and twice corrected it; the
+  awkward phrase is the price of not doing it a third time.* **Economics SEALED, NOT
+  READ. Gate 1 reads at 2026-09-09T00:06Z. The book STANDS.**
+  (8) **AND MY ROUND-140 COMMIT LANDED WITH THE SAME SHA** (`82d74fd`) after being
+  stranded -- *rule 21's integration path working end to end for the second time,
+  and the sha I reported is the sha on origin.*
+  (9) **AND AT COMMIT TIME BOTH OF MY ROUND-140 FINDINGS CLOSED, AND THE SMOKE
+  STARTED.** BE 56 replaced the prefix compare with **FULL-LENGTH EQUALITY** --
+  driven: the one-character and right-16-wrong-48 cases now REFUSE -- and threaded
+  the **ONE-OBJECT `inputs=` form** so both seam checks fire. ***And the comment is
+  the part worth keeping: it used to assert "with its digest verified at load" above
+  a call that skipped the check; it now reads "the `tape_path=` form THE 09-03 BOOK
+  WAS BUILT UNDER passes only a path and skips them."*** **A comment that claimed a
+  false property now records the true history and scopes it to the artifact already
+  built** -- exactly what REV 46's "fixed for 09-04 onward" needs a future reader to
+  know, put where that reader will be. **My probe was stale (I grepped 400-414; the
+  call had moved to 417) -- widened rather than filed: ninth suspect-the-probe
+  instance, and the first caused by my own earlier finding being FIXED.** *A
+  line-range probe expires the moment the code it points at is edited; the symbol
+  does not.* **And the slice audit shows the smoke RUNNING under the venv
+  interpreter -- so RUNNING-OR-ABOUT-TO resolves to RUNNING, and the awkward phrase
+  did its job.**
+  MEASURED BEFORE THIS SENTENCE: flags 780 -> 786, flag_provenance 325 -> 331,
+  tasks 19; 192 CHECKED, 139 RELAYED, **455 UNMARKED -- unchanged for the
+  seventeenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T08:13:30Z (MEM ROUND 140 -- R-594, Q-BE-55 AND Q-DA-288 SWEPT. STATE
   ONLY. THE BOOK EXISTS AND WHETHER IT MAY BE USED IS AN OPEN QUESTION.
   (1) **THE DIGEST CHECK IS A PREFIX COMPARE, AND I DROVE ALL FOUR CASES.**
@@ -203,76 +280,6 @@ updated: >-
   tasks 19; 183 CHECKED, 133 RELAYED, **455 UNMARKED -- unchanged for the fifteenth
   round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new flags
   vs HEAD 0 without provenance.)
-  2026-09-06T08:00:21Z (MEM ROUND 138 -- R-592 AND Q-DE-82 SWEPT. STATE ONLY. A
-  RULING'S OWN FALSIFIER FIRED ONE ROUND AFTER IT WAS WRITTEN.
-  (1) **R-590(C) IS VOID AS POSED, AND I DROVE THE EVIDENCE.** It made the
-  population conditional, **"void if they carry no incumbent increment"**; R-592:
-  ***"the two 09-01/02 receipts are SEAL-RELOCATION receipts that carry no
-  economics by their own rule."*** **My own scan: all FOUR receipts return ZERO
-  hits for increment / net_cents / incumbent / MATCHED / cents / statistic, with a
-  positive control firing at 24** on the v2 declaration -- and the receipts state
-  their own rule, *"no metric, rho, net value or sign appears outside this file."*
-  ***So the condition was not a hedge: it named the evidence that would retract the
-  ruling, that evidence was gathered, and the ruling retracted -- inside one
-  round.***
-  (2) **AND THE COORDINATOR NAMES ITS OWN ERROR IN THE SAME CLASS AS MINE:** *"My
-  R-590(C) cited two receipts for a number they cannot carry."* **Three instances
-  in ten rounds across two seats** -- my round-129 receipt summary, my round-136
-  feed prose, this -- ***each a claim about what an artifact contains, made without
-  opening it, and each time the artifact was small, present and one read away.***
-  **And the reviewer's search states its surface AND its as-of, lists its hits, and
-  reports one 180 s search KILLED as INCONCLUSIVE rather than clean.** *A search
-  that runs out of time and says so is worth more than one that finishes by
-  narrowing itself.*
-  (3) **RULED, FORM (3) -- AND NOTHING WAS CHOSEN AFTER SEEING.** Five named days,
-  none dropped or added; 09-03/04/05 from the pinned feeds; **09-01/02 disclosed
-  READ-BUT-UNRECOVERABLE**; the directional read on **G = 3, floor 0.25 -- EXACTLY
-  v2's own pessimistic branch, which I verified at round 136.** ***The phrase that
-  matters is "no new concept": the number the read will rest on was declared, as
-  the UNFLATTERING branch, before anyone knew it would be operative.*** **A
-  population loses two of five days and nothing is chosen after seeing, because the
-  pessimistic case was written down in advance.**
-  (4) **THE READER BINDS TO NO PIN, AND ITS DIGEST CLAIM IS A LITERAL THE BATTERY
-  ASSERTS -- both driven by me at the code.** `feed_pins`, `expect_sha256`,
-  `voids_on_mismatch`: **ZERO occurrences**, so the pin file's
-  `the_read_voids_on_mismatch: true` **has no code behind it.** And line 179 emits
-  `"digest_is_of_the_bytes_parsed": True` while line 295's battery **asserts that
-  same key** -- ***rule 10 and rule 16 in one place: a printed conclusion, and a
-  control that cannot fail because it reads the conclusion it is meant to
-  verify.*** **AND THE FIX IS CHEAPER THAN THE DEFECT** -- hash incrementally over
-  the parsed stream: **one pass, ~285 MB instead of ~850 MB per day.** *Three reads
-  collapse to one and the claim becomes true by construction; it is rare that the
-  correct version is also the fast one.* **APPROVED-PENDING-TWO-FIXES.**
-  (5) **THE SMOKE IS REHEARSED, NOT RUN -- AND ITS STATUS CARRIES ITS OWN REASON:**
-  `NOT_READY_P2_book_exists_P2_builder_receipt_exists`, with `THE_ONE_COMMAND`
-  recorded. ***A bare NOT_READY would need a reader to go looking; this one cannot
-  be quoted without its reason travelling with it*** -- the opposite of the verdict
-  strings the currency audit found unauditable. **And three defects that would EACH
-  have refused a correct book AT GO were found by REHEARSING** -- the builder
-  receipt's name, the compact vs dashed day, the digest at `book.sha256`. *Each
-  would have produced a refusal that looked like a data problem and was a wiring
-  problem, at the moment the lock is held and a book exists.*
-  (6) **BOTH RULED CONTROLS BEHAVE, VERIFIED BY THE REVIEWER ON THE REAL LEG:**
-  08-24 and 08-26 EXCLUDED (158 s and 4,656 s gaps, 2 restarts each); **08-29/30
-  ADMITTED with EMPTY exclusion lists.** *The withdrawal I swept as a ruling at
-  round 130 and recorded as pinned-by-a-check at 136 is now verified BEHAVING.* And
-  the era leg's **15 -> 11** reproduces the number I computed at 130 and DA derived
-  at 136 -- **now by a third route.**
-  (7) **FLAG WORDS: the race read NOT READ, population RULED form (3), reader
-  APPROVED-PENDING-TWO-FIXES; the 09-03 BOOK RUNNING, NOT ASSEMBLED; the smoke
-  REHEARSED, NOT RUN.**
-  (8) **AND AT COMMIT TIME DA's RACE-READ VERIFIER LANDED AND AGREES WITH BE's
-  READ** -- MATCHED_VOLUME **re-implemented from the declaration.** ***The same
-  seat, in the same batch, re-implements the STATISTIC and REFUSES to re-implement
-  the ENGINE*** -- and the boundary between them is the whole content of R-235's
-  converse. *Agreement between two implementations of one declared statistic is
-  evidence; agreement between two engines would be a coincidence.* **Relayed from
-  the commit subjects, not re-driven -- and a verifier agreeing with a reader is
-  not a gate opening: the read is still NOT READ.**
-  MEASURED BEFORE THIS SENTENCE: flags 758 -> 765, flag_provenance 303 -> 310,
-  tasks 19; 178 CHECKED, 132 RELAYED, **455 UNMARKED -- unchanged for the
-  fourteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2926,7 +2933,40 @@ flags:
                              # The reviewer's own resources stated rather than implied:
                              # 18.45 s / 66 MB and 22.92 s / 22 MB, **the lock never
                              # taken, no sealed file opened.**
-  THE_DIGEST_CHECK_IS_A_PREFIX_COMPARE_AND_A_ONE_CHARACTER_DIGEST_ADMITS: I-DROVE-ALL-FOUR-CASES
+  THE_DIGEST_CHECK_IS_A_PREFIX_COMPARE_AND_A_ONE_CHARACTER_DIGEST_ADMITS: CLOSED-AT-BE-56-FULL-LENGTH-EQUALITY
+                             # SUPERSEDED-IN-BAND 2026-09-06T08:24:03Z at my commit-time
+                             # re-read. **BE 56 CLOSED IT: the prefix compare is GONE**
+                             # (0 occurrences of `startswith(expect_sha256.lower()[:16])`)
+                             # and the compare is **full-length equality** -- driven: the
+                             # one-character and right-16-wrong-48 cases now REFUSE.
+                             # *My round-140 finding, filed with all four cases driven,
+                             # closed inside one round.*
+                             # EARLIER VALUE (rule 13): I-DROVE-ALL-FOUR-CASES
+  THE_COMMENT_ABOVE_THE_CALL_CLAIMS_THE_PROPERTY_THE_CALL_OMITS: CLOSED-AND-THE-COMMENT-NOW-RECORDS-THE-TRUE-HISTORY
+                             # SUPERSEDED-IN-BAND 2026-09-06T08:24:03Z. **BE 56 threaded the
+                             # ONE-OBJECT form: `R.build_tape_index(splits, inputs=inp)`
+                             # -- so the ruled-day AND load-side checks inside the seam
+                             # now fire.**
+                             # ***AND THE COMMENT IS THE PART WORTH KEEPING.*** It used to
+                             # assert *"the index is built from THE DAY'S OWN TAPE, with
+                             # its digest verified at load"* above a call that skipped the
+                             # check. **It now reads: "R16: the ONE-OBJECT form, so the
+                             # ruled-day and load-side checks inside the seam fire. The
+                             # `tape_path=` form THE 09-03 BOOK WAS BUILT UNDER passes
+                             # only a path and skips them."**
+                             # ***A comment that claimed a false property now records the
+                             # true history AND scopes it to the artifact already built***
+                             # -- which is exactly what REV 46's "the book stands, the
+                             # call form is fixed for 09-04 onward" needs a future reader
+                             # to know, and puts it where that reader will be.
+                             # **AND MY PROBE WAS STALE:** I grepped lines 400-414 and the
+                             # call had moved to 417, returning 0. **Widened rather than
+                             # filed -- ninth suspect-the-probe instance, and the first
+                             # caused by MY OWN earlier finding being FIXED.** *A
+                             # line-range probe expires the moment the code it points at
+                             # is edited; the symbol does not.*
+                             # EARLIER VALUE (rule 13): MY-OWN-ADDITION-TO-THE-FILING
+
                              # CHECKED 2026-09-06T08:13:30Z at `phase2_arms.py:480` and
                              # driven by me on four inputs.
                              # The line is **`if not got.startswith(expect_sha256.lower()
@@ -2960,7 +3000,6 @@ flags:
                              # characters.*
                              # *And it is invisible to every test that supplies a real
                              # digest -- which is every honest test.*
-  THE_COMMENT_ABOVE_THE_CALL_CLAIMS_THE_PROPERTY_THE_CALL_OMITS: MY-OWN-ADDITION-TO-THE-FILING
                              # CHECKED 2026-09-06T08:13:30Z at `be_daybook_build.py:402-406`,
                              # and **I have not seen this half stated anywhere.**
                              # REV 45 §1.3 establishes that BE's call passes **neither
@@ -2980,7 +3019,129 @@ flags:
                              # check #2 -- which design v12 says is THE POINT -- does
                              # not.*** *A reader auditing this file finds a comment
                              # claiming both.*
-  THE_BOOK_IS_BUILT_AND_VERIFIED_AT_THE_ARTIFACT_AND_ITS_STANDING_IS_NOT_DECIDED: STANDING-PENDING-REV-46
+  THE_BOOK_IS_BUILT_AND_VERIFIED_AT_THE_ARTIFACT_AND_ITS_STANDING_IS_NOT_DECIDED: THE-BOOK-STANDS-GO-AND-MY-HEADLINE-UPGRADED-AN-ACCURATE-RELAY
+                             # SUPERSEDED-IN-BAND 2026-09-06T08:20:37Z, on two counts.
+                             # **(1) THE STANDING IS DECIDED: REV 46 FILED GO AND THE BOOK
+                             # STANDS.** *And it did not rule the check-#1 question on
+                             # principle: it MEASURED THE WINDOW SHUT* -- both inputs
+                             # still hash to their pinned digests AFTER the assembly, with
+                             # mtimes that PREDATE the run, so **"a re-assembly under
+                             # `inputs=` would buy no evidence this book lacks."** *The
+                             # call form is fixed for 09-04 onward (BE 56), so the
+                             # decision is bounded to the artifact that exists rather than
+                             # granted to the code path.*
+                             # **(2) AND A FINDING AGAINST MY OWN FLAG.** REV 46(c):
+                             # **`state_join_failed: 0 across 42 chunks` IS NOT IN THE
+                             # RECEIPT** -- I drove it: `state_join` ×0, `chunk` ×0, with
+                             # `sets_are_equal` present as a positive control proving the
+                             # grep fires. **The claim lives only in the Q-BE row**,
+                             # corroborated indirectly by coverage 0.9497 (*a wrong tape
+                             # gives ~0*).
+                             # ***MY CITATION WAS CORRECT AND MY HEADLINE UPGRADED IT.***
+                             # My provenance names COORDINATION.md and opens "R-594(A)
+                             # verifies the book at …" -- **an accurate quotation of the
+                             # register.** *But the flag's headline read VERIFIED AT THE
+                             # ARTIFACT, which invites a reader to take each listed item
+                             # as sitting in the receipt. One of them does not.*
+                             # **THIS IS THE THIRD FORM ON MY RELAY AXIS AND THE SUBTLEST:
+                             # not a wrong relay (129), not an unread artifact (136), but
+                             # AN ACCURATE RELAY UNDER A HEADLINE THAT UPGRADES IT.** ***A
+                             # correct citation to a SUMMARY is not a citation to the
+                             # artifact the summary describes*** -- and the upgrade began
+                             # in R-594(A)'s own "VERIFIED at be_daybook_receipt…", which
+                             # is where I took the frame from. **The headline is mine.**
+                             # EARLIER VALUE (rule 13): STANDING-PENDING-REV-46
+  SET_EQUALITY_IS_R1s_PRECONDITION_AND_NOTHING_DOWNSTREAM_WOULD_SHOW_ITS_ABSENCE: THE-DECISION-POPULATION-COMES-FROM-ONE-HEADS-KEYS
+                             # CHECKED 2026-09-06T08:20:37Z at REV 46(b), and it is the
+                             # reason `sets_are_equal` is worth asserting rather than
+                             # reporting.
+                             # `be_cancel_axis_null.py:217` builds the decision population
+                             # for **BOTH arms** from **the CONDVALUE head's key set
+                             # alone.** ***So unequal sets would evaluate HAZARD on a
+                             # population defined by the OTHER head's coverage -- and
+                             # NOTHING DOWNSTREAM WOULD SHOW IT.***
+                             # *That is the precise condition rule 16 exists for: a defect
+                             # with no symptom. The arms would both run, both report, and
+                             # the comparison would be between one arm on its own
+                             # population and another on a population it never chose.*
+                             # **Verified at BOTH SIDES of the seam** -- which is what
+                             # makes it a precondition rather than a coincidence.
+  THE_RECEIPT_RECORDS_THE_COUNT_AND_NOT_THE_REASON: 15735-CHECKS-OUT-AND-WHY-IS-ABSENT
+                             # CHECKED 2026-09-06T08:20:37Z: **I computed 313,114 − 297,379 =
+                             # 15,735 = 5.03%**, identical for both heads, matching REV
+                             # 46(b).
+                             # **The count is right and the REASON class is absent.** *A
+                             # counted status is better than a silent drop -- I recorded
+                             # that at round 140 as the receipt's virtue -- and a count
+                             # without its reason cannot distinguish "these generations
+                             # have no state row" from "these were excluded by a rule".*
+                             # **Routed to BE 57 with the state_join line and the
+                             # round-49 withdrawal**, which the receipt also does not
+                             # carry. ***Three absences in one receipt, none of them a
+                             # wrong number: the receipt is accurate and under-specified.***
+  THE_ONE_COMMAND_REFUSED_AS_WRITTEN_AND_ITS_PRECONDITION_ROWS_WERE_STALE: THE-23-CLASS-AGAIN-ONE-LINE-FROM-COMPUTED
+                             # RELAYED from REV 46 §6.3 2026-09-06T08:20:37Z.
+                             # **The playbook's §2 command lacks `--book` and REFUSES as
+                             # written (rc 1)**; **P1 cites REV 38 and says "need
+                             # re-driving"** when it was driven at REV 41/45; **P2 reads
+                             # "NOT MET" while the book exists and verifies**; and
+                             # **`P5_lock_free_now` is a STATIC SENTENCE printed
+                             # regardless of the measured state.**
+                             # ***THE "23" CLASS AGAIN*** -- the count in prose against
+                             # `DAY_PATH_CHECKS = 49` that DE 81 swept -- **and the
+                             # reviewer's phrase is the one to keep: "one line from
+                             # computed."** *Every one of these four is a field that could
+                             # read its own state and instead states it.*
+                             # **Corrected by DE 84 BEFORE the run**, which is the whole
+                             # value of a rehearsal: *a command that refuses as written is
+                             # harmless at 08:15Z and expensive at GO.*
+  THE_PEAK_STAGE_IS_AN_ARGMAX_OVER_DELTAS_AND_BOTH_READINGS_ARE_REPORTED: THE-TRANSIENT-IS-INVISIBLE-TO-CURRENT-RSS
+                             # RELAYED from R-596(B) 2026-09-06T08:20:37Z; **152 checks
+                             # under the coordinator's run** (I did not re-drive).
+                             # The peak stage is the **ARGMAX over per-stage HIGHWATER
+                             # DELTAS**, the declaration READ from the stage table, and
+                             # **BOTH readings reported** -- *delta-argmax and
+                             # current-RSS-argmax answer different questions.*
+                             # ***THE KNOWN-BAD IS THE POINT: 78 MB allocated and freed
+                             # BEFORE the mark is INVISIBLE to current RSS and VISIBLE in
+                             # the delta.*** *A transient that a high-water metric records
+                             # and an instantaneous one cannot -- the mirror of round
+                             # 133's finding that `ru_maxrss` cannot show a RELEASE.*
+                             # **Together they say: neither metric alone answers "what did
+                             # this stage cost", and the receipt now carries both.**
+                             # And the real-day behaviour is declared: measured
+                             # `S0_verify` ≠ declared `S1_load` is RECORDED on the
+                             # fixture and **a real day would REFUSE on it** -- *"the
+                             # ceiling's basis being checked rather than assumed."* **Two
+                             # of DE's own rehearsal checks went RED because they pinned
+                             # TRANSIENT states; both are relations now**, with the absent
+                             # branch driven on 2026-09-08.
+  THE_RELEASE_IS_STILL_MEASURED_AND_NEVER_ASSERTED_AND_IT_FREED_BY_LUCK_OF_ARITHMETIC: REV-43-2.2-OPEN-SINCE
+                             # RELAYED from REV 46(d) 2026-09-06T08:20:37Z.
+                             # **The index release is still MEASURED and never ASSERTED**
+                             # -- open since REV 43 §2.2, which I swept at round 134 --
+                             # and here it freed 1.156 GB ***"by luck of arithmetic rather
+                             # than by a guard."***
+                             # *A measurement with no predicate over it was my round-134
+                             # wording; the reviewer's is better, because it names what
+                             # the absence of the predicate means: the run succeeded and
+                             # nothing established that it had to.* **Routed to BE 57 with
+                             # the two receipt absences.**
+  GO_AND_THE_FLAG_WORDS_AT_ROUND_141: SMOKE-RUNNING-OR-ABOUT-TO-ECONOMICS-SEALED-NOT-READ
+                             # CHECKED 2026-09-06T08:20:37Z at R-596.
+                             # **GO.** DE 84 is dispatched for **the first sealed Gate-1
+                             # smoke day**, with `THE_ONE_COMMAND` carrying the venv
+                             # interpreter; the rehearsal v2 reads **READY with all eight
+                             # preconditions HOLDING** and blocking `[]`.
+                             # **FLAG WORDS, AND THE FIRST IS DELIBERATELY AWKWARD:**
+                             # **the 09-03 smoke is RUNNING-OR-ABOUT-TO** -- ***not "run"
+                             # until DE reports a sealed receipt sha.*** *I have twice
+                             # this session recorded a process as an artifact and twice
+                             # corrected it; the awkward phrase is the price of not doing
+                             # it a third time.*
+                             # **Economics SEALED, NOT READ. Gate 1 reads at
+                             # 2026-09-09T00:06Z. The book STANDS (REV 46).**
+
                              # CHECKED 2026-09-06T08:13:30Z at R-594(A); the sha I checked
                              # at the receipt last round.
                              # **VERIFIED AT THE ARTIFACT:** 290,758,834 bytes, `sha256` =
@@ -17158,6 +17319,51 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 141, 2026-09-06T08:20:37Z ------------------------------
+  SET_EQUALITY_IS_R1s_PRECONDITION_AND_NOTHING_DOWNSTREAM_WOULD_SHOW_ITS_ABSENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T08:20:37Z
+    said: >-
+      REV 46(b) as recorded in R-596(A): be_cancel_axis_null.py:217 builds the
+      decision population for BOTH arms from the CONDVALUE head's key set alone,
+      so unequal sets would evaluate HAZARD on a population defined by the other
+      head's coverage and nothing downstream would show it -- verified at both
+      sides of the seam, which is what makes set equality a precondition rather
+      than a coincidence.
+  THE_RECEIPT_RECORDS_THE_COUNT_AND_NOT_THE_REASON:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260903_btc.json
+    as_of: 2026-09-06T08:20:37Z
+    said: >-
+      I computed 313,114 - 297,379 = 15,735 = 5.03%, matching the receipt's
+      coverage 0.9497 and identical for both heads; and grepping the receipt
+      returns state_join 0 and chunk 0 with sets_are_equal present as a positive
+      control, so the state_join_failed line REV 46(c) flags is genuinely absent,
+      as are the uncovered reason class and the round-49 withdrawal. The receipt
+      is accurate and under-specified; routed to BE 57.
+  THE_ONE_COMMAND_REFUSED_AS_WRITTEN_AND_ITS_PRECONDITION_ROWS_WERE_STALE:
+    prov: RELAYED
+    from: REV 46 section 6.3
+    as_of: 2026-09-06T08:20:37Z
+  THE_PEAK_STAGE_IS_AN_ARGMAX_OVER_DELTAS_AND_BOTH_READINGS_ARE_REPORTED:
+    prov: RELAYED
+    from: R-596(B)
+    as_of: 2026-09-06T08:20:37Z
+  THE_RELEASE_IS_STILL_MEASURED_AND_NEVER_ASSERTED_AND_IT_FREED_BY_LUCK_OF_ARITHMETIC:
+    prov: RELAYED
+    from: REV 46(d)
+    as_of: 2026-09-06T08:20:37Z
+  GO_AND_THE_FLAG_WORDS_AT_ROUND_141:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T08:20:37Z
+    said: >-
+      R-596 records GO: REV 46 filed GO for the sealed smoke on the 09-03 book,
+      DE 84 is dispatched for the first sealed Gate-1 smoke day with
+      THE_ONE_COMMAND carrying the venv interpreter, and the rehearsal v2 reads
+      status READY with all eight preconditions holding and blocking empty. The
+      economics stay sealed and unread; Gate 1 reads at 2026-09-09T00:06Z.
   # --- MEM round 140, 2026-09-06T08:13:30Z ------------------------------
   THE_DIGEST_CHECK_IS_A_PREFIX_COMPARE_AND_A_ONE_CHARACTER_DIGEST_ADMITS:
     prov: CHECKED
