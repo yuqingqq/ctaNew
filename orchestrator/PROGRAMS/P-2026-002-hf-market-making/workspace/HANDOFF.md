@@ -82,7 +82,63 @@ just clears the 2.3 gate, and it is 0.08% of the notional.
    the instrument worked, but the standing refresh procedure silently undoes
    the fix. Restored twice this session. See the Q-DA row.
 
-## E2-A is DECLARED — and two things need a ruling before it runs
+## E2-A: the inherited control PASSES, v3 lands the reviewer's condition, the smoke has NOT run
+
+**The inherited control PASSES exactly.** `p002_e2a_e1a_reproduction__20260906T051626Z.json`
+(sha256 `e76e3226b1cf603e`, carrying_commit `0d7fae6`): re-measuring E1-A's
+episode design with new code on E1-A's own aggTrades, 12 symbols × 31 days,
+T_p = 600 s, gives **touch 3.4485 against a published 3.4485 and sweep 6.2645
+against a published 6.2645** — errors 0.000011 and 0.000027 bps, and the
+bootstrap CIs reproduce to 4 dp. 45.86 s wall, 1,274 MiB RSS.
+
+> **RECORD DEFECT FOUND, routed and not a blocker.** `E1_RESULTS.md`'s
+> corrections queue quotes a second pair — *"tick_size() FIXED post-audit;
+> corrected aggregate 3.36/6.28"*. **It is not reproducible from the committed
+> code.** E1's OWN `tick_size('FILUSDT')`, executed directly, returns **1e-6**
+> — the pre-fix value — and an independent transcription returns 1e-6 too. Two
+> implementations agree, so the repository does not carry the FIL = 1e-4 the
+> corrections queue describes and cannot produce 3.36/6.28. **A reader
+> reaching for that pair is reaching for a number nothing on disk can make.**
+> E1-A's operative number is untouched by this.
+
+**Declaration v3** (`p002_e2_a_declaration_v3.json`, sha256 `6383d781c7bbeaa6`)
+carries the reviewer's interior controls — **and they caught a defect in v2's
+own formula before any run**: v2 declared ProbQueue-f3's fill probability as
+`f(front)/(f(front)+f(back))`, which makes it RISE as the queue ahead grows.
+Hand-computed, v2 gave 0.073 for an order nearly at the HEAD and 0.927 for one
+nearly at the BACK. v3 states `f(back)/(f(front)+f(back))`, pins the interior
+value 343000/370000 = 0.927027027, and drives the direction and monotonicity as
+further controls.
+
+**THE SMOKE HAS NOT RUN.** The reviewer's approval is landed
+(`REVIEW_P002_E2A_DESIGN_2026-09-06.md`, APPROVED) and v3 meets its condition,
+so **the gate is OPEN** — but the E2-A *runner* does not exist yet. What exists
+is the episode machinery on the proxy mid (`e2_a_episodes.py`) and the declared
+queue models. Still to build: real-book placement from bookTicker, depth20
+queue-ahead at placement, the two fill simulations wired to episodes, partial
+fills, and their falsifiers. **Nothing was run against a half-built runner.**
+
+## The supersession sidecar convention (write this down — it is now used twice)
+
+When a receipt is superseded by a later one that **adds** a field rather than
+changing a result, the earlier file is **never edited** (rule 13). A sidecar
+`<earlier>.superseded_by.json` sits beside it naming the operative receipt by
+path and sha256, and the claim that both carry the same result is **computed
+field by field**, not asserted — the emitter **refuses** to describe it as a
+supersession-by-added-diagnostic if any gate-bearing field moved. Both files
+stay in git when the earlier one was **read** before the addition: deleting an
+artifact a decision saw is worse than keeping it, and the sidecar is what stops
+it resolving as current. Emitted by
+`e2_0_true_mid.py --supersede EARLIER OPERATIVE OUT`.
+
+## E2-A's two escalations — RULED (R-567(C))
+
+Both stand as declared: the closed-form models proceed with no dependency
+installed, and the size-aware arm REFUSES with its status while the min-size
+arm runs labelled NOT the gate. A size-aware arm needs a declared notional
+source and that question is with the USER.
+
+## E2-A was DECLARED — and here is what needed the ruling
 
 `live/mm_research/declarations/p002_e2_a_declaration_v2.json`
 (sha256 `6567a25f04d7fb89`, carrying_commit `0cbaba6`; v1 `405ddb7ab10486c2`

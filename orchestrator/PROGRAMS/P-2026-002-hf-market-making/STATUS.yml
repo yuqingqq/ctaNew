@@ -35,10 +35,39 @@ flags:
                           # notional-weighted (H1 fat-tick artifact; same flip all wide-tick
                           # names); majors NEGATIVE pre-fee. Program → overlay-only track.
                           # See live/mm_research/E1_RESULTS.md.
+  e2_a_control_passed: 2026-09-06
+                          # THE INHERITED CONTROL PASSES EXACTLY. Receipt
+                          # data/mm_hf/e1/
+                          # p002_e2a_e1a_reproduction__20260906T051626Z.json,
+                          # sha256 e76e3226b1cf603e, carrying_commit 0d7fae6.
+                          # touch 3.4485 vs published 3.4485, sweep 6.2645 vs
+                          # 6.2645; errors 0.000011 / 0.000027 bps; bootstrap
+                          # CIs reproduce to 4 dp. 45.86 s, 1,274 MiB.
+                          # RECORD DEFECT ROUTED: E1_RESULTS' corrections
+                          # queue quotes 3.36/6.28 as the tick-fixed
+                          # aggregate; it is NOT reproducible from the
+                          # committed code -- E1's OWN tick_size('FILUSDT')
+                          # returns 1e-6, the pre-fix value, and an
+                          # independent transcription agrees. Not a blocker
+                          # on E2-A; E1-A's operative number is untouched.
+  e2_a_smoke: NOT_RUN
+                          # The reviewer APPROVED (REVIEW_P002_E2A_DESIGN_
+                          # 2026-09-06.md, landed) and v3 meets its interior-
+                          # control condition, so THE GATE IS OPEN. The E2-A
+                          # RUNNER does not exist yet: real-book placement,
+                          # depth20 queue-ahead, the two fill simulations,
+                          # partial fills and their falsifiers are still to
+                          # build. Nothing was run against a half-built
+                          # runner.
   e2_a_declared: 2026-09-06
                           # DECLARATION ONLY, no data. live/mm_research/
-                          # declarations/p002_e2_a_declaration_v2.json,
-                          # sha256 6567a25f04d7fb89 (v1 405ddb7ab10486c2 superseded in band),
+                          # declarations/p002_e2_a_declaration_v3.json,
+                          # sha256 6383d781c7bbeaa6 (v2 6567a25f04d7fb89 and
+                          # v1 405ddb7ab10486c2 superseded in band, untouched).
+                          # v3 CARRIES THE REVIEWER'S INTERIOR CONTROLS, WHICH
+                          # CAUGHT ProbQueue-f3's FILL PROBABILITY DECLARED
+                          # BACKWARDS IN v2 -- rising with the queue ahead
+                          # instead of falling. Caught before any run.
                           # carrying_commit 0cbaba6.
                           # Gate: eff_RT <= 8 bps under RiskAverse at
                           # T_p = 600 s, with the interval binding on the PASS
