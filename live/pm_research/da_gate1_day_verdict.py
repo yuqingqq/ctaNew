@@ -2267,7 +2267,8 @@ def main() -> int:
                          open_book=a.open_book,
                          builder_receipt=a.builder_receipt)
         print(f"{a.day}: {r['status']} -- "
-              f"{r['n_arms_agreeing']}/{r['n_arms_declared']} arms agree, "
+              f"{r['n_arms_agreeing'] if r['n_arms_agreeing'] is not None else 'NO POPULATION RECOMPUTED'}"
+              f"{'' if r['n_arms_agreeing'] is None else '/' + str(r['n_arms_declared']) + ' arms agree'}, "
               f"sealed={r['economic_absence']['sealed']}, "
               f"economics read: NONE "
               f"(verification of the economics="
@@ -2854,8 +2855,21 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     #: never made is an ABSENCE -- incomplete. Collapsing them was the
     #: defect REV 70 names, and collapsing them the other way would be
     #: worse.
+    def _is_a_contradiction(blk):
+        """A DECLARED digest the file does not have. `matches: False`
+        because NOTHING was declared is an ABSENCE, and the design block
+        says so in `sha256_declared: NOT_PINNED_HERE` -- reading that as a
+        contradiction is the very collapse REV 70 section 2 names."""
+        if blk.get("matches") is not False:
+            return False
+        dec = str(blk.get("sha256_declared") or "")
+        return len(dec) == 64 and all(c in "0123456789abcdef" for c in dec)
+
     _mismatch = [k for k in ("params", "design")
-                 if prov[k].get("matches") is False]
+                 if _is_a_contradiction(prov[k])]
+    _unpinned = [k for k in ("params", "design")
+                 if prov[k].get("matches") is False
+                 and not _is_a_contradiction(prov[k])]
     if pnamed.get("matches") is False:
         _mismatch.append("params_named_by_the_receipt")
     _incomplete_because = []
@@ -2863,6 +2877,10 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         _incomplete_because.append(
             "the receipt names no params declaration, so a conjunct's INPUT "
             f"is missing ({pnamed.get('status')})")
+    for _k in _unpinned:
+        _incomplete_because.append(
+            f"the {_k} pin declares no digest to verify against "
+            f"({prov[_k].get('sha256_declared')})")
     if book_refusal:
         _incomplete_because.append(
             "the population half was REFUSED BY NAME and NOT ATTEMPTED: "
@@ -2879,12 +2897,13 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         else "FLAGGED" if (_day_flag or not _seal_holds or _mismatch)
         #: the ONLY gap is the params pin -- the state this scheme already
         #: had a name for.
-        else "PROVENANCE_INCOMPLETE" if (params_incomplete
+        else "PROVENANCE_INCOMPLETE" if ((params_incomplete or _unpinned)
                                          and not book_refusal)
         #: nothing disagreed; something was not evaluated.
         else "INCOMPLETE")
     out["incomplete_because"] = _incomplete_because or None
     out["provenance_mismatches"] = _mismatch or None
+    out["provenance_unpinned"] = _unpinned or None
     out["why_this_status"] = (
         "FLAGGED is reserved for a flag IN THE DAY -- an arm COMPARED and "
         "disagreeing, a DECLARED digest its file does not have, or a seal "
