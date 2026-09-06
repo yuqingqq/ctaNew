@@ -47,7 +47,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 69
+EXPECTED_CHECKS = 71
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -442,6 +442,16 @@ def generate_draws_in_process(params: dict, *, day: str, arm: str,
     }
 
 
+def ruled_day_set() -> list:
+    """THE RULED SET, READ FROM THE COMMITTED PARAMETER FILE.
+
+    Deliberately not a parameter: this is the one fact the fixture/real lock
+    turns on, and a lock whose input the caller supplies is not a lock."""
+    return list(json.loads(
+        (Path(__file__).resolve().parents[2] / PARAMS_REL).read_text()
+    ).get("days", []))
+
+
 def resolve_draws(params: dict, *, day: str, arm: str, fixture: bool,
                   supplied: dict | None = None, **kw) -> dict:
     """GENERATED on a ruled day, SUPPLIED only for a fixture -- and the
@@ -452,11 +462,16 @@ def resolve_draws(params: dict, *, day: str, arm: str, fixture: bool,
     such door and it gets a structural lock rather than a promise: fixture
     mode REFUSES when the day is in the ruled set, and real mode REFUSES
     when it is not."""
-    in_ruled = day in params.get("days", [])
+    # THE RULED SET COMES FROM THE COMMITTED FILE, NOT FROM `params`.
+    # `params` is the caller's dict and the caller can rewrite it -- the
+    # fixture run does exactly that, replacing `days` with FIXTURE-1..3. A
+    # lock read from the object the caller controls is the caller's word
+    # again, which is the whole defect this is closing.
+    in_ruled = day in ruled_day_set()
     if fixture and in_ruled:
         raise RunnerRefused(
             f"REFUSED: fixture draws were claimed for {day}, which IS in "
-            f"the ruled day set {params.get('days')}. A fixture run on a "
+            f"the ruled day set {ruled_day_set()}. A fixture run on a "
             f"ruled day is not a fixture run, and only its author would "
             f"know.")
     if not fixture and not in_ruled:
@@ -977,11 +992,20 @@ def fixture_run() -> dict:
             {a: dict(sp["model_digests"])
              for a, sp in params["arms"].items()})
         for arm in sorted(params["arms"]):
-            draws = [rng.gauss(0.0, 1.0) for _ in range(600)]
             observed = 2.5 if arm == "CONDVALUE_X_SKEW" else -0.2
-            prov = {"module_sha256": FIXTURE_MODULE_SHA,
-                    "seed": seed_for(book_sha, arm),
-                    "book_digest": book_sha, "arm": arm}
+            # THROUGH THE SEAM, NOT AROUND IT (rule 17). This used to build
+            # the provenance dict inline, so `resolve_draws()` had a full
+            # battery and NO CALL SITE in the fixture path -- the receipt
+            # recorded `draw_source: UNDECLARED`, which is what a seam with
+            # no caller looks like from the artifact.
+            _res = resolve_draws(
+                params, day=day, arm=arm, fixture=True,
+                supplied={"draws": [rng.gauss(0.0, 1.0) for _ in range(600)],
+                          "provenance": {"module_sha256": FIXTURE_MODULE_SHA,
+                                         "seed": seed_for(book_sha, arm),
+                                         "book_digest": book_sha,
+                                         "arm": arm}})
+            draws, prov = _res["draws"], _res["provenance"]
             r = arm_day(day, arm, observed, draws, 200, params,
                         draw_provenance=prov, book_digest=book_sha,
                         verified_module_sha=FIXTURE_MODULE_SHA)
@@ -1658,6 +1682,20 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
             "a proof produced elsewhere is a proof about elsewhere (DE 76's "
             "rule, in the second place it applies)",
             "does not bind")
+
+    _mutated = dict(live)
+    _mutated["days"] = ["2026-09-03"]          # the caller rewrites its copy
+    refuses(lambda: resolve_draws(
+        _mutated, day="2026-09-03", arm="CONDVALUE_X_SKEW", fixture=True,
+        supplied={"draws": [1.0] * 500, "provenance": {}}),
+        "AND THE LOCK IS NOT READ FROM THE CALLER'S DICT: a caller that "
+        "rewrites `params['days']` to open the door is still REFUSED, "
+        "because the ruled set is read from the COMMITTED file. The fixture "
+        "run does exactly this rewrite, which is how the hole was found",
+        "IS in the ruled day set")
+    ok(ruled_day_set() == live["days"] and len(ruled_day_set()) == 6,
+       f"and `ruled_day_set()` reads the committed file and agrees with the "
+       f"loaded params: {ruled_day_set()}")
 
     # ---- R-387: carrying_commit, and the property that matters ---------
     _cc_ref = carrying_commit_block(
