@@ -96,6 +96,10 @@ def _params_is_newest(params: dict) -> bool:
     return bool(v and Path(params["_path"]).stem.endswith(f"_v{max(v)}"))
 
 
+class VerifierRefused(RuntimeError):
+    """The verification cannot proceed honestly on the inputs given."""
+
+
 def _newest_params() -> Path:
     """The HIGHEST-numbered params declaration present.
 
@@ -114,7 +118,22 @@ def _newest_params() -> Path:
             continue
         if n > best_n:
             best, best_n = f, n
-    return best or (d / "de_multiday_gate1_params_v6.json")
+    #: DA 95, FOUND BY THIS SEAT'S OWN CENSUS once its dataflow gate took
+    #: the TRANSITIVE closure (REV 73 S2(b)): the old tail was
+    #: `best or (d / "…_params_v6.json")` -- ***a stale default that would
+    #: be OPENED whenever the glob found nothing***, while the head is
+    #: v14. A fallback is a fallback in the shape a one-hop gate cannot
+    #: see: the literal is returned, the return lands in `PARAMS_PATH`,
+    #: and `PARAMS_PATH` is opened. ***An absence is a named refusal, not
+    #: a default*** (rule 11): reading a version nobody is running under
+    #: is the exact failure this verifier exists to catch elsewhere.
+    if best is None:
+        raise VerifierRefused(
+            f"REFUSED: NO_PARAMS_DECLARATION_PRESENT -- no "
+            f"`de_multiday_gate1_params_v*.json` under {d}. This verifier "
+            f"will not fall back to a version number typed into its own "
+            f"source; a missing declaration is a named absence.")
+    return best
 
 
 PARAMS_PATH = _newest_params()
@@ -187,6 +206,215 @@ def de_economic_fields_at_source(path: Path | None = None) -> dict:
 #: what tells this verifier the receipt is sealed.
 ECONOMIC_FIELDS = de_economic_fields_at_source()["fields"]
 
+#: DE's DESIGN DECLARATION module, read as a DOCUMENT for one number: the
+#: design VERSION a given commit's tree was under.
+DE_DESIGN_PATH = HERE / "de_multiday_design_declaration.py"
+DE_DESIGN_REL = "live/pm_research/de_multiday_design_declaration.py"
+
+
+def de_sealed_from_design_version_at_source(path: Path | None = None) -> dict:
+    """DE's `SEALED_FROM_DESIGN_VERSION`, read FROM THE SOURCE by AST.
+
+    ***THE SEAM REV 72 S1.4 PREDICTED, AND IT WAS LIVE ON MY SIDE (R-663).***
+    DE scoped the seal PER NAME when the list grew from eight to eleven --
+    `_strip_economic` seals by the list in force for THIS run, and a
+    verifier must judge a receipt by the list in force WHEN THAT RECEIPT WAS
+    PRODUCED. This verifier read the list FLAT and judged the programme's
+    first sealed day against all eleven: `sealed False, n_leaked_fields 6`.
+    ***An instrument that reaches backwards convicts the past of not having
+    obeyed a future rule*** -- and it accused the one day the seal had
+    actually held.
+
+    Read, never imported (R-235): DE's map is a DECLARATION, and the
+    judgement built on it here is this seat's own."""
+    src = Path(path) if path else DE_RUNNER_PATH
+    if not src.is_file():
+        raise VerifierRefused(
+            f"REFUSED: DE's runner is absent at {src}; the per-name seal "
+            f"scope cannot be read at its source and MUST NOT be guessed.")
+    raw = src.read_bytes()
+    tree = ast.parse(raw.decode())
+    scope, in_force = None, None
+    for node in tree.body:
+        if not isinstance(node, ast.Assign):
+            continue
+        for t in node.targets:
+            if not isinstance(t, ast.Name):
+                continue
+            if t.id == "SEALED_FROM_DESIGN_VERSION":
+                scope = {str(k): int(v)
+                         for k, v in ast.literal_eval(node.value).items()}
+            elif t.id == "DESIGN_VERSION_IN_FORCE":
+                in_force = int(ast.literal_eval(node.value))
+    if scope is None:
+        raise VerifierRefused(
+            "REFUSED: SEALED_FROM_DESIGN_VERSION is not a module-level "
+            "assignment in DE's runner. The scope this verifier judges a "
+            "receipt by must come from the code that does the sealing.")
+    #: THE SAME GUARD THE FLAT LIST CARRIES: a map nothing consults pins
+    #: nothing. DE's own selector must reference the name.
+    used_by = sorted(
+        n.name for n in ast.walk(tree)
+        if isinstance(n, ast.FunctionDef)
+        and any(isinstance(x, ast.Name)
+                and x.id == "SEALED_FROM_DESIGN_VERSION"
+                for x in ast.walk(n)))
+    if not used_by:
+        raise VerifierRefused(
+            "REFUSED: no function in DE's runner references "
+            "SEALED_FROM_DESIGN_VERSION. A scope map nothing consults "
+            "would pin nothing -- the stripper could be sealing by a "
+            "different rule entirely.")
+    missing = [f for f in ECONOMIC_FIELDS if f not in scope]
+    if missing:
+        raise VerifierRefused(
+            f"REFUSED: {len(missing)} name(s) in ECONOMIC_FIELDS carry no "
+            f"sealed-from version: {missing}. A name with no scope cannot "
+            f"be judged either way, and defaulting it would pick a rule "
+            f"nobody wrote.")
+    return {"scope": scope, "design_version_in_force": in_force,
+            "source_path": "live/pm_research/de_multiday_gate1_runner.py",
+            "source_sha256": hashlib.sha256(raw).hexdigest(),
+            "read_by": "ast, at the source; not imported and not copied",
+            "referenced_by_functions": used_by}
+
+
+_SEAL_SCOPE = de_sealed_from_design_version_at_source()
+#: name -> the design version FROM WHICH it is sealed.
+SEALED_FROM_DESIGN_VERSION = _SEAL_SCOPE["scope"]
+DESIGN_VERSION_IN_FORCE_AT_SOURCE = _SEAL_SCOPE["design_version_in_force"]
+
+
+def _design_version_in_a_tree(commit: str) -> dict:
+    """DE's design `VERSION` in the tree a commit names, plus the file's
+    digest so a receipt's own closure entry can be matched against it."""
+    import da_root as _R                                       # noqa: PLC0415
+    root = _R.code_root("resolving a receipt's design version at its "
+                        "carrying commit")
+    try:
+        r = subprocess.run(["git", "-C", str(root), "show",
+                            f"{commit}:{DE_DESIGN_REL}"],
+                           capture_output=True, timeout=60)
+    except (OSError, subprocess.SubprocessError) as e:
+        return {"resolved": False, "why": f"git could not run: {e!r}"}
+    if r.returncode != 0:
+        return {"resolved": False,
+                "why": (f"the commit does not resolve in this tree, or the "
+                        f"file is not in it: "
+                        f"{(r.stderr or b'').decode()[:200].strip()}")}
+    blob = r.stdout
+    try:
+        tree = ast.parse(blob.decode())
+    except (UnicodeDecodeError, SyntaxError) as e:
+        return {"resolved": False, "why": f"unparseable at that commit: {e}"}
+    ver = None
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            for t in node.targets:
+                if isinstance(t, ast.Name) and t.id == "VERSION":
+                    ver = int(ast.literal_eval(node.value))
+    if ver is None:
+        return {"resolved": False,
+                "why": "no module-level VERSION in the design declaration "
+                       "at that commit"}
+    return {"resolved": True, "design_version": ver,
+            "file_sha256": hashlib.sha256(blob).hexdigest(),
+            "read_by": f"git show {commit[:12]}:{DE_DESIGN_REL}, then ast"}
+
+
+def receipt_design_version(rec: dict) -> dict:
+    """WHICH LIST A RECEIPT IS JUDGED AGAINST -- resolved from the receipt.
+
+    TWO ROUTES, BOTH PAIRS, and nothing else counts:
+
+      (1) `provenance.design` = {path, sha256} (DE 100 on). The digest is
+          RECOMPUTED from the file the path names; a path whose digest does
+          not match names nothing.
+      (2) `source_identity.carrying_commit` + the receipt's OWN import
+          closure digest for the design module. The blob at that commit is
+          read and hashed; if it equals what the receipt says it imported,
+          the tree is identified and its `VERSION` is the design version.
+
+    ***AN OPENED PATH IS NOT A PIN.*** The 09-03 run opened a stale
+    `_design_v10` beside `_design_v21` -- picking the first would have been
+    a coin toss dressed as evidence.
+
+    UNRESOLVED MEANS THE FULL LIST. An absence never selects the weaker
+    rule: a receipt that cannot say what it was produced under is judged
+    against every sealed name, and the record says so."""
+    ev = []
+    prov = ((rec.get("provenance") or {}).get("design")) or {}
+    pth, dig = str(prov.get("path") or ""), prov.get("sha256")
+    m = re.search(r"_design_v(\d+)(?:__|\.)", Path(pth).name) if pth else None
+    if m:
+        f = _derived_dir() / Path(pth).name
+        actual = (hashlib.sha256(f.read_bytes()).hexdigest()
+                  if f.is_file() else None)
+        if dig and actual and dig == actual:
+            return {"design_version": int(m.group(1)), "resolved": True,
+                    "how": "provenance.design PAIR {path, sha256}, digest "
+                           "recomputed from the file the path names",
+                    "pair_verified": True}
+        ev.append({"route": "provenance.design",
+                   "path": Path(pth).name, "declared_sha256": dig,
+                   "recomputed_sha256": actual, "pair_verified": False,
+                   "why": "the path names a version and the digest beside "
+                          "it does not match the file -- the version is "
+                          "UNKNOWN, not the one the path claims"})
+    si = rec.get("source_identity") or {}
+    cc = si.get("carrying_commit")
+    declared = ((si.get("import_closure") or {}).get("modules")
+                or {}).get(Path(DE_DESIGN_REL).name)
+    if cc:
+        t = _design_version_in_a_tree(str(cc))
+        if t.get("resolved") and declared and declared == t["file_sha256"]:
+            return {"design_version": t["design_version"], "resolved": True,
+                    "how": ("source_identity.carrying_commit PAIRED with "
+                            "the receipt's own import-closure digest for "
+                            "the design module: the blob at that commit "
+                            "hashes to what the receipt says it imported"),
+                    "carrying_commit": str(cc),
+                    "design_module_sha256": t["file_sha256"],
+                    "read_by": t["read_by"], "pair_verified": True}
+        ev.append({"route": "carrying_commit + import closure",
+                   "commit": str(cc),
+                   "closure_digest_in_receipt": declared,
+                   "blob_digest_at_that_commit": t.get("file_sha256"),
+                   "resolved_tree": t.get("resolved"),
+                   "why": t.get("why") or (
+                       "the receipt's closure digest and the blob at that "
+                       "commit disagree, so the tree is not identified")})
+    return {"design_version": None, "resolved": False,
+            "how": "NO VERIFIABLE PAIR -- judged against the FULL list",
+            "an_opened_path_is_not_a_pin": (
+                "the 09-03 run opened a stale _design_v10 beside _design_"
+                "v21; choosing one would be a coin toss dressed as "
+                "evidence"),
+            "evidence_considered": ev, "pair_verified": False}
+
+
+def fields_in_force_for(rec: dict) -> dict:
+    """The sealed names a receipt is judged against, and WHY those."""
+    v = receipt_design_version(rec)
+    if v["resolved"]:
+        names = tuple(n for n in ECONOMIC_FIELDS
+                      if SEALED_FROM_DESIGN_VERSION[n] <= v["design_version"])
+        later = tuple(n for n in ECONOMIC_FIELDS if n not in names)
+    else:
+        names, later = tuple(ECONOMIC_FIELDS), ()
+    return {"fields": names, "n_fields": len(names),
+            "design_version": v["design_version"],
+            "version_resolved": v["resolved"], "how_resolved": v["how"],
+            "version_evidence": {k: x for k, x in v.items()
+                                 if k not in ("design_version", "resolved",
+                                              "how")},
+            "sealed_only_from_a_later_version": list(later),
+            "judged_against_the_full_list": not v["resolved"],
+            "why": ("a receipt is judged by the list in force WHEN IT WAS "
+                    "PRODUCED; a name sealed later did not exist as a rule "
+                    "for it. An unresolvable version is judged against "
+                    "every name -- absence never selects the weaker rule")}
+
 #: THE DECLARED TOLERANCE, and where it is exact and where it cannot be.
 TOLERANCE = {
     "exact_bit_for_bit": ["D_E0", "Z", "p_location", "null_mean", "null_sd"],
@@ -208,10 +436,6 @@ TOLERANCE = {
         "A near-miss is a MISMATCH here, not a pass: the whole point of a "
         "seeded null is that it reproduces."),
 }
-
-
-class VerifierRefused(RuntimeError):
-    """The verification cannot proceed honestly on the inputs given."""
 
 
 def carrying_commit() -> str:
@@ -629,8 +853,28 @@ def load_day_book(path: str, *, open_book: bool = False,
         #: refused BY NAME rather than mapped by inference.
         #: (2) only here, and only under the wrapper the caller holds.
         import pickle                                         # noqa: PLC0415
-        with p.open("rb") as fh:
-            obj = pickle.load(fh)
+        #: REV 73 S2(a): ***A TRACEBACK IS NOT A VERDICT.*** With the RIGHT
+        #: pin on bytes that are not a pickle, `pickle.load` raised
+        #: `UnpicklingError` straight out of the verifier -- a caller
+        #: reading verdicts got a stack trace, and the two facts that
+        #: matter were nowhere in it. ***The pin AUTHORISES the execution;
+        #: it does not VALIDATE it***: a digest says these are the bytes
+        #: the receipt names, never that they are a book. So both are
+        #: named -- the pin MATCHED, the payload is not a pickle.
+        try:
+            with p.open("rb") as fh:
+                obj = pickle.load(fh)
+        except (pickle.UnpicklingError, EOFError, ValueError, TypeError,
+                AttributeError, ImportError, IndexError,
+                MemoryError) as e:
+            raise VerifierRefused(
+                f"REFUSED: BOOK_PIN_MATCHED_BUT_NOT_A_PICKLE -- {p.name} "
+                f"hashes to the digest the receipt names, so the PIN "
+                f"HELD; the bytes are then not a loadable pickle "
+                f"({type(e).__name__}: {str(e)[:120]}). WHICH OF THE TWO "
+                f"FAILED: the pin PASSED, the payload FAILED. A digest "
+                f"authorises the execution, it does not validate it."
+            ) from e
         if not isinstance(obj, dict):
             raise VerifierRefused(
                 f"REFUSED: BOOK_PICKLE_IS_NOT_A_MAPPING -- {p.name} "
@@ -1668,15 +1912,28 @@ def declared_limits(receipt_arm_seals: list, params: dict,
     #: never produces it -- counted from the source, not asserted.
     src = DE_RUNNER_PATH.read_text()
     tree = ast.parse(src)
-    n_assign = 0
+    #: A PRODUCING PLACE BINDS A VALUE; A DECLARATION ONLY NAMES THE
+    #: FIELD. R-663: DE's new per-name scope map carries `"D_E_MINUS_R": 1`
+    #: -- a VERSION, not a quantity -- and counting every dict key made
+    #: this limit read "1 producing place" the hour that map landed. The
+    #: separating property is the VALUE: a constant int or string beside
+    #: the name is a table entry, an expression is an emission. The
+    #: declarations are counted too, so the exclusion is VISIBLE.
+    n_assign, n_named_in_declarations = 0, 0
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign):
             for t in node.targets:
                 if isinstance(t, ast.Name) and t.id == "D_E_MINUS_R":
                     n_assign += 1
         if isinstance(node, ast.Dict):
-            for k in node.keys:
-                if isinstance(k, ast.Constant) and k.value == "D_E_MINUS_R":
+            for k, v in zip(node.keys, node.values):
+                if not (isinstance(k, ast.Constant)
+                        and k.value == "D_E_MINUS_R"):
+                    continue
+                if isinstance(v, ast.Constant) and isinstance(
+                        v.value, (int, float, str, bool)):
+                    n_named_in_declarations += 1
+                else:
                     n_assign += 1
     n_sealed = sum(1 for s in receipt_arm_seals if s)
     return [
@@ -1689,6 +1946,13 @@ def declared_limits(receipt_arm_seals: list, params: dict,
          "computed": {"in_DEs_economic_field_list":
                           "D_E_MINUS_R" in de["fields"],
                       "n_places_the_runner_produces_it": n_assign,
+                      "n_places_it_is_only_NAMED_in_a_declaration":
+                          n_named_in_declarations,
+                      "a_producing_place_binds_a_value": (
+                          "a dict entry whose value is a CONSTANT is a "
+                          "table entry (DE's per-name seal scope says "
+                          "`D_E_MINUS_R: 1`, a VERSION); one whose value "
+                          "is an expression is an emission"),
                       "so_there_is_nothing_to_compare": n_assign == 0}},
         {"limit": "THE_BOOK_IS_SHARED_AND_ITS_CONSTRUCTION_IS_NOT_CHECKED",
          "what": ("both implementations read the SAME day book. If the book "
@@ -2284,6 +2548,10 @@ def main() -> int:
     ap.add_argument("--book")
     ap.add_argument("--receipt")
     ap.add_argument("--output", type=Path, default=None)
+    ap.add_argument("--supersedes", default=None,
+                    help="the record this one replaces: R-608's pair is "
+                         "written and the prior chain extended")
+    ap.add_argument("--what-changed", default=None)
     a = ap.parse_args()
     if a.selftest:
         checks, n_fail = selftest()
@@ -2305,6 +2573,8 @@ def main() -> int:
             ap.error("--pre-read needs --day, --book and --receipt")
         r = pre_read_day(a.day, a.book, a.receipt, output=a.output,
                          open_book=a.open_book,
+                         supersedes=a.supersedes,
+                         what_changed=a.what_changed,
                          builder_receipt=a.builder_receipt)
         print(f"{a.day}: {r['status']} -- "
               f"{r['n_arms_agreeing'] if r['n_arms_agreeing'] is not None else 'NO POPULATION RECOMPUTED'}"
@@ -2369,10 +2639,30 @@ def economic_absence(receipt) -> dict:
     copied anywhere, not into this dict, not into a message, not into a log
     line. A checker that reported `D_E0 = 6.13 leaked` would have published
     the number it exists to protect."""
+    #: R-663: JUDGED BY THE LIST IN FORCE WHEN THIS RECEIPT WAS PRODUCED,
+    #: not by today's. Reading the list flat made this function report the
+    #: programme's FIRST SEALED DAY as `sealed False, n_leaked_fields 6`
+    #: -- for carrying three counts that were OPEN BY RULING when it was
+    #: emitted. The scope comes from DE's own per-name map; the version
+    #: comes from the receipt itself, by a PAIR, or the full list applies.
+    inforce = fields_in_force_for(receipt if isinstance(receipt, dict)
+                                  else {})
+    judged = inforce["fields"]
     walked = list(_walk_paths(receipt))
     leaks = [p for p, _ in walked
-             if p.rsplit(".", 1)[-1].split("[")[0] in ECONOMIC_FIELDS]
+             if p.rsplit(".", 1)[-1].split("[")[0] in judged]
     return {"economic_fields_declared": list(ECONOMIC_FIELDS),
+            "judged_against": list(judged),
+            "n_judged_against": len(judged),
+            "design_version_of_this_receipt": inforce["design_version"],
+            "design_version_resolved": inforce["version_resolved"],
+            "how_the_version_was_resolved": inforce["how_resolved"],
+            "version_evidence": inforce["version_evidence"],
+            "sealed_only_from_a_later_version": inforce[
+                "sealed_only_from_a_later_version"],
+            "judged_against_the_full_list": inforce[
+                "judged_against_the_full_list"],
+            "why_scoped": inforce["why"],
             #: REV 70 / R-656: NAME WHAT EACH COUNT COUNTS. This walks THE
             #: RECEIPT; `emitted_census` walks THIS SEAT'S OWN RECORD. The
             #: register read them as one number ("0 leaked in 299 leaves")
@@ -2600,10 +2890,41 @@ def emitted_census(emitted: dict, receipt) -> dict:
             }
 
 
+def supersession_block(prior: str | Path, *, what_changed: str,
+                       what_did_not: str) -> dict:
+    """R-608's PAIR plus the chain the prior record already carried.
+
+    DA 91 wrote this block by hand after the emission; a block that lives
+    outside the emitter is a block that can be forgotten, and REV 73 S0's
+    correction is unconditional. It is part of the module now, with the
+    chain EXTENDED rather than replaced -- a record whose chain forgets its
+    grandparent has no provenance, only a parent."""
+    f = Path(prior)
+    if not f.is_file():
+        raise VerifierRefused(
+            f"REFUSED: SUPERSEDED_RECORD_NOT_PRESENT -- {f}. A link is the "
+            f"pair {{path, sha256}} landing on ONE PRESENT file; a "
+            f"half-written link refuses BY NAME, never as 'no link'.")
+    sha = hashlib.sha256(f.read_bytes()).hexdigest()
+    try:
+        prior_chain = (json.loads(f.read_text()).get("supersedes")
+                       or {}).get("chain") or []
+    except ValueError:
+        prior_chain = []
+    return {"path": f.name, "sha256": sha,
+            "chain": [list(x) for x in prior_chain] + [[f.name, sha]],
+            "the_link_is_the_PAIR": ["path", "sha256"],
+            "v1_untouched": True,
+            "what_changed": what_changed,
+            "what_did_NOT_change": what_did_not}
+
+
 def pre_read_day(day: str, book_path: str, receipt_path: str, *,
                  output: Path | None = None, open_book: bool = False,
                  params: dict | None = None,
                  now: datetime.datetime | None = None,
+                 supersedes: str | Path | None = None,
+                 what_changed: str | None = None,
                  builder_receipt: str | None = None) -> dict:
     """THE PRE-READ. Everything the runbook promises before the bar, and
     NOTHING that the bar exists to schedule.
@@ -2803,6 +3124,15 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         #: the fact is indistinguishable from the one the read was
         #: scheduled against.
         "is_the_declared_LANDING_RECORD": True,
+        #: REV 73 S0: the superseding link is written BY THE EMITTER now.
+        **({"supersedes": supersession_block(
+            supersedes,
+            what_changed=(what_changed or
+                          "re-emitted; see the round's report"),
+            what_did_not=(
+                "the receipt digest this record exists to carry. Conjunct "
+                "3 reads the CHAIN HEAD, and the head still carries "
+                + str(rp_sha)))} if supersedes else {}),
         #: REV 52 section 2.4: the record's DECLARED NAME and its correction
         #: path, declared by the seat that writes it.
         "landing_record_naming": pre_read_artifact_naming(),
@@ -3375,6 +3705,136 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"{pl['economic_absence']['leaked_field_paths']}; the value appears "
        f"0 times in the emission and the census confirms "
        f"{pl['emitted_census']['n_of_them_echoed_as_a_NUMERIC_LEAF']} echoed")
+
+    # -- R-663. THE SEAL IS SCOPED PER NAME, AND THE SCOPE IS THE -------
+    # -- LIST IN FORCE WHEN THE RECEIPT WAS PRODUCED --------------------
+    #: REV 72 S1.4 predicted this seam and it was LIVE here: DE extended
+    #: ECONOMIC_FIELDS from eight to eleven, this verifier read the list
+    #: FLAT, and the programme's FIRST SEALED DAY came back `sealed False,
+    #: n_leaked_fields 6` -- accused by its own instrument for carrying
+    #: three counts that were OPEN BY RULING when it was emitted.
+    real = (_derived_dir()
+            / "p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json")
+    if real.is_file():
+        rrec = json.loads(real.read_text())
+        rabs = economic_absence(rrec)
+        ck("R-663 ON THE REAL 09-03 RECEIPT -- ***THE SEAL HOLDS, AND THE "
+           "ACCUSATION WAS THE INSTRUMENT'S.*** Judged against the list in "
+           "force WHEN IT WAS PRODUCED, the programme's first sealed day "
+           "is `sealed True, 0 leaked`. The version is not assumed: it is "
+           "resolved from the receipt by a PAIR -- its own "
+           "`source_identity.carrying_commit` and its own import-closure "
+           "digest for DE's design module, which is hashed at that commit "
+           "-- and NAMED in the record. ***An opened path is not a pin***: "
+           "this run opened a stale `_design_v10` beside `_design_v21`, "
+           "and picking one would be a coin toss dressed as evidence",
+           rabs["sealed"] is True and rabs["n_leaked_fields"] == 0
+           and rabs["design_version_of_this_receipt"] == 21
+           and rabs["design_version_resolved"] is True
+           and rabs["n_judged_against"] == 8
+           and len(rabs["sealed_only_from_a_later_version"]) == 3
+           and rabs["judged_against_the_full_list"] is False,
+           f"design v{rabs['design_version_of_this_receipt']} resolved by "
+           f"the carrying-commit pair; judged against "
+           f"{rabs['n_judged_against']} names, "
+           f"{len(rabs['sealed_only_from_a_later_version'])} sealed only "
+           f"from a later version; {rabs['n_leaked_fields']} leaked over "
+           f"{rabs['n_receipt_leaves_walked']} leaves")
+    else:
+        ck("R-663 ON THE REAL 09-03 RECEIPT -- ***SKIPPED, NAMED, AND NOT "
+           "COUNTED AS A PASS***: the sealed receipt is not at this root. "
+           "An absent artifact is a named status, never a green check",
+           False,
+           f"ABSENT: {real.name} -- rule 11: this cell FAILS rather than "
+           f"reporting a seal it could not read")
+
+    # the SAME bytes, two versions: only the pin differs
+    vtmp = Path(tempfile.mkdtemp(prefix="da95ver_"))
+    def _pinned(version: int, *, corrupt_digest: bool = False) -> dict:
+        f = vtmp / f"p003_de_multiday_gate1_design_v{version}.json"
+        f.write_text(json.dumps({"design_version": version}))
+        d = hashlib.sha256(f.read_bytes()).hexdigest()
+        return {"protocol": "P003_SYNTHETIC_FOR_THE_SCOPE_TEST",
+                "provenance": {"design": {
+                    "path": f"derived/{f.name}",
+                    "sha256": ("0" * 64 if corrupt_digest else d)}},
+                "per_day_sealed_artifacts": [
+                    {"arm": "A", "admissibility": {"n_decisions": 7},
+                     "counts": {"n_fills_arm": 3}}]}
+    _real_derived = globals()["_derived_dir"]
+    globals()["_derived_dir"] = lambda: vtmp
+    try:
+        a21 = economic_absence(_pinned(21))
+        a23 = economic_absence(_pinned(23))
+        abad = economic_absence(_pinned(23, corrupt_digest=True))
+    finally:
+        globals()["_derived_dir"] = _real_derived
+    ck("KNOWN-BAD IN BOTH DIRECTIONS, ONE FIELD, TWO SCOPES: a receipt "
+       "carrying `n_fills_arm` AT DEPTH is CLEAN under a v21 pin (the "
+       "count was open by ruling then) and ***LEAKED under a v23 pin***, "
+       "where R-659 sealed it. Same bytes, same walker, same name -- only "
+       "the version the receipt pins differs, which is exactly what a "
+       "scoped seal must turn on",
+       a21["sealed"] is True and a21["n_judged_against"] == 8
+       and a23["sealed"] is False and a23["n_judged_against"] == 11
+       and any("n_fills_arm" in x for x in a23["leaked_field_paths"])
+       and a21["design_version_of_this_receipt"] == 21
+       and a23["design_version_of_this_receipt"] == 23,
+       f"v21 -> sealed {a21['sealed']} against {a21['n_judged_against']} "
+       f"names; v23 -> sealed {a23['sealed']} against "
+       f"{a23['n_judged_against']}, leaked at {a23['leaked_field_paths']}")
+    ck("AND THE PAIR IS A PAIR: a `provenance.design` whose PATH names v23 "
+       "and whose DIGEST does not match the file is ***not a v23 receipt "
+       "-- it is a receipt of UNKNOWN version***, judged against the FULL "
+       "list and saying so. ***Absence never selects the weaker rule***: "
+       "the strictest list is what an unresolvable version gets",
+       abad["design_version_resolved"] is False
+       and abad["judged_against_the_full_list"] is True
+       and abad["n_judged_against"] == len(ECONOMIC_FIELDS)
+       and abad["sealed"] is False
+       and abad["version_evidence"]["evidence_considered"][0][
+           "pair_verified"] is False,
+       f"declared digest does not match the file -> resolved "
+       f"{abad['design_version_resolved']}, judged against "
+       f"{abad['n_judged_against']} (the full list), sealed "
+       f"{abad['sealed']}")
+
+    # the SCOPE MAP itself, read from DE's source, with both refusals
+    stmp = Path(tempfile.mkdtemp(prefix="da95scope_"))
+    base = DE_RUNNER_PATH.read_text()
+    unused = stmp / "no_reader.py"
+    unused.write_text(
+        "ECONOMIC_FIELDS = ('D_E0',)\n"
+        "SEALED_FROM_DESIGN_VERSION = {'D_E0': 1}\n"
+        "def _strip_economic(x):\n    return ECONOMIC_FIELDS\n")
+    short = stmp / "short_map.py"
+    short.write_text(base.replace(
+        '"n_fills_arm": 23, "n_fills_baseline": 23, "n_cancels_issued": 23,',
+        '"n_fills_arm": 23,', 1))
+    def _refuses(fn):
+        try:
+            fn()
+            return None
+        except VerifierRefused as e:
+            return str(e)
+    r_unused = _refuses(
+        lambda: de_sealed_from_design_version_at_source(unused))
+    r_short = _refuses(
+        lambda: de_sealed_from_design_version_at_source(short))
+    r_absent = _refuses(
+        lambda: de_sealed_from_design_version_at_source(stmp / "gone.py"))
+    ck("AND THE SCOPE MAP IS READ AT DE'S SOURCE BY AST WITH THE SAME TWO "
+       "GUARDS THE FLAT LIST CARRIES (R-235: their declaration, this "
+       "seat's judgement -- never their computation): a map ***no function "
+       "consults*** pins nothing and REFUSES; a map that leaves a name in "
+       "`ECONOMIC_FIELDS` ***with no sealed-from version*** REFUSES rather "
+       "than defaulting it, because defaulting would pick a rule nobody "
+       "wrote; and an absent runner REFUSES rather than guessing the scope",
+       r_unused and "no function" in r_unused
+       and r_short and "carry no sealed-from version" in r_short
+       and r_absent and "MUST NOT be guessed" in r_absent,
+       f"unconsulted map -> refused; two names dropped from the map -> "
+       f"refused by name; absent runner -> refused")
 
     # -- G2. REV 49 section 2.4: A SEALED NUMBER HIDDEN IN PROSE ---------
     #: the exact class DE 85 found. The receipt is properly SEALED, so it
@@ -3954,6 +4414,65 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and _pin_msgs["no_pin_at_all"] == "NO_PIN_NO_OPEN",
        "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
                  for k, v in list(_msgs.items()) + list(_pin_msgs.items())))
+    # -- REV 73 S0: THE SUPERSEDING LINK IS WRITTEN BY THE EMITTER ------
+    _sd = Path(tempfile.mkdtemp(prefix="da95sup_"))
+    _g1 = _sd / "rec_v1.json"
+    _g1.write_text(json.dumps({"day": "2026-09-03"}))
+    _g1sha = hashlib.sha256(_g1.read_bytes()).hexdigest()
+    _g2 = _sd / "rec_v2.json"
+    _g2.write_text(json.dumps({"day": "2026-09-03", "supersedes": {
+        "path": _g1.name, "sha256": _g1sha, "chain": [[_g1.name, _g1sha]]}}))
+    _blk = supersession_block(_g2, what_changed="x", what_did_not="y")
+    try:
+        supersession_block(_sd / "gone.json", what_changed="x",
+                           what_did_not="y")
+        _sup_absent = "ADMITTED"
+    except VerifierRefused as _e:
+        _sup_absent = str(_e).split(" -- ")[0].replace("REFUSED: ", "")
+    ck("REV 73 S0 -- THE SUPERSEDING LINK IS WRITTEN BY THE EMITTER, AND "
+       "THE CHAIN IS EXTENDED, NOT REPLACED. DA 91 wrote this block BY "
+       "HAND after the emission, and ***a block that lives outside the "
+       "emitter is a block that can be forgotten***. The pair is "
+       "{path, sha256} on ONE PRESENT file; the prior record's chain is "
+       "carried forward and the prior record appended, so ***a record "
+       "whose chain forgets its grandparent has provenance only one step "
+       "deep***; and a prior that is not there REFUSES BY NAME rather "
+       "than emitting a record with no link",
+       _blk["path"] == _g2.name
+       and _blk["sha256"] == hashlib.sha256(_g2.read_bytes()).hexdigest()
+       and [x[0] for x in _blk["chain"]] == [_g1.name, _g2.name]
+       and _blk["v1_untouched"] is True
+       and _sup_absent == "SUPERSEDED_RECORD_NOT_PRESENT",
+       f"chain {[x[0] for x in _blk['chain']]} (grandparent first); "
+       f"absent prior -> {_sup_absent}")
+
+    #: REV 73 S2(a): the RIGHT pin on bytes that are not a pickle.
+    _notpkl = Path(tempfile.mkdtemp(prefix="da95pkl_")) / "book.pkl"
+    _notpkl.write_bytes(b"this is not a pickle, it is a sentence.\n")
+    _right = hashlib.sha256(_notpkl.read_bytes()).hexdigest()
+    try:
+        load_day_book(str(_notpkl), open_book=True, expected_sha256=_right)
+        _np = "ADMITTED"
+    except VerifierRefused as _e:
+        _np = str(_e)
+    except Exception as _e:                                   # noqa: BLE001
+        #: the FIXTURE is what catches a raw exception -- if the verifier
+        #: still leaks one, this cell must SEE it rather than die.
+        _np = f"RAW_{type(_e).__name__}"
+    ck("REV 73 S2(a) -- ***A TRACEBACK IS NOT A VERDICT.*** With the RIGHT "
+       "pin on bytes that are not a pickle, `pickle.load` raised "
+       "`UnpicklingError` straight out of the verifier: a caller reading "
+       "verdicts got a stack trace, and the two facts that matter were "
+       "nowhere in it. It is now `BOOK_PIN_MATCHED_BUT_NOT_A_PICKLE`, and "
+       "***it says WHICH OF THE TWO FAILED*** -- the pin PASSED, the "
+       "payload FAILED. ***A digest AUTHORISES the execution; it does not "
+       "VALIDATE it***: matching bytes are the bytes the receipt names, "
+       "never a guarantee that they are a book",
+       _np.startswith("REFUSED: BOOK_PIN_MATCHED_BUT_NOT_A_PICKLE")
+       and "the pin PASSED, the payload FAILED" in _np
+       and not _np.startswith("RAW_"),
+       _np.split(". WHICH")[0][:150] + " …")
+
     ck("AND THE SEED RE-DERIVATION AND PER-SIDE COUNTS STAY **NOT DONE BY "
        "NAME** until that run: the pre-read reports "
        "`population_recomputed_from_the_book: false` with the refusal text "

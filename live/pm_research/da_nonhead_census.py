@@ -332,8 +332,106 @@ HASH_FUNCS = ("sha256", "sha1", "md5", "blake2b", "blake2s", "sha512",
 PRESENCE_FUNCS = ("exists", "is_file")
 
 
-def _flows_into_an_open(node, parents, assigned_uses) -> dict:
-    """Does this literal reach a file open? DIRECT, or via ONE assignment."""
+#: REV 73 S2(b). ***ONE HOP IS A REFACTOR AWAY FROM BLIND.*** The gate
+#: followed `LIT -> A -> open(A)` and stopped there, so two ordinary
+#: shapes walked straight past it: a SECOND assignment (`A = LIT; B = A;
+#: open(B)`) and a FUNCTION that returns the literal (`def p(): return
+#: LIT` … `open(p())`). Neither is exotic -- both are what happens when
+#: someone tidies a module. So the flow is the TRANSITIVE CLOSURE over
+#: name-to-name assignments, computed to a FIXED POINT, and a function
+#: whose returned literal reaches an open is itself an alias for it.
+def _alias_edges(tree, parents) -> dict:
+    """name -> names it flows into, over assignments and returns."""
+    edges: dict = {}
+
+    def add(src, dst):
+        if src and dst:
+            edges.setdefault(src, set()).add(dst)
+
+    def _forwarded(v):
+        """The names whose VALUE can land in the target unchanged."""
+        if isinstance(v, ast.Name):
+            return [v.id]
+        #: `X = A if c else B` and `X = A or B` forward one of their
+        #: operands VERBATIM -- a fallback is exactly this shape, and it
+        #: is where a stale default hides (`best or (d / "…_v6.json")`).
+        if isinstance(v, ast.IfExp):
+            return [x.id for x in (v.body, v.orelse)
+                    if isinstance(x, ast.Name)]
+        if isinstance(v, ast.BoolOp):
+            return [x.id for x in v.values if isinstance(x, ast.Name)]
+        return []
+
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Assign):
+            for src in _forwarded(n.value):
+                for t in n.targets:
+                    if isinstance(t, ast.Name):
+                        add(src, t.id)
+        #: `X = f()` puts what `f` RETURNS into `X`, so the function is
+        #: an alias for the name it lands in. Without this edge a literal
+        #: returned by a resolver is invisible the moment the caller
+        #: assigns the result -- which is the ordinary shape.
+        if isinstance(n, ast.Assign) and isinstance(n.value, ast.Call) \
+                and isinstance(n.value.func, ast.Name):
+            for t in n.targets:
+                if isinstance(t, ast.Name):
+                    add(n.value.func.id, t.id)
+        #: `def p(): return A` makes `p` an alias for `A`, because a call
+        #: to `p` puts A's value where the call is.
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            for sub in ast.walk(n):
+                if isinstance(sub, ast.Return) and isinstance(sub.value,
+                                                              ast.Name):
+                    if _enclosing_fn(sub, parents) == n.name:
+                        add(sub.value.id, n.name)
+    return edges
+
+
+def _closure(name: str, edges: dict) -> set:
+    """Every name the value reaches. A FIXED POINT, not one hop."""
+    seen, stack = {name}, [name]
+    while stack:
+        cur = stack.pop()
+        for nxt in edges.get(cur, ()):
+            if nxt not in seen:
+                seen.add(nxt)
+                stack.append(nxt)
+    return seen
+
+
+def _returning_function(node, parents) -> str | None:
+    """The function whose RETURN this literal is -- `def p(): return LIT`."""
+    cur, depth = parents.get(node), 0
+    while cur is not None and depth < 6:
+        depth += 1
+        if isinstance(cur, ast.Return):
+            return _enclosing_fn(cur, parents)
+        if isinstance(cur, (ast.FunctionDef, ast.AsyncFunctionDef,
+                            ast.Module)):
+            return None
+        cur = parents.get(cur)
+    return None
+
+
+def _merge_uses(names, assigned_uses) -> dict:
+    """The use kinds of every name the value reaches, added up."""
+    out = {"first": None, "HASHED": 0, "PRESENCE": 0, "INTERPRETED": 0,
+           "through": []}
+    for nm in sorted(names):
+        e = assigned_uses.get(nm)
+        if not e:
+            continue
+        out["through"].append(nm)
+        out["first"] = out["first"] or e["first"]
+        for k in ("HASHED", "PRESENCE", "INTERPRETED"):
+            out[k] += e[k]
+    return out if out["through"] else {}
+
+
+def _flows_into_an_open(node, parents, assigned_uses, edges=None) -> dict:
+    """Does this literal reach a file open? DIRECTLY, or through the
+    TRANSITIVE CLOSURE of assignments and returning functions."""
     #: THE FIXTURE ANCESTRY IS CHECKED FIRST. Walking up and stopping at
     #: the FIRST open found `Path(...)` INSIDE `refuses(lambda: ...)` and
     #: called it a pin -- the exclusion never fired, because the open is
@@ -367,19 +465,32 @@ def _flows_into_an_open(node, parents, assigned_uses) -> dict:
                                 f"WRITTEN, not a pin being read")}
             if name in OPEN_CTORS or name in OPEN_FUNCS:
                 return {"flows": True, "how": f"DIRECT argument of {name}()"}
+    edges = edges or {}
     ident = _assigned_name(node, parents)
-    if ident and ident in assigned_uses:
-        e = assigned_uses[ident]
-        if _only_hashed(e):
-            return {"flows": False,
-                    "how": (f"HASHED, NOT INTERPRETED: every use of "
-                            f"`{ident}` feeds a digest or tests presence "
-                            f"beside one ({e['HASHED']} hashed, "
-                            f"{e['PRESENCE']} presence, 0 interpreted) -- "
-                            f"the R-608 link being WRITTEN, not a pin")}
-        return {"flows": True,
-                "how": f"through ONE assignment: `{ident}` is used at "
-                       f"{e['first']}"}
+    fn_ret = _returning_function(node, parents)
+    roots = {x for x in (ident, fn_ret) if x}
+    reach: set = set()
+    for r in roots:
+        reach |= _closure(r, edges)
+    if reach:
+        e = _merge_uses(reach, assigned_uses)
+        if e:
+            hops = sorted(reach - roots)
+            via = (f"`{'`/`'.join(sorted(roots))}`"
+                   + (f" -> `{'`/`'.join(hops)}`" if hops else ""))
+            if _only_hashed(e):
+                return {"flows": False,
+                        "how": (f"HASHED, NOT INTERPRETED: every use of "
+                                f"{via} feeds a digest or tests presence "
+                                f"beside one ({e['HASHED']} hashed, "
+                                f"{e['PRESENCE']} presence, 0 "
+                                f"interpreted) -- the R-608 link being "
+                                f"WRITTEN, not a pin")}
+            kind = ("a RETURNING FUNCTION" if fn_ret and fn_ret in reach
+                    and fn_ret != ident else "ASSIGNMENT")
+            return {"flows": True,
+                    "how": (f"through the assignment closure ({kind}): "
+                            f"{via} is used at {e['first']}")}
     return {"flows": False, "how": ("the literal reaches no file open -- "
                                     "not a pin")}
 
@@ -493,6 +604,58 @@ def derived_index(purpose: str = "the non-head census") -> dict:
             "names": {k: sorted(set(v)) for k, v in names.items()}}
 
 
+#: REV 73 S2(b), THE THIRD SHAPE. A name BUILT at runtime --
+#: `f"declarations/{FAM}_v{VER}.json"` -- is invisible to a scan over
+#: string CONSTANTS, whatever the dataflow gate does afterwards. It cannot
+#: be resolved to a version without evaluating the module, so it is not
+#: silently absent: every composed declaration name is CENSUSED and
+#: reported, and whether any real module builds one is what decides
+#: between a NOTE and a HOLE.
+COMPOSED_HINTS = ("declarations/", "_declaration", "_v")
+
+
+def composed_declaration_names(root: Path) -> list:
+    """f-strings that look like they build a declaration filename."""
+    out = []
+    for py in sorted((Path(root) / "live").rglob("*.py")):
+        try:
+            src = py.read_text()
+            with warnings.catch_warnings(record=True):
+                warnings.simplefilter("always")
+                tree = ast.parse(src)
+        except (OSError, SyntaxError):
+            continue
+        parents = {}
+        for nd in ast.walk(tree):
+            for c in ast.iter_child_nodes(nd):
+                parents[c] = nd
+        for n in ast.walk(tree):
+            if not isinstance(n, ast.JoinedStr):
+                continue
+            static = "".join(v.value for v in n.values
+                             if isinstance(v, ast.Constant)
+                             and isinstance(v.value, str))
+            if ".json" not in static:
+                continue
+            if not any(h in static for h in COMPOSED_HINTS):
+                continue
+            holes = [ast.unparse(v.value)[:60] for v in n.values
+                     if isinstance(v, ast.FormattedValue)]
+            out.append({"file": str(py.relative_to(root)), "line": n.lineno,
+                        "static_parts": static[:80],
+                        "interpolated": holes,
+                        "in_function": _enclosing_fn(n, parents),
+                        "flows_into_an_open": _flows_into_an_open(
+                            n, parents,
+                            _names_used_in_opens(tree, parents),
+                            _alias_edges(tree, parents))["flows"],
+                        "why": ("a name BUILT at runtime cannot be resolved "
+                                "to a version by a scan over string "
+                                "constants -- reported, never counted as "
+                                "absent")})
+    return out
+
+
 def literal_census(root: Path, chains: dict,
                    derived: dict | None = None) -> dict:
     """Every `declarations/..._vN.json` literal in `live/`, judged."""
@@ -524,6 +687,7 @@ def literal_census(root: Path, chains: dict,
                 parents[c] = nd
         seat = py.stem.split("_")[0]
         opens = _names_used_in_opens(tree, parents)
+        edges = _alias_edges(tree, parents)
         for n in ast.walk(tree):
             if not (isinstance(n, ast.Constant)
                     and isinstance(n.value, str)):
@@ -537,7 +701,7 @@ def literal_census(root: Path, chains: dict,
                 fn = _enclosing_fn(n, parents)
                 #: GATE ONE: dataflow. A literal that reaches no file open
                 #: is not a pin and is not reported as one.
-                flow = _flows_into_an_open(n, parents, opens)
+                flow = _flows_into_an_open(n, parents, opens, edges)
                 in_chain = _inside_a_supersession_field(n, parents)
                 mk_id = _identifier_marks(ident or "")
                 mk_fn = bool(fn and FUNCTION_MARKER_RE.search(fn))
@@ -609,12 +773,34 @@ def literal_census(root: Path, chains: dict,
                     row["status"] = "MARKED_ON_A_HEAD_NOTED"
                     marked.append(row)
     non_heads = refused
+    #: REV 73 S2(b): WHICH SHAPES THE TREE ACTUALLY USES decides note vs
+    #: hole. A gate extended for a shape nobody writes is a note; one
+    #: extended for a shape in live code was a HOLE while it was missing.
+    _multi = [r for r in rows
+              if "assignment closure" in (r.get("flow") or "")
+              and "->" in (r.get("flow") or "")]
+    _retfn = [r for r in rows
+              if "RETURNING FUNCTION" in (r.get("flow") or "")]
     _nulls = [r for r in rows if r["is_head"] is None]
     _null_pins = [r for r in _nulls if r["flows_into_an_open"]]
     return {"n_literals": len(rows), "literals": rows,
             "derived_index": {k: v for k, v in (derived or {}).items()
                               if k != "names"} or
                              {"status": "NOT_ASKED"},
+            "shapes_the_tree_uses": {
+                "n_pins_through_a_multi_hop_assignment": len(_multi),
+                "pins_through_a_multi_hop_assignment": [
+                    {"file": r["file"], "line": r["line"],
+                     "flow": r["flow"]} for r in _multi],
+                "n_pins_through_a_returning_function": len(_retfn),
+                "pins_through_a_returning_function": [
+                    {"file": r["file"], "line": r["line"],
+                     "flow": r["flow"]} for r in _retfn],
+                "why_it_is_censused": (
+                    "one hop is a refactor away from blind; whether a real "
+                    "module uses the shape is what decides between a NOTE "
+                    "and a HOLE, and that is counted here rather than "
+                    "assumed either way")},
             "files_that_warn_when_parsed": warned,
             "n_files_that_warn_when_parsed": len(warned),
             "n_head_is_null": len(_nulls),
@@ -707,6 +893,7 @@ def build_report(root: Path | None = None,
     chains = merged_chains(r)
     dix = derived_index()
     lits = literal_census(r, chains, dix)
+    composed = composed_declaration_names(r)
     multi = {k: v for k, v in chains.items() if v["n_heads"] != 1}
     return {
         "protocol": PROTOCOL,
@@ -726,6 +913,17 @@ def build_report(root: Path | None = None,
         "n_families_without_exactly_one_head": len(multi),
         "chains": chains,
         "literal_census": lits,
+        "composed_declaration_names": composed,
+        "n_composed_declaration_names": len(composed),
+        "n_composed_that_reach_an_open": sum(
+            1 for c in composed if c["flows_into_an_open"]),
+        "the_composed_name_limit": (
+            "a declaration name BUILT at runtime -- an f-string over a "
+            "version constant -- cannot be resolved to a version without "
+            "evaluating the module. Every one is listed with its static "
+            "parts and what it interpolates; NONE is silently absent. "
+            "Where the count is zero the literal scan is complete over "
+            "this tree, and that is a MEASUREMENT, not an assumption"),
         "infrastructure_not_a_statistic": (
             "this reads FILENAMES and the seats' own `supersedes` links; it "
             "re-derives no seat's number (R-235)"),
@@ -953,6 +1151,68 @@ def selftest() -> tuple:
        and lh["n_refused"] == 1,
        f"build_v4 (sha256 + .exists()) -> {_hash['status']}; read_config "
        f"(json.loads) -> {_read['status']}")
+
+    # -- REV 73 S2(b): TWO REFACTORING SHAPES AND ONE COMPOSED NAME -----
+    mod.write_text(
+        'from pathlib import Path\n'
+        'VER = 2\n'
+        '#: two hops: the one-hop gate saw neither of these\n'
+        'A = "live/pm_research/declarations/x_declaration_v2.json"\n'
+        'B = A\n'
+        'D1 = Path(B).read_text()\n'
+        '\n\ndef p():\n'
+        '    return "live/pm_research/declarations/'
+        'x_declaration_v2.json"\n'
+        '\n\nD2 = Path(p()).read_text()\n'
+        '\n\ndef best():\n'
+        '    found = None\n'
+        '    return found or '
+        '"live/pm_research/declarations/x_declaration_v2.json"\n'
+        '\n\nCHOSEN = best()\n'
+        'D3 = Path(CHOSEN).read_text()\n'
+        '\n\nCOMPOSED = f"declarations/x_declaration_v{VER}.json"\n'
+        'D4 = Path(COMPOSED).read_text()\n')
+    lshape = literal_census(tmp, merged_chains(tmp))
+    _by = {}
+    for r in lshape["literals"]:
+        _by.setdefault((r["assigned_to"], r["in_function"]), r)
+    _two_hop = _by.get(("A", None))
+    _ret = _by.get((None, "p"))
+    _fallback = _by.get((None, "best"))
+    comp = composed_declaration_names(tmp)
+    ck("REV 73 S2(b) -- ***ONE HOP IS A REFACTOR AWAY FROM BLIND.*** The "
+       "gate followed `LIT -> A -> open(A)` and stopped, so two ordinary "
+       "shapes walked past it: a SECOND assignment (`A = LIT; B = A; "
+       "open(B)`) and a FUNCTION returning the literal (`def p(): return "
+       "LIT` … `open(p())`) -- and the third, a FALLBACK (`return found or "
+       "LIT`, whose value lands in a module constant that is opened), is "
+       "***the shape a stale default actually hides in***. The flow is the "
+       "TRANSITIVE CLOSURE now, to a fixed point, over name-to-name "
+       "assignments, `X = f()`, and the operands an `if/else` or an `or` "
+       "forwards verbatim. All three are REFUSED here, each naming the "
+       "head it should have named",
+       _two_hop and _two_hop["flows_into_an_open"] is True
+       and _two_hop["status"] == "REFUSED_UNMARKED_NON_HEAD"
+       and "->" in _two_hop["flow"]
+       and _ret and _ret["flows_into_an_open"] is True
+       and "RETURNING FUNCTION" in _ret["flow"]
+       and _fallback and _fallback["flows_into_an_open"] is True
+       and _fallback["status"] == "REFUSED_UNMARKED_NON_HEAD",
+       f"two hops -> {_two_hop['flow'][:70]}…; returning function -> "
+       f"{_ret['flow'][:70]}…; fallback -> {_fallback['flow'][:70]}…")
+    ck("AND THE COMPOSED NAME IS CENSUSED, NOT SILENTLY MISSED: "
+       "`f\"declarations/x_declaration_v{VER}.json\"` cannot be resolved "
+       "to a version by a scan over string CONSTANTS -- so it is listed "
+       "with its static parts, what it interpolates, and whether it "
+       "reaches an open. ***A limit that is counted is a limit; one that "
+       "is not counted is a hole***, and the count is what decides which "
+       "this is",
+       len(comp) == 1 and comp[0]["interpolated"] == ["VER"]
+       and comp[0]["flows_into_an_open"] is True
+       and "x_declaration_v" in comp[0]["static_parts"],
+       f"{len(comp)} composed name(s): {comp[0]['static_parts']} "
+       f"interpolating {comp[0]['interpolated']}, reaching an open: "
+       f"{comp[0]['flows_into_an_open']}")
 
     orphan = d / "x_declaration_v4.json"
     orphan.write_text(json.dumps({"v": 4}))

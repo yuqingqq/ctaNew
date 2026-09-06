@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 import time
@@ -58,6 +59,62 @@ KNOWN_RED: dict[str, tuple] = {
         "this round and not touched by it.",
         "DA, in a round that reopens iter-011"),
 }
+
+
+#: REV 73 S2(c). ***THE STEP IS ONLY REAL IF THE COMMAND HAS THE SHAPE.***
+#: "Run the suite, then commit" is a sentence; what stopped it twice was
+#: that the two lived in ONE command and the shell ran both. So the shape
+#: is a PREDICATE over the command actually issued: the FIRST clause is
+#: the gate, and every `git commit` after it is chained with `&&` -- which
+#: is what makes the commit conditional on the exit code. `;` runs the
+#: commit whatever happened; `||` runs it precisely when the suite FAILED.
+GATE_CLAUSE_MARK = "da_land_gate.py --gate"
+
+
+def command_is_gated(cmd: str) -> dict:
+    """Does this landing command chain the commit onto the gate's rc?"""
+    parts, buf, sep, seps = [], "", None, []
+    i = 0
+    while i < len(cmd):
+        two = cmd[i:i + 2]
+        if two in ("&&", "||"):
+            parts.append((sep, buf.strip()))
+            seps.append(two)
+            sep, buf, i = two, "", i + 2
+            continue
+        if cmd[i] == ";":
+            parts.append((sep, buf.strip()))
+            seps.append(";")
+            sep, buf, i = ";", "", i + 1
+            continue
+        buf += cmd[i]
+        i += 1
+    parts.append((sep, buf.strip()))
+    first = parts[0][1] if parts else ""
+    commits = [(k, (s, c)) for k, (s, c) in enumerate(parts)
+               if re.search(r"\bgit\b[^|;&]*\bcommit\b", c)]
+    gate_first = GATE_CLAUSE_MARK in first
+    unchained = [c for _, (s, c) in commits if s != "&&"]
+    before_gate = [c for k, (_, c) in commits
+                   if not gate_first or k == 0]
+    return {"n_clauses": len(parts), "first_clause": first[:120],
+            "separators": seps,
+            "gate_is_the_first_clause": gate_first,
+            "n_commit_clauses": len(commits),
+            "commit_clauses_not_chained_with_and": unchained,
+            "commit_clauses_before_the_gate": before_gate,
+            "gated": bool(gate_first and commits and not unchained
+                          and not before_gate),
+            "why": ("the commit must be CONDITIONAL on the gate's exit "
+                    "code: `;` commits whatever happened and `||` commits "
+                    "exactly when the suite failed")}
+
+
+def land_command(*after_the_gate: str) -> str:
+    """The landing command, built in the only shape that is checkable."""
+    return " && ".join(
+        [f"python3 live/pm_research/da_land_gate.py --gate"]
+        + [c.strip() for c in after_the_gate if c.strip()])
 
 
 def run_module(mod: str, *, timeout_s: int = 180) -> dict:
@@ -187,6 +244,32 @@ def selftest() -> tuple:
        run_module("no_such_module")["status"] == "MODULE_ABSENT"
        and gate(("no_such_module",))["n_green"] == 0,
        f"absent -> {run_module('no_such_module')['status']}")
+    good = land_command("git -C /repo commit -F - -- a.py",
+                        "git -C /repo push -q origin HEAD")
+    semi = good.replace(" && git -C /repo commit", " ; git -C /repo commit")
+    orr = good.replace(" && git -C /repo commit", " || git -C /repo commit")
+    flip = ("git -C /repo commit -F - -- a.py && "
+            "python3 live/pm_research/da_land_gate.py --gate")
+    ck("REV 73 S2(c) -- ***TEST-THEN-LAND IN THE CHECKABLE FORM.*** The "
+       "rule is not a sentence about intent: it is a SHAPE the landing "
+       "command either has or does not. The FIRST clause is the gate and "
+       "every `git commit` is chained onto it with `&&`, so the commit is "
+       "conditional on the exit code. Driven on the three ways to get it "
+       "wrong: ***`;` commits whatever happened*** (which is how a failing "
+       "selftest was pushed twice), ***`||` commits precisely when the "
+       "suite FAILED***, and a commit BEFORE the gate is not gated at all",
+       command_is_gated(good)["gated"] is True
+       and command_is_gated(semi)["gated"] is False
+       and command_is_gated(orr)["gated"] is False
+       and command_is_gated(flip)["gated"] is False
+       and command_is_gated(
+           "python3 live/pm_research/da_land_gate.py --gate")["gated"]
+       is False,
+       f"`&&` -> gated; `;` -> {command_is_gated(semi)['gated']}; `||` -> "
+       f"{command_is_gated(orr)['gated']}; commit first -> "
+       f"{command_is_gated(flip)['gated']}; gate with no commit -> not a "
+       f"landing command")
+
     print(f"\n{'SELFTEST OK' if not fails else 'SELFTEST FAILED'} -- "
           f"{len(checks)} checks, {fails} failure(s)")
     return checks, fails
