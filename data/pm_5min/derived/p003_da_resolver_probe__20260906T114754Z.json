@@ -1,0 +1,723 @@
+{
+  "as_of_utc": "2026-09-06T11:48:03Z",
+  "both_directions": true,
+  "checks": [
+    {
+      "check": "A PLANTED RESOLVER THAT FALLS BACK TO CWD IS SEEN AS CWD, AND ONE THAT FALLS BACK TO ITS OWN TREE IS SEEN AS A WORKTREE -- with the environment UNSET. ***That is BE 59's finding in one line: four worktrees are one unset variable from reading a shell fact as a ledger fact***",
+      "detail": "cwd-faller unset -> CWD; own-tree faller unset -> WORKTREE; both follow the env when it IS set -> LEDGER",
+      "pass": true
+    },
+    {
+      "check": "AND A RESOLVER THAT REFUSES IS SEEN TO REFUSE, IN BOTH DIRECTIONS: unset REFUSES, a worktree root REFUSES, the ledger ADMITS. ***A probe that could only report paths would call a correct gate and a silent fallback the same thing***",
+      "detail": "unset -> REFUSED; worktree -> REFUSED; ledger -> LEDGER",
+      "pass": true
+    },
+    {
+      "check": "REV 58 section 4 (test 2) -- THE DEAD TRY-BRANCH IS CAUGHT, AND ONLY FROM A WORKTREE. The planted module has the exact shape: a try that CANNOT return (`Path(<dict>)` raises TypeError), a BARE except, and a tree-relative fallback -- with a docstring claiming the shared resolver. ***Driven with the environment set CORRECTLY it still answers with its own tree, which is the only signal there is: from the shared tree the fallback gives the right answer and no test run there can see it***",
+      "detail": "env set to the LEDGER -> WORKTREE (/tmp/claude-1001/-home-yuqing-ctaNew/f39956e0-9036-4820-9583-883ec184e424/scratchpad/da80_probe_640gd14k/ctaNew-wt-fake/live/pm_5min); unset -> WORKTREE",
+      "pass": true
+    },
+    {
+      "check": "THE CLASSIFIER SEPARATES THE FOUR ANSWERS BY THE PATH ITSELF, not by what a module says about itself",
+      "detail": "ledger, ledger-subpath, worktree, cwd and other all separate",
+      "pass": true
+    },
+    {
+      "check": "EVERY RESOLVER IN THE PROGRAMME IS DRIVEN THROUGH ITS OWN PUBLIC ENTRY POINT, IN ITS OWN PROCESS, FROM A NEUTRAL DIRECTORY -- three environments each, and the LEDGER case is the positive control",
+      "detail": "11 resolvers x 3 environments; 0 with findings: []",
+      "pass": true
+    }
+  ],
+  "decides_nothing": "each finding belongs to the seat that owns the resolver; none is fixed here",
+  "findings_by_resolver": {},
+  "ledger": "/home/yuqing/ctaNew",
+  "n_checks": 5,
+  "n_failed": 0,
+  "n_resolvers": 11,
+  "n_with_findings": 0,
+  "neutral_cwd": "/tmp/da80_neutral_4gtjow8v",
+  "probe_identity": {
+    "path": "live/pm_research/da_resolver_probe.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "b97376c35140d858c6fe67e7c7f2ff76e11b3fc6d0530392b4e3e3c3fcd99800",
+    "tree_head": "42a1d05e60fbc384512a5b68af4171c3edf499f3"
+  },
+  "protocol": "P003_DA_RESOLVER_PROBE_V1",
+  "resolvers": {
+    "be_data_root.data_root": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew-wt-da/data",
+          "path_class": "WORKTREE"
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/tmp/da80_partial_o00xj_rc/data",
+          "path_class": "OTHER"
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        }
+      },
+      "findings": [],
+      "kind": "resolver",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "LEDGER",
+        "B_worktree_env": "WORKTREE",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "OTHER",
+        "F_ledger_env_from_worktree_code": "LEDGER"
+      },
+      "verdict": "OK",
+      "why_not_judged": null
+    },
+    "be_data_root.require_ledger": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "be_data_root.DataRootRefused: REFUSED: resolved data root '/home/yuqing/ctaNew-wt-da/data' is not the ledger '/home/yuqing/ctaNew/data' (branch 1_env_PM_DATA_ROOT). A result-bearing emission read from another tree is a result about another tree. Pass fixture=True with a reason if this is deliberate.",
+          "exception_type": "DataRootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "be_data_root.DataRootRefused: REFUSED: resolved data root '/tmp/da80_partial_o00xj_rc/data' is not the ledger '/home/yuqing/ctaNew/data' (branch 1_env_PM_DATA_ROOT). A result-bearing emission read from another tree is a result about another tree. Pass fixture=True with a reason if this is deliberate.",
+          "exception_type": "DataRootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        }
+      },
+      "findings": [],
+      "kind": "gate",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "LEDGER",
+        "B_worktree_env": "REFUSED",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "REFUSED",
+        "F_ledger_env_from_worktree_code": "LEDGER"
+      },
+      "verdict": "OK",
+      "why_not_judged": null
+    },
+    "be_data_root.resolve": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew-wt-da/data",
+          "path_class": "WORKTREE"
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/tmp/da80_partial_o00xj_rc/data",
+          "path_class": "OTHER"
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        }
+      },
+      "findings": [],
+      "kind": "resolver",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "LEDGER",
+        "B_worktree_env": "WORKTREE",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "OTHER",
+        "F_ledger_env_from_worktree_code": "LEDGER"
+      },
+      "verdict": "OK",
+      "why_not_judged": null
+    },
+    "da_accrual_report.data_root": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "da_root.RootRefused: REFUSED: the accrual report resolved the root to '/home/yuqing/ctaNew-wt-da', which is not the canonical ledger '/home/yuqing/ctaNew'. A seat worktree's `data/` is a MATERIALISED directory holding only the TRACKED artifacts, so a count taken there is a count of a smaller, plausible ledger -- and the read gate COUNTS SEALED RECEIPTS AT A ROOT (REV 57 A.6). Pass fixture=True wit",
+          "exception_type": "RootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "da_root.RootRefused: REFUSED: the accrual report resolved the root to '/tmp/da80_partial_o00xj_rc', which is not the canonical ledger '/home/yuqing/ctaNew'. A seat worktree's `data/` is a MATERIALISED directory holding only the TRACKED artifacts, so a count taken there is a count of a smaller, plausible ledger -- and the read gate COUNTS SEALED RECEIPTS AT A ROOT (REV 57 A.6). Pass fixture=True wi",
+          "exception_type": "RootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        }
+      },
+      "findings": [],
+      "kind": "resolver",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "LEDGER",
+        "B_worktree_env": "REFUSED",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "REFUSED",
+        "F_ledger_env_from_worktree_code": "LEDGER"
+      },
+      "verdict": "OK",
+      "why_not_judged": null
+    },
+    "da_gate1_day_verdict._derived_dir": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data/pm_5min/derived",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data/pm_5min/derived",
+          "path_class": "LEDGER"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "da_root.RootRefused: REFUSED: the Gate-1 read gate's day set resolved the root to '/home/yuqing/ctaNew-wt-da', which is not the canonical ledger '/home/yuqing/ctaNew'. A seat worktree's `data/` is a MATERIALISED directory holding only the TRACKED artifacts, so a count taken there is a count of a smaller, plausible ledger -- and the read gate COUNTS SEALED RECEIPTS AT A ROOT (REV 57 A.6). Pass fixt",
+          "exception_type": "RootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data/pm_5min/derived",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "da_root.RootRefused: REFUSED: the Gate-1 read gate's day set resolved the root to '/tmp/da80_partial_o00xj_rc', which is not the canonical ledger '/home/yuqing/ctaNew'. A seat worktree's `data/` is a MATERIALISED directory holding only the TRACKED artifacts, so a count taken there is a count of a smaller, plausible ledger -- and the read gate COUNTS SEALED RECEIPTS AT A ROOT (REV 57 A.6). Pass fix",
+          "exception_type": "RootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data/pm_5min/derived",
+          "path_class": "LEDGER"
+        }
+      },
+      "findings": [],
+      "kind": "resolver",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "LEDGER",
+        "B_worktree_env": "REFUSED",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "REFUSED",
+        "F_ledger_env_from_worktree_code": "LEDGER"
+      },
+      "verdict": "OK",
+      "why_not_judged": null
+    },
+    "da_process_budget_audit.AUDIT_ROOT": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "da_root.RootRefused: REFUSED: the module sweep resolved the root to '/home/yuqing/ctaNew-wt-da', which is not the canonical ledger '/home/yuqing/ctaNew'. A seat worktree's `data/` is a MATERIALISED directory holding only the TRACKED artifacts, so a count taken there is a count of a smaller, plausible ledger -- and the read gate COUNTS SEALED RECEIPTS AT A ROOT (REV 57 A.6). Pass fixture=True with ",
+          "exception_type": "RootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "da_root.RootRefused: REFUSED: the module sweep resolved the root to '/tmp/da80_partial_o00xj_rc', which is not the canonical ledger '/home/yuqing/ctaNew'. A seat worktree's `data/` is a MATERIALISED directory holding only the TRACKED artifacts, so a count taken there is a count of a smaller, plausible ledger -- and the read gate COUNTS SEALED RECEIPTS AT A ROOT (REV 57 A.6). Pass fixture=True with",
+          "exception_type": "RootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        }
+      },
+      "findings": [],
+      "kind": "resolver",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "LEDGER",
+        "B_worktree_env": "REFUSED",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "REFUSED",
+        "F_ledger_env_from_worktree_code": "LEDGER"
+      },
+      "verdict": "OK",
+      "why_not_judged": null
+    },
+    "da_race_read_verify (declarations only)": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/live/pm_research/declarations",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew-wt-da/live/pm_research/declarations",
+          "path_class": "WORKTREE"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/live/pm_research/declarations",
+          "path_class": "LEDGER"
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/live/pm_research/declarations",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/live/pm_research/declarations",
+          "path_class": "LEDGER"
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew-wt-da/live/pm_research/declarations",
+          "path_class": "WORKTREE"
+        }
+      },
+      "findings": [],
+      "kind": "not_a_data_root_resolver",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "WORKTREE",
+        "B_worktree_env": "LEDGER",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "LEDGER",
+        "F_ledger_env_from_worktree_code": "WORKTREE"
+      },
+      "verdict": "OK",
+      "why_not_judged": "this module resolves no data root: it reads code-tree declarations and takes data paths from its caller. Its answer is REPORTED so the absence is visible, never judged as a fallback"
+    },
+    "da_root.require_canonical_root": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "da_root.RootRefused: REFUSED: probe resolved the root to '/home/yuqing/ctaNew-wt-da', which is not the canonical ledger '/home/yuqing/ctaNew'. A seat worktree's `data/` is a MATERIALISED directory holding only the TRACKED artifacts, so a count taken there is a count of a smaller, plausible ledger -- and the read gate COUNTS SEALED RECEIPTS AT A ROOT (REV 57 A.6). Pass fixture=True with a reason if",
+          "exception_type": "RootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "da_root.RootRefused: REFUSED: probe resolved the root to '/tmp/da80_partial_o00xj_rc', which is not the canonical ledger '/home/yuqing/ctaNew'. A seat worktree's `data/` is a MATERIALISED directory holding only the TRACKED artifacts, so a count taken there is a count of a smaller, plausible ledger -- and the read gate COUNTS SEALED RECEIPTS AT A ROOT (REV 57 A.6). Pass fixture=True with a reason i",
+          "exception_type": "RootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        }
+      },
+      "findings": [],
+      "kind": "gate",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "LEDGER",
+        "B_worktree_env": "REFUSED",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "REFUSED",
+        "F_ledger_env_from_worktree_code": "LEDGER"
+      },
+      "verdict": "OK",
+      "why_not_judged": null
+    },
+    "de_data_root.require_canonical": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "de_data_root.DataRootRefused: REFUSED: DA 80 probe is a result-bearing emission and the resolved data root is /home/yuqing/ctaNew-wt-da/data, not /home/yuqing/ctaNew/data (branch 1_env_PM_DATA_ROOT, PM_DATA_ROOT='/home/yuqing/ctaNew-wt-da'). A worktree shell resolves, reads and holds a DIFFERENT ledger -- which is why this is a refusal and not a warning.",
+          "exception_type": "DataRootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": "de_data_root.DataRootRefused: REFUSED: DA 80 probe is a result-bearing emission and the resolved data root is /tmp/da80_partial_o00xj_rc/data, not /home/yuqing/ctaNew/data (branch 1_env_PM_DATA_ROOT, PM_DATA_ROOT='/tmp/da80_partial_o00xj_rc'). A worktree shell resolves, reads and holds a DIFFERENT ledger -- which is why this is a refusal and not a warning.",
+          "exception_type": "DataRootRefused",
+          "outcome": "REFUSED",
+          "path": null,
+          "path_class": null,
+          "returncode": 1
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        }
+      },
+      "findings": [],
+      "kind": "gate",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "LEDGER",
+        "B_worktree_env": "REFUSED",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "REFUSED",
+        "F_ledger_env_from_worktree_code": "LEDGER"
+      },
+      "verdict": "OK",
+      "why_not_judged": null
+    },
+    "de_data_root.resolve": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew-wt-da/data",
+          "path_class": "WORKTREE"
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/tmp/da80_partial_o00xj_rc/data",
+          "path_class": "OTHER"
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew/data",
+          "path_class": "LEDGER"
+        }
+      },
+      "findings": [],
+      "kind": "resolver",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "LEDGER",
+        "B_worktree_env": "WORKTREE",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "OTHER",
+        "F_ledger_env_from_worktree_code": "LEDGER"
+      },
+      "verdict": "OK",
+      "why_not_judged": null
+    },
+    "pm_tape_density._resolve_data_root": {
+      "cases": {
+        "A_unset_ledger_code": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "A_unset_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "B_worktree_env": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew-wt-da",
+          "path_class": "WORKTREE"
+        },
+        "C_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        },
+        "D_planted_partial_ledger": {
+          "code_root": "/home/yuqing/ctaNew",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/tmp/da80_partial_o00xj_rc",
+          "path_class": "OTHER"
+        },
+        "F_ledger_env_from_worktree_code": {
+          "code_root": "/home/yuqing/ctaNew-wt-da",
+          "exception": null,
+          "outcome": "RETURNED",
+          "path": "/home/yuqing/ctaNew",
+          "path_class": "LEDGER"
+        }
+      },
+      "findings": [],
+      "kind": "resolver",
+      "n_findings": 0,
+      "summary": {
+        "A_unset_ledger_code": "LEDGER",
+        "A_unset_worktree_code": "LEDGER",
+        "B_worktree_env": "WORKTREE",
+        "C_ledger": "LEDGER",
+        "D_planted_partial_ledger": "OTHER",
+        "F_ledger_env_from_worktree_code": "LEDGER"
+      },
+      "verdict": "OK",
+      "why_not_judged": null
+    }
+  },
+  "why": "BE 59: every seat worktree's data/ is a MATERIALISED directory, so the ledger's UNTRACKED artifacts are invisible under a worktree path and a run there is correct only because PM_DATA_ROOT was passed. This drives every resolver with the variable UNSET and with it pointing at a worktree",
+  "worktree_probed": "/home/yuqing/ctaNew-wt-da"
+}

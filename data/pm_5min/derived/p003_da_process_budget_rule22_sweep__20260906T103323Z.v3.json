@@ -1,0 +1,2153 @@
+{
+  "as_of_utc": "2026-09-06T11:50:47Z",
+  "auditor": {
+    "path": "live/pm_research/da_process_budget_audit.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "aa6514477fa18506f895c496dce282fa15b8a19a461082db45ecdc4e3830268e",
+    "tree_head": "7600469b828d20dd9fec0441d5751b6ab1e7e3bf"
+  },
+  "both_directions": true,
+  "checks": [
+    {
+      "check": "THE SWEEP READS THE LEDGER TREE, NOT THIS SEAT'S WORKTREE COPY. ***An earlier run of this instrument reported the DE runner FLAGGED for a comparison DE had already removed -- it was reading my worktree's stale copy. A finding about the wrong copy of a file is the R-601 class: an address that names a different object***",
+      "detail": "AUDIT_ROOT=/home/yuqing/ctaNew (PM_DATA_ROOT), auditor's own tree=/home/yuqing/ctaNew",
+      "pass": true
+    },
+    {
+      "check": "THE KNOWN-BAD IS THE ARTIFACT THAT CAUSED THE FINDING, NOT A PLANT: the runner AT 77c723e -- the bytes the 09-03 smoke died on -- is FLAGGED with a process-wide high-water against a fixture budget GATING A REFUSAL, and the SAME module at the ledger tip is not, because DE 89 made the budget a growth. ***An instrument that cannot flag the case that motivated it is not an instrument***",
+      "detail": "77c723e: 1 refusing mismatch(es) at line(s) [3061]; tip: 0",
+      "pass": true
+    },
+    {
+      "check": "AND (c) IS STILL LIVE AT THE TIP: the battery is invoked from the REAL day path in the same process, at BOTH revisions -- DE 89 closed the measurement half and the seam itself is open. ***A NEW narrow-scope budget anywhere inside that battery reproduces the class***",
+      "detail": "tip: [('_main_day', 'selftest', 7033)]",
+      "pass": true
+    },
+    {
+      "check": "A PLANTED FIXTURE-IN-REAL-PATH IS FLAGGED AND THE SAME MODULE WITHOUT IT ADMITS: `build()` calling `selftest()` is a finding; the CLI's own `if \"--selftest\" in argv: return selftest()` is not",
+      "detail": "planted -> FLAGGED at ['build->selftest']; clean -> CLEAN",
+      "pass": true
+    },
+    {
+      "check": "AND THE GUARD RULE APPLIES TO THE FIXTURE-ARGUMENT HALF TOO: `emit(fixture=True)` inside a CLI's own `if a.selftest:` branch is NOT a finding; the same call on an unguarded path IS. ***The first half checked guards and this half did not, so this sweep flagged its own seat's book verifier for a call sitting inside the battery branch -- a rule that holds on one half of a check and not the other is two rules***",
+      "detail": "guarded -> CLEAN; unguarded -> FLAGGED at ['main']",
+      "pass": true
+    },
+    {
+      "check": "A PLANTED PER-STAGE/FIXTURE BUDGET AGAINST `ru_maxrss` IS FLAGGED AS A SCOPE MISMATCH THAT GATES A REFUSAL -- through the flag (`row['within_budget'] = ...` then `if not ...: raise`) -- AND THE DELTA FORM OF THE SAME CODE ADMITS. ***That delta is the repair REV 53 names, so the instrument must be able to see it arrive***",
+      "detail": "mismatch -> SCOPE_MISMATCH_process_highwater_vs_narrower / GATES_A_REFUSAL; delta -> 1 delta(s), 0 mismatch(es)",
+      "pass": true
+    },
+    {
+      "check": "A PLANTED EMIT-TIME DIGEST IS FLAGGED **AS EMIT-TIME**, AND THE SAME CAPTURE AT MODULE LEVEL READS AS IMPORT-TIME. ***This is the whole of rule 22: a digest read when the receipt is written names the file as it is THEN, and the committed-bytes guard passes because the replacement is committed***",
+      "detail": "emit-time -> AT_EMIT_the_code_on_disk_when_the_receipt_was_written; module-level -> AT_IMPORT_the_code_that_ran",
+      "pass": true
+    },
+    {
+      "check": "A SUBSCRIPT THAT ONLY LOOKS LIKE A MEASUREMENT IS REPORTED AS A LOOKALIKE AND IS NOT COUNTED AS A BUDGET COMPARISON. ***DE's battery reads `plan['peak_rss_mb']` out of a DECLARATION file; counting it would invent a finding, dropping it would hide one (rule 11)***",
+      "detail": "1 lookalike(s), 0 budget comparison(s)",
+      "pass": true
+    },
+    {
+      "check": "A GUARD IS A DISPATCH ON THE BATTERY SWITCH, NOT A TEST THAT MENTIONS IT: `a.selftest`, `a.selftest or a.fixture` and `--selftest` are guards; `not fixture and not payload[...]` -- DE's actual early exit above the battery call -- is NOT. ***Matching the word alone excused the exact call this sweep exists to find, and the sweep reported the runner CLEAN***",
+      "detail": "three positives and two negatives on enclosing guards; on early exits the polarity is REVERSED and driven both ways",
+      "pass": true
+    },
+    {
+      "check": "BE's FRAGMENT AND TAPE ARE CLEAN, AND THE CENSUS SAYS WHY RATHER THAN CERTIFYING SILENCE: one budget comparison each, both reading `ru_maxrss` -- a PROCESS-WIDE high-water -- against `MEM_CAP_GB`, which is the rule-20 wrapper's own PROCESS-WIDE 8 GB. ***Same instrument, matched scopes: that pairing is correct, and it is the pairing, not the instrument, that the smoke got wrong***",
+      "detail": "fragment L276 and tape L158: SCOPE_MATCHED_process_measure_process_budget",
+      "pass": true
+    },
+    {
+      "check": "BE's DAYBOOK: THE SHAPE ROUND 77 FOUND IS EITHER STILL OPEN (a per-stage/fixture budget against `ru_maxrss`, GATING A REFUSAL) OR CLOSED BY A DELTA -- and the census says WHICH. ***Round 77's check asserted the FINDING (`len(bm) == 1`) and broke on BE 60's FIX: a check pinned to a defect fails when the defect is repaired, which is the sixth instance of this seat's own recurring class***",
+      "detail": "CLOSED: 0 refusing scope mismatches and 1 delta-measured budget comparison(s) at line(s) [521] -- BE 60 landed the growth budget, and the census carries the change rather than a stale assertion",
+      "pass": true
+    },
+    {
+      "check": "AND THIS SEAT'S OWN INSTRUMENTS CARRY NEITHER HALF: no scope mismatch and no battery on a real path across all seven. The one memory refusal among them -- the book verifier's -- is measured on CURRENT rss, which FALLS, so it cannot inherit a freed peak",
+      "detail": "7 DA instruments, 1 budget comparison(s) among them, 0 mismatches, 0 batteries on a real path",
+      "pass": true
+    },
+    {
+      "check": "RULE 22 / R-605, COMPUTED AT THE SOURCE -- AND THE CAPTURE MAY LIVE IN A SHARED MODULE. BE 60 put it in `be_rule22.py` and each producer calls `_R22.init(...)` AT MODULE LEVEL, so the closure is captured at IMPORT even though the construct is in another file. ***A per-FILE detector reported ABSENT for all three, which is a FALSE NEGATIVE about another seat's work -- exactly the 'half a predicate reported as the predicate' this sweep exists to catch. One hop, and the WHEN decided by the IMPORTER's call site.*** DE's runner captures it directly, at module level, in its own file",
+      "detail": "be_gate1_fragment.py: closure=AT_IMPORT(via be_rule22), head=AT_IMPORT; be_gate1_state_tape.py: closure=AT_IMPORT(via be_rule22), head=AT_EMIT_t; be_daybook_build.py: closure=AT_IMPORT(via be_rule22), head=AT_IMPORT",
+      "pass": true
+    },
+    {
+      "check": "AND THE DAYBOOK'S ONE PROVENANCE LITERAL IS TYPED, NOT DERIVED: `seam.commit` is the string \"6f134a6\" in the source. A TYPED provenance field cannot move when the code does. ***The historical citations in a `supersedes` block are NOT counted here -- citing a past artifact by literal is the only honest form, and a checker that conflated the two would report every correction as a defect***",
+      "detail": "be_daybook_build.py:1454 commit=\"6f134a6\" -- and e2_a_declare's supersedes literal reads as HISTORICAL_CITATION_of_a_superseded_artifact",
+      "pass": true
+    },
+    {
+      "check": "EVERY COUNT IN THE CENSUS IS RECOMPUTED FROM THE ROWS IT SUMMARISES AND THE TOTALS FROM THE MODULES. ***The first emission of this receipt reported ZERO assertion-only mismatches while DE's row carried one: the count tested `startswith(<the whole refusing verdict string>)` instead of the prefix. A count pinned to how a verdict is SPELLED rather than what it IS -- rounds 69, 72, 74, 75, and here again in the summary of my own rows***",
+      "detail": "12 module censuses recomputed from their rows, 0 disagreements; the assertion-only total is 1",
+      "pass": true
+    },
+    {
+      "check": "THE REPORT NAMES SITES AND COUNTS PREDICATES AND DECIDES NOTHING: every module row carries its file digest, the tree it was read from, and whether that tree has it committed -- the owners fix (BE 59, DE 90)",
+      "detail": "12 modules; 10 budget comparisons, 1 deltas, 0 refusing mismatches, 1 batteries on a real path",
+      "pass": true
+    }
+  ],
+  "decides_nothing": "the owners fix: BE 59 for the builders, DE 90 for the runner. This sweep names sites and counts predicates",
+  "modules": [
+    {
+      "budget_comparisons": [
+        {
+          "budget_name": "MEM_CAP_GB",
+          "budget_scope": "PROCESS_scope",
+          "expr": "peak > MEM_CAP_GB",
+          "gates": "GATES_A_REFUSAL",
+          "in_function": "build",
+          "is_delta": false,
+          "line": 276,
+          "measured_how": "`peak` assigned from calls _rss_gb()",
+          "measured_scope": "PROCESS_HIGHWATER_never_falls",
+          "verdict": "SCOPE_MATCHED_process_measure_process_budget"
+        }
+      ],
+      "bytes": 21855,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 1,
+        "n_current_rss": 0,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 0,
+        "n_measurement_sites": 1,
+        "n_scope_matched": 1,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 0
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "\"--selftest\" in argv",
+              "EARLY_EXIT: \"--selftest\" in argv"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 443
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [],
+      "measurement_sites": [
+        {
+          "expr": "resource.getrusage(resource.RUSAGE_SELF).ru_maxrss",
+          "kind": "PROCESS_HIGHWATER_never_falls",
+          "line": 164,
+          "why": "getrusage(RUSAGE_SELF).ru_maxrss is the high-water of the WHOLE PROCESS and never falls"
+        }
+      ],
+      "measuring_functions": {
+        "_rss_gb": "PROCESS_HIGHWATER_never_falls"
+      },
+      "path": "live/pm_research/be_gate1_fragment.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "BE_heavy_producer",
+      "rule22": {
+        "head_sha": [],
+        "import_closure": [],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {
+          "head_sha": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "import_closure": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "producing_code_digest": "AT_IMPORT_the_code_that_ran__VIA_be_rule22"
+        },
+        "producing_code_digest": [
+          {
+            "expr": "__import__(\"hashlib\").sha256( Path(__file__).read_bytes())",
+            "in": "selftest",
+            "line": 393,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(f.read_bytes())",
+            "in": "selftest",
+            "line": 367,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": false,
+        "status": {
+          "head_sha": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "import_closure": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+        },
+        "typed_literals": [],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": true,
+      "sha256": "40b0ce78d5bbed8bc9aea9b80e5e4d80cafc62954afe22a02785559640f29fe1",
+      "unresolved_measure_lookalikes": [],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [
+        {
+          "budget_name": "MEM_CAP_GB",
+          "budget_scope": "PROCESS_scope",
+          "expr": "peak > MEM_CAP_GB",
+          "gates": "GATES_A_REFUSAL",
+          "in_function": "build",
+          "is_delta": false,
+          "line": 158,
+          "measured_how": "`peak` assigned from calls _rss_gb()",
+          "measured_scope": "PROCESS_HIGHWATER_never_falls",
+          "verdict": "SCOPE_MATCHED_process_measure_process_budget"
+        }
+      ],
+      "bytes": 18069,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 1,
+        "n_current_rss": 0,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 0,
+        "n_measurement_sites": 1,
+        "n_scope_matched": 1,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 0
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "\"--selftest\" in argv",
+              "EARLY_EXIT: \"--selftest\" in argv"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 346
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [],
+      "measurement_sites": [
+        {
+          "expr": "resource.getrusage(resource.RUSAGE_SELF).ru_maxrss",
+          "kind": "PROCESS_HIGHWATER_never_falls",
+          "line": 100,
+          "why": "getrusage(RUSAGE_SELF).ru_maxrss is the high-water of the WHOLE PROCESS and never falls"
+        }
+      ],
+      "measuring_functions": {
+        "_rss_gb": "PROCESS_HIGHWATER_never_falls"
+      },
+      "path": "live/pm_research/be_gate1_state_tape.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "BE_heavy_producer",
+      "rule22": {
+        "head_sha": [
+          {
+            "expr": "subprocess.run([\"git\", \"-C\", str(HERE), \"rev-parse\", \"HEAD\"], capture_output=True, text=True).stdout.strip()",
+            "in": "build",
+            "line": 127,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "subprocess.run([\"git\", \"-C\", str(HERE), \"rev-parse\", \"HEAD\"], capture_output=True, text=True)",
+            "in": "build",
+            "line": 127,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "import_closure": [],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {
+          "head_sha": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "import_closure": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "producing_code_digest": "AT_IMPORT_the_code_that_ran__VIA_be_rule22"
+        },
+        "producing_code_digest": [
+          {
+            "expr": "hashlib.sha256(frag.read_bytes())",
+            "in": "build",
+            "line": 113,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256( empty.read_bytes())",
+            "in": "build",
+            "line": 177,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "__import__(\"hashlib\").sha256( Path(__file__).read_bytes())",
+            "in": "selftest",
+            "line": 296,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": false,
+        "status": {
+          "head_sha": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written",
+          "import_closure": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+        },
+        "typed_literals": [],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": true,
+      "sha256": "03d0209266faa9cb1dabe98db5dcb98da092f4f95aacd8064a7883374030e71d",
+      "unresolved_measure_lookalikes": [],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [
+        {
+          "budget_name": "cap_gb",
+          "budget_scope": "PROCESS_scope",
+          "expr": "peak <= self.cap_gb",
+          "gates": "GATES_A_REFUSAL",
+          "in_function": "done",
+          "is_delta": false,
+          "line": 522,
+          "measured_how": "`peak` assigned from calls _rss_gb()",
+          "measured_scope": "PROCESS_HIGHWATER_never_falls",
+          "verdict": "SCOPE_MATCHED_process_measure_process_budget"
+        },
+        {
+          "budget_name": "b",
+          "budget_scope": "FIXTURE_scope_via_attribute_budgets",
+          "expr": "row[\"growth_gb\"] <= b",
+          "gates": "GATES_A_REFUSAL",
+          "in_function": "done",
+          "is_delta": true,
+          "line": 521,
+          "measured_how": "key 'growth_gb', BOUND to a DELTA of two measurements in this function",
+          "measured_scope": "PROCESS_HIGHWATER_never_falls",
+          "verdict": "DELTA_measured_per_stage"
+        }
+      ],
+      "bytes": 93246,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 2,
+        "n_current_rss": 0,
+        "n_deltas": 1,
+        "n_fixture_selected_budget_sites": 1,
+        "n_measurement_sites": 4,
+        "n_scope_matched": 1,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 3
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "\"--selftest\" in argv",
+              "EARLY_EXIT: \"--selftest\" in argv"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 1772
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [
+        {
+          "expr": "FIXTURE_STAGE_BUDGETS_GB if fixture\n                     else STAGE_BUDGETS_GB",
+          "line": 634,
+          "test": "fixture"
+        }
+      ],
+      "measurement_sites": [
+        {
+          "expr": "\"6.5G formats BELOW the 6.628 GiB read 40 s earlier, and memory.peak is monotone -- so systemd's line reports some other quantity. Stated, not explained\"",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 1581,
+          "why": "the cgroup's high-water; never falls"
+        },
+        {
+          "expr": "resource.getrusage(resource.RUSAGE_SELF).ru_maxrss",
+          "kind": "PROCESS_HIGHWATER_never_falls",
+          "line": 468,
+          "why": "getrusage(RUSAGE_SELF).ru_maxrss is the high-water of the WHOLE PROCESS and never falls"
+        },
+        {
+          "expr": "'ru_maxrss is a high-water mark and cannot show a release; this is VmRSS'",
+          "kind": "PROCESS_CURRENT_falls_on_release",
+          "line": 729,
+          "why": "current resident set: it FALLS when memory is released"
+        },
+        {
+          "expr": "'VmRSS:'",
+          "kind": "PROCESS_CURRENT_falls_on_release",
+          "line": 477,
+          "why": "current resident set: it FALLS when memory is released"
+        }
+      ],
+      "measuring_functions": {
+        "_rss_gb": "PROCESS_HIGHWATER_never_falls",
+        "_rss_now_gb": "PROCESS_CURRENT_falls_on_release",
+        "build": "PROCESS_CURRENT_falls_on_release"
+      },
+      "path": "live/pm_research/be_daybook_build.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "BE_heavy_producer",
+      "rule22": {
+        "head_sha": [],
+        "import_closure": [],
+        "n_typed_stamps_of_this_run": 1,
+        "present_via_a_shared_module": {
+          "head_sha": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "import_closure": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "producing_code_digest": "AT_IMPORT_the_code_that_ran__VIA_be_rule22"
+        },
+        "producing_code_digest": [
+          {
+            "expr": "hashlib.sha256(dst.read_bytes())",
+            "in": "build",
+            "line": 781,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(src.read_bytes())",
+            "in": "supersede_receipt",
+            "line": 1733,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": false,
+        "status": {
+          "head_sha": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "import_closure": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+          "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+        },
+        "typed_literals": [
+          {
+            "key": "commit",
+            "kind": "TYPED_STAMP_of_this_run",
+            "line": 1454,
+            "looks_like_a_commit_sha": true,
+            "value": "6f134a6",
+            "why": "a provenance field TYPED as a literal is derived from nothing and cannot move when the code does -- unless it is CITING a past artifact, where a literal is the only honest form"
+          }
+        ],
+        "typed_stamps_of_this_run": [
+          {
+            "key": "commit",
+            "kind": "TYPED_STAMP_of_this_run",
+            "line": 1454,
+            "looks_like_a_commit_sha": true,
+            "value": "6f134a6",
+            "why": "a provenance field TYPED as a literal is derived from nothing and cannot move when the code does -- unless it is CITING a past artifact, where a literal is the only honest form"
+          }
+        ]
+      },
+      "rule22_binds_this_module": true,
+      "sha256": "ea4a0238538668c077945af8c088a69a7de01388847a6d05ef152b6723eaf295",
+      "unresolved_measure_lookalikes": [
+        {
+          "budget_name": "MIN_RELEASE_FRACTION",
+          "expr": "_rel[\"freed_fraction_of_index_peak\"] > MIN_RELEASE_FRACTION",
+          "in_function": "selftest",
+          "line": 1135,
+          "measured_how": "key 'freed_fraction_of_index_peak' LOOKS measured but is bound to no measurement in this function -- NOT resolved as one",
+          "status": "UNRESOLVED_MEASURE_LOOKALIKE",
+          "why": "the key reads like a measurement and is bound to none in this function -- reported, never counted as a budget comparison and never dropped"
+        },
+        {
+          "budget_name": "budget_gb",
+          "expr": "_rowg[\"growth_gb\"] <= _rowg[\"budget_gb\"]",
+          "in_function": "selftest",
+          "line": 1321,
+          "measured_how": "key 'growth_gb' LOOKS measured but is bound to no measurement in this function -- NOT resolved as one",
+          "status": "UNRESOLVED_MEASURE_LOOKALIKE",
+          "why": "the key reads like a measurement and is bound to none in this function -- reported, never counted as a budget comparison and never dropped"
+        },
+        {
+          "budget_name": "budget_gb",
+          "expr": "_rowg[\"peak_gb\"] > _rowg[\"budget_gb\"]",
+          "in_function": "selftest",
+          "line": 1322,
+          "measured_how": "key 'peak_gb' LOOKS measured but is bound to no measurement in this function -- NOT resolved as one",
+          "status": "UNRESOLVED_MEASURE_LOOKALIKE",
+          "why": "the key reads like a measurement and is bound to none in this function -- reported, never counted as a budget comparison and never dropped"
+        }
+      ],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [],
+      "bytes": 24682,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 0,
+        "n_current_rss": 0,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 0,
+        "n_measurement_sites": 2,
+        "n_scope_matched": 0,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 0
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "\"--selftest\" in argv",
+              "EARLY_EXIT: \"--selftest\" in argv"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 514
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [],
+      "measurement_sites": [
+        {
+          "expr": "'memory.peak'",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 167,
+          "why": "the cgroup's high-water; never falls"
+        },
+        {
+          "expr": "'memory.current'",
+          "kind": "CGROUP_CURRENT_falls_on_release",
+          "line": 168,
+          "why": "the cgroup's current"
+        }
+      ],
+      "measuring_functions": {
+        "scope_stats": "CGROUP_PEAK_never_falls"
+      },
+      "path": "live/pm_research/be_data_root.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "BE_shared_measurement_module",
+      "rule22": {
+        "head_sha": [],
+        "import_closure": [],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {},
+        "producing_code_digest": [],
+        "rule22_complete": false,
+        "status": {
+          "head_sha": "ABSENT",
+          "import_closure": "ABSENT",
+          "producing_code_digest": "ABSENT"
+        },
+        "typed_literals": [],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": false,
+      "sha256": "fcf15e2339b519ca2cd84119db3aaf7019b8c3429c6f4b145601c4ffaf237be9",
+      "unresolved_measure_lookalikes": [],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [],
+      "bytes": 196049,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 0,
+        "n_current_rss": 0,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 0,
+        "n_measurement_sites": 0,
+        "n_scope_matched": 0,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 0
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest_pre_read",
+            "caller": "selftest",
+            "caller_is_itself_a_battery": true,
+            "guarded_by_the_battery_switch": false,
+            "guards": [],
+            "handed_to": [],
+            "innermost_caller": "selftest",
+            "kwargs": {},
+            "line": 2033
+          },
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "a.selftest",
+              "EARLY_EXIT: a.selftest"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 2057
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [],
+      "measurement_sites": [],
+      "measuring_functions": {},
+      "path": "live/pm_research/da_gate1_day_verdict.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "DA_instrument",
+      "rule22": {
+        "head_sha": [
+          {
+            "expr": "subprocess.run([\"git\", \"rev-parse\", \"HEAD\"], capture_output=True, text=True, cwd=str(HERE))",
+            "in": "carrying_commit",
+            "line": 218,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "import_closure": [
+          {
+            "expr": "sys.modules",
+            "in": "selftest_pre_read",
+            "line": 3583,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "sys.modules",
+            "in": "selftest_pre_read",
+            "line": 3582,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "sys.modules",
+            "in": "selftest_pre_read",
+            "line": 3590,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "sys.modules",
+            "in": "selftest_pre_read",
+            "line": 3601,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "sys.modules",
+            "in": "selftest_pre_read",
+            "line": 3603,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {},
+        "producing_code_digest": [
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "load_params",
+            "line": 254,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "verify_book_digest",
+            "line": 554,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(rp.read_bytes())",
+            "in": "pre_read_day",
+            "line": 2534,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "params_check",
+            "line": 2751,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "design_check",
+            "line": 2794,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(v1p.read_bytes())",
+            "in": "selftest_pre_read",
+            "line": 3440,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256( (d608 / f\"p003_de_gate1_day_run_{D}_SEALED__V1.json\").read_bytes() )",
+            "in": "selftest_pre_read",
+            "line": 3710,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(src.read_bytes())",
+            "in": "verifier_identity",
+            "line": 233,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(f.read_bytes())",
+            "in": "resolve_chain",
+            "line": 903,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "write_day_book",
+            "line": 1708,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(rp.read_bytes())",
+            "in": "verify_real_day",
+            "line": 1615,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(bp.read_bytes())",
+            "in": "pre_read_day",
+            "line": 2405,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(dsn[-1].read_bytes())",
+            "in": "selftest_pre_read",
+            "line": 2906,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(head.read_bytes())",
+            "in": "_matches_landing",
+            "line": 1230,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(Path(sup).read_bytes())",
+            "in": "_mk",
+            "line": 3377,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(Path(sup).read_bytes())",
+            "in": "_lr",
+            "line": 3509,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(spath.read_bytes())",
+            "in": "selftest_pre_read",
+            "line": 3627,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(spath.read_bytes())",
+            "in": "selftest_pre_read",
+            "line": 3767,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": false,
+        "status": {
+          "head_sha": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written",
+          "import_closure": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written",
+          "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+        },
+        "typed_literals": [
+          {
+            "key": "carrying_commit",
+            "kind": "PLACEHOLDER_not_a_digest",
+            "line": 3372,
+            "looks_like_a_commit_sha": false,
+            "value": "HEAD",
+            "why": "a provenance field TYPED as a literal is derived from nothing and cannot move when the code does -- unless it is CITING a past artifact, where a literal is the only honest form"
+          }
+        ],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": false,
+      "sha256": "f00a55730275fd4c6f0019da2acdd1ed70984662479f808e8f33445a865e5733",
+      "unresolved_measure_lookalikes": [],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [],
+      "bytes": 72957,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 0,
+        "n_current_rss": 0,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 0,
+        "n_measurement_sites": 0,
+        "n_scope_matched": 0,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 0
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest_real",
+            "caller": "selftest",
+            "caller_is_itself_a_battery": true,
+            "guarded_by_the_battery_switch": false,
+            "guards": [],
+            "handed_to": [],
+            "innermost_caller": "selftest",
+            "kwargs": {},
+            "line": 603
+          },
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "EARLY_EXIT: a.real",
+              "EARLY_EXIT: not a.selftest"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 645
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [],
+      "measurement_sites": [],
+      "measuring_functions": {},
+      "path": "live/pm_research/da_race_read_verify.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "DA_instrument",
+      "rule22": {
+        "head_sha": [
+          {
+            "expr": "subprocess.run([\"git\", \"rev-parse\", \"HEAD\"], capture_output=True, text=True, cwd=str(src.parent))",
+            "in": "verifier_identity",
+            "line": 109,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "import_closure": [],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {},
+        "producing_code_digest": [
+          {
+            "expr": "hashlib.sha256(Path(feeds[day0]).read_bytes())",
+            "in": "selftest_real",
+            "line": 1443,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(src.read_bytes())",
+            "in": "verifier_identity",
+            "line": 112,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(PINS_DECL.read_bytes())",
+            "in": "pinned_feeds",
+            "line": 325,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(ap.read_bytes())",
+            "in": "verify_real_read",
+            "line": 1038,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256( Path(pins_path).read_bytes())",
+            "in": "verify_real_read",
+            "line": 1045,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "_synthetic_pins",
+            "line": 1108,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(Path(one_arm_pinned).read_bytes())",
+            "in": "selftest_real",
+            "line": 1403,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": false,
+        "status": {
+          "head_sha": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written",
+          "import_closure": "ABSENT",
+          "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+        },
+        "typed_literals": [],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": false,
+      "sha256": "7245df0ce00d78da225eb9a3a77dad21eb29eba9cb4b781c04eed5c7ad91b558",
+      "unresolved_measure_lookalikes": [],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [
+        {
+          "budget_name": "BOOK_LOAD_CAP_GB",
+          "budget_scope": "PROCESS_scope",
+          "expr": "after > BOOK_LOAD_CAP_GB",
+          "gates": "GATES_A_REFUSAL",
+          "in_function": "verify_full",
+          "is_delta": false,
+          "line": 1018,
+          "measured_how": "`after` assigned from calls _rss_gb()",
+          "measured_scope": "PROCESS_CURRENT_falls_on_release",
+          "verdict": "CURRENT_RSS_falls_so_it_cannot_inherit_a_freed_peak"
+        }
+      ],
+      "bytes": 82364,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 1,
+        "n_current_rss": 1,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 0,
+        "n_measurement_sites": 2,
+        "n_scope_matched": 0,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 0
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "a.selftest",
+              "EARLY_EXIT: a.selftest"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 1618
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [],
+      "measurement_sites": [
+        {
+          "expr": "'/proc/self/statm'",
+          "kind": "PROCESS_CURRENT_falls_on_release",
+          "line": 301,
+          "why": "current resident set: it FALLS when memory is released"
+        },
+        {
+          "expr": "'VmRSS'",
+          "kind": "PROCESS_CURRENT_falls_on_release",
+          "line": 1167,
+          "why": "current resident set: it FALLS when memory is released"
+        }
+      ],
+      "measuring_functions": {
+        "_rss_gb": "PROCESS_CURRENT_falls_on_release",
+        "synthetic_book_and_receipt": "PROCESS_CURRENT_falls_on_release"
+      },
+      "path": "live/pm_research/da_book_verify.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "DA_instrument",
+      "rule22": {
+        "head_sha": [
+          {
+            "expr": "subprocess.run([\"git\", \"rev-parse\", \"HEAD\"], capture_output=True, text=True, cwd=str(HERE))",
+            "in": "carrying_commit",
+            "line": 278,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "_g(\"rev-parse\", \"HEAD\")",
+            "in": "_head_state",
+            "line": 169,
+            "when": "AT_IMPORT_the_code_that_ran"
+          }
+        ],
+        "import_closure": [
+          {
+            "expr": "sys.modules",
+            "in": "capture_closure",
+            "line": 148,
+            "when": "AT_IMPORT_the_code_that_ran"
+          }
+        ],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {},
+        "producing_code_digest": [
+          {
+            "expr": "hashlib.sha256( Path(__file__).resolve().read_bytes())",
+            "in": "<module>",
+            "line": 116,
+            "when": "AT_IMPORT_the_code_that_ran"
+          },
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "_digest_module",
+            "line": 137,
+            "when": "AT_IMPORT_the_code_that_ran"
+          },
+          {
+            "expr": "hashlib.sha256(me.read_bytes())",
+            "in": "source_identity_at_launch",
+            "line": 197,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(src.read_bytes())",
+            "in": "verifier_identity",
+            "line": 290,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(sib_a.read_bytes())",
+            "in": "selftest",
+            "line": 1545,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(sib_b.read_bytes())",
+            "in": "selftest",
+            "line": 1546,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(Path(path).read_bytes())",
+            "in": "closure_drift",
+            "line": 183,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(rp.read_bytes())",
+            "in": "verify_receipt_tier",
+            "line": 968,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(tape.read_bytes())",
+            "in": "synthetic_book_and_receipt",
+            "line": 1129,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256( frag.read_bytes())",
+            "in": "synthetic_book_and_receipt",
+            "line": 1132,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": true,
+        "status": {
+          "head_sha": "AT_IMPORT_the_code_that_ran",
+          "import_closure": "AT_IMPORT_the_code_that_ran",
+          "producing_code_digest": "AT_IMPORT_the_code_that_ran"
+        },
+        "typed_literals": [],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": true,
+      "sha256": "e9596e568f90dd5f73426975ef26f0e92476b8ec6806909a807115f2d150b1b9",
+      "unresolved_measure_lookalikes": [],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [],
+      "bytes": 76291,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 0,
+        "n_current_rss": 0,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 0,
+        "n_measurement_sites": 0,
+        "n_scope_matched": 0,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 0
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "a.selftest",
+              "EARLY_EXIT: a.selftest"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 1518
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [],
+      "measurement_sites": [],
+      "measuring_functions": {},
+      "path": "live/pm_research/da_accrual_report.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "DA_instrument",
+      "rule22": {
+        "head_sha": [
+          {
+            "expr": "subprocess.run([\"git\", \"rev-parse\", \"HEAD\"], capture_output=True, text=True, cwd=str(HERE))",
+            "in": "carrying_commit",
+            "line": 86,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "import_closure": [],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {},
+        "producing_code_digest": [
+          {
+            "expr": "hashlib.sha256(v1.read_bytes())",
+            "in": "selftest",
+            "line": 1456,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(src.read_bytes())",
+            "in": "reporter_identity",
+            "line": 98,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "de_statement_about_the_smoke",
+            "line": 476,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "gate1_accrual",
+            "line": 241,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(v2.read_bytes())",
+            "in": "selftest",
+            "line": 1472,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256( E2A_DECL.read_bytes())",
+            "in": "e2a_accrual",
+            "line": 895,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": false,
+        "status": {
+          "head_sha": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written",
+          "import_closure": "ABSENT",
+          "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+        },
+        "typed_literals": [],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": false,
+      "sha256": "378c9b8a9f86b4cd14157a92c554064c4c25141b5ab4db6d140ac930142f3cf7",
+      "unresolved_measure_lookalikes": [],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [],
+      "bytes": 37141,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 0,
+        "n_current_rss": 0,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 0,
+        "n_measurement_sites": 8,
+        "n_scope_matched": 0,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 0
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "a.selftest",
+              "EARLY_EXIT: a.selftest"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 759
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [],
+      "measurement_sites": [
+        {
+          "expr": "\"P-2026-002 E2-A -- REV 44 section C.4's two reporting gaps, closed in a\\nSUPERSEDING receipt computed from the landed smoke receipt's BYTES.\\n\\nNothing is re-run. The sealed payload is not opened. v1 is not edited: the\\ncorrection supersedes in band (CLAUDE.md rule 13) and cites v1 by sha256.\\n\\nTHE TWO GAPS.\\n\\n(1) A CONTAINER CENSUS BESIDE THE NAME CENSUS. v1 published\\n    `numeric_keys_that_survived` -- a census by VOCABULARY. Both of the seal's\\n    nets are name-based by construction (a marker list, and a name-shape\\n    scan), so a leaf under an innocuous name is invisible to both. The\\n    container census is the INDEPENDENT AXIS: it counts numeric leaves by\\n    CONTAINER PATH, at full depth, through dicts AND lists, and compares the\\n    profile against the one this receipt pins. A leaf added anywhere -- under\\n    any name at all -- changes its container's count and is FLAGGED.\\n\\n    LIST-RESIDENCY MEANS 'ANYWHERE UNDER A LIST', NOT 'A DIRECT CHILD OF ONE'.\\n    Measured on this receipt the two readings are 1,119 and 0. A census built\\n    on the second reading would report zero list-resident numbers and look\\n    like a clean bill on the very region -- the per-day admission diagnostics\\n    -- where almost all of them live.\\n\\n(2) THE RESOURCE BLOCK. v1 carried `max_rss_kib` alone, which cannot show\\n    what the run actually did to rule 20's cap. The block now reads the\\n    scope's own `memory.peak`, `memory.stat` anon and file apart, and\\n    `memory.events` max/oom. DE 82 (`e255e72`) built this for the Gate-1\\n    runner; per R-235 it is READ AS A DOCUMENT and re-implemented here, not\\n    imported -- including its ambient-scope falsifier, because a scope\\n    outside `research.slice` is the shell's own and its numbers are real\\n    measurements OF THE WRONG OBJECT.\\n\\n    python3 live/mm_research/da_e2a_receipt_v2.py --selftest\\n    python3 live/mm_research/da_e2a_receipt_v2.py --emit\\n\"",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 1,
+          "why": "the cgroup's high-water; never falls"
+        },
+        {
+          "expr": "\"07:25:16Z is about three and a half minutes before the run finished, and `memory.peak` is monotone. So 8,363,192,320 bytes is a LOWER BOUND on the scope's final peak: the run came AT LEAST as close to the cap as this says, and possibly closer. The scope was gone when it was next read, which is the gap the instrument closes\"",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 363,
+          "why": "the cgroup's high-water; never falls"
+        },
+        {
+          "expr": "'memory.peak is monotone and this sample precedes the end of the run, so the true headroom is this or less'",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 375,
+          "why": "the cgroup's high-water; never falls"
+        },
+        {
+          "expr": "\" GiB of the cap, and that is an UPPER bound on the headroom because memory.peak is monotone and the sample precedes the run's end. Meanwhile the anon component was \"",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 502,
+          "why": "the cgroup's high-water; never falls"
+        },
+        {
+          "expr": "\"THE HEADROOM IS COMPUTED, AND IT ANSWERS THE QUESTION: the scope peaked at 8,363,192,320 of 8,589,934,592 bytes -- 226,742,272 bytes = 0.2112 GiB from the cap, and that is an UPPER BOUND because memory.peak is monotone and the sample precedes the run's end\"",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 653,
+          "why": "the cgroup's high-water; never falls"
+        },
+        {
+          "expr": "\"a RESOURCE block reading the scope's memory.peak, memory.stat anon and file apart, and memory.events max/oom\"",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 409,
+          "why": "the cgroup's high-water; never falls"
+        },
+        {
+          "expr": "'memory.peak'",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 462,
+          "why": "the cgroup's high-water; never falls"
+        },
+        {
+          "expr": "'memory.peak'",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 221,
+          "why": "the cgroup's high-water; never falls"
+        }
+      ],
+      "measuring_functions": {
+        "build_v2": "CGROUP_PEAK_never_falls",
+        "carried_headroom": "CGROUP_PEAK_never_falls",
+        "da_scope_memory": "CGROUP_PEAK_never_falls",
+        "selftest": "CGROUP_PEAK_never_falls"
+      },
+      "path": "live/mm_research/da_e2a_receipt_v2.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "DA_instrument",
+      "rule22": {
+        "head_sha": [
+          {
+            "expr": "subprocess.run([\"git\", \"rev-parse\", \"HEAD\"], capture_output=True, text=True, cwd=str(HERE))",
+            "in": "carrying_commit",
+            "line": 68,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "import_closure": [],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {},
+        "producing_code_digest": [
+          {
+            "expr": "hashlib.sha256(src.read_bytes())",
+            "in": "emitter_identity",
+            "line": 80,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(v1.read_bytes())",
+            "in": "selftest",
+            "line": 722,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(Path(out).read_bytes())",
+            "in": "main",
+            "line": 773,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": false,
+        "status": {
+          "head_sha": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written",
+          "import_closure": "ABSENT",
+          "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+        },
+        "typed_literals": [],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": false,
+      "sha256": "51bf8c813f6a7869240de4cb56207223d02d6bc3664d0e88ba3e95ce21030a1d",
+      "unresolved_measure_lookalikes": [],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [],
+      "bytes": 161576,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 0,
+        "n_current_rss": 0,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 0,
+        "n_measurement_sites": 4,
+        "n_scope_matched": 0,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 1
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "fixture",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "a.selftest or a.fixture",
+              "EARLY_EXIT: a.selftest or a.fixture"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 3225
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [],
+      "measurement_sites": [
+        {
+          "expr": "resource.getrusage(resource.RUSAGE_SELF).ru_maxrss",
+          "kind": "PROCESS_HIGHWATER_never_falls",
+          "line": 108,
+          "why": "getrusage(RUSAGE_SELF).ru_maxrss is the high-water of the WHOLE PROCESS and never falls"
+        },
+        {
+          "expr": "resource.getrusage(\n            resource.RUSAGE_SELF).ru_maxrss",
+          "kind": "PROCESS_HIGHWATER_never_falls",
+          "line": 1761,
+          "why": "getrusage(RUSAGE_SELF).ru_maxrss is the high-water of the WHOLE PROCESS and never falls"
+        },
+        {
+          "expr": "resource.getrusage(\n            resource.RUSAGE_SELF).ru_maxrss",
+          "kind": "PROCESS_HIGHWATER_never_falls",
+          "line": 3096,
+          "why": "getrusage(RUSAGE_SELF).ru_maxrss is the high-water of the WHOLE PROCESS and never falls"
+        },
+        {
+          "expr": "'/proc/self/statm'",
+          "kind": "PROCESS_CURRENT_falls_on_release",
+          "line": 100,
+          "why": "current resident set: it FALLS when memory is released"
+        }
+      ],
+      "measuring_functions": {
+        "mechanism_check": "PROCESS_HIGHWATER_never_falls",
+        "rss_now_gib": "PROCESS_CURRENT_falls_on_release",
+        "rss_peak_gib": "PROCESS_HIGHWATER_never_falls",
+        "run": "PROCESS_HIGHWATER_never_falls"
+      },
+      "path": "live/mm_research/e2_a_runner.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "DA_instrument",
+      "rule22": {
+        "head_sha": [
+          {
+            "expr": "subprocess.run([\"git\", \"rev-parse\", \"HEAD\"], capture_output=True, text=True, cwd=str(HERE))",
+            "in": "carrying_commit",
+            "line": 508,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "_g(\"rev-parse\", \"HEAD\")",
+            "in": "_head_state",
+            "line": 399,
+            "when": "AT_IMPORT_the_code_that_ran"
+          }
+        ],
+        "import_closure": [
+          {
+            "expr": "sys.modules",
+            "in": "capture_closure",
+            "line": 378,
+            "when": "AT_IMPORT_the_code_that_ran"
+          }
+        ],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {
+          "head_sha": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written__VIA_e2_0_true_mid",
+          "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written__VIA_e2_0_true_mid"
+        },
+        "producing_code_digest": [
+          {
+            "expr": "hashlib.sha256( Path(__file__).resolve().read_bytes())",
+            "in": "<module>",
+            "line": 346,
+            "when": "AT_IMPORT_the_code_that_ran"
+          },
+          {
+            "expr": "hashlib.sha256(DECL_PATH.read_bytes())",
+            "in": "load_declaration",
+            "line": 593,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "_digest_module",
+            "line": 367,
+            "when": "AT_IMPORT_the_code_that_ran"
+          },
+          {
+            "expr": "hashlib.sha256(me.read_bytes())",
+            "in": "source_identity_at_launch",
+            "line": 427,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(src.read_bytes())",
+            "in": "runner_identity",
+            "line": 535,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256( Path(__file__).resolve().read_bytes())",
+            "in": "fixture",
+            "line": 2603,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(_a.read_bytes())",
+            "in": "fixture",
+            "line": 2653,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(_b.read_bytes())",
+            "in": "fixture",
+            "line": 2654,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(Path(path).read_bytes())",
+            "in": "closure_drift",
+            "line": 413,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(DECL_PATH.read_bytes())",
+            "in": "fixture",
+            "line": 2620,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": true,
+        "status": {
+          "head_sha": "AT_IMPORT_the_code_that_ran",
+          "import_closure": "AT_IMPORT_the_code_that_ran",
+          "producing_code_digest": "AT_IMPORT_the_code_that_ran"
+        },
+        "typed_literals": [],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": true,
+      "sha256": "13495ad1fa059855b3f72ae7678fbdce62063ce323e03ddf76da550cf9ffdf61",
+      "unresolved_measure_lookalikes": [
+        {
+          "budget_name": "DAY_RSS_CAP_GIB",
+          "expr": "admitted[\"rss_now_gib\"] < DAY_RSS_CAP_GIB",
+          "in_function": "fixture",
+          "line": 2545,
+          "measured_how": "key 'rss_now_gib' LOOKS measured but is bound to no measurement in this function -- NOT resolved as one",
+          "status": "UNRESOLVED_MEASURE_LOOKALIKE",
+          "why": "the key reads like a measurement and is bound to none in this function -- reported, never counted as a budget comparison and never dropped"
+        }
+      ],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [],
+      "bytes": 131594,
+      "census": {
+        "n_battery_calls_on_the_real_path": 0,
+        "n_budget_comparisons": 0,
+        "n_current_rss": 0,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 0,
+        "n_measurement_sites": 0,
+        "n_scope_matched": 0,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 0,
+        "n_unclassified": 0,
+        "n_unresolved_measure_lookalikes": 0
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "a.selftest",
+              "EARLY_EXIT: a.selftest"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 2252
+          }
+        ],
+        "findings": [],
+        "n_findings": 0
+      },
+      "fixture_selected_budgets": [],
+      "measurement_sites": [],
+      "measuring_functions": {},
+      "path": "live/mm_research/e2_a_declare.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "DA_instrument",
+      "rule22": {
+        "head_sha": [
+          {
+            "expr": "subprocess.run([\"git\", \"rev-parse\", \"HEAD\"], capture_output=True, text=True, cwd=str(HERE))",
+            "in": "carrying_commit",
+            "line": 952,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "import_closure": [],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {},
+        "producing_code_digest": [
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "sha256_file",
+            "line": 913,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "_h.sha256(Path(__file__).resolve().read_bytes())",
+            "in": "selftest",
+            "line": 2231,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(src.read_bytes())",
+            "in": "emitter_identity",
+            "line": 936,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": false,
+        "status": {
+          "head_sha": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written",
+          "import_closure": "ABSENT",
+          "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+        },
+        "typed_literals": [
+          {
+            "key": "carrying_commit",
+            "kind": "HISTORICAL_CITATION_of_a_superseded_artifact",
+            "line": 69,
+            "looks_like_a_commit_sha": true,
+            "value": "e29f984",
+            "why": "a provenance field TYPED as a literal is derived from nothing and cannot move when the code does -- unless it is CITING a past artifact, where a literal is the only honest form"
+          }
+        ],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": false,
+      "sha256": "5f582817af054724ae11f56f4e2e88301baca0cfc95c5d459432aee7763e33b2",
+      "unresolved_measure_lookalikes": [],
+      "verdict": "CLEAN",
+      "why": "no comparison pairs a process-wide high-water with a narrower budget, and no battery is invoked from the real path"
+    },
+    {
+      "budget_comparisons": [
+        {
+          "budget_name": "",
+          "budget_scope": "SCOPE_UNDETERMINED",
+          "expr": "_hw_after > _mp[\"growth_rss_mb\"] + 100",
+          "gates": "INSIDE_AN_ASSERTION_it_gates_no_refusal",
+          "in_function": "selftest",
+          "is_delta": false,
+          "line": 5214,
+          "measured_how": "`_hw_after` assigned from calls _peak_rss_mb()",
+          "measured_scope": "PROCESS_HIGHWATER_never_falls",
+          "verdict": "UNCLASSIFIED_budget_scope_undetermined"
+        },
+        {
+          "budget_name": "_base",
+          "budget_scope": "STAGE_scope",
+          "expr": "stages[HOOK_STAGE][\"rss_mb_current\"] >= _base",
+          "gates": "GATES_A_RECORDED_FLAG",
+          "in_function": "run_day",
+          "is_delta": false,
+          "line": 3873,
+          "measured_how": "key 'rss_mb_current', BOUND to a measurement in this function",
+          "measured_scope": "PROCESS_CURRENT_falls_on_release",
+          "verdict": "CURRENT_RSS_falls_so_it_cannot_inherit_a_freed_peak"
+        },
+        {
+          "budget_name": "bar_mb",
+          "budget_scope": "SCOPE_UNDETERMINED",
+          "expr": "peak > bar_mb",
+          "gates": "GATES_A_RECORDED_FLAG",
+          "in_function": "battery_resources",
+          "is_delta": false,
+          "line": 4156,
+          "measured_how": "`peak` assigned from calls _peak_rss_mb()",
+          "measured_scope": "PROCESS_HIGHWATER_never_falls",
+          "verdict": "UNCLASSIFIED_budget_scope_undetermined"
+        },
+        {
+          "budget_name": "FIXTURE_DAY_PEAK_RSS_MB_BUDGET",
+          "budget_scope": "FIXTURE_scope",
+          "expr": "_hw_after > FIXTURE_DAY_PEAK_RSS_MB_BUDGET",
+          "gates": "INSIDE_AN_ASSERTION_it_gates_no_refusal",
+          "in_function": "selftest",
+          "is_delta": false,
+          "line": 5205,
+          "measured_how": "`_hw_after` assigned from calls _peak_rss_mb()",
+          "measured_scope": "PROCESS_HIGHWATER_never_falls",
+          "verdict": "SCOPE_MISMATCH_INSIDE_AN_ASSERTION_not_a_refusal"
+        },
+        {
+          "budget_name": "",
+          "budget_scope": "SCOPE_UNDETERMINED",
+          "expr": "_peak_rss_mb() > HEAVY_RSS_GB * 1024.0",
+          "gates": "INSIDE_AN_ASSERTION_it_gates_no_refusal",
+          "in_function": "selftest",
+          "is_delta": false,
+          "line": 4820,
+          "measured_how": "calls _peak_rss_mb()",
+          "measured_scope": "PROCESS_HIGHWATER_never_falls",
+          "verdict": "UNCLASSIFIED_budget_scope_undetermined"
+        }
+      ],
+      "bytes": 378454,
+      "census": {
+        "n_battery_calls_on_the_real_path": 1,
+        "n_budget_comparisons": 5,
+        "n_current_rss": 1,
+        "n_deltas": 0,
+        "n_fixture_selected_budget_sites": 1,
+        "n_measurement_sites": 5,
+        "n_scope_matched": 0,
+        "n_scope_mismatch": 0,
+        "n_scope_mismatch_inside_an_assertion": 1,
+        "n_unclassified": 3,
+        "n_unresolved_measure_lookalikes": 4
+      },
+      "committed_in_that_tree": true,
+      "fixture_on_real_path": {
+        "benign_battery_calls": [
+          {
+            "callee": "selftest",
+            "caller": "fixture_run",
+            "caller_is_itself_a_battery": true,
+            "guarded_by_the_battery_switch": false,
+            "guards": [],
+            "handed_to": [],
+            "innermost_caller": "fixture_run",
+            "kwargs": {
+              "offline": "True",
+              "quiet": "True"
+            },
+            "line": 2409
+          },
+          {
+            "callee": "battery_resources",
+            "caller": "selftest",
+            "caller_is_itself_a_battery": true,
+            "guarded_by_the_battery_switch": false,
+            "guards": [],
+            "handed_to": [],
+            "innermost_caller": "selftest",
+            "kwargs": {},
+            "line": 4816
+          },
+          {
+            "callee": "battery_resources",
+            "caller": "selftest",
+            "caller_is_itself_a_battery": true,
+            "guarded_by_the_battery_switch": false,
+            "guards": [],
+            "handed_to": [],
+            "innermost_caller": "selftest",
+            "kwargs": {},
+            "line": 4817
+          },
+          {
+            "callee": "_day_path_checks",
+            "caller": "selftest",
+            "caller_is_itself_a_battery": true,
+            "guarded_by_the_battery_switch": false,
+            "guards": [
+              "offline"
+            ],
+            "handed_to": [],
+            "innermost_caller": "selftest",
+            "kwargs": {},
+            "line": 6829
+          },
+          {
+            "callee": "battery_resources",
+            "caller": "selftest",
+            "caller_is_itself_a_battery": true,
+            "guarded_by_the_battery_switch": false,
+            "guards": [],
+            "handed_to": [],
+            "innermost_caller": "selftest",
+            "kwargs": {},
+            "line": 6891
+          },
+          {
+            "callee": "selftest",
+            "caller": "main",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": true,
+            "guards": [
+              "a.selftest",
+              "EARLY_EXIT: a.selftest"
+            ],
+            "handed_to": [],
+            "innermost_caller": "main",
+            "kwargs": {},
+            "line": 6931
+          },
+          {
+            "callee": "selftest",
+            "caller": "_battery_first",
+            "caller_is_itself_a_battery": true,
+            "guarded_by_the_battery_switch": false,
+            "guards": [],
+            "handed_to": [
+              "day_split_residency_proof(before_work=_battery_first)"
+            ],
+            "innermost_caller": "_battery_first",
+            "kwargs": {
+              "offline": "fixture",
+              "quiet": "True"
+            },
+            "line": 7033
+          }
+        ],
+        "findings": [
+          {
+            "callee": "selftest",
+            "caller": "_main_day",
+            "caller_is_itself_a_battery": false,
+            "guarded_by_the_battery_switch": false,
+            "guards": [
+              "EARLY_EXIT: a.output is None"
+            ],
+            "handed_to": [
+              "day_split_residency_proof(before_work=_battery_first)"
+            ],
+            "innermost_caller": "_battery_first",
+            "kwargs": {
+              "offline": "fixture",
+              "quiet": "True"
+            },
+            "line": 7033,
+            "why": "a battery is called from a function that is not itself a battery and no enclosing guard names the battery switch -- so a REAL run executes it IN THE SAME PROCESS, where every process-wide number the fixture is judged against has already been raised by the real work"
+          }
+        ],
+        "n_findings": 1
+      },
+      "fixture_selected_budgets": [
+        {
+          "expr": "FIXTURE_DAY_PEAK_RSS_MB_BUDGET if fixture\n                    else REAL_DAY_PEAK_RSS_MB_BUDGET",
+          "line": 3572,
+          "test": "fixture"
+        }
+      ],
+      "measurement_sites": [
+        {
+          "expr": "_r.getrusage(_r.RUSAGE_SELF).ru_maxrss",
+          "kind": "PROCESS_HIGHWATER_never_falls",
+          "line": 2717,
+          "why": "getrusage(RUSAGE_SELF).ru_maxrss is the high-water of the WHOLE PROCESS and never falls"
+        },
+        {
+          "expr": "usage.ru_maxrss",
+          "kind": "PROCESS_HIGHWATER_never_falls",
+          "line": 2296,
+          "why": "getrusage(RUSAGE_SELF).ru_maxrss is the high-water of the WHOLE PROCESS and never falls"
+        },
+        {
+          "expr": "usage.ru_maxrss",
+          "kind": "PROCESS_HIGHWATER_never_falls",
+          "line": 2469,
+          "why": "getrusage(RUSAGE_SELF).ru_maxrss is the high-water of the WHOLE PROCESS and never falls"
+        },
+        {
+          "expr": "'memory.peak'",
+          "kind": "CGROUP_PEAK_never_falls",
+          "line": 2791,
+          "why": "the cgroup's high-water; never falls"
+        },
+        {
+          "expr": "'/proc/self/statm'",
+          "kind": "PROCESS_CURRENT_falls_on_release",
+          "line": 2843,
+          "why": "current resident set: it FALLS when memory is released"
+        }
+      ],
+      "measuring_functions": {
+        "_current_rss_mb": "PROCESS_CURRENT_falls_on_release",
+        "_peak_rss_mb": "PROCESS_HIGHWATER_never_falls",
+        "dry_run_ledger": "PROCESS_HIGHWATER_never_falls",
+        "fixture_run": "PROCESS_HIGHWATER_never_falls",
+        "scope_memory_observation": "CGROUP_PEAK_never_falls"
+      },
+      "path": "live/pm_research/de_multiday_gate1_runner.py",
+      "read_from_tree": "/home/yuqing/ctaNew",
+      "role": "DE_runner_the_known_bad",
+      "rule22": {
+        "head_sha": [
+          {
+            "expr": "_git(\"rev-parse\", \"HEAD\")",
+            "in": "carrying_commit_block",
+            "line": 552,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "_g(\"rev-parse\", \"HEAD\")",
+            "in": "_head_state",
+            "line": 148,
+            "when": "AT_IMPORT_the_code_that_ran"
+          },
+          {
+            "expr": "_sp3.run([\"git\", \"-C\", str(_repo), \"rev-parse\", \"HEAD\"], capture_output=True, text=True).stdout.strip()",
+            "in": "_synth_ledger",
+            "line": 4624,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "_sp3.run([\"git\", \"-C\", str(_repo), \"rev-parse\", \"HEAD\"], capture_output=True, text=True)",
+            "in": "_synth_ledger",
+            "line": 4624,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "import_closure": [
+          {
+            "expr": "sys.modules",
+            "in": "_capture_closure",
+            "line": 130,
+            "when": "AT_IMPORT_the_code_that_ran"
+          },
+          {
+            "expr": "sys.modules",
+            "in": "_day_path_checks",
+            "line": 6272,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "n_typed_stamps_of_this_run": 0,
+        "present_via_a_shared_module": {
+          "head_sha": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written__VIA_de_multiday_design_declaration",
+          "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written__VIA_de_multiday_design_declaration"
+        },
+        "producing_code_digest": [
+          {
+            "expr": "hashlib.sha256( Path(__file__).resolve().read_bytes())",
+            "in": "<module>",
+            "line": 94,
+            "when": "AT_IMPORT_the_code_that_ran"
+          },
+          {
+            "expr": "hashlib.sha256(loaded.read_bytes())",
+            "in": "import_be_cascade",
+            "line": 602,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(p.read_bytes())",
+            "in": "_digest_module",
+            "line": 124,
+            "when": "AT_IMPORT_the_code_that_ran"
+          },
+          {
+            "expr": "hashlib.sha256(me.read_bytes())",
+            "in": "source_identity_at_launch",
+            "line": 195,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(src.read_bytes())",
+            "in": "verify_be_module",
+            "line": 341,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(_sp.read_bytes())",
+            "in": "selftest",
+            "line": 5575,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(_real.read_bytes())",
+            "in": "_day_path_checks",
+            "line": 6117,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(Path(path).read_bytes())",
+            "in": "closure_drift",
+            "line": 178,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(q.read_bytes())",
+            "in": "_digest",
+            "line": 2003,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256( (Path(__file__).resolve().parents[2] / PARAMS_REL ).read_bytes())",
+            "in": "selftest",
+            "line": 5125,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(f.read_bytes())",
+            "in": "verify_pinned_models",
+            "line": 374,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          },
+          {
+            "expr": "hashlib.sha256(_bk.read_bytes())",
+            "in": "_day_path_checks",
+            "line": 6372,
+            "when": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+          }
+        ],
+        "rule22_complete": true,
+        "status": {
+          "head_sha": "AT_IMPORT_the_code_that_ran",
+          "import_closure": "AT_IMPORT_the_code_that_ran",
+          "producing_code_digest": "AT_IMPORT_the_code_that_ran"
+        },
+        "typed_literals": [],
+        "typed_stamps_of_this_run": []
+      },
+      "rule22_binds_this_module": true,
+      "sha256": "de53fcaf0a8a4ecd4d0c0a7bf50a0aceeb2470678fb852c9b6082abe9840601e",
+      "unresolved_measure_lookalikes": [
+        {
+          "budget_name": "",
+          "expr": "abs(_ns[\"delta_seconds\"]) < 5.0",
+          "in_function": "selftest",
+          "line": 4867,
+          "measured_how": "key 'delta_seconds' LOOKS measured but is bound to no measurement in this function -- NOT resolved as one",
+          "status": "UNRESOLVED_MEASURE_LOOKALIKE",
+          "why": "the key reads like a measurement and is bound to none in this function -- reported, never counted as a budget comparison and never dropped"
+        },
+        {
+          "budget_name": "FIXTURE_DAY_PEAK_RSS_MB_BUDGET",
+          "expr": "_mp[\"growth_rss_mb\"] < FIXTURE_DAY_PEAK_RSS_MB_BUDGET",
+          "in_function": "selftest",
+          "line": 5206,
+          "measured_how": "key 'growth_rss_mb' LOOKS measured but is bound to no measurement in this function -- NOT resolved as one",
+          "status": "UNRESOLVED_MEASURE_LOOKALIKE",
+          "why": "the key reads like a measurement and is bound to none in this function -- reported, never counted as a budget comparison and never dropped"
+        },
+        {
+          "budget_name": "",
+          "expr": "_pf[\"before_work_hook_highwater_delta_mb\"] > 8_000.0",
+          "in_function": "selftest",
+          "line": 5327,
+          "measured_how": "key 'before_work_hook_highwater_delta_mb' LOOKS measured but is bound to no measurement in this function -- NOT resolved as one",
+          "status": "UNRESOLVED_MEASURE_LOOKALIKE",
+          "why": "the key reads like a measurement and is bound to none in this function -- reported, never counted as a budget comparison and never dropped"
+        },
+        {
+          "budget_name": "FIXTURE_DAY_PEAK_RSS_MB_BUDGET",
+          "expr": "_open[\"memory_plan\"][\"growth_rss_mb\"] < FIXTURE_DAY_PEAK_RSS_MB_BUDGET",
+          "in_function": "_day_path_checks",
+          "line": 5945,
+          "measured_how": "key 'growth_rss_mb' LOOKS measured but is bound to no measurement in this function -- NOT resolved as one",
+          "status": "UNRESOLVED_MEASURE_LOOKALIKE",
+          "why": "the key reads like a measurement and is bound to none in this function -- reported, never counted as a budget comparison and never dropped"
+        }
+      ],
+      "verdict": "FLAGGED",
+      "why": "(a)+(b) a process-wide high-water is compared against a narrower budget, and/or (c) a battery runs on the real path"
+    }
+  ],
+  "modules_with_a_live_finding": [
+    "live/pm_research/de_multiday_gate1_runner.py"
+  ],
+  "n_checks": 16,
+  "n_failed": 0,
+  "protocol": "P003_DA_PROCESS_BUDGET_AND_RULE22_SWEEP_V1",
+  "read_from_tree": "/home/yuqing/ctaNew",
+  "rule22_binds_and_incomplete": [
+    {
+      "path": "live/pm_research/be_gate1_fragment.py",
+      "status": {
+        "head_sha": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+        "import_closure": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+        "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+      }
+    },
+    {
+      "path": "live/pm_research/be_gate1_state_tape.py",
+      "status": {
+        "head_sha": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written",
+        "import_closure": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+        "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+      }
+    },
+    {
+      "path": "live/pm_research/be_daybook_build.py",
+      "status": {
+        "head_sha": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+        "import_closure": "AT_IMPORT_the_code_that_ran__VIA_be_rule22",
+        "producing_code_digest": "AT_EMIT_the_code_on_disk_when_the_receipt_was_written"
+      }
+    }
+  ],
+  "supersedes": {
+    "chain": [
+      [
+        "p003_da_process_budget_rule22_sweep__20260906T103323Z.v2.json",
+        "c017033599a1806f9ce9f52ef6b0959482fa4e82ae18ca8bdee49028260b3f0e"
+      ]
+    ],
+    "modules_added": [],
+    "modules_removed": [],
+    "modules_that_moved_since": [
+      "live/pm_research/be_daybook_build.py",
+      "live/pm_research/be_gate1_fragment.py",
+      "live/pm_research/be_gate1_state_tape.py",
+      "live/pm_research/da_accrual_report.py",
+      "live/pm_research/da_book_verify.py",
+      "live/pm_research/da_gate1_day_verdict.py",
+      "live/pm_research/de_multiday_gate1_runner.py"
+    ],
+    "n_modules_moved": 7,
+    "path": "p003_da_process_budget_rule22_sweep__20260906T103323Z.v2.json",
+    "sha256": "c017033599a1806f9ce9f52ef6b0959482fa4e82ae18ca8bdee49028260b3f0e",
+    "totals_then": {
+      "n_battery_calls_on_the_real_path": 1,
+      "n_budget_comparisons": 7,
+      "n_deltas": 0,
+      "n_modules": 12,
+      "n_modules_rule22_binds_and_incomplete": 3,
+      "n_modules_rule22_complete": 3,
+      "n_scope_mismatch_gating_a_refusal": 1,
+      "n_scope_mismatch_inside_an_assertion": 1
+    },
+    "v1_untouched": true,
+    "why_re_emitted": "the tree under audit moved: a census names the bytes it read, so a census of other bytes is a different statement"
+  },
+  "totals": {
+    "n_battery_calls_on_the_real_path": 1,
+    "n_budget_comparisons": 10,
+    "n_deltas": 1,
+    "n_modules": 12,
+    "n_modules_rule22_binds_and_incomplete": 3,
+    "n_modules_rule22_complete": 3,
+    "n_scope_mismatch_gating_a_refusal": 0,
+    "n_scope_mismatch_inside_an_assertion": 1
+  },
+  "what_this_answers": {
+    "a": "does a budget comparison read a PROCESS-WIDE high-water (ru_maxrss, cgroup memory.peak) rather than a per-stage or per-fixture DELTA",
+    "b": "is the BUDGET's own scope narrower than the MEASUREMENT's -- one stage's, one fixture's, against a number the whole process set",
+    "c": "is a battery invoked from the REAL path, in the same process, so that (a) and (b) can meet",
+    "rule22": "is the producing-code digest, the import closure and HEAD captured AT IMPORT, at EMIT, or not at all (R-605)"
+  }
+}
