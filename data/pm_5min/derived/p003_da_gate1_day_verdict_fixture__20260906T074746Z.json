@@ -1,0 +1,157 @@
+{
+  "both_directions": true,
+  "checks": [
+    {
+      "check": "THE BARS COME FROM DE's DECLARATION, not from constants in this file -- a bar retyped into a checker is a second source of truth",
+      "detail": "params v4 sha 03e5cd029f69e660: decisions >= 30, draws >= 500, sd >= 0.25*|mean|",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: a params file missing a bar REFUSES rather than defaulting -- the verifier must not invent a threshold",
+      "detail": "a declaration with only `alpha` raises",
+      "passed": true
+    },
+    {
+      "check": "THE SEED RULE re-derived, and it DEPENDS on both inputs: the same book with a different arm, and the same arm with a different book, both move the seed",
+      "detail": "seed(aaaa..,CONDVALUE)=2980092173; other arm 4069893284; other book 644519309 -- a seed that ignored either would pin the wrong data",
+      "passed": true
+    },
+    {
+      "check": "THE VALUATION, hand-derived and SIGNED: level-to-markout with NO fee term, +1 on SIDES[0] and -1 on the other; an unvaluable fill returns None and is COUNTED, never a silent zero",
+      "detail": "BUY (13-10)*2 = 6.0; SELL = -6.0; missing level -> None; zero size -> None",
+      "passed": true
+    },
+    {
+      "check": "AND THE UNVALUABLE ONES ARE COUNTED IN THE TOTAL's OWN BLOCK (rule 4): a status beside the number, not a drop",
+      "detail": "2 fills, 1 unvaluable, 5.0 cents",
+      "passed": true
+    },
+    {
+      "check": "THE DECISION BOUNDARY IS `>=` AND IT IS PINNED: a generation exactly AT theta is IN the set the cancel is drawn from",
+      "detail": "scores 0.5/0.4999/0.9 at theta 0.5 -> 2 decisions {'BUY_UP': 1, 'SELL_UP': 1}, keys SORTED (which is what pins the RNG)",
+      "passed": true
+    },
+    {
+      "check": "D(E0) ON A SYNTHETIC BOOK WITH D KNOWN BY CONSTRUCTION REPRODUCES EXACTLY -- the identity D(C) = -sum(v_i for i in C), not an estimate of it",
+      "detail": "recomputed D_E0 = -176.42115 against the closed form -176.42115 over 48 decisions -- equal bit-for-bit, not within a tolerance",
+      "passed": true
+    },
+    {
+      "check": "THE STATISTIC READS THE ENGINE RATHER THAN ASSUMING IT: under a CASCADING replay -- cancelling a generation also removes the next one's fill -- D(E0) still equals value(returned fills) minus baseline, and it is NOT the naive minus-sum over the cancelled set",
+      "detail": "cascading D_E0 = -103.315993 = the closed form over the 66 generations the cascade actually removed; the naive minus-sum over the 48 DECISIONS would have said -176.42115. A fixture whose replay dropped exactly the cancelled rows could not tell those apart",
+      "passed": true
+    },
+    {
+      "check": "THE NULL IS MATCHED ON THE DECISION VARIABLE (CLAUDE.md rule 7): every draw takes exactly the arm's per-side decision counts, without replacement",
+      "detail": "50 draws, per-side counts identical to {'BUY_UP': 23, 'SELL_UP': 25} and no index repeated within a draw",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE CONTROL: the SAME seed reproduces the null BIT-FOR-BIT -- which is what makes an exact comparison the honest one",
+      "detail": "500 draws, two runs, identical value lists",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: a WRONG-SEED null is FLAGGED -- its draw sequence, its moments and its p differ from the seed the book and arm imply",
+      "detail": "seed 2709414823 vs 2709414824: first-draw indices [0, 2, 4, 6] vs [0, 1, 2, 3]; p 0.962076 vs 0.968064",
+      "passed": true
+    },
+    {
+      "check": "THE SIDE ITERATION ORDER IS PART OF THE SEED, and it is pinned to SORTED because that is the dict DE hands the sampler: consuming the sides in the other order gives a DIFFERENT draw at the SAME seed",
+      "detail": "same seed 12345, sorted vs reversed side order -> different index sets. An implementation that got this wrong would disagree with DE for a reason no field records",
+      "passed": true
+    },
+    {
+      "check": "p = (1 + #{null >= observed}) / (1 + K), hand-checked: observed 2.0 against [1,2,3,4] has 3 at-or-above, so p = 4/5",
+      "detail": "{'n_draws': 4, 'n_null_ge_observed': 3, 'p_one_sided': 0.8, 'floor': 0.2}",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: 499 draws REFUSES against the declared 500 minimum (rule 6) -- and 500 admits, so the bar is a bar and not a wall",
+      "detail": "499 raises; 500 returns",
+      "passed": true
+    },
+    {
+      "check": "Z = (observed - mean)/pstdev, hand-checked, and a ZERO-DISPERSION null REFUSES rather than returning a large Z",
+      "detail": "Z(3 | [1,2,3]) = 1.224745; a constant null raises",
+      "passed": true
+    },
+    {
+      "check": "R4 BOTH DIRECTIONS: a healthy arm-day ADMITS; four decisions REFUSE on the decision bar; a null whose sd is tiny beside its mean REFUSES on the sd floor -- Z explodes as sd -> 0",
+      "detail": "healthy OK; short: decisions 4 < declared minimum 30; degenerate: null sd 0.144337 < 0.25 * |mean 100.249| = 25.0624; ",
+      "passed": true
+    },
+    {
+      "check": "THE ALLOCATION IS CHECKED BOTH WAYS: a realisable one admits, more decisions than the side holds REFUSES, and an unknown side REFUSES -- never a quietly smaller draw",
+      "detail": "{'BUY_UP': 23, 'SELL_UP': 25} is realisable; 10^6 on one side is not",
+      "passed": true
+    },
+    {
+      "check": "THE EXACT COMPARISON's PRECONDITION IS CHECKED: a replay that answers differently to the SAME input REFUSES, because a bit-for-bit test of a seeded null rests on determinism and this module does not re-implement the engine",
+      "detail": "a flaky replay raises on the double-baseline check; the deterministic one runs through",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE CONTROL: an UNALTERED receipt AGREES on every compared field -- the comparator can pass, so a flag means something",
+      "detail": "10 fields compared, 0 mismatches",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: a receipt with ONE number altered by 1e-9 is FLAGGED -- the comparison is EXACT, so a near-miss is a mismatch and not a pass",
+      "detail": "D_E0 moved by 1e-9 -> ['D_E0']",
+      "passed": true
+    },
+    {
+      "check": "AND THE FLAG IS NOT ONLY ON THE ECONOMICS: an altered n_decisions -- a POPULATION field that survives the seal -- is flagged too",
+      "detail": "['admissibility.n_decisions']",
+      "passed": true
+    },
+    {
+      "check": "THE ROUND's SHARPEST CONTROL -- A SEALED RECEIPT IS NOT A VERIFICATION: with every economic field stripped there is nothing for the recomputed D(E0), Z, p and null moments to agree WITH, so the verifier reports ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED and IS_A_VERIFICATION_OF_THE_ECONOMICS = False",
+      "detail": "sealed: 0 mismatches AND not a verification; open: 10 fields compared AND a verification. ***ZERO MISMATCHES AGAINST A SEALED RECEIPT IS CERTIFYING AN EMPTY SET, and reporting it as a pass is the exact shape SEAT_PROTOCOL rule 16 names***",
+      "passed": true
+    },
+    {
+      "check": "AND THE SEAL IS DETECTED BY DE's OWN FIELD LIST, not by a filename or a flag the caller passes",
+      "detail": "sealed -> none of 7 present; open -> ['D_E0', 'Z', 'p_location', 'null_mean', 'null_sd', 'null_draws_summary']",
+      "passed": true
+    },
+    {
+      "check": "THE BOOK DIGEST GATE BOTH WAYS: the matching digest VERIFIES and a book whose sha does not match the receipt REFUSES the whole verification -- a day whose book moved is not the day the receipt describes",
+      "detail": "sha 0fc3c38b2208033a verifies; a wrong digest raises",
+      "passed": true
+    },
+    {
+      "check": "THE GATE-1 REAL-DAY PATH REFUSES BEFORE GO -- AND THE REFUSAL REASON CHANGES ACROSS THE BAR, which is what proves the gate predicate fires rather than the path refusing for one reason always",
+      "detail": "before the bar: 'REFUSED: the Gate-1 real-day path is closed until 2026-0...'; after the bar the gate OPENS and the refusal becomes 'REFUSED: the real-day path is declared and NOT...' -- a control that refused identically on both sides would prove nothing",
+      "passed": true
+    }
+  ],
+  "n_checks": 25,
+  "n_failed": 0,
+  "params_declaration": {
+    "path": "de_multiday_gate1_params_v4.json",
+    "sha256": "03e5cd029f69e660b07d3eb7214e4b8b80f54736105353c60227ef6e96c5261d"
+  },
+  "protocol": "P003_DA_GATE1_DAY_VERDICT_VERIFIER_V1_FIXTURE",
+  "status": "FIXTURE_NO_REAL_BOOK_NO_REAL_DAY",
+  "tolerance": {
+    "exact_bit_for_bit": [
+      "D_E0",
+      "Z",
+      "p_location",
+      "null_mean",
+      "null_sd"
+    ],
+    "float_equality_rule": "compared with `==` on floats after both sides are cast to float. A near-miss is a MISMATCH here, not a pass: the whole point of a seeded null is that it reproduces.",
+    "where_it_CANNOT_be_exact": "if the replay engine is not deterministic, D(E0) and every null value inherit that. This module does NOT assume determinism: it REPLAYS THE BASELINE TWICE and refuses if the two disagree, so the precondition the exact comparison rests on is checked rather than asserted.",
+    "why_exact": "the seed pins the DRAW SEQUENCE -- same seed, same pools, same sorted side order, same numpy Generator gives the same indices -- and the valuation is a finite sum of products of floats read from the same records in the same order. Nothing here is sampled twice or averaged over runs, so an equality is the honest comparison and a tolerance would only hide a real difference."
+  },
+  "verifier_identity": {
+    "commit_best_effort": "448c96aae1bde11132db74c66846bce5ce222d71",
+    "path": "live/pm_research/da_gate1_day_verdict.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "87520153851ea864dc738cc66f02c5a8838db8afe764dd5c6ceed222ac1d8ab1",
+    "tree_head": "448c96aae1bde11132db74c66846bce5ce222d71"
+  }
+}
