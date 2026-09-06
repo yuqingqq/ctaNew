@@ -63,6 +63,99 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T06:57:19Z (MEM ROUND 132 -- R-583 SWEPT, PLUS A CURRENCY AUDIT ON MY
+  OWN FILE. STATE ONLY, AND THE CURRENCY DEFECT IS MINE AND IS NOT THE ONE THE
+  QUESTION ANTICIPATED.
+  (1) **THE QUESTION ASKED WAS CLEAN: NO FLAG SAYS THE BOOK NEEDS ONLY THE
+  FRAGMENT.** Every mention from round 127 forward carries both inputs; the
+  round-127 "a MISSING INPUT" hits are historically scoped to the fragment
+  refusal. ***The two-input correction from REVIEW_BE48 A.3 propagated cleanly on
+  its first pass and has not rotted.***
+  (2) **AND THE METHOD IS HALF THAT ANSWER. MY FIRST SCAN WAS VALUE-ONLY AND
+  COULD NOT SEE FLAG BODIES** -- they are YAML COMMENTS and `safe_load` discards
+  them. ***A clean result from it would have been a silent zero over most of the
+  file*** -- the folded-scalar defect of round 126 in a second shape. Re-scanned on
+  RAW TEXT with a positive control (7 hits / 6 hits).
+  (3) **THE DEFECT THAT IS THERE IS MINE: "BOTH MISSING INPUTS NOW EXIST FOR ONE
+  DAY" IS FALSE AT THIS MOMENT.** The 09-03 tape on disk is
+  `...**WRONG_SPLIT**.json` (991,078,272 B, 06:31:21Z) and **the corrected tape
+  does not exist** -- BE 51's rebuild is 1,238 s in. **The count of existing
+  correct inputs is ONE.** ***And the claim was TRUE when I wrote it: the artifact
+  existed and was ruled defective afterwards.*** **This is the one failure mode my
+  new-flag instrument cannot catch -- the flag was cited correctly and the world
+  moved.** *The distinction to carry: a FILE CENSUS and a READINESS CLAIM are
+  different statements, and the artifact that existed is precisely the one being
+  replaced.*
+  (4) **AND BE RENAMED RATHER THAN OVERWROTE.** The superseded 991 MB tape sits
+  under a name that says what is wrong with it. *Rule 13 is written about receipts;
+  this is the same discipline applied to a data file by a seat that was not asked
+  to.* **A stale path now fails on a NAME instead of succeeding on WRONG ROWS**, and
+  a guard was added so the assembly cannot run against it.
+  (5) **DE 79 CLOSED THE THREE WIRING ITEMS -- 76 / 115 / 18, DRIVEN BY ME AT A
+  TREE I CHECKED CLEAN FIRST** -- and **the item I conceded last round is closed at
+  the code**: the runner now carries BOTH forms, **FLOCK entries on the lock's
+  INODE from `/proc/locks` AND a fresh-fd `LOCK_EX|LOCK_NB` that must FAIL.**
+  *Two independent mechanisms for one predicate, neither satisfiable by merely
+  having the file open.* **REV 41 drives them and states whether `--day` remains
+  approved** -- *the approval is not assumed to survive the change that answered
+  its conditions.*
+  (6) **DE REPORTS ALL THREE INSTRUMENTS IT BUILT THE ROUND BEFORE WERE WRONG.**
+  *The second seat today to report its own batch wrong (DA's four at R-576).* **And
+  the pattern worth naming: the instruments that fail are the ones built to satisfy
+  a REVIEW ITEM, because they are built against the WORDS of the item rather than
+  against the property** -- an fd check satisfies "prove the lock is held" in words
+  and not in fact.
+  (7) **AND DE'S OWN DEFECT IS A LIVE HAZARD IN MY METHOD: a 4-space anchor
+  matched 8-space lines as SUBSTRINGS and the file stopped parsing.** ***I edit
+  this file by exact-string anchors every round.*** The inherited rule -- anchor to
+  strings, never slice by index -- **protects against one hazard and creates this
+  one.** *What already protects me, stated so it is not luck: every edit asserts
+  `count(anchor) == 1` before replacing and every write is followed by a
+  `yaml.safe_load`; both have caught real anchor collisions this session.* **What I
+  ADD: an anchor must be unambiguous about INDENT, not only about text -- a bare
+  key fragment is a substring of its own deeper copies.**
+  (8) **THE SMOKE CHAIN IS FIVE LINKS AND LINK ONE IS RUNNING:** tape rebuild ->
+  assembly -> book -> the reviewer's filing -> GO. `be_gate1_state_tape.py`, pid
+  2945533, 1,238 s, 2,134,456 KiB, and the slice audit reads **one scope,
+  heavy=True locked=True** -- driven by me. *BE's own lock probe had matched the
+  WRONG PID and was corrected -- the third lock instrument today to be wrong in its
+  first form.*
+  (9) **AND THE COMMIT-TIME RE-READ CAUGHT TWO THINGS, ONE OF THEM A USER RULING.**
+  **(a) The corrected tape APPEARED** -- `phase2_state_tape_gate1_20260903_btc
+  .json`, 07:01:11Z, **991,078,272 bytes, EXACTLY the `.WRONG_SPLIT` byte count**,
+  with the builder STILL RUNNING. *I do not claim completion and a size match is
+  not a content match.* ***But an identical byte count points at the unruled
+  question: if the corrected tape is the same size, the split correction moved
+  LABELS not ROWS -- the REVIEWER's reading rather than the coordinator's.*** Three
+  readings, still unruled, and the first physical evidence bears on it; **I record
+  the observation with its limits and rule nothing.**
+  **(b) A USER RULING landed at 06:59Z, two minutes before my re-read: "We can
+  focus on btc for now, don't have to extend to other symbols."** P-003 Gate-1 is
+  already BTC-only; **E2-A's sealed smoke moves ADA/DOGE -> BTCUSDT**, v7 declared
+  over BTC, the twelve-symbol census standing as CONTEXT, the gate read on BTC at
+  14 post-boundary days. ***AND IT SUPERSEDES MY OWN ICP FRAMING:*** I carried "the
+  honest end is STATED, not unresolved" from round 129; **the cell is now DEFERRED,
+  not resolved, with its machinery kept DECLARED for when scope widens.**
+  *Deferring a cell with its instruments already declared is not dropping it, and
+  that is what makes the deferral reversible.* E2.0's ADA result and the race read
+  are unaffected.
+  (10) **AND THE BATCH COULD NOT BE PUSHED: THE SHARED TREE IS DIVERGED.** 1 ahead
+  / 1 behind on DISJOINT file sets -- local-only `cd212f9` (DA's v7 emitter, in NO
+  remote branch) against origin-only `9d15e35` (BE 51). ***I do not resolve it:
+  the verbs are not mine (rule 21 forbids rebase; merge is not permitted either)
+  and the commit at risk is ANOTHER SEAT'S AND UNPUSHED*** -- losing it would be
+  the orphan class a third time. **I commit my four files so they cannot be swept
+  by another seat's pathspec commit (which cost me my Q-row at round 128), attempt
+  the push, and REPORT THE REFUSAL** -- rule 21's own sequence, which anticipates
+  a refused push and therefore anticipates the commit. **Fourth shared-tree
+  incident today; one root, and it has now failed in each of the three ways a git
+  tree can.**
+  MEASURED BEFORE THIS SENTENCE: flags 706 -> 716, flag_provenance 251 -> 261,
+  tasks 19; 140 CHECKED, 121 RELAYED, **455 UNMARKED -- unchanged for the eighth
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; **the
+  new-flag instrument fired on this round's seven flags before their entries
+  existed (7 findings, exit 1) and cleared to 0 once written -- its second
+  consecutive live positive control.**)
   2026-09-06T06:50:12Z (MEM ROUND 131 -- R-581 AND R-582 SWEPT. STATE ONLY, AND
   THE ROUND CLOSES ONE OF MY OWN OPEN ITEMS WITH AN INSTRUMENT THAT FIRED ON ME.
   (1) **THE RACE READ IS BLOCKED ON READER -- NOT "APPROVED TO OPEN".** Carried
@@ -232,123 +325,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 691 -> 700, flag_provenance 236 -> 245,
   tasks 19; 128 CHECKED, 117 RELAYED, **455 UNMARKED -- unchanged for the sixth
   round running**, because all nine new flags carried provenance when written.
-  ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3.)
-  2026-09-06T06:28:46Z (MEM ROUND 129 -- R-577, R-578, R-579 SWEPT. STATE ONLY.
-  THE ROUND'S TWO EDGES: A NEGATIVE-EXISTENCE CLAIM THAT IS FALSE AT THE TIP AND
-  SHOULD NOT BE FILED, AND A PASS GATE RESTING 36% ON DATA RULE 5 FORBIDS.
-  (1) **THE FOUR BATTERIES REPRODUCE -- AND THIS TIME I MEASURED THE TREE FIRST.**
-  `git status --short` returned 0 lines BEFORE I ran anything, so the shared tree
-  is its HEAD; then design 71 / runner 100 / data root 18 / diff 26, **all four
-  exact.** *And the counts moved from round 128's 65/71/16/26 exactly as the dirty
-  tree predicted -- the cleanest possible confirmation that last round's
-  disagreement was a STATE difference, not a defect.*
-  (2) **THE INDEX-SPLIT LEVER IS HALF-ANSWERED, AND IT IS THE HALF THAT DOES NOT
-  MOVE THE BUDGET.** v9's R11 says `index_splits_needed_by_day = "NONE, at any
-  stage"` with a per-stage breakdown and a residency proof -- **and the field
-  beside it, `what_DE_cannot_rule`, declines the other half by name**: "WHICH
-  split BE must build to produce a September day's `asm` is BE's measurement".
-  ***R-575(A)'s ~2.5 GB lever was that producer question, so the 8.713 GB figure
-  is unchanged by v9.*** R-578(A) states this correctly; I record it because a
-  headline reading "the assembly lever answered" resolves to the wrong half.
-  (3) **THE ERA PREDICATE IS NOT AN ADMISSION LEG, AND 36 OF 101 ADMISSIBLE
-  SYMBOL-DAYS ARE LEGACY-STAMPED (35.6%)** -- 29 wholly pre-boundary + 7 on the
-  boundary day; **I computed the arithmetic and read the ledger myself.** E2.0
-  reads exchange `T` so rule 5 does not bind there; **E2-A reads `recv_ns` and is
-  sub-second by construction -- AND ITS GATE IS A PASS GATE.** ***A pass built 36%
-  on queue positions timestamped after up to ~0.6 s of parse backlog,
-  concentrated in bursts exactly when queue position matters, is a pass on data
-  rule 5 declares inadmissible. A kill survives bad data; a pass does not.***
-  For E2.0 it is a STATEMENT defect (ADA 5/16 legacy; the kill survives
-  leave-one-out on all 16) -- restate the population with n and as-of.
-  (4) **AND RULE 5'S CONSTANT IS TRACEABLE, WHICH NOBODY HAD SAID:** the ledger's
-  FOUR rows include one whose `started_at_ns` is **`1787579334881534478` --
-  CLAUDE.md's boundary verbatim.** *The number is a row in an artifact, not a
-  remembered figure, which is the opposite of the citation defects this programme
-  keeps finding.*
-  (5) **THE REVIEWER'S ZERO-OCCURRENCE CLAIM IS FALSE AT THE TIP -- AND I DID NOT
-  FILE IT.** Two hits against its stated zero, **with my positive control firing
-  (1/1/3 over CLAUDE.md), so the scan is not silently mismatching.** Both
-  explained: the runner's read of `collector_runs.jsonl` was committed **06:25:14Z,
-  AFTER the 06:22Z as-of** -- DA 62 landing the very leg the finding asked for --
-  and the declaration's mention landed **90 seconds BEFORE it**, with the
-  reviewer's pin at filing time **not establishable from here, and I assume
-  neither way.** ***And the substance is untouched, arguably strengthened:*** the
-  pre-existing mention is prose calibrating an OUTAGE BAR -- the era restart
-  explaining a 158 s heartbeat gap against a 61 s clean-day maximum -- **so the
-  boundary was already known to the declaration, used to explain a gap, and still
-  not made an admission predicate.** *That is the reviewer's finding, in the
-  declaration's own words.* **FOURTH ROUND RUNNING A FIRST-ORDER READ NEEDED A
-  STATE CHECK BEFORE IT COULD BE REPORTED.**
-  (6) **THE ORDERING FALSIFIER'S SURVIVING HALF IS FALSE TOO -- 993 of 2,000 seeds
-  (49.6%)** -- and the serious part is the RESPONSE: the runner declares its own
-  instrument refuted and reads NO GATE, ***so a correct model disagreement
-  SILENCES the gate.*** *A falsifier that converts an expected disagreement into a
-  refusal to report fails closed on the wrong condition.* v6 restates it as an
-  EXPECTATION. **TWICE NOW A FALSIFIER I RECORDED AS OWED HAS PROVED WRONG IN ITS
-  OWN TERMS** -- writing one down is not the same as its being true.
-  (7) **THE ICP CELL'S HONEST END IS STATED, NOT UNRESOLVED** -- and this
-  supersedes my own round-128 framing. ~736 gate-row episodes EXIST, so
-  "unresolved" would read as "we could not tell", which is false: **the defect is
-  in the COMPARISON, not the sample.** Run it, label **NOT COMPARABLE on placement
-  quality**, read the gate both ways at a declared staleness bar. **And ICP's one
-  admissible day is wholly pre-boundary, so its population is a v6 OUTPUT.**
-  (8) **THE LOCK IS PROVEN FROM `/proc/self/fd`, NOT FROM A FLAG** -- measured
-  from the running process, driven three ways, and **a heavy run without it
-  refuses with the artifact UNWRITTEN.** *Rule 11 in its strongest form: nothing
-  partial exists to misread.* **And the boolean sweep is STANDING** -- 5
-  classified, 4 COMPUTED / 1 INTENT, with `exhaustiveness_is_checked` so a new
-  undocumented boolean FAILS the battery. *Closing a class, not an instance.*
-  (9) **TWO MORE DE PROCESS ERRORS, BOTH RECOVERED**, and rule 21 gains "a shell
-  `cd` into a worktree mid-command". **Three shared-tree incidents this session --
-  two detachments and an orphan -- one shared root: the shared tree is a LANDING
-  surface being used as a WORKING one.** *The same sentence I wrote last round
-  about measuring counts there, arriving from the write side.*
-  (10) **AND THE COMMIT-TIME RE-READ CAUGHT THE BIGGEST THING IN THE ROUND, 90
-  SECONDS OLD.** BE 50 landed at 06:33:11Z: **the 09-03 STATE TAPE IS BUILT** --
-  544,286 rows, 991 MB, 4.740 GB of 8, its train split the very fragment I
-  verified in round 127. ***So BOTH missing inputs now exist for one day; the
-  block REV 36 extended from one to two is closed for 09-03, from both ends, in
-  about forty minutes.*** **And the split question has a THIRD face:** the
-  receipt's own `THE_SPLIT_QUESTION_IS_NOT_MINE` is **PROVISIONAL** -- *DE
-  declined the producer half by name, BE made a provisional choice to get
-  unblocked, nobody has ruled it, and an artifact now sits on top of the
-  provisional answer.*
-  (11) **AND THE RUNNER'S DIGEST GUARD FIRED ON IT WITHIN MINUTES:** 100 checks at
-  06:28:46Z, and at 06:34:39Z **`RunnerRefused: BE's cascade module digest differs
-  -- declared 2b164df2ec0653a5, found 93332a45faf714fe`.** *The R-572(B)(1) binding
-  catching a real change on its first real opportunity, and asking for a
-  DELIBERATE re-point rather than an automatic one -- the difference between a pin
-  and a nuisance.* **DE owes the re-point; until it lands the battery does not
-  complete.**
-  (12) **AND A COMMIT THAT STATES AN ACTION IT DID NOT PERFORM.** `git ls-tree -r`
-  at each commit: **0 tracked `.pyc` before BE 50's landing, 82 added by it
-  (unmentioned in its message), 82 still tracked AT HEAD** -- while the next
-  commit's subject reads *"Untrack live/pm_research/__pycache__ (90 .pyc files …)
-  and ignore bytecode"*. **It touched 41 paths, every one `M` rather than `D`, and
-  its stated 90 did not match the measured 82.** ***CLOSED at my commit-time
-  re-read: `b474e34` untracked all 82 -- 0 tracked at HEAD, none dirty -- with the
-  MEASURED count in its message, and stating that it committed without a pathspec
-  and why that was safe.*** *A no-pathspec commit in the shared tree is precisely
-  what swept my Q-row last round; this one carries its own justification.*
-  **Sixth round running the commit-time re-read changed what I was about to land --
-  and the first time it closed a finding of mine within about two minutes.** *The ignore half was already
-  true -- `.gitignore` carried both patterns and was untouched -- and gitignore
-  never applies to tracked files, which is why the untrack was the operative
-  half.* **WHY IT BINDS ON ME: with bytecode tracked, ANY seat running ANY suite
-  dirties the shared tree without editing a source file** -- defeating rule 21's
-  empty-status clause AND my own round-128 clean-tree rule. ***I dirtied 41 of
-  them myself this round, one paragraph after writing that the shared tree is a
-  landing surface being used as a working one.*** `git rm --cached` is not a rule
-  21 verb, so I route rather than fix.
-  **AND I RECORD THE THREE PROBES IT TOOK**, because the sequence is the lesson:
-  `--stat`'s "Bin 0 -> N" (right by luck), `git ls-files` returning 82 before AND
-  after (**wrong -- it reports the current index, not a historical tree**), and
-  `ls-tree -r` per commit (decisive). ***Two of three wrong, and the wrong ones
-  disagreed with each other -- which is the signal that made me keep going instead
-  of publishing either.***
-  MEASURED BEFORE THIS SENTENCE: flags 679 -> 691, flag_provenance 224 -> 236,
-  tasks 19; 122 CHECKED, 114 RELAYED, **455 UNMARKED -- unchanged for the fifth
-  round running**, because all twelve new flags carried provenance when written.
   ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2731,6 +2707,284 @@ flags:
                              # is touched -- **a coordinator ruling, not mine.**
                              # *I state it in my own Q-row too, so the register's own
                              # record of who carried it is not silently wrong.*
+  MY_OWN_BOTH_INPUTS_EXIST_CLAIM_IS_FALSE_AT_THIS_MOMENT: THE-TAPE-IS-REBUILT-AND-MY-BYTE-COUNT-INFERENCE-WAS-WRONG
+                             # CORRECTED-IN-BAND 2026-09-06T07:03Z, **against my own
+                             # inference of ten minutes earlier**, at BE 51's landed
+                             # commit and receipt.
+                             # **THE TAPE IS REBUILT AND THE SPLIT QUESTION IS RULED:**
+                             # sha `9de88da950598e86`, 991,078,272 bytes, 544,286 rows,
+                             # wall 1,471.6 s, peak 4.741 GB, cap not raised; the
+                             # `.WRONG_SPLIT` artifact moved aside, not deleted; the
+                             # receipt now carries `WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_
+                             # AND_WHY` = **score**.
+                             # ***AND MY INFERENCE FROM THE IDENTICAL BYTE COUNT WAS
+                             # WRONG.*** I wrote that a same-size rebuild "points at" the
+                             # reviewer's labels-not-rows reading. **The rows ARE the
+                             # same and the LABEL IS DECISIVE:**
+                             # `phase2_arms.tape_index` filters `r['split'] != split`,
+                             # **so the label decides which index a row lands in -- and a
+                             # forward day labelled `train` reports as a day the heads
+                             # were FITTED ON.**
+                             # **SO THE COORDINATOR'S "DEFECT" READING IS RIGHT**, and the
+                             # reviewer's "largely inert" was the narrower claim about the
+                             # BUILDER's embargo comparison. *Both were about different
+                             # code paths and I collapsed them into one question, then
+                             # resolved it from a file size.*
+                             # ***THE LESSON IS MINE AND IT IS THE ROUND'S SHARPEST: I
+                             # INFERRED A MECHANISM FROM A BYTE COUNT.*** A size match is
+                             # consistent with a material correction AND with a cosmetic
+                             # one; **it discriminates nothing, and I let it point.** *I
+                             # did attach limits -- "I do not claim completion, a size
+                             # match is not a content match" -- and the limits covered the
+                             # wrong risk: not whether the file was finished, but whether
+                             # the observation bore on the question at all.*
+                             # EARLIER VALUE (rule 13):
+                             # THE-CORRECTED-TAPE-APPEARED-AT-MY-COMMIT-TIME-RE-READ-SAME-BYTE-COUNT
+                             # SUPERSEDED-IN-BAND 2026-09-06T07:01:37Z at my commit-time
+                             # re-read. **THE CORRECTED TAPE NOW EXISTS:**
+                             # `phase2_state_tape_gate1_20260903_btc.json`, 07:01:11Z --
+                             # **991,078,272 bytes, EXACTLY the byte count of the
+                             # `.WRONG_SPLIT` file.**
+                             # **WHAT I CLAIM AND WHAT I DO NOT.** The file exists at that
+                             # size and **the builder process is STILL RUNNING**, so *I do
+                             # not claim the rebuild is complete* and **a size match is
+                             # NOT a content match** -- I have not compared bytes or
+                             # digests.
+                             # ***BUT AN IDENTICAL BYTE COUNT IS INFORMATIVE AND POINTS AT
+                             # THE UNRULED QUESTION:*** if the corrected tape is the same
+                             # size, the split correction moved LABELS rather than ROWS --
+                             # **which is the REVIEWER's reading ("the label is assigned
+                             # by input file and its only behavioural consequence is an
+                             # embargo comparison an empty score split passes trivially")
+                             # rather than the coordinator's ("every forward-day row is a
+                             # SCORE row").** *Three readings, still unruled, and the
+                             # first physical evidence bears on it.* **BE 51 states it;
+                             # I record the observation with its limits and rule nothing.**
+                             # EARLIER VALUE (rule 13):
+                             # THE-TAPE-IS-RENAMED-WRONG_SPLIT-AND-THE-CORRECTED-ONE-IS-NOT-BUILT
+                             # CHECKED 2026-09-06T06:57:19Z on disk, and it is the currency
+                             # defect the round was sent to look for -- **though not the
+                             # one the question anticipated.**
+                             # Round 130 landed **"BOTH MISSING INPUTS NOW EXIST FOR ONE
+                             # DAY"** in three places. **It is false right now.** The
+                             # 09-03 state tape on disk is
+                             # `phase2_state_tape_gate1_20260903_btc.**WRONG_SPLIT**.json`
+                             # (991,078,272 bytes, 06:31:21Z) -- **renamed** on the
+                             # coordinator's EMPTY-score-split addendum -- and **the
+                             # corrected tape does not exist**: BE 51's rebuild is 1,238 s
+                             # in, holding the lock.
+                             # **SO THE COUNT OF EXISTING CORRECT INPUTS IS ONE, NOT
+                             # TWO** -- the fragment.
+                             # ***AND THE CLAIM WAS TRUE WHEN I WROTE IT.*** The file
+                             # existed at round 130 and its defect was ruled after. *This
+                             # is not a relay failure or a bad measurement; it is a
+                             # readiness claim outliving the artifact it was about* --
+                             # **which is the one failure mode my new-flag instrument
+                             # cannot catch, because the flag was cited correctly and the
+                             # world moved.**
+                             # **THE DISTINCTION TO CARRY: a FILE CENSUS and a READINESS
+                             # CLAIM are different statements.** "Both inputs exist" was a
+                             # census; it is read as readiness; and the artifact that
+                             # existed is precisely the one being replaced. Superseded
+                             # here rather than in round 130's generation, which stands as
+                             # written (rule 13).
+  NO_FLAG_SAYS_THE_BOOK_NEEDS_ONLY_THE_FRAGMENT_I_SCANNED_THE_RAW_TEXT: THE-TWO-INPUT-CORRECTION-PROPAGATED-CLEANLY
+                             # CHECKED 2026-09-06T06:57:19Z, and the METHOD is half the
+                             # entry.
+                             # **My first scan was value-only** -- `yaml.safe_load` then a
+                             # regex over flag VALUES -- and it returned 2 hits, both
+                             # unrelated. ***That scan CANNOT SEE flag bodies, because
+                             # the bodies are YAML COMMENTS and the parser discards
+                             # them.*** **A clean result from it would have been a silent
+                             # zero over the majority of the file** -- the folded-scalar
+                             # defect of round 126 in a second shape.
+                             # **Re-scanned on the RAW TEXT with a positive control** (the
+                             # phrase is findable: 7 hits in STATUS.yml, 6 in HANDOFF.md).
+                             # **RESULT: no live claim says the 09-03 book needs only the
+                             # fragment.** Every mention from round 127 forward carries
+                             # both inputs -- "MY ROUND-126 SWEEP CARRIED ONE MISSING
+                             # INPUT. THERE ARE TWO", "THE SECOND MISSING INPUT IS BEING
+                             # BUILT", "BOTH MISSING INPUTS" -- and the round-127 hits
+                             # that say "a MISSING INPUT" are historically scoped to the
+                             # fragment refusal, correctly.
+                             # ***So the two-input correction from REVIEW_BE48 section A.3
+                             # propagated cleanly on its first pass and has not rotted.***
+                             # *The defect this round is a different one, above.*
+  THE_WRONG_TAPE_IS_RENAMED_NOT_OVERWRITTEN: RULE-13-APPLIED-TO-A-DATA-ARTIFACT
+                             # CHECKED 2026-09-06T06:57:19Z on disk.
+                             # The superseded tape is not deleted and not overwritten: it
+                             # sits as **`....WRONG_SPLIT.json`**, ***a name that says what
+                             # is wrong with it.***
+                             # *Rule 13 is written about receipts -- never edit a landed
+                             # artifact, supersede it -- and this is the same discipline
+                             # applied to a 991 MB data file, by a seat that was not asked
+                             # to.* **A reader who finds it cannot mistake it for the
+                             # current tape, and an assembly pointed at it by a stale path
+                             # fails on a name rather than succeeding on wrong rows.**
+                             # And BE added a guard so the assembly cannot run against the
+                             # wrong tape -- *belt and name.*
+  DE_79_CLOSED_THE_THREE_WIRING_ITEMS_AND_THE_LOCK_NOW_TESTS_THE_LOCK: 76-115-18-AT-A-TREE-I-VERIFIED-CLEAN-FIRST
+                             # CHECKED 2026-09-06T06:57:19Z: `git status --short` = 0 lines
+                             # FIRST, then the batteries -- **design 76 / runner 115 /
+                             # data root 18, matching R-583(A) exactly.**
+                             # **AND THE ITEM I CONCEDED LAST ROUND IS CLOSED AT THE
+                             # CODE.** I recorded at round 129 that reading
+                             # `/proc/self/fd` was "the right shape" and conceded at round
+                             # 130 that **an fd is evidence a file is OPEN, not that a
+                             # LOCK is held.** The runner now carries BOTH forms the
+                             # reviewer named: **FLOCK entries on the lock's INODE read
+                             # from `/proc/locks`, and a FRESH-FD `LOCK_EX|LOCK_NB`
+                             # attempt that must FAIL** if somebody holds it.
+                             # *Two independent mechanisms for one predicate, neither of
+                             # which can be satisfied by merely having the file open.*
+                             # Also closed: the fixture/real lock on the DAY path, and
+                             # `selftest(offline=fixture)` so a real day's receipt carries
+                             # the 23 day-path checks and the four R6 controls.
+                             # **REV 41 drives all three and states whether `--day`
+                             # remains approved** -- *the approval is not assumed to
+                             # survive the change that answered its conditions, which is
+                             # the discipline DE applied to itself at R-574.*
+  ALL_THREE_INSTRUMENTS_DE_BUILT_THE_ROUND_BEFORE_WERE_WRONG: AND-THE-SEAT-REPORTED-IT-ITSELF
+                             # RELAYED from R-583(A) / Q-DE-79 2026-09-06T06:57:19Z.
+                             # DE reports that **all three instruments it built the round
+                             # before were wrong in a way the reviewer named** -- the lock
+                             # instrument, the peak-stage claim, and its own re-point
+                             # method.
+                             # ***A seat reporting that its whole previous batch of
+                             # instruments was wrong is the opposite shape from a batch
+                             # that reports none***, and it is the second time today a
+                             # seat has done it (DA's four self-caught errors at R-576).
+                             # **The pattern worth naming: the instruments that fail are
+                             # the ones built to satisfy a review item, because they are
+                             # built against the WORDS of the item rather than against the
+                             # property.** *An fd check satisfies "prove the lock is held"
+                             # in words and not in fact.*
+  A_FOUR_SPACE_ANCHOR_MATCHED_EIGHT_SPACE_LINES_AND_THE_FILE_STOPPED_PARSING: A-LIVE-HAZARD-IN-MY-OWN-EDIT-METHOD
+                             # RELAYED from R-583(A) 2026-09-06T06:57:19Z, and recorded
+                             # because **it is a hazard in the method I use every round.**
+                             # DE's own defect: two battery blocks went in under-indented
+                             # because **a 4-space anchor matched 8-space lines as
+                             # SUBSTRINGS** -- the file stopped parsing; repaired by line
+                             # range.
+                             # ***I EDIT `STATUS.yml` BY EXACT-STRING ANCHORS ON EVERY
+                             # ROUND, AND A SHORTER-INDENT ANCHOR MATCHING A DEEPER LINE
+                             # IS EXACTLY THE FAILURE AVAILABLE TO ME.*** The programme's
+                             # inherited rule -- "do not slice source by index, anchor to
+                             # exact strings" -- **protects against one hazard and creates
+                             # this one.**
+                             # **WHAT ALREADY PROTECTS ME, STATED SO IT IS NOT LUCK:**
+                             # every edit I make asserts `t.count(anchor) == 1` before
+                             # replacing, and every write is followed by a `yaml.safe_load`
+                             # that would fail exactly as DE's file did. *Both are in place
+                             # and have caught real anchor collisions this session (the
+                             # flags-versus-provenance duplicate keys, twice).*
+                             # **What I ADD from DE's instance: an anchor must carry
+                             # enough of its own line to be unambiguous about INDENT, not
+                             # only about text** -- a bare key fragment is a substring of
+                             # its own deeper copies.
+  A_USER_RULING_LANDED_AT_MY_COMMIT_TIME_RE_READ_SCOPE_IS_BTC: THE-ICP-CELL-IS-DEFERRED-NOT-RESOLVED
+                             # CHECKED 2026-09-06T07:01:37Z at R-584, which landed at 06:59Z
+                             # -- **two minutes before my re-read and after my batch was
+                             # composed.**
+                             # **THE USER'S WORDS, VERBATIM: "We can focus on btc for now,
+                             # don't have to extend to other symbols."** Scope for new
+                             # work in BOTH programmes is BTC until the USER says
+                             # otherwise.
+                             # **APPLIED:** P-2026-003 Gate-1 is **already BTC-only**
+                             # (R-560, design v3+ R3) -- no change. **P-2026-002 E2-A: the
+                             # sealed smoke moves from ADA/DOGE to BTCUSDT**; v7's
+                             # population and admission are declared over BTC; the
+                             # twelve-symbol census **stands as CONTEXT**; the gate is read
+                             # on BTC when 14 post-boundary days exist (~09-09 -- the
+                             # date I reconciled last round). **E2.0's SETTLED ADA result
+                             # is unaffected; the race read is unaffected -- it reads what
+                             # was FROZEN.**
+                             # ***AND IT SUPERSEDES MY OWN FRAMING OF THE ICP CELL.*** I
+                             # carried it from round 129 as "the honest end is STATED, not
+                             # unresolved -- run it, label NOT COMPARABLE". **The cell is
+                             # now DEFERRED, not resolved**, with its v7 machinery -- the
+                             # staleness status, the NOT_COMPARABLE label -- **kept
+                             # DECLARED for when scope widens.** *Deferring a cell with
+                             # its instruments already declared is not the same as
+                             # dropping it, and the distinction is what makes the deferral
+                             # reversible.*
+                             # **AND THE RESOURCE CLAUSE IS THE PROGRAMME'S OWN
+                             # DISCIPLINE, RESTATED BY THE COORDINATOR WITHOUT PROMPTING:**
+                             # BTC's bookTicker is the **8.6 GB** input the census queued
+                             # by size; the runner streams per hour-file under the wrapper
+                             # and **REFUSES if a day exceeds the cap -- never a raised
+                             # cap, never a smaller population** -- with the resource
+                             # observation published.
+  THE_SHARED_TREE_IS_DIVERGED_WITH_ANOTHER_SEATS_UNPUSHED_COMMIT: I-HOLD-RATHER-THAN-RESOLVE-IT
+                             # CHECKED 2026-09-06T07:04Z, and it is a STOP condition I
+                             # report rather than act on.
+                             # **MEASURED:** merge-base `7a5a0e8`; **local-only
+                             # `cd212f9`** (DA's E2-A v7 emitter) which
+                             # `git branch -r --contains` shows in **NO remote branch** --
+                             # unpushed; **origin-only `9d15e35`** (BE round 51), pushed.
+                             # **1 ahead / 1 behind. The two commits touch DISJOINT file
+                             # sets**, so the merge itself would be trivial.
+                             # ***I DO NOT RESOLVE IT, FOR TWO REASONS THAT AGREE.***
+                             # **(1) The verbs are not mine:** rule 21 forbids `rebase`
+                             # (and `checkout`/`reset`/`stash`) in the shared tree, and a
+                             # merge is not among its permitted verbs. **(2) The commit at
+                             # risk is ANOTHER SEAT'S AND IS UNPUSHED** -- *anything I did
+                             # that lost `cd212f9` would destroy DA's batch, which is
+                             # exactly the orphan class this session has already produced
+                             # twice.*
+                             # **WHAT I DO INSTEAD, AND WHY IT IS RULE 21's OWN
+                             # SEQUENCE:** I commit my four files (add, commit) so my
+                             # batch cannot be swept by another seat's pathspec commit --
+                             # ***which cost me my Q-row at round 128*** -- then attempt
+                             # the push, **report the refusal, and wait.** Rule 21
+                             # anticipates a refused push, so it anticipates the seat
+                             # having committed first.
+                             # **FOURTH SHARED-TREE INCIDENT TODAY** -- two detachments,
+                             # an orphan, now a divergence -- ***one root: the shared tree
+                             # is a landing surface being used as a working one, and it
+                             # has now produced a failure in each of the three ways a git
+                             # tree can fail.***
+                             # **ESCALATED, not ruled: whoever owns `cd212f9` pushes it or
+                             # the coordinator merges; my batch lands on the next round
+                             # with no loss.**
+  LINK_TWO_IS_BLOCKED_ON_A_MODULE_CONSTANT_AND_BE_VERIFIED_THE_BLOCKER: TAPE_PATH-IS-A-CONSTANT-ON-THE-AUGUST-TAPE
+                             # CHECKED 2026-09-06T07:03Z at BE 51's landed commit
+                             # message and receipt.
+                             # **The streaming assembly is BUILT to DE v9 R11** -- five
+                             # stages with declared per-stage budgets that REFUSE when
+                             # exceeded, **the index released after `asm` and before the
+                             # book is written (measured on VmRSS, because `ru_maxrss`
+                             # cannot show a release)**, the fragment streamed at
+                             # chunk_windows=6, and asm's peak published as its own field.
+                             # **AND IT CANNOT RUN: `phase2_arms.TAPE_PATH` IS A MODULE
+                             # CONSTANT ON THE LIVE AUGUST TAPE, and neither `tape_index`
+                             # nor `build_tape_index` takes a path.** A September assembly
+                             # would index the WRONG TAPE and emit a book with an empty
+                             # `asm` -- ***"the failure that looks like a result."***
+                             # **AND BE VERIFIED THE BLOCKER INSTEAD OF HITTING IT**:
+                             # `assert_day_tape` refuses before any work, naming the
+                             # constant and the consequence, driven in the battery. *A
+                             # seat that proves the wall exists before walking into it
+                             # turns a wasted run into a routable finding.*
+                             # **This is the reviewer's BE48 routed item 2 -- a path
+                             # parameter -- and it is DE's surface**, so the chain now
+                             # reads: tape (DONE) -> **a path parameter on DE's surface**
+                             # -> assembly -> book -> filing -> GO.
+  THE_GATE_1_SMOKE_CHAIN_IS_FIVE_LINKS_AND_THE_FIRST_IS_RUNNING: TAPE-ASSEMBLY-BOOK-FILING-GO
+                             # CHECKED 2026-09-06T06:57:19Z at the process table and the
+                             # slice audit.
+                             # **tape rebuild -> streaming assembly -> the 09-03 book ->
+                             # the reviewer's filing on the book -> the smoke on GO.**
+                             # **Link one is RUNNING:** `be_gate1_state_tape.py --day
+                             # 20260903`, pid 2945533, **1,238 s, 2,134,456 KiB**, and the
+                             # slice audit reads **one scope, `heavy=True locked=True`,
+                             # none heavy without the lock** -- driven by me.
+                             # *BE's own lock probe had matched the WRONG PID and was
+                             # corrected against DE's R12 mechanism -- the third instance
+                             # today of a lock instrument being wrong in its first form.*
+                             # **In flight: BE 51, DA 63 (v7 at `run()`: the era leg, the
+                             # narrowed ordering trigger, the sealed path), REV 41; DE
+                             # stands by at ~55%.**
   THE_RACE_READ_IS_BLOCKED_ON_READER_NOT_APPROVED_TO_OPEN: THE-STATE-WORD-CHANGES-AND-SO-DOES-THE-RISK
                              # CHECKED 2026-09-06T06:50:12Z at R-581 and the filing, and this
                              # is the STATE correction the round exists to land.
@@ -15487,6 +15741,113 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 132, 2026-09-06T06:57:19Z ------------------------------
+  THE_SHARED_TREE_IS_DIVERGED_WITH_ANOTHER_SEATS_UNPUSHED_COMMIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-06T07:04Z
+    said: >-
+      rule 21 permits add, commit and push in the shared tree and forbids
+      checkout, switch, reset, rebase, stash and pull --rebase, and directs a seat
+      whose push is refused to fetch and retry only with an EMPTY status,
+      otherwise to report and wait. Measured: merge-base 7a5a0e8, local-only
+      cd212f9 (in no remote branch, unpushed), origin-only 9d15e35, 1 ahead and 1
+      behind, with disjoint file sets. Resolving it needs a verb rule 21 does not
+      permit and would risk another seat's unpushed commit, so I commit my own
+      four files, attempt the push, report the refusal and wait.
+  LINK_TWO_IS_BLOCKED_ON_A_MODULE_CONSTANT_AND_BE_VERIFIED_THE_BLOCKER:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260903_btc.json
+    as_of: 2026-09-06T07:03Z
+    said: >-
+      BE 51's landed commit states the streaming assembly is built to R11 with
+      per-stage budgets that refuse, the index released after asm measured on
+      VmRSS because ru_maxrss cannot show a release, and asm's peak published;
+      and that phase2_arms.TAPE_PATH is a module constant on the live August tape
+      with neither tape_index nor build_tape_index taking a path, so a September
+      assembly would index the wrong tape and emit a book with an empty asm --
+      "the failure that looks like a result". assert_day_tape refuses before any
+      work and is driven in the battery. The rebuilt tape carries sha
+      9de88da950598e86, 544,286 rows, and WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM
+      = score, with why_the_label_is_not_cosmetic naming the tape_index filter
+      r['split'] != split.
+  A_USER_RULING_LANDED_AT_MY_COMMIT_TIME_RE_READ_SCOPE_IS_BTC:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T07:01:37Z
+    said: >-
+      R-584, timestamped 06:59Z, records the USER's words verbatim -- "We can
+      focus on btc for now, don't have to extend to other symbols" -- and applies
+      them: P-003 Gate-1 already BTC-only so no change; P-002 E2-A's sealed smoke
+      moves from ADA/DOGE to BTCUSDT with v7's population and admission declared
+      over BTC and the twelve-symbol census standing as context; the ICP /
+      thin-names cell DEFERRED, not resolved, its v7 machinery kept declared for
+      when scope widens; the gate read on BTC at 14 post-boundary days; E2.0's
+      settled ADA result and the race read both unaffected. BTC's bookTicker is
+      8.6 GB, streamed per hour-file, refusing if a day exceeds the cap.
+  MY_OWN_BOTH_INPUTS_EXIST_CLAIM_IS_FALSE_AT_THIS_MOMENT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260903_btc.json
+    as_of: 2026-09-06T06:57:19Z
+    said: >-
+      the 09-03 state tape on disk is phase2_state_tape_gate1_20260903_btc
+      .WRONG_SPLIT.json, 991,078,272 bytes at 06:31:21Z, and no corrected tape
+      exists; its receipt still carries inputs.score_split.EMPTY_BY_CONSTRUCTION
+      true and THE_SPLIT_QUESTION_IS_NOT_MINE status PROVISIONAL. BE 51's rebuild
+      is 1,238 s in and holding the lock. So round 130's "both missing inputs now
+      exist for one day" is false at this moment: the count of existing correct
+      inputs is one, the fragment. The claim was true when written and the
+      artifact was ruled defective after.
+  NO_FLAG_SAYS_THE_BOOK_NEEDS_ONLY_THE_FRAGMENT_I_SCANNED_THE_RAW_TEXT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T06:57:19Z
+    said: >-
+      a value-only scan through yaml.safe_load returned two unrelated hits and
+      cannot see flag bodies, which are YAML comments the parser discards; the
+      raw-text scan with a positive control (7 hits in STATUS.yml, 6 in
+      HANDOFF.md) shows every mention from round 127 forward carrying both
+      inputs, and the round-127 "a MISSING INPUT" hits scoped historically to the
+      fragment refusal. No live claim says the book needs only the fragment.
+  THE_WRONG_TAPE_IS_RENAMED_NOT_OVERWRITTEN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260903_btc.json
+    as_of: 2026-09-06T06:57:19Z
+    said: >-
+      the superseded 991 MB tape is present on disk under the name
+      phase2_state_tape_gate1_20260903_btc.WRONG_SPLIT.json rather than deleted or
+      overwritten, so a stale path fails on a name instead of succeeding on wrong
+      rows; R-583(B) records that BE also added a guard so the assembly cannot run
+      against the wrong tape.
+  DE_79_CLOSED_THE_THREE_WIRING_ITEMS_AND_THE_LOCK_NOW_TESTS_THE_LOCK:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T06:57:19Z
+    said: >-
+      with git status --short at 0 lines first, the batteries give design 76,
+      runner 115 and data root 18, matching R-583(A); and the runner carries both
+      forms the reviewer required -- FLOCK entries on the lock's inode read from
+      /proc/locks, and a fresh-fd LOCK_EX|LOCK_NB attempt that must fail if
+      somebody holds it -- so the predicate cannot be satisfied by merely having
+      the file open, which is what I conceded at round 130.
+  ALL_THREE_INSTRUMENTS_DE_BUILT_THE_ROUND_BEFORE_WERE_WRONG:
+    prov: RELAYED
+    from: R-583(A) / Q-DE-79
+    as_of: 2026-09-06T06:57:19Z
+  A_FOUR_SPACE_ANCHOR_MATCHED_EIGHT_SPACE_LINES_AND_THE_FILE_STOPPED_PARSING:
+    prov: RELAYED
+    from: R-583(A)
+    as_of: 2026-09-06T06:57:19Z
+  THE_GATE_1_SMOKE_CHAIN_IS_FIVE_LINKS_AND_THE_FIRST_IS_RUNNING:
+    prov: CHECKED
+    artifact: live/pm_research/heavy_slice_audit.py
+    as_of: 2026-09-06T06:57:19Z
+    said: >-
+      the process table shows be_gate1_state_tape.py --day 20260903 at pid 2945533
+      with 1,238 s elapsed, and heavy_slice_audit under my run reports
+      be51tape.scope at rss 2,134,456 KiB, heavy=True locked=True, concluding
+      "1 scope(s) in research.slice, none heavy without the lock". fuser on the
+      lock returns pids 2945532 and 2945533.
   # --- MEM round 131, 2026-09-06T06:50:12Z ------------------------------
   THE_RACE_READ_IS_BLOCKED_ON_READER_NOT_APPROVED_TO_OPEN:
     prov: CHECKED

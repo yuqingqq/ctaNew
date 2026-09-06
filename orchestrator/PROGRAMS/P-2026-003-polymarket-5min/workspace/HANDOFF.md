@@ -1,9 +1,144 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T06:50:12Z — **The race read is BLOCKED ON READER, not approved
-to open: the reader exists and computes the wrong quantity. And the new-flag rule
-now has an instrument — it fired on my own batch first.** Gate 1 is 1 of 7.
+Updated: 2026-09-06T06:57:19Z — **"Both missing inputs exist" is false right now:
+the 09-03 tape is renamed `.WRONG_SPLIT.json` and the corrected one is still
+building. The smoke chain is five links and link one is running.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 132
+
+### 1. The question asked was clean — and the method is half the answer
+
+**No flag says the 09-03 book needs only the fragment.** Every mention from round
+127 forward carries both inputs; the round-127 *"a missing input"* hits are
+historically scoped to the fragment refusal. *The two-input correction from
+REVIEW_BE48 §A.3 propagated cleanly on its first pass and has not rotted.*
+
+> **But my first scan was value-only and could not see flag bodies** — they are YAML
+> **comments**, and `safe_load` discards them. **A clean result from it would have
+> been a silent zero over most of the file** — the folded-scalar defect of round 126
+> in a second shape.
+
+Re-scanned on **raw text with a positive control** (7 hits in `STATUS.yml`, 6 in
+`HANDOFF.md`).
+
+### 2. The currency defect that *is* there is mine
+
+**"Both missing inputs now exist for one day" is false at this moment.**
+
+```
+data/pm_5min/derived/phase2_state_tape_gate1_20260903_btc.WRONG_SPLIT.json
+        991,078,272 B   06:31:21Z        <- renamed, not deleted
+        (no corrected tape yet — BE 51's rebuild is 1,238 s in)
+```
+
+**The count of existing correct inputs is ONE**, the fragment.
+
+> **And the claim was true when I wrote it.** The artifact existed at round 130 and
+> was ruled defective afterwards. **This is the one failure mode my new-flag
+> instrument cannot catch — the flag was cited correctly and the world moved.**
+
+*The distinction to carry: a **file census** and a **readiness claim** are different
+statements. "Both inputs exist" was a census; it reads as readiness; and the artifact
+that existed is precisely the one being replaced.*
+
+### 3. And BE renamed rather than overwrote
+
+The superseded 991 MB tape sits under **a name that says what is wrong with it.**
+*Rule 13 is written about receipts; this is the same discipline applied to a data
+file by a seat that was not asked to.* **A stale path now fails on a name instead of
+succeeding on wrong rows** — and a guard was added so the assembly cannot run
+against it.
+
+### 4. DE 79 closed the three wiring items — and closed the point I conceded
+
+**Driven by me at a tree I checked clean first: design 76 · runner 115 · data root
+18**, matching R-583(A).
+
+I recorded at round 129 that reading `/proc/self/fd` was "the right shape" and
+conceded at round 130 that **an fd is evidence a file is open, not that a lock is
+held.** The runner now carries **both** forms the reviewer required:
+
+- **FLOCK entries on the lock's inode**, read from `/proc/locks`
+- **a fresh-fd `LOCK_EX|LOCK_NB` attempt that must FAIL** if somebody holds it
+
+*Two independent mechanisms for one predicate, neither satisfiable by merely having
+the file open.* **REV 41 drives all three and states whether `--day` remains
+approved** — *the approval is not assumed to survive the change that answered its
+conditions.*
+
+### 5. DE reports all three instruments it built the round before were wrong
+
+*The second seat today to report its own batch wrong (DA's four self-caught errors at
+R-576).*
+
+> **The pattern worth naming: the instruments that fail are the ones built to satisfy
+> a REVIEW ITEM — because they are built against the *words* of the item rather than
+> against the property.** An fd check satisfies *"prove the lock is held"* in words
+> and not in fact.
+
+### 6. And DE's own defect is a live hazard in my method
+
+**A 4-space anchor matched 8-space lines as substrings and the file stopped
+parsing.** *I edit this file by exact-string anchors every round.* The inherited rule
+— anchor to strings, never slice by index — **protects against one hazard and creates
+this one.**
+
+*What already protects me, stated so it is not luck:* every edit asserts
+`count(anchor) == 1` before replacing, and every write is followed by a
+`yaml.safe_load` that would fail exactly as DE's file did — both have caught real
+anchor collisions this session.
+
+**What I add from DE's instance: an anchor must be unambiguous about *indent*, not
+only about text — a bare key fragment is a substring of its own deeper copies.**
+
+### 7. The smoke chain is five links and link one is running
+
+**tape rebuild → streaming assembly → the 09-03 book → the reviewer's filing → the
+smoke on GO.**
+
+`be_gate1_state_tape.py --day 20260903`, pid 2945533, **1,238 s, 2,134,456 KiB**, and
+the slice audit under my run reads **one scope, `heavy=True locked=True`, none heavy
+without the lock.** *BE's own lock probe had matched the wrong pid and was corrected
+against DE's R12 mechanism — the third lock instrument today to be wrong in its first
+form.*
+
+### 8. The commit-time re-read caught two things — one of them a USER ruling
+
+**(a) The corrected tape appeared** — `phase2_state_tape_gate1_20260903_btc.json`,
+07:01:11Z, **991,078,272 bytes: exactly the `.WRONG_SPLIT` byte count** — with the
+builder **still running**. *I do not claim completion, and a size match is not a
+content match.*
+
+> **But an identical byte count points at the unruled question**: if the corrected
+> tape is the same size, the split correction moved **labels, not rows** — the
+> **reviewer's** reading rather than the coordinator's. Three readings, still
+> unruled, and this is the first physical evidence bearing on it. **I record the
+> observation with its limits and rule nothing.**
+
+**(b) A USER ruling landed at 06:59Z**, two minutes before my re-read:
+
+> **"We can focus on btc for now, don't have to extend to other symbols."**
+
+P-003 Gate-1 is already BTC-only. **E2-A's sealed smoke moves ADA/DOGE → BTCUSDT**,
+v7 declared over BTC, the twelve-symbol census standing as **context**, the gate read
+on BTC at 14 post-boundary days. BTC's bookTicker is the **8.6 GB** input — streamed
+per hour-file, **refusing if a day exceeds the cap; never a raised cap, never a
+smaller population.**
+
+**And it supersedes my own ICP framing.** I carried *"the honest end is STATED, not
+unresolved"* from round 129; **the cell is now DEFERRED, not resolved**, with its v7
+machinery — the staleness status, the `NOT_COMPARABLE` label — **kept declared for
+when scope widens.** *Deferring a cell with its instruments already declared is not
+dropping it, and that is what makes the deferral reversible.* E2.0's settled ADA
+result and the race read are unaffected.
+
+**Counts, measured before this was written:** flags 706 → 714, flag_provenance
+251 → 259, tasks 19; 138 CHECKED, 121 RELAYED, **455 UNMARKED — unchanged for the
+eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; **the
+new-flag instrument fired on this round's seven flags before their entries existed
+(7 findings, exit 1) and cleared to 0 once written — its second consecutive live
+positive control.**
 
 ## READ FIRST — round 131
 
