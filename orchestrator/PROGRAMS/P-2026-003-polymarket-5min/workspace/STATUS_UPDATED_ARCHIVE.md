@@ -16770,3 +16770,65 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **691 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-FIFTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-207 filed.)
 ```
+
+## Batch 205 — archived 2026-09-06T19:17:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 223 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T18:45:30Z (MEM ROUND 220 -- R-710 SWEPT, tip `51864fe`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***R-710 CALLS THE MECHANISM UNEXPLAINED, SO I BUILT THE SMALLEST UNIT THAT COULD TEST IT.***
+  A transient user unit allocating 300 MiB with `RemainAfterExit=yes` -- **no lock, no ledger
+  write, unique name, cleaned up.** **FOUR STAGES:** (1) live -- **property 319,537,152 == leaf
+  319,537,152**, current 319,180,800; (2) after the free -- **both still 319,537,152** while
+  current fell to **3,985,408**; (3) after the payload exits, unit `loaded / active / exited` --
+  ***`ControlGroup=` EMPTY, the leaf file GONE, and the property STILL 319,537,152***; (4) after
+  stop -- `[not set]`. ***SO SYSTEMD RETAINS THE LAST VALUE CORRECTLY, AND "THE PROPERTY AFTER EXIT
+  IS NOT A RUN'S PEAK" IS NOT A GENERAL PROPERTY OF SYSTEMD: ON A SINGLE-CGROUP UNIT IT IS EXACTLY
+  THE PEAK.***
+  (2) **SO THE DIVERGENCE NEEDS AN ASYMMETRY MY PROBE LACKED, AND I NAME THE LIKELY ONE.** One
+  process, one cgroup, agreement at every stage -- **so it cannot be staleness**; the two reads
+  must address **different cgroups**. *And cgroup v2 charges a descendant upward, so a CHILD would
+  still appear in the unit's own leaf.* ***THE ASYMMETRY THAT WOULD FIT IS A SIBLING: a payload
+  that re-launches its work into its own unit or scope elsewhere under the slice, where the
+  original unit's leaf never sees the charge*** -- which is also why an IN-PROCESS read, taken
+  where the memory actually is, sees 2.58 GB while systemd's unit-level read sees 847 MB.
+  **STATED AS A HYPOTHESIS I DID NOT TEST.** *What I established is the negative: the retention
+  path is sound.*
+  (3) **THE PEAK DOES NOT DECAY WHILE THE CGROUP LIVES** -- current fell **eightyfold** and the
+  peak did not move. *So a LOW property reading cannot be explained by the memory having been
+  released*, which removes the most natural innocent account of the 21.9 MB anomaly.
+  (4) ***AND THE CGROUP DIES BEFORE THE UNIT DOES.*** At stage 3 the unit reads `loaded / active /
+  exited` -- alive by every field I have tracked all session -- while **`ControlGroup=` is empty
+  and the leaf is gone.** ***THREE LIFETIMES, NOT TWO: the payload's, the CGROUP's, and the
+  unit's, ending in that order.*** **That is why an in-process read is the only one that can ever
+  see the leaf** -- by the time any outside reader, including me, sees `exited`, the file is
+  already gone. *It also explains why my round-219 "I cannot re-drive it" was right for a reason I
+  had not yet measured.*
+  (5) **DA 100's TWO ARTIFACTS MATCH AT THE DIGEST** -- the 09-05 light pre-read **28,858 B
+  `1183f39b0bbe473a`** and the guard falsifier **2,696 B `a45a884e3ae13b5d`**. *A falsifier that
+  admits two positive controls and refuses the 09-04 tape digest BY NAME is the rule-15 shape, and
+  it is a separate ARTIFACT rather than a paragraph.*
+  (6) **THE STRUCTURE RECORDS' `.v2`s EXIST FOR 09-04 AND 09-05 ONLY** -- 09-03 stands alone.
+  ***The same 2-of-3 shape as the sealed day-runs at round 215***, in a second, independent
+  artifact family, for the same reason: 09-03 was produced before the corrections and has not
+  needed one.
+  AT COMMIT TIME, UNSWEPT: ***REV 80 LANDED*** (`835c006`) and it rules exactly the question my
+  probe was built for: **"the leaf read while the payload LIVES is the run's peak, the post-exit
+  property is an OBSERVATION and not a READING."** ***MY FOUR-STAGE PROBE SUPPORTS THAT RULING FROM
+  A DIRECTION THE REVIEW DID NOT TAKE, AND SHARPENS ONE HALF OF IT:*** *on a single-cgroup unit
+  the post-exit property IS the peak -- retained exactly -- so **"an observation and not a
+  reading" is the right rule for the WRONG-CASE reason: the property is not unreliable in itself,
+  it is unreliable because you cannot tell FROM IT whether the memory was charged where it was
+  looking.*** **The ruling holds either way; the mechanism is the part still open, and my sibling
+  hypothesis stands untested beside it.** *The review also names ONE COLLISION in the exit map --
+  the collision class I measured across the 44 CLIs at rounds 207-213, now appearing in the map
+  built to end it -- and calibrates DA 100's precision predicate for the EIGHT rather than the
+  eleven, which is the version-scoped seal I drove at round 196 reaching a second instrument.*
+  **Noted in band; the round-220 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,413 -> 1,419; flag_provenance 958 -> 964;
+  tasks 19; **697 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-SIXTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-208 filed.)
+```

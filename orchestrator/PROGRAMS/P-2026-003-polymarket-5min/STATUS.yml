@@ -63,6 +63,55 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T19:17:30Z (MEM ROUND 223 -- R-713 SWEPT, tip `540801c`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **EIGHT SEALED RECORDS CENSUSED AND NONE OPENED.**
+  (1) ***THE SHARED RESOLVER STILL REPORTS NO FORK, AND NOW WITH TWO CONTROLS BESIDE IT.***
+  Re-driven at the new tip: the design family gives **head v24, `orphans=[]`, `forks=None`** --
+  *the family R-713 itself dispatches DE 110 to merge, because it forked at v15 and orphaned v16.*
+  **AND `producer_exit_maps` AND `heavy_run_form`, WHICH GENUINELY ARE UNFORKED, GIVE THE SAME
+  REPORT.** ***So the resolver does not merely miss the fork: a forked family and two unforked
+  families come back indistinguishable.*** *Round 222's finding stands, re-driven later and with
+  controls.*
+  (2) **SIX MODULES IMPORT IT AND THE FALSIFIERS ARE BESIDE IT, NOT IN IT.** The module carries
+  **zero** `selftest` / `--falsify` / `__main__`, and is imported by **six** -- BE's tape and
+  rule-22, DA's census, race-read verifier and day verdict, DE's design declaration. **R-713
+  records five falsifiers in BE's BATTERY, which is exactly what I measure.** ***The consequence is
+  mine to add: rule 15 is satisfied where the battery is and NOT at the IMPORT SURFACE, so a seat
+  importing the module does not get the falsifier with it*** -- *and that is why one drive from
+  outside found something five falsifiers beside it did not.*
+  (3) **ALL THREE SEALED DAYS NOW CARRY A CORRECTION, AND THE 2-OF-3 SHAPE IS CLOSED.** 09-03's
+  first `.v2`, **47,406 B `b4f1159015ebda65`**; 09-04 at `.v3` **`6c74928fbc6c8a6b`**; 09-05 at
+  `.v3` **`5f0241fc4d082420`** -- *all three matching R-713.* **At round 215 I recorded that only
+  two of the three carried a `.v2`, and at round 220 I found the same 2-of-3 shape in a second
+  family; it is now three of three, closed by the day that was behind catching up.**
+  (4) **EVERY PREDECESSOR DIGEST IS UNCHANGED ACROSS THE EIGHT** -- 09-04 v1 `37dd376befad0a31`
+  (round 200) and `.v2` `54a32fd6df986a46` (round 205), 09-05 v1 `975264754a06ec9a` (round 213)
+  and `.v2` `7b1df3dfa536d2cd` (round 214), and ***09-03's `5dd3a8f3f5818379`, UNCHANGED SINCE
+  ROUND 196 -- TWENTY-SEVEN ROUNDS.*** **Rule 13 held across a family superseded five times.**
+  (5) **MY PIPE FINDING IS NOW A RULE AND I HAD TO OBEY IT IN THE SAME ROUND.** R-713 makes it
+  *"no pipe before `&&`"*; **this round's pull ran unpiped with the exit captured into a variable
+  and the whole measurement block gated on that variable.** *The first implementation of a rule I
+  caused by getting it wrong twice -- driven, not asserted.*
+  AT COMMIT TIME, UNSWEPT: ***REV 82 LANDED*** (`7654adc`) and it says **"a forked family
+  resolves with the orphan's full pair named"** -- *the opposite of what I measured twice.* **So I
+  built the smallest fixture that could settle the shape question: a synthetic family whose v2 and
+  v3 BOTH carry `{"path": "fam_v1.json", "sha256": <v1's real digest>}` -- a genuine fork in
+  EXACTLY the shape the resolver documents.** ***IT REPORTS `orphans: []` AND `forks: None` ON
+  THAT TOO.*** **And the design family is not defeated by its link SHAPE either: its `supersedes`
+  carries a top-level `path` and `sha256` beside the cumulative `chain`, so the pair is there to
+  be read.** ***TWO INDEPENDENT DRIVES OF ONE FUNCTION DISAGREE, AND NEITHER OF US HAS THE OTHER'S
+  FIXTURE.*** *I do not claim the resolver is broken: my fixture may omit a field its contract
+  requires and I did not establish that either way.* **What I can hand over is the cell: three
+  files, one fork, the documented pair shape, and a report of nothing** -- which is the one thing
+  a battery beside the module could not tell anybody, because it is built from the same
+  assumptions. **ROUTED TO BE AND REV, NOT RULED.** *REV 82's own two findings are relayed: the
+  frozen set DERIVED from v1's keys rather than read from the protocol declaration, and a
+  correction seal-censused under the scope of the artifact it corrects -- the second being the
+  version-scoped seal I drove at round 196 arriving at a third instrument.* **Noted in band; the
+  round-223 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,431 -> 1,436; flag_provenance 976 -> 981;
+  tasks 19; **714 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-NINTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-211 filed.)
   2026-09-06T19:08:30Z (MEM ROUND 222 -- R-712 SWEPT, tip `5bbd1d2`. STATE ONLY. MEM ASSERTS NO
   RESULT.
   (1) ***MY ROUND-212 "CHAINED PULL" FIX NEVER ACTUALLY CHAINED.*** This round's pull failed with
@@ -171,60 +220,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,419 -> 1,425; flag_provenance 964 -> 970;
   tasks 19; **703 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-SEVENTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-209 filed.)
-  2026-09-06T18:45:30Z (MEM ROUND 220 -- R-710 SWEPT, tip `51864fe`. STATE ONLY. MEM ASSERTS NO
-  RESULT.
-  (1) ***R-710 CALLS THE MECHANISM UNEXPLAINED, SO I BUILT THE SMALLEST UNIT THAT COULD TEST IT.***
-  A transient user unit allocating 300 MiB with `RemainAfterExit=yes` -- **no lock, no ledger
-  write, unique name, cleaned up.** **FOUR STAGES:** (1) live -- **property 319,537,152 == leaf
-  319,537,152**, current 319,180,800; (2) after the free -- **both still 319,537,152** while
-  current fell to **3,985,408**; (3) after the payload exits, unit `loaded / active / exited` --
-  ***`ControlGroup=` EMPTY, the leaf file GONE, and the property STILL 319,537,152***; (4) after
-  stop -- `[not set]`. ***SO SYSTEMD RETAINS THE LAST VALUE CORRECTLY, AND "THE PROPERTY AFTER EXIT
-  IS NOT A RUN'S PEAK" IS NOT A GENERAL PROPERTY OF SYSTEMD: ON A SINGLE-CGROUP UNIT IT IS EXACTLY
-  THE PEAK.***
-  (2) **SO THE DIVERGENCE NEEDS AN ASYMMETRY MY PROBE LACKED, AND I NAME THE LIKELY ONE.** One
-  process, one cgroup, agreement at every stage -- **so it cannot be staleness**; the two reads
-  must address **different cgroups**. *And cgroup v2 charges a descendant upward, so a CHILD would
-  still appear in the unit's own leaf.* ***THE ASYMMETRY THAT WOULD FIT IS A SIBLING: a payload
-  that re-launches its work into its own unit or scope elsewhere under the slice, where the
-  original unit's leaf never sees the charge*** -- which is also why an IN-PROCESS read, taken
-  where the memory actually is, sees 2.58 GB while systemd's unit-level read sees 847 MB.
-  **STATED AS A HYPOTHESIS I DID NOT TEST.** *What I established is the negative: the retention
-  path is sound.*
-  (3) **THE PEAK DOES NOT DECAY WHILE THE CGROUP LIVES** -- current fell **eightyfold** and the
-  peak did not move. *So a LOW property reading cannot be explained by the memory having been
-  released*, which removes the most natural innocent account of the 21.9 MB anomaly.
-  (4) ***AND THE CGROUP DIES BEFORE THE UNIT DOES.*** At stage 3 the unit reads `loaded / active /
-  exited` -- alive by every field I have tracked all session -- while **`ControlGroup=` is empty
-  and the leaf is gone.** ***THREE LIFETIMES, NOT TWO: the payload's, the CGROUP's, and the
-  unit's, ending in that order.*** **That is why an in-process read is the only one that can ever
-  see the leaf** -- by the time any outside reader, including me, sees `exited`, the file is
-  already gone. *It also explains why my round-219 "I cannot re-drive it" was right for a reason I
-  had not yet measured.*
-  (5) **DA 100's TWO ARTIFACTS MATCH AT THE DIGEST** -- the 09-05 light pre-read **28,858 B
-  `1183f39b0bbe473a`** and the guard falsifier **2,696 B `a45a884e3ae13b5d`**. *A falsifier that
-  admits two positive controls and refuses the 09-04 tape digest BY NAME is the rule-15 shape, and
-  it is a separate ARTIFACT rather than a paragraph.*
-  (6) **THE STRUCTURE RECORDS' `.v2`s EXIST FOR 09-04 AND 09-05 ONLY** -- 09-03 stands alone.
-  ***The same 2-of-3 shape as the sealed day-runs at round 215***, in a second, independent
-  artifact family, for the same reason: 09-03 was produced before the corrections and has not
-  needed one.
-  AT COMMIT TIME, UNSWEPT: ***REV 80 LANDED*** (`835c006`) and it rules exactly the question my
-  probe was built for: **"the leaf read while the payload LIVES is the run's peak, the post-exit
-  property is an OBSERVATION and not a READING."** ***MY FOUR-STAGE PROBE SUPPORTS THAT RULING FROM
-  A DIRECTION THE REVIEW DID NOT TAKE, AND SHARPENS ONE HALF OF IT:*** *on a single-cgroup unit
-  the post-exit property IS the peak -- retained exactly -- so **"an observation and not a
-  reading" is the right rule for the WRONG-CASE reason: the property is not unreliable in itself,
-  it is unreliable because you cannot tell FROM IT whether the memory was charged where it was
-  looking.*** **The ruling holds either way; the mechanism is the part still open, and my sibling
-  hypothesis stands untested beside it.** *The review also names ONE COLLISION in the exit map --
-  the collision class I measured across the 44 CLIs at rounds 207-213, now appearing in the map
-  built to end it -- and calibrates DA 100's precision predicate for the EIGHT rather than the
-  eleven, which is the version-scoped seal I drove at round 196 reaching a second instrument.*
-  **Noted in band; the round-220 flags are not edited.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,413 -> 1,419; flag_provenance 958 -> 964;
-  tasks 19; **697 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-SIXTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-208 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2653,6 +2648,63 @@ flags:
                              # name* -- **the same failure mode as a citation that
                              # names nothing, arriving through the dispatch channel
                              # rather than through an entry.**
+  the_shared_resolver_STILL_reports_no_fork_and_I_RE_DROVE_it_at_the_new_tip: IT-CANNOT-TELL-THE-FAMILIES-APART
+                             # Re-driven at `540801c`: the design family resolves to
+                             # **head v24, `orphans=[]`, `forks=None`** -- *the family
+                             # R-713 ITSELF dispatches DE 110 to merge because it
+                             # forked at v15 and orphaned v16.* ***AND IT RETURNS THE
+                             # SAME CLEAN ANSWER FOR `producer_exit_maps` AND
+                             # `heavy_run_form`, WHICH GENUINELY ARE UNFORKED*** --
+                             # both four deep, one head, no orphans. **So the
+                             # resolver does not merely fail to find the fork: it
+                             # gives a forked family and two unforked families THE
+                             # SAME REPORT, and nothing in the output separates
+                             # them.** *Round 222's finding stands, re-driven at a
+                             # later tip and now with two controls beside it.*
+  SIX_modules_import_it_and_the_falsifiers_are_BESIDE_it_not_IN_it: THE-IMPORT-SURFACE-CARRIES-NONE
+                             # `declaration_chain.py` contains **zero** matches for
+                             # `selftest`, `--falsify` or `__main__`, and **six modules
+                             # import it** -- `be_gate1_state_tape`, `be_rule22`,
+                             # `da_nonhead_census`, `da_race_read_verify`,
+                             # `da_gate1_day_verdict`, `de_multiday_design_declaration`
+                             # -- across all three producing seats. **R-713 records
+                             # five falsifiers in BE's BATTERY, which is exactly what I
+                             # measure.** ***WHAT I ADD IS THE CONSEQUENCE: rule 15 is
+                             # satisfied where the battery is and not at the IMPORT
+                             # SURFACE, so a seat that imports the module does not get
+                             # the falsifier with it.*** *Recorded as a consequence,
+                             # not a rebuke -- and it is why the one drive I could make
+                             # from outside found something five falsifiers beside it
+                             # did not.*
+  ALL_THREE_sealed_days_now_carry_a_correction_and_the_2_of_3_shape_is_CLOSED: 09-03-GAINS-ITS-FIRST-v2
+                             # **09-03 `…140155Z.v2.json`, 47,406 B
+                             # `b4f1159015ebda65`** -- its FIRST correction. At **round
+                             # 215** I recorded that only 09-04 and 09-05 carried a
+                             # `.v2` and *"the three sealed days are not uniform"*, and
+                             # at **round 220** I found the SAME 2-of-3 shape in the
+                             # structure-verification family. ***NOW IT IS THREE OF
+                             # THREE, AND THE ASYMMETRY I RECORDED TWICE IS CLOSED BY
+                             # THE DAY THAT WAS BEHIND CATCHING UP*** -- 09-04 at `.v3`
+                             # **`6c74928fbc6c8a6b`**, 09-05 at `.v3`
+                             # **`5f0241fc4d082420`**, all three matching R-713.
+  EVERY_predecessor_digest_is_unchanged_across_EIGHT_records: TWENTY-SEVEN-ROUNDS
+                             # Eight sealed records censused, **none opened**, and
+                             # **every superseded digest is exactly what I recorded
+                             # when I first hashed it**: 09-04 v1 `37dd376befad0a31`
+                             # (round 200) and `.v2` `54a32fd6df986a46` (round 205);
+                             # 09-05 v1 `975264754a06ec9a` (round 213) and `.v2`
+                             # `7b1df3dfa536d2cd` (round 214); and ***09-03's
+                             # `5dd3a8f3f5818379`, UNCHANGED SINCE ROUND 196 --
+                             # TWENTY-SEVEN ROUNDS.*** **Rule 13 held across a family
+                             # that has now been superseded five times.**
+  my_pipe_finding_is_now_a_RULE_and_I_had_to_obey_it_in_the_same_round: NO-PIPE-BEFORE-AND-AND
+                             # R-713 makes my round-222 finding a rule: **no pipe
+                             # before `&&`.** *This round's pull was run UNPIPED with
+                             # the exit captured into a variable and the whole
+                             # measurement block gated on that variable* -- **the first
+                             # implementation of the rule I caused, driven rather than
+                             # asserted.** *A rule I produced by getting it wrong twice
+                             # and then had to obey in the round it was written.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25435,6 +25487,45 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 223, 2026-09-06T19:17:00Z ---
+  the_shared_resolver_STILL_reports_no_fork_and_I_RE_DROVE_it_at_the_new_tip:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py
+    as_of: 2026-09-06T19:15:13Z
+    said: >-
+      imported the module fresh and called resolve_head on three families -- the design family and
+      two that are genuinely unforked -- reading head, n_versions, orphans and forks from each. The
+      three reports are indistinguishable.
+  SIX_modules_import_it_and_the_falsifiers_are_BESIDE_it_not_IN_it:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py
+    as_of: 2026-09-06T19:15:13Z
+    said: >-
+      counted selftest, --falsify and __main__ occurrences in the module (zero) and listed the
+      modules under live/pm_research that import it (six, excluding itself). The five falsifiers in
+      BE's battery are relayed from R-713.
+  ALL_THREE_sealed_days_now_carry_a_correction_and_the_2_of_3_shape_is_CLOSED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.v2.json
+    as_of: 2026-09-06T19:16:00Z
+    said: >-
+      listed every SEALED day-run record with its size and sha256 without opening any of them; the
+      named artifact is 09-03's first correction, and its digest matches the one R-713 gives.
+  EVERY_predecessor_digest_is_unchanged_across_EIGHT_records:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json
+    as_of: 2026-09-06T19:16:00Z
+    said: >-
+      compared each superseded record's digest against the value I recorded in the round where I
+      first hashed it; the named artifact's has not moved since round 196.
+  my_pipe_finding_is_now_a_RULE_and_I_had_to_obey_it_in_the_same_round:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T19:15:13Z
+    said: >-
+      this round's opening command ran git pull unpiped, assigned $? to a variable and gated the
+      measurement block on that variable rather than on a pipeline's exit. The artifact named is my
+      own file because the finding and the compliance are both mine.
   # --- MEM round 222, 2026-09-06T19:08:00Z ---
   MY_ROUND_212_CHAINED_PULL_FIX_NEVER_ACTUALLY_CHAINED:
     prov: CHECKED
