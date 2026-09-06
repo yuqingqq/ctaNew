@@ -44,9 +44,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 23
+VERSION = 24
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 110
+EXPECTED_CHECKS = 111
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -137,6 +137,9 @@ V21_DECLARATION = ("p003_de_multiday_gate1_design_v21.json",
 V22_DECLARATION = ("p003_de_multiday_gate1_design_v22.json",
                    "d38dba3dcf02491cd1e8668ac0f06ec2825673ada6e66ec1bcdcc7"
                    "7317c9d094")
+V23_DECLARATION = ("p003_de_multiday_gate1_design_v23.json",
+                   "f248e8438e5254999e1d41ee60a8db4041e9c0d71af1e6c94d1903"
+                   "c9a4e586ce")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
@@ -146,7 +149,8 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V13_DECLARATION, V14_DECLARATION, V15_DECLARATION,
                     V16_DECLARATION, V17_DECLARATION, V18_DECLARATION,
                     V19_DECLARATION, V20_DECLARATION,
-                    V21_DECLARATION, V22_DECLARATION)
+                    V21_DECLARATION, V22_DECLARATION,
+                    V23_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -567,7 +571,7 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 
 #: The params file this design pins. ONE name, and everything in the pin
 #: block is derived from it.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v14.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v15.json"
 
 
 def _params_path() -> Path:
@@ -2067,6 +2071,28 @@ def declaration() -> dict:
                     "ratio"),
             },
         },
+        # ---- DE 104 / R-674: a POINTER-ONLY bump, and why it is forced.
+        "R31_the_two_way_pin_forces_a_paired_bump": {
+            "what_changed": "NOTHING but the params pin: v14 -> v15",
+            "no_estimand_no_bar_no_scope_change": True,
+            "why_it_was_forced": (
+                "R-674 moved the params' design pointer to v23 so a run "
+                "reads v23 and its receipt's `provenance.design` pair "
+                "resolves 23. But the pin runs BOTH ways: params name the "
+                "design by PATH, and the design pins the params by "
+                "DIGEST. v23 pins params v14, so the moment params became "
+                "v15 the design's half named a superseded file and the "
+                "walk stopped closing"),
+            "the_asymmetry_that_makes_it_unavoidable": (
+                "the params->design half TOLERATES lag (DE 101: the named "
+                "path must be IN the chain, and the resolved HEAD is what "
+                "binds), so a design bump no longer forces a params bump. "
+                "The design->params half CANNOT tolerate lag: it is a "
+                "digest of one file, and it must be one file, because "
+                "'the newest params' would let a parameter file appear "
+                "and change a run -- choosing after seeing. So a PARAMS "
+                "bump still forces a design bump, and this is it"),
+        },
         "R20_the_serial_schedule": serial_schedule(),
         "R22_the_launch_capture_is_the_IMPORT_CLOSURE": {
             "ruling": "SEAT_PROTOCOL rule 22 AS AMENDED (REV 51 S3)",
@@ -3116,6 +3142,15 @@ def selftest(*, quiet: bool = False) -> int:
        f"V{VERSION}, the chain holds {len(DECLARATION_CHAIN)} = VERSION - 1 "
        f"predecessors and its head is v{VERSION - 1}. v7 on disk read "
        f"protocol V4, filename v7 and supersedes v2")
+    _r31 = d["R31_the_two_way_pin_forces_a_paired_bump"]
+    ok(_r31["no_estimand_no_bar_no_scope_change"] is True
+       and "v14 -> v15" in _r31["what_changed"]
+       and "CANNOT tolerate lag" in _r31[
+           "the_asymmetry_that_makes_it_unavoidable"],
+       "DE 104 / R-674: this version is a POINTER-ONLY bump and says so -- "
+       "the params->design half tolerates lag since DE 101, the "
+       "design->params half is a digest of ONE file and cannot, so a "
+       "params bump still forces a design bump")
     # ---- DE 102 / R-659: the corrected scope, and the sets disjoint ---
     _r30 = d["R30_seal_scope_corrected"]
     _newly = set(_r30["now_SEALED_because_they_are_OUTCOME_counts"])

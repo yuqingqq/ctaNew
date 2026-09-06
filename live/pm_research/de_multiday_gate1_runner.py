@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 305
+EXPECTED_CHECKS = 309
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -61,7 +61,7 @@ EXPECTED_CHECKS = 305
 #: the comment above it still described the v1 -> v2 bump long after v14.
 #: A dead constant beside a stale comment is two things a reader can
 #: believe.)
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v14.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v15.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -1283,6 +1283,67 @@ def economic_absence_scoped(rec: dict) -> dict:
                 "eleven the first sealed day is accused by its own "
                 "instrument of carrying fields that were OPEN BY RULING "
                 "(REV 72 S1.4)")}
+
+
+def assert_reasons_carry_no_sealed_value(result: dict) -> dict:
+    """R-599's SECOND LEAK, CHECKED RATHER THAN PROMISED (R-674 (c)).
+
+    `admissibility.reasons` is written by
+    `de_multiday_design_declaration.arm_day_admissible()` and has been in
+    every receipt since design v2 -- including 09-03's, where its value is
+    an empty list. It carries NUMBERS on a refused arm-day, and as written
+    they are all OPEN: the decision count and the declared minimum (a
+    population size and a bar), and the declared floor fraction. The sd
+    reason publishes a VERDICT ONLY, with no sd, mean or ratio, which is
+    R-599's second leak already closed at the source.
+
+    But `_strip_economic` removes KEYS, not substrings -- so nothing in
+    the machinery would stop a FUTURE reason string from interpolating a
+    sealed value. That protection rested entirely on whoever writes the
+    string. This checks it instead: no sealed quantity's value may appear
+    in any reason text, in any of the forms a formatter produces."""
+    adm = (result or {}).get("admissibility") or {}
+    reasons = adm.get("reasons") or []
+    text = " || ".join(str(r) for r in reasons)
+    hits = []
+    for name in ECONOMIC_FIELDS:
+        for src in (adm, (result or {}).get("economic") or {}):
+            v = src.get(name)
+            if v is None or isinstance(v, (bool, dict, list)):
+                continue
+            forms = {str(v)}
+            if isinstance(v, float):
+                forms |= {f"{v:.1f}", f"{v:.2f}", f"{v:.3f}",
+                          f"{v:.4f}", f"{v:g}", str(round(v, 6))}
+            elif isinstance(v, int):
+                forms |= {f"{v:,}"}
+            for f in sorted(forms):
+                if len(f) >= 3 and f in text:
+                    hits.append({"sealed_name": name, "form_found": f})
+    if hits:
+        raise RunnerRefused(
+            f"REFUSED: a refusal REASON carries the VALUE of a sealed "
+            f"quantity -- {[h['sealed_name'] for h in hits]}. "
+            f"`_strip_economic` removes KEYS, not substrings, so a number "
+            f"interpolated into a reason string survives the seal. That "
+            f"is R-599's second leak, and it fires on a REFUSED arm-day: "
+            f"exactly the case where the numbers are most tempting.")
+    return {"n_reasons": len(reasons),
+            "checked_against": list(ECONOMIC_FIELDS),
+            "no_sealed_value_in_any_reason": True,
+            "written_by": "de_multiday_design_declaration."
+                          "arm_day_admissible()",
+            "present_since": "design v2 -- including the 09-03 receipt, "
+                             "where it is an empty list",
+            "what_the_reasons_may_carry": (
+                "OPEN numbers only: the decision count and the declared "
+                "minimum, and the declared sd floor fraction. The sd "
+                "reason is a VERDICT ONLY"),
+            "why_a_check_and_not_a_promise": (
+                "the stripper removes keys; a value interpolated into a "
+                "string survives it. Before this, nothing but the "
+                "author's care stopped one"),
+            }
 
 
 def assert_no_economic_leak(artifact: dict, n_days_complete: int,
@@ -5036,6 +5097,11 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     _mark("S4_null")
 
     # ---- S5: seal. Counts and statuses only. ---------------------------
+    # R-674 (c): every arm's REASONS are checked for sealed VALUES before
+    # anything is sealed -- the stripper cannot see a number inside a
+    # string.
+    reasons_checked = [assert_reasons_carry_no_sealed_value(r)
+                       for r in results]
     sealed = [seal(r, n_days_complete, params["G"]) for r in results]
     for a in sealed:
         assert_no_economic_leak(a, n_days_complete, params["G"])
@@ -5125,6 +5191,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         "decision_populations": pops,
         "per_day_sealed_artifacts": sealed,
         "seal_layout_symmetry_checked_on_the_emitted_results": seal_symmetry,
+        "reasons_carry_no_sealed_value": reasons_checked,
         "fixture_day_lock": day_lock,
         "launch_form_at_runtime": launch_runtime,
         "lock_form_at_runtime": lock_runtime,
@@ -5176,21 +5243,35 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             # R-656 (REV 70 S0.2): the per-arm counts are POPULATION
             # SIZES, outside the seal, and they are named here so a
             # reader meets the ruling where the numbers are.
-            "the_per_arm_counts_are_SIZES_not_results": {
-                "fields": ["n_decisions", "n_fills_baseline",
-                           "n_fills_arm", "n_cancels_issued"],
-                "what_they_are": "the action-side counts every quoted "
-                                 "population must carry (rule 8), and "
-                                 "what the read gate's admissibility "
-                                 "reads (R-599's "
-                                 "min_decisions_per_arm_day)",
-                "what_they_are_not": "a valuation. They say how MUCH each "
-                                     "arm intervened, never what it was "
-                                     "worth; no rank, exceedance count or "
-                                     "moment appears anywhere, so they do "
-                                     "not invert into a sealed name "
-                                     "(REV 70 S0's census of 545 leaves)",
-                "ruled": "R-656, written down before day 2",
+            # R-674: GENERATED FROM THE SCOPE MAP IN FORCE, never a
+            # literal. This block listed all FOUR counts as open sizes
+            # under R-656 -- which R-659 had already reversed for three
+            # of them -- so a receipt whose emitter sealed eleven names
+            # described itself as sealing eight. The receipt's
+            # self-description contradicted its own seal.
+            "the_seal_scope_in_force_for_THIS_receipt": {
+                "design_version": DESIGN_VERSION_IN_FORCE,
+                "sealed_names": list(economic_fields_in_force()),
+                "n_sealed": len(economic_fields_in_force()),
+                "open_population_sizes": list(OPEN_POPULATION_SIZES),
+                "generated_from": ("ECONOMIC_FIELDS and "
+                                   "SEALED_FROM_DESIGN_VERSION -- the map "
+                                   "the emitter actually applied, read at "
+                                   "emit"),
+                "why_generated": (
+                    "a literal list here said four counts were open "
+                    "SIZES while the emitter sealed three of them "
+                    "(R-674). A receipt that describes its own seal from "
+                    "a constant somebody edited separately describes a "
+                    "different seal"),
+                "the_open_sizes_are": (
+                    "the action-side counts rule 8 requires and what R4's "
+                    "admissibility bar reads. `n_decisions` cannot be "
+                    "sealed without making the bar uncheckable"),
+                "the_sealed_outcome_counts_are": (
+                    "counts of what the policy DID: arm fills MINUS "
+                    "baseline fills is the intervention's effect in "
+                    "events (R-659)"),
             },
             "the_economics_are_SEALED": n_days_complete < params["G"],
             "D_E_MINUS_R_is_UNBOUND": (
@@ -6131,6 +6212,46 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"`_strip_economic` seals by the list in force for THIS run; a "
        f"census judges a receipt by the list in force when THAT receipt "
        f"was produced")
+    # ---- R-674 (b): the receipt describes ITS OWN seal, generated ----
+    _scope104 = {
+        "design_version": DESIGN_VERSION_IN_FORCE,
+        "sealed_names": list(economic_fields_in_force()),
+        "open_population_sizes": list(OPEN_POPULATION_SIZES)}
+    ok(set(_scope104["sealed_names"]) == set(ECONOMIC_FIELDS)
+       and set(_scope104["open_population_sizes"])
+       & set(ECONOMIC_FIELDS) == set()
+       and len(_scope104["sealed_names"]) == 11,
+       f"R-674(b): the receipt's self-description is GENERATED from the "
+       f"scope map the emitter applies -- {len(_scope104['sealed_names'])} "
+       f"sealed names and {len(_scope104['open_population_sizes'])} open "
+       f"sizes. A literal list said four counts were open SIZES while the "
+       f"emitter sealed three of them: the receipt described a different "
+       f"seal from the one it had")
+    # ---- R-674 (c): a refusal REASON may not carry a sealed VALUE -----
+    ok(assert_reasons_carry_no_sealed_value(
+           {"admissibility": {"reasons": ["decisions 12 < declared "
+                                          "minimum 30"],
+                              "null_sd": 1.5, "null_mean": 4.25}}
+       )["no_sealed_value_in_any_reason"] is True,
+       "R-674(c) POSITIVE CONTROL: a real refusal reason -- the decision "
+       "count and the declared minimum, both OPEN -- is admitted. "
+       "`reasons` is written by the DESIGN's `arm_day_admissible` and has "
+       "been in every receipt since design v2, INCLUDING 09-03's, where "
+       "it is an empty list")
+    for _bad104, _lbl104 in (
+            ({"admissibility": {"reasons": ["the null dispersion 1.5 is "
+                                            "below the floor"],
+                                "null_sd": 1.5}}, "a raw sealed value"),
+            ({"admissibility": {"reasons": ["Z was 2.50 on this arm"]},
+              "economic": {"Z": 2.5}}, "a FORMATTED sealed value (2.50)")):
+        refuses(lambda b=_bad104: assert_reasons_carry_no_sealed_value(b),
+                f"R-674(c) KNOWN-BAD, {_lbl104}: a refusal REASON "
+                f"carrying a sealed quantity's VALUE is REFUSED. "
+                f"`_strip_economic` removes KEYS, not substrings, so a "
+                f"number interpolated into a string survives the seal -- "
+                f"R-599's second leak, and it fires on a REFUSED arm-day, "
+                f"exactly where the numbers are most tempting",
+                "carries the VALUE of a sealed quantity")
     # ---- REV 73 S1.1: THE SELECTOR'S THREE HOLES, all driven ---------
     _d103 = Path(DR.resolve()["data_root"]) / "pm_5min/derived"
     _v22f = _d103 / "p003_de_multiday_gate1_design_v22.json"
@@ -7144,10 +7265,23 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         offline_skip("the params -> design -> params walk (it reads the "
                      "design artifact under data/)")
     else:
+        # THE BINDING HALF IS THE HEAD'S PIN (DE 101/DE 104). This read
+        # the design the PARAMS NAME and compared ITS pin -- so the moment
+        # params moved to v15 it compared v23's pin (v14) against v15 and
+        # failed, while the resolved HEAD v24 pinned v15 correctly. The
+        # named path must be IN the chain; the HEAD is what binds. One
+        # rule, and P3_design already used it.
+        _dchw = design_chain()
+        _headp = Path(_dchw["head_path"]) if _dchw.get("resolved") \
+            else _dpath
         _walk = {"params_names": str(_pdd.get("path")),
-                 "design_exists": _dpath.is_file()}
-        if _dpath.is_file():
-            _dj = json.loads(_dpath.read_text())
+                 "design_exists": _dpath.is_file(),
+                 "resolved_head": _dchw.get("head_name"),
+                 "named_design_is_in_the_chain":
+                     Path(str(_pdd.get("path"))).name
+                     in (_dchw.get("chain_names") or [])}
+        if _headp.is_file():
+            _dj = json.loads(_headp.read_text())
             _here = hashlib.sha256(
                 (Path(__file__).resolve().parents[2] / PARAMS_REL
                  ).read_bytes()).hexdigest()
@@ -7162,9 +7296,12 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                 str(_pin.get("path", "")).rsplit("/", 1)[-1]
                 == PARAMS_REL.rsplit("/", 1)[-1])
             _walk["closes"] = bool(_walk["design_pins"] == _here
-                                   and _walk["path_matches"])
+                                   and _walk["path_matches"]
+                                   and _walk["named_design_is_in_the_"
+                                             "chain"])
             ok(_walk["closes"] is True,
-               f"AND THE WALK CLOSES ON BOTH HALVES: params name the design "
+               f"AND THE WALK CLOSES ON BOTH HALVES, THROUGH THE HEAD "
+               f"({_walk['resolved_head']}): params name the design "
                f"at {_dpath.name}; that design's pin names "
                f"{str(_walk['design_pins_path']).rsplit('/', 1)[-1]} AND "
                f"hashes to this params file. Comparing the digest alone let "
