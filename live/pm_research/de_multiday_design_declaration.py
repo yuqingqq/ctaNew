@@ -1061,9 +1061,18 @@ def main() -> int:
         raise DesignRefused(f"output already exists: {a.output}")
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
-    print(json.dumps({"emitted": str(a.output), "status": payload["status"],
-                      "G": G, "arms": list(ARMS),
-                      "battery": payload["battery"]["outcome"]}))
+    r7 = payload["R7_the_day_set"]
+    print(json.dumps({
+        "emitted": str(a.output), "status": payload["status"],
+        # NOT the module constant. The CLI printed `G: 5` from `G` while
+        # the payload's own R7 says the set is 6 or 3 pending the USER --
+        # a summary line that disowns its own artifact.
+        "G": "PENDING_THE_USER_PARAMETER",
+        "SET_A_G": r7["SET_A_reads_count_as_untouched"]["holm"]["G"],
+        "SET_B_G": r7["SET_B_reads_consume_the_day"]["holm"]["G"],
+        "arms": list(ARMS),
+        "battery": payload["battery"]["outcome"],
+        "battery_checks": payload["battery"]["n_checks_run"]}))
     return 0
 
 
