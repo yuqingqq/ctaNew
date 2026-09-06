@@ -14,7 +14,7 @@ Everything else -- the episode grid, the patience ladder, the shortfall
 accounting against the decision mid, the 8.0 bps threshold, the day-clustered
 mean and the block bootstrap -- is E1-A's, unchanged, so the two are
 comparable. The declaration is
-`declarations/p002_e2_a_declaration_v4.json` and this module REFUSES if its
+`declarations/p002_e2_a_declaration_v7.json` and this module REFUSES if its
 sha256 has moved.
 
 EVERY LEVEL COMPARISON IS ON INTEGER TICK INDICES. E1's D-i defect exists
@@ -54,8 +54,8 @@ CODE_ROOT = E20.CODE_ROOT
 ROOT = E20.ROOT
 RAW = E20.RAW
 PROTOCOL = "P002_E2_A_OVERLAY_RUNNER_V1"
-DECL_PATH = HERE / "declarations" / "p002_e2_a_declaration_v6.json"
-DECL_SHA = "127e0a56ddee775ecb478453e77ee08614b58023aa45f22fe1642492d8c0f4fb"
+DECL_PATH = HERE / "declarations" / "p002_e2_a_declaration_v7.json"
+DECL_SHA = "57c92c9e899eb6912c659de3bb84f31994b8143bc79ba3f4fd7131d82d5bcfa0"
 
 EPS = 1e-12
 TP_GRID_S = D.TP_GRID_S
@@ -74,12 +74,228 @@ BOOT_B = EP.BOOT_B
 
 SYMBOLS_IN_SCOPE = tuple(D.E1A_REPRODUCTION_TARGET["symbols"])
 
+#: R-584 (USER ruling, 2026-09-06): SCOPE IS BTC FOR NOW. The smoke runs on
+#: BTCUSDT and the gate, when 14 post-boundary days exist, is read on BTC.
+#: The twelve-symbol census stays as CONTEXT; the thin-name (ICP) cell is
+#: DEFERRED, not resolved. Any other symbol may still be executed as a
+#: diagnostic, and is LABELLED as not the gate rather than quietly counted.
+GATE_SYMBOL = D.GATE_SYMBOL
+
+#: R-584. BTC's bookTicker is the 8.6 GB input the census queued by size --
+#: 621 MB gz and 60 M rows on a single day, measured. The day read STREAMS
+#: per hour-file and the run REFUSES if a day exceeds the cap. The cap is
+#: NEVER raised and the population is NEVER made smaller to fit it.
+#: WHERE THE CAP COMES FROM: the rule-20 wrapper's own MemoryMax is 8 GiB and
+#: a cgroup kill is SILENT -- it leaves nothing written. The guard must fire
+#: while there is still room to write the refusal, so the bar is 75% of the
+#: wrapper's cap. It is not tuned on BTC.
+DAY_RSS_CAP_GIB = D.DAY_RSS_CAP_GIB
+
+
+def rss_now_gib() -> float:
+    """Current RSS, which FALLS when a day is released -- unlike the
+    getrusage high-water mark, which never does."""
+    try:
+        with builtins.open("/proc/self/statm", "rb") as fh:
+            return int(fh.read().split()[1]) * 4096 / 1073741824
+    except Exception:                                         # noqa: BLE001
+        return float("nan")
+
+
+def rss_peak_gib() -> float:
+    import resource                                           # noqa: PLC0415
+    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1048576
+
+
+def memory_guard(where: str, day: str, cap: float | None = None) -> dict:
+    """R-584. REFUSE rather than raise the cap or shrink the population.
+
+    `cap` is injectable ONLY so the falsifier can drive the refusing
+    direction; every production call takes the declared cap.
+    """
+    cap_gib = DAY_RSS_CAP_GIB if cap is None else float(cap)
+    now, peak = rss_now_gib(), rss_peak_gib()
+    obs = {"where": where, "day": day,
+           "rss_now_gib": round(now, 3), "rss_peak_gib": round(peak, 3),
+           "cap_gib": cap_gib}
+    if now > cap_gib:
+        raise E2ARefused(
+            f"MEMORY CAP: {now:.2f} GiB resident at {where} on {day} exceeds "
+            f"the declared {cap_gib} GiB. The cap is NOT raised and "
+            f"the population is NOT reduced -- the day is refused and said "
+            f"so.")
+    return obs
+
+
+# --------------------------------------------------------------------------
+# the book, two ways: whole (fixtures, small symbols) and STREAMED (R-584)
+# --------------------------------------------------------------------------
+def episode_grid(day: str):
+    """The decision times and their T_p ends. ONE definition, so the
+    streamed reader and `evaluate_day` cannot drift apart."""
+    day0 = int(pd.Timestamp(day, tz="UTC").timestamp()) * 1000
+    lefts, rights = set(), set()
+    for tp in TP_GRID_S:
+        for hh in range(24 if tp * 1000 <= 3_600_000 else 23):
+            t0 = day0 + hh * 3_600_000
+            lefts.add(t0)
+            rights.add(t0 + tp * 1000)
+    return day0, np.array(sorted(lefts)), np.array(sorted(rights))
+
+
+class BookAccess:
+    """The three things `evaluate_day` asks a book for."""
+
+    def before(self, t):                                      # noqa: D102
+        raise NotImplementedError
+
+    def at_or_before(self, t):                                # noqa: D102
+        raise NotImplementedError
+
+
+class FullBook(BookAccess):
+    """The whole day in memory -- unchanged behaviour, used by the fixture
+    and by any symbol small enough not to need streaming."""
+
+    def __init__(self, bt_t, bid, ask):
+        self.t, self.bid, self.ask = bt_t, bid, ask
+        self.t_max = int(bt_t[-1]) if len(bt_t) else None
+        self.n_rows = int(len(bt_t))
+        self.streamed = False
+
+    def before(self, t):
+        i = int(np.searchsorted(self.t, t, "left")) - 1
+        return None if i < 0 else (int(self.t[i]), float(self.bid[i]),
+                                   float(self.ask[i]))
+
+    def at_or_before(self, t):
+        i = int(np.searchsorted(self.t, t, "right")) - 1
+        return None if i < 0 else (int(self.t[i]), float(self.bid[i]),
+                                   float(self.ask[i]))
+
+
+class StreamedBook(BookAccess):
+    """R-584. One hour-file at a time, keeping ONLY the quotes the episode
+    grid asks for.
+
+    The whole-day read is 60 M rows on BTC; the grid needs 24 decision-time
+    quotes and 72 T_p-end quotes. Holding the rest is the entire memory
+    problem, and it buys nothing.
+    """
+
+    def __init__(self, lefts, rights):
+        self._l = {int(t): None for t in lefts}
+        self._r = {int(t): None for t in rights}
+        self._lk = np.array(sorted(self._l))
+        self._rk = np.array(sorted(self._r))
+        self.t_max = None
+        self.n_rows = 0
+        self.n_bad_quotes = 0
+        self.n_unparsed = 0
+        self.n_files = 0
+        self.peak_file_rss_gib = 0.0
+        self.streamed = True
+
+    def ingest(self, t, bid, ask):
+        if len(t) == 0:
+            return
+        o = np.argsort(t, kind="stable")
+        t, bid, ask = t[o], bid[o], ask[o]
+        self.n_rows += int(len(t))
+        tm = int(t[-1])
+        self.t_max = tm if self.t_max is None else max(self.t_max, tm)
+        for keys, store, side in ((self._lk, self._l, "left"),
+                                  (self._rk, self._r, "right")):
+            if not len(keys):
+                continue
+            idx = np.searchsorted(t, keys, side) - 1
+            ok = idx >= 0
+            for k, i in zip(keys[ok], idx[ok]):
+                cand_t = int(t[i])
+                cur = store[int(k)]
+                if cur is None or cand_t > cur[0]:
+                    store[int(k)] = (cand_t, float(bid[i]), float(ask[i]))
+
+    def _get(self, store, t, which):
+        k = int(t)
+        if k not in store:
+            #: a target the stream was never built for would silently read
+            #: as "no quote", i.e. a wrong EXCLUSION. Refuse instead.
+            raise E2ARefused(
+                f"streamed book asked for a {which} quote at {k}, which is "
+                f"not on the episode grid it was built from")
+        return store[k]
+
+    def before(self, t):
+        return self._get(self._l, t, "before")
+
+    def at_or_before(self, t):
+        return self._get(self._r, t, "at-or-before")
+
+
+def stream_book(sym: str, day: str, extend: bool = True) -> StreamedBook:
+    """R-584: read bookTicker hour-file by hour-file, keep the grid only."""
+    _, lefts, rights = episode_grid(day)
+    sb = StreamedBook(lefts, rights)
+    files = E20._hour_files("bookTicker", sym, day)
+    if extend:
+        nx = E20._next_hour_file("bookTicker", sym, day)
+        if nx is not None:
+            files = files + [nx]
+    for f in files:
+        df = pd.read_csv(f, header=None, usecols=[2, 4, 6],
+                         names=["T", "bid", "ask"],
+                         dtype={2: "int64", 4: "float64", 6: "float64"},
+                         on_bad_lines="skip")
+        t = df["T"].to_numpy()
+        bid, ask = df["bid"].to_numpy(), df["ask"].to_numpy()
+        del df
+        #: A QUOTE MUST BE A QUOTE -- E2.0's rule, applied per file so the
+        #: streamed and the whole-day reads cannot disagree.
+        good = (bid > 0) & (ask > 0) & (ask >= bid)
+        sb.n_bad_quotes += int((~good).sum())
+        sb.ingest(t[good], bid[good], ask[good])
+        sb.n_files += 1
+        sb.peak_file_rss_gib = max(sb.peak_file_rss_gib, rss_now_gib())
+        del t, bid, ask, good
+    return sb
+
+
+
+
 #: Episode statuses. Exclusions are STATUSES, never silent drops (rule 4).
 ST_RESOLVED = "RESOLVED"
 ST_NO_QUOTE = "NO_QUOTE_BEFORE_T0"
 ST_QAU = "QUEUE_AHEAD_UNDEFINED"
 ST_NO_BOOK_TP = "NO_BOOK_AT_TP"
 STATUSES = (ST_RESOLVED, ST_NO_QUOTE, ST_QAU, ST_NO_BOOK_TP)
+
+#: v7 LABELS. Distinct from STATUSES on purpose: a status is EXCLUSIVE and
+#: says why an episode produced no row; a label describes a RESOLVED episode
+#: and never removes it. Filtering on either of these would select on
+#: activity, which is the defect v6 took out of admission.
+LB_MARGINAL = "ORDERING_NOT_TESTABLE_MARGINAL"
+LB_STALE = "QUOTE_STALE_AT_DECISION"
+LABELS = (LB_MARGINAL, LB_STALE)
+
+#: v7 day-level status: below three distinct trade quantities the modal
+#: positive diff is an echo of the sample, not an estimate of a step.
+ST_QTY_UNDET = "QTY_STEP_UNDERDETERMINED"
+
+#: v7 era leg (CLAUDE.md rule 5), carried from the declaration so the number
+#: has ONE home.
+ERA_BOUNDARY_RECV_NS = D.ERA_BOUNDARY_RECV_NS
+ERA_BOUNDARY_UTC = D.ERA_BOUNDARY_UTC
+STALENESS_BAR_MS = D.STALENESS_BAR_MS
+MIN_DISTINCT_QUANTITIES = D.MIN_DISTINCT_QUANTITIES
+
+#: v7 SEALED SMOKE. Every key whose value is an ECONOMIC quantity. The open
+#: receipt is scanned for these names recursively and REFUSES if one appears,
+#: so "sealed" is a checked property of the artifact rather than a promise
+#: about which branch was taken.
+SEALED_KEY_MARKERS = ("eff_rt", "cost_", "c_fill", "c_chase", "ci_lo",
+                      "ci_hi", "verdict", "gate", "phi_", "fill_rate",
+                      "mean_phi", "aggregate_by_tp", "partial_pricing")
 
 #: The two partial-fill pricings, R-570(C)(2).
 PR_RESIDUAL = "residual_chased"          # GATE-BEARING
@@ -96,6 +312,43 @@ def carrying_commit() -> str:
     r = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
                        text=True, cwd=str(HERE))
     return r.stdout.strip() if r.returncode == 0 else "UNKNOWN"
+
+
+def runner_identity() -> dict:
+    """WHICH CODE PRODUCED THIS RECEIPT, in a form a rebase cannot rewrite.
+
+    `carrying_commit` is the tree's HEAD, and in a per-seat worktree that is
+    whatever commit the worktree was last detached at -- NOT necessarily a
+    commit carrying the code that ran. DA 63 measured its own worktree three
+    landings behind while running this module. And even a correct commit id
+    can be rewritten: this batch's emitter commit was rebased to a new id
+    with byte-identical content between landing and emitting.
+
+    So the durable citation is the CONTENT DIGEST of the module that ran,
+    with the commit ids beside it and labelled for what they are.
+    """
+    src = Path(__file__).resolve()
+    r = subprocess.run(["git", "log", "-1", "--format=%H", "--", str(src)],
+                       capture_output=True, text=True, cwd=str(src.parent))
+    last = r.stdout.strip() if r.returncode == 0 else ""
+    dirty = subprocess.run(["git", "status", "--porcelain", "--", str(src)],
+                           capture_output=True, text=True,
+                           cwd=str(src.parent))
+    return {
+        "runner_path": "live/mm_research/e2_a_runner.py",
+        "runner_sha256": hashlib.sha256(src.read_bytes()).hexdigest(),
+        "runner_sha256_is_the_durable_citation": (
+            "the digest identifies the code that produced this receipt "
+            "whatever happens to the history above it. Resolve it first."),
+        "runner_commit_best_effort": last or None,
+        "tree_head_at_run": carrying_commit(),
+        "producing_code_is_the_committed_bytes": (
+            dirty.returncode == 0 and dirty.stdout.strip() == ""),
+        "why_that_field": (
+            "false means the module had uncommitted edits when it ran, so "
+            "the commit ids below it describe a DIFFERENT file than the one "
+            "that produced these numbers. Stated, never inferred."),
+    }
 
 
 def wrapper_block() -> dict:
@@ -374,6 +627,51 @@ def collector_health(day: str, beats: np.ndarray,
                     f"{n_restarts} restart(s) in day")}
 
 
+def era_leg(sym: str, day: str) -> dict:
+    """v7 / R-580(C)(2): CLAUDE.md rule 5 as a per-symbol-day admission leg.
+
+    MEASURED ROW-WISE on `recv_ns`, never inferred from the date -- the
+    boundary falls at 13:48:54 INSIDE 2026-08-24, so a date test would
+    admit a day that is 56% legacy-stamped.
+
+    Why it binds E2-A and did not bind E2.0: E2.0 reads the exchange stamp
+    `T`. E2-A's estimand IS sub-second arrival order on `recv_ns`, and a
+    legacy-stamped row carries up to ~0.6 s of parse-backlog error,
+    concentrated in bursts -- exactly when queue position matters.
+    """
+    files = E20._hour_files("bookTicker", sym, day)
+    n_rows = n_legacy = 0
+    mn = mx = None
+    for f in files:
+        a = pd.read_csv(f, header=None, usecols=[0],
+                        dtype={0: "int64"})[0].to_numpy()
+        if a.size == 0:
+            continue
+        n_rows += int(a.size)
+        n_legacy += int((a < ERA_BOUNDARY_RECV_NS).sum())
+        lo, hi = int(a.min()), int(a.max())
+        mn = lo if mn is None else min(mn, lo)
+        mx = hi if mx is None else max(mx, hi)
+    share = (n_legacy / n_rows) if n_rows else None
+    post = bool(n_rows > 0 and n_legacy == 0)
+    return {
+        "n_rows": n_rows,
+        "n_legacy_stamped": n_legacy,
+        "legacy_share": share,
+        "post_boundary": post,
+        "min_recv_ns": mn,
+        "max_recv_ns": mx,
+        "boundary_recv_ns": ERA_BOUNDARY_RECV_NS,
+        "boundary_utc": ERA_BOUNDARY_UTC,
+        "measured_row_wise": True,
+        "why": ("every bookTicker row carries recv_ns at or after the "
+                "hf_ws_v2 stamp boundary" if post else
+                f"{n_legacy} of {n_rows} bookTicker rows are LEGACY-STAMPED "
+                f"(recv_ns < {ERA_BOUNDARY_RECV_NS}); a queue simulation on "
+                f"recv_ns cannot use them"),
+    }
+
+
 def stream_file_counts(sym: str, day: str) -> dict:
     return {s: len(E20._hour_files(s, sym, day))
             for s in ("bookTicker", "trade", "depth20")}
@@ -382,7 +680,9 @@ def stream_file_counts(sym: str, day: str) -> dict:
 def day_admission(sym: str, day: str, counts: dict,
                   health: dict | None = None,
                   gap: float | None = None,
-                  age: dict | None = None) -> dict:
+                  age: dict | None = None,
+                  era: dict | None = None,
+                  require_era: bool = True) -> dict:
     """v6. A UTC day is ADMISSIBLE FOR A SYMBOL iff (a) all THREE streams
     carry 24 hour-files and (b) THE COLLECTOR WAS LIVE.
 
@@ -405,9 +705,32 @@ def day_admission(sym: str, day: str, counts: dict,
     if not live:
         reasons.append("collector_not_live: "
                        + (health or {}).get("why", "no health ledger"))
-    return {"day": day, "admissible": bool(all_complete and live),
+    #: v7 leg (c). ABSENCE MUST NOT READ AS A PASS (rule 11 / protocol rule
+    #: 11): a caller that does not supply the era measurement gets a REFUSAL
+    #: with a named status, never a quiet admission. `require_era=False` is
+    #: for the census, which says in its own receipt that the leg was not
+    #: evaluated.
+    if require_era:
+        if era is None:
+            era_ok = False
+            reasons.append("ERA_LEG_NOT_EVALUATED: rule 5 admissibility was "
+                           "not measured for this symbol-day, so it cannot "
+                           "be admitted")
+        else:
+            era_ok = bool(era.get("post_boundary"))
+            if not era_ok:
+                reasons.append(f"rule5_legacy_stamped: {era.get('why')}")
+    else:
+        era_ok = True
+    return {"day": day,
+            "admissible": bool(all_complete and live and era_ok),
             "stream_file_counts": counts, "streams_complete": complete,
             "collector_health": health,
+            "era_rule5": era if era is not None else {
+                "evaluated": False,
+                "why": ("this caller did not measure the era leg; "
+                        "admissibility here is NOT the E2-A gate population")},
+            "era_leg_enforced": bool(require_era),
             "reasons_excluded": reasons,
             "REPORTED_not_gated": {
                 "gap_fraction": gap,
@@ -459,11 +782,25 @@ def simulate_episode(queue_ahead: float, order_qty: float,
         hit = draws < prob
         idx = int(np.argmax(hit)) if hit.any() else -1
     else:
-        idx, prob = -1, np.zeros(0)
+        idx, prob, front = -1, np.zeros(0), np.zeros(0)
     filled_pq = float(order_qty) if idx >= 0 else 0.0
+
+    #: v7. THE TESTABILITY PREDICATE, computed per episode. The ordering
+    #: E[filled_ProbQueue] >= filled_RiskAverse is ARITHMETIC exactly where
+    #: some trade arrives with front = 0 -- there f(0) = 0 makes p = 1, so
+    #: ProbQueue takes the whole order at that trade at the latest while
+    #: RiskAverse can never exceed it. Where no trade reaches front = 0,
+    #: RiskAverse can fill a sliver off the CUMULATIVE volume while ProbQueue
+    #: is still a draw, and NEITHER the realisation nor the expectation
+    #: ordering holds -- measured, both, in the declaration's regimes.
+    testable = bool((front <= 0.0).any()) if len(front) else False
+    e_filled_pq = D.expected_filled_probqueue(prob, order_qty)
 
     return {"filled_qty_RiskAverse": float(filled_ra),
             "filled_qty_ProbQueue_f3": filled_pq,
+            "E_filled_qty_ProbQueue_f3": float(e_filled_pq),
+            "ordering_testable": testable,
+            "front_min": float(front.min()) if len(front) else None,
             "volume_at_or_through_L": total,
             "n_opposite_trades": int(len(vol)),
             "probqueue_fill_index": idx,
@@ -499,17 +836,41 @@ def evaluate_day(sym: str, day: str, decl_digest: str,
         return {"day": day, "usable": False,
                 "why": "one of the three streams read empty"}
 
-    bt_t, bid, ask = book
+    #: R-584: `book` is either the whole day (a 3-tuple, as the fixture and
+    #: E2.0's reader give it) or a StreamedBook that holds only the episode
+    #: grid. Both answer the same three questions.
+    bk = FullBook(*book) if isinstance(book, tuple) else book
     tr_t, tr_p, tr_q, tr_m = trades
     d_t, d_bp, d_bq, d_ap, d_aq = depth
 
     if tick is None:
-        tick = EP.tick_mode([tr_p, bid, ask])
+        #: the streamed book carries no price array, so the tick comes from
+        #: the trade tape alone there. Stated, not silently different: on the
+        #: whole-day path the quote prices are included exactly as before.
+        tick = (EP.tick_mode([tr_p, book[1], book[2]])
+                if isinstance(book, tuple) else EP.tick_mode([tr_p]))
+    #: v7 / REVIEW_DA61_E2A A.4.1. A modal positive diff over fewer than
+    #: three distinct quantities is an echo of the sample, not an estimate of
+    #: a step. The day REFUSES with a counted status rather than guessing.
+    #: The status is about ESTIMATING the step: a caller that SUPPLIES one
+    #: (the fixture pins q = 1.0) is not estimating anything and is not
+    #: subject to it.
+    n_distinct_q = int(np.unique(tr_q).size)
+    if qty_step is None and n_distinct_q < MIN_DISTINCT_QUANTITIES:
+        return {"day": day, "usable": False, "why": ST_QTY_UNDET,
+                "status_day": ST_QTY_UNDET,
+                "n_distinct_quantities": n_distinct_q,
+                "min_distinct_quantities_required": MIN_DISTINCT_QUANTITIES,
+                "detail": ("the quantity step is UNDERDETERMINED: a modal "
+                           "positive diff computed from fewer than three "
+                           "distinct quantities is a property of the sample "
+                           "rather than of the instrument")}
     if qty_step is None:
         qty_step = qty_step_mode(tr_q)
     order_qty = float(qty_step)
 
     k_tr = np.round(tr_p / tick).astype(np.int64)
+    t_max_book = bk.t_max
     k_bid = np.round(d_bp / tick).astype(np.int64)
     k_ask = np.round(d_ap / tick).astype(np.int64)
     #: taker-SELL prints (buyer is maker) hit resting BIDS; taker-BUY prints
@@ -522,18 +883,23 @@ def evaluate_day(sym: str, day: str, decl_digest: str,
     #: in the day by 24 hours, silently.
     day0 = int(pd.Timestamp(day, tz="UTC").timestamp()) * 1000
     rows, status_counts = [], {s: 0 for s in STATUSES}
-    ordering_violations = []
+    label_counts = {lb: 0 for lb in LABELS}
+    viol_testable, viol_marginal = [], []
 
     for tp in TP_GRID_S:
         hours = range(24 if tp * 1000 <= 3_600_000 else 23)
         for hh in hours:
             t0 = day0 + hh * 3_600_000
-            i0 = int(np.searchsorted(bt_t, t0, "left")) - 1
+            q0 = bk.before(t0)
             for sign in (1.0, -1.0):
-                if i0 < 0:
+                if q0 is None:
                     status_counts[ST_NO_QUOTE] += 1
                     continue
-                b0, a0 = float(bid[i0]), float(ask[i0])
+                tq0, b0, a0 = q0
+                #: v7 / B.4.2. The age of the quote this order is placed
+                #: FROM. Reported, never gated -- but it partitions the
+                #: second gate reading at the declared staleness bar.
+                quote_age_ms = float(t0 - tq0)
                 m0 = (b0 + a0) / 2.0
                 L = b0 if sign > 0 else a0
                 kL = int(round(L / tick))
@@ -577,24 +943,42 @@ def evaluate_day(sym: str, day: str, decl_digest: str,
                 sim = simulate_episode(queue_ahead, order_qty, vol,
                                        depth_at_L, rng)
 
-                iT = int(np.searchsorted(bt_t, t_end, "right")) - 1
-                if iT < 0 or t_end > bt_t[-1]:
+                qT = bk.at_or_before(t_end)
+                if qT is None or t_max_book is None or t_end > t_max_book:
                     status_counts[ST_NO_BOOK_TP] += 1
                     continue
-                p_x = float(ask[iT]) if sign > 0 else float(bid[iT])
+                p_x = qT[2] if sign > 0 else qT[1]
                 c_fill = sign * (L - m0) / m0 * 1e4 + FEE_MAKER
                 c_chase = sign * (p_x - m0) / m0 * 1e4 + FEE_TAKER
 
+                #: v7. The violation is recorded in the regime it happened
+                #: in. ONLY the testable regime may refute (A.5): there the
+                #: ordering is arithmetic, so a violation can only be an
+                #: implementation defect. A marginal-regime violation is the
+                #: two models disagreeing where neither claims an ordering,
+                #: and it MUST NOT silence the gate.
                 if (sim["filled_qty_ProbQueue_f3"]
                         < sim["filled_qty_RiskAverse"] - 1e-9):
-                    ordering_violations.append(
-                        {"day": day, "tp_s": tp, "hour": hh, "sign": sign,
-                         "filled_RiskAverse": sim["filled_qty_RiskAverse"],
-                         "filled_ProbQueue_f3":
-                             sim["filled_qty_ProbQueue_f3"]})
+                    rec = {"day": day, "tp_s": tp, "hour": hh, "sign": sign,
+                           "filled_RiskAverse": sim["filled_qty_RiskAverse"],
+                           "filled_ProbQueue_f3":
+                               sim["filled_qty_ProbQueue_f3"],
+                           "front_min": sim["front_min"],
+                           "ordering_testable": sim["ordering_testable"]}
+                    (viol_testable if sim["ordering_testable"]
+                     else viol_marginal).append(rec)
+                if not sim["ordering_testable"]:
+                    label_counts[LB_MARGINAL] += 1
+                if quote_age_ms > STALENESS_BAR_MS:
+                    label_counts[LB_STALE] += 1
 
                 row = {"tp_s": tp, "hour": hh, "sign": sign,
                        "queue_ahead": queue_ahead, "order_qty": order_qty,
+                       "quote_age_ms": quote_age_ms,
+                       "ordering_testable": sim["ordering_testable"],
+                       "E_filled_ProbQueue_f3":
+                           sim["E_filled_qty_ProbQueue_f3"],
+                       "filled_RiskAverse": sim["filled_qty_RiskAverse"],
                        "c_fill_bps": c_fill, "c_chase_bps": c_chase,
                        "n_opposite_trades": sim["n_opposite_trades"],
                        "volume_at_or_through_L":
@@ -610,17 +994,42 @@ def evaluate_day(sym: str, day: str, decl_digest: str,
                 status_counts[ST_RESOLVED] += 1
 
     df = pd.DataFrame(rows)
+    ages = df["quote_age_ms"].to_numpy() if len(df) else np.zeros(0)
     out = {"day": day, "usable": True, "tick": float(tick),
            "rows": rows,
            "qty_step": float(qty_step),
+           "n_distinct_quantities": n_distinct_q,
            "status_counts": status_counts,
+           "label_counts": label_counts,
            "n_attempted": int(sum(status_counts.values())),
-           "ordering_violations": ordering_violations,
+           #: v7: the violations, split by the regime they occurred in.
+           "ordering_violations_testable": viol_testable,
+           "ordering_violations_marginal": viol_marginal,
+           "n_ordering_testable": int(
+               sum(1 for r in rows if r["ordering_testable"])),
+           "n_ordering_marginal": label_counts[LB_MARGINAL],
+           #: v7 / B.4.2: the staleness a placement actually carried,
+           #: REPORTED per symbol-day. Never a filter on admission.
+           "decision_time_quote_age_ms": (
+               {"n": int(ages.size),
+                "p50": float(np.percentile(ages, 50)),
+                "p90": float(np.percentile(ages, 90)),
+                "max": float(ages.max()),
+                "n_over_declared_bar": label_counts[LB_STALE],
+                "declared_bar_ms": STALENESS_BAR_MS}
+               if ages.size else {"n": 0}),
            "cells": {}}
     for tp in TP_GRID_S:
         sub = df[df.tp_s == tp] if len(df) else df
         cell = {"n_episodes": int(len(sub))}
         if len(sub):
+            fresh = sub[sub.quote_age_ms <= STALENESS_BAR_MS]
+            cell["n_episodes_fresh_quote"] = int(len(fresh))
+            cell["n_ordering_testable"] = int(sub["ordering_testable"].sum())
+            cell["mean_filled_RiskAverse"] = float(
+                sub["filled_RiskAverse"].mean())
+            cell["mean_E_filled_ProbQueue_f3"] = float(
+                sub["E_filled_ProbQueue_f3"].mean())
             for mdl in MODELS:
                 cell[f"fill_rate_{mdl}"] = float((sub[f"phi_{mdl}"] > 0).mean())
                 cell[f"mean_phi_{mdl}"] = float(sub[f"phi_{mdl}"].mean())
@@ -629,6 +1038,12 @@ def evaluate_day(sym: str, day: str, decl_digest: str,
                 for pk in PRICINGS:
                     cell[f"eff_rt_{mdl}_{pk}"] = float(
                         2.0 * sub[f"cost_{mdl}_{pk}"].mean())
+                    #: READING B, at the declared staleness bar. Both
+                    #: readings are published with their n; a straddle of
+                    #: the threshold is STATED, never averaged.
+                    cell[f"eff_rt_{mdl}_{pk}_fresh"] = (
+                        float(2.0 * fresh[f"cost_{mdl}_{pk}"].mean())
+                        if len(fresh) else None)
         out["cells"][str(tp)] = cell
     return out
 
@@ -636,19 +1051,29 @@ def evaluate_day(sym: str, day: str, decl_digest: str,
 # --------------------------------------------------------------------------
 # aggregation and verdict
 # --------------------------------------------------------------------------
-def aggregate_symbol(days: list[dict], tp: int) -> dict:
-    """Day-clustered mean and the stationary bootstrap, E1-A's estimator."""
+def aggregate_symbol(days: list[dict], tp: int, fresh: bool = False) -> dict:
+    """Day-clustered mean and the stationary bootstrap, E1-A's estimator.
+
+    `fresh=True` is v7's READING B: the same estimator over the subset of
+    episodes whose decision-time quote is no older than the DECLARED
+    staleness bar. It is a second reading, never a filter on admission --
+    filtering the population on quote age would select on activity, which is
+    the defect v6 removed.
+    """
     vals = {}
+    suffix = "_fresh" if fresh else ""
+    nkey = "n_episodes_fresh_quote" if fresh else "n_episodes"
     usable = [d for d in days if d.get("usable")
-              and d["cells"].get(str(tp), {}).get("n_episodes", 0) > 0]
+              and (d["cells"].get(str(tp), {}).get(nkey) or 0) > 0]
     g = len(usable)
     for mdl in MODELS:
         for pk in PRICINGS:
             k = f"eff_rt_{mdl}_{pk}"
-            series = np.array([d["cells"][str(tp)][k] for d in usable])
             if g == 0:
                 vals[k] = {"eff_rt_bps": None, "n_days": 0}
                 continue
+            series = np.array([d["cells"][str(tp)][k + suffix]
+                               for d in usable], dtype=float)
             lo, hi = (EP.stationary_boot_ci(series, np.ones(g), exp_block=3)
                       if g >= 4 else (float("nan"), float("nan")))
             vals[k] = {"eff_rt_bps": float(series.mean()),
@@ -659,6 +1084,10 @@ def aggregate_symbol(days: list[dict], tp: int) -> dict:
     n_res = sum(d["status_counts"][ST_RESOLVED] for d in days
                 if d.get("usable"))
     vals["G_complete_days"] = g
+    vals["reading"] = ("B_fresh_quotes_only" if fresh else "A_all_episodes")
+    vals["staleness_bar_ms"] = STALENESS_BAR_MS if fresh else None
+    vals["n_episodes"] = int(sum(
+        (d["cells"].get(str(tp), {}).get(nkey) or 0) for d in usable))
     vals["episode_skip_rate"] = (None if n_att == 0
                                  else float(1.0 - n_res / n_att))
     return vals
@@ -685,11 +1114,122 @@ def verdict(agg: dict, decl: dict) -> dict:
             "interval_claimable": bool(g >= 5)}
 
 
+def staleness_sensitivity(agg_a: dict, agg_b: dict) -> dict:
+    """v7 / B.4.2: the gate read BOTH ways, and a straddle STATED.
+
+    Reading A is every resolved episode; reading B is the subset whose
+    decision-time quote is no older than the declared staleness bar. If the
+    two fall on opposite sides of the 8.0 bps threshold the cell says so.
+    THE TWO ARE NEVER AVERAGED -- the same rule the queue bracket carries.
+    """
+    a = agg_a[f"eff_rt_RiskAverse_{PR_RESIDUAL}"]["eff_rt_bps"]
+    b = agg_b[f"eff_rt_RiskAverse_{PR_RESIDUAL}"]["eff_rt_bps"]
+    if a is None or b is None:
+        return {"state": "NOT_BOTH_READABLE",
+                "reading_A_all_episodes_bps": a,
+                "reading_B_fresh_quotes_bps": b,
+                "staleness_bar_ms": STALENESS_BAR_MS}
+    pa, pb = a <= THRESHOLD, b <= THRESHOLD
+    return {"state": ("STRADDLES_THE_STALENESS_BAR" if pa != pb
+                      else "AGREES_ACROSS_THE_STALENESS_BAR"),
+            "reading_A_all_episodes_bps": a,
+            "reading_B_fresh_quotes_bps": b,
+            "reading_A_n_days": agg_a[
+                f"eff_rt_RiskAverse_{PR_RESIDUAL}"]["n_days"],
+            "reading_B_n_days": agg_b[
+                f"eff_rt_RiskAverse_{PR_RESIDUAL}"]["n_days"],
+            "reading_A_n_episodes": agg_a.get("n_episodes"),
+            "reading_B_n_episodes": agg_b.get("n_episodes"),
+            "staleness_bar_ms": STALENESS_BAR_MS,
+            "never_averaged": True}
+
+
+#: v7 SEALING. Structural keys that merely NAME the gate rather than carrying
+#: a number; without this list the marker scan would strip the metadata a
+#: reader needs to know WHICH gate is sealed.
+SEALED_KEY_ALLOW = ("gate_row_tp_s", "gates_the_run", "gate_read",
+                    "when_the_gate_may_be_read", "why_no_gate_is_read",
+                    "gate_bearing_pricing")
+
+
+def _is_sealed_key(k: str) -> bool:
+    if k in SEALED_KEY_ALLOW:
+        return False
+    kl = k.lower()
+    return any(m in kl for m in SEALED_KEY_MARKERS)
+
+
+def redact_sealed(obj, path="", dropped=None):
+    """Remove every economic quantity, recording WHICH keys were removed.
+
+    The open receipt keeps its shape and its statuses; what it loses is
+    named. A seal that did not say what it covered would be a seal over
+    whatever happened to be convenient.
+    """
+    if dropped is None:
+        dropped = []
+    if isinstance(obj, dict):
+        out = {}
+        for k, v in obj.items():
+            if _is_sealed_key(str(k)):
+                dropped.append(f"{path}.{k}" if path else str(k))
+                continue
+            out[k] = redact_sealed(v, f"{path}.{k}" if path else str(k),
+                                   dropped)
+        return out
+    if isinstance(obj, list):
+        return [redact_sealed(v, f"{path}[{i}]", dropped)
+                for i, v in enumerate(obj)]
+    return obj
+
+
+def find_sealed_leaks(obj, path=""):
+    """The falsifier for the seal: any economic key surviving in the open
+    receipt is a LEAK, named. Run on every sealed emission."""
+    leaks = []
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            here = f"{path}.{k}" if path else str(k)
+            if _is_sealed_key(str(k)):
+                leaks.append(here)
+            leaks += find_sealed_leaks(v, here)
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            leaks += find_sealed_leaks(v, f"{path}[{i}]")
+    return leaks
+
+
 # --------------------------------------------------------------------------
 # the run
 # --------------------------------------------------------------------------
+def inherited_control_block(run_repro: bool, rep: dict | None = None) -> dict:
+    """v7 / REVIEW_DA61_E2A A.2. THE FIELD IS ALWAYS PRESENT.
+
+    --no-repro turned the gating control off and the receipt went SILENT --
+    the key ABSENT rather than false. That is the P-003 asymmetry class in
+    P-002: a reader cannot tell "the control passed" from "the control was
+    never asked". `null` is not `false`: the control neither passed nor
+    failed, because it did not run.
+    """
+    if not run_repro:
+        return {"reproduced": None,
+                "gates_the_run": False,
+                "why_skipped": ("--no-repro: the E1-A reproduction control "
+                                "was NOT RUN, so this run is not gated on "
+                                "E2-A superseding E1-A's estimator rather "
+                                "than measuring a different one. A receipt "
+                                "produced this way is not gate-bearing."),
+                "regimes": None}
+    rep = rep or {}
+    return {"reproduced": bool(rep.get("reproduced")),
+            "regimes": rep.get("regimes"),
+            "gates_the_run": True,
+            "why_skipped": None}
+
+
 def run(symbols, out_path: Path | None, min_days: int | None = None,
-        run_repro: bool = True) -> dict:
+        run_repro: bool = True, sealed: bool = False,
+        sealed_out: Path | None = None) -> dict:
     t_start = time.time()
     root_block = E20.require_canonical_root(
         "P-2026-002 E2-A result-bearing emission")
@@ -701,6 +1241,7 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
                 if min_days is None else min_days)
 
     result = {"protocol": PROTOCOL, "carrying_commit": carrying_commit(),
+              "runner_identity": runner_identity(),
               "wrapper": wrapper_block(),
               "data_root_check": root_block,
               "ledger_root": {"data_root": str(ROOT),
@@ -717,8 +1258,20 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
                   "why": decl["the_required_input_that_does_not_exist_yet"][
                       "if_it_cannot_be_sourced"]},
               "the_arm_that_ran": "MIN_SIZE_NOT_THE_E2A_GATE",
+              "scope_R584": {
+                  "ruling": "R-584 (USER, 2026-09-06): scope is BTC for now",
+                  "gate_symbol": GATE_SYMBOL,
+                  "the_thin_name_cell": "DEFERRED_NOT_RESOLVED",
+                  "the_twelve": "CONTEXT, not re-run as a population"},
+              "memory_cap_gib": DAY_RSS_CAP_GIB,
               "symbols": {}}
 
+    #: v7 / REVIEW_DA61_E2A A.2: THE FIELD IS ALWAYS PRESENT. --no-repro
+    #: turned the gating control off and the receipt went SILENT -- the key
+    #: absent rather than false. `null` is not `false`: the control neither
+    #: passed nor failed, because it did not run.
+    if not run_repro:
+        result["inherited_control"] = inherited_control_block(False)
     # 7 of the reviewer's checklist: the inherited control GATES the smoke.
     if run_repro:
         rep = EP.reproduce_e1a(list(SYMBOLS_IN_SCOPE), regimes=("csv",))
@@ -745,49 +1298,197 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
         for day in days_all:
             counts = stream_file_counts(sym, day)
             health = collector_health(day, beats, restarts)
-            admissions.append(day_admission(sym, day, counts, health))
+            #: v7 leg (c). The era leg is measured only where the cheap legs
+            #: already admit -- it reads recv_ns off every bookTicker row, so
+            #: running it on a day already excluded on hour-file counts would
+            #: buy nothing. A day it is not run for is NOT silently admitted:
+            #: `day_admission` refuses on ERA_LEG_NOT_EVALUATED.
+            pre = all(n == HOURS_PER_DAY_FILES for n in counts.values()) \
+                and bool(health.get("live"))
+            era = era_leg(sym, day) if pre else None
+            admissions.append(day_admission(sym, day, counts, health,
+                                            era=era, require_era=True))
         adm_days = [a["day"] for a in admissions if a["admissible"]]
+        n_pre_era = sum(1 for a in admissions
+                        if all(a["streams_complete"].values())
+                        and bool((a["collector_health"] or {}).get("live")))
+        era_block = {
+            "boundary_recv_ns": ERA_BOUNDARY_RECV_NS,
+            "boundary_utc": ERA_BOUNDARY_UTC,
+            "n_days_admissible_before_the_era_leg": n_pre_era,
+            "n_days_admissible_after_the_era_leg": len(adm_days),
+            "n_days_lost_to_the_era_leg": n_pre_era - len(adm_days),
+            "legacy_share_by_day": {
+                a["day"]: (a["era_rule5"] or {}).get("legacy_share")
+                for a in admissions if isinstance(a.get("era_rule5"), dict)
+                and a["era_rule5"].get("measured_row_wise")},
+            "why": ("CLAUDE.md rule 5: E2-A's estimand is sub-second arrival "
+                    "order on recv_ns, so a legacy-stamped row carries up to "
+                    "~0.6 s of parse-backlog error into the queue "
+                    "simulation"),
+        }
+        #: R-580(C)(2). Under the era leg no symbol reaches the declared
+        #: minimum of 14 until ~2026-09-09. THE BAR IS NOT MOVED. In SEALED
+        #: mode the mechanism still runs on the admissible post-boundary days
+        #: -- economics sealed and never read, statuses and resources
+        #: published -- and NO GATE IS READ.
+        refusal = None
         if len(adm_days) < min_days:
-            result["symbols"][sym] = {
-                "admissions": admissions,
-                "n_admissible_days": len(adm_days),
-                "REFUSED": (f"{len(adm_days)} admissible days < the declared "
-                            f"minimum {min_days}: no gate is read for this "
-                            f"symbol and the cap is not relaxed")}
-            continue
+            refusal = (f"{len(adm_days)} admissible days < the declared "
+                       f"minimum {min_days}: no gate is read for this symbol "
+                       f"and the cap is not relaxed")
+            if not sealed:
+                result["symbols"][sym] = {
+                    "admissions": admissions,
+                    "n_admissible_days": len(adm_days),
+                    "admissible_days": adm_days,
+                    "era_leg": era_block,
+                    "REFUSED": refusal,
+                    "the_population_collapse_is_the_ERA_LEG": (
+                        era_block["n_days_lost_to_the_era_leg"] > 0)}
+                continue
+        resources = []
         for day in adm_days:
-            book, _, bmeta = E20.read_book(sym, day, extend=True)
+            #: R-584. The bookTicker day is STREAMED hour-file by hour-file
+            #: and only the episode grid is kept. Every stage is guarded:
+            #: a day over the declared cap REFUSES, the cap is not raised
+            #: and the population is not made smaller to fit it.
+            st = {"day": day}
+            w = time.time()
+            book = stream_book(sym, day, extend=True)
+            st["book"] = {"wall_s": round(time.time() - w, 2),
+                          "n_hour_files": book.n_files,
+                          "n_rows_streamed": book.n_rows,
+                          "n_bad_quotes": book.n_bad_quotes,
+                          "peak_single_hour_file_rss_gib":
+                              round(book.peak_file_rss_gib, 3),
+                          "kept": "the episode grid only"}
+            st["after_book"] = memory_guard("after the streamed book", day)
+            w = time.time()
             trades, _, tmeta = E20.read_trades(sym, day)
+            st["trades"] = {"wall_s": round(time.time() - w, 2), **tmeta}
+            st["after_trades"] = memory_guard("after the trade tape", day)
+            w = time.time()
             depth, _, dmeta = read_depth20(sym, day)
+            st["depth20"] = {"wall_s": round(time.time() - w, 2), **dmeta}
+            st["after_depth20"] = memory_guard("after depth20", day)
+            w = time.time()
             ev = evaluate_day(sym, day, decl_digest, book, trades, depth)
-            ev["stream_meta"] = {"book": bmeta, "trades": tmeta,
-                                 "depth20": dmeta}
+            st["evaluate"] = {"wall_s": round(time.time() - w, 2)}
+            st["after_evaluate"] = memory_guard("after the episodes", day)
+            ev["stream_meta"] = {
+                "book": {"streamed": True, "n_rows": book.n_rows,
+                         "n_hour_files": book.n_files,
+                         "n_bad_quotes": book.n_bad_quotes},
+                "trades": tmeta, "depth20": dmeta}
             evaluated.append(ev)
+            resources.append(st)
             del book, trades, depth
         aggs = {str(tp): aggregate_symbol(evaluated, tp) for tp in TP_GRID_S}
+        aggs_fresh = {str(tp): aggregate_symbol(evaluated, tp, fresh=True)
+                      for tp in TP_GRID_S}
         primary = aggs[str(TP_PRIMARY_S)]
-        viol = [v for d in evaluated for v in d["ordering_violations"]]
+        #: v7 / A.5. The trigger is narrowed to the arithmetic regime. A
+        #: marginal-regime violation is COUNTED and the gate is still read;
+        #: only a testable-regime violation can be an implementation defect.
+        vt = [v for d in evaluated
+              for v in d.get("ordering_violations_testable", [])]
+        vm = [v for d in evaluated
+              for v in d.get("ordering_violations_marginal", [])]
+        n_test = sum(d.get("n_ordering_testable", 0) for d in evaluated)
+        n_marg = sum(d.get("n_ordering_marginal", 0) for d in evaluated)
+        pc = [d["cells"][str(TP_PRIMARY_S)] for d in evaluated
+              if d.get("usable") and d["cells"][str(TP_PRIMARY_S)]["n_episodes"]]
+        e_pq = (float(np.mean([c["mean_E_filled_ProbQueue_f3"] for c in pc]))
+                if pc else None)
+        f_ra = (float(np.mean([c["mean_filled_RiskAverse"] for c in pc]))
+                if pc else None)
+        ordering = D.ordering_verdict(n_test, len(vt), n_marg, len(vm),
+                                      e_pq, f_ra)
+        ordering["mean_E_filled_ProbQueue_f3"] = e_pq
+        ordering["mean_filled_RiskAverse"] = f_ra
         vd = verdict(primary, decl)
-        if viol:
+        if ordering["state"] == "REFUTES_THE_BRACKET":
             vd = {"state": "REFUTES_THE_BRACKET",
-                  "why": (f"{len(viol)} episodes where ProbQueue-f3 filled "
-                          f"LESS than RiskAverse. That ordering is arithmetic "
-                          f"per episode, so this is an implementation defect "
-                          f"and no overlay verdict may be read."),
-                  "n_ordering_violations": len(viol),
-                  "examples": viol[:5]}
+                  "why": (f"{len(vt)} episodes IN THE TESTABLE REGIME where "
+                          f"ProbQueue-f3 filled LESS than RiskAverse. Some "
+                          f"trade in each reached front = 0, where the "
+                          f"ordering is arithmetic, so this can only be an "
+                          f"implementation defect and no overlay verdict may "
+                          f"be read."),
+                  "n_ordering_violations_testable": len(vt),
+                  "examples": vt[:5]}
+        stale = staleness_sensitivity(primary, aggs_fresh[str(TP_PRIMARY_S)])
         icp = D.icp_predicate(primary["episode_skip_rate"], in_aggregate=True)
+        ages = [d["decision_time_quote_age_ms"] for d in evaluated
+                if d.get("usable") and d["decision_time_quote_age_ms"].get("n")]
+        placement = {
+            "quote_age_p50_ms_median_over_days": (
+                float(np.median([a["p50"] for a in ages])) if ages else None),
+            "quote_age_p90_ms_median_over_days": (
+                float(np.median([a["p90"] for a in ages])) if ages else None),
+            "quote_age_max_ms": (float(max(a["max"] for a in ages))
+                                 if ages else None),
+            "n_episodes_over_the_declared_bar": sum(
+                d["label_counts"][LB_STALE] for d in evaluated
+                if d.get("usable")),
+            "declared_bar_ms": STALENESS_BAR_MS,
+            "REPORTED_not_gated": True,
+        }
+        cell_label = None
+        if sym == "ICPUSDT":
+            lab = decl["the_ICP_cell_label_v7"]
+            cell_label = {"label": lab["label"],
+                          "mechanism": lab["the_mechanism"],
+                          "scope": ("the DECLARED ICP cell -- the label is "
+                                    "not a computed threshold applied to "
+                                    "every symbol, which would be a bar "
+                                    "chosen after seeing. The evidence "
+                                    "beside it IS computed."),
+                          "evidence_computed_here": placement}
         result["symbols"][sym] = {
             "admissions": admissions,
             "n_admissible_days": len(adm_days),
             "admissible_days": adm_days,
+            "era_leg": era_block,
             "days": [{k: v for k, v in d.items() if k != "rows"}
                      for d in evaluated],
             "aggregate_by_tp": aggs,
+            "aggregate_by_tp_fresh_quotes_only": aggs_fresh,
             "gate_row_tp_s": TP_PRIMARY_S,
             "verdict": vd,
+            "ordering_property": ordering,
+            "staleness_sensitivity": stale,
+            "placement_quality": placement,
+            "cell_label": cell_label,
             "icp_rule": icp,
-            "n_ordering_violations": len(viol),
+            "n_ordering_violations_testable": len(vt),
+            "n_ordering_violations_marginal": len(vm),
+            "REFUSED": refusal,
+            #: R-584: the gate is read on BTC. Another symbol may be executed
+            #: as a diagnostic and is LABELLED rather than quietly counted.
+            "is_the_gate_symbol_under_R584": bool(sym == GATE_SYMBOL),
+            "scope_label": (None if sym == GATE_SYMBOL
+                            else "NOT_THE_GATE_SYMBOL_UNDER_R584"),
+            "resource_observation": resources,
+            "memory_cap_gib": DAY_RSS_CAP_GIB,
+            "gate_read": bool(refusal is None and not sealed
+                              and sym == GATE_SYMBOL),
+            "why_no_gate_is_read": (
+                None if (refusal is None and not sealed
+                         and sym == GATE_SYMBOL) else
+                (refusal or "")
+                + ("" if sym == GATE_SYMBOL else
+                   f" | R-584: {sym} is not the gate symbol "
+                   f"({GATE_SYMBOL}); this cell is a diagnostic")
+                + (
+                    " | SEALED SMOKE (R-580(C)(2)): the mechanism ran on the "
+                    "admissible post-boundary days, every economic quantity "
+                    "is sealed and NOT read, and the gate is read only at "
+                    "G >= 14 post-boundary complete days (~2026-09-09)"
+                    if sealed else "")),
+            "the_population_collapse_is_the_ERA_LEG": (
+                era_block["n_days_lost_to_the_era_leg"] > 0),
             "wall_s": round(time.time() - w0, 2)}
 
     result["wall_s_total"] = round(time.time() - t_start, 2)
@@ -797,9 +1498,55 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
             resource.RUSAGE_SELF).ru_maxrss
     except Exception:                                         # noqa: BLE001
         pass
+
+    if not sealed:
+        if out_path:
+            out_path.write_text(
+                json.dumps(result, indent=2, sort_keys=True) + "\n")
+        return result
+
+    #: ---- THE SEALED SMOKE ------------------------------------------------
+    #: The full payload is written ONCE, digested, and NOT READ. The open
+    #: receipt is the same object with every economic key REMOVED -- and the
+    #: removal is CHECKED, not asserted: a marker scan over the open receipt
+    #: must find zero leaks or the emission refuses.
+    if sealed_out is None:
+        raise E2ARefused("sealed run without a sealed output path: the "
+                         "economics would have nowhere to go but the open "
+                         "receipt")
+    payload = json.dumps(result, indent=2, sort_keys=True) + "\n"
+    sealed_out.parent.mkdir(parents=True, exist_ok=True)
+    sealed_out.write_text(payload)
+    dropped: list[str] = []
+    openr = redact_sealed(result, "", dropped)
+    leaks = find_sealed_leaks(openr)
+    openr["sealed_payload"] = {
+        "path": str(sealed_out.relative_to(ROOT))
+                if str(sealed_out).startswith(str(ROOT)) else str(sealed_out),
+        "sha256": hashlib.sha256(payload.encode()).hexdigest(),
+        "n_bytes": len(payload.encode()),
+        "n_keys_removed_from_the_open_receipt": len(dropped),
+        "keys_removed": sorted(set(
+            k.split(".")[-1] for k in dropped)),
+        "what_is_sealed": decl["admission_legs_v7"][
+            "leg_c_rule5_era_purity"]["the_sealed_smoke_regime"][
+                "what_is_SEALED"],
+        "when_the_gate_may_be_read": decl["admission_legs_v7"][
+            "leg_c_rule5_era_purity"]["the_sealed_smoke_regime"][
+                "when_the_gate_may_be_read"],
+        "NOT_READ_BY_THIS_RUN": True,
+        "leak_scan": {"n_leaks": len(leaks), "leaks": leaks[:20]},
+    }
+    if leaks:
+        openr["REFUSED"] = (f"{len(leaks)} economic key(s) survived the "
+                            f"redaction: the receipt is not sealed")
+        if out_path:
+            out_path.write_text(
+                json.dumps(openr, indent=2, sort_keys=True) + "\n")
+        raise E2ARefused(openr["REFUSED"])
     if out_path:
-        out_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
-    return result
+        out_path.write_text(json.dumps(openr, indent=2, sort_keys=True) + "\n")
+    return openr
 
 
 # --------------------------------------------------------------------------
@@ -848,7 +1595,8 @@ DAY0_MS = int(pd.Timestamp(FIX_DAY, tz="UTC").timestamp()) * 1000
 
 def _synth_day(tick=0.001, qty_step=1.0, spread_ticks=2, mid=100.0,
                queue_at_touch=1000.0, trades=(), drift_ticks=0,
-               levels_present=True, n_levels=N_LEVELS):
+               levels_present=True, n_levels=N_LEVELS,
+               depth_at_touch=None):
     """A book, a trade tape and a depth20 tape, all in memory.
 
     `trades` is a sequence of (offset_ms, price_ticks_from_L_buy, qty,
@@ -872,8 +1620,15 @@ def _synth_day(tick=0.001, qty_step=1.0, spread_ticks=2, mid=100.0,
         ap = ap + 50 * tick
     bq = np.full((1, n_levels), 500.0)
     aq = np.full((1, n_levels), 500.0)
-    bq[0, 0] = queue_at_touch
-    aq[0, 0] = queue_at_touch
+    #: `queue_at_touch` is the size AHEAD at placement; `depth_at_touch` is
+    #: the total depth the snapshot shows at L. They are the same field read
+    #: at the same instant, so they default equal -- but the declaration's
+    #: marginal counterexample needs them to differ (depth 1000 against a
+    #: queue of 100), which a real tape produces whenever the book at L
+    #: changes between placement and a trade.
+    bq[0, 0] = queue_at_touch if depth_at_touch is None else depth_at_touch
+    aq[0, 0] = queue_at_touch if depth_at_touch is None else depth_at_touch
+    q_ahead_override = queue_at_touch if depth_at_touch is not None else None
     d_t = np.array([DAY0_MS - 1], dtype=np.int64)
     tr_t, tr_p, tr_q, tr_m = [], [], [], []
     for off, ktick, q, taker_sell in trades:
@@ -889,6 +1644,20 @@ def _synth_day(tick=0.001, qty_step=1.0, spread_ticks=2, mid=100.0,
              np.array(tr_p)[order], np.array(tr_q)[order],
              np.array(tr_m, dtype=bool)[order])
     depth = (d_t, bp, bq, ap, aq)
+    if q_ahead_override is not None:
+        #: TWO snapshots: the one at t0- carries the queue AHEAD at
+        #: placement, and a later one -- before the first trade -- carries
+        #: the total depth at L. That is what a live book does between a
+        #: placement and the print that trades against it, and it is what
+        #: the declaration's marginal counterexample needs (queue 100
+        #: against depth 1000).
+        bq0 = bq.copy()
+        aq0 = aq.copy()
+        bq0[0, 0] = q_ahead_override
+        aq0[0, 0] = q_ahead_override
+        depth = (np.array([DAY0_MS - 1, DAY0_MS + 500], dtype=np.int64),
+                 np.vstack([bp, bp]), np.vstack([bq0, bq]),
+                 np.vstack([ap, ap]), np.vstack([aq0, aq]))
     return book, tapes, depth
 
 
@@ -1048,12 +1817,15 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
         h_out = collector_health(FIX_DAY, out_beats, no_rs)
         h_restart = collector_health(FIX_DAY, live_beats,
                                      np.array([d0 + 50_000.0]))
+        POST = {"post_boundary": True, "legacy_share": 0.0, "n_rows": 10,
+                "n_legacy_stamped": 0, "measured_row_wise": True,
+                "why": "synthetic: every row post-boundary"}
         a_quiet = day_admission("ICPUSDT", FIX_DAY, full, h_live,
-                                gap=0.99, age={"p50_ms": 5000.0})
+                                gap=0.99, age={"p50_ms": 5000.0}, era=POST)
         a_d20 = day_admission("ICPUSDT", FIX_DAY, dict(full, depth20=23),
-                              h_live)
-        a_out = day_admission("ICPUSDT", FIX_DAY, full, h_out)
-        a_rs = day_admission("ICPUSDT", FIX_DAY, full, h_restart)
+                              h_live, era=POST)
+        a_out = day_admission("ICPUSDT", FIX_DAY, full, h_out, era=POST)
+        a_rs = day_admission("ICPUSDT", FIX_DAY, full, h_restart, era=POST)
         ck("v6 POSITIVE, THE WHOLE POINT: a book so quiet that 99% of its "
            "seconds carry no message is ADMITTED when the COLLECTOR is live",
            a_quiet["admissible"]
@@ -1210,6 +1982,322 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
            f"{meta['n_ragged_rows']} ragged of {meta['n_raw_rows']} raw -- a "
            f"padded zero level is an invented queue position")
 
+        # ==== v7 ==========================================================
+        # -- 16. THE ERA LEG (rule 5), both directions and the absence case --
+        POSTB = {"post_boundary": True, "legacy_share": 0.0, "n_rows": 100,
+                 "n_legacy_stamped": 0, "measured_row_wise": True,
+                 "why": "synthetic: every row post-boundary"}
+        LEGACY = {"post_boundary": False, "legacy_share": 0.56, "n_rows": 100,
+                  "n_legacy_stamped": 56, "measured_row_wise": True,
+                  "why": "synthetic: 56 of 100 rows legacy-stamped"}
+        a_post = day_admission("ICPUSDT", FIX_DAY, full, h_live, era=POSTB)
+        a_leg = day_admission("ICPUSDT", FIX_DAY, full, h_live, era=LEGACY)
+        a_none = day_admission("ICPUSDT", FIX_DAY, full, h_live, era=None)
+        ck("v7 ERA LEG POSITIVE CONTROL: a post-boundary day with a live "
+           "collector ADMITS -- the leg is not a guard shown only refusing",
+           a_post["admissible"] and a_post["era_leg_enforced"],
+           f"legacy_share 0.0 -> admissible {a_post['admissible']}")
+        ck("v7 ERA LEG KNOWN-BAD: a LEGACY-STAMPED day REFUSES with the "
+           "share named, however complete its streams are",
+           (not a_leg["admissible"])
+           and any("rule5_legacy_stamped" in r
+                   for r in a_leg["reasons_excluded"]),
+           f"legacy_share 0.56 -> {a_leg['reasons_excluded'][-1][:90]} -- a "
+           f"queue simulation on recv_ns cannot use post-parse stamps")
+        ck("v7 ERA LEG, ABSENCE IS NOT A PASS: a day whose era leg was NOT "
+           "MEASURED is REFUSED, not quietly admitted",
+           (not a_none["admissible"])
+           and any("ERA_LEG_NOT_EVALUATED" in r
+                   for r in a_none["reasons_excluded"]),
+           "era=None with require_era=True -> ERA_LEG_NOT_EVALUATED. "
+           "Rule 11: absence must never read as a pass")
+
+        # -- 17-19. THE ORDERING PROPERTY, END TO END IN THE RUNNER ---------
+        #: Driven through evaluate_day, not through the model functions:
+        #: 'the wiring is where the sign conventions can invert' (R-570(B)).
+        #: THE REVIEWER'S A.5 CASE, at its own numbers: queue_ahead 100,
+        #: order 10, one opposite trade of 105, depth at L 200.
+        bkM, trM, dpM = _synth_day(queue_at_touch=100.0, depth_at_touch=200.0,
+                                   trades=[(1000, 0, 105.0, True)])
+        evM = evaluate_day("ICPUSDT", FIX_DAY, digest, bkM, trM, dpM,
+                           tick=0.001, qty_step=10.0)
+        rM = _row(evM, hour=0)
+        ck("v7 ORDERING, MARGINAL REGIME REPRODUCED IN THE RUNNER'S OWN "
+           "WIRING at the reviewer's numbers: no trade reaches front = 0, so "
+           "the episode is classified NOT TESTABLE and any violation is "
+           "counted as MARGINAL rather than raising a refutation",
+           rM is not None and rM["ordering_testable"] is False
+           and len(evM["ordering_violations_testable"]) == 0
+           and abs(rM["filled_RiskAverse"] - 5.0) < 1e-9
+           and abs(rM["E_filled_ProbQueue_f3"] - 5.0) < 1e-9,
+           f"queue_ahead {rM['queue_ahead']}, order 10, one trade of 105 at "
+           f"depth 200: RiskAverse fills {rM['filled_RiskAverse']} off the "
+           f"CUMULATIVE volume, E[ProbQueue] {rM['E_filled_ProbQueue_f3']}, "
+           f"testable={rM['ordering_testable']}. THE PRE-v7 RUNNER WOULD "
+           f"HAVE READ NO GATE FOR THIS SYMBOL")
+        vio_m = sum(
+            1 for sd in range(2000)
+            if simulate_episode(100.0, 10.0, np.array([105.0]),
+                                np.array([200.0]),
+                                np.random.default_rng(sd)
+                                )["filled_qty_ProbQueue_f3"] < 5.0 - 1e-9)
+        ck("v7 AND THE REVIEWER'S MEASUREMENT REPRODUCES IN THIS CODE: about "
+           "half of all seeds violate the per-episode REALISATION ordering "
+           "in the marginal regime, with no defect present",
+           800 <= vio_m <= 1200,
+           f"{vio_m} of 2,000 seeds = {vio_m / 2000:.4f} (REVIEW_DA61_E2A "
+           f"A.5 measured 993 / 2000 = 0.4965). A per-episode realisation "
+           f"test on a stochastic model is a coin flip with a veto attached")
+        bkT, trT, dpT = _synth_day(queue_at_touch=50.0,
+                                   trades=[(1000, 0, 60.0, True),
+                                           (2000, 0, 60.0, True)])
+        evT = evaluate_day("ICPUSDT", FIX_DAY, digest, bkT, trT, dpT,
+                           tick=0.001, qty_step=10.0)
+        rT = _row(evT)
+        vio_t = sum(
+            1 for sd in range(2000)
+            if simulate_episode(50.0, 10.0, np.array([60.0, 60.0]),
+                                np.array([50.0, 50.0]),
+                                np.random.default_rng(sd)
+                                )["filled_qty_ProbQueue_f3"] < 10.0 - 1e-9)
+        ck("v7 ORDERING, TESTABLE REGIME: a trade arrives with the queue "
+           "already cleared (front = 0), so ProbQueue fills the whole order "
+           "and the ordering holds ARITHMETICALLY -- zero violations over "
+           "2,000 seeds, which is what makes a violation here a DEFECT",
+           rT is not None and rT["ordering_testable"] is True
+           and len(evT["ordering_violations_testable"]) == 0
+           and len(evT["ordering_violations_marginal"]) == 0
+           and vio_t == 0,
+           f"queue_ahead 50, two trades of 60: testable="
+           f"{rT['ordering_testable']}, E[ProbQueue] "
+           f"{rT['E_filled_ProbQueue_f3']} against RiskAverse "
+           f"{rT['filled_RiskAverse']}; {vio_t} / 2,000 seeds violate")
+        #: THE EXPECTATION COUNTEREXAMPLE, END TO END. queue_ahead 100,
+        #: order 10, ONE trade of 110, depth at L 1000.
+        bkC, trC, dpC = _synth_day(queue_at_touch=100.0,
+                                   depth_at_touch=1000.0,
+                                   trades=[(1000, 0, 110.0, True)])
+        evC = evaluate_day("ICPUSDT", FIX_DAY, digest, bkC, trC, dpC,
+                           tick=0.001, qty_step=10.0)
+        rC = _row(evC, hour=0)
+        hand = 10.0 * (900.0 ** 3) / (100.0 ** 3 + 900.0 ** 3)
+        ck("v7 THE EXPECTATION ALONE IS NOT THE FIX -- KNOWN-BAD FOR THE "
+           "REVIEWER'S OWN PROPOSAL, driven through the RUNNER: RiskAverse "
+           "fills the whole order while E[ProbQueue] falls short, in the "
+           "marginal regime, with no defect present",
+           rC is not None and rC["ordering_testable"] is False
+           and abs(rC["filled_RiskAverse"] - 10.0) < 1e-9
+           and abs(rC["E_filled_ProbQueue_f3"] - hand) < 1e-12
+           and rC["E_filled_ProbQueue_f3"] < rC["filled_RiskAverse"] - 1e-9,
+           f"RiskAverse {rC['filled_RiskAverse']}, E[ProbQueue] "
+           f"{rC['E_filled_ProbQueue_f3']:.15f} against the hand derivation "
+           f"{hand:.15f} (900^3/(100^3+900^3) x 10). A.5 proposes the "
+           f"expectation as the corrected property; measured, it is true "
+           f"EXACTLY on the testable set, so the front = 0 predicate is what "
+           f"decides and this control is what stops that being taken on "
+           f"trust")
+        ovr = D.ordering_verdict(50, 1, 10, 0)
+        ovm = D.ordering_verdict(50, 0, 10, 7)
+        ck("v7 THE NARROWED TRIGGER, BOTH DIRECTIONS: a TESTABLE-regime "
+           "violation still REFUTES; a marginal-regime violation counts and "
+           "the gate stays readable",
+           ovr["state"] == "REFUTES_THE_BRACKET"
+           and ovm["state"] == "ORDERING_HOLDS_WHERE_TESTABLE"
+           and ovm["n_violations_in_the_marginal_regime"] == 7,
+           "narrowing has not disarmed the falsifier -- it has stopped a "
+           "correct model disagreement from silencing a gate")
+
+        # -- 20. DECISION-TIME QUOTE AGE: a label, never an exclusion -------
+        r_fresh = _row(evT, hour=0)
+        r_stale = _row(evT, hour=3)
+        ck("v7 QUOTE AGE is carried PER EPISODE and labels rather than "
+           "excludes: a 1 ms quote and a 30-minute quote are BOTH RESOLVED, "
+           "and only the second is labelled stale",
+           r_fresh["quote_age_ms"] <= STALENESS_BAR_MS
+           and r_stale["quote_age_ms"] > STALENESS_BAR_MS
+           and evT["label_counts"][LB_STALE] > 0
+           and evT["status_counts"][ST_RESOLVED] == len(evT["rows"]),
+           f"hour 0 age {r_fresh['quote_age_ms']:.0f} ms, hour 3 age "
+           f"{r_stale['quote_age_ms']:.0f} ms, "
+           f"{evT['label_counts'][LB_STALE]} labelled of "
+           f"{evT['status_counts'][ST_RESOLVED]} resolved -- filtering on "
+           f"age would select on ACTIVITY, the defect v6 removed")
+
+        # -- 21. THE GATE READ BOTH WAYS, and the straddle ------------------
+        aggA = aggregate_symbol([evT], TP_PRIMARY_S)
+        aggB = aggregate_symbol([evT], TP_PRIMARY_S, fresh=True)
+        ck("v7 READING B IS A DIFFERENT POPULATION, not a re-label: the "
+           "fresh-quote reading carries fewer episodes than reading A",
+           (aggB["n_episodes"] or 0) < (aggA["n_episodes"] or 0)
+           and aggB["staleness_bar_ms"] == STALENESS_BAR_MS,
+           f"reading A {aggA['n_episodes']} episodes, reading B "
+           f"{aggB['n_episodes']} at a {STALENESS_BAR_MS:.0f} ms bar")
+        st_str = staleness_sensitivity(
+            {f"eff_rt_RiskAverse_{PR_RESIDUAL}":
+                {"eff_rt_bps": 7.0, "n_days": 1}},
+            {f"eff_rt_RiskAverse_{PR_RESIDUAL}":
+                {"eff_rt_bps": 9.0, "n_days": 1}})
+        st_agr = staleness_sensitivity(
+            {f"eff_rt_RiskAverse_{PR_RESIDUAL}":
+                {"eff_rt_bps": 7.0, "n_days": 1}},
+            {f"eff_rt_RiskAverse_{PR_RESIDUAL}":
+                {"eff_rt_bps": 7.5, "n_days": 1}})
+        ck("v7 THE STALENESS STRADDLE FIRES AND CAN ALSO ADMIT: 7.0 against "
+           "9.0 STRADDLES the 8.0 threshold; 7.0 against 7.5 AGREES",
+           st_str["state"] == "STRADDLES_THE_STALENESS_BAR"
+           and st_agr["state"] == "AGREES_ACROSS_THE_STALENESS_BAR"
+           and st_str["never_averaged"],
+           "a rule that could only fire would be a veto, not a rule -- and "
+           "the two readings are never averaged")
+
+        # -- 22. QTY_STEP_UNDERDETERMINED, both directions ------------------
+        bkQ, trQ, dpQ = _synth_day(trades=[(1000, 0, 5.0, True),
+                                           (2000, 0, 5.0, True)])
+        evQ = evaluate_day("ICPUSDT", FIX_DAY, digest, bkQ, trQ, dpQ,
+                           tick=0.001)
+        bkQ3, trQ3, dpQ3 = _synth_day(trades=[(1000, 0, 5.0, True),
+                                              (2000, 0, 7.0, True),
+                                              (3000, 0, 9.0, True)])
+        evQ3 = evaluate_day("ICPUSDT", FIX_DAY, digest, bkQ3, trQ3, dpQ3,
+                            tick=0.001)
+        ck("v7 QTY_STEP_UNDERDETERMINED KNOWN-BAD: one distinct quantity "
+           "REFUSES the day rather than returning a modal diff computed "
+           "from it",
+           (not evQ["usable"]) and evQ["why"] == ST_QTY_UNDET
+           and evQ["n_distinct_quantities"] < MIN_DISTINCT_QUANTITIES,
+           f"{evQ['n_distinct_quantities']} distinct quantities < "
+           f"{MIN_DISTINCT_QUANTITIES} -> {evQ['why']}")
+        ck("v7 QTY_STEP POSITIVE CONTROL: three distinct quantities ESTIMATE "
+           "the step and the day runs -- the status is about the estimator, "
+           "not a wall",
+           evQ3["usable"]
+           and evQ3["n_distinct_quantities"] >= MIN_DISTINCT_QUANTITIES,
+           f"{evQ3['n_distinct_quantities']} distinct quantities -> "
+           f"qty_step {evQ3['qty_step']}")
+
+        # -- 23. THE SEAL is a CHECKED property, not a promise --------------
+        sample = {"symbols": {"ADAUSDT": {
+            "n_admissible_days": 11,
+            "aggregate_by_tp": {"600": {"eff_rt_RiskAverse_residual_chased":
+                                        {"eff_rt_bps": 6.1}}},
+            "verdict": {"state": "PASS"},
+            "status_counts": {"RESOLVED": 500},
+            "gate_row_tp_s": 600}}}
+        dropped = []
+        red = redact_sealed(sample, "", dropped)
+        ck("v7 REDACTION removes every economic key and KEEPS the statuses "
+           "and the structural metadata",
+           "aggregate_by_tp" not in red["symbols"]["ADAUSDT"]
+           and "verdict" not in red["symbols"]["ADAUSDT"]
+           and red["symbols"]["ADAUSDT"]["status_counts"]["RESOLVED"] == 500
+           and red["symbols"]["ADAUSDT"]["gate_row_tp_s"] == 600
+           and len(dropped) >= 2,
+           f"{len(dropped)} key(s) removed, named in the receipt; "
+           f"gate_row_tp_s survives because it names the gate rather than "
+           f"carrying a number")
+        ck("v7 THE LEAK SCAN FIRES ON A PLANTED ECONOMIC KEY and is CLEAN "
+           "on the redacted object -- a seal asserted is not a seal",
+           len(find_sealed_leaks(sample)) > 0
+           and find_sealed_leaks(red) == [],
+           f"{len(find_sealed_leaks(sample))} leak(s) in the raw payload, "
+           f"{len(find_sealed_leaks(red))} after redaction. The sealed "
+           f"emission REFUSES if this scan is non-empty")
+
+        # -- 24. --no-repro writes the field -------------------------------
+        ic_off = inherited_control_block(False)
+        ic_on = inherited_control_block(True, {"reproduced": True,
+                                               "regimes": ["csv"]})
+        ck("v7 --no-repro WRITES {reproduced: null, gates_the_run: false, "
+           "why_skipped} instead of going SILENT -- null is not false",
+           ic_off["reproduced"] is None
+           and ic_off["gates_the_run"] is False
+           and bool(ic_off["why_skipped"])
+           and ic_on["reproduced"] is True and ic_on["gates_the_run"] is True,
+           "the key is ALWAYS present, so a reader can tell 'the control "
+           "passed' from 'the control was never asked'")
+
+        # -- 25. R-584: THE STREAMED BOOK ANSWERS WHAT THE WHOLE ONE DOES --
+        _, g_l, g_r = episode_grid(FIX_DAY)
+        rq = np.random.default_rng(584)
+        q_t = np.sort(DAY0_MS - 5_000 + rq.integers(
+            0, 90_000_000, size=40_000).astype(np.int64))
+        q_b = 100.0 + rq.random(q_t.size)
+        q_a = q_b + 0.01
+        whole = FullBook(q_t, q_b, q_a)
+        chunked = StreamedBook(g_l, g_r)
+        for lo in range(0, q_t.size, 4_000):          # 10 "hour files"
+            sl = slice(lo, lo + 4_000)
+            chunked.ingest(q_t[sl], q_b[sl], q_a[sl])
+        same_l = all(whole.before(int(t)) == chunked.before(int(t))
+                     for t in g_l)
+        same_r = all(whole.at_or_before(int(t)) == chunked.at_or_before(int(t))
+                     for t in g_r)
+        ck("R-584 STREAMING PARITY: the streamed book returns the IDENTICAL "
+           "quote to the whole-day book at every one of the grid's decision "
+           "times and T_p ends -- a different reader giving a different "
+           "answer is the whole risk of the change",
+           same_l and same_r and chunked.t_max == whole.t_max
+           and chunked.n_rows == whole.n_rows,
+           f"{len(g_l)} decision times and {len(g_r)} T_p ends over 40,000 "
+           f"quotes fed in 10 chunks: identical on both rules, t_max "
+           f"{chunked.t_max} == {whole.t_max}, {chunked.n_rows} rows")
+        off_grid = False
+        try:
+            chunked.before(int(g_l[0]) + 7)
+        except E2ARefused:
+            off_grid = True
+        ck("R-584 STREAMING KNOWN-BAD: a target the stream was NOT built for "
+           "REFUSES instead of returning nothing -- an absent target would "
+           "read as NO_QUOTE, which is a wrong EXCLUSION, not a wrong number",
+           off_grid,
+           "an off-grid timestamp raises E2ARefused; silence there would "
+           "have deleted episodes and looked like a quiet tape")
+
+        # -- 26. R-584: THE MEMORY GUARD, BOTH DIRECTIONS ------------------
+        admitted = memory_guard("fixture", FIX_DAY)
+        refused = False
+        try:
+            memory_guard("fixture", FIX_DAY, cap=0.0001)
+        except E2ARefused:
+            refused = True
+        ck("R-584 MEMORY GUARD BOTH WAYS: the declared cap ADMITS this "
+           "process and a cap below its residency REFUSES -- a guard only "
+           "ever shown refusing is a wall, not a bound",
+           admitted["cap_gib"] == DAY_RSS_CAP_GIB and refused
+           and admitted["rss_now_gib"] < DAY_RSS_CAP_GIB,
+           f"resident {admitted['rss_now_gib']} GiB under the declared "
+           f"{DAY_RSS_CAP_GIB} GiB cap admits; a 0.0001 GiB cap refuses. THE "
+           f"CAP IS NEVER RAISED AND THE POPULATION IS NEVER MADE SMALLER")
+
+        # -- 27. R-584: the gate symbol, both directions -------------------
+        ck("R-584 SCOPE both directions: BTCUSDT is the gate symbol and any "
+           "other symbol is LABELLED a diagnostic rather than quietly "
+           "counted toward a gate",
+           GATE_SYMBOL == "BTCUSDT"
+           and decl["scope_R584_BTC_ONLY"]["the_gate_symbol"] == GATE_SYMBOL
+           and decl["the_ICP_cell_label_v7"]["status_under_R584"]
+           == "DEFERRED_NOT_RESOLVED",
+           "the thin-name cell is DEFERRED, NOT RESOLVED -- its declared "
+           "handling stands, and E2-A under this scope does not answer it")
+
+        # -- 28. THE RECEIPT NAMES THE CODE BY CONTENT, NOT ONLY BY COMMIT --
+        rid = runner_identity()
+        live_digest = hashlib.sha256(
+            Path(__file__).resolve().read_bytes()).hexdigest()
+        ck("THE RECEIPT CITES THE RUNNER BY CONTENT DIGEST: a per-seat "
+           "worktree's HEAD is whatever it was last detached at, and a "
+           "rebase can rewrite even a correct commit id -- the digest can do "
+           "neither",
+           rid["runner_sha256"] == live_digest and len(live_digest) == 64
+           and rid["runner_path"].endswith("e2_a_runner.py")
+           and isinstance(rid["producing_code_is_the_committed_bytes"], bool),
+           f"runner_sha256 {live_digest[:16]}, tree head "
+           f"{(rid['tree_head_at_run'] or '')[:7]}, committed-bytes "
+           f"{rid['producing_code_is_the_committed_bytes']} -- DA 63 measured "
+           f"its own worktree THREE LANDINGS behind while running this "
+           f"module, so `carrying_commit` alone would have named code that "
+           f"did not run")
+
         # -- 14. the declaration is pinned ----------------------------------
         pinned = hashlib.sha256(DECL_PATH.read_bytes()).hexdigest() == DECL_SHA
         ck("THE DECLARATION IS PINNED: the runner refuses if its sha256 "
@@ -1227,6 +2315,7 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
     receipt = {
         "protocol": PROTOCOL + "_FIXTURE",
         "carrying_commit": carrying_commit(),
+        "runner_identity": runner_identity(),
         "wrapper": wrapper_block(),
         "status": "FIXTURE_NO_DATA_TOUCHED",
         "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
@@ -1369,7 +2458,12 @@ def census(symbols, out_path: Path | None = None,
                     prof = gap_profile(bk[0], day)
                     gap = prof["gap_fraction"]
                     age = decision_time_quote_age(bk[0], day)
-            adm = day_admission(sym, day, counts, health, gap, age)
+            #: the census is a DIAGNOSTIC table, not the gate population:
+            #: the era leg reads recv_ns off every row and is measured only
+            #: in `run()`. `require_era=False` makes that explicit in every
+            #: row (era_leg_enforced: false) rather than silent.
+            adm = day_admission(sym, day, counts, health, gap, age,
+                                require_era=False)
             adm["gap_profile"] = prof
             rows.append(adm)
         n_adm = sum(1 for r in rows if r["admissible"])
@@ -1518,7 +2612,8 @@ def mechanism_check(sym: str, out_path: Path | None = None) -> dict:
     for day in days_all:
         counts = stream_file_counts(sym, day)
         if day_admission(sym, day, counts,
-                         collector_health(day, beats, restarts))["admissible"]:
+                         collector_health(day, beats, restarts),
+                         require_era=False)["admissible"]:
             adm_days.append(day)
     if not adm_days:
         raise E2ARefused(
@@ -1526,7 +2621,12 @@ def mechanism_check(sym: str, out_path: Path | None = None) -> dict:
             f"to exercise the path on. An empty population is not a check.")
     per_day = []
     for day in adm_days:
-        book, _, bmeta = E20.read_book(sym, day, extend=True)
+        #: R-584: the mechanism check reads the book the same way the gate
+        #: run does. Two book paths in one module is how they drift apart.
+        book = stream_book(sym, day, extend=True)
+        bmeta = {"streamed": True, "n_rows": book.n_rows,
+                 "n_hour_files": book.n_files,
+                 "n_bad_quotes": book.n_bad_quotes}
         trades, _, tmeta = E20.read_trades(sym, day)
         depth, _, dmeta = read_depth20(sym, day)
         ev = evaluate_day(sym, day, digest, book, trades, depth)
@@ -1537,7 +2637,14 @@ def mechanism_check(sym: str, out_path: Path | None = None) -> dict:
             "day": day, "tick": ev["tick"], "qty_step": ev["qty_step"],
             "status_counts": ev["status_counts"],
             "n_attempted": ev["n_attempted"],
-            "n_ordering_violations": len(ev["ordering_violations"]),
+            "n_ordering_violations_testable": len(
+                ev["ordering_violations_testable"]),
+            "n_ordering_violations_marginal": len(
+                ev["ordering_violations_marginal"]),
+            "n_ordering_testable": ev["n_ordering_testable"],
+            "n_ordering_marginal": ev["n_ordering_marginal"],
+            "decision_time_quote_age_ms": ev["decision_time_quote_age_ms"],
+            "era_leg_enforced_here": False,
             "stream_meta": {"book": bmeta, "trades": tmeta, "depth20": dmeta},
             "gate_row_tp_s": TP_PRIMARY_S,
             "n_gate_row_episodes": len(gate),
@@ -1690,9 +2797,13 @@ def main() -> int:
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--fixture", action="store_true")
     ap.add_argument("--run", action="store_true")
-    ap.add_argument("--symbols", nargs="*", default=["ICPUSDT"])
+    ap.add_argument("--symbols", nargs="*", default=[GATE_SYMBOL])
     ap.add_argument("--min-days", type=int, default=None)
     ap.add_argument("--no-repro", action="store_true")
+    ap.add_argument("--sealed", action="store_true",
+                    help="R-580(C)(2): run the mechanism, seal every "
+                         "economic quantity, read no gate")
+    ap.add_argument("--sealed-output", type=Path, default=None)
     ap.add_argument("--diagnose-tick", nargs="*", default=None)
     ap.add_argument("--census", nargs="*", default=None)
     ap.add_argument("--mechanism-check", default=None)
@@ -1727,9 +2838,18 @@ def main() -> int:
         return 0
     if a.run:
         res = run(a.symbols, a.output, min_days=a.min_days,
-                  run_repro=not a.no_repro)
+                  run_repro=not a.no_repro, sealed=a.sealed,
+                  sealed_out=a.sealed_output)
         for sym, blk in res["symbols"].items():
-            print(f"{sym}: {blk.get('REFUSED') or blk['verdict']['state']}")
+            #: NOTHING ECONOMIC IS PRINTED IN A SEALED RUN. The verdict state
+            #: is itself a reading of the gate.
+            if a.sealed:
+                print(f"{sym}: SEALED -- "
+                      f"{blk.get('n_admissible_days')} admissible days, "
+                      f"gate_read={blk.get('gate_read')}")
+            else:
+                print(f"{sym}: "
+                      f"{blk.get('REFUSED') or blk['verdict']['state']}")
         return 0
     ap.error("choose --selftest/--fixture or --run")
     return 2
