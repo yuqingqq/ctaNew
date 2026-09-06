@@ -74,7 +74,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 230
+EXPECTED_CHECKS = 236
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1774,15 +1774,36 @@ def adverse_over_spread(fills: list) -> dict:
 
 
 def generations_with_fills(reference: dict) -> int:
-    """Generations that produced at least one valued tranche -- the
-    denominator a RANDOM cancel is priced against, since a cancel lands
-    on a generation and takes whatever fills that generation held."""
+    """Generations that produced at least one valued tranche.
+
+    CORRECTED LABEL (round 65, BE's measurement at `4c17646`). This
+    docstring used to call it *"the denominator a RANDOM cancel is priced
+    against"*. IT IS NOT. A cancel decision lands on a generation drawn
+    from the CANCELLABLE population, most of which never fill; dividing
+    by the filling ones answers a different question -- how many fills a
+    FILLING generation holds. On the 12-window arms fragment that reading
+    is 4,315/3,861 = 1.1176, while BE's replayed random null measures
+    0.40-0.50 fills per cancel (mean 0.497, sd 0.072, n = 500) and
+    1.1176 lies outside both drawn ranges. Use `generations_all` for the
+    random-decision baseline; this function keeps its own honest
+    meaning."""
     return sum(1 for sides in reference.values() for gens in sides.values()
                for g in gens if g.get("tranches"))
 
 
-def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int
-                     ) -> dict:
+def generations_all(reference: dict) -> int:
+    """EVERY generation in the reference -- the cancellable population.
+
+    This is the denominator the random-cancel null actually names: a
+    generation drawn WITHOUT REGARD TO ITS FILLS. Most never fill, which
+    is exactly why the filling-generation rate overstates what a random
+    cancel removes."""
+    return sum(1 for sides in reference.values() for gens in sides.values()
+               for _ in gens)
+
+
+def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
+                     n_gens_all: int | None = None) -> dict:
     """WHAT A CANCEL COSTS, SPLIT INTO THE TWO THINGS IT IS MADE OF.
 
     `cents_per_cancel` alone cannot separate a policy that picks BAD
@@ -1809,7 +1830,23 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int
     if not n_b or not n_gens_with_fills:
         return {"status": "NO_BASELINE", "n_baseline_fills": n_b,
                 "n_generations_with_fills": n_gens_with_fills}
-    fpg = n_b / n_gens_with_fills
+    # ROUND 65, BE's measurement at `4c17646`. THE BASELINE IS THE
+    # RANDOM-DECISION RATE, not the filling-generation rate. The null this
+    # function names is "a generation drawn WITHOUT REGARD TO ITS FILLS",
+    # and a cancel's action space is every CANCELLABLE generation -- most
+    # of which never fill. Dividing by the filling ones answered "how many
+    # fills does a filling generation hold", which is a property of
+    # filling generations and not the expected cost of a random cancel.
+    # Both rates are emitted; the random-decision rate is PRIMARY when the
+    # caller supplies the cancellable population, and the filling rate is
+    # kept beside it under its own name rather than deleted.
+    fpg_filling = n_b / n_gens_with_fills
+    fpg_random = (n_b / n_gens_all) if n_gens_all else None
+    fpg = fpg_random if fpg_random is not None else fpg_filling
+    baseline_kind = ("RANDOM_DECISION_over_all_cancellable_generations"
+                     if fpg_random is not None
+                     else "FILLING_GENERATION_RATE_no_cancellable_count_"
+                          "supplied")
     mean_b = pnl_b / n_b
     rnd = fpg * mean_b
     out = {}
@@ -1831,6 +1868,13 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int
             "n_cancels": ncx, "fills_lost": lost,
             "fills_lost_per_cancel": flpc,
             "cascade_factor": cascade,
+            # BOTH READINGS TRAVEL, so a reader can see which baseline a
+            # cascade number was taken against (round 65).
+            "cascade_factor_baseline": baseline_kind,
+            "cascade_factor_vs_filling_generation_rate":
+                (flpc / fpg_filling if fpg_filling else None),
+            "cascade_factor_vs_random_decision_rate":
+                (flpc / fpg_random if fpg_random else None),
             "mean_pnl_per_removed_fill_cents": mean_r,
             "selectivity_factor": sel,
             "cents_per_cancel": cpc,
@@ -1870,18 +1914,48 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int
                             "one differs MORE is an arithmetic question "
                             "and is answered here rather than in prose",
         }
+        # AND THE ORDERING IS INVARIANT TO THE BASELINE CHOICE -- COMPUTED,
+        # not asserted (round 65). Every arm's cascade divides by the SAME
+        # fpg, so the max/min SPREAD cancels it. The baseline correction
+        # therefore moves the cascade LEVEL and `ratio_vs_random_cancel`,
+        # and cannot move `dominant_factor` or `ordering`.
+        _alt = {a: v.get("cascade_factor_vs_filling_generation_rate")
+                for a, v in out.items()
+                if v.get("cascade_factor_vs_filling_generation_rate")}
+        if len(_alt) >= 2:
+            _cr_alt = max(_alt.values()) / min(_alt.values())
+            sep["cascade_spread_under_the_other_baseline"] = _cr_alt
+            sep["ordering_is_invariant_to_the_baseline_choice"] = (
+                abs(_cr_alt - _cr) <= 1e-9
+                and ((_sr > _cr) == (_sr > _cr_alt)))
     return {
         "separation": sep,
         "n_baseline_fills": n_b, "baseline_pnl_cents": pnl_b,
         "n_generations_with_fills": n_gens_with_fills,
+        "n_generations_all_cancellable": n_gens_all,
         "fills_per_generation": fpg,
+        "fills_per_generation_baseline": baseline_kind,
+        "fills_per_FILLING_generation": fpg_filling,
+        "fills_per_CANCELLABLE_generation": fpg_random,
+        "be_replayed_random_null_4c17646": {
+            "mean_fills_per_cancel": 0.497, "sd": 0.072, "n_draws": 500,
+            "range": [0.40, 0.50],
+            "status": "CITED FROM BE, NOT RECOMPUTED HERE",
+            "filling_rate_is_outside_that_range":
+                not (0.40 <= fpg_filling <= 0.50),
+            "random_decision_rate_is_inside_that_range":
+                (0.40 <= fpg_random <= 0.50) if fpg_random else None},
         "book_mean_pnl_per_fill_cents": mean_b,
         "random_cancel_cost_cents": rnd,
         "random_cancel_definition":
-            "a cancel that lands on a generation drawn without regard to "
-            "its fills removes `fills_per_generation` fills at the book's "
-            "mean P&L per fill. It is the null a cents_per_cancel must "
-            "beat, and it is COMPUTED from this book, not assumed",
+            "a cancel that lands on a generation drawn WITHOUT REGARD TO "
+            "ITS FILLS removes `fills_per_generation` fills at the book's "
+            "mean P&L per fill. CORRECTED round 65: that denominator is "
+            "every CANCELLABLE generation, not only the filling ones -- "
+            "the old reading divided by filling generations while the "
+            "prose said 'without regard to its fills', which are "
+            "different populations. It is COMPUTED from this book, not "
+            "assumed",
         "identity": "ratio_vs_random_cancel == cascade x selectivity",
         "arms": out,
         "decides_nothing": "REPORTED (rule 14).",
@@ -5037,6 +5111,75 @@ def selftest() -> int:
        and cancel_mechanics([], {}, 50)["status"] == "NO_BASELINE",
        "KNOWN-BAD: an arm with no cancels and an empty baseline are "
        "STATUSES, never a division that returns a number")
+
+    # ---- ROUND 65: THE CASCADE BASELINE, CORRECTED AND FALSIFIED -------
+    # BE's replayed random null (`4c17646`): a random cancel removes
+    # 0.40-0.50 fills (mean 0.497, sd 0.072, n=500), while dividing by
+    # FILLING generations gave 1.1176 -- outside both drawn ranges. The
+    # null this function names is "a generation drawn WITHOUT REGARD TO
+    # ITS FILLS", so the denominator is every CANCELLABLE generation.
+    _cm_r = cancel_mechanics(
+        _base, {"CASCADER": (_eats_tail, 1)}, n_gens_with_fills=50,
+        n_gens_all=200)
+    ok(abs(_cm_r["fills_per_CANCELLABLE_generation"] - 0.5) < 1e-9
+       and abs(_cm_r["fills_per_FILLING_generation"] - 2.0) < 1e-9
+       and abs(_cm_r["fills_per_generation"] - 0.5) < 1e-9
+       and _cm_r["fills_per_generation_baseline"].startswith(
+           "RANDOM_DECISION"),
+       f"POSITIVE CONTROL, HAND-COMPUTED, AND IT ADMITS: 100 baseline "
+       f"fills over 200 cancellable generations is 0.5 per RANDOM "
+       f"decision and 2.0 per FILLING generation -- a factor of 4, which "
+       f"is exactly 200/50. The PRIMARY rate is the random-decision one "
+       f"and the emission names which it used: "
+       f"{_cm_r['fills_per_generation_baseline']}")
+    ok(abs(_cm_r["arms"]["CASCADER"]["cascade_factor"] - 4.0) < 1e-9
+       and abs(_cm_r["arms"]["CASCADER"][
+           "cascade_factor_vs_filling_generation_rate"] - 1.0) < 1e-9
+       and abs(_cm_r["arms"]["CASCADER"][
+           "cascade_factor_vs_random_decision_rate"] - 4.0) < 1e-9,
+       "and the SAME arm reads cascade 1.0 against filling generations "
+       "and 4.0 against cancellable ones -- BOTH travel, so a cascade "
+       "number can never again be quoted without its baseline")
+    ok(_cm_r["arms"]["CASCADER"]["identity_holds"] is True
+       and abs(_cm_r["arms"]["CASCADER"]["ratio_vs_random_cancel"]
+               - _cm_r["arms"]["CASCADER"]["cascade_x_selectivity"]) <= 1e-9,
+       "THE IDENTITY SURVIVES THE CORRECTION: ratio == cascade x "
+       "selectivity still holds, because the baseline divides the ratio "
+       "and the cascade by the same number")
+    # KNOWN-BAD: a caller that omits the cancellable count must NOT get the
+    # corrected reading silently -- it must fall back AND SAY SO.
+    ok(_cm["fills_per_generation_baseline"].startswith("FILLING_GENERATION")
+       and _cm["fills_per_CANCELLABLE_generation"] is None
+       and abs(_cm["fills_per_generation"] - 2.0) < 1e-9,
+       "KNOWN-BAD, THE SILENT-FALLBACK SHAPE: a caller that supplies no "
+       "cancellable count falls back to the FILLING rate and the "
+       "emission SAYS SO by name, so an uncorrected number cannot pass "
+       "itself off as the corrected one")
+    # AND THE ORDERING IS INVARIANT -- driven on TWO arms, not argued.
+    _cm2 = cancel_mechanics(
+        _base, {"A": (_eats_tail, 1), "B": (_base[:-1], 2)},
+        n_gens_with_fills=50, n_gens_all=200)
+    _cm2f = cancel_mechanics(
+        _base, {"A": (_eats_tail, 1), "B": (_base[:-1], 2)},
+        n_gens_with_fills=50)
+    ok(_cm2["separation"]["ordering_is_invariant_to_the_baseline_choice"]
+       is True
+       and _cm2["separation"]["ordering"] == _cm2f["separation"]["ordering"]
+       and _cm2["separation"]["dominant_factor"]
+       == _cm2f["separation"]["dominant_factor"],
+       f"THE ORDERING IS INVARIANT TO THE BASELINE, COMPUTED BOTH WAYS "
+       f"AND COMPARED: every arm's cascade divides by the same rate, so "
+       f"the max/min spread cancels it. Both readings say "
+       f"'{_cm2['separation']['ordering']}'. The correction moves the "
+       f"cascade LEVEL and ratio_vs_random_cancel, and CANNOT move "
+       f"which factor separates the arms")
+    ok(abs(generations_all({"w": {"BUY_UP": [{"tranches": [1]}, {}],
+                                  "SELL_UP": [{}]}}) - 3) < 1e-9
+       and generations_with_fills({"w": {"BUY_UP": [{"tranches": [1]}, {}],
+                                         "SELL_UP": [{}]}}) == 1,
+       "and the two denominators are computed from the same reference by "
+       "two functions that disagree by construction: 3 cancellable "
+       "generations, 1 of which filled")
 
     # ---- DE60: V_oracle, AND THE TWO FALSIFIERS IT WAS ASKED FOR ------
     # ALL POSITIVE -> the ceiling is ZERO. This is the direction that

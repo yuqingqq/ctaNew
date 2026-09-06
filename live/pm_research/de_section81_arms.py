@@ -1167,7 +1167,11 @@ def run_arms(argv=None):
                 _bl,
                 {a: (f, OUT["arms"][a]["n_cancels"])
                  for a, f in _acting.items()},
-                R.generations_with_fills(ref)),
+                R.generations_with_fills(ref),
+                # ROUND 65: the RANDOM-DECISION denominator. A cancel is
+                # drawn from every cancellable generation, not from the
+                # filling ones (BE `4c17646`).
+                R.generations_all(ref)),
             "why_these_three_together": (
                 "the tail says WHERE the book's P&L lives, `r` says what "
                 "an overlay must beat and what the body already exceeds, "

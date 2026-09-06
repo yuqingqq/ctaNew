@@ -47,6 +47,25 @@ DURATION_TAIL_S = (2.0, 4.0, 8.0, 16.0)
 N_PERMUTATIONS = 400
 SEED = 0
 
+#: THE CONSUMER-SIDE LIVENESS PROBE (round 65).
+#: DA's mutation audit (`p003_da_population_mutation_audit__20260905T161926Z
+#: .json`) applied four mutants to `da_population_audit` -- the statistic
+#: returning zero, the statistic dropping `abs`, the null not permuting, and
+#: NOTHING_EXCLUDED emitted unconditionally -- and DA's own suite caught
+#: 4 of 4 while THIS MODULE caught 0 OF 4, GREEN EVERY TIME. Including the
+#: fourth, whose emitted string is the exact certification this module's
+#: artifact cites. "Imported unchanged, a second copy is a second test" is
+#: the right rule for avoiding DIVERGENCE; it is not a consumer-side
+#: falsifier, and the difference is what those four mutants measured.
+#: So the census no longer certifies from an oracle it has not just seen
+#: FIRE and seen STAY SILENT, on two populations whose answers are fixed by
+#: construction rather than by a seed.
+ORACLE_PROBE_SEED = 20260906
+ORACLE_PROBE_N = 96
+ORACLE_PROBE_SELECTIVE_HOUR = 3
+ORACLE_PROBE_RETAINED_HOUR = 9
+ORACLE_PROBE_BALANCED_HOURS = (3, 4, 5, 6)
+
 
 class MidCensusRefused(RuntimeError):
     """Refused rather than reporting a rate over a population it cannot
@@ -182,18 +201,133 @@ def _median(xs: list[float]):
     return round(s[m] if len(s) % 2 else 0.5 * (s[m - 1] + s[m]), 6)
 
 
+def _probe_rec(hour: int, i: int) -> dict:
+    """One synthetic record for the liveness probe. Only `hour` varies; it
+    is a small-cardinality int, which `_levels` treats CATEGORICALLY, so
+    the two arms' answers do not depend on bucketing."""
+    return {"slug": "probe", "side": "BUY_UP", "hour": hour,
+            "duration": 1.0, "gen": i, "t": float(i), "shares": 1.0,
+            "has_mid": False, "has_markout": True}
+
+
+def oracle_probe(*, n_permutations: int = N_PERMUTATIONS,
+                 seed: int = ORACLE_PROBE_SEED) -> dict:
+    """Drive the IMPORTED oracle on two populations whose answers are fixed
+    BY CONSTRUCTION, and report what it said. Decides nothing itself.
+
+    * **SELECTIVE arm** -- every excluded record in hour 3, every retained
+      record in hour 9. The two hour distributions are DISJOINT, so the
+      total-variation distance is 1.0 and no permutation can reach it. A
+      working oracle MUST flag `hour`.
+    * **BALANCED arm** -- both sides carry the SAME hour multiset. The
+      distance is 0.0 exactly, so a working oracle must flag NOTHING.
+
+    Neither arm depends on a lucky seed: one is maximally separated and the
+    other is exactly equal, which is why this is a control and not a draw."""
+    n, half = ORACLE_PROBE_N, ORACLE_PROBE_N
+    sel_ex = [_probe_rec(ORACLE_PROBE_SELECTIVE_HOUR, i) for i in range(half)]
+    sel_re = [_probe_rec(ORACLE_PROBE_RETAINED_HOUR, i) for i in range(half)]
+    hours = ORACLE_PROBE_BALANCED_HOURS
+    bal_ex = [_probe_rec(hours[i % len(hours)], i) for i in range(n)]
+    bal_re = [_probe_rec(hours[i % len(hours)], i) for i in range(n)]
+    selective = PA.compare(sel_ex, sel_re, attrs=("hour",),
+                           n_permutations=n_permutations, seed=seed)
+    balanced = PA.compare(bal_ex, bal_re, attrs=("hour",),
+                          n_permutations=n_permutations, seed=seed)
+    sel_hour = (selective.get("attributes") or {}).get("hour") or {}
+    bal_hour = (balanced.get("attributes") or {}).get("hour") or {}
+    fired = (selective.get("status") == "COMPARED"
+             and "hour" in (selective.get("selective_attributes") or [])
+             and float(sel_hour.get("tvd") or 0.0) > 0.0)
+    silent = (balanced.get("status") == "COMPARED"
+              and not (balanced.get("selective_attributes") or []))
+    return {
+        "oracle": "da_population_audit.compare",
+        "oracle_sha256_prefix": _oracle_sha16(),
+        "n_permutations": n_permutations, "seed": seed,
+        "selective_arm": {
+            "construction": "excluded all in hour "
+                            f"{ORACLE_PROBE_SELECTIVE_HOUR}, retained all in "
+                            f"hour {ORACLE_PROBE_RETAINED_HOUR} -- DISJOINT, "
+                            "so TVD is 1.0 by construction",
+            "status": selective.get("status"),
+            "selective_attributes": selective.get("selective_attributes"),
+            "tvd": sel_hour.get("tvd"),
+            "p_permutation": sel_hour.get("p_permutation"),
+            "ORACLE_FIRED": fired},
+        "balanced_arm": {
+            "construction": "both sides carry the SAME hour multiset over "
+                            f"{list(ORACLE_PROBE_BALANCED_HOURS)} -- TVD is "
+                            "0.0 by construction",
+            "status": balanced.get("status"),
+            "selective_attributes": balanced.get("selective_attributes"),
+            "tvd": bal_hour.get("tvd"),
+            "p_permutation": bal_hour.get("p_permutation"),
+            "ORACLE_STAYED_SILENT": silent},
+        "ORACLE_IS_LIVE": bool(fired and silent),
+        "why_this_exists": (
+            "DA's mutation audit applied four mutants to this oracle; DA's "
+            "suite caught 4 of 4 and THIS CONSUMER caught 0 of 4, green "
+            "every time -- including the mutant that emits NOTHING_EXCLUDED "
+            "unconditionally, the exact string this module's artifact "
+            "cites. A certification taken from an instrument that has not "
+            "been seen to fire is not a certification (rule 15)"),
+        "decides_nothing": "REPORTED (rule 14).",
+    }
+
+
+def _oracle_sha16() -> str:
+    import hashlib
+    return hashlib.sha256(
+        Path(PA.__file__).read_bytes()).hexdigest()[:16]
+
+
+def assert_oracle_live(*, n_permutations: int = N_PERMUTATIONS,
+                       seed: int = ORACLE_PROBE_SEED) -> dict:
+    """REFUSE to certify from an oracle that has not just been seen to fire
+    AND to stay silent. This is the consumer-side falsifier the four
+    surviving mutants proved was missing."""
+    probe = oracle_probe(n_permutations=n_permutations, seed=seed)
+    if not probe["selective_arm"]["ORACLE_FIRED"]:
+        raise MidCensusRefused(
+            "REFUSED: the imported oracle DID NOT FLAG a maximally "
+            "selective exclusion (hours disjoint, TVD 1.0 by "
+            f"construction). It answered {probe['selective_arm']}. No "
+            "NOTHING_EXCLUDED or INDISTINGUISHABLE certification may be "
+            "taken from an instrument in this state.")
+    if not probe["balanced_arm"]["ORACLE_STAYED_SILENT"]:
+        raise MidCensusRefused(
+            "REFUSED: the imported oracle FLAGGED an exactly balanced "
+            "exclusion (identical hour multisets, TVD 0.0 by "
+            f"construction). It answered {probe['balanced_arm']}. An "
+            "oracle that flags everything certifies nothing.")
+    return probe
+
+
 def selectivity(records: list[dict], *, n_permutations: int = N_PERMUTATIONS,
                 seed: int = SEED) -> dict:
     """DA's fourth oracle, pointed at MY exclusion.
 
     The instrument is `da_population_audit.compare` UNCHANGED and
     IMPORTED, never re-implemented here: a second copy of a test is a
-    second test."""
+    second test.
+
+    ROUND 65: importing it unchanged avoids DIVERGENCE and does NOT give
+    this module a falsifier -- DA's mutation audit measured exactly that
+    gap, 0 of 4 caught here against 4 of 4 in DA's own suite. So every
+    call now runs `assert_oracle_live()` FIRST and refuses if the oracle
+    cannot be seen to fire on a planted selective exclusion and to stay
+    silent on an exactly balanced one. The probe result travels with the
+    answer, so a reader can see the instrument was live WHEN THIS RAN
+    rather than when it was written."""
+    probe = assert_oracle_live(n_permutations=n_permutations)
     ex = [r for r in records if not r["has_mid"]]
     re_ = [r for r in records if r["has_mid"]]
-    return PA.compare(ex, re_,
-                      attrs=("slug", "side", "hour", "duration"),
-                      n_permutations=n_permutations, seed=seed)
+    out = PA.compare(ex, re_,
+                     attrs=("slug", "side", "hour", "duration"),
+                     n_permutations=n_permutations, seed=seed)
+    out["oracle_liveness_probe"] = probe
+    return out
 
 
 def denominator_check(records: list[dict]) -> dict:
@@ -345,8 +479,112 @@ def selftest() -> int:
     except PA.PopulationAuditRefused:
         ok(True, "")
 
+    # ================= ROUND 65: THE CONSUMER-SIDE FALSIFIER =============
+    # DA's mutation audit: 4 mutants on the imported oracle, DA's suite
+    # 4 of 4 CAUGHT, this module 0 OF 4, green every time. Everything below
+    # exists because that gap was real and this file could not see it.
+    #
+    # POSITIVE CONTROL, AND IT MUST ADMIT: on the SHIPPED oracle the probe
+    # must fire on a maximally selective exclusion and stay silent on an
+    # exactly balanced one. A probe that only ever refuses is rule 16's
+    # control that cannot pass.
+    probe = oracle_probe()
+    ok(probe["selective_arm"]["ORACLE_FIRED"] is True
+       and probe["selective_arm"]["tvd"] == 1.0
+       and probe["balanced_arm"]["ORACLE_STAYED_SILENT"] is True
+       and probe["balanced_arm"]["tvd"] == 0.0
+       and probe["ORACLE_IS_LIVE"] is True,
+       f"ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the "
+       f"oracle must FLAG a disjoint-hour exclusion (got tvd "
+       f"{probe['selective_arm']['tvd']}, p "
+       f"{probe['selective_arm']['p_permutation']}, fired "
+       f"{probe['selective_arm']['ORACLE_FIRED']}) and STAY SILENT on an "
+       f"identical-multiset one (got tvd {probe['balanced_arm']['tvd']}, "
+       f"silent {probe['balanced_arm']['ORACLE_STAYED_SILENT']}). "
+       f"ORACLE_IS_LIVE={probe['ORACLE_IS_LIVE']}")
+    # DEFENSIVELY, so the suite reaches its summary and prints its FAIL
+    # lines: a bare call here aborted the whole selftest with a traceback
+    # under every mutant, which is rc=1 -- red, but not red BY NAME.
+    try:
+        ok(assert_oracle_live()["ORACLE_IS_LIVE"] is True,
+           "assert_oracle_live must ADMIT the shipped oracle -- a guard "
+           "shown only to refuse is not a guard (SEAT_PROTOCOL 16)")
+    except MidCensusRefused as e:
+        ok(False, f"assert_oracle_live REFUSED THE SHIPPED ORACLE: {e}")
+
+    # THE FOUR MUTANT SHAPES, STUBBED AT THE CONSUMER BOUNDARY. Each is the
+    # ANSWER the corresponding mutant makes the oracle give; the census
+    # must REFUSE to certify from every one of them.
+    _real_compare = PA.compare
+    try:
+        def _stub_nothing_excluded(*a, **k):
+            return {"status": "NOTHING_EXCLUDED", "n_excluded": 0,
+                    "attributes": {}, "selective_attributes": []}
+        PA.compare = _stub_nothing_excluded
+        try:
+            selectivity(tranche_records(ref))
+            ok(False, "MUTANT 4 (STATUS_always_nothing_excluded): the "
+                      "census CERTIFIED from an oracle that emits "
+                      "NOTHING_EXCLUDED unconditionally -- the exact string "
+                      "the artifact cites")
+        except MidCensusRefused as e:
+            ok("DID NOT FLAG" in str(e),
+               "MUTANT 4 CAUGHT BY NAME: an oracle emitting "
+               "NOTHING_EXCLUDED unconditionally is REFUSED, because it "
+               "never flagged the planted selective exclusion")
+
+        def _stub_zero_statistic(*a, **k):
+            return {"status": "COMPARED", "n_excluded": 1, "n_retained": 1,
+                    "attributes": {"hour": {"status": "COMPARED", "tvd": 0.0,
+                                            "p_permutation": 1.0,
+                                            "verdict":
+                                                "INDISTINGUISHABLE_AT_THIS_N"}},
+                    "selective_attributes": []}
+        PA.compare = _stub_zero_statistic
+        try:
+            selectivity(tranche_records(ref))
+            ok(False, "MUTANTS 1-3 (statistic zero / abs dropped / null not "
+                      "permuting): the census CERTIFIED from an oracle that "
+                      "never flags anything")
+        except MidCensusRefused as e:
+            ok("DID NOT FLAG" in str(e),
+               "MUTANTS 1-3 CAUGHT BY NAME: every always-PASS shape -- a "
+               "zero statistic, a signed statistic that cancels, and a null "
+               "that does not permute -- reaches the consumer as 'nothing "
+               "is ever selective', and that is now REFUSED")
+
+        def _stub_flags_everything(*a, **k):
+            return {"status": "COMPARED", "n_excluded": 1, "n_retained": 1,
+                    "attributes": {"hour": {"status": "COMPARED", "tvd": 1.0,
+                                            "p_permutation": 0.0,
+                                            "verdict":
+                                                "DISTRIBUTION_DIFFERS"}},
+                    "selective_attributes": ["hour"]}
+        PA.compare = _stub_flags_everything
+        try:
+            selectivity(tranche_records(ref))
+            ok(False, "THE OTHER DIRECTION: the census certified from an "
+                      "oracle that flags everything")
+        except MidCensusRefused as e:
+            ok("FLAGGED an exactly balanced" in str(e),
+               "AND THE OTHER DIRECTION IS CAUGHT TOO: an oracle that "
+               "flags an exactly-balanced exclusion is REFUSED -- an "
+               "instrument that always fires certifies nothing either")
+    finally:
+        PA.compare = _real_compare
+    ok(PA.compare is _real_compare,
+       "and the shipped oracle is RESTORED after the stubs -- a test that "
+       "leaves a monkeypatch behind poisons every check after it")
+
+    # RED BY NAME. Until round 65 a failure returned rc=1 with the reason
+    # only inside a JSON list, so DA's mutation harness recorded
+    # `named_failures: []` -- the suite was red and could not say what for.
+    # A red that does not name its check is a red a reader has to guess at.
+    for f in fails:
+        print(f"FAIL: {f}")
     print(json.dumps({"selftest": "PASS" if not fails else "FAIL",
-                      "checks": checks, "failures": fails}, indent=1))
+                      "checks": checks, "n_failures": len(fails),
+                      "failures": fails}, indent=1))
     return 0 if not fails else 1
 
 
