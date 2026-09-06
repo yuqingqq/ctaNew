@@ -5,6 +5,94 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 171
+
+**As of 2026-09-06T12:18:10Z. State only — MEM writes no result.**
+
+### The fourth launch is PENDING DE 94 → REV 62; the lock is BE's until ≈12:45Z
+
+**The 09-05 fragment LANDED** — `harmful_exposure_rows_v3_gate1_20260905_btc.json`,
+**545,493,868 bytes**, receipt **492,533 rows / 288 windows / wall 527.1 s**, sha
+`50318a3a…`. **Measured at 12:23:01Z: `be61frag.scope` no longer appears in the user
+manager's unit list at all, and `be61tape.scope` is `loaded active running`** — the
+tape's own log reading `[score] 100/288 slugs`, the second of the stages on the day
+whose whole chain must fit before the horizon. **The lock is still BE's** (`flock`,
+its shell, and the tape all hold `data/.heavy_run.lock`).
+
+### A contradiction that was mine, not DA's
+
+I drove `da_root.derived_dir()` from two worktrees: **`wt-da` → the canonical
+`/home/yuqing/ctaNew/data/pm_5min/derived` (admits); `wt-de2` → `RootRefused` naming
+`/home/yuqing/ctaNew-wt-de2`** — while **both** trees' `data/` symlinks resolve to the
+same ledger. **The discriminator was one `sha256sum` per tree:** `da_root.py` is
+`d58025ac…` in wt-da and `4c6b7693…` in wt-de2; **`eee7b3d`'s blob is `4c6b7693…` and
+the tip's is `d58025ac…`**. So **wt-de2 matches its HEAD exactly** and **wt-da carries
+an uncommitted modification equal to the tip** (` M live/pm_research/da_root.py`) — DA
+working in its own tree. **The rule is consistent; I compared two versions of it.**
+
+**A probe that imports from a worktree runs what that tree holds** — not what its
+commit says, not what the shared tree says. *The week's class — the bytes that ran
+versus the bytes on disk — from the verification side.* **When two trees disagree, hash
+the file before believing either.**
+
+### DA 82, verified
+
+- **The absence flag is `None` when the walk is truncated — never `False`** — and the
+  refuting direction still fires. **Three values where two would lie:** *found*, *not
+  found in what I searched*, *I did not finish*. The round-169 finding landed as a
+  **third value**, not a reworded second one.
+- **A producing-code digest is the module's OWN file**; other-file digests counted
+  separately. **Rule-22 complete 3 → 5, incomplete 1** — `be_gate1_state_tape`'s
+  HEAD-at-emit, *"the one fact that may be genuinely incomplete"* (**BE 63**).
+- **Canonicality for DATA is `readlink -f` of `<root>/data`** — a symlinked worktree
+  admits, a materialised one refuses — **while CODE canonicality stays strict**; and
+  `derived_dir()` returns the **resolved** path, so **a receipt naming a ledger
+  artifact from any tree names the one path**. *Two rules for two questions, stated as
+  such.*
+- **Every DA module imports under `python -m` and as a script**, and every receipt this
+  round was emitted under `-m`.
+- **DA's account of wt-da corrects the coordinator's, with counts:** 235 tracked
+  artifacts read as **deleted behind the symlink**; three files untracked **only**
+  because wt-da's HEAD predated them; all **byte-identical to origin**, copies saved
+  before removal; the fixed script then succeeded at **270/270**.
+
+### State
+
+- **Four of five worktrees are symlinks** — wt-da, wt-de2, wt-be, wt-rev. **Only
+  `wt-de` remains a directory: the frozen evidence of the refused run**, where the
+  drift is deliberate.
+- **Queued:** **DE 94** (the launch form as a declaration act with its falsifier) =
+  **REV 62** = the **GO #4 gate**; **REV 61** on DA 81/82; **BE 63**.
+
+### At commit time: Q-DE-94 landed, and it qualifies a line this file carries
+
+**Q-DE-94 landed at 12:21:50Z** (`e2185e9`+`d27de63` code, `e3480df` artifacts). **I
+measured the part that touches this file's own boilerplate:** `.gitignore` carries the
+pattern **`data/`** — trailing slash, so it matches a **directory** and **not a
+symlink** — and `git status --porcelain` in `wt-de2`, `wt-be` and `wt-rev` returns
+**exactly one line each: `?? data`**. ***After the mandated refresh a worktree is dirty
+by exactly the line the refresh creates.***
+
+**Relayed from DE, not re-driven by me:** immediately after the refresh
+`rehearse_smoke` → **NOT_READY_P10** and `assert_source_unchanged(fixture=False)` →
+**REFUSED**, so **GO #4 could not have proceeded**; the exemption is now a **property**
+(untracked AND really a symlink AND resolving to the canonical root) with four cells
+driven; and **P10 asked the RAW dirty flag while the import refusal asks the EXEMPTED
+one**.
+
+**R-626 amended rule 21's LANDING precondition to admit that same `?? data` line; the
+runner's IMPORT refusal was not amended with it — one exemption written in two places,
+only one updated.** **Round 168's seat-brief boilerplate here names
+`scripts/wt_refresh.sh` as THE refresh: from this round it travels with that
+consequence.** *DE's surface, DE has fixed it, I route.*
+
+**Counts, measured before the sentence (re-measured after the commit-time flag):**
+flags 1,023 → 1,032, `flag_provenance` 568 → 577, tasks 19; **350 CHECKED**, 227
+RELAYED, **455 UNMARKED — unchanged for the forty-seventh round running**. ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3
+(Batch 153 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 170
 
 **As of 2026-09-06T12:12:10Z. State only — MEM writes no result.**

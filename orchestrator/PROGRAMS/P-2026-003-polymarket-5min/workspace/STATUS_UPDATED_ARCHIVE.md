@@ -12865,3 +12865,76 @@ directions.
   forty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
   new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 153 — archived 2026-09-06T12:18:10Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 171 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T11:57:50Z (MEM ROUND 168 -- R-624, R-625, Q-BE-62, Q-DA-303 AND REV 59'S
+  FILING SWEPT. STATE ONLY. THE FIRST ITEM IS A CORRECTION AGAINST MYSELF.
+  (1) **I RESOLVED MY OWN AMBIGUITY ON EVIDENCE THAT COULD NOT DISCRIMINATE.** At
+  round 166 I measured `wt-rev/data` as a DIRECTORY at 11:47:17Z and offered two
+  readings -- *the restore has not reached it* or *a refresh re-materialised it inside
+  the minute* -- and at that round's commit time I saw a symlink and concluded the
+  FIRST. ***REV 59 SS8: "the coordinator's 11:46Z symlink destroyed by its own
+  `checkout --detach` at 11:47:14Z". The SECOND was right.*** **A symlink existing at
+  11:50Z fits BOTH stories.** *And the discriminating fact was in the entry I swept
+  that same round: a restore at 11:46Z followed by a directory at 11:47:17Z can only
+  mean destruction in between.* ***I held both facts and took the simpler story*** --
+  **round 155's tidy-narrative failure, committed this time instead of caught.**
+  (2) **AND THE MECHANISM I RECORDED AT ROUND 167 WAS TRIED AND REJECTED.** The script
+  now BEGINS `sparse-checkout disable`, and its header says why: ***"under it git
+  IGNORES `update-index --skip-worktree`."*** *My commit-time note was accurate for the
+  bytes then on disk.* **Recording a fix at commit time buys CURRENCY, not permanence
+  -- and the as_of is what lets the record survive its own correction.**
+  (3) **THE REFRESH IS FIVE STEPS AND A REFUSAL:** drop the symlink (*"so the checkout
+  cannot write THROUGH it"*) -> checkout -> the R-554 sweep *"covering the NEW ones"*
+  -> `rm -rf` + `ln -s` -> ***verify `readlink -f` == the ledger or REFUSE, exit 2***,
+  with a report line printing the skip-worktree count. **Every step exists because a
+  specific failure was measured** -- *writing through a symlink, a new file arriving
+  unswept, and a rule that was followed and still lost.*
+  (4) **BOTH TERMS OF BE'S GROWTH COME FROM THE HIGH-WATER:** `self.baseline_gb =
+  _rss_gb()` and `peak = _rss_gb()`. ***So a second `_Stages` in one process starts
+  from a baseline the first already raised -- growth reads ~0 and the budget CANNOT
+  FIRE.*** *Safe today only because there is one build per process* -- **and BE's
+  known-bads hide it by hand-setting `baseline_gb = 0.0`, testing the ARITHMETIC
+  rather than the INSTRUMENT.** The repair is the one DE already measured: current
+  RSS. **BE 62.**
+  (5) **THREE OF FIVE WORKTREES RE-LINKED, AND FULLY SWEPT:** `wt-be` **265 S of
+  265**, `wt-rev` **265 S**, `wt-da` **235 S** -- every tracked file under `data/`
+  carrying the bit -- *and `wt-da/data` is a symlink now.* wt-de2 after the run; wt-de
+  while it is the frozen evidence.
+  (6) **DA'S RULE IS ONE, AND IT REFUSES BY NAME:** with the env set from a worktree,
+  the canonical derived dir; **unset, `RootRefused` names the worktree as not the
+  canonical ledger and REFUSES.** *"DE's ADMITS from a worktree by finding the ledger
+  on its own; DA's REFUSES -- both safe, DA's stricter."* **And the bare `except` is
+  narrowed to `(ImportError, AttributeError)`, so a resolver whose RETURN SHAPE moves
+  is NAMED rather than swallowed** -- *the exact defect I drove two rounds ago.*
+  **`da_book_verify` had been judging BE's receipt against a STALE COPY of BE's code
+  from a worktree.**
+  (7) **AND THE SWEEP MISREAD BE 60 IN BOTH DIRECTIONS** -- BE's delta budget reported
+  absent (*it was there under names the census did not know*) and the closure reported
+  ABSENT because it lives in a SHARED `be_rule22.py`. ***Both checks pinned to the
+  FINDINGS that produced them rather than to the PROPERTIES they test*** -- **DA's
+  sixth and seventh instances; disjunctions now.** *A checker written from a fix fails
+  when the fix changes shape, and it fails in BOTH directions: missing the repair and
+  inventing the gap.*
+  (8) **THE DISCLOSURE MUST RIDE IN THE KEY.** The `.v2`'s reconstruction is thorough
+  and honest -- and **one field short of safe**: *a consumer keying
+  `producing_code.builder_commit` gets a commit that MATCHES THE BYTES and is NOT the
+  run's head.* ***"Automated readers resolve FIELDS"*** -- so
+  `builder_commit_RECONSTRUCTED`, or a leading `status`, **the pattern BE already uses
+  twice in the same receipt.** *And "NOT RECOVERABLE alone would discard a true,
+  useful fact": the reviewer defending the field while rejecting its NAME.*
+  **FLAG WORDS: the worktree symlinks SURVIVE-BY-SCRIPT (wt-be, wt-rev, wt-da done and
+  counted; wt-de2 and wt-de pending idle moments); the re-run RUNNING -- I measure pid
+  3282335 at 1,720 s (~29 min), RSS 755,572 KiB.**
+  MEASURED BEFORE THIS SENTENCE: flags 999 -> 1,007, flag_provenance 544 -> 552,
+  tasks 19; **335 CHECKED**, 217 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
