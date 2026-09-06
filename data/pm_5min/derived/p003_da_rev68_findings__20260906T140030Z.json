@@ -1,0 +1,135 @@
+{
+  "as_of_utc": "2026-09-06T14:00:30Z",
+  "decides_nothing": "instruments; no verdict here",
+  "finding_1_a_failed_read_is_not_an_absence": {
+    "copy": {
+      "lines": null,
+      "n_lines_copied": null,
+      "n_lines_for_the_unit": null,
+      "status": "JOURNALCTL_FAILED",
+      "which_query_failed": "the unit count",
+      "why": "journalctl exited non-zero, so no count and no copy exist. A failed read reported as 0 lines would be an absence invented from an error (REV 68 finding 1)"
+    },
+    "retention": {
+      "available": null,
+      "n_lines_available": null,
+      "returncode": 1,
+      "status": "JOURNALCTL_FAILED",
+      "stderr": "journalctl: Failed to open journal: Permission denied",
+      "why": "journalctl exited non-zero: the journal was NOT read, so nothing is known about this unit's retention. An unread journal is not an empty one"
+    }
+  },
+  "finding_2_two_measured_clocks": {
+    "an_unreadable_clock": {
+      "covered": null,
+      "host_horizon": {
+        "oldest_epoch": null,
+        "oldest_utc": null,
+        "status": "JOURNALCTL_FAILED"
+      },
+      "reference_is": "the window start",
+      "reference_utc": "1970-01-01T00:00:00Z",
+      "regime": "CONTINUOUS_LOGGER__the_reference_is_the_window_start",
+      "status": "NOT_DETERMINABLE",
+      "two_clocks_no_text_search": true,
+      "unit_start": null,
+      "why": "one of the two clocks is unreadable, so coverage is UNKNOWN -- never assumed either way"
+    },
+    "bursty_unit": {
+      "covered": true,
+      "host_horizon": {
+        "oldest_epoch": 1788688438.0,
+        "oldest_utc": "2026-09-06T09:53:58Z",
+        "query": "journalctl --user -o short-iso --no-pager --utc",
+        "read_at_utc": "2026-09-06T14:00:30Z",
+        "status": "MEASURED"
+      },
+      "reference_is": "the unit's own start",
+      "reference_utc": "2026-09-06T12:35:35Z",
+      "regime": "BURSTY_UNIT__the_reference_is_the_unit_start",
+      "status": "MEASURED",
+      "two_clocks_no_text_search": true,
+      "unit_start": {
+        "query": "systemctl --user show de95smoke.service -p ExecMainStartTimestamp --value",
+        "raw": "Sun 2026-09-06 12:35:35 UTC",
+        "start_epoch": 1788698135.0,
+        "start_utc": "2026-09-06T12:35:35Z",
+        "status": "MEASURED",
+        "unit": "de95smoke.service"
+      },
+      "why": "the journal's oldest retained entry is 2026-09-06T09:53:58Z and the unit's own start is 2026-09-06T12:35:35Z; the journal reaches back past it"
+    },
+    "de95smoke_start": {
+      "query": "systemctl --user show de95smoke.service -p ExecMainStartTimestamp --value",
+      "raw": "Sun 2026-09-06 12:35:35 UTC",
+      "start_epoch": 1788698135.0,
+      "start_utc": "2026-09-06T12:35:35Z",
+      "status": "MEASURED",
+      "unit": "de95smoke.service"
+    },
+    "host_horizon": {
+      "oldest_epoch": 1788688438.0,
+      "oldest_utc": "2026-09-06T09:53:58Z",
+      "query": "journalctl --user -o short-iso --no-pager --utc",
+      "read_at_utc": "2026-09-06T14:00:30Z",
+      "status": "MEASURED"
+    },
+    "window_before_the_host_horizon": {
+      "covered": false,
+      "host_horizon": {
+        "oldest_epoch": 1788688438.0,
+        "oldest_utc": "2026-09-06T09:53:58Z",
+        "query": "journalctl --user -o short-iso --no-pager --utc",
+        "read_at_utc": "2026-09-06T14:00:30Z",
+        "status": "MEASURED"
+      },
+      "reference_is": "the window start",
+      "reference_utc": "2026-09-06T08:53:58Z",
+      "regime": "CONTINUOUS_LOGGER__the_reference_is_the_window_start",
+      "status": "MEASURED",
+      "two_clocks_no_text_search": true,
+      "unit_start": null,
+      "why": "the journal's oldest retained entry is 2026-09-06T09:53:58Z and the window start is 2026-09-06T08:53:58Z; the journal does NOT reach it"
+    },
+    "window_one_minute_before_its_single_line": {
+      "covered": true,
+      "host_horizon": {
+        "oldest_epoch": 1788688438.0,
+        "oldest_utc": "2026-09-06T09:53:58Z",
+        "query": "journalctl --user -o short-iso --no-pager --utc",
+        "read_at_utc": "2026-09-06T14:00:30Z",
+        "status": "MEASURED"
+      },
+      "reference_is": "the window start",
+      "reference_utc": "2026-09-06T12:34:35Z",
+      "regime": "CONTINUOUS_LOGGER__the_reference_is_the_window_start",
+      "status": "MEASURED",
+      "two_clocks_no_text_search": true,
+      "unit_start": null,
+      "why": "the journal's oldest retained entry is 2026-09-06T09:53:58Z and the window start is 2026-09-06T12:34:35Z; the journal reaches back past it"
+    }
+  },
+  "finding_3_never_or_true_on_the_only_evidence": {
+    "control_record_writable": {
+      "exit": 0,
+      "note": "same bytes, _REC_FAILED=0"
+    },
+    "normal_path_unchanged": {
+      "exit": 7,
+      "record_lines": 3
+    },
+    "refusal_path": {
+      "exit": 7,
+      "files_written": 0,
+      "note": "the refusal's own code is kept and the stderr names each unwritten event",
+      "stderr_lines_named": 4
+    },
+    "unwritable_record_directory_mode": "500",
+    "would_be_success_path": {
+      "driven_on": "the script's own _rec_exit bytes, extracted with sed and evaluated",
+      "exit": 9,
+      "stderr": "RUN_RECORD_UNWRITABLE: this run's record was NOT written. Underlying outcome rc=0."
+    }
+  },
+  "protocol": "P003_DA_REV68_FINDINGS_V1"
+}
