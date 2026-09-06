@@ -1,0 +1,104 @@
+{
+ "a_capture_record_must": "name the producer module it launched, resolve this chain's head, and carry the resolved kind beside the verbatim ExecMainStatus; a producer absent from the head is recorded UNMAPPED by name",
+ "chain_head_rule": "vN+1 by the {path, sha256} pair; readers resolve the chain head by the <family>_v<N>.json glob and follow the pair; ONE producer's block is added or changed per version, by that producer, with the pair from the head it read; v1 is never edited",
+ "declared_at_utc": "2026-09-06T18:43:32Z",
+ "declared_by": "coordinator (R-709, on REV 79 \u00a72.1)",
+ "producers": {
+  "live/pm_research/be_daybook_build.py": {
+   "75_is_never_used": true,
+   "declared_by": "BE, BE 75 (3)",
+   "map": {
+    "0": "the artifact was written and its receipt emitted",
+    "1": "a refusal or an uncaught error (Python's default for an exception)",
+    "2": "usage: no --day and no --selftest"
+   },
+   "note": "75 is RESERVED to the launcher's flock conflict and is not in this map; the selftest asserts it.",
+   "read_from": "the module's own EXIT_CODES constant, not typed here",
+   "selftest_asserts_75_absent": true,
+   "status": "DECLARED"
+  },
+  "live/pm_research/be_gate1_fragment.py": {
+   "75_is_never_used": true,
+   "declared_by": "BE, BE 75 (3)",
+   "map": {
+    "0": "the artifact was written and its receipt emitted",
+    "1": "a refusal or an uncaught error (Python's default for an exception)",
+    "2": "usage: no --day and no --selftest"
+   },
+   "note": "75 is RESERVED to the launcher's flock conflict and is not in this map; the selftest asserts it.",
+   "read_from": "the module's own EXIT_CODES constant, not typed here",
+   "selftest_asserts_75_absent": true,
+   "status": "DECLARED"
+  },
+  "live/pm_research/be_gate1_state_tape.py": {
+   "75_is_never_used": true,
+   "declared_by": "BE, BE 75 (3)",
+   "map": {
+    "0": "the artifact was written and its receipt emitted",
+    "1": "a refusal or an uncaught error (Python's default for an exception)",
+    "2": "usage: no --day and no --selftest"
+   },
+   "note": "75 is RESERVED to the launcher's flock conflict and is not in this map; the selftest asserts it.",
+   "read_from": "the module's own EXIT_CODES constant, not typed here",
+   "selftest_asserts_75_absent": true,
+   "status": "DECLARED"
+  },
+  "live/pm_research/be_race_reader.py": {
+   "75_is_never_used": true,
+   "declared_by": "BE, BE 75 (3)",
+   "map": {
+    "0": "the selftest passed, or --open completed and wrote the result",
+    "1": "the selftest failed, or a refusal/uncaught error reached the top (ReadRefused and ReadVoid both exit here: a refusal is not a distinct code, it is a named message on stderr)",
+    "2": "usage: neither --selftest nor --open"
+   },
+   "note": "75 is RESERVED to the launcher's flock conflict and is not in this map; the selftest asserts it.",
+   "read_from": "the module's own EXIT_CODES constant, not typed here",
+   "selftest_asserts_75_absent": true,
+   "status": "DECLARED"
+  },
+  "live/pm_research/da_gate1_day_verdict.py": {
+   "known_from_prose_only": "exit 3 = PROVENANCE_INCOMPLETE per Q-DA-325 -- prose, not a map; UNMAPPED until DA's block lands",
+   "status": "UNDECLARED",
+   "who_declares": "DA, by pair"
+  },
+  "live/pm_research/da_race_read_verify.py": {
+   "status": "UNDECLARED",
+   "who_declares": "DA, by pair"
+  },
+  "live/pm_research/de_multiday_gate1_runner.py": {
+   "status": "UNDECLARED",
+   "who_declares": "DE, by pair"
+  }
+ },
+ "protocol": "PRODUCER_EXIT_MAPS_V1",
+ "reading_kinds": {
+  "75": "REFUSAL by the wrapper",
+  "declared code": "a VERDICT by name, resolved in the producer's block",
+  "undeclared non-zero": "UNMAPPED -- a number observed and nothing learned; NOT a refusal, NOT a failure, and it does NOT satisfy a GO conditioned on that run (the predicate is not evaluable; the GO waits, the producer declares the code by pair, the record is re-read)"
+ },
+ "runtime_default": {
+  "1": "the interpreter's uncaught exception -- a CRASH, not a verdict, unless the producer's own block declares 1 otherwise"
+ },
+ "sibling_of": {
+  "path": "live/pm_research/declarations/heavy_run_form_v3.json",
+  "sha256": "e6ddd378d259fa198056d9341d51a51b20a7d052d1d40ecebed1c135e7714158",
+  "why_a_sibling": "the form's constants are the WRAPPER's (lock path, conflict code, caps) and belong to every producer alike; an exit map is one producer's own and would make the shared form change whenever any producer added a code (REV 79 \u00a72.1)"
+ },
+ "supersedes": {
+  "path": "live/pm_research/declarations/producer_exit_maps_v1.json",
+  "rule": "13 / R-608 -- vN+1 by the {path, sha256} pair; v1 is NOT edited",
+  "sha256": "c4e9438019ff88c57c84ebbe766969d434c363337acb2aa162817124ffe3ab5a",
+  "what_changed": "BE's four producers move from UNDECLARED to DECLARED, each map READ from the module's own EXIT_CODES constant rather than typed here, each asserting 75 absent in its selftest. DA's and DE's rows are untouched."
+ },
+ "version": 2,
+ "what": "One block per producer that runs under the heavy-run lock: {exit code: meaning}. A capture record resolves a non-zero ExecMainStatus HERE, never in the producer's source. A code with no entry is recorded VERBATIM as UNMAPPED and is not a reading.",
+ "what_this_is_not": "not a list of the wrapper's five fields (heavy_run_form), not a permission (a declared code is a reading, decisions live in the policy layer, rule 14)",
+ "wrapper_reserved": {
+  "75": {
+   "meaning": "EX_TEMPFAIL -- the heavy-run lock is held; the unit did NO work and wrote nothing (rule 20)",
+   "no_producer_may_declare_it": true,
+   "owner": "the launch form (flock -n -E 75 inside the unit)",
+   "where_enforced": "a producer whose declared block contains 75 is refused at its own selftest (REV 68 \u00a73.2)"
+  }
+ }
+}

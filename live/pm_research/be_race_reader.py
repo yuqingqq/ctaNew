@@ -46,6 +46,21 @@ GATE1_PATTERNS = DECL.GATE1_ARTIFACT_PATTERNS
 LATENCY_MS = 50
 
 
+#: R-649 §3.2 / BE 75 (3): 75 is EX_TEMPFAIL and is RESERVED to the
+#: launcher's flock conflict. From outside a unit, ExecMainStatus=75 must
+#: mean "the lock was held" and nothing else, so this producer declares its
+#: own exit codes and its selftest asserts 75 is not among them.
+EXIT_CODES = {
+    0: "the selftest passed, or --open completed and wrote the result",
+    1: "the selftest failed, or a refusal/uncaught error reached the top "
+       "(ReadRefused and ReadVoid both exit here: a refusal is not a "
+       "distinct code, it is a named message on stderr)",
+    2: "usage: neither --selftest nor --open",
+}
+EXIT_CODE_NOTE = ("75 is RESERVED to the launcher's flock conflict and is "
+                  "not in this map; the selftest asserts it.")
+
+
 class ReadVoid(RuntimeError):
     """The read is void. Never downgraded to a warning."""
 
@@ -877,7 +892,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 48
+EXPECTED_CHECKS = 50
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -1200,6 +1215,16 @@ def selftest() -> int:
            "REFUSES on the real path -- a day set nobody re-checked is "
            "exactly what R-600 found, so the field is not merely honest, it "
            "is verified")
+
+    ok(75 not in EXIT_CODES,
+       f"R-649 §3.2: this reader's declared exit codes are "
+       f"{sorted(EXIT_CODES)} and 75 is NOT among them -- so a unit reading "
+       f"ExecMainStatus=75 means the heavy lock was held, and cannot also "
+       f"mean this reader exited 75 for its own reasons")
+    ok(set(EXIT_CODES) == {0, 1, 2},
+       f"AND THE MAP IS THE CODE'S: main() returns {sorted(EXIT_CODES)} and "
+       f"nothing else -- 1 covers both the selftest's failure and a "
+       f"top-level refusal, which is stated rather than implied")
 
     # ---- R-707 / REV 78 §3: the .v2 of the read artifact ----------------
     import tempfile as _tfV, copy as _cpV
