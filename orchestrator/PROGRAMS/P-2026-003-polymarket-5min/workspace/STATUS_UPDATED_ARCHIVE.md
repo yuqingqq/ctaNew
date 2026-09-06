@@ -15848,3 +15848,86 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **587 CHECKED / 260 RELAYED / 455 UNMARKED -- the SEVENTY-NINTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-191 filed.)
 ```
+
+## Batch 189 — archived 2026-09-06T17:32:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 207 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T17:15:30Z (MEM ROUND 204 -- R-685 SWEPT, tip `24b2a1d`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NO SEALED RECEIPT OPENED; AND NOTHING I RAN WROTE A MARKER --
+  counted 0 before and 0 after every drive.**
+  (1) ***THE SEAM I MEASURED OPEN AT 17:07Z WAS CLOSED BY 17:13Z, AND CLOSED BETTER THAN THE
+  CHECK ASKED.*** **DE 106 (`0e4a033`)** landed six minutes after my round-203 drive; the check
+  now returns **`DECLARED_AND_AGREES_ON_THE_PROPERTY`, `agrees: True`, `declared_as: SEAL_RULE`,
+  `key_walkers_found_by_property: ['seal_key_walk']`**, both rule texts normalising identically.
+  **And `agreement_is_on` says the agreement is on the PROPERTY -- a KEY, whatever the value,
+  empty containers included -- NOT on the wording**, which answers exactly the tolerance I
+  recorded at round 203: *two independent statements of one rule need not be string-identical.*
+  ***THIS IS THE THIRD ROUND RUNNING THAT A STATE I MEASURED MOVED WITHIN MINUTES*** -- design
+  v24 eight minutes BEFORE my round-201 reading, DA 98 four minutes AFTER my round-202 one, DE
+  106 six minutes after this one. **The clock on every reading is what makes these a SEQUENCE
+  rather than a contradiction.**
+  (2) **AND MY ROUND-203 PROBE READ A KEY THAT HAD BEEN RENAMED:** `KeyError:
+  'key_walkers_found'` -- the field is now `key_walkers_found_by_property`. *The result was fine;
+  my reader named an identity that had moved.* **Same lesson as the provenance rot at round 200,
+  and I printed the key set before any value** -- the only form that survives a rename. Tenth
+  "suspect the probe first".
+  (3) ***BE 69 IS STRONGER THAN THE TWO-LINE FIX REV 77 ASKED FOR.*** `decl_was_injected` is
+  replaced by **five** fields plus the reason as a field -- and the supplied declaration is not
+  merely described: **`resolve_days()` is re-resolved FRESH and the read REFUSES
+  (`ReadRefused`) if the supplied decl is not the chain head.** *The fix turns "record a boolean
+  about injection" into "re-resolve and refuse", and the refusal text names why:* **a supplied
+  set nobody re-checked is exactly what R-600 found.**
+  (4) ***I COULD NOT ISOLATE THE HEAD-CHECK, AND I CHOSE NOT TO REACH IT.*** With synthetic
+  paths an EARLIER guard fires: read from the source, the order is **feed-on-disk (:504) -> the
+  decl head-check (:517-527) -> `resolve_marker_dir` (:547) -> `pre_state` (:550) -> the marker
+  guard -> write**. Both cells refused at the feed check -- *which names the day and the missing
+  feed rather than folding it into a generic absence.* **Reaching the head-check needed the REAL
+  feed paths, and the step after that guard is THE READ ITSELF -- the coordinator's act on GO. I
+  stopped.** *An instrument I cannot drive without risking the act it protects is one I leave to
+  its owner*, and the non-result is recorded rather than papered over.
+  (5) **MY DRIVE WROTE NOTHING AND I PROVED IT ON BOTH SIDES:** markers and declared-result files
+  counted **0 before and 0 after** every drive including the full selftest. *The selftest's own
+  closing line asserts the real days are untouched; my count is an INDEPENDENT check of the same
+  thing from OUTSIDE it* -- the difference between an instrument's self-report and a measurement
+  of its effect.
+  (6) **THE SELFTEST IS 27 CHECKS NOW, FROM 20 AT ROUND 201** -- BE 68 and BE 69 added seven, and
+  I ran it rather than taking the count from a report.
+  (7) **THE DECLARATION DIGEST VERIFIED AND G IS ASSERTED, NOT ASSUMED:**
+  `be_race_read_declaration_v4.json`, **`a741b4d6b5ac7f59…` recomputed and matching** the GO's
+  required field; `READABLE = ['20260903','20260904','20260905']`; **`G_declared 3`, `G_computed
+  3`, `G_agrees_with_the_declaration TRUE`** -- computed and declared side by side with the
+  AGREEMENT as its own field, never one standing in for the other; `resolved_from` = *"the chain
+  head, never a filename"*.
+  (8) **THE GO's TEXT NAMES THE ARTIFACT'S OWN REQUIRED FIELDS AND TWO PROHIBITIONS** --
+  `declaration_sha256` (verified by me), `zero_markers_before_the_act`,
+  `declared_result_absent_before_the_act`, `marker_dir_realpath`, `decl_source`; and **no re-run
+  verification, no expected direction or magnitude.** ***The second prohibition is the one that
+  protects the test from its reader:*** a stated expectation is a selection made before seeing,
+  and this act cannot be repeated to undo it. *Relayed except the digest.*
+  (9) **THE CENSUS FAMILY IS FOUR-HEADED FOR THE FIFTH ROUND** (7 records, 3 links) -- recorded,
+  not re-routed.
+  (10) **de104smoke AT A FOURTH IDENTICAL PEAK:** 17:12:15Z, `loaded / active / running`;
+  InvocationID unchanged across **four** readings and MemoryPeak **2,312,695,808 identical in all
+  four**. ≈18:25Z.
+  AT COMMIT TIME, UNSWEPT: ***THE RACE READ GO IS ISSUED*** -- **R-687 (BE 70, 17:14Z): ONE GO,
+  ONE READ, conditioned on the 09-05 run's exit by BOTH routes (the artifact AND the inode),
+  ≈18:25Z.** *The GO's text is published verbatim in the register as REV 77 §3 asked, which is
+  the form that makes a GO checkable afterwards rather than recalled.* **R-686** verifies BE 69,
+  DA 99-dry and MEM 203. The chain to here is worth stating once, because it is what a GO should
+  look like: **REV 76 recommended GO with five conditions -> BE 68 closed three -> REV 77 gave GO
+  subject to ONE code change -> BE 69 closed it -> the GO issues.** BE 69's own drive was *"on a
+  call structurally identical to `--open` on scratch"*, with `pre_state` reading
+  `zero_markers_before_the_act true`, `all_pins_present_and_true true`,
+  `all_feeds_on_disk_at_their_pins true`, `declared_result_absent_before_the_act true`, **and a
+  supplied non-head declaration refused by name** -- the guard I could not reach without risking
+  the act, driven by its owner on a structurally identical call, which is the right seat for it.
+  **AT MY LAST READING, 17:16Z: 0 OPENED markers, 0 result files, and the lock still HELD by pid
+  3665963** -- the 09-05 run -- **so the act has not happened and its precondition is not yet
+  met.** *State, not a forecast.* **Noted in band; the round-204 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,302 -> 1,312; flag_provenance 847 -> 857;
+  tasks 19; **596 CHECKED / 261 RELAYED / 455 UNMARKED -- the EIGHTIETH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-192 filed.)
+```

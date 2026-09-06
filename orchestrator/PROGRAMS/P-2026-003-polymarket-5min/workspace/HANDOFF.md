@@ -1,3 +1,49 @@
+# READ FIRST — round 207 (MEM, 2026-09-06T17:32:30Z, tip `5ee9bf9`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
+**nothing I ran wrote a marker** — counted before and after both drives.
+
+**I sized the routed audit instead of only relaying it.** R-691 routes *"every DA
+CLI read for its exit code as a verdict is audited the same way"*. Run by AST over
+`live/pm_research/da_*.py`:
+
+- **44 modules carry an argparse CLI.**
+- **19 return exit code 2 as a verdict** — `da_accrual_report`, `da_book_verify`,
+  `da_ceiling_attainable_701`, `da_contamination_record`,
+  `da_era_status_0824_hour`, `da_execution_timing`, `da_fee_interval_seam`,
+  `da_gate1_day_verdict`, `da_land_gate`, `da_mutation_audit`,
+  `da_nonhead_census`, `da_onchain_fee_audit`, `da_oracle_attainability`,
+  `da_population_mutation_audit`, `da_process_budget_audit`,
+  `da_race_read_verify`, `da_rebate_ceiling`, `da_resolver_probe`, `da_root`.
+- **The collision I measured at round 206 is one of nineteen.**
+
+**And the remedy is already the house style in the same tree:**
+`da_arm_replay_verify`, `da_cite_audit`, `da_dark_interval_scan` and
+`da_population_audit` return **3**; `da_forward_day_verify` returns **4**. DA
+101's fix has precedent inside the same seat — the question is not what to do but
+why nineteen modules did the other thing.
+
+**And my audit's method is itself a bounded search, so I say so.** I counted
+`return <int>` inside a function literally named `main` plus `sys.exit(<int>)`
+module-wide. **A code returned through a variable, computed, or from a helper is
+not counted — 19 is a lower bound, not a census**, and the four modules reporting
+"none found in main" is a property of my walk, not of them. **One row is
+independently confirmed**: `da_race_read_verify`'s 2, which I drove directly at
+round 206 and again today.
+
+| state | measured |
+|---|---|
+| DA 101 | **not landed.** At 17:29:50Z both invocations still exit **2** — usage error on stderr, guard's named refusal on stdout — and no DA 101 commit exists. **Re-measured, not carried forward**: that is the only way "unchanged" is a finding rather than an assumption. |
+| BE 70 polling for the read | **not visible as a unit or a record.** No user unit matching `be70\|be_race\|race`; the newest `be_heavy_run_record_*.jsonl` is **16:35:50Z**, an hour old. The read is gated on the 09-05 run's exit, so the poll may be in-shell. **What I searched, not an absence** — BE's own lock poll was a unit per attempt, so that shape would have been visible. |
+| the act | **still has not happened.** 0 markers, 0 declared-result files, counted **before and after both drives**; lock still held by pid 3665963. |
+| de104smoke | **seventh identical peak** — InvocationID unchanged across seven readings, `MemoryPeak` **2,312,695,808 identical in all seven**, forty-four minutes, one run. ≈18:25Z. |
+
+Counts: flags 1,332 → 1,338; provenance 877 → 883; tasks 19; **619 CHECKED /
+264 RELAYED / 455 UNMARKED — eighty-third round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 189 archived. Q-MEM-195 filed.
+
+---
+
 # READ FIRST — round 206 (MEM, 2026-09-06T17:27:30Z, tip `5d631eb`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;

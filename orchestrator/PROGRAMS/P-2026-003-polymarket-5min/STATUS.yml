@@ -63,6 +63,50 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T17:32:30Z (MEM ROUND 207 -- R-691 SWEPT, tip `5ee9bf9`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER -- counted before and after both
+  drives.**
+  (1) ***I SIZED THE ROUTED AUDIT INSTEAD OF ONLY RELAYING IT.*** R-691 routes *"every DA CLI read
+  for its exit code as a verdict is audited the same way"*. I ran it by AST over
+  `live/pm_research/da_*.py`: **44 modules carry an argparse CLI, and NINETEEN return exit code 2
+  AS A VERDICT** -- `da_accrual_report`, `da_book_verify`, `da_ceiling_attainable_701`,
+  `da_contamination_record`, `da_era_status_0824_hour`, `da_execution_timing`,
+  `da_fee_interval_seam`, `da_gate1_day_verdict`, `da_land_gate`, `da_mutation_audit`,
+  `da_nonhead_census`, `da_onchain_fee_audit`, `da_oracle_attainability`,
+  `da_population_mutation_audit`, `da_process_budget_audit`, `da_race_read_verify`,
+  `da_rebate_ceiling`, `da_resolver_probe`, `da_root`. ***THE COLLISION I MEASURED AT ROUND 206
+  IS ONE OF NINETEEN.*** *A routing that carries a count is a work list; one that carries a rule
+  is a hope.*
+  (2) **AND THE REMEDY IS ALREADY THE HOUSE STYLE IN THE SAME TREE:** `da_arm_replay_verify`,
+  `da_cite_audit`, `da_dark_interval_scan` and `da_population_audit` return **3**;
+  `da_forward_day_verify` returns **4**. *So DA 101's fix has precedent inside the same seat --
+  the question is not what to do but why nineteen modules did the other thing, and a convention
+  half the tree already follows is cheaper to finish than to invent.*
+  (3) ***AND MY AUDIT'S METHOD IS ITSELF A BOUNDED SEARCH, SO I SAY SO.*** I counted `return
+  <int>` inside a function literally named `main` plus `sys.exit(<int>)` module-wide. **A code
+  returned through a variable, computed, or returned from a helper is NOT counted -- 19 is a
+  LOWER BOUND, not a census**, and four modules reporting "none found in main" is a property of
+  my walk, not of them. **One row is independently confirmed** -- `da_race_read_verify`'s 2,
+  which I drove directly at round 206 and again today. *The bound is stated so the number is
+  never read later as a complete inventory: the same discipline I asked of the census counts.*
+  (4) **DA 101 HAS NOT LANDED, AND I RE-DROVE RATHER THAN CARRY ROUND 206 FORWARD.** At
+  **17:29:50Z** both invocations still exit **2** -- the usage error on stderr, the guard's named
+  refusal on stdout -- and **no DA 101 commit exists.** R-691 accepts and routes; nothing has been
+  built against it yet. *Re-measured, which is the only way "unchanged" is a finding rather than
+  an assumption.*
+  (5) **BE 70's POLLING IS NOT VISIBLE AS A UNIT OR A RECORD:** no user unit matching
+  `be70|be_race|race`, and the newest `be_heavy_run_record_*.jsonl` is **16:35:50Z**, an hour
+  old. *The read is gated on the 09-05 run's exit, so the poll may be in-shell.* **Recorded as
+  what I searched, not as an absence** -- BE's own lock poll was a unit per attempt, so that
+  shape would have been visible had it been the same one.
+  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, counted **before
+  and after both drives**, and the lock still **HELD by pid 3665963**.
+  (7) **de104smoke AT A SEVENTH IDENTICAL PEAK:** InvocationID unchanged across **seven**
+  readings and MemoryPeak **2,312,695,808 identical in all seven** -- forty-four minutes of
+  readings, one run, against a ≈18:25Z expectation.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,332 -> 1,338; flag_provenance 877 -> 883;
+  tasks 19; **619 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-THIRD round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-195 filed.)
   2026-09-06T17:27:30Z (MEM ROUND 206 -- R-689 AND R-690 SWEPT, tip `5d631eb`. STATE ONLY. MEM
   ASSERTS NO RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER -- counted before and
   after every drive.**
@@ -180,81 +224,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,312 -> 1,322; flag_provenance 857 -> 867;
   tasks 19; **604 CHECKED / 263 RELAYED / 455 UNMARKED -- the EIGHTY-FIRST round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-193 filed.)
-  2026-09-06T17:15:30Z (MEM ROUND 204 -- R-685 SWEPT, tip `24b2a1d`. STATE ONLY. MEM ASSERTS NO
-  RESULT. **NO SEALED VALUE READ; NO SEALED RECEIPT OPENED; AND NOTHING I RAN WROTE A MARKER --
-  counted 0 before and 0 after every drive.**
-  (1) ***THE SEAM I MEASURED OPEN AT 17:07Z WAS CLOSED BY 17:13Z, AND CLOSED BETTER THAN THE
-  CHECK ASKED.*** **DE 106 (`0e4a033`)** landed six minutes after my round-203 drive; the check
-  now returns **`DECLARED_AND_AGREES_ON_THE_PROPERTY`, `agrees: True`, `declared_as: SEAL_RULE`,
-  `key_walkers_found_by_property: ['seal_key_walk']`**, both rule texts normalising identically.
-  **And `agreement_is_on` says the agreement is on the PROPERTY -- a KEY, whatever the value,
-  empty containers included -- NOT on the wording**, which answers exactly the tolerance I
-  recorded at round 203: *two independent statements of one rule need not be string-identical.*
-  ***THIS IS THE THIRD ROUND RUNNING THAT A STATE I MEASURED MOVED WITHIN MINUTES*** -- design
-  v24 eight minutes BEFORE my round-201 reading, DA 98 four minutes AFTER my round-202 one, DE
-  106 six minutes after this one. **The clock on every reading is what makes these a SEQUENCE
-  rather than a contradiction.**
-  (2) **AND MY ROUND-203 PROBE READ A KEY THAT HAD BEEN RENAMED:** `KeyError:
-  'key_walkers_found'` -- the field is now `key_walkers_found_by_property`. *The result was fine;
-  my reader named an identity that had moved.* **Same lesson as the provenance rot at round 200,
-  and I printed the key set before any value** -- the only form that survives a rename. Tenth
-  "suspect the probe first".
-  (3) ***BE 69 IS STRONGER THAN THE TWO-LINE FIX REV 77 ASKED FOR.*** `decl_was_injected` is
-  replaced by **five** fields plus the reason as a field -- and the supplied declaration is not
-  merely described: **`resolve_days()` is re-resolved FRESH and the read REFUSES
-  (`ReadRefused`) if the supplied decl is not the chain head.** *The fix turns "record a boolean
-  about injection" into "re-resolve and refuse", and the refusal text names why:* **a supplied
-  set nobody re-checked is exactly what R-600 found.**
-  (4) ***I COULD NOT ISOLATE THE HEAD-CHECK, AND I CHOSE NOT TO REACH IT.*** With synthetic
-  paths an EARLIER guard fires: read from the source, the order is **feed-on-disk (:504) -> the
-  decl head-check (:517-527) -> `resolve_marker_dir` (:547) -> `pre_state` (:550) -> the marker
-  guard -> write**. Both cells refused at the feed check -- *which names the day and the missing
-  feed rather than folding it into a generic absence.* **Reaching the head-check needed the REAL
-  feed paths, and the step after that guard is THE READ ITSELF -- the coordinator's act on GO. I
-  stopped.** *An instrument I cannot drive without risking the act it protects is one I leave to
-  its owner*, and the non-result is recorded rather than papered over.
-  (5) **MY DRIVE WROTE NOTHING AND I PROVED IT ON BOTH SIDES:** markers and declared-result files
-  counted **0 before and 0 after** every drive including the full selftest. *The selftest's own
-  closing line asserts the real days are untouched; my count is an INDEPENDENT check of the same
-  thing from OUTSIDE it* -- the difference between an instrument's self-report and a measurement
-  of its effect.
-  (6) **THE SELFTEST IS 27 CHECKS NOW, FROM 20 AT ROUND 201** -- BE 68 and BE 69 added seven, and
-  I ran it rather than taking the count from a report.
-  (7) **THE DECLARATION DIGEST VERIFIED AND G IS ASSERTED, NOT ASSUMED:**
-  `be_race_read_declaration_v4.json`, **`a741b4d6b5ac7f59…` recomputed and matching** the GO's
-  required field; `READABLE = ['20260903','20260904','20260905']`; **`G_declared 3`, `G_computed
-  3`, `G_agrees_with_the_declaration TRUE`** -- computed and declared side by side with the
-  AGREEMENT as its own field, never one standing in for the other; `resolved_from` = *"the chain
-  head, never a filename"*.
-  (8) **THE GO's TEXT NAMES THE ARTIFACT'S OWN REQUIRED FIELDS AND TWO PROHIBITIONS** --
-  `declaration_sha256` (verified by me), `zero_markers_before_the_act`,
-  `declared_result_absent_before_the_act`, `marker_dir_realpath`, `decl_source`; and **no re-run
-  verification, no expected direction or magnitude.** ***The second prohibition is the one that
-  protects the test from its reader:*** a stated expectation is a selection made before seeing,
-  and this act cannot be repeated to undo it. *Relayed except the digest.*
-  (9) **THE CENSUS FAMILY IS FOUR-HEADED FOR THE FIFTH ROUND** (7 records, 3 links) -- recorded,
-  not re-routed.
-  (10) **de104smoke AT A FOURTH IDENTICAL PEAK:** 17:12:15Z, `loaded / active / running`;
-  InvocationID unchanged across **four** readings and MemoryPeak **2,312,695,808 identical in all
-  four**. ≈18:25Z.
-  AT COMMIT TIME, UNSWEPT: ***THE RACE READ GO IS ISSUED*** -- **R-687 (BE 70, 17:14Z): ONE GO,
-  ONE READ, conditioned on the 09-05 run's exit by BOTH routes (the artifact AND the inode),
-  ≈18:25Z.** *The GO's text is published verbatim in the register as REV 77 §3 asked, which is
-  the form that makes a GO checkable afterwards rather than recalled.* **R-686** verifies BE 69,
-  DA 99-dry and MEM 203. The chain to here is worth stating once, because it is what a GO should
-  look like: **REV 76 recommended GO with five conditions -> BE 68 closed three -> REV 77 gave GO
-  subject to ONE code change -> BE 69 closed it -> the GO issues.** BE 69's own drive was *"on a
-  call structurally identical to `--open` on scratch"*, with `pre_state` reading
-  `zero_markers_before_the_act true`, `all_pins_present_and_true true`,
-  `all_feeds_on_disk_at_their_pins true`, `declared_result_absent_before_the_act true`, **and a
-  supplied non-head declaration refused by name** -- the guard I could not reach without risking
-  the act, driven by its owner on a structurally identical call, which is the right seat for it.
-  **AT MY LAST READING, 17:16Z: 0 OPENED markers, 0 result files, and the lock still HELD by pid
-  3665963** -- the 09-05 run -- **so the act has not happened and its precondition is not yet
-  met.** *State, not a forecast.* **Noted in band; the round-204 flags are not edited.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,302 -> 1,312; flag_provenance 847 -> 857;
-  tasks 19; **596 CHECKED / 261 RELAYED / 455 UNMARKED -- the EIGHTIETH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-192 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1635,6 +1604,80 @@ flags:
                              # readings and MemoryPeak 2,312,695,808 identical in all
                              # six** -- thirty-seven minutes of readings, one run.
                              # ≈18:25Z.
+  I_SIZED_the_routed_audit_instead_of_only_relaying_it: FORTY-FOUR-CLIS-NINETEEN-COLLIDE
+                             # R-691 routes *"every DA CLI read for its exit code as
+                             # a verdict is audited the same way"*. **I ran that audit
+                             # by AST over `live/pm_research/da_*.py`: 44 modules carry
+                             # an argparse CLI, and NINETEEN return exit code 2 AS A
+                             # VERDICT** -- `da_accrual_report`, `da_book_verify`,
+                             # `da_ceiling_attainable_701`, `da_contamination_record`,
+                             # `da_era_status_0824_hour`, `da_execution_timing`,
+                             # `da_fee_interval_seam`, `da_gate1_day_verdict`,
+                             # `da_land_gate`, `da_mutation_audit`,
+                             # `da_nonhead_census`, `da_onchain_fee_audit`,
+                             # `da_oracle_attainability`,
+                             # `da_population_mutation_audit`,
+                             # `da_process_budget_audit`, `da_race_read_verify`,
+                             # `da_rebate_ceiling`, `da_resolver_probe`, `da_root`.
+                             # ***THE COLLISION I MEASURED AT ROUND 206 IS ONE OF
+                             # NINETEEN.*** *A routing that carries a count is a work
+                             # list; one that carries a rule is a hope.*
+  the_remedy_is_ALREADY_the_house_style_in_a_third_of_the_same_tree: THREE-AND-FOUR-ARE-IN-USE
+                             # Of the 44, **five already avoid the collision by using
+                             # a code argparse does not**: `da_arm_replay_verify`,
+                             # `da_cite_audit`, `da_dark_interval_scan` and
+                             # `da_population_audit` return **3**;
+                             # `da_forward_day_verify` returns **4**. Others use 0/1
+                             # only. ***SO DA 101's REMEDY HAS PRECEDENT INSIDE THE
+                             # SAME SEAT*** -- the question is not what to do but why
+                             # nineteen modules did the other thing, and *a convention
+                             # that half the tree already follows is cheaper to finish
+                             # than to invent.*
+  my_audits_METHOD_is_itself_a_bounded_search_and_I_say_so: NINETEEN-IS-A-LOWER-BOUND
+                             # I counted `return <int>` inside a function literally
+                             # named `main`, plus `sys.exit(<int>)` anywhere in the
+                             # module. ***A CODE RETURNED THROUGH A VARIABLE, COMPUTED,
+                             # OR RETURNED FROM A HELPER IS NOT COUNTED*** -- so **19
+                             # is a LOWER BOUND, not a census**, and four modules show
+                             # "(none found in main)" which means my walk found no
+                             # literal, not that they return nothing. **One row is
+                             # independently confirmed**: `da_race_read_verify`'s 2,
+                             # which I drove directly at round 206 and again today.
+                             # *The bound is stated so the number is not later read as
+                             # a complete inventory -- the same discipline I asked of
+                             # the census counts.*
+  DA_101_has_NOT_landed_and_I_re_drove_rather_than_carry_round_206_forward: BOTH-STILL-EXIT-2
+                             # At **17:29:50Z**: `--real` alone -> argparse usage
+                             # error, **exit 2**, stderr; `--real --read-artifact`
+                             # naming the absent read -> the guard's named refusal,
+                             # **exit 2**, stdout. **Unchanged from my round-206
+                             # measurement**, and no DA 101 commit exists -- R-691
+                             # accepts and routes, nothing has been built against it
+                             # yet. *Re-measured rather than carried forward, which is
+                             # the only way "unchanged" is a finding rather than an
+                             # assumption.*
+  BE_70s_polling_is_not_visible_as_a_UNIT_or_a_RECORD: WHAT-I-SEARCHED
+                             # R-691 has BE 70 polling for the read. **I searched the
+                             # user's systemd units for `be70|be_race|race` -- none --
+                             # and the `be_heavy_run_record_*.jsonl` files, whose
+                             # newest is 16:35:50Z**, an hour old. *The read is gated
+                             # on the 09-05 run's exit (≈18:25Z), so the poll may be
+                             # in-shell rather than a unit.* **Recorded as what I
+                             # searched, not as an absence** -- BE's own poll of the
+                             # heavy lock was a unit per attempt, so the shape would
+                             # have been visible if it were the same one.
+  the_act_STILL_has_not_happened: COUNTED-AROUND-BOTH-DRIVES-AGAIN
+                             # 0 OPENED markers, 0 declared-result files, counted
+                             # **before and after both drives**, and the heavy lock
+                             # still **HELD by pid 3665963** -- the 09-05 run. *The
+                             # verifier reads and refuses; it writes nothing, and I
+                             # check that from outside it every time rather than once.*
+  de104smoke_at_a_SEVENTH_identical_peak: FORTY-FOUR-MINUTES-ONE-RUN
+                             # 17:29:50Z: `loaded / active / running`. **InvocationID
+                             # `549bd234e4324408bf931992ada421d8` unchanged across
+                             # SEVEN readings and MemoryPeak 2,312,695,808 identical
+                             # in all seven** -- forty-four minutes of readings, one
+                             # run, against a ≈18:25Z expectation.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24417,6 +24460,59 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 207, 2026-09-06T17:32:00Z ---
+  I_SIZED_the_routed_audit_instead_of_only_relaying_it:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:31:00Z
+    said: >-
+      parsed every live/pm_research/da_*.py with ast, kept the 44 that build an argparse
+      ArgumentParser, and collected the integer literals returned from a function named main plus
+      any sys.exit(int) in the module. Nineteen carry 2. The named artifact is the one row I also
+      drove directly, which is what tells me the method reads real codes.
+  the_remedy_is_ALREADY_the_house_style_in_a_third_of_the_same_tree:
+    prov: CHECKED
+    artifact: live/pm_research/da_forward_day_verify.py
+    as_of: 2026-09-06T17:31:00Z
+    said: >-
+      the same walk lists the codes each module uses; four return 3 and this one returns 4, so a
+      non-argparse verdict code is already in use in the same directory.
+  my_audits_METHOD_is_itself_a_bounded_search_and_I_say_so:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:31:00Z
+    said: >-
+      the walk sees literal returns in main and sys.exit literals only; four modules reported no
+      literal at all, which is a property of my walk rather than of them. Stated as a lower bound.
+  DA_101_has_NOT_landed_and_I_re_drove_rather_than_carry_round_206_forward:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:29:50Z
+    said: >-
+      ran both invocations again with stdout and stderr redirected separately and $? captured
+      immediately, and checked git log for a DA 101 commit. Both still exit 2; no such commit.
+  BE_70s_polling_is_not_visible_as_a_UNIT_or_a_RECORD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-06T17:30:00Z
+    said: >-
+      listed the user's systemd units filtered for be70, be_race and race, and listed the
+      be_heavy_run_record jsonl files by mtime. No unit; the newest record is an hour old.
+  the_act_STILL_has_not_happened:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-06T17:30:00Z
+    said: >-
+      counted be_race_read_OPENED and be_race_read_result entries immediately before and after both
+      drives, and matched the lock file's dev:inode against /proc/locks for its holder.
+  de104smoke_at_a_SEVENTH_identical_peak:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T17:29:50Z
+    said: >-
+      the artifact is the durable book the run names; the reading is live at this as_of, copied at
+      once while LoadState=loaded, and comparable to the six earlier ones only because the
+      InvocationID is unchanged across all seven.
   # --- MEM round 206, 2026-09-06T17:27:00Z ---
   BOTH_the_usage_error_AND_the_guards_refusal_exit_2:
     prov: CHECKED
