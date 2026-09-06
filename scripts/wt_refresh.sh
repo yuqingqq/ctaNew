@@ -7,6 +7,8 @@ set -e
 WT="${1:?usage: wt_refresh.sh <worktree> [ref]}"; REF="${2:-origin/mm-research}"; LEDGER=/home/yuqing/ctaNew/data
 git -C "$WT" sparse-checkout disable >/dev/null 2>&1 || true
 git -C "$WT" fetch -q origin
+# R-554 sweep BEFORE the checkout: tracked data files that read as deleted behind a symlink block a checkout
+git -C "$WT" ls-files data | xargs -r git -C "$WT" update-index --skip-worktree 2>/dev/null || true
 [ -L "$WT/data" ] && rm "$WT/data"                       # drop the symlink so the checkout cannot write through it
 if ! git -C "$WT" checkout -q --detach "$REF" 2>/dev/null; then   # the seat's own uncommitted edits block a checkout
   echo "REFUSED: $WT has uncommitted edits that the checkout would overwrite -- preserve them (a WIP HELD commit) or land them first:"; git -C "$WT" status --short | grep -v '^?? data$' | head; [ -e "$WT/data" ] || ln -s "$LEDGER" "$WT/data"; exit 3
