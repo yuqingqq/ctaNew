@@ -43,7 +43,7 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 14
+VERSION = 15
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
 EXPECTED_CHECKS = 89
 
@@ -92,13 +92,17 @@ V13_DECLARATION = ("p003_de_multiday_gate1_design_v13__20260906T083511Z"
                    ".json",
                    "c833338cdde61bcd51d3807eba2f72cd1bbc6a08c4e05916edf35a"
                    "19d3d32b10")
+V14_DECLARATION = ("p003_de_multiday_gate1_design_v14__20260906T091319Z"
+                   ".json",
+                   "3284cafb10be2584de91b5e8a43afd793aae4260a4c84bf4c0a5cd"
+                   "64a83657e1")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
                     V10_DECLARATION, V11_DECLARATION, V12_DECLARATION,
-                    V13_DECLARATION)
+                    V13_DECLARATION, V14_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -433,7 +437,7 @@ def _params_digest() -> str:
     """The params file's digest, READ at emission -- the design is emitted
     last, so the params are already final and can be pinned here."""
     p = (Path(__file__).resolve().parents[2]
-         / "live/pm_research/declarations/de_multiday_gate1_params_v6.json")
+         / "live/pm_research/declarations/de_multiday_gate1_params_v7.json")
     return (hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file()
             else "ABSENT")
 
@@ -2627,7 +2631,7 @@ def selftest(*, quiet: bool = False) -> int:
 
     import hashlib as _h4
     _pp = (Path(__file__).resolve().parents[2] / "live/pm_research/"
-           "declarations/de_multiday_gate1_params_v6.json")
+           "declarations/de_multiday_gate1_params_v7.json")
     ok(d["parameters"]["sha256"] == _h4.sha256(_pp.read_bytes()).hexdigest()
        and d["parameters"]["pin_direction"].startswith("design -> params"),
        "THE PIN DIRECTION IS FLIPPED AND THE PIN IS REAL: the design pins "
