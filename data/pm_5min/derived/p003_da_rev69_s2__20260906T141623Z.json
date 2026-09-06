@@ -1,0 +1,245 @@
+{
+  "as_of_utc": "2026-09-06T14:16:23Z",
+  "decides_nothing": "instruments; no verdict here",
+  "protocol": "P003_DA_REV69_S2_V1",
+  "r654_open_book_path_for_DA91": {
+    "declared_shape": "BOOK_MAPPING_AWAITS_BES_DECLARATION",
+    "json_fixture": "ADMITTED rows=1",
+    "light_path_on_a_pickle": "BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON",
+    "not_a_mapping": "BOOK_PICKLE_IS_NOT_A_MAPPING",
+    "wrong_top_level": "BOOK_PICKLE_TOP_LEVEL_NOT_THE_DECLARED_SHAPE"
+  },
+  "s2_1_encoding_residues": {
+    "both_fields_decoded_through_one_helper": true,
+    "n_malformed": 6,
+    "n_rows": 16,
+    "regime": "no -z caller; no tracked path needs quoting today",
+    "twenty_two_line_table": [
+      {
+        "line": " M live/x.py",
+        "path": "live/x.py",
+        "path_was_c_quoted": false,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": " M"
+      },
+      {
+        "line": "?? data",
+        "path": "data",
+        "path_was_c_quoted": false,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": "??"
+      },
+      {
+        "line": "R  a -> b",
+        "path": "b",
+        "path_was_c_quoted": false,
+        "renamed_from": "a",
+        "renamed_from_was_c_quoted": false,
+        "xy": "R "
+      },
+      {
+        "line": "M live/x.py",
+        "result": "MALFORMED"
+      },
+      {
+        "line": "## mm-research...origin/mm-research",
+        "result": "MALFORMED"
+      },
+      {
+        "line": "?? a -> b",
+        "path": "a -> b",
+        "path_was_c_quoted": false,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": "??"
+      },
+      {
+        "line": "?? trailing ",
+        "path": "trailing ",
+        "path_was_c_quoted": false,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": "??"
+      },
+      {
+        "line": "RM \"odd name.py\"",
+        "path": "odd name.py",
+        "path_was_c_quoted": true,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": "RM"
+      },
+      {
+        "line": "A  new.py",
+        "path": "new.py",
+        "path_was_c_quoted": false,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": "A "
+      },
+      {
+        "line": " D gone.py",
+        "path": "gone.py",
+        "path_was_c_quoted": false,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": " D"
+      },
+      {
+        "line": "UU both.py",
+        "path": "both.py",
+        "path_was_c_quoted": false,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": "UU"
+      },
+      {
+        "line": "C  src.py -> cp.py",
+        "path": "cp.py",
+        "path_was_c_quoted": false,
+        "renamed_from": "src.py",
+        "renamed_from_was_c_quoted": false,
+        "xy": "C "
+      },
+      {
+        "line": "??  leading.py",
+        "path": " leading.py",
+        "path_was_c_quoted": false,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": "??"
+      },
+      {
+        "line": " R old.py -> new.py",
+        "path": "new.py",
+        "path_was_c_quoted": false,
+        "renamed_from": "old.py",
+        "renamed_from_was_c_quoted": false,
+        "xy": " R"
+      },
+      {
+        "line": "RM keep.py",
+        "path": "keep.py",
+        "path_was_c_quoted": false,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": "RM"
+      },
+      {
+        "line": "M",
+        "result": "MALFORMED"
+      },
+      {
+        "line": "?? ",
+        "result": "MALFORMED"
+      },
+      {
+        "line": "XY nope.py",
+        "result": "MALFORMED"
+      },
+      {
+        "line": "?z nope.py",
+        "result": "MALFORMED"
+      },
+      {
+        "line": "?? nul\u0000keep.py",
+        "path": "nul\u0000keep.py",
+        "path_was_c_quoted": false,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": "??"
+      },
+      {
+        "line": "R  \"a\\\"b.py\" -> \"c\\td.py\"",
+        "path": "c\td.py",
+        "path_was_c_quoted": true,
+        "renamed_from": "a\"b.py",
+        "renamed_from_was_c_quoted": true,
+        "xy": "R "
+      },
+      {
+        "line": "?? \"caf\\303\\251.py\"",
+        "path": "caf\u00e9.py",
+        "path_was_c_quoted": true,
+        "renamed_from": null,
+        "renamed_from_was_c_quoted": false,
+        "xy": "??"
+      }
+    ]
+  },
+  "s2_2_the_plus_is_unloseable": {
+    "copies": {
+      "both": {
+        "count_note": "30 line(s) for this invocation against 253 for the unit NAME across all its invocations -- a mismatch by design, not a finding",
+        "fields": [
+          "_SYSTEMD_INVOCATION_ID",
+          "USER_INVOCATION_ID"
+        ],
+        "missing_fields": null,
+        "n_lines_copied": 30,
+        "n_lines_for_the_unit": 253,
+        "query": "journalctl --user _SYSTEMD_INVOCATION_ID=e1460575980f488f9027e504b6334c9f + USER_INVOCATION_ID=e1460575980f488f9027e504b6334c9f --no-pager -o short-iso --utc",
+        "status": "COPIED"
+      },
+      "empty_field_set": {
+        "count_note": null,
+        "fields": [],
+        "missing_fields": [
+          "_SYSTEMD_INVOCATION_ID",
+          "USER_INVOCATION_ID"
+        ],
+        "n_lines_copied": null,
+        "n_lines_for_the_unit": null,
+        "query": null,
+        "status": "REFUSED_INCOMPLETE_FIELD_SET"
+      },
+      "systemd_only": {
+        "count_note": null,
+        "fields": [
+          "_SYSTEMD_INVOCATION_ID"
+        ],
+        "missing_fields": [
+          "USER_INVOCATION_ID"
+        ],
+        "n_lines_copied": null,
+        "n_lines_for_the_unit": null,
+        "query": null,
+        "status": "REFUSED_INCOMPLETE_FIELD_SET"
+      },
+      "user_only": {
+        "count_note": null,
+        "fields": [
+          "USER_INVOCATION_ID"
+        ],
+        "missing_fields": [
+          "_SYSTEMD_INVOCATION_ID"
+        ],
+        "n_lines_copied": null,
+        "n_lines_for_the_unit": null,
+        "query": null,
+        "status": "REFUSED_INCOMPLETE_FIELD_SET"
+      },
+      "wrong_system_field": {
+        "count_note": null,
+        "fields": [
+          "INVOCATION_ID"
+        ],
+        "missing_fields": [
+          "_SYSTEMD_INVOCATION_ID",
+          "USER_INVOCATION_ID"
+        ],
+        "n_lines_copied": null,
+        "n_lines_for_the_unit": null,
+        "query": null,
+        "status": "REFUSED_INCOMPLETE_FIELD_SET"
+      }
+    },
+    "count_mismatch": "a NOTE -- `-u <unit>` spans every invocation of a REUSED unit name and mismatches by design, so it is never a refusal",
+    "guard": "a SHAPE CHECK on the query this function builds: both field names or REFUSED",
+    "note_on_this_artifact": "the field above was written through an UNQUOTED heredoc on the first pass and the shell ate the backticked string; corrected in place before landing. Third time this session -- the delimiter is quoted from here on",
+    "unit": "be64book.service"
+  },
+  "seed_and_per_side_counts": "NOT DONE BY NAME until the heavy open-book run"
+}
