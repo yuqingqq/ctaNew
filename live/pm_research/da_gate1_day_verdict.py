@@ -576,6 +576,23 @@ def load_day_book(path: str) -> dict:
     p = Path(path)
     if not p.is_file():
         raise VerifierRefused(f"REFUSED: day book absent at {path}")
+    if p.suffix == ".pkl":
+        #: THE REAL BOOK IS A PICKLE, AND THIS READER WAS BUILT ON THE
+        #: FIXTURE'S JSON. Found at the FIRST REAL GO -- a fixture/real seam
+        #: in my own instrument, which is rule 17's shape and the class I
+        #: have been auditing in other seats. It is REFUSED BY NAME rather
+        #: than guessed at: mapping BE's `asm.by_arm` structure onto rows
+        #: and per-arm scores is a reading of ANOTHER SEAT'S BOOK and needs
+        #: BE's declaration, not my inference. And opening it is ~2 GB --
+        #: HEAVY under rule 20, so it cannot ride along in a light run.
+        raise VerifierRefused(
+            f"REFUSED: BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON -- {p.name} "
+            f"is BE's pickled day book ({p.stat().st_size} bytes). This "
+            f"reader consumes `rows` + `scores_by_arm`; the pickle carries "
+            f"`asm.by_arm` and `fr`. The population half of the pre-read "
+            f"CANNOT be recomputed until that mapping is read from BE's "
+            f"declaration, and opening the pickle is ~2 GB, which is HEAVY "
+            f"under rule 20 and cannot ride in a light run.")
     try:
         bk = json.loads(p.read_text())
     except json.JSONDecodeError as e:
@@ -2183,6 +2200,10 @@ def main() -> int:
     #: no economics, before the bar or after it. The full read still gates.
     ap.add_argument("--pre-read", action="store_true")
     ap.add_argument("--builder-receipt")
+    ap.add_argument("--open-book", action="store_true",
+                    help="open the day book to recompute the population. "
+                         "HEAVY under rule 20 (~2 GB): the wrapper and the "
+                         "lock are required")
     ap.add_argument("--day")
     ap.add_argument("--book")
     ap.add_argument("--receipt")
@@ -2207,6 +2228,7 @@ def main() -> int:
         if not (a.day and a.book and a.receipt):
             ap.error("--pre-read needs --day, --book and --receipt")
         r = pre_read_day(a.day, a.book, a.receipt, output=a.output,
+                         open_book=a.open_book,
                          builder_receipt=a.builder_receipt)
         print(f"{a.day}: {r['status']} -- "
               f"{r['n_arms_agreeing']}/{r['n_arms_declared']} arms agree, "
@@ -2490,7 +2512,7 @@ def emitted_census(emitted: dict, receipt) -> dict:
 
 
 def pre_read_day(day: str, book_path: str, receipt_path: str, *,
-                 output: Path | None = None,
+                 output: Path | None = None, open_book: bool = False,
                  params: dict | None = None,
                  now: datetime.datetime | None = None,
                  builder_receipt: str | None = None) -> dict:
@@ -2546,13 +2568,26 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
                 f"day receipt names {r_sha}. Two receipts describing "
                 f"different books is not a day this verifier may check.")
 
-    bk = load_day_book(book_path)
-    rows = bk["rows"]
+    #: THE FULL READ ALWAYS OPENS THE BOOK -- it is the verification of the
+    #: economics and there is nothing to verify without it.
+    #: THE POPULATION HALF IS OPTIONAL AND ITS ABSENCE IS A NAMED
+    #: STATUS, never a silent pass (rule 11). Everything else the
+    #: pre-read does -- the two book bindings, the provenance, the seal
+    #: census and the landing record -- needs no book CONTENTS at all.
+    book_refusal = None
+    try:
+        bk = load_day_book(book_path)
+        rows = bk["rows"]
+    except VerifierRefused as e:
+        if open_book:
+            raise
+        book_refusal, bk, rows = str(e), None, []
 
     #: (b) THE POPULATION, recomputed from the book at the declared thetas.
     #: NO REPLAY. NO NULL.
     arms_out, agree = {}, []
-    for arm, spec in sorted(params["arms"].items()):
+    for arm, spec in ([] if book_refusal
+                      else sorted(params["arms"].items())):
         r_arm = arms_in.get(arm)
         if r_arm is None:
             arms_out[arm] = {"status": "ABSENT_FROM_THE_RECEIPT"}
@@ -2716,6 +2751,9 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
             "resolves one -- so it cannot compute an economic value, let "
             "alone emit it"),
         "book": book_meta,
+        "population_recomputed_from_the_book": (book_refusal is None),
+        "why_the_population_was_not_recomputed": book_refusal,
+        "n_arms_with_a_recomputed_population": len(arms_out),
         "builder_receipt": builder,
         #: THE AUTHORITATIVE DIGEST. Both seats now resolve through this
         #: field; the landing block's copy mirrors it and is asserted equal
