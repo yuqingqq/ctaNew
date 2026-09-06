@@ -63,6 +63,79 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T14:34:57Z (MEM ROUND 187 -- R-657 AND R-658 SWEPT AS ONE BATCH, tip `fedae1a`;
+  REV 71 recorded as LANDED-AND-UNSWEPT. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED
+  VALUE READ, QUOTED OR INFERRED.**
+  (1) ***MY ROUTED NOTE FROM ROUNDS 174 AND 182 IS CLOSED AT THE ARTIFACT.*** *I recorded
+  that `wrapper_measured` and `peak_is_censored` lived in the PRODUCERS and in NO landed
+  receipt, and that the next BE heavy run would be the first to carry them.* **It is: the
+  09-05 book receipt carries `peak_is_censored` TWICE and `wrapper_measured` ONCE, with
+  `lock_mode WRITE`, `n_flock_holders 1`, `in_a_transient_scope False`** -- *beside BE's own
+  caveat that an fd on the lock file only says it is OPEN, so the MODE is the test.*
+  **REV 63 §4's gap is closed in an artifact a reader resolves.**
+  (2) **AND THE CENSORED-PEAK FIELD'S FIRST REAL VALUE IS THE NEGATIVE CASE:**
+  `peak_is_censored: False`, `peak_bytes 5,161,025,536`, *"demand peaked here and was never
+  throttled; the peak is a MEASUREMENT"* -- with the same receipt restating that 09-04's
+  cap-equal peak with 1,199 reclaims *"is a BOUND"*. ***A flag whose first use
+  discriminates is a flag that works.***
+  (3) **THE COVERAGE ARITHMETIC REPRODUCES DIGIT FOR DIGIT:** 248,441 / 266,592 =
+  **0.9319146861121114**, which is the receipt's own `coverage`. *I divided the two numbers
+  rather than reading the ratio.*
+  (4) ***AND THE ROW ACCOUNTING CLOSES WITH NUMBERS I SWEPT ELEVEN ROUNDS AGO.***
+  `rows_published_by_the_tape_receipt 489,434` -- **and at ROUND 173 I recorded that tape
+  receipt's statuses: OK 463,384, PRE_WINDOW 26,027, NO_LEVEL_HISTORY 19, GAP_AT_CUTOFF 4.
+  463,384 + 26,027 + 19 + 4 = 489,434, and the three exclusions sum to exactly the 26,050
+  the register names.** *`rows_pin_receipt` names the tape receipt BY FILENAME: the pin is
+  to the artifact, not to a remembered number.*
+  (5) **THE LANDING RECORD SUPERSEDES BY THE PAIR I HASHED:** the successor
+  (`65048af3fda7…`, `status INCOMPLETE`, `n_arms_agreeing None`) names the 14:08 pre-read at
+  **`24f2191009177b4abe…` -- the digest I hashed MYSELF at round 183** -- in both `chain`
+  and `{path, sha256}`, **and the sealed receipt's digest `5dd3a8f3f5818379…` SURVIVES the
+  supersession.**
+  (6) **`output_format` IS IN THE CODE AND IN NO ARTIFACT YET.** *Six small derived JSONs
+  written since 14:25; ZERO hits; control: the string DOES appear in DA's code, so the zero
+  is an instrument's zero.* ***Fifth instance today of the emitter/artifact distinction --
+  and the first where the claim sits in the REGISTER rather than in a receipt.*** **Routed,
+  not ruled.**
+  (7) **THE 09-04 RUN IS LIVE AND I VERIFIED IT FROM OUTSIDE:** `de101smoke.service`
+  `loaded / active / running / 0 / success`, `InvocationID 499d6470b7844459…`, `MemoryPeak`
+  2,957,099,008 B, payload at 3:39; **MainPID = `flock` under PPid 1004**, from wt-de2 at
+  `c138f4f` against the 09-04 book `9193206c…`, receipt ≈15:57Z. ***The FIRST run in the
+  programme to carry `-E 75`, and the FIRST whose outcome will still be readable AFTER EXIT
+  (v3's `RemainAfterExit`).***
+  (8) **REV 71 LANDED AND IS NOT IN THIS DISPATCH -- recorded as LANDED-AND-UNSWEPT:** the
+  chain-head resolver **refuses five of six attacks** (a wrong-digest link, a missing
+  `supersedes`, a fork with two heads, an absent predecessor) **AND SILENTLY DEMOTES TO THE
+  SUPERSEDED PREDECESSOR WHEN THE HEAD IS UNREADABLE.** ***That is the chain-head rule's own
+  failure mode: the reader believes it is on the head.*** *Named within an hour of the rule
+  that created it; DE's surface.*
+  ***AT COMMIT TIME, 2026-09-06T14:38:38Z: THE 09-04 RUN WAS STOPPED BEFORE EMIT -- FOUR
+  MINUTES IN, BY ORDER, AND THE STOP IS AN ARTIFACT.***
+  **`p003_de_gate1_day_run_20260904_STOPPED__20260906T143800Z.json` (6,500 B,
+  `82fa43375cf6860b…`): `status STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN`, `day 2026-09-04`,
+  carrying `the_five_fields_and_the_id_copied_BEFORE_the_stop`, a `journal_copy`, DE's
+  `my_own_poll`, and the two negative keys `this_is_a_stop_before_emit_not_a_re_roll` and
+  `what_this_is_not`.** ***The day's rules applied in the only moment they matter: the five
+  fields and the id were copied WHILE THE UNIT WAS LOADED, and only then was it stopped --
+  so a run that no longer exists is still fully readable.*** *`de101smoke` now reads
+  `not-found / inactive / dead / 0` with `MemoryPeak [not set]`; that reading is VOID and
+  the record is the copy.*
+  **R-659 REVERSES PART OF R-656, disclosed:** of the four names ruled open, only
+  `n_decisions` is a population SIZE; **`n_fills_arm`, `n_fills_baseline` and
+  `n_cancels_issued` are OUTCOME COUNTS** -- *"the difference between the arm's fills and
+  the baseline's is the intervention's effect in EVENTS, a per-day directional proxy
+  readable before the read"* -- and ***rule 11 forbids the POSSIBILITY, not the MOTIVE.***
+  **They move behind the seal from the next launch (design v23, `ECONOMIC_FIELDS` extended
+  so DA's census follows by construction); the 09-03 receipt carries them open, produced
+  under v21 before the question was asked, and nobody quotes them.** *Cost ≈30 min; the
+  ruled day set unchanged; relaunch under v23 from a NEW rehearsal (rule 12).*
+  **FLAG WORDS: the 09-04 smoke LIVE-WITH-THE-FULL-RULED-FORM (≈15:57Z); the 09-05 book
+  LANDED-AT-260-MB; my routed fields NOW-IN-A-RECEIPT; the resolver
+  SILENTLY-DEMOTES-WHEN-THE-HEAD-IS-UNREADABLE (REV 71, unswept).**
+  MEASURED BEFORE THIS SENTENCE: flags 1,152 -> 1,160, flag_provenance 697 -> 705,
+  tasks 19; **459 CHECKED**, 246 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-third round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T14:28:34Z (MEM ROUND 186 -- R-656 SWEPT, tip `7e4e0bb`; DA 91 landed DURING the
   round and is swept with it. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ,
   QUOTED OR INFERRED.**
@@ -195,76 +268,6 @@ updated: >-
   tasks 19; **444 CHECKED**, 245 RELAYED, **455 UNMARKED -- unchanged for the
   sixty-first round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T14:15:29Z (MEM ROUND 184 -- R-653 AND R-654 SWEPT AS ONE BATCH, tip
-  `43abbd9`. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED FIELD IS READ OR QUOTED.**
-  (1) ***THE INVOCATION-ID TIE, DRIVEN ON ONE LIVE UNIT AND ONE GONE.*** **`be64book`:
-  `LoadState=loaded`, `InvocationID=e1460575980f488f9027e504b6334c9f`. `de95smoke`
-  (collected on success): `not-found`, `InvocationID=` EMPTY.** *The id is non-empty only
-  while the unit is loaded -- exactly the window in which the other four fields mean
-  anything* -- **and an outcome copied WITHOUT it cannot be matched back to a launch, since
-  the journal lines are keyed by that same id.**
-  (2) **R3'' IS A FIVE-FIELD READ, AND v3 SUPERSEDES v2 BY THE PAIR.** *I hashed v2:*
-  **`4a9409a1f712921abe…` -- and v3 (14:09:53Z) names that path and that sha256.** ***The
-  why is the sharp part: "v2's three-field minimum read is insufficient under the
-  RemainAfterExit IT DECLARES" -- with `RemainAfterExit=yes` a finished unit stays `active`,
-  so `active` no longer separates RUNNING from FINISHED and `SubState` + `Result` are
-  needed.*** *A remedy that created the need for a wider read, corrected inside twenty
-  minutes, in the declaration that introduced it.*
-  (3) **THE `-E` HALF IS DECIDABLE FROM THE RUNNING PROCESS.** On the live book run,
-  `be64book`'s MainPID 3485787 is the launcher shell and its child 3485789 reads
-  **`flock -n -E 75 …/.heavy_run.lock …/python`** from `/proc/3485789/cmdline`. ***Rule
-  20's second guard asks for THE LAUNCHER'S BYTES; this is those bytes at their strongest --
-  the argv of the process holding the lock -- and it is decidable from the payload's own
-  `PPid`, so a producer can check its own launch form without trusting anything it was
-  told.***
-  (4) **`systemd-run` FAILS WHILE A NAME IS LOADED** -- driven and cleaned up: a retained
-  failed unit makes a second launch under the same name refuse (*"Unit mem184a.service was
-  already loaded or has a fragment file"*), and `reset-failed` frees it. ***That is why the
-  STOP is a DECLARED STEP and not housekeeping: a run that leaves its unit loaded BLOCKS
-  THE NEXT LAUNCH UNDER THAT NAME -- and with `RemainAfterExit=yes` a SUCCESS now leaves it
-  loaded too, which is the new way to block a queue.***
-  (5) **DA 89's PRE-READ HOLDS AND NAMES ITS TWO NOT-DONES.** **`status FLAGGED`;
-  `n_leaked_fields 0` against `n_leaves_emitted 299`; the book `aad816d637f8445a…` bound
-  twice; `landing_record.receipt_sha256` == `receipt.sha256` == `5dd3a8f3f5818379…`.** *The
-  not-dones are NAMED: `provenance_all_matched False`, `code_is_committed False`, the design
-  digest `NOT_PINNED_HERE -- the pin runs design → params`.* ***A pre-read that holds AND
-  flags is worth more than one that passes.***
-  (6) **THE POPULATION HALF REFUSED BY NAME:** DA's fixtures are JSON, BE's book is a 290 MB
-  PICKLE, so the comparison instrument has never run against the real object -- ***rule 17's
-  own shape INSIDE the seat whose instruments hold everyone else to their receipts.***
-  **RULED: BE 65 declares the book structure; DA 91 runs the open-book half HEAVY ON THE
-  LOCK after DE 100's launch; every receipt from DE 100 carries an OPEN PROVENANCE BLOCK.**
-  (7) ***AND MY OWN LISTING PROBE WAS FOOLED BY THE UNPADDED SORT.*** *Checking the
-  coordinator's own correction ("params v13" was v14 at the artifact), `ls … | grep params |
-  tail -4` showed **v6, v7, v8, v9** and I nearly wrote that no v13/v14 exists.* **Both
-  exist: `v14` sorts BEFORE `v6` as a string, so `tail` showed the highest STRINGS, not the
-  highest VERSIONS -- and the pinned digest settles it, `2da40f4e7b2305df…` IS
-  `params_v14.json`.** ***This is the defect I swept at round 155 (DE 88's `"…v17…" <
-  "…v9…"`) arriving in my own probe twenty-nine rounds later.*** *Twentieth "suspect the
-  probe first".*
-  (8) **THE BOOK, READ AS FIVE FIELDS PLUS THE TIE:** `loaded / active / running / 0 /
-  success`, `InvocationID e1460575980f488f…`, `MemoryCurrent` 3,421,118,464 B, the payload
-  at **13:10**, RSS 3,399,432 KiB. *`ExecMainStatus=0` and `Result=success` on a RUNNING
-  unit are precisely why five fields are read: two of them say nothing yet.* **DA 90 and
-  REV 70 dispatched; DE 100 launches ONLY IF `be64book` has finished, else it files
-  READY-AND-BLOCKED and DE 101 is a SEPARATE GO.**
-  **AT COMMIT TIME, 2026-09-06T14:19:16Z: DA 90 LANDED and I censused its receipt** --
-  `p003_da_rev69_s2__20260906T141623Z.json`, **7,125 B, `dc2905237b3cd5d9aa…`**, whose own
-  fields record **both encoding residues decoded through ONE helper (16 rows, 6 malformed)**,
-  **`s2_2_the_plus_is_unloseable`**, and the open-book path for DA 91: **a JSON fixture
-  `ADMITTED rows=1` beside `BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON`** -- ***R-654's refusal
-  reproduced as an INSTRUMENT RESULT rather than a sentence.*** *DA also writes a slip of
-  its own into the artifact -- an unquoted heredoc that let the shell eat a backticked
-  string -- the same defect R-647 recorded, caught again by the seat that reported it.*
-  **The book is at 16:57, RSS 3,442,928 KiB, and the five-field read plus the tie is
-  unchanged.**
-  **FLAG WORDS: the outcome FIVE-FIELDS-PLUS-THE-TIE (R3''); the 09-05 book
-  BUILDING-ON-THE-LOCK (13 min); the 09-03 pre-read FLAGGED-WITH-TWO-NAMED-NOT-DONES; DE 100
-  LAUNCH-ONLY-IF-THE-LOCK-IS-FREE.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,128 -> 1,136, flag_provenance 673 -> 681,
-  tasks 19; **440 CHECKED**, 241 RELAYED, **455 UNMARKED -- unchanged for the
-  sixtieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
-  new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2938,6 +2941,126 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_COVERAGE_ARITHMETIC_REPRODUCES_DIGIT_FOR_DIGIT: 248441_OVER_266592
+                             # CHECKED 2026-09-06T14:34:57Z at BE's 09-05 receipt. **`asm.n_shared_
+                             # keys 248,441` over `UNCOVERED_GENERATIONS.n_reference_generations
+                             # 266,592` gives `0.9319146861121114` -- and the receipt's own
+                             # `coverage` field reads `0.9319146861121114`, digit for digit.**
+                             # *I divided the two numbers myself rather than reading the ratio.*
+                             # **And the receipt says why no reason-class sits beside it: the drop
+                             # classes (`pre_window_excluded`, `gap_at_cutoff_excluded`,
+                             # `no_level_history_excluded`, `state_join_failed`) belong to the
+                             # TAPE's accounting, not the book's** -- *`state_join_failed 0` with
+                             # its own boolean beside it.*
+  THE_ROW_ACCOUNTING_CLOSES_WITH_MY_OWN_ROUND_173_NUMBERS: 463384_PLUS_26050
+                             # CHECKED 2026-09-06T14:34:57Z. **`rows_published_by_the_tape_receipt
+                             # 489,434` -- and at ROUND 173 I recorded that tape receipt's own
+                             # statuses: `OK 463,384`, `PRE_WINDOW 26,027`, `NO_LEVEL_HISTORY 19`,
+                             # `GAP_AT_CUTOFF 4`.**
+                             # ***463,384 + 26,027 + 19 + 4 = 489,434, and the three exclusion
+                             # statuses sum to exactly the 26,050 the register names.*** *A number I
+                             # swept eleven rounds ago closes an accounting written today, without
+                             # either side being re-derived.*
+                             # **`assembly_evidence.ROW_ACCOUNTING.rows_accounted_for: True` with
+                             # `rows_pin_receipt` naming the tape receipt by filename** -- *the pin
+                             # is to the artifact, not to a remembered number.*
+  MY_ROUTED_NOTE_IS_CLOSED_AT_THE_ARTIFACT: WRAPPER_MEASURED_AND_PEAK_IS_CENSORED_ARE_IN_A_RECEIPT
+                             # CHECKED 2026-09-06T14:34:57Z -- ***and this closes the note I routed
+                             # at rounds 174 and 182.*** *I recorded then that `wrapper_measured`
+                             # and `peak_is_censored` existed in the PRODUCERS and in NO landed
+                             # receipt, and that the next BE heavy run would be the first to carry
+                             # them.*
+                             # **It is: `be_daybook_receipt_20260905_btc.json` carries
+                             # `peak_is_censored` TWICE and `wrapper_measured` ONCE.**
+                             # **The lock is evidenced with its MODE: `lock_mode WRITE`,
+                             # `n_flock_holders 1`, `heavy_run_lock_held True`,
+                             # `in_a_transient_scope False`** -- *beside BE's own honest caveat,
+                             # "an fd on the lock file says the file is OPEN. Two lines of `open()`
+                             # with no flock forged the old field", so the fd is corroboration and
+                             # the MODE is the test.* **REV 63 §4's gap is closed in an artifact a
+                             # reader resolves, not in code.**
+  THE_CENSORED_PEAK_IS_A_MEASUREMENT_THIS_TIME: FIVE_POINT_ONE_SIX_GIGABYTES_NEVER_THROTTLED
+                             # CHECKED 2026-09-06T14:34:57Z. **`scope.peak_is_censored: False`,
+                             # `peak_bytes 5,161,025,536`, with `what_this_peak_supports`: "demand
+                             # peaked here and was never throttled; the peak is a MEASUREMENT".**
+                             # *And the same receipt restates the contrast in its own words:
+                             # "09-04's tape reported `peak_bytes == max_bytes` with 1,199 reclaims
+                             # that pinned it there. That is a BOUND, not a…" measurement.*
+                             # ***So the field I watched being ruled, then written, then shipped is
+                             # now carrying its first real value -- and the first value it carries
+                             # is the NEGATIVE case, which is the one that proves it can
+                             # discriminate.***
+  OUTPUT_FORMAT_IS_IN_THE_CODE_AND_IN_NO_ARTIFACT_YET: FIFTH_INSTANCE_ROUTED
+                             # CHECKED 2026-09-06T14:34:57Z with a bounded search and a control.
+                             # **Six small derived JSONs have been written since 14:25 and
+                             # `output_format` appears in NONE of them; the string DOES appear in
+                             # DA's code (`da_cross_venue_forensics.py`, `da_root.py`), so the zero
+                             # is an INSTRUMENT'S zero and not a silent mismatch.**
+                             # *R-657 records `output_format` "everywhere". True of the COPIERS;
+                             # not yet of any artifact, because no journal copy has been emitted
+                             # since the ruling.*
+                             # ***Fifth instance today of the emitter/artifact distinction -- and the
+                             # first where the claim sits in the REGISTER rather than in a
+                             # receipt.*** **Routed, not ruled: the sentence is right about the code
+                             # and a reader resolving artifacts today finds nothing.**
+  THE_LANDING_RECORD_SUPERSEDES_BY_THE_PAIR_I_HASHED: TWENTY_FOUR_F2_TO_SIXTY_FIVE_ZERO
+                             # CHECKED 2026-09-06T14:34:57Z. **The superseding 09-03 landing record
+                             # carries `supersedes` as BOTH a `chain` and a `{path, sha256}` pair,
+                             # naming `p003_da_gate1_pre_read_20260903__20260906T140810Z.json` at
+                             # `24f2191009177b4abe…` -- the digest I hashed MYSELF at round 183.**
+                             # *So the supersession resolves against a number an independent seat
+                             # had already recorded, which is what the pair form is for.*
+                             # **The successor is `65048af3fda7…`; `status INCOMPLETE`;
+                             # `n_arms_agreeing None`; and the sealed receipt's digest
+                             # `5dd3a8f3f5818379…` SURVIVES the supersession unchanged.**
+  THE_09_04_RUN_IS_LIVE_AND_VERIFIED_FROM_OUTSIDE: THE_FIRST_RUN_WITH_MINUS_E_75
+                             # CHECKED 2026-09-06T14:34:57Z, five fields plus the tie:
+                             # **`de101smoke.service` `loaded / active / running / 0 / success`,
+                             # `InvocationID 499d6470b7844459…`, `MemoryPeak` 2,957,099,008 B, the
+                             # payload (3521829) at 3:39 with RSS 846,624 KiB; MainPID = `flock`
+                             # under PPid 1004; from wt-de2 at `c138f4f` against the 09-04 book
+                             # `9193206c…`; receipt expected ≈15:57Z.**
+                             # ***REV 71 records what makes this run different, and I had measured
+                             # the same fields myself: it is the FIRST run in the programme to carry
+                             # `-E 75` (verified from `/proc/<pid>/cmdline`) and the FIRST whose
+                             # outcome will still be readable AFTER EXIT, because v3's
+                             # `RemainAfterExit=yes` is in its unit.***
+                             # **EXTENDED IN BAND 2026-09-06T14:38:38Z: THE 09-04 RUN WAS STOPPED
+                             # BEFORE EMIT, AND THE STOP IS AN ARTIFACT.**
+                             # **`p003_de_gate1_day_run_20260904_STOPPED__20260906T143800Z.json`,
+                             # 6,500 B, `82fa43375cf6860b…`, `status
+                             # STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN`, `day 2026-09-04`, with keys
+                             # `the_five_fields_and_the_id_copied_BEFORE_the_stop`,
+                             # `journal_copy`, `my_own_poll`, `this_is_a_stop_before_emit_not_a_re_
+                             # roll` and `what_this_is_not`.**
+                             # ***R3' AND R3'' APPLIED IN THE ONLY MOMENT THEY MATTER: the five
+                             # fields and the InvocationID were COPIED WHILE THE UNIT WAS LOADED,
+                             # and only then was it stopped -- so the run that no longer exists is
+                             # still fully readable.*** *`de101smoke` now reads `not-found /
+                             # inactive / dead / 0` with `MemoryPeak [not set]`, and that reading is
+                             # VOID; the record is the copy.*
+                             # **WHY (R-659, the coordinator's own reversal, disclosed): design v22
+                             # left three OUTCOME counts open -- `n_fills_arm`, `n_fills_baseline`,
+                             # `n_cancels_issued` -- and "the difference between the arm's fills and
+                             # the baseline's is the intervention's effect in EVENTS, a per-day
+                             # directional proxy readable before the read"; rule 11 FORBIDS THE
+                             # POSSIBILITY, NOT THE MOTIVE.** *They move behind the seal from the
+                             # next launch (v23), `ECONOMIC_FIELDS` extended so DA's census follows
+                             # by construction; the 09-03 receipt carries them open, produced under
+                             # v21 before the question was asked, and nobody quotes them.*
+                             # **Cost ≈30 minutes on the chain; the ruled day set unchanged.**
+  REV_71_LANDED_WITH_A_SILENT_DEMOTION_AND_IS_NOT_IN_THIS_SWEEP: FIVE_OF_SIX_REFUSED
+                             # CHECKED 2026-09-06T14:34:57Z at the commit message; **RECORDED AS
+                             # LANDED-AND-UNSWEPT** -- REV 71 (`995bd4e`) is not in this round's
+                             # dispatch and is verified when its entry lands.
+                             # **Its headline: the chain-head resolver REFUSES FIVE OF SIX ATTACKS
+                             # -- a wrong-digest link, a missing `supersedes`, a fork with two
+                             # heads, an absent predecessor -- AND SILENTLY DEMOTES TO THE
+                             # SUPERSEDED PREDECESSOR WHEN THE HEAD ITSELF IS UNREADABLE.**
+                             # ***A resolver that falls back to the superseded version without
+                             # saying so is the chain-head rule's own failure mode: the reader
+                             # believes it is on the head.*** *Named by the reviewer within an hour
+                             # of the rule that created it; DE's surface, and MEM rules nothing.*
   PRODUCING_CODE_LOCATABLE_VERIFIED_AT_THE_COMMIT_BY_ME: F6071F12
                              # CHECKED 2026-09-06T14:28:34Z. **`git cat-file blob
                              # b741352:live/pm_research/de_multiday_gate1_runner.py | sha256sum` →
@@ -22109,6 +22232,91 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 187, 2026-09-06T14:34:57Z ------------------------------
+  THE_COVERAGE_ARITHMETIC_REPRODUCES_DIGIT_FOR_DIGIT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc.json
+    as_of: 2026-09-06T14:34:57Z
+    said: >-
+      n_shared_keys 248,441 over n_reference_generations 266,592 is 0.9319146861121114 and
+      the receipt's coverage field reads the same digits; I divided the two numbers myself
+      rather than reading the ratio. The receipt also says why no reason class sits beside
+      it: the drop classes belong to the tape's accounting, with state_join_failed 0.
+  THE_ROW_ACCOUNTING_CLOSES_WITH_MY_OWN_ROUND_173_NUMBERS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc.json
+    as_of: 2026-09-06T14:34:57Z
+    said: >-
+      rows_published_by_the_tape_receipt is 489,434, and at round 173 I recorded that tape
+      receipt's own statuses as OK 463,384, PRE_WINDOW 26,027, NO_LEVEL_HISTORY 19 and
+      GAP_AT_CUTOFF 4; their sum is 489,434 and the three exclusion statuses sum to exactly
+      the 26,050 the register names. rows_accounted_for is true with rows_pin_receipt naming
+      the tape receipt by filename, so the pin is to the artifact rather than to a
+      remembered number.
+  MY_ROUTED_NOTE_IS_CLOSED_AT_THE_ARTIFACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc.json
+    as_of: 2026-09-06T14:34:57Z
+    said: >-
+      at rounds 174 and 182 I recorded that wrapper_measured and peak_is_censored existed in
+      the producers and in no landed receipt, and that the next BE heavy run would be the
+      first to carry them; the 09-05 book receipt carries peak_is_censored twice and
+      wrapper_measured once, with lock_mode WRITE, n_flock_holders 1, heavy_run_lock_held
+      true and in_a_transient_scope false, beside BE's caveat that an fd on the lock file
+      only says it is open and the mode is the test.
+  THE_CENSORED_PEAK_IS_A_MEASUREMENT_THIS_TIME:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc.json
+    as_of: 2026-09-06T14:34:57Z
+    said: >-
+      scope.peak_is_censored is False with peak_bytes 5,161,025,536 and the note that demand
+      peaked there and was never throttled so the peak is a measurement, while the same
+      receipt restates that 09-04's tape reported peak equal to the cap with 1,199 reclaims,
+      which is a bound. The field's first real value is the negative case, which is the one
+      that proves it can discriminate.
+  OUTPUT_FORMAT_IS_IN_THE_CODE_AND_IN_NO_ARTIFACT_YET:
+    prov: CHECKED
+    artifact: live/pm_research/da_cross_venue_forensics.py
+    as_of: 2026-09-06T14:34:57Z
+    said: >-
+      six small derived JSONs have been written since 14:25 and output_format appears in
+      none of them, while the string does appear in DA's code, so the zero is an
+      instrument's zero. R-657 records output_format everywhere, which is true of the
+      copiers and not yet of any artifact because no journal copy has been emitted since the
+      ruling -- the fifth instance today of the emitter versus artifact distinction and the
+      first where the claim sits in the register. Routed, not ruled.
+  THE_LANDING_RECORD_SUPERSEDES_BY_THE_PAIR_I_HASHED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T142749Z.json
+    as_of: 2026-09-06T14:34:57Z
+    said: >-
+      the superseding landing record carries supersedes as both a chain and a path plus
+      sha256 pair, naming the 14:08 pre-read at 24f2191009177b4abe, which is the digest I
+      hashed myself at round 183; the successor is 65048af3fda7 with status INCOMPLETE and
+      n_arms_agreeing None, and the sealed receipt's digest 5dd3a8f3f5818379 survives the
+      supersession unchanged.
+  THE_09_04_RUN_IS_LIVE_AND_VERIFIED_FROM_OUTSIDE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/heavy_run_form_v3.json
+    as_of: 2026-09-06T14:34:57Z
+    said: >-
+      de101smoke.service reads loaded, active, running, ExecMainStatus 0 and Result success
+      with InvocationID 499d6470b7844459 and MemoryPeak 2,957,099,008, its payload at 3:39
+      with RSS 846,624 KiB, MainPID being flock under PPid 1004, launched from wt-de2 at
+      c138f4f against the 09-04 book 9193206c with a receipt expected about 15:57Z. It is
+      the first run in the programme to carry -E 75 and the first whose outcome will still
+      be readable after exit under v3's RemainAfterExit.
+  REV_71_LANDED_WITH_A_SILENT_DEMOTION_AND_IS_NOT_IN_THIS_SWEEP:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T14:34:57Z
+    said: >-
+      REV 71 landed at 995bd4e and is not in this round's dispatch, so it is recorded as
+      landed and unswept pending its entry. Its headline is that the chain-head resolver
+      refuses five of six attacks -- a wrong-digest link, a missing supersedes, a fork with
+      two heads, an absent predecessor -- and silently demotes to the superseded predecessor
+      when the head itself is unreadable, which is the chain-head rule's own failure mode
+      because the reader believes it is on the head.
   # --- MEM round 186, 2026-09-06T14:28:34Z ------------------------------
   PRODUCING_CODE_LOCATABLE_VERIFIED_AT_THE_COMMIT_BY_ME:
     prov: CHECKED

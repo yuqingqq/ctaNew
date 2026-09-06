@@ -14249,3 +14249,83 @@ directions.
   fifty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 169 — archived 2026-09-06T14:34:57Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 187 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T14:15:29Z (MEM ROUND 184 -- R-653 AND R-654 SWEPT AS ONE BATCH, tip
+  `43abbd9`. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED FIELD IS READ OR QUOTED.**
+  (1) ***THE INVOCATION-ID TIE, DRIVEN ON ONE LIVE UNIT AND ONE GONE.*** **`be64book`:
+  `LoadState=loaded`, `InvocationID=e1460575980f488f9027e504b6334c9f`. `de95smoke`
+  (collected on success): `not-found`, `InvocationID=` EMPTY.** *The id is non-empty only
+  while the unit is loaded -- exactly the window in which the other four fields mean
+  anything* -- **and an outcome copied WITHOUT it cannot be matched back to a launch, since
+  the journal lines are keyed by that same id.**
+  (2) **R3'' IS A FIVE-FIELD READ, AND v3 SUPERSEDES v2 BY THE PAIR.** *I hashed v2:*
+  **`4a9409a1f712921abe…` -- and v3 (14:09:53Z) names that path and that sha256.** ***The
+  why is the sharp part: "v2's three-field minimum read is insufficient under the
+  RemainAfterExit IT DECLARES" -- with `RemainAfterExit=yes` a finished unit stays `active`,
+  so `active` no longer separates RUNNING from FINISHED and `SubState` + `Result` are
+  needed.*** *A remedy that created the need for a wider read, corrected inside twenty
+  minutes, in the declaration that introduced it.*
+  (3) **THE `-E` HALF IS DECIDABLE FROM THE RUNNING PROCESS.** On the live book run,
+  `be64book`'s MainPID 3485787 is the launcher shell and its child 3485789 reads
+  **`flock -n -E 75 …/.heavy_run.lock …/python`** from `/proc/3485789/cmdline`. ***Rule
+  20's second guard asks for THE LAUNCHER'S BYTES; this is those bytes at their strongest --
+  the argv of the process holding the lock -- and it is decidable from the payload's own
+  `PPid`, so a producer can check its own launch form without trusting anything it was
+  told.***
+  (4) **`systemd-run` FAILS WHILE A NAME IS LOADED** -- driven and cleaned up: a retained
+  failed unit makes a second launch under the same name refuse (*"Unit mem184a.service was
+  already loaded or has a fragment file"*), and `reset-failed` frees it. ***That is why the
+  STOP is a DECLARED STEP and not housekeeping: a run that leaves its unit loaded BLOCKS
+  THE NEXT LAUNCH UNDER THAT NAME -- and with `RemainAfterExit=yes` a SUCCESS now leaves it
+  loaded too, which is the new way to block a queue.***
+  (5) **DA 89's PRE-READ HOLDS AND NAMES ITS TWO NOT-DONES.** **`status FLAGGED`;
+  `n_leaked_fields 0` against `n_leaves_emitted 299`; the book `aad816d637f8445a…` bound
+  twice; `landing_record.receipt_sha256` == `receipt.sha256` == `5dd3a8f3f5818379…`.** *The
+  not-dones are NAMED: `provenance_all_matched False`, `code_is_committed False`, the design
+  digest `NOT_PINNED_HERE -- the pin runs design → params`.* ***A pre-read that holds AND
+  flags is worth more than one that passes.***
+  (6) **THE POPULATION HALF REFUSED BY NAME:** DA's fixtures are JSON, BE's book is a 290 MB
+  PICKLE, so the comparison instrument has never run against the real object -- ***rule 17's
+  own shape INSIDE the seat whose instruments hold everyone else to their receipts.***
+  **RULED: BE 65 declares the book structure; DA 91 runs the open-book half HEAVY ON THE
+  LOCK after DE 100's launch; every receipt from DE 100 carries an OPEN PROVENANCE BLOCK.**
+  (7) ***AND MY OWN LISTING PROBE WAS FOOLED BY THE UNPADDED SORT.*** *Checking the
+  coordinator's own correction ("params v13" was v14 at the artifact), `ls … | grep params |
+  tail -4` showed **v6, v7, v8, v9** and I nearly wrote that no v13/v14 exists.* **Both
+  exist: `v14` sorts BEFORE `v6` as a string, so `tail` showed the highest STRINGS, not the
+  highest VERSIONS -- and the pinned digest settles it, `2da40f4e7b2305df…` IS
+  `params_v14.json`.** ***This is the defect I swept at round 155 (DE 88's `"…v17…" <
+  "…v9…"`) arriving in my own probe twenty-nine rounds later.*** *Twentieth "suspect the
+  probe first".*
+  (8) **THE BOOK, READ AS FIVE FIELDS PLUS THE TIE:** `loaded / active / running / 0 /
+  success`, `InvocationID e1460575980f488f…`, `MemoryCurrent` 3,421,118,464 B, the payload
+  at **13:10**, RSS 3,399,432 KiB. *`ExecMainStatus=0` and `Result=success` on a RUNNING
+  unit are precisely why five fields are read: two of them say nothing yet.* **DA 90 and
+  REV 70 dispatched; DE 100 launches ONLY IF `be64book` has finished, else it files
+  READY-AND-BLOCKED and DE 101 is a SEPARATE GO.**
+  **AT COMMIT TIME, 2026-09-06T14:19:16Z: DA 90 LANDED and I censused its receipt** --
+  `p003_da_rev69_s2__20260906T141623Z.json`, **7,125 B, `dc2905237b3cd5d9aa…`**, whose own
+  fields record **both encoding residues decoded through ONE helper (16 rows, 6 malformed)**,
+  **`s2_2_the_plus_is_unloseable`**, and the open-book path for DA 91: **a JSON fixture
+  `ADMITTED rows=1` beside `BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON`** -- ***R-654's refusal
+  reproduced as an INSTRUMENT RESULT rather than a sentence.*** *DA also writes a slip of
+  its own into the artifact -- an unquoted heredoc that let the shell eat a backticked
+  string -- the same defect R-647 recorded, caught again by the seat that reported it.*
+  **The book is at 16:57, RSS 3,442,928 KiB, and the five-field read plus the tie is
+  unchanged.**
+  **FLAG WORDS: the outcome FIVE-FIELDS-PLUS-THE-TIE (R3''); the 09-05 book
+  BUILDING-ON-THE-LOCK (13 min); the 09-03 pre-read FLAGGED-WITH-TWO-NAMED-NOT-DONES; DE 100
+  LAUNCH-ONLY-IF-THE-LOCK-IS-FREE.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,128 -> 1,136, flag_provenance 673 -> 681,
+  tasks 19; **440 CHECKED**, 241 RELAYED, **455 UNMARKED -- unchanged for the
+  sixtieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
+  new flags vs HEAD 0 without provenance.)
+```

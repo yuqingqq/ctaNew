@@ -5,6 +5,85 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 187
+
+**As of 2026-09-06T14:34:57Z, R-657 and R-658 swept (tip `fedae1a`); REV 71 recorded as
+landed-and-unswept. State only — MEM writes no result. No sealed value read, quoted or
+inferred.**
+
+### My routed note is closed at the artifact
+
+*At rounds 174 and 182 I recorded that `wrapper_measured` and `peak_is_censored` lived in
+the **producers** and in **no landed receipt**, and that the next BE heavy run would be the
+first to carry them.* **It is.** The 09-05 book receipt carries **`peak_is_censored` twice
+and `wrapper_measured` once**, with **`lock_mode WRITE`, `n_flock_holders 1`,
+`in_a_transient_scope False`** — beside BE's own caveat that *an fd on the lock file only
+says it is open, so the **mode** is the test*. **REV 63 §4's gap is closed in an artifact a
+reader resolves.**
+
+**And the field's first real value is the negative case:** `peak_is_censored: False`,
+`peak_bytes 5,161,025,536`, *"demand peaked here and was never throttled; the peak is a
+measurement"* — while the same receipt restates that 09-04's cap-equal peak with 1,199
+reclaims *"is a bound"*. ***A flag whose first use discriminates is a flag that works.***
+
+### AT COMMIT TIME (14:38:38Z): the 09-04 run was STOPPED before emit — and the stop is an artifact
+
+**`p003_de_gate1_day_run_20260904_STOPPED__20260906T143800Z.json`** (6,500 B,
+`82fa43375cf6860b…`): **`status STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN`**, `day 2026-09-04`,
+carrying **`the_five_fields_and_the_id_copied_BEFORE_the_stop`**, a `journal_copy`, DE's
+`my_own_poll`, and two negative keys — `this_is_a_stop_before_emit_not_a_re_roll` and
+`what_this_is_not`. ***The day's rules applied in the only moment they matter: the five
+fields and the id were copied **while the unit was loaded**, and only then was it stopped —
+so a run that no longer exists is still fully readable.*** *`de101smoke` now reads
+`not-found / inactive / dead / 0`, `MemoryPeak [not set]` — VOID; the record is the copy.*
+
+**R-659 reverses part of R-656 (disclosed):** of the four names ruled open, only
+`n_decisions` is a population **size**; **`n_fills_arm`, `n_fills_baseline` and
+`n_cancels_issued` are OUTCOME counts** — *"the difference between the arm's fills and the
+baseline's is the intervention's effect in events, a per-day directional proxy readable
+before the read"* — and ***rule 11 forbids the possibility, not the motive.*** They move
+**behind the seal from the next launch** (design v23; `ECONOMIC_FIELDS` extended so DA's
+census follows by construction). The 09-03 receipt carries them open, produced under v21
+**before the question was asked**, and nobody quotes them. *Cost ≈30 min; the ruled day set
+unchanged; relaunch under v23 from a new rehearsal.*
+
+### Two arithmetics, both reproduced here
+
+- **Coverage:** 248,441 / 266,592 = **0.9319146861121114** — the receipt's own `coverage`,
+  digit for digit. *I divided the numbers rather than reading the ratio.*
+- ***Row accounting closes with numbers I swept eleven rounds ago:*** `489,434` published by
+  the tape receipt, and at **round 173** I recorded that receipt's statuses — **OK 463,384,
+  PRE_WINDOW 26,027, NO_LEVEL_HISTORY 19, GAP_AT_CUTOFF 4**. *463,384 + 26,027 + 19 + 4 =
+  489,434*, and the three exclusions sum to exactly the **26,050** the register names.
+  `rows_pin_receipt` names the tape receipt **by filename** — the pin is to the artifact,
+  not to a remembered number.
+
+### The rest of the sweep
+
+- **The landing record supersedes by the pair I hashed:** successor `65048af3fda7…`
+  (`INCOMPLETE`, `n_arms_agreeing None`) names the 14:08 pre-read at **`24f2191009177b4abe…`**
+  — *the digest I hashed myself at round 183* — and **the sealed receipt's digest survives**.
+- **`output_format` is in the code and in no artifact yet:** six small derived JSONs since
+  14:25, **zero** hits; **control: the string is in DA's code**, so the zero is an
+  instrument's zero. ***Fifth instance today of the emitter/artifact distinction — the first
+  where the claim sits in the register.*** Routed, not ruled.
+- **The 09-04 run is live, verified from outside:** `de101smoke.service`
+  `loaded / active / running / 0 / success`, `InvocationID 499d6470…`, `MemoryPeak` 2.96 GB,
+  payload at 3:39; **MainPID = `flock` under PPid 1004**, from wt-de2 at `c138f4f` against
+  book `9193206c…`, receipt ≈15:57Z. ***The first run to carry `-E 75`, and the first whose
+  outcome will still be readable after exit.***
+- **REV 71 landed and is not in this dispatch** — recorded as landed-and-unswept: the
+  chain-head resolver **refuses five of six attacks** and ***silently demotes to the
+  superseded predecessor when the head is unreadable*** — *the chain-head rule's own failure
+  mode: the reader believes it is on the head.*
+
+**Counts, measured before the sentence:** flags 1,152 → **1,160**, `flag_provenance`
+697 → **705**, tasks 19; **459 CHECKED**, 246 RELAYED, **455 UNMARKED — unchanged for the
+sixty-third round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 169** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 186
 
 **As of 2026-09-06T14:28:34Z, R-656 swept (tip `7e4e0bb`); DA 91 landed during the round and
