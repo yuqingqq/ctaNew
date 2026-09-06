@@ -53,6 +53,26 @@ class DataRootRefused(RuntimeError):
 #: proof carries its own non-vacuity, because an instrument that observed
 #: nothing cannot testify that nothing was opened.
 _LAST_PROOF: dict = {}
+#: THE FULL PATH SET, IN MEMORY ONLY, never inside the proof dict.
+#: `distinct_paths` is capped so a receipt cannot carry an unbounded list;
+#: that cap then silently answered MEMBERSHIP questions wrong. DE 90 moved
+#: the runner's battery inside the instrumented region, the run went from
+#: ~25 to ~5,800 opens, and the day path's own non-vacuity guard -- "did
+#: the instrument see the book?" -- read the capped list, missed the book,
+#: and REFUSED a correct run. Found by running `--synthetic-day`, not by
+#: reading.
+#:
+#: It is kept OUT of `proof` on purpose: a caller that embeds the proof in
+#: an artifact cannot embed this by accident.
+_LAST_FULL_PATHS: list = []
+
+
+def last_full_paths() -> list:
+    """Every distinct path the LAST `instrumented()` call observed.
+
+    Uncapped, and for asking membership questions IN PROCESS. Do not put
+    it in an artifact -- that is what the capped `distinct_paths` is for."""
+    return list(_LAST_FULL_PATHS)
 
 
 #: The proof carries the paths it saw, capped: an unbounded list inside a
@@ -105,12 +125,15 @@ def instrumented(fn, *args, **kwargs):
     }
     _LAST_PROOF.clear()
     _LAST_PROOF.update(proof)
+    _LAST_FULL_PATHS.clear()
+    _LAST_FULL_PATHS.extend(sorted(set(seen)))
     return result, proof
 
 
 def clear_proof() -> None:
     """Forget any registered proof -- so a stale one cannot be reused."""
     _LAST_PROOF.clear()
+    _LAST_FULL_PATHS.clear()
 
 
 def resolve() -> dict:

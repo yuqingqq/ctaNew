@@ -44,9 +44,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 18
+VERSION = 19
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 100
+EXPECTED_CHECKS = 102
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -122,6 +122,9 @@ V16_DECLARATION = ("p003_de_multiday_gate1_design_v16.json",
 V17_DECLARATION = ("p003_de_multiday_gate1_design_v17.json",
                    "56645012b707ffc0ed78fa0c96dcd3b9e478bb84b0d7d355ef952b"
                    "313ae5a02d")
+V18_DECLARATION = ("p003_de_multiday_gate1_design_v18.json",
+                   "fa7698d7ce4811ddfd41ef6c3db299fd289fb71de231d20030f765"
+                   "b22e49c2b7")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
@@ -129,7 +132,7 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
                     V10_DECLARATION, V11_DECLARATION, V12_DECLARATION,
                     V13_DECLARATION, V14_DECLARATION, V15_DECLARATION,
-                    V16_DECLARATION, V17_DECLARATION)
+                    V16_DECLARATION, V17_DECLARATION, V18_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -550,7 +553,7 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 
 #: The params file this design pins. ONE name, and everything in the pin
 #: block is derived from it.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v11.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v12.json"
 
 
 def _params_path() -> Path:
@@ -1745,6 +1748,93 @@ def declaration() -> dict:
             "enforced_by": ["de_multiday_gate1_runner.run_day()",
                             "de_multiday_gate1_runner._main_day()"],
         },
+        # ---- DE 91 / REV 55 S2.1: WHO COMPOSES THE RECEIPT'S NAME.
+        # A declaration change, because the name is what the read gate's
+        # glob and DA's landing record resolve -- and because the rule it
+        # replaces was "whatever the operator types".
+        "R25_the_day_receipts_name_is_composed_by_the_runner": {
+            "the_defect": (
+                "the operator supplied `--output` and the published GO "
+                "procedure built the name at LAUNCH from `date -u`. The "
+                "emit compares the filename's stamp against the moment of "
+                "WRITING: on the last smoke's own name that is -5,074 s, "
+                "a CERTAIN refusal after 85 minutes. And the obvious "
+                "escape -- a stamp-free name -- passes the emit and is "
+                "INVISIBLE to the sealed glob, so the receipt would exist "
+                "and the read gate would report the day MISSING. Neither "
+                "name an operator can type is right"),
+            "the_rule": (
+                "`--output` names a DIRECTORY on the day path. The runner "
+                "composes the filename itself, from the clock, at the "
+                "moment of writing -- `as_of` and the stamp come from ONE "
+                "clock read, so they are the same instant by "
+                "construction"),
+            "why_a_directory": (
+                "DE 88's own principle: a path that must be known in "
+                "advance cannot carry an honest stamp. A directory is "
+                "knowable in advance and carries none. The principle was "
+                "declared for the DESIGN artifact and the day receipt was "
+                "still being named the old way"),
+            "convention": ("p003_de_gate1_day_run_<YYYYMMDD>_SEALED__"
+                           "<stamp>.json -- params v12's "
+                           "read_gate.receipt_naming, which the glob and "
+                           "DA's landing record resolve"),
+            "a_fixture_cannot_wear_it": (
+                "a fixture receipt carries `_FIXTURE__`, so it cannot "
+                "match the sealed glob AT ALL -- not merely carry a "
+                "different day. `--synthetic-day 2026-09-03` once emitted "
+                "a SEALED-looking artifact from a synthetic book; the day "
+                "half was locked and the FILENAME half stayed with the "
+                "caller"),
+            "both_refusals_are_BEFORE_the_work": (
+                "a caller-supplied filename, stamped or not, is refused "
+                "at the top of `_main_day` at ZERO draws. A naming rule "
+                "enforced at the emit is a rule that costs 85 minutes to "
+                "break"),
+            "what_replaced_the_output_exists_guard": (
+                "`assert_no_sealed_receipt_yet` -- has this DAY already "
+                "landed a sealed artifact? Stronger than the check it "
+                "replaces, which could only catch a collision on the "
+                "exact stamp the caller happened to type"),
+            "the_receipt_records_both_times": ["launched_at_utc",
+                                               "emitted_at_utc"],
+            "enforced_by": [
+                "de_multiday_gate1_runner.day_receipt_name()",
+                "de_multiday_gate1_runner.assert_output_is_a_directory()",
+                "de_multiday_gate1_runner.assert_no_sealed_receipt_yet()",
+            ],
+        },
+        # ---- DE 91: found while closing R25, and it was the second
+        # certain end-of-run refusal -- this one mine, from DE 90.
+        "R26_membership_questions_are_asked_of_the_UNCAPPED_path_set": {
+            "the_defect": (
+                "DE 90 moved the battery inside the day's residency "
+                "instrument. The run went from ~25 opens to thousands; "
+                "`distinct_paths` is capped at 200 so a receipt cannot "
+                "carry an unbounded list; and the day path's own "
+                "non-vacuity guard -- did the instrument see the book? -- "
+                "read the CAPPED list, missed the book, and REFUSED a "
+                "correct run. It would have refused the REAL DAY AFTER 85 "
+                "MINUTES, because that guard runs when the day returns"),
+            "why_it_was_not_caught": (
+                "DE 90's own check drove `day_split_residency_proof` with "
+                "a STUB hook that opens nothing. The property held for "
+                "the hook it was given and not for the hook it gets. "
+                "Found by running `--synthetic-day` end to end"),
+            "the_rule": (
+                "the ARTIFACT carries the capped list; the QUESTION is "
+                "asked of `de_data_root.last_full_paths()`, which is "
+                "uncapped and kept OUT of the proof dict so a caller "
+                "cannot embed it by accident"),
+            "and_it_is_reported": (
+                "`the_book_was_in_the_CAPPED_list_too` sits beside the "
+                "answer, so a reader can see that the cap bit rather than "
+                "wondering why a 200-entry list does not contain the "
+                "book"),
+            "enforced_by": ["de_data_root.last_full_paths()",
+                            "de_multiday_gate1_runner."
+                            "day_split_residency_proof()"],
+        },
         "R20_the_serial_schedule": serial_schedule(),
         "R22_the_launch_capture_is_the_IMPORT_CLOSURE": {
             "ruling": "SEAT_PROTOCOL rule 22 AS AMENDED (REV 51 S3)",
@@ -2759,6 +2849,28 @@ def selftest(*, quiet: bool = False) -> int:
        f"V{VERSION}, the chain holds {len(DECLARATION_CHAIN)} = VERSION - 1 "
        f"predecessors and its head is v{VERSION - 1}. v7 on disk read "
        f"protocol V4, filename v7 and supersedes v2")
+    # ---- DE 91: the receipt's name, and the uncapped membership set ---
+    _r25 = d["R25_the_day_receipts_name_is_composed_by_the_runner"]
+    ok("-5,074 s" in _r25["the_defect"]
+       and "DIRECTORY" in _r25["the_rule"]
+       and _r25["the_receipt_records_both_times"] == ["launched_at_utc",
+                                                      "emitted_at_utc"]
+       and "_FIXTURE__" in _r25["a_fixture_cannot_wear_it"]
+       and len(_r25["enforced_by"]) == 3,
+       "DE 91 / REV 55 S2.1: the day receipt's NAME is a declared rule -- "
+       "the runner composes it from the clock at the moment of writing "
+       "and `--output` names a directory. It was whatever the operator "
+       "typed, and both names an operator can type fail: a launch stamp "
+       "refuses at the emit by -5,074 s, a stamp-free name is invisible "
+       "to the glob")
+    _r26 = d["R26_membership_questions_are_asked_of_the_UNCAPPED_path_set"]
+    ok("STUB hook" in _r26["why_it_was_not_caught"]
+       and "uncapped" in _r26["the_rule"]
+       and len(_r26["enforced_by"]) == 2,
+       "and R26 records the second certain refusal, which was mine: the "
+       "200-path cap answered a MEMBERSHIP question, and DE 90's check "
+       "could not see it because it drove the function with a stub hook "
+       "that opens nothing")
     # ---- DE 90: the landing record's authority, and the battery's place
     _r23 = d["R23_the_landing_records_authoritative_fields"]
     ok(_r23["authoritative"]["receipt_digest_at_landing"]

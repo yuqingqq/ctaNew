@@ -48,14 +48,14 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 220
+EXPECTED_CHECKS = 234
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
 #: stays as provenance (rule 13).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v11.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v12.json"
 SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v10.json")
+                        "de_multiday_gate1_params_v11.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -76,7 +76,7 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 DAY_PATH_CHECKS = 100
 #: R-610's battery-order checks. They perform real draws (see the guard at
 #: their site), so they are online-only and their count is DECLARED.
-BATTERY_ORDER_CHECKS = 6
+BATTERY_ORDER_CHECKS = 7
 
 
 #: R-603 / REV 49 §0 -- THE DIGEST OF THE BYTES THAT ARE RUNNING, taken
@@ -1013,9 +1013,21 @@ SEALED_DAY_RECEIPT_PREFIX = "p003_de_gate1_day_run_"
 SEALED_DAY_RECEIPT_MIDFIX = "_SEALED__"
 
 
+def day_token(day: str) -> str:
+    """THE DAY AS IT APPEARS IN A FILENAME -- one rule, one place.
+
+    `day_forms` yields a compact form only for a real `YYYY-MM-DD`, so
+    `[0]` of the compact list raised IndexError on any day that is not a
+    date -- a latent crash in BOTH the glob and the name composer, found by
+    driving the fixture path end to end. A fixture day is not a date and
+    must still name a file."""
+    compact = [d for d in sorted(day_forms(day)) if "-" not in d]
+    return compact[0] if compact else re.sub(
+        r"[^A-Za-z0-9]+", "-", str(day)).strip("-")
+
+
 def sealed_day_receipt_glob(day: str) -> str:
-    compact = [d for d in sorted(day_forms(day)) if "-" not in d][0]
-    return (f"{SEALED_DAY_RECEIPT_PREFIX}{compact}"
+    return (f"{SEALED_DAY_RECEIPT_PREFIX}{day_token(day)}"
             f"{SEALED_DAY_RECEIPT_MIDFIX}*.json")
 
 
@@ -1198,6 +1210,96 @@ def resolve_day_chain(files, *, kind: str) -> dict:
                                  if f.name in superseded),
             "links": links,
             "chain_head_is": f"the {kind} nothing else supersedes"}
+
+
+#: The FIXTURE infix. A fixture day artifact must be unable to match the
+#: sealed glob AT ALL -- not merely carry a different day. `--synthetic-day
+#: 2026-09-03` once emitted a SEALED-looking artifact from a synthetic
+#: book; `assert_fixture_day_lock` closed the DAY half of that and the
+#: FILENAME half stayed with the caller.
+FIXTURE_DAY_RECEIPT_MIDFIX = "_FIXTURE__"
+
+
+def day_receipt_name(day: str, *, fixture: bool, stamp: str) -> str:
+    """THE DAY RECEIPT'S FILENAME, COMPOSED BY THE CODE THAT WRITES IT.
+
+    REV 55 S2.1, and it was a CERTAIN end-of-run refusal. The operator
+    supplied `--output` and the harvested GO procedure built the name at
+    LAUNCH from `date -u`; `assert_name_stamp_is_the_clock` compares the
+    filename's stamp against the moment of WRITING. On the last smoke's own
+    name the reviewer measured **-5,074 s**: 85 minutes of work, then a
+    refusal about a filename. And the obvious escape -- a stamp-free name --
+    passes that check and is INVISIBLE to `sealed_day_receipt_glob`, so the
+    receipt would exist and the read gate would report the day MISSING.
+
+    So the name is not the caller's to type. `--output` names a DIRECTORY,
+    which is knowable in advance and carries no stamp -- DE 88's own
+    principle, applied where it was still being violated -- and the stamp
+    is read from the clock at the moment of writing, in the same clock read
+    that fills `as_of`.
+
+    The convention is params v11's `read_gate.receipt_naming`, so the
+    glob and DA's landing record still resolve what this writes."""
+    token = day_token(day)
+    mid = (FIXTURE_DAY_RECEIPT_MIDFIX if fixture
+           else SEALED_DAY_RECEIPT_MIDFIX)
+    return f"{SEALED_DAY_RECEIPT_PREFIX}{token}{mid}{stamp}.json"
+
+
+def assert_output_is_a_directory(output, *, day: str) -> dict:
+    """REFUSE A CALLER-SUPPLIED FILENAME ON THE DAY PATH -- BEFORE ANY WORK.
+
+    This is the falsifier's other half: the run must not be able to start
+    with a name that will refuse at the end. It is checked at the top of
+    `_main_day`, so a bad `--output` costs zero draws rather than 85
+    minutes."""
+    o = Path(output)
+    if o.is_file():
+        raise RunnerRefused(
+            f"REFUSED before any work: --output {o} is an existing FILE. On "
+            f"the day path --output names the DIRECTORY the receipt is "
+            f"written into; the runner composes the filename itself from "
+            f"the clock at the moment of writing (REV 55 S2.1).")
+    if o.suffix:
+        raise RunnerRefused(
+            f"REFUSED before any work: --output {o.name} looks like a "
+            f"FILENAME (suffix {o.suffix!r}). On the day path --output "
+            f"names a DIRECTORY. A caller-supplied filename either carries "
+            f"a stamp -- which is the LAUNCH moment, and "
+            f"`assert_name_stamp_is_the_clock` compares it to the moment "
+            f"of WRITING, measured at -5,074 s on the last smoke's own "
+            f"name -- or carries none, which passes that check and is then "
+            f"INVISIBLE to `{sealed_day_receipt_glob(day)}`. The name is "
+            f"composed here, from the clock (REV 55 S2.1).")
+    return {"output_is_a_directory": True, "directory": str(o),
+            "the_filename_is_composed_by": "day_receipt_name(), from "
+                                           "emission_stamp() at the moment "
+                                           "of writing",
+            "why_not_the_caller": "a path that must be known in advance "
+                                  "cannot carry an honest stamp (DE 88); "
+                                  "the directory is knowable in advance "
+                                  "and carries none"}
+
+
+def assert_no_sealed_receipt_yet(day: str, root: Path) -> dict:
+    """THE GUARD THAT REPLACES `if output.exists()`.
+
+    With the filename composed at write time there is no path to test in
+    advance, so the question becomes the one that always mattered: has this
+    DAY already landed a sealed receipt? That is a stronger check than the
+    one it replaces -- `output.exists()` only caught a collision on the
+    exact stamp the caller happened to type."""
+    res = find_sealed_day_receipt(day, root)
+    if res["n_matches"]:
+        raise RunnerRefused(
+            f"REFUSED before any work: day {day} already has "
+            f"{res['n_matches']} artifact(s) under the sealed layout "
+            f"({res['status']}). A day that runs twice is not a day with a "
+            f"newest result. A deliberate correction is a SUPERSEDING "
+            f"receipt carrying `supersedes` = {{path, sha256}} (rule 13), "
+            f"which is not this path.")
+    return {"day": day, "n_sealed_artifacts_present": 0,
+            "expected_glob": res["expected_glob"]}
 
 
 def find_sealed_day_receipt(day: str, root: Path) -> dict:
@@ -1878,13 +1980,23 @@ def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
     book = root / "pm_5min/derived" / f"be_daybook_{compact}_{coin}.pkl"
     receipt = root / "pm_5min/derived" / \
         f"be_daybook_receipt_{compact}_{coin}.json"
+    # `--output` NAMES THE DIRECTORY (REV 55 S2.1). It said
+    # `<receipt path>`, and the only two names an operator can supply both
+    # fail: a LAUNCH-stamped one refuses at the emit (measured -5,074 s on
+    # the last smoke's own name) and a stamp-free one passes the emit and
+    # is INVISIBLE to the sealed glob. The runner composes the filename
+    # from the clock at the moment of writing; what the command carries is
+    # the directory, which is knowable in advance and carries no stamp.
+    outdir = root / "pm_5min/derived"
     cmd = (f"flock -n {HEAVY_RUN_LOCK} "
-           f"systemd-run --user --scope --slice={RESEARCH_SLICE} "
+           f"systemd-run --user --scope --unit=<deNNsmoke> "
+           f"--slice={RESEARCH_SLICE} "
            f"-p MemoryMax=8G -p CPUQuota=100% "
            f"--setenv=PM_DATA_ROOT={DR.resolve()['repo_root']} "
-           f"python3 live/pm_research/de_multiday_gate1_runner.py "
+           f"{sys.executable} "
+           f"live/pm_research/de_multiday_gate1_runner.py "
            f"--day {dashed} --book {book} "
-           f"--output <receipt path>")
+           f"--output {outdir}")
 
     def _digest(p):
         q = Path(p)
@@ -1947,6 +2059,46 @@ def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
        {"path": params["be_module"]["path"],
         "declared": params["be_module"]["sha256"]})
     _p("day_is_in_the_ruled_set", dashed in ruled_day_set(), ruled_day_set())
+    # REV 55 S2.1 as a PRECONDITION, not a paragraph: the command's
+    # `--output` must be a directory the runner will accept, and the day
+    # must not already have a sealed artifact.
+    try:
+        _outok = assert_output_is_a_directory(outdir, day=dashed)
+        _outdetail = {**_outok,
+                      "example_name_if_emitted_now": day_receipt_name(
+                          dashed, fixture=False, stamp=emission_stamp()),
+                      "declared_convention": params["read_gate"][
+                          "receipt_naming"]["convention"]}
+        _outheld = True
+    except RunnerRefused as _e:
+        _outdetail, _outheld = {"refusal": str(_e)}, False
+    _p("P8_output_is_a_directory_and_the_name_is_composed",
+       _outheld, _outdetail)
+    try:
+        _p("P9_no_sealed_receipt_for_this_day_yet", True,
+           assert_no_sealed_receipt_yet(dashed, root))
+    except RunnerRefused as _e:
+        _p("P9_no_sealed_receipt_for_this_day_yet", False, {"refusal":
+                                                            str(_e)})
+    # REV 55 S2.2 as a FIELD. The emit refuses on closure drift, a moved
+    # HEAD, or a worktree dirty at import, so "the run worktree is frozen"
+    # is a precondition of an 85-minute run rather than a discipline
+    # somebody remembers. Nothing in the code can tell "a seat landed"
+    # from "the code moved" -- which is why it is checked BEFORE.
+    _si = source_identity_at_launch()
+    _head = _si["head_at_import"]
+    _p("P10_run_worktree_is_clean_at_import",
+       _head.get("dirty") is False,
+       {"worktree": _head.get("worktree"), "head": _head.get("head"),
+        "dirty": _head.get("dirty"), "dirty_paths": _head.get("dirty_paths"),
+        "n_modules_in_the_import_closure": _si["import_closure"][
+            "n_modules"],
+        "why_it_blocks": "a REAL day refuses at import on a dirty "
+                         "worktree, and the emit refuses if any module of "
+                         "the closure or HEAD moves during the run. The "
+                         "run must execute from a worktree frozen for its "
+                         "whole life, and this seat must land from a "
+                         "different one (REV 55 S2.2)"})
 
     blocking = [x["precondition"] for x in pre
                 if not x["holds"] and x["blocks_go"]]
@@ -2479,6 +2631,31 @@ REAL_DAY_BUDGET_DERIVATION = {
     "observed_peak_09_03_mb": 2426.0,
     "headroom_for_null_and_seal_mb": 1500.0,
     "declared_mb": 4000.0,
+    # REV 55 S1.2. THREE TERMS ARE MEASURED AND ONE IS NOT, and a reader
+    # resolving this block saw an arithmetic chain and could take all of
+    # it as measurement. Which is which, named:
+    "which_terms_are_MEASURED": {
+        "cgroup_cap_mb": "the wrapper's own -p MemoryMax=8G",
+        "be_day_reference_measured_mb": "BE's measurement (R-573)",
+        "battery_retained_mb_measured": "DE, a fresh process at the tip "
+                                        "(2026-09-06)",
+        "observed_peak_09_03_mb": "journalctl, the refused smoke",
+    },
+    "which_terms_are_DECLARED_ALLOWANCES": {
+        "headroom_for_null_and_seal_mb": (
+            "1500 MB is a JUDGEMENT about what else the day might need -- "
+            "the null loop's working set and the seal -- not a "
+            "measurement. Nothing has measured a real day's S4/S5 growth, "
+            "because no real day has reached them"),
+        "the_rounding": (
+            "2008 + 26.1 + 1500 = 3534.1, declared at 4000. The 465.9 MB "
+            "of rounding is an allowance too"),
+    },
+    "so_4000_MB_is_NOT_a_measured_number": (
+        "it is a derivation from three measurements and two declared "
+        "allowances. Anyone citing it as measured is citing it wrong. "
+        "What IS measured is that the day refuses if it crosses it, at "
+        "the first stage that does"),
     "fraction_of_cap": 4000.0 / 8192.0,
     # R-610 MOVED THE BATTERY INSIDE THE MEASURED WINDOW, so it is a TERM
     # of this derivation now and not a thing that happens afterwards. The
@@ -2778,7 +2955,7 @@ def assert_peak_stage(pred: dict, *, fixture: bool, day: str) -> dict:
             "recorded_not_refused_because_fixture": fixture}
 
 
-def tape_artifacts_opened(proof: dict) -> list:
+def tape_artifacts_opened(proof: dict, full_paths=None) -> list:
     """Which TAPE/INDEX/FRAGMENT artifacts the instrumented run opened.
 
     IT READS THE UNCAPPED LIST TOO. `distinct_paths` is capped at
@@ -2789,7 +2966,8 @@ def tape_artifacts_opened(proof: dict) -> list:
     under `data/`, so the union is what the predicate is computed on, and
     whether the capped list bit is reported beside the answer."""
     return sorted({p for p in (set(proof.get("distinct_paths") or [])
-                               | set(proof.get("data_paths_opened") or []))
+                               | set(proof.get("data_paths_opened") or [])
+                               | set(full_paths or []))
                    if not p.endswith(".py")
                    and any(m in p for m in TAPE_ARTIFACT_MARKERS)})
 
@@ -3427,13 +3605,19 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     if before_work is not None:
         _dr0 = RUN_COUNTERS["draws_performed"]
         _res_bw, before_work_proof = DR.instrumented(before_work)
+        # THE HOOK'S OWN UNCAPPED SET, read before anything else calls the
+        # instrument. `distinct_paths` is capped at 200 and the battery
+        # opens thousands, so the capped list cannot answer what the hook
+        # touched.
+        _hook_paths = DR.last_full_paths()
         _hook_draws = RUN_COUNTERS["draws_performed"] - _dr0
         before_work_proof = {
             **{k: before_work_proof[k] for k in
                ("n_paths_opened", "n_distinct_paths", "non_vacuous",
                 "distinct_paths_truncated")},
             "tape_artifacts_opened": tape_artifacts_opened(
-                before_work_proof),
+                before_work_proof, _hook_paths),
+            "n_paths_opened_uncapped": len(_hook_paths),
             "data_paths_opened": before_work_proof["data_paths_opened"],
             "what_it_was": "the in-run battery, run BEFORE the day's work",
             # THE FALSIFIER'S MEASUREMENT: what THIS DAY had drawn at the
@@ -3846,7 +4030,8 @@ def day_split_residency_proof(day: str, book_path, *, params: dict,
     # THE CLAIM IS ABOUT THE DAY PATH. If a `before_work` hook ran inside
     # the instrumented region (the battery does, since R-610), the opens
     # it made are ITS opens and are subtracted -- reported, never dropped.
-    _all_hits = tape_artifacts_opened(proof)
+    _full = DR.last_full_paths()
+    _all_hits = tape_artifacts_opened(proof, _full)
     _hook = ((result.get("before_work") or {}).get("residency") or {})
     _hook_hits = list(_hook.get("tape_artifacts_opened") or [])
     hits = sorted(set(_all_hits) - set(_hook_hits))
@@ -3855,9 +4040,20 @@ def day_split_residency_proof(day: str, book_path, *, params: dict,
     # certainly reads the BOOK, so the instrument must have seen THAT --
     # otherwise "no tape artifact was opened" could be an instrument that
     # missed the reads rather than reads that did not happen.
+    # THE MEMBERSHIP QUESTION IS ASKED OF THE UNCAPPED SET. It was asked
+    # of `distinct_paths`, which is capped at DR.PATH_LIST_CAP -- and once
+    # DE 90 put the battery inside this instrumented region the run went
+    # from ~25 opens to ~5,800, the book's own path fell off the end of the
+    # capped list, and this guard REFUSED A CORRECT RUN. It would have
+    # refused the real day AFTER 85 MINUTES: the check runs when the day
+    # returns. Found by running `--synthetic-day` end to end, which DE 90's
+    # own checks did not do -- they drove this function with a STUB hook
+    # that opens nothing.
     _bp = str(Path(book_path).resolve())
-    _saw_book = any(str(Path(p).resolve()) == _bp
-                    for p in proof.get("distinct_paths", []))
+    _saw_book = any(str(Path(p).resolve()) == _bp for p in _full)
+    _saw_book_in_the_capped_list = any(
+        str(Path(p).resolve()) == _bp
+        for p in proof.get("distinct_paths", []))
     if not _saw_book:
         raise RunnerRefused(
             f"REFUSED: the residency instrument did not observe the day "
@@ -3867,6 +4063,13 @@ def day_split_residency_proof(day: str, book_path, *, params: dict,
     return {
         "no_tape_index_or_fragment_artifact_was_opened": not hits,
         "instrument_observed_the_book_read": _saw_book,
+        "n_paths_opened_uncapped": len(_full),
+        "the_book_was_in_the_CAPPED_list_too": _saw_book_in_the_capped_list,
+        "why_that_second_field_exists": (
+            "the capped list is what the ARTIFACT carries and the uncapped "
+            "set is what the QUESTION is asked of. When they disagree the "
+            "cap bit, and a reader can see that it did rather than "
+            "wondering why a 200-entry list does not contain the book"),
         "tape_artifacts_opened": hits,
         "tape_artifacts_opened_by_the_whole_process": _all_hits,
         "tape_artifacts_opened_by_the_before_work_hook": _hook_hits,
@@ -3895,6 +4098,40 @@ def day_split_residency_proof(day: str, book_path, *, params: dict,
 LAST_BATTERY: dict = {}
 
 
+def battery_resources(t0: float, hw0: float) -> dict:
+    """WHAT THE BATTERY ITSELF COST, against rule 20's own bar.
+
+    REV 55 S2.4: it is ~850 MB / ~24 s and was 52 MB three rounds ago.
+    Every seat runs it several times a round as a STANDALONE command,
+    where rule 20's bar applies to IT -- so it measures itself, and the
+    trend is a field in every receipt that embeds it rather than something
+    a reviewer has to go and time.
+
+    The bar comes from the constants `assert_rule20` uses. I first wrote a
+    second pair beside them: two spellings of one fact, the defect this
+    codebase keeps finding."""
+    wall = time.time() - t0
+    peak = _peak_rss_mb()
+    bar_mb = HEAVY_RSS_GB * 1024.0
+    return {
+        "wall_seconds": round(wall, 2),
+        "process_peak_rss_mb_at_the_end": round(peak, 1),
+        "process_peak_rss_mb_at_the_start": round(hw0, 1),
+        "heavy_bar_mb": bar_mb,
+        "heavy_bar_seconds": HEAVY_WALL_S,
+        "fraction_of_the_heavy_bar_by_memory": round(peak / bar_mb, 3),
+        "fraction_of_the_heavy_bar_by_wall": round(wall / HEAVY_WALL_S, 3),
+        "would_need_the_lock_standalone": (peak > bar_mb
+                                           or wall > HEAVY_WALL_S),
+        "most_of_the_peak_is_one_check": (
+            "REV 53 S0.3's control inflates the process past the 700 MB "
+            "fixture budget ON PURPOSE and frees it immediately -- it has "
+            "to exceed that budget to reproduce the case. That is why the "
+            "peak is ~850 MB and the RETAINED figure is ~26 MB, and why "
+            "the peak cannot be reduced without retiring the control"),
+    }
+
+
 def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     """`offline=True` skips the checks that READ `data/` and RECORDS them.
 
@@ -3905,6 +4142,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     stopped existing."""
     n = [0]
     skipped: list = []
+    _bat_t0, _bat_hw0 = time.time(), _peak_rss_mb()
 
     def offline_skip(label):
         skipped.append(label)
@@ -4512,6 +4750,137 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
+    # ---- REV 55 S1.2 / S2.4: two numbers that must say what they are --
+    _der91 = REAL_DAY_BUDGET_DERIVATION
+    _measured91 = set(_der91["which_terms_are_MEASURED"])
+    _declared91 = set(_der91["which_terms_are_DECLARED_ALLOWANCES"])
+    ok(_measured91 & _declared91 == set()
+       and "be_day_reference_measured_mb" in _measured91
+       and "battery_retained_mb_measured" in _measured91
+       and "headroom_for_null_and_seal_mb" in _declared91
+       and "not a measurement" in _der91["which_terms_are_DECLARED_"
+                                         "ALLOWANCES"][
+           "headroom_for_null_and_seal_mb"],
+       f"REV 55 S1.2: every term of the budget derivation is classed "
+       f"MEASURED ({sorted(_measured91)}) or DECLARED ALLOWANCE "
+       f"({sorted(_declared91)}), the two sets are DISJOINT, and the "
+       f"headroom says in words that it is not a measurement. A reader "
+       f"resolving this block saw an arithmetic chain and could take all "
+       f"of 4000 MB for measurement")
+    ok(abs(_der91["declared_mb"] - _der91["terms_sum_mb"] - 465.9) < 0.05,
+       f"and the ROUNDING is COMPUTED, not absorbed: declared "
+       f"{_der91['declared_mb']:.0f} minus the terms' "
+       f"{_der91['terms_sum_mb']:.1f} is "
+       f"{_der91['declared_mb'] - _der91['terms_sum_mb']:.1f} MB of "
+       f"allowance")
+    _light91 = battery_resources(time.time(), _peak_rss_mb())
+    _heavy91 = battery_resources(time.time() - (HEAVY_WALL_S + 5),
+                                 _peak_rss_mb())
+    ok(_light91["would_need_the_lock_standalone"]
+       is (_peak_rss_mb() > HEAVY_RSS_GB * 1024.0)
+       and _heavy91["would_need_the_lock_standalone"] is True
+       and _light91["heavy_bar_mb"] == HEAVY_RSS_GB * 1024.0
+       and _light91["heavy_bar_seconds"] == HEAVY_WALL_S,
+       f"REV 55 S2.4: the battery MEASURES ITSELF against rule 20's own "
+       f"constants -- not a second pair typed beside them -- and the "
+       f"measurement FIRES: a run {HEAVY_WALL_S + 5:.0f} s long reports "
+       f"`would_need_the_lock_standalone` True. This battery is at "
+       f"{_light91['fraction_of_the_heavy_bar_by_memory'] * 100:.0f}% of "
+       f"the memory bar, up from 52 MB three rounds ago")
+    # ---- REV 55 S2.1: THE OUTPUT'S NAME, and it was CERTAIN ----------
+    # The operator supplied `--output` and the harvested GO procedure built
+    # the name at LAUNCH; the emit compares the filename's stamp against
+    # the moment of WRITING. On the last smoke's own name the reviewer
+    # measured -5,074 s: 85 minutes, then a refusal about a filename. Both
+    # halves of that are driven here -- the failure and the repair.
+    _launch_name = ("p003_de_gate1_day_run_20260903_SEALED__"
+                    "20260906T082155Z.json")
+    refuses(lambda: assert_name_stamp_is_the_clock(
+                Path("/tmp") / _launch_name, "2026-09-06T09:46:29+00:00"),
+            "REV 55 S2.1, THE FAILURE REPRODUCED: a LAUNCH-stamped receipt "
+            "name refuses at the emit -- the last smoke's own name against "
+            "its own write time is -5,074 s. This is what the published "
+            "procedure would have done after 85 minutes", "-5074s")
+    _free = Path("/tmp/p003_de_gate1_day_run_20260903_SEALED.json")
+    ok(assert_name_stamp_is_the_clock(
+           _free, datetime.datetime.now(
+               datetime.timezone.utc).isoformat())[
+           "name_carries_a_stamp"] is False
+       and not Path(_free.name).match(
+           sealed_day_receipt_glob("2026-09-03")),
+       f"AND THE OBVIOUS ESCAPE IS WORSE: a STAMP-FREE name PASSES the "
+       f"emit check and does NOT match "
+       f"`{sealed_day_receipt_glob('2026-09-03')}` -- the receipt would "
+       f"exist and the read gate would report the day MISSING. Neither "
+       f"name the operator can type is right, which is why the name is "
+       f"not the operator's to type")
+    # THE REPAIR: the runner composes it, from the clock, at the moment of
+    # writing -- DE 88's own principle, applied where it was still being
+    # violated. `--output` is the DIRECTORY, which is knowable in advance
+    # and carries no stamp.
+    _now91 = datetime.datetime.now(datetime.timezone.utc)
+    _composed = day_receipt_name("2026-09-03", fixture=False,
+                                 stamp=emission_stamp(_now91))
+    _ns = assert_name_stamp_is_the_clock(Path("/tmp") / _composed,
+                                         _now91.isoformat())
+    ok(_ns["stamp_is_the_clock"] is True
+       and abs(_ns["delta_seconds"]) < 5.0
+       and Path(_composed).match(sealed_day_receipt_glob("2026-09-03"))
+       # READ FROM THE PARAMS, never typed beside them: the declared
+       # per-day glob is what DA's landing record and the read gate
+       # resolve, so the composed name is checked against IT.
+       and Path(_composed).match(
+           live["read_gate"]["receipt_naming"][
+               "expected_per_day"]["2026-09-03"]),
+       f"REV 55 S2.1, THE REPAIR: the composed name {_composed} carries the "
+       f"clock at the moment of writing ({_ns['delta_seconds']:+.3f} s "
+       f"against `as_of`, from the SAME clock read), it MATCHES the sealed "
+       f"glob, and it is the convention params v12 declares -- read from "
+       f"the params, not typed beside them")
+    _fx = day_receipt_name("FIXTURE-DAY-1", fixture=True,
+                           stamp=emission_stamp(_now91))
+    ok(not Path(_fx).match(sealed_day_receipt_glob("FIXTURE-DAY-1"))
+       and FIXTURE_DAY_RECEIPT_MIDFIX in _fx
+       and "FIXTURE-DAY-1" in _fx,
+       f"and a FIXTURE receipt ({_fx}) cannot match the sealed glob AT ALL "
+       f"-- not merely carry a different day. `--synthetic-day 2026-09-03` "
+       f"once emitted a SEALED-looking artifact from a synthetic book; the "
+       f"day half was locked and the FILENAME half stayed with the caller")
+    # THE PRE-WORK REFUSALS. The point is that a naming mistake costs ZERO
+    # draws, so they are driven at the function the emit calls FIRST.
+    _d91 = RUN_COUNTERS["draws_performed"]
+    refuses(lambda: assert_output_is_a_directory(
+                Path("/tmp") / _launch_name, day="2026-09-03"),
+            "KNOWN-BAD: a caller-supplied STAMPED filename is REFUSED "
+            "BEFORE ANY WORK, naming the -5,074 s measurement as the "
+            "reason", "looks like a FILENAME")
+    refuses(lambda: assert_output_is_a_directory(_free, day="2026-09-03"),
+            "and a caller-supplied STAMP-FREE filename is refused too -- "
+            "it would pass the emit and be invisible to the glob, which is "
+            "the worse of the two failures", "INVISIBLE")
+    ok(RUN_COUNTERS["draws_performed"] == _d91,
+       f"AND BOTH REFUSALS COST ZERO DRAWS "
+       f"({RUN_COUNTERS['draws_performed'] - _d91}) -- they are evaluated "
+       f"at the top of `_main_day`, before the book is even opened. A "
+       f"naming rule enforced at the emit is a rule that costs 85 minutes "
+       f"to break")
+    _dirok = assert_output_is_a_directory(
+        Path(_tfr.mkdtemp(prefix="de91dir_")), day="2026-09-03")
+    ok(_dirok["output_is_a_directory"] is True,
+       "POSITIVE CONTROL, AND IT ADMITS: a DIRECTORY is accepted, so the "
+       "known-bads above fire on the name's shape and not on everything")
+    # AND THE GUARD THAT REPLACED `if output.exists()`.
+    _emptyroot = _synth_ledger([], )
+    ok(assert_no_sealed_receipt_yet(
+           _D6[0], _emptyroot)["n_sealed_artifacts_present"] == 0,
+       "POSITIVE CONTROL: with no receipt for the day, the pre-work guard "
+       "admits")
+    refuses(lambda: assert_no_sealed_receipt_yet(_D6[0], _all6),
+            "KNOWN-BAD: a day that ALREADY has a sealed artifact is "
+            "refused BEFORE any work. This replaces `if output.exists()`, "
+            "which could only catch a collision on the exact stamp the "
+            "caller happened to type, and is stronger: it asks whether the "
+            "DAY has landed", "already has")
     # ---- REV 54 S0/S0.1: THE EIGHT SHAPES, driven, verdicts asserted --
     # The reviewer drove both seats' resolvers side by side and found row
     # 8 -- a BARE-STRING `supersedes` -- taking DE's read gate DOWN with an
@@ -4926,6 +5295,46 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"delta is REPORTED, and counted in the growth budget; only "
            f"the argmax excludes it, because the ceiling rests on the DAY "
            f"PATH's shape")
+        # THE 200-PATH CAP, AND IT REFUSED A CORRECT RUN. DE 90 put the
+        # battery inside the instrumented region; the run went from ~25
+        # opens to thousands; `distinct_paths` is capped at
+        # DR.PATH_LIST_CAP and the day path's own non-vacuity guard --
+        # "did the instrument see the book?" -- read the CAPPED list,
+        # missed the book, and REFUSED. It would have refused the REAL DAY
+        # AFTER 85 MINUTES, because the guard runs when the day returns.
+        # DE 90's own check drove this function with a STUB hook that
+        # opens nothing, so it could not see it. This hook opens more
+        # paths than the cap.
+        # THE PREFIX IS CHOSEN SO THE FAT FILES SORT BEFORE THE BOOK.
+        # `distinct_paths` is `sorted(set(seen))[:CAP]`, so WHICH paths the
+        # cap drops depends on sort order -- with a prefix that sorted
+        # AFTER the book (`de91fat_` vs the book's `de90ord_`) the book
+        # survived the cut and the check passed for the wrong reason. A
+        # falsifier whose firing depends on a tempdir name is not one.
+        _fatdir = Path(_tfr.mkdtemp(prefix="0de91fat_"))
+        for _i in range(DR.PATH_LIST_CAP + 50):
+            (_fatdir / f"aaa_{_i:04d}.txt").write_text("x")
+
+        def _hook_that_opens_more_than_the_cap():
+            for _f in sorted(_fatdir.iterdir()):
+                _f.read_text()
+            return {"outcome": "PASS", "n_checks_run": 0}
+
+        _fatproof = day_split_residency_proof(
+            "FIXTURE-DAY-ORDER", _mk_ord["book_path"], params=live,
+            fixture=True, before_work=_hook_that_opens_more_than_the_cap)
+        ok(_fatproof["instrument_observed_the_book_read"] is True
+           and _fatproof["n_paths_opened_uncapped"] > DR.PATH_LIST_CAP
+           and _fatproof["the_book_was_in_the_CAPPED_list_too"] is False,
+           f"REV 55, FOUND BY RUNNING: a `before_work` hook that opens "
+           f"{_fatproof['n_paths_opened_uncapped']} paths -- past the "
+           f"{DR.PATH_LIST_CAP}-path cap -- and the guard STILL sees the "
+           f"book, because the membership question is now asked of the "
+           f"UNCAPPED set. It read the capped list, and the book is NOT in "
+           f"it ({_fatproof['the_book_was_in_the_CAPPED_list_too']}) -- so "
+           f"this is the exact configuration that refused a correct "
+           f"`--synthetic-day` at the tip, and would have refused the real "
+           f"day after 85 minutes")
         # AND THE HOOK'S OWN READS ARE SUBTRACTED FROM THE DAY-PATH CLAIM.
         _rp_ord = day_split_residency_proof(
             "FIXTURE-DAY-ORDER", _mk_ord["book_path"], params=live,
@@ -6411,13 +6820,16 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     ok(n[0] + 1 + len(skipped) == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} run + "
        f"{len(skipped)} skipped == {EXPECTED_CHECKS}")
+    _bat_wall = time.time() - _bat_t0
+    _bat_peak = _peak_rss_mb()
     LAST_BATTERY.update({
         "outcome": "PASS", "n_checks_run": n[0],
-        "n_checks_skipped_offline": len(skipped),
-        "skipped_offline": list(skipped),
-        "expected_checks_in_the_source": EXPECTED_CHECKS,
-        "run_plus_skipped_equals_source_expected":
-            n[0] + len(skipped) == EXPECTED_CHECKS,
+        # REV 55 S2.4: the battery is 850 MB / 23.6 s and was 52 MB three
+        # rounds ago. Every seat runs it several times a round as a
+        # STANDALONE command, where rule 20's bar applies to it. It now
+        # measures itself, so the trend is a field in every receipt that
+        # embeds it rather than something a reviewer has to go and time.
+        "resources": battery_resources(_bat_t0, _bat_hw0),
         "offline": offline,
         "why_skipped": ("these checks READ `data/`; a fixture run must "
                         "open no path under it, and a skipped check that "
@@ -6522,9 +6934,15 @@ def _main_day(a) -> int:
     where the book comes from and whether the run is a fixture."""
     params = load_params()
     if a.output is None:
-        raise RunnerRefused("REFUSED: --output is required for a day run")
-    if a.output.exists():
-        raise RunnerRefused(f"output already exists: {a.output}")
+        raise RunnerRefused(
+            "REFUSED: --output is required for a day run. On the day path "
+            "it names the DIRECTORY the receipt is written into; the "
+            "runner composes the filename from the clock (REV 55 S2.1).")
+    # BOTH REFUSALS ARE HERE, AT THE TOP, BEFORE ANY WORK -- the whole
+    # point of the change is that a naming mistake costs zero draws
+    # instead of 85 minutes.
+    _outdir_check = assert_output_is_a_directory(
+        a.output, day=(a.day or a.synthetic_day))
     import tempfile as _tf
     if a.synthetic_day:
         day = a.synthetic_day
@@ -6539,6 +6957,8 @@ def _main_day(a) -> int:
             raise RunnerRefused(
                 f"REFUSED: {day} is not in the ruled day set "
                 f"{params['days']}.")
+        _outdir_check["no_sealed_receipt_yet"] = assert_no_sealed_receipt_yet(
+            day, Path(DR.resolve()["data_root"]))
     # THE BATTERY RUNS BEFORE THE DAY'S WORK (R-610), not at the emit.
     # It used to be called here, AFTER `day_split_residency_proof` had
     # already spent the day: on 2026-09-03 that was 84 minutes of null
@@ -6627,13 +7047,47 @@ def _main_day(a) -> int:
     }
     payload["data_root"] = DR.require_canonical(
         f"the {'fixture' if fixture else 'sealed'} day run", fixture=False)
+    # ---- THE NAME, COMPOSED HERE, FROM ONE CLOCK READ (REV 55 S2.1) ----
+    # `as_of` and the filename's stamp are the SAME instant because they
+    # are the same reading. Two reads would differ by microseconds and
+    # invite exactly the "which clock" question the check exists to answer.
+    _emitted_at = datetime.datetime.now(datetime.timezone.utc)
+    payload["as_of"] = _emitted_at.isoformat()
+    payload["launched_at_utc"] = LAUNCH_TIME_UTC
+    payload["emitted_at_utc"] = _emitted_at.isoformat()
+    out_path = Path(a.output) / day_receipt_name(
+        day, fixture=fixture, stamp=emission_stamp(_emitted_at))
+    payload["output_name"] = {
+        **_outdir_check,
+        "composed_name": out_path.name,
+        "launched_at_utc": LAUNCH_TIME_UTC,
+        "emitted_at_utc": _emitted_at.isoformat(),
+        "wall_between_launch_and_emit_s": (
+            _emitted_at - datetime.datetime.fromisoformat(
+                LAUNCH_TIME_UTC)).total_seconds(),
+        "matches_the_declared_convention":
+            params["read_gate"]["receipt_naming"]["convention"],
+        "resolves_under_the_sealed_glob": (
+            None if fixture else
+            Path(out_path.name).match(sealed_day_receipt_glob(day))),
+        "why_a_fixture_cannot": (
+            "a fixture receipt carries "
+            f"{FIXTURE_DAY_RECEIPT_MIDFIX!r}, so it cannot match the "
+            "sealed glob AT ALL -- not merely carry a different day"),
+    }
+    if out_path.exists():
+        raise RunnerRefused(
+            f"REFUSED at the emit: {out_path.name} already exists. The "
+            f"stamp is second-resolution and the pre-work guard found no "
+            f"sealed artifact for this day, so this is a collision nobody "
+            f"expected; it is refused rather than overwritten.")
     payload["name_stamp"] = assert_name_stamp_is_the_clock(
-        a.output, payload["as_of"])
-    a.output.parent.mkdir(parents=True, exist_ok=True)
-    a.output.write_text(json.dumps(payload, indent=2, sort_keys=True,
+        out_path, payload["as_of"])
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(payload, indent=2, sort_keys=True,
                                    default=str) + "\n")
     print(json.dumps({
-        "emitted": str(a.output), "status": payload["status"],
+        "emitted": str(out_path), "status": payload["status"],
         "day": payload["day"],
         "arms": {r["arm"]: r.get("status")
                  for r in payload["per_day_sealed_artifacts"]},
