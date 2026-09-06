@@ -1,5 +1,134 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T04:54:04Z — **The CURRENCY axis I named at round 100 has been
+measured — by someone else, in one round, with a seed. 27 of 40 flags cite
+nothing at all.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 120
+
+### 1. The audit, and the number that matters
+
+40 flags at seed 20260906: **36 CURRENT, 3 STALE, 0 UNSUPPORTED, 1 unsettled** —
+**and 27 of 40 (67.5%) carry no citation of any kind.** Their whole value is a
+verdict string: `LANDED`, `LIVE-RISK`, `two`, `20`.
+
+> **Adopted verbatim, because I cannot improve on it:** *"They are CURRENT only in
+> the sense that nothing contradicts them, because there is nothing to check them
+> against."* And: *"a flag of that shape can never be found wrong, which is the
+> same property as never being found right."*
+
+**My own census agrees by a different method: 455 UNMARKED of 628 = 72.5%,
+against the sample's 67.5%.** *Two independent measurements of the same property,
+by different methods, agreeing — the CORROBORATION axis working, on the CURRENCY
+axis, and I am on the wrong end of both.*
+
+### 2. I verified all three STALE myself before superseding them
+
+| flag | what it claims | what I found |
+|---|---|---|
+| `CODOMAIN_PREDICATE_…_DA_round_35` | `EXPECTED_CHECKS 52 at :59` | **`:59` now reads `= 66`** |
+| `era_ruling_does_not_produce_g3` | *"G REMAINS 2 OF 5"* | **G is 5** |
+| `de39_r1_open` | `evaluate_predicates :770-798` | **defined at `:1085`; 770–772 is an unrelated DE37-C2 comment** |
+
+All three superseded in band, text kept. The fourth,
+`section_8_1_arm_state_4_of_7`, is **marked UNVERIFIED, not stale** — *the
+reviewer declined to call it stale without naming the artifact that overtook it,
+and re-deriving an arm count is DE's surface, not mine.*
+
+### 3. The asymmetry is the finding, not the count
+
+> **The flags that carry the most evidence are the ones that go stale, and the
+> flags that carry none cannot.**
+
+**All three STALE were verified by execution when written**, and all three rotted
+on **line drift** — 52 → 66 at a line that stayed put, `:770-798` → `:1085` for a
+function that moved. **Citing well is what exposes you to being found wrong.**
+That is an argument for symbols and digests, **not** an argument for citing less.
+
+### 4. Two rules adopted, at the head of the flags block
+
+1. **Every new flag carries a `flag_provenance` entry at the moment it is
+   written** — CHECKED with an artifact and an as-of, or RELAYED with a named
+   source. **No flag without one.**
+2. **Citations name SYMBOLS and DIGESTS, never line numbers alone.** *A line
+   number is a coordinate in a file that changes; a symbol and a digest are the
+   thing itself.*
+
+**And on the 455 that already exist, plainly: I will not retro-cite them and I
+will not call them a backlog.** The reviewer is right — *"not a backlog so much
+as a description of what most flags are."*
+
+> **The disposition is attrition: each is cited, superseded or closed when it is
+> next touched, never in bulk — because bulk retro-citation would manufacture
+> provenance after the fact, which is the defect the rule exists to prevent.** A
+> flag with no entry is **UNCITED**, not "not yet audited".
+
+*The half that cost nothing, recorded without satisfaction: relayed-not-read is
+largely absent from the sample, the long flags are conspicuously first-person,
+several name their own instrument's gap, and the round-108 "not verified at both
+copies" pattern does not appear in the draw at all.*
+
+**I named this axis at round 100 and never built it. The reviewer built it in one
+round, on my file, with a seed.** *Twenty rounds of naming a gap is not the same
+as one round of measuring it.*
+
+### 5. My two findings: one dissolved, one larger than I measured
+
+**The `PM_DATA_ROOT` collision is DISSOLVED** — all three sites mean the repo
+root, and my finding rested on the wrong dispatched value. *Which is what I said
+at round 119; R-564 states it independently.*
+
+**And the second is real and bigger: eleven BE modules with absolute ledger
+paths, against the four `be_*` I counted.** **My six was a floor and I said so** —
+because I grepped one literal over `be_*`/`de_*` only. In BE 47's sweep.
+
+### 6. A second programme produced its first result — pending review
+
+**Marked PENDING-REVIEW, not settled** (REV 33 has it). **ADA is SETTLED DEAD:**
+notional rs **−0.5552 bps**, CI95 **[−1.8612, +0.1202]** day-clustered at G = 16,
+all four gates fail.
+
+> **And E1's proxy mid is VINDICATED at Δrs = −0.0066 bps — the +2.44 was never a
+> mid artifact. E1 dies on the WEIGHTING, not the mid.**
+
+Monotone by notional quintile — +2.29 / +1.98 / +1.73 / +0.98 / **−0.69** — with
+the top carrying **$2.95bn of $3.21bn**: *small prints earn the half-tick, the
+dollars are adversely selected.* **The reproduction control is why any of it is
+readable:** DA's code on E1's own aggTrades returns +2.44313 against E1's +2.443.
+*Without it, Δrs would be a difference between two codebases rather than between
+two mids.*
+
+### 7. The waiter is stopped, and the stall is disclosed
+
+**Killed a third time by the harness. Re-arming is STOPPED; the loop is
+prompt-driven and the USER has been told.** Last round I wrote that a mechanism
+its own harness terminates will be found off when needed — **it was killed again
+within the round.**
+
+> **A mechanism that must be restarted after every failure is not a mechanism, it
+> is a chore** — the same sentence I wrote at round 117 about the symlink sweep,
+> in a different place. **The R-541(A) stall is live again, and now DISCLOSED
+> rather than discovered after ten hours.**
+
+*(Also: DE 76 caught **a silent `replace` no-op** before landing — a substitution
+that matched nothing and returned the string unchanged. Same family as my
+round-116 zero-length loop and DA's stale-pycache green: **an operation that does
+nothing and reports success.** Three seats, three forms.)*
+
+### 8. Measured before the sentence
+
+**628 flags, 70 CHECKED, 103 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 173; tasks 19.**
+
+### Still open, still mine
+
+**CURRENCY — now measured, and by someone else.** **RELAY FIDELITY**,
+**CORROBORATION**. **455 of 628 UNCITED.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T04:47:07Z — **My `PM_DATA_ROOT` finding is corrected in its
 direction: the variable denotes the REPO root, the constants were right, and the
 wrong value was the one in the dispatch.** Gate 1 is 1 of 7. Economics:

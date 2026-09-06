@@ -63,6 +63,56 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T04:54:04Z (MEM ROUND 120 -- R-564, R-565 AND TWO REVIEWER FILINGS
+  SWEPT. STATE ONLY, AND THE ONE THAT MATTERS LANDS ON MY OWN FILES.
+  (1) REV 32's CURRENCY AUDIT MEASURED THE AXIS I NAMED AT ROUND 100 AND NEVER
+  BUILT. 40 flags at seed 20260906: 36 CURRENT, 3 STALE, 0 UNSUPPORTED, 1
+  unsettled -- **AND 27 OF 40 (67.5%) CARRY NO CITATION OF ANY KIND**, their
+  whole value a verdict string. THE REVIEWER'S SENTENCE, ADOPTED VERBATIM: "They
+  are CURRENT only in the sense that nothing contradicts them, because there is
+  nothing to check them against." AND MY OWN CENSUS AGREES BY A DIFFERENT
+  METHOD: 455 UNMARKED of 624 = 72.9% against the sample's 67.5%.
+  (2) I VERIFIED ALL THREE STALE MYSELF BEFORE SUPERSEDING THEM.
+  da_race_withdrawals.py:59 now reads EXPECTED_CHECKS = 66 against the flag's 52;
+  G IS 5 against "G REMAINS 2 OF 5"; and `def evaluate_predicates` is at
+  de_phase4_diag_runner.py:**1085** with 770-772 an unrelated DE37-C2 comment.
+  All three superseded in band with the text kept.
+  (3) AND THE ASYMMETRY IS THE FINDING, NOT THE COUNT: **THE FLAGS THAT CARRY THE
+  MOST EVIDENCE ARE THE ONES THAT GO STALE, AND THE FLAGS THAT CARRY NONE
+  CANNOT.** All three STALE were VERIFIED BY EXECUTION WHEN WRITTEN and rotted on
+  LINE DRIFT. **CITING WELL IS WHAT EXPOSES YOU TO BEING FOUND WRONG.**
+  (4) TWO RULES ADOPTED AT THE HEAD OF THE FLAGS BLOCK. **EVERY NEW FLAG CARRIES
+  A flag_provenance ENTRY AT THE MOMENT IT IS WRITTEN -- CHECKED with artifact and
+  as-of, or RELAYED with a source. NO FLAG WITHOUT ONE.** And **CITATIONS NAME
+  SYMBOLS AND DIGESTS, NEVER LINE NUMBERS ALONE**, because all three that rotted
+  rotted on line drift.
+  (5) ON THE 455 THAT ALREADY EXIST, PLAINLY: **I WILL NOT RETRO-CITE THEM AND I
+  WILL NOT CALL THEM A BACKLOG.** The reviewer is right that it is "not a backlog
+  so much as a description of what most flags are". THE DISPOSITION IS ATTRITION
+  -- each cited, superseded or closed WHEN NEXT TOUCHED, never in bulk -- because
+  BULK RETRO-CITATION WOULD MANUFACTURE PROVENANCE AFTER THE FACT, which is the
+  defect the rule exists to prevent. A flag with no entry is **UNCITED**, not
+  "not yet audited".
+  (6) MY PM_DATA_ROOT COLLISION IS **DISSOLVED** -- all three sites mean the repo
+  root and my finding rested on the wrong dispatched value, which is what I said
+  at round 119 and R-564 states independently. **AND MY SECOND FINDING IS REAL
+  AND LARGER THAN I MEASURED: ELEVEN BE MODULES, against the four be_* I counted.
+  MY SIX WAS A FLOOR AND I SAID SO.** In BE 47's sweep.
+  (7) P-2026-002's E2.0 IS RUN AND READ -- **MARKED PENDING-REVIEW, NOT SETTLED**
+  (REV 33 has it). ADA SETTLED DEAD: notional rs -0.5552 bps, CI95 [-1.8612,
+  +0.1202] day-clustered at G = 16, all four gates fail. AND E1's PROXY MID IS
+  VINDICATED at delta_rs -0.0066 bps -- **the +2.44 WAS NEVER A MID ARTIFACT; E1
+  DIES ON THE WEIGHTING.** Monotone by quintile with the top carrying $2.95bn of
+  $3.21bn: SMALL PRINTS EARN THE HALF-TICK, THE DOLLARS ARE ADVERSELY SELECTED.
+  THE REPRODUCTION CONTROL IS WHY IT IS READABLE -- without it delta_rs would be
+  a difference between two codebases.
+  (8) THE WAITER WAS KILLED A THIRD TIME BY THE HARNESS AND **RE-ARMING IS
+  STOPPED**; the loop is prompt-driven and THE USER HAS BEEN TOLD. Last round I
+  wrote that a mechanism its own harness terminates will be found off when
+  needed; it was killed again within the round. **A MECHANISM THAT MUST BE
+  RESTARTED AFTER EVERY FAILURE IS NOT A MECHANISM, IT IS A CHORE** -- and the
+  stall is now DISCLOSED rather than discovered.
+  PRIOR CHECKPOINT:
   2026-09-06T04:47:07Z (MEM ROUND 119 -- R-562 AND R-563 SWEPT. STATE ONLY,
   AND IT LEADS WITH A CORRECTION TO MY OWN FINDING.
   (1) MY PM_DATA_ROOT FINDING IS WRONG IN ITS DIRECTION, AND I CHECKED THE
@@ -1078,6 +1128,27 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # =====================================================================
+  # STANDING RULE FOR THIS BLOCK, ADOPTED 2026-09-06T04:54:04Z FROM REV 32's
+  # CURRENCY AUDIT. **EVERY NEW FLAG CARRIES A flag_provenance ENTRY AT THE
+  # MOMENT IT IS WRITTEN** -- CHECKED with an artifact and an as-of, or RELAYED
+  # with a named source. NO FLAG WITHOUT ONE.
+  # **AND CITATIONS NAME SYMBOLS AND DIGESTS, NEVER LINE NUMBERS ALONE**, because
+  # all three flags the audit found STALE rotted on LINE DRIFT -- 52 -> 66 at a
+  # line that stayed put, and :770-798 -> :1085 for a function that moved. A line
+  # number is a coordinate in a file that changes; a symbol and a digest are the
+  # thing itself.
+  # A FLAG WITH NO PROVENANCE ENTRY IS **UNCITED**, NOT "not yet audited". The
+  # instrument counts it UNMARKED; the meaning is that IT CARRIES NO EVIDENCE AND
+  # CANNOT BE CHECKED EITHER WAY.
+  # ON THE 455 THAT ALREADY EXIST, PLAINLY: I WILL NOT RETRO-CITE THEM AND I WILL
+  # NOT CALL THEM A BACKLOG. The reviewer's sentence is the true one -- "not a
+  # backlog so much as a description of what most flags are." THE DISPOSITION IS
+  # ATTRITION: each is cited, superseded or closed WHEN IT IS NEXT TOUCHED, never
+  # in bulk, and the rule above stops the class growing. Bulk retro-citation
+  # would manufacture provenance after the fact, which is the defect this rule
+  # exists to prevent.
+  # =====================================================================
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -2251,6 +2322,54 @@ flags:
                              # R-549(B) is corrected in band at R-551(2); DE 70
                              # states the fields as COMPUTED FROM THE MEASURED
                              # SECONDS rather than typed.
+  P_2026_002_E2_0_IS_RUN_AND_READ_ADA_SETTLED_DEAD: PENDING-REVIEW-NOT-SETTLED
+                             # RELAYED from R-565, verified by the coordinator at
+                             # the receipt (sha 6942eb5f matching DA's row,
+                             # selftest OK under its wrapper run). **MARKED
+                             # PENDING-REVIEW: the RESULT review is with the
+                             # reviewer now (REV 33) and this is a FACT ON RECORD,
+                             # NOT A SETTLED RESULT.**
+                             # ADAUSDT, 16 admissible UTC days 08-20..09-05,
+                             # tau* = 30 s, 2,077,916 sweeps, intersection
+                             # 1,899,255 -- the reviewer's finding 1 APPLIED
+                             # BEFORE THE RUN (delta_rs on the INTERSECTION,
+                             # eq-weighted).
+                             # THE VOID LEG: delta_rs = **-0.006570 bps** against
+                             # a +1.0 bps voiding threshold. **E1's TWO-SIDED
+                             # LAST-PRINT MID AGREES WITH THE REAL BOOK TO SEVEN
+                             # THOUSANDTHS OF A BASIS POINT** -- the +2.44 WAS
+                             # NEVER A MID ARTIFACT. E1 is VINDICATED AS A
+                             # MEASUREMENT.
+                             # THE SETTLE LEG: notional-weighted rs(30 s) on true
+                             # mids = **-0.5552 bps, CI95 [-1.8612, +0.1202]**
+                             # day-clustered (B = 2,000, unit = day, G = 16) --
+                             # below the 1.8 death bar with the interval ENTIRELY
+                             # BELOW the 2.3 gate; 6 of 16 days positive against
+                             # 12 required. Verdict **NOT_VOIDED+DEAD**; E1-B
+                             # empty, E1x moot.
+                             # AND THE MECHANISM IS MONOTONE AND PER-DOLLAR,
+                             # WHICH IS WHY IT READS AS AN EXPLANATION RATHER
+                             # THAN A NUMBER: eq +1.3639 against notional
+                             # -0.5552, a 1.92 bps WEIGHTING GAP; by notional
+                             # quintile +2.29 / +1.98 / +1.73 / +0.98 / **-0.69**
+                             # with the top quintile carrying **$2.95bn of
+                             # $3.21bn**. SMALL PRINTS EARN THE HALF-TICK; THE
+                             # DOLLARS ARE ADVERSELY SELECTED. E1 dies on the
+                             # WEIGHTING, not on the mid.
+                             # THE REPRODUCTION CONTROL IS WHY ANY OF IT IS
+                             # READABLE, and it is the part to copy: DA's code on
+                             # E1's OWN Vision aggTrades returns +2.44313 against
+                             # E1's published +2.443 and -0.32222 against -0.322
+                             # (errors 0.00013 / 0.00022 bps), with 31/31 and
+                             # 7/31 positive days matching. **WITHOUT IT,
+                             # delta_rs WOULD BE A DIFFERENCE BETWEEN TWO
+                             # CODEBASES** rather than between two mids.
+                             # DECLARED BEFORE DATA, REVIEWED AT THE DESIGN, RUN,
+                             # READ -- the full sequence this programme spent
+                             # twenty rounds learning, executed once through by
+                             # the other programme in a day.
+                             # P-002's OWN STATUS/HANDOFF WERE UPDATED BY DA
+                             # under the single-seat rule. I WRITE NOTHING THERE.
   de74_ONE_IMPORTED_RESOLVER_OWNS_THE_DE_SURFACE: AND-THE-SYMLINK-IS-OUT
                              # RELAYED from R-562. DE 74 landed with ONE
                              # IMPORTED RESOLVER for the DE surface --
@@ -2351,6 +2470,53 @@ flags:
                              # A CHORE WITH A DEADLINE -- and this one's deadline
                              # is invisible, because nothing announces that the
                              # bits have lapsed.
+  REV32_CURRENCY_AUDIT_MEASURED_THE_AXIS_I_NAMED_AND_NEVER_BUILT: 27-OF-40-CITE-NOTHING
+                             # CHECKED 2026-09-06T04:54:04Z -- the three STALE
+                             # verified by me at their artifacts before I
+                             # superseded them; the sampling and the rest RELAYED
+                             # from REV 32 (d62c6ee).
+                             # 40 FLAGS AT SEED 20260906: 36 CURRENT, 3 STALE,
+                             # 0 UNSUPPORTED, 1 unsettled. **AND 27 OF 40 (67.5%)
+                             # CARRY NO CITATION OF ANY KIND** -- their entire
+                             # value is a verdict string: LANDED, LIVE-RISK,
+                             # two, 20, ARMED-TRIPLE-PRE-REGISTERED.
+                             # THE REVIEWER'S SENTENCE, WHICH I ADOPT VERBATIM
+                             # BECAUSE I CANNOT IMPROVE ON IT: **"They are
+                             # CURRENT only in the sense that nothing contradicts
+                             # them, because there is nothing to check them
+                             # against."** And: **"a flag of that shape can never
+                             # be found wrong, which is the same property as
+                             # never being found right."**
+                             # THE SAMPLE AGREES WITH MY OWN CENSUS, WHICH IS THE
+                             # PART I CAN CONTRIBUTE: the instrument reports 455
+                             # UNMARKED of 624 = **72.9%**, against the audit's
+                             # 67.5% in a 40-draw sample. TWO INDEPENDENT
+                             # MEASUREMENTS OF THE SAME QUANTITY, BY DIFFERENT
+                             # METHODS, AGREEING -- which is the CORROBORATION
+                             # axis working, on the CURRENCY axis, and I am on
+                             # the wrong end of both.
+                             # AND THE ASYMMETRY THE AUDIT EXPOSES IS THE FINDING
+                             # RATHER THAN THE COUNT: **THE FLAGS THAT CARRY THE
+                             # MOST EVIDENCE ARE THE ONES THAT GO STALE, AND THE
+                             # FLAGS THAT CARRY NONE CANNOT.** All three STALE
+                             # were VERIFIED BY EXECUTION WHEN WRITTEN and were
+                             # overtaken by the instruments growing. **CITING
+                             # WELL IS WHAT EXPOSES YOU TO BEING FOUND WRONG.**
+                             # That is an argument for symbols and digests over
+                             # line numbers, NOT an argument for citing less.
+                             # WHAT THE AUDIT ALSO FOUND, AND I RECORD IT WITHOUT
+                             # SATISFACTION BECAUSE IT IS THE HALF THAT COST
+                             # NOTHING: relayed-not-read is LARGELY ABSENT from
+                             # the sample; the long flags are conspicuously
+                             # first-person; several NAME THEIR OWN INSTRUMENT'S
+                             # GAP; and the round-108 "not yet verified at both
+                             # copies" pattern DOES NOT APPEAR IN THE DRAW AT
+                             # ALL.
+                             # I NAMED THIS AXIS AT ROUND 100 AND NEVER BUILT IT.
+                             # THE REVIEWER BUILT IT IN ONE ROUND, ON MY FILE,
+                             # WITH A SEED. Twenty rounds of naming a gap is not
+                             # the same as one round of measuring it, and the
+                             # difference is the whole lesson.
   PM_DATA_ROOT_IS_A_NAME_SEMANTICS_MISMATCH_NOT_TWO_REFERENTS: MY-OWN-FINDING-CORRECTED-IN-ITS-DIRECTION
                              # CORRECTED 2026-09-06T04:47:07Z, AND THE CORRECTION
                              # IS TO MY OWN CHARACTERISATION AT ROUNDS 117-118.
@@ -2395,8 +2561,27 @@ flags:
                              # TAKE FROM THE ARTIFACT THIS TIME WAS NOT A PATH OR
                              # A TYPE BUT A **USAGE** -- the same root as the
                              # round-116 family, one level up.
+                             # ---- R-564 CLOSES THIS AS A COLLISION, AND I
+                             # ACCEPT IT: all three binding sites MEAN THE REPO
+                             # ROOT, so there is no collision -- MY FINDING
+                             # RESTED ON THE COORDINATOR'S WRONG DISPATCHED
+                             # VALUE, which is exactly what I said at round 119
+                             # and R-564 states independently. **DISSOLVED.**
+                             # THE NAME/SEMANTICS OBSERVATION STANDS AS A NOTE
+                             # AND NOT AS A DEFECT TO ROUTE: a variable named
+                             # ..._DATA_ROOT denoting the repo root misled one
+                             # dispatch, and now that all three sites agree and
+                             # one resolver owns the surface, the next reader is
+                             # protected by the code rather than by the name.
+                             # ---- AND MY SECOND FINDING IS REAL AND ROUTED:
+                             # R-564 confirms it by its own grep at a LARGER
+                             # figure than mine -- **ELEVEN BE MODULES** with
+                             # absolute ledger paths, against the FOUR be_* I
+                             # counted. **MY SIX WAS A FLOOR AND I SAID SO**; the
+                             # true surface is wider because my grep took one
+                             # literal over be_*/de_* only. In BE 47's sweep.
                              # WHAT SURVIVES UNCHANGED AND STILL NEEDS ROUTING:
-                             # the SIX FILES holding an absolute ledger path that
+                             # the files holding an absolute ledger path that
                              # no resolver touches -- re-measured at
                              # 2026-09-06T04:47:07Z, STILL FOUR be_* AND TWO de_*
                              # after DE 74. One de_* file imports the resolver;
@@ -2688,6 +2873,49 @@ flags:
                              # that fire is the coordinator's call. Recorded so
                              # that if it goes wrong, nobody has to reconstruct
                              # that both stakes were known in advance.
+  THE_WAITER_WAS_KILLED_A_THIRD_TIME_AND_RE_ARMING_IS_STOPPED: THE-LOOP-IS-PROMPT-DRIVEN
+                             # UPDATED 2026-09-06T04:54:04Z from R-564, and it
+                             # closes the thread the other way from last round.
+                             # THE HARNESS KILLED THE BACKGROUND WAITER **A THIRD
+                             # TIME**. RE-ARMING IS STOPPED; THE LOOP IS
+                             # PROMPT-DRIVEN, AND THE COORDINATOR HAS TOLD THE
+                             # USER, naming /loop as the alternative.
+                             # LAST ROUND I RECORDED THE RE-ARM AND WROTE THAT
+                             # WHAT WAS WORTH WATCHING WAS THAT THE HARNESS HAD
+                             # KILLED IT TWICE -- "a wake mechanism its own
+                             # harness terminates is one more thing that will be
+                             # found off at the moment it was needed." IT WAS
+                             # KILLED AGAIN WITHIN THE ROUND.
+                             # AND STOPPING IS THE RIGHT MOVE RATHER THAN A
+                             # SURRENDER: three kills by the same actor make
+                             # re-arming a loop of its own, and **A MECHANISM
+                             # THAT MUST BE RESTARTED AFTER EVERY FAILURE IS NOT
+                             # A MECHANISM, IT IS A CHORE** -- the same sentence
+                             # I wrote at round 117 about the symlink sweep, in a
+                             # different place.
+                             # SO THE STRUCTURAL STALL OF R-541(A) IS LIVE AGAIN
+                             # AND IS NOW **DISCLOSED TO THE USER** rather than
+                             # discovered after ten hours. That is the difference
+                             # between the two states and it is the whole value
+                             # of stopping.
+                             # EARLIER VALUE (rule 13): RE-ARMED
+  the_de74_resolver_is_SOUND_WITH_ONE_DOOR_NOW_BOUND: fixture-True-CLOSED-BY-DE-76
+                             # RELAYED from R-564 and Q-DE-76. The reviewer found
+                             # the DE 74 resolver SOUND with ONE DOOR --
+                             # `fixture=True` -- and DE 76 BINDS IT: the fixture
+                             # claim is now BOUND TO ITS PROOF.
+                             # A refusal with an override parameter is only as
+                             # strong as what the override has to prove, and this
+                             # is the second time in three rounds that DE has
+                             # closed a door by making the claim carry its own
+                             # evidence rather than by removing the door.
+                             # ALSO IN Q-DE-76: **a silent `replace` no-op caught
+                             # before landing** -- a substitution that matched
+                             # nothing and returned the string unchanged. That is
+                             # the same family as my own round-116 zero-length
+                             # loop and DA's stale-pycache green: **AN OPERATION
+                             # THAT DOES NOTHING AND REPORTS SUCCESS.** Three
+                             # seats have now hit it in different forms.
   THE_WAITER_KILLS_WERE_THE_HARNESS_NOT_THE_USER: RE-ARMED
                              # UPDATED 2026-09-06T04:47:07Z from R-563, and it
                              # resolves the question I recorded last round as
@@ -8882,6 +9110,16 @@ flags:
   de_r39_landed_executed: "cd93663 (Q-DE-57): counts 31/115/26/21/26/21/184/92; shas VERIFIED BY MEM -- runner 2976b46e1eb67a22 (3,201 lines), score-stream f85be3354610e2ce (420), DRAFT 6a62569f536e460f (290); EXPECTED_CHECKS = 115"
   de38_rulings_built: "all four DE38-C1 rulings BUILT as ruled -- identity ADMITTED AND COUNTED per stratum and whole-draw, guard RETIRED with its parse certificate INVERTED (not deleted), accepted-set statistics, null: DEGENERATE (n_distinct_accepted = 1) with NO quantiles and NO net_diff and predicate interval: POINT_ESTIMATE_NO_INTERVAL, accepted_by_stratum BEFORE any 3 number; plus DE38-R1+C3, C2, R3, R4, R2 and 2(iii) -- every step DRIVEN"
   de39_c1_confirmed_ruled: "CONFIRMED (LOW) and reproduced; RULED in three parts -- (i) the identity IS set identity: source comment re-worded + the enable_reduce caveat as ONE clause in the DRAFT 5 definition; (ii) ruling (3) asserted on the LOGGED ACCEPTED VALUES with the stream-map count kept as a SECOND LABELLED statistic; (iii) log `drawn`, delete the recomputation"
+  # SUPERSEDED-IN-BAND 2026-09-06T04:54:04Z (REV 32, verified by me): the flag
+  # below cites "evaluate_predicates :770-798, verified at the blob". CHECKED BY
+  # ME -- `def evaluate_predicates` is at de_phase4_diag_runner.py:**1085**, and
+  # 770-772 is now an unrelated comment about DE37-C2's known-bad.
+  # THE CLAIM MAY STILL HOLD AT THE NEW LOCATION AND I DID NOT RE-DERIVE IT; what
+  # is established is that THE CITATION NO LONGER REACHES THE CODE IT IS ABOUT.
+  # And the reviewer's point about the phrase is the sharp one: "verified at the
+  # blob" IS EXACTLY WHAT MAKES A MOVED LINE INVISIBLE -- the blob it was
+  # verified against is not the file a reader opens. Re-cite by SYMBOL:
+  # de_phase4_diag_runner.evaluate_predicates.
   de39_r1_open: "LOW-MEDIUM: the predicate row has NO null field, so POINT_ESTIMATE_NO_INTERVAL is emitted whenever null_quantiles is falsy -- A COLLAPSED NULL AND A NEVER-RUN NULL READ IDENTICALLY (evaluate_predicates :770-798, verified at the blob); the comment claims the label says what it is, and it does not"
   de39_r2_open: "LOW: len(_ca) == 1 at :2492 encodes today's single changed_at -- group by it. The coordinator had it as NOTED, NOT A FINDING; THE REVIEWER'S READING WAS ADOPTED"
   reviewer_de_r39_released: "650569c 22:55:56Z, 194 lines; EVERY DE38 closure CONFIRMED, each DRIVEN; the six literals verified at BOTH sides of 851edaf by the reviewer's own _fn_asts -- a THIRD independent parser on that seal"
@@ -9381,6 +9619,14 @@ flags:
     factors are costed rather than assumed. THE HOLM DENOMINATOR OF RECORD FOR
     THE FORWARD READ IS 18. Any reader resolving R-497 (F)(4)'s prose takes this
     instead; the artifact always said 18.
+  # SUPERSEDED-IN-BAND 2026-09-06T04:54:04Z (REV 32, verified by me): the flag
+  # below closes "G REMAINS 2 OF 5 AND THE EARLIEST G=5 IS UNCHANGED AT
+  # 2026-09-06." **G IS 5.** 09-05 accrued at the 00:06:01Z scheduled unit and
+  # the race reached its bar; overtaken by R-531/R-532 and BE 44's sealed 09-05
+  # receipt (d65cadbc, which I hashed at round 108).
+  # THE FLAG'S SUBSTANCE IS UNTOUCHED -- the era ruling did not grow the race AT
+  # THE TIME -- AND ITS CLOSING SENTENCE IS NOW FALSE AS WRITTEN. A flag whose
+  # body is a finding and whose last line is a forecast rots at the last line.
   era_ruling_does_not_produce_g3: >-
     READ THIS BEFORE ASSUMING THE RACE GREW. The USER ruled the era boolean on
     QUALITY (R-497 F(1)), which admits 08-29 -- AND THE RACE DID NOT GROW.
@@ -10249,6 +10495,15 @@ flags:
     all 13 fields are present, each with a source XOR a reason and no two sharing
     a source, BUT ALL SEVEN COUNTERS LACK A COMPANION EVALUATED-FLAG, SO A ZERO
     FROM A PATH THAT NEVER RAN IS INDISTINGUISHABLE FROM A COUNTED ZERO.
+  # UNSETTLED, NOT STALE, AND NOT RESOLVED BY ME EITHER, 2026-09-06T04:54:04Z
+  # (REV 32). The reviewer confirmed `arm_runnability` resolves (in
+  # de_lane4_real_parity, de_lane4_results_doc, da_arm_replay_verify) BUT DID NOT
+  # RE-DERIVE THE 4-OF-7 COUNT, and the arms have been RESTRUCTURED TWICE since
+  # 09-04 (cascade ruling v2, per-arm baselines). It declined to call it stale
+  # without naming the artifact that overtook it.
+  # I ADOPT THAT DISPOSITION RATHER THAN IMPROVING ON IT: the honest state is
+  # UNVERIFIED, and re-deriving an arm count is DE's surface, not mine. **MARKED
+  # UNVERIFIED; NOT TO BE QUOTED AS A CURRENT COUNT.**
   section_8_1_arm_state_4_of_7_measured_by_mem: >-
     MEM DROVE arm_runnability() RATHER THAN READING ITS COUNT, BECAUSE THE COUNT
     HAD ALREADY MOVED: R-504 (H) records 3 OF 7 RUNNABLE; MEM's own run at
@@ -10800,6 +11055,15 @@ flags:
     STANDING RULE INSTEAD, AND THE USER-ITEM COUNT DID NOT GROW -- which is what a
     standing predicate is FOR, and the first time in this programme one has closed
     a question before it became an item.
+  # SUPERSEDED-IN-BAND 2026-09-06T04:54:04Z (REV 32 currency audit, verified by
+  # me): the flag below says "EXPECTED_CHECKS 52 at :59". CHECKED BY ME --
+  # live/pm_research/da_race_withdrawals.py:59 NOW READS `EXPECTED_CHECKS = 66`.
+  # THE LINE NUMBER IS STILL RIGHT AND THE VALUE IS NOT. Overtaken by DA's own
+  # growth of that battery (52 -> 57 -> 59 -> 64 -> 66 across rounds 35-57).
+  # THE FINDING STANDS; THE VERIFICATION IS OF A BATTERY THAT NO LONGER EXISTS AT
+  # THAT SIZE. Re-cite by SYMBOL: the assertion lives at
+  # da_race_withdrawals.EXPECTED_CHECKS, whose value is a moving target and must
+  # be read, never quoted.
   CODOMAIN_PREDICATE_REACHED_INDEPENDENTLY_BY_DA_round_35: >-
     R-506 (F), AND MEM VERIFIED IT BY EXECUTION RATHER THAN BY READING: I RAN
     da_race_withdrawals --selftest MYSELF AND ALL 52 CHECKS PASSED (EXPECTED_CHECKS
@@ -12074,6 +12338,31 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T04:54:04Z, THE CURRENCY AXIS I NAMED AT ROUND 100 HAS BEEN
+  MEASURED -- BY SOMEONE ELSE, IN ONE ROUND, WITH A SEED. 40 flags: 36 CURRENT,
+  3 STALE, 0 UNSUPPORTED, 1 unsettled, **AND 27 OF 40 CITE NOTHING AT ALL**.
+  My own census agrees by a different method: 455 UNMARKED of 624 = 72.9%. I
+  verified all three STALE myself before superseding them, and the asymmetry is
+  the finding rather than the count: **THE FLAGS THAT CARRY THE MOST EVIDENCE ARE
+  THE ONES THAT GO STALE, AND THE FLAGS THAT CARRY NONE CANNOT** -- all three
+  rotted on LINE DRIFT after being verified by execution when written.
+  TWO RULES ADOPTED AT THE HEAD OF THE FLAGS BLOCK: **every new flag carries a
+  provenance entry at the moment it is written**, and **citations name SYMBOLS
+  AND DIGESTS, never line numbers alone.** On the 455 that exist: I WILL NOT
+  RETRO-CITE THEM AND WILL NOT CALL THEM A BACKLOG -- attrition, each when next
+  touched, because bulk retro-citation would MANUFACTURE PROVENANCE AFTER THE
+  FACT.
+  MY PM_DATA_ROOT COLLISION IS DISSOLVED (all three sites mean the repo root);
+  MY SECOND FINDING IS REAL AND LARGER THAN I MEASURED -- ELEVEN BE MODULES
+  against my four -- and MY SIX WAS A FLOOR AND I SAID SO.
+  P-2026-002's E2.0 IS RUN AND READ AND **PENDING REVIEW, NOT SETTLED**: ADA
+  SETTLED DEAD (-0.5552 bps, CI95 entirely below the gate, G = 16) and **E1's
+  PROXY MID VINDICATED at -0.0066 bps -- E1 dies on the WEIGHTING, not the mid**,
+  monotone by quintile with the top carrying $2.95bn of $3.21bn.
+  THE WAITER WAS KILLED A THIRD TIME AND RE-ARMING IS STOPPED; the loop is
+  prompt-driven and the USER has been told. Gate 1 is 1 of 7. Economics:
+  workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T04:47:07Z, RETAINED BELOW --
   AS-OF 2026-09-06T04:47:07Z, MY OWN PM_DATA_ROOT FINDING IS CORRECTED IN ITS
   DIRECTION: the variable DENOTES THE REPO ROOT -- branch 2 returns CODE_ROOT,
   line 116 is `REPO = DATA_ROOT`, and paths append "data/..." -- SO THE TWO
@@ -13110,6 +13399,32 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 120, 2026-09-06T04:54:04Z ------------------------------
+  REV32_CURRENCY_AUDIT_MEASURED_THE_AXIS_I_NAMED_AND_NEVER_BUILT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_CURRENCY_AUDIT_2026-09-06.md
+    as_of: 2026-09-06T04:54:04Z
+    said: >-
+      the filing reports 40 flags drawn at seed 20260906 with 36 CURRENT, 3
+      STALE, 0 UNSUPPORTED, 1 unsettled, and 27 of 40 carrying no citation. I
+      verified each STALE at its own artifact rather than relaying:
+      da_race_withdrawals.EXPECTED_CHECKS reads 66 at line 59 against the flag's
+      52; the race is at G = 5 against "G REMAINS 2 OF 5"; and
+      de_phase4_diag_runner.evaluate_predicates is defined at line 1085 while
+      lines 770-772 are an unrelated DE37-C2 comment. My own instrument's census
+      of the same property is 455 UNMARKED of 624.
+  P_2026_002_E2_0_IS_RUN_AND_READ_ADA_SETTLED_DEAD:
+    prov: RELAYED
+    from: >-
+      R-565, verified by the coordinator at receipt sha 6942eb5f with the
+      selftest run under its wrapper. PENDING-REVIEW: REV 33 has the result
+      review and nothing here is settled. P-002's own state files are DA's.
+  the_de74_resolver_is_SOUND_WITH_ONE_DOOR_NOW_BOUND:
+    prov: RELAYED
+    from: R-564 and Q-DE-76 (4981d00, a3368b8)
+  THE_WAITER_WAS_KILLED_A_THIRD_TIME_AND_RE_ARMING_IS_STOPPED:
+    prov: RELAYED
+    from: R-564
   # --- MEM round 119, 2026-09-06T04:47:07Z ------------------------------
   PM_DATA_ROOT_IS_A_NAME_SEMANTICS_MISMATCH_NOT_TWO_REFERENTS:
     prov: CHECKED
