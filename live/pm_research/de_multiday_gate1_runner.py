@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 309
+EXPECTED_CHECKS = 312
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -1243,8 +1243,32 @@ def assert_seal_layout_symmetric(sealed_artifact: dict,
             "sealed_reads": s, "unsealed_reads": u}
 
 
+#: THE SHARED CENSUS RULE (REV 76 S0). Stated here so DE's census and
+#: DA's `economic_absence` agree BY CONSTRUCTION rather than by both
+#: happening to be written the same way:
+#:
+#:   A SEALED NAME PRESENT AS A KEY IS A LEAK, WHATEVER ITS VALUE --
+#:   including `[]`, `{}` and `null`. The census walks KEYS, never leaves:
+#:   an empty container yields no leaf, so a leaf-walk reports a sealed
+#:   key emitted as `[]` or `{}` as ABSENT. The receipt's own
+#:   `seal_status` says every economic field is "ABSENT from this
+#:   artifact, not present-and-ignored" -- and an empty container is
+#:   exactly present-and-ignored.
+#:
+#: DA 98 carries the same sentence. If the two ever diverge, this line is
+#: the one to compare.
+CENSUS_RULE = ("a sealed name present as a KEY is a leak whatever its "
+               "value, including [] and {} and null; the census walks "
+               "KEYS, never leaves")
+
+
 def _economic_keys_in(o, path="") -> list:
     """Economic fields present as KEYS, at any depth.
+
+    THE RULE IS `CENSUS_RULE` ABOVE, and it is the key-walk: a name is
+    reported wherever it appears as a key, whatever the value is. A
+    leaf-walk would miss `[]` and `{}` entirely (REV 76 S0, driven on
+    both censuses).
 
     NOT a substring test on the serialised artifact: `sealed_field_names`
     is a LIST OF THE NAMES BEING SEALED, so a substring test reports it as
@@ -6212,6 +6236,54 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"`_strip_economic` seals by the list in force for THIS run; a "
        f"census judges a receipt by the list in force when THAT receipt "
        f"was produced")
+    # ---- REV 76 S0: THE CENSUS WALKS KEYS, NOT LEAVES ----------------
+    # An empty container yields NO LEAF, so a leaf-walking census reports
+    # a sealed key emitted as `[]` or `{}` as ABSENT -- while the
+    # receipt's own `seal_status` says every economic field is "ABSENT
+    # from this artifact, not present-and-ignored", and an empty
+    # container is exactly present-and-ignored. Driven on the reviewer's
+    # three values, for EVERY one of the eleven names, AT DEPTH.
+    _forms105 = {"[]": [], "{}": {}, "0.0": 0.0, "null": None}
+    _missed105, _n105 = [], 0
+    for _name105 in ECONOMIC_FIELDS:
+        for _lbl105, _val105 in _forms105.items():
+            _art105 = {"per_day_sealed_artifacts": [
+                {"arm": "A", "nested": [{"deep": {_name105: _val105}}]}]}
+            _n105 += 1
+            if not _economic_keys_in(_art105):
+                _missed105.append(f"{_name105}={_lbl105}")
+                continue
+            try:
+                assert_no_economic_leak(_art105, 1, 6)
+                _missed105.append(f"{_name105}={_lbl105} ADMITTED")
+            except RunnerRefused:
+                pass
+    ok(not _missed105 and _n105 == len(ECONOMIC_FIELDS) * 4,
+       f"REV 76 S0: all {len(ECONOMIC_FIELDS)} sealed names planted AT "
+       f"DEPTH as `[]`, `{{}}`, `0.0` and `null` -- {_n105} cells -- are "
+       f"found by the census and REFUSED. An empty container yields no "
+       f"LEAF, so a leaf-walk reports it absent; this walks KEYS")
+    # NO `or True` HERE. I wrote one, and it makes a check unfalsifiable --
+    # the same slip as DE 97's key-name assertion, one round on.
+    ok(CENSUS_RULE.startswith("a sealed name present as a KEY is a leak")
+       and "never leaves" in CENSUS_RULE
+       and "[] and {}" in CENSUS_RULE
+       and "CENSUS_RULE" in (_economic_keys_in.__doc__ or ""),
+       f"and the RULE IS STATED ONCE, in `CENSUS_RULE`, so DE's census "
+       f"and DA's `economic_absence` agree BY CONSTRUCTION rather than by "
+       f"both happening to be written the same way (DA 98 carries the "
+       f"same sentence)")
+    # THE POST-EMIT READ-BACK: the claim is about the BYTES, not the
+    # object. Driven on a file, because that is what it guards.
+    _rb = Path(_tfr.mkdtemp(prefix="de105rb_")) / "r.json"
+    _rb.write_text(json.dumps({"per_day_sealed_artifacts": [
+        {"arm": "A", "economic": {"D_E0": []}}]}))
+    ok(_economic_keys_in(json.loads(_rb.read_text())) != [],
+       "REV 76 S0(3): the emitter now READS THE RECEIPT BACK FROM DISK "
+       "and censuses THOSE BYTES before naming it sealed -- everything "
+       "before that point checks the payload in memory, and what a reader "
+       "gets is the file. On a leak it removes the file and refuses: a "
+       "sealed day that leaks is not a day")
     # ---- R-674 (b): the receipt describes ITS OWN seal, generated ----
     _scope104 = {
         "design_version": DESIGN_VERSION_IN_FORCE,
@@ -9383,7 +9455,25 @@ def _main_day(a) -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(payload, indent=2, sort_keys=True,
                                    default=str) + "\n")
+    # THE RECEIPT IS READ BACK FROM DISK AND CENSUSED BEFORE IT IS CALLED
+    # SEALED (REV 76 S0(3)). Everything before this point checks the
+    # PAYLOAD IN MEMORY; what a reader gets is the BYTES. Serialisation
+    # can differ from the object -- `default=str` stringifies what it
+    # cannot encode -- and the claim on the artifact is about the
+    # artifact.
+    _back = json.loads(out_path.read_text())
+    _post = _economic_keys_in(_back)
+    if _post and payload["n_days_complete"] < payload["G"]:
+        out_path.unlink(missing_ok=True)
+        raise RunnerRefused(
+            f"REFUSED after writing: the receipt READ BACK FROM DISK "
+            f"carries sealed names as KEYS -- {_post[:6]}. The rule is "
+            f"`{CENSUS_RULE}`. The file has been removed; a sealed day "
+            f"that leaks is not a day.")
     print(json.dumps({
+        "post_emit_census": {"read_back_from": str(out_path),
+                             "sealed_keys_found": len(_post),
+                             "rule": CENSUS_RULE},
         "emitted": str(out_path), "status": payload["status"],
         "day": payload["day"],
         "arms": {r["arm"]: r.get("status")
