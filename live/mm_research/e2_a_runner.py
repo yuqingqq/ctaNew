@@ -1129,6 +1129,107 @@ def census(symbols, out_path: Path | None = None) -> dict:
     return out
 
 
+def mechanism_check(sym: str, out_path: Path | None = None) -> dict:
+    """Does the real-book path EXECUTE? -- with every cost REDACTED.
+
+    The fixture drives `evaluate_day` on synthetic tapes, so the code path is
+    exercised; it has never met a real bookTicker, a real trade tape or a real
+    depth20 snapshot. If a ruling later admits days, the first real run should
+    not be the first time the parse, the level lookup and the two simulations
+    see the tape.
+
+    This runs the ADMISSIBLE days only, and emits NO cost, NO eff_RT and NO
+    verdict -- only episode STATUS counts, the queue-ahead and fill-quantity
+    distributions, the ordering predicate, and resources. A number that is not
+    written cannot be quoted, and the declared minimum-day floor is untouched
+    because no gate is read here.
+    """
+    root = E20.require_canonical_root("P-2026-002 E2-A mechanism check")
+    require_symbol_in_scope(sym)
+    decl = load_declaration()
+    digest = DECL_SHA[:16]
+    t0 = time.time()
+    days_all = sorted({f.name.split("_")[0]
+                       for f in (RAW / "bookTicker" / sym).glob("*.csv*")})
+    adm_days = []
+    for day in days_all:
+        counts = stream_file_counts(sym, day)
+        gap = None
+        if counts["bookTicker"] == HOURS_PER_DAY_FILES:
+            bk, _, _ = E20.read_book(sym, day, extend=False)
+            gap = None if bk is None else E20.gap_fraction(bk[0], day)
+        if day_admission(sym, day, counts, gap)["admissible"]:
+            adm_days.append(day)
+    if not adm_days:
+        raise E2ARefused(
+            f"REFUSED: {sym} has no admissible day, so there is no real book "
+            f"to exercise the path on. An empty population is not a check.")
+    per_day = []
+    for day in adm_days:
+        book, _, bmeta = E20.read_book(sym, day, extend=True)
+        trades, _, tmeta = E20.read_trades(sym, day)
+        depth, _, dmeta = read_depth20(sym, day)
+        ev = evaluate_day(sym, day, digest, book, trades, depth)
+        rows = ev["rows"]
+        gate = [r for r in rows if r["tp_s"] == TP_PRIMARY_S]
+        qa = np.array([r["queue_ahead"] for r in gate]) if gate else np.zeros(0)
+        per_day.append({
+            "day": day, "tick": ev["tick"], "qty_step": ev["qty_step"],
+            "status_counts": ev["status_counts"],
+            "n_attempted": ev["n_attempted"],
+            "n_ordering_violations": len(ev["ordering_violations"]),
+            "stream_meta": {"book": bmeta, "trades": tmeta, "depth20": dmeta},
+            "gate_row_tp_s": TP_PRIMARY_S,
+            "n_gate_row_episodes": len(gate),
+            "queue_ahead_at_placement": {
+                "p50": float(np.percentile(qa, 50)) if qa.size else None,
+                "p90": float(np.percentile(qa, 90)) if qa.size else None,
+                "max": float(qa.max()) if qa.size else None,
+                "n_zero": int((qa == 0).sum())},
+            "fill_rate_RiskAverse":
+                float(np.mean([r["phi_RiskAverse"] > 0 for r in gate]))
+                if gate else None,
+            "fill_rate_ProbQueue_f3":
+                float(np.mean([r["phi_ProbQueue_f3"] > 0 for r in gate]))
+                if gate else None,
+            "partial_share_RiskAverse":
+                float(np.mean([r["partial_RiskAverse"] for r in gate]))
+                if gate else None,
+            "n_opposite_trades_p50":
+                float(np.percentile([r["n_opposite_trades"] for r in gate], 50))
+                if gate else None,
+        })
+        del book, trades, depth
+    out = {"protocol": PROTOCOL + "_MECHANISM_CHECK",
+           "carrying_commit": carrying_commit(),
+           "status": "MECHANISM_ONLY_ALL_COSTS_REDACTED",
+           "data_root_check": root,
+           "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
+                           "sha256": DECL_SHA},
+           "symbol": sym, "admissible_days_used": adm_days,
+           "min_complete_days_declared": decl["population"][
+               "min_complete_days"],
+           "why_no_number": (
+               "this is NOT a gate read and emits no cost, no eff_RT and no "
+               "verdict. It answers one question -- does the real-book path "
+               "execute on a real tape -- so that a first real run is not "
+               "also a first contact. The declared minimum-day floor is "
+               "untouched because no gate is read."),
+           "days": per_day,
+           "wall_s": round(time.time() - t0, 2)}
+    try:
+        import resource                                       # noqa: PLC0415
+        out["max_rss_kib"] = resource.getrusage(
+            resource.RUSAGE_SELF).ru_maxrss
+    except Exception:                                         # noqa: BLE001
+        pass
+    if out_path:
+        out_path.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
+    print(json.dumps({k: v for k, v in out.items()
+                      if k != "data_root_check"}, indent=2)[:4000])
+    return out
+
+
 def diagnose_tick(sym: str, out_path: Path | None = None) -> dict:
     """R-570(D): WHY E1's tick_size returns 1e-6 for FIL, at the mechanism.
 
@@ -1232,12 +1333,16 @@ def main() -> int:
     ap.add_argument("--no-repro", action="store_true")
     ap.add_argument("--diagnose-tick", nargs="*", default=None)
     ap.add_argument("--census", nargs="*", default=None)
+    ap.add_argument("--mechanism-check", default=None)
     ap.add_argument("--output", type=Path, default=None)
     a = ap.parse_args()
     if a.selftest or a.fixture:
         r = fixture(a.output)
         return 1 if r["n_failed"] or not r["data_free_proof"][
             "no_path_under_data_mm_hf_was_opened"] else 0
+    if a.mechanism_check:
+        mechanism_check(a.mechanism_check, a.output)
+        return 0
     if a.census is not None:
         census(a.census or list(SYMBOLS_IN_SCOPE), a.output)
         return 0
