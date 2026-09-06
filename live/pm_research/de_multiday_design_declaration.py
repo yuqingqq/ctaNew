@@ -44,9 +44,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 19
+VERSION = 20
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 102
+EXPECTED_CHECKS = 103
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -125,6 +125,9 @@ V17_DECLARATION = ("p003_de_multiday_gate1_design_v17.json",
 V18_DECLARATION = ("p003_de_multiday_gate1_design_v18.json",
                    "fa7698d7ce4811ddfd41ef6c3db299fd289fb71de231d20030f765"
                    "b22e49c2b7")
+V19_DECLARATION = ("p003_de_multiday_gate1_design_v19.json",
+                   "81db0b9eb64df5068b57748ab914b43b61b8a1b546cc94f9db4203"
+                   "f26ac75858")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
@@ -132,7 +135,8 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
                     V10_DECLARATION, V11_DECLARATION, V12_DECLARATION,
                     V13_DECLARATION, V14_DECLARATION, V15_DECLARATION,
-                    V16_DECLARATION, V17_DECLARATION, V18_DECLARATION)
+                    V16_DECLARATION, V17_DECLARATION, V18_DECLARATION,
+                    V19_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -553,7 +557,7 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 
 #: The params file this design pins. ONE name, and everything in the pin
 #: block is derived from it.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v12.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v13.json"
 
 
 def _params_path() -> Path:
@@ -2083,6 +2087,18 @@ def declaration() -> dict:
         },
         "R15_a_real_days_battery_is_the_FULL_battery": {
             "reviewer": "REVIEW_DAY_PATH_DE78 S3.4",
+            # DE 92. design v19 landed carrying 100 while the runner moved
+            # to 101 the same hour. Nothing RESOLVES this number -- the
+            # runner computes its own at run time -- but a reader could
+            # take it for a pin, and a pin that goes stale by construction
+            # every time a check is added is churn dressed as provenance.
+            "what_this_number_is": (
+                "a SNAPSHOT of `de_multiday_gate1_runner.DAY_PATH_CHECKS` "
+                "read at emission, NOT a pin. The runner computes its own "
+                "count at run time and asserts it against its own "
+                "constant; this records what the runner declared when "
+                "this design was emitted. A later count in a receipt is "
+                "the runner moving, not a broken declaration"),
             "the_defect": "`_main_day` called selftest(offline=True) "
                           "unconditionally, so a REAL day's receipt would "
                           "say `battery: PASS` having skipped all four R6 "
@@ -2850,6 +2866,15 @@ def selftest(*, quiet: bool = False) -> int:
        f"predecessors and its head is v{VERSION - 1}. v7 on disk read "
        f"protocol V4, filename v7 and supersedes v2")
     # ---- DE 91: the receipt's name, and the uncapped membership set ---
+    _r15 = d["R15_a_real_days_battery_is_the_FULL_battery"]
+    ok(_r15["day_path_checks_declared"] == RUNNER.DAY_PATH_CHECKS
+       and "SNAPSHOT" in _r15["what_this_number_is"],
+       f"DE 92: the runner's day-path check count in this declaration is a "
+       f"SNAPSHOT read from the runner at emission "
+       f"({_r15['day_path_checks_declared']}), and it says so. design v19 "
+       f"landed carrying 100 while the runner moved to 101 the same hour; "
+       f"a number a reader could take for a PIN going stale by "
+       f"construction is worse than one that names itself")
     _r25 = d["R25_the_day_receipts_name_is_composed_by_the_runner"]
     ok("-5,074 s" in _r25["the_defect"]
        and "DIRECTORY" in _r25["the_rule"]

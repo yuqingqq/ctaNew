@@ -48,14 +48,14 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 234
+EXPECTED_CHECKS = 235
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
 #: stays as provenance (rule 13).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v12.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v13.json"
 SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v11.json")
+                        "de_multiday_gate1_params_v12.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -73,7 +73,7 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 100
+DAY_PATH_CHECKS = 101
 #: R-610's battery-order checks. They perform real draws (see the guard at
 #: their site), so they are online-only and their count is DECLARED.
 BATTERY_ORDER_CHECKS = 7
@@ -3494,6 +3494,43 @@ def assert_rule20(observed: dict, *, wall_s: float, peak_rss_mb: float,
 
 # --------------------------------------------------------- the day itself
 
+def assert_real_day_has_the_lock(day: str, observed: dict, *,
+                                 fixture: bool) -> dict:
+    """A REAL DAY TAKES THE LOCK FIRST -- as a predicate over an OBSERVATION.
+
+    It was an inline `if` inside `run_day`, and the battery drove it by
+    calling `run_day` and reading the message. That check could therefore
+    only pass when the BATTERY'S OWN PROCESS did not hold the lock -- and
+    the battery now runs inside every real day, which by construction
+    holds it. Measured, one line apart:
+
+        battery without the lock -> PASS 234 checks
+        battery holding the lock -> FAIL, "wrong reason"
+
+    Every seat and every reviewer ran it without the lock, so it passed
+    everywhere except in the one configuration it exists for. It cost the
+    09-03 re-run 26 seconds -- not 85 minutes, because R-610 had already
+    moved the battery in front of the day's work.
+
+    The observation is now a PARAMETER, so both directions are drivable
+    from either ambient state, which is what `assert_rule20` beside it
+    already did."""
+    held = bool(observed.get("heavy_run_lock_held"))
+    if not fixture and not held:
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: a REAL day is heavy by construction (BE "
+            f"projects ~2.3 h for both arms) and this process does not hold "
+            f"{HEAVY_RUN_LOCK}. Take the lock first; if it is held, refuse "
+            f"and report (R-575(C)).")
+    return {"day": day, "fixture": fixture, "heavy_run_lock_held": held,
+            "checked": not fixture,
+            "why_a_parameter_not_a_reading": (
+                "a guard that reads the ambient lock cannot be driven in "
+                "the state it protects: the battery runs INSIDE a real "
+                "day, which holds the lock, so the check could only ever "
+                "pass where it did not matter")}
+
+
 def run_day(day: str, book_path, *, params: dict, module=None,
             fixture: bool = False, receipt_path=None,
             n_days_complete: int = 1,
@@ -3577,12 +3614,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     day_lock = assert_fixture_day_lock(day, fixture, what="day run")
     _mark("S_start")
     obs = wrapper_observed()
-    if not fixture and not obs["heavy_run_lock_held"]:
-        raise RunnerRefused(
-            f"REFUSED DAY {day}: a REAL day is heavy by construction (BE "
-            f"projects ~2.3 h for both arms) and this process does not hold "
-            f"{HEAVY_RUN_LOCK}. Take the lock first; if it is held, refuse "
-            f"and report (R-575(C)).")
+    assert_real_day_has_the_lock(day, obs, fixture=fixture)
 
     # ---- S0: verify. Digests only. -------------------------------------
     book_path = Path(book_path)
@@ -4123,6 +4155,14 @@ def battery_resources(t0: float, hw0: float) -> dict:
         "fraction_of_the_heavy_bar_by_wall": round(wall / HEAVY_WALL_S, 3),
         "would_need_the_lock_standalone": (peak > bar_mb
                                            or wall > HEAVY_WALL_S),
+        # THE AMBIENT LOCK STATE THE BATTERY RAN IN. DE 92: one check's
+        # verdict depended on it, so it passed for every seat (no lock)
+        # and failed inside the only run that matters (lock held). The
+        # configuration now travels in every receipt that embeds a
+        # battery, so "which state was this battery run in" is a field
+        # rather than a question.
+        "ran_holding_the_heavy_run_lock": bool(
+            wrapper_observed().get("heavy_run_lock_held")),
         "most_of_the_peak_is_one_check": (
             "REV 53 S0.3's control inflates the process past the 700 MB "
             "fixture budget ON PURPOSE and frees it immediately -- it has "
@@ -6739,12 +6779,31 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            "into any later check")
 
         # ---- a real day is refused for the reasons it must be --------------
-        refuses(lambda: run_day("2026-09-04", _made["book_path"],
-                                params=_DAYP, fixture=False),
+        # DRIVEN ON THE PREDICATE, WITH THE OBSERVATION INJECTED. This
+        # called `run_day` and read its message, so its verdict depended
+        # on whether THIS process held the lock -- and the battery now
+        # runs inside every real day, which holds it. Measured one line
+        # apart: PASS 234 without the lock, FAIL "wrong reason" with it.
+        # It refused the 09-03 re-run at 26 seconds (DE 92).
+        refuses(lambda: assert_real_day_has_the_lock(
+                    "2026-09-04", {"heavy_run_lock_held": False},
+                    fixture=False),
                 "A REAL DAY WITHOUT THE LOCK REFUSES BEFORE ANY WORK: it is "
                 "heavy by construction (BE projects ~2.3 h for both arms), so "
                 "the lock is taken FIRST or the run does not start (R-575(C))",
                 "does not hold")
+        ok(assert_real_day_has_the_lock(
+               "2026-09-04", {"heavy_run_lock_held": True},
+               fixture=False)["checked"] is True
+           and assert_real_day_has_the_lock(
+               "FIXTURE-DAY-1", {"heavy_run_lock_held": False},
+               fixture=True)["checked"] is False,
+           "AND BOTH OTHER CELLS DRIVE, which the old shape could not "
+           "reach at all: a real day that HOLDS the lock admits, and a "
+           "FIXTURE is not checked. The observation is a PARAMETER now, "
+           "so the battery's verdict no longer depends on whether the "
+           "process running it happens to hold the lock -- it passed "
+           "everywhere except inside the run it exists for")
 
     # ================= DE 78: THE REAL-DAY PATH, ON A SYNTHETIC DAY ======
     # SKIPPED OFFLINE, and the reason is precise: these drive BE's own
