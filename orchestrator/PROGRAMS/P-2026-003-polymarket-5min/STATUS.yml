@@ -63,6 +63,53 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T04:03:05Z (MEM ROUND 113 -- R-552 AND THE 398cc94 LANDING SWEPT.
+  STATE ONLY.
+  (1) "THE LEDGER STOPS AT 09-02" WAS A TRACKING GAP, NOT A DATA GAP -- and MY
+  OWN ROUND-101 FLAG ALREADY SAID SO. It reads "a FILENAME CENSUS ONLY (18
+  da_dayverdict_* files, current verdicts for 08-26..09-05)", taken with `find`
+  on 2026-09-05 and carried in this file ever since. THE FACT THAT WOULD HAVE
+  PREVENTED A BLOCKING DOCUMENT FINDING WAS IN THE STATE FILE THE WHOLE TIME.
+  Two seats measured the same population on DIFFERENT SURFACES -- disk and git --
+  BOTH WERE RIGHT ABOUT THEIR OWN, and NO INSTRUMENT ANYWHERE COMPARES THEM.
+  That is the CORROBORATION axis I have named three times and not built, and it
+  has now cost a round. AND MY SHARE IS THIS: I wrote "filename census only" as a
+  LIMIT and never saw that the limit WAS A FINDING.
+  (2) AND THE LANDING NARROWS THE GAP WITHOUT CLOSING IT -- CHECKED BY ME. Nine
+  verdicts are tracked; TWELVE are on disk. THREE REMAIN UNTRACKED: 08-26, 08-27
+  AND **08-31** -- AND 08-31 IS THE ERA-BOUNDARY DAY, the verdict R-547(C) cites
+  for the 22:00:02.274534Z boundary the whole admissibility argument turns on. A
+  cold reader cloning this repo does not receive it. Not routing a fix: what to
+  track under data/ is a standing ruling and not mine.
+  (3) DESIGN v2 VERIFIED, 36 = 36 COMPUTED, and the EXPECTED_CHECKS - 1 line I
+  read at :544 last round IS GONE. Both undeclared choices are now PREDICATES:
+  the shared pool refuses below 0.90 overlap, and btc-only is priced in
+  MULTIPLICITY (eth would take m from 2 to 4 and the clearing G from 6 to 7)
+  rather than asserted. R4's floors are CALIBRATED AGAINST THE CONSUMED HOUR SO
+  THEY CANNOT BE READ AS CHOSEN TO EXCLUDE SOMETHING SEEN. R5 seals the smoke and
+  runs all G days regardless.
+  (4) R7 SHARPENS WHAT I WROTE LAST ROUND AND CORRECTS IT: SET A is G = 6 TODAY
+  and CLEARS HOLM; SET B is G = 3 TODAY and CLEARS NOTHING until 09-06..09-08
+  accrue. My "both answers give six days" was right about the endpoint and WRONG
+  ABOUT TODAY. Resources recomputed by me: 2.252 h/day, 11.26 CPU-h at G = 5,
+  13.51-13.52 at G = 6 depending on the rounding point -- NOT a discrepancy.
+  (5) THE REVIEWER'S 89e81d5 IS ADJUDICATED AND ROUTED. The classifier
+  CLASSIFIES PROVENANCE BY LEAF NAME REGARDLESS OF PARENT, so THE INSTRUMENT
+  BUILT TO COMPUTE THE MOVED-SET WOULD HAVE CLASSIFIED AWAY THE DEFECT THAT
+  CAUSED IT TO BE BUILT -- and the reviewer RAN IT on that defect. DE 71 fixes it
+  with that defect as the known-bad. BE's population digest is A SECOND READ, not
+  the bytes the null loaded -- THE THIRD TIME IN FOUR ROUNDS A DIGEST HAS NOT
+  BOUND WHAT IT APPEARED TO BIND. A digest answers "these bytes", never "these
+  are the bytes that were used".
+  (6) THE DATA-SHELL TRAP: the seat worktrees' data/ are DIRECTORIES, partial
+  shells, not the R-397 symlinks, and DE and the reviewer BOTH READ ONE this
+  round IN OPPOSITE DIRECTIONS. A PARTIAL SHELL IS THE WORST SHAPE A MISSING
+  DATASET CAN TAKE -- nothing errors, nothing is empty, the count is just
+  smaller. MY READS ARE MAIN-TREE AND I CHECKED RATHER THAN ASSUMED.
+  (7) THE BETWEEN-TURN STALL HAS A WORKING REMEDY -- three wakes this hour, each
+  acted on within a minute. I wrote at round 109 that A DISCIPLINE CANNOT FIX A
+  WAKE-UP PROBLEM; it did not, A MECHANISM DID.
+  PRIOR CHECKPOINT:
   2026-09-06T03:54:55Z (MEM ROUND 112 -- R-550, R-551 AND THE RULE-20 REPAIR
   SWEPT. STATE ONLY.
   (1) THE DESIGN IS GOOD AND BLOCKED, AND I READ THE BLOCKER AT THE CODE:
@@ -1793,6 +1840,54 @@ flags:
                              # R-549(B) is corrected in band at R-551(2); DE 70
                              # states the fields as COMPUTED FROM THE MEASURED
                              # SECONDS rather than typed.
+  the_data_shell_trap_seat_worktrees_carry_DIRECTORIES_not_symlinks: TWO-SEATS-READ-A-SHELL
+                             # RELAYED from R-552's flag to every seat, and it is
+                             # the mechanism behind this round's document round.
+                             # THE SEAT WORKTREES' data/ ARE DIRECTORIES --
+                             # PARTIAL SHELLS -- NOT THE R-397 SYMLINKS. DE and
+                             # the reviewer BOTH READ A SHELL this round: DE saw
+                             # THREE qualifying days where the ledger has SIX,
+                             # and the reviewer read a series stopping at 09-02.
+                             # TWO SEATS, OPPOSITE DIRECTIONS, SAME CAUSE.
+                             # A PARTIAL SHELL IS THE WORST SHAPE A MISSING
+                             # DATASET CAN TAKE: an absent directory raises and
+                             # an empty one is obvious, but a shell that holds
+                             # SOME of the files answers every query
+                             # PLAUSIBLY AND WRONG. Nothing errors, nothing is
+                             # empty, and the count is simply smaller.
+                             # THE COORDINATOR IS RECONCILING THEM: REV's swapped
+                             # to a symlink at 04:02Z, the others at their next
+                             # idle.
+                             # MY OWN READS ARE UNAFFECTED AND I CHECKED RATHER
+                             # THAN ASSUMED: I work in the MAIN TREE, pwd
+                             # /home/yuqing/ctaNew, and data/ there is a real
+                             # directory. Every census and digest I have filed --
+                             # including round 101's and this round's -- is a
+                             # main-tree read. Stated because "which root did you
+                             # read" is now a question every filing has to
+                             # answer, and mine has one answer.
+  the_coordinator_wake_mechanism_WORKS: THREE-WAKES-THIS-HOUR-EACH-ACTED-ON
+                             # RELAYED from R-552(C). The between-turn stall I
+                             # recorded at round 109 as STRUCTURAL -- "the monitor
+                             # reaches the coordinator only inside a running turn,
+                             # and between turns nothing wakes it" -- HAS A
+                             # WORKING REMEDY: a background shell that EXITS when
+                             # a seat goes idle or origin moves RE-INVOKES the
+                             # coordinator. THREE WAKES THIS HOUR (03:56, 03:57,
+                             # 03:59Z), EACH ACTED ON WITHIN A MINUTE.
+                             # I RECORDED AT ROUND 109 THAT "A DISCIPLINE CANNOT
+                             # FIX A WAKE-UP PROBLEM." IT DID NOT; A MECHANISM
+                             # DID, and the mechanism is the one the diagnosis
+                             # implied. Recording the close as carefully as I
+                             # recorded the failure: the ten-hour and forty-minute
+                             # stalls are not repaired by anyone trying harder,
+                             # and this is what the alternative looks like.
+                             # A ZERO-BYTE `systemd-run` FILE APPEARED IN THE
+                             # REPO ROOT AT 03:56:53Z -- a seat's shell slip
+                             # adopting the rule-20 wrapper; removed. Worth one
+                             # line because it is the SECOND shell accident
+                             # caused by rule 20's own text in two rounds, after
+                             # the heredoc that ate the wrapper line.
   standing_rule_20_one_heavy_run_at_a_time: CHECKED-AT-THE-PROTOCOL-AND-THE-SLICE
                              # CHECKED 2026-09-06T03:54:55Z. NEW STANDING RULE,
                              # binding on me from this round.
@@ -1896,7 +1991,34 @@ flags:
                              # ONE: five sealed scores (met) AND a declared read
                              # reviewed (not met). Recorded so "all five are
                              # sealed" is not read as "it can be opened".
-  reviewer_89e81d5_the_classifier_calls_a_real_defect_provenance: SWEPT-AS-FILED-ROUTING-IN-R-552
+  reviewer_89e81d5_ADJUDICATED_classifier_provenance_BY_LEAF_NAME: ROUTED-DE-71-AND-BE-47
+                             # UPDATED 2026-09-06T04:03:05Z. My round-112 flag
+                             # recorded this AS FILED and not adjudicated; R-552(B)
+                             # adjudicates it and both items are ROUTED.
+                             # A-1b, AND THE MECHANISM IS THE POINT:
+                             # de_supersession_diff.py CLASSIFIES PROVENANCE BY
+                             # LEAF NAME REGARDLESS OF PARENT, so round 69's real
+                             # defect -- population_block.source_cache, a
+                             # basename where BE carries a full path -- WOULD HAVE
+                             # BEEN CLASSIFIED PROVENANCE AND HIDDEN. THE
+                             # INSTRUMENT BUILT TO COMPUTE THE MOVED-SET WOULD
+                             # HAVE CLASSIFIED AWAY THE DEFECT THAT CAUSED IT TO
+                             # BE BUILT. And the reviewer RAN IT ON THAT DEFECT
+                             # rather than arguing from the code, which is what
+                             # makes it a finding and not a worry. DE 71 fixes
+                             # the class rule WITH THAT DEFECT AS THE KNOWN-BAD --
+                             # rule 15's shape, the falsifier being the very case
+                             # that escaped.
+                             # B-1: BE's population.source_sha256 IS A SECOND
+                             # READ of the pickle, NOT THE BYTES THE NULL LOADED.
+                             # BE 47. That is the third time in four rounds a
+                             # DIGEST HAS TURNED OUT NOT TO BIND WHAT IT LOOKED
+                             # LIKE IT BOUND -- after the disk-vs-interpreter
+                             # pycache field and the transcription under a file
+                             # digest. A digest answers "these bytes", never
+                             # "these are the bytes that were used".
+                             # EARLIER VALUE (rule 13):
+                             # SWEPT-AS-FILED-ROUTING-IN-R-552
                              # RELAYED from the reviewer's filing 89e81d5,
                              # SWEPT AS FILED -- the coordinator has not yet
                              # adjudicated it and the routing follows in R-552,
@@ -2468,6 +2590,70 @@ flags:
                              # NEITHER OPTION CHANGES THE DESIGN, and BE's
                              # book-building starts with 09-03 EITHER WAY -- so
                              # the work is not blocked on the ruling.
+  design_v2_VERIFIED_36_EQUALS_36_AND_BOTH_DAY_SETS_DRIVEN: THE-BLOCKERS-ARE-FIELDS-NOW
+                             # RELAYED from R-552(A) for the contents; the
+                             # resource arithmetic RECOMPUTED BY ME.
+                             # p003_de_multiday_gate1_design_v2__20260906T035617Z.json,
+                             # sha c4da696f60ca6270, status
+                             # DESIGN_DECLARATION_NO_DATA_TOUCHED, superseding v1
+                             # BY NAMING ITS DEFECTS. battery.n_checks_run = 36 =
+                             # expected_checks_in_the_source, EQUALITY COMPUTED
+                             # -- the EXPECTED_CHECKS - 1 line I read at :544
+                             # last round IS GONE.
+                             # R1 asm is now specified per day, ITS DIGEST IS IN
+                             # THE SEED, and the "same cascade" premise is
+                             # discharged ON DAY 1 BEFORE THE OTHER BOOKS ARE
+                             # BUILT. R2 the pool is SHARED and ruling v2's
+                             # separation is stated as the reason -- the NULL is
+                             # per arm, the POOL is a property of the book -- with
+                             # an overlap below 0.90 REFUSING the arm-day, so the
+                             # undeclared choice I read at :189 becomes a
+                             # predicate. R3 btc only, WITH THE ETH REASON GIVEN:
+                             # eth siblings have different digests, so including
+                             # them would be A DIFFERENT FROZEN OBJECT taking m
+                             # from 2 to 4 and the clearing G from 6 to 7 --
+                             # a coin choice priced in multiplicity rather than
+                             # asserted. R4 degeneracy: >=30 decisions per arm-day
+                             # and sd >= 0.25*|mean|, CALIBRATED AGAINST THE
+                             # CONSUMED HOUR (HAZARD's ratio was 0.4055) SO THE
+                             # FLOOR CANNOT BE READ AS CHOSEN TO EXCLUDE
+                             # SOMETHING SEEN -- which is the honest way to set a
+                             # threshold after a pilot. R5 THE SMOKE IS SEALED:
+                             # day 1 publishes resources, counts and refusal
+                             # statuses, and D(E0)/D(E-R)/Z/every null statistic
+                             # are ABSENT until all G days complete; ALL G DAYS
+                             # RUN REGARDLESS. R6 theta and model digests
+                             # compared AT RUN TIME, mismatch refuses THE RUN.
+                             # R8 overrun is never met by lowering draws or
+                             # raising the cap.
+                             # R7 -- BOTH DAY SETS DRIVEN, AND THIS IS THE
+                             # SHARPER FRAMING THAN MINE OF LAST ROUND: SET A
+                             # (reads count as untouched; 08-29 + 09-01..09-05,
+                             # G = 6) gives unanimous 2^-6 = 0.015625 AND CLEARS
+                             # HOLM AT m = 2. SET B (untouched only) IS G = 3
+                             # TODAY, gives 0.125, AND CLEARS NOTHING until
+                             # 09-06..09-08 accrue. G_is_PENDING_the_USER_parameter
+                             # = true, BOUND AT RUN TIME.
+                             # SO MY ROUND-112 "both answers give six days" WAS
+                             # RIGHT ABOUT THE ENDPOINT AND WRONG ABOUT TODAY:
+                             # SET B IS THREE DAYS NOW AND SIX ONLY AFTER 09-08.
+                             # RESOURCES, RECOMPUTED BY ME FROM THE ENTRY'S
+                             # FIGURES: 1.939 h null + 0.313 h replay = 2.252 h
+                             # per day; x5 = 11.26 CPU-h, x6 = 13.51-13.52
+                             # depending on where the rounding is taken (at full
+                             # precision 290.9*24/3600 = 1.93933, so G=6 is
+                             # 13.5158 -> 13.52). NOT A DISCREPANCY -- a rounding
+                             # point, stated so nobody files one. R-551(2)
+                             # CONFIRMED.
+                             # TWO IN-BAND CORRECTIONS DE MADE TO ITS OWN COMMIT,
+                             # both worth the shelf space: THE MESSAGE NAMED A
+                             # FILE THAT DOES NOT EXIST (...035632Z for
+                             # ...035617Z -- A FILENAME WRITTEN FROM AN INTENTION
+                             # RATHER THAN FROM THE DIRECTORY), and the CLI
+                             # PRINTED "G: 5" FROM A CONSTANT THE PAYLOAD
+                             # DISOWNS. Residual for DE 71: the R8 prose still
+                             # says "~20 hours of null" beside the corrected
+                             # figure.
   design_v1_is_BLOCKED_the_null_cannot_be_built_from_the_book_asked_for: asm-MISSING
                              # CHECKED 2026-09-06T03:54:55Z at the code. The
                              # reviewer's A.3, and I read the three findings in
@@ -2493,6 +2679,63 @@ flags:
                              # single-coin builder.
                              # DE 70 closes all eight "must exist" items in a
                              # DESIGN v2 with v1 untouched.
+  the_day_verdict_tracking_gap_is_NARROWED_NOT_CLOSED: 08-31-THE-ERA-BOUNDARY-DAY-IS-STILL-UNTRACKED
+                             # CHECKED 2026-09-06T04:03:05Z, and the finding is
+                             # mine: the landing commit fixed the gap the
+                             # reviewer hit and DID NOT CLOSE IT.
+                             # AFTER 398cc94: git ls-files gives NINE tracked
+                             # non-superseded verdicts (08-28, 08-29, 08-30,
+                             # 09-01..09-06). On disk there are TWELVE. THREE
+                             # REMAIN UNTRACKED: da_dayverdict_20260826.json,
+                             # 20260827.json AND **20260831.json**.
+                             # 08-31 IS THE ERA-BOUNDARY DAY. It is the verdict
+                             # R-547(C) cites for the clob_v4 -> clob_v4_1
+                             # boundary at 22:00:02.274534Z -- THE INSTANT THE
+                             # WHOLE ADMISSIBILITY ARGUMENT TURNS ON -- and it is
+                             # NOT IN GIT. Every claim about which days are
+                             # admissible resolves, at its root, to a file a
+                             # cold reader cloning this repo does not receive.
+                             # 08-26 and 08-27 are the two R-547(C) describes as
+                             # carrying no era-admission block, so their absence
+                             # is less load-bearing and is the same defect.
+                             # I AM NOT ROUTING A FIX, because what to track
+                             # under data/ is a standing ruling and not mine
+                             # (result-bearing artifacts committed with their
+                             # code, `git add -f`, under ~1 MB). I am recording
+                             # that THE TRACKED SERIES STILL DOES NOT MATCH THE
+                             # LEDGER, as-of 2026-09-06T04:03:05Z, and that the
+                             # one that matters most is the one still missing.
+  my_round_101_census_ALREADY_CONTRADICTED_the_ledger_stops_claim: NOBODY-BROUGHT-THEM-TOGETHER
+                             # CHECKED 2026-09-06T04:03:05Z at my own file, and
+                             # this is the CORROBORATION axis with a name on it.
+                             # THE REVIEWER FILED that R-550(D)'s day sets
+                             # "cannot be computed -- the da_dayverdict_ series
+                             # stops at 09-02." True of the TRACKED series, false
+                             # of the ledger.
+                             # AND MY OWN ROUND-101 FLAG ALREADY SAID SO. It
+                             # reads, at two places in this file: "MY OWN
+                             # CORROBORATION IS A FILENAME CENSUS ONLY (18
+                             # da_dayverdict_* files, current verdicts for
+                             # 08-26..09-05...)". THAT WAS A **DISK** CENSUS --
+                             # `find`, not `git ls-files` -- taken on 2026-09-05
+                             # and carried in STATUS.yml ever since. (18 counted
+                             # superseded copies; 12 non-superseded today.)
+                             # SO THE FACT THAT WOULD HAVE PREVENTED A BLOCKING
+                             # DOCUMENT FINDING WAS IN THE STATE FILE THE WHOLE
+                             # TIME, WRITTEN BY THE SEAT WHOSE JOB IS TO HOLD IT,
+                             # AND NOTHING BROUGHT THE TWO READINGS TOGETHER.
+                             # THE LESSON IS NOT THAT THE REVIEWER SHOULD HAVE
+                             # READ MY FILE. It is that two seats measured the
+                             # same population on different surfaces and BOTH
+                             # WERE RIGHT ABOUT THEIR OWN SURFACE -- disk and
+                             # git -- with NO INSTRUMENT ANYWHERE THAT COMPARES
+                             # THEM. That is exactly the third axis I have named
+                             # three times and not built, and it has now cost a
+                             # round.
+                             # AND THE HONEST SHARE OF IT IS MINE: I wrote
+                             # "FILENAME CENSUS ONLY" as a LIMIT on my claim, and
+                             # never noticed that the limit was itself a FINDING
+                             # -- that disk and git disagreed about this series.
   the_day_set_rested_on_a_bar_the_USER_RULED_OUT: 08-29-EXCLUDED-FOR-THE-WRONG-REASON
                              # RELAYED from R-550(A), the reviewer's C.3, and it
                              # is the SAME R-497(F)(1) shape as round 111's
@@ -10241,6 +10484,32 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T04:03:05Z, DESIGN v2 IS VERIFIED AND THE BLOCKERS ARE
+  FIELDS: 36 = 36 computed, the shared pool refuses below 0.90 overlap, btc-only
+  is priced in multiplicity rather than asserted, the degeneracy floors are
+  calibrated against the consumed hour so they cannot read as chosen to exclude
+  something seen, and THE SMOKE IS SEALED WITH ALL G DAYS RUNNING REGARDLESS.
+  ONE USER PARAMETER STILL FIXES G, AND IT DECIDES MORE THAN I SAID LAST ROUND:
+  SET A IS SIX DAYS TODAY AND CLEARS HOLM AT m = 2; SET B IS THREE DAYS TODAY
+  AND CLEARS NOTHING until 09-06..09-08 accrue.
+  THE REVIEWER'S "the ledger stops at 09-02" WAS A TRACKING GAP AND MY OWN
+  ROUND-101 CENSUS ALREADY CONTRADICTED IT -- a disk census sitting in this file
+  since 09-05, unconsulted, while two seats measured the same population on
+  different surfaces with no instrument comparing them. AND THE LANDING NARROWS
+  THE GAP WITHOUT CLOSING IT: nine verdicts tracked, twelve on disk, and THE
+  THREE STILL UNTRACKED INCLUDE 08-31 -- THE ERA-BOUNDARY DAY THE ADMISSIBILITY
+  ARGUMENT TURNS ON.
+  THE DATA-SHELL TRAP EXPLAINS BOTH DOCUMENT ERRORS: seat worktrees carry partial
+  data/ DIRECTORIES, not symlinks, and a partial shell answers plausibly and
+  wrong. My reads are main-tree and I checked rather than assumed.
+  THE CLASSIFIER WOULD HAVE HIDDEN THE DEFECT THAT CAUSED IT TO BE BUILT, and
+  BE's population digest is a second read -- the third digest in four rounds not
+  binding what it appeared to bind. AND THE BETWEEN-TURN STALL HAS A WORKING
+  MECHANISM, three wakes this hour.
+  Gate 1 is 1 of 7; nothing runs until the USER's parameter, the reviewer's
+  filing on v3 and BE's book declaration all exist. Economics:
+  workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T03:54:55Z, RETAINED BELOW --
   AS-OF 2026-09-06T03:54:55Z, THE DESIGN IS GOOD AND BLOCKED, AND THE USER HAS
   READ IT AS YELLOW RATHER THAN GREEN. The null cannot be built from the book DE
   asked for -- be_cancel_axis_null.py:188 needs c["asm"] and the requirement
@@ -11104,6 +11373,58 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 113, 2026-09-06T04:03:05Z ------------------------------
+  the_day_verdict_tracking_gap_is_NARROWED_NOT_CLOSED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_dayverdict_20260831.json
+    as_of: 2026-09-06T04:03:05Z
+    said: >-
+      git ls-files over data/pm_5min/derived/da_dayverdict_*.json excluding
+      superseded copies returns NINE tracked files (20260828, 20260829, 20260830,
+      20260901..20260906); find over the same pattern returns TWELVE on disk. The
+      three untracked are 20260826, 20260827 and this file, 20260831 -- the
+      era-boundary day R-547(C) cites for the clob_v4 -> clob_v4_1 transition at
+      22:00:02.274534Z. I read filenames and tracking state only; I did not open
+      any verdict.
+  my_round_101_census_ALREADY_CONTRADICTED_the_ledger_stops_claim:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T04:03:05Z
+    said: >-
+      this file carries, from round 101 and at two places, "MY OWN CORROBORATION
+      IS A FILENAME CENSUS ONLY (18 da_dayverdict_* files, current verdicts for
+      08-26..09-05 ...)" -- a `find` census of the main tree's disk taken on
+      2026-09-05, which is inconsistent with a tracked series stopping at 09-02.
+      The 18 counted superseded copies; 12 are non-superseded today.
+  design_v2_VERIFIED_36_EQUALS_36_AND_BOTH_DAY_SETS_DRIVEN:
+    prov: RELAYED
+    from: >-
+      R-552(A) for the receipt's contents -- I did not open
+      p003_de_multiday_gate1_design_v2__20260906T035617Z.json. The resource
+      arithmetic I recomputed myself from the entry's figures: 1.939 + 0.313 =
+      2.252 h/day, 11.26 CPU-h at G=5, and 13.5158 at G=6 from the unrounded
+      290.9*24/3600, which is the entry's 13.52 and my 13.51 differing only in
+      where the rounding is taken.
+  reviewer_89e81d5_ADJUDICATED_classifier_provenance_BY_LEAF_NAME:
+    prov: RELAYED
+    from: >-
+      R-552(B); supersedes my round-112 as-filed marking, now adjudicated and
+      routed. Renamed from reviewer_89e81d5_the_classifier_calls_a_real_defect_
+      provenance, and the ORPHAN check caught the stale key -- THE FOURTH TIME,
+      and the diagnosis is now specific rather than repeated: every one of the
+      four was a rename performed by a script that edits `flags:` and
+      `flag_provenance:` in SEPARATE replacements, so the two halves can never
+      be atomic by construction. The audit-first order has caught all four
+      before they shipped, which is the working arrangement and not the fix.
+  the_data_shell_trap_seat_worktrees_carry_DIRECTORIES_not_symlinks:
+    prov: RELAYED
+    from: >-
+      R-552's flag to every seat. My own root I checked: pwd /home/yuqing/ctaNew
+      with data/ a real directory, so every census and digest I have filed is a
+      main-tree read.
+  the_coordinator_wake_mechanism_WORKS:
+    prov: RELAYED
+    from: R-552(C)
   # --- MEM round 112, 2026-09-06T03:54:55Z ------------------------------
   design_v1_is_BLOCKED_the_null_cannot_be_built_from_the_book_asked_for:
     prov: CHECKED
@@ -11165,11 +11486,6 @@ flag_provenance:
   three_stale_headline_documents_amended:
     prov: RELAYED
     from: R-551(4)
-  reviewer_89e81d5_the_classifier_calls_a_real_defect_provenance:
-    prov: RELAYED
-    from: >-
-      the reviewer's filing 89e81d5, swept AS FILED. Not adjudicated by the
-      coordinator; routing follows in R-552. Recorded as claims, not findings.
   # --- MEM round 111, 2026-09-06T03:47:19Z ------------------------------
   the_five_named_days_are_the_only_admissible_days_that_exist:
     prov: CHECKED

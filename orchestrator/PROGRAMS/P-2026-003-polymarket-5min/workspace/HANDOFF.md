@@ -1,5 +1,132 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T04:03:05Z — **Design v2 verified; the blockers are fields. And
+"the ledger stops at 09-02" was a tracking gap that MY OWN round-101 census
+already contradicted.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 113
+
+### 1. The fact that would have prevented a blocking finding was in this file
+
+The reviewer filed that R-550(D)'s day sets *"cannot be computed — the
+`da_dayverdict_` series stops at 09-02."* **True of the tracked series, false of
+the ledger.**
+
+> **And my own round-101 flag already said so.** It reads, at two places in
+> `STATUS.yml`: *"MY OWN CORROBORATION IS A FILENAME CENSUS ONLY (18
+> `da_dayverdict_*` files, current verdicts for 08-26..09-05…)"* — **a `find`
+> census of the main tree's disk, taken 2026-09-05 and carried ever since.**
+
+**The lesson is not that the reviewer should have read my file.** It is that
+**two seats measured the same population on different surfaces — disk and git —
+both were right about their own, and no instrument anywhere compares them.**
+That is the **CORROBORATION** axis I have named three times and not built, and
+**it has now cost a round.**
+
+**And my share is this:** I wrote *"filename census only"* as a **limit on my
+claim**, and never saw that **the limit was itself a finding** — that disk and
+git disagreed about this series.
+
+### 2. The landing narrows the gap without closing it — checked by me
+
+| | count |
+|---|---|
+| tracked (non-superseded) | **9** — 08-28, 08-29, 08-30, 09-01…09-06 |
+| on disk | **12** |
+| **still untracked** | **08-26, 08-27, and 08-31** |
+
+> **08-31 is the era-boundary day.** It is the verdict R-547(C) cites for the
+> `clob_v4` → `clob_v4_1` transition at **22:00:02.274534Z** — the instant the
+> whole admissibility argument turns on — **and it is not in git.** A cold reader
+> cloning this repo does not receive it.
+
+*Not routing a fix: what to track under `data/` is a standing ruling and not
+mine. Recording that the tracked series still does not match the ledger.*
+
+### 3. Design v2 — the blockers are predicates now
+
+**36 = 36 computed**, and the `EXPECTED_CHECKS − 1` line I read at `:544` last
+round **is gone.** Both undeclared choices I found at `:189`/`:138` are now
+predicates: **the shared pool refuses below 0.90 overlap**, and **btc-only is
+priced in multiplicity** — eth would be a different frozen object, taking m from
+2 to 4 and the clearing G from 6 to 7 — *rather than asserted.* R4's floors are
+**calibrated against the consumed hour** (HAZARD's ratio was 0.4055) **so they
+cannot be read as chosen to exclude something seen.** R5 **seals the smoke** and
+**runs all G days regardless.**
+
+**R7 corrects what I wrote last round:** **SET A is G = 6 today and CLEARS Holm
+at m = 2; SET B is G = 3 today and clears NOTHING** until 09-06…09-08 accrue. My
+*"both answers give six days"* was right about the endpoint and **wrong about
+today.**
+
+**Resources recomputed by me:** 1.939 + 0.313 = **2.252 h/day**; **11.26 CPU-h at
+G = 5**, **13.51–13.52 at G = 6** depending where the rounding is taken (at full
+precision 290.9×24/3600 = 1.93933 → 13.5158). **Not a discrepancy** — stated so
+nobody files one.
+
+### 4. The classifier would have hidden the defect that built it
+
+`de_supersession_diff.py` **classifies provenance by LEAF NAME regardless of
+parent**, so round 69's real defect (`population_block.source_cache`) **would
+have been classified provenance and hidden** — and **the reviewer ran it on that
+defect** rather than arguing from the code. DE 71 fixes the class rule **with
+that defect as the known-bad.**
+
+**And BE's `population.source_sha256` is a second read**, not the bytes the null
+loaded. **That is the third time in four rounds a digest has not bound what it
+appeared to bind** — after the disk-vs-interpreter pycache field and the
+transcription under a file digest. *A digest answers "these bytes", never "these
+are the bytes that were used".*
+
+### 5. The data-shell trap explains both document errors
+
+**Seat worktrees' `data/` are DIRECTORIES — partial shells — not the R-397
+symlinks.** DE and the reviewer **both read one this round, in opposite
+directions**: DE saw three qualifying days where the ledger has six; the reviewer
+saw a series stopping at 09-02.
+
+> **A partial shell is the worst shape a missing dataset can take.** An absent
+> directory raises and an empty one is obvious; **a shell holding *some* of the
+> files answers every query plausibly and wrong.**
+
+**My reads are unaffected and I checked rather than assumed:** main tree, `pwd`
+`/home/yuqing/ctaNew`, `data/` a real directory. **Every census and digest I have
+filed is a main-tree read.** *"Which root did you read" is now a question every
+filing has to answer, and mine has one.*
+
+### 6. The stall has a mechanism
+
+**Three wakes this hour (03:56, 03:57, 03:59Z), each acted on within a minute.**
+I recorded at round 109 that **a discipline cannot fix a wake-up problem.** It
+did not — **a mechanism did**, and it is the one the diagnosis implied.
+*Recording the close as carefully as I recorded the failure.*
+
+*(A zero-byte `systemd-run` file appeared in the repo root at 03:56:53Z — a
+seat's shell slip adopting the rule-20 wrapper; removed. **Second shell accident
+caused by rule 20's own text in two rounds**, after the heredoc that ate the
+wrapper line.)*
+
+### 7. My instrument caught the same rename a fourth time
+
+ORPHAN on `reviewer_89e81d5_the_classifier_calls_a_real_defect_provenance` after
+I renamed the flag. **Fourth time — and the diagnosis is now specific rather than
+repeated: every one of the four was a rename performed by a script that edits
+`flags:` and `flag_provenance:` in SEPARATE replacements, so the two halves can
+never be atomic by construction.** *The audit-first order has caught all four
+before they shipped, which is the working arrangement and not the fix.*
+
+**Measured before the sentence: 597 flags, 60 CHECKED, 82 RELAYED, 455 UNMARKED,
+0 findings; `flag_provenance` 142; tasks 19.**
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — the third of which cost a
+round this time. **455 of 597 flags never audited.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T03:54:55Z — **The design is good and BLOCKED, and the USER reads
 it YELLOW, not green. Nothing runs until three things exist.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
