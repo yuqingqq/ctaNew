@@ -150,6 +150,15 @@ cascade-feasible.
 
 ### Gate 1 — acting matched control through the stateful cascade
 
+> **USER RULING 2026-09-06 (register R-547) — SUPERSEDES THE MATCHING SPECIFICATION BELOW; the original text stays as provenance.**
+> **Control:** Gate 1's acting matched control is the **replay null** — random decisions, same count and same side split as the arm, drawn from the arm's own decision population at the arm's own theta, replayed through the same stateful policy cascade (`be_cancel_axis_null.py`, declaration `8b930b4`). The exact-fiber matched sampler (iid / ESS≥100 / quota) refused three ways (Q-DA-247, Q-DE-64) and is withdrawn as this gate's instrument; "match action count by side/hour" below is read as count and side, per arm.
+> **Sample:** at least five complete, era-admissible UTC days (collector era `clob_v4_1`, admissible from 2026-08-31T22:00:02Z), named in the register before any run: **2026-09-01..2026-09-05** (R-547(C)). 08-20..08-25 consumed and excluded. No threshold, window or feature is chosen on these days.
+> **Null:** ≥500 draws per arm per day, declared and committed before the first draw; cluster unit = UTC day; intervals only at G ≥ 5; multiplicity m = 2 (CONDVALUE, HAZARD).
+> **Metric:** net value delta at E0 (maker fee zero, our signed rate); E−R as robustness (R-537).
+> **Outcome:** §7 is evaluated on this run and nothing else — if either arm fails to beat the replay null on the decision metric at day-cluster level, the harmful-fill route STOPS; if an arm beats it, Gates 2–6 proceed as written on days not used here (09-06 onward).
+> **Freeze:** design and null committed before data is touched; the reviewer files on the design first.
+
+
 Implement a runner adapter that turns each selected generation action into an
 actual cancel request on an independent replay clock. The treated model and
 each random draw must use the same neutral opportunity population and match
