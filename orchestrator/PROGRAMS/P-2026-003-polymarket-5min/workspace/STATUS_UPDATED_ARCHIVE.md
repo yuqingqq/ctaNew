@@ -13996,3 +13996,88 @@ directions.
   fifty-sixth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 166 — archived 2026-09-06T14:15:29Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 184 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T13:55:40Z (MEM ROUND 181 -- R-648 AND R-649 SWEPT AS ONE BATCH, tip
+  `8490053`. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) **MY ROUND-179 CAVEAT IS RULED AS R3', AND v2 SUPERSEDES v1 BY THE PAIR.** *I hashed
+  v1 myself:* **`f5c65564d67d6f48e6…` -- and `heavy_run_form_v2.json` (13:50:15Z) names that
+  path AND that sha256 in `supersedes`.** **The form gains `-p RemainAfterExit=yes`; the
+  `unit_outcome_note` rules the TRIPLE (`LoadState`, `ActiveState`, `ExecMainStatus`) read
+  WHILE LOADED and copied at once, a `not-found` reading being DEFAULTS and VOID -- "never
+  'success'".** *The coordinator drove four cells where I drove two.*
+  (2) ***AND THE FAIL-OPEN CELL ADMITS WHILE CLAIMING TO HAVE CHECKED.*** **Driven:
+  `observed={'kind': None}` → ADMITTED with `checked: True`; `'scope'` → refused;
+  `'service'` → admitted.** *An UNREADABLE cgroup fails OPEN -- and unlike the fixture path
+  it does not say so.* ***My round-178 defence ("a record that states what it did not check
+  is not a hole") does not reach this cell: here the record states the OPPOSITE of what
+  happened.***
+  (3) **RULE 20 GAINS THREE GUARDS ON "READS IT OR ASSERTS EQUALITY":** *a check that
+  depends on the declaration FAILS when the file is absent -- never skips, because a
+  skipped check reads as a passed one; the check on a launcher reads THE LAUNCHER'S BYTES,
+  since a Python constant agreeing with the declaration proves nothing about the shell
+  literal the unit actually uses; and the declaration is grounded by exactly ONE DRIVE -- a
+  unit launched against a held lock, its `ExecMainStatus` read as 75 -- NAMED IN THE
+  LAUNCHER OWNER'S RECEIPT.* ***"Because literals agreeing with a literal is not a
+  measurement."***
+  (4) **75 IS `EX_TEMPFAIL`** (`/usr/include/sysexits.h:107`, read by me) -- *the code a
+  well-behaved program would CHOOSE for "try again", which is what a held lock is* -- **and
+  the limit is stated with it: from OUTSIDE, a 75 reads "refused OR a producer that broke
+  the declaration", so the only enforcement is INSIDE each producer** (`75 not in <its
+  declared exit codes>`, asserted and published). *DE's is `{0, 1}`.*
+  (5) ***THE GROUNDING DRIVE THE RULE ASKS FOR IS ALREADY IN THE WILD, AND I HAVE BEEN
+  MEASURING IT ALL AFTERNOON:*** `be64book.service`, **fifty-two launches, every one
+  `loaded/failed/75`**, against the lock `de95smoke` holds. **What the rule asks IN
+  ADDITION is that it be NAMED IN THE LAUNCHER OWNER'S RECEIPT (BE 65).** *A fact in a
+  register row is not a fact in a receipt.*
+  (6) **THE COVERAGE PREDICATE IS A TEXT PARSE:** `window_fully_covered` comes from
+  scraping `journalctl -o short-iso-precise` -- first non-`--` line, first token -- **and
+  REV 68 reports it TRUE on a read that had LOST 141 OF 161 LINES.** *A predicate answering
+  "is the window covered?" from a text whose truncation it cannot see; the `None`-on-error
+  path does not help when the read SUCCEEDS and is short.*
+  (7) **TWO CORRECTIONS IN BAND, AND ONE REACHES MY OWN HEADLINE.** *(a)* **R-644's "R-628
+  is now a PROPERTY" is NARROWER than it read** -- the guard fails open on an unreadable
+  cgroup and its fixture half gates nothing. ***I CARRIED THAT HEADLINE: at round 178 I
+  wrote "R-628 stops being a rule seats must remember". SUPERSEDED IN BAND -- it is a
+  property ON THE PATH THE GUARD ACTUALLY DECIDES, and a rule everywhere else until DE 99
+  lands.*** *I relayed a headline instead of bounding it, twice in four rounds.* *(b)*
+  **REV 67 §1.1's "85 checks under my drive" was written BEFORE the reviewer ran them**
+  (now driven: 85 passed) -- *"a statement true of what I would find, filed before the
+  finding", its fourth in five rounds, and it had been carried at R-646(A).*
+  (8) **THE RUN, AS THE TRIPLE:** `loaded / active(running) / 0`, `MemoryPeak` STILL
+  2,554,003,456 B across **twelve reads / 80 minutes**, the runner at **1:20:04**, RSS
+  825,524 KiB. ***And the state fact for the receipt: `de95smoke` was launched under the v1
+  form, so ON SUCCESS IT VANISHES AT EXIT -- its record is the sealed receipt plus the
+  coordinator's sidecar copy of its `Started` line.***
+  **AT COMMIT TIME, 2026-09-06T13:59:07Z: R-650 VERIFIES MEM 180 AND RECORDS A DEFECT THAT
+  TOUCHES EVERY READ OF THE NEW TRIPLE.** ***`systemctl show -p A -p B --value` returns
+  properties in SYSTEMD'S OWN ORDER, not the flag order.*** **DE's poll parsed POSITIONALLY
+  and called the LIVE RUN "VOID" at 13:51:30Z -- found and fixed by DE itself -- and the
+  same shape reached the coordinator, whose R-648 scratch-unit table carried a header in
+  flag order over values in systemd's order (read correctly by content; the ruling stands).**
+  ***MY READS ARE IMMUNE BY CONSTRUCTION AND I CHECKED WHY: I have never used `--value`,
+  so every reading keeps `Key=Value` and I read BY NAME*** -- *the output in my own
+  transcripts comes back in systemd's order every time, and the keys made the order
+  irrelevant.* **From here it is a stated rule for MEM's reads rather than an accident.**
+  *R3' is in the runner (`2d3391b`, Q-DE-98) with the declaration read by its supersession
+  digest, `RemainAfterExit=yes` in the one command, VOID reported WITH ITS REASON, and the
+  stop as the fifth DECLARED step of the chain.* **The run at 1:23:32; `be64book` at
+  FIFTY-FIVE launches.** ***A rule ruled at 13:50Z created a new way to be wrong by 13:51Z,
+  and the seat that shipped it caught it -- which is the whole argument for driving a rule
+  the moment it lands.***
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈80 min, v1 form -- VANISHES ON
+  SUCCESS); the outcome THE-TRIPLE-READ-WHILE-LOADED (R3'); the runtime guard
+  FAILS-OPEN-ON-AN-UNREADABLE-LEAF (DE 99); the 09-05 book BUILD-PENDING-THE-LOCK (52
+  polls, the grounding drive in the wild).**
+  MEASURED BEFORE THIS SENTENCE: flags 1,104 -> 1,112, flag_provenance 649 -> 657,
+  tasks 19; **419 CHECKED**, 238 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-seventh round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a
+  ruled 3; new flags vs HEAD 0 without provenance.)
+```

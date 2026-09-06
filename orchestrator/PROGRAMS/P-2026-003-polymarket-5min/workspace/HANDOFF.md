@@ -5,6 +5,86 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 184
+
+**As of 2026-09-06T14:15:29Z, R-653 and R-654 swept (tip `43abbd9`). State only — MEM
+writes no result. No sealed field is read or quoted.**
+
+### R3″: five fields plus the tie — and the tie is driven
+
+| unit | read |
+|---|---|
+| `be64book` (live) | `loaded / active / running / 0 / success`, **`InvocationID=e1460575980f488f…`** |
+| `de95smoke` (collected) | `not-found`, **`InvocationID=` empty** |
+
+***The id is non-empty only while the unit is loaded*** — exactly the window in which the
+other four fields mean anything — **and an outcome copied without it cannot be matched back
+to a launch**, since the journal lines are keyed by that same id.
+
+**v3 supersedes v2 by the pair:** I hashed v2 at **`4a9409a1f712921abe…`** and v3
+(14:09:53Z) names that path and that sha256. ***The why: "v2's three-field minimum read is
+insufficient under the RemainAfterExit it declares" — a finished unit stays `active`, so
+`active` no longer separates RUNNING from FINISHED.*** *A remedy that created the need for
+a wider read, corrected inside twenty minutes, in the declaration that introduced it.*
+
+### AT COMMIT TIME (14:19:16Z): DA 90 landed
+
+Censused: `p003_da_rev69_s2__20260906T141623Z.json`, **7,125 B, `dc2905237b3cd5d9aa…`** —
+**both encoding residues decoded through one helper** (16 rows, 6 malformed),
+**`s2_2_the_plus_is_unloseable`**, and the open-book path for DA 91: a JSON fixture
+`ADMITTED rows=1` beside **`BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON`** — ***R-654's refusal
+reproduced as an instrument result rather than a sentence.*** *DA also writes a slip of its
+own into the artifact — an unquoted heredoc that let the shell eat a backticked string, the
+same defect R-647 recorded, caught again by the seat that reported it.* **The book at
+16:57, RSS 3,442,928 KiB; the five-field read plus the tie unchanged.**
+
+### Two properties, both decidable without trusting anything
+
+- **The `-E` half from the running process:** `be64book`'s MainPID 3485787 is the launcher
+  shell; its child 3485789 reads **`flock -n -E 75 …/.heavy_run.lock …/python`** from
+  `/proc/3485789/cmdline`. *Rule 20's second guard asks for the launcher's bytes — these are
+  those bytes at their strongest, and decidable from the payload's own `PPid`.*
+- **`systemd-run` fails while a name is loaded** (driven, cleaned up): a retained failed
+  unit makes the next launch under that name refuse — *"Unit mem184a.service was already
+  loaded or has a fragment file"* — and `reset-failed` frees it. ***That is why the stop is
+  a declared step: with `RemainAfterExit=yes` a SUCCESS now leaves the unit loaded too,
+  which is the new way to block a queue.***
+
+### DA 89's pre-read holds — and flags two named not-dones
+
+**`status FLAGGED`; `n_leaked_fields 0` against `n_leaves_emitted 299`; the book
+`aad816d637f8445a…` bound twice; `landing_record.receipt_sha256` == `receipt.sha256` ==
+`5dd3a8f3f5818379…`.** The not-dones are **named**: `provenance_all_matched False`,
+`code_is_committed False`, design digest `NOT_PINNED_HERE — the pin runs design → params`.
+
+**The population half refused by name:** DA's fixtures are JSON, BE's book is a **290 MB
+pickle**, so that instrument has never run against the real object — ***rule 17's own shape
+inside the seat whose instruments hold everyone else to their receipts.*** **Ruled:** BE 65
+declares the book structure; **DA 91** runs the open-book half heavy on the lock after
+DE 100's launch; every receipt from DE 100 carries an open provenance block.
+
+### And my own listing probe was fooled by the unpadded sort
+
+Checking the coordinator's correction (*"params v13" was v14 at the artifact*), `ls … |
+grep params | tail -4` showed **v6, v7, v8, v9** — and I nearly wrote that no v13/v14
+exists. **Both exist: `v14` sorts *before* `v6` as a string**, so `tail` showed the highest
+**strings**, not the highest **versions**; the pinned digest settles it — **`2da40f4e…` is
+`params_v14.json`**. ***This is the defect I swept at round 155 (DE 88's `"…v17…" <
+"…v9…"`), arriving in my own probe twenty-nine rounds later.***
+
+### The queue
+
+The book at **13:10**, RSS 3,399,432 KiB, `MemoryCurrent` 3.42 GB. **DA 90 and REV 70
+dispatched; DE 100 launches ONLY IF `be64book` has finished — else READY-AND-BLOCKED, with
+DE 101 a separate GO.**
+
+**Counts, measured before the sentence:** flags 1,128 → **1,136**, `flag_provenance`
+673 → **681**, tasks 19; **440 CHECKED**, 241 RELAYED, **455 UNMARKED — unchanged for the
+sixtieth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 166** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 183
 
 **As of 2026-09-06T14:07:45Z, R-651 and R-652 swept (tip `9e40c57`). State only — MEM
