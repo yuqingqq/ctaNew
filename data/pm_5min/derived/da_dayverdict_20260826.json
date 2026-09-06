@@ -1,0 +1,108 @@
+{
+  "all_pass": false,
+  "as_of_utc": "2026-08-27T10:21:05.818705+00:00",
+  "authorised_by": "R-141(1); DA-verifies-first restored as a hard precondition by R-153(2)",
+  "day": "2026-08-26",
+  "day_closed_calendar": true,
+  "day_closed_selector": true,
+  "day_token": "20260826",
+  "decision_note": "This instrument STATES REASONS; it does not exclude. R-141(1): a day that fails DA's verification is EXCLUDED WITH A STATED REASON, and that exclusion is the coordinator's to rule, not a worker's boolean (rule 14). Note also that gaps/hour understates damage: day one ran 28.0/hr while 80.2% of btc windows carried a gap -- read windows_gap_affected beside it, never instead of it.",
+  "freeze_epoch": 1787583868.0,
+  "gap_series": {
+    "causes": {
+      "CONNECTIONCLOSEDOK": 2,
+      "NO_CLOSE_FRAME": 143,
+      "PING_TIMEOUT": 281,
+      "SLOW_CONSUMER_1013": 82
+    },
+    "coin": null,
+    "gaps_per_hour": 21.17,
+    "hours_elapsed": 24.0,
+    "hours_over_bar": [
+      0,
+      1,
+      2,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "hours_with_a_gap": 21,
+    "ledger_lines": 3400,
+    "ledger_unparseable": 0,
+    "lost_s": 3042.3,
+    "n_gaps": 508,
+    "n_hours_over_bar": 18,
+    "per_hour": {
+      "0": 32,
+      "1": 20,
+      "10": 24,
+      "11": 17,
+      "12": 35,
+      "13": 46,
+      "14": 44,
+      "15": 27,
+      "16": 17,
+      "17": 28,
+      "18": 28,
+      "19": 21,
+      "2": 17,
+      "20": 21,
+      "21": 22,
+      "22": 39,
+      "23": 25,
+      "3": 11,
+      "7": 2,
+      "8": 9,
+      "9": 23
+    },
+    "rate_estimable": true,
+    "rate_note": null,
+    "worst_hour": 46
+  },
+  "granularity_note": "R-211(3), declared 2026-08-27 while no 08-28 data existed. Days before the boundary are judged by the FROZEN whole-day rule; from the boundary each coin-day passes or fails on its own completeness and its own hourly gap bars. `all_pass` remains whole-day-strict under BOTH rules so an un-updated reader fails safe; per-coin verdicts are in `per_coin`.",
+  "instrument": "da_forward_day_verify_v1",
+  "per_coin": {},
+  "per_coin_rule_from_day": "20260828",
+  "predicates": [
+    {
+      "detail": "day_closed=True; bnb 278/278, btc 278/278, doge 278/278, eth 278/278 (+3 more)",
+      "pass": true,
+      "predicate": "entirely_post_freeze"
+    },
+    {
+      "detail": "expect 288 (closed day (calendar)); btc 279 (short 9), eth 279 (short 9)",
+      "pass": false,
+      "predicate": "complete_tape"
+    },
+    {
+      "detail": "508 gaps over 24.0h elapsed = 21.17/hr vs bar 15; 18 hours over; worst 46; 3042.3s lost",
+      "pass": false,
+      "predicate": "gap_rate_under_bar"
+    }
+  ],
+  "verdict_granularity": "aggregate_frozen",
+  "windows_gap_affected": {
+    "btc": {
+      "era_covered_windows": 278,
+      "gap_affected": 178,
+      "gap_affected_pct": 64.0
+    },
+    "eth": {
+      "era_covered_windows": 278,
+      "gap_affected": 1,
+      "gap_affected_pct": 0.4
+    }
+  }
+}
