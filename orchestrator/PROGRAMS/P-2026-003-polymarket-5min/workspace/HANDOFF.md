@@ -1,5 +1,142 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T02:51:45Z — **A remedy these files carried for two rounds does
+not work, and I reproduced the counterexample myself.** 09-05 stays sealed and
+unread; Gate 1 unmoved, **1 of 7**. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 109
+
+### 1. `PYTHONDONTWRITEBYTECODE=1` does NOT close the stale-pycache hazard
+
+My own run, in a scratch directory:
+
+```
+m.py returns 0.5  ->  import  ->  __pycache__/m.cpython-312.pyc written
+m.py rewritten to 0.0, SAME BYTE LENGTH (24 = 24), mtime restored
+PYTHONDONTWRITEBYTECODE=1 python3 -c 'import m; print(m.v())'   ->  0.5
+rm -rf __pycache__ ; same command                                ->  0.0
+```
+
+> **The variable suppresses WRITING bytecode and does nothing about READING a
+> stale one.** My round-107 flag prescribed it as *the* remedy. **The hazard was
+> real; the fix was wrong; nobody had run it.**
+
+**Standing fix for every seat:** `rmtree(__pycache__)` **per mutant** (the
+pattern already at `be_forward_day.py:2903`), or checked-hash pycs — **and the
+receipt records which bytes actually ran.** DA 55 hardens the harness.
+
+**This is a different failure from the previous four relay-fidelity instances,
+and the distinction is worth keeping: the finding was right and the FIX was
+wrong.** A relayed remedy is a claim like any other. And the direction is the
+bad one — **a stale cache sends a suite GREEN on a mutant, never red.** *Which
+is exactly what I wrote at round 107, correctly, about a mechanism I then
+mis-defended.*
+
+### 2. And it qualifies a verification I relayed as clean
+
+**R-543(B)'s mutation run was sound — but because it ran in a FRESH detached
+worktree where no `__pycache__` could exist. The fresh tree protected it, not the
+variable the entry credited.** DA 54's re-run, in a non-fresh worktree with only
+the variable set, is **not protected by construction**; its 4/4 assertion-kills
+stand only because the failure direction is self-guarding. *A right answer from
+a mechanism that was not doing the work.*
+
+### 3. The deferral is closed at the token — but not on the machine
+
+The mixed log now **FAILS**; 21 drives + 15 checks pass; **and the printed
+summary I carried into these files at round 106 is replaced by a computed
+enumeration.** The thing I propagated is deleted at its source.
+
+> **What is installed predates the fix.** The live unit still classifies a mixed
+> log as DEFERRED — **the failure mode is still live on the machine** until DA 55
+> reinstalls. Next scheduled run Mon 00:06Z. **"Installed" is not "fixed".**
+
+*(Separately, Q-DA-266 reports the deploy is not live at all — main tree 4
+behind and dirty. **Named, not adopted:** I have not read that filing and no
+entry has ruled on it.)*
+
+### 4. An instrument that rotted by time passing
+
+`da_blackout_mask --selftest` **was RED at HEAD on the nightly governed path.**
+Two fixtures hardcoded `20260905` as a *future* day; the calendar passed it; one
+then loaded the **real** gap ledger for what had become a real day, and the
+other's closed-flag assertion **inverted itself**.
+
+> **Nothing changed in the code. The world moved past a literal.** That is the
+> **CURRENCY** axis — my own open item — landing on a *selftest* instead of on a
+> flag, **the first time it has been seen outside my files.**
+
+**And no check found it: DA found it while patching something else.** A red
+selftest on the governed nightly path was red and nobody was told — the same
+shape as the midnight unit being red every night for a different reason. *Twice
+now this path has carried a signal nobody reads.* Fixed at the root: the future
+day is **derived from the clock (+30d)**, not written down. 58 checks, rc 0.
+
+### 5. The cascade baseline is ruled
+
+**Adopt BE's per-arm replayed rates (0.4970 / 0.4003) BY CITATION** — path +
+sha, **never recomputed in DE's module** — count-based rates retained as
+`REFUTED_AS_A_BASELINE`, and a computed cross-check that **refuses on mismatch**.
+
+*Why a count cannot do it:* BE's 0.497 is `fills_lost_per_cancel` **measured by
+replay** — latency, holds, reposts and queue resets stand between the decision
+and the fills, and **no count can price that.** It is also **per arm**, so no
+single book-wide rate serves both — *a defect in the function's shape, not only
+its denominator.*
+
+**The reason to believe it:** DE computed the same thing independently and got
+**8.7013 — exactly BE's published headline.** *Adopting by citation rather than
+recomputation is the part to keep: one measurement, one provenance, instead of
+two implementations that can drift.*
+
+### 6. DE 66b's table — checked by me, and its field name is wrong
+
+sha `48effdb5bd81e714`; `baseline_status = CONTESTED_THE_BASELINE_IS_NOT_A_COUNT`;
+`n_candidates_landing_in_BE_range = 0`. **Zero of five land, and the one BE
+actually draws from is furthest away.** `cascade_spread` and
+`cascade_spread_under_the_other_baseline` are **both** `1.9398838090426878` in
+the file — the ordering finding is invariant, computed not asserted.
+
+> **Found by reading, not relaying:** the predicate is named
+> `lands_in_BE_range_0p40_0p50` — **it pins an interval that is not BE's.** BE's
+> measured range is **[0.3098, 0.8182]**. **I recomputed the verdict against the
+> correct range rather than assuming it survived: still zero of five.** *The
+> verdict survives the correction; the field name does not.* Round 107's
+> predicate-NAME shape, one round later, in a different seat's artifact.
+
+### 7. Two caches disagree by 1,309 generations
+
+BE's block: **29,813** from `de_section81_cache_12.pkl`. DE: **31,122** from
+`de_section81_cache_v2_12.pkl`. **Both emitted, neither preferred.** Recorded as
+an **open disagreement** rather than resolved here — *1,309 is not a rounding
+difference, and one published population block is wrong.* BE 46.
+
+### 8. B-4, and one corroboration in my favour
+
+**B-4 checked at the code:** `da_rebate_ceiling.py:240-243` **reconstructs**
+`fe_t` by inverting the delta identity while the receipt carries it **directly,
+one key away**. No number is wrong — *but a derived value stands where a measured
+one was available, so an identity error would cancel itself out of view.* DA 55
+asserts agreement, turning the coincidence into a check.
+
+**And the reviewer re-ran my round-106 move.** Its two apparent findings
+**dissolved into its own cruder boundary split**: 11/11 (10/10 colon-anchored),
+69–71 archived, 107/107 blocks terminal — *"MEM's account exactly right."*
+**Recorded as CORROBORATION — the axis I cannot measure — resolving because a
+second seat ran a DIFFERENT split and got the same answer.** Neither check alone
+would have been enough.
+
+### Still open, still mine
+
+**CURRENCY** (which surfaced in someone else's selftest this round),
+**RELAY FIDELITY** (fifth instance, and the first where the *remedy* was the
+thing that failed), **CORROBORATION**. Three named axes, none built; **455 of
+572 flags never audited for staleness.**
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T02:44:55Z — **09-05 IS SCORED AND SEALED, AND NOBODY HAS READ
 IT. The unseal is HELD until all five days carry a sealed score, then opened in
 one act.** Gate 1 unmoved, **1 of 7**. Economics: `RESULTS.md` §0.

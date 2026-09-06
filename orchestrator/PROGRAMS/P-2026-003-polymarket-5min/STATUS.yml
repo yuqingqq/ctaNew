@@ -63,6 +63,62 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T02:51:45Z (MEM ROUND 109 -- R-546 SWEPT. STATE ONLY, AND THE
+  CENTRAL ITEM IS A REMEDY OF MINE THAT DOES NOT WORK.
+  (1) PYTHONDONTWRITEBYTECODE=1 DOES NOT CLOSE THE STALE-PYCACHE HAZARD, AND I
+  REPRODUCED IT MYSELF: m.py returning 0.5, imported so a .pyc exists; rewritten
+  to 0.0 AT THE SAME BYTE LENGTH (24 = 24) with mtime restored; then
+  PYTHONDONTWRITEBYTECODE=1 python3 -c "import m; print(m.v())" PRINTS 0.5 while
+  the source reads 0.0. rm -rf __pycache__ gives 0.0. THE VARIABLE SUPPRESSES
+  WRITING AND DOES NOTHING ABOUT READING. My round-107 flag prescribed it as THE
+  remedy: THE HAZARD WAS REAL, THE FIX WAS WRONG, and nobody had run it. Standing
+  fix: rmtree(__pycache__) PER MUTANT, or checked-hash pycs, and the receipt
+  records WHICH BYTES RAN. DA 55.
+  (2) AND IT QUALIFIES A VERIFICATION I RELAYED AS CLEAN: R-543(B)'s run was
+  sound because it used a FRESH DETACHED WORKTREE where no __pycache__ could
+  exist -- THE FRESH TREE, NOT THE VARIABLE. DA 54's re-run in a non-fresh
+  worktree is NOT protected by construction; its result stands only because a
+  stale cache sends a suite GREEN, never red. A right answer from a mechanism
+  that was not doing the work.
+  (3) THE DEFERRAL IS CLOSED AT THE TOKEN: the mixed log now FAILS, 21 drives +
+  15 checks pass, AND THE PRINTED SUMMARY I CARRIED AT ROUND 106 IS REPLACED BY A
+  COMPUTED ENUMERATION. But WHAT IS INSTALLED PREDATES THE FIX, so the failure
+  mode is STILL LIVE ON THE MACHINE until DA 55 reinstalls -- "installed" is not
+  "fixed".
+  (4) da_blackout_mask --selftest WAS RED AT HEAD ON THE NIGHTLY GOVERNED PATH,
+  from two fixtures that hardcoded 20260905 as a FUTURE day until the calendar
+  arrived. THE INSTRUMENT ROTTED BY TIME PASSING -- the CURRENCY axis landing on
+  a selftest instead of on a flag, the first time it has been seen outside my
+  files -- and NO CHECK FOUND IT: DA found it while patching something else.
+  Fixed at the root (the future day DERIVED FROM THE CLOCK, not written down),
+  58 checks, rc 0.
+  (5) THE CASCADE BASELINE IS RULED: adopt BE's PER-ARM REPLAYED rates
+  (0.4970 / 0.4003) BY CITATION, never recomputed in DE's module, count-based
+  rates retained as REFUTED_AS_A_BASELINE, with a cross-check that REFUSES ON
+  MISMATCH -- and the reason to believe it is that DE computed the same thing
+  independently and got 8.7013, EXACTLY BE'S PUBLISHED HEADLINE.
+  (6) DE 66b's TABLE CHECKED BY ME (sha 48effdb5bd81e714): zero of five
+  candidates land, the one BE actually draws from is furthest, and
+  cascade_spread is 1.9398838090426878 under BOTH baselines in the file. AND ONE
+  THING I FOUND BY READING: the predicate's field name is
+  lands_in_BE_range_0p40_0p50, PINNING A RANGE THAT IS NOT BE'S -- BE's measured
+  range is [0.3098, 0.8182]. I COMPUTED THE VERDICT AGAINST THE CORRECT RANGE
+  RATHER THAN ASSUMING IT SURVIVED: still zero of five. THE VERDICT SURVIVES THE
+  CORRECTION AND THE FIELD NAME DOES NOT.
+  (7) TWO CACHES, TWO COUNTS -- 29,813 (BE) against 31,122 (DE) -- both emitted,
+  neither preferred, routed to BE 46. 1,309 generations is not a rounding
+  difference and one published population block is wrong.
+  (8) B-4 CHECKED AT THE CODE: da_rebate_ceiling.py:240-243 RECONSTRUCTS fe_t by
+  inverting the delta identity while the receipt carries it directly one key
+  away. No number is wrong; a derived value stands where a measured one was
+  available, so an identity error would cancel itself out of view. DA 55 asserts
+  agreement.
+  (9) THE REVIEWER RE-RAN MY ROUND-106 MOVE AND ITS TWO APPARENT FINDINGS
+  DISSOLVED INTO ITS OWN CRUDER SPLIT: 11/11 (or 10/10 colon-anchored), 69-71
+  archived, 107/107 blocks terminal -- "MEM's account exactly right". Recorded
+  as CORROBORATION, the axis I cannot measure, resolving by a second seat
+  running a DIFFERENT SPLIT.
+  PRIOR CHECKPOINT:
   2026-09-06T02:44:55Z (MEM ROUND 108 -- R-544 AND R-545 SWEPT. STATE ONLY.
   (1) 09-05 IS SCORED AND SEALED, AND I VERIFIED THE PROVENANCE MYSELF. The
   receipt hashes to d65cadbcf4af6818 AT BOTH COPIES (derived and the run dir),
@@ -725,6 +781,26 @@ flags:
                              # OWN. This is standing rule 15's exact shape: a
                              # zero from an instrument that never proved it can
                              # fire is not a result.
+  r543b_was_sound_for_a_reason_other_than_the_one_given: THE-FRESH-WORKTREE-NOT-THE-VARIABLE
+                             # RELAYED from R-546(B), and it qualifies a flag I
+                             # carried at round 107 as a clean verification.
+                             # R-543(B)'s mutation run WAS SOUND -- but because
+                             # it ran in a FRESH DETACHED WORKTREE where no
+                             # __pycache__ existed before the first import and
+                             # none was ever written, SO NO STALE READ WAS
+                             # POSSIBLE. THE FRESH TREE PROTECTED IT, NOT THE
+                             # VARIABLE THE ENTRY CREDITED.
+                             # AND THE CONSEQUENCE FOR THE NEXT RUN IS THE POINT:
+                             # DA 54's re-run at HEAD, in DA's OWN NON-FRESH
+                             # worktree with only the variable set, IS NOT
+                             # PROTECTED BY CONSTRUCTION. Its 4/4 ASSERTION_KILLs
+                             # are self-guarding in the direction that matters --
+                             # a stale cache sends a suite GREEN, never red -- so
+                             # the result stands while the guarantee does not.
+                             # A RIGHT ANSWER FROM A MECHANISM THAT WAS NOT DOING
+                             # THE WORK IS THE SHAPE THIS PROGRAMME KEEPS
+                             # FINDING, and this time it is in a verification I
+                             # relayed as clean.
   de_consumer_side_falsifier_built_and_closed: 4-OF-4-CAUGHT-EVERYWHERE-0-SURVIVING
                              # RELAYED from R-543(B), and the coordinator ran it
                              # ITSELF -- in a throwaway detached worktree with
@@ -743,7 +819,46 @@ flags:
                              # BETTER THAN ONE THAT ONLY GOES RED, and this one
                              # was built because a measurement with an
                              # over-broad NAME pointed at a real hole.
-  mutation_audit_hazards_for_every_seat: NO-PYCACHE-AND-NEVER-IN-THE-SHARED-TREE
+  mutation_audit_hazards_for_every_seat: CORRECTED-THE-VARIABLE-DOES-NOT-CLOSE-IT-rmtree-DOES
+                             # CORRECTED 2026-09-06T02:51:45Z, AND I REPRODUCED
+                             # THE COUNTEREXAMPLE MYSELF BECAUSE THE REMEDY WAS
+                             # MINE TO CARRY AND IT WAS WRONG.
+                             # MY OWN RUN, in a scratch directory: m.py returning
+                             # 0.5, imported once so a .pyc is written; source
+                             # rewritten to 0.0 AT THE SAME BYTE LENGTH (24 = 24)
+                             # with mtime restored; then
+                             # PYTHONDONTWRITEBYTECODE=1 python3 -c "import m;
+                             # print(m.v())" PRINTS 0.5 while cat m.py reads 0.0.
+                             # After rm -rf __pycache__ it prints 0.0.
+                             # SO THE VARIABLE SUPPRESSES *WRITING* BYTECODE AND
+                             # DOES NOTHING ABOUT *READING* A STALE ONE. My
+                             # round-107 flag prescribed it as THE remedy. The
+                             # HAZARD I recorded was real; THE FIX I recorded
+                             # does not close it.
+                             # THE STANDING FIX FOR EVERY SEAT: rmtree the
+                             # __pycache__ PER MUTANT (the pattern already at
+                             # be_forward_day.py:2903), or checked-hash pycs, AND
+                             # THE RECEIPT RECORDS WHICH BYTES ACTUALLY RAN.
+                             # DA 55 hardens the harness.
+                             # THIS IS A DIFFERENT FAILURE FROM THE PREVIOUS
+                             # FOUR RELAY-FIDELITY INSTANCES AND WORTH THE
+                             # DISTINCTION: THE FINDING WAS RIGHT AND THE FIX WAS
+                             # WRONG. A relayed remedy is a claim like any other
+                             # and nobody had run it -- the fix travelled four
+                             # rounds inside a hazard note whose danger everyone
+                             # agreed about.
+                             # AND THE DIRECTION OF THE FAILURE IS THE BAD ONE: a
+                             # stale cache makes a suite go GREEN on a mutant,
+                             # never red. An instrument that cannot fire,
+                             # reporting that nothing fired -- which is what I
+                             # wrote at round 107, correctly, about a mechanism I
+                             # then mis-defended.
+                             # THE SECOND HAZARD IS UNCHANGED AND STILL RIGHT: a
+                             # mutation audit in the SHARED TREE leaves a mutated
+                             # file where another seat's commit can sweep it in.
+                             # Run them in an ISOLATED WORKTREE.
+                             # EARLIER VALUE (rule 13):
+                             # NO-PYCACHE-AND-NEVER-IN-THE-SHARED-TREE
                              # RELAYED from R-543(B). Two hazards paid for by DE
                              # and recorded for every seat, not just DE.
                              # (1) SAME-BYTE-LENGTH MUTANTS (0.5 -> 0.0) CAN
@@ -1025,7 +1140,24 @@ flags:
                              # separate them; the ruling did not go back to the
                              # file. Both are needed for the failure and each
                              # would have been enough to prevent it.
-  updated_rolling_window_restored_to_three: MOVED-NEVER-INTERPRETED-GUARD-11-OF-11-PASS
+  updated_rolling_window_restored_to_three: CHECKED-BY-ME-THEN-CHECKED-BY-THE-REVIEWER
+                             # CORROBORATED 2026-09-06T02:51:45Z. The reviewer
+                             # re-ran the move against my account and raised TWO
+                             # APPARENT FINDINGS, BOTH OF WHICH DISSOLVED INTO
+                             # ITS OWN CRUDER BOUNDARY SPLIT: 11 of 11 PASS (or
+                             # 10 of 10 under a colon-anchored split), rounds
+                             # 69-71 confirmed archived, 107 of 107 fenced blocks
+                             # terminal. R-546(B): "MEM's account exactly right."
+                             # THIS IS THE CORROBORATION AXIS RESOLVING IN MY
+                             # FAVOUR FOR ONCE, AND IT IS WORTH RECORDING FOR
+                             # THAT REASON RATHER THAN DESPITE IT: my instrument
+                             # measures PROVENANCE only, and the thing that
+                             # turned this from "MEM says so" into a corroborated
+                             # result was a second seat running a DIFFERENT SPLIT
+                             # and getting the same answer. Neither my check nor
+                             # its check would have been enough alone.
+                             # ORIGINAL, UNCHANGED:
+                             # MOVED-NEVER-INTERPRETED-GUARD-11-OF-11-PASS
                              # CHECKED 2026-09-06T02:26:37Z. R-542(E) executed.
                              # Eleven generations moved VERBATIM to archive
                              # batch 107; the field goes 362 lines -> 154 and
@@ -1123,6 +1255,54 @@ flags:
                              # 288.4177679999994 is IDENTICAL to the E0 value in
                              # DE's ruled receipt, read from BOTH files. The
                              # straddle quantity is GONE, not moved.
+  the_rc_deferral_is_closed_at_the_token: MIXED-LOG-NOW-FAILS-21-DRIVES-15-CHECKS
+                             # RELAYED from R-546(A), verified by the
+                             # coordinator's own execution of the extracted
+                             # function. The deferral now keys on a STRUCTURED
+                             # TOKEN, not a prose match: MASK_STATUS=
+                             # CONTENT_LIVENESS_UNJUDGEABLE alone -> DEFERRED;
+                             # THE REVIEWER'S MIXED LOG -> FAILURE; the token in
+                             # prose -> FAILURE; a structured refusal followed by
+                             # an OSError -> FAILURE. 21 drives + 15 named checks
+                             # PASSED.
+                             # AND THE ECHO IS GONE: the summary is now a
+                             # COMPUTED ENUMERATION -- "the ONLY inputs in this
+                             # battery that reach DEFERRED are the two pure
+                             # structured open-day refusals -- enumerated, not
+                             # asserted" -- replacing the printed conclusion I
+                             # carried into these files at round 106 and named at
+                             # round 107. THE THING I PROPAGATED IS NOW DELETED
+                             # AT ITS SOURCE.
+                             # See the_rc_deferral_can_swallow_a_real_failure
+                             # below for what it was.
+  blackout_mask_was_red_at_head_on_the_nightly_governed_path: FOUND-WHILE-PATCHING-BY-NO-CHECK
+                             # RELAYED from R-546(A), and flagged in its own
+                             # right because of WHERE it was and HOW it was
+                             # found.
+                             # da_blackout_mask --selftest WAS RED AT HEAD ON THE
+                             # NIGHTLY GOVERNED PATH. Two fixtures hardcoded
+                             # "20260905" as a FUTURE day; the calendar passed
+                             # it; one then loaded the REAL gap ledger for what
+                             # had become a REAL day, and the other's closed-flag
+                             # assertion INVERTED ITSELF.
+                             # THE INSTRUMENT ROTTED BY THE CALENDAR ARRIVING.
+                             # Nothing changed in the code; the world moved past
+                             # a literal. That is the CURRENCY axis -- my own
+                             # open item -- landing on a selftest instead of on a
+                             # flag, and it is the first time it has been seen
+                             # anywhere but in my files.
+                             # AND NO CHECK FOUND IT: DA found it WHILE PATCHING
+                             # SOMETHING ELSE. A red selftest on the governed
+                             # nightly path was red and nobody was told, which
+                             # is the same shape as the midnight unit being red
+                             # every night for a different reason -- twice now,
+                             # this path has carried a signal nobody reads.
+                             # FIXED AT THE ROOT (ledger isolated; the future day
+                             # DERIVED FROM THE CLOCK +30d rather than written
+                             # down), 58 checks pass, rc 0 under the
+                             # coordinator's run. Fixing the date at the root
+                             # rather than bumping the literal is what stops it
+                             # rotting again.
   the_rc_deferral_can_swallow_a_real_failure: DEFERRED-ON-A-DISK-FULL-TRACEBACK
                              # RELAYED from R-543(C), the reviewer's C-1, and
                              # the coordinator reproduced it by driving the path
@@ -1180,7 +1360,26 @@ flags:
                              # A ceiling that does not bind is not a failure of
                              # the ceiling; it is the answer that the headroom
                              # has to be defended some other way.
-  midnight_unit_installed: DEPLOYED-2026-09-06T02:24Z-BY-THE-COORDINATOR
+  midnight_unit_installed: SUPERSEDED-THE-INSTALLED-COPY-PREDATES-THE-C1-FIX
+                             # QUALIFIED 2026-09-06T02:51:45Z. THE DEPLOY FACTS
+                             # BELOW STAND; WHAT IS INSTALLED IS NO LONGER WHAT
+                             # SHOULD BE.
+                             # The copy installed at 02:24Z predates DA 54's C-1
+                             # fix, so THE LIVE UNIT STILL CLASSIFIES A MIXED LOG
+                             # AS DEFERRED -- the failure mode I recorded at
+                             # round 107 IS STILL LIVE ON THE MACHINE, and the
+                             # fix exists only in the tree. DA 55 is dispatched
+                             # to install the C-1-fixed unit AND VERIFY IT.
+                             # NEXT SCHEDULED RUN IS Mon 2026-09-07 00:06Z, so
+                             # there is time; recorded so that nobody reads
+                             # "installed" as "fixed".
+                             # ALSO OPEN FROM DA 54 AND NOT SWEPT HERE BECAUSE
+                             # R-546 DOES NOT CARRY IT: Q-DA-266 reports the
+                             # deploy is not live -- main tree 4 behind and
+                             # dirty. NAMED, NOT ADOPTED; I have not read that
+                             # filing and the coordinator has not ruled on it.
+                             # EARLIER VALUE (rule 13):
+                             # DEPLOYED-2026-09-06T02:24Z-BY-THE-COORDINATOR
                              # RELAYED from R-542(B), and flagged with the clock
                              # time from the entry because IT IS A DEPLOY and
                              # deploys are the class this programme records with
@@ -1244,6 +1443,95 @@ flags:
                              # THROUGH A POINTER NOBODY CAN FOLLOW. A dangling
                              # hash was fixed and replaced by a reachable-looking
                              # one that is not on the graph. BE 45.
+  cascade_baseline_ruled_be_per_arm_replayed_by_citation: 0.4970-AND-0.4003-NEVER-RECOMPUTED
+                             # RELAYED from R-546(C) for the ruling; the table
+                             # under it CHECKED BY ME at the artifact.
+                             # THE RULING (coordinator, a measurement choice
+                             # under rule 14): ADOPT BE's PER-ARM REPLAYED RATES
+                             # AS THE CASCADE BASELINE, BY CITATION -- path plus
+                             # sha 6951f57d2b8a23bd..., NEVER RECOMPUTED IN DE'S
+                             # MODULE -- with the count-based rates retained as
+                             # fields marked REFUTED_AS_A_BASELINE and a computed
+                             # cross-check against BE's headline that REFUSES ON
+                             # MISMATCH. DE 67.
+                             # WHY A COUNT CANNOT DO IT, IN DE'S READING: BE's
+                             # 0.497 is fills_lost_per_cancel MEASURED BY REPLAY.
+                             # A random cancel does not remove its generation's
+                             # fills, because LATENCY, HOLDS, REPOSTS AND QUEUE
+                             # RESETS STAND BETWEEN THE DECISION AND THE FILLS --
+                             # and no count can price that. It is also PER ARM
+                             # (0.4970 / 0.4003), SO NO SINGLE BOOK-WIDE RATE CAN
+                             # SERVE BOTH ARMS: a defect in the function's SHAPE,
+                             # not only in its denominator.
+                             # THE CROSS-CHECK IS THE REASON TO BELIEVE IT: DE
+                             # computed and did NOT adopt the per-arm baseline,
+                             # getting cascade 8.7013 / 5.5684 -- AND 8.7013 IS
+                             # EXACTLY BE'S PUBLISHED HEADLINE. Two seats, two
+                             # routes, one number.
+                             # ADOPTING BY CITATION RATHER THAN BY RECOMPUTATION
+                             # IS THE PART TO KEEP: it makes the number one seat's
+                             # measurement with one provenance, instead of two
+                             # implementations that can drift.
+  de66b_five_candidate_table_zero_of_five_land: CHECKED-BY-ME-AND-THE-RANGE-IN-THE-FIELD-NAME-IS-WRONG
+                             # CHECKED 2026-09-06T02:51:45Z at
+                             # de_section81_arms__20260906T024425Z.json, sha256
+                             # 48effdb5bd81e714.
+                             # baseline_status =
+                             # CONTESTED_THE_BASELINE_IS_NOT_A_COUNT;
+                             # n_candidates_landing_in_BE_range = 0. The five:
+                             # filling generations 3,861 -> 1.1176; all
+                             # cancellable (DE's v2 cache) 31,122 -> 0.13865; all
+                             # generations (BE's block) 29,813 -> 0.1447; and
+                             # BE'S OWN DECISION POPULATIONS 1,154 -> 3.7392 and
+                             # 106 -> 40.7075. ZERO LAND, AND THE ONE BE ACTUALLY
+                             # DRAWS FROM IS THE FURTHEST AWAY.
+                             # AND ONE THING I FOUND BY READING RATHER THAN
+                             # RELAYING: THE PREDICATE'S FIELD NAME IS
+                             # lands_in_BE_range_0p40_0p50 -- IT PINS [0.40,
+                             # 0.50], WHICH R-546(B) ESTABLISHES IS NOT BE'S
+                             # RANGE. BE's measured range is [0.3098, 0.8182];
+                             # the 0.40-0.50 wording was the coordinator's
+                             # DISPATCH, corrected to DE by addendum.
+                             # I COMPUTED THE VERDICT AGAINST THE CORRECT RANGE
+                             # RATHER THAN ASSUMING IT SURVIVED: against
+                             # [0.3098, 0.8182] the five candidates are 1.1176,
+                             # 0.1386, 0.1447, 3.7392 and 40.7075 -- STILL ZERO
+                             # LAND. THE VERDICT SURVIVES THE CORRECTION AND THE
+                             # FIELD NAME DOES NOT. A reader resolving that field
+                             # gets a false statement about BE beside a true
+                             # verdict, which is the round-107 predicate-NAME
+                             # shape one round later in a different seat's
+                             # artifact.
+                             # cascade_spread = 1.9398838090426878 AND
+                             # cascade_spread_under_the_other_baseline is the
+                             # SAME VALUE, both in the file -- the ordering
+                             # finding is invariant, computed and not asserted.
+  two_cache_counts_29813_vs_31122: BOTH-EMITTED-NEITHER-PREFERRED
+                             # RELAYED from R-546(C), routed to BE 46. BE's
+                             # population block reports 29,813 generations from
+                             # de_section81_cache_12.pkl; DE counts 31,122 from
+                             # de_section81_cache_v2_12.pkl. TWO CACHES, TWO
+                             # COUNTS, BOTH EMITTED, NEITHER PREFERRED.
+                             # Recorded as an OPEN DISAGREEMENT rather than
+                             # resolved in these files: 1,309 generations is not
+                             # a rounding difference, and whichever cache is
+                             # right, one published population block is wrong.
+                             # DE explains its side in round 67; BE 46 answers.
+  b4_fe_t_is_reconstructed_not_read: CHECKED-BY-ME-AT-THE-CODE-AGREEMENT-1.5e-15
+                             # CHECKED 2026-09-06T02:51:45Z at
+                             # live/pm_research/da_rebate_ceiling.py, lines
+                             # 240-243: fe_t = (dd["treatment"]["D_E_MINUS_R"] -
+                             # dd["treatment"]["D_E0"]) / REBATE_SHARE + fe_b --
+                             # i.e. RECONSTRUCTED BY INVERTING THE DELTA IDENTITY
+                             # while the receipt carries s["fe_cents"]
+                             # ["treatment"] DIRECTLY, one key away.
+                             # NO NUMBER IS WRONG: agreement is 1.47e-15
+                             # relative (relayed). The defect is that A DERIVED
+                             # VALUE STANDS WHERE A MEASURED ONE WAS AVAILABLE,
+                             # so an error in the identity would cancel itself
+                             # out of view instead of showing up as a mismatch.
+                             # DA 55 reads both and ASSERTS AGREEMENT, which
+                             # turns the coincidence into a check.
   cascade_baseline_contested_but_the_spread_is_invariant: 1.9398838-UNDER-BOTH-BASELINES
                              # RELAYED from R-543(B). DE accepted BE's finding
                              # AT THE CODE -- 1.1176 is fills per FILLING
@@ -9029,6 +9317,30 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T02:51:45Z, A REMEDY THESE FILES CARRIED FOR TWO ROUNDS DOES
+  NOT WORK, AND I REPRODUCED THE COUNTEREXAMPLE MYSELF:
+  PYTHONDONTWRITEBYTECODE=1 SUPPRESSES WRITING BYTECODE AND DOES NOTHING ABOUT
+  READING A STALE .pyc, so a same-length mutant can be run against old bytecode
+  and the suite goes GREEN. The hazard was real; the fix was wrong; nobody had
+  run it. Standing fix is rmtree per mutant plus a record of which bytes ran.
+  It also qualifies R-543(B): that run was protected by a FRESH WORKTREE, not by
+  the variable.
+  THE DEFERRAL IS CLOSED AT THE TOKEN (the mixed log now FAILS, and the printed
+  summary I carried at round 106 is now a computed enumeration) -- BUT WHAT IS
+  INSTALLED PREDATES THE FIX, so the failure mode is still live on the machine
+  until DA 55 reinstalls. And da_blackout_mask's selftest WAS RED AT HEAD ON THE
+  NIGHTLY GOVERNED PATH because two fixtures hardcoded a future date that
+  arrived -- an instrument that rotted by time passing, found while patching
+  something else.
+  THE CASCADE BASELINE IS RULED: BE's per-arm replayed rates BY CITATION, with
+  DE's independent computation landing on BE's published 8.7013 as the
+  cross-check. DE's five-candidate table is checked by me -- zero of five land --
+  and its predicate NAME pins a range that is not BE's, though the verdict
+  survives the correction when computed against the right one. Two caches
+  disagree by 1,309 generations, routed to BE 46.
+  09-05 stays SEALED AND UNREAD; the unseal is HELD until all five days carry a
+  score. Gate 1 unmoved, 1 of 7. Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T02:44:55Z, RETAINED BELOW --
   AS-OF 2026-09-06T02:44:55Z, 09-05 IS SCORED AND SEALED AND NOBODY HAS READ
   IT. Receipt identical at both copies, the sealed file hashing to the digest
   the receipt pins, twelve gates PASS, 2,016 windows, 0 masked -- all verified
@@ -9794,6 +10106,85 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 109, 2026-09-06T02:51:45Z ------------------------------
+  mutation_audit_hazards_for_every_seat:
+    prov: CHECKED
+    artifact: live/pm_research/be_forward_day.py
+    as_of: 2026-09-06T02:51:45Z
+    said: >-
+      I reproduced the counterexample in a scratch directory: m.py returning 0.5
+      imported once so a .pyc is written; the source rewritten to 0.0 at the same
+      byte length (24 = 24) with mtime restored; then
+      PYTHONDONTWRITEBYTECODE=1 python3 -c "import m; print(m.v())" prints 0.5
+      while cat m.py reads 0.0, and rm -rf __pycache__ makes it print 0.0. So the
+      variable suppresses writing bytecode and does nothing about reading a stale
+      one, and the remedy my round-107 flag prescribed does not close the hazard
+      it names. The artifact cited is the file carrying the rmtree pattern that
+      DOES close it (be_forward_day.py:2903), which is the standing fix; that
+      line number is RELAYED from R-546(B).
+  de66b_five_candidate_table_zero_of_five_land:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/de_section81_arms__20260906T024425Z.json
+    as_of: 2026-09-06T02:51:45Z
+    said: >-
+      sha256 begins 48effdb5bd81e714; baseline_status
+      CONTESTED_THE_BASELINE_IS_NOT_A_COUNT;
+      n_candidates_landing_in_BE_range 0; the candidate block gives
+      all_cancellable_generations_this_cache n 31122 rate 0.13864790180579653,
+      all_generations_BE_population_block n 29813, and the decision populations
+      1,154 and 106; be_replayed_per_arm.CONDVALUE_X_SKEW.be_replayed_rate
+      0.4969748944984966 with be_artifact_sha256
+      6951f57d2b8a23bd2d51f24d25659ddffc671c5932aaba89246b025182c2fa08; and
+      cascade_spread and cascade_spread_under_the_other_baseline are both
+      1.9398838090426878. The predicate field is named
+      lands_in_BE_range_0p40_0p50, which pins an interval R-546(B) establishes is
+      not BE's; recomputing the five rates against BE's measured [0.3098,
+      0.8182] still gives zero landing, so the verdict survives and the name
+      does not.
+  b4_fe_t_is_reconstructed_not_read:
+    prov: CHECKED
+    artifact: live/pm_research/da_rebate_ceiling.py
+    as_of: 2026-09-06T02:51:45Z
+    said: >-
+      lines 240-243 read fe_t = (dd["treatment"]["D_E_MINUS_R"] -
+      dd["treatment"]["D_E0"]) / REBATE_SHARE + fe_b, while the same function
+      binds s = de["fee_endpoint_summary"] and s["fe_cents"]["treatment"] is
+      available directly. The 1.47e-15 relative agreement is RELAYED from
+      R-546(B); I read the reconstruction, not the residual.
+  updated_rolling_window_restored_to_three:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/STATUS_UPDATED_ARCHIVE.md
+    as_of: 2026-09-06T02:51:45Z
+    said: >-
+      unchanged from round 106 -- batch 107 carries the eleven moved generations
+      verbatim and the containment guard gated the write, 11 of 11 PASS -- and
+      now CORROBORATED by the reviewer, which re-ran the move under a different
+      (colon-anchored) boundary split, raised two apparent findings that
+      dissolved into its own split, and confirmed 69-71 archived and 107 of 107
+      fenced blocks terminal. R-546(B): "MEM's account exactly right." The
+      corroboration itself is RELAYED; my own guard run is the CHECKED half.
+  r543b_was_sound_for_a_reason_other_than_the_one_given:
+    prov: RELAYED
+    from: R-546(B), the reviewer's A-6 reproduced by the coordinator
+  the_rc_deferral_is_closed_at_the_token:
+    prov: RELAYED
+    from: R-546(A), verified by the coordinator's own execution of the extracted function
+  blackout_mask_was_red_at_head_on_the_nightly_governed_path:
+    prov: RELAYED
+    from: R-546(A) -- found by DA while patching, not by any check
+  cascade_baseline_ruled_be_per_arm_replayed_by_citation:
+    prov: RELAYED
+    from: R-546(C), a coordinator measurement choice under rule 14
+  two_cache_counts_29813_vs_31122:
+    prov: RELAYED
+    from: R-546(C), routed to BE 46; recorded as an open disagreement, not resolved here
+  midnight_unit_installed:
+    prov: RELAYED
+    from: >-
+      R-544(B) for the deploy and R-546(D) for the supersession -- the installed
+      copy predates DA 54's C-1 fix, so the live unit still defers a mixed log.
+      Q-DA-266's separate "the deploy is not live" claim is NAMED and NOT
+      ADOPTED: I have not read that filing and no entry has ruled on it.
   # --- MEM round 108, 2026-09-06T02:44:55Z ------------------------------
   day_09_05_is_scored_and_sealed:
     prov: CHECKED
