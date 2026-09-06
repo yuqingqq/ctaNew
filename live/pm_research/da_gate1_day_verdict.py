@@ -619,6 +619,28 @@ def resolve_replay(bk: dict, replay_fn=None):
 #: to an evaluator BY KEYWORD; a conjunct no evaluator matches is a STATUS,
 #: never a pass, so params growing from two conjuncts to eight cannot widen
 #: what this verifier silently accepts.
+#: R-604 / REV 51. DE's params v8 carries the conjuncts as OBJECTS with
+#: STABLE IDS, so a conjunct is bound by identity rather than by matching
+#: prose. The ids are DE's; if DE's Q-row reports different ones this map is
+#: what changes, and the binding says which it used.
+CONJUNCT_IDS = {
+    "clock_ge_read_not_before": "clock_at_or_after_read_not_before_utc",
+    "six_ruled_days_from_params":
+        "every_ruled_day_has_exactly_one_sealed_receipt",
+    "receipt_at_landing_digest":
+        "every_sealed_receipt_matches_its_LANDING_RECORD",
+    "at_least_one_admissible_arm":
+        "every_day_has_at_least_one_admissible_arm",
+    "ledger_verdict": "the_ledger_verdict_stands_for_every_day",
+    "producing_code_locatable":
+        "every_receipt_names_locatable_producing_code",
+    "horizon_fallback_G5_directional": "clock_at_or_before_horizon",
+    "params_field_required": "the_params_field_is_present",
+}
+#: KEYWORD fallback, for params v7 and earlier where the conjunction is a
+#: list of SENTENCES. Kept so an older declaration is still evaluated rather
+#: than reported wholly unevaluable -- and the binding records which route
+#: each conjunct took.
 CONJUNCT_EVALUATORS = {
     "clock": "clock_at_or_after_read_not_before_utc",
     "horizon": "clock_at_or_before_horizon",
@@ -700,47 +722,116 @@ def read_gate_predicate(params: dict, now: datetime.datetime | None = None,
         h = (rg.get("horizon_utc") or rg.get("horizon")
              or params.get("horizon_utc"))
         if not isinstance(h, str):
-            return {"holds": None, "status": "HORIZON_NOT_DECLARED"}
+            return {"holds": None, "status": "HORIZON_NOT_DECLARED",
+                    "why": ("a horizon conjunct with no declared horizon is "
+                            "UNEVALUABLE, never satisfied")}
         t = datetime.datetime.fromisoformat(h.replace("Z", "+00:00"))
-        return {"holds": now <= t, "horizon": h, "now": now.isoformat()}
+        past = now > t
+        fb = (rg.get("horizon_fallback") or {})
+        return {
+            "holds": not past, "horizon": h, "now": now.isoformat(),
+            "horizon_passed": past,
+            "THE_FALLBACK_OUTCOME_IF_IT_PASSES": {
+                "G": fb.get("G", 5),
+                "reading": fb.get("reading", "directional"),
+                "applies_now": past,
+                "NEVER_APPLIED_SILENTLY": (
+                    "past the horizon the declared fallback is G = 5, "
+                    "DIRECTIONAL -- a different claim from the six-day test, "
+                    "and this verifier NAMES it rather than quietly reading "
+                    "the smaller G as though it were the ruled one. "
+                    "Whether to take the fallback is the coordinator's act"),
+            },
+        }
+
+    def _resolve_day(d):
+        """DE's supersession resolver, re-derived: a v1 plus a CHAINED v2
+        resolves to the v2; two UNCHAINED receipts are AMBIGUOUS and refuse.
+
+        REV 51 (a). Picking the newest by mtime would resolve an ambiguous
+        pair silently -- and a day that ran twice without a supersedes link
+        is exactly the case a read must refuse rather than resolve."""
+        pat = naming.get(f"{d[:4]}-{d[4:6]}-{d[6:]}") or \
+            f"p003_de_gate1_day_run_{d}_SEALED__*.json"
+        hits = sorted(der.glob(pat))
+        if not hits:
+            return {"status": "NO_RECEIPT", "n_matches": 0, "head": None}
+        if len(hits) == 1:
+            return {"status": "ONE", "n_matches": 1, "head": hits[0],
+                    "chain": [hits[0].name]}
+        by_name, superseded = {h.name: h for h in hits}, set()
+        for h in hits:
+            try:
+                r = json.loads(h.read_text())
+            except (OSError, json.JSONDecodeError):
+                continue
+            sup = r.get("supersedes")
+            ref = None
+            if isinstance(sup, dict):
+                ref = sup.get("path") or sup.get("artifact")
+            elif isinstance(sup, str):
+                ref = sup
+            if ref:
+                superseded.add(Path(ref).name)
+        heads = [h for h in hits if h.name not in superseded]
+        if len(heads) == 1:
+            return {"status": "CHAIN_HEAD", "n_matches": len(hits),
+                    "head": heads[0],
+                    "chain": [h.name for h in hits],
+                    "superseded": sorted(superseded),
+                    "why": "a v1 plus a CHAINED v2 resolves to the v2"}
+        return {"status": "AMBIGUOUS", "n_matches": len(hits), "head": None,
+                "candidates": [h.name for h in hits],
+                "why": ("two receipts for one day with no supersedes link "
+                        "between them. A read REFUSES rather than resolving "
+                        "by picking the newest -- a day that ran twice is "
+                        "not a day that ran")}
 
     def _sealed_present():
         per = {}
         for d in days:
-            pat = naming.get(f"{d[:4]}-{d[4:6]}-{d[6:]}") or \
-                f"p003_de_gate1_day_run_{d}_SEALED__*.json"
-            hits = sorted(der.glob(pat))
-            per[d] = {"n_matches": len(hits),
-                      "exactly_one": len(hits) == 1,
-                      "path": (hits[0].name if len(hits) == 1 else None),
-                      "why": ("zero is a day that never ran and two is a day "
-                              "that ran twice; a read refuses either rather "
-                              "than resolving by picking the newest")}
-        return {"holds": all(v["exactly_one"] for v in per.values()) and
-                bool(days), "per_day": per}
+            r = _resolve_day(d)
+            per[d] = {"n_matches": r["n_matches"], "status": r["status"],
+                      "resolves": r["status"] in ("ONE", "CHAIN_HEAD"),
+                      "head": (r["head"].name if r.get("head") else None),
+                      "chain": r.get("chain"),
+                      "why": ("zero is a day that never ran; two UNCHAINED "
+                              "is a day that ran twice, which a read refuses "
+                              "rather than resolving by picking the newest; "
+                              "a chained pair resolves to its HEAD")}
+        return {"holds": bool(days) and all(v["resolves"] for v in per.values()),
+                "per_day": per,
+                "resolution": "supersedes-chain, head-of-chain wins"}
 
     def _matches_landing():
         per = {}
         for d in days:
             lr = lrs.get(d)
-            hits = sorted(der.glob(
-                naming.get(f"{d[:4]}-{d[4:6]}-{d[6:]}")
-                or f"p003_de_gate1_day_run_{d}_SEALED__*.json"))
-            cur = (hashlib.sha256(hits[0].read_bytes()).hexdigest()
-                   if len(hits) == 1 else None)
+            r = _resolve_day(d)
+            head = r.get("head")
+            cur = (hashlib.sha256(head.read_bytes()).hexdigest()
+                   if head is not None else None)
             per[d] = {
                 "landing_record_exists": lr is not None,
                 "recorded_by": (lr or {}).get("recorded_by"),
+                "chain_status": r["status"],
+                "chain_head": (head.name if head else None),
                 "matches": (None if not lr or cur is None
                             else cur == lr["receipt_sha256"]),
-                "status": ("NO_LANDING_RECORD" if lr is None else
+                "status": ("AMBIGUOUS_CHAIN" if r["status"] == "AMBIGUOUS"
+                           else "NO_LANDING_RECORD" if lr is None else
                            "NO_RECEIPT" if cur is None else
                            "MATCH" if cur == lr["receipt_sha256"]
                            else "RECEIPT_MOVED_SINCE_LANDING")}
         return {"holds": bool(days) and all(v["matches"] is True
                                             for v in per.values()),
                 "per_day": per,
-                "the_record_is_this_seats_pre_read": True}
+                "the_record_is_this_seats_pre_read": True,
+                "the_digest_is_the_CHAIN_HEADS": (
+                    "REV 51 (a): a superseded receipt's landing digest is "
+                    "the digest of the chain HEAD, because the head is what "
+                    "a read would use. A v1 whose v2 supersedes it is not "
+                    "the artifact under test")}
 
     def _one_admissible_arm():
         per = {}
@@ -798,7 +889,16 @@ def read_gate_predicate(params: dict, now: datetime.datetime | None = None,
                                             for v in per.values()),
                 "per_day": per}
 
+    def _params_field_present():
+        return {"holds": True,
+                "why": ("the conjunction was read from "
+                        f"`{READ_GATE_FIELD}.{CONJUNCTION_FIELD}` -- had it "
+                        "been absent this predicate would have REFUSED "
+                        "before any conjunct was evaluated, so reaching "
+                        "here IS the conjunct holding")}
+
     EVAL = {
+        "the_params_field_is_present": _params_field_present,
         "clock_at_or_after_read_not_before_utc": _clock_after,
         "clock_at_or_before_horizon": _clock_before_horizon,
         "every_ruled_day_has_exactly_one_sealed_receipt": _sealed_present,
@@ -808,26 +908,42 @@ def read_gate_predicate(params: dict, now: datetime.datetime | None = None,
         "every_receipt_names_locatable_producing_code": _producing_code,
     }
     results, unevaluable = [], []
-    for text in conjuncts:
-        low = str(text).lower()
+    for item in conjuncts:
+        #: ID FIRST. An object with an `id` is bound by identity; a bare
+        #: sentence falls back to keywords, and the route is recorded --
+        #: because "matched some words" and "is this conjunct" are
+        #: different claims and a reader is entitled to know which was made.
+        cid, text, route = None, item, None
+        if isinstance(item, dict):
+            cid = item.get("id")
+            text = item.get("text") or item.get("statement") or item.get("id")
         name = None
-        for kw, ev in CONJUNCT_EVALUATORS.items():
-            if kw in low:
-                name = ev
-                break
+        if cid and cid in CONJUNCT_IDS:
+            name, route = CONJUNCT_IDS[cid], "bound by ID"
+        elif cid:
+            route = "ID NOT IN THIS VERIFIER'S MAP"
+        else:
+            low = str(text).lower()
+            for kw, ev in CONJUNCT_EVALUATORS.items():
+                if kw in low:
+                    name, route = ev, f"matched the keyword {kw!r}"
+                    break
+            if name is None:
+                route = "no id and no keyword matched"
         if name is None or name not in EVAL:
-            unevaluable.append(text)
-            results.append({"conjunct": text, "evaluator": None,
-                            "holds": None,
+            unevaluable.append(cid or text)
+            results.append({"conjunct": text, "id": cid, "evaluator": None,
+                            "binding": route, "holds": None,
                             "status": "CONJUNCT_NOT_EVALUABLE_BY_THIS_"
                                       "VERIFIER",
-                            "why": ("no evaluator matches this conjunct. It "
-                                    "is a STATUS and NOT a pass: a bar this "
-                                    "verifier cannot check is a bar it must "
-                                    "not wave through")})
+                            "why": ("no evaluator is bound to this "
+                                    "conjunct. It is a STATUS and NOT a "
+                                    "pass: a bar this verifier cannot check "
+                                    "is a bar it must not wave through")})
             continue
         res = EVAL[name]()
-        results.append({"conjunct": text, "evaluator": name, **res})
+        results.append({"conjunct": text, "id": cid, "evaluator": name,
+                        "binding": route, **res})
 
     holds = [r for r in results if r.get("holds") is True]
     fails = [r["evaluator"] or r["conjunct"] for r in results
@@ -1958,6 +2074,7 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         #: checked is that the declaration resolved is the NEWEST present
         #: and that its digest is RECORDED; the digest itself is evidence,
         #: not a constant to match.
+        "params_named_by_the_receipt": params_check(receipt),
         "params": {"path": Path(params["_path"]).name,
                    "sha256": params["_sha256"],
                    "is_the_newest_present": _params_is_newest(params),
@@ -2031,11 +2148,18 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     #: DA 63's finding is that the durable citation is the CONTENT DIGEST,
     #: which this artifact carries either way, and a reader who needs the
     #: stricter reading has the flag in front of them.
-    prov_ok = bool(prov["params"]["matches"]
-                   and prov["design"]["matches"])
+    #: the receipt's OWN params binding gates alongside the design's. A gap
+    #: there is PROVENANCE_INCOMPLETE, not a flag -- the same three states.
+    pnamed = prov["params_named_by_the_receipt"]
+    prov_ok = bool(prov["params"]["matches"] and prov["design"]["matches"]
+                   and pnamed["matches"] is not False)
+    params_incomplete = pnamed["matches"] is None
     out["status"] = (
         "PRE_READ_VERIFIED" if (agree and all(agree) and absence["sealed"]
-                                and prov_ok)
+                                and prov_ok and not params_incomplete)
+        else "PROVENANCE_INCOMPLETE" if (agree and all(agree)
+                                         and absence["sealed"]
+                                         and params_incomplete)
         else "FLAGGED")
     out["provenance_all_matched"] = prov_ok
     out["code_is_committed"] = bool(
@@ -2111,6 +2235,64 @@ def _derived_dir() -> Path:
         return HERE.parents[1] / "data" / "pm_5min" / "derived"
 
 
+def params_check(receipt: dict) -> dict:
+    """The PARAMS declaration the RECEIPT names, verified at the file it
+    names -- the same binding the design pin already had.
+
+    REV 51 section 2.6: the design pin was bound and, two lines away, the
+    params pin was still a constant. Round 74 replaced it with
+    newest-present, which is better but is still this verifier CHOOSING;
+    the receipt should say which declaration it was produced against, and
+    that is what gets verified. A receipt naming a params file this
+    worktree cannot resolve is a PROVENANCE GAP -- never a fall back to
+    whatever happens to be newest, because the newest is not what ran."""
+    blk = (receipt.get("params_declaration") or receipt.get("params_used")
+           or (receipt.get("declaration") or {}).get("params"))
+    if not isinstance(blk, dict) or not (blk.get("path") or blk.get("protocol")):
+        return {"named_by_the_receipt": False,
+                "status": "PROVENANCE_INCOMPLETE_NO_PARAMS_NAMED",
+                "matches": None,
+                "why": ("the receipt names no params declaration, so the "
+                        "bars it was produced against cannot be identified. "
+                        "This verifier does NOT substitute its own choice: "
+                        "the newest present is not what ran")}
+    name = blk.get("path") or ""
+    cand = Path(name)
+    p = cand if cand.is_absolute() and cand.is_file() else None
+    if p is None:
+        for base in (HERE / "declarations", _derived_dir()):
+            q = base / Path(name).name
+            if q.is_file():
+                p = q
+                break
+    if p is None and blk.get("protocol"):
+        ver = str(blk["protocol"]).rsplit("_V", 1)[-1]
+        q = HERE / "declarations" / f"de_multiday_gate1_params_v{ver}.json"
+        p = q if q.is_file() else None
+    if p is None:
+        return {"named_by_the_receipt": True, "path_named": name,
+                "protocol_named": blk.get("protocol"),
+                "status": "PROVENANCE_INCOMPLETE_PARAMS_UNRESOLVED",
+                "matches": None,
+                "why": ("the receipt names a params declaration this "
+                        "worktree cannot resolve. Verifying against a "
+                        "DIFFERENT declaration would be the round-74 error "
+                        "again: a verdict about bars the receipt never ran "
+                        "under")}
+    sha = hashlib.sha256(p.read_bytes()).hexdigest()
+    declared = blk.get("sha256")
+    return {"named_by_the_receipt": True, "path": p.name, "sha256": sha,
+            "sha256_declared": declared,
+            "protocol": json.loads(p.read_text()).get("protocol"),
+            "status": ("PARAMS_VERIFIED" if (declared is None or sha == declared)
+                       else "PARAMS_DIGEST_MISMATCH"),
+            "matches": (True if declared is None else sha == declared),
+            "digest_was_declared": declared is not None,
+            "why": ("the digest of the params file the RECEIPT names, "
+                    "against the digest the receipt declares -- not against "
+                    "a constant here and not against whatever is newest")}
+
+
 def design_check(receipt: dict, params: dict) -> dict:
     """The design declaration, READ FROM THE RECEIPT and verified at the file
     it names.
@@ -2158,7 +2340,8 @@ def _sealed_de_shape_receipt(d: Path, arms_payload: dict, book_sha: str, *,
                              name: str = "sealed_de.json",
                              leak: tuple | None = None,
                              shape: str = "v13",
-                             design: dict | None = None) -> Path:
+                             design: dict | None = None,
+                             params_block: dict | None = None) -> Path:
     """A receipt in DE's OWN emitted shape: per-day arm blocks in a LIST,
     each with `admissibility`, `draw_provenance.book_digest`, `seed`, and
     the economic fields STRIPPED at every depth."""
@@ -2200,6 +2383,8 @@ def _sealed_de_shape_receipt(d: Path, arms_payload: dict, book_sha: str, *,
             "receipt_shape_for_the_fixture": shape}
     if design:
         body["design_declaration"] = design
+    if params_block:
+        body["params_declaration"] = params_block
     p.write_text(json.dumps(body))
     return p
 
@@ -2250,7 +2435,13 @@ def selftest_pre_read() -> list:                              # noqa: C901
         design = {"path": dsn[-1].name,
                   "sha256": hashlib.sha256(dsn[-1].read_bytes()).hexdigest(),
                   "protocol": "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION"}
-    spath = _sealed_de_shape_receipt(td, payload, bsha, design=design)
+    #: a real DE receipt NAMES the params it ran under; the fixture's does
+    #: too, so REV 51 section 2.6's binding has something to verify.
+    pblock = {"path": Path(params["_path"]).name,
+              "sha256": params["_sha256"],
+              "protocol": params.get("protocol")}
+    spath = _sealed_de_shape_receipt(td, payload, bsha, design=design,
+                                     params_block=pblock)
 
     # -- A. it RUNS BEFORE THE BAR and verifies ---------------------------
     pre = pre_read_day("2026-09-03", str(bpath), str(spath),
@@ -2345,6 +2536,7 @@ def selftest_pre_read() -> list:                              # noqa: C901
     # -- G. A LEAKED ECONOMIC FIELD IS FLAGGED WITHOUT ECHOING ITS VALUE --
     leak_val = float(payload[sorted(payload)[0]]["economic"]["D_E0"])
     lp = _sealed_de_shape_receipt(td, payload, bsha, name="sealed_leak.json",
+                                  design=design, params_block=pblock,
                                   leak=(sorted(payload)[0], "D_E0",
                                         leak_val))
     pl = pre_read_day("2026-09-03", str(bpath), str(lp), params=params,
@@ -2427,7 +2619,8 @@ def selftest_pre_read() -> list:                              # noqa: C901
 
     # -- G3. REV 49 section 2.5: THE iff FIRES AND ADMITS -----------------
     v12 = _sealed_de_shape_receipt(td, payload, bsha, name="sealed_v12.json",
-                                   shape="v12", design=design)
+                                   shape="v12", design=design,
+                                   params_block=pblock)
     p12 = pre_read_day("2026-09-03", str(bpath), str(v12), params=params,
                        now=BAR_BEFORE)
     a12 = p12["arms"][sorted(params["arms"])[0]]["sd_over_abs_mean_consistency"]
@@ -2495,6 +2688,50 @@ def selftest_pre_read() -> list:                              # noqa: C901
        "book digest mismatch" in why and bsha[:16] in why,
        f"'{why[:96]}...'")
 
+    # -- H1b. REV 51 section 2.6: THE PARAMS PIN IS BOUND TO THE RECEIPT --
+    pn = pre["provenance"]["params_named_by_the_receipt"]
+    r_nop = json.loads(spath.read_text())
+    r_nop.pop("params_declaration", None)
+    nop = td / "sealed_no_params.json"
+    nop.write_text(json.dumps(r_nop))
+    p_nop = pre_read_day("2026-09-03", str(bpath), str(nop), params=P,
+                         now=BAR_BEFORE)
+    r_unr = json.loads(spath.read_text())
+    r_unr["params_declaration"] = {"path": "de_multiday_gate1_params_v999.json",
+                                   "sha256": "0" * 64,
+                                   "protocol": "P003_..._V999"}
+    unr = td / "sealed_params_unresolved.json"
+    unr.write_text(json.dumps(r_unr))
+    p_unr = pre_read_day("2026-09-03", str(bpath), str(unr), params=P,
+                         now=BAR_BEFORE)
+    ck("REV 51 section 2.6 CLOSED ON THE PARAMS PIN TOO: the design pin was "
+       "bound to the receipt and TWO LINES AWAY the params pin was a "
+       "constant. Round 74 made it newest-present, which is still this "
+       "verifier CHOOSING -- ***the newest is not what ran***. The RECEIPT "
+       "names its params now and the file it names is verified",
+       pn["named_by_the_receipt"] is True
+       and pn["status"] == "PARAMS_VERIFIED" and pn["matches"] is True
+       and pn["digest_was_declared"] is True,
+       f"the receipt names {pn['path']} ({pn['protocol']}) and declares its "
+       f"digest; verified {pn['sha256'][:16]}")
+    ck("AND BOTH GAPS ARE INCOMPLETE, NEVER A FALLBACK: a receipt naming NO "
+       "params is PROVENANCE_INCOMPLETE_NO_PARAMS_NAMED, and one naming a "
+       "params file this worktree cannot resolve is "
+       "PROVENANCE_INCOMPLETE_PARAMS_UNRESOLVED -- verifying against a "
+       "DIFFERENT declaration would be a verdict about bars the receipt "
+       "never ran under",
+       p_nop["provenance"]["params_named_by_the_receipt"]["status"]
+       == "PROVENANCE_INCOMPLETE_NO_PARAMS_NAMED"
+       and p_nop["status"] == "PROVENANCE_INCOMPLETE"
+       and p_unr["provenance"]["params_named_by_the_receipt"]["status"]
+       == "PROVENANCE_INCOMPLETE_PARAMS_UNRESOLVED"
+       and p_unr["status"] == "PROVENANCE_INCOMPLETE"
+       and p_nop["n_arms_agreeing"] == len(P["arms"]),
+       f"unnamed -> {p_nop['status']}; unresolvable -> {p_unr['status']}; "
+       f"both with every arm still agreeing "
+       f"({p_nop['n_arms_agreeing']}/{p_nop['n_arms_declared']}) -- a GAP, "
+       f"not a defect")
+
     # -- H2. R-604: THE READ BAR IS A CONJUNCTION, READ BY NAME ----------
     #: a params file WITHOUT the field must REFUSE, never fall back.
     thin = td / "params_no_read_gate.json"
@@ -2559,6 +2796,152 @@ def selftest_pre_read() -> list:                              # noqa: C901
            f"an unrecognised conjunct -> "
            f"{len(pred_grown['conjuncts_not_evaluable'])} unevaluable, gate "
            f"open={pred_grown['open']}")
+
+    # -- H2b. R-604/REV 51: PARAMS v8's EIGHT CONJUNCTS, BOUND BY ID -----
+    V8_IDS = ["params_field_required", "clock_ge_read_not_before",
+              "six_ruled_days_from_params", "receipt_at_landing_digest",
+              "at_least_one_admissible_arm", "ledger_verdict",
+              "producing_code_locatable", "horizon_fallback_G5_directional"]
+    d8 = td / "v8"
+    d8.mkdir(exist_ok=True)
+    p8 = json.loads(json.dumps({k: v for k, v in params.items()
+                                if not k.startswith("_")}))
+    p8["protocol"] = "P003_DE_MULTIDAY_GATE1_PARAMS_V8_FIXTURE"
+    p8[READ_GATE_FIELD] = {
+        CONJUNCTION_FIELD: [{"id": i, "text": f"conjunct {i}"}
+                            for i in V8_IDS],
+        "horizon_utc": "2026-09-09T12:00:00Z",
+        "horizon_fallback": {"G": 5, "reading": "directional"},
+    }
+    p8["_path"], p8["_sha256"] = str(td / "p8.json"), "0" * 64
+    pred8 = read_gate_predicate(p8, BAR_BEFORE, derived=d8)
+    bound = [c for c in pred8["conjuncts"] if c.get("binding") == "bound by ID"]
+    ck("R-604 / REV 51 -- ALL EIGHT OF PARAMS v8's CONJUNCTS ARE BOUND BY "
+       "STABLE ID, not by matching prose. `matched some words` and `is this "
+       "conjunct` are different claims, and the binding route is RECORDED "
+       "per conjunct so a reader knows which was made",
+       len(pred8["conjuncts"]) == 8 and len(bound) == 8
+       and not pred8["conjuncts_not_evaluable"]
+       and sorted(c["id"] for c in bound) == sorted(V8_IDS),
+       f"{len(bound)} of {len(pred8['conjuncts'])} bound by ID, 0 "
+       f"unevaluable; ids {sorted(c['id'] for c in bound)[:3]}...")
+    ck("AND EVERY CONJUNCT IS EVALUATED, WITH THE FAILING ONES NAMED: on an "
+       "empty ledger the artifact conjuncts fail by name while "
+       "`params_field_required` holds -- reaching the evaluator IS that "
+       "conjunct holding, because a missing field REFUSES before any "
+       "conjunct runs",
+       pred8["open"] is False
+       and set(pred8["failing_conjuncts_by_name"]) >= {
+           "every_ruled_day_has_exactly_one_sealed_receipt",
+           "every_sealed_receipt_matches_its_LANDING_RECORD",
+           "every_day_has_at_least_one_admissible_arm",
+           "the_ledger_verdict_stands_for_every_day",
+           "every_receipt_names_locatable_producing_code"}
+       and any(c["evaluator"] == "the_params_field_is_present"
+               and c["holds"] is True for c in pred8["conjuncts"]),
+       f"{pred8['n_holding']} of 8 hold on an empty ledger; failing by name "
+       f"{sorted(pred8['failing_conjuncts_by_name'])[:3]}...")
+    unknown = json.loads(json.dumps(p8))
+    unknown[READ_GATE_FIELD][CONJUNCTION_FIELD].append(
+        {"id": "some_id_this_verifier_has_never_heard_of", "text": "x"})
+    unknown["_path"], unknown["_sha256"] = p8["_path"], p8["_sha256"]
+    pu = read_gate_predicate(unknown, BAR_AFTER, derived=d8)
+    ck("KNOWN-BAD: AN ID THIS VERIFIER IS NOT BOUND TO CLOSES THE GATE, and "
+       "the route says so -- ID NOT IN THIS VERIFIER'S MAP. DE renaming or "
+       "adding a conjunct cannot widen what is silently accepted",
+       len(pu["conjuncts_not_evaluable"]) == 1
+       and pu["open"] is False
+       and any(c.get("binding") == "ID NOT IN THIS VERIFIER'S MAP"
+               for c in pu["conjuncts"]),
+       f"an unknown id -> {len(pu['conjuncts_not_evaluable'])} unevaluable, "
+       f"gate open={pu['open']}")
+
+    # -- H2c. THE HORIZON NAMES G = 5 AND NEVER APPLIES IT SILENTLY ------
+    #: BAR_AFTER (09-10) is already PAST the declared horizon, so "inside
+    #: the horizon" needs a clock between the read bar (09-09T00:06Z) and
+    #: the horizon (09-09T12:00Z). The first version of this check used
+    #: BAR_AFTER for both sides and failed -- correctly.
+    inside_h = datetime.datetime(2026, 9, 9, 6, 0,
+                                 tzinfo=datetime.timezone.utc)
+    past_h = datetime.datetime(2026, 9, 10, tzinfo=datetime.timezone.utc)
+    pre_h = read_gate_predicate(p8, inside_h, derived=d8)
+    post_h = read_gate_predicate(p8, past_h, derived=d8)
+    hz_a = next(c for c in pre_h["conjuncts"]
+                if c["evaluator"] == "clock_at_or_before_horizon")
+    hz_b = next(c for c in post_h["conjuncts"]
+                if c["evaluator"] == "clock_at_or_before_horizon")
+    ck("REV 51 (b) -- THE HORIZON IS EVALUATED AGAINST THE CLOCK AND ITS "
+       "FALLBACK IS NAMED, NEVER APPLIED SILENTLY: inside the horizon it "
+       "HOLDS; past it, it fails and the receipt states the declared "
+       "outcome -- G = 5, DIRECTIONAL. ***That is a different claim from the "
+       "six-day test, and taking it is the coordinator's act***",
+       hz_a["holds"] is True and hz_a["horizon_passed"] is False
+       and hz_b["holds"] is False and hz_b["horizon_passed"] is True
+       and hz_b["THE_FALLBACK_OUTCOME_IF_IT_PASSES"]["G"] == 5
+       and hz_b["THE_FALLBACK_OUTCOME_IF_IT_PASSES"]["applies_now"] is True
+       and hz_a["THE_FALLBACK_OUTCOME_IF_IT_PASSES"]["applies_now"] is False,
+       f"horizon {hz_a['horizon']}: inside -> holds; past it -> fails with "
+       f"the fallback named G="
+       f"{hz_b['THE_FALLBACK_OUTCOME_IF_IT_PASSES']['G']} "
+       f"{hz_b['THE_FALLBACK_OUTCOME_IF_IT_PASSES']['reading']}")
+
+    # -- H2d. REV 51 (a): THE CHAIN HEAD, AND AN UNCHAINED PAIR REFUSES ---
+    def _mk(day, name, sup=None, admissible=True):
+        b = {"day": day, "per_day_sealed_artifacts": [
+            {"arm": "A", "day": day, "status": "OK",
+             "admissibility": {"admissible": admissible, "n_decisions": 50},
+             "draw_provenance": {"seed": 1}, "runner_sha256": "a" * 64,
+             "carrying_commit": "HEAD"}]}
+        if sup:
+            b["supersedes"] = {"path": sup}
+        (d8 / name).write_text(json.dumps(b))
+        return d8 / name
+    D = "20260903"
+    one = _mk(D, f"p003_de_gate1_day_run_{D}_SEALED__A.json")
+    pred_one = read_gate_predicate(p8, BAR_AFTER, derived=d8)
+    st_one = next(c for c in pred_one["conjuncts"]
+                  if c["evaluator"]
+                  == "every_ruled_day_has_exactly_one_sealed_receipt"
+                  )["per_day"][D]
+    two = _mk(D, f"p003_de_gate1_day_run_{D}_SEALED__B.json",
+              sup=one.name)
+    pred_ch = read_gate_predicate(p8, BAR_AFTER, derived=d8)
+    st_ch = next(c for c in pred_ch["conjuncts"]
+                 if c["evaluator"]
+                 == "every_ruled_day_has_exactly_one_sealed_receipt"
+                 )["per_day"][D]
+    _mk(D, f"p003_de_gate1_day_run_{D}_SEALED__C.json")
+    pred_am = read_gate_predicate(p8, BAR_AFTER, derived=d8)
+    st_am = next(c for c in pred_am["conjuncts"]
+                 if c["evaluator"]
+                 == "every_ruled_day_has_exactly_one_sealed_receipt"
+                 )["per_day"][D]
+    ck("REV 51 (a) -- THE SUPERSEDES CHAIN IS FOLLOWED AND AN UNCHAINED PAIR "
+       "REFUSES: one receipt resolves; a v1 plus a CHAINED v2 resolves to "
+       "the HEAD; a third with NO link makes the day AMBIGUOUS. ***Picking "
+       "the newest by mtime would resolve an ambiguous pair silently, and a "
+       "day that ran twice is not a day that ran***",
+       st_one["status"] == "ONE" and st_one["resolves"] is True
+       and st_ch["status"] == "CHAIN_HEAD" and st_ch["resolves"] is True
+       and st_ch["head"] == two.name
+       and st_am["status"] == "AMBIGUOUS" and st_am["resolves"] is False,
+       f"one -> {st_one['status']}; chained pair -> {st_ch['status']} at "
+       f"{st_ch['head']}; unchained third -> {st_am['status']}")
+    ck("AND THE LANDING DIGEST IS THE CHAIN HEAD'S, not the superseded "
+       "one's -- the head is what a read would use, so a v1 whose v2 "
+       "supersedes it is not the artifact under test",
+       "CHAIN_HEAD" in json.dumps(
+           next(c for c in pred_ch["conjuncts"]
+                if c["evaluator"]
+                == "every_sealed_receipt_matches_its_LANDING_RECORD"
+                )["per_day"][D])
+       and "chain HEAD" in next(
+           c for c in pred_ch["conjuncts"]
+           if c["evaluator"]
+           == "every_sealed_receipt_matches_its_LANDING_RECORD"
+           )["the_digest_is_the_CHAIN_HEADS"],
+       f"the landing conjunct resolves {D} through the chain to "
+       f"{st_ch['head']}")
 
     # -- H3. THE PRE-READ IS THE DECLARED LANDING RECORD ------------------
     ck("REV 50 section 3.3 item 3 -- THE PRE-READ ARTIFACT IS THE DECLARED "

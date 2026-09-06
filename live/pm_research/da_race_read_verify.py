@@ -850,8 +850,38 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
             f"gate: there is no clock here and no flag, because an "
             f"instrument that could be TOLD the read had happened would be a "
             f"way of asserting it had.")
-    art = json.loads(ap.read_bytes())
-    pins = json.loads(Path(pins_path).read_bytes())
+    #: REV 49 section 3.4, THE CASE AS FILED. Every input this path reads
+    #: is checked BY NAME before it is parsed. The artifact's absence was
+    #: already named; the PINS were not, and an absent or unreadable pins
+    #: file died with a bare FileNotFoundError from `json.loads` -- a
+    #: generic refusal standing in front of an informative one, on the CLI
+    #: path where the coordinator will meet it.
+    pp = Path(pins_path)
+    if not pp.is_file():
+        raise RaceVerifyRefused(
+            f"REFUSED: PINS_DECLARATION_ABSENT — no pins declaration at "
+            f"{pins_path}. The pins are what say WHICH bytes the read was "
+            f"pinned to; without them there is nothing to verify a feed "
+            f"against, and a recompute over unpinned bytes is not a check.")
+    try:
+        art = json.loads(ap.read_bytes())
+    except json.JSONDecodeError as e:
+        raise RaceVerifyRefused(
+            f"REFUSED: READ_ARTIFACT_UNREADABLE — {ap.name} is not readable "
+            f"JSON ({e.msg} at line {e.lineno}). An artifact this verifier "
+            f"cannot parse is not one it may report on.")
+    try:
+        pins = json.loads(pp.read_bytes())
+    except json.JSONDecodeError as e:
+        raise RaceVerifyRefused(
+            f"REFUSED: PINS_DECLARATION_UNREADABLE — {pp.name} is not "
+            f"readable JSON ({e.msg} at line {e.lineno}).")
+    if not isinstance(pins.get("per_day"), dict) or not pins["per_day"]:
+        raise RaceVerifyRefused(
+            f"REFUSED: PINS_DECLARATION_CARRIES_NO_DAYS — {pp.name} has no "
+            f"`per_day` block. An empty pin set would make every day "
+            f"vacuously said, which is the silence REV 49 section 3.3 "
+            f"closed arriving through the pins instead of the artifact.")
     per_day_pins = pins["per_day"]
 
     readable = sorted(d for d, v in per_day_pins.items() if v.get("exists"))
@@ -1266,6 +1296,43 @@ def selftest_real() -> list:                                  # noqa: C901
        "PINNED_FEED_ABSENT" in why_abs and "GENERIC" not in why_abs
        and "not on disk" in why_abs,
        f"'{why_abs[:112]}...'")
+
+    # -- 5d. REV 49 section 3.4 AS FILED: DRIVEN FROM THE CLI ------------
+    import subprocess as _sp
+    MOD = str(Path(__file__).resolve())
+    def _cli(*a):
+        r = _sp.run([sys.executable, MOD, "--real", *a],
+                    capture_output=True, text=True)
+        return r.returncode, (r.stdout + r.stderr)
+    rc_pins, out_pins = _cli("--read-artifact", str(art_p),
+                             "--pins", str(td / "no_such_pins.json"))
+    bad_json = td / "bad_pins.json"
+    bad_json.write_text("{ not json")
+    rc_bad, out_bad = _cli("--read-artifact", str(art_p),
+                           "--pins", str(bad_json))
+    empty_pins = td / "empty_pins.json"
+    empty_pins.write_text(json.dumps({"per_day": {}}))
+    rc_empty, out_empty = _cli("--read-artifact", str(art_p),
+                               "--pins", str(empty_pins))
+    rc_ok, out_ok = _cli("--read-artifact", str(art_p), "--pins", str(pins_p))
+    ck("REV 49 section 3.4 CLOSED AS FILED -- AND DRIVEN FROM THE CLI, which "
+       "is where the coordinator meets it. An absent PINS file died with a "
+       "bare FileNotFoundError traceback: a generic refusal standing in "
+       "front of an informative one. ***Round 73 closed a DIFFERENT case "
+       "(the pinned feed inside `verify_real_read`) and reported it as this "
+       "one.*** Every CLI input now refuses BY NAME with exit 2",
+       rc_pins == 2 and "PINS_DECLARATION_ABSENT" in out_pins
+       and "Traceback" not in out_pins
+       and rc_bad == 2 and "PINS_DECLARATION_UNREADABLE" in out_bad
+       and "Traceback" not in out_bad
+       and rc_empty == 2 and "PINS_DECLARATION_CARRIES_NO_DAYS" in out_empty,
+       f"absent pins -> rc {rc_pins} PINS_DECLARATION_ABSENT; unreadable -> "
+       f"rc {rc_bad}; empty -> rc {rc_empty}; no traceback in any")
+    ck("AND THE POSITIVE CONTROL FROM THE SAME CLI: a good invocation still "
+       "runs and VERIFIES with exit 0 -- the by-name refusals are reachable "
+       "without making the path a wall",
+       rc_ok == 0 and "VERIFIED" in out_ok and "Traceback" not in out_ok,
+       f"rc {rc_ok}: '{out_ok.strip().splitlines()[-1][:88]}'")
 
     # -- 6. THE FLOORS, re-derived ----------------------------------------
     f3 = da_floors(3)
