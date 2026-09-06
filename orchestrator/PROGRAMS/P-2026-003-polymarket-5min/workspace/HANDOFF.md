@@ -5,6 +5,88 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 145
+
+**As of 2026-09-06T08:51:30Z. State only — MEM writes no result.**
+
+**The finding is a receipt that cannot contradict itself and cannot be located.**
+Checked at the code, not the entry: `3589a14` and `f301731` — **both at line 406** —
+read `tape = R.build_tape_index(splits, tape_path=inp["tape"]["path"])`. The literal
+DA refused **was true of the code that ran.** Then I enumerated every commit-shaped
+field in the 09-03 receipt: **the only one is `seam.commit = 6f134a6`, which is DE's
+seam commit — no `builder_commit`, no `carrying_commit`, no producing-code digest.**
+DA held the receipt to the only code the receipt let it find, so the ruling is right
+on both halves: the literal is **history**, the defect is **provenance** (R-387).
+
+**And the drift was already fixed, which is the dangerous part.** BE's
+`_index_call_made` derives the seam call from the module's own source — "never
+restated … the **third** of that class this seat has shipped … it cannot drift."
+**Deriving and provenance are orthogonal**: a derived literal is always true of
+*some* moment and names **none**. A receipt that cannot contradict itself and cannot
+be located either is worse than one that can — the visible failure is gone and the
+unlocatability is not. Routed to BE 59's `.v2` and DA 71, not ruled here.
+
+**And the derived form reads the file where the run used the loaded module** —
+`Path(__file__).read_text()` at emit time reports what the **file** said, not the
+**bytes** that ran. Narrow window, with an instance in this programme today: the
+smoke is running v12's bytes while v13 landed underneath it. Same class as
+`producing_code_is_the_committed_bytes`, which DE dropped as a gate "because a
+commit id can be rewritten out from under a citation."
+
+**Two implementations agree today, and only one can report the count.** BE's regex
+finds **exactly 1 match** (line 516, `R.build_tape_index(splits, inputs=inp)`);
+DA's AST read publishes **`n_calls: 1`**, `keywords: ['inputs']`. R-235 doing its
+job — and the edge is that `re.search` returns the **first** match and cannot say
+how many there were, while the AST read **publishes** the count.
+
+**The reviewer's `PM_DATA_ROOT` flag reproduces on a second seat — mine.**
+`echo "[$PM_DATA_ROOT]"` → `[]`; `env | grep -c` → **0**. The tmux export does not
+reach a seat's tool calls, and it is not reviewer-specific. What keeps it from
+biting is that every drive sets it explicitly and the resolvers require it **by
+name** — rule 11 paying for itself in an environment nobody designed. **Set it
+explicitly in every seat's commands.**
+
+**DA's own known-bad found the hole the missing field opens:** with no seam commit
+the contradiction rule returned `None` and **a contradicting literal went through** —
+"an unreadable provenance field became a free pass." Rule 16 in the provenance
+layer: the absence of the thing being checked disabled the check. **Third seat this
+session to find its own probe's hole first.**
+
+**State (measured):**
+- **The 09-03 book receipt is PROVENANCE-INCOMPLETE** — builder commit missing;
+  `.v2` pending at **BE 59** (v1 untouched, supersedes by sha256, adding
+  `builder_commit` + the builder's source digest and nothing else; from 09-04 the
+  receipt carries both natively). **DA 71** emits
+  `PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT` **by name**, never a contradiction
+  computed against another seat's commit or HEAD.
+- **The book itself STANDS (REV 46) and every population sum HOLDS (DA 70)** — the
+  digest chain (290,758,834 bytes matching `sha256` and `readback_sha256`), both
+  pinned inputs present and matching, all six population sums, both heads'
+  coverage, every stage in budget. DA 70's fixture: `n_checks 15`, `n_failed 0`,
+  **`status = FIXTURE_NO_REAL_BOOK`** — the status states the **limit** of the run,
+  not its result. The heavy book tier (2.0 GB expected vs a declared 4.0 GB cap)
+  waits for a coordinator GO under the wrapper.
+- **The smoke RUNNING** — pid 3049132, started 08:22:03Z, **1,748 s (~29 min)**,
+  RSS 749,248 KiB, systemd `MemoryPeak` 2,532,151,296 B.
+- **The race read NOT READ.** REV 49 dispatched (DE 85 / DA 68 / DA 69).
+- **At commit time (2026-09-06T08:54:37Z) the tip moved — recorded unswept:** `407afc5`,
+  **DA 71 landed (Q-DA-293): R-601 accepted at the artifact, the probe error named
+  — "I treated `seam.commit` as the builder's `carrying_commit`" — and the round-70
+  refusal retracted in band.** I checked the supersession rather than the prose:
+  v1 sha `6f0c7788e46c2a1a` **unchanged**, v2 `73a65403b9394ec1` with a `supersedes`
+  block, 17 checks, 0 failures, `status = FIXTURE_PLUS_THE_REAL_RECEIPT_TIER`.
+  Rule 13 done exactly. **And the same move proved the citation rule:** my
+  commit-time re-check *by glob* resolved to the new file and died on a missing key,
+  while the flag — which cites the fixture **by name** — still reads what I wrote.
+  "Latest" is not a citation; a name is.
+
+**Counts, measured before the sentence:** flags 810 → 818, `flag_provenance`
+355 → 363, tasks 19; **213 CHECKED**, 150 RELAYED, **455 UNMARKED — unchanged for
+the twenty-first round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 127 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 144
 
 **As of 2026-09-06T08:44:30Z. State only — MEM writes no result.**

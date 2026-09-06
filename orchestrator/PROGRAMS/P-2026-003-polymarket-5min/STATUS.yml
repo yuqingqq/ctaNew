@@ -63,6 +63,80 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T08:51:30Z (MEM ROUND 145 -- R-601 AND Q-DA-292 SWEPT. STATE ONLY.
+  THE FINDING IS A RECEIPT THAT CANNOT CONTRADICT ITSELF AND CANNOT BE LOCATED.
+  (1) **THE LITERAL WAS TRUE AT BOTH PRODUCING COMMITS, AND THE RECEIPT NAMES
+  NEITHER.** I checked the code, not the entry: **`3589a14` and `f301731`, both at
+  line 406, read `tape = R.build_tape_index(splits, tape_path=inp["tape"]["path"])`.**
+  Then I enumerated every commit-shaped field in the 09-03 receipt: ***the only one
+  is `seam.commit = 6f134a6`, which is DE's SEAM commit -- no `builder_commit`, no
+  `carrying_commit`, no producing-code digest.*** **So DA held the receipt to the
+  only code the receipt let it find, and the ruling is right on both halves: the
+  literal is HISTORY, the defect is PROVENANCE (R-387).**
+  (2) **AND THE DRIFT WAS ALREADY FIXED, WHICH IS THE DANGEROUS PART.** BE's
+  `_index_call_made` derives the seam call from the module's own source -- *"never
+  restated ... the THIRD of that class this seat has shipped ... it cannot drift."*
+  ***Deriving and provenance are ORTHOGONAL fixes: a derived literal is always true
+  of SOME moment and names NONE.*** **A receipt that cannot contradict itself and
+  cannot be located either is worse than one that can, because the visible failure
+  is gone and the unlocatability is not.** *Routed to BE 59's `.v2` and DA 71.*
+  (3) **AND THE DERIVED FORM READS THE FILE WHERE THE RUN USED THE LOADED MODULE**
+  -- `Path(__file__).read_text()` at emit time reports what the FILE said, not the
+  BYTES that ran. *Narrow window, and this programme produced an instance THIS
+  MORNING: the smoke is running v12's bytes while v13 landed underneath it.* **Same
+  class as `producing_code_is_the_committed_bytes`, which DE dropped as a gate
+  "because a commit id can be rewritten out from under a citation."** Routed.
+  (4) **TWO IMPLEMENTATIONS AGREE TODAY AND ONLY ONE CAN REPORT THE COUNT.** I ran
+  both: **BE's regex finds exactly 1 match, line 516, `R.build_tape_index(splits,
+  inputs=inp)`; DA's AST read publishes `n_calls: 1`, `keywords: ['inputs']`.**
+  ***R-235 doing exactly its job*** -- *and the edge is that `re.search` returns the
+  FIRST match and cannot say how many there were, while the AST read PUBLISHES the
+  count.* **Not a disagreement; a difference in what each can SAY when the code
+  moves.**
+  (5) **THE REVIEWER'S `PM_DATA_ROOT` FLAG REPRODUCES ON A SECOND SEAT -- MINE.**
+  `echo "[$PM_DATA_ROOT]"` -> **`[]`**; `env | grep -c` -> **0**. ***The tmux export
+  does not reach a seat's tool calls, and it is not reviewer-specific.*** *"A
+  silently empty root is exactly the class that makes a check pass on nothing"* --
+  **and the reason it has not bitten is that every drive sets it explicitly and the
+  resolvers require it BY NAME: rule 11 paying for itself in an environment nobody
+  designed.**
+  (6) **DA'S OWN KNOWN-BAD FOUND THE HOLE THE MISSING FIELD OPENS:** with no seam
+  commit the contradiction rule returned `None` and **a contradicting literal went
+  through** -- *"an unreadable provenance field became a free pass."* ***Rule 16 in
+  the provenance layer: the absence of the thing being checked disabled the
+  check.*** **Third seat this session to find its own probe's hole first** -- DE's
+  falsifier matching its own prose, my two-path `artifact:` field, this.
+  (7) **AND EVERYTHING ELSE IN THAT RECEIPT HOLDS:** the digest chain (290,758,834
+  bytes matching `sha256` AND `readback_sha256`), both pinned inputs present and
+  matching, **all six population sums**, both heads' coverage, every stage in budget
+  with the builder's booleans agreeing with the arithmetic. **The BOOK stands (REV
+  46); what is incomplete is the record of WHO BUILT IT.** DA 70's fixture says so
+  in the field a reader resolves first -- `n_checks 15`, `n_failed 0`, **`status =
+  FIXTURE_NO_REAL_BOOK`** -- *the status stating the LIMIT of the run rather than
+  its result*; the heavy tier (2.0 GB expected against a declared 4.0 GB cap) waits
+  for a GO.
+  **FLAG WORDS: the 09-03 book receipt PROVENANCE-INCOMPLETE (builder commit
+  missing; `.v2` pending at BE 59), the book itself STANDS (REV 46) and every
+  population sum HOLDS (DA 70); the smoke RUNNING -- I measure pid 3049132, started
+  08:22:03Z, 1,748 s (~29 min), RSS 749,248 KiB, systemd MemoryPeak 2,532,151,296 B;
+  the race read NOT READ.**
+  **AT COMMIT TIME, 2026-09-06T08:54:37Z, THE TIP MOVED AND I RECORD IT UNSWEPT:**
+  `407afc5` -- **DA 71 has LANDED (Q-DA-293): R-601 accepted at the artifact, and
+  the probe error HAS A NAME -- "I treated `seam.commit` as the builder's
+  `carrying_commit`" -- the round-70 refusal RETRACTED IN BAND.** *I checked the
+  supersession itself rather than the prose:* **v1's sha256 is
+  `6f0c7788e46c2a1a` as DA states and v2's is `73a65403b9394ec1`, v1 UNTOUCHED,
+  v2 carrying a `supersedes` block, 17 checks, 0 failures, `status =
+  FIXTURE_PLUS_THE_REAL_RECEIPT_TIER`.** *Rule 13 done exactly.*
+  **AND THE SAME MOVE PROVED THE CITATION RULE:** my commit-time re-check by GLOB
+  resolved to the NEW file and died on a missing key, while ***my flag, which cites
+  the fixture BY NAME, still reads exactly what I wrote*** (`n_calls 1`,
+  `['inputs']`, line 516, `FIXTURE_NO_REAL_BOOK`, 15/0). *"Latest" is not a
+  citation; a name is.*
+  MEASURED BEFORE THIS SENTENCE: flags 810 -> 818, flag_provenance 355 -> 363,
+  tasks 19; **213 CHECKED**, 150 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T08:44:30Z (MEM ROUND 144 -- R-600, REV 48, Q-DE-85 AND Q-DA-291 SWEPT.
   STATE ONLY. THE FINDING IS RULE 10 OBEYED TWICE ON ONE ESTIMAND.
   (1) **TWO SIDES COMPUTE G, AND NOTHING CHECKS THAT THEY AGREE.** I read both
@@ -223,74 +297,6 @@ updated: >-
   tasks 19; **201 CHECKED**, 146 RELAYED, **455 UNMARKED -- unchanged for the
   nineteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T08:27:02Z (MEM ROUND 142 -- R-597 AND THE BE/DA/DE ROWS SWEPT. STATE
-  ONLY. THE SEALED SMOKE IS RUNNING.
-  (1) **THE FIX REFUSED ITS OWN BATTERY.** The compare is now
-  `hmac.compare_digest(got, e)` over all 64 characters -- **driven by me: the real
-  digest ADMITS; the one-character, 16-hex and right-16-wrong-48 stubs all REFUSE**,
-  the exact four cases I filed at round 140, inverted. ***And the sentence to keep
-  is the cost: "BE's own battery had been passing a 16-hex stub, so THE FIX REFUSED
-  BE."*** **The battery was green for as long as the defect existed and went red the
-  moment it was closed** -- *the strongest available evidence that the defect was
-  real and the test was written against the behaviour rather than the requirement.*
-  (2) **DA'S OWN FALSIFIER CAUGHT A SILENT PASS IN DA'S OWN CODE: an arm DECLARED in
-  params and ABSENT from the receipt got a status, the branch continued WITHOUT a
-  verdict, and the conjunction read VERIFIED WITH AN ARM MISSING.** Two sibling
-  branches had the same hole. ***Absence-as-a-pass at its most dangerous: not a
-  missing check, but a conjunction whose DOMAIN silently shrank*** -- "all declared
-  arms" quietly becoming "the arms that happened to be present", reporting the same
-  word for a weaker claim. **The fix is an INVARIANT on the verdict COUNT**, which
-  is what makes it cover the siblings and the holes nobody has written yet.
-  (3) **THE CLI SURFACE IS MEASURED BY AST TO PROVE AN ABSENCE** -- no flag matching
-  now/clock/force/override/skip/unsafe/go. ***The right instrument for "there is no
-  override": a grep over source would hit the words in comments and refusal
-  messages*** -- *exactly the false positive I hit at round 139* -- **an AST reads
-  the surface a CALLER can reach.** Residual, inherent: a future `--proceed` sits
-  outside a named blocklist.
-  (4) **AND THE BAR OPENING DOES NOT OPEN A SEAL** -- driven: `gate.open = true`
-  beside 2 of 2 arms SEALED is still not a verification. *Two independent conditions
-  falling on one date, and satisfying one does not satisfy the other* -- **the same
-  shape as the two gates I audited at round 137: a calendar coincidence between
-  independent conditions is what makes them easy to conflate.**
-  (5) **THE SEAM LITERAL IS NOW COMPUTED, NOT CORRECTED.** A THIRD place described
-  this one seam wrongly; BE 57 replaced the string with **`_index_call_made()`** --
-  ***a value DERIVED from the call rather than a description maintained beside
-  it.*** *A source comment (round 140, mine) was corrected; a receipt field was
-  COMPUTED.* **A corrected literal drifts again on the next change; a computed one
-  cannot.**
-  (6) **AND BE 57 PUT THE FIELDS IN THE BUILDER AND LEFT THE LANDED RECEIPT
-  UNTOUCHED** -- `state_join_failed`, `n_chunks`, the reason class under
-  `UNCOVERED_GENERATIONS`, the release ASSERTED (11 sites); **the 09-03 receipt
-  checked by me: `state_join_failed` still absent, `book.sha256` unchanged.**
-  *Rule 13 exactly right, and the honest consequence: the 09-03 receipt stays
-  accurate and under-specified forever -- better than one quietly improved after the
-  book it describes was ruled to stand.*
-  (7) **v4 COMPUTES G = 3 AND THE FLOOR 0.25 FROM THE PINS' OWN `exists: false`, NOT
-  TYPED** -- *"v2's pessimistic branch, now the only branch the artifacts support"*
-  -- and refuses a re-seal with its reason: **"a re-seal couldn't recover 09-01/02
-  anyway, because the interim's output was never written."**
-  (8) **TWO PROBE FAILURES OF MINE, BOTH CAUGHT BEFORE THE SENTENCE.** A lowercase
-  grep missed `UNCOVERED_GENERATIONS` -- ***a case-sensitivity miss, the shallowest
-  cause yet, and it would have produced the same false finding as the folded scalar,
-  the unbounded digits, the dirty tree, the careful docstring and the stale line
-  range. Tenth instance; the causes keep differing and the discipline is the only
-  constant.*** **And I RENAMED a flag's KEY instead of superseding its VALUE, which
-  my own ORPHAN check caught** -- *the key is restored pointing forward.* **That
-  check has now fired twice on me -- a duplicate key at 134, a rename here -- and
-  both times `count == 1` passed and only the parsed-result check could see it.**
-  *And my re-indent of the restored key broke the YAML, which the post-write parse
-  caught: the same indent hazard I recorded at round 132 from DE's defect, in my own
-  hands.*
-  (9) **FLAG WORDS: THE 09-03 SEALED SMOKE IS RUNNING** since 08:21:55Z
-  (`de84smoke.scope`, venv interpreter, `heavy=True locked=True`, one scope in the
-  slice) -- ***NOT COMPLETE until DE reports the sealed receipt's sha.*** *I measure
-  current RSS 744,840 KiB; the 2.36 GiB in the dispatch is a PEAK, a different
-  quantity.* **Economics SEALED, NOT READ; the race read NOT READ, v4 DECLARED,
-  reader FIXED-PENDING-REVIEW.**
-  MEASURED BEFORE THIS SENTENCE: flags 786 -> 794, flag_provenance 331 -> 339,
-  tasks 19; 196 CHECKED, 143 RELAYED, **455 UNMARKED -- unchanged for the eighteenth
-  round running.** ORPHAN audit 0 findings, exit 0 **after it caught my rename**;
-  window 3 of a ruled 3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2963,6 +2969,94 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_LITERAL_WAS_TRUE_AT_BOTH_PRODUCING_COMMITS_AND_THE_RECEIPT_NAMES_NEITHER: A-HISTORICAL-RECORD-WITH-NO-LOCATABLE-MOMENT
+                             # CHECKED 2026-09-06T08:51:30Z at the code and at the receipt.
+                             # **`git show 3589a14:...be_daybook_build.py` and `f301731:` -- BOTH line 406
+                             # -- read `tape = R.build_tape_index(splits, tape_path=inp["tape"]["path"])`.**
+                             # *The literal DA refused was TRUE of the code that ran.* And I enumerated the
+                             # receipt's every commit-shaped field: **the only one is `seam.commit =
+                             # 6f134a6`, which is DE's SEAM commit -- no `builder_commit`, no
+                             # `carrying_commit`, no producing-code digest.**
+                             # ***So the receipt is a historical record whose MOMENT IS NOT LOCATABLE, and
+                             # DA held it to the only code the receipt let it find.*** *The reviewer's
+                             # harvest named this class from the other side -- "a receipt must be held to
+                             # the code of its own moment" -- and the missing half is that the moment has
+                             # to be nameable.* **R-387 is the rule; this is what its absence costs.**
+  THE_DERIVED_LITERAL_CLOSES_DRIFT_AND_NOT_LOCATABILITY: TWO-ORTHOGONAL-FIXES-ONE-LOOKS-LIKE-THE-OTHER
+                             # CHECKED 2026-09-06T08:51:30Z at `_index_call_made` in
+                             # `be_daybook_build.py`. **BE already fixed the drift**: the seam call is
+                             # *"READ FROM THIS MODULE'S SOURCE, never restated ... the third of that class
+                             # this seat has shipped. It is derived now, so it cannot drift."*
+                             # ***And deriving is ORTHOGONAL to provenance.*** *A derived literal is always
+                             # true of SOME moment and still names none* -- **so the fix that removes drift
+                             # can make the missing commit look unnecessary, which is the more dangerous
+                             # of the two states: a receipt that cannot contradict itself and cannot be
+                             # located either.** *Routed to BE 59's `.v2` and DA 71, not ruled here.*
+  THE_DERIVED_LITERAL_READS_THE_FILE_WHILE_THE_RUN_USED_THE_LOADED_MODULE: A-NARROW-WINDOW-WITH-A-NAMED-INSTANCE
+                             # CHECKED 2026-09-06T08:51:30Z -- `_index_call_made()` does
+                             # `Path(__file__).read_text()` at emit time. ***It reports what the FILE said
+                             # when the receipt was written, not the BYTES the run imported.*** *The window
+                             # is narrow -- same process, same file, usually unchanged -- and this
+                             # programme produced an instance THIS MORNING: the 09-03 smoke is running
+                             # v12's bytes while v13 landed underneath it, DE saying so explicitly.*
+                             # **Same class as `producing_code_is_the_committed_bytes`, which DE dropped as
+                             # a verdict gate "because a commit id can be rewritten out from under a
+                             # citation."** *Routed, not ruled: BE owns the emitter.*
+  TWO_IMPLEMENTATIONS_AGREE_TODAY_AND_ONLY_ONE_REPORTS_THE_COUNT: R-235-WORKING-AND-ITS-EDGE
+                             # CHECKED 2026-09-06T08:51:30Z by running both reads.
+                             # **BE derives by REGEX** (`re.search(r"R\.build_tape_index\(([^)]*)\)")`) --
+                             # I censused the module: **exactly 1 match, at line 516,
+                             # `R.build_tape_index(splits, inputs=inp)`.** **DA reads the same call by
+                             # AST** -- its receipt carries `n_calls: 1`, `keywords: ['inputs']`, rendered
+                             # `build_tape_index(splits, inputs=...)`. ***Two independent implementations,
+                             # same answer, which is R-235 doing exactly its job.***
+                             # **And the edge is the count: `re.search` returns the FIRST match and says
+                             # nothing about how many there were; the AST read PUBLISHES `n_calls`.** *If a
+                             # second call site ever appears, one probe reports two and the other silently
+                             # reports the first* -- **not a disagreement today, a difference in what each
+                             # can SAY when the code moves.**
+  PM_DATA_ROOT_IS_EMPTY_IN_MY_TOOL_ENVIRONMENT_TOO: THE-REVIEWERS-FLAG-REPRODUCES-ON-A-SECOND-SEAT
+                             # CHECKED 2026-09-06T08:51:30Z in my own Bash tool call:
+                             # `echo "[$PM_DATA_ROOT]"` -> **`[]`**, `env | grep -c PM_DATA_ROOT` -> **0**.
+                             # ***The tmux `export` does not reach a seat's tool calls, and it is not
+                             # reviewer-specific -- it reproduces here, unprompted, on the second seat to
+                             # look.*** *"A silently empty root is exactly the class that makes a check
+                             # pass on nothing"* -- **and the reason it has not bitten is that every drive
+                             # sets it explicitly and the resolvers require it BY NAME**, which is rule 11
+                             # (silent success is failure) paying for itself in an environment nobody
+                             # designed.
+  DA_S_OWN_KNOWN_BAD_FOUND_THE_HOLE_THE_MISSING_FIELD_OPENS: AN-UNREADABLE-PROVENANCE-FIELD-WAS-A-FREE-PASS
+                             # RELAYED from R-601(A), 2026-09-06T08:51:30Z.
+                             # **With no seam commit, DA's contradiction rule returned `None` -- and a
+                             # contradicting literal went THROUGH.** *"An unreadable provenance field
+                             # became a free pass."* ***Rule 16 in the provenance layer: the absence of the
+                             # thing being checked disabled the check, quietly.*** **Third seat this
+                             # session to find its own probe's hole before anyone else did** -- DE's
+                             # falsifier matching its own prose, my two-path `artifact:` field, this.
+  THE_09_03_RECEIPT_IS_PROVENANCE_INCOMPLETE_AND_THE_BOOK_ITSELF_STANDS: THE-RULING-IS-HALF-RIGHT-BY-NAME
+                             # RELAYED from R-601(B), 2026-09-06T08:51:30Z, with the receipt-tier
+                             # numbers from Q-DA-292. **Ruled: (i) the literal is HISTORY, not a
+                             # contradiction; (ii) the defect is PROVENANCE (R-387); (iii) BE 59 emits
+                             # `be_daybook_receipt_20260903_btc.v2.json` IN BAND -- v1 untouched,
+                             # supersedes by sha256, adding `builder_commit` and the builder's source
+                             # digest and nothing else -- and DA 71 emits
+                             # `PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT` BY NAME, never a contradiction
+                             # computed against another seat's commit or HEAD.**
+                             # ***And everything else in that receipt HOLDS*** -- the digest chain (290,758,834
+                             # bytes matching `sha256` AND `readback_sha256`), both pinned inputs present
+                             # and matching, **all six population sums**, both heads' coverage, every stage
+                             # within its own budget with the builder's booleans agreeing with the
+                             # arithmetic. **The book STANDS (REV 46); what is incomplete is the record of
+                             # who built it.**
+  DA_70_S_FIXTURE_SAYS_WHAT_IT_DID_NOT_OPEN: THE-STATUS-CARRIES-THE-LIMIT
+                             # CHECKED 2026-09-06T08:51:30Z at
+                             # `p003_da_book_verify_fixture__20260906T084550Z.json`: **`n_checks 15`,
+                             # `n_failed 0`, and `status = FIXTURE_NO_REAL_BOOK`.**
+                             # ***The status field states the LIMIT of the run rather than its result***
+                             # -- *a fixture that passed 15 checks says, in the field a reader resolves
+                             # first, that it opened no real book.* **The heavy BOOK tier (expected peak
+                             # 2.0 GB against a declared 4.0 GB cap) waits for a coordinator GO under the
+                             # wrapper** -- declared before it runs, rule 6's shape applied to cost.
   THE_READER_TAKES_G_FROM_ITS_INVOCATION_WHILE_THE_DECLARATION_COMPUTES_ITS_OWN: TWO-COMPUTED-Gs-NO-CHECK-THEY-AGREE
                              # CHECKED 2026-09-06T08:44:30Z at BOTH artifacts, and this is the
                              # round's finding as I read it.
@@ -17739,6 +17833,78 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 145, 2026-09-06T08:51:30Z ------------------------------
+  THE_LITERAL_WAS_TRUE_AT_BOTH_PRODUCING_COMMITS_AND_THE_RECEIPT_NAMES_NEITHER:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T08:51:30Z
+    said: >-
+      git show 3589a14 and f301731 of this file, both at line 406, read
+      tape = R.build_tape_index(splits, tape_path=inp["tape"]["path"]) -- the
+      literal DA refused was true of the code that ran. And I enumerated every
+      commit-shaped field of data/pm_5min/derived/be_daybook_receipt_20260903_btc.json
+      (read at the same as_of): the only one is seam.commit = 6f134a6, which is
+      DE's seam commit -- no builder_commit, no carrying_commit, no producing-code
+      digest. The receipt is a historical record whose moment is not locatable.
+  THE_DERIVED_LITERAL_CLOSES_DRIFT_AND_NOT_LOCATABILITY:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T08:51:30Z
+    said: >-
+      _index_call_made reads this module's source and derives the seam call, its
+      docstring recording that the receipt's restated literal was the third of
+      that class this seat shipped and that it cannot drift now. Deriving is
+      orthogonal to provenance: a derived literal is always true of some moment
+      and names none, so the drift fix can make the missing commit look
+      unnecessary. Routed to BE 59 and DA 71, not ruled.
+  THE_DERIVED_LITERAL_READS_THE_FILE_WHILE_THE_RUN_USED_THE_LOADED_MODULE:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T08:51:30Z
+    said: >-
+      _index_call_made does Path(__file__).read_text() at emit time, so it reports
+      what the FILE said when the receipt was written rather than the bytes the run
+      imported. Narrow window, with an instance in this programme today: the 09-03
+      smoke runs v12's bytes while v13 landed underneath it. Routed, not ruled.
+  TWO_IMPLEMENTATIONS_AGREE_TODAY_AND_ONLY_ONE_REPORTS_THE_COUNT:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T08:51:30Z
+    said: >-
+      I ran both reads. BE's regex form finds exactly 1 match in the module, at
+      line 516, R.build_tape_index(splits, inputs=inp); DA's AST read (in
+      p003_da_book_verify_fixture__20260906T084550Z.json, same as_of) publishes
+      n_calls 1, keywords ['inputs'], rendered build_tape_index(splits, inputs=...).
+      Same answer by two implementations (R-235). The edge is the count: re.search
+      returns the first match and cannot say how many there were; the AST read
+      publishes n_calls.
+  PM_DATA_ROOT_IS_EMPTY_IN_MY_TOOL_ENVIRONMENT_TOO:
+    prov: CHECKED
+    artifact: live/pm_research/mem_flag_provenance.py
+    as_of: 2026-09-06T08:51:30Z
+    said: >-
+      checked in my own Bash tool call, not at a file: echo "[$PM_DATA_ROOT]"
+      printed [] and env | grep -c PM_DATA_ROOT printed 0, so the reviewer's flag
+      reproduces on a second seat -- the tmux export does not reach tool calls. The
+      artifact named here is MEM's own instrument, the nearest thing to a file this
+      environment fact has; the evidence is the command output, quoted above.
+  DA_S_OWN_KNOWN_BAD_FOUND_THE_HOLE_THE_MISSING_FIELD_OPENS:
+    prov: RELAYED
+    from: R-601(A)
+    as_of: 2026-09-06T08:51:30Z
+  THE_09_03_RECEIPT_IS_PROVENANCE_INCOMPLETE_AND_THE_BOOK_ITSELF_STANDS:
+    prov: RELAYED
+    from: R-601(B)
+    as_of: 2026-09-06T08:51:30Z
+  DA_70_S_FIXTURE_SAYS_WHAT_IT_DID_NOT_OPEN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_book_verify_fixture__20260906T084550Z.json
+    as_of: 2026-09-06T08:51:30Z
+    said: >-
+      n_checks 15, n_failed 0, status FIXTURE_NO_REAL_BOOK -- the status field
+      states the limit of the run rather than its result, and the heavy book tier
+      (expected peak 2.0 GB against a declared 4.0 GB cap) waits for a coordinator
+      GO under the wrapper.
   # --- MEM round 144, 2026-09-06T08:44:30Z ------------------------------
   THE_READER_TAKES_G_FROM_ITS_INVOCATION_WHILE_THE_DECLARATION_COMPUTES_ITS_OWN:
     prov: CHECKED
