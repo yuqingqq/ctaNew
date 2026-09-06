@@ -1409,11 +1409,19 @@ def supersession_block(prior: Path, current: dict) -> dict:
     now = {m["path"]: m.get("sha256") for m in current.get("modules", [])
            if m.get("sha256")}
     moved = sorted(p for p in set(was) & set(now) if was[p] != now[p])
+    #: THE CHAIN TRAVELS FORWARD COMPLETE, as the accrual report's block
+    #: already did. A v4 whose chain named only the v3 would make a reader
+    #: open three files to learn what a fourth supersedes -- and two
+    #: supersession blocks with two behaviours is two rules (R-608).
+    prior_chain = [list(e) for e in
+                   ((pri.get("supersedes") or {}).get("chain") or [])
+                   if isinstance(e, (list, tuple)) and len(e) == 2]
     return {
         "path": prior.name,
         "sha256": hashlib.sha256(prior.read_bytes()).hexdigest(),
-        "chain": [[prior.name,
-                   hashlib.sha256(prior.read_bytes()).hexdigest()]],
+        "chain": prior_chain + [[prior.name,
+                                 hashlib.sha256(
+                                     prior.read_bytes()).hexdigest()]],
         "v1_untouched": True,
         "why_re_emitted": ("the tree under audit moved: a census names the "
                            "bytes it read, so a census of other bytes is a "
