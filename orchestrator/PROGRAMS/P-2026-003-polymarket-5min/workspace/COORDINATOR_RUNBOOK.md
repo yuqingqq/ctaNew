@@ -414,7 +414,7 @@ DA reclassified it (DA 52) and the coordinator INSTALLED the fixed unit at 02:24
 true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94% of
 its controls at both endpoints; Gate 1's three sampler refusals stand.
 
-- **Tip:** see `git log`. Next register entry after R-556: **R-557**.
+- **Tip:** see `git log`. Next register entry after R-557: **R-558**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
   USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
   + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
@@ -446,3 +446,12 @@ reporting the tracked data files as deleted (R-554); artifacts under data/ are l
 the MAIN tree by pathspec. Check `readlink -f <wt>/data`. A materialised `data/` directory (git tracks ~135 files
 under it) is a partial SHELL — every uncommitted artifact is absent from it, and two
 seats reported shell facts as ledger facts on 2026-09-06.
+
+## Shared-tree prohibitions (R-557)
+
+Never `git reset --hard`, `git checkout -- <file>`, `git clean`, or `git stash` in
+`/home/yuqing/ctaNew` — seats keep uncommitted work there (MEM's state files all
+night). Probes and experiments live in a scratch worktree; a wrong commit in the
+shared tree is REVERTED, never reset. Never `--autostash` over another seat's dirty
+file — wait for its commit. Seat refresh is ONE command:
+`git checkout --detach mm-research && git ls-files data | xargs git update-index --skip-worktree`.
