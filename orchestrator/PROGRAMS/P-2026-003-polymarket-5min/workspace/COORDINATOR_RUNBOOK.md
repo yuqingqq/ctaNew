@@ -225,7 +225,7 @@ Append-only. Entries are `### R-NNN — <UTC stamp> — coordinator — …`.
 - **After every register commit**, check:
   - placeholders on the NEW entry only —
     `sed -n '/^### R-NNN/,/^## 6/p' $R | grep -c 'SSTAMP\|xZ\|TBD'` → 0
-  - exactly one ratification fence — `grep -c '^\x60\x60\x60ratification' $R` → 1
+  - exactly TWO ratification fences (R-419's block and the USER's 08-29 ratification at R-502; the count moves only with a new ratification, and the entry adding one updates this line) — `grep -c '^\x60\x60\x60ratification' $R` → 2 (was written as 1 before R-502; corrected 2026-09-06 at R-643's check)
   - the ratification check passes:
     ```
     sys.path.insert(0,"/home/yuqing/ctaNew")
