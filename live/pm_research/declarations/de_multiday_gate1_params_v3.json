@@ -89,8 +89,12 @@
     "2026-09-08"
   ],
   "design_declaration": {
-    "path": "PENDING",
-    "sha256": "PENDING"
+    "carrying_commit": "db043c732e1651ecb134f7c6355203691636c815",
+    "note": "the pin runs params -> design in ONE direction only; the design cites params by PATH, because two digest pins would be circular",
+    "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v10__20260906T064720Z.json",
+    "protocol": "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V10",
+    "sha256": "0c8445983f2e43c83e16a9f0be502274328b68642664e15ac0248379e95f72d7",
+    "supersedes": "data/pm_5min/derived/p003_de_multiday_gate1_design_v9__20260906T062115Z.json"
   },
   "expected_G": 6,
   "head_overlap_floor": 0.9,
