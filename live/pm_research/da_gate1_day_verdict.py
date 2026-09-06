@@ -3912,15 +3912,29 @@ def selftest_pre_read() -> list:                              # noqa: C901
     with _shaped.open("wb") as fh:
         _pk.dump({"asm": {"by_arm": {}}, "fr": {}}, fh)
     _msgs = {}
+    #: THE PIN COMES FIRST NOW (REV 71 2.3), so each drive supplies the
+    #: file's OWN digest -- otherwise every one of them refuses at the pin
+    #: and the shape checks below are never reached. That is the ordering
+    #: working, and this cell has to respect it to test what it names.
     for _lbl, _f, _open in (("wrong_top_level", _wrong, True),
                             ("not_a_mapping", _lst, True),
                             ("declared_shape", _shaped, True),
                             ("light_path_on_a_pickle", _shaped, False)):
+        _sha = hashlib.sha256(_f.read_bytes()).hexdigest()
         try:
-            load_day_book(str(_f), open_book=_open)
+            load_day_book(str(_f), open_book=_open, expected_sha256=_sha)
             _msgs[_lbl] = "ADMITTED"
         except VerifierRefused as _e:
             _msgs[_lbl] = str(_e)
+    _pin_msgs = {}
+    for _lbl, _kw in (("wrong_pin", {"expected_sha256": "a" * 64}),
+                      ("no_pin_at_all", {})):
+        try:
+            load_day_book(str(_shaped), open_book=True, **_kw)
+            _pin_msgs[_lbl] = "ADMITTED"
+        except VerifierRefused as _e:
+            _pin_msgs[_lbl] = str(_e).split(" -- ")[0].replace(
+                "REFUSED: ", "")
     ck("R-654 -- THE `--open-book` PATH IS BUILT AND DRIVEN BOTH WAYS, so "
        "DA 91 has something to run on the lock. A JSON fixture book ADMITS; "
        "a pickle whose top level is NOT the declared shape is REFUSED BY "
@@ -3934,9 +3948,12 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and "TOP_LEVEL_NOT_THE_DECLARED_SHAPE" in _msgs["wrong_top_level"]
        and "NOT_A_MAPPING" in _msgs["not_a_mapping"]
        and "AWAITS_BES_DECLARATION" in _msgs["declared_shape"]
-       and "NOT_THIS_READER'S_JSON" in _msgs["light_path_on_a_pickle"],
+       and "NOT_THIS_READER'S_JSON" in _msgs["light_path_on_a_pickle"]
+       #: REV 71 2.3: and the PIN is checked BEFORE any of it.
+       and _pin_msgs["wrong_pin"] == "BOOK_DIGEST_DOES_NOT_MATCH_ITS_RECEIPT"
+       and _pin_msgs["no_pin_at_all"] == "NO_PIN_NO_OPEN",
        "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
-                 for k, v in _msgs.items()))
+                 for k, v in list(_msgs.items()) + list(_pin_msgs.items())))
     ck("AND THE SEED RE-DERIVATION AND PER-SIDE COUNTS STAY **NOT DONE BY "
        "NAME** until that run: the pre-read reports "
        "`population_recomputed_from_the_book: false` with the refusal text "
