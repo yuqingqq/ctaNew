@@ -154,8 +154,12 @@ except where marked USER-ONLY.
     the runner 13 minutes into a 1.5-hour run would have named code that did
     not execute, and the committed-bytes guard PASSED because the replacement
     was committed. A seat that must land code during its own run lands from a
-    SECOND worktree. Runners capture their source digest at import and refuse
-    the emit by name if the on-disk bytes have changed since.
+    SECOND worktree. Runners AND every heavy producer (the fragment, tape and
+    book builders included) capture at IMPORT the digest of every module in
+    their import closure under `live/` plus the worktree's HEAD sha, stamp
+    those into the receipt, and refuse the emit by name if any moved (REV 51
+    §3, R-605: a digest of one file closes a third of the class; the closure
+    and HEAD close it; a practice that depends on noticing is not a control).
 
 ## Cadences
 
