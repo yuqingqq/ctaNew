@@ -63,6 +63,98 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T16:59:30Z (MEM ROUND 202 -- R-677, R-678 AND R-679 SWEPT, tip `8704451`. STATE
+  ONLY. MEM ASSERTS NO RESULT. ***NOTHING I DROVE THIS ROUND READ A SEALED VALUE:*** every cell
+  used a sealed **NAME** with an INVENTED or EMPTY value, the landing record was read for counts,
+  booleans, paths and NAMES only, and **neither sealed day receipt was opened.**
+  (1) ***THE EMPTY-CONTAINER MECHANISM DRIVEN, AND ITS BOUNDARY DRAWN SHARPER THAN THE ENTRY
+  STATES IT.*** R-678 generalises REV 70: the seal census walks LEAVES, so an empty container
+  hides a sealed key. Driven on DA's side with synthetic receipts: a **scalar** under the name is
+  CAUGHT; **`None` is also CAUGHT -- `None` is a LEAF**; an **empty dict is MISSED**; an **empty
+  list is MISSED**; and **a dict of empty dicts is MISSED too, so the hiding is RECURSIVE.**
+  ***THE EXACT BOUNDARY: a key is invisible precisely when its subtree contains NO LEAF*** --
+  which is sharper than "an empty container", because nesting them keeps the key hidden. **AND
+  THE ARTIFACT ALREADY CARRIES THE SIGNAL:** `n_receipt_leaves_walked` reads **2 instead of 3**
+  in exactly the missed cells -- *the leaf count differs from the key count and nothing compares
+  them.* **That comparison is the cheapest form of the fix DE 105 and DA 98 are dispatched to
+  make on both sides.** ***THAT READING IS AS OF 16:56Z AND IS ALREADY HISTORY: DA 98 landed at
+  17:00:42Z and my re-drive at ~17:02 has all four cells refusing -- see the commit-time note
+  below.***
+  (2) **THE 09-04 LANDING RECORD VERIFIED, AND NO VALUE QUOTED:** `…163925Z.json`, **27,092 B,
+  `bee78a53d1a0a1a5`** -- R-679's `bee78a53…` -- `INCOMPLETE`, `seal_holds TRUE`, **superseding
+  `…163619Z` at `80600c545f50`, which I recomputed.** `economic_absence`: `sealed TRUE`,
+  `n_leaked_fields 0`, `leaked_field_paths []`, **`n_judged_against 8`**, **`n_receipt_leaves
+  _walked 720`**, version resolved **21** by *provenance.design PAIR {path, sha256}, digest
+  recomputed from the file the path names*, `judged_against_the_full_list FALSE`,
+  `values_were_not_read TRUE`.
+  (3) **AND THE v21/v23 MISMATCH IS HANDLED BY NAMING IT, NOT FOLDING IT IN.** The record carries
+  `sealed_only_from_a_later_version` = `n_fills_arm`, `n_fills_baseline`, `n_cancels_issued`. *So
+  "0 leaked under both scopes" is zero against the EIGHT names in force at the version the
+  receipt was produced under, PLUS three later-sealed names listed by NAME.* **A receipt is
+  judged at ITS version and the difference is published** -- the only form that does not
+  retro-apply a rule nobody had written when the receipt was made.
+  (4) **`INCOMPLETE` IS FOR THE POPULATION HALF AND ITS REASON IS A NAMED REFUSAL:** *"the
+  population half was REFUSED BY NAME and NOT ATTEMPTED: BOOK_IS_A_PICKLE_NOT_THIS_READER'S
+  _JSON"*, beside `n_arms_declared 2`, `n_arms_with_a_recomputed_population 0`, and
+  **`n_arms_agreeing` = None -- three-valued, NOT 0**. `null_drawn FALSE` and `code_is_committed
+  FALSE` are stated rather than left to be assumed.
+  (5) ***DA's LANDING RECORDS ARE SINGLE-HEADED IN EVERY FAMILY AND ITS CENSUS IS NOT.*** Drove
+  the predicate over all three `pre_read` families: **09-03 -- 3 records, 2 links, ONE head;
+  09-04 -- 2 records, 1 link, ONE head; the fixture -- its own root.** The census family is now
+  **7 records, 3 links, still FOUR heads** -- the same three orphans for the **third round
+  running**. *The same seat, the same hour, two artifact families: one chained throughout and one
+  with permanent orphans.* The going-forward fix works; the in-band history-linking R-673 routed
+  has not happened.
+  (6) **AND THE CHAINING MAKES THE PERISHABILITY LEGIBLE, WHICH IS WHAT IT WAS FOR.** The newest
+  census `…165035Z` (`cab2f3548f27f7aa`, **287 -> 67 -> 0**, multi-hop **6**) supersedes
+  `…164823Z` (291 -> 68 -> 1) emitted **two minutes earlier**. *The counts move as fast as they
+  ever did* -- literals 291 -> 287, pins 68 -> 67, multi-hop 7 -> 6, refused 1 -> 0 -- ***but a
+  reader now follows a SEQUENCE instead of meeting two contradictory numbers.*** **The routing
+  never needed the numbers to stop moving, only to be ordered.**
+  (7) **de104smoke STILL RUNNING AND THE PEAK HAS HELD ACROSS TWO READINGS.** 16:57:40Z:
+  `loaded / active / running`, so the two economic-looking fields remain DEFAULTS. **InvocationID
+  `549bd234e4324408bf931992ada421d8` unchanged from 16:47:15Z -- one run, not a relaunch** -- and
+  MemoryPeak **2,312,695,808, identical across two readings ten minutes apart.** ≈18:25Z.
+  (8) **THE REFRESH SCRIPT RESTORES LANDED-IDENTICAL FILES IN TWO SHAPES:** `c41a6f8` a
+  **MODIFIED** file byte-identical to REF's blob, `31c2949` an **UNTRACKED** file whose bytes
+  equal REF's tracked blob. *Ruled away by a computed PROPERTY -- byte-identity to the reference
+  blob -- not by an exception for a named path*, the same discipline as BE's dirt exemption.
+  (9) **REV 76's CONDITIONS NAME TWO SHAPES THIS PROGRAMME HAS PAID FOR** -- the marker directory
+  resolved by the **UNGUARDED `derived()`** while `require_ledger()` exists, and ***a half-written
+  marker making the consumption guard RAISE instead of REFUSING***, an exception where a NAMED
+  refusal belongs. **BE 68 is the tip I was dispatched on (`8704451`)** and its subject names all
+  three fixes. *The five conditions themselves are RELAYED, not driven -- this round's only
+  RELAYED entry, and the count moves 258 -> 259 to say so.*
+  AT COMMIT TIME, UNSWEPT -- AND ONE OF THEM CLOSES MY OWN HEADLINE FOUR MINUTES AFTER I
+  MEASURED IT. **R-680, R-681, R-682 and Q-DA-321 landed.** ***DA 98 LANDED AT 17:00:42Z
+  (`539af4c`, "the seal census walks KEYS, not leaves") -- FOUR MINUTES AFTER MY 16:56 DRIVE, AND
+  I RE-DROVE RATHER THAN LET THE EARLIER READING STAND.*** **At 16:56 DA's side MISSED an empty
+  dict, an empty list and nested empties; at ~17:02 ALL FOUR CELLS REFUSE.** *So the boundary I
+  mapped -- a key is invisible precisely when its subtree holds no leaf -- described a state that
+  lasted four more minutes.* **The map was the useful part and it is now history on both sides:**
+  DE 105 (`8ff9b72`) closed DE's, DA 98 closed DA's, and R-681 says the two censuses agree by
+  construction. *The perishable-reading discipline applied to a CODE state rather than a unit's:
+  the reading was taken with a clock, and re-taken before the sentence.*
+  ***AND R-682 IS A CORRECTION IN BAND AGAINST THE COORDINATOR THAT IS MY ROUND-201 CLASS IN
+  MIRROR IMAGE.*** R-681 reported five refusals from a drive of DE 105; **the drive did not
+  run** -- the probe called `assert_no_economic_leak(artifact)` without its two required
+  positional arguments and every cell returned `TypeError`, *written into the entry as five
+  refusals before the output was read*. **At round 201 my probe passed the wrong SHAPE and I read
+  a false PASS; here a probe passed the wrong ARITY and read a false REFUSAL. Same class,
+  opposite direction, one round apart, both caught and both reported against their own author.**
+  R-682 states the rule -- *"a drive's result is read before the sentence, and a caller's
+  TypeError is the probe not the guard"* -- and republishes the real drive verbatim. **R-680**
+  verifies BE 68 at the tip (the marker directory through `require_ledger()`, an unparseable
+  marker treated as OPENED with a refusal naming the day and the path rather than a traceback, a
+  `pre_state` block recorded before the act, and **zero `be_race_read_OPENED_2026090[345]`
+  markers in the ledger**) and names **one ORDERING defect BE found while driving -- the
+  result-name guard fired before the marker guard and hid it**, the same shape as REV 48 §1.6 one
+  round later, caught by BE's own battery. **Noted in band; the flags are corrected only where my
+  own reading went stale.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,282 -> 1,292; flag_provenance 827 -> 837;
+  tasks 19; **578 CHECKED / 259 RELAYED / 455 UNMARKED -- the SEVENTY-EIGHTH round unchanged on
+  UNMARKED, and the first RELAYED entry in many rounds.** ORPHAN audit 0 findings. Q-MEM-190
+  filed.)
   2026-09-06T16:53:00Z (MEM ROUND 201 -- R-675 AND R-676 SWEPT, tip `dd332cf`. STATE ONLY.
   MEM ASSERTS NO RESULT. **NO SEALED VALUE READ OR WRITTEN -- every cell of the sealed-value
   guard was driven with an INVENTED number, and the sealed receipts were not opened.**
@@ -236,70 +328,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,261 -> 1,272; flag_provenance 806 -> 817;
   tasks 19; **559 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-SIXTH round unchanged.**
   ORPHAN audit: 5 findings, all repointed, re-run to **0**. Q-MEM-188 filed.)
-  2026-09-06T16:06:30Z (MEM ROUND 199 -- R-673 SWEPT, tip `4c61210`. STATE ONLY. MEM ASSERTS
-  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- the absence of a 09-04
-  receipt established by FILENAME CENSUS.**
-  (1) ***R-673 CORRECTS R-671 IN BAND, AND I PROVED R-671 UNEDITED IN GIT RATHER THAN BY
-  READING IT.*** `git log -S` on R-671's exact guard phrase returns **exactly ONE commit**,
-  `db6f060`, the one that introduced it -- no later commit added or removed the string.
-  *Reading the current text tells you what it says now; the pickaxe tells you it was never
-  changed.* **Rule 13 verified from history, not from content.**
-  (2) **THE FOUR HEADS ARE STILL FOUR.** Re-measured rather than carried forward: five census
-  records, **exactly one `supersedes` link** (`…150939Z` -> `…144403Z`, digest recomputes),
-  so `…142709Z`, `…143544Z`, `…150939Z` and `…153821Z` are all heads. *R-673 confirms the
-  finding at the files independently and routes it to DA 97; DA is READY, not done, and the
-  newest census still supersedes nothing.*
-  (3) ***THE CHAINING IS AN UNUSED CAPABILITY, NOT A MISSING ONE -- AND I DROVE THAT BEFORE
-  SAYING WHAT DA 97 MUST BUILD,*** because "cannot chain" and "was not asked to" need
-  different fixes. **A present prior writes the pair with the digest RECOMPUTED from the file**
-  (`92edc2dc74ba7186`, the digest I verified at round 198) with the rule-13 note; **an absent
-  prior REFUSES BY NAME** -- *"a half-written link refuses BY NAME, never as 'no link'"*. So
-  the machinery is sound and ships its own falsifier. ***AND THAT MAKES THE SHARPER DEFECT
-  VISIBLE: THE LINK IS A FLAG.*** An emission that omits it produces a head **silently** --
-  **the instrument that refuses a HALF-WRITTEN link does not refuse a MISSING one, an absence
-  that is not a status.** Routed to DA 97 as the FORM of its fix, not only its content.
-  (4) **AND THE BLIND SPOT IS STRUCTURAL.** The census scans exactly two directories and finds
-  23 families, **none named for the census**; its own records live in `data/pm_5min/derived/`,
-  read as the DERIVED INDEX (234 files, keyed by NAME) and never chain-checked. So
-  `n_families_without_exactly_one_head: 0` is *true of what it scans and silent about where it
-  lives*.
-  (5) ***BE 66's REFUSAL IS NOW AN ARTIFACT, AND IT CLOSES A GAP BE NAMED AGAINST ITSELF.***
-  `be_heavy_run_record_be66struct.jsonl`, as-of 16:05:30Z: **60 attempts x 3 rows**, **every
-  one of the 60 exits `rc: 75`** -- the declared conflict code, not one failure -- and **ZERO
-  polls with `same_invocation_as_previous: True`**, so all 60 are DISTINCT units. *At Q-BE-308
-  BE wrote that the ids were not recorded and that it therefore could not prove its 58
-  refusals were 58 distinct runs.* **Now it can, and I proved it FROM THE ARTIFACT by counting
-  the ids rather than from BE's summary.** Window 15:03:14Z -> 16:05:07Z, about one a minute.
-  (6) **TWO INDEPENDENT SOURCES AGREE ON THE BLOCK:** my `/proc/locks` read (dev:inode ->
-  pid 3551079, de102smoke's own `flock -n -E 75`) and BE's 60 refusals are *the same fact from
-  the two sides of one lock*, neither inferred from the other. The refusal text is written by
-  the wrapper at the moment it refuses -- journal-independent.
-  (7) **THE SAME FIVE FIELDS SEPARATE A RUN FROM A REFUSAL.** de102smoke: `loaded / active /
-  running` with `ExecMainStatus=0` and `Result=success` as **defaults on a live process**.
-  be66struct's last poll: `loaded / failed / failed / exit-code / 75` -- a **refusal**.
-  ***The triple plus the rc does all the work and neither case is readable from two fields***
-  -- `SubState` separates running from refused, the rc separates refused from failed.
-  (8) **BE's LAUNCH RECORD IS VERIFIABLE, NOT MERELY DESCRIPTIVE:** `conflict_rc: 75` **read
-  from `heavy_run_form_v3.json`** (the chain head, not a typed literal), plus the lock, the
-  worktree and `tip 78290d3ef6ed708b…` -- *which I resolved: a real commit, an **ancestor of
-  origin/mm-research**, "BE 66 (REV 74's four corrections, before the heavy run)" at
-  15:17:22Z.* The producing code behind all 60 refusals is locatable in a commit.
-  (9) ***A LIVE ARTIFACT IS PERISHABLE TOO, AND THE HONEST FORM IS AN AS-OF, NOT A
-  RE-EMISSION.*** BE's record grew **177 -> 180 rows between two reads eighty seconds apart**.
-  Same class as the pane-vs-artifact drift I routed for two rounds, *different remedy*: a file
-  still being APPENDED is fixed by quoting the clock, not by emitting again. **AND MY PROBE
-  ERRED TWICE READING IT** -- I looked for the exit status under `ExecMainStatus` (on exit rows
-  it is `rc`) and for the ids on the exit rows (they are on the POLL rows), printing "0 of 60"
-  until I read the row SHAPES instead of guessing the keys. **Twenty-eighth "suspect the probe
-  first".**
-  (10) **IN FLIGHT.** de102smoke at 16:04:50Z: `loaded / active / running`, InvocationID
-  `a8c7e41ee2d24ff8` **unchanged across four readings since 15:42:51Z** -- one run, not a
-  relaunch; MemoryPeak 2,957,488,128 for the **TENTH** consecutive reading; 70 min against a
-  receipt expected ~16:20Z. **The only 09-04 record on disk is still the STOPPED one**
-  (`…20260906T143800Z.json`, 6,500 B) -- established by filename census.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,251 -> 1,261; flag_provenance 796 -> 806;
-  tasks 19; **548 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-FIFTH round unchanged.**
-  ORPHAN audit 0 findings. Q-MEM-187 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1153,6 +1181,131 @@ flags:
                              # Recorded as a partial, with which half moved. And the
                              # refused count is back to **1** at the tip, from 0 at
                              # `…153821Z` -- a new refused pin has surfaced since.
+  the_empty_container_mechanism_DRIVEN_and_its_boundary_DRAWN: A-KEY-IS-INVISIBLE-WITH-NO-LEAF-BELOW-IT
+                             # REV 70's mechanism generalised in R-678 -- the seal
+                             # census walks LEAVES, so an empty container hides a
+                             # sealed key -- **driven on DA's side with SYNTHETIC
+                             # receipts carrying a sealed NAME and never a value.**
+                             # A scalar under the name is CAUGHT (`economic.Z`
+                             # reported). **`None` is also CAUGHT -- None is a
+                             # LEAF.** An **empty dict is MISSED**; an **empty list
+                             # is MISSED**; and a **dict of empty dicts is MISSED
+                             # too, so the hiding is RECURSIVE.** ***THE EXACT
+                             # BOUNDARY: the key is invisible precisely when its
+                             # subtree contains NO LEAF*** -- which is sharper than
+                             # "an empty container", because nesting them keeps the
+                             # key hidden. **THAT READING IS AS OF 16:56Z AND IS
+                             # ALREADY HISTORY: `DA 98` landed at 17:00:42Z
+                             # (`539af4c`) and my re-drive at ~17:02 has ALL FOUR
+                             # cells REFUSING.** *Re-taken before the sentence rather
+                             # than left to stand.* **AND THE ARTIFACT ALREADY CARRIES THE
+                             # SIGNAL: `n_receipt_leaves_walked` reads 2 instead of 3
+                             # in exactly the missed cells** -- the leaf count differs
+                             # from the key count, and nothing compares them. That
+                             # comparison is the cheapest form of the fix DE 105 and
+                             # DA 98 are dispatched to make on both sides.
+  the_09_04_landing_record_VERIFIED_and_no_value_quoted: BEE78A53-CHAINED-TO-ITS-PREDECESSOR
+                             # `p003_da_gate1_pre_read_20260904__20260906T163925Z
+                             # .json`, **27,092 B, `bee78a53d1a0a1a5`** -- R-679's
+                             # `bee78a53…` -- `status INCOMPLETE`, `seal_holds TRUE`,
+                             # **superseding `…163619Z` at `80600c545f50`, which I
+                             # recomputed and which matches.** Its `economic_absence`
+                             # block: `sealed TRUE`, `n_leaked_fields 0`,
+                             # `leaked_field_paths []`, **`n_judged_against 8`**,
+                             # **`n_receipt_leaves_walked 720`**, `design_version
+                             # _resolved TRUE` at **21**, `how_the_version_was
+                             # _resolved` = *provenance.design PAIR {path, sha256},
+                             # digest recomputed from the file the path names*,
+                             # `judged_against_the_full_list FALSE`,
+                             # `values_were_not_read TRUE`. **Every item above is a
+                             # count, a boolean, a path or a NAME: no value was read
+                             # or written.**
+  sealed_only_from_a_LATER_version_is_how_the_v21_v23_mismatch_is_handled_honestly: NAMED-NOT-FOLDED-IN
+                             # The record carries its own key
+                             # `sealed_only_from_a_later_version` naming the three
+                             # fields sealed from v23 but NOT from v21 --
+                             # `n_fills_arm`, `n_fills_baseline`, `n_cancels_issued`.
+                             # **So "0 leaked under both scopes" is: zero against the
+                             # EIGHT names in force at the version the receipt was
+                             # produced under, PLUS three later-sealed names listed
+                             # by name rather than silently folded into the same
+                             # count.** *A receipt is judged at ITS version and the
+                             # difference is published* -- which is the only form
+                             # that does not retro-apply a rule nobody wrote when the
+                             # receipt was made.
+  INCOMPLETE_is_for_the_population_half_and_the_reason_is_a_NAMED_refusal: NOT-A-SILENT-GAP
+                             # `incomplete_because` = *"the population half was
+                             # REFUSED BY NAME and NOT ATTEMPTED:
+                             # BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON"* -- a status,
+                             # not a gap. Beside it: `n_arms_declared 2`,
+                             # `n_arms_with_a_recomputed_population 0`, and
+                             # **`n_arms_agreeing` = None, three-valued and NOT 0** --
+                             # the distinction this programme has paid for. Also
+                             # `null_drawn FALSE` and `code_is_committed FALSE`, both
+                             # stated rather than left to be assumed.
+  DAs_LANDING_records_are_single_headed_in_every_family_and_its_CENSUS_is_not: ONE-SEAT-ONE-HOUR-TWO-SHAPES
+                             # Drove the chain-head predicate over all three
+                             # `pre_read` families: **09-03 -- 3 records, 2 links, ONE
+                             # head; 09-04 -- 2 records, 1 link, ONE head; the fixture
+                             # -- its own root.** Meanwhile the census family is now
+                             # **7 records with 3 links and still FOUR heads**, the
+                             # same three orphans (`…142709Z`, `…143544Z`,
+                             # `…150939Z`) for the **third round running**. ***THE
+                             # SAME SEAT, THE SAME HOUR, TWO ARTIFACT FAMILIES: ONE
+                             # CHAINED THROUGHOUT AND ONE WITH A PERMANENT ORPHANED
+                             # HEAD.*** The going-forward fix is working; the in-band
+                             # history-linking R-673 routed has not happened.
+  the_chaining_makes_the_PERISHABILITY_legible_which_is_what_it_was_for: 291-TO-287-IN-TWO-MINUTES
+                             # The newest census `…165035Z` (`cab2f3548f27f7aa`,
+                             # **287 -> 67 -> 0**, multi-hop **6**) supersedes
+                             # `…164823Z` (291 -> 68 -> 1) emitted **two minutes
+                             # earlier**. **The counts move as fast as they ever
+                             # did** -- literals 291 -> 287, pins 68 -> 67, multi-hop
+                             # 7 -> 6, refused 1 -> 0 -- ***but a reader now follows
+                             # them as a SEQUENCE instead of meeting two
+                             # contradictory numbers.*** That is what the routing was
+                             # for: **it never needed the numbers to stop moving, only
+                             # to be ordered.**
+  de104smoke_still_running_and_the_peak_has_HELD_across_two_readings: SAME-RUN-NOT-A-RELAUNCH
+                             # 16:57:40Z, five fields copied at once while
+                             # `LoadState=loaded`: `loaded / active / running`, so
+                             # `ExecMainStatus=0` and `Result=success` remain
+                             # DEFAULTS. **InvocationID `549bd234e4324408bf931992
+                             # ada421d8` unchanged from my 16:47:15Z reading, so this
+                             # is one run and not a relaunch**, and MemoryPeak
+                             # **2,312,695,808 -- IDENTICAL across the two readings
+                             # ten minutes apart.** Completion expected ≈18:25Z.
+  the_refresh_script_restores_landed_identical_files_in_TWO_shapes: RULED-BY-PROPERTY-NOT-EXCEPTION
+                             # Two commits, two shapes: **`c41a6f8` (16:48:33Z)** --
+                             # a **MODIFIED** file byte-identical to REF's blob is a
+                             # LANDED COPY; **`31c2949` (16:55:17Z)** -- an
+                             # **UNTRACKED** file whose bytes equal REF's tracked blob
+                             # likewise. *The friction BE reported is ruled away by a
+                             # computed PROPERTY -- byte-identity to the reference
+                             # blob -- not by an exception for a named path*, which is
+                             # the same discipline as BE's own dirt exemption (three
+                             # computed conjuncts, never a name).
+  REV_76s_five_conditions_name_two_shapes_this_programme_has_PAID_for: AND-BE-68-IS-THE-TIP
+                             # The marker directory resolved by the **UNGUARDED
+                             # `derived()`** while BE's own `require_ledger()` exists;
+                             # and ***a HALF-WRITTEN MARKER MAKING THE CONSUMPTION
+                             # GUARD RAISE INSTEAD OF REFUSING*** -- an exception
+                             # where a NAMED refusal belongs, the same distinction the
+                             # census emitter draws correctly
+                             # (`SUPERSEDED_RECEIPT_NOT_PRESENT`) and the reasons
+                             # guard draws correctly (`RunnerRefused`). **BE 68 is the
+                             # tip I was dispatched on (`8704451`)**: the marker
+                             # directory through `require_ledger()`, a half-written
+                             # marker counting as consumed, and the pre-state recorded
+                             # before anything is written.
+  nothing_I_drove_this_round_read_a_SEALED_VALUE: NAMES-AND-COUNTS-ONLY
+                             # Stated because the round is about the seal. Every cell
+                             # of the empty-container drive used a sealed **NAME** with
+                             # an **invented** or **empty** value; the landing record
+                             # was read for counts, booleans, paths and field NAMES
+                             # only; and **neither sealed day receipt was opened** --
+                             # the 09-04 one has been hashed and censused twice now and
+                             # never read.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -23935,6 +24088,88 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 202, 2026-09-06T16:59:00Z ---
+  the_empty_container_mechanism_DRIVEN_and_its_boundary_DRAWN:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T16:56:00Z
+    said: >-
+      drove economic_absence on six synthetic receipts, each carrying a verifiable v21 pair and a
+      sealed NAME whose value was invented or empty -- a scalar, None, an empty dict, an empty
+      list, a dict of empty dicts, and a control with no sealed name. Read n_leaked_fields,
+      leaked_field_paths and n_receipt_leaves_walked from each. No real receipt was involved and
+      no real value exists in any cell.
+  the_09_04_landing_record_VERIFIED_and_no_value_quoted:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163925Z.json
+    as_of: 2026-09-06T16:55:00Z
+    said: >-
+      hashed both 09-04 landing records, read the newer one's status, seal_holds and supersedes
+      block, recomputed the predecessor's digest to confirm the link, and read the
+      economic_absence block for its counts, booleans and resolution route. Values were not read;
+      the block itself reports values_were_not_read true.
+  sealed_only_from_a_LATER_version_is_how_the_v21_v23_mismatch_is_handled_honestly:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163925Z.json
+    as_of: 2026-09-06T16:55:00Z
+    said: >-
+      read the sealed_only_from_a_later_version key and listed the three field NAMES it carries,
+      beside n_judged_against 8 and the resolved version 21.
+  INCOMPLETE_is_for_the_population_half_and_the_reason_is_a_NAMED_refusal:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163925Z.json
+    as_of: 2026-09-06T16:55:00Z
+    said: >-
+      read incomplete_because, n_arms_declared, n_arms_agreeing,
+      n_arms_with_a_recomputed_population, null_drawn and code_is_committed directly from the
+      record rather than from the register's summary of it.
+  DAs_LANDING_records_are_single_headed_in_every_family_and_its_CENSUS_is_not:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163925Z.json
+    as_of: 2026-09-06T16:57:00Z
+    said: >-
+      grouped every pre_read record by the part of its name before the timestamp and ran the
+      chain-head predicate per family, then ran the same predicate over the census family. Three
+      landing families at one head each; the census at four heads with the same three orphans as
+      the last two rounds.
+  the_chaining_makes_the_PERISHABILITY_legible_which_is_what_it_was_for:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T165035Z.json
+    as_of: 2026-09-06T16:58:00Z
+    said: >-
+      hashed the newest census, read its four counts and its shapes block, and read the
+      predecessor it names; compared the two sets of counts emitted two minutes apart.
+  de104smoke_still_running_and_the_peak_has_HELD_across_two_readings:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T16:57:40Z
+    said: >-
+      the artifact is the book the run names, which is durable; the five-field reading is live at
+      this as_of, copied at once while LoadState=loaded, and comparable to my round-201 reading
+      only because the InvocationID is unchanged.
+  the_refresh_script_restores_landed_identical_files_in_TWO_shapes:
+    prov: CHECKED
+    artifact: scripts/wt_refresh.sh
+    as_of: 2026-09-06T16:57:00Z
+    said: >-
+      read both commit subjects and their times from git log; the two shapes are a tracked
+      modification and an untracked file, each decided by byte-identity to the reference blob.
+  REV_76s_five_conditions_name_two_shapes_this_programme_has_PAID_for:
+    prov: RELAYED
+    from: R-678 (coordinator, 2026-09-06) and the REV 76 review line at 51f1d12
+    said: >-
+      the five conditions themselves are relayed from the review; what I checked is that BE 68 is
+      the tip commit 8704451 and that its subject names the marker directory going through
+      require_ledger, a half-written marker counting as consumed, and the pre-state recorded
+      before anything is written.
+  nothing_I_drove_this_round_read_a_SEALED_VALUE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json
+    as_of: 2026-09-06T16:58:00Z
+    said: >-
+      the artifact is the sealed receipt this round did NOT open; it has been hashed and censused
+      by name and size twice now and never read. Every drive used invented or empty values under a
+      sealed name.
   # --- MEM round 201, 2026-09-06T16:52:00Z ---
   I_TOOK_THE_DESIGN_VERSION_FROM_THE_DISPATCH_INSTEAD_OF_RESOLVING_THE_HEAD:
     prov: CHECKED
