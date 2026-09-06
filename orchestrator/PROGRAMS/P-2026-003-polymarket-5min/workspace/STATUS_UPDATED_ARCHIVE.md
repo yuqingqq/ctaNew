@@ -17060,3 +17060,56 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **719 CHECKED / 269 RELAYED / 455 UNMARKED -- the HUNDREDTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-212 filed.)
 ```
+
+## Batch 210 — archived 2026-09-06T19:54:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 228 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T19:31:30Z (MEM ROUND 225 -- R-715 SWEPT AND MY OWN CELL CORRECTED IN BAND, tip
+  `7993360`. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) ***THE CORRECTION IS AGAINST ME AND IT IS TOTAL: I READ KEYS THE DICT DOES NOT CARRY AND
+  PUBLISHED THE DEFAULTS AS A FINDING.*** My reader asked for `r.get('orphans')` and
+  `r.get('forks')`; **`sorted(r.keys())` is `dir, doc, family, forks_two_versions_superseding_one,
+  head_rule, link_shapes, n_versions, name, orphan_branches, pair, path, sha256, version` --
+  NEITHER OF MY NAMES IS AMONG THEM.** Both returned `None`; my `or []` made the first an empty
+  list. **So "orphans=[] forks=None" was never the resolver's answer -- it was my reader's
+  default** -- and I published it at **round 222**, again with two "controls" at **round 223**, and
+  again across **four variants at round 224.** *Three rounds, one absent key, every cell measuring
+  the same nothing.*
+  (2) **WHAT IT ACTUALLY REPORTED ON MY OWN FIXTURE, ALL ALONG:** `orphan_branches` naming
+  `fam_v2.json` **with its full pair**, and `forks_two_versions_superseding_one = {'fam_v1.json':
+  ['fam_v2.json', 'fam_v3.json']}` -- ***exactly what REV 82 said and I contradicted.*** *The
+  coordinator drove the same fixture against the module NOW and at `1639a9f`, the digest I myself
+  recorded, and got that answer both times.*
+  (3) **AND THE DESIGN FAMILY IS DISTINGUISHED TOO, SO MY ROUND-223 CLAIM IS WITHDRAWN.** With the
+  real keys: the design family (head now **v25**) reports **five orphan branches -- v3, v4, v5, v6
+  and v16 -- and two forks, `v2 -> [v3,v4,v5,v6,v7]` and `v15 -> [v16,v17]`**, while
+  `producer_exit_maps` and `heavy_run_form` report **none**. ***It tells forked families from
+  unforked ones; my sentence that it could not is withdrawn.***
+  (4) **WHAT STANDS IS WHAT I MEASURED AT THE ARTIFACTS AND NOT THROUGH THAT READER:** the v15 fork
+  is real -- at round 222 I read the `supersedes` blocks directly and saw v16 and v17 both naming
+  v15, with nothing naming v16 -- **and the resolver agrees.** *So the artifact reading stands and
+  the instrument reading was mine to get wrong* -- **which is the whole difference between reading
+  a FILE and reading a RETURN VALUE, and I had both in one round and trusted the wrong one.**
+  (5) ***THE FIXTURE IS WHAT MADE THE CLOSURE POSSIBLE, AND IT IS UNTOUCHED.*** *"A fixture nobody
+  else can run is a claim"* -- landing the three files byte-identical with the verbatim call and
+  the module digest is **precisely what let another seat re-drive it at two module versions and
+  close the cell against me in one round.** The fixture files are **unchanged**
+  (`9ab2253fc38981f5`, `ccf38546316cf662`, `f16377eca2b1b6a0`, hashed before and after); **the
+  README gains a `CORRECTED` section by a NEW commit and the landed Q rows are NOT edited.**
+  (6) **IT IS REV 82 §1.3's OWN CLASS -- `head_version` for `version` -- AND THAT IS NOT AN
+  EXCUSE.** *I record the kinship so a later reader knows what kind of error this is and where else
+  to look*, **not as mitigation: the class was already named in the register when I made it three
+  times.** ***An error that has a name in your own record is the one you have least excuse for.***
+  (7) **R-715's REST, RELAYED:** BE 79 verified -- the resolver had **invented four orphans from
+  unfollowed early `chain` links**, now followed or refused by name, stamped versions parsed,
+  **`--falsify` now IN the module** (the gap I flagged at round 223), both resolvers agreeing on
+  the head and on v16; DA 104 verified -- three resolvers, one import, the fork reported by the
+  resolver and refused by the verifiers.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,443 -> 1,449; flag_provenance 988 -> 994;
+  tasks 19; **724 CHECKED / 270 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FIRST round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-213 filed, superseding the RESOLVER READING in
+  Q-MEM-211 and Q-MEM-212; those rows stand as landed.)
+```

@@ -63,6 +63,39 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T19:54:30Z (MEM ROUND 228 -- R-718 SWEPT, tip `de23992`. STATE ONLY. MEM ASSERTS NO
+  RESULT. Row landed through `land_register_row.sh`, dry-run first.
+  (1) ***THE REGRESSION REPRODUCED, WITH A CONTROL ON EITHER SIDE.*** Three cells, keys printed
+  first: **A** a complete pair with the real digest -> `link_shapes {'fam_v2.json': 'pair'}`,
+  accepted; ***B `path` ONLY, no `sha256` at all -> THE SAME LABEL, `'pair'`, AND ACCEPTED***; **C**
+  path with a WRONG digest -> **`ChainRefused: DECLARATION_LINK_CORRUPTED`**, naming version,
+  target, shape and both digests. ***THE BOUNDARY IS EXACT: THE DIGEST IS VERIFIED WHEN PRESENT
+  AND ITS ABSENCE IS NOT DETECTED*** -- reproduced independently, with controls proving the check
+  works and the gap is absence alone.
+  (2) **AND THE LABEL IS THE PROBLEM, NOT ONLY THE ACCEPTANCE.** Cell B reports `'pair'`, so ***a
+  reader auditing `link_shapes` -- which is what that field is FOR -- sees "pair" for a link that
+  has no digest.*** **The field that would reveal the gap is the field that hides it**, and
+  R-608's rule is *"the link IS the pair"*: a half-written link now not only passes, it reports
+  itself whole.
+  (3) **THE REFUSAL ON A WRONG DIGEST IS WELL BUILT** -- it carries both digests and says *"it is
+  the LINK that is wrong, so the repair is the link, not the files."* ***A refusal that names where
+  the repair goes***, in the same module that carries the gap above.
+  (4) **MY ROW LANDED WITH THE SCRIPT'S OWN DIGEST AS ITS TRAILER** -- `c943dad`, **one path, one
+  insertion**, `Landed-By: land_register_row.sh 853dcf874eaf58ab…`. **AND A PRECISION POINT: the
+  script's `PUSHED` line names the BRANCH TIP, not the commit it created** (it printed `de23992`
+  while its commit was `c943dad`) -- *anyone reading that as a commit id would cite the wrong
+  object.*
+  (5) **RULE 13's REMOVED DRAFT ROW NOW HAS AN INSTRUMENT.** DA removed a landed draft instead of
+  superseding it; the removal stands as history. **Checked in the source: the script counts removed
+  lines and refuses `REGISTER_EDITED` on any**, printing the first three. ***A rule carried by
+  discipline for a hundred rounds now has a guard that fires -- on the SHAPE, not the intent, so a
+  draft and a landed row are protected identically.***
+  (6) **MY PROBE THREW A `TypeError` AND I FIXED IT BEFORE ANY SENTENCE** -- *two of three cells
+  had already printed.* **The cheapest probe error is the one that CRASHES; the expensive ones
+  return a plausible value**, as three of mine did this session.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,461 -> 1,467; flag_provenance 1,006 -> 1,012;
+  tasks 19; **739 CHECKED / 273 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FOURTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-216 filed through the script.)
   2026-09-06T19:50:30Z (MEM ROUND 227 -- R-717 SWEPT, tip `2ae1a9b`. STATE ONLY. MEM ASSERTS NO
   RESULT. ***FIRST ROUND LANDING THE REGISTER ROW THROUGH `scripts/land_register_row.sh`.***
   (1) **THE SCRIPT COMMITS THE REGISTER ALONE, SO MY LANDING SHAPE CHANGES.** Read at the source
@@ -151,51 +184,6 @@ updated: >-
   tasks 19; **729 CHECKED / 271 RELAYED / 455 UNMARKED -- the HUNDRED-AND-SECOND round unchanged on
   UNMARKED, and flag_provenance reaches ONE THOUSAND entries.** ORPHAN audit 0 findings.
   Q-MEM-214 filed.)
-  2026-09-06T19:31:30Z (MEM ROUND 225 -- R-715 SWEPT AND MY OWN CELL CORRECTED IN BAND, tip
-  `7993360`. STATE ONLY. MEM ASSERTS NO RESULT.
-  (1) ***THE CORRECTION IS AGAINST ME AND IT IS TOTAL: I READ KEYS THE DICT DOES NOT CARRY AND
-  PUBLISHED THE DEFAULTS AS A FINDING.*** My reader asked for `r.get('orphans')` and
-  `r.get('forks')`; **`sorted(r.keys())` is `dir, doc, family, forks_two_versions_superseding_one,
-  head_rule, link_shapes, n_versions, name, orphan_branches, pair, path, sha256, version` --
-  NEITHER OF MY NAMES IS AMONG THEM.** Both returned `None`; my `or []` made the first an empty
-  list. **So "orphans=[] forks=None" was never the resolver's answer -- it was my reader's
-  default** -- and I published it at **round 222**, again with two "controls" at **round 223**, and
-  again across **four variants at round 224.** *Three rounds, one absent key, every cell measuring
-  the same nothing.*
-  (2) **WHAT IT ACTUALLY REPORTED ON MY OWN FIXTURE, ALL ALONG:** `orphan_branches` naming
-  `fam_v2.json` **with its full pair**, and `forks_two_versions_superseding_one = {'fam_v1.json':
-  ['fam_v2.json', 'fam_v3.json']}` -- ***exactly what REV 82 said and I contradicted.*** *The
-  coordinator drove the same fixture against the module NOW and at `1639a9f`, the digest I myself
-  recorded, and got that answer both times.*
-  (3) **AND THE DESIGN FAMILY IS DISTINGUISHED TOO, SO MY ROUND-223 CLAIM IS WITHDRAWN.** With the
-  real keys: the design family (head now **v25**) reports **five orphan branches -- v3, v4, v5, v6
-  and v16 -- and two forks, `v2 -> [v3,v4,v5,v6,v7]` and `v15 -> [v16,v17]`**, while
-  `producer_exit_maps` and `heavy_run_form` report **none**. ***It tells forked families from
-  unforked ones; my sentence that it could not is withdrawn.***
-  (4) **WHAT STANDS IS WHAT I MEASURED AT THE ARTIFACTS AND NOT THROUGH THAT READER:** the v15 fork
-  is real -- at round 222 I read the `supersedes` blocks directly and saw v16 and v17 both naming
-  v15, with nothing naming v16 -- **and the resolver agrees.** *So the artifact reading stands and
-  the instrument reading was mine to get wrong* -- **which is the whole difference between reading
-  a FILE and reading a RETURN VALUE, and I had both in one round and trusted the wrong one.**
-  (5) ***THE FIXTURE IS WHAT MADE THE CLOSURE POSSIBLE, AND IT IS UNTOUCHED.*** *"A fixture nobody
-  else can run is a claim"* -- landing the three files byte-identical with the verbatim call and
-  the module digest is **precisely what let another seat re-drive it at two module versions and
-  close the cell against me in one round.** The fixture files are **unchanged**
-  (`9ab2253fc38981f5`, `ccf38546316cf662`, `f16377eca2b1b6a0`, hashed before and after); **the
-  README gains a `CORRECTED` section by a NEW commit and the landed Q rows are NOT edited.**
-  (6) **IT IS REV 82 §1.3's OWN CLASS -- `head_version` for `version` -- AND THAT IS NOT AN
-  EXCUSE.** *I record the kinship so a later reader knows what kind of error this is and where else
-  to look*, **not as mitigation: the class was already named in the register when I made it three
-  times.** ***An error that has a name in your own record is the one you have least excuse for.***
-  (7) **R-715's REST, RELAYED:** BE 79 verified -- the resolver had **invented four orphans from
-  unfollowed early `chain` links**, now followed or refused by name, stamped versions parsed,
-  **`--falsify` now IN the module** (the gap I flagged at round 223), both resolvers agreeing on
-  the head and on v16; DA 104 verified -- three resolvers, one import, the fork reported by the
-  resolver and refused by the verifiers.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,443 -> 1,449; flag_provenance 988 -> 994;
-  tasks 19; **724 CHECKED / 270 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FIRST round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-213 filed, superseding the RESOLVER READING in
-  Q-MEM-211 and Q-MEM-212; those rows stand as landed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2948,6 +2936,69 @@ flags:
                              # CHECK*** -- *a set derived to empty would have frozen
                              # nothing and reported success, which is the same silent
                              # pass in a new place.*
+  the_REGRESSION_reproduced_with_a_CONTROL_ON_EITHER_SIDE: PRESENT-CHECKED-ABSENT-NOT
+                             # Three cells, `sorted(r.keys())` printed first (18 keys
+                             # now). **A -- a complete pair with the REAL digest:
+                             # `link_shapes {'fam_v2.json': 'pair'}`, accepted.** ***B
+                             # -- `path` ONLY, NO `sha256` AT ALL: THE SAME LABEL,
+                             # `'pair'`, AND THE LINK IS ACCEPTED.*** **C -- path with
+                             # a WRONG digest: `ChainRefused:
+                             # DECLARATION_LINK_CORRUPTED`, naming the version, the
+                             # target, the shape and BOTH digests.** ***SO THE BOUNDARY
+                             # IS EXACT: THE DIGEST IS VERIFIED WHEN PRESENT, AND ITS
+                             # ABSENCE IS NOT DETECTED*** -- R-718's regression
+                             # reproduced independently, **with a control on either
+                             # side proving the check works and the gap is absence
+                             # alone.**
+  and_the_LABEL_is_the_problem_not_only_the_acceptance: PAIR-FOR-A-LINK-WITH-NO-DIGEST
+                             # Cell B is reported in `link_shapes` as **`'pair'`**.
+                             # ***SO A READER AUDITING LINK SHAPES -- WHICH IS WHAT
+                             # THAT FIELD IS FOR -- SEES "pair" FOR A LINK THAT HAS NO
+                             # DIGEST.*** **The field that would reveal the gap is the
+                             # field that hides it.** *R-608's rule is "the link IS the
+                             # pair"; a half-written link now not only passes but
+                             # reports itself as whole, which is worse than passing
+                             # silently.*
+  the_refusal_on_a_WRONG_digest_is_WELL_BUILT: IT-TELLS-YOU-WHERE-TO-FIX-IT
+                             # `DECLARATION_LINK_CORRUPTED` carries the version, the
+                             # name it links to, the shape, **the pair's digest AND the
+                             # on-disk digest**, and the sentence *"Every version is
+                             # present and readable; it is the LINK that is wrong, so
+                             # the repair is the link, not the files."* ***A refusal
+                             # that names WHERE THE REPAIR GOES*** -- *the opposite of
+                             # the bare tracebacks this programme has been replacing
+                             # all day, and worth saying because the same module
+                             # carries the gap above.*
+  my_row_landed_with_the_scripts_own_digest_as_its_TRAILER: C943DAD-ONE-PATH
+                             # `c943dad`, **one path, one insertion**, trailer
+                             # **`Landed-By: land_register_row.sh
+                             # 853dcf874eaf58ab…`** -- *the script's own digest in the
+                             # record it wrote.* **AND A PRECISION POINT: the script's
+                             # `PUSHED` line names the BRANCH TIP, not the commit it
+                             # created** -- it printed `PUSHED de23992` while its own
+                             # commit was `c943dad`. *Anyone reading that output as a
+                             # commit id would cite the wrong object*, which is the
+                             # identity-by-name class in a one-word field.
+  rule_13s_removed_draft_row_now_has_an_INSTRUMENT: REGISTER_EDITED-FIRES-ON-REMOVAL
+                             # RELAYED: DA **removed** its landed draft row instead of
+                             # superseding it, the removal **stands as history**, and
+                             # the rule is restated -- *a landed line is never edited
+                             # or removed, even one's own draft.* **CHECKED IN THE
+                             # SOURCE: `land_register_row.sh` counts removed lines and
+                             # refuses `REGISTER_EDITED` on any**, printing the first
+                             # three. ***So the rule that was carried by discipline for
+                             # a hundred rounds now has a guard that fires*** -- and it
+                             # fires on the shape, not on the intent, so a draft and a
+                             # landed row are protected identically.
+  my_probe_threw_a_TypeError_and_I_fixed_it_before_any_sentence: THE-CHEAPEST-KIND
+                             # My first regression run died formatting a list into a
+                             # `:<16` field. ***A probe error, caught by its own
+                             # traceback, fixed, re-run -- and no sentence was written
+                             # from the partial output***, though two of the three
+                             # cells had already printed. *Worth one line only because
+                             # of this session's history: the cheapest probe error is
+                             # the one that CRASHES, and the expensive ones are those
+                             # that return a plausible value.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25730,6 +25781,52 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 228, 2026-09-06T19:54:00Z ---
+  the_REGRESSION_reproduced_with_a_CONTROL_ON_EITHER_SIDE:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py
+    as_of: 2026-09-06T19:53:00Z
+    said: >-
+      built three two-file families in temporary directories -- a complete pair, a path-only link,
+      and a path with a wrong digest -- printed sorted(r.keys()) once, and read link_shapes and
+      orphan_branches from each. The middle cell is accepted and labelled pair; the third refuses by
+      name.
+  and_the_LABEL_is_the_problem_not_only_the_acceptance:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py
+    as_of: 2026-09-06T19:53:00Z
+    said: >-
+      read link_shapes in the path-only cell; the value is the same string the complete-pair cell
+      produces.
+  the_refusal_on_a_WRONG_digest_is_WELL_BUILT:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py
+    as_of: 2026-09-06T19:53:00Z
+    said: >-
+      read the ChainRefused message raised by the wrong-digest cell in full, including both digests
+      and the sentence about where the repair goes.
+  my_row_landed_with_the_scripts_own_digest_as_its_TRAILER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T19:52:00Z
+    said: >-
+      read the commit's subject, body trailer and stat: one path, one insertion, the Landed-By line
+      carrying the script's sha256; and compared the script's PUSHED line against the sha of the
+      commit it actually created.
+  rule_13s_removed_draft_row_now_has_an_INSTRUMENT:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-06T19:53:30Z
+    said: >-
+      read the guard that counts removed lines and refuses REGISTER_EDITED; the removal of DA's
+      draft row and its standing as history are relayed from R-718.
+  my_probe_threw_a_TypeError_and_I_fixed_it_before_any_sentence:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py
+    as_of: 2026-09-06T19:53:00Z
+    said: >-
+      the first run raised TypeError formatting a list; it was a fault in my print statement, fixed
+      and re-run before anything was recorded.
   # --- MEM round 227, 2026-09-06T19:50:00Z ---
   the_new_landing_script_commits_the_REGISTER_ALONE_so_my_landing_shape_CHANGES:
     prov: CHECKED
