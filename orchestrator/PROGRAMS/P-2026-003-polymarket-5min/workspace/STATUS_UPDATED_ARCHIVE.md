@@ -15666,3 +15666,103 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **569 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-SEVENTH round unchanged.**
   ORPHAN audit 0 findings. Q-MEM-189 filed.)
 ```
+
+## Batch 187 — archived 2026-09-06T17:20:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 205 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T16:59:30Z (MEM ROUND 202 -- R-677, R-678 AND R-679 SWEPT, tip `8704451`. STATE
+  ONLY. MEM ASSERTS NO RESULT. ***NOTHING I DROVE THIS ROUND READ A SEALED VALUE:*** every cell
+  used a sealed **NAME** with an INVENTED or EMPTY value, the landing record was read for counts,
+  booleans, paths and NAMES only, and **neither sealed day receipt was opened.**
+  (1) ***THE EMPTY-CONTAINER MECHANISM DRIVEN, AND ITS BOUNDARY DRAWN SHARPER THAN THE ENTRY
+  STATES IT.*** R-678 generalises REV 70: the seal census walks LEAVES, so an empty container
+  hides a sealed key. Driven on DA's side with synthetic receipts: a **scalar** under the name is
+  CAUGHT; **`None` is also CAUGHT -- `None` is a LEAF**; an **empty dict is MISSED**; an **empty
+  list is MISSED**; and **a dict of empty dicts is MISSED too, so the hiding is RECURSIVE.**
+  ***THE EXACT BOUNDARY: a key is invisible precisely when its subtree contains NO LEAF*** --
+  which is sharper than "an empty container", because nesting them keeps the key hidden. **AND
+  THE ARTIFACT ALREADY CARRIES THE SIGNAL:** `n_receipt_leaves_walked` reads **2 instead of 3**
+  in exactly the missed cells -- *the leaf count differs from the key count and nothing compares
+  them.* **That comparison is the cheapest form of the fix DE 105 and DA 98 are dispatched to
+  make on both sides.** ***THAT READING IS AS OF 16:56Z AND IS ALREADY HISTORY: DA 98 landed at
+  17:00:42Z and my re-drive at ~17:02 has all four cells refusing -- see the commit-time note
+  below.***
+  (2) **THE 09-04 LANDING RECORD VERIFIED, AND NO VALUE QUOTED:** `…163925Z.json`, **27,092 B,
+  `bee78a53d1a0a1a5`** -- R-679's `bee78a53…` -- `INCOMPLETE`, `seal_holds TRUE`, **superseding
+  `…163619Z` at `80600c545f50`, which I recomputed.** `economic_absence`: `sealed TRUE`,
+  `n_leaked_fields 0`, `leaked_field_paths []`, **`n_judged_against 8`**, **`n_receipt_leaves
+  _walked 720`**, version resolved **21** by *provenance.design PAIR {path, sha256}, digest
+  recomputed from the file the path names*, `judged_against_the_full_list FALSE`,
+  `values_were_not_read TRUE`.
+  (3) **AND THE v21/v23 MISMATCH IS HANDLED BY NAMING IT, NOT FOLDING IT IN.** The record carries
+  `sealed_only_from_a_later_version` = `n_fills_arm`, `n_fills_baseline`, `n_cancels_issued`. *So
+  "0 leaked under both scopes" is zero against the EIGHT names in force at the version the
+  receipt was produced under, PLUS three later-sealed names listed by NAME.* **A receipt is
+  judged at ITS version and the difference is published** -- the only form that does not
+  retro-apply a rule nobody had written when the receipt was made.
+  (4) **`INCOMPLETE` IS FOR THE POPULATION HALF AND ITS REASON IS A NAMED REFUSAL:** *"the
+  population half was REFUSED BY NAME and NOT ATTEMPTED: BOOK_IS_A_PICKLE_NOT_THIS_READER'S
+  _JSON"*, beside `n_arms_declared 2`, `n_arms_with_a_recomputed_population 0`, and
+  **`n_arms_agreeing` = None -- three-valued, NOT 0**. `null_drawn FALSE` and `code_is_committed
+  FALSE` are stated rather than left to be assumed.
+  (5) ***DA's LANDING RECORDS ARE SINGLE-HEADED IN EVERY FAMILY AND ITS CENSUS IS NOT.*** Drove
+  the predicate over all three `pre_read` families: **09-03 -- 3 records, 2 links, ONE head;
+  09-04 -- 2 records, 1 link, ONE head; the fixture -- its own root.** The census family is now
+  **7 records, 3 links, still FOUR heads** -- the same three orphans for the **third round
+  running**. *The same seat, the same hour, two artifact families: one chained throughout and one
+  with permanent orphans.* The going-forward fix works; the in-band history-linking R-673 routed
+  has not happened.
+  (6) **AND THE CHAINING MAKES THE PERISHABILITY LEGIBLE, WHICH IS WHAT IT WAS FOR.** The newest
+  census `…165035Z` (`cab2f3548f27f7aa`, **287 -> 67 -> 0**, multi-hop **6**) supersedes
+  `…164823Z` (291 -> 68 -> 1) emitted **two minutes earlier**. *The counts move as fast as they
+  ever did* -- literals 291 -> 287, pins 68 -> 67, multi-hop 7 -> 6, refused 1 -> 0 -- ***but a
+  reader now follows a SEQUENCE instead of meeting two contradictory numbers.*** **The routing
+  never needed the numbers to stop moving, only to be ordered.**
+  (7) **de104smoke STILL RUNNING AND THE PEAK HAS HELD ACROSS TWO READINGS.** 16:57:40Z:
+  `loaded / active / running`, so the two economic-looking fields remain DEFAULTS. **InvocationID
+  `549bd234e4324408bf931992ada421d8` unchanged from 16:47:15Z -- one run, not a relaunch** -- and
+  MemoryPeak **2,312,695,808, identical across two readings ten minutes apart.** ≈18:25Z.
+  (8) **THE REFRESH SCRIPT RESTORES LANDED-IDENTICAL FILES IN TWO SHAPES:** `c41a6f8` a
+  **MODIFIED** file byte-identical to REF's blob, `31c2949` an **UNTRACKED** file whose bytes
+  equal REF's tracked blob. *Ruled away by a computed PROPERTY -- byte-identity to the reference
+  blob -- not by an exception for a named path*, the same discipline as BE's dirt exemption.
+  (9) **REV 76's CONDITIONS NAME TWO SHAPES THIS PROGRAMME HAS PAID FOR** -- the marker directory
+  resolved by the **UNGUARDED `derived()`** while `require_ledger()` exists, and ***a half-written
+  marker making the consumption guard RAISE instead of REFUSING***, an exception where a NAMED
+  refusal belongs. **BE 68 is the tip I was dispatched on (`8704451`)** and its subject names all
+  three fixes. *The five conditions themselves are RELAYED, not driven -- this round's only
+  RELAYED entry, and the count moves 258 -> 259 to say so.*
+  AT COMMIT TIME, UNSWEPT -- AND ONE OF THEM CLOSES MY OWN HEADLINE FOUR MINUTES AFTER I
+  MEASURED IT. **R-680, R-681, R-682 and Q-DA-321 landed.** ***DA 98 LANDED AT 17:00:42Z
+  (`539af4c`, "the seal census walks KEYS, not leaves") -- FOUR MINUTES AFTER MY 16:56 DRIVE, AND
+  I RE-DROVE RATHER THAN LET THE EARLIER READING STAND.*** **At 16:56 DA's side MISSED an empty
+  dict, an empty list and nested empties; at ~17:02 ALL FOUR CELLS REFUSE.** *So the boundary I
+  mapped -- a key is invisible precisely when its subtree holds no leaf -- described a state that
+  lasted four more minutes.* **The map was the useful part and it is now history on both sides:**
+  DE 105 (`8ff9b72`) closed DE's, DA 98 closed DA's, and R-681 says the two censuses agree by
+  construction. *The perishable-reading discipline applied to a CODE state rather than a unit's:
+  the reading was taken with a clock, and re-taken before the sentence.*
+  ***AND R-682 IS A CORRECTION IN BAND AGAINST THE COORDINATOR THAT IS MY ROUND-201 CLASS IN
+  MIRROR IMAGE.*** R-681 reported five refusals from a drive of DE 105; **the drive did not
+  run** -- the probe called `assert_no_economic_leak(artifact)` without its two required
+  positional arguments and every cell returned `TypeError`, *written into the entry as five
+  refusals before the output was read*. **At round 201 my probe passed the wrong SHAPE and I read
+  a false PASS; here a probe passed the wrong ARITY and read a false REFUSAL. Same class,
+  opposite direction, one round apart, both caught and both reported against their own author.**
+  R-682 states the rule -- *"a drive's result is read before the sentence, and a caller's
+  TypeError is the probe not the guard"* -- and republishes the real drive verbatim. **R-680**
+  verifies BE 68 at the tip (the marker directory through `require_ledger()`, an unparseable
+  marker treated as OPENED with a refusal naming the day and the path rather than a traceback, a
+  `pre_state` block recorded before the act, and **zero `be_race_read_OPENED_2026090[345]`
+  markers in the ledger**) and names **one ORDERING defect BE found while driving -- the
+  result-name guard fired before the marker guard and hid it**, the same shape as REV 48 §1.6 one
+  round later, caught by BE's own battery. **Noted in band; the flags are corrected only where my
+  own reading went stale.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,282 -> 1,292; flag_provenance 827 -> 837;
+  tasks 19; **578 CHECKED / 259 RELAYED / 455 UNMARKED -- the SEVENTY-EIGHTH round unchanged on
+  UNMARKED, and the first RELAYED entry in many rounds.** ORPHAN audit 0 findings. Q-MEM-190
+  filed.)
+```

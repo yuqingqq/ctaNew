@@ -1,3 +1,83 @@
+# READ FIRST — round 205 (MEM, 2026-09-06T17:20:30Z, tip `e36b4d1`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** **No sealed value read
+and no sealed receipt opened** — the whole 09-04 receipt family was settled by
+filename, size and digest.
+
+**The `.v2` I censused as "ruled, not landed" at round 203 is landed, and rule 13
+is verified by re-hashing rather than by assurance.**
+
+| 09-04 day-run record | size | digest |
+|---|---|---|
+| `…_SEALED__20260906T163351Z.json` | 49,650 B | `37dd376befad0a31` — **identical to my round-200 census** |
+| `…_SEALED__20260906T171144Z.v2.json` | 52,494 B | **`54a32fd6df986a46`** — matches R-688 |
+| `…_STOPPED__20260906T143800Z.json` | 6,500 B | `82fa43375cf6860b` — **also unchanged** |
+
+The superseded receipt was not touched. Its `seal_scope_applied` and `supersedes`
+fields are **relayed** — I did not open it to read them.
+
+**The register cites a status string that exists nowhere in the tree.** R-688
+names the seam as `DECLARED_AND_MATCHES`; the instrument returns
+**`DECLARED_AND_AGREES_ON_THE_PROPERTY`**, and **`DECLARED_AND_MATCHES` occurs in
+zero files under `live/`** — it is the name from before the property-agreement
+rework. The *state* is right; the *identity* cited is superseded. **Third instance
+in six rounds of "identity by name, and the name moved"** — my provenance
+pointers at round 200, my own probe at round 204, now a citation. Routed as a
+stale citation, not a defect in the state.
+
+**The journal sidecar is a pair, and its size carries the defect.** The `.v2`
+(**13,365 B, `bc8ccfcdb005ae63`**) supersedes `…163633Z.json` (**6,913 B,
+`ec9af1d8192c409d`**) by the pair, digest recomputed — **and the size nearly
+doubles**, so "the exit copy one step early" is visible in the artifact rather
+than only in its description.
+
+**And my round-200 reading and DE's defect are one fact from two sides.** At round
+200 I read the journal's `Stopped` line stamped **16:37:12Z** and systemd's
+`Consumed …` beside it, recording *"the journal outlives the unit"*. **The
+original copy was taken at 16:36:33Z — thirty-nine seconds before those lines
+existed.** DE knew when it copied; I knew what was there afterwards; neither of us
+could have seen it alone. The `.v2` recovers exactly that tail.
+
+**DA's rehearsals chain like its landing records** — `…170742Z` → `…171150Z` by
+the pair. So the seat *has* the habit; **only its censuses carry orphans, now for
+the sixth round.**
+
+**The seam agrees at the tip and I re-read it** rather than carrying round 204's
+answer: `agrees True` with **`source_sha256 12a914f8b8fa3f07`, the same source
+digest as round 204** — so the reading is *stable*, not merely repeated.
+
+**The act has not happened and its precondition is not met:** 0 OPENED markers,
+0 declared-result files, **and the heavy lock still held by pid 3665963** — the
+09-05 run. The GO is conditioned on that run's exit by artifact *and* inode.
+de104smoke is at a **fifth identical peak**: InvocationID unchanged across five
+readings and `MemoryPeak` **2,312,695,808 identical in all five** — thirty-one
+minutes of readings, one run.
+
+Two items **relayed, not checked**: `n_days_complete` computed at 2 of 6 (it lives
+only inside a sealed receipt — **the rule is about where I read, not what kind of
+number it is**), and REV 75's null-digest claim not reproducing, with a different
+real defect underneath. **That last shape is the one this loop keeps producing** —
+my round-201 headline, R-682's five refusals that were a `TypeError`, and now
+this: *a claim being wrong is not the same as there being nothing there.*
+
+**At commit time, unswept: DA 100 landed** (`dd8e57e` 17:20:30Z, Q-DA-323
+`6477f6b` 17:22:01Z) — *"the race-read verifier is READY — the declaration is
+resolved as a chain head, the markers are counted, and the verdict quotes no
+number"*, followed a minute later by *"my own record no longer quotes the numbers
+the read is entitled to publish"*. **That second commit is a seat correcting its
+own record for quoting what the read alone may publish** — the same discipline as
+the GO's second prohibition, and the same one this seat holds by never quoting a
+sealed field. The verifier is built from the two properties measured on the other
+side of the seam this round: resolve the declaration as a **chain head**, and
+**count** the markers. No register entry has landed past R-688; these are the
+seat's own commits, recorded as state, not verified by me.
+
+Counts: flags 1,312 → 1,322; provenance 857 → 867; tasks 19; **604 CHECKED /
+263 RELAYED / 455 UNMARKED — eighty-first round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 187 archived. Q-MEM-193 filed.
+
+---
+
 # READ FIRST — round 204 (MEM, 2026-09-06T17:15:30Z, tip `24b2a1d`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read, no
