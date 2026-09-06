@@ -62,7 +62,25 @@ import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-DECL_VERSION = 1
+DECL_VERSION = 2
+SUPERSEDES = {
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v1.json",
+    "sha256": "405ddb7ab10486c21141b1d8c18dd6908d2892bbb29c91e50ecff424a9124a0b",
+    "carrying_commit": "367b80014178",
+    "correction_is_in_band": (
+        "rule 13: v1 is NOT edited and stands as provenance. v2 adds the "
+        "data-root discipline the E2.0 RESULT review (section 6) requires of "
+        "the P-002 surface. No tape was touched under either version."),
+    "what_changed": [
+        "the resources section now carries `data_root_discipline`: the "
+        "P-002 surface resolves through the SAME imported resolver as "
+        "P-003 (de_data_root, itself delegating to "
+        "pm_tape_density._resolve_data_root), every receipt records the "
+        "root and the branch, and a result-bearing run off the canonical "
+        "ledger REFUSES. The falsifier named is the reviewer's precise "
+        "case: a PARTIAL root refuses, never a smaller census.",
+    ],
+}
 OUT = HERE / "declarations" / f"p002_e2_a_declaration_v{DECL_VERSION}.json"
 PROTOCOL = f"P002_E2_A_OVERLAY_QUEUE_BRACKET_DECLARATION_V{DECL_VERSION}"
 
@@ -256,6 +274,7 @@ def declaration() -> dict:
     return {
         "protocol": PROTOCOL,
         "status": "DECLARATION_NO_DATA_TOUCHED",
+        "supersedes": SUPERSEDES,
         "program": "P-2026-002-hf-market-making",
         "step": "E2-A -- overlay bracket resolution on real books under the "
                 "queue-model bracket",
@@ -513,6 +532,42 @@ def declaration() -> dict:
                      "any fan-out -- and it will be ICP, because ICP is the "
                      "cell E2-A owes an answer on and the one most likely to "
                      "refuse.",
+            "data_root_discipline": {
+                "why_this_field_exists": (
+                    "the E2.0 RESULT review, section 6: `e2_0_true_mid.py:46` "
+                    "was `ROOT = HERE.parents[1]` and there was NO data-root "
+                    "resolver anywhere on the P-002 surface. On a partial "
+                    "root the existing check fires only for a WHOLLY missing "
+                    "directory, so a shell would have produced a silently "
+                    "SMALLER population rather than a refusal."),
+                "the_rule": (
+                    "every result-bearing P-002 run resolves through the "
+                    "SAME imported resolver P-003 uses -- "
+                    "de_data_root.require_canonical, which itself delegates "
+                    "to pm_tape_density._resolve_data_root. IMPORTED, NOT "
+                    "COPIED: a second implementation of 'where is the "
+                    "ledger' is exactly the thing that drifts apart."),
+                "recorded_in_every_receipt": [
+                    "repo_root", "data_root", "data_root_resolved", "branch",
+                    "PM_DATA_ROOT_env", "tape_present", "is_canonical",
+                    "refusal"],
+                "refusal": (
+                    "a result-bearing emission whose resolved data root is "
+                    "not the canonical ledger REFUSES. Not a warning: a "
+                    "worktree shell resolves, reads and holds a DIFFERENT "
+                    "ledger."),
+                "the_falsifier_is_the_reviewer_s_exact_case": (
+                    "a PARTIAL root -- a real mm_hf tape holding 2 days of "
+                    "19, every directory present, every file readable -- "
+                    "must REFUSE before any day is read, and must NOT be "
+                    "reported as a 2-day census. Driven through the runner's "
+                    "own entry point, not through the resolver alone: the "
+                    "child prints the census it WOULD have produced (2) and "
+                    "then the refusal."),
+                "already_in_force": (
+                    "landed for E2.0 before this declaration was written, so "
+                    "E2-A inherits it rather than promising it"),
+            },
             "estimate_is_labelled_an_estimate": (
                 "adding a third stream and a queue simulation to E2.0's "
                 "measured 67 s is not linear and no wall-clock figure is "

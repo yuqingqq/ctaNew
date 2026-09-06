@@ -1018,6 +1018,42 @@ def selftest() -> int:                                        # noqa: C901
        "POSITIVE CONTROL: the canonical root ADMITS through DE's resolver and "
        "the block records is_canonical, the branch and a null refusal")
 
+    # --- THE PARTIAL ROOT: refuses, never a SMALLER CENSUS ---
+    # The reviewer's precise case, driven through run() rather than through
+    # the resolver alone: a root that carries a REAL but INCOMPLETE mm_hf tape
+    # passes every "does the directory exist" test. Before DE's resolver was
+    # adopted this would have produced a census over 2 days instead of 19 and
+    # reported it as a result. The refusal must happen BEFORE any day is read.
+    with _tf2.TemporaryDirectory() as d:
+        fake = Path(d) / "repo"
+        (fake / "data" / "pm_5min" / "raw").mkdir(parents=True)
+        bt = fake / "data" / "mm_hf" / "raw" / "bookTicker" / "ADAUSDT"
+        tr = fake / "data" / "mm_hf" / "raw" / "trade" / "ADAUSDT"
+        bt.mkdir(parents=True); tr.mkdir(parents=True)
+        for day in ("20260901", "20260902"):          # 2 of 19 days
+            for h in range(24):
+                (bt / f"{day}_{h:02d}.csv").write_text("1,1,1,1,1,1,1,1\n")
+                (tr / f"{day}_{h:02d}.csv").write_text("1,1,1,1,1,1,0\n")
+        r = _sp.run([sys.executable, "-c",
+                     "import sys, json; sys.path.insert(0, %r)\n"
+                     "import e2_0_true_mid as E\n"
+                     "print('DAYS', len(E.days_available('ADAUSDT')))\n"
+                     "try:\n"
+                     "    E.run(['ADAUSDT'], E.load_declaration(), None)\n"
+                     "    print('EMITTED_A_CENSUS')\n"
+                     "except Exception as e: print('REFUSED', type(e).__name__)\n"
+                     % str(HERE)], capture_output=True, text=True,
+                    env={**os.environ, "PM_DATA_ROOT": str(fake)})
+        out = r.stdout.strip().splitlines()
+        ok(out[:1] == ["DAYS 2"] and any(x.startswith("REFUSED")
+                                         for x in out),
+           f"KNOWN-BAD (reviewer, E2.0 result review section 6): a PARTIAL "
+           f"root -- a real mm_hf tape holding 2 days of 19 -- is REFUSED "
+           f"before any day is read. It is NOT reported as a 2-day census. "
+           f"Every directory test it would have to pass, it passes: the "
+           f"files are there. Only the CANONICAL-root check catches it "
+           f"(got {out})")
+
     # --- tau* rule reproduces the plan's own instantiation ---
     ts30 = [10.0] * 24 + [90.0] * 7
     ok(tau_star(ts30, decl)[0] == 30,
