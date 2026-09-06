@@ -63,6 +63,65 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T04:30:05Z (MEM ROUND 117 -- R-558, R-559 AND THE REVIEWER'S DA-57
+  FILING SWEPT. STATE ONLY.
+  (1) THE RUNNER IS **NOT YET APPROVED** FOR THE 09-03 SMOKE -- three changes,
+  and ONE IS ON A 20-HOUR CLOCK: the design module's R7 selftest ASSERTS TODAY'S
+  DAY COUNTS AS CONSTANTS and the runner calls it on every fixture run, SO AT
+  09-07T00:06Z, WHEN 09-06 IS RE-VERDICTED, **BOTH BREAK**. THAT IS A FOURTH
+  THING RIDING ON THAT FIRE -- and unlike the other three it does not get tested
+  there, IT BREAKS THERE. Also: the digest citing BE's cascade NEVER TOUCHES THE
+  DRAWS (the runner verifies the module, then receives null_draws as an
+  argument), which is the FOURTH TIME IN SIX ROUNDS a digest has not bound what
+  it appeared to; and --fixture-run READS THE LEDGER despite FIXTURE_RUN_NO_DATA.
+  (2) THE WORKTREE DATA ANSWER IS NOT A SYMLINK, AND MY ROUND-116 RULE IS
+  SUPERSEDED. Both routes were tested in scratch worktrees and both fail in
+  opposite ways -- sparse-checkout keeps the symlink across checkouts but leaves
+  159 lines of phantom deletions; skip-worktree cleans status but the symlink is
+  replaced at the next checkout that lands data paths. NEITHER IS A STANDING
+  ANSWER BECAUSE BOTH FIGHT GIT OVER PATHS IT TRACKS.
+  (3) THE ROOT BELONGS IN THE CODE AND THE VARIABLE ALREADY EXISTS -- CHECKED BY
+  ME at pm_tape_density.py:97-115, where _resolve_data_root() reads PM_DATA_ROOT
+  as branch 1. AND THE GAP IS EXACTLY AS FILED: **ZERO de_* AND ZERO be_* FILES
+  HONOUR IT.**
+  (4) BUT PM_DATA_ROOT NAMES TWO DIFFERENT THINGS IN THIS PROGRAMME'S OWN CODE,
+  AND A DISPATCH IS ABOUT TO USE THE NAME. Of eight files mentioning it, ONE
+  reads the environment (pm_tape_density) and TWO BIND IT AS A MODULE CONSTANT --
+  and phase2_arms.py:41 binds `Path("/home/yuqing/ctaNew")`, **THE REPO ROOT, ONE
+  LEVEL ABOVE WHAT THE ENV VAR MEANS**. A value swapped between them would
+  resolve and read the wrong tree. SECOND INSTANCE OF THE ROUND-110 SHAPE
+  (ERA_BOUNDARY_NS): ONE NAME, TWO REFERENTS, AND THE GREP A SEAT WILL RUN
+  RETURNS BOTH.
+  (5) AND THE SHELL TRAP WAS ALREADY SOLVED IN A CODE COMMENT.
+  pm_tape_density.py:103-107: "THE TEST IS FOR THE TAPE, NOT FOR A DIRECTORY ...
+  Testing the parent directory picked the worktree and then failed on the ledger;
+  testing for the tape itself is the property." THAT IS R-553/R-554's FINDING,
+  DIAGNOSED AND FIXED, BEFORE IT COST THREE SEATS A ROUND. THIRD TIME IN FIVE
+  ROUNDS THAT WHAT WOULD HAVE PREVENTED A FINDING WAS ALREADY IN THE REPOSITORY
+  -- after my round-101 census and DA's limits[2] -- and each time the missing
+  step is the same: NOBODY ASKED WHETHER THE QUESTION HAD ALREADY BEEN ANSWERED.
+  (6) DESIGN v4 VERIFIED, 47 = 47, runner now 33 checks. R2's floor is CALIBRATED
+  AT THE CEILING OF ITS OWN STATISTIC **WITH ITS LIMIT IN THE FIELD** -- one hour
+  of one coin, and two heads agreeing perfectly there does not establish they
+  agree elsewhere. A calibration that ships its own insufficiency is the honest
+  form.
+  (7) A SECOND PROGRAMME IS MOVING: P-2026-002's E2.0 is DECLARED BEFORE ANY TAPE
+  IS OPENED, with **delta_rs > +1.0 bps VOIDING E1's ADA PASS declared as leg
+  (i)**. Its STATUS/HANDOFF are DA's to update under the single-seat rule -- I
+  WRITE NOTHING THERE -- and they were LAST TOUCHED 2026-08-20, sixteen days ago.
+  (8) THE DEPLOY RECORD IS SOUND AND ITS SCOPE STOPS AT THE INTERPRETER BINARY --
+  CHECKED BY ME: /interpreter pins path, realpath and a sha256 OF THE BINARY, and
+  NOT ONE of the 33 pinned paths is under /usr/lib/python or site-packages. The
+  defect is the UNSTATED SCOPE, not the missing coverage. Record, not fix; DA 59.
+  (9) AND B-1 IS CLOSED AT THE MECHANISM: the stale-pycache known-bad REFUSES,
+  and **v3's predicate would have called it good**. Four rounds, three seats,
+  each step moving the proof one layer closer to what actually executes -- from
+  my round-109 reproduction that the env var does nothing, through the receipt
+  field that digested the disk, to a harness that proves what the INTERPRETER
+  ran.
+  (10) MY OWN ROUND-116 EXPOSURE -- STATUS.yml HELD DIRTY FOR THE LENGTH OF EVERY
+  BATCH -- IS NOW A FACT IN THE RUNBOOK'S PROHIBITION.
+  PRIOR CHECKPOINT:
   2026-09-06T04:22:04Z (MEM ROUND 116 -- R-556 AND R-557 SWEPT. STATE ONLY.
   (1) THE MIDNIGHT UNIT IS DEPLOYED UNDER A TRACKED RECORD WITH A DRIFT REFUSAL,
   AND I CHECKED THE RECORD TWO WAYS: the seven REFUSE-tier digests recompute
@@ -1721,6 +1780,62 @@ flags:
                              # A ceiling that does not bind is not a failure of
                              # the ceiling; it is the answer that the headroom
                              # has to be defended some other way.
+  the_deploy_records_SCOPE_STOPS_AT_THE_INTERPRETER_BINARY: STDLIB-UNPINNED-AND-UNSTATED
+                             # CHECKED 2026-09-06T04:30:05Z at the record, the
+                             # reviewer's finding on DA 57 (118af18) confirmed by
+                             # my own read.
+                             # THE RECORD'S /interpreter PINS path
+                             # (/home/yuqing/pricer-sol/venv/bin/python3),
+                             # realpath (/usr/bin/python3.12) AND A sha256 OF THE
+                             # BINARY. AND I ENUMERATED ALL 33 PINNED PATHS: NOT
+                             # ONE IS UNDER /usr/lib/python OR site-packages --
+                             # every one is under live/. **SO THE STANDARD
+                             # LIBRARY IS UNPINNED**, and the record does not say
+                             # so.
+                             # WHY IT MATTERS AND WHY IT IS NOT ALARMING: a
+                             # stdlib change under the same binary digest is
+                             # unlikely on a fixed system, BUT THE RECORD READS
+                             # AS THOUGH IT PINS WHAT THE UNIT EXECUTES, AND IT
+                             # PINS WHAT THE UNIT EXECUTES **FROM live/**. The
+                             # defect is the UNSTATED SCOPE, not the missing
+                             # coverage -- exactly the class where a checker's
+                             # NAME over-promises its measurement, which is the
+                             # round-107 predicate-name shape a fourth time.
+                             # THE SECOND ITEM, RELAYED: deployed_commit CAN BE
+                             # ORPHANED BY A HISTORY REWRITE. Both are "RECORD,
+                             # NOT FIX" and are queued for DA 59 -- the right
+                             # disposition for a sound instrument with a stated
+                             # edge.
+                             # THE REVIEWER'S OVERALL VERDICT STANDS AND I DID
+                             # NOT DISTURB IT: THE DEPLOY RECORD IS SOUND. My own
+                             # round-116 check (7/7 REFUSE digests, sha256sum -c
+                             # all OK) is unaffected by either item.
+  B1_IS_CLOSED_AT_THE_MECHANISM: THE-STALE-PYCACHE-KNOWN-BAD-REFUSES
+                             # RELAYED from the reviewer's 118af18, and it is the
+                             # end of a thread I have carried since round 109.
+                             # THE STALE-PYCACHE KNOWN-BAD **REFUSES** under the
+                             # v4 harness -- and the reviewer states the measure
+                             # that makes it a closure rather than a claim:
+                             # **v3's PREDICATE WOULD HAVE CALLED IT GOOD.** The
+                             # falsifier is the exact case that escaped the
+                             # previous version.
+                             # THE REVIEWER'S OWN WORDS: "the most complete
+                             # closure of any finding I've filed."
+                             # THE ARC, BECAUSE IT IS THE USEFUL PART: I
+                             # reproduced at round 109 that
+                             # PYTHONDONTWRITEBYTECODE=1 DOES NOT CLOSE THE
+                             # HAZARD -- it suppresses writing and does nothing
+                             # about reading. DA's round-54 4/4 was then recorded
+                             # as NOT having closed it. The reviewer's B-1 showed
+                             # that even the receipt field meant to prove which
+                             # bytes ran DIGESTED THE DISK, NOT THE INTERPRETER.
+                             # v4 now proves what the INTERPRETER ran, per
+                             # mutant, with the escapee as the known-bad.
+                             # FOUR ROUNDS, THREE SEATS, AND EACH STEP MOVED THE
+                             # PROOF ONE LAYER CLOSER TO THE THING THAT ACTUALLY
+                             # EXECUTES. That is what closing a finding at the
+                             # mechanism looks like, as against closing it at the
+                             # symptom.
   midnight_unit_is_DEPLOYED_UNDER_A_RECORD_WITH_A_DRIFT_REFUSAL: rc-7-AND-NOTHING-RUNS
                              # RELAYED from R-556(A) for the deploy; THE RECORD
                              # ITSELF CHECKED BY ME, TWO WAYS.
@@ -2024,7 +2139,52 @@ flags:
                              # R-549(B) is corrected in band at R-551(2); DE 70
                              # states the fields as COMPUTED FROM THE MEASURED
                              # SECONDS rather than typed.
-  the_symlink_fix_DOES_NOT_SURVIVE_A_WORKTREE_CHECKOUT: A-MOMENT-NOT-A-STATE
+  the_data_root_answer_is_PM_DATA_ROOT_IN_THE_CODE_not_a_symlink: SUPERSEDES-MY-ROUND-116-RE-SWEEP
+                             # RELAYED from R-558(B) and R-559(C); THE CODE
+                             # FACTS CHECKED BY ME.
+                             # BOTH SYMLINK ROUTES WERE TESTED IN SCRATCH
+                             # WORKTREES AND BOTH FAIL, IN OPPOSITE WAYS:
+                             # sparse-checkout with !/data/ MAKES THE SYMLINK
+                             # SURVIVE a checkout that lands new tracked data
+                             # paths -- the reviewer's third re-materialisation
+                             # would not have happened -- BUT git status still
+                             # reports every tracked data/ path as deleted even
+                             # after skip-worktree and reapply (159 lines), so
+                             # the add -A hazard REMAINS. Non-sparse +
+                             # skip-worktree gives a CLEAN STATUS but THE
+                             # SYMLINK IS REPLACED BY A DIRECTORY at the next
+                             # checkout that adds data paths -- which every
+                             # DE/BE round does.
+                             # NEITHER IS A STANDING ANSWER BECAUSE BOTH FIGHT
+                             # GIT OVER PATHS IT TRACKS. That sentence is the
+                             # whole diagnosis, and it is why my round-116
+                             # entry -- the R-557 re-sweep as the rule -- IS
+                             # SUPERSEDED HERE rather than merely amended.
+                             # THE ANSWER IS AN ENV-VAR ROOT IN THE CODE, AND
+                             # THE VARIABLE ALREADY EXISTS. CHECKED BY ME at
+                             # live/pm_research/pm_tape_density.py:97-115:
+                             # _resolve_data_root() reads os.environ["PM_DATA_ROOT"]
+                             # as BRANCH 1 ("1_env_PM_DATA_ROOT"), falling back
+                             # to a tape-presence test then canonical, with
+                             # DATA_ROOT = _resolve_data_root() at :115. DA's
+                             # family takes DATA_ROOT from it and is therefore
+                             # ALREADY ROOT-PORTABLE.
+                             # AND THE GAP IS EXACTLY WHERE R-559(C) SAYS:
+                             # I GREPPED EVERY live/ .py FILE -- **ZERO** de_*
+                             # files and **ZERO** be_* files honour it.
+                             # THE STANDING ANSWER, per seat at its next idle:
+                             # the root helper honours PM_DATA_ROOT (default
+                             # unchanged), THE RESOLVED ROOT IS RECORDED IN EVERY
+                             # RECEIPT, and a result-bearing emission from a
+                             # NON-LEDGER ROOT **REFUSES** unless --fixture; the
+                             # shells export PM_DATA_ROOT=/home/yuqing/ctaNew/data;
+                             # THEN THE SYMLINKS COME OUT and git owns data/
+                             # again -- clean status AND checkout-proof.
+                             # THE R-557 REFRESH COMMAND STANDS UNTIL EACH
+                             # SEAT'S HELPER CARRIES IT. So my round-116 rule is
+                             # not wrong today; it is an interim with a named
+                             # end.
+                             # EARLIER VALUE (rule 13): A-MOMENT-NOT-A-STATE
                              # RELAYED from R-557(B), DE 72b's structural note,
                              # and it reopens what I recorded at round 114 as a
                              # repair.
@@ -2055,6 +2215,70 @@ flags:
                              # A CHORE WITH A DEADLINE -- and this one's deadline
                              # is invisible, because nothing announces that the
                              # bits have lapsed.
+  PM_DATA_ROOT_NAMES_TWO_DIFFERENT_THINGS_IN_THIS_PROGRAMMES_CODE: SECOND-INSTANCE-OF-THE-ROUND-110-SHAPE
+                             # CHECKED 2026-09-06T04:30:05Z, and it is a hazard
+                             # sitting directly in front of a dispatch: DE and BE
+                             # are about to be told to "honour PM_DATA_ROOT".
+                             # I CLASSIFIED EVERY live/ .py FILE THAT MENTIONS
+                             # THE NAME -- EIGHT FILES -- BY WHETHER IT READS THE
+                             # ENVIRONMENT OR BINDS A CONSTANT:
+                             #   ENV-READ: pm_tape_density.py ONLY (1 of 8).
+                             #   CONST-BIND: phase2_arms.py AND
+                             #   build_state_tape_v2.py -- each with a
+                             #   module-level `PM_DATA_ROOT = ...`.
+                             #   The other five merely mention it in prose,
+                             #   selftests or branch-name strings.
+                             # AND THE COLLISION IS OFF BY ONE LEVEL, WHICH IS
+                             # THE WORST VERSION: phase2_arms.py:41 binds
+                             # `PM_DATA_ROOT = Path("/home/yuqing/ctaNew")` --
+                             # THE REPO ROOT -- while the environment variable of
+                             # the same name means THE DATA ROOT
+                             # (/home/yuqing/ctaNew/data), one level below. A
+                             # value swapped between them would resolve, produce
+                             # paths, and read the wrong tree.
+                             # THIS IS THE SECOND INSTANCE OF THE SHAPE I FOUND
+                             # AT ROUND 110 (ERA_BOUNDARY_NS naming the BINANCE
+                             # instant inside P-003 code). SAME PROGRAMME, SAME
+                             # FAILURE MODE: ONE NAME, TWO REFERENTS, AND THE
+                             # GREP THAT A SEAT WILL RUN RETURNS BOTH.
+                             # I ASSERT NO DEFECT IN THE TWO CONSTANTS -- they
+                             # may be entirely correct for their own modules and
+                             # I have not read their call sites. THE CLAIM IS
+                             # THAT A SEAT IMPLEMENTING R-559(C) BY GREPPING THE
+                             # NAME FINDS TWO OF ITS THREE BINDING HITS ARE THE
+                             # OTHER THING.
+  the_shell_trap_WAS_ALREADY_SOLVED_IN_A_CODE_COMMENT: TEST-FOR-THE-TAPE-NOT-THE-DIRECTORY
+                             # CHECKED 2026-09-06T04:30:05Z at
+                             # live/pm_research/pm_tape_density.py:103-107, and
+                             # it is the most useful thing I read this round.
+                             # THE COMMENT, VERBATIM: "THE TEST IS FOR THE TAPE,
+                             # NOT FOR A DIRECTORY. A worktree checks out the
+                             # TRACKED receipts under data/pm_5min/derived, so
+                             # `data/pm_5min` exists there while `raw/` -- the
+                             # gitignored tape this module actually reads -- does
+                             # not. Testing the parent directory picked the
+                             # worktree and then failed on the ledger; testing
+                             # for the tape itself is the property."
+                             # THAT IS THE SHELL TRAP, DIAGNOSED AND SOLVED, IN A
+                             # CODE COMMENT, BEFORE IT COST THREE SEATS A ROUND
+                             # AT R-553/R-554. The generalisation the programme
+                             # reached the hard way -- a partial shell answers
+                             # plausibly because it holds SOME of the files -- is
+                             # exactly this comment's "testing the parent
+                             # directory picked the worktree".
+                             # AND IT IS THE THIRD TIME IN FIVE ROUNDS THAT THE
+                             # THING WHICH WOULD HAVE PREVENTED A FINDING WAS
+                             # ALREADY IN THE REPOSITORY: my round-101 census
+                             # (round 113), DA's limits[2] (round 107), and now
+                             # this. THE CORROBORATION AXIS AGAIN, and each time
+                             # the missing step is the same -- NOBODY ASKED
+                             # WHETHER THE QUESTION HAD ALREADY BEEN ANSWERED
+                             # SOMEWHERE IN THE TREE.
+                             # NOT A ROUTING. Recorded because the property --
+                             # TEST FOR THE ARTEFACT THE CODE ACTUALLY READS,
+                             # NOT FOR THE DIRECTORY THAT CONTAINS IT -- is the
+                             # right form of the refusal R-559(C) asks DE and BE
+                             # to build, and it exists as working code today.
   the_shell_trap_MEASURED_PER_SEAT_and_BE_HAS_NO_ROUTE_TO_THE_LEDGER: CHECKED-BY-ME-AT-04:09Z
                              # CHECKED 2026-09-06T04:09:46Z. I measured every
                              # seat's route rather than relaying the structural
@@ -2565,7 +2789,43 @@ flags:
                              # DESCRIBES IT. The corrected check did both and
                              # returned 7 of 7 with a second, independent
                              # confirmation from `sha256sum -c`.
-  da_is_at_75_percent_context: RESET-DONE-NOW-ON-P-2026-002-E2.0
+  A_SECOND_PROGRAMME_IS_MOVING_P_2026_002_E2_0_DECLARED: ITS-OWN-STATUS-IS-DA-S-AND-IS-16-DAYS-STALE
+                             # RELAYED from R-559(B). P-2026-002's E2.0 is
+                             # DECLARED BEFORE ANY TAPE IS OPENED:
+                             # live/mm_research/declarations/
+                             # p002_e2_0_declaration_v1.json, sha
+                             # 95aeaf1bc35fd8fb, status
+                             # DECLARATION_NO_DATA_TOUCHED, carrying a7b5534.
+                             # THE TRUE MID from the last bookTicker AT EXCHANGE
+                             # transact_time; a day-admission predicate (24 hour
+                             # files for BOTH bookTicker and trade) with UTC DAY
+                             # as the cluster unit; the gate quantity
+                             # delta_rs(tau*) = rs_proxy - rs_true, eq-weighted,
+                             # WITH **delta_rs > +1.0 bps VOIDING E1's ADA PASS**
+                             # DECLARED AS LEG (i); an E1 reproduction control;
+                             # robustness splits declared NOW; falsifiers both
+                             # directions -- a synthetic book moving against the
+                             # maker must return rs NEGATIVE at the known
+                             # magnitude; resources under the rule-20 wrapper,
+                             # never raised.
+                             # A DECLARATION THAT NAMES THE CONDITION UNDER WHICH
+                             # IT VOIDS AN EXISTING PASS, BEFORE LOOKING, IS THE
+                             # SHAPE THIS PROGRAMME SPENT TWENTY ROUNDS LEARNING.
+                             # AND THE CROSS-PROGRAMME BOUNDARY, FLAGGED BECAUSE
+                             # IT IS NOT MINE AND COULD EASILY BE ASSUMED TO BE:
+                             # **P-2026-002 IS SINGLE-SEAT, SO CLAUDE.md's
+                             # ORDINARY RULE APPLIES THERE -- DA UPDATES THAT
+                             # PROGRAMME'S OWN STATUS.yml AND HANDOFF.md
+                             # ITSELF** and files only a pointer row in this
+                             # register. I WRITE NOTHING THERE.
+                             # AND THE FACT THAT MAKES IT WORTH A FLAG RATHER
+                             # THAN A LINE: THOSE FILES WERE LAST TOUCHED
+                             # 2026-08-20 -- SIXTEEN DAYS. A programme that has
+                             # just started moving carries state files sixteen
+                             # days behind it, and the seat now writing them is
+                             # one that reset four hours ago.
+                             # EARLIER VALUE (rule 13):
+                             # RESET-DONE-NOW-ON-P-2026-002-E2.0
                              # UPDATED 2026-09-06T04:22:04Z from R-557(C). DA's
                              # data shell swapped at 04:19Z (no unique files),
                              # and DA 58 is dispatched to P-2026-002 E2.0 -- the
@@ -3105,6 +3365,69 @@ flags:
                              # NEITHER OPTION CHANGES THE DESIGN, and BE's
                              # book-building starts with 09-03 EITHER WAY -- so
                              # the work is not blocked on the ruling.
+  the_runner_is_NOT_YET_APPROVED_FOR_THE_SMOKE: THREE-CHANGES-ONE-ON-A-20-HOUR-CLOCK
+                             # RELAYED from R-558(A). The reviewer calls it
+                             # "the best-built instrument this programme has
+                             # produced" AND WITHHOLDS APPROVAL, which is the
+                             # right pair.
+                             # WHAT IT DRIVES AND PASSES: 29 checks under the
+                             # wrapper; the R5 catch REPRODUCED EXACTLY; G bound
+                             # both ways; a previously-opened day refuses NAMING
+                             # ITS READ STATE; a day with no read-state entry
+                             # refuses as NO_READ_STATE_RECORDED RATHER THAN
+                             # DEFAULTING IN -- absence treated as a status, not
+                             # as permission; a refused arm-day leaves G and
+                             # marks the arm UNTESTABLE; 499 draws refuses.
+                             # THREE CHANGES BEFORE THE 09-03 SMOKE.
+                             # (1) **BLOCKER, AND IT IS ON A CLOCK.** The design
+                             # module's R7 selftest ASSERTS TODAY'S DAY COUNTS AS
+                             # CONSTANTS (six qualifying / three untouched) and
+                             # THE RUNNER CALLS THAT SELFTEST ON EVERY FIXTURE
+                             # RUN -- so AT 09-07T00:06Z, WHEN 09-06 IS
+                             # RE-VERDICTED, **BOTH BREAK**. The assertion must
+                             # be RELATIVE TO THE RULED SET with the count AN
+                             # OUTPUT.
+                             # THAT IS A FOURTH THING RIDING ON THE SAME FIRE,
+                             # and unlike the other three it does not merely GET
+                             # TESTED there -- IT BREAKS THERE. An instrument
+                             # whose selftest hardcodes today's answer has a
+                             # shelf life, and this one's expires in the same
+                             # minute the day set completes its first step.
+                             # (2) THE DIGEST THAT CITES BE'S CASCADE NEVER
+                             # TOUCHES THE DRAWS: the runner VERIFIES BE's module
+                             # and then RECEIVES null_draws AS AN ARGUMENT --
+                             # NOTHING BINDS THE VERIFIED MODULE TO THE NUMBERS.
+                             # This is the fourth time in six rounds a digest has
+                             # turned out not to bind what it appeared to: the
+                             # disk-vs-interpreter pycache field, the
+                             # transcription under a file digest, BE's population
+                             # second read, and now a verified module beside
+                             # unverified numbers.
+                             # (3) --fixture-run READS THE LEDGER despite
+                             # FIXTURE_RUN_NO_DATA, and cannot be driven from a
+                             # shell worktree.
+                             # ALL THREE TO DE 73 AS AN ADDENDUM, WITH FALSIFIERS
+                             # NAMED FOR EACH.
+  design_v4_VERIFIED_47_EQUALS_47_AND_R2_CALIBRATED_WITH_ITS_LIMIT: RUNNER-NOW-33-CHECKS
+                             # RELAYED from R-559(A). design v4 sha
+                             # 24db4e1bd5bfc04b, NO DATA, battery 47 = 47
+                             # computed; the coordinator's own runs give design
+                             # selftest 47 PASS and RUNNER SELFTEST 33 PASS
+                             # (29 -> 33: the theta/model verifier and the root
+                             # refusal, i.e. reviewer items 3 and 4 from R-557).
+                             # R2's OVERLAP FLOOR IS NOW CALIBRATED -- "at the
+                             # ceiling of its own statistic" on the consumed hour
+                             # -- AND THE LIMIT IS STATED IN THE FIELD: ONE HOUR
+                             # OF ONE COIN, AND TWO HEADS AGREEING PERFECTLY
+                             # THERE DOES NOT ESTABLISH THEY AGREE ELSEWHERE.
+                             # A calibration that ships its own insufficiency is
+                             # the honest form, and it is the same shape as R4's
+                             # 0.25 against HAZARD's measured 0.4055.
+                             # AND R7 NOW CARRIES BOTH ROOTS:
+                             # declared_ledger_root = /home/yuqing/ctaNew/data
+                             # BESIDE ledger_root_read (the worktree symlink path
+                             # that resolves to it) -- the shell trap answered by
+                             # recording both sides rather than trusting one.
   de72_the_GATE1_RUNNER_EXISTS_ON_FIXTURES: THE-R5-SEAL-CAUGHT-ITS-OWN-EMITTER
                              # RELAYED from R-556(B), verified by the
                              # coordinator's own execution under the rule-20
@@ -11222,6 +11545,30 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T04:30:05Z, THE RUNNER IS NOT YET APPROVED FOR THE 09-03
+  SMOKE AND ONE OF ITS THREE BLOCKERS IS ON A CLOCK: the design's R7 selftest
+  hardcodes today's day counts and the runner calls it, SO BOTH BREAK AT
+  09-07T00:06Z WHEN 09-06 IS RE-VERDICTED. THAT IS A FOURTH THING RIDING ON THAT
+  FIRE, AND THE ONLY ONE THAT DOES NOT GET TESTED THERE BUT BREAKS THERE.
+  THE WORKTREE DATA ANSWER IS NOT A SYMLINK -- both routes tested and both fail,
+  because BOTH FIGHT GIT OVER PATHS IT TRACKS -- so my round-116 re-sweep rule is
+  an interim with a named end. THE ROOT BELONGS IN THE CODE and PM_DATA_ROOT
+  already exists, read as branch 1 by pm_tape_density; ZERO de_* and ZERO be_*
+  files honour it. BUT THE NAME IS TAKEN TWICE IN THIS PROGRAMME'S OWN CODE --
+  phase2_arms.py binds it to THE REPO ROOT, one level above what the env var
+  means -- which is the round-110 shape a second time, in front of a dispatch
+  that will grep for that name.
+  AND THE SHELL TRAP WAS ALREADY SOLVED IN A CODE COMMENT: "test for the tape,
+  not for a directory" -- the third time in five rounds that what would have
+  prevented a finding was already in the repository.
+  Design v4 is verified (47 = 47, runner 33) with R2's floor calibrated AND ITS
+  LIMIT STATED IN THE FIELD. A SECOND PROGRAMME IS MOVING -- P-2026-002's E2.0
+  declared before any tape, with a condition that VOIDS AN EXISTING PASS named in
+  advance; its state files are DA's and are sixteen days stale. The deploy record
+  is SOUND with its scope stopping at the interpreter BINARY (checked by me), and
+  B-1 IS CLOSED AT THE MECHANISM.
+  Gate 1 is 1 of 7. Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T04:22:04Z, RETAINED BELOW --
   AS-OF 2026-09-06T04:22:04Z, THE NIGHTLY PATH IS FINALLY INSTRUMENTED: the
   midnight unit is DEPLOYED UNDER A TRACKED RECORD and any drift in the seven
   recorded files gives rc 7 AND NOTHING RUNS -- checked by me two ways, 7/7
@@ -12183,6 +12530,70 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 117, 2026-09-06T04:30:05Z ------------------------------
+  the_data_root_answer_is_PM_DATA_ROOT_IN_THE_CODE_not_a_symlink:
+    prov: CHECKED
+    artifact: live/pm_research/pm_tape_density.py
+    as_of: 2026-09-06T04:30:05Z
+    said: >-
+      _resolve_data_root() at line 97 reads os.environ.get("PM_DATA_ROOT") and
+      sets DATA_ROOT_BRANCH = "1_env_PM_DATA_ROOT" when set, falling back to a
+      tape-presence test on data/pm_5min/raw and then canonical, with
+      DATA_ROOT = _resolve_data_root() at :115. Grepping every .py under live/
+      for the name and classifying each hit: ZERO de_* files and ZERO be_* files
+      honour it. The two scratch-worktree experiments and their 159-line status
+      result are RELAYED from R-558(B); I ran neither.
+  PM_DATA_ROOT_NAMES_TWO_DIFFERENT_THINGS_IN_THIS_PROGRAMMES_CODE:
+    prov: CHECKED
+    artifact: live/pm_research/phase2_arms.py
+    as_of: 2026-09-06T04:30:05Z
+    said: >-
+      eight .py files under live/ mention PM_DATA_ROOT; classifying each by
+      whether it reads the environment or binds a module constant gives ONE
+      env-read (pm_tape_density.py) and TWO const-binds (this file and
+      build_state_tape_v2.py), the remaining five being prose, selftest strings
+      or branch names. Line 41 here is
+      `PM_DATA_ROOT = Path("/home/yuqing/ctaNew")` -- the repo root, one level
+      above the data root the environment variable denotes. I have not read the
+      call sites and assert no defect in either constant.
+  the_shell_trap_WAS_ALREADY_SOLVED_IN_A_CODE_COMMENT:
+    prov: CHECKED
+    artifact: live/pm_research/pm_tape_density.py
+    as_of: 2026-09-06T04:30:05Z
+    said: >-
+      lines 103-107 read "THE TEST IS FOR THE TAPE, NOT FOR A DIRECTORY. A
+      worktree checks out the TRACKED receipts under data/pm_5min/derived, so
+      `data/pm_5min` exists there while `raw/` -- the gitignored tape this module
+      actually reads -- does not. Testing the parent directory picked the
+      worktree and then failed on the ledger; testing for the tape itself is the
+      property." That is R-553/R-554's finding, diagnosed and fixed in code
+      before it cost three seats a round.
+  the_deploy_records_SCOPE_STOPS_AT_THE_INTERPRETER_BINARY:
+    prov: CHECKED
+    artifact: live/pm_research/systemd/da_deploy_record.json
+    as_of: 2026-09-06T04:30:05Z
+    said: >-
+      /interpreter carries path /home/yuqing/pricer-sol/venv/bin/python3,
+      realpath /usr/bin/python3.12 and a sha256 of the binary; enumerating all 33
+      pinned paths, none is under /usr/lib/python or site-packages and every one
+      is under live/. So the standard library is unpinned and the record does not
+      say so. The orphanable deployed_commit is RELAYED from the reviewer's
+      filing.
+  the_runner_is_NOT_YET_APPROVED_FOR_THE_SMOKE:
+    prov: RELAYED
+    from: R-558(A), the reviewer's REVIEW_RUNNER_2026-09-06.md
+  design_v4_VERIFIED_47_EQUALS_47_AND_R2_CALIBRATED_WITH_ITS_LIMIT:
+    prov: RELAYED
+    from: R-559(A), verified by the coordinator's own runs
+  A_SECOND_PROGRAMME_IS_MOVING_P_2026_002_E2_0_DECLARED:
+    prov: RELAYED
+    from: >-
+      R-559(B). P-2026-002's STATUS.yml and HANDOFF.md are DA's under the
+      single-seat rule; I write nothing there. That they were last touched
+      2026-08-20 is from the register.
+  B1_IS_CLOSED_AT_THE_MECHANISM:
+    prov: RELAYED
+    from: the reviewer's filing 118af18
   # --- MEM round 116, 2026-09-06T04:22:04Z ------------------------------
   midnight_unit_is_DEPLOYED_UNDER_A_RECORD_WITH_A_DRIFT_REFUSAL:
     prov: CHECKED
@@ -12229,18 +12640,12 @@ flag_provenance:
   de72_the_GATE1_RUNNER_EXISTS_ON_FIXTURES:
     prov: RELAYED
     from: R-556(B), verified by the coordinator's own execution
-  the_symlink_fix_DOES_NOT_SURVIVE_A_WORKTREE_CHECKOUT:
-    prov: RELAYED
-    from: R-557(B), DE 72b
   THREE_THINGS_RIDE_ON_THE_09-07T00:06Z_FIRE:
     prov: RELAYED
     from: >-
       R-555(B), R-549(E) item 5 and R-556(A) for the three stakes. The
       observation that the instruments being tested are the ones that would
       report the other's failure is mine, carried from round 115.
-  da_is_at_75_percent_context:
-    prov: RELAYED
-    from: R-557(C) -- reset complete, shell swapped at 04:19Z, now on P-2026-002 E2.0
   # --- MEM round 115, 2026-09-06T04:16:41Z ------------------------------
   the_day_verdict_tracking_gap_is_CLOSED_AT_0852871:
     prov: CHECKED
@@ -12515,9 +12920,6 @@ flag_provenance:
   sigkill_still_defers_fix_at_the_exit_code:
     prov: RELAYED
     from: R-548(C), the reviewer's A-1, reproduced by the reviewer
-  da_is_at_75_percent_context:
-    prov: RELAYED
-    from: R-548(B)
   # --- MEM round 109, 2026-09-06T02:51:45Z ------------------------------
   mutation_audit_hazards_for_every_seat:
     prov: CHECKED

@@ -1,5 +1,137 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T04:30:05Z — **The runner is NOT yet approved for the smoke, and
+one of its three blockers expires at 09-07T00:06Z.** Gate 1 is 1 of 7.
+Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 117
+
+### 1. Three changes before the smoke — and one is on a clock
+
+The reviewer calls it *"the best-built instrument this programme has produced"*
+**and withholds approval.** *(A day with no read-state entry refuses as
+`NO_READ_STATE_RECORDED` rather than defaulting in — absence treated as a status,
+not as permission.)*
+
+1. **BLOCKER, on a 20-hour clock.** The design module's R7 selftest **asserts
+   today's day counts as constants**, and the runner calls it on every fixture
+   run — so **at 09-07T00:06Z, when 09-06 is re-verdicted, both break.** The
+   assertion must be **relative to the ruled set with the count an output.**
+
+   > **That is a FOURTH thing riding on that fire — and unlike the other three it
+   > does not get *tested* there, it *breaks* there.** *An instrument whose
+   > selftest hardcodes today's answer has a shelf life, and this one's expires in
+   > the same minute the day set completes its first step.*
+
+2. **The digest citing BE's cascade never touches the draws** — the runner
+   verifies the module, then **receives `null_draws` as an argument.** *Fourth
+   time in six rounds a digest has not bound what it appeared to.*
+3. `--fixture-run` **reads the ledger** despite `FIXTURE_RUN_NO_DATA`.
+
+### 2. The data-root answer — and my round-116 rule is superseded
+
+Both symlink routes were tested in scratch worktrees and **both fail in opposite
+ways**: sparse-checkout keeps the symlink across checkouts but leaves **159 lines
+of phantom deletions**; skip-worktree cleans status but **the symlink is replaced
+at the next checkout that lands data paths** — which every DE/BE round does.
+
+> **Neither is a standing answer because both fight git over paths it tracks.**
+> That is the whole diagnosis, and it is why what I recorded at round 116 as the
+> rule is **superseded**, not amended. It stands as an interim **with a named
+> end.**
+
+**The root belongs in the code, and the variable already exists — checked by
+me:** `pm_tape_density.py:97–115`, `_resolve_data_root()` reads `PM_DATA_ROOT` as
+**branch 1**, falling back to a tape-presence test then canonical. **And the gap
+is exactly as filed: ZERO `de_*` and ZERO `be_*` files honour it.**
+
+### 3. But the name is taken twice — and a dispatch is about to use it
+
+Of eight `.py` files mentioning `PM_DATA_ROOT`: **one reads the environment**
+(`pm_tape_density`), **two bind it as a module constant.** And
+`phase2_arms.py:41` binds `Path("/home/yuqing/ctaNew")` — **the repo root, one
+level above what the env var means.**
+
+> *A value swapped between them would resolve, produce paths, and read the wrong
+> tree.* **Second instance of the round-110 shape** (`ERA_BOUNDARY_NS`): **one
+> name, two referents, and the grep a seat will run returns both.** I assert no
+> defect in either constant — I have not read their call sites.
+
+### 4. The shell trap was already solved in a code comment
+
+`pm_tape_density.py:103–107`:
+
+> *"**THE TEST IS FOR THE TAPE, NOT FOR A DIRECTORY.** A worktree checks out the
+> TRACKED receipts under `data/pm_5min/derived`, so `data/pm_5min` exists there
+> while `raw/` — the gitignored tape this module actually reads — does not.
+> Testing the parent directory picked the worktree and then failed on the ledger;
+> testing for the tape itself is the property."*
+
+**That is R-553/R-554's finding, diagnosed and fixed, before it cost three seats
+a round.** And it is the **third time in five rounds** that what would have
+prevented a finding was already in the repository — after my round-101 census and
+DA's `limits[2]`. **Each time the missing step is the same: nobody asked whether
+the question had already been answered.**
+
+*The property — **test for the artefact the code actually reads, not the
+directory containing it** — is the right form of the refusal R-559(C) now asks DE
+and BE to build, and it exists as working code today.*
+
+### 5. Design v4, and a calibration that ships its own insufficiency
+
+**47 = 47; runner 29 → 33** (the theta/model verifier and the root refusal).
+R2's overlap floor is now calibrated *"at the ceiling of its own statistic"* —
+**with the limit stated in the field: one hour of one coin, and two heads
+agreeing perfectly there does not establish they agree elsewhere.** *Same honest
+shape as R4's 0.25 against HAZARD's measured 0.4055.* And R7 now carries **both**
+roots — declared and read — *the shell trap answered by recording both sides
+rather than trusting one.*
+
+### 6. A second programme is moving
+
+**P-2026-002's E2.0 is DECLARED before any tape is opened** — and **`Δ_rs > +1.0
+bps VOIDS E1's ADA pass`, declared as leg (i).** *A declaration that names the
+condition under which it voids an existing pass, before looking, is the shape this
+programme spent twenty rounds learning.*
+
+**Its `STATUS.yml` and `HANDOFF.md` are DA's** under the single-seat rule — **I
+write nothing there** — and **they were last touched 2026-08-20, sixteen days
+ago.** *A programme that has just started moving carries state files sixteen days
+behind it, written by a seat that reset four hours ago.*
+
+### 7. The deploy record's edge, and a closure
+
+**Checked by me:** `/interpreter` pins path, realpath and **a sha256 of the
+binary**, and **not one of the 33 pinned paths is under `/usr/lib/python` or
+`site-packages`.** **The stdlib is unpinned and the record does not say so.**
+*The defect is the unstated scope, not the missing coverage* — the
+predicate-name shape a fourth time. Record, not fix; DA 59. **The reviewer's
+verdict stands: the record is sound**, and my round-116 check is unaffected.
+
+**And B-1 is closed at the mechanism:** the stale-pycache known-bad **REFUSES**,
+and **v3's predicate would have called it good.** *Four rounds, three seats, each
+step moving the proof one layer closer to what actually executes* — from my
+round-109 reproduction that the env var does nothing, through the receipt field
+that digested the disk, to a harness that proves what the **interpreter** ran.
+
+**My round-116 exposure — `STATUS.yml` held dirty for the length of every batch —
+is now a fact in the runbook's prohibition.**
+
+### 8. Measured before the sentence
+
+**613 flags, 69 CHECKED, 89 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 158; tasks 19.** *(Two ORPHANs, caught pre-commit; one key had
+two entries and the assertion caught it.)*
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — the third named three times
+this round alone. **455 of 613 flags never audited.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T04:22:04Z — **The nightly path is finally instrumented: the
 midnight unit is deployed under a tracked record, and drift gives rc 7 with
 nothing run.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
