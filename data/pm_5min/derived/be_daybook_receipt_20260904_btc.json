@@ -1,0 +1,356 @@
+{
+ "ROUND_49_BUDGET_WITHDRAWN": {
+  "and_the_term_it_could_not_close_is_now_measured": "asm's own peak, published per run as resources.asm_peak_gb_PUBLISHED",
+  "so_the_floor_was_an_ARTEFACT": "of indexing the wrong tape, not a property of the day. The budget's arithmetic was right and its input was wrong.",
+  "status": "WITHDRAWN. The declaration is not edited (rule 13); this records the withdrawal where the budgets are read.",
+  "what_it_rested_on": "an A1_index peak of 5.971 GB, MEASURED while indexing the LIVE v5 tape -- the consumed hour's, not the day's",
+  "what_was_declared": "be_assembly_budget_declaration_v1.json computed 8.713 GB against the 8 GB cap (resident floor 5.971 + whole fragment 2.742) and answered NO",
+  "what_was_measured_once_the_seam_took_a_path": "A1_index 3.190 GB, from the day's 991 MB tape"
+ },
+ "asm": {
+  "both_heads_present": true,
+  "by_arm_keys": [
+   [
+    "btc",
+    "incumbent_linear_d"
+   ],
+   [
+    "btc",
+    "q1_arrival_composed_lgbm"
+   ]
+  ],
+  "coverage_by_head": {
+   "incumbent_linear_d": {
+    "coverage": 0.9450918300954743,
+    "n_covered": 338444,
+    "n_reference_generations": 358107,
+    "n_scored_keys": 338444,
+    "n_uncovered": 19663,
+    "theta": 0.43525926488298716
+   },
+   "q1_arrival_composed_lgbm": {
+    "coverage": 0.9450918300954743,
+    "n_covered": 338444,
+    "n_reference_generations": 358107,
+    "n_scored_keys": 338444,
+    "n_uncovered": 19663,
+    "theta": 0.32450609461933483
+   }
+  },
+  "n_shared_keys": 338444,
+  "set_equality_asserted": true,
+  "sets_are_equal": true
+ },
+ "assembly_evidence": {
+  "UNCOVERED_GENERATIONS": {
+   "by_reason": {
+    "fine": 0,
+    "gap_at_cutoff_excluded": 103,
+    "no_archive": 0,
+    "no_level_history_excluded": 22,
+    "pm": 0,
+    "pre_window_excluded": 29340,
+    "state_join_failed": 0
+   },
+   "count": 19663,
+   "identical_across_heads": true,
+   "if_they_do_not_sum": "the residual is UNEXPLAINED and is reported as such rather than absorbed -- a count without a reason invites the reading that the gap is understood",
+   "n_reference_generations": 358107,
+   "reasons_account_for_the_count": false,
+   "reasons_sum": 29465
+  },
+  "chunk_windows": 6,
+  "computed_from": "asm['assembly']['drops_by_coin'] and the reference, not from the run log",
+  "kept_by_coin": {
+   "btc": 609137
+  },
+  "n_chunks": 48,
+  "n_windows": 288,
+  "state_join_failed": 0,
+  "state_join_failed_is_zero": true,
+  "why_that_matters": "a non-zero state_join_failed would mean the day's generations did not find rows in the day's tape -- which is exactly what the parameterised seam exists to make impossible"
+ },
+ "book": {
+  "bytes": 340969199,
+  "digest_is_of_the_buffer_as_written": true,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+  "readback_matches": true,
+  "readback_sha256": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+  "sha256": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+  "sha256_of_asm": "ccbe6c20d2eabf2764ca03f4351651b928e5f8f1d61bf6ba71ad8668a34c946f",
+  "why_readback": "the digest is taken from the buffer that was written (the B-1 discipline on the write side); the readback is a SECOND, independent statement of the same bytes and is reported beside it, not instead"
+ },
+ "coin": "btc",
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day": "20260904",
+ "decides_nothing": "REPORTED (rule 14).",
+ "inputs_pinned": {
+  "fragment": {
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260904_btc.json",
+   "sha256": "839e5377b6666e59d68563025ffb8b8be28c183070382c0f783b16e5201d4b2a"
+  },
+  "tape": {
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260904_btc.json",
+   "receipt": "be_gate1_state_tape_receipt_20260904_btc.v3.json",
+   "sha256": "3727de65337120576a1cb4f9c6ab197d377c8aced36d419bd5fb3f9cdc1614a0",
+   "split": "score"
+  }
+ },
+ "no_economics": true,
+ "no_null_draws": true,
+ "no_scoring_of_arms": true,
+ "protocol": "BE_DAYBOOK_V1",
+ "reference": {
+  "generations": 358107,
+  "n_slugs": 288,
+  "n_terminal_marks": 288,
+  "statuses": {
+   "ADMITTED": 288,
+   "BINANCE_GAP_EXCLUDED": 0,
+   "NO_REPLAY": 0,
+   "RECONCILIATION_FAILED": 0,
+   "TERMINAL_MARK_ENDED_IN_GAP": 78,
+   "TERMINAL_MARK_MISSING": 0,
+   "TERMINAL_MARK_OK": 288,
+   "TRANCHE_KEPT": 57850,
+   "TRANCHE_NO_MARKOUT": 0
+  },
+  "terminal_marks_present": true,
+  "windows": 288
+ },
+ "resources": {
+  "after_tape_peak_gb": 3.701,
+  "asm_peak_gb_PUBLISHED": 4.913,
+  "assembly_inputs": {
+   "fragment": {
+    "bytes": 711128106,
+    "day": "2026-09-04",
+    "day_is_in_the_ruled_set": true,
+    "digest_recomputed_at_read_time": true,
+    "is_the_consumed_era_constant": false,
+    "kind": "fragment",
+    "ledger_root": "/home/yuqing/ctaNew/data",
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260904_btc.json",
+    "sha256": "839e5377b6666e59d68563025ffb8b8be28c183070382c0f783b16e5201d4b2a"
+   },
+   "regime": "RULED_DAY_INPUTS_SUPPLIED",
+   "ruled_day_set": [
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06",
+    "2026-09-07",
+    "2026-09-08"
+   ],
+   "tape": {
+    "bytes": 1165058495,
+    "day": "2026-09-04",
+    "day_is_in_the_ruled_set": true,
+    "digest_recomputed_at_read_time": true,
+    "is_the_consumed_era_constant": false,
+    "kind": "tape",
+    "ledger_root": "/home/yuqing/ctaNew/data",
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260904_btc.json",
+    "sha256": "3727de65337120576a1cb4f9c6ab197d377c8aced36d419bd5fb3f9cdc1614a0"
+   },
+   "what_this_does_not_check": "that the day's tape was BUILT correctly -- schema, splits, coverage. Those are the builder's own guards; this verifies WHICH BYTES reach the pass"
+  },
+  "assembly_s": 1560.8,
+  "fragment_bytes": 711128106,
+  "fragment_is_the_days_own": true,
+  "index_released": {
+   "asserted_not_only_measured": true,
+   "current_gb_after": 3.144,
+   "current_gb_before": 4.524,
+   "freed_fraction_of_index_peak": 0.3729,
+   "freed_gb": 1.38,
+   "index_is_build_time_only": "DE design v9 R11 -- INDEX_SPLITS_NEEDED_BY_DAY = NONE at any stage",
+   "index_peak_gb": 3.701,
+   "measured_on_CURRENT_rss": "ru_maxrss is a high-water mark and cannot show a release; this is VmRSS",
+   "released": true,
+   "required_fraction": 0.1,
+   "required_freed_gb": 0.37
+  },
+  "peak_gb": 4.913,
+  "peak_rss_gb": 4.913,
+  "reference_peak_gb": 2.307,
+  "reference_s": 664.4,
+  "stage_budgets_gb": {
+   "A0_reference": 3.0,
+   "A1_index": 6.5,
+   "A2_assemble": 7.5,
+   "A3_release_index": 7.5,
+   "A4_write_book": 7.5
+  },
+  "stages": [
+   {
+    "budget_gb": 3.0,
+    "current_gb": 2.284,
+    "peak_gb": 2.307,
+    "stage": "A0_reference",
+    "wall_s": 664.4,
+    "within_budget": true
+   },
+   {
+    "budget_gb": 6.5,
+    "current_gb": 3.683,
+    "peak_gb": 3.701,
+    "stage": "A1_index",
+    "wall_s": 140.4,
+    "within_budget": true
+   },
+   {
+    "budget_gb": 7.5,
+    "current_gb": 4.524,
+    "peak_gb": 4.913,
+    "stage": "A2_assemble",
+    "wall_s": 1560.8,
+    "within_budget": true
+   },
+   {
+    "budget_gb": 7.5,
+    "current_gb": 3.144,
+    "peak_gb": 4.913,
+    "stage": "A3_release_index",
+    "wall_s": 1.7,
+    "within_budget": true
+   },
+   {
+    "budget_gb": 7.5,
+    "current_gb": 3.414,
+    "peak_gb": 4.913,
+    "stage": "A4_write_book",
+    "wall_s": 6.8,
+    "within_budget": true
+   }
+  ],
+  "tape_index_s": 140.4,
+  "tape_rows": 638602,
+  "wall_s": 2379.8,
+  "wrapper": {
+   "a_SHARED_hold_does_not_satisfy_rule_20": "rule 20 is ONE heavy run at a time. `flock -s` lets two holders in at once, and both would have read `held: true` under the previous two-conjunct test (REV 41)",
+   "ancestor_pids": [
+    1,
+    3735,
+    19464,
+    19858,
+    3221529,
+    3221533,
+    3221534
+   ],
+   "cgroup_leaf": "be59book.scope",
+   "declared_wrapper_is_not_evidence": "params carries a `wrapper` string; a string in a file cannot say what launched this process (R-575(C))",
+   "delegated_to": "de_multiday_gate1_runner.wrapper_observed",
+   "exclusive": true,
+   "fixture": false,
+   "flock_holder_pids": [
+    3221533
+   ],
+   "flock_modes_on_the_inode": [
+    "WRITE"
+   ],
+   "fresh_probe": {
+    "holder_is_exclusive": true,
+    "probed": true,
+    "probes": [
+     "LOCK_EX|LOCK_NB",
+     "LOCK_SH|LOCK_NB"
+    ],
+    "someone_holds_it": true,
+    "why_two": "a shared hold blocks an exclusive request and admits a shared one; only an exclusive hold blocks both. Rule 20 needs exclusivity"
+   },
+   "heavy_run_lock_held": true,
+   "held_by_self_or_ancestor": true,
+   "holder_is_exclusive": true,
+   "how": "a fresh-fd LOCK_EX|LOCK_NB that FAILS, AND a /proc/locks FLOCK entry on the lock's inode whose pid is this process or an ancestor -- the holder is the `flock` wrapper, not the python child",
+   "in_a_transient_scope": true,
+   "lock_fd_is_corroboration_not_the_test": "an fd on the lock file says the file is OPEN. Two lines of `open()` with no flock forged the old field, and a 1-hour / 6.84 GiB run certified itself (reviewer \u00a72.3)",
+   "lock_fds": [
+    3
+   ],
+   "lock_is_held_by_someone": true,
+   "lock_mode": "WRITE",
+   "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+   "n_flock_holders": 1,
+   "self_or_ancestor_holds_EXCLUSIVE": true,
+   "why_mode_not_just_held": "two `flock -s` holders would both report the fd and both certify; only WRITE is mutual exclusion"
+  }
+ },
+ "seam": {
+  "commit": "6f134a6",
+  "digests_recomputed_at_read_time": true,
+  "front_door": "de_phase4_diag_runner.day_assembly_inputs",
+  "index": "build_tape_index(splits, inputs=inp)"
+ },
+ "selection": {
+  "era": "clob_v3_1",
+  "n_supplied_slugs": 288,
+  "source": "de_admissible_windows.supply(day, be_forward_day.present_from_ledger(day))",
+  "why_not_select_v2_era": "the declared population intervals end 2026-08-26T00:00, so no September day passes them"
+ },
+ "stage_budgets_gb": {
+  "A0_reference": 3.0,
+  "A1_index": 6.5,
+  "A2_assemble": 7.5,
+  "A3_release_index": 7.5,
+  "A4_write_book": 7.5
+ },
+ "wrapper_measured": {
+  "a_SHARED_hold_does_not_satisfy_rule_20": "rule 20 is ONE heavy run at a time. `flock -s` lets two holders in at once, and both would have read `held: true` under the previous two-conjunct test (REV 41)",
+  "ancestor_pids": [
+   1,
+   3735,
+   19464,
+   19858,
+   3221529,
+   3221533,
+   3221534
+  ],
+  "cgroup_leaf": "be59book.scope",
+  "declared_wrapper_is_not_evidence": "params carries a `wrapper` string; a string in a file cannot say what launched this process (R-575(C))",
+  "delegated_to": "de_multiday_gate1_runner.wrapper_observed",
+  "exclusive": true,
+  "fixture": false,
+  "flock_holder_pids": [
+   3221533
+  ],
+  "flock_modes_on_the_inode": [
+   "WRITE"
+  ],
+  "fresh_probe": {
+   "holder_is_exclusive": true,
+   "probed": true,
+   "probes": [
+    "LOCK_EX|LOCK_NB",
+    "LOCK_SH|LOCK_NB"
+   ],
+   "someone_holds_it": true,
+   "why_two": "a shared hold blocks an exclusive request and admits a shared one; only an exclusive hold blocks both. Rule 20 needs exclusivity"
+  },
+  "heavy_run_lock_held": true,
+  "held_by_self_or_ancestor": true,
+  "holder_is_exclusive": true,
+  "how": "a fresh-fd LOCK_EX|LOCK_NB that FAILS, AND a /proc/locks FLOCK entry on the lock's inode whose pid is this process or an ancestor -- the holder is the `flock` wrapper, not the python child",
+  "in_a_transient_scope": true,
+  "lock_fd_is_corroboration_not_the_test": "an fd on the lock file says the file is OPEN. Two lines of `open()` with no flock forged the old field, and a 1-hour / 6.84 GiB run certified itself (reviewer \u00a72.3)",
+  "lock_fds": [
+   3
+  ],
+  "lock_is_held_by_someone": true,
+  "lock_mode": "WRITE",
+  "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+  "n_flock_holders": 1,
+  "self_or_ancestor_holds_EXCLUSIVE": true,
+  "why_mode_not_just_held": "two `flock -s` holders would both report the fd and both certify; only WRITE is mutual exclusion"
+ }
+}
