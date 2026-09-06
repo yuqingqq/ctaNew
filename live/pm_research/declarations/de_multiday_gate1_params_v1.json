@@ -1,0 +1,55 @@
+{
+  "alpha": 0.05,
+  "arms": {
+    "CONDVALUE_X_SKEW": {
+      "head": "q1_arrival_composed_lgbm",
+      "model_digests": {
+        "lgbm_haz_btc.txt": "ec52055214a01ed5",
+        "lgbm_thresholds_btc.json": "0fa2f1f7a5a4c58f"
+      },
+      "theta": 0.32450609461933483
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+      "head": "incumbent_linear_d",
+      "model_digests": {
+        "linear_d_btc.json": "18701008c2bd18c6"
+      },
+      "theta": 0.43525926488298716
+    }
+  },
+  "be_module": {
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "sha256": "67fc7b6c0150d3f9c933d9000481e19f7b8b90088dee1d7e6f4b7836662dd657"
+  },
+  "candidate_sets": {
+    "SET_A_reads_do_not_consume": [
+      "2026-08-29",
+      "2026-09-01",
+      "2026-09-02",
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ],
+    "SET_B_reads_consume": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ]
+  },
+  "coin": "btc",
+  "days": [],
+  "design_declaration": {
+    "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
+    "sha256": "a1016a8762fffdfeb368c5ff217e8bcc83141b1567e218a2f1b69c658a65289c"
+  },
+  "head_overlap_floor": 0.9,
+  "min_decisions_per_arm_day": 30,
+  "min_draws_per_arm_day": 500,
+  "multiplicity_m": 2,
+  "note": "G IS DERIVED FROM len(days) AT RUN TIME AND IS NEVER A CONSTANT. `days` is empty until the USER answers design v3's R7 parameter (SET A = 6 days, SET B = 3); the runner REFUSES on an empty set rather than defaulting to either.",
+  "per_day_deadline_s": 43200,
+  "protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V1",
+  "sd_floor_fraction": 0.25,
+  "status": "PARAMETERS_PENDING_THE_USER_DAY_SET_RULING",
+  "wrapper": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100%"
+}
