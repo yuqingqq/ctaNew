@@ -708,6 +708,10 @@ def _row(gen, score, inc, cents, **kw):
 def selftest() -> int:
     import tempfile
     checks, fails = 0, []
+    # the ledger's marker set BEFORE any drive, so the closing check can
+    # compare against it rather than against a constant that expires
+    _ledger_markers_at_start = sorted(
+        x.name for x in Path(_BDR.derived()).glob("be_race_read_OPENED_*"))
 
     def ok(cond, label):
         nonlocal checks
@@ -1109,16 +1113,24 @@ def selftest() -> int:
        and len(_r6["consumption"]["markers_written_before_reading"]) == 2,
        "POSITIVE CONTROL: the same days in a tree with NO markers open "
        "normally -- the refusal is about the markers, not about the days")
-    ok(not (Path(_BDR.derived()) /
-            "be_race_read_OPENED_20260903.json").exists()
-       and not (Path(_BDR.derived()) /
-                "be_race_read_OPENED_20260904.json").exists()
-       and not (Path(_BDR.derived()) /
-                "be_race_read_OPENED_20260905.json").exists(),
-       "AND THE REAL DAYS ARE UNTOUCHED: no OPENED marker exists for "
-       "20260903/04/05 in the ledger -- this batch drove consumption on "
-       "scratch feeds under a scratch declaration only. The real read is "
-       "the coordinator's separate act on GO")
+    # THIS CHECK USED TO ASSERT "no OPENED marker exists for 20260903/04/05".
+    # The race read of 2026-09-06T17:56:54Z made that FALSE by doing exactly
+    # what it was authorised to do: the three days are consumed and their
+    # markers are in the ledger, permanently. A check that encodes a fact
+    # the programme is about to change is a check with an expiry date.
+    #
+    # The DURABLE property is the one worth guarding: THIS BATTERY writes no
+    # markers into the ledger. It is compared against the ledger's marker
+    # set as it stood when the battery started, so it holds before the read
+    # and after it, and fails the moment a fixture leaks into the ledger.
+    _after = sorted(x.name for x in Path(_BDR.derived()).glob(
+        "be_race_read_OPENED_*"))
+    ok(_after == _ledger_markers_at_start,
+       f"THE BATTERY WRITES NO MARKERS INTO THE LEDGER: it held "
+       f"{len(_ledger_markers_at_start)} OPENED marker(s) when this battery "
+       f"started and holds {len(_after)} now -- the same set. Every "
+       f"consumption drive above ran under a DECLARED fixture marker "
+       f"directory on days 2099xxxx, and none reached the ledger")
 
     print()
     if fails:
