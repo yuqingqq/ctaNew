@@ -2156,10 +2156,23 @@ def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
     # from "the code moved" -- which is why it is checked BEFORE.
     _si = source_identity_at_launch()
     _head = _si["head_at_import"]
+    # THE SAME READING THE IMPORT REFUSAL USES. This asked `dirty`, the
+    # RAW flag, while `assert_source_unchanged` asks the one that exempts
+    # the verified data symlink -- so after the mandated refresh the
+    # rehearsal blocked on a condition the run itself would have admitted.
+    # Two spellings of one fact, in the precondition whose whole job is to
+    # predict the refusal.
     _p("P10_run_worktree_is_clean_at_import",
-       _head.get("dirty") is False,
+       _head.get("dirty_beyond_the_shared_data_link") is False,
        {"worktree": _head.get("worktree"), "head": _head.get("head"),
-        "dirty": _head.get("dirty"), "dirty_paths": _head.get("dirty_paths"),
+        "any_untracked_entry": _head.get("dirty"),
+        "dirty_paths": _head.get("dirty_paths"),
+        "dirty_beyond_the_shared_data_link":
+            _head.get("dirty_beyond_the_shared_data_link"),
+        "dirty_paths_beyond_the_shared_data_link":
+            _head.get("dirty_paths_beyond_the_shared_data_link"),
+        "shared_data_link_exempted":
+            _head.get("shared_data_link_exempted"),
         "n_modules_in_the_import_closure": _si["import_closure"][
             "n_modules"],
         "why_it_blocks": "a REAL day refuses at import on a dirty "
