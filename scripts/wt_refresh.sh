@@ -7,7 +7,9 @@ WT="${1:?usage: wt_refresh.sh <worktree> [ref]}"; REF="${2:-origin/mm-research}"
 git -C "$WT" fetch -q origin
 git -C "$WT" sparse-checkout init --no-cone >/dev/null 2>&1 || true
 git -C "$WT" sparse-checkout set '/*' '!/data/' >/dev/null
-git -C "$WT" checkout -q --detach "$REF"
+git -C "$WT" checkout -q --detach "$REF" 2>/dev/null || git -C "$WT" checkout -q --detach "$REF"
+# R-554: mark every tracked file under data/ skip-worktree (new landings arrive without the bit)
+git -C "$WT" ls-files data | xargs -r git -C "$WT" update-index --skip-worktree 2>/dev/null || true
 if [ ! -L "$WT/data" ]; then rm -rf "$WT/data"; ln -s /home/yuqing/ctaNew/data "$WT/data"; fi
 [ "$(readlink -f "$WT/data")" = "/home/yuqing/ctaNew/data" ] || { echo "REFUSED: $WT/data is not the ledger symlink"; exit 2; }
 echo "$WT at $(git -C "$WT" rev-parse --short HEAD); data -> $(readlink "$WT/data"); status lines: $(git -C "$WT" status --short | wc -l)"
