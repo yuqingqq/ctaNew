@@ -6365,22 +6365,30 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         if _saved106:
             INPUT_DIGESTS["params"] = _saved106
     # S1.2 `n_days_complete` was a DEFAULT PARAMETER nobody passed.
-    _dc106 = days_complete_now(live)
-    ok(_dc106["n_days_complete"] == len(_dc106["days_complete"])
-       and set(_dc106["per_day"]) == set(live["days"])
-       and _dc106["counted_by"].startswith("find_sealed_day_receipt"),
-       f"REV 75 S1.2: `n_days_complete` is COMPUTED through the read "
-       f"gate's own resolver -- {_dc106['n_days_complete']} of "
-       f"{_dc106['G']}, days {_dc106['days_complete']}. It was a DEFAULT "
-       f"of 1 that nothing on the real path passed, so the 09-04 receipt "
-       f"reads `1 of 6` on a day when two were complete. Fail-safe by "
-       f"accident: a constant 1 can only over-seal")
-    ok(f"{_dc106['n_days_complete']} of {_dc106['G']}" in seal(
-           {"day": "D", "arm": "A", "status": "OK", "admissibility": {},
-            "economic": {"Z": 1.0}},
-           _dc106["n_days_complete"], _dc106["G"])["seal_status"],
-       "and the receipt's PROSE is generated from that computed value, so "
-       "the sentence and the number cannot disagree (rule 10)")
+    # IT READS `data/` (it resolves the sealed receipts through the gate's
+    # own glob), so a FIXTURE run must not run it -- the fifth time the
+    # data-root guard has caught me on exactly this.
+    if offline:
+        offline_skip("REV 75 S1.2 the computed day count and its prose "
+                     "(they resolve sealed receipts under data/)")
+        offline_skip("REV 75 S1.2 the seal prose from the computed value")
+    else:
+        _dc106 = days_complete_now(live)
+        ok(_dc106["n_days_complete"] == len(_dc106["days_complete"])
+           and set(_dc106["per_day"]) == set(live["days"])
+           and _dc106["counted_by"].startswith("find_sealed_day_receipt"),
+           f"REV 75 S1.2: `n_days_complete` is COMPUTED through the read "
+           f"gate's own resolver -- {_dc106['n_days_complete']} of "
+           f"{_dc106['G']}, days {_dc106['days_complete']}. It was a DEFAULT "
+           f"of 1 that nothing on the real path passed, so the 09-04 receipt "
+           f"reads `1 of 6` on a day when two were complete. Fail-safe by "
+           f"accident: a constant 1 can only over-seal")
+        ok(f"{_dc106['n_days_complete']} of {_dc106['G']}" in seal(
+               {"day": "D", "arm": "A", "status": "OK", "admissibility": {},
+                "economic": {"Z": 1.0}},
+               _dc106["n_days_complete"], _dc106["G"])["seal_status"],
+           "and the receipt's PROSE is generated from that computed value, so "
+           "the sentence and the number cannot disagree (rule 10)")
     # S3 the exit copy was one step early.
     _ch106 = declared_chain()
     ok(len(_ch106) == 7
