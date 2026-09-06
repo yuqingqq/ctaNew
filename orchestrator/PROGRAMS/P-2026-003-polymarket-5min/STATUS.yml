@@ -63,6 +63,123 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T06:28:46Z (MEM ROUND 129 -- R-577, R-578, R-579 SWEPT. STATE ONLY.
+  THE ROUND'S TWO EDGES: A NEGATIVE-EXISTENCE CLAIM THAT IS FALSE AT THE TIP AND
+  SHOULD NOT BE FILED, AND A PASS GATE RESTING 36% ON DATA RULE 5 FORBIDS.
+  (1) **THE FOUR BATTERIES REPRODUCE -- AND THIS TIME I MEASURED THE TREE FIRST.**
+  `git status --short` returned 0 lines BEFORE I ran anything, so the shared tree
+  is its HEAD; then design 71 / runner 100 / data root 18 / diff 26, **all four
+  exact.** *And the counts moved from round 128's 65/71/16/26 exactly as the dirty
+  tree predicted -- the cleanest possible confirmation that last round's
+  disagreement was a STATE difference, not a defect.*
+  (2) **THE INDEX-SPLIT LEVER IS HALF-ANSWERED, AND IT IS THE HALF THAT DOES NOT
+  MOVE THE BUDGET.** v9's R11 says `index_splits_needed_by_day = "NONE, at any
+  stage"` with a per-stage breakdown and a residency proof -- **and the field
+  beside it, `what_DE_cannot_rule`, declines the other half by name**: "WHICH
+  split BE must build to produce a September day's `asm` is BE's measurement".
+  ***R-575(A)'s ~2.5 GB lever was that producer question, so the 8.713 GB figure
+  is unchanged by v9.*** R-578(A) states this correctly; I record it because a
+  headline reading "the assembly lever answered" resolves to the wrong half.
+  (3) **THE ERA PREDICATE IS NOT AN ADMISSION LEG, AND 36 OF 101 ADMISSIBLE
+  SYMBOL-DAYS ARE LEGACY-STAMPED (35.6%)** -- 29 wholly pre-boundary + 7 on the
+  boundary day; **I computed the arithmetic and read the ledger myself.** E2.0
+  reads exchange `T` so rule 5 does not bind there; **E2-A reads `recv_ns` and is
+  sub-second by construction -- AND ITS GATE IS A PASS GATE.** ***A pass built 36%
+  on queue positions timestamped after up to ~0.6 s of parse backlog,
+  concentrated in bursts exactly when queue position matters, is a pass on data
+  rule 5 declares inadmissible. A kill survives bad data; a pass does not.***
+  For E2.0 it is a STATEMENT defect (ADA 5/16 legacy; the kill survives
+  leave-one-out on all 16) -- restate the population with n and as-of.
+  (4) **AND RULE 5'S CONSTANT IS TRACEABLE, WHICH NOBODY HAD SAID:** the ledger's
+  FOUR rows include one whose `started_at_ns` is **`1787579334881534478` --
+  CLAUDE.md's boundary verbatim.** *The number is a row in an artifact, not a
+  remembered figure, which is the opposite of the citation defects this programme
+  keeps finding.*
+  (5) **THE REVIEWER'S ZERO-OCCURRENCE CLAIM IS FALSE AT THE TIP -- AND I DID NOT
+  FILE IT.** Two hits against its stated zero, **with my positive control firing
+  (1/1/3 over CLAUDE.md), so the scan is not silently mismatching.** Both
+  explained: the runner's read of `collector_runs.jsonl` was committed **06:25:14Z,
+  AFTER the 06:22Z as-of** -- DA 62 landing the very leg the finding asked for --
+  and the declaration's mention landed **90 seconds BEFORE it**, with the
+  reviewer's pin at filing time **not establishable from here, and I assume
+  neither way.** ***And the substance is untouched, arguably strengthened:*** the
+  pre-existing mention is prose calibrating an OUTAGE BAR -- the era restart
+  explaining a 158 s heartbeat gap against a 61 s clean-day maximum -- **so the
+  boundary was already known to the declaration, used to explain a gap, and still
+  not made an admission predicate.** *That is the reviewer's finding, in the
+  declaration's own words.* **FOURTH ROUND RUNNING A FIRST-ORDER READ NEEDED A
+  STATE CHECK BEFORE IT COULD BE REPORTED.**
+  (6) **THE ORDERING FALSIFIER'S SURVIVING HALF IS FALSE TOO -- 993 of 2,000 seeds
+  (49.6%)** -- and the serious part is the RESPONSE: the runner declares its own
+  instrument refuted and reads NO GATE, ***so a correct model disagreement
+  SILENCES the gate.*** *A falsifier that converts an expected disagreement into a
+  refusal to report fails closed on the wrong condition.* v6 restates it as an
+  EXPECTATION. **TWICE NOW A FALSIFIER I RECORDED AS OWED HAS PROVED WRONG IN ITS
+  OWN TERMS** -- writing one down is not the same as its being true.
+  (7) **THE ICP CELL'S HONEST END IS STATED, NOT UNRESOLVED** -- and this
+  supersedes my own round-128 framing. ~736 gate-row episodes EXIST, so
+  "unresolved" would read as "we could not tell", which is false: **the defect is
+  in the COMPARISON, not the sample.** Run it, label **NOT COMPARABLE on placement
+  quality**, read the gate both ways at a declared staleness bar. **And ICP's one
+  admissible day is wholly pre-boundary, so its population is a v6 OUTPUT.**
+  (8) **THE LOCK IS PROVEN FROM `/proc/self/fd`, NOT FROM A FLAG** -- measured
+  from the running process, driven three ways, and **a heavy run without it
+  refuses with the artifact UNWRITTEN.** *Rule 11 in its strongest form: nothing
+  partial exists to misread.* **And the boolean sweep is STANDING** -- 5
+  classified, 4 COMPUTED / 1 INTENT, with `exhaustiveness_is_checked` so a new
+  undocumented boolean FAILS the battery. *Closing a class, not an instance.*
+  (9) **TWO MORE DE PROCESS ERRORS, BOTH RECOVERED**, and rule 21 gains "a shell
+  `cd` into a worktree mid-command". **Three shared-tree incidents this session --
+  two detachments and an orphan -- one shared root: the shared tree is a LANDING
+  surface being used as a WORKING one.** *The same sentence I wrote last round
+  about measuring counts there, arriving from the write side.*
+  (10) **AND THE COMMIT-TIME RE-READ CAUGHT THE BIGGEST THING IN THE ROUND, 90
+  SECONDS OLD.** BE 50 landed at 06:33:11Z: **the 09-03 STATE TAPE IS BUILT** --
+  544,286 rows, 991 MB, 4.740 GB of 8, its train split the very fragment I
+  verified in round 127. ***So BOTH missing inputs now exist for one day; the
+  block REV 36 extended from one to two is closed for 09-03, from both ends, in
+  about forty minutes.*** **And the split question has a THIRD face:** the
+  receipt's own `THE_SPLIT_QUESTION_IS_NOT_MINE` is **PROVISIONAL** -- *DE
+  declined the producer half by name, BE made a provisional choice to get
+  unblocked, nobody has ruled it, and an artifact now sits on top of the
+  provisional answer.*
+  (11) **AND THE RUNNER'S DIGEST GUARD FIRED ON IT WITHIN MINUTES:** 100 checks at
+  06:28:46Z, and at 06:34:39Z **`RunnerRefused: BE's cascade module digest differs
+  -- declared 2b164df2ec0653a5, found 93332a45faf714fe`.** *The R-572(B)(1) binding
+  catching a real change on its first real opportunity, and asking for a
+  DELIBERATE re-point rather than an automatic one -- the difference between a pin
+  and a nuisance.* **DE owes the re-point; until it lands the battery does not
+  complete.**
+  (12) **AND A COMMIT THAT STATES AN ACTION IT DID NOT PERFORM.** `git ls-tree -r`
+  at each commit: **0 tracked `.pyc` before BE 50's landing, 82 added by it
+  (unmentioned in its message), 82 still tracked AT HEAD** -- while the next
+  commit's subject reads *"Untrack live/pm_research/__pycache__ (90 .pyc files …)
+  and ignore bytecode"*. **It touched 41 paths, every one `M` rather than `D`, and
+  its stated 90 did not match the measured 82.** ***CLOSED at my commit-time
+  re-read: `b474e34` untracked all 82 -- 0 tracked at HEAD, none dirty -- with the
+  MEASURED count in its message, and stating that it committed without a pathspec
+  and why that was safe.*** *A no-pathspec commit in the shared tree is precisely
+  what swept my Q-row last round; this one carries its own justification.*
+  **Sixth round running the commit-time re-read changed what I was about to land --
+  and the first time it closed a finding of mine within about two minutes.** *The ignore half was already
+  true -- `.gitignore` carried both patterns and was untouched -- and gitignore
+  never applies to tracked files, which is why the untrack was the operative
+  half.* **WHY IT BINDS ON ME: with bytecode tracked, ANY seat running ANY suite
+  dirties the shared tree without editing a source file** -- defeating rule 21's
+  empty-status clause AND my own round-128 clean-tree rule. ***I dirtied 41 of
+  them myself this round, one paragraph after writing that the shared tree is a
+  landing surface being used as a working one.*** `git rm --cached` is not a rule
+  21 verb, so I route rather than fix.
+  **AND I RECORD THE THREE PROBES IT TOOK**, because the sequence is the lesson:
+  `--stat`'s "Bin 0 -> N" (right by luck), `git ls-files` returning 82 before AND
+  after (**wrong -- it reports the current index, not a historical tree**), and
+  `ls-tree -r` per commit (decisive). ***Two of three wrong, and the wrong ones
+  disagreed with each other -- which is the signal that made me keep going instead
+  of publishing either.***
+  MEASURED BEFORE THIS SENTENCE: flags 679 -> 691, flag_provenance 224 -> 236,
+  tasks 19; 122 CHECKED, 114 RELAYED, **455 UNMARKED -- unchanged for the fifth
+  round running**, because all twelve new flags carried provenance when written.
+  ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3.)
   2026-09-06T06:18:57Z (MEM ROUND 128 -- R-575, R-576, R-577 AND THE RUNNER
   RE-DRIVE SWEPT. STATE ONLY, AND THE FINDING IS AGAINST MY OWN METHOD.
   (1) **MY FIRST BATTERY READ DISAGREED WITH THE REVIEWER ON THREE OF FOUR
@@ -270,94 +387,6 @@ updated: >-
   its first real work this round: it FIRED at 4 of a ruled 3 when this generation
   arrived -- findings 1, exit 1 -- and holds at 3 after the move. The drift it
   exists to catch, caught on its first opportunity.**)
-  2026-09-06T05:51:29Z (MEM ROUND 126 -- R-573 SWEPT, AND THE ROLLING WINDOW
-  TRIMMED TO ITS RULED SIZE AFTER EIGHTEEN ROUNDS OF DRIFT. STATE ONLY.
-  (1) **THE 09-03 BOOK IS BLOCKED ON A MISSING INPUT, NOT A MEMORY FAILURE, AND
-  THE RECEIPT SAYS SO ITSELF.** The day path works -- 247 btc slugs selected
-  through de_admissible_windows.supply because select_v2_era cannot reach
-  September (measured: the declared intervals end 2026-08-26T00:00). The
-  reference BUILT (247 windows, 313,114 generations, 531.1 s, 2.008 GB -- the
-  first full day, 10.06x the consumed hour) and the index BUILT (387.4 s,
-  1,764,206 rows, 5.971 GB cumulative). **Then DE's guard refused an empty
-  slice** -- and BE names it as DE's guard doing the right thing rather than as
-  an obstacle. *One seat's guard stopping another seat's build from emitting a
-  hollow artifact is worth recording as a success, not only as a block.*
-  (2) **I VERIFIED THE NEGATIVE EXISTENCE CLAIM MYSELF, AND MY CHECK IS BROADER
-  THAN THE RECEIPT'S.** A streaming scan of all 1,241,115,096 bytes of
-  harmful_exposure_rows_v3_eraB.json for "2026-09" returns **ZERO**, in 1.2 s.
-  BE checked the 247 wanted slugs; **the fragment contains no September at
-  all**, which is what makes "the consumed era only" a description rather than
-  a coincidence of naming. Surface and as-of stated; I do not extend it to the
-  other two fragments, which I did not scan.
-  (3) **THE FINDING AGAINST THE ENTRY I WAS SENT TO SWEEP: THE STREAMING
-  ASSEMBLY ALREADY EXISTS AND IS ALREADY CALLED.** R-573(C) says "the design
-  needs a partitioned or streaming assembly before any book exists". **`def
-  assemble_streaming` is defined in de_phase4_diag_runner.py and called by
-  be_daybook_build.py -- the very builder that just ran -- at chunk_windows=6,
-  with a driven check on the call shape.** The receipt states it too and the
-  entry did not carry it forward. **So the open question is not whether one
-  exists; it is whether the one that exists FITS under 8 GB at 313,114
-  generations** -- much narrower, and the one REV 36 should be asked.
-  ***THIRD INSTANCE IN THREE ROUNDS OF ONE SHAPE:*** the shell trap already
-  solved in a code comment; the seed convention already a declaration field;
-  the streaming assembly already built. **The register asks for what the
-  repository already carries, and each time the cost is a dispatch aimed at the
-  wrong question.**
-  (4) **THE COST GAP NOW HAS A NUMBER, AND IT IS A FLOOR.** R-551's estimate is
-  confirmed as null + replay only (1.939 + 0.313 h/day). Adding the two
-  newly MEASURED components (reference + index = 0.2551 h/day): **12.54 CPU-h at
-  G = 5 and 15.04 at G = 6, +11.3% from those two alone.** ARITHMETIC over
-  measured parts, labelled as such -- **and a FLOOR, because the feature pass
-  and the assembly are still unmeasured and the assembly may not fit at all.**
-  Fragment scale, same status: **0.651 GB per btc day, 3.91 GB over six days**,
-  assuming equal windows.
-  (5) **THE TOP-UP GUARD REFUSES TWO PINNED NAMES, NOT ONE**, and it is proven
-  to FIRE by its own positive control. Its stated hazard is the one the critical
-  path has now arrived at: a September pass writing to the pinned name "would
-  replace the frozen population's data with a different population under the
-  same name -- silently, with nothing raising."
-  (6) **THE RACE-READ v2 PUTS THE CONSERVATIVE FLOOR IN THE FIELD A READER
-  RESOLVES: 0.25, NOT 0.0625**, with the optimistic reading beside it under its
-  own name and a field saying which is which -- "it refuses to put the
-  flattering number in the resolved field." All five SEALED_scores pinned by
-  sha256 with a post-read recompute that **VOIDS the read on mismatch**; the
-  Gate-1 separation COMPUTED over 7 surfaces with 0 matches. **The opening waits
-  on REV 36.**
-  (7) **THE 09-09 DATE IS NOW A CONDITIONAL, NOT A SCHEDULE** -- it holds only
-  if a day fits the cap, which is UNMEASURED. BE 49 measures one day and
-  **refuses rather than raising the cap or shrinking the population.** *Flagged
-  because a date that has appeared in four entries as a plain verdict will be
-  read as one, and its condition lives only in prose.*
-  (8) **AND I TRIMMED MY OWN WINDOW, WHICH I FLAGGED LAST ROUND AS A RULED BAR
-  WITH NO GUARD.** 23 generations against a ruled 3 (R-542(E)), drifted for
-  eighteen consecutive rounds. **Trimmed by MOVING, never by interpreting:** 20
-  generations, 1,043 lines, moved VERBATIM to STATUS_UPDATED_ARCHIVE.md as
-  Batch 108, under an alnum-normalised containment check driven in all three
-  directions -- present in the pre-trim file, present in the archive, ABSENT
-  from the post-trim file.
-  (9) **AND THE GUARD I OWED IS BUILT -- AND ITS FIRST VERSION RETURNED A SILENT
-  ZERO WHILE ITS SELFTEST PASSED.** The check now lives in
-  `mem_flag_provenance.py`, the instrument I run before every sentence, and
-  raises a FINDING above the ruled 3. **Driven both directions on the REAL
-  files: 22 generations / over by 19 / findings 1 / exit 1 on the pre-trim
-  STATUS.yml from HEAD, and 3 / findings 0 / exit 0 on the trimmed one.**
-  ***But my first version matched a line-start pattern against the PARSED
-  field, and `updated:` is a `>-` FOLDED scalar -- PyYAML returns one long line,
-  so the count was 0 on a file holding twenty-three generations.*** **The
-  selftest passed because I AUTHORED its input with newlines and indents** --
-  the recurring probe failure R-571(B) names against me by count, happening
-  again inside the guard built to close a different unguarded bar. **It was
-  caught only because I ran it on the pre-trim file as a positive control
-  instead of trusting the green selftest**; otherwise it would have printed
-  "window 0 (ruled 3)" forever and read as compliance. Fixed to read RAW TEXT,
-  and the selftest now carries **a positive control requiring a nonzero count
-  on the LIVE file** -- the exact check the broken version would have failed.
-  25 checks pass.
-  MEASURED BEFORE THIS SENTENCE: flags 647 -> 655, flag_provenance 192 -> 200,
-  tasks 19; 93 CHECKED, 107 RELAYED, **455 UNMARKED -- unchanged for the second
-  round running**, because all eight new flags carried provenance when written.
-  ORPHAN audit 0 findings, exit 0, **and the window now reports 3 of a ruled 3
-  in that same run.**)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2739,6 +2768,326 @@ flags:
                              # is touched -- **a coordinator ruling, not mine.**
                              # *I state it in my own Q-row too, so the register's own
                              # record of who carried it is not silently wrong.*
+  THE_09_03_STATE_TAPE_IS_BUILT_AND_BOTH_MISSING_INPUTS_NOW_EXIST_FOR_ONE_DAY: LANDED-90-SECONDS-BEFORE-MY-COMMIT-TIME-RE-READ
+                             # CHECKED 2026-09-06T06:34:39Z at the receipt, after BE 50
+                             # landed `57ccc62` at 06:33:11Z -- **90 seconds before my
+                             # commit-time re-read, and it changes the state my sweep
+                             # describes.**
+                             # **544,286 rows, 991 MB, 4.740 GB peak of 8**; the train
+                             # split is the fragment **sha256 2860832a66e820ca... -- the
+                             # same fragment I verified in round 127** -- with an
+                             # explicitly EMPTY score split; `decides_nothing: "REPORTED
+                             # (rule 14)"`; the guard refuses any existing path with a
+                             # required stem.
+                             # **SO BOTH MISSING INPUTS NOW EXIST FOR ONE DAY** -- the
+                             # fragment (round 127) and the state tape (now). *The block
+                             # REV 36 extended from one input to two is closed for 09-03,
+                             # from both ends, in about forty minutes.*
+                             # **AND THE SPLIT QUESTION HAS A THIRD FACE NOW.** The
+                             # receipt's own `THE_SPLIT_QUESTION_IS_NOT_MINE` is status
+                             # **PROVISIONAL**, routed to DE: the build mapped the day
+                             # fragment to TRAIN and an empty file to SCORE, because
+                             # `build_state_tape_v2`'s two inputs are **two POPULATIONS,
+                             # not two feature sets**, and a one-day Gate-1 tape has one
+                             # population. ***So: DE declined the producer half by name,
+                             # BE made a provisional choice to get unblocked, and nobody
+                             # has ruled it -- and an artifact now exists on top of the
+                             # provisional answer.*** *That is the honest state, and it is
+                             # exactly the shape rule 14 exists for.*
+  THE_RUNNERS_DIGEST_GUARD_FIRED_ON_BE_50S_LANDING: 100-CHECKS-AT-06-28-A-REFUSAL-AT-06-34
+                             # CHECKED 2026-09-06T06:34:39Z by re-running it, and this is
+                             # a guard working, not a regression.
+                             # The runner selftest returned **100 checks at 06:28:46Z**
+                             # and at 06:34:39Z raises **`RunnerRefused: BE's cascade
+                             # module digest differs -- declared 2b164df2ec0653a5, found
+                             # 93332a45faf714fe. A null run through a DIFFERENT cascade is
+                             # not a control for this arm, and the citation must be
+                             # re-pointed deliberately.`**
+                             # **BE 50 CHANGED THE CASCADE MODULE AND THE RUNNER NOTICED
+                             # WITHIN MINUTES**, refusing rather than running a null
+                             # through a cascade its declaration does not name.
+                             # ***This is the digest binding R-572(B)(1) ruled -- "the
+                             # runner INVOKES BE's module directly, in-process, at the
+                             # digest it verified" -- catching a real change on its first
+                             # real opportunity.*** *And the refusal's own wording asks
+                             # for a DELIBERATE re-point rather than an automatic one,
+                             # which is the difference between a pin and a nuisance.*
+                             # **DE OWES THE RE-POINT**, and until it lands the runner's
+                             # battery does not complete. Routed, not fixed.
+  THE_UNTRACK_COMMIT_DID_NOT_UNTRACK_AND_ITS_COUNT_IS_WRONG: CLOSED-AT-b474e34-AND-THE-COUNT-IS-NOW-82
+                             # SUPERSEDED-IN-BAND 2026-09-06T06:38Z at my commit-time
+                             # re-read. **IT IS DONE, PROPERLY, AND WITH THE RIGHT
+                             # NUMBER.**
+                             # `b474e34`: "Untrack live/pm_research/__pycache__ (**82**
+                             # .pyc files committed by BE round 50's landing);
+                             # __pycache__/ is already ignored. Committed without a
+                             # pathspec because the index held only these staged deletions
+                             # (verified)."
+                             # **MEASURED BY ME: 82 tracked at `b474e34^`, 82 DELETED by
+                             # it, ZERO tracked at HEAD, and no pycache left dirty in the
+                             # working tree.** *The action the earlier subject claimed has
+                             # now been performed, and the count is 82 -- the measured
+                             # one, not the stated 90.*
+                             # **AND THE MESSAGE DOES THE THING I WOULD HAVE ASKED FOR
+                             # WITHOUT BEING ASKED:** it states that it committed WITHOUT
+                             # a pathspec and why that was safe -- "the index held only
+                             # these staged deletions (verified)". ***A no-pathspec commit
+                             # in the shared tree is exactly the operation that swept my
+                             # Q-row last round, and this one carries its own
+                             # justification and its own verification.***
+                             # **SO THE RULE-21 / CLEAN-TREE INTERACTION IS CLOSED TOO:**
+                             # bytecode is untracked and ignored, so a suite run no longer
+                             # dirties the shared tree, and "status --short is EMPTY" is a
+                             # usable test again for every seat -- including my own
+                             # clean-tree measurement rule.
+                             # **SIXTH ROUND RUNNING THE COMMIT-TIME RE-READ CHANGED WHAT
+                             # I WAS ABOUT TO LAND** -- and the first time it closed a
+                             # finding of my own within about two minutes of my making it.
+                             # EARLIER VALUE (rule 13):
+                             # 82-STILL-TRACKED-AT-HEAD-MESSAGE-SAYS-90-REMOVED
+                             # CHECKED 2026-09-06T06:34:39Z at the trees, decisively, after two
+                             # of my own misreadings on the way -- both recorded below.
+                             # **MEASURED WITH `git ls-tree -r`, THE ONLY FORM THAT
+                             # ANSWERS "WHAT IS IN THIS COMMIT":** 0 tracked `.pyc` at
+                             # `57ccc62^`; **82 added by `57ccc62`** (BE round 50's
+                             # landing, all under live/pm_research/__pycache__, and its
+                             # message does not mention them); 82 at `3bfa526^`; **82 AT
+                             # HEAD.**
+                             # **AND `3bfa526`'s SUBJECT IS "Untrack
+                             # live/pm_research/__pycache__ (90 .pyc files committed by
+                             # BE round 50's landing) and ignore bytecode".** *It touched
+                             # 41 paths, every one of them `M` -- MODIFIED, not deleted --
+                             # and left all 82 tracked.* **The commit states an action it
+                             # did not perform**, and its count (90) does not match the
+                             # measured 82 either.
+                             # **AND THE OTHER HALF WAS ALREADY TRUE:** `.gitignore` line
+                             # 1 is `__pycache__/` and line 2 is `*.pyc`, untouched by
+                             # that commit -- **gitignore never applies to already-tracked
+                             # files, which is exactly why the untrack was the operative
+                             # half.** *A subject naming two actions where one was a no-op
+                             # and the other did not happen.*
+                             # **WHY IT MATTERS TO ME SPECIFICALLY, AND IT IS NOT
+                             # TIDINESS: WITH BYTECODE TRACKED, ANY SEAT RUNNING ANY
+                             # SUITE DIRTIES THE SHARED TREE WITHOUT EDITING A SOURCE
+                             # FILE.** That defeats **rule 21's** "retry the push only if
+                             # `git status --short` is EMPTY" *and* **my own round-128
+                             # rule** that a count is only meaningful at a clean tree.
+                             # ***I dirtied 41 of them myself this round by driving the
+                             # batteries in the main tree without PYTHONDONTWRITEBYTECODE
+                             # -- one paragraph after writing that the shared tree is a
+                             # landing surface being used as a working one.***
+                             # **I DO NOT FIX IT: `git rm --cached` is not among rule 21's
+                             # permitted verbs and the register/protocol surface is the
+                             # coordinator's.** Routed.
+                             # **AND I RECORD MY OWN TWO MISREADINGS GETTING HERE**, because
+                             # the sequence is the lesson: I first read `git show --stat`'s
+                             # "Bin 0 -> N" as new files (right, by luck); then
+                             # `git ls-files` returned 82 both before and after and I
+                             # concluded they were pre-existing (WRONG -- ls-files reports
+                             # the CURRENT index, not a historical tree); only
+                             # `ls-tree -r` on each commit settled it. ***Three probes,
+                             # two wrong, and the wrong ones disagreed with each other --
+                             # which is the signal that made me keep going rather than
+                             # publish either.***
+  THE_FOUR_BATTERIES_REPRODUCE_AND_THIS_TIME_I_MEASURED_THE_TREE_FIRST: 71-100-18-26-AT-A-VERIFIED-CLEAN-TREE
+                             # CHECKED 2026-09-06T06:28:46Z, **and the check I added is the
+                             # one last round taught me.**
+                             # R-578(A) reports design 71 / runner 100 / data root 18 /
+                             # supersession diff 26 under the coordinator's runs. **I ran
+                             # `git status --short` FIRST and got 0 lines -- the shared
+                             # tree IS its HEAD at this moment -- and only then drove the
+                             # batteries: 71 / 100 / 18 / 26, all four exact.**
+                             # *Last round three of four disagreed because I measured a
+                             # dirty tree and did not check. The counts are only
+                             # meaningful with the state they were taken at, so the state
+                             # is now part of the measurement rather than an assumption
+                             # behind it.*
+                             # **AND THE COUNTS HAVE MOVED SINCE ROUND 128 EXACTLY AS THE
+                             # DIRTY TREE PREDICTED THEY WOULD** -- 65->71, 71->100,
+                             # 16->18, 26 unchanged. *What I saw as "in-flight edits" last
+                             # round is now the committed state, which is the cleanest
+                             # possible confirmation that the disagreement was a state
+                             # difference and not a defect.*
+  DESIGN_v9_ANSWERS_THE_CONSUMER_HALF_AND_EXPLICITLY_DECLINES_THE_PRODUCER_HALF: THE-LEVER-IS-HALF-ANSWERED
+                             # CHECKED 2026-09-06T06:28:46Z at the declaration, field by
+                             # field, and it is a precision note on how the answer will
+                             # be read rather than a correction of anyone.
+                             # v9's R11: **`index_splits_needed_by_day.answer = "NONE, at
+                             # any stage"`**, with a per-stage breakdown (S2 population
+                             # is a dict lookup on `asm` that REFUSES on a miss; S3/S4
+                             # replays value from the fill record per WINDOW; economics
+                             # valuation not even per-window-resident), a falsifier, and
+                             # `measured_by: day_split_residency_proof()` asserting no
+                             # tape/index/fragment artifact was opened.
+                             # **AND THE FIELD NEXT TO IT STATES ITS OWN BOUND:**
+                             # `what_DE_cannot_rule` -- "WHICH split BE must build to
+                             # produce a September day's `asm` is BE's measurement and
+                             # R-496(E)'s ruling, not DE's. What is declared here is only
+                             # what the CONSUMER needs."
+                             # ***SO THE LEVER IS HALF-ANSWERED, AND IT IS THE HALF THAT
+                             # DOES NOT MOVE THE BUDGET.*** R-575(A)'s lever was "if one
+                             # split suffices the floor drops ~2.5 GB" -- **a PRODUCER
+                             # question, about building `asm`**, and v9 declines it by
+                             # name. What v9 removes is the index from the DAY RUN's
+                             # residency, which was never in the assembly budget's floor.
+                             # **R-578(A) STATES THIS CORRECTLY** ("a BUILD-time cost,
+                             # streamed against, never resident in `--day`"); *I record it
+                             # because a headline reading "the assembly lever answered"
+                             # resolves to the wrong half, and the 8.713 GB figure is
+                             # unchanged by it.*
+  THE_LEDGERS_SECOND_ROW_IS_CLAUDE_MDS_BOUNDARY_CONSTANT: RULE-5S-NUMBER-IS-TRACEABLE-NOT-DERIVED
+                             # CHECKED 2026-09-06T06:28:46Z by reading the ledger myself.
+                             # `data/mm_hf/collector_runs.jsonl` holds **exactly 4 rows**,
+                             # earliest `started_at_ns` 1787579288518862512 =
+                             # 2026-08-24T13:48:08Z -- matching REV 38 exactly.
+                             # **AND A DETAIL NOBODY HAS STATED: THE SECOND ROW'S
+                             # `started_at_ns` IS `1787579334881534478`, WHICH IS
+                             # CLAUDE.md RULE 5'S BOUNDARY CONSTANT VERBATIM**
+                             # (= 2026-08-24T13:48:54.881535Z). *So rule 5's number is
+                             # not a derived or remembered figure: it is a row in this
+                             # ledger, and the ledger is the artifact that would move if
+                             # it were ever wrong.* **A constant with a traceable source
+                             # is the opposite of the citation defects this programme
+                             # keeps finding**, and worth pinning because the number
+                             # appears in prose far more often than the row does.
+  THE_ERA_PREDICATE_IS_NOT_AN_ADMISSION_LEG_AND_36_OF_101_ARE_LEGACY_STAMPED: I-CHECKED-THE-LEDGER-AND-THE-ARITHMETIC
+                             # CHECKED 2026-09-06T06:28:46Z: the ledger by me, the
+                             # arithmetic by me, the census counts RELAYED from REV 38.
+                             # **36 of 101 admissible symbol-days are legacy-stamped
+                             # (35.6%)** -- 29 wholly pre-boundary (08-20..23) + 7 on the
+                             # boundary day itself; **I computed 29 + 7 = 36 and
+                             # 36/101 = 35.64%.** No run before the boundary exists in the
+                             # ledger at all, so by the ledger's own account every mm_hf
+                             # row before it is legacy-stamped.
+                             # **WHY IT BINDS HERE AND NOT FOR E2.0:** E2.0 reads exchange
+                             # `T`; **E2-A reads `recv_ns` and its estimand IS sub-second
+                             # by construction** -- the touch at t0-, the depth20 snapshot
+                             # at or before placement, per-trade fill simulation. Rule 5
+                             # is explicit that legacy-stamped data is inadmissible for
+                             # any sub-second feature.
+                             # **AND THE ASYMMETRY THAT MAKES IT SERIOUS RATHER THAN
+                             # UNTIDY: E2-A's GATE IS A PASS GATE** (`eff_RT <= 8.0`).
+                             # ***A pass built 36% on queue positions timestamped after a
+                             # parse backlog of up to ~0.6 s -- concentrated in bursts,
+                             # exactly when queue position matters -- is a pass on data
+                             # rule 5 declares inadmissible for the feature.*** *A kill
+                             # survives bad data; a pass does not.*
+                             # **FOR E2.0 IT IS A STATEMENT DEFECT, NOT A RESULT ONE**
+                             # (ADA 5/16 legacy, and the kill survives leave-one-day-out
+                             # on all 16 -- dropping five cannot revive it): rule 8 wants
+                             # the population restated with n and as-of; the verdict
+                             # stands. **The era predicate becomes an admission leg of its
+                             # own, per symbol-day, with the legacy share beside every
+                             # table.**
+  THE_REVIEWERS_ZERO_OCCURRENCE_CLAIM_IS_FALSE_AT_THE_TIP_AND_BOTH_HITS_ARE_EXPLAINED: SUBSTANCE-UNTOUCHED-AND-ARGUABLY-STRENGTHENED
+                             # CHECKED 2026-09-06T06:28:46Z by driving the scan myself WITH
+                             # A POSITIVE CONTROL, which is the standing rule I adopted
+                             # at round 127.
+                             # REV 38 states a negative existence claim with its surface
+                             # and as-of (06:22Z): **zero occurrences** of `hf_ws_v2`, the
+                             # boundary `recv_ns`, `legacy`, `post-parse`, `stamp`,
+                             # `collector_runs` or `sub-second-reliable` across six
+                             # artifacts. **Against the tip at 06:28:46Z I get TWO
+                             # hits** -- and my positive control fires (the same patterns
+                             # over CLAUDE.md return 1 / 1 / 3), so the scan is not
+                             # silently mismatching.
+                             # **BOTH ARE EXPLAINED AND I DID NOT FILE IT AS A REVIEWER
+                             # ERROR.** (1) `e2_a_runner.py` reads
+                             # `data/mm_hf/collector_runs.jsonl` -- **committed 06:25:14Z,
+                             # AFTER the as-of**: that is DA 62 landing the era leg the
+                             # finding asked for, so the hit is the finding being ACTED
+                             # ON. (2) `e2_a_declare.py` mentions "the hf_ws_v2
+                             # era-boundary restart" -- committed 06:20:55Z, **about 90
+                             # seconds BEFORE the as-of**; *whether it was visible in the
+                             # reviewer's pinned worktree at filing time I cannot
+                             # establish -- I can read its current pin, not its pin
+                             # then -- and I do not assume either way.*
+                             # **AND THE SUBSTANCE IS UNTOUCHED, ARGUABLY STRENGTHENED.**
+                             # The pre-existing mention is prose calibrating an OUTAGE
+                             # BAR: the era-boundary restart explains a 158 s heartbeat
+                             # gap against a 61 s clean-day maximum. ***So the boundary
+                             # was already known to the declaration, and used to explain
+                             # a gap, and still was not made an admission predicate.***
+                             # That is the reviewer's finding, in the declaration's own
+                             # words.
+                             # **FOURTH ROUND RUNNING A FIRST-ORDER READ OF A NUMBER
+                             # NEEDED A STATE CHECK BEFORE IT COULD BE REPORTED** -- my
+                             # own silent zero, my own inflated 1,732, the dirty-tree
+                             # batteries, and now this. *The positive control is what
+                             # separates "the claim is false" from "my scan is broken",
+                             # and the commit timestamps are what separate "the claim is
+                             # false" from "the object moved".*
+  THE_ORDERING_FALSIFIERS_SURVIVING_HALF_IS_ALSO_FALSE_AND_A_VIOLATION_SILENCES_THE_GATE: 993-OF-2000-SEEDS
+                             # RELAYED from REV 38 section A 2026-09-06T06:28:46Z; the
+                             # construction is the reviewer's and I did not re-drive it.
+                             # R-570(B) split the ordering falsifier after its cost half
+                             # was found false (round 128). **The SURVIVING half --
+                             # "quantity per episode is arithmetic" -- is false too**,
+                             # constructed and driven: **993 of 2,000 seeds (49.6%)
+                             # violate it** in the marginal regime.
+                             # **AND THE SERIOUS PART IS THE RESPONSE, NOT THE
+                             # RATE:** the runner's reaction to a violation is to declare
+                             # its own instrument REFUTED and read NO GATE -- ***so a
+                             # correct model disagreement SILENCES the gate.*** *A
+                             # falsifier that converts an expected disagreement into a
+                             # refusal to report is worse than no falsifier: it fails
+                             # closed on the wrong condition.*
+                             # v6 restates the ordering as an **EXPECTATION**, with the
+                             # `front = 0` predicate deciding per-episode testability and
+                             # the refutation trigger narrowed to the arithmetic regime.
+                             # **TWICE NOW A FALSIFIER I RECORDED AS OWED HAS TURNED OUT
+                             # WRONG IN ITS OWN TERMS** (round 125 recorded both halves
+                             # as owed; round 128 the cost half fell; now the other).
+                             # *Writing a falsifier down is not the same as its being
+                             # true, and only driving it tells them apart.*
+  THE_LOCK_IS_PROVEN_FROM_PROC_SELF_FD_NOT_FROM_A_FLAG: MEASURED-FROM-THE-PROCESS-ITSELF
+                             # CHECKED 2026-09-06T06:28:46Z at the code, by symbol.
+                             # `de_multiday_gate1_runner.py` lists `/proc/self/fd` and
+                             # readlinks each entry, and reads `/proc/self/cgroup` for the
+                             # scope -- **the wrapper is MEASURED from the process, not
+                             # asserted by a caller flag.** Its own words: "this is READ
+                             # FROM /proc/self/fd".
+                             # *Why this is the right shape: `systemd-run --scope` holds
+                             # the flock as fd 3, so the lock's presence is a fact about
+                             # the running process rather than a claim in its arguments --
+                             # and a claim in the arguments is exactly what
+                             # `may_run_day`'s caller-supplied params turned out to be.*
+                             # **Driven three ways per R-578(A): a heavy run without the
+                             # lock REFUSES with the artifact unwritten, and a real day
+                             # refuses before any work.** *Rule 11 in its strongest form
+                             # -- the refusal happens before anything is written, so there
+                             # is no partial artifact to misread.*
+  THE_BOOLEAN_SWEEP_IS_STANDING_AND_EXHAUSTIVENESS_IS_ASSERTED: 5-CLASSIFIED-4-COMPUTED-1-INTENT
+                             # CHECKED 2026-09-06T06:28:46Z at fixture receipt v8.
+                             # `literal_audit` classifies **5 top-level booleans -- 4
+                             # COMPUTED, 1 INTENT** -- carries `rule: "10 -- compute
+                             # predicates, never print conclusions"`, and states
+                             # `exhaustiveness_is_checked: the battery asserts every
+                             # top-level boolean in the emitted receipt has an entry
+                             # here`.
+                             # ***THE EXHAUSTIVENESS CLAUSE IS WHAT MAKES IT A SWEEP
+                             # RATHER THAN A FIX.*** A new undocumented boolean fails the
+                             # battery, so the class cannot regrow silently -- which is
+                             # the difference between closing an instance and closing a
+                             # class, and it is the same move my window guard made for
+                             # the `updated:` bar. **Rule 10 with an instrument behind
+                             # it.**
+  TWO_DE_PROCESS_ERRORS_RECOVERED_AND_RULE_21_GAINS_A_MECHANISM: A-SHELL-cd-INTO-A-WORKTREE-MID-COMMAND
+                             # RELAYED from R-578(B) 2026-09-06T06:28:46Z.
+                             # DE ran suites in the SHARED tree by copying files there
+                             # (the coordinator's 06:18Z stop-the-line caught it; the
+                             # worktree was already a superset; copies restored
+                             # 06:18:31Z), and a commit ran with the shell `cd`'d into the
+                             # worktree and **landed on a DETACHED HEAD** -- recovered by
+                             # cherry-pick.
+                             # **Rule 21's mechanism list gains "a shell `cd` into a
+                             # worktree mid-command".** *That is now THREE shared-tree
+                             # incidents in one session -- two detachments and an orphan --
+                             # each with a different proximate cause and one shared root:
+                             # the shared tree is a landing surface being used as a
+                             # working one.* **Which is the same sentence I wrote last
+                             # round about measuring counts there**, arriving from the
+                             # write side.
   MY_FIRST_BATTERY_READ_MEASURED_A_DIRTY_TREE_AND_WOULD_HAVE_FILED_AGAINST_A_CORRECT_REVIEWER: 65-71-26-16-REPRODUCE-EXACTLY
                              # CHECKED 2026-09-06T06:18:57Z at a CLEAN COMMITTED STATE after
                              # my first read disagreed, and this is the round's finding
@@ -2897,7 +3246,28 @@ flags:
                              # (DA 62) -- heavy scopes listed against the lock holder,
                              # concurrency flagged. *Until it exists, rule 20's
                              # enforcement is a reviewer noticing.*
-  THE_ADMISSION_PREDICATE_LOSES_EXACTLY_THE_THIN_NAMES: ICP-REFUSED-ON-POPULATION-1-OF-14
+  THE_ADMISSION_PREDICATE_LOSES_EXACTLY_THE_THIN_NAMES: ANSWERED-BY-REV-38-THE-HONEST-END-IS-STATED-NOT-UNRESOLVED
+                             # SUPERSEDED-IN-BAND 2026-09-06T06:28:46Z. I recorded REV 38's
+                             # question UNRESOLVED last round and said so deliberately;
+                             # **REV 38 has answered it, and against my framing.**
+                             # **`UNRESOLVED_TOO_FEW_EPISODES` IS NOT THE HONEST END** --
+                             # approximately 736 gate-row episodes over sixteen days
+                             # EXIST. ***The honest end is a STATED one: run the cell,
+                             # label it NOT COMPARABLE on placement quality, and read the
+                             # gate BOTH WAYS at a declared staleness bar.***
+                             # *The difference matters and it is the reviewer's, not
+                             # mine: "unresolved" reads as "we could not tell", which is
+                             # false when the episodes exist and the defect is in the
+                             # COMPARISON rather than in the sample.* **A cell you can
+                             # run and must not compare is a different object from a cell
+                             # you cannot run**, and only the first can carry a number
+                             # with a caveat attached.
+                             # **AND THE SECOND HALF IS WORSE THAN THE ADMISSION LEG:**
+                             # ICP's ONE admissible day is 2026-08-22, **wholly
+                             # pre-boundary** -- so whatever v6 does to the gap leg, that
+                             # day does not become sub-second-admissible. **The ICP cell's
+                             # population is a v6 OUTPUT**, not an input.
+                             # EARLIER VALUE (rule 13): ICP-REFUSED-ON-POPULATION-1-OF-14
                              # CHECKED 2026-09-06T06:18:57Z at the ICP receipt.
                              # p002_e2a_smoke_ICPUSDT__20260906T055050Z.json:
                              # n_admissible_days 1, **REFUSED verbatim -- "1 admissible
@@ -14732,6 +15102,139 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 129, 2026-09-06T06:28:46Z ------------------------------
+  THE_UNTRACK_COMMIT_DID_NOT_UNTRACK_AND_ITS_COUNT_IS_WRONG:
+    prov: CHECKED
+    artifact: .gitignore
+    as_of: 2026-09-06T06:34:39Z
+    said: >-
+      git ls-tree -r counts of tracked .pyc under __pycache__: 0 at 57ccc62^, 82
+      at 57ccc62 (added by BE round 50's landing, unmentioned in its message), 82
+      at 3bfa526^, and 82 at HEAD. 3bfa526's subject is "Untrack
+      live/pm_research/__pycache__ (90 .pyc files committed by BE round 50's
+      landing) and ignore bytecode"; it touched 41 paths, all M rather than D,
+      and left all 82 tracked, and its stated 90 does not match the measured 82.
+      .gitignore already carried __pycache__/ and *.pyc on lines 1-2 and was not
+      touched, so the ignore half was already true and gitignore does not apply
+      to tracked files. Consequence: any suite run dirties the shared tree
+      without a source edit, defeating rule 21's empty-status clause and the
+      clean-tree measurement rule.
+  THE_09_03_STATE_TAPE_IS_BUILT_AND_BOTH_MISSING_INPUTS_NOW_EXIST_FOR_ONE_DAY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260903_btc.json
+    as_of: 2026-09-06T06:34:39Z
+    said: >-
+      the receipt names the train split as the fragment sha256
+      2860832a66e820ca... -- the same fragment I verified in round 127 -- with an
+      explicitly EMPTY score split, decides_nothing "REPORTED (rule 14)",
+      guard.refuses_any_existing_path true and required_stem
+      phase2_state_tape_gate1_. Its THE_SPLIT_QUESTION_IS_NOT_MINE block is
+      status PROVISIONAL, routed to DE: the build mapped the day fragment to
+      TRAIN and an empty file to SCORE because build_state_tape_v2's two inputs
+      are two POPULATIONS, not two feature sets, and a one-day Gate-1 tape has
+      one population.
+  THE_RUNNERS_DIGEST_GUARD_FIRED_ON_BE_50S_LANDING:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T06:34:39Z
+    said: >-
+      re-running the runner selftest after BE 50 landed raises RunnerRefused:
+      "BE's cascade module digest differs -- declared 2b164df2ec0653a5, found
+      93332a45faf714fe. A null run through a DIFFERENT cascade is not a control
+      for this arm, and the citation must be re-pointed deliberately." The
+      battery returned 100 checks at 06:28:46Z and refuses at 06:34:39Z; this is
+      the guard firing on a real change, not a regression, and DE owes a
+      deliberate re-point.
+  THE_FOUR_BATTERIES_REPRODUCE_AND_THIS_TIME_I_MEASURED_THE_TREE_FIRST:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T06:28:46Z
+    said: >-
+      git status --short returned 0 lines first, so the shared tree equals its
+      HEAD at this moment; the four batteries then gave design 71, runner 100,
+      data root 18, supersession diff 26 -- matching R-578(A) exactly. The counts
+      have moved since round 128 (65->71, 71->100, 16->18, 26 unchanged), which
+      confirms last round's disagreement was a state difference rather than a
+      defect.
+  DESIGN_v9_ANSWERS_THE_CONSUMER_HALF_AND_EXPLICITLY_DECLINES_THE_PRODUCER_HALF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v9__20260906T062115Z.json
+    as_of: 2026-09-06T06:28:46Z
+    said: >-
+      R11_memory_and_index_residency.index_splits_needed_by_day.answer is "NONE,
+      at any stage" with a per-stage breakdown, a falsifier and measured_by
+      day_split_residency_proof(); and the sibling field what_DE_cannot_rule
+      states "WHICH split BE must build to produce a September day's asm is BE's
+      measurement and R-496(E)'s ruling, not DE's. What is declared here is only
+      what the CONSUMER needs." R-575(A)'s ~2.5 GB lever is the producer
+      question, so it is untouched and the 8.713 GB budget figure is unchanged.
+  THE_LEDGERS_SECOND_ROW_IS_CLAUDE_MDS_BOUNDARY_CONSTANT:
+    prov: CHECKED
+    artifact: data/mm_hf/collector_runs.jsonl
+    as_of: 2026-09-06T06:28:46Z
+    said: >-
+      the ledger holds exactly four rows; the earliest started_at_ns is
+      1787579288518862512 = 2026-08-24T13:48:08Z, matching REV 38, and the second
+      row's started_at_ns is 1787579334881534478 -- CLAUDE.md rule 5's boundary
+      constant verbatim, = 2026-08-24T13:48:54.881535Z. Rule 5's number is a row
+      in this ledger rather than a derived or remembered figure.
+  THE_ERA_PREDICATE_IS_NOT_AN_ADMISSION_LEG_AND_36_OF_101_ARE_LEGACY_STAMPED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_DA61_E2A_2026-09-06.md
+    as_of: 2026-09-06T06:28:46Z
+    said: >-
+      section B.3 gives 101 admissible symbol-days with 29 wholly pre-boundary
+      and 7 on the boundary day; I computed 29 + 7 = 36 and 36/101 = 35.64%,
+      matching the stated 35.6%, and read the ledger myself to confirm no run
+      exists before the boundary. E2.0 reads exchange T so rule 5 does not bind
+      there; E2-A reads recv_ns and its estimand is sub-second by construction,
+      and its gate is a PASS gate, so a pass would rest 36% on data rule 5
+      declares inadmissible for the feature. ICP's single admissible day,
+      20260822, is wholly pre-boundary.
+  THE_REVIEWERS_ZERO_OCCURRENCE_CLAIM_IS_FALSE_AT_THE_TIP_AND_BOTH_HITS_ARE_EXPLAINED:
+    prov: CHECKED
+    artifact: live/mm_research/e2_a_declare.py
+    as_of: 2026-09-06T06:28:46Z
+    said: >-
+      scanning the named artifacts for the era vocabulary returns two hits
+      against the filing's stated zero, with a positive control over CLAUDE.md
+      returning 1/1/3 so the scan is proven able to fire. e2_a_runner.py's read
+      of data/mm_hf/collector_runs.jsonl was committed 06:25:14Z, after the
+      filing's 06:22Z as-of -- DA 62 landing the era leg the finding asked for;
+      e2_a_declare.py's mention of "the hf_ws_v2 era-boundary restart" was
+      committed 06:20:55Z, about 90 seconds before it, and whether it was visible
+      in the reviewer's pinned worktree then cannot be established from here. The
+      mention is prose calibrating an outage bar -- the restart explaining a 158 s
+      heartbeat gap against a 61 s clean-day maximum -- not an admission
+      predicate.
+  THE_ORDERING_FALSIFIERS_SURVIVING_HALF_IS_ALSO_FALSE_AND_A_VIOLATION_SILENCES_THE_GATE:
+    prov: RELAYED
+    from: REV 38 section A
+    as_of: 2026-09-06T06:28:46Z
+  THE_LOCK_IS_PROVEN_FROM_PROC_SELF_FD_NOT_FROM_A_FLAG:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T06:28:46Z
+    said: >-
+      the runner lists /proc/self/fd and readlinks each entry, reads
+      /proc/self/cgroup for the scope, and states in its own text "this is READ
+      FROM /proc/self/fd" -- the wrapper is measured from the running process
+      rather than asserted by a caller flag, which is the failure mode
+      may_run_day's caller-supplied params turned out to be.
+  THE_BOOLEAN_SWEEP_IS_STANDING_AND_EXHAUSTIVENESS_IS_ASSERTED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_fixture_run_v8__20260906T062115Z.json
+    as_of: 2026-09-06T06:28:46Z
+    said: >-
+      literal_audit classifies five top-level booleans as four COMPUTED and one
+      INTENT, carries rule "10 -- compute predicates, never print conclusions",
+      and states exhaustiveness_is_checked -- the battery asserts every top-level
+      boolean in the emitted receipt has an entry, so a new undocumented boolean
+      fails the battery.
+  TWO_DE_PROCESS_ERRORS_RECOVERED_AND_RULE_21_GAINS_A_MECHANISM:
+    prov: RELAYED
+    from: R-578
+    as_of: 2026-09-06T06:28:46Z
   # --- MEM round 128, 2026-09-06T06:18:57Z ------------------------------
   ANOTHER_SEATS_COMMIT_SWEPT_MY_UNCOMMITTED_Q_ROW_INTO_THE_REGISTER:
     prov: CHECKED

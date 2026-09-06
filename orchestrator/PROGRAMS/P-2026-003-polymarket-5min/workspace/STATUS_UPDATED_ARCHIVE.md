@@ -9151,3 +9151,102 @@ alnum-normalised containment check in all three directions.
   REVIEW_P002_E20_RESULT_2026-09-06.md, re-read from the log this round, not
   carried from the brief.)
 ```
+
+## Batch 111 — archived 2026-09-06T06:28:46Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 129 entered the field —
+the third consecutive round the window guard has demanded the trim rather than a
+seat remembering to make it. Trim by MOVING, never by interpreting; boundaries
+at the generation markers as they stand; verified by an alnum-normalised
+containment check in all three directions.
+
+```
+  2026-09-06T05:51:29Z (MEM ROUND 126 -- R-573 SWEPT, AND THE ROLLING WINDOW
+  TRIMMED TO ITS RULED SIZE AFTER EIGHTEEN ROUNDS OF DRIFT. STATE ONLY.
+  (1) **THE 09-03 BOOK IS BLOCKED ON A MISSING INPUT, NOT A MEMORY FAILURE, AND
+  THE RECEIPT SAYS SO ITSELF.** The day path works -- 247 btc slugs selected
+  through de_admissible_windows.supply because select_v2_era cannot reach
+  September (measured: the declared intervals end 2026-08-26T00:00). The
+  reference BUILT (247 windows, 313,114 generations, 531.1 s, 2.008 GB -- the
+  first full day, 10.06x the consumed hour) and the index BUILT (387.4 s,
+  1,764,206 rows, 5.971 GB cumulative). **Then DE's guard refused an empty
+  slice** -- and BE names it as DE's guard doing the right thing rather than as
+  an obstacle. *One seat's guard stopping another seat's build from emitting a
+  hollow artifact is worth recording as a success, not only as a block.*
+  (2) **I VERIFIED THE NEGATIVE EXISTENCE CLAIM MYSELF, AND MY CHECK IS BROADER
+  THAN THE RECEIPT'S.** A streaming scan of all 1,241,115,096 bytes of
+  harmful_exposure_rows_v3_eraB.json for "2026-09" returns **ZERO**, in 1.2 s.
+  BE checked the 247 wanted slugs; **the fragment contains no September at
+  all**, which is what makes "the consumed era only" a description rather than
+  a coincidence of naming. Surface and as-of stated; I do not extend it to the
+  other two fragments, which I did not scan.
+  (3) **THE FINDING AGAINST THE ENTRY I WAS SENT TO SWEEP: THE STREAMING
+  ASSEMBLY ALREADY EXISTS AND IS ALREADY CALLED.** R-573(C) says "the design
+  needs a partitioned or streaming assembly before any book exists". **`def
+  assemble_streaming` is defined in de_phase4_diag_runner.py and called by
+  be_daybook_build.py -- the very builder that just ran -- at chunk_windows=6,
+  with a driven check on the call shape.** The receipt states it too and the
+  entry did not carry it forward. **So the open question is not whether one
+  exists; it is whether the one that exists FITS under 8 GB at 313,114
+  generations** -- much narrower, and the one REV 36 should be asked.
+  ***THIRD INSTANCE IN THREE ROUNDS OF ONE SHAPE:*** the shell trap already
+  solved in a code comment; the seed convention already a declaration field;
+  the streaming assembly already built. **The register asks for what the
+  repository already carries, and each time the cost is a dispatch aimed at the
+  wrong question.**
+  (4) **THE COST GAP NOW HAS A NUMBER, AND IT IS A FLOOR.** R-551's estimate is
+  confirmed as null + replay only (1.939 + 0.313 h/day). Adding the two
+  newly MEASURED components (reference + index = 0.2551 h/day): **12.54 CPU-h at
+  G = 5 and 15.04 at G = 6, +11.3% from those two alone.** ARITHMETIC over
+  measured parts, labelled as such -- **and a FLOOR, because the feature pass
+  and the assembly are still unmeasured and the assembly may not fit at all.**
+  Fragment scale, same status: **0.651 GB per btc day, 3.91 GB over six days**,
+  assuming equal windows.
+  (5) **THE TOP-UP GUARD REFUSES TWO PINNED NAMES, NOT ONE**, and it is proven
+  to FIRE by its own positive control. Its stated hazard is the one the critical
+  path has now arrived at: a September pass writing to the pinned name "would
+  replace the frozen population's data with a different population under the
+  same name -- silently, with nothing raising."
+  (6) **THE RACE-READ v2 PUTS THE CONSERVATIVE FLOOR IN THE FIELD A READER
+  RESOLVES: 0.25, NOT 0.0625**, with the optimistic reading beside it under its
+  own name and a field saying which is which -- "it refuses to put the
+  flattering number in the resolved field." All five SEALED_scores pinned by
+  sha256 with a post-read recompute that **VOIDS the read on mismatch**; the
+  Gate-1 separation COMPUTED over 7 surfaces with 0 matches. **The opening waits
+  on REV 36.**
+  (7) **THE 09-09 DATE IS NOW A CONDITIONAL, NOT A SCHEDULE** -- it holds only
+  if a day fits the cap, which is UNMEASURED. BE 49 measures one day and
+  **refuses rather than raising the cap or shrinking the population.** *Flagged
+  because a date that has appeared in four entries as a plain verdict will be
+  read as one, and its condition lives only in prose.*
+  (8) **AND I TRIMMED MY OWN WINDOW, WHICH I FLAGGED LAST ROUND AS A RULED BAR
+  WITH NO GUARD.** 23 generations against a ruled 3 (R-542(E)), drifted for
+  eighteen consecutive rounds. **Trimmed by MOVING, never by interpreting:** 20
+  generations, 1,043 lines, moved VERBATIM to STATUS_UPDATED_ARCHIVE.md as
+  Batch 108, under an alnum-normalised containment check driven in all three
+  directions -- present in the pre-trim file, present in the archive, ABSENT
+  from the post-trim file.
+  (9) **AND THE GUARD I OWED IS BUILT -- AND ITS FIRST VERSION RETURNED A SILENT
+  ZERO WHILE ITS SELFTEST PASSED.** The check now lives in
+  `mem_flag_provenance.py`, the instrument I run before every sentence, and
+  raises a FINDING above the ruled 3. **Driven both directions on the REAL
+  files: 22 generations / over by 19 / findings 1 / exit 1 on the pre-trim
+  STATUS.yml from HEAD, and 3 / findings 0 / exit 0 on the trimmed one.**
+  ***But my first version matched a line-start pattern against the PARSED
+  field, and `updated:` is a `>-` FOLDED scalar -- PyYAML returns one long line,
+  so the count was 0 on a file holding twenty-three generations.*** **The
+  selftest passed because I AUTHORED its input with newlines and indents** --
+  the recurring probe failure R-571(B) names against me by count, happening
+  again inside the guard built to close a different unguarded bar. **It was
+  caught only because I ran it on the pre-trim file as a positive control
+  instead of trusting the green selftest**; otherwise it would have printed
+  "window 0 (ruled 3)" forever and read as compliance. Fixed to read RAW TEXT,
+  and the selftest now carries **a positive control requiring a nonzero count
+  on the LIVE file** -- the exact check the broken version would have failed.
+  25 checks pass.
+  MEASURED BEFORE THIS SENTENCE: flags 647 -> 655, flag_provenance 192 -> 200,
+  tasks 19; 93 CHECKED, 107 RELAYED, **455 UNMARKED -- unchanged for the second
+  round running**, because all eight new flags carried provenance when written.
+  ORPHAN audit 0 findings, exit 0, **and the window now reports 3 of a ruled 3
+  in that same run.**)
+```
