@@ -81,6 +81,51 @@ def module_commit(path) -> dict:
                           "than restating a constant"}
 
 
+class PorcelainMalformed(ValueError):
+    """A `git status --porcelain` line that does not have porcelain's shape.
+
+    Raised rather than sliced. A line that has lost its leading space still
+    LOOKS parseable -- `line[3:]` returns a path that is one character
+    short -- so a mis-slice is silent, and silence is the whole defect."""
+
+
+#: porcelain v1 status letters, both columns. A space is a valid state.
+_PORCELAIN_STATES = set(" MTADRCU?!")
+
+
+def parse_porcelain_line(line: str) -> tuple:
+    """(status_code, path) from ONE porcelain v1 line -- SHAPE CHECKED.
+
+    R-637: the defect has two halves and no seat had both right. The READ
+    half is a `.strip()` eating the leading space of the first line; this
+    module fixed that in round 62 with a raw read. THE SLICE HALF is
+    `line[3:]`, which is correct ONLY while the read stays raw -- so the
+    fix is one edit away from the defect for anyone who touches the helper,
+    and the slice is the half people edit.
+
+    So the offset is no longer assumed. Porcelain v1 is `XY<space>path`
+    with X and Y drawn from a fixed alphabet; a line that does not have
+    that shape is REFUSED by name instead of being sliced into a path that
+    is silently one character short. A rename or copy carries
+    `old -> new`, and the path that exists in the worktree is the NEW one.
+    """
+    if (len(line) < 4 or line[2] != " "
+            or line[0] not in _PORCELAIN_STATES
+            or line[1] not in _PORCELAIN_STATES):
+        raise PorcelainMalformed(
+            f"REFUSED: {line!r} is not a porcelain v1 line (expected two "
+            f"status characters then a space). A line that lost its leading "
+            f"space -- what a `.strip()` on the whole output does to the "
+            f"FIRST line -- still slices to a path that is one character "
+            f"short, and nothing downstream can tell (R-637).")
+    code, rest = line[:2], line[3:]
+    if ("R" in code or "C" in code) and " -> " in rest:
+        rest = rest.split(" -> ", 1)[1]      # the path in the worktree NOW
+    if len(rest) >= 2 and rest[0] == '"' and rest[-1] == '"':
+        rest = rest[1:-1]                    # git quotes unusual paths
+    return code, rest
+
+
 class HeavyRunRefused(RuntimeError):
     """This process is not entitled to run heavy work right now."""
 
@@ -276,7 +321,7 @@ class Capture:
         is deliberate: the question rule 22 asks is whether the PRODUCING
         CODE moved, and a symlink to the ledger is not producing code no
         matter what it is called. The name carries nothing either way."""
-        code, _, path = line[:2], line[2:3], line[3:]
+        code, path = parse_porcelain_line(line)
         full = Path(self.worktree) / path
         is_untracked = code == "??"
         is_link = full.is_symlink()

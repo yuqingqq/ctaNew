@@ -922,7 +922,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 78
+EXPECTED_CHECKS = 85
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -1815,6 +1815,73 @@ def selftest() -> int:
        "AND THE STAMP CARRIES BOTH KEYS: the rule-22 question gets its own "
        "name rather than quietly changing the meaning of the field already "
        "in the landed 09-05 receipts")
+
+    # ---- R-637: THE PORCELAIN DEFECT'S *SLICE* HALF ---------------------
+    # Round 62 fixed the READ half here (a `.strip()` eating the first
+    # line's leading space). The SLICE half -- `line[3:]` -- was correct
+    # only WHILE the read stayed raw, which is one edit away from the
+    # defect, and the slice is the half people edit. The offset is no
+    # longer assumed: the shape is checked and a malformed line refuses.
+    for _ln, _want in ((" M live/pm_research/x.py",
+                        (" M", "live/pm_research/x.py")),
+                       ("?? data", ("??", "data")),
+                       ("R  a -> b", ("R ", "b"))):
+        _got = _R22.parse_porcelain_line(_ln)
+        ok(_got == _want,
+           f"THE THREE-LINE FALSIFIER, LINE {_ln!r}: parses to {_got} -- a "
+           f"leading-space status, an untracked entry, and a rename whose "
+           f"path in the worktree is the NEW one")
+    try:
+        _R22.parse_porcelain_line("M live/pm_research/x.py")
+        ok(False, "a shifted porcelain line must refuse")
+    except _R22.PorcelainMalformed as _e:
+        ok("not a porcelain v1 line" in str(_e) and "one character" in str(_e),
+           "KNOWN-BAD, THE SLICE HALF: a line that LOST its leading space -- "
+           "what a `.strip()` does to the FIRST line -- is REFUSED BY NAME "
+           "rather than sliced into a path one character short. That "
+           "mis-slice is silent, and the silence was the defect")
+    ok(_R22.parse_porcelain_line('RM "odd name.py"')[1] == "odd name.py",
+       "AND A QUOTED PATH IS UNQUOTED: git quotes unusual names, so the "
+       "quotes are part of the encoding, not of the path")
+
+    # ---- the two readers REV 64 did not audit ---------------------------
+    # Neither slices porcelain: each uses it as a BOOLEAN, so the read half
+    # cannot bite them either. That is a fact about their code, so it is
+    # CHECKED here rather than asserted in a row -- and this check fails
+    # the moment either starts deriving a path from that output.
+    import ast as _ast2
+    for _f in ("be_forward_day.py", "be_forward_recon.py"):
+        _src2 = (Path(HERE) / _f).read_text()
+        _t2 = _ast2.parse(_src2)
+        _porc = [n for n in _ast2.walk(_t2)
+                 if isinstance(n, _ast2.Constant) and n.value == "--porcelain"]
+        # the names any porcelain result is bound to, if any
+        _bound = set()
+        for _n in _ast2.walk(_t2):
+            if isinstance(_n, _ast2.Assign) and any(
+                    isinstance(c, _ast2.Constant) and c.value == "--porcelain"
+                    for c in _ast2.walk(_n.value)):
+                for _t in _n.targets:
+                    if isinstance(_t, _ast2.Name):
+                        _bound.add(_t.id)
+        # a path would have to come out by subscripting or splitting one of
+        # those names; neither happens
+        _derived = []
+        for _n in _ast2.walk(_t2):
+            if isinstance(_n, _ast2.Subscript) and isinstance(
+                    _n.value, _ast2.Name) and _n.value.id in _bound:
+                _derived.append(f"{_n.value.id}[...]")
+            if (isinstance(_n, _ast2.Attribute)
+                    and _n.attr in ("split", "partition", "splitlines")
+                    and isinstance(_n.value, _ast2.Name)
+                    and _n.value.id in _bound):
+                _derived.append(f"{_n.value.id}.{_n.attr}()")
+        ok(_porc and not _derived,
+           f"{_f}: {len(_porc)} porcelain call(s), result bound to "
+           f"{sorted(_bound) or 'nothing'}, and NO path is derived from it "
+           f"({_derived or 'no subscript, no split'}) -- it is used as a "
+           f"BOOLEAN, so neither half of R-637's defect can reach it. "
+           f"Checked, not assumed, and this fails if that changes")
 
     return _finish(checks, fails, skipped)
 
