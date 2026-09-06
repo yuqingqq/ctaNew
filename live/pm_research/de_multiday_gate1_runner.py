@@ -47,7 +47,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 152
+EXPECTED_CHECKS = 159
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -59,13 +59,20 @@ SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
 ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
-                   "null_mean", "null_sd", "null_draws_summary")
+                   "null_mean", "null_sd", "null_draws_summary",
+                   # R-599 (DA 68): the RATIO survived the seal while BOTH
+                   # quantities it is formed from were sealed. A
+                   # null-derived ratio published before the read is more
+                   # than the pre-read needs; the pre-read needs R4's
+                   # STATUS, which the admissibility block publishes as two
+                   # booleans.
+                   "sd_over_abs_mean")
 
 #: How many checks the DE 78 day-path block runs. Declared, because the
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 75
+DAY_PATH_CHECKS = 82
 
 
 class RunnerRefused(RuntimeError):
@@ -1684,6 +1691,37 @@ def tape_artifacts_opened(proof: dict) -> list:
                    and any(m in p for m in TAPE_ARTIFACT_MARKERS)})
 
 
+#: REV 47: hashing a 290 MB book with `read_bytes()` put a ~290 MB
+#: TRANSIENT in S0 -- allocated, hashed, freed before the mark, so it is
+#: invisible to the current-RSS series and lands squarely in S0's HIGHWATER
+#: DELTA, which is the instrument DE 83 built to locate the peak. It made
+#: S0 look like a memory stage when what it did was read a file.
+HASH_CHUNK_BYTES = 8 << 20
+
+
+def sha256_streamed(path: Path) -> str:
+    """The digest WITHOUT holding the file.
+
+    THE OBSERVATION IS THE REVIEWER'S AND THE FIX IS NOT THE ONE PROPOSED,
+    for a reason worth recording: 'one read with sha256 fed from the same
+    buffer' would need BE's `load()` to accept BYTES, and `phase2_arms` /
+    `be_cancel_axis_null` are BE's modules -- DE does not change their
+    signatures to save its own transient. Streaming is DE-side and gets
+    the whole benefit: O(chunk) instead of O(file).
+
+    THE DOUBLE READ REMAINS, DELIBERATELY. DE hashes the book to admit it
+    against BE's published receipt BEFORE the load; BE's loader hashes the
+    buffer it actually unpickled. Those are the two ends of a check-and-use
+    pair and collapsing them into one read would reintroduce the window REV
+    43 made me close on the tape. Two reads of 290 MB cost seconds; the
+    window costs correctness."""
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for block in iter(lambda: fh.read(HASH_CHUNK_BYTES), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
 def day_forms(day: str) -> set:
     """`2026-09-03` and `20260903` are the SAME DAY.
 
@@ -1763,7 +1801,7 @@ def verify_book_against_builder_receipt(day: str, book_path: Path,
             f"nobody checked.")
     if not book_path.is_file():
         raise RunnerRefused(f"REFUSED DAY {day}: no book at {book_path}")
-    actual = hashlib.sha256(book_path.read_bytes()).hexdigest()
+    actual = sha256_streamed(book_path)
     if actual != declared:
         raise RunnerRefused(
             f"REFUSED DAY {day}: reference-book digest mismatch -- BE's "
@@ -3806,6 +3844,78 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"(found {_lit}). It read 23 beside a constant of 38 and then "
            f"49 -- the gap widened twice while the sentence sat still, "
            f"which is rule 10 in my own receipt")
+
+        # ---- R-599 (DA 68): the RATIO is sealed, and so is its text -----
+        _adm_bad = DESIGN.arm_day_admissible(10, [1.0] * 500)
+        ok(_adm_bad["decisions_meet_bar"] is False
+           and _adm_bad["sd_meets_floor"] is False
+           and _adm_bad["n_decisions"] == 10
+           and _adm_bad["min_decisions_per_arm_day"] == 30,
+           "R-599: R4 publishes TWO BOOLEANS -- the DECISION half with its "
+           "numbers (a population fact) and the SD half as a VERDICT. That "
+           "is what the pre-read needs; a null-derived ratio is more")
+        _deep = {"day": "D", "arm": "A", "status": "X",
+                 "admissibility": _adm_bad,
+                 "nested": [{"a": [{"admissibility": dict(_adm_bad)}]}],
+                 "economic": {"Z": 1.0}}
+        _sealed_deep = seal(_deep, 1, 6)
+        # KEYS, NOT SUBSTRINGS. My first version of this check tested the
+        # serialised payload for the string "sd_over_abs_mean" and FAILED
+        # -- because `sealed_field_names` is A LIST OF THE NAMES BEING
+        # SEALED. That is the needle-matches-its-own-prose failure this
+        # module's own `_economic_keys_in` docstring warns about, and I
+        # walked into it in the check written to close a leak.
+        _nested_adm = _sealed_deep["nested"][0]["a"][0]["admissibility"]
+        ok(_economic_keys_in(_sealed_deep) == []
+           and "sd_over_abs_mean" not in _nested_adm
+           and "null_sd" not in _nested_adm
+           and "sd_over_abs_mean" not in _sealed_deep["admissibility"],
+           "R-599 KNOWN-BAD, PLANTED AT DEPTH: `sd_over_abs_mean` inside a "
+           "nested list inside a dict is STRIPPED -- it survived the seal "
+           "because it was not in ECONOMIC_FIELDS while BOTH quantities it "
+           "is formed from were sealed (DA 68). Tested as KEYS at depth, "
+           "because the artifact legitimately NAMES the sealed fields")
+        _sd_txt = " ".join(_sealed_deep["admissibility"]["reasons"])
+        _leaked_nums = [t for t in ("0.25 * |mean 1", "null sd 0",
+                                    "sd 0.000000")
+                        if t in _sd_txt]
+        ok(not _leaked_nums and "VERDICT ONLY" in _sd_txt
+           and "decisions 10 < declared minimum 30" in _sd_txt,
+           f"AND A SECOND LEAK OF THE SAME CLASS, FOUND WHILE FIXING THE "
+           f"FIRST: the refusal REASONS embedded sd and mean as TEXT, and "
+           f"the stripper removes KEYS, not substrings -- it fired only on "
+           f"a REFUSED arm-day, exactly where the numbers are most "
+           f"tempting. The sd half is a verdict now; the decision half "
+           f"keeps its numbers")
+        _unsealed_deep = seal(_deep, 6, 6)
+        ok(_unsealed_deep["admissibility"]["sd_over_abs_mean"] is not None
+           or _unsealed_deep["admissibility"].get("null_sd") is not None,
+           "POSITIVE CONTROL: after the unseal the ratio and its parts are "
+           "PRESENT -- the seal withholds them, it does not delete them")
+        import inspect as _i5
+        _strip_src = _i5.getsource(_strip_economic)
+        ok("ECONOMIC_FIELDS" in _strip_src,
+           "and `_strip_economic` still REFERENCES `ECONOMIC_FIELDS` by "
+           "name, which is the invariant DA's verifier asserts by AST -- "
+           "DE's field list at the source stays the one DA reads")
+
+        # ---- REV 47: the S0 transient ------------------------------------
+        _bk = Path(_made["book_path"])
+        ok(sha256_streamed(_bk) == hashlib.sha256(_bk.read_bytes()).hexdigest(),
+           f"REV 47 POSITIVE CONTROL: the streamed digest equals the "
+           f"whole-file digest on a real book, so the transient is removed "
+           f"without changing the number")
+        ok(HASH_CHUNK_BYTES <= (16 << 20)
+           and "check-and-use" in sha256_streamed.__doc__,
+           f"REV 47 TAKEN, WITH ONE PART DECLINED AND RECORDED: hashing "
+           f"290 MB with read_bytes() put a ~290 MB TRANSIENT in S0 -- "
+           f"invisible to the current-RSS series and squarely in the "
+           f"HIGHWATER DELTA, so S0 looked like a memory stage when what "
+           f"it did was read a file. Streamed at "
+           f"{HASH_CHUNK_BYTES >> 20} MiB. The DOUBLE READ REMAINS: "
+           f"collapsing it would need BE's loader to accept bytes (BE's "
+           f"module, not DE's) and would reintroduce the check-and-use "
+           f"window REV 43 made me close on the tape")
 
         # ---- DE 82 (1): the scope's anon and file, read APART ------------
         _sm = scope_memory_observation()

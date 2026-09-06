@@ -43,9 +43,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 12
+VERSION = 13
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 81
+EXPECTED_CHECKS = 84
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -84,12 +84,16 @@ V11_DECLARATION = ("p003_de_multiday_gate1_design_v11__20260906T071214Z"
                    ".json",
                    "5039b35cc3d84709101f4e208bed522258ffa477382fe4a9bc8afd"
                    "7637bfe1e8")
+V12_DECLARATION = ("p003_de_multiday_gate1_design_v12__20260906T074622Z"
+                   ".json",
+                   "c32c72455b26ac3ea5dfa1b3c27bcea2585b72f36f6774d38a05ef"
+                   "5e73923ff5")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
-                    V10_DECLARATION, V11_DECLARATION)
+                    V10_DECLARATION, V11_DECLARATION, V12_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -523,19 +527,48 @@ def day_cluster_verdict(z_by_day: dict, *, alpha: float = ALPHA,
 
 
 def arm_day_admissible(n_decisions: int, null_draws: list) -> dict:
-    """(4) THE DEGENERACY BARS, applied. Declared before any day is seen."""
+    """(4) THE DEGENERACY BARS, applied. Declared before any day is seen.
+
+    R-599 (DA 68): `sd_over_abs_mean` SURVIVED the seal -- it was not in
+    `ECONOMIC_FIELDS`, so the stripper kept it while BOTH quantities it is
+    formed from were sealed. A null-derived ratio published before the read
+    is more than the pre-read needs; what the pre-read needs is the R4
+    STATUS.
+
+    AND A SECOND LEAK OF THE SAME CLASS, found while fixing the first and
+    not named in the ruling: the refusal REASONS embedded `sd` and `mean`
+    as TEXT, and `_strip_economic` removes KEYS, not substrings. It fired
+    only on a refused arm-day -- exactly the case where the numbers are
+    most tempting. The two halves are now asymmetric on purpose:
+
+      * the DECISION half publishes its numbers (the count and the bar are
+        population facts, not null-derived);
+      * the SD half publishes a VERDICT ONLY. No sd, no mean, no ratio, in
+        a key or in a string."""
     sd = statistics.pstdev(null_draws) if null_draws else 0.0
     mean = statistics.fmean(null_draws) if null_draws else 0.0
+    decisions_ok = n_decisions >= MIN_DECISIONS_PER_ARM_DAY
+    sd_ok = sd >= SD_FLOOR_FRACTION * abs(mean)
     reasons = []
-    if n_decisions < MIN_DECISIONS_PER_ARM_DAY:
+    if not decisions_ok:
         reasons.append(
             f"decisions {n_decisions} < declared minimum "
             f"{MIN_DECISIONS_PER_ARM_DAY}")
-    if sd < SD_FLOOR_FRACTION * abs(mean):
+    if not sd_ok:
         reasons.append(
-            f"null sd {sd:.6g} < {SD_FLOOR_FRACTION} * |mean {mean:.6g}| "
-            f"= {SD_FLOOR_FRACTION * abs(mean):.6g}; Z explodes as sd -> 0")
-    return {"n_decisions": n_decisions, "null_sd": sd, "null_mean": mean,
+            f"the null's dispersion is below the declared floor of "
+            f"{SD_FLOOR_FRACTION} * |mean| (Z explodes as sd -> 0). THE "
+            f"VERDICT ONLY: sd, mean and their ratio are SEALED and are "
+            f"not quoted here, in a key or in a string (R-599)")
+    return {"n_decisions": n_decisions,
+            "min_decisions_per_arm_day": MIN_DECISIONS_PER_ARM_DAY,
+            "sd_floor_fraction": SD_FLOOR_FRACTION,
+            # R4's TWO BOOLEANS -- what the pre-read needs.
+            "decisions_meet_bar": decisions_ok,
+            "sd_meets_floor": sd_ok,
+            # SEALED: every one of these is in ECONOMIC_FIELDS and the
+            # stripper removes them at every depth.
+            "null_sd": sd, "null_mean": mean,
             "sd_over_abs_mean": (sd / abs(mean)) if mean else None,
             "admissible": not reasons,
             "status": "OK" if not reasons else "DEGENERATE_ARM_DAY_REFUSED",
@@ -1333,6 +1366,69 @@ def declaration() -> dict:
                                         "coverage are the builder's guards. "
                                         "This verifies WHICH BYTES reach "
                                         "the pass",
+        },
+        "R17_the_R4_ratio_is_SEALED": {
+            "ruling": "R-599 (coordinator), on DA 68's finding",
+            "the_defect": "`admissibility.sd_over_abs_mean` SURVIVED the "
+                          "seal -- it was not in ECONOMIC_FIELDS, so "
+                          "`_strip_economic` kept it, while BOTH "
+                          "quantities it is formed from (null_sd, "
+                          "null_mean) were sealed. A null-derived ratio "
+                          "published before the read is more than the "
+                          "pre-read needs (rule 11)",
+            "what_the_pre_read_needs": "R4's STATUS, published as TWO "
+                                       "BOOLEANS",
+            "the_two_halves_are_asymmetric_on_purpose": {
+                "decision_half": "decisions >= 30, WITH its numbers -- the "
+                                 "count and the bar are population facts, "
+                                 "not null-derived",
+                "sd_half": "sd >= 0.25*|mean|, VERDICT ONLY -- no sd, no "
+                           "mean, no ratio, in a key or in a string",
+            },
+            "AND_A_SECOND_LEAK_OF_THE_SAME_CLASS": (
+                "found while fixing the first and NOT named in the "
+                "ruling: the refusal REASONS embedded sd and mean as "
+                "TEXT, and `_strip_economic` removes KEYS, not "
+                "substrings. It fired only on a REFUSED arm-day -- "
+                "exactly the case where the numbers are most tempting"),
+            "falsifier": "the ratio is planted AT DEPTH (inside a nested "
+                         "list inside a dict) and proved stripped, tested "
+                         "as KEYS -- the artifact legitimately NAMES the "
+                         "sealed fields in `sealed_field_names`, so a "
+                         "substring test reports the seal as a leak",
+            "DEs_field_list_stays_the_one_DA_reads": (
+                "`_strip_economic` references `ECONOMIC_FIELDS` by name, "
+                "which is the invariant DA's verifier asserts by AST"),
+            "applies_from": "2026-09-04 onward; the 09-03 receipt was "
+                            "produced by v12's code and CARRIES the ratio "
+                            "-- nobody quotes it",
+        },
+        "R18_the_S0_transient": {
+            "observation": "REV 47",
+            "what_it_was": "hashing a 290 MB book with `read_bytes()` put "
+                           "a ~290 MB TRANSIENT in S0 -- allocated, "
+                           "hashed, freed before the mark, so INVISIBLE to "
+                           "the current-RSS series and squarely in S0's "
+                           "HIGHWATER DELTA, which is the instrument DE 83 "
+                           "built to locate the peak. S0 looked like a "
+                           "memory stage when what it did was read a file",
+            "taken": "the digest is STREAMED in 8 MiB chunks -- O(chunk), "
+                     "not O(file)",
+            "and_one_part_DECLINED_with_the_reason_recorded": (
+                "the reviewer proposed ONE read with sha256 fed from the "
+                "same buffer. That needs BE's `load()` to accept BYTES, "
+                "and `be_cancel_axis_null` / `phase2_arms` are BE's "
+                "modules -- DE does not change their signatures to save "
+                "its own transient. Streaming is DE-side and gets the "
+                "whole benefit"),
+            "the_double_read_REMAINS_deliberately": (
+                "DE hashes the book to ADMIT it against BE's published "
+                "receipt BEFORE the load; BE's loader hashes the buffer it "
+                "actually unpickled. Those are the two ends of a "
+                "check-and-use pair, and collapsing them into one read "
+                "reintroduces the window REV 43 made DE close on the "
+                "tape. Two reads of 290 MB cost seconds; the window costs "
+                "correctness"),
         },
         "R14_the_fixture_real_lock_is_ONE_function": {
             "reviewer": "REVIEW_DAY_PATH_DE78 S1.4",
@@ -2359,6 +2455,30 @@ def selftest(*, quiet: bool = False) -> int:
     ok(len(_excl["driven"]) == 3 and "LOCK_SH" in _excl["now"],
        "and REV 41's exclusivity finding is in the declaration with the "
        "three cases it is driven on")
+
+    _r17 = d["R17_the_R4_ratio_is_SEALED"]
+    ok("sd_over_abs_mean" in _RUN.ECONOMIC_FIELDS
+       and _r17["applies_from"].startswith("2026-09-04")
+       and "VERDICT ONLY" in _r17[
+           "the_two_halves_are_asymmetric_on_purpose"]["sd_half"],
+       "R17: the ratio is IN the sealed field list, the two R4 halves are "
+       "declared asymmetric (numbers for the decision half, a verdict for "
+       "the sd half), and the entry says the 09-03 receipt predates it")
+    _a = arm_day_admissible(10, [1.0] * 500)
+    ok(_a["decisions_meet_bar"] is False and _a["sd_meets_floor"] is False
+       and "VERDICT ONLY" in _a["reasons"][1]
+       and "1e" not in _a["reasons"][1] and "0.000" not in _a["reasons"][1],
+       "and the sd refusal REASON carries no sd, no mean and no ratio -- "
+       "the second leak, in a string rather than a key, which the stripper "
+       "cannot reach")
+    _r18 = d["R18_the_S0_transient"]
+    ok("STREAMED" in _r18["taken"]
+       and "BE's modules" in _r18[
+           "and_one_part_DECLINED_with_the_reason_recorded"]
+       and "check-and-use" in _r18["the_double_read_REMAINS_deliberately"],
+       "R18: REV 47's observation TAKEN by streaming, with the part "
+       "DECLINED and its reason recorded -- collapsing the two reads needs "
+       "BE's signature and reintroduces a check-and-use window")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
