@@ -1112,6 +1112,9 @@ def verify_full(book_path, receipt_path, *, day: str | None = None,
     if bp["n_heads"] != 2:
         flags.append("book.n_heads")
     not_computable = []
+    if census["sealed_statistic_check"] == "NOT_ESTABLISHED_WALK_TRUNCATED":
+        not_computable.append(
+            "book.no_sealed_day_statistic_is_named__WALK_TRUNCATED")
     for head, blk in bp["per_head"].items():
         for k in ("matches", "coverage_matches", "theta_matches"):
             if blk[k] is False:
@@ -1125,7 +1128,13 @@ def verify_full(book_path, receipt_path, *, day: str | None = None,
             flags.append(f"book.{head}.theta_matches_params")
     incomplete = bool(out.get("provenance_incomplete")) or bool(not_computable)
     census = economic_census(book)
-    if not census["NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK"]:
+    #: A FLAG IS A REFUTATION, NOT AN UNKNOWN. `not None` is True, so a
+    #: TRUNCATED walk -- which establishes nothing -- was being reported as
+    #: "a sealed day statistic IS named in the book", the exact inversion
+    #: the truncation limit exists to prevent. REFUTED flags; NOT
+    #: ESTABLISHED is a status that blocks the verification and names
+    #: itself.
+    if census["sealed_statistic_check"] == "REFUTED":
         flags.append("book.a_SEALED_DAY_STATISTIC_is_named_in_the_book")
     out.update({
         "protocol": PROTOCOL + "_FULL",
