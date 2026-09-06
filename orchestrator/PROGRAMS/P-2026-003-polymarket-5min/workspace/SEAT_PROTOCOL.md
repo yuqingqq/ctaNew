@@ -135,13 +135,19 @@ except where marked USER-ONLY.
     minutes that way, nothing written. Launch as a transient SERVICE the manager
     forks, the lock held inside it:
     `systemd-run --user --unit=<name> --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew -- flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock <cmd>`
+    with `-p RemainAfterExit=yes` from DE 98 on (R-648: a succeeded transient unit is otherwise COLLECTED at
+    exit — `LoadState=not-found`, and `systemctl show` then returns DEFAULTS inactive/0/success — leaving only
+    its Started line; a failed one stays loaded until `reset-failed`; measured on four scratch units 13:48Z).
     (no `--scope`; `flock` inside the unit holds the lock for the run's life; a held
     lock refuses with **75**, the declared conflict code, never the payload's own 1 — read the unit's
-    result as the PAIR (`ActiveState`, `ExecMainStatus`): a RUNNING unit reports `ExecMainStatus=0`,
-    so neither field alone says finished or refused). **The form's constants are declared ONCE** in
-    `live/pm_research/declarations/heavy_run_form_v1.json` (lock path, conflict code 75, caps, the
-    journal identity fields); every literal in code reads it or asserts equality with it in its
-    selftest, and no runner or producer exits 75 for any other reason. Poll the UNIT, not a
+    outcome as the TRIPLE (`LoadState`, `ActiveState`, `ExecMainStatus`) WHILE `LoadState=loaded` and copy it
+    into the record at once: `not-found` makes the reading VOID, never "success"; a RUNNING unit reports
+    `ExecMainStatus=0`, so no field alone says finished or refused; after the receipt lands and the triple is
+    copied, stop the unit so the name is free). **The form's constants are declared ONCE** in
+    `live/pm_research/declarations/heavy_run_form_v2.json` (supersedes v1 by path+sha256; lock path, conflict
+    code 75, caps, `RemainAfterExit`, the journal identity fields, the triple); every literal in code reads
+    it or asserts equality with it in its selftest, and no runner or producer exits 75 for any other
+    reason. Poll the UNIT, not a
     child PID; a run's survival of `kill -TERM` on the launching shell's process
     group is a battery falsifier. **The journal is NOT the record (R-641, REV 66 §3.1):**
     it rotates within hours (DE 84's Started line was gone four hours later). A

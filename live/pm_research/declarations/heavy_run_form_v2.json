@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "declared_at_utc": "2026-09-06T13:50:15Z",
+  "declared_by": "coordinator (R-648; MEM 179's caveat on R3, measured by the coordinator on four scratch units at 13:48Z)",
+  "what": "THE ONE DECLARATION of the heavy-run launch form's constants. Every literal in code that names these values reads this file or asserts equality with it in its selftest; two definitions of the conflict code (be_heavy_run.sh:36 and be_rule22.py:134) and two bare literals were measured drifting-capable at REV 67 \u00a72.3 (a launcher refusing with 76 was published as 75).",
+  "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+  "lock_conflict_rc": 75,
+  "lock_conflict_rc_why": "flock -E 75: a held lock exits with the declared code, distinct from any payload exit; without -E a refusal and a crash are both ExecMainStatus=1 (REV 67 \u00a72.1, measured). No runner or producer may exit 75 for any other reason; each declares its own exit codes and asserts 75 is not among them.",
+  "form": "systemd-run --user --unit=<name> --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% -p RemainAfterExit=yes --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew --working-directory=<worktree> -- flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock <cmd>",
+  "memory_max_bytes": 8589934592,
+  "cpu_quota_percent": 100,
+  "slice": "research.slice",
+  "unit_outcome_minimum_read": [
+    "LoadState",
+    "ActiveState",
+    "ExecMainStatus"
+  ],
+  "unit_outcome_note": "read the TRIPLE while LoadState=loaded and COPY it into the record at once; LoadState=not-found means the other properties are defaults and the reading is VOID (never 'success'); a running unit reports ExecMainStatus=0; after the receipt is landed and the triple copied, the launcher or its owner stops the unit (`systemctl --user stop <unit>`; `reset-failed` for a failed one) so the name is free and the box is clean. Unit names are unique per launch. A run launched under v1 (de95smoke.service) leaves no unit object on success: its record is the sealed receipt its payload wrote plus the manager's journal lines copied by USER_INVOCATION_ID; the absence of a 'Failed with result' line in a rotating journal is NOT evidence of success.",
+  "journal_identity": {
+    "payload_lines_field": "_SYSTEMD_INVOCATION_ID",
+    "manager_lines_field_under_the_user_manager": "USER_INVOCATION_ID",
+    "system_manager_field_not_used_here": "INVOCATION_ID",
+    "query_form": "journalctl --user _SYSTEMD_INVOCATION_ID=<id> + USER_INVOCATION_ID=<id>",
+    "cross_check": "journalctl --user -u <unit> -o cat | wc -l must equal the by-id count for a unit launched once under that name",
+    "measured": "de95smoke.service: 1 line (the Started line, USER_INVOCATION_ID only); be64book.service: 99 manager lines (USER_INVOCATION_ID), 26 payload lines (_SYSTEMD_INVOCATION_ID), 1 neither \u2014 13:37Z; a unit NAME names every run ever launched under it",
+    "note": "a copy that returns 0 lines for a unit whose -u query has lines is a REFUSAL of the copy, never a record (two coordinator copies were exactly that, 13:35Z/13:36Z, deleted)"
+  },
+  "decidable_launch_form_property": "the process's own cgroup leaf suffix from /proc/self/cgroup: '.service' admits a real day, '.scope' refuses it (DE 96 assert_launch_form_at_runtime); the PPid test in the runbook is the OUTSIDE diagnostic and holds of MainPID (flock), not of the payload (a grandchild)",
+  "supersedes": {
+    "path": "live/pm_research/declarations/heavy_run_form_v1.json",
+    "sha256": "f5c65564d67d6f48e6c1de0620525b80b449acdae54c579b197abf3594fa309c",
+    "why": "v1's pair read is void after collection: a succeeded transient unit is collected at exit (LoadState not-found; systemctl show then returns DEFAULTS inactive/0/success) and leaves only its Started line in the journal; a failed one stays loaded until reset-failed"
+  },
+  "remain_after_exit": true,
+  "remain_after_exit_why": "with RemainAfterExit=yes a unit that exits 0 stays LOADED as active/exited with ExecMainStatus 0 and Result success until `systemctl --user stop <unit>`; the lock is a process-held flock and is released when the payload exits regardless of the unit object. Measured 13:48Z: exit 0 without it -> not-found/inactive/dead/0/success (defaults); exit 3 without it -> loaded/failed/3; exit 0 with it -> loaded/active/exited/0/success; exit 3 with it -> loaded/failed/3."
+}
