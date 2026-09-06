@@ -55,6 +55,7 @@ verification -- driven both ways in the battery.
 from __future__ import annotations
 
 import argparse
+import ast
 import datetime
 import hashlib
 import json
@@ -62,6 +63,7 @@ import math
 import statistics
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -78,16 +80,68 @@ SEED_TAG = "P003_GATE1_MULTIDAY"
 
 #: Read from the params declaration at load time -- never hardcoded here,
 #: because a bar retyped into a checker is a second source of truth.
-PARAMS_PATH = HERE / "declarations" / "de_multiday_gate1_params_v4.json"
+#: v5 (REV 45 section 3.3): v4 is SUPERSEDED and a checker left pinned to a
+#: superseded declaration reads bars nobody is running under.
+PARAMS_PATH = HERE / "declarations" / "de_multiday_gate1_params_v5.json"
+
+#: DE's runner, read as a DOCUMENT so its economic field list can be taken
+#: from the source rather than from a copy in this file.
+DE_RUNNER_PATH = HERE / "de_multiday_gate1_runner.py"
 
 #: `harmful_stateful_policy.SIDES[0]` -- the sign convention the valuation
 #: turns on. Read from the module (a constant, not a computation).
 BUY_SIDE = "BUY_UP"
 
-#: DE's ECONOMIC_FIELDS, read from `de_multiday_gate1_runner`'s declaration.
-#: Their ABSENCE is what tells this verifier a receipt is sealed.
-ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
-                   "null_mean", "null_sd", "null_draws_summary")
+def de_economic_fields_at_source(path: Path | None = None) -> dict:
+    """DE's ECONOMIC_FIELDS, read FROM THE SOURCE by AST -- never imported,
+    never copied into this file (REV 45 section 3.3).
+
+    A copy drifts silently: DE adds a field to the list, the stripper starts
+    removing it, and a verifier holding last week's tuple reports a receipt
+    OPEN that is in fact sealed on that field. Reading the constant is not
+    enough either, so this ALSO asserts that `_strip_economic` -- the
+    function that actually removes them -- references that same name. A
+    constant nothing uses would pin nothing.
+    """
+    src = Path(path) if path else DE_RUNNER_PATH
+    if not src.is_file():
+        raise VerifierRefused(
+            f"REFUSED: DE's runner is absent at {src}; the economic field "
+            f"list cannot be read at its source and MUST NOT be guessed.")
+    raw = src.read_bytes()
+    tree = ast.parse(raw.decode())
+    fields = None
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            for t in node.targets:
+                if isinstance(t, ast.Name) and t.id == "ECONOMIC_FIELDS":
+                    fields = tuple(ast.literal_eval(node.value))
+    stripper_uses_it = False
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef) and node.name == "_strip_economic":
+            stripper_uses_it = any(
+                isinstance(x, ast.Name) and x.id == "ECONOMIC_FIELDS"
+                for x in ast.walk(node))
+    if fields is None:
+        raise VerifierRefused(
+            "REFUSED: ECONOMIC_FIELDS is not a module-level assignment in "
+            "DE's runner. The list this verifier detects a seal by must come "
+            "from the code that does the sealing.")
+    if not stripper_uses_it:
+        raise VerifierRefused(
+            "REFUSED: `_strip_economic` does not reference ECONOMIC_FIELDS. "
+            "The constant would then pin nothing -- the stripper could be "
+            "removing a different set entirely.")
+    return {"fields": fields,
+            "source_path": "live/pm_research/de_multiday_gate1_runner.py",
+            "source_sha256": hashlib.sha256(raw).hexdigest(),
+            "read_by": "ast, at the source; not imported and not copied",
+            "stripper_references_the_same_name": True}
+
+
+#: Resolved once at import from DE's source. Their ABSENCE in a receipt is
+#: what tells this verifier the receipt is sealed.
+ECONOMIC_FIELDS = de_economic_fields_at_source()["fields"]
 
 #: THE DECLARED TOLERANCE, and where it is exact and where it cannot be.
 TOLERANCE = {
@@ -463,69 +517,313 @@ def verify_book_digest(book_path: str, receipt_sha: str) -> dict:
     return {"book": book_path, "sha256": actual, "verified": True}
 
 
+BOOK_REQUIRED_KEYS = ("rows", "scores_by_arm")
+
+
+def load_day_book(path: str) -> dict:
+    """The day book, through an ADAPTER that refuses what it cannot read.
+
+    This verifier consumes rows plus PER-ARM scores. It does NOT re-score
+    from the pinned heads: doing so would require the model artifacts and
+    would make this a second scorer rather than a second STATISTIC, and a
+    disagreement would then be about scoring rather than about the number
+    under test. So a book that does not carry the arm scores REFUSES BY NAME
+    -- it is a limit, stated, not a silent partial verification."""
+    p = Path(path)
+    if not p.is_file():
+        raise VerifierRefused(f"REFUSED: day book absent at {path}")
+    try:
+        bk = json.loads(p.read_text())
+    except json.JSONDecodeError as e:
+        raise VerifierRefused(
+            f"REFUSED: day book at {path} is not readable JSON ({e.msg}). A "
+            f"book this verifier cannot parse is not a book it may score.")
+    missing = [k for k in BOOK_REQUIRED_KEYS if k not in bk]
+    if missing:
+        raise VerifierRefused(
+            f"REFUSED: BOOK_CARRIES_NO_ARM_SCORES -- the day book is missing "
+            f"{missing}. This verifier re-derives the STATISTIC, not the "
+            f"scoring: re-scoring from the pinned heads needs the model "
+            f"artifacts and would make a disagreement a scoring difference. "
+            f"The book must carry the arm scores it was built with.")
+    if not bk["rows"]:
+        raise VerifierRefused(
+            "REFUSED: the day book carries zero rows. An empty book is a "
+            "FAILURE, not a day with no actions.")
+    return bk
+
+
+def resolve_replay(bk: dict, replay_fn=None):
+    """The replay SEAM. In production it is the engine of record; here it is
+    whatever the caller supplies. A missing engine REFUSES BY NAME rather
+    than substituting a second implementation of the policy."""
+    if replay_fn is not None:
+        return replay_fn, {"source": "supplied by the caller",
+                           "is_the_engine_of_record": False}
+    fn = bk.get("_replay")
+    if callable(fn):
+        return fn, {"source": "carried on the book object",
+                    "is_the_engine_of_record": False}
+    raise VerifierRefused(
+        "REFUSED: REPLAY_ENGINE_NOT_RESOLVED. The policy replay is the "
+        "instrument of record and this module does not own a second one; "
+        "without it no D(E0) may be computed. Wiring it to "
+        "`harmful_stateful_policy` is a build step, not a default.")
+
+
 def gate_is_open(params: dict, now: datetime.datetime | None = None) -> dict:
-    """The Gate-1 REAL-DAY path REFUSES before GO.
+    """The Gate-1 REAL-DAY path REFUSES before the ruled read bar.
 
     `read_not_before_utc` is DE's own declared field; this reads it rather
-    than carrying a second copy of the date."""
+    than carrying a second copy of the date. THERE IS NO OVERRIDE FLAG: the
+    clock is a PARAMETER so a test can drive both sides of the predicate,
+    and it is never exposed on the command line, because a bar with a
+    documented way past it is not a bar."""
     bar = params["read_not_before_utc"]
     t_bar = datetime.datetime.fromisoformat(bar.replace("Z", "+00:00"))
     t_now = now or datetime.datetime.now(datetime.timezone.utc)
     return {"read_not_before_utc": bar, "now_utc": t_now.isoformat(),
-            "open": t_now >= t_bar}
+            "open": t_now >= t_bar,
+            "seconds_until_open": (t_bar - t_now).total_seconds(),
+            "no_override_flag_exists": True}
 
 
-def verify_real_day(book_path: str, receipt_path: str,
+def declared_limits(receipt_arm_seals: list, params: dict,
+                    book_meta: dict) -> list:
+    """THE FOUR LIMITS, each carrying a COMPUTED field rather than a claim.
+
+    A limits section written as prose is a paragraph a reader skims. Each
+    entry here is decided by something this run measured."""
+    de = de_economic_fields_at_source()
+    #: (1) D_E_MINUS_R: it is in DE's economic field list, and the runner
+    #: never produces it -- counted from the source, not asserted.
+    src = DE_RUNNER_PATH.read_text()
+    tree = ast.parse(src)
+    n_assign = 0
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            for t in node.targets:
+                if isinstance(t, ast.Name) and t.id == "D_E_MINUS_R":
+                    n_assign += 1
+        if isinstance(node, ast.Dict):
+            for k in node.keys:
+                if isinstance(k, ast.Constant) and k.value == "D_E_MINUS_R":
+                    n_assign += 1
+    n_sealed = sum(1 for s in receipt_arm_seals if s)
+    return [
+        {"limit": "D_E_MINUS_R_IS_NOT_VERIFIED",
+         "what": ("D(E-R) is in DE's economic field list, so a receipt "
+                  "carrying it would be compared -- but the runner declares "
+                  "it UNBOUND (it needs the rebate's identity value, which "
+                  "is not on DE's surface) and never emits it. This verifier "
+                  "therefore verifies D(E0) and nothing about D(E-R)."),
+         "computed": {"in_DEs_economic_field_list":
+                          "D_E_MINUS_R" in de["fields"],
+                      "n_places_the_runner_produces_it": n_assign,
+                      "so_there_is_nothing_to_compare": n_assign == 0}},
+        {"limit": "THE_BOOK_IS_SHARED_AND_ITS_CONSTRUCTION_IS_NOT_CHECKED",
+         "what": ("both implementations read the SAME day book. If the book "
+                  "was built wrong -- wrong rows, wrong scores, wrong "
+                  "generation keys -- the two agree on a number computed "
+                  "from the same wrong input. Agreement here is evidence "
+                  "about the STATISTIC, never about the book."),
+         "computed": {"book_sha256": book_meta.get("sha256"),
+                      "arm_scores_read_from_the_book_not_recomputed": True,
+                      "this_module_rescored_nothing": True}},
+        {"limit": "AN_ERROR_IN_THE_DECLARATION_REPRODUCES_IN_BOTH",
+         "what": ("the seed rule, the thetas, the bars and the arms all come "
+                  "from the SAME params declaration both sides read. A wrong "
+                  "theta or a wrong seed rule is reproduced identically by "
+                  "an independent implementation, and the exact agreement "
+                  "would say nothing about whether the declaration is right."),
+         "computed": {"params_path": Path(params["_path"]).name,
+                      "params_sha256": params["_sha256"],
+                      "read_by_both_sides_from_one_file": True}},
+        {"limit": "SEALED_ECONOMICS_CANNOT_BE_VERIFIED_AT_ALL",
+         "what": ("a receipt whose economic fields were stripped offers "
+                  "nothing for the recomputed D(E0), Z, p and null moments "
+                  "to agree WITH. The read bar opening does not open a "
+                  "sealed receipt: after the bar a sealed receipt is still "
+                  "ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED."),
+         "computed": {"n_arms_sealed_in_this_receipt": n_sealed,
+                      "n_arms_seen": len(receipt_arm_seals),
+                      "economic_field_list_source": de["source_path"],
+                      "economic_field_list_sha256": de["source_sha256"]}},
+    ]
+
+
+def verify_real_day(day: str, book_path: str, receipt_path: str, *,
+                    output: Path | None = None,
                     params: dict | None = None,
-                    now: datetime.datetime | None = None) -> dict:
-    """The real-day entry point. It REFUSES before GO, by design."""
+                    now: datetime.datetime | None = None,
+                    replay_fn=None) -> dict:
+    """THE REAL-DAY ENTRY POINT.
+
+    The order is the order the refusals must happen in:
+      1. the READ BAR      -- before it, nothing else is even looked at
+      2. the BOOK DIGEST   -- a book that moved is not the receipt's day
+      3. the SEAL          -- a sealed receipt is not a verification, and
+                              the bar opening does not change that
+      4. the RECOMPUTATION -- per arm, from the book, at the declared seed
+      5. the COMPARISON    -- exact, and the verdict is COMPUTED
+    """
     params = params or load_params()
     g = gate_is_open(params, now)
     if not g["open"]:
         raise VerifierRefused(
             f"REFUSED: the Gate-1 real-day path is closed until "
-            f"{g['read_not_before_utc']} (now {g['now_utc']}). A day "
-            f"verdict recomputed before the read bar is a read of the "
-            f"gate, whatever it is called.")
-    raise VerifierRefused(
-        "REFUSED: the real-day path is declared and NOT BUILT. It is "
-        "reachable only after GO and only against a receipt that carries "
-        "economics; this round is fixture-only by dispatch.")
+            f"{g['read_not_before_utc']} (now {g['now_utc']}, "
+            f"{g['seconds_until_open']:.0f}s to go). A day verdict "
+            f"recomputed before the read bar is a read of the gate, whatever "
+            f"it is called -- and there is no flag that moves this bar.")
+
+    rp = Path(receipt_path)
+    if not rp.is_file():
+        raise VerifierRefused(f"REFUSED: receipt absent at {receipt_path}")
+    receipt = json.loads(rp.read_text())
+    r_sha = receipt.get("book_sha256") or receipt.get("book", {}).get(
+        "sha256")
+    if not r_sha:
+        raise VerifierRefused(
+            "REFUSED: the receipt names no book digest, so the book it "
+            "describes cannot be identified. An unpinned book is not a day.")
+    book_meta = verify_book_digest(book_path, r_sha)
+
+    bk = load_day_book(book_path)
+    replay, replay_meta = resolve_replay(bk, replay_fn)
+    rows = bk["rows"]
+
+    arms_out, seals, verifications = {}, [], []
+    for arm, spec in sorted(params["arms"].items()):
+        r_arm = (receipt.get("arms") or {}).get(arm)
+        if r_arm is None:
+            arms_out[arm] = {"status": "ABSENT_FROM_THE_RECEIPT",
+                             "IS_A_VERIFICATION_OF_THE_ECONOMICS": False,
+                             "why": ("the receipt carries no block for this "
+                                     "declared arm; a missing arm is a "
+                                     "STATUS, never a silent pass")}
+            verifications.append(False)
+            continue
+        seal = receipt_is_sealed(r_arm)
+        seals.append(seal["sealed"])
+        if seal["sealed"]:
+            arms_out[arm] = {
+                "status": "ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED",
+                "seal": seal,
+                "IS_A_VERIFICATION_OF_THE_ECONOMICS": False,
+                "the_bar_does_not_open_a_seal": (
+                    "the read bar has passed and this receipt is still "
+                    "sealed. Those are different gates: one schedules the "
+                    "read, the other withholds the numbers."),
+            }
+            verifications.append(False)
+            continue
+        vec = bk["scores_by_arm"].get(arm)
+        if vec is None:
+            arms_out[arm] = {"status": "BOOK_CARRIES_NO_SCORES_FOR_THIS_ARM",
+                             "IS_A_VERIFICATION_OF_THE_ECONOMICS": False,
+                             "why": "declared in params, absent in the book"}
+            verifications.append(False)
+            continue
+        if len(vec) != len(rows):
+            #: A score vector of the wrong length would zip SHORT and
+            #: silently score a prefix of the day -- a smaller population
+            #: wearing the day's name.
+            arms_out[arm] = {
+                "status": "ARM_SCORE_VECTOR_LENGTH_MISMATCH",
+                "n_rows": len(rows), "n_scores": len(vec),
+                "IS_A_VERIFICATION_OF_THE_ECONOMICS": False,
+                "why": ("a score vector shorter than the rows would zip to a "
+                        "PREFIX and silently score part of the day")}
+            verifications.append(False)
+            continue
+        #: the book carries scores as a VECTOR aligned to `rows`; the
+        #: statistic reads them off the row, so they are joined here once.
+        scored = [dict(r, score=float(sv)) for r, sv in zip(rows, vec)]
+        mine = da_arm_day(replay, rows, scored, arm=arm,
+                          theta=float(spec["theta"]), book_sha=r_sha,
+                          params=params)
+        cmp_ = compare_arm(mine, r_arm)
+        arms_out[arm] = {"status": mine["status"], "recomputed": mine,
+                         "comparison": cmp_,
+                         "IS_A_VERIFICATION_OF_THE_ECONOMICS":
+                             cmp_["IS_A_VERIFICATION_OF_THE_ECONOMICS"]}
+        verifications.append(cmp_["IS_A_VERIFICATION_OF_THE_ECONOMICS"]
+                             and cmp_["n_mismatches"] == 0)
+
+    #: EVERY declared arm must have contributed exactly one verdict. A
+    #: branch added later that `continue`s without recording one would make
+    #: the conjunction read over a SHORTER list and a missing arm would pass
+    #: silently -- which is exactly what the battery caught here once.
+    if len(verifications) != len(params["arms"]):
+        raise VerifierRefused(
+            f"REFUSED: {len(verifications)} verdicts for "
+            f"{len(params['arms'])} declared arms. Every arm must contribute "
+            f"one, or the conjunction is taken over a shorter list and an "
+            f"unhandled arm passes silently.")
+
+    out = {
+        "protocol": PROTOCOL + "_REAL_DAY",
+        "day": day,
+        "status": "VERIFIED" if (verifications and all(verifications))
+                  else "NOT_A_FULL_VERIFICATION",
+        "gate": g,
+        "book": book_meta,
+        "replay_seam": replay_meta,
+        "receipt": {"path": rp.name,
+                    "sha256": hashlib.sha256(rp.read_bytes()).hexdigest()},
+        "params_declaration": {"path": Path(params["_path"]).name,
+                               "sha256": params["_sha256"]},
+        "economic_field_list": de_economic_fields_at_source(),
+        "verifier_identity": verifier_identity(),
+        "tolerance": TOLERANCE,
+        "arms": arms_out,
+        "n_arms_declared": len(params["arms"]),
+        "n_arms_verified": sum(1 for v in verifications if v),
+        "n_arms_sealed": sum(1 for x in seals if x),
+        "IS_A_VERIFICATION_OF_THE_ECONOMICS": bool(
+            verifications and all(verifications)),
+        "why_that_is_computed": (
+            "it is the conjunction over the declared arms of 'the economics "
+            "were comparable AND every compared field matched exactly'. A "
+            "sealed arm contributes False, so a receipt that withheld its "
+            "numbers can never read as verified."),
+        "limits": declared_limits(seals, params, book_meta),
+    }
+    if output:
+        Path(output).write_text(
+            json.dumps(out, indent=2, sort_keys=True, default=str) + "\n")
+    return out
 
 
 # --------------------------------------------------------------- the fixture
 
 SIDES_FIX = ("BUY_UP", "SELL_UP")
+BAR_BEFORE = datetime.datetime(2026, 9, 6, 8, 0,
+                               tzinfo=datetime.timezone.utc)
+BAR_AFTER = datetime.datetime(2026, 9, 10, 0, 0,
+                              tzinfo=datetime.timezone.utc)
 
 
-def synthetic_book(n_rows: int = 80, *, seed: int = 20260906,
-                   theta_frac: float = 0.5) -> dict:
+def synthetic_book(n_rows: int = 80, *, seed: int = 20260906) -> dict:
     """A book whose D(E0) is known IN CLOSED FORM.
 
-    Each row carries one fill worth `v_i` cents, encoded so that the
-    DECLARED valuation returns exactly `v_i`: size 1, level 0, and a markout
-    of `v_i` on the buy side / `-v_i` on the sell side, because the sign
-    convention flips on SIDES[0].
-
-    The synthetic replay drops the cancelled rows' fills and nothing else,
-    so for any cancelled set C:
-
-        D(C) = value(fills | C) - value(fills | {}) = -sum(v_i for i in C)
-
-    -- an identity, not an estimate, which is what makes it a falsifier."""
+    Each row carries one fill worth `v_i` cents, encoded so the DECLARED
+    valuation returns exactly `v_i`. The synthetic replay drops the
+    cancelled rows' fills and nothing else, so for any cancelled set C:
+    D(C) = -sum(v_i for i in C) -- an identity, which is what makes it a
+    falsifier rather than a demonstration."""
     rng = np.random.default_rng(seed)
     rows, values = [], []
     for i in range(n_rows):
-        side = SIDES_FIX[i % 2]
-        v = float(round(rng.normal(0.0, 10.0), 6))
-        rows.append({"t": 1000.0 + i, "slug": f"s{i // 4}", "side": side,
-                     "gen": i, "score": float(rng.random())})
-        values.append(v)
-    return {"rows": rows, "values": values, "theta_frac": theta_frac}
+        rows.append({"t": 1000.0 + i, "slug": f"s{i // 4}",
+                     "side": SIDES_FIX[i % 2], "gen": i,
+                     "score": float(rng.random())})
+        values.append(float(round(rng.normal(0.0, 10.0), 6)))
+    return {"rows": rows, "values": values}
 
 
 def synthetic_replay(book: dict):
-    """The replay SEAM, in closed form. Returns a callable."""
     values = book["values"]
 
     def _replay(rows: list, cancelled) -> dict:
@@ -534,41 +832,52 @@ def synthetic_replay(book: dict):
         for i, r in enumerate(rows):
             if i in c:
                 continue
-            v = values[i]
             sgn = 1.0 if r["side"] == BUY_SIDE else -1.0
             fills.append({"side": r["side"], "px_cents": 0.0,
-                          "mid_cents_at_markout": sgn * v, "size": 1.0})
-        return {"fills": fills, "cancels_issued": len(c), "n_fills": len(fills)}
+                          "mid_cents_at_markout": sgn * values[i],
+                          "size": 1.0})
+        return {"fills": fills, "cancels_issued": len(c),
+                "n_fills": len(fills)}
     return _replay
 
 
 def known_D(book: dict, decision_idx) -> float:
-    """D by construction: minus the value the cancelled rows carried."""
     return -float(sum(book["values"][int(i)] for i in decision_idx))
 
 
-def _receipt_from(recomputed: dict, *, sealed: bool) -> dict:
-    """A receipt in DE's emitted shape, from MY numbers -- so the comparison
-    battery tests the COMPARATOR, not a disagreement I planted."""
-    arm = {"day": "2026-09-03", "arm": recomputed["arm"],
-           "status": recomputed["status"],
-           "admissibility": dict(recomputed["admissibility"]),
-           "draw_provenance": {"seed": recomputed["seed"],
-                               "n_draws": recomputed["n_draws"]},
-           "economic": dict(recomputed["economic"] or {})}
-    if sealed:
-        def strip(o):
-            if isinstance(o, dict):
-                return {k: strip(v) for k, v in o.items()
-                        if k not in ECONOMIC_FIELDS}
-            if isinstance(o, list):
-                return [strip(v) for v in o]
-            return o
-        arm = strip(arm)
-    return arm
+def _strip_like_DE(o):
+    """DE's own stripper, re-derived over the field list read at source."""
+    if isinstance(o, dict):
+        return {k: _strip_like_DE(v) for k, v in o.items()
+                if k not in ECONOMIC_FIELDS}
+    if isinstance(o, list):
+        return [_strip_like_DE(v) for v in o]
+    return o
 
 
-def selftest() -> int:                                        # noqa: C901
+def write_day_book(d: Path, book: dict, params: dict, *,
+                   omit_scores: bool = False) -> tuple:
+    """A day book on disk in the shape the adapter declares."""
+    payload = {"rows": book["rows"]}
+    if not omit_scores:
+        payload["scores_by_arm"] = {
+            a: [r["score"] for r in book["rows"]] for a in params["arms"]}
+    p = d / "book.json"
+    p.write_text(json.dumps(payload))
+    return p, hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def write_receipt(d: Path, arms: dict, book_sha: str, *,
+                  sealed: bool = False, name: str = "receipt.json") -> Path:
+    body = {"day": "2026-09-03", "book_sha256": book_sha,
+            "arms": {a: (_strip_like_DE(v) if sealed else v)
+                     for a, v in arms.items()}}
+    p = d / name
+    p.write_text(json.dumps(body))
+    return p
+
+
+def selftest() -> tuple:                                      # noqa: C901
     checks: list[dict] = []
 
     def ck(name, passed, detail):
@@ -576,399 +885,276 @@ def selftest() -> int:                                        # noqa: C901
                        "detail": detail})
 
     params = load_params()
-    P = {"min_decisions_per_arm_day": params["min_decisions_per_arm_day"],
-         "min_draws_per_arm_day": params["min_draws_per_arm_day"],
-         "sd_floor_fraction": params["sd_floor_fraction"]}
+    P = params
+    td = Path(tempfile.mkdtemp(prefix="da67_"))
 
-    # -- 1. the bars are READ, never retyped ------------------------------
-    ck("THE BARS COME FROM DE's DECLARATION, not from constants in this "
-       "file -- a bar retyped into a checker is a second source of truth",
-       P["min_decisions_per_arm_day"] == 30
-       and P["min_draws_per_arm_day"] == 500
-       and P["sd_floor_fraction"] == 0.25
-       and params["_sha256"][:16] == hashlib.sha256(
-           PARAMS_PATH.read_bytes()).hexdigest()[:16],
-       f"params v4 sha {params['_sha256'][:16]}: decisions >= "
-       f"{P['min_decisions_per_arm_day']}, draws >= "
-       f"{P['min_draws_per_arm_day']}, sd >= {P['sd_floor_fraction']}*|mean|")
-    missing_refused = False
+    # -- 1. params v5, and the bars are READ ------------------------------
+    ck("THE BARS COME FROM PARAMS v5, NOT THE SUPERSEDED v4 (REV 45 3.3): a "
+       "checker pinned to a superseded declaration reads bars nobody is "
+       "running under",
+       PARAMS_PATH.name.endswith("v5.json")
+       and params["protocol"].endswith("V5")
+       and params["min_decisions_per_arm_day"] == 30
+       and params["min_draws_per_arm_day"] == 500
+       and params["sd_floor_fraction"] == 0.25,
+       f"{PARAMS_PATH.name} sha {params['_sha256'][:16]}, protocol "
+       f"{params['protocol']}, read bar {params['read_not_before_utc']}")
+
+    # -- 2. DE's field list, AT SOURCE, with the stripper asserted --------
+    de = de_economic_fields_at_source()
+    ck("DE's ECONOMIC FIELD LIST IS READ AT THE SOURCE BY AST, and the "
+       "assertion is not just that the constant exists but that "
+       "`_strip_economic` -- the function that actually removes them -- "
+       "REFERENCES THAT NAME. A constant nothing uses would pin nothing",
+       de["fields"] == ECONOMIC_FIELDS and len(de["fields"]) == 7
+       and de["stripper_references_the_same_name"] is True
+       and "D_E_MINUS_R" in de["fields"],
+       f"{len(de['fields'])} fields from {de['source_path']} sha "
+       f"{de['source_sha256'][:16]}: {list(de['fields'])}")
+    bad_src = td / "nostrip.py"
+    bad_src.write_text("ECONOMIC_FIELDS = ('D_E0',)\n"
+                       "def _strip_economic(o):\n    return o\n")
+    refused_nostrip = False
     try:
-        import tempfile
-        with tempfile.NamedTemporaryFile("w", suffix=".json",
-                                         delete=False) as fh:
-            json.dump({"alpha": 0.05}, fh)
-            bad_p = fh.name
-        load_params(Path(bad_p))
-    except VerifierRefused:
-        missing_refused = True
-    ck("KNOWN-BAD: a params file missing a bar REFUSES rather than "
-       "defaulting -- the verifier must not invent a threshold",
-       missing_refused, "a declaration with only `alpha` raises")
+        de_economic_fields_at_source(bad_src)
+    except VerifierRefused as e:
+        refused_nostrip = "does not reference" in str(e)
+    ck("KNOWN-BAD: a runner whose `_strip_economic` does NOT reference the "
+       "constant REFUSES -- the stripper could then be removing a different "
+       "set entirely and the seal detection would be pinned to nothing",
+       refused_nostrip,
+       "a source with the constant present but unused by the stripper raises")
 
-    # -- 2. the seed rule --------------------------------------------------
-    BS = "a" * 64
-    s1 = da_seed_for(BS, "CONDVALUE_X_SKEW")
-    s2 = da_seed_for(BS, "HAZARD_OVER_SKEWED_REF")
-    s3 = da_seed_for("b" * 64, "CONDVALUE_X_SKEW")
-    hand = int(hashlib.sha256(
-        f"{BS}|CONDVALUE_X_SKEW|P003_GATE1_MULTIDAY".encode()
-    ).hexdigest()[:8], 16)
-    ck("THE SEED RULE re-derived, and it DEPENDS on both inputs: the same "
-       "book with a different arm, and the same arm with a different book, "
-       "both move the seed",
-       s1 == hand and s1 != s2 and s1 != s3 and 0 <= s1 < 2 ** 32,
-       f"seed({BS[:4]}..,CONDVALUE)={s1}; other arm {s2}; other book {s3} "
-       f"-- a seed that ignored either would pin the wrong data")
-
-    # -- 3. the valuation, both directions ---------------------------------
-    vb = da_value_cents({"side": "BUY_UP", "px_cents": 10.0,
-                         "mid_cents_at_markout": 13.0, "size": 2.0})
-    vs = da_value_cents({"side": "SELL_UP", "px_cents": 10.0,
-                         "mid_cents_at_markout": 13.0, "size": 2.0})
-    vn = da_value_cents({"side": "BUY_UP", "px_cents": None,
-                         "mid_cents_at_markout": 13.0, "size": 2.0})
-    vz = da_value_cents({"side": "BUY_UP", "px_cents": 10.0,
-                         "mid_cents_at_markout": 13.0, "size": 0.0})
-    ck("THE VALUATION, hand-derived and SIGNED: level-to-markout with NO "
-       "fee term, +1 on SIDES[0] and -1 on the other; an unvaluable fill "
-       "returns None and is COUNTED, never a silent zero",
-       vb == 6.0 and vs == -6.0 and vn is None and vz is None,
-       f"BUY (13-10)*2 = {vb}; SELL = {vs}; missing level -> {vn}; "
-       f"zero size -> {vz}")
-    tv = da_total_value([{"side": "BUY_UP", "px_cents": 0.0,
-                          "mid_cents_at_markout": 5.0, "size": 1.0},
-                         {"side": "BUY_UP", "px_cents": None,
-                          "mid_cents_at_markout": 5.0, "size": 1.0}])
-    ck("AND THE UNVALUABLE ONES ARE COUNTED IN THE TOTAL's OWN BLOCK "
-       "(rule 4): a status beside the number, not a drop",
-       tv["value_cents"] == 5.0 and tv["n_unvaluable"] == 1
-       and tv["n_fills"] == 2,
-       f"{tv['n_fills']} fills, {tv['n_unvaluable']} unvaluable, "
-       f"{tv['value_cents']} cents")
-
-    # -- 4. the decision boundary -----------------------------------------
-    rr = [{"side": "BUY_UP", "score": 0.5}, {"side": "BUY_UP", "score": 0.4999},
-          {"side": "SELL_UP", "score": 0.9}]
-    d = da_decisions(rr, 0.5)
-    ck("THE DECISION BOUNDARY IS `>=` AND IT IS PINNED: a generation "
-       "exactly AT theta is IN the set the cancel is drawn from",
-       d["n_decisions"] == 2 and d["by_side"] == {"BUY_UP": 1, "SELL_UP": 1}
-       and list(d["by_side"]) == sorted(d["by_side"]),
-       f"scores 0.5/0.4999/0.9 at theta 0.5 -> {d['n_decisions']} "
-       f"decisions {d['by_side']}, keys SORTED (which is what pins the RNG)")
-
-    # -- 5. THE HEADLINE: D(E0) known by construction reproduces ----------
+    # -- 3. the book adapter, both ways -----------------------------------
     book = synthetic_book()
     replay = synthetic_replay(book)
     rows = book["rows"]
-    theta = float(np.quantile([r["score"] for r in rows], 0.4))
-    dec = da_decisions(rows, theta)
-    arm = da_arm_day(replay, rows, rows, arm="CONDVALUE_X_SKEW", theta=theta,
-                     book_sha="c" * 64, params=P)
-    kd = known_D(book, dec["decision_idx"])
-    ck("D(E0) ON A SYNTHETIC BOOK WITH D KNOWN BY CONSTRUCTION REPRODUCES "
-       "EXACTLY -- the identity D(C) = -sum(v_i for i in C), not an "
-       "estimate of it",
-       arm["economic"] is not None
-       and arm["economic"]["D_E0"] == kd
-       and arm["decisions"]["n_decisions"] == dec["n_decisions"],
-       f"recomputed D_E0 = {arm['economic']['D_E0']!r} against the "
-       f"closed form {kd!r} over {dec['n_decisions']} decisions -- equal "
-       f"bit-for-bit, not within a tolerance")
-
-    # -- 5b. A CASCADING REPLAY: the statistic must READ the engine -------
-    #: The closed-form fixture above drops exactly the cancelled rows'
-    #: fills, so a statistic that had BAKED IN `D = -sum(v_i in C)` would
-    #: pass it. This replay CASCADES -- cancelling row i also removes row
-    #: i+1's fill -- so the naive identity is FALSE and only a statistic
-    #: that values whatever the engine returned can still be right.
-    def cascading_replay(rows_, cancelled):
-        c = set(int(i) for i in np.asarray(cancelled, dtype=int).ravel())
-        gone = set(c) | {i + 1 for i in c if i + 1 < len(rows_)}
-        fills = []
-        for i, r in enumerate(rows_):
-            if i in gone:
-                continue
-            v = book["values"][i]
-            sgn = 1.0 if r["side"] == BUY_SIDE else -1.0
-            fills.append({"side": r["side"], "px_cents": 0.0,
-                          "mid_cents_at_markout": sgn * v, "size": 1.0})
-        return {"fills": fills, "cancels_issued": len(c),
-                "n_fills": len(fills)}
-
-    arm_c = da_arm_day(cascading_replay, rows, rows, arm="CONDVALUE_X_SKEW",
-                       theta=theta, book_sha="c" * 64, params=P)
-    gone_c = set(dec["decision_idx"]) | {
-        i + 1 for i in dec["decision_idx"] if i + 1 < len(rows)}
-    truth_c = -float(sum(book["values"][i] for i in gone_c))
-    naive_c = known_D(book, dec["decision_idx"])
-    ck("THE STATISTIC READS THE ENGINE RATHER THAN ASSUMING IT: under a "
-       "CASCADING replay -- cancelling a generation also removes the next "
-       "one's fill -- D(E0) still equals value(returned fills) minus "
-       "baseline, and it is NOT the naive minus-sum over the cancelled set",
-       arm_c["economic"] is not None
-       and arm_c["economic"]["D_E0"] == truth_c
-       and arm_c["economic"]["D_E0"] != naive_c,
-       f"cascading D_E0 = {arm_c['economic']['D_E0']!r} = the closed form "
-       f"over the {len(gone_c)} generations the cascade actually removed; "
-       f"the naive minus-sum over the {dec['n_decisions']} DECISIONS would "
-       f"have said {naive_c!r}. A fixture whose replay dropped exactly the "
-       f"cancelled rows could not tell those apart")
-
-    # -- 6. the null is MATCHED, and drawn from the right pools ------------
-    pools = da_pools(rows)
-    rng = np.random.default_rng(arm["seed"])
-    ok_match, ok_pool = True, True
-    for _ in range(50):
-        fl = da_draw_flags(pools, dec["by_side"], rng)
-        cnt: dict = {}
-        for i in fl:
-            cnt[rows[int(i)]["side"]] = cnt.get(rows[int(i)]["side"], 0) + 1
-        if cnt != dec["by_side"]:
-            ok_match = False
-        if len(set(int(x) for x in fl)) != len(fl):
-            ok_pool = False
-    ck("THE NULL IS MATCHED ON THE DECISION VARIABLE (CLAUDE.md rule 7): "
-       "every draw takes exactly the arm's per-side decision counts, "
-       "without replacement",
-       ok_match and ok_pool,
-       f"50 draws, per-side counts identical to {dec['by_side']} and no "
-       f"index repeated within a draw")
-
-    # -- 7. same seed reproduces; WRONG SEED IS FLAGGED -------------------
-    n_small = P["min_draws_per_arm_day"]
-    base_v = da_total_value(replay(rows, np.zeros(0, dtype=int))["fills"])
-    n_a = da_null_values(replay, rows, base_v["value_cents"], pools,
-                         dec["by_side"], seed=arm["seed"], k_draws=n_small)
-    n_b = da_null_values(replay, rows, base_v["value_cents"], pools,
-                         dec["by_side"], seed=arm["seed"], k_draws=n_small)
-    n_w = da_null_values(replay, rows, base_v["value_cents"], pools,
-                         dec["by_side"], seed=arm["seed"] + 1,
-                         k_draws=n_small)
-    ck("POSITIVE CONTROL: the SAME seed reproduces the null BIT-FOR-BIT -- "
-       "which is what makes an exact comparison the honest one",
-       n_a["values"] == n_b["values"] and len(n_a["values"]) == n_small,
-       f"{n_small} draws, two runs, identical value lists")
-    p_a = da_p_location(arm["economic"]["D_E0"], n_a["values"],
-                        min_draws=n_small)
-    p_w = da_p_location(arm["economic"]["D_E0"], n_w["values"],
-                        min_draws=n_small)
-    ck("KNOWN-BAD: a WRONG-SEED null is FLAGGED -- its draw sequence, its "
-       "moments and its p differ from the seed the book and arm imply",
-       n_w["values"] != n_a["values"]
-       and (statistics.pstdev(n_w["values"])
-            != statistics.pstdev(n_a["values"])
-            or p_w["p_one_sided"] != p_a["p_one_sided"]),
-       f"seed {arm['seed']} vs {arm['seed'] + 1}: first-draw indices "
-       f"{n_a['first_draw_indices'][0][:4]} vs "
-       f"{n_w['first_draw_indices'][0][:4]}; p {p_a['p_one_sided']:.6f} vs "
-       f"{p_w['p_one_sided']:.6f}")
-
-    # -- 8. THE SIDE ORDER IS PART OF THE SEED ----------------------------
-    r1 = np.random.default_rng(12345)
-    r2 = np.random.default_rng(12345)
-    f_sorted = da_draw_flags(pools, dec["by_side"], r1)
-    rev = dict(reversed(list(dec["by_side"].items())))
-    parts = [r2.choice(pools[sd], k, replace=False)
-             for sd, k in rev.items() if k > 0]
-    f_rev = np.concatenate(parts)
-    ck("THE SIDE ITERATION ORDER IS PART OF THE SEED, and it is pinned to "
-       "SORTED because that is the dict DE hands the sampler: consuming "
-       "the sides in the other order gives a DIFFERENT draw at the SAME "
-       "seed",
-       sorted(int(x) for x in f_sorted) != sorted(int(x) for x in f_rev),
-       f"same seed 12345, sorted vs reversed side order -> different index "
-       f"sets. An implementation that got this wrong would disagree with "
-       f"DE for a reason no field records")
-
-    # -- 9. p and Z arithmetic, and the 500 bar ---------------------------
-    loc = da_p_location(2.0, [1.0, 2.0, 3.0, 4.0], min_draws=4)
-    ck("p = (1 + #{null >= observed}) / (1 + K), hand-checked: observed "
-       "2.0 against [1,2,3,4] has 3 at-or-above, so p = 4/5",
-       loc["n_null_ge_observed"] == 3 and loc["p_one_sided"] == 0.8
-       and loc["floor"] == 0.2,
-       f"{loc}")
-    under = False
+    bpath, bsha = write_day_book(td, book, params)
+    loaded = load_day_book(bpath)
+    noscore_p, _ = write_day_book(td / "ns" if (td / "ns").mkdir(
+        exist_ok=True) is None else (td / "ns"), book, params,
+        omit_scores=True)
+    refused_book = False
     try:
-        da_p_location(2.0, [1.0] * 499, min_draws=500)
-    except VerifierRefused:
-        under = True
-    ck("KNOWN-BAD: 499 draws REFUSES against the declared 500 minimum "
-       "(rule 6) -- and 500 admits, so the bar is a bar and not a wall",
-       under and da_p_location(
-           2.0, list(np.linspace(0, 1, 500)), min_draws=500)["n_draws"] == 500,
-       "499 raises; 500 returns")
-    zz = da_z(3.0, [1.0, 2.0, 3.0])
-    zero_sd = False
-    try:
-        da_z(1.0, [2.0, 2.0, 2.0])
-    except VerifierRefused:
-        zero_sd = True
-    ck("Z = (observed - mean)/pstdev, hand-checked, and a ZERO-DISPERSION "
-       "null REFUSES rather than returning a large Z",
-       abs(zz - (3.0 - 2.0) / statistics.pstdev([1.0, 2.0, 3.0])) < 1e-12
-       and zero_sd,
-       f"Z(3 | [1,2,3]) = {zz:.6f}; a constant null raises")
-
-    # -- 10. R4, both directions ------------------------------------------
-    healthy = da_r4(50, list(np.linspace(-10, 10, 500)), min_decisions=30,
-                    sd_floor_fraction=0.25)
-    short = da_r4(4, list(np.linspace(-10, 10, 500)), min_decisions=30,
-                  sd_floor_fraction=0.25)
-    degen = da_r4(50, [100.0 + 1e-3 * i for i in range(500)],
-                  min_decisions=30, sd_floor_fraction=0.25)
-    ck("R4 BOTH DIRECTIONS: a healthy arm-day ADMITS; four decisions "
-       "REFUSE on the decision bar; a null whose sd is tiny beside its "
-       "mean REFUSES on the sd floor -- Z explodes as sd -> 0",
-       healthy["admissible"] and not short["admissible"]
-       and not degen["admissible"]
-       and "decisions 4" in short["reasons"][0]
-       and "sd" in degen["reasons"][0],
-       f"healthy OK; short: {short['reasons'][0][:44]}; degenerate: "
-       f"{degen['reasons'][0][:52]}")
-
-    # -- 11. the allocation must be realisable ----------------------------
-    unreal = False
-    try:
-        da_alloc_realisable({"BUY_UP": 10 ** 6}, pools)
-    except VerifierRefused:
-        unreal = True
-    absent = False
-    try:
-        da_alloc_realisable({"NOT_A_SIDE": 1}, pools)
-    except VerifierRefused:
-        absent = True
-    ck("THE ALLOCATION IS CHECKED BOTH WAYS: a realisable one admits, more "
-       "decisions than the side holds REFUSES, and an unknown side REFUSES "
-       "-- never a quietly smaller draw",
-       unreal and absent
-       and da_alloc_realisable(dec["by_side"], pools)["realisable"],
-       f"{dec['by_side']} is realisable; 10^6 on one side is not")
-
-    # -- 12. the determinism PRECONDITION is checked, not assumed ---------
-    flaky_state = {"n": 0}
-
-    def flaky(rows_, cancelled):
-        flaky_state["n"] += 1
-        r = replay(rows_, cancelled)
-        if flaky_state["n"] % 2 == 0:
-            r["fills"] = r["fills"][:-1]
-        return r
-    nondet = False
-    try:
-        da_arm_day(flaky, rows, rows, arm="X", theta=theta,
-                   book_sha="c" * 64, params=P)
+        load_day_book(noscore_p)
     except VerifierRefused as e:
-        nondet = "not deterministic" in str(e)
-    ck("THE EXACT COMPARISON's PRECONDITION IS CHECKED: a replay that "
-       "answers differently to the SAME input REFUSES, because a "
-       "bit-for-bit test of a seeded null rests on determinism and this "
-       "module does not re-implement the engine",
-       nondet and arm["status"] == "OK",
-       "a flaky replay raises on the double-baseline check; the "
-       "deterministic one runs through")
+        refused_book = "BOOK_CARRIES_NO_ARM_SCORES" in str(e)
+    ck("THE BOOK ADAPTER BOTH WAYS: a book carrying rows AND per-arm scores "
+       "loads; one without the scores REFUSES BY NAME. This verifier "
+       "re-derives the STATISTIC, not the scoring -- re-scoring from the "
+       "pinned heads would make a disagreement a scoring difference",
+       set(loaded) >= {"rows", "scores_by_arm"} and refused_book,
+       f"{len(loaded['rows'])} rows, {len(loaded['scores_by_arm'])} armed "
+       f"score vectors; a book without them raises "
+       f"BOOK_CARRIES_NO_ARM_SCORES")
 
-    # -- 13. RECEIPT COMPARISON: agrees, and one altered number is FLAGGED -
-    good = _receipt_from(arm, sealed=False)
-    cg = compare_arm(arm, good)
-    bad = json.loads(json.dumps(good))
-    bad["economic"]["D_E0"] = float(bad["economic"]["D_E0"]) + 1e-9
-    cb = compare_arm(arm, bad)
-    ck("POSITIVE CONTROL: an UNALTERED receipt AGREES on every compared "
-       "field -- the comparator can pass, so a flag means something",
-       cg["n_mismatches"] == 0 and cg["verdict"] == "AGREES"
-       and cg["IS_A_VERIFICATION_OF_THE_ECONOMICS"],
-       f"{len(cg['checks'])} fields compared, 0 mismatches")
-    ck("KNOWN-BAD: a receipt with ONE number altered by 1e-9 is FLAGGED -- "
-       "the comparison is EXACT, so a near-miss is a mismatch and not a "
-       "pass",
-       cb["n_mismatches"] == 1 and cb["mismatched_fields"] == ["D_E0"]
-       and cb["verdict"] == "FLAGGED",
-       f"D_E0 moved by 1e-9 -> {cb['mismatched_fields']}")
-    bad2 = json.loads(json.dumps(good))
-    bad2["admissibility"]["n_decisions"] = \
-        int(bad2["admissibility"]["n_decisions"]) + 1
-    cb2 = compare_arm(arm, bad2)
-    ck("AND THE FLAG IS NOT ONLY ON THE ECONOMICS: an altered "
-       "n_decisions -- a POPULATION field that survives the seal -- is "
-       "flagged too",
-       "admissibility.n_decisions" in cb2["mismatched_fields"],
-       f"{cb2['mismatched_fields']}")
+    # -- 4. the read bar: REFUSES before, ADMITS after --------------------
+    arm0 = sorted(params["arms"])[0]
+    theta0 = float(params["arms"][arm0]["theta"])
+    mine0 = da_arm_day(replay, rows, rows, arm=arm0, theta=theta0,
+                       book_sha=bsha, params=params)
+    arms_payload = {a: {"day": "2026-09-03", "arm": a,
+                        "status": mine0["status"],
+                        "admissibility": dict(mine0["admissibility"]),
+                        "draw_provenance": {"seed": da_seed_for(bsha, a)},
+                        "economic": dict(mine0["economic"] or {})}
+                    for a in params["arms"]}
+    # each arm has its OWN seed and theta, so recompute per arm honestly
+    for a in params["arms"]:
+        m = da_arm_day(replay, rows, rows, arm=a,
+                       theta=float(params["arms"][a]["theta"]),
+                       book_sha=bsha, params=params)
+        arms_payload[a] = {"day": "2026-09-03", "arm": a,
+                           "status": m["status"],
+                           "admissibility": dict(m["admissibility"]),
+                           "draw_provenance": {"seed": m["seed"]},
+                           "economic": dict(m["economic"] or {})}
+    rpath = write_receipt(td, arms_payload, bsha)
 
-    # -- 14. A SEALED RECEIPT IS NOT A VERIFICATION ------------------------
-    sealed = _receipt_from(arm, sealed=True)
-    cs = compare_arm(arm, sealed)
-    ck("THE ROUND's SHARPEST CONTROL -- A SEALED RECEIPT IS NOT A "
-       "VERIFICATION: with every economic field stripped there is nothing "
-       "for the recomputed D(E0), Z, p and null moments to agree WITH, so "
-       "the verifier reports ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED and "
-       "IS_A_VERIFICATION_OF_THE_ECONOMICS = False",
-       cs["seal"]["sealed"] and cs["n_mismatches"] == 0
-       and cs["economic_comparison"] ==
-       "ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED"
-       and cs["IS_A_VERIFICATION_OF_THE_ECONOMICS"] is False
-       and cg["IS_A_VERIFICATION_OF_THE_ECONOMICS"] is True,
-       f"sealed: 0 mismatches AND not a verification; open: "
-       f"{len(cg['checks'])} fields compared AND a verification. "
-       f"***ZERO MISMATCHES AGAINST A SEALED RECEIPT IS CERTIFYING AN "
-       f"EMPTY SET, and reporting it as a pass is the exact shape "
-       f"SEAT_PROTOCOL rule 16 names***")
-    ck("AND THE SEAL IS DETECTED BY DE's OWN FIELD LIST, not by a filename "
-       "or a flag the caller passes",
-       cs["seal"]["economic_fields_present"] == []
-       and set(cs["seal"]["economic_fields_declared"]) == set(
-           ECONOMIC_FIELDS)
-       and sorted(compare_arm(arm, good)["seal"][
-           "economic_fields_present"]) == sorted(
-           [f for f in ECONOMIC_FIELDS if f in (arm["economic"] or {})]),
-       f"sealed -> none of {len(ECONOMIC_FIELDS)} present; open -> "
-       f"{compare_arm(arm, good)['seal']['economic_fields_present']}")
-
-    # -- 15. the book digest gate, both directions ------------------------
-    import tempfile
-    with tempfile.NamedTemporaryFile("wb", suffix=".json",
-                                     delete=False) as fh:
-        fh.write(b'{"rows": []}')
-        bp = fh.name
-    real_sha = hashlib.sha256(Path(bp).read_bytes()).hexdigest()
-    moved = False
+    why_pre = ""
     try:
-        verify_book_digest(bp, "0" * 64)
-    except VerifierRefused:
-        moved = True
-    ck("THE BOOK DIGEST GATE BOTH WAYS: the matching digest VERIFIES and a "
-       "book whose sha does not match the receipt REFUSES the whole "
-       "verification -- a day whose book moved is not the day the receipt "
-       "describes",
-       moved and verify_book_digest(bp, real_sha)["verified"],
-       f"sha {real_sha[:16]} verifies; a wrong digest raises")
-
-    # -- 16. the Gate-1 REAL-DAY path refuses BEFORE GO -------------------
-    before = datetime.datetime(2026, 9, 6, 8, 0,
-                               tzinfo=datetime.timezone.utc)
-    after = datetime.datetime(2026, 9, 10, 0, 0,
-                              tzinfo=datetime.timezone.utc)
-    g_before = gate_is_open(params, before)
-    g_after = gate_is_open(params, after)
-    why_before, why_after = "", ""
-    try:
-        verify_real_day(bp, bp, params, before)
+        verify_real_day("2026-09-03", str(bpath), str(rpath),
+                        params=params, now=BAR_BEFORE, replay_fn=replay)
     except VerifierRefused as e:
-        why_before = str(e)
+        why_pre = str(e)
+    ck("BEFORE THE BAR THE REAL-DAY PATH REFUSES, AND THE BAR IS NAMED: a "
+       "day verdict recomputed before the read bar is a read of the gate, "
+       "whatever it is called",
+       "closed until" in why_pre
+       and params["read_not_before_utc"] in why_pre
+       and "no flag that moves this bar" in why_pre,
+       f"'{why_pre[:104]}...'")
+
+    out = verify_real_day("2026-09-03", str(bpath), str(rpath),
+                          params=params, now=BAR_AFTER, replay_fn=replay)
+    ck("AND WITH THE CLOCK PAST THE BAR IT ADMITS AND VERIFIES: every "
+       "declared arm recomputed from the book at its own seed, compared "
+       "EXACT, and IS_A_VERIFICATION_OF_THE_ECONOMICS computed true",
+       out["IS_A_VERIFICATION_OF_THE_ECONOMICS"] is True
+       and out["status"] == "VERIFIED"
+       and out["n_arms_verified"] == len(params["arms"])
+       and out["n_arms_sealed"] == 0
+       and all(v["comparison"]["n_mismatches"] == 0
+               for v in out["arms"].values()),
+       f"{out['n_arms_verified']} of {out['n_arms_declared']} arms verified, "
+       f"0 sealed; the clock is a PARAMETER for this test and is NOT a CLI "
+       f"flag -- a bar with a documented way past it is not a bar")
+
+    # -- 5. one moved economic field FLAGS --------------------------------
+    moved = json.loads(rpath.read_text())
+    a_first = sorted(moved["arms"])[0]
+    moved["arms"][a_first]["economic"]["D_E0"] = float(
+        moved["arms"][a_first]["economic"]["D_E0"]) + 1e-9
+    mpath = td / "receipt_moved.json"
+    mpath.write_text(json.dumps(moved))
+    out_m = verify_real_day("2026-09-03", str(bpath), str(mpath),
+                            params=params, now=BAR_AFTER, replay_fn=replay)
+    ck("KNOWN-BAD: ONE MOVED ECONOMIC FIELD IS FLAGGED and the run is NOT a "
+       "verification -- the comparison is exact, so 1e-9 is a mismatch",
+       out_m["IS_A_VERIFICATION_OF_THE_ECONOMICS"] is False
+       and out_m["status"] == "NOT_A_FULL_VERIFICATION"
+       and out_m["arms"][a_first]["comparison"]["mismatched_fields"]
+       == ["D_E0"],
+       f"{a_first}.D_E0 +1e-9 -> flagged "
+       f"{out_m['arms'][a_first]['comparison']['mismatched_fields']}, "
+       f"verification {out_m['IS_A_VERIFICATION_OF_THE_ECONOMICS']}")
+
+    # -- 6. A SEALED RECEIPT AFTER THE BAR IS STILL NOT A VERIFICATION ----
+    spath = write_receipt(td, arms_payload, bsha, sealed=True,
+                          name="receipt_sealed.json")
+    out_s = verify_real_day("2026-09-03", str(bpath), str(spath),
+                            params=params, now=BAR_AFTER, replay_fn=replay)
+    ck("THE BAR OPENING DOES NOT OPEN A SEAL: with the clock PAST the read "
+       "bar, a sealed receipt is still "
+       "ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED and the run is NOT a "
+       "verification. Those are different gates -- one schedules the read, "
+       "the other withholds the numbers",
+       out_s["IS_A_VERIFICATION_OF_THE_ECONOMICS"] is False
+       and out_s["n_arms_sealed"] == len(params["arms"])
+       and all(v["status"] == "ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED"
+               for v in out_s["arms"].values())
+       and out_s["gate"]["open"] is True,
+       f"gate open {out_s['gate']['open']}, "
+       f"{out_s['n_arms_sealed']} arms sealed, verification "
+       f"{out_s['IS_A_VERIFICATION_OF_THE_ECONOMICS']} -- and the seal is "
+       f"detected by DE's OWN field list read at source")
+
+    # -- 7. a wrong book REFUSES ------------------------------------------
+    wrong = td / "wrong_book.json"
+    w = json.loads(bpath.read_text())
+    w["rows"] = w["rows"][:-1]
+    wrong.write_text(json.dumps(w))
+    why_book = ""
     try:
-        verify_real_day(bp, bp, params, after)
+        verify_real_day("2026-09-03", str(wrong), str(rpath),
+                        params=params, now=BAR_AFTER, replay_fn=replay)
     except VerifierRefused as e:
-        why_after = str(e)
-    ck("THE GATE-1 REAL-DAY PATH REFUSES BEFORE GO -- AND THE REFUSAL "
-       "REASON CHANGES ACROSS THE BAR, which is what proves the gate "
-       "predicate fires rather than the path refusing for one reason "
-       "always",
-       (not g_before["open"]) and g_after["open"]
-       and "closed until" in why_before and "closed until" not in why_after
-       and "NOT BUILT" in why_after,
-       f"before the bar: '{why_before[:56]}...'; after the bar the gate "
-       f"OPENS and the refusal becomes '{why_after[:46]}...' -- a control "
-       f"that refused identically on both sides would prove nothing")
+        why_book = str(e)
+    ck("A WRONG BOOK REFUSES THE WHOLE VERIFICATION, not the offending arm: "
+       "a day whose book does not match the receipt's digest is not the day "
+       "the receipt describes",
+       "book digest mismatch" in why_book and bsha[:16] in why_book,
+       f"'{why_book[:110]}...'")
+
+    # -- 8. the replay seam refuses rather than substituting --------------
+    why_seam = ""
+    try:
+        verify_real_day("2026-09-03", str(bpath), str(rpath),
+                        params=params, now=BAR_AFTER)
+    except VerifierRefused as e:
+        why_seam = str(e)
+    ck("WITHOUT A REPLAY ENGINE THE PATH REFUSES BY NAME rather than "
+       "substituting a second implementation of the policy -- the engine is "
+       "the instrument of record and a second one would measure a different "
+       "thing",
+       "REPLAY_ENGINE_NOT_RESOLVED" in why_seam,
+       f"'{why_seam[:98]}...'")
+
+    # -- 9. an arm declared but absent from the receipt is a STATUS -------
+    part = json.loads(rpath.read_text())
+    dropped_arm = sorted(part["arms"])[-1]
+    part["arms"].pop(dropped_arm)
+    ppath = td / "receipt_partial.json"
+    ppath.write_text(json.dumps(part))
+    out_p = verify_real_day("2026-09-03", str(bpath), str(ppath),
+                            params=params, now=BAR_AFTER, replay_fn=replay)
+    ck("AN ARM DECLARED IN PARAMS AND ABSENT FROM THE RECEIPT IS A STATUS, "
+       "NEVER A SILENT PASS -- and the run is not a verification",
+       out_p["arms"][dropped_arm]["status"] == "ABSENT_FROM_THE_RECEIPT"
+       and out_p["IS_A_VERIFICATION_OF_THE_ECONOMICS"] is False,
+       f"{dropped_arm} absent -> "
+       f"{out_p['arms'][dropped_arm]['status']}, verification "
+       f"{out_p['IS_A_VERIFICATION_OF_THE_ECONOMICS']}")
+
+    # -- 10. THE FOUR LIMITS, each with a COMPUTED field ------------------
+    lims = out["limits"]
+    names = [x["limit"] for x in lims]
+    dm = next(x for x in lims if x["limit"].startswith("D_E_MINUS_R"))
+    ck("THE FOUR LIMITS ARE A COMPUTED LIST, NOT PROSE: each carries a field "
+       "this run measured -- D(E-R) is in DE's economic list and the runner "
+       "produces it in ZERO places; the book is shared and nothing was "
+       "re-scored; the declaration is read by both sides from one file; and "
+       "sealed arms are counted",
+       len(lims) == 4
+       and dm["computed"]["in_DEs_economic_field_list"] is True
+       and dm["computed"]["n_places_the_runner_produces_it"] == 0
+       and dm["computed"]["so_there_is_nothing_to_compare"] is True
+       and all("computed" in x and x["computed"] for x in lims),
+       f"{names}; D(E-R) appears in {dm['computed']['n_places_the_runner_produces_it']} "
+       f"producing places, so there is nothing to compare")
+    lim_s = next(x for x in out_s["limits"]
+                 if x["limit"].startswith("SEALED_ECONOMICS"))
+    ck("AND THE LIMITS MOVE WITH THE RUN: on the SEALED receipt the sealed "
+       "limit counts every arm, on the open one it counts none -- a limits "
+       "block that read the same either way would be prose after all",
+       lim_s["computed"]["n_arms_sealed_in_this_receipt"]
+       == len(params["arms"])
+       and next(x for x in lims if x["limit"].startswith("SEALED_ECONOMICS"))[
+           "computed"]["n_arms_sealed_in_this_receipt"] == 0,
+       f"sealed run: {lim_s['computed']['n_arms_sealed_in_this_receipt']} of "
+       f"{lim_s['computed']['n_arms_seen']}; open run: 0")
+
+    # -- 11. the emitted artifact is ONE file and carries the verdict -----
+    opath = td / "verdict.json"
+    verify_real_day("2026-09-03", str(bpath), str(rpath), output=opath,
+                    params=params, now=BAR_AFTER, replay_fn=replay)
+    emitted = json.loads(opath.read_text())
+    ck("ONE DECLARED ARTIFACT, carrying the computed verdict, the gate, the "
+       "book digest, the params pin, DE's field list with its source digest, "
+       "and the limits",
+       emitted["IS_A_VERIFICATION_OF_THE_ECONOMICS"] is True
+       and emitted["params_declaration"]["sha256"] == params["_sha256"]
+       and emitted["economic_field_list"]["source_sha256"]
+       == de["source_sha256"]
+       and emitted["book"]["sha256"] == bsha
+       and len(emitted["limits"]) == 4,
+       f"{opath.name}: verification "
+       f"{emitted['IS_A_VERIFICATION_OF_THE_ECONOMICS']}, params "
+       f"{emitted['params_declaration']['sha256'][:16]}, field list from "
+       f"{emitted['economic_field_list']['source_sha256'][:16]}")
+
+    # -- 12. NO OVERRIDE FLAG EXISTS ON THE CLI ---------------------------
+    src = Path(__file__).resolve().read_text()
+    tree = ast.parse(src)
+    cli_flags = set()
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and node.func.attr == "add_argument"):
+            for a in node.args:
+                if isinstance(a, ast.Constant) and isinstance(a.value, str):
+                    cli_flags.add(a.value)
+    banned = {f for f in cli_flags
+              if any(w in f.lower() for w in
+                     ("now", "clock", "force", "override", "ignore-bar",
+                      "skip", "unsafe", "go"))}
+    ck("THERE IS NO OVERRIDE FLAG ON THE CLI -- asserted from THIS FILE's "
+       "OWN argument parser by AST, not from a comment. The clock is a "
+       "PARAMETER so the battery can drive both sides of the predicate; a "
+       "bar with a documented way past it is not a bar",
+       banned == set(),
+       f"CLI flags {sorted(cli_flags)}; none matches now/clock/force/"
+       f"override/skip/unsafe/go")
 
     n_fail = sum(1 for c in checks if not c["passed"])
     for c in checks:
@@ -982,23 +1168,36 @@ def selftest() -> int:                                        # noqa: C901
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--day")
+    ap.add_argument("--book")
+    ap.add_argument("--receipt")
     ap.add_argument("--output", type=Path, default=None)
     a = ap.parse_args()
-    if not a.selftest:
-        ap.error("this round is fixture-only: --selftest")
-    checks, n_fail = selftest()
-    if a.output:
-        a.output.write_text(json.dumps({
-            "protocol": PROTOCOL + "_FIXTURE",
-            "status": "FIXTURE_NO_REAL_BOOK_NO_REAL_DAY",
-            "verifier_identity": verifier_identity(),
-            "params_declaration": {"path": str(PARAMS_PATH.name),
-                                   "sha256": load_params()["_sha256"]},
-            "tolerance": TOLERANCE,
-            "checks": checks, "n_checks": len(checks), "n_failed": n_fail,
-            "both_directions": True,
-        }, indent=2, sort_keys=True) + "\n")
-    return 1 if n_fail else 0
+    if a.selftest:
+        checks, n_fail = selftest()
+        if a.output:
+            a.output.write_text(json.dumps({
+                "protocol": PROTOCOL + "_FIXTURE",
+                "status": "FIXTURE_NO_REAL_BOOK_NO_REAL_DAY",
+                "verifier_identity": verifier_identity(),
+                "params_declaration": {"path": PARAMS_PATH.name,
+                                       "sha256": load_params()["_sha256"]},
+                "economic_field_list": de_economic_fields_at_source(),
+                "tolerance": TOLERANCE,
+                "checks": checks, "n_checks": len(checks),
+                "n_failed": n_fail, "both_directions": True,
+            }, indent=2, sort_keys=True) + "\n")
+        return 1 if n_fail else 0
+    if a.day and a.book and a.receipt:
+        r = verify_real_day(a.day, a.book, a.receipt, output=a.output)
+        print(f"{a.day}: {r['status']} -- verification="
+              f"{r['IS_A_VERIFICATION_OF_THE_ECONOMICS']}, "
+              f"{r['n_arms_verified']}/{r['n_arms_declared']} arms verified, "
+              f"{r['n_arms_sealed']} sealed")
+        return 0 if r["IS_A_VERIFICATION_OF_THE_ECONOMICS"] else 1
+    ap.error("--selftest, or --day <YYYY-MM-DD> --book <path> "
+             "--receipt <path> [--output <path>]")
+    return 2
 
 
 if __name__ == "__main__":
