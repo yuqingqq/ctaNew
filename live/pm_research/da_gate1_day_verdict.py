@@ -655,6 +655,276 @@ READ_GATE_FIELD = "read_gate"
 CONJUNCTION_FIELD = "the_bar_is_a_CONJUNCTION"
 
 
+#: R-608 / REV 52 section 2.3. A SUPERSESSION LINK IS A PAIR.
+#: The definition is READ FROM DE's DESIGN, not typed here: DE's own
+#: `supersedes.chain` carries `[path, sha256]` two-element entries, so the
+#: link's identity is the PAIR and both halves must land on ONE present
+#: file. Resolving by NAME alone accepts a file whose bytes moved; resolving
+#: by DIGEST alone accepts the right bytes under a different name.
+SUPERSESSION_PAIR_FIELDS = ("path", "sha256")
+
+
+def _designs_by_version() -> list:
+    """DE's designs, ordered NUMERICALLY. Lexicographic ordering puts v9
+    after v16, which would read the definition out of an older design."""
+    out = []
+    for f in _derived_dir().glob("p003_de_multiday_gate1_design_v*.json"):
+        tok = f.stem.split("design_v", 1)[-1].split("_", 1)[0].split("__")[0]
+        try:
+            out.append((int("".join(c for c in tok if c.isdigit())), f))
+        except ValueError:
+            continue
+    return [f for _, f in sorted(out)]
+
+
+def supersession_pair_definition() -> dict:
+    """The link's definition, OBSERVED IN DE's DESIGN rather than typed.
+
+    DE's design declares its own supersession chain as two-element
+    `[path, sha256]` entries. That form IS the definition, and reading it
+    from the artifact means this verifier cannot hold a different one than
+    the seat whose links it is resolving -- which is precisely what REV 52
+    found: two seats resolving the same link by different fields, so exactly
+    one of them would call the R-603 correction a day that ran twice."""
+    designs = _designs_by_version()
+    if not designs:
+        return {"declared": False,
+                "status": "SUPERSESSION_DEFINITION_NOT_DECLARED",
+                "required_fields": None,
+                "why": ("no DE design is on disk, so the link's definition "
+                        "cannot be read from the seat that writes the "
+                        "links. This verifier does NOT supply one")}
+    d = designs[-1]
+    try:
+        obj = json.loads(d.read_text())
+    except (OSError, json.JSONDecodeError):
+        return {"declared": False, "source": d.name,
+                "status": "SUPERSESSION_DEFINITION_UNREADABLE",
+                "required_fields": None}
+    chain = (obj.get("supersedes") or {}).get("chain")
+    pair_form = (isinstance(chain, list) and chain
+                 and all(isinstance(e, (list, tuple)) and len(e) == 2
+                         and isinstance(e[0], str) and isinstance(e[1], str)
+                         and len(e[1]) == 64 for e in chain))
+    if not pair_form:
+        return {"declared": False, "source": d.name,
+                "status": "SUPERSESSION_DEFINITION_NOT_A_PAIR_FORM",
+                "required_fields": None,
+                "why": ("DE's design does not carry its own chain as "
+                        "[path, sha256] pairs, so the pair form cannot be "
+                        "read from it and MUST NOT be assumed")}
+    return {"declared": True, "source": d.name,
+            "observed_in": "supersedes.chain",
+            "n_chain_entries": len(chain),
+            "required_fields": list(SUPERSESSION_PAIR_FIELDS),
+            "the_link_is": ("the PAIR {path, sha256} of the artifact "
+                            "superseded, BOTH of which must match ONE "
+                            "PRESENT file"),
+            "status": "PAIR_DEFINITION_READ_FROM_DES_DESIGN"}
+
+
+def resolve_supersession_link(block, present: dict) -> dict:
+    """R-608's three rows, ruled.
+
+    `present` maps filename -> sha256 for the candidate files of one day.
+
+      both fields, agreeing on one present file  -> VALID link
+      both fields, digest disagrees              -> TARGET_DIGEST_MISMATCH
+      both fields, digest matches another name   -> TARGET_MOVED
+      only one field                             -> LINK_INCOMPLETE
+                                                    (NOT 'no link')
+    """
+    if block is None:
+        return {"is_a_link": False, "status": "NO_SUPERSEDES_BLOCK"}
+    if isinstance(block, str):
+        #: a bare path string is the PATH HALF of the pair, so it is an
+        #: INCOMPLETE link and refuses by name -- reading it as a link would
+        #: be resolving by name, which is exactly what R-608 forbids.
+        block = {"path": block}
+    if not isinstance(block, dict):
+        return {"is_a_link": False, "status": "SUPERSESSION_BLOCK_MALFORMED",
+                "why": ("a supersedes block that is neither a mapping nor a "
+                        "path carries no pair and is REFUSED BY NAME")}
+    have = {f: block.get(f) for f in SUPERSESSION_PAIR_FIELDS}
+    missing = [f for f, v in have.items() if not isinstance(v, str) or not v]
+    if missing:
+        return {"is_a_link": False, "status": "SUPERSESSION_LINK_INCOMPLETE",
+                "missing_fields": missing, "present_fields":
+                    [f for f in SUPERSESSION_PAIR_FIELDS if f not in missing],
+                "why": ("R-608: the link is the PAIR. A block carrying only "
+                        "one half is NOT a link and is REFUSED BY NAME -- "
+                        "reporting it as 'no link' would make a half-written "
+                        "supersession look like two independent runs")}
+    name, sha = Path(have["path"]).name, have["sha256"]
+    if name in present:
+        if present[name] == sha:
+            return {"is_a_link": True, "status": "LINK_VALID",
+                    "target": name, "sha256": sha}
+        return {"is_a_link": False,
+                "status": "SUPERSESSION_TARGET_DIGEST_MISMATCH",
+                "target": name, "declared_sha256": sha,
+                "actual_sha256": present[name],
+                "why": ("the named file is present and its bytes are not "
+                        "the ones the link declares")}
+    elsewhere = [n for n, h in present.items() if h == sha]
+    if elsewhere:
+        return {"is_a_link": False, "status": "SUPERSESSION_TARGET_MOVED",
+                "declared_path": name, "found_as": sorted(elsewhere),
+                "why": ("the declared DIGEST is present under a DIFFERENT "
+                        "name. Resolving by digest alone would accept it; "
+                        "the pair does not, because a moved file is not the "
+                        "file the link names")}
+    return {"is_a_link": False, "status": "SUPERSESSION_TARGET_ABSENT",
+            "declared_path": name, "declared_sha256": sha}
+
+
+#: R-608. ONE resolver for BOTH chains (sealed receipts and this seat's
+#: own landing records), so the two cannot drift into different rules.
+CHAIN_REFUSAL_STATUSES = (
+    "SUPERSESSION_LINK_INCOMPLETE", "SUPERSESSION_TARGET_DIGEST_MISMATCH",
+    "SUPERSESSION_TARGET_MOVED", "SUPERSESSION_TARGET_ABSENT",
+    "SUPERSESSION_BLOCK_MALFORMED", "ARTIFACT_UNREADABLE")
+
+
+def resolve_chain(files, kind: str = "artifact") -> dict:
+    """Resolve a set of same-day artifacts through their supersession links.
+
+      none                     -> NO_ARTIFACT
+      one                      -> ONE
+      v1 + a PAIR-VALID v2     -> CHAIN_HEAD (the v2)
+      two with no link         -> AMBIGUOUS
+      a link that is not a PAIR-> that link's own refusal, BY NAME
+
+    The last row is R-608: a half-written link is NOT 'no link'. Reporting
+    it as 'no link' would turn a botched supersession into what looks like a
+    day that ran twice -- or, resolved by name alone, into a clean chain
+    over bytes nobody checked."""
+    files = sorted(files)
+    if not files:
+        return {"status": "NO_ARTIFACT", "n_matches": 0, "head": None}
+    if len(files) == 1:
+        return {"status": "ONE", "n_matches": 1, "head": files[0],
+                "chain": [files[0].name], "links": []}
+    present, links, superseded, refusals = {}, [], set(), []
+    for f in files:
+        present[f.name] = hashlib.sha256(f.read_bytes()).hexdigest()
+    for f in files:
+        try:
+            obj = json.loads(f.read_text())
+        except (OSError, json.JSONDecodeError) as e:
+            refusals.append({"in": f.name, "status": "ARTIFACT_UNREADABLE",
+                             "why": str(e)})
+            continue
+        if "supersedes" not in obj:
+            continue
+        link = resolve_supersession_link(obj.get("supersedes"), present)
+        links.append(dict(link, declared_in=f.name))
+        if link["is_a_link"]:
+            superseded.add(link["target"])
+        elif link["status"] != "NO_SUPERSEDES_BLOCK":
+            refusals.append(dict(link, declared_in=f.name))
+    if refusals:
+        return {"status": refusals[0]["status"], "n_matches": len(files),
+                "head": None, "chain": [f.name for f in files],
+                "links": links, "refusals": refusals,
+                "why": (f"a supersession link on this {kind} is not the PAIR "
+                        f"{{path, sha256}} landing on ONE present file "
+                        f"(R-608). This is REFUSED BY NAME and is NOT the "
+                        f"same finding as 'no link'")}
+    heads = [f for f in files if f.name not in superseded]
+    if len(heads) == 1:
+        return {"status": "CHAIN_HEAD", "n_matches": len(files),
+                "head": heads[0], "chain": [f.name for f in files],
+                "superseded": sorted(superseded), "links": links,
+                "why": (f"a v1 plus a PAIR-VALID v2 resolves to the v2; the "
+                        f"head is the {kind} a read would use")}
+    return {"status": "AMBIGUOUS", "n_matches": len(files), "head": None,
+            "candidates": [f.name for f in files], "links": links,
+            "why": (f"two {kind}s for one day with NO supersession link "
+                    f"between them. Resolving by picking the newest would "
+                    f"decide silently; a day that ran twice is not a day "
+                    f"that ran")}
+
+
+#: REV 52 section 2.4. THE LANDING RECORD'S DECLARED NAME. It had none, so
+#: it had no correction path either: a second pre-read for one day was
+#: unresolvable. The DAY IS READ FROM THE `day` FIELD, never parsed out of
+#: the filename -- the convention makes the record findable, the field makes
+#: it identified, and a record carrying no day REFUSES BY NAME.
+PRE_READ_NAME_TEMPLATE = "p003_da_gate1_pre_read_<YYYYMMDD>__<clock>.json"
+PRE_READ_GLOB = "p003_da_gate1_pre_read_*.json"
+
+
+def pre_read_artifact_naming() -> dict:
+    """THIS SEAT'S OWN DECLARATION of the landing record's name."""
+    return {
+        "template": PRE_READ_NAME_TEMPLATE,
+        "glob": PRE_READ_GLOB,
+        "day_comes_from": "the artifact's `day` FIELD, never the filename",
+        "day_field_required": True,
+        "clock_token": "a UTC stamp %Y%m%dT%H%M%SZ, read from a clock",
+        "correction_path": (
+            "in band as `.v2`, carrying supersedes = {path, sha256} of the "
+            "record it replaces (R-608's PAIR). A chained pair resolves to "
+            "the v2; two UNCHAINED records for one day are AMBIGUOUS and "
+            "the landing conjunct refuses rather than picking one"),
+        "why_declared": (
+            "REV 52 section 2.4: an artifact this verifier's own read gate "
+            "depends on had no declared name and no correction path, so a "
+            "mistaken pre-read could not be superseded -- only shadowed"),
+    }
+
+
+def landing_record_for(day: str, derived: Path | None = None) -> dict:
+    """ONE day's landing record, resolved through the SAME pair rule.
+
+    no record -> NO_LANDING_RECORD; one -> that record; a chained pair ->
+    the v2; two unchained -> AMBIGUOUS."""
+    der = Path(derived) if derived else _landing_record_dir()
+    d = str(day).replace("-", "")
+    mine, refused = [], []
+    for f in sorted(der.glob(PRE_READ_GLOB)):
+        try:
+            r = json.loads(f.read_text())
+        except (OSError, json.JSONDecodeError):
+            refused.append({"file": f.name,
+                            "status": "LANDING_RECORD_UNREADABLE"})
+            continue
+        if not r.get("is_the_declared_LANDING_RECORD"):
+            continue
+        lr = r.get("landing_record") or {}
+        fd = r.get("day") or lr.get("day")
+        if not fd:
+            #: rule 11: a record with no day is a STATUS, never a silent drop
+            refused.append({"file": f.name,
+                            "status": "LANDING_RECORD_NO_DAY_FIELD"})
+            continue
+        if str(fd).replace("-", "") == d:
+            mine.append(f)
+    res = resolve_chain(mine, "landing record")
+    if res["status"] == "NO_ARTIFACT":
+        return {"status": "NO_LANDING_RECORD", "day": d, "head": None,
+                "receipt_sha256": None, "recorded_by": None,
+                "n_matches": 0, "refused_records": refused}
+    out = {"status": res["status"], "day": d, "n_matches": res["n_matches"],
+           "head": (res["head"].name if res.get("head") else None),
+           "chain": res.get("chain"), "candidates": res.get("candidates"),
+           "refusals": res.get("refusals"), "refused_records": refused,
+           "why": res.get("why"), "receipt_sha256": None,
+           "receipt_path": None, "recorded_at_utc": None,
+           "recorded_by": (res["head"].name if res.get("head") else None)}
+    if res.get("head") is not None:
+        lr = (json.loads(res["head"].read_text()).get("landing_record")
+              or {})
+        out["receipt_sha256"] = lr.get("receipt_sha256")
+        out["receipt_path"] = lr.get("receipt_path")
+        out["recorded_at_utc"] = lr.get("recorded_at_utc")
+        out["name_matches_convention"] = bool(
+            re.match(r"^p003_da_gate1_pre_read_\d{8}__.+\.json$",
+                     res["head"].name))
+    return out
+
+
 def _landing_record_dir() -> Path:
     return _derived_dir()
 
@@ -667,23 +937,21 @@ def landing_records(derived: Path | None = None) -> dict:
     records it: a receipt re-emitted after the fact would otherwise be
     indistinguishable from the one the read was scheduled against."""
     der = Path(derived) if derived else _landing_record_dir()
-    out = {}
-    for f in sorted(der.glob("p003_da_gate1_pre_read_*__*.json")):
+    days = set()
+    for f in sorted(der.glob(PRE_READ_GLOB)):
         try:
             r = json.loads(f.read_text())
         except (OSError, json.JSONDecodeError):
             continue
         if not r.get("is_the_declared_LANDING_RECORD"):
             continue
-        lr = r.get("landing_record") or {}
-        day = r.get("day") or lr.get("day")
-        if day and lr.get("receipt_sha256"):
-            out[str(day).replace("-", "")] = {
-                "receipt_sha256": lr["receipt_sha256"],
-                "receipt_path": lr.get("receipt_path"),
-                "recorded_by": f.name,
-                "recorded_at_utc": lr.get("recorded_at_utc")}
-    return out
+        d = r.get("day") or (r.get("landing_record") or {}).get("day")
+        if d:
+            days.add(str(d).replace("-", ""))
+    #: REV 52 section 2.4: every day's record resolves through the SAME
+    #: supersession-PAIR rule the sealed receipts do, and an unresolved day
+    #: keeps its NAMED status here rather than vanishing from the index.
+    return {d: landing_record_for(d, der) for d in sorted(days)}
 
 
 def read_gate_predicate(params: dict, now: datetime.datetime | None = None,
@@ -745,47 +1013,20 @@ def read_gate_predicate(params: dict, now: datetime.datetime | None = None,
         }
 
     def _resolve_day(d):
-        """DE's supersession resolver, re-derived: a v1 plus a CHAINED v2
-        resolves to the v2; two UNCHAINED receipts are AMBIGUOUS and refuse.
+        """DE's supersession resolver, re-derived: a v1 plus a v2 whose
+        link is the PAIR resolves to the v2; two UNCHAINED receipts are
+        AMBIGUOUS; a HALF-WRITTEN link refuses BY ITS OWN NAME.
 
-        REV 51 (a). Picking the newest by mtime would resolve an ambiguous
-        pair silently -- and a day that ran twice without a supersedes link
-        is exactly the case a read must refuse rather than resolve."""
+        R-608 / REV 52 section 2.3. This resolved by NAME alone, which
+        accepts a chain whose bytes were never checked -- and would have
+        called the same artifacts a clean chain that DE, resolving by the
+        pair, calls a refusal."""
         pat = naming.get(f"{d[:4]}-{d[4:6]}-{d[6:]}") or \
             f"p003_de_gate1_day_run_{d}_SEALED__*.json"
-        hits = sorted(der.glob(pat))
-        if not hits:
+        r = resolve_chain(sorted(der.glob(pat)), "sealed receipt")
+        if r["status"] == "NO_ARTIFACT":
             return {"status": "NO_RECEIPT", "n_matches": 0, "head": None}
-        if len(hits) == 1:
-            return {"status": "ONE", "n_matches": 1, "head": hits[0],
-                    "chain": [hits[0].name]}
-        by_name, superseded = {h.name: h for h in hits}, set()
-        for h in hits:
-            try:
-                r = json.loads(h.read_text())
-            except (OSError, json.JSONDecodeError):
-                continue
-            sup = r.get("supersedes")
-            ref = None
-            if isinstance(sup, dict):
-                ref = sup.get("path") or sup.get("artifact")
-            elif isinstance(sup, str):
-                ref = sup
-            if ref:
-                superseded.add(Path(ref).name)
-        heads = [h for h in hits if h.name not in superseded]
-        if len(heads) == 1:
-            return {"status": "CHAIN_HEAD", "n_matches": len(hits),
-                    "head": heads[0],
-                    "chain": [h.name for h in hits],
-                    "superseded": sorted(superseded),
-                    "why": "a v1 plus a CHAINED v2 resolves to the v2"}
-        return {"status": "AMBIGUOUS", "n_matches": len(hits), "head": None,
-                "candidates": [h.name for h in hits],
-                "why": ("two receipts for one day with no supersedes link "
-                        "between them. A read REFUSES rather than resolving "
-                        "by picking the newest -- a day that ran twice is "
-                        "not a day that ran")}
+        return r
 
     def _sealed_present():
         per = {}
@@ -806,23 +1047,42 @@ def read_gate_predicate(params: dict, now: datetime.datetime | None = None,
     def _matches_landing():
         per = {}
         for d in days:
-            lr = lrs.get(d)
+            lr = lrs.get(d) or landing_record_for(d, der)
             r = _resolve_day(d)
             head = r.get("head")
             cur = (hashlib.sha256(head.read_bytes()).hexdigest()
                    if head is not None else None)
+            lr_sha = lr.get("receipt_sha256")
+            #: the RECORD's own chain is resolved by the same pair rule, so
+            #: an unresolvable record is a NAMED status, never a missing one
+            if lr["status"] == "NO_LANDING_RECORD":
+                st = "NO_LANDING_RECORD"
+            elif lr["status"] not in ("ONE", "CHAIN_HEAD"):
+                st = "LANDING_RECORD_" + lr["status"]
+            elif r["status"] in CHAIN_REFUSAL_STATUSES:
+                st = "RECEIPT_" + r["status"]
+            elif r["status"] == "AMBIGUOUS":
+                st = "AMBIGUOUS_CHAIN"
+            elif cur is None:
+                st = "NO_RECEIPT"
+            elif not lr_sha:
+                st = "LANDING_RECORD_CARRIES_NO_DIGEST"
+            else:
+                st = ("MATCH" if cur == lr_sha
+                      else "RECEIPT_MOVED_SINCE_LANDING")
             per[d] = {
-                "landing_record_exists": lr is not None,
-                "recorded_by": (lr or {}).get("recorded_by"),
+                "landing_record_exists":
+                    lr["status"] != "NO_LANDING_RECORD",
+                "landing_record_status": lr["status"],
+                "recorded_by": lr.get("recorded_by"),
                 "chain_status": r["status"],
                 "chain_head": (head.name if head else None),
-                "matches": (None if not lr or cur is None
-                            else cur == lr["receipt_sha256"]),
-                "status": ("AMBIGUOUS_CHAIN" if r["status"] == "AMBIGUOUS"
-                           else "NO_LANDING_RECORD" if lr is None else
-                           "NO_RECEIPT" if cur is None else
-                           "MATCH" if cur == lr["receipt_sha256"]
-                           else "RECEIPT_MOVED_SINCE_LANDING")}
+                #: TRUE only in the MATCH state -- every named refusal
+                #: leaves it None, so no status can read as a pass (rule 11)
+                "matches": ((cur == lr_sha) if (cur and lr_sha and st in
+                            ("MATCH", "RECEIPT_MOVED_SINCE_LANDING"))
+                            else None),
+                "status": st}
         return {"holds": bool(days) and all(v["matches"] is True
                                             for v in per.values()),
                 "per_day": per,
@@ -2098,6 +2358,9 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         #: the fact is indistinguishable from the one the read was
         #: scheduled against.
         "is_the_declared_LANDING_RECORD": True,
+        #: REV 52 section 2.4: the record's DECLARED NAME and its correction
+        #: path, declared by the seat that writes it.
+        "landing_record_naming": pre_read_artifact_naming(),
         "landing_record": {
             "day": day,
             "receipt_path": rp.name,
@@ -2428,8 +2691,9 @@ def selftest_pre_read() -> list:                              # noqa: C901
                       "economic": dict(m["economic"] or {})}
     #: the fixture names a REAL design declaration so 2.6's check has a
     #: file to verify against -- whichever version is current.
-    dsn = sorted(_derived_dir().glob(
-        "p003_de_multiday_gate1_design_v*__*.json"))
+    #: NUMERICALLY, not lexicographically: `v9` sorts after `v16` as text,
+    #: so the old glob named a SUPERSEDED design as "whichever is current".
+    dsn = _designs_by_version()
     design = None
     if dsn:
         design = {"path": dsn[-1].name,
@@ -2900,8 +3164,11 @@ def selftest_pre_read() -> list:                              # noqa: C901
              "admissibility": {"admissible": admissible, "n_decisions": 50},
              "draw_provenance": {"seed": 1}, "runner_sha256": "a" * 64,
              "carrying_commit": "HEAD"}]}
-        if sup:
-            b["supersedes"] = {"path": sup}
+        if sup is not None:
+            #: R-608: the link is the PAIR, so the fixture writes the PAIR
+            b["supersedes"] = {
+                "path": Path(sup).name,
+                "sha256": hashlib.sha256(Path(sup).read_bytes()).hexdigest()}
         (d8 / name).write_text(json.dumps(b))
         return d8 / name
     D = "20260903"
@@ -2911,8 +3178,7 @@ def selftest_pre_read() -> list:                              # noqa: C901
                   if c["evaluator"]
                   == "every_ruled_day_has_exactly_one_sealed_receipt"
                   )["per_day"][D]
-    two = _mk(D, f"p003_de_gate1_day_run_{D}_SEALED__B.json",
-              sup=one.name)
+    two = _mk(D, f"p003_de_gate1_day_run_{D}_SEALED__B.json", sup=one)
     pred_ch = read_gate_predicate(p8, BAR_AFTER, derived=d8)
     st_ch = next(c for c in pred_ch["conjuncts"]
                  if c["evaluator"]
@@ -2935,6 +3201,168 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and st_am["status"] == "AMBIGUOUS" and st_am["resolves"] is False,
        f"one -> {st_one['status']}; chained pair -> {st_ch['status']} at "
        f"{st_ch['head']}; unchained third -> {st_am['status']}")
+    # -- H2e. R-608 / REV 52 section 2.3: THE LINK IS THE PAIR -----------
+    #: THE DEFINITION IS READ FROM DE's DESIGN, not held here. DE declares
+    #: its OWN supersession chain as [path, sha256] entries; that form IS
+    #: the definition, and reading it from the artifact is why this verifier
+    #: cannot quietly hold a different rule than the seat writing the links.
+    pdef = supersession_pair_definition()
+    ck("R-608 -- THE PAIR'S DEFINITION IS READ FROM DE's DESIGN, NOT TYPED "
+       "HERE: the design carries its own supersession chain as "
+       "[path, sha256] entries, and this verifier takes its required fields "
+       "from that artifact. ***Two seats resolving one link by different "
+       "fields is how the same three files become a clean chain to one and "
+       "a refusal to the other***",
+       pdef["declared"] is True
+       and pdef["source"].startswith("p003_de_multiday_gate1_design_v")
+       and tuple(pdef["required_fields"]) == SUPERSESSION_PAIR_FIELDS
+       and pdef["observed_in"] == "supersedes.chain",
+       f"{pdef['source']} declares {pdef['n_chain_entries']} chain entries "
+       f"as pairs -> required fields {tuple(pdef['required_fields'])}")
+
+    #: the reviewer's THREE ROWS, driven to the ruled outcomes, in a dir of
+    #: their own so the H2d state cannot supply the answer.
+    d608 = td / "r608"
+    d608.mkdir(exist_ok=True)
+    p608 = p8
+    base = {"day": "2026-09-03", "per_day_sealed_artifacts": [
+        {"arm": "A", "day": "2026-09-03", "status": "OK",
+         "admissibility": {"admissible": True, "n_decisions": 50},
+         "draw_provenance": {"seed": 1}, "runner_sha256": "a" * 64}]}
+    v1p = d608 / f"p003_de_gate1_day_run_{D}_SEALED__V1.json"
+    v1p.write_text(json.dumps(base))
+    v1sha = hashlib.sha256(v1p.read_bytes()).hexdigest()
+
+    def _row(sup):
+        v2 = d608 / f"p003_de_gate1_day_run_{D}_SEALED__V2.json"
+        v2.write_text(json.dumps(dict(base, supersedes=sup)))
+        return next(
+            c for c in read_gate_predicate(p608, BAR_AFTER, derived=d608)[
+                "conjuncts"] if c["evaluator"]
+            == "every_ruled_day_has_exactly_one_sealed_receipt"
+            )["per_day"][D]
+
+    row_sha = _row({"sha256": v1sha})
+    row_path = _row({"path": v1p.name})
+    row_both = _row({"path": v1p.name, "sha256": v1sha})
+    row_moved = _row({"path": "p003_de_gate1_day_run_20260903_SEALED__X.json",
+                      "sha256": v1sha})
+    row_wrong = _row({"path": v1p.name, "sha256": "0" * 64})
+    ck("R-608 -- THE THREE ROWS: sha256 ALONE is NOT a link and refuses BY "
+       "NAME (SUPERSESSION_LINK_INCOMPLETE); path ALONE is NOT a link and "
+       "refuses BY NAME; BOTH, landing on ONE present file, resolves to the "
+       "HEAD. ***`no link` was the old answer for the first two rows, and it "
+       "makes a half-written supersession look like a day that ran twice***",
+       row_sha["status"] == "SUPERSESSION_LINK_INCOMPLETE"
+       and row_sha["resolves"] is False
+       and row_path["status"] == "SUPERSESSION_LINK_INCOMPLETE"
+       and row_path["resolves"] is False
+       and row_both["status"] == "CHAIN_HEAD" and row_both["resolves"] is True
+       and row_both["head"].endswith("__V2.json"),
+       f"sha256-only -> {row_sha['status']}; path-only -> "
+       f"{row_path['status']}; both -> {row_both['status']} at "
+       f"{row_both['head']}")
+    ck("AND A MATCHING DIGEST UNDER A DIFFERENT NAME IS A **MOVED FILE**, "
+       "REFUSED -- resolving by digest alone would accept it; the pair does "
+       "not, because a moved file is not the file the link names. A NAMED "
+       "file whose BYTES differ refuses too",
+       row_moved["status"] == "SUPERSESSION_TARGET_MOVED"
+       and row_moved["resolves"] is False
+       and row_wrong["status"] == "SUPERSESSION_TARGET_DIGEST_MISMATCH"
+       and row_wrong["resolves"] is False,
+       f"right bytes under another name -> {row_moved['status']}; named "
+       f"file at the wrong digest -> {row_wrong['status']}")
+
+    # -- H2f. REV 52 section 2.4: THE LANDING RECORD'S NAME AND CHAIN -----
+    nm = pre_read_artifact_naming()
+    lrd = td / "lr608"
+    lrd.mkdir(exist_ok=True)
+    ck("REV 52 section 2.4 -- THE LANDING RECORD HAS A DECLARED NAME AND A "
+       "CORRECTION PATH, declared by the seat that writes it, with the DAY "
+       "read from the `day` FIELD and never parsed out of the filename. "
+       "***It had neither, so a mistaken pre-read could not be superseded, "
+       "only shadowed***",
+       nm["template"] == "p003_da_gate1_pre_read_<YYYYMMDD>__<clock>.json"
+       and nm["day_field_required"] is True
+       and "supersedes" in nm["correction_path"]
+       and pre["landing_record_naming"]["template"] == nm["template"],
+       f"{nm['template']}; day from {nm['day_comes_from']}")
+
+    def _lr(name, sha, sup=None):
+        rec = dict(pre)
+        rec["day"] = "2026-09-03"
+        rec["landing_record"] = dict(pre["landing_record"],
+                                     receipt_sha256=sha)
+        if sup is not None:
+            rec["supersedes"] = {
+                "path": Path(sup).name,
+                "sha256": hashlib.sha256(Path(sup).read_bytes()).hexdigest()}
+        f = lrd / name
+        f.write_text(json.dumps(rec, default=str))
+        return f
+
+    lr_none = landing_record_for("2026-09-03", lrd)
+    a = _lr("p003_da_gate1_pre_read_20260903__20260906T120000Z.json", "1" * 64)
+    lr_one = landing_record_for("2026-09-03", lrd)
+    b = _lr("p003_da_gate1_pre_read_20260903__20260906T130000Z.v2.json",
+            "2" * 64, sup=a)
+    lr_chain = landing_record_for("2026-09-03", lrd)
+    _lr("p003_da_gate1_pre_read_20260903__20260906T140000Z.json", "3" * 64)
+    lr_amb = landing_record_for("2026-09-03", lrd)
+    ck("AND THE RECORD'S OWN CHAIN RESOLVES BY THE SAME PAIR RULE: none -> "
+       "NO_LANDING_RECORD; one -> that record; a .v2 CHAINED BY THE PAIR -> "
+       "the v2's digest; two UNCHAINED -> AMBIGUOUS. ***The record the read "
+       "gate compares against is itself an artifact, so it needs the "
+       "correction path the receipts have***",
+       lr_none["status"] == "NO_LANDING_RECORD"
+       and lr_none["receipt_sha256"] is None
+       and lr_one["status"] == "ONE" and lr_one["receipt_sha256"] == "1" * 64
+       and lr_chain["status"] == "CHAIN_HEAD"
+       and lr_chain["head"] == b.name
+       and lr_chain["receipt_sha256"] == "2" * 64
+       and lr_amb["status"] == "AMBIGUOUS"
+       and lr_amb["receipt_sha256"] is None,
+       f"none -> {lr_none['status']}; one -> {lr_one['status']} at "
+       f"{lr_one['receipt_sha256'][:8]}; chained -> {lr_chain['status']} at "
+       f"{lr_chain['head']} ({lr_chain['receipt_sha256'][:8]}); unchained "
+       f"pair -> {lr_amb['status']}")
+
+    #: and the landing conjunct CONSUMES those statuses rather than reading
+    #: an unresolvable record as a missing one.
+    for f in d608.glob("*.json"):
+        f.unlink()
+    (d608 / f"p003_de_gate1_day_run_{D}_SEALED__V1.json").write_text(
+        json.dumps(base))
+    real_sha = hashlib.sha256(
+        (d608 / f"p003_de_gate1_day_run_{D}_SEALED__V1.json").read_bytes()
+    ).hexdigest()
+
+    def _landing_state():
+        return next(
+            c for c in read_gate_predicate(
+                p608, BAR_AFTER, derived=d608)["conjuncts"]
+            if c["evaluator"]
+            == "every_sealed_receipt_matches_its_LANDING_RECORD"
+            )["per_day"][D]
+
+    lr_st_amb = _landing_state()
+    #: the record lives beside the receipts, which is where the read gate
+    #: looks for it -- the same directory the conjunct is evaluated over.
+    lrd = d608
+    _lr("p003_da_gate1_pre_read_20260903__20260906T150000Z.json", real_sha)
+    lr_st_match = _landing_state()
+    ck("AND THE LANDING CONJUNCT CARRIES THE RECORD'S NAMED STATUS: with no "
+       "record it is NO_LANDING_RECORD and `matches` is None -- never False "
+       "and never absent -- and with the record present at the receipt's "
+       "own digest it MATCHES",
+       lr_st_amb["status"] == "NO_LANDING_RECORD"
+       and lr_st_amb["matches"] is None
+       and lr_st_match["status"] == "MATCH"
+       and lr_st_match["matches"] is True,
+       f"no record -> {lr_st_amb['status']} (matches "
+       f"{lr_st_amb['matches']}); record at the receipt digest -> "
+       f"{lr_st_match['status']}")
+
     ck("AND THE LANDING DIGEST IS THE CHAIN HEAD'S, not the superseded "
        "one's -- the head is what a read would use, so a v1 whose v2 "
        "supersedes it is not the artifact under test",

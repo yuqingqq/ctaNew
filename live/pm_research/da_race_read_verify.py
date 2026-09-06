@@ -694,6 +694,7 @@ def da_hash_and_parse_feed(path, latency_ms: int) -> dict:
     n_bytes = 0
     per: dict = {}
     n = missing = 0
+    deferred = None
     with Path(path).open("rb") as fh:
         for raw in fh:
             h.update(raw)
@@ -701,13 +702,32 @@ def da_hash_and_parse_feed(path, latency_ms: int) -> dict:
             line = raw.decode().strip()
             if not line:
                 continue
-            fr = json.loads(line)
+            try:
+                fr = json.loads(line)
+            except json.JSONDecodeError as e:
+                n += 1
+                if deferred is None:
+                    deferred = (f"REFUSED: feed row {n} is not readable JSON "
+                                f"({e.msg}).")
+                continue
             n += 1
             if "score_incumbent" not in fr:
-                raise RaceVerifyRefused(
-                    f"REFUSED: feed row {n} carries no `score_incumbent`. "
-                    f"This is a ONE-ARM feed and the declared estimand is an "
-                    f"increment OVER the incumbent.")
+                #: REV 52 section 2.5. DEFERRED, NOT RAISED. A shape error
+                #: raised here aborts the pass before the digest is
+                #: complete, so a file whose BYTES do not match the pin is
+                #: reported as ONE-ARM -- an answer about its contents when
+                #: the true fact is that it is not the pinned file at all.
+                #: The hashing pass finishes, the pin is judged first, and
+                #: this is raised only if the bytes were the right ones.
+                if deferred is None:
+                    deferred = (
+                        f"REFUSED: feed row {n} carries no `score_incumbent`. "
+                        f"This is a ONE-ARM feed and the declared estimand "
+                        f"is an increment OVER the incumbent; computing it "
+                        f"from one arm would compare the candidate with "
+                        f"itself and return a zero that looks like a "
+                        f"measurement.")
+                continue
             si = fr["score_incumbent"]
             if si is None:
                 missing += 1
@@ -725,7 +745,14 @@ def da_hash_and_parse_feed(path, latency_ms: int) -> dict:
     return {"per_coin": per, "n_feed_rows": n,
             "n_rows_without_an_incumbent_score": missing,
             "parsed_stream_sha256": h.hexdigest(),
-            "parsed_stream_bytes": n_bytes}
+            "parsed_stream_bytes": n_bytes,
+            "deferred_shape_error": deferred,
+            "why_deferred": (
+                "REV 52 section 2.5: a shape error raised mid-pass aborts "
+                "before the digest is complete, so a file whose bytes are "
+                "not the pinned ones is reported as ONE-ARM -- an answer "
+                "about its CONTENTS when the true fact is that it is not "
+                "the pinned file. The pin is judged first")}
 
 
 def da_day_from_pinned_feed(path, pin_sha: str, *,
@@ -746,6 +773,7 @@ def da_day_from_pinned_feed(path, pin_sha: str, *,
             f"name, not a parser error: the pin and the ledger disagree "
             f"about what exists.")
     parsed = da_hash_and_parse_feed(path, latency_ms)
+    #: THE PIN IS JUDGED FIRST, on a COMPLETED hashing pass (REV 52 2.5).
     if parsed["parsed_stream_sha256"] != pin_sha:
         raise RaceVerifyRefused(
             f"REFUSED — THE PIN DOES NOT HOLD for {Path(path).name}: the "
@@ -754,6 +782,10 @@ def da_day_from_pinned_feed(path, pin_sha: str, *,
             f"The bytes are not the bytes the read was pinned to, and no "
             f"number computed from them is comparable. Nothing parsed here "
             f"was used.")
+    #: the bytes ARE the pinned ones, so a shape error is now a statement
+    #: about the pinned file and is raised.
+    if parsed["deferred_shape_error"]:
+        raise RaceVerifyRefused(parsed["deferred_shape_error"])
     per_coin, net = {}, 0.0
     for coin, blk in sorted(parsed["per_coin"].items()):
         mv = da_matched_volume(blk["rows"], blk["cand"], blk["inc"],
@@ -1333,6 +1365,50 @@ def selftest_real() -> list:                                  # noqa: C901
        "without making the path a wall",
        rc_ok == 0 and "VERIFIED" in out_ok and "Traceback" not in out_ok,
        f"rc {rc_ok}: '{out_ok.strip().splitlines()[-1][:88]}'")
+
+    # -- 5e. REV 52 section 2.5: THE PIN IS JUDGED BEFORE THE SHAPE ------
+    #: THE REVIEWER'S EXACT DRIVE: a PRESENT file whose bytes do not match
+    #: the pin, and which is ALSO one-arm. Before the fix the shape error
+    #: aborted the pass and the day was reported ONE-ARM -- an answer about
+    #: its contents when the true fact is that it is not the pinned file.
+    d5 = td / "movedfeed"
+    d5.mkdir(exist_ok=True)
+    day5 = sorted(feeds)[0]
+    moved_rows = [_row(f"btc-updown-5m-W{g}", "UP", g, 1000 + g, 0.9, 0.5,
+                       1.0) for g in range(4)]
+    moved_feed = write_feed(d5, moved_rows, one_arm=True)
+    why_moved = ""
+    try:
+        da_day_from_pinned_feed(moved_feed, pins[day5]["sha256"])
+    except RaceVerifyRefused as e:
+        why_moved = str(e)
+    ck("REV 52 section 2.5 CLOSED -- THE PIN IS JUDGED FIRST, ON A COMPLETED "
+       "HASHING PASS. A present file that is BOTH one-arm AND not the pinned "
+       "bytes is now reported as a PIN MISMATCH, not as ONE-ARM: the shape "
+       "error is DEFERRED through the pass and raised only if the bytes were "
+       "the right ones. ***Reporting ONE-ARM there answers about the file's "
+       "CONTENTS when the true fact is that it is not the pinned file at "
+       "all***",
+       "THE PIN DOES NOT HOLD" in why_moved
+       and "ONE-ARM" not in why_moved
+       and "Nothing parsed here was used" in why_moved,
+       f"a one-arm file at the wrong digest -> '{why_moved[:96]}...'")
+    #: and the shape refusal is still REACHABLE when the bytes ARE pinned.
+    one_arm_pinned = write_feed(td / "oap" if (td / "oap").mkdir(
+        exist_ok=True) is None else (td / "oap"), moved_rows, one_arm=True)
+    why_shape = ""
+    try:
+        da_day_from_pinned_feed(
+            one_arm_pinned,
+            hashlib.sha256(Path(one_arm_pinned).read_bytes()).hexdigest())
+    except RaceVerifyRefused as e:
+        why_shape = str(e)
+    ck("AND THE SHAPE REFUSAL IS STILL REACHABLE WHEN THE BYTES ARE THE "
+       "PINNED ONES: deferring it did not remove it -- a one-arm feed at its "
+       "OWN digest still refuses BY NAME on `score_incumbent`",
+       "score_incumbent" in why_shape and "ONE-ARM" in why_shape
+       and "THE PIN DOES NOT HOLD" not in why_shape,
+       f"a one-arm file at its own digest -> '{why_shape[:88]}...'")
 
     # -- 6. THE FLOORS, re-derived ----------------------------------------
     f3 = da_floors(3)
