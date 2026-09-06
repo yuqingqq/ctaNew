@@ -1,0 +1,426 @@
+{
+  "carrying_commit": "b5bf558ada95b4f9523a7d60fdc777b1616e827c",
+  "data_root_check": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "adopted_from": "live/pm_research/de_data_root.py, imported not copied",
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "mm_hf_tape_present": true,
+    "purpose": "P-2026-002 E2-A result-bearing emission",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "declaration": {
+    "carrying_commit": "8e6b75338fa676b04cf93658aebd0a2b8c5611af",
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v5.json",
+    "sha256": "90a9a99f6cb2a2cc4c8f45f211177695355859e157643e854a34ef77ccc7b593"
+  },
+  "inherited_control": {
+    "gates_the_run": true,
+    "regimes": {
+      "csv": {
+        "sweep": {
+          "ci_hi": 6.753870188246235,
+          "ci_lo": 5.756146603945111,
+          "eff_rt_bps": 6.264472967929728,
+          "n_days": 31
+        },
+        "touch": {
+          "ci_hi": 3.792661305055285,
+          "ci_lo": 3.1095161480471254,
+          "eff_rt_bps": 3.4484893715577347,
+          "n_days": 31
+        }
+      }
+    },
+    "reproduced": true
+  },
+  "ledger_root": {
+    "code_and_data_are_the_same_tree": false,
+    "code_root": "/home/yuqing/ctaNew-wt-da",
+    "data_root": "/home/yuqing/ctaNew",
+    "data_root_branch": "1_env_PM_DATA_ROOT"
+  },
+  "max_rss_kib": 1124356,
+  "protocol": "P002_E2_A_OVERLAY_RUNNER_V1",
+  "symbols": {
+    "ICPUSDT": {
+      "REFUSED": "1 admissible days < the declared minimum 14: no gate is read for this symbol and the cap is not relaxed",
+      "admissions": [
+        {
+          "admissible": false,
+          "day": "20260819",
+          "gap_fraction": null,
+          "reasons_excluded": [
+            "bookTicker_files=12",
+            "trade_files=12",
+            "depth20_files=12"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 12,
+            "depth20": 12,
+            "trade": 12
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260820",
+          "gap_fraction": 0.1744444444444444,
+          "reasons_excluded": [
+            "gap_fraction=0.1744>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260821",
+          "gap_fraction": 0.109375,
+          "reasons_excluded": [
+            "gap_fraction=0.1094>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260822",
+          "gap_fraction": 0.03780092592592588,
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260823",
+          "gap_fraction": 0.15278935185185183,
+          "reasons_excluded": [
+            "gap_fraction=0.1528>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260824",
+          "gap_fraction": 0.1338194444444445,
+          "reasons_excluded": [
+            "gap_fraction=0.1338>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260825",
+          "gap_fraction": 0.14771990740740737,
+          "reasons_excluded": [
+            "gap_fraction=0.1477>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260826",
+          "gap_fraction": null,
+          "reasons_excluded": [
+            "bookTicker_files=23",
+            "trade_files=23",
+            "depth20_files=23"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 23,
+            "depth20": 23,
+            "trade": 23
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260827",
+          "gap_fraction": 0.16071759259259255,
+          "reasons_excluded": [
+            "gap_fraction=0.1607>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260828",
+          "gap_fraction": 0.16082175925925923,
+          "reasons_excluded": [
+            "gap_fraction=0.1608>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260829",
+          "gap_fraction": 0.21895833333333337,
+          "reasons_excluded": [
+            "gap_fraction=0.2190>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260830",
+          "gap_fraction": 0.2051736111111111,
+          "reasons_excluded": [
+            "gap_fraction=0.2052>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260831",
+          "gap_fraction": 0.16692129629629626,
+          "reasons_excluded": [
+            "gap_fraction=0.1669>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260901",
+          "gap_fraction": 0.17254629629629625,
+          "reasons_excluded": [
+            "gap_fraction=0.1725>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260902",
+          "gap_fraction": 0.16759259259259263,
+          "reasons_excluded": [
+            "gap_fraction=0.1676>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260903",
+          "gap_fraction": 0.13618055555555553,
+          "reasons_excluded": [
+            "gap_fraction=0.1362>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260904",
+          "gap_fraction": 0.13693287037037039,
+          "reasons_excluded": [
+            "gap_fraction=0.1369>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260905",
+          "gap_fraction": 0.1334953703703704,
+          "reasons_excluded": [
+            "gap_fraction=0.1335>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260906",
+          "gap_fraction": null,
+          "reasons_excluded": [
+            "bookTicker_files=6",
+            "trade_files=6",
+            "depth20_files=6"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 6,
+            "depth20": 6,
+            "trade": 6
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        }
+      ],
+      "n_admissible_days": 1
+    }
+  },
+  "symbols_in_scope": [
+    "AAVEUSDT",
+    "ADAUSDT",
+    "AVAXUSDT",
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "FILUSDT",
+    "ICPUSDT",
+    "LTCUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ],
+  "the_arm_that_ran": "MIN_SIZE_NOT_THE_E2A_GATE",
+  "the_size_aware_arm": {
+    "status": "REFUSED_NO_DECLARED_REBALANCE_NOTIONAL",
+    "why": "the runner REFUSES the size-aware arm and reports the min-size arm ONLY, labelled as NOT the E2-A gate -- because a min-size answer is exactly the E1-A answer with a better fill model, and calling it E2-A would quietly drop the third of the three things section 2 asks for. It is a refusal with a named status, never a default."
+  },
+  "wall_s_total": 33.55
+}
