@@ -1,0 +1,451 @@
+{
+ "AND_THE_SECOND_LIMIT_WHICH_IS_INDEPENDENT": "V2's own HANDOFF: the prior race cannot validate the CHANGED pipeline, because the pipeline the race scores is not the one V2 changed. Both limits stand together and neither implies the other.",
+ "G": 5,
+ "R_529_A_UP_FRONT": "THIS READ ESTABLISHES DIRECTION AND CONSISTENCY AND NEVER A HOLM-CLEARING VERDICT. USER ruling R-529(A). At G = 5 with m = 2 the best possible adjusted p is 0.0625 > 0.05; the smallest G that clears is 6. This bounds the SIGNIFICANCE the race can establish, not its VALUE.",
+ "adjudicates": null,
+ "as_of_utc": "2026-09-06T05:21:16Z",
+ "candidate": "the FROZEN candidate",
+ "cluster_disclosure": {
+  "G_complete_days": 5,
+  "intervals_claimable": "NOT ON THIS READ, and not because of G. R-529(A) makes the read DIRECTIONAL; an interval would imply an inferential claim the ruling forbids.",
+  "permutation_floor": {
+   "OPTIMISTIC_all_five_days_fresh": {
+    "G": 5,
+    "assignments": 32,
+    "best_possible_adjusted_p": 0.0625,
+    "clears_0_05": false,
+    "multiplicity": 2,
+    "smallest_achievable_one_sided_p": 0.03125
+   },
+   "PESSIMISTIC_only_the_three_first_openings_are_fresh": {
+    "G": 3,
+    "assignments": 8,
+    "best_possible_adjusted_p": 0.25,
+    "clears_0_05": false,
+    "multiplicity": 2,
+    "smallest_achievable_one_sided_p": 0.125
+   },
+   "WHICH_ONE_IS_THIS_FIELD": "the CONSERVATIVE (pessimistic) reading. A reader resolving one number gets the worse one; the optimistic one is beside it under its own name.",
+   "best_possible_adjusted_p": 0.25,
+   "both_clear_0_05": false,
+   "computed_here_not_quoted": true,
+   "neither_clears_0_05": true,
+   "ruled_cluster_unit": "UTC day",
+   "smallest_G_that_clears_at_m2": 6,
+   "who_weighs_the_readings": "the USER and the coordinator. This declaration does not resolve how to weight a re-read; it refuses to put the flattering number in the resolved field."
+  },
+  "ruled_cluster_unit": "UTC day",
+  "two_of_the_five_are_re_reads": [
+   "20260901",
+   "20260902"
+  ],
+  "unit_actually_used": "UTC day",
+  "weaker_than_ruled": false,
+  "why_that_matters": "09-01 and 09-02 were opened under the interim read. Their contribution to a 5-cluster sign test is not a fresh draw in the sense 09-03..09-05 are, and a reader counting five independent days would be over-counting. It is DISCLOSED; this declaration does not resolve how to weight it -- that is the coordinator's and the USER's.",
+  "why_this_differs_from_the_interim_read": "the interim read had G = 1 and had to disclose the WINDOW as a weaker substitute. Here the ruled unit is available and is the unit used -- which is the one thing five days bought."
+ },
+ "declared_in_commit": "8d7c4c0460369d99f4a4ef5268cbbcdd2f37cdb6",
+ "gate1_separation": {
+  "and_it_matters_now": "the two lines run in parallel on the same days, so a reader will ask. It is a computed field rather than a fact someone checked once.",
+  "checked_against": [
+   "be_daybook_",
+   "de_multiday_",
+   "de_section81_",
+   "be_cancel_axis_null",
+   "phase2_fits",
+   "de_daybook",
+   "gate1"
+  ],
+  "matches_found": [],
+  "no_gate1_book_or_arm_artifact_is_on_the_read_s_path": true,
+  "what_the_read_opens": [
+   "/home/yuqing/.local/state/pm-co/race_record_20260901_fwd5/be_forward_day_SEALED_scores_20260901.json",
+   "/home/yuqing/ctaNew_forward_runs/20260902_be13/be_forward_day_SEALED_scores_20260902.json",
+   "/home/yuqing/ctaNew_forward_runs/20260903_be45/be_forward_day_SEALED_scores_20260903.json",
+   "/home/yuqing/ctaNew_forward_runs/20260904_be45/be_forward_day_SEALED_scores_20260904.json",
+   "/home/yuqing/ctaNew_forward_runs/20260905_be44/be_forward_day_SEALED_scores_20260905.json"
+  ],
+  "why_they_cannot_collide": "the read opens the FORWARD SCORER's sealed scores. The Gate-1 objects are the day BOOKS (`asm` + reference) and the arms' pinned thetas -- different files, different producer, no shared path."
+ },
+ "inherited_from_the_interim_declaration": {
+  "era_caveat": {
+   "not_resizable_after_the_fact": true,
+   "supersedes": "08-29 runs on collector era clob_v3_1, TWO surface generations behind the race's clob_v4_1 ... whether the surface moves the economics is unknown and is not assumed in either direction",
+   "verified_content": {
+    "08_29_measured_quality": "btc P1 32.29 s/hr against a bar of 120 \u2014 the cleanest day in the record",
+    "fields_and_stamping": "IDENTICAL across clob_v3_1 and clob_v4_1 \u2014 verified in the code and on 180,000 tape rows, with a planted-field falsifier that breaks the equality",
+    "keepalive": "clob_v4_1 is the ROLLBACK to v3_1's own 10/10 keepalive, so clob_v4 is the outlier BETWEEN them and 08-29's era is the race era's configuration on the one axis anybody measured",
+    "the_material_one": "O1c's absence: before it, a socket that connects and never delivers opens no gap row, so that loss class is invisible on 08-29. Handled under masking above.",
+    "the_real_deltas": "O1b/O1c/O1d, confined to DETECTING AND LABELLING loss \u2014 never the values of rows that survive"
+   },
+   "why_superseded": "an open-ended caveat is a lever of adjustable size: an unfavourable number can be dismissed as 'the old collector', a favourable one keeps it as a footnote. R496-R7 measured the distance and the label overstated it."
+  },
+  "exclusion_vocabulary": {
+   "known_at_declaration": [
+    "SCORED",
+    "NO_FILL_AHEAD",
+    "ZERO_VALUE",
+    "NON_FINITE_SCORE"
+   ],
+   "set_is_closed": false
+  },
+  "frozen_decisions": {
+   "L_equals_the_freeze": true,
+   "L_latency_ms": 50,
+   "L_source": "phase2_declaration.TARGET_LATENCY_MS, equal to the frozen candidate's own target_latency_ms",
+   "any_later_change_is_a_new_declaration": "with its own multiplicity; a change made after seeing this read's number is rule 11 without re-using a single consumed row",
+   "budget_grid": [
+    "5%",
+    "10%",
+    "15%"
+   ],
+   "budget_grid_module_sha256": "aa866f8261677d79",
+   "budget_grid_source": "phase2_declaration.BUDGETS",
+   "candidate": {
+    "model_form": "LINEAR",
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_reduced_fine_candidate_v1.json",
+    "sha256": "cfc454d62f521d9aecf389b51a6536a4fa9cadb2370a11c19fbce0da9a68c341",
+    "spec": "PM_PLUS_FINE (reduced fine)"
+   },
+   "coin_set": [
+    "btc",
+    "eth"
+   ],
+   "declared_cell_count": 18,
+   "declared_cell_count_cited_by_sha256": "f87eb13b7d67909b8a7ffc110481f64df6f56c5b74290df131d932abb2f925e1",
+   "incumbent": {
+    "btc": {
+     "bytes": 5251,
+     "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_fits/linear_d_btc.json",
+     "role": "incumbent",
+     "sha256": "18701008c2bd18c68dc8c8ba38f49ca34ac83a0d9d7587f139f8a03848a6980c",
+     "spec": "INCUMBENT_REWEIGHTED_ONLY (per-coin linear)"
+    },
+    "eth": {
+     "bytes": 5252,
+     "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_fits/linear_d_eth.json",
+     "role": "incumbent",
+     "sha256": "fb371f6352214a9245523a5724e7f645b01c78351f728bb82cba27cc2d704797",
+     "spec": "INCUMBENT_REWEIGHTED_ONLY (per-coin linear)"
+    }
+   },
+   "none_of_these_may_move_on_this_read": true,
+   "operating_point_form": "FROZEN_FROM_TRAIN_QUANTILE",
+   "operating_point_theta_map_sha16": "72b61c771efffb50",
+   "pairing_conventions": [
+    "BY_COUNT",
+    "BY_THRESHOLD"
+   ],
+   "phase2_winner_criterion": {
+    "frozen_here": "the criterion by which the Phase-2 winner is decided may not move on the basis of this read. That is R496-R2's consequential item: naming the day as consumed bars the DAY, not the DECISION.",
+    "status": "NOT DECIDED BY THIS READ",
+    "who": "the USER; the race decides it (RESULTS.md \u00a77)"
+   },
+   "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+   "threshold_mode_source": "phase2_declaration.THRESHOLD_PRIMARY"
+  },
+  "instrument": "be_read_declaration",
+  "masking_treatment": {
+   "and_disclosed_as": "the result carries `masked: false` and `no_content_rule_governs_this_day: true`, so a reader is never left to infer that an unmasked day was a clean one",
+   "content_liveness_v1_effective_from": "20260902",
+   "content_liveness_v2_effective_from": "20260903",
+   "day": "20260829",
+   "declared_treatment": "NO MASK APPLIED",
+   "mask_artifact_exists": false,
+   "masks_that_do_exist": [
+    "da_blackout_mask_20260901.json",
+    "da_blackout_mask_20260902.json",
+    "da_blackout_mask_20260903.json",
+    "da_blackout_mask_20260904.json",
+    "da_blackout_mask_20260905.json"
+   ],
+   "redirectable": "the coordinator or the USER may order a mask instead",
+   "the_consequence_is_stated_not_hidden": "an undetected stall would leave the last book standing, so adverse selection is measured smaller and the spread frozen \u2014 biasing rho toward the flattering side. Direction argued from the code path; magnitude unknown and not asserted (R496-R5).",
+   "v1_governs_this_day": false,
+   "v2_governs_this_day": false,
+   "why_not_build_one": "no content-liveness rule governs 08-29 and no mask exists for it. Building a mask now would invent a rule for a day already known, which is R496-R5's own concern; and 08-29 predates O1c, so the invisible-hole class the rule exists for leaves no gap row to build a mask from in any case."
+  },
+  "null_declaration": {
+   "draw_count_is_stated_not_ranged": true,
+   "floor_disclosure": {
+    "at_floor_means": "the observed arrangement is itself one arrangement under H0, so a permutation p can never be zero; a p AT the floor is a bound, not a measurement, and must be reported as one",
+    "floor_p_at_2000_draws": 0.0004997501249375312
+   },
+   "matched_random_null": {
+    "compared_on": "net cents, NOT harm share",
+    "matching": "action count within (side x hour) strata",
+    "n_random": 200,
+    "source": "harmful_action_eval.N_RANDOM"
+   },
+   "paired_incumbent_null": {
+    "n_perm": 2000,
+    "seed": 20260828,
+    "source": "phase2_iter011.N_PERM_011 / PERM_SEED_011",
+    "statistic": "window-level sign-flip of paired increments",
+    "unit_order": "SORTED KEYS, pinned at consumption (R-234)"
+   },
+   "sidedness": {
+    "a2_status_read_from_the_plan": "FROZEN \u2014 IN FORCE",
+    "adjudicated": "ONE-SIDED",
+    "alternative": "greater \u2014 the candidate must BEAT the incumbent",
+    "chosen_here": false,
+    "ruled_by": "R-286/R-288, amendment A2",
+    "two_sided_reported_as": "a diagnostic, never adjudicated"
+   },
+   "why_2000_is_not_a_choice_made_here": "amendment A2 declares the matched-random resolution for the NEXT run/population PROSPECTIVELY at n_draws = 2000, with iteration 011's own family left at 500 and its floor disclosed. This read IS that next population, so the number was fixed before it existed \u2014 which is the whole point of a prospective declaration."
+  },
+  "reconciliation_caveat": {
+   "claim": "the decision metric has NEVER been reconciled against any published number, and cannot be from existing artifacts",
+   "conventions_differ_COMPUTED": {
+    "increment_primary_convention": "BY_THRESHOLD",
+    "iteration_011_convention": "BY_COUNT",
+    "so_no_published_number_shares_this_estimand": true,
+    "they_differ": true
+   },
+   "for_the_reader": "do not carry the reconciliation's authority onto the number this read produces",
+   "required_in_the_receipt": true,
+   "what_it_did_not": "the primary estimand, and the producer half beneath it",
+   "what_the_36_of_36_did_validate": "the BRIDGE arm and everything downstream of `increment_by_window` \u2014 the identity, the paired null, the sidedness, the multiplicity and the cluster disclosure \u2014 reproduced bit-for-bit against a published result",
+   "why_not": "`increment()` computes the BY_THRESHOLD estimand; iteration 011's published cells are BY_COUNT. This module's own PAIRING_CONVENTION_DIVERGENCE establishes they are different estimands, so the primary estimand is unreconcilable against that artifact BY CONSTRUCTION, not by omission."
+  },
+  "scoring_stack": {
+   "any_post_read_change_requires": "every already-accrued day to be re-scored on the new code, and the fact recorded in the register (R496-R6)",
+   "every_attempt_enumerated": "the driver's `_flush` already chains re-runs as `.1`, `.2` with `supersedes_receipt` and `prior_receipts` and their sha256s, so the enumeration is a property of the artifacts rather than an undertaking. The read's filing lists every attempt with its receipt path and sha.",
+   "first_completed_run_is_the_result_of_record": true,
+   "frozen_for_the_duration_of_the_race": true,
+   "modules": {
+    "be_forward_day.py": "2a8d50c61357bcf31d15e2beefaf6c1e52cad6b54032872955e7f8395d754690",
+    "be_forward_metric.py": "bad177c949294152bfe55f041fd81f140a178da3b0a390b24247017e2c2239e8",
+    "be_operating_point.py": "252ce9193e1748e364bddca96cea0a872cbe70bbf2ee8b219d85fe06f5c3e6ec",
+    "de_admissible_windows.py": "4d8f622075b0447fb0b9f80c5a5b5201a243edd7a2afe882430358ce42cefc1d",
+    "ev_replay_seam.py": "d63612a2a7b26c4846f7bad503ac7474bd0c3d87ea31c295442747a414ea02fd",
+    "harmful_action_eval.py": "2c4e21936e3fc1d2d91af5dad86afa113a7c3f5f8ca24a7a9efa1bd53f66db64",
+    "harmful_exposure_rows.py": "1bbd8e7525fc27ac342d39e59b958082df78a1929d7b19dde0a2b8c40a338ad5",
+    "harmful_fast_compute.py": "86866fea2506cafa5c013a9d680365f29796df315a7cfba27e019044064df63c",
+    "harmful_forward_scorer.py": "37142b125ffbd842adefce8ebcb0a1158231664d25a348561d8032fbc9d30333",
+    "harmful_hazard_model.py": "58b8a2c08eea3cc9ee9bfd13b3ca5648d65a2947275d1cc5df0ad8e1153ac7ed",
+    "phase2_declaration.py": "aa866f8261677d799dbf56bcb2feb9a7f99f59db7982820e60fff05db0a54df9",
+    "phase2_increment_null.py": "5d94da83430233e4471811942be32e636cb18a68c991bc6bc95835c60006b0ff",
+    "phase2_iter011.py": "c3de39ae2892e931a665578dfa02860d5a6c9a35e5fe411526540fa78f65b25d",
+    "policy_optimizer_queue_realistic.py": "ae13af2931bc33b85b6a73a144261f0ca1d45b4767e985cf94e0cdda0e5c204c"
+   },
+   "n_modules": 14,
+   "opened_and_sealed_use_distinct_outdir_ROOTS": "not merely distinct filenames within one outdir (R496-R6)",
+   "stack_digest": "4262d4663e75f913"
+  },
+  "why": "the interim read declared these and they have not changed; restating them would create a second copy that can disagree with the first"
+ },
+ "members": {
+  "conjunct_holds": true,
+  "members": [
+   "PM_PLUS_FINE (PRIMARY, this artifact)",
+   "PM_FINE_EXTENDED (HELD)"
+  ],
+  "race_multiplicity_at_freeze": 2,
+  "read_not_typed": true,
+  "recorded_in_the_frozen_bytes": true,
+  "source": "be_freeze_audit.rule12_conjuncts()['d_multiplicity_at_freeze']"
+ },
+ "opens_nothing": true,
+ "protocol": "BE_RACE_READ_DECLARATION_V2",
+ "read_days": [
+  "20260901",
+  "20260902",
+  "20260903",
+  "20260904",
+  "20260905"
+ ],
+ "rule_11_in_force": {
+  "already_consumed_before_this_read": [
+   "20260901",
+   "20260902"
+  ],
+  "consequence_if_one_moves": "the read is consumed and the moved quantity is selected on seen data -- rule 11 voids the test, and no later day repairs it",
+  "consumed_the_moment_they_are_opened": true,
+  "days_consumed_by_this_read": [
+   "20260901",
+   "20260902",
+   "20260903",
+   "20260904",
+   "20260905"
+  ],
+  "first_opening": [
+   "20260903",
+   "20260904",
+   "20260905"
+  ],
+  "may_not_be_chosen_on_what_is_seen": [
+   "parameter",
+   "threshold",
+   "horizon",
+   "budget",
+   "candidate",
+   "the winner criterion",
+   "the day set",
+   "G"
+  ],
+  "the_race_is_finished_after_this": "there is no sixth day to add afterwards that would rescue significance: adding days AFTER seeing this read is selection on the outcome. If G = 6 is ever wanted it must be declared BEFORE this read is opened."
+ },
+ "selects_nothing": true,
+ "statistic": {
+  "R_529_A_VERBATIM_AND_UP_FRONT": "every future statement of a race result must say up front that it establishes DIRECTION AND CONSISTENCY and never a Holm-clearing verdict",
+  "THE_RACE_STATISTIC": {
+   "NOT_reported": [
+    "any adjusted p presented as clearing a bar",
+    "any interval",
+    "any statement that the race establishes a winner"
+   ],
+   "form": "the SIGN of the per-day quantity, per UTC day, five days",
+   "multiplicity": {
+    "conjunct_holds": true,
+    "members": [
+     "PM_PLUS_FINE (PRIMARY, this artifact)",
+     "PM_FINE_EXTENDED (HELD)"
+    ],
+    "race_multiplicity_at_freeze": 2,
+    "read_not_typed": true,
+    "recorded_in_the_frozen_bytes": true,
+    "source": "be_freeze_audit.rule12_conjuncts()['d_multiplicity_at_freeze']"
+   },
+   "reported": [
+    "the per-day sign for each of the five days",
+    "the count of days in each direction",
+    "the per-day magnitude, REPORTED BESIDE the sign and not aggregated into a test statistic"
+   ],
+   "why_the_sign_and_not_the_magnitude": "R-529(A) makes this read DIRECTIONAL. Direction and consistency is what a 5-cluster sign pattern supports; a magnitude aggregated across days would invite the inferential reading the ruling forbids."
+  },
+  "estimand": {
+   "comparator": "the frozen per-coin incumbent, not a base rate",
+   "latency_axis": "only tranches after t + L are valued, L = 50 ms (rule 7 -- latency enters the estimand)",
+   "pairing_authority": "R-497 (F)(4) -- the primary, causal convention",
+   "pairing_convention": "BY_THRESHOLD",
+   "quantity": "NET CENTS against the INCUMBENT",
+   "tranche_valuation": "each tranche at ITS OWN time and level (rule 3), never a nearby proxy",
+   "unit_of_analysis": "the ACTION (slug, side, gen), de-duplicated",
+   "why_actions": "rule 2 -- several rows can share one outcome; measured 1.99 rows/fill, max 23, so a row-level count inflates"
+  },
+  "inherited_verbatim_from": "be_read_declaration.estimand()",
+  "per_day_quantity": "NET CENTS against the INCUMBENT",
+  "per_day_unit_of_analysis": "the ACTION (slug, side, gen), de-duplicated"
+ },
+ "supersedes": {
+  "artifact": "live/pm_research/declarations/be_race_read_declaration_v1.json",
+  "changes_nothing_the_read_may_conclude": true,
+  "closes": "the reviewer's three v2 items at R-563(A) / \u00a7B.7",
+  "items": [
+   "B.3 the permutation floor at BOTH readings, with the CONSERVATIVE one in the field a reader resolves",
+   "B.4 what the read WRITES, and the SEALED_scores digests pinned for a REQUIRED post-read byte-identity check",
+   "B.6 an explicit FIELD asserting no Gate-1 book or arm artifact is on the read's path"
+  ],
+  "rule": "13 -- vN+1; v1 is NOT edited and stays at its bytes"
+ },
+ "what_is_opened": {
+  "NOT_OPENED_BY_FILING_THIS": "filing a declaration is not reading. Nothing above is opened by this artifact; the opening is the coordinator's or the USER's act after the reviewer has seen this.",
+  "OPENED_BY_THE_READ": {
+   "field_shapes": {
+    "per_coin_scores": "coin -> list of per-action rows",
+    "report": "the full complement report"
+   },
+   "fields": [
+    "per_coin_scores",
+    "report"
+   ],
+   "file": "be_forward_day_SEALED_scores_<DAY>.json, one per day",
+   "source_of_this_field_list": "be_forward_day.seal(), read at the WRITER rather than by opening a sealed file -- the field names come from the code that writes them"
+  },
+  "STAYS_SEALED": {
+   "file": "be_forward_day_SEALED_feed_<DAY>.jsonl, one per day",
+   "not_opened_by_this_read": true,
+   "why": "the feed carries the per-row key, times, score and latency-resolved preventable value. The read needs the per-action scores, not the feed, and opening more than the estimand needs is consumption without purpose (rule 11)."
+  },
+  "per_day": [
+   {
+    "day": "20260901",
+    "first_opening": false,
+    "receipt": "data/pm_5min/derived/be_forward_day_receipt_20260901.json",
+    "receipt_present": true,
+    "receipt_sha256": "4000106752f816e4c3ff8ebc6d6057538914e1cefb77d6c7137cf98d6460ae04",
+    "sealed_scores_file": "be_forward_day_SEALED_scores_20260901.json"
+   },
+   {
+    "day": "20260902",
+    "first_opening": false,
+    "receipt": "data/pm_5min/derived/be_forward_day_receipt_20260902.json",
+    "receipt_present": true,
+    "receipt_sha256": "0907b0369e14d77b974e935ae696f3f5e3a8387c8695508a70c59848e563843a",
+    "sealed_scores_file": "be_forward_day_SEALED_scores_20260902.json"
+   },
+   {
+    "day": "20260903",
+    "first_opening": true,
+    "receipt": "data/pm_5min/derived/be_forward_day_receipt_20260903.json",
+    "receipt_present": true,
+    "receipt_sha256": "9aec99cff1cfc9e62282be3d632f5877b610ff75fe36fd9f31c5e0ca9b47c869",
+    "sealed_scores_file": "be_forward_day_SEALED_scores_20260903.json"
+   },
+   {
+    "day": "20260904",
+    "first_opening": true,
+    "receipt": "data/pm_5min/derived/be_forward_day_receipt_20260904.json",
+    "receipt_present": true,
+    "receipt_sha256": "8f08b089c5989dfe422f1f604a98b537ed2710c531167dc741cf90a58867eeb2",
+    "sealed_scores_file": "be_forward_day_SEALED_scores_20260904.json"
+   },
+   {
+    "day": "20260905",
+    "first_opening": true,
+    "receipt": "data/pm_5min/derived/be_forward_day_receipt_20260905.json",
+    "receipt_present": true,
+    "receipt_sha256": "d65cadbcf4af6818ff186395537b3e412f8c5f0c0a1766b55a1669a070f3e5cb",
+    "sealed_scores_file": "be_forward_day_SEALED_scores_20260905.json"
+   }
+  ]
+ },
+ "what_the_read_writes": {
+  "REQUIRED_AFTER_THE_READ": {
+   "check": "recompute each sha256 and compare to the pin above",
+   "on_mismatch": "the read is VOID and must be reported as such -- a read that moved the bytes it read is not a read, it is an edit",
+   "who_runs_it": "whoever opens; the check is part of the read, not an audit afterwards"
+  },
+  "SEALED_SCORES_PINNED_BEFORE_THE_READ": {
+   "20260901": {
+    "bytes": 54213086,
+    "path": "/home/yuqing/.local/state/pm-co/race_record_20260901_fwd5/be_forward_day_SEALED_scores_20260901.json",
+    "present": true,
+    "sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627"
+   },
+   "20260902": {
+    "bytes": 52911716,
+    "path": "/home/yuqing/ctaNew_forward_runs/20260902_be13/be_forward_day_SEALED_scores_20260902.json",
+    "present": true,
+    "sha256": "7522786db5423574aff39ac1f902b58bdf4e2b3d7248d84591d701f3619b589e"
+   },
+   "20260903": {
+    "bytes": 58851778,
+    "path": "/home/yuqing/ctaNew_forward_runs/20260903_be45/be_forward_day_SEALED_scores_20260903.json",
+    "present": true,
+    "sha256": "c466a3fe590f2d590b7c71ac478373f880205348952111c305ab4ffd3b1f31ad"
+   },
+   "20260904": {
+    "bytes": 61595588,
+    "path": "/home/yuqing/ctaNew_forward_runs/20260904_be45/be_forward_day_SEALED_scores_20260904.json",
+    "present": true,
+    "sha256": "a610b64ab7e204766c5a7c08bc8c05f2556af0a0e9291b76021c34f5a05a7a05"
+   },
+   "20260905": {
+    "bytes": 42663031,
+    "path": "/home/yuqing/ctaNew_forward_runs/20260905_be44/be_forward_day_SEALED_scores_20260905.json",
+    "present": true,
+    "sha256": "1370598870c5fa754f21c79203a98ea306c340d687d912d27655e5b002863705"
+   }
+  },
+  "WRITES": {
+   "nothing_is_written_by_filing_this_declaration": true,
+   "nothing_under_the_run_dirs": true,
+   "per_day_signs": "inside that artifact; no per-day file is written",
+   "read_artifact": "data/pm_5min/derived/be_race_read_result_v1.json"
+  },
+  "digested_never_opened": "a sha256 reveals no score. These digests are taken from the bytes without parsing them, which is why pinning them is not itself a read."
+ },
+ "who_decides": "the USER (rule 14); the coordinator authorises the read, after the reviewer has seen this declaration"
+}

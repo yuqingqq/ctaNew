@@ -1,0 +1,72 @@
+{
+ "STATUS": "BLOCKED \u2014 NO BOOK WRITTEN",
+ "THE_RESOURCE_FINDING_THAT_MATTERS_FOR_THE_NEXT_ATTEMPT": {
+  "consequence": "even with a September fragment, an 8 GB assembly of a 313,114-generation day is not obviously feasible and must be measured, not assumed. The chunked path (assemble_streaming, chunk_windows=6) is the one designed for it and is what this builder calls.",
+  "not_a_prediction": true,
+  "peak_before_assembly_gb": 6.4,
+  "reading": "the reference and the tape index alone reach 80% of the 8 GB cap BEFORE the fragment is sliced or the assembly starts. DE's own docstring records that 'the ruled run of 2026-09-03 died because [the 3.9 GB index] was held alongside the entire fragment' \u2014 this run reproduces that pressure and stops short of it for an unrelated reason.",
+  "share_of_cap": 0.8
+ },
+ "WHAT_DID_RUN_AND_WHAT_IT_COST": {
+  "reference": {
+   "generations": 313114,
+   "note": "10.06x the consumed hour's 31,122 generations \u2014 the first measurement of a full day's reference",
+   "peak_gb": 2.008,
+   "wall_s": 531.1,
+   "windows": 247
+  },
+  "scope_total": {
+   "cap_gb": 8,
+   "cap_raised": false,
+   "cpu": "18min 2.904s",
+   "memory_peak_gb": 6.4,
+   "source": "systemd journal for run-u69617.scope"
+  },
+  "selection": {
+   "era": "clob_v3_1",
+   "source": "de_admissible_windows.supply(day, be_forward_day.present_from_ledger(day))",
+   "supplied_btc_slugs": 247,
+   "why_not_select_v2_era": "the declared population intervals end 2026-08-26T00:00 (measured: [1787650201, 1787702400]), so no September day passes them"
+  },
+  "tape_index": {
+   "cumulative_peak_gb": 5.971,
+   "matches_DEs_measurement": "DE's docstring: 390.7 s for both splits; measured 387.4 s here",
+   "rows": 1764206,
+   "wall_s": 387.4
+  }
+ },
+ "WHY_NO_BOOK": {
+  "refusal_verbatim": "the slice is EMPTY: no window of harmful_exposure_rows_v3_eraB.json matched the 247 wanted slugs. An empty slice measures nothing and would extrapolate from zero",
+  "refused_at": "de_phase4_diag_runner.fragment_slice",
+  "the_citable_form": "THE FEATURE FRAGMENT IS THE CONSUMED-ERA FRAGMENT. September has never been materialised into it, so a SCORED book for 09-03 cannot be assembled from existing artifacts. This is a MISSING INPUT, not a failure of the builder and not a memory failure.",
+  "verified_at_the_artifact_by_this_seat": {
+   "any_20260903_btc_slug_present": false,
+   "bytes": 1241115096,
+   "fragment": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_eraB.json",
+   "span": "2026-08-24 -> 2026-08-25",
+   "windows_in_fragment": 471
+  },
+  "what_would_unblock_it": "a feature pass materialising 09-03 into a fragment. That is a separate and much larger job than the book, and it was not dispatched.",
+  "whose_guard": "DE's, not mine \u2014 and it did exactly the right thing: it refused rather than emitting a book whose `asm` was empty"
+ },
+ "approval_cited": {
+  "commit": "4daaea9",
+  "filed": "2026-09-06T04:41Z",
+  "path": "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_RUNNER_REDRIVE_AND_RACE_READ_2026-09-06.md",
+  "verdict_read_by_path": "THE RUNNER \u2014 APPROVED for the 09-03 smoke once BE's book exists"
+ },
+ "as_of_utc": "2026-09-06T05:42:21Z",
+ "builder": {
+  "module": "live/pm_research/be_daybook_build.py",
+  "selftest": "8 checks passed, both guards driven"
+ },
+ "coin": "btc",
+ "day": "20260903",
+ "decides_nothing": "REPORTED (rule 14).",
+ "no_book_written": true,
+ "no_economics": true,
+ "no_null_draws": true,
+ "no_scoring_of_arms": true,
+ "nothing_sealed_opened": true,
+ "protocol": "BE_DAYBOOK_BUILD_ATTEMPT_V1"
+}

@@ -39,6 +39,28 @@ ROOT = HERE.parents[1]
 DERIVED = ROOT / "data/pm_5min/derived"
 
 RACE_DAYS = ("20260901", "20260902", "20260903", "20260904", "20260905")
+
+#: Where each day's sealed scores live. DIGESTED, NEVER OPENED -- a sha256
+#: reveals no score, and pinning them is what makes a post-read byte-identity
+#: check possible at all.
+SEALED_SCORES = {
+    "20260901": "/home/yuqing/.local/state/pm-co/race_record_20260901_fwd5/"
+                "be_forward_day_SEALED_scores_20260901.json",
+    "20260902": "/home/yuqing/ctaNew_forward_runs/20260902_be13/"
+                "be_forward_day_SEALED_scores_20260902.json",
+    "20260903": "/home/yuqing/ctaNew_forward_runs/20260903_be45/"
+                "be_forward_day_SEALED_scores_20260903.json",
+    "20260904": "/home/yuqing/ctaNew_forward_runs/20260904_be45/"
+                "be_forward_day_SEALED_scores_20260904.json",
+    "20260905": "/home/yuqing/ctaNew_forward_runs/20260905_be44/"
+                "be_forward_day_SEALED_scores_20260905.json",
+}
+
+#: The Gate-1 line's objects. NONE of them is on this read's path, and §B.6
+#: says that should be a field rather than a fact the reviewer checked.
+GATE1_ARTIFACT_PATTERNS = ("be_daybook_", "de_multiday_", "de_section81_",
+                           "be_cancel_axis_null", "phase2_fits",
+                           "de_daybook", "gate1")
 ALREADY_OPENED_UNDER_THE_INTERIM = ("20260901", "20260902")
 
 
@@ -103,15 +125,7 @@ def cluster_disclosure_race() -> dict:
                                "R-529(A) makes the read DIRECTIONAL; an "
                                "interval would imply an inferential claim "
                                "the ruling forbids.",
-        "permutation_floor": {
-            "assignments": "2^G = 32 sign assignments over 5 day-clusters",
-            "smallest_achievable_one_sided_p": 1.0 / 32,
-            "with_multiplicity_2": 2.0 / 32,
-            "best_possible_adjusted_p": 0.0625,
-            "clears_0_05": False,
-            "smallest_G_that_clears": 6,
-            "computed_here_not_quoted": True,
-        },
+        "permutation_floor": _floor_both_readings(),
         "two_of_the_five_are_re_reads": list(ALREADY_OPENED_UNDER_THE_INTERIM),
         "why_that_matters": (
             "09-01 and 09-02 were opened under the interim read. Their "
@@ -120,6 +134,115 @@ def cluster_disclosure_race() -> dict:
             "independent days would be over-counting. It is DISCLOSED; this "
             "declaration does not resolve how to weight it -- that is the "
             "coordinator's and the USER's."),
+    }
+
+
+def _floor(g: int, m: int = 2) -> dict:
+    """One reading's floor, COMPUTED. 2^g assignments; smallest one-sided p
+    is 1/2^g; Holm at m multiplies it."""
+    base = 1.0 / (2 ** g)
+    adj = m * base
+    return {"G": g, "assignments": 2 ** g,
+            "smallest_achievable_one_sided_p": base,
+            "multiplicity": m, "best_possible_adjusted_p": adj,
+            "clears_0_05": adj <= 0.05}
+
+
+def _floor_both_readings() -> dict:
+    """B.3: BOTH readings, and the CONSERVATIVE one in the resolved field.
+
+    The reviewer's objection, and it is exactly right: this block computed
+    the floor at G = 5 only (0.0625) while the SAME declaration said that
+    counting five independent days would be an over-count, because 09-01 and
+    09-02 were already opened under the interim. Reporting the optimistic
+    floor in the field a reader resolves and the worse one in a sentence
+    puts the better number where it will be quoted. Both are computed here
+    and the FIELD carries the conservative one."""
+    optimistic = _floor(5)
+    pessimistic = _floor(3)
+    worse = max(optimistic["best_possible_adjusted_p"],
+                pessimistic["best_possible_adjusted_p"])
+    return {
+        "ruled_cluster_unit": "UTC day",
+        "OPTIMISTIC_all_five_days_fresh": optimistic,
+        "PESSIMISTIC_only_the_three_first_openings_are_fresh": pessimistic,
+        "best_possible_adjusted_p": worse,
+        "WHICH_ONE_IS_THIS_FIELD": "the CONSERVATIVE (pessimistic) reading. "
+                                   "A reader resolving one number gets the "
+                                   "worse one; the optimistic one is beside "
+                                   "it under its own name.",
+        "both_clear_0_05": (optimistic["clears_0_05"]
+                            and pessimistic["clears_0_05"]),
+        "neither_clears_0_05": not (optimistic["clears_0_05"]
+                                    or pessimistic["clears_0_05"]),
+        "smallest_G_that_clears_at_m2": 6,
+        "computed_here_not_quoted": True,
+        "who_weighs_the_readings": "the USER and the coordinator. This "
+                                   "declaration does not resolve how to "
+                                   "weight a re-read; it refuses to put the "
+                                   "flattering number in the resolved field.",
+    }
+
+
+def what_the_read_writes() -> dict:
+    """B.4: the artifacts the read produces, and the digests it must not move.
+
+    A read that opens sealed bytes must be able to prove afterwards that it
+    did not change them. The digests are taken HERE, before the read, and a
+    byte-identity check after it is REQUIRED rather than suggested."""
+    import hashlib
+    rows = {}
+    for d, path in SEALED_SCORES.items():
+        p = Path(path)
+        rows[d] = {"path": path, "present": p.exists(),
+                   "sha256": (hashlib.sha256(p.read_bytes()).hexdigest()
+                              if p.exists() else None),
+                   "bytes": p.stat().st_size if p.exists() else None}
+    return {
+        "WRITES": {
+            "read_artifact": "data/pm_5min/derived/"
+                             "be_race_read_result_v1.json",
+            "per_day_signs": "inside that artifact; no per-day file is "
+                             "written",
+            "nothing_under_the_run_dirs": True,
+            "nothing_is_written_by_filing_this_declaration": True,
+        },
+        "SEALED_SCORES_PINNED_BEFORE_THE_READ": rows,
+        "digested_never_opened": "a sha256 reveals no score. These digests "
+                                 "are taken from the bytes without parsing "
+                                 "them, which is why pinning them is not "
+                                 "itself a read.",
+        "REQUIRED_AFTER_THE_READ": {
+            "check": "recompute each sha256 and compare to the pin above",
+            "on_mismatch": "the read is VOID and must be reported as such -- "
+                           "a read that moved the bytes it read is not a "
+                           "read, it is an edit",
+            "who_runs_it": "whoever opens; the check is part of the read, "
+                           "not an audit afterwards",
+        },
+    }
+
+
+def gate1_separation() -> dict:
+    """B.6: state the separation as a FIELD, not leave it to be checked."""
+    opened = [SEALED_SCORES[d] for d in RACE_DAYS]
+    hits = sorted({pat for pat in GATE1_ARTIFACT_PATTERNS
+                   for p in opened if pat in p})
+    return {
+        "no_gate1_book_or_arm_artifact_is_on_the_read_s_path": not hits,
+        "checked_against": list(GATE1_ARTIFACT_PATTERNS),
+        "matches_found": hits,
+        "what_the_read_opens": opened,
+        "why_they_cannot_collide": "the read opens the FORWARD SCORER's "
+                                   "sealed scores. The Gate-1 objects are "
+                                   "the day BOOKS (`asm` + reference) and "
+                                   "the arms' pinned thetas -- different "
+                                   "files, different producer, no shared "
+                                   "path.",
+        "and_it_matters_now": "the two lines run in parallel on the same "
+                              "days, so a reader will ask. It is a computed "
+                              "field rather than a fact someone checked "
+                              "once.",
     }
 
 
@@ -224,7 +347,22 @@ def statistic() -> dict:
 def build() -> dict:
     import be_read_declaration as RD
     return {
-        "protocol": "BE_RACE_READ_DECLARATION_V1",
+        "protocol": "BE_RACE_READ_DECLARATION_V2",
+        "supersedes": {
+            "artifact": "live/pm_research/declarations/"
+                        "be_race_read_declaration_v1.json",
+            "rule": "13 -- vN+1; v1 is NOT edited and stays at its bytes",
+            "closes": "the reviewer's three v2 items at R-563(A) / §B.7",
+            "items": [
+                "B.3 the permutation floor at BOTH readings, with the "
+                "CONSERVATIVE one in the field a reader resolves",
+                "B.4 what the read WRITES, and the SEALED_scores digests "
+                "pinned for a REQUIRED post-read byte-identity check",
+                "B.6 an explicit FIELD asserting no Gate-1 book or arm "
+                "artifact is on the read's path",
+            ],
+            "changes_nothing_the_read_may_conclude": True,
+        },
         "as_of_utc": dt.datetime.now(dt.timezone.utc).strftime(
             "%Y-%m-%dT%H:%M:%SZ"),
         "R_529_A_UP_FRONT": (
@@ -246,6 +384,8 @@ def build() -> dict:
         "cluster_disclosure": cluster_disclosure_race(),
         "rule_11_in_force": rule_11_race(),
         "what_is_opened": what_is_opened(),
+        "what_the_read_writes": what_the_read_writes(),
+        "gate1_separation": gate1_separation(),
         # REUSED, NOT RESTATED -- the two declarations must not drift.
         "inherited_from_the_interim_declaration": {
             "instrument": "be_read_declaration",
@@ -272,7 +412,7 @@ def build() -> dict:
     }
 
 
-EXPECTED_CHECKS = 10
+EXPECTED_CHECKS = 14
 
 
 def selftest() -> int:
@@ -290,12 +430,38 @@ def selftest() -> int:
        "R-529(A) IS THE FIRST SUBSTANTIVE FIELD -- the ruling says the "
        "statement must be up front, so it is, not in a caveats block")
     cl = d["cluster_disclosure"]["permutation_floor"]
-    ok(cl["best_possible_adjusted_p"] == 0.0625
-       and cl["with_multiplicity_2"] == 0.0625
-       and not cl["clears_0_05"] and cl["smallest_G_that_clears"] == 6,
-       f"and its ARITHMETIC IS COMPUTED, not quoted: 2/2^5 = "
-       f"{cl['with_multiplicity_2']}, clears 0.05: {cl['clears_0_05']}, "
-       f"smallest G that clears: {cl['smallest_G_that_clears']}")
+    opt = cl["OPTIMISTIC_all_five_days_fresh"]
+    pes = cl["PESSIMISTIC_only_the_three_first_openings_are_fresh"]
+    ok(opt["best_possible_adjusted_p"] == 0.0625
+       and pes["best_possible_adjusted_p"] == 0.25
+       and cl["neither_clears_0_05"]
+       and cl["smallest_G_that_clears_at_m2"] == 6,
+       f"B.3 THE FLOOR AT BOTH READINGS, COMPUTED: G=5 -> "
+       f"{opt['best_possible_adjusted_p']}, three-fresh-days -> "
+       f"{pes['best_possible_adjusted_p']}, neither clears 0.05")
+    ok(cl["best_possible_adjusted_p"] == pes["best_possible_adjusted_p"]
+       and "CONSERVATIVE" in cl["WHICH_ONE_IS_THIS_FIELD"],
+       f"AND THE RESOLVED FIELD CARRIES THE CONSERVATIVE ONE "
+       f"({cl['best_possible_adjusted_p']}), not the flattering one -- the "
+       f"reviewer's objection was that the better number sat where a reader "
+       f"resolves and the worse one in a sentence")
+    w = d["what_the_read_writes"]
+    ok(all(r["sha256"] for r in w["SEALED_SCORES_PINNED_BEFORE_THE_READ"].values())
+       and "VOID" in w["REQUIRED_AFTER_THE_READ"]["on_mismatch"],
+       f"B.4 all {len(w['SEALED_SCORES_PINNED_BEFORE_THE_READ'])} sealed "
+       f"score files are PINNED BY DIGEST before the read, with a REQUIRED "
+       f"post-read byte-identity check whose failure VOIDS the read")
+    ok(w["WRITES"]["nothing_is_written_by_filing_this_declaration"]
+       and w["WRITES"]["read_artifact"].endswith(".json"),
+       "and what the read WRITES is named -- one artifact, nothing under the "
+       "run dirs, and nothing written by filing this")
+    g = d["gate1_separation"]
+    ok(g["no_gate1_book_or_arm_artifact_is_on_the_read_s_path"]
+       and g["matches_found"] == [],
+       f"B.6 NO Gate-1 book or arm artifact is on the read's path -- a "
+       f"COMPUTED field now, checked against "
+       f"{len(g['checked_against'])} patterns, {len(g['matches_found'])} "
+       f"matches")
     ok(d["cluster_disclosure"]["G_complete_days"] == 5
        and d["cluster_disclosure"]["unit_actually_used"] == "UTC day"
        and not d["cluster_disclosure"]["weaker_than_ruled"],
@@ -358,7 +524,7 @@ def main(argv=None) -> int:
         return selftest()
     if "--declare" in argv:
         out = build()
-        dst = (HERE / "declarations" / "be_race_read_declaration_v1.json")
+        dst = (HERE / "declarations" / "be_race_read_declaration_v2.json")
         dst.write_text(json.dumps(out, indent=1, sort_keys=True, default=str))
         print(json.dumps({"written": str(dst), "G": out["G"],
                           "opens_nothing": out["opens_nothing"]}))
