@@ -669,6 +669,7 @@ def reproduce_e1(sym: str = "ADAUSDT", decl: dict | None = None) -> dict:
     """Re-measure E1's ADA on E1's OWN Vision aggTrades with THIS code."""
     decl = decl or load_declaration()
     tgt = decl["e1_reproduction_control"]
+    require_canonical_root("P-2026-002 E2.0 E1 reproduction control")
     files = sorted(VISION.glob(f"{sym}/*.parquet"))
     if not files:
         return {"status": "SOURCE_ABSENT", "path": str(VISION / sym)}
@@ -986,6 +987,37 @@ def selftest() -> int:                                        # noqa: C901
            "POSITIVE CONTROL: PM_DATA_ROOT at the real repo root ADMITS and "
            "finds tape -- the refusal discriminates rather than always firing")
 
+    # --- DE'S RESOLVER IS THE GATE, and it refuses a NON-CANONICAL root
+    #     even when a tape is present -- the case my own check could not see.
+    with _tf2.TemporaryDirectory() as d:
+        fake = Path(d) / "repo"
+        (fake / "data" / "pm_5min" / "raw").mkdir(parents=True)
+        (fake / "data" / "mm_hf" / "raw").mkdir(parents=True)
+        r = _sp.run([sys.executable, "-c",
+                     "import sys; sys.path.insert(0, %r)\n"
+                     "import e2_0_true_mid as E\n"
+                     "try:\n"
+                     "    E.require_canonical_root('t'); print('ADMITTED')\n"
+                     "except Exception as e: print(type(e).__name__)\n"
+                     % str(HERE)],
+                    capture_output=True, text=True,
+                    env={**os.environ, "PM_DATA_ROOT": str(fake)})
+        ok("DataRootRefused" in r.stdout,
+           f"KNOWN-BAD: a NON-CANONICAL root that DOES carry a tape is still "
+           f"REFUSED by DE's resolver -- the partial-shell case my own "
+           f"tape-exists check would have admitted, and the reviewer's exact "
+           f"point (got {r.stdout.strip()})")
+    r = _sp.run([sys.executable, "-c",
+                 "import sys; sys.path.insert(0, %r)\n"
+                 "import e2_0_true_mid as E\n"
+                 "b = E.require_canonical_root('t')\n"
+                 "print(b['is_canonical'], b['branch'], b['refusal'])\n"
+                 % str(HERE)], capture_output=True, text=True,
+                env={**os.environ, "PM_DATA_ROOT": "/home/yuqing/ctaNew"})
+    ok(r.returncode == 0 and "True 1_env_PM_DATA_ROOT None" in r.stdout,
+       "POSITIVE CONTROL: the canonical root ADMITS through DE's resolver and "
+       "the block records is_canonical, the branch and a null refusal")
+
     # --- tau* rule reproduces the plan's own instantiation ---
     ts30 = [10.0] * 24 + [90.0] * 7
     ok(tau_star(ts30, decl)[0] == 30,
@@ -1057,9 +1089,31 @@ def selftest() -> int:                                        # noqa: C901
 
 
 # --------------------------------------------------------------------------
+def require_canonical_root(purpose: str) -> dict:
+    """DE's resolver, IMPORTED not copied (reviewer 118af18 / the E2.0 result
+    review section 6).
+
+    My own `require_tape` refuses only when the tape DIRECTORY is absent. The
+    reviewer's precise point is that a PARTIAL shell would pass that and yield
+    a silently smaller population. `de_data_root.require_canonical` refuses
+    unless the resolved root IS the canonical ledger, which is the property
+    that actually protects a result-bearing emission -- and P-002 had none of
+    it. One resolver for both programmes; a second implementation of "where is
+    the ledger" is exactly the thing that drifts.
+    """
+    sys.path.insert(0, str(CODE_ROOT / "live" / "pm_research"))
+    import de_data_root as DR                                 # noqa: PLC0415
+    block = DR.require_canonical(purpose)
+    require_tape()
+    block["mm_hf_tape_present"] = True
+    block["adopted_from"] = ("live/pm_research/de_data_root.py, imported not "
+                             "copied")
+    return block
+
+
 def require_tape() -> None:
-    """A root with no tape REFUSES. Reporting zero days would be a result-
-    shaped object built from an absent input -- the shape that cost a run."""
+    """A root with no mm_hf tape REFUSES -- the P-002-specific half, run after
+    DE's canonical check, because that one tests pm_5min/raw."""
     if not RAW.is_dir():
         raise E20Refused(
             f"REFUSED: no tape at {RAW} (root branch {DATA_ROOT_BRANCH}, "
@@ -1074,8 +1128,10 @@ def days_available(sym: str) -> list[str]:
 
 def run(symbols, decl, out_path: Path | None):
     t0 = time.time()
-    require_tape()
+    root_block = require_canonical_root(
+        "P-2026-002 E2.0 result-bearing emission")
     result = {"protocol": PROTOCOL, "carrying_commit": carrying_commit(),
+              "data_root_check": root_block,
               "ledger_root": {
                   "data_root": str(ROOT),
                   "data_root_branch": DATA_ROOT_BRANCH,
