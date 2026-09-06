@@ -3,6 +3,7 @@
 # Register landing with the hold, the chained commit, the post-condition, and the revert on failure (R-661/R-662/R-667/R-686).
 set -u
 E="$1"; N="$2"; MSG="$3"; NORB="${4:-}"; cd /home/yuqing/ctaNew
+LAND_TMP=$(mktemp -d); export LAND_TMP
 B=orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace; REG=$B/COORDINATION.md; RB=$B/COORDINATOR_RUNBOOK.md
 git fetch -q origin; git merge -q --ff-only origin/mm-research 2>/dev/null
 D=$(git status --short -- "$REG"); if [ -n "$D" ]; then echo "HELD: register dirty [$D]"; exit 3; fi
@@ -17,10 +18,10 @@ if claims and "```" not in e:
 assert f'### R-{n} ' not in s, 'already present'
 last=max(int(x) for x in re.findall(r'\n### R-(\d+)', s)); assert last==n-1, f'last is R-{last}, expected R-{n-1}'
 a=s.index(f'### R-{last}'); sec=s.find('\n## 6. Build-readiness'); nxt=s.find('\n### ', a+10); ins=sec if (nxt==-1 or (sec!=-1 and sec<nxt)) else nxt
-s=s[:ins].rstrip('\n')+'\n\n'+e+'\n'+s[ins:].lstrip('\n'); reg.write_text(s); Path('/tmp/claude-1001/-home-yuqing-ctaNew/6cdde79e-344f-476d-ab19-28e353fe349a/scratchpad/expected_added.txt').write_text(str(e.count('\n')+1)); print(f'R-{n} inserted (register clean)')
+s=s[:ins].rstrip('\n')+'\n\n'+e+'\n'+s[ins:].lstrip('\n'); reg.write_text(s); Path('${LAND_TMP:-/tmp}/expected_added.txt').write_text(str(e.count('\n')+1)); print(f'R-{n} inserted (register clean)')
 PY
 { cat "$MSG"; printf '\nLanded-By: land_entry.sh %s\n' "$(sha256sum "$0" | cut -c1-64)"; } > "$MSG.landed"; git add -- "$REG" && git commit -q -F "$MSG.landed" -- "$REG" || { echo "commit failed"; git restore -q --staged --worktree -- "$REG"; exit 5; }
-ADDED=$(git show --format= HEAD -- "$REG" | grep -c '^+[^+]'); EXP=$(cat /tmp/claude-1001/-home-yuqing-ctaNew/6cdde79e-344f-476d-ab19-28e353fe349a/scratchpad/expected_added.txt); OTHER=$(git show --format= HEAD -- "$REG" | grep -E '^\+\| Q-' | wc -l); NPATHS=$(git show --stat --format= HEAD | grep -c '|')
+ADDED=$(git show --format= HEAD -- "$REG" | grep -c '^+[^+]'); EXP=$(cat ${LAND_TMP:-/tmp}/expected_added.txt); OTHER=$(git show --format= HEAD -- "$REG" | grep -E '^\+\| Q-' | wc -l); NPATHS=$(git show --stat --format= HEAD | grep -c '|')
 echo "post-condition: paths $NPATHS added $ADDED expected $EXP foreign $OTHER"
 if [ "$NPATHS" = "1" ] && [ "$OTHER" = "0" ] && [ "$ADDED" -le $((EXP+2)) ]; then echo "POST-CONDITION OK"; else echo "POST-CONDITION FAILED — reverting"; git revert --no-edit HEAD >/dev/null && echo reverted; exit 6; fi
 if [ "$NORB" != "--no-runbook" ]; then
