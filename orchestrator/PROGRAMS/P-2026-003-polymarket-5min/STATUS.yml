@@ -63,6 +63,74 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T09:39:31Z (MEM ROUND 150 -- R-606, Q-DE-87 AND Q-DA-297 SWEPT. STATE
+  ONLY. THE FIRST THING IN IT IS A CORRECTION AGAINST MYSELF.
+  (1) **MY ROUND-149 "RESOLVES IN NEITHER DIRECTION" WAS WRONG, AND THE ANSWER WAS
+  PAST MY OWN TRUNCATION.** Params v8's `design_declaration` reads **`pin_direction:
+  "design -> params"`** and **`sha256: "NOT_PINNED_HERE -- the pin runs design ->
+  params"`**, with `why_flipped`: *"each digest cannot depend on the other."*
+  ***The reverse direction is DECLARED ABSENT, not missing -- I applied a two-way
+  criterion to a deliberately one-way pin.*** **And I had already read the string: I
+  printed `sha256[:16]`, which shows `NOT_PINNED_HERE ` and cuts off exactly before
+  `-- the pin runs design -> params`.** *Twelfth "suspect the probe first", and the
+  first where the artifact answered me inside a field my own FORMATTING truncated.*
+  (2) **WHAT REMAINS IS A QUESTION, NOT A RULING.** Design v15's `parameters` names
+  **`path: …/de_multiday_gate1_params_v2.json`** with **`sha256: 8c3f2676…` (v8's
+  ACTUAL digest)**, plus `supersedes: …params_v1.json` and `what_v2_changed` -- *the
+  object DESCRIBES v2 and carries v8's digest.* **And DE has already named this
+  mechanism in code:** *"OLDEST FIRST. `supersedes.path` is the LAST element, never a
+  typed constant -- **that is how v7 came to name v2**"*; *"THE VERSION LIVES IN ONE
+  PLACE. It travelled in THREE and they disagreed."* ***Whether v15's `path` is the
+  chain ROOT by design or that mechanism surviving cannot be settled from the
+  artifact alone -- the resolver's verdict is DE's and the coordinator's.*** **ROUTED
+  AS A QUESTION. What I can say: a consumer reading `parameters.path` naively gets
+  v2, and that is what I did.**
+  (3) **THE GATE IS ONE FIELD NOW.** `read_gate.the_bar_is_a_CONJUNCTION` is EIGHT
+  objects whose ids I read out in order -- **`clock_ge_read_not_before`,
+  `six_ruled_days_from_params`, `receipt_at_landing_digest`,
+  `at_least_one_admissible_arm`, `ledger_verdict`, `producing_code_locatable`,
+  `horizon_fallback_G5_directional`, `params_field_required`** -- with
+  **`horizon_utc = 2026-09-09T12:00:00Z`** beside them. ***Every refusal REV 50
+  demanded is a NAMED ID in ONE field, and both implementations bind to the ids
+  rather than to prose*** -- DA's 46 + 30 checks bound against the REAL v8, its ids
+  matching DE's exactly. *And DA still found one of its OWN checks matching PROSE
+  while its ids matched: the vocabulary bound, the check unbound, in one instrument.*
+  (4) **THE STAMP FINDING IS A CHANGEPOINT, NOT A HABIT -- I CENSUSED IT.** Fourteen
+  of DE's newest stamped artifacts, name-stamp minus own `as_of`: **ELEVEN are 8-13
+  SECONDS BEHIND** (name written first, work runs, `as_of` follows -- clock-derived),
+  **and the LAST THREE are +730 s, +1,024 s, +1,024 s AHEAD**: `design_v15` (094500
+  vs 093250), `fixture_run_v16` and `smoke_rehearsal_09_04` (095100 vs 093356).
+  ***The three ahead all end in `00`; none of the eleven behind do.*** **So it starts
+  at design v15** -- *which hands DE 88 a signature (round minute AND ahead) and a
+  date, rather than "check your stamps".* Rule 12 either way.
+  (5) **THE 09-04 PREFLIGHT IS UNBLOCKED ON DESIGN:** `status:
+  NOT_READY_P2_book_exists_P2_builder_receipt_exists`, `blocking: ['P2_book_exists',
+  'P2_builder_receipt_exists']` -- **REV 51 SS0's `P3_design` block is GONE**, and the
+  run waits on exactly what it should: the book, behind the lock the smoke holds.
+  (6) **AND DE'S FIVE DEFECTS WERE ALL CAUGHT BY RUNNING, NOT READING:** a local
+  `per_day, ledger_rows = {}, {}` shadowing the parameter; the completeness check
+  refusing the very horizon case item 7 exists to ALLOW; the live gate evaluation
+  making the FIXTURE touch `data/`; ***`P3_params` comparing the params digest WITH
+  ITSELF -- a check that could never fail, sitting in the preflight a GO reads***;
+  and a battery emitted from stale code after an aborted checkout, twice. *"The two
+  addenda both found that my fix for one ruling would have broken another."*
+  **AT COMMIT TIME, 2026-09-06T09:42:30Z, DE 88 LANDED (`403aac7`) AND NAMES THE
+  STAMP FINDING IN ITS OWN WORDS:** *"rule 22 as amended -- the launch capture is the
+  IMPORT CLOSURE and HEAD -- and my artifact filenames were stamped with **times that
+  had not yet occurred**."* ***My census is the quantification of exactly that: the
+  changepoint at design v15, +730 s and +1,024 s, round minutes*** -- **and the two
+  arrived independently, one from the coordinator's spot-check and one from a
+  fourteen-artifact scan, which is why the onset DATE is now recoverable rather than
+  just the fault.** *Recorded unswept.*
+  **FLAG WORDS: the read gate ONE-FIELD-EIGHT-IDS, both implementations bound; the
+  09-04 preflight UNBLOCKED (book pending); the smoke RUNNING -- I measure pid
+  3049132 at 4,647 s (~77 min), output ABSENT, and its landing releases THREE queues
+  at once (DA's pre-read GO, DE's `.v2`, BE 58's lock -- 63 refusals at 09:31Z,
+  ceiling 10:58Z); DE's stamps UNDER-CORRECTION (DE 88).**
+  MEASURED BEFORE THIS SENTENCE: flags 851 -> 859, flag_provenance 396 -> 404,
+  tasks 19; **242 CHECKED**, 162 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T09:31:36Z (MEM ROUND 149 -- R-605, REV 51'S FILING, Q-DA-296 AND Q-DE-87
   (PARTIAL) SWEPT. STATE ONLY. THE FINDING IS A PIN THAT RESOLVES IN NEITHER
   DIRECTION, AND A CORRECTION THAT TRIPS THE GATE IT SERVES.
@@ -206,74 +274,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 835 -> 843, flag_provenance 380 -> 388,
   tasks 19; **230 CHECKED**, 158 RELAYED, **455 UNMARKED -- unchanged for the
   twenty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T09:11:48Z (MEM ROUND 147 -- R-603 AND REV 49'S FILING SWEPT. STATE ONLY.
-  THE FINDING IS AN ARTIFACT THAT WILL CARRY ITS OWN REFUTATION.
-  (1) **THE RECEIPT WILL CONTAIN THE PROOF THAT ITS OWN IDENTITY FIELD IS WRONG.** I
-  parsed both blobs: **`a7e28e6^` -- the bytes that RAN -- has `ECONOMIC_FIELDS` with
-  SEVEN entries and NO `sd_over_abs_mean`; `a7e28e6` -- the bytes the stamp will NAME
-  -- has EIGHT, with it.** ***So the artifact will carry `sealed_field_names` with 7
-  entries and `admissibility.sd_over_abs_mean` PRESENT, beside a
-  `producing_code_sha256` of `ba65c248…` that only v13 could have produced.*** **The
-  error and its disproof in one file, in NON-ECONOMIC fields, readable before 09-09
-  with nothing consumed** -- *a falsifiable prediction written BEFORE the artifact
-  exists, which is rule 6's shape applied to a defect instead of a result.*
-  (2) **AND AFTER A MID-RUN REWRITE THE TWO HALVES OF PROVENANCE CANNOT BOTH BE
-  TRUE.** Restoring v12's bytes makes the digest TRUE and
-  `producing_code_is_the_committed_bytes` FALSE -- **a REFUSAL at emit after 1.5 h**;
-  leaving v13 makes the digest FALSE and the guard TRUE. ***No on-disk state
-  satisfies both: the digest describes BYTES, the guard describes the INDEX, and the
-  run belongs to neither.*** **Which is why the repair is a LAUNCH-TIME CAPTURE plus
-  an emit-time refusal and not a choice between the routes** -- *a state that cannot
-  be reached by picking, only by recording earlier.* The census I could check
-  myself: **`producing_code_sha256` at :1271, :4268 and :4345, each a fresh
-  `read_bytes()` of `__file__`, and nothing capturing it at import.**
-  (3) **THE LIVE HAZARD IS CLOSED, AND I MEASURE ONE THING MORE PRECISELY.**
-  `~/ctaNew-wt-de`'s runner hashes **`ba65c248…`** -- the uncommitted edit reversed
-  (caught 09:06:07Z, reversed 09:09:48Z, before the emit) -- and **`~/ctaNew-wt-de2`
-  exists at `2ef2186`.** *One precision: `git status --short` in wt-de is not empty;
-  it carries `?? …declarations/de_multiday_gate1_params_v6.json`, untracked, present
-  in my round-146 reading too.* **The emit predicate reads the RUNNER's bytes, which
-  are restored, so this changes nothing about the emit** -- *but rule 22 asks that
-  further work live in the second worktree, and one artifact has not moved.* ROUTED.
-  (4) **AND MY OWN ROUND-146 RECORD WAS RIGHT IN MECHANISM AND UNDERSTATED THE
-  CONSEQUENCE.** I wrote that the flag *"flips … does not fail in a stable
-  direction."* ***What I did not price: in that state the emit does not record
-  something false -- it REFUSES, and the only sealed day is lost after 1.5 hours of
-  compute.*** *The same measurement, one minute apart, read as INSTABILITY by me and
-  as a LOSS by the coordinator; the difference is carrying what the field DOES
-  downstream.* **My own recurring shape: the headline looser than the artifact.**
-  (5) **THE RULING:** the run is **NOT touched and emits** -- restoring bytes or
-  killing loses the only sealed day -- and **DE supersedes the receipt IN BAND
-  (`.v2`, v1 untouched, the SEALED PAYLOAD untouched) with `producing_code_sha256 =
-  2089d74e…`, attested by THREE independent records named by path: DA's Q-DA-290
-  record, the reviewer's SS0 blob hash, and the receipt's own v12 fingerprints.**
-  ***The correction does not rest on anyone remembering what ran; it rests on three
-  artifacts that agree, one of them being the wrong receipt itself.***
-  (6) **RULE 22 IS IN FORCE, AND THE COORDINATOR NAMED ITS OWN MISS:** *"DE 85 was
-  MY dispatch, at 08:31Z, NINE MINUTES into DE 84's run -- 'LIGHT, while your smoke
-  runs (do not touch the running process…)'. I wrote the words and did not see that
-  landing the module IS touching the process's provenance."* ***The instruction was
-  correct and the model of "touching" was one level too narrow: a process is touched
-  through the FILES IT WILL READ, not only through its memory.*** **Second seat this
-  session to name its own miss in the register rather than have it named.**
-  **FLAG WORDS: the 09-03 smoke RUNNING -- I measure pid 3049132 at 2,983 s (~50
-  min), output artifact ABSENT; its receipt PROVENANCE-WILL-BE-WRONG-AND-SUPERSEDED
-  (v13's digest stamped, v12 ran); rule 22 IN FORCE; the seal-open bar
-  RULED-AS-PREDICATE (R-602), USER-PENDING for overrule.**
-  **AT COMMIT TIME, 2026-09-06T09:14:48Z, TWO LANDINGS AND I RECORD THEM UNSWEPT:**
-  ***(a) DE 86 (`f27298f`) LANDED THE DURABLE REPAIR*** -- the source digest captured
-  at IMPORT (`LAUNCH_SOURCE_SHA256`, `source_identity_at_launch()`, a refusal naming
-  the launch digest, a selftest pinning the emitted value to the launch value), plus
-  the bar-as-predicate and the flipped pin. **So (2)'s "three fresh reads, no launch
-  capture" is now HISTORY at its as-of, and the fix is exactly the one the ruling
-  named.** ***(b) `d82c54d`: DA 73 closed REV 49's five findings*** -- *"closing 2.4
-  took THREE TRIES, each one a defect this seat shipped"*, **a seat counting its own
-  failed attempts in the headline**. *Neither is in this round's dispatch; both are
-  here because the file is what a fresh seat reads first.*
-  MEASURED BEFORE THIS SENTENCE: flags 827 -> 835, flag_provenance 372 -> 380,
-  tasks 19; **225 CHECKED**, 155 RELAYED, **455 UNMARKED -- unchanged for the
-  twenty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2947,6 +2947,95 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  MY_TWO_WAY_PIN_TEST_WAS_WRONG_THE_PIN_IS_DECLARED_ONE_WAY: THE-ANSWER-WAS-PAST-MY-TRUNCATION
+                             # CHECKED 2026-09-06T09:39:31Z -- and this is a correction against my
+                             # own round-149 measurement. **Params v8's `design_declaration` reads
+                             # `pin_direction: "design -> params"` and
+                             # `sha256: "NOT_PINNED_HERE -- the pin runs design -> params"`, with
+                             # `why_flipped`: "each digest cannot depend on the other ... pinning
+                             # design -> params costs nothing, because the design is emitted after the code
+                             # and the params are already final."**
+                             # ***So the reverse direction is not missing -- it is DECLARED ABSENT, and my
+                             # "resolves in NEITHER direction" applied a two-way criterion to a
+                             # deliberately one-way pin.***
+                             # **And the answer was inside the string I had already read: I printed
+                             # `sha256[:16]`, which shows `NOT_PINNED_HERE ` and truncates exactly before
+                             # `-- the pin runs design -> params`.** *Twelfth "suspect the probe first",
+                             # and the first where the artifact told me the answer in a field my own
+                             # FORMATTING cut off.*
+  THE_FORWARD_PIN_NAMES_V2_S_PATH_WITH_V8_S_DIGEST_AND_DE_HAS_NAMED_THAT_MECHANISM: A-QUESTION-NOT-A-RULING
+                             # CHECKED 2026-09-06T09:39:31Z: design v15's `parameters` = **`path:
+                             # live/pm_research/declarations/de_multiday_gate1_params_v2.json`, `sha256:
+                             # 8c3f2676…` (v8's ACTUAL digest), `supersedes: …params_v1.json`,
+                             # `what_v2_changed: [...]`** -- *the object DESCRIBES v2 and carries v8's
+                             # digest.*
+                             # **And DE has already named this mechanism in its own code:** *"OLDEST FIRST.
+                             # `supersedes.path` is the LAST element, never a typed constant -- ***that is
+                             # how v7 came to name v2***"*, and *"THE VERSION LIVES IN ONE PLACE. It
+                             # travelled in THREE and they disagreed ... a reader resolving the receipt
+                             # field walked from v7 straight past v3, v4, v5 and v6."*
+                             # ***I cannot settle from the artifact alone whether v15's `path` is the chain
+                             # ROOT by design or that same mechanism surviving into the design's pin; the
+                             # resolver's verdict is DE's and the coordinator's.*** **ROUTED AS A QUESTION.
+                             # What I can say: a consumer reading `parameters.path` naively gets v2, and
+                             # that is what I did.**
+  PARAMS_V8_IS_ONE_FIELD_WITH_EIGHT_IDS_AND_THE_HORIZON_BESIDE_IT: THE-GATE-IS-ONE-FIELD-NOW
+                             # CHECKED 2026-09-06T09:39:31Z at
+                             # `de_multiday_gate1_params_v8.json` (`P003_DE_MULTIDAY_GATE1_PARAMS_V8`):
+                             # `read_gate.the_bar_is_a_CONJUNCTION` is a list of **EIGHT** objects whose
+                             # ids I read out in order -- **`clock_ge_read_not_before`,
+                             # `six_ruled_days_from_params`, `receipt_at_landing_digest`,
+                             # `at_least_one_admissible_arm`, `ledger_verdict`, `producing_code_locatable`,
+                             # `horizon_fallback_G5_directional`, `params_field_required`** -- with
+                             # **`read_gate.horizon_utc = 2026-09-09T12:00:00Z`** beside them.
+                             # ***Every one of the eight refusals REV 50 demanded is now a NAMED ID in ONE
+                             # field, and both implementations bind to the ids rather than to prose.***
+                             # *Rule 604's "the same field or refuse", made checkable.*
+  THE_STAMP_ANOMALY_IS_A_CHANGEPOINT_NOT_A_HABIT: A-CENSUS-INSTEAD-OF-AN-ANECDOTE
+                             # CHECKED 2026-09-06T09:39:31Z -- I censused DE's fourteen newest
+                             # stamped artifacts, name-stamp minus own `as_of`:
+                             # **ELEVEN are 8-13 SECONDS BEHIND their `as_of`** (name written first, work
+                             # runs, `as_of` follows -- a clock-derived stamp), **and the LAST THREE are
+                             # +730 s, +1,024 s and +1,024 s AHEAD** -- `design_v15` (094500 vs 093250),
+                             # `fixture_run_v16` and `smoke_rehearsal_09_04` (095100 vs 093356).
+                             # ***The three ahead all end in `00`; none of the eleven behind do.***
+                             # **So this is not a habit but a CHANGEPOINT, and it starts at design v15** --
+                             # *which dates the onset and gives DE 88 a signature to look for (round
+                             # minute AND ahead) rather than a general instruction to check stamps.*
+                             # **Rule 12 either way: a stamp must be read from the clock in its own call.**
+  THE_09_04_PREFLIGHT_IS_UNBLOCKED_ON_DESIGN_AND_WAITS_ON_THE_BOOK: P3-IS-GONE
+                             # CHECKED 2026-09-06T09:39:31Z at
+                             # `p003_de_gate1_smoke_rehearsal_09_04__20260906T095100Z.json`:
+                             # **`status: NOT_READY_P2_book_exists_P2_builder_receipt_exists`,
+                             # `blocking: ['P2_book_exists', 'P2_builder_receipt_exists']`** -- ***REV 51
+                             # SS0's `P3_design` block is GONE.*** *The 09-04 run now waits on exactly what
+                             # it should: the book that has not been built, behind the lock the smoke
+                             # holds.*
+  DE_S_FIVE_DEFECTS_WERE_ALL_CAUGHT_BY_RUNNING_NOT_READING: INCLUDING-A-CHECK-THAT-COULD-NEVER-FAIL-IN-A-PREFLIGHT-A-GO-READS
+                             # RELAYED from R-606(A), 2026-09-06T09:39:31Z. **DE's own five: a local
+                             # `per_day, ledger_rows = {}, {}` SHADOWING the parameter; the completeness
+                             # check refusing the very horizon case item 7 exists to ALLOW; the live gate
+                             # evaluation making the FIXTURE touch `data/`; ***`P3_params` comparing the
+                             # params digest WITH ITSELF -- a check that could never fail, sitting in the
+                             # preflight a GO reads***; and a battery emitted from stale code after an
+                             # aborted checkout, TWICE.**
+                             # *"The two addenda both found that my fix for one ruling would have broken
+                             # another."* **Every one caught by RUNNING rather than reading -- the
+                             # reviewer's standing judgement of this seat, confirmed by the seat itself.**
+  DA_75_BOUND_ITS_IDS_TO_DE_S_REAL_V8: TWO-IMPLEMENTATIONS-ONE-VOCABULARY
+                             # RELAYED from R-606(B), 2026-09-06T09:39:31Z. **`da_gate1_day_verdict`
+                             # 46 and `da_race_read_verify` 30 checks; DA's ids match DE's EXACTLY, bound
+                             # against the REAL v8 that landed mid-round; REV 51 SS2.6 and SS3.4 closed as
+                             # filed this time, driven from the CLI.**
+                             # *And DA found one of its OWN checks still matching PROSE while its ids
+                             # matched* -- ***the vocabulary bound and the check unbound, in the same
+                             # instrument.***
+  THE_SMOKE_AT_SEVENTY_SEVEN_MINUTES: THREE-THINGS-WAIT-ON-ONE-ARTIFACT
+                             # CHECKED 2026-09-06T09:39:31Z: pid 3049132 at **4,647 s (~77 min)**,
+                             # output artifact **absent**. ***Its landing triggers THREE queued things at
+                             # once:*** DA's pre-read GO on the real receipt, **DE's `.v2`** carrying the
+                             # digest that actually ran, and **BE 58's lock** (63 refusals at 09:31Z,
+                             # ceiling 10:58Z). *One artifact is the head of three queues.*
   THE_PIN_RESOLVES_IN_NEITHER_DIRECTION_AND_I_COMPUTED_BOTH_DIGESTS: A-CROSS-POINTER-WITH-NO-CHECK-BEHIND-IT
                              # CHECKED 2026-09-06T09:31:36Z: I read both artifacts and hashed the
                              # files myself. **Design v14
@@ -18236,6 +18325,80 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 150, 2026-09-06T09:39:31Z ------------------------------
+  MY_TWO_WAY_PIN_TEST_WAS_WRONG_THE_PIN_IS_DECLARED_ONE_WAY:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v8.json
+    as_of: 2026-09-06T09:39:31Z
+    said: >-
+      params v8's design_declaration reads pin_direction "design -> params" and
+      sha256 "NOT_PINNED_HERE -- the pin runs design -> params", with why_flipped
+      explaining that each digest cannot depend on the other. The reverse direction is
+      declared absent, not missing, so my round-149 "resolves in neither direction"
+      applied a two-way criterion to a one-way pin -- and the answer was inside the
+      string I had already read: I printed sha256[:16], which truncates exactly before
+      "-- the pin runs design -> params".
+  THE_FORWARD_PIN_NAMES_V2_S_PATH_WITH_V8_S_DIGEST_AND_DE_HAS_NAMED_THAT_MECHANISM:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v15__20260906T094500Z.json
+    as_of: 2026-09-06T09:39:31Z
+    said: >-
+      design v15's parameters object is path = .../de_multiday_gate1_params_v2.json,
+      sha256 = 8c3f2676... (v8's actual digest), supersedes = ...params_v1.json,
+      what_v2_changed = [...] -- it describes v2 and carries v8's digest. DE's own
+      code names the mechanism: "OLDEST FIRST. supersedes.path is the LAST element,
+      never a typed constant -- that is how v7 came to name v2", and "THE VERSION
+      LIVES IN ONE PLACE. It travelled in THREE and they disagreed". Whether v15's
+      path is the chain root by design or that mechanism surviving cannot be settled
+      from the artifact alone; routed as a question. A consumer reading
+      parameters.path naively gets v2.
+  PARAMS_V8_IS_ONE_FIELD_WITH_EIGHT_IDS_AND_THE_HORIZON_BESIDE_IT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v8.json
+    as_of: 2026-09-06T09:39:31Z
+    said: >-
+      read_gate.the_bar_is_a_CONJUNCTION is a list of eight objects with ids
+      clock_ge_read_not_before, six_ruled_days_from_params, receipt_at_landing_digest,
+      at_least_one_admissible_arm, ledger_verdict, producing_code_locatable,
+      horizon_fallback_G5_directional, params_field_required, and
+      read_gate.horizon_utc = 2026-09-09T12:00:00Z beside them.
+  THE_STAMP_ANOMALY_IS_A_CHANGEPOINT_NOT_A_HABIT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v15__20260906T094500Z.json
+    as_of: 2026-09-06T09:39:31Z
+    said: >-
+      census of DE's fourteen newest stamped artifacts, name-stamp minus own as_of:
+      eleven are 8-13 seconds BEHIND (a clock-derived stamp written before the work),
+      and the last three are +730 s, +1024 s and +1024 s AHEAD -- design_v15 (094500
+      vs 093250), fixture_run_v16 and smoke_rehearsal_09_04 (095100 vs 093356). The
+      three ahead all end in 00; none of the eleven behind do. A changepoint beginning
+      at design v15, not a long-standing habit, which gives DE 88 a signature (round
+      minute AND ahead) rather than a general instruction.
+  THE_09_04_PREFLIGHT_IS_UNBLOCKED_ON_DESIGN_AND_WAITS_ON_THE_BOOK:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_smoke_rehearsal_09_04__20260906T095100Z.json
+    as_of: 2026-09-06T09:39:31Z
+    said: >-
+      status NOT_READY_P2_book_exists_P2_builder_receipt_exists with blocking
+      ['P2_book_exists', 'P2_builder_receipt_exists'] -- REV 51 section 0's P3_design
+      block is gone and the 09-04 run waits on the book behind the lock the smoke
+      holds.
+  DE_S_FIVE_DEFECTS_WERE_ALL_CAUGHT_BY_RUNNING_NOT_READING:
+    prov: RELAYED
+    from: R-606(A)
+    as_of: 2026-09-06T09:39:31Z
+  DA_75_BOUND_ITS_IDS_TO_DE_S_REAL_V8:
+    prov: RELAYED
+    from: R-606(B)
+    as_of: 2026-09-06T09:39:31Z
+  THE_SMOKE_AT_SEVENTY_SEVEN_MINUTES:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:39:31Z
+    said: >-
+      pid 3049132 at 4,647 s (~77 min) with the output artifact absent; its landing
+      triggers DA's pre-read GO, DE's .v2 carrying the digest that actually ran, and
+      BE 58's lock (63 refusals at 09:31Z, ceiling 10:58Z).
   # --- MEM round 149, 2026-09-06T09:31:36Z ------------------------------
   THE_PIN_RESOLVES_IN_NEITHER_DIRECTION_AND_I_COMPUTED_BOTH_DIGESTS:
     prov: CHECKED

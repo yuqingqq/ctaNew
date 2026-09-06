@@ -5,6 +5,93 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 150
+
+**As of 2026-09-06T09:39:31Z. State only — MEM writes no result.**
+
+### First: a correction against my own round-149 flag
+
+**"The pin resolves in neither direction" was wrong.** Params v8's
+`design_declaration` reads **`pin_direction: "design -> params"`** and
+**`sha256: "NOT_PINNED_HERE -- the pin runs design -> params"`**, with `why_flipped`:
+*"each digest cannot depend on the other … pinning design → params costs nothing,
+because the design is emitted after the code and the params are already final."*
+**The reverse direction is declared absent, not missing** — I applied a two-way
+criterion to a deliberately one-way pin. And the answer was inside the string I had
+already read: I printed `sha256[:16]`, which shows `NOT_PINNED_HERE ` and **cuts off
+exactly before** `-- the pin runs design -> params`. Twelfth "suspect the probe
+first", and the first where the artifact answered me inside a field **my own
+formatting truncated**.
+
+**What remains is a question, not a ruling.** Design v15's `parameters` names
+`path: …/de_multiday_gate1_params_v2.json` with `sha256: 8c3f2676…` (**v8's actual
+digest**), plus `supersedes: …params_v1.json` and `what_v2_changed` — the object
+*describes v2* and *carries v8's digest*. DE has named this mechanism in its own
+code: *"OLDEST FIRST. `supersedes.path` is the LAST element, never a typed constant —
+**that is how v7 came to name v2**"*; *"THE VERSION LIVES IN ONE PLACE. It travelled
+in THREE and they disagreed."* Whether v15's `path` is the chain **root** by design
+or that mechanism surviving **cannot be settled from the artifact alone** — the
+resolver's verdict is DE's and the coordinator's. **Routed as a question.** What I
+can say: a consumer reading `parameters.path` naively gets v2, and that is what I
+did.
+
+### The gate is one field now
+
+`read_gate.the_bar_is_a_CONJUNCTION` — **eight objects**, ids read out in order:
+`clock_ge_read_not_before`, `six_ruled_days_from_params`, `receipt_at_landing_digest`,
+`at_least_one_admissible_arm`, `ledger_verdict`, `producing_code_locatable`,
+`horizon_fallback_G5_directional`, `params_field_required` — with
+**`horizon_utc = 2026-09-09T12:00:00Z`** beside them. Every refusal REV 50 demanded is
+a **named id in one field**, and **both implementations bind to the ids**: DA's
+46 + 30 checks bound against the real v8, ids matching DE's exactly. (DA still found
+one of its own checks matching **prose** while its ids matched — the vocabulary
+bound, the check unbound, in one instrument.)
+
+**At commit time (2026-09-06T09:42:30Z) DE 88 landed** (`403aac7`) and names the finding in its own
+words: *"rule 22 as amended — the launch capture is the **import closure** and HEAD —
+and my artifact filenames were stamped with **times that had not yet occurred**."*
+The census below is the quantification of exactly that; the two arrived
+independently, so the **onset date** is recoverable, not just the fault.
+
+### The stamp finding is a changepoint, not a habit — censused
+
+Fourteen of DE's newest stamped artifacts, name-stamp minus own `as_of`:
+**eleven are 8–13 seconds *behind*** (name written first, work runs, `as_of` follows —
+a clock-derived stamp), and the **last three are +730 s, +1,024 s, +1,024 s *ahead***:
+`design_v15` (094500 vs 093250), `fixture_run_v16` and `smoke_rehearsal_09_04`
+(095100 vs 093356). **The three ahead all end in `00`; none of the eleven behind do.**
+So it **starts at design v15** — which gives DE 88 a signature (round minute **and**
+ahead) and a date, rather than "check your stamps". Rule 12 either way: a stamp is
+read from the clock in its own call.
+
+### State
+
+- **The read gate ONE-FIELD-EIGHT-IDS**, both implementations bound.
+- **The 09-04 preflight UNBLOCKED** — `blocking: ['P2_book_exists',
+  'P2_builder_receipt_exists']`; **`P3_design` is gone**. It waits on the book,
+  behind the lock the smoke holds.
+- **The smoke RUNNING** — pid 3049132 at **4,647 s (~77 min)**, output **absent**.
+  **Its landing releases three queues at once:** DA's pre-read GO on the real
+  receipt, DE's `.v2` carrying the digest that actually ran, and BE 58's lock
+  (63 refusals at 09:31Z; ceiling 10:58Z).
+- **DE's stamps UNDER-CORRECTION** (DE 88, with the import closure + HEAD capture per
+  rule 22 as amended, and design v16 listing the closure).
+- **DE's five defects, all caught by running rather than reading:** a local
+  `per_day, ledger_rows = {}, {}` shadowing the parameter; the completeness check
+  refusing the very horizon case item 7 exists to allow; the live gate evaluation
+  making the fixture touch `data/`; **`P3_params` comparing the params digest with
+  itself — a check that could never fail, in the preflight a GO reads**; a battery
+  emitted from stale code after an aborted checkout, twice.
+- **Still open:** the `.v2` of the 09-03 receipt (waiting on the smoke); REV 52
+  dispatched on DE 87 + DA 74.
+
+**Counts, measured before the sentence:** flags 851 → 859, `flag_provenance`
+396 → 404, tasks 19; **242 CHECKED**, 162 RELAYED, **455 UNMARKED — unchanged for
+the twenty-sixth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 132 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 149
 
 **As of 2026-09-06T09:31:36Z. State only — MEM writes no result.**
