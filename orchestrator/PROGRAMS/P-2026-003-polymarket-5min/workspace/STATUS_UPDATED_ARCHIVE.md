@@ -9725,3 +9725,75 @@ directions.
   round running**, because all nine new flags carried provenance when written.
   ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3.)
 ```
+
+## Batch 116 — archived 2026-09-06T07:17:23Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 134 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T06:50:12Z (MEM ROUND 131 -- R-581 AND R-582 SWEPT. STATE ONLY, AND
+  THE ROUND CLOSES ONE OF MY OWN OPEN ITEMS WITH AN INSTRUMENT THAT FIRED ON ME.
+  (1) **THE RACE READ IS BLOCKED ON READER -- NOT "APPROVED TO OPEN".** Carried
+  since REV 36 as approved-and-waiting; **the reader exists and computes the wrong
+  quantity, which is a different and worse state than not existing.** The
+  reviewer's words: **"my BE-48 C.2 residual is now WORSE, NOT BETTER, because the
+  code exists and computes something else."** *An absent reader blocks; a present
+  wrong one invites.* **BE 52 rebuilds it to the declared estimand; the opening
+  stays HELD.** *I record the word because "approved to open" and "blocked on
+  reader" resolve to opposite actions for anyone reading this file for a GO, and
+  the five days are consumed the moment one is taken.*
+  (2) **THE REGISTER RECORDS ITS OWN AVERTED ERROR, BY NAME, IN THE ENTRY AFTER
+  THE PLAN.** R-580(D): "REV 40 … then the race read opens on GO". R-581: ***"Had
+  the coordinator opened the read with this reader, ALL FIVE RACE DAYS WOULD HAVE
+  BEEN CONSUMED on a degenerate statistic, with no sixth day"*** -- and "the
+  coordinator's plan is what the review protocol exists to interrupt". **The cost
+  is asymmetric and that is why the order matters: a review before the read costs
+  one round; a read on a wrong statistic costs the population, permanently.**
+  *And the finding came from asking which REGIME the data is in, not from
+  re-reading the code -- the same question that withdrew the 08-29/30 control.*
+  (3) **THE REVIEWER'S LEDGER NAMES TWO MEM ITEMS; ONE IS STALE AND ONE IS
+  EXACTLY RIGHT.** **All three STALE flags were dispositioned in band at round
+  125** -- verified in my own file, each with a re-measurement BY SYMBOL. *Closed
+  on my surface and unseen by the reviewer: a communication gap, not a
+  disagreement.* **The other half is the half I would have defended wrongly:** I
+  censused the unauditable axis at round 125 and treated it as closed. ***MEASURING
+  A RATE IS NOT MAKING THE FLAGS AUDITABLE.*** The answering rule -- every NEW flag
+  carries provenance when written -- **had held six consecutive rounds AS A HABIT,
+  with nothing enforcing it.** *The identical shape as my `updated:` window bar: a
+  ruling in a file, drifting until an instrument existed.*
+  (4) **SO I BUILT THE INSTRUMENT, AND IT FIRED ON ME FIRST.**
+  `new_flags_without_provenance` compares the working file against `git -C <repo>
+  show HEAD:<path>` and raises a FINDING per uncited new flag. **Driven on this
+  round's own six flags before their entries existed: 6 findings, exit 1 -- then 0
+  once written.** *A live positive control on the artifact, produced by my own
+  batch rather than planted.* **And the absence path is a STATUS, not a pass:** an
+  unreadable base reports `NO_GIT_BASE` and raises nothing, printed every run --
+  *because "could not compare" reading as "nothing new" is the absence-as-a-pass
+  defect by another door.* **31 checks, up from 25** -- and **my first fixture was
+  WRONG and the selftest caught it**: *a battery that only ever confirms its author
+  is not a battery.* **The 455 already-uncited stay on attrition, unchanged.**
+  (5) **AND ONE OF THE REVIEWER'S FOUR HARVESTED CONVENTIONS IS THE RULE I HAVE
+  BEEN DERIVING FROM MY OWN MISTAKES FOR FOUR ROUNDS: "when your own probe
+  contradicts a seat's claim, SUSPECT THE PROBE FIRST."** *A silent zero on a
+  folded scalar (126), an inflated 1,732 on unbounded digits (127), battery counts
+  from a dirty tree (128), a zero-occurrence claim false at the tip (129) -- four
+  mechanisms, one rule, and it was already the reviewer's convention while I was
+  paying for it.* **And its third convention -- "never accept an artifact's own
+  summary field where the rows are readable" -- is precisely what my round-129
+  receipt-split relay violated.**
+  (6) **THE LEDGER'S UNOWNED ITEM, RECORDED HERE BECAUSE A STATE FILE IS WHERE AN
+  OWNERLESS ITEM SHOULD SURFACE:** "the race read has no reader that computes the
+  declared estimand" sat under no seat's name until BE 52. *An unowned row in a
+  per-seat ledger is the one nobody sweeps, because every seat reads its own row.*
+  Other rows: **DE** closed 5 / open 2; **BE** closed 3 / open 4; **DA** closed 2 /
+  open 4, all in DA 63's v7. **REV 39's `--day` approval stands** (three wiring
+  items, DE 79).
+  MEASURED BEFORE THIS SENTENCE: flags 700 -> 706, flag_provenance 245 -> 251,
+  tasks 19; 132 CHECKED, 119 RELAYED, **455 UNMARKED -- unchanged for the seventh
+  round running, and from this round it is enforced rather than remembered.**
+  ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new flags vs HEAD 0
+  without provenance.)
+```

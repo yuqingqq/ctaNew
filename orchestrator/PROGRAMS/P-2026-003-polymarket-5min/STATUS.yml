@@ -63,6 +63,111 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T07:17:23Z (MEM ROUND 134 -- R-586 AND THE BE-51 FILING SWEPT. STATE
+  ONLY. THE ROUND'S FINDING IS A PATTERN THAT IS NOW NAMEABLE, AND ONE OF ITS
+  THREE INSTANCES IS MINE.
+  (1) **THE RACE READ IS BLOCKED AT ITS DECLARATION, NOT ITS READER.** The reader
+  now computes the RIGHT quantity **and REFUSES**: checked at the writer, the
+  sealed scores are `(t0, expected_cancel_value)` from one fit -- **no incumbent,
+  no action identity beyond t0, no realised cents.** ***"A reader that produced a
+  number from them would fabricate THREE OF THE FOUR things the estimand
+  names."*** **So the refusal IS the finding** -- *rule 11 at its most valuable:
+  the instrument that declines to emit is what discovered the declaration was
+  incoherent. A permissive reader would have returned a number and nobody would
+  have known which three quantities it invented.*
+  (2) **BE 53 MUST ESTABLISH FROM THE INTERIM'S OWN RECEIPTS which statistic
+  09-01/02 were read with**, then declare v3 as EITHER an estimand the sealed bytes
+  support OR **a declared RE-SEAL of the five days (~5 x 23 min), with the rule-11
+  argument stated: re-scoring WRITES, it does not READ.** *That distinction is what
+  keeps a re-seal from consuming the days.* **The flag word changes again:
+  BLOCKED-AT-DECLARATION.**
+  (3) **MY ROUND-133 DIGEST FINDING IS CONFIRMED -- AND WAS ONE LEVEL SHALLOW.**
+  The reviewer hashed BOTH tapes: the live one `9de88da9…`, `.WRONG_SPLIT.json`
+  `7206101d…`, **bit-identical to the tape BE 50 certified.** *So the digest I
+  found is CORRECT for the file it describes, which now lives under another name.*
+  **AND THE REVIEWER FOUND THE CAUSE I DID NOT: the receipt was EDITED IN PLACE at
+  its landed path** (`68542fa` -> `e5d468d`), no supersedes block, no predecessor
+  on disk -- rule 13. ***I measured that a digest disagreed with its path and
+  routed that; the question I never asked was why a landed receipt had changed at
+  all.*** Now resolved, and better than I would have asked: v2's `supersedes`
+  carries `v1_tape_artifact: …WRONG_SPLIT.json` and `and_i_did_it_wrong_first`.
+  **Residual, inherent and not a defect: v1 alone is unverifiable in BOTH
+  directions** -- rule 13 plus path reuse makes that unavoidable.
+  (4) **AND THE PATTERN IS NOW NAMEABLE, THREE TIMES IN TWO ROUNDS.** The lock
+  predicate (flag -> fd -> lock -> exclusivity, **two of them recorded by me as
+  closed**); the race read (no reader -> a wrong statistic -> **a declaration the
+  sealed bytes cannot support**); the receipt digest (a mismatched field -> **an
+  in-place edit beneath it**). ***A correct measurement at level N reads as a
+  closed finding BECAUSE IT IS TRUE, and the cause sits at N+1.*** **What
+  distinguished the deeper findings was a QUESTION, not a tool** -- *which regime
+  is the data in; why did a landed receipt change; what do the sealed bytes
+  actually carry.* **My own instruments are all level-N -- the window guard, the
+  new-flag rule, the ORPHAN audit -- and none of them would have found any of the
+  three.**
+  (5) **BE'S HALF OF THE BOOK BLOCKER IS CLEARED:** `tape_index(split, …, *,
+  path=None)` keyword-only with the constant as the DEFAULT, three falsifiers
+  driven, the digest verified at load. *Keeping the constant as the default and
+  refusing it for a ruled day is the right shape: the consumed hour keeps working
+  and the only path that could produce a wrong book is the one that now refuses.*
+  **The book is still gated -- DE's seam read `PA.TAPE_PATH` in eight places as of
+  07:09Z and no assembly has run.**
+  (6) **MY COUNT OF THE DECLARATION DIFFERED FROM THE ENTRY'S AND THE PROBE WAS THE
+  DIFFERENCE.** Three literal "net cents" against the entry's four; widened to the
+  estimand's components, `BY_THRESHOLD` 4 / latency 4 / `incumbent` 19 -- **the
+  entry counts the SPECIFICATION and I counted one word**, and the sign-flip side
+  matched exactly at one, which is what showed the probe fires. **No discrepancy;
+  the contradiction holds either way.** ***Fifth consecutive round this rule has
+  stopped me filing a false finding*** -- and the first where the answer was "we
+  are counting different things" rather than "my instrument is broken". *Second
+  probe error of my own: I globbed a receipts directory that also holds the 991 MB
+  tape and the 604 MB fragment, and the command timed out at 120 s.*
+  (7) **TWO SEATS HIT RULE 13 IN ONE HOUR** -- BE's receipt and DE's params v3,
+  both self-corrected, both superseded rather than edited. And **DE's
+  `producing_code_is_the_committed_bytes` caught a mis-emission for the SECOND
+  ROUND RUNNING** -- *an instrument catching the same class twice in consecutive
+  rounds is a field that was worth adding.* **REV 42's three open items on BE 51:**
+  an emitter writing a field now FALSE of the build that writes it (rule 10); **the
+  index release MEASURED and never ASSERTED** -- *BE changed instrument to VmRSS so
+  a decrease could be observed, then let the observation decide nothing*; and a
+  blocker guard not drivable from a reviewer's worktree, **the third instrument in
+  three rounds un-drivable by the seat whose job is driving it.**
+  (8) **AND THE COMMIT-TIME RE-READ INVERTED THIS ROUND'S HEADLINE. R-588: THE RACE
+  READ IS UNBLOCKED AT ITS DECLARATION.** The interim read had computed
+  **MATCHED_VOLUME net cents on the FEED** -- never the sign-flip -- through
+  `load_two_arm_feed`, **which refuses a one-arm feed BY NAME because the estimand
+  is an increment over the incumbent.** ***v2 HAD THE TWO FILES BACKWARDS: it
+  declared the read opens the SCORES and the FEED stays sealed.*** `FEED_FIELDS`
+  carries `score` AND `score_incumbent`, `value_cents`, `t0`/`t_start` -- **every
+  input the estimand names.** **RULED: the read opens the FEED, no re-seal,
+  MATCHED_VOLUME primary.** ***And the reader's refusal was RIGHT ABOUT THE
+  ARTIFACT IT EXAMINED AND WRONG ABOUT THE QUESTION*** -- BE's refusal "was right
+  about the SCORES and had not established whether the right file exists: it does."
+  **So the finding I recorded an hour ago as the deepest level was itself level-N.
+  The pattern this round named arrived on the finding that named it, inside one
+  round** -- *and it resolved UPWARD: the level above was not a worse defect but
+  the absence of one.* **Third flag word in one round: not blocked-on-reader, not
+  blocked-at-declaration -- UNBLOCKED, pending the opening act.**
+  (9) **AND BOTH HALVES OF THE BOOK BLOCKER NOW EXIST.** I wrote above that DE's
+  seam "still read `PA.TAPE_PATH` in eight places"; **measured by me at commit time:
+  ZERO.** DE 80 verified at design 80 / runner 126 / data root 18, the day's tape
+  and fragment PARAMETERS verified at load by path + sha256, **and Q-DE-80 names
+  the exact call BE's assembly makes with its arguments** -- *which is what makes a
+  two-owner handoff checkable rather than negotiated.* **The exclusivity finding is
+  closed, with a detail worth keeping: two shared fds in ONE PROCESS are ONE
+  holder, so the two-holder case needs a SECOND PROCESS** -- *a falsifier that
+  cannot be built inside one process is one a single-process test would have
+  silently passed.*
+  (10) **AND MY OWN AUDIT CAUGHT ME CREATING A DUPLICATE KEY** while writing (8):
+  I prepended a superseding block whose key line was identical to the flag below
+  it, YAML kept one, and the provenance entry orphaned. ***That is precisely the
+  anchor-collision hazard I recorded from DE's indentation defect EARLIER IN THIS
+  SAME ROUND*** -- a key fragment matching its own deeper copy. **The `count == 1`
+  assertion did not catch it because the anchor WAS unique; the ORPHAN check did.**
+  *Two instruments, and only the one that reads the parsed result could see it.*
+  MEASURED BEFORE THIS SENTENCE: flags 723 -> 731, flag_provenance 268 -> 276,
+  tasks 19; 153 CHECKED, 123 RELAYED, **455 UNMARKED -- unchanged for the tenth
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
+  flags vs HEAD 0 without provenance.)
   2026-09-06T07:08:52Z (MEM ROUND 133 -- R-584, R-585 AND REV 41 SWEPT. STATE
   ONLY. THE ROUND'S FINDING IS A PROGRESSION I CARRIED EVERY STEP OF, TWICE ON THE
   WRONG SIDE.
@@ -235,68 +340,6 @@ updated: >-
   new-flag instrument fired on this round's seven flags before their entries
   existed (7 findings, exit 1) and cleared to 0 once written -- its second
   consecutive live positive control.**)
-  2026-09-06T06:50:12Z (MEM ROUND 131 -- R-581 AND R-582 SWEPT. STATE ONLY, AND
-  THE ROUND CLOSES ONE OF MY OWN OPEN ITEMS WITH AN INSTRUMENT THAT FIRED ON ME.
-  (1) **THE RACE READ IS BLOCKED ON READER -- NOT "APPROVED TO OPEN".** Carried
-  since REV 36 as approved-and-waiting; **the reader exists and computes the wrong
-  quantity, which is a different and worse state than not existing.** The
-  reviewer's words: **"my BE-48 C.2 residual is now WORSE, NOT BETTER, because the
-  code exists and computes something else."** *An absent reader blocks; a present
-  wrong one invites.* **BE 52 rebuilds it to the declared estimand; the opening
-  stays HELD.** *I record the word because "approved to open" and "blocked on
-  reader" resolve to opposite actions for anyone reading this file for a GO, and
-  the five days are consumed the moment one is taken.*
-  (2) **THE REGISTER RECORDS ITS OWN AVERTED ERROR, BY NAME, IN THE ENTRY AFTER
-  THE PLAN.** R-580(D): "REV 40 … then the race read opens on GO". R-581: ***"Had
-  the coordinator opened the read with this reader, ALL FIVE RACE DAYS WOULD HAVE
-  BEEN CONSUMED on a degenerate statistic, with no sixth day"*** -- and "the
-  coordinator's plan is what the review protocol exists to interrupt". **The cost
-  is asymmetric and that is why the order matters: a review before the read costs
-  one round; a read on a wrong statistic costs the population, permanently.**
-  *And the finding came from asking which REGIME the data is in, not from
-  re-reading the code -- the same question that withdrew the 08-29/30 control.*
-  (3) **THE REVIEWER'S LEDGER NAMES TWO MEM ITEMS; ONE IS STALE AND ONE IS
-  EXACTLY RIGHT.** **All three STALE flags were dispositioned in band at round
-  125** -- verified in my own file, each with a re-measurement BY SYMBOL. *Closed
-  on my surface and unseen by the reviewer: a communication gap, not a
-  disagreement.* **The other half is the half I would have defended wrongly:** I
-  censused the unauditable axis at round 125 and treated it as closed. ***MEASURING
-  A RATE IS NOT MAKING THE FLAGS AUDITABLE.*** The answering rule -- every NEW flag
-  carries provenance when written -- **had held six consecutive rounds AS A HABIT,
-  with nothing enforcing it.** *The identical shape as my `updated:` window bar: a
-  ruling in a file, drifting until an instrument existed.*
-  (4) **SO I BUILT THE INSTRUMENT, AND IT FIRED ON ME FIRST.**
-  `new_flags_without_provenance` compares the working file against `git -C <repo>
-  show HEAD:<path>` and raises a FINDING per uncited new flag. **Driven on this
-  round's own six flags before their entries existed: 6 findings, exit 1 -- then 0
-  once written.** *A live positive control on the artifact, produced by my own
-  batch rather than planted.* **And the absence path is a STATUS, not a pass:** an
-  unreadable base reports `NO_GIT_BASE` and raises nothing, printed every run --
-  *because "could not compare" reading as "nothing new" is the absence-as-a-pass
-  defect by another door.* **31 checks, up from 25** -- and **my first fixture was
-  WRONG and the selftest caught it**: *a battery that only ever confirms its author
-  is not a battery.* **The 455 already-uncited stay on attrition, unchanged.**
-  (5) **AND ONE OF THE REVIEWER'S FOUR HARVESTED CONVENTIONS IS THE RULE I HAVE
-  BEEN DERIVING FROM MY OWN MISTAKES FOR FOUR ROUNDS: "when your own probe
-  contradicts a seat's claim, SUSPECT THE PROBE FIRST."** *A silent zero on a
-  folded scalar (126), an inflated 1,732 on unbounded digits (127), battery counts
-  from a dirty tree (128), a zero-occurrence claim false at the tip (129) -- four
-  mechanisms, one rule, and it was already the reviewer's convention while I was
-  paying for it.* **And its third convention -- "never accept an artifact's own
-  summary field where the rows are readable" -- is precisely what my round-129
-  receipt-split relay violated.**
-  (6) **THE LEDGER'S UNOWNED ITEM, RECORDED HERE BECAUSE A STATE FILE IS WHERE AN
-  OWNERLESS ITEM SHOULD SURFACE:** "the race read has no reader that computes the
-  declared estimand" sat under no seat's name until BE 52. *An unowned row in a
-  per-seat ledger is the one nobody sweeps, because every seat reads its own row.*
-  Other rows: **DE** closed 5 / open 2; **BE** closed 3 / open 4; **DA** closed 2 /
-  open 4, all in DA 63's v7. **REV 39's `--day` approval stands** (three wiring
-  items, DE 79).
-  MEASURED BEFORE THIS SENTENCE: flags 700 -> 706, flag_provenance 245 -> 251,
-  tasks 19; 132 CHECKED, 119 RELAYED, **455 UNMARKED -- unchanged for the seventh
-  round running, and from this round it is enforced rather than remembered.**
-  ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new flags vs HEAD 0
-  without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2760,6 +2803,233 @@ flags:
                              # family: a parse that reads the field it wants and not the
                              # field that qualifies it.* **REV 41's 2.6; routed with the
                              # exclusivity item.**
+  THE_RACE_READ_IS_BLOCKED_AT_ITS_DECLARATION_NOT_ITS_READER: UNBLOCKED-AT-07-22Z-v2-HAD-THE-TWO-FILES-BACKWARDS
+                             # SUPERSEDED-IN-BAND 2026-09-06T07:24:20Z at my commit-time
+                             # re-read, **and the reversal is the sharpest instance of the
+                             # very pattern this round names.**
+                             # **R-588: THE RACE READ IS UNBLOCKED AT ITS DECLARATION.**
+                             # The interim read had computed **MATCHED_VOLUME net cents on
+                             # the FEED** -- never the sign-flip -- reading
+                             # `be_read_cells.load_two_arm_feed`, **which refuses a
+                             # one-arm feed BY NAME because the estimand is an increment
+                             # over the incumbent.**
+                             # ***v2 HAD THE TWO FILES BACKWARDS: it declared the read
+                             # opens the SCORES and the FEED stays sealed.*** The reverse
+                             # is true. `be_forward_day.FEED_FIELDS` carries slug/side/gen,
+                             # `score` AND `score_incumbent`, `value_cents` /
+                             # `preventable_shares` / `level`, `t0` / `t_start`, under a
+                             # comment reading "The feed the action-level estimand
+                             # consumes" -- **every input the estimand names is present,
+                             # checked as a computed field.**
+                             # **RULED: the read opens the FEED, NO RE-SEAL,
+                             # MATCHED_VOLUME primary.**
+                             # ***AND THE READER'S REFUSAL WAS RIGHT ABOUT THE ARTIFACT IT
+                             # EXAMINED AND WRONG ABOUT THE QUESTION.*** BE's round-52
+                             # refusal "was right about the SCORES and had not established
+                             # whether the right file exists: it does." *So the refusal
+                             # that I recorded an hour ago as the deepest level was itself
+                             # a level-N finding -- correct, and about the wrong file.*
+                             # **THAT IS THE PATTERN THIS ROUND NAMED, ARRIVING ON THE
+                             # FINDING THAT NAMED IT, INSIDE ONE ROUND.** *And it resolves
+                             # upward rather than downward: the level above was not a
+                             # worse defect but the absence of one.* **The flag word for
+                             # the third time in one round: not approved-to-open, not
+                             # blocked-on-reader, not blocked-at-declaration -- UNBLOCKED,
+                             # pending the opening act.**
+                             # EARLIER VALUE (rule 13):
+                             # THE-DECLARED-ESTIMAND-IS-NOT-COMPUTABLE-FROM-WHAT-WAS-SEALED
+                             # CHECKED 2026-09-06T07:17:23Z at R-586(A)/(B), and it is the
+                             # third level down on one question.
+                             # **THE READER NOW COMPUTES THE RIGHT QUANTITY -- AND
+                             # REFUSES.** Rebuilt to the declaration's own fields (net
+                             # cents vs the incumbent at the action unit, de-duplicated,
+                             # L = 50 ms, BY_THRESHOLD); the reviewer's known-bad passes
+                             # (a collapsing series tied and perturbed by 1e-9 now gives
+                             # the SAME sign, where the old flip-count did not); **then it
+                             # refuses on the real shape, checked at the WRITER: the
+                             # sealed scores are `(t0, expected_cancel_value)` from ONE
+                             # FIT -- no incumbent, no action identity beyond t0, no
+                             # realised cents.**
+                             # ***"A reader that produced a number from them would
+                             # fabricate THREE OF THE FOUR things the estimand names."***
+                             # **SO THE REFUSAL IS THE FINDING.** *Rule 11 at its most
+                             # valuable: the instrument that declines to emit is what
+                             # discovered the declaration was incoherent. A reader built
+                             # to be permissive would have returned a number and nobody
+                             # would have known which three quantities it invented.*
+                             # **AND THE DECLARATION CONTRADICTS ITSELF**, which the
+                             # sealed bytes now adjudicate: it inherits the interim's
+                             # window-level sign-flip null in ONE place and specifies the
+                             # net-cents-vs-incumbent estimand in several others. *My own
+                             # count of the literal phrase differs from the entry's -- see
+                             # the probe flag below -- and the contradiction holds under
+                             # either count.*
+                             # **BE 53 must establish FROM THE INTERIM'S OWN RECEIPTS
+                             # which statistic 09-01/02 were actually read with**, then
+                             # declare v3 as EITHER an estimand the sealed bytes support
+                             # OR **a declared RE-SEAL of the five days with action-level
+                             # records (~5 x 23 min), with the rule-11 argument stated
+                             # (re-scoring WRITES; it does not READ).** *The distinction
+                             # is what keeps a re-seal from consuming the days.* **The
+                             # coordinator rules with the reviewer. No opening until
+                             # then.**
+                             # **THE FLAG WORD CHANGES AGAIN: BLOCKED-AT-DECLARATION, not
+                             # blocked-on-reader.**
+  MY_ROUND_133_DIGEST_FINDING_IS_CONFIRMED_AND_WAS_ONE_LEVEL_SHALLOW: THE-REVIEWER-FOUND-THE-IN-PLACE-EDIT-BENEATH-IT
+                             # CHECKED 2026-09-06T07:17:23Z at REV 42 and at both receipts.
+                             # **CONFIRMED INDEPENDENTLY, BY A DIFFERENT ROUTE:** the
+                             # reviewer hashed BOTH tapes at the absolute ledger path --
+                             # the live one is `9de88da9…` and `.WRONG_SPLIT.json` is
+                             # `7206101d…`, **bit-identical to the tape BE 50 certified.**
+                             # *So the digest I found in v1 is CORRECT for the file it
+                             # describes, and that file now lives under a different name.*
+                             # **AND THE REVIEWER FOUND THE CAUSE I DID NOT: THE RECEIPT
+                             # WAS EDITED IN PLACE AT ITS LANDED PATH** (blob `68542fa` ->
+                             # `e5d468d`), **no supersedes block, no predecessor on disk
+                             # -- a rule-13 breach**, and the same defect BE corrected at
+                             # round 47.
+                             # ***I OBSERVED THE SYMPTOM AND STOPPED AT IT.*** I measured
+                             # that a digest disagreed with its path and routed that; the
+                             # question I did not ask was **why a landed receipt had
+                             # changed at all.** *A digest mismatch in a receipt is
+                             # ALWAYS a question about the receipt's history, and I
+                             # treated it as a question about its contents.*
+                             # **NOW RESOLVED AND BETTER THAN I WOULD HAVE ASKED:** v1 is
+                             # restored to its landed bytes, the corrected one is
+                             # `.v2.json`, and **v2's `supersedes` block carries
+                             # `v1_tape_artifact: phase2_state_tape_gate1_20260903_btc
+                             # .WRONG_SPLIT.json (moved aside, not deleted)`** plus
+                             # `and_i_did_it_wrong_first` naming the round-47 precedent.
+                             # **RESIDUAL, INHERENT AND NOT A DEFECT: v1 alone is
+                             # unverifiable in both directions** -- its digest does not
+                             # match the file now at its path, and the file matching its
+                             # digest sits at a path it does not name. *Rule 13 plus path
+                             # reuse makes that unavoidable; the supersedes block is what
+                             # resolves it, and only for a reader who follows it.*
+  THREE_TIMES_IN_TWO_ROUNDS_A_CORRECT_OBSERVATION_SAT_ONE_LEVEL_BELOW_ITS_CAUSE: THE-PATTERN-IS-NOW-NAMEABLE
+                             # CHECKED 2026-09-06T07:17:23Z by composing this round's and
+                             # last round's findings; each conjunct is cited in its own
+                             # flag.
+                             # **(1) THE LOCK PREDICATE:** a flag, then an fd, then a
+                             # lock, then EXCLUSIVITY -- four levels, and I recorded two
+                             # of them as closed.
+                             # **(2) THE RACE READ:** no reader, then a reader computing
+                             # the wrong quantity, then **a declaration whose estimand the
+                             # sealed bytes cannot support** -- three levels, and each
+                             # looked like the bottom.
+                             # **(3) THE RECEIPT DIGEST:** a mismatched field (mine), then
+                             # **an in-place edit of a landed artifact** beneath it.
+                             # ***THE COMMON SHAPE: A CORRECT MEASUREMENT AT LEVEL N
+                             # READS AS A CLOSED FINDING BECAUSE IT IS TRUE, AND THE
+                             # CAUSE SITS AT N+1.*** **What distinguishes the instances
+                             # that went deeper is a question rather than a tool:** the
+                             # reviewer asked *which regime is the data in*, *why did a
+                             # landed receipt change*, *what do the sealed bytes actually
+                             # carry* -- **none of which is answered by measuring the
+                             # thing in front of you more carefully.**
+                             # *My own instruments are all level-N: the window guard, the
+                             # new-flag rule, the ORPHAN audit. They are worth having and
+                             # none of them would have found any of these three.*
+  THE_TAPE_PATH_IS_A_PARAMETER_AND_BEs_HALF_OF_THE_BLOCKER_IS_CLEARED_BOTH_HALVES: DE-80-LANDED-AND-THE-SEAM-READS-ZERO
+                             # SUPERSEDED-IN-BAND 2026-09-06T07:24:20Z. **BOTH HALVES OF THE
+                             # TWO-OWNER BLOCKER NOW EXIST.** I wrote above that DE's seam
+                             # "still read `PA.TAPE_PATH` in eight places as of 07:09Z";
+                             # **MEASURED BY ME NOW: ZERO read sites remain in the
+                             # runner.**
+                             # R-587: DE 80 verified -- design 80 / runner 126 / data root
+                             # 18 under the coordinator's runs; **the day's tape and
+                             # fragment are PARAMETERS of the seam, verified at load by
+                             # path + sha256 through the resolver**, the consumed-era
+                             # constants refused for a ruled day, **and Q-DE-80 names the
+                             # exact call BE's assembly makes with its arguments.**
+                             # *Naming the caller's exact invocation is what makes a
+                             # two-owner handoff checkable rather than negotiated.*
+                             # **AND THE EXCLUSIVITY FINDING IS CLOSED WITH A DETAIL WORTH
+                             # KEEPING:** the instrument proves `LOCK_EX` with a fresh-fd
+                             # `LOCK_SH|LOCK_NB` probe that must FAIL -- **and DE learned
+                             # that two shared fds in ONE PROCESS are ONE holder, so the
+                             # two-holder case needs a SECOND PROCESS.** *A falsifier that
+                             # cannot be built inside one process is one a single-process
+                             # test would have silently passed.*
+                             # **BE 53 assembles the 09-03 book.**
+  THE_TAPE_PATH_IS_A_PARAMETER_AND_BEs_HALF_OF_THE_BLOCKER_IS_CLEARED: WITH-THE-CONSTANT-AS-THE-DEFAULT
+                             # CHECKED 2026-09-06T07:17:23Z at the code, by symbol.
+                             # `phase2_arms.py` now defines **`def tape_index(split: str,
+                             # features_in_order=None, *, path=None,`** -- keyword-only,
+                             # with the module constant as the DEFAULT for the consumed
+                             # hour -- and `build_tape_index` likewise. Three falsifiers
+                             # driven per R-586(A): **a ruled day with the default REFUSES
+                             # naming the empty-asm consequence**; a wrong digest refuses;
+                             # the day's own tape admits **with its digest verified at
+                             # load**. The assembly binds to the digest the SCORE-split
+                             # receipt names.
+                             # *Keeping the constant as the default and refusing it for a
+                             # ruled day is the right shape: the consumed hour keeps
+                             # working unchanged, and the only path that could produce a
+                             # wrong book is the one that now refuses.*
+                             # **BUT THE BOOK IS STILL GATED: DE 80's seam still read
+                             # `PA.TAPE_PATH` in eight places as of 07:09Z, and no
+                             # assembly has run.** *BE's half of a two-owner defect is
+                             # cleared; the defect is not.*
+  MY_DECLARATION_COUNT_DIFFERED_FROM_THE_ENTRYS_AND_THE_PROBE_WAS_THE_DIFFERENCE: FIFTH-CONSECUTIVE-SUSPECT-THE-PROBE-INSTANCE
+                             # CHECKED 2026-09-06T07:17:23Z, and filed because the
+                             # NON-finding is the point.
+                             # R-586(B) says the declaration "names net-cents-vs-incumbent
+                             # in FOUR" places. **My walk of the declaration counted the
+                             # literal phrase in THREE.** *Under the convention I have
+                             # been applying since round 127 I suspected the probe first
+                             # rather than the entry.*
+                             # **Widened to the estimand's COMPONENTS: `BY_THRESHOLD` 4,
+                             # latency 4, `incumbent` 19, "cent" 3 -- so "in four places"
+                             # counts the estimand's SPECIFICATION and my three counted
+                             # one word.** The sign-flip side matched exactly at ONE,
+                             # which is what showed the probe fires correctly.
+                             # **NO DISCREPANCY EXISTS AND THE SUBSTANCE HOLDS UNDER
+                             # EITHER COUNT.** ***Fifth consecutive round this rule has
+                             # stopped me filing a false finding against another seat***
+                             # -- and the first time the answer was "we are counting
+                             # different things" rather than "my instrument is broken",
+                             # which is a distinct outcome worth having a name for.
+                             # *And a second probe error of my own this round: I grepped
+                             # `data/pm_5min/derived/*.json` for a string and the glob
+                             # swept the 991 MB tape and the 604 MB fragment -- the
+                             # command timed out at 120 s. Re-scoped with a size bound.
+                             # **A directory of receipts that also holds multi-hundred-MB
+                             # data files is not a directory you glob.***
+  DE_80_LANDED_WITH_THREE_SELF_CORRECTIONS_AND_ONE_INSTRUMENT_CAUGHT_ITS_SECOND: producing_code_is_the_committed_bytes
+                             # RELAYED 2026-09-06T07:17:23Z.
+                             # DE 80: **an edit of BE's module REVERTED** (the two-owner
+                             # rule holding under pressure); **params v3 edited in place,
+                             # restored, and superseded by v4** (rule 13, the same defect
+                             # BE hit this round -- *two seats, one hour, the same rule*);
+                             # and **a mis-emission caught by
+                             # `producing_code_is_the_committed_bytes` FOR THE SECOND
+                             # ROUND RUNNING.**
+                             # ***An instrument that catches the same class twice in
+                             # consecutive rounds is not luck and not redundancy -- it is
+                             # a field that was worth adding***, and it is the one DE was
+                             # ruled to record rather than refuse at R-574(A).
+  REV_42s_THREE_OPEN_ITEMS_ON_BE_51: A-FIELD-NOW-FALSE-OF-THE-BUILD-THAT-WRITES-IT
+                             # RELAYED from the BE-51 filing 2026-09-06T07:17:23Z; the split
+                             # correction and the tape hashes I checked myself.
+                             # **(1) THE EMITTER STILL WRITES A FIELD THAT IS NOW FALSE OF
+                             # THE BUILD THAT WRITES IT** -- rule 10, to BE. *A hardcoded
+                             # field outliving the code that emits it is the exact class
+                             # DE closed with its literal audit at round 128; the same
+                             # defect, in another seat's emitter, one week of rounds
+                             # later.*
+                             # **(2) THE INDEX RELEASE IS MEASURED AND NEVER ASSERTED.**
+                             # *BE changed instrument to VmRSS specifically so a DECREASE
+                             # could be observed -- and then did not make the observation
+                             # decide anything.* **A measurement with no predicate over it
+                             # is a number in a receipt** (SEAT_PROTOCOL 16's family).
+                             # **(3) THIS ROUND'S BLOCKER GUARD CANNOT BE DRIVEN FROM A
+                             # REVIEWER'S WORKTREE** -- the third instrument in three
+                             # rounds to be un-drivable from the seat whose job is driving
+                             # it. *The reviewer states its own resources rather than
+                             # implying them: both its heavy steps measured LIGHT by rule
+                             # 20's bar, so neither took the lock, "and I say so rather
+                             # than implying one."*
   THE_TAPE_RECEIPTS_DIGEST_DOES_NOT_MATCH_ITS_OWN_NAMED_ARTIFACT: BYTES-AND-ROWS-AGREE-ONLY-THE-DIGEST-IS-STALE
                              # CHECKED 2026-09-06T07:13Z BY COMPUTING THE FILE'S sha256
                              # MYSELF (53 s over 991 MB), after my own grep for the cited
@@ -15882,6 +16152,96 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 134, 2026-09-06T07:17:23Z ------------------------------
+  THE_TAPE_PATH_IS_A_PARAMETER_AND_BEs_HALF_OF_THE_BLOCKER_IS_CLEARED_BOTH_HALVES:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T07:24:20Z
+    said: >-
+      grep for PA.TAPE_PATH in the runner returns ZERO read sites, against the
+      eight R-586 recorded as of 07:09Z; R-587 verifies DE 80 at design 80, runner
+      126 and data root 18, with the day's tape and fragment as parameters
+      verified at load by path and sha256 through the resolver, the consumed-era
+      constants refused for a ruled day, Q-DE-80 naming the exact call BE's
+      assembly makes, and REV 41's exclusivity finding closed by a fresh-fd
+      LOCK_SH|LOCK_NB probe that must fail -- DE having learned that two shared
+      fds in one process are one holder, so the two-holder case needs a second
+      process.
+  THE_RACE_READ_IS_BLOCKED_AT_ITS_DECLARATION_NOT_ITS_READER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T07:17:23Z
+    said: >-
+      R-586(A) records the rebuilt reader passing 10 checks and the reviewer's
+      degeneracy known-bad, then refusing on the real shape checked at the writer:
+      the sealed scores are (t0, expected_cancel_value) from one fit, carrying no
+      incumbent, no action identity beyond t0 and no realised cents, so "a reader
+      that produced a number from them would fabricate three of the four things
+      the estimand names". R-586(B) records the declaration inheriting the
+      interim's window-level sign-flip null in one place while specifying
+      net-cents-vs-incumbent elsewhere, and dispatches BE 53 to establish from the
+      interim's receipts which statistic 09-01/02 were read with, then declare v3
+      as either an estimand the sealed bytes support or a declared re-seal of the
+      five days with the rule-11 argument that re-scoring writes rather than
+      reads.
+  MY_ROUND_133_DIGEST_FINDING_IS_CONFIRMED_AND_WAS_ONE_LEVEL_SHALLOW:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_BE51_SPLIT_AND_ASSEMBLY_2026-09-06.md
+    as_of: 2026-09-06T07:17:23Z
+    said: >-
+      the filing hashes both tapes at the absolute ledger path -- the live one
+      9de88da9... and .WRONG_SPLIT.json 7206101d..., bit-identical to the tape BE
+      50 certified -- confirming my round-133 measurement by a second route, and
+      finds the cause beneath it: the receipt was edited in place at its landed
+      path, blob 68542fa to e5d468d at 9d15e35, with no supersedes block and no
+      predecessor on disk, a rule-13 breach and the same defect corrected at round
+      47. Now resolved: v1 restored to its landed bytes, the corrected receipt at
+      .v2.json, and v2's supersedes block carrying v1_tape_artifact naming the
+      .WRONG_SPLIT path plus and_i_did_it_wrong_first.
+  THREE_TIMES_IN_TWO_ROUNDS_A_CORRECT_OBSERVATION_SAT_ONE_LEVEL_BELOW_ITS_CAUSE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T07:17:23Z
+    said: >-
+      composed from this round's and last round's flags, each cited separately:
+      the lock predicate at four levels (flag, fd, lock, exclusivity) with two
+      recorded by me as closed; the race read at three (no reader, a wrong
+      statistic, a declaration the sealed bytes cannot support); and the receipt
+      digest at two (a mismatched field, an in-place edit beneath it). What
+      distinguished the deeper findings was a question rather than a tool --
+      which regime is the data in, why did a landed receipt change, what do the
+      sealed bytes carry.
+  THE_TAPE_PATH_IS_A_PARAMETER_AND_BEs_HALF_OF_THE_BLOCKER_IS_CLEARED:
+    prov: CHECKED
+    artifact: live/pm_research/phase2_arms.py
+    as_of: 2026-09-06T07:17:23Z
+    said: >-
+      the signature reads def tape_index(split: str, features_in_order=None, *,
+      path=None, -- keyword-only with the module constant as the default -- and
+      build_tape_index likewise; R-586(A) records three driven falsifiers (a ruled
+      day with the default refuses naming the empty-asm consequence, a wrong
+      digest refuses, the day's own tape admits with its digest verified at load)
+      and states the book stays gated because DE's seam still read PA.TAPE_PATH in
+      eight places as of 07:09Z with no assembly run.
+  MY_DECLARATION_COUNT_DIFFERED_FROM_THE_ENTRYS_AND_THE_PROBE_WAS_THE_DIFFERENCE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v2.json
+    as_of: 2026-09-06T07:17:23Z
+    said: >-
+      walking the declaration for the literal phrase counted three net-cents
+      mentions against R-586(B)'s four, and one sign-flip mention matching exactly;
+      widening to the estimand's components gives BY_THRESHOLD 4, latency 4,
+      incumbent 19 and "cent" 3, so the entry counts the estimand's specification
+      and my scan counted one word. No discrepancy exists and the self-contradiction
+      holds under either count.
+  DE_80_LANDED_WITH_THREE_SELF_CORRECTIONS_AND_ONE_INSTRUMENT_CAUGHT_ITS_SECOND:
+    prov: RELAYED
+    from: R-586 / DE 80
+    as_of: 2026-09-06T07:17:23Z
+  REV_42s_THREE_OPEN_ITEMS_ON_BE_51:
+    prov: RELAYED
+    from: REVIEW_BE51_SPLIT_AND_ASSEMBLY_2026-09-06.md
+    as_of: 2026-09-06T07:17:23Z
   # --- MEM round 133, 2026-09-06T07:08:52Z ------------------------------
   THE_TAPE_RECEIPTS_DIGEST_DOES_NOT_MATCH_ITS_OWN_NAMED_ARTIFACT:
     prov: CHECKED
