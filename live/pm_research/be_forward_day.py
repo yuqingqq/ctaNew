@@ -2176,6 +2176,26 @@ def run_forward_day(day: str, outdir: Path) -> int:
     rc = 0
     try:
         _adm = gate("user_admission", lambda: admitted_verdict(day))
+        # C-1 (reviewer 7a0c62e): `{"gate": "user_admission", "result":
+        # "PASS"}` READS AS THE OPPOSITE OF ITS MEANING on a day with no
+        # admission -- there the gate passes BECAUSE NONE WAS NEEDED, and a
+        # reader scanning the gate list sees "a user admission passed". The
+        # row now says WHICH CASE IT IS. 09-03 genuinely carries one
+        # ("RE-VERDICT UNDER A USER RULING"); 09-04 and 09-05 carry none and
+        # their rows said exactly what 09-03's said.
+        #
+        # `admission` and `means` are NOT in DECISION_VOCAB -- checked: the
+        # vocabulary is scanned over KEYS and it holds `gate`, which is why
+        # `gates[].gate` is the one excused path. These add no exemption.
+        rec["gates"][-1]["admission"] = (
+            _adm["record"].get("ADMISSION", "PRESENT_UNNAMED")
+            if _adm else "NONE")
+        rec["gates"][-1]["means"] = (
+            "an admission covers this day and the gate accepted it"
+            if _adm else
+            "NO admission covers this day. The gate passes because the "
+            "ORDINARY path applies and none was required -- it does NOT "
+            "mean an admission was granted")
         # rule 14 again: `admitted` is a decision-shaped NAME, and
         # `assert_no_decision_field` refused it. The record says what is
         # true without wearing an entitlement's clothes.
@@ -3637,6 +3657,13 @@ def selftest() -> int:
            f"{_pass9} passing ahead of it — and its receipt WRITES; a "
            f"fixture-only control let the post-condition refuse every real "
            f"receipt without the suite noticing (rule 17)")
+        _g9 = [g for g in _r9["gates"] if g["gate"] == "user_admission"]
+        ok(len(_g9) == 1 and _g9[0].get("admission") == "NONE"
+           and "does NOT mean an admission was granted" in _g9[0].get("means", ""),
+           f"C-1 POSITIVE CONTROL: on a day with NO admission the gate row "
+           f"carries admission={_g9[0].get('admission')!r} and says in words "
+           f"that passing is not a grant. Before this the row read as its own "
+           f"opposite, and 09-04's said exactly what 09-03's said")
         ok(_r9["user_admission"] == {
                "no_admission_covers_this_day": True,
                "note": "the ordinary gate applies, unchanged"},

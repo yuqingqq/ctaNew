@@ -1,0 +1,51 @@
+{
+ "THE_GAP": {
+  "identical_across_both_pinned_heads": true,
+  "per_head": {
+   "incumbent_linear_d": 1309,
+   "q1_arrival_composed_lgbm": 1309
+  },
+  "reading": "IDENTICAL across both heads, so the drop is a property of the ASSEMBLY and not of either model",
+  "value": 1309
+ },
+ "as_of_utc": "2026-09-06T03:54:14Z",
+ "cause_named_at_its_own_source": {
+  "docstring": "the scorer refuses a generation whose rows the feature pass dropped -- correctly, since scoring it would be scoring from nothing -- so the exclusion happens HERE, before scoring, and is COUNTED (rule 4)",
+  "module": "de_section81_arms.stream",
+  "quoted_not_paraphrased": true,
+  "status_field": "excluded_no_assembled_score"
+ },
+ "consequence_for_the_null": "be_cancel_axis_null.load() builds its decision population by this exact membership test, so these generations cannot be drawn: they have no score to threshold.",
+ "decides_nothing": "REPORTED (rule 14).",
+ "file": {
+  "bytes": 28018021,
+  "path": "/home/yuqing/ctaNew-wt-be/data/pm_5min/derived/de_section81_cache_12.pkl",
+  "sha256": "ee1f150b263c1c9a869c2623db242e46d7fd94c4485e5b4f5681b7ca2a8baa22"
+ },
+ "protocol": "BE_GENERATION_COUNT_DERIVATION_V1",
+ "stage_1": {
+  "count": 31122,
+  "expression": "sum(len(ref[slug][side]) for slug, side)",
+  "n_slugs": 12,
+  "sides": [
+   "BUY_UP",
+   "SELL_UP"
+  ],
+  "what": "every generation in the reference, both sides, all slugs"
+ },
+ "stage_2_by_head": {
+  "incumbent_linear_d": {
+   "dropped": 1309,
+   "len_gen_scores": 29813,
+   "membership_test": "(slug, side, float(g['t0'])) in gen_scores",
+   "stage2_rows_kept": 29813
+  },
+  "q1_arrival_composed_lgbm": {
+   "dropped": 1309,
+   "len_gen_scores": 29813,
+   "membership_test": "(slug, side, float(g['t0'])) in gen_scores",
+   "stage2_rows_kept": 29813
+  }
+ },
+ "this_is_BEs_derivation_only": "it publishes WHICH FILE, WHICH STAGE and WHICH COUNT so BE's and DE's derivations can be compared by digest and count. It makes NO claim about DE's cache and does not assert the two files are identical -- that is the thing 0fe061b said was not established."
+}

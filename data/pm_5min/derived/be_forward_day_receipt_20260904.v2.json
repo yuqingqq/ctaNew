@@ -1,0 +1,50 @@
+{
+ "as_of_utc": "2026-09-06T03:53:31Z",
+ "carrying_commit": "3990df6444edecc794c9df5093cea17d4511a77c",
+ "corrected_gate_row": {
+  "admission": "NONE",
+  "gate": "user_admission",
+  "means": "NO admission covers this day. The gate passes because the ORDINARY path applies and none was required -- it does NOT mean an admission was granted",
+  "result": "PASS"
+ },
+ "day": "20260904",
+ "decides_nothing": "REPORTED (rule 14).",
+ "every_other_byte_identical": {
+  "every_other_byte_identical": true,
+  "how_checked": "the v2 with the added keys REMOVED is serialised canonically and compared to v1 byte-for-byte",
+  "keys_added": [
+   "gates[user_admission].admission",
+   "gates[user_admission].means"
+  ],
+  "n_keys_added": 2,
+  "v1_canonical_bytes": 22538,
+  "v1_canonical_sha256": "9ec7fc79e588cc21a1c1a2a60ccb1b44b93f55a93a08d2c6ba0b016f310417ed",
+  "v2_stripped_canonical_bytes": 22538,
+  "v2_stripped_canonical_sha256": "9ec7fc79e588cc21a1c1a2a60ccb1b44b93f55a93a08d2c6ba0b016f310417ed"
+ },
+ "label_derived_from": "the receipt's OWN `user_admission` block, by the same expression the fixed scorer uses -- a supersession, not a second opinion",
+ "no_sealed_file_read": true,
+ "protocol": "BE_FORWARD_DAY_RECEIPT_C1_SUPERSEDE_V2",
+ "scorer_fixed_so_no_future_day_needs_this": {
+  "excused_paths_unchanged": [
+   "gates[].gate"
+  ],
+  "keys_added_to_the_row": [
+   "admission",
+   "means"
+  ],
+  "module": "be_forward_day.py",
+  "not_in_DECISION_VOCAB": true,
+  "positive_control": "the driver's own suite now asserts a no-admission day carries admission=NONE and says in words that passing is not a grant"
+ },
+ "seal_state": "SEALED -- NOT OPENED BY THIS ACT",
+ "supersedes_receipt": {
+  "bytes": 26894,
+  "path": "data/pm_5min/derived/be_forward_day_receipt_20260904.json",
+  "sha256": "8f08b089c5989dfe422f1f604a98b537ed2710c531167dc741cf90a58867eeb2",
+  "status": "UNTOUCHED, kept as provenance (rule 13). A frozen artifact is never edited; the correction supersedes IN-BAND as this vN+1 receipt."
+ },
+ "supersedes_version": 1,
+ "what_this_receipt_changes": "ONE LABEL, on one gate row, and nothing else. `gates[user_admission]` now carries `admission` and `means` so the row says WHICH case it is. The scores, the run that produced them, every gate result, every count and every hash are unchanged.",
+ "why": "C-1 (reviewer 7a0c62e). `{\"gate\": \"user_admission\", \"result\": \"PASS\"}` reads as *a user admission passed*. On a day carrying none the gate passes BECAUSE NONE WAS NEEDED -- the opposite of what the row says. 09-03 has one; 09-04 and 09-05 do not, and their rows were identical to 09-03's."
+}

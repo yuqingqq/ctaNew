@@ -1,0 +1,194 @@
+{
+ "COIN_SET_AND_IT_IS_A_CONSTRAINT_NOT_A_CHOICE": {
+  "PROPOSED_and_awaiting_ruling": "btc for all five days, with eth as a declared extension only if the day-1 measurement leaves room. Declaring two coins and delivering one is the failure mode; one is declared.",
+  "n_scoreable": 2,
+  "probe": {
+   "bnb": {
+    "CONDVALUE_X_SKEW": {
+     "available": false,
+     "refusal": "ScoreStreamRefused"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "available": false,
+     "refusal": "ScoreStreamRefused"
+    },
+    "scoreable": false
+   },
+   "btc": {
+    "CONDVALUE_X_SKEW": {
+     "available": true,
+     "theta": 0.32450609461933483
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "available": true,
+     "theta": 0.43525926488298716
+    },
+    "scoreable": true
+   },
+   "doge": {
+    "CONDVALUE_X_SKEW": {
+     "available": false,
+     "refusal": "ScoreStreamRefused"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "available": false,
+     "refusal": "ScoreStreamRefused"
+    },
+    "scoreable": false
+   },
+   "eth": {
+    "CONDVALUE_X_SKEW": {
+     "available": true,
+     "theta": 0.06860842745659537
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "available": true,
+     "theta": 0.08987090319081104
+    },
+    "scoreable": true
+   },
+   "hype": {
+    "CONDVALUE_X_SKEW": {
+     "available": false,
+     "refusal": "ScoreStreamRefused"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "available": false,
+     "refusal": "ScoreStreamRefused"
+    },
+    "scoreable": false
+   },
+   "sol": {
+    "CONDVALUE_X_SKEW": {
+     "available": false,
+     "refusal": "ScoreStreamRefused"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "available": false,
+     "refusal": "ScoreStreamRefused"
+    },
+    "scoreable": false
+   },
+   "xrp": {
+    "CONDVALUE_X_SKEW": {
+     "available": false,
+     "refusal": "ScoreStreamRefused"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "available": false,
+     "refusal": "ScoreStreamRefused"
+    },
+    "scoreable": false
+   }
+  },
+  "scoreable_at_the_pinned_thetas": [
+   "btc",
+   "eth"
+  ],
+  "structurally_absent": [
+   "bnb",
+   "doge",
+   "hype",
+   "sol",
+   "xrp"
+  ],
+  "the_existing_cache_is_narrower_still": {
+   "arms_assembled": "btc only \u2014 the consumed hour's cache assembles ('btc', both heads) and no eth",
+   "cache": "/home/yuqing/ctaNew-wt-be/data/pm_5min/derived/de_section81_cache_12.pkl",
+   "sha256": "ee1f150b263c1c9a869c2623db242e46d7fd94c4485e5b4f5681b7ca2a8baa22"
+  },
+  "why": "five of the seven coins have NO threshold at either pinned head and raise ScoreStreamRefused. They are absent at SELECTION and no amount of running buys them."
+ },
+ "DAY_1_FIRST_AND_ALONE": {
+  "and_all_five_run_regardless_of_the_interim": "declared here so an interim result cannot stop the run",
+  "economic_fields_SEALED_until_all_five_are_run": true,
+  "minimum_decisions_per_arm_per_day": "TO BE DECLARED FROM DAY 1's MEASUREMENT, before day 2 is built \u2014 it cannot be declared honestly from the hour, whose arms made 1,154 and 106 decisions over 12 windows",
+  "reviewer_items": [
+   4,
+   5
+  ],
+  "rule": "ONE day is built and measured before the other four. It discharges the 'same cascade' premise, which \u00a7A.4 calls LIVE rather than hypothetical, and it measures the scaling assumption above.",
+  "small_but_nonzero_null_sd": "REPORTED with the cell and the cell marked; no floor is invented here"
+ },
+ "DRAW_POOL_CONVENTION_DECLARED_EITHER_WAY": {
+  "AND_THE_FACT_THAT_SETTLES_IT_HERE": "on the measured hour BOTH heads score the SAME 29,813 generations (measured, both drops equal 1,309), so the shared pool and a per-arm pool are THE SAME SET and the choice is empty on this book.",
+  "is_that_intended": "YES, AND HERE IS THE ARGUMENT \u2014 but it is declared, not assumed, because it is a denominator question and those have cost this programme two rounds.",
+  "the_argument": "the null matches each arm's DECISION COUNT separately; the pool is the set of generations a decision could have been taken on. If the two heads scored different generation sets, a per-arm pool would make the two nulls non-comparable \u2014 each arm would be drawing from a different universe.",
+  "what_must_be_checked_per_day": "that equality is a MEASUREMENT of the hour, not a guarantee. The builder must assert set(gen_scores[CONDVALUE]) == set(gen_scores[HAZARD]) per day and REFUSE the day if it fails, because then the shared pool is a real choice and this declaration does not cover it.",
+  "what_the_loader_does_today": "rows is built from CONDVALUE's head ONLY, and both arms draw from that one pool"
+ },
+ "INPUTS_PER_DAY": {
+  "days": [
+   "20260901",
+   "20260902",
+   "20260903",
+   "20260904",
+   "20260905"
+  ],
+  "digests_recorded_per_day": [
+   "the day book's own sha256",
+   "each pinned head's model sha256",
+   "each theta"
+  ],
+  "reference_source": "the same selection the forward scorer used, per day",
+  "run_time_verification": "theta and model digests are RECOMPUTED at build time and compared to the pinned values; a mismatch REFUSES that day (reviewer item 6 \u2014 recording a digest is not verifying it)"
+ },
+ "NOT_MINE_AND_NOT_DECLARED_HERE": [
+  "DE's null design",
+  "the day set's re-derivation on quality and the fixing of G (reviewer item 7) \u2014 that is the coordinator's",
+  "whether 08-29 is admissible"
+ ],
+ "OUTPUT": {
+  "digest_scheme": "sha256 of the pickle, emitted in a sidecar receipt be_daybook_<DAY>.json AND recomputed by the reader at read time; a mismatch refuses that day",
+  "path_scheme": "data/pm_5min/derived/be_daybook_<DAY>.pkl",
+  "population_source_sha256_travels_in_the_null": "already implemented \u2014 be_cancel_axis_null v2 emits population.source_sha256 at run time",
+  "why_a_sidecar": "the pickle is far over 1 MB and is pinned by digest, not committed; the receipt is small and commits with its code"
+ },
+ "RESOURCES": {
+  "assumption_stated": "replay cost is LINEAR in stream length. That is an assumption, not a measurement -- the policy walks the stream once, but state growth is not verified at day scale. IT MUST BE MEASURED ON DAY 1 BEFORE THE OTHER FOUR ARE BUILT.",
+  "basis": "MEASURED 0.35 s for one replay of a 29,813-generation stream (round 43, 12 windows)",
+  "generations_per_coin_day": 715512.0,
+  "generations_per_window": 2484.4166666666665,
+  "memory": {
+   "cap": "8G, NOT raised (R-174)",
+   "measured_peak_gb_on_the_hour": 0.27,
+   "naive_scaled_gb": 6.48,
+   "the_honest_statement": "a naive linear scale exceeds nothing, but memory is NOT linear in the same way wall time is and this is NOT a prediction. Day 1 measures it; if a day does not fit under 8G the day is REFUSED, not run at a raised cap."
+  },
+  "projected_h_five_days_one_coin": 11.666666666666664,
+  "projected_h_five_days_two_coins": 23.33333333333333,
+  "projected_h_per_day_both_arms": 2.333333333333333,
+  "projected_s_per_arm_per_day": 4199.999999999999,
+  "projected_s_per_day_both_arms": 8399.999999999998,
+  "projected_s_per_replay": 8.399999999999999,
+  "scale_factor_vs_the_measured_hour": 24.0
+ },
+ "THE_BLOCKING_FACT_CONFIRMED_AT_MY_OWN_LOADER": {
+  "confirmed_by_this_seat": true,
+  "consequence": "the day-book must be a SCORED book. A book with reference + statuses + population + n_slugs + terminal_marks and no `asm` raises, and the null cannot be built at all.",
+  "reviewer": "be03d4d \u00a7A.3",
+  "site": "be_cancel_axis_null.py load() -- c['asm'], then asm['by_arm'][(COIN, head)][0]"
+ },
+ "THE_RESPONSE_TO_AN_OVERRUN_IS_WRITTEN_DOWN": {
+  "reviewer_item": 8,
+  "rule": "THE DAY IS REFUSED. Draws are NOT cut below the declared 500 and the 8G cap is NOT raised (R-174).",
+  "what_a_refusal_looks_like": "the day is reported with its status and its measured cost, and the race of books is short by that day \u2014 stated, never silently dropped (rule 4).",
+  "why_not_fewer_draws": "n was declared from a measurement with stated headroom; cutting it after seeing the clock is choosing a null's resolution on the basis of cost, which is rule 11's shape in a new place."
+ },
+ "WHAT_asm_WILL_CONTAIN": {
+  "and_what_it_costs": "generations with no assembled score cannot be drawn. On the measured hour that is 1,309 of 31,122 (4.2%), identical for both heads \u2014 see be_generation_count_derivation_v1.json.",
+  "both_arms_pinned": true,
+  "heads": {
+   "CONDVALUE_X_SKEW": "q1_arrival_composed_lgbm",
+   "HAZARD_OVER_SKEWED_REF": "incumbent_linear_d"
+  },
+  "membership_test_the_loader_uses": "(slug, side, float(g['t0'])) in gen_scores",
+  "shape": "asm['by_arm'][(coin, head)] -> (gen_scores, ...) where gen_scores is keyed (slug, side, float(t0))"
+ },
+ "as_of_utc": "2026-09-06T03:58:00Z",
+ "builds_nothing": true,
+ "decides_nothing": "REPORTED (rule 14).",
+ "protocol": "BE_DAYBOOK_BUILDER_DECLARATION_V1",
+ "scope": "this declaration covers the BOOK only. It does not design DE's null and adjudicates nothing (rule 14).",
+ "status": "DECLARED \u2014 NOTHING BUILT. No build until DE's design v2 is reviewed."
+}
