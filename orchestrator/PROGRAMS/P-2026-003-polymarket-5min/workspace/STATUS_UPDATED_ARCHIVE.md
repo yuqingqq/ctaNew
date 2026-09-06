@@ -12451,3 +12451,82 @@ directions.
   thirty-eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 148 — archived 2026-09-06T11:47:40Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 166 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T11:27:40Z (MEM ROUND 163 -- R-619, Q-BE-59 AND Q-DE-92 SWEPT. STATE ONLY.
+  THE 09-04 BOOK EXISTS; THE RE-RUN EXITED AT 26 SECONDS HAVING WRITTEN NOTHING.
+  (1) **THE BOOK'S DIGEST REPRODUCES UNDER MY OWN HASH.** 340,969,199 bytes ->
+  **`9193206c2fa33878…`, equal to the receipt's `book.sha256` AND `readback_sha256`**;
+  **`sets_are_equal: true` at 338,444 shared keys; `state_join_failed: 0` across 48
+  chunks.** ***The 09-04 book EXISTS and verifies at the artifact*** -- built with the
+  REVIEWED builder, from the inputs I hashed at round 156. Pending REV 57.
+  (2) **AND THE RECEIPT NAMES A FILE THAT DOES NOT EXIST.**
+  `inputs_pinned.tape.receipt = …_20260904_btc.v3.json` -- **I tested it: EXISTS =
+  FALSE** (the head is `.v2`). *An f-string literal naming a version never emitted,
+  while the RESOLVER binds correctly.* ***R-601's class -- a literal beside a resolver
+  that disagrees with it -- fourth round running, and its FIRST APPEARANCE IN A REAL
+  DAY'S RECEIPT.*** **Found by BE reading the receipt IT had just produced**, the same
+  way it found the no-op `.replace()` two rounds ago.
+  (3) **AND `reasons_account_for_the_count` IS FALSE ON THE FIRST REAL DAY** --
+  19,663 uncovered reference generations against 29,465 fragment rows, ***two
+  populations compared as one***. **The fixture's known-bad supplied BOTH SIDES FROM
+  ONE UNIT, so it could not reveal the difference** -- *rule 16's shape: a control
+  whose fixture makes the two quantities identical cannot test that they are.* **It
+  REPORTS rather than REFUSES, so the book stands and the field under-claims** --
+  which is the right failure direction, and worth saying out loud.
+  (4) **THE SAME DICT STILL CARRIES THE DERIVED AND THE TYPED:** `seam.index =
+  build_tape_index(splits, inputs=inp)` -- derived, **matching the call** -- beside
+  `seam.commit: "6f134a6"`, still typed. ***My round-157 observation, now on the REAL
+  receipt a reviewer will read.*** *The 09-03 receipt's literal CONTRADICTED its call;
+  this one matches -- the derived half working on its first real outing.*
+  (5) **BOTH GAPS CONFIRMED BY ENUMERATING THE KEYS:** **no `scope` block**
+  (anon/file/peak/events -- the fragment and tape receipts carry one, the book's does
+  not) and **no `builder_commit`/`carrying_commit` of any kind.** *The second because
+  the WIP is unreviewed BY DESIGN -- the right call, and still a gap.* BE 60.
+  (6) **THE RE-RUN WROTE NOTHING AND COST ~1/195th OF THE RUN.** The journal:
+  **started 11:19:05Z, "Consumed 21.315s CPU time, 842.9M memory peak" at 11:19:31Z --
+  26 SECONDS** -- and the only 09-03 day-run artifact on disk is still the **09:50:58Z
+  REFUSED record**. ***26 s against 5,065 s.*** **The battery-before-the-day move's
+  first real payoff, measured rather than argued** -- *"zero draws performed" was a
+  falsifier two rounds ago; today it is an outcome.* **EXITED, not FAILED: nothing
+  consumed, the day untouched.**
+  (7) **AND THE CHECK THAT STOPPED IT READS ITS OWN CONTEXT:** the pre-day battery
+  refused on a check whose verdict depends on the AMBIENT heavy lock -- ***which the
+  run itself holds.*** *DE reproduced it in one line; the guard becomes a predicate
+  driven with an INJECTED observation, both ways.* **The same shape as the fixture
+  budget against the process-wide peak (R-609), one layer out: there the MEASUREMENT
+  was ambient, here the CONDITION is.**
+  (8) **AND FOUR WORKTREES ARE ONE UNSET ENV FROM A SHELL FACT:** every seat
+  worktree's `data/` is a MATERIALISED directory, so the ledger's untracked artifacts
+  are INVISIBLE under a worktree path -- **and this run was correct only because
+  `PM_DATA_ROOT` was passed explicitly.** *DA 80 drives every resolver with the env
+  UNSET: each must REFUSE, never fall back.* ***The reviewer measured `PM_DATA_ROOT`
+  empty in its own tool environment at round 145 and I reproduced it in mine; what was
+  a curiosity then is the mechanism now.***
+  **AT COMMIT TIME, 2026-09-06T11:30:09Z: GO #3 IS ALREADY RUNNING, AND PAST THE
+  POINT THAT KILLED ATTEMPT #2.** ***`de93smoke.scope` `active / running`, pid
+  3282335, 92 s elapsed, RSS 745,172 KiB***, the same command with `--output` the
+  DIRECTORY, holding the heavy lock (3282334/3282335). **92 s is 3.5x the 26 s exit,
+  and 745 MB is past the 843 MB the failed attempt peaked at in its battery -- so the
+  pre-day battery has PASSED and the day's work has begun.** *Recorded unswept.*
+  **AND DE 92's ARTIFACTS LANDED (`6e32506`): design v20 -- *"the check count is a
+  SNAPSHOT, said so in the field"* -- plus the v5 rehearsal the GO run was launched
+  from.** ***A count that must track something moving, declared as a SNAPSHOT rather
+  than pinned*** -- *the class I have swept since round 133 (23 -> 49 -> 75 -> 82),
+  answered by changing what the number CLAIMS rather than by chasing it.*
+  **FLAG WORDS: the 09-04 book BUILT-VERIFIED-PENDING-REV-57; the 09-03 re-run
+  EXITED-AT-26s-FIX-IN-FLIGHT (not "failed" -- zero draws, nothing consumed, and I
+  confirmed no artifact was written); the schedule ABSORBS it (re-run ≈11:50Z ->
+  ≈13:15Z; the 09-04 smoke ≈14:40Z).**
+  MEASURED BEFORE THIS SENTENCE: flags 959 -> 967, flag_provenance 504 -> 512,
+  tasks 19; **312 CHECKED**, 200 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-ninth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

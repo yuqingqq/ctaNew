@@ -63,6 +63,76 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T11:47:40Z (MEM ROUND 166 -- R-622, Q-BE-60 AND Q-DA-302 SWEPT. STATE
+  ONLY. THE FINDING IS DEAD CODE THAT PRODUCED THE RIGHT ANSWER FOR A YEAR OF READS.
+  (1) **THE `try` RAISES ON EVERY CALL -- I DROVE IT.** `de_data_root.resolve()` is
+  declared **`-> dict`** and returns one; **`Path(resolve())` raises `TypeError`.** *So
+  in `_derived_dir()`'s `try: … Path(BDR.resolve()) / …`, the body raises EVERY TIME,
+  the bare `except` swallows it, and the tree-relative fallback runs every call:* ***the
+  "one resolver" line was NEVER EXECUTED.*** **And from the SHARED TREE the fallback
+  gives the RIGHT answer** -- *which is exactly why it was invisible: the defect shows
+  only from a worktree, and every seat verifying from the shared tree saw a correct
+  result produced by dead code.*
+  (2) **AND MY OWN ROUND-165 READING STOPPED ONE LEVEL SHORT.** I read the SHAPE and
+  wrote "DA DOES import DE's resolver; the intended path IS the canonical one" --
+  ***true of the source, false of the behaviour.*** **I did not CALL the function.**
+  *The reviewer's standing advice to DE -- "the productive attack is always RUN THE
+  THING, never READ THE DESIGN" -- applied to me, and it cost one round.* **The flag
+  stands as what the SOURCE said, with its as_of; this is what the CALL does.**
+  (3) **THE WORKTREE DRIFT REGENERATES WITHIN SECONDS OF A RESTORE.** Measured:
+  **`wt-be/data` IS a symlink now (mtime 11:46:59Z), restored as stated -- and
+  `wt-rev/data` is STILL A DIRECTORY, mtime 11:47:15Z, TWO SECONDS before my read,
+  with 262 tracked files against the 257 I counted at round 165.** *Either the restore
+  has not reached wt-rev, or a refresh re-materialised it inside the same minute.*
+  ***Either way the measurement says the same thing: restoring is not the whole
+  repair, because the next refresh recreates it.*** ROUTED.
+  (4) **FOUR ROOT RULES FOR ONE ROOT** -- and DA 80's addendum 2 collapses them to
+  ONE, with the four tests and the bare `except` named. ***A defect found in one module
+  turning out to be a COUNT across four is the difference between a fix and a
+  closure*** -- **the second time in two rounds the reviewer's contribution was to turn
+  an instance into an enumeration** (the ambient-lock census was the first).
+  (5) **THE CODE AND THE DESIGN NAME DIFFERENT AUTHORITATIVE FIELDS -- AND DA CHECKS
+  NEITHER.** DE's **code** and DE's **design** name different authoritative
+  landing-digest fields, *and DA's check compares THE DESIGN against DA's OWN
+  CONSTANT, not DE's code.* ***Three parties, three answers, and the check compares
+  the two that are not the one that runs.*** **R-608 gave the landing digest ONE
+  authority "because it is the field DE reads"; this says it was DECLARED in one place
+  and IMPLEMENTED in another.** DE 94, after the run.
+  (6) **AND THE SWEEP IMPLEMENTED INSTANCES, NOT THE CLASS:** three instances of "a
+  verdict from ambient process state" -- ***and the 26-second refusal was NONE OF ITS
+  QUESTIONS.*** **A sweep written to find a class, by enumerating examples of the
+  class, will pass a fresh member of it** -- *the fixture-supplies-both-sides shape one
+  level up: an instrument's COVERAGE is bounded by the cases its author thought of, and
+  nothing in it says so.*
+  (7) **BE CLOSED SEVEN DEBTS IN ONE BATCH AND DISCLOSED ITS OWN BREACH:** rule 22 in
+  ALL THREE producers, the growth budget, the scope block, two literals COMPUTED, the
+  09-04 receipt superseded -- **`be_daybook_receipt_20260904_btc.v2.json`, which I
+  hashed to `2ff7b754db24b185…`, v1 beside it** -- *and BE was EDITING IN THE SHARED
+  TREE until corrected at 11:43Z, then restored the files.* **The run head is NOT
+  RECOVERABLE.** ***Rule 21's discipline broken and repaired inside one batch,
+  disclosed by the seat itself -- which is the only reason it is a note rather than an
+  incident.***
+  **AT COMMIT TIME, 2026-09-06T11:50:14Z, THE AMBIGUITY I ROUTED IS ANSWERED:**
+  ***`wt-rev/data` IS A SYMLINK NOW*** (and R-623 lands, recording the restores in
+  wt-rev and wt-be). **So of my two hypotheses -- "the restore has not reached
+  wt-rev" or "a refresh re-materialised it inside the same minute" -- the FIRST is
+  what happened: my 11:47:17Z reading caught the seconds BEFORE the restore arrived,
+  and the 11:47:15Z mtime was the refresh that preceded it, not one that followed.**
+  *A two-way ambiguity, routed rather than guessed, and answered by the world in three
+  minutes.* **`wt-da` and `wt-de2` remain DIRECTORIES** -- *wt-da after DA 80, wt-de2
+  after the run, as ruled.*
+  **AND THE DEAD TRY IS STILL DEAD:** I re-drove it at commit time --
+  `Path(resolve())` **still raises `TypeError`** -- so the finding stands and the fix
+  is IN FLIGHT, not landed. *R-623 also carries BE 60 verified (rule 22 in all three
+  producers; the `.v2`'s run head HONESTLY NOT RECOVERABLE), the landing-mechanics
+  ruling folded into rule 21, and DA 80's 09-03 book tier HOLDING.*
+  **FLAG WORDS: DA's resolver DEAD-TRY-FIX-IN-FLIGHT (and the try is dead by
+  execution, not by reading); the landing field DESIGN-CODE-DISAGREE (DE 94); the
+  re-run RUNNING -- I measure pid 3282335 at 1,113 s (~18.5 min), RSS 758,600 KiB.**
+  MEASURED BEFORE THIS SENTENCE: flags 983 -> 991, flag_provenance 528 -> 536,
+  tasks 19; **326 CHECKED**, 210 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-second round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T11:38:40Z (MEM ROUND 165 -- R-621 AND REV 57'S FILING SWEPT. STATE ONLY.
   THE FINDING IS A SWALLOWED EXCEPTION THREE LINES BELOW THE SENTENCE DENYING IT.
   (1) **DA'S SECOND RULE IS AN `except`, NOT A SECOND IMPLEMENTATION.** At
@@ -217,75 +287,6 @@ updated: >-
   tasks 19; **318 CHECKED**, 202 RELAYED, **455 UNMARKED -- unchanged for the
   fortieth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
   new flags vs HEAD 0 without provenance.)
-  2026-09-06T11:27:40Z (MEM ROUND 163 -- R-619, Q-BE-59 AND Q-DE-92 SWEPT. STATE ONLY.
-  THE 09-04 BOOK EXISTS; THE RE-RUN EXITED AT 26 SECONDS HAVING WRITTEN NOTHING.
-  (1) **THE BOOK'S DIGEST REPRODUCES UNDER MY OWN HASH.** 340,969,199 bytes ->
-  **`9193206c2fa33878…`, equal to the receipt's `book.sha256` AND `readback_sha256`**;
-  **`sets_are_equal: true` at 338,444 shared keys; `state_join_failed: 0` across 48
-  chunks.** ***The 09-04 book EXISTS and verifies at the artifact*** -- built with the
-  REVIEWED builder, from the inputs I hashed at round 156. Pending REV 57.
-  (2) **AND THE RECEIPT NAMES A FILE THAT DOES NOT EXIST.**
-  `inputs_pinned.tape.receipt = …_20260904_btc.v3.json` -- **I tested it: EXISTS =
-  FALSE** (the head is `.v2`). *An f-string literal naming a version never emitted,
-  while the RESOLVER binds correctly.* ***R-601's class -- a literal beside a resolver
-  that disagrees with it -- fourth round running, and its FIRST APPEARANCE IN A REAL
-  DAY'S RECEIPT.*** **Found by BE reading the receipt IT had just produced**, the same
-  way it found the no-op `.replace()` two rounds ago.
-  (3) **AND `reasons_account_for_the_count` IS FALSE ON THE FIRST REAL DAY** --
-  19,663 uncovered reference generations against 29,465 fragment rows, ***two
-  populations compared as one***. **The fixture's known-bad supplied BOTH SIDES FROM
-  ONE UNIT, so it could not reveal the difference** -- *rule 16's shape: a control
-  whose fixture makes the two quantities identical cannot test that they are.* **It
-  REPORTS rather than REFUSES, so the book stands and the field under-claims** --
-  which is the right failure direction, and worth saying out loud.
-  (4) **THE SAME DICT STILL CARRIES THE DERIVED AND THE TYPED:** `seam.index =
-  build_tape_index(splits, inputs=inp)` -- derived, **matching the call** -- beside
-  `seam.commit: "6f134a6"`, still typed. ***My round-157 observation, now on the REAL
-  receipt a reviewer will read.*** *The 09-03 receipt's literal CONTRADICTED its call;
-  this one matches -- the derived half working on its first real outing.*
-  (5) **BOTH GAPS CONFIRMED BY ENUMERATING THE KEYS:** **no `scope` block**
-  (anon/file/peak/events -- the fragment and tape receipts carry one, the book's does
-  not) and **no `builder_commit`/`carrying_commit` of any kind.** *The second because
-  the WIP is unreviewed BY DESIGN -- the right call, and still a gap.* BE 60.
-  (6) **THE RE-RUN WROTE NOTHING AND COST ~1/195th OF THE RUN.** The journal:
-  **started 11:19:05Z, "Consumed 21.315s CPU time, 842.9M memory peak" at 11:19:31Z --
-  26 SECONDS** -- and the only 09-03 day-run artifact on disk is still the **09:50:58Z
-  REFUSED record**. ***26 s against 5,065 s.*** **The battery-before-the-day move's
-  first real payoff, measured rather than argued** -- *"zero draws performed" was a
-  falsifier two rounds ago; today it is an outcome.* **EXITED, not FAILED: nothing
-  consumed, the day untouched.**
-  (7) **AND THE CHECK THAT STOPPED IT READS ITS OWN CONTEXT:** the pre-day battery
-  refused on a check whose verdict depends on the AMBIENT heavy lock -- ***which the
-  run itself holds.*** *DE reproduced it in one line; the guard becomes a predicate
-  driven with an INJECTED observation, both ways.* **The same shape as the fixture
-  budget against the process-wide peak (R-609), one layer out: there the MEASUREMENT
-  was ambient, here the CONDITION is.**
-  (8) **AND FOUR WORKTREES ARE ONE UNSET ENV FROM A SHELL FACT:** every seat
-  worktree's `data/` is a MATERIALISED directory, so the ledger's untracked artifacts
-  are INVISIBLE under a worktree path -- **and this run was correct only because
-  `PM_DATA_ROOT` was passed explicitly.** *DA 80 drives every resolver with the env
-  UNSET: each must REFUSE, never fall back.* ***The reviewer measured `PM_DATA_ROOT`
-  empty in its own tool environment at round 145 and I reproduced it in mine; what was
-  a curiosity then is the mechanism now.***
-  **AT COMMIT TIME, 2026-09-06T11:30:09Z: GO #3 IS ALREADY RUNNING, AND PAST THE
-  POINT THAT KILLED ATTEMPT #2.** ***`de93smoke.scope` `active / running`, pid
-  3282335, 92 s elapsed, RSS 745,172 KiB***, the same command with `--output` the
-  DIRECTORY, holding the heavy lock (3282334/3282335). **92 s is 3.5x the 26 s exit,
-  and 745 MB is past the 843 MB the failed attempt peaked at in its battery -- so the
-  pre-day battery has PASSED and the day's work has begun.** *Recorded unswept.*
-  **AND DE 92's ARTIFACTS LANDED (`6e32506`): design v20 -- *"the check count is a
-  SNAPSHOT, said so in the field"* -- plus the v5 rehearsal the GO run was launched
-  from.** ***A count that must track something moving, declared as a SNAPSHOT rather
-  than pinned*** -- *the class I have swept since round 133 (23 -> 49 -> 75 -> 82),
-  answered by changing what the number CLAIMS rather than by chasing it.*
-  **FLAG WORDS: the 09-04 book BUILT-VERIFIED-PENDING-REV-57; the 09-03 re-run
-  EXITED-AT-26s-FIX-IN-FLIGHT (not "failed" -- zero draws, nothing consumed, and I
-  confirmed no artifact was written); the schedule ABSORBS it (re-run ≈11:50Z ->
-  ≈13:15Z; the 09-04 smoke ≈14:40Z).**
-  MEASURED BEFORE THIS SENTENCE: flags 959 -> 967, flag_provenance 504 -> 512,
-  tasks 19; **312 CHECKED**, 200 RELAYED, **455 UNMARKED -- unchanged for the
-  thirty-ninth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2958,6 +2959,79 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_TRY_RAISES_ON_EVERY_CALL_AND_I_DROVE_IT: THE_CANONICAL_BRANCH_WAS_NEVER_TAKEN
+                             # CHECKED 2026-09-06T11:47:40Z by EXECUTION, not reading. **`de_data_root.resolve()`
+                             # is declared `-> dict` and I called it: it returns
+                             # `{'repo_root': …, 'data_root': …, …}`. And `Path(resolve())` raises
+                             # `TypeError: argument should be a str or an os.PathLike object …` -- I drove
+                             # that too.**
+                             # ***So in `_derived_dir()`'s `try: … Path(BDR.resolve()) / …`, the try body
+                             # raises on EVERY CALL, the bare `except` swallows it, and the tree-relative
+                             # fallback runs EVERY TIME: the "one resolver" line was NEVER EXECUTED.***
+                             # **And from the SHARED TREE the fallback gives the RIGHT answer** (`HERE.parents[1]`
+                             # is `/home/yuqing/ctaNew`) -- *which is exactly why it was invisible: the defect
+                             # shows only from a worktree, and every seat verifying from the shared tree saw a
+                             # correct result produced by dead code.*
+  MY_ROUND_165_READING_STOPPED_ONE_LEVEL_SHORT: READ_IT_THEN_RUN_IT
+                             # CHECKED 2026-09-06T11:47:40Z against my own flag. **Last round I read the
+                             # SHAPE -- try-canonical, except-relative -- and wrote that "DA DOES import DE's
+                             # resolver; the intended path IS the canonical one".** *That is true of the
+                             # source and false of the behaviour: the canonical path was never taken.*
+                             # ***I stopped at the structure and did not CALL the function*** -- **the
+                             # reviewer's standing judgement of DE ("the productive attack is always 'run
+                             # the thing', never 'read the design'") applied to me, and it cost one round.**
+                             # *The correction is cheap because the flag was CHECKED with its as_of: it
+                             # stands as what the source said, and this is what the call does.*
+  WT_REV_IS_STILL_A_DIRECTORY_AND_WAS_WRITTEN_TO_TWO_SECONDS_BEFORE_MY_READ: THE_DRIFT_REGENERATES
+                             # CHECKED 2026-09-06T11:47:40Z: **`wt-be/data` IS a symlink ->
+                             # `/home/yuqing/ctaNew/data`, mtime 11:46:59Z -- restored, as stated. But
+                             # `wt-rev/data` is STILL A DIRECTORY, mtime 11:47:15Z -- two seconds before my
+                             # read -- with 262 tracked files against the 257 I counted at round 165.**
+                             # ***So either the restore has not reached wt-rev, or a refresh re-materialised
+                             # it inside the same minute*** -- **and either way the measurement says the
+                             # drift can REGENERATE WITHIN SECONDS of a restore**, which bears directly on
+                             # the repair plan (restore, then what stops the next refresh?). *ROUTED, NOT
+                             # RULED: which of the two it is, is the coordinator's to say.*
+  BE_60_S_V2_HASHES_AS_STATED: TWO_RECEIPTS_ON_DISK
+                             # CHECKED 2026-09-06T11:47:40Z: **`be_daybook_receipt_20260904_btc.v2.json`
+                             # exists and hashes `2ff7b754db24b185…`, the digest the entry states; v1
+                             # remains beside it.** *The 09-04 receipt superseded IN BAND, v1 untouched --
+                             # rule 13 for the fourth time today, and the first where the superseded
+                             # artifact is one I verified myself in an earlier round.*
+  FOUR_ROOT_RULES_FOR_ONE_ROOT: THE_CLASS_NOT_THE_INSTANCE
+                             # RELAYED from R-622, 2026-09-06T11:47:40Z. **The programme has FOUR
+                             # rules for resolving one root** -- *and DA 80's addendum 2 collapses them to
+                             # ONE, with the four tests and the bare `except` named.*
+                             # ***A defect found in one module turning out to be a COUNT across four is the
+                             # difference between a fix and a closure*** -- **and it is the second time in
+                             # two rounds that the reviewer's contribution was to convert an instance into
+                             # an enumeration** (the ambient-lock census was the first).
+  THE_CODE_AND_THE_DESIGN_NAME_DIFFERENT_AUTHORITATIVE_FIELDS: AND_DA_CHECKS_NEITHER
+                             # RELAYED from R-622, 2026-09-06T11:47:40Z. **DE's CODE and DE's DESIGN
+                             # name DIFFERENT authoritative landing-digest fields -- and DA's check compares
+                             # THE DESIGN against DA's OWN CONSTANT, not DE's code.**
+                             # ***Three parties, three answers, and the check compares the two that are not
+                             # the one that runs.*** *R-608 made the landing digest have ONE authority
+                             # (`receipt.sha256`, "because it is the field DE reads"); this says the
+                             # authority was declared in one place and implemented in another.* **DE 94,
+                             # after the run.**
+  THE_SWEEP_IMPLEMENTED_INSTANCES_NOT_THE_CLASS: THE_REFUSAL_WAS_NONE_OF_ITS_QUESTIONS
+                             # RELAYED from R-622, 2026-09-06T11:47:40Z. **DA's sweep implements THREE
+                             # INSTANCES of "a verdict from ambient process state" -- and *the 26-second
+                             # refusal was NONE OF ITS QUESTIONS*.**
+                             # ***A sweep written to find a class that enumerates examples of the class will
+                             # pass a fresh member of it*** -- **the same shape as a fixture that supplies
+                             # both sides of a comparison, one level up: the instrument's COVERAGE is
+                             # defined by the cases its author thought of, and nothing in it says so.**
+  BE_EDITED_IN_THE_SHARED_TREE_UNTIL_11_43Z: CORRECTED_AND_RESTORED
+                             # RELAYED from R-622 / Q-BE-60, 2026-09-06T11:47:40Z. **BE closed the
+                             # builder's seven debts in one batch -- rule 22 in ALL THREE producers, the
+                             # growth budget, the scope block, two literals COMPUTED, and the 09-04 receipt
+                             # superseded -- and did it EDITING IN THE SHARED TREE until corrected at
+                             # 11:43Z, then restored the files.** *And the run head is NOT RECOVERABLE.*
+                             # ***Rule 21's tree discipline broken and repaired inside one batch, disclosed
+                             # by the seat itself*** -- **which is the only reason it is a note rather than
+                             # an incident.**
   THE_SECOND_RULE_IS_A_SWALLOWED_EXCEPTION_NOT_A_SECOND_IMPLEMENTATION: THREE_LINES_BELOW_THE_SENTENCE_DENYING_IT
                              # CHECKED 2026-09-06T11:38:40Z at `da_gate1_day_verdict._derived_dir()`
                              # (:2685), and this is the round's finding as I read it. **The function is
@@ -19659,6 +19733,64 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 166, 2026-09-06T11:47:40Z ------------------------------
+  THE_TRY_RAISES_ON_EVERY_CALL_AND_I_DROVE_IT:
+    prov: CHECKED
+    artifact: live/pm_research/de_data_root.py
+    as_of: 2026-09-06T11:47:40Z
+    said: >-
+      driven, not read: de_data_root.resolve() is declared -> dict and returns
+      {'repo_root': ..., 'data_root': ..., ...}, and Path(resolve()) raises TypeError
+      (argument should be a str or an os.PathLike object). So in _derived_dir()'s try
+      body the Path(BDR.resolve()) call raises on every call, the bare except swallows
+      it, and the tree-relative fallback runs every time -- the "one resolver" line was
+      never executed. From the shared tree the fallback gives the right answer, which
+      is why it was invisible: the defect shows only from a worktree.
+  MY_ROUND_165_READING_STOPPED_ONE_LEVEL_SHORT:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T11:47:40Z
+    said: >-
+      last round I read the shape -- try-canonical, except-relative -- and wrote that
+      DA does import DE's resolver and the intended path is the canonical one. True of
+      the source, false of the behaviour: the canonical path was never taken because
+      the try always raises. I stopped at the structure and did not call the function.
+      The flag stands as what the source said, with its as_of, and this is what the
+      call does.
+  WT_REV_IS_STILL_A_DIRECTORY_AND_WAS_WRITTEN_TO_TWO_SECONDS_BEFORE_MY_READ:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-06T11:47:40Z
+    said: >-
+      wt-be/data is a symlink to /home/yuqing/ctaNew/data with mtime 11:46:59Z, restored
+      as stated; wt-rev/data is still a directory with mtime 11:47:15Z -- two seconds
+      before my read -- and 262 tracked files against the 257 counted at round 165.
+      Either the restore has not reached wt-rev or a refresh re-materialised it inside
+      the same minute; either way the drift can regenerate within seconds of a restore.
+      Routed, not ruled.
+  BE_60_S_V2_HASHES_AS_STATED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260904_btc.v2.json
+    as_of: 2026-09-06T11:47:40Z
+    said: >-
+      the .v2 exists and hashes 2ff7b754db24b185..., the digest the entry states, with
+      v1 remaining beside it: the 09-04 receipt superseded in band, v1 untouched.
+  FOUR_ROOT_RULES_FOR_ONE_ROOT:
+    prov: RELAYED
+    from: R-622
+    as_of: 2026-09-06T11:47:40Z
+  THE_CODE_AND_THE_DESIGN_NAME_DIFFERENT_AUTHORITATIVE_FIELDS:
+    prov: RELAYED
+    from: R-622
+    as_of: 2026-09-06T11:47:40Z
+  THE_SWEEP_IMPLEMENTED_INSTANCES_NOT_THE_CLASS:
+    prov: RELAYED
+    from: R-622
+    as_of: 2026-09-06T11:47:40Z
+  BE_EDITED_IN_THE_SHARED_TREE_UNTIL_11_43Z:
+    prov: RELAYED
+    from: R-622
+    as_of: 2026-09-06T11:47:40Z
   # --- MEM round 165, 2026-09-06T11:38:40Z ------------------------------
   THE_SECOND_RULE_IS_A_SWALLOWED_EXCEPTION_NOT_A_SECOND_IMPLEMENTATION:
     prov: CHECKED

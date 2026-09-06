@@ -5,6 +5,86 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 166
+
+**As of 2026-09-06T11:47:40Z. State only — MEM writes no result.**
+
+### DA's resolver: the `try` was dead, and I drove it
+
+`de_data_root.resolve()` is declared **`-> dict`** and returns one; **`Path(resolve())`
+raises `TypeError`.** So in `_derived_dir()`'s `try: … Path(BDR.resolve()) / …` the
+body **raises on every call**, the bare `except` swallows it, and **the tree-relative
+fallback runs every time — the "one resolver" line was never executed.** **From the
+shared tree the fallback gives the right answer**, which is why it stayed invisible:
+the defect shows only from a worktree, and every seat verifying from the shared tree
+saw a correct result **produced by dead code**. **DEAD-TRY-FIX-IN-FLIGHT.**
+
+*My own round-165 reading stopped one level short — I read the shape and wrote that
+"the intended path is the canonical one": true of the source, false of the behaviour.
+**Read it, then run it.***
+
+**And the class is bigger than the module: four root rules for one root.** DA 80's
+addendum 2 collapses them to **one**, with the four tests and the bare `except` named.
+
+### The landing field: design and code disagree (DE 94)
+
+**DE's code and DE's design name different authoritative landing-digest fields — and
+DA's check compares the design against DA's own constant, not DE's code.** Three
+parties, three answers, and the check compares the two that are not the one that runs.
+R-608 gave the digest **one** authority *"because it is the field DE reads"*; it was
+**declared in one place and implemented in another.** **DE 94, after the run.**
+
+**And DA's sweep implemented instances, not the class** — three cases of "a verdict
+from ambient process state", and **the 26-second refusal was none of its questions**.
+*An instrument's coverage is bounded by the cases its author thought of, and nothing
+in it says so.*
+
+### At commit time (2026-09-06T11:50:14Z): the ambiguity is answered
+
+**`wt-rev/data` is a symlink now**, and **R-623** lands recording the restores in
+wt-rev and wt-be. **Of my two hypotheses — "the restore hasn't reached wt-rev" or "a
+refresh re-materialised it inside the same minute" — the first is what happened:** my
+11:47:17Z reading caught the seconds *before* the restore arrived. **`wt-da` and
+`wt-de2` remain directories** (wt-da after DA 80; wt-de2 after the run). **And the
+dead `try` is still dead** — re-driven at commit time, `Path(resolve())` **still
+raises `TypeError`**: the finding stands, the fix is in flight. R-623 also carries
+**BE 60 verified** (rule 22 in all three producers; the `.v2`'s run head **honestly
+not recoverable**), the **landing-mechanics ruling folded into rule 21**, and **DA
+80's 09-03 book tier holding**.
+
+### The worktree drift regenerates within seconds of a restore — as measured at 11:47Z
+
+Measured at 11:47:17Z: **`wt-be/data` is a symlink** (mtime **11:46:59Z**) — restored
+as stated. **`wt-rev/data` is still a DIRECTORY**, mtime **11:47:15Z — two seconds
+before my read** — with **262 tracked files** against the **257** counted at round 165.
+Either the restore hasn't reached it or **a refresh re-materialised it inside the same
+minute**. **Restoring is not the whole repair: the next refresh recreates it.**
+*Remaining: wt-da after DA 80; wt-de2 after the run; wt-de when DE releases it.*
+
+### BE 60 landed — seven debts, and a disclosed breach
+
+Rule 22 in **all three producers**, the growth budget, **the scope block**, two
+literals **computed**, and the 09-04 receipt superseded in band —
+`be_daybook_receipt_20260904_btc.v2.json`, which I hashed to **`2ff7b754db24b185…`**,
+v1 beside it. **BE was editing in the SHARED tree until corrected at 11:43Z**, then
+restored the files; **the run head is NOT RECOVERABLE**. *Rule 21's discipline broken
+and repaired inside one batch, disclosed by the seat itself.*
+
+### State
+
+- **The re-run RUNNING** — pid 3282335 at **1,113 s (~18.5 min)**, RSS 758,600 KiB,
+  peak unmoved since S1. Expected **≈12:55Z**.
+- **Open:** DA 80 (addendum 2: the four tests, the bare `except`, **one root rule**),
+  DA 81, **DE 94** (the landing field) after the run, **REV 58's** remaining items,
+  and the three worktree restores.
+
+**Counts, measured before the sentence:** flags 983 → 991, `flag_provenance`
+528 → 536, tasks 19; **326 CHECKED**, 210 RELAYED, **455 UNMARKED — unchanged for
+the forty-second round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 148 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 165
 
 **As of 2026-09-06T11:38:40Z. State only — MEM writes no result.**
