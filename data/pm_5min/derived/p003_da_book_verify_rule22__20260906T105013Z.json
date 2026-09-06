@@ -1,0 +1,264 @@
+{
+  "both_directions": true,
+  "builder_call_read_by_ast": {
+    "calls": [
+      {
+        "keywords": [
+          "inputs"
+        ],
+        "line": 516,
+        "positional": [
+          "splits"
+        ],
+        "rendered": "build_tape_index(splits, inputs=\u2026)"
+      }
+    ],
+    "keyword_names": [
+      "inputs"
+    ],
+    "n_calls": 1,
+    "read_by": "ast over the builder's source; not imported, not regexed, not restated",
+    "source": "working tree"
+  },
+  "checks": [
+    {
+      "check": "BOTH TIERS VERIFY A BOOK OF BE's OWN SHAPE: the RECEIPT tier holds the receipt to itself and to the bytes; the FULL tier opens the book and recomputes what only the book can say",
+      "detail": "receipt tier VERIFIED (0 flags), full VERIFIED (0 flags)",
+      "passed": true
+    },
+    {
+      "check": "THE DIGEST CHAIN CHECKS BOTH STATEMENTS OF THE SAME BYTES: the write-side `sha256` AND the independent `readback_sha256`, against one streamed hash of the file. Checking one and calling it the chain leaves the other unchecked -- and they can disagree",
+      "detail": "3647 bytes hashing to df3abe060b6aacc7; both declared statements agree; 2 pinned inputs hashed, 0 absent",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A TAMPERED BOOK FAILS THE CHAIN -- one appended byte moves the digest and the chain does not hold, against BOTH declared statements",
+      "detail": "one byte appended -> 3e26c771079eca83 against declared df3abe060b6aacc7",
+      "passed": true
+    },
+    {
+      "check": "AN ABSENT PINNED INPUT IS A STATUS, NEVER A PASS: it is reported INPUT_ABSENT_NOT_CHECKED with `matches: null`, because a `true` there would be a pass for a check that never ran",
+      "detail": "tape absent -> status INPUT_ABSENT_NOT_CHECKED, matches None",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: ONE MOVED COUNT IS FLAGGED. ADMITTED + the excluded classes must equal the windows, so a receipt whose statuses no longer sum is flagged on the sum, not on the field",
+      "detail": "ADMITTED +1 -> ['population.admitted_plus_excluded_equals_windows']",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD, AND THE ONE THAT MATTERS MOST: UNEQUAL HEAD KEY SETS ARE FLAGGED AND THE DIFFERENCE IS SIZED -- the receipt CLAIMS `sets_are_equal: true` and the recomputation over the book's own keys disagrees. Set equality is the precondition the null rests on, so it is compared, never read",
+      "detail": "the book's two heads differ by 5 keys (3 only in one, 2 only in the other) while the receipt claims equality",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE CONTROL ON THE SAME AXIS: equal key sets RECOMPUTE equal, agree with the receipt, and the shared count matches -- so the flag means something",
+      "detail": "360 shared keys recomputed against 360 declared, difference 0",
+      "passed": true
+    },
+    {
+      "check": "COVERAGE AND THE THETAS ARE RECOMPUTED FROM THE BOOK: n_scored_keys counted off the book's own key sets, coverage divided out again, and each head's theta compared to the one the receipt pins",
+      "detail": "incumbent_linear_d: 360 keys, coverage 0.900000, theta 0.43525926488298716; q1_arrival_composed_lgbm: 360 keys, coverage 0.900000, theta 0.32450609461933483",
+      "passed": true
+    },
+    {
+      "check": "A RECEIPT FOR A DIFFERENT DAY OR COIN REFUSES: a receipt for another day is not this day's evidence, however well its numbers hold together",
+      "detail": "day: 'REFUSED: the receipt is for day '20260903' and the verification ...'; coin: 'REFUSED: the receipt is for coin 'btc' and the verificat...'",
+      "passed": true
+    },
+    {
+      "check": "THE BUILDER'S `build_tape_index` CALL IS READ BY AST FROM ITS OWN SOURCE -- argument names off the syntax tree, not a regex over text and not the receipt's word for it",
+      "detail": "1 call(s) at line(s) [516], keywords ['inputs']",
+      "passed": true
+    },
+    {
+      "check": "R-601, THE CORRECTION TO MY OWN PROBE: a receipt naming NO BUILDER COMMIT gets PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT BY NAME, and its literal is NOT JUDGED -- even a literal that would contradict HEAD. ***Computing a contradiction against HEAD or another seat's commit is an answer about code the receipt never ran.*** A gap, not a defect",
+      "detail": "literal 'build_tape_index(splits, tape_path=\u2026)' left unjudged; status PROVENANCE_INCOMPLETE with 0 flags -- incomplete is a THIRD state, neither VERIFIED nor FLAGGED",
+      "passed": true
+    },
+    {
+      "check": "A RECEIPT NAMING A BUILDER COMMIT WHOSE CALL MATCHES IS VERIFIED: the literal is judged against the code that actually produced the receipt, and nowhere else",
+      "detail": "builder_commit HEAD, literal 'build_tape_index(splits, inputs=\u2026)' agrees with the call there",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A LITERAL CONTRADICTING THE CALL **AT THE RECEIPT'S OWN BUILDER COMMIT** REFUSES -- the check still has teeth, it is just pointed at the right object now",
+      "detail": "'REFUSED: `seam.index` is a LITERAL that contradicts the call AT THE RECEIPT'S OWN BUILDER COMMIT HEAD. The recei...'",
+      "passed": true
+    },
+    {
+      "check": "REV 50 section 1.3 CLOSED -- A BUILDER COMMIT THIS WORKTREE CANNOT RESOLVE IS INCOMPLETE, NEVER FLAGGED. `builder_index_call` fell back to the WORKING TREE and `check_seam` never looked at `source`, so a verdict computed from HEAD wore a sentence attributing it to the receipt's commit -- ***the R-601 class through the other door***. `front_door_at` two functions above never fell back and never returned a verdict on a commit it could not read",
+      "detail": "an unresolvable commit -> PROVENANCE_INCOMPLETE_BUILDER_COMMIT_UNRESOLVED, 0 flags, source 'working tree (FALLBACK -- the requested comm...'",
+      "passed": true
+    },
+    {
+      "check": "AND THE POSITIVE CONTROL ON THE SAME AXIS: a RESOLVABLE builder commit whose call matches still VERIFIES -- the fix removes a false verdict, not the check",
+      "detail": "builder_commit HEAD resolved from git HEAD and the literal agrees",
+      "passed": true
+    },
+    {
+      "check": "AND `seam.commit` IS CHECKED AGAINST DE's MODULE -- WHICH IS WHAT IT NAMES. My round-70 probe read BE's BUILDER there and reported a contradiction: `6f134a6` is a Q-DE-80 register entry touching only COORDINATION.md, so reading BE's builder at it returned a real file at a real commit with nothing to do with the field. ***A commit id names a specific object; using it to locate a different one returns something true and tells you nothing.***",
+      "detail": "live/pm_research/de_phase4_diag_runner.py at HEAD defines day_assembly_inputs: True",
+      "passed": true
+    },
+    {
+      "check": "THE RESOURCES ARE FACTS, NOT VERDICTS: every stage's peak is compared to its OWN declared budget and the builder's `within_budget` is checked against the recomputation, with the index release fraction divided out",
+      "detail": "2 stages all within budget; index release 1.156 GB = 0.282 of what was held",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A `within_budget` FLAG THAT DISAGREES WITH THE ARITHMETIC IS FLAGGED -- the builder's own boolean is checked against peak <= budget rather than taken",
+      "detail": "stage A0 declares within_budget false at peak 2.0 <= budget 3.0",
+      "passed": true
+    },
+    {
+      "check": "THE RECEIPT TIER STATES WHAT IT CANNOT SAY, and the heavy tier's cost is DECLARED before it runs: set equality stays a CLAIM until the book is opened, and opening it is expected to cost about 2.0 GB against a declared 4.0 GB cap",
+      "detail": "receipt tier opened no book; the full tier did. Expected peak 2.0 GB, cap 4.0 GB, rule-20 wrapper required for the real book",
+      "passed": true
+    },
+    {
+      "check": "RULE 22 / R-605 -- THE LAUNCH CAPTURE EXISTS AND IT IS THE CLOSURE, NOT ONE FILE: at IMPORT this run digested every `live/` module in `sys.modules`, the worktree's HEAD and its dirty state, and the receipt carries them. ***DA 77's own sweep found this runner lacking it -- and found that this seat's binding map had EXEMPTED it, which is worse than the gap***",
+      "detail": "1 module(s) under /home/yuqing/ctaNew/live captured at 2026-09-06T10:50:16Z; HEAD c4ad4ef5, dirty True; capture points ['module import', 'after the book was unpickled', 'after the book was unpickled']",
+      "passed": true
+    },
+    {
+      "check": "AND IT REFUSES BY MODULE NAME WHEN A SIBLING IS REWRITTEN MID-RUN, AND ADMITS WHEN NOTHING MOVED: two modules captured, nothing touched -> no drift; ONE rewritten -> drift naming THAT module and no other; one DELETED -> named too, with `gone`. ***The run is unaffected -- the modules are in memory -- but a receipt stamped from the files would name code that DID NOT RUN, and `producing_code_is_the_committed_bytes` PASSES if the replacement is itself committed (R-603)***",
+      "detail": "nothing moved -> 0 drift; one rewritten -> ['sibling_beta.py']; one deleted as well -> ['sibling_alpha.py', 'sibling_beta.py']",
+      "passed": true
+    },
+    {
+      "check": "THE EMIT GUARD REFUSES BY NAME AND THE REAL/FIXTURE ASYMMETRY IS THE DIRTY BAR: a moved closure raises naming the module; the real closure admits; and a DIRTY worktree is a recorded FACT for a fixture and a REFUSAL for a real artifact -- uncommitted bytes are locatable in no commit",
+      "detail": "moved -> refused naming sibling_beta.py; unmoved -> admitted; dirty at import = True -> real emit REFUSES",
+      "passed": true
+    }
+  ],
+  "launch_capture": {
+    "closure_drift": [],
+    "closure_unchanged_during_the_run": true,
+    "digest_taken_at": "MODULE IMPORT, before any work",
+    "head_at_emit": {
+      "dirty": true,
+      "dirty_paths": [
+        "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_GO_09_03_RERUN_2026-09-06.md"
+      ],
+      "head": "c4ad4ef51f2f2240044db6fd8bb67f477e825d03",
+      "worktree": "/home/yuqing/ctaNew"
+    },
+    "head_at_import": {
+      "dirty": true,
+      "dirty_paths": [
+        "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_GO_09_03_RERUN_2026-09-06.md"
+      ],
+      "head": "c4ad4ef51f2f2240044db6fd8bb67f477e825d03",
+      "worktree": "/home/yuqing/ctaNew"
+    },
+    "head_unchanged_during_the_run": true,
+    "import_closure": {
+      "capture_points": [
+        {
+          "n_added": 1,
+          "n_modules_after": 1,
+          "where": "module import"
+        },
+        {
+          "n_added": 0,
+          "n_modules_after": 1,
+          "where": "after the book was unpickled"
+        },
+        {
+          "n_added": 0,
+          "n_modules_after": 1,
+          "where": "after the book was unpickled"
+        }
+      ],
+      "digested": "from the bytes each module held when it FIRST entered this run -- never re-read",
+      "modules": [
+        [
+          "da_book_verify.py",
+          "c6153edde1b406b996603a0d95ccd57beb63971196bcc2e493655c0136cf4f34"
+        ]
+      ],
+      "n_modules": 1,
+      "root": "/home/yuqing/ctaNew/live"
+    },
+    "launch_time_utc": "2026-09-06T10:50:16Z",
+    "on_disk_sha256_at_emit": "c6153edde1b406b996603a0d95ccd57beb63971196bcc2e493655c0136cf4f34",
+    "producing_code": "da_book_verify.py",
+    "producing_code_sha256": "c6153edde1b406b996603a0d95ccd57beb63971196bcc2e493655c0136cf4f34",
+    "source_unchanged_during_the_run": true,
+    "worktree_was_dirty_at_import": true
+  },
+  "n_checks": 22,
+  "n_failed": 0,
+  "protocol": "P003_DA_BOOK_VERIFIER_V1_FIXTURE",
+  "status": "FIXTURE_NO_REAL_BOOK",
+  "the_real_book_tier_is_HEAVY": {
+    "declared_cap_gb": 4.0,
+    "expected_peak_gb": 2.0,
+    "the_real_run_is_a_coordinator_GO": true,
+    "why": "the 09-03 book is a 290,758,834-byte pickle; unpickling is expected to cost about 2 GB resident, which is heavy under rule 20"
+  },
+  "verifier_identity": {
+    "commit_best_effort": "633b5fa021349ce6aeda21509287dcfbab93a5fa",
+    "path": "live/pm_research/da_book_verify.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "c6153edde1b406b996603a0d95ccd57beb63971196bcc2e493655c0136cf4f34",
+    "source_identity": {
+      "closure_drift": [],
+      "closure_unchanged_during_the_run": true,
+      "digest_taken_at": "MODULE IMPORT, before any work",
+      "head_at_emit": {
+        "dirty": true,
+        "dirty_paths": [
+          "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_GO_09_03_RERUN_2026-09-06.md"
+        ],
+        "head": "c4ad4ef51f2f2240044db6fd8bb67f477e825d03",
+        "worktree": "/home/yuqing/ctaNew"
+      },
+      "head_at_import": {
+        "dirty": true,
+        "dirty_paths": [
+          "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_GO_09_03_RERUN_2026-09-06.md"
+        ],
+        "head": "c4ad4ef51f2f2240044db6fd8bb67f477e825d03",
+        "worktree": "/home/yuqing/ctaNew"
+      },
+      "head_unchanged_during_the_run": true,
+      "import_closure": {
+        "capture_points": [
+          {
+            "n_added": 1,
+            "n_modules_after": 1,
+            "where": "module import"
+          },
+          {
+            "n_added": 0,
+            "n_modules_after": 1,
+            "where": "after the book was unpickled"
+          },
+          {
+            "n_added": 0,
+            "n_modules_after": 1,
+            "where": "after the book was unpickled"
+          }
+        ],
+        "digested": "from the bytes each module held when it FIRST entered this run -- never re-read",
+        "modules": [
+          [
+            "da_book_verify.py",
+            "c6153edde1b406b996603a0d95ccd57beb63971196bcc2e493655c0136cf4f34"
+          ]
+        ],
+        "n_modules": 1,
+        "root": "/home/yuqing/ctaNew/live"
+      },
+      "launch_time_utc": "2026-09-06T10:50:16Z",
+      "on_disk_sha256_at_emit": "c6153edde1b406b996603a0d95ccd57beb63971196bcc2e493655c0136cf4f34",
+      "producing_code": "da_book_verify.py",
+      "producing_code_sha256": "c6153edde1b406b996603a0d95ccd57beb63971196bcc2e493655c0136cf4f34",
+      "source_unchanged_during_the_run": true,
+      "worktree_was_dirty_at_import": true
+    },
+    "tree_head": "c4ad4ef51f2f2240044db6fd8bb67f477e825d03"
+  }
+}

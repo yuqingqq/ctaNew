@@ -1,0 +1,378 @@
+{
+  "both_directions": true,
+  "carrying_commit": "c4ad4ef51f2f2240044db6fd8bb67f477e825d03",
+  "checks": [
+    {
+      "check": "INTERIOR RiskAverse",
+      "detail": "clip(1005-1000,0,10) = 5.0 against the hand-derived 5.0",
+      "passed": true
+    },
+    {
+      "check": "INTERIOR ProbQueue-f3",
+      "detail": "f(70)/(f(30)+f(70)) = 0.927027027027027 against 343000/370000",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE alone-at-level identical under both models",
+      "detail": "queue_ahead 0, one opposite trade of 5: RiskAverse 1.0, ProbQueue 1.0 -- with nothing ahead the probability is 1 by the declared branch, so they cannot differ",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD queue > all subsequent volume never fills (RiskAverse)",
+      "detail": "queue_ahead 1e9 against 10 units of volume fills 0.0 -- if this were positive the queue would not be being counted",
+      "passed": true
+    },
+    {
+      "check": "ORDERING per EPISODE on QUANTITY (400 randomised episodes)",
+      "detail": "0 episodes where ProbQueue filled LESS than RiskAverse. The ordering is arithmetic on quantity -- RiskAverse fills only once front reaches 0, and at front = 0 ProbQueue's probability is 1",
+      "passed": true
+    },
+    {
+      "check": "R-570(B) SHARPENED: per-episode COST can invert with no defect",
+      "detail": "an episode whose mid ran AWAY over T_p costs -6.0 chased against 1.0 filled -- filling MORE costs MORE, so a per-episode cost inversion is the winner's curse, not an implementation defect. This is why the arithmetic check is on quantity.",
+      "passed": true
+    },
+    {
+      "check": "AT-L POSITIVE (reviewer REVIEW_DA60 section 2): a trade at EXACTLY L fills",
+      "detail": "one opposite print at exactly L with 100 units against a queue of 10 fills phi = 1.0",
+      "passed": true
+    },
+    {
+      "check": "AT-L KNOWN-BAD: a print one tick ABOVE L (away from the buy) does NOT fill",
+      "detail": "the same print one tick on the wrong side of L fills phi = 0.0 -- which is what makes the at-or-through rule a direction with a check rather than a comment",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 1 KNOWN-BAD: L absent from the snapshot is QUEUE_AHEAD_UNDEFINED and in NEITHER model's population",
+      "detail": "144 of 144 episodes carry the status and 0 resolve -- never a queue-ahead of zero, which would read as the best queue position there is",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 1 POSITIVE: an L that IS in the book is ADMITTED",
+      "detail": "144 of 144 resolve -- the status can NOT fire, so it is a status and not a filter",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 2 POSITIVE: phi = 0.5 prices STRICTLY between c_fill and c_chase under the gate-bearing rule",
+      "detail": "residual_chased 3.0 strictly inside (1.0, 5.0); whole_leg_charged 5.0 exactly at the chase",
+      "passed": true
+    },
+    {
+      "check": "BOUNDARY 2 KNOWN-BAD: the two pricings straddling 8.0 is a FAIL, never their mean",
+      "detail": "(7.0, 9.0) -> FAIL_PARTIAL_FILL_PRICING_STRADDLES even though the mean is exactly 8.0 and would have passed; (6.0, 7.0) -> PARTIAL_FILL_PRICING_AGREES",
+      "passed": true
+    },
+    {
+      "check": "v6 POSITIVE, THE WHOLE POINT: a book so quiet that 99% of its seconds carry no message is ADMITTED when the COLLECTOR is live",
+      "detail": "gap_fraction 0.99 and decision-time age 5,000 ms are REPORTED (0.99) and the day still admits -- under v5 this day was excluded, which is what cut ICP from 16 days to 1",
+      "passed": true
+    },
+    {
+      "check": "v6 KNOWN-BAD: a COLLECTOR OUTAGE refuses -- a heartbeat gap of 5,000 s against a bar of 2x the measured 60 s cadence",
+      "detail": "max_heartbeat_gap_s 5040 vs bar 120: ['collector_not_live: collector NOT live: max heartbeat gap 5040 s against a bar of 120 s, 0 restart(s) in day']",
+      "passed": true
+    },
+    {
+      "check": "v6 KNOWN-BAD: a COLLECTOR RESTART inside the day refuses even with an unbroken heartbeat",
+      "detail": "1 restart in day, max gap 60 s within bar: ['collector_not_live: collector NOT live: max heartbeat gap 60 s against a bar of 120 s, 1 restart(s) in day']",
+      "passed": true
+    },
+    {
+      "check": "v6 KNOWN-BAD: a day missing depth20 ALONE is still EXCLUDED",
+      "detail": "['depth20_files=23'] -- the third stream is a real requirement, not decoration",
+      "passed": true
+    },
+    {
+      "check": "v6: THE BAR IS THE COLLECTOR'S OWN MEASURED CADENCE, not a number chosen here",
+      "detail": "modal inter-heartbeat interval 60 s -> bar 120 s",
+      "passed": true
+    },
+    {
+      "check": "PARTIAL FILL FIRES: a queue of 100, an order of 10 and 104 units through leaves the order HALF FILLED under RiskAverse",
+      "detail": "filled 4.0 of 10 -- clip(104-100, 0, 10) = 4, strictly between the two boundaries",
+      "passed": true
+    },
+    {
+      "check": "AND BOTH PRICINGS THEN DIFFER: residual-chased prices the unfilled 60%, whole-leg charges the entire leg as a chase",
+      "detail": "phi 0.40: residual_chased 3.0 vs whole_leg_charged 5.0 -- eff_RT 6.0 vs 10.0, so the second bracket is not degenerate",
+      "passed": true
+    },
+    {
+      "check": "AND THE STRADDLE RULE FIRES ON THEM: eff_RT 6.0 against 10.0 spans the 8.0 bps threshold",
+      "detail": "FAIL_PARTIAL_FILL_PRICING_STRADDLES -- the rule DA 61 reported as unable to fire at partial_share 0.000 is shown FIRING on an episode that is actually partial, and their mean 8.0 would have passed",
+      "passed": true
+    },
+    {
+      "check": "ORDERING (aggregate, COST): ProbQueue at or below RiskAverse at the gate row ADMITS; above it REFUTES THE INSTRUMENT",
+      "detail": "aggregate cost ordering is the gate-level check; the per-episode cost ordering is NOT an ordering property at all (driven above)",
+      "passed": true
+    },
+    {
+      "check": "SCOPE both directions: a symbol outside the twelve is REFUSED by name, one inside is admitted",
+      "detail": "ATOMUSDT refused (collected but not in E1-A's XS set), ICPUSDT admitted",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE the closed form: a touch fill with no adverse drift costs fee_maker - half_spread",
+      "detail": "c_fill = 1.700000 bps = 1.8 -0.100000 (the half-spread earned, hence negative)",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE the chase: an unfilled episode pays the TAKER fee plus the realised drift over T_p",
+      "detail": "phi = 0, c_chase = 4.6000 bps against a taker fee of 4.5 -- the mid ran 10 ticks against the maker and the winner's curse is charged in full",
+      "passed": true
+    },
+    {
+      "check": "q IS MEASURED: a tape of 0.25 multiples returns 0.25, and ONE off-grid print does not drag it",
+      "detail": "qty_step_mode gives 0.25 on grid and 0.25 with one off-grid quantity",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD, AND IT IS E1's OWN FALLBACK: the GCD fallback kept in `tick_size` collapses on a single off-grid value",
+      "detail": "EP.tick_mode on the same tape returns 1e-05 instead of 0.25 -- the modal-diff fix is present and the retained GCD fallback overrides it, which is the FIL 1e-6-vs-1e-4 mechanism. The price tick is NOT changed here: it is pinned by the E1-A reproduction control.",
+      "passed": true
+    },
+    {
+      "check": "PARSE: twenty levels a side land at the right sizes",
+      "detail": "bid0 2.4@100.0, ask0 2.401@200.0",
+      "passed": true
+    },
+    {
+      "check": "PARSE KNOWN-BAD: a row without twenty levels a side is RAGGED, counted and EXCLUDED -- never padded with zeros",
+      "detail": "1 ragged of 2 raw -- a padded zero level is an invented queue position",
+      "passed": true
+    },
+    {
+      "check": "v7 ERA LEG POSITIVE CONTROL: a post-boundary day with a live collector ADMITS -- the leg is not a guard shown only refusing",
+      "detail": "legacy_share 0.0 -> admissible True",
+      "passed": true
+    },
+    {
+      "check": "v7 ERA LEG KNOWN-BAD: a LEGACY-STAMPED day REFUSES with the share named, however complete its streams are",
+      "detail": "legacy_share 0.56 -> rule5_legacy_stamped: synthetic: 56 of 100 rows legacy-stamped -- a queue simulation on recv_ns cannot use post-parse stamps",
+      "passed": true
+    },
+    {
+      "check": "v7 ERA LEG, ABSENCE IS NOT A PASS: a day whose era leg was NOT MEASURED is REFUSED, not quietly admitted",
+      "detail": "era=None with require_era=True -> ERA_LEG_NOT_EVALUATED. Rule 11: absence must never read as a pass",
+      "passed": true
+    },
+    {
+      "check": "v7 ORDERING, MARGINAL REGIME REPRODUCED IN THE RUNNER'S OWN WIRING at the reviewer's numbers: no trade reaches front = 0, so the episode is classified NOT TESTABLE and any violation is counted as MARGINAL rather than raising a refutation",
+      "detail": "queue_ahead 100.0, order 10, one trade of 105 at depth 200: RiskAverse fills 5.0 off the CUMULATIVE volume, E[ProbQueue] 5.0, testable=False. THE PRE-v7 RUNNER WOULD HAVE READ NO GATE FOR THIS SYMBOL",
+      "passed": true
+    },
+    {
+      "check": "v7 AND THE REVIEWER'S MEASUREMENT REPRODUCES IN THIS CODE: about half of all seeds violate the per-episode REALISATION ordering in the marginal regime, with no defect present",
+      "detail": "993 of 2,000 seeds = 0.4965 (REVIEW_DA61_E2A A.5 measured 993 / 2000 = 0.4965). A per-episode realisation test on a stochastic model is a coin flip with a veto attached",
+      "passed": true
+    },
+    {
+      "check": "v7 ORDERING, TESTABLE REGIME: a trade arrives with the queue already cleared (front = 0), so ProbQueue fills the whole order and the ordering holds ARITHMETICALLY -- zero violations over 2,000 seeds, which is what makes a violation here a DEFECT",
+      "detail": "queue_ahead 50, two trades of 60: testable=True, E[ProbQueue] 10.0 against RiskAverse 10.0; 0 / 2,000 seeds violate",
+      "passed": true
+    },
+    {
+      "check": "v7 THE EXPECTATION ALONE IS NOT THE FIX -- KNOWN-BAD FOR THE REVIEWER'S OWN PROPOSAL, driven through the RUNNER: RiskAverse fills the whole order while E[ProbQueue] falls short, in the marginal regime, with no defect present",
+      "detail": "RiskAverse 10.0, E[ProbQueue] 9.986301369863014 against the hand derivation 9.986301369863014 (900^3/(100^3+900^3) x 10). A.5 proposes the expectation as the corrected property; measured, it is true EXACTLY on the testable set, so the front = 0 predicate is what decides and this control is what stops that being taken on trust",
+      "passed": true
+    },
+    {
+      "check": "v7 THE NARROWED TRIGGER, BOTH DIRECTIONS: a TESTABLE-regime violation still REFUTES; a marginal-regime violation counts and the gate stays readable",
+      "detail": "narrowing has not disarmed the falsifier -- it has stopped a correct model disagreement from silencing a gate",
+      "passed": true
+    },
+    {
+      "check": "v7 QUOTE AGE is carried PER EPISODE and labels rather than excludes: a 1 ms quote and a 30-minute quote are BOTH RESOLVED, and only the second is labelled stale",
+      "detail": "hour 0 age 1 ms, hour 3 age 1800000 ms, 138 labelled of 144 resolved -- filtering on age would select on ACTIVITY, the defect v6 removed",
+      "passed": true
+    },
+    {
+      "check": "v7 READING B IS A DIFFERENT POPULATION, not a re-label: the fresh-quote reading carries fewer episodes than reading A",
+      "detail": "reading A 48 episodes, reading B 2 at a 1000 ms bar",
+      "passed": true
+    },
+    {
+      "check": "v7 THE STALENESS STRADDLE FIRES AND CAN ALSO ADMIT: 7.0 against 9.0 STRADDLES the 8.0 threshold; 7.0 against 7.5 AGREES",
+      "detail": "a rule that could only fire would be a veto, not a rule -- and the two readings are never averaged",
+      "passed": true
+    },
+    {
+      "check": "v7 QTY_STEP_UNDERDETERMINED KNOWN-BAD: one distinct quantity REFUSES the day rather than returning a modal diff computed from it",
+      "detail": "1 distinct quantities < 3 -> QTY_STEP_UNDERDETERMINED",
+      "passed": true
+    },
+    {
+      "check": "v7 QTY_STEP POSITIVE CONTROL: three distinct quantities ESTIMATE the step and the day runs -- the status is about the estimator, not a wall",
+      "detail": "3 distinct quantities -> qty_step 2.0",
+      "passed": true
+    },
+    {
+      "check": "v7 REDACTION removes every economic key and KEEPS the statuses and the structural metadata",
+      "detail": "2 key(s) removed, named in the receipt; gate_row_tp_s survives because it names the gate rather than carrying a number",
+      "passed": true
+    },
+    {
+      "check": "v7 THE LEAK SCAN FIRES ON A PLANTED ECONOMIC KEY and is CLEAN on the redacted object -- a seal asserted is not a seal",
+      "detail": "4 leak(s) in the raw payload, 0 after redaction. The sealed emission REFUSES if this scan is non-empty",
+      "passed": true
+    },
+    {
+      "check": "v7 --no-repro WRITES {reproduced: null, gates_the_run: false, why_skipped} instead of going SILENT -- null is not false",
+      "detail": "the key is ALWAYS present, so a reader can tell 'the control passed' from 'the control was never asked'",
+      "passed": true
+    },
+    {
+      "check": "R-584 STREAMING PARITY: the streamed book returns the IDENTICAL quote to the whole-day book at every one of the grid's decision times and T_p ends -- a different reader giving a different answer is the whole risk of the change",
+      "detail": "24 decision times and 72 T_p ends over 40,000 quotes fed in 10 chunks: identical on both rules, t_max 1787273994785 == 1787273994785, 40000 rows",
+      "passed": true
+    },
+    {
+      "check": "R-584 STREAMING KNOWN-BAD: a target the stream was NOT built for REFUSES instead of returning nothing -- an absent target would read as NO_QUOTE, which is a wrong EXCLUSION, not a wrong number",
+      "detail": "an off-grid timestamp raises E2ARefused; silence there would have deleted episodes and looked like a quiet tape",
+      "passed": true
+    },
+    {
+      "check": "R-584 MEMORY GUARD BOTH WAYS: the declared cap ADMITS this process and a cap below its residency REFUSES -- a guard only ever shown refusing is a wall, not a bound",
+      "detail": "resident 0.109 GiB under the declared 6.0 GiB cap admits; a 0.0001 GiB cap refuses. THE CAP IS NEVER RAISED AND THE POPULATION IS NEVER MADE SMALLER",
+      "passed": true
+    },
+    {
+      "check": "R-584 SCOPE both directions: BTCUSDT is the gate symbol and any other symbol is LABELLED a diagnostic rather than quietly counted toward a gate",
+      "detail": "the thin-name cell is DEFERRED, NOT RESOLVED -- its declared handling stands, and E2-A under this scope does not answer it",
+      "passed": true
+    },
+    {
+      "check": "THE SEAL's OWN BLIND SPOT, PINNED: the pre-fix marker list saw ZERO leaks in a block holding two eff_RT values in bps; the current list catches them and the redaction removes the block",
+      "detail": "pre-fix scan: 0 leaks -- it would have certified a receipt carrying reading_A_all_episodes_bps. Current scan: 3 leaks (staleness_sensitivity, reading_A_all_episodes_bps, reading_B_fresh_quotes_bps). A leak scan that shares its blind spot with the redactor certifies exactly what it fails to see",
+      "passed": true
+    },
+    {
+      "check": "THE SECOND NET CATCHES WHAT THE MARKER LIST WAS NEVER TOLD ABOUT: two economic fields under names no marker matches are caught by NAME SHAPE over numeric leaves, and the emission refuses on either net",
+      "detail": "marker scan: 0 leaks. Second net: 2 (markout_cents_at_tp, realised_capture_per_episode). And it does NOT fire on mechanism fields (n_episodes, wall_s, p50) -- a net that flagged everything would be as useless as one that flagged nothing",
+      "passed": true
+    },
+    {
+      "check": "THE RECEIPT CITES THE RUNNER BY CONTENT DIGEST: a per-seat worktree's HEAD is whatever it was last detached at, and a rebase can rewrite even a correct commit id -- the digest can do neither",
+      "detail": "runner_sha256 13495ad1fa059855, tree head c4ad4ef, committed-bytes True -- DA 63 measured its own worktree THREE LANDINGS behind while running this module, so `carrying_commit` alone would have named code that did not run",
+      "passed": true
+    },
+    {
+      "check": "THE DECLARATION IS PINNED: the runner refuses if its sha256 moves",
+      "detail": "57c92c9e899eb691 matches on disk",
+      "passed": true
+    },
+    {
+      "check": "THE SIZE-AWARE ARM REFUSES rather than defaulting to min-size and calling it E2-A",
+      "detail": "the arm that runs is labelled MIN_SIZE_NOT_THE_E2A_GATE",
+      "passed": true
+    },
+    {
+      "check": "RULE 22 / R-605 -- THE LAUNCH CAPTURE IS THE IMPORT CLOSURE, NOT ONE FILE: at import this run digested every `live/` module in `sys.modules` plus HEAD and the dirty state, and it re-captures after a LAZY import so a module that entered mid-run is not left outside. ***DA 77's sweep found this runner without it -- and found that this seat's own binding map had EXEMPTED it***",
+      "detail": "4 modules [['e2_0_true_mid.py', '115f0c977a69b3fb0b45740a4041fd82957d93b7241baa71e4d70206c7b0832b'], ['e2_a_declare.py', '5f582817af054724ae11f56f4e2e88301baca0cfc95c5d459432aee7763e33b2'], ['e2_a_episodes.py', '5e95896f6453da2bb069a67e14705a14d9eb75cf3a7cf233bb4a2c48593553b5'], ['e2_a_runner.py', '13495ad1fa059855b3f72ae7678fbdce62063ce323e03ddf76da550cf9ffdf61']], HEAD c4ad4ef5, dirty True",
+      "passed": true
+    },
+    {
+      "check": "AND IT REFUSES BY MODULE NAME WHEN A SIBLING IS REWRITTEN MID-RUN AND ADMITS WHEN NOTHING MOVED -- driven on COPIES, never on a module another seat is working in. ***The run is unaffected; a receipt stamped from the files would name code that DID NOT RUN, and `producing_code_is_the_committed_bytes` PASSES when the replacement is itself committed (R-603)***",
+      "detail": "nothing moved -> 0 drift; one rewritten -> ['sib_two.py'] and the emit refuses naming it",
+      "passed": true
+    },
+    {
+      "check": "THE CLOSURE IS STAMPED AS [name, digest] PAIRS, SO NO MODULE NAME IS EVER A KEY -- and the seal's two nets are UNTOUCHED. ***The first draft of this fix carved the closure out of both nets: a HOLE in a seal, to solve a problem the seal does not have. The shape removes the interaction instead.*** The stamp survives redaction intact, both nets find nothing in it, and an economic key planted BESIDE it is still caught by name",
+      "detail": "4 pairs survive redaction unchanged; 0 leaks from either net; a planted `cost_per_fill` beside them -> ['cost_per_fill', 'source_identity.import_closure.cost_per_fill']; module names that WOULD have collided as keys: none today",
+      "passed": true
+    }
+  ],
+  "data_free_proof": {
+    "instrument": "builtins.open + gzip.open + pandas.read_csv + Path.read_bytes + Path.read_text, wrapped for the duration of the fixture and restored after",
+    "n_paths_opened": 7,
+    "no_path_under_data_mm_hf_was_opened": true,
+    "tape_paths_opened": [],
+    "why": "a fixture that says it touched no data and cannot show it is a claim, not a control"
+  },
+  "declaration": {
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v7.json",
+    "sha256": "57c92c9e899eb6912c659de3bb84f31994b8143bc79ba3f4fd7131d82d5bcfa0"
+  },
+  "n_checks": 56,
+  "n_failed": 0,
+  "protocol": "P002_E2_A_OVERLAY_RUNNER_V1_FIXTURE",
+  "runner_identity": {
+    "producing_code_is_the_committed_bytes": true,
+    "runner_commit_best_effort": "633b5fa021349ce6aeda21509287dcfbab93a5fa",
+    "runner_path": "live/mm_research/e2_a_runner.py",
+    "runner_sha256": "13495ad1fa059855b3f72ae7678fbdce62063ce323e03ddf76da550cf9ffdf61",
+    "runner_sha256_is_the_durable_citation": "the digest identifies the code that produced this receipt whatever happens to the history above it. Resolve it first.",
+    "tree_head_at_run": "c4ad4ef51f2f2240044db6fd8bb67f477e825d03",
+    "why_that_field": "false means the module had uncommitted edits when it ran, so the commit ids below it describe a DIFFERENT file than the one that produced these numbers. Stated, never inferred."
+  },
+  "source_identity": {
+    "closure_drift": [],
+    "closure_unchanged_during_the_run": true,
+    "digest_taken_at": "MODULE IMPORT, before any work",
+    "head_at_emit": {
+      "dirty": true,
+      "dirty_paths": [
+        "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_GO_09_03_RERUN_2026-09-06.md"
+      ],
+      "head": "c4ad4ef51f2f2240044db6fd8bb67f477e825d03",
+      "worktree": "/home/yuqing/ctaNew"
+    },
+    "head_at_import": {
+      "dirty": true,
+      "dirty_paths": [
+        "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_GO_09_03_RERUN_2026-09-06.md"
+      ],
+      "head": "c4ad4ef51f2f2240044db6fd8bb67f477e825d03",
+      "worktree": "/home/yuqing/ctaNew"
+    },
+    "head_unchanged_during_the_run": true,
+    "import_closure": {
+      "capture_points": [
+        {
+          "n_added": 4,
+          "n_modules_after": 4,
+          "where": "module import"
+        }
+      ],
+      "digested": "from the bytes each module held when it FIRST entered this run -- never re-read",
+      "modules": [
+        [
+          "e2_0_true_mid.py",
+          "115f0c977a69b3fb0b45740a4041fd82957d93b7241baa71e4d70206c7b0832b"
+        ],
+        [
+          "e2_a_declare.py",
+          "5f582817af054724ae11f56f4e2e88301baca0cfc95c5d459432aee7763e33b2"
+        ],
+        [
+          "e2_a_episodes.py",
+          "5e95896f6453da2bb069a67e14705a14d9eb75cf3a7cf233bb4a2c48593553b5"
+        ],
+        [
+          "e2_a_runner.py",
+          "13495ad1fa059855b3f72ae7678fbdce62063ce323e03ddf76da550cf9ffdf61"
+        ]
+      ],
+      "n_modules": 4,
+      "root": "/home/yuqing/ctaNew/live"
+    },
+    "launch_time_utc": "2026-09-06T10:50:18Z",
+    "on_disk_sha256_at_emit": "13495ad1fa059855b3f72ae7678fbdce62063ce323e03ddf76da550cf9ffdf61",
+    "producing_code": "e2_a_runner.py",
+    "producing_code_sha256": "13495ad1fa059855b3f72ae7678fbdce62063ce323e03ddf76da550cf9ffdf61",
+    "source_unchanged_during_the_run": true,
+    "worktree_was_dirty_at_import": true
+  },
+  "status": "FIXTURE_NO_DATA_TOUCHED",
+  "wrapper": {
+    "heavy_run_lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+    "note": "false means this step was NOT inside the capped scope. That is correct only for a step under 60 s and 1 GiB that opens no tape; anything else takes the lock FIRST and REFUSES if it is held.",
+    "ran_under_the_rule20_wrapper": false,
+    "read_from": "/proc/self/cgroup, in this process",
+    "rule": "SEAT_PROTOCOL rule 20 / R-575(C)",
+    "systemd_scope": "run-r324799b229734b96a812ff93f6624164.scope",
+    "systemd_slice": "app.slice",
+    "why_the_SLICE_and_not_the_scope": "the first version of this field tested `scope.startswith('run-')` and reported TRUE for an UNWRAPPED run, because the calling shell is itself inside a transient scope (app.slice). A field that is true either way is a control that cannot fail. `--slice=research.slice` is what the rule-20 wrapper adds and nothing else in this session does."
+  }
+}
