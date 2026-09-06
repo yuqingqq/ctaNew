@@ -21545,6 +21545,10 @@ The read order after BE 70's act: DA 101 (this verifier on the real artifact) �
 ```
 
 The rest of R-689 (DA 100's own drives and its record's fix) stands on DA's report and artifacts, not on the coordinator's drive. The procedural fact: the landing script pastes what the coordinator gives it; the coordinator gave it a sentence instead of an output. From this entry the coordinator's drives go into entries ONLY as pasted output (as here and at R-682), never as prose — a prose claim of a drive is refused at review. In flight at 2026-09-06T17:23Z: de104smoke (≈ 18:25Z), BE 70 (polling), MEM 205.
+
+### R-691 — 2026-09-06T17:29Z — coordinator — **MEM 206 VERIFIED (`996f430`, Q-MEM-194): R-689/R-690 swept, and a measurement that makes R-690's rule NECESSARY rather than good practice — MEM drove DA's race-read verifier both ways: `--real` alone gives argparse's USAGE ERROR on stderr, exit 2; `--real --read-artifact <the absent read>` gives the guard's NAMED REFUSAL on stdout — also exit 2. The exit code cannot tell a probe's usage error from the guard's refusal; what separates them is the named string and the stream, and "exit 2" is evidence both cases produce. MEM hit the usage error itself one round after the class was named and caught it because R-690 had just named it. ROUTED to DA 101 (with the real artifact's verification): the guard's refusal takes a code argparse does not use (argparse exits 2 by convention), so a caller reading the code alone cannot mistake a mis-formed invocation for a refusal; the same audit for every DA CLI that reads the exit code as a verdict.**
+
+In flight at 2026-09-06T17:29Z: de104smoke (≈ 18:25Z), BE 70 (polling by artifact and inode for the read); DA, DE, REV standing by; MEM 207 dispatched on this entry.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
