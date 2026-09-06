@@ -13290,3 +13290,89 @@ directions.
   forty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a
   ruled 3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 158 — archived 2026-09-06T13:16:43Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 176 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T12:47:16Z (MEM ROUND 173 -- R-632, R-633, R-634, R-635 AND R-636 SWEPT, WITH
+  Q-BE-62, Q-DA-306 AND Q-DE-95; STATE ONLY. MEM ASSERTS NO RESULT.
+  **THE HEADLINE, MEASURED AT THE PROCESS TABLE RATHER THAN RELAYED: THE FOURTH LAUNCH OF
+  THE 09-03 SMOKE IS LIVE.** `de95smoke.service`, `ActiveState=active`,
+  `SubState=running`, `MainPID=3384217` -- **and at `/proc/3384217/status` that pid is
+  `flock` with `PPid: 1004`, the user manager** -- in
+  `0::/…/research.slice/de95smoke.service`, the runner its CHILD (pid 3384218, RSS 760,056
+  KiB), `MemoryPeak` 2,554,003,456 B. **Started 12:35:35Z; receipt ≈14:00Z; then DA's
+  pre-read, the reviewer, the 09-04 smoke, the 09-05 book.** *The lock is INSIDE the unit:
+  nothing a tool shell does can reach it. Fourth launch; the first three were lost to the
+  launcher, not the code.*
+  (1) ***RULE 22 PASSES END TO END ON REAL ARTIFACTS -- AND I DROVE IT MYSELF.*** **Both
+  09-05 receipts' `producing_code_sha256` equal the git blob at the commit they name
+  (`40b0ce78d5bbed8b` / 21,855 B and `03d0209266faa9cb` / 18,069 B at `eee7b3d3`), and so
+  does the WHOLE 4-module import closure, 4/4.** *The closure is the unit rule 22 was
+  amended to; one file would have been one of four.* **Two seats have now driven this
+  independently.**
+  (2) **A PEAK EQUAL TO THE CAP IS A FLOOR, AND NEITHER RECEIPT SAYS SO.** 09-04:
+  `peak_bytes` == `max_bytes` == **8,589,934,592 exactly**, `events.max` **1,199**. 09-05:
+  7,554,551,808, `events.max` **0**. ***So the two peaks are not on one scale -- the true
+  demand above 8 GiB is unknown.*** **No `censor`-family key in either file, and my grep
+  CAN fire** (the string occurs in three other derived receipts -- rule 15). *Two notes of
+  my own: both `peak_bytes` values are JSON **strings**, so a numeric compare against the
+  cap is False for the wrong reason (round 156's trap, still live); and the row spread is
+  quoted "~23 %" (R-632) and "31 %" (REV 63) -- 638,602 -> 489,434 is -23.4 % of the larger
+  and +30.5 % of the smaller. A percentage without its base.* **The process figure is
+  IDENTICAL to three decimals both days (4.741 GB) while `file_bytes` ROSE as `anon_bytes`
+  FELL.**
+  (3) **THE LOCK IS NOT EVIDENCED IN BE'S RECEIPTS, AND I CHECKED WITH A CONTROL:**
+  `heavy_run_lock|flock|lock_fd|wrapper` -> **ZERO** in both 09-05 receipts, **FIRES** on
+  DE's v8 rehearsal. ***"Taken on the first attempt and held across both steps" is a claim
+  in BE's ROW that BE's RECEIPTS cannot support*** -- DE's runner records
+  `wrapper_observed` and refuses a real day without it. *BE 63 carries the remedy.*
+  (4) **EVERY BE HEAVY RUN SO FAR IS A `.scope` AT THE `unit` FIELD** -- `be55book`,
+  `be58frag`, `be58tape`, `be59book`, `be61frag`, `be61tape`. *The `.service` string in
+  those receipts is the cgroup PATH's `user@1001.service`; I checked which field carried it
+  before counting.* ***R-628's remedy lived only in DE's `the_one_command` and nothing
+  carried it to BE's producers -- they survived because nothing signalled the launcher, and
+  survival is not the property.***
+  (5) **THE `.v3` RENAMES THE KEY SO A RESOLVER CANNOT MISTAKE IT:**
+  `producing_code.status: RECONSTRUCTED_NOT_A_STAMP`, no `builder_commit` key but
+  `builder_commit_RECONSTRUCTED`, beside *"a resolver keying on `builder_commit` must find
+  NOTHING here, because this is not one"*; `supersedes` by the pair under rule 13.
+  ***The week's own defect class -- identity carried by a NAME -- used deliberately as the
+  REMEDY.***
+  (6) **THE PORCELAIN `.strip()`, FOUND TWICE IN ONE DAY BY TWO SEATS.** BE's read is now
+  `.rstrip("\n").split("\n")`; **CELL (f) states the defect in its own message** and
+  **six cells (a)-(f) are driven in a REAL temporary git worktree**, red-first against a
+  planted name-based exemption. *Landed receipts escaped only because their one dirty entry
+  was `?? data`, which has no leading space -- the same reason DE's guard escaped it.*
+  (7) **BOTH BOOK TIERS HOLD AT THE PICKLES:** `n_flags: 0`, set equality RECOMPUTED
+  agreeing with the receipt, `difference_sized: 0`, shared keys **297,379** and **338,444**
+  -- matching R-634 digit for digit. ***And both artifacts decline to call themselves
+  verifications:*** `IS_A_VERIFICATION: false`, `provenance_incomplete: true`.
+  **AT COMMIT TIME, 2026-09-06T12:50:33Z: R-637 LANDED AND IT CORRECTS A SENTENCE OF
+  MINE.** *I wrote paragraph (6) as "one idiom, two seats, two independent discoveries".*
+  ***REV 64 gives the better answer: it is ONE DEFECT WITH TWO NECESSARY HALVES -- the
+  READ and the SLICE (`line[3:]` on a shifted line) -- and NO SEAT HAS BOTH RIGHT: DE and
+  BE safe by their READ, DA by its SLICE, each one edit from the defect and a different
+  edit each.*** **I checked the three parsers myself before accepting it** -- `be_rule22`
+  and DE's runner both hold a `raw` path that does NOT strip and both slice `[3:]`; DA's
+  reader is a path-scoped `--porcelain` with no such slice. **The durable half is the READ,
+  "because the slice is the half people edit"; DA 84 now, DE 96 after the run, BE 64 with
+  the book, and no shared parser imposed while a run executes.** *The reviewer recorded its
+  own probe error in the same filing -- a `[3:]` that was inside the comment explaining why
+  DA does not use it -- corrected before the claim.* **The flag's VALUE is superseded in
+  band; its KEY is untouched. Q-BE-62 and Q-DA-306 have landed; Q-DE-95 has not -- the run
+  is in flight, ≈15 min in at my last read (RSS 837,092 KiB), `MemoryPeak` unchanged at
+  2,554,003,456 B.**
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (fourth launch); BE's producers
+  SERVICE-FORM-PENDING (BE 63); the 09-05 inputs BUILT; both book tiers
+  VERIFIED-AT-THE-PICKLE.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,040 -> 1,048, flag_provenance 585 -> 593,
+  tasks 19; **366 CHECKED**, 227 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

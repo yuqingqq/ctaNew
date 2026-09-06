@@ -5,6 +5,107 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 176
+
+**As of 2026-09-06T13:16:43Z, tip `a7dfc94`. State only — MEM writes no result.**
+
+### The retention window moved while I worked
+
+**Oldest user-journal entry: `2026-09-06T09:00:20Z` read at 13:05:10Z; `09:05:56Z` read at
+13:16:43Z** — disk 184.5 MB both times. **The window's start advanced ~5 m 36 s in eleven
+minutes.** *A retention state named once is already stale.* ***Rule 20's form — the number
+copied into an artifact at the moment of reading, with the state named beside it — is the
+only one that survives*** (R-641, `689c911`). **I can watch the boundary move; a control
+that reads the journal cannot, which is why no verdict may depend on it.**
+
+### AT COMMIT TIME (13:19:51Z): DA 86 landed, and its instrument agrees with me to the second
+
+**`p003_da_journal_retention__20260906T131704Z.json`** records `oldest_available_utc:
+**2026-09-06T09:05:56Z**` at `read_at_utc: 2026-09-06T13:17:04Z` — **the same boundary I
+read 21 seconds earlier, from a different instrument.** *Two readers, one moving edge.* My
+**third** reading, at 13:19:51Z, is **`09:09:57Z`**: ~9 m 37 s of window lost in under
+fifteen minutes.
+
+**DA's known-bads are the right shape:** an absent unit reports
+`ABSENT_NO_JOURNAL_LINES_FOR_THIS_UNIT` with *"NO NUMBER IS QUOTED FROM IT: a 0 reported as
+a measurement is a measurement of"* nothing; **a window older than retention reports
+`UNMEASURED` with `window_fully_covered: false` — not zero.** *The three-valued discipline,
+now on the journal*, beside `decides_nothing` and
+`the_numbers_are_copied_at_the_moment_of_reading: true`.
+
+**R-641's routing closed on DA's side** (`ab8f60c`, `ee9d8c1`, `8105bfd` = **Q-DA-309**)
+**within eight minutes of its 13:12Z dispatch**, and the same receipt exercises the shared
+porcelain parser (`the_rename_returns: b`, `n_malformed: 0`). **The run is at 44:16;
+`be64book` at sixteen refused polls; `MemoryPeak` still 2,554,003,456 B across six reads.**
+
+### The seven journal readers, censused with a control
+
+All seven exist and each contains `journalctl` — `be_daybook_build` 1, `da_accrual_report`
+1, `da_cross_venue_forensics` 2, `de_multiday_gate1_runner` 2, `de_launch_form_probe` 1,
+`be_heavy_run.sh` 2, `da_midnight_verify.sh` 1 — with **`be_rule22.py` returning 0** as the
+control. **Only `da_accrual_report.py` labels retention in substance** (:412, :421, :445).
+***My keyword pass would have said two of seven:*** DE's runner matched the word
+"decaying" **in a sentence about rule 10**. *Reading the hit made it one of seven — the
+harvest's own "census by AST, never by regex", arriving as keyword-versus-read.*
+
+### REV 63 §4, restated at my own measurement
+
+The two 09-05 **input** receipts — **rows `50318a3a…`** (read back out of the tape
+receipt's own `inputs.score_split.sha256`) and **tape `0650e213…`** — carry **`"dirty":
+true` with `"dirty_paths": ["data"]`, twice each**, and **zero** hits for
+`heavy_run_lock|flock|lock_fd|wrapper`. ***Accepted as-is; the new fields start with the
+book.*** *So no reader of those two is told they carry evidence they do not.* It was
+already said at **R-640(A) §5** — and **the reloaded reviewer found it there itself**.
+
+### The runbook now carries a test and a prohibition in one line
+
+`COORDINATOR_RUNBOOK.md` §6 (`63e601a`): ***"the test is the payload's PPid, measured never
+argued: under a transient service it is `systemd --user` (pid 1004 here); under a
+`--scope` it is the harness (`claude`). Never demonstrate it with `kill -TERM -<pgid>` —
+that reached the harness's own tree twice."*** *The cheap measurement replaces the
+demonstration that cost two tool shells;* DE 95's payload reads `PPid: 1004` at `/proc`.
+Rule 20's journal line sits in the same section.
+
+### The reviewer reset a second time — and confirmed itself from the files
+
+Stop **13:06:03Z** at the ≈75 % crossing; **the pane's scrollback overwrote the head of the
+harvest and it was re-sent verbatim at 13:10Z**; state verified **from the main tree, never
+from the pane**; cleared 13:11:52Z; brief v2 at `7864cb8`. ***Reloaded and confirmed at
+13:14Z from the FILES, not the brief — three deltas, all in the register's favour.*** *The
+files were ahead of the summary of them.*
+
+**The harvest is verbatim in the register because nothing else retains it.** The durable
+part is the methods: parentage not kills; scratch unit names with a `--setenv` lock
+(**`systemd-run` forwards only what `--setenv` names**, so a unit that re-resolves a path
+from an empty environment lands on the **real** lock and returns the right code for the
+wrong reason); **env-derived versus module constant** (`HEAVY_RUN_LOCK` is a constant, so
+`BE_HEAVY_LOCK` moves what the unit *takes* and never what the producer *verifies*);
+1-byte-file digest attacks; the porcelain three-line block; `journalctl … | wc -l` before
+quoting.
+
+***And the seam has moved up a level: it is no longer two seats' code, it is one artifact
+read by two seats with different rules*** — the supersession pair, the landing digest, the
+data root, the porcelain parse — **four instances in eight rounds**. **One structural
+asymmetry named: DA reads other seats' declarations rather than typing them, so divergence
+is impossible on DA's side — and it is one-way, because nothing checks DE's code against
+DE's design.**
+
+### The queue
+
+`de95smoke.service` active/running at **40:04**, RSS 810,828 KiB, `MemoryPeak` **still
+2,554,003,456 B** across five reads spanning 37 minutes. **`be64book` has started twelve
+times, every one `ExecMainStatus=75`** — the poll is a loop and twelve refusals cost
+nothing but journal lines. **DA 86 dispatched 13:12Z, in flight; BE 65 and DE 96/97 own
+the rest of §3.1's readers.** Receipt ≈14:00Z, then DA's pre-read → the 09-04 smoke → the
+09-05 book.
+
+**Counts, measured before the sentence:** flags 1,064 → **1,072**, `flag_provenance`
+609 → **617**, tasks 19; **385 CHECKED**, 232 RELAYED, **455 UNMARKED — unchanged for the
+fifty-second round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 158** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 175
 
 **As of 2026-09-06T13:05:10Z. State only — MEM writes no result.**
