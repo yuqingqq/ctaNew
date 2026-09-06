@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 318
+EXPECTED_CHECKS = 320
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -4419,6 +4419,75 @@ RUNNER_EXIT_CODES = {
 }
 
 
+EXIT_MAP_DIR = "live/pm_research/declarations"
+EXIT_MAP_GLOB = "producer_exit_maps_v*.json"
+THIS_PRODUCER = "live/pm_research/de_multiday_gate1_runner.py"
+
+
+def producer_exit_map(root: Path | None = None) -> dict:
+    """THIS PRODUCER'S DECLARED EXIT MAP, from the chain head (R-709).
+
+    The head is resolved through the pair, never a filename literal --
+    the same rule as the launch form's. A map that claims 75 is REFUSED:
+    75 is the LAUNCH LAYER'S (`flock -n -E 75` means a held lock and the
+    payload never started), and a producer claiming it would make a
+    refusal indistinguishable from a held lock in `ExecMainStatus`."""
+    r = Path(root) if root else Path(__file__).resolve().parents[2]
+    d = r / EXIT_MAP_DIR
+    docs, bad = {}, []
+    for f in sorted(d.glob(EXIT_MAP_GLOB)):
+        m = re.search(r"_v(\d+)\.json$", f.name)
+        if not m:
+            continue
+        try:
+            docs[int(m.group(1))] = (f, json.loads(f.read_text()))
+        except (OSError, ValueError) as exc:
+            bad.append({"file": f.name, "why": str(exc)})
+    if bad:
+        raise RunnerRefused(
+            f"REFUSED: {[b['file'] for b in bad]} in the exit-map family "
+            f"cannot be read; an unresolvable set has no head.")
+    if not docs:
+        raise RunnerRefused(f"REFUSED: no producer exit map under {d}.")
+    superseded = set()
+    for v in sorted(docs):
+        f, doc = docs[v]
+        sup = doc.get("supersedes") or {}
+        if not sup:
+            continue
+        prev = r / sup["path"]
+        if not prev.is_file():
+            raise RunnerRefused(
+                f"REFUSED: {f.name} supersedes {sup['path']}, absent.")
+        got = hashlib.sha256(prev.read_bytes()).hexdigest()
+        if got != sup.get("sha256"):
+            raise RunnerRefused(
+                f"REFUSED: {f.name}'s supersession pair does not hold "
+                f"({str(sup.get('sha256'))[:16]} vs {got[:16]}).")
+        superseded.add(prev.name)
+    heads = [v for v, (f, _) in docs.items() if f.name not in superseded]
+    if len(heads) != 1:
+        raise RunnerRefused(
+            f"REFUSED: the exit-map family resolves to {len(heads)} heads "
+            f"({sorted(heads)}); it must resolve to one.")
+    hf, hdoc = docs[heads[0]]
+    block = (hdoc.get("producers") or {}).get(THIS_PRODUCER) or {}
+    codes = {int(k) for k in (block.get("map") or {})}
+    rc = heavy_run_form()["lock_conflict_rc"]
+    if rc in codes:
+        raise RunnerRefused(
+            f"REFUSED: this producer's declared exit map claims {rc}, "
+            f"which is the LAUNCH LAYER'S lock-conflict code. A producer "
+            f"exiting {rc} makes a refusal indistinguishable from a held "
+            f"lock in `ExecMainStatus` -- the whole point of `-E {rc}`.")
+    return {"head_version": heads[0], "head_path": str(hf.name),
+            "head_sha256": hashlib.sha256(hf.read_bytes()).hexdigest(),
+            "status": block.get("status"), "map": block.get("map"),
+            "codes": sorted(codes),
+            "lock_conflict_rc_excluded": rc,
+            "agrees_with_the_module": codes == set(RUNNER_EXIT_CODES)}
+
+
 def assert_no_exit_code_collision() -> dict:
     """A RunnerRefused MUST NOT exit with the lock-conflict code.
 
@@ -6333,6 +6402,32 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"`_strip_economic` seals by the list in force for THIS run; a "
        f"census judges a receipt by the list in force when THAT receipt "
        f"was produced")
+    # ---- R-709: THIS PRODUCER'S EXIT MAP, DECLARED --------------------
+    if offline:
+        offline_skip("R-709 the producer exit map at the chain head")
+        offline_skip("R-709 the known-bad: a map claiming 75")
+    else:
+        _em = producer_exit_map()
+        ok(_em["status"] == "DECLARED"
+           and _em["agrees_with_the_module"] is True
+           and _em["lock_conflict_rc_excluded"] not in _em["codes"],
+           f"R-709: this producer's exit map is DECLARED at the chain "
+           f"head (v{_em['head_version']}, {_em['head_sha256'][:16]}) and "
+           f"AGREES with the module's own `RUNNER_EXIT_CODES` "
+           f"{_em['codes']} -- a map beside the code is two definitions; "
+           f"this one is checked against it")
+        _bad709 = {"producers": {THIS_PRODUCER: {"map": {"0": "x",
+                                                          "75": "y"}}}}
+        _t709 = Path(_tfr.mkdtemp(prefix="de108map_"))
+        (_t709 / EXIT_MAP_DIR).mkdir(parents=True)
+        (_t709 / EXIT_MAP_DIR / "producer_exit_maps_v1.json").write_text(
+            json.dumps(_bad709))
+        refuses(lambda: producer_exit_map(_t709),
+                f"R-709 KNOWN-BAD: a map claiming 75 is REFUSED. 75 is "
+                f"the LAUNCH LAYER's -- `flock -n -E 75` means a held "
+                f"lock and the payload never started -- and a producer "
+                f"claiming it makes a refusal indistinguishable from a "
+                f"held lock in ExecMainStatus", "LAUNCH LAYER")
     # ---- REV 75: the four defects, driven ----------------------------
     # S1.1 a `{path, sha256: null}` is not a pair (R-608), and the DESIGN
     # was digested at the EMIT -- so its "at load" and "at emit" were one
