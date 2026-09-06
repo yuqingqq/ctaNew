@@ -7526,7 +7526,8 @@ def feature_blocks(*, splits, fragment: Path | None = None,
             "n_tape_rows": len(TAPE)}
 
 
-def build_tape_index(splits) -> dict:
+def build_tape_index(splits, *, path=None, day: str | None = None,
+                     expect_sha256: str | None = None) -> dict:
     """THE TAPE INDEX, built ONCE and reusable across feature passes.
 
     MEASURED at full scale, which the price never did: the score split is
@@ -7542,7 +7543,8 @@ def build_tape_index(splits) -> dict:
     split_of: dict = {}
     for sp in got:
         t0 = time.time()
-        idx = PA.tape_index(sp)
+        idx = PA.tape_index(sp, path=path, day=day,
+                            expect_sha256=expect_sha256)
         dup = [k for k in idx if k in TAPE]
         if dup:
             # SITE: assembly#5

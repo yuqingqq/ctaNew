@@ -271,6 +271,19 @@ def main(argv=None) -> int:
         day = argv[argv.index("--day") + 1]
         out = build(day)
         dst = OUT_DERIVED / f"be_gate1_state_tape_receipt_{day}_{COIN}.json"
+        # A LANDED RECEIPT IS NEVER OVERWRITTEN (rule 13). Round 51 wrote the
+        # corrected receipt at v1's path and replaced a landed artifact; the
+        # builder now versions instead, so the defect cannot recur from here.
+        if dst.exists():
+            n = 2
+            while (OUT_DERIVED / f"be_gate1_state_tape_receipt_{day}_"
+                                 f"{COIN}.v{n}.json").exists():
+                n += 1
+            dst = (OUT_DERIVED /
+                   f"be_gate1_state_tape_receipt_{day}_{COIN}.v{n}.json")
+            out["supersedes"] = {
+                "artifact": f"be_gate1_state_tape_receipt_{day}_{COIN}.json",
+                "rule": "13 -- vN+1; the earlier receipt is not edited"}
         dst.write_text(json.dumps(out, indent=1, sort_keys=True, default=str))
         print(json.dumps({"receipt": str(dst), **out["tape"],
                           "wall_s": out["resources"]["wall_s"],

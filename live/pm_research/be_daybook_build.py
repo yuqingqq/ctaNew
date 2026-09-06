@@ -84,6 +84,24 @@ class BookRefused(RuntimeError):
     """A named refusal."""
 
 
+def day_tape_sha(day: str, coin: str = COIN) -> str | None:
+    """The day tape's digest AS THE BUILDER RECEIPT NAMES IT.
+
+    Read from the receipt rather than recomputed here, so the assembly is
+    bound to the bytes the tape builder published -- not merely to whatever
+    is at the path today."""
+    import be_gate1_state_tape as TM
+    for name in (f"be_gate1_state_tape_receipt_{day}_{coin}.v2.json",
+                 f"be_gate1_state_tape_receipt_{day}_{coin}.json"):
+        r = OUT_DERIVED / name
+        if r.exists():
+            d = json.loads(r.read_text())
+            if d.get("WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY", {}) \
+                    .get("split") == "score":
+                return d["tape"]["sha256"]
+    return None
+
+
 def assert_day_tape(day: str, coin: str = COIN) -> dict:
     """THE ASSEMBLY MUST READ THE DAY'S TAPE, AND TODAY IT CANNOT.
 
@@ -101,8 +119,20 @@ def assert_day_tape(day: str, coin: str = COIN) -> dict:
     import be_gate1_state_tape as TAPEMOD
     import phase2_arms as PA
     want = TAPEMOD.out_path(day, coin)
-    have = Path(PA.TAPE_PATH)
-    if have.resolve() != want.resolve():
+    if not want.exists():
+        raise BookRefused(
+            f"REFUSED: the day's tape {want.name} does not exist.")
+    sha = day_tape_sha(day, coin)
+    if not sha:
+        raise BookRefused(
+            f"REFUSED: no SCORE-split builder receipt for {day} {coin}. The "
+            f"assembly binds to the digest the tape builder published, and a "
+            f"tape whose receipt says `train` is the wrong split for a ruled "
+            f"forward day.")
+    # ITEM 1 landed: the path is now a parameter, so the default constant is
+    # no longer the blocker. What must still hold is that the day's tape
+    # EXISTS and its receipt names the SCORE split.
+    if False:
         raise BookRefused(
             f"REFUSED: the assembly would index {have.name}, not this day's "
             f"tape {want.name}. `phase2_arms.TAPE_PATH` is a module constant "
@@ -112,7 +142,12 @@ def assert_day_tape(day: str, coin: str = COIN) -> dict:
             f"book with an EMPTY `asm`. BLOCKED on a path parameter, which "
             f"is DE's surface (reviewer BE48, item 2). Not raised here, and "
             f"not worked around.")
-    return {"tape": str(want), "is_the_days_tape": True}
+    return {"tape": str(want), "is_the_days_tape": True,
+            "sha256_from_receipt": sha,
+            "default_constant_no_longer_blocks": True,
+            "why": "phase2_arms.tape_index and build_tape_index now take a "
+                   "`path` (BE round 52 item 1), so the assembly indexes the "
+                   "day's tape and verifies its digest at load"}
 
 
 def assert_rule20(*, fixture: bool = False) -> dict:
@@ -272,6 +307,7 @@ def build(day: str, *, coin: str = COIN,
           chunk_windows: int = CHUNK_WINDOWS,
           scratch: Path | None = None, progress: bool = True,
           fixture: bool = False) -> dict:
+    import be_gate1_state_tape as TAPEMOD
     import de_phase4_diag_runner as R
     t0 = time.time()
     obs = {}
@@ -300,7 +336,12 @@ def build(day: str, *, coin: str = COIN,
     assert_day_tape(day, coin)
     splits = R.DECLARED_SPLIT_SETS[R.RULED_SPLIT_SET]
     t = time.time()
-    tape = R.build_tape_index(splits)
+    # ITEM 1 IS IN: the index is built from THE DAY'S OWN TAPE, with its
+    # digest verified at load. Before this, `build_tape_index` had no path
+    # and would have indexed the consumed hour's tape for a September day.
+    _dt = TAPEMOD.out_path(day, coin)
+    tape = R.build_tape_index(splits, path=_dt, day=day,
+                              expect_sha256=day_tape_sha(day, coin))
     stages.done("A1_index", t)
     obs["tape_index_s"] = round(time.time() - t, 1)
     obs["tape_rows"] = tape.get("n_tape_rows")
@@ -433,7 +474,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 10
+EXPECTED_CHECKS = 15
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -554,17 +595,58 @@ def selftest() -> int:
            "KNOWN-BAD: zero coverage on every head REFUSES -- an empty "
            "decision population is the failure that looks like a result")
 
+    # ROUND 51's BLOCKER IS CLEARED BY ROUND 52's ITEM 1, so this check
+    # asserts the NEW truth: the day tape ADMITS, bound to the digest its
+    # SCORE-split receipt names.
+    _adt = assert_day_tape("20260903")
+    ok(_adt["is_the_days_tape"]
+       and _adt["sha256_from_receipt"].startswith("9de88da950598e86")
+       and _adt["default_constant_no_longer_blocks"],
+       f"POSITIVE CONTROL: the assembly now binds to THE DAY'S tape, at the "
+       f"digest its SCORE-split receipt names "
+       f"({_adt['sha256_from_receipt'][:16]}…) -- round 51's module-constant "
+       f"blocker is cleared by this round's path parameter")
     try:
-        assert_day_tape("20260903")
-        ok(False, "the day-tape guard must refuse while TAPE_PATH is a "
-                  "module constant")
+        assert_day_tape("19700101")
+        ok(False, "a day with no tape must refuse")
     except BookRefused as e:
-        ok("module constant" in str(e) and "EMPTY `asm`" in str(e),
-           "KNOWN-BAD, AND IT IS THE LIVE BLOCKER: the assembly would index "
-           "the live August tape, not the day's, because "
-           "`phase2_arms.TAPE_PATH` is a module constant -- so a September "
-           "run would emit a book with an empty `asm`. It REFUSES before "
-           "any work rather than producing that book")
+        ok("does not exist" in str(e),
+           "KNOWN-BAD: a day with no tape REFUSES -- the assembly never "
+           "silently falls back to the consumed hour's tape")
+
+    # ---- ITEM 1: the tape PATH parameter, driven three ways --------------
+    import phase2_arms as _PA
+    import be_gate1_state_tape as _TM
+    try:
+        _PA.assert_tape_for_day("20260903")          # default path
+        ok(False, "the default tape on a ruled day must refuse")
+    except _PA.TapePathRefused as e:
+        ok("RULED FORWARD DAY" in str(e) and "EMPTY `asm`" in str(e),
+           "KNOWN-BAD: a RULED DAY asked for with the DEFAULT tape REFUSES, "
+           "naming the consequence -- indexing the consumed hour's tape for "
+           "a September day yields an empty asm")
+    _dt = _TM.out_path("20260903")
+    if _dt.exists():
+        try:
+            _PA.assert_tape_for_day("20260903", _dt,
+                                    expect_sha256="0" * 16)
+            ok(False, "a wrong digest must refuse")
+        except _PA.TapePathRefused as e:
+            ok("is not that day's tape" in str(e),
+               "KNOWN-BAD: the day's tape with a WRONG expected digest "
+               "REFUSES -- bytes that are not the ones the builder receipt "
+               "names are not that day's tape")
+        _r = _PA.assert_tape_for_day("20260903", _dt,
+                                     expect_sha256="9de88da950598e86")
+        ok(_r["digest_verified_at_load"] and not _r["is_the_default"],
+           f"POSITIVE CONTROL: the day's own tape ADMITS with its digest "
+           f"VERIFIED AT LOAD ({_r['sha256'][:16]}…) and is not the default")
+    else:
+        skip("the day-tape digest checks", f"{_dt.name} absent")
+        skip("the day-tape positive control", f"{_dt.name} absent")
+    ok(_PA.assert_tape_for_day(None)["is_the_default"] is True,
+       "and the CONSUMED HOUR still uses the default with no day named -- "
+       "the parameter is additive and changes no existing call")
 
     return _finish(checks, fails, skipped)
 

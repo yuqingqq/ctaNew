@@ -435,7 +435,60 @@ def _stream_tape_rows(path: Path):
             buf = buf[end:]
 
 
-def tape_index(split: str, features_in_order=None) -> dict:
+#: The ruled forward days. A day tape exists per day; asking for one of
+#: these with the DEFAULT tape is the mistake `assert_tape_for_day` refuses.
+RULED_FORWARD_DAYS = ("20260901", "20260902", "20260903", "20260904",
+                      "20260905", "20260906")
+
+
+class TapePathRefused(RuntimeError):
+    """A named refusal."""
+
+
+def assert_tape_for_day(day: str | None, path=None, *,
+                        expect_sha256: str | None = None) -> dict:
+    """WHICH TAPE, FOR WHICH DAY -- and a refusal when they disagree.
+
+    `TAPE_PATH` is the CONSUMED HOUR's tape. A ruled forward day has its own,
+    and indexing the default for such a day finds no rows for that day's
+    generations and yields an EMPTY `asm` -- the failure that looks like a
+    result. So the default is allowed for the consumed hour and REFUSED for a
+    ruled day.
+
+    The digest is verified AT LOAD when the caller supplies one: a day tape
+    that is not the bytes the builder receipt names is not that day's tape."""
+    import hashlib
+    p = Path(path) if path is not None else TAPE_PATH
+    if day is not None and str(day) in RULED_FORWARD_DAYS \
+            and p.resolve() == Path(TAPE_PATH).resolve():
+        raise TapePathRefused(
+            f"REFUSED: day {day} is a RULED FORWARD DAY and the tape is the "
+            f"DEFAULT ({p.name}) -- the consumed hour's tape. Indexing it "
+            f"for {day} finds no rows for that day's generations and yields "
+            f"an EMPTY `asm`, which is the failure that looks like a result. "
+            f"Pass the day's own tape.")
+    if not p.exists():
+        raise TapePathRefused(f"REFUSED: tape {p} does not exist.")
+    out = {"tape_path": str(p), "day": day,
+           "is_the_default": p.resolve() == Path(TAPE_PATH).resolve()}
+    if expect_sha256:
+        h = hashlib.sha256()
+        with p.open("rb") as fh:
+            for chunk in iter(lambda: fh.read(1 << 20), b""):
+                h.update(chunk)
+        got = h.hexdigest()
+        if not got.startswith(expect_sha256.lower()[:16]):
+            raise TapePathRefused(
+                f"REFUSED: {p.name} digests {got[:16]}…, not the expected "
+                f"{expect_sha256[:16]}…. A tape that is not the bytes the "
+                f"builder receipt names is not that day's tape.")
+        out["sha256"] = got
+        out["digest_verified_at_load"] = True
+    return out
+
+
+def tape_index(split: str, features_in_order=None, *, path=None,
+               day: str | None = None, expect_sha256: str | None = None) -> dict:
     """Index ONE split by identity, storing a COMPACT FLOAT TUPLE per row.
 
     R-194 seam 15: storing whole row dicts was ~12 GB for 1.7M rows -- the
@@ -445,8 +498,9 @@ def tape_index(split: str, features_in_order=None) -> dict:
     caller cannot re-make the outer-row mistake."""
     import phase2_state_schema_freeze as _PIN
     feats = features_in_order or _PIN.build_pin()["features_in_order"]
+    _tp = assert_tape_for_day(day, path, expect_sha256=expect_sha256)
     idx = {}
-    for r in _stream_tape_rows(TAPE_PATH):
+    for r in _stream_tape_rows(Path(_tp["tape_path"])):
         if r.get("split") != split:
             continue
         # R-215: index EVERY row and CARRY ITS STATUS. Skipping non-OK rows
