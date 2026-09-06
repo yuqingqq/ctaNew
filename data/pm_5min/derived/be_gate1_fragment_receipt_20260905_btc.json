@@ -1,0 +1,132 @@
+{
+ "build": {
+  "boundary_time_violations": 0,
+  "consume_clock_violations": 0,
+  "days": [
+   "2026-09-05"
+  ],
+  "n_rows": 492533,
+  "n_windows": 288,
+  "reconciliation_failures": 0,
+  "unhooked_state_changes": 0
+ },
+ "coin": "btc",
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day": "20260905",
+ "decides_nothing": "REPORTED (rule 14).",
+ "fragment": {
+  "bytes": 545493868,
+  "digest_is_of_the_bytes_as_written": true,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260905_btc.json",
+  "sha256": "50318a3a7c011739eed25f2bf1db656a38f4e7c46d10487ea419bcef82f1dfe6",
+  "streamed_never_materialised": true
+ },
+ "guard": {
+  "refuses_any_existing_path": true,
+  "refuses_existing_datasets": [
+   "harmful_exposure_rows_v1.json",
+   "harmful_exposure_rows_v2.json",
+   "harmful_exposure_rows_v2_eraB.json",
+   "harmful_exposure_rows_v3.json",
+   "harmful_exposure_rows_v3_eraB.json",
+   "harmful_exposure_rows_v3_topup.PREFIX_FILTERED.json",
+   "harmful_exposure_rows_v3_topup.json"
+  ],
+  "required_stem": "harmful_exposure_rows_v3_gate1_"
+ },
+ "no_assembly_run": true,
+ "no_book_built": true,
+ "one_file_per_day": true,
+ "population": {
+  "coin": "btc",
+  "day": "20260905",
+  "n_windows": 288,
+  "slugs_sha256": "ce10a8c1a4f622219d990ab62a7625313edc5aeff6d016d192e857d34ae21ea0",
+  "source": "de_admissible_windows.supply(day, be_forward_day.present_from_ledger(day))",
+  "why_not_a_declared_population": "the declared population intervals end 2026-08-26T00:00; no September day passes slug_in_population"
+ },
+ "producing_code": {
+  "builder_commit": "eee7b3d30c1a562463dd579f521a451659ba2614",
+  "captured_at": "IMPORT",
+  "closure_drift": [],
+  "closure_unchanged_during_the_run": true,
+  "head_at_emit": {
+   "dirty": true,
+   "dirty_paths": [
+    "data"
+   ],
+   "head": "eee7b3d30c1a562463dd579f521a451659ba2614",
+   "worktree": "/home/yuqing/ctaNew-wt-be"
+  },
+  "head_at_import": {
+   "dirty": true,
+   "dirty_paths": [
+    "data"
+   ],
+   "head": "eee7b3d30c1a562463dd579f521a451659ba2614",
+   "worktree": "/home/yuqing/ctaNew-wt-be"
+  },
+  "head_unchanged_during_the_run": true,
+  "import_closure": {
+   "first_seen_at": {
+    "be_data_root.py": "be_gate1_fragment import",
+    "be_gate1_fragment.py": "be_gate1_fragment import",
+    "be_rule22.py": "be_gate1_fragment import"
+   },
+   "modules": {
+    "be_data_root.py": "fcf15e2339b519ca2cd84119db3aaf7019b8c3429c6f4b145601c4ffaf237be9",
+    "be_gate1_fragment.py": "40b0ce78d5bbed8bc9aea9b80e5e4d80cafc62954afe22a02785559640f29fe1",
+    "be_rule22.py": "e60ea28b6bcfe2d3285066d4f8ed2dd187e3401bc4019bf6b6144e1ab30e1427"
+   },
+   "n_modules": 3,
+   "not_covered": "modules imported after the last capture call, packages outside this root, the interpreter, and data",
+   "root": "/home/yuqing/ctaNew-wt-be/live"
+  },
+  "producing_code": "be_gate1_fragment.py",
+  "producing_code_sha256": "40b0ce78d5bbed8bc9aea9b80e5e4d80cafc62954afe22a02785559640f29fe1",
+  "why_not_at_emit": "a digest taken when the receipt is written can be of bytes that changed during the run; the receipt would then name code that did not produce its numbers (R-603, rule 22)",
+  "worktree_was_dirty_at_import": true
+ },
+ "protocol": "BE_GATE1_FRAGMENT_V1",
+ "resources": {
+  "cap_gb": 8.0,
+  "cap_raised": false,
+  "peak_rss_gb": 1.764,
+  "wall_s": 527.1
+ },
+ "rule22_checked_at_emit": {
+  "closure_unchanged": true,
+  "head_unchanged": true,
+  "n_modules": 3,
+  "where": "be_gate1_fragment receipt emit"
+ },
+ "scope": {
+  "anon_bytes": 1785843712,
+  "cap_was_hit": false,
+  "cgroup": "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/research.slice/be61frag.scope",
+  "current_bytes": "4104753152",
+  "events": {
+   "high": 0,
+   "low": 0,
+   "max": 0,
+   "oom": 0,
+   "oom_group_kill": 0,
+   "oom_kill": 0,
+   "sock_throttled": 0
+  },
+  "file_bytes": 2296426496,
+  "max_bytes": "8589934592",
+  "peak_bytes": "4104753152",
+  "unit": "be61frag.scope"
+ }
+}

@@ -1,0 +1,139 @@
+{
+ "THE_SPLIT_QUESTION_IS_NOT_MINE": {
+  "computed_from_the_build_not_a_literal": true,
+  "consequence_if_DE_rules_otherwise": "the tape is rebuilt; it is one day and it is cheap relative to the fragment",
+  "mechanism": "build_state_tape_v2 maps its two inputs onto the two splits: (('train', FRAG), ('score', TOP))",
+  "status": "RULED \u2014 the day's rows are the SCORE split (R-560). A ruled forward day is not trained on. (Superseded the PROVISIONAL status this field carried while the question was open.)",
+  "what_this_build_did": "day fragment -> SCORE; an explicitly EMPTY file -> TRAIN",
+  "why_it_bites_here": "those are two POPULATIONS (eraB, top-up), not two feature sets. A one-day Gate-1 tape has ONE population, so one split has no input."
+ },
+ "WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY": {
+  "corrected_from": "the first 09-03 tape put the day in TRAIN and left SCORE empty; that artifact is moved aside as .WRONG_SPLIT and superseded",
+  "split": "score",
+  "why": "a RULED FORWARD DAY is not trained on. Every row is a SCORE row that the PINNED heads score at their PINNED thetas to produce `asm`; nothing is fitted here.",
+  "why_the_label_is_not_cosmetic": "`phase2_arms.tape_index` filters `r['split'] != split`, so the label decides which index a row lands in -- and a forward day labelled `train` reports as a day the heads were FITTED on, which is the look-ahead-shaped misreport"
+ },
+ "build_ref": "eee7b3d30c1a562463dd579f521a451659ba2614",
+ "coin": "btc",
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day": "20260905",
+ "decides_nothing": "REPORTED (rule 14).",
+ "guard": {
+  "refuses_any_existing_path": true,
+  "refuses_existing_state_tapes": [
+   "phase2_state_tape_v2.json",
+   "phase2_state_tape_v5.QUARANTINED_ZERO_ROW.json",
+   "phase2_state_tape_v5.QUARANTINED_tape6d_286.json",
+   "phase2_state_tape_v5.json"
+  ],
+  "required_stem": "phase2_state_tape_gate1_"
+ },
+ "inputs": {
+  "score_split": {
+   "THE_DAY'S_ROWS": true,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260905_btc.json",
+   "sha256": "50318a3a7c011739eed25f2bf1db656a38f4e7c46d10487ea419bcef82f1dfe6"
+  },
+  "train_split": {
+   "EMPTY_BY_CONSTRUCTION": true,
+   "bytes": 234,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260905_btc.EMPTY_SCORE.json",
+   "sha256": "5f13170c0602d1e9bcf48604d4845075d4ea73522e47733409a81031c67bf50b",
+   "why_it_still_carries_a_digest": "REV 43: 'empty by construction' is a claim about the file, and a claim about a file that carries no digest cannot be checked. An empty file is still bytes."
+  }
+ },
+ "no_assembly_run": true,
+ "no_book_built": true,
+ "producing_code": {
+  "builder_commit": "eee7b3d30c1a562463dd579f521a451659ba2614",
+  "captured_at": "IMPORT",
+  "closure_drift": [],
+  "closure_unchanged_during_the_run": true,
+  "head_at_emit": {
+   "dirty": true,
+   "dirty_paths": [
+    "data"
+   ],
+   "head": "eee7b3d30c1a562463dd579f521a451659ba2614",
+   "worktree": "/home/yuqing/ctaNew-wt-be"
+  },
+  "head_at_import": {
+   "dirty": true,
+   "dirty_paths": [
+    "data"
+   ],
+   "head": "eee7b3d30c1a562463dd579f521a451659ba2614",
+   "worktree": "/home/yuqing/ctaNew-wt-be"
+  },
+  "head_unchanged_during_the_run": true,
+  "import_closure": {
+   "first_seen_at": {
+    "be_data_root.py": "be_gate1_state_tape import",
+    "be_gate1_fragment.py": "be_gate1_fragment import",
+    "be_gate1_state_tape.py": "be_gate1_state_tape import",
+    "be_rule22.py": "be_gate1_state_tape import"
+   },
+   "modules": {
+    "be_data_root.py": "fcf15e2339b519ca2cd84119db3aaf7019b8c3429c6f4b145601c4ffaf237be9",
+    "be_gate1_fragment.py": "40b0ce78d5bbed8bc9aea9b80e5e4d80cafc62954afe22a02785559640f29fe1",
+    "be_gate1_state_tape.py": "03d0209266faa9cb1dabe98db5dcb98da092f4f95aacd8064a7883374030e71d",
+    "be_rule22.py": "e60ea28b6bcfe2d3285066d4f8ed2dd187e3401bc4019bf6b6144e1ab30e1427"
+   },
+   "n_modules": 4,
+   "not_covered": "modules imported after the last capture call, packages outside this root, the interpreter, and data",
+   "root": "/home/yuqing/ctaNew-wt-be/live"
+  },
+  "producing_code": "be_gate1_state_tape.py",
+  "producing_code_sha256": "03d0209266faa9cb1dabe98db5dcb98da092f4f95aacd8064a7883374030e71d",
+  "why_not_at_emit": "a digest taken when the receipt is written can be of bytes that changed during the run; the receipt would then name code that did not produce its numbers (R-603, rule 22)",
+  "worktree_was_dirty_at_import": true
+ },
+ "protocol": "BE_GATE1_STATE_TAPE_V1",
+ "resources": {
+  "cap_gb": 8.0,
+  "cap_raised": false,
+  "peak_rss_gb": 4.741,
+  "wall_s": 755.4
+ },
+ "rule22_checked_at_emit": {
+  "closure_unchanged": true,
+  "head_unchanged": true,
+  "n_modules": 4,
+  "where": "be_gate1_state_tape receipt emit"
+ },
+ "scope": {
+  "anon_bytes": 1153556480,
+  "cap_was_hit": false,
+  "cgroup": "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/research.slice/be61tape.scope",
+  "current_bytes": "4830842880",
+  "events": {
+   "high": 0,
+   "low": 0,
+   "max": 0,
+   "oom": 0,
+   "oom_group_kill": 0,
+   "oom_kill": 0,
+   "sock_throttled": 0
+  },
+  "file_bytes": 3645927424,
+  "max_bytes": "8589934592",
+  "peak_bytes": "7554551808",
+  "unit": "be61tape.scope"
+ },
+ "tape": {
+  "bytes": 890640737,
+  "n_rows": 489434,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260905_btc.json",
+  "sha256": "0650e21348dbccb8c77e0478de26f62f832faded74fe058573d1ad5b240b1f80"
+ }
+}
