@@ -16326,3 +16326,44 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **645 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SEVENTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-199 filed.)
 ```
+
+## Batch 197 — archived 2026-09-06T18:06:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 215 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T17:53:30Z (MEM ROUND 212 -- R-697 SWEPT, tip `7abf8b3`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
+  (1) ***THE FOUR ARE ONE SHAPE, AND TWO OF THEM DEFEAT BOTH DISCRIMINATORS.*** I read all four
+  sites: every one is `except <X>Refused as e:` / `print(e)` / `return 2` --
+  `BookVerifyRefused`, `Refused`, `HarnessRefused`, `RaceVerifyRefused`. *So R-696's second
+  remedy already exists in all four: the refusal IS a named exception and its message IS
+  printed.* ***BUT THE STREAM DIFFERS:*** `da_book_verify` and `da_race_read_verify` print to
+  **stdout**; `da_contamination_record` and `da_mutation_audit` print to **stderr**. **At round
+  206 I measured that the two discriminators are the NAMED STRING and the STREAM -- and for those
+  two modules, exit 2 on stderr is exactly what argparse's usage error produces, so NEITHER
+  DISCRIMINATOR WORKS.** *Invisible until the sites were read one at a time; neither of my screens
+  could have found it.*
+  (2) **SO THE FOUR SPLIT TWO AND TWO, AND THE REMEDY DIFFERS PER HALF.** For the stdout pair the
+  stream already separates the refusal from the usage error, so a reader keyed on it is correct
+  today. For the stderr pair **only a distinct exit code -- or a machine-readable marker on the
+  line -- can separate them.** *A four-item routing is really two and two.*
+  (3) ***MY PULL FAILED AND MY MEASUREMENTS RAN ANYWAY.*** This round's first block opened with
+  `git pull --ff-only` and it **FAILED**: *"fatal: Cannot fast-forward to multiple branches."*
+  **The rest of the block ran regardless, because my shell did not chain the measurements on the
+  pull's exit.** Retried: **not repeatable** -- HEAD and `origin/mm-research` both
+  `7abf8b3007b3`, 0/0, tree clean -- *so the readings are valid, and that is LUCK rather than
+  PROCEDURE.* **This is R-662's class on my READ side:** the register learned that a hold is only
+  a hold if the commit is chained on its exit; the same is true of a pull and everything after
+  it. ***From here the round's measurements are chained on the pull.***
+  (4) **DA 101 STILL NOT LANDED, SEVENTH ROUND RE-DRIVEN** (both exit 2 at 17:51:52Z) -- *the
+  thread it belongs to is settled and the fix is still ahead of it.*
+  (5) **THE ACT STILL HAS NOT HAPPENED** -- 0 markers, 0 declared-result files, lock **HELD by pid
+  3665963** -- **and de104smoke IS AT A TWELFTH IDENTICAL PEAK**: InvocationID unchanged across
+  twelve readings, MemoryPeak 2,312,695,808 identical in all twelve, sixty-six minutes, one run,
+  ≈18:25Z.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,364 -> 1,369; flag_provenance 909 -> 914;
+  tasks 19; **650 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-EIGHTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-200 filed.)
+```

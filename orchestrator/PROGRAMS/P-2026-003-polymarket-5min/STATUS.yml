@@ -63,6 +63,70 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T18:06:30Z (MEM ROUND 215 -- R-703 SWEPT, tip `ce88a0c`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **EIGHT SEALED RECEIPTS CENSUSED AND NONE OPENED; THE RACE READ'S RESULT HASHED AND NOT
+  OPENED FOR THE THIRD TIME.**
+  (1) ***THE WHOLE SEALED FAMILY CENSUSED, AND EVERY OLDER DIGEST IS UNCHANGED.*** Eight records
+  across three days: 09-03 REFUSED `79ab7f4c88b6caee` / KILLED `ef8b7a0a8a5cd3c8` / SEALED
+  **`5dd3a8f3f5818379`**; 09-04 STOPPED `82fa43375cf6860b` / SEALED `37dd376befad0a31` / `.v2`
+  `54a32fd6df986a46`; 09-05 SEALED `975264754a06ec9a` / `.v2` `7b1df3dfa536d2cd`. ***THE 09-03
+  SEALED DIGEST IS THE ONE I FIRST VERIFIED AT ROUND 196 AND IT HAS NOT MOVED IN NINETEEN
+  ROUNDS.*** *Rule 13 verified across a WHOLE FAMILY in one census rather than one receipt at a
+  time.*
+  (2) ***AND THE SEALED FAMILY IS THE ONE CHAIN I CANNOT VERIFY FROM OUTSIDE.*** For the E2-A
+  declarations, the params, the design, the landing records, the rehearsals, the sidecars and the
+  census I have **driven the chain-head predicate myself**. **I cannot here: the `supersedes` link
+  lives INSIDE the sealed receipt, and reading a link means opening the file.** *I can hash the
+  TARGET; I cannot read the POINTER.* **Not a defect -- it is what a seal IS -- but worth stating
+  once, because every other "the chain resolves" line in my record was driven and this one cannot
+  be.**
+  (3) **SO THE SEALED CHAIN IS VERIFIED JOINTLY, AND THAT IS THE DESIGN WORKING:** the seat that
+  may open the receipt **reads the link and publishes the digest**; **I recompute the digest of
+  the file that digest names.** *Neither seat reads the other's copy and the identity is
+  established from both sides.* ***That is why the pair is a `{path, sha256}` and not a path*** --
+  a path would have required me to trust the reader; a digest lets me check the half I can reach.
+  (4) **AND WHICH FILE EACH `.v2` SUPERSEDES IS RELAYED, NOT VERIFIED BY ME.** The `_v2` suffix and
+  the shared day prefix make the intent plain, and **plain is not verified** -- this programme has
+  paid for identity-by-NAME more than once. *Recorded as RELAYED from R-703 (09-05) and R-688
+  (09-04), with the corroboration I CAN offer: the digest each entry names is one I computed
+  myself on the file the name suggests.*
+  (5) **09-03 HAS NO `.v2`** -- only 09-04 and 09-05 do. *The three sealed days are not uniform:
+  two superseded once, one standing as produced*, establishable from the FILENAMES alone.
+  (6) **THE READ'S ARTIFACTS ARE UNCHANGED FOR A THIRD CENSUS** -- three markers at 292 B each and
+  the result at 12,025 B `1fa4b93f02b369af`, identical at rounds 213, 214 and 215. ***R-702's read
+  order has now held across three independent censuses, every one of which hashed the result
+  WITHOUT OPENING IT.***
+  (7) **DA 101 STILL NOT LANDED, TENTH ROUND RE-DRIVEN** (both exit 2 at 18:05:39Z) -- *it is in
+  flight as the race artifact's first reader, and the exit-code adoption rides with it.*
+  AT COMMIT TIME, UNSWEPT: ***DA 101 LANDED AS THE RACE ARTIFACT'S FIRST READER*** (`e420e1e`),
+  and **R-704** (BE 71 verified). **Its record exists --
+  `p003_da_race_read_verify__20260906T180638Z.json`, 16,979 B, written 18:07:14Z -- and I
+  CENSUSED IT WITHOUT OPENING IT: I am not the first reader, I assert no result, and I quote no
+  verdict from it.** *The read order names three things before anyone quotes: DA's record, the
+  runner's read and REV 78. One of the three now exists.*
+  ***AND I WROTE "DA 101 DID THE READ AND NOT THE CODE" AND IT IS WRONG -- CAUGHT BEFORE
+  LANDING.*** I drove `da_race_read_verify`, saw **both paths still exit 2**, and generalised from
+  one module to the class. **Reading the four `main` handlers shows DA 101 DID BOTH, and did the
+  code change EXACTLY WHERE MY ROUND-212 MEASUREMENT SAID IT WAS NEEDED:**
+  `da_contamination_record` and `da_mutation_audit` -- ***the hard pair, the two that print to
+  stderr and were separable from a usage error by NEITHER code NOR stream*** -- now return
+  **`REFUSAL_EXIT`, and `REFUSAL_EXIT = 3` in both**, the house convention I measured at round
+  213, adopted as a **NAMED CONSTANT** rather than a bare literal so the code has a name at the
+  site. **`da_book_verify` and `da_race_read_verify` still return 2 -- the stdout pair, where the
+  stream already separates them and no code change was owed.** *So the routing landed on the
+  two-and-two split exactly as published, and the module I happen to drive is in the half that
+  needed nothing.* ***THE LESSON IS THE ONE I HAVE BEEN RECORDING ALL SESSION, THIS TIME AGAINST
+  MYSELF: A SINGLE DRIVE IS EVIDENCE ABOUT THE MODULE DRIVEN, NOT ABOUT THE CLASS.*** *Caught by
+  reading the handlers rather than by trusting the drive I already had.*
+  **AND THE REGISTER WAS DIRTY WHEN I FIRST TRIED TO LAND: the guard HELD my insertion, the
+  chained commit never ran, and nothing was stranded** -- rule 21's first landing form, working.
+  *I waited, re-pulled, and the other seat's commit had landed.*
+    **AND THE RESULT IS BYTE-UNCHANGED FOR A FOURTH CENSUS** (`1fa4b93f02b369af`) -- *DA read it and
+  did not modify it, which is what a READER looks like at the bytes.* **Noted in band; the
+  round-215 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,383 -> 1,390; flag_provenance 928 -> 935;
+  tasks 19; **669 CHECKED / 266 RELAYED / 455 UNMARKED -- the NINETY-FIRST round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-203 filed.)
   2026-09-06T18:03:30Z (MEM ROUND 214 -- R-699 THROUGH R-702 SWEPT, tip `14a748d`. STATE ONLY.
   MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE 09-05 RECEIPT CENSUSED AND NOT OPENED; AND
   THE RACE READ'S RESULT HASHED AND NOT OPENED.**
@@ -183,39 +247,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,369 -> 1,375; flag_provenance 914 -> 920;
   tasks 19; **656 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-NINTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-201 filed.)
-  2026-09-06T17:53:30Z (MEM ROUND 212 -- R-697 SWEPT, tip `7abf8b3`. STATE ONLY. MEM ASSERTS NO
-  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
-  (1) ***THE FOUR ARE ONE SHAPE, AND TWO OF THEM DEFEAT BOTH DISCRIMINATORS.*** I read all four
-  sites: every one is `except <X>Refused as e:` / `print(e)` / `return 2` --
-  `BookVerifyRefused`, `Refused`, `HarnessRefused`, `RaceVerifyRefused`. *So R-696's second
-  remedy already exists in all four: the refusal IS a named exception and its message IS
-  printed.* ***BUT THE STREAM DIFFERS:*** `da_book_verify` and `da_race_read_verify` print to
-  **stdout**; `da_contamination_record` and `da_mutation_audit` print to **stderr**. **At round
-  206 I measured that the two discriminators are the NAMED STRING and the STREAM -- and for those
-  two modules, exit 2 on stderr is exactly what argparse's usage error produces, so NEITHER
-  DISCRIMINATOR WORKS.** *Invisible until the sites were read one at a time; neither of my screens
-  could have found it.*
-  (2) **SO THE FOUR SPLIT TWO AND TWO, AND THE REMEDY DIFFERS PER HALF.** For the stdout pair the
-  stream already separates the refusal from the usage error, so a reader keyed on it is correct
-  today. For the stderr pair **only a distinct exit code -- or a machine-readable marker on the
-  line -- can separate them.** *A four-item routing is really two and two.*
-  (3) ***MY PULL FAILED AND MY MEASUREMENTS RAN ANYWAY.*** This round's first block opened with
-  `git pull --ff-only` and it **FAILED**: *"fatal: Cannot fast-forward to multiple branches."*
-  **The rest of the block ran regardless, because my shell did not chain the measurements on the
-  pull's exit.** Retried: **not repeatable** -- HEAD and `origin/mm-research` both
-  `7abf8b3007b3`, 0/0, tree clean -- *so the readings are valid, and that is LUCK rather than
-  PROCEDURE.* **This is R-662's class on my READ side:** the register learned that a hold is only
-  a hold if the commit is chained on its exit; the same is true of a pull and everything after
-  it. ***From here the round's measurements are chained on the pull.***
-  (4) **DA 101 STILL NOT LANDED, SEVENTH ROUND RE-DRIVEN** (both exit 2 at 17:51:52Z) -- *the
-  thread it belongs to is settled and the fix is still ahead of it.*
-  (5) **THE ACT STILL HAS NOT HAPPENED** -- 0 markers, 0 declared-result files, lock **HELD by pid
-  3665963** -- **and de104smoke IS AT A TWELFTH IDENTICAL PEAK**: InvocationID unchanged across
-  twelve readings, MemoryPeak 2,312,695,808 identical in all twelve, sixty-six minutes, one run,
-  ≈18:25Z.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,364 -> 1,369; flag_provenance 909 -> 914;
-  tasks 19; **650 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-EIGHTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-200 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2105,6 +2136,70 @@ flags:
                              # than my classification: I have been tracking a
                              # neighbouring family (a probe's error read as a result,
                              # R-682 and R-690), and I do not merge the two tallies.*
+  the_WHOLE_sealed_family_censused_and_every_older_digest_is_UNCHANGED: RULE-13-ACROSS-A-FAMILY
+                             # **Eight records across three days, censused by
+                             # filename, size and digest, NONE OPENED:** 09-03
+                             # REFUSED `79ab7f4c88b6caee` / KILLED `ef8b7a0a8a5cd3c8`
+                             # / SEALED **`5dd3a8f3f5818379`**; 09-04 STOPPED
+                             # `82fa43375cf6860b` / SEALED `37dd376befad0a31` /
+                             # `.v2` `54a32fd6df986a46`; 09-05 SEALED
+                             # `975264754a06ec9a` / `.v2` `7b1df3dfa536d2cd`.
+                             # ***THE 09-03 SEALED DIGEST IS THE ONE I FIRST VERIFIED
+                             # AT ROUND 196 AND IT HAS NOT MOVED IN NINETEEN
+                             # ROUNDS.*** *Rule 13 -- never edit a frozen artifact --
+                             # verified across a WHOLE FAMILY in one census rather
+                             # than one receipt at a time.*
+  the_sealed_family_is_the_ONE_chain_I_CANNOT_verify_from_outside: THE-LINK-IS-INSIDE-THE-SEAL
+                             # For the E2-A declarations, the params, the design, the
+                             # landing records, the rehearsals, the journal sidecars
+                             # and the census, **I have driven the chain-head
+                             # predicate myself.** ***I CANNOT FOR THE SEALED
+                             # DAY-RUNS: the `supersedes` link lives INSIDE the sealed
+                             # receipt, and reading a link means opening the file.***
+                             # *I can hash the TARGET; I cannot read the POINTER.*
+                             # **This is not a defect -- it is what a seal IS -- but
+                             # it is worth stating once, because every other "the
+                             # chain resolves" line in my record was driven and this
+                             # one cannot be.**
+  so_the_sealed_chain_is_verified_JOINTLY_and_that_is_the_design_working: TWO-SIDES-ONE-IDENTITY
+                             # The compensating mechanism is exactly what happened at
+                             # round 214: **the seat that may open the receipt reads
+                             # the link and PUBLISHES the digest; I recompute the
+                             # digest of the file that digest names.** *Neither seat
+                             # reads the other's copy, and the identity is established
+                             # from both sides.* **That is why the pair is a `{path,
+                             # sha256}` and not a path** -- a path would have required
+                             # me to trust the reader, and a digest lets me check the
+                             # half I can reach.
+  and_WHICH_file_a_v2_supersedes_is_RELAYED_not_verified_by_me: OBVIOUS-IS-NOT-VERIFIED
+                             # The `_v2` suffix and the shared day prefix make the
+                             # intent plain, and **plain is not verified.** *This
+                             # programme has paid for identity-by-NAME more than once,
+                             # so I record the supersession target for both `.v2`s as
+                             # **RELAYED** -- from R-703 for 09-05 and R-688 for 09-04
+                             # -- with the corroboration I CAN offer: the digest each
+                             # entry names is one I computed myself on the file the
+                             # name suggests.*
+  09_03_has_NO_v2_and_its_head_is_its_ORIGINAL_sealed_receipt: FILENAME-CENSUS
+                             # Only **09-04 and 09-05** carry `.v2` receipts; **09-03
+                             # does not.** *So the three sealed days are not uniform:
+                             # two have been superseded once and one stands as
+                             # produced* -- which matches R-703's "09-04 and 09-05 at
+                             # `.v2` chain heads" and is establishable from the
+                             # FILENAMES alone, without opening anything.
+  the_read_artifacts_are_unchanged_for_a_THIRD_census: THE-ORDER-HOLDS-AT-THE-BYTES
+                             # Three markers at **292 B each** and the result at
+                             # **12,025 B `1fa4b93f02b369af`** -- *identical at rounds
+                             # 213, 214 and now 215.* **R-702's read order -- nobody
+                             # quotes the result before DA's record, the runner's read
+                             # and REV 78 -- has now held across three independent
+                             # censuses, and every one of them hashed the result
+                             # without opening it.**
+  DA_101_still_not_landed_TENTH_round_re_driven: BOTH-EXIT-2-AT-18-05-39Z
+                             # `--real` alone -> **2**; `--real --read-artifact`
+                             # naming an absent file -> **2**. *Tenth round re-driven.
+                             # DA 101 is in flight as the race artifact's first
+                             # reader, and the exit-code adoption rides with it.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24887,6 +24982,57 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 215, 2026-09-06T18:06:00Z ---
+  the_WHOLE_sealed_family_censused_and_every_older_digest_is_UNCHANGED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json
+    as_of: 2026-09-06T18:05:39Z
+    said: >-
+      listed every de_gate1_day_run record for the three days and took each one's size and sha256
+      without opening any of them, comparing each against the digest I recorded when I first
+      censused it. The named artifact is the oldest of them and its digest is unchanged since round
+      196.
+  the_sealed_family_is_the_ONE_chain_I_CANNOT_verify_from_outside:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T180043Z.v2.json
+    as_of: 2026-09-06T18:05:39Z
+    said: >-
+      the supersedes block is a field of the receipt, so reading it requires opening the file, which
+      my standing constraint forbids for a sealed day. I hashed the file instead and left the link
+      unread.
+  so_the_sealed_chain_is_verified_JOINTLY_and_that_is_the_design_working:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json
+    as_of: 2026-09-06T18:05:39Z
+    said: >-
+      R-703 publishes the digest the .v2 names; I recomputed that digest on this file, which is the
+      half of the pair I can reach without opening either receipt.
+  and_WHICH_file_a_v2_supersedes_is_RELAYED_not_verified_by_me:
+    prov: RELAYED
+    from: R-703 (09-05) and R-688 (09-04), coordinator, 2026-09-06
+    said: >-
+      the supersession target of each .v2 is relayed from the entries; what I add is the recomputed
+      digest of the file each entry names, which corroborates the target without establishing the
+      pointer.
+  09_03_has_NO_v2_and_its_head_is_its_ORIGINAL_sealed_receipt:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json
+    as_of: 2026-09-06T18:05:39Z
+    said: >-
+      the filename census over all three days shows .v2 receipts for 09-04 and 09-05 only.
+  the_read_artifacts_are_unchanged_for_a_THIRD_census:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_race_read_result_v1.json
+    as_of: 2026-09-06T18:05:39Z
+    said: >-
+      re-hashed the three markers and the result and compared sizes and digests against my round-213
+      and round-214 censuses. The result was hashed, never opened, in all three.
+  DA_101_still_not_landed_TENTH_round_re_driven:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T18:05:39Z
+    said: >-
+      ran both invocations with the exit code captured directly rather than through a pipe.
   # --- MEM round 214, 2026-09-06T18:03:00Z ---
   the_SIDECAR_makes_my_round_200_and_205_finding_a_MEASURED_FIELD:
     prov: CHECKED
