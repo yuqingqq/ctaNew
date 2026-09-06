@@ -24,6 +24,7 @@ import json
 import math
 import re
 import statistics
+import subprocess
 import sys
 from pathlib import Path
 
@@ -46,7 +47,7 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: agree.
 VERSION = 25
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 114
+EXPECTED_CHECKS = 116
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -2697,8 +2698,17 @@ def declaration() -> dict:
 LAST_BATTERY: dict = {}
 
 
+PLANT_ONE_DISARMED_CELL = False
+
+
 def selftest(*, quiet: bool = False) -> int:
     n = [0]
+    #: REV 84 §2. Every cell in this battery is over a CONSTRUCTED
+    #: input -- planted arms, built payloads, fixture families -- so
+    #: DISARMED is UNREACHABLE here and the sink stays empty. The
+    #: SUMMARY carries it regardless: that is what was ruled on.
+    disarmed: list = []
+
 
     def ok(cond, label):
         if not cond:
@@ -3725,6 +3735,34 @@ def selftest(*, quiet: bool = False) -> int:
        f"that reported it. A typed list is a claim the chain stops "
        f"checking")
 
+    # ===== DE 113 (REV 84 §3.2): THE SHARED MODULE'S FALSIFIER ==========
+    _dcf = subprocess.run(
+        [sys.executable,
+         str(Path(__file__).resolve().parent / "declaration_chain.py"),
+         "--falsify"], capture_output=True, text=True, timeout=120)
+    _last = (_dcf.stdout.strip().splitlines() or [""])[-1]
+    ok(_dcf.returncode == 0 and "0 failures" in _last,
+       f"REV 84 §3.2: `declaration_chain.py --falsify` runs as ONE cell "
+       f"of this battery -- rc {_dcf.returncode}, `{_last}`. This module "
+       f"imports the chain to RESOLVE THE HEAD IT SUPERSEDES and to write "
+       f"through its CAS, and that resolution is the verdict every merge "
+       f"version rests on -- the cell below keeps it independently. The "
+       f"module's internal link algebra is NOT re-tested here")
+    _hd113 = _DC.resolve_head(
+        Path(RUNNER.DR.resolve()["data_root"]) / "pm_5min/derived",
+        "p003_de_multiday_gate1_design")
+    ok(_hd113["version"] == VERSION and _hd113["orphan_branches"] == []
+       and _hd113["sha256"] == hashlib.sha256(
+           Path(_hd113["path"]).read_bytes()).hexdigest(),
+       f"THE CELL THIS SEAT KEEPS: the head this module would supersede "
+       f"is {_hd113['name']} (v{_hd113['version']}) at "
+       f"{_hd113['sha256'][:12]}…, recomputed here, with "
+       f"orphan_branches {_hd113['orphan_branches']}. `emit_merge_version` "
+       f"gates on `head + 1 == V{VERSION}`, so it REFUSES now -- this "
+       f"module IS the head, v{_hd113['version']} == V{VERSION}, and the "
+       f"merge has landed. The resolution is a verdict either way and is "
+       f"tested here, not delegated")
+
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
     LAST_BATTERY.update({
@@ -3742,8 +3780,23 @@ def selftest(*, quiet: bool = False) -> int:
             "equality, so a receipt cannot disagree with its own source "
             "again"),
     })
+    if PLANT_ONE_DISARMED_CELL and not quiet:
+        disarmed.append({"label": "PLANTED by --falsify-disarmed",
+                         "ambient": "memory"})
+    _sum = RUNNER.battery_summary("de_multiday_design_declaration",
+                                  n_run=n[0], disarmed=disarmed,
+                                  expected=EXPECTED_CHECKS)
+    LAST_BATTERY.update({"n_disarmed": _sum["n_disarmed"],
+                         "disarmed": _sum["disarmed"],
+                         "summary_line": _sum["line"],
+                         "clean": _sum["clean"]})
     if not quiet:
-        print(f"[de_multiday_design_declaration] PASS -- {n[0]} checks")
+        print(_sum["line"])
+    if not _sum["clean"]:
+        raise SystemExit(
+            f"[de_multiday_design_declaration] NOT CLEAN: n_disarmed "
+            f"{_sum['n_disarmed']} -- "
+            f"{[d['label'] for d in _sum['disarmed']]} (REV 84 §2).")
     return 0
 
 
@@ -3873,12 +3926,20 @@ _ORPHANS_BEFORE: list = []
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--falsify-disarmed", action="store_true",
+                    dest="falsify_disarmed",
+                    help="run the real battery with ONE cell planted "
+                         "DISARMED (REV 84 §2)")
     ap.add_argument("--emit", action="store_true")
     ap.add_argument("--emit-merge", action="store_true", dest="merge",
                     help="write the next version as a MERGE of the fork's "
                          "branch tips, through declaration_chain's CAS")
     ap.add_argument("--output", type=Path)
     a = ap.parse_args()
+    if a.falsify_disarmed:
+        global PLANT_ONE_DISARMED_CELL
+        PLANT_ONE_DISARMED_CELL = True
+        return selftest()
     if a.selftest:
         return selftest()
     if a.merge:

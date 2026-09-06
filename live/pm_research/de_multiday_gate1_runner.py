@@ -37,6 +37,7 @@ import json
 import random
 import re
 import statistics
+import subprocess
 import sys
 import time
 import gc as _gc
@@ -50,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 337
+EXPECTED_CHECKS = 342
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -3631,6 +3632,75 @@ UNIT_MEMORY_STATUSES = ("MEASURED", "AMBIENT_UNIT_NOT_THE_RUNS_OWN",
                         "NOT_IN_A_UNIT", "UNIT_LEAF_NAMED_BUT_UNREADABLE")
 
 
+#: THE AMBIENTS A CELL'S VERDICT CAN REST ON -- DA's REV 68 §1.2 census,
+#: named here so a caller cannot invent an eighth by typing a string.
+#: These are the states no test constructs: they are whatever the machine
+#: happened to be in when the cell ran. A known-bad over a CONSTRUCTED
+#: input (a planted digest, a porcelain line, a census predicate) cannot
+#: be DISARMED -- the input is built, so the cell fires or admits -- and
+#: asking for the third outcome there would be a control that can never
+#: reach one of its own states (REV 84 §2).
+AMBIENT_KINDS = ("memory", "the lock", "the cgroup", "the clock",
+                 "the journal", "cwd", "the worktree")
+
+
+def record_ambient_verdict(sink: list, verdict: dict, *, ambient: str,
+                           label: str) -> bool:
+    """A CELL WHOSE VERDICT RESTS ON AN AMBIENT, recorded three ways.
+
+    Returns True when the cell may be asserted normally (FIRED), False
+    when it was DISARMED -- and a DISARMED cell is appended to `sink`, so
+    the battery's SUMMARY can carry `n_disarmed` beside its count. REV 84
+    §2: "a run that prints 'N checks passed' while three were disarmed
+    reproduces the defect one level up."
+
+    ADMITTED is NOT recorded here: it means the guard was reachable and
+    did not fire, which is a defect in the code under test and belongs to
+    the cell's own assertion, not to the measurement's ledger."""
+    if ambient not in AMBIENT_KINDS:
+        raise RunnerRefused(
+            f"REFUSED: {ambient!r} is not one of the ambients a verdict "
+            f"may rest on {list(AMBIENT_KINDS)} (DA's REV 68 §1.2 census). "
+            f"A cell over a CONSTRUCTED input cannot be DISARMED, and "
+            f"claiming it can is a control that can never reach one of "
+            f"its own states.")
+    if "verdict" not in (verdict or {}):
+        raise RunnerRefused(
+            "REFUSED: `record_ambient_verdict` was handed something that "
+            "is not a `known_bad_verdict` result. An ambient cell's third "
+            "state has to be COMPUTED, never asserted.")
+    if verdict["verdict"] == "DISARMED":
+        sink.append({"label": label, "ambient": ambient,
+                     "quantity": verdict.get("quantity"),
+                     "baseline": verdict.get("baseline"),
+                     "now": verdict.get("now"),
+                     "moved_by": verdict.get("moved_by"),
+                     "why": verdict.get("why")})
+        return False
+    return True
+
+
+def battery_summary(module: str, *, n_run: int, n_skipped: int = 0,
+                    disarmed: list | None = None,
+                    expected: int | None = None) -> dict:
+    """THE ONE SUMMARY LINE, AND `n_disarmed` IS PART OF IT (REV 84 §2).
+
+    A non-zero `n_disarmed` is NOT a clean run: the cells ran, could not
+    have fired, and the count beside them would otherwise read as
+    coverage. The line names them; the caller raises on `clean` False."""
+    dis = list(disarmed or [])
+    clean = not dis and (expected is None or n_run + n_skipped == expected)
+    line = (f"[{module}] {'PASS' if clean else 'NOT CLEAN'} -- "
+            f"{n_run} checks, n_disarmed {len(dis)}"
+            + (f", {n_skipped} skipped" if n_skipped else ""))
+    return {"line": line, "clean": clean, "n_run": n_run,
+            "n_skipped": n_skipped, "n_disarmed": len(dis),
+            "disarmed": dis, "expected": expected,
+            "rule": "REV 84 §2 -- a non-zero n_disarmed is not a clean "
+                    "run; the cells ran and could not have fired, and a "
+                    "count beside them would read as coverage"}
+
+
 def cell_baseline(what: str, *, counts=None, dirs=None) -> dict:
     """A KNOWN-BAD MEASURES AGAINST **ITS OWN** BASELINE (DE 110 (5)).
 
@@ -6150,6 +6220,14 @@ def battery_resources(t0: float, hw0: float) -> dict:
     }
 
 
+#: REV 84 §2's falsifier, END TO END. Set by `--falsify-disarmed`: the
+#: real battery runs and ONE cell is planted DISARMED, so the summary
+#: path -- not a hand-built dict -- has to print `n_disarmed 1` and exit
+#: non-clean. A predicate driven only through its own helper is a
+#: predicate nobody has seen fire in the run it protects.
+PLANT_ONE_DISARMED_CELL = False
+
+
 def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     """`offline=True` skips the checks that READ `data/` and RECORDS them.
 
@@ -6161,6 +6239,8 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     n = [0]
     skipped: list = []
     _bat_t0, _bat_hw0 = time.time(), _peak_rss_mb()
+
+    disarmed: list = []
 
     def offline_skip(label):
         skipped.append(label)
@@ -9490,7 +9570,13 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
             _rssr = "AT STAGE" in str(_e)
         _rssv = known_bad_verdict(_rssb, refused=_rssr,
                                   quantity="rss_mb_current")
-        ok(_rssv["verdict"] == "FIRED",
+        # AN AMBIENT CELL (REV 84 §2): its verdict rests on MEMORY, so
+        # DISARMED is reachable and is recorded for the summary rather
+        # than read as a pass.
+        _rssok = record_ambient_verdict(
+            disarmed, _rssv, ambient="memory",
+            label="the -1.0 MB stage-budget known-bad")
+        ok(_rssok and _rssv["verdict"] == "FIRED",
            f"AND IT FIRES AT THE FIRST STAGE THAT CROSSES IT, not at the "
            f"emit: a budget of -1.0 MB refuses AT A STAGE (verdict "
            f"{_rssv['verdict']}, this cell's own baseline on "
@@ -9847,6 +9933,89 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     # stopped refusing and a known-bad that had fired for rounds ADMITTED.
     # A check whose ability to fail depends on what ran before it is
     # rule 16's class; the fix is order, and this is the note that says so.
+    # ===== DE 113 (REV 84 §2): n_disarmed IS PART OF THE SUMMARY ========
+    _fake_dis = [{"label": "a planted disarmed cell", "ambient": "memory"}]
+    _sd = battery_summary("de_probe", n_run=42, disarmed=_fake_dis)
+    _sc = battery_summary("de_probe", n_run=42, disarmed=[])
+    ok("n_disarmed 1" in _sd["line"] and _sd["clean"] is False
+       and "NOT CLEAN" in _sd["line"]
+       and "n_disarmed 0" in _sc["line"] and _sc["clean"] is True
+       and "PASS" in _sc["line"],
+       f"REV 84 §2 FALSIFIER: a battery with ONE disarmed cell prints "
+       f"`{_sd['line']}` and is NOT clean, while the same battery with "
+       f"none prints `{_sc['line']}` and is. A run that printed 'N checks "
+       f"passed' beside three disarmed cells would report the "
+       f"measurement's failure as coverage -- the DE 110 defect one level "
+       f"up")
+    refuses(lambda: record_ambient_verdict(
+                [], {"verdict": "DISARMED"}, ambient="a planted digest",
+                label="x"),
+            f"and DISARMED is UNREACHABLE for a constructed input: an "
+            f"ambient outside DA's REV 68 §1.2 census "
+            f"{list(AMBIENT_KINDS)} REFUSES, because a cell over a built "
+            f"input either fires or admits and a third state it can never "
+            f"reach is a control that cannot fail",
+            "not one of the ambients")
+    _sink = []
+    ok(record_ambient_verdict(
+           _sink, {"verdict": "FIRED", "quantity": "rss_mb_current"},
+           ambient="memory", label="fired") is True
+       and _sink == []
+       and record_ambient_verdict(
+           _sink, {"verdict": "DISARMED", "quantity": "rss_mb_current",
+                   "baseline": 1.0, "now": 1.0, "moved_by": 0.0,
+                   "why": "no movement"},
+           ambient="the clock", label="disarmed") is False
+       and len(_sink) == 1 and _sink[0]["ambient"] == "the clock",
+       "and the sink takes ONLY the disarmed: FIRED returns True and "
+       "records nothing, DISARMED returns False and records the label, "
+       "the ambient and the measurement. ADMITTED is deliberately not "
+       "recorded here -- it is a defect in the code under test, not in "
+       "the measurement")
+
+    # ===== DE 113 (REV 84 §3.2): THE SHARED MODULE'S FALSIFIER, AS ONE
+    # CELL OF THIS BATTERY. One implementation, N detectors: a regression
+    # in `declaration_chain` fails BE's, DA's and this suite at once
+    # without any importer re-implementing the logic.
+    _dcf = subprocess.run(
+        [sys.executable,
+         str(Path(__file__).resolve().parent / "declaration_chain.py"),
+         "--falsify"], capture_output=True, text=True, timeout=120)
+    _dcf_last = (_dcf.stdout.strip().splitlines() or [""])[-1]
+    ok(_dcf.returncode == 0 and "0 failures" in _dcf_last,
+       f"REV 84 §3.2: the SHARED module's own falsifier runs as ONE cell "
+       f"of this battery -- `declaration_chain.py --falsify` -> rc "
+       f"{_dcf.returncode}, `{_dcf_last}`. THE CELLS THIS SEAT KEEPS "
+       f"INDEPENDENT are the ones its OWN verdicts rest on: the head "
+       f"resolution that picks the seal scope (below), and this module's "
+       f"OWN walk, which is this seat's code and not the shared one's. "
+       f"What it does NOT re-test is the module's internal link algebra "
+       f"-- that is what this cell is for, and re-implementing it would "
+       f"re-create the divergence one implementation was adopted to end")
+    # READS `data/` (the design family and the head's bytes) -- skipped
+    # offline and NAMED. Third time this pair of rounds; the guard goes in
+    # with the cell.
+    if offline:
+        offline_skip("DE 113: the seal scope picked from the design chain "
+                     "head (reads data/pm_5min/derived)")
+    else:
+      _hv = design_chain()["head_version"]
+      _sv = design_version_of_receipt(
+          {"provenance": {"design": {
+              "path": f"data/pm_5min/derived/"
+                      f"p003_de_multiday_gate1_design_v{_hv}.json",
+              "sha256": hashlib.sha256(
+                  (Path(DR.resolve()["data_root"]) / "pm_5min/derived"
+                   / f"p003_de_multiday_gate1_design_v{_hv}.json"
+                   ).read_bytes()).hexdigest()}}})
+      ok(_sv["design_version"] == _hv and _sv["pair_verified"] is True
+         and len(_sv["fields_in_force"]) == len(ECONOMIC_FIELDS),
+         f"THE CELL THIS SEAT KEEPS: the SEAL SCOPE is picked from the "
+         f"head resolution -- a receipt pinning the head v{_hv} by pair "
+         f"is judged under {len(_sv['fields_in_force'])} names. Every "
+         f"sealed artifact this seat writes rests on that, so it is "
+         f"tested here and not delegated (REV 84 §3.1)")
+
     # ===== DE 112: THE RECEIPT NAMES EVERY CHAIN IT RESOLVED ============
     _pem = producer_exit_map()
     ok(_pem["status"] == "DECLARED" and _pem["codes"] == [0, 1]
@@ -10145,14 +10314,43 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
                         "is silent is a check that has stopped existing"
                         if skipped else None),
         "ran_in_the_emitting_process": True})
+    # ONLY IN THE OUTERMOST BATTERY. The nested `selftest(quiet=True)`
+    # inside every fixture day run reaches this summary first, so a plain
+    # module flag aborted the run 38 checks in -- at a NESTED summary, not
+    # the one the falsifier is about. `quiet` is what distinguishes them.
+    if PLANT_ONE_DISARMED_CELL and not quiet:
+        disarmed.append({
+            "label": "PLANTED by --falsify-disarmed", "ambient": "memory",
+            "quantity": "rss_mb_current", "baseline": 0.0, "now": 0.0,
+            "moved_by": 0.0,
+            "why": "planted: this cell did not run, it is the falsifier "
+                   "for the summary's own n_disarmed line"})
+    _sum = battery_summary("de_multiday_gate1_runner", n_run=n[0],
+                           n_skipped=len(skipped), disarmed=disarmed,
+                           expected=EXPECTED_CHECKS)
+    LAST_BATTERY.update({"n_disarmed": _sum["n_disarmed"],
+                         "disarmed": _sum["disarmed"],
+                         "summary_line": _sum["line"],
+                         "clean": _sum["clean"]})
     if not quiet:
-        print(f"[de_multiday_gate1_runner] PASS -- {n[0]} checks")
+        print(_sum["line"])
+    if not _sum["clean"]:
+        raise SystemExit(
+            f"[de_multiday_gate1_runner] NOT CLEAN: n_disarmed "
+            f"{_sum['n_disarmed']} -- "
+            f"{[d['label'] for d in _sum['disarmed']]}. A cell that ran "
+            f"and could not have fired is not coverage (REV 84 §2).")
     return 0
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--falsify-disarmed", action="store_true",
+                    dest="falsify_disarmed",
+                    help="run the real battery with ONE cell planted "
+                         "DISARMED: the summary must print n_disarmed 1 "
+                         "and exit non-clean (REV 84 §2)")
     ap.add_argument("--fixture-run", action="store_true", dest="fixture")
     ap.add_argument("--dry-run-ledger", action="store_true", dest="ledger",
                     help="read the ledger and report the day set; this is "
@@ -10177,6 +10375,10 @@ def main() -> int:
                          "opens only at G")
     ap.add_argument("--output", type=Path)
     a = ap.parse_args()
+    if a.falsify_disarmed:
+        global PLANT_ONE_DISARMED_CELL
+        PLANT_ONE_DISARMED_CELL = True
+        return selftest()
     if a.selftest:
         return selftest()
     if a.rehearse:

@@ -43,7 +43,7 @@ import be_race_reader as BE                               # noqa: E402
 import de_multiday_gate1_runner as RUNNER                 # noqa: E402
 
 PROTOCOL = "P003_DE_RECEIPT_CORRECTION_V1"
-EXPECTED_CHECKS = 27
+EXPECTED_CHECKS = 29
 
 #: The blocks REV 79 §3 names. NOT the frozen set -- the frozen set is
 #: "everything v1 carries". These are asserted to be INSIDE it, so the
@@ -703,8 +703,18 @@ def emit_all(*, root: Path, repo: Path) -> int:
     return 0
 
 
+PLANT_ONE_DISARMED_CELL = False
+
+
 def selftest() -> int:
     n = [0]
+    #: REV 84 §2. This battery's cells are all over CONSTRUCTED inputs --
+    #: fixture receipts, planted additions, built payloads -- so DISARMED
+    #: is UNREACHABLE for every one of them and the sink is expected to
+    #: stay empty. It is carried anyway, because the SUMMARY's contract is
+    #: what REV 84 ruled on: a count without `n_disarmed` beside it cannot
+    #: be told from a count that never looked.
+    disarmed: list = []
 
     def ok(cond, label):
         if not cond:
@@ -976,19 +986,63 @@ def selftest() -> int:
        "MAY EMIT -- DE 108's cell pinned the ADMIT of that moment and is "
        "superseded by this drive, not deleted")
 
-    print(f"[de_receipt_correction] PASS -- {n[0]} checks")
+    # ===== DE 113 (REV 84 §3.2): THE SHARED MODULE'S FALSIFIER ==========
+    _dcf = subprocess.run(
+        [sys.executable,
+         str(Path(__file__).resolve().parent / "declaration_chain.py"),
+         "--falsify"], capture_output=True, text=True, timeout=120)
+    _last = (_dcf.stdout.strip().splitlines() or [""])[-1]
+    ok(_dcf.returncode == 0 and "0 failures" in _last,
+       f"REV 84 §3.2: `declaration_chain.py --falsify` runs as ONE cell "
+       f"of this battery -- rc {_dcf.returncode}, `{_last}`. This module "
+       f"imports the chain only to RESOLVE the scope at its own emit "
+       f"(`scope_at_this_correction`), and that resolution IS a verdict "
+       f"this seat's refusals rest on -- so the cell below keeps it "
+       f"independently. Nothing else here re-tests the module")
+    _now113 = scope_at_this_correction()
+    ok(_now113["chain_head_version"] is not None
+       and _now113["design_version"] >= _now113["module_constant"]
+       and _now113["design_version"] >= _now113["chain_head_version"]
+       and len(_now113["sealed_names"]) == 11,
+       f"THE CELL THIS SEAT KEEPS: the scope at THIS correction's emit is "
+       f"the WIDER of the module constant v{_now113['module_constant']} "
+       f"and the resolved chain head v{_now113['chain_head_version']} -- "
+       f"v{_now113['design_version']}, {len(_now113['sealed_names'])} "
+       f"names. Every ADDED-key refusal in this module is judged under "
+       f"it, so it is tested here and not delegated (REV 84 §3.1)")
+
+    if PLANT_ONE_DISARMED_CELL:
+        disarmed.append({"label": "PLANTED by --falsify-disarmed",
+                         "ambient": "memory"})
+    _sum = RUNNER.battery_summary("de_receipt_correction", n_run=n[0],
+                                  disarmed=disarmed,
+                                  expected=EXPECTED_CHECKS)
+    print(_sum["line"])
     if n[0] != EXPECTED_CHECKS:
         raise SystemExit(
             f"[de_receipt_correction] FAIL: {n[0]} checks run against a "
             f"declared {EXPECTED_CHECKS}")
+    if not _sum["clean"]:
+        raise SystemExit(
+            f"[de_receipt_correction] NOT CLEAN: n_disarmed "
+            f"{_sum['n_disarmed']} -- "
+            f"{[d['label'] for d in _sum['disarmed']]} (REV 84 §2).")
     return 0
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--falsify-disarmed", action="store_true",
+                    dest="falsify_disarmed",
+                    help="run the real battery with ONE cell planted "
+                         "DISARMED (REV 84 §2)")
     ap.add_argument("--emit", action="store_true")
     a = ap.parse_args()
+    if a.falsify_disarmed:
+        global PLANT_ONE_DISARMED_CELL
+        PLANT_ONE_DISARMED_CELL = True
+        return selftest()
     if a.selftest:
         return selftest()
     if a.emit:
