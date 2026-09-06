@@ -856,6 +856,73 @@ def day_status_in_artifact(art, day: str) -> dict:
                     "every day the pins name")}
 
 
+#: DA 100. THE DECLARATION IS THE OTHER HALF OF THE PIN. The pins say
+#: WHICH BYTES each day was read from; the DECLARATION says WHICH DAYS may
+#: be read at all, and what G is. A verifier that checked only the pins
+#: would admit a read of the right bytes over the wrong day set.
+RACE_DECL_FAMILY = "be_race_read_declaration"
+
+
+def _derived_for_markers() -> Path:
+    """The CANONICAL ledger's derived directory -- where a marker lives."""
+    import da_root as _R                                      # noqa: PLC0415
+    return _R.derived_dir("the race read's OPENED markers")
+
+
+def race_declaration_head() -> dict:
+    """The chain head of BE's race-read declaration family, by the pair."""
+    import da_nonhead_census as _C                            # noqa: PLC0415
+    d = Path(__file__).resolve().parent / "declarations"
+    blk = _C.declaration_chains(d).get(RACE_DECL_FAMILY)
+    if not blk:
+        raise RaceVerifyRefused(
+            f"REFUSED: RACE_DECLARATION_FAMILY_ABSENT — no "
+            f"`{RACE_DECL_FAMILY}_v*.json` under {d}. The day set and G "
+            f"cannot be assumed.")
+    if blk["n_heads"] != 1:
+        raise RaceVerifyRefused(
+            f"REFUSED: RACE_DECLARATION_DOES_NOT_RESOLVE_TO_ONE_HEAD — "
+            f"heads {blk['heads']}. Which one a read was taken under has "
+            f"no answer, and picking the highest number would invent the "
+            f"link the seat did not write.")
+    f = d / blk["heads"][0]
+    obj = json.loads(f.read_text())
+    pop = obj.get("population") or {}
+    return {"name": f.name, "path": str(f),
+            "sha256": hashlib.sha256(f.read_bytes()).hexdigest(),
+            "G_declared": obj.get("G"),
+            "READABLE": sorted(pop.get("READABLE") or []),
+            "READ_BUT_UNRECOVERABLE": sorted(
+                pop.get("READ_BUT_UNRECOVERABLE") or []),
+            "n_members": blk["n_members"],
+            "resolved_by": ("the chain head of the family, pair-verified "
+                            "back to v1 -- never a filename literal")}
+
+
+def opened_markers(marker_dir: Path, declared_days) -> dict:
+    """ONE marker per declared day, and NO FOURTH.
+
+    The marker is the ONLY record that a day was spent. A fourth marker
+    means a day was opened that the declaration does not name -- which is
+    the one thing rule 11 cannot absorb after the fact."""
+    d = Path(marker_dir)
+    found = sorted(x.name for x in d.glob("be_race_read_OPENED_*"))
+    days_found = sorted({x.replace("be_race_read_OPENED_", "").split(".")[0]
+                         for x in found})
+    declared = sorted(declared_days)
+    return {"marker_dir": str(d), "markers": found,
+            "n_markers": len(found), "days_with_a_marker": days_found,
+            "declared_days": declared,
+            "one_per_declared_day": days_found == declared,
+            "extra_days_opened": sorted(set(days_found) - set(declared)),
+            "declared_days_without_a_marker": sorted(
+                set(declared) - set(days_found)),
+            "what_a_marker_IS": ("an UNTRACKED file under the ledger's "
+                                 "derived directory -- the only record "
+                                 "that a day was spent, and exactly as "
+                                 "durable as that directory")}
+
+
 def verify_real_read(read_artifact: str, pins_path: str, *,
                      output: Path | None = None,
                      latency_ms: int = LATENCY_MS) -> dict:
@@ -922,17 +989,23 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
 
     checks, bad = [], []
 
+    #: DA 100 / THE READ ORDER. ***THIS RECORD COMES FIRST -- BEFORE THE
+    #: RUNNER'S READ, BEFORE REV 78, BEFORE THE COORDINATOR*** -- so a
+    #: number quoted here is a number published ahead of the read that is
+    #: entitled to publish it. The comparison is by FIELD NAME and STATE:
+    #: MATCH / MISMATCH / ABSENT_IN_ARTIFACT. No MATCHED_VOLUME, no
+    #: permutation p, no direction, no per-day quantity of any kind
+    #: appears in this verifier's own output. ***A verdict does not need
+    #: the number; it needs the predicate.***
     def cmp(name, mine, theirs):
         if theirs is None:
-            checks.append({"field": name, "state": "ABSENT_IN_ARTIFACT",
-                           "mine": mine})
+            checks.append({"field": name, "state": "ABSENT_IN_ARTIFACT"})
             bad.append(name)
             return
         ok = (float(mine) == float(theirs)) if isinstance(
             mine, (int, float)) else (mine == theirs)
         checks.append({"field": name,
-                       "state": "MATCH" if ok else "MISMATCH",
-                       "mine": mine, "artifact": theirs})
+                       "state": "MATCH" if ok else "MISMATCH"})
         if not ok:
             bad.append(name)
 
@@ -944,8 +1017,9 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
                                        latency_ms=latency_ms)
         theirs = art_per_day.get(day)
         if theirs is None:
-            days_out[day] = {"status": "READABLE_DAY_ABSENT_FROM_THE_ARTIFACT",
-                             "recomputed": mine}
+            days_out[day] = {
+                "status": "READABLE_DAY_ABSENT_FROM_THE_ARTIFACT",
+                "recomputed": "WITHHELD_BY_THE_READ_ORDER"}
             bad.append(f"per_day.{day}")
             continue
         cmp(f"{day}.day_increment_cents", mine["day_increment_cents"],
@@ -964,7 +1038,9 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
                       "incumbent_net_cents_matched", "n_actions",
                       "counts_matched"):
                 cmp(f"{day}.per_coin.{coin}.{f}", blk[f], t.get(f))
-        days_out[day] = {"status": "COMPARED", "recomputed": mine,
+        days_out[day] = {"status": "COMPARED",
+                         "recomputed": "WITHHELD_BY_THE_READ_ORDER",
+                         "n_coins_compared": len(mine["per_coin"]),
                          "pin_sha256": pin["sha256"]}
 
     #: THE DAY SET. A day the pins mark `exists: false` was READ under the
@@ -1018,6 +1094,86 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
     if not day_set["readable_set_matches"]:
         bad.append("day_set.readable_set")
 
+    #: DA 100 (2)(3): THE DECLARATION, THE DAY SET'S TWO G's, THE
+    #: BYTE-IDENTITY BLOCK AND THE OPENED MARKERS.
+    head = race_declaration_head()
+    ps = art.get("pre_state") or {}
+    ds = art.get("day_set") or {}
+    cons = art.get("consumption") or {}
+    bi = art.get("byte_identity") or {}
+    declared_sha = ps.get("declaration_sha256") or ds.get(
+        "declaration_sha256")
+    if declared_sha is not None and declared_sha != head["sha256"]:
+        raise RaceVerifyRefused(
+            f"REFUSED: READ_ARTIFACT_DECLARATION_DIGEST_DIFFERS — the "
+            f"artifact says it read under {str(declared_sha)[:16]}… and "
+            f"the chain head {head['name']} is {head['sha256'][:16]}…. A "
+            f"read taken under another declaration is a read of another "
+            f"day set, and this verifier will not reconcile the two.")
+    markers = opened_markers(
+        Path(ps.get("marker_dir") or _derived_for_markers()),
+        head["READABLE"])
+    decl_block = {
+        "chain_head": {k: head[k] for k in
+                       ("name", "sha256", "G_declared", "READABLE",
+                        "READ_BUT_UNRECOVERABLE", "n_members",
+                        "resolved_by")},
+        "the_artifact_says_it_read_under": declared_sha,
+        "digest_agrees_with_the_chain_head": (
+            None if declared_sha is None else declared_sha == head["sha256"]),
+        "declaration_named_in_the_artifact": (
+            ps.get("declaration") or ds.get("from")),
+        "decl_source": cons.get("decl_source"),
+        "decl_supplied_by_the_caller": cons.get("decl_supplied_by_the_caller"),
+        "BEs_claim_that_it_is_the_chain_head": cons.get(
+            "decl_is_the_chain_head"),
+        "and_this_verifier_resolved_the_head_ITSELF": True,
+        "why": ("the pins say WHICH BYTES each day was read from; the "
+                "declaration says WHICH DAYS may be read at all and what G "
+                "is. A verifier checking only the pins would admit a read "
+                "of the right bytes over the wrong day set"),
+    }
+    day_set_declared = {
+        "READABLE_in_the_declaration": head["READABLE"],
+        "READABLE_in_the_artifact": sorted(ds.get("READABLE") or []),
+        "readable_agrees": sorted(ds.get("READABLE") or []) == head[
+            "READABLE"] if ds else None,
+        "G_declared_in_the_declaration": head["G_declared"],
+        "G_declared_in_the_artifact": ds.get("G_declared"),
+        "G_computed_from_the_set": ds.get("G_computed_from_the_set"),
+        "both_Gs_agree_with_each_other": (
+            None if not ds else
+            ds.get("G_declared") == ds.get("G_computed_from_the_set")),
+        "both_Gs_agree_with_the_declaration": (
+            None if not ds else
+            ds.get("G_declared") == head["G_declared"]
+            and ds.get("G_computed_from_the_set") == head["G_declared"]),
+        "why_two": ("a G DECLARED and a G COMPUTED FROM THE SET are two "
+                    "different facts; one number standing for both is how "
+                    "a widened day set would pass unnoticed"),
+    }
+    byte_identity = {
+        "present": bool(bi),
+        "all_unchanged": bi.get("all_unchanged"),
+        "digest_covers_every_byte_parsed": (
+            None if not bi else
+            all(bool(x) for x in (
+                bi.get("digest_covers_every_byte_parsed") or {}).values())
+            if isinstance(bi.get("digest_covers_every_byte_parsed"), dict)
+            else bi.get("digest_covers_every_byte_parsed")),
+        "on_mismatch_declared": bi.get("on_mismatch"),
+    }
+    if ds and day_set_declared["both_Gs_agree_with_the_declaration"] is False:
+        bad.append("day_set.G")
+    if ds and day_set_declared["readable_agrees"] is False:
+        bad.append("day_set.READABLE")
+    if bi and byte_identity["all_unchanged"] is not True:
+        bad.append("byte_identity.all_unchanged")
+    if bi and byte_identity["digest_covers_every_byte_parsed"] is not True:
+        bad.append("byte_identity.digest_covers_every_byte_parsed")
+    if markers["extra_days_opened"]:
+        bad.append("opened_markers.extra_days_opened")
+
     #: THE FLOORS, re-derived.
     g = len(readable)
     mine_floor = da_floors(g)
@@ -1065,6 +1221,47 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
             "open and parsing in another leaves a window in which both "
             "readings are true of different files"),
         "day_set": day_set,
+        "the_declaration": decl_block,
+        "day_set_against_the_declaration": day_set_declared,
+        "byte_identity_block": byte_identity,
+        "opened_markers": markers,
+        "what_this_verifier_VERIFIES": [
+            "the read artifact EXISTS (the gate), is BE's declared "
+            "protocol, and is readable JSON",
+            "the DECLARATION resolves to one chain head by the R-608 pair, "
+            "and the artifact's `pre_state.declaration_sha256` IS that "
+            "head -- a different one REFUSES",
+            "the day set: READABLE against the declaration, and BOTH G's "
+            "(declared and computed from the set) against it and each "
+            "other",
+            "every day in the PINS is SAID, with the status the pin "
+            "expects, and no unrecoverable day carries a number",
+            "one OPENED marker per declared day and NO FOURTH",
+            "the byte-identity block: unchanged, and the digest covering "
+            "every byte parsed",
+            "the permutation floor, re-derived from G",
+            "each readable day's numbers, RECOMPUTED from the pinned bytes "
+            "and compared field by field -- the comparison is reported by "
+            "NAME and STATE, never by value",
+        ],
+        "what_this_verifier_DOES_NOT_VERIFY": [
+            "that the OPENED markers were written BEFORE the reading -- "
+            "the marker's presence is the fact, and its timestamp is not "
+            "evidence of order",
+            "that the feeds were not modified between BE's read and this "
+            "recompute -- the PIN is what makes that decidable, and it is "
+            "checked, but a feed replaced with bytes matching its pin is "
+            "not distinguishable and is not claimed to be",
+            "the DIRECTION, the permutation p, or any economic reading of "
+            "the day set -- those belong to the read, and this record "
+            "comes BEFORE it",
+            "BE's own claim `decl_is_the_chain_head`: it is RECORDED as "
+            "BE's claim and re-resolved here independently, never taken",
+        ],
+        "the_read_order": (
+            "this record, then the runner's read, then REV 78, then the "
+            "coordinator -- so no number the read is entitled to publish "
+            "appears here"),
         "permutation_floor_recomputed": mine_floor,
         "days": days_out,
         "checks": checks,
@@ -1077,6 +1274,8 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
     }
     out["IS_A_VERIFICATION"] = bool(
         not bad and readable
+        and markers["one_per_declared_day"]
+        and (decl_block["digest_agrees_with_the_chain_head"] is not False)
         and out["the_gate_is_the_artifacts_existence"]["is_BEs_declared_shape"]
         and day_set["no_unrecoverable_day_carries_a_number"]
         and not day_set["days_not_said_as_the_pins_expect"])
@@ -1120,9 +1319,26 @@ def _synthetic_pins(d: Path, feeds: dict, absent: list) -> Path:
 def _synthetic_read_artifact(d: Path, per_day: dict, *,
                              name: str = "be_race_read_result_v1.json",
                              extra_days: dict | None = None,
-                             unrecoverable: list | None = None) -> Path:
-    """BE's declared shape, read from `be_race_reader.read()` as a document."""
+                             unrecoverable: list | None = None,
+                             decl_sha: str | None = None,
+                             markers: bool = True,
+                             extra_marker: str | None = None) -> Path:
+    """BE's declared shape, read from `be_race_reader.read()` as a document.
+
+    DA 100: the shape now includes what REV 77 S4 will check after this
+    verifier -- `pre_state`, `day_set` with BOTH G's, `decl_source`, the
+    byte-identity block -- and the OPENED markers are WRITTEN, because a
+    positive control that omits them is not a control over the check that
+    reads them."""
     days = sorted(per_day)
+    _head = race_declaration_head()
+    if markers:
+        for _dy in days:
+            (d / f"be_race_read_OPENED_{_dy}.json").write_text(
+                json.dumps({"day": _dy, "synthetic": True}))
+        if extra_marker:
+            (d / f"be_race_read_OPENED_{extra_marker}.json").write_text(
+                json.dumps({"day": extra_marker, "synthetic": True}))
     signs = {k: v["day_sign"] for k, v in per_day.items()}
     g = len(days)
     body = {
@@ -1139,6 +1355,30 @@ def _synthetic_read_artifact(d: Path, per_day: dict, *,
             "resolved_best_possible_adjusted_p": MULTIPLICITY_M / 2 ** g,
             "neither_clears_0_05": MULTIPLICITY_M / 2 ** g > 0.05},
         "decides_nothing": "REPORTED (rule 14).",
+        "pre_state": {
+            "declaration": _head["name"],
+            "declaration_sha256": decl_sha or _head["sha256"],
+            "marker_dir": str(d),
+            "existing_OPENED_markers": [],
+            "n_existing_OPENED_markers": 0,
+            "zero_markers_before_the_act": True,
+            "days": days},
+        "day_set": {"from": _head["name"],
+                    "declaration_sha256": decl_sha or _head["sha256"],
+                    "READABLE": days,
+                    "G_declared": _head["G_declared"],
+                    "G_computed_from_the_set": len(days),
+                    "G_agrees_with_the_declaration": True,
+                    "the_cli_cannot_widen_or_narrow_it": True},
+        "consumption": {"the_read_consumes": True, "marker_dir": str(d),
+                        "decl_source": "RE-VERIFIED here from the chain "
+                                       "head (synthetic)",
+                        "decl_supplied_by_the_caller": True,
+                        "decl_is_the_chain_head": True},
+        "byte_identity": {"all_unchanged": True,
+                          "digest_covers_every_byte_parsed": {
+                              dd: True for dd in days},
+                          "on_mismatch": "the read is VOID -- enforced"},
     }
     if unrecoverable:
         body["population"] = {"READ_BUT_UNRECOVERABLE": list(unrecoverable)}
@@ -1481,6 +1721,101 @@ def selftest_real() -> list:                                  # noqa: C901
        f"protocol {fb['protocol']} -> is_BEs_declared_shape False, and note "
        f"{out_x['n_mismatches']} numeric mismatches: the numbers agreed and "
        f"it still is not a verification")
+
+
+    # -- DA 100: THE DECLARATION, THE MARKERS, AND THE READ ORDER --------
+    _real_head = race_declaration_head()
+    ck("DA 100 (2) -- THE DECLARATION IS THE OTHER HALF OF THE PIN, AND "
+       "IT IS RESOLVED AS A CHAIN HEAD, NEVER AS A FILENAME. ***The pins "
+       "say WHICH BYTES each day was read from; the declaration says "
+       "WHICH DAYS may be read at all and what G is*** -- a verifier "
+       "checking only the pins would admit a read of the right bytes over "
+       "the wrong day set. At HEAD it resolves to one head by the R-608 "
+       "pair, and its population and G are READ from it rather than typed "
+       "here",
+       _real_head["name"] == "be_race_read_declaration_v4.json"
+       and _real_head["sha256"].startswith("a741b4d6b5ac7f59")
+       and _real_head["G_declared"] == 3
+       and _real_head["READABLE"] == ["20260903", "20260904", "20260905"],
+       f"{_real_head['name']} {_real_head['sha256'][:16]}, G="
+       f"{_real_head['G_declared']}, READABLE {_real_head['READABLE']}, "
+       f"{_real_head['n_members']} members in the family")
+    _wrongd = Path(tempfile.mkdtemp(prefix="da100wd_"))
+    _bad_art = _synthetic_read_artifact(td, mine_days,
+                                        name="art_wrong_decl.json",
+                                        decl_sha="9" * 64)
+    try:
+        verify_real_read(str(_bad_art), str(pins_p))
+        _wd = "ADMITTED"
+    except RaceVerifyRefused as _e:
+        _wd = str(_e).split(" — ")[0].replace("REFUSED: ", "")
+    ck("AND A READ TAKEN UNDER ANOTHER DECLARATION IS REFUSED BY NAME: "
+       "the artifact's `pre_state.declaration_sha256` against the chain "
+       "head's digest. ***A read under another declaration is a read of "
+       "another day set***, and this verifier will not reconcile the two",
+       _wd == "READ_ARTIFACT_DECLARATION_DIGEST_DIFFERS",
+       f"a planted declaration digest -> {_wd}")
+    _md = Path(tempfile.mkdtemp(prefix="da100mk_"))
+    _art4 = _synthetic_read_artifact(_md, mine_days, extra_marker="20260906")
+    _o4 = verify_real_read(str(_art4), str(pins_p))
+    _md3 = Path(tempfile.mkdtemp(prefix="da100mk3_"))
+    _art0 = _synthetic_read_artifact(_md3, mine_days, markers=False)
+    _o0 = verify_real_read(str(_art0), str(pins_p))
+    ck("DA 100 (3) -- ONE OPENED MARKER PER DECLARED DAY, AND NO FOURTH. "
+       "***The marker is the ONLY record that a day was spent***, so a "
+       "fourth means a day was opened that the declaration does not name "
+       "-- the one thing rule 11 cannot absorb after the fact. Driven "
+       "both ways: a fourth marker FLAGS and names the extra day; no "
+       "markers at all FLAGS and names the declared days that lack one",
+       _o4["opened_markers"]["extra_days_opened"] == ["20260906"]
+       and _o4["IS_A_VERIFICATION"] is False
+       and _o0["opened_markers"]["declared_days_without_a_marker"]
+       == _real_head["READABLE"]
+       and _o0["IS_A_VERIFICATION"] is False,
+       f"a fourth marker -> extra {_o4['opened_markers']['extra_days_opened']}"
+       f", verified {_o4['IS_A_VERIFICATION']}; none -> missing "
+       f"{len(_o0['opened_markers']['declared_days_without_a_marker'])}, "
+       f"verified {_o0['IS_A_VERIFICATION']}")
+    _good = verify_real_read(str(art_p), str(pins_p))
+    _mine_numbers = set()
+    for _d in _real_head["READABLE"]:
+        _pin = json.loads(Path(pins_p).read_text())["per_day"][_d]
+        _m = da_day_from_pinned_feed(_pin["path"], _pin["sha256"])
+        _mine_numbers.add(round(float(_m["day_increment_cents"]), 9))
+        for _c, _b in _m["per_coin"].items():
+            _mine_numbers.add(round(float(
+                _b["MATCHED_VOLUME_increment_cents"]), 9))
+    _mine_numbers = {x for x in _mine_numbers if abs(x) > 1e-9}
+    _emitted = {round(float(v), 9) for _q, v in _leaves(_good)
+                if isinstance(v, (int, float)) and not isinstance(v, bool)}
+    _echoed = sorted(_mine_numbers & _emitted)
+    _has_values = [c for c in _good["checks"]
+                   if "mine" in c or "artifact" in c]
+    ck("DA 100 (4) -- ***THE READ ORDER: THIS RECORD COMES FIRST, SO A "
+       "NUMBER QUOTED HERE IS A NUMBER PUBLISHED AHEAD OF THE READ THAT "
+       "IS ENTITLED TO PUBLISH IT.*** The verdict is by PREDICATE and by "
+       "NAME: every comparison is MATCH / MISMATCH / ABSENT_IN_ARTIFACT on "
+       "a field NAME, and no MATCHED_VOLUME, day increment, permutation p "
+       "or direction appears in this verifier's own output. Computed, not "
+       "promised: every recomputed quantity is searched for as a numeric "
+       "leaf of the emission",
+       not _echoed and not _has_values
+       and _good["IS_A_VERIFICATION"] is True,
+       f"{len(_mine_numbers)} recomputed quantities, {len(_echoed)} of "
+       f"them present in my own output; {len(_has_values)} of "
+       f"{len(_good['checks'])} check rows carry a value")
+    ck("AND THE RECORD SAYS WHAT IT DOES NOT VERIFY, NOT ONLY WHAT IT "
+       "DOES: the marker ORDER (presence is the fact, a timestamp is not "
+       "evidence of order), a feed replaced with bytes matching its pin, "
+       "the direction and the permutation p, and BE's own "
+       "`decl_is_the_chain_head` claim -- ***recorded as BE's claim and "
+       "re-resolved here independently, never taken***",
+       len(_good["what_this_verifier_DOES_NOT_VERIFY"]) >= 4
+       and _good["the_declaration"][
+           "and_this_verifier_resolved_the_head_ITSELF"] is True,
+       f"{len(_good['what_this_verifier_VERIFIES'])} verified / "
+       f"{len(_good['what_this_verifier_DOES_NOT_VERIFY'])} explicitly "
+       f"not")
 
     return checks
 
