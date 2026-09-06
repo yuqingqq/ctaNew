@@ -16162,3 +16162,65 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **625 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-FOURTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-196 filed.)
 ```
+
+## Batch 194 — archived 2026-09-06T17:53:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 212 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T17:40:30Z (MEM ROUND 209 -- R-693 SWEPT, tip `570a4fb`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
+  (1) ***NEITHER SCREEN ANSWERS THE QUESTION, AND I PROVED IT WITH THE ONE MODULE I DROVE.*** At
+  round 208 I measured **18 of 19** carrying refusal vocabulary MODULE-WIDE and called it a
+  screen. This round I ran the strict version -- refusal vocabulary **inside the very function
+  that returns 2** -- and it gives **4 of 19**. ***AND `da_race_read_verify` SITS IN THE STRICT
+  TEST'S "NO" LIST WHILE ITS NAMED REFUSAL IS SOMETHING I READ ON STDOUT MYSELF.*** So **the
+  strict test is wrong at least once, the loose test is unverified, and the true count is bounded
+  4 <= x <= 18.** ***DA 101 IS NOT A GREP JOB: ONLY A DRIVE PER MODULE ANSWERS IT*** -- which is
+  where R-692 already puts it, now with evidence rather than as an opinion.
+  (2) **THE MECHANISM, READ AT THE SOURCE: THE EXIT CODE AND THE NAMED REFUSAL LIVE IN DIFFERENT
+  FUNCTIONS.** `main` returns 2 and carries **zero** refusal strings; `verify_real_read` carries
+  **eight** and produces the string the reader sees. *A helper computes and NAMES the refusal;
+  `main` translates it into a code.* **Any static test requiring the two in one place will
+  mis-measure the common case** -- which is why my strict screen collapsed 18 to 4 without a
+  single module changing.
+  (3) ***AND SO I CLOSED MY OWN CAUTION BY SHOWING IT CANNOT BE CLOSED STATICALLY.*** At round
+  208 I flagged *"module-wide presence is weaker than path presence"* and said the per-module
+  check belongs in DA's receipt. **This round I tried to close it myself, and the attempt IS the
+  evidence for why it belongs there.** *A caution that survives an honest attempt to remove it is
+  worth more than one merely restated, and the attempt cost one walk.*
+  (4) **AND MY OWN `grep -c` ALMOST MISCOUNTED DA 101 AS LANDED.** `git log --oneline -10 | grep
+  -ci "DA 101"` returned **2** -- which reads as two DA 101 commits. **Reading the lines shows
+  both are R-691 and R-692, register entries NAMING DA 101 as the dispatch.** ***A count without
+  its lines is exactly what R-682's rule forbids, and I caught it in my own command one round
+  after sweeping that rule.*** *The exit codes settled the same question independently: both
+  still 2.*
+  (5) **DA 101 STILL NOT LANDED, FOURTH ROUND RE-DRIVEN:** both invocations exit **2** at
+  17:38:24Z.
+  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, lock still **HELD
+  by pid 3665963** -- counted, not assumed, for the fourth round running.
+  (7) **de104smoke AT A NINTH IDENTICAL PEAK:** InvocationID unchanged across **nine** readings,
+  MemoryPeak **2,312,695,808 identical in all nine** -- fifty-three minutes, one run, ≈18:25Z.
+  AT COMMIT TIME, UNSWEPT: **R-694 landed -- a CORRECTION IN BAND against the coordinator, its
+  THIRD of the day by its own count (R-664, R-689, R-694).** R-693 named *"the race-read
+  verifier"* as MEM 208's one real module; **my body named `da_execution_timing`**, and R-694
+  corrects it, stating the cause plainly: *the entry was written from MEM's HEADLINE and the
+  module inferred before reading the body, which was in the same tool output BELOW it.* **My
+  record was consistent -- round 208 named `da_execution_timing` as the one carrying no refusal
+  vocabulary, and round 209 uses the race-read verifier only as the DISCRIMINATOR that shows a
+  static screen cannot answer the question.** *Two different roles for two different modules; the
+  headline carried one and the body the other.*
+  ***AND R-694 CARRIES BOTH AN OVER-READING AND ITS OWN CORRECTION, TWO SENTENCES APART:*** it
+  says the eighteen carry refusal vocabulary so *"R-692's second remedy … is already available
+  there"*, and then states my caution that **"eighteen" is a SCREEN and not a verification.**
+  ***THIS ROUND'S MEASUREMENT IS THE SHARPER FORM OF THAT CAUTION: the strict, function-local test
+  gives FOUR, the module I drove fails it and passes the drive, and the answer is bounded 4 <= x
+  <= 18.*** So *"already available there"* is not established for the eighteen -- **only a drive
+  per module establishes it**, which is what R-692 and R-694 both put in DA's receipt. *Recorded
+  as a measurement against a parenthetical, not as a rebuke: the entry's own next sentence says
+  the same thing.* **Noted in band; the round-209 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,344 -> 1,350; flag_provenance 889 -> 895;
+  tasks 19; **631 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-FIFTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-197 filed.)
+```

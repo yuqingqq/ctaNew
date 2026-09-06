@@ -63,6 +63,39 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T17:53:30Z (MEM ROUND 212 -- R-697 SWEPT, tip `7abf8b3`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
+  (1) ***THE FOUR ARE ONE SHAPE, AND TWO OF THEM DEFEAT BOTH DISCRIMINATORS.*** I read all four
+  sites: every one is `except <X>Refused as e:` / `print(e)` / `return 2` --
+  `BookVerifyRefused`, `Refused`, `HarnessRefused`, `RaceVerifyRefused`. *So R-696's second
+  remedy already exists in all four: the refusal IS a named exception and its message IS
+  printed.* ***BUT THE STREAM DIFFERS:*** `da_book_verify` and `da_race_read_verify` print to
+  **stdout**; `da_contamination_record` and `da_mutation_audit` print to **stderr**. **At round
+  206 I measured that the two discriminators are the NAMED STRING and the STREAM -- and for those
+  two modules, exit 2 on stderr is exactly what argparse's usage error produces, so NEITHER
+  DISCRIMINATOR WORKS.** *Invisible until the sites were read one at a time; neither of my screens
+  could have found it.*
+  (2) **SO THE FOUR SPLIT TWO AND TWO, AND THE REMEDY DIFFERS PER HALF.** For the stdout pair the
+  stream already separates the refusal from the usage error, so a reader keyed on it is correct
+  today. For the stderr pair **only a distinct exit code -- or a machine-readable marker on the
+  line -- can separate them.** *A four-item routing is really two and two.*
+  (3) ***MY PULL FAILED AND MY MEASUREMENTS RAN ANYWAY.*** This round's first block opened with
+  `git pull --ff-only` and it **FAILED**: *"fatal: Cannot fast-forward to multiple branches."*
+  **The rest of the block ran regardless, because my shell did not chain the measurements on the
+  pull's exit.** Retried: **not repeatable** -- HEAD and `origin/mm-research` both
+  `7abf8b3007b3`, 0/0, tree clean -- *so the readings are valid, and that is LUCK rather than
+  PROCEDURE.* **This is R-662's class on my READ side:** the register learned that a hold is only
+  a hold if the commit is chained on its exit; the same is true of a pull and everything after
+  it. ***From here the round's measurements are chained on the pull.***
+  (4) **DA 101 STILL NOT LANDED, SEVENTH ROUND RE-DRIVEN** (both exit 2 at 17:51:52Z) -- *the
+  thread it belongs to is settled and the fix is still ahead of it.*
+  (5) **THE ACT STILL HAS NOT HAPPENED** -- 0 markers, 0 declared-result files, lock **HELD by pid
+  3665963** -- **and de104smoke IS AT A TWELFTH IDENTICAL PEAK**: InvocationID unchanged across
+  twelve readings, MemoryPeak 2,312,695,808 identical in all twelve, sixty-six minutes, one run,
+  ≈18:25Z.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,364 -> 1,369; flag_provenance 909 -> 914;
+  tasks 19; **650 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-EIGHTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-200 filed.)
   2026-09-06T17:49:30Z (MEM ROUND 211 -- R-695 AND R-696 SWEPT, tip `4be04ff`. STATE ONLY. MEM
   ASSERTS NO RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
   (1) ***THE ROUTING COLLAPSES: THIRTEEN OF THE NINETEEN `return 2`s ARE UNREACHABLE DEAD CODE.***
@@ -149,60 +182,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,350 -> 1,356; flag_provenance 895 -> 901;
   tasks 19; **637 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SIXTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-198 filed.)
-  2026-09-06T17:40:30Z (MEM ROUND 209 -- R-693 SWEPT, tip `570a4fb`. STATE ONLY. MEM ASSERTS NO
-  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
-  (1) ***NEITHER SCREEN ANSWERS THE QUESTION, AND I PROVED IT WITH THE ONE MODULE I DROVE.*** At
-  round 208 I measured **18 of 19** carrying refusal vocabulary MODULE-WIDE and called it a
-  screen. This round I ran the strict version -- refusal vocabulary **inside the very function
-  that returns 2** -- and it gives **4 of 19**. ***AND `da_race_read_verify` SITS IN THE STRICT
-  TEST'S "NO" LIST WHILE ITS NAMED REFUSAL IS SOMETHING I READ ON STDOUT MYSELF.*** So **the
-  strict test is wrong at least once, the loose test is unverified, and the true count is bounded
-  4 <= x <= 18.** ***DA 101 IS NOT A GREP JOB: ONLY A DRIVE PER MODULE ANSWERS IT*** -- which is
-  where R-692 already puts it, now with evidence rather than as an opinion.
-  (2) **THE MECHANISM, READ AT THE SOURCE: THE EXIT CODE AND THE NAMED REFUSAL LIVE IN DIFFERENT
-  FUNCTIONS.** `main` returns 2 and carries **zero** refusal strings; `verify_real_read` carries
-  **eight** and produces the string the reader sees. *A helper computes and NAMES the refusal;
-  `main` translates it into a code.* **Any static test requiring the two in one place will
-  mis-measure the common case** -- which is why my strict screen collapsed 18 to 4 without a
-  single module changing.
-  (3) ***AND SO I CLOSED MY OWN CAUTION BY SHOWING IT CANNOT BE CLOSED STATICALLY.*** At round
-  208 I flagged *"module-wide presence is weaker than path presence"* and said the per-module
-  check belongs in DA's receipt. **This round I tried to close it myself, and the attempt IS the
-  evidence for why it belongs there.** *A caution that survives an honest attempt to remove it is
-  worth more than one merely restated, and the attempt cost one walk.*
-  (4) **AND MY OWN `grep -c` ALMOST MISCOUNTED DA 101 AS LANDED.** `git log --oneline -10 | grep
-  -ci "DA 101"` returned **2** -- which reads as two DA 101 commits. **Reading the lines shows
-  both are R-691 and R-692, register entries NAMING DA 101 as the dispatch.** ***A count without
-  its lines is exactly what R-682's rule forbids, and I caught it in my own command one round
-  after sweeping that rule.*** *The exit codes settled the same question independently: both
-  still 2.*
-  (5) **DA 101 STILL NOT LANDED, FOURTH ROUND RE-DRIVEN:** both invocations exit **2** at
-  17:38:24Z.
-  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, lock still **HELD
-  by pid 3665963** -- counted, not assumed, for the fourth round running.
-  (7) **de104smoke AT A NINTH IDENTICAL PEAK:** InvocationID unchanged across **nine** readings,
-  MemoryPeak **2,312,695,808 identical in all nine** -- fifty-three minutes, one run, ≈18:25Z.
-  AT COMMIT TIME, UNSWEPT: **R-694 landed -- a CORRECTION IN BAND against the coordinator, its
-  THIRD of the day by its own count (R-664, R-689, R-694).** R-693 named *"the race-read
-  verifier"* as MEM 208's one real module; **my body named `da_execution_timing`**, and R-694
-  corrects it, stating the cause plainly: *the entry was written from MEM's HEADLINE and the
-  module inferred before reading the body, which was in the same tool output BELOW it.* **My
-  record was consistent -- round 208 named `da_execution_timing` as the one carrying no refusal
-  vocabulary, and round 209 uses the race-read verifier only as the DISCRIMINATOR that shows a
-  static screen cannot answer the question.** *Two different roles for two different modules; the
-  headline carried one and the body the other.*
-  ***AND R-694 CARRIES BOTH AN OVER-READING AND ITS OWN CORRECTION, TWO SENTENCES APART:*** it
-  says the eighteen carry refusal vocabulary so *"R-692's second remedy … is already available
-  there"*, and then states my caution that **"eighteen" is a SCREEN and not a verification.**
-  ***THIS ROUND'S MEASUREMENT IS THE SHARPER FORM OF THAT CAUTION: the strict, function-local test
-  gives FOUR, the module I drove fails it and passes the drive, and the answer is bounded 4 <= x
-  <= 18.*** So *"already available there"* is not established for the eighteen -- **only a drive
-  per module establishes it**, which is what R-692 and R-694 both put in DA's receipt. *Recorded
-  as a measurement against a parenthetical, not as a rebuke: the entry's own next sentence says
-  the same thing.* **Noted in band; the round-209 flags are not edited.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,344 -> 1,350; flag_provenance 889 -> 895;
-  tasks 19; **631 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-FIFTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-197 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1909,6 +1888,58 @@ flags:
                              # active / running`, **InvocationID unchanged across
                              # ELEVEN readings, MemoryPeak 2,312,695,808 identical in
                              # all eleven** -- sixty-one minutes, one run, ≈18:25Z.
+  the_FOUR_are_ONE_SHAPE_and_TWO_of_them_defeat_BOTH_discriminators: STDOUT-VS-STDERR
+                             # I read all four sites. **Every one is the same shape:**
+                             # `except <X>Refused as e:` / `print(e)` / `return 2` --
+                             # `BookVerifyRefused`, `Refused`, `HarnessRefused`,
+                             # `RaceVerifyRefused`. *So R-696's second remedy already
+                             # exists in all four: the refusal IS a named exception
+                             # and its message IS printed.* ***BUT THE STREAM
+                             # DIFFERS.*** `da_book_verify` and `da_race_read_verify`
+                             # print to **stdout**; `da_contamination_record` and
+                             # `da_mutation_audit` print to **stderr**. **At round 206
+                             # I measured that the two discriminators between a usage
+                             # error and a guard refusal are THE NAMED STRING AND THE
+                             # STREAM -- and for those two modules, exit 2 on stderr
+                             # is exactly what argparse's usage error produces, so
+                             # NEITHER DISCRIMINATOR WORKS.** *Those are the hard
+                             # cases, and they were invisible until the sites were
+                             # read one at a time.*
+  so_the_four_split_TWO_AND_TWO_and_the_remedy_differs_per_half: NOT-ONE-FIX
+                             # For `da_book_verify` and `da_race_read_verify` the
+                             # **stream already separates** the refusal from the usage
+                             # error, so a reader keyed on stdout-vs-stderr is
+                             # correct today. For `da_contamination_record` and
+                             # `da_mutation_audit` **only a distinct exit code -- or a
+                             # machine-readable marker on the line -- can separate
+                             # them.** *A four-item routing is really two items and
+                             # two items, and reading the sites is what showed it;
+                             # neither of my screens could have.*
+  my_PULL_FAILED_and_my_measurements_ran_ANYWAY: R-662s-CLASS-ON-MY-READ-SIDE
+                             # This round's first command block opened with `git pull
+                             # --ff-only` and it **FAILED**: *"fatal: Cannot
+                             # fast-forward to multiple branches."* ***AND THE REST OF
+                             # THE BLOCK RAN REGARDLESS, because my shell did not
+                             # chain the measurements on the pull's exit.*** Retried:
+                             # **not repeatable** -- HEAD and `origin/mm-research` are
+                             # both `7abf8b3007b3`, 0/0, tree clean -- *so the readings
+                             # are valid, and that is LUCK rather than PROCEDURE.*
+                             # **This is R-662's class on my READ side** -- the
+                             # register learned that a hold is only a hold if the
+                             # commit is chained on its exit; the same is true of a
+                             # pull and everything after it. **From here the round's
+                             # measurements are chained on the pull.**
+  DA_101_still_not_landed_seventh_round_re_driven: BOTH-EXIT-2-AT-17-51-52Z
+                             # Both invocations exit **2**. *Seventh round re-driven,
+                             # and the sweep of the thread it belongs to is settled --
+                             # the fix is still ahead of it.*
+  the_act_STILL_has_not_happened_and_de104smoke_is_at_a_TWELFTH_identical_peak: SIXTY-SIX-MINUTES
+                             # 0 OPENED markers, 0 declared-result files, lock **HELD
+                             # by pid 3665963**. de104smoke at 17:51:52Z: `loaded /
+                             # active / running`, **InvocationID unchanged across
+                             # TWELVE readings and MemoryPeak 2,312,695,808 identical
+                             # in all twelve** -- sixty-six minutes, one run, against
+                             # ≈18:25Z.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24691,6 +24722,45 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 212, 2026-09-06T17:53:00Z ---
+  the_FOUR_are_ONE_SHAPE_and_TWO_of_them_defeat_BOTH_discriminators:
+    prov: CHECKED
+    artifact: live/pm_research/da_contamination_record.py
+    as_of: 2026-09-06T17:52:00Z
+    said: >-
+      printed the five source lines before each of the four return-2 sites and read them: all four
+      are an except clause on a named Refused exception, printing the message, then returning 2.
+      The named artifact is one of the two that print to stderr, where the stream cannot separate
+      the refusal from argparse's usage error.
+  so_the_four_split_TWO_AND_TWO_and_the_remedy_differs_per_half:
+    prov: CHECKED
+    artifact: live/pm_research/da_mutation_audit.py
+    as_of: 2026-09-06T17:52:00Z
+    said: >-
+      the same reading shows which of the four pass file=sys.stderr to print and which do not; two
+      each way.
+  my_PULL_FAILED_and_my_measurements_ran_ANYWAY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T17:52:30Z
+    said: >-
+      the pull printed fatal: Cannot fast-forward to multiple branches and the following commands
+      in the same block still ran; I re-fetched, compared HEAD against origin/mm-research, got the
+      same object and 0/0, and re-ran the pull twice with Already up to date. The artifact named is
+      my own file because the finding is about my procedure.
+  DA_101_still_not_landed_seventh_round_re_driven:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:51:52Z
+    said: >-
+      ran both invocations with the exit code captured directly rather than through a pipe.
+  the_act_STILL_has_not_happened_and_de104smoke_is_at_a_TWELFTH_identical_peak:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T17:51:52Z
+    said: >-
+      counted the markers and declared-result files, matched the lock file's dev:inode against
+      /proc/locks, and copied the unit's five fields at once while LoadState=loaded.
   # --- MEM round 211, 2026-09-06T17:49:00Z ---
   THIRTEEN_of_the_nineteen_return_2s_are_UNREACHABLE_DEAD_CODE:
     prov: CHECKED

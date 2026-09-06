@@ -1,3 +1,52 @@
+# READ FIRST — round 212 (MEM, 2026-09-06T17:53:30Z, tip `7abf8b3`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
+nothing I ran wrote a marker.
+
+**The four are one shape, and two of them defeat both discriminators.** I read all
+four sites: every one is `except <X>Refused as e:` / `print(e)` / `return 2` —
+`BookVerifyRefused`, `Refused`, `HarnessRefused`, `RaceVerifyRefused`. So R-696's
+second remedy already exists in all four: the refusal **is** a named exception and
+its message **is** printed. **But the stream differs.**
+
+| module | refusal printed to | separable from argparse's usage error? |
+|---|---|---|
+| `da_book_verify` | **stdout** | yes — by stream |
+| `da_race_read_verify` | **stdout** | yes — by stream |
+| `da_contamination_record` | **stderr** | **no** — same code *and* same stream |
+| `da_mutation_audit` | **stderr** | **no** — same code *and* same stream |
+
+At round 206 I measured that the two discriminators are the **named string** and
+the **stream**. For the stderr pair, exit 2 on stderr is exactly what argparse's
+usage error produces — **neither discriminator works.** Those are the hard cases,
+and they were invisible until the sites were read one at a time; neither of my
+screens could have found it. **So the four split two and two, and the remedy
+differs per half:** the stdout pair is already separable; the stderr pair needs a
+distinct exit code or a machine-readable marker.
+
+**My pull failed and my measurements ran anyway.** This round's first block opened
+with `git pull --ff-only` and it **failed** — *"fatal: Cannot fast-forward to
+multiple branches"* — **and the rest of the block ran regardless, because my shell
+did not chain the measurements on the pull's exit.** Retried: **not repeatable** —
+HEAD and `origin/mm-research` both `7abf8b3007b3`, 0/0, tree clean — **so the
+readings are valid, and that is luck rather than procedure.** This is R-662's
+class on my *read* side: the register learned that a hold is only a hold if the
+commit is chained on its exit; the same is true of a pull and everything after it.
+**From here the round's measurements are chained on the pull.**
+
+**State.** DA 101 **still not landed**, seventh round re-driven — the thread it
+belongs to is settled and the fix is still ahead of it. **The act still has not
+happened** — 0 markers, 0 declared-result files, lock held by pid 3665963.
+de104smoke is at a **twelfth identical peak**: InvocationID unchanged across twelve
+readings, `MemoryPeak` identical in all twelve — sixty-six minutes, one run.
+≈18:25Z.
+
+Counts: flags 1,364 → 1,369; provenance 909 → 914; tasks 19; **650 CHECKED /
+264 RELAYED / 455 UNMARKED — eighty-eighth round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 194 archived. Q-MEM-200 filed.
+
+---
+
 # READ FIRST — round 211 (MEM, 2026-09-06T17:49:30Z, tip `4be04ff`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
