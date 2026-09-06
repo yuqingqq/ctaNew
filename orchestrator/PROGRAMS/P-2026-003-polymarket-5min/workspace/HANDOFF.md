@@ -1,3 +1,71 @@
+# READ FIRST — round 201 (MEM, 2026-09-06T16:53:00Z, tip `dd332cf`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read or
+written — every cell of the sealed-value guard was driven with an **invented**
+number, and no sealed receipt was opened.
+
+**The headline I first wrote was wrong, and I caught it before it landed.** I
+measured that design **v23** pins `de_multiday_gate1_params_v14.json` at
+`2da40f4e7b2305df…` (verified by recomputation) while the params head is **v15**,
+and I wrote that *nothing currently pins the params head*. **False.** **Design
+v24 exists, is the sole chain head, and pins params v15 — `92858fc7f9493f8e`,
+recomputed and matching** — and it had been on disk since **16:42:23Z, eight
+minutes before my measurement**. The cause is the class I keep catching in other
+seats: **I took "design v23" from the dispatch's prose instead of resolving the
+family's chain head at the files.** Resolved properly: nine `design_vN` files
+(16–24), **v24 the sole head, v23 named in v24's chain**.
+
+What survives is the *mechanism*, and DE names it in v24 itself —
+`R31_the_two_way_pin_forces_a_paired_bump`: params v15 naming v23 required the
+design to pin v15 back, so the flipped direction forces a **paired bump**. A
+window exists between a params emission and its paired design; here it closed
+inside the same batch. **Nothing to route.** And the digests settled what the
+clocks would have confused: v24's mtime is 16:42:23Z and v15's is 16:43:47Z, so
+v24 appears to pin a file written 84 s *later* — and the digest matches anyway.
+**mtime is not emission order; the digest is the only identity.**
+
+**At commit time, unswept: R-677 and REV 76 landed.** R-677 confirms design v24
+and states the same mechanism, gives the 09-05 launch as `MainPID 3665963`
+(`/proc/exe` = `/usr/bin/flock`, PPid 1004, cwd wt-de2 at `8445bed`) from a
+rehearsal receipt READY with all twelve preconditions, against the 09-05 book
+`499f8596…` (260,449,687 B) — **the digest I verified at an earlier round** — with
+the lock free by both routes before Enter and completion expected ≈18:12–18:25Z.
+REV 76 recommends GO on the race reader with five conditions, two of which are
+instrument shapes this programme has paid for before: the marker directory is
+resolved by the **unguarded** `derived()` while BE's own `require_ledger()`
+exists, and **a half-written marker makes the consumption guard RAISE instead of
+refusing** — an exception where a named refusal belongs.
+
+| claim | what I measured |
+|---|---|
+| DE 104(0): the reasons-text check refuses a reason carrying a sealed value | **driven — and my first probe said the opposite.** I passed `reasons` as a dict-of-lists; the field is a **list**, and joining over a dict joins its keys, so the guard had nothing to find and "admitted" both known-bads. Re-driven with the code's shapes: positive control **admitted**, **both known-bads refused by name**, the empty-list 09-03 shape admitted at `n_reasons 0`. **The guard is sound.** A false accusation against the newest instrument in the programme, avoided by suspecting the probe. |
+| — | **the matcher's boundary is stated:** forms under three characters are not searched, so a **two-character** sealed value in a reason is admitted. A stated threshold with a named consequence — recorded as a boundary, **not routed as a defect**. |
+| REV 70's "does not exist" corrected in band | corrected **where a reader of the code meets it**: the guard's docstring and its positive control both state the field has been written by `arm_day_admissible()` since design v2, including 09-03's empty list. |
+| BE 67: the read consumes, the real days untouched, 20/20 | **ran it: 20 checks passed**, and the final line is an assertion — no OPENED marker exists for 20260903/04/05; the drive ran on scratch feeds under a scratch declaration. |
+| R-675: the structure declaration v2 verified, v1 untouched | drove that chain last round: v1 `ea1e88595844e800` → v2 `0fa3c6db8750857f` by the pair, **v2 the sole head**. |
+| DA 97 links the family | **going-forward half done, historical half not.** Six census records, **two** links — the new `…164823Z` (`7d3e1fd473a3`, **291 → 68 → 1**) names `…153821Z` by the pair — but `…142709Z`, `…143544Z`, `…150939Z` and the new head are still **four heads**. The refused count is back to **1** at the tip. |
+
+**The 09-05 run is live, and I copied the five fields while loaded** — the round
+after my void reading. de104smoke at 16:47:15Z: **`loaded / active / running`**,
+so `ExecMainStatus=0` and `Result=success` are defaults. InvocationID
+`549bd234e4324408bf931992ada421d8`, matching the dispatch's `549bd234…` — **the
+tie confirmed, not accepted**. `ExecMainStartTimestamp` **16:45:44Z** against the
+launch stamp 16:45:46Z — two seconds, and they are different events. Day
+**2026-09-05** on `be_daybook_20260905_btc.pkl`, read from the payload's own
+`/proc/<pid>/cmdline`. (`pgrep -f` also matched **my own shell**, whose command
+line carries the pattern because my script does — round 177's class, unchanged.)
+
+**Three probe errors this round, all caught before they became findings**: a
+digest compared to a sentence; a shape-printer that tested the rarer key first
+and hid the pair; and the reasons-guard harness above. The artifacts were right
+every time.
+
+Counts: flags 1,272 → 1,282; provenance 817 → 827; tasks 19; **569 CHECKED /
+258 RELAYED / 455 UNMARKED — seventy-seventh round unchanged.** ORPHAN audit
+0 findings. Window trimmed 4 → 3, Batch 183 archived. Q-MEM-189 filed.
+
+---
+
 # READ FIRST — round 200 (MEM, 2026-09-06T16:39:40Z, tip `ade9a96`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read.

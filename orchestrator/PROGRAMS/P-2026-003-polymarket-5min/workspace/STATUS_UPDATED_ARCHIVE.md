@@ -15323,3 +15323,85 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **528 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-THIRD round unchanged.**
   ORPHAN audit 0 findings. Q-MEM-185 filed.)
 ```
+
+## Batch 183 — archived 2026-09-06T16:53:00Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 201 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T15:59:10Z (MEM ROUND 198 -- R-672 SWEPT, tip `d2adb5d`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
+  (1) ***R-672 NAMES TWO CELLS OF THE CHAIN-HEAD CHECK; I DROVE ALL SEVEN.*** `v1..v6` each
+  have **exactly one** successor naming them by the `{path, sha256}` pair, `v7` has none:
+  **an unbroken line with exactly ONE head.** *That is the property that matters and the two
+  cells would not have caught its absence -- a FORK passes "v7 is a head" and "v2 is refused"
+  equally well.* v2 `6567a25f04d7fb89`, v7 `57c92c9e899eb691`, and the module's `DECL_SHA`
+  recomputes to v7's bytes.
+  (2) **NOTHING COMPUTED CHANGES, AND I READ THE BLOCK RATHER THAN THE CLAIM.**
+  `reproduction_control_inherited` canonicalises to sha256 `0de161a999246f01` in **both** v2
+  and v7. *The block carries the twelve symbol NAMES themselves* -- AAVE ADA AVAX BNB BTC DOGE
+  ETH FIL ICP LTC SOL XRP -- with `tp_s` 600, tolerance 0.05, both published pairs and their
+  CIs, and the source `e1a_gate_summary.csv row tp_s=600`. ***AND MY FIRST READ PRINTED SIX
+  KEYS AND I WAS ABOUT TO FILE THAT THE BLOCK CARRIED A COUNT AND NOT A LIST.*** *My
+  truncation, not the artifact's.* **Twenty-seventh "suspect the probe first" -- and the
+  SECOND this round that would have become a wrong routing.**
+  (3) **THE SECOND ONE: THE TWELVE AND BTC-ONLY ARE BOTH TRUE, AND v7 SAYS SO ITSELF.** v7's
+  `population` declares day admission PER SYMBOL over the twelve in scope; v7 also carries
+  R-584, *"SCOPE IS BTC FOR NOW"*. Read alone either looks like a contradiction of R-672.
+  **v7 resolves it in its own words -- `the_twelve_are_CONTEXT_under_R584`: the XS-overlap set
+  remains the declared population of the EXPERIMENT, and R-584 narrows what is READ to BTC.**
+  *I went looking for the contradiction before writing one down.*
+  (4) **THE OLDER RECEIPT IS ACCURATE AND UNTOUCHED.**
+  `p002_e2a_e1a_reproduction__20260906T051626Z.json`, 6,508 B, `e76e3226b1cf603e`, mtime
+  05:17:41Z -- *hours before v7 existed* -- names v2 with sha `6567a25f04d7fb89…`, which was
+  the head when it ran. Rule 13 holds: the old receipt stays as provenance.
+  (5) ***THE DEBT I ROUTED FOR TWO ROUNDS IS DISCHARGED.***
+  `p003_da_nonhead_census__20260906T153821Z.json`, 379,450 B, `92edc2dc74ba7186`, as_of
+  15:38:36Z -- *emitted between my round-197 measurement and my round-197 commit* -- carries
+  **281 -> 66 -> 0**, 23 families, 1 marked, **the `shapes_the_tree_uses` block** (multi-hop 7,
+  returning-function 1) and composed names **17, of which 2 reach an open**. **My own
+  independent run at the tip agrees on all four counts.** *Every number R-670, R-671 and R-672
+  quoted from a run is now in an artifact and citable by digest.* **Closed by the remedy I
+  named -- an emission -- not by anyone conceding a number.**
+  (6) ***AND THE CENSUS FAMILY ITSELF HAS FOUR HEADS.*** Applying **DA's OWN chain-head
+  predicate** to the five census artifacts: **exactly ONE link exists in the whole family** --
+  `…150939Z` names `…144403Z` at `ccb79d352c712a24`, which recomputes -- so `…142709Z`,
+  `…143544Z`, `…150939Z` **and the new `…153821Z`** are all heads. ***THE INSTRUMENT THAT
+  CERTIFIES 23 DECLARATION FAMILIES AT EXACTLY ONE HEAD EACH IS EMITTED INTO A FAMILY WITH
+  FOUR.*** Its CLI offers `--supersedes` and one member used it, so the family is a chain in
+  one member and a bare series in the rest: *a reader cannot tell which, and cannot learn that
+  `…150939Z`'s 271 -> 62 -> 1 is superseded* -- numbers quoted in three register entries.
+  **Exactly the defect DA 96 just fixed in `e2_a_episodes.py`, on the instrument that found
+  it. ROUTED TO DA, NOT RULED.**
+  (7) **THE LANDING GATE REACHES OUTSIDE ITS DIRECTORY, DRIVEN WITH ITS KNOWN-BAD.**
+  `live/mm_research/e2_a_episodes.py` runs **GREEN** through `run_module` (script form, "0
+  failure(s)"); an absent path returns **`MODULE_ABSENT`** -- *a status, not a crash and not a
+  silent pass*; a bare name still resolves in-directory. `ACTIVE` is 10, the declared-red map
+  is 2 (`da_cite_audit`, `da_iter011_contract_verify`), **and every declared known-red runs
+  whatever the scope** -- so 10 + 1 `--also` + 2 = **13 rows -> 11 green / 2 declared red**,
+  R-672's report exactly. *The row count was reconcilable only because the known-reds are
+  scope-independent by construction.*
+  (8) **THE 139/48 RECONCILIATION IS ARITHMETIC AT THE ARTIFACT AND ONLY CORROBORATED IN GIT.**
+  At `a0c8cb70b841`: `NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION` 141 +
+  `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY` 70 = `n_head_is_null` 211 exactly, and 139+2 / 48+22
+  / 187+24 land on it. In git, between the tree at 14:57:55Z and `c6dc6e5`,
+  `da_nonhead_census.py` gains net **+24** lines carrying a `.json` literal and DE's runner net
+  **+3** -- the right two files, the right order, the right sign. ***MY GREP COUNTS LINES, NOT
+  THE CENSUS'S LITERALS, SO THIS CORROBORATES THE 22/2 DECOMPOSITION AND DOES NOT CONFIRM IT***
+  -- said plainly rather than let a rough count stand in for the instrument's.
+  (9) **THE CENSUS IS STABLE WHEN THE TREE IS, AND THAT IS WHAT MAKES IT CITABLE.** My run at
+  tip `3427357` and at tip `d2adb5d` are IDENTICAL on all six quantities -- as they must be,
+  since my own round-197 commit touched only `orchestrator/`. *So the perishability I routed
+  for two rounds is TREE-DRIVEN, not noise: the quantity is stable under a stable tree, which
+  is exactly why an emitted artifact can be cited by digest and a pane cannot.*
+  (10) **IN FLIGHT, MEASURED.** de102smoke at 15:55:01Z: `loaded / active / running`, with
+  `ExecMainStatus=0` / `Result=success` still reading as defaults on a live process;
+  **InvocationID `a8c7e41ee2d24ff8` unchanged since 15:42:51Z, so it is the SAME run and not a
+  relaunch**; MemoryPeak 2,957,488,128 for the **NINTH** consecutive reading; 61 min against a
+  receipt expected ~16:20Z. The lock is still held by pid 3551079 -- the same flock -- so BE
+  66's heavy half is still **refused**, not failed.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,241 -> 1,251; flag_provenance 786 -> 796;
+  tasks 19; **538 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-FOURTH round unchanged.**
+  ORPHAN audit 0 findings. Q-MEM-186 filed.)
+```

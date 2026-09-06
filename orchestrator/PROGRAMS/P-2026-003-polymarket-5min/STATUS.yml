@@ -63,6 +63,87 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T16:53:00Z (MEM ROUND 201 -- R-675 AND R-676 SWEPT, tip `dd332cf`. STATE ONLY.
+  MEM ASSERTS NO RESULT. **NO SEALED VALUE READ OR WRITTEN -- every cell of the sealed-value
+  guard was driven with an INVENTED number, and the sealed receipts were not opened.**
+  (1) ***I WROTE A HEADLINE THAT WAS WRONG AND CAUGHT IT BEFORE IT LANDED -- THE REPLACED
+  CLAIM IS KEPT HERE SO THE LESSON SURVIVES.*** I measured that design **v23** pins params
+  **v14** (`2da40f4e7b2305df…`, verified by recomputation) while the params head is **v15**, and
+  I wrote that *nothing currently pins the params head*. **FALSE.** ***DESIGN v24 EXISTS, IS THE
+  SOLE CHAIN HEAD, AND PINS PARAMS v15 (`92858fc7f9493f8e`, RECOMPUTED, MATCHING)*** -- on disk
+  since **16:42:23Z, eight minutes before my measurement**. **THE CAUSE IS THE CLASS I KEEP
+  CATCHING IN OTHER SEATS: I TOOK "design v23" FROM THE DISPATCH'S PROSE INSTEAD OF RESOLVING
+  THE FAMILY'S CHAIN HEAD AT THE FILES.** Resolved properly: nine `design_vN` files (16..24),
+  **v24 the sole head, v23 named in v24's chain**. *What survives is the MECHANISM, and DE names
+  it in v24 --* `R31_the_two_way_pin_forces_a_paired_bump`: *params v15 naming v23 required the
+  design to pin v15 back, so the flipped direction forces a PAIRED bump.* **A window exists
+  between a params emission and its paired design; here it closed inside the same batch. Nothing
+  to route.** ***Eighth "suspect the probe first" this session, and the only one that reached my
+  headline.*** **AND THE DIGESTS SETTLED WHAT THE CLOCKS WOULD HAVE CONFUSED:** v24's mtime is
+  16:42:23Z and v15's is 16:43:47Z, so v24 appears to pin a file written 84 s LATER -- *and the
+  digest matches anyway.* **mtime is not emission order; the digest is the only identity.**
+  (2) **AND THE ABSENT PIN IS A NAMED ABSENCE -- MY PROBE COMPARED A DIGEST TO A SENTENCE.** My
+  first check reported "matches declared: **False**" against a field that is not a digest at all
+  but a sentence carrying the direction. *The declaration states the absence; my comparator read
+  it as a mismatch.* **Sixth "suspect the probe first" this session.**
+  (3) **THE PARAMS FAMILY CARRIES BOTH THE PAIR AND A CUMULATIVE CHAIN** (v15's chain has 14
+  entries, last = v14, the same file its pair names). ***MY SHAPE-PRINTER TESTED `"chain" in s`
+  FIRST AND SO REPORTED "CHAIN" FOR EVERY DICT CARRYING BOTH*** -- which read as though the pair
+  were missing and the family had fourteen heads, contradicting my own correct first measurement
+  of ONE. **Reporting a shape by the first key that matches is not reporting the shape.** Fifth.
+  (4) ***I DROVE DE's NEWEST CHECK AND GOT "ADMITTED" ON BOTH KNOWN-BADS -- WHICH WOULD HAVE
+  BEEN A FALSE ACCUSATION THAT THE GUARD LEAKS A SEALED VALUE.*** The cause was mine:
+  `admissibility.reasons` is a **LIST**, I passed a dict-of-lists, and joining over a dict joins
+  its KEYS -- so the text I handed the guard held no numbers and there was nothing to find.
+  **Re-driven with the code's own shapes: the positive control ADMITTED (a decision count and a
+  declared minimum, both open), and BOTH known-bads REFUSED BY NAME** -- raw and formatted --
+  with the empty-list 09-03 shape admitted at `n_reasons 0`. **THE GUARD IS SOUND.** *Seventh
+  "suspect the probe first", and the one that would have cost the most: an accusation against
+  the newest instrument in the programme, from a defect in my own test harness.*
+  (5) **THE MATCHER'S BOUNDARY IS STATED, AND I DROVE IT:** forms shorter than three characters
+  are not searched, so a **two-character** sealed value interpolated into a reason is admitted.
+  *A stated threshold with a named consequence, not a hidden one* -- a guard firing on every
+  "42" in prose would be useless. **Recorded as a boundary, not routed as a defect.**
+  (6) **REV 70's "key absent" IS CORRECTED WHERE A READER OF THE CODE MEETS IT:** the guard's
+  docstring and its positive control both say `admissibility.reasons` has been written by
+  `arm_day_admissible()` since design v2, **including 09-03's, where it is an empty list**. *A
+  correction living only in a register entry is one an automated reader never meets.*
+  (7) **BE 67's RACE READER: 20 of 20, RUN NOT READ** -- and its final line is an assertion, not
+  a promise: *no OPENED marker exists for 20260903/04/05 in the ledger; the consumption drive
+  ran on scratch feeds under a scratch declaration.* **The consuming read is gated by a marker
+  the selftest proves it did not write.**
+  (8) **THE 09-05 RUN IS LIVE AND I COPIED THE FIVE FIELDS WHILE LOADED** -- *the round after my
+  VOID reading.* de104smoke at 16:47:15Z: **`loaded / active / running`**, so
+  `ExecMainStatus=0` and `Result=success` are DEFAULTS. InvocationID
+  `549bd234e4324408bf931992ada421d8`, **matching the dispatch's `549bd234…` -- the tie confirmed,
+  not accepted**. MemoryPeak 2,312,695,808. `ExecMainStartTimestamp` **16:45:44Z** against the
+  launch stamp 16:45:46Z -- *two seconds, and they are different events*. Day **2026-09-05** on
+  `be_daybook_20260905_btc.pkl`, read from the payload's own `/proc/<pid>/cmdline`.
+  (9) **MY `pgrep` MATCHED MY OWN SHELL AGAIN** -- three pids: the flock, the payload, **and my
+  own Claude Code wrapper, whose command line carries the pattern because my script does.**
+  Round 177's class, unchanged; I read each pid's cmdline rather than counting matches.
+  (10) **DA 97's GOING-FORWARD CHAINING HAS STARTED AND THE HISTORY HAS NOT.** The census family
+  is now **six records with two links**: the new `…164823Z` (`7d3e1fd473a3`, **291 -> 68 -> 1**)
+  **NAMES `…153821Z` BY THE PAIR**. *The going-forward half of what R-673 routed is done; the
+  historical half is not -- still **FOUR heads**.* Recorded as a partial, with which half moved.
+  And the refused count is back to **1** at the tip, from 0.
+  AT COMMIT TIME, UNSWEPT: **R-677 AND REV 76 LANDED.** R-677 confirms **design v24** and states
+  the same mechanism I recovered -- `R31_the_two_way_pin_forces_a_paired_bump` -- and gives the
+  09-05 launch as `MainPID 3665963` with `/proc/exe` = `/usr/bin/flock`, PPid 1004, cwd wt-de2
+  at `8445bed`, from a rehearsal receipt **READY with all twelve preconditions**, against the
+  09-05 book `499f8596…` (260,449,687 B) -- ***the digest I verified myself at an earlier
+  round*** -- with the lock free **by both routes** before Enter and completion expected
+  ≈18:12-18:25Z. **REV 76** recommends GO on the race reader with five conditions, **two of them
+  instrument shapes this programme has already paid for**: the marker directory is resolved by
+  the **UNGUARDED `derived()`** while BE's own `require_ledger()` exists, and ***a half-written
+  marker makes the consumption guard RAISE instead of REFUSING*** -- an exception where a NAMED
+  refusal belongs, which is the same distinction the census emitter draws correctly
+  (`SUPERSEDED_RECEIPT_NOT_PRESENT`) and the reasons guard draws correctly (`RunnerRefused`).
+  **Noted in band; the round-201 flags are not edited beyond the headline I corrected before
+  landing.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,272 -> 1,282; flag_provenance 817 -> 827;
+  tasks 19; **569 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-SEVENTH round unchanged.**
+  ORPHAN audit 0 findings. Q-MEM-189 filed.)
   2026-09-06T16:39:40Z (MEM ROUND 200 -- R-674 SWEPT, tip `ade9a96`. STATE ONLY. MEM ASSERTS
   NO RESULT. **NO SEALED VALUE READ. THE 09-04 SEALED RECEIPT WAS HASHED AND CENSUSED AND NOT
   OPENED -- a digest is not a read -- and no field of it is quoted anywhere in this round.**
@@ -219,80 +300,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,251 -> 1,261; flag_provenance 796 -> 806;
   tasks 19; **548 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-FIFTH round unchanged.**
   ORPHAN audit 0 findings. Q-MEM-187 filed.)
-  2026-09-06T15:59:10Z (MEM ROUND 198 -- R-672 SWEPT, tip `d2adb5d`. STATE ONLY. MEM ASSERTS
-  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
-  (1) ***R-672 NAMES TWO CELLS OF THE CHAIN-HEAD CHECK; I DROVE ALL SEVEN.*** `v1..v6` each
-  have **exactly one** successor naming them by the `{path, sha256}` pair, `v7` has none:
-  **an unbroken line with exactly ONE head.** *That is the property that matters and the two
-  cells would not have caught its absence -- a FORK passes "v7 is a head" and "v2 is refused"
-  equally well.* v2 `6567a25f04d7fb89`, v7 `57c92c9e899eb691`, and the module's `DECL_SHA`
-  recomputes to v7's bytes.
-  (2) **NOTHING COMPUTED CHANGES, AND I READ THE BLOCK RATHER THAN THE CLAIM.**
-  `reproduction_control_inherited` canonicalises to sha256 `0de161a999246f01` in **both** v2
-  and v7. *The block carries the twelve symbol NAMES themselves* -- AAVE ADA AVAX BNB BTC DOGE
-  ETH FIL ICP LTC SOL XRP -- with `tp_s` 600, tolerance 0.05, both published pairs and their
-  CIs, and the source `e1a_gate_summary.csv row tp_s=600`. ***AND MY FIRST READ PRINTED SIX
-  KEYS AND I WAS ABOUT TO FILE THAT THE BLOCK CARRIED A COUNT AND NOT A LIST.*** *My
-  truncation, not the artifact's.* **Twenty-seventh "suspect the probe first" -- and the
-  SECOND this round that would have become a wrong routing.**
-  (3) **THE SECOND ONE: THE TWELVE AND BTC-ONLY ARE BOTH TRUE, AND v7 SAYS SO ITSELF.** v7's
-  `population` declares day admission PER SYMBOL over the twelve in scope; v7 also carries
-  R-584, *"SCOPE IS BTC FOR NOW"*. Read alone either looks like a contradiction of R-672.
-  **v7 resolves it in its own words -- `the_twelve_are_CONTEXT_under_R584`: the XS-overlap set
-  remains the declared population of the EXPERIMENT, and R-584 narrows what is READ to BTC.**
-  *I went looking for the contradiction before writing one down.*
-  (4) **THE OLDER RECEIPT IS ACCURATE AND UNTOUCHED.**
-  `p002_e2a_e1a_reproduction__20260906T051626Z.json`, 6,508 B, `e76e3226b1cf603e`, mtime
-  05:17:41Z -- *hours before v7 existed* -- names v2 with sha `6567a25f04d7fb89…`, which was
-  the head when it ran. Rule 13 holds: the old receipt stays as provenance.
-  (5) ***THE DEBT I ROUTED FOR TWO ROUNDS IS DISCHARGED.***
-  `p003_da_nonhead_census__20260906T153821Z.json`, 379,450 B, `92edc2dc74ba7186`, as_of
-  15:38:36Z -- *emitted between my round-197 measurement and my round-197 commit* -- carries
-  **281 -> 66 -> 0**, 23 families, 1 marked, **the `shapes_the_tree_uses` block** (multi-hop 7,
-  returning-function 1) and composed names **17, of which 2 reach an open**. **My own
-  independent run at the tip agrees on all four counts.** *Every number R-670, R-671 and R-672
-  quoted from a run is now in an artifact and citable by digest.* **Closed by the remedy I
-  named -- an emission -- not by anyone conceding a number.**
-  (6) ***AND THE CENSUS FAMILY ITSELF HAS FOUR HEADS.*** Applying **DA's OWN chain-head
-  predicate** to the five census artifacts: **exactly ONE link exists in the whole family** --
-  `…150939Z` names `…144403Z` at `ccb79d352c712a24`, which recomputes -- so `…142709Z`,
-  `…143544Z`, `…150939Z` **and the new `…153821Z`** are all heads. ***THE INSTRUMENT THAT
-  CERTIFIES 23 DECLARATION FAMILIES AT EXACTLY ONE HEAD EACH IS EMITTED INTO A FAMILY WITH
-  FOUR.*** Its CLI offers `--supersedes` and one member used it, so the family is a chain in
-  one member and a bare series in the rest: *a reader cannot tell which, and cannot learn that
-  `…150939Z`'s 271 -> 62 -> 1 is superseded* -- numbers quoted in three register entries.
-  **Exactly the defect DA 96 just fixed in `e2_a_episodes.py`, on the instrument that found
-  it. ROUTED TO DA, NOT RULED.**
-  (7) **THE LANDING GATE REACHES OUTSIDE ITS DIRECTORY, DRIVEN WITH ITS KNOWN-BAD.**
-  `live/mm_research/e2_a_episodes.py` runs **GREEN** through `run_module` (script form, "0
-  failure(s)"); an absent path returns **`MODULE_ABSENT`** -- *a status, not a crash and not a
-  silent pass*; a bare name still resolves in-directory. `ACTIVE` is 10, the declared-red map
-  is 2 (`da_cite_audit`, `da_iter011_contract_verify`), **and every declared known-red runs
-  whatever the scope** -- so 10 + 1 `--also` + 2 = **13 rows -> 11 green / 2 declared red**,
-  R-672's report exactly. *The row count was reconcilable only because the known-reds are
-  scope-independent by construction.*
-  (8) **THE 139/48 RECONCILIATION IS ARITHMETIC AT THE ARTIFACT AND ONLY CORROBORATED IN GIT.**
-  At `a0c8cb70b841`: `NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION` 141 +
-  `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY` 70 = `n_head_is_null` 211 exactly, and 139+2 / 48+22
-  / 187+24 land on it. In git, between the tree at 14:57:55Z and `c6dc6e5`,
-  `da_nonhead_census.py` gains net **+24** lines carrying a `.json` literal and DE's runner net
-  **+3** -- the right two files, the right order, the right sign. ***MY GREP COUNTS LINES, NOT
-  THE CENSUS'S LITERALS, SO THIS CORROBORATES THE 22/2 DECOMPOSITION AND DOES NOT CONFIRM IT***
-  -- said plainly rather than let a rough count stand in for the instrument's.
-  (9) **THE CENSUS IS STABLE WHEN THE TREE IS, AND THAT IS WHAT MAKES IT CITABLE.** My run at
-  tip `3427357` and at tip `d2adb5d` are IDENTICAL on all six quantities -- as they must be,
-  since my own round-197 commit touched only `orchestrator/`. *So the perishability I routed
-  for two rounds is TREE-DRIVEN, not noise: the quantity is stable under a stable tree, which
-  is exactly why an emitted artifact can be cited by digest and a pane cannot.*
-  (10) **IN FLIGHT, MEASURED.** de102smoke at 15:55:01Z: `loaded / active / running`, with
-  `ExecMainStatus=0` / `Result=success` still reading as defaults on a live process;
-  **InvocationID `a8c7e41ee2d24ff8` unchanged since 15:42:51Z, so it is the SAME run and not a
-  relaunch**; MemoryPeak 2,957,488,128 for the **NINTH** consecutive reading; 61 min against a
-  receipt expected ~16:20Z. The lock is still held by pid 3551079 -- the same flock -- so BE
-  66's heavy half is still **refused**, not failed.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,241 -> 1,251; flag_provenance 786 -> 796;
-  tasks 19; **538 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-FOURTH round unchanged.**
-  ORPHAN audit 0 findings. Q-MEM-186 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1008,6 +1015,144 @@ flags:
                              # it is: live at its as-of and no longer re-checkable.**
                              # The instrument caught all five; I did not notice until
                              # it did.
+  I_TOOK_THE_DESIGN_VERSION_FROM_THE_DISPATCH_INSTEAD_OF_RESOLVING_THE_HEAD: WRONG-HEADLINE-CORRECTED-BEFORE-IT-LANDED
+                             # ***THIS FLAG REPLACES THE ONE I HAD WRITTEN, AND THE
+                             # REPLACED CLAIM IS STATED SO THE LESSON SURVIVES.*** I
+                             # measured that design **v23** pins
+                             # `de_multiday_gate1_params_v14.json` at
+                             # `2da40f4e7b2305df…` (verified by recomputation) while
+                             # the params head is **v15**, and I wrote that *nothing
+                             # currently pins the params head*. **THAT WAS FALSE.**
+                             # ***DESIGN v24 EXISTS, IS THE SOLE CHAIN HEAD, AND PINS
+                             # PARAMS v15 -- `92858fc7f9493f8e`, WHICH I RECOMPUTED
+                             # AND WHICH MATCHES*** -- and it had been on disk since
+                             # **16:42:23Z, eight minutes before my measurement.**
+                             # **THE CAUSE IS THE CLASS I KEEP CATCHING IN OTHER
+                             # SEATS: I TOOK "design v23" FROM THE DISPATCH'S PROSE
+                             # INSTEAD OF RESOLVING THE DESIGN FAMILY'S CHAIN HEAD AT
+                             # THE FILES**, which is the one thing my own rule says to
+                             # do -- resolve the head, recompute the digest from the
+                             # file the path names. Resolved properly: nine `design_vN`
+                             # files (16..24), **v24 the sole head, v23 named in v24's
+                             # chain**. *What survives is the MECHANISM, and DE names
+                             # it in v24 itself -- `R31_the_two_way_pin_forces_a_paired
+                             # _bump`: params v15 naming v23 required the design to pin
+                             # v15 back, so the flipped direction forces a PAIRED
+                             # bump.* **A window exists between a params emission and
+                             # its paired design; here it was closed within the same
+                             # batch. Not routed -- there is nothing to route.**
+                             # ***EIGHTH "suspect the probe first" this session, and
+                             # the only one that reached my headline.***
+                             # AND ONE THING THE DIGESTS SETTLED THAT THE CLOCKS WOULD
+                             # HAVE CONFUSED: design v24 has mtime **16:42:23Z** and
+                             # params v15 **16:43:47Z**, so v24 appears to pin a file
+                             # written 84 seconds LATER -- **yet the digest matches.**
+                             # *mtime is not emission order here; the digest is the
+                             # only reliable identity.*
+  the_pin_direction_is_a_NAMED_ABSENCE_and_my_probe_compared_a_digest_to_a_SENTENCE: SUSPECT-THE-PROBE-SIXTH
+                             # My first check recomputed design v23's digest and
+                             # reported "matches declared: **False**" against params
+                             # v15's `sha256` field -- which is not a digest at all
+                             # but a SENTENCE naming the absence and its direction.
+                             # **The declaration states the absence; my comparator
+                             # read it as a mismatch.** The good form is the one the
+                             # file uses: an absent pin is a NAMED status carrying the
+                             # direction, never an empty field.
+  the_params_family_carries_BOTH_the_pair_AND_a_cumulative_chain: MY-SHAPE-PRINTER-HID-THE-PAIR
+                             # v2 carries the `{path, sha256}` pair alone; **v3..v15
+                             # carry the immediate-predecessor PAIR *and* a cumulative
+                             # `chain` list** (v15's has 14 entries, last = v14).
+                             # ***MY SHAPE-PRINTER TESTED `"chain" in s` FIRST AND
+                             # REPORTED "CHAIN" FOR EVERY DICT THAT CARRIES BOTH***,
+                             # which read as though the pair were absent and the
+                             # family had fourteen heads -- contradicting my own
+                             # correct first measurement of ONE head. **Reporting a
+                             # shape by the first key that matches is not reporting
+                             # the shape.** Fifth "suspect the probe first" this
+                             # session; the artifacts were right both times.
+  the_reasons_guard_refuses_BOTH_known_bads_and_my_first_probe_said_otherwise: THE-MOST-CONSEQUENTIAL-PROBE-ERROR
+                             # ***I DROVE DE's NEWEST CHECK AND GOT "ADMITTED" ON BOTH
+                             # KNOWN-BADS -- WHICH WOULD HAVE BEEN A FALSE ACCUSATION
+                             # THAT THE GUARD LEAKS A SEALED VALUE.*** The cause was
+                             # mine: `admissibility.reasons` is a **LIST**, I passed a
+                             # dict-of-lists, and `" || ".join(str(r) for r in
+                             # reasons)` over a dict joins its KEYS -- so the text I
+                             # handed the guard contained no numbers and there was
+                             # nothing to find. **Re-driven with the shape the code
+                             # actually reads: the positive control ADMITTED (open
+                             # numbers only -- a decision count and a declared
+                             # minimum), and BOTH known-bads REFUSED BY NAME** -- a
+                             # raw value and a formatted one -- with the empty-list
+                             # 09-03 shape admitted at `n_reasons 0`. **The guard is
+                             # sound.** Seventh "suspect the probe first", and the one
+                             # that would have cost the most.
+  the_matchers_boundary_is_STATED_and_I_drove_it: A-TWO-CHARACTER-VALUE-SURVIVES
+                             # The guard builds every formatter form of each sealed
+                             # value and searches the reason text, **but only for
+                             # forms of `len >= 3`**. I drove my own cell: a
+                             # **two-character** sealed value interpolated into a
+                             # reason is **ADMITTED**. *This is a STATED threshold
+                             # with a named consequence, not a hidden one* -- the
+                             # trade-off against false positives on two-character
+                             # substrings is obvious, and a guard that fired on every
+                             # "42" in prose would be useless. **Recorded as a
+                             # boundary, not routed as a defect** -- the distinction
+                             # matters, and the two-character case is the one a future
+                             # reader should know about.
+  REV_70s_key_absent_is_corrected_where_a_reader_of_the_CODE_meets_it: NOT-ONLY-IN-THE-REGISTER
+                             # The guard's own docstring and its positive control both
+                             # state that `admissibility.reasons` is written by
+                             # `arm_day_admissible()` and **has been in every receipt
+                             # since design v2, INCLUDING 09-03's, where it is an
+                             # empty list**. REV 70's "does not exist" is corrected in
+                             # band in the register AND in the code that reads the
+                             # field. *A correction that lives only in a register entry
+                             # is one an automated reader never meets.*
+  BE_67s_race_reader_passes_20_of_20_and_ASSERTS_the_real_days_untouched: RUN-NOT-READ
+                             # Ran the CLI selftest myself: **20 checks passed**, and
+                             # its final line is an assertion rather than a promise --
+                             # *"no OPENED marker exists for 20260903/04/05 in the
+                             # ledger; this batch drove consumption on scratch feeds
+                             # under a scratch declaration only. The real read is the
+                             # coordinator's separate act on GO."* **The consuming
+                             # read is gated by a marker the selftest proves it did not
+                             # write.**
+  the_09_05_run_is_LIVE_and_I_copied_the_five_fields_WHILE_LOADED: THE-ROUND-AFTER-THE-VOID-READING
+                             # de104smoke at 16:47:15Z, five fields copied at once
+                             # while `LoadState=loaded`: **`loaded / active /
+                             # running`** -- so `ExecMainStatus=0` and
+                             # `Result=success` are DEFAULTS, not an outcome.
+                             # InvocationID **`549bd234e4324408bf931992ada421d8`**,
+                             # which matches the dispatch's `549bd234…` -- **the tie
+                             # confirmed independently, not accepted**. MemoryPeak
+                             # 2,312,695,808 at this reading.
+                             # `ExecMainStartTimestamp` **16:45:44Z** against the
+                             # dispatch's launch stamp 16:45:46Z -- **two seconds
+                             # apart, and they are different events**: the unit's main
+                             # process start and the launch record's clock. The day is
+                             # **2026-09-05** on `be_daybook_20260905_btc.pkl`, read
+                             # from the payload's own `/proc/<pid>/cmdline`.
+  my_pgrep_matched_MY_OWN_SHELL_again: ROUND-177s-CLASS-UNCHANGED
+                             # `pgrep -f de_multiday_gate1_runner` returned THREE pids:
+                             # the flock, the payload, **and my own Claude Code shell
+                             # wrapper -- whose command line contains the pattern
+                             # because my script does.** The searcher matches itself.
+                             # I read each pid's `cmdline` rather than counting
+                             # matches, which is the only form that survives this.
+                             # (One pid had already exited by the time I read it: a
+                             # `No such file` on `/proc/<pid>/cmdline` is a race, not
+                             # an error.)
+  DA_97s_going_forward_chaining_HAS_started_and_the_history_has_not: SIX-RECORDS-TWO-LINKS-FOUR-HEADS
+                             # Re-measured: the census family is now **six** records
+                             # with **two** links -- the new
+                             # `…164823Z.json` (`7d3e1fd473a3`, **291 -> 68 -> 1**)
+                             # **NAMES `…153821Z` BY THE PAIR**. So the going-forward
+                             # half of what R-673 routed to DA 97 is done. **The
+                             # historical half is not: `…142709Z`, `…143544Z`,
+                             # `…150939Z` and the new head are still FOUR heads.**
+                             # Recorded as a partial, with which half moved. And the
+                             # refused count is back to **1** at the tip, from 0 at
+                             # `…153821Z` -- a new refused pin has surfaced since.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -23790,6 +23935,90 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 201, 2026-09-06T16:52:00Z ---
+  I_TOOK_THE_DESIGN_VERSION_FROM_THE_DISPATCH_INSTEAD_OF_RESOLVING_THE_HEAD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json
+    as_of: 2026-09-06T16:50:00Z
+    said: >-
+      read design v23's parameters block, recomputed the digest of the params file it names and
+      confirmed the match; drove the chain-head predicate over the fifteen-member params family;
+      and then -- AFTER writing a headline off design v23 because the dispatch named it -- listed
+      the design_vN files and resolved the family's own chain head, which is v24. Recomputed v24's
+      parameters pin against params v15: it matches. The correction is the entry.
+  the_pin_direction_is_a_NAMED_ABSENCE_and_my_probe_compared_a_digest_to_a_SENTENCE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v15.json
+    as_of: 2026-09-06T16:49:00Z
+    said: >-
+      my comparator hashed the design file v15 names and tested it against v15's sha256 field,
+      printing a mismatch; reading the field showed it is the string NOT_PINNED_HERE with
+      pin_direction beside it.
+  the_params_family_carries_BOTH_the_pair_AND_a_cumulative_chain:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v15.json
+    as_of: 2026-09-06T16:49:30Z
+    said: >-
+      printed the supersedes key set of v2, v3 and v15 rather than classifying each block by the
+      first key my elif ladder happened to test. Every member from v3 on carries both path and
+      chain, and the chain's last entry is the same immediate predecessor the pair names.
+  the_reasons_guard_refuses_BOTH_known_bads_and_my_first_probe_said_otherwise:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T16:51:00Z
+    said: >-
+      drove assert_reasons_carry_no_sealed_value on four synthetic records and got ADMITTED on
+      all four, including both known-bads; read the function and its selftest, found reasons is a
+      list and my probe had passed a dict, and re-drove with the code's own shapes. Positive
+      control admitted, both known-bads refused by name. No real sealed value was used in any
+      cell.
+  the_matchers_boundary_is_STATED_and_I_drove_it:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T16:51:00Z
+    said: >-
+      read the len(f) >= 3 condition in the matcher and added my own cell with a two-character
+      synthetic value interpolated into a reason; it is admitted. The value is invented, not read
+      from any receipt.
+  REV_70s_key_absent_is_corrected_where_a_reader_of_the_CODE_meets_it:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T16:51:00Z
+    said: >-
+      read the guard's docstring and the positive control's message, both of which state the
+      field has been present since design v2 including 09-03, where it is an empty list.
+  BE_67s_race_reader_passes_20_of_20_and_ASSERTS_the_real_days_untouched:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-06T16:50:30Z
+    said: >-
+      ran the module's CLI selftest and read its output; 20 checks passed and the final line
+      asserts no OPENED marker exists for the three real days.
+  the_09_05_run_is_LIVE_and_I_copied_the_five_fields_WHILE_LOADED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T16:47:15Z
+    said: >-
+      the artifact is the book the run names, which is on disk and durable; the five-field
+      reading is a live read at this as_of, copied at once while LoadState=loaded, and is
+      re-checkable only while InvocationID 549bd234e4324408bf931992ada421d8 is the live one. The
+      day and book come from the payload's own /proc cmdline, not from the unit listing. This
+      entry names a durable artifact deliberately, after four of mine rotted at round 200.
+  my_pgrep_matched_MY_OWN_SHELL_again:
+    prov: CHECKED
+    artifact: /proc
+    as_of: 2026-09-06T16:47:30Z
+    said: >-
+      pgrep -f returned three pids and I read each one's cmdline; the third was my own shell
+      wrapper carrying the pattern because the command I typed contains it.
+  DA_97s_going_forward_chaining_HAS_started_and_the_history_has_not:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T164823Z.json
+    as_of: 2026-09-06T16:52:00Z
+    said: >-
+      re-listed the census family, hashed each record, read each supersedes block and re-applied
+      the chain-head predicate. Six records, two links, four heads; the newest names its
+      predecessor by the pair and its counts are 291 / 68 / 1.
   # --- MEM round 200, 2026-09-06T16:39:00Z ---
   FOUR_of_my_provenance_pointers_ROTTED_IN_THE_SAME_SECOND:
     prov: CHECKED
