@@ -63,6 +63,59 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T04:22:04Z (MEM ROUND 116 -- R-556 AND R-557 SWEPT. STATE ONLY.
+  (1) THE MIDNIGHT UNIT IS DEPLOYED UNDER A TRACKED RECORD WITH A DRIFT REFUSAL,
+  AND I CHECKED THE RECORD TWO WAYS: the seven REFUSE-tier digests recompute
+  7 MATCH / 0 DRIFT / 0 MISSING with an assertion that the loop covered every
+  entry, and `sha256sum -c` on the manifest returns OK for all seven
+  independently. Drift -> rc 7 AND NOTHING RUNS. THE COMMIT IS PROVENANCE, NOT A
+  GATE -- pinning HEAD would refuse nearly every night while catching nothing --
+  and DA made the git anchor non-fatal after its own positive control caught that
+  a fatal anchor would refuse the unit BETWEEN A DEPLOY AND ITS LANDING COMMIT.
+  THIS CLOSES R-549(E) ITEM 4, the coupling I carried for three rounds as the
+  only green-while-wrong path with no owner and no check.
+  (2) SO THE 09-07T00:06Z FIRE NOW CARRIES **THREE** STAKES, not the two I
+  recorded last round: 09-06's re-verdict for a BOUND G = 6, the first production
+  test of rc-2/rc-4, AND the first production test of the deploy gate. A THIRD
+  STAKE DOES NOT SPREAD THE RISK -- IT ADDS ANOTHER THING THAT MUST WORK FOR US
+  TO LEARN WHETHER THE FIRST ONE DID.
+  (3) THE RUNNER EXISTS ON FIXTURES: 26 = 26 and 42 = 42 computed, BE's machinery
+  CITED BY DIGEST NOT COPIED, and THE R5 SEAL CAUGHT DE'S OWN EMITTER ON ITS
+  FIRST RUN. Its sharpest clause: A REFUSED ARM-DAY DOES NOT SHRINK G -- "an arm
+  present on four of five days is UNTESTABLE, NOT TESTED AT G = 4."
+  (4) DESIGN v3 IS APPROVED with FOUR ITEMS BEFORE ANY REAL DAY, and each is a
+  gap between a REQUIREMENT and a CODE PATH: the 0.90 overlap floor is THE ONLY
+  BAR WITH NO CALIBRATION; R5 became code only in the runner; R6 IS HALF A CODE
+  PATH (theta/model digests have no verifier); and THE ROOT DERIVATION DOES NOT
+  REFUSE -- a non-ledger root RETURNS AN EMPTY DAY SET SILENTLY. That last is THE
+  SHELL TRAP WEARING A THIRD FACE. The reviewer's R7 derivation independently
+  returned EXACTLY the six ruled days.
+  (5) THE SYMLINK FIX DOES NOT SURVIVE A WORKTREE CHECKOUT -- so what I swept at
+  round 114 as the rule FIXES A MOMENT, NOT THE STATE, and it decays with every
+  artifact landed under data/. Interim answer: re-sweep on every refresh as ONE
+  command. A sparse-checkout attempt SET 0 OF 153 BITS and is NOT ADOPTED --
+  recorded as a measured failure rather than dropped.
+  (6) A COORDINATOR `git reset --hard` IN THE SHARED TREE, AND MY DIRTY
+  STATUS.yml SURVIVED BY SIX SECONDS. I VERIFIED THE OUTCOME MYSELF: 1031bd5 is
+  an ancestor of HEAD, all three round-115 flags are in HEAD's file, and THE
+  REFLOG READS EXACTLY AS DESCRIBED -- 1031bd5 -> probe -> "reset: moving to
+  HEAD~1" -> 1031bd5. BY TIMING, NOT BY CARE. AND THE EXPOSURE IS STRUCTURAL TO
+  HOW I WORK: I hold STATUS.yml dirty for the length of every batch and had never
+  counted that. Rule now: never reset --hard / checkout -- / clean / stash in the
+  shared tree; probes in scratch worktrees; a wrong commit is REVERTED.
+  (7) AND THE FINDING AGAINST MYSELF IS THE ROUND'S MOST USEFUL: **THREE FALSE
+  SIGNALS FROM MY OWN PROBES, ONE ROOT.** I built a filename from prose and
+  reported a file missing; I compared a record against a manifest of other files
+  and reported a digest mismatch; and I iterated `.items()` over A LIST so THE
+  LOOP NEVER RAN AND PRINTED A REASSURING ZERO -- rule 15's exact shape, one
+  round after I wrote up rule 10 in a shell echo. IN EVERY CASE THE PROBE'S INPUT
+  WAS AUTHORED BY ME RATHER THAN READ FROM THE ARTIFACT. With round 113's
+  constructed boundary and round 114's else-branch that is FIVE INSTANCES, FOUR
+  ROUNDS, ONE CAUSE. None shipped, and (3) LOOKED RIGHT -- I caught it only
+  because 33 files with zero of everything is arithmetically impossible.
+  ADOPTED NOW: assert that a loop covered what it claims, and take paths and
+  types FROM THE ARTIFACT, never from the prose describing it.
+  PRIOR CHECKPOINT:
   2026-09-06T04:16:41Z (MEM ROUND 115 -- R-555 AND THE TWO VERDICT LANDINGS
   SWEPT. STATE ONLY. DA 57 AND DE 72 ARE NOT SWEPT: the coordinator verifies them
   next round and I do not carry unverified filings into the state files.
@@ -1668,7 +1721,47 @@ flags:
                              # A ceiling that does not bind is not a failure of
                              # the ceiling; it is the answer that the headroom
                              # has to be defended some other way.
-  midnight_unit_installed: RESOLVED-C1-FIXED-UNIT-LIVE-AND-CONFIRMED-AT-THE-DAEMON
+  midnight_unit_is_DEPLOYED_UNDER_A_RECORD_WITH_A_DRIFT_REFUSAL: rc-7-AND-NOTHING-RUNS
+                             # RELAYED from R-556(A) for the deploy; THE RECORD
+                             # ITSELF CHECKED BY ME, TWO WAYS.
+                             # live/pm_research/systemd/da_deploy_record.json and
+                             # da_deploy_record.sha256, BOTH TRACKED, both
+                             # mtimed 2026-09-06T04:13:32Z. The record lists 33
+                             # files across two tiers -- SEVEN "REFUSE" and 26
+                             # "REPORT" -- which is exactly R-556's "seven files
+                             # by DA's rule".
+                             # MY CHECK 1: recomputing sha256 for each of the
+                             # SEVEN REFUSE-tier entries against disk gives
+                             # 7 MATCH, 0 DRIFT, 0 MISSING -- and I asserted that
+                             # the loop covered every entry rather than trusting
+                             # a zero.
+                             # MY CHECK 2: `sha256sum -c` on the manifest returns
+                             # OK for all seven, independently of my own hashing.
+                             # THE GATE: da_midnight_verify.sh:152-203 -- record
+                             # absent or any digest differing -> DEPLOY_DRIFT,
+                             # rc 7, AND NOTHING RUNS.
+                             # AND THE DESIGN CHOICE WORTH KEEPING IS THAT THE
+                             # COMMIT IS PROVENANCE, NOT A GATE: DA's reasoning
+                             # is that the register moves several times a day, so
+                             # pinning HEAD WOULD REFUSE NEARLY EVERY NIGHT WHILE
+                             # CATCHING NOTHING -- THE FILE DIGESTS ARE THE GATE.
+                             # A gate that fires constantly is a gate that gets
+                             # disabled, and DA priced that before building it.
+                             # DA also made the git anchor NON-FATAL after its
+                             # own positive control caught that a fatal anchor
+                             # would refuse the unit in the window BETWEEN A
+                             # DEPLOY AND ITS LANDING COMMIT.
+                             # THIS CLOSES R-549(E) ITEM 4 -- the unruled
+                             # main-tree/ExecStart coupling I carried at rounds
+                             # 111-113 as "the third way this path can be green
+                             # while wrong, and the only one with no owner and no
+                             # check." It now has both.
+                             # STANDING RE-DEPLOY RULE: any change to the seven
+                             # recorded files needs
+                             # `bash live/pm_research/da_deploy_midnight.sh` PLUS
+                             # a landing commit for the new record.
+                             # EARLIER VALUE (rule 13):
+                             # RESOLVED-C1-FIXED-UNIT-LIVE-AND-CONFIRMED-AT-THE-DAEMON
                              # RESOLVED 2026-09-06T03:12:12Z. Both halves of what
                              # I left open at round 109 are closed.
                              # THE C-1-FIXED UNIT IS INSTALLED, 02:51:29Z,
@@ -1931,6 +2024,37 @@ flags:
                              # R-549(B) is corrected in band at R-551(2); DE 70
                              # states the fields as COMPUTED FROM THE MEASURED
                              # SECONDS rather than typed.
+  the_symlink_fix_DOES_NOT_SURVIVE_A_WORKTREE_CHECKOUT: A-MOMENT-NOT-A-STATE
+                             # RELAYED from R-557(B), DE 72b's structural note,
+                             # and it reopens what I recorded at round 114 as a
+                             # repair.
+                             # EVERY NEWLY LANDED ARTIFACT UNDER data/ RE-ARMS
+                             # THE DELETION TRAP AT THE NEXT REFRESH, so R-554's
+                             # skip-worktree sweep FIXES A MOMENT, NOT THE STATE.
+                             # I swept that sweep at round 114 as the rule; it is
+                             # a rule that decays with every commit anyone makes
+                             # under data/ -- which, in a programme that lands
+                             # artifacts by pathspec several times an hour, is
+                             # continuously.
+                             # INTERIM STANDING ANSWER (R-557(B)): RE-SWEEP ON
+                             # EVERY REFRESH, as ONE command --
+                             # `git checkout --detach mm-research && git ls-files
+                             # data | xargs git update-index --skip-worktree` --
+                             # until a checkout-proof form is proven. Two
+                             # candidates named, NEITHER ADOPTED.
+                             # AND A NEGATIVE RESULT RECORDED RATHER THAN
+                             # QUIETLY DROPPED: a sparse-checkout attempt
+                             # (`set --no-cone '/*' '!/data/'` in a scratch
+                             # worktree) DID NOT SET THE BITS -- 0 of 153 -- so
+                             # the pattern or mode was wrong. NOT ADOPTED, to be
+                             # retried IN A SCRATCH WORKTREE ONLY. A failed fix
+                             # with its measurement is worth more than an
+                             # untried idea.
+                             # THE GENERAL SHAPE: A FIX THAT MUST BE RE-APPLIED
+                             # AFTER EVERY ROUTINE OPERATION IS NOT A FIX, IT IS
+                             # A CHORE WITH A DEADLINE -- and this one's deadline
+                             # is invisible, because nothing announces that the
+                             # bits have lapsed.
   the_shell_trap_MEASURED_PER_SEAT_and_BE_HAS_NO_ROUTE_TO_THE_LEDGER: CHECKED-BY-ME-AT-04:09Z
                              # CHECKED 2026-09-06T04:09:46Z. I measured every
                              # seat's route rather than relaying the structural
@@ -2039,7 +2163,32 @@ flags:
                              # finding that survives -- BE has NO route to the
                              # ledger -- is STRONGER than the one I first wrote,
                              # and it is established by the corrected probe.
-  TWO_THINGS_RIDE_ON_THE_09-07T00:06Z_FIRE: 09-06s-REVERDICT-AND-THE-FIRST-rc-TEST
+  THREE_THINGS_RIDE_ON_THE_09-07T00:06Z_FIRE: THE-DEPLOY-GATE-JOINS-THE-OTHER-TWO
+                             # UPDATED 2026-09-06T04:22:04Z -- I recorded TWO at
+                             # round 115 and R-556(A) adds a third.
+                             # (1) 09-06's RE-VERDICT, on which the BOUND G = 6
+                             # depends; under R-555's clause the set WAITS rather
+                             # than substitutes if it does not come.
+                             # (2) THE FIRST PRODUCTION TEST OF THE rc-2/rc-4
+                             # CLASSIFICATION, on a path green-while-wrong three
+                             # distinct ways.
+                             # (3) NEW: THE FIRST PRODUCTION TEST OF THE DEPLOY
+                             # GATE ITSELF -- rc 7 on drift, never exercised in
+                             # a real 00:06Z fire.
+                             # SO ONE SCHEDULED FIRE NOW CARRIES A GATE-1
+                             # SCHEDULE DEPENDENCY AND THE FIRST LIVE PROOF OF
+                             # **TWO** INSTRUMENTS, EACH OF WHICH REPORTS ON THE
+                             # HEALTH OF THAT SAME FIRE.
+                             # THE COUPLING I NAMED AT ROUND 115 DEEPENS RATHER
+                             # THAN DILUTES: the two instruments being tested are
+                             # the two that would tell us the re-verdict failed.
+                             # A third stake does not spread the risk -- it adds
+                             # another thing that must work for us to learn
+                             # whether the first one did.
+                             # Still recorded, still not routed: whether anything
+                             # is watched before that fire is the coordinator's.
+                             # EARLIER VALUE (rule 13):
+                             # 09-06s-REVERDICT-AND-THE-FIRST-rc-TEST
                              # RELAYED and recorded as its own flag at
                              # 2026-09-06T04:16:41Z because it is the single
                              # scheduled event this programme is most exposed to,
@@ -2323,7 +2472,115 @@ flags:
                              # not at the recorded commit -- plus B-1.
                              # P-2026-002 E2.0 follows as its second.
                              # NUMBERS MEASURED AND UNFILED: NONE.
-  da_is_at_75_percent_context: LIGHT-BATCH-THEN-RESET-AT-80
+  a_reset_hard_IN_THE_SHARED_TREE_and_my_commit_survived_BY_SIX_SECONDS: CHECKED-AT-THE-REFLOG
+                             # CHECKED 2026-09-06T04:22:04Z. A coordinator error,
+                             # self-reported at R-557(D), AND I VERIFIED THE
+                             # OUTCOME MYSELF RATHER THAN ACCEPTING "no damage".
+                             # WHAT HAPPENED: testing sparse-checkout, the
+                             # coordinator committed a probe artifact IN THE
+                             # SHARED TREE and ran `git reset --hard HEAD~1`
+                             # there to drop it. reset --hard DISCARDS EVERY
+                             # UNCOMMITTED CHANGE TO TRACKED FILES IN THAT TREE
+                             # -- and MY STATUS.yml HAD BEEN DIRTY ALL NIGHT.
+                             # MY OWN CHECKS: `git merge-base --is-ancestor
+                             # 1031bd5 HEAD` -> TRUE, my round-115 commit is on
+                             # the branch; all three flags I wrote that round are
+                             # present in HEAD's STATUS.yml. And THE REFLOG READS
+                             # EXACTLY AS THE ENTRY DESCRIBES: 1031bd5 (my
+                             # commit) -> 7673d42 (probe) -> "reset: moving to
+                             # HEAD~1" -> 1031bd5. THE RESET LANDED PRECISELY ON
+                             # MY COMMIT.
+                             # SIX SECONDS. My commit landed at 04:20:19Z and the
+                             # probe followed. **BY TIMING, NOT BY CARE** -- the
+                             # coordinator's own words, and the right ones. Had I
+                             # been mid-batch, a night's uncommitted sweep would
+                             # have gone with no error message and no trace
+                             # except a file that no longer said what I wrote.
+                             # WHAT I TAKE FROM IT FOR MY OWN PRACTICE: I hold
+                             # STATUS.yml dirty for the length of a batch, which
+                             # is minutes at a time, EVERY ROUND. That exposure
+                             # is structural to how I work and I had never
+                             # counted it. The mitigation is not mine to build,
+                             # but the exposure is mine to name.
+                             # THE RULE EARNED, effective now and in the runbook:
+                             # NEVER `git reset --hard`, `checkout -- <file>`,
+                             # `clean` OR `stash` IN THE SHARED TREE; every probe
+                             # and experiment lives IN A SCRATCH WORKTREE; A
+                             # WRONG COMMIT IN THE SHARED TREE IS **REVERTED**,
+                             # NEVER RESET.
+                             # AND THE ADJACENT ONE THAT STANDS: DA landed with
+                             # `git pull --rebase --autostash` OVER MY DIRTY
+                             # STATUS.yml -- it snapshotted first and verified
+                             # byte-identical restoration (fd2df824...). IT
+                             # WORKED, AND IT IS THE OPERATION THAT PRODUCED THE
+                             # R-537-ERA CONFLICT. The rule stays: DO NOT
+                             # AUTOSTASH OVER ANOTHER SEAT'S DIRTY FILE -- WAIT
+                             # FOR ITS COMMIT. Two near-misses on the same file
+                             # in one night, from two different seats, both
+                             # ending well for reasons unrelated to the
+                             # procedure.
+  MY_PROBE_CONSTRUCTION_PRODUCED_THREE_FALSE_SIGNALS_THIS_ROUND: THE-INPUT-WAS-AUTHORED-NOT-READ
+                             # CHECKED 2026-09-06T04:22:04Z, against myself, and
+                             # this is the round's most useful finding about my
+                             # own work.
+                             # THREE TIMES IN ONE ROUND MY PROBE REPORTED
+                             # SOMETHING FALSE, AND ALL THREE HAVE ONE ROOT.
+                             # (1) I built the filename
+                             # `da_deploy_record.json.sha256` from R-556's
+                             # shorthand "(+ `.sha256`)" and reported the
+                             # companion MISSING. THE REAL NAME IS
+                             # da_deploy_record.sha256 and BOTH FILES ARE
+                             # TRACKED.
+                             # (2) I compared the record's own bytes against the
+                             # first line of that file and reported MATCH: False.
+                             # THE FILE IS A sha256sum-FORMAT MANIFEST OF SEVEN
+                             # OTHER FILES, not a digest of the record.
+                             # (3) I iterated `files.items() if isinstance(f,
+                             # dict) else []` over what is A LIST, so THE LOOP
+                             # NEVER RAN, AND IT PRINTED "match: 0 drift: 0
+                             # missing: 0" -- A REASSURING ZERO FROM A CHECK
+                             # THAT NEVER EXECUTED. STANDING RULE 15's EXACT
+                             # SHAPE, produced by me, in the round after I
+                             # recorded rule 10 in a shell echo.
+                             # THE ROOT IS ONE THING: IN EVERY CASE THE PROBE'S
+                             # INPUT WAS AUTHORED BY ME RATHER THAN READ FROM THE
+                             # ARTIFACT -- a filename from prose, a comparison
+                             # from an assumption, a container type from a guess.
+                             # It is the same root as round 113's constructed
+                             # boundary (which said round 69 was unarchived) and
+                             # round 114's else-branch (which named a directory
+                             # that did not exist). FIVE INSTANCES, FOUR ROUNDS,
+                             # ONE CAUSE.
+                             # NONE OF THE FIVE SHIPPED, and the reason is the
+                             # same each time: THE NUMBER LOOKED WRONG AND I
+                             # RE-TESTED. That is not a safeguard, it is luck
+                             # with a good habit attached -- (3) in particular
+                             # looked RIGHT, and I only caught it because 33
+                             # files with 0 of everything is arithmetically
+                             # impossible.
+                             # THE CHEAP DISCIPLINE THIS EARNS, adopted by me
+                             # now: ASSERT THAT A LOOP COVERED WHAT IT CLAIMED
+                             # (ok+bad+missing == n), and TAKE PATHS AND TYPES
+                             # FROM THE ARTIFACT, NEVER FROM THE PROSE THAT
+                             # DESCRIBES IT. The corrected check did both and
+                             # returned 7 of 7 with a second, independent
+                             # confirmation from `sha256sum -c`.
+  da_is_at_75_percent_context: RESET-DONE-NOW-ON-P-2026-002-E2.0
+                             # UPDATED 2026-09-06T04:22:04Z from R-557(C). DA's
+                             # data shell swapped at 04:19Z (no unique files),
+                             # and DA 58 is dispatched to P-2026-002 E2.0 -- the
+                             # notional-weighted true-mid recompute THAT VOIDS OR
+                             # SETTLES ADA -- declaration first, one-symbol smoke
+                             # under the rule-20 wrapper.
+                             # THE CROSS-PROGRAMME RULE IS RESPECTED AND WORTH
+                             # NOTING: DA UPDATES **THAT** PROGRAMME'S
+                             # STATUS/HANDOFF ITSELF (P-2026-002 is single-seat,
+                             # so CLAUDE.md's ordinary rule applies there) AND
+                             # FILES ONLY A POINTER ROW HERE. Two programmes,
+                             # two conventions, one seat -- and the boundary is
+                             # named rather than discovered.
+                             # EARLIER VALUE (rule 13):
+                             # LIGHT-BATCH-THEN-RESET-AT-80
                              # RELAYED from R-548(B). DA reports ~75% context;
                              # its next batch is LIGHT, it STOPS AT 80% for a
                              # seat reset, and it TAKES NOTHING NEW after that.
@@ -2848,7 +3105,74 @@ flags:
                              # NEITHER OPTION CHANGES THE DESIGN, and BE's
                              # book-building starts with 09-03 EITHER WAY -- so
                              # the work is not blocked on the ruling.
-  design_v3_VERIFIED_42_EQUALS_42_AND_THE_READ_STATE_IS_A_FIELD: THE-ROOT-IT-READ-IS-RECORDED
+  de72_the_GATE1_RUNNER_EXISTS_ON_FIXTURES: THE-R5-SEAL-CAUGHT-ITS-OWN-EMITTER
+                             # RELAYED from R-556(B), verified by the
+                             # coordinator's own execution under the rule-20
+                             # wrapper.
+                             # de_multiday_gate1_runner.py, 581 lines, with
+                             # declarations/de_multiday_gate1_params_v1.json;
+                             # fixture receipt sha aa9a5135..., status
+                             # FIXTURE_RUN_NO_DATA. Runner battery 26 = 26 and
+                             # design battery 42 = 42, BOTH EQUALITIES COMPUTED.
+                             # BE's null machinery is CITED BY PATH + SHA256, NOT
+                             # COPIED -- adoption by citation actually
+                             # implemented, after the round-111 finding that a
+                             # transcription under a file digest is a copy
+                             # wearing a provenance check.
+                             # 29 CHECKS PASS after the R-555 addendum, three of
+                             # them new for the ruled parameter: A SET OF FIVE
+                             # REFUSES; A PREVIOUSLY-OPENED DAY REFUSES; AND **A
+                             # REFUSED ARM-DAY DOES NOT SHRINK G** -- DE's own
+                             # wording, which is the sharpest line in the batch:
+                             # "an arm present on four of five days is
+                             # UNTESTABLE, NOT TESTED AT G = 4."
+                             # THE R5 SEALED-SMOKE GUARD IS A CODE PATH AND IT
+                             # CAUGHT DE'S OWN EMITTER ON ITS FIRST RUN. A guard
+                             # whose first catch is its author's own output is
+                             # the only kind that has demonstrated it can fire.
+                             # "THE SEED PINS THE DATA: it changes with the book
+                             # digest and is REPRODUCIBLE FROM THE ARTIFACT
+                             # ALONE." THE RUNNER HAS TOUCHED NO DAY.
+  design_v3_APPROVED_by_the_reviewer_WITH_FOUR_ITEMS_BEFORE_ANY_REAL_DAY: DE-73
+                             # RELAYED from R-557(A). The reviewer's filing at
+                             # 04:14Z: **"APPROVED for DE 72 to build the runner
+                             # against, on fixtures."**
+                             # WHAT IT CHECKED AND PASSED: all eight must-exist
+                             # items present AS FIELDS; R4 and the book-digest
+                             # check are REAL TWO-SIDED CODE PATHS; **R7's
+                             # derivation returns EXACTLY the six days the
+                             # reviewer gets from the ledger** -- an independent
+                             # recomputation of the ruled set, not a read of
+                             # DE's; the imported era bar WITHDRAWN VERBATIM; the
+                             # Set-B refinement handled STRUCTURALLY.
+                             # FOUR ITEMS MUST CLOSE BEFORE ANY REAL DAY RUNS,
+                             # and each is a gap between a REQUIREMENT and a CODE
+                             # PATH: (1) R2's 0.90 head-overlap floor is THE ONLY
+                             # BAR WITH NO CALIBRATION -- to be calibrated on the
+                             # consumed hour AS R4's 0.25 WAS, which is the
+                             # precedent that makes it checkable rather than
+                             # chosen; (2) R5's seal was a REQUIREMENT at v3, not
+                             # a code path -- the runner made it one AND IT
+                             # CAUGHT DE'S OWN EMITTER; (3) R6 IS HALF A CODE
+                             # PATH -- the book digest refuses, THETA AND MODEL
+                             # DIGESTS HAVE NO VERIFIER; (4) THE ROOT DERIVATION
+                             # DOES NOT REFUSE -- a non-ledger root returns AN
+                             # EMPTY DAY SET SILENTLY, driven.
+                             # (4) IS THE SHELL TRAP WEARING A THIRD FACE: after
+                             # a partial shell answering plausibly and a
+                             # symlink-vs-git-status collision, now A DERIVATION
+                             # THAT RETURNS EMPTY RATHER THAN REFUSING. Same
+                             # root, same silence.
+                             # DE 73 carries all four, each WITH A FALSIFIER --
+                             # a planted-byte falsifier for the theta/model
+                             # verifier, a PLANTED-SHELL falsifier for the root
+                             # refusal.
+                             # AND THE REVIEWER HIT THE SHELL TRAP A THIRD TIME
+                             # MID-ROUND and re-verified every data/ read at the
+                             # ABSOLUTE LEDGER PATH. Three seats have now paid
+                             # it.
+                             # EARLIER VALUE (rule 13):
+                             # THE-ROOT-IT-READ-IS-RECORDED
                              # RELAYED from R-554(A).
                              # p003_de_multiday_gate1_design_v3__20260906T040539Z.json,
                              # sha a1016a8762fffdfe, NO DATA.
@@ -10898,6 +11222,31 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T04:22:04Z, THE NIGHTLY PATH IS FINALLY INSTRUMENTED: the
+  midnight unit is DEPLOYED UNDER A TRACKED RECORD and any drift in the seven
+  recorded files gives rc 7 AND NOTHING RUNS -- checked by me two ways, 7/7
+  digests and `sha256sum -c` all OK. That closes the coupling I carried for three
+  rounds as the only green-while-wrong path with no owner. AND THE 09-07T00:06Z
+  FIRE NOW CARRIES THREE STAKES, not two: 09-06's re-verdict for a bound G = 6,
+  the first live test of rc-2/rc-4, and the first live test of the deploy gate
+  itself. A third stake does not spread the risk -- it adds another thing that
+  must work for us to learn whether the first one did.
+  THE RUNNER EXISTS ON FIXTURES (26 = 26, 42 = 42, BE cited by digest not copied,
+  and the R5 seal caught DE's own emitter), and DESIGN v3 IS APPROVED WITH FOUR
+  ITEMS BEFORE ANY REAL DAY -- each a gap between a requirement and a code path,
+  and the fourth is THE SHELL TRAP WEARING A THIRD FACE: a non-ledger root
+  returns an EMPTY DAY SET SILENTLY instead of refusing.
+  THE SYMLINK FIX DOES NOT SURVIVE A WORKTREE CHECKOUT, so what I recorded at
+  round 114 as the rule fixes A MOMENT, NOT THE STATE, and decays with every
+  artifact landed under data/.
+  A COORDINATOR reset --hard IN THE SHARED TREE MISSED MY DIRTY STATUS.yml BY SIX
+  SECONDS -- verified by me at the reflog -- and the exposure is structural: I
+  hold that file dirty for the length of every batch. AND MY OWN PROBES PRODUCED
+  THREE FALSE SIGNALS THIS ROUND, ALL FROM INPUTS I AUTHORED RATHER THAN READ,
+  ONE OF WHICH WAS A LOOP THAT NEVER RAN AND PRINTED A REASSURING ZERO.
+  Gate 1 is 1 of 7; the smoke on 09-03 waits on DE 73's four items and BE's first
+  book. Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T04:16:41Z, RETAINED BELOW --
   AS-OF 2026-09-06T04:16:41Z, THE DAY SET IS RULED AND G IS BOUND: the USER
   answered "NO, untouched only", so the Gate-1 run is 09-03..09-08, **G = 6,
   FIXED BEFORE ANY RUN** -- checked by me: six members, EMPTY intersection with
@@ -11834,6 +12183,64 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 116, 2026-09-06T04:22:04Z ------------------------------
+  midnight_unit_is_DEPLOYED_UNDER_A_RECORD_WITH_A_DRIFT_REFUSAL:
+    prov: CHECKED
+    artifact: live/pm_research/systemd/da_deploy_record.json
+    as_of: 2026-09-06T04:22:04Z
+    said: >-
+      the record and da_deploy_record.sha256 are both tracked, both mtimed
+      2026-09-06T04:13:32Z; `files` is a list of 33 entries with tiers REFUSE 7 /
+      REPORT 26; recomputing sha256 for each of the seven REFUSE entries against
+      disk gives 7 match, 0 drift, 0 missing, with an assertion that
+      ok+bad+missing equals the entry count so a silent empty loop cannot pass;
+      and `sha256sum -c da_deploy_record.sha256` returns OK for all seven
+      independently. drift_exit_code is 7. The gate's location at
+      da_midnight_verify.sh:152-203 and the rc-7 behaviour are RELAYED from
+      R-556(A); I did not drive the unit.
+  a_reset_hard_IN_THE_SHARED_TREE_and_my_commit_survived_BY_SIX_SECONDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T04:22:04Z
+    said: >-
+      `git merge-base --is-ancestor 1031bd5 HEAD` succeeds; all three flags I
+      wrote at round 115 appear in HEAD's copy of this file; and the reflog reads
+      1031bd5 (MEM round 115 commit) -> 7673d42 (probe) -> "reset: moving to
+      HEAD~1" -> 1031bd5, so the reset returned HEAD exactly to my commit. The
+      six-second margin and the autostash snapshot digest are RELAYED from
+      R-557(C)/(D).
+  MY_PROBE_CONSTRUCTION_PRODUCED_THREE_FALSE_SIGNALS_THIS_ROUND:
+    prov: CHECKED
+    artifact: live/pm_research/systemd/da_deploy_record.sha256
+    as_of: 2026-09-06T04:22:04Z
+    said: >-
+      three probes of mine returned false results in one round: a filename built
+      from R-556's "(+ `.sha256`)" shorthand reported the companion missing when
+      the real name is da_deploy_record.sha256 and both files are tracked; a
+      comparison of the record's bytes against the first line of that file
+      reported a digest mismatch when the file is a sha256sum-format manifest of
+      seven other files; and an iteration written as `files.items() if
+      isinstance(f, dict) else []` over what is a list ran zero times and printed
+      "match: 0 drift: 0 missing: 0". The corrected checks are recorded under
+      midnight_unit_is_DEPLOYED_UNDER_A_RECORD_WITH_A_DRIFT_REFUSAL.
+  design_v3_APPROVED_by_the_reviewer_WITH_FOUR_ITEMS_BEFORE_ANY_REAL_DAY:
+    prov: RELAYED
+    from: R-557(A), the reviewer's filing of 04:14Z
+  de72_the_GATE1_RUNNER_EXISTS_ON_FIXTURES:
+    prov: RELAYED
+    from: R-556(B), verified by the coordinator's own execution
+  the_symlink_fix_DOES_NOT_SURVIVE_A_WORKTREE_CHECKOUT:
+    prov: RELAYED
+    from: R-557(B), DE 72b
+  THREE_THINGS_RIDE_ON_THE_09-07T00:06Z_FIRE:
+    prov: RELAYED
+    from: >-
+      R-555(B), R-549(E) item 5 and R-556(A) for the three stakes. The
+      observation that the instruments being tested are the ones that would
+      report the other's failure is mine, carried from round 115.
+  da_is_at_75_percent_context:
+    prov: RELAYED
+    from: R-557(C) -- reset complete, shell swapped at 04:19Z, now on P-2026-002 E2.0
   # --- MEM round 115, 2026-09-06T04:16:41Z ------------------------------
   the_day_verdict_tracking_gap_is_CLOSED_AT_0852871:
     prov: CHECKED
@@ -11856,13 +12263,6 @@ flag_provenance:
       arithmetic, 2^-6 = 0.015625 <= 0.025 TRUE against 2^-5 = 0.03125 FALSE. The
       per-day quality values are the coordinator's read at the ledger at 03:59Z
       and I did not open the verdicts.
-  TWO_THINGS_RIDE_ON_THE_09-07T00:06Z_FIRE:
-    prov: RELAYED
-    from: >-
-      R-555(B) for 09-06's re-verdict and DA's harvest (R-549(E) item 5) for the
-      first production test of the rc-2/rc-4 classification. The observation that
-      both now ride on one fire, and that the instrument being tested is the one
-      that would report the other's failure, is mine.
   # --- MEM round 114, 2026-09-06T04:09:46Z ------------------------------
   # renamed from the_data_shell_trap_seat_worktrees_carry_DIRECTORIES_not_symlinks;
   # the ORPHAN check caught the stale key for the FIFTH consecutive round, same
@@ -11901,9 +12301,6 @@ flag_provenance:
   a_symlinked_data_makes_git_report_the_tracked_files_DELETED:
     prov: RELAYED
     from: R-554(B), the reviewer's structural finding
-  design_v3_VERIFIED_42_EQUALS_42_AND_THE_READ_STATE_IS_A_FIELD:
-    prov: RELAYED
-    from: R-554(A) -- I did not open the v3 receipt
   the_reviewer_WITHDREW_its_A3_at_the_ledger:
     prov: RELAYED
     from: >-
@@ -12108,13 +12505,6 @@ flag_provenance:
     from: >-
       R-547(C), read by the coordinator at the day verdicts at 03:06Z. I did not
       open them; my standing practice on sealed forward days is unchanged.
-  midnight_unit_installed:
-    prov: RELAYED
-    from: >-
-      R-547(E) and Q-DA-267 -- installed 02:51:29Z, identical to repo (sha
-      4c804c6ec0abff7f), confirmed at the daemon and by behaviour. Resolves the
-      qualification I carried at round 109; Q-DA-266's "4 behind and dirty" was
-      true at 02:49Z and overtaken by pulls at 02:51Z.
   two_cache_counts_29813_vs_31122:
     prov: RELAYED
     from: >-
@@ -12200,13 +12590,6 @@ flag_provenance:
   two_cache_counts_29813_vs_31122:
     prov: RELAYED
     from: R-546(C), routed to BE 46; recorded as an open disagreement, not resolved here
-  midnight_unit_installed:
-    prov: RELAYED
-    from: >-
-      R-544(B) for the deploy and R-546(D) for the supersession -- the installed
-      copy predates DA 54's C-1 fix, so the live unit still defers a mixed log.
-      Q-DA-266's separate "the deploy is not live" claim is NAMED and NOT
-      ADOPTED: I have not read that filing and no entry has ruled on it.
   # --- MEM round 108, 2026-09-06T02:44:55Z ------------------------------
   day_09_05_is_scored_and_sealed:
     prov: CHECKED
@@ -12369,9 +12752,6 @@ flag_provenance:
   da52_closes_my_round_105_pending_caveat:
     prov: RELAYED
     from: R-542(A), Q-DA-258 -- DA's recompute is the execution, mine was a read
-  midnight_unit_installed:
-    prov: RELAYED
-    from: R-542(B), a coordinator deploy at 02:24Z; DA 53 certifies from its own side
   receipt_does_not_record_that_its_own_battery_ran:
     prov: RELAYED
     from: >-

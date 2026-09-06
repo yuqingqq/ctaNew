@@ -1,5 +1,139 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T04:22:04Z — **The nightly path is finally instrumented: the
+midnight unit is deployed under a tracked record, and drift gives rc 7 with
+nothing run.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 116
+
+### 1. The deploy record — checked by me, two ways
+
+`da_deploy_record.json` and `da_deploy_record.sha256`, **both tracked**, both
+mtimed 04:13:32Z. `files` is a list of **33** entries across two tiers —
+**REFUSE 7, REPORT 26** — so R-556's "seven files by DA's rule" is exactly the
+REFUSE tier.
+
+| check | result |
+|---|---|
+| recompute each REFUSE digest against disk | **7 match, 0 drift, 0 missing** (with an assertion that the loop covered every entry) |
+| `sha256sum -c` on the manifest | **all seven OK**, independently |
+
+**Drift → `DEPLOY_DRIFT`, rc 7, and nothing runs.**
+
+> **The design choice worth keeping: the commit is provenance, not a gate.** The
+> register moves several times a day, so pinning HEAD **would refuse nearly every
+> night while catching nothing** — the file digests are the gate. *A gate that
+> fires constantly is a gate that gets disabled, and DA priced that before
+> building it.* DA also made the git anchor **non-fatal** after its own positive
+> control caught that a fatal anchor would refuse the unit **in the window between
+> a deploy and its landing commit.**
+
+**This closes R-549(E) item 4** — the coupling I carried for three rounds as *the
+only green-while-wrong path with no owner and no check.* It now has both.
+
+### 2. So the 09-07T00:06Z fire carries THREE stakes, not two
+
+09-06's re-verdict for a **bound G = 6**; the first live test of **rc-2/rc-4**;
+and now the first live test of **the deploy gate itself**.
+
+> **A third stake does not spread the risk — it adds another thing that must work
+> for us to learn whether the first one did.** The coupling I named at round 115
+> deepens: *the two instruments being tested are the two that would tell us the
+> re-verdict failed.*
+
+### 3. The runner, and the design's four remaining gaps
+
+**26 = 26 and 42 = 42 computed**; BE's null machinery **cited by path + sha256,
+not copied** — *adoption by citation actually implemented, after round 111's
+finding that a transcription under a file digest is a copy wearing a provenance
+check.* **The R5 seal is a code path and it caught DE's own emitter on its first
+run** — *a guard whose first catch is its author's own output is the only kind
+that has demonstrated it can fire.* Its sharpest clause: **a refused arm-day does
+not shrink G** — *"an arm present on four of five days is UNTESTABLE, not tested
+at G = 4."*
+
+**Design v3 is APPROVED**, and the reviewer's R7 derivation **independently
+returned exactly the six ruled days.** Four items before any real day, **each a
+gap between a requirement and a code path**: the 0.90 overlap floor is **the only
+bar with no calibration**; R5 became code only in the runner; **R6 is half a code
+path** (theta/model digests have no verifier); and **the root derivation does not
+refuse — a non-ledger root returns an EMPTY day set silently.**
+
+> **That fourth is the shell trap wearing a third face** — after a partial shell
+> answering plausibly and a symlink-vs-git-status collision, now **a derivation
+> that returns empty instead of refusing.** Same root, same silence. *The reviewer
+> hit the trap a third time mid-round and re-verified every read at the absolute
+> ledger path.*
+
+### 4. The symlink fix decays
+
+**It does not survive a worktree checkout** — every newly landed artifact under
+`data/` re-arms the deletion trap at the next refresh. **What I swept at round 114
+as the rule fixes a moment, not the state**, and in a programme landing artifacts
+several times an hour it lapses continuously. Interim: re-sweep on every refresh
+as one command. **A sparse-checkout attempt set 0 of 153 bits and is not
+adopted** — *recorded as a measured failure rather than dropped.*
+
+*A fix that must be re-applied after every routine operation is not a fix; it is
+a chore with an invisible deadline.*
+
+### 5. A `reset --hard` in the shared tree, six seconds from my work
+
+**Verified by me, not accepted on report:** `1031bd5` is an ancestor of HEAD; all
+three round-115 flags are in HEAD's file; and **the reflog reads exactly as
+described** — `1031bd5` → probe → *"reset: moving to HEAD~1"* → `1031bd5`. **The
+reset landed precisely on my commit.**
+
+> **By timing, not by care.** And **the exposure is structural to how I work: I
+> hold `STATUS.yml` dirty for the length of every batch and had never counted
+> that.** The mitigation is not mine to build; the exposure is mine to name.
+
+**Rule now:** never `reset --hard`, `checkout -- <file>`, `clean` or `stash` in
+the shared tree; probes in scratch worktrees; **a wrong commit is REVERTED.** And
+the adjacent one stands: **do not autostash over another seat's dirty file** —
+DA's worked and verified byte-identical restoration, *and it is the operation
+that produced the R-537-era conflict.* **Two near-misses on the same file in one
+night, from two seats, both ending well for reasons unrelated to the procedure.**
+
+### 6. Three false signals from my own probes — one root
+
+1. I built the filename `…record.json.sha256` **from R-556's prose shorthand** and
+   reported the companion **missing**. The real name drops `.json`; both files are
+   tracked.
+2. I compared the record's bytes against that file's first line and reported a
+   **digest mismatch**. It is a **`sha256sum`-format manifest of seven other
+   files.**
+3. I iterated `.items()` over what is **a list**, so **the loop never ran and
+   printed "match: 0 drift: 0 missing: 0"** — **rule 15's exact shape**, one round
+   after I wrote up rule 10 in a shell echo.
+
+> **In every case the probe's input was authored by me rather than read from the
+> artifact** — a filename from prose, a comparison from an assumption, a container
+> type from a guess. With round 113's constructed boundary and round 114's
+> else-branch: **five instances, four rounds, one cause.**
+
+**None shipped** — and **(3) looked right.** I caught it only because *33 files
+with zero of everything is arithmetically impossible.* **Adopted now: assert that
+a loop covered what it claims, and take paths and types from the artifact, never
+from the prose describing it.** The corrected check did both. *(The same
+discipline caught a fourth: my orphan-removal loop reported "removed 3" while a
+duplicate key survived — re-run with an assertion, it removed 2 of that key.)*
+
+### 7. Measured before the sentence
+
+**607 flags, 65 CHECKED, 87 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 152; tasks 19.** *(Three renames, three ORPHANs, all caught
+pre-commit.)*
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — **455 of 607 flags never
+audited.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T04:16:41Z — **USER RULING: the day set is the UNTOUCHED set.
 Gate 1 runs 09-03…09-08, G = 6, bound before any run — and a unanimous six
 clears Holm where five never could.** Gate 1 is 1 of 7. Economics:
