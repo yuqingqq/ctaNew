@@ -1,0 +1,46 @@
+{
+  "NOTHING_ECONOMIC_WAS_READ_OR_WRITTEN": {
+    "no_receipt_was_written": true,
+    "predicate": "glob(p003_de_gate1_day_run_*20260903*) is EMPTY",
+    "sealed_layout_artifacts_for_this_day": [],
+    "therefore_the_day_is_NOT_consumed": true,
+    "why_that_follows": "a day is consumed when it is OPENED for a read. This run wrote no artifact at all, and its economics were computed in memory and discarded with the process. The book on disk is unchanged"
+  },
+  "as_of": "2026-09-06T09:50:58+00:00",
+  "book": {
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+    "sha256": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323"
+  },
+  "day": "2026-09-03",
+  "exit_utc": "2026-09-06T09:46:29Z",
+  "launch_utc": "2026-09-06T08:22:03Z",
+  "launcher_log": {
+    "bytes": 1398,
+    "n_lines": 22,
+    "path": "/tmp/claude-1001/-home-yuqing-ctaNew/7d625e60-adda-4bb2-a192-fd4246b1fafa/scratchpad/de84smoke.log",
+    "sha256": "c0df5d377c1fc31e1cb466b831815d59175aff2ec68aeb62f6944eda8a4dbb71"
+  },
+  "protocol": "P003_DE_GATE1_DAY_RUN_REFUSED_V1",
+  "ruling": "R-608 (coordinator): the predicate worked and the response is a DECLARATION ACT -- never raise the cap, never cut draws (REV 47 S2.3)",
+  "runner_that_RAN": {
+    "blob": "a7e28e6^:live/pm_research/de_multiday_gate1_runner.py",
+    "note": "the bytes in memory for the whole run; the file on disk was replaced at 08:35:20Z by DE 85 (R-603)",
+    "sha256": "2089d74eecb1dcac6ba9a9032ac2cb6102fbd341eab9993ed5d1c5086cd63d07"
+  },
+  "scope": {
+    "cpu": "1h 24min 20.439s",
+    "journal_line": "de84smoke.scope: Consumed 1h 24min 20.439s CPU time, 2.3G memory peak, 0B memory swap peak.",
+    "memory_peak": "2.3G",
+    "result": "success",
+    "source": "journalctl --user -u de84smoke.scope",
+    "unit": "de84smoke.scope"
+  },
+  "status": "REFUSED_NO_RECEIPT_WRITTEN",
+  "the_label_as_printed": "FIXTURE-DAY-1",
+  "the_refusal_verbatim": "RunnerRefused: REFUSED DAY FIXTURE-DAY-1: peak RSS 2426 MB exceeds the declared budget 700 MB. The DAY refuses -- the cap is never raised and the draw count is never cut (R-174).",
+  "what_this_record_is_not": {
+    "a_day_run": false,
+    "a_result": false,
+    "it_says_nothing_about_either_arm": true
+  }
+}
