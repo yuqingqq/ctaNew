@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 293
+EXPECTED_CHECKS = 296
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -2324,11 +2324,38 @@ def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
                       ).get("sha256")
         except (OSError, ValueError):
             _dpins = None
-    _p("P3_design", bool(_dpins) and _dpins == _digest(repo / PARAMS_REL),
-       {"path": design["path"], "exists": _dp.is_file(),
-        "design_pins_params_sha256": _dpins,
+    # THE DESIGN IS RESOLVED TO ITS CHAIN HEAD (R-656). params v14 names
+    # v21 by path while v22 is the head; requiring the path to BE the head
+    # would force a params bump per design version for a pointer alone.
+    # The head pins the params by digest -- that is the binding half --
+    # and the path the params name must be IN the chain.
+    _dch = design_chain()
+    _head_pins = None
+    if _dch.get("resolved"):
+        try:
+            _head_pins = (json.loads(Path(_dch["head_path"]).read_text())
+                          .get("parameters") or {}).get("sha256")
+        except (OSError, ValueError):
+            _head_pins = None
+    _named_in_chain = Path(design["path"]).name in (
+        _dch.get("chain_names") or [])
+    _p("P3_design",
+       bool(_head_pins) and _head_pins == _digest(repo / PARAMS_REL)
+       and _named_in_chain and bool(_dch.get("resolved")),
+       {"params_name_this_design": design["path"],
+        "the_named_design_is_in_the_chain": _named_in_chain,
+        "resolved_head": _dch.get("head_name"),
+        "head_version": _dch.get("head_version"),
+        "head_pins_params_sha256": _head_pins,
         "params_sha256_here": _digest(repo / PARAMS_REL),
-        "pin_direction": "design -> params"})
+        "chain_links_all_agree": all(
+            l.get("agrees") for l in (_dch.get("links") or [])),
+        "pin_direction": "design -> params",
+        "why_the_head_and_not_the_named_path": (
+            "the params name the design by PATH; requiring that path to "
+            "be the head forces a params bump per design version for a "
+            "pointer alone. The HEAD pins the params by digest -- the "
+            "binding half -- and the named path must be IN the chain")})
     _p("P4_data_root_is_the_ledger",
        DR.resolve()["is_canonical"] is True, DR.resolve()["data_root"])
     _lockobs = wrapper_observed()
@@ -3635,6 +3662,15 @@ def journal_copy_by_invocation(unit: str, *, invocation_id=None,
         "read_at_utc": read_at.isoformat(),
         "query": (f"journalctl --user _SYSTEMD_INVOCATION_ID={inv} + "
                   f"USER_INVOCATION_ID={inv}" if inv else None),
+        # REV 70 S3: NEITHER COPY NAMED ITS FORMAT, so the reviewer's
+        # first diff of two copies of one run reported a false mismatch --
+        # the formats differed, not the lines. One field removes it.
+        "output_format": "short-iso-precise",
+        "output_format_note": (
+            "journalctl -o short-iso-precise: an ISO timestamp, the host "
+            "and the process prefix, then the message. A copy that does "
+            "not name its format cannot be diffed against one that used "
+            "another"),
         "fields_matched": ["_SYSTEMD_INVOCATION_ID (the payload's lines)",
                            "USER_INVOCATION_ID (the user manager's "
                            "lines: Started, Consumed, Failed)"],
@@ -3735,6 +3771,101 @@ def journal_read(unit: str, *, n: int = 200) -> dict:
 #: drifting-capable (a launcher refusing with 76 was published as 75).
 HEAVY_RUN_FORM_DIR = "live/pm_research/declarations"
 HEAVY_RUN_FORM_GLOB = "heavy_run_form_v*.json"
+
+
+def design_chain(root: Path | None = None) -> dict:
+    """THE DESIGN DECLARATION'S CHAIN HEAD, resolved not pinned.
+
+    R-656 keeps params v14 while the design goes v21 -> v22, and the
+    params name the design by PATH. If that path had to be the head, every
+    design bump would force a params bump for a pointer alone -- the churn
+    this seat has been paying since v14/v17.
+
+    So the rule is R-653 (i) generalised: the HEAD is the design nothing
+    supersedes, with every `supersedes` pair {path, sha256} recomputed;
+    the path the params name must be IN that chain (the head, or an
+    ancestor of it). Both halves keep their meaning and neither forces the
+    other to move."""
+    d = (Path(root) if root else Path(DR.resolve()["data_root"])) \
+        / "pm_5min/derived"
+    docs, bad = {}, []
+    for f in sorted(d.glob("p003_de_multiday_gate1_design_v*.json")):
+        m = re.search(r"_design_v(\d+)\.json$", f.name)
+        if not m:
+            continue
+        try:
+            docs[int(m.group(1))] = (f, json.loads(f.read_text()))
+        except (OSError, ValueError) as exc:
+            bad.append({"file": f.name, "why": str(exc)})
+    if not docs:
+        return {"resolved": False, "why": "no versioned design artifact",
+                "unreadable": bad}
+    links, superseded = [], set()
+    for v in sorted(docs):
+        f, doc = docs[v]
+        sup = doc.get("supersedes") or {}
+        sp, sh = sup.get("path"), sup.get("sha256")
+        if not sp or not sh:
+            continue
+        prev = Path(sp)
+        prev = prev if prev.is_absolute() else (d.parent.parent.parent
+                                                / sp)
+        if not prev.is_file():
+            prev = d / Path(sp).name
+        if not prev.is_file():
+            links.append({"version": v, "supersedes": Path(sp).name,
+                          "agrees": False, "why": "the named file is "
+                                                  "absent"})
+            continue
+        got = hashlib.sha256(prev.read_bytes()).hexdigest()
+        links.append({"version": v, "supersedes": prev.name,
+                      "declared_sha256": sh, "recomputed_sha256": got,
+                      "agrees": got == sh})
+        if got == sh:
+            superseded.add(prev.name)
+    # THE HEAD IS RESOLVED BACKWARD FROM THE NEWEST, and the chain is
+    # the path it walks. "Nothing supersedes it" alone yields TWO heads
+    # here -- v16 and v17 BOTH supersede v15, which is DE 94's
+    # two-files-one-version defect showing up as a FORK. Picking between
+    # two heads by recency would be choosing after seeing; walking back
+    # from the newest is deterministic, and every version off that path
+    # is an ORPHAN BRANCH, reported BY NAME rather than quietly dropped.
+    by_name = {f.name: v for v, (f, _) in docs.items()}
+    newest = max(docs)
+    walk, seen, cur = [], set(), newest
+    while cur is not None and cur not in seen:
+        seen.add(cur)
+        walk.append(cur)
+        f, doc = docs[cur]
+        sup = (doc.get("supersedes") or {})
+        nxt = by_name.get(Path(str(sup.get("path") or "")).name)
+        link = next((l for l in links if l["version"] == cur), None)
+        cur = nxt if (nxt is not None and link and link.get("agrees")) \
+            else None
+    orphans = sorted(set(docs) - seen)
+    hf, _ = docs[newest]
+    out = {"resolved": True, "versions_present": sorted(docs),
+           "links": links, "unreadable": bad,
+           "heads_by_nothing_supersedes_them": sorted(
+               v for v, (f, _) in docs.items() if f.name not in superseded),
+           "chain_from_the_newest": walk,
+           "orphan_branches": orphans,
+           "orphan_note": (
+               "versions NOT on the path walked back from the newest. "
+               "v16 and v17 both supersede v15 (DE 94: two artifacts, one "
+               "protocol version), so 'nothing supersedes it' yields two "
+               "heads; the fork is REPORTED, never resolved by picking"
+               if orphans else None),
+           "head_version": newest, "head_name": hf.name,
+           "head_path": str(hf),
+           "head_sha256": hashlib.sha256(hf.read_bytes()).hexdigest(),
+           "chain_names": sorted(f.name for f, _ in docs.values()),
+           "rule": ("the head is the NEWEST version whose supersession "
+                    "pairs verify back along its own path; every version "
+                    "off that path is an orphan branch, named. The path "
+                    "the params name must be IN the chain (R-653 (i) "
+                    "generalised)")}
+    return out
 
 
 def heavy_run_form_chain() -> dict:
@@ -4758,6 +4889,25 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                       "scope_memory": scope_mem},
         "what_this_is_not": {
             "a_result": False,
+            # R-656 (REV 70 S0.2): the per-arm counts are POPULATION
+            # SIZES, outside the seal, and they are named here so a
+            # reader meets the ruling where the numbers are.
+            "the_per_arm_counts_are_SIZES_not_results": {
+                "fields": ["n_decisions", "n_fills_baseline",
+                           "n_fills_arm", "n_cancels_issued"],
+                "what_they_are": "the action-side counts every quoted "
+                                 "population must carry (rule 8), and "
+                                 "what the read gate's admissibility "
+                                 "reads (R-599's "
+                                 "min_decisions_per_arm_day)",
+                "what_they_are_not": "a valuation. They say how MUCH each "
+                                     "arm intervened, never what it was "
+                                     "worth; no rank, exceedance count or "
+                                     "moment appears anywhere, so they do "
+                                     "not invert into a sealed name "
+                                     "(REV 70 S0's census of 545 leaves)",
+                "ruled": "R-656, written down before day 2",
+            },
             "the_economics_are_SEALED": n_days_complete < params["G"],
             "D_E_MINUS_R_is_UNBOUND": (
                 "the robustness endpoint needs the rebate's identity value, "
@@ -5668,6 +5818,43 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
+    # ---- R-656 (REV 70 S0.2/S3): the seal's scope, and the format ----
+    _sizes101 = ("n_decisions", "n_fills_baseline", "n_fills_arm",
+                 "n_cancels_issued")
+    ok(set(ECONOMIC_FIELDS) & set(_sizes101) == set(),
+       f"R-656: the SEALED names and the open population SIZES are "
+       f"DISJOINT -- {len(ECONOMIC_FIELDS)} against {len(_sizes101)}, no "
+       f"name in both. The sizes are the action-side counts rule 8 "
+       f"requires and the read gate's admissibility reads; they say how "
+       f"MUCH each arm intervened, never what it was worth")
+    _jf101 = journal_copy_by_invocation("de101-cannot-exist.service")
+    ok(_jf101.get("output_format") == "short-iso-precise"
+       and "cannot be diffed" in _jf101.get("output_format_note", ""),
+       "R-656 / REV 70 S3: every journal copy NAMES ITS FORMAT. Two "
+       "copies of one run were diffed and reported a false mismatch -- "
+       "the formats differed, not the lines")
+    # THE DESIGN CHAIN READS THE DESIGN ARTIFACTS UNDER `data/`, and a
+    # FIXTURE run must open no path under it -- the data-root guard
+    # refused this check the first time, as it did DE 98's.
+    if offline:
+        offline_skip("the design chain-head resolution (it reads the "
+                     "design artifacts under data/)")
+    else:
+        _dch101 = design_chain()
+        ok(_dch101.get("resolved") is True
+           and all(l.get("agrees") for l in _dch101["links"])
+           and _dch101["head_version"] == max(_dch101["versions_present"])
+           and _dch101["orphan_branches"] == [16],
+           f"and the DESIGN is resolved to its chain head too "
+           f"(v{_dch101.get('head_version')} of "
+           f"{len(_dch101.get('versions_present') or [])} present, every pair "
+           f"recomputed), and the FORK is REPORTED rather than resolved: "
+           f"orphan branches {_dch101['orphan_branches']} -- v16 and v17 both "
+           f"supersede v15, which is DE 94's two-artifacts-one-version defect "
+           f"showing up as a chain fork. params v14 names v21 while v22 is "
+           f"the head, and requiring the named path to BE the head would "
+           f"force a params bump per design version for a pointer alone")
+
     # ---- R-653 (i): THE CHAIN HEAD, never a filename literal ----------
     # This runner PINNED v1 at 14:00Z while v2 existed, then pinned v2 by
     # NAME while v3 existed. A reader pinned to a superseded version

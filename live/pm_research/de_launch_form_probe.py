@@ -73,6 +73,7 @@ def _journal_read(unit: str, n: int = 50) -> dict:
              and not x.startswith("-- ")]
     if not lines:
         return {"unit": unit, "status": "ABSENT", "read_at_utc": read_at,
+                "output_format": "short-iso-precise",
                 "n_lines_available": 0, "oldest_entry_utc": None,
                 "window_fully_covered": None,
                 "why_absent_not_zero": (
@@ -85,6 +86,7 @@ def _journal_read(unit: str, n: int = 50) -> dict:
     except ValueError:
         oldest = None
     return {"unit": unit, "status": "PRESENT", "read_at_utc": read_at,
+            "output_format": "short-iso-precise",
             "n_lines_available": len(lines), "lines": lines[-6:],
             "oldest_entry_utc": oldest, "oldest_entry_raw": first,
             "oldest_entry_from": "the entry's own clock",

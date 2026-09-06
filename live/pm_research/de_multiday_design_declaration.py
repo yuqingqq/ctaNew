@@ -44,9 +44,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 21
+VERSION = 22
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 105
+EXPECTED_CHECKS = 107
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -131,6 +131,9 @@ V19_DECLARATION = ("p003_de_multiday_gate1_design_v19.json",
 V20_DECLARATION = ("p003_de_multiday_gate1_design_v20.json",
                    "1a481c970afdc88cb874d8b0422ae53d055e60d59ac90320ac20ce"
                    "177aed3685")
+V21_DECLARATION = ("p003_de_multiday_gate1_design_v21.json",
+                   "a52b463c89498332875c18fd758a18464c4f409196ac9eecb16055"
+                   "79e3614771")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
@@ -139,7 +142,8 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V10_DECLARATION, V11_DECLARATION, V12_DECLARATION,
                     V13_DECLARATION, V14_DECLARATION, V15_DECLARATION,
                     V16_DECLARATION, V17_DECLARATION, V18_DECLARATION,
-                    V19_DECLARATION, V20_DECLARATION)
+                    V19_DECLARATION, V20_DECLARATION,
+                    V21_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -1925,6 +1929,50 @@ def declaration() -> dict:
                             "de_multiday_gate1_runner."
                             "_is_the_shared_data_link()"],
         },
+        # ---- DE 101 / R-656 (REV 70 S0.2): WHAT THE SEAL COVERS.
+        # Written down BEFORE day 2, not argued after day 6.
+        "R29_seal_scope": {
+            "ruling": "R-656 (the coordinator's, on REV 70 S0.2)",
+            "changes_nothing_else": (
+                "NO estimand, NO bar, NO pin. params v14 is unchanged and "
+                "still the pinned parameter file; this clause only writes "
+                "down what the seal already covered"),
+            "the_seal_protects": {
+                "valuations_and_null_statistics": list(
+                    RUNNER.ECONOMIC_FIELDS),
+                "and_one_ruled_bit": "admissibility.sd_meets_floor -- a "
+                                     "one-bit thresholded function of the "
+                                     "sealed sd_over_abs_mean against the "
+                                     "open sd_floor_fraction, disclosed "
+                                     "and ruled at R-599, not a defect",
+            },
+            "OUTSIDE_the_seal_the_decision_population_SIZES": [
+                "n_decisions", "n_fills_baseline", "n_fills_arm",
+                "n_cancels_issued",
+            ],
+            "why_the_sizes_are_open": (
+                "they are the ACTION-SIDE COUNTS every quoted population "
+                "must carry (rule 8: every population carries its n and "
+                "its as-of); the read gate's admissibility READS them by "
+                "design (R-599's `min_decisions_per_arm_day`); and REV 70 "
+                "S0's census of all 545 leaves found no open field of a "
+                "shape that inverts a sealed one -- no rank, no "
+                "exceedance count, no moment. They say how MUCH each arm "
+                "intervened, not what it was WORTH"),
+            "the_question_REV_70_asked": (
+                "whether 'the size of the intervention' is part of 'the "
+                "result'. RULED: it is not. The result is the VALUATION "
+                "and the null statistics; the size is the population, and "
+                "a population nobody may quote is a population nobody can "
+                "check"),
+            "the_two_sets_are_DISJOINT": (
+                "asserted in this module's own battery -- a name cannot "
+                "be both sealed and an open size"),
+            "the_receipt_says_so_too": (
+                "`what_this_is_not` names the counts as SIZES, so a "
+                "reader of the artifact meets the ruling where the "
+                "numbers are"),
+        },
         "R20_the_serial_schedule": serial_schedule(),
         "R22_the_launch_capture_is_the_IMPORT_CLOSURE": {
             "ruling": "SEAT_PROTOCOL rule 22 AS AMENDED (REV 51 S3)",
@@ -2974,6 +3022,27 @@ def selftest(*, quiet: bool = False) -> int:
        f"V{VERSION}, the chain holds {len(DECLARATION_CHAIN)} = VERSION - 1 "
        f"predecessors and its head is v{VERSION - 1}. v7 on disk read "
        f"protocol V4, filename v7 and supersedes v2")
+    # ---- DE 101 / R-656: the seal's scope, and the two sets disjoint --
+    _r29 = d["R29_seal_scope"]
+    _sealed29 = set(_r29["the_seal_protects"][
+        "valuations_and_null_statistics"])
+    _sizes29 = set(_r29["OUTSIDE_the_seal_the_decision_population_SIZES"])
+    ok(_sealed29 == set(RUNNER.ECONOMIC_FIELDS)
+       and _sizes29 == {"n_decisions", "n_fills_baseline", "n_fills_arm",
+                        "n_cancels_issued"}
+       and _sealed29 & _sizes29 == set(),
+       f"R-656: the seal's scope is DECLARED and the two sets are "
+       f"DISJOINT -- {len(_sealed29)} sealed names (read from the "
+       f"runner's own ECONOMIC_FIELDS, not typed here) against "
+       f"{len(_sizes29)} open population SIZES, no name in both")
+    ok("NO estimand" in _r29["changes_nothing_else"]
+       and "params v14" in _r29["changes_nothing_else"]
+       and "sd_meets_floor" in _r29["the_seal_protects"][
+           "and_one_ruled_bit"],
+       "and the clause states what it does NOT change -- no estimand, no "
+       "bar, no pin, params v14 unchanged -- and names the ONE ruled bit "
+       "that is a function of sealed material (R-599), so the leakage is "
+       "measured rather than discovered")
     # ---- DE 94: the launch form and the data-link exemption ----------
     _r27 = d["R27_a_heavy_run_is_never_a_child_of_a_tool_shell"]
     ok(_r27["ruling"] == "R-628"
