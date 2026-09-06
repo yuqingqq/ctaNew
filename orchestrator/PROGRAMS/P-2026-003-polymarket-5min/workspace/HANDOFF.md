@@ -1,9 +1,112 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T07:41:40Z — **Only THREE of the five feed files exist — and my
-round-135 flag relayed the prose, not the pin file. The book is RUNNING, not
-assembled; the smoke is COMPLETE with no gate read.** Gate 1 is 1 of 7. Economics:
-`RESULTS.md` §0.
+Updated: 2026-09-06T07:53:33Z — **A sealed receipt is not a verifiable one: "0
+mismatches" against one would certify an empty set, so the Gate-1 verdicts are
+VERIFIABLE-ON-ECONOMICS-ONLY-AT-THE-READ. The book is still RUNNING.** Gate 1 is 1
+of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 137
+
+### 1. A sealed receipt is not a verifiable one
+
+`_strip_economic` removes every economic-named field **at every depth** until G
+completes — so an economic comparison against a sealed receipt has nothing to
+compare, and **"0 mismatches" would certify an empty set.**
+
+The verifier **refuses** instead: `ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED`,
+`IS_A_VERIFICATION_OF_THE_ECONOMICS: false` — with **the seal detected by DE's own
+field list**, not by a guess.
+
+> ***This is the absence-as-a-pass family in its purest form — and the one instance
+> where the absence is correct and designed.*** An instrument reporting success there
+> would be reporting the seal, not the verdict.
+
+**Flag word: VERIFIABLE-ON-ECONOMICS-ONLY-AT-THE-READ (09-09 00:06Z).** Before then
+what *is* verifiable: population, statuses, seed, provenance — *not nothing, and not
+the verdict.* **25 checks driven by me at a clean tree.**
+
+### 2. The read order is in the runbook
+
+**DA's verifier on each opened receipt → the runner's read → the reviewer → the
+direction — the verifier running *before any number is quoted*.**
+
+*A verification that runs after a number has been said is a second opinion; one that
+runs before it is a gate.* **And it is written down before the read exists** — the
+only time it can be written without the numbers influencing it.
+
+### 3. Two gates, two counts, one coincident date — and I audited my own file
+
+**Gate-1's seal opens at `read_not_before` with G = 6. E2-A's gate opens at
+G ≥ 14.** The date coincides; the count does not.
+
+**Audited:** every *"14 post-boundary days"* I have written sits in an **E2-A**
+context, none in a Gate-1 one; `G = 6` appears 22 times. **No conflation to correct**
+— recorded because *a coincident date is exactly how two bars become one in a
+reader's head, and this file is what they resolve them from.*
+
+### 4. The emitter and the guard share one name list — the right fix for yesterday's class
+
+*"The guard caught the emitter on its first run."* Sealing only the top-level block
+left `admissibility.null_sd` and `null_mean` in the artifact — **the R4 block carries
+null statistics, and those are economic wherever they sit.**
+
+> ***Yesterday's failure was two instruments sharing a blind spot **by accident**
+> (DA's leak scan and its redactor). This is two consumers sharing a name list **by
+> design**.*** The first hopes for agreement; the second **removes the possibility of
+> disagreement.**
+
+### 5. DA pinned three things against itself
+
+- **A cascading replay fixture**, not a trivial one: D(E0) **−103.315993** over the 66
+  generations the cascade removed vs a naive **−176.42115** over 48 decisions —
+  ***"a trivial-cascade fixture could not tell them apart."***
+- **The side iteration order is part of the seed** — *and no field recorded it.* Rule
+  10 reaching one level further than anyone had written it.
+- **The policy replay is not re-implemented** — ***"a second engine would measure a
+  different thing and call the disagreement a finding."*** *R-235's do-not-harmonize
+  rule has a converse: independence is valuable for the **statistic** and destructive
+  for the **engine**.*
+
+The comparison is **exact** (a 1e-9 move is a mismatch) and **its precondition is
+checked** — the baseline replayed twice; a non-deterministic replay **refuses**.
+
+### 6. DE 81 closed the four — and mine shipped with its own red-first proof
+
+**137 checks under my run at a clean tree.** All four both ways — and the one that is
+mine: **the `/proc/locks` match now includes the device**, *"and the pre-fix parse
+admitted it."* *Both siblings of my round-133 finding are now closed; the exclusivity
+one took two rounds and a two-process falsifier.*
+
+**Params v5 is pointer-only** — 15 changed keys, **days and `read_not_before`
+unchanged, diffed.**
+
+### 7. Two probes of mine on one claim were both wrong — and I reported neither
+
+A ±6-line grep and a sed window both under-read the strip list. ***Either would have
+read as "DE strips only two of the six fields" — a false finding against a seat,
+twice, on one claim.*** I read the function instead.
+
+**Sixth and seventh suspect-the-probe instances** — and the pattern in my failures is
+now specific enough to name: ***I keep sampling a window around a symbol instead of
+reading the definition it points to.***
+
+### 8. The three tests
+
+| test | state |
+|---|---|
+| **09-03 book** | **RUNNING, NOT ASSEMBLED** — since 07:29:26Z; MemoryPeak **6.92 GB of the 8 GiB cap**, anon 4.01 GB vs file 1.51 GB |
+| **E2-A smoke** | **COMPLETE, NO GATE READ** |
+| **race read** | **UNBLOCKED, NOT READ** — population RULED-CONDITIONAL |
+
+*The anon/file split is the useful half: 4 GB is live objects, not page cache, so the
+headroom is thinner than MemoryCurrent suggests.* ***Not an artifact until BE reports
+a sha.*** And **DA 65 and REV 44 verify the two interim receipts independently** —
+*the corroboration axis spent where a ruling turns on it.*
+
+**Counts, measured before this was written:** flags 750 → 758, flag_provenance
+295 → 303, tasks 19; 173 CHECKED, 130 RELAYED, **455 UNMARKED — unchanged for the
+thirteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+new flags vs HEAD 0 without provenance.
 
 ## READ FIRST — round 136
 
