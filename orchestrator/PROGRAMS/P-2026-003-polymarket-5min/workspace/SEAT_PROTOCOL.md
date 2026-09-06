@@ -223,6 +223,10 @@ except where marked USER-ONLY.
     **A cited artifact is locatable (R-601, REV 85 §4, R-726):** a row naming a receipt or record by digest names its
     PATH in the ledger, or states it is scratch-only with the absolute path -- a digest without a resolvable location is
     a pin to nothing.
+    **An instrument verifying a PAST act resolves every declaration by the pair the act recorded -- never by the head
+    (REV 86 §8, R-729; third instance: the seal scope from the carrying commit, REV 75 §2; a receipt's design pin by its
+    own pair, REV 73; the read's declaration by `pre_state.declaration_sha256`, DA 112).** The head is for writers; the
+    pair is for readers of history.
     **A halted seat's worktree (R-627's clause, REV 81 §4).** "Never touch a seat's worktree while the seat works" --
     *idle* includes *halted for a reset*: a preservation-only commit in a halted worktree is permitted, UNPUSHED, the
     bytes unaltered, the act disclosed in the register by commit id; the rows then land in the shared register attributed.
