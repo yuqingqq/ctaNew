@@ -43,9 +43,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 15
+VERSION = 16
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 89
+EXPECTED_CHECKS = 91
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -96,13 +96,17 @@ V14_DECLARATION = ("p003_de_multiday_gate1_design_v14__20260906T091319Z"
                    ".json",
                    "3284cafb10be2584de91b5e8a43afd793aae4260a4c84bf4c0a5cd"
                    "64a83657e1")
+V15_DECLARATION = ("p003_de_multiday_gate1_design_v15__20260906T094500Z"
+                   ".json",
+                   "0c83afb1b1bc52016994116aae03237222b3f2463099d9534fc8f3"
+                   "421cc9c799")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
                     V10_DECLARATION, V11_DECLARATION, V12_DECLARATION,
-                    V13_DECLARATION, V14_DECLARATION)
+                    V13_DECLARATION, V14_DECLARATION, V15_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -437,7 +441,7 @@ def _params_digest() -> str:
     """The params file's digest, READ at emission -- the design is emitted
     last, so the params are already final and can be pinned here."""
     p = (Path(__file__).resolve().parents[2]
-         / "live/pm_research/declarations/de_multiday_gate1_params_v8.json")
+         / "live/pm_research/declarations/de_multiday_gate1_params_v9.json")
     return (hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file()
             else "ABSENT")
 
@@ -1502,6 +1506,63 @@ def declaration() -> dict:
                        "a day with two receipts -> REFUSES as ambiguous"],
         },
         "R20_the_serial_schedule": serial_schedule(),
+        "R22_the_launch_capture_is_the_IMPORT_CLOSURE": {
+            "ruling": "SEAT_PROTOCOL rule 22 AS AMENDED (REV 51 S3)",
+            "the_gap": "the capture covered ONE file. A SIBLING replaced "
+                       "mid-run -- the design module, BE's cascade -- "
+                       "moves the code that produced the numbers while the "
+                       "receipt still says the source is unchanged",
+            "what_is_captured_at_import": [
+                "every module in sys.modules whose __file__ is under "
+                "live/, digested FROM THE BYTES THAT MODULE WAS FIRST SEEN "
+                "WITH -- never a second read, because import_module can "
+                "return a cached module whose file has since moved",
+                "BE's cascade, which imports LAZILY and joins the closure "
+                "at its first import -- a closure that misses the module "
+                "producing the NUMBERS misses the point",
+                "the worktree's HEAD sha AND its dirty state",
+            ],
+            "the_closure_by_name": [
+                "de_multiday_gate1_runner.py",
+                "de_multiday_design_declaration.py",
+                "de_data_root.py",
+                "pm_tape_density.py (imported by the root resolver)",
+                "be_cancel_axis_null.py (lazily, on the day path)",
+            ],
+            "refused_at_every_emit": [
+                "any module of the closure whose bytes moved -> REFUSES "
+                "NAMING THE MODULE",
+                "HEAD moved (a commit in the run's own worktree) -> "
+                "REFUSES",
+                "a DIRTY worktree at import -> recorded for a fixture, "
+                "REFUSED for a real day: uncommitted bytes are locatable "
+                "nowhere (REV 49 S0)",
+            ],
+        },
+        "R23_the_artifact_NAME_stamp_is_the_clock": {
+            "the_defect_and_it_is_mine": (
+                "design v15's filename says 20260906T094500Z and the "
+                "artifact was written at 09:32:50Z; the 09-04 rehearsal "
+                "and fixture v16 say 09:51:00Z against 09:33:56Z. TWO "
+                "FILENAMES NAMING A MOMENT THAT HAD NOT YET OCCURRED"),
+            "the_cause": "params must name the design's PATH before the "
+                         "design is emitted (the pin runs design -> "
+                         "params), so I chose a rounded stamp instead of "
+                         "reading a clock -- and then reused the habit for "
+                         "artifacts that had no such constraint",
+            "the_rule_it_breaks": "times come from `date`, never "
+                                  "estimated -- this programme's own "
+                                  "standing rule, applied to filenames "
+                                  "where nobody had been looking",
+            "the_fix": ["`emission_stamp()` takes the stamp from the clock",
+                        "`assert_name_stamp_is_the_clock()` REFUSES an "
+                        "emission whose filename stamp is not the moment "
+                        "of writing, at every emit path",
+                        "and for a path that must be known IN ADVANCE the "
+                        "name carries NO stamp at all -- the design is "
+                        "version-only from v16, and its time lives in "
+                        "`as_of`"],
+        },
         "R21_a_heavy_runs_code_is_FROZEN_until_its_receipt_lands": {
             "ruling": "R-603 (coordinator) / REV 49 S0; SEAT_PROTOCOL rule "
                       "22",
@@ -2648,13 +2709,31 @@ def selftest(*, quiet: bool = False) -> int:
 
     import hashlib as _h4
     _pp = (Path(__file__).resolve().parents[2] / "live/pm_research/"
-           "declarations/de_multiday_gate1_params_v8.json")
+           "declarations/de_multiday_gate1_params_v9.json")
     ok(d["parameters"]["sha256"] == _h4.sha256(_pp.read_bytes()).hexdigest()
        and d["parameters"]["pin_direction"].startswith("design -> params"),
        "THE PIN DIRECTION IS FLIPPED AND THE PIN IS REAL: the design pins "
        "the params file by a digest READ at emission. params -> design "
        "cost a params version per design bump for a pointer alone, twice, "
        "and a third was due this round")
+
+    _r22 = d["R22_the_launch_capture_is_the_IMPORT_CLOSURE"]
+    _live_closure = set(
+        _RUN.source_identity_at_launch()["import_closure"]["modules"])
+    _named = {x.split(" ")[0] for x in _r22["the_closure_by_name"]}
+    ok(_live_closure <= _named and len(_r22["refused_at_every_emit"]) == 3
+       and "de_multiday_design_declaration.py" in _live_closure,
+       f"R22: the closure is LISTED BY NAME and the modules actually "
+       f"captured are among them -- {sorted(_live_closure)}. The design "
+       f"module is in it, which is the sibling the old one-file capture "
+       f"could not see")
+    _r23 = d["R23_the_artifact_NAME_stamp_is_the_clock"]
+    ok("HAD NOT YET OCCURRED" in _r23["the_defect_and_it_is_mine"]
+       and len(_r23["the_fix"]) == 3,
+       "R23: the stamp defect is recorded as mine, with the two filenames "
+       "that named a moment which had not yet occurred, and the fix "
+       "includes dropping the stamp entirely from a path that must be "
+       "known in advance")
 
     _r19 = d["R19_the_seal_open_bar_is_a_PREDICATE"]
     ok(len(_r19["the_conjunction"]) == 2 and len(_r19["driven"]) == 5

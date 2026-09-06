@@ -47,14 +47,14 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 182
+EXPECTED_CHECKS = 190
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
 #: stays as provenance (rule 13).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v8.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v9.json"
 SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v7.json")
+                        "de_multiday_gate1_params_v8.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -72,7 +72,7 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 88
+DAY_PATH_CHECKS = 96
 
 
 #: R-603 / REV 49 §0 -- THE DIGEST OF THE BYTES THAT ARE RUNNING, taken
@@ -94,22 +94,93 @@ except OSError:                       # pragma: no cover - unreadable source
 LAUNCH_TIME_UTC = datetime.datetime.now(
     datetime.timezone.utc).isoformat()
 
+#: RULE 22 AS AMENDED (REV 51 §3): ONE FILE IS NOT THE RUN. The launch
+#: capture covered this module only, so a SIBLING replaced mid-run --
+#: the design module, BE's cascade -- moved the code that produced the
+#: numbers while the receipt still said the source was unchanged. The
+#: closure is every module under `live/` that is loaded, plus the
+#: worktree's HEAD and dirty state.
+LIVE_DIR = str(Path(__file__).resolve().parents[1])
+#: digest OF THE BYTES OBSERVED WHEN THE MODULE FIRST ENTERED THIS RUN --
+#: never a second read later, because `importlib.import_module` can return
+#: a module that was already in `sys.modules` and whose file has since
+#: moved.
+LAUNCH_CLOSURE: dict = {}
+
+
+def _digest_module(mod) -> None:
+    """Record a loaded module's bytes ONCE, the first time it is seen."""
+    f = getattr(mod, "__file__", None)
+    if not f:
+        return
+    p = Path(f).resolve()
+    if not str(p).startswith(LIVE_DIR) or str(p) in LAUNCH_CLOSURE:
+        return
+    try:
+        LAUNCH_CLOSURE[str(p)] = hashlib.sha256(p.read_bytes()).hexdigest()
+    except OSError:
+        LAUNCH_CLOSURE[str(p)] = None
+
+
+def _capture_closure() -> None:
+    for m in list(sys.modules.values()):
+        _digest_module(m)
+
+
+def _head_state() -> dict:
+    """The worktree's HEAD and whether it was dirty AT IMPORT."""
+    import subprocess as _sp
+    root = str(Path(__file__).resolve().parents[2])
+
+    def _g(*a):
+        try:
+            r = _sp.run(["git", "-C", root, *a], capture_output=True,
+                        text=True, timeout=60)
+        except Exception:
+            return None
+        return r.stdout.strip() if r.returncode == 0 else None
+
+    st = _g("status", "--porcelain")
+    return {"worktree": root, "head": _g("rev-parse", "HEAD"),
+            "dirty": bool(st) if st is not None else None,
+            "dirty_paths": [x[3:] for x in (st or "").split("\n") if x][:20]}
+
+
+_capture_closure()
+LAUNCH_HEAD = _head_state()
+
 
 class RunnerRefused(RuntimeError):
     """The run cannot proceed honestly on the inputs given."""
 
 
+def closure_drift() -> list:
+    """Which modules of the launch closure have MOVED on disk since."""
+    out = []
+    for path, was in LAUNCH_CLOSURE.items():
+        try:
+            now = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+        except OSError:
+            now = None
+        if now != was:
+            out.append({"module": Path(path).name, "path": path,
+                        "at_import": was, "now": now})
+    return out
+
+
 def source_identity_at_launch() -> dict:
-    """THE BYTES THAT RAN, and whether the file still holds them.
+    """THE BYTES THAT RAN -- ALL OF THEM -- and whether they still hold.
 
     A receipt must name the code that PRODUCED it. Reading `__file__` at
-    emit names whatever is on disk THEN, which is a different fact the
-    moment anything lands mid-run."""
+    emit names whatever is on disk THEN; reading ONE file names one
+    twenty-fourth of what ran."""
     me = Path(__file__).resolve()
     try:
         now = hashlib.sha256(me.read_bytes()).hexdigest()
     except OSError:
         now = None
+    drift = closure_drift()
+    head_now = _head_state()
     return {
         "producing_code": me.name,
         "producing_code_sha256": LAUNCH_SOURCE_SHA256,
@@ -117,15 +188,59 @@ def source_identity_at_launch() -> dict:
         "launch_time_utc": LAUNCH_TIME_UTC,
         "on_disk_sha256_at_emit": now,
         "source_unchanged_during_the_run": now == LAUNCH_SOURCE_SHA256,
+        # RULE 22 AS AMENDED: the CLOSURE, not one file.
+        "import_closure": {
+            "n_modules": len(LAUNCH_CLOSURE),
+            "modules": {Path(k).name: v
+                        for k, v in sorted(LAUNCH_CLOSURE.items())},
+            "root": LIVE_DIR,
+            "digested": "from the bytes observed when each module first "
+                        "entered THIS run -- never a second read, because "
+                        "import_module can return a cached module whose "
+                        "file has since moved",
+        },
+        "closure_drift": drift,
+        "closure_unchanged_during_the_run": not drift,
+        "head_at_import": LAUNCH_HEAD,
+        "head_at_emit": head_now,
+        "head_unchanged_during_the_run": (
+            LAUNCH_HEAD.get("head") == head_now.get("head")),
+        "worktree_was_dirty_at_import": LAUNCH_HEAD.get("dirty"),
     }
 
 
-def assert_source_unchanged(where: str) -> dict:
-    """REFUSE THE EMIT if the file changed under this run.
+def assert_source_unchanged(where: str, *, fixture: bool = True) -> dict:
+    """REFUSE THE EMIT if ANY of the code that ran changed under it.
 
-    Not the RUN -- the run is fine, Python holds the module in memory. What
-    is not fine is a receipt that names bytes which did not produce it."""
+    Not the RUN -- the run is fine, Python holds the modules in memory.
+    What is not fine is a receipt that names bytes which did not produce
+    it. Rule 22 as amended covers the CLOSURE and HEAD, because a sibling
+    module or a commit in the worktree moves the producing code just as
+    surely as this file does."""
     idy = source_identity_at_launch()
+    if idy["closure_drift"]:
+        raise RunnerRefused(
+            f"REFUSED at {where}: A MODULE OF THIS RUN'S IMPORT CLOSURE "
+            f"CHANGED UNDER IT -- "
+            f"{[d['module'] for d in idy['closure_drift']]}. The run is "
+            f"unaffected (the modules are in memory); a receipt stamped "
+            f"from the files would name code that DID NOT RUN. Rule 22 as "
+            f"amended (REV 51 S3): the capture is the closure, not one "
+            f"file.")
+    if not idy["head_unchanged_during_the_run"]:
+        raise RunnerRefused(
+            f"REFUSED at {where}: THE WORKTREE'S HEAD MOVED UNDER THIS RUN "
+            f"-- {str(idy['head_at_import'].get('head'))[:12]} -> "
+            f"{str(idy['head_at_emit'].get('head'))[:12]}. A receipt's "
+            f"carrying_commit would name a commit that was not the one "
+            f"this run executed from.")
+    if not fixture and idy["worktree_was_dirty_at_import"]:
+        raise RunnerRefused(
+            f"REFUSED at {where}: THE WORKTREE WAS DIRTY AT IMPORT "
+            f"({idy['head_at_import'].get('dirty_paths')}). For a REAL day "
+            f"the producing code must be locatable in a commit; "
+            f"uncommitted bytes are locatable nowhere. Recorded as a fact "
+            f"for a fixture, refused for a day (REV 49 S0).")
     if not idy["source_unchanged_during_the_run"]:
         raise RunnerRefused(
             f"REFUSED at {where}: THE SOURCE CHANGED UNDER THIS RUN. This "
@@ -440,6 +555,13 @@ def import_be_cascade(params: dict, *, module=None) -> tuple:
     if module is None:
         import importlib
         module = importlib.import_module(BE_MODULE_IMPORT_NAME)
+    # THE CASCADE JOINS THE LAUNCH CLOSURE AT ITS FIRST IMPORT. It is
+    # imported lazily, so it is not in `sys.modules` when this module
+    # loads -- and a closure that misses the module producing the NUMBERS
+    # is the closure missing the point. Recorded once: `import_module` can
+    # return a cached module whose file has since moved.
+    _digest_module(module)
+    _capture_closure()
     loaded = Path(getattr(module, "__file__", "") or "")
     declared = (Path(__file__).resolve().parents[2]
                 / params["be_module"]["path"])
@@ -1379,6 +1501,58 @@ def fixture_run_proven() -> dict:
     payload["data_root"] = DR.require_canonical(
         "the fixture run", fixture=True, proof=proof)
     return payload
+
+
+def emission_stamp(now=None) -> str:
+    """THE FILENAME STAMP, FROM THE CLOCK.
+
+    I typed these. design v15's name says 09:45:00Z and the artifact was
+    written at 09:32:50Z; the 09-04 rehearsal says 09:51:00Z against
+    09:33:56Z -- **names for a moment that had not yet occurred**. The
+    cause was that params must name the design's path BEFORE the design is
+    emitted (the pin runs design -> params), so I chose a rounded stamp
+    instead of reading a clock. That is the memory rule this programme
+    already carries -- times come from `date`, never estimated -- applied
+    to filenames, where nobody had been looking."""
+    t = now or datetime.datetime.now(datetime.timezone.utc)
+    return t.strftime("%Y%m%dT%H%M%SZ")
+
+
+def assert_name_stamp_is_the_clock(output: Path, as_of: str, *,
+                                   tolerance_s: int = 300) -> dict:
+    """A stamped filename must name the moment the file was written.
+
+    A version-only name (no `__<stamp>`) is the OTHER fix and is admitted:
+    an artifact whose path must be known in advance cannot carry a stamp
+    honestly, so it carries none and its time lives in `as_of`."""
+    name = Path(output).name
+    if "__" not in name:
+        return {"name_carries_a_stamp": False,
+                "why_this_is_fine": "a path that must be known in advance "
+                                    "cannot carry an honest stamp; the "
+                                    "time lives in `as_of`",
+                "as_of": as_of}
+    stamp = name.rsplit("__", 1)[1].split(".")[0]
+    try:
+        st = datetime.datetime.strptime(
+            stamp, "%Y%m%dT%H%M%SZ").replace(
+                tzinfo=datetime.timezone.utc)
+    except ValueError:
+        raise RunnerRefused(
+            f"REFUSED: the output name {name} carries `{stamp}`, which is "
+            f"not a UTC stamp.")
+    wrote = datetime.datetime.fromisoformat(as_of)
+    delta = (st - wrote).total_seconds()
+    if abs(delta) > tolerance_s:
+        raise RunnerRefused(
+            f"REFUSED: the output name {name} is stamped {stamp} while the "
+            f"artifact was written at {as_of} -- {delta:+.0f}s. A stamp "
+            f"that is not the clock is a time somebody typed; two of mine "
+            f"named a moment that had NOT YET OCCURRED (design v15: name "
+            f"09:45:00Z, written 09:32:50Z). Times come from the clock.")
+    return {"name_carries_a_stamp": True, "stamp": stamp, "as_of": as_of,
+            "delta_seconds": delta, "tolerance_s": tolerance_s,
+            "stamp_is_the_clock": True}
 
 
 def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
@@ -3498,7 +3672,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"fixture run opens {len(_seen)} paths, ZERO of them under "
            f"`data/`. It reads only its own module source and the "
            f"committed parameter file, so it runs from a shell worktree")
-        ok(any(x.endswith("de_multiday_gate1_params_v8.json")
+        ok(any(x.endswith("de_multiday_gate1_params_v9.json")
                for x in _seen),
            "and the instrument is not vacuous -- it DID observe the "
            "parameter file being read, so a zero above is a measurement "
@@ -4740,6 +4914,83 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"module, not DE's) and would reintroduce the check-and-use "
            f"window REV 43 made me close on the tape")
 
+        # ---- RULE 22 AS AMENDED: the CLOSURE and HEAD, not one file -----
+        _sid2 = source_identity_at_launch()
+        _mods = set(_sid2["import_closure"]["modules"])
+        ok(_sid2["import_closure"]["n_modules"] >= 4
+           and "de_multiday_design_declaration.py" in _mods
+           and "de_data_root.py" in _mods
+           and _sid2["closure_unchanged_during_the_run"] is True,
+           f"RULE 22 AS AMENDED (REV 51 S3): the launch capture is the "
+           f"IMPORT CLOSURE, not one file -- {len(_mods)} modules under "
+           f"live/, digested from the bytes each was first seen with. One "
+           f"file was one twenty-fourth of what ran")
+        ok(_sid2["head_at_import"]["head"]
+           and _sid2["head_unchanged_during_the_run"] is True
+           and isinstance(_sid2["worktree_was_dirty_at_import"], bool),
+           f"and HEAD and the dirty state are captured AT IMPORT: "
+           f"{str(_sid2['head_at_import']['head'])[:12]}, dirty="
+           f"{_sid2['worktree_was_dirty_at_import']} -- a commit in the "
+           f"worktree moves the producing code as surely as an edit does")
+        import shutil as _sh2
+        _sib = Path(__file__).resolve().parent / \
+            "de_multiday_design_declaration.py"
+        _bk2 = Path(_tfl.mkdtemp(prefix="de88sib_")) / "sib.bak"
+        _sh2.copy2(_sib, _bk2)
+        try:
+            with open(_sib, "ab") as _fh2:
+                _fh2.write(b"\n# a SIBLING rewritten mid-run\n")
+            try:
+                assert_source_unchanged("the closure known-bad")
+                ok(False, "a sibling module change was ADMITTED")
+            except RunnerRefused as _e2:
+                ok("IMPORT CLOSURE" in str(_e2)
+                   and "de_multiday_design_declaration.py" in str(_e2),
+                   "RULE 22 KNOWN-BAD, A SIBLING: the DESIGN module "
+                   "rewritten mid-run REFUSES BY NAME. The old capture "
+                   "watched only this file, so the module that declares "
+                   "the design could have moved under a run and the "
+                   "receipt would still have said the source was "
+                   "unchanged")
+        finally:
+            _sh2.copy2(_bk2, _sib)
+        ok(assert_source_unchanged("the closure restore control")[
+               "closure_unchanged_during_the_run"] is True,
+           "AND THE POSITIVE CONTROL: with the sibling restored the emit "
+           "admits again")
+        _moved = dict(_sid2["head_at_import"])
+        _moved["head"] = "0" * 40
+        ok(_moved["head"] != _sid2["head_at_emit"]["head"],
+           "and a MOVED HEAD is detectable as a value comparison -- the "
+           "emit refuses on it, which is the case a commit in the run's "
+           "own worktree creates")
+        # ---- the NAME STAMP is the clock, not a number I typed ----------
+        _now = datetime.datetime.now(datetime.timezone.utc)
+        _good = Path(f"x__{emission_stamp(_now)}.json")
+        ok(assert_name_stamp_is_the_clock(
+               _good, _now.isoformat())["stamp_is_the_clock"] is True,
+           "THE NAME STAMP IS THE CLOCK: a filename stamped from "
+           "`emission_stamp()` at the moment of writing is admitted")
+        _late = Path("x__20260906T094500Z.json")
+        try:
+            assert_name_stamp_is_the_clock(
+                _late, "2026-09-06T09:32:50+00:00")
+            ok(False, "a typed future stamp was ADMITTED")
+        except RunnerRefused as _e3:
+            ok("NOT YET OCCURRED" in str(_e3),
+               "KNOWN-BAD, AND IT IS MY OWN ARTIFACT: design v15's name "
+               "says 09:45:00Z and it was written at 09:32:50Z -- a "
+               "filename naming a moment that had not yet occurred, "
+               "because I typed a rounded stamp instead of reading a "
+               "clock. It refuses now")
+        ok(assert_name_stamp_is_the_clock(
+               Path("p003_de_design_v16.json"), _now.isoformat())[
+               "name_carries_a_stamp"] is False,
+           "and a VERSION-ONLY name is admitted as the other fix: an "
+           "artifact whose path must be known in ADVANCE (the design, "
+           "because params names it) cannot carry an honest stamp, so it "
+           "carries none and its time lives in `as_of`")
+
         # ---- R-603 / REV 49 S0: the source may not change under a run ---
         _sid = source_identity_at_launch()
         ok(_sid["producing_code_sha256"] == LAUNCH_SOURCE_SHA256
@@ -4760,8 +5011,11 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
                 assert_source_unchanged("the known-bad")
                 ok(False, "a mid-run source change was ADMITTED")
             except RunnerRefused as _e:
-                ok("THE SOURCE CHANGED UNDER THIS RUN" in str(_e),
-                   "R-603 KNOWN-BAD, THE FILE REWRITTEN MID-RUN: the emit "
+                ok(("THE SOURCE CHANGED UNDER THIS RUN" in str(_e)
+                    or "IMPORT CLOSURE" in str(_e))
+                   and "de_multiday_gate1_runner.py" in str(_e),
+                   "R-603 KNOWN-BAD, THE FILE REWRITTEN MID-RUN, and it is "
+                   "the CLOSURE check that now names it: the emit "
                    "REFUSES BY NAME. This is not hypothetical -- DE 85 "
                    "committed this file at 08:35:20Z while the 09-03 smoke "
                    "was executing it from the same worktree, so its "
@@ -5128,6 +5382,8 @@ def main() -> int:
             if a.output.exists():
                 raise RunnerRefused(f"output already exists: {a.output}")
             a.output.parent.mkdir(parents=True, exist_ok=True)
+            payload["name_stamp"] = assert_name_stamp_is_the_clock(
+                a.output, payload["as_of"])
             a.output.write_text(
                 json.dumps(payload, indent=2, sort_keys=True) + "\n")
         print(json.dumps({"emitted": str(a.output), "day": payload["day"],
@@ -5159,6 +5415,8 @@ def main() -> int:
     payload = fixture_run_proven()
     if a.output.exists():
         raise RunnerRefused(f"output already exists: {a.output}")
+    payload["name_stamp"] = assert_name_stamp_is_the_clock(
+        a.output, payload["as_of"])
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
     print(json.dumps({"emitted": str(a.output), "status": payload["status"],
@@ -5197,7 +5455,8 @@ def _main_day(a) -> int:
     payload = proof.pop("day_result")
     payload["split_residency_proof"] = proof
     payload["source_identity"] = {
-        **assert_source_unchanged("the day-run emit"),
+        **assert_source_unchanged("the day-run emit",
+                                  fixture=fixture),
         **carrying_commit_block(Path(__file__).resolve()),
     }
     # R-572(B)(4) / the coordinator's DE 78 ruling, as FIELDS.
@@ -5244,6 +5503,8 @@ def _main_day(a) -> int:
     }
     payload["data_root"] = DR.require_canonical(
         f"the {'fixture' if fixture else 'sealed'} day run", fixture=False)
+    payload["name_stamp"] = assert_name_stamp_is_the_clock(
+        a.output, payload["as_of"])
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(payload, indent=2, sort_keys=True,
                                    default=str) + "\n")
