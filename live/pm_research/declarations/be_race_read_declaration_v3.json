@@ -1,0 +1,128 @@
+{
+ "RECOMMENDATION": {
+  "and_it_avoids_a_rule_11_question_entirely": "a re-seal writes rather than reads, so it would not have consumed a day -- but it would have replaced the artifacts the interim's own numbers rest on, and the cheapest way to keep those comparable is not to move them",
+  "option": "A \u2014 declare an estimand computable from the sealed bytes AS THEY ARE, against the FEED",
+  "primary_statistic_recommended": "MATCHED_VOLUME",
+  "re_seal_NOT_recommended": true,
+  "the_second_contradiction_named": "v2 declares the pairing BY_THRESHOLD; the interim declares BY_THRESHOLD explicitly NOT primary. Both cannot be the primary, and this names it rather than silently picking.",
+  "who_decides": "the coordinator, with the reviewer's filing. This RECOMMENDS (rule 14).",
+  "why": "it is the one with a RULE cited (CLAUDE.md rule 7: controls matched on the DECISION VARIABLE) and the one the two already-opened days were actually read with. BY_THRESHOLD is reported BESIDE it.",
+  "why_not": "the dispatch offered a re-seal at ~5 x 23 min at 8G. It is not needed: every field the estimand names is already in the feed BY DESIGN, and the interim already computed the statistic from it. Re-scoring to obtain fields that exist would spend two hours to arrive where the artifacts already are."
+ },
+ "R_529_A_UP_FRONT": "THIS READ ESTABLISHES DIRECTION AND CONSISTENCY AND NEVER A HOLM-CLEARING VERDICT (R-529(A)).",
+ "THE_CORRECTION": {
+  "and_that_is_backwards": "the scores cannot support the declared estimand and the feed can",
+  "round_52s_refusal_stands": "it was correct ABOUT THE SCORES. What it did not establish is whether the right file exists. It does.",
+  "v2_said": "the read OPENS be_forward_day_SEALED_scores_<DAY>.json and the FEED STAYS SEALED",
+  "v3_says": "the read OPENS be_forward_day_SEALED_feed_<DAY>.jsonl; the SCORES stay sealed, because the estimand does not need them and opening more than it needs is consumption without purpose (rule 11)"
+ },
+ "as_of_utc": "2026-09-06T07:16:48Z",
+ "carried_forward_from_v2_unchanged": [
+  "the permutation floors at both readings, conservative resolved",
+  "the required post-read byte-identity recompute, VOID on mismatch",
+  "the Gate-1 separation, checked against the paths actually opened"
+ ],
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "decides_nothing": "REPORTED (rule 14).",
+ "estimand_inputs": {
+  "every_input_present": true,
+  "in_the_SCORES_instead": false,
+  "per_requirement": {
+   "L = 50 ms resolution": {
+    "all_present": true,
+    "fields": [
+     "t0",
+     "t_start"
+    ]
+   },
+   "realised cents": {
+    "all_present": true,
+    "fields": [
+     "value_cents",
+     "preventable_shares",
+     "level"
+    ]
+   },
+   "the ACTION unit (slug, side, gen)": {
+    "all_present": true,
+    "fields": [
+     "slug",
+     "side",
+     "gen"
+    ]
+   },
+   "the INCUMBENT, as a pair": {
+    "all_present": true,
+    "fields": [
+     "score",
+     "score_incumbent"
+    ]
+   }
+  },
+  "why_the_scores_cannot": "be_forward_day.seal writes (t0, expected_cancel_value) from ONE fit: no incumbent, no action identity beyond t0, no realised cents (BE round 52)"
+ },
+ "feed": {
+  "fields": [
+   "slug",
+   "side",
+   "gen",
+   "t0",
+   "t_start",
+   "score",
+   "score_incumbent",
+   "any_fill_ahead",
+   "value_cents",
+   "preventable_shares",
+   "level"
+  ],
+  "protocol": "BE_FORWARD_METRIC_FEED_V1",
+  "read_at_the_writer_not_by_opening": true,
+  "source": "be_forward_day.FEED_FIELDS",
+  "the_writers_own_words": "The feed the action-level estimand consumes. Named here so a checker can assert the driver emits it without importing the metric module."
+ },
+ "interim_evidence": {
+  "days": [
+   "20260901",
+   "20260902"
+  ],
+  "it_computed_net_cents_not_a_sign_flip": true,
+  "latency_ms": 50,
+  "primary_statistic_definition": "net cents (candidate at its frozen theta) MINUS net cents (incumbent at the theta that makes the incumbent cancel the SAME NUMBER of actions the candidate actually cancelled)",
+  "primary_statistic_name": "MATCHED_VOLUME",
+  "reported_beside_and_NOT_primary": [
+   "BY_THRESHOLD",
+   "BY_COUNT"
+  ],
+  "so_which_half_was_ever_computable": "the NET-CENTS half, and it was not merely computable -- IT WAS COMPUTED, on 09-01 and 09-02, the exact two days v2 calls re-reads. The 'window-level sign-flip of paired increments' v2 inherited in one place was never the statistic those days were read with.",
+  "source": "live/pm_research/declarations/be_interim_declaration_v1.json (the interim's OWN declaration) and be_read_cells.py (its producer) -- never a sealed file",
+  "status_of_the_interim": "INTERIM ON AN INCOMPLETE RACE",
+  "what_it_read": "be_read_cells.load_two_arm_feed(path, latency_ms) -- the FEED, streamed, refusing a one-arm feed BY NAME because 'the declared estimand is an increment OVER the incumbent'",
+  "why_BY_THRESHOLD_is_not_primary": "CLAUDE.md rule 7: controls are matched on the DECISION VARIABLE (action count). BY_THRESHOLD is not matched on it and BY_COUNT matches it only by letting each arm pick its own cutoff from the data being scored, which is non-causal"
+ },
+ "nothing_was_read_to_produce_this": "the interim's declaration and two source files; no sealed artifact was opened",
+ "opens_nothing": true,
+ "protocol": "BE_RACE_READ_DECLARATION_V3",
+ "rule_11": {
+  "09_01_and_09_02_remain_RE_READS": true,
+  "floors_unchanged": "both readings still computed, conservative resolved (0.25 on the 5/3 split)",
+  "why": "they were opened under the interim and this read does not un-open them"
+ },
+ "supersedes": {
+  "artifacts": [
+   "be_race_read_declaration_v1.json",
+   "be_race_read_declaration_v2.json"
+  ],
+  "rule": "13 -- vN+1; v1 and v2 are NOT edited",
+  "what_changes": "WHICH FILE THE READ OPENS, and which of the two statistics v2 carried is the one. No number moves; nothing has been read."
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "THE_SPLIT_QUESTION_IS_NOT_MINE": {
+  "computed_from_the_build_not_a_literal": true,
+  "consequence_if_DE_rules_otherwise": "the tape is rebuilt; it is one day and it is cheap relative to the fragment",
+  "corrected_because": "reviewer BE-51 1.3: `what_this_build_did` was a LITERAL saying 'day fragment -> TRAIN', which the round-51 split correction made FALSE OF THE BUILD THAT WROTE IT -- rule 10, in my own emitter, and it was live code so every future receipt would have carried it. The emitter now computes it.",
+  "mechanism": "build_state_tape_v2 maps its two inputs onto the two splits: (('train', FRAG), ('score', TOP))",
+  "status": "RULED \u2014 the day's rows are the SCORE split. A ruled forward day is not trained on. (Superseded the PROVISIONAL status this field carried while the question was open.)",
+  "what_this_build_did": "day fragment -> SCORE; an explicitly EMPTY file -> TRAIN",
+  "why_it_bites_here": "those are two POPULATIONS (eraB, top-up), not two feature sets. A one-day Gate-1 tape has ONE population, so one split has no input."
+ },
+ "WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY": {
+  "corrected_from": "the first 09-03 tape put the day in TRAIN and left SCORE empty; that artifact is moved aside as .WRONG_SPLIT and superseded",
+  "split": "score",
+  "why": "a RULED FORWARD DAY is not trained on. Every row is a SCORE row that the PINNED heads score at their PINNED thetas to produce `asm`; nothing is fitted here.",
+  "why_the_label_is_not_cosmetic": "`phase2_arms.tape_index` filters `r['split'] != split`, so the label decides which index a row lands in -- and a forward day labelled `train` reports as a day the heads were FITTED on, which is the look-ahead-shaped misreport"
+ },
+ "build_ref": "3bd2c2f501a42f6cbdb447d132a98b67be4803cb",
+ "coin": "btc",
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day": "20260903",
+ "decides_nothing": "REPORTED (rule 14).",
+ "guard": {
+  "refuses_any_existing_path": true,
+  "refuses_existing_state_tapes": [
+   "phase2_state_tape_v2.json",
+   "phase2_state_tape_v5.QUARANTINED_ZERO_ROW.json",
+   "phase2_state_tape_v5.QUARANTINED_tape6d_286.json",
+   "phase2_state_tape_v5.json"
+  ],
+  "required_stem": "phase2_state_tape_gate1_"
+ },
+ "inputs": {
+  "score_split": {
+   "THE_DAY'S_ROWS": true,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260903_btc.json",
+   "sha256": "2860832a66e820cad0b2ee039740692d4d17f3fec11ee4874ef6ef9b244f0764"
+  },
+  "train_split": {
+   "EMPTY_BY_CONSTRUCTION": true,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260903_btc.EMPTY_SCORE.json"
+  }
+ },
+ "no_assembly_run": true,
+ "no_book_built": true,
+ "protocol": "BE_GATE1_STATE_TAPE_V3",
+ "resources": {
+  "cap_gb": 8.0,
+  "cap_raised": false,
+  "peak_rss_gb": 4.741,
+  "wall_s": 1471.6
+ },
+ "supersedes": {
+  "rule": "13 -- vN+1; v1 and v2 are NOT edited and stay readable without `git show`",
+  "v1": {
+   "note": "the BE-50 receipt, train-split; its tape is phase2_state_tape_gate1_20260903_btc.WRONG_SPLIT.json",
+   "path": "be_gate1_state_tape_receipt_20260903_btc.json",
+   "sha256": "bddb56437ef337333e7a6772c10aa210835a3ae9fe518e41a89ae0780808c028"
+  },
+  "v2": {
+   "path": "be_gate1_state_tape_receipt_20260903_btc.v2.json",
+   "sha256": "ebb2d8ada42bb5d11ceda1ea2e79e644322ac2b4bc6291c887821af824714005"
+  },
+  "what_changed": "TWO FIELDS, both prose: `what_this_build_did` (was false of the build) and `status` (was PROVISIONAL on a question since ruled). No number moves; the tape is the same bytes."
+ },
+ "tape": {
+  "bytes": 991078272,
+  "n_rows": 544286,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260903_btc.json",
+  "sha256": "9de88da950598e8603f913a4166491e1a3d0da7c3c355f0ebaef8383b63310bf"
+ }
+}

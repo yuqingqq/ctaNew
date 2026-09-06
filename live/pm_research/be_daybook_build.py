@@ -102,7 +102,9 @@ def day_tape_sha(day: str, coin: str = COIN) -> str | None:
     return None
 
 
-def assert_day_tape(day: str, coin: str = COIN) -> dict:
+def assert_day_tape(day: str, coin: str = COIN, *,
+                    tape: Path | None = None,
+                    receipt_sha: str | None = None) -> dict:
     """THE ASSEMBLY MUST READ THE DAY'S TAPE, AND TODAY IT CANNOT.
 
     `phase2_arms.tape_index` reads the MODULE CONSTANT `TAPE_PATH`
@@ -118,11 +120,16 @@ def assert_day_tape(day: str, coin: str = COIN) -> dict:
     item 2, not taken here."""
     import be_gate1_state_tape as TAPEMOD
     import phase2_arms as PA
-    want = TAPEMOD.out_path(day, coin)
+    # `tape`/`receipt_sha` are FIXTURE INJECTION POINTS. The reviewer could
+    # not drive this guard from a worktree (BE-51 1.x): it reached for the
+    # ledger's tape and receipt, which a worktree does not carry. Injecting
+    # them makes the guard drivable anywhere without weakening it -- the
+    # real path is still the default.
+    want = Path(tape) if tape is not None else TAPEMOD.out_path(day, coin)
     if not want.exists():
         raise BookRefused(
             f"REFUSED: the day's tape {want.name} does not exist.")
-    sha = day_tape_sha(day, coin)
+    sha = receipt_sha or day_tape_sha(day, coin)
     if not sha:
         raise BookRefused(
             f"REFUSED: no SCORE-split builder receipt for {day} {coin}. The "
@@ -143,11 +150,32 @@ def assert_day_tape(day: str, coin: str = COIN) -> dict:
             f"is DE's surface (reviewer BE48, item 2). Not raised here, and "
             f"not worked around.")
     return {"tape": str(want), "is_the_days_tape": True,
+            "fixture_injected": tape is not None,
             "sha256_from_receipt": sha,
             "default_constant_no_longer_blocks": True,
             "why": "phase2_arms.tape_index and build_tape_index now take a "
                    "`path` (BE round 52 item 1), so the assembly indexes the "
                    "day's tape and verifies its digest at load"}
+
+
+def _flock_mode(lock_path) -> str | None:
+    """WRITE (exclusive) or READ (shared), read from /proc/locks.
+
+    `flock -n` takes LOCK_EX; `flock -s -n` takes LOCK_SH and TWO holders
+    then coexist. The fd is present either way, so holding it is not
+    evidence of exclusion."""
+    import os
+    try:
+        st = os.stat(str(lock_path))
+        want = f"{st.st_dev >> 8:02x}:{st.st_dev & 0xff:02x}:{st.st_ino}"
+        for line in open("/proc/locks"):
+            f = line.split()
+            if len(f) >= 6 and f[1] == "FLOCK" and f[3] in ("READ", "WRITE"):
+                if f[5].endswith(f":{st.st_ino}") or f[5] == want:
+                    return f[3]
+    except OSError:
+        pass
+    return None
 
 
 def assert_rule20(*, fixture: bool = False) -> dict:
@@ -163,6 +191,22 @@ def assert_rule20(*, fixture: bool = False) -> dict:
     w = dict(RUN.wrapper_observed())
     w["delegated_to"] = "de_multiday_gate1_runner.wrapper_observed"
     w["fixture"] = fixture
+    # THE REVIEWER'S FINDING (round 53): TWO `flock -s` HOLDERS BOTH CERTIFY.
+    # A shared lock is not mutual exclusion, and "the fd is held" cannot tell
+    # the two apart -- so the MODE is read from /proc/locks, where an
+    # exclusive flock is ADVISORY WRITE and a shared one is READ.
+    w["lock_mode"] = _flock_mode(RUN.HEAVY_RUN_LOCK)
+    w["exclusive"] = w["lock_mode"] == "WRITE"
+    w["why_mode_not_just_held"] = ("two `flock -s` holders would both report "
+                                   "the fd and both certify; only WRITE is "
+                                   "mutual exclusion")
+    if not fixture and w.get("heavy_run_lock_held") and not w["exclusive"]:
+        raise BookRefused(
+            f"REFUSED: the heavy-run lock is held in mode "
+            f"{w['lock_mode']!r}, not WRITE. A SHARED (`flock -s`) lock lets "
+            f"a second heavy run take it at the same time and both would "
+            f"certify -- which is not one-heavy-run-at-a-time. Take it "
+            f"exclusively (`flock -n`, the default).")
     if not fixture and not w.get("heavy_run_lock_held"):
         raise BookRefused(
             "REFUSED: a real day is HEAVY BY CONSTRUCTION and this process "
@@ -474,7 +518,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 15
+EXPECTED_CHECKS = 18
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -647,6 +691,44 @@ def selftest() -> int:
     ok(_PA.assert_tape_for_day(None)["is_the_default"] is True,
        "and the CONSUMED HOUR still uses the default with no day named -- "
        "the parameter is additive and changes no existing call")
+
+    # ---- THE REVIEWER'S ROUND-53 FINDING, DRIVEN BOTH WAYS ---------------
+    import fcntl as _fc, subprocess as _sp, tempfile as _tf
+    with _tf.NamedTemporaryFile(suffix=".lock", delete=False) as _lk:
+        _lp = _lk.name
+    _probe = ("import sys,fcntl,os;f=open(sys.argv[1],'w');"
+              "fcntl.flock(f,fcntl.LOCK_EX if sys.argv[2]=='EX' "
+              "else fcntl.LOCK_SH);"
+              "sys.path.insert(0,%r);import be_daybook_build as B;"
+              "print(B._flock_mode(sys.argv[1]))" % str(HERE))
+    _ex = _sp.run([sys.executable, "-c", _probe, _lp, "EX"],
+                  capture_output=True, text=True).stdout.strip()
+    _sh = _sp.run([sys.executable, "-c", _probe, _lp, "SH"],
+                  capture_output=True, text=True).stdout.strip()
+    Path(_lp).unlink(missing_ok=True)
+    ok(_ex == "WRITE" and _sh == "READ",
+       f"LOCK MODE IS READ FROM /proc/locks AND DISTINGUISHES THE TWO: "
+       f"LOCK_EX -> {_ex!r}, LOCK_SH -> {_sh!r}. The reviewer's finding is "
+       f"that TWO `flock -s` holders both certify -- holding the fd is not "
+       f"evidence of exclusion, and only WRITE is")
+
+    # ---- THE BLOCKER GUARD, DRIVEN FROM ANY TREE (reviewer BE-51) --------
+    import tempfile as _tf3
+    with _tf3.TemporaryDirectory() as _td3:
+        _fx = Path(_td3) / "phase2_state_tape_gate1_20260903_btc.json"
+        _fx.write_text("{}")
+        _r3 = assert_day_tape("20260903", tape=_fx, receipt_sha="abc123")
+        ok(_r3["fixture_injected"] and _r3["sha256_from_receipt"] == "abc123",
+           "THE BLOCKER GUARD IS DRIVABLE FROM ANY TREE: a fixture tape and "
+           "a fixture digest admit, so a reviewer in an R-397 worktree can "
+           "drive it without the ledger's artifacts")
+        try:
+            assert_day_tape("20260903", tape=Path(_td3) / "absent.json")
+            ok(False, "an absent fixture tape must refuse")
+        except BookRefused as e:
+            ok("does not exist" in str(e),
+               "KNOWN-BAD, on the fixture path too: an absent tape REFUSES, "
+               "so the injection does not weaken the guard it makes drivable")
 
     return _finish(checks, fails, skipped)
 
