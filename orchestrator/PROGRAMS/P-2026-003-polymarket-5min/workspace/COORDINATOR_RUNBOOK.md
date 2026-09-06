@@ -361,7 +361,7 @@ recorded as R-495.
 
 ## 6. Standing prohibitions (coordinator)
 
-**A HEAVY RUN IS NEVER A CHILD OF A TOOL SHELL (R-628).** `systemd-run --scope` from a Claude Code Bash task dies when the harness stops that task (the same mechanism that killed the coordinator's shell waiters earlier today). Heavy runs launch as transient SERVICES (`systemd-run --user --unit=… -- flock -n <lock> <cmd>`, no `--scope`); a GO names that form.
+**A HEAVY RUN IS NEVER A CHILD OF A TOOL SHELL (R-628).** `systemd-run --scope` from a Claude Code Bash task dies when the harness stops that task (the same mechanism that killed the coordinator's shell waiters earlier today). Heavy runs launch as transient SERVICES (`systemd-run --user --unit=… -- flock -n <lock> <cmd>`, no `--scope`); a GO names that form. **The test is the payload's PPid, measured never argued (REV harvest, R-642): under a transient service it is `systemd --user` (pid 1004 here); under a `--scope` it is the harness (`claude`). Never demonstrate it with `kill -TERM -<pgid>` — that reached the harness's own tree twice.** **The journal is NOT the record (R-641):** copy a journal number into an artifact at the moment of reading with the retention state named; a receipt carries its own journal lines at emit.
 
 **NEVER TOUCH A SEAT'S WORKTREE WHILE THE SEAT WORKS (R-627).** Symlink restores, refreshes and file restores in a seat worktree happen only when that seat is idle and told; read every script's output before reporting it done (two coordinator errors on wt-da, 12:03–12:04Z).
 
