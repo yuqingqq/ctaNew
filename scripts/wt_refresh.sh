@@ -1,15 +1,16 @@
 #!/bin/bash
-# Refresh a seat worktree to origin's tip WITHOUT materialising data/ (R-625).
-# data/ is a symlink to the canonical ledger (R-553); sparse-checkout excludes
-# the tracked artifacts under data/ so no checkout can replace the symlink (REV 59 §8).
+# Refresh a seat worktree to origin's tip and keep data/ the ledger SYMLINK (R-553/R-554/R-625).
+# Why a script: a bare `checkout --detach` materialises every NEW tracked artifact under data/
+# (they arrive without the skip-worktree bit) and replaces the symlink with a directory
+# (REV 59 §8). Sparse-checkout does not help: under it git ignores update-index --skip-worktree.
 set -e
-WT="${1:?usage: wt_refresh.sh <worktree> [ref]}"; REF="${2:-origin/mm-research}"
+WT="${1:?usage: wt_refresh.sh <worktree> [ref]}"; REF="${2:-origin/mm-research}"; LEDGER=/home/yuqing/ctaNew/data
+git -C "$WT" sparse-checkout disable >/dev/null 2>&1 || true
 git -C "$WT" fetch -q origin
-git -C "$WT" sparse-checkout init --no-cone >/dev/null 2>&1 || true
-git -C "$WT" sparse-checkout set '/*' '!/data/' >/dev/null
-git -C "$WT" checkout -q --detach "$REF" 2>/dev/null || git -C "$WT" checkout -q --detach "$REF"
-# R-554: mark every tracked file under data/ skip-worktree (new landings arrive without the bit)
-git -C "$WT" ls-files data | xargs -r git -C "$WT" update-index --skip-worktree 2>/dev/null || true
-if [ ! -L "$WT/data" ]; then rm -rf "$WT/data"; ln -s /home/yuqing/ctaNew/data "$WT/data"; fi
-[ "$(readlink -f "$WT/data")" = "/home/yuqing/ctaNew/data" ] || { echo "REFUSED: $WT/data is not the ledger symlink"; exit 2; }
-echo "$WT at $(git -C "$WT" rev-parse --short HEAD); data -> $(readlink "$WT/data"); status lines: $(git -C "$WT" status --short | wc -l)"
+[ -L "$WT/data" ] && rm "$WT/data"                       # drop the symlink so the checkout cannot write through it
+git -C "$WT" checkout -q --detach "$REF"                # materialises data/ as a directory of tracked files
+git -C "$WT" ls-files data | xargs -r git -C "$WT" update-index --skip-worktree   # R-554, covering the new ones
+rm -rf "$WT/data" && ln -s "$LEDGER" "$WT/data"          # the ledger symlink, R-553
+[ "$(readlink -f "$WT/data")" = "$LEDGER" ] || { echo "REFUSED: $WT/data is not the ledger symlink"; exit 2; }
+N=$(git -C "$WT" status --short | grep -vc '^?? data$' || true)
+echo "$WT at $(git -C "$WT" rev-parse --short HEAD); data -> $(readlink "$WT/data"); skip-worktree $(git -C "$WT" ls-files -v data | grep -c '^S') / $(git -C "$WT" ls-files data | wc -l); other status lines: $N"
