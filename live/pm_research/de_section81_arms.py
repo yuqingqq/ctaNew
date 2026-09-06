@@ -1171,7 +1171,10 @@ def run_arms(argv=None):
                 # ROUND 65: the RANDOM-DECISION denominator. A cancel is
                 # drawn from every cancellable generation, not from the
                 # filling ones (BE `4c17646`).
-                R.generations_all(ref)),
+                R.generations_all(ref),
+                # R-546: THIS IS THE REAL EMISSION, so a cited-baseline
+                # cascade that fails BE's published headline REFUSES it.
+                enforce_published_headline=True),
             "why_these_three_together": (
                 "the tail says WHERE the book's P&L lives, `r` says what "
                 "an overlay must beat and what the body already exceeds, "

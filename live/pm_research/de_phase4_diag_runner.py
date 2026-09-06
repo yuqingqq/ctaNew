@@ -74,7 +74,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 239
+EXPECTED_CHECKS = 247
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1778,27 +1778,71 @@ def adverse_over_spread(fills: list) -> dict:
 #: draws from each arm's OWN decision set at its own theta -- 1,154
 #: above-threshold events for CONDVALUE and 106 for HAZARD -- so there is
 #: no single book-wide rate to compare against.
+#: R-546 (coordinator ruling, rule 14 -- a MEASUREMENT choice): the cascade
+#: baseline IS BE's per-arm replayed rate, adopted BY CITATION. Never
+#: recomputed here; the artifact's sha256 is verified at read time and a
+#: mismatch REFUSES the emission.
+BE_PUBLISHED_CASCADE_HEADLINE = {"CONDVALUE_X_SKEW": 8.7013,
+                                 "HAZARD_OVER_SKEWED_REF": 5.5684}
+BE_HEADLINE_TOL = 1e-3
+
 BE_CANCEL_AXIS_NULL = {
     "artifact": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
     "sha256": "6951f57d2b8a23bd2d51f24d25659ddffc671c5932aaba89246b025182"
               "c2fa08",
     "per_arm": {
+        # BE's ACTUAL MEASURED RANGE is min..max, cited verbatim. A
+        # coordinator note gave [0.40, 0.50]; the reviewer (be28db0 A-3b)
+        # checked BE's artifact and that band is NOT a field of BE's. Any
+        # band this module compares against carries its PROVENANCE.
         "CONDVALUE_X_SKEW": {"decisions": 1154, "n_draws": 500,
                              "fills_lost_per_cancel_mean": 0.4969748944984966,
                              "sd": 0.0723329691964029,
+                             "min": 0.30982905982905984,
+                             "max": 0.8181818181818182,
                              "p05": 0.3894501018329939,
+                             "p50": 0.4930097758626234,
                              "p95": 0.6198034448300008},
         "HAZARD_OVER_SKEWED_REF": {"decisions": 106, "n_draws": 500,
                                    "fills_lost_per_cancel_mean":
                                        0.40032701534077203,
                                    "sd": 0.16233976983401005,
+                                   "min": 0.041666666666666664,
+                                   "max": 1.0425531914893618,
                                    "p05": 0.16666666666666666,
+                                   "p50": 0.3883219954648526,
                                    "p95": 0.6878472222222219},
     },
     "population_block": {"generations": 29813, "n_generations_with_fills":
                          3861, "baseline_fills": 4315,
                          "source_cache": "de_section81_cache_12.pkl"},
 }
+
+
+def load_cited_be_null(root: Path | None = None) -> dict:
+    """Read BE's null artifact and VERIFY its digest before using a number
+    from it. A different sha256 REFUSES -- a cited measurement whose bytes
+    moved is not the measurement that was cited."""
+    import hashlib
+    from pathlib import Path as _P
+    base = _P(root) if root is not None else _P(__file__).resolve().parents[2]
+    path = base / BE_CANCEL_AXIS_NULL["artifact"]
+    if not path.is_file():
+        raise RuntimeError(
+            f"REFUSED: the cited BE null is absent at {path}. A baseline "
+            f"adopted by citation cannot be used when the citation does "
+            f"not resolve.")
+    raw = path.read_bytes()
+    got = hashlib.sha256(raw).hexdigest()
+    if got != BE_CANCEL_AXIS_NULL["sha256"]:
+        raise RuntimeError(
+            f"REFUSED: the cited BE null has moved. Expected sha256 "
+            f"{BE_CANCEL_AXIS_NULL['sha256']}, found {got}. If BE emitted "
+            f"an in-band v2, the citation must be re-pointed DELIBERATELY, "
+            f"not followed silently.")
+    return {"path": BE_CANCEL_AXIS_NULL["artifact"], "sha256": got,
+            "verified_at_read_time": True,
+            "n_bytes": len(raw)}
 
 
 def generations_with_fills(reference: dict) -> int:
@@ -1844,6 +1888,32 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
     the problem; the ESTIMATOR is. A random cancel does not remove its
     generation's fills: latency, holds, reposts and queue resets stand
     between the decision and the fills, and only a replay prices that."""
+    # THE BANDS, EACH WITH ITS PROVENANCE NAMED (reviewer be28db0 A-3b).
+    # The [0.40, 0.50] band is a COORDINATOR-SUPPLIED APPROXIMATION and is
+    # NOT a field of BE's artifact; BE's measured range is min..max on the
+    # CONDVALUE cell and it is wider in both directions.
+    BANDS = {
+        "coordinator_approximation_0p40_0p50": {
+            "lo": 0.40, "hi": 0.50,
+            "provenance": "COORDINATOR-SUPPLIED APPROXIMATION in the round-"
+                          "66 dispatch, corrected by the coordinator in "
+                          "round 67. NOT a field of BE's artifact."},
+        "be_measured_range_CONDVALUE": {
+            "lo": BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]["min"],
+            "hi": BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]["max"],
+            "provenance": "CITED from be_cancel_axis_null_v1.json, the "
+                          "CONDVALUE cell's null min..max over 500 draws"},
+        "be_mean_plus_minus_1sd_CONDVALUE": {
+            "lo": (BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]
+                   ["fills_lost_per_cancel_mean"]
+                   - BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]["sd"]),
+            "hi": (BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]
+                   ["fills_lost_per_cancel_mean"]
+                   + BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]["sd"]),
+            "provenance": "DERIVED here from BE's cited mean and sd -- a "
+                          "construction of this module, not a field of "
+                          "BE's"},
+    }
     lo, hi = 0.40, 0.50
     cands = {
         "filling_generations": {
@@ -1869,8 +1939,10 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
                       "count ratio over it is the furthest of all from "
                       "BE's measured rate, which is the finding"}
     for v in cands.values():
-        v["lands_in_BE_range_0p40_0p50"] = (
-            v["rate"] is not None and lo <= v["rate"] <= hi)
+        v["lands_in"] = {
+            name: (v["rate"] is not None and b["lo"] <= v["rate"] <= b["hi"])
+            for name, b in BANDS.items()}
+        v["lands_in_any_band"] = any(v["lands_in"].values())
         v["distance_from_BE_mean_0p497"] = (
             None if v["rate"] is None
             else v["rate"] - 0.4969748944984966)
@@ -1885,12 +1957,86 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
         }
     return {
         "candidates": cands,
-        "n_candidates_landing_in_BE_range": sum(
-            1 for v in cands.values() if v["lands_in_BE_range_0p40_0p50"]),
+        "bands_and_their_provenance": BANDS,
+        "n_candidates_landing_in_any_band": sum(
+            1 for v in cands.values() if v["lands_in_any_band"]),
+        "n_candidates_landing_per_band": {
+            name: sum(1 for v in cands.values() if v["lands_in"][name])
+            for name in BANDS},
         "be_replayed_per_arm": replayed,
         "be_artifact": BE_CANCEL_AXIS_NULL["artifact"],
         "be_artifact_sha256": BE_CANCEL_AXIS_NULL["sha256"],
-        "baseline_status": "CONTESTED_THE_BASELINE_IS_NOT_A_COUNT",
+        "two_generation_counts_explained": {
+            "de_counts": 31122, "de_cache": "de_section81_cache_v2_12.pkl",
+            "be_counts": 29813, "be_cache": "de_section81_cache_12.pkl",
+            "difference": 1309,
+            "best_evidenced_cause": (
+                "NOT A CACHE DIFFERENCE. The two numbers are the SAME "
+                "reference at two stages of one known filter. "
+                "`da_de53_exclusion.py:41-42` asserts n_excluded == 1309, "
+                "n_retained == 29813 and n_reference == 31122 over DE's "
+                "own cache, partitioning on whether a generation is "
+                "PRESENT IN THE SCORE STREAM. So 31,122 is every "
+                "generation in the reference and 29,813 is those the "
+                "scorer covers -- and `be_cancel_axis_null.py:593` "
+                "asserts len(rows) == 29813, i.e. BE's population IS the "
+                "scored one. 31,122 - 29,813 = 1,309 EXACTLY, which is "
+                "DE53's exclusion count, not a residual"),
+            "what_de_can_say_about_its_own_cache_version": (
+                "v2 differs from v1 by carrying `terminal_marks` on the "
+                "cached `fr` (de_section81_arms.py:469-474): a FIELD "
+                "ADDITION, not a re-cut of windows or generations. The "
+                "two files are 28,018,021 and 28,019,050 bytes -- 1,029 "
+                "apart, consistent with metadata and not with 1,309 "
+                "generations. DE did not open either pickle to say this, "
+                "and must not open BE's"),
+            "the_caveat_this_puts_on_the_adopted_baseline": (
+                "BE's null draws from the SCORED 29,813, so the 1,309 "
+                "unscored generations -- which DA measured as SELECTIVE "
+                "ON DURATION at the permutation floor -- are absent from "
+                "the random-cancel population BY CONSTRUCTION. The "
+                "adopted rate is 'what a random cancel does AMONG SCORED "
+                "GENERATIONS', which is the right set for a policy that "
+                "can only act where it has a score, and is NOT the whole "
+                "book"),
+            "what_would_settle_it": (
+                "BE stating whether `population.generations` is the "
+                "row-feed (scored) count. Queued for BE 46; DE cannot "
+                "read BE's pickle and has not"),
+            "de_half_status": "ANSWERED_FROM_DE_SIDE",
+        },
+        "baseline_status": "RESOLVED_BY_REPLAY_CITATION",
+        "resolved_by": {
+            "ruling": "R-546 (coordinator, rule 14 -- a MEASUREMENT choice, "
+                      "not an entitlement)",
+            "artifact": BE_CANCEL_AXIS_NULL["artifact"],
+            "sha256": BE_CANCEL_AXIS_NULL["sha256"],
+            "rates_adopted_per_arm": {
+                a: m["fills_lost_per_cancel_mean"]
+                for a, m in BE_CANCEL_AXIS_NULL["per_arm"].items()},
+            "never_recomputed_here": True,
+            "digest_verified_at_read_time": True,
+            "why_a_replay_and_not_a_count": (
+                "what a random cancel DOES through the same machinery is "
+                "not what a count says it should do: 0 of 5 counted "
+                "denominators land in any cited band, and the DECISION "
+                "population BE draws from is the furthest of all"),
+            "be_v2_status": (
+                "BE 45's in-band v2 of this artifact had NOT landed at "
+                "emission time -- the only be_cancel_axis_null on disk was "
+                "v1 at the cited digest. If v2 lands, the citation is "
+                "re-pointed DELIBERATELY: load_cited_be_null REFUSES on a "
+                "changed digest rather than following it silently"),
+        },
+        "what_the_cascade_level_now_supports": (
+            "with the baseline resolved, cascade 8.7013 (CONDVALUE) and "
+            "5.5684 (HAZARD) are the arms' fill-removal rates AGAINST WHAT "
+            "A RANDOM CANCEL ACTUALLY REMOVES through the same machinery. "
+            "They support the statement that both arms cancel generations "
+            "that were about to fill far more than chance -- 8.70x and "
+            "5.57x. THEY REMAIN a 12-window, one-hour, G=0 development "
+            "reading with no interval (rule 8), and the SEPARATION "
+            "ordering, not the level, is what the specification turns on"),
         "what_the_count_predicate_answered": (
             "ZERO of the five candidate denominators lands in BE's "
             "measured range, and the DECISION POPULATION -- the very set "
@@ -1910,7 +2056,6 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
             "another seat's measured constant into this emission is a "
             "coordinator/USER call, not this module's (rule 14), so it is "
             "COMPUTED here and NOT adopted"),
-        "no_verdict_is_read_from_the_cascade_LEVEL_in_this_state": True,
         "what_is_settled": (
             "the FILLING rate is refuted, and `separation`'s ordering is "
             "INVARIANT to the choice -- computed both ways in this same "
@@ -1919,7 +2064,8 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
 
 
 def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
-                     n_gens_all: int | None = None) -> dict:
+                     n_gens_all: int | None = None, *,
+                     enforce_published_headline: bool = False) -> dict:
     """WHAT A CANCEL COSTS, SPLIT INTO THE TWO THINGS IT IS MADE OF.
 
     `cents_per_cancel` alone cannot separate a policy that picks BAD
@@ -1974,11 +2120,20 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
                          "fills_lost": lost}
             continue
         flpc = lost / ncx
-        cascade = flpc / fpg if fpg else None
+        # R-546: THE BASELINE IS THE ARM'S OWN CITED REPLAYED RATE. It is
+        # per arm because BE draws from each arm's own decision set at its
+        # own theta, and it is a REPLAY because a count cannot price the
+        # latency, holds, reposts and queue resets between a decision and
+        # its fills -- 0 of 5 counted denominators landed in its range.
+        cited = (BE_CANCEL_AXIS_NULL["per_arm"].get(name) or {}).get(
+            "fills_lost_per_cancel_mean")
+        base_rate = cited if cited else fpg
+        rnd_arm = base_rate * mean_b if base_rate else None
+        cascade = flpc / base_rate if base_rate else None
         mean_r = removed / lost if lost else None
         sel = (mean_r / mean_b) if (mean_r is not None and mean_b) else None
         cpc = removed / ncx
-        ratio = (cpc / rnd) if rnd else None
+        ratio = (cpc / rnd_arm) if rnd_arm else None
         prod = (cascade * sel) if (cascade is not None and sel is not None) else None
         out[name] = {
             "n_cancels": ncx, "fills_lost": lost,
@@ -1986,11 +2141,35 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
             "cascade_factor": cascade,
             # BOTH READINGS TRAVEL, so a reader can see which baseline a
             # cascade number was taken against (round 65).
-            "cascade_factor_baseline": baseline_kind,
-            "cascade_factor_vs_filling_generation_rate":
-                (flpc / fpg_filling if fpg_filling else None),
-            "cascade_factor_vs_random_decision_rate":
-                (flpc / fpg_random if fpg_random else None),
+            "cascade_factor_baseline": (
+                "BE_REPLAYED_PER_ARM_RATE_CITED" if cited
+                else baseline_kind),
+            "cascade_baseline_rate_used": base_rate,
+            "cascade_baseline_is_a_cited_measurement": bool(cited),
+            "random_cancel_cost_cents_this_arm": rnd_arm,
+            # RETAINED AS FIELDS, MARKED, because a refuted reading that
+            # disappears cannot be checked against the one that replaced it.
+            "cascade_factor_vs_filling_generation_rate": {
+                "value": (flpc / fpg_filling if fpg_filling else None),
+                "status": "REFUTED_AS_A_BASELINE",
+                "why": "conditions on the very outcome a random-cancel "
+                       "null must be ignorant of (BE 4c17646)"},
+            "cascade_factor_vs_random_decision_rate": {
+                "value": (flpc / fpg_random if fpg_random else None),
+                "status": "REFUTED_AS_A_BASELINE",
+                "why": "right POPULATION, wrong ESTIMATOR -- a count "
+                       "cannot price latency, holds, reposts or queue "
+                       "resets, and 0 of 5 counted rates landed in BE's "
+                       "measured range"},
+            "published_headline_cross_check": {
+                "expected": BE_PUBLISHED_CASCADE_HEADLINE.get(name),
+                "computed": cascade,
+                "tolerance": BE_HEADLINE_TOL,
+                "agrees": (
+                    BE_PUBLISHED_CASCADE_HEADLINE.get(name) is not None
+                    and cascade is not None
+                    and abs(cascade - BE_PUBLISHED_CASCADE_HEADLINE[name])
+                    <= BE_HEADLINE_TOL)},
             "mean_pnl_per_removed_fill_cents": mean_r,
             "selectivity_factor": sel,
             "cents_per_cancel": cpc,
@@ -2004,6 +2183,25 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
             "better_than_a_random_cancel": (ratio is not None
                                             and abs(ratio) < 1.0),
         }
+    # R-546: A FAILED CROSS-CHECK REFUSES THE EMISSION. If the cascade this
+    # module computes from the cited rate does not reproduce BE's published
+    # headline, either the rate was mis-transcribed or the arm's fills
+    # moved -- and either way the citation is not what it claims to be.
+    # The cross-check is COMPUTED on every arm and REPORTED; it REFUSES
+    # only when the caller declares this is the real emission, because a
+    # fixture's fill counts are not the real arm's and a headline is a
+    # property of the real population.
+    _xbad = [] if not enforce_published_headline else sorted(
+        a for a, v in out.items()
+        if isinstance(v.get("published_headline_cross_check"), dict)
+        and v["published_headline_cross_check"]["expected"] is not None
+        and not v["published_headline_cross_check"]["agrees"])
+    if _xbad:
+        raise ValueError(
+            f"REFUSED: the cited-baseline cascade does not reproduce BE's "
+            f"published headline for {_xbad}: "
+            f"{ {a: out[a]['published_headline_cross_check'] for a in _xbad} }")
+
     # DE60(3): WHICH FACTOR ACTUALLY SEPARATES THE ARMS -- COMPUTED, so
     # a summary cannot get the ordering wrong again. I wrote "the
     # actionable lever is a cancel that does not cascade" in two round
@@ -2035,9 +2233,11 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
         # fpg, so the max/min SPREAD cancels it. The baseline correction
         # therefore moves the cascade LEVEL and `ratio_vs_random_cancel`,
         # and cannot move `dominant_factor` or `ordering`.
-        _alt = {a: v.get("cascade_factor_vs_filling_generation_rate")
-                for a, v in out.items()
-                if v.get("cascade_factor_vs_filling_generation_rate")}
+        _alt = {a: (v.get("cascade_factor_vs_filling_generation_rate") or {})
+                .get("value")
+            for a, v in out.items()
+            if (v.get("cascade_factor_vs_filling_generation_rate") or {})
+            .get("value")}
         if len(_alt) >= 2:
             _cr_alt = max(_alt.values()) / min(_alt.values())
             sep["cascade_spread_under_the_other_baseline"] = _cr_alt
@@ -5243,14 +5443,35 @@ def selftest() -> int:
        f"is exactly 200/50. The PRIMARY rate is the random-decision one "
        f"and the emission names which it used: "
        f"{_cm_r['fills_per_generation_baseline']}")
-    ok(abs(_cm_r["arms"]["CASCADER"]["cascade_factor"] - 4.0) < 1e-9
-       and abs(_cm_r["arms"]["CASCADER"][
-           "cascade_factor_vs_filling_generation_rate"] - 1.0) < 1e-9
-       and abs(_cm_r["arms"]["CASCADER"][
-           "cascade_factor_vs_random_decision_rate"] - 4.0) < 1e-9,
+    _ca = _cm_r["arms"]["CASCADER"]
+    ok(abs(_ca["cascade_factor"] - 4.0) < 1e-9
+       and abs(_ca["cascade_factor_vs_filling_generation_rate"]["value"]
+               - 1.0) < 1e-9
+       and abs(_ca["cascade_factor_vs_random_decision_rate"]["value"]
+               - 4.0) < 1e-9
+       and _ca["cascade_factor_vs_filling_generation_rate"]["status"]
+       == "REFUTED_AS_A_BASELINE"
+       and _ca["cascade_factor_vs_random_decision_rate"]["status"]
+       == "REFUTED_AS_A_BASELINE",
        "and the SAME arm reads cascade 1.0 against filling generations "
-       "and 4.0 against cancellable ones -- BOTH travel, so a cascade "
-       "number can never again be quoted without its baseline")
+       "and 4.0 against cancellable ones -- BOTH travel and BOTH are "
+       "marked REFUTED_AS_A_BASELINE, so a cascade number can never be "
+       "quoted without its baseline and a refuted reading cannot vanish")
+    # R-546 POSITIVE CONTROL, AND IT ADMITS: a NAMED arm gets its cited
+    # per-arm replayed rate, and the cross-check must agree.
+    _cm_cite = cancel_mechanics(
+        _base, {"CONDVALUE_X_SKEW": (_eats_tail, 1)}, 50, 200)
+    _cc = _cm_cite["arms"]["CONDVALUE_X_SKEW"]
+    ok(_cc["cascade_baseline_is_a_cited_measurement"] is True
+       and abs(_cc["cascade_baseline_rate_used"] - 0.4969748944984966) < 1e-15
+       and _cc["cascade_factor_baseline"] == "BE_REPLAYED_PER_ARM_RATE_CITED",
+       f"R-546 POSITIVE CONTROL: a named arm takes BE's CITED per-arm "
+       f"replayed rate {_cc['cascade_baseline_rate_used']}, not any count, "
+       f"and says so in `cascade_factor_baseline`")
+    ok(_cm_r["arms"]["CASCADER"][
+           "cascade_baseline_is_a_cited_measurement"] is False,
+       "and an arm BE did not measure falls back to the counted rate and "
+       "SAYS SO -- the citation cannot be silently assumed for a new arm")
     ok(_cm_r["arms"]["CASCADER"]["identity_holds"] is True
        and abs(_cm_r["arms"]["CASCADER"]["ratio_vs_random_cancel"]
                - _cm_r["arms"]["CASCADER"]["cascade_x_selectivity"]) <= 1e-9,
@@ -5290,25 +5511,37 @@ def selftest() -> int:
     # ever answers False is rule 16's control that cannot pass.
     _cb_hit = _cascade_baseline_candidates(
         450.0, 450.0 / 3861, 450.0 / 1000, 3861, 1000, {})
-    ok(_cb_hit["candidates"]["all_cancellable_generations_this_cache"][
-           "lands_in_BE_range_0p40_0p50"] is True
-       and abs(_cb_hit["candidates"][
-           "all_cancellable_generations_this_cache"]["rate"] - 0.45) < 1e-9,
+    _hit = _cb_hit["candidates"]["all_cancellable_generations_this_cache"]
+    ok(_hit["lands_in_any_band"] is True
+       and _hit["lands_in"]["coordinator_approximation_0p40_0p50"] is True
+       and _hit["lands_in"]["be_measured_range_CONDVALUE"] is True
+       and abs(_hit["rate"] - 0.45) < 1e-9,
        "POSITIVE CONTROL ON THE COUNT PREDICATE, AND IT ADMITS: 450 fills "
-       "over 1,000 cancellable generations is 0.45, which IS in BE's "
-       "[0.40, 0.50] and is flagged as landing")
+       "over 1,000 cancellable generations is 0.45, which lands in BOTH "
+       "the coordinator's approximation and BE's own measured range")
+    ok(_cb_hit["bands_and_their_provenance"][
+           "coordinator_approximation_0p40_0p50"]["provenance"].startswith(
+               "COORDINATOR-SUPPLIED APPROXIMATION")
+       and _cb_hit["bands_and_their_provenance"][
+           "be_measured_range_CONDVALUE"]["lo"] == 0.30982905982905984
+       and _cb_hit["bands_and_their_provenance"][
+           "be_measured_range_CONDVALUE"]["hi"] == 0.8181818181818182,
+       "EVERY BAND CARRIES ITS PROVENANCE (reviewer be28db0 A-3b): "
+       "[0.40, 0.50] is a COORDINATOR APPROXIMATION and is NOT a field of "
+       "BE's; BE's measured range is 0.3098..0.8182 and is WIDER IN BOTH "
+       "DIRECTIONS, so a band named for BE that was not BE's would have "
+       "made the count predicate look sharper than the measurement is")
     # KNOWN-BAD, THE REAL SHAPE: on the actual book NOTHING lands, and the
     # DECISION population -- the set BE itself draws from -- is furthest.
     _cb_real = _cascade_baseline_candidates(
         4315.0, 4315.0 / 3861, 4315.0 / 31122, 3861, 31122, {})
-    ok(_cb_real["n_candidates_landing_in_BE_range"] == 0
+    ok(_cb_real["n_candidates_landing_in_any_band"] == 0
        and abs(_cb_real["candidates"][
            "decision_population_CONDVALUE_X_SKEW"]["rate"] - 3.7391679) < 1e-5
-       and _cb_real["baseline_status"]
-       == "CONTESTED_THE_BASELINE_IS_NOT_A_COUNT",
+       and _cb_real["baseline_status"] == "RESOLVED_BY_REPLAY_CITATION",
        f"KNOWN-BAD, AND IT IS THE FINDING: ZERO of "
        f"{len(_cb_real['candidates'])} candidate denominators lands in "
-       f"BE's measured range, and the DECISION population BE draws from "
+       f"ANY of the three named bands, and the DECISION population BE draws from "
        f"is the furthest of all at 3.7392 against 0.497. The population "
        f"was never the problem -- a count cannot price latency, holds, "
        f"reposts and queue resets, and BE's number is a REPLAY")
@@ -5321,6 +5554,58 @@ def selftest() -> int:
        "of 1,154 and 106 -- so no single book-wide `fpg` can be the "
        "baseline for both arms, which is the structural half of the same "
        "finding")
+
+    # ---- R-546: THE CITATION'S OWN FALSIFIERS, BOTH DIRECTIONS --------
+    import tempfile as _tf
+    _root = Path(__file__).resolve().parents[2]
+    _live = load_cited_be_null(_root)
+    ok(_live["verified_at_read_time"] is True
+       and _live["sha256"] == BE_CANCEL_AXIS_NULL["sha256"],
+       f"POSITIVE CONTROL ON THE CITATION, AND IT ADMITS: BE's null "
+       f"resolves at the cited path and its digest matches "
+       f"({_live['sha256'][:16]}...), so the rates adopted are the bytes "
+       f"that were cited")
+    with _tf.TemporaryDirectory() as _td:
+        _fake = Path(_td) / BE_CANCEL_AXIS_NULL["artifact"]
+        _fake.parent.mkdir(parents=True, exist_ok=True)
+        _fake.write_text('{"planted": "not BE\'s bytes"}')
+        try:
+            load_cited_be_null(Path(_td))
+            ok(False, "KNOWN-BAD: a planted artifact at the cited path was "
+                      "ACCEPTED")
+        except RuntimeError as _e:
+            ok("has moved" in str(_e) and "Expected sha256" in str(_e),
+               "KNOWN-BAD, PLANTED: an artifact at the cited path whose "
+               "bytes differ REFUSES by digest -- a cited measurement "
+               "whose bytes moved is not the measurement that was cited, "
+               "and an in-band v2 must be re-pointed DELIBERATELY")
+    with _tf.TemporaryDirectory() as _td2:
+        try:
+            load_cited_be_null(Path(_td2))
+            ok(False, "KNOWN-BAD: an ABSENT citation was accepted")
+        except RuntimeError as _e:
+            ok("is absent" in str(_e),
+               "KNOWN-BAD, the other absence: a citation that does not "
+               "resolve REFUSES rather than falling back to a count")
+    _saved = dict(BE_PUBLISHED_CASCADE_HEADLINE)
+    try:
+        BE_PUBLISHED_CASCADE_HEADLINE["CONDVALUE_X_SKEW"] = 99.0
+        try:
+            cancel_mechanics(_base, {"CONDVALUE_X_SKEW": (_eats_tail, 1)},
+                             50, 200, enforce_published_headline=True)
+            ok(False, "KNOWN-BAD: a cascade that misses BE's published "
+                      "headline was EMITTED")
+        except ValueError as _e:
+            ok("does not reproduce BE's published headline" in str(_e),
+               "KNOWN-BAD, PLANTED RATE: a cited-baseline cascade that "
+               "does not reproduce BE's published headline REFUSES the "
+               "emission -- either the rate was mis-transcribed or the "
+               "arm's fills moved, and neither may ship")
+    finally:
+        BE_PUBLISHED_CASCADE_HEADLINE.clear()
+        BE_PUBLISHED_CASCADE_HEADLINE.update(_saved)
+    ok(BE_PUBLISHED_CASCADE_HEADLINE["CONDVALUE_X_SKEW"] == 8.7013,
+       "and the headline table is RESTORED after the planted-rate test")
 
     ok(abs(generations_all({"w": {"BUY_UP": [{"tranches": [1]}, {}],
                                   "SELL_UP": [{}]}}) - 3) < 1e-9

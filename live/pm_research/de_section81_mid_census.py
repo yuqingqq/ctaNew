@@ -277,9 +277,24 @@ def oracle_probe(*, n_permutations: int = N_PERMUTATIONS,
 
 
 def _oracle_sha16() -> str:
+    """WHICH BYTES RAN -- the full digest of the oracle SOURCE, recorded in
+    every probe and in every refusal.
+
+    Reviewer be28db0 A-6: `PYTHONDONTWRITEBYTECODE=1` does NOT close the
+    stale-`__pycache__` hazard -- the interpreter was demonstrated reading
+    a stale `.pyc` under it. The mutants in DA's harness are the SAME BYTE
+    LENGTH as the originals (`0.5` -> `0.0`), so with second-granularity
+    mtime a restored file can be served from a stale cache. The durable
+    fixes are an `rmtree(__pycache__)` per mutant (the pattern at
+    `be_forward_day.py:2903`) or checked-hash pycs; what THIS module can do
+    is record the digest of the source it believes it imported, so a run
+    that read different bytes is detectable after the fact rather than
+    invisible."""
     import hashlib
-    return hashlib.sha256(
-        Path(PA.__file__).read_bytes()).hexdigest()[:16]
+    src = Path(PA.__file__)
+    if src.suffix == ".pyc":                                 # pragma: no cover
+        return f"PYC:{src.name}"
+    return hashlib.sha256(src.read_bytes()).hexdigest()
 
 
 def assert_oracle_live(*, n_permutations: int = N_PERMUTATIONS,
@@ -292,9 +307,13 @@ def assert_oracle_live(*, n_permutations: int = N_PERMUTATIONS,
         raise MidCensusRefused(
             "REFUSED: the imported oracle DID NOT FLAG a maximally "
             "selective exclusion (hours disjoint, TVD 1.0 by "
-            f"construction). It answered {probe['selective_arm']}. No "
-            "NOTHING_EXCLUDED or INDISTINGUISHABLE certification may be "
-            "taken from an instrument in this state.")
+            f"construction). It answered {probe['selective_arm']}. The "
+            f"oracle SOURCE digest at probe time was "
+            f"{probe['oracle_sha256_prefix']} -- record it, because a "
+            f"stale __pycache__ can make the bytes that RAN differ from "
+            f"the bytes on disk (reviewer A-6). No NOTHING_EXCLUDED or "
+            f"INDISTINGUISHABLE certification may be taken from an "
+            f"instrument in this state.")
     if not probe["balanced_arm"]["ORACLE_STAYED_SILENT"]:
         raise MidCensusRefused(
             "REFUSED: the imported oracle FLAGGED an exactly balanced "
