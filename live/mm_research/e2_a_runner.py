@@ -94,6 +94,46 @@ def carrying_commit() -> str:
     return r.stdout.strip() if r.returncode == 0 else "UNKNOWN"
 
 
+def wrapper_block() -> dict:
+    """WHAT THIS RUN ACTUALLY RAN UNDER -- rule 20 / R-575(C).
+
+    A receipt that does not say whether it ran inside the capped scope leaves
+    a reader unable to tell a wrapped run from an unwrapped one, and the two
+    have different resource meanings. Read from the process's own cgroup, so
+    it is a produced fact and not a claim about the command line.
+    """
+    scope, slice_ = None, None
+    try:
+        for line in Path("/proc/self/cgroup").read_text().splitlines():
+            path = line.rsplit(":", 1)[-1]
+            for part in path.split("/"):
+                if part.endswith(".scope"):
+                    scope = part
+                if part.endswith(".slice") and part != "user.slice":
+                    slice_ = part
+    except OSError:
+        pass
+    lock = ROOT / "data" / ".heavy_run.lock"
+    return {"rule": "SEAT_PROTOCOL rule 20 / R-575(C)",
+            "systemd_scope": scope,
+            "systemd_slice": slice_,
+            "ran_under_the_rule20_wrapper": slice_ == "research.slice",
+            "heavy_run_lock_path": str(lock),
+            "read_from": "/proc/self/cgroup, in this process",
+            "why_the_SLICE_and_not_the_scope": (
+                "the first version of this field tested `scope.startswith("
+                "'run-')` and reported TRUE for an UNWRAPPED run, because the "
+                "calling shell is itself inside a transient scope "
+                "(app.slice). A field that is true either way is a control "
+                "that cannot fail. `--slice=research.slice` is what the "
+                "rule-20 wrapper adds and nothing else in this session "
+                "does."),
+            "note": ("false means this step was NOT inside the capped "
+                     "scope. That is correct only for a step under 60 s and "
+                     "1 GiB that opens no tape; anything else takes the lock "
+                     "FIRST and REFUSES if it is held.")}
+
+
 def load_declaration() -> dict:
     if not DECL_PATH.is_file():
         raise E2ARefused(f"REFUSED: no declaration at {DECL_PATH}")
@@ -534,6 +574,7 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
                 if min_days is None else min_days)
 
     result = {"protocol": PROTOCOL, "carrying_commit": carrying_commit(),
+              "wrapper": wrapper_block(),
               "data_root_check": root_block,
               "ledger_root": {"data_root": str(ROOT),
                               "data_root_branch": E20.DATA_ROOT_BRANCH,
@@ -981,6 +1022,7 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
     receipt = {
         "protocol": PROTOCOL + "_FIXTURE",
         "carrying_commit": carrying_commit(),
+        "wrapper": wrapper_block(),
         "status": "FIXTURE_NO_DATA_TOUCHED",
         "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
                         "sha256": DECL_SHA},
@@ -1089,6 +1131,7 @@ def census(symbols, out_path: Path | None = None) -> dict:
     root = E20.require_canonical_root("P-2026-002 E2-A admission census")
     out = {"protocol": PROTOCOL + "_CENSUS",
            "carrying_commit": carrying_commit(),
+           "wrapper": wrapper_block(),
            "data_root_check": root,
            "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
                            "sha256": DECL_SHA},
@@ -1202,6 +1245,7 @@ def mechanism_check(sym: str, out_path: Path | None = None) -> dict:
         del book, trades, depth
     out = {"protocol": PROTOCOL + "_MECHANISM_CHECK",
            "carrying_commit": carrying_commit(),
+           "wrapper": wrapper_block(),
            "status": "MECHANISM_ONLY_ALL_COSTS_REDACTED",
            "data_root_check": root,
            "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
@@ -1288,6 +1332,7 @@ def _diagnose_tick_inner(sym, files, E1, root, out_path):
     out = {
         "protocol": PROTOCOL + "_TICK_DIAGNOSIS",
         "carrying_commit": carrying_commit(),
+        "wrapper": wrapper_block(),
         "data_root_check": root,
         "symbol": sym,
         "n_day_files": len(files),
