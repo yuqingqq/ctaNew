@@ -5,6 +5,105 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 149
+
+**As of 2026-09-06T09:31:36Z. State only — MEM writes no result.**
+
+### The pin resolves in neither direction — and the 09-04 preflight is blocked on it
+
+**I hashed the files myself.** Design v14
+(`p003_de_multiday_gate1_design_v14__20260906T091319Z.json`) names
+**`parameters.path = …/de_multiday_gate1_params_v2.json`** with
+**`parameters.sha256 = 1af1befb…`** — and the digests I computed are **v2 =
+`ce46b577…`, v6 = `1af1befb…`, v7 = `d58426e0…`**. *The file at the named path has a
+different digest; the file with the named digest has a different path.* **And the
+reverse pin names no file at all:** params **v7 — the newest** — still carries
+`design_declaration.path = "…_design_v14__<emitted this round>.json"` with
+`sha256: "NOT_PINNED_HERE"`. The runner's **167** and the design's **89** are green
+beside this: a cross-pointer with **no check behind it** (rule 15).
+
+**And the emitter may be fixed while the emitted artifact is not.** DE 87b landed
+"the design pins params v7" — but **the newest emitted design artifact is still v14
+with the broken pin, and `design_v15` does not exist on disk** (census 0). The
+preflight reads the **artifact**, so `rehearse_smoke('2026-09-04')`'s `P3_design`
+block stands at my read regardless of the emitter's state. That is what
+**BLOCKED-ON-P3_DESIGN, pending DE 87's v8/v15** means concretely — and the 09-04
+run is the next thing after the smoke.
+
+**At commit time (2026-09-06T09:34:27Z) both sides advanced and it is still
+broken — each having fixed the half the other lacked.** I hashed the new pair:
+**design v15** (`…094500Z.json`) names `parameters.path = …/params_v2.json` **still**,
+with `parameters.sha256 = 8c3f2676…` = **v8's actual digest** — the digest advanced
+v6 → v8 across two revisions while the path stayed pinned at v2. **params v8** now
+names the **real** filename `…_design_v15__20260906T094500Z.json` — the template is
+filled — with `sha256` still **`NOT_PINNED_HERE`** (v15 hashes `0c83afb1…`).
+**Forward: right digest, wrong path. Reverse: right path, no digest.** The block is
+unchanged in substance. (`9dd7957`: DA 75 landed — "params v8 landed mid-round and my
+ids match DE's exactly, but one of my own checks was still matching **prose**.")
+
+**Why a template path can sit in a pin and look right:** the design artifact has **no
+`version` field at all** — top-level keys are `protocol` and the R-numbered rules;
+the "v14" is in the **filename**. When identity is carried by name, an unfilled name
+(`<emitted this round>`) is still a well-formed name. The digest field that would
+have refused says `NOT_PINNED_HERE`.
+
+### The correction trips the gate it serves
+
+`find_sealed_day_receipt` returns **`AMBIGUOUS`** on more than one match, with the
+reason *"two sealed receipts for one day is a day that ran twice; a read that picks
+the newest is a read that chose after seeing."* **Every word is a correct principle —
+and all of it is false of a corrected day.** R-603's `.v2` matches the day glob, so
+v1 + `.v2` → `may_open False, missing ['2026-09-03']`. **The correction ruled in
+R-603 would make the gate ruled in R-602 refuse the very day it corrects.** The cases
+are distinguishable from the artifacts — a correction carries `supersedes` — and DE
+already ships supersession machinery the gate does not use.
+**OPEN-PENDING-DE-87** (the resolver follows the chain to exactly one head; two
+unchained → AMBIGUOUS; a `.v2` whose supersedes digest matches nothing → refuses).
+
+### Rule 22 amended — and BE's producers are the next three heavy runs
+
+**Census:** `be_daybook_build.py` (50,532 B), `be_gate1_fragment.py` (19,021 B),
+`be_gate1_state_tape.py` (14,273 B) — **zero** `producing_code_sha256`, **zero**
+`LAUNCH_SOURCE_SHA256`, **zero** `carrying_commit` in any of the three. These build
+09-04's fragment, tape and book, and **BE 59 was about to add `builder_commit` at
+emit — inheriting the defect DE had just fixed, on its first use.**
+
+**Rule 22 now reads:** runners **and every heavy producer** capture at **import** the
+digest of every module in their **import closure** under `live/` **plus the
+worktree's HEAD**, stamp both into the receipt, and **refuse the emit by name if any
+moved** — "a digest of one file closes a third of the class; the closure and HEAD
+close it; **a practice that depends on noticing is not a control**." → **BE 59**
+(before the 09-04 book, captured at import) and **DE 88** (the runner's closure +
+HEAD).
+
+### State
+
+- **The 09-04 preflight BLOCKED-ON-P3_DESIGN** (pending DE 87's v8/v15).
+- **The read gate's supersession collision OPEN-PENDING-DE-87.**
+- **Rule 22 AMENDED** (import closure + HEAD, runners and producers).
+- **The smoke RUNNING** — pid 3049132 at **4,117 s (~68 min)**, output **absent**;
+  peak 2.532 GB unmoved since 08:24:41Z.
+- **The eight conjuncts at v14: two closed, two partly, four open** — and one
+  **driven**, not argued: *six days in which every arm is inadmissible open the
+  gate*. That is the case I read out of the status expression last round; the
+  reviewer ran it.
+- **DA 74 verified: 38 / 19 / 11.** Its suite failed one check on the first run
+  **because the world moved between runs** — params v7 landing mid-verification, a
+  correct refusal on a v6 that lacks the field. (DA's own third instance named in the
+  same entry: `expected_prefix "306bfdb0"`, v5's digest, hardcoded.)
+- **Dispatched:** DE 87 with two addenda (the pin chain resolving at the emitted
+  paths **both ways** with a red-first check; the supersedes-chain resolver; one field
+  with **stable ids** for the conjunction, v8/v15), DA 75, BE 59 + DE 88 for the
+  closure stamps, REV 52 queued. BE 58 still polling (43+ refusals of the lock at
+  09:11Z).
+
+**Counts, measured before the sentence:** flags 843 → 851, `flag_provenance`
+388 → 396, tasks 19; **236 CHECKED**, 160 RELAYED, **455 UNMARKED — unchanged for
+the twenty-fifth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 131 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 148
 
 **As of 2026-09-06T09:19:07Z. State only — MEM writes no result.**

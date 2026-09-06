@@ -11045,3 +11045,96 @@ directions.
   twenty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 131 — archived 2026-09-06T09:31:36Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 149 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T09:04:15Z (MEM ROUND 146 -- R-602, Q-DA-293 AND Q-DA-294 SWEPT. STATE
+  ONLY. AND A LIVE STOP-THE-LINE RECORDED, NOT RULED.
+  (1) **THE RUNNING SMOKE WILL STAMP A DIGEST FOR CODE THAT DID NOT RUN -- I
+  REPRODUCED EVERY FACT UNDER MY OWN DRIVE.** pid 3049132, cwd
+  `/home/yuqing/ctaNew-wt-de`, started **08:22:03Z**; that worktree's runner has
+  **mtime 08:35:20Z -- thirteen minutes INTO the run -- and sha256 `ba65c248…`,
+  which is `a7e28e6`'s blob**, while the bytes on disk at launch were `a7e28e6^` =
+  **`2089d74e…`**; and the stamp inside `_main_day`, AFTER the day is computed, is
+  `producing_code_sha256 = sha256(Path(__file__).resolve().read_bytes())`. Output
+  artifact absent at my read. ***Filed by REV 49 as STOP THE LINE at 08:57:50Z. NOT
+  MINE TO RULE -- recorded because the run is LIVE and this file is what a fresh
+  seat reads first.***
+  (2) **AND MY OWN ROUND-145 FLAG NAMED THIS CLASS ONE ROUND BEFORE IT FIRED.** I
+  routed it on BE's builder: *"`Path(__file__).read_text()` at emit time ... reports
+  what the FILE said, not the BYTES the run imported ... this programme produced an
+  instance THIS MORNING."* **The instance was the smoke.** ***The class transferred
+  across seats and modules without changing shape: a long-lived process, a mutable
+  file, and an identity field read at the END.*** *Routing a class does not stop it
+  firing; only the fix does.*
+  (3) **AND THE GUARD PASSES BECAUSE THE REPLACEMENT IS COMMITTED.** Beside the
+  stamp: `carrying_commit_block(Path(__file__).resolve())`, with
+  `committed_bytes_policy` recording that `producing_code_is_the_committed_bytes`
+  *"MAY be false and is RECORDED, never refused."* ***DE 85 IS committed, so the
+  predicate comes out TRUE -- on the wrong object.*** **Rule 16's purest form yet:
+  not a control that cannot fail, a control that PASSES CORRECTLY on the wrong
+  thing.** *The reason it is recorded and not gating -- "a commit id can be
+  rewritten out from under a citation" -- is exactly the reason it cannot catch
+  this.*
+  (4) **THE ACCRUAL'S MISSING COMPONENT ONLY STRENGTHENS ITS FINDING.** At the
+  receipt: **`n_ruled_days 6`, `n_complete_by_calendar 3`, `n_with_all_four_inputs`
+  = ZERO** (09-03 holds **3 of 4**); **fragment 608.4 s, tape 1,471.6 s, book
+  2,115.7 s = 1.165 h**; `hours_until_the_bar 63.1`;
+  **`days_that_CANNOT_fit = ['20260908']`** -- 0.1 h against 1.165 h. ***And the
+  smoke's wall is `None`, `NEVER_RUN_ON_A_REAL_DAY`, said in the projection's own
+  `IMPORTANT` field -- so 1.165 h is a LOWER BOUND and the unmeasured part can only
+  WIDEN the gap.*** **A finding whose missing component cannot overturn it, saying
+  so in the artifact.** E2-A: **11 admissible, 3 needed (09-06/07/08), first G >= 14
+  at 2026-09-09T00:00:00Z**, both collectors alive (22.3 s / 16.3 s heartbeats), 2
+  events since 08-26, later days' era leg marked `UNMEASURED_AFTER_THE_SMOKES_AS_OF`
+  rather than assumed.
+  (5) **AND THE INSTRUMENT PUBLISHES THE BOUNDARY OF ITS OWN AUTHORITY AS DATA:**
+  `decides_nothing: "whether a ruled day that cannot hold its inputs by the bar
+  moves the bar, shrinks G, or is handled some third way …"`, plus per-day
+  `why_not_a_verdict_here`. ***Rule 14 in the payload rather than in a seat's
+  discipline*** -- *a reader who resolves fields, not prose, still learns that
+  nothing here is a decision.*
+  (6) **THE RULING: THE SEAL-OPEN BAR IS A PREDICATE, NOT A CLOCK** -- the clock
+  **>= 2026-09-09T00:06Z AND all six sealed day receipts, verified by DIGEST at read
+  time.** Population R-555's; statistic, null and multiplicity unchanged; **G = 6
+  KEPT; no day read before the bar; nothing chosen on data**; declared BEFORE the
+  data by **DE 86 (params v6, design v14)**. ***"The bar was a SCHEDULE, and the
+  schedule is now COMPUTED from artifacts instead of typed"*** -- *rule 10 applied
+  to a deadline.* **A clock alone would have left G = 5, and 2^-5 = 0.03125 fails
+  Holm at m = 2** -- ***the same hazard REV 44 SB named for the reader, "a silently
+  smaller G reported as the declared one", one layer out: there in the DAY SET, here
+  in the CALENDAR.*** **USER-PENDING for overrule; the alternative is G = 5 and a
+  directional-only Gate 1.**
+  (7) **DA 71'S ERROR HAS A NAME:** *"I treated `seam.commit` as the builder's
+  `carrying_commit` … a commit id names a specific object; using it to locate a
+  DIFFERENT object returns something TRUE OF NOTHING."* The probe judges `seam.index`
+  only at the receipt's own builder commit, `seam.commit` explicitly **not** a
+  fallback; **the real 09-03 v1 receipt: `PROVENANCE_INCOMPLETE`, zero flags, exit
+  3**, the literal not judged, digest chain and every population predicate holding.
+  **AT COMMIT TIME, 2026-09-06T09:07:54Z, TWO THINGS MOVED AND BOTH ARE HERE:**
+  ***(a) RULE 22 LANDED*** (`2ef2186`, R-603): *"a heavy run's code is FROZEN until
+  its receipt lands ... a worktree whose HEAD is not moved and whose files are not
+  edited."* ***(b) AND I MEASURE THAT WORKTREE DIRTY:*** `~/ctaNew-wt-de` at
+  `ae9df8d` with **`M de_multiday_gate1_runner.py`** and an untracked
+  `de_multiday_gate1_params_v6.json`, while pid 3049132 runs from it -- **the
+  runner file is now a THIRD digest, `19f55b33…`, against the launch bytes
+  `2089d74e…` and DE 85's `ba65c248…`.** *So the stamped value is a function of the
+  file at emit, it has changed TWICE, neither candidate is what ran, and the
+  committed-bytes flag flips with it -- TRUE against a landing, FALSE against an
+  uncommitted edit.* **ROUTED, NOT RULED: the coordinator and DE own it; it is in
+  this file because a rule landing during the run it governs is exactly what a
+  fresh seat must not have to reconstruct.**
+  **FLAG WORDS: the Gate-1 read bar RULED-AS-PREDICATE, USER-PENDING for overrule;
+  the ruled day set UNCHANGED (09-03..09-08, G = 6); the smoke RUNNING -- I measure
+  pid 3049132 at 2,531 s (~42 min); BE 58 POLLING the lock, which the smoke holds.**
+  MEASURED BEFORE THIS SENTENCE: flags 818 -> 827, flag_provenance 363 -> 372,
+  tasks 19; **219 CHECKED**, 153 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-second round running.** ORPHAN audit 0 findings, exit 0; window 3 of a
+  ruled 3; new flags vs HEAD 0 without provenance.)
+```

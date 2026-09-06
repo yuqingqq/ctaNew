@@ -63,6 +63,78 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T09:31:36Z (MEM ROUND 149 -- R-605, REV 51'S FILING, Q-DA-296 AND Q-DE-87
+  (PARTIAL) SWEPT. STATE ONLY. THE FINDING IS A PIN THAT RESOLVES IN NEITHER
+  DIRECTION, AND A CORRECTION THAT TRIPS THE GATE IT SERVES.
+  (1) **I HASHED THE FILES MYSELF.** Design v14 names **`parameters.path =
+  …/de_multiday_gate1_params_v2.json`** with **`parameters.sha256 = 1af1befb…`**, and
+  the digests I computed are **v2 = `ce46b577…`, v6 = `1af1befb…`, v7 =
+  `d58426e0…`.** ***The file at the named PATH has a different digest; the file with
+  the named DIGEST has a different path.*** **And the reverse pin names no file at
+  all: params v7 -- the NEWEST -- still carries `design_declaration.path =
+  "…_design_v14__<emitted this round>.json"`, `sha256: "NOT_PINNED_HERE"`.** *A
+  cross-pointer broken in BOTH directions with the runner's 167 and the design's 89
+  GREEN beside it* -- **rule 15: a claim with no check behind it drifts without
+  either side noticing.**
+  (2) **AND THE EMITTER MAY BE FIXED WHILE THE EMITTED ARTIFACT IS NOT.** DE 87b
+  landed *"the design pins params v7"* -- and **the newest EMITTED design artifact is
+  still v14 with the broken pin; `design_v15` does not exist on disk (census 0).**
+  ***So the 09-04 preflight's `P3_design` block stands at my read regardless of what
+  the emitter now does, because the preflight reads the ARTIFACT.*** *The same
+  distinction that governs a receipt, and the same reason `.v2` supersessions exist.*
+  (3) **AND THE DESIGN ARTIFACT HAS NO `version` FIELD AT ALL** -- its top-level keys
+  are `protocol` and the R-numbered rules; **the "v14" is in the FILENAME.**
+  ***Which is exactly why a template path sits in a pin and looks right: when
+  identity is carried by NAME, an unfilled name is still a well-formed name.*** *The
+  digest field that would have refused says `NOT_PINNED_HERE`.*
+  (4) **THE CORRECTION TRIPS THE GATE IT SERVES.** `find_sealed_day_receipt` returns
+  **`AMBIGUOUS`** on more than one match, with the reason ***"two sealed receipts for
+  one day is a day that ran twice; a read that picks the newest is a read that chose
+  after seeing."*** **Every word is a correct principle -- and all of it is FALSE of a
+  corrected day.** R-603's `.v2` matches the day glob, so v1 + `.v2` -> `may_open
+  False, missing ['2026-09-03']`. ***The correction ruled in R-603 would make the
+  gate ruled in R-602 refuse the very day it corrects.*** *The cases are
+  distinguishable from the artifacts -- a correction carries `supersedes` -- and DE
+  ships supersession machinery the gate does not use.* OPEN-PENDING-DE-87.
+  (5) **BE'S THREE HEAVY PRODUCERS CARRY ZERO PROVENANCE STAMPS** -- census over
+  `be_daybook_build.py`, `be_gate1_fragment.py`, `be_gate1_state_tape.py`: **no
+  `producing_code_sha256`, no `LAUNCH_SOURCE_SHA256`, no `carrying_commit`, in any of
+  the three.** ***These are the next three heavy runs, and BE 59 was about to add
+  `builder_commit` AT EMIT -- inheriting the defect DE had just fixed, on its first
+  use.*** **The class does not travel by being written down; it travels by being
+  implemented the obvious way.**
+  (6) **RULE 22 AMENDED:** runners **and every heavy producer** capture at IMPORT the
+  digest of every module in their **import closure** under `live/` **plus the
+  worktree's HEAD**, stamp both, and refuse the emit by name if any moved -- *"a
+  digest of ONE FILE closes a THIRD of the class; the closure and HEAD close it;*
+  ***a practice that depends on noticing is not a control."*** *The first
+  stop-the-line was caught by a human looking, three minutes before the state would
+  have cost the day.*
+  (7) **AND ONE OF THE EIGHT WAS DRIVEN, NOT ARGUED:** at v14, **two closed, two
+  partly, four open** -- and ***"six days in which every arm is inadmissible OPEN the
+  gate"*** was RUN. *That is the case I read out of the status expression last round;
+  the reviewer exhibited it.* **Same defect at two levels, and the exhibit is what
+  closes it.** DA 74 verified (**38 / 19 / 11**), with a suite that **failed one
+  check because the world moved between two runs -- v7 landing mid-verification, a
+  correct refusal on a v6 lacking the field.**
+  **AT COMMIT TIME, 2026-09-06T09:34:27Z: PARAMS v8 AND DESIGN v15 BOTH LANDED, AND
+  THE PIN IS STILL BROKEN IN BOTH DIRECTIONS.** I hashed the new pair: **design v15
+  names `params_v2.json` STILL, with v8's ACTUAL digest `8c3f2676…`** -- *the digest
+  advanced v6 -> v8 across two revisions while the path stayed at v2* -- **and params
+  v8 names the REAL `…design_v15__20260906T094500Z.json` with `sha256` still
+  `NOT_PINNED_HERE`** (v15 hashes `0c83afb1…`). ***Forward: right digest, wrong path.
+  Reverse: right path, no digest. Each side repaired the half the OTHER lacked.***
+  *(1) stands as history at its as-of; the block is unchanged in substance.* And
+  `9dd7957`: **DA 75 landed -- "params v8 landed mid-round and my ids match DE's
+  exactly, but one of my own checks was still matching PROSE"** -- *another seat
+  suspecting its own probe, in the same hour.*
+  **FLAG WORDS: the 09-04 PREFLIGHT BLOCKED-ON-P3_DESIGN (pending DE 87's v8/v15);
+  the read gate's supersession collision OPEN-PENDING-DE-87; rule 22 AMENDED; the
+  smoke RUNNING -- I measure pid 3049132 at 4,117 s (~68 min), output ABSENT.**
+  MEASURED BEFORE THIS SENTENCE: flags 843 -> 851, flag_provenance 388 -> 396,
+  tasks 19; **236 CHECKED**, 160 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T09:19:07Z (MEM ROUND 148 -- R-604, REV 50'S FILING, Q-DE-86 AND Q-DA-295
   SWEPT. STATE ONLY. THE FINDING IS A STATUS FIELD ANSWERING A DIFFERENT QUESTION.
   (1) **`status` ANSWERS "WAS THIS A FIXTURE?" AND THE BAR READS IT AS "DID THIS DAY
@@ -203,89 +275,6 @@ updated: >-
   tasks 19; **225 CHECKED**, 155 RELAYED, **455 UNMARKED -- unchanged for the
   twenty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T09:04:15Z (MEM ROUND 146 -- R-602, Q-DA-293 AND Q-DA-294 SWEPT. STATE
-  ONLY. AND A LIVE STOP-THE-LINE RECORDED, NOT RULED.
-  (1) **THE RUNNING SMOKE WILL STAMP A DIGEST FOR CODE THAT DID NOT RUN -- I
-  REPRODUCED EVERY FACT UNDER MY OWN DRIVE.** pid 3049132, cwd
-  `/home/yuqing/ctaNew-wt-de`, started **08:22:03Z**; that worktree's runner has
-  **mtime 08:35:20Z -- thirteen minutes INTO the run -- and sha256 `ba65c248…`,
-  which is `a7e28e6`'s blob**, while the bytes on disk at launch were `a7e28e6^` =
-  **`2089d74e…`**; and the stamp inside `_main_day`, AFTER the day is computed, is
-  `producing_code_sha256 = sha256(Path(__file__).resolve().read_bytes())`. Output
-  artifact absent at my read. ***Filed by REV 49 as STOP THE LINE at 08:57:50Z. NOT
-  MINE TO RULE -- recorded because the run is LIVE and this file is what a fresh
-  seat reads first.***
-  (2) **AND MY OWN ROUND-145 FLAG NAMED THIS CLASS ONE ROUND BEFORE IT FIRED.** I
-  routed it on BE's builder: *"`Path(__file__).read_text()` at emit time ... reports
-  what the FILE said, not the BYTES the run imported ... this programme produced an
-  instance THIS MORNING."* **The instance was the smoke.** ***The class transferred
-  across seats and modules without changing shape: a long-lived process, a mutable
-  file, and an identity field read at the END.*** *Routing a class does not stop it
-  firing; only the fix does.*
-  (3) **AND THE GUARD PASSES BECAUSE THE REPLACEMENT IS COMMITTED.** Beside the
-  stamp: `carrying_commit_block(Path(__file__).resolve())`, with
-  `committed_bytes_policy` recording that `producing_code_is_the_committed_bytes`
-  *"MAY be false and is RECORDED, never refused."* ***DE 85 IS committed, so the
-  predicate comes out TRUE -- on the wrong object.*** **Rule 16's purest form yet:
-  not a control that cannot fail, a control that PASSES CORRECTLY on the wrong
-  thing.** *The reason it is recorded and not gating -- "a commit id can be
-  rewritten out from under a citation" -- is exactly the reason it cannot catch
-  this.*
-  (4) **THE ACCRUAL'S MISSING COMPONENT ONLY STRENGTHENS ITS FINDING.** At the
-  receipt: **`n_ruled_days 6`, `n_complete_by_calendar 3`, `n_with_all_four_inputs`
-  = ZERO** (09-03 holds **3 of 4**); **fragment 608.4 s, tape 1,471.6 s, book
-  2,115.7 s = 1.165 h**; `hours_until_the_bar 63.1`;
-  **`days_that_CANNOT_fit = ['20260908']`** -- 0.1 h against 1.165 h. ***And the
-  smoke's wall is `None`, `NEVER_RUN_ON_A_REAL_DAY`, said in the projection's own
-  `IMPORTANT` field -- so 1.165 h is a LOWER BOUND and the unmeasured part can only
-  WIDEN the gap.*** **A finding whose missing component cannot overturn it, saying
-  so in the artifact.** E2-A: **11 admissible, 3 needed (09-06/07/08), first G >= 14
-  at 2026-09-09T00:00:00Z**, both collectors alive (22.3 s / 16.3 s heartbeats), 2
-  events since 08-26, later days' era leg marked `UNMEASURED_AFTER_THE_SMOKES_AS_OF`
-  rather than assumed.
-  (5) **AND THE INSTRUMENT PUBLISHES THE BOUNDARY OF ITS OWN AUTHORITY AS DATA:**
-  `decides_nothing: "whether a ruled day that cannot hold its inputs by the bar
-  moves the bar, shrinks G, or is handled some third way …"`, plus per-day
-  `why_not_a_verdict_here`. ***Rule 14 in the payload rather than in a seat's
-  discipline*** -- *a reader who resolves fields, not prose, still learns that
-  nothing here is a decision.*
-  (6) **THE RULING: THE SEAL-OPEN BAR IS A PREDICATE, NOT A CLOCK** -- the clock
-  **>= 2026-09-09T00:06Z AND all six sealed day receipts, verified by DIGEST at read
-  time.** Population R-555's; statistic, null and multiplicity unchanged; **G = 6
-  KEPT; no day read before the bar; nothing chosen on data**; declared BEFORE the
-  data by **DE 86 (params v6, design v14)**. ***"The bar was a SCHEDULE, and the
-  schedule is now COMPUTED from artifacts instead of typed"*** -- *rule 10 applied
-  to a deadline.* **A clock alone would have left G = 5, and 2^-5 = 0.03125 fails
-  Holm at m = 2** -- ***the same hazard REV 44 SB named for the reader, "a silently
-  smaller G reported as the declared one", one layer out: there in the DAY SET, here
-  in the CALENDAR.*** **USER-PENDING for overrule; the alternative is G = 5 and a
-  directional-only Gate 1.**
-  (7) **DA 71'S ERROR HAS A NAME:** *"I treated `seam.commit` as the builder's
-  `carrying_commit` … a commit id names a specific object; using it to locate a
-  DIFFERENT object returns something TRUE OF NOTHING."* The probe judges `seam.index`
-  only at the receipt's own builder commit, `seam.commit` explicitly **not** a
-  fallback; **the real 09-03 v1 receipt: `PROVENANCE_INCOMPLETE`, zero flags, exit
-  3**, the literal not judged, digest chain and every population predicate holding.
-  **AT COMMIT TIME, 2026-09-06T09:07:54Z, TWO THINGS MOVED AND BOTH ARE HERE:**
-  ***(a) RULE 22 LANDED*** (`2ef2186`, R-603): *"a heavy run's code is FROZEN until
-  its receipt lands ... a worktree whose HEAD is not moved and whose files are not
-  edited."* ***(b) AND I MEASURE THAT WORKTREE DIRTY:*** `~/ctaNew-wt-de` at
-  `ae9df8d` with **`M de_multiday_gate1_runner.py`** and an untracked
-  `de_multiday_gate1_params_v6.json`, while pid 3049132 runs from it -- **the
-  runner file is now a THIRD digest, `19f55b33…`, against the launch bytes
-  `2089d74e…` and DE 85's `ba65c248…`.** *So the stamped value is a function of the
-  file at emit, it has changed TWICE, neither candidate is what ran, and the
-  committed-bytes flag flips with it -- TRUE against a landing, FALSE against an
-  uncommitted edit.* **ROUTED, NOT RULED: the coordinator and DE own it; it is in
-  this file because a rule landing during the run it governs is exactly what a
-  fresh seat must not have to reconstruct.**
-  **FLAG WORDS: the Gate-1 read bar RULED-AS-PREDICATE, USER-PENDING for overrule;
-  the ruled day set UNCHANGED (09-03..09-08, G = 6); the smoke RUNNING -- I measure
-  pid 3049132 at 2,531 s (~42 min); BE 58 POLLING the lock, which the smoke holds.**
-  MEASURED BEFORE THIS SENTENCE: flags 818 -> 827, flag_provenance 363 -> 372,
-  tasks 19; **219 CHECKED**, 153 RELAYED, **455 UNMARKED -- unchanged for the
-  twenty-second round running.** ORPHAN audit 0 findings, exit 0; window 3 of a
-  ruled 3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2958,6 +2947,111 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_PIN_RESOLVES_IN_NEITHER_DIRECTION_AND_I_COMPUTED_BOTH_DIGESTS: A-CROSS-POINTER-WITH-NO-CHECK-BEHIND-IT
+                             # CHECKED 2026-09-06T09:31:36Z: I read both artifacts and hashed the
+                             # files myself. **Design v14
+                             # (`p003_de_multiday_gate1_design_v14__20260906T091319Z.json`) names
+                             # `parameters.path = .../de_multiday_gate1_params_v2.json` with
+                             # `parameters.sha256 = 1af1befb…` -- and the digests I computed are
+                             # v2 = `ce46b577…`, v6 = `1af1befb…`, v7 = `d58426e0…`.** *So the file at the
+                             # named PATH has a different digest, and the file with the named DIGEST has a
+                             # different path.* **And the reverse pin names no file at all: params v7, the
+                             # NEWEST, still carries `design_declaration.path =
+                             # "…_design_v14__<emitted this round>.json"` with `sha256:
+                             # "NOT_PINNED_HERE"`.**
+                             # ***A cross-pointer between two declarations, broken in BOTH directions, with
+                             # the runner's 167 checks and the design's 89 GREEN beside it*** -- **rule 15:
+                             # a claim with no check behind it drifts without either side noticing.**
+                             # **AT COMMIT TIME, 2026-09-06T09:34:27Z, BOTH SIDES ADVANCED AND
+                             # IT IS STILL BROKEN -- each having fixed the HALF THE
+                             # OTHER LACKED.** I hashed the new pair: **design v15
+                             # (`…094500Z.json`) names `parameters.path =
+                             # …/params_v2.json` STILL, with `parameters.sha256 =
+                             # 8c3f2676…` = v8's ACTUAL digest** -- *the digest advanced
+                             # v6 -> v8 across two revisions while the PATH stayed pinned
+                             # at v2.* **And params v8 now names the REAL filename
+                             # `…_design_v15__20260906T094500Z.json` -- the template is
+                             # filled -- with `sha256` still `NOT_PINNED_HERE`** (v15's
+                             # actual digest is `0c83afb1…`).
+                             # ***Forward: right digest, wrong path. Reverse: right path,
+                             # no digest. Neither direction resolves, and the two halves
+                             # were repaired on OPPOSITE sides.*** *Routed, not ruled --
+                             # DE 87's addendum asks for both ends checked red-first, and
+                             # this is what "both ends" costs when only one is written at
+                             # a time.*
+  THE_EMITTER_MAY_BE_FIXED_WHILE_THE_EMITTED_ARTIFACT_IS_NOT: THE-PREFLIGHT-READS-ARTIFACTS
+                             # CHECKED 2026-09-06T09:31:36Z. DE 87b (`3b5ce97`) landed *"the design
+                             # pins params v7, not v6, and its chain reaches v14"* -- **and the newest
+                             # EMITTED design artifact is still v14 with the broken pin; `design_v15` does
+                             # not exist on disk (census: 0).**
+                             # ***So the 09-04 preflight's `P3_design` block stands at my read regardless of
+                             # what the emitter now does, because the preflight reads the ARTIFACT.***
+                             # *The same distinction that governs a receipt -- code fixed, artifact not
+                             # re-emitted -- and the same reason the .v2 supersession exists.* **Routed:
+                             # the flag words say BLOCKED-ON-P3_DESIGN pending DE 87's v8/v15, and this is
+                             # what "pending" means concretely.**
+  THE_DESIGN_ARTIFACTS_VERSION_LIVES_IN_ITS_FILENAME_ONLY: IDENTITY-BY-NAME-IS-WHY-A-TEMPLATE-LOOKS-PLAUSIBLE
+                             # CHECKED 2026-09-06T09:31:36Z: the design artifact has **no `version`
+                             # field** -- its top-level keys are `protocol` and the R-numbered rules
+                             # (`R19_the_seal_open_bar_is_a_PREDICATE`,
+                             # `R21_a_heavy_runs_code_is_FROZEN_until_its_receipt_lands`, …). **The "v14"
+                             # is in the FILENAME.**
+                             # ***Which is exactly why a template path can sit in a pin and look right:
+                             # when identity is carried by NAME, an unfilled name
+                             # (`<emitted this round>`) is still a well-formed name.*** *A digest field
+                             # would have refused -- and the digest field beside it says
+                             # `NOT_PINNED_HERE`.*
+  THE_REFUSALS_REASON_IS_A_TRUE_PRINCIPLE_APPLIED_TO_THE_WRONG_CASE: THE-CORRECTION-TRIPS-THE-GATE-IT-SERVES
+                             # CHECKED 2026-09-06T09:31:36Z at `find_sealed_day_receipt`: on
+                             # `len(hits) > 1` it returns **`status: "AMBIGUOUS"`** with
+                             # ***`why: "two sealed receipts for one day is a day that ran twice; a read
+                             # that picks the newest is a read that chose after seeing"`.***
+                             # **Every word of that is a correct principle -- and it is FALSE of a
+                             # corrected day.** *R-603's own `.v2` (the supersession that fixes the wrong
+                             # producer digest) matches the day glob, so v1 + `.v2` -> AMBIGUOUS ->
+                             # `may_open False, missing ['2026-09-03']`.* ***The correction ruled in R-603
+                             # would make the gate ruled in R-602 refuse the very day it corrects.***
+                             # **The two cases are distinguishable from the artifacts -- a correction
+                             # carries `supersedes` -- and DE already ships supersession machinery the gate
+                             # does not use.** OPEN-PENDING-DE-87.
+  BE_S_THREE_HEAVY_PRODUCERS_CARRY_ZERO_PROVENANCE_STAMPS: THE-NEXT-THREE-HEAVY-RUNS
+                             # CHECKED 2026-09-06T09:31:36Z by census: `be_daybook_build.py` (50,532
+                             # B), `be_gate1_fragment.py` (19,021 B), `be_gate1_state_tape.py` (14,273 B)
+                             # -- **ZERO matches for `producing_code_sha256`, `LAUNCH_SOURCE_SHA256` or
+                             # `carrying_commit` in any of the three.**
+                             # ***These are the next three heavy runs*** (09-04's fragment, tape and book),
+                             # **and BE 59 was about to add `builder_commit` AT EMIT -- inheriting the
+                             # defect DE had just fixed, on its first use.** *The class does not travel by
+                             # being written down; it travels by being implemented the obvious way.*
+  RULE_22_AMENDED_TO_THE_IMPORT_CLOSURE_AND_HEAD: A-PRACTICE-THAT-DEPENDS-ON-NOTICING-IS-NOT-A-CONTROL
+                             # CHECKED 2026-09-06T09:31:36Z at `SEAT_PROTOCOL.md`: **"Runners AND
+                             # every heavy producer (the fragment, tape and book builders included) capture
+                             # at IMPORT the digest of every module in their import closure under `live/`
+                             # plus the worktree's HEAD sha, stamp those into the receipt, and refuse the
+                             # emit by name if any moved (REV 51 SS3, R-605: a digest of ONE FILE closes a
+                             # THIRD of the class; the closure and HEAD close it; ***a practice that depends
+                             # on noticing is not a control***)."**
+                             # *The line earns its place: the first stop-the-line was caught by a human
+                             # looking, at 09:06Z, three minutes before the state would have cost the day.*
+  TWO_OF_EIGHT_CLOSED_TWO_PARTLY_FOUR_OPEN_AND_ONE_DRIVEN: MY-ROUND-148-FINDING-DRIVEN-BY-THE-REVIEWER
+                             # RELAYED from R-605(B) / REV 51 SS1.4, 2026-09-06T09:31:36Z. **At design
+                             # v14 the eight conjuncts stand: TWO closed, TWO partly, FOUR open** -- and
+                             # ***one of them DRIVEN: "six days in which every arm is inadmissible OPEN the
+                             # gate."*** *That is the case I read out of the status expression last round
+                             # (`fixture` is the only branch); the reviewer did not read it, it RAN it.*
+                             # **A finding I could state from the code and the reviewer could exhibit from
+                             # the gate -- the same defect at two levels, and the exhibit is what closes
+                             # it.**
+  DA_74_VERIFIED_AND_A_SUITE_REFUSED_BECAUSE_THE_WORLD_MOVED: A-CORRECT-FAILURE-BETWEEN-TWO-RUNS
+                             # RELAYED from R-605(A), 2026-09-06T09:31:36Z. **DA 74: 38 / 19 / 11
+                             # checks.** *And the coordinator's FIRST run of the 38 failed one check
+                             # "because DE 87's params v7 landed between my runs and the suite reads the
+                             # NEWEST params: a correct refusal on a v6 that lacks the field."*
+                             # ***A battery that fails because the world moved under it, and is RIGHT to***
+                             # -- **the exact opposite of DA's own round-69 lesson (a check pinning
+                             # today's value fails on a correct change); here the check reads the newest and
+                             # refuses the stale.** *DA's third instance of its own class named in the same
+                             # entry: `expected_prefix "306bfdb0"` -- v5's digest -- hardcoded.*
   THE_STATUS_FIELD_ANSWERS_WAS_THIS_A_FIXTURE_AND_IS_READ_AS_DID_THIS_DAY_PRODUCE: THE-NAME-IS-NOT-THE-DEFINITION-AGAIN
                              # CHECKED 2026-09-06T09:19:07Z at the code, and this is the live
                              # refusal case as I read it. The emitted field is
@@ -18142,6 +18236,80 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 149, 2026-09-06T09:31:36Z ------------------------------
+  THE_PIN_RESOLVES_IN_NEITHER_DIRECTION_AND_I_COMPUTED_BOTH_DIGESTS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v14__20260906T091319Z.json
+    as_of: 2026-09-06T09:31:36Z
+    said: >-
+      design v14 names parameters.path = .../de_multiday_gate1_params_v2.json with
+      parameters.sha256 = 1af1befb..., and the digests I computed myself are
+      v2 = ce46b577..., v6 = 1af1befb..., v7 = d58426e0... -- so the file at the named
+      path has a different digest and the file with the named digest has a different
+      path. The reverse pin names no file at all: params v7, the newest, still carries
+      design_declaration.path = "..._design_v14__<emitted this round>.json" with
+      sha256 "NOT_PINNED_HERE". A cross-pointer broken in both directions with the
+      runner's 167 and the design's 89 green beside it.
+  THE_EMITTER_MAY_BE_FIXED_WHILE_THE_EMITTED_ARTIFACT_IS_NOT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v7.json
+    as_of: 2026-09-06T09:31:36Z
+    said: >-
+      DE 87b (3b5ce97) landed the design pinning params v7, and the newest emitted
+      design artifact is still v14 with the broken pin -- design_v15 does not exist on
+      disk (census 0). The 09-04 preflight's P3_design block stands at this as_of
+      regardless of the emitter's state, because the preflight reads the artifact.
+  THE_DESIGN_ARTIFACTS_VERSION_LIVES_IN_ITS_FILENAME_ONLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v14__20260906T091319Z.json
+    as_of: 2026-09-06T09:31:36Z
+    said: >-
+      the design artifact has no version field; its top-level keys are protocol and
+      the R-numbered rules. The v14 is in the filename. When identity is carried by
+      name, an unfilled name (<emitted this round>) is still a well-formed name, which
+      is why a template path can sit in a pin and look right; the digest field beside
+      it says NOT_PINNED_HERE.
+  THE_REFUSALS_REASON_IS_A_TRUE_PRINCIPLE_APPLIED_TO_THE_WRONG_CASE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:31:36Z
+    said: >-
+      find_sealed_day_receipt returns status AMBIGUOUS on len(hits) > 1 with the
+      reason "two sealed receipts for one day is a day that ran twice; a read that
+      picks the newest is a read that chose after seeing" -- a correct principle that
+      is false of a corrected day. R-603's .v2 matches the day glob, so v1 + .v2 gives
+      AMBIGUOUS and may_open False: the correction ruled in R-603 would make the gate
+      ruled in R-602 refuse the day it corrects. The two cases are distinguishable
+      from the artifacts because a correction carries supersedes.
+  BE_S_THREE_HEAVY_PRODUCERS_CARRY_ZERO_PROVENANCE_STAMPS:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T09:31:36Z
+    said: >-
+      census over be_daybook_build.py (50,532 B), be_gate1_fragment.py (19,021 B) and
+      be_gate1_state_tape.py (14,273 B): zero matches for producing_code_sha256,
+      LAUNCH_SOURCE_SHA256 or carrying_commit in any of the three. These are the next
+      three heavy runs, and BE 59 was about to add builder_commit at emit time,
+      inheriting the defect DE had just fixed.
+  RULE_22_AMENDED_TO_THE_IMPORT_CLOSURE_AND_HEAD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-06T09:31:36Z
+    said: >-
+      rule 22 now reads that runners AND every heavy producer (the fragment, tape and
+      book builders included) capture at IMPORT the digest of every module in their
+      import closure under live/ plus the worktree's HEAD sha, stamp both into the
+      receipt, and refuse the emit by name if any moved -- a digest of one file closes
+      a third of the class; the closure and HEAD close it; a practice that depends on
+      noticing is not a control.
+  TWO_OF_EIGHT_CLOSED_TWO_PARTLY_FOUR_OPEN_AND_ONE_DRIVEN:
+    prov: RELAYED
+    from: R-605(B)
+    as_of: 2026-09-06T09:31:36Z
+  DA_74_VERIFIED_AND_A_SUITE_REFUSED_BECAUSE_THE_WORLD_MOVED:
+    prov: RELAYED
+    from: R-605(A)
+    as_of: 2026-09-06T09:31:36Z
   # --- MEM round 148, 2026-09-06T09:19:07Z ------------------------------
   THE_STATUS_FIELD_ANSWERS_WAS_THIS_A_FIXTURE_AND_IS_READ_AS_DID_THIS_DAY_PRODUCE:
     prov: CHECKED
