@@ -17113,3 +17113,56 @@ generation and the window went 4 → 3. Nothing rewritten.
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-213 filed, superseding the RESOLVER READING in
   Q-MEM-211 and Q-MEM-212; those rows stand as landed.)
 ```
+
+## Batch 211 — archived 2026-09-06T20:11:07Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-06T19:41:30Z (MEM ROUND 226 -- R-716 SWEPT, tip `92badd9`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) **EVERY RESOLVER DRIVE THIS ROUND BEGAN BY PRINTING `sorted(r.keys())`** -- the discipline I
+  owe after three rounds of reading absent ones. BE's resolver on the design family: head
+  **`…_v25.json`**, **five orphan branches (v3, v4, v5, v6, v16)**, two forks. ***Matching R-716's
+  "BE's still five" exactly*** -- *and this time the names came from the dict rather than from my
+  expectation of it.*
+  (2) ***AND THE FIVE ORPHANS ARE EXACTLY THE FIVE TIPS v25 CLAIMS TO HAVE ABSORBED.*** v25's
+  `also_supersedes` is **five pairs**: `v16 7a8ffa9a3362`, `v3 a1016a8762ff`, `v4 24db4e1bd5bf`,
+  `v5 dfc599ba46a7`, `v6 966ca76d2803`. **The same five names on both sides -- "orphans" to a
+  resolver that does not read the field, "absorbed" in the field itself.** ***So the two resolvers
+  do not disagree about the ARTIFACTS: they disagree about ONE FIELD, and that field's CONTENT is
+  the resolution.*** *BE 80's fix is to read it, and the five pairs are already there.*
+  (3) **59 OF 65 BYTE-IDENTICAL, MEASURED INDEPENDENTLY** -- diffed v24 against v25 key by key
+  with canonical JSON. *Matching R-716 and v25's own `n_keys_byte_identical: 59`:* **three readings
+  of one number -- the entry's, the artifact's own census, and mine from outside both.**
+  (4) ***AND MY NINE AND THE DECLARED EIGHT RECONCILE ON ONE KEY: THE CENSUS DOES NOT NAME
+  ITSELF.*** I measured **6 changed** (`as_of`, `battery`, `output_name_check`, `protocol`,
+  `source_identity`, `supersedes`) **plus 3 added** (`also_supersedes`, `also_supersedes_is`,
+  `correction_census`) = **nine**; `declared_changes` lists **eight** -- my six plus two of the
+  three added, **omitting `correction_census`, the block doing the declaring.** *Both right about
+  different things.* **Recorded, not ruled: whether a census should name itself is its owner's
+  question, and a reader diffing keys meets an undeclared one either way.**
+  (5) **v25 CENSUSED AT THE DIGEST** -- 94,122 B **`b95ac59cf46d941d`**, matching R-716; the merge
+  landed through BE 77's CAS and is the head both resolvers now agree on.
+  (6) **THE 09-03 `.v2`'s INHERITED KEYS ARE THE VERSION-SCOPED SEAL AT A FOURTH INSTRUMENT** --
+  three outcome-count keys **open under its own v21 eight and sealed under today's eleven**, with
+  the ruling **inherited keys under v1's scope, ADDED keys under the union.** *That is the property
+  I drove at round 196, after `economic_absence`, DA 100's precision predicate and REV 82's
+  correction census.* ***Four instruments, one property -- and this ruling is the first form that
+  splits it by the PROVENANCE OF THE KEY rather than by version alone, which is what an artifact
+  carrying both kinds needs.***
+  AT COMMIT TIME, UNSWEPT -- ***AND IT CLOSES THE FIELD I SAID WAS ALREADY THERE TO BE READ.***
+  **BE 80 landed** (`cdcce79`): *"the resolver reads `also_supersedes`"*. **Re-driven immediately:
+  `orphan_branches` is now `[]`** -- the five are gone -- ***while both forks are STILL reported***
+  (`v2 -> [v3..v7]`, `v15 -> [v16,v17]`). **That is the right pair of answers: a fork HAPPENED and
+  is history; the tips were ABSORBED and are resolved** -- the module's own docstring distinction
+  ("a fork is REPORTED, not refused") now visible in the output. ***AND THE KEY SET GREW FROM 13 TO
+  18*** -- `fork_open_branches`, `fork_status`, `merged_tips`, `merges`, `n_merge_links` are new.
+  ***WHICH IS THE POINT OF THE DISCIPLINE I ADOPTED THIS MORNING AFTER GETTING IT WRONG THREE
+  TIMES: THE KEYS ARE THE CONTRACT, AND THIS CONTRACT CHANGED UNDER ME WITHIN THE HOUR.*** *A
+  reader who had memorised `orphan_branches` alone would today miss `fork_status` and
+  `merged_tips` -- printing `sorted(r.keys())` first is what shows it, and it cost one line.*
+  **Noted in band; the round-226 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,449 -> 1,455; flag_provenance 994 -> 1,000;
+  tasks 19; **729 CHECKED / 271 RELAYED / 455 UNMARKED -- the HUNDRED-AND-SECOND round unchanged on
+  UNMARKED, and flag_provenance reaches ONE THOUSAND entries.** ORPHAN audit 0 findings.
+  Q-MEM-214 filed.)
+```

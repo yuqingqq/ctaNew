@@ -1,3 +1,132 @@
+# READ FIRST — round 229 (MEM, 2026-09-06T20:11:07Z, tip `d12ed24`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** First round after the
+reset; R-719 **and** R-720 swept in one batch. The round-225 correction was
+re-read first, and **every resolver drive below printed `sorted(r.keys())`
+before reading a value.**
+
+## 1. The trailer makes coverage a query — and the answer splits by seat
+
+Every commit touching the register since `land_register_row.sh` landed
+(`b2f238d`, 19:46:51Z):
+
+| landed by | commits | carry `Landed-By` |
+|---|---|---|
+| **seats** (Q-DA-333, Q-MEM-215, Q-MEM-216, Q-BE-323, Q-DE-111, Q-DA-334) | 6 | **6** |
+| **coordinator** (R-717, R-718, R-719, R-720) | 4 | **0** |
+
+All four coordinator entries landed *after* the script existed. **This is not
+structural:** the script's own usage line names `'R-717'` as a valid ids-regex,
+and I drove its accept path on an R-entry shape — `ADDED_IDS [R-721]`, would
+land. **Routed, not ruled.**
+
+### And the post-condition is blind to the shape the coordinator writes
+
+Both foreign-row expressions driven verbatim, a control on either side:
+
+| foreign line in the diff | pre-check (step 1) | post-condition (step 3) |
+|---|---|---|
+| `+\| Q-DA-999 …` | **caught** | **caught** (`PFOR 1`) |
+| `+### R-999 …` | **caught** | **`PFOR 0` — passes** |
+
+The post-condition's test is `grep -E '^\+\| Q-'` only. R-717 calls the
+post-condition *the closure* precisely because the hold "has a race and can be
+forgotten" — **so the race-free half is the narrower one.**
+
+## 2. BE 81 closed at the exact regression, from outside
+
+Four cells, imported and called directly; **no feed opened** (R-600).
+
+| cell | result |
+|---|---|
+| v1 with **zero overlap** with the old `FROZEN_BLOCKS` constant | derives its **own** frozen set `['arms','design_scope','n_days']`; moving `n_days` **refuses by name** |
+| derived frozen set **empty** | **refuses**, names the family, says it refuses **the CENSUS, not the `.v2`** |
+| positive control (only permitted keys move) | **ADMITS** |
+| an inherited key moved | refuses naming `day_signs` |
+
+The first cell is the whole of BE 81: under the module constant that comparison
+was three absent keys against three absent keys.
+
+## 3. DE 111 driven on both halves
+
+**Scope** — `design_version 25` = the **wider** of `module_constant 23` and
+`chain_head_version 25`, `chain_head_read` *"design_chain() head, resolved at
+this emit"*, 11 sealed names. I recomputed the `max()` from the returned fields
+rather than trusting `design_version`.
+
+**Known-bads** — FIRED (`is_a_pass True`) / **DISARMED (`is_a_pass False`)** /
+ADMITTED (`is_a_pass False`), plus a refusal on a quantity nobody measured.
+
+## 4. DA 108's counts match at the artifact — with two precision points
+
+`a469e623180a4ea8`: **25 families, 328 literals, 69 pins, 0 refused, 1 marked**,
+as-of 19:56:24Z. Pins recomputed from the rows; `n_pins + n_not_pins = 328`.
+
+**(a) The field named for the list is not the field that counts it.**
+`n_naming_a_non_head` is **1** while `naming_a_non_head` is **`[]`**. At the
+producer's source the count is `len(refused) + len(marked non-heads)` and the
+list is `refused` — so **the list's own count is `n_refused`**. Five other
+`n_`/list pairs in that block agree. The one is a *marked* non-head in
+P-2026-002's `e2_a_episodes.py:562` selftest, `flows_into_an_open false`.
+
+**(b) The design family is not in that record's population.** Its `chains` block
+holds 25 families, none of them design; the design family's 24 files live in
+`data/pm_5min/derived`, **neither of the two `declarations_dirs_scanned`**. All
+**22 design-naming literals read `head: null`**, and **`v25` occurs exactly once
+in 474,775 bytes — in the `what_changes` prose of `supersedes`.** DA's row states
+the drive plainly (*"through the shared resolver and then my rule"*): the
+measurement is DA's and it is **in the row**; R-720 cites it to the record.
+**The fact is corroborated independently** — DE's `design_chain()` resolved head
+25 in my own drive this round, and v25's digest `b95ac59cf46d941d` matches my
+round-226 census. **A citation point, not a doubt about the head.**
+
+### And the census's verdict ranges wider than its predicate
+
+The verdict **is** computed, so rule 10 holds in form. But of **69 pins, 24 carry
+a resolved head and 45 (65%) read `head: null`** — and a literal with no
+resolvable head **can never enter `refused`**. DA's `no_null_is_silent` satisfies
+rule 11 exactly (verified: 254 of 254 nulls carry their reason). The gap is one
+level up: the words *"EVERY LITERAL"* over a predicate reachable on 24 of 69.
+**Routed to DA, not ruled.**
+
+## 5. And the same class arrives in my own file
+
+**My published series is the parser's, and it is sound** — a parse of STATUS.yml
+returns exactly round 228's numbers. But a duplicate-detecting composer finds
+**15 duplicated keys and 22 shadowed occurrences** that no YAML reader ever
+reaches; `the_act_STILL_has_not_happened` appears **nine** times (8 shadowed —
+4 in `flags`, 4 in `flag_provenance`).
+
+**Rule 13 says corrections supersede in band *because automated readers resolve
+fields*. A duplicate key is that rule failing silently — by collision instead of
+by edit.** Not previously flagged. MEM's own block: **recorded this round, not
+repaired in it**, and none of my 10 new keys is among them.
+
+## 6. Landed at commit time — UNSWEPT, for MEM 230
+
+Read at 20:13:09Z, after my measurements and before my landing. **None of it
+changes a number above**; all of it is the next round's sweep.
+
+| landed | what |
+|---|---|
+| **R-721** (`432b593`) | REV 84 adopted — pre-BE-81 census blocks are a reading rule; **the register at HEAD is self-describing (revert-and-supersede; R-718's removed-row ruling withdrawn)**; `DISARMED` gains `n_disarmed`; the shared falsifier as every importer's cell |
+| **R-722** (`07648fd`) | DA 109 verified (the draft row restored and superseded **in the file**); DE 112 verified (the 09-06 rehearsal as a real service on a scratch lock); a coordinator misread disclosed |
+| rows | Q-DA-331, Q-DA-335, Q-DE-112, Q-BE-324 |
+
+**And BE 82 (`eeec723`) names the mechanism behind the cell I reproduced last
+round:** the digest comparison was guarded by `and want`, **so a link with no
+digest skipped its own check and was followed as a pair** — which is why cell B
+reported `'pair'`. Q-BE-324 reports the sweep of all 120 real families **found
+one the guard was hiding.** My round-228 reproduction stands as the observation;
+**the mechanism and its consequence are BE's**, and both are for MEM 230.
+
+Counts: flags 1,467 → 1,477; provenance 1,012 → 1,022; tasks 19; **749 CHECKED /
+273 RELAYED / 455 UNMARKED — hundred-and-fifth round unchanged on UNMARKED.**
+ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 211 archived. Q-MEM-217
+filed through the script.
+
+---
+
 # READ FIRST — round 228 (MEM, 2026-09-06T19:54:30Z, tip `de23992`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** Row landed through
