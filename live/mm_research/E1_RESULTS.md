@@ -64,31 +64,55 @@ program continues) — recommended, not yet started.
   unchanged — current CSVs still carry the old FIL tick, immaterial).
 
   > **IN-BAND CORRECTION, 2026-09-06 (DA seat; R-570(D), reviewer
-  > `REVIEW_DA60_2026-09-06.md`). The entry above is not reproducible from the
-  > committed code and the word to change is "FIXED".** The line should read:
-  > *tick_size(): fix DESIGNED post-audit (mode-of-diffs) and **NOT LANDED** —
-  > the committed function still returns FIL = 1e-6; the corrected aggregate
-  > 3.36/6.28 is what the fix WOULD produce, recomputed, and the operative CSV
-  > pair 3.4485 / 6.2645 stands.*
+  > `REVIEW_DA60_2026-09-06.md`). The entry above describes a state the
+  > committed code does not reach, and the word to change is "FIXED".** The
+  > line should read: *tick_size(): mode-of-diffs fix LANDED but OVERRIDDEN
+  > on FIL by the GCD fallback the same docstring says was "kept" — the
+  > committed function returns FIL = 1e-6, not the 1e-4 the fix computes; the
+  > corrected aggregate 3.36/6.28 is what the fix WOULD produce if the
+  > fallback did not fire, and the operative CSV pair 3.4485 / 6.2645 stands.*
   >
-  > **How it was found and on what evidence.** E2-A's inherited reproduction
-  > control ran BOTH published pairs rather than one. `e1_markout_scan.py`'s
-  > own `tick_size('FILUSDT')`, **executed** rather than transcribed, returns
-  > **1e-6** — the pre-fix value — and an independent mode-of-diffs
-  > implementation returns 1e-6 as well, so two implementations agree and the
-  > defect is not a transcription. The committed code's own comment at
-  > `e1_markout_scan.py:148` still describes the UNFIXED behaviour. The
-  > repository therefore does not carry the FIL = 1e-4 this entry describes
-  > and **cannot produce 3.36 / 6.28**: a reader reaching for that pair is
-  > reaching for a number nothing on disk can make.
+  > **THE MECHANISM, MEASURED — not read off the source.** Receipt
+  > `data/mm_hf/e1/p002_e2a_tick_diagnosis__20260906T054915Z.json`, which
+  > executes both halves of `tick_size` with their intermediates exposed:
+  >
+  > | symbol | distinct prices | modal diff (the FIX) | frac. integer-multiple | fallback fires? | `tick_size()` returns |
+  > |---|---:|---:|---:|---|---:|
+  > | **FILUSDT** | 1,371 | **1e-4** | **0.909489** | **YES** (< 0.999) | **1e-6** |
+  > | ADAUSDT | 586 | 1e-4 | 1.000000 | no | 1e-4 |
+  >
+  > **The mode-of-diffs fix IS present and DOES produce the 1e-4 this entry
+  > claims.** What returns 1e-6 is the retained GCD fallback, which fires
+  > because only 90.9% of FIL's price diffs are integer multiples of the modal
+  > one — the 81 off-grid prints the audit itself named. *The fallback
+  > supersedes the fix on exactly the input the fix was written for.* ADA is
+  > the other direction: 100% on grid, the fallback does not fire, and the
+  > modal answer stands — so the diagnosis can fail to fire and is a
+  > measurement rather than a verdict.
+  >
+  > **This supersedes the first version of this note** (commit `0718fea`),
+  > which followed the reviewer's proposed wording *"fix DESIGNED post-audit
+  > and NOT LANDED"*. That is not right and the measurement is why: it was
+  > landed. Two independent implementations returning 1e-6 established the
+  > VALUE; only executing the intermediates established the CAUSE.
   >
   > **What does NOT move.** E1-A's operative number is the **csv regime**,
   > which E2-A's control reproduces to four decimal places (touch 3.4485,
   > sweep 6.2645; errors 1.1e-5 and 2.7e-5 bps against a 0.05 tolerance).
-  > The tick fix is **not re-landed here** — E1's frozen artifacts are not
-  > edited (rule 13) and this note supersedes the record in band. Receipt:
+  > The tick fix is **not re-landed and the fallback is not removed** — E1's
+  > producing code is not edited (rule 13) and this note supersedes the record
+  > in band. Reproduction receipt:
   > `data/mm_hf/e1/p002_e2a_e1a_reproduction__20260906T051626Z.json`
   > (sha256 `e76e3226b1cf603e`).
+  >
+  > **One further defect in the same module, routed and NOT fixed here:**
+  > `e1_markout_scan.py` has **no data-root resolver** (`SRC = REPO /
+  > "data/..."` from its own file location), so run from a worktree
+  > `day_files()` returns an EMPTY list and `tick_size()` raises on an empty
+  > argmax. That is the E2.0 result review's §6 gap, still open in the module
+  > that produced E1's published numbers; the reviewer hit it independently.
+  > The diagnosis points `SRC` at the resolved ledger for its own duration and
+  > refuses on an empty file list.
 - E1x (ADA + any future passer): notional-weighted gate quantity (amendment
   above), fixed tick, and the §1.4 bin bootstrap at the symbol's τ*.
 - Prereg gaps found by review, for the record: day-clustered t declared but
