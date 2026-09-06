@@ -8,7 +8,7 @@ B=orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace; REG=$B/COORDINATIO
 git fetch -q origin; git merge -q --ff-only origin/mm-research 2>/dev/null
 D=$(git status --short -- "$REG"); if [ -n "$D" ]; then echo "HELD: register dirty [$D]"; exit 3; fi
 python3 - "$E" "$N" "$REG" <<'PY' || { echo "HELD: insertion refused"; exit 4; }
-import re,sys
+import os; import re,sys
 from pathlib import Path
 e=Path(sys.argv[1]).read_text().strip(); n=int(sys.argv[2]); reg=Path(sys.argv[3]); s=reg.read_text()
 # R-690: a coordinator drive enters an entry ONLY as pasted output. A prose claim of a drive without a fenced block in the entry is refused.
@@ -18,7 +18,7 @@ if claims and "```" not in e:
 assert f'### R-{n} ' not in s, 'already present'
 last=max(int(x) for x in re.findall(r'\n### R-(\d+)', s)); assert last==n-1, f'last is R-{last}, expected R-{n-1}'
 a=s.index(f'### R-{last}'); sec=s.find('\n## 6. Build-readiness'); nxt=s.find('\n### ', a+10); ins=sec if (nxt==-1 or (sec!=-1 and sec<nxt)) else nxt
-s=s[:ins].rstrip('\n')+'\n\n'+e+'\n'+s[ins:].lstrip('\n'); reg.write_text(s); Path('${LAND_TMP:-/tmp}/expected_added.txt').write_text(str(e.count('\n')+1)); print(f'R-{n} inserted (register clean)')
+s=s[:ins].rstrip('\n')+'\n\n'+e+'\n'+s[ins:].lstrip('\n'); reg.write_text(s); (Path(os.environ.get('LAND_TMP','/tmp'))/'expected_added.txt').write_text(str(e.count('\n')+1)); print(f'R-{n} inserted (register clean)')
 PY
 { cat "$MSG"; printf '\nLanded-By: land_entry.sh %s\n' "$(sha256sum "$0" | cut -c1-64)"; } > "$MSG.landed"; git add -- "$REG" && git commit -q -F "$MSG.landed" -- "$REG" || { echo "commit failed"; git restore -q --staged --worktree -- "$REG"; exit 5; }
 ADDED=$(git show --format= HEAD -- "$REG" | grep -c '^+[^+]'); EXP=$(cat ${LAND_TMP:-/tmp}/expected_added.txt); OTHER=$(git show --format= HEAD -- "$REG" | grep -E '^\+\| Q-' | wc -l); NPATHS=$(git show --stat --format= HEAD | grep -c '|')
