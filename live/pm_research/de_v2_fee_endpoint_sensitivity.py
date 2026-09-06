@@ -904,6 +904,16 @@ def supersede_v2_to_v3(v2_path: Path, *, root: Path | None = None) -> dict:
     payload["version"] = 3
     payload["as_of"] = datetime.datetime.now(
         datetime.timezone.utc).isoformat()
+    # THE BATTERY IS RE-RUN HERE, not carried. v2's block said 26 checks
+    # and the battery is now 29; a deep-copied battery field describes the
+    # process that wrote v2, not the one that wrote v3, and the whole
+    # point of that field (round 66 item (e)) is that it describes THIS
+    # emission.
+    LAST_BATTERY.clear()
+    selftest(quiet=True)
+    payload["battery"] = dict(LAST_BATTERY)
+    payload["battery"]["v2_battery_retained_at"] = "battery_at_v2"
+    payload["battery_at_v2"] = v2["battery"]
     payload["superseded_fields"] = {
         "why_a_sibling_and_not_an_edit": (
             "the summary must stay BIT-IDENTICAL to v1, so a pointer "
