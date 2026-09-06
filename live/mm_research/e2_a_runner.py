@@ -293,9 +293,24 @@ MIN_DISTINCT_QUANTITIES = D.MIN_DISTINCT_QUANTITIES
 #: receipt is scanned for these names recursively and REFUSES if one appears,
 #: so "sealed" is a checked property of the artifact rather than a promise
 #: about which branch was taken.
+#: `_bps` and `staleness` are here because DA 63's FIRST marker list MISSED
+#: `staleness_sensitivity.reading_A_all_episodes_bps` -- an eff_RT in bps
+#: under a name none of the other markers matched. The leak scan uses this
+#: same list, so it would have reported ZERO leaks beside two gate numbers
+#: sitting in the open receipt: a control blind in exactly the place it was
+#: guarding. Caught by enumerating the emitted keys against the list rather
+#: than trusting the list, and BEFORE any sealed run emitted.
 SEALED_KEY_MARKERS = ("eff_rt", "cost_", "c_fill", "c_chase", "ci_lo",
                       "ci_hi", "verdict", "gate", "phi_", "fill_rate",
-                      "mean_phi", "aggregate_by_tp", "partial_pricing")
+                      "mean_phi", "aggregate_by_tp", "partial_pricing",
+                      "_bps", "staleness")
+
+#: the list AS IT WAS when it missed the leak, kept so the regression control
+#: can show the miss rather than assert it.
+SEALED_KEY_MARKERS_PRE_FIX = ("eff_rt", "cost_", "c_fill", "c_chase", "ci_lo",
+                              "ci_hi", "verdict", "gate", "phi_", "fill_rate",
+                              "mean_phi", "aggregate_by_tp",
+                              "partial_pricing")
 
 #: The two partial-fill pricings, R-570(C)(2).
 PR_RESIDUAL = "residual_chased"          # GATE-BEARING
@@ -1152,11 +1167,48 @@ SEALED_KEY_ALLOW = ("gate_row_tp_s", "gates_the_run", "gate_read",
                     "gate_bearing_pricing")
 
 
-def _is_sealed_key(k: str) -> bool:
+def _is_sealed_key(k: str, markers=SEALED_KEY_MARKERS) -> bool:
     if k in SEALED_KEY_ALLOW:
         return False
     kl = k.lower()
-    return any(m in kl for m in SEALED_KEY_MARKERS)
+    return any(m in kl for m in markers)
+
+
+#: A SECOND NET, WITH A DIFFERENT SHAPE FROM THE FIRST. The marker list and
+#: the leak scan share a list, so they share a blind spot -- DA 63's own
+#: `staleness_sensitivity.reading_A_all_episodes_bps` passed both. This net
+#: does not read the marker list at all: it censuses every NUMERIC LEAF that
+#: survived and refuses on any whose name is economic-SHAPED. Two nets
+#: cut from the same cloth catch the same things; these are cut differently
+#: on purpose.
+ECONOMIC_SHAPE = ("bps", "eff_rt", "eff_", "cost", "ci_", "capture", "pnl",
+                  "spread", "fee", "rebate", "markout", "cents", "profit",
+                  "edge", "revenue")
+
+
+def numeric_key_census(obj, key=""):
+    """Every key name in the object that carries a NUMERIC leaf.
+
+    Published in the sealed receipt so a reader can audit what survived
+    instead of taking the seal on trust."""
+    out = set()
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            out |= numeric_key_census(v, str(k))
+    elif isinstance(obj, list):
+        for v in obj:
+            out |= numeric_key_census(v, key)
+    elif isinstance(obj, (int, float)) and not isinstance(obj, bool):
+        out.add(key)
+    return out
+
+
+def find_economic_shaped_leaks(obj):
+    """Numeric leaves whose NAME is economic-shaped, whatever the marker
+    list thinks. Fails closed: an unforeseen economic field refuses the
+    emission rather than riding out in a receipt labelled sealed."""
+    return sorted(k for k in numeric_key_census(obj)
+                  if any(m in k.lower() for m in ECONOMIC_SHAPE))
 
 
 def redact_sealed(obj, path="", dropped=None):
@@ -1183,19 +1235,23 @@ def redact_sealed(obj, path="", dropped=None):
     return obj
 
 
-def find_sealed_leaks(obj, path=""):
+def find_sealed_leaks(obj, path="", markers=SEALED_KEY_MARKERS):
     """The falsifier for the seal: any economic key surviving in the open
-    receipt is a LEAK, named. Run on every sealed emission."""
+    receipt is a LEAK, named. Run on every sealed emission.
+
+    `markers` is a parameter ONLY so the regression control can drive the
+    pre-fix list and show the miss. Every production call takes the default.
+    """
     leaks = []
     if isinstance(obj, dict):
         for k, v in obj.items():
             here = f"{path}.{k}" if path else str(k)
-            if _is_sealed_key(str(k)):
+            if _is_sealed_key(str(k), markers):
                 leaks.append(here)
-            leaks += find_sealed_leaks(v, here)
+            leaks += find_sealed_leaks(v, here, markers)
     elif isinstance(obj, list):
         for i, v in enumerate(obj):
-            leaks += find_sealed_leaks(v, f"{path}[{i}]")
+            leaks += find_sealed_leaks(v, f"{path}[{i}]", markers)
     return leaks
 
 
@@ -1520,6 +1576,8 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
     dropped: list[str] = []
     openr = redact_sealed(result, "", dropped)
     leaks = find_sealed_leaks(openr)
+    econ_leaks = find_economic_shaped_leaks(openr)
+    census = sorted(numeric_key_census(openr))
     openr["sealed_payload"] = {
         "path": str(sealed_out.relative_to(ROOT))
                 if str(sealed_out).startswith(str(ROOT)) else str(sealed_out),
@@ -1536,10 +1594,22 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
                 "when_the_gate_may_be_read"],
         "NOT_READ_BY_THIS_RUN": True,
         "leak_scan": {"n_leaks": len(leaks), "leaks": leaks[:20]},
+        "second_net_economic_shaped_leak_scan": {
+            "n_leaks": len(econ_leaks), "leaks": econ_leaks[:20],
+            "why_a_second_net": (
+                "the marker scan and the redactor share a list, so they "
+                "share a blind spot. This net censuses numeric leaves by "
+                "NAME SHAPE instead and refuses on anything economic-"
+                "shaped, including a field nobody thought to mark."),
+        },
+        "numeric_keys_that_survived": census,
+        "n_numeric_keys_that_survived": len(census),
     }
-    if leaks:
-        openr["REFUSED"] = (f"{len(leaks)} economic key(s) survived the "
-                            f"redaction: the receipt is not sealed")
+    if leaks or econ_leaks:
+        openr["REFUSED"] = (
+            f"{len(leaks)} marker leak(s) and {len(econ_leaks)} "
+            f"economic-shaped leak(s) survived the redaction: the receipt is "
+            f"not sealed")
         if out_path:
             out_path.write_text(
                 json.dumps(openr, indent=2, sort_keys=True) + "\n")
@@ -2279,6 +2349,46 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
            == "DEFERRED_NOT_RESOLVED",
            "the thin-name cell is DEFERRED, NOT RESOLVED -- its declared "
            "handling stands, and E2-A under this scope does not answer it")
+
+        # -- 27b. THE SEAL's OWN BLIND SPOT, pinned as a regression --------
+        leaky = {"symbols": {"BTCUSDT": {"staleness_sensitivity": {
+            "state": "AGREES_ACROSS_THE_STALENESS_BAR",
+            "reading_A_all_episodes_bps": 6.1,
+            "reading_B_fresh_quotes_bps": 6.4,
+            "reading_A_n_episodes": 1200}}}}
+        missed = find_sealed_leaks(leaky, "", SEALED_KEY_MARKERS_PRE_FIX)
+        caught = find_sealed_leaks(leaky)
+        red_leaky = redact_sealed(leaky, "", [])
+        ck("THE SEAL's OWN BLIND SPOT, PINNED: the pre-fix marker list saw "
+           "ZERO leaks in a block holding two eff_RT values in bps; the "
+           "current list catches them and the redaction removes the block",
+           missed == [] and len(caught) > 0
+           and find_sealed_leaks(red_leaky) == []
+           and "staleness_sensitivity" not in red_leaky["symbols"]["BTCUSDT"],
+           f"pre-fix scan: {len(missed)} leaks -- it would have certified a "
+           f"receipt carrying reading_A_all_episodes_bps. Current scan: "
+           f"{len(caught)} leaks ({', '.join(k.split('.')[-1] for k in caught[:3])}). "
+           f"A leak scan that shares its blind spot with the redactor "
+           f"certifies exactly what it fails to see")
+
+        # -- 27c. THE SECOND NET, cut differently from the first -----------
+        unforeseen = {"symbols": {"BTCUSDT": {"diagnostics": {
+            "realised_capture_per_episode": 2.4,
+            "markout_cents_at_tp": -1.1,
+            "n_episodes": 1200}}}}
+        net1 = find_sealed_leaks(unforeseen)
+        net2 = find_economic_shaped_leaks(unforeseen)
+        ck("THE SECOND NET CATCHES WHAT THE MARKER LIST WAS NEVER TOLD "
+           "ABOUT: two economic fields under names no marker matches are "
+           "caught by NAME SHAPE over numeric leaves, and the emission "
+           "refuses on either net",
+           net1 == [] and len(net2) == 2
+           and find_economic_shaped_leaks(
+               {"n_episodes": 5, "wall_s": 1.2, "p50": 29.0}) == [],
+           f"marker scan: {len(net1)} leaks. Second net: {len(net2)} "
+           f"({', '.join(net2)}). And it does NOT fire on mechanism fields "
+           f"(n_episodes, wall_s, p50) -- a net that flagged everything "
+           f"would be as useless as one that flagged nothing")
 
         # -- 28. THE RECEIPT NAMES THE CODE BY CONTENT, NOT ONLY BY COMMIT --
         rid = runner_identity()
