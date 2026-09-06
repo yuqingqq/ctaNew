@@ -62,15 +62,16 @@ import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-DECL_VERSION = 5
+DECL_VERSION = 6
 SUPERSEDES = {
-    "path": "live/mm_research/declarations/p002_e2_a_declaration_v4.json",
-    "sha256": "756ca9a31b89cd74489ce72523d0598d097c189079b256f3de9813dcabb47533",
-    "carrying_commit": "0718fea",
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v5.json",
+    "sha256": "90a9a99f6cb2a2cc4c8f45f211177695355859e157643e854a34ef77ccc7b593",
+    "carrying_commit": "8e6b753",
     "chain": ["v1 405ddb7ab10486c2 (367b800)",
               "v2 6567a25f04d7fb89 (0cbaba6)",
               "v3 6383d781c7bbeaa6 (39f3eca)",
-              "v4 756ca9a31b89cd74 (0718fea)"],
+              "v4 756ca9a31b89cd74 (0718fea)",
+              "v5 90a9a99f6cb2a2cc (8e6b753)"],
     "correction_is_in_band": (
         "rule 13: v1 is NOT edited and stands as provenance. v2 adds the "
         "data-root discipline the E2.0 RESULT review (section 6) requires of "
@@ -151,6 +152,50 @@ SUPERSEDES = {
         "FALLBACK the same docstring says was 'kept', firing on exactly the "
         "input the fix was written for. 'Designed and not landed' is not the "
         "whole account: it was landed, and it is overridden.",
+
+        "v6, THE ADMISSION LEG IS RE-DECLARED AS AN OUTAGE DETECTOR "
+        "(coordinator addendum to DA 62, on DA 61's census8 finding). v1-v5 "
+        "gated a day on the intra-day bookTicker GAP FRACTION, inherited "
+        "from E2.0 where it guarded against collector outage. MEASURED OVER "
+        "EIGHT SYMBOLS, that leg selects on HOW OFTEN THE BEST QUOTE "
+        "CHANGES: admissible days ran 16/16/16/14/14/13/11/1 against median "
+        "decision-time quote ages of 68/102/116/169/194/222/261/517 ms -- "
+        "monotone in activity -- and ICP, with 16 structurally complete days "
+        "and ZERO of its missing seconds in runs of a minute or more, was "
+        "cut to ONE. E2-A was dropping precisely the thin cell it exists to "
+        "resolve. ADMISSIBILITY IS NOW A PROPERTY OF THE COLLECTOR BEING "
+        "LIVE, never of how often a quiet book moves.",
+
+        "v6, AND THE NEW LEG HAS NO THRESHOLD CHOSEN ON THIS DATA. The "
+        "collector emits a heartbeat line carrying per-stream counters; its "
+        "cadence is MEASURED as the modal inter-heartbeat interval (60 s) "
+        "and the bar is 2x that. Measured separation on the real ledger: "
+        "every clean day's largest heartbeat gap is 61 s -- one cadence -- "
+        "while 2026-08-24 (the hf_ws_v2 era-boundary restart) is 158 s and "
+        "2026-08-26 (the reboot) is 4,656 s. The bar sits between them by "
+        "construction rather than by tuning, and the separation is a factor "
+        "of 2.6 at its tightest.",
+
+        "v6, AND WHAT MEASURING IT HAS CONSUMED, STATED RATHER THAN "
+        "GLOSSED. The DECISION to replace the leg was informed by seeing "
+        "which days v5 excluded, so eight symbols over 2026-08-20..09-05 "
+        "are CONSUMED for any further re-choice of an admission predicate "
+        "(rule 11). What is NOT tuned on them is the new leg itself: it "
+        "reads a different quantity (the collector's heartbeat, not the "
+        "book) and its bar comes from the collector's own cadence. A THIRD "
+        "predicate proposed on this evidence would need days not yet "
+        "examined.",
+
+        "v6, AND THE PARTIAL-FILL BRACKET IS SHOWN TO FIRE. DA 61 reported "
+        "that at partial_share = 0.000 the two R-570(C)(2) pricings "
+        "COINCIDE and the straddle rule cannot fire -- rule 16's shape in "
+        "my own work. The falsifiers now carry an episode built to be "
+        "partial (queue 100, order 10, 104 units through -> filled 4 of "
+        "10), on which the two pricings give eff_RT 6.0 and 10.0 and the "
+        "straddle rule FIRES, their mean 8.0 being exactly the pass the "
+        "rule exists to refuse. And the R-570(B) ordering falsifier is "
+        "split in the battery as it already was in prose: QUANTITY per "
+        "episode, COST at the aggregate gate row.",
     ],
 }
 
@@ -729,11 +774,33 @@ def declaration() -> dict:
                 "measure something else."),
             "symbol_list": E1A_REPRODUCTION_TARGET["symbols"],
             "day_admission_predicate": (
-                "a UTC day is ADMISSIBLE iff 24 hour-files exist for ALL "
-                "THREE streams -- bookTicker, trade AND depth20 -- and the "
-                "intra-day bookTicker gap fraction is < 0.05. depth20 is new "
-                "here: E2.0 needed two streams, E2-A needs three for "
-                "depth-aware sizing."),
+                "v6: a UTC day is ADMISSIBLE FOR A SYMBOL iff (a) 24 "
+                "hour-files exist for ALL THREE streams -- bookTicker, trade "
+                "AND depth20 -- and (b) THE COLLECTOR WAS LIVE for the whole "
+                "day: no gap between consecutive heartbeats exceeding 2x the "
+                "collector's own MEASURED modal cadence, and no collector "
+                "restart inside the day. Nothing about how often the book "
+                "moves enters admission."),
+            "what_is_REPORTED_and_NOT_gated": [
+                "the intra-day bookTicker gap fraction -- the quantity v5 "
+                "gated on",
+                "decision-time quote age per symbol-day (p50/p90/max at the "
+                "24 decision times), which is the staleness a thin name "
+                "actually carries into placement and which a reader must see",
+                "the gap run-length profile, which is what shows a quiet book "
+                "and an outage apart",
+            ],
+            "why_the_v5_leg_was_WRONG_and_how_that_was_established": (
+                "it was inherited from E2.0 as an OUTAGE guard and, measured "
+                "over eight symbols, turned out to select on ACTIVITY: "
+                "admissible days 16/16/16/14/14/13/11/1 against median "
+                "decision-time ages 68..517 ms, monotone. ICP's missing "
+                "seconds are 2,853-11,997 one-second holes a day with "
+                "0.0000 of them in runs of 60 s or more -- a quiet book, not "
+                "missing data -- and the leg cut it from 16 days to 1. The "
+                "control that made this readable is ADA at 16 of 16 under "
+                "the same code and the same bar, reproducing E2.0's own "
+                "admissible set."),
             "the_admissible_set_is_an_OUTPUT": (
                 "declared as an output so no expectation about which days "
                 "qualify can become a filter. Structural file-count as-of "
@@ -932,8 +999,13 @@ def declaration() -> dict:
                 "TAKER fee and the realised drift over T_p, so the winner's "
                 "curse is charged in full",
                 "the E1-A reproduction control passing on E1-A's own data",
-                "a day with all three streams complete and no gaps is "
-                "ADMITTED",
+                "a day with all three streams complete and a LIVE "
+                "collector is ADMITTED -- including a book so quiet that 99% "
+                "of its seconds carry no message, which is the whole point of "
+                "v6 and the case v5 excluded",
+                "the partial-fill bracket must be able to produce two "
+                "DIFFERENT numbers: an episode filled 4 of 10 prices at "
+                "eff_RT 6.0 residual-chased against 10.0 whole-leg-charged",
                 "an episode whose L IS inside the depth20 snapshot's twenty "
                 "levels is ADMITTED to both models -- the undefined status "
                 "must be able NOT to fire, or it is a filter wearing a "
@@ -961,6 +1033,13 @@ def declaration() -> dict:
                 "the runner must REFUSE a result-bearing emission off the "
                 "canonical ledger root (de_data_root.require_canonical, "
                 "adopted from P-003 and imported, not copied)",
+                "a day whose COLLECTOR heartbeat shows a gap beyond twice its "
+                "measured cadence, or a restart inside the day, must be "
+                "EXCLUDED even with 24 hour-files on all three streams",
+                "a partial episode's two pricings straddling the threshold "
+                "must return FAIL_PARTIAL_FILL_PRICING_STRADDLES rather than "
+                "their mean -- driven on an episode that is ACTUALLY partial, "
+                "because at partial_share = 0.000 the rule cannot fire at all",
                 "the runner must REFUSE if the E1-A reproduction control "
                 f"misses the published numbers by more than "
                 f"{E1A_REPRODUCTION_TARGET['tolerance_bps']} bps"
