@@ -503,21 +503,39 @@ class _Stages:
     def __init__(self, budgets: dict, *, cap_gb: float = CAP_GB):
         self.budgets = dict(budgets)
         self.cap_gb = cap_gb
-        #: this run's own high-water BEFORE its first stage
-        self.baseline_gb = _rss_gb()
+        #: CURRENT RSS, not the high-water. REV 59 §3: round 60 took BOTH
+        #: terms of the growth from `ru_maxrss`, which never falls -- so a
+        #: SECOND `_Stages` in the same process read growth 0.000 and its
+        #: budget could not fire at all. DE 89 measured and rejected that
+        #: same instrument a round earlier and its comment says why: "a
+        #: budget measured with an instrument that cannot fall is a budget
+        #: that only works once per process". `_rss_now_gb` exists in this
+        #: module precisely because a falling number was needed.
+        self.baseline_gb = _rss_now_gb()
         self.rows = []
 
     def done(self, name: str, t0: float) -> dict:
         b = self.budgets.get(name)
-        peak = _rss_gb()
+        peak = _rss_gb()                      # process high-water: the CAP
+        cur = _rss_now_gb()                   # falls: the BUDGET
         row = {"stage": name, "wall_s": round(time.time() - t0, 1),
                "peak_gb": peak,
                "baseline_gb": self.baseline_gb,
-               "growth_gb": round(peak - self.baseline_gb, 3),
-               "current_gb": _rss_now_gb(),
+               "growth_gb": round(cur - self.baseline_gb, 3),
+               "current_gb": cur,
                "budget_gb": b, "cap_gb": self.cap_gb,
-               "budget_is_measured_on": "growth_gb (this run's own), never "
-                                        "the process-wide ru_maxrss"}
+               "budget_is_measured_on": "CURRENT RSS minus this _Stages' own "
+                                        "baseline -- an instrument that can "
+                                        "FALL, so the budget fires as often "
+                                        "as it is asked. The cap below is "
+                                        "measured on the process high-water, "
+                                        "which is the right instrument for a "
+                                        "ceiling that must never be crossed",
+               "what_growth_cannot_see": "a transient INSIDE a stage that is "
+                                         "already released by the time the "
+                                         "stage ends. That is what the "
+                                         "high-water cap check catches, and "
+                                         "it is why both are reported"}
         row["within_budget"] = (b is None or row["growth_gb"] <= b)
         row["within_cap"] = peak <= self.cap_gb
         self.rows.append(row)
@@ -889,7 +907,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 58
+EXPECTED_CHECKS = 64
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -1312,40 +1330,76 @@ def selftest() -> int:
        f"digested at import, HEAD {str(_mine['builder_commit'])[:12]}, and "
        f"the producing digest equals this file on disk")
 
-    # ---- the per-stage budget is GROWTH, never the process high-water ----
-    _now_hw = _rss_gb()
-    _sg = _Stages({"S": round(_now_hw / 2, 3)}, cap_gb=CAP_GB)
-    _sg.baseline_gb = round(_now_hw - 0.01, 3)   # as if earlier work ran
-    _rowg = _sg.done("S", time.time())
-    ok(_rowg["within_budget"]
-       and _rowg["growth_gb"] <= _rowg["budget_gb"]
-       and _rowg["peak_gb"] > _rowg["budget_gb"]
-       and _rowg["baseline_gb"] == round(_now_hw - 0.01, 3),
-       f"DA 77 / R-613 CLOSED: a stage whose own GROWTH is "
-       f"{_rowg['growth_gb']} GB passes a {_rowg['budget_gb']} GB budget "
-       f"even though the process high-water is {_rowg['peak_gb']} GB -- "
-       f"ABOVE that budget. This is the smoke's "
-       f"death exactly -- a real day's 2,426 MB judged against a fixture's "
-       f"700 MB -- and it now admits")
-    _sb = _Stages({"S": 0.001}, cap_gb=CAP_GB); _sb.baseline_gb = 0.0
+    # ---- the per-stage budget: an instrument that can FALL, and FIRE ----
+    # REV 59 §3. Round 60's known-bads hand-set the baseline to zero AFTER
+    # construction, so they tested the arithmetic and not the instrument --
+    # and the instrument's one failure mode was exactly what the hand-set
+    # hid. Nothing below sets a baseline: every _Stages here uses the one
+    # its own constructor took, which is the thing under test.
+    #: DECLARED, not derived from ambient memory. Round 60 read the process
+    #: high-water here and halved it to make a budget -- a bound computed
+    #: from whatever the process happened to be holding, which means
+    #: something different on every run (the class DA 81 is generalising).
+    _PROBE_BUDGET_GB = 0.05
+    _PROBE_ALLOC_MB = 300
+    _sg = _Stages({"S": _PROBE_BUDGET_GB}, cap_gb=CAP_GB)
+    _row_idle = _sg.done("S", time.time())
+    ok(_row_idle["within_budget"] and _row_idle["growth_gb"] <= _PROBE_BUDGET_GB
+       and _row_idle["baseline_gb"] == _sg.baseline_gb,
+       f"POSITIVE CONTROL, ON THE CONSTRUCTOR'S OWN BASELINE: a stage that "
+       f"allocates nothing grows {_row_idle['growth_gb']} GB from the "
+       f"{_row_idle['baseline_gb']} GB baseline `_Stages` took itself, and "
+       f"ADMITS against a DECLARED {_PROBE_BUDGET_GB} GB budget")
+    _blob = bytearray(_PROBE_ALLOC_MB * 1024 * 1024)
+    _blob[::4096] = b"\x01" * (len(_blob) // 4096)        # touch every page
     try:
-        _sb.done("S", time.time())
+        _sg.done("S", time.time())
         ok(False, "growth over budget must refuse")
     except BookRefused as _e:
-        ok("GREW" in str(_e) and "own" in str(_e) and "NOT raised" in str(_e),
-           "KNOWN-BAD: growth over the declared budget REFUSES, naming the "
-           "growth and the baseline it is measured from -- the budget is "
-           "not widened by moving to growth, it is measured on the "
-           "quantity it names")
-    _sc = _Stages({"S": 99.0}, cap_gb=0.001); _sc.baseline_gb = 0.0
+        ok("GREW" in str(_e) and "NOT raised" in str(_e),
+           f"KNOWN-BAD A: {_PROBE_ALLOC_MB} MB of real, touched memory "
+           f"against a {_PROBE_BUDGET_GB} GB budget REFUSES, naming the "
+           f"growth and the baseline it is measured from")
+    _hw_after = _rss_gb()
+    del _blob
+    __import__("gc").collect()
+    # THE REVIEWER'S FALSIFIER (REV 59 §3B): a SECOND _Stages in the SAME
+    # process, after the high-water has already been pushed up. On round
+    # 60's instrument both terms came from the high-water, so this read a
+    # growth of zero and COULD NOT FIRE -- a budget that only works once
+    # per process, which is the instrument DE 89 measured and rejected a
+    # round before I shipped it.
+    _sg2 = _Stages({"S": _PROBE_BUDGET_GB}, cap_gb=CAP_GB)
+    _blob2 = bytearray((_PROBE_ALLOC_MB // 2) * 1024 * 1024)
+    _blob2[::4096] = b"\x01" * (len(_blob2) // 4096)
+    try:
+        _sg2.done("S", time.time())
+        ok(False, "the SECOND _Stages must still refuse")
+    except BookRefused as _e2:
+        ok("GREW" in str(_e2) and _sg2.baseline_gb < _hw_after,
+           f"KNOWN-BAD B -- THE ONE ROUND 60 COULD NOT FIRE: a SECOND "
+           f"_Stages in the same process, with the high-water already at "
+           f"{_hw_after} GB, takes a baseline of {_sg2.baseline_gb} GB "
+           f"(current RSS, which fell) and still REFUSES on "
+           f"{_PROBE_ALLOC_MB // 2} MB. Measured on the high-water both "
+           f"terms would be {_hw_after} and the growth would read zero")
+    del _blob2
+    __import__("gc").collect()
+    ok(_rss_gb() >= _hw_after and _rss_now_gb() < _hw_after,
+       f"AND THE TWO INSTRUMENTS ARE DIFFERENT, MEASURED: after the "
+       f"allocations were freed the high-water stayed at {_rss_gb()} GB "
+       f"while current RSS fell to {_rss_now_gb()} GB. The budget needs the "
+       f"falling one; the cap needs the other")
+    _sc = _Stages({"S": 99.0}, cap_gb=0.001)
     try:
         _sc.done("S", time.time())
         ok(False, "a peak over the cap must refuse")
     except BookRefused as _e:
         ok("CAP" in str(_e) and "never raised" in str(_e),
-           "KNOWN-BAD, AND THE REASON GROWTH DOES NOT WIDEN ANYTHING: the "
-           "absolute high-water is still checked against the CAP, so a run "
-           "that fits its budget but not the machine still refuses")
+           "KNOWN-BAD C, AND THE REASON GROWTH DOES NOT WIDEN ANYTHING: the "
+           "absolute high-water is still checked against the CAP -- on "
+           "`ru_maxrss`, which is the right instrument for a ceiling -- so "
+           "a run that fits its budget but not the machine still refuses")
 
     # ---- the seam commit is READ, and the receipt name is the resolver's --
     _sc2 = _R22.module_commit(Path(HERE) / "de_phase4_diag_runner.py")
@@ -1471,7 +1525,7 @@ def selftest() -> int:
                           .read_text())
     finally:
         globals()["OUT_DERIVED"] = _saved2
-    ok(_res["v1_untouched"]
+    ok(_res["superseded_untouched"]
        and _sha_file(_fx2 / "be_daybook_receipt_20260101_btc.json")
        == _v1_sha_before
        and _out["supersedes"]["sha256"] == _v1_sha_before
@@ -1509,6 +1563,65 @@ def selftest() -> int:
        "block is marked unrecoverable with both external observations and "
        "their disagreement, and the producing code is labelled a "
        "reconstruction rather than dressed up as an import-time stamp")
+    ok("builder_commit" not in _out["producing_code"]
+       and _out["producing_code"]["status"] == "RECONSTRUCTED_NOT_A_STAMP"
+       and "builder_commit_RECONSTRUCTED" in _out["producing_code"],
+       "REV 59 S6: THE DISCLOSURE IS IN THE KEY. A resolver keying on "
+       "`producing_code.builder_commit` finds NOTHING in a reconstruction -- "
+       "round 60 gave it a commit that matched the bytes but was not the "
+       "run's head, with the five disclosing fields under other keys. Rule "
+       "13's own lesson: readers resolve fields, not annotations")
+    # the head is RESOLVED: superseding again must produce .v3 from .v2,
+    # linked to .v2 -- not another .v2 built from v1
+    globals()["OUT_DERIVED"] = _fx2
+    try:
+        _res3 = supersede_receipt("20260101", "btc")
+        _out3 = json.loads(Path(_res3["new_version"]).read_text())
+    finally:
+        globals()["OUT_DERIVED"] = _saved2
+    _ra3 = _out3["assembly_evidence"]["ROW_ACCOUNTING"]
+    ok(_ra3["rows_accounted_for"] is True and _ra3["dropped"] == 100
+       and _ra3["accounted"] == 1000
+       and _ra3["dropped_read_from"] == "the head's ROW_ACCOUNTING"
+       and _out3["producing_code"][
+           "run_head_recoverable_from_the_receipt"] is False,
+       f"THE CORRECTION IS IDEMPOTENT, AND A RECONSTRUCTION IS NOT A "
+       f"SOURCE: superseding an already-corrected head keeps the row "
+       f"accounting closed ({_ra3['dropped']} dropped, read from "
+       f"{_ra3['dropped_read_from']}) instead of silently defaulting the "
+       f"drops to zero and reporting a failure on numbers that close -- and "
+       f"the run head still reads NOT recoverable, because the head it came "
+       f"from was itself a reconstruction, not an import-time stamp")
+    globals()["OUT_DERIVED"] = _fx2
+    try:
+        (_fx2 / "be_daybook_receipt_20260101_btc.v3.json").rename(
+            _fx2 / "be_daybook_receipt_20260101_btc.v3.json.bak")
+        _stripped = json.loads(json.dumps(_out))
+        _stripped["assembly_evidence"]["ROW_ACCOUNTING"].pop("dropped")
+        _stripped["assembly_evidence"]["ROW_ACCOUNTING"].pop("by_reason")
+        _stripped["assembly_evidence"]["UNCOVERED_GENERATIONS"].pop(
+            "reasons_sum", None)
+        (_fx2 / "be_daybook_receipt_20260101_btc.v2.json").write_text(
+            json.dumps(_stripped, indent=1, sort_keys=True))
+        try:
+            supersede_receipt("20260101", "btc")
+            ok(False, "a head with no drop count must refuse")
+        except BookRefused as _e:
+            ok("no drop count in any known field" in str(_e),
+               "KNOWN-BAD: a head carrying NO drop count in any known field "
+               "REFUSES rather than defaulting it to zero -- which is how "
+               "the first .v3 reported an accounting failure on numbers "
+               "that close (rule 11: absence is not a value)")
+    finally:
+        globals()["OUT_DERIVED"] = _saved2
+    ok(Path(_res3["new_version"]).name == "be_daybook_receipt_20260101_btc.v3.json"
+       and _out3["supersedes"]["artifact"]
+       == "be_daybook_receipt_20260101_btc.v2.json"
+       and _out3["supersedes"]["sha256"] == _res["new_version_sha256"],
+       f"AND THE VERSION IS RESOLVED, NOT TYPED: a second correction "
+       f"produces {Path(_res3['new_version']).name} superseding the .v2 by its "
+       f"{{path, sha256}} -- applying a correction to a stale version would "
+       f"silently drop the corrections already in the head")
     ok(_out["producing_code"]["run_head_recoverable_from_the_receipt"]
        is False
        and "NOT RECOVERABLE" in _out["producing_code"]["run_head_source"]
@@ -1587,7 +1700,7 @@ BE59_SCOPE_OBSERVED = {
 
 
 def supersede_receipt(day: str, coin: str = COIN, *,
-                      out_suffix: str = ".v2",
+                      out_suffix: str | None = None,
                       run_head: str | None = None,
                       run_head_source: str | None = None) -> dict:
     """CORRECT A LANDED BOOK RECEIPT IN BAND (rule 13). NO RE-ASSEMBLY.
@@ -1598,9 +1711,17 @@ def supersede_receipt(day: str, coin: str = COIN, *,
     re-derived from the book, no arm is scored, and v1 is never edited: it
     stays as provenance and this file supersedes it by {path, sha256}."""
     import copy
-    src = OUT_DERIVED / f"be_daybook_receipt_{day}_{coin}.json"
-    if not src.exists():
-        raise BookRefused(f"REFUSED: no receipt to supersede at {src.name}.")
+    # THE HEAD IS RESOLVED, NEVER TYPED -- the same discipline that closed
+    # the `.v3.json` defect. A correction applied to a stale version would
+    # silently drop the corrections already in the head.
+    cands, _ver = _receipt_head(f"be_daybook_receipt_{day}_{coin}")
+    cands = [c for c in cands if ".WRONG" not in c.name]
+    if not cands:
+        raise BookRefused(
+            f"REFUSED: no receipt to supersede for {day} {coin}.")
+    src = cands[0]
+    if out_suffix is None:
+        out_suffix = f".v{_ver(src) + 1}"
     raw = src.read_bytes()
     v1 = json.loads(raw)
     v1_sha = hashlib.sha256(raw).hexdigest()
@@ -1625,12 +1746,32 @@ def supersede_receipt(day: str, coin: str = COIN, *,
     ev = v2.get("assembly_evidence") or {}
     ug = ev.get("UNCOVERED_GENERATIONS") or {}
     kept = sum(int(x) for x in (ev.get("kept_by_coin") or {}).values())
-    dropped = int(ug.get("reasons_sum") or 0)
+    # THE CORRECTION MUST BE IDEMPOTENT. Reading `reasons_sum` alone worked
+    # on v1 and silently returned 0 on an already-corrected head, where that
+    # field no longer exists -- so a .v3 built from a .v2 reported
+    # `rows_accounted_for: false` on numbers that had closed. Absence must
+    # never read as a value (rule 11): the count is taken from whichever
+    # block holds it, and if none does the correction REFUSES.
+    _prev_ra = ev.get("ROW_ACCOUNTING") or {}
+    if _prev_ra.get("dropped") is not None:
+        dropped, _dsrc = int(_prev_ra["dropped"]), "the head's ROW_ACCOUNTING"
+    elif ug.get("reasons_sum") is not None:
+        dropped, _dsrc = int(ug["reasons_sum"]), "the head's reasons_sum"
+    elif _prev_ra.get("by_reason") or ug.get("by_reason"):
+        _br = _prev_ra.get("by_reason") or ug.get("by_reason")
+        dropped, _dsrc = sum(int(v) for v in _br.values()), "by_reason"
+    else:
+        raise BookRefused(
+            f"REFUSED: {src.name} carries no drop count in any known field "
+            f"(ROW_ACCOUNTING.dropped, reasons_sum, by_reason). Defaulting "
+            f"it to zero would report an accounting failure on numbers that "
+            f"close.")
     rows_published = (pin or {}).get("n_rows")
     ev["ROW_ACCOUNTING"] = {
         "population": "FRAGMENT ROWS",
         "kept": kept, "dropped": dropped,
-        "by_reason": ug.get("by_reason"),
+        "by_reason": _prev_ra.get("by_reason") or ug.get("by_reason"),
+        "dropped_read_from": _dsrc,
         "accounted": kept + dropped,
         "rows_published_by_the_tape_receipt": rows_published,
         "rows_pin_receipt": (pin or {}).get("receipt"),
@@ -1689,12 +1830,28 @@ def supersede_receipt(day: str, coin: str = COIN, *,
     #     that ran carried no import-time capture, so this is not a stamp.
     _blob = _blob_sha_at(head, "live/pm_research/be_daybook_build.py")
     v2["producing_code"] = {
+        # REV 59 S6: THE DISCLOSURE IS IN THE KEY, not in a neighbouring
+        # field. Rule 13's own lesson is that automated readers resolve
+        # FIELDS, not annotations: a resolver keying on `builder_commit`
+        # got a commit that matches the bytes and is NOT the run's head,
+        # while the five fields saying so were different keys. There is now
+        # no `builder_commit` here to find -- the value carries its status
+        # in its name, the pattern already used by `receipt_corrected_from`.
+        # (`status` is also set, but the KEY is what carries it: this file
+        # is written with sort_keys, so no field is reliably "first".)
+        "status": "RECONSTRUCTED_NOT_A_STAMP",
         "reconstructed_after_the_fact": True,
-        "run_head_recoverable_from_the_receipt": bool(
-            (v1.get("producing_code") or {}).get("builder_commit")),
+        # A RECONSTRUCTION IS NOT A SOURCE. This tested for a
+        # `builder_commit` KEY, which the previous reconstruction also had
+        # -- so superseding a .v2 reported the head as recoverable from the
+        # receipt when it was only recoverable from an earlier guess. The
+        # test is now for a genuine import-time capture.
+        "run_head_recoverable_from_the_receipt": (
+            (v1.get("producing_code") or {}).get("captured_at") == "IMPORT"),
         "run_head_source": run_head_source or (
-            "the receipt's own stamp" if (v1.get("producing_code") or {})
-            .get("builder_commit") else "NOT RECOVERABLE from the artifact"),
+            "the receipt's own import-time stamp"
+            if (v1.get("producing_code") or {}).get("captured_at") == "IMPORT"
+            else "NOT RECOVERABLE from the artifact"),
         "builder_digest_matches_that_commit": (
             None if not (head and _blob) else
             _blob == "6a09f7e3aac7ede37ce7347ee341cb950861767e"
@@ -1713,7 +1870,17 @@ def supersede_receipt(day: str, coin: str = COIN, *,
         "sha256_at_the_run_head": _blob_sha_at(head,
                                                "live/pm_research/"
                                                "be_daybook_build.py"),
-        "builder_commit": head,
+        "builder_commit_RECONSTRUCTED": head,
+        "why_the_key_is_not_builder_commit": "a resolver keying on "
+                                             "`builder_commit` must find "
+                                             "NOTHING here, because this is "
+                                             "not one. Receipts produced "
+                                             "from round 60 onward carry a "
+                                             "real `builder_commit` inside "
+                                             "an import-time stamp, and the "
+                                             "two must not be "
+                                             "indistinguishable to a "
+                                             "machine",
         "from_round_60_onward": "captured at IMPORT with the import closure "
                                 "and HEAD, and the emit refused by name if "
                                 "any of it moves",
@@ -1736,8 +1903,12 @@ def supersede_receipt(day: str, coin: str = COIN, *,
             f"REFUSED: v1 changed while its superseding version was being "
             f"written -- {v1_sha[:16]} -> {after[:16]}. A superseding "
             f"receipt whose predecessor moved is not a correction.")
-    return {"v2": str(dst), "v2_sha256": _sha_file(dst),
-            "v1_sha256": v1_sha, "v1_untouched": True,
+    # NAMES THAT TRACK WHAT THEY HOLD: this returned `v2`/`v1_sha256` while
+    # writing a .v3 over a .v2 -- the same class as the receipt-name literal,
+    # in my own return value.
+    return {"new_version": str(dst), "new_version_sha256": _sha_file(dst),
+            "superseded": src.name, "superseded_sha256": v1_sha,
+            "superseded_untouched": True,
             "book_sha256_unchanged": v2["book"]["sha256"] == v1["book"]["sha256"]}
 
 
