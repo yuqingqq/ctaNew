@@ -1,0 +1,348 @@
+{
+  "THE_DECLARED_CHAIN": [
+    {
+      "do": "run THE_ONE_COMMAND with one substitution (the unit name)",
+      "step": 1,
+      "then": "read the TRIPLE at once: a held lock is ExecMainStatus=75 and the payload never started"
+    },
+    {
+      "do": "poll the UNIT (LoadState, ActiveState, ExecMainStatus), never a child PID",
+      "step": 2,
+      "then": "a running unit reports ExecMainStatus=0; that is not a finish"
+    },
+    {
+      "do": "when the unit leaves `active`, COPY the triple and the journal by InvocationID on both fields WHILE LoadState=loaded",
+      "step": 3,
+      "then": "after collection every field is a DEFAULT; a reading taken then is VOID, never success"
+    },
+    {
+      "do": "read the receipt the runner named under the output directory",
+      "step": 4,
+      "then": "the receipt is the record; the unit reading corroborates it"
+    },
+    {
+      "do": "COPY THE UNIT'S JOURNAL AGAIN, by both invocation fields, AFTER the unit has exited",
+      "step": 5,
+      "then": "the `Consumed` line is written at exit and it is the line that survives longest -- DE 84's `Started` line was gone four hours later while its `Consumed` line remained. The receipt's own copy is taken at the EMIT, before that line exists, so the record needs both"
+    },
+    {
+      "do": "`systemctl --user stop <unit>` -- the owner stops it once both copies are taken",
+      "step": 6,
+      "then": "the name is free for the next launch. RemainAfterExit keeps a finished unit loaded until someone does this"
+    }
+  ],
+  "THE_ONE_COMMAND": "systemd-run --user --unit=<deNNsmoke> --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% -p RemainAfterExit=yes --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew --working-directory=/home/yuqing/ctaNew-wt-de2 -- flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-04 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived",
+  "as_of": "2026-09-06T14:48:11.754089+00:00",
+  "blocking": [],
+  "book": {
+    "REFUSES_NOW_BY_NAME": null,
+    "builder_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260904_btc.json",
+    "builder_receipt_exists": true,
+    "exists": true,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl"
+  },
+  "coin": "btc",
+  "data_root": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "purpose": "the smoke rehearsal",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "day": "2026-09-04",
+  "day_compact": "20260904",
+  "declarations": {
+    "design": {
+      "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v21.json",
+      "sha256": "NOT_PINNED_HERE -- the pin runs design -> params"
+    },
+    "params": {
+      "path": "live/pm_research/declarations/de_multiday_gate1_params_v14.json",
+      "sha256": "2da40f4e7b2305df31ee995480b96236eed29915aa72139395d646305bc236c9"
+    }
+  },
+  "informational_and_false_now": [],
+  "name_stamp": {
+    "as_of": "2026-09-06T14:48:11.754089+00:00",
+    "delta_seconds": -0.754089,
+    "name_carries_a_stamp": true,
+    "stamp": "20260906T144811Z",
+    "stamp_is_the_clock": true,
+    "tolerance_s": 300
+  },
+  "preconditions_evaluated_now": [
+    {
+      "blocks_go": true,
+      "detail": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+      "holds": true,
+      "precondition": "P2_book_exists"
+    },
+    {
+      "blocks_go": true,
+      "detail": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260904_btc.json",
+      "holds": true,
+      "precondition": "P2_builder_receipt_exists"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v14.json",
+        "sha256": "2da40f4e7b2305df31ee995480b96236eed29915aa72139395d646305bc236c9"
+      },
+      "holds": true,
+      "precondition": "P3_params"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "chain_links_all_agree": true,
+        "head_pins_params_sha256": "2da40f4e7b2305df31ee995480b96236eed29915aa72139395d646305bc236c9",
+        "head_version": 23,
+        "params_name_this_design": "data/pm_5min/derived/p003_de_multiday_gate1_design_v21.json",
+        "params_sha256_here": "2da40f4e7b2305df31ee995480b96236eed29915aa72139395d646305bc236c9",
+        "pin_direction": "design -> params",
+        "resolved_head": "p003_de_multiday_gate1_design_v23.json",
+        "the_named_design_is_in_the_chain": true,
+        "why_the_head_and_not_the_named_path": "the params name the design by PATH; requiring that path to be the head forces a params bump per design version for a pointer alone. The HEAD pins the params by digest -- the binding half -- and the named path must be IN the chain"
+      },
+      "holds": true,
+      "precondition": "P3_design"
+    },
+    {
+      "blocks_go": true,
+      "detail": "/home/yuqing/ctaNew/data",
+      "holds": true,
+      "precondition": "P4_data_root_is_the_ledger"
+    },
+    {
+      "blocks_go": false,
+      "detail": {
+        "held_by_self_or_ancestor": false,
+        "holder_pids": [],
+        "lock_is_held_by_someone": false,
+        "modes": [],
+        "why_informational": "the lock is TAKEN by the wrapper at GO, so its state now does not gate GO"
+      },
+      "holds": true,
+      "precondition": "P5_lock_free_now"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "declared": "93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef",
+        "path": "live/pm_research/be_cancel_axis_null.py"
+      },
+      "holds": true,
+      "precondition": "P7_cascade_digest"
+    },
+    {
+      "blocks_go": true,
+      "detail": [
+        "2026-09-03",
+        "2026-09-04",
+        "2026-09-05",
+        "2026-09-06",
+        "2026-09-07",
+        "2026-09-08"
+      ],
+      "holds": true,
+      "precondition": "day_is_in_the_ruled_set"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "declared_convention": "the runner's own: p003_de_gate1_day_run_<YYYYMMDD>_SEALED__<stamp>.json",
+        "directory": "/home/yuqing/ctaNew/data/pm_5min/derived",
+        "example_name_if_emitted_now": "p003_de_gate1_day_run_20260904_SEALED__20260906T144811Z.json",
+        "output_is_a_directory": true,
+        "the_filename_is_composed_by": "day_receipt_name(), from emission_stamp() at the moment of writing",
+        "why_not_the_caller": "a path that must be known in advance cannot carry an honest stamp (DE 88); the directory is knowable in advance and carries none"
+      },
+      "holds": true,
+      "precondition": "P8_output_is_a_directory_and_the_name_is_composed"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "form": "systemd-run --user transient SERVICE (never --scope)",
+        "lock_is_inside_the_unit": true,
+        "ok": true,
+        "poll_by": "the UNIT name, never a child PID",
+        "requirements_checked": [
+          "absolute_interpreter",
+          "lock_inside_the_unit",
+          "memory_and_cpu",
+          "no_scope",
+          "slice",
+          "unit_named",
+          "working_directory"
+        ],
+        "unit_substitution_left": 1
+      },
+      "holds": true,
+      "precondition": "P11_launch_form_is_a_transient_service"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "day": "2026-09-04",
+        "expected_glob": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__*.json",
+        "n_sealed_artifacts_present": 0
+      },
+      "holds": true,
+      "precondition": "P9_no_sealed_receipt_for_this_day_yet"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "any_untracked_entry": true,
+        "dirty_beyond_the_shared_data_link": false,
+        "dirty_paths": [
+          "data"
+        ],
+        "dirty_paths_beyond_the_shared_data_link": [],
+        "head": "477d3679afcc610dc167475faf4309f28795c6f0",
+        "n_modules_in_the_import_closure": 5,
+        "shared_data_link_exempted": [
+          "data"
+        ],
+        "why_it_blocks": "a REAL day refuses at import on a dirty worktree, and the emit refuses if any module of the closure or HEAD moves during the run. The run must execute from a worktree frozen for its whole life, and this seat must land from a different one (REV 55 S2.2)",
+        "worktree": "/home/yuqing/ctaNew-wt-de2"
+      },
+      "holds": true,
+      "precondition": "P10_run_worktree_is_clean_at_import"
+    }
+  ],
+  "protocol": "P003_DE_GATE1_SMOKE_REHEARSAL_V1",
+  "resource_observation": {
+    "wall_seconds": 0.03217887878417969
+  },
+  "source_identity": {
+    "carrying_commit": "477d3679afcc610dc167475faf4309f28795c6f0",
+    "closure_drift": [],
+    "closure_unchanged_during_the_run": true,
+    "digest_taken_at": "MODULE IMPORT, before any work",
+    "head_at_emit": {
+      "dirty": true,
+      "dirty_beyond_the_shared_data_link": false,
+      "dirty_paths": [
+        "data"
+      ],
+      "dirty_paths_beyond_the_shared_data_link": [],
+      "head": "477d3679afcc610dc167475faf4309f28795c6f0",
+      "porcelain": {
+        "malformed": [],
+        "n_malformed": 0,
+        "n_rows": 1,
+        "parser": "da_root.parse_porcelain -- the programme's ONE porcelain reader (R-641)",
+        "renames": []
+      },
+      "shared_data_link_exempted": [
+        "data"
+      ],
+      "why_exempted": "an UNTRACKED SYMLINK resolving to the canonical data root -- `scripts/wt_refresh.sh` makes it so every seat reads one data tree. Verified as a property (untracked AND a symlink AND resolving to the data root), never matched by name",
+      "worktree": "/home/yuqing/ctaNew-wt-de2"
+    },
+    "head_at_import": {
+      "dirty": true,
+      "dirty_beyond_the_shared_data_link": false,
+      "dirty_paths": [
+        "data"
+      ],
+      "dirty_paths_beyond_the_shared_data_link": [],
+      "head": "477d3679afcc610dc167475faf4309f28795c6f0",
+      "porcelain": {
+        "malformed": [],
+        "n_malformed": 0,
+        "n_rows": 1,
+        "parser": "da_root.parse_porcelain -- the programme's ONE porcelain reader (R-641)",
+        "renames": []
+      },
+      "shared_data_link_exempted": [
+        "data"
+      ],
+      "why_exempted": "an UNTRACKED SYMLINK resolving to the canonical data root -- `scripts/wt_refresh.sh` makes it so every seat reads one data tree. Verified as a property (untracked AND a symlink AND resolving to the data root), never matched by name",
+      "worktree": "/home/yuqing/ctaNew-wt-de2"
+    },
+    "head_unchanged_during_the_run": true,
+    "import_closure": {
+      "captured_at": [
+        "module import",
+        "the cascade's first import",
+        "after the cascade's first load(), which imports harmful_stateful_policy and de_phase4_diag_runner LAZILY -- the closure reached the cascade and stopped there, and the two modules that do the REPLAYING were outside it (REV 53 S1.1)"
+      ],
+      "digested": "from the bytes observed when each module first entered THIS run -- never a second read, because import_module can return a cached module whose file has since moved",
+      "modules": {
+        "da_root.py": "0c0e604bc50693ae66c35d24febae59ceff8b5b5957a089ab97083ba0e3be1f9",
+        "de_data_root.py": "faa5871836555684779c0e2e617d8bbeb7f1f8d1378f02398edf6637384109ad",
+        "de_multiday_design_declaration.py": "8e6d2e5b8454f58601ba23121c4212fdf5a413e0415a5f2cd267bb2cab12da8a",
+        "de_multiday_gate1_runner.py": "dcd7667fc80b1fc1ba6cf60e6de9ef439a081e1f285aff992e12c4b774afdabe",
+        "pm_tape_density.py": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912"
+      },
+      "n_modules": 5,
+      "root": "/home/yuqing/ctaNew-wt-de2/live"
+    },
+    "launch_time_utc": "2026-09-06T14:48:11.701075+00:00",
+    "on_disk_sha256_at_emit": "dcd7667fc80b1fc1ba6cf60e6de9ef439a081e1f285aff992e12c4b774afdabe",
+    "producing_code": "de_multiday_gate1_runner.py",
+    "producing_code_is_the_committed_bytes": true,
+    "producing_code_path": "live/pm_research/de_multiday_gate1_runner.py",
+    "producing_code_sha256": "dcd7667fc80b1fc1ba6cf60e6de9ef439a081e1f285aff992e12c4b774afdabe",
+    "source_unchanged_during_the_run": true,
+    "tree_dirty": true,
+    "tree_dirty_is_NOT_the_check": "other seats' uncommitted files say nothing about this producer; the check above compares THIS file's blob at HEAD with the bytes that ran",
+    "worktree_had_any_untracked_entry_at_import": true,
+    "worktree_was_dirty_at_import": false
+  },
+  "status": "READY",
+  "the_null": {
+    "draws_per_arm": 500,
+    "generated": "IN PROCESS, through be_cancel_axis_null at the verified digest (R-572(B)(1))",
+    "metric": "D(E0) per draw = value(draw's fills) - value(baseline fills), from fill_value_cents",
+    "seed_is_derived_from": "the day book's own sha256 and the arm name -- so it cannot be computed until the book exists",
+    "seed_rule": "int(sha256(f'{day_book_sha256}|{arm}|P003_GATE1_MULTIDAY'.encode()).hexdigest()[:8], 16)"
+  },
+  "what_the_run_writes": {
+    "run_receipt": "battery equality, the resolved data root, the BE citation, the wrapper AS MEASURED, and the scope's anon/file/peak/events",
+    "seal_layout": {
+      "conditional_key": "economic",
+      "keys_in_both_states": [
+        "sealed",
+        "seal_status",
+        "sealed_at_every_depth",
+        "sealed_field_names"
+      ],
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary",
+        "sd_over_abs_mean",
+        "n_fills_arm",
+        "n_fills_baseline",
+        "n_cancels_issued"
+      ]
+    },
+    "sealed_per_day_artifact": "economic fields ABSENT at every depth; counts, statuses, admissibility and draw provenance published"
+  },
+  "what_this_is_not": {
+    "a_run": false,
+    "it_opens_no_book": true,
+    "it_scores_no_arm": true
+  },
+  "what_this_rehearsal_found": [
+    "BE's builder receipt is `be_daybook_receipt_<DAY>_<COIN>.json`, not the book path with a `.json` suffix -- the old derivation would have refused a correct book AT GO for a naming reason",
+    "BE stamps the day COMPACT (`20260903`) and DE names it dashed (`2026-09-03`); the receipt's day check now compares day FORMS",
+    "BE's receipt carries the digest at `book.sha256`, not at a top-level `sha256`"
+  ]
+}
