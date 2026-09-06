@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 302
+EXPECTED_CHECKS = 305
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -127,32 +127,118 @@ def economic_fields_in_force(design_version: int | None = None) -> tuple:
                  if SEALED_FROM_DESIGN_VERSION.get(n, 1) <= v)
 
 
-def design_version_of_receipt(rec: dict) -> dict:
-    """WHICH SCOPE A RECEIPT IS JUDGED UNDER, read from the receipt.
+#: The last design version whose seal scope was the original eight. A
+#: receipt POSITIVELY recognised as older than the correction is judged
+#: under this; absence never selects it (REV 73 §1.1(a)).
+SCOPE_BEFORE_THE_CORRECTION = 22
+#: The correction: the version from which the three outcome counts are
+#: sealed, and the moment after which every receipt carries a design pair.
+SCOPE_CORRECTED_AT_DESIGN_VERSION = 23
+SCOPE_CORRECTION_UTC = "2026-09-06T14:45:00Z"
 
-    From DE 100 a receipt carries `provenance.design.path`, whose name
-    carries the version. Older receipts carry only `protocol`; the 09-03
-    receipt was produced under design v21, before either the question or
-    this field existed, so a receipt with neither is judged under the
-    version in force when the SEAL SCOPE was last unchanged -- v22, the
-    last version whose scope was the original eight."""
-    src, ver = None, None
+
+def design_version_of_receipt(rec: dict) -> dict:
+    """WHICH SCOPE A RECEIPT IS JUDGED UNDER -- read from the receipt.
+
+    **STABLE NAME. DA reads this function and `economic_fields_in_force`
+    by AST from DA 95 on; neither is renamed in place. A change of meaning
+    arrives as a superseding name, never as the same name doing something
+    else.**
+
+    REV 73 §1.1 found three holes in the first version, all driven:
+
+      (a) THE DEFAULT WAS THE PERMISSIVE LIST. A receipt with no
+          provenance fell through to v22 -- eight names -- so ABSENCE
+          selected the WEAKER rule inside the scoping built to protect the
+          seal. The default is now the STRICTEST list in force, and a
+          pre-correction receipt is recognised POSITIVELY: by an emit
+          stamp before the correction, corroborated by a
+          `carrying_commit` that resolves. Never by a field being absent.
+      (b) THE SELECTOR READ THE PATH AND IGNORED THE DIGEST BESIDE IT, so
+          a receipt naming a v22 path with any other sha256 was judged
+          v22. The version comes from the PAIR: the digest must match the
+          file the path names, or the version is UNKNOWN and the
+          strictest list applies.
+      (c) THE SECOND FALLBACK WAS ORDER-DEPENDENT -- the first
+          `_design_v<N>.json` among a run's opened paths, and the 09-03
+          run opened a stale v10 beside v21. Dropped: an opened path is
+          not a pin.
+    """
+    root = Path(DR.resolve()["data_root"])
+    strictest = DESIGN_VERSION_IN_FORCE
+    ev = []
+
+    # ---- (b) THE PAIR, or nothing ------------------------------------
     prov = (rec.get("provenance") or {}).get("design") or {}
-    m = re.search(r"_design_v(\d+)\.json$", str(prov.get("path") or ""))
+    pth, dig = str(prov.get("path") or ""), prov.get("sha256")
+    m = re.search(r"_design_v(\d+)\.json$", pth)
     if m:
-        src, ver = "provenance.design.path", int(m.group(1))
-    if ver is None:
-        for a in (rec.get("split_residency_proof") or {}).get(
-                "tape_artifacts_opened", []) or []:
-            mm = re.search(r"_design_v(\d+)\.json$", str(a))
-            if mm:
-                src, ver = "an opened design artifact", int(mm.group(1))
-                break
-    if ver is None:
-        src, ver = ("no design pin -- judged under the last version whose "
-                    "scope was the original eight"), 22
-    return {"design_version": ver, "read_from": src,
-            "fields_in_force": list(economic_fields_in_force(ver))}
+        f = root / "pm_5min/derived" / Path(pth).name
+        actual = (hashlib.sha256(f.read_bytes()).hexdigest()
+                  if f.is_file() else None)
+        if dig and actual and dig == actual:
+            v = int(m.group(1))
+            return {"design_version": v,
+                    "read_from": "provenance.design {path, sha256} -- the "
+                                 "PAIR, digest recomputed from the file "
+                                 "the path names",
+                    "pair_verified": True,
+                    "fields_in_force": list(economic_fields_in_force(v)),
+                    "n_names_in_force": len(economic_fields_in_force(v))}
+        ev.append({"provenance_design_path": pth,
+                   "declared_sha256": dig, "actual_sha256": actual,
+                   "pair_verified": False,
+                   "why": "the path names a version and the digest beside "
+                          "it does not match the file -- the version is "
+                          "UNKNOWN, not the one the path claims"})
+
+    # ---- (a) POSITIVE recognition of a pre-correction receipt ---------
+    positive = []
+    stamp = rec.get("emitted_at_utc") or rec.get("as_of")
+    if stamp:
+        try:
+            if (datetime.datetime.fromisoformat(str(stamp))
+                    < datetime.datetime.fromisoformat(
+                        SCOPE_CORRECTION_UTC.replace("Z", "+00:00"))):
+                positive.append({"kind": "emit stamp before the correction",
+                                 "emitted_at_utc": str(stamp),
+                                 "correction_utc": SCOPE_CORRECTION_UTC})
+        except ValueError:
+            pass
+    cc = (rec.get("source_identity") or {}).get("carrying_commit")
+    if cc and _blob_sha256_at(
+            cc, "live/pm_research/de_multiday_gate1_runner.py",
+            Path(__file__).resolve().parents[2]) is not None:
+        positive.append({"kind": "carrying_commit resolves to a tree",
+                         "commit": cc})
+    if any(x["kind"].startswith("emit stamp") for x in positive):
+        v = SCOPE_BEFORE_THE_CORRECTION
+        return {"design_version": v,
+                "read_from": "POSITIVE recognition of a pre-correction "
+                             "receipt",
+                "positive_evidence": positive,
+                "protocol": rec.get("protocol"),
+                "pair_verified": False,
+                "why_not_by_absence": (
+                    "absence of a field never selects the weaker rule; "
+                    "this receipt is recognised by what it CARRIES"),
+                "fields_in_force": list(economic_fields_in_force(v)),
+                "n_names_in_force": len(economic_fields_in_force(v))}
+
+    # ---- the DEFAULT IS THE STRICTEST list in force -------------------
+    return {"design_version": strictest,
+            "read_from": "THE STRICTEST LIST IN FORCE -- no verifiable "
+                         "design pair, and nothing positively identifies "
+                         "this receipt as older",
+            "pair_verified": False,
+            "evidence_considered": ev,
+            "positive_evidence": positive,
+            "why_strictest": (
+                "absence must not select the weaker rule inside the "
+                "scoping built to protect the seal (REV 73 §1.1(a)). An "
+                "unrecognised receipt is judged under every name"),
+            "fields_in_force": list(economic_fields_in_force(strictest)),
+            "n_names_in_force": len(economic_fields_in_force(strictest))}
 
 #: How many checks the DE 78 day-path block runs. Declared, because the
 #: offline skip list is generated from it and the online run asserts the
@@ -6045,32 +6131,84 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"`_strip_economic` seals by the list in force for THIS run; a "
        f"census judges a receipt by the list in force when THAT receipt "
        f"was produced")
+    # ---- REV 73 S1.1: THE SELECTOR'S THREE HOLES, all driven ---------
+    _d103 = Path(DR.resolve()["data_root"]) / "pm_5min/derived"
+    _v22f = _d103 / "p003_de_multiday_gate1_design_v22.json"
+    _v23f = _d103 / "p003_de_multiday_gate1_design_v23.json"
+    _sel_none = design_version_of_receipt({})
+    ok(_sel_none["design_version"] == DESIGN_VERSION_IN_FORCE
+       and _sel_none["n_names_in_force"] == len(ECONOMIC_FIELDS)
+       and "STRICTEST" in _sel_none["read_from"],
+       f"REV 73 S1.1(a): a receipt with NO provenance at all is judged "
+       f"under the STRICTEST list in force (v{_sel_none['design_version']}"
+       f", {_sel_none['n_names_in_force']} names). It fell through to "
+       f"v22's EIGHT -- absence selecting the WEAKER rule, inside the "
+       f"scoping built to protect the seal")
     _old102 = {"protocol": "P003_DE_MULTIDAY_GATE1_DAY_RUN_V1",
+               "emitted_at_utc": "2026-09-06T14:01:55.557479+00:00",
                "per_day_sealed_artifacts": [
                    {"arm": "A", "n_fills_arm": 1, "n_fills_baseline": 2,
                     "n_cancels_issued": 3}]}
-    _new102 = {**_old102,
-               "provenance": {"design": {"path": "data/pm_5min/derived/"
-                                                 "p003_de_multiday_gate1_"
-                                                 "design_v23.json"}}}
+    # NO FILE IS READ HERE: `_new102` carries no provenance at all, so it
+    # falls to the STRICTEST list -- which is the point being made. The
+    # cells that must READ a design artifact are guarded below, because a
+    # FIXTURE run must open no path under `data/` and the data-root guard
+    # refused this block the first time (as it did DE 98's and DE 101's;
+    # three rounds, same guard, same lesson).
+    _new102 = {k: v for k, v in _old102.items() if k != "emitted_at_utc"}
     _ja = economic_absence_scoped(_old102)
     _jb = economic_absence_scoped(_new102)
     ok(_ja["sealed"] is True and _ja["n_leaked"] == 0
-       and _ja["design_version"] == 22
-       and _jb["sealed"] is False and _jb["n_leaked"] == 3
-       and _jb["design_version"] == 23,
-       f"and the SAME three counts read CLEAN in a receipt with no design "
-       f"pin (v{_ja['design_version']}, {_ja['n_names_in_force']} names) "
-       f"and as {_jb['n_leaked']} LEAKS in one pinned to v23 "
-       f"({_jb['n_names_in_force']} names). A receipt cannot have "
-       f"disobeyed a rule that did not exist when it was written")
-    ok(design_version_of_receipt(_new102)["read_from"]
-       == "provenance.design.path"
-       and "no design pin" in design_version_of_receipt(
-           _old102)["read_from"],
-       "and the scope is READ FROM THE RECEIPT -- its own design pin from "
-       "DE 100, or the stated fallback for one written before that field "
-       "existed -- never from a table a verifier keeps on the side")
+       and _ja["design_version"] == SCOPE_BEFORE_THE_CORRECTION
+       and "POSITIVE" in _ja["read_from"]
+       and _jb["n_leaked"] == 3,
+       f"and a PRE-CORRECTION receipt is recognised POSITIVELY -- by an "
+       f"emit stamp before the correction, not by a missing field -- so "
+       f"it reads {_ja['n_leaked']} leaked under its own "
+       f"{_ja['n_names_in_force']} names, while the SAME three counts in "
+       f"a v23-pinned receipt read as {_jb['n_leaked']} leaks")
+    if offline:
+        offline_skip("REV 73 S1.1(b) the design PAIR cells and (c) the "
+                     "opened-paths cell (they read design artifacts "
+                     "under data/)")
+        offline_skip("REV 73 S1.1(c) the order-dependent fallback cell")
+    elif _v22f.is_file() and _v23f.is_file():
+        _s22 = hashlib.sha256(_v22f.read_bytes()).hexdigest()
+        _s23 = hashlib.sha256(_v23f.read_bytes()).hexdigest()
+        _badp = design_version_of_receipt({"provenance": {"design": {
+            "path": str(_v22f), "sha256": "0" * 64}}})
+        _g22 = design_version_of_receipt({"provenance": {"design": {
+            "path": str(_v22f), "sha256": _s22}}})
+        _g23 = design_version_of_receipt({"provenance": {"design": {
+            "path": str(_v23f), "sha256": _s23}}})
+        ok(_badp["design_version"] == DESIGN_VERSION_IN_FORCE
+           and _badp["pair_verified"] is False
+           and _g22["design_version"] == 22 and _g22["pair_verified"]
+           and _g23["design_version"] == DESIGN_VERSION_IN_FORCE
+           and _g23["pair_verified"],
+           f"REV 73 S1.1(b): the version comes from the PAIR. A v22 PATH "
+           f"beside a WRONG digest is UNKNOWN and gets the strictest list "
+           f"(v{_badp['design_version']}); the same path with its OWN "
+           f"digest resolves v{_g22['design_version']}, and a v23 pair "
+           f"resolves v{_g23['design_version']}. It read the path and "
+           f"ignored the digest sitting next to it")
+        _ord = design_version_of_receipt({"split_residency_proof": {
+            "tape_artifacts_opened": [
+                str(_d103 / "p003_de_multiday_gate1_design_v10__x.json"),
+                str(_d103 / "p003_de_multiday_gate1_design_v21.json")]}})
+        ok(_ord["design_version"] == DESIGN_VERSION_IN_FORCE,
+           f"REV 73 S1.1(c): the ORDER-DEPENDENT fallback is GONE. A "
+           f"receipt whose opened paths name v10 and then v21 -- exactly "
+           f"what the 09-03 run opened -- gets the strictest list, not "
+           f"whichever version happened to be listed first. An opened "
+           f"path is not a pin")
+    ok("STABLE NAME" in (design_version_of_receipt.__doc__ or "")
+       and "economic_fields_in_force" in (
+           design_version_of_receipt.__doc__ or ""),
+       "and the docstring says the NAME IS STABLE: DA reads this function "
+       "and `economic_fields_in_force` by AST from DA 95 on, so a change "
+       "of meaning arrives as a superseding name rather than the same "
+       "name doing something else")
     # AND THE SEAL REACHES THEM AT EVERY DEPTH, PLANTED AND PROVEN.
     _deep102 = {"day": "D", "arm": "A", "status": "OK",
                 "admissibility": {"admissible": True, "null_sd": 1.0},
