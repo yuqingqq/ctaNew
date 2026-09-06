@@ -5,6 +5,80 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 162
+
+**As of 2026-09-06T11:16:50Z. State only — MEM writes no result.**
+
+### AT COMMIT TIME (2026-09-06T11:19:11Z): THE RE-RUN IS RUNNING
+
+**The 09-04 book landed** — `be_daybook_20260904_btc.pkl`, **340,969,199 bytes**,
+mtime 11:18; `be59book.scope` **inactive/dead, `Result=success`**. **The lock passed.**
+**And the 09-03 re-run started** — `de92smoke.scope` **active/running**, pid 3269169,
+RSS 157,256 KiB at 15 s, argv exactly `--day 2026-09-03 --book
+…/be_daybook_20260903_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived` —
+**the directory form, no typed name** — with `flock` holding the heavy lock.
+**Expect ~85 min; a growth-budget refusal would *be* the result; the receipt names
+itself at the emit.** Then **DA's pre-read on landing → the reviewer → the 09-04
+smoke.**
+
+### GO is issued. The re-run was waiting on the lock (as dispatched).
+
+**GO at 11:14Z** (R-618). **DE 92** runs the 09-03 re-run from `wt-de2` at the tip,
+**untouched for the run's life**, `THE_ONE_COMMAND` with `--unit=de92smoke` and
+`--output` the **directory**, **the open fields only**. At my read the lock is still
+BE's — `be59book.scope` **active at 2,265 s**, **no `be_daybook_20260904` file**, and
+no file over 1 MB written in that directory in four minutes. **A GO that cannot start
+is still a GO:** the decision and the slot are separate, and rule 20 keeps them so.
+The dispatch bounds the wait with a **declared poll ≤ 30 min**.
+
+**The GO checklist** (not an instruction — a checklist): refresh `wt-de2`,
+`status --short` **empty**, **the tip sha in the report**, nothing touched or landed
+until the receipt lands; `--rehearse-smoke 2026-09-03` **from that tip** → READY;
+`flock -n` first; the one substitution; **the book digest `aad816d6…` confirmed before
+Enter**; a declared poll **by PID**; ≈85 min; **a growth-budget refusal would *be* the
+result**; landed by rule 21. Then **DA's pre-read on landing → the reviewer → the
+09-04 smoke.**
+
+### What GO rests on, and what it does not
+
+- **The path is verified at ~1/1,629th of the scale.** The end-to-end drive is a
+  24-slug synthetic at **3.11 s**; the real day measured **5,065 s**. **Every branch
+  has been executed; nothing has been executed at size.** If the real day's growth
+  exceeds 4,000 MB **the per-stage check refuses early** — the correct outcome, and the
+  reason the unknown is affordable. **`assert_peak_stage` has never been driven on real
+  stage deltas.**
+- **The residual end-of-run refusals are one DISCIPLINE and one RULING:** the run's
+  worktree frozen for the run's life, and the peak stage (R-598). **Nothing certain can
+  refuse at the end.**
+- **Why the discipline, and not a fix:** `assert_source_unchanged` — *"REFUSE THE EMIT
+  if ANY of the code that ran changed under it. **Not the RUN** — the run is fine,
+  Python holds the modules in memory. What is not fine is a receipt that names bytes
+  which did not produce it."* **A benign landing and a harmful drift are the same event
+  to it.**
+- **The reviewer measured its own recommendation failing** — DE's remedy won on all
+  three counts, one of them **measured** (the 300 s tolerance racing the operator's
+  pre-flight). The emitted name resolves to **one head at both seats' resolvers**,
+  driven. **DE's second refusal was reproduced by the artifact it emitted** — a defect
+  whose known-bad is the tool's own output.
+- **Notes for DE 93, not blockers:** the battery at 850 MB / 23.6 s as a standalone
+  command; `assert_output_is_a_directory` refusing an existing **dotted** directory.
+
+### The 09-04 book: in its last stages, evidenced
+
+**RSS across five readings: 5,128,372 → 4,807,808 → 4,760,584 → 4,750,344 →
+4,748,296 KiB**, with the scope's `MemoryPeak` **flat**. A monotone fall after a flat
+peak is **consistent with** being past the index release and inside the final stages —
+**I cannot pin the stage from outside** (the builder logs no progress). What the
+samples establish: **the run is shrinking, not growing** — the opposite of the failure
+a budget exists to catch.
+
+**Counts, measured before the sentence:** flags 951 → 959, `flag_provenance`
+496 → 504, tasks 19; **306 CHECKED**, 198 RELAYED, **455 UNMARKED — unchanged for
+the thirty-eighth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 144 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 161
 
 **As of 2026-09-06T11:11:50Z. State only — MEM writes no result.**

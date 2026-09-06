@@ -63,6 +63,84 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T11:16:50Z (MEM ROUND 162 -- R-618 AND REV 56'S FILING SWEPT. STATE ONLY.
+  GO IS ISSUED; THE RE-RUN IS WAITING ON THE LOCK.
+  (1) **THE PATH IS VERIFIED AT ONE SIXTEEN-HUNDREDTH OF THE SCALE.** I computed what
+  the review states in words: **the end-to-end drive is a 24-slug synthetic at 3.11 s;
+  the real day measured 5,065 s -- ~1,629 : 1 in WALL**, with the memory gap of the
+  same order. ***Every branch has been executed; nothing has been executed at size.***
+  *If the real day's growth exceeds 4,000 MB the per-stage check refuses EARLY -- which
+  is the correct outcome and the reason the unknown is affordable.* **`assert_peak_stage`
+  has still never been driven on real stage deltas.**
+  (2) **AND THE REFUSAL CANNOT TELL A LANDING FROM A DRIFT -- AND SAYS SO.**
+  `assert_source_unchanged`: ***"REFUSE THE EMIT if ANY of the code that ran changed
+  under it. NOT THE RUN -- the run is fine, Python holds the modules in memory. What is
+  not fine is a receipt that names bytes which did not produce it."*** **A benign
+  landing and a harmful drift are the SAME EVENT to it**, which is exactly why REV 56's
+  residual is a **DISCIPLINE** -- freeze the worktree for the run's life -- rather than
+  a code fix. *And the docstring states the half that matters: the RUN survives; the
+  RECEIPT is what breaks.*
+  (3) **GO WAS ISSUED AT 11:14Z AND THE RE-RUN IS QUEUED, NOT RUNNING:**
+  `be59book.scope` active at **2,244-2,265 s**; **no `be_daybook_20260904` file, and no
+  file over 1 MB written in that directory in four minutes.** ***A GO that cannot start
+  is still a GO: the decision and the slot are separate things, and rule 20 is what
+  keeps them separate.*** *The dispatch bounds the wait -- a declared poll of ≤ 30 min
+  if the lock is held.*
+  (4) **THE BOOK'S RSS HAS FALLEN ACROSS FIVE READINGS** -- **5,128,372 -> 4,807,808 ->
+  4,760,584 -> 4,750,344 -> 4,748,296 KiB** with `MemoryPeak` flat. *A monotone fall
+  after a flat peak is consistent with being past the index release and inside the
+  final stages* -- **and I say plainly that I cannot pin the stage from outside: the
+  builder logs no progress and five samples are five samples.** ***What they do
+  establish is that the run is SHRINKING rather than growing, which is the opposite of
+  the failure a budget exists to catch.***
+  (5) **THE REVIEWER MEASURED ITS OWN RECOMMENDATION FAILING:** DE's remedy beat the
+  reviewer's on all three counts, **one of them MEASURED** -- the 300 s tolerance
+  racing the operator's own pre-flight. ***A reviewer that drives its own
+  recommendation to failure has done what rule 15 asks of a checker, applied to
+  ADVICE*** -- *the second time in two rounds that the strongest evidence in a filing
+  was against the filer's own position.* **And the emitted name resolves to ONE HEAD at
+  BOTH seats' resolvers, driven.**
+  (6) **THE SECOND REFUSAL IS CLOSED BY AN ARTIFACT CARRYING THE DEFECT'S OWN
+  CONDITION** -- *"reproduced by the artifact IT EMITTED and closed"*. ***A defect whose
+  reproduction is the tool's own output needs no fixture: the condition travels in the
+  artifact, so the known-bad is free and cannot drift from the code that produces
+  it.*** **The cleanest falsifier shape I have swept -- not a constructed case, but the
+  case the instrument makes.**
+  (7) **THE RESIDUAL IS ONE DISCIPLINE AND ONE RULING:** the frozen worktree, and the
+  peak stage (R-598). **Nothing CERTAIN can refuse at the end any more.** *Plus SS4 as
+  a NOTE for DE 93, not a blocker: the battery at 850 MB / 23.6 s as a standalone
+  command; `assert_output_is_a_directory` refusing an existing DOTTED directory.*
+  ***The list that began as "what else could refuse at the end" is now two items, and
+  both are things a PERSON does rather than things the CODE does.***
+  (8) **AND THE GO DISPATCH IS A CHECKLIST, NOT AN INSTRUCTION:** refresh `wt-de2`,
+  `status --short` EMPTY, **the tip sha in the report**, nothing touched or landed
+  until the receipt lands; rehearse FROM THAT TIP -> READY; `flock -n` first with the
+  declared poll; the ONE substitution and `--output` the DIRECTORY; the book digest
+  confirmed BEFORE Enter; a declared poll BY PID; ≈85 min; ***a growth-budget refusal
+  would BE the result***; **the OPEN FIELDS ONLY** -- never `D_E0`, `D_E_MINUS_R`, `Z`,
+  `p_location`, the null moments, `sd_over_abs_mean`, or any refusal REASON TEXT;
+  landed by rule 21.
+  **AT COMMIT TIME, 2026-09-06T11:19:11Z, THE STATE TURNED OVER COMPLETELY -- AND I
+  MEASURED ALL OF IT:** ***the 09-04 BOOK LANDED*** (`be_daybook_20260904_btc.pkl`,
+  **340,969,199 bytes**, mtime 11:18; `be59book.scope` `inactive / dead`,
+  `Result=success`); ***the lock passed***; and ***THE 09-03 RE-RUN IS RUNNING*** --
+  **`de92smoke.scope` `active / running`, pid 3269169, RSS 157,256 KiB at 15 s**, its
+  argv exactly `--day 2026-09-03 --book …/be_daybook_20260903_btc.pkl --output
+  /home/yuqing/ctaNew/data/pm_5min/derived` -- ***the DIRECTORY form, no typed
+  name***, with `flock` holding the heavy lock (pids 3269168/3269169).
+  **So the flag word "STARTING-WHEN-THE-LOCK-FREES" was true when dispatched and is
+  spent: it started.** *Between my sentence at 11:16:50Z and this commit, the book
+  finished, the lock changed hands with no seat deciding it, and the run the last ten
+  rounds have been preparing began.* **Expect ~85 min; a growth-budget refusal would
+  BE the result; the receipt names itself at the emit.**
+  **FLAG WORDS: the 09-03 re-run GO-ISSUED, STARTING-WHEN-THE-LOCK-FREES
+  (`be59book.scope` still holds it -- I measure 2,265 s and no book file); the 09-04
+  book IN-ITS-LAST-STAGES (evidenced by a falling RSS across five samples and a flat
+  scope peak, not by an adjective).**
+  MEASURED BEFORE THIS SENTENCE: flags 951 -> 959, flag_provenance 496 -> 504,
+  tasks 19; **306 CHECKED**, 198 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T11:11:50Z (MEM ROUND 161 -- R-617 AND Q-DE-91 SWEPT. STATE ONLY.
   THE GO CONDITION IS CLOSED AND ONE GATE REMAINS.
   (1) **THE RECEIPT'S NAME IS NO LONGER THE OPERATOR'S TO TYPE.** Rehearsal v4:
@@ -214,65 +292,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 935 -> 943, flag_provenance 480 -> 488,
   tasks 19; **298 CHECKED**, 190 RELAYED, **455 UNMARKED -- unchanged for the
   thirty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T10:53:20Z (MEM ROUND 159 -- R-615 AND REV 55'S FILING SWEPT. STATE ONLY.
-  THE FINDING IS MY OWN ROUND-151 FLAG READ FROM THE OTHER DIRECTION.
-  (1) **THE STAMP TOLERANCE IS TWO-SIDED.** At `assert_name_stamp_is_the_clock`:
-  `delta = (st - wrote).total_seconds()` then **`if abs(delta) > tolerance_s:`** -- so
-  **an output name stamped at LAUNCH refuses at the emit on any run longer than 300
-  seconds**, and for an 85-minute run the delta is ~-5,100 s (the reviewer drove
-  **-5,074**). ***AND I MEASURED THAT SAME CONSTANT AT ROUND 151.*** I compared it to
-  my census band of -1 to -13 s, wrote that it *"admits any stamp up to FIVE MINUTES
-  AHEAD ... roughly 23x the widest honest deviation"*, and routed it as possibly too
-  LOOSE. **The live consequence is the opposite: `abs()` makes 300 s a bound in BOTH
-  directions, and the convention that fixes the name at launch collides with it every
-  time.** *One constant, two directions, and I examined one.*
-  (2) **AND THE ONLY STAMP-FREE NAME THE GLOB ACCEPTS LOOKS LIKE A BUG.** The glob is
-  `{PREFIX}{day}_SEALED__*.json`; I drove three names: **a stamped name MATCHES;
-  `…_SEALED__.json` MATCHES (the `*` accepts empty); `…_SEALED.json` does NOT.**
-  ***So the natural stamp-free form is invisible to the reader, and the one variant
-  that satisfies both the stamp check and the glob ends in a DANGLING SEPARATOR.***
-  **Which is why "drop the stamp" is not the fix** -- DE 91's shape (compose the name
-  AT THE EMIT from the clock; `--output` a DIRECTORY; a caller-supplied stamped name
-  refusing BEFORE any work, zero draws) keeps both.
-  (3) **I EVALUATED THE HEADROOM:** 2008 + 26.1 + 1500 = **3534.1 MB** against the
-  declared **4000** -- **465.9 MB in reserve**, 12 % of the budget. *The observed
-  2,426 MB is a CHECK on the declaration, never its source, which is what makes it a
-  declaration act rather than a measurement in costume.*
-  (4) **AND THE BOOK IS RUNNING AT 55 % OF ITS OWN BUDGET AND 75 % OF THE CAP:** scope
-  **`MemoryPeak` 6,399,197,184 (5.96 GiB)**, `MemoryCurrent` 5.90 GiB -- **process RSS
-  4,333,876 KiB (4.13 GiB)** at 833 s. ***The two differ by ~1.8 GiB, and the budget
-  the builder checks is the PROCESS one*** (`ru_maxrss` against 7.5 GB stages) --
-  *round 156's page-cache finding, live on the next build.*
-  (5) **THE SEAM IS CLOSED STRUCTURALLY, AND THE BATTERY'S MOVE IS WHAT MAKES IT
-  CHEAP:** ***"not by moving the battery, but by making the budget a PER-RUN DELTA --
-  and the battery's move is what makes a battery finding cost 0.03 s instead of a
-  day."*** **Two fixes, two jobs: the delta makes the check CORRECT, the move makes
-  its failure CHEAP** -- and the reviewer checked that the repair did not DISARM the
-  control, which is the half a "fixed" claim usually omits.
-  (6) **AND IT STATES, BEFORE THE RUN, WHAT THE RUN COULD STILL FALSIFY:** *"the real
-  book has never been through this code path END TO END; the growth drives are on a
-  24-slug fixture, so the RULE is verified and NOT the HEADROOM."* ***If the real day's
-  growth exceeds 4000 MB the per-stage check refuses EARLY -- which is the point of
-  the fix.*** **The cleanest rule-6 shape I have swept: a null declared for a REPAIR
-  rather than for a result.**
-  (7) **WHAT CAN STILL REFUSE AT THE END, IN FOUR CLASSES:** **CERTAIN** (the output's
-  name -- the GO condition); **OPERATIONAL** (`assert_source_unchanged`: *nothing may
-  land to the run's closure during the run* -- a discipline, not a defect); **KNOWN
-  AND RULED** (the peak-stage predicate, R-598); **CHEAP** (one line before an
-  85-minute run). *The question the 84 wasted minutes bought, answered as a LIST
-  rather than as a reassurance.*
-  (8) **AND THE REVIEWER MARKS ITS OWN REMEDY UNVERIFIED:** ***"my recommendation, not
-  a verified fix: I DROVE THE FAILURE, NOT THE REPAIR."*** **A reviewer separating,
-  inside one filing, what it EXHIBITED from what it ADVISES** -- *load-bearing here,
-  because the failure is certain and driven while the remedy is a judgement DE 91 must
-  implement and REV 56 must drive.* **The same discipline as CHECKED versus RELAYED,
-  inside a review.**
-  **FLAG WORDS: the re-run GO-CONDITIONAL-ON-DE-91 (the output's name), then REV 56,
-  then GO; the 09-04 book BUILDING.**
-  MEASURED BEFORE THIS SENTENCE: flags 927 -> 935, flag_provenance 472 -> 480,
-  tasks 19; **293 CHECKED**, 187 RELAYED, **455 UNMARKED -- unchanged for the
-  thirty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2946,6 +2965,87 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_PATH_IS_VERIFIED_AT_ONE_SIXTEEN_HUNDREDTH_OF_THE_SCALE: THE_RATIO_COMPUTED
+                             # CHECKED 2026-09-06T11:16:50Z -- I computed the ratio the review states
+                             # in words. **The end-to-end drive is a 24-slug synthetic at 3.11 s; the real
+                             # day measured 5,065 s. That is ~1,629 : 1 in WALL**, and the memory gap is the
+                             # same order (a fixture against ~2 GB).
+                             # ***"The PATH is verified and not the SCALE"*** -- **and the number says how
+                             # far the extrapolation reaches: every branch has been executed, and nothing
+                             # has been executed at size.** *If the real day's growth exceeds 4,000 MB the
+                             # per-stage check refuses EARLY, which is the correct outcome and the reason
+                             # the unknown is affordable.* **`assert_peak_stage` has still never been driven
+                             # on real stage deltas.**
+  THE_REFUSAL_CANNOT_TELL_A_LANDING_FROM_A_DRIFT_AND_SAYS_SO: WHY_THE_DISCIPLINE_EXISTS
+                             # CHECKED 2026-09-06T11:16:50Z at `assert_source_unchanged`: ***"REFUSE
+                             # THE EMIT if ANY of the code that ran changed under it. NOT THE RUN -- the run
+                             # is fine, Python holds the modules in memory. What is not fine is a receipt
+                             # that names bytes which did not produce it."***
+                             # **So the check refuses on ANY change and cannot know WHY** -- *a benign
+                             # landing and a harmful drift are the same event to it* -- **which is exactly
+                             # why REV 56's residual is a DISCIPLINE (freeze the worktree for the run's
+                             # life) rather than a code fix.** *And the docstring states the half that
+                             # matters: the RUN survives; the RECEIPT is what breaks.*
+  THE_LOCK_IS_STILL_BE_S_AND_THE_RE_RUN_IS_QUEUED_BEHIND_IT: GO_ISSUED_AT_11_14Z
+                             # CHECKED 2026-09-06T11:16:50Z: **GO was issued at 11:14Z and
+                             # `be59book.scope` is `active / running` at 2,244-2,265 s** -- *so the re-run
+                             # is DISPATCHED and WAITING, not running.* **No `be_daybook_20260904` file
+                             # exists, and no file over 1 MB has been written in that directory in the last
+                             # four minutes.**
+                             # ***A GO that cannot start is still a GO: the decision and the slot are
+                             # separate things, and rule 20 is what keeps them separate.*** *The dispatch
+                             # carries a declared poll of ≤ 30 min if the lock is held -- so the waiting is
+                             # bounded and stated rather than open.*
+  THE_RSS_HAS_FALLEN_ACROSS_FOUR_SAMPLES: CONSISTENT_BUT_NOT_PINNED
+                             # CHECKED 2026-09-06T11:16:50Z: **5,128,372 -> 4,807,808 -> 4,760,584 ->
+                             # 4,750,344 -> 4,748,296 KiB across five readings**, while the scope's
+                             # `MemoryPeak` stayed flat.
+                             # ***A monotone fall after a flat peak is consistent with being PAST the index
+                             # release and inside the final stages*** -- **and I state plainly that I cannot
+                             # pin the stage from outside: the builder does not log progress, and five RSS
+                             # samples are five samples.** *What they do establish is that the run is
+                             # shrinking rather than growing, which is the opposite of the failure mode a
+                             # budget exists to catch.*
+  THE_REVIEWER_MEASURED_ITS_OWN_RECOMMENDATION_FAILING: ALL_THREE_COUNTS_ONE_MEASURED
+                             # RELAYED from R-618(A) SS1, 2026-09-06T11:16:50Z. **DE's remedy beat the
+                             # reviewer's on all three counts -- and the reviewer MEASURED one of them: the
+                             # 300 s tolerance racing the operator's own pre-flight.**
+                             # ***A reviewer that drives its own recommendation to failure has done the
+                             # thing rule 15 asks of a checker, applied to ADVICE*** -- *and it is the
+                             # second time in two rounds that the strongest evidence in a filing was against
+                             # the filer's own position.* **SS1.1: the emitted name resolves to ONE HEAD at
+                             # BOTH seats' resolvers, driven.**
+  THE_SECOND_REFUSAL_IS_CLOSED_BY_AN_ARTIFACT_CARRYING_THE_DEFECTS_OWN_CONDITION: REPRODUCED_BY_ITS_OWN_OUTPUT
+                             # RELAYED from R-618(A) SS2, 2026-09-06T11:16:50Z. **DE's second certain
+                             # refusal was "reproduced by the artifact IT EMITTED and closed."**
+                             # ***A defect whose reproduction is the tool's own output needs no fixture***
+                             # -- *the condition travels in the artifact, so the known-bad is free and
+                             # cannot drift from the code that produces it.* **The cleanest form of rule
+                             # 15's falsifier I have swept: not a constructed case, but the case the
+                             # instrument makes.**
+  THE_RESIDUAL_IS_ONE_DISCIPLINE_AND_ONE_RULING: NOTHING_CERTAIN_LEFT
+                             # RELAYED from R-618, 2026-09-06T11:16:50Z. **After REV 56, the
+                             # end-of-run refusals that remain are ONE DISCIPLINE -- the run's worktree
+                             # frozen for the run's life -- and ONE RULING -- the peak stage (R-598).
+                             # Nothing CERTAIN can refuse at the end any more.**
+                             # *And SS4's note for DE 93 rather than a blocker: the battery at 850 MB /
+                             # 23.6 s as a standalone command, near the heavy bar; and
+                             # `assert_output_is_a_directory` refusing an existing DOTTED directory.*
+                             # ***The enumeration that began as "what else could refuse at the end" is now
+                             # a two-item list, and both items are things a person does rather than things
+                             # the code does.***
+  THE_GO_DISPATCH_IS_A_CHECKLIST_WITH_A_DECLARED_POLL: THE_OPEN_FIELDS_ONLY
+                             # RELAYED from R-618(B), 2026-09-06T11:16:50Z. **Refresh `wt-de2` to
+                             # origin's tip, `status --short` EMPTY, the tip sha IN THE REPORT, nothing
+                             # touched or landed until the receipt lands; `--rehearse-smoke 2026-09-03` FROM
+                             # THAT TIP -> READY, blocking []; `flock -n` FIRST, with a declared poll ≤ 30
+                             # min if held; THE_ONE_COMMAND with the single substitution `--unit=de92smoke`
+                             # and `--output` the DIRECTORY; the book digest `aad816d6…` confirmed BEFORE
+                             # Enter; a declared poll BY PID; ≈85 min; ***a growth-budget refusal would BE
+                             # the result***; the receipt's OPEN FIELDS ONLY -- never `D_E0`, `D_E_MINUS_R`,
+                             # `Z`, `p_location`, the null moments, `sd_over_abs_mean`, or any refusal
+                             # REASON TEXT; landed by rule 21.**
+                             # *Then DA's pre-read on landing, the reviewer, the 09-04 smoke.*
   THE_RECEIPT_S_NAME_IS_NO_LONGER_THE_OPERATOR_S_TO_TYPE: THE_ONE_COMMAND_CARRIES_A_DIRECTORY
                              # CHECKED 2026-09-06T11:11:50Z at the rehearsal v4
                              # (`…_v4__20260906T110600Z.json`): **`status READY`, `blocking []`, as_of
@@ -19328,6 +19428,67 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 162, 2026-09-06T11:16:50Z ------------------------------
+  THE_PATH_IS_VERIFIED_AT_ONE_SIXTEEN_HUNDREDTH_OF_THE_SCALE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T11:16:50Z
+    said: >-
+      I computed the ratio the review states in words: the end-to-end drive is a
+      24-slug synthetic at 3.11 s against a real day measured at 5,065 s, about
+      1,629 to 1 in wall, with a memory gap of the same order. Every branch has been
+      executed and nothing has been executed at size; if the real day's growth exceeds
+      4,000 MB the per-stage check refuses early, and assert_peak_stage has still never
+      been driven on real stage deltas.
+  THE_REFUSAL_CANNOT_TELL_A_LANDING_FROM_A_DRIFT_AND_SAYS_SO:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T11:16:50Z
+    said: >-
+      assert_source_unchanged's docstring reads "REFUSE THE EMIT if ANY of the code
+      that ran changed under it. Not the RUN -- the run is fine, Python holds the
+      modules in memory. What is not fine is a receipt that names bytes which did not
+      produce it." The check refuses on any change and cannot know why, so a benign
+      landing and a harmful drift are the same event to it -- which is why REV 56's
+      residual is a discipline (freeze the worktree for the run's life) rather than a
+      code fix.
+  THE_LOCK_IS_STILL_BE_S_AND_THE_RE_RUN_IS_QUEUED_BEHIND_IT:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T11:16:50Z
+    said: >-
+      GO was issued at 11:14Z and be59book.scope is active/running at 2,244-2,265 s, so
+      the re-run is dispatched and waiting rather than running; no be_daybook_20260904
+      file exists and no file over 1 MB has been written in that directory in the last
+      four minutes. The dispatch carries a declared poll of at most 30 minutes if the
+      lock is held.
+  THE_RSS_HAS_FALLEN_ACROSS_FOUR_SAMPLES:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T11:16:50Z
+    said: >-
+      process RSS across five readings: 5,128,372 then 4,807,808, 4,760,584, 4,750,344
+      and 4,748,296 KiB, while the scope's MemoryPeak stayed flat. A monotone fall
+      after a flat peak is consistent with being past the index release and inside the
+      final stages; I cannot pin the stage from outside because the builder logs no
+      progress, and what the samples do establish is that the run is shrinking rather
+      than growing.
+  THE_REVIEWER_MEASURED_ITS_OWN_RECOMMENDATION_FAILING:
+    prov: RELAYED
+    from: R-618(A)
+    as_of: 2026-09-06T11:16:50Z
+  THE_SECOND_REFUSAL_IS_CLOSED_BY_AN_ARTIFACT_CARRYING_THE_DEFECTS_OWN_CONDITION:
+    prov: RELAYED
+    from: R-618(A)
+    as_of: 2026-09-06T11:16:50Z
+  THE_RESIDUAL_IS_ONE_DISCIPLINE_AND_ONE_RULING:
+    prov: RELAYED
+    from: R-618
+    as_of: 2026-09-06T11:16:50Z
+  THE_GO_DISPATCH_IS_A_CHECKLIST_WITH_A_DECLARED_POLL:
+    prov: RELAYED
+    from: R-618(B)
+    as_of: 2026-09-06T11:16:50Z
   # --- MEM round 161, 2026-09-06T11:11:50Z ------------------------------
   THE_RECEIPT_S_NAME_IS_NO_LONGER_THE_OPERATOR_S_TO_TYPE:
     prov: CHECKED

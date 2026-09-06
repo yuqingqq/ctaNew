@@ -12122,3 +12122,72 @@ directions.
   thirty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 144 — archived 2026-09-06T11:16:50Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 162 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T10:53:20Z (MEM ROUND 159 -- R-615 AND REV 55'S FILING SWEPT. STATE ONLY.
+  THE FINDING IS MY OWN ROUND-151 FLAG READ FROM THE OTHER DIRECTION.
+  (1) **THE STAMP TOLERANCE IS TWO-SIDED.** At `assert_name_stamp_is_the_clock`:
+  `delta = (st - wrote).total_seconds()` then **`if abs(delta) > tolerance_s:`** -- so
+  **an output name stamped at LAUNCH refuses at the emit on any run longer than 300
+  seconds**, and for an 85-minute run the delta is ~-5,100 s (the reviewer drove
+  **-5,074**). ***AND I MEASURED THAT SAME CONSTANT AT ROUND 151.*** I compared it to
+  my census band of -1 to -13 s, wrote that it *"admits any stamp up to FIVE MINUTES
+  AHEAD ... roughly 23x the widest honest deviation"*, and routed it as possibly too
+  LOOSE. **The live consequence is the opposite: `abs()` makes 300 s a bound in BOTH
+  directions, and the convention that fixes the name at launch collides with it every
+  time.** *One constant, two directions, and I examined one.*
+  (2) **AND THE ONLY STAMP-FREE NAME THE GLOB ACCEPTS LOOKS LIKE A BUG.** The glob is
+  `{PREFIX}{day}_SEALED__*.json`; I drove three names: **a stamped name MATCHES;
+  `…_SEALED__.json` MATCHES (the `*` accepts empty); `…_SEALED.json` does NOT.**
+  ***So the natural stamp-free form is invisible to the reader, and the one variant
+  that satisfies both the stamp check and the glob ends in a DANGLING SEPARATOR.***
+  **Which is why "drop the stamp" is not the fix** -- DE 91's shape (compose the name
+  AT THE EMIT from the clock; `--output` a DIRECTORY; a caller-supplied stamped name
+  refusing BEFORE any work, zero draws) keeps both.
+  (3) **I EVALUATED THE HEADROOM:** 2008 + 26.1 + 1500 = **3534.1 MB** against the
+  declared **4000** -- **465.9 MB in reserve**, 12 % of the budget. *The observed
+  2,426 MB is a CHECK on the declaration, never its source, which is what makes it a
+  declaration act rather than a measurement in costume.*
+  (4) **AND THE BOOK IS RUNNING AT 55 % OF ITS OWN BUDGET AND 75 % OF THE CAP:** scope
+  **`MemoryPeak` 6,399,197,184 (5.96 GiB)**, `MemoryCurrent` 5.90 GiB -- **process RSS
+  4,333,876 KiB (4.13 GiB)** at 833 s. ***The two differ by ~1.8 GiB, and the budget
+  the builder checks is the PROCESS one*** (`ru_maxrss` against 7.5 GB stages) --
+  *round 156's page-cache finding, live on the next build.*
+  (5) **THE SEAM IS CLOSED STRUCTURALLY, AND THE BATTERY'S MOVE IS WHAT MAKES IT
+  CHEAP:** ***"not by moving the battery, but by making the budget a PER-RUN DELTA --
+  and the battery's move is what makes a battery finding cost 0.03 s instead of a
+  day."*** **Two fixes, two jobs: the delta makes the check CORRECT, the move makes
+  its failure CHEAP** -- and the reviewer checked that the repair did not DISARM the
+  control, which is the half a "fixed" claim usually omits.
+  (6) **AND IT STATES, BEFORE THE RUN, WHAT THE RUN COULD STILL FALSIFY:** *"the real
+  book has never been through this code path END TO END; the growth drives are on a
+  24-slug fixture, so the RULE is verified and NOT the HEADROOM."* ***If the real day's
+  growth exceeds 4000 MB the per-stage check refuses EARLY -- which is the point of
+  the fix.*** **The cleanest rule-6 shape I have swept: a null declared for a REPAIR
+  rather than for a result.**
+  (7) **WHAT CAN STILL REFUSE AT THE END, IN FOUR CLASSES:** **CERTAIN** (the output's
+  name -- the GO condition); **OPERATIONAL** (`assert_source_unchanged`: *nothing may
+  land to the run's closure during the run* -- a discipline, not a defect); **KNOWN
+  AND RULED** (the peak-stage predicate, R-598); **CHEAP** (one line before an
+  85-minute run). *The question the 84 wasted minutes bought, answered as a LIST
+  rather than as a reassurance.*
+  (8) **AND THE REVIEWER MARKS ITS OWN REMEDY UNVERIFIED:** ***"my recommendation, not
+  a verified fix: I DROVE THE FAILURE, NOT THE REPAIR."*** **A reviewer separating,
+  inside one filing, what it EXHIBITED from what it ADVISES** -- *load-bearing here,
+  because the failure is certain and driven while the remedy is a judgement DE 91 must
+  implement and REV 56 must drive.* **The same discipline as CHECKED versus RELAYED,
+  inside a review.**
+  **FLAG WORDS: the re-run GO-CONDITIONAL-ON-DE-91 (the output's name), then REV 56,
+  then GO; the 09-04 book BUILDING.**
+  MEASURED BEFORE THIS SENTENCE: flags 927 -> 935, flag_provenance 472 -> 480,
+  tasks 19; **293 CHECKED**, 187 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
