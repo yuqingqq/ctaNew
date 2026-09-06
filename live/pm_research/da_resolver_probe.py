@@ -303,13 +303,17 @@ def selftest() -> tuple:
     tmp = Path(tempfile.mkdtemp(prefix="da80_probe_",
                                 dir=os.environ.get("DA_SCRATCH")
                                 or tempfile.gettempdir()))
-    pkg = tmp / "pkg"
-    pkg.mkdir()
+    #: THE PLANTED MODULES LIVE IN A FAKE WORKTREE, in the real layout
+    #: (`<tree>/live/pm_research/`), because the own-tree faller answers
+    #: with `parents[1]` -- and in a flat scratch directory that is a
+    #: nondescript temp path, which the classifier rightly calls OTHER. A
+    #: fixture in the wrong shape tests the wrong thing.
+    fake_wt = tmp / "ctaNew-wt-fake"
+    pkg = fake_wt / "live" / "pm_research"
+    pkg.mkdir(parents=True)
     (pkg / "planted_cwd.py").write_text(FALLS_BACK_TO_CWD)
     (pkg / "planted_own_tree.py").write_text(FALLS_BACK_TO_ITS_OWN_TREE)
     (pkg / "planted_refuses.py").write_text(REFUSES)
-    fake_wt = tmp / "ctaNew-wt-fake"
-    (fake_wt / "live" / "pm_research").mkdir(parents=True)
     planted = {
         "planted.falls_back_to_cwd": (
             "resolver",
