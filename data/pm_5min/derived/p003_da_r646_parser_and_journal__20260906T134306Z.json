@@ -1,0 +1,154 @@
+{
+  "R1_one_parser": {
+    "algorithm_from": "be_rule22.parse_porcelain_line (5f5f76c L96-128)",
+    "n_malformed": 2,
+    "n_rows": 10,
+    "row_structure": "this seat's -- malformed reported per row, never raised",
+    "the_two_defects_that_were_mine": [
+      "the  split ran regardless of the status code, so a file NAMED  became ",
+      "a  branch header was accepted as a path"
+    ],
+    "twelve_line_table_driven": [
+      {
+        "line": " M live/x.py",
+        "path": "live/x.py",
+        "renamed_from": null,
+        "xy": " M"
+      },
+      {
+        "line": "?? data",
+        "path": "data",
+        "renamed_from": null,
+        "xy": "??"
+      },
+      {
+        "line": "R  a -> b",
+        "path": "b",
+        "renamed_from": "a",
+        "xy": "R "
+      },
+      {
+        "line": "M live/x.py",
+        "result": "MALFORMED"
+      },
+      {
+        "line": "## mm-research...origin/mm-research",
+        "result": "MALFORMED"
+      },
+      {
+        "line": "?? a -> b",
+        "path": "a -> b",
+        "renamed_from": null,
+        "xy": "??"
+      },
+      {
+        "line": "?? trailing ",
+        "path": "trailing ",
+        "renamed_from": null,
+        "xy": "??"
+      },
+      {
+        "line": "RM \"odd name.py\"",
+        "path": "odd name.py",
+        "renamed_from": null,
+        "xy": "RM"
+      },
+      {
+        "line": "A  new.py",
+        "path": "new.py",
+        "renamed_from": null,
+        "xy": "A "
+      },
+      {
+        "line": " D gone.py",
+        "path": "gone.py",
+        "renamed_from": null,
+        "xy": " D"
+      },
+      {
+        "line": "UU both.py",
+        "path": "both.py",
+        "renamed_from": null,
+        "xy": "UU"
+      },
+      {
+        "line": "C  src.py -> cp.py",
+        "path": "cp.py",
+        "renamed_from": "src.py",
+        "xy": "C "
+      }
+    ]
+  },
+  "R4_the_journal_copy": {
+    "copies": {
+      "both": {
+        "fields": [
+          "_SYSTEMD_INVOCATION_ID",
+          "USER_INVOCATION_ID"
+        ],
+        "invocation_id": "374e087bb72242cf99aebab666b89115",
+        "n_lines_copied": 4,
+        "n_lines_for_the_unit": 150,
+        "query": "journalctl --user _SYSTEMD_INVOCATION_ID=374e087bb72242cf99aebab666b89115 + USER_INVOCATION_ID=374e087bb72242cf99aebab666b89115 --no-pager -o short-iso --utc",
+        "status": "COPIED",
+        "why": null
+      },
+      "systemd_only": {
+        "fields": [
+          "_SYSTEMD_INVOCATION_ID"
+        ],
+        "invocation_id": "374e087bb72242cf99aebab666b89115",
+        "n_lines_copied": 1,
+        "n_lines_for_the_unit": 150,
+        "query": "journalctl --user _SYSTEMD_INVOCATION_ID=374e087bb72242cf99aebab666b89115 --no-pager -o short-iso --utc",
+        "status": "COPIED",
+        "why": null
+      },
+      "user_only": {
+        "fields": [
+          "USER_INVOCATION_ID"
+        ],
+        "invocation_id": "374e087bb72242cf99aebab666b89115",
+        "n_lines_copied": 3,
+        "n_lines_for_the_unit": 150,
+        "query": "journalctl --user USER_INVOCATION_ID=374e087bb72242cf99aebab666b89115 --no-pager -o short-iso --utc",
+        "status": "COPIED",
+        "why": null
+      },
+      "wrong_system_manager_field": {
+        "fields": [
+          "INVOCATION_ID"
+        ],
+        "invocation_id": "374e087bb72242cf99aebab666b89115",
+        "n_lines_copied": 0,
+        "n_lines_for_the_unit": 150,
+        "query": "journalctl --user INVOCATION_ID=374e087bb72242cf99aebab666b89115 --no-pager -o short-iso --utc",
+        "status": "REFUSED_ZERO_LINE_COPY",
+        "why": "the unit has 150 journal line(s) and this filter copied ZERO. A record written from that would say the run was silent when it was not -- ***a 0-line copy where the unit has lines is a REFUSAL, never a record*** (R-646 R4)"
+      }
+    },
+    "retention_query_now_travels": "journalctl --user -u resource-monitor --no-pager -o short-iso --utc",
+    "rule": "a 0-line copy where  has lines is a REFUSAL, never a record",
+    "unit": "be64book.service"
+  },
+  "as_of_utc": "2026-09-06T13:43:06Z",
+  "decides_nothing": "instruments and a process cleanup; no verdict here",
+  "protocol": "P003_DA_R646_R1_R4_V1",
+  "the_three_self_matching_waiters": {
+    "alive_for": "about 6 h 25 m (started 07:14:34Z, 07:19:20Z, 07:25:26Z)",
+    "all_three_gone": true,
+    "commands_read_from_proc": [
+      "pgrep -f \"e2_a_runner.py --run\" >/dev/null",
+      "pgrep -f \"e2_a_runner.py --run\" >/dev/null",
+      "pgrep -f \"e2_a_runner.py --run --sealed\" >/dev/null"
+    ],
+    "killed_at_utc": "2026-09-06T13:39:52Z",
+    "note": "the first write of this receipt used an UNQUOTED heredoc and the shell ate the very strings this block is about -- corrected in place before landing; the artifact was not yet landed, so nothing is superseded",
+    "pids": [
+      2982152,
+      2987365,
+      2992920
+    ],
+    "shape": "a `bash -c` whose own command line CONTAINS the pattern it greps: `pgrep -f \"e2_a_runner.py --run\"` matched ITSELF, so the waiter never saw the process end and blocked for hours"
+  }
+}
