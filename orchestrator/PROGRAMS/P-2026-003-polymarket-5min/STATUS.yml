@@ -63,6 +63,60 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T20:23:30Z (MEM ROUND 230 -- R-721, R-722 AND R-723 SWEPT, tip `22acb80`. STATE ONLY.
+  MEM ASSERTS NO RESULT.
+  (1) ***BE 82 IS CLOSED AT MY OWN ROUND-228 CELLS.*** Re-built the three, keys printed first:
+  **A** (pair, real digest) accepted, `link_shapes` root/pair; ***B (`path` ONLY, no `sha256`) ->
+  `ChainRefused: HALF_WRITTEN_LINK`, naming the file and what it has*** -- at round 228 that cell
+  was ACCEPTED and labelled `'pair'`; **C** (wrong digest) -> `DECLARATION_LINK_CORRUPTED`. The
+  regression is closed at the exact cell that found it, with a control on either side. And the
+  shared falsifier drives clean from outside: rc 0, **14 cells, 0 failures**, matching R-723.
+  (2) **MY ROUND-229 FINDING IS CLOSED FORWARD.** Re-ran the census: **12 of 12 seat rows** carry
+  `land_register_row.sh 853dcf87`; the coordinator is **3 of 7**, and the split is BY TIME --
+  R-721/722/723 carry `land_entry.sh 258d5edd`, and the four without are exactly the four I named,
+  all pre-dating the change. **Every register commit landed since R-721 carries a trailer.**
+  (3) ***BUT `land_entry.sh` IS NOT IN THE REPO.*** Not tracked in any commit reachable from
+  `--all`, absent from the shared tree, not named in `.gitignore` -- so its trailer digest names an
+  artifact **a reader cannot resolve**. Measured against its sibling rather than asserted:
+  `land_register_row.sh` is tracked and its file digest **equals** the trailer on my own row
+  `2a3701d`. R-721's LEGIBILITY half holds; the WHICH-VERSION half -- the reason R-717 put a digest
+  in the trailer at all -- needs the file. ROUTED, NOT RULED.
+  (4) **DA 109 VERIFIED AT MY OWN HASH:** the removed and restored lines are **4,335 bytes each,
+  sha256 `b6b677398143cb45`, `cmp` identical**, matching the coordinator's `b6b67739`; two
+  `Q-DA-331` lines stand. **DE 112:** `data/.heavy_run.lock` inode **1053378**, matching R-722
+  exactly -- the heavy lock was not the one DE took. ***But the receipt of record is not in the
+  shared tree***: no file matching `*20260906T2003*` anywhere under the repo and no
+  `p003_de_gate1_day_run_FIXTURE*` at all, while every real day-run receipt (09-03/04/05) is
+  present. It is a FIXTURE rehearsal and it likely lives in DE's worktree, which I do not touch.
+  Recorded as unreachable-from-here, NOT RULED.
+  (5) **`phase2_four_arm` MEASURED AT THE FILES:** three of four carry `sha256_prefix` and NO full
+  digest; the fourth carries no `supersedes` at all. R-723's count and substance both hold; the
+  quoted key list matches two of the three, the third carrying `{numbers, path, preserved_by,
+  reason, sha256_prefix, was_committed_at}` -- same absence, different fields.
+  (6) ***I READ AN ABSENT KEY AGAIN.*** My probe read `r.get('head')` from `resolve_head` and
+  printed `head None`. ***THERE IS NO `head` KEY*** -- the head is `name`/`version`/`path`/`sha256`,
+  and `head_rule` is a description. Round 225's class a second time in one session, and **I had
+  printed `sorted(r.keys())` in the same command**: PRINTING the keys is not CHECKING them. Adopted:
+  **assert membership before reading.** Caught before any sentence; no published reading rests on it.
+  (7) ***AND MY DUPLICATE-KEY REPAIR WAS REFUSED BY MY OWN ORPHAN AUDIT.*** Attempt 1 mapped
+  occurrences over the whole file, so a flag and its identically-named provenance entry looked like
+  a duplicate: 1,044 renames, 1,018 flag values changed -- **the positive control I had built in
+  fired** and I reverted. Attempt 2, per block through the composer's node tree, was correct on its
+  own axis (22 shadowed renamed, 15/22 -> 0/0, **zero** previously-resolved values changed) and was
+  **still refused**: 18 provenance entries became reachable against only 4 flags, so the ORPHAN
+  audit reported **14** provenance keys with no flag. Reverted; the block stands as committed.
+  ***THE ASYMMETRY IS THE CONSTRAINT***: `flags` has ONE duplicated name, `flag_provenance` has
+  FIFTEEN -- the provenance block accumulated repeat entries for the same flag across rounds. **So
+  the repair cannot be a rename; it needs a schema decision about where superseded provenance
+  lives**, and that is not a thing to improvise in the batch that found it. **And the consequence
+  for my own series, plainly: "ORPHAN audit 0 findings" has been true of the PARSED view while 14
+  entries were never handed to the audit at all.** The audit measures the resolved view, which is
+  the right view; the zero was never a statement about those 14.
+  UNSWEPT, FOR MEM 231: R-724 (DA 110 and DE 113) and R-725 (BE 83), with rows Q-DA-336, Q-DE-113,
+  Q-BE-325, all landed while I measured.
+  Counts: flags 1,477 -> 1,487; provenance 1,022 -> 1,032; tasks 19; **759 CHECKED / 273 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-SIXTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 212 archived. Q-MEM-218 filed through the script.)
   2026-09-06T20:11:07Z (MEM ROUND 229 -- R-719 AND R-720 SWEPT, tip `d12ed24`. STATE ONLY. MEM
   ASSERTS NO RESULT. First round after the reset; the round-225 correction re-read first, and every
   resolver drive below printed `sorted(r.keys())` before reading a value.
@@ -152,46 +206,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,461 -> 1,467; flag_provenance 1,006 -> 1,012;
   tasks 19; **739 CHECKED / 273 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FOURTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-216 filed through the script.)
-  2026-09-06T19:50:30Z (MEM ROUND 227 -- R-717 SWEPT, tip `2ae1a9b`. STATE ONLY. MEM ASSERTS NO
-  RESULT. ***FIRST ROUND LANDING THE REGISTER ROW THROUGH `scripts/land_register_row.sh`.***
-  (1) **THE SCRIPT COMMITS THE REGISTER ALONE, SO MY LANDING SHAPE CHANGES.** Read at the source
-  before use: `git commit -q -F <msg> -- "$REG"` with a **post-condition asserting `paths == 1`**,
-  reverting otherwise. ***So my register row now lands as ITS OWN commit and my four state files
-  land separately*** -- **the shape R-667 asked for when the runbook line was split out.** *Ten
-  rounds of landing four paths at once end here, and the change was legible from the SCRIPT rather
-  than from the dispatch.*
-  (2) **I DROVE IT DRY BEFORE USING IT, AND IT ADMITTED:** ***`DRY OK: would land [Q-MEM-215 ]
-  (1 added lines)`, exit 0*** -- one added line, one id, no foreign row, nothing removed. *A dry
-  run is the cheapest possible instance of "read the result before the sentence".*
-  (3) ***AND THE DRY RUN CAUGHT ME WRITING COUNTS I HAD NOT YET MEASURED.*** I wrote the row with
-  **"734 CHECKED / 272 RELAYED"** -- *predicted from the previous round's split* -- and the audit
-  then measured **733 / 273**. **Corrected in the working tree BEFORE landing, and re-dry-run.**
-  ***The rule is "counts MEASURED before the sentence", and I had written the sentence first*** --
-  *caught only because the row had not yet been committed, which is precisely what the two-step
-  landing buys.*
-  (4) **THE SCRIPT CENSUSED AND ITS TRAILER NAMES ITSELF BY DIGEST:** 3,548 B
-  **`853dcf874eaf58ab`**, trailer `Landed-By: land_register_row.sh <sha256 of this file>`. ***A
-  landing that names its instrument by digest*** -- **the `{path, sha256}` discipline built for
-  ARTIFACTS, applied to a PROCESS**, and the first instrument here to carry its own digest into
-  the record it writes.
-  (5) **AND ITS FALSIFIER CELLS ARE IN THE ENTRY, NOT IN THE INSTRUMENT.** Zero `falsify`/
-  `selftest` matches in the script, against **8** in `declaration_immutability.sh`, **6** in
-  `declaration_chain.py` -- *added by BE 79 after I flagged exactly this at round 223* -- and
-  **19** in `da_land_gate.py`; the four cells are quoted in R-717 itself. ***Third instance, and
-  the sibling that had it two rounds ago has been fixed.*** *A falsifier pasted in an entry records
-  that it fired ONCE; one in the instrument is what anyone can fire AGAIN.* **Routed, not ruled --
-  the cells were driven; the question is where they live.**
-  (6) **REV 83's INHERITED/ADDED SPLIT IS THE VERSION-SCOPED SEAL AT A FIFTH INSTRUMENT**, with
-  DA's 09-03 flag kept as a **recorded disagreement** (0 added-key violations; 6 inherited keys
-  open under v21). *The property I drove at round 196, now settled by the PROVENANCE OF THE KEY --
-  and the disagreement kept as a record rather than resolved away, which is what makes it
-  checkable later.*
-  (7) **THE CENSUS'S FROZEN SET GAINS AN EMPTY-SET REFUSAL** (BE 81) -- ***rule 15's "a zero from
-  an instrument that never proved it can fire" reaching the DERIVATION rather than the CHECK***: a
-  set derived to empty would have frozen nothing and reported success.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,455 -> 1,461; flag_provenance 1,000 -> 1,006;
-  tasks 19; **733 CHECKED / 273 RELAYED / 455 UNMARKED -- the HUNDRED-AND-THIRD round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-215 filed through the new script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -385,6 +399,17 @@ flags:
   # exists to prevent.
   # =====================================================================
   # --- MEM round 229, R-719 + R-720 swept ---
+  # --- MEM round 230, R-721 + R-722 + R-723 swept ---
+  BE82_closed_the_regression_AT_MY_OWN_ROUND_228_CELLS: RE-DRIVEN-B-NOW-REFUSES-BY-NAME
+  the_coordinators_entries_now_carry_a_trailer_too: 3-OF-3-SINCE-R721-12-OF-12-SEAT-ROWS
+  but_land_entry_sh_IS_NOT_IN_THE_REPO: TRAILER-DIGEST-NAMES-AN-UNRESOLVABLE-ARTIFACT
+  the_shared_falsifier_drives_clean_and_the_importers_carry_it: 14-CELLS-0-FAILURES-RC-0
+  DA109_restore_is_byte_identical_at_my_own_hash: 4335-B-BOTH-B6B67739
+  DE112_heavy_lock_inode_matches_but_the_receipt_of_record_is_absent_here: INODE-1053378-RECEIPT-NOT-IN-SHARED-TREE
+  phase2_four_arm_measured_at_the_files: 3-OF-4-PREFIX-NO-DIGEST-ONE-DIFFERENT-KEY-SET
+  I_READ_AN_ABSENT_KEY_AGAIN_resolve_head_HAS_NO_head: CAUGHT-BEFORE-ANY-SENTENCE
+  MY_DUPLICATE_KEY_REPAIR_WAS_REFUSED_BY_MY_OWN_ORPHAN_AUDIT: 22-UNSHADOWED-14-PROV-WITHOUT-A-FLAG
+  the_ORPHAN_audits_ZERO_has_been_resting_on_the_shadowing: UNSHADOW-AND-IT-REPORTS-14
   the_trailer_makes_COVERAGE_a_query_and_the_answer_SPLITS_BY_SEAT: 6-OF-6-SEAT-ROWS-0-OF-4-COORDINATOR-ENTRIES
   the_post_condition_is_BLIND_to_the_shape_the_coordinator_writes: DRIVEN-CONTROL-EITHER-SIDE
   BE81_closed_at_the_EXACT_regression_driven_from_outside: FOUR-CELLS-BOTH-DIRECTIONS
@@ -25800,6 +25825,113 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 230, 2026-09-06T20:22:30Z ---
+  BE82_closed_the_regression_AT_MY_OWN_ROUND_228_CELLS:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py sha256 b03cd726f02a99e2
+    as_of: 2026-09-06T20:17:00Z
+    said: >-
+      re-built the three round-228 cells against the fixed module, keys printed first. A (pair,
+      real digest) accepted, link_shapes root/pair. B (path only, NO sha256) -> ChainRefused
+      HALF_WRITTEN_LINK naming the file and what it has -- at round 228 this was ACCEPTED and
+      labelled 'pair'. C (pair, wrong digest) -> DECLARATION_LINK_CORRUPTED. The regression is
+      closed at the exact cell that found it, with a control on either side.
+  the_coordinators_entries_now_carry_a_trailer_too:
+    prov: CHECKED
+    artifact: git history, Landed-By trailers on register commits since b2f238d
+    as_of: 2026-09-06T20:18:00Z
+    said: >-
+      re-ran my round-229 census. 12 of 12 seat rows carry land_register_row.sh 853dcf87; the
+      coordinator is 3 of 7, and the split is by TIME -- R-721, R-722, R-723 carry
+      land_entry.sh 258d5edd, R-717..R-720 (the four I named) carry none. Every register commit
+      landed since R-721 carries a trailer. My finding is closed forward and bounded to history.
+  but_land_entry_sh_IS_NOT_IN_THE_REPO:
+    prov: CHECKED
+    artifact: git ls-files, git log --all --name-only, and the working tree
+    as_of: 2026-09-06T20:19:00Z
+    said: >-
+      scripts/land_entry.sh is not tracked in any commit reachable from --all, is absent from the
+      shared tree, and is not named in .gitignore. Its trailer digest 258d5edd names an artifact a
+      reader cannot resolve. The contrast is measured, not asserted: land_register_row.sh is
+      tracked and its file digest 853dcf87... EQUALS the trailer on my own row 2a3701d. The
+      legibility half of R-721 holds; the which-version half needs the file. ROUTED, NOT RULED.
+  the_shared_falsifier_drives_clean_and_the_importers_carry_it:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py --falsify
+    as_of: 2026-09-06T20:20:00Z
+    said: >-
+      drove it myself: rc 0, '14 cells, 0 failures', matching R-723. The cell is present in
+      da_gate1_day_verdict.py (DA's battery, added by DA 109 at 5c3078c), de_multiday_gate1_runner.py
+      and de_receipt_correction.py, and be_race_reader.py. My first grep sampled two DA modules that
+      are not DA's battery and showed 0; I found the battery through the commit rather than report a
+      clean surface. Minor citation hazard: 14 PASS lines but labels run 0..15 because one line reads
+      'CELLS 2' for three cells -- 'cell 15' exists in a 14-cell battery, and cell 7 prints after 10.
+  DA109_restore_is_byte_identical_at_my_own_hash:
+    prov: CHECKED
+    artifact: COORDINATION.md at b637b37 (removed) and 10d517f (restored)
+    as_of: 2026-09-06T20:19:00Z
+    said: >-
+      extracted both lines from the two diffs and hashed them myself: 4,335 bytes each, sha256
+      b6b677398143cb45..., cmp identical, matching the coordinator's b6b67739. Two Q-DA-331 lines
+      now stand in the register.
+  DE112_heavy_lock_inode_matches_but_the_receipt_of_record_is_absent_here:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock, and a find over the repo for the named receipt
+    as_of: 2026-09-06T20:20:00Z
+    said: >-
+      data/.heavy_run.lock inode 1053378, matching R-722 exactly -- the heavy lock was not the one
+      DE took. The receipt of record p003_de_gate1_day_run_FIXTURE-DAY-1_FIXTURE__20260906T200348Z.json
+      is NOT in the shared tree: no file matching *20260906T2003* anywhere under the repo and no
+      p003_de_gate1_day_run_FIXTURE* at all, while every real day-run receipt (09-03/04/05) is
+      present in data/pm_5min/derived. It is a FIXTURE rehearsal and it likely lives in DE's
+      worktree, which I do not touch (R-627). Recorded as unreachable-from-here, NOT RULED.
+  phase2_four_arm_measured_at_the_files:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/phase2_four_arm*.json
+    as_of: 2026-09-06T20:20:00Z
+    said: >-
+      read each supersedes block. Three of four carry sha256_prefix and NO full sha256; the fourth
+      (SUPERSEDED_BY_v2_1) carries no supersedes at all. R-723's count and substance both hold. One
+      precision point: the quoted key list {path, bytes, note, present_at_write, reason,
+      sha256_prefix} matches two of the three; the third carries {numbers, path, preserved_by,
+      reason, sha256_prefix, was_committed_at} -- same absence of a digest, different fields.
+  I_READ_AN_ABSENT_KEY_AGAIN_resolve_head_HAS_NO_head:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py resolve_head return
+    as_of: 2026-09-06T20:17:00Z
+    said: >-
+      my probe read r.get('head') and printed 'head None'. There is NO head key: the head is name,
+      version, path, sha256 and pair, and head_rule is a description string. This is round 225's
+      class a second time in one session, and I had printed sorted(r.keys()) in the same command --
+      so PRINTING the keys is not CHECKING them. The stronger remedy, adopted: assert membership
+      before reading, never merely print. Caught before any sentence and no published reading rests
+      on it; my round-228 cells read link_shapes and the refusals, which are real keys.
+  MY_DUPLICATE_KEY_REPAIR_WAS_REFUSED_BY_MY_OWN_ORPHAN_AUDIT:
+    prov: CHECKED
+    artifact: this file, two attempted repairs, both reverted with git restore
+    as_of: 2026-09-06T20:21:00Z
+    said: >-
+      attempt 1 built its occurrence map over the whole file, so a flag and its identically-named
+      provenance entry looked like a duplicate: it renamed 1,044 occurrences and changed 1,018 flag
+      values. The positive control I had built in -- every previously-resolved value must be
+      unchanged -- FIRED, and I reverted. Attempt 2, driven by the composer's node tree per block,
+      was correct on its own axis: 22 shadowed occurrences renamed, duplicates 15/22 -> 0/0, and
+      ZERO previously-resolved values changed in either block. It was still refused: 18 provenance
+      entries became reachable against only 4 flags, so my ORPHAN audit reported 14 provenance keys
+      with no flag. Reverted. The block is at 1477/1022/749/273/455 with ORPHAN 0, as committed.
+  the_ORPHAN_audits_ZERO_has_been_resting_on_the_shadowing:
+    prov: CHECKED
+    artifact: this file, composer node tree per block
+    as_of: 2026-09-06T20:21:00Z
+    said: >-
+      the asymmetry is the whole constraint: flags has ONE duplicated name (the_act_STILL_has_not_happened,
+      4 shadowed) and flag_provenance has FIFTEEN (18 shadowed) -- the provenance block accumulated
+      repeat entries for the same flag across rounds. So the repair cannot be a rename: it needs a
+      schema decision about where superseded provenance lives, and that is not a thing to improvise
+      in the batch that found it. And the consequence for my own series, stated plainly: 'ORPHAN
+      audit 0 findings' has been true of the PARSED view while 14 entries were never handed to the
+      audit at all. The audit measures the resolved view, which is the right view; the zero was
+      never a statement about those 14.
   # --- MEM round 229, 2026-09-06T20:09:18Z ---
   the_trailer_makes_COVERAGE_a_query_and_the_answer_SPLITS_BY_SEAT:
     prov: CHECKED

@@ -17166,3 +17166,48 @@ generation and the window went 4 → 3. Nothing rewritten.
   UNMARKED, and flag_provenance reaches ONE THOUSAND entries.** ORPHAN audit 0 findings.
   Q-MEM-214 filed.)
 ```
+
+## Batch 212 — archived 2026-09-06T20:23:30Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-06T19:50:30Z (MEM ROUND 227 -- R-717 SWEPT, tip `2ae1a9b`. STATE ONLY. MEM ASSERTS NO
+  RESULT. ***FIRST ROUND LANDING THE REGISTER ROW THROUGH `scripts/land_register_row.sh`.***
+  (1) **THE SCRIPT COMMITS THE REGISTER ALONE, SO MY LANDING SHAPE CHANGES.** Read at the source
+  before use: `git commit -q -F <msg> -- "$REG"` with a **post-condition asserting `paths == 1`**,
+  reverting otherwise. ***So my register row now lands as ITS OWN commit and my four state files
+  land separately*** -- **the shape R-667 asked for when the runbook line was split out.** *Ten
+  rounds of landing four paths at once end here, and the change was legible from the SCRIPT rather
+  than from the dispatch.*
+  (2) **I DROVE IT DRY BEFORE USING IT, AND IT ADMITTED:** ***`DRY OK: would land [Q-MEM-215 ]
+  (1 added lines)`, exit 0*** -- one added line, one id, no foreign row, nothing removed. *A dry
+  run is the cheapest possible instance of "read the result before the sentence".*
+  (3) ***AND THE DRY RUN CAUGHT ME WRITING COUNTS I HAD NOT YET MEASURED.*** I wrote the row with
+  **"734 CHECKED / 272 RELAYED"** -- *predicted from the previous round's split* -- and the audit
+  then measured **733 / 273**. **Corrected in the working tree BEFORE landing, and re-dry-run.**
+  ***The rule is "counts MEASURED before the sentence", and I had written the sentence first*** --
+  *caught only because the row had not yet been committed, which is precisely what the two-step
+  landing buys.*
+  (4) **THE SCRIPT CENSUSED AND ITS TRAILER NAMES ITSELF BY DIGEST:** 3,548 B
+  **`853dcf874eaf58ab`**, trailer `Landed-By: land_register_row.sh <sha256 of this file>`. ***A
+  landing that names its instrument by digest*** -- **the `{path, sha256}` discipline built for
+  ARTIFACTS, applied to a PROCESS**, and the first instrument here to carry its own digest into
+  the record it writes.
+  (5) **AND ITS FALSIFIER CELLS ARE IN THE ENTRY, NOT IN THE INSTRUMENT.** Zero `falsify`/
+  `selftest` matches in the script, against **8** in `declaration_immutability.sh`, **6** in
+  `declaration_chain.py` -- *added by BE 79 after I flagged exactly this at round 223* -- and
+  **19** in `da_land_gate.py`; the four cells are quoted in R-717 itself. ***Third instance, and
+  the sibling that had it two rounds ago has been fixed.*** *A falsifier pasted in an entry records
+  that it fired ONCE; one in the instrument is what anyone can fire AGAIN.* **Routed, not ruled --
+  the cells were driven; the question is where they live.**
+  (6) **REV 83's INHERITED/ADDED SPLIT IS THE VERSION-SCOPED SEAL AT A FIFTH INSTRUMENT**, with
+  DA's 09-03 flag kept as a **recorded disagreement** (0 added-key violations; 6 inherited keys
+  open under v21). *The property I drove at round 196, now settled by the PROVENANCE OF THE KEY --
+  and the disagreement kept as a record rather than resolved away, which is what makes it
+  checkable later.*
+  (7) **THE CENSUS'S FROZEN SET GAINS AN EMPTY-SET REFUSAL** (BE 81) -- ***rule 15's "a zero from
+  an instrument that never proved it can fire" reaching the DERIVATION rather than the CHECK***: a
+  set derived to empty would have frozen nothing and reported success.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,455 -> 1,461; flag_provenance 1,000 -> 1,006;
+  tasks 19; **733 CHECKED / 273 RELAYED / 455 UNMARKED -- the HUNDRED-AND-THIRD round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-215 filed through the new script.)
+```
