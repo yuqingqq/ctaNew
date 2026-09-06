@@ -1204,7 +1204,7 @@ def rule22_stamp(tree: ast.AST, src: str, _via: bool = True) -> dict:
         return (AT_IMPORT if host in at_import else AT_EMIT), host
 
     out = {"producing_code_digest": [], "import_closure": [],
-           "head_sha": [], "typed_literals": []}
+           "head_sha": [], "typed_literals": [], "digests_of_other_files": []}
     for n in ast.walk(tree):
         seg = _seg(src, n)
         if isinstance(n, ast.Call):
@@ -1213,9 +1213,26 @@ def rule22_stamp(tree: ast.AST, src: str, _via: bool = True) -> dict:
             if f in ("sha256", "file_digest") and (
                     "__file__" in seg or "read_bytes" in seg):
                 w, host = where(n.lineno)
-                out["producing_code_digest"].append(
-                    {"line": n.lineno, "when": w, "in": host,
-                     "expr": " ".join(seg.split())[:120]})
+                #: WHOSE BYTES? A producing-code digest is a digest of THE
+                #: MODULE'S OWN FILE. Round 77 counted every
+                #: `sha256(<path>.read_bytes())` reached from an emit path,
+                #: so a book's READ-BACK, a receipt's read-back, an INPUT
+                #: fragment and BE's own battery control for this very
+                #: property all read as producing-code digests -- and all
+                #: three BE producers then sat falsely in
+                #: `rule22_binds_and_incomplete`. The property is whose
+                #: bytes are hashed, not where the call sits.
+                own = ("__file__" in seg
+                       or re.search(r"\b(me|self_src|_src|src_path|"
+                                    r"MY_PATH|THIS_FILE)\b", seg)
+                       is not None)
+                row = {"line": n.lineno, "when": w, "in": host,
+                       "expr": " ".join(seg.split())[:120],
+                       "hashes_this_modules_own_file": bool(own)}
+                if own:
+                    out["producing_code_digest"].append(row)
+                else:
+                    out.setdefault("digests_of_other_files", []).append(row)
             if "rev-parse" in seg and "HEAD" in seg:
                 w, host = where(n.lineno)
                 out["head_sha"].append(
@@ -1266,6 +1283,17 @@ def rule22_stamp(tree: ast.AST, src: str, _via: bool = True) -> dict:
             if status.get(k) == ABSENT:
                 status[k] = v
         out["present_via_a_shared_module"] = via
+    #: THE CLOSURE COVERS THE PRODUCER'S OWN FILE. Rule 22 asks for "the
+    #: digest of every module in their import closure under `live/`" -- and
+    #: the producing module is one of them. A separate own-file hash is a
+    #: second statement of a fact the closure already carries, so a module
+    #: whose closure is captured AT IMPORT satisfies the producing-code
+    #: construct THROUGH IT, and the receipt says by which route.
+    if status["import_closure"].startswith(AT_IMPORT) \
+            and not status["producing_code_digest"].startswith(AT_IMPORT):
+        status["producing_code_digest"] = (
+            AT_IMPORT + "__COVERED_BY_THE_IMPORT_CLOSURE")
+        out["producing_code_covered_by_the_closure"] = True
     out["status"] = status
     out["rule22_complete"] = all(v.startswith(AT_IMPORT)
                                  for v in status.values())
@@ -1965,6 +1993,43 @@ def selftest() -> tuple:                                      # noqa: C901
                  f"{'(via be_rule22)' if '__VIA_' in v[1]['import_closure'] else ''}"
                  f", head={v[1]['head_sha'][:9]}"
                  for k, v in be_state.items()))
+    _others = {Path(k).name: len(by[k]["rule22"].get(
+        "digests_of_other_files") or []) for k in BE_PRODUCERS}
+    _tape = by["live/pm_research/be_gate1_state_tape.py"]["rule22"]
+    ck("REV 60 section 5 -- A PRODUCING-CODE DIGEST IS A DIGEST OF **THE "
+       "MODULE'S OWN FILE**, and the classifier is keyed on WHOSE BYTES "
+       "are hashed rather than on where the call sits. ***Round 77 counted "
+       "every `sha256(<path>.read_bytes())` reached from an emit path -- so "
+       "a book's READ-BACK, a receipt's read-back, an INPUT fragment and "
+       "BE's own battery control FOR THIS VERY PROPERTY all read as "
+       "producing-code digests, and all three BE producers then sat "
+       "FALSELY in `rule22_binds_and_incomplete`.*** Those sites are now "
+       "counted separately as digests of OTHER files, and the closure -- "
+       "which necessarily contains the producing module -- covers the "
+       "construct, by the route the receipt names",
+       all(by[k]["rule22"]["status"]["producing_code_digest"].startswith(
+           AT_IMPORT) for k in BE_PRODUCERS)
+       and sum(_others.values()) >= 3
+       and by["live/pm_research/be_gate1_fragment.py"][
+           "rule22"]["rule22_complete"] is True
+       and by["live/pm_research/be_daybook_build.py"][
+           "rule22"]["rule22_complete"] is True,
+       f"other-file digests no longer counted as producing code: {_others}; "
+       f"fragment and daybook now COMPLETE")
+    ck("AND THE ONE FACT THAT MAY BE GENUINELY INCOMPLETE SURVIVES THE "
+       "CORRECTION: `be_gate1_state_tape`'s HEAD is captured at EMIT, not "
+       "at import, and it is the only module left in "
+       "`rule22_binds_and_incomplete`. ***A correction that cleared the "
+       "false three AND the true one would have been a looser instrument, "
+       "not a better one***",
+       _tape["status"]["head_sha"].startswith(AT_EMIT)
+       and _tape["rule22_complete"] is False
+       and [x["path"] for x in rep["rule22_binds_and_incomplete"]]
+       == ["live/pm_research/be_gate1_state_tape.py"],
+       f"be_gate1_state_tape head={_tape['status']['head_sha'][:34]}; "
+       f"binds-and-incomplete = "
+       f"{[Path(x['path']).name for x in rep['rule22_binds_and_incomplete']]}")
+
     typed = by["live/pm_research/be_daybook_build.py"][
         "rule22"]["typed_stamps_of_this_run"]
     ck("AND THE DAYBOOK'S ONE PROVENANCE LITERAL IS TYPED, NOT DERIVED: "

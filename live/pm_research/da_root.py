@@ -109,8 +109,25 @@ def code_root(purpose: str = "reading another seat's source") -> Path:
     A verifier that judges another seat's receipt against that seat's
     SOURCE must read the source from the ledger, not from its own
     worktree's copy -- DA 77 shipped exactly that finding against DE's
-    runner and had to retract it."""
-    return Path(require_canonical_root(purpose)["root"])
+    runner and had to retract it.
+
+    AND THIS ONE STAYS STRICT. The symlink equivalence that makes a
+    worktree canonical for DATA does not extend to CODE: a worktree's
+    `data/` may BE the ledger's directory while its `live/` is a checkout
+    at another commit. Data is canonical by where it LANDS; code is
+    canonical by WHICH TREE it is."""
+    canon = canonical_from_DEs_source()
+    if not canon.get("repo"):
+        raise RootRefused(
+            f"REFUSED: {purpose} -- the canonical root is not readable from "
+            f"DE's module ({canon['status']}), and this seat will not "
+            f"substitute a constant of its own.")
+    p = Path(canon["repo"])
+    if not (p / "live" / "pm_research").is_dir():
+        raise RootRefused(
+            f"REFUSED: {purpose} -- the canonical tree {p} carries no "
+            f"live/pm_research to read.")
+    return p
 
 
 def require_canonical_root(purpose: str, *, fixture: bool = False,
@@ -120,16 +137,31 @@ def require_canonical_root(purpose: str, *, fixture: bool = False,
     canon = canonical_from_DEs_source()
     r = Path(root) if root is not None else resolve_root()
     resolved = str(r.resolve()) if r.exists() else str(r)
-    data = str((r / "data").resolve()) if (r / "data").exists() \
-        else str(r / "data")
-    is_canonical = (canon.get("repo") is not None
-                    and resolved == canon["repo"])
+    #: CANONICAL IS DECIDED BY THE LEDGER'S REAL PATH, NOT BY THE TREE'S
+    #: NAME. Since R-553's symlink was restored, a seat worktree's `data/`
+    #: IS the ledger's directory -- `readlink -f` proves it -- and refusing
+    #: there refused a root whose every data byte is the ledger's. What
+    #: matters for DATA is where `<root>/data` actually LANDS.
+    dp = r / "data"
+    data = str(dp.resolve()) if dp.exists() else str(dp)
+    canon_data = canon.get("data")
+    if canon_data and Path(canon_data).exists():
+        canon_data = str(Path(canon_data).resolve())
+    is_canonical = (canon_data is not None and data == canon_data)
     block = {
         "purpose": purpose,
         "root": resolved,
         "data_root": data,
         "canonical": canon,
         "is_canonical": is_canonical,
+        "canonical_decided_by": "the data directory's REAL path",
+        "canonical_data_root": canon_data,
+        "data_root_real_path": data,
+        "the_tree_name_is_not_the_test": (
+            "a worktree whose `data/` symlinks to the ledger holds the "
+            "ledger's bytes; a worktree with a MATERIALISED `data/` holds "
+            "only the TRACKED ones. The first is canonical for data, the "
+            "second is not, and their paths are the same shape"),
         "resolver_of_record": "pm_tape_density._resolve_data_root",
         "the_canonical_path_is_READ_from": canon.get("source"),
     }
@@ -152,8 +184,9 @@ def require_canonical_root(purpose: str, *, fixture: bool = False,
         block["NOT_RESULT_BEARING"] = True
         return block
     raise RootRefused(
-        f"REFUSED: {purpose} resolved the root to {resolved!r}, which is "
-        f"not the canonical ledger {canon['repo']!r}. A seat worktree's "
+        f"REFUSED: {purpose} resolved the root to {resolved!r}, whose "
+        f"`data/` lands on {data!r} and NOT on the ledger's "
+        f"{canon_data!r}. A seat worktree's "
         f"`data/` is a MATERIALISED directory holding only the TRACKED "
         f"artifacts, so a count taken there is a count of a smaller, "
         f"plausible ledger -- and the read gate COUNTS SEALED RECEIPTS AT A "
@@ -162,6 +195,13 @@ def require_canonical_root(purpose: str, *, fixture: bool = False,
 
 
 def derived_dir(purpose: str = "the derived directory") -> Path:
-    """`<canonical>/data/pm_5min/derived`, or a refusal."""
-    return Path(require_canonical_root(purpose)["root"]) / \
-        "data" / "pm_5min" / "derived"
+    """The LEDGER's derived directory by its REAL path, or a refusal.
+
+    Resolved, not merely admitted: from a worktree whose `data/` symlinks
+    to the ledger, `<worktree>/data/pm_5min/derived` IS the right
+    directory, but every path this seat then RECORDS would carry the
+    worktree's name for a ledger artifact -- and a receipt that names a
+    file by a path only one tree can resolve is a citation nobody else can
+    follow."""
+    b = require_canonical_root(purpose)
+    return Path(b["data_root_real_path"]) / "pm_5min" / "derived"

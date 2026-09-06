@@ -726,7 +726,15 @@ def economic_census(book, budget: int = CENSUS_VISIT_BUDGET) -> dict:
             len(SEALED_DAY_STATISTIC_MARKERS),
         "n_field_names_naming_a_SEALED_DAY_STATISTIC": len(sealed_hits),
         "field_names_naming_a_SEALED_DAY_STATISTIC": sealed_hits,
-        "NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK": not sealed_hits,
+        #: REFUTE, NEVER ESTABLISH. A truncated walk can PROVE a sealed
+        #: name is present and can NEVER prove none is: the flag is only
+        #: assertable when the walk COMPLETED (REV 60 section 4.1).
+        "NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK": (
+            (not sealed_hits) if not truncated[0] else None),
+        "sealed_statistic_check": (
+            "REFUTED" if sealed_hits else
+            "ESTABLISHED_OVER_A_COMPLETE_WALK" if not truncated[0] else
+            "NOT_ESTABLISHED_WALK_TRUNCATED"),
         "n_field_names_naming_a_VALUE_INPUT": len(value_hits),
         "field_names_naming_a_VALUE_INPUT": value_hits,
         "the_value_inputs_are_EXPECTED": (
@@ -738,6 +746,22 @@ def economic_census(book, budget: int = CENSUS_VISIT_BUDGET) -> dict:
         "nodes_visited": visited[0],
         "budget": budget,
         "truncated": truncated[0],
+        #: THE SENTENCE IS COMPUTED FROM THE NUMBERS. It used to read
+        #: "NONE OF THEM NAMES AN ECONOMIC QUANTITY" beside a census that
+        #: had just listed three names and truncated its walk -- rule 10's
+        #: own shape, inside the instrument that censuses names.
+        "summary": (
+            f"the book names {len(value_hits)} reference-valuation field(s)"
+            + (f" ({', '.join(value_hits[:6])})" if value_hits else "")
+            + ", expected by construction; "
+            + (f"{len(sealed_hits)} field(s) naming a SEALED DAY STATISTIC "
+               f"({', '.join(sealed_hits[:6])}) -- REFUTED"
+               if sealed_hits else
+               ("no field names a sealed day statistic over a COMPLETE "
+                "walk of " + f"{visited[0]} nodes"
+                if not truncated[0] else
+                f"the census cannot establish the absence of others at "
+                f"this budget: the walk TRUNCATED at {budget} nodes"))),
         "what_this_establishes": (
             "the set of NAMED fields the book carries, which of them name a "
             "VALUE INPUT (expected) and that none names a SEALED DAY "
@@ -745,9 +769,12 @@ def economic_census(book, budget: int = CENSUS_VISIT_BUDGET) -> dict:
             "FALSE as literally stated: the book carries the valued "
             "tranches it scores against. What it does not carry is the "
             "day's own sealed result***"),
-        "what_it_cannot_establish": (
-            "that a float under an innocent name is not secretly a price. "
-            "Names and shapes are checkable; intent is not"),
+        "what_it_cannot_establish": [
+            "that a float under an innocent name is not secretly a price -- "
+            "names and shapes are checkable, intent is not",
+            "the ABSENCE of any name, whenever the walk truncated: a "
+            "bounded walk REFUTES and never ESTABLISHES",
+        ],
     }
 
 
@@ -1494,7 +1521,7 @@ def selftest() -> tuple:                                      # noqa: C901
        and value_c["NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK"] is True
        and "markout_cents_per_share" in value_c[
            "field_names_naming_a_VALUE_INPUT"]
-       and clean_c["what_it_cannot_establish"],
+       and len(clean_c["what_it_cannot_establish"]) >= 2,
        f"clean: {clean_c['n_field_names']} field names, "
        f"{clean_c['n_field_names_naming_a_SEALED_DAY_STATISTIC']} sealed; "
        f"planted sealed -> "
@@ -1513,6 +1540,41 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{ident_c['n_identity_keys']} identity key(s), "
        f"{ident_c['n_field_names']} field name(s): "
        f"{ident_c['field_names']}")
+
+    # -- REV 60 section 4.1: THE SENTENCE IS COMPUTED, AND A BOUNDED -----
+    # -- WALK REFUTES BUT NEVER ESTABLISHES ------------------------------
+    tiny = economic_census(book, budget=3)
+    full = economic_census(book)
+    leaky = economic_census({**book, "leak": {"null_mean": 1.0}}, budget=3)
+    ck("REV 60 section 4.1 -- THE VERDICT SENTENCE IS COMPUTED FROM THE "
+       "NUMBERS, and a TRUNCATED walk is stated as a LIMIT. ***The receipt "
+       "said `NONE OF THEM NAMES AN ECONOMIC QUANTITY` beside a census that "
+       "had just listed three names and truncated its walk at 400,000 "
+       "nodes -- rule 10's own shape, inside the instrument that censuses "
+       "names.*** The summary now counts what it found; and a bounded walk "
+       "can REFUTE (a sealed name it DID reach is a fact) and can never "
+       "ESTABLISH an absence",
+       full["sealed_statistic_check"] == "ESTABLISHED_OVER_A_COMPLETE_WALK"
+       and full["NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK"] is True
+       and tiny["truncated"] is True
+       and tiny["sealed_statistic_check"] == "NOT_ESTABLISHED_WALK_TRUNCATED"
+       and tiny["NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK"] is None
+       and "cannot establish the absence" in tiny["summary"]
+       and str(full["n_field_names_naming_a_VALUE_INPUT"]) in full["summary"],
+       f"complete walk -> {full['sealed_statistic_check']}; truncated at 3 "
+       f"nodes -> {tiny['sealed_statistic_check']} with the flag None, not "
+       f"False; summary: \"{tiny['summary'][:90]}…\"")
+    ck("AND THE REFUTING DIRECTION SURVIVES TRUNCATION: a sealed name the "
+       "walk DID reach is REFUTED even though the walk stopped early -- "
+       "***the asymmetry is the point, and an instrument that reported "
+       "`unknown` for a name it had already seen would be throwing away "
+       "the half it can prove***",
+       leaky["sealed_statistic_check"] == "REFUTED"
+       and leaky["NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK"] is False
+       and "null_mean" in leaky["field_names_naming_a_SEALED_DAY_STATISTIC"]
+       and "REFUTED" in leaky["summary"],
+       f"truncated AND leaking -> {leaky['sealed_statistic_check']} naming "
+       f"{leaky['field_names_naming_a_SEALED_DAY_STATISTIC']}")
 
     # -- RULE 22 / R-605: THE LAUNCH CAPTURE, BOTH DIRECTIONS ------------
     idy = source_identity_at_launch()

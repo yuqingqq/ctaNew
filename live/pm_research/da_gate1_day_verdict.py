@@ -3697,8 +3697,14 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"{_derived_dir()} == de_data_root.resolve()['data_root'] + "
        f"/pm_5min/derived")
     _env_hold = os.environ.get("PM_DATA_ROOT")
+    #: A MATERIALISED worktree -- the case that must refuse. A worktree
+    #: whose `data/` SYMLINKS to the ledger is canonical for data and
+    #: admits; the tree's NAME was never the test.
+    _mat = td / "materialised-wt"
+    (_mat / "data" / "pm_5min" / "derived").mkdir(parents=True,
+                                                  exist_ok=True)
     try:
-        os.environ["PM_DATA_ROOT"] = "/home/yuqing/ctaNew-wt-da"
+        os.environ["PM_DATA_ROOT"] = str(_mat)
         _wt = None
         try:
             _wt = _derived_dir()
@@ -3731,12 +3737,13 @@ def selftest_pre_read() -> list:                              # noqa: C901
        "under both proves INSENSITIVITY, not correctness. Correctness is "
        "the equality above***",
        str(_wt).startswith("REFUSED")
-       and (_unset == shared or str(_unset).startswith("REFUSED")),
-       f"PM_DATA_ROOT=<worktree> -> {str(_wt)[:44]}; unset -> "
-       f"{str(_unset)[:44]} (the canonical dir OR a named refusal -- since "
-       f"the R-553 symlink was restored at 11:52Z the resolver's "
-       f"tape-carrying branch fires in a worktree, so the identity check "
-       f"refuses there)")
+       and (Path(str(_unset)).resolve() == Path(shared).resolve()
+            or str(_unset).startswith("REFUSED")),
+       f"PM_DATA_ROOT=<a MATERIALISED worktree> -> {str(_wt)[:40]}; unset "
+       f"-> {str(_unset)[:52]} (the canonical dir OR a named refusal). "
+       f"***Canonical is the LEDGER'S REAL PATH: a worktree whose `data/` "
+       f"symlinks to the ledger is canonical for data and ADMITS; a "
+       f"MATERIALISED one holds only the tracked artifacts and refuses***")
     _stub = type(sys)("pm_tape_density_stub")
     _stub._resolve_data_root = lambda: {"data_root": "/somewhere"}
     _hold_mod = sys.modules.get("pm_tape_density")

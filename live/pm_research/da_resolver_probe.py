@@ -435,6 +435,44 @@ def selftest() -> tuple:
        and classify_path("/srv/elsewhere", "/tmp/x") == "OTHER",
        "ledger, ledger-subpath, worktree, cwd and other all separate")
 
+    #: REV 60 / the coordinator: CANONICAL IS THE LEDGER'S REAL PATH.
+    import da_root as _DR                                     # noqa: PLC0415
+    _fake = tmp / "materialised-wt"
+    (_fake / "data" / "pm_5min" / "derived").mkdir(parents=True,
+                                                   exist_ok=True)
+    _cases = {}
+    for _lbl, _root in (("the shared tree", str(LEDGER)),
+                        ("wt-da, data/ symlinked",
+                         str(Path(__file__).resolve().parents[2])),
+                        ("a MATERIALISED worktree", str(_fake))):
+        try:
+            _b = _DR.require_canonical_root("probe", root=Path(_root))
+            _cases[_lbl] = ("ADMITS", _b["data_root_real_path"])
+        except _DR.RootRefused as _e:
+            _cases[_lbl] = ("REFUSED", str(_e)[:60])
+    ck("CANONICAL IS DECIDED BY THE LEDGER'S REAL PATH, NOT BY THE TREE'S "
+       "NAME: the shared tree ADMITS, a worktree whose `data/` SYMLINKS to "
+       "the ledger ADMITS -- its every data byte IS the ledger's -- and a "
+       "worktree with a MATERIALISED `data/` REFUSES, because that one "
+       "holds only the TRACKED artifacts and a count taken there is a "
+       "count of a smaller, plausible ledger. ***Their paths are the same "
+       "shape; only `readlink -f` separates them***",
+       _cases["the shared tree"][0] == "ADMITS"
+       and _cases["wt-da, data/ symlinked"][0] == "ADMITS"
+       and _cases["a MATERIALISED worktree"][0] == "REFUSED"
+       and _cases["wt-da, data/ symlinked"][1] == "/home/yuqing/ctaNew/data",
+       "; ".join(f"{k} -> {v[0]}" for k, v in _cases.items()))
+    ck("AND CODE CANONICALITY STAYS STRICT, because the symlink says "
+       "nothing about `live/`: a worktree's `data/` may BE the ledger's "
+       "directory while its checkout is at another commit. ***DATA is "
+       "canonical by where it LANDS; CODE is canonical by WHICH TREE it "
+       "is*** -- and reading another seat's source from a stale checkout "
+       "is the finding DA 77 shipped and had to retract",
+       str(_DR.code_root("probe")) == "/home/yuqing/ctaNew"
+       and (_DR.code_root("probe") / "live" / "pm_research").is_dir(),
+       f"code_root -> {_DR.code_root('probe')} regardless of which tree "
+       f"asks")
+
     real = probe_all(str(Path(__file__).resolve().parents[2]))
     ck("EVERY RESOLVER IN THE PROGRAMME IS DRIVEN THROUGH ITS OWN PUBLIC "
        "ENTRY POINT, IN ITS OWN PROCESS, FROM A NEUTRAL DIRECTORY -- three "
