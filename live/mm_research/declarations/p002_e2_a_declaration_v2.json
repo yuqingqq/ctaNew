@@ -1,0 +1,213 @@
+{
+  "carrying_commit": "0cbaba62db906c94d63af85d59f951f02989a4ae",
+  "declared_by": "DA seat (pm-da), single-seat program",
+  "falsifiers": {
+    "both_directions_required": true,
+    "known_bads": [
+      "a resting order behind depth larger than all subsequent volume must NOT fill under RiskAverse -- if it does, the queue is not being counted",
+      "ProbQueue-f3 returning a HIGHER cost than RiskAverse on the same episodes must REFUTE the run, not be averaged away",
+      "a day missing depth20 alone must be EXCLUDED even though bookTicker and trade are complete -- the third stream is a real requirement, not decoration",
+      "a symbol above the skip bar must be UNRESOLVED and excluded from the aggregate, and the aggregate reported both ways",
+      "an absent rebalance notional must REFUSE the size-aware arm rather than defaulting to min-size and calling it E2-A",
+      "the runner must REFUSE if this declaration's sha256 differs",
+      "the runner must REFUSE a result-bearing emission off the canonical ledger root (de_data_root.require_canonical, adopted from P-003 and imported, not copied)",
+      "the runner must REFUSE if the E1-A reproduction control misses the published numbers by more than 0.05 bps"
+    ],
+    "positive_controls": [
+      "a synthetic book where the resting order is ALONE at the level fills on the first opposite-side trade under BOTH queue models -- with no queue ahead the two models must agree exactly",
+      "a synthetic episode that fills at the touch with zero adverse drift must return cost = fee_maker - half_spread, the closed form, to floating tolerance",
+      "an unfilled episode must return the chase cost with the TAKER fee and the realised drift over T_p, so the winner's curse is charged in full",
+      "the E1-A reproduction control passing on E1-A's own data",
+      "a day with all three streams complete and no gaps is ADMITTED"
+    ]
+  },
+  "hftbacktest_is_absent": {
+    "checked": "import hftbacktest raises ModuleNotFoundError on this interpreter, as-of 2026-09-06T05:01Z",
+    "consequence": "the plan names hftbacktest for the bracket. Installing a dependency is an environment change and is not the seat's to make, so both models are declared in closed form above and implemented in the runner.",
+    "ruling_requested": "this is a DEVIATION from a pre-registered plan and is flagged for the reviewer and the coordinator BEFORE any run -- either the direct implementation is accepted, or the dependency is authorised, or E2-A waits. It is not absorbed.",
+    "what_that_costs": "the models' CORRECTNESS becomes mine rather than a library's. Each therefore ships a falsifier that fires on a known-bad queue state, and the ordering property (optimistic <= pessimistic) is a COMPUTED predicate whose violation refutes the instrument rather than the symbol."
+  },
+  "population": {
+    "cluster_unit": "UTC day (CLAUDE.md rule 8)",
+    "day_admission_predicate": "a UTC day is ADMISSIBLE iff 24 hour-files exist for ALL THREE streams -- bookTicker, trade AND depth20 -- and the intra-day bookTicker gap fraction is < 0.05. depth20 is new here: E2.0 needed two streams, E2-A needs three for depth-aware sizing.",
+    "episode_unit": "symbol x admissible day x decision time on a fixed grid (24/day, every hour on the hour) x direction in ['buy', 'sell'] -- E1-A's grid exactly, unchanged, so the two are comparable",
+    "min_complete_days": 14,
+    "refuses_below_min": true,
+    "symbol_list": [
+      "AAVEUSDT",
+      "ADAUSDT",
+      "AVAXUSDT",
+      "BNBUSDT",
+      "BTCUSDT",
+      "DOGEUSDT",
+      "ETHUSDT",
+      "FILUSDT",
+      "ICPUSDT",
+      "LTCUSDT",
+      "SOLUSDT",
+      "XRPUSDT"
+    ],
+    "symbols": "the XS-overlap set E1-A used, NAMED and inherited rather than recomputed: AAVE, ADA, AVAX, BNB, BTC, DOGE, ETH, FIL, ICP, LTC, SOL, XRP. Recomputing the top-40 ADV universe as-of a new date would change the population and the number together, and then E2-A would not supersede E1-A -- it would measure something else.",
+    "the_admissible_set_is_an_OUTPUT": "declared as an output so no expectation about which days qualify can become a filter. Structural file-count as-of 2026-09-06T05:01Z: 16 complete days per stream per symbol (08-20..08-25, 08-27..09-05); the gap-fraction leg is NOT yet evaluated.",
+    "window_is_not_E1A_s": "E1-A ran 2026-07-18..08-17 on Vision aggTrades; the L2 collector started 08-19 and the windows DO NOT INTERSECT. E2-A's number supersedes E1-A's as the operative number WITHOUT re-measuring E1-A's window. A reader must not difference the two and call it a queue-model effect."
+  },
+  "program": "P-2026-002-hf-market-making",
+  "protocol": "P002_E2_A_OVERLAY_QUEUE_BRACKET_DECLARATION_V2",
+  "reproduction_control_inherited": {
+    "ci_sweep": [
+      5.7561,
+      6.7539
+    ],
+    "ci_touch": [
+      3.1095,
+      3.7927
+    ],
+    "eff_rt_sweep_bps": 6.2645,
+    "eff_rt_touch_bps": 3.4485,
+    "n_symbols": 12,
+    "source": "data/mm_hf/e1/e1a_gate_summary.csv, row tp_s=600",
+    "symbols": [
+      "AAVEUSDT",
+      "ADAUSDT",
+      "AVAXUSDT",
+      "BNBUSDT",
+      "BTCUSDT",
+      "DOGEUSDT",
+      "ETHUSDT",
+      "FILUSDT",
+      "ICPUSDT",
+      "LTCUSDT",
+      "SOLUSDT",
+      "XRPUSDT"
+    ],
+    "tolerance_bps": 0.05,
+    "tp_s": 600,
+    "why_required": "E2-A supersedes E1-A's number. A superseding number produced by a DIFFERENT implementation of the same episode design would be measuring the implementation, not the book. E2.0 established this discipline and reproduced E1-B's ADA numbers to 0.0002 bps; E2-A inherits it on the E1-A side.",
+    "window": "2026-07-18..2026-08-17 (31 d Vision tick aggTrades)"
+  },
+  "resources": {
+    "cap": "one CPU, MemoryMax=8G, under the rule-20 wrapper (flock + systemd-run). NEVER RAISED: a symbol that exceeds the cap REFUSES.",
+    "data_root_discipline": {
+      "already_in_force": "landed for E2.0 before this declaration was written, so E2-A inherits it rather than promising it",
+      "recorded_in_every_receipt": [
+        "repo_root",
+        "data_root",
+        "data_root_resolved",
+        "branch",
+        "PM_DATA_ROOT_env",
+        "tape_present",
+        "is_canonical",
+        "refusal"
+      ],
+      "refusal": "a result-bearing emission whose resolved data root is not the canonical ledger REFUSES. Not a warning: a worktree shell resolves, reads and holds a DIFFERENT ledger.",
+      "the_falsifier_is_the_reviewer_s_exact_case": "a PARTIAL root -- a real mm_hf tape holding 2 days of 19, every directory present, every file readable -- must REFUSE before any day is read, and must NOT be reported as a 2-day census. Driven through the runner's own entry point, not through the resolver alone: the child prints the census it WOULD have produced (2) and then the refusal.",
+      "the_rule": "every result-bearing P-002 run resolves through the SAME imported resolver P-003 uses -- de_data_root.require_canonical, which itself delegates to pm_tape_density._resolve_data_root. IMPORTED, NOT COPIED: a second implementation of 'where is the ledger' is exactly the thing that drifts apart.",
+      "why_this_field_exists": "the E2.0 RESULT review, section 6: `e2_0_true_mid.py:46` was `ROOT = HERE.parents[1]` and there was NO data-root resolver anywhere on the P-002 surface. On a partial root the existing check fires only for a WHOLLY missing directory, so a shell would have produced a silently SMALLER population rather than a refusal."
+    },
+    "estimate_is_labelled_an_estimate": "adding a third stream and a queue simulation to E2.0's measured 67 s is not linear and no wall-clock figure is offered before the smoke measures one.",
+    "measured_input_sizes_as_of_2026-09-06T05:01Z": {
+      "E2_0_measured_cost": "67 s wall / 657 MiB RSS for one symbol x 16 days on two streams",
+      "depth20 per day (gz)": {
+        "ADAUSDT": "30 MB",
+        "BTCUSDT": "40 MB",
+        "ICPUSDT": "14 MB"
+      },
+      "note": "depth20 is 100 ms snapshots and is far more even across symbols than bookTicker, where BTC is 480 MB a day against ADA's 41. The heavy stream for E2-A is still bookTicker."
+    },
+    "smoke": "ONE symbol first with its resource observation, before any fan-out -- and it will be ICP, because ICP is the cell E2-A owes an answer on and the one most likely to refuse."
+  },
+  "sources": {
+    "bracket_rule": "live/mm_research/STRATEGY_SKETCH.md -- 'sign-flip between RiskAverse and ProbQueue = failure, never averaged'",
+    "e1a_numbers": "data/mm_hf/e1/e1a_gate_summary.csv",
+    "icp_cell": "live/mm_research/E1_CODE_REVIEW.md and E1_RESULTS.md -- ICP fragile, 72% episode skips, UNRESOLVED",
+    "prereg_e2a": "live/mm_research/EXPERIMENT_PLAN.md section 2, E2-A",
+    "prereg_episode_design": "live/mm_research/EXPERIMENT_PLAN.md section 1.5, Gate E1-A",
+    "sibling_step": "live/mm_research/declarations/p002_e2_0_declaration_v2.json"
+  },
+  "status": "DECLARATION_NO_DATA_TOUCHED",
+  "step": "E2-A -- overlay bracket resolution on real books under the queue-model bracket",
+  "supersedes": {
+    "carrying_commit": "367b80014178",
+    "correction_is_in_band": "rule 13: v1 is NOT edited and stands as provenance. v2 adds the data-root discipline the E2.0 RESULT review (section 6) requires of the P-002 surface. No tape was touched under either version.",
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v1.json",
+    "sha256": "405ddb7ab10486c21141b1d8c18dd6908d2892bbb29c91e50ecff424a9124a0b",
+    "what_changed": [
+      "the resources section now carries `data_root_discipline`: the P-002 surface resolves through the SAME imported resolver as P-003 (de_data_root, itself delegating to pm_tape_density._resolve_data_root), every receipt records the root and the branch, and a result-bearing run off the canonical ledger REFUSES. The falsifier named is the reviewer's precise case: a PARTIAL root refuses, never a smaller census."
+    ]
+  },
+  "the_ICP_cell": {
+    "rule": "a symbol whose episode-skip rate exceeds the bar is reported UNRESOLVED_TOO_FEW_EPISODES and EXCLUDED from the aggregate, with both the rate and the exclusion reported. A verdict on a population that is mostly absent is not a verdict.",
+    "skip_rate_bar": 0.5,
+    "the_aggregate_is_reported_BOTH_WAYS": "with and without any excluded symbol, as E1-A did when it reported 6.15 excluding ICP beside 6.26 including it -- so the exclusion's effect is visible and not just its result.",
+    "the_bar_is_declared_now_and_applies_to_every_symbol": "0.50 is set before any E2-A episode census exists. It is not an ICP-shaped hole: it applies to all twelve, and if ICP clears it, ICP is read on the same footing as the rest.",
+    "why_it_is_named": "E1-A's results audit recorded ICP as UNRESOLVED, not passed: 72% episode skips, stale-sweep 11.0, ADV rank exactly 40 on stale data, per-symbol eff_RT 7.53 -- the highest of the twelve and inside 0.5 bps of the threshold. E2-A owes it an answer."
+  },
+  "the_gate_quantity": {
+    "also_reported": [
+      "the full T_p ladder [60, 600, 3600] (reported, never gated -- no patience shopping)",
+      "ProbQueue-f3 as the optimistic bracket end",
+      "per-symbol eff_RT, so no single name can carry the aggregate",
+      "fill rate, partial-fill share and episode-skip rate per symbol",
+      "the min-size arm beside the notional-aware arm, so the size effect is visible rather than assumed"
+    ],
+    "fees": {
+      "maker_bps": 1.8,
+      "taker_bps": 4.5,
+      "tier": "VIP0 + BNB"
+    },
+    "formula": "eff_leg = fill_rate*E[cost|fill] + (1-fill_rate)*E[cost|chase]; eff_RT = 2*eff_leg (entry and exit legs symmetric by convention) -- EXPERIMENT_PLAN section 1.5, unchanged",
+    "primary": "eff_RT under RiskAverse at T_p = 600 s, day-clustered mean, bps of the decision mid",
+    "threshold_bps": 8.0
+  },
+  "the_queue_bracket": {
+    "ProbQueue_f3": {
+      "determinism": "the fill draw is seeded per (symbol, day, hour, direction) from sha256 of those fields plus the declaration digest, so the optimistic end is REPRODUCIBLE and the seed pins the data.",
+      "role": "OPTIMISTIC bracket end -- reported, never the gate",
+      "rule": "hftbacktest's ProbQueueModel with PowerProbQueueFunc3, n = 3: at each opposite-side trade the resting order fills with probability f(front)/f(front)+f(back) where f(x) = x**3, front = queue ahead remaining, back = depth behind. Implemented here in closed form because the library is not installed; the n = 3 exponent is the plan's, not chosen here."
+    },
+    "RiskAverse": {
+      "queue_ahead_at_placement": "the depth20 snapshot's size at L at the last snapshot at or before t0",
+      "role": "PESSIMISTIC -- the binding model, and the one the gate reads",
+      "rule": "a resting order of size q at level L is filled only when the cumulative opposite-side volume traded AT OR THROUGH L since the order was placed exceeds the depth that was resting at L when it was placed, PLUS q. That is: everything ahead must trade first, and the queue ahead is taken as the FULL depth observed at L at placement time -- never a fraction of it.",
+      "why_this_is_the_gate": "EXPERIMENT_PLAN section 2: 'Gate: eff_RT <= 8 bps under RiskAverse.' A pass under the pessimistic model passes everywhere; a pass only under the optimistic one is not a pass."
+    }
+  },
+  "the_required_input_that_does_not_exist_yet": {
+    "escalated": true,
+    "if_it_cannot_be_sourced": "the runner REFUSES the size-aware arm and reports the min-size arm ONLY, labelled as NOT the E2-A gate -- because a min-size answer is exactly the E1-A answer with a better fill model, and calling it E2-A would quietly drop the third of the three things section 2 asks for. It is a refusal with a named status, never a default.",
+    "what": "a per-symbol rebalance NOTIONAL for the XS book",
+    "where_it_must_come_from": "the P-2026-001 capstone book's own construction, not from this tape and not from a round number chosen here",
+    "why_it_matters": "'depth-aware sizes at the XS book's actual rebalance notionals' is the whole of the size change. E1-A's episodes were explicitly min-size and notional-free, so this programme has never pinned the number."
+  },
+  "what_changes_from_E1A_and_what_does_not": {
+    "CHANGED_BECAUSE_A_REAL_BOOK_EXISTS": [
+      "PLACEMENT: the touch is the ACTUAL best bid/ask from bookTicker at t0-, not `m0 - sign*ES_day/2` from a same-day median flip-bounce. E1-A's own review logged that proxy as a sanctioned same-day look-ahead; it is gone.",
+      "FILLS: the touch/sweep-through bracket is replaced by the QUEUE bracket (RiskAverse / ProbQueue-f3) against real depth. E1-A's bracket expressed 'we cannot see the queue'; this one expresses 'we can see the depth but not our place in it', which is a strictly narrower uncertainty.",
+      "SIZE: episodes carry the XS book's rebalance notional instead of being min-size and notional-free.",
+      "PARTIAL FILLS: admitted and reported, since depth makes them expressible; E1-A could not."
+    ],
+    "UNCHANGED": [
+      "the episode grid, the patience ladder, the primary T_p = 600 s and the rule that the gate reads ONLY that row (no patience shopping)",
+      "the shortfall accounting against the decision mid, and the chase branch at the taker fee",
+      "the 8.0 bps capstone threshold",
+      "equal weighting across symbols, day-clustered mean, block bootstrap interval"
+    ]
+  },
+  "what_settles_and_what_fails": {
+    "FAIL": "eff_RT(RiskAverse) > 8.0 bps",
+    "FAIL_BRACKET_DISAGREES": "the two queue models straddle the threshold -- never averaged",
+    "INCONCLUSIVE_INTERVAL_DOES_NOT_CLEAR": "point clears, CI upper bound does not",
+    "INCONCLUSIVE_NO_INTERVAL": "point clears, G < 5, no interval",
+    "PASS": "eff_RT(RiskAverse) <= 8.0 bps AND its 95% CI upper bound <= 8.0",
+    "REFUTES_THE_BRACKET": "ProbQueue-f3 > RiskAverse: the optimistic model cannot cost more than the pessimistic one, so the INSTRUMENT is refuted and no overlay verdict is read",
+    "what_this_supersedes": "E1-A's eff_RT_sweep 6.2645 [5.7561, 6.7539] as the operative overlay number -- per EXPERIMENT_PLAN section 2, 'Supersedes the E1-A number'. E1-A stays as provenance and is not edited.",
+    "why_the_interval_binds_only_on_PASS": "a PASS is the claim that carries weight -- it is what would let the overlay proceed -- and a claim that needs power gets an interval. A FAIL is 'did not clear', which needs none. This is E2.0's reviewer finding 3 applied before it had to be filed twice."
+  },
+  "what_would_refute_this_DESIGN_rather_than_a_symbol": [
+    "the E1-A reproduction control failing -- then E2-A is not superseding E1-A, it is measuring a different estimator",
+    "ProbQueue-f3 costing more than RiskAverse -- the bracket's ordering is arithmetic, so a violation is an implementation defect and no verdict may be read",
+    "depth20 snapshots being too sparse at the touch to establish a queue-ahead at placement -- then 'depth-aware' is a name and not a property, and the honest report is that the bracket could not be narrowed",
+    "a systematically empty admissible-day set once all three streams are required -- that refutes the population predicate",
+    "the rebalance notional proving unsourceable -- then E2-A can resolve the queue question but NOT the size question, and must say which half it answered"
+  ]
+}
