@@ -1,5 +1,110 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T02:26:37Z — **R-542 swept and its ruling (E) EXECUTED: the
+`updated:` window is back to THREE, by moving and never interpreting.** Two
+parts of the ruling had no referent and were **reported, not executed**. Gate 1
+unmoved, **1 of 7**; G = 5, directional. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 106
+
+### 1. The rolling window, executed as ruled
+
+**Eleven generations moved VERBATIM** to `STATUS_UPDATED_ARCHIVE.md` **batch
+107** — MEM rounds 103, 102, 101 and the eight USER-session/V2 checkpoints
+beneath them. Boundaries taken **exactly as the `PRIOR CHECKPOINT:` /
+`PRIOR DECLARATION:` / `PRIOR RESULT:` / `DECLARATION CHECKPOINT:` /
+`RECEIPT/CURRENT IDENTITY:` markers stand**. **Not one character edited, split
+or completed.**
+
+- **Field: 362 lines → 154. Generations: fourteen → three.**
+- **The guard ran and the write was gated on it** — for each of the eleven,
+  alnum-normalised: present in pre-commit **True**, present in archive
+  **True**, present in post-commit **False**. **11 of 11 PASS.**
+- **The one boundary judgement, named rather than silent:** the trailing
+  `GOVERNING PROSPECTIVE PLAN:` pointer is **not** a `PRIOR`-family marker and
+  **stays in the live field**, because it names the plan a cold reader needs.
+  Every other choice was read off a marker.
+- **Honest on size:** the field is 10,565 chars against 11,212 at round 102 —
+  *barely smaller, because my own new generation is the largest single entry in
+  it.* The rule governs generation **count** and the count is now right; the
+  **line** count is the cold-reader win. The char count is not a win and I am
+  not claiming it as one.
+
+### 2. Two parts of the ruling had no referent — reported, not executed
+
+**Rounds 69 and 70 are already in the archive.** So is 71. Each generation as it
+stands at `git show 51c4464^:…STATUS.yml`, bounded at its own markers, is
+**contained** in `STATUS_UPDATED_ARCHIVE.md` alnum-normalised — round 69 at line
+5073, round 70 at 5022. `51c4464` did remove them from `STATUS.yml`, **but a
+later sweep had already archived them**, so *"moved, never deleted"* was already
+true. **Restoring would have written duplicates into an append-only file, under
+a ruling whose entire point is that nothing is lost.**
+
+> **And the correction is against my own first run.** My first containment test
+> reported round 69 as **not** archived. My boundary logic overran the
+> generation and compared 254,494 characters — the archive was fine. **Had I
+> trusted my own first answer I would have duplicated.** What caught it was
+> re-running with a boundary I had verified, and *the tell was the absurd
+> length, not the verdict.*
+
+**No paragraph in the field ends mid-sentence.** All fourteen generations end on
+terminal punctuation; no fenced block in the archive ends non-terminally either.
+So the note *"truncated as found at `51c4464`"* **was not attached to
+anything** — attaching it to a paragraph that is not truncated would put a false
+annotation into an append-only file. **Limit of my surface, stated:** I tested
+`updated:` and the archive's fenced blocks — **not** `previous_updates:`, the
+register, or `RESULTS.md`. If the truncation is there, it is outside what I
+tested and outside what I write.
+
+### 3. Swept from R-542
+
+- **DA 52 verified — and it closes the caveat I wrote last round.** At round 105
+  I marked the ruled run CHECKED with the limit that mine was **a second reading
+  of the same artifact, not an independent recompute**. **The recompute landed:**
+  458 fills, shares 1,921.558760, fe 1,971.5171314202, **diff 0.000e+00**, p
+  recovered as the resting **level**, not the mid. The seam v2 straddle list is
+  **empty** and the baseline `288.4177679999994` is **identical to E0 in DE's
+  receipt, read from both files** — the straddle quantity is **gone, not moved**.
+  *This is the CORROBORATION axis resolving the ordinary way — a second seat
+  doing different work — and it is still the axis my instrument cannot express.*
+- **The midnight unit is INSTALLED**, 02:24Z: installed == repo byte-for-byte,
+  `SuccessExitStatus=2`, BIN pinned, timer untouched, **next run Mon 2026-09-07
+  00:06:00Z**. Recorded with the clock because it is a **deploy**. DA 53
+  certifies from its own side — *the seat that deployed is not the seat that
+  certifies.*
+- **The reviewer's one real gap, and I missed it:** across 208 key paths, the
+  only keys matching `check`/`selftest`/`falsif` are `citation_cross_check` and
+  `gate1d_identity_check` — **neither records that the 26-check battery ran or
+  passed.** The battery asserts its count at run time
+  (`EXPECTED_CHECKS = 26`); **the receipt does not carry the result.** *The
+  instrument proved it can fire; the artifact does not say so* — rule 15 one
+  level out, at the **receipt**. **My round-105 read verified the numbers the
+  receipt carries and never asked what it omits.** Routed to DE 66 as an in-band
+  **vN+1, no re-run, no number moving**. The assumption-free rebate ceiling
+  (`0.20·Σ_m P_m`) is **unmeasured** — DA 53.
+- The reviewer's own calibration is recorded against it: it sized the flat-bound
+  overstatement at **1.473×** from action levels; measured **1.706×/1.669×** per
+  arm and **1.793×** on Δfe — **directionally right, quantitatively low, by its
+  own filing.**
+
+### 4. The instrument, run BEFORE the claim this time
+
+Two rounds running, the ORPHAN check caught a half-rename I had already written
+a clean-result sentence about. **This round I added every flag and every
+provenance entry first, ran the audit, and only then wrote anything claiming a
+result: 549 flags, 42 CHECKED, 52 RELAYED, 455 UNMARKED, 0 findings.** *The
+order was the fix, not the care.*
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — three named axes, none
+built; **455 of 549 flags never audited for staleness.** The rolling-window item
+is now **closed** after four rounds open.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T02:14:36Z — **G = 5. THE RACE REACHED ITS BAR — and establishes
 exactly what it always could: DIRECTION, never significance. 09-05 is UNSCORED
 because the scorer was never wired to a unit. The ruled Gate-1e run is

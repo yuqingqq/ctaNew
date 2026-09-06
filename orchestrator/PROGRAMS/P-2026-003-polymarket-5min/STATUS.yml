@@ -63,6 +63,46 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T02:26:37Z (MEM ROUND 106 -- R-542 SWEPT AND ITS RULING (E) EXECUTED.
+  STATE ONLY.
+  (1) THE `updated:` ROLLING WINDOW IS BACK TO THREE, BY MOVING AND NEVER BY
+  INTERPRETING. Eleven generations -- MEM rounds 103, 102, 101 and the eight
+  USER-session/V2 checkpoints beneath them -- moved VERBATIM to
+  workspace/STATUS_UPDATED_ARCHIVE.md batch 107, boundaries taken exactly as
+  the existing PRIOR CHECKPOINT / PRIOR DECLARATION / PRIOR RESULT /
+  DECLARATION CHECKPOINT / RECEIPT-CURRENT-IDENTITY markers stand. NOT ONE
+  CHARACTER WAS EDITED, SPLIT OR COMPLETED. The GOVERNING PROSPECTIVE PLAN
+  pointer is NOT a generation marker and STAYS in the field, because it is a
+  current pointer a cold reader needs; that is the one boundary judgement in
+  the move and it is named rather than silent. GUARD: alnum-normalised
+  containment, every moved generation present in the pre-commit file, present
+  in the archive, ABSENT from the post-commit file -- run, not asserted.
+  (2) TWO PARTS OF THE RULING HAD NO REFERENT AND I DID NOT INVENT ONE.
+  ROUNDS 69 AND 70 ARE ALREADY IN THE ARCHIVE -- so is 71 -- verified by
+  alnum-normalised containment of each generation as it stands at
+  `51c4464^` against the archive; restoring them would have DUPLICATED, not
+  repaired. AND NO PARAGRAPH IN THE FIELD ENDS MID-SENTENCE: all fourteen
+  generations end on terminal punctuation, and no fenced block in the archive
+  ends non-terminally either. Both reported to the coordinator with their
+  surfaces rather than executed blind.
+  (3) A CORRECTION AGAINST MY OWN FIRST ANSWER, WHICH IS THE PART WORTH
+  KEEPING: MY FIRST CONTAINMENT RUN SAID ROUND 69 WAS *NOT* IN THE ARCHIVE.
+  It was my boundary logic that was wrong, not the archive. Had I trusted my
+  own first run I would have written a duplicate into an append-only file
+  under a ruling whose whole point is that nothing is lost. The check that
+  saved it was re-running with a boundary I had verified.
+  (4) SWEPT FROM R-542: DA 52 VERIFIED BY THE COORDINATOR (falsifier 10/10,
+  the seam v2 straddle list EMPTY, baseline 288.4177679999994 identical to
+  DE's E0 in both files) -- WHICH CLOSES THE "pending DA's independent
+  recompute" CAVEAT I WROTE AT ROUND 105; the midnight unit INSTALLED at
+  02:24Z, installed == repo byte-for-byte, SuccessExitStatus=2, BIN pinned,
+  next run Mon 2026-09-07 00:06Z; the reviewer's filing verified across 208
+  key paths with ONE REAL GAP -- THE RECEIPT DOES NOT RECORD THAT ITS OWN
+  26-CHECK BATTERY RAN, so the instrument proved it can fire and the artifact
+  does not say so, rule 15 AT THE RECEIPT -- routed to DE 66 as an in-band
+  vN+1 with NO RE-RUN AND NO NUMBER MOVING; and RESULTS.md's stale G
+  statements corrected by the coordinator.
+  PRIOR CHECKPOINT:
   2026-09-06T02:14:36Z (MEM ROUND 105 -- R-541 SWEPT. STATE ONLY.
   (1) G = 5. THE BAR IS REACHED: 09-05 accrued at the scheduled unit's
   00:06:01Z write, four conjuncts true, content_liveness CONTENT_LIVE, mask
@@ -171,256 +211,8 @@ updated: >-
   DE's seam answer -- the tranche record carries NO fee field -- was reached
   INDEPENDENTLY of Q-DA-252, which makes it a SECOND OBSERVATION.
   (7) MY OWN ROUND-102 INTERVAL STAYS WITHDRAWN, citable form [-rebate, 0].
-  PRIOR CHECKPOINT:
-  2026-09-05T15:56:56Z (MEM ROUND 103 -- THE FEE, SWEPT FROM THREE ENTRIES.
-  STATE ONLY.
-  (1) THE VENUE'S OWN DOCS, FETCHED LIVE ON THE USER'S INSTRUCTION (R-536, whose
-  TRUE AS-OF IS 15:51Z -- ITS HEADER READS 16:04Z AND I CHECKED THAT MYSELF:
-  the commit carrying it, 78b5c80, is stamped 15:51:44Z, so the header is
-  THIRTEEN MINUTES AHEAD OF ITS OWN EXISTENCE; corrected in band at R-537(A),
-  and R-536 stands as written under rule 13). TWO VENUE PAGES, ONE UPDATED
-  2026-07-10, BOTH SAY "MAKERS ARE NEVER CHARGED FEES. ONLY TAKERS PAY FEES."
-  Taker C*0.07*p(1-p) in crypto. Maker rebate 20% of the crypto taker-fee pool,
-  PER MARKET, pro-rata by fee-equivalent on FILLED orders, daily pUSD, $1
-  minimum, AND DISCRETIONARY. A THIRD PROGRAM, Liquidity Rewards, IS SEPARATE
-  AND ITS ELIGIBILITY FOR CRYPTO 5-MINUTE MARKETS IS UNSTATED -- recorded as a
-  status, not assumed either way. WE ARE THE MAKER: charge zero, net of rebate
-  NEGATIVE.
-  (2) THE USER RULES (R-537(B)): GATE 1e IS RE-RUN AT THREE FEE ENDPOINTS --
-  0, +0.07*p(1-p), -rebate with the per-market share as an interval [0, 20%] --
-  REPORTING INVARIANCE INSTEAD OF A NULL. IT DOES NOT CLEAR GATE 1: the three
-  sampler refusals stand. Sequencing (R-537(C)): the reviewer SPECIFIES, DE
-  RUNS, DA VERIFIES, and NOTHING RUNS BEFORE THE BAR IS DECLARED.
-  (3) DA WENT TO THE CHAIN (R-538) AND SHARPENED THE VENUE'S ABSOLUTE: 901
-  receipts decoded from raw with the ABI DERIVED BY KECCAK rather than copied;
-  1,046 of 1,056 maker legs at exactly zero; AND THE TEN CHARGED ARE A
-  MECHANISM -- all at p = 0.99, across 6 addresses, EACH PAYING EXACTLY ITS OWN
-  SIGNED RATE (seven at 1000 bps, three at 5000 bps). SO THE MAKER FEE IS A
-  SIGNED ORDER PARAMETER: a maker who signs 0 pays 0, and FOR US THE FEE IS
-  WHAT WE SIGN -- a stronger footing than a venue promise.
-  (4) SO MY ROUND-102 INTERVAL IS SUPERSEDED-BY-R-538. [0, 1.75 c/share] priced
-  the 1.3% exception AS AN INCIDENCE RATE; it is a PARAMETER WE SET, and an
-  incidence-weighted average over a parameter we set is not a bound on us. THE
-  INTERVAL IS [-rebate, 0], with the + endpoint's shape under the reviewer's
-  re-derivation. THE PART I CHECKED SURVIVED -- the three cites read at the
-  artifacts; THE PART I RELAYED DID NOT.
-  (5) ALSO FROM R-538, CARRIED AS OPEN EXCEPTIONS, NOT SMOOTHED: the taker
-  formula is floor(C*0.07*p(1-p)/10 uUSDC)*10 uUSDC, exact 879/901, with 22
-  charged MORE, mechanism unknown; ITER1_M's two transactions ARE NOT IN THE
-  CACHE, so that decisive test IS NOT REPRODUCIBLE from this repository -- I
-  corroborated that with my own grep surface -- and the finding now rests on the
-  901-decode, which IS reproducible; and Gate 1f's negative predicate is
-  FAIL-OPEN with 86% of its block outside the window, so the instrument is
-  weaker than its conclusion, which still survives on a wider check.
-  PRIOR CHECKPOINT:
-  2026-09-05T15:47:09Z (MEM ROUND 102 -- THE FIRST LOOP ROUND SWEPT. STATE ONLY;
-  I PRODUCED NO RESULT AND ADJUDICATED NOTHING.
-  (1) THE V2 BLOCKER'S LABEL IS WITHDRAWN, SUPERSEDED-BY-R-535. Gate 1f's
-  terminal stop rests on a NEGATIVE EXISTENCE CLAIM never checked against this
-  programme's own measurement, and I VERIFIED ALL THREE CITES AT THE ARTIFACTS
-  MYSELF: FLOW_MODEL_STATE.md:78 (maker fee measured, 744/754 legs zero,
-  n=600), MEASUREMENT_PLAN.md:945 (that precondition DISCHARGED, "measured
-  on-chain"), and de_v2_owned_execution_input.py:425-428 (the "conclusion" is a
-  CONSTANT STRING LITERAL no predicate evaluates -- and "on-chain" appears in
-  that module EXACTLY ONCE, inside it). The reviewer's section 2.3 adds that an
-  owned per-fill ledger is UNDEFINED for a COUNTERFACTUAL population, SO THERE
-  IS NOTHING TO PROCURE -- "acquire an owned-execution export" was never an
-  available move. THE USER'S QUESTION IS NOW THE NARROWER ONE: should Gate 1e be
-  re-run on the fee INTERVAL [0, 1.75 c/share] the repository already owns?
-  BUT GATE 1'S OTHER THREE REFUSALS STAND, REPRODUCED BIT-FOR-BIT BY DA, SO THE
-  ROUTE IS STILL STOPPED. What changed is WHY, not whether.
-  (2) THE CEILING'S ZERO WAS WRONG. BE's declared-before-run null shows a
-  matched-count RANDOM decline captures a NEGATIVE fraction of V_oracle at every
-  k, which ANSWERS MY OWN ROUND-100 OBJECTION -- AND ANSWERS IT NO. Against
-  matched random CONDVALUE is +3.16 pp and HAZARD +0.33 pp, neither clearing
-  p95: A DIRECTION, NOT A RESULT. R-529(C)'s "neither ranker finds any of it" IS
-  NOT SUPPORTED and is marked so. The two axes DISAGREE -- CONDVALUE beats
-  random per FILL, loses to a blind cancel per CANCEL (2.865 vs 2.227 c/cancel)
-  through a 4.32-fills-per-cancel cascade.
-  (3) V_oracle HAS r's DISEASE BY CONSTRUCTION (identical V_oracle 600.0c,
-  attainable 600.0 vs 300.0; 10.0% overstatement on the Gate-0 book) -- BUT THAT
-  10.0% DOES NOT TRANSFER TO THE 701%: different surfaces. EVERY CEILING FIGURE
-  NOW CARRIES AN ATTAINABLE-VALUE COMPANION.
-  (4) TWO R-532 CLAIMS I RELAYED AT ROUND 101 ARE FALSE AS STATED, AND I CHECKED
-  BOTH MYSELF THIS ROUND. Exactly FIVE of eight V2 receipts carry a provenance
-  block; THREE CARRY NONE -- gate1_smoke (the headline Gate-1 refusal) and BOTH
-  gate1f audits, the receipts behind the very stop this round dissolved. And
-  `git cat-file -t e3a1f088` returns "not a valid object name", with ZERO
-  matches across ALL refs for that blob of de_phase4_diag_runner.py: THE TWO
-  EARLIEST RECEIPTS NAME CODE THAT IS NOWHERE IN GIT.
-  (5) THE COORDINATOR STALLED FORTY MINUTES on nine landed commits and asked for
-  it recorded against itself as R-378/R-381 record it against seats. Recorded.
-  (6) THE WAITER RULE (third instance): a waiter armed inside a turn does not
-  survive the turn ending -- poll from `ps` at the top of the next turn,
-  observer excluded. BE is on RECORDED STANDBY, which is not idleness (R-381).
-  (7) RESULTS.md's "G = 3 of 5" IS FIXED TO 4 in 0c56940 -- CHECKED at the
-  artifact. Round 101 routed it rather than editing another seat's file, and
-  the owner fixed it; THE ROUTE WORKED.
-  PRIOR CHECKPOINT:
-  2026-09-05T15:01:22Z (MEM ROUND 101 -- STATE SWEEP ON THE USER'S RESUMPTION
-  OF THE LOOP AT 14:54Z. NO NEW RESULT; THIS IS A STATE BATCH.
-  (1) PHASE/STATUS MOVE stopped/halted -> resumed-loop-within-v2-scope, WITH
-  THE AUTHORISED AND UNAUTHORISED SCOPE NAMED RATHER THAN ASSUMED.
-  (2) THE V2 LINE IS COMMITTED (9b37088 + 120a9b3, VERIFIED BY ME AT GIT) AND
-  STILL NOT FROZEN (RELAYED FROM R-532(E)); EVERY FLAG THAT READ
-  "uncommitted/unfrozen" IS TRUED UP TO THAT PAIR.
-  (3) hazard_forward_reach IS CORRECTED, NOT ADVANCED: IT READ
-  G-5-OF-5-REACHED AND G HAS NEVER BEEN 5. THE ACCRUAL IS 4 (09-01..09-04;
-  09-04 ACCRUED AT THE 00:06:01Z SCHEDULED UNIT WITH counts_toward_race TRUE,
-  RELAYED FROM R-532(G)) AGAINST A BAR OF 5. MY ROUND-100 VALUE READ R-529(A)'s
-  *BAR* AS AN *ACCRUAL*; RESULTS.md SAID "G = 3 of 5" AT THAT MOMENT AND STILL
-  DOES. THE RACE STAYS DIRECTIONAL, NOT SIGNIFICANCE-BEARING (R-529(A)), AND
-  THE OLD RACE CANNOT VALIDATE THE CHANGED V2 PIPELINE (V2 HANDOFF) -- TWO
-  SEPARATE LIMITS THAT STAND TOGETHER.
-  (4) EVERY V2-ORIGINATED FLAG IS MARKED RELAYED UNTIL A SEAT CHECKS IT AT AN
-  ARTIFACT; DA ROUND 49 IS DISPATCHED TO BE THAT SEAT. NOBODY BUT THE PRODUCING
-  SESSION HAS VERIFIED V2's RECEIPTS OR ITS THREE GATE-1 REFUSALS.
-  (5) v41_collector_live REFRESHED FROM R-532(H) (RELAYED): ALL FOUR COLLECTORS
-  ALIVE AT 2026-09-05T11:32Z.
-  (6) R-534 DOES NOT EXIST: the register's last entry is R-533 and the runbook
-  names R-534 as the NEXT one, so facts my dispatch attributes to R-534 are
-  carried here as DISPATCH-RELAYED, not as register citations.
-  (7) FIVE DISPATCHES ARE IN FLIGHT AND NONE IS DONE: BE 42, DA 49, DE 63,
-  REVIEWER, MEM 101.
-  (8) THE CURRENCY AXIS REMAINS NAMED AND NOT BUILT -- 457 of 502 flags have
-  never been audited for staleness -- AND THIS ROUND ADDS ITS SECOND CONFIRMED
-  INSTANCE AND A FOURTH AXIS: RELAY FIDELITY. A FLAG MARKED RELAYED IS HONEST
-  ABOUT NOT BEING RE-DERIVED AND STILL SAYS NOTHING ABOUT WHETHER IT READ ITS
-  SOURCE CORRECTLY, WHICH IS HOW G-5-OF-5 SURVIVED 24.5 HOURS.
-  PRIOR CHECKPOINT:
-  2026-09-05T09:54:58Z (DOCUMENT/REGRESSION RECONCILIATION AFTER THE
-  2026-09-05T05:50:05Z USER-CONTINUED GATE-1 BLOCKER AUDIT;
-  GATE-1F INPUT ADMISSION REFUSED_NO_OWNED_EXECUTION_SOURCE; V2 REMAINS
-  TERMINALLY STOPPED AT 1/7. CORRECTED RECEIPT
-  p003_v2_gate1f_owned_source_audit__20260905T054941Z.json SHA256
-  c99109943de37d37d2fc8358628640214d489752e96bb8ca4f86e144bf197f47
-  SUPERSEDES ...T054848Z.json SHA256
-  bf3d01fa61ee799860ec8bbc764645b0e034162f1611a54879b146d99b292022;
-  THE FIRST RECEIPT'S TIER1 RANGE WAS NULL BECAUSE ITS PATH CENSUS MISSED THE
-  DISTILLER DIRECTORY, WHILE ALL GATE FIELDS/CONCLUSIONS WERE UNCHANGED. THE
-  FIXED OWNED-EXECUTION MANIFEST IS ABSENT. PUBLIC RAW DATE DIRECTORIES REACH
-  2026-09-05 AND TIER1 PUBLIC TRADES REACH 2026-09-02, BUT THE PUBLIC COLLECTOR
-  AND TIER1 SCHEMA HAVE NO OWNED CLIENT-ORDER->VENUE-ACK->MAKER-FILL->EXACT-FEE
-  JOIN. MORE PUBLIC TAPE CANNOT SUPPLY IT. THE OFFLINE CONTRACT MODULE PASSES
-  11 CHECKS UNDER ONE CPU/512 MiB; IT ACCEPTS EXPLICIT SCHEDULE-BOUND ZERO FEES
-  BUT REFUSES MISSING FEES, PUBLIC/TAKER FILLS, ORPHANS, PRE-ACK FILLS, HASH
-  DRIFT AND SEEN/FREEZE-DAY REUSE. AUDIT 0.006 S / 19,760 KiB RSS. DECISION
-  METRIC NULL; GATE 1 STILL REFUSED; GATE 2 OFF. REQUIRED NEXT INPUT IS AN
-  AUTHENTICATED OFFLINE OWNED-EXECUTION EXPORT PRODUCED OUTSIDE THIS RESEARCH
-  REPO OVER >=5 POST-FREEZE COMPLETE UTC DAYS. DO NOT ADD CREDENTIALS, SIGNING
-  OR LIVE ORDER/CANCEL CODE HERE. LATEST BOUNDED REGRESSION: ALL 17 CURRENT V2
-  MODULE/WRAPPER BATTERIES PASS (182 CHECKS TOTAL) AND THE PARENT SUITE PASSES
-  223/223, SEQUENTIALLY UNDER ONE CPU/1 GiB, SWAP OFF; NO GATE CHANGED.)
-  PRIOR CHECKPOINT:
-  2026-09-05T05:28:23Z (GATE 1E LIFECYCLE LEDGER AUDIT COMPLETE; GATE 1
-  REFUSED; V2 ROUTE TERMINALLY STOPPED AT 1/7. RECEIPT
-  p003_v2_gate1_economics_smoke__20260905T052605Z.json SHA256
-  e78fe495846cf22e834b63e04aea445cf1616563cb932a11f304d3a7ba2abd42.
-  THE PINNED GATE-1D SHA, 720-PHASE SUPPORT, EXACT 200 OFFSETS AND ALL 200
-  SCORE/ACTION IDENTITIES REPRODUCED ON 5,869 SOURCE ROWS / 3,557 ACTIONS.
-  QR_SKEW_ONLY, TREATMENT AND 200 CONTROLS PASSED EVERY GROSS FILL,
-  SPREAD/ADVERSE, FIVE-SECOND/TERMINAL, RHO, CANCEL-LIFECYCLE, RATE AND
-  POPULATION IDENTITY. ALL 202 PER-FILL MAKER-FEE LEDGERS ARE
-  UNAVAILABLE_NO_PER_FILL_MAKER_FEE, SO ALL 202 STRATEGY NETS, THE TREATMENT
-  DECISION VALUE AND MATCHED DECISION NULL ARE NULL. PUBLIC TAKER/TRADE FEES
-  WERE NOT SUBSTITUTED; OWNED ACK/FILL CAUSALITY REMAINS UNOBSERVABLE. THIS IS
-  AN IDENTIFICATION/INPUT REFUSAL, NOT A NEGATIVE P&L RESULT. 22.98 S,
-  338,556 KiB PROCESS MAX RSS UNDER ONE CPU/3 GiB, SWAP OFF. NO NAMED GATE-1D
-  SOURCE CODE DRIFTED; ONLY THE EXPECTED POST-RECEIPT PLAN DOCUMENT CHANGED.
-  GATE 2 AND GATES 3-6 DID NOT START. RESUMPTION REQUIRES A NEW RELIABLE
-  OWNED-ORDER MAKER-FEE/ACK/FILL SOURCE, PROSPECTIVE AMENDMENT AND FRESH DATA;
-  NO LIVE TRADING IS AUTHORISED. AT THIS PRIOR CHECKPOINT, ALL 16 THEN-EXISTING
-  V2 MODULE/WRAPPER BATTERIES AND THE 223-CHECK PARENT SUITE PASSED UNDER ONE
-  CPU/1 GiB, SWAP OFF.)
-  PRIOR CHECKPOINT:
-  2026-09-05T05:14:39Z (GATE 1D FINITE ACTING SUPPORT CLEARED; GATE 1E
-  LIFECYCLE-ECONOMIC COMPLETENESS AUDIT DECLARED BEFORE OUTPUT. RECEIPT
-  p003_v2_gate1_cyclic_smoke__20260905T051116Z.json SHA256
-  8a97102cc11f5f8c94f1545deb0df75a82d6bb44a6970fd5fc4faaf723074650.
-  COMPLETE ENUMERATION: BUY 1,891 OFFSETS / 18 EXACT; SELL 1,666 / 40 EXACT;
-  720 DISTINCT JOINT PHASES, THEN 200 UNIFORM WITHOUT-REPLACEMENT DISTINCT
-  FULL REPLAYS. ALL SOURCE/SCORE/SEPARABILITY/ACTUAL-COUNT/STATEFUL IDENTITIES
-  TRUE. 99.85 S, 338,448 KiB PROCESS MAX RSS UNDER ONE CPU/3 GiB, SWAP OFF.
-  THIS CLEARS ONLY THE ACTING-CONTROL SEAM: ECONOMICS REMAIN
-  INCOMPLETE_NOT_STRATEGY_NET AND NO PARTIAL VALUE IS INTERPRETED. GATE 1E NOW
-  PINS THE RECEIPT/PHASES, REPLAYS BASELINE/TREATMENT/200 CONTROLS, RECONCILES
-  FILL P&L, SPREAD, ADVERSE, RHO, TERMINAL INVENTORY AND LIFECYCLE COUNTERS,
-  BUT MUST REFUSE WITH NULL DECISION METRIC IF A PER-FILL MAKER-FEE LEDGER OR
-  ANY REQUIRED TERM IS UNAVAILABLE. ONE CPU/1 GiB SYNTHETIC; ONE CPU/3 GiB,
-  SWAP OFF, FIVE-MINUTE REAL AUDIT. GATE 2 REMAINS OFF.)
-  PRIOR DECLARATION:
-  2026-09-05T05:03:29Z (USER RESUMED ONLY A DIFFERENT GATE-1D CONTROL
-  ESTIMAND. BEFORE ANY OUTPUT, THE PLAN FIXED COMPLETE CYCLIC-PHASE
-  ENUMERATION WITHIN SIDE/HOUR: PRESERVE THE FULL CLUSTERED SCORE SEQUENCE AND
-  MULTISET, ROTATE ITS PHASE AGAINST THE SAME CANONICAL OPPORTUNITIES, RETAIN
-  ONLY ACTUAL CANCEL_ISSUED COUNT MATCHES, DEDUPLICATE FULL ASSIGNMENTS, AND
-  REQUIRE AT LEAST 200 DISTINCT JOINT PHASES. IF SUFFICIENT, SAMPLE EXACTLY 200
-  UNIFORMLY WITHOUT REPLACEMENT WITH SEED 20260905 AND FULL-REPLAY EVERY DRAW.
-  NO QUOTA SUPPRESSION, FORCE-CANCEL, PROPOSAL LIMIT, FILL/MARKOUT/P&L
-  SELECTION OR CHANGE TO THE THREE CONSUMED FAILURES. SYNTHETICS: ONE CPU/1
-  GiB. ONE FIXED INTERVAL-LOCAL REAL SMOKE: ONE CPU/3 GiB, SWAP OFF, TEN-MINUTE
-  CEILING. DECLARED, NOT YET RUN; GATE 2 AND HEAVY/BROAD WORK REMAIN OFF.)
-  PRIOR RESULT:
-  2026-09-05T01:10:57Z (USER-RESUMED GATE 1C REACHED ITS FIXED SUPPORT STOP.
-  THE SEQUENTIAL RANDOM ACTION-QUOTA CONTROLLER PASSES 14 SYNTHETIC CHECKS AND
-  ITS WRAPPER EIGHT UNDER ONE CPU/1 GiB. THE ONE AUTHORISED REAL SMOKE REFUSED:
-  TREATED ACTUAL CANCEL_ISSUED QUOTA BUY_UP 150 / SELL_UP 110 IN UTC HOUR 13;
-  ONLY 16 OF 1,000 INDEPENDENT PROPOSALS REACHED BOTH QUOTAS VERSUS 200
-  REQUIRED, ALL 984 REJECTIONS WERE UNDER_QUOTA, AND ONLY 16 DISTINCT REALISED
-  ACTION SETS EXISTED VERSUS 50 REQUIRED. ALL ACCEPTED STATE/SOURCE/QUOTA
-  IDENTITIES WERE TRUE, BUT MATCHED_NULL IS ABSENT AND ITS AGGREGATE METRIC IS
-  NULL. RECEIPT p003_v2_gate1_quota_smoke__20260905T010921Z.json SHA256
-  e10dec7167a1b61a17c87b3ff0d19cd6c11692a6280035181e9cf5f1985a2ab8f;
-  82.81 S, 337,028 KiB PROCESS MAX RSS UNDER ONE CPU/3 GiB. DO NOT WIDEN OR
-  MODIFY THIS CONTROL ON THE CONSUMED WINDOW. OVERALL PROGRESS REMAINS 1/7;
-  GATE 1 AND GATES 2-6 DO NOT CLEAR/START. NO NEW ECONOMIC RESULT.)
-  RECEIPT/CURRENT IDENTITY: 11 OF 12 NAMED FILES ARE BYTE-IDENTICAL; ONLY THE
-  V2 PLAN DIFFERS BECAUSE ITS HASHED PROSPECTIVE DECLARATION WAS EXTENDED
-  POST-RUN WITH THE RESULT/STATUS. NO NAMED SOURCE FILE CHANGED.
-  DECLARATION CHECKPOINT: 2026-09-05T00:58:42Z (USER RESUMED ONLY A DIFFERENT
-  GATE-1C CONTROL ESTIMAND; ITS 200-OF-1,000 AND 50-DISTINCT BARS WERE FIXED
-  BEFORE OUTPUT.)
-  PRIOR CHECKPOINT: 2026-09-04T16:44:23Z (LONG LOOP REACHED ITS GATED STOP;
-  V2 GATE 0 CLEARED;
-  BOTH DECLARED GATE-1 NULLS REFUSED; NO NEW ECONOMIC RESULT.)
-  R-531 REMAINS THE LATEST REGISTER
-  ENTRY, BUT THE USER LATER AUTHORISED A REWRITTEN PROSPECTIVE PLAN AND BUILD.
-  CURRENT SCOPE IS DOCUMENTATION, SOURCE, SYNTHETIC SELFTESTS AND REQUIRED
-  ONE-WINDOW CAPPED SMOKES ONLY; NO MODEL FIT, BROAD RAW-TAPE REPLAY, SURVEY,
-  GRID OR CACHE REBUILD. THE V2 PLAN IS CONTROL-FIRST:
-  CANONICAL ONE-ACTION-PER-GENERATION IDENTITY, A >=200-DRAW RANDOM NULL MATCHED
-  ON ACTION COUNT/SIDE/UTC HOUR, THEN ACTING STATEFUL CASCADE ECONOMICS; FAIR
-  PRICE IS DEFERRED. de_action_economic_ledger.py AND
-  de_action_bundle_control.py ARE BUILT; THEIR SYNTHETIC BATTERIES PASS 14 AND
-  12 CHECKS RESPECTIVELY. THE CANONICAL ACTION ADAPTER PASSES 11 AND THE
-  COMPOSED GATE-0 RUNNER NINE. THE OPT-IN V2 REFERENCE PRODUCER RETAINS
-  MISSING-MARKOUT TRANCHE IDENTITIES WITHOUT CHANGING ITS HISTORICAL DEFAULT.
-  THE CAPPED REAL GATE-0 SMOKE RECONCILED 3,557 ACTIONS, 458 EXACT FILLS AND
-  200 MATCHED NULL DRAWS WITH ALL SIX COMPUTED PREDICATES TRUE; IT USED 347,080
-  KiB MAXIMUM RSS IN 11.70 S UNDER ONE CPU/3 GiB. THIS IS A PIPELINE RECEIPT,
-  NOT AN ECONOMIC RESULT, AND IS NOT FROZEN WHILE UNCOMMITTED. A FIRST ATTEMPT
-  HIT ITS 3 GiB JOB CAP IN THE HISTORICAL GLOBAL GAP INDEX AND WAS STOPPED WITH
-  NO ARTIFACT; THE SUCCESSFUL RETRY USES AN EXACT THREE-FILE LOCAL SELECTOR.
-  THE LATEST
-  ECONOMIC EVIDENCE AND ALL R-531 CAVEATS ARE UNCHANGED: ONE BTC DEVELOPMENT
-  HOUR, NO BROAD SURVEY RESULT, G=0 FOR THAT PROPOSED SURVEY, AND V_oracle
-  PENDING A NULL/ATTAINABILITY PROOF. OVERALL V2 PROGRESS IS 1 OF 7 GATES.
-  THE IID ACTING ADAPTER PASSES 18 SYNTHETIC CHECKS AND ITS WRAPPER SEVEN, BUT
-  THE CAPPED REAL GATE-1 SMOKE REFUSED: 1 OF 4,000 PERMUTATIONS MATCHED THE
-  TREATED REALISED SIDE/HOUR COUNTS, VERSUS 200 REQUIRED; 3,999 WERE REJECTED,
-  4M44S ON ONE CPU, 250.5 MiB PEAK. NO NULL OR ECONOMIC STATISTIC WAS
-  PUBLISHED. THE EXACT-FIBER SWITCH REPLACEMENT PASSES 13 SYNTHETIC CHECKS AND
-  ITS WRAPPER SEVEN, BUT ITS CAPPED REAL RETRY ALSO REFUSED: 2,443 OF 5,000
-  PROPOSALS MOVED ON THE FIBER, ALL FOUR CHAINS LEFT TREATMENT, AND 400 SAMPLES
-  HELD 399 DISTINCT STATES WITH EVERY IDENTITY TRUE, BUT ESS WAS 10.53 VERSUS
-  THE DECLARED 100 MINIMUM. THE AGGREGATE NULL IS ABSENT; ECONOMICS REMAIN
-  EXPLICITLY INCOMPLETE. DO NOT INCREASE IID ATTEMPTS, BURN-IN OR THINNING OR
-  CHANGE THE KERNEL ON THIS CONSUMED WINDOW. OVERALL PROGRESS REMAINS 1 OF 7.
-  GATES 2-6 DO NOT START; A DIFFERENT CONTROL ESTIMAND REQUIRES USER RULING.
-  FINAL VERIFICATION: ALL TEN V2 MODULE BATTERIES PASS UNDER ONE CPU/1 GiB AND
-  THE PARENT DIAGNOSTIC SUITE PASSES 223/223. A POST-RECEIPT PARENT PIN FIX
-  LEAVES EXACTLY ONE CURRENT-TREE IDENTITY FILE DIFFERENT FROM EACH SUCCESSFUL
-  SMOKE RECEIPT; THE RECEIPTS RETAIN THEIR OWN HASHES AND WERE NOT RERUN.
+  ARCHIVED: the eleven generations older than these three moved VERBATIM to
+  workspace/STATUS_UPDATED_ARCHIVE.md batch 107 at 2026-09-06T02:26:37Z under R-542(E).
   GOVERNING PROSPECTIVE
   PLAN:
   live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md.
@@ -1033,6 +825,162 @@ flags:
                              # WE SIGN -- a stronger footing than a venue
                              # promise, because it does not depend on the venue
                              # keeping one.
+  updated_rolling_window_restored_to_three: MOVED-NEVER-INTERPRETED-GUARD-11-OF-11-PASS
+                             # CHECKED 2026-09-06T02:26:37Z. R-542(E) executed.
+                             # Eleven generations moved VERBATIM to archive
+                             # batch 107; the field goes 362 lines -> 154 and
+                             # fourteen generations -> THREE. Boundaries taken
+                             # exactly as the PRIOR CHECKPOINT / PRIOR
+                             # DECLARATION / PRIOR RESULT / DECLARATION
+                             # CHECKPOINT / RECEIPT-CURRENT-IDENTITY markers
+                             # stand; NOT ONE CHARACTER EDITED, SPLIT OR
+                             # COMPLETED.
+                             # THE GUARD RAN, IT WAS NOT ASSERTED: for each of
+                             # the eleven, alnum-normalised containment gives
+                             # present-in-pre TRUE, present-in-archive TRUE,
+                             # present-in-post FALSE. 11 of 11 PASS, and the
+                             # write was gated on the assertion.
+                             # THE ONE BOUNDARY JUDGEMENT, NAMED RATHER THAN
+                             # SILENT: the trailing GOVERNING PROSPECTIVE PLAN
+                             # pointer is NOT a marker in the PRIOR-family and
+                             # STAYS in the live field, because it names the
+                             # plan a cold reader needs. Every other choice was
+                             # read off a marker.
+                             # HONEST ON SIZE: the field is 10,565 chars against
+                             # 11,212 at round 102 -- barely smaller, because
+                             # MY OWN new generation is the largest single entry
+                             # in it. The rule governs generation COUNT and the
+                             # count is now right; the LINE count (362 -> 154) is
+                             # the cold-reader win, and the char count is not.
+  rounds_69_and_70_were_already_archived: RESTORING-THEM-WOULD-HAVE-DUPLICATED
+                             # CHECKED 2026-09-06T02:26:37Z, and this part of
+                             # R-542(E) was REPORTED RATHER THAN EXECUTED.
+                             # The ruling asked that rounds 69 and 70, which
+                             # 51c4464 deleted rather than moved, be restored
+                             # into the archive from 51c4464^. THEY ARE ALREADY
+                             # THERE. So is 71.
+                             # SURFACE: each generation as it stands at
+                             # `git show 51c4464^:...STATUS.yml`, bounded at its
+                             # own markers, tested by alnum-normalised
+                             # containment against STATUS_UPDATED_ARCHIVE.md --
+                             # round 69 at archive line 5073, round 70 at 5022,
+                             # round 71 present; all three CONTAINED. 51c4464
+                             # did remove them from STATUS.yml, but a later
+                             # sweep had already archived them, so "moved, never
+                             # deleted" was ALREADY TRUE.
+                             # RESTORING WOULD HAVE WRITTEN DUPLICATES INTO AN
+                             # APPEND-ONLY FILE, under a ruling whose entire
+                             # point is that nothing is lost.
+                             # AND THE CORRECTION IS AGAINST MY OWN FIRST RUN,
+                             # WHICH IS WHY THIS FLAG EXISTS: MY FIRST
+                             # CONTAINMENT TEST REPORTED ROUND 69 AS *NOT*
+                             # ARCHIVED. My boundary logic was wrong -- it ran
+                             # past the generation and compared 254,494
+                             # characters -- not the archive. HAD I TRUSTED MY
+                             # OWN FIRST ANSWER I WOULD HAVE DUPLICATED. The
+                             # thing that caught it was re-running with a
+                             # boundary I had verified, and the tell was the
+                             # absurd length, not the verdict.
+  no_paragraph_in_the_field_ends_mid_sentence: THE-TRUNCATION-NOTE-HAS-NOTHING-TO-ATTACH-TO
+                             # CHECKED 2026-09-06T02:26:37Z. The second part of
+                             # R-542(E) that had no referent.
+                             # The ruling directed that "the paragraph that ends
+                             # mid-sentence moves AS FOUND with the one-line
+                             # note truncated as found at 51c4464".
+                             # SURFACE: all fourteen generations of the
+                             # pre-commit field tested at their own boundaries
+                             # -- EVERY ONE ends on terminal punctuation
+                             # (. or .) ). And every fenced block in
+                             # STATUS_UPDATED_ARCHIVE.md tested the same way --
+                             # NONE ends non-terminally.
+                             # SO THE NOTE WAS NOT ATTACHED TO ANYTHING, because
+                             # attaching "truncated as found" to a paragraph
+                             # that is not truncated would put a false
+                             # annotation into an append-only file. Reported to
+                             # the coordinator instead.
+                             # I MAY BE LOOKING IN THE WRONG PLACE: my surface
+                             # is `updated:` and the archive's fenced blocks. If
+                             # the truncation the ruling means is in
+                             # previous_updates, the register or RESULTS.md, it
+                             # is outside what I tested and outside what I write.
+  da52_closes_my_round_105_pending_caveat: THE-RECOMPUTE-LANDED-AND-MATCHED
+                             # RELAYED from R-542(A). At round 105 I marked the
+                             # ruled run CHECKED-BY-ME with the limit stated
+                             # that MINE WAS A SECOND READING OF THE SAME
+                             # ARTIFACT, NOT AN INDEPENDENT RECOMPUTE, and that
+                             # DA's recompute was still pending. IT LANDED:
+                             # Q-DA-258, 458 fills, shares 1,921.558760, fe
+                             # 1,971.5171314202, DIFF 0.000e+00, with p
+                             # recovered as the resting LEVEL and not the mid.
+                             # SO THE CAVEAT IS CLOSED AND THE FIGURES I READ
+                             # ARE NOW BACKED BY A RECOMPUTE AS WELL AS A READ.
+                             # This is the CORROBORATION axis resolving in the
+                             # ordinary way -- by a second seat doing different
+                             # work -- and it is the axis my instrument still
+                             # cannot express.
+                             # ALSO IN R-542(A): the seam v2 straddle list is
+                             # EMPTY, and the baseline admissible reading
+                             # 288.4177679999994 is IDENTICAL to the E0 value in
+                             # DE's ruled receipt, read from BOTH files. The
+                             # straddle quantity is GONE, not moved.
+  midnight_unit_installed: DEPLOYED-2026-09-06T02:24Z-BY-THE-COORDINATOR
+                             # RELAYED from R-542(B), and flagged with the clock
+                             # time from the entry because IT IS A DEPLOY and
+                             # deploys are the class this programme records with
+                             # a time.
+                             # At 02:24Z the coordinator copied the repo service
+                             # into ~/.config/systemd/user/ and reloaded:
+                             # systemctl --user show reads SuccessExitStatus=2
+                             # and the DA_MIDNIGHT_VERIFY_BIN pin; diff -q
+                             # installed vs repo IDENTICAL; timer untouched;
+                             # NEXT RUN Mon 2026-09-07 00:06:00Z.
+                             # DA had held the install as boundary-only, and the
+                             # reasoning for going now is recorded: for THIS
+                             # unit install-now and install-at-boundary are the
+                             # SAME ACT -- it runs only at 00:06Z and touches no
+                             # tape -- and it is not a collector surface (R-110).
+                             # The previously-installed unit's drift (no BIN pin)
+                             # is closed by the same copy. DA 53 verifies from
+                             # its own side, which is the right shape: the seat
+                             # that deployed is not the seat that certifies.
+  receipt_does_not_record_that_its_own_battery_ran: RULE-15-AT-THE-RECEIPT
+                             # RELAYED from R-542(C). The reviewer's one real
+                             # gap, and the coordinator walked the same 208 key
+                             # paths to confirm it.
+                             # The only keys containing check/selftest/falsif
+                             # are citation_cross_check and
+                             # gate1d_identity_check, and NEITHER records that
+                             # the 26-check battery ran or passed. The battery
+                             # asserts its own count at RUN time
+                             # (de_v2_fee_endpoint_sensitivity.py:96
+                             # EXPECTED_CHECKS = 26, :738) and THE RECEIPT DOES
+                             # NOT CARRY THE RESULT.
+                             # THE INSTRUMENT PROVED IT CAN FIRE; THE ARTIFACT
+                             # DOES NOT SAY SO. That is standing rule 15 landing
+                             # one level out from where it usually lands -- not
+                             # on the checker, on the RECEIPT -- and it is a gap
+                             # my own round-105 read did not catch, because I
+                             # verified the numbers the receipt carries and
+                             # never asked what it OMITS.
+                             # ROUTED TO DE 66 AS AN IN-BAND vN+1 WITH NO RE-RUN
+                             # AND NO NUMBER MOVING, carrying the reviewer's five
+                             # points: the "exact and not an interval" identity
+                             # naming A1-A4; which INVARIANT conjuncts are
+                             # unconditional (same_sign, by monotonicity of the
+                             # rebate in the arm's own fe) and which conditional
+                             # (p_shift, MATERIAL); the MATERIAL headroom factor
+                             # 3.6184x; A1's direction (if false, E-R = 0 and
+                             # every conjunct STRENGTHENS); and the check count
+                             # and outcome.
+                             # AND THE REVIEWER'S OWN CALIBRATION IS RECORDED
+                             # AGAINST IT: it sized the flat-bound overstatement
+                             # at 1.473x from action levels; measured 1.706x and
+                             # 1.669x per arm and 1.793x on delta_fe --
+                             # DIRECTIONALLY RIGHT, QUANTITATIVELY LOW, by its
+                             # own filing.
+                             # THE ASSUMPTION-FREE CEILING that bounds the rebate
+                             # from above -- 0.20 * sum_m P_m -- IS UNMEASURED.
+                             # Dispatched to DA 53.
   ruled_run_result_invariant_and_immaterial: CHECKED-BY-ME-AT-THE-RECEIPT
                              # CHECKED 2026-09-06T02:14:36Z -- I OPENED THE
                              # RECEIPT AND READ EVERY FIGURE, and I did the KEY
@@ -9282,6 +9230,55 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 106, 2026-09-06T02:26:37Z ------------------------------
+  updated_rolling_window_restored_to_three:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/STATUS_UPDATED_ARCHIVE.md
+    as_of: 2026-09-06T02:26:37Z
+    said: >-
+      batch 107 carries the eleven moved generations verbatim inside one fenced
+      block. The containment guard ran on all eleven before anything was
+      written and the write was gated on its assertion: for each, alnum-
+      normalised present-in-pre-commit True, present-in-archive True,
+      present-in-post-commit False -- 11 of 11 PASS. The live field went 362
+      lines to 154 and fourteen generations to three; the GOVERNING PROSPECTIVE
+      PLAN pointer was kept because it is not a PRIOR-family marker, which is
+      the single boundary judgement in the move.
+  rounds_69_and_70_were_already_archived:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/STATUS_UPDATED_ARCHIVE.md
+    as_of: 2026-09-06T02:26:37Z
+    said: >-
+      MEM ROUND 69 appears at line 5073 and MEM ROUND 70 at line 5022; each
+      generation as it stands at `git show 51c4464^:...STATUS.yml`, bounded at
+      its own markers, is CONTAINED in this file alnum-normalised, and so is
+      round 71. My FIRST containment run reported round 69 as absent; that was
+      my boundary logic overrunning the generation (it compared 254,494
+      characters), not the archive. Re-run with a verified boundary it is
+      present. Restoring would have duplicated.
+  no_paragraph_in_the_field_ends_mid_sentence:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T02:26:37Z
+    said: >-
+      all fourteen generations of the pre-commit `updated:` field, taken at
+      their own markers, end on terminal punctuation; and every fenced block in
+      STATUS_UPDATED_ARCHIVE.md tested the same way ends terminally too. Surface
+      stated because this is a negative existence claim, and its limit stated
+      with it: I tested `updated:` and the archive's fenced blocks, not
+      previous_updates, the register or RESULTS.md.
+  da52_closes_my_round_105_pending_caveat:
+    prov: RELAYED
+    from: R-542(A), Q-DA-258 -- DA's recompute is the execution, mine was a read
+  midnight_unit_installed:
+    prov: RELAYED
+    from: R-542(B), a coordinator deploy at 02:24Z; DA 53 certifies from its own side
+  receipt_does_not_record_that_its_own_battery_ran:
+    prov: RELAYED
+    from: >-
+      R-542(C) -- the reviewer's finding, confirmed by the coordinator across
+      the same 208 key paths. A gap my own round-105 read did not catch, because
+      I verified the numbers the receipt carries and never asked what it omits.
   # --- MEM round 105, 2026-09-06T02:14:36Z ------------------------------
   ruled_run_result_invariant_and_immaterial:
     prov: CHECKED
