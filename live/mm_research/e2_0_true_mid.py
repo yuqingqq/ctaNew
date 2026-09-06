@@ -46,8 +46,8 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 RAW = ROOT / "data" / "mm_hf" / "raw"
 VISION = ROOT / "data" / "mm_hf" / "vision" / "parquet" / "aggTrades"
-DECL_PATH = HERE / "declarations" / "p002_e2_0_declaration_v1.json"
-DECL_SHA = "95aeaf1bc35fd8fba1eb96af54429ec1bf7c366afc9e87f0b5be1248504d442a"
+DECL_PATH = HERE / "declarations" / "p002_e2_0_declaration_v2.json"
+DECL_SHA = "054ff4e7536291ee1a4846dec90e62cb3496e851cb27768a898969b67256c1d6"
 PROTOCOL = "P002_E2_0_TRUE_MID_V1"
 EPS = 1e-12
 SEC_PER_DAY = 86_400
@@ -357,14 +357,35 @@ def evaluate_day(sym, day, decl, book=None, trades=None):
 
     rows = []
     incoherent = {"true": False, "proxy": False}
+    pop_counts = {}
     for tau in taus:
         u1 = ts + int(round(tau * 1000))
         m1t, v1t, _ = tm.at(u1)
         m1p, v1p = pm.at(u1)
-        for midname, m0, m1, val in (("true", m0t, m1t, v0t & v1t),
-                                     ("proxy", m0p, m1p, v0p & v1p)):
+        # REVIEWER FINDING 1 (46030b1): the two mids do NOT exist on the same
+        # sweeps -- the true mid needs only a prior quote, the proxy needs two
+        # prints within 10 s. Delta_rs is therefore computed on the
+        # INTERSECTION, where the ONLY thing that differs is the mid. The
+        # settle leg keeps the full true-mid population, because restricting
+        # the economics to what the proxy happened to see would let the
+        # proxy's blindness select the settle population.
+        vt, vp = v0t & v1t, v0p & v1p
+        inter = vt & vp
+        pop_counts[str(tau)] = {
+            "n_sweeps": int(len(ts)),
+            "n_true_valid": int(vt.sum()),
+            "n_proxy_valid": int(vp.sum()),
+            "n_intersection": int(inter.sum()),
+            "n_true_valid_without_proxy": int((vt & ~vp).sum()),
+            "share_true_valid_without_proxy": (
+                float((vt & ~vp).sum() / vt.sum()) if vt.sum() else float("nan")),
+        }
+        for midname, m0, m1, val in (("true", m0t, m1t, vt),
+                                     ("proxy", m0p, m1p, vp),
+                                     ("true_INTERSECTION", m0t, m1t, inter),
+                                     ("proxy_INTERSECTION", m0p, m1p, inter)):
             mo, es, lam = markout(sgn, ps, m0, m1)
-            if val.sum() > 0:
+            if val.sum() > 0 and midname in incoherent:
                 gap = abs(np.mean(mo[val])
                           - (np.mean(es[val]) - np.mean(lam[val])))
                 if gap > incoh_tol:
@@ -426,6 +447,7 @@ def evaluate_day(sym, day, decl, book=None, trades=None):
         "n_prints": int(len(t)), "n_sweeps": int(len(ts)),
         "trade_read": tr_diag, "book_read": bt_diag,
         "n_zero_qty_sweeps": int((qs <= 0).sum()),
+        "population_counts_by_tau": pop_counts,
         "notional_usd": float(notional.sum()),
         "t_opp_med_s": t_opp_med,
         "quote_age_ms_p50": float(np.percentile(age0[v0t], 50)) if v0t.any()
@@ -517,7 +539,26 @@ def summarise(days: list[dict], decl: dict) -> dict:
            "tau_star_s": ts_, "tau_star_why": why,
            "admissible_days": [d["date"] for d in adm],
            "cells": {}}
-    for mid in ("true", "proxy"):
+    pc = [d["population_counts_by_tau"][str(ts_)] for d in adm
+          if str(ts_) in d.get("population_counts_by_tau", {})]
+    if pc:
+        out["population_at_tau_star"] = {
+            "n_sweeps": sum(x["n_sweeps"] for x in pc),
+            "n_true_valid": sum(x["n_true_valid"] for x in pc),
+            "n_proxy_valid": sum(x["n_proxy_valid"] for x in pc),
+            "n_intersection": sum(x["n_intersection"] for x in pc),
+            "n_true_valid_without_proxy":
+                sum(x["n_true_valid_without_proxy"] for x in pc),
+            "share_true_valid_without_proxy": (
+                sum(x["n_true_valid_without_proxy"] for x in pc)
+                / max(sum(x["n_true_valid"] for x in pc), 1)),
+            "what_it_means": (
+                "the events the PROXY could not see. Delta_rs is computed on "
+                "the intersection only; this share is how much of the window "
+                "E1's mid was blind to, and it bounds the reach of the void "
+                "reading (reviewer finding 1)."),
+        }
+    for mid in ("true", "proxy", "true_INTERSECTION", "proxy_INTERSECTION"):
         for side in ("all", "makerbid", "makerask"):
             for w in ("eq", "notional"):
                 c = cell(mid, side, w, ts_)
@@ -546,18 +587,31 @@ def summarise(days: list[dict], decl: dict) -> dict:
 def apply_declared_predicates(summary: dict, decl: dict) -> dict:
     """The 2x2, evaluated by importing the DECLARATION's own functions."""
     D = declaring_module()
-    t = summary.get("cells", {}).get("true|all|notional")
-    pe = summary.get("cells", {}).get("proxy|all|eq")
-    te = summary.get("cells", {}).get("true|all|eq")
+    c = summary.get("cells", {})
+    # SETTLE: the FULL true-mid population, notional-weighted (the amendment).
+    t = c.get("true|all|notional")
+    # VOID: the INTERSECTION, eq-weighted (reviewer finding 1 + the plan).
+    pe = c.get("proxy_INTERSECTION|all|eq")
+    te = c.get("true_INTERSECTION|all|eq")
     delta = (pe["day_clustered_mean_bps"] - te["day_clustered_mean_bps"]) \
         if (pe and te) else None
+    ci = summary.get("primary_ci95", {})
     void = D.void_predicate(delta)
-    settle = D.settle_predicate(t["day_clustered_mean_bps"] if t else None)
+    settle = D.settle_predicate(
+        t["day_clustered_mean_bps"] if t else None,
+        ci_lo_bps=ci.get("lo_bps"), ci_hi_bps=ci.get("hi_bps"),
+        interval_claimable=ci.get("lo_bps") is not None)
     verdict = D.ada_verdict(void, settle)
-    return {"delta_rs_bps": delta, "void_leg": void, "settle_leg": settle,
-            "verdict": verdict,
-            "predicates_from": "e2_0_declare.py (the declaring module), not "
-                               "re-implemented here"}
+    return {
+        "delta_rs_bps": delta,
+        "delta_rs_population": "INTERSECTION (both mids defined at t- and "
+                               "t+tau*), eq-weighted -- reviewer finding 1",
+        "settle_population": "ALL sweeps with a valid TRUE mid, "
+                             "notional-weighted -- the amendment's quantity",
+        "populations": summary.get("population_at_tau_star"),
+        "void_leg": void, "settle_leg": settle, "verdict": verdict,
+        "predicates_from": "e2_0_declare.py (the declaring module), not "
+                           "re-implemented here"}
 
 
 # --------------------------------------------------------------------------
@@ -646,7 +700,7 @@ def selftest() -> int:                                        # noqa: C901
             fails.append(m)
 
     decl = load_declaration()
-    ok(decl["protocol"] == "P002_E2_0_TRUE_MID_DECLARATION_V1",
+    ok(decl["protocol"] == declaring_module().PROTOCOL,
        f"DECLARATION PINNED: sha256 {DECL_SHA[:16]} verified before anything "
        f"is computed; a mismatch REFUSES")
 
@@ -852,20 +906,60 @@ def selftest() -> int:                                        # noqa: C901
        "not a constant wearing a rule's name")
 
     # --- the verdict comes from the declaring module, not from here ---
-    sm = {"cells": {"true|all|notional": {"day_clustered_mean_bps": -0.4},
-                    "proxy|all|eq": {"day_clustered_mean_bps": 2.4},
-                    "true|all|eq": {"day_clustered_mean_bps": 2.0}}}
+    sm = {"cells": {
+        "true|all|notional": {"day_clustered_mean_bps": -0.4},
+        "proxy_INTERSECTION|all|eq": {"day_clustered_mean_bps": 2.4},
+        "true_INTERSECTION|all|eq": {"day_clustered_mean_bps": 2.0}},
+        "primary_ci95": {"lo_bps": -1.2, "hi_bps": 0.3}}
     r = apply_declared_predicates(sm, decl)
     ok(abs(r["delta_rs_bps"] - 0.4) < 1e-9
-       and r["verdict"]["verdict"] == "SETTLED_DEAD",
+       and r["verdict"]["verdict"] == "NOT_VOIDED+DEAD",
        f"WIRED TO THE DECLARATION: a synthetic summary routes through "
        f"e2_0_declare's own predicates and returns "
        f"{r['verdict']['verdict']} -- the runner does not re-implement the gate")
-    sm["cells"]["proxy|all|eq"]["day_clustered_mean_bps"] = 4.0
-    r2 = apply_declared_predicates(sm, decl)
-    ok(r2["verdict"]["verdict"] == "VOID_AND_DEAD",
+    sm["cells"]["proxy_INTERSECTION|all|eq"]["day_clustered_mean_bps"] = 4.0
+    ok(apply_declared_predicates(sm, decl)["verdict"]["verdict"]
+       == "VOIDED+DEAD",
        "WIRED: raising the proxy mid past the +1.0 bps tolerance moves the "
-       "verdict to VOID_AND_DEAD -- the void leg is connected")
+       "verdict -- the void leg is connected")
+    # REVIEWER FINDING 1: Delta_rs must come from the INTERSECTION cells. If
+    # the runner read the unrestricted cells instead, this would still return
+    # a number -- so the check is that the intersection keys are the ones
+    # consulted, driven by making them disagree.
+    sm2 = {"cells": {
+        "true|all|notional": {"day_clustered_mean_bps": -0.4},
+        "true|all|eq": {"day_clustered_mean_bps": 9.0},
+        "proxy|all|eq": {"day_clustered_mean_bps": 9.0},
+        "proxy_INTERSECTION|all|eq": {"day_clustered_mean_bps": 2.4},
+        "true_INTERSECTION|all|eq": {"day_clustered_mean_bps": 2.0}},
+        "primary_ci95": {"lo_bps": -1.2, "hi_bps": 0.3}}
+    ok(abs(apply_declared_predicates(sm2, decl)["delta_rs_bps"] - 0.4) < 1e-9,
+       "REVIEWER FINDING 1 WIRED: with the unrestricted and intersection "
+       "cells set to DIFFERENT values, Delta_rs takes the INTERSECTION pair "
+       "-- so the population difference cannot leak into the mid difference")
+    # REVIEWER FINDINGS 2 AND 3, wired through the runner's own path.
+    sm3 = {"cells": {
+        "true|all|notional": {"day_clustered_mean_bps": 2.0},
+        "proxy_INTERSECTION|all|eq": {"day_clustered_mean_bps": 2.0},
+        "true_INTERSECTION|all|eq": {"day_clustered_mean_bps": 2.0}},
+        "primary_ci95": {"lo_bps": 1.9, "hi_bps": 2.1}}
+    ok(apply_declared_predicates(sm3, decl)["verdict"]["settle_state"]
+       == "NOT_KILLED_PENDING_GATE_1",
+       "REVIEWER FINDING 2 WIRED: 2.0 bps through the runner reads "
+       "NOT_KILLED_PENDING_GATE_1, not ALIVE -- the band between the 1.8 "
+       "death bar and the plan's 2.3 gate has its own name end to end")
+    sm3["cells"]["true|all|notional"]["day_clustered_mean_bps"] = 2.5
+    sm3["primary_ci95"] = {"lo_bps": 1.0, "hi_bps": 4.0}
+    ok(apply_declared_predicates(sm3, decl)["verdict"]["settle_state"]
+       == "INCONCLUSIVE_INTERVAL_DOES_NOT_CLEAR",
+       "REVIEWER FINDING 3 WIRED: a point of 2.5 with a CI lower bound of 1.0 "
+       "reads INCONCLUSIVE through the runner -- the interval is "
+       "decision-bearing, not decorative")
+    sm3["primary_ci95"] = {"lo_bps": 2.0, "hi_bps": 3.0}
+    ok(apply_declared_predicates(sm3, decl)["verdict"]["cell_passes_gate1"]
+       is True,
+       "POSITIVE CONTROL: with the interval clearing too, the same point "
+       "DOES pass gate 1 -- the interval rule can admit")
 
     print(f"\n{'selftest OK' if not fails else 'SELFTEST FAILED'} -- "
           f"{len(fails)} failure(s)")
