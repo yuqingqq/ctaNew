@@ -361,18 +361,56 @@ def not_pooled_clause(doc=None, *, decl_dir: Path | None = None,
         doc = head["doc"]
     ddir = Path(decl_dir) if decl_dir is not None else Path(_R22.DECLARATIONS)
     pop = doc.get("population") or {}
-    consumed = sorted(pop.get("CONSUMED_BY_THE_FIRST_READ") or [])
+    sup = doc.get("supersedes")
+    # REV 87 §1.3: "HAS A PREVIOUS READ" IS READ FROM THE CHAIN, NOT ONLY
+    # FROM THE POPULATION BLOCK. The consumed set alone left one escape: a
+    # declaration that simply does not mention a predecessor renders no
+    # clause, and the generator cannot know the omission is false. The
+    # SUPERSEDES link is the other half of the same fact, and it is in the
+    # same file -- a declaration whose `supersedes` names another race-read
+    # declaration HAS a predecessor, whatever its population block says.
+    #
+    # The test is DELIBERATELY BROAD: any shape that names a predecessor
+    # counts, including the early `chain` form and a link too broken to
+    # follow. A resolver refuses an unfollowable link (BE 79/82); here the
+    # question is only whether a predecessor is NAMED, so breaking the link
+    # is not a way out either.
+    named_predecessor = (
+        (isinstance(sup, dict) and bool(sup.get("path") or sup.get("chain")))
+        or (isinstance(sup, str) and bool(sup.strip())))
+    KEY = "CONSUMED_BY_THE_FIRST_READ"
+    stated = KEY in pop
+    consumed = sorted(pop.get(KEY) or [])
+    if named_predecessor and not stated:
+        raise ReadRefused(
+            f"CONSUMED_SET_ABSENT_BUT_A_PREDECESSOR_IS_NAMED: this "
+            f"declaration's `supersedes` names "
+            f"{Path(str((sup or {}).get('path') if isinstance(sup, dict) else sup)).name!r} "
+            f"-- so it HAS a previous read -- and its population block does "
+            f"not carry `{KEY}` at all. An omission is not an answer: a "
+            f"declaration that says nothing about what came before renders "
+            f"no clause, and the reader who holds only this artifact never "
+            f"learns that a second chance was taken. State the days a "
+            f"previous read consumed, or state the EMPTY LIST with a reason "
+            f"-- a named absence, never a silent one (rule 4).")
     if not consumed:
         return {"applies": False,
                 "declaration_R_529_A": doc.get("R_529_A_UP_FRONT"),
                 "declaration_may_not_infer":
                     doc.get("what_a_reader_may_NOT_infer"),
-                "why": "this declaration names no days CONSUMED BY A "
-                       "PREVIOUS READ, so there is no other read for a "
-                       "clause to be about and no reader of this artifact "
-                       "is at risk of the inference",
-                "checked": "population.CONSUMED_BY_THE_FIRST_READ"}
-    sup = doc.get("supersedes")
+                "why": ("this declaration STATES an empty consumed set: no "
+                        "previous read consumed any day, so there is no "
+                        "other read for a clause to be about"
+                        if stated else
+                        "this declaration names NO predecessor in its "
+                        "`supersedes` and no days consumed by a previous "
+                        "read -- it is a first read, and no reader of its "
+                        "artifact is at risk of the inference"),
+                "named_predecessor": named_predecessor,
+                "consumed_set_is_STATED": stated,
+                "checked": "the supersedes chain AND "
+                           "population.CONSUMED_BY_THE_FIRST_READ -- either "
+                           "one makes a previous read a fact (REV 87 §1.3)"}
     if not isinstance(sup, dict) or not sup.get("path"):
         raise ReadRefused(
             f"FIRST_READ_PAIR_ABSENT: this declaration names {consumed} as "
@@ -1354,7 +1392,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 76
+EXPECTED_CHECKS = 79
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -2347,10 +2385,53 @@ def selftest() -> int:
        f"reads` is CHECKED against 2^-G x m recomputed from each "
        f"declaration's own fields -- a sentence that asserted it without "
        f"checking would be a hardcoded verdict beside a table (rule 10)")
+    # REV 87 §1.3: THE ESCAPE THAT REMAINED -- omit the consumed set and the
+    # clause disapplies itself. "Has a previous read" is now read from the
+    # SUPERSEDES CHAIN as well, so the omission refuses instead.
+    _esc = _second()
+    _esc["population"] = {"READABLE": ["20990201", "20990202"]}
+    _ecode, _emsg = _clause(_esc)
+    ok(_ecode == "CONSUMED_SET_ABSENT_BUT_A_PREDECESSOR_IS_NAMED"
+       and "HAS a previous read" in _emsg
+       and "An omission is not an answer" in _emsg,
+       f"REV 87 §1.3 KNOWN-BAD -- A v5-SHAPED DECLARATION WITH THE PAIR "
+       f"PRESENT AND THE CONSUMED SET REMOVED IS REFUSED BY NAME, never "
+       f"`applies: False`: {_emsg[:220]!r}. The two facts sit in the same "
+       f"file, and the population block alone let a declaration lose the "
+       f"clause by saying nothing")
+    _brk = _second()
+    _brk["population"] = {"READABLE": ["20990201"]}
+    _brk["supersedes"] = {"chain": [["whatever_v1.json", "z" * 64]]}
+    _bcode, _ = _clause(_brk)
+    _str = _second()
+    _str["population"] = {"READABLE": ["20990201"]}
+    _str["supersedes"] = "be_race_read_declaration_v1.json"
+    _scode, _ = _clause(_str)
+    ok(_bcode == _scode == "CONSUMED_SET_ABSENT_BUT_A_PREDECESSOR_IS_NAMED",
+       f"AND BREAKING THE LINK IS NOT A WAY OUT EITHER: the early `chain` "
+       f"form ({_bcode}) and a BARE STRING ({_scode}) -- shapes a resolver "
+       f"refuses to FOLLOW -- still NAME a predecessor, and the question "
+       f"here is only whether one is named. Deliberately broader than the "
+       f"resolver's own reading, because the narrower test is the escape")
+    _emptied = _second()
+    _emptied["population"] = {"READABLE": ["20990201", "20990202"],
+                              "CONSUMED_BY_THE_FIRST_READ": []}
+    _ecode2, _eout = _clause(_emptied)
+    ok(_ecode2 == "ADMITTED" and _eout["applies"] is False
+       and _eout["consumed_set_is_STATED"] is True
+       and _eout["named_predecessor"] is True
+       and "STATES an empty consumed set" in _eout["why"],
+       f"AND A STATED EMPTY SET IS AN ANSWER, WHERE SILENCE IS NOT: a "
+       f"predecessor named WITH `CONSUMED_BY_THE_FIRST_READ: []` renders no "
+       f"clause and says why ({_eout['why'][:80]!r}) -- rule 4, a named "
+       f"absence rather than a silent one. The refusal above is about the "
+       f"MISSING KEY, not about the empty list")
     _na = not_pooled_clause({"protocol": "NO-PREVIOUS-READ",
                              "population": {"READABLE": ["20990301"]}},
                             decl_dir=_dN / "decl", derived_dir=_dN / "der")
-    ok(_na["applies"] is False and "no other read" in _na["why"]
+    ok(_na["applies"] is False and "it is a first read" in _na["why"]
+       and _na["named_predecessor"] is False
+       and _na["consumed_set_is_STATED"] is False
        and "sentence" not in _na,
        f"AND A FIRST READ SAYS SO RATHER THAN SAYING NOTHING: a declaration "
        f"naming no consumed days renders `applies False` WITH ITS REASON "
