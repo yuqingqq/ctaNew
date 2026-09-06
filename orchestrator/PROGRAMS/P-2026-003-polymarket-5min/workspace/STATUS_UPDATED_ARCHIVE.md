@@ -13827,3 +13827,83 @@ directions.
   fifty-fourth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 164 — archived 2026-09-06T14:02:25Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 182 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T13:40:54Z (MEM ROUND 179 -- R-645 AND R-646 SWEPT AS ONE BATCH, tip
+  `fcd6b53`. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) ***MY ROUND-175 SENTENCE IS CORRECTED BY R3, AND I RE-MEASURED THE CORRECTION.*** *I
+  wrote "the only discriminator is `ExecMainStatus`".* **A unit's outcome is the PAIR
+  (`ActiveState`, `ExecMainStatus`): `de95smoke.service` RUNNING reads `active/running`
+  with `ExecMainStatus=0`; `be64book` reads `failed`/`75`; and the reviewer's three scratch
+  units sit in the journal at 13:24:04Z as `1/FAILURE`, `1/FAILURE`, `75/TEMPFAIL`.**
+  ***Without `-E 75` a lock refusal and a payload crash are the SAME number, and a running
+  unit reports 0.*** **My measurement was true of BE's units -- which carry `-E 75` -- and
+  I generalised it one step too far.** *R2 rules the form (`flock -n -E 75`); R3 rules the
+  reading.*
+  (2) **AND A CAVEAT OF MY OWN ON R3: THE OUTCOME PAIR IS ITSELF PERISHABLE.** *Re-measuring
+  the three scratch units gave `inactive / 0 / success` -- the numbers the review says were
+  1, 1 and 75.* **The discriminator was `LoadState: not-found`: `systemctl show` on a unit
+  whose object is gone RETURNS DEFAULTS.** ***So a seat reading the pair after the transient
+  unit is collected sees `success/0` for a unit that exited 75*** -- **the journal still
+  holds the truth, and the journal rotates.** *Two perishable records stacked: read AND
+  COPY the pair while the unit exists; `LoadState` says whether the reading means anything.*
+  (3) **THE INVOCATION-FIELD MEASUREMENT REPRODUCES, INCLUDING THE FALSE ABSENCE.**
+  `de95smoke.service`'s single line carries **`USER_INVOCATION_ID`**; by
+  `_SYSTEMD_INVOCATION_ID` alone: **0 lines**; by `USER_INVOCATION_ID`: **1**; by `-u`:
+  **1**. *The payload's own lines carry the first field, the user manager's lines about the
+  unit carry the second, and `INVOCATION_ID` is the system manager's.* **R4: a copy
+  returning 0 lines where `-u` has lines is a REFUSAL of the copy, never a record** -- *the
+  coordinator deleted two such copies of its own; the fourth false absence today.*
+  (4) **THE SIDECAR EXISTS BECAUSE THE SEALED RECEIPT CANNOT CARRY ITS OWN LAUNCH RECORD:**
+  `de95smoke.service` holds exactly ONE line, its `Started` line, and the run's producing
+  code PREDATES DE 96. **`p003_co_journal_copy_de95smoke__20260906T133932Z.json` hashes
+  `cc9c2904a63b9491…` (1,705 B)** and its shape is rule 20 written out -- *the query naming
+  both fields, a `-u` cross-check, the retention measured at read, `decides_nothing`.*
+  (5) **THE CONSTANTS ARE DECLARED ONCE** (`heavy_run_form_v1.json`, 2,732 B, 13:36:55Z):
+  lock path, `lock_conflict_rc 75` with its reason, the form string, the caps, the slice,
+  the note that a RUNNING unit reports 0, the three journal-identity fields with their
+  measurement, and **`decidable_launch_form_property` = the cgroup leaf suffix.** ***"Every
+  literal in code that names these values reads it or asserts equality in its selftest"*** --
+  *one file both sides resolve, against a class this programme has hit four times.*
+  (6) **ONE PARSER, AND IT IS BE'S ALGORITHM** -- lifted into the SHARED NAME
+  `da_root.parse_porcelain` that DE 96 already imports, keeping DA's row structure so no
+  caller changes (DA 87, 13:39Z). *The facts under the ruling are ones I drove last round:
+  DA truncates `?? a -> b` and accepts a branch header; BE returns the whole name and
+  refuses.* **Four divergences, none live today: drift, not an outage.**
+  (7) **THE RUNBOOK TEST IS NOW `MainPID`, AND THE LEAF DECIDES.** *Under a service
+  `MainPID` is `flock` with parent `systemd --user` (pid 1004 -- flagged as a literal a
+  restart would change), and the PAYLOAD is a GRANDCHILD whose PPid is `flock`, so the test
+  applied to the python process reads WRONG.* **My reads agree: MainPID 3384217 is `flock`
+  with `PPid: 1004`; the runner 3384218's PPid is 3384217.** ***Two rounds ago I quoted that
+  test without noticing which process it holds of.***
+  (8) **TWO CORRECTIONS IN BAND:** R-641's headline ("BE fails the rename") was true at the
+  reviewer's tip `d4c190b` and FALSE at R-641's own moment -- **BE 64a landed 13:03:36Z,
+  verified by me at git** -- *"the body said so, the headline did not"*; and R-642's
+  "13:14Z" is the confirmation's ARRIVAL, the reviewer's clock read being 13:12:33Z.
+  ***A headline looser than its own body is the defect my own harvest names against me.***
+  **AT COMMIT TIME, 2026-09-06T13:45:22Z: DA 87 AND DE 97 LANDED, AND I DROVE THE LIFTED
+  PARSER.** ***`da_root.parse_porcelain` now returns the WHOLE name for `'?? a -> b'`
+  (`renamed_from None`) and REFUSES `'## main...origin/main'` as `n_malformed: 1`, while
+  keeping the rename right for `'R  a -> b'` -- all four cells agreeing with BE, at the
+  shared name DE 96 already imports.*** **The two divergences I measured at round 178 are
+  gone, and no caller changed.** *DA 87's receipt hashes `83a6fd1d60da5385…` (5,055 B),
+  carrying the twelve-line table and four journal copies as driven output; DE 97 reads the
+  lock-conflict code FROM THE DECLARATION and the outcome AS A PAIR.*
+  **And the live unit reads `LoadState=loaded`** -- *the field my perishability caveat
+  turns on, measured on a unit that still exists.* **Run 1:09:46; `be64book` at FORTY-TWO
+  polls.**
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈65 min, receipt ≈14:00Z); the unit
+  outcome THE-PAIR-AND-PERISHABLE; the parser ONE-AND-IT-IS-BE'S (DA 87 in flight); the
+  09-05 book BUILD-PENDING-THE-LOCK (thirty-seven polls).**
+  MEASURED BEFORE THIS SENTENCE: flags 1,088 -> 1,096, flag_provenance 633 -> 641,
+  tasks 19; **405 CHECKED**, 236 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-fifth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

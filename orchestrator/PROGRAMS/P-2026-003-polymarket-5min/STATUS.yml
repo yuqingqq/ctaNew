@@ -63,6 +63,81 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T14:02:25Z (MEM ROUND 182 -- R-650 SWEPT, tip `6588359`; DA 88 landed and
+  recorded as UNVERIFIED-UNTIL-R-651. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) **DA 88 CLOSES THE FALSE-ABSENCE CLASS WITH A REAL FAILURE, NOT A SIMULATION.** *Its
+  receipt (`p003_da_rev68_findings__20260906T140030Z.json`, sha `187704982c8dbc4d6a…`,
+  5,299 B, hashed by me) drives finding 1 against* **`journalctl: Failed to open journal:
+  Permission denied`, `returncode 1` -- and every count comes back `None`, NOT 0**, with the
+  reason in the artifact: ***"A failed read reported as 0 lines would be an absence
+  INVENTED."*** *Five instances of that class today across four seats; this one closed at
+  the instrument with a failure DA actually caused.*
+  (2) **COVERAGE IS TWO MEASURED CLOCKS AND TWO NAMED REGIMES -- AND I REDID THE
+  ARITHMETIC.** Every cell carries `two_clocks_no_text_search: True` and names its regime:
+  **`BURSTY_UNIT` (reference = the unit's own start)** or **`CONTINUOUS_LOGGER` (reference =
+  the window start)**. *de95smoke's start `12:35:35Z` against the host horizon `09:53:58Z`
+  → covered TRUE; a window starting `08:53:58Z` → FALSE; one minute before its single line
+  → TRUE;* ***an unreadable clock → `covered: None`, `NOT_DETERMINABLE`, "never assumed
+  either way".*** **My check: `12:35:35Z > 09:53:58Z` and `08:53:58Z > 09:53:58Z` -- both
+  verdicts follow.** ***This is the answer to "TRUE on a read that had lost 141 of 161
+  lines": the predicate no longer reads TEXT.***
+  (3) **NEVER `|| true` ON THE ONLY EVIDENCE.** Driven on **the script's own `_rec_exit`
+  bytes** (extracted with `sed`) against a record directory at mode 500: **the would-be-
+  success path exits 9 with `RUN_RECORD_UNWRITABLE: this run's record was NOT written.
+  Underlying outcome rc=0.`**; the refusal keeps its own **7** and names **four** unwritten
+  events; the normal path unchanged; the writable control exits 0 on the same bytes.
+  *The drive is on the DEPLOYED bytes -- rule 20's guard from this morning, applied by the
+  seat it was written for.*
+  (4) ***MY FIFTH HORIZON READING AGREES WITH DA'S TO THE SECOND:*** **`09:53:58Z`** (DA at
+  14:00:30Z, me at 14:02:25Z). *My five: 09:00:20Z → 09:05:56Z → 09:09:57Z → 09:25:57Z →
+  09:53:58Z.* **The window's start has advanced ~53 minutes in the 57 I have watched it --
+  and I still assert NO RATE, because one of my own intervals moved nothing at all.**
+  (5) **R-650(C) CORRECTS ITS OWN TABLE HEADER IN BAND:** R-648's header was in FLAG order
+  over `--value` output systemd emits in ITS order; **the four rulings were made from the
+  VALUES, which are unambiguous by content, so they stand and the HEADER was wrong.**
+  ***The distinction worth keeping: a mislabelled header over self-identifying values is a
+  PRESENTATION defect; the same header over ambiguous values is a RESULT defect -- which is
+  what DE's poll had, because it acted on the order.***
+  (6) **MY ROUND-181 NOTE IS NOW THE RULE:** MEM reads `Key=Value` BY NAME, never `--value`
+  for a multi-property read. **And DE reached the same property from the other side: in
+  `unit_outcome` "every property here is read in its OWN CALL", with its own defect recorded
+  beside it.** ***One call per property and one name per value are the same guarantee --
+  neither can be mis-ordered.***
+  (7) **R3' IS IN THE RUNNER, NOT ONLY IN THE RULING:** `unit_outcome` (:3774) reads the
+  TRIPLE and reports **VOID with its reason** -- a collected unit's defaults *"wearing the
+  shape of a SUCCESS"* -- under the rule **"VOID, NEVER SUCCESS"**; and **the stop is a
+  DECLARED step of the chain**, because a unit left unstopped keeps its name taken.
+  (8) **THE RUN, READ BY NAME:** `loaded / active / running / 0`, `MemoryPeak` STILL
+  2,554,003,456 B -- **thirteen reads across 87 minutes** -- the runner at **1:26:04**, RSS
+  825,460 KiB; **`be64book` at FIFTY-EIGHT launches, all 75.** *The receipt was expected
+  ≈14:00Z and the run continues; no state file makes a wall-clock estimate a deadline.*
+  ***AT COMMIT TIME, 2026-09-06T14:05:01Z: THE RUN FINISHED AND THE FIRST REAL SEALED
+  RECEIPT EXISTS.*** **`p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json`,
+  37,104 B, emitted 14:01:55Z -- hashed by me as `5dd3a8f3f581…`, the digest R-652 names;
+  FILENAME CENSUS AND DIGEST ONLY, no sealed field read or quoted.** *Produced by
+  `de95smoke.service` from wt-de2 at `b741352`, launched 12:35:35Z under v1's form, wall
+  ≈86 min, `Consumed` 1 h 26 min 12.243 s CPU / 2.3 G peak.*
+  ***AND THE UNIT VANISHED ON SUCCESS EXACTLY AS R3' PREDICTED -- I READ THE VOID TRIPLE
+  MYSELF: `not-found / inactive / dead / 0 / success` at 14:05:01Z, the DEFAULT reading,
+  which is VOID and not a success.*** **The coordinator's monitor read the same at
+  14:02:06Z; what I swept as a prediction at round 181 is now a measurement from three
+  instruments.** *The run's record is therefore the journal copy at 14:03:25Z
+  (`58a3f08df4bb…`, 2,483 B), 3 lines by both invocation fields -- and I confirmed 3 by
+  `-u`: Started, the payload's "emitted" line naming the receipt, Consumed.*
+  **THE LOCK PASSED TO BE 64 WITHIN THE MINUTE:** `be64book.service` started **14:02:19Z**,
+  reads `loaded/active/running`, `MainPID 3485787` with PPid 1004, `MemoryCurrent` 1.64 GB
+  -- **the 09-05 book is BUILDING after FIFTY-NINE refused polls, and the ruled form is
+  visible in the live process tree (`be_heavy_run.sh --inner` → `flock -n -E 75 <lock>` →
+  python).** *R-651 verified MEM 181 and DA 88; DA 89 (the pre-read) dispatched 14:04Z.*
+  ***The day's rules were written for this minute: a unit that vanished on success, a
+  reading that says VOID instead of success, and a record that survives in a copy.***
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈86 min, past its ≈14:00Z estimate,
+  v1 form -- VANISHES ON SUCCESS); coverage TWO-MEASURED-CLOCKS; the false absence
+  CLOSED-WITH-A-REAL-FAILURE; DA 88 LANDED-UNVERIFIED-UNTIL-R-651.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,112 -> 1,120, flag_provenance 657 -> 665,
+  tasks 19; **427 CHECKED**, 238 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T13:55:40Z (MEM ROUND 181 -- R-648 AND R-649 SWEPT AS ONE BATCH, tip
   `8490053`. STATE ONLY. MEM ASSERTS NO RESULT.
   (1) **MY ROUND-179 CAVEAT IS RULED AS R3', AND v2 SUPERSEDES v1 BY THE PAIR.** *I hashed
@@ -216,76 +291,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 1,096 -> 1,104, flag_provenance 641 -> 649,
   tasks 19; **411 CHECKED**, 238 RELAYED, **455 UNMARKED -- unchanged for the
   fifty-sixth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T13:40:54Z (MEM ROUND 179 -- R-645 AND R-646 SWEPT AS ONE BATCH, tip
-  `fcd6b53`. STATE ONLY. MEM ASSERTS NO RESULT.
-  (1) ***MY ROUND-175 SENTENCE IS CORRECTED BY R3, AND I RE-MEASURED THE CORRECTION.*** *I
-  wrote "the only discriminator is `ExecMainStatus`".* **A unit's outcome is the PAIR
-  (`ActiveState`, `ExecMainStatus`): `de95smoke.service` RUNNING reads `active/running`
-  with `ExecMainStatus=0`; `be64book` reads `failed`/`75`; and the reviewer's three scratch
-  units sit in the journal at 13:24:04Z as `1/FAILURE`, `1/FAILURE`, `75/TEMPFAIL`.**
-  ***Without `-E 75` a lock refusal and a payload crash are the SAME number, and a running
-  unit reports 0.*** **My measurement was true of BE's units -- which carry `-E 75` -- and
-  I generalised it one step too far.** *R2 rules the form (`flock -n -E 75`); R3 rules the
-  reading.*
-  (2) **AND A CAVEAT OF MY OWN ON R3: THE OUTCOME PAIR IS ITSELF PERISHABLE.** *Re-measuring
-  the three scratch units gave `inactive / 0 / success` -- the numbers the review says were
-  1, 1 and 75.* **The discriminator was `LoadState: not-found`: `systemctl show` on a unit
-  whose object is gone RETURNS DEFAULTS.** ***So a seat reading the pair after the transient
-  unit is collected sees `success/0` for a unit that exited 75*** -- **the journal still
-  holds the truth, and the journal rotates.** *Two perishable records stacked: read AND
-  COPY the pair while the unit exists; `LoadState` says whether the reading means anything.*
-  (3) **THE INVOCATION-FIELD MEASUREMENT REPRODUCES, INCLUDING THE FALSE ABSENCE.**
-  `de95smoke.service`'s single line carries **`USER_INVOCATION_ID`**; by
-  `_SYSTEMD_INVOCATION_ID` alone: **0 lines**; by `USER_INVOCATION_ID`: **1**; by `-u`:
-  **1**. *The payload's own lines carry the first field, the user manager's lines about the
-  unit carry the second, and `INVOCATION_ID` is the system manager's.* **R4: a copy
-  returning 0 lines where `-u` has lines is a REFUSAL of the copy, never a record** -- *the
-  coordinator deleted two such copies of its own; the fourth false absence today.*
-  (4) **THE SIDECAR EXISTS BECAUSE THE SEALED RECEIPT CANNOT CARRY ITS OWN LAUNCH RECORD:**
-  `de95smoke.service` holds exactly ONE line, its `Started` line, and the run's producing
-  code PREDATES DE 96. **`p003_co_journal_copy_de95smoke__20260906T133932Z.json` hashes
-  `cc9c2904a63b9491…` (1,705 B)** and its shape is rule 20 written out -- *the query naming
-  both fields, a `-u` cross-check, the retention measured at read, `decides_nothing`.*
-  (5) **THE CONSTANTS ARE DECLARED ONCE** (`heavy_run_form_v1.json`, 2,732 B, 13:36:55Z):
-  lock path, `lock_conflict_rc 75` with its reason, the form string, the caps, the slice,
-  the note that a RUNNING unit reports 0, the three journal-identity fields with their
-  measurement, and **`decidable_launch_form_property` = the cgroup leaf suffix.** ***"Every
-  literal in code that names these values reads it or asserts equality in its selftest"*** --
-  *one file both sides resolve, against a class this programme has hit four times.*
-  (6) **ONE PARSER, AND IT IS BE'S ALGORITHM** -- lifted into the SHARED NAME
-  `da_root.parse_porcelain` that DE 96 already imports, keeping DA's row structure so no
-  caller changes (DA 87, 13:39Z). *The facts under the ruling are ones I drove last round:
-  DA truncates `?? a -> b` and accepts a branch header; BE returns the whole name and
-  refuses.* **Four divergences, none live today: drift, not an outage.**
-  (7) **THE RUNBOOK TEST IS NOW `MainPID`, AND THE LEAF DECIDES.** *Under a service
-  `MainPID` is `flock` with parent `systemd --user` (pid 1004 -- flagged as a literal a
-  restart would change), and the PAYLOAD is a GRANDCHILD whose PPid is `flock`, so the test
-  applied to the python process reads WRONG.* **My reads agree: MainPID 3384217 is `flock`
-  with `PPid: 1004`; the runner 3384218's PPid is 3384217.** ***Two rounds ago I quoted that
-  test without noticing which process it holds of.***
-  (8) **TWO CORRECTIONS IN BAND:** R-641's headline ("BE fails the rename") was true at the
-  reviewer's tip `d4c190b` and FALSE at R-641's own moment -- **BE 64a landed 13:03:36Z,
-  verified by me at git** -- *"the body said so, the headline did not"*; and R-642's
-  "13:14Z" is the confirmation's ARRIVAL, the reviewer's clock read being 13:12:33Z.
-  ***A headline looser than its own body is the defect my own harvest names against me.***
-  **AT COMMIT TIME, 2026-09-06T13:45:22Z: DA 87 AND DE 97 LANDED, AND I DROVE THE LIFTED
-  PARSER.** ***`da_root.parse_porcelain` now returns the WHOLE name for `'?? a -> b'`
-  (`renamed_from None`) and REFUSES `'## main...origin/main'` as `n_malformed: 1`, while
-  keeping the rename right for `'R  a -> b'` -- all four cells agreeing with BE, at the
-  shared name DE 96 already imports.*** **The two divergences I measured at round 178 are
-  gone, and no caller changed.** *DA 87's receipt hashes `83a6fd1d60da5385…` (5,055 B),
-  carrying the twelve-line table and four journal copies as driven output; DE 97 reads the
-  lock-conflict code FROM THE DECLARATION and the outcome AS A PAIR.*
-  **And the live unit reads `LoadState=loaded`** -- *the field my perishability caveat
-  turns on, measured on a unit that still exists.* **Run 1:09:46; `be64book` at FORTY-TWO
-  polls.**
-  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈65 min, receipt ≈14:00Z); the unit
-  outcome THE-PAIR-AND-PERISHABLE; the parser ONE-AND-IT-IS-BE'S (DA 87 in flight); the
-  09-05 book BUILD-PENDING-THE-LOCK (thirty-seven polls).**
-  MEASURED BEFORE THIS SENTENCE: flags 1,088 -> 1,096, flag_provenance 633 -> 641,
-  tasks 19; **405 CHECKED**, 236 RELAYED, **455 UNMARKED -- unchanged for the
-  fifty-fifth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
@@ -2960,6 +2965,136 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  DA_88_CLOSES_THE_FALSE_ABSENCE_WITH_A_REAL_FAILURE: PERMISSION_DENIED_NOT_A_SIMULATION
+                             # CHECKED 2026-09-06T14:02:25Z at
+                             # `p003_da_rev68_findings__20260906T140030Z.json` (sha
+                             # `187704982c8dbc4d6a…`, 5,299 B, hashed by me).
+                             # **Finding 1 is driven against a REAL failure -- `journalctl: Failed
+                             # to open journal: Permission denied`, `returncode 1` -- and every
+                             # count comes back `None`, NOT 0: `status JOURNALCTL_FAILED`,
+                             # `n_lines_copied None`, `available None`.**
+                             # ***The why is written in the artifact: "A failed read reported as 0
+                             # lines would be an absence INVENTED", and "the journal was NOT read,
+                             # so nothing is known about this unit's retention".***
+                             # *The false-absence class -- five instances today across four seats --
+                             # closed at DA's instrument with a failure it actually caused rather
+                             # than one it imagined.*
+  COVERAGE_IS_TWO_MEASURED_CLOCKS_AND_TWO_NAMED_REGIMES: NO_TEXT_SEARCH
+                             # CHECKED 2026-09-06T14:02:25Z, **and I re-did the arithmetic myself.**
+                             # **Every cell carries `two_clocks_no_text_search: True` and one of two
+                             # NAMED REGIMES: `BURSTY_UNIT__the_reference_is_the_unit_start` and
+                             # `CONTINUOUS_LOGGER__the_reference_is_the_window_start`.**
+                             # *Four cells: de95smoke (unit start `12:35:35Z` vs host horizon
+                             # `09:53:58Z`) → covered TRUE; a window starting `08:53:58Z` → covered
+                             # FALSE; a window one minute before its single line (`12:34:35Z`) →
+                             # TRUE; **an unreadable clock → `covered: None`,
+                             # `NOT_DETERMINABLE`, "coverage is UNKNOWN -- never assumed either
+                             # way".***
+                             # **My independent check: `12:35:35Z > 09:53:58Z` is True and
+                             # `08:53:58Z > 09:53:58Z` is False -- both verdicts follow.**
+                             # ***This is the answer to REV 68's "TRUE on a read that had lost 141
+                             # of 161 lines": the predicate no longer reads TEXT, it compares two
+                             # measured clocks and names which one is the reference.***
+  NEVER_TRUE_ON_THE_ONLY_EVIDENCE: EXIT_NINE_SAYS_THE_RECORD_WAS_NOT_WRITTEN
+                             # CHECKED 2026-09-06T14:02:25Z. **Finding 3 is driven on the SCRIPT'S
+                             # OWN `_rec_exit` BYTES (extracted with `sed` and evaluated), against a
+                             # record directory at mode 500:** *the would-be-success path exits **9**
+                             # with `RUN_RECORD_UNWRITABLE: this run's record was NOT written.
+                             # Underlying outcome rc=0.`; the refusal path KEEPS its own code
+                             # (**7**) and names **four** unwritten events in stderr; the normal
+                             # path is unchanged (7, three record lines); the control with a
+                             # writable directory exits 0 on the same bytes.*
+                             # ***So `|| true` on the only evidence is gone: a run whose RECORD
+                             # could not be written no longer reports the run's own success.*** *And
+                             # the drive is on the deployed bytes, not a copy of them -- the guard
+                             # rule 20 added this morning, applied by the seat it was written for.*
+  THE_HORIZON_AT_MY_FIFTH_READING_AGREES_WITH_DAS_TO_THE_SECOND: 09_53_58Z
+                             # CHECKED 2026-09-06T14:02:25Z. **DA's receipt records the host horizon
+                             # as `2026-09-06T09:53:58Z` read at 14:00:30Z; I read
+                             # `2026-09-06T09:53:58+00:00` at 14:02:25Z -- the same boundary, two
+                             # instruments, ~2 minutes apart.**
+                             # *My five readings: `09:00:20Z` (13:05:10Z) → `09:05:56Z` (13:16:43Z)
+                             # → `09:09:57Z` (13:19:51Z) → `09:25:57Z` (13:30:43Z) → `09:53:58Z`
+                             # (14:02:25Z).* **The window's start has advanced ~53 minutes in the 57
+                             # minutes I have been watching it** -- *and I still assert no rate:
+                             # rotation is size-driven and one interval of mine (13:30→13:35) moved
+                             # nothing at all.*
+                             # ***Second time today an independent reading of mine has coincided
+                             # exactly with another seat's, which is what makes the copies
+                             # comparable at all.***
+  R_650C_CORRECTS_ITS_OWN_TABLE_HEADER_IN_BAND: THE_VALUES_WERE_READ_BY_CONTENT
+                             # CHECKED 2026-09-06T14:02:25Z at R-650(C). **R-648's scratch-unit
+                             # table header read "LoadState ActiveState SubState ExecMainStatus
+                             # Result" over `--value` output that systemd emits as "Result,
+                             # ExecMainStatus, LoadState, ActiveState, SubState".**
+                             # ***The four rulings were made FROM THE VALUES THEMSELVES --
+                             # `not-found` / `loaded` / `active-exited` are unambiguous by content --
+                             # so the rulings are unchanged and the HEADER is what was wrong.*** *The
+                             # entry is its own correction (rule 13).*
+                             # **The distinction worth keeping: a mislabelled header over
+                             # self-identifying values is a presentation defect; the same header
+                             # over ambiguous values would have been a result defect.** *DE's poll
+                             # had the second kind -- it acted on the order.*
+  MY_KEY_EQUALS_VALUE_NOTE_IS_NOW_THE_RULE: AND_DES_REMEDY_IS_ONE_CALL_PER_PROPERTY
+                             # CHECKED 2026-09-06T14:02:25Z. **R-650 adopts my round-181 note as the
+                             # rule: MEM reads `Key=Value` BY NAME, never `--value` for a
+                             # multi-property read.** *I recorded it as an accident of my own
+                             # practice; it is a rule now.*
+                             # **And DE reached the same property from the other side: in
+                             # `unit_outcome` (:3774) "every property here is read in its OWN CALL"
+                             # (:3792), with the defect recorded beside it -- "it declared a live
+                             # run VOID" (:3820).** ***One call per property and one name per value
+                             # are the same guarantee: neither can be mis-ordered.*** *Two seats,
+                             # two remedies, one invariant.*
+  DES_UNIT_OUTCOME_REPORTS_VOID_WITH_ITS_REASON: WEARING_THE_SHAPE_OF_A_SUCCESS
+                             # CHECKED 2026-09-06T14:02:25Z at the runner. **`unit_outcome(unit)`
+                             # (:3774) reads the TRIPLE and reports VOID with the reason in its own
+                             # words -- a collected unit's defaults are "wearing the shape of a
+                             # SUCCESS, and it is reported here as VOID" (:3786) -- and the code
+                             # carries the rule "VOID, NEVER SUCCESS. After collection every field
+                             # below is a default" (:3825).**
+                             # *The stop is a DECLARED step of the chain (:2105): a unit that is not
+                             # stopped keeps its name taken and the next launch under it collides.*
+                             # ***R3' is in the runner, not only in the ruling -- which is the
+                             # difference the programme has spent the day insisting on.***
+  THE_RUN_AT_EIGHTY_SIX_MINUTES_AND_FIFTY_EIGHT_POLLS: SUPERSEDED_SEALED_AT_14_01_55Z
+                             # CHECKED 2026-09-06T14:02:25Z, read BY NAME: **`LoadState=loaded`,
+                             # `ActiveState=active`, `SubState=running`, `ExecMainStatus=0`;
+                             # `MemoryPeak` STILL 2,554,003,456 B -- thirteen reads across 87
+                             # minutes; the runner at 1:26:04, RSS 825,460 KiB.**
+                             # **`be64book` at FIFTY-EIGHT launches, all 75.**
+                             # *The receipt was expected ≈14:00Z and the run is still going; nothing
+                             # in the state files says a wall-clock estimate is a deadline.*
+                             # **DA 88 landed (`119eb66`, receipt `0e98dd2`) and is verified at
+                             # R-651 when it lands; REV 69 in flight; DE READY on its own poll.**
+                             # **VALUE SUPERSEDED IN BAND 2026-09-06T14:05:01Z -- THE RUN IS DONE
+                             # AND THE FIRST REAL SEAL EXISTS.** **`p003_de_gate1_day_run_20260903_
+                             # SEALED__20260906T140155Z.json`, 37,104 B, `emitted_at_utc
+                             # 14:01:55Z` -- I hashed it myself: `5dd3a8f3f581…`, the digest R-652
+                             # names. FILENAME CENSUS AND DIGEST ONLY; no sealed field read or
+                             # quoted.** *Produced by `de95smoke.service` from wt-de2 at `b741352`,
+                             # launched 12:35:35Z under declaration v1's form, wall ≈86 min; the
+                             # manager's `Consumed` line records 1 h 26 min 12.243 s CPU and a 2.3 G
+                             # memory peak.*
+                             # ***AND THE UNIT VANISHED ON SUCCESS EXACTLY AS R3' PREDICTS -- I READ
+                             # THE VOID TRIPLE MYSELF AT 14:05:01Z: `LoadState=not-found`,
+                             # `ActiveState=inactive`, `SubState=dead`, `ExecMainStatus=0`,
+                             # `Result=success`.*** **That reading is the DEFAULT and it is VOID --
+                             # the coordinator's exit monitor read the same at 14:02:06Z, and the
+                             # prediction I swept at round 181 is now a measurement from three
+                             # instruments.**
+                             # **So the run's record is the copy made at 14:03:25Z:
+                             # `p003_co_journal_copy_de95smoke_run__20260906T140325Z.json`
+                             # (`58a3f08df4bb…`, 2,483 B) -- 3 lines by both invocation fields, and
+                             # I confirmed 3 by `-u` independently: Started, the payload's "emitted"
+                             # line naming the receipt, Consumed.**
+                             # **THE LOCK PASSED TO BE 64 WITHIN THE MINUTE: `be64book.service`
+                             # started 14:02:19Z and reads `loaded/active/running`, `MainPID
+                             # 3485787` with PPid 1004, `MemoryCurrent` 1.64 GB -- the 09-05 book is
+                             # BUILDING after FIFTY-NINE refused polls.** *And the ruled form is
+                             # visible in the live process tree: `be_heavy_run.sh --inner` → `flock
+                             # -n -E 75 <lock>` → python.* **DA 89 (the pre-read) dispatched
+                             # 14:04Z.**
   THE_TRIPLE_IS_RULED_AND_V2_SUPERSEDES_BY_THE_PAIR: MY_CAVEAT_IS_NOW_R3_PRIME
                              # CHECKED 2026-09-06T13:55:40Z. **I hashed v1 myself:
                              # `f5c65564d67d6f48e6…` -- and `heavy_run_form_v2.json` (declared
@@ -21536,6 +21671,90 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 182, 2026-09-06T14:02:25Z ------------------------------
+  DA_88_CLOSES_THE_FALSE_ABSENCE_WITH_A_REAL_FAILURE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_rev68_findings__20260906T140030Z.json
+    as_of: 2026-09-06T14:02:25Z
+    said: >-
+      the receipt hashes 187704982c8dbc4d6a over 5,299 bytes and its first finding is driven
+      against a real failure -- journalctl exiting non-zero with Failed to open journal,
+      Permission denied -- so every count is None rather than 0, with status
+      JOURNALCTL_FAILED and the reason written in the artifact that a failed read reported
+      as 0 lines would be an absence invented.
+  COVERAGE_IS_TWO_MEASURED_CLOCKS_AND_TWO_NAMED_REGIMES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_rev68_findings__20260906T140030Z.json
+    as_of: 2026-09-06T14:02:25Z
+    said: >-
+      every coverage cell carries two_clocks_no_text_search true and one of two named
+      regimes, BURSTY_UNIT with the unit's own start as reference and CONTINUOUS_LOGGER with
+      the window start; de95smoke's start 12:35:35Z against the host horizon 09:53:58Z gives
+      covered true, a window starting 08:53:58Z gives false, and an unreadable clock gives
+      covered None with NOT_DETERMINABLE. I redid the arithmetic myself and both verdicts
+      follow. This answers REV 68's TRUE on a read that had lost 141 of 161 lines: the
+      predicate no longer reads text.
+  NEVER_TRUE_ON_THE_ONLY_EVIDENCE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_rev68_findings__20260906T140030Z.json
+    as_of: 2026-09-06T14:02:25Z
+    said: >-
+      finding 3 is driven on the script's own _rec_exit bytes extracted with sed against a
+      record directory at mode 500: the would-be-success path exits 9 with
+      RUN_RECORD_UNWRITABLE naming the underlying rc=0, the refusal path keeps exit 7 and
+      names four unwritten events, the normal path is unchanged at exit 7 with three record
+      lines, and the writable control exits 0 on the same bytes. A run whose record could
+      not be written no longer reports the run's own success.
+  THE_HORIZON_AT_MY_FIFTH_READING_AGREES_WITH_DAS_TO_THE_SECOND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_rev68_findings__20260906T140030Z.json
+    as_of: 2026-09-06T14:02:25Z
+    said: >-
+      DA's receipt records the host horizon as 2026-09-06T09:53:58Z read at 14:00:30Z and I
+      read the same boundary at 14:02:25Z. My five readings are 09:00:20Z, 09:05:56Z,
+      09:09:57Z, 09:25:57Z and 09:53:58Z, so the window's start has advanced about 53
+      minutes in the 57 I have been watching, and I still assert no rate because one of my
+      intervals moved nothing at all.
+  R_650C_CORRECTS_ITS_OWN_TABLE_HEADER_IN_BAND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T14:02:25Z
+    said: >-
+      R-648's scratch-unit table header was in flag order over --value output that systemd
+      emits in its own order; the four rulings were made from the values themselves, which
+      are unambiguous by content, so the rulings stand and the header is what was wrong, and
+      R-650(C) is its correction. A mislabelled header over self-identifying values is a
+      presentation defect; the same header over ambiguous values would have been a result
+      defect, which is what DE's poll had.
+  MY_KEY_EQUALS_VALUE_NOTE_IS_NOW_THE_RULE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T14:02:25Z
+    said: >-
+      R-650 adopts my round-181 note as the rule that MEM reads Key=Value by name and never
+      uses --value for a multi-property read, and DE reached the same property from the other
+      side: unit_outcome reads every property in its own call, with the defect recorded
+      beside it. One call per property and one name per value are the same guarantee.
+  DES_UNIT_OUTCOME_REPORTS_VOID_WITH_ITS_REASON:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T14:02:25Z
+    said: >-
+      unit_outcome at :3774 reads the triple and reports VOID with its reason -- a collected
+      unit's defaults wearing the shape of a success -- and the code states VOID, never
+      success, after collection every field is a default; the stop is a declared step of the
+      chain because a unit that is not stopped keeps its name taken. R3' is in the runner,
+      not only in the ruling.
+  THE_RUN_AT_EIGHTY_SIX_MINUTES_AND_FIFTY_EIGHT_POLLS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/heavy_run_form_v2.json
+    as_of: 2026-09-06T14:02:25Z
+    said: >-
+      read by name: LoadState loaded, ActiveState active, SubState running, ExecMainStatus 0,
+      MemoryPeak still 2,554,003,456 across thirteen reads spanning 87 minutes, the runner at
+      1:26:04 with RSS 825,460 KiB, and be64book at fifty-eight launches all at 75. The
+      receipt was expected about 14:00Z and the run is still going. DA 88 landed at 119eb66
+      with receipt 0e98dd2 and is verified at R-651 when it lands.
   # --- MEM round 181, 2026-09-06T13:55:40Z ------------------------------
   THE_TRIPLE_IS_RULED_AND_V2_SUPERSEDES_BY_THE_PAIR:
     prov: CHECKED
