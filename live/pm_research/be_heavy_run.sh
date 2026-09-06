@@ -195,8 +195,33 @@ if [ "${1:-}" = "--capture" ]; then
   MS=$(systemctl --user show "$CUNIT.service" -p ExecMainStatus --value)
   ID=$(systemctl --user show "$CUNIT.service" -p InvocationID --value)
   MP=$(systemctl --user show "$CUNIT.service" -p MemoryPeak --value)
-  printf '{"event":"outcome","utc":"%s","read_while":"LOADED","LoadState":"%s","ActiveState":"%s","SubState":"%s","Result":"%s","ExecMainStatus":"%s","InvocationID":"%s","MemoryPeak":"%s"}\n' \
-    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$LS" "$AS" "$SS" "$RS" "$MS" "$ID" "$MP" >> "$CREC"
+  # THE PEAK'S SOURCE (BE 74's finding, REV 80 ruling on the reading).
+  # systemd's MemoryPeak PROPERTY is not the cgroup's memory.peak for an
+  # exited unit: measured on be74struct04b, the property read 847,671,296
+  # while the leaf's own file read 2,578,067,456 and the process measured
+  # 2.405 GB. Read WHILE RUNNING (be74probe) the two agreed exactly. So the
+  # record now carries BOTH, each labelled with its source, and the peak OF
+  # RECORD is the leaf's file. No check changes; this is a measurement.
+  CG=$(systemctl --user show "$CUNIT.service" -p ControlGroup --value)
+  if [ -z "$CG" ]; then
+    echo "REFUSED: cannot resolve $CUNIT's cgroup leaf (ControlGroup= is" \
+         "empty while the unit is loaded), so the peak OF RECORD cannot be" \
+         "read from the leaf's own file. systemd's MemoryPeak property is" \
+         "not that number (BE 74)." >&2
+    exit 77
+  fi
+  CGB="/sys/fs/cgroup${CG}"
+  LEAFPEAK=$(cat "$CGB/memory.peak" 2>/dev/null || echo "")
+  LEAFCUR=$(cat "$CGB/memory.current" 2>/dev/null || echo "")
+  if [ -z "$LEAFPEAK" ]; then
+    echo "REFUSED: $CUNIT's leaf $CGB carries no readable memory.peak," \
+         "so the peak OF RECORD is unavailable. Not substituting the" \
+         "systemd property for it (BE 74)." >&2
+    exit 77
+  fi
+  printf '{"event":"outcome","utc":"%s","read_while":"LOADED","LoadState":"%s","ActiveState":"%s","SubState":"%s","Result":"%s","ExecMainStatus":"%s","InvocationID":"%s","peak_of_record_bytes":"%s","peak_of_record_source":"the unit'"'"'s own cgroup leaf memory.peak, read at capture","cgroup_leaf":"%s","leaf_memory_peak":"%s","leaf_memory_current":"%s","systemd_MemoryPeak_property":"%s","systemd_property_source":"systemctl show -p MemoryPeak, recorded verbatim; NOT the peak of record (BE 74: it read 847671296 where the leaf read 2578067456)"}\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$LS" "$AS" "$SS" "$RS" "$MS" "$ID" \
+    "$LEAFPEAK" "$CG" "$LEAFPEAK" "$LEAFCUR" "$MP" >> "$CREC"
   systemctl --user stop "$CUNIT.service" >/dev/null 2>&1
   printf '{"event":"stopped","utc":"%s","unit":"%s","InvocationID":"%s"}\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$CUNIT" "$ID" >> "$CREC"
@@ -208,7 +233,7 @@ if [ "${1:-}" = "--capture" ]; then
   NS=$(journalctl --user USER_INVOCATION_ID="$ID" --no-pager -o cat 2>/dev/null | grep -c -e Stopped -e Consumed)
   printf '{"event":"journal_copy","utc":"%s","taken":"AFTER the stop","InvocationID":"%s","n_payload_lines":%s,"n_manager_lines":%s,"n_stopped_or_consumed_lines":%s,"retention_oldest_entry":"%s","why_after":"the Stopped/Consumed lines are written BY the stop; a copy taken before it cannot contain them (DE 106)"}\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ID" "$NP" "$NM" "$NS" "$OLDEST" >> "$CREC"
-  echo "captured $CUNIT: $LS/$AS/$SS/$RS/$MS id=$ID; stopped; journal by id payload=$NP manager=$NM stopped_or_consumed=$NS"
+  echo "captured $CUNIT: $LS/$AS/$SS/$RS/$MS id=$ID; peak_of_record=$LEAFPEAK (leaf $CG); systemd property=$MP; stopped; journal by id payload=$NP manager=$NM stopped_or_consumed=$NS"
   exit 0
 fi
 
