@@ -220,6 +220,121 @@ def day_matched_volume(path, *, latency_ms: int = LATENCY_MS) -> dict:
             "latency_ms": latency_ms}
 
 
+def declared_read(decl_dir: Path | None = None) -> dict:
+    """THE DECLARATION'S OWN READ SET, from the CHAIN HEAD.
+
+    REV 48 §1.6 / R-600: the reader's day set came from the INVOCATION --
+    `--open` handed `sealed_feeds()`'s FIVE days to `read()`, which computed
+    `permutation_floors` from `len(paths)`. So G was a property of the call,
+    not of the declaration: a five-path call resolved 0.25 while REPORTING
+    G = 5, and `--open` was safe only because two of the five files happen
+    to be absent. The declaration says READABLE = three days and G = 3; this
+    resolves that, from the head of the chain rather than a filename."""
+    import be_rule22 as _R22
+    if decl_dir is not None:
+        saved = _R22.DECLARATIONS
+        try:
+            _R22.DECLARATIONS = Path(decl_dir)
+            head = _R22.declaration_head("be_race_read_declaration")
+        finally:
+            _R22.DECLARATIONS = saved
+    else:
+        head = _R22.declaration_head("be_race_read_declaration")
+    doc = head["doc"]
+    readable = list((doc.get("population") or {}).get("READABLE") or [])
+    if not readable:
+        raise ReadRefused(
+            f"REFUSED: {head['name']} declares no READABLE population. A "
+            f"read whose day set is empty is not a smaller read, it is a "
+            f"different question.")
+    g_declared = ((doc.get("permutation_floor") or {}).get("G"))
+    return {"declaration": head["name"], "declaration_sha256": head["sha256"],
+            "n_versions": head["n_versions"], "READABLE": sorted(readable),
+            "G_declared": g_declared,
+            "resolved_from": "the chain head, never a filename"}
+
+
+def resolve_days(cli_days=None, *, decl_dir: Path | None = None) -> dict:
+    """The day set the read WILL use -- the declaration's, always.
+
+    The CLI can neither widen nor narrow it: a `--days` that differs is
+    REFUSED BY NAME, and no argument means the declaration's set. G is then
+    computed from that set and asserted equal to the declaration's own G, so
+    rule 10 is obeyed once and CHECKED twice."""
+    d = declared_read(decl_dir)
+    if cli_days is not None:
+        want = sorted(cli_days)
+        if want != d["READABLE"]:
+            extra = [x for x in want if x not in d["READABLE"]]
+            missing = [x for x in d["READABLE"] if x not in want]
+            raise ReadRefused(
+                f"REFUSED: --days {want} is not the declared READABLE set "
+                f"{d['READABLE']} (declaration {d['declaration']}). "
+                f"{'Widened by ' + str(extra) + '. ' if extra else ''}"
+                f"{'Narrowed by ' + str(missing) + '. ' if missing else ''}"
+                f"The day set is the declaration's; an invocation that could "
+                f"change it would make G a property of the call, which is "
+                f"exactly what R-600 found.")
+    g_computed = len(d["READABLE"])
+    if d["G_declared"] is not None and g_computed != d["G_declared"]:
+        raise ReadRefused(
+            f"REFUSED: G computed from the declared READABLE set is "
+            f"{g_computed}, but {d['declaration']} declares "
+            f"permutation_floor.G = {d['G_declared']}. The declaration "
+            f"disagrees with itself; nothing is read until it does not.")
+    return {**d, "G_computed": g_computed,
+            "G_agrees_with_the_declaration": (d["G_declared"] is None
+                                              or g_computed == d["G_declared"]),
+            "days": d["READABLE"],
+            "cli_days_supplied": cli_days is not None}
+
+
+def marker_path(day: str, outdir: Path) -> Path:
+    return Path(outdir) / f"be_race_read_OPENED_{day}.json"
+
+
+def assert_not_already_opened(days, outdir: Path) -> dict:
+    """THE THREE-PATH READ CONSUMES (runbook §6).
+
+    A day that has been opened cannot be opened again: the first read is the
+    one that spends it, and a second would report a fresh result from a
+    consumed day. The marker is written BEFORE the feed is read, so a read
+    that dies mid-way still leaves the day marked -- consumed is the safe
+    direction, unread is not."""
+    already = []
+    for d in sorted(days):
+        m = marker_path(d, outdir)
+        if m.exists():
+            already.append({"day": d, "marker": str(m),
+                            "opened_at": json.loads(m.read_text()).get("utc")})
+    if already:
+        raise ReadRefused(
+            f"REFUSED: {[a['day'] for a in already]} already carry an OPENED "
+            f"marker ({[a['marker'] for a in already]}). The race read "
+            f"CONSUMES the days it opens; a second read of a consumed day "
+            f"would report a fresh result from a spent one.")
+    return {"checked": sorted(days), "already_opened": []}
+
+
+def write_open_markers(days, outdir: Path, pins_used: dict) -> list:
+    """Written BEFORE any feed is read -- see `assert_not_already_opened`."""
+    import subprocess as _sp
+    now = _sp.run(["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"], capture_output=True,
+                  text=True, timeout=30).stdout.strip()
+    out = []
+    for d in sorted(days):
+        m = marker_path(d, outdir)
+        m.write_text(json.dumps({
+            "day": d, "utc": now,
+            "pin": (pins_used.get(d) or {}).get("sha256"),
+            "why": "the race read CONSUMES this day: written BEFORE the feed "
+                   "was read, so a read that dies mid-way still leaves it "
+                   "marked. Consumed is the safe direction.",
+        }, indent=1, sort_keys=True))
+        out.append(str(m))
+    return out
+
+
 def floors(g_opt: int, g_pess: int, m: int = 2) -> dict:
     o, p = m / 2 ** g_opt, m / 2 ** g_pess
     return {"optimistic": {"G": g_opt, "best_possible_adjusted_p": o},
@@ -230,14 +345,50 @@ def floors(g_opt: int, g_pess: int, m: int = 2) -> dict:
 
 
 def read(paths: dict, *, outdir: Path = None, write: bool = True,
-         per_day_pins: dict | None = None) -> dict:
+         per_day_pins: dict | None = None, decl: dict | None = None,
+         consume: bool = True) -> dict:
     opened = [Path(v) for v in paths.values()]
     sep = assert_separation(opened)
-    missing = [str(p) for p in opened if not Path(p).exists()]
-    if missing:
-        raise ReadRefused(f"REFUSED: sealed feed(s) absent: {missing}")
     per_day, before, pinned = {}, {}, {}
     pd = per_day_pins if per_day_pins is not None else pins()
+    # THE BY-NAME REFUSAL IS REACHABLE NOW. The generic `sealed feed(s)
+    # absent` fired FIRST, so `assert_pinned`'s refusal -- the one that
+    # NAMES the day and says a silently skipped day would report a smaller G
+    # as though it were the declared one -- was unreachable on the CLI path
+    # (REV 48 §1.6). Each declared day is checked BY NAME, in order, before
+    # anything generic.
+    for d in sorted(paths):
+        q = Path(paths[d])
+        pin = (pd or {}).get(d)
+        if pin is None:
+            raise ReadRefused(
+                f"REFUSED: {d} is in the declared READABLE set and has no "
+                f"pin. Every day the read opens must have been pinned "
+                f"before it.")
+        if not pin.get("exists"):
+            raise ReadRefused(
+                f"REFUSED: {d} is DECLARED READABLE but its pin marks the "
+                f"feed ABSENT (`exists: false`, no digest). A read that "
+                f"skipped it would report a smaller G as though it were the "
+                f"declared one.")
+        if not q.exists():
+            raise ReadRefused(
+                f"REFUSED: {d} is DECLARED READABLE and pinned, but its feed "
+                f"{q.name} is not on disk. Named, not folded into a generic "
+                f"absence.")
+    # the day set and G come from the DECLARATION, never from len(paths)
+    _dc = decl if decl is not None else resolve_days()
+    if sorted(paths) != sorted(_dc["days"]):
+        raise ReadRefused(
+            f"REFUSED: the paths handed to read() are {sorted(paths)} but "
+            f"the declaration's READABLE set is {sorted(_dc['days'])}. G "
+            f"would be a property of the call (R-600).")
+    _out_d = Path(outdir) if outdir is not None else _BDR.derived()
+    if consume:
+        assert_not_already_opened(_dc["days"], _out_d)
+        _markers = write_open_markers(_dc["days"], _out_d, pd or {})
+    else:
+        _markers = []
     for d, p in sorted(paths.items()):
         # A.3: the pin is checked BEFORE a byte is parsed.
         pinned[d] = assert_pinned(d, p, pd)
@@ -297,7 +448,20 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
         "n_positive": sum(1 for v in signs.values() if v == 1),
         "n_negative": sum(1 for v in signs.values() if v == -1),
         "n_zero": sum(1 for v in signs.values() if v == 0),
-        "permutation_floors": floors(len(paths), len(fresh)),
+        # G FROM THE DECLARATION, not from the count of paths handed in
+        "permutation_floors": floors(_dc["G_computed"], len(fresh)),
+        "day_set": {"from": _dc["declaration"],
+                    "declaration_sha256": _dc["declaration_sha256"],
+                    "READABLE": _dc["days"],
+                    "G_declared": _dc["G_declared"],
+                    "G_computed_from_the_set": _dc["G_computed"],
+                    "G_agrees_with_the_declaration":
+                        _dc["G_agrees_with_the_declaration"],
+                    "the_cli_cannot_widen_or_narrow_it": True},
+        "consumption": {"markers_written_before_reading": _markers,
+                        "the_read_consumes": True,
+                        "runbook": "§6 -- a three-path call to the race "
+                                   "reader CONSUMES the race days"},
         "byte_identity": {"pinned_before": before, "after": after,
                           "all_unchanged": True,
                           "pins": pinned,
@@ -320,7 +484,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 14
+EXPECTED_CHECKS = 20
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -422,27 +586,50 @@ def selftest() -> int:
                          "bytes": Path(q).stat().st_size}
                     for dd, q in pp.items()}
         _pins = _pin(paths)
+        # A FIXTURE DECLARATION whose READABLE set is the fixture's own days.
+        # REV 48 §1.6 item (4): the selftest never routed through the
+        # declaration at all -- it called `read()` with whatever paths it had
+        # built and pinned the floors as literals, so it agreed with the
+        # reader about arithmetic while the reader took G from the call.
+        _fdecl = d / "fixture_declarations"
+        _fdecl.mkdir(exist_ok=True)
+        (_fdecl / "be_race_read_declaration_v1.json").write_text(json.dumps({
+            "protocol": "FIXTURE", "supersedes": None,
+            "population": {"READABLE": sorted(paths)},
+            "permutation_floor": {"G": len(paths), "multiplicity": 2}}))
+        _fd = resolve_days(decl_dir=_fdecl)
+        ok(_fd["days"] == sorted(paths) and _fd["G_computed"] == len(paths)
+           and _fd["G_declared"] == len(paths),
+           f"A FIXTURE DECLARATION DRIVES A DIFFERENT G: its READABLE set is "
+           f"{_fd['days']} and G = {_fd['G_computed']}, computed from THAT "
+           f"set -- so the selftest now routes through the declaration "
+           f"rather than pinning floors as literals")
         # A.3 KNOWN-BADS, driven
         try:
-            read(paths, outdir=d, per_day_pins=dict(
-                _pins, **{"20260901": dict(_pins["20260901"],
-                                           sha256="0" * 64)}))
+            read(paths, outdir=d, decl=_fd, consume=False,
+                 per_day_pins=dict(
+                     _pins, **{"20260901": dict(_pins["20260901"],
+                                                sha256="0" * 64)}))
             ok(False, "a tampered pin must refuse")
         except ReadRefused as ex:
             ok("not the pinned" in str(ex),
                "KNOWN-BAD: a TAMPERED pin REFUSES before a byte is parsed -- "
                "the bytes changed between the pin and the read")
         try:
-            read(paths, outdir=d, per_day_pins=dict(
-                _pins, **{"20260901": {"exists": False, "sha256": None}}))
+            read(paths, outdir=d, decl=_fd, consume=False,
+                 per_day_pins=dict(
+                     _pins, **{"20260901": {"exists": False,
+                                            "sha256": None}}))
             ok(False, "a pin-absent day must refuse by name")
         except ReadRefused as ex:
-            ok("marks 20260901's feed ABSENT" in str(ex)
+            ok("20260901 is DECLARED READABLE" in str(ex)
+               and "ABSENT" in str(ex)
                and "smaller G as though it were the declared one" in str(ex),
                "KNOWN-BAD: a day the pin marks ABSENT REFUSES **by name** -- "
                "`exists: false` is actionable, and skipping it would report "
                "a smaller G as though it were the declared one")
-        r = read(paths, outdir=d, per_day_pins=_pins)
+        r = read(paths, outdir=d, per_day_pins=_pins, decl=_fd,
+                 consume=False)
         ok(all(c["digest_covers_every_byte_parsed"]
                for c in r["byte_identity"]["digest_covers_every_byte_parsed"]
                .values()),
@@ -459,12 +646,23 @@ def selftest() -> int:
            "A CLEAN READ ADMITS against matching pins, and it writes THE "
            "ONE declared artifact and nothing else")
         f = r["permutation_floors"]
+        # NO FLOORS LITERALS. This pinned `floors(5, 3) == 0.25` as constants
+        # and never routed through the CLI, so it agreed with the reader
+        # about arithmetic while the reader took its G from the invocation
+        # (REV 48 §1.6). The floor is now checked against the DECLARATION's
+        # own G, recomputed here from the declared set.
+        _ds = r["day_set"]
         ok(f["resolved_best_possible_adjusted_p"] ==
            max(f["optimistic"]["best_possible_adjusted_p"],
                f["pessimistic"]["best_possible_adjusted_p"])
-           and floors(5, 3)["resolved_best_possible_adjusted_p"] == 0.25,
-           "both floors computed, CONSERVATIVE resolved (0.25 on the real "
-           "5/3 split, not the flattering 0.0625)")
+           and f["optimistic"]["G"] == _ds["G_computed_from_the_set"]
+           and _ds["G_computed_from_the_set"] == len(_ds["READABLE"])
+           and _ds["G_agrees_with_the_declaration"],
+           f"BOTH FLOORS COMPUTED, THE CONSERVATIVE ONE RESOLVED, AND G "
+           f"COMES FROM THE DECLARATION: G={_ds['G_computed_from_the_set']} "
+           f"is len(READABLE) from {_ds['from']}, not len(paths) from the "
+           f"call, and it agrees with the declaration's own "
+           f"permutation_floor.G")
 
         _g = globals()
         _orig = _g["day_matched_volume"]
@@ -482,7 +680,8 @@ def selftest() -> int:
             return r
         _g["day_matched_volume"] = _mut
         try:
-            read(paths, outdir=d, per_day_pins=_pins)
+            read(paths, outdir=d, per_day_pins=_pins, decl=_fd,
+                 consume=False)
             ok(False, "a tampered feed must VOID the read")
         except ReadVoid as e:
             ok("THE READ IS VOID" in str(e)
@@ -514,6 +713,95 @@ def selftest() -> int:
        f"`str.replace` would have rewritten the directory too and pointed "
        f"the read at a path that does not exist")
 
+    # ---- (3) the BY-NAME refusal is reachable, both ways ---------------
+    # It was not: `read()` began with a generic `sealed feed(s) absent`
+    # over ALL paths, so `assert_pinned`'s named refusal could not be
+    # reached on the CLI path (REV 48 §1.6). A declared day whose FILE is
+    # gone is now named, in order, before anything generic.
+    import tempfile as _tf3
+    _d3 = Path(_tf3.mkdtemp(prefix="be67_named_"))
+    _p3 = {"19700101": _feed(_d3, "19700101", pos),
+           "19700102": _feed(_d3, "19700102", neg)}
+    (_d3 / "decl").mkdir()
+    (_d3 / "decl" / "be_race_read_declaration_v1.json").write_text(json.dumps({
+        "protocol": "FIXTURE-NAMED", "supersedes": None,
+        "population": {"READABLE": sorted(_p3)},
+        "permutation_floor": {"G": len(_p3), "multiplicity": 2}}))
+    _dc3 = resolve_days(decl_dir=_d3 / "decl")
+    _pins3 = {dd: {"exists": True,
+                   "sha256": hashlib.sha256(Path(q).read_bytes()).hexdigest(),
+                   "bytes": Path(q).stat().st_size}
+              for dd, q in _p3.items()}
+    Path(_p3["19700102"]).unlink()          # the FILE goes, the pin stays
+    try:
+        read(_p3, outdir=_d3, per_day_pins=_pins3, decl=_dc3, consume=False)
+        ok(False, "a declared day whose feed is gone must refuse by name")
+    except ReadRefused as _e3:
+        ok("19700102 is DECLARED READABLE and pinned" in str(_e3)
+           and "not on disk" in str(_e3)
+           and "sealed feed(s) absent" not in str(_e3),
+           f"(3) THE BY-NAME REFUSAL IS REACHABLE: a DECLARED READABLE day "
+           f"whose feed is gone refuses NAMING THE DAY, and the generic "
+           f"`sealed feed(s) absent` -- which used to fire first and hide it "
+           f"-- does not appear in the message")
+
+    # ---- (5) THE THREE-PATH READ CONSUMES (runbook §6) ------------------
+    # Driven on a SCRATCH declaration and SCRATCH feeds. The real pins are
+    # never touched: the real read is the coordinator's separate act on GO.
+    import tempfile as _tf5
+    _d5 = Path(_tf5.mkdtemp(prefix="be67_consume_"))
+    _p5 = {"19700101": _feed(_d5, "19700101", pos),
+           "19700102": _feed(_d5, "19700102", neg)}
+    (_d5 / "decl").mkdir()
+    (_d5 / "decl" / "be_race_read_declaration_v1.json").write_text(json.dumps({
+        "protocol": "FIXTURE-CONSUME", "supersedes": None,
+        "population": {"READABLE": sorted(_p5)},
+        "permutation_floor": {"G": len(_p5), "multiplicity": 2}}))
+    _dc5 = resolve_days(decl_dir=_d5 / "decl")
+    _pins5 = {dd: {"exists": True,
+                   "sha256": hashlib.sha256(Path(q).read_bytes()).hexdigest(),
+                   "bytes": Path(q).stat().st_size}
+              for dd, q in _p5.items()}
+    _r5 = read(_p5, outdir=_d5, per_day_pins=_pins5, decl=_dc5)
+    _mk = [marker_path(dd, _d5) for dd in _p5]
+    ok(all(m.exists() for m in _mk)
+       and len(_r5["consumption"]["markers_written_before_reading"]) == 2
+       and _r5["consumption"]["the_read_consumes"] is True,
+       f"(5) THE READ CONSUMES: opening {sorted(_p5)} wrote an OPENED marker "
+       f"for each day, naming the day and its pin, BEFORE the feed was read "
+       f"-- so a read that dies mid-way still leaves the day marked, which "
+       f"is the safe direction")
+    try:
+        read(_p5, outdir=_d5, per_day_pins=_pins5, decl=_dc5)
+        ok(False, "a second read of a consumed day must refuse")
+    except ReadRefused as _e5:
+        ok("already carry an OPENED marker" in str(_e5)
+           and "would report a fresh result from a spent one" in str(_e5),
+           "KNOWN-BAD: a SECOND read of the same days REFUSES, naming them "
+           "-- the three-path call consumes, and a re-read would report a "
+           "fresh result from a spent day")
+    _d6 = Path(_tf5.mkdtemp(prefix="be67_fresh_"))
+    _p6 = {dd: _feed(_d6, dd, pos) for dd in _p5}
+    _pins6 = {dd: {"exists": True,
+                   "sha256": hashlib.sha256(Path(q).read_bytes()).hexdigest(),
+                   "bytes": Path(q).stat().st_size}
+              for dd, q in _p6.items()}
+    _r6 = read(_p6, outdir=_d6, per_day_pins=_pins6, decl=_dc5)
+    ok(_r6["consumption"]["the_read_consumes"] is True
+       and len(_r6["consumption"]["markers_written_before_reading"]) == 2,
+       "POSITIVE CONTROL: the same days in a tree with NO markers open "
+       "normally -- the refusal is about the markers, not about the days")
+    ok(not (Path(_BDR.derived()) /
+            "be_race_read_OPENED_20260903.json").exists()
+       and not (Path(_BDR.derived()) /
+                "be_race_read_OPENED_20260904.json").exists()
+       and not (Path(_BDR.derived()) /
+                "be_race_read_OPENED_20260905.json").exists(),
+       "AND THE REAL DAYS ARE UNTOUCHED: no OPENED marker exists for "
+       "20260903/04/05 in the ledger -- this batch drove consumption on "
+       "scratch feeds under a scratch declaration only. The real read is "
+       "the coordinator's separate act on GO")
+
     print()
     if fails:
         print(f"{len(fails)} FAILURES of {checks} checks")
@@ -530,12 +818,26 @@ def main(argv=None) -> int:
     if "--selftest" in argv:
         return selftest()
     if "--open" in argv:
-        out = read({d: Path(p) for d, p in sealed_feeds().items()})
+        _cli = None
+        if "--days" in argv:
+            _cli = [x for x in argv[argv.index("--days") + 1].split(",") if x]
+        _dc = resolve_days(_cli)
+        _feeds = sealed_feeds()
+        _missing_decl = [d for d in _dc["days"] if d not in _feeds]
+        if _missing_decl:
+            raise ReadRefused(
+                f"REFUSED: the declaration names {_missing_decl} as READABLE "
+                f"and no feed path resolves for them.")
+        out = read({d: Path(_feeds[d]) for d in _dc["days"]}, decl=_dc)
         print(json.dumps({"written": out.get("_written"),
                           "day_signs": out["day_signs"]}))
         return 0
-    print("usage: be_race_reader.py --selftest | --open  (--open CONSUMES the "
-          "five sealed FEEDS; the coordinator's act on GO)")
+    print("usage: be_race_reader.py --selftest | --open [--days d1,d2,...]\n"
+          "  --open CONSUMES the DECLARED READABLE days (the coordinator's "
+          "act on GO).\n"
+          "  --days must EQUAL the declaration's READABLE set; it exists so "
+          "an invocation\n  that disagrees is refused by name, never so the "
+          "set can be changed.")
     return 2
 
 
