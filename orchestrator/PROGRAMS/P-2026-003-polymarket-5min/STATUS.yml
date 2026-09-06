@@ -63,6 +63,96 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T12:35:47Z (MEM ROUND 172 -- R-630 AND R-631 SWEPT, WITH Q-DE-94; Q-DA-306
+  NOT FILED. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) **REV 58 §2.3 IS RETRACTED AND THE RETRACTION HOLDS AT FOUR ARTIFACTS I READ.**
+  DE's design **v20 and v21** each carry `"landing_record.receipt_sha256"` twice; DE's
+  code head is `LANDING_RECORD_FIELD_COPIES[0]`; DA's
+  `LANDING_DIGEST_AUTHORITATIVE_FIELD` is the same string; and `git log` on v20 shows
+  **ONE commit, `6e32506`** -- so "DE's code and design agreed all along" is checkable,
+  and true. ***AND ONE THING I CAN ADD TO THE REVIEWER'S ACCOUNT, because I searched the
+  design instead of trusting the story:*** **a standalone `"receipt.sha256"` IS in v20 --
+  and still in v21 -- inside `second_copies_that_must_agree`, as the VALUE mapped FROM
+  `landing_record.receipt_sha256`.** *A grep for the string HITS DE's design; reading the
+  hit as the name inverts a map.* **Two different ways into one wrong sentence, and only
+  this one is visible in the file.**
+  (2) **THE 09-03 BOOK-TIER CONTRADICTION CLOSED WHILE I WAS MEASURING IT.** At 12:31Z
+  the 11:28Z receipt still carried `NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: false` beside
+  "none of them names an economic quantity"; at **12:33:21Z** the `.v2` landed with
+  `supersedes` **as the PAIR** (`the_link_is_the_PAIR: ["path","sha256"]`, digest
+  `9aaa1b5fefc4a452…`, `v1_untouched: true`), the key renamed to
+  `NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK`, **the old string surviving only inside
+  the quoted `what_changed`** -- which also names a second correction: **two theta
+  MISMATCHES that were a misread of the book's count map.**
+  (3) ***THE THREE-VALUED FLAG I SWEPT LAST ROUND WAS INVERTED BY ITS FIRST CONSUMER.***
+  **`not None` is True**, so the NOT-ESTABLISHED state raised the flag that means
+  REFUTED -- "the exact inversion the truncation limit exists to prevent" (`f8e6d6f`),
+  FLAGGED with one flag beside an EMPTY sealed-hit list. *Fixed in the artifact: `null`,
+  `truncated: true`, `NOT_ESTABLISHED_WALK_TRUNCATED` a named entry in
+  `predicates_not_computable` that blocks `IS_A_VERIFICATION` and claims nothing.*
+  **A three-valued flag stays three-valued only while every reader tests for the third
+  value.**
+  (4) **AND THE FIX ON THE FIX, 18 SECONDS LATER (`02f3227`): `UnboundLocalError`,
+  caught by DA's own selftest IN THE SAME COMMAND THAT LANDED IT.** ***Routed, not
+  ruled:*** *rule 21 as amended (R-623) tells seats to copy and commit in ONE COMPOUND
+  COMMAND -- the idiom that makes "test, then land" collapse into "land and test".* **A
+  fix on one side of a seam opening the other, for the fourth time today.**
+  (5) **THE 09-05 TAPE IS BUILT AND THE LOCK IS FREE, 16 MINUTES EARLY** -- 890,640,737
+  B, 489,434 rows, `wall_s 755.4`, `peak_rss_gb 4.741`, TAPE_RC=0 and CHAIN_RC=0 at
+  **12:28:58Z**, `fuser` on the lock returning no holder. ***TWO INSTRUMENTS, TWO
+  MARGINS:*** **the cgroup's `scope.peak_bytes` is 7,554,551,808 of 8,589,934,592 --
+  87.9 % of the cap -- where the process figure reads 4.741 GB.** *R-632: zero reclaim
+  events, against 09-04's 1,199 cap hits, correlation recorded with no mechanism at
+  n = 2.*
+  (6) ***I CAN ACCOUNT FOR THE NON-ZERO EXIT REV 62 §5 COULD NOT -- AND IT IS ROUTED, NOT
+  RULED.*** The reviewer records one unreproducible non-zero exit of the GO-gating
+  battery. **My own first run exited 1 with the runner's own message: "and HEAD and the
+  dirty state are captured AT IMPORT: 989373fa87c6, dirty=False"; the predicate is
+  `_sid2["head_unchanged_during_the_run"] is True`; my import captured `989373f`
+  (12:30:40Z) and the reflog shows DA committing at 12:30:55Z and 12:31:13Z -- three
+  seats committing into one tree inside 33 seconds. My re-run on a settled tree: 245
+  checks, exit 0.** **THE CAVEAT: a linked worktree has its own HEAD**, so this explains
+  MY exit and is a candidate of the SAME SHAPE for theirs. *Unreproducible by
+  construction: it depends on another seat's timing.*
+  (7) **THE DIRT EXEMPTION IS A PROPERTY IN THREE SEATS INDEPENDENTLY** -- DE's four
+  driven cells (R-631), DA's `8a620d9` before its re-run, BE's receipts carrying
+  `dirty: true, dirty_paths: ['data']` with BE 62 classifying it (R-632) -- **and R-626
+  had already exempted that same line for LANDING.** *Other seats' clean-tree checks must
+  do the same.*
+  (8) **GO #4 IS FILED BY REV 62** -- `REVIEW_DE94_GO4_2026-09-06.md`, 12:33Z, "GO for
+  the 09-03 smoke", batteries 245 / 105 / 5 -- **and at the rehearsal artifact I checked
+  the form myself: `status READY`, `blocking []`, `THE_ONE_COMMAND` carrying `--unit=`,
+  `--working-directory=…wt-de2`, `flock -n` INSIDE the unit and NO `--scope`.** *My first
+  probe asked the whole DOCUMENT about `--scope` and it said True -- the hits are the
+  declaration "never --scope" and a known-bad. Second needle-vs-prose slip of mine this
+  round; the other was `grep -c FAIL` counting six PASS lines.* ***R-631's sequence puts
+  the coordinator's GO next; the lock is idle.***
+  **AT COMMIT TIME, 2026-09-06T12:39:11Z -- AND THE RE-READ CAUGHT ITS OWN HEADLINE:
+  GO #4 ISSUED (R-633, 12:35Z) AND THE FOURTH LAUNCH IS RUNNING.** **`de95smoke.service`:
+  `ActiveState=active`, `SubState=running`, `MainPID=3384217`, started **12:35:35 UTC**,
+  `MemoryPeak` 2,554,003,456 B, the lock held by the unit's own `flock -n` -- the first
+  launch under the transient-SERVICE form after three lost runs.** *The v8 rehearsal
+  (12:35:16Z) is READY, `blocking []`, and its `THE_ONE_COMMAND` still carries the
+  `<deNNsmoke>` placeholder: the unit NAME is all the launch added to the driven string.*
+  **R-633 records leg 1 proving itself the hard way -- the reviewer's TERM to a scope's
+  process group killed the reviewer's own tool shell, TWICE, while the service's MainPID
+  has PPid 1004 -- and it records the unexplained battery exit as UNEXPLAINED, not
+  explained away.** ***That is the gap paragraph (6) above lands in: my exit has a
+  measured mechanism, offered as a candidate of the same shape, not as their answer.***
+  **R-634 (12:37Z) VERIFIES DA 83 AND AGREES WITH WHAT I MEASURED INDEPENDENTLY:** the
+  flag was DA's own defect introduced by DA 82's fix, `not None` reading as "a sealed day
+  statistic IS named" beside an EMPTY hit list; **both tiers re-ran UNDER THE SERVICE
+  FORM** -- 09-03 297,379 shared keys, 09-04 338,444, **0 mismatches**, coverage
+  0.949746737609944 / 0.9450918300954743, 1.962 / 2.287 GB, receipts superseded.
+  **Q-DA-306 has landed.** *Flag values superseded in band, keys untouched.*
+  **FLAG WORDS: GO #4 FILED-BY-REV-62 (the coordinator's GO next; the lock FREE since
+  12:28:58Z, not ≈12:45Z); the refresh-symlink DIRT-EXEMPTION-BY-PROPERTY (DE, DA and BE
+  independently) -- other seats' clean-tree checks must do the same; the 09-05 tape
+  BUILT.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,032 -> 1,040, flag_provenance 577 -> 585,
+  tasks 19; **358 CHECKED**, 227 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a
+  ruled 3; new flags vs HEAD 0 without provenance.)
   2026-09-06T12:18:10Z (MEM ROUND 171 -- R-629, Q-DA-305 AND Q-BE-61 SWEPT. STATE
   ONLY. THE FINDING BEGAN AS AN APPARENT CONTRADICTION IN DA'S NEW RULE AND WAS MINE.
   (1) **THE SAME RULE GAVE TWO VERDICTS BECAUSE TWO TREES HELD TWO VERSIONS.** I drove
@@ -203,88 +293,7 @@ updated: >-
   tasks 19; **345 CHECKED**, 223 RELAYED, **455 UNMARKED -- unchanged for the
   forty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
   new flags vs HEAD 0 without provenance.)
-  2026-09-06T12:03:40Z (MEM ROUND 169 -- R-626 AND REV 60'S FILING SWEPT. STATE ONLY.
-  THE FINDING IS A SENTENCE THAT DENIES THE BOOLEAN TWO KEYS AWAY.
-  (1) **THE PROSE ASSERTS WHAT ITS OWN BOOLEAN DENIES.** At the 09-03 book tier:
-  **`NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: False`,
-  `n_field_names_matching_an_economic_marker: 3`, `matching_field_names:
-  ['TRANCHE_NO_MARKOUT', 'markout_cents_per_share', 'preventable_value_cents']` -- and
-  beside them `what_this_establishes: "… and that NONE OF THEM NAMES AN ECONOMIC
-  QUANTITY …"`.** ***The sentence contradicts the boolean and lists the three
-  counterexamples in between.*** **Rule 10's exact shape INSIDE the instrument whose
-  job is to census names.** *The three are the REFERENCE's valuation fields, carried by
-  construction -- so the boolean is right, the alarm is not, and the defect is the
-  PROSE.*
-  (2) **AND AT THAT BUDGET IT CANNOT ESTABLISH THE CLAIM AT ALL:** `nodes_visited:
-  400000` **equals** `budget: 400000`, `truncated: True`. *The walk STOPPED rather than
-  finished.* ***A truncated search proves PRESENCE and never ABSENCE*** -- **so the
-  census can refute "nothing economic is named" and can never establish it.**
-  (3) **AND THE SAME BLOCK HOLDS AN HONEST LIMIT BESIDE THE OVERCLAIM:**
-  `what_it_cannot_establish: "that a float under an innocent name is not secretly a
-  price. Names and shapes are checkable; INTENT IS NOT."` ***One field states the
-  instrument's boundary exactly; the field next to it ignores a boundary of its own.***
-  *A conceptual limit is remembered while writing; a MEASURED one has to be read back
-  out of the run.*
-  (4) **THREE PROBE ERRORS IN ONE ROUND, AND ONE WAS AN IDIOM I SWEPT MYSELF.**
-  *(a)* I read the **FIXTURE** census first, having picked the file by NAME rather than
-  content. *(b)* An **unscoped glob** over `derived/*.json` swept the 1.16 GB tape and
-  the 711 MB fragment and had to be backgrounded -- **the same trap as round 138.**
-  *(c)* **`pkill -f 'NOTHING_ECONOMIC_IS_NAMED'` MATCHED ITS OWN COMMAND LINE and
-  killed the shell (exit 144)** -- ***the fourth idiom in BE's harvest, which I swept
-  into this file at round 156.*** **Recording a hazard does not install it** -- *and the
-  harvest still paid: I knew what had bitten me before the exit code finished
-  printing.*
-  (5) **AND DA'S VERIFIER RECORDED MY OWN DIRTY TREE:** the fixture census carries
-  `worktree_was_dirty_at_import: True`, `dirty_paths: ['…/STATUS.yml']`, at
-  **11:39:51Z**. ***The dirty path is MEM's file, mid-round.*** **Every seat that starts
-  a run between my first write and my commit records it** -- *nothing is wrong, and
-  "the tree was dirty" now has a routine, benign, NAMED cause: me.*
-  (6) **THE SWEEP'S CLASSIFIER KEYS ON THE PATTERN, NOT ON WHOSE BYTES:** any
-  `hashlib.sha256(<path>.read_bytes())` on an emit path is called a producing-code
-  digest, **so all three BE producers read `rule22_binds_and_incomplete`** -- and the
-  four cited sites are *the BOOK's read-back, the v1 RECEIPT's read-back, the FRAGMENT
-  (an INPUT), and **BE's own battery control for the very property the sweep
-  denies***. **`_R22.stamp()` returns the import-time digest with `why_not_at_emit`
-  right there.** ***The budget half of that census was corrected properly; the closure
-  half keyed on shape rather than subject.***
-  (7) **AND THE REVIEWER SEPARATED THE FALSE POSITIVES FROM THE POSSIBLE TRUE ONE:**
-  `be_gate1_state_tape`'s `head_sha: AT_EMIT` cites a real `git rev-parse HEAD` inside
-  `build` and **may be genuinely incomplete** -> BE 63. ***The headline wrong and one of
-  its members possibly right, said in the same paragraph*** -- **the hardest correction
-  to write, because it neither vindicates nor discards.**
-  (8) **AND THE REVIEW EVALUATED A VERSION ALREADY REPLACED** -- REV 60 SS1 assessed
-  the SPARSE refresh, superseded by R-625 *before the filing landed*. **Three of its
-  four concerns are closed by the deterministic script** (status `?? data` alone,
-  driven on wt-be and wt-rev) **and rule 21's precondition now admits that line**
-  (`a6a1d51`); *the fourth -- artifacts TRACKED under `data/` -- is the programme-level
-  change not proposed today.* ***A review overtaken mid-flight whose findings outlived
-  the mechanism they were written about, because they named PROPERTIES.***
-  **AT COMMIT TIME, 2026-09-06T12:08:14Z: THE RE-RUN IS DEAD -- KILLED AT 35 MINUTES,
-  AND MY FLAG WORD "RUNNING, RECEIPT ~12:55Z" IS OVERTAKEN.** *Measured: the journal
-  reads 11:28:44Z -> 12:03:43Z, **34 min 52.780 s CPU, 2.3 G peak**; `de93smoke.scope`
-  inactive; **no SEALED artifact** and a new record on disk --
-  `p003_de_gate1_day_run_20260903_KILLED__20260906T120555Z.json`.*
-  ***AND THE MECHANISM IS DRIVEN BOTH WAYS IN THE RECORD ITSELF:*** **`TERM to the
-  PROCESS GROUP` -> the scope DIED (probe: ActiveState inactive, no child); `TERM to
-  the launching shell ALONE` -> the scope SURVIVED (probe: the child sleep kept
-  running); so: "`systemd-run --scope` registers processes THE CALLER FORKS, so the
-  run sits in the launching shell's process group".** *And what it is NOT: **not a
-  refusal by the runner, not a coordinator stop, not an OOM kill** -- the cgroup peak
-  was far under.* **`NOTHING_WAS_WRITTEN`: `find_sealed_day_receipt_status: MISSING`,
-  `n_matches: 0`, `the_day_is_not_consumed: True`, `book_digest_unchanged: True`.**
-  ***Rule 20 is amended (`016a625`): a heavy run is NEVER a child of a tool shell --
-  launch as a TRANSIENT SERVICE with `flock` INSIDE the unit.*** *Third attempt lost,
-  35 minutes, nothing consumed -- and the cause was the LAUNCH MECHANISM, not the
-  code, the day, or the budget.* **BE has already taken the lock for the 09-05
-  fragment (pid 3341391).**
-  **FLAG WORDS: DA's census PROSE-CONTRADICTS-BOOLEAN (DA 82 queued); BE's producers
-  rule-22 COMPLETE (the sweep's headline wrong, the substance right); the re-run
-  RUNNING -- I measure pid 3282335 at 2,011 s (~34 min), RSS 788,920 KiB, receipt
-  expected ≈12:55Z.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,007 -> 1,015, flag_provenance 552 -> 560,
-  tasks 19; **340 CHECKED**, 220 RELAYED, **455 UNMARKED -- unchanged for the
-  forty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
-  new flags vs HEAD 0 without provenance.)
+
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2957,6 +2966,167 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  REV_58_2_3_RETRACTED_AND_THE_MISREAD_STRING_IS_IN_THE_DESIGN_AS_A_MAPPED_VALUE: I_CHECKED_FOUR_ARTIFACTS
+                             # CHECKED 2026-09-06T12:35:47Z (R-630(A); REV 61,
+                             # `REVIEW_DA81_DA82_2026-09-06.md`). **THE RETRACTION HOLDS AT THE
+                             # ARTIFACTS I READ MYSELF:** DE's design **v20 AND v21** each carry
+                             # `"landing_record.receipt_sha256"` **twice**; DE's code head is
+                             # `LANDING_RECORD_FIELD_COPIES[0] = ("receipt_sha256_at_landing",
+                             # ("landing_record","receipt_sha256"), ("receipt","sha256"))`; DA's
+                             # `LANDING_DIGEST_AUTHORITATIVE_FIELD` is the same string, and
+                             # `_design_names_landing_digest_field()` is the function whose RETURN
+                             # VALUE REV 58 quoted as DE's design. **`git log` on v20: ONE commit,
+                             # `6e32506` (DE 92) -- it has never been rewritten**, so "agreed all
+                             # along" is checkable and true.
+                             # ***AND ONE THING I CAN ADD TO THE REVIEWER'S OWN ACCOUNT, because I
+                             # searched the design instead of trusting the story:*** **a standalone
+                             # `"receipt.sha256"` IS present in v20 -- and still in v21 -- inside
+                             # `second_copies_that_must_agree`, as the VALUE mapped FROM the key
+                             # `landing_record.receipt_sha256`, beside the design's own line "The
+                             # gate does not pick a copy".** *So a grep for the string HITS DE's
+                             # design; reading that hit as "the design names this field" inverts a
+                             # map -- key and value are not interchangeable.* **The reviewer's
+                             # mechanism (a DA return value quoted as DE's artifact) and this one
+                             # (a mapped VALUE read as the name) are two different ways into the
+                             # same wrong sentence, and only the second is visible in the file.**
+  THE_09_03_BOOK_TIER_CONTRADICTION_IS_SUPERSEDED_BY_THE_PAIR: LANDED_AT_12_33_21Z
+                             # CHECKED 2026-09-06T12:35:47Z. **R-630(B) said the artifact a reader
+                             # resolves contradicts itself until DA 83 re-runs the tier, and I read
+                             # BOTH ends.** *At 12:31Z the 11:28Z receipt still carried
+                             # `NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: false` beside "none of them
+                             # names an economic quantity".* **At 12:33:21Z
+                             # `p003_da_book_tier_20260903__20260906T112813Z.v2.json` landed
+                             # (`bce9a0d`) carrying `supersedes` as the PAIR --
+                             # `the_link_is_the_PAIR: ["path","sha256"]`, the digest
+                             # `9aaa1b5fefc4a452…`, `chain` a list of pairs, `v1_untouched: true`
+                             # (rule 13, and R-608's link form).**
+                             # **In the successor the census key is RENAMED to
+                             # `NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK` and the old key
+                             # survives ONLY inside the quoted `what_changed` text** -- *which is
+                             # the right place for a superseded string: named as history, not left
+                             # live.* **`what_changed` also names a SECOND correction I had not
+                             # been told: two theta MISMATCHES that were a misread of the book's
+                             # count map.** *The 09-04 tier re-ran too (`…__20260906T123316Z.json`,
+                             # 12:33:44Z).*
+  DA_83_S_FIRST_RE_RUN_INVERTED_DA_82_S_OWN_THREE_VALUED_FLAG: NOT_NONE_IS_TRUE
+                             # CHECKED 2026-09-06T12:35:47Z at `f8e6d6f` and at the artifact.
+                             # ***I swept the three-valued absence flag LAST ROUND -- found, not
+                             # found, did-not-finish -- and its FIRST CONSUMER inverted it one round
+                             # later.*** **`not None` is True, so the NOT-ESTABLISHED state (which
+                             # establishes nothing) raised the flag that means REFUTED: "the exact
+                             # inversion the truncation limit exists to prevent", and the first real
+                             # re-run produced it -- FLAGGED with one flag beside a census whose
+                             # sealed-hit list was EMPTY.**
+                             # **The fix, visible in the artifact I read:** `NO_SEALED_DAY_STATISTIC_
+                             # IS_NAMED_IN_THIS_BOOK: null`, `truncated: true`,
+                             # `sealed_statistic_check: NOT_ESTABLISHED_WALK_TRUNCATED`,
+                             # `n_flags: 0`, and `book.no_sealed_day_statistic_is_named__WALK_
+                             # TRUNCATED` a NAMED entry in `predicates_not_computable` that blocks
+                             # `IS_A_VERIFICATION` (`false`) and claims nothing.
+                             # *A three-valued flag is only three-valued while every reader tests
+                             # for the third value; `not x` collapses it back to two.*
+  THE_FIX_ON_THE_FIX_WAS_LANDED_AND_TESTED_IN_ONE_COMMAND: EIGHTEEN_SECONDS
+                             # CHECKED 2026-09-06T12:35:47Z at `02f3227` (18 s after `f8e6d6f`).
+                             # **DA's own words: `f8e6d6f` left `if census[...]` ABOVE
+                             # `census = economic_census(book)`, so the FULL tier raised
+                             # `UnboundLocalError` -- "my own selftest caught it in the same command
+                             # that landed it, which is one command too late: I landed and tested in
+                             # one line instead of testing and then landing."**
+                             # ***ROUTED, NOT RULED: rule 21 as amended (R-623) tells seats to copy
+                             # worktree bytes and commit in ONE COMPOUND COMMAND, which is exactly
+                             # the idiom that makes "test, then land" collapse into "land and
+                             # test".*** *The amendment closed a landing hazard and opened a
+                             # sequencing one -- the same shape R-631(B) records for R-625's refresh
+                             # script, three times today.* **DE/DA own the remedy; I record the
+                             # pairing.**
+  THE_09_05_TAPE_IS_BUILT_THE_CHAIN_RETURNED_ZERO_AND_THE_LOCK_IS_FREE: SIXTEEN_MINUTES_EARLY
+                             # CHECKED 2026-09-06T12:35:47Z, and the dispatched flag word "the
+                             # 09-05 tape BUILDING" was true when written and is SPENT.
+                             # **`phase2_state_tape_gate1_20260905_btc.json`: 890,640,737 bytes,
+                             # 489,434 rows, sha `0650e213…`, `wall_s 755.4`, `peak_rss_gb 4.741`,
+                             # `builder_commit eee7b3d3`; TAPE_RC=0 and CHAIN_RC=0 at 12:28:58Z;
+                             # `fuser` on `data/.heavy_run.lock` returns NO holder.** *The lock was
+                             # forecast as BE's "until ≈12:45Z" and came free at 12:28:58Z.*
+                             # ***TWO INSTRUMENTS, TWO MARGINS:*** **the receipt's process figure is
+                             # `peak_rss_gb 4.741`, while the cgroup's own `scope.peak_bytes` is
+                             # 7,554,551,808 of `max_bytes` 8,589,934,592 -- 87.9 % of the cap, with
+                             # `file_bytes` 3,645,927,424 of it page cache.** *R-632 adds ZERO
+                             # reclaim events where 09-04 hit the cap 1,199 times, and BE records
+                             # the correlation with no mechanism at n = 2.* **A run sized by RSS
+                             # looks twice as safe as the same run sized by its cgroup.**
+  I_CAN_ACCOUNT_FOR_A_NON_ZERO_EXIT_THE_REVIEWER_COULD_NOT: HEAD_MOVED_UNDER_THE_RUN
+                             # CHECKED 2026-09-06T12:35:47Z -- **and this is ROUTED to DE and REV,
+                             # not ruled.** REV 62 §5 records "one unexplained non-zero exit of the
+                             # GO-gating battery", four later runs at 245/exit 0, "I could not
+                             # reproduce it and I do not know the cause".
+                             # ***MY FIRST RUN OF THE SAME BATTERY EXITED 1, AND THE RUNNER SAID WHY
+                             # IN ITS OWN MESSAGE:*** `[de_multiday_gate1_runner] FAIL: and HEAD and
+                             # the dirty state are captured AT IMPORT: 989373fa87c6, dirty=False --
+                             # a commit in the worktree moves the producing code as surely as an
+                             # edit does`. **The predicate is
+                             # `_sid2["head_unchanged_during_the_run"] is True`; my import captured
+                             # `989373f` (BE round 61, committed 12:30:40Z) and the reflog shows DA
+                             # committing `f8e6d6f` at 12:30:55Z and `02f3227` at 12:31:13Z -- three
+                             # seats committing into one tree inside 33 seconds.** **My re-run on a
+                             # settled tree: `PASS -- 245 checks`, exit 0, matching R-631 exactly.**
+                             # **THE CAVEAT THAT KEEPS THIS HONEST:** *a linked worktree has its own
+                             # HEAD, so a shared-tree commit does not move wt-rev's -- this explains
+                             # MY exit and is offered as a candidate of the SAME SHAPE for the
+                             # reviewer's, which is theirs to test:* **the failure is unreproducible
+                             # BY CONSTRUCTION, because it depends on another seat's timing.**
+                             # *And the message names only the CAPTURED head, never the one it
+                             # changed to -- a message that says less than its predicate tests.*
+  THE_REFRESH_SYMLINK_DIRT_EXEMPTION_BY_PROPERTY: ALL_THREE_SEATS_INDEPENDENTLY
+                             # CHECKED 2026-09-06T12:35:47Z (dispatched flag words, kept verbatim:
+                             # **the refresh-symlink DIRT-EXEMPTION-BY-PROPERTY (DE) -- other seats'
+                             # clean-tree checks must do the same**).
+                             # **DE (R-631): untracked AND really a symlink AND resolving to the
+                             # canonical data root, four cells driven.** **DA reached it
+                             # independently at `8a620d9`, before its re-run: "the ledger symlink is
+                             # not dirt, and it is exempted as a PROPERTY".** **BE's 09-05 receipts
+                             # carry `dirty: true, dirty_paths: ['data']` (R-632) -- a reader sees a
+                             # dirty worktree that is clean -- and BE 62 classifies code-dirt from
+                             # the shell artifact as a property.**
+                             # ***So the same one-line dirt now has three answers converging on one
+                             # rule, and MEM's is the fourth: R-626 had already exempted that line
+                             # for LANDING.*** *A name-matched exemption is how a binding map comes
+                             # to excuse the thing it exists to catch (R-613); the property form is
+                             # the remedy every seat found separately.*
+  GO_4_IS_FILED_BY_REV_62_AND_THE_COORDINATORS_GO_IS_THE_NEXT_ACT: SUPERSEDED_THE_FOURTH_LAUNCH_IS_RUNNING
+                             # CHECKED 2026-09-06T12:35:47Z. **`REVIEW_DE94_GO4_2026-09-06.md`
+                             # (12:33Z, tip `0a1f8d5`, `cbe100a`) reads "### **GO for the 09-03
+                             # smoke.**", batteries runner 245 / design 105 / launch-form probe 5,
+                             # every lock drive on a scratch file in /tmp and every unit a `rev62*`
+                             # name.** **At the rehearsal artifact I checked the form MYSELF:
+                             # `p003_de_gate1_smoke_rehearsal_09_03_v7__20260906T121913Z.json` has
+                             # `status READY`, `blocking []`, and `THE_ONE_COMMAND` (the STRING)
+                             # carries `--unit=`, `--slice=research.slice`, `--working-directory=
+                             # /home/yuqing/ctaNew-wt-de2`, `flock -n` INSIDE the unit, and NO
+                             # `--scope`.**
+                             # *My first probe asked the whole DOCUMENT about `--scope` and it said
+                             # True -- the hits are the declaration "never --scope" and a 52-char
+                             # KNOWN-BAD command. The question was about one string, so the probe
+                             # had to be about one string.* **Second needle-vs-prose slip of my own
+                             # this round; the other was `grep -c FAIL` counting six PASS lines
+                             # whose message text names a planted failure.**
+                             # ***STATE, NOT A RULING: R-631's sequence puts the coordinator's GO --
+                             # naming the commit and the unit -- next, and the lock is idle.***
+                             # **VALUE SUPERSEDED IN BAND 2026-09-06T12:39:11Z, at my
+                             # commit-time re-read -- the KEY is left alone, because renaming a key
+                             # breaks every search for the old name (round 140).** **GO #4 ISSUED
+                             # (R-633, 12:35Z) AND THE FOURTH LAUNCH IS RUNNING:**
+                             # `de95smoke.service`, `ActiveState=active SubState=running`,
+                             # `MainPID=3384217`, `ExecMainStartTimestamp` **12:35:35 UTC**,
+                             # `MemoryPeak` 2,554,003,456 B at my read, the lock held by the unit's
+                             # own `flock -n`. **The v8 rehearsal (12:35:16Z) is READY with
+                             # `blocking []` and its `THE_ONE_COMMAND` still carries the
+                             # `<deNNsmoke>` PLACEHOLDER -- the one substitution -- so the unit NAME
+                             # is the only thing the launch added to the driven string.**
+                             # *Three previous launches were lost; this one is the first under the
+                             # SERVICE form, and R-633 records leg 1 proving itself the hard way --
+                             # the reviewer's own TERM to a scope's process group killed the
+                             # reviewer's tool shell, twice, while the service's MainPID has PPid
+                             # 1004.*
   THE_MANDATED_REFRESH_LEAVES_EVERY_WORKTREE_DIRTY_BY_ONE_LINE: EXEMPTED_FOR_LANDING_NOT_FOR_IMPORT
                              # CHECKED 2026-09-06T12:23:01Z, at commit time, after
                              # **Q-DE-94 landed** (`e2185e9`+`d27de63` code, `e3480df` artifacts,
@@ -20155,6 +20325,108 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 172, 2026-09-06T12:35:47Z ------------------------------
+  REV_58_2_3_RETRACTED_AND_THE_MISREAD_STRING_IS_IN_THE_DESIGN_AS_A_MAPPED_VALUE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v20.json
+    as_of: 2026-09-06T12:35:47Z
+    said: >-
+      design v20 and v21 each carry "landing_record.receipt_sha256" twice; DE's code
+      head is LANDING_RECORD_FIELD_COPIES[0] naming the same pair; DA's
+      LANDING_DIGEST_AUTHORITATIVE_FIELD is that string and
+      _design_names_landing_digest_field() is the function whose return value REV 58
+      quoted as DE's design; git log on v20 shows ONE commit, 6e32506. Added by me: a
+      standalone "receipt.sha256" is present in v20 and v21 inside
+      second_copies_that_must_agree, as the value mapped from the key
+      landing_record.receipt_sha256 -- so a grep for the string hits DE's design and
+      reading the hit as the name inverts a map.
+  THE_09_03_BOOK_TIER_CONTRADICTION_IS_SUPERSEDED_BY_THE_PAIR:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_book_tier_20260903__20260906T112813Z.v2.json
+    as_of: 2026-09-06T12:35:47Z
+    said: >-
+      the 11:28Z receipt still carried NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK false
+      beside prose saying none names an economic quantity when I read it at 12:31Z; the
+      superseding .v2 landed 12:33:21Z carrying supersedes as the pair with
+      the_link_is_the_PAIR ["path","sha256"], sha256 9aaa1b5fefc4a452..., a chain of
+      pairs and v1_untouched true; the census key is renamed to
+      NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK and the old key survives only
+      inside the quoted what_changed, which also names two theta mismatches that were a
+      misread of the book's count map. The 09-04 tier re-ran at 12:33:44Z.
+  DA_83_S_FIRST_RE_RUN_INVERTED_DA_82_S_OWN_THREE_VALUED_FLAG:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_book_tier_20260903__20260906T112813Z.v2.json
+    as_of: 2026-09-06T12:35:47Z
+    said: >-
+      commit f8e6d6f records that `not None` is True, so the not-established state
+      raised the flag meaning REFUTED -- the exact inversion the truncation limit
+      exists to prevent, produced by the first real re-run, FLAGGED with one flag
+      beside an empty sealed-hit list. The artifact now reads
+      NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK null, truncated true,
+      sealed_statistic_check NOT_ESTABLISHED_WALK_TRUNCATED, n_flags 0, and
+      book.no_sealed_day_statistic_is_named__WALK_TRUNCATED a named entry in
+      predicates_not_computable blocking IS_A_VERIFICATION. I swept the three-valued
+      flag last round; its first consumer collapsed it with `not x`.
+  THE_FIX_ON_THE_FIX_WAS_LANDED_AND_TESTED_IN_ONE_COMMAND:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T12:35:47Z
+    said: >-
+      commit 02f3227, eighteen seconds after f8e6d6f, records that the previous commit
+      left `if census[...]` above `census = economic_census(book)` so the full tier
+      raised UnboundLocalError, caught by DA's own selftest in the same command that
+      landed it. Routed, not ruled: rule 21 as amended (R-623) tells seats to copy and
+      commit in one compound command, which is the idiom that makes test-then-land
+      collapse into land-and-test.
+  THE_09_05_TAPE_IS_BUILT_THE_CHAIN_RETURNED_ZERO_AND_THE_LOCK_IS_FREE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260905_btc.json
+    as_of: 2026-09-06T12:35:47Z
+    said: >-
+      tape 890,640,737 bytes, 489,434 rows, sha256 0650e213..., wall_s 755.4,
+      peak_rss_gb 4.741, builder_commit eee7b3d3; TAPE_RC=0 and CHAIN_RC=0 at
+      12:28:58Z; fuser on data/.heavy_run.lock returns no holder. The receipt's cgroup
+      block reads scope.peak_bytes 7,554,551,808 of max_bytes 8,589,934,592 (87.9 % of
+      the cap) with file_bytes 3,645,927,424, so the process figure and the cgroup
+      figure give two different margins for the same run.
+  I_CAN_ACCOUNT_FOR_A_NON_ZERO_EXIT_THE_REVIEWER_COULD_NOT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T12:35:47Z
+    said: >-
+      REV 62 section 5 records an unreproducible non-zero exit of the GO-gating
+      battery. My own first run exited 1 with the runner's message "and HEAD and the
+      dirty state are captured AT IMPORT: 989373fa87c6, dirty=False"; the predicate is
+      _sid2["head_unchanged_during_the_run"] is True; my import captured 989373f
+      (12:30:40Z) and the reflog shows DA committing f8e6d6f at 12:30:55Z and 02f3227
+      at 12:31:13Z. My re-run on a settled tree passed 245 checks, exit 0. Caveat: a
+      linked worktree has its own HEAD, so this explains my exit and is offered as a
+      candidate of the same shape for the reviewer's -- theirs to test. Routed to DE
+      and REV.
+  THE_REFRESH_SYMLINK_DIRT_EXEMPTION_BY_PROPERTY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T12:35:47Z
+    said: >-
+      dispatched flag words kept verbatim. DE's exemption is a property (untracked and
+      really a symlink and resolving to the canonical data root, four cells driven);
+      DA reached the same at 8a620d9 before its re-run; BE's 09-05 receipts carry
+      dirty true with dirty_paths ['data'] (R-632) and BE 62 classifies code-dirt from
+      the shell artifact as a property; R-626 had already exempted that line for
+      landing. Other seats' clean-tree checks must do the same.
+  GO_4_IS_FILED_BY_REV_62_AND_THE_COORDINATORS_GO_IS_THE_NEXT_ACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_smoke_rehearsal_09_03_v7__20260906T121913Z.json
+    as_of: 2026-09-06T12:35:47Z
+    said: >-
+      REVIEW_DE94_GO4_2026-09-06.md (12:33Z, tip 0a1f8d5, commit cbe100a) reads GO for
+      the 09-03 smoke with batteries runner 245, design 105, launch-form probe 5. At
+      the rehearsal artifact I checked the form myself: status READY, blocking [], and
+      THE_ONE_COMMAND as a string carries --unit=, --slice=research.slice,
+      --working-directory=/home/yuqing/ctaNew-wt-de2 and flock -n inside the unit, with
+      no --scope. My first probe asked the whole document about --scope and it said
+      True; the hits are the declaration "never --scope" and a known-bad command
+      string. R-631's sequence puts the coordinator's GO next; the lock is idle.
   # --- MEM round 171, 2026-09-06T12:18:10Z ------------------------------
   THE_MANDATED_REFRESH_LEAVES_EVERY_WORKTREE_DIRTY_BY_ONE_LINE:
     prov: CHECKED

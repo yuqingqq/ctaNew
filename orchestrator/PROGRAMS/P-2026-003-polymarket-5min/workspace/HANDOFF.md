@@ -5,6 +5,121 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 172
+
+**As of 2026-09-06T12:35:47Z. State only — MEM writes no result.**
+
+### AT COMMIT TIME (12:39:11Z): GO #4 issued and **the fourth launch is RUNNING**
+
+**`de95smoke.service` — `ActiveState=active`, `SubState=running`, `MainPID=3384217`,
+started 12:35:35 UTC, `MemoryPeak` 2,554,003,456 B, the lock held by the unit's own
+`flock -n`.** R-633 issued GO at 12:35Z and DE 95 launched — **the first launch under the
+transient-SERVICE form after three lost runs**. The **v8** rehearsal (12:35:16Z) is
+`READY`, `blocking []`, and its `THE_ONE_COMMAND` still carries the `<deNNsmoke>`
+placeholder: **the unit name is all the launch added to the driven string.**
+
+R-633 also records **leg 1 proving itself the hard way** — the reviewer's own TERM to a
+scope's process group killed the reviewer's tool shell, *twice*, while the service's
+MainPID has PPid 1004 — and it records the unexplained battery exit **as unexplained, not
+explained away**. *That is the gap the routed mechanism below lands in.*
+
+**R-634 (12:37Z) verifies DA 83 and agrees with what I measured independently:** the flag
+was DA's own defect introduced by DA 82's fix; **both tiers re-ran under the service form**
+— 09-03 **297,379** shared keys, 09-04 **338,444**, **0 mismatches**, coverage
+0.949746737609944 / 0.9450918300954743, 1.962 / 2.287 GB, receipts superseded. **Q-DA-306
+has landed.**
+
+*The section below was written before the launch and is left as it stood (rule 13 — in-band
+supersession, nothing edited away).*
+
+### GO #4 is filed by REV 62; the coordinator's GO is the next act, and the lock is idle
+
+`REVIEW_DE94_GO4_2026-09-06.md` (12:33Z, tip `0a1f8d5`, commit `cbe100a`) reads **"GO for
+the 09-03 smoke"**, batteries **runner 245 / design 105 / launch-form probe 5**. **At the
+rehearsal artifact I checked the launch form myself:**
+`p003_de_gate1_smoke_rehearsal_09_03_v7__20260906T121913Z.json` has `status READY`,
+`blocking []`, and `THE_ONE_COMMAND` — *the string* — carries `--unit=`,
+`--slice=research.slice`, `--working-directory=/home/yuqing/ctaNew-wt-de2`, `flock -n`
+**inside** the unit, and **no `--scope`**.
+
+**The lock came free at 12:28:58Z**, not ≈12:45Z: the 09-05 tape finished with
+`TAPE_RC=0`/`CHAIN_RC=0` — **890,640,737 B, 489,434 rows, `wall_s 755.4`,
+`peak_rss_gb 4.741`** — and `fuser` on `data/.heavy_run.lock` returns no holder. **R-631's
+sequence puts the coordinator's GO — naming the commit and the unit — next.**
+
+### One thing routed, not ruled: the non-zero exit REV 62 §5 could not explain
+
+The reviewer records **one unreproducible non-zero exit of the GO-gating battery** and
+declines to file a mechanism it cannot show. **My own first run of the same battery exited
+1, and the runner said why in its own message:**
+
+```
+[de_multiday_gate1_runner] FAIL: and HEAD and the dirty state are captured AT IMPORT:
+989373fa87c6, dirty=False -- a commit in the worktree moves the producing code as
+surely as an edit does
+```
+
+The predicate is `_sid2["head_unchanged_during_the_run"] is True`. **My import captured
+`989373f` (BE round 61, 12:30:40Z); the reflog shows DA committing `f8e6d6f` at 12:30:55Z
+and `02f3227` at 12:31:13Z — three seats committing into one tree inside 33 seconds.** My
+re-run on a settled tree: **245 checks, exit 0**, matching R-631.
+
+**The caveat that keeps this honest: a linked worktree has its own HEAD**, so a shared-tree
+commit does not move `wt-rev`'s. This explains **my** exit and is offered as a candidate of
+the **same shape** for the reviewer's — theirs to test. *The failure is unreproducible by
+construction: it depends on another seat's timing.* And the message names only the
+**captured** HEAD, never the one it moved to — a message that says less than its predicate
+tests.
+
+### What closed while I was measuring it
+
+- **REV 58 §2.3 retracted, and it holds at four artifacts I read**: design **v20 and v21**
+  each carry `"landing_record.receipt_sha256"` twice, DE's code head is
+  `LANDING_RECORD_FIELD_COPIES[0]`, DA's `LANDING_DIGEST_AUTHORITATIVE_FIELD` is the same
+  string, and `git log` on v20 shows **one commit, `6e32506`**. **My addition:** a
+  standalone `"receipt.sha256"` *is* in v20 — and still in v21 — inside
+  `second_copies_that_must_agree`, **as the VALUE mapped from
+  `landing_record.receipt_sha256`**. A grep for the string hits DE's design; reading that
+  hit as the name **inverts a map**.
+- **The 09-03 book-tier contradiction is superseded by the pair.** At 12:31Z the 11:28Z
+  receipt still carried `NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: false` beside "none of
+  them names an economic quantity"; at **12:33:21Z** the `.v2` landed with `supersedes`
+  as `{path, sha256}` (`the_link_is_the_PAIR`, `9aaa1b5fefc4a452…`, `v1_untouched: true`),
+  the key renamed, **the old string surviving only inside the quoted `what_changed`** —
+  which also names **two theta mismatches that were a misread of the book's count map**.
+- ***The three-valued absence flag swept last round was inverted by its first consumer:***
+  **`not None` is True**, so the not-established state raised the flag meaning REFUTED
+  (`f8e6d6f`) — flagged, beside an empty sealed-hit list. Now `null` + `truncated: true` +
+  `NOT_ESTABLISHED_WALK_TRUNCATED` in `predicates_not_computable`, blocking
+  `IS_A_VERIFICATION`. **A three-valued flag stays three-valued only while every reader
+  tests for the third value.**
+- **And the fix on the fix, 18 seconds later** (`02f3227`): `UnboundLocalError`, caught by
+  DA's own selftest **in the same command that landed it**. *Routed:* rule 21 as amended
+  (R-623) tells seats to copy and commit in **one compound command** — the idiom that makes
+  "test, then land" collapse into "land and test".
+
+### Standing, for every seat
+
+**The refresh-symlink dirt is exempted BY PROPERTY, not by name** — untracked **and**
+really a symlink **and** resolving to the canonical data root. DE drove four cells
+(R-631); **DA reached it independently** at `8a620d9`; **BE's 09-05 receipts carry
+`dirty: true, dirty_paths: ['data']`** and BE 62 classifies it (R-632); **R-626 had already
+exempted that same line for landing**. ***Other seats' clean-tree checks must do the
+same.***
+
+**Two instruments, two margins:** the 09-05 tape's receipt reads `peak_rss_gb 4.741` while
+its cgroup reads `scope.peak_bytes` **7,554,551,808 of 8,589,934,592 — 87.9 % of the cap**
+(`file_bytes` 3.65 GB of it page cache), with **zero reclaim events** against 09-04's
+**1,199** cap hits (R-632, correlation only, n = 2). *A run sized by RSS looks twice as safe
+as the same run sized by its cgroup.*
+
+**Counts, measured before the sentence:** flags 1,032 → **1,040**, `flag_provenance`
+577 → **585**, tasks 19; **358 CHECKED**, 227 RELAYED, **455 UNMARKED — unchanged for the
+forty-eighth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 154** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 171
 
 **As of 2026-09-06T12:18:10Z. State only — MEM writes no result.**

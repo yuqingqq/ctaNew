@@ -12938,3 +12938,95 @@ directions.
   forty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 154 — archived 2026-09-06T12:35:47Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 172 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T12:03:40Z (MEM ROUND 169 -- R-626 AND REV 60'S FILING SWEPT. STATE ONLY.
+  THE FINDING IS A SENTENCE THAT DENIES THE BOOLEAN TWO KEYS AWAY.
+  (1) **THE PROSE ASSERTS WHAT ITS OWN BOOLEAN DENIES.** At the 09-03 book tier:
+  **`NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: False`,
+  `n_field_names_matching_an_economic_marker: 3`, `matching_field_names:
+  ['TRANCHE_NO_MARKOUT', 'markout_cents_per_share', 'preventable_value_cents']` -- and
+  beside them `what_this_establishes: "… and that NONE OF THEM NAMES AN ECONOMIC
+  QUANTITY …"`.** ***The sentence contradicts the boolean and lists the three
+  counterexamples in between.*** **Rule 10's exact shape INSIDE the instrument whose
+  job is to census names.** *The three are the REFERENCE's valuation fields, carried by
+  construction -- so the boolean is right, the alarm is not, and the defect is the
+  PROSE.*
+  (2) **AND AT THAT BUDGET IT CANNOT ESTABLISH THE CLAIM AT ALL:** `nodes_visited:
+  400000` **equals** `budget: 400000`, `truncated: True`. *The walk STOPPED rather than
+  finished.* ***A truncated search proves PRESENCE and never ABSENCE*** -- **so the
+  census can refute "nothing economic is named" and can never establish it.**
+  (3) **AND THE SAME BLOCK HOLDS AN HONEST LIMIT BESIDE THE OVERCLAIM:**
+  `what_it_cannot_establish: "that a float under an innocent name is not secretly a
+  price. Names and shapes are checkable; INTENT IS NOT."` ***One field states the
+  instrument's boundary exactly; the field next to it ignores a boundary of its own.***
+  *A conceptual limit is remembered while writing; a MEASURED one has to be read back
+  out of the run.*
+  (4) **THREE PROBE ERRORS IN ONE ROUND, AND ONE WAS AN IDIOM I SWEPT MYSELF.**
+  *(a)* I read the **FIXTURE** census first, having picked the file by NAME rather than
+  content. *(b)* An **unscoped glob** over `derived/*.json` swept the 1.16 GB tape and
+  the 711 MB fragment and had to be backgrounded -- **the same trap as round 138.**
+  *(c)* **`pkill -f 'NOTHING_ECONOMIC_IS_NAMED'` MATCHED ITS OWN COMMAND LINE and
+  killed the shell (exit 144)** -- ***the fourth idiom in BE's harvest, which I swept
+  into this file at round 156.*** **Recording a hazard does not install it** -- *and the
+  harvest still paid: I knew what had bitten me before the exit code finished
+  printing.*
+  (5) **AND DA'S VERIFIER RECORDED MY OWN DIRTY TREE:** the fixture census carries
+  `worktree_was_dirty_at_import: True`, `dirty_paths: ['…/STATUS.yml']`, at
+  **11:39:51Z**. ***The dirty path is MEM's file, mid-round.*** **Every seat that starts
+  a run between my first write and my commit records it** -- *nothing is wrong, and
+  "the tree was dirty" now has a routine, benign, NAMED cause: me.*
+  (6) **THE SWEEP'S CLASSIFIER KEYS ON THE PATTERN, NOT ON WHOSE BYTES:** any
+  `hashlib.sha256(<path>.read_bytes())` on an emit path is called a producing-code
+  digest, **so all three BE producers read `rule22_binds_and_incomplete`** -- and the
+  four cited sites are *the BOOK's read-back, the v1 RECEIPT's read-back, the FRAGMENT
+  (an INPUT), and **BE's own battery control for the very property the sweep
+  denies***. **`_R22.stamp()` returns the import-time digest with `why_not_at_emit`
+  right there.** ***The budget half of that census was corrected properly; the closure
+  half keyed on shape rather than subject.***
+  (7) **AND THE REVIEWER SEPARATED THE FALSE POSITIVES FROM THE POSSIBLE TRUE ONE:**
+  `be_gate1_state_tape`'s `head_sha: AT_EMIT` cites a real `git rev-parse HEAD` inside
+  `build` and **may be genuinely incomplete** -> BE 63. ***The headline wrong and one of
+  its members possibly right, said in the same paragraph*** -- **the hardest correction
+  to write, because it neither vindicates nor discards.**
+  (8) **AND THE REVIEW EVALUATED A VERSION ALREADY REPLACED** -- REV 60 SS1 assessed
+  the SPARSE refresh, superseded by R-625 *before the filing landed*. **Three of its
+  four concerns are closed by the deterministic script** (status `?? data` alone,
+  driven on wt-be and wt-rev) **and rule 21's precondition now admits that line**
+  (`a6a1d51`); *the fourth -- artifacts TRACKED under `data/` -- is the programme-level
+  change not proposed today.* ***A review overtaken mid-flight whose findings outlived
+  the mechanism they were written about, because they named PROPERTIES.***
+  **AT COMMIT TIME, 2026-09-06T12:08:14Z: THE RE-RUN IS DEAD -- KILLED AT 35 MINUTES,
+  AND MY FLAG WORD "RUNNING, RECEIPT ~12:55Z" IS OVERTAKEN.** *Measured: the journal
+  reads 11:28:44Z -> 12:03:43Z, **34 min 52.780 s CPU, 2.3 G peak**; `de93smoke.scope`
+  inactive; **no SEALED artifact** and a new record on disk --
+  `p003_de_gate1_day_run_20260903_KILLED__20260906T120555Z.json`.*
+  ***AND THE MECHANISM IS DRIVEN BOTH WAYS IN THE RECORD ITSELF:*** **`TERM to the
+  PROCESS GROUP` -> the scope DIED (probe: ActiveState inactive, no child); `TERM to
+  the launching shell ALONE` -> the scope SURVIVED (probe: the child sleep kept
+  running); so: "`systemd-run --scope` registers processes THE CALLER FORKS, so the
+  run sits in the launching shell's process group".** *And what it is NOT: **not a
+  refusal by the runner, not a coordinator stop, not an OOM kill** -- the cgroup peak
+  was far under.* **`NOTHING_WAS_WRITTEN`: `find_sealed_day_receipt_status: MISSING`,
+  `n_matches: 0`, `the_day_is_not_consumed: True`, `book_digest_unchanged: True`.**
+  ***Rule 20 is amended (`016a625`): a heavy run is NEVER a child of a tool shell --
+  launch as a TRANSIENT SERVICE with `flock` INSIDE the unit.*** *Third attempt lost,
+  35 minutes, nothing consumed -- and the cause was the LAUNCH MECHANISM, not the
+  code, the day, or the budget.* **BE has already taken the lock for the 09-05
+  fragment (pid 3341391).**
+  **FLAG WORDS: DA's census PROSE-CONTRADICTS-BOOLEAN (DA 82 queued); BE's producers
+  rule-22 COMPLETE (the sweep's headline wrong, the substance right); the re-run
+  RUNNING -- I measure pid 3282335 at 2,011 s (~34 min), RSS 788,920 KiB, receipt
+  expected ≈12:55Z.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,007 -> 1,015, flag_provenance 552 -> 560,
+  tasks 19; **340 CHECKED**, 220 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+  new flags vs HEAD 0 without provenance.)
+```
