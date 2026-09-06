@@ -1,19 +1,27 @@
 #!/usr/bin/env bash
-# A landed declaration version is immutable (R-711). For every <family>_v<N>.json under the
-# given directory, the file must have exactly ONE commit in its git history; more means a
-# landed version was EDITED in place (FORKED_BY_EDIT) -- the exit-map chain lost two seats'
-# blocks that way on 2026-09-06 (a81484c -> ba635de -> 40c8903, all 'v2').
-# Usage: declaration_immutability.sh <dir> [--falsify]
-#   --falsify: positive control = the real producer_exit_maps_v2.json (3 commits) must FLAG;
-#              known-good = producer_exit_maps_v1.json (1 commit) must PASS. Fails if either does not.
+# A landed declaration version is immutable (R-711). For every <family>_v<N>.json under DIR,
+# no commit AFTER the baseline may modify a file that already existed (its creation commit is
+# the one allowed touch). The exit-map chain lost two seats' blocks to in-place edits on
+# 2026-09-06 (a81484c -> ba635de -> 40c8903, all 'producer_exit_maps_v2.json').
+# Usage: declaration_immutability.sh <dir> [--base <commit>] [--falsify]
+#   default base: a3de2ef (the R-711 repair) -- edits before it are HISTORY, printed, not refusals.
+#   --falsify: base 56d3894 (v1's landing): producer_exit_maps_v2.json must FLAG (3 edits after
+#              creation), producer_exit_maps_v1.json must PASS. Exit 1 if either does not.
 set -u
-DIR="${1:?dir}"; MODE="${2:-}"; cd "$(git -C "$DIR" rev-parse --show-toplevel)" || exit 2
-check() { local f="$1"; local n; n=$(git log --oneline --follow -- "$f" | wc -l); if [ "$n" -eq 1 ]; then echo "OK $f commits=1"; return 0; elif [ "$n" -eq 0 ]; then echo "UNTRACKED $f"; return 1; else echo "FORKED_BY_EDIT $f commits=$n"; return 1; fi; }
-if [ "$MODE" = "--falsify" ]; then
-  P=live/pm_research/declarations/producer_exit_maps_v2.json; G=live/pm_research/declarations/producer_exit_maps_v1.json
-  r1=$(check "$P"); r2=$(check "$G"); echo "$r1"; echo "$r2"
+DIR="${1:?dir}"; shift; BASE=a3de2ef; MODE=""
+while [ $# -gt 0 ]; do case "$1" in --base) BASE="$2"; shift 2;; --falsify) MODE=falsify; BASE=56d3894; shift;; *) echo "unknown arg $1"; exit 2;; esac; done
+cd "$(git -C "$DIR" rev-parse --show-toplevel)" || exit 2
+check() { # prints OK|FORKED_BY_EDIT|UNTRACKED ; returns 1 on FORKED/UNTRACKED
+  local f="$1"; local created n
+  created=$(git log --diff-filter=A --format=%H -- "$f" | tail -1)
+  [ -n "$created" ] || { echo "UNTRACKED $f"; return 1; }
+  n=$(git log --format=%H "$BASE..HEAD" -- "$f" | grep -vc "^$created\$")
+  if [ "$n" -eq 0 ]; then echo "OK $f edits_after_base=0"; return 0; else echo "FORKED_BY_EDIT $f edits_after_base=$n"; return 1; fi
+}
+if [ "$MODE" = "falsify" ]; then
+  r1=$(check live/pm_research/declarations/producer_exit_maps_v2.json); r2=$(check live/pm_research/declarations/producer_exit_maps_v1.json); echo "$r1"; echo "$r2"
   case "$r1" in FORKED_BY_EDIT*) ;; *) echo "FALSIFIER FAIL: positive control did not flag"; exit 1;; esac
   case "$r2" in OK*) ;; *) echo "FALSIFIER FAIL: known-good did not pass"; exit 1;; esac
-  echo "FALSIFIER PASS"; exit 0
+  echo "FALSIFIER PASS (base $BASE)"; exit 0
 fi
-RC=0; for f in "$DIR"/*_v[0-9]*.json; do [ -e "$f" ] || continue; check "$f" || RC=1; done; exit $RC
+RC=0; for f in "$DIR"/*_v[0-9]*.json; do [ -e "$f" ] || continue; check "$f" || RC=1; done; echo "base $BASE; exit $RC"; exit $RC
