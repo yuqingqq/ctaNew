@@ -141,8 +141,11 @@ except where marked USER-ONLY.
     therefore every git call names its tree with `-C`, never a bare `git` after a
     `cd`). A
     refused push means another seat landed first: `git -C … fetch` and retry the
-    push only if `git -C … status --short` is EMPTY; otherwise report and wait —
-    MEM's state files are dirty there for the length of every MEM batch.
+    push only if `git -C … status --short` is EMPTY; otherwise LEAVE the commit,
+    REPORT it as stranded, and continue — the coordinator rebases stranded
+    commits onto origin at the first clean-tree moment (R-586/R-588; a retry can
+    never fast-forward once a local commit exists, and the shared tree is
+    dirty for the length of every MEM batch).
 
 ## Cadences
 
