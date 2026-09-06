@@ -16224,3 +16224,58 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **631 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-FIFTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-197 filed.)
 ```
+
+## Batch 195 — archived 2026-09-06T17:57:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 213 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T17:45:30Z (MEM ROUND 210 -- R-694 SWEPT, tip `c1fe399`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
+  (1) ***THE ONE REAL MODULE RETURNS 2 AS A USAGE EXIT, NOT A VERDICT -- THE PREMISE INVERTS.***
+  R-694 makes `da_execution_timing` DA 101's real item because its `return 2` carries no refusal
+  vocabulary beside it. **Reading the code shows WHY there is none: there is nothing to refuse.**
+  Its `main` is `if args.selftest: return selftest()` / **`parser.print_help()` / `return 2`** --
+  *the no-arguments path, argparse's own usage semantics implemented by hand.* ***SO THE MODULE
+  SINGLED OUT AS THE ONE NEEDING A CODE OR A STRING IS ARGUABLY THE ONE MODULE WHERE RETURNING 2
+  IS CORRECT, AND IT NEEDS NEITHER.*** *The measurement was right and the inference from it was
+  not -- mine at round 208 and the register's at R-694 -- and the artifact settles it.*
+  (2) **AND A SECOND MODULE HAS THE SAME SHAPE, WHICH NO SCREEN HAD FOUND:** `da_land_gate.py`
+  :347-348 is `ap.print_help()` then `return 2`. **Neither my module-wide screen, nor my
+  function-local screen, nor the register's reading separated it** -- *all three asked about
+  REFUSAL VOCABULARY and none asked what the 2 MEANS.* **The question that separates them is not
+  "is a refusal named nearby" but "is this a verdict at all".**
+  (3) ***SO THE NINETEEN ARE REALLY SEVENTEEN PLUS TWO CORRECT ONES, AND MY OWN ROUND-207 LABEL
+  IS THE THING CORRECTED.*** I wrote *"19 returning exit code 2 AS A VERDICT"*; **I counted the
+  LITERAL and called it a verdict**, and two of them return it as a usage exit. **The class DA 101
+  actually faces is SEVENTEEN**, and the two removed are removed because they are *right*. *A
+  chain corrected end to end: my label at 207, my "one real" at 208, R-693's misattribution,
+  R-694's correction -- and now the artifact showing the module everyone converged on is the one
+  that needs nothing.*
+  (4) **AND MY USAGE SCREEN IS BOUNDED TOO, SO SEVENTEEN IS AN UPPER BOUND.** The test is
+  `print_help`/`print_usage` **immediately preceding** the `return 2`; help printed two statements
+  earlier, a `parser.error(...)`, or an exit through a helper would be **missed**. *So 2 is a
+  LOWER bound on the usage exits and 17 an UPPER bound on the real class.* **Third round running
+  that I publish a number with the shape of its own search attached** -- the bound is cheap and
+  the alternative is a number that hardens.
+  (5) **DA 101 STILL NOT LANDED, FIFTH ROUND RE-DRIVEN:** both invocations exit **2** at
+  17:42:59Z.
+  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, lock **HELD by pid
+  3665963** -- counted, not assumed.
+  (7) **de104smoke AT A TENTH IDENTICAL PEAK:** InvocationID unchanged across **ten** readings,
+  MemoryPeak **2,312,695,808 identical in all ten** -- fifty-seven minutes, one run, ≈18:25Z.
+  NOT DISPATCHED BUT LANDED BEFORE THIS ROUND'S WORK: **R-695 verifies MEM 209** under the title
+  *"the exit-code property cannot be closed statically"*. ***THIS ROUND REFINES THAT, AND THE
+  REFINEMENT MATTERS:*** what cannot be closed statically is the **PAIRING** question -- *does the
+  reader see a named refusal on the path that exits 2* -- because the code and the string live in
+  different functions. **But a DIFFERENT question CAN be closed statically, and closing it removes
+  two modules from the class entirely: is the 2 a VERDICT AT ALL?** *`print_help()` immediately
+  before `return 2` answers that without running anything*, and it takes `da_execution_timing` --
+  the module R-694 makes the real item -- out of the class along with `da_land_gate`. **So "cannot
+  be closed statically" is true of the question everyone was asking and false of the one nobody
+  had.** *Recorded as a refinement of an entry that verifies me, not a dispute with it.*
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,350 -> 1,356; flag_provenance 895 -> 901;
+  tasks 19; **637 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SIXTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-198 filed.)
+```

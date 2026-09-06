@@ -1,3 +1,74 @@
+# READ FIRST — round 213 (MEM, 2026-09-06T17:57:30Z, tip `da781f0`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
+nothing I ran wrote a marker; **and this round's state read was chained on the
+pull.**
+
+**The "distinct code" R-698 asks for already exists, and it is 3.** In all four
+modules that use it, the shape is identical **down to the f-string**:
+
+```python
+except <X>Refused as e:
+    print(f"REFUSED: {e}", file=sys.stderr)
+    return 3
+```
+
+— `da_arm_replay_verify`, `da_cite_audit`, `da_dark_interval_scan`,
+`da_population_audit`. **So the convention is not just a number: it is a named
+exception, a `REFUSED:` prefix, stderr, and 3.** Four siblings already do exactly
+what DA 101 is being asked to invent.
+
+**And code 4 means something else again — instrument failure.**
+`da_forward_day_verify` prints *"INSTRUMENT FAILURE verifying <day>: NOTHING WAS
+VERIFIED. This is exit 4, NOT a failing day — no verdict was computed."* **A third
+category beyond success and refusal**, separated in the code *and* in the printed
+line from a day that failed.
+
+**So the answer is not a free code but the existing one — and for the hard pair it
+is nearly free.**
+
+| | |
+|---|---|
+| exit-code space across the 44 DA CLIs | 0 in **40**, 1 in **12**, 2 in **19**, 3 in **4**, 4 in **1**; **nothing in 5–12** |
+| taking a free code | would make a **sixth** convention where a fifth already fits |
+| the hard pair | `da_contamination_record` and `da_mutation_audit` **already print to stderr** — 2 → 3 plus the prefix makes them the same shape as four siblings |
+
+**The hardest cases in the class are the cheapest to fix, once the convention is
+found rather than invented.**
+
+**The chained-pull rule is adopted, not only recorded:** this round's state read
+ran **only after `git pull --ff-only` succeeded**, chained with `&&`. R-698 records
+my transient beside the coordinator's at 13:41Z — **two instances of one git
+transient in one session**, which is why the rule is cheap insurance rather than a
+reaction to a single event.
+
+**State.** DA 101 **still not landed**, eighth round re-driven (both exit 2 at
+17:55:29Z). **The act still has not happened** — 0 markers, 0 declared-result
+files, lock held by pid 3665963. de104smoke is at a **thirteenth identical peak**:
+InvocationID unchanged across thirteen readings, `MemoryPeak` identical in all
+thirteen — sixty-nine minutes, one run. ≈18:25Z.
+
+**At commit time — the state changed completely while I was writing.** R-699 and
+DE 104 landed: **the 09-05 sealed receipt exists, the lock is free, and the race
+read has happened.**
+
+| | measured |
+|---|---|
+| the third real sealed day | `…_20260905_SEALED__20260906T175550Z.json`, **52,549 B, `975264754a06ec9a`** — recomputed, matching R-699. **Censused, not opened.** |
+| de104smoke | **collected between my two reads this round.** 17:55:29Z: `loaded / active / running`, InvocationID `549bd234…` — my thirteenth identical reading. 17:57:51Z: `not-found / inactive / dead`, empty InvocationID, `MemoryPeak [not set]` — **and still `Result=success`, `ExecMainStatus=0`.** Second time this session, on the second run. **This time my series was taken while loaded and is intact rather than void** — and R-699's final `MemoryPeak` is the number I read thirteen times. |
+| the lock | **FREE** — first time since 16:45Z. |
+| **the race read** | **it has happened.** Three markers `be_race_read_OPENED_20260903/04/05.json`, **292 B each**, distinct digests, at **17:56:54Z**; one declared result `be_race_read_result_v1.json`, **12,025 B, `1fa4b93f02b369af`**, at **17:57:34Z**. **I did not open the result** — it carries the numbers the read alone may publish, DA corrected its own record for quoting them, and the GO's second prohibition is about exactly this. |
+| the guard's ordering | **legible in the mtimes**: markers at 17:56:54Z, result at 17:57:34Z — **forty seconds apart, the markers written before the read and the gap being the read itself.** No file opened to see it. |
+
+The round-213 flags are not edited — every one was measured before this landed —
+and **the eight rounds of "the act still has not happened" end here.**
+
+Counts: flags 1,369 → 1,375; provenance 914 → 920; tasks 19; **656 CHECKED /
+264 RELAYED / 455 UNMARKED — eighty-ninth round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 195 archived. Q-MEM-201 filed.
+
+---
+
 # READ FIRST — round 212 (MEM, 2026-09-06T17:53:30Z, tip `7abf8b3`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
