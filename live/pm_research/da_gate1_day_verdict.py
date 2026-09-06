@@ -1144,6 +1144,11 @@ def selftest() -> tuple:                                      # noqa: C901
             for a in node.args:
                 if isinstance(a, ast.Constant) and isinstance(a.value, str):
                     cli_flags.add(a.value)
+    #: `--pre-read` is deliberately NOT in this list: it does not move the
+    #: bar, it selects a mode that reads no economics on either side of it.
+    #: The battery proves that separately -- the pre-read run below is
+    #: driven with the clock BEFORE the bar and again AFTER it, and reads
+    #: no economics in either.
     banned = {f for f in cli_flags
               if any(w in f.lower() for w in
                      ("now", "clock", "force", "override", "ignore-bar",
@@ -1155,6 +1160,8 @@ def selftest() -> tuple:                                      # noqa: C901
        banned == set(),
        f"CLI flags {sorted(cli_flags)}; none matches now/clock/force/"
        f"override/skip/unsafe/go")
+
+    checks.extend(selftest_pre_read())
 
     n_fail = sum(1 for c in checks if not c["passed"])
     for c in checks:
@@ -1168,6 +1175,10 @@ def selftest() -> tuple:                                      # noqa: C901
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    #: NOT an override: the pre-read is a DIFFERENT verification that reads
+    #: no economics, before the bar or after it. The full read still gates.
+    ap.add_argument("--pre-read", action="store_true")
+    ap.add_argument("--builder-receipt")
     ap.add_argument("--day")
     ap.add_argument("--book")
     ap.add_argument("--receipt")
@@ -1188,6 +1199,18 @@ def main() -> int:
                 "n_failed": n_fail, "both_directions": True,
             }, indent=2, sort_keys=True) + "\n")
         return 1 if n_fail else 0
+    if a.pre_read:
+        if not (a.day and a.book and a.receipt):
+            ap.error("--pre-read needs --day, --book and --receipt")
+        r = pre_read_day(a.day, a.book, a.receipt, output=a.output,
+                         builder_receipt=a.builder_receipt)
+        print(f"{a.day}: {r['status']} -- "
+              f"{r['n_arms_agreeing']}/{r['n_arms_declared']} arms agree, "
+              f"sealed={r['economic_absence']['sealed']}, "
+              f"economics read: NONE "
+              f"(verification of the economics="
+              f"{r['IS_A_VERIFICATION_OF_THE_ECONOMICS']})")
+        return 0 if r["status"] == "PRE_READ_VERIFIED" else 1
     if a.day and a.book and a.receipt:
         r = verify_real_day(a.day, a.book, a.receipt, output=a.output)
         print(f"{a.day}: {r['status']} -- verification="
@@ -1195,9 +1218,629 @@ def main() -> int:
               f"{r['n_arms_verified']}/{r['n_arms_declared']} arms verified, "
               f"{r['n_arms_sealed']} sealed")
         return 0 if r["IS_A_VERIFICATION_OF_THE_ECONOMICS"] else 1
-    ap.error("--selftest, or --day <YYYY-MM-DD> --book <path> "
-             "--receipt <path> [--output <path>]")
+    ap.error("--selftest, or --pre-read --day <YYYY-MM-DD> --book <path> "
+             "--receipt <path> [--builder-receipt <path>] [--output <path>], "
+             "or --day/--book/--receipt for the full read")
     return 2
+
+
+
+
+# ------------------------------------------------------------ the PRE-READ
+
+#: Design v12, pinned. The pre-read matches provenance BY DIGEST, so the
+#: declaration it matches against must itself be named.
+DESIGN_V12_SHA = "c32c72455b26ac3ea5df5cc5c8e2b7be1d2eb4d2ab0c50a91b9b26be5c2c8e79"
+
+
+def _fn_source(name: str) -> str:
+    """The source text of one function in THIS module, by AST.
+
+    Used so a structural claim -- 'this path never draws a null' -- is
+    checked against the code rather than read off a field the same code
+    wrote. A field asserting its own honesty proves nothing."""
+    src = Path(__file__).resolve().read_text()
+    tree = ast.parse(src)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef) and node.name == name:
+            return ast.get_source_segment(src, node) or ""
+    raise VerifierRefused(f"REFUSED: no function named {name} in this module")
+
+
+def _walk_paths(o, path=""):
+    """(path, value) for every leaf, at full depth, dicts and lists."""
+    if isinstance(o, dict):
+        for k, v in o.items():
+            yield from _walk_paths(v, f"{path}.{k}" if path else str(k))
+    elif isinstance(o, list):
+        for i, v in enumerate(o):
+            yield from _walk_paths(v, f"{path}[{i}]")
+    else:
+        yield path, o
+
+
+def economic_absence(receipt) -> dict:
+    """DE's economic field list must be ABSENT at every depth.
+
+    A LEAK IS NAMED AND NEVER READ. The path is recorded; the value is not
+    copied anywhere, not into this dict, not into a message, not into a log
+    line. A checker that reported `D_E0 = 6.13 leaked` would have published
+    the number it exists to protect."""
+    leaks = [p for p, _ in _walk_paths(receipt)
+             if p.rsplit(".", 1)[-1].split("[")[0] in ECONOMIC_FIELDS]
+    return {"economic_fields_declared": list(ECONOMIC_FIELDS),
+            "n_leaked_fields": len(leaks),
+            "leaked_field_paths": sorted(leaks),
+            "sealed": not leaks,
+            "values_were_not_read": True,
+            "why_paths_only": (
+                "a leak is reported BY NAME. Echoing the value would publish "
+                "the number the seal exists to withhold, which is the "
+                "failure this check exists to prevent -- not a lesser one")}
+
+
+def emitted_census(emitted: dict, receipt) -> dict:
+    """PROVE the emission carried no economic value.
+
+    Two independent things are checked. (a) No economic field NAME appears
+    in what was emitted. (b) No VALUE that sits under an economic name in
+    the receipt appears anywhere in the emission -- which is the half that
+    still holds when the receipt LEAKS, because a name-only check would pass
+    while the number rode out under a different key."""
+    names = [p for p, _ in _walk_paths(emitted)
+             if p.rsplit(".", 1)[-1].split("[")[0] in ECONOMIC_FIELDS]
+    econ_vals = {v for p, v in _walk_paths(receipt)
+                 if p.rsplit(".", 1)[-1].split("[")[0] in ECONOMIC_FIELDS
+                 and isinstance(v, (int, float))
+                 and not isinstance(v, bool)}
+    emitted_vals = {v for _, v in _walk_paths(emitted)
+                    if isinstance(v, (int, float))
+                    and not isinstance(v, bool)}
+    echoed = sorted(econ_vals & emitted_vals)
+    return {"n_leaves_emitted": sum(1 for _ in _walk_paths(emitted)),
+            "n_economic_field_names_in_the_emission": len(names),
+            "economic_field_names_in_the_emission": sorted(names),
+            "n_economic_values_from_the_receipt": len(econ_vals),
+            "n_of_them_echoed_in_the_emission": len(echoed),
+            "clean": not names and not echoed,
+            "why_two_checks": (
+                "a name check alone passes while the NUMBER rides out under "
+                "a different key; a value check alone passes while an empty "
+                "economic key rides out. Both, or neither proves anything")}
+
+
+def pre_read_day(day: str, book_path: str, receipt_path: str, *,
+                 output: Path | None = None,
+                 params: dict | None = None,
+                 now: datetime.datetime | None = None,
+                 builder_receipt: str | None = None) -> dict:
+    """THE PRE-READ. Everything the runbook promises before the bar, and
+    NOTHING that the bar exists to schedule.
+
+    It runs BEFORE 2026-09-09T00:06Z on purpose -- that is the gap this
+    closes -- and it reads NO economics, before or after. The two gates are
+    independent: the read bar schedules the READ, the seal withholds the
+    NUMBERS, and this mode is on the far side of neither.
+
+    NO REPLAY ENGINE IS RESOLVED AND NO NULL IS DRAWN. Decisions and
+    per-side counts come from the book's scores against the declared thetas,
+    which is arithmetic on the book alone; D(E0), the null and everything
+    downstream need the replay, and the pre-read never asks for it. That is
+    not a convention -- it is why this mode cannot leak."""
+    params = params or load_params()
+    gate = gate_is_open(params, now)
+
+    rp = Path(receipt_path)
+    if not rp.is_file():
+        raise VerifierRefused(f"REFUSED: receipt absent at {receipt_path}")
+    receipt = json.loads(rp.read_text())
+    arms_in = _receipt_arms(receipt)
+    if not arms_in:
+        raise VerifierRefused(
+            "REFUSED: the receipt carries no arm blocks. An empty receipt is "
+            "a FAILURE, not a day with nothing in it.")
+
+    #: (a) THE BOOK, against the receipt's OWN field and, when supplied,
+    #: against BE's builder receipt. Two independent bindings.
+    r_sha = _receipt_book_digest(receipt)
+    if not r_sha:
+        raise VerifierRefused(
+            "REFUSED: the receipt names no book digest, so the book it "
+            "describes cannot be identified. An unpinned book is not a day.")
+    book_meta = verify_book_digest(book_path, r_sha)
+    builder = {"supplied": False}
+    if builder_receipt:
+        bp = Path(builder_receipt)
+        if not bp.is_file():
+            raise VerifierRefused(
+                f"REFUSED: builder receipt absent at {builder_receipt}")
+        br = json.loads(bp.read_text())
+        b_sha = _find_first(br, ("book_sha256", "sha256", "digest"))
+        builder = {"supplied": True, "path": bp.name,
+                   "sha256": hashlib.sha256(bp.read_bytes()).hexdigest(),
+                   "book_digest_in_the_builder_receipt": b_sha,
+                   "agrees_with_the_day_receipt": b_sha == r_sha}
+        if b_sha != r_sha:
+            raise VerifierRefused(
+                f"REFUSED: BE's builder receipt names book {b_sha} and the "
+                f"day receipt names {r_sha}. Two receipts describing "
+                f"different books is not a day this verifier may check.")
+
+    bk = load_day_book(book_path)
+    rows = bk["rows"]
+
+    #: (b) THE POPULATION, recomputed from the book at the declared thetas.
+    #: NO REPLAY. NO NULL.
+    arms_out, agree = {}, []
+    for arm, spec in sorted(params["arms"].items()):
+        r_arm = arms_in.get(arm)
+        if r_arm is None:
+            arms_out[arm] = {"status": "ABSENT_FROM_THE_RECEIPT"}
+            agree.append(False)
+            continue
+        vec = bk["scores_by_arm"].get(arm)
+        if vec is None or len(vec) != len(rows):
+            arms_out[arm] = {"status": "BOOK_SCORES_UNUSABLE_FOR_THIS_ARM",
+                             "n_rows": len(rows),
+                             "n_scores": (None if vec is None else len(vec))}
+            agree.append(False)
+            continue
+        scored = [dict(r, score=float(sv)) for r, sv in zip(rows, vec)]
+        dec = da_decisions(scored, float(spec["theta"]))
+        seed_mine = da_seed_for(r_sha, arm)
+        seed_theirs = (r_arm.get("seed")
+                       or (r_arm.get("draw_provenance") or {}).get("seed"))
+        radm = r_arm.get("admissibility") or {}
+        checks, bad = [], []
+
+        def cmp(name, mine, theirs):
+            if theirs is None:
+                checks.append({"field": name, "state": "ABSENT_IN_RECEIPT",
+                               "mine": mine})
+                return
+            ok = mine == theirs
+            checks.append({"field": name,
+                           "state": "MATCH" if ok else "MISMATCH",
+                           "mine": mine, "receipt": theirs})
+            if not ok:
+                bad.append(name)
+
+        cmp("n_decisions", dec["n_decisions"], radm.get("n_decisions"))
+        cmp("seed", seed_mine, seed_theirs)
+        r_by_side = (r_arm.get("by_side")
+                     or (r_arm.get("decisions") or {}).get("by_side"))
+        cmp("by_side", dec["by_side"], r_by_side)
+        #: the DECISION half of R4 is arithmetic on the book; the sd half
+        #: needs the null and is NOT verifiable before the read.
+        dec_ok = dec["n_decisions"] >= params["min_decisions_per_arm_day"]
+        arms_out[arm] = {
+            "status": "PRE_READ_AGREES" if not bad else "FLAGGED",
+            "recomputed": {"n_decisions": dec["n_decisions"],
+                           "by_side": dec["by_side"],
+                           "theta_declared": float(spec["theta"])},
+            "seed_recomputed": seed_mine,
+            "checks": checks, "n_mismatches": len(bad),
+            "mismatched_fields": bad,
+            "receipt_status": r_arm.get("status"),
+            "receipt_admissibility_status": radm.get("status"),
+            "R4_decision_half": {
+                "n_decisions": dec["n_decisions"],
+                "min_declared": params["min_decisions_per_arm_day"],
+                "passes": dec_ok},
+            "R4_sd_half_is_NOT_verifiable_before_the_read": (
+                "the sd floor compares the null's sd against its mean, and "
+                "both are sealed. Verifying half a predicate and reporting "
+                "it as the predicate is the error this field exists to "
+                "prevent"),
+            "sd_over_abs_mean_present_in_the_sealed_receipt": (
+                "sd_over_abs_mean" in radm),
+        }
+        agree.append(not bad)
+
+    #: (c) PROVENANCE, matched by digest.
+    de = de_economic_fields_at_source()
+    prov = {
+        "params": {"path": Path(params["_path"]).name,
+                   "sha256": params["_sha256"],
+                   "expected_prefix": "306bfdb0",
+                   "matches": params["_sha256"].startswith("306bfdb0")},
+        "design_v12": _design_v12_check(),
+        "runner_economic_field_list": de,
+        "verifier": verifier_identity(),
+    }
+
+    #: (d) THE SEAL. Absent = good. A leak is NAMED, never read.
+    absence = economic_absence(receipt)
+
+    out = {
+        "protocol": PROTOCOL + "_PRE_READ",
+        "mode": "PRE_READ",
+        "day": day,
+        "runs_before_the_bar_by_design": True,
+        "gate_state_recorded_not_enforced": gate,
+        "why_no_bar_here": (
+            "the bar schedules the READ of the economics. This mode reads "
+            "none, before or after it -- the two gates are independent and "
+            "this is on the far side of neither"),
+        "replay_engine_used": False,
+        "null_drawn": False,
+        "why_that_is_structural": (
+            "decisions and per-side counts are arithmetic on the book's own "
+            "scores against the declared thetas. D(E0), the null and "
+            "everything downstream need the replay, and this path never "
+            "resolves one -- so it cannot compute an economic value, let "
+            "alone emit it"),
+        "book": book_meta,
+        "builder_receipt": builder,
+        "receipt": {"path": rp.name,
+                    "sha256": hashlib.sha256(rp.read_bytes()).hexdigest()},
+        "provenance": prov,
+        "economic_absence": absence,
+        "arms": arms_out,
+        "n_arms_declared": len(params["arms"]),
+        "n_arms_agreeing": sum(1 for a in agree if a),
+        "IS_A_VERIFICATION_OF_THE_ECONOMICS": False,
+        "why_never_a_verification_of_the_economics": (
+            "this mode reads no economic field and computes no economic "
+            "quantity. It is a verification of the POPULATION, the SEED, the "
+            "STATUSES and the PROVENANCE, and saying so is the point: a "
+            "pre-read reported as a verification would be the sealed-receipt "
+            "error in a new place"),
+        "status": None,
+    }
+    #: The DECLARATIONS gate the verdict: params and design v12 are external
+    #: artifacts this run matched by digest. The verifier's OWN
+    #: committed-bytes flag is REPORTED at top level rather than folded in --
+    #: DA 63's finding is that the durable citation is the CONTENT DIGEST,
+    #: which this artifact carries either way, and a reader who needs the
+    #: stricter reading has the flag in front of them.
+    prov_ok = bool(prov["params"]["matches"]
+                   and prov["design_v12"]["matches"])
+    out["status"] = (
+        "PRE_READ_VERIFIED" if (agree and all(agree) and absence["sealed"]
+                                and prov_ok)
+        else "FLAGGED")
+    out["provenance_all_matched"] = prov_ok
+    out["code_is_committed"] = bool(
+        prov["verifier"]["producing_code_is_the_committed_bytes"])
+    out["verifier_sha256"] = prov["verifier"]["sha256"]
+    out["why_committed_bytes_is_reported_not_gating"] = (
+        "the durable citation is the verifier's CONTENT DIGEST, carried "
+        "here either way; a commit id can be rewritten by a rebase and a "
+        "worktree's HEAD is whatever it was last detached at. The flag is "
+        "in front of the reader rather than folded silently into a verdict")
+    out["emitted_census"] = emitted_census(out, receipt)
+    if not out["emitted_census"]["clean"]:
+        raise VerifierRefused(
+            f"REFUSED: the emission carries "
+            f"{out['emitted_census']['n_economic_field_names_in_the_emission']}"
+            f" economic field name(s) and echoes "
+            f"{out['emitted_census']['n_of_them_echoed_in_the_emission']} "
+            f"economic value(s). A pre-read that emits what it exists to "
+            f"withhold is worse than no pre-read.")
+    if output:
+        Path(output).write_text(
+            json.dumps(out, indent=2, sort_keys=True, default=str) + "\n")
+    return out
+
+
+def _receipt_arms(receipt) -> dict:
+    """DE emits per-day arm blocks as a LIST; a dict keyed by arm is also
+    accepted. Both shapes, because the receipt's shape is DE's to choose."""
+    if isinstance(receipt, dict) and isinstance(receipt.get("arms"), dict):
+        return receipt["arms"]
+    out = {}
+    src = None
+    if isinstance(receipt, dict):
+        for k in ("per_day_sealed_artifacts", "arms", "per_arm"):
+            if isinstance(receipt.get(k), list):
+                src = receipt[k]
+                break
+    if src is None and isinstance(receipt, list):
+        src = receipt
+    for blk in (src or []):
+        if isinstance(blk, dict) and blk.get("arm"):
+            out[blk["arm"]] = blk
+    return out
+
+
+def _find_first(o, keys):
+    for p, v in _walk_paths(o):
+        if p.rsplit(".", 1)[-1].split("[")[0] in keys and isinstance(v, str):
+            return v
+    return None
+
+
+def _receipt_book_digest(receipt):
+    arms = _receipt_arms(receipt)
+    for blk in arms.values():
+        d = (blk.get("draw_provenance") or {}).get("book_digest")
+        if d:
+            return d
+    return _find_first(receipt, ("book_sha256", "book_digest"))
+
+
+def _derived_dir() -> Path:
+    """The ledger's derived directory, through the programme's ONE data-root
+    resolver -- imported, never a second implementation of 'where is the
+    ledger' (R-562/R-564)."""
+    try:
+        import de_data_root as BDR                            # noqa: PLC0415
+        return Path(BDR.resolve()) / "data" / "pm_5min" / "derived"
+    except Exception:                                         # noqa: BLE001
+        return HERE.parents[1] / "data" / "pm_5min" / "derived"
+
+
+def _design_v12_check() -> dict:
+    root = _derived_dir()
+    hits = sorted(root.glob("p003_de_multiday_gate1_design_v12__*.json"))
+    if not hits:
+        return {"found": False, "matches": False,
+                "why": "design v12 is not on disk; provenance cannot be "
+                       "matched by digest and MUST NOT be assumed"}
+    p = hits[-1]
+    sha = hashlib.sha256(p.read_bytes()).hexdigest()
+    return {"found": True, "path": p.name, "sha256": sha,
+            "expected_prefix": "c32c7245",
+            "matches": sha.startswith("c32c7245")}
+
+
+def _sealed_de_shape_receipt(d: Path, arms_payload: dict, book_sha: str, *,
+                             name: str = "sealed_de.json",
+                             leak: tuple | None = None) -> Path:
+    """A receipt in DE's OWN emitted shape: per-day arm blocks in a LIST,
+    each with `admissibility`, `draw_provenance.book_digest`, `seed`, and
+    the economic fields STRIPPED at every depth."""
+    blocks = []
+    for arm, v in sorted(arms_payload.items()):
+        econ = v.get("economic") or {}
+        blk = {
+            "arm": arm, "day": "2026-09-03", "status": v["status"],
+            "sealed": True, "sealed_at_every_depth": True,
+            "sealed_field_names": list(ECONOMIC_FIELDS),
+            "seal_status": "SEALED -- economic fields ABSENT, not "
+                           "present-and-ignored",
+            "admissibility": {
+                "admissible": v["admissibility"]["admissible"],
+                "n_decisions": v["admissibility"]["n_decisions"],
+                "reasons": v["admissibility"]["reasons"],
+                "sd_over_abs_mean": v["admissibility"]["sd_over_abs_mean"],
+                "status": v["admissibility"]["status"]},
+            "by_side": v["by_side"],
+            "seed": v["seed"],
+            "draw_provenance": {"arm": arm, "book_digest": book_sha,
+                                "seed": v["seed"], "n_draws": v["n_draws"],
+                                "recomputed_by_the_runner": True},
+        }
+        blk = _strip_like_DE(blk)
+        if leak and leak[0] == arm:
+            blk[leak[1]] = econ.get(leak[1], leak[2])
+        blocks.append(blk)
+    p = d / name
+    p.write_text(json.dumps({"day": "2026-09-03",
+                             "per_day_sealed_artifacts": blocks}))
+    return p
+
+
+def selftest_pre_read() -> list:                              # noqa: C901
+    """The PRE-READ battery. Returned to the main selftest so the module has
+    one check list and one count."""
+    checks: list[dict] = []
+
+    def ck(name, passed, detail):
+        checks.append({"check": name, "passed": bool(passed),
+                       "detail": detail})
+
+    params = load_params()
+    td = Path(tempfile.mkdtemp(prefix="da68_"))
+    book = synthetic_book()
+    replay = synthetic_replay(book)
+    rows = book["rows"]
+    bpath, bsha = write_day_book(td, book, params)
+
+    payload = {}
+    for a, spec in sorted(params["arms"].items()):
+        m = da_arm_day(replay, rows, rows, arm=a,
+                       theta=float(spec["theta"]), book_sha=bsha,
+                       params=params)
+        d = da_decisions(rows, float(spec["theta"]))
+        payload[a] = {"status": m["status"], "seed": m["seed"],
+                      "n_draws": m["n_draws"], "by_side": d["by_side"],
+                      "admissibility": {
+                          **m["admissibility"],
+                          "sd_over_abs_mean":
+                              m["admissibility"]["sd_over_abs_mean"]},
+                      "economic": dict(m["economic"] or {})}
+    spath = _sealed_de_shape_receipt(td, payload, bsha)
+
+    # -- A. it RUNS BEFORE THE BAR and verifies ---------------------------
+    pre = pre_read_day("2026-09-03", str(bpath), str(spath),
+                       params=params, now=BAR_BEFORE)
+    ck("THE PRE-READ RUNS BEFORE THE BAR AND VERIFIES -- which is the whole "
+       "gap: the full read gates on 2026-09-09T00:06Z, so the population, "
+       "seed, statuses and provenance the runbook promises BEFORE it had "
+       "nowhere to be checked",
+       pre["status"] == "PRE_READ_VERIFIED"
+       and pre["gate_state_recorded_not_enforced"]["open"] is False
+       and pre["n_arms_agreeing"] == len(params["arms"]),
+       f"clock {BAR_BEFORE.date()} (bar {params['read_not_before_utc']}, "
+       f"open={pre['gate_state_recorded_not_enforced']['open']}) -> "
+       f"{pre['status']}, {pre['n_arms_agreeing']}/"
+       f"{pre['n_arms_declared']} arms agree")
+
+    # -- B. it reads NO economics, and that is STRUCTURAL ------------------
+    ck("IT READS NO ECONOMICS AND THAT IS STRUCTURAL, NOT A CONVENTION: no "
+       "replay engine is resolved and no null is drawn, so D(E0) and "
+       "everything downstream are not merely unreported -- they are "
+       "uncomputable on this path",
+       pre["replay_engine_used"] is False and pre["null_drawn"] is False
+       and pre["IS_A_VERIFICATION_OF_THE_ECONOMICS"] is False
+       #: and the claim is checked at the SOURCE, not taken from the field:
+       #: `pre_read_day` must not call the arm-day statistic, which is the
+       #: only thing on this surface that draws a null.
+       and "da_arm_day" not in _fn_source("pre_read_day"),
+       f"replay_engine_used={pre['replay_engine_used']}, "
+       f"null_drawn={pre['null_drawn']}, "
+       f"IS_A_VERIFICATION_OF_THE_ECONOMICS="
+       f"{pre['IS_A_VERIFICATION_OF_THE_ECONOMICS']}")
+
+    # -- C. the emitted census PROVES the emission is clean ---------------
+    cen = pre["emitted_census"]
+    ck("AND THE EMISSION IS PROVEN CLEAN BY A COMPUTED CENSUS, two ways: no "
+       "economic field NAME appears in what was emitted, AND none of the "
+       "receipt's economic VALUES appears anywhere in it. A name check alone "
+       "passes while the number rides out under another key",
+       cen["clean"] is True
+       and cen["n_economic_field_names_in_the_emission"] == 0
+       and cen["n_of_them_echoed_in_the_emission"] == 0,
+       f"{cen['n_leaves_emitted']} leaves emitted, "
+       f"{cen['n_economic_field_names_in_the_emission']} economic names, "
+       f"{cen['n_of_them_echoed_in_the_emission']} echoed values")
+
+    # -- D. AFTER the bar it still runs and still reads nothing -----------
+    post = pre_read_day("2026-09-03", str(bpath), str(spath),
+                        params=params, now=BAR_AFTER)
+    ck("AFTER THE BAR THE SAME MODE STILL RUNS AND STILL READS NO "
+       "ECONOMICS -- two gates, independent: the bar schedules the READ, "
+       "the seal withholds the NUMBERS, and this mode is on the far side of "
+       "neither",
+       post["status"] == "PRE_READ_VERIFIED"
+       and post["gate_state_recorded_not_enforced"]["open"] is True
+       and post["IS_A_VERIFICATION_OF_THE_ECONOMICS"] is False
+       and post["emitted_census"]["clean"] is True,
+       f"clock past the bar (open="
+       f"{post['gate_state_recorded_not_enforced']['open']}) -> "
+       f"{post['status']}, economics read: NONE")
+
+    # -- E. a moved population count is FLAGGED ---------------------------
+    moved = json.loads(spath.read_text())
+    moved["per_day_sealed_artifacts"][0]["admissibility"]["n_decisions"] += 1
+    mp = td / "sealed_moved.json"
+    mp.write_text(json.dumps(moved))
+    pm = pre_read_day("2026-09-03", str(bpath), str(mp), params=params,
+                      now=BAR_BEFORE)
+    arm0 = moved["per_day_sealed_artifacts"][0]["arm"]
+    ck("KNOWN-BAD: A MOVED POPULATION COUNT IS FLAGGED. n_decisions is "
+       "recomputed from the book at the declared theta, so a receipt that "
+       "claims a different one disagrees with the book it names",
+       pm["status"] == "FLAGGED"
+       and "n_decisions" in pm["arms"][arm0]["mismatched_fields"],
+       f"{arm0}.n_decisions +1 -> {pm['arms'][arm0]['mismatched_fields']}")
+
+    # -- F. a wrong seed is FLAGGED ---------------------------------------
+    ws = json.loads(spath.read_text())
+    ws["per_day_sealed_artifacts"][0]["seed"] += 1
+    ws["per_day_sealed_artifacts"][0]["draw_provenance"]["seed"] += 1
+    wp = td / "sealed_wrongseed.json"
+    wp.write_text(json.dumps(ws))
+    pw = pre_read_day("2026-09-03", str(bpath), str(wp), params=params,
+                      now=BAR_BEFORE)
+    ck("KNOWN-BAD: A WRONG SEED IS FLAGGED. The seed is re-derived from the "
+       "book's digest and the arm name, so a receipt whose seed does not "
+       "follow from the book it names drew a different null",
+       pw["status"] == "FLAGGED"
+       and "seed" in pw["arms"][arm0]["mismatched_fields"],
+       f"{arm0}.seed +1 -> {pw['arms'][arm0]['mismatched_fields']}; "
+       f"recomputed {pw['arms'][arm0]['seed_recomputed']}")
+
+    # -- G. A LEAKED ECONOMIC FIELD IS FLAGGED WITHOUT ECHOING ITS VALUE --
+    leak_val = float(payload[sorted(payload)[0]]["economic"]["D_E0"])
+    lp = _sealed_de_shape_receipt(td, payload, bsha, name="sealed_leak.json",
+                                  leak=(sorted(payload)[0], "D_E0",
+                                        leak_val))
+    pl = pre_read_day("2026-09-03", str(bpath), str(lp), params=params,
+                      now=BAR_BEFORE)
+    emitted_text = json.dumps(pl, default=str)
+    ck("KNOWN-BAD, AND THE HARD HALF: A LEAKED ECONOMIC FIELD IS FLAGGED BY "
+       "NAME AND ITS VALUE IS NEVER ECHOED. The leak's PATH is recorded, the "
+       "number is not -- a checker that reported `D_E0 = <value> leaked` "
+       "would publish exactly what the seal exists to withhold",
+       pl["status"] == "FLAGGED"
+       and pl["economic_absence"]["sealed"] is False
+       and pl["economic_absence"]["n_leaked_fields"] == 1
+       and any("D_E0" in p
+               for p in pl["economic_absence"]["leaked_field_paths"])
+       and repr(leak_val) not in emitted_text
+       and pl["emitted_census"]["n_of_them_echoed_in_the_emission"] == 0,
+       f"leak named at "
+       f"{pl['economic_absence']['leaked_field_paths']}; the value appears "
+       f"0 times in the emission and the census confirms "
+       f"{pl['emitted_census']['n_of_them_echoed_in_the_emission']} echoed")
+
+    # -- H. a wrong book REFUSES ------------------------------------------
+    wb = td / "wrong_book.json"
+    w = json.loads(bpath.read_text())
+    w["rows"] = w["rows"][:-1]
+    wb.write_text(json.dumps(w))
+    why = ""
+    try:
+        pre_read_day("2026-09-03", str(wb), str(spath), params=params,
+                     now=BAR_BEFORE)
+    except VerifierRefused as e:
+        why = str(e)
+    ck("A WRONG BOOK REFUSES THE PRE-READ TOO: a day whose book does not "
+       "match the receipt's digest is not the day the receipt describes, "
+       "and no population recomputed from it would mean anything",
+       "book digest mismatch" in why and bsha[:16] in why,
+       f"'{why[:96]}...'")
+
+    # -- I. BE's builder receipt is a SECOND binding ----------------------
+    good_b = td / "builder_ok.json"
+    good_b.write_text(json.dumps({"book_sha256": bsha, "day": "2026-09-03"}))
+    bad_b = td / "builder_bad.json"
+    bad_b.write_text(json.dumps({"book_sha256": "0" * 64}))
+    p_ok = pre_read_day("2026-09-03", str(bpath), str(spath), params=params,
+                        now=BAR_BEFORE, builder_receipt=str(good_b))
+    why_b = ""
+    try:
+        pre_read_day("2026-09-03", str(bpath), str(spath), params=params,
+                     now=BAR_BEFORE, builder_receipt=str(bad_b))
+    except VerifierRefused as e:
+        why_b = str(e)
+    ck("BE's BUILDER RECEIPT IS A SECOND, INDEPENDENT BINDING ON THE BOOK: "
+       "agreeing digests admit, and two receipts naming DIFFERENT books "
+       "REFUSE -- one binding can be right about the wrong artifact",
+       p_ok["builder_receipt"]["agrees_with_the_day_receipt"] is True
+       and p_ok["status"] == "PRE_READ_VERIFIED"
+       and "different books" in why_b,
+       f"builder agrees -> {p_ok['status']}; a disagreeing builder receipt "
+       f"raises")
+
+    # -- J. provenance is matched BY DIGEST -------------------------------
+    pv = pre["provenance"]
+    ck("PROVENANCE IS MATCHED BY DIGEST, not by name: params v5 "
+       "306bfdb0..., design v12 c32c7245..., DE's economic field list from "
+       "the runner's own source, and the verifier's own committed-bytes flag",
+       pv["params"]["matches"] is True
+       and pv["design_v12"]["found"] is True
+       and pv["design_v12"]["matches"] is True
+       and pv["runner_economic_field_list"][
+           "stripper_references_the_same_name"] is True
+       and pre["provenance_all_matched"] is True
+       and isinstance(pre["code_is_committed"], bool)
+       and len(pre["verifier_sha256"]) == 64,
+       f"params {pv['params']['sha256'][:16]}, design v12 "
+       f"{pv['design_v12']['sha256'][:16]}, field list from "
+       f"{pv['runner_economic_field_list']['source_sha256'][:16]}; the "
+       f"verifier's own committed-bytes flag is REPORTED "
+       f"({pre['code_is_committed']}) beside its content digest "
+       f"{pre['verifier_sha256'][:16]}, not folded into the verdict")
+
+    # -- K. the R4 sd half is NOT claimed ---------------------------------
+    a0 = pre["arms"][arm0]
+    ck("AND HALF A PREDICATE IS NOT REPORTED AS THE PREDICATE: R4's "
+       "DECISION half is arithmetic on the book and is checked; its SD half "
+       "compares the null's sd against its mean, both sealed, and the "
+       "receipt says so rather than implying R4 passed",
+       a0["R4_decision_half"]["passes"] is True
+       and "sealed" in a0["R4_sd_half_is_NOT_verifiable_before_the_read"]
+       and a0["sd_over_abs_mean_present_in_the_sealed_receipt"] is True,
+       f"decisions {a0['R4_decision_half']['n_decisions']} >= "
+       f"{a0['R4_decision_half']['min_declared']} passes; the sd half is "
+       f"unverifiable, and `sd_over_abs_mean` DOES survive DE's seal -- "
+       f"reported as an observation, not ruled on")
+
+    return checks
 
 
 if __name__ == "__main__":
