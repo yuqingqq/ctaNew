@@ -1,0 +1,51 @@
+{
+ "all_five_present": false,
+ "as_of_utc": "2026-09-06T07:30:32Z",
+ "method": "sha256 over the file bytes and the byte size; no line, row or field was read or counted; the paths derive from v2 SEALED_SCORES_PINNED_BEFORE_THE_READ by replacing SEALED_scores_<DAY>.json with SEALED_feed_<DAY>.jsonl, the same derivation be_race_reader uses",
+ "per_day": {
+  "20260901": {
+   "exists": false,
+   "path": "/home/yuqing/.local/state/pm-co/race_record_20260901_fwd5/be_forward_day_SEALED_feed_20260901.jsonl",
+   "v2_scores_path": "/home/yuqing/.local/state/pm-co/race_record_20260901_fwd5/be_forward_day_SEALED_scores_20260901.json",
+   "v2_scores_sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627"
+  },
+  "20260902": {
+   "exists": false,
+   "path": "/home/yuqing/ctaNew_forward_runs/20260902_be13/be_forward_day_SEALED_feed_20260902.jsonl",
+   "v2_scores_path": "/home/yuqing/ctaNew_forward_runs/20260902_be13/be_forward_day_SEALED_scores_20260902.json",
+   "v2_scores_sha256": "7522786db5423574aff39ac1f902b58bdf4e2b3d7248d84591d701f3619b589e"
+  },
+  "20260903": {
+   "bytes": 283925031,
+   "exists": true,
+   "mtime_utc": "2026-09-06T03:09:06Z",
+   "path": "/home/yuqing/ctaNew_forward_runs/20260903_be45/be_forward_day_SEALED_feed_20260903.jsonl",
+   "sha256": "19d03c5d442670ade5ec0cf374bbfa0be4b05f57af98ef27173cff3e3975f641",
+   "v2_scores_path": "/home/yuqing/ctaNew_forward_runs/20260903_be45/be_forward_day_SEALED_scores_20260903.json",
+   "v2_scores_sha256": "c466a3fe590f2d590b7c71ac478373f880205348952111c305ab4ffd3b1f31ad"
+  },
+  "20260904": {
+   "bytes": 297461852,
+   "exists": true,
+   "mtime_utc": "2026-09-06T03:42:21Z",
+   "path": "/home/yuqing/ctaNew_forward_runs/20260904_be45/be_forward_day_SEALED_feed_20260904.jsonl",
+   "sha256": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949",
+   "v2_scores_path": "/home/yuqing/ctaNew_forward_runs/20260904_be45/be_forward_day_SEALED_scores_20260904.json",
+   "v2_scores_sha256": "a610b64ab7e204766c5a7c08bc8c05f2556af0a0e9291b76021c34f5a05a7a05"
+  },
+  "20260905": {
+   "bytes": 206084218,
+   "exists": true,
+   "mtime_utc": "2026-09-06T02:35:14Z",
+   "path": "/home/yuqing/ctaNew_forward_runs/20260905_be44/be_forward_day_SEALED_feed_20260905.jsonl",
+   "sha256": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491",
+   "v2_scores_path": "/home/yuqing/ctaNew_forward_runs/20260905_be44/be_forward_day_SEALED_scores_20260905.json",
+   "v2_scores_sha256": "1370598870c5fa754f21c79203a98ea306c340d687d912d27655e5b002863705"
+  }
+ },
+ "pinned_before": "any read of the feed; declaration v3 opens the FEED and pinned no feed digest (0 sixty-four-hex strings in v3, checked)",
+ "pinned_by": "coordinator (pm-co)",
+ "protocol": "BE_RACE_READ_FEED_PINS_V1",
+ "scores_untouched": "the five SEALED_scores stay sealed; their v2 digests are not re-verified here",
+ "the_read_voids_on_mismatch": true
+}
