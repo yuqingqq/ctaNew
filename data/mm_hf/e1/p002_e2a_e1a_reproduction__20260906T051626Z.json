@@ -1,0 +1,189 @@
+{
+  "carrying_commit": "0d7fae6112cc475ffccaa95b21727d8a8737237c",
+  "checks": {
+    "csv": {
+      "sweep": {
+        "abs_error_bps": 2.7032070271992836e-05,
+        "got": 6.264472967929728,
+        "want": 6.2645,
+        "within_tolerance": true
+      },
+      "touch": {
+        "abs_error_bps": 1.0628442265403493e-05,
+        "got": 3.4484893715577347,
+        "want": 3.4485,
+        "within_tolerance": true
+      }
+    },
+    "tick_fixed": {
+      "sweep": {
+        "abs_error_bps": 0.013597079045499783,
+        "got": 6.2664029209545005,
+        "want": 6.28,
+        "within_tolerance": true
+      },
+      "touch": {
+        "abs_error_bps": 0.18536801912878076,
+        "got": 3.174631980871219,
+        "want": 3.36,
+        "within_tolerance": false
+      }
+    }
+  },
+  "data_root_check": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "adopted_from": "live/pm_research/de_data_root.py, imported not copied",
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "mm_hf_tape_present": true,
+    "purpose": "P-2026-002 E2-A E1-A reproduction control",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "declaration": {
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v2.json",
+    "sha256": "6567a25f04d7fb892d001da3dee7d7db00f3df342197d7ab9663e8a2f8e03ed1"
+  },
+  "n_symbols": 12,
+  "protocol": "P002_E2_A_E1A_REPRODUCTION_V1",
+  "regimes": {
+    "csv": {
+      "sweep": {
+        "ci_hi": 6.753870188246235,
+        "ci_lo": 5.756146603945111,
+        "eff_rt_bps": 6.264472967929728,
+        "n_days": 31
+      },
+      "touch": {
+        "ci_hi": 3.792661305055285,
+        "ci_lo": 3.1095161480471254,
+        "eff_rt_bps": 3.4484893715577347,
+        "n_days": 31
+      }
+    },
+    "tick_fixed": {
+      "sweep": {
+        "ci_hi": 6.778433235947354,
+        "ci_lo": 5.7608555558526255,
+        "eff_rt_bps": 6.2664029209545005,
+        "n_days": 31
+      },
+      "touch": {
+        "ci_hi": 3.5156143306515872,
+        "ci_lo": 2.836835315780132,
+        "eff_rt_bps": 3.174631980871219,
+        "n_days": 31
+      }
+    }
+  },
+  "reproduced": true,
+  "symbols": [
+    "AAVEUSDT",
+    "ADAUSDT",
+    "AVAXUSDT",
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "FILUSDT",
+    "ICPUSDT",
+    "LTCUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ],
+  "targets": {
+    "csv": {
+      "ci_sweep": [
+        5.7561,
+        6.7539
+      ],
+      "ci_touch": [
+        3.1095,
+        3.7927
+      ],
+      "source": "data/mm_hf/e1/e1a_gate_summary.csv row tp_s=600",
+      "sweep": 6.2645,
+      "tick": "as recorded per symbol in e1_spread_daily.csv (FIL = 1e-6, the pre-fix value)",
+      "touch": 3.4485
+    },
+    "tick_fixed": {
+      "ci_sweep": null,
+      "ci_touch": null,
+      "source": "E1_RESULTS.md corrections queue, quoted to 2dp",
+      "sweep": 6.28,
+      "tick": "mode-of-diffs, recomputed (FIL = 1e-4)",
+      "touch": 3.36
+    }
+  },
+  "the_gate_is_the_csv_regime": {
+    "result": {
+      "sweep": {
+        "abs_error_bps": 2.7032070271992836e-05,
+        "got": 6.264472967929728,
+        "want": 6.2645,
+        "within_tolerance": true
+      },
+      "touch": {
+        "abs_error_bps": 1.0628442265403493e-05,
+        "got": 3.4484893715577347,
+        "want": 3.4485,
+        "within_tolerance": true
+      }
+    },
+    "why": "it is E1-A's OPERATIVE published pair, the one e1a_gate_summary.csv carries and the one my declaration pinned"
+  },
+  "the_second_pair_is_a_FINDING_ABOUT_E1_S_RECORD": {
+    "claim_in_E1_RESULTS": "tick_size() FIXED post-audit; corrected aggregate 3.36/6.28",
+    "evidence": "E1's OWN committed tick_size('FILUSDT') -- executed directly, not transcribed -- returns 1e-6, the PRE-fix value. This module's independent mode-of-diffs transcription returns 1e-6 as well. Two implementations agree, so the transcription is not the defect: the committed code does not produce the FIL = 1e-4 the corrections queue describes, and therefore cannot produce 3.36/6.28.",
+    "measured_ticks": null,
+    "routed": "to the coordinator and the reviewer as a record defect in P-002, not as a blocker on E2-A",
+    "status": "NOT_REPRODUCIBLE_FROM_THE_COMMITTED_CODE",
+    "what_it_does_NOT_mean": "it does not impugn E1-A's operative number, which reproduces here EXACTLY -- both legs to 4 dp and both bootstrap CIs. It means the corrections queue records a fix that the repository does not carry, so a reader who reaches for 3.36/6.28 is reaching for a number nothing on disk can produce."
+  },
+  "tick_control": {
+    "FILUSDT_csv_regime": 1.0000000000287557e-06,
+    "FILUSDT_tick_fixed_regime": 1e-06,
+    "every_other_symbol_unmoved": true,
+    "the_fix_moved_FIL": false,
+    "why": "E1_RESULTS names FIL as the ONLY symbol the tick fix moved. If another symbol also moved, the two regimes differ by more than one documented input and the reproduction would not explain what it claims to explain."
+  },
+  "ticks_used": {
+    "csv": {
+      "AAVEUSDT": 0.0099999999999909,
+      "ADAUSDT": 9.9999999999989e-05,
+      "AVAXUSDT": 0.0009999999999994,
+      "BNBUSDT": 0.0099999999999909,
+      "BTCUSDT": 0.0999999999912688,
+      "DOGEUSDT": 9.999999999996125e-06,
+      "ETHUSDT": 0.0099999999999909,
+      "FILUSDT": 1.0000000000287557e-06,
+      "ICPUSDT": 0.0009999999999998,
+      "LTCUSDT": 0.009999999999998,
+      "SOLUSDT": 0.0099999999999909,
+      "XRPUSDT": 9.9999999999989e-05
+    },
+    "tick_fixed": {
+      "AAVEUSDT": 0.01,
+      "ADAUSDT": 0.0001,
+      "AVAXUSDT": 0.001,
+      "BNBUSDT": 0.01,
+      "BTCUSDT": 0.1,
+      "DOGEUSDT": 1e-05,
+      "ETHUSDT": 0.01,
+      "FILUSDT": 1e-06,
+      "ICPUSDT": 0.001,
+      "LTCUSDT": 0.01,
+      "SOLUSDT": 0.01,
+      "XRPUSDT": 0.0001
+    }
+  },
+  "tolerance_bps": 0.05,
+  "tp_s": 600,
+  "why_two_regimes": "E1_RESULTS.md records that tick_size() was FIXED after the results audit and that the committed CSVs still carry the OLD FIL tick, with the corrected aggregate quoted separately. Two published pairs exist, so reproducing one would leave the other unexplained. Landing inside tolerance on BOTH shows the implementation is E1-A's and that the whole difference between the pairs is ONE documented input."
+}
