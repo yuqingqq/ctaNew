@@ -57,39 +57,67 @@ DE_MODULE = HERE / "de_data_root.py"
 #: a raw line and wrong on a shifted one. No seat had both right -- DE and
 #: BE are safe by their READ, this seat was safe by its SLICE -- so the
 #: parser is written once, raw, and used everywhere.
+#: R-646 R1. THE ALPHABET AND THE SHAPE CHECK ARE **BE's ALGORITHM**,
+#: lifted from `be_rule22.parse_porcelain_line` (5f5f76c, L96-128) rather
+#: than re-derived: the reviewer drove three implementations on twelve
+#: lines and BE's was the only one right on all twelve. What is kept from
+#: here is the ROW STRUCTURE -- a malformed line is REPORTED per row, never
+#: raised -- because DE 96 imports this interface unchanged.
+_PORCELAIN_STATES = set(" MTADRCU?!")
+
+
 def parse_porcelain(stdout: str) -> dict:
     """Rows of {xy, path, renamed_from, untracked}, and the malformed ones
     NAMED rather than dropped (rule 11).
 
-    SHARED PROGRAMME INFRASTRUCTURE (R-641 / REV 66 §1.1): DE 96 and BE 65
-    import this parser rather than keeping their own. R-235 forbids sharing
-    a STATISTIC, not a way of reading a tool's output -- two porcelain
-    parsers corroborate nothing and drift apart, which they did three times
-    (the strip, the slice, the rename). The interface is fixed: callers
-    depend on it."""
+    SHARED PROGRAMME INFRASTRUCTURE (R-641 / R-646 R1): DE 96 and BE 65
+    call this parser rather than keeping their own. R-235 forbids sharing a
+    STATISTIC, not a way of reading a tool's output -- and the reviewer
+    MEASURED what three implementations cost: four of twelve lines
+    disagreed and no two were wrong in the same place, which is exactly
+    "two implementations corroborate nothing". The interface is fixed:
+    callers depend on it.
+
+    THE ALGORITHM, from BE's:
+      * porcelain v1 is `XY<space>path` with X and Y from a fixed alphabet;
+        the OFFSET IS NOT ASSUMED. A line failing that shape -- a `.strip()`
+        victim that lost its leading space, or a `--branch` header -- is
+        MALFORMED BY NAME rather than sliced into a path one character
+        short that nothing downstream can detect;
+      * `old -> new` is split ONLY when the code carries R or C, so a file
+        merely NAMED `a -> b` keeps its name;
+      * git's own quoting of unusual paths is undone;
+      * trailing spaces are part of the path and are kept.
+    """
     rows, malformed = [], []
     for line in (stdout or "").split("\n"):
         if not line:
             continue
-        if len(line) < 4 or line[2] != " ":
-            #: NOT silently skipped: a line this parser cannot read is a
-            #: status, and a status is reported.
+        if (len(line) < 4 or line[2] != " "
+                or line[0] not in _PORCELAIN_STATES
+                or line[1] not in _PORCELAIN_STATES):
+            #: NOT silently skipped and NOT sliced anyway: a line this
+            #: parser cannot read is a status, and a status is reported.
             malformed.append(line)
             continue
-        xy, path = line[:2], line[3:]
+        code, rest = line[:2], line[3:]
         old = None
-        if " -> " in path:
-            old, path = path.split(" -> ", 1)
-        if len(path) > 1 and path[0] == '"' and path[-1] == '"':
-            path = path[1:-1]
-        rows.append({"xy": xy, "path": path, "renamed_from": old,
-                     "untracked": xy == "??"})
+        if ("R" in code or "C" in code) and " -> " in rest:
+            old, rest = rest.split(" -> ", 1)
+        if len(rest) >= 2 and rest[0] == '"' and rest[-1] == '"':
+            rest = rest[1:-1]
+        rows.append({"xy": code, "path": rest, "renamed_from": old,
+                     "untracked": code == "??"})
     return {"rows": rows, "malformed": malformed,
             "n_rows": len(rows), "n_malformed": len(malformed),
             "read": "RAW -- the block is never stripped",
+            "shape": "XY<space>path, the code alphabet-validated, the "
+                     "offset never assumed",
             "path_from": "column 4, after the two-column code and one space",
-            "renames": "`R  old -> new` is split on ` -> `; the NEW path is "
-                       "the path and the old one is recorded"}
+            "renames": "`R`/`C` only: `old -> new` is split on ` -> ` and "
+                       "the NEW path is the path; a file merely NAMED "
+                       "`a -> b` keeps its name",
+            "algorithm_from": "be_rule22.parse_porcelain_line (R-646 R1)"}
 
 
 class RootRefused(RuntimeError):
@@ -271,24 +299,49 @@ def selftest() -> tuple:
         if detail:
             print("       " + detail)
 
-    #: THE REVIEWER'S BLOCK. The THIRD line is the one that matters: a
-    #: `[3:]` slice passes the first two and returns `a -> b` where the
-    #: path is `b`.
-    BLOCK = " M live/x.py\n?? data\nR  a -> b\n"
-    out = parse_porcelain(BLOCK)
-    ck("THE SHARED PORCELAIN PARSER ON THE REVIEWER'S THREE LINES: "
-       "` M live/x.py` (leading space), `?? data`, `R  a -> b` -- every "
-       "path recovered exactly, and ***the RENAME returns `b`, not "
-       "`a -> b`***, which is the line a `[3:]` slice passes in direction "
-       "and fails in cause",
-       [r["path"] for r in out["rows"]] == ["live/x.py", "data", "b"]
-       and out["rows"][0]["xy"] == " M"
-       and out["rows"][1]["untracked"] is True
-       and out["rows"][2]["renamed_from"] == "a"
-       and out["n_malformed"] == 0,
-       f"paths {[r['path'] for r in out['rows']]}; xy "
-       f"{[r['xy'] for r in out['rows']]}; rename b<-"
-       f"{out['rows'][2]['renamed_from']}")
+    #: THE REVIEWER'S TWELVE-LINE TABLE, as EXPECTED VALUES (REV 67 1.2).
+    #: Four of these twelve separated the three implementations, and no two
+    #: were wrong in the same place.
+    TABLE = [
+        (" M live/x.py",      "row", " M", "live/x.py", None),
+        ("?? data",           "row", "??", "data",      None),
+        ("R  a -> b",         "row", "R ", "b",         "a"),
+        ("M live/x.py",       "malformed", None, None,  None),
+        ("## mm-research...origin/mm-research", "malformed", None, None,
+         None),
+        ("?? a -> b",         "row", "??", "a -> b",    None),
+        ("?? trailing ",      "row", "??", "trailing ", None),
+        ('RM "odd name.py"',  "row", "RM", "odd name.py", None),
+        ("A  new.py",         "row", "A ", "new.py",    None),
+        (" D gone.py",        "row", " D", "gone.py",   None),
+        ("UU both.py",        "row", "UU", "both.py",   None),
+        ("C  src.py -> cp.py", "row", "C ", "cp.py",    "src.py"),
+    ]
+    out = parse_porcelain("\n".join(t[0] for t in TABLE) + "\n")
+    got_rows = {r["path"]: r for r in out["rows"]}
+    exp_rows = [t for t in TABLE if t[1] == "row"]
+    exp_mal = [t[0] for t in TABLE if t[1] == "malformed"]
+    rows_ok = (len(out["rows"]) == len(exp_rows)
+               and all(out["rows"][i]["xy"] == t[2]
+                       and out["rows"][i]["path"] == t[3]
+                       and out["rows"][i]["renamed_from"] == t[4]
+                       for i, t in enumerate(exp_rows)))
+    ck("R-646 R1 -- BE's ALGORITHM, THIS SEAT'S ROW STRUCTURE, DRIVEN ON "
+       "THE REVIEWER'S TWELVE-LINE TABLE. ***The four lines that separated "
+       "the three implementations are the point:*** a SHIFTED line and a "
+       "`--branch` header are MALFORMED BY NAME (this parser used to take "
+       "the header as a path); `?? a -> b` keeps its NAME because the "
+       "split is gated on R/C (this parser used to truncate it to `b`); "
+       "and `?? trailing ` keeps its trailing space",
+       rows_ok and out["malformed"] == exp_mal
+       and got_rows["a -> b"]["renamed_from"] is None
+       and got_rows["b"]["renamed_from"] == "a"
+       and got_rows["cp.py"]["renamed_from"] == "src.py",
+       "; ".join(f"{t[0]!r} -> "
+                 + ("MALFORMED" if t[1] == "malformed"
+                    else repr(got_rows.get(t[3], {}).get("path")))
+                 for t in TABLE))
+
     ck("AND A LINE IT CANNOT READ IS NAMED, NOT DROPPED: an unreadable "
        "status line is a status, and a caller that treated silence as a "
        "clean tree would be reading absence as a pass (rule 11)",

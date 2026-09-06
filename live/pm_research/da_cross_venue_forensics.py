@@ -333,16 +333,21 @@ def journal_retention(unit: str, *, _lines: list | None = None) -> dict:
     this label exists to prevent*** -- an absent host record is not
     evidence the host was healthy (R-366)."""
     read_at = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    #: R-646 R4: THE RETENTION STATE IS A MEASUREMENT, so the QUERY that
+    #: produced it travels with it. A number whose query nobody can see is
+    #: a number nobody can re-measure.
+    argv = ["journalctl", "--user", "-u", unit, "--no-pager",
+            "-o", "short-iso", "--utc"]
     if _lines is None:
         try:
             r = subprocess.run(
-                ["journalctl", "--user", "-u", unit, "--no-pager",
-                 "-o", "short-iso", "--utc"],
+                argv,
                 capture_output=True, text=True, timeout=120)
             lines = r.stdout.splitlines() if r.returncode == 0 else []
         except Exception as e:                              # noqa: BLE001
             return {"unit": unit, "available": None, "read_at_utc": read_at,
                     "status": "JOURNALCTL_FAILED", "why": repr(e),
+                    "query": " ".join(argv),
                     "n_lines_available": None,
                     "oldest_available_utc": None}
     else:
@@ -364,12 +369,14 @@ def journal_retention(unit: str, *, _lines: list | None = None) -> dict:
     if not lines:
         return {"unit": unit, "available": False, "n_lines_available": 0,
                 "oldest_available_utc": None, "read_at_utc": read_at,
+                "query": " ".join(argv),
                 "status": "ABSENT_NO_JOURNAL_LINES_FOR_THIS_UNIT",
                 "why": ("the journal holds no lines for this unit. NO NUMBER "
                         "IS QUOTED FROM IT: a 0 reported as a measurement "
                         "is a measurement of nothing")}
     oldest = min(stamped) if stamped else None
     return {"unit": unit, "available": True,
+            "query": " ".join(argv),
             "n_lines_available": len(lines),
             "n_lines_with_a_readable_stamp": len(stamped),
             "oldest_available_utc": (oldest.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -381,6 +388,77 @@ def journal_retention(unit: str, *, _lines: list | None = None) -> dict:
             "the_journal_is_not_the_record": (
                 "these numbers are copied into this artifact at the moment "
                 "of reading; the journal behind them rotates (rule 20)")}
+
+
+#: R-646 R4 / R-646(B), MEASURED: the user manager's `Started`/`Consumed`
+#: lines carry `USER_INVOCATION_ID`; the payload carries
+#: `_SYSTEMD_INVOCATION_ID`; and `INVOCATION_ID` -- the SYSTEM manager's
+#: field -- matches NOTHING here. A copy filtered on one field alone is a
+#: partial copy of the run.
+INVOCATION_FIELDS = ("_SYSTEMD_INVOCATION_ID", "USER_INVOCATION_ID")
+
+
+def copy_journal_lines(unit: str, *, invocation_id: str | None = None,
+                       fields: tuple = INVOCATION_FIELDS) -> dict:
+    """Copy a RUN's journal lines, filtered on its InvocationID.
+
+    THE CROSS-CHECK IS THE POINT: the copy is counted against what `-u
+    <unit>` holds, and a ZERO-line copy where the unit HAS lines is a
+    REFUSAL, never a record. That is the state a single wrong field
+    produces, and a record written from it would say the run was silent."""
+    read_at = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if invocation_id is None:
+        try:
+            invocation_id = subprocess.run(
+                ["systemctl", "--user", "show", unit, "-p", "InvocationID",
+                 "--value"], capture_output=True, text=True,
+                timeout=60).stdout.strip()
+        except Exception as e:                              # noqa: BLE001
+            return {"unit": unit, "status": "SYSTEMCTL_FAILED",
+                    "why": repr(e), "read_at_utc": read_at}
+    if not invocation_id:
+        return {"unit": unit, "status": "NO_INVOCATION_ID",
+                "read_at_utc": read_at,
+                "why": ("the unit has no InvocationID -- it has never run "
+                        "under this manager, and no lines are copied")}
+    unit_argv = ["journalctl", "--user", "-u", unit, "--no-pager", "-o",
+                 "cat"]
+    q = ["journalctl", "--user"]
+    for i, f in enumerate(fields):
+        if i:
+            q.append("+")
+        q.append(f"{f}={invocation_id}")
+    q += ["--no-pager", "-o", "short-iso", "--utc"]
+    def _run(argv):
+        try:
+            r = subprocess.run(argv, capture_output=True, text=True,
+                               timeout=120)
+            return ([x for x in r.stdout.splitlines()
+                     if not x.startswith("-- No entries")]
+                    if r.returncode == 0 else [])
+        except Exception:                                   # noqa: BLE001
+            return []
+    unit_lines, lines = _run(unit_argv), _run(q)
+    out = {"unit": unit, "invocation_id": invocation_id,
+           "fields": list(fields), "query": " ".join(q),
+           "unit_query": " ".join(unit_argv),
+           "n_lines_for_the_unit": len(unit_lines),
+           "n_lines_copied": len(lines), "read_at_utc": read_at}
+    if unit_lines and not lines:
+        out["status"] = "REFUSED_ZERO_LINE_COPY"
+        out["lines"] = None
+        out["why"] = (
+            f"the unit has {len(unit_lines)} journal line(s) and this "
+            f"filter copied ZERO. A record written from that would say the "
+            f"run was silent when it was not -- ***a 0-line copy where the "
+            f"unit has lines is a REFUSAL, never a record*** (R-646 R4)")
+        return out
+    out["status"] = "COPIED"
+    out["lines"] = lines
+    out["the_journal_is_not_the_record"] = (
+        "these lines are copied into the artifact at the moment of "
+        "reading; the journal behind them rotates (rule 20)")
+    return out
 
 
 def host_window(w0: float, w1: float) -> dict[str, Any]:
@@ -735,6 +813,39 @@ def selftest() -> int:
        "why NAMES the oldest available entry "
        f"({hw['retention']['oldest_available_utc']}) -- never a partial "
        "CSV presented as the window")
+
+    # -- R-646 R4: THE QUERY TRAVELS, AND A ZERO-LINE COPY REFUSES --------
+    ok("journalctl" in live_ret.get("query", "")
+       and "-u resource-monitor" in live_ret["query"],
+       "the retention state is a MEASUREMENT, so the QUERY that produced "
+       f"it travels with it: {live_ret.get('query')}")
+    _u = "be64book.service"
+    both = copy_journal_lines(_u)
+    wrong = copy_journal_lines(_u, fields=("INVOCATION_ID",))
+    if both.get("status") == "COPIED":
+        ok(both["n_lines_copied"] > 0
+           and "+" in both["query"]
+           and "_SYSTEMD_INVOCATION_ID" in both["query"]
+           and "USER_INVOCATION_ID" in both["query"],
+           "POSITIVE CONTROL: a run's lines are copied on BOTH invocation "
+           f"fields -- {both['n_lines_copied']} line(s) against "
+           f"{both['n_lines_for_the_unit']} for the unit. The user "
+           "manager's Started/Consumed lines carry USER_INVOCATION_ID and "
+           "the payload carries _SYSTEMD_INVOCATION_ID; either alone is a "
+           "PARTIAL copy of the run")
+        ok(wrong["status"] == "REFUSED_ZERO_LINE_COPY"
+           and wrong["n_lines_copied"] == 0
+           and wrong["n_lines_for_the_unit"] > 0
+           and wrong.get("lines") is None,
+           "KNOWN-BAD: the SYSTEM manager's `INVOCATION_ID` matches nothing "
+           f"here -- 0 lines copied where the unit has "
+           f"{wrong['n_lines_for_the_unit']} -- and the cross-check "
+           "REFUSES. ***A record written from that copy would say the run "
+           "was silent when it was not***")
+    else:
+        ok(both.get("status") in ("NO_INVOCATION_ID", "SYSTEMCTL_FAILED"),
+           "the unit has not run under this manager; the copy is a NAMED "
+           f"status ({both.get('status')}) and no lines are quoted")
 
     print(f"da_cross_venue_forensics selftests: {checks} checks passed")
     return 0
