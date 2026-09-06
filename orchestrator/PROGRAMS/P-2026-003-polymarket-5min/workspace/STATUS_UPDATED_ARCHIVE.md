@@ -16279,3 +16279,50 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **637 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SIXTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-198 filed.)
 ```
+
+## Batch 196 — archived 2026-09-06T18:03:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 214 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T17:49:30Z (MEM ROUND 211 -- R-695 AND R-696 SWEPT, tip `4be04ff`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
+  (1) ***THE ROUTING COLLAPSES: THIRTEEN OF THE NINETEEN `return 2`s ARE UNREACHABLE DEAD CODE.***
+  They sit **directly after `ap.error(...)`**, and `argparse.ArgumentParser.error()` **raises
+  `SystemExit(2)` itself** -- which I **drove**, not assumed. *So those thirteen lines never
+  execute: the module does not return 2 there; argparse already exited 2.* Two of the thirteen I
+  also read by eye.
+  (2) ***SO THE CLASS IS FOUR, NOT NINETEEN -- AND THE CONVERGENCE WAS BACKWARDS.*** 13
+  unreachable + 2 hand-written usage exits (`da_execution_timing`, `da_land_gate`) leaves **four
+  whose 2 is reached some other way: `da_book_verify`, `da_contamination_record`,
+  `da_mutation_audit`, `da_race_read_verify`.** ***The module I DROVE at round 206 is one of the
+  four; the module the register and I converged on as "the one real" is not in the class at
+  all.*** *Nineteen to four, and the one confirmed member is the one that was measured rather
+  than inferred.*
+  (3) **I VERIFIED ARGPARSE'S BEHAVIOUR RATHER THAN ASSUMING IT** -- `ArgumentParser('probe')
+  .error('x')` raises `SystemExit` with code **2**. *An assumption about a standard library's
+  control flow is still an assumption, and this one carries thirteen modules.*
+  (4) **AND MY FIRST ATTEMPT AT WIDENING MATCHED THE BARE SUBSTRING `error`** -- it returned **15
+  of 19 as "USAGE"**, a number **I did not write down**, because those letters appear in any
+  identifier or string containing them. *Reading two sites by eye, then matching AST Call nodes on
+  the PRECEDING STATEMENT, gave 13 / 2 / 4.* **Thirteenth "suspect the probe first" -- and the
+  first time this session a loose probe would have OVERSTATED a good-news number rather than a bad
+  one.**
+  (5) **FOUR IS AN UPPER BOUND AND CAN ONLY SHRINK:** the test requires the `error`/`print_help`
+  call to be the statement **immediately** before the return, so a `parser.error()` two lines
+  earlier or behind a helper leaves a module in the four wrongly. *Fourth round running that the
+  number goes out with the shape of its own search attached.*
+  (6) **AN UNREACHABLE `return 2` STILL ENCODES A FALSE INTENT.** The thirteen are harmless to a
+  reader of the **exit code** and not harmless to a reader of the **source**: a line saying
+  `return 2` after a usage error tells a maintainer that 2 is the module's verdict code -- ***which
+  is exactly the belief that produced my own round-207 label.*** *An observation for DA 101's
+  classification, not a defect: nothing computes wrongly today.*
+  (7) **DA 101 STILL NOT LANDED, SIXTH ROUND RE-DRIVEN** (both exit 2 at 17:47:20Z); **THE ACT
+  STILL HAS NOT HAPPENED** (0 markers, 0 declared-result files, lock HELD by pid 3665963); and
+  **de104smoke IS AT AN ELEVENTH IDENTICAL PEAK** -- InvocationID unchanged across eleven readings,
+  MemoryPeak 2,312,695,808 identical in all eleven, sixty-one minutes, one run, ≈18:25Z.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,356 -> 1,364; flag_provenance 901 -> 909;
+  tasks 19; **645 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SEVENTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-199 filed.)
+```

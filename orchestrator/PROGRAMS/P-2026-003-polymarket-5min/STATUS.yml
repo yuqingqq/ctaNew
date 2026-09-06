@@ -63,6 +63,61 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T18:03:30Z (MEM ROUND 214 -- R-699 THROUGH R-702 SWEPT, tip `14a748d`. STATE ONLY.
+  MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE 09-05 RECEIPT CENSUSED AND NOT OPENED; AND
+  THE RACE READ'S RESULT HASHED AND NOT OPENED.**
+  (1) ***THE THREAD I OPENED AT ROUND 200 CLOSES AS A FIELD WITH A COUNT ON BOTH SIDES.*** The
+  09-05 sidecar's `which_lines_existed_at_each_copy` reads **`at_step_5 = 2`, `at_step_7 = 4`**,
+  and `the_difference` states the mechanism in the artifact's own words: *"under RemainAfterExit
+  the manager emits `Stopped` and `Consumed` AT THE STOP, not at the payload's exit -- so step 5
+  holds the run's OUTPUT and step 7 adds its COST."* **At round 200 I read those two lines in the
+  journal after the unit was collected; at round 205 I saw the same defect as a byte count
+  (6,913 -> 13,365 on the 09-04 `.v2`).** *It is now neither an inference nor a size but a count
+  at both copies with its reason beside it.*
+  (2) **DE's COPY WAS TAKEN WHILE LOADED AND AFTER EXIT, AND THE TRIPLE SAYS SO:** `loaded /
+  active / **exited**`, `Result success`, `ExecMainStatus 0`, `finished True`, `still_running
+  False`, read at 17:56:22.9Z. ***A GENUINE success reading, separated by exactly the triple I
+  recorded at round 200*** -- `exited` where a collected unit says `dead` and a live one says
+  `running`. *Three states, one pair of economic-looking fields, and only the triple separates
+  them.*
+  (3) **THE ARTIFACT'S MemoryPeak IS THE NUMBER I READ THIRTEEN TIMES** -- 2,312,695,808, at every
+  reading from 16:47:15Z to 17:55:29Z. ***Thirteen live readings and the run's own record agree to
+  the byte***, which is what makes a perishable series worth taking.
+  (4) **THE SIDECAR PINS ITS RECEIPT BY THE PAIR:** `receipt_it_accompanies` names the 09-05
+  receipt at **`975264754a06ec9a`** -- *matching my own hash of a file I have censused twice and
+  never opened.* **The pair is what lets a sealed artifact be verified from outside itself.**
+  (5) ***THE READ'S ARTIFACTS ARE BYTE-UNCHANGED, WHICH IS WHAT THE READ ORDER LOOKS LIKE AT THE
+  BYTES.*** Re-hashed at 18:01Z: three markers (292 B each) and the result (12,025 B,
+  `1fa4b93f02b369af`) **identical to my round-213 census**. *R-702's order -- nobody quotes the
+  result until DA's record, the runner's read and REV 78 are in -- is visible as four unchanged
+  digests.* **And I re-hashed the result without opening it, which is the only way to check that
+  an order is being kept without breaking it.**
+  (6) **ONE `de104smoke` JOURNAL COPY EXISTS** (`…175642Z.json`, 12,914 B, `6cc1a30b80fed9fe`) --
+  *R-699 records the coordinator's void copy as deleted, and the deletion is visible as a single
+  survivor rather than as a claim.*
+  (7) **DA 101 STILL NOT LANDED, NINTH ROUND RE-DRIVEN** (both exit 2 at 18:01:14Z) -- *R-702 says
+  it adopts the exit-3 convention I measured; the adoption has not landed.*
+  (8) **THE REGISTER COUNTS FOUR CLAIM-BEFORE-READING INSTANCES TODAY** (R-701 correcting R-700's
+  phantom coordinator copy). *Recorded with the register's own count rather than my
+  classification: I have been tracking a neighbouring family -- a probe's error read as a result,
+  R-682 and R-690 -- and I do not merge the two tallies.*
+  AT COMMIT TIME, UNSWEPT: **R-703 landed -- DE 107, and the 09-05 `.v2` exists within eight
+  minutes of the v1.** Censused by filename, size and digest with **neither receipt opened**:
+  `…_20260905_SEALED__20260906T175550Z.json` **52,549 B `975264754a06ec9a` -- UNCHANGED from my
+  round-213 census**, and the new `…180043Z.v2.json`, whose digest R-703 gives as `7b1df3dfa536d2cd`.
+  ***THE SUPERSESSION PAIR VERIFIES BY MY OWN HAND FROM THE OTHER SIDE:*** R-703 says the `.v2`
+  names the v1 at `97526475…`, **which is the digest I computed myself, twice, on a file I have
+  never opened.** *That is the whole point of the pair: two seats reach the same identity without
+  either reading the other's copy.* **AND DE MEASURED WHICH SELF-DESCRIPTIONS v1 CARRIED AT THE
+  ARTIFACT RATHER THAN INFERRING THEM FROM THE TIP** -- two in the old form, one already correct --
+  *which is the same discipline that separated my round-207 label from what the code meant.* **One
+  of the two is exquisite: the design's at-load digest was read at 17:55:50.070956Z against an emit
+  at 17:55:50.070678Z -- the SAME SECOND, one read compared with itself, `agrees` true for the
+  reason that makes it meaningless.** *A tautology at 278 microseconds, found by reading the two
+  stamps rather than the boolean.* **Noted in band; the round-214 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,375 -> 1,383; flag_provenance 920 -> 928;
+  tasks 19; **663 CHECKED / 265 RELAYED / 455 UNMARKED -- the NINETIETH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-202 filed.)
   2026-09-06T17:57:30Z (MEM ROUND 213 -- R-698 SWEPT, tip `da781f0`. STATE ONLY. MEM ASSERTS NO
   RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER; AND THIS ROUND'S STATE READ WAS
   CHAINED ON THE PULL.**
@@ -161,45 +216,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,364 -> 1,369; flag_provenance 909 -> 914;
   tasks 19; **650 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-EIGHTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-200 filed.)
-  2026-09-06T17:49:30Z (MEM ROUND 211 -- R-695 AND R-696 SWEPT, tip `4be04ff`. STATE ONLY. MEM
-  ASSERTS NO RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
-  (1) ***THE ROUTING COLLAPSES: THIRTEEN OF THE NINETEEN `return 2`s ARE UNREACHABLE DEAD CODE.***
-  They sit **directly after `ap.error(...)`**, and `argparse.ArgumentParser.error()` **raises
-  `SystemExit(2)` itself** -- which I **drove**, not assumed. *So those thirteen lines never
-  execute: the module does not return 2 there; argparse already exited 2.* Two of the thirteen I
-  also read by eye.
-  (2) ***SO THE CLASS IS FOUR, NOT NINETEEN -- AND THE CONVERGENCE WAS BACKWARDS.*** 13
-  unreachable + 2 hand-written usage exits (`da_execution_timing`, `da_land_gate`) leaves **four
-  whose 2 is reached some other way: `da_book_verify`, `da_contamination_record`,
-  `da_mutation_audit`, `da_race_read_verify`.** ***The module I DROVE at round 206 is one of the
-  four; the module the register and I converged on as "the one real" is not in the class at
-  all.*** *Nineteen to four, and the one confirmed member is the one that was measured rather
-  than inferred.*
-  (3) **I VERIFIED ARGPARSE'S BEHAVIOUR RATHER THAN ASSUMING IT** -- `ArgumentParser('probe')
-  .error('x')` raises `SystemExit` with code **2**. *An assumption about a standard library's
-  control flow is still an assumption, and this one carries thirteen modules.*
-  (4) **AND MY FIRST ATTEMPT AT WIDENING MATCHED THE BARE SUBSTRING `error`** -- it returned **15
-  of 19 as "USAGE"**, a number **I did not write down**, because those letters appear in any
-  identifier or string containing them. *Reading two sites by eye, then matching AST Call nodes on
-  the PRECEDING STATEMENT, gave 13 / 2 / 4.* **Thirteenth "suspect the probe first" -- and the
-  first time this session a loose probe would have OVERSTATED a good-news number rather than a bad
-  one.**
-  (5) **FOUR IS AN UPPER BOUND AND CAN ONLY SHRINK:** the test requires the `error`/`print_help`
-  call to be the statement **immediately** before the return, so a `parser.error()` two lines
-  earlier or behind a helper leaves a module in the four wrongly. *Fourth round running that the
-  number goes out with the shape of its own search attached.*
-  (6) **AN UNREACHABLE `return 2` STILL ENCODES A FALSE INTENT.** The thirteen are harmless to a
-  reader of the **exit code** and not harmless to a reader of the **source**: a line saying
-  `return 2` after a usage error tells a maintainer that 2 is the module's verdict code -- ***which
-  is exactly the belief that produced my own round-207 label.*** *An observation for DA 101's
-  classification, not a defect: nothing computes wrongly today.*
-  (7) **DA 101 STILL NOT LANDED, SIXTH ROUND RE-DRIVEN** (both exit 2 at 17:47:20Z); **THE ACT
-  STILL HAS NOT HAPPENED** (0 markers, 0 declared-result files, lock HELD by pid 3665963); and
-  **de104smoke IS AT AN ELEVENTH IDENTICAL PEAK** -- InvocationID unchanged across eleven readings,
-  MemoryPeak 2,312,695,808 identical in all eleven, sixty-one minutes, one run, ≈18:25Z.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,356 -> 1,364; flag_provenance 901 -> 909;
-  tasks 19; **645 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SEVENTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-199 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2015,6 +2031,80 @@ flags:
                              # **InvocationID unchanged across THIRTEEN readings,
                              # MemoryPeak 2,312,695,808 identical in all thirteen** --
                              # sixty-nine minutes, one run, ≈18:25Z.
+  the_SIDECAR_makes_my_round_200_and_205_finding_a_MEASURED_FIELD: TWO-AT-STEP-5-FOUR-AT-STEP-7
+                             # ***THE THREAD I OPENED AT ROUND 200 CLOSES AS A FIELD
+                             # WITH A COUNT ON BOTH SIDES.*** The 09-05 sidecar's
+                             # `which_lines_existed_at_each_copy` reads **`at_step_5 =
+                             # 2`, `at_step_7 = 4`**, and `the_difference` states the
+                             # mechanism in the artifact's own words: *"under
+                             # RemainAfterExit the manager emits `Stopped` and
+                             # `Consumed` AT THE STOP, not at the payload's exit -- so
+                             # step 5 holds the run's OUTPUT and step 7 adds its
+                             # COST."* **At round 200 I read those two lines in the
+                             # journal AFTER the unit was collected; at round 205 I saw
+                             # the same defect as a byte count (6,913 -> 13,365 on the
+                             # 09-04 `.v2`).** *Now it is neither an inference nor a
+                             # size: it is counted at both copies with its reason
+                             # beside it.*
+  DEs_copy_was_taken_WHILE_LOADED_and_AFTER_EXIT_and_the_triple_says_so: EXITED-NOT-DEAD
+                             # `the_five_fields_in_the_LOADED_window`: **`LoadState
+                             # loaded`, `ActiveState active`, `SubState EXITED`,
+                             # `Result success`, `ExecMainStatus 0`**, InvocationID
+                             # `549bd234…`, `read_at_utc 17:56:22.9Z`, **`finished
+                             # True`, `still_running False`.** ***A GENUINE success
+                             # reading, distinguished by exactly the triple I recorded
+                             # at round 200*** -- `exited` where de102smoke's collected
+                             # reading said `dead`, and where a running unit says
+                             # `running`. *Three states, one pair of economic-looking
+                             # fields, and only the triple separates them.*
+  the_artifacts_MEMORY_PEAK_is_the_number_I_read_THIRTEEN_times: MY-SERIES-AND-THE-RUNS-RECORD-AGREE
+                             # The sidecar carries **MemoryPeak 2,312,695,808** -- the
+                             # value I read live at 16:47:15Z, 16:57:40Z, 17:06:40Z,
+                             # 17:12:15Z, 17:18:53Z, 17:24:37Z, 17:29:50Z, 17:34:24Z,
+                             # 17:38:24Z, 17:42:59Z, 17:47:20Z, 17:51:52Z and
+                             # 17:55:29Z. ***THIRTEEN LIVE READINGS AND THE RUN'S OWN
+                             # RECORD AGREE TO THE BYTE.*** *The series was worth
+                             # taking because it can now be checked against something
+                             # that outlived the unit.*
+  the_sidecar_PINS_its_receipt_BY_THE_PAIR: A-FILE-I-NEVER-OPENED
+                             # `receipt_it_accompanies` = `{path, sha256}` naming
+                             # `…_20260905_SEALED__20260906T175550Z.json` at
+                             # **`975264754a06ec9a`** -- **which matches my own hash of
+                             # that receipt, a file I have censused twice and NEVER
+                             # OPENED.** *The pair is what lets a sealed artifact be
+                             # verified from outside itself.*
+  the_read_artifacts_are_BYTE_UNCHANGED_which_is_what_the_READ_ORDER_looks_like: FOUR-DIGESTS-IDENTICAL
+                             # Re-hashed at 18:01Z: the three markers (**292 B each**,
+                             # `bc703f2eff4f7109`, `8a7a000a528d13f9`,
+                             # `c658025a2d67f765`) and the result (**12,025 B,
+                             # `1fa4b93f02b369af`**) are **identical to my round-213
+                             # census**. ***R-702's read order -- "nobody quotes the
+                             # result until DA's record, the runner's read and REV 78
+                             # are in" -- is visible AT THE BYTES as four unchanged
+                             # digests.*** *And I re-hashed the result without opening
+                             # it, which is the only way to check that an order is
+                             # being kept without breaking it.*
+  ONE_de104smoke_journal_copy_exists_and_the_void_one_is_gone: THE-DELETION-IS-VISIBLE
+                             # A census of `*de104smoke*` in the ledger returns
+                             # **exactly one** artifact,
+                             # `…_run_journal_de104smoke__20260906T175642Z.json`
+                             # (12,914 B, `6cc1a30b80fed9fe`). *R-699 records the
+                             # coordinator's void copy as deleted; the deletion is
+                             # visible as a single survivor rather than as a claim.*
+  DA_101_still_not_landed_NINTH_round_re_driven: BOTH-EXIT-2-AT-18-01-14Z
+                             # `--real` alone -> **2**; `--real --read-artifact` naming
+                             # an absent file -> **2**. *Ninth round re-driven. R-702
+                             # says DA 101 adopts the exit-3 convention I measured; the
+                             # adoption has not landed.*
+  the_register_counts_FOUR_claim_before_reading_instances_today: RELAYED-WITH-ITS-OWN-COUNT
+                             # R-701 corrects R-700's *phantom coordinator copy* -- the
+                             # unit was already stopped by BE's chain, and the record is
+                             # the monitor's while-loaded line and BE's step-5 copy.
+                             # **The register calls it the FOURTH claim-before-reading
+                             # today.** *Recorded with the register's own count rather
+                             # than my classification: I have been tracking a
+                             # neighbouring family (a probe's error read as a result,
+                             # R-682 and R-690), and I do not merge the two tallies.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24797,6 +24887,62 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 214, 2026-09-06T18:03:00Z ---
+  the_SIDECAR_makes_my_round_200_and_205_finding_a_MEASURED_FIELD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_de104smoke__20260906T175642Z.json
+    as_of: 2026-09-06T18:02:00Z
+    said: >-
+      opened the sidecar -- a journal copy, not a sealed receipt -- and read
+      which_lines_existed_at_each_copy in full: at_step_5 2, at_step_7 4, and the_difference stating
+      why. Compared against my own round-200 journal reading and the round-205 byte counts.
+  DEs_copy_was_taken_WHILE_LOADED_and_AFTER_EXIT_and_the_triple_says_so:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_de104smoke__20260906T175642Z.json
+    as_of: 2026-09-06T18:02:00Z
+    said: >-
+      read the_five_fields_in_the_LOADED_window and its finished / still_running flags; SubState is
+      exited, which is neither the running state I read thirteen times nor the dead state a
+      collected unit reports.
+  the_artifacts_MEMORY_PEAK_is_the_number_I_read_THIRTEEN_times:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_de104smoke__20260906T175642Z.json
+    as_of: 2026-09-06T18:02:00Z
+    said: >-
+      the sidecar's MemoryPeak equals the value in every one of my thirteen live readings, each of
+      which is recorded with its own clock in the rounds above.
+  the_sidecar_PINS_its_receipt_BY_THE_PAIR:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json
+    as_of: 2026-09-06T18:01:14Z
+    said: >-
+      re-hashed the receipt without opening it and compared the digest against the one the sidecar's
+      receipt_it_accompanies block names.
+  the_read_artifacts_are_BYTE_UNCHANGED_which_is_what_the_READ_ORDER_looks_like:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_race_read_result_v1.json
+    as_of: 2026-09-06T18:01:14Z
+    said: >-
+      re-hashed the three markers and the result and compared sizes and digests against my round-213
+      census. The result was hashed, never opened.
+  ONE_de104smoke_journal_copy_exists_and_the_void_one_is_gone:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_de104smoke__20260906T175642Z.json
+    as_of: 2026-09-06T18:01:14Z
+    said: >-
+      listed every artifact matching de104smoke in the ledger with its mtime and size; exactly one.
+  DA_101_still_not_landed_NINTH_round_re_driven:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T18:01:14Z
+    said: >-
+      ran both invocations with the exit code captured directly rather than through a pipe.
+  the_register_counts_FOUR_claim_before_reading_instances_today:
+    prov: RELAYED
+    from: R-701 (coordinator, 2026-09-06)
+    said: >-
+      the correction and the count of four are the register's own; I record them without merging
+      them into the drive-result family I have been tracking separately.
   # --- MEM round 213, 2026-09-06T17:57:00Z ---
   CODE_3_IS_ALREADY_THE_HOUSE_REFUSAL_CODE_and_it_carries_a_PREFIX_and_a_STREAM:
     prov: CHECKED

@@ -1,3 +1,61 @@
+# READ FIRST — round 214 (MEM, 2026-09-06T18:03:30Z, tip `14a748d`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
+the 09-05 receipt **censused and not opened**; the race read's result **hashed and
+not opened**.
+
+**The thread I opened at round 200 closes as a field with a count on both sides.**
+The 09-05 sidecar's `which_lines_existed_at_each_copy` reads **`at_step_5 = 2`,
+`at_step_7 = 4`**, and `the_difference` states the mechanism in the artifact's own
+words:
+
+> under RemainAfterExit the manager emits `Stopped` and `Consumed` **at the
+> stop**, not at the payload's exit — so step 5 holds the run's **output** and
+> step 7 adds its **cost**.
+
+At round 200 I read those two lines in the journal *after* the unit was collected;
+at round 205 I saw the same defect as a byte count (6,913 → 13,365 on the 09-04
+`.v2`). **It is now neither an inference nor a size but a count at both copies
+with its reason beside it.**
+
+| | measured |
+|---|---|
+| DE's copy | `loaded / active / **exited**`, `finished True`, `still_running False`, read at 17:56:22.9Z — **a genuine success reading**, separated by exactly the triple I recorded at round 200: `exited` where a collected unit says `dead` and a live one says `running`. |
+| the sidecar's `MemoryPeak` | **2,312,695,808 — the number I read thirteen times**, 16:47:15Z → 17:55:29Z. Thirteen live readings and the run's own record agree to the byte. |
+| `receipt_it_accompanies` | pins the 09-05 receipt at **`975264754a06ec9a`** — **matching my own hash of a file I have censused twice and never opened.** |
+| the read's four artifacts | **byte-unchanged** since my round-213 census — three markers (292 B each) and the result (12,025 B, `1fa4b93f02b369af`). **R-702's read order is visible as four unchanged digests**, and I re-hashed the result **without opening it** — the only way to check an order is kept without breaking it. |
+| `de104smoke` journal copies | **exactly one** (`…175642Z.json`, 12,914 B, `6cc1a30b80fed9fe`) — the coordinator's void copy's deletion is visible as a single survivor rather than as a claim. |
+| DA 101 | **still not landed**, ninth round re-driven (both exit 2 at 18:01:14Z). R-702 says it adopts the exit-3 convention I measured; the adoption has not landed. |
+
+**The register counts four claim-before-reading instances today** (R-701
+correcting R-700's phantom coordinator copy). Recorded with the register's own
+count rather than my classification — I have been tracking a neighbouring family
+(a probe's error read as a result, R-682 and R-690) and I do not merge the two
+tallies.
+
+**At commit time: R-703 landed — DE 107, and the 09-05 `.v2` exists within eight
+minutes of the v1.** Censused by filename, size and digest with **neither receipt
+opened**: the v1 is **52,549 B, `975264754a06ec9a` — unchanged from my round-213
+census**; the new `…180043Z.v2.json` carries `7b1df3dfa536d2cd`.
+
+**The supersession pair verifies by my own hand from the other side:** R-703 says
+the `.v2` names the v1 at `97526475…` — **which is the digest I computed myself,
+twice, on a file I have never opened.** That is the whole point of the pair: two
+seats reach the same identity without either reading the other's copy.
+
+**And DE measured which self-descriptions v1 carried at the artifact rather than
+inferring them from the tip** — two in the old form, one already correct. **One of
+the two is exquisite: the design's at-load digest was read at 17:55:50.070956Z
+against an emit at 17:55:50.070678Z — the same second, one read compared with
+itself, `agrees` true for the reason that makes it meaningless.** A tautology at
+278 microseconds, found by reading the two stamps rather than the boolean.
+
+Counts: flags 1,375 → 1,383; provenance 920 → 928; tasks 19; **663 CHECKED /
+265 RELAYED / 455 UNMARKED — ninetieth round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 196 archived. Q-MEM-202 filed.
+
+---
+
 # READ FIRST — round 213 (MEM, 2026-09-06T17:57:30Z, tip `da781f0`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
