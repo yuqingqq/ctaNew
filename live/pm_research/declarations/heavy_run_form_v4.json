@@ -1,0 +1,67 @@
+{
+ "chain_head_rule": "readers resolve THE CHAIN HEAD of heavy_run_form_v*.json in this directory (the newest version whose supersedes pair {path, sha256} verifies against the file it names, back to v1) \u2014 never a filename literal; a reader pinned to a superseded version satisfies the words of rule 20's guard 1 without the property (REV 69 \u00a73.1/\u00a74: the runner pinned v1 at 14:00Z while v2 existed)",
+ "cpu_quota_percent": 100,
+ "decidable_launch_form_property": "the process's own cgroup leaf suffix from /proc/self/cgroup: '.service' admits a real day, '.scope' refuses it (DE 96 assert_launch_form_at_runtime); the PPid test in the runbook is the OUTSIDE diagnostic and holds of MainPID (flock), not of the payload (a grandchild)",
+ "declared_at_utc": "2026-09-06T18:52:04Z",
+ "declared_by": "BE (BE 76, REV 80 \u00a71.2); the reading, not the caps",
+ "form": "systemd-run --user --unit=<name> --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% -p RemainAfterExit=yes --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew --working-directory=<worktree> -- flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock <cmd>",
+ "grounding_drive": "exactly ONE drive grounds the conflict code's BEHAVIOUR: a unit launched against a HELD scratch lock with a payload whose own exit map excludes 75, its five fields and InvocationID read while loaded and copied into the launcher owner's receipt (REV 69 \u00a74 guard 3); the declared lock_path is grounded separately by inode (wrapper_observed), never by that drive",
+ "journal_identity": {
+  "cross_check": "journalctl --user -u <unit> -o cat | wc -l must equal the by-id count for a unit launched once under that name",
+  "manager_lines_field_under_the_user_manager": "USER_INVOCATION_ID",
+  "measured": "de95smoke.service: 1 line (the Started line, USER_INVOCATION_ID only); be64book.service: 99 manager lines (USER_INVOCATION_ID), 26 payload lines (_SYSTEMD_INVOCATION_ID), 1 neither \u2014 13:37Z; a unit NAME names every run ever launched under it",
+  "note": "a copy that returns 0 lines for a unit whose -u query has lines is a REFUSAL of the copy, never a record (two coordinator copies were exactly that, 13:35Z/13:36Z, deleted)",
+  "payload_lines_field": "_SYSTEMD_INVOCATION_ID",
+  "query_form": "journalctl --user _SYSTEMD_INVOCATION_ID=<id> + USER_INVOCATION_ID=<id>",
+  "system_manager_field_not_used_here": "INVOCATION_ID"
+ },
+ "lock_conflict_rc": 75,
+ "lock_conflict_rc_why": "flock -E 75: a held lock exits with the declared code, distinct from any payload exit; without -E a refusal and a crash are both ExecMainStatus=1 (REV 67 \u00a72.1, measured). No runner or producer may exit 75 for any other reason; each declares its own exit codes and asserts 75 is not among them.",
+ "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+ "memory_max_bytes": 8589934592,
+ "memory_peak_reading": {
+  "consequence_for_a_reader": "do not take a run's memory from `systemctl show -p MemoryPeak` after the payload exits. A capture that cannot resolve the leaf REFUSES rather than substituting the property (exit 77).",
+  "measured": {
+   "agreement_while_running": {
+    "leaf_memory_peak": 1083482112,
+    "note": "read while the payload was alive: the two agree.",
+    "systemd_MemoryPeak_property": 1081647104,
+    "unit": "be74probe (1 GiB anon, held)"
+   },
+   "disagreements_after_exit": {
+    "in_process_peak_rss_gb_09_04": 2.405,
+    "in_process_peak_rss_gb_09_05": 1.879,
+    "leaf_memory_peak_be74struct04b": 2578067456,
+    "note": "the same unit's leaf read 2,578,067,456 while the property read 847,671,296; across three runs the property read 21 MB, 848 MB and 2.01 GB against in-process peaks of 2.405 and 1.879 GB.",
+    "systemd_property_be74struct04": 21946368,
+    "systemd_property_be74struct04b": 847671296,
+    "systemd_property_be74struct05": 2011267072
+   }
+  },
+  "no_mechanism_asserted": true,
+  "the_post_exit_property": "systemd's `MemoryPeak`, recorded VERBATIM. It is not a reading of the run's peak and must not be quoted as one.",
+  "the_runs_peak": "the cgroup LEAF's `memory.peak`, read WHILE THE PAYLOAD LIVES -- in-process at the end of the run, or by `be_heavy_run.sh --capture` which resolves the leaf from `ControlGroup=` while the unit is still loaded.",
+  "unit_outcome_minimum_read_is_unchanged": "the five fields [\"LoadState\", \"ActiveState\", \"SubState\", \"ExecMainStatus\", \"Result\"] are exactly as v3 declared them. This addition concerns the MEMORY reading only and adds no field to the outcome read.",
+  "why_no_mechanism": "this declaration records WHICH READING IS THE RUN'S PEAK and which is not. Why systemd's latched property lags, and by how much, is unexplained here: naming a mechanism that has not been measured would be the defect the programme keeps closing."
+ },
+ "remain_after_exit": true,
+ "remain_after_exit_why": "with RemainAfterExit=yes a unit that exits 0 stays LOADED as active/exited with ExecMainStatus 0 and Result success until `systemctl --user stop <unit>`; the lock is a process-held flock and is released when the payload exits regardless of the unit object. Measured 13:48Z: exit 0 without it -> not-found/inactive/dead/0/success (defaults); exit 3 without it -> loaded/failed/3; exit 0 with it -> loaded/active/exited/0/success; exit 3 with it -> loaded/failed/3.",
+ "runtime_form_check": "the -E half is decidable at runtime exactly as the --scope half is: the payload's parent IS flock, so /proc/<PPid>/cmdline carries 'flock -n -E <rc> <lock_path> ...' \u2014 a runner asserts its own parent's cmdline against this declaration (REV 69 \u00a71.2); the composed-string lint is a lint",
+ "slice": "research.slice",
+ "supersedes": {
+  "path": "live/pm_research/declarations/heavy_run_form_v3.json",
+  "rule": "13 / R-608 -- vN+1 by the {path, sha256} pair; v3 is NOT edited",
+  "sha256": "e6ddd378d259fa198056d9341d51a51b20a7d052d1d40ecebed1c135e7714158",
+  "what_changed": "ONE addition under a NEW key, `memory_peak_reading`. Nothing else in this declaration moves -- in particular `unit_outcome_minimum_read` is UNCHANGED at the same five fields."
+ },
+ "unit_outcome_minimum_read": [
+  "LoadState",
+  "ActiveState",
+  "SubState",
+  "ExecMainStatus",
+  "Result"
+ ],
+ "unit_outcome_note": "read the FIVE fields while LoadState=loaded and COPY them with the unit's InvocationID at once; LoadState=not-found makes the rest defaults and the reading VOID; under RemainAfterExit=yes a FINISHED unit is loaded/active/EXITED and a RUNNING one loaded/active/RUNNING with ExecMainStatus 0 in both \u2014 SubState is the discriminator; a killed or OOM-killed unit reports Result=signal with ExecMainStatus = the signal number (not in any exit map); THE PROPERTY-SIDE TIE (REV 69 \u00a73.5): InvocationID is non-empty only while the unit is loaded and empty after stop or collection, so a copy carrying a non-empty InvocationID could only have been taken while the unit existed \u2014 a copy without one is VOID whatever its LoadState string says; after the receipt lands and the five fields + id are copied, the owner stops the unit (MemoryPeak and InvocationID are retained while loaded/exited and [not set]/empty after stop \u2014 copy BEFORE stopping); a unit name that is still loaded (active/exited OR failed) makes systemd-run FAIL at launch ('already loaded') \u2014 unique names per launch, reset-failed/stop hygiene by the owner",
+ "version": 4,
+ "what": "THE ONE DECLARATION of the heavy-run launch form's constants. Every literal in code that names these values reads this file or asserts equality with it in its selftest; two definitions of the conflict code (be_heavy_run.sh:36 and be_rule22.py:134) and two bare literals were measured drifting-capable at REV 67 \u00a72.3 (a launcher refusing with 76 was published as 75)."
+}
