@@ -74,7 +74,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 250
+EXPECTED_CHECKS = 252
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1786,7 +1786,7 @@ BE_PUBLISHED_CASCADE_HEADLINE = {"CONDVALUE_X_SKEW": 8.7013,
                                  "HAZARD_OVER_SKEWED_REF": 5.5684}
 BE_HEADLINE_TOL = 1e-3
 
-BE_CANCEL_AXIS_NULL = {
+BE_EXPECTED_VALUES = {
     "artifact": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
     "sha256": "6951f57d2b8a23bd2d51f24d25659ddffc671c5932aaba89246b025182"
               "c2fa08",
@@ -1815,18 +1815,77 @@ BE_CANCEL_AXIS_NULL = {
     },
     "population_block": {"generations": 29813, "n_generations_with_fills":
                          3861, "baseline_fills": 4315,
-                         "source_cache": "de_section81_cache_12.pkl"},
+                         # CAUGHT BY THE NEW CROSS-CHECK ON ITS FIRST REAL
+                         # RUN (round 69). I had transcribed this as the
+                         # BASENAME; BE's artifact carries the FULL PATH,
+                         # and it points into BE'S OWN WORKTREE. The digest
+                         # matched throughout -- this is precisely the
+                         # class a file digest cannot catch. Corrected to
+                         # the artifact's own value.
+                         "source_cache": "/home/yuqing/ctaNew-wt-be/data/"
+                                         "pm_5min/derived/"
+                                         "de_section81_cache_12.pkl"},
 }
 
 
-def load_cited_be_null(root: Path | None = None) -> dict:
-    """Read BE's null artifact and VERIFY its digest before using a number
-    from it. A different sha256 REFUSES -- a cited measurement whose bytes
-    moved is not the measurement that was cited."""
+#: A-1 (reviewer 3563fd2, reproduced by the coordinator). The digest guards
+#: THE FILE; it does not guard the TRANSCRIPTION. Every cited number is now
+#: READ FROM THE PARSED ARTIFACT at its JSON path, and the literals above
+#: survive only as a CROSS-CHECK that refuses on mismatch -- the
+#: transcription is the falsifier, never the source.
+BE_CITED_PATHS = {
+    "per_arm": {
+        arm: {field: f"cells.{arm}.null.fills_lost_per_cancel.{key}"
+              for field, key in (("fills_lost_per_cancel_mean", "mean"),
+                                 ("sd", "sd"), ("min", "min"),
+                                 ("max", "max"), ("p05", "p05"),
+                                 ("p50", "p50"), ("p95", "p95"))}
+        for arm in ("CONDVALUE_X_SKEW", "HAZARD_OVER_SKEWED_REF")},
+    "per_arm_scalar": {
+        arm: {"decisions": f"cells.{arm}.decisions",
+              "n_draws": f"cells.{arm}.n_draws"}
+        for arm in ("CONDVALUE_X_SKEW", "HAZARD_OVER_SKEWED_REF")},
+    "population_block": {
+        "generations": "population.generations",
+        "n_generations_with_fills": "population.n_generations_with_fills",
+        "baseline_fills": "population.baseline_fills",
+        "source_cache": "population.source"},
+}
+
+_BE_CITED_CACHE: dict = {}
+
+
+def _json_at(doc, dotted: str):
+    cur = doc
+    for part in dotted.split("."):
+        if not isinstance(cur, dict) or part not in cur:
+            raise RuntimeError(
+                f"REFUSED: the cited path {dotted!r} does not resolve in "
+                f"BE's artifact. A citation that does not resolve is not a "
+                f"citation.")
+        cur = cur[part]
+    return cur
+
+
+def load_cited_be_null(root: Path | None = None, *,
+                       refresh: bool = False) -> dict:
+    """Read BE's null artifact, VERIFY its digest, then READ EVERY CITED
+    VALUE FROM THE PARSED JSON at its declared path.
+
+    Two refusals, and they guard different things. The DIGEST refuses when
+    the file's bytes moved -- a cited measurement whose bytes changed is
+    not the measurement that was cited. The TRANSCRIPTION CROSS-CHECK
+    refuses when a literal in this module disagrees with the artifact at
+    the same path -- which the digest cannot catch, because a digest over
+    the file says nothing about what was copied out of it by hand
+    (reviewer 3563fd2 A-1)."""
     import hashlib
     from pathlib import Path as _P
     base = _P(root) if root is not None else _P(__file__).resolve().parents[2]
-    path = base / BE_CANCEL_AXIS_NULL["artifact"]
+    key = str(base)
+    if not refresh and key in _BE_CITED_CACHE:
+        return _BE_CITED_CACHE[key]
+    path = base / BE_EXPECTED_VALUES["artifact"]
     if not path.is_file():
         raise RuntimeError(
             f"REFUSED: the cited BE null is absent at {path}. A baseline "
@@ -1834,15 +1893,55 @@ def load_cited_be_null(root: Path | None = None) -> dict:
             f"not resolve.")
     raw = path.read_bytes()
     got = hashlib.sha256(raw).hexdigest()
-    if got != BE_CANCEL_AXIS_NULL["sha256"]:
+    if got != BE_EXPECTED_VALUES["sha256"]:
         raise RuntimeError(
             f"REFUSED: the cited BE null has moved. Expected sha256 "
-            f"{BE_CANCEL_AXIS_NULL['sha256']}, found {got}. If BE emitted "
+            f"{BE_EXPECTED_VALUES['sha256']}, found {got}. If BE emitted "
             f"an in-band v2, the citation must be re-pointed DELIBERATELY, "
             f"not followed silently.")
-    return {"path": BE_CANCEL_AXIS_NULL["artifact"], "sha256": got,
-            "verified_at_read_time": True,
-            "n_bytes": len(raw)}
+    doc = json.loads(raw)
+
+    per_arm, mismatches = {}, []
+    for arm, fields in BE_CITED_PATHS["per_arm"].items():
+        vals = {f: _json_at(doc, jp) for f, jp in fields.items()}
+        vals.update({f: _json_at(doc, jp) for f, jp
+                     in BE_CITED_PATHS["per_arm_scalar"][arm].items()})
+        per_arm[arm] = vals
+        for f, v in vals.items():
+            exp = BE_EXPECTED_VALUES["per_arm"][arm].get(f)
+            if exp is not None and exp != v:
+                mismatches.append(
+                    {"where": f"per_arm.{arm}.{f}", "literal": exp,
+                     "artifact": v})
+    pop = {f: _json_at(doc, jp)
+           for f, jp in BE_CITED_PATHS["population_block"].items()}
+    for f, v in pop.items():
+        exp = BE_EXPECTED_VALUES["population_block"].get(f)
+        if exp is not None and exp != v:
+            mismatches.append({"where": f"population_block.{f}",
+                               "literal": exp, "artifact": v})
+    if mismatches:
+        raise RuntimeError(
+            f"REFUSED: {len(mismatches)} transcription mismatch(es) between "
+            f"this module's literals and BE's artifact at the same JSON "
+            f"paths: {mismatches[:4]}. The digest matched, so the FILE is "
+            f"the cited one and the COPY is wrong -- which is exactly what "
+            f"a digest cannot catch.")
+
+    out = {"path": BE_EXPECTED_VALUES["artifact"], "sha256": got,
+           "verified_at_read_time": True, "n_bytes": len(raw),
+           "per_arm": per_arm, "population_block": pop,
+           "values_read_from": "the parsed artifact at the declared JSON "
+                               "paths, never from this module's literals",
+           "transcription_crosscheck": {
+               "n_values_compared": sum(
+                   len(v) for v in BE_EXPECTED_VALUES["per_arm"].values())
+               + len(BE_EXPECTED_VALUES["population_block"]),
+               "n_mismatches": 0,
+               "role": "the literals are a FALSIFIER, not the source"},
+           "cited_paths": BE_CITED_PATHS}
+    _BE_CITED_CACHE[key] = out
+    return out
 
 
 def generations_with_fills(reference: dict) -> int:
@@ -1875,7 +1974,8 @@ def generations_all(reference: dict) -> int:
 
 
 def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
-                                 n_gens_with_fills, n_gens_all, arms):
+                                 n_gens_with_fills, n_gens_all, arms,
+                                 cited=None):
     """EVERY candidate denominator, with `lands_in_BE_range` COMPUTED for
     each -- round 66.
 
@@ -1888,6 +1988,9 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
     the problem; the ESTIMATOR is. A random cancel does not remove its
     generation's fills: latency, holds, reposts and queue resets stand
     between the decision and the fills, and only a replay prices that."""
+    cited = cited if cited is not None else load_cited_be_null()
+    CIT = cited["per_arm"]
+    POP = cited["population_block"]
     # THE BANDS, EACH WITH ITS PROVENANCE NAMED (reviewer be28db0 A-3b).
     # The [0.40, 0.50] band is a COORDINATOR-SUPPLIED APPROXIMATION and is
     # NOT a field of BE's artifact; BE's measured range is min..max on the
@@ -1899,17 +2002,15 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
                           "66 dispatch, corrected by the coordinator in "
                           "round 67. NOT a field of BE's artifact."},
         "be_measured_range_CONDVALUE": {
-            "lo": BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]["min"],
-            "hi": BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]["max"],
+            "lo": CIT["CONDVALUE_X_SKEW"]["min"],
+            "hi": CIT["CONDVALUE_X_SKEW"]["max"],
             "provenance": "CITED from be_cancel_axis_null_v1.json, the "
                           "CONDVALUE cell's null min..max over 500 draws"},
         "be_mean_plus_minus_1sd_CONDVALUE": {
-            "lo": (BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]
-                   ["fills_lost_per_cancel_mean"]
-                   - BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]["sd"]),
-            "hi": (BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]
-                   ["fills_lost_per_cancel_mean"]
-                   + BE_CANCEL_AXIS_NULL["per_arm"]["CONDVALUE_X_SKEW"]["sd"]),
+            "lo": (CIT["CONDVALUE_X_SKEW"]["fills_lost_per_cancel_mean"]
+                   - CIT["CONDVALUE_X_SKEW"]["sd"]),
+            "hi": (CIT["CONDVALUE_X_SKEW"]["fills_lost_per_cancel_mean"]
+                   + CIT["CONDVALUE_X_SKEW"]["sd"]),
             "provenance": "DERIVED here from BE's cited mean and sd -- a "
                           "construction of this module, not a field of "
                           "BE's"},
@@ -1925,14 +2026,13 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
             "status": "the correct POPULATION for a decision drawn without "
                       "regard to fills, and still the wrong ESTIMATOR"},
         "all_generations_BE_population_block": {
-            "n": BE_CANCEL_AXIS_NULL["population_block"]["generations"],
-            "rate": (n_b / BE_CANCEL_AXIS_NULL["population_block"]
-                     ["generations"]),
+            "n": POP["generations"],
+            "rate": (n_b / POP["generations"]),
             "status": "BE reads de_section81_cache_12.pkl and this module "
                       "reads de_section81_cache_v2_12.pkl; the two "
                       "generation counts DIFFER and both are reported"},
     }
-    for a, meta in BE_CANCEL_AXIS_NULL["per_arm"].items():
+    for a, meta in CIT.items():
         cands[f"decision_population_{a}"] = {
             "n": meta["decisions"], "rate": n_b / meta["decisions"],
             "status": "THE POPULATION BE ACTUALLY DRAWS FROM -- and the "
@@ -1947,7 +2047,7 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
             None if v["rate"] is None
             else v["rate"] - 0.4969748944984966)
     replayed = {}
-    for a, meta in BE_CANCEL_AXIS_NULL["per_arm"].items():
+    for a, meta in CIT.items():
         flpc = (arms.get(a) or {}).get("fills_lost_per_cancel")
         replayed[a] = {
             "be_replayed_rate": meta["fills_lost_per_cancel_mean"],
@@ -1964,8 +2064,11 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
             name: sum(1 for v in cands.values() if v["lands_in"][name])
             for name in BANDS},
         "be_replayed_per_arm": replayed,
-        "be_artifact": BE_CANCEL_AXIS_NULL["artifact"],
-        "be_artifact_sha256": BE_CANCEL_AXIS_NULL["sha256"],
+        "be_artifact": cited["path"],
+        "be_artifact_sha256": cited["sha256"],
+        "citation_read_mode": cited["values_read_from"],
+        "transcription_crosscheck": cited["transcription_crosscheck"],
+        "cited_json_paths": cited["cited_paths"],
         "two_generation_counts_explained": {
             "de_counts": 31122, "de_cache": "de_section81_cache_v2_12.pkl",
             "be_counts": 29813, "be_cache": "de_section81_cache_12.pkl",
@@ -2009,11 +2112,11 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
         "resolved_by": {
             "ruling": "R-546 (coordinator, rule 14 -- a MEASUREMENT choice, "
                       "not an entitlement)",
-            "artifact": BE_CANCEL_AXIS_NULL["artifact"],
-            "sha256": BE_CANCEL_AXIS_NULL["sha256"],
+            "artifact": cited["path"],
+            "sha256": cited["sha256"],
             "rates_adopted_per_arm": {
                 a: m["fills_lost_per_cancel_mean"]
-                for a, m in BE_CANCEL_AXIS_NULL["per_arm"].items()},
+                for a, m in CIT.items()},
             "never_recomputed_here": True,
             "digest_verified_at_read_time": True,
             "why_a_replay_and_not_a_count": (
@@ -2065,7 +2168,8 @@ def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
 
 def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
                      n_gens_all: int | None = None, *,
-                     enforce_published_headline: bool = False) -> dict:
+                     enforce_published_headline: bool = False,
+                     cited: dict | None = None) -> dict:
     """WHAT A CANCEL COSTS, SPLIT INTO THE TWO THINGS IT IS MADE OF.
 
     `cents_per_cancel` alone cannot separate a policy that picks BAD
@@ -2102,6 +2206,8 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
     # Both rates are emitted; the random-decision rate is PRIMARY when the
     # caller supplies the cancellable population, and the filling rate is
     # kept beside it under its own name rather than deleted.
+    cited = cited if cited is not None else load_cited_be_null()
+    CIT = cited["per_arm"]
     fpg_filling = n_b / n_gens_with_fills
     fpg_random = (n_b / n_gens_all) if n_gens_all else None
     fpg = fpg_random if fpg_random is not None else fpg_filling
@@ -2125,9 +2231,8 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
         # own theta, and it is a REPLAY because a count cannot price the
         # latency, holds, reposts and queue resets between a decision and
         # its fills -- 0 of 5 counted denominators landed in its range.
-        cited = (BE_CANCEL_AXIS_NULL["per_arm"].get(name) or {}).get(
-            "fills_lost_per_cancel_mean")
-        base_rate = cited if cited else fpg
+        arm_rate = (CIT.get(name) or {}).get("fills_lost_per_cancel_mean")
+        base_rate = arm_rate if arm_rate else fpg
         rnd_arm = base_rate * mean_b if base_rate else None
         cascade = flpc / base_rate if base_rate else None
         mean_r = removed / lost if lost else None
@@ -2142,10 +2247,10 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
             # BOTH READINGS TRAVEL, so a reader can see which baseline a
             # cascade number was taken against (round 65).
             "cascade_factor_baseline": (
-                "BE_REPLAYED_PER_ARM_RATE_CITED" if cited
+                "BE_REPLAYED_PER_ARM_RATE_CITED" if arm_rate
                 else baseline_kind),
             "cascade_baseline_rate_used": base_rate,
-            "cascade_baseline_is_a_cited_measurement": bool(cited),
+            "cascade_baseline_is_a_cited_measurement": bool(arm_rate),
             "random_cancel_cost_cents_this_arm": rnd_arm,
             # RETAINED AS FIELDS, MARKED, because a refuted reading that
             # disappears cannot be checked against the one that replaced it.
@@ -2338,7 +2443,7 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
         "fills_per_CANCELLABLE_generation": fpg_random,
         "cascade_baseline_candidates": _cascade_baseline_candidates(
             n_b, fpg_filling, fpg_random, n_gens_with_fills, n_gens_all,
-            out),
+            out, cited=cited),
         "book_mean_pnl_per_fill_cents": mean_b,
         "random_cancel_cost_cents": rnd,
         "random_cancel_definition":
@@ -5677,19 +5782,20 @@ def selftest() -> int:
     # ---- R-546: THE CITATION'S OWN FALSIFIERS, BOTH DIRECTIONS --------
     import tempfile as _tf
     _root = Path(__file__).resolve().parents[2]
-    _live = load_cited_be_null(_root)
+    _live = load_cited_be_null(_root, refresh=True)
     ok(_live["verified_at_read_time"] is True
-       and _live["sha256"] == BE_CANCEL_AXIS_NULL["sha256"],
+       and _live["sha256"] == BE_EXPECTED_VALUES["sha256"]
+       and _live["transcription_crosscheck"]["n_mismatches"] == 0,
        f"POSITIVE CONTROL ON THE CITATION, AND IT ADMITS: BE's null "
        f"resolves at the cited path and its digest matches "
        f"({_live['sha256'][:16]}...), so the rates adopted are the bytes "
        f"that were cited")
     with _tf.TemporaryDirectory() as _td:
-        _fake = Path(_td) / BE_CANCEL_AXIS_NULL["artifact"]
+        _fake = Path(_td) / BE_EXPECTED_VALUES["artifact"]
         _fake.parent.mkdir(parents=True, exist_ok=True)
         _fake.write_text('{"planted": "not BE\'s bytes"}')
         try:
-            load_cited_be_null(Path(_td))
+            load_cited_be_null(Path(_td), refresh=True)
             ok(False, "KNOWN-BAD: a planted artifact at the cited path was "
                       "ACCEPTED")
         except RuntimeError as _e:
@@ -5700,12 +5806,44 @@ def selftest() -> int:
                "and an in-band v2 must be re-pointed DELIBERATELY")
     with _tf.TemporaryDirectory() as _td2:
         try:
-            load_cited_be_null(Path(_td2))
+            load_cited_be_null(Path(_td2), refresh=True)
             ok(False, "KNOWN-BAD: an ABSENT citation was accepted")
         except RuntimeError as _e:
             ok("is absent" in str(_e),
                "KNOWN-BAD, the other absence: a citation that does not "
                "resolve REFUSES rather than falling back to a count")
+    # A-1: THE TRANSCRIPTION IS THE FALSIFIER, NOT THE SOURCE. The digest
+    # guards the FILE; only this cross-check guards the COPY, and it caught
+    # a real one on its first run -- `source_cache` was transcribed as a
+    # basename where BE's artifact carries a full path into BE's worktree.
+    ok(_live["values_read_from"].startswith("the parsed artifact")
+       and _live["per_arm"]["CONDVALUE_X_SKEW"][
+           "fills_lost_per_cancel_mean"] == 0.4969748944984966
+       and _live["transcription_crosscheck"]["n_values_compared"] >= 18,
+       f"A-1 POSITIVE CONTROL, AND IT ADMITS: every cited value is READ "
+       f"from the parsed artifact at its declared JSON path "
+       f"({_live['transcription_crosscheck']['n_values_compared']} values "
+       f"cross-checked, 0 mismatching), so a literal in this module can no "
+       f"longer be the source of a number")
+    _sv_lit = BE_EXPECTED_VALUES["per_arm"]["CONDVALUE_X_SKEW"]["sd"]
+    try:
+        BE_EXPECTED_VALUES["per_arm"]["CONDVALUE_X_SKEW"]["sd"] = 0.999
+        try:
+            load_cited_be_null(_root, refresh=True)
+            ok(False, "KNOWN-BAD: a PLANTED TRANSCRIPTION mismatch was "
+                      "accepted -- the digest would not have caught it")
+        except RuntimeError as _e:
+            ok("transcription mismatch" in str(_e)
+               and "the FILE is the cited one and the COPY is wrong"
+               in str(_e),
+               "KNOWN-BAD, PLANTED TRANSCRIPTION: a literal that disagrees "
+               "with the artifact at the same JSON path REFUSES, while the "
+               "DIGEST STILL MATCHES -- which is the whole gap A-1 named, "
+               "driven rather than argued")
+    finally:
+        BE_EXPECTED_VALUES["per_arm"]["CONDVALUE_X_SKEW"]["sd"] = _sv_lit
+        load_cited_be_null(_root, refresh=True)
+
     _saved = dict(BE_PUBLISHED_CASCADE_HEADLINE)
     try:
         BE_PUBLISHED_CASCADE_HEADLINE["CONDVALUE_X_SKEW"] = 99.0
