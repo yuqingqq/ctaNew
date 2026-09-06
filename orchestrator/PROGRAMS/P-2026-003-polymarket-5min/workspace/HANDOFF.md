@@ -5,6 +5,79 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 196
+
+**As of 2026-09-06T15:28:14Z, R-670 swept (tip `f151cad`). State only — MEM writes no
+result. No sealed value read; the sealed day not opened — every cell driven on a synthetic
+receipt.**
+
+### The seam I drove open at round 190 is closed — and I drove the ladder
+
+| receipt (verifiable pair) | DA's verdict |
+|---|---|
+| v21 | **`sealed: True`, 0 leaked** |
+| v22 | **`sealed: True`, 0 leaked** |
+| v23 | **`sealed: False`, 3 leaked** |
+
+*At round 190, DA said three fields leaked where DE said the receipt obeyed the rule in
+force when it was produced.* ***The two readers now agree, version for version*** — DA
+reading `SEALED_FROM_DESIGN_VERSION` by the same AST route it already used for the field
+list, **so the seats share a fact rather than a convention.**
+
+**And my first cell fell to the strictest list because I omitted the digest.** *A path with
+no `sha256` gave `sealed False, 3 leaked` for both v21 and v23* — **because the pair was
+unverifiable, exactly as on DE's selector at round 192.** ***The two sides are symmetric in
+their refusals as well as their admissions.*** *Twenty-fifth "suspect the probe first."*
+
+**At commit time (15:31:55Z): Q-DA-318 landed** — *"R-663 closed: the 09-03 seal **holds**,
+judged against the **eight** names in force at design v21."* ***The filing says on the real
+receipt what I drove synthetically this round.*** *The seam that opened at round 190, was
+confirmed by REV 73 on the landed receipt and closed on DA's side at DA 95, is now filed
+closed — with the day's verdict unchanged throughout.*
+
+### The record, and a stale default with a familiar name
+
+- **The landing record is re-emitted by pair and the seal holds:** 27,237 B,
+  `6e418d119ce27bebf0…`, superseding `…142749Z.json` at `65048af3fda79195de78…` (*the digest
+  I verified at round 191*), `INCOMPLETE`, **`seal_holds: true`**, receipt digest
+  `5dd3a8f3f5818379` carried. ***Three supersessions in ninety minutes, each by the pair —
+  and the fact surviving all three is the receipt digest.***
+- ***The transitive closure found a stale default in DA's own verifier:*** *"the old tail was
+  `best or (d / '…_params_v6.json')` — a stale default that would be **opened** whenever the
+  glob found nothing — while the head is v14."* **One hop could not see it: the literal is
+  returned, the return lands in `PARAMS_PATH`, and `PARAMS_PATH` is opened.** The remedy is
+  rule 11 — ***"an absence is a named refusal, not a default"*** — now
+  `NO_PARAMS_DECLARATION_PRESENT`.
+- ***And it is the same `v6` my round-184 listing surfaced.*** *My `tail -4` showed v6–v9 and
+  hid v13/v14 because `v14` sorts before `v6`.* **Two independent routes to one stale
+  version.** *Mine was a probe error; DA's would have been a verifier reading bars nobody runs
+  under.*
+- **`BOOK_PIN_MATCHED_BUT_NOT_A_PICKLE` is a named refusal** with its own selftest, replacing
+  *a traceback with the verifier's name nowhere in it*.
+
+### One routed, one lifted
+
+- **The census numbers "at the tip" are a run's, not an artifact's.** R-670 reports **279 →
+  66 → 1**; the newest **emitted** census is still `…150939Z.json` at **271 → 62 → 1**.
+  *True of a run; **a re-emission is still owed**.* **Eighth instance today — one round after
+  R-669 corrected the same class.**
+- **The pre-read is admissible again** — lifting the hold I recorded at round 190. ***It
+  lasted five rounds and ended when the instrument was fixed, not when the pressure to re-run
+  rose.***
+
+### The run
+
+`active / running`, **`MemoryPeak` 2,957,488,128 B for the seventh consecutive reading**;
+BE 66's heavy half still blocked on the lock; **REV 75** open on the
+positively-old-with-a-bad-pair shape. *Receipt ≈16:20Z.*
+
+**Counts, measured before the sentence:** flags 1,224 → **1,232**, `flag_provenance`
+769 → **777**, tasks 19; **519 CHECKED**, 258 RELAYED, **455 UNMARKED — unchanged for the
+seventy-second round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 178** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 195
 
 **As of 2026-09-06T15:22:37Z, R-669 swept (tip `3ca9009`). State only — MEM writes no

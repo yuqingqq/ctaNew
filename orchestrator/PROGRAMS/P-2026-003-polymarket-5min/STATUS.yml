@@ -63,6 +63,69 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T15:28:14Z (MEM ROUND 196 -- R-670 SWEPT, tip `f151cad`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every cell driven on a
+  SYNTHETIC receipt.**
+  (1) ***THE SEAM I DROVE OPEN AT ROUND 190 IS CLOSED, AND I DROVE THE LADDER.***
+  **`economic_absence` with a VERIFIABLE pair: v21 → `sealed True` / 0 leaked; v22 → `True` /
+  0; v23 → `False` / 3, each with `judged_against` naming the list in force.** *At round 190
+  DA said three fields leaked where DE said the receipt obeyed the rule in force when it was
+  produced.* **The two readers now agree, version for version** -- *DA reading
+  `SEALED_FROM_DESIGN_VERSION` by the same AST route it already used for the field list, so
+  the seats share a FACT rather than a convention.*
+  (2) **AND MY FIRST CELL FELL TO THE STRICTEST LIST BECAUSE I OMITTED THE DIGEST.** *A path
+  with no `sha256` gave `sealed False, 3 leaked` for BOTH v21 and v23 -- which reads as "the
+  version made no difference".* **It made none because the PAIR was unverifiable, exactly the
+  behaviour I verified on DE's selector at round 192.** ***The two sides are symmetric in
+  their refusals as well as their admissions.*** *Twenty-fifth "suspect the probe first".*
+  (3) **THE LANDING RECORD IS RE-EMITTED BY PAIR AND THE SEAL HOLDS:** 27,237 B,
+  `6e418d119ce27bebf0…`, superseding `…142749Z.json` at `65048af3fda79195de78…` -- *the
+  digest I verified at round 191* -- `status INCOMPLETE`, `n_arms_agreeing None`,
+  **`seal_holds TRUE`**, and the sealed receipt's digest `5dd3a8f3f5818379` carried through.
+  ***Three supersessions of one record in ninety minutes, each by the PAIR, each leaving its
+  predecessor intact -- and the fact that survives all three unchanged is the receipt
+  digest.***
+  (4) ***THE TRANSITIVE CLOSURE FOUND A STALE DEFAULT IN DA'S OWN VERIFIER:*** *"the old tail
+  was `best or (d / '…_params_v6.json')` -- a stale default that would be OPENED whenever the
+  glob found nothing -- while the head is v14."* **One hop could not see it: "the literal is
+  returned, the return lands in `PARAMS_PATH`, and `PARAMS_PATH` is opened".** **The remedy
+  is rule 11 -- "an absence is a NAMED REFUSAL, not a default" -- now
+  `NO_PARAMS_DECLARATION_PRESENT`.** *"Reading a version nobody is running under is the exact
+  failure this verifier exists to catch elsewhere."*
+  (5) ***AND IT IS THE SAME v6 MY ROUND-184 LISTING SURFACED.*** *My `ls … | tail -4` showed
+  v6–v9 and hid v13/v14 because `v14` sorts before `v6`; the stale default was pinned at
+  **v6**.* **Two independent routes to one stale version -- a listing that showed v6 as
+  newest, and a default that would have OPENED v6 when the glob found nothing.** *Mine was a
+  probe error; DA's would have been a verifier reading bars nobody runs under.*
+  (6) **`BOOK_PIN_MATCHED_BUT_NOT_A_PICKLE` IS A NAMED REFUSAL** (:871, selftest
+  :4466-4471), replacing a raise that escaped the verifier -- *"a traceback with the
+  verifier's name nowhere in it"*. ***A raise that escapes its own verifier is
+  indistinguishable from a crash; a named refusal is a verdict the caller can record.***
+  (7) **THE CENSUS NUMBERS "AT THE TIP" ARE A RUN'S, NOT AN ARTIFACT'S.** *R-670 reports 279
+  → 66 pins → 1; the newest EMITTED census is still `…150939Z.json` at 271 → 62 → 1, re-read
+  by me this round.* **The sentence says "at the tip" and is true of a RUN; no artifact
+  carries 279 or 66, so a reader who resolves the census meets 271/62 and a RE-EMISSION IS
+  STILL OWED.** *Eighth instance today -- one round after R-669 corrected the same class.*
+  **Routed, not ruled.**
+  (8) **THE PRE-READ IS ADMISSIBLE AGAIN** -- *lifting the hold I recorded at round 190,
+  where an instrument known to be wrong about the day was kept OUT OF USE rather than
+  trusted.* ***The hold lasted five rounds and ended when the instrument was fixed, not when
+  the pressure to re-run rose.*** **The run: `active / running`, `MemoryPeak` 2,957,488,128 B
+  for the SEVENTH consecutive reading; BE 66's heavy half still blocked on the lock; REV 75
+  open on the positively-old-with-a-bad-pair shape.**
+  **AT COMMIT TIME, 2026-09-06T15:31:55Z: Q-DA-318 LANDED (`6d3f04e`) -- "R-663 closed: the
+  09-03 seal HOLDS, judged against the EIGHT names in force at design v21".** ***So the
+  filing says on the real receipt what I drove synthetically this round: at v21 the eight are
+  the list, and the day obeys it.*** *The seam that opened at round 190, was confirmed by REV
+  73 on the landed receipt, and closed on DA's side at DA 95, is now filed closed by the seat
+  that carried it -- with the day's verdict unchanged throughout.*
+  **FLAG WORDS: the seal-scope seam CLOSED-BOTH-SIDES (v21/v22 sealed, v23 not); the landing
+  record RE-EMITTED-SEAL-HOLDS; a stale default FOUND-BY-THE-TRANSITIVE-CLOSURE (params v6
+  again); the census 279/66 A-RUN-NOT-AN-ARTIFACT.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,224 -> 1,232, flag_provenance 769 -> 777,
+  tasks 19; **519 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
+  seventy-second round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T15:22:37Z (MEM ROUND 195 -- R-669 SWEPT, tip `3ca9009`. STATE ONLY. MEM ASSERTS
   NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every cell driven on a
   SCRATCH file in a temp directory.**
@@ -171,71 +234,6 @@ updated: >-
   tasks 19; **503 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
   seventieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
   new flags vs HEAD 0 without provenance.)
-  2026-09-06T15:11:21Z (MEM ROUND 193 -- R-667 SWEPT, tip `dac2066`; DA 94 landed during the
-  round. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT
-  OPENED.**
-  (1) ***THE REGISTER LINE, RESOLVED BY ME RATHER THAN TAKEN FROM THE LIST.*** **At
-  `2f20d83^`: `27e2fa5d…` is `be_race_read_declaration_v1.json`, `603c6847…` is v3,
-  `9cd15527…` is v4; at HEAD the same three files hash `8ba84927…`, `3a2fdb28…`,
-  `a741b4d6…`.** *So every digest of those eleven files recorded before `2f20d83` resolves at
-  that commit's PARENT and nowhere later -- and the cause is not a content change.* **The
-  rule is about READING: a digest cited in a record is a fact about the bytes at the moment
-  of writing, and it stays true THERE.** ***Which is why the instruction is ANNOTATE, not
-  rewrite: a rewritten digest would make the old citation resolve at HEAD and quietly erase
-  that the file was ever different.***
-  (2) **MY STATUS CARRIES FOUR OF THOSE DIGESTS AND EXACTLY TWO NEEDED THE NOTE.** *`grep`
-  finds `603c6847…` three times and `27e2fa5d…` once -- and the COUNT alone would have had me
-  annotate four places.* ***Reading them split the four: two are MY OWN round-192 text, which
-  already says "the pre-BE-65 blob hashes `603c6847…`" beside the current file, and are
-  correct as written; the other two are older CITATIONS*** (`v4_COMPUTES_G_EQUALS_3…` naming
-  v3, `be46_THE_RACE_READ…` naming v1). **Both annotated IN BAND at 15:11:21Z, marked "NOT a
-  rewrite", each naming where the digest resolves and what the file hashes now.** *A count
-  said four; reading said two.*
-  (3) **CONTENT IDENTICAL, EVERY DIGEST MOVED.** REV 74 for all eleven: *JSON-identical to
-  their pre-BE-65 selves once the link is removed, and every one changed digest, the large
-  diffs being RE-SERIALISATION.* ***Two facts that sound contradictory and are not: nothing
-  about their MEANING changed, and nothing about their BYTES stayed the same.*** **The break
-  is inert for three independent reasons: v4's former `supersedes` is preserved under
-  `was_before_this_link`, NO CODE pins the old digests, and the race read binds to the FEED
-  PINS.**
-  (4) **THE LAUNCHER'S FIVE ITEMS ARE CLOSED**, with two residues and a thin-book
-  `StopIteration` to BE 66 -- **and the correction was SENT BEFORE its heavy item**, which is
-  still blocked on the lock. *A correction that overtakes a blocked heavy item is the right
-  order: the heavy run would otherwise carry the residue into an artifact, and the artifact
-  outlives the round.*
-  (5) **THE REGISTER AND THE RUNBOOK NOW LAND AS SEPARATE COMMITS, each with its
-  post-condition**, and the next entry is named in advance (R-668). ***The fourth layer on
-  the landing rule my round-187 note opened: precondition, chaining, post-condition, and now
-  SEPARATION -- so a post-condition on the diff can be exact rather than covering two
-  file-families at once.*** *Each layer arrived after a real event; none was designed in
-  advance.*
-  (6) **DA 94 CLOSED REV 72:** *"a marker cannot excuse an OPEN, both declaration directories
-  are scanned, and the landing gate is executable."* ***A seat cannot label its way past a
-  file it actually reads*** -- the round-189 composition sharpened -- *and an allowlist that
-  scans one directory is a census of that directory, not of the programme.*
-  (7) **THE RUN:** `loaded / active / running`, `MemoryPeak` 2,957,488,128 B **unchanged
-  across four reads (14:56, 15:02, 15:05, 15:11)**, payload past seventeen minutes. *The peak
-  is set in the first minutes and the rest is flat -- a cap sized on the peak is sized on the
-  LOAD, not on the work.* **Receipt ≈16:20Z; BE 66's heavy half still refused on the lock;
-  DA 95 and REV 75 are the open gates on the seam.**
-  ***AT COMMIT TIME, 2026-09-06T15:14:10Z: R-668 LANDED AND THE LANDING GATE FOUND ITS OWN
-  SEAT RED.*** **`da_land_gate.py` runs the seat's instruments plus every declared known-red
-  and its EXIT CODE is read before a commit is issued** (`p003_da_land_gate__20260906T150939Z
-  .json`, `8e29271a…`), **beside a census `.V2` (`a0c8cb70b8419e36…`) superseding the 144403Z
-  record BY PAIR -- the re-emission my round-191 note asked for.** ***Its first real run found
-  DA's own suite RED at the tip: a codomain check silently swallowed a `(None, {...})` return
-  and no adjudication followed -- "my own instrument for exactly that class, red and
-  unnoticed, because I had been running only the modules I touched."*** **10 green / 2
-  declared red, exit 0, 48 s; fixed BOTH ways -- the handler narrowed and the site adjudicated
-  in source.** *A gate whose first execution indicts the seat that built it is the strongest
-  evidence it is not decorative.* **The runbook's next entry is R-669.**
-  **FLAG WORDS: the old digests ANNOTATED-NOT-REWRITTEN (two of four, split by reading); the
-  four families CONTENT-IDENTICAL-DIGESTS-MOVED; the landing rule NOW-FOUR-LAYERS; the 09-04
-  run FLAT-PEAK-AT-TWENTY-MINUTES.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,201 -> 1,208, flag_provenance 746 -> 753,
-  tasks 19; **497 CHECKED**, 256 RELAYED, **455 UNMARKED -- unchanged for the
-  sixty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2930,6 +2928,102 @@ flags:
                              # / Result exit-code / ExecMainStatus "75"` with the refusal text "This
                              # unit did NO work and wrote nothing (rule 20)" -- the five fields plus
                              # the id in a poll line, exactly as ruled.*
+  THE_SEAM_I_DROVE_OPEN_AT_ROUND_190_IS_CLOSED_AND_I_DROVE_THE_LADDER: TRUE_TRUE_FALSE
+                             # CHECKED 2026-09-06T15:28:14Z on SYNTHETIC receipts with a VERIFIABLE
+                             # pair (the sealed day not opened). **`da_gate1_day_verdict.economic_
+                             # absence`: v21 → `sealed True`, `n_leaked_fields 0`; v22 → `sealed
+                             # True`, 0; v23 → `sealed False`, 3 -- each with `judged_against`
+                             # naming the list in force.**
+                             # ***At round 190 I drove this open: DA said three fields leaked where
+                             # DE said the receipt obeyed the rule in force when it was produced.
+                             # The two readers now agree, version for version.*** *DA reads
+                             # `SEALED_FROM_DESIGN_VERSION` by AST -- the same route it already used
+                             # for the field list -- so the two seats share a fact rather than a
+                             # convention.*
+  MY_FIRST_CELL_FELL_TO_THE_STRICTEST_LIST_BECAUSE_I_OMITTED_THE_DIGEST: SYMMETRIC_WITH_DES_SELECTOR
+                             # CHECKED 2026-09-06T15:28:14Z. *My first drive passed
+                             # `provenance.design.path` with NO `sha256`, and BOTH v21 and v23 came
+                             # back `sealed False, 3 leaked` -- which reads as "the version made no
+                             # difference".*
+                             # **It made none because the PAIR was unverifiable, so the STRICTEST
+                             # list applied -- exactly the behaviour I verified on DE's selector at
+                             # round 192 (hole (b): a path without its digest buys nothing).**
+                             # ***So the two sides are symmetric in their refusals as well as in
+                             # their admissions, and my synthetic receipt was the unverifiable
+                             # one.*** *Twenty-fifth "suspect the probe first" -- and the second
+                             # time this week the same missing field in MY input produced an answer
+                             # that looked like a finding.*
+  THE_LANDING_RECORD_IS_RE_EMITTED_BY_PAIR_AND_THE_SEAL_HOLDS: SIX_E_FOUR_ONE_EIGHT
+                             # CHECKED 2026-09-06T15:28:14Z:
+                             # **`p003_da_gate1_pre_read_20260903__20260906T152649Z.json`, 27,237 B,
+                             # `6e418d119ce27bebf0…`; `supersedes` names `…142749Z.json` at
+                             # `65048af3fda79195de78…` -- the digest I verified myself at round 191
+                             # -- `status INCOMPLETE`, `n_arms_agreeing None`, `seal_holds TRUE`,
+                             # and the sealed receipt's digest `5dd3a8f3f5818379` carried
+                             # through.**
+                             # ***Three supersessions of one record in ninety minutes, each by the
+                             # PAIR, each leaving its predecessor intact -- and the fact that
+                             # survives all three unchanged is the receipt digest.***
+  THE_TRANSITIVE_CLOSURE_FOUND_A_STALE_DEFAULT_IN_DAS_OWN_VERIFIER: BEST_OR_PARAMS_V6
+                             # CHECKED 2026-09-06T15:28:14Z at `da_gate1_day_verdict.py:121-131`,
+                             # DA's own comment: ***"DA 95, FOUND BY THIS SEAT'S OWN CENSUS once its
+                             # dataflow gate took the TRANSITIVE closure: the old tail was `best or
+                             # (d / '…_params_v6.json')` -- a stale default that would be OPENED
+                             # whenever the glob found nothing -- while the head is v14."***
+                             # **Why one hop could not see it, in the code's words: "the literal is
+                             # returned, the return lands in `PARAMS_PATH`, and `PARAMS_PATH` is
+                             # opened".** *Two hops, and the gate that read one hop called it
+                             # NOT_A_PIN.*
+                             # **The remedy is rule 11: "An absence is a NAMED REFUSAL, not a
+                             # default" -- now `VerifierRefused: NO_PARAMS_DECLARATION_PRESENT`.**
+                             # *And the seat's own sentence on it: "reading a version nobody is
+                             # running under is the exact failure this verifier exists to catch
+                             # elsewhere."*
+  AND_IT_IS_THE_SAME_V6_MY_ROUND_184_LISTING_SURFACED: TWO_ROUTES_TO_ONE_STALE_VERSION
+                             # CHECKED 2026-09-06T15:28:14Z. ***The stale default was pinned at
+                             # `params_v6.json` -- and at ROUND 184 my own `ls … | tail -4` returned
+                             # v6, v7, v8, v9 while hiding v13 and v14, because `v14` sorts before
+                             # `v6` as a string.***
+                             # **Two independent routes to the same stale version: a lexicographic
+                             # listing that showed me v6 as the newest, and a code default that
+                             # would have OPENED v6 when the glob found nothing.**
+                             # *Neither is the other's cause; both are the same underlying fact --
+                             # v6 is the file that looks current when nothing sorts or resolves the
+                             # versions properly.* **Mine was a probe error; DA's would have been a
+                             # verifier reading bars nobody runs under.**
+  BOOK_PIN_MATCHED_BUT_NOT_A_PICKLE_IS_A_NAMED_REFUSAL: WITH_ITS_OWN_SELFTEST
+                             # CHECKED 2026-09-06T15:28:14Z at `da_gate1_day_verdict.py:871` -- the
+                             # REFUSED status -- with the selftest at :4466-4471 asserting the
+                             # message begins `REFUSED: BOOK_PIN_MATCHED_BUT_NOT_A_PICKLE` and
+                             # recording what it replaced: *a right pin on a non-pickle used to
+                             # raise OUT of the verifier, so the failure was a traceback with the
+                             # verifier's name "nowhere in it".*
+                             # ***A raise that escapes its own verifier is indistinguishable from a
+                             # crash; a named refusal is a verdict the caller can record.*** *REV
+                             # 73's DA item, closed with its falsifier.*
+  THE_CENSUS_NUMBERS_AT_THE_TIP_ARE_A_RUNS_NOT_AN_ARTIFACTS: EIGHTH_INSTANCE
+                             # CHECKED 2026-09-06T15:28:14Z -- **routed, not ruled.** *R-670 reports
+                             # "the census at the tip 279 → 66 pins → 1 refused".* **The newest
+                             # EMITTED census on disk is still `…150939Z.json` (`a0c8cb70b841…`)
+                             # reading 271 → 62 pins → 1 refused, which I re-read this round.**
+                             # ***The register's sentence says "at the tip" and is true of a RUN; no
+                             # artifact carries 279 or 66, so a reader who resolves the census meets
+                             # 271/62 and a re-emission is still owed.***
+                             # **Eighth instance today of run-versus-artifact -- and it lands one
+                             # round after R-669 corrected the same class (a pane number that did
+                             # not resolve).** *The distinction is not a defect; the record is
+                             # simply not yet written.*
+  THE_PRE_READ_IS_ADMISSIBLE_AGAIN_AND_THE_RUN_IS_AT_ITS_SEVENTH_PEAK: THE_HOLD_IS_LIFTED
+                             # CHECKED 2026-09-06T15:28:14Z. **"The pre-read of the 09-03 day is
+                             # ADMISSIBLE TO RE-RUN AGAIN"** -- *lifting the hold I recorded at
+                             # round 190, where an instrument known to be wrong about the day was
+                             # kept out of use rather than trusted.* ***The hold lasted five rounds
+                             # and ended when the instrument was fixed, not when the pressure to
+                             # re-run rose.***
+                             # **The run: `de102smoke.service` `active / running`, `MemoryPeak`
+                             # 2,957,488,128 B for the SEVENTH consecutive reading.** *Receipt
+                             # ≈16:20Z; BE 66's heavy half still blocked on the lock; REV 75 remains
+                             # open on the positively-old-with-a-bad-pair shape.*
   I_DROVE_THE_RECEIPT_LESS_REFUSAL_AND_THE_WRONG_DIGEST_REFUSAL: BOTH_BEFORE_ANY_OPEN
                              # CHECKED 2026-09-06T15:22:37Z, driven on a SCRATCH file in a temp
                              # directory (nothing real opened). **`assert_input_matches_its_receipt`
@@ -23128,6 +23222,93 @@ flag_provenance:
       commit and the index collision, and the only silent one: it looks like success, and
       the way to see it is to notice the staged count and ask git which commit holds the
       line.
+  # --- MEM round 196, 2026-09-06T15:28:14Z ------------------------------
+  THE_SEAM_I_DROVE_OPEN_AT_ROUND_190_IS_CLOSED_AND_I_DROVE_THE_LADDER:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T15:28:14Z
+    said: >-
+      driving economic_absence on synthetic receipts with a verifiable pair: v21 gives sealed
+      true with zero leaked, v22 the same, and v23 gives sealed false with three leaked, each
+      carrying judged_against naming the list in force. At round 190 I drove this seam open,
+      with DA saying three fields leaked where DE said the receipt obeyed the rule in force
+      when it was produced; the two readers now agree version for version, DA reading
+      SEALED_FROM_DESIGN_VERSION by the same AST route it already used for the field list.
+  MY_FIRST_CELL_FELL_TO_THE_STRICTEST_LIST_BECAUSE_I_OMITTED_THE_DIGEST:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T15:28:14Z
+    said: >-
+      my first drive passed a design path with no sha256 and both v21 and v23 came back sealed
+      false with three leaked, which reads as the version making no difference; it made none
+      because the pair was unverifiable so the strictest list applied, exactly the behaviour I
+      verified on DE's selector at round 192. The two sides are symmetric in their refusals as
+      well as their admissions, and my synthetic receipt was the unverifiable one.
+  THE_LANDING_RECORD_IS_RE_EMITTED_BY_PAIR_AND_THE_SEAL_HOLDS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T152649Z.json
+    as_of: 2026-09-06T15:28:14Z
+    said: >-
+      the re-emitted landing record is 27,237 bytes hashing 6e418d119ce27bebf0, superseding the
+      142749Z record at 65048af3fda79195de78 -- the digest I verified at round 191 -- with
+      status INCOMPLETE, n_arms_agreeing None, seal_holds true, and the sealed receipt's digest
+      5dd3a8f3f5818379 carried through. Three supersessions of one record in ninety minutes,
+      each by the pair, each leaving its predecessor intact, and the fact surviving all three
+      unchanged is the receipt digest.
+  THE_TRANSITIVE_CLOSURE_FOUND_A_STALE_DEFAULT_IN_DAS_OWN_VERIFIER:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T15:28:14Z
+    said: >-
+      DA's own comment records that once its dataflow gate took the transitive closure it found
+      the old tail best or params_v6.json, a stale default that would be opened whenever the
+      glob found nothing while the head is v14; one hop could not see it because the literal is
+      returned, the return lands in PARAMS_PATH, and PARAMS_PATH is opened. The remedy is rule
+      11 -- an absence is a named refusal, not a default -- now VerifierRefused
+      NO_PARAMS_DECLARATION_PRESENT, with the seat's own line that reading a version nobody is
+      running under is the exact failure this verifier exists to catch elsewhere.
+  AND_IT_IS_THE_SAME_V6_MY_ROUND_184_LISTING_SURFACED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v14.json
+    as_of: 2026-09-06T15:28:14Z
+    said: >-
+      the stale default was pinned at params_v6.json, and at round 184 my own ls piped through
+      tail returned v6 to v9 while hiding v13 and v14 because v14 sorts before v6 as a string.
+      Two independent routes to the same stale version: a lexicographic listing that showed v6
+      as newest and a code default that would have opened v6 when the glob found nothing. Mine
+      was a probe error; DA's would have been a verifier reading bars nobody runs under.
+  BOOK_PIN_MATCHED_BUT_NOT_A_PICKLE_IS_A_NAMED_REFUSAL:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T15:28:14Z
+    said: >-
+      the refused status is at :871 with a selftest at :4466 to :4471 asserting the message and
+      recording what it replaced: a right pin on a non-pickle used to raise out of the verifier
+      so the failure was a traceback with the verifier's name nowhere in it. A raise that
+      escapes its own verifier is indistinguishable from a crash; a named refusal is a verdict
+      the caller can record.
+  THE_CENSUS_NUMBERS_AT_THE_TIP_ARE_A_RUNS_NOT_AN_ARTIFACTS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T150939Z.json
+    as_of: 2026-09-06T15:28:14Z
+    said: >-
+      R-670 reports the census at the tip as 279 literals, 66 pins and one refusal, while the
+      newest emitted census on disk is still the 150939Z one at 271, 62 and one, which I
+      re-read this round. The register's sentence says at the tip and is true of a run; no
+      artifact carries 279 or 66, so a reader resolving the census meets 271 and 62 and a
+      re-emission is still owed. Eighth instance today of run versus artifact, one round after
+      R-669 corrected the same class.
+  THE_PRE_READ_IS_ADMISSIBLE_AGAIN_AND_THE_RUN_IS_AT_ITS_SEVENTH_PEAK:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/heavy_run_form_v3.json
+    as_of: 2026-09-06T15:28:14Z
+    said: >-
+      the pre-read of the 09-03 day is admissible to re-run again, lifting the hold I recorded
+      at round 190 where an instrument known to be wrong about the day was kept out of use
+      rather than trusted; the hold lasted five rounds and ended when the instrument was fixed.
+      de102smoke reads active and running with MemoryPeak 2,957,488,128 for the seventh
+      consecutive reading, receipt about 16:20Z, BE 66's heavy half still blocked on the lock,
+      and REV 75 open on the positively-old-with-a-bad-pair shape.
   # --- MEM round 195, 2026-09-06T15:22:37Z ------------------------------
   I_DROVE_THE_RECEIPT_LESS_REFUSAL_AND_THE_WRONG_DIGEST_REFUSAL:
     prov: CHECKED
