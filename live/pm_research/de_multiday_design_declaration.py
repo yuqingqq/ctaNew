@@ -44,9 +44,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 22
+VERSION = 23
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 107
+EXPECTED_CHECKS = 110
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -134,6 +134,9 @@ V20_DECLARATION = ("p003_de_multiday_gate1_design_v20.json",
 V21_DECLARATION = ("p003_de_multiday_gate1_design_v21.json",
                    "a52b463c89498332875c18fd758a18464c4f409196ac9eecb16055"
                    "79e3614771")
+V22_DECLARATION = ("p003_de_multiday_gate1_design_v22.json",
+                   "d38dba3dcf02491cd1e8668ac0f06ec2825673ada6e66ec1bcdcc7"
+                   "7317c9d094")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
@@ -143,7 +146,7 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V13_DECLARATION, V14_DECLARATION, V15_DECLARATION,
                     V16_DECLARATION, V17_DECLARATION, V18_DECLARATION,
                     V19_DECLARATION, V20_DECLARATION,
-                    V21_DECLARATION)
+                    V21_DECLARATION, V22_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -1946,10 +1949,21 @@ def declaration() -> dict:
                                      "open sd_floor_fraction, disclosed "
                                      "and ruled at R-599, not a defect",
             },
-            "OUTSIDE_the_seal_the_decision_population_SIZES": [
+            # NARROWED IN BAND BY R30 (R-659). v22 listed four names
+            # here; three of them are OUTCOME counts and are now SEALED.
+            # The clause is not deleted -- it is the record of what was
+            # ruled at v22 and why it was wrong.
+            "SUPERSEDED_WITHIN_THIS_DECLARATION_BY":
+                "R30_seal_scope_corrected",
+            "what_v22_listed_here": [
                 "n_decisions", "n_fills_baseline", "n_fills_arm",
-                "n_cancels_issued",
-            ],
+                "n_cancels_issued"],
+            "what_is_still_outside_the_seal": list(
+                RUNNER.OPEN_POPULATION_SIZES),
+            "why_the_change": (
+                "R-659 reversed R-656 on three of the four: arm fills "
+                "MINUS baseline fills is the intervention's effect in "
+                "events, so they are outcome counts, not sizes"),
             "why_the_sizes_are_open": (
                 "they are the ACTION-SIDE COUNTS every quoted population "
                 "must carry (rule 8: every population carries its n and "
@@ -1972,6 +1986,86 @@ def declaration() -> dict:
                 "`what_this_is_not` names the counts as SIZES, so a "
                 "reader of the artifact meets the ruling where the "
                 "numbers are"),
+        },
+        # ---- DE 102 / R-659: THE SEAL SCOPE CORRECTED. R-656 is
+        # REVERSED on three of the four counts, disclosed as a reversal.
+        "R30_seal_scope_corrected": {
+            "ruling": "R-659 (REV 71 S4.1), reversing R-656 on three "
+                      "counts. The reversal is stated as a reversal: v22 "
+                      "left them open and this is why that was wrong",
+            "changes_nothing_else": (
+                "NO estimand, NO bar, NO pin. params v14 unchanged"),
+            "now_SEALED_because_they_are_OUTCOME_counts": [
+                "n_fills_arm", "n_fills_baseline", "n_cancels_issued"],
+            "why_they_are_outcomes_and_not_sizes": (
+                "`n_fills_arm` MINUS `n_fills_baseline` is the "
+                "intervention's effect IN EVENTS. A reader who can order "
+                "the arms by intervention size on day 1 has seen "
+                "something about the result -- and the G=5 DIRECTIONAL "
+                "fallback at the horizon is a degree of freedom monotone "
+                "in it. R-656 called them population sizes; they are "
+                "counts of what the policy DID"),
+            "still_OPEN_the_population_sizes": list(
+                RUNNER.OPEN_POPULATION_SIZES),
+            "why_those_stay_open": (
+                "`n_decisions` is the population size R4's admissibility "
+                "bar READS (min_decisions_per_arm_day) and what rule 8 "
+                "requires every quoted population to carry. Sealing it "
+                "would make the bar uncheckable"),
+            "the_two_sets_are_DISJOINT": "asserted in both batteries",
+            "enforced_by": (
+                "`ECONOMIC_FIELDS` -- the ONE list DA reads by AST -- so "
+                "`_strip_economic` seals them AT EVERY DEPTH and "
+                "`assert_no_economic_leak` refuses a receipt carrying "
+                "them before G. The falsifier plants all three AT DEPTH "
+                "and proves them stripped, tested as KEYS"),
+            "the_09_03_receipt_carries_them_OPEN": (
+                "it was produced under v21, before the question was "
+                "asked. It is not edited (rule 13). NOBODY QUOTES THEM -- "
+                "the same precedent as R-599's R4 ratio, which survived "
+                "the seal in earlier receipts and is not quoted from "
+                "them"),
+            "from_09_04_on": "sealed, and `what_this_is_not` says so",
+            # REV 72 S1.4: the extension is SCOPED, not retroactive.
+            "the_extension_is_SCOPED_per_name": (
+                "each sealed name carries the design version from which "
+                "it is sealed. `_strip_economic` seals by the list in "
+                "force for THIS run (all eleven); a census judges a "
+                "receipt by the list in force WHEN THAT RECEIPT WAS "
+                "PRODUCED, which the receipt names (its `protocol`, and "
+                "from DE 100 its `provenance.design`). Extending the list "
+                "alone made DA's `economic_absence()` read the landed "
+                "09-03 receipt as six leaks -- the first sealed day "
+                "accused by its own instrument for carrying fields that "
+                "were OPEN BY RULING when it was written"),
+            "measured": ("the 09-03 receipt reads `sealed True, 0 leaked` "
+                         "under its own v22 scope and 6 under v23's "
+                         "eleven; both drives are in the runner's "
+                         "battery"),
+            # REV 72 S1.3: the disclosure a reader at the read cannot
+            # reconstruct from the artifacts.
+            "DISCLOSURE_one_of_six_days_was_seen": {
+                "what": ("2026-09-03's intervention counts "
+                         "(n_fills_arm, n_fills_baseline, "
+                         "n_cancels_issued, per arm) were VISIBLE in its "
+                         "landed receipt and were read by three seats "
+                         "before the scope was corrected"),
+                "the_other_five_days": ("2026-09-04..08 are NOT seen: "
+                                        "no receipt for them exists, and "
+                                        "from v23 the counts are sealed "
+                                        "at emit"),
+                "why_it_is_disclosed_here": (
+                    "a reader at the read cannot reconstruct it "
+                    "otherwise. The artifacts show the counts present in "
+                    "one receipt and absent from the rest, which looks "
+                    "like a format change; it was a RULING change, and "
+                    "one day's counts were seen under the old one"),
+                "what_it_does_not_change": (
+                    "no estimand, no bar, no day set. The 09-03 receipt "
+                    "is not edited (rule 13) and NOBODY QUOTES the three "
+                    "counts from it -- R-599's precedent for the R4 "
+                    "ratio"),
+            },
         },
         "R20_the_serial_schedule": serial_schedule(),
         "R22_the_launch_capture_is_the_IMPORT_CLOSURE": {
@@ -3022,19 +3116,55 @@ def selftest(*, quiet: bool = False) -> int:
        f"V{VERSION}, the chain holds {len(DECLARATION_CHAIN)} = VERSION - 1 "
        f"predecessors and its head is v{VERSION - 1}. v7 on disk read "
        f"protocol V4, filename v7 and supersedes v2")
+    # ---- DE 102 / R-659: the corrected scope, and the sets disjoint ---
+    _r30 = d["R30_seal_scope_corrected"]
+    _newly = set(_r30["now_SEALED_because_they_are_OUTCOME_counts"])
+    _open30 = set(_r30["still_OPEN_the_population_sizes"])
+    ok(_newly == {"n_fills_arm", "n_fills_baseline", "n_cancels_issued"}
+       and _newly <= set(RUNNER.ECONOMIC_FIELDS)
+       and _open30 & set(RUNNER.ECONOMIC_FIELDS) == set()
+       and "n_decisions" in _open30,
+       f"R-659: the three OUTCOME counts are IN `ECONOMIC_FIELDS` -- the "
+       f"one list DA reads by AST, so the seal reaches them at every "
+       f"depth -- and the open sizes {sorted(_open30)} are in none of it. "
+       f"The two sets are DISJOINT")
+    _disc = _r30["DISCLOSURE_one_of_six_days_was_seen"]
+    ok("2026-09-03" in _disc["what"] and "three seats" in _disc["what"]
+       and "NOT seen" in _disc["the_other_five_days"]
+       # THE ASSERTION IS ON THE VALUE'S SUBSTANCE, not on a word that
+       # happens to live in the key name -- the slip I made at DE 97.
+       and "in force for THIS run" in _r30[
+           "the_extension_is_SCOPED_per_name"],
+       "REV 72 S1.3/S1.4: the design DISCLOSES that ONE of six days' "
+       "intervention counts were seen before the scope was corrected and "
+       "that the other five are not -- a reader at the read cannot "
+       "reconstruct that from artifacts where the counts are present in "
+       "one receipt and absent from the rest; and it records that the "
+       "extension is SCOPED per name rather than retroactive")
+    ok("reversing R-656" in _r30["ruling"]
+       and "MINUS" in _r30["why_they_are_outcomes_and_not_sizes"]
+       and "NOBODY QUOTES THEM" in _r30[
+           "the_09_03_receipt_carries_them_OPEN"],
+       "and the clause states it AS A REVERSAL, gives the reason in one "
+       "line (arm fills minus baseline fills is the intervention's effect "
+       "in events), and says what happens to the 09-03 receipt that "
+       "carries them open: it is not edited and nobody quotes them")
     # ---- DE 101 / R-656: the seal's scope, and the two sets disjoint --
     _r29 = d["R29_seal_scope"]
     _sealed29 = set(_r29["the_seal_protects"][
         "valuations_and_null_statistics"])
-    _sizes29 = set(_r29["OUTSIDE_the_seal_the_decision_population_SIZES"])
+    _sizes29 = set(_r29["what_is_still_outside_the_seal"])
     ok(_sealed29 == set(RUNNER.ECONOMIC_FIELDS)
-       and _sizes29 == {"n_decisions", "n_fills_baseline", "n_fills_arm",
-                        "n_cancels_issued"}
-       and _sealed29 & _sizes29 == set(),
-       f"R-656: the seal's scope is DECLARED and the two sets are "
-       f"DISJOINT -- {len(_sealed29)} sealed names (read from the "
-       f"runner's own ECONOMIC_FIELDS, not typed here) against "
-       f"{len(_sizes29)} open population SIZES, no name in both")
+       and _sizes29 == set(RUNNER.OPEN_POPULATION_SIZES)
+       and _sealed29 & _sizes29 == set()
+       and _r29["SUPERSEDED_WITHIN_THIS_DECLARATION_BY"]
+       == "R30_seal_scope_corrected",
+       f"R-656 as R-659 CORRECTS IT: the seal's scope is declared and the "
+       f"two sets are DISJOINT -- {len(_sealed29)} sealed names (read "
+       f"from the runner's own ECONOMIC_FIELDS, never typed here) against "
+       f"{len(_sizes29)} open population sizes -- and v22's clause is "
+       f"marked superseded IN BAND rather than left standing beside the "
+       f"one that replaced it")
     ok("NO estimand" in _r29["changes_nothing_else"]
        and "params v14" in _r29["changes_nothing_else"]
        and "sd_meets_floor" in _r29["the_seal_protects"][

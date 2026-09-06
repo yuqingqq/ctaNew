@@ -49,14 +49,19 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 296
+EXPECTED_CHECKS = 302
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
-#: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
-#: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
-#: stays as provenance (rule 13).
+#: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
+#: stays one: "always the newest" would let a parameter file appear and
+#: change the run, which is choosing after seeing. That is the opposite of
+#: the launch-form declaration, where the head must be resolved -- a
+#: constant of the wrapper, not a parameter of the experiment.
+#:
+#: (REV 71 S1.4(d): `SUPERSEDED_PARAMS_REL` sat here, read by NOTHING, and
+#: the comment above it still described the v1 -> v2 bump long after v14.
+#: A dead constant beside a stale comment is two things a reader can
+#: believe.)
 PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v14.json"
-SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v13.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -68,7 +73,86 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
                    # than the pre-read needs; the pre-read needs R4's
                    # STATUS, which the admissibility block publishes as two
                    # booleans.
-                   "sd_over_abs_mean")
+                   "sd_over_abs_mean",
+                   # R-659 (REV 71 S4.1), reversing R-656 on these three.
+                   # They are OUTCOME counts under a policy, not population
+                   # sizes: `n_fills_arm` MINUS `n_fills_baseline` is the
+                   # intervention's effect IN EVENTS, and a reader who can
+                   # order the arms by intervention size on day 1 has seen
+                   # something about the result. The G=5 directional
+                   # fallback at the horizon is a degree of freedom
+                   # monotone in it. `n_decisions` stays OPEN: it is the
+                   # population size R4's admissibility bar reads.
+                   "n_fills_arm", "n_fills_baseline",
+                   "n_cancels_issued")
+
+#: The population SIZES that stay open (R-659): what rule 8 requires every
+#: quoted population to carry and what R4's bar reads. Named so the two
+#: sets can be asserted DISJOINT rather than kept apart by hand.
+OPEN_POPULATION_SIZES = ("n_decisions", "n_scored_rows")
+
+#: THE SEAL IS SCOPED PER NAME (REV 72 S1.4). Extending the list alone
+#: made DA's `economic_absence()` read the LANDED 09-03 receipt as
+#: `n_leaked_fields 6, sealed False` -- the programme's first sealed day
+#: accused by its own instrument, for carrying fields that were OPEN BY
+#: RULING when it was produced. A seal that reaches backwards convicts
+#: the past of not having obeyed a future rule.
+#:
+#: So each name carries the DESIGN VERSION FROM WHICH IT IS SEALED:
+#:   * `_strip_economic` seals by the list IN FORCE FOR THIS RUN -- all
+#:     eleven from now on;
+#:   * a census or verifier judges a receipt against the list in force
+#:     WHEN THAT RECEIPT WAS PRODUCED, which the receipt names (its
+#:     `protocol`, and from DE 100 its `provenance.design`).
+SEALED_FROM_DESIGN_VERSION = {
+    "D_E0": 1, "D_E_MINUS_R": 1, "Z": 1, "p_location": 1,
+    "null_mean": 1, "null_sd": 1, "null_draws_summary": 1,
+    "sd_over_abs_mean": 1,
+    # R-659, reversing R-656: OUTCOME counts, sealed from design v23.
+    "n_fills_arm": 23, "n_fills_baseline": 23, "n_cancels_issued": 23,
+}
+#: This module's own design version -- the list in force for THIS run.
+DESIGN_VERSION_IN_FORCE = 23
+
+
+def economic_fields_in_force(design_version: int | None = None) -> tuple:
+    """The sealed names for a receipt produced under `design_version`.
+
+    None means THIS run: every name. A receipt from before a name was
+    sealed is judged without it -- it did not disobey a rule that did not
+    exist."""
+    v = DESIGN_VERSION_IN_FORCE if design_version is None \
+        else int(design_version)
+    return tuple(n for n in ECONOMIC_FIELDS
+                 if SEALED_FROM_DESIGN_VERSION.get(n, 1) <= v)
+
+
+def design_version_of_receipt(rec: dict) -> dict:
+    """WHICH SCOPE A RECEIPT IS JUDGED UNDER, read from the receipt.
+
+    From DE 100 a receipt carries `provenance.design.path`, whose name
+    carries the version. Older receipts carry only `protocol`; the 09-03
+    receipt was produced under design v21, before either the question or
+    this field existed, so a receipt with neither is judged under the
+    version in force when the SEAL SCOPE was last unchanged -- v22, the
+    last version whose scope was the original eight."""
+    src, ver = None, None
+    prov = (rec.get("provenance") or {}).get("design") or {}
+    m = re.search(r"_design_v(\d+)\.json$", str(prov.get("path") or ""))
+    if m:
+        src, ver = "provenance.design.path", int(m.group(1))
+    if ver is None:
+        for a in (rec.get("split_residency_proof") or {}).get(
+                "tape_artifacts_opened", []) or []:
+            mm = re.search(r"_design_v(\d+)\.json$", str(a))
+            if mm:
+                src, ver = "an opened design artifact", int(mm.group(1))
+                break
+    if ver is None:
+        src, ver = ("no design pin -- judged under the last version whose "
+                    "scope was the original eight"), 22
+    return {"design_version": ver, "read_from": src,
+            "fields_in_force": list(economic_fields_in_force(ver))}
 
 #: How many checks the DE 78 day-path block runs. Declared, because the
 #: offline skip list is generated from it and the online run asserts the
@@ -377,9 +461,68 @@ def assert_source_unchanged(where: str, *, fixture: bool = True) -> dict:
 
 # ------------------------------------------------------------- parameters
 
+#: R-659 / REV 71 S1.4(c). THE DIGEST OF EVERY DECLARED INPUT, TAKEN
+#: WHERE THE FILE IS LOADED. The provenance block digested params and
+#: design AT THE EMIT and said "the files THIS run read" -- which is the
+#: bytes at emit, not the bytes that were read. Rule 22 already refuses
+#: when a MODULE moves under a run; a declared input is the same class,
+#: and this is its symmetric form.
+INPUT_DIGESTS: dict = {}
+
+
+def record_input_digest(name: str, rel: str) -> dict:
+    """Digest a declared input WHERE IT IS READ, once, and keep it."""
+    root = Path(__file__).resolve().parents[2]
+    f = root / rel
+    if name in INPUT_DIGESTS:
+        return INPUT_DIGESTS[name]
+    INPUT_DIGESTS[name] = {
+        "path": str(rel),
+        "sha256_at_load": (hashlib.sha256(f.read_bytes()).hexdigest()
+                           if f.is_file() else None),
+        "read_at_utc": datetime.datetime.now(
+            datetime.timezone.utc).isoformat(),
+        "existed_at_load": f.is_file(),
+    }
+    return INPUT_DIGESTS[name]
+
+
+def verify_input_digests(where: str) -> dict:
+    """RE-DIGEST EVERY DECLARED INPUT AT THE EMIT and refuse on a change.
+
+    Both digests travel: the one taken where the file was READ and the one
+    taken here. A receipt that carries only the second names bytes that
+    may not be the bytes the run used."""
+    root = Path(__file__).resolve().parents[2]
+    out, moved = {}, []
+    for name, rec in sorted(INPUT_DIGESTS.items()):
+        f = root / rec["path"]
+        now = (hashlib.sha256(f.read_bytes()).hexdigest()
+               if f.is_file() else None)
+        agrees = now == rec["sha256_at_load"]
+        out[name] = {**rec, "sha256_at_emit": now, "agrees": agrees}
+        if not agrees:
+            moved.append(name)
+    if moved:
+        raise RunnerRefused(
+            f"REFUSED at {where}: a DECLARED INPUT changed under this run "
+            f"-- {moved}. Rule 22 refuses when a module of the closure "
+            f"moves; a params or design file is the same class, and a "
+            f"receipt naming bytes that are not the bytes the run read is "
+            f"provenance theatre (REV 71 S1.4(c)).")
+    return {"inputs": out, "n_inputs": len(out),
+            "all_agree": True,
+            "why_both_digests": (
+                "the one taken WHERE THE FILE WAS READ and the one taken "
+                "at the emit. The block used to carry only the second and "
+                "claim it was 'the files THIS run read'")}
+
+
 def load_params(path: Path | None = None) -> dict:
     root = Path(__file__).resolve().parents[2]
     p = Path(path) if path is not None else root / PARAMS_REL
+    if path is None:
+        record_input_digest("params", PARAMS_REL)
     if not p.is_file():
         raise RunnerRefused(f"REFUSED: no parameter file at {p}")
     d = json.loads(p.read_text())
@@ -1031,6 +1174,29 @@ def _economic_keys_in(o, path="") -> list:
         for i, v in enumerate(o):
             found += _economic_keys_in(v, f"{path}[{i}]")
     return found
+
+
+def economic_absence_scoped(rec: dict) -> dict:
+    """A RECEIPT JUDGED UNDER ITS OWN SCOPE (REV 72 S1.4).
+
+    The same walker, the same key test -- but the name set is the one in
+    force when the receipt was produced. Judged under v23's eleven, the
+    09-03 receipt reads six 'leaks'; under its own v22 scope it reads
+    clean, which is the true statement."""
+    scope = design_version_of_receipt(rec)
+    names = set(scope["fields_in_force"])
+    found = [k for k in _economic_keys_in(rec)
+             if k.rsplit(".", 1)[-1] in names]
+    return {**scope, "n_names_in_force": len(names),
+            "leaked_keys": found, "n_leaked": len(found),
+            "sealed": not found,
+            "judged_as_KEYS_not_substrings": True,
+            "why_scoped": (
+                "a receipt cannot have disobeyed a rule that did not "
+                "exist when it was written. Judged under the CURRENT "
+                "eleven the first sealed day is accused by its own "
+                "instrument of carrying fields that were OPEN BY RULING "
+                "(REV 72 S1.4)")}
 
 
 def assert_no_economic_leak(artifact: dict, n_days_complete: int,
@@ -2080,8 +2246,15 @@ def parent_cmdline(pid: int | None = None) -> dict:
         return {"ppid": ppid, "argv": None, "readable": False,
                 "why": f"{type(exc).__name__}: {exc}"}
     argv = [x for x in raw.decode("utf-8", "replace").split("\0") if x]
-    return {"ppid": ppid, "argv": argv, "readable": True,
-            "argv_joined": " ".join(argv)}
+    try:
+        exe = _os.readlink(f"/proc/{ppid}/exe")
+    except OSError:
+        exe = None
+    return {"ppid": ppid, "argv": argv, "readable": True, "exe": exe,
+            "argv_joined": " ".join(argv),
+            "exe_is_the_identity": (
+                "argv[0] is settable by `exec -a`; the exe link is the "
+                "file the kernel mapped")}
 
 
 def assert_lock_form_at_runtime(day: str, *, fixture: bool,
@@ -2101,10 +2274,20 @@ def assert_lock_form_at_runtime(day: str, *, fixture: bool,
     rc, lock = str(form["lock_conflict_rc"]), form["lock_path"]
     par = parent if parent is not None else parent_cmdline()
     argv = par.get("argv") or []
+    # THE PARENT'S IDENTITY COMES FROM ITS EXECUTABLE, NOT FROM argv[0]
+    # (REV 71 S1.2). `exec -a flock /bin/sleep` sets argv[0] to "flock"
+    # while running something else; /proc/<ppid>/exe is the file the
+    # kernel actually mapped. argv is still read -- it is where the FLAGS
+    # are -- but it no longer answers "is this flock?".
     out = {"day": day, "fixture": fixture, "ppid": par.get("ppid"),
-           "parent_argv": argv,
+           "parent_argv": argv, "parent_exe": par.get("exe"),
            "declared_rc": rc, "declared_lock_path": lock,
-           "parent_is_flock": bool(argv) and Path(argv[0]).name == "flock",
+           "parent_is_flock": (
+               bool(par.get("exe"))
+               and Path(par["exe"]).name == "flock"),
+           "identity_from": "/proc/<ppid>/exe -- the file the kernel "
+                            "mapped, never argv[0], which `exec -a` sets "
+                            "to anything",
            "carries_dash_E_with_the_declared_rc": (
                "-E" in argv and rc in argv
                and argv.index(rc) == argv.index("-E") + 1),
@@ -2127,7 +2310,8 @@ def assert_lock_form_at_runtime(day: str, *, fixture: bool,
     if not out["parent_is_flock"]:
         raise RunnerRefused(
             f"REFUSED DAY {day} BEFORE ANY STAGE: this process's parent "
-            f"is {argv[:1] or ['<none>']}, not `flock`. Under the declared "
+            f"executable is {par.get('exe')!r} (argv[0] says "
+            f"{(argv[:1] or ['<none>'])[0]!r}), not `flock`. Under the declared "
             f"form the lock is the unit's OWN ExecStart and the payload's "
             f"parent is flock; if it is not, this run does not hold the "
             f"lock the way the form requires.")
@@ -3894,6 +4078,20 @@ def heavy_run_form_chain() -> dict:
     if not docs:
         raise RunnerRefused(
             f"REFUSED: no launch-form declaration under {d}.")
+    # AN UNREADABLE FILE IN THE SET IS A REFUSAL, NEVER A DEMOTION
+    # (REV 71 S1.1). This collected unparseable files into `bad` and went
+    # on to resolve a head from the rest -- so a corrupt v3 silently
+    # DEMOTED the reader to v2, which is the pinned-to-a-superseded-
+    # version defect arriving by another door. An unresolvable set has no
+    # head.
+    if bad:
+        raise RunnerRefused(
+            f"REFUSED: {len(bad)} launch-form declaration(s) under {d} "
+            f"cannot be read ({[b['file'] for b in bad]}). The head is "
+            f"the version nothing supersedes AMONG ALL OF THEM; with one "
+            f"unreadable the set has no head, and resolving from the rest "
+            f"would silently demote this reader to a superseded version "
+            f"(REV 71 S1.1).")
     links, superseded = [], set()
     for v in sorted(docs):
         f, doc = docs[v]
@@ -5819,14 +6017,84 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
     # ---- R-656 (REV 70 S0.2/S3): the seal's scope, and the format ----
-    _sizes101 = ("n_decisions", "n_fills_baseline", "n_fills_arm",
-                 "n_cancels_issued")
-    ok(set(ECONOMIC_FIELDS) & set(_sizes101) == set(),
-       f"R-656: the SEALED names and the open population SIZES are "
-       f"DISJOINT -- {len(ECONOMIC_FIELDS)} against {len(_sizes101)}, no "
-       f"name in both. The sizes are the action-side counts rule 8 "
-       f"requires and the read gate's admissibility reads; they say how "
-       f"MUCH each arm intervened, never what it was worth")
+    # R-659 REVERSES R-656 ON THREE OF THE FOUR. This check listed the
+    # four as sizes; three of them are OUTCOME counts (arm fills MINUS
+    # baseline fills is the intervention's effect in events) and are now
+    # sealed. Both sets are read from the module's own tuples, so the
+    # check cannot disagree with the emitter.
+    ok(set(ECONOMIC_FIELDS) & set(OPEN_POPULATION_SIZES) == set()
+       and {"n_fills_arm", "n_fills_baseline",
+            "n_cancels_issued"} <= set(ECONOMIC_FIELDS)
+       and "n_decisions" in OPEN_POPULATION_SIZES,
+       f"R-659: the SEALED names ({len(ECONOMIC_FIELDS)}) and the open "
+       f"population SIZES ({len(OPEN_POPULATION_SIZES)}) are DISJOINT, "
+       f"and the three OUTCOME counts are on the SEALED side. "
+       f"`n_decisions` stays open because R4's admissibility bar reads "
+       f"it -- sealing it would make the bar uncheckable")
+    # THE EXTENSION IS SCOPED (REV 72 S1.4). Extending the list alone
+    # made DA's `economic_absence()` read the LANDED 09-03 receipt as six
+    # leaks -- the first sealed day accused by its own instrument for
+    # carrying fields that were OPEN BY RULING when it was written.
+    ok(set(economic_fields_in_force(22)) == set(ECONOMIC_FIELDS)
+       - {"n_fills_arm", "n_fills_baseline", "n_cancels_issued"}
+       and set(economic_fields_in_force(23)) == set(ECONOMIC_FIELDS)
+       and len(economic_fields_in_force(22)) == 8,
+       f"R-659 / REV 72 S1.4: the seal is SCOPED PER NAME -- "
+       f"{len(economic_fields_in_force(22))} names in force under design "
+       f"v22, {len(economic_fields_in_force(23))} under v23. "
+       f"`_strip_economic` seals by the list in force for THIS run; a "
+       f"census judges a receipt by the list in force when THAT receipt "
+       f"was produced")
+    _old102 = {"protocol": "P003_DE_MULTIDAY_GATE1_DAY_RUN_V1",
+               "per_day_sealed_artifacts": [
+                   {"arm": "A", "n_fills_arm": 1, "n_fills_baseline": 2,
+                    "n_cancels_issued": 3}]}
+    _new102 = {**_old102,
+               "provenance": {"design": {"path": "data/pm_5min/derived/"
+                                                 "p003_de_multiday_gate1_"
+                                                 "design_v23.json"}}}
+    _ja = economic_absence_scoped(_old102)
+    _jb = economic_absence_scoped(_new102)
+    ok(_ja["sealed"] is True and _ja["n_leaked"] == 0
+       and _ja["design_version"] == 22
+       and _jb["sealed"] is False and _jb["n_leaked"] == 3
+       and _jb["design_version"] == 23,
+       f"and the SAME three counts read CLEAN in a receipt with no design "
+       f"pin (v{_ja['design_version']}, {_ja['n_names_in_force']} names) "
+       f"and as {_jb['n_leaked']} LEAKS in one pinned to v23 "
+       f"({_jb['n_names_in_force']} names). A receipt cannot have "
+       f"disobeyed a rule that did not exist when it was written")
+    ok(design_version_of_receipt(_new102)["read_from"]
+       == "provenance.design.path"
+       and "no design pin" in design_version_of_receipt(
+           _old102)["read_from"],
+       "and the scope is READ FROM THE RECEIPT -- its own design pin from "
+       "DE 100, or the stated fallback for one written before that field "
+       "existed -- never from a table a verifier keeps on the side")
+    # AND THE SEAL REACHES THEM AT EVERY DEPTH, PLANTED AND PROVEN.
+    _deep102 = {"day": "D", "arm": "A", "status": "OK",
+                "admissibility": {"admissible": True, "null_sd": 1.0},
+                "n_cancels_issued": 5146,
+                "nested": [{"inner": {"n_fills_arm": 30171,
+                                      "n_fills_baseline": 46439}}],
+                "economic": {"D_E0": 1.0, "Z": 2.0, "p_location": 0.01,
+                             "null_mean": 0.0, "null_sd": 1.0,
+                             "null_draws_summary": {"n": 500}}}
+    _sealed102 = seal(_deep102, 1, 6)
+    _keys102 = set(_economic_keys_in(_sealed102))
+    ok(_keys102 == set()
+       and _strip_economic({"a": {"b": {"n_fills_arm": 1}}}) == {"a": {"b": {}}},
+       f"R-659 FALSIFIER, PLANTED AT DEPTH AND TESTED AS KEYS: "
+       f"`n_cancels_issued` at the top, `n_fills_arm` and "
+       f"`n_fills_baseline` two levels down inside a LIST -- all stripped "
+       f"by the seal, and the leak walker finds none left. Tested as KEYS, "
+       f"not as substrings: a value that happens to contain the name is "
+       f"not a leak, and the count of them is not evidence")
+    _unsealed102 = seal(_deep102, 6, 6)
+    ok("n_cancels_issued" in json.dumps(_unsealed102),
+       "AND THEY COME BACK AT G: the seal WITHHOLDS them until every day "
+       "is complete, it does not delete them. A guard shown only to "
+       "withhold is not a guard")
     _jf101 = journal_copy_by_invocation("de101-cannot-exist.service")
     ok(_jf101.get("output_format") == "short-iso-precise"
        and "cannot be diffed" in _jf101.get("output_format_note", ""),
@@ -5900,7 +6168,12 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     # The composed-string check is a LINT; this reads what actually ran.
     _f100 = heavy_run_form()
     _rc100, _lock100 = str(_f100["lock_conflict_rc"]), _f100["lock_path"]
-    _good100 = {"ppid": 1, "readable": True,
+    # THE INJECTED PARENTS CARRY `exe` NOW (REV 71 S1.2): identity comes
+    # from /proc/<ppid>/exe, not argv[0], because `exec -a flock` sets
+    # argv[0] to anything. These cells passed an argv-only parent and the
+    # positive control refused the moment the source changed -- which is
+    # the check noticing its own subject moved.
+    _good100 = {"ppid": 1, "readable": True, "exe": "/usr/bin/flock",
                 "argv": ["/usr/bin/flock", "-n", "-E", _rc100, _lock100,
                          "/venv/python3", "runner.py"]}
     ok(assert_lock_form_at_runtime(
@@ -5909,18 +6182,24 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"R-653 (iii) POSITIVE CONTROL: a parent flock carrying `-E "
        f"{_rc100}` on the declared lock ADMITS a real day")
     for _bad100, _lbl100, _needle100 in (
-            ({"ppid": 1, "readable": True,
+            ({"ppid": 1, "readable": True, "exe": "/usr/bin/flock",
               "argv": ["/usr/bin/flock", "-n", _lock100, "x"]},
              "no -E", "carries no"),
-            ({"ppid": 1, "readable": True,
+            ({"ppid": 1, "readable": True, "exe": "/usr/bin/flock",
               "argv": ["/usr/bin/flock", "-n", "-E", "76", _lock100, "x"]},
              "the WRONG rc", "carries no"),
-            ({"ppid": 1, "readable": True,
+            ({"ppid": 1, "readable": True, "exe": "/usr/bin/flock",
               "argv": ["/usr/bin/flock", "-n", "-E", _rc100,
                        "/tmp/other.lock", "x"]},
              "ANOTHER lock", "does not name the declared lock"),
-            ({"ppid": 1, "readable": True, "argv": ["/bin/sh", "-c", "x"]},
+            ({"ppid": 1, "readable": True, "exe": "/bin/sh",
+              "argv": ["/bin/sh", "-c", "x"]},
              "a parent that is NOT flock", "not `flock`"),
+            # THE SPOOF (REV 71 S1.2): `exec -a flock /bin/sleep` --
+            # argv[0] SAYS flock and the executable is sleep.
+            ({"ppid": 1, "readable": True, "exe": "/bin/sleep",
+              "argv": ["flock", "-n", "-E", _rc100, _lock100, "x"]},
+             "argv[0] SPOOFED to `flock` by `exec -a`", "not `flock`"),
             ({"ppid": None, "readable": False, "why": "no /proc"},
              "an UNREADABLE parent", "unreadable")):
         refuses(lambda b=_bad100: assert_lock_form_at_runtime(
@@ -5931,7 +6210,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                 f"reading its own parent's cmdline", _needle100)
     ok(assert_lock_form_at_runtime(
            "FIXTURE-DAY-1", fixture=True,
-           parent={"ppid": 1, "readable": True,
+           parent={"ppid": 1, "readable": True, "exe": "/bin/sh",
                    "argv": ["/bin/sh"]})["checked"] is False,
        "and a FIXTURE is not launched under the heavy form, so it is "
        "recorded as NOT CHECKED rather than silently passed")
@@ -8746,6 +9025,9 @@ def _main_day(a) -> int:
                 "sha256": (hashlib.sha256(f.read_bytes()).hexdigest()
                            if f.is_file() else None)}
     _design_rel = (params.get("design_declaration") or {}).get("path")
+    if _design_rel:
+        record_input_digest("design", _design_rel)
+    _inputs = verify_input_digests("the day-run emit")
     payload["provenance"] = {
         "params": _pair(PARAMS_REL),
         "design": (_pair(_design_rel) if _design_rel else
@@ -8754,6 +9036,7 @@ def _main_day(a) -> int:
             **_pair(heavy_run_form()["_chain"]["head_path"]),
             "chain": heavy_run_form()["_chain"]["links"],
             "resolved_as": "the chain head, not a filename literal"},
+        "digests_at_load_and_at_emit": _inputs,
         "as_the_run_resolved_them": (
             "these are the files THIS run read, digested at emit -- not a "
             "version a reader infers from a name and not a pin copied "
