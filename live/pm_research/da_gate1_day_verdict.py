@@ -6141,49 +6141,39 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"{_fork_verdict}; merged: head {_merged['name']}, orphans "
        f"{_merged['orphan_branches']} -> admitted")
 
-    # -- DA 104: THE CHAIN IS RESOLVED AND WRITTEN BY THE SHARED CODE ---
-    import declaration_chain as _DC                           # noqa: PLC0415
-    _ct = Path(tempfile.mkdtemp(prefix="da104chain_"))
-    (_ct / "fam_v1.json").write_text(json.dumps({"v": 1}))
-    _h1 = _DC.resolve_head(_ct, "fam")
-    #: TWO WRITERS FROM ONE HEAD -- the shape that cost two seats their
-    #: exit-map blocks: each read v1 and each wrote v2, and the second
-    #: landing overwrote the first IN PLACE.
-    _DC.write_next_version(_ct, "fam", {"v": 2, "supersedes": _h1["pair"]},
-                           _h1)
-    try:
-        _DC.write_next_version(_ct, "fam",
-                               {"v": 2, "supersedes": _h1["pair"]}, _h1)
-        _second = "ADMITTED"
-    except Exception as _e:                                   # noqa: BLE001
-        _second = str(_e).split(":")[0].strip()
-    #: A FORK: a second version superseding v1 beside the chained v2.
-    (_ct / "fam_v9.json").write_text(json.dumps(
-        {"v": 9, "supersedes": _h1["pair"]}))
-    _hf = _DC.resolve_head(_ct, "fam")
-    try:
-        _declaration_head("fam", _ct)
-        _fork_here = "ADMITTED"
-    except VerifierRefused as _e:
-        _fork_here = str(_e).split(" -- ")[0].replace("REFUSED: ", "")
-    ck("DA 104 -- ***THE CHAIN RESOLVES AND WRITES THROUGH THE SHARED "
-       "IMPLEMENTATION*** (`declaration_chain`, BE 77): this seat had "
-       "THREE of its own glob-and-pair resolvers, each able to drift from "
-       "the rule alone. Driven THROUGH THE IMPORT: a SECOND writer from "
-       "the same head is refused by name -- ***the shape that cost two "
-       "seats their exit-map blocks, each reading v1 and each writing "
-       "v2***; and on a FORKED family the resolver still RESOLVES (the "
-       "highest unsuperseded version) while REPORTING the orphan branch, "
-       "which this verifier then REFUSES, because reporting a fork and "
-       "ruling on it are different jobs",
-       _second in ("VERSION_PATH_EXISTS", "HEAD_MOVED")
-       and _hf["name"] == "fam_v9.json"
-       and [o["version"] for o in _hf["orphan_branches"]] == ["fam_v2.json"]
-       and _fork_here == "FAM_DOES_NOT_RESOLVE_TO_ONE_HEAD",
-       f"two writers from one head -> {_second}; the forked family "
-       f"resolves to {_hf['name']} with orphan "
-       f"{[o['version'] for o in _hf['orphan_branches']]}; this verifier "
-       f"-> {_fork_here}")
+    # -- REV 84 S3.2: THE SHARED MODULE'S OWN FALSIFIER IS ONE CELL ----
+    #: ***A REGRESSION IN THE SHARED MODULE FAILS EVERY IMPORTER AT
+    #: ONCE.*** DA 104 re-drove the module's write refusals here; that is
+    #: BE's battery, and running a copy of it is how two batteries drift.
+    #: This runs THEIRS, as one cell, and keeps independent cells only for
+    #: the properties THIS SEAT'S VERDICTS REST ON:
+    #:   * HALF_WRITTEN_LINK -- the pair-verified link. The module follows
+    #:     a `{path}`-only link today (BE 82 pending), and my census's
+    #:     refusal is what stands in for it;
+    #:   * THE FORK/MERGE RULE -- the module REPORTS an orphan branch; the
+    #:     REFUSAL is mine, and a verdict of mine turns on it;
+    #:   * THE STRUCTURE, EXIT-MAP, ANTI-ECHO and HEAVY-FORM heads -- read
+    #:     through `_declaration_head`, whose refusal wording is this
+    #:     seat's and whose behaviour on a fork is this seat's ruling.
+    import subprocess as _sp2                                 # noqa: PLC0415
+    _fals = _sp2.run([sys.executable,
+                      str(HERE / "declaration_chain.py"), "--falsify"],
+                     capture_output=True, text=True, timeout=300)
+    _flast = [l for l in (_fals.stdout or "").strip().splitlines()
+              if l.strip()][-1] if (_fals.stdout or "").strip() else ""
+    ck("REV 84 S3.2 -- ***THE SHARED MODULE'S OWN FALSIFIER RUNS AS ONE "
+       "CELL OF THIS BATTERY.*** A regression in `declaration_chain` fails "
+       "every importer at once, so its battery runs here rather than a "
+       "COPY of its drives: DA 104 re-drove the module's write refusals in "
+       "this file, and two batteries testing one module is how they "
+       "drift. What stays independent is what THIS SEAT'S VERDICTS REST "
+       "ON -- the pair-verified link (my `HALF_WRITTEN_LINK` census "
+       "refusal, which stands in for the module's while it follows a "
+       "`{path}`-only link) and the FORK RULE (the module REPORTS an "
+       "orphan branch; the REFUSAL is mine)",
+       _fals.returncode == 0 and "0 failures" in _flast,
+       f"`declaration_chain.py --falsify` -> rc {_fals.returncode}: "
+       f"{_flast}")
 
     # -- R-709 (RESTORED): THE EXIT MAP, AND 75 IS NEVER A PRODUCER'S ---
     #: ***THIS CELL WAS LANDED AT DA 101 AND I DELETED IT AT DA 102***, by
