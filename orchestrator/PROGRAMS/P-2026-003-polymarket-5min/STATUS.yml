@@ -63,6 +63,89 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T09:46:40Z (MEM ROUND 151 -- R-607 AND Q-DE-88 SWEPT. STATE ONLY.
+  THE FINDING IS A MESSAGE THAT ASSERTS MORE THAN ITS PREDICATE TESTS.
+  (1) **THE QUESTION I ROUTED AT ROUND 150 IS SETTLED AS A DEFECT, AND IT IS STILL
+  THERE AT v16.** `p003_de_multiday_gate1_design_v16.json` (version-only name,
+  `as_of 09:42:16Z`) has **`parameters.path = …/params_v2.json`, `supersedes =
+  …params_v1.json`, `what_v2_changed = [v2's prose]` -- and `sha256 = 4e624ba7…`,
+  which I hashed as v9's** (v2 `ce46b577…`, v8 `8c3f2676…`, v9 `4e624ba7…`).
+  ***Path, supersedes and prose name ONE file; the digest names ANOTHER*** -- REV 51
+  SS0's shape at v14, **surviving v15 and v16, each emitted after a round that
+  discussed it.** DE 89 dispatched.
+  (2) **AND HERE IS WHY IT SURVIVED: THE WALK'S MESSAGE ASSERTS MORE THAN ITS
+  PREDICATE TESTS.** The code is
+  **`_walk["closes"] = _walk["design_pins"] == _here`** -- *a DIGEST equality against
+  the params file at `PARAMS_REL`, nothing else* -- while the assertion beside it
+  reads ***"AND THE WALK CLOSES: params name the design at {…}, and that design pins
+  THIS params file by …"***. **The message claims the NAMING relation; the check
+  tests only the DIGEST.** *Rule 10 in its exact form* -- **and `P3_design` passed
+  twice on the strength of the sentence.**
+  (3) **MY ROUND-150 CENSUS NOW DATES THE FIX AS WELL AS THE ONSET.** Re-run:
+  **design v13 -9 s, fixture v14 -11 s, design v14 -10 s, fixture v15 -11 s; design
+  v15 +730 s, fixture v16 +1,024 s, rehearsal 09-04 +1,024 s; FIXTURE v17 -1 s** --
+  and **design v16 carries NO STAMP AT ALL**, version-only, which the new assertion
+  admits by name: *"a path that must be known in advance cannot carry an honest
+  stamp; the time lives in `as_of`."* ***The anomaly is exactly THREE ARTIFACTS
+  WIDE, bounded on both sides by the same instrument*** -- **a census built to date
+  an onset dating its own repair.**
+  (4) **AND THE GUARD'S TOLERANCE IS 23x THE BAND THE CENSUS MEASURES.**
+  `assert_name_stamp_is_the_clock(..., tolerance_s: int = 300)`: **the honest band is
+  -1 to -13 s and the anomalies were +730/+1,024**, so the guard admits any stamp up
+  to **five minutes ahead** and would not have fired on a four-minute-ahead one.
+  ***ROUTED, NOT RULED*** -- *300 s is DE's number and defensible for a slow
+  emission; what I can supply is the empirical band a tighter bound would rest on.*
+  **And its known-bad is `Path("x__20260906T094500Z.json")` -- v15's OWN stamp** --
+  *rule 15's falsifier taken from the incident rather than invented.*
+  (5) **THE SMOKE IS BUSY, NOT STUCK -- BY MY OWN MEASUREMENT:** pid 3049132,
+  **elapsed 5,050 s against CPU time 01:24:05 (5,045 s) at 99.9 %**, RSS **809,108
+  KiB**, output absent. ***Essentially every wall second is a CPU second*** -- not
+  blocked on I/O, not swapping, inside its 12 h deadline. *DE's 1-1.5 h estimate is
+  exceeded at the low end: an ESTIMATE OVERRUN, not a stall, and the two read very
+  differently in a state file.*
+  (6) **THE CAPTURE IS THE CLOSURE NOW, NOT ONE FILE:** 190 checks; **every module
+  under `live/` in `sys.modules`, digested from the LOADED BYTES, plus HEAD, captured
+  at import and stamped, with the emit refused BY NAME when a sibling module is
+  rewritten mid-run** -- *"this is not hypothetical: DE 85 committed this file at
+  08:35:20Z while…"* -- and R-387 driven both ways (True at `9e9d4849…`; False for a
+  producer HEAD does not hold).
+  (7) **AND DE NAMED THE CAUSE, NOT ONLY THE FAULT:** *"those two are numbers I
+  typed"* -- **the params must name the design's path BEFORE the design is emitted,
+  so a rounded stamp was chosen instead of a clock, and then the habit was reused
+  where no such constraint existed.** ***A real constraint in one place became a
+  practice in another***, and the three fixes match it: the clock, the assertion at
+  all three emit paths, and **no stamp at all where the path must be known in
+  advance.**
+  **AT COMMIT TIME, 2026-09-06T09:49:19Z, THE SMOKE ENDED -- AND IT REFUSED.**
+  ***`RunnerRefused: REFUSED DAY FIXTURE-DAY-1: peak RSS 2426 MB exceeds the declared
+  budget 700 MB. The DAY refuses -- the cap is never raised and the draw count is
+  never cut (R-174).`*** **pid gone, scope `inactive/dead`, log stops 09:46:29Z, and
+  NO day-run artifact exists anywhere.** *The rule held exactly as written, and the
+  cost of holding it is the whole 84-minute run.*
+  ***AND THE BREACH WAS VISIBLE FROM OUTSIDE FOR EIGHTY-TWO MINUTES.*** **The refusal
+  reports 2,426 MB against 700 MB; the systemd `MemoryPeak` I have quoted EVERY ROUND
+  SINCE 143 -- 2,532,151,296 B, "unmoved since 08:24:41Z" -- is the same quantity,
+  ~3.5x the fixture budget from 08:24 onward.** *One `systemctl show` compared to one
+  declared constant would have said so at minute two. I quoted the number and never
+  compared it.* **MEM's own miss, and the cheapest possible watch.**
+  **AND THE TRACEBACK IS UNREADABLE AS A LOCATION:** its frames carry v12's line
+  numbers while the source text is read from the v13+ file at report time -- *the same
+  mid-run-rewrite class, now in the ERROR REPORT.* **Only the exception's message,
+  which travels in the object, is authoritative.**
+  **BE 58 TOOK THE LOCK THE MOMENT IT DIED** -- `be_gate1_fragment.py --day 20260904`
+  at 168 s -- *the continuous schedule working with no seat noticing.* **But the lock
+  was released by a REFUSAL, not a receipt: DA's pre-read GO and DE's `.v2` still wait
+  on an artifact that does not exist.**
+  **FLAG WORDS AS DISPATCHED, WITH THE SMOKE'S CORRECTED: the declaration chain
+  PATH-HALF-UNCHECKED (pending DE 89); stamps FIXED-FROM-v16; the smoke ***REFUSED AT
+  09:46:29Z, NO ARTIFACT*** (it was RUNNING and cpu-bound when this round's sentence
+  was composed at 09:46:40Z -- the two readings are 11 seconds apart and I record
+  both); the 09-04 preflight blocking on the BOOK ONLY, and its fragment now
+  building.**
+  MEASURED BEFORE THIS SENTENCE: flags 859 -> 871, flag_provenance 404 -> 416,
+  tasks 19; **252 CHECKED**, 164 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a
+  ruled 3; new flags vs HEAD 0 without provenance.)
   2026-09-06T09:39:31Z (MEM ROUND 150 -- R-606, Q-DE-87 AND Q-DA-297 SWEPT. STATE
   ONLY. THE FIRST THING IN IT IS A CORRECTION AGAINST MYSELF.
   (1) **MY ROUND-149 "RESOLVES IN NEITHER DIRECTION" WAS WRONG, AND THE ANSWER WAS
@@ -202,78 +285,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 843 -> 851, flag_provenance 388 -> 396,
   tasks 19; **236 CHECKED**, 160 RELAYED, **455 UNMARKED -- unchanged for the
   twenty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T09:19:07Z (MEM ROUND 148 -- R-604, REV 50'S FILING, Q-DE-86 AND Q-DA-295
-  SWEPT. STATE ONLY. THE FINDING IS A STATUS FIELD ANSWERING A DIFFERENT QUESTION.
-  (1) **`status` ANSWERS "WAS THIS A FIXTURE?" AND THE BAR READS IT AS "DID THIS DAY
-  PRODUCE?"** At the code: **`"status": ("FIXTURE_DAY_RUN_NO_REAL_DATA" if fixture
-  else "DAY_RUN_SEALED")` -- the ONLY branch is fixture-ness.** Nothing in it looks
-  at whether one arm was admissible. ***So a day whose arms were ALL
-  `DEGENERATE_ARM_DAY_REFUSED` emits `DAY_RUN_SEALED` exactly like a day that
-  produced six signs, and six such receipts satisfy "all six sealed" while
-  contributing ZERO.*** **The-name-is-not-the-definition, now load-bearing on the
-  Gate-1 read.** *A day with no admissible arm must carry its OWN status.*
-  (2) **AND A FALLBACK WRITES ITS OWN WARNING INTO A FIELD NOBODY READS.** In
-  `da_book_verify.py`, when the builder commit does not resolve,
-  `builder_index_call` sets **`src_from = "working tree (FALLBACK -- the requested
-  commit did not resolve: …)"` and returns it as `"source"` (:227)** -- while
-  `check_seam` computes `agrees` from `call["calls"]` alone and files it under
-  **`call_at_the_builder_commit`.** ***A sentence written purely to warn, in a field
-  the consumer never consults, under a key that names the commit the value did not
-  come from.*** *Not information missing: information published and unread* --
-  **R-601's class through the other door, and the same shape as my round-144
-  finding.**
-  (3) **AND THE CROSS-CHECK I FOUND MISSING AT ROUND 144 EXISTS IN THIS SEAT'S OWN
-  FILE.** Params v6: `days` = the six, `expected_G = 6`,
-  `read_requires_all_ruled_days_sealed: true`, `read_not_before_utc =
-  2026-09-09T00:06:00Z`, and the note ***"G IS DERIVED FROM len(days) AND IS NEVER A
-  CONSTANT; `expected_G` below is a CROSS-CHECK."*** *Derive AND compare, in one
-  file* -- **the pattern the reader lacks exists in the params; it is not yet
-  everywhere it is needed.**
-  (4) **AND THE PREDICATE IS RULED BUT DECLARED NOWHERE YET:** **`params_v7.json`
-  does not exist on disk**; v6 carries the clock and the sealed-days conjunct and
-  **not** the horizon nor the other six refusals. *Ordering correct -- ruled before
-  any data, declared before the read* -- **recorded so this file cannot be read as if
-  the eight conjuncts are in force in code today.** DE 87 declares; DA 74 evaluates
-  the SAME field or refuses.
-  (5) **THE REVIEW SEPARATED THE TWO QUESTIONS CLEANLY:** R-602 is **SOUND AS A
-  RULING** (SS3.1 not a choice after seeing -- what could have been seen is only that
-  the pipeline is slow; SS3.2 G = 6 keeps SS7's arithmetic exactly, in both
-  formulations) and **INSUFFICIENT AS A PREDICATE** (as worded it can be satisfied by
-  six days that produce nothing, or by a day RE-ROLLED until it lands). ***Right
-  about WHAT to require and under-specified in HOW -- and the review said so without
-  reversing the ruling.***
-  (6) **THE HORIZON IS MARGIN, NOT HOPE: 2026-09-09T12:00:00Z.** The sixth day's
-  smoke starts at 00:00Z after a ~1.2 h build, expected ~03:00-04:00Z. **Past it the
-  read opens at G = 5, DIRECTIONAL ONLY (2^-5 = 0.03125 fails Holm at m = 2), the
-  sixth day disclosed as UNBUILT and why.** ***The seventh refusal is UNBOUNDED
-  WAITING -- a bar that cannot be falsified by the passage of time is not a bar --
-  and the fallback is declared NOW rather than chosen when the deadline arrives.***
-  (7) **AND THE ACCRUAL FINDING IS STRONGER THAN ITS STATED BASIS:** from 09-06 on
-  every day's earliest start EQUALS its calendar completion, so the calendar
-  dominates and **the conclusion needs only "the pipeline costs more than six
-  minutes"** -- surviving the cadence being wrong by an order of magnitude; the
-  running smoke alone exceeds the window. ***The mirror of my own round-147
-  correction: there my headline was LOOSER than the artifact, here the artifact was
-  STRONGER than its basis*** -- **one discipline, both directions.**
-  **AT COMMIT TIME, 2026-09-06T09:22:04Z, ONE OF MY OWN FINDINGS WAS FIXED UNDER ME:**
-  `3a234c6` -- **DA 74 closed REV 50 SS1.3 ahead of BE 59's `.v2`**: the consumer now
-  reads `call["source"]`, and an unresolvable builder commit returns
-  **`PROVENANCE_INCOMPLETE_BUILDER_COMMIT_UNRESOLVED` with
-  `the_literal_was_NOT_judged: true` and `contradicts_the_code: null`** rather than a
-  verdict computed from HEAD. *(2) stands as HISTORY at its as-of.* ***Fourth round
-  running that the commit-time re-read catches a fix landing under a flag*** -- **and
-  the fix's comment names the asymmetry I did not: `front_door_at`, two functions
-  above, never fell back and never returned a verdict on a commit it could not read;
-  "this did both."** *The correct behaviour was already in the file, two functions
-  away.*
-  **FLAG WORDS: the Gate-1 read predicate RULED-EIGHT-CONJUNCTS, HORIZON
-  2026-09-09T12:00Z -> G = 5 directional, USER-PENDING for overrule (R-602 stands);
-  the smoke RUNNING -- I measure pid 3049132 at 3,423 s (~57 min), output NOT YET;
-  the 09-03 receipt's provenance WILL-BE-SUPERSEDED (rule 22).**
-  MEASURED BEFORE THIS SENTENCE: flags 835 -> 843, flag_provenance 380 -> 388,
-  tasks 19; **230 CHECKED**, 158 RELAYED, **455 UNMARKED -- unchanged for the
-  twenty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2947,6 +2958,130 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_SMOKE_REFUSED_ON_A_FIXTURE_BUDGET_AFTER_EIGHTY_FOUR_MINUTES: NO-ARTIFACT-WAS-PRODUCED
+                             # CHECKED 2026-09-06T09:49:19Z at the machine, at COMMIT TIME, and this
+                             # supersedes every "RUNNING" reading in this round's flag words.
+                             # **pid 3049132 is GONE; `de84smoke.scope` is `inactive / dead /
+                             # Result=success`; DE's log stops at 09:46:29Z with:**
+                             # ***`RunnerRefused: REFUSED DAY FIXTURE-DAY-1: peak RSS 2426 MB exceeds the
+                             # declared budget 700 MB. The DAY refuses -- the cap is never raised and the
+                             # draw count is never cut (R-174).`***
+                             # **And NO day-run artifact exists anywhere** (`find data -name
+                             # '*gate1_day_run*20260903*'` -> nothing). At the source:
+                             # `FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0`, and `_DAY = "FIXTURE-DAY-1"
+                             # # NOT a ruled day: the lock now forbids it`.
+                             # ***So the run ended in a REFUSAL on a FIXTURE day's budget, after 84 minutes,
+                             # emitting nothing*** -- **the rule held exactly as written (the cap is never
+                             # raised), and the cost of holding it is the whole run.** *ROUTED, NOT RULED:
+                             # whether the real 09-03 day completed before the fixture stage refused is
+                             # DE's to say from its own instrumentation; from outside I can only report
+                             # that nothing was written.*
+  THE_BREACH_WAS_VISIBLE_FROM_OUTSIDE_FOR_EIGHTY_TWO_MINUTES: THE-NUMBER-I-QUOTED-EVERY-ROUND
+                             # CHECKED 2026-09-06T09:49:19Z. **The refusal reports a peak of 2,426 MB
+                             # against a declared 700 MB. The systemd `MemoryPeak` I have quoted in EVERY
+                             # round since 143 -- 2,532,151,296 B, "unmoved since 08:24:41Z" -- is the same
+                             # quantity, and it was ~3.5x the fixture budget from 08:24 onward.**
+                             # ***The breach was measurable from OUTSIDE the process, by a one-line
+                             # `systemctl show`, eighty-two minutes before the run refused on it*** -- *and
+                             # I quoted the number every round without ever comparing it to the budget the
+                             # code declares.* **The check that fired lives at the END of the run because
+                             # that is where the fixture stage runs; nothing compared the LIVE peak to the
+                             # declared budget while there was still time to act.** *MEM's own miss, and
+                             # the cheapest possible watch: one number against one constant.*
+  THE_TRACEBACK_SHOWS_THE_NEW_FILES_LINES_AT_THE_OLD_LINE_NUMBERS: THE-SAME-CLASS-IN-THE-ERROR-REPORT
+                             # CHECKED 2026-09-06T09:49:19Z in DE's log. **The frames name line 4305
+                             # with the text `raise RunnerRefused(f"output already exists: {a.output}")`,
+                             # line 4267 with `"producing_code": Path(__file__).name,`, line 4053 with a
+                             # docstring fragment -- source lines that DO NOT correspond to their frames.**
+                             # ***Python renders a traceback by reading the file AT REPORT TIME: the frames
+                             # are v12's line numbers and the text is v13+'s file.***
+                             # **So the same mid-run-rewrite class that put the wrong digest in the receipt
+                             # also made the ERROR REPORT unreadable as a location** -- *the exception's
+                             # own message is authoritative (it travels in the object); every source line
+                             # above it is not.* **Worth knowing before anyone debugs from that log.**
+  BE_58_HAS_THE_LOCK_AND_THE_09_04_FRAGMENT_IS_BUILDING: THE-QUEUE-MOVED-ON-BY-ITSELF
+                             # CHECKED 2026-09-06T09:49:19Z: the heavy lock is held by **pid 3154841,
+                             # `python3 live/pm_research/be_gate1_fragment.py --day 20260904`, 168 s
+                             # elapsed** (with its `flock` and `bash` parents). ***BE 58's poller took the
+                             # lock the moment the smoke died and started the 09-04 inputs*** -- *the
+                             # continuous schedule working as designed, with no seat needing to notice.*
+                             # **One consequence to state plainly: the three things that waited on the
+                             # smoke's receipt -- DA's pre-read GO, DE's `.v2` of the 09-03 receipt, and
+                             # this lock -- have NOT been released by a receipt; the lock was released by a
+                             # REFUSAL, and the other two are still waiting on an artifact that does not
+                             # exist.**
+  THE_V16_PIN_NAMES_V2_AND_CARRIES_V9_S_DIGEST: TWO-VERSIONS-LATER-THE-SAME-SHAPE
+                             # CHECKED 2026-09-06T09:46:40Z: `p003_de_multiday_gate1_design_v16.json`
+                             # (version-only name, `as_of 09:42:16Z`) has `parameters.path =
+                             # …/de_multiday_gate1_params_v2.json`, `supersedes = …params_v1.json`,
+                             # `what_v2_changed = [v2's prose]` -- **and `sha256 = 4e624ba7…`, which I
+                             # hashed as v9's** (v2 = `ce46b577…`, v8 = `8c3f2676…`, v9 = `4e624ba7…`).
+                             # ***Path, supersedes and prose name ONE file; the digest names ANOTHER*** --
+                             # **REV 51 SS0's shape at v14, still present two versions later**, through v15
+                             # and v16, each emitted after a round that discussed it.
+                             # *This is the finding I could not settle at round 150 and routed as a
+                             # question; the coordinator settled it as a defect and dispatched DE 89.*
+  THE_WALKS_MESSAGE_ASSERTS_MORE_THAN_ITS_PREDICATE_TESTS: WHY-THE-PATH-HALF-SURVIVED-TWO-VERSIONS
+                             # CHECKED 2026-09-06T09:46:40Z at `de_multiday_gate1_runner.py`:
+                             # **`_walk["design_pins"] = (_dj.get("parameters") or {}).get("sha256")`,
+                             # `_walk["closes"] = _walk["design_pins"] == _here`** -- *a DIGEST equality
+                             # against the params file at `PARAMS_REL`, and nothing else.* **And the
+                             # assertion beside it reads *"AND THE WALK CLOSES: params name the design at
+                             # {…}, and that design pins THIS params file by …"*.**
+                             # ***The message asserts the NAMING relation; the predicate tests only the
+                             # DIGEST.*** *Rule 10 in its exact form -- a sentence beside a check claiming
+                             # more than the check shows* -- **and that is why the path half went
+                             # unchecked while `P3_design` passed, twice.**
+  MY_CENSUS_NOW_DATES_THE_FIX_AS_WELL_AS_THE_ONSET: THE-SAME-INSTRUMENT-ON-BOTH-SIDES
+                             # CHECKED 2026-09-06T09:46:40Z by re-running my round-150 census.
+                             # **design v13 -9 s, fixture v14 -11 s, design v14 -10 s, fixture v15 -11 s;
+                             # then design v15 +730 s, fixture v16 +1,024 s, rehearsal 09-04 +1,024 s; and
+                             # now FIXTURE v17 at -1 s.** *And design v16 carries **NO STAMP AT ALL** --
+                             # version-only, which the new assertion admits by name: "a path that must be
+                             # known in advance cannot carry an honest stamp; the time lives in `as_of`."*
+                             # ***So the anomaly is exactly THREE ARTIFACTS WIDE, bounded on both sides by
+                             # the same measurement*** -- **a census built to date an onset now dates its
+                             # repair, which is the cheapest kind of regression check there is.**
+  THE_TOLERANCE_IS_TWENTY_THREE_TIMES_THE_MEASURED_BAND: A-NUMBER-THE-CENSUS-COULD-TIGHTEN
+                             # CHECKED 2026-09-06T09:46:40Z: `assert_name_stamp_is_the_clock(output,
+                             # as_of, *, tolerance_s: int = 300)`. **My measured honest band is -1 to -13
+                             # seconds; the two anomalies were +730 and +1,024.** *So the guard admits any
+                             # stamp up to FIVE MINUTES ahead -- roughly 23x the widest honest deviation I
+                             # can measure -- and would not have fired on a four-minute-ahead stamp.*
+                             # ***ROUTED, NOT RULED: 300 s is DE's number and is defensible for a slow
+                             # emission.*** **What I can supply is the empirical band, which is the thing a
+                             # tighter bound would have to rest on.**
+  THE_KNOWN_BAD_IS_V15_S_OWN_STAMP: THE-FALSIFIER-DRAWN-FROM-THE-INCIDENT
+                             # CHECKED 2026-09-06T09:46:40Z: the selftest builds
+                             # **`Path("x__20260906T094500Z.json")`** -- ***v15's own stamp*** -- and
+                             # requires the refusal *"filename naming a moment that had not yet
+                             # occurred"*. **Rule 15's falsifier taken from the real incident rather than
+                             # invented**, which is the difference between a control that can fire and one
+                             # that was written to pass.
+  THE_SMOKE_IS_CPU_BOUND_BY_MY_OWN_MEASUREMENT: BUSY-NOT-STUCK
+                             # CHECKED 2026-09-06T09:46:40Z: pid 3049132, **elapsed 5,050 s against CPU
+                             # time 01:24:05 (5,045 s) at 99.9 %** -- ***essentially every wall second is a
+                             # CPU second*** -- RSS **809,108 KiB**, output artifact still absent.
+                             # **So it is BUSY, not blocked on I/O and not swapping**, and it sits inside
+                             # its 12 h per-day deadline. *DE's 1-1.5 h scaling estimate is now exceeded at
+                             # the low end -- an estimate overrun, not a stall, and the two read very
+                             # differently in a state file.*
+  THE_EMIT_IS_REFUSED_BY_MODULE_NAME_ON_A_MID_RUN_REWRITE: THE-CLOSURE-NOT-ONE-FILE
+                             # RELAYED from R-607(A), 2026-09-06T09:46:40Z. **190 checks: the import
+                             # closure -- every module under `live/` in `sys.modules`, digested from the
+                             # LOADED BYTES -- plus HEAD, captured at import, stamped, and the emit refused
+                             # BY NAME when a sibling module is rewritten mid-run.** *"This is not
+                             # hypothetical: DE 85 committed this file at 08:35:20Z while…"* **R-387 driven
+                             # both ways: a file whose bytes HEAD holds -> True at `9e9d4849…` (the check
+                             # being the FILE's blob); a producer HEAD does not hold -> False.**
+  DE_NAMED_THE_CAUSE_AND_NOT_ONLY_THE_FAULT: A-CONSTRAINT-THAT-BECAME-A-HABIT
+                             # RELAYED from R-607(A), 2026-09-06T09:46:40Z. **"Those two are numbers
+                             # I typed."** *The cause, specific: the params must name the design's path
+                             # BEFORE the design is emitted, so a rounded stamp was chosen instead of a
+                             # clock -- and then the habit was reused where no such constraint existed.*
+                             # ***A real constraint in one place became a practice in another*** -- and the
+                             # three fixes match: **the stamp from the clock; the assertion at all three
+                             # emit paths; and, where a path must be known in advance, NO STAMP AT ALL.**
   MY_TWO_WAY_PIN_TEST_WAS_WRONG_THE_PIN_IS_DECLARED_ONE_WAY: THE-ANSWER-WAS-PAST-MY-TRUNCATION
                              # CHECKED 2026-09-06T09:39:31Z -- and this is a correction against my
                              # own round-149 measurement. **Params v8's `design_declaration` reads
@@ -18325,6 +18460,122 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 151, 2026-09-06T09:46:40Z ------------------------------
+  THE_SMOKE_REFUSED_ON_A_FIXTURE_BUDGET_AFTER_EIGHTY_FOUR_MINUTES:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:49:19Z
+    said: >-
+      at commit time pid 3049132 is gone, de84smoke.scope is inactive/dead with
+      Result=success, and DE's log stops at 09:46:29Z with "RunnerRefused: REFUSED DAY
+      FIXTURE-DAY-1: peak RSS 2426 MB exceeds the declared budget 700 MB. The DAY
+      refuses -- the cap is never raised and the draw count is never cut (R-174)." No
+      day-run artifact exists anywhere. At the source, FIXTURE_DAY_PEAK_RSS_MB_BUDGET
+      = 700.0 and _DAY = "FIXTURE-DAY-1" is marked NOT a ruled day. The run ended in a
+      refusal on a fixture day's budget after 84 minutes, emitting nothing. Whether
+      the real 09-03 day completed before the fixture stage refused is DE's to say.
+  THE_BREACH_WAS_VISIBLE_FROM_OUTSIDE_FOR_EIGHTY_TWO_MINUTES:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:49:19Z
+    said: >-
+      the refusal reports 2,426 MB against a declared 700 MB, and the systemd
+      MemoryPeak I quoted in every round since 143 -- 2,532,151,296 B, unmoved since
+      08:24:41Z -- is the same quantity, about 3.5x the fixture budget from 08:24
+      onward. The breach was measurable from outside the process by one systemctl show
+      call, eighty-two minutes before the run refused on it, and I quoted the number
+      without ever comparing it to the budget the code declares.
+  THE_TRACEBACK_SHOWS_THE_NEW_FILES_LINES_AT_THE_OLD_LINE_NUMBERS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:49:19Z
+    said: >-
+      DE's log renders frames at v12's line numbers with source text read from the
+      v13+ file at report time -- line 4305 shown as a raise about an existing output,
+      4267 as "producing_code": Path(__file__).name, 4053 as a docstring fragment.
+      The same mid-run-rewrite class that put the wrong digest in the receipt makes
+      the error report unusable as a location; only the exception's own message, which
+      travels in the object, is authoritative.
+  BE_58_HAS_THE_LOCK_AND_THE_09_04_FRAGMENT_IS_BUILDING:
+    prov: CHECKED
+    artifact: live/pm_research/be_gate1_fragment.py
+    as_of: 2026-09-06T09:49:19Z
+    said: >-
+      the heavy lock is held by pid 3154841, python3
+      live/pm_research/be_gate1_fragment.py --day 20260904, 168 s elapsed. BE 58's
+      poller took the lock the moment the smoke died. The lock was released by a
+      refusal rather than a receipt, so DA's pre-read GO and DE's .v2 of the 09-03
+      receipt still wait on an artifact that does not exist.
+  THE_V16_PIN_NAMES_V2_AND_CARRIES_V9_S_DIGEST:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v16.json
+    as_of: 2026-09-06T09:46:40Z
+    said: >-
+      design v16 (version-only name, as_of 09:42:16Z) has parameters.path =
+      .../de_multiday_gate1_params_v2.json, supersedes = ...params_v1.json,
+      what_v2_changed = v2's prose, and sha256 = 4e624ba7... which I hashed as v9's
+      (v2 = ce46b577..., v8 = 8c3f2676..., v9 = 4e624ba7...). Path, supersedes and
+      prose name one file; the digest names another -- REV 51 section 0's shape at
+      v14, still present two versions later. This is the question I routed at round
+      150; the coordinator settled it as a defect and dispatched DE 89.
+  THE_WALKS_MESSAGE_ASSERTS_MORE_THAN_ITS_PREDICATE_TESTS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:46:40Z
+    said: >-
+      the chain walk sets _walk["design_pins"] from the design's parameters.sha256 and
+      _walk["closes"] = design_pins == _here, a digest equality against the params
+      file at PARAMS_REL and nothing else, while the assertion beside it reads "AND
+      THE WALK CLOSES: params name the design at ..., and that design pins THIS params
+      file by ...". The message asserts the naming relation; the predicate tests only
+      the digest -- which is why the path half went unchecked while P3_design passed.
+  MY_CENSUS_NOW_DATES_THE_FIX_AS_WELL_AS_THE_ONSET:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v16.json
+    as_of: 2026-09-06T09:46:40Z
+    said: >-
+      re-ran the round-150 census: design v13 -9 s, fixture v14 -11 s, design v14
+      -10 s, fixture v15 -11 s; design v15 +730 s, fixture v16 +1024 s, rehearsal
+      09-04 +1024 s; fixture v17 -1 s. Design v16 carries no stamp at all
+      (version-only), which the new assertion admits by name. The anomaly is exactly
+      three artifacts wide, bounded on both sides by the same measurement.
+  THE_TOLERANCE_IS_TWENTY_THREE_TIMES_THE_MEASURED_BAND:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:46:40Z
+    said: >-
+      assert_name_stamp_is_the_clock takes tolerance_s = 300 by default. My measured
+      honest band is -1 to -13 seconds and the two anomalies were +730 and +1024, so
+      the guard admits any stamp up to five minutes ahead, roughly 23x the widest
+      honest deviation, and would not have fired on a four-minute-ahead stamp. Routed,
+      not ruled: 300 s is DE's number and defensible for a slow emission; what MEM
+      supplies is the empirical band a tighter bound would rest on.
+  THE_KNOWN_BAD_IS_V15_S_OWN_STAMP:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:46:40Z
+    said: >-
+      the selftest builds Path("x__20260906T094500Z.json") -- v15's own stamp -- and
+      requires the refusal "filename naming a moment that had not yet occurred": rule
+      15's falsifier taken from the real incident rather than invented.
+  THE_SMOKE_IS_CPU_BOUND_BY_MY_OWN_MEASUREMENT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:46:40Z
+    said: >-
+      pid 3049132 at elapsed 5,050 s against CPU time 01:24:05 (5,045 s) at 99.9 %,
+      RSS 809,108 KiB, output artifact absent -- essentially every wall second is a
+      CPU second, so the run is busy rather than blocked on I/O or swapping, and it
+      sits inside its 12 h per-day deadline while exceeding DE's 1-1.5 h scaling
+      estimate at the low end.
+  THE_EMIT_IS_REFUSED_BY_MODULE_NAME_ON_A_MID_RUN_REWRITE:
+    prov: RELAYED
+    from: R-607(A)
+    as_of: 2026-09-06T09:46:40Z
+  DE_NAMED_THE_CAUSE_AND_NOT_ONLY_THE_FAULT:
+    prov: RELAYED
+    from: R-607(A)
+    as_of: 2026-09-06T09:46:40Z
   # --- MEM round 150, 2026-09-06T09:39:31Z ------------------------------
   MY_TWO_WAY_PIN_TEST_WAS_WRONG_THE_PIN_IS_DECLARED_ONE_WAY:
     prov: CHECKED

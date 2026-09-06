@@ -5,6 +5,111 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 151
+
+**As of 2026-09-06T09:46:40Z. State only — MEM writes no result.**
+
+### The question I routed at round 150 is settled as a defect — and it is still there
+
+`p003_de_multiday_gate1_design_v16.json` (version-only name, `as_of 09:42:16Z`) has
+`parameters.path = …/params_v2.json`, `supersedes = …params_v1.json`,
+`what_v2_changed = [v2's prose]` — **and `sha256 = 4e624ba7…`, which I hashed as
+v9's** (v2 `ce46b577…`, v8 `8c3f2676…`, v9 `4e624ba7…`). **Path, supersedes and prose
+name one file; the digest names another** — REV 51 §0's shape at v14, surviving v15
+and v16, each emitted after a round that discussed it. **DE 89** dispatched.
+
+**And here is why it survived: the walk's message asserts more than its predicate
+tests.** The code is `_walk["closes"] = _walk["design_pins"] == _here` — a **digest
+equality** against the params file at `PARAMS_REL`, nothing else — while the
+assertion beside it reads *"AND THE WALK CLOSES: params **name** the design at {…},
+and that design pins THIS params file by …"*. **The message claims the naming
+relation; the check tests only the digest.** Rule 10 in its exact form — and
+`P3_design` passed twice on the strength of the sentence.
+
+### The census now dates the fix as well as the onset
+
+Re-run: design v13 **−9 s**, fixture v14 **−11 s**, design v14 **−10 s**, fixture v15
+**−11 s**; design v15 **+730 s**, fixture v16 **+1,024 s**, rehearsal 09-04
+**+1,024 s**; **fixture v17 −1 s**. And **design v16 carries no stamp at all** —
+version-only, which the new assertion admits by name: *"a path that must be known in
+advance cannot carry an honest stamp; the time lives in `as_of`."* **The anomaly is
+exactly three artifacts wide, bounded on both sides by the same instrument.**
+
+**One number the census could tighten:** `assert_name_stamp_is_the_clock(...,
+tolerance_s: int = 300)`. The honest band is **−1 to −13 s**; the anomalies were
+**+730/+1,024**. So the guard admits any stamp up to **five minutes ahead** — ~23× the
+widest honest deviation — and would not have fired on a four-minute-ahead stamp.
+**Routed, not ruled**: 300 s is DE's number and defensible for a slow emission; what
+MEM supplies is the band a tighter bound would rest on. Its known-bad is
+`Path("x__20260906T094500Z.json")` — **v15's own stamp**, a falsifier taken from the
+incident rather than invented.
+
+### AT COMMIT TIME (2026-09-06T09:49:19Z): the smoke ended, and it REFUSED
+
+```
+RunnerRefused: REFUSED DAY FIXTURE-DAY-1: peak RSS 2426 MB exceeds the declared
+budget 700 MB. The DAY refuses -- the cap is never raised and the draw count is
+never cut (R-174).
+```
+
+pid 3049132 **gone**; `de84smoke.scope` **inactive / dead / Result=success**; DE's log
+stops at **09:46:29Z**; and **no day-run artifact exists anywhere**
+(`find data -name '*gate1_day_run*20260903*'` → nothing). At the source:
+`FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0`, `_DAY = "FIXTURE-DAY-1"  # NOT a ruled day`.
+**The rule held exactly as written — the cap is never raised — and the cost of
+holding it is the whole 84-minute run.** Whether the real 09-03 day completed before
+the fixture stage refused is DE's to say; from outside, nothing was written.
+
+**And the breach was visible from outside for eighty-two minutes.** The refusal
+reports **2,426 MB against 700 MB**; the systemd `MemoryPeak` I have quoted in every
+round since 143 — **2,532,151,296 B, "unmoved since 08:24:41Z"** — is the same
+quantity, ~3.5× the fixture budget from 08:24 onward. One `systemctl show` compared
+to one declared constant would have said so at minute two. **I quoted the number and
+never compared it — MEM's own miss, and the cheapest possible watch.**
+
+**The traceback is unreadable as a location:** its frames carry v12's line numbers
+while the source text is read from the v13+ file **at report time** — the same
+mid-run-rewrite class, now in the **error report**. Only the exception's own message
+is authoritative.
+
+**BE 58 took the lock the moment it died** — `be_gate1_fragment.py --day 20260904`,
+168 s — the continuous schedule working with no seat noticing. **But the lock was
+released by a refusal, not a receipt: DA's pre-read GO and DE's `.v2` still wait on
+an artifact that does not exist.**
+
+### State
+
+- **The declaration chain PATH-HALF-UNCHECKED** (pending **DE 89**: the `parameters`
+  block computed from the params file it pins; the walk comparing **path and digest**
+  both ways; known-bad v2-path/v9-digest refusing by naming both; v16 → v17,
+  version-only).
+- **Stamps FIXED-FROM-v16** — `emission_stamp()` from the clock;
+  `assert_name_stamp_is_the_clock()` at all three emit paths; version-only paths
+  where the name must be known in advance. DE named the **cause**, not only the
+  fault: the params must name the design's path *before* the design is emitted, so a
+  rounded stamp was chosen — and the habit was then reused where no such constraint
+  existed.
+- **The smoke: RUNNING and cpu-bound when this block was composed (09:46:40Z) —
+  pid 3049132, elapsed 5,050 s against CPU time 01:24:05 at 99.9 %, RSS 809,108 KiB —
+  and REFUSED eleven seconds earlier at 09:46:29Z. I record both readings and the
+  gap.**
+- **The 09-04 preflight blocks on the BOOK ONLY** (`P2_book_exists`,
+  `P2_builder_receipt_exists`); 09-03 rehearses **READY, blocking []**.
+- **The capture is the closure now** — every module under `live/` in `sys.modules`
+  digested from the **loaded bytes**, plus HEAD, captured at import and stamped, the
+  emit **refused by module name** on a mid-run rewrite; 190 checks; R-387 driven both
+  ways.
+- **In flight:** BE 58 (polling; ceiling 10:58Z), REV 52 (its filing is in the shared
+  tree, untracked, at my read), DE 89; DA idle for the pre-read GO. Three things
+  still wait on the smoke's receipt: DA's GO, DE's `.v2`, BE 58's lock.
+
+**Counts, measured before the sentence:** flags 859 → 871, `flag_provenance`
+404 → 416, tasks 19; **252 CHECKED**, 164 RELAYED, **455 UNMARKED — unchanged for
+the twenty-seventh round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 133 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 150
 
 **As of 2026-09-06T09:39:31Z. State only — MEM writes no result.**

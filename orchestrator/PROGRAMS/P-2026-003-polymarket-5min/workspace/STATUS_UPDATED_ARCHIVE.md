@@ -11216,3 +11216,85 @@ directions.
   twenty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 133 — archived 2026-09-06T09:46:40Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 151 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T09:19:07Z (MEM ROUND 148 -- R-604, REV 50'S FILING, Q-DE-86 AND Q-DA-295
+  SWEPT. STATE ONLY. THE FINDING IS A STATUS FIELD ANSWERING A DIFFERENT QUESTION.
+  (1) **`status` ANSWERS "WAS THIS A FIXTURE?" AND THE BAR READS IT AS "DID THIS DAY
+  PRODUCE?"** At the code: **`"status": ("FIXTURE_DAY_RUN_NO_REAL_DATA" if fixture
+  else "DAY_RUN_SEALED")` -- the ONLY branch is fixture-ness.** Nothing in it looks
+  at whether one arm was admissible. ***So a day whose arms were ALL
+  `DEGENERATE_ARM_DAY_REFUSED` emits `DAY_RUN_SEALED` exactly like a day that
+  produced six signs, and six such receipts satisfy "all six sealed" while
+  contributing ZERO.*** **The-name-is-not-the-definition, now load-bearing on the
+  Gate-1 read.** *A day with no admissible arm must carry its OWN status.*
+  (2) **AND A FALLBACK WRITES ITS OWN WARNING INTO A FIELD NOBODY READS.** In
+  `da_book_verify.py`, when the builder commit does not resolve,
+  `builder_index_call` sets **`src_from = "working tree (FALLBACK -- the requested
+  commit did not resolve: …)"` and returns it as `"source"` (:227)** -- while
+  `check_seam` computes `agrees` from `call["calls"]` alone and files it under
+  **`call_at_the_builder_commit`.** ***A sentence written purely to warn, in a field
+  the consumer never consults, under a key that names the commit the value did not
+  come from.*** *Not information missing: information published and unread* --
+  **R-601's class through the other door, and the same shape as my round-144
+  finding.**
+  (3) **AND THE CROSS-CHECK I FOUND MISSING AT ROUND 144 EXISTS IN THIS SEAT'S OWN
+  FILE.** Params v6: `days` = the six, `expected_G = 6`,
+  `read_requires_all_ruled_days_sealed: true`, `read_not_before_utc =
+  2026-09-09T00:06:00Z`, and the note ***"G IS DERIVED FROM len(days) AND IS NEVER A
+  CONSTANT; `expected_G` below is a CROSS-CHECK."*** *Derive AND compare, in one
+  file* -- **the pattern the reader lacks exists in the params; it is not yet
+  everywhere it is needed.**
+  (4) **AND THE PREDICATE IS RULED BUT DECLARED NOWHERE YET:** **`params_v7.json`
+  does not exist on disk**; v6 carries the clock and the sealed-days conjunct and
+  **not** the horizon nor the other six refusals. *Ordering correct -- ruled before
+  any data, declared before the read* -- **recorded so this file cannot be read as if
+  the eight conjuncts are in force in code today.** DE 87 declares; DA 74 evaluates
+  the SAME field or refuses.
+  (5) **THE REVIEW SEPARATED THE TWO QUESTIONS CLEANLY:** R-602 is **SOUND AS A
+  RULING** (SS3.1 not a choice after seeing -- what could have been seen is only that
+  the pipeline is slow; SS3.2 G = 6 keeps SS7's arithmetic exactly, in both
+  formulations) and **INSUFFICIENT AS A PREDICATE** (as worded it can be satisfied by
+  six days that produce nothing, or by a day RE-ROLLED until it lands). ***Right
+  about WHAT to require and under-specified in HOW -- and the review said so without
+  reversing the ruling.***
+  (6) **THE HORIZON IS MARGIN, NOT HOPE: 2026-09-09T12:00:00Z.** The sixth day's
+  smoke starts at 00:00Z after a ~1.2 h build, expected ~03:00-04:00Z. **Past it the
+  read opens at G = 5, DIRECTIONAL ONLY (2^-5 = 0.03125 fails Holm at m = 2), the
+  sixth day disclosed as UNBUILT and why.** ***The seventh refusal is UNBOUNDED
+  WAITING -- a bar that cannot be falsified by the passage of time is not a bar --
+  and the fallback is declared NOW rather than chosen when the deadline arrives.***
+  (7) **AND THE ACCRUAL FINDING IS STRONGER THAN ITS STATED BASIS:** from 09-06 on
+  every day's earliest start EQUALS its calendar completion, so the calendar
+  dominates and **the conclusion needs only "the pipeline costs more than six
+  minutes"** -- surviving the cadence being wrong by an order of magnitude; the
+  running smoke alone exceeds the window. ***The mirror of my own round-147
+  correction: there my headline was LOOSER than the artifact, here the artifact was
+  STRONGER than its basis*** -- **one discipline, both directions.**
+  **AT COMMIT TIME, 2026-09-06T09:22:04Z, ONE OF MY OWN FINDINGS WAS FIXED UNDER ME:**
+  `3a234c6` -- **DA 74 closed REV 50 SS1.3 ahead of BE 59's `.v2`**: the consumer now
+  reads `call["source"]`, and an unresolvable builder commit returns
+  **`PROVENANCE_INCOMPLETE_BUILDER_COMMIT_UNRESOLVED` with
+  `the_literal_was_NOT_judged: true` and `contradicts_the_code: null`** rather than a
+  verdict computed from HEAD. *(2) stands as HISTORY at its as-of.* ***Fourth round
+  running that the commit-time re-read catches a fix landing under a flag*** -- **and
+  the fix's comment names the asymmetry I did not: `front_door_at`, two functions
+  above, never fell back and never returned a verdict on a commit it could not read;
+  "this did both."** *The correct behaviour was already in the file, two functions
+  away.*
+  **FLAG WORDS: the Gate-1 read predicate RULED-EIGHT-CONJUNCTS, HORIZON
+  2026-09-09T12:00Z -> G = 5 directional, USER-PENDING for overrule (R-602 stands);
+  the smoke RUNNING -- I measure pid 3049132 at 3,423 s (~57 min), output NOT YET;
+  the 09-03 receipt's provenance WILL-BE-SUPERSEDED (rule 22).**
+  MEASURED BEFORE THIS SENTENCE: flags 835 -> 843, flag_provenance 380 -> 388,
+  tasks 19; **230 CHECKED**, 158 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
