@@ -52,6 +52,7 @@ drive both.
 from __future__ import annotations
 
 import argparse
+import copy
 import datetime
 import hashlib
 import json
@@ -564,6 +565,61 @@ def build_payload(smoke: dict, *, root: Path, wall: float) -> dict:
     return payload
 
 
+#: ---- vN+1, round 66 -----------------------------------------------------
+#: The v1 receipt this supersedes, and the artifacts the new fields cite.
+V1_RECEIPT = ("p003_v2_fee_endpoint_sensitivity__20260905T161824Z.json",
+              "f4974039c1fc99c0ad848e188522380b96895e03203a4170cb2fe05db39"
+              "56238")
+DA_REBATE_CEILING = ("p003_da_rebate_ceiling__20260906T022941Z.json",
+                     "9c66242032289ef623f976e9524316fdb8c4163e8b9d4b05c4396"
+                     "2ae76cb5bbe")
+DA_SEAM_V2 = ("p003_da_fee_interval_seam_v2__20260906T021955Z.json",
+              "56cd1a0c82f2a282b7f2a3c330b212b07a090b3bc0e86ce4499acfb42565"
+              "cd0a")
+
+#: The four assumptions the rebate cancellation rests on. The reviewer's
+#: 9e5d62f established them AFTER the v1 receipt was written, which is why
+#: v1's "exact and not an interval" is its OWN superseded sec 1.2 quoted
+#: faithfully rather than a mistake of mine.
+REBATE_IDENTITY_ASSUMPTIONS = {
+    "A1": {"statement": "fee_equivalent uses the CATEGORY feeRate (0.07), "
+                        "not the maker's own signed rate",
+           "if_false": "E-R collapses to 0 EXACTLY",
+           "direction_on_the_verdict": "STRENGTHENS every conjunct -- at "
+                                       "E-R = 0 the two endpoints coincide, "
+                                       "so sign, p-shift and materiality "
+                                       "are trivially invariant"},
+    "A2": {"statement": "per trade, the maker legs' fee-equivalent sums to "
+                        "the taker leg's fee base",
+           "if_false": "rebate GREATER than 0.20*fe"},
+    "A3": {"statement": "no material maker-maker / mint crossings creating "
+                        "fee-equivalent with no taker fee",
+           "if_false": "rebate LESS than 0.20*fe"},
+    "A4": {"statement": "realised taker fees approximately follow the "
+                        "formula",
+           "if_false": "rebate GREATER than 0.20*fe"},
+}
+
+
+def _deps_match_snapshot(root: Path) -> dict:
+    """Are the modules the battery exercises byte-identical to the pin?"""
+    import subprocess
+    out = {}
+    for f in ("de_v2_lifecycle_economics.py", "de_v2_gate1_economics_smoke.py"):
+        try:
+            blob = subprocess.run(
+                ("git", "show", f"9b37088:live/pm_research/{f}"),
+                cwd=str(root), capture_output=True, check=True).stdout
+            now = (Path(__file__).resolve().parent / f).read_bytes()
+            out[f] = hashlib.sha256(blob).hexdigest() == \
+                hashlib.sha256(now).hexdigest()
+        except Exception:                                    # noqa: BLE001
+            out[f] = None
+    out["all_identical"] = all(v is True for k, v in out.items()
+                               if k != "all_identical")
+    return out
+
+
 def _git_head(root: Path) -> str | None:
     import subprocess
     try:
@@ -572,6 +628,215 @@ def _git_head(root: Path) -> str | None:
         return r.stdout.strip() if r.returncode == 0 else None
     except Exception:                                        # noqa: BLE001
         return None
+
+
+def supersede(v1_path: Path, *, root: Path | None = None) -> dict:
+    """The vN+1 of the ruled receipt: IN BAND, NO RE-RUN, NO NUMBER MOVES.
+
+    Every economic quantity is COPIED from v1 after its sha256 is verified.
+    What is added is the wording and the fields the reviewer's
+    clause-by-clause (`30646c3`) and its three-batch filing (`e2991c9`)
+    found missing. v1 is never edited (rule 13)."""
+    root = (root or Path(__file__).resolve().parents[2]).resolve()
+    raw = v1_path.read_bytes()
+    got = hashlib.sha256(raw).hexdigest()
+    if v1_path.name != V1_RECEIPT[0] or got != V1_RECEIPT[1]:
+        raise FeeEndpointRefused(
+            f"REFUSED: v1 is not the receipt this supersedes -- name "
+            f"{v1_path.name!r} sha256 {got}")
+    v1 = json.loads(raw)
+    summary = copy.deepcopy(v1["fee_endpoint_summary"])
+    d = summary["decision_delta_cents"]["treatment"]
+    mat = summary["materiality"]["value"]
+    d_e0, d_er = d["D_E0"], d["D_E_MINUS_R"]
+    fe = summary["fe_cents"]
+
+    # (e) THE BATTERY, RUN HERE. Not typed in.
+    LAST_BATTERY.clear()
+    selftest(quiet=True)
+    battery = dict(LAST_BATTERY)
+
+    # (c) the headroom on MATERIAL, COMPUTED.
+    headroom = (MATERIALITY_THRESHOLD / mat) if mat else None
+
+    # (b) which conjuncts survive WITHOUT the identity.
+    fe_T_le_fe_B = fe["treatment"] <= fe["baseline"]
+    unconditional = {
+        "conjunct": "same_sign",
+        "is_unconditional": bool(fe_T_le_fe_B and d_e0 < 0),
+        "argument": (
+            "the rebate is INCREASING in the arm's own fee-equivalent "
+            "(rebate_A,m = 0.20 * P_m * fe_A,m / (other_fe_m + fe_A,m), "
+            "9e5d62f sec 1.4), so fe_T <= fe_B gives rebate_T <= rebate_B "
+            "and therefore D(E-R) <= D(E0) for ANY rebate magnitude in "
+            "[0, ceiling] -- whatever P_m and other_fe_m are. With "
+            "D(E0) < 0 the sign cannot flip. THIS NEEDS NONE OF A1-A4."),
+        "fe_T_le_fe_B": fe_T_le_fe_B,
+        "D_E0_is_negative": d_e0 < 0,
+        "n_non_baseline_arms_with_fe_le_baseline":
+            summary["computed_predicates"]["n_arms_with_fe_le_baseline"],
+        "n_violations": summary["computed_predicates"][
+            "n_arms_with_fe_GREATER_than_baseline"],
+    }
+    conditional = {
+        "conjuncts": ["p_shift_within_tolerance",
+                      "both_p_same_side_of_half", "MATERIAL"],
+        "why_conditional": (
+            "these are MAGNITUDE clauses. They are evaluated at the "
+            "IDENTITY VALUE 0.20*fe, which holds only under A1-A4; a "
+            "rebate larger than the identity value (A2 or A4 false) moves "
+            "the endpoint further from E0 and can grow the p-shift and "
+            "the materiality without bound up to the ceiling."),
+        "observed_p_shift": summary["invariant_parts"][
+            "p_shift_within_tolerance"],
+        "observed_materiality": mat,
+    }
+
+    payload = {
+        "protocol": PROTOCOL,
+        "version": 2,
+        "status": v1["status"],
+        "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "supersedes": {
+            "path": f"data/pm_5min/derived/{V1_RECEIPT[0]}",
+            "sha256": V1_RECEIPT[1],
+            "v1_is_untouched": True,
+            "no_re_run": True,
+            "numbers_moved": False,
+            "what_changed": (
+                "WORDING AND FIELDS ONLY. (1) E-R is the IDENTITY VALUE "
+                "under A1-A4, not an exact value -- v1's 'exact and not an "
+                "interval' quoted the reviewer's OWN sec 1.2 faithfully and "
+                "that section was superseded by 9e5d62f after v1 was "
+                "written. (2) the battery's run is recorded as a field. "
+                "(3) the INVARIANT conjuncts are split into unconditional "
+                "and conditional. (4) the MATERIAL headroom is computed. "
+                "(5) A1's direction is a field. (6) DA 53's measured "
+                "ceiling is cited. (7) DA's seam v1 citation gains its "
+                "in-band successor pointer."),
+        },
+        "fee_endpoint_summary": summary,
+        "endpoint_E_MINUS_R_is_an_IDENTITY_VALUE": {
+            "corrected_wording":
+                "-0.20 * fe_fill is the rebate's IDENTITY VALUE -- the "
+                "point it takes UNDER the four-part identity A1-A4. It is "
+                "not an exact value and not an interval endpoint that "
+                "needs no assumption.",
+            "withdrawn_wording_in_v1":
+                summary["endpoints"]["E_MINUS_R"]["meaning"],
+            "why_v1_said_it": (
+                "it quoted the reviewer's sec 1.2 ('the per-market share "
+                "CANCELS ... exact, not an interval') faithfully. 9e5d62f "
+                "then established that the cancellation rests on A1-A4, so "
+                "the wording is superseded, not wrong at the time"),
+            "assumptions": REBATE_IDENTITY_ASSUMPTIONS,
+            "three_numbers_none_selected": {
+                "floor": 0.0,
+                "floor_attained_if": "A1 false, or our per-market share -> "
+                                     "0, or the $1 daily minimum bites",
+                "identity_value_cents_treatment":
+                    REBATE_FRACTION * fe["treatment"],
+                "identity_value_cents_baseline":
+                    REBATE_FRACTION * fe["baseline"],
+                "assumption_free_ceiling": "0.20 * SUM_m P_m -- see the "
+                                           "cited measurement below",
+            },
+        },
+        "invariant_conjuncts_by_status": {
+            "unconditional": unconditional,
+            "conditional": conditional,
+            "why_the_split_matters": (
+                "v1 reported INVARIANT as one boolean. One of its three "
+                "conjuncts survives any rebate magnitude and two do not, "
+                "and a reader who takes the single boolean inherits the "
+                "weaker two at the strength of the stronger one."),
+        },
+        "MATERIAL_headroom": {
+            "materiality": mat,
+            "threshold": MATERIALITY_THRESHOLD,
+            "headroom_factor": headroom,
+            "meaning": ("the rebate would have to be this many times the "
+                        "identity value before MATERIAL flips to true"),
+            "computed_not_typed": True,
+        },
+        "A1_direction": {
+            "if_the_fee_equivalent_uses_the_makers_own_signed_rate":
+                "E-R = 0 EXACTLY, because our signed rate is 0 (R-538)",
+            "effect_on_every_conjunct": "STRENGTHENS -- the two endpoints "
+                                        "coincide, so sign, p-shift and "
+                                        "materiality are trivially "
+                                        "invariant",
+            "so_the_risk_is_one_sided_in_the_other_direction": (
+                "A1 being FALSE cannot hurt the reading; only A2/A4 "
+                "(rebate larger than the identity value) can"),
+        },
+        "battery": battery,
+        "cited_measurements": {
+            "da_rebate_ceiling": {
+                "path": f"data/pm_5min/derived/{DA_REBATE_CEILING[0]}",
+                "sha256": DA_REBATE_CEILING[1],
+                "what_it_measured": "0.20 * P_m = 21,228.98 c on this "
+                                    "market/window, PARTIAL_LOWER_BOUND",
+                "ratio_ceiling_over_identity_value": [53.84, 76.42],
+                "what_it_does_NOT_do": (
+                    "IT DOES NOT PROTECT THE MAGNITUDE CLAUSES. The "
+                    "ceiling is 53.84x/76.42x the identity value, and the "
+                    "MATERIAL headroom is only "
+                    f"{headroom:.4f}x -- so a rebate anywhere near the "
+                    "ceiling would blow through both magnitude conjuncts. "
+                    "The p-shift and materiality clauses therefore rest on "
+                    "THE IDENTITY BEING RIGHT, not on the ceiling being "
+                    "finite. Only same_sign is protected without it."),
+            },
+            "da_fee_interval_seam": {
+                "path": f"data/pm_5min/derived/{DA_SEAM_ARTIFACT[0]}",
+                "sha256": DA_SEAM_ARTIFACT[1],
+                "why_v1_is_cited": "v1 is the artifact the cross-check "
+                                   "CORRECTS, pinned by digest",
+                "superseded_by": f"data/pm_5min/derived/{DA_SEAM_V2[0]}",
+                "superseded_by_sha256": DA_SEAM_V2[1],
+            },
+        },
+        "what_this_is_not": v1["what_this_is_not"],
+        "signing_build_requirement": v1["signing_build_requirement"],
+        "notes": v1["notes"],
+        "source_identity": {
+            **v1["source_identity"],
+            "v2_producing_code_sha256": hashlib.sha256(
+                Path(__file__).resolve().read_bytes()).hexdigest(),
+            "v2_carrying_commit": _git_head(root),
+            # PRECISE, because "same snapshot" would be loose: the vN+1
+            # runs no replay, so nothing was re-emitted at 9b37088. What is
+            # asserted, and CHECKED here, is that the two modules the
+            # battery exercises are byte-identical between the snapshot and
+            # the tree this ran in -- so the battery's result is the same
+            # result it would have had at the pin.
+            "v1_snapshot_commit": v1["source_identity"].get(
+                "snapshot_commit"),
+            "battery_dependencies_identical_to_the_v1_snapshot":
+                _deps_match_snapshot(root),
+            "no_replay_was_re_run": True,
+        },
+        "upstream_population": v1["upstream_population"],
+        "resource_observation": {
+            **v1["resource_observation"],
+            "v2_note": "v1's figures, retained. The vN+1 re-ran no replay; "
+                       "it ran only its own battery.",
+        },
+    }
+    if not _no_gate1_exit(payload):
+        raise FeeEndpointRefused(
+            "a gate1_exit block reached the vN+1 payload -- spec 1.8 "
+            "forbids it")
+    payload["computed_no_gate1_exit_anywhere"] = True
+    # THE NUMBERS DID NOT MOVE, CHECKED RATHER THAN CLAIMED.
+    if json.dumps(payload["fee_endpoint_summary"], sort_keys=True) != \
+            json.dumps(v1["fee_endpoint_summary"], sort_keys=True):
+        raise FeeEndpointRefused(
+            "the vN+1 changed fee_endpoint_summary -- this supersession is "
+            "wording only and must move no number")
+    payload["fee_endpoint_summary_is_bit_identical_to_v1"] = True
+    return payload
 
 
 def run(root: Path | None = None) -> dict:
@@ -585,14 +850,24 @@ def run(root: Path | None = None) -> dict:
     return build_payload(smoke, root=root, wall=time.time() - started)
 
 
-def selftest() -> int:
+#: Filled by `selftest()` so a receipt can record THE BATTERY THAT EMITTED
+#: IT rather than a typed-in number (spec item (e), round 66).
+LAST_BATTERY: dict = {}
+
+
+def selftest(*, quiet: bool = False) -> int:
     n = [0]
+    labels: list = []
 
     def ok(cond, label):
         if not cond:
+            LAST_BATTERY.update({"outcome": "FAIL", "n_checks": n[0],
+                                 "failed_on": label, "labels": labels})
             raise SystemExit(f"[de_v2_fee_endpoint_sensitivity] FAIL: {label}")
         n[0] += 1
-        print(f"  PASS  {label}")
+        labels.append(label)
+        if not quiet:
+            print(f"  PASS  {label}")
 
     def refuses(fn, label, needle):
         try:
@@ -603,8 +878,12 @@ def selftest() -> int:
                     f"[de_v2_fee_endpoint_sensitivity] FAIL: {label} -- "
                     f"refused for the WRONG reason: {exc}")
             n[0] += 1
-            print(f"  PASS  {label}")
+            labels.append(label)
+            if not quiet:
+                print(f"  PASS  {label}")
             return
+        LAST_BATTERY.update({"outcome": "FAIL", "n_checks": n[0],
+                             "failed_on": label, "labels": labels})
         raise SystemExit(
             f"[de_v2_fee_endpoint_sensitivity] FAIL: {label} -- ADMITTED")
 
@@ -737,7 +1016,20 @@ def selftest() -> int:
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
-    print(f"[de_v2_fee_endpoint_sensitivity] PASS -- {n[0]} checks")
+    LAST_BATTERY.update({
+        "outcome": "PASS", "n_checks": n[0],
+        "expected_checks_asserted_at_run_time": EXPECTED_CHECKS,
+        "labels": labels,
+        "falsifiers": [x for x in labels
+                       if "KNOWN-BAD" in x or "POSITIVE CONTROL" in x
+                       or x.startswith("ANCHOR")],
+        "how_this_field_was_produced":
+            "by RUNNING the battery in the same process that wrote this "
+            "receipt, then reading its recorded outcome -- not typed in "
+            "(round 66, reviewer C-1)",
+    })
+    if not quiet:
+        print(f"[de_v2_fee_endpoint_sensitivity] PASS -- {n[0]} checks")
     return 0
 
 
@@ -745,13 +1037,23 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--run", action="store_true")
+    ap.add_argument("--supersede", type=Path,
+                    help="path to the v1 receipt to supersede in band")
     ap.add_argument("--output", type=Path)
     a = ap.parse_args()
     if a.selftest:
         return selftest()
-    if not a.run or a.output is None:
-        ap.error("the real run requires --run --output PATH")
-    payload = run()
+    if a.supersede is not None:
+        if a.output is None:
+            ap.error("--supersede requires --output PATH")
+        payload = supersede(a.supersede)
+    elif a.run:
+        if a.output is None:
+            ap.error("the real run requires --run --output PATH")
+        payload = run()
+    else:
+        ap.error("choose --selftest, --run or --supersede")
+        return 2
     if a.output.exists():
         raise FeeEndpointRefused(f"output already exists: {a.output}")
     a.output.parent.mkdir(parents=True, exist_ok=True)
@@ -760,6 +1062,11 @@ def main() -> int:
     tmp.replace(a.output)
     print(json.dumps({
         "emitted": str(a.output), "status": payload["status"],
+        "version": payload.get("version", 1),
+        "summary_bit_identical_to_v1":
+            payload.get("fee_endpoint_summary_is_bit_identical_to_v1"),
+        "battery": (payload.get("battery") or {}).get("outcome"),
+        "battery_checks": (payload.get("battery") or {}).get("n_checks"),
         "INVARIANT": payload["fee_endpoint_summary"]["INVARIANT"],
         "MATERIAL": payload["fee_endpoint_summary"]["materiality"]["MATERIAL"],
         "D_E0": payload["fee_endpoint_summary"]["decision_delta_cents"][
