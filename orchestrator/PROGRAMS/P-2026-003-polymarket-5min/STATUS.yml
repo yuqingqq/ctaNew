@@ -63,6 +63,53 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T18:13:30Z (MEM ROUND 216 -- R-704 AND R-705 SWEPT, tip `2d6059b`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **THE RESULT HASHED AND NOT OPENED FOR THE FIFTH TIME; DA'S RECORD NOT
+  OPENED; NO VERDICT QUOTED.**
+  (1) **THE 09-06 BLOCKER IS A CLOCK FACT, NOT A JUDGEMENT.** BE 72 is READY-AND-BLOCKED on the
+  09-06 day: **at 18:12:18Z that UTC day closes at 2026-09-07T00:00:00Z -- 5 h 47 m 42 s
+  remain.** *And it is the SAME predicate the evaluation uses* -- rule 8's cluster unit is the UTC
+  day, so "not closed" is **the admissibility condition itself**, not a scheduling excuse. **A
+  blocker worth having is one a reader can refute in one line.**
+  (2) ***THE HARD PAIR'S TWO PATHS ARE NOW SEPARATED, AND I DROVE THE HALF I COULD.*** Driven with
+  **no arguments** -- harmless, no work -- all four of the class exit **2** on the usage path; and
+  I read at round 215 that **`REFUSAL_EXIT = 3`** in `da_contamination_record` and
+  `da_mutation_audit`. **So usage 2 and refusal 3: the discriminator I measured MISSING at round
+  212 exists.** *I drove the usage half, DA drove the refusal half (R-705), and **it is the PAIR
+  of drives that establishes it** -- neither of us drove both.*
+  (3) **A BARE TRACEBACK BECAME A NAMED REFUSAL, AND THE COMMENT KEEPS THE DEFECT.**
+  `da_mutation_audit` :103 records that the module *"died here with a bare `FileNotFoundError` --
+  a traceback"*, and :108 now raises **`REFUSED: MODULE_ABSENT`**. ***The comment beside the fix is
+  how a later reader learns why the guard exists rather than deleting it as redundant.***
+  (4) **THE READ ORDER HAS HELD FOR FIVE CENSUSES** -- three markers at 292 B each and the result
+  at 12,025 B `1fa4b93f02b369af`, identical at rounds 213, 214, 215 and twice today. ***Five
+  independent censuses, every one hashing the result WITHOUT OPENING IT.***
+  (5) ***THE EXIT-CODE VOCABULARY NOW SPANS TWO DISJOINT RANGES, AND THE ONE RECORDED CONFUSION IS
+  INSIDE SYSEXITS.*** The launcher's new `--capture` exits **76** when the unit is already gone,
+  and `/usr/include/sysexits.h` :108 gives **`EX_PROTOCOL 76`**, next above **`EX_TEMPFAIL 75`**,
+  the held-lock refusal. **So: 0-4 for VERDICTS (3 refusal, 4 instrument failure) and 75/76 from
+  sysexits for LAUNCH-LAYER conditions.** *And `be_heavy_run.sh` :66 records the one confusion in
+  that space -- "a launcher refusing with 76 published as 75" -- **between the two ADJACENT
+  SYSEXITS CODES, not between the verdict codes.*** **The risk lives where codes are adjacent and
+  their meanings are near-neighbours.**
+  (6) **I FOUND NO TRACE OF DA 99 HEAVY, AND I NAME WHERE I LOOKED:** the user's units filtered for
+  `da99|de1|be7` (none), `pgrep -af "da_*.py"` (none), derived artifacts newer than 18:07 (only DA
+  101's record), and `/proc/locks` -- **where the lock is FREE.** ***The free lock is the one
+  positive datum: a heavy run holding it would show.*** *Recorded as what I searched, not as an
+  absence -- it may have finished, may run under a name I did not match, or may not have started,
+  and my search does not separate those.*
+  AT COMMIT TIME, UNSWEPT: ***REV 78 LANDED*** (`c5bbfbc`) -- **the third of the three things
+  the read order names before anyone quotes.** DA's record exists (round 215), the runner's read
+  exists, and REV 78 is now in. **I did not open it and I quote no verdict from it**; its subject
+  concerns the read's PRECONDITIONS, which is a different object from the result. *So the order
+  R-702 set has been kept end to end and is now complete on its own terms* -- **and my own record
+  of it is five censuses of four unchanged digests, taken without ever opening the file they
+  identify.** *That is the whole of what MEM can contribute to a read order: not the reading, but
+  the evidence that nothing moved while others read.* **Noted in band; the round-216 flags are not
+  edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,390 -> 1,396; flag_provenance 935 -> 941;
+  tasks 19; **675 CHECKED / 266 RELAYED / 455 UNMARKED -- the NINETY-SECOND round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-204 filed.)
   2026-09-06T18:06:30Z (MEM ROUND 215 -- R-703 SWEPT, tip `ce88a0c`. STATE ONLY. MEM ASSERTS NO
   RESULT. **EIGHT SEALED RECEIPTS CENSUSED AND NONE OPENED; THE RACE READ'S RESULT HASHED AND NOT
   OPENED FOR THE THIRD TIME.**
@@ -182,71 +229,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,375 -> 1,383; flag_provenance 920 -> 928;
   tasks 19; **663 CHECKED / 265 RELAYED / 455 UNMARKED -- the NINETIETH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-202 filed.)
-  2026-09-06T17:57:30Z (MEM ROUND 213 -- R-698 SWEPT, tip `da781f0`. STATE ONLY. MEM ASSERTS NO
-  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER; AND THIS ROUND'S STATE READ WAS
-  CHAINED ON THE PULL.**
-  (1) ***THE "DISTINCT CODE" R-698 ASKS FOR ALREADY EXISTS, AND IT IS 3.*** In all four modules
-  that use it the shape is IDENTICAL down to the f-string: `except <X>Refused as e:` /
-  `print(f"REFUSED: {e}", file=sys.stderr)` / `return 3` -- `da_arm_replay_verify`,
-  `da_cite_audit`, `da_dark_interval_scan`, `da_population_audit`. **So the convention is not just
-  a number: it is a NAMED EXCEPTION, a `REFUSED:` PREFIX, STDERR, and 3.** *Four siblings already
-  do exactly what DA 101 is being asked to invent.*
-  (2) **AND CODE 4 MEANS SOMETHING ELSE AGAIN -- INSTRUMENT FAILURE.** `da_forward_day_verify`
-  prints *"INSTRUMENT FAILURE verifying <day>: NOTHING WAS VERIFIED. This is exit 4, NOT a failing
-  day -- no verdict was computed."* ***A third category beyond success and refusal, which the
-  routing did not assume:*** the instrument itself failing, separated in the code AND in the
-  printed line from a day that failed.
-  (3) ***SO THE ANSWER IS NOT A FREE CODE BUT THE EXISTING ONE -- AND FOR THE HARD PAIR IT IS
-  NEARLY FREE.*** Codes **5-12 are unused** across all 44 DA CLIs, so a seat looking for room
-  would find plenty; **taking one would make a sixth convention where a fifth already fits.** And
-  `da_contamination_record` and `da_mutation_audit` **already print their named refusal to
-  stderr**, so 2 -> 3 plus the prefix makes them the same shape as four siblings. *The hardest
-  cases in the class are the cheapest to fix, once the convention is FOUND rather than INVENTED.*
-  (4) **THE CODE SPACE, MEASURED ACROSS 44 CLIs:** 0 in 40 modules, 1 in 12, 2 in 19, 3 in 4, 4 in
-  1, **nothing in 5-12** -- *so "a distinct code" is chosen against what exists rather than
-  against a guess.*
-  (5) **THE CHAINED-PULL RULE IS ADOPTED, NOT ONLY RECORDED:** this round's state read ran **only
-  after `git pull --ff-only` succeeded**, chained with `&&`. *R-698 records my transient beside the
-  coordinator's at 13:41Z -- two instances of one git transient in one session, which is why the
-  rule is cheap insurance rather than a reaction to a single event.*
-  (6) **DA 101 STILL NOT LANDED, EIGHTH ROUND RE-DRIVEN** (both exit 2 at 17:55:29Z); **THE ACT
-  STILL HAS NOT HAPPENED** (0 markers, 0 declared-result files, lock HELD by pid 3665963); and
-  **de104smoke IS AT A THIRTEENTH IDENTICAL PEAK** -- InvocationID unchanged across thirteen
-  readings, MemoryPeak 2,312,695,808 identical in all thirteen, sixty-nine minutes, one run,
-  ≈18:25Z.
-  AT COMMIT TIME, UNSWEPT -- ***THE STATE CHANGED COMPLETELY WHILE I WAS WRITING.*** **R-699 and
-  DE 104 landed, THE 09-05 SEALED RECEIPT EXISTS, THE LOCK IS FREE, AND THE RACE READ HAS
-  HAPPENED.**
-  (a) **THE THIRD REAL SEALED DAY, CENSUSED AND NOT OPENED:**
-  `p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json`, **52,549 B**, sha256
-  **`975264754a06ec9a`** -- *my recomputation matches the digest R-699 names.*
-  (b) ***AND de104smoke WAS COLLECTED BETWEEN MY TWO READS OF THIS ROUND.*** At **17:55:29Z** it
-  read `loaded / active / running` with InvocationID `549bd234…` -- my THIRTEENTH identical
-  reading. At **17:57:51Z**: `LoadState=not-found`, `ActiveState=inactive`, `SubState=dead`,
-  InvocationID **empty**, MemoryPeak **[not set]** -- ***and still `Result=success`,
-  `ExecMainStatus=0`.*** **The second time this session, on the second run, that the collected
-  unit reads "success" from defaults.** *This time the difference is that my series was taken
-  WHILE LOADED and is therefore intact rather than void* -- **and R-699's final MemoryPeak,
-  2,312,695,808, is the number I read thirteen times, so my series and the unit's own last report
-  agree.**
-  (c) **THE LOCK IS FREE** -- for the first time since 16:45Z.
-  (d) ***THE RACE READ HAS HAPPENED -- THE ACT THE WHOLE GO CHAIN WAS GATED ON.*** Censused by
-  name, size and digest and **NOT OPENED**: three markers,
-  `be_race_read_OPENED_20260903/04/05.json`, **292 B each**, distinct digests
-  (`bc703f2eff4f7109`, `8a7a000a528d13f9`, `c658025a2d67f765`), written at **17:56:54Z**; and one
-  declared result, `be_race_read_result_v1.json`, **12,025 B, `1fa4b93f02b369af`**, at
-  **17:57:34Z**. ***I DID NOT OPEN THE RESULT:*** it carries the numbers the read alone may
-  publish, DA corrected its own record for quoting them, and the GO's second prohibition is about
-  exactly this.
-  (e) **AND THE ORDERING BE 68 BUILT IS VISIBLE IN THE MTIMES:** the three markers land
-  **17:56:54Z**, the result **17:57:34Z** -- *forty seconds apart, the markers written BEFORE the
-  read and the gap being the read itself.* **The guard's order is legible in the file times
-  without opening anything.**
-  **Noted in band; the round-213 flags are not edited -- every one of them was measured before
-  this landed, and the eight rounds of "the act still has not happened" end here.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,369 -> 1,375; flag_provenance 914 -> 920;
-  tasks 19; **656 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-NINTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-201 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2200,6 +2182,73 @@ flags:
                              # naming an absent file -> **2**. *Tenth round re-driven.
                              # DA 101 is in flight as the race artifact's first
                              # reader, and the exit-code adoption rides with it.*
+  the_09_06_blocker_is_a_CLOCK_FACT_not_a_judgement: FIVE-POINT-EIGHT-HOURS-REMAIN
+                             # BE 72 is READY-AND-BLOCKED on the 09-06 day. **At
+                             # 18:12:18Z the 09-06 UTC day closes at
+                             # 2026-09-07T00:00:00Z -- 5 h 47 m 42 s remain.** *So the
+                             # blocker is checkable against a clock by anyone, and it
+                             # is the SAME predicate the evaluation uses:* rule 8's
+                             # cluster unit is the UTC day, so "the day is not closed"
+                             # is not a scheduling excuse but **the admissibility
+                             # condition itself**. **A blocker worth having is one a
+                             # reader can refute in one line.**
+  the_stderr_pairs_TWO_PATHS_are_now_separated_and_I_drove_the_half_I_could: USAGE-2-REFUSAL-3
+                             # Driven with **no arguments** -- harmless, no work --
+                             # all four of the class exit **2** on the usage path. And
+                             # I read at round 215 that **`REFUSAL_EXIT = 3`** in
+                             # `da_contamination_record` and `da_mutation_audit`.
+                             # ***SO FOR THE HARD PAIR THE TWO PATHS NOW DIFFER: usage
+                             # 2, refusal 3 -- the discriminator I measured MISSING at
+                             # round 212 EXISTS.*** *I drove the usage half; DA drove
+                             # the refusal half (R-705); **neither of us drove both,
+                             # and it is the PAIR of drives that establishes it.***
+  a_bare_TRACEBACK_became_a_NAMED_REFUSAL_and_the_comment_keeps_the_defect: MODULE-ABSENT
+                             # `da_mutation_audit` :103 records that the module *"died
+                             # here with a bare `FileNotFoundError` -- a traceback"*,
+                             # and :108 now raises **`REFUSED: MODULE_ABSENT -- no
+                             # module at {module}`**. ***THE COMMENT KEEPS THE DEFECT
+                             # BESIDE THE FIX***, which is how a later reader learns
+                             # why the guard exists rather than deleting it as
+                             # redundant. *The same shape as every named refusal in
+                             # this programme: an exception that escaped becomes a
+                             # status with a name.*
+  the_read_order_has_held_for_FIVE_censuses: FOUR-DIGESTS-EVERY-TIME
+                             # Three markers at **292 B each** and the result at
+                             # **12,025 B `1fa4b93f02b369af`** -- identical at rounds
+                             # 213, 214, 215 and twice more today. ***FIVE INDEPENDENT
+                             # CENSUSES, EVERY ONE HASHING THE RESULT WITHOUT OPENING
+                             # IT.*** *R-705 says nobody quotes the result until REV
+                             # 78 is in and the coordinator reports the direction
+                             # last; at the bytes that order is five unchanged
+                             # digests.*
+  the_exit_code_vocabulary_spans_TWO_disjoint_ranges_and_the_one_recorded_confusion_is_INSIDE_sysexits: 75-VS-76
+                             # The launcher's new `--capture` step exits **76** when
+                             # the unit is already gone -- and `/usr/include/sysexits.h`
+                             # :108 gives **`EX_PROTOCOL 76`**, the next code above
+                             # **`EX_TEMPFAIL 75`**, the held-lock refusal. **So the
+                             # programme's codes now span two disjoint ranges: 0-4 for
+                             # VERDICTS (3 refusal, 4 instrument failure) and 75/76
+                             # from sysexits for LAUNCH-LAYER conditions.** ***AND THE
+                             # ONE CONFUSION RECORDED IN THAT SPACE IS BETWEEN THE TWO
+                             # ADJACENT SYSEXITS CODES, NOT BETWEEN THE VERDICT
+                             # CODES:*** `be_heavy_run.sh` :66 says *"a launcher
+                             # refusing with 76 published as 75."* *The risk lives
+                             # where the codes are adjacent and their meanings are
+                             # near-neighbours, which is worth knowing before more are
+                             # added.*
+  I_found_NO_TRACE_of_DA_99_heavy_and_I_name_WHERE_I_LOOKED: THE-FREE-LOCK-IS-THE-POSITIVE-DATUM
+                             # R-705 says DA 99 heavy -- the open-book pre-read of
+                             # 09-03 -- was launched on the free lock. **I searched:
+                             # the user's systemd units for `da99|de1|be7` (none);
+                             # `pgrep -af "da_[a-z_]*\.py"` (none); derived artifacts
+                             # newer than 18:07 (only DA 101's own record); and
+                             # `/proc/locks` -- where THE LOCK IS FREE.** ***THE FREE
+                             # LOCK IS THE ONE POSITIVE DATUM: a heavy run holding it
+                             # would show, and none does.*** *Recorded as what I
+                             # searched rather than as an absence -- it may have
+                             # finished, may run under a name I did not match, or may
+                             # not have started, and my search does not separate
+                             # those.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24982,6 +25031,52 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 216, 2026-09-06T18:13:00Z ---
+  the_09_06_blocker_is_a_CLOCK_FACT_not_a_judgement:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T18:12:18Z
+    said: >-
+      computed the remaining time from the round's own clock reading to 2026-09-07T00:00:00Z; the
+      day closes in 5 h 47 m 42 s. The artifact named is the register where BE 72's blocked status
+      is recorded.
+  the_stderr_pairs_TWO_PATHS_are_now_separated_and_I_drove_the_half_I_could:
+    prov: CHECKED
+    artifact: live/pm_research/da_contamination_record.py
+    as_of: 2026-09-06T18:12:18Z
+    said: >-
+      ran each of the four with no arguments and captured the exit code directly; all four give 2 on
+      the usage path. The refusal half is the REFUSAL_EXIT = 3 I read in this module and
+      da_mutation_audit at round 215, and DA drove it per R-705.
+  a_bare_TRACEBACK_became_a_NAMED_REFUSAL_and_the_comment_keeps_the_defect:
+    prov: CHECKED
+    artifact: live/pm_research/da_mutation_audit.py
+    as_of: 2026-09-06T18:12:30Z
+    said: >-
+      read the comment at :103 and the raise at :108 together; the comment names the bare
+      FileNotFoundError the guard replaced.
+  the_read_order_has_held_for_FIVE_censuses:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_race_read_result_v1.json
+    as_of: 2026-09-06T18:12:18Z
+    said: >-
+      re-hashed the three markers and the result and compared sizes and digests against my
+      round-213, 214 and 215 censuses. Hashed, never opened, in all five.
+  the_exit_code_vocabulary_spans_TWO_disjoint_ranges_and_the_one_recorded_confusion_is_INSIDE_sysexits:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-06T18:12:40Z
+    said: >-
+      read the --capture block and its exit 76, then read /usr/include/sysexits.h for the names of
+      75 and 76, then found the launcher's own comment at :66 recording a 76 published as 75.
+  I_found_NO_TRACE_of_DA_99_heavy_and_I_name_WHERE_I_LOOKED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-06T18:12:30Z
+    said: >-
+      listed the user's systemd units filtered for da99, de1 and be7; ran pgrep -af over da_*.py;
+      listed derived artifacts newer than 18:07; and matched the lock file's dev:inode against
+      /proc/locks. The lock is free, which is the only positive datum among them.
   # --- MEM round 215, 2026-09-06T18:06:00Z ---
   the_WHOLE_sealed_family_censused_and_every_older_digest_is_UNCHANGED:
     prov: CHECKED

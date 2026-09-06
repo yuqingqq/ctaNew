@@ -16367,3 +16367,76 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **650 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-EIGHTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-200 filed.)
 ```
+
+## Batch 198 — archived 2026-09-06T18:13:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 216 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T17:57:30Z (MEM ROUND 213 -- R-698 SWEPT, tip `da781f0`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER; AND THIS ROUND'S STATE READ WAS
+  CHAINED ON THE PULL.**
+  (1) ***THE "DISTINCT CODE" R-698 ASKS FOR ALREADY EXISTS, AND IT IS 3.*** In all four modules
+  that use it the shape is IDENTICAL down to the f-string: `except <X>Refused as e:` /
+  `print(f"REFUSED: {e}", file=sys.stderr)` / `return 3` -- `da_arm_replay_verify`,
+  `da_cite_audit`, `da_dark_interval_scan`, `da_population_audit`. **So the convention is not just
+  a number: it is a NAMED EXCEPTION, a `REFUSED:` PREFIX, STDERR, and 3.** *Four siblings already
+  do exactly what DA 101 is being asked to invent.*
+  (2) **AND CODE 4 MEANS SOMETHING ELSE AGAIN -- INSTRUMENT FAILURE.** `da_forward_day_verify`
+  prints *"INSTRUMENT FAILURE verifying <day>: NOTHING WAS VERIFIED. This is exit 4, NOT a failing
+  day -- no verdict was computed."* ***A third category beyond success and refusal, which the
+  routing did not assume:*** the instrument itself failing, separated in the code AND in the
+  printed line from a day that failed.
+  (3) ***SO THE ANSWER IS NOT A FREE CODE BUT THE EXISTING ONE -- AND FOR THE HARD PAIR IT IS
+  NEARLY FREE.*** Codes **5-12 are unused** across all 44 DA CLIs, so a seat looking for room
+  would find plenty; **taking one would make a sixth convention where a fifth already fits.** And
+  `da_contamination_record` and `da_mutation_audit` **already print their named refusal to
+  stderr**, so 2 -> 3 plus the prefix makes them the same shape as four siblings. *The hardest
+  cases in the class are the cheapest to fix, once the convention is FOUND rather than INVENTED.*
+  (4) **THE CODE SPACE, MEASURED ACROSS 44 CLIs:** 0 in 40 modules, 1 in 12, 2 in 19, 3 in 4, 4 in
+  1, **nothing in 5-12** -- *so "a distinct code" is chosen against what exists rather than
+  against a guess.*
+  (5) **THE CHAINED-PULL RULE IS ADOPTED, NOT ONLY RECORDED:** this round's state read ran **only
+  after `git pull --ff-only` succeeded**, chained with `&&`. *R-698 records my transient beside the
+  coordinator's at 13:41Z -- two instances of one git transient in one session, which is why the
+  rule is cheap insurance rather than a reaction to a single event.*
+  (6) **DA 101 STILL NOT LANDED, EIGHTH ROUND RE-DRIVEN** (both exit 2 at 17:55:29Z); **THE ACT
+  STILL HAS NOT HAPPENED** (0 markers, 0 declared-result files, lock HELD by pid 3665963); and
+  **de104smoke IS AT A THIRTEENTH IDENTICAL PEAK** -- InvocationID unchanged across thirteen
+  readings, MemoryPeak 2,312,695,808 identical in all thirteen, sixty-nine minutes, one run,
+  ≈18:25Z.
+  AT COMMIT TIME, UNSWEPT -- ***THE STATE CHANGED COMPLETELY WHILE I WAS WRITING.*** **R-699 and
+  DE 104 landed, THE 09-05 SEALED RECEIPT EXISTS, THE LOCK IS FREE, AND THE RACE READ HAS
+  HAPPENED.**
+  (a) **THE THIRD REAL SEALED DAY, CENSUSED AND NOT OPENED:**
+  `p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json`, **52,549 B**, sha256
+  **`975264754a06ec9a`** -- *my recomputation matches the digest R-699 names.*
+  (b) ***AND de104smoke WAS COLLECTED BETWEEN MY TWO READS OF THIS ROUND.*** At **17:55:29Z** it
+  read `loaded / active / running` with InvocationID `549bd234…` -- my THIRTEENTH identical
+  reading. At **17:57:51Z**: `LoadState=not-found`, `ActiveState=inactive`, `SubState=dead`,
+  InvocationID **empty**, MemoryPeak **[not set]** -- ***and still `Result=success`,
+  `ExecMainStatus=0`.*** **The second time this session, on the second run, that the collected
+  unit reads "success" from defaults.** *This time the difference is that my series was taken
+  WHILE LOADED and is therefore intact rather than void* -- **and R-699's final MemoryPeak,
+  2,312,695,808, is the number I read thirteen times, so my series and the unit's own last report
+  agree.**
+  (c) **THE LOCK IS FREE** -- for the first time since 16:45Z.
+  (d) ***THE RACE READ HAS HAPPENED -- THE ACT THE WHOLE GO CHAIN WAS GATED ON.*** Censused by
+  name, size and digest and **NOT OPENED**: three markers,
+  `be_race_read_OPENED_20260903/04/05.json`, **292 B each**, distinct digests
+  (`bc703f2eff4f7109`, `8a7a000a528d13f9`, `c658025a2d67f765`), written at **17:56:54Z**; and one
+  declared result, `be_race_read_result_v1.json`, **12,025 B, `1fa4b93f02b369af`**, at
+  **17:57:34Z**. ***I DID NOT OPEN THE RESULT:*** it carries the numbers the read alone may
+  publish, DA corrected its own record for quoting them, and the GO's second prohibition is about
+  exactly this.
+  (e) **AND THE ORDERING BE 68 BUILT IS VISIBLE IN THE MTIMES:** the three markers land
+  **17:56:54Z**, the result **17:57:34Z** -- *forty seconds apart, the markers written BEFORE the
+  read and the gap being the read itself.* **The guard's order is legible in the file times
+  without opening anything.**
+  **Noted in band; the round-213 flags are not edited -- every one of them was measured before
+  this landed, and the eight rounds of "the act still has not happened" end here.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,369 -> 1,375; flag_provenance 914 -> 920;
+  tasks 19; **656 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-NINTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-201 filed.)
+```
