@@ -414,7 +414,7 @@ DA reclassified it (DA 52) and the coordinator INSTALLED the fixed unit at 02:24
 true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94% of
 its controls at both endpoints; Gate 1's three sampler refusals stand.
 
-- **Tip:** see `git log`. Next register entry after R-561: **R-562**.
+- **Tip:** see `git log`. Next register entry after R-562: **R-563**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
   USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
   + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
@@ -453,5 +453,7 @@ Never `git reset --hard`, `git checkout -- <file>`, `git clean`, or `git stash` 
 `/home/yuqing/ctaNew` — seats keep uncommitted work there (MEM's state files all
 night). Probes and experiments live in a scratch worktree; a wrong commit in the
 shared tree is REVERTED, never reset. Never `--autostash` over another seat's dirty
-file — wait for its commit. Seat refresh is ONE command:
+file — wait for its commit. Every coordinator commit is `git commit -- <paths>` (R-562: a commit without a
+pathspec swept a seat's staged file). `PM_DATA_ROOT` names the REPO root
+(`/home/yuqing/ctaNew`), not the data directory (R-562). Seat refresh is ONE command:
 `git checkout --detach mm-research && git ls-files data | xargs git update-index --skip-worktree`.
