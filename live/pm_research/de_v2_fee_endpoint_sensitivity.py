@@ -94,7 +94,7 @@ MATERIALITY_THRESHOLD = 0.10
 #: section 1.6 -- the E0 identity is required EXACTLY, not to a tolerance.
 DELTA_RECONSTRUCTION_TOL_CENTS = 1e-9
 
-EXPECTED_CHECKS = 26
+EXPECTED_CHECKS = 29
 
 #: section 1.8 item 1, by name, because a side-car that omits them reads as a
 #: gate result.  Verbatim from the V2 plan's own Gate-1 record.
@@ -839,6 +839,112 @@ def supersede(v1_path: Path, *, root: Path | None = None) -> dict:
     return payload
 
 
+V2_RECEIPT = ("p003_v2_fee_endpoint_sensitivity_v2__20260906T023951Z.json",
+              "8bfa0edef587a86a3a148d0da5f1e8dff53e3c0b1ac44687fcf782ac504"
+              "b297f")
+
+#: B-1: the sibling index. A superseding field elsewhere in the payload is
+#: invisible to a reader (or a machine) walking the summary, and the
+#: summary must stay BIT-IDENTICAL, so the pointer cannot live inside it.
+#: The index is keyed by the summary's own JSON path.
+SUPERSEDED_FIELD_INDEX = {
+    "fee_endpoint_summary.endpoints.E_MINUS_R.meaning":
+        "endpoint_E_MINUS_R_is_an_IDENTITY_VALUE.corrected_wording",
+    "fee_endpoint_summary.INVARIANT":
+        "invariant_conjuncts_by_status",
+    "fee_endpoint_summary.materiality.MATERIAL":
+        "MATERIAL_headroom",
+}
+
+
+def _resolve(obj, dotted: str):
+    """Walk a dotted JSON path; return (found, value)."""
+    cur = obj
+    for part in dotted.split("."):
+        if not isinstance(cur, dict) or part not in cur:
+            return False, None
+        cur = cur[part]
+    return True, cur
+
+
+def supersede_v2_to_v3(v2_path: Path, *, root: Path | None = None) -> dict:
+    """v3 in band: the summary stays bit-identical and gains its SIBLING
+    INDEX. No number moves; both properties, no trade (reviewer B-1)."""
+    root = (root or Path(__file__).resolve().parents[2]).resolve()
+    raw = v2_path.read_bytes()
+    got = hashlib.sha256(raw).hexdigest()
+    if v2_path.name != V2_RECEIPT[0] or got != V2_RECEIPT[1]:
+        raise FeeEndpointRefused(
+            f"REFUSED: v2 is not the receipt this supersedes -- name "
+            f"{v2_path.name!r} sha256 {got}")
+    v2 = json.loads(raw)
+    payload = copy.deepcopy(v2)
+
+    # THE COMPUTED PREDICATE: every superseded path must RESOLVE in the
+    # summary, and every superseding target must RESOLVE at top level.
+    # An index entry pointing at nothing is worse than no index.
+    rows = {}
+    for src, dst in SUPERSEDED_FIELD_INDEX.items():
+        ok_src, val = _resolve(payload, src)
+        ok_dst, _ = _resolve(payload, dst)
+        rows[src] = {
+            "superseded_by": dst,
+            "superseded_path_resolves": ok_src,
+            "superseding_path_resolves": ok_dst,
+            "superseded_value_still_present_verbatim": val,
+        }
+    bad = sorted(k for k, v in rows.items()
+                 if not (v["superseded_path_resolves"]
+                         and v["superseding_path_resolves"]))
+    if bad:
+        raise FeeEndpointRefused(
+            f"REFUSED: the superseded_fields index has entries that do not "
+            f"resolve on both sides: {bad}")
+
+    payload["version"] = 3
+    payload["as_of"] = datetime.datetime.now(
+        datetime.timezone.utc).isoformat()
+    payload["superseded_fields"] = {
+        "why_a_sibling_and_not_an_edit": (
+            "the summary must stay BIT-IDENTICAL to v1, so a pointer "
+            "cannot be written into it; a superseding field elsewhere in "
+            "the payload is otherwise invisible to a reader or a machine "
+            "walking the summary. The index is keyed by the summary's own "
+            "JSON path and is a SIBLING (reviewer B-1)"),
+        "index": rows,
+        "n_entries": len(rows),
+        "all_entries_resolve_on_both_sides": True,
+        "the_superseded_values_are_NOT_removed":
+            "each is still present verbatim at its own path; this index "
+            "says a field is superseded, it does not delete it (rule 13)",
+    }
+    payload["supersedes"] = {
+        "path": f"data/pm_5min/derived/{V2_RECEIPT[0]}",
+        "sha256": V2_RECEIPT[1],
+        "chain": [f"data/pm_5min/derived/{V1_RECEIPT[0]}", V1_RECEIPT[1],
+                  f"data/pm_5min/derived/{V2_RECEIPT[0]}", V2_RECEIPT[1]],
+        "v1_and_v2_untouched": True,
+        "no_re_run": True,
+        "numbers_moved": False,
+        "what_changed": (
+            "ONE ADDITION: the sibling `superseded_fields` index keyed by "
+            "JSON path. Nothing else, and the summary is re-checked "
+            "bit-identical against v1's bytes"),
+        "v2_supersedes_block_retained_at":
+            "supersedes_v2_provenance",
+    }
+    payload["supersedes_v2_provenance"] = v2["supersedes"]
+    if not _no_gate1_exit(payload):
+        raise FeeEndpointRefused("a gate1_exit block reached v3")
+    payload["computed_no_gate1_exit_anywhere"] = True
+    if json.dumps(payload["fee_endpoint_summary"], sort_keys=True) != \
+            json.dumps(v2["fee_endpoint_summary"], sort_keys=True):
+        raise FeeEndpointRefused(
+            "v3 changed fee_endpoint_summary -- it must move no number")
+    payload["fee_endpoint_summary_is_bit_identical_to_v1"] = True
+    return payload
+
+
 def run(root: Path | None = None) -> dict:
     root = (root or Path(__file__).resolve().parents[2]).resolve()
     started = time.time()
@@ -1014,6 +1120,37 @@ def selftest(*, quiet: bool = False) -> int:
     ok(_p_location(2.0, [1.0, 2.0, 3.0]) == 0.75,
        "ties count TOWARD the control (>=), which is the conservative side")
 
+    # ---- B-1: the sibling index, falsified both directions -------------
+    _doc = {"fee_endpoint_summary": {"endpoints": {"E_MINUS_R":
+                                                   {"meaning": "old"}},
+                                     "INVARIANT": True,
+                                     "materiality": {"MATERIAL": False}},
+            "endpoint_E_MINUS_R_is_an_IDENTITY_VALUE":
+                {"corrected_wording": "new"},
+            "invariant_conjuncts_by_status": {},
+            "MATERIAL_headroom": {}}
+    ok(all(_resolve(_doc, k)[0] and _resolve(_doc, v)[0]
+           for k, v in SUPERSEDED_FIELD_INDEX.items()),
+       f"POSITIVE CONTROL ON THE SIBLING INDEX, AND IT ADMITS: all "
+       f"{len(SUPERSEDED_FIELD_INDEX)} entries resolve on BOTH sides -- "
+       f"the superseded path inside the summary and the superseding field "
+       f"at top level")
+    ok(_resolve(_doc, "fee_endpoint_summary.endpoints.E_MINUS_R.meaning")
+       == (True, "old")
+       and _resolve(_doc, "fee_endpoint_summary.nope")[0] is False
+       and _resolve(_doc, "endpoint_E_MINUS_R_is_an_IDENTITY_VALUE.x")[0]
+       is False,
+       "KNOWN-BAD: a path that does not resolve returns False rather than "
+       "raising or inventing a value -- an index entry pointing at "
+       "nothing is worse than no index")
+    _broken = {k: v for k, v in _doc.items()
+               if k != "invariant_conjuncts_by_status"}
+    ok(not all(_resolve(_broken, v)[0]
+               for v in SUPERSEDED_FIELD_INDEX.values()),
+       "KNOWN-BAD, THE OTHER SIDE: removing a SUPERSEDING field breaks the "
+       "index, which is what makes the emitter's refusal a real guard "
+       "rather than a formality")
+
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
     LAST_BATTERY.update({
@@ -1039,11 +1176,17 @@ def main() -> int:
     ap.add_argument("--run", action="store_true")
     ap.add_argument("--supersede", type=Path,
                     help="path to the v1 receipt to supersede in band")
+    ap.add_argument("--supersede-v2", type=Path, dest="supersede_v2",
+                    help="path to the v2 receipt; emits v3 in band")
     ap.add_argument("--output", type=Path)
     a = ap.parse_args()
     if a.selftest:
         return selftest()
-    if a.supersede is not None:
+    if a.supersede_v2 is not None:
+        if a.output is None:
+            ap.error("--supersede-v2 requires --output PATH")
+        payload = supersede_v2_to_v3(a.supersede_v2)
+    elif a.supersede is not None:
         if a.output is None:
             ap.error("--supersede requires --output PATH")
         payload = supersede(a.supersede)

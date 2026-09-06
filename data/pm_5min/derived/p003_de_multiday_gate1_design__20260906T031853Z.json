@@ -1,0 +1,173 @@
+{
+  "arms": [
+    "CONDVALUE_X_SKEW",
+    "HAZARD_OVER_SKEWED_REF"
+  ],
+  "as_of": "2026-09-06T03:18:53.293670+00:00",
+  "battery": {
+    "n_checks": 19,
+    "outcome": "PASS",
+    "ran_in_the_emitting_process": true
+  },
+  "day_cluster_aggregation": {
+    "cluster_unit": "UTC day (rule 8)",
+    "estimate": "mean of Z_d over the G = 5 days",
+    "interval": "reported ONLY because G >= 5; the exact sign test over the 5 day signs is the test, and the interval is the 5 Z values themselves -- no normal approximation is claimed at n = 5",
+    "per_day_value": "Z_d = (D_d - mean(null_d)) / sd(null_d)",
+    "why_not_pooled_over_draws": "pooling 2,500 draws across days would treat the DRAW as the cluster unit and inflate by the number of draws, which is free"
+  },
+  "days": {
+    "G": 5,
+    "admissibility_source": "da_dayverdict_<YYYYMMDD>.json, the era-admission block -- NOT CLAUDE.md rule 5's mm_hf Binance boundary, which does not govern this tape (R-547(B))",
+    "named": [
+      "2026-09-01",
+      "2026-09-02",
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ],
+    "nothing_has_been_chosen_on_them": "the thetas were fixed on the consumed 08-24 hour and the race scored a different object on these days, sealed and unread",
+    "why_these": "the only era-pure clob_v4_1 days in existence (R-547(C)); 08-29/30/31 straddle era boundaries and are inadmissible; 08-20..08-25 are consumed"
+  },
+  "decision_population": {
+    "a_day_with_too_few_decisions_is_a_STATUS": "if an arm's decision count on a day is 0, that day is reported as a counted status for that arm and the arm cannot be aggregated over G = 5 -- it does not silently become a 4-day test",
+    "definition": "the arm's above-threshold events on day d at the arm's FIXED theta -- the set a cancel decision is drawn from",
+    "on_the_consumed_hour_it_was": {
+      "CONDVALUE_X_SKEW": {
+        "by_side": {
+          "BUY_UP": 586,
+          "SELL_UP": 568
+        },
+        "decisions": 1154
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "by_side": {
+          "BUY_UP": 41,
+          "SELL_UP": 65
+        },
+        "decisions": 106
+      }
+    },
+    "per_day_values_are_UNKNOWN_and_are_an_OUTPUT": true
+  },
+  "declared_before_any_draw": true,
+  "falsifiers": {
+    "a_degenerate_null": "zero dispersion is a STATUS, not a large Z",
+    "a_missing_day": "G != 5 refuses rather than testing on 4",
+    "a_planted_arm_that_MUST_FAIL": "an arm whose D sits at the null's median on every day",
+    "a_planted_arm_that_MUST_PASS": "an arm above every draw on every day -- and the pass is asserted to be DIRECTIONAL, with clears_holm FALSE",
+    "a_planted_day_with_a_WRONG_BOOK_DIGEST": "refuses that day outright",
+    "an_under_sampled_null": "fewer than 500 draws refuses"
+  },
+  "metric": {
+    "primary": "D(E0) -- net value delta at maker fee zero (our signed rate), arm minus QR_SKEW_ONLY, per day",
+    "robustness": "D(E-R) at the rebate's identity value, reported beside it and never substituted for it",
+    "unchanged_from": "R-537 / the fee-endpoint receipt v1-v3"
+  },
+  "null": {
+    "design": "random decisions matched to the arm's OWN count and side split on that day, drawn from that day's decision population, replayed through the SAME stateful cascade",
+    "explicitly_not_matched_on": [
+      "realised cancel count",
+      "realised cancel set",
+      "fills lost -- a decision is not a cancel"
+    ],
+    "machinery": {
+      "de_does_not_reimplement_it": true,
+      "owner": "BE",
+      "path": "live/pm_research/be_cancel_axis_null.py",
+      "why": "two implementations of one cascade is two cascades; the null must run through the SAME stateful policy the arm ran through or it is not a control for it (R-547 item 1)"
+    },
+    "matched_on": [
+      "decision count",
+      "side split"
+    ],
+    "min_draws_per_arm_per_day": 500,
+    "seed": {
+      "not_a_bare_integer": true,
+      "rule": "seed = int(sha256(day_book_sha256 || arm || 'P003_GATE1_MULTIDAY')[:8], 16)",
+      "why": "the seed PINS THE DATA: it is derived from the day's book digest, so a book that moved cannot reuse the same draw sequence, and the sequence is reproducible from the artifact alone"
+    }
+  },
+  "per_day_location": {
+    "floor_at_500_draws": 0.001996007984031936,
+    "statistic": "p = (1 + #{null >= observed}) / (1 + K), ONE-SIDED, larger D is better"
+  },
+  "protocol": "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V1",
+  "resources": {
+    "basis": "measured on the consumed 08-24 hour",
+    "be_null_500_draws_one_hour_two_arms": {
+      "wall_s": 290.9
+    },
+    "cap": "one CPU, MemoryMax=8G, never raised (R-174); if a day exceeds the cap the day REFUSES rather than the cap rising",
+    "de_arms_replay_per_hour": {
+      "peak_gb": 0.61,
+      "wall_s": 47.0
+    },
+    "per_day_estimate": "a UTC day is 288 five-minute windows against the 12 of the measured hour, so a linear extrapolation is 24x: ~19 minutes of replay and ~2 hours of null per arm-day, which is an ESTIMATE from one hour and not a measurement",
+    "recommendation": "the first day is run alone as a smoke with its resource observation published before the remaining four"
+  },
+  "ruling": "R-547 (USER). Gate 1's control is the REPLAY NULL; the five named days decide the section-7 stopping rule; design and null committed before data.",
+  "section_7_predicate": {
+    "THE_ASYMMETRY_IS_THE_POINT": "FAIL is cheap and needs no significance -- 'did not beat the null' is not a claim that needs power. PASS is capped by arithmetic: at G = 5 the smallest attainable one-sided sign-test p is 2^-5 = 0.03125, and Holm at m = 2 compares it against 0.025. NO ARM CAN CLEAR HOLM ON THIS RUN even if every day goes its way",
+    "alpha": 0.05,
+    "and_that_is_ONE_MORE_DAY": "at m = 2 the smallest clearing G is 6, so a SIXTH admissible day would make a unanimous pass significance-bearing. There is none yet -- 09-06 is the next candidate and is not complete -- but the price of a significant answer is one day, and that is worth knowing before the run rather than after it",
+    "declared_before_any_day_is_seen": true,
+    "multiplicity_m": 2,
+    "smallest_G_that_would_clear_holm": {
+      "m_1": 5,
+      "m_2": 6
+    },
+    "so_a_pass_means": "DIRECTIONAL AND CONSISTENT, NEVER SIGNIFICANCE-BEARING -- the same limit R-529(A) ruled for the forward race, declared here BEFORE the run rather than discovered after it",
+    "statement": "arm a FAILS iff mean_d Z_(a,d) <= 0 OR the five day signs are not unanimous",
+    "this_is_stated_now_so_nobody_reads_a_pass_as_a_validation": true
+  },
+  "source_identity": {
+    "producing_code": "de_multiday_design_declaration.py",
+    "producing_code_sha256": "79c34f98476a749a45b62316502b6297d5a80df6da5a0bdb85fd6265ab096bb7"
+  },
+  "status": "DESIGN_DECLARATION_NO_DATA_TOUCHED",
+  "theta": {
+    "CONDVALUE_X_SKEW": 0.32450609461933483,
+    "HAZARD_OVER_SKEWED_REF": 0.43525926488298716
+  },
+  "theta_is_not_refitted_on_any_of_the_five_days": true,
+  "theta_pins": {
+    "CONDVALUE_X_SKEW": {
+      "artifact": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
+      "head": "q1_arrival_composed_lgbm",
+      "json_path": "cells.CONDVALUE_X_SKEW.arm_filed.theta",
+      "model_artifacts": {
+        "lgbm_haz_btc.txt": "ec52055214a01ed5",
+        "lgbm_thresholds_btc.json": "0fa2f1f7a5a4c58f"
+      },
+      "sha256": "6951f57d2b8a23bd2d51f24d25659ddffc671c5932aaba89246b025182c2fa08"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+      "artifact": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
+      "head": "incumbent_linear_d",
+      "json_path": "cells.HAZARD_OVER_SKEWED_REF.arm_filed.theta",
+      "model_artifacts": {
+        "linear_d_btc.json": "18701008c2bd18c6"
+      },
+      "sha256": "6951f57d2b8a23bd2d51f24d25659ddffc671c5932aaba89246b025182c2fa08"
+    }
+  },
+  "what_DE_needs_from_BE_per_day": {
+    "de_does_not_build_the_book_and_does_not_open_BEs_pickle": true,
+    "digest_pinning": "BE publishes, per day, the book path and its sha256 in a builder declaration. DE's per-day artifact carries `reference_book: {day, path, sha256}` and RECOMPUTES the digest at read time; a mismatch REFUSES that day",
+    "object": "the day's reference book -- the same shape as the 08-24 arms cache's `fr`: reference (slug -> side -> generations with tranches), statuses, population, n_slugs, and terminal_marks",
+    "why_terminal_marks": "the inventory leg is valued to each window's terminal mark; a book without them reads NO_TERMINAL_MARK on every fill"
+  },
+  "what_this_declaration_is_not": {
+    "a_result": false,
+    "a_run": false,
+    "gates_2_to_6": "if an arm passes, Gates 2-6 need FIVE FURTHER admissible days (09-06 onward, earliest complete set 09-10, readable 09-11) -- these five are consumed by this run",
+    "it_touches_no_data": true
+  },
+  "what_would_REFUTE_this_design": [
+    "if the per-day decision population for an arm is systematically empty or tiny on the admissible days, the matched null cannot be built and Gate 1's control fails for a reason that is not about the arm -- that refutes the DESIGN, not the arm",
+    "if BE's cascade cannot be driven on a day's book without re-fitting anything, the 'same cascade' premise is false",
+    "if the five days' books are not independent in the way the day-cluster unit assumes (a single market event spanning days), the interval is wrong even at G = 5",
+    "if the arm's theta is found to have been fitted on any of these five days, they are consumed and the run is void (rule 11)"
+  ]
+}

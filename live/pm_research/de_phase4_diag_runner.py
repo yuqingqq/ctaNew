@@ -74,7 +74,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 247
+EXPECTED_CHECKS = 250
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -2247,6 +2247,26 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
             # baseline is PER ARM, so it no longer cancels: the spread is
             # now baseline-DEPENDENT. What survives is the ORDERING, and
             # that is computed under every baseline rather than asserted.
+            # RULING v2: BOTH SPREADS, EACH NAMING ITS DENOMINATOR.
+            sep["cascade_spread_by_denominator"] = {
+                "arm_local_nulls": {
+                    "value": _cr,
+                    "denominator": "each arm's OWN replayed null (BE, "
+                                   "cited) -- different per arm, so it "
+                                   "does NOT cancel in the ratio",
+                    "is_the_ruled_null": True},
+                "shared_book_wide_rate": {
+                    "value": _cr_alt,
+                    "denominator": "one book-wide fills_per_generation for "
+                                   "both arms -- it CANCELS, which is the "
+                                   "only reason the old spread looked "
+                                   "invariant",
+                    "is_the_ruled_null": False,
+                    "equals_the_bare_flpc_ratio": True},
+                "algebra": "(n_C/B_C)/(n_H/B_H) = (n_C/n_H)*(B_H/B_C); "
+                           "with B_C == B_H the second factor is 1 and the "
+                           "spread reduces to the bare flpc ratio",
+            }
             sep["cascade_spread_is_invariant_to_the_baseline_choice"] = (
                 abs(_cr_alt - _cr) <= 1e-9)
             sep["why_the_spread_is_no_longer_invariant"] = (
@@ -2266,6 +2286,32 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
             sep["ordering_under_each_baseline"] = _ord
             sep["ordering_agrees_under_all_baselines"] = (
                 len(set(_ord.values())) == 1 if _ord else None)
+            # RULING v2: THE ORDERING IS RE-DERIVED UNDER THE ARM-LOCAL
+            # NULL AND SAID TO BE, not inherited from the shared-
+            # denominator proof that the reviewer refuted.
+            sep["ordering_under_the_ruled_null"] = _ord.get("primary_cited")
+            sep["ordering_derivation"] = {
+                "derived_under": "the ARM-LOCAL replayed nulls (the ruled "
+                                 "null), by comparing the selectivity "
+                                 "spread against the cascade spread "
+                                 "computed with each arm's own "
+                                 "denominator",
+                "selectivity_spread": _sr,
+                "cascade_spread_arm_local": _cr,
+                "selectivity_exceeds_cascade_under_the_ruled_null":
+                    _sr > _cr,
+                "NOT_inherited_from": (
+                    "the shared-denominator invariance proof of round 65, "
+                    "which the reviewer's B-3 refuted: that proof showed "
+                    "the spread cancels under ONE book-wide rate and says "
+                    "nothing about arm-local nulls"),
+                "it_also_holds_under_the_book_wide_rate": _sr > _cr_alt,
+                "so_the_claim_is": (
+                    "re-derived and independently true under both, which "
+                    "is a stronger statement than either alone -- and it "
+                    "is stated as two derivations, never as one "
+                    "invariance"),
+            }
             sep["ordering_is_invariant_to_the_baseline_choice"] = (
                 sep["ordering_agrees_under_all_baselines"])
     return {
@@ -2273,7 +2319,20 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
         "n_baseline_fills": n_b, "baseline_pnl_cents": pnl_b,
         "n_generations_with_fills": n_gens_with_fills,
         "n_generations_all_cancellable": n_gens_all,
+        # RULING v2 (R-548(C), accepting the reviewer's B-3). This field
+        # is BOOK-WIDE BY NAME AND POSITION, so writing a per-arm rate
+        # into it is a schema-level category error. It stays book-wide and
+        # says it is NOT the null; each arm's null lives in that arm's own
+        # block, where rule 7's matching (count and side mix) is what
+        # makes it a null at all.
         "fills_per_generation": fpg,
+        "fills_per_generation_status": "NOT_THE_NULL",
+        "fills_per_generation_is_book_wide": True,
+        "where_the_null_lives": (
+            "arms[*].cascade_baseline_rate_used -- BE's replayed rate for "
+            "THAT arm, matched to its own decision count and side split. "
+            "A book-wide rate is not matched to any arm and is therefore "
+            "not a null for any of them"),
         "fills_per_generation_baseline": baseline_kind,
         "fills_per_FILLING_generation": fpg_filling,
         "fills_per_CANCELLABLE_generation": fpg_random,
@@ -5492,6 +5551,42 @@ def selftest() -> int:
        f"R-546 POSITIVE CONTROL: a named arm takes BE's CITED per-arm "
        f"replayed rate {_cc['cascade_baseline_rate_used']}, not any count, "
        f"and says so in `cascade_factor_baseline`")
+    # RULING v2 (R-548(C)): the book-wide field is NOT the null, and the
+    # spread is emitted BOTH ways with its denominator named.
+    _cm_v2 = cancel_mechanics(
+        _base, {"CONDVALUE_X_SKEW": (_eats_tail, 1),
+                "HAZARD_OVER_SKEWED_REF": (_base[:-1], 2)}, 50, 200)
+    ok(_cm_v2["fills_per_generation_status"] == "NOT_THE_NULL"
+       and _cm_v2["fills_per_generation_is_book_wide"] is True
+       and "arms[*].cascade_baseline_rate_used"
+       in _cm_v2["where_the_null_lives"],
+       "RULING v2: the BOOK-WIDE `fills_per_generation` is marked "
+       "NOT_THE_NULL and points at where each arm's null actually lives. "
+       "Writing a per-arm rate into a field that is book-wide by name and "
+       "position is a schema-level category error, and the field now says "
+       "so instead of carrying one")
+    _sd = _cm_v2["separation"]["cascade_spread_by_denominator"]
+    ok(_sd["arm_local_nulls"]["is_the_ruled_null"] is True
+       and _sd["shared_book_wide_rate"]["is_the_ruled_null"] is False
+       and _sd["arm_local_nulls"]["value"] != _sd[
+           "shared_book_wide_rate"]["value"]
+       and "does NOT cancel" in _sd["arm_local_nulls"]["denominator"]
+       and "CANCELS" in _sd["shared_book_wide_rate"]["denominator"],
+       f"and the spread is emitted BOTH ways with its denominator NAMED "
+       f"in each: {_sd['arm_local_nulls']['value']:.6f} under the ruled "
+       f"arm-local nulls against "
+       f"{_sd['shared_book_wide_rate']['value']:.6f} under one shared "
+       f"book-wide rate -- and they DIFFER, which is the whole point")
+    _od = _cm_v2["separation"]["ordering_derivation"]
+    ok(_od["derived_under"].startswith("the ARM-LOCAL")
+       and "NOT_inherited_from" in _od
+       and isinstance(_od["selectivity_exceeds_cascade_under_the_ruled_"
+                          "null"], bool),
+       "and the ordering is RE-DERIVED under the arm-local null and says "
+       "it is NOT inherited from the shared-denominator proof the "
+       "reviewer refuted -- two derivations stated as two, never as one "
+       "invariance")
+
     ok(_cm_r["arms"]["CASCADER"][
            "cascade_baseline_is_a_cited_measurement"] is False,
        "and an arm BE did not measure falls back to the counted rate and "
