@@ -3226,12 +3226,49 @@ def emitted_census(emitted: dict, receipt) -> dict:
         return len(t.replace("-", "").replace(".", "").rstrip("0")
                    .lstrip("0")) if "e" not in t else 17
 
-    _raw_hits = sorted(watched & emitted_vals)
-    echoed = [v for v in _raw_hits if _sig(v) >= MIN_SIG_DIGITS_TO_BE_EVIDENCE]
-    coincidences = sorted(
-        {p_ for p_, v in _walk_paths(emitted)
-         if isinstance(v, (int, float)) and not isinstance(v, bool)
-         and v in set(_raw_hits) - set(echoed)})
+    #: REV 80 S3.2: THE KIND DECIDES, AND THE NUMBERS ARE DECLARED.
+    _ae = anti_echo_declaration()
+    _allow = _ae["allowlist"]
+
+    def _allowed(path_: str) -> str | None:
+        leaf = path_.rsplit(".", 1)[-1].split("[")[0]
+        return _allow.get(leaf)
+
+    def _is_an_integer_count(v) -> bool:
+        return float(v).is_integer()
+
+    _raw_hits = set(watched & emitted_vals)
+    _where = {}
+    for p_, v in _walk_paths(emitted):
+        if isinstance(v, (int, float)) and not isinstance(v, bool) \
+                and v in _raw_hits:
+            _where.setdefault(v, []).append(p_)
+    echoed, coincidences, coincidence_rows = [], [], []
+    for v in sorted(_raw_hits):
+        paths = sorted(set(_where.get(v, [])))
+        if _is_an_integer_count(v):
+            #: AN INTEGER EQUALITY REFUSES AT ANY DIGIT COUNT unless every
+            #: path carrying it is a DECLARED structural counter.
+            reasons = {p_: _allowed(p_) for p_ in paths}
+            if paths and all(reasons.values()):
+                coincidences.extend(paths)
+                coincidence_rows.append(
+                    {"paths": paths, "kind": "INTEGER",
+                     "allowlisted_because": sorted(set(reasons.values()))})
+            else:
+                echoed.append(v)
+        else:
+            if _sig(v) >= _ae["min_significant_digits_for_a_float"]:
+                echoed.append(v)
+            else:
+                coincidences.extend(paths)
+                coincidence_rows.append(
+                    {"paths": paths, "kind": "FLOAT_BELOW_THE_THRESHOLD",
+                     "allowlisted_because": [
+                         f"fewer than "
+                         f"{_ae['min_significant_digits_for_a_float']} "
+                         f"significant digits"]})
+    coincidences = sorted(set(coincidences))
 
     strings = [(p, v) for p, v in _walk_paths(emitted) if isinstance(v, str)]
 
@@ -3301,8 +3338,21 @@ def emitted_census(emitted: dict, receipt) -> dict:
                 "could then only catch a leak in a receipt that had already "
                 "leaked, which is no catch at all"),
             "n_of_them_echoed_as_a_NUMERIC_LEAF": len(echoed),
+            "n_coincidence_paths": len(coincidences),
             "n_low_precision_coincidences": len(coincidences),
             "low_precision_coincidence_paths": coincidences,
+            "coincidences_by_kind": coincidence_rows,
+            "the_declared_rule": {
+                "head": _ae["head"], "sha256": _ae["sha256"],
+                "float_threshold": _ae["min_significant_digits_for_a_float"],
+                "integer_rule": _ae["integer_rule"],
+                "n_allowlisted_counters": len(_allow),
+                "reporting_property": _ae["reporting_property"].get("rule")},
+            "PATHS_ONLY": (
+                "this census names the PATH in THIS record where a "
+                "collision sits, never which sealed field matched and "
+                "never the value -- naming the sealed field would publish "
+                "the association the seal exists to withhold"),
             "why_a_coincidence_is_not_an_echo": (
                 "since R-659 the sealed list carries three OUTCOME COUNTS, "
                 "which are small integers; one of this record's own "
@@ -3748,19 +3798,57 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     _day_flag = bool(agree) and not all(agree)
     _seal_holds = bool(absence["sealed"]) and not absence.get(
         "leaked_field_paths")
+    #: DA 102, MY OWN FINDING FROM DA 101. ***THE STATUS IS COMPUTED FROM
+    #: THE NAMED HALVES, NOT FROM ONE COUNTER.*** `PRE_READ_VERIFIED`
+    #: required `agree and all(agree)` -- a ROW-loop counter that the
+    #: PICKLE path leaves EMPTY -- so two heavy records whose population
+    #: was recomputed and AGREED, whose provenance matched and whose seal
+    #: held, read `INCOMPLETE` with `incomplete_because: null`: ***a
+    #: status with no reason, and wrong on the facts***. Each half now
+    #: states itself, the status is a function of those states, and an
+    #: emit whose status is not affirmative and carries no reason REFUSES.
+    _pop_state = (
+        "REFUSED_NOT_ATTEMPTED" if book_refusal else
+        "FLAGGED" if (_day_flag or (pop_out and pop_out.get("flags")))
+        else "DONE_AND_AGREES" if (
+            (agree and all(agree))
+            or (pop_out and pop_out.get("IS_A_POPULATION_VERIFICATION")))
+        else "NOT_EVALUATED")
+    _seal_state = "HOLDS" if _seal_holds else "LEAKED"
+    _prov_state = ("CONTRADICTED" if _mismatch else
+                   "INCOMPLETE" if (params_incomplete or _unpinned)
+                   else "MATCHED")
+    out["the_halves_this_status_is_computed_from"] = {
+        "population": {"state": _pop_state,
+                       "route": ("the PICKLE path through BE's structure "
+                                 "declaration" if pop_out else
+                                 "the ROW loop" if agree else "none")},
+        "seal": {"state": _seal_state},
+        "provenance": {"state": _prov_state},
+        "why": ("a status computed from ONE counter says nothing when that "
+                "counter is not the one that ran; each half states itself "
+                "and the status is a function of the three")}
     out["status"] = (
-        "PRE_READ_VERIFIED" if (agree and all(agree) and _seal_holds
-                                and prov_ok and not params_incomplete
-                                and not book_refusal)
+        "PRE_READ_VERIFIED" if (_pop_state == "DONE_AND_AGREES"
+                                and _seal_state == "HOLDS"
+                                and _prov_state == "MATCHED")
         #: A FLAG **IN THE DAY**: something WAS compared and disagreed, a
         #: declared digest contradicts its file, or the seal leaked.
-        else "FLAGGED" if (_day_flag or not _seal_holds or _mismatch)
+        else "FLAGGED" if (_pop_state == "FLAGGED"
+                           or _seal_state == "LEAKED"
+                           or _prov_state == "CONTRADICTED")
         #: the ONLY gap is the params pin -- the state this scheme already
         #: had a name for.
-        else "PROVENANCE_INCOMPLETE" if ((params_incomplete or _unpinned)
-                                         and not book_refusal)
+        else "PROVENANCE_INCOMPLETE" if (
+            _prov_state == "INCOMPLETE"
+            and _pop_state in ("DONE_AND_AGREES", "NOT_EVALUATED")
+            and not book_refusal)
         #: nothing disagreed; something was not evaluated.
         else "INCOMPLETE")
+    if _pop_state == "NOT_EVALUATED" and not _incomplete_because:
+        _incomplete_because.append(
+            "the population half was NOT EVALUATED: no row comparison ran "
+            "and no book recompute was attempted")
     out["incomplete_because"] = _incomplete_because or None
     out["provenance_mismatches"] = _mismatch or None
     out["provenance_unpinned"] = _unpinned or None
@@ -3784,6 +3872,20 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         "here either way; a commit id can be rewritten by a rebase and a "
         "worktree's HEAD is whatever it was last detached at. The flag is "
         "in front of the reader rather than folded silently into a verdict")
+    #: EVERY NON-AFFIRMATIVE STATUS CARRIES ITS REASON, OR THE EMIT
+    #: REFUSES. A status is a summary; a summary with nothing behind it is
+    #: the silent status rule 11 forbids -- and it is what DA 101 emitted
+    #: twice.
+    if out["status"] != "PRE_READ_VERIFIED" and not (
+            out.get("incomplete_because") or out.get("provenance_mismatches")
+            or out.get("provenance_unpinned")
+            or out["status"] == "FLAGGED"):
+        raise VerifierRefused(
+            f"REFUSED: STATUS_WITHOUT_A_REASON -- the status is "
+            f"{out['status']!r} and no reason field carries why. A reader "
+            f"cannot act on a verdict that names nothing, and the halves "
+            f"this status is computed from are "
+            f"{ {k: v['state'] for k, v in out['the_halves_this_status_is_computed_from'].items() if isinstance(v, dict) and 'state' in v} }.")
     out["emitted_census"] = emitted_census(out, receipt)
     if not out["emitted_census"]["clean"]:
         raise VerifierRefused(
@@ -4557,6 +4659,37 @@ def recompute_population_from_book(obj: dict, receipt: dict) -> dict:
 #: never in this source. ***75 MAY NOT BE DECLARED BY A PRODUCER***: it is
 #: the WRAPPER's refusal (a held lock), and a producer that claimed it
 #: could make a lock conflict read as one of its own verdicts.
+#: REV 80 S3.2. THE ANTI-ECHO NUMBERS LIVE IN A DECLARATION, not in this
+#: source: a threshold that lives in the checker is a threshold nobody
+#: else can argue with. And ***the threshold is a function of the watched
+#: value's KIND***: a float identifies what it came from only with enough
+#: digits, while an INTEGER COUNT identifies itself exactly -- so an
+#: integer equality refuses at ANY digit count unless the emitting PATH is
+#: a declared structural counter of this record's own.
+ANTI_ECHO_FAMILY = "da_anti_echo"
+
+
+def anti_echo_declaration(decl_dir: Path | None = None) -> dict:
+    """The chain head of the anti-echo family, read by the pair."""
+    st = _declaration_head(ANTI_ECHO_FAMILY, decl_dir)
+    obj = st.pop("obj")
+    kind = obj.get("the_threshold_is_a_function_of_the_KIND") or {}
+    allow = obj.get("the_allowlist_of_structural_counters") or {}
+    mind = ((kind.get("float") or {})
+            .get("min_significant_digits_to_be_evidence"))
+    if not isinstance(mind, int) or not allow:
+        raise VerifierRefused(
+            f"REFUSED: ANTI_ECHO_DECLARATION_INCOMPLETE -- {st['name']} "
+            f"must state the float threshold and a non-empty allowlist of "
+            f"structural counters. A census with no declared numbers is a "
+            f"census whose rule cannot be argued with.")
+    return {"head": st["name"], "sha256": st["sha256"],
+            "min_significant_digits_for_a_float": mind,
+            "allowlist": allow,
+            "integer_rule": (kind.get("integer") or {}).get("rule"),
+            "reporting_property": (obj.get("the_reporting_property") or {})}
+
+
 EXIT_MAP_FAMILY = "producer_exit_maps"
 THIS_PRODUCER = "live/pm_research/da_gate1_day_verdict.py"
 
@@ -5482,60 +5615,60 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and _pin_msgs["no_pin_at_all"] == "NO_PIN_NO_OPEN",
        "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
                  for k, v in list(_msgs.items()) + list(_pin_msgs.items())))
-    # -- DA 100: A COINCIDENCE IS NOT AN ECHO, BUT AN ECHO STILL IS -----
+    # -- REV 80 S3.2: THE THRESHOLD IS A FUNCTION OF THE KIND ----------
+    _ae = anti_echo_declaration()
     _long = 6.135792468013579
-    _cnt = 431
+    _count4 = 4317
     _rec_c = {"per_day_sealed_artifacts": [
         {"arm": "A", "economic": {"null_sd": _long},
-         "counts": {"n_cancels_issued": _cnt}}]}
-    _co = emitted_census({"my": {"n_leaves_emitted": _cnt}}, _rec_c)
-    _ec = emitted_census({"my": {"a_value": _long}}, _rec_c)
-    ck("DA 100, FOUND ON THE REAL 09-05 RECEIPT -- ***A COINCIDENCE IS NOT "
-       "AN ECHO, AND THIS CONTROL REFUSED MY OWN HONEST EMISSION.*** Since "
-       "R-659 the sealed list carries three OUTCOME COUNTS -- small "
-       "integers -- and a set-intersection over numeric leaves flagged a "
-       "structural counter of mine that happened to equal one. The "
-       "precision standard the PROSE scan already declares now applies to "
-       "numeric leaves too: a low-precision collision is REPORTED BY PATH "
-       "as a coincidence, ***visible and not silently dropped***, while a "
-       "value carrying enough digits to identify what it came from is "
-       "still an ECHO and still refuses",
-       _co["n_of_them_echoed_as_a_NUMERIC_LEAF"] == 0
-       and _co["n_low_precision_coincidences"] == 1
-       and _co["low_precision_coincidence_paths"] == ["my.n_leaves_emitted"]
-       and _ec["n_of_them_echoed_as_a_NUMERIC_LEAF"] == 1
-       and _ec["clean"] is False,
-       f"a 3-digit count collision -> coincidence at "
-       f"{_co['low_precision_coincidence_paths']}, clean={_co['clean']}; a "
-       f"16-digit sealed value -> echoed, clean={_ec['clean']}")
-
-    # -- R-709: THE EXIT MAP, AND 75 IS NEVER A PRODUCER'S ---------------
-    _em = exit_map_head()
-    _emt = Path(tempfile.mkdtemp(prefix="da101em_"))
-    (_emt / "producer_exit_maps_v1.json").write_text(json.dumps({
-        "producers": {THIS_PRODUCER: {"codes": {"3": "x", "75": "mine"}}}}))
-    try:
-        exit_map_head(_emt)
-        _bad75 = "ADMITTED"
-    except VerifierRefused as _e:
-        _bad75 = str(_e).split(" -- ")[0].replace("REFUSED: ", "")
-    ck("R-709 -- ***THE EXIT CODE RESOLVES IN THE MAP, NOT IN THIS "
-       "SOURCE, AND 75 IS NEVER A PRODUCER'S.*** A non-zero "
-       "`ExecMainStatus` is the wrapper's 75, a code DECLARED in the "
-       "producer's block of the exit-map chain head, or UNMAPPED -- and "
-       "UNMAPPED does not satisfy a GO conditioned on that run. This "
-       "producer's block is read at the head by the pair, and ***a map in "
-       "which ANY producer declares 75 is REFUSED***: 75 is what a HELD "
-       "LOCK exits with, so a producer claiming it would make a lock "
-       "conflict read as one of its own verdicts",
-       _em["i_am_declared"] is True
-       and sorted(_em["my_codes"]) == ["0", "1", "2", "3"]
-       and "75" not in _em["my_codes"]
-       and _em["no_producer_declares_75"] is True
-       and _bad75 == "A_PRODUCER_DECLARES_75",
-       f"head {_em['head']} ({_em['sha256'][:16]}) declares this producer's "
-       f"{sorted(_em['my_codes'])} across {_em['n_producers']} producers; a "
-       f"planted map declaring 75 -> {_bad75}")
+         "counts": {"n_cancels_issued": _count4}}]}
+    _plain = emitted_census({"my": {"a_plain_field": _count4}}, _rec_c)
+    _allowed = emitted_census({"my": {"n_leaves_emitted": _count4}}, _rec_c)
+    _floaty = emitted_census({"my": {"a_value": _long}}, _rec_c)
+    _shortf = emitted_census({"my": {"ratio": 0.25}},
+                             {"per_day_sealed_artifacts": [
+                                 {"arm": "A", "economic": {"Z": 0.25}}]})
+    ck("REV 80 S3.2 -- ***THE ANTI-ECHO THRESHOLD IS A FUNCTION OF THE "
+       "WATCHED VALUE'S KIND, AND THE NUMBERS ARE DECLARED, NOT CODED.*** "
+       "A FLOAT identifies what it came from only with enough digits, so "
+       "the declared 6-significant-digit rule stands. ***AN INTEGER COUNT "
+       "IDENTIFIES ITSELF EXACTLY***, so an integer equality REFUSES AT "
+       "ANY DIGIT COUNT -- unless the emitting PATH is one of the declared "
+       "structural counters of this record's own, each carrying its "
+       "reason. Driven: a FOUR-DIGIT sealed count echoed under a "
+       "NON-allowlisted path REFUSES (my DA 100 rule would have waved it "
+       "through); the SAME value at an allowlisted path is a coincidence "
+       "REPORTED BY PATH; a six-digit float echo refuses",
+       _plain["n_of_them_echoed_as_a_NUMERIC_LEAF"] == 1
+       and _plain["clean"] is False
+       and _allowed["n_of_them_echoed_as_a_NUMERIC_LEAF"] == 0
+       and _allowed["low_precision_coincidence_paths"]
+       == ["my.n_leaves_emitted"]
+       and _allowed["coincidences_by_kind"][0]["kind"] == "INTEGER"
+       and _floaty["n_of_them_echoed_as_a_NUMERIC_LEAF"] == 1
+       and _shortf["n_of_them_echoed_as_a_NUMERIC_LEAF"] == 0,
+       f"4-digit count at a plain path -> echoed, clean="
+       f"{_plain['clean']}; the same value at `n_leaves_emitted` -> "
+       f"coincidence at {_allowed['low_precision_coincidence_paths']}; "
+       f"16-digit float -> echoed; a 2-digit float -> coincidence")
+    ck("AND THE NUMBERS COME FROM A DECLARATION RESOLVED BY THE PAIR, so a "
+       "reader can argue with the rule without reading this source -- the "
+       "float threshold, the integer rule and the allowlist with A REASON "
+       "PER COUNTER. ***And the reporting property is stated as a RULE***: "
+       "PATHS ONLY, never which sealed field matched and never the value, "
+       "because naming the sealed field would publish the association the "
+       "seal exists to withhold",
+       _ae["head"].startswith("da_anti_echo_v")
+       and _ae["min_significant_digits_for_a_float"] == 6
+       and "ANY DIGIT COUNT" in str(_ae["integer_rule"])
+       and len(_ae["allowlist"]) >= 10
+       and all(isinstance(v, str) and len(v) > 20
+               for v in _ae["allowlist"].values())
+       and "PATHS ONLY" in str(_ae["reporting_property"].get("rule")),
+       f"{_ae['head']} ({_ae['sha256'][:16]}): float >= "
+       f"{_ae['min_significant_digits_for_a_float']} digits, integers "
+       f"exact-unless-allowlisted, {len(_ae['allowlist'])} counters each "
+       f"with a reason")
 
     # -- DA 100: THE STRUCTURE GUARD, DRIVEN AT THE REAL DECLARATION ----
     #: THE DIGESTS ARE READ FROM BE'S BUILDER RECEIPTS. No book is opened

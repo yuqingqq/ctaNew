@@ -1,0 +1,42 @@
+{
+  "chain_head_rule": "vN+1 by the {path, sha256} PAIR; readers resolve the head by the da_anti_echo_v<N>.json glob and follow the pair. v1 is never edited.",
+  "decides_nothing": "REPORTED (rule 14).",
+  "declared_at_utc": "2026-09-06T18:55:15Z",
+  "declared_by": "DA (REV 80 S3.2)",
+  "first_of_family": true,
+  "protocol": "DA_ANTI_ECHO_V1",
+  "supersedes": null,
+  "the_allowlist_of_structural_counters": {
+    "n_arms_agreeing": "how many arms agreed -- a count of comparisons this record made",
+    "n_arms_declared": "how many arms the PARAMS declare -- this seat's own count of a declaration, not a measurement of the day",
+    "n_arms_with_a_recomputed_population": "how many arms this run recomputed",
+    "n_books_verified": "how many books a structure declaration covers",
+    "n_checks": "how many checks a selftest ran",
+    "n_coins_compared": "how many coins a per-arm comparison covered",
+    "n_days_complete": "the day count a receipt states, copied not derived",
+    "n_failed": "how many checks failed",
+    "n_judged_against": "how many sealed names the receipt is judged against",
+    "n_leaves_emitted": "the size of THIS record's own leaf walk",
+    "n_low_precision_coincidences": "this census's own count of coincidences",
+    "n_receipt_keys_walked": "the size of the receipt's own KEY walk",
+    "n_receipt_leaves_walked": "the size of the receipt's own leaf walk",
+    "versions_present": "the declaration VERSION NUMBERS present on disk -- a version is not a quantity of any day"
+  },
+  "the_reporting_property": {
+    "rule": "PATHS ONLY. The census reports the PATH in THIS record where a collision sits and NEVER which sealed field matched, and never the value.",
+    "why": "naming the sealed field would publish the association the seal exists to withhold -- 'the field that equals my leaf count' is a fact about the sealed field. A path in my own record is a fact about my record."
+  },
+  "the_threshold_is_a_function_of_the_KIND": {
+    "float": {
+      "min_significant_digits_to_be_evidence": 6,
+      "why": "a sealed moment is a long float; a 1-3 digit coincidence identifies nothing, and treating it as evidence made this census refuse its own honest output"
+    },
+    "integer": {
+      "rule": "AN EXACT EQUALITY REFUSES AT ANY DIGIT COUNT",
+      "unless": "the emitting PATH is on the allowlist below -- a small, named set of THIS RECORD'S OWN structural counters, each with its reason",
+      "why": "since R-659 the sealed list carries OUTCOME COUNTS. A digit threshold on integers would let a sealed count ride out under any path that happened to carry it; the path is what separates a counter of mine from a quantity of DE's"
+    }
+  },
+  "version": 1,
+  "what": "The numbers the anti-echo census judges by. They were module constants, which means a reader had to read DA's source to know what 'echo' meant -- and a threshold that lives in the checker is a threshold nobody else can argue with."
+}
