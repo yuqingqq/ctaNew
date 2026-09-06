@@ -201,6 +201,19 @@ except where marked USER-ONLY.
     write time differs from the head it read -- one shared implementation, imported, never re-typed. A landing whose
     diff shows M on an existing version (instead of A on a new one) is a refusal; the landing-time head re-read is a
     discipline and `scripts/declaration_immutability.sh` is the detection -- neither is the rule.
+    **A field that changes what a chain resolves to is declared where both readers resolve it (REV 83 §1.2, R-717):**
+    `supersedes` and `also_supersedes` (a merge version naming every tip it closes, each by pair) are the chain's link
+    fields and live in `live/pm_research/declaration_chain.py`'s contract; no seat adds a link field its own resolver
+    reads and the shared one does not -- the design family diverged within one round that way.
+    **Register rows land through `scripts/land_register_row.sh` (REV 83 §4, R-717):** the dirty-register hold, the file
+    pathspec, the post-condition on the commit's OWN diff (exactly the caller's row ids added, zero foreign rows, no
+    landed line changed), the capture-test-trim push, and the trailer `Landed-By: land_register_row.sh <sha256>` -- so
+    "was this row landed by the script" is a query over the history; a row that appears without the trailer is visible,
+    which is the closure (the hold alone has a race and can be forgotten).
+    **A known-bad establishes its own baseline inside the cell and asserts a delta -- never a level read from a counter
+    the process shares (REV 83 §5, R-717; third instance: REV 53 §0, REV 59 §3, DE 110).** A battery whose verdict
+    changes when its cells are reordered is measuring history, not the property: run the cell alone and run the battery
+    shuffled -- if either verdict differs, the cell is measuring the process.
     **A halted seat's worktree (R-627's clause, REV 81 §4).** "Never touch a seat's worktree while the seat works" --
     *idle* includes *halted for a reset*: a preservation-only commit in a halted worktree is permitted, UNPUSHED, the
     bytes unaltered, the act disclosed in the register by commit id; the rows then land in the shared register attributed.
