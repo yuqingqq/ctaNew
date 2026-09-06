@@ -790,6 +790,16 @@ CODOMAIN_ADJUDICATED: dict[tuple[str, str, str], str] = {
         "returncode -- no success path can produce it, because it comes from "
         "`subprocess.CompletedProcess.returncode`. Callers refuse on "
         "`rc != 0` unchanged and can now distinguish 'git never ran'.",
+    ("da_cross_venue_forensics", "_run",
+     "(None, {'returncode': None, 'stderr': repr(e)})"):
+        "DISTINCTION SURVIVES: the pair is (lines, failure) and the two "
+        "elements move together -- success is (list, None), failure is "
+        "(None, mapping). The confusable element would be an EMPTY LIST, "
+        "and this handler cannot produce one: `journalctl` never ran, so "
+        "there is nothing to have zero of. DA 88's finding is exactly "
+        "this: a failed read must not arrive as an absence, and the "
+        "caller branches on the SECOND element, which is None on every "
+        "success path.",
     ("da_forward_day_verify", "_artifact_closed", "None"):
         "SAME MEANING: the docstring defines None as RE-VERDICT for ANY "
         "reason the file cannot answer -- unreadable, unparseable, wrong day, "

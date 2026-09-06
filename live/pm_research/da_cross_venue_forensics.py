@@ -494,7 +494,12 @@ def copy_journal_lines(unit: str, *, invocation_id: str | None = None,
         try:
             r = subprocess.run(argv, capture_output=True, text=True,
                                timeout=120)
-        except Exception as e:                              # noqa: BLE001
+        #: NARROW, and every class named: `subprocess.run` raises OSError
+        #: when the binary is not there and SubprocessError (TimeoutExpired
+        #: among them) when it ran and did not finish. A bare `Exception`
+        #: here would also swallow a bug in this function and report it as
+        #: "journalctl failed".
+        except (OSError, subprocess.SubprocessError) as e:
             return None, {"returncode": None, "stderr": repr(e)}
         if r.returncode != 0:
             return None, {"returncode": r.returncode,

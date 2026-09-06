@@ -33,13 +33,25 @@ import json
 import re
 import subprocess
 import sys
+import warnings
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-PROTOCOL = "P003_DA_NONHEAD_CENSUS_V1"
+PROTOCOL = "P003_DA_NONHEAD_CENSUS_V2"
+#: WHAT V2 CHANGES (rule 13 -- the V1 receipts stay as provenance):
+WHAT_CHANGES_IN_V2 = (
+    "four rules, all of which change what the census REPORTS: (2.1) a "
+    "marker cannot excuse an OPEN -- a marked literal that is read is "
+    "refused, and the marker is recorded as the file author's claim, not "
+    "a finding; (2.2) the marker word list drops the bare `bad`, adds "
+    "previous/prior/historical, and splits camelCase; (2.3) the allowlist "
+    "resolves through the head rule instead of merging every version; (4) "
+    "BOTH declaration directories are scanned and every null head carries "
+    "WHY. And one rule this seat found by RUNNING it: bytes consumed by a "
+    "DIGEST are the R-608 link being written, not a pin being read")
 DECL_RE = re.compile(r"declarations/([A-Za-z0-9_\-]+?)_v(\d+)\.json$")
 #: BOTH FORMS: `declarations/<family>_vN.json` AND a bare
 #: `<family>_vN.json`. The reviewer's regex saw the bare ones too, and a
@@ -127,6 +139,47 @@ def declaration_chains(decl_dir: Path) -> dict:
     return out
 
 
+#: REV 72 4. THE SECOND DECLARATION DIRECTORY. Fifty pins carried
+#: `head: null` -- not "no head", but ***a family this census never
+#: looked for***: `live/mm_research/declarations/` holds P-2026-002's
+#: declarations and the census read only `live/pm_research/`. A null that
+#: means "not scanned" is indistinguishable from a null that means "no
+#: head", and rule 11 says an absence is never a pass. Both directories
+#: are scanned; a family name present in BOTH refuses by name rather than
+#: silently taking one.
+DECLARATION_DIRS = ("live/pm_research/declarations",
+                    "live/mm_research/declarations")
+
+
+def merged_chains(root: Path, dirs=DECLARATION_DIRS) -> dict:
+    """Every declaration family under `dirs`, each tagged with its dir."""
+    out = {}
+    for rel in dirs:
+        d = Path(root) / rel
+        if not d.is_dir():
+            out[f"__absent__{rel}"] = {
+                "members": [], "n_members": 0, "heads": [], "n_heads": 0,
+                "declarations_dir": rel,
+                "status": "DECLARATION_DIRECTORY_ABSENT",
+                "why": "named in DECLARATION_DIRS and not present"}
+            continue
+        for fam, blk in declaration_chains(d).items():
+            blk["declarations_dir"] = rel
+            if fam in out:
+                prior = out[fam]
+                out[fam] = {**blk, "heads": prior["heads"] + blk["heads"],
+                            "n_heads": prior["n_heads"] + blk["n_heads"],
+                            "declarations_dir": [
+                                prior["declarations_dir"], rel],
+                            "status": "FAMILY_IN_TWO_DECLARATION_DIRS",
+                            "why": ("the same family name lives in two "
+                                    "declaration directories: a pin "
+                                    "naming it has no single answer")}
+            else:
+                out[fam] = blk
+    return out
+
+
 #: R-657. A LITERAL NAMING A NON-HEAD IS ADMISSIBLE ONLY WHERE THE CODE
 #: MARKS IT. Two of the census's first hits were not pins at all: the
 #: runner's `SUPERSEDED_PARAMS_REL` names the superseded file ON PURPOSE
@@ -147,14 +200,29 @@ def declaration_chains(decl_dir: Path) -> dict:
 #: A marked literal is ADMITTED and REPORTED as MARKED with its reason; an
 #: unmarked one is REFUSED. A marker on a HEAD literal is admitted and
 #: NOTED -- the marker is not a licence, it is an explanation.
-MARKER_WORDS = ("superseded", "known_bad", "bad", "falsifier")
+#: REV 72 2.2. THE BARE `bad` IS GONE: it admitted `BAD_REQUEST_PATH`, a
+#: name about HTTP, not about supersession -- a marker word must be about
+#: the ONE thing it excuses. `known_bad` stays. `previous` / `prior` /
+#: `historical` are ADDED, because they are the honest names for a
+#: deliberate historical pin and today they refuse. And the split is
+#: camelCase-aware: `supersededParams` was invisible to a `_`-only split,
+#: so a marker could be lost by naming style alone.
+#: REV 72 2.4: what a marker IS.
+MARKER_IS = ("the FILE AUTHOR'S CLAIM about a literal, recorded and never "
+             "treated as a finding by this census. It explains a name the "
+             "code does not READ; it cannot excuse one it does")
+MARKER_WORDS = ("superseded", "known_bad", "previous", "prior",
+                "historical", "falsifier")
 FUNCTION_MARKER_RE = re.compile(r"known[_-]?bad|falsif", re.I)
 
 
 def _identifier_marks(name: str) -> str | None:
     if not name:
         return None
-    toks = [t for t in re.split(r"[_\W]+", name.lower()) if t]
+    #: `_`-separated AND camelCase-separated: `supersededParams` splits to
+    #: {superseded, params} the same way `SUPERSEDED_PARAMS` does.
+    spaced = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", name)
+    toks = [t for t in re.split(r"[_\W]+", spaced.lower()) if t]
     joined = "_".join(toks)
     for w in MARKER_WORDS:
         if w in toks or ("_" in w and w in joined):
@@ -195,21 +263,45 @@ def _enclosing_fn(node, parents) -> str | None:
     return best
 
 
-def _allowlist(decl_dir: Path) -> dict:
-    """`<seat>_nonhead_allowlist_v*.json`: {literal: reason}, per seat."""
-    out = {}
-    for f in sorted(decl_dir.glob("*_nonhead_allowlist_v*.json")):
-        seat = f.stem.split("_nonhead_allowlist")[0]
+def _allowlist(root: Path, chains: dict) -> tuple:
+    """`<seat>_nonhead_allowlist_v*.json`: {literal: reason}, per seat.
+
+    REV 72 2.3: THE ALLOWLIST IS A DECLARATION LIKE ANY OTHER, so it is
+    resolved through the SAME head rule the census applies to everything
+    else. Globbing every version and MERGING them meant ***a v2 that
+    REMOVES an entry could not*** -- the v1 entry survived the merge and
+    the exemption it granted could never be withdrawn. A family that does
+    not resolve to exactly one head REFUSES; exposure is zero today (no
+    such file exists), which is why it is fixed now."""
+    out, refusals = {}, []
+    fams = {f: b for f, b in chains.items()
+            if "nonhead_allowlist" in f}
+    for fam, blk in sorted(fams.items()):
+        if blk["n_heads"] != 1:
+            refusals.append({"family": fam, "heads": blk["heads"],
+                             "status": "ALLOWLIST_DOES_NOT_RESOLVE_TO_ONE_"
+                                       "HEAD",
+                             "why": ("an allowlist is a declaration like "
+                                     "any other: merging its versions "
+                                     "means a later one cannot REMOVE an "
+                                     "entry")})
+            continue
+        d = blk.get("declarations_dir")
+        f = ((Path(root) / d) if isinstance(d, str)
+             else Path(root) / DECLARATION_DIRS[0]) / blk["heads"][0]
+        seat = fam.split("_nonhead_allowlist")[0]
         try:
             obj = json.loads(f.read_text())
         except (OSError, ValueError):
+            refusals.append({"family": fam, "file": f.name,
+                             "status": "ALLOWLIST_UNREADABLE"})
             continue
         for ent in (obj.get("entries") or []):
             if isinstance(ent, dict) and ent.get("names") and ent.get(
                     "reason"):
                 out[(seat, ent["names"])] = {"reason": ent["reason"],
                                              "declaration": f.name}
-    return out
+    return out, refusals
 
 
 #: REV 71 4.3. THE FIRST GATE IS DATAFLOW, NOT TEXT. A regex over source
@@ -225,6 +317,19 @@ OPEN_FUNCS = ("open", "read_text", "read_bytes", "load", "loads",
               "read_json", "is_file", "exists")
 OPEN_CTORS = ("Path", "PosixPath")
 FIXTURE_CALLS = ("refuses", "raises")
+#: DA 94, found by running the census at the tip. ***THE ONE USE THAT MUST
+#: READ A NON-HEAD IS THE SUPERSESSION LINK ITSELF.*** R-608 says a link is
+#: the pair {path, sha256} -- so the builder of `_v4` MUST open `_v3` and
+#: hash its bytes, and my first pass refused BE's link-writer as a stale
+#: pin. The separating property is not the name and not the marker (2.1
+#: settles that a marker cannot excuse an open); it is WHAT THE BYTES DO:
+#: bytes consumed by a DIGEST cannot make the code behave as if it were
+#: under old bars, bytes consumed by `json.loads` can. A presence test
+#: (`.exists()`) counts as non-interpreting ONLY beside a digest use of
+#: the same name -- alone, it gates behaviour and stays a pin.
+HASH_FUNCS = ("sha256", "sha1", "md5", "blake2b", "blake2s", "sha512",
+              "file_digest", "hexdigest", "digest")
+PRESENCE_FUNCS = ("exists", "is_file")
 
 
 def _flows_into_an_open(node, parents, assigned_uses) -> dict:
@@ -255,20 +360,53 @@ def _flows_into_an_open(node, parents, assigned_uses) -> dict:
             f = anc.func
             name = (f.id if isinstance(f, ast.Name)
                     else f.attr if isinstance(f, ast.Attribute) else "")
+            if name in OPEN_FUNCS and _use_kind(anc, parents) == "HASHED":
+                return {"flows": False,
+                        "how": (f"HASHED, NOT INTERPRETED: {name}() feeds a "
+                                f"digest -- this is the R-608 link being "
+                                f"WRITTEN, not a pin being read")}
             if name in OPEN_CTORS or name in OPEN_FUNCS:
                 return {"flows": True, "how": f"DIRECT argument of {name}()"}
     ident = _assigned_name(node, parents)
     if ident and ident in assigned_uses:
+        e = assigned_uses[ident]
+        if _only_hashed(e):
+            return {"flows": False,
+                    "how": (f"HASHED, NOT INTERPRETED: every use of "
+                            f"`{ident}` feeds a digest or tests presence "
+                            f"beside one ({e['HASHED']} hashed, "
+                            f"{e['PRESENCE']} presence, 0 interpreted) -- "
+                            f"the R-608 link being WRITTEN, not a pin")}
         return {"flows": True,
                 "how": f"through ONE assignment: `{ident}` is used at "
-                       f"{assigned_uses[ident]}"}
+                       f"{e['first']}"}
     return {"flows": False, "how": ("the literal reaches no file open -- "
                                     "not a pin")}
 
 
+def _use_kind(call, parents) -> str:
+    """HASHED / PRESENCE / INTERPRETED, for one open call."""
+    f = call.func
+    name = (f.id if isinstance(f, ast.Name)
+            else f.attr if isinstance(f, ast.Attribute) else "")
+    if name in PRESENCE_FUNCS:
+        return "PRESENCE"
+    cur, depth = parents.get(call), 0
+    while cur is not None and depth < 3:
+        depth += 1
+        if isinstance(cur, ast.Call):
+            g = cur.func
+            gn = (g.id if isinstance(g, ast.Name)
+                  else g.attr if isinstance(g, ast.Attribute) else "")
+            if gn in HASH_FUNCS:
+                return "HASHED"
+        cur = parents.get(cur)
+    return "INTERPRETED"
+
+
 def _names_used_in_opens(tree, parents) -> dict:
-    """identifier -> where it is used as a path in an open."""
-    out = {}
+    """identifier -> {first use, and the COUNT of each use kind}."""
+    out: dict = {}
     for n in ast.walk(tree):
         if not isinstance(n, ast.Call):
             continue
@@ -280,11 +418,23 @@ def _names_used_in_opens(tree, parents) -> dict:
             cands.append(f.value)
         if name not in OPEN_CTORS and name not in OPEN_FUNCS:
             continue
+        kind = "INTERPRETED" if name in OPEN_CTORS else _use_kind(n, parents)
         for a in cands:
             for sub in ast.walk(a):
                 if isinstance(sub, ast.Name):
-                    out.setdefault(sub.id, f"line {n.lineno} ({name})")
+                    e = out.setdefault(sub.id, {
+                        "first": f"line {n.lineno} ({name})",
+                        "HASHED": 0, "PRESENCE": 0, "INTERPRETED": 0})
+                    #: `Path(x)` alone says nothing about what the bytes
+                    #: do; the kind comes from the call that READS.
+                    if name in OPEN_CTORS:
+                        continue
+                    e[kind] += 1
     return out
+
+
+def _only_hashed(entry: dict) -> bool:
+    return bool(entry) and entry["INTERPRETED"] == 0 and entry["HASHED"] > 0
 
 
 def _inside_a_supersession_field(node, parents) -> bool:
@@ -307,18 +457,65 @@ def _inside_a_supersession_field(node, parents) -> bool:
     return False
 
 
-def literal_census(root: Path, chains: dict) -> dict:
+#: REV 72 4, THE SECOND HALF. Scanning both declaration directories left
+#: 45 pins still reading `head: null` -- and they are not declarations at
+#: all: 22 name artifacts in the LEDGER's derived tree (a receipt, a
+#: manifest, a fit) and the rest name files that exist nowhere yet. "No
+#: family" is a different fact from "not a declaration", and a census that
+#: prints one null for both is the silent null rule 11 forbids. So every
+#: null-head row carries WHY, and the derived tree is INDEXED (by its
+#: canonical real path, never a tree-relative guess) to tell the two
+#: apart.
+def derived_index(purpose: str = "the non-head census") -> dict:
+    """{basename: [dirs]} over the LEDGER's derived tree, or a refusal."""
+    try:
+        import da_root as R                                   # noqa: PLC0415
+    except ImportError as e:
+        return {"status": "DA_ROOT_NOT_IMPORTABLE",
+                "refusal": f"{type(e).__name__}: {e}", "names": {}}
+    #: NARROW AND NAMED: `derived_dir` refuses with RootRefused when the
+    #: root is not the canonical ledger, and the filesystem answers with
+    #: OSError. A bare `Exception` would report a bug in the resolver as
+    #: "the ledger is not there" -- the absence-as-a-pass rule 11 forbids.
+    try:
+        d = R.derived_dir(purpose)
+    except (R.RootRefused, OSError) as e:
+        return {"status": "DERIVED_TREE_NOT_RESOLVED",
+                "refusal": f"{type(e).__name__}: {e}", "names": {}}
+    if not d.is_dir():
+        return {"status": "DERIVED_TREE_ABSENT", "dir": str(d), "names": {}}
+    names: dict = {}
+    for f in d.rglob("*_v*.json"):
+        names.setdefault(f.name, []).append(
+            str(f.parent.relative_to(d)) or ".")
+    return {"status": "INDEXED", "dir": str(d),
+            "n_files": sum(len(v) for v in names.values()),
+            "names": {k: sorted(set(v)) for k, v in names.items()}}
+
+
+def literal_census(root: Path, chains: dict,
+                   derived: dict | None = None) -> dict:
     """Every `declarations/..._vN.json` literal in `live/`, judged."""
     head_of = {}
     for fam, blk in chains.items():
         if blk["n_heads"] == 1:
             head_of[fam] = blk["heads"][0]
-    allow = _allowlist(root / "live/pm_research/declarations")
-    rows, refused, marked, not_pins = [], [], [], []
+    allow, allow_refusals = _allowlist(root, chains)
+    rows, refused, marked, not_pins, warned = [], [], [], [], []
     for py in sorted((root / "live").rglob("*.py")):
         try:
             src = py.read_text()
-            tree = ast.parse(src)
+            #: A SyntaxWarning from ANOTHER seat's file (an invalid escape
+            #: in `live/bx_iter2_carry.py` today) is not this census's
+            #: output. It is reported below as `files_that_warn`, never
+            #: printed into the middle of a verdict.
+            with warnings.catch_warnings(record=True) as w:
+                warnings.simplefilter("always")
+                tree = ast.parse(src)
+            for x in w:
+                warned.append({"file": str(py.relative_to(root)),
+                               "warning": f"{x.category.__name__}: "
+                                          f"{x.message}"})
         except (OSError, SyntaxError):
             continue
         parents = {}
@@ -335,6 +532,7 @@ def literal_census(root: Path, chains: dict) -> dict:
                 named = Path(m.group(0)).name
                 fam, _ = _family(Path(named).stem)
                 head = head_of.get(fam)
+                fam_dir = (chains.get(fam) or {}).get("declarations_dir")
                 ident = _assigned_name(n, parents)
                 fn = _enclosing_fn(n, parents)
                 #: GATE ONE: dataflow. A literal that reaches no file open
@@ -351,11 +549,33 @@ def literal_census(root: Path, chains: dict) -> dict:
                 row = {"file": str(py.relative_to(root)), "line": n.lineno,
                        "names": named, "family": fam, "head": head,
                        "is_head": (None if head is None else named == head),
+                       "declarations_dir": fam_dir,
+                       "head_is_null_because": (
+                           None if head is not None else
+                           (chains.get(fam) or {}).get("status")
+                           if fam_dir is not None else
+                           "NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION"
+                           if named in (derived or {}).get("names", {}) else
+                           "DERIVED_TREE_NOT_INDEXED_FOR_THIS_CALL__"
+                           + str((derived or {}).get("status", "NOT_ASKED"))
+                           if (derived or {}).get("status") != "INDEXED"
+                           else "NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY"),
+                       "found_in_derived": sorted(
+                           (derived or {}).get("names", {}).get(named, [])),
                        "assigned_to": ident, "in_function": fn,
                        "flows_into_an_open": flow["flows"],
                        "flow": flow["how"],
                        "inside_a_supersession_field": in_chain,
                        "marker": marker}
+                #: EVERY ROW CARRIES A STATUS. Rows whose family has no
+                #: single head, and admitted head-pins, fell through every
+                #: branch and carried no `status` at all -- a reader then
+                #: had to infer one, which is the silent null again.
+                row["status"] = ("ADMITTED_NAMES_THE_HEAD"
+                                 if row["is_head"] else
+                                 "HEAD_UNKNOWN__SEE_head_is_null_because"
+                                 if row["is_head"] is None else
+                                 "REFUSED_UNMARKED_NON_HEAD")
                 rows.append(row)
                 if not flow["flows"] or in_chain:
                     #: BOTH FACTS, not one: the dataflow gate says it is
@@ -371,17 +591,46 @@ def literal_census(root: Path, chains: dict) -> dict:
                         marked.append(row)
                     not_pins.append(row)
                 elif row["is_head"] is False:
+                    #: REV 72 2.1: A MARKER CANNOT EXCUSE AN OPEN. A literal
+                    #: that IS a pin -- it reaches a file open -- and names
+                    #: a non-head is REFUSED whatever the code calls it.
+                    #: ***The marker is the FILE AUTHOR'S CLAIM, not a
+                    #: finding of this census*** (2.4): it explains a name
+                    #: that is never read, and a name that IS read is read
+                    #: whatever it is called.
+                    row["status"] = ("REFUSED_NON_HEAD_PIN_MARKER_DOES_NOT"
+                                     "_EXCUSE_AN_OPEN" if marker
+                                     else "REFUSED_UNMARKED_NON_HEAD")
+                    row["marker_is"] = MARKER_IS
+                    refused.append(row)
                     if marker:
-                        row["status"] = "MARKED_ADMITTED"
                         marked.append(row)
-                    else:
-                        row["status"] = "REFUSED_UNMARKED_NON_HEAD"
-                        refused.append(row)
                 elif marker:
                     row["status"] = "MARKED_ON_A_HEAD_NOTED"
                     marked.append(row)
     non_heads = refused
+    _nulls = [r for r in rows if r["is_head"] is None]
+    _null_pins = [r for r in _nulls if r["flows_into_an_open"]]
     return {"n_literals": len(rows), "literals": rows,
+            "derived_index": {k: v for k, v in (derived or {}).items()
+                              if k != "names"} or
+                             {"status": "NOT_ASKED"},
+            "files_that_warn_when_parsed": warned,
+            "n_files_that_warn_when_parsed": len(warned),
+            "n_head_is_null": len(_nulls),
+            "n_head_is_null_and_a_pin": len(_null_pins),
+            "head_is_null_because": {
+                k: sum(1 for r in _nulls if r["head_is_null_because"] == k)
+                for k in sorted({r["head_is_null_because"]
+                                 for r in _nulls})},
+            "no_null_is_silent": (
+                "rule 11: every null head carries WHY -- no family in "
+                "either scanned declarations directory, a family that does "
+                "not resolve to one head, an artifact in the LEDGER's "
+                "derived tree (not a declaration at all), or a named file "
+                "present nowhere"),
+            "allowlist_refusals": allow_refusals,
+            "n_allowlist_refusals": len(allow_refusals),
             "n_not_pins": len(not_pins), "not_pins": not_pins,
             "n_pins": len(rows) - len(not_pins),
             "the_first_gate_is_dataflow": (
@@ -395,19 +644,39 @@ def literal_census(root: Path, chains: dict) -> dict:
             "n_refused": len(refused), "naming_a_non_head": refused,
             "n_marked": len(marked), "marked": marked,
             "the_marker_rule": {
+                "a_marker_is": MARKER_IS,
                 "identifier_words": list(MARKER_WORDS),
-                "matched": "on `_`-separated TOKENS of the assigned "
-                           "identifier, never as a substring: "
-                           "`SUPERSEDED_PARAMS_REL` marks, `PARAMS_REL` "
-                           "does not",
+                "words_changed_at_REV_72_2_2": {
+                    "dropped": ["bad"],
+                    "why_dropped": ("it admitted `BAD_REQUEST_PATH`, a "
+                                    "name about HTTP: a marker word must "
+                                    "be about the one thing it excuses"),
+                    "added": ["previous", "prior", "historical"],
+                    "why_added": ("the honest names for a deliberate "
+                                  "historical pin, which refused before")},
+                "matched": "on `_`-separated AND camelCase TOKENS of the "
+                           "assigned identifier, never as a substring: "
+                           "`SUPERSEDED_PARAMS_REL` and "
+                           "`supersededParams` mark, `PARAMS_REL` does "
+                           "not",
                 "function_names": "containing `known_bad` or `falsif`",
                 "allowlist": ("declarations/<seat>_nonhead_allowlist_v*"
                               ".json, owned by the seat, one reason per "
-                              "entry"),
+                              "entry -- resolved through THE SAME HEAD "
+                              "RULE as any other declaration (REV 72 2.3);"
+                              " versions are NOT merged, so a v2 CAN "
+                              "remove an entry, and a family that does "
+                              "not resolve to one head refuses"),
                 "a_marker_is_not_a_licence": (
                     "a marker on a HEAD literal is admitted and NOTED; the "
                     "marker explains a deliberate non-head, it does not "
-                    "grant one")},
+                    "grant one"),
+                "and_it_cannot_excuse_an_open": (
+                    "REV 72 2.1: a literal that FLOWS INTO A FILE OPEN and "
+                    "names a non-head is REFUSED whatever the code calls "
+                    "it. The marker explains a name the code does not "
+                    "READ; a name that IS read is read whatever it is "
+                    "called")},
             "verdict": ("REFUSED_A_LITERAL_NAMES_A_NON_HEAD" if refused
                         else "EVERY_LITERAL_NAMES_ITS_CHAIN_HEAD_OR_IS_"
                              "MARKED"),
@@ -416,17 +685,40 @@ def literal_census(root: Path, chains: dict) -> dict:
                     "is right beside it on disk")}
 
 
-def build_report(root: Path | None = None) -> dict:
+def supersession_block(prior: Path | None) -> dict | None:
+    """R-608: the PAIR {path, sha256}, both halves on ONE present file."""
+    if prior is None:
+        return None
+    p = Path(prior)
+    if not p.is_file():
+        raise FileNotFoundError(
+            f"REFUSED: SUPERSEDED_RECEIPT_NOT_PRESENT -- {p}. A link is "
+            f"the pair {{path, sha256}} landing on one PRESENT file; a "
+            f"half-written link refuses BY NAME, never as 'no link'")
+    return {"path": str(p), "sha256": hashlib.sha256(
+        p.read_bytes()).hexdigest(),
+        "rule": "13 -- vN+1; the superseded receipt is not edited",
+        "what_changes": WHAT_CHANGES_IN_V2}
+
+
+def build_report(root: Path | None = None,
+                 prior: Path | None = None) -> dict:
     r = Path(root) if root else _root()
-    decl = r / "live/pm_research/declarations"
-    chains = declaration_chains(decl)
-    lits = literal_census(r, chains)
+    chains = merged_chains(r)
+    dix = derived_index()
+    lits = literal_census(r, chains, dix)
     multi = {k: v for k, v in chains.items() if v["n_heads"] != 1}
     return {
         "protocol": PROTOCOL,
+        "supersedes": supersession_block(prior),
         "as_of_utc": datetime.datetime.now(
             datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "root": str(r), "declarations_dir": str(decl),
+        "root": str(r),
+        "declarations_dirs_scanned": list(DECLARATION_DIRS),
+        "why_both": ("REV 72 4: fifty pins read `head: null` because their "
+                     "families live in live/mm_research/declarations/ and "
+                     "this census scanned only live/pm_research/. A null "
+                     "that means NOT SCANNED is not a finding -- rule 11"),
         "n_families": len(chains),
         "families_without_exactly_one_head": {
             k: {"heads": v["heads"], "status": v["status"]}
@@ -476,7 +768,7 @@ def selftest() -> tuple:
                    'PIN = "live/pm_research/declarations/'
                    'x_declaration_v2.json"\n'
                    'DATA = Path(PIN).read_text()\n')
-    ch = declaration_chains(d)
+    ch = merged_chains(tmp)
     lc = literal_census(tmp, ch)
     ck("THE CHAIN RESOLVES TO EXACTLY ONE HEAD, pair-verified: v1 <- v2 <- "
        "v3 leaves v3 as the only member nothing supersedes",
@@ -502,7 +794,7 @@ def selftest() -> tuple:
                    'PIN = "live/pm_research/declarations/'
                    'x_declaration_v3.json"\n'
                    'DATA = Path(PIN).read_text()\n')
-    lc2 = literal_census(tmp, declaration_chains(d))
+    lc2 = literal_census(tmp, merged_chains(tmp))
     ck("AND THE SAME MODULE PINNING THE HEAD ADMITS -- the census answers "
        "about the PIN, not about the module",
        #: THE PROPERTY, not the spelling: 0 REFUSED. The verdict string
@@ -516,43 +808,65 @@ def selftest() -> tuple:
     # -- R-657: THE MARKER RULE, all three directions ---------------------
     mod.write_text(
         'from pathlib import Path\n'
+        '#: OPENED and marked -- the case REV 72 2.1 names\n'
         'SUPERSEDED_PIN = "live/pm_research/declarations/'
         'x_declaration_v2.json"\n'
+        'A = Path(SUPERSEDED_PIN).read_text()\n'
+        '#: marked and NEVER opened -- a guard\n'
+        'SUPERSEDED_GUARD = "live/pm_research/declarations/'
+        'x_declaration_v1.json"\n'
         'CURRENT_PIN = "live/pm_research/declarations/'
         'x_declaration_v3.json"\n'
-        'A = Path(SUPERSEDED_PIN).read_text()\n'
         'B = Path(CURRENT_PIN).read_text()\n'
-        '\n\ndef known_bad_case():\n'
-        '    return Path("live/pm_research/declarations/'
-        'x_declaration_v1.json").read_text()\n'
         '\n\ndef plain_pin():\n'
         '    return Path("live/pm_research/declarations/'
         'x_declaration_v2.json").read_text()\n')
-    ch_m = declaration_chains(d)
+    ch_m = merged_chains(tmp)
     lm = literal_census(tmp, ch_m)
-    _by = {(r["line"], r["names"]): r for r in lm["literals"]}
-    _marked = {r["names"]: r for r in lm["marked"]}
-    _ref = {(r["file"], r["line"]) for r in lm["naming_a_non_head"]}
-    ck("R-657 -- A LITERAL NAMING A NON-HEAD IS ADMISSIBLE ONLY WHERE THE "
-       "CODE MARKS IT, and the census READS the marker. ***Two of this "
-       "census's first hits were not pins at all: a runner's "
-       "`SUPERSEDED_PARAMS_REL` names the superseded file ON PURPOSE (it "
-       "IS the guard) and a `_bad_pin` is a known-bad -- a census that "
-       "cannot tell a PIN from a GUARD reports the guard as the defect it "
-       "exists to prevent.*** An IDENTIFIER carrying `superseded` as a "
-       "`_`-token MARKS and is admitted with its reason; a function named "
-       "`known_bad_*` marks a literal inside it; and the SAME literal in a "
-       "plainly-named function is REFUSED",
-       _marked.get("x_declaration_v2.json", {}).get("status")
-       == "MARKED_ADMITTED"
-       and any(r["marker"] and r["marker"]["kind"] == "FUNCTION"
-               for r in lm["marked"])
-       and lm["n_refused"] == 1
-       and lm["naming_a_non_head"][0]["names"] == "x_declaration_v2.json"
-       and lm["naming_a_non_head"][0]["in_function"] == "plain_pin"
-       and lm["naming_a_non_head"][0]["flows_into_an_open"] is True,
-       f"marked: {[(r['names'], r['marker']['kind']) for r in lm['marked']]}; "
-       f"refused: {[(r['in_function'], r['names']) for r in lm['naming_a_non_head']]}")
+    _st = {(r["names"], r["assigned_to"], r["in_function"]): r
+           for r in lm["literals"]}
+    _opened_marked = next(
+        (r for r in lm["literals"]
+         if r["assigned_to"] == "SUPERSEDED_PIN"), None)
+    _guard = next((r for r in lm["literals"]
+                   if r["assigned_to"] == "SUPERSEDED_GUARD"), None)
+    _plain = next((r for r in lm["literals"]
+                   if r["in_function"] == "plain_pin"), None)
+    ck("REV 72 2.1 -- ***A MARKER CANNOT EXCUSE AN OPEN.*** A literal "
+       "assigned to `SUPERSEDED_PIN` and then passed to "
+       "`Path(...).read_text()` names a non-head AND IS READ, so it is "
+       "REFUSED whatever the code calls it; the SAME word on a literal "
+       "that is never opened is a guard and stays "
+       "`MARKED_AND_NOT_A_PIN`. ***The marker is the FILE AUTHOR'S CLAIM, "
+       "recorded, never a finding of this census (2.4) -- it explains a "
+       "name the code does not READ, and it cannot excuse one it does***",
+       _opened_marked is not None
+       and _opened_marked["status"]
+       == "REFUSED_NON_HEAD_PIN_MARKER_DOES_NOT_EXCUSE_AN_OPEN"
+       and _opened_marked["marker"]["word"] == "superseded"
+       and _guard is not None
+       and _guard["status"] == "MARKED_AND_NOT_A_PIN"
+       and _plain is not None
+       and _plain["status"] == "REFUSED_UNMARKED_NON_HEAD",
+       f"opened + marked -> {_opened_marked['status']}; marked and never "
+       f"opened -> {_guard['status']}; opened and unmarked -> "
+       f"{_plain['status']}")
+    ck("REV 72 2.2 -- THE WORD LIST IS ABOUT SUPERSESSION AND THE SPLIT IS "
+       "camelCase-AWARE: the bare `bad` is GONE (it admitted "
+       "`BAD_REQUEST_PATH`, a name about HTTP), `known_bad` stays, and "
+       "`previous`/`prior`/`historical` are ADDED because they are the "
+       "honest names for a deliberate historical pin. ***`supersededParams` "
+       "was invisible to a `_`-only split, so a marker could be lost by "
+       "naming style alone***",
+       _identifier_marks("BAD_REQUEST_PATH") is None
+       and _identifier_marks("KNOWN_BAD_PIN") == "known_bad"
+       and _identifier_marks("PREVIOUS_PARAMS") == "previous"
+       and _identifier_marks("historicalPin") == "historical"
+       and _identifier_marks("supersededParams") == "superseded"
+       and _identifier_marks("PARAMS_REL") is None,
+       "BAD_REQUEST_PATH -> no marker; KNOWN_BAD_PIN, PREVIOUS_PARAMS, "
+       "historicalPin, supersededParams -> marked; PARAMS_REL -> no marker")
+
     ck("AND A MARKER ON A **HEAD** LITERAL IS ADMITTED AND **NOTED**: the "
        "marker EXPLAINS a deliberate non-head, it does not GRANT one, so "
        "the census reports it rather than treating the word as a licence",
@@ -579,7 +893,7 @@ def selftest() -> tuple:
         '\n\ndef real_pin():\n'
         '    return Path("live/pm_research/declarations/'
         'x_declaration_v3.json").read_text()\n')
-    lnoise = literal_census(tmp, declaration_chains(d))
+    lnoise = literal_census(tmp, merged_chains(tmp))
     _rows = {(Path(r["file"]).name, r["line"]): r
              for r in lnoise["literals"]}
     _noise = [r for r in lnoise["literals"]
@@ -602,6 +916,43 @@ def selftest() -> tuple:
        f"{len(_noise)} literals in the noise module -> {len(_pins)} pin: "
        f"{_pins[0]['names']} in {_pins[0]['in_function']}; the rest are "
        f"{sorted({r['status'] for r in _noise if r is not _pins[0]})}")
+
+    # -- DA 94: THE LINK-WRITER READS ITS PREDECESSOR ON PURPOSE ----------
+    mod.write_text(
+        'import hashlib, json\n'
+        'from pathlib import Path\n'
+        'HERE = Path(".")\n'
+        '\n\ndef build_v4():\n'
+        '    v3p = HERE / "live/pm_research/declarations/'
+        'x_declaration_v2.json"\n'
+        '    return {"supersedes": {"path": v3p.name, "sha256":\n'
+        '            hashlib.sha256(v3p.read_bytes()).hexdigest()\n'
+        '            if v3p.exists() else None}}\n'
+        '\n\ndef read_config():\n'
+        '    q = HERE / "live/pm_research/declarations/'
+        'x_declaration_v2.json"\n'
+        '    return json.loads(q.read_text())["symbols"]\n')
+    lh = literal_census(tmp, merged_chains(tmp))
+    _hash = next(r for r in lh["literals"] if r["in_function"] == "build_v4")
+    _read = next(r for r in lh["literals"]
+                 if r["in_function"] == "read_config")
+    ck("DA 94, FOUND BY RUNNING THE CENSUS AT THE TIP -- ***THE ONE USE "
+       "THAT MUST READ A NON-HEAD IS THE SUPERSESSION LINK ITSELF.*** "
+       "R-608 makes a link the pair {path, sha256}, so the builder of `v4` "
+       "MUST open `v3` and hash it; my first pass refused BE's link-writer "
+       "as a stale pin. The separating property is neither the name nor "
+       "the marker (2.1 settles that) but WHAT THE BYTES DO: bytes "
+       "consumed by a DIGEST cannot make the code behave as if it were "
+       "under old bars, bytes consumed by `json.loads` can. The SAME "
+       "literal, same file, same non-head: hashed -> not a pin; "
+       "interpreted -> REFUSED",
+       _hash["flows_into_an_open"] is False
+       and _hash["flow"].startswith("HASHED, NOT INTERPRETED")
+       and _read["flows_into_an_open"] is True
+       and _read["status"] == "REFUSED_UNMARKED_NON_HEAD"
+       and lh["n_refused"] == 1,
+       f"build_v4 (sha256 + .exists()) -> {_hash['status']}; read_config "
+       f"(json.loads) -> {_read['status']}")
 
     orphan = d / "x_declaration_v4.json"
     orphan.write_text(json.dumps({"v": 4}))
@@ -627,6 +978,182 @@ def selftest() -> tuple:
                for b in ch3["y_declaration"]["unlinked_or_broken"]),
        f"y_declaration heads {sorted(ch3['y_declaration']['heads'])}, "
        f"broken {[b['status'] for b in ch3['y_declaration']['unlinked_or_broken']]}")
+
+    # -- REV 72 2.3: THE ALLOWLIST IS A DECLARATION LIKE ANY OTHER --------
+    tmp2 = Path(tempfile.mkdtemp(prefix="da94_"))
+    d2 = tmp2 / "live" / "pm_research" / "declarations"
+    d2.mkdir(parents=True)
+    a1 = d2 / "da_nonhead_allowlist_v1.json"
+    a1.write_text(json.dumps({"entries": [
+        {"names": "x_declaration_v2.json", "reason": "kept on purpose"}]}))
+    a1sha = hashlib.sha256(a1.read_bytes()).hexdigest()
+    (d2 / "x_declaration_v1.json").write_text(json.dumps({"v": 1}))
+    x1sha = hashlib.sha256(
+        (d2 / "x_declaration_v1.json").read_bytes()).hexdigest()
+    (d2 / "x_declaration_v2.json").write_text(json.dumps(
+        {"v": 2, "supersedes": {"path": "x_declaration_v1.json",
+                                "sha256": x1sha}}))
+    x2sha = hashlib.sha256(
+        (d2 / "x_declaration_v2.json").read_bytes()).hexdigest()
+    (d2 / "x_declaration_v3.json").write_text(json.dumps(
+        {"v": 3, "supersedes": {"path": "x_declaration_v2.json",
+                                "sha256": x2sha}}))
+    mod2 = tmp2 / "live" / "pm_research" / "da_mod.py"
+    #: the SAME non-head literal twice: once never opened (a name), once
+    #: opened (a pin). The allowlist can speak about the first only.
+    mod2.write_text('from pathlib import Path\n'
+                    'P = "live/pm_research/declarations/'
+                    'x_declaration_v2.json"\n'
+                    'Q = "live/pm_research/declarations/'
+                    'x_declaration_v2.json"\n'
+                    'D = Path(Q).read_text()\n')
+    a2 = d2 / "da_nonhead_allowlist_v2.json"
+    a2.write_text(json.dumps({"entries": [], "supersedes": {
+        "path": a1.name, "sha256": a1sha}}))
+    def _named(rep, ident):
+        return next(r for r in rep["literals"] if r["assigned_to"] == ident)
+
+    lA = literal_census(tmp2, merged_chains(tmp2))      # v2 linked, entry gone
+    a2.unlink()
+    lB = literal_census(tmp2, merged_chains(tmp2))      # v1 alone
+    a2.write_text(json.dumps({"entries": []}))          # unlinked v2
+    lC = literal_census(tmp2, merged_chains(tmp2))
+    a_v1_alone = (_named(lB, "P")["status"] == "MARKED_AND_NOT_A_PIN"
+                  and _named(lB, "P")["marker"]["kind"] == "ALLOWLIST"
+                  and _named(lB, "P")["marker"]["reason"] == "kept on purpose")
+    a_removed = (_named(lA, "P")["status"] == "NOT_A_PIN__NO_OPEN"
+                 and _named(lA, "P")["marker"] is None)
+    #: and the OPENED one is refused in BOTH, allowlist or not (2.1)
+    a_open_refused = all(
+        _named(r, "Q")["status"]
+        == "REFUSED_NON_HEAD_PIN_MARKER_DOES_NOT_EXCUSE_AN_OPEN"
+        for r in (lB,)) and _named(lA, "Q")["status"] \
+        == "REFUSED_UNMARKED_NON_HEAD"
+    ck("REV 72 2.3 -- ***THE ALLOWLIST RESOLVES THROUGH THE SAME HEAD RULE "
+       "AS ANY OTHER DECLARATION.*** Globbing every `*_nonhead_allowlist_"
+       "v*.json` and MERGING them meant a v2 that REMOVES an entry could "
+       "not: the v1 entry survived the merge and the exemption it granted "
+       "could never be withdrawn. Driven three ways -- v1 alone ADMITS the "
+       "literal, a PAIR-LINKED v2 with the entry removed makes it REFUSE "
+       "again, and an UNLINKED v2 (two heads) refuses the ALLOWLIST ITSELF "
+       "by name rather than choosing one. Exposure today is zero: no such "
+       "file exists, which is why it is fixed before one does",
+       a_v1_alone and a_removed and a_open_refused
+       and lC["n_allowlist_refusals"] == 1
+       and lC["allowlist_refusals"][0]["status"]
+       == "ALLOWLIST_DOES_NOT_RESOLVE_TO_ONE_HEAD",
+       f"the never-opened name: v1 alone -> {_named(lB, 'P')['status']}, "
+       f"PAIR-LINKED v2 with the entry removed -> "
+       f"{_named(lA, 'P')['status']}; unlinked v2 -> "
+       f"{lC['allowlist_refusals'][0]['status']}. And the OPENED literal "
+       f"is refused either way ({_named(lB, 'Q')['status']} / "
+       f"{_named(lA, 'Q')['status']}): 2.1 leaves the allowlist able to "
+       f"explain a NAME, never to excuse a READ")
+
+    # -- REV 72 4: THE SECOND DECLARATION DIRECTORY -----------------------
+    mm = tmp2 / "live" / "mm_research" / "declarations"
+    mm.mkdir(parents=True)
+    (mm / "p002_declaration_v1.json").write_text(json.dumps({"v": 1}))
+    m1sha = hashlib.sha256(
+        (mm / "p002_declaration_v1.json").read_bytes()).hexdigest()
+    (mm / "p002_declaration_v2.json").write_text(json.dumps(
+        {"v": 2, "supersedes": {"path": "p002_declaration_v1.json",
+                                "sha256": m1sha}}))
+    mod2.write_text('from pathlib import Path\n'
+                    'P = "live/mm_research/declarations/'
+                    'p002_declaration_v1.json"\n'
+                    'D = Path(P).read_text()\n')
+    lD = literal_census(tmp2, merged_chains(tmp2))
+    before = literal_census(tmp2, declaration_chains(d2))
+    ck("REV 72 4 -- ***A `head: null` THAT MEANT \"NOT SCANNED\" IS NOT A "
+       "FINDING.*** Fifty pins read null because their families live in "
+       "`live/mm_research/declarations/` and this census read only "
+       "`live/pm_research/`. Scanning ONE dir, a pin on a superseded "
+       "mm-research declaration comes back `head: null` and is not "
+       "refused; scanning BOTH, the same pin is REFUSED and names its "
+       "head -- and where a family really is unknown the row says WHY, "
+       "never a bare null (rule 11)",
+       before["n_refused"] == 0
+       and before["literals"][0]["is_head"] is None
+       and before["literals"][0]["head_is_null_because"]
+       == ("DERIVED_TREE_NOT_INDEXED_FOR_THIS_CALL__NOT_ASKED")
+       and lD["n_refused"] == 1
+       and lD["naming_a_non_head"][0]["head"] == "p002_declaration_v2.json"
+       and lD["naming_a_non_head"][0]["declarations_dir"]
+       == "live/mm_research/declarations",
+       f"one dir -> head {before['literals'][0]['head']}, "
+       f"{before['n_refused']} refused, because "
+       f"{before['literals'][0]['head_is_null_because']}; both dirs -> "
+       f"head {lD['naming_a_non_head'][0]['head']}, {lD['n_refused']} "
+       f"refused")
+    #: REV 72 4, the second half: 45 pins still read null after BOTH dirs
+    #: were scanned, and 22 of them name artifacts in the LEDGER's derived
+    #: tree -- not declarations at all. The two facts get two names.
+    mod2.write_text('from pathlib import Path\n'
+                    'P = "phase2_fits_v9.json"\n'
+                    'D = Path(P).read_text()\n')
+    ch_d = merged_chains(tmp2)
+    l_noix = literal_census(tmp2, ch_d)
+    l_ix = literal_census(tmp2, ch_d, {"status": "INDEXED", "dir": "/x",
+                                       "names": {"phase2_fits_v9.json":
+                                                 ["phase2_fits"]}})
+    l_abs = literal_census(tmp2, ch_d, {"status": "INDEXED", "dir": "/x",
+                                        "names": {}})
+    ck("AND THE NULLS THAT SURVIVE BOTH DIRECTORIES ARE SPLIT BY WHAT THEY "
+       "ACTUALLY ARE: a literal naming an artifact in the LEDGER's DERIVED "
+       "tree is `NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION` (the head "
+       "rule does not reach it -- there is no supersession chain in a "
+       "derived tree), one naming a file present NOWHERE is "
+       "`NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY`, and a census run with NO "
+       "index says so rather than borrowing either verdict. ***Three "
+       "different facts that all printed as `null` before***",
+       l_ix["literals"][0]["head_is_null_because"]
+       == "NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION"
+       and l_ix["literals"][0]["found_in_derived"] == ["phase2_fits"]
+       and l_abs["literals"][0]["head_is_null_because"]
+       == "NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY"
+       and l_noix["literals"][0]["head_is_null_because"].startswith(
+           "DERIVED_TREE_NOT_INDEXED_FOR_THIS_CALL")
+       and l_ix["n_head_is_null_and_a_pin"] == 1,
+       f"indexed+present -> {l_ix['literals'][0]['head_is_null_because']}; "
+       f"indexed+absent -> {l_abs['literals'][0]['head_is_null_because']}; "
+       f"no index -> {l_noix['literals'][0]['head_is_null_because']}")
+    mod2.write_text('from pathlib import Path\n'
+                    'P = "live/mm_research/declarations/'
+                    'p002_declaration_v1.json"\n'
+                    'D = Path(P).read_text()\n')
+    (d2 / "p002_declaration_v3.json").write_text(json.dumps({"v": 3}))
+    chBoth = merged_chains(tmp2)
+    ck("AND A FAMILY NAME LIVING IN BOTH DIRECTORIES REFUSES BY NAME: two "
+       "directories are two namespaces, so `p002_declaration` in each has "
+       "no single head and a pin naming it has no single answer -- the "
+       "census says FAMILY_IN_TWO_DECLARATION_DIRS rather than silently "
+       "taking the first directory scanned",
+       chBoth["p002_declaration"]["status"]
+       == "FAMILY_IN_TWO_DECLARATION_DIRS"
+       and chBoth["p002_declaration"]["n_heads"] == 2,
+       f"{chBoth['p002_declaration']['status']}, heads "
+       f"{sorted(chBoth['p002_declaration']['heads'])}")
+
+    pri = tmp2 / "prior_receipt.json"
+    pri.write_text(json.dumps({"protocol": "P003_DA_NONHEAD_CENSUS_V1"}))
+    blk = supersession_block(pri)
+    try:
+        supersession_block(tmp2 / "not_here.json")
+        refused_by_name = False
+    except FileNotFoundError as e:
+        refused_by_name = "SUPERSEDED_RECEIPT_NOT_PRESENT" in str(e)
+    ck("AND THIS RECEIPT SUPERSEDES ITS V1 BY THE R-608 PAIR: the census's "
+       "RULES changed, so the number it prints is not comparable to the "
+       "one before it -- the link carries {path, sha256} on a PRESENT "
+       "file, states WHAT CHANGED, and leaves the V1 receipt unedited as "
+       "provenance (rule 13). A prior that is not there REFUSES BY NAME, "
+       "never as 'no link'",
+       blk["sha256"] == hashlib.sha256(pri.read_bytes()).hexdigest()
+       and blk["what_changes"] == WHAT_CHANGES_IN_V2 and refused_by_name,
+       f"pair on {pri.name}: sha {blk['sha256'][:12]}…; absent prior -> "
+       f"refused by name: {refused_by_name}")
+
     print(f"\n{'SELFTEST OK' if not fails else 'SELFTEST FAILED'} -- "
           f"{len(checks)} checks, {fails} failure(s)")
     return checks, fails
@@ -637,11 +1164,12 @@ def main() -> int:
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--census", action="store_true")
     ap.add_argument("--output", type=Path, default=None)
+    ap.add_argument("--supersedes", type=Path, default=None)
     a = ap.parse_args()
     if a.selftest:
         checks, n_fail = selftest()
         if a.output:
-            rep = build_report()
+            rep = build_report(prior=a.supersedes)
             rep["checks"] = checks
             rep["n_checks"] = len(checks)
             rep["n_failed"] = n_fail
@@ -650,7 +1178,7 @@ def main() -> int:
                                            default=str) + "\n")
         return 1 if n_fail else 0
     if a.census:
-        rep = build_report()
+        rep = build_report(prior=a.supersedes)
         if a.output:
             a.output.write_text(json.dumps(rep, indent=2, sort_keys=True,
                                            default=str) + "\n")
