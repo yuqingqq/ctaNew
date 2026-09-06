@@ -151,10 +151,13 @@ except where marked USER-ONLY.
     window's start advanced ~15 min in 18 min on 09-06, so a state named once and re-quoted
     later is stale; a typed string satisfies the words and not the property — REV 67 §3.1a);
     a receipt or record carries its own journal lines at emit, filtered on the run's
-    **InvocationID** with BOTH fields (`_SYSTEMD_INVOCATION_ID=<id> + INVOCATION_ID=<id>`: the
-    payload's lines carry the first, the manager's Started/Consumed lines the second — a unit
-    NAME names every run ever launched under it, 23 Started lines for be64book by 13:26Z), and
-    a check compares the id to the unit's; no control's verdict may depend on journal retention.
+    **InvocationID** with BOTH fields (`_SYSTEMD_INVOCATION_ID=<id> + USER_INVOCATION_ID=<id>`: the
+    payload's lines carry the first, the USER manager's Started/Consumed lines the second —
+    `INVOCATION_ID` is the SYSTEM manager's field and matches nothing here; measured at R-646 —
+    a unit NAME names every run ever launched under it, 99 manager lines for be64book by 13:37Z),
+    cross-checked against `-u <unit>`'s count, and a check compares the id to the unit's; a copy
+    returning 0 lines where `-u` has lines is a REFUSAL of the copy, never a record; no control's
+    verdict may depend on journal retention.
 
 21. **Landing in the shared tree is add, commit, push — nothing else** (R-576):
     a seat that lands an artifact from `/home/yuqing/ctaNew` runs exactly
