@@ -63,6 +63,60 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T20:49:20Z (MEM ROUND 234 -- R-731 SWEPT, tip `f451eac`. STATE ONLY. MEM ASSERTS NO
+  RESULT. ***I OPENED NO RESULT THIS ROUND EITHER*** -- a declaration, a source file, a git object,
+  a directory listing, and a synthetic fixture I built in a temp directory.
+  (1) ***THE TWO-READS CLAUSE CANNOT BE ESCAPED BY DROPPING THE PAIR -- DRIVEN, FOUR WAYS.*** Built
+  a synthetic declarations directory and drove `not_pooled_clause` on a second-read document,
+  dropping or damaging the pair each time. **All four refuse BY NAME**: no pair at all ->
+  `FIRST_READ_PAIR_ABSENT` (naming the consumed days that make the clause apply); a pair with no
+  `sha256` -> `FIRST_READ_PAIR_HALF_WRITTEN`; a pair naming a file that is not there ->
+  `FIRST_READ_DECLARATION_ABSENT`; a pair whose digest has moved -> `FIRST_READ_PAIR_MISMATCH`,
+  quoting the digest on disk. R-731's property holds **under drive**, not only in the docstring.
+  (2) ***AND THE POSITIVE CONTROL ADMITS***, because four refusals alone would be a guard shown only
+  to refuse (rule 16, R-249's second instance): a declaration naming **no** days consumed by a
+  previous read returns `applies False` and **no sentence** -- it admits, and does not refuse. The
+  clause is a property of the declaration's CONTENT, exactly as the docstring says.
+  ***AND REV 87, FILED AT 20:48:40Z WHILE I WAS DRIVING THAT SAME CELL, READ THAT ADMISSION AS THE
+  ESCAPE ROUTE THAT SUCCEEDS***: a second read that simply omits `CONSUMED_BY_THE_FIRST_READ` from
+  its population block renders **no clause at all**, while its `supersedes` chain still shows a prior
+  read -- so *"has a previous read"* must be derived from the **supersedes chain**, not only from the
+  population block (BE 86). **My control was correct as a control, and I did not ask the next
+  question of it.** That is my own named class -- *a reading that was true and did not cover the
+  question* -- and I claim no priority: REV and I drove the same three pair-attempts to the same four
+  names, and REV asked the fourth question.
+  (3) **AND THE FOUR REFUSALS ARE DISTINGUISHED, NOT ABSORBED** -- four names for four faults, so no
+  one absorbs another. That is BE 82's discipline (`HALF_WRITTEN_LINK` never absorbing
+  `DECLARATION_LINK_CORRUPTED`) in a **second instrument**, four-way this time; the ordering defect
+  this programme has met four times does not recur here.
+  (4) **EVERY REFUSAL FIRES BEFORE ANY RESULT IS TOUCHED** -- raised on the PAIR, before the
+  generator reaches the first read's `day_signs`. That is what made the whole escape-the-clause
+  property drivable by MY seat on a synthetic fixture. **A control I can run is worth more to me
+  than one I must take on trust.**
+  (5) **BE 85 WROTE NO DECLARATION VERSION AND v5 STANDS:** `9ef0e47` touches **exactly one file**,
+  `be_race_reader.py`; all five declaration digests unmoved (v5 `b1aa349ed276bc41`), no v6. The
+  second read's **result family is still absent** -- the template that will carry the clause exists,
+  the artifact it renders into does not, because the days are open.
+  (6) ***BE's CHECK COUNT 70 -> 76 IS RELAYED, NOT CHECKED BY ME.*** Its clause cell calls
+  `not_pooled_clause()` with no arguments, which resolves the REAL head and renders against the
+  first read's `day_signs` -- so running the battery would have BE's code open the first read's
+  result inside my process. **The property that matters I drove on a fixture; the COUNT I relay.**
+  Second round running that RELAYED moves **for a stated reason** rather than drifting.
+  (7) **THE GENERATOR MATCHES ITS OWN DOCSTRING CLAUSE FOR CLAUSE** -- pair read and verified on
+  disk, the first read's days from its own declaration, m read from both and refused if they
+  disagree, each floor RECOMPUTED from arms alone, the consistency word a PREDICATE over `day_signs`
+  (rule 10), no sign value carried. Its stated reason: *"a typed sentence about another artifact
+  goes stale the moment that artifact changes, and nobody notices because prose does not fail."*
+  (8) **NEXT STATE: A QUIET HOLD.** All producing seats stand by for 00:00Z (BE 72 -- fragment,
+  tape, book, structure v4, pins v2 -- then DE's launch as one GO; the wake is armed). REV 87 is out
+  on BE 85 and DA 112. **The USER's four open items stand**, item (d) time-bound to
+  **2026-09-10T01:00:00Z**. MEM has nothing to sweep until the next entry lands, and **a quiet hold
+  is a valid state rather than a gap.**
+  UNSWEPT, FOR MEM 235: **R-732** (`1bcde29`) -- REV 87 verified, both routings close, with the one
+  escape route above routed to **BE 86**.
+  Counts: flags 1,517 -> 1,527; provenance 1,062 -> 1,072; tasks 19; **797 CHECKED / 275 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-TENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 216 archived. Q-MEM-222 filed through the script.)
   2026-09-06T20:44:26Z (MEM ROUND 233 -- R-729 AND R-730 SWEPT, tip `d6ad970`. STATE ONLY. MEM
   ASSERTS NO RESULT. ***I OPENED NO RESULT THIS ROUND AND QUOTED NO SEALED FIELD*** -- everything I
   opened is a DECLARATION, a source file, a git object or a directory listing.
@@ -167,61 +221,6 @@ updated: >-
   Counts: flags 1,497 -> 1,507; provenance 1,042 -> 1,052; tasks 19; **779 CHECKED / 273 RELAYED /
   455 UNMARKED -- the HUNDRED-AND-EIGHTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 214 archived. Q-MEM-220 filed through the script.)
-  2026-09-06T20:31:51Z (MEM ROUND 231 -- R-724, R-725 AND R-726 SWEPT, tip `8d4aebb`. STATE ONLY.
-  MEM ASSERTS NO RESULT.
-  (1) ***MY ROUND-230 FINDING IS CLOSED AT THE DIGEST.*** The receipt I could not locate is now at
-  `live/pm_research/fixtures/de112_rehearsal/...FIXTURE__20260906T200348Z.json`, 55,993 B,
-  **`b5c620995ba93649` -- EQUAL to the `b5c62099` R-722 named**, so DE 114 landed THE SAME ARTIFACT
-  and not a re-emission; the earlier `...195909Z` (`97962a627743a2f5`) landed beside it.
-  ***AND I CORRECTED MY OWN DRAFT BEFORE IT LANDED***: I had written "superseded predecessor",
-  repeating R-722's *"superseding the pre-fix ...195909Z"* -- then checked the key. **NEITHER
-  receipt carries a `supersedes` field at all**, and R-727, landing while I wrote, says the same:
-  **two INDEPENDENT launches, not a chain.** A relayed framing refuted at the artifact.
-  ***AND REV FILED FIRST: I CLAIM NO PRIORITY*** -- REV 85 is stamped **20:24:03Z** and my
-  round-230 row **20:26:47Z**. REV searched under `data/`, `~/ctaNew-wt-de2` and `/tmp`; I searched
-  the repo. Two independent searches, one absence, REV's landing first -- recorded so my row is not
-  read as having prompted the rule.
-  (2) **DA 110's CENSUS VERIFIED** (`c5a1e67f8f9c3b9e`, matching R-724): 25 families, **324**
-  literals, 69 pins, 0 refused, 1 marked, as-of 20:16:11Z. **The literal count FELL by 4** against
-  the 19:56Z census and I went looking rather than passing it: **DA's own row states the reason** --
-  DA 109 replaced a copied battery with one cell that runs BE's own. Accounted for.
-  (3) **A READING NOTE, NOT A DEFECT:** `phase2_four_arm` is **not** in `literal_census.marked` and
-  not in `chains` -- it has its own top-level block `marked_pre_R608_families`. `n_marked` is still
-  **1** and still the P-2026-002 `e2_a_episodes.py:562` literal I read at round 229. **Two
-  populations wear the word MARKED in one record**; both blocks name themselves.
-  (4) ***DA 111's TRIGGER IS A COMPUTED PREDICATE, AND I CHECKED THE EXACT HAZARD.*** The record
-  stores `who_reads_it_through_the_chain` as the STRING `'nobody'` -- which is NON-EMPTY, so a
-  predicate reading that field would never fire. **It does not read it**: `readers =
-  mark_readers(fam, root)` scans the tree and the test is `if readers:` on the LIST; the string is
-  the RENDERING of an empty list. Both triggers exist -- a reader appearing refuses the mark BY
-  NAME, and `MARKED_BUT_THE_RESOLVER_NOW_ADMITS_IT` fires when the refusal stops. The 20:26:58Z
-  census (`34a516f4ac31c24a`) carries `n_readers_through_the_chain 0`, `n_marks_refused 0`.
-  (5) **DE 113 DRIVEN END TO END, BOTH DIRECTIONS:** clean rc 0, `PASS -- 342 checks, n_disarmed 0`
-  (matching R-724 verbatim); with `--falsify-disarmed` **rc 1**, `NOT CLEAN -- 342 checks,
-  n_disarmed 1`, naming `['PLANTED by --falsify-disarmed']`. The positive control ADMITS and the
-  known-bad FIRES. **BE 83** verified and driven: `shared_falsifier()` spawns the module as a
-  SUBPROCESS -- `ok True, rc 0, '14 cells, 0 failures'` -- and its docstring gives the reason in its
-  own words: a broken `__main__` or a failing import is then a FAILURE OF THIS CELL rather than
-  something an in-process call routes around.
-  (6) **THE TWO PROTOCOL RULES LANDED** at `c09369b` (9 insertions): the importer rule as amended
-  (an importer's independent cell tests its OWN behaviour AT THE SEAM) and *"a cited artifact is
-  locatable"*.
-  (7) ***AND THE NEW LOCATABILITY RULE DESCRIBES THE COORDINATOR'S OWN TRAILER.*** Re-checked after
-  R-726: **`scripts/land_entry.sh` is STILL absent** -- 0 tracked, no path on disk -- while the
-  newest coordinator entries still carry `Landed-By: land_entry.sh 258d5edd`. The rule landed this
-  round reads ***"a digest without a resolvable location is a pin to nothing"***, which is my
-  round-230 finding in the coordinator's own words. **PRECISION, so the scope is not overstated:**
-  the rule says *a ROW naming a RECEIPT OR RECORD*, and a commit TRAILER is not a row while a SCRIPT
-  is not a receipt -- so the rule as written may not literally bind it. **What transfers verbatim is
-  the principle.** Whether the scope reaches a trailer naming a script is the coordinator's to say.
-  ROUTED, NOT RULED.
-  UNSWEPT, FOR MEM 232: **R-727** (`b08f76c`), which landed while I wrote and verifies DA 111 and
-  DE 114 -- the code and artifacts I had already verified above, and the source of the `supersedes`
-  correction I made to this entry; and **BE 84** (`8d26a89`, Q-BE-326) -- the second race read
-  pre-declared, v5 by the CAS, before any of its days closes.
-  Counts: flags 1,487 -> 1,497; provenance 1,032 -> 1,042; tasks 19; **769 CHECKED / 273 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-SEVENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
-  Window trimmed 4 -> 3, Batch 213 archived. Q-MEM-219 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -418,6 +417,17 @@ flags:
   # --- MEM round 231, R-724 + R-725 + R-726 swept ---
   # --- MEM round 232, R-727 + R-728 swept ---
   # --- MEM round 233, R-729 + R-730 swept ---
+  # --- MEM round 234, R-731 swept ---
+  the_two_reads_clause_CANNOT_BE_ESCAPED_by_dropping_the_pair: FOUR-DISTINCT-REFUSALS-BY-NAME-DRIVEN
+  and_a_FIRST_read_renders_NO_clause_the_control_ADMITS: APPLIES-FALSE-NOT-A-REFUSAL
+  the_four_refusals_are_DISTINGUISHED_not_absorbed: ABSENT-HALFWRITTEN-DECLABSENT-MISMATCH
+  every_refusal_fires_BEFORE_any_result_is_touched: WHICH_IS_WHY_I_COULD_DRIVE_IT_AT_ALL
+  BE85_wrote_no_declaration_version_and_v5_stands: ONE-FILE-TOUCHED-FIVE-DIGESTS-UNMOVED
+  the_second_reads_result_family_is_STILL_absent: ZERO-PATHS-THE-DAYS-ARE-OPEN
+  BEs_check_count_70_to_76_is_RELAYED_NOT_CHECKED_BY_ME: RUNNING-IT-RENDERS-ON-THE-REAL-HEAD
+  I_opened_no_result_this_round_either: SYNTHETIC-FIXTURE-ONLY
+  the_clause_generator_matches_its_own_docstring_clause_for_clause: PAIR-DAYS-M-FLOORS-PREDICATE-NO-SIGN
+  a_quiet_hold_is_the_next_valid_state: ALL-PRODUCING-SEATS-STAND-BY-FOR-0000Z
   USER_items_FOUR_open_with_the_second_reads_horizon: HORIZON-2026-09-10T01-00-00Z-3D4H17M-FROM-20-42-41Z
   REVs_substance_claim_INDEPENDENTLY_CONFIRMED_with_a_control_that_fires: 09-03-04-05-PRESENT-09-06-ABSENT
   and_MY_FIRST_PROBE_COULD_NOT_DISCRIMINATE_so_it_proved_nothing: CONTROL-READ-ZERO-ON-A-CONSUMED-DAY-TOO
@@ -25874,6 +25884,109 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 234, 2026-09-06T20:49:20Z ---
+  the_two_reads_clause_CANNOT_BE_ESCAPED_by_dropping_the_pair:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py not_pooled_clause
+    as_of: 2026-09-06T20:48:00Z
+    said: >-
+      built a synthetic declarations directory and drove the generator on a second-read document
+      four ways, each dropping or damaging the pair. All four REFUSE by name: no pair at all ->
+      FIRST_READ_PAIR_ABSENT (naming the consumed days that make the clause apply); a pair with no
+      sha256 -> FIRST_READ_PAIR_HALF_WRITTEN; a pair naming a file that is not there ->
+      FIRST_READ_DECLARATION_ABSENT; a pair whose digest has moved -> FIRST_READ_PAIR_MISMATCH,
+      quoting the digest on disk. R-731's property holds under drive, not only in the docstring.
+  and_a_FIRST_read_renders_NO_clause_the_control_ADMITS:
+    prov: CHECKED
+    artifact: the same generator, on a declaration naming no consumed days
+    as_of: 2026-09-06T20:48:00Z
+    said: >-
+      the positive control, because four refusals alone would be a guard shown only to refuse
+      (rule 16, R-249's second instance): a declaration naming NO days consumed by a previous read
+      returns applies False and NO sentence -- it admits, and it does not refuse. So the clause is
+      a property of the declaration's CONTENT, exactly as the docstring says, and not a gate that
+      fires on everything. ***AND REV 87, FILED AT 20:48:40Z WHILE I WAS DRIVING THE SAME CELL, READ
+      THAT ADMISSION AS THE ESCAPE ROUTE THAT SUCCEEDS***: a second read that simply omits
+      CONSUMED_BY_THE_FIRST_READ from its population block renders no clause at all, while its
+      supersedes chain still shows a prior read -- so 'has a previous read' must be derived from the
+      SUPERSEDES CHAIN and not only from the population block (BE 86). My control was correct AS A
+      CONTROL and I did not ask the next question of it. That is my own named class -- a reading that
+      was true and did not cover the question -- and I claim no priority: REV and I drove the same
+      three pair-attempts to the same four names, and REV asked the fourth question.
+  the_four_refusals_are_DISTINGUISHED_not_absorbed:
+    prov: CHECKED
+    artifact: the four refusal names read from the drive
+    as_of: 2026-09-06T20:48:00Z
+    said: >-
+      worth naming as a class rather than a detail: ABSENT, HALF_WRITTEN, DECLARATION_ABSENT and
+      MISMATCH are four distinct names for four distinct faults, so no one of them absorbs another.
+      That is BE 82's discipline (HALF_WRITTEN_LINK never absorbing DECLARATION_LINK_CORRUPTED)
+      appearing in a second instrument, four-way this time -- the ordering defect this programme has
+      met four times does not recur here.
+  every_refusal_fires_BEFORE_any_result_is_touched:
+    prov: CHECKED
+    artifact: the drive itself -- no result artifact existed in my fixture directory
+    as_of: 2026-09-06T20:48:00Z
+    said: >-
+      recorded because it is what made the verification possible for MY seat: each of the four
+      refusals is raised on the PAIR, before the generator reaches the first read's day_signs. So I
+      could drive the whole escape-the-clause property on a synthetic fixture without opening any
+      result. A control I can run is worth more to me than one I must take on trust.
+  BE85_wrote_no_declaration_version_and_v5_stands:
+    prov: CHECKED
+    artifact: commit 9ef0e47 and the five declaration files
+    as_of: 2026-09-06T20:49:00Z
+    said: >-
+      9ef0e47 touches EXACTLY ONE file, live/pm_research/be_race_reader.py -- no declaration version
+      written. All five digests unmoved: v1 8ba84927ac35cf80, v2 f6c344a47cf01b3c, v3
+      3a2fdb28d87d77d9, v4 a741b4d6b5ac7f59, v5 b1aa349ed276bc41, and no v6. v5 stands as written.
+  the_second_reads_result_family_is_STILL_absent:
+    prov: CHECKED
+    artifact: a find over the repo for be_race_read2_result_v*.json
+    as_of: 2026-09-06T20:49:00Z
+    said: >-
+      zero paths, as at round 232. The template that will carry the clause exists; the artifact it
+      will be rendered into does not, because the days are open. Nothing was opened by BE 85 and
+      nothing by me.
+  BEs_check_count_70_to_76_is_RELAYED_NOT_CHECKED_BY_ME:
+    prov: RELAYED
+    artifact: R-731's own text (BE 85, Q-BE-327)
+    as_of: 2026-09-06T20:49:00Z
+    said: >-
+      I did not re-run be_race_reader's battery to confirm 76. Its clause cell calls
+      not_pooled_clause() with no arguments, which resolves the REAL head and renders against the
+      first read's day_signs -- so running it would have BE's code open the first read's result
+      inside my process. The property that matters I drove on a fixture instead; the COUNT I relay.
+      Second round running that RELAYED moves for a stated reason rather than drifting.
+  I_opened_no_result_this_round_either:
+    prov: CHECKED
+    artifact: this round's own commands
+    as_of: 2026-09-06T20:49:00Z
+    said: >-
+      a predicate over my own work, as last round. Everything I opened is a DECLARATION, a source
+      file, a git object, a directory listing, or a synthetic fixture I built in a temp directory.
+      No result artifact was read and neither permitted field was quoted -- I had no need of them.
+  the_clause_generator_matches_its_own_docstring_clause_for_clause:
+    prov: CHECKED
+    artifact: not_pooled_clause's docstring and body
+    as_of: 2026-09-06T20:48:00Z
+    said: >-
+      read the contract rather than taking R-731's summary: the pair READ from the declaration's
+      supersedes and verified against the file on disk; the first read's days from ITS OWN
+      declaration; m read from BOTH and refused if they disagree; each floor RECOMPUTED from arms
+      alone, which is what 'counts arms, not reads' means as a predicate; the consistency word a
+      PREDICATE over day_signs and never a typed conclusion (rule 10); no sign value carried. The
+      docstring states its own reason -- 'a typed sentence about another artifact goes stale the
+      moment that artifact changes, and nobody notices because prose does not fail'.
+  a_quiet_hold_is_the_next_valid_state:
+    prov: CHECKED
+    artifact: R-731's routing line
+    as_of: 2026-09-06T20:49:00Z
+    said: >-
+      all producing seats stand by for 00:00Z (BE 72 -- fragment, tape, book, structure v4, pins v2
+      -- then DE's launch as one GO; the wake is armed). REV 87 is out on BE 85 and DA 112. The
+      USER's four open items stand, item (d) time-bound to 2026-09-10T01:00:00Z. MEM has nothing to
+      sweep until the next entry lands, and a quiet hold is a valid state rather than a gap.
   # --- MEM round 233, 2026-09-06T20:44:26Z ---
   USER_items_FOUR_open_with_the_second_reads_horizon:
     prov: CHECKED
