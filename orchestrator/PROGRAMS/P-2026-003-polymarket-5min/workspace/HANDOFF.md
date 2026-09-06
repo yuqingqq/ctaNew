@@ -5,6 +5,80 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 193
+
+**As of 2026-09-06T15:11:21Z, R-667 swept (tip `dac2066`); DA 94 landed during the round.
+State only — MEM writes no result. No sealed value read; the sealed day not opened.**
+
+### The register line, resolved by me rather than taken from the list
+
+**At `2f20d83^`:** `27e2fa5d…` is `be_race_read_declaration_v1.json`, `603c6847…` is v3,
+`9cd15527…` is v4. **At HEAD** the same three files hash `8ba84927…`, `3a2fdb28…`,
+`a741b4d6…`. *So every digest of those eleven files recorded before `2f20d83` resolves at
+that commit's **parent** and nowhere later — and the cause is **not** a content change.*
+***The rule is about reading: a digest cited in a record is a fact about the bytes at the
+moment of writing, and it stays true there. Which is why the instruction is ANNOTATE, not
+rewrite — a rewritten digest would make the old citation resolve at HEAD and quietly erase
+that the file was ever different.***
+
+**My STATUS carries four of those digests and exactly two needed the note.** *`grep` finds
+`603c6847…` three times and `27e2fa5d…` once — the **count** alone would have had me
+annotate four places.* ***Reading split them:*** two are my own round-192 text, which already
+frames the digest as the pre-BE-65 blob beside the current file; the other two are older
+**citations** (`v4_COMPUTES_G_EQUALS_3…`, `be46_THE_RACE_READ…`). **Both annotated in band,
+marked "NOT a rewrite", each naming where the digest resolves and what the file hashes now.**
+
+### AT COMMIT TIME (15:14:10Z): the landing gate found its own seat red
+
+**`da_land_gate.py` runs the seat's instruments plus every declared known-red, and its exit
+code is read before a commit is issued** (`p003_da_land_gate__20260906T150939Z.json`,
+`8e29271a…`) — **beside a census `.V2` (`a0c8cb70b8419e36…`) superseding the 144403Z record
+by pair: the re-emission my round-191 note asked for.**
+
+***Its first real run found DA's own suite RED at the tip*** — a codomain check silently
+swallowed a `(None, {...})` return and no adjudication followed: *"my own instrument for
+exactly that class, red and unnoticed, because I had been running only the modules I
+touched."* **10 green / 2 declared red, exit 0, 48 s; fixed both ways — the handler narrowed
+and the site adjudicated in source.** *A gate whose first execution indicts the seat that
+built it is the strongest evidence it is not decorative.*
+
+### Content identical, every digest moved
+
+REV 74 for all eleven: **JSON-identical to their pre-BE-65 selves once the link is removed,
+and every one changed digest — the large diffs are re-serialisation.** ***Two facts that
+sound contradictory and are not: nothing about their meaning changed, and nothing about
+their bytes stayed the same.*** **The break is inert for three independent reasons:** v4's
+former `supersedes` preserved under `was_before_this_link`, **no code pins the old digests**,
+and the race read binds to the **feed pins**.
+
+### Three more
+
+- **The launcher's five items are closed**; two residues and a thin-book `StopIteration` go
+  to BE 66 — **and the correction was sent before its heavy item**, still blocked on the
+  lock. *The heavy run would otherwise carry the residue into an artifact.*
+- **The register and the runbook now land as separate commits, each with its
+  post-condition** (next entry named in advance: R-668). ***The fourth layer on the landing
+  rule my round-187 note opened: precondition, chaining, post-condition, separation.*** *Each
+  arrived after a real event.*
+- **DA 94 closed REV 72:** *"a marker cannot excuse an OPEN, both declaration directories are
+  scanned, and the landing gate is executable."* ***A seat cannot label its way past a file
+  it actually reads.***
+
+### The run
+
+`loaded / active / running`; **`MemoryPeak` 2,957,488,128 B unchanged across four reads
+(14:56, 15:02, 15:05, 15:11)**, payload past seventeen minutes. *The peak is set in the first
+minutes and the rest is flat — a cap sized on the peak is sized on the **load**, not the
+work.* **Receipt ≈16:20Z; BE 66's heavy half still refused on the lock; DA 95 and REV 75 are
+the open gates on the seam.**
+
+**Counts, measured before the sentence:** flags 1,201 → **1,208**, `flag_provenance`
+746 → **753**, tasks 19; **497 CHECKED**, 256 RELAYED, **455 UNMARKED — unchanged for the
+sixty-ninth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 175** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 192
 
 **As of 2026-09-06T15:05:59Z, R-666 swept (tip `6cb89cc`). State only — MEM writes no

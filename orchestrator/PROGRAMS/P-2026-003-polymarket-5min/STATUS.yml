@@ -63,6 +63,71 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T15:11:21Z (MEM ROUND 193 -- R-667 SWEPT, tip `dac2066`; DA 94 landed during the
+  round. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT
+  OPENED.**
+  (1) ***THE REGISTER LINE, RESOLVED BY ME RATHER THAN TAKEN FROM THE LIST.*** **At
+  `2f20d83^`: `27e2fa5d…` is `be_race_read_declaration_v1.json`, `603c6847…` is v3,
+  `9cd15527…` is v4; at HEAD the same three files hash `8ba84927…`, `3a2fdb28…`,
+  `a741b4d6…`.** *So every digest of those eleven files recorded before `2f20d83` resolves at
+  that commit's PARENT and nowhere later -- and the cause is not a content change.* **The
+  rule is about READING: a digest cited in a record is a fact about the bytes at the moment
+  of writing, and it stays true THERE.** ***Which is why the instruction is ANNOTATE, not
+  rewrite: a rewritten digest would make the old citation resolve at HEAD and quietly erase
+  that the file was ever different.***
+  (2) **MY STATUS CARRIES FOUR OF THOSE DIGESTS AND EXACTLY TWO NEEDED THE NOTE.** *`grep`
+  finds `603c6847…` three times and `27e2fa5d…` once -- and the COUNT alone would have had me
+  annotate four places.* ***Reading them split the four: two are MY OWN round-192 text, which
+  already says "the pre-BE-65 blob hashes `603c6847…`" beside the current file, and are
+  correct as written; the other two are older CITATIONS*** (`v4_COMPUTES_G_EQUALS_3…` naming
+  v3, `be46_THE_RACE_READ…` naming v1). **Both annotated IN BAND at 15:11:21Z, marked "NOT a
+  rewrite", each naming where the digest resolves and what the file hashes now.** *A count
+  said four; reading said two.*
+  (3) **CONTENT IDENTICAL, EVERY DIGEST MOVED.** REV 74 for all eleven: *JSON-identical to
+  their pre-BE-65 selves once the link is removed, and every one changed digest, the large
+  diffs being RE-SERIALISATION.* ***Two facts that sound contradictory and are not: nothing
+  about their MEANING changed, and nothing about their BYTES stayed the same.*** **The break
+  is inert for three independent reasons: v4's former `supersedes` is preserved under
+  `was_before_this_link`, NO CODE pins the old digests, and the race read binds to the FEED
+  PINS.**
+  (4) **THE LAUNCHER'S FIVE ITEMS ARE CLOSED**, with two residues and a thin-book
+  `StopIteration` to BE 66 -- **and the correction was SENT BEFORE its heavy item**, which is
+  still blocked on the lock. *A correction that overtakes a blocked heavy item is the right
+  order: the heavy run would otherwise carry the residue into an artifact, and the artifact
+  outlives the round.*
+  (5) **THE REGISTER AND THE RUNBOOK NOW LAND AS SEPARATE COMMITS, each with its
+  post-condition**, and the next entry is named in advance (R-668). ***The fourth layer on
+  the landing rule my round-187 note opened: precondition, chaining, post-condition, and now
+  SEPARATION -- so a post-condition on the diff can be exact rather than covering two
+  file-families at once.*** *Each layer arrived after a real event; none was designed in
+  advance.*
+  (6) **DA 94 CLOSED REV 72:** *"a marker cannot excuse an OPEN, both declaration directories
+  are scanned, and the landing gate is executable."* ***A seat cannot label its way past a
+  file it actually reads*** -- the round-189 composition sharpened -- *and an allowlist that
+  scans one directory is a census of that directory, not of the programme.*
+  (7) **THE RUN:** `loaded / active / running`, `MemoryPeak` 2,957,488,128 B **unchanged
+  across four reads (14:56, 15:02, 15:05, 15:11)**, payload past seventeen minutes. *The peak
+  is set in the first minutes and the rest is flat -- a cap sized on the peak is sized on the
+  LOAD, not on the work.* **Receipt ≈16:20Z; BE 66's heavy half still refused on the lock;
+  DA 95 and REV 75 are the open gates on the seam.**
+  ***AT COMMIT TIME, 2026-09-06T15:14:10Z: R-668 LANDED AND THE LANDING GATE FOUND ITS OWN
+  SEAT RED.*** **`da_land_gate.py` runs the seat's instruments plus every declared known-red
+  and its EXIT CODE is read before a commit is issued** (`p003_da_land_gate__20260906T150939Z
+  .json`, `8e29271a…`), **beside a census `.V2` (`a0c8cb70b8419e36…`) superseding the 144403Z
+  record BY PAIR -- the re-emission my round-191 note asked for.** ***Its first real run found
+  DA's own suite RED at the tip: a codomain check silently swallowed a `(None, {...})` return
+  and no adjudication followed -- "my own instrument for exactly that class, red and
+  unnoticed, because I had been running only the modules I touched."*** **10 green / 2
+  declared red, exit 0, 48 s; fixed BOTH ways -- the handler narrowed and the site adjudicated
+  in source.** *A gate whose first execution indicts the seat that built it is the strongest
+  evidence it is not decorative.* **The runbook's next entry is R-669.**
+  **FLAG WORDS: the old digests ANNOTATED-NOT-REWRITTEN (two of four, split by reading); the
+  four families CONTENT-IDENTICAL-DIGESTS-MOVED; the landing rule NOW-FOUR-LAYERS; the 09-04
+  run FLAT-PEAK-AT-TWENTY-MINUTES.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,201 -> 1,208, flag_provenance 746 -> 753,
+  tasks 19; **497 CHECKED**, 256 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T15:05:59Z (MEM ROUND 192 -- R-666 SWEPT, tip `6cb89cc`. STATE ONLY. MEM ASSERTS
   NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- EVERY SELECTOR CELL DRIVEN
   ON A SYNTHETIC RECEIPT.**
@@ -198,68 +263,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 1,185 -> 1,193, flag_provenance 730 -> 738,
   tasks 19; **483 CHECKED**, 255 RELAYED, **455 UNMARKED -- unchanged for the
   sixty-seventh round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T14:53:22Z (MEM ROUND 190 -- R-663 SWEPT, tip `4e1bf8c`; BE 65 landed during the
-  round. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED --
-  AND THE SEALED DAY WAS NOT OPENED.**
-  (1) ***I REPRODUCED THE LIVE SEAM WITHOUT OPENING THE SEALED DAY.*** *The coordinator drove
-  it on the real 09-03 receipt; I drove the MECHANISM on a SYNTHETIC receipt of the same
-  shape, because a sealed forward day is not mine to open.* **On a synthetic receipt
-  declaring design v21 and carrying the three outcome counts:
-  `da_gate1_day_verdict.economic_absence` → `sealed: False`, `n_leaked_fields: 3` of 6
-  leaves; `de_multiday_gate1_runner.design_version_of_receipt` → `design_version 21`,
-  `read_from provenance.design.path`, the ORIGINAL EIGHT in force.**
-  ***Two seats, one object, opposite answers -- because DA reads `ECONOMIC_FIELDS` by AST as
-  a FLAT LIST.*** **DA 95 reads DE's scoping map by the same route; until then NO RE-RUN of
-  the 09-03 pre-read.**
-  (2) **AND THE EMITTER'S CORRECTNESS RESTS ON AN EQUALITY I DROVE.** `_strip_economic`
-  strips by the module-level `ECONOMIC_FIELDS`, not by a call to
-  `economic_fields_in_force()` -- correct for an emitter running under v23. **I drove the
-  identity: `set(ECONOMIC_FIELDS) == set(economic_fields_in_force(None))`, both size 11,
-  symmetric difference EMPTY.** ***So it is correct BY AN EQUALITY that holds while
-  `DESIGN_VERSION_IN_FORCE` is the maximum version in the map*** -- *at v22 the in-force list
-  is 8, so the emitter strips THREE MORE than a v22 receipt is judged by: the safe
-  direction, and worth saying because the opposite would be a leak.* **A coupling, not a
-  defect.**
-  (3) **DESIGN v23 SUPERSEDES v22 BY THE PAIR I HASHED** (`d38dba3dcf02491cd1…`), with a
-  `chain` **TWENTY-TWO LINKS LONG** ending at v22 -- *the whole lineage in the artifact, so a
-  reader can walk back rather than trust a version number.* **`R30_seal_scope_corrected`
-  carries `DISCLOSURE_one_of_six_days_was_seen`, with the other five named as NOT seen.**
-  (4) **THE DEAD CONSTANT IS GONE AND ITS NAME IS ITS OWN GRAVESTONE.** *`grep -c
-  SUPERSEDED_PARAMS_REL` returns 1 -- which looked like a constant that had survived its own
-  removal.* **The line is the COMMENT recording the removal.** ***A count is not a reading:
-  the same one-hit answer would have come back if the constant were still live.*** *Third
-  time this week a grep COUNT and a grep READING disagreed.*
-  (5) **REV 71's FOUR CLOSED AT THE CODE:** the parent identified by
-  `_os.readlink("/proc/<ppid>/exe")` -- ***`argv[0]` is a claim the process makes about
-  itself; `/proc/<pid>/exe` is a fact the kernel keeps about it*** -- plus the resolver
-  refusing an unreadable head, digests at LOAD and at EMIT both carried, and the dead
-  constant removed.
-  (6) **THE 09-03 PRE-READ IS HELD UNTIL DA 95** -- ***the instrument that would re-judge the
-  day is known to be wrong about it, so it is not run rather than run and explained away.***
-  *A pre-read reporting a false leak would enter the record ahead of its own explanation.*
-  (7) **BE 65 MADE THE FALSIFIER INVOCATION- AND JOURNAL-INDEPENDENT** (`2f20d83`), reading
-  the scope leaf. ***Both halves of REV 65 §1.1 closed at once -- the `$0` dependence I swept
-  at round 175 and the journal dependence*** -- *with the same remedy the runtime guard uses:
-  read what the process IS.*
-  (8) **THE QUEUE BEFORE THE RELAUNCH:** the lock is FREE, **no `de102*` unit exists**,
-  rehearsal v4 is emitted and v23 is landed; open are DA 94 (the allowlist's chain head), DA
-  95 (the scoping map), BE 66 (the bytes interface) and REV 73.
-  ***AT COMMIT TIME, 2026-09-06T14:56:45Z: THE 09-04 RUN IS RELAUNCHED UNDER DESIGN v23.***
-  **`de102smoke.service` started 14:54:00Z -- `loaded / active / running / 0 / success`,
-  `InvocationID a8c7e41ee2d24ff8…`, `RemainAfterExit=yes`, `MainPID 3551079` = `flock` with
-  `PPid 1004` and cmdline `/usr/bin/flock -n -E 75 …/.heavy_run.lock`, payload at 2:54.**
-  ***The first day in this chain produced under a seal scope written down BEFORE the run.***
-  **And REV 73 landed in the same minutes, confirming ON THE LANDED RECEIPT what I drove
-  synthetically: "DE scoped the seal and DA did not."** *Two routes to one seam -- and mine
-  did not open the sealed day.* *BE 65 filed Q-BE-308: ten light items landed, item 11
-  ready-and-blocked, item 4 waiting on DA 87.*
-  **FLAG WORDS: the seam LIVE-AND-DRIVEN-SYNTHETICALLY (DA flat list vs DE's scoped map);
-  the 09-03 pre-read HELD-UNTIL-DA-95; design v23 SUPERSEDES-BY-A-22-LINK-CHAIN; the 09-04
-  relaunch LOCK-FREE-AWAITING-GO.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,177 -> 1,185, flag_provenance 722 -> 730,
-  tasks 19; **479 CHECKED**, 251 RELAYED, **455 UNMARKED -- unchanged for the
-  sixty-sixth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
@@ -2955,6 +2958,114 @@ flags:
                              # / Result exit-code / ExecMainStatus "75"` with the refusal text "This
                              # unit did NO work and wrote nothing (rule 20)" -- the five fields plus
                              # the id in a poll line, exactly as ruled.*
+  EVERY_DIGEST_OF_THOSE_FILES_RECORDED_BEFORE_2F20D83_RESOLVES_AT_ITS_PARENT: THE_REGISTER_LINE
+                             # CHECKED 2026-09-06T15:11:21Z, and I resolved them MYSELF rather than
+                             # taking the list. **At `2f20d83^`: `27e2fa5d…` is
+                             # `be_race_read_declaration_v1.json`, `603c6847…` is v3, `9cd15527…`
+                             # is v4. At HEAD the same three files hash `8ba84927…`, `3a2fdb28…`
+                             # and `a741b4d6…`.**
+                             # ***So EVERY digest of those eleven files recorded before `2f20d83`
+                             # resolves at that commit's PARENT and nowhere later -- and the cause
+                             # is not a content change: BE 65 linked the four families and all
+                             # eleven files were RE-SERIALISED.***
+                             # **The rule is a rule about READING, not about the files: a digest
+                             # cited in a record is a fact about the bytes at the moment of
+                             # writing, and it stays true THERE.** *Which is why the register's
+                             # instruction is to ANNOTATE, not to rewrite -- a rewritten digest
+                             # would make the old citation resolve at HEAD and quietly erase that
+                             # the file was ever different.*
+  MY_STATUS_CARRIES_FOUR_OF_THOSE_DIGESTS_AND_TWO_NEEDED_THE_NOTE: I_SPLIT_THEM_BY_READING
+                             # CHECKED 2026-09-06T15:11:21Z. **`grep` finds `603c6847…` THREE times
+                             # and `27e2fa5d…` ONCE in my STATUS.yml** -- *and the count alone would
+                             # have had me annotate four places.*
+                             # ***READING THEM SPLIT THE FOUR: two occurrences are MY OWN round-192
+                             # text, which already says "the pre-BE-65 blob hashes `603c6847…`" and
+                             # names the current file beside it -- those are correct as written. The
+                             # other two are older CITATIONS -- `v4_COMPUTES_G_EQUALS_3…` naming v3
+                             # by `603c6847…`, and `be46_THE_RACE_READ…` naming v1 by
+                             # `27e2fa5d…` -- and those are the two that needed the note.***
+                             # **Both annotated IN BAND at 15:11:21Z, marked "NOT a rewrite", each
+                             # naming where the digest resolves and what the file hashes now.**
+                             # *A count told me four; reading told me two. Twenty-third time this
+                             # session that distinction has decided what I wrote.*
+  THE_FOUR_FAMILIES_ARE_CONTENT_IDENTICAL_AND_EVERY_DIGEST_MOVED: RE_SERIALISATION_IS_A_BYTE_CHANGE
+                             # CHECKED 2026-09-06T15:11:21Z (R-667, REV 74), on the family I
+                             # verified myself last round: **content identical once `supersedes` and
+                             # its note are removed, digest `603c6847…` → `3a2fdb28…`.**
+                             # **REV 74 establishes it for ALL ELEVEN: JSON-identical to their
+                             # pre-BE-65 selves once the link is removed, and every one changed
+                             # digest, the large diffs being RE-SERIALISATION.**
+                             # ***Two facts that sound contradictory and are not: nothing about the
+                             # declarations' MEANING changed, and nothing about their BYTES stayed
+                             # the same.*** *`{path, sha256}` binds bytes -- which is what makes it
+                             # a strong link and what makes a re-serialisation a break.*
+                             # **v4's former `supersedes` block is preserved under
+                             # `was_before_this_link`, NO CODE pins the old digests, and the race
+                             # read binds to the FEED PINS rather than to a declaration digest** --
+                             # *three independent reasons the break is inert.*
+  THE_LAUNCHERS_FIVE_ITEMS_CLOSED_AND_A_CORRECTION_OVERTOOK_THE_HEAVY_ONE: BE_66
+                             # RELAYED from R-667. **The launcher's five items are closed; two
+                             # residues plus a thin-book `StopIteration` go to BE 66 -- and the
+                             # correction was SENT BEFORE its heavy item, which is still blocked on
+                             # the lock.**
+                             # ***A correction that overtakes a blocked heavy item is the right
+                             # order: the heavy run would otherwise carry the residue into an
+                             # artifact, and the artifact is the thing that outlives the round.***
+                             # *A thin-book `StopIteration` is the shape a reader meets when a
+                             # generator is asked for a row that a small book does not have -- the
+                             # empty-population case that only appears when a real object is
+                             # smaller than the fixture.*
+  THE_REGISTER_AND_THE_RUNBOOK_LAND_AS_SEPARATE_COMMITS: EACH_WITH_ITS_POST_CONDITION
+                             # CHECKED 2026-09-06T15:11:21Z at the runbook's own commit
+                             # (`cdd430f`). **"The register and the runbook land as SEPARATE
+                             # commits, each with its post-condition", and the next entry is named
+                             # in advance: R-668.**
+                             # ***That is the fourth layer on the landing rule my round-187 note
+                             # opened: precondition (clean), chaining (the commit follows the
+                             # insertion's exit), post-condition (read the diff), and now
+                             # SEPARATION (one commit per file-family, so a post-condition on the
+                             # diff can be exact rather than "these two files are both mine").***
+                             # *Each layer arrived after a real event; none was designed in
+                             # advance.*
+  DA_94_CLOSED_REV_72_AND_A_MARKER_CANNOT_EXCUSE_AN_OPEN: BOTH_DIRECTORIES_SCANNED
+                             # CHECKED 2026-09-06T15:11:21Z at the tip (`dac2066`, Q-DA-317;
+                             # `c6dc6e5` DA 94). **"A marker cannot excuse an OPEN, both declaration
+                             # directories are scanned, and the landing gate is executable."**
+                             # ***The first clause is the composition I recorded at round 189
+                             # sharpened: DA 92's MARKER is a label and DA 93's DATAFLOW GATE is the
+                             # guard, and now a marker is explicitly powerless against an open --
+                             # so a seat cannot label its way past a file it actually reads.***
+                             # *"Both declaration directories" is the census's own blind spot
+                             # closed: an allowlist that scans one directory is a census of that
+                             # directory, not of the programme.*
+                             # **EXTENDED IN BAND 2026-09-06T15:14:10Z: R-668 LANDED AND THE LANDING
+                             # GATE FOUND ITS OWN SEAT RED.** *`da_land_gate.py` runs the seat's
+                             # instruments plus every declared known-red, and ITS EXIT CODE is what
+                             # is read before a commit is issued -- receipt
+                             # `p003_da_land_gate__20260906T150939Z.json` (`8e29271a…`), beside a
+                             # census `.V2` (`a0c8cb70b8419e36…`) superseding the 144403Z record by
+                             # pair -- which is the RE-EMISSION my round-191 note asked for.*
+                             # ***ITS FIRST REAL RUN FOUND DA'S OWN SUITE RED AT THE TIP: a codomain
+                             # check silently swallowed a `(None, {...})` return and no adjudication
+                             # followed -- "my own instrument for exactly that class, red and
+                             # unnoticed, because I had been running only the modules I touched".***
+                             # **10 green / 2 declared red, exit 0, 48 s -- and the fix went in BOTH
+                             # ways: the handler narrowed to `(OSError, SubprocessError)` and the
+                             # site adjudicated in source.**
+                             # *A gate whose first execution indicts the seat that built it is the
+                             # strongest evidence it is not decorative* -- **and "running only the
+                             # modules I touched" is the habit every seat here has, named by the
+                             # seat it caught.**
+  THE_09_04_RUN_AT_TWENTY_MINUTES: PEAK_UNMOVED_FOR_A_QUARTER_HOUR
+                             # CHECKED 2026-09-06T15:11:21Z: **`de102smoke.service` `loaded /
+                             # active / running`, `MemoryPeak` 2,957,488,128 B -- unchanged across
+                             # my 14:56, 15:02, 15:05 and 15:11 reads -- with the payload past
+                             # seventeen minutes.**
+                             # *Four readings, one number: the peak is set in the first minutes and
+                             # the rest of the run is flat, which is why a cap sized on the peak is
+                             # sized on the load and not on the work.*
+                             # **Receipt ≈16:20Z. BE 66's heavy half still refused on the lock; DA
+                             # 95 and REV 75 are the open gates on the seam.**
   I_DROVE_THE_SELECTORS_FOUR_CELLS_AND_THE_POLARITY_IS_RIGHT: ABSENCE_NOW_BUYS_NOTHING
                              # CHECKED 2026-09-06T15:05:59Z, driven on SYNTHETIC receipts (no
                              # sealed day opened). **no provenance → v23, ELEVEN names, reason "THE
@@ -8415,6 +8526,13 @@ flags:
                              # RELAYED from R-597(A)(D) 2026-09-06T08:27:02Z.
                              # Declaration v4 (12/12, supersedes v3 by sha256
                              # `603c6847…`): population the five named days; **READABLE
+                             # **[R-667 ANNOTATION, added 2026-09-06T15:11:21Z, NOT a rewrite:
+                             # `603c6847…` resolves at `2f20d83^`, NOT at HEAD. BE 65 linked the
+                             # four families and every one of the eleven files was RE-SERIALISED,
+                             # so the content is identical and the digest moved. That file --
+                             # `be_race_read_declaration_v3.json` -- now hashes `3a2fdb28…`, which
+                             # I verified myself at both revisions. The citation stands as
+                             # written: it named the bytes that were there when it was written.]**
                              # 09-03/04/05; READ-BUT-UNRECOVERABLE 09-01/02 taken from the
                              # pins' `exists: false`, NOT TYPED; G = 3 and the floor 0.25
                              # COMPUTED.**
@@ -13267,6 +13385,11 @@ flags:
                              # coordinator at the artifacts.
                              # THE RACE READ (be_race_read_declaration_v1.json,
                              # sha 27e2fa5d): the G = 5 DIRECTIONAL read of the
+                             # **[R-667 ANNOTATION, added 2026-09-06T15:11:21Z, NOT a rewrite:
+                             # `27e2fa5d…` is `be_race_read_declaration_v1.json` AT `2f20d83^`;
+                             # at HEAD that file hashes `8ba84927…`. Same cause: BE 65's linking
+                             # re-serialised all eleven files. Verified by me at both
+                             # revisions.]**
                              # frozen candidate, with race_multiplicity_at_freeze
                              # = 2 **READ FROM THE FREEZE, NOT TYPED**; the
                              # permutation floor 0.0625 STATED UP FRONT; 09-01
@@ -22838,6 +22961,82 @@ flag_provenance:
       commit and the index collision, and the only silent one: it looks like success, and
       the way to see it is to notice the staged count and ask git which commit holds the
       line.
+  # --- MEM round 193, 2026-09-06T15:11:21Z ------------------------------
+  EVERY_DIGEST_OF_THOSE_FILES_RECORDED_BEFORE_2F20D83_RESOLVES_AT_ITS_PARENT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v3.json
+    as_of: 2026-09-06T15:11:21Z
+    said: >-
+      resolved by me at both revisions: at 2f20d83^ the digest 27e2fa5d is
+      be_race_read_declaration_v1.json, 603c6847 is v3 and 9cd15527 is v4, while at HEAD the
+      same three files hash 8ba84927, 3a2fdb28 and a741b4d6. Every digest of those eleven
+      files recorded before 2f20d83 resolves at that commit's parent and nowhere later, and
+      the cause is re-serialisation rather than a content change. The rule is about reading: a
+      digest cited in a record is a fact about the bytes at the moment of writing, which is why
+      the instruction is to annotate rather than rewrite.
+  MY_STATUS_CARRIES_FOUR_OF_THOSE_DIGESTS_AND_TWO_NEEDED_THE_NOTE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T15:11:21Z
+    said: >-
+      grep finds 603c6847 three times and 27e2fa5d once in my STATUS.yml, and the count alone
+      would have had me annotate four places; reading them split the four, because two
+      occurrences are my own round-192 text which already frames the digest as the pre-BE-65
+      blob and names the current file beside it, while the other two are older citations --
+      v4_COMPUTES_G_EQUALS_3 naming v3 by 603c6847 and be46_THE_RACE_READ naming v1 by
+      27e2fa5d. Both were annotated in band, marked not a rewrite, each naming where the digest
+      resolves and what the file hashes now.
+  THE_FOUR_FAMILIES_ARE_CONTENT_IDENTICAL_AND_EVERY_DIGEST_MOVED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v3.json
+    as_of: 2026-09-06T15:11:21Z
+    said: >-
+      on the family I verified myself last round the content is identical once supersedes and
+      its note are removed while the digest moved from 603c6847 to 3a2fdb28, and REV 74
+      establishes it for all eleven: JSON-identical to their pre-BE-65 selves once the link is
+      removed, every one changed digest, the large diffs being re-serialisation. Nothing about
+      their meaning changed and nothing about their bytes stayed the same. v4's former
+      supersedes block is preserved under was_before_this_link, no code pins the old digests,
+      and the race read binds to the feed pins.
+  THE_LAUNCHERS_FIVE_ITEMS_CLOSED_AND_A_CORRECTION_OVERTOOK_THE_HEAVY_ONE:
+    prov: RELAYED
+    from: R-667
+    as_of: 2026-09-06T15:11:21Z
+    said: >-
+      the launcher's five items are closed, with two residues and a thin-book StopIteration
+      going to BE 66, and the correction was sent before its heavy item, which is still blocked
+      on the lock. A correction that overtakes a blocked heavy item is the right order, since
+      the heavy run would otherwise carry the residue into an artifact.
+  THE_REGISTER_AND_THE_RUNBOOK_LAND_AS_SEPARATE_COMMITS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-06T15:11:21Z
+    said: >-
+      the runbook now lands the register and itself as separate commits, each with its
+      post-condition, and names the next entry in advance as R-668. That is the fourth layer on
+      the landing rule my round-187 note opened -- precondition, chaining, post-condition and
+      now separation, so a post-condition on the diff can be exact rather than covering two
+      file-families at once.
+  DA_94_CLOSED_REV_72_AND_A_MARKER_CANNOT_EXCUSE_AN_OPEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T15:11:21Z
+    said: >-
+      DA 94 landed with Q-DA-317: a marker cannot excuse an open, both declaration directories
+      are scanned, and the landing gate is executable. The first clause sharpens the
+      composition I recorded at round 189, since a marker is now explicitly powerless against a
+      file the code actually reads, and scanning both directories closes the census's own blind
+      spot.
+  THE_09_04_RUN_AT_TWENTY_MINUTES:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/heavy_run_form_v3.json
+    as_of: 2026-09-06T15:11:21Z
+    said: >-
+      de102smoke reads loaded, active and running with MemoryPeak 2,957,488,128 unchanged
+      across my 14:56, 15:02, 15:05 and 15:11 reads and the payload past seventeen minutes.
+      Four readings, one number: the peak is set in the first minutes and the rest is flat, so
+      a cap sized on the peak is sized on the load rather than the work. Receipt about 16:20Z,
+      BE 66's heavy half still refused on the lock, DA 95 and REV 75 the open gates on the seam.
   # --- MEM round 192, 2026-09-06T15:05:59Z ------------------------------
   I_DROVE_THE_SELECTORS_FOUR_CELLS_AND_THE_POLARITY_IS_RIGHT:
     prov: CHECKED
