@@ -1958,12 +1958,19 @@ def selftest() -> int:
        "scopes and every receipt said so in `scope.unit`; no seat read it")
     _sd = _R22.declaration_head("be_daybook_structure")
     ok(_sd["name"].startswith("be_daybook_structure_v")
-       and _sd['doc']['STATUS'] == 'VERIFIED AGAINST THE REAL 09-03 BOOK',
+       and _sd["doc"]["STATUS"].startswith("VERIFIED AGAINST")
+       and _sd["doc"].get("verified_books")
+       and all(_sha_file(OUT_DERIVED / v["file"]) == v["sha256"]
+               for v in _sd["doc"]["verified_books"].values()),
        f"R-654: the book's structure is DECLARED ({_sd['name']}) so DA maps "
        f"the pickle through it instead of guessing -- and it says of itself "
-       f"it has now been ASSERTED against the real 09-03 book (7 of 7 "
-       f"claims, 4.3 s, 2.079 GB, the digest pinned before the open), so "
-       f"v1's 'not yet verified' is superseded in band by v2")
+       f"and EVERY BOOK IT NAMES IS RE-HASHED HERE: "
+       f"{sorted(_sd['doc']['verified_books'])} each match the file on disk. "
+       f"This check used to pin v2's STATUS string as a literal and would "
+       f"have broken the moment a second book was verified -- the same "
+       f"expiry the ledger-marker check had (BE 70). It now asserts the "
+       f"PROPERTY: the head says VERIFIED, and the digests it names are the "
+       f"digests on disk")
     import pickle as _pk
     def _fixture_book(where, payload):
         """a fixture book AND the receipt that pins it -- the verifier now

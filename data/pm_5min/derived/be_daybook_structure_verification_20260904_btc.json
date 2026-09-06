@@ -1,0 +1,79 @@
+{
+ "MemoryPeak_caveat": "the unit's MemoryPeak is read at CAPTURE time, after the payload has exited; with RemainAfterExit the accounting has already dropped, so it reads far below the run's own peak. The run's peak is peak_rss_gb in this document, measured inside the process.",
+ "all_hold": true,
+ "as_of": "2026-09-06T18:30:38Z",
+ "book": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+ "bytes": 340969199,
+ "checks": [
+  {
+   "claim": "the top level is a dict",
+   "holds": true
+  },
+  {
+   "claim": "the top-level keys are ['fr', 'asm'], found ['asm', 'fr']",
+   "holds": true
+  },
+  {
+   "claim": "asm carries by_arm and assembly",
+   "holds": true
+  },
+  {
+   "claim": "asm.by_arm is keyed by (coin, head) TUPLES",
+   "holds": true
+  },
+  {
+   "claim": "each by_arm value is indexable and its [0] carries the scored keys",
+   "holds": true
+  },
+  {
+   "claim": "fr carries the reference",
+   "holds": true
+  },
+  {
+   "claim": "asm.assembly carries the chunk and drop accounting",
+   "holds": true
+  }
+ ],
+ "declaration": "be_daybook_structure_v2.json",
+ "digest_pin": {
+  "digest_checked_before_open": true,
+  "receipt": "be_daybook_receipt_20260904_btc.v3.json",
+  "sha256": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+  "what_this_does_not_make_safe": "pickle.load executes the payload's opcodes; pinning the digest says WHICH bytes are executed, not that executing them is harmless. This runs under the heavy lock and the declared cap, on another seat's serialisation."
+ },
+ "journal": {
+  "as_of": "2026-09-06T18:30:38Z",
+  "query": "journalctl --user _SYSTEMD_INVOCATION_ID=899eb54baab64e439b48e7315380c233 + USER_INVOCATION_ID=899eb54baab64e439b48e7315380c233",
+  "retention_oldest_entry": "2026-09-06T14:22:48+00:00",
+  "the_journal_is_not_the_record": "copied at the moment of reading (R-641); the record is this artifact"
+ },
+ "launch_record": {
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_heavy_run_record_be74struct04.jsonl",
+  "rows": [
+   "launch",
+   "exit",
+   "outcome",
+   "stopped",
+   "journal_copy"
+  ],
+  "sha256": "ce422e14916c3f75dfc3e11e7e8bc401a98cdf9b648c3b8707d7ed52bc01c21a"
+ },
+ "n_checks": 7,
+ "peak_rss_gb": 2.405,
+ "protocol": "BE_DAYBOOK_STRUCTURE_VERIFICATION_V1",
+ "sha256": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+ "this_is_the_step_that_makes_the_declaration_a_measurement": "before this ran, the declaration was derived from the producing code and said so (R-654)",
+ "unit": "be74struct04.service",
+ "unit_outcome_read_while_loaded": {
+  "ActiveState": "active",
+  "ExecMainStatus": "0",
+  "InvocationID": "899eb54baab64e439b48e7315380c233",
+  "LoadState": "loaded",
+  "MemoryPeak": "21946368",
+  "Result": "success",
+  "SubState": "exited"
+ },
+ "verdict": "THE DECLARATION HOLDS AGAINST THIS BOOK",
+ "wall_s": 3.7,
+ "why_while_loaded": "R-653: LoadState not-found is VOID, never a verdict. Captured by be_heavy_run.sh --capture BEFORE the stop."
+}
