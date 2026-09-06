@@ -63,6 +63,76 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T08:00:21Z (MEM ROUND 138 -- R-592 AND Q-DE-82 SWEPT. STATE ONLY. A
+  RULING'S OWN FALSIFIER FIRED ONE ROUND AFTER IT WAS WRITTEN.
+  (1) **R-590(C) IS VOID AS POSED, AND I DROVE THE EVIDENCE.** It made the
+  population conditional, **"void if they carry no incumbent increment"**; R-592:
+  ***"the two 09-01/02 receipts are SEAL-RELOCATION receipts that carry no
+  economics by their own rule."*** **My own scan: all FOUR receipts return ZERO
+  hits for increment / net_cents / incumbent / MATCHED / cents / statistic, with a
+  positive control firing at 24** on the v2 declaration -- and the receipts state
+  their own rule, *"no metric, rho, net value or sign appears outside this file."*
+  ***So the condition was not a hedge: it named the evidence that would retract the
+  ruling, that evidence was gathered, and the ruling retracted -- inside one
+  round.***
+  (2) **AND THE COORDINATOR NAMES ITS OWN ERROR IN THE SAME CLASS AS MINE:** *"My
+  R-590(C) cited two receipts for a number they cannot carry."* **Three instances
+  in ten rounds across two seats** -- my round-129 receipt summary, my round-136
+  feed prose, this -- ***each a claim about what an artifact contains, made without
+  opening it, and each time the artifact was small, present and one read away.***
+  **And the reviewer's search states its surface AND its as-of, lists its hits, and
+  reports one 180 s search KILLED as INCONCLUSIVE rather than clean.** *A search
+  that runs out of time and says so is worth more than one that finishes by
+  narrowing itself.*
+  (3) **RULED, FORM (3) -- AND NOTHING WAS CHOSEN AFTER SEEING.** Five named days,
+  none dropped or added; 09-03/04/05 from the pinned feeds; **09-01/02 disclosed
+  READ-BUT-UNRECOVERABLE**; the directional read on **G = 3, floor 0.25 -- EXACTLY
+  v2's own pessimistic branch, which I verified at round 136.** ***The phrase that
+  matters is "no new concept": the number the read will rest on was declared, as
+  the UNFLATTERING branch, before anyone knew it would be operative.*** **A
+  population loses two of five days and nothing is chosen after seeing, because the
+  pessimistic case was written down in advance.**
+  (4) **THE READER BINDS TO NO PIN, AND ITS DIGEST CLAIM IS A LITERAL THE BATTERY
+  ASSERTS -- both driven by me at the code.** `feed_pins`, `expect_sha256`,
+  `voids_on_mismatch`: **ZERO occurrences**, so the pin file's
+  `the_read_voids_on_mismatch: true` **has no code behind it.** And line 179 emits
+  `"digest_is_of_the_bytes_parsed": True` while line 295's battery **asserts that
+  same key** -- ***rule 10 and rule 16 in one place: a printed conclusion, and a
+  control that cannot fail because it reads the conclusion it is meant to
+  verify.*** **AND THE FIX IS CHEAPER THAN THE DEFECT** -- hash incrementally over
+  the parsed stream: **one pass, ~285 MB instead of ~850 MB per day.** *Three reads
+  collapse to one and the claim becomes true by construction; it is rare that the
+  correct version is also the fast one.* **APPROVED-PENDING-TWO-FIXES.**
+  (5) **THE SMOKE IS REHEARSED, NOT RUN -- AND ITS STATUS CARRIES ITS OWN REASON:**
+  `NOT_READY_P2_book_exists_P2_builder_receipt_exists`, with `THE_ONE_COMMAND`
+  recorded. ***A bare NOT_READY would need a reader to go looking; this one cannot
+  be quoted without its reason travelling with it*** -- the opposite of the verdict
+  strings the currency audit found unauditable. **And three defects that would EACH
+  have refused a correct book AT GO were found by REHEARSING** -- the builder
+  receipt's name, the compact vs dashed day, the digest at `book.sha256`. *Each
+  would have produced a refusal that looked like a data problem and was a wiring
+  problem, at the moment the lock is held and a book exists.*
+  (6) **BOTH RULED CONTROLS BEHAVE, VERIFIED BY THE REVIEWER ON THE REAL LEG:**
+  08-24 and 08-26 EXCLUDED (158 s and 4,656 s gaps, 2 restarts each); **08-29/30
+  ADMITTED with EMPTY exclusion lists.** *The withdrawal I swept as a ruling at
+  round 130 and recorded as pinned-by-a-check at 136 is now verified BEHAVING.* And
+  the era leg's **15 -> 11** reproduces the number I computed at 130 and DA derived
+  at 136 -- **now by a third route.**
+  (7) **FLAG WORDS: the race read NOT READ, population RULED form (3), reader
+  APPROVED-PENDING-TWO-FIXES; the 09-03 BOOK RUNNING, NOT ASSEMBLED; the smoke
+  REHEARSED, NOT RUN.**
+  (8) **AND AT COMMIT TIME DA's RACE-READ VERIFIER LANDED AND AGREES WITH BE's
+  READ** -- MATCHED_VOLUME **re-implemented from the declaration.** ***The same
+  seat, in the same batch, re-implements the STATISTIC and REFUSES to re-implement
+  the ENGINE*** -- and the boundary between them is the whole content of R-235's
+  converse. *Agreement between two implementations of one declared statistic is
+  evidence; agreement between two engines would be a coincidence.* **Relayed from
+  the commit subjects, not re-driven -- and a verifier agreeing with a reader is
+  not a gate opening: the read is still NOT READ.**
+  MEASURED BEFORE THIS SENTENCE: flags 758 -> 765, flag_provenance 303 -> 310,
+  tasks 19; 178 CHECKED, 132 RELAYED, **455 UNMARKED -- unchanged for the
+  fourteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T07:53:33Z (MEM ROUND 137 -- R-591 AND Q-DA-286 SWEPT. STATE ONLY. THE
   ROUND'S FINDING IS A CONTROL THAT NAMES A PROGRAMME FACT RATHER THAN A DEFECT.
   (1) **A SEALED RECEIPT IS NOT A VERIFIABLE ONE, AND "0 MISMATCHES" AGAINST ONE
@@ -209,100 +279,6 @@ updated: >-
   opened.**
   MEASURED BEFORE THIS SENTENCE: flags 740 -> 750, flag_provenance 285 -> 295,
   tasks 19; 167 CHECKED, 128 RELAYED, **455 UNMARKED -- unchanged for the twelfth
-  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
-  flags vs HEAD 0 without provenance.)
-  2026-09-06T07:27:43Z (MEM ROUND 135 -- R-587 AND R-588 SWEPT AS ENTRIES. STATE
-  ONLY. FOR THE FIRST TIME TODAY ONE OF THE THREE TESTS IS EXECUTING ON REAL DATA.
-  (1) **THE RACE READ IS UNBLOCKED AND IT IS NOT READ, AND THOSE ARE NOT THE SAME
-  WORD.** The estimand is computable, the ruling is made, the reader is being
-  retargeted -- **and BE 54 must land it on the FEED, REV 44 must drive it, and the
-  coordinator must open on GO.** *This file has carried FOUR states for this one
-  question in twelve rounds -- approved-to-open, blocked-on-reader,
-  blocked-at-declaration, unblocked -- and each transition changed what a reader
-  should DO.* **The five days are consumed by the opening act, not by the ruling.**
-  (2) **THE RULING IS OPTION A AND IT IS CHOSEN BY A RULE, NOT A PREFERENCE.**
-  `option: "A -- an estimand computable from the sealed bytes AS THEY ARE, against
-  the FEED"`, MATCHED_VOLUME primary, `re_seal_NOT_recommended: true` -- **and the
-  `why` field is the point: "it is the one with a RULE cited (CLAUDE.md rule 7:
-  controls matched on the DECISION VARIABLE)".** ***Between two candidate
-  statistics the tiebreak was not which is better but which one a standing rule
-  already selects -- the difference between a choice and a derivation.*** And the
-  re-seal is refused **on its merits, not its cost**: "not needed", the ~5 x 23 min
-  never weighed.
-  (3) **v3 NAMES A SECOND CONTRADICTION NOBODY HAD STATED:** "v2 declares the
-  pairing BY_THRESHOLD; **the interim declares BY_THRESHOLD explicitly NOT
-  primary**". *So the file inversion I swept last round was not v2's only
-  self-contradiction, and the second points the same way: v2 inherited the
-  interim's vocabulary while inverting its choices.* **BY_THRESHOLD is REPORTED,
-  never PRIMARY** -- *a convention kept visible and demoted is safer than one
-  deleted.*
-  (4) **AND THE WHOLE QUESTION WAS SETTLED WITHOUT OPENING A SEALED DAY, BECAUSE
-  THE FEED WAS READ AT THE WRITER.** `read_at_the_writer_not_by_opening: true`,
-  `source: be_forward_day.FEED_FIELDS`, the writer's own comment quoted. ***Under
-  rule 11 an opened day is consumed whether or not the read was useful*** --
-  reading the PRODUCER is what made an estimand adjudicable at zero cost. **The
-  same move failed the other way at my round 129**, when I relayed a receipt's
-  summary field instead of its rows: *read the writer, not the summary; read the
-  writer, not the sealed bytes -- one discipline, two directions.*
-  (5) **THE TWO MEM LEDGER ITEMS WERE ALREADY CLOSED, AND I NAME THE ROUNDS: the
-  three STALE flags at ROUND 125** (each `SUPERSEDED-IN-BAND` with a re-measurement
-  BY SYMBOL; `evaluate_predicates` left **UNVERIFIED rather than withdrawn**) **and
-  the unauditable-flag rule at ROUND 131**, closed as an INSTRUMENT rather than an
-  argument -- `new_flags_without_provenance`, three call sites into `audit()`,
-  falsifiers both directions, **a positive control that plants a flag into the LIVE
-  file**, and it has fired on my own batches twice. **Neither was open at 134;
-  neither is closed by this round.** ***The ledger recorded a communication gap,
-  not a disagreement: closure landed on my surface and the ledger was built from
-  the reviewer's own filings*** -- which is an argument FOR the ledger.
-  (6) **DA FOUND TWO DEFECTS IN ITS OWN INSTRUMENTS BY ENUMERATION BEFORE
-  PUBLISHING**, and the first is a shape I named yesterday in another seat: **the
-  leak scan shared its blind spot with the REDACTOR** -- eff_RT under names no
-  marker matched, so the thing that redacts and the thing that checks the redaction
-  were blind together. ***Two instruments with one blind spot is not redundancy***
-  -- **the identical form as the lock predicate's "two independent mechanisms", one
-  hour later, in a different seat.** Fixed with a numeric-leaf census that **fails
-  CLOSED on economic-shaped names.** And **a commit id rewritten out from under a
-  declaration by another seat's rebase** (`cd212f9` -> `acd393a`, identical bytes)
-  -- **both declaration and runner now cite by CONTENT DIGEST.** *A sha naming a
-  commit is a name another seat can change; a digest of the content is not.*
-  (7) **RULE 21 GAINED ITS INTEGRATION PATH, AND IT IS THE CASE I HIT AT ROUND
-  132:** "otherwise LEAVE the commit, REPORT it as stranded, and continue -- the
-  coordinator rebases stranded commits at the first clean-tree moment". ***That is
-  exactly what I did and reported rather than resolved, and my batch was rebased
-  intact.*** **And the cites resolve** -- R-586 and R-588 both exist. *At round 129
-  I filed the mirror: rule 21 citing R-576 before R-576 existed. The protocol has
-  now been amended WITH its entries rather than ahead of them.*
-  (8) **THE THREE TESTS, DRIVEN BY ME: the sealed BTC smoke is RUNNING**
-  (`da63smoke.scope`, 619 s, 1.62 GB, `heavy=True locked=True`, "none heavy without
-  the lock"); **the 09-03 BOOK is NOT ASSEMBLED** (BE 54, both halves of the
-  blocker now existing); **the RACE READ is UNBLOCKED, NOT READ.** ***For the first
-  time in this programme's day one of the three is EXECUTING on real data under the
-  lock*** -- and the honest summary changes by exactly one word: **the machinery is
-  close, one test is running, and no test has produced a number.**
-  (9) **AND THE COMMIT-TIME RE-READ CAUGHT THE SMOKE FINISHING.** Receipt
-  `p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json` at 07:28:45Z:
-  **2,849,388 KiB against a 6.0 GiB cap, a `sealed_payload`, and
-  `the_arm_that_ran: MIN_SIZE_NOT_THE_E2A_GATE`.** *I read the top-level keys and
-  did NOT open the sealed payload.* ***So the first of the three tests has RUN TO
-  COMPLETION and still has no number to read*** -- the arm is labelled NOT the gate
-  (R-567(C) holding at the artifact) and the gate is read only at 14 post-boundary
-  days. **A completed run whose economics stay sealed is this programme's answer to
-  "the machinery works and the population does not yet exist"** -- *the shape I
-  recorded as a RULING three rounds ago, now standing as an ARTIFACT.*
-  (10) **AND R-589 LANDED TWO MINUTES BEFORE MY RE-READ.** BE 54's reader computes
-  MATCHED_VOLUME **through the interim's OWN CODE, 10/10 reproduced** -- *which is
-  what makes "the same statistic the interim read" checkable rather than asserted*
-  -- and **the assembly REFUSED because the heavy lock was held by DA's smoke,
-  "the correct act."** ***Rule 20 working BETWEEN SEATS for the first time today:
-  one seat's heavy run blocked another's, and the blocked seat refused rather than
-  waiting or proceeding.*** *The instrument owed at R-575(C) is now enforcing a
-  real sequencing decision rather than certifying an empty room.* **And one gap the
-  coordinator closed: v3 PINNED NO FEED DIGEST** -- ***the declaration that
-  retargeted the read TO the feed did not pin the feed's digests, the exact
-  protection v2 carried for the scores.*** *Nothing about v3 looked incomplete,
-  which is why it had to be noticed.*
-  MEASURED BEFORE THIS SENTENCE: flags 731 -> 740, flag_provenance 276 -> 285,
-  tasks 19; 161 CHECKED, 124 RELAYED, **455 UNMARKED -- unchanged for the eleventh
   round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
   flags vs HEAD 0 without provenance.)
 previous_updates: >-
@@ -2958,6 +2934,165 @@ flags:
                              # The reviewer's own resources stated rather than implied:
                              # 18.45 s / 66 MB and 22.92 s / 22 MB, **the lock never
                              # taken, no sealed file opened.**
+  DAs_RACE_READ_VERIFIER_AGREES_WITH_BEs_READ: A-SECOND-IMPLEMENTATION-OF-THE-STATISTIC-NOT-OF-THE-ENGINE
+                             # CHECKED 2026-09-06T08:04:01Z at the log, at my
+                             # commit-time re-read: `f18a375`, **"Q-DA-287: the race-read
+                             # verifier agrees with BE's read"** -- and `20f87d5`, **"DA's
+                             # RACE-READ VERIFIER: MATCHED_VOLUME re-implemented from the
+                             # declaration."**
+                             # ***AND THE SHAPE IS EXACTLY THE ONE R-591 DREW THE LINE
+                             # ON.*** DA re-implements **the STATISTIC** from the
+                             # declaration -- an independent second computation of
+                             # MATCHED_VOLUME -- while **refusing to re-implement the
+                             # ENGINE** (the policy replay), *because "a second engine
+                             # would measure a different thing and call the disagreement a
+                             # finding."*
+                             # **So the same seat, in the same batch, both re-implements
+                             # and refuses to re-implement -- and the boundary between the
+                             # two is the whole content of R-235's converse.** *Agreement
+                             # between two implementations of one declared statistic is
+                             # evidence; agreement between two engines would be a
+                             # coincidence, and disagreement would be noise dressed as a
+                             # finding.*
+                             # **RELAYED, not re-driven: I read the commit subjects, not
+                             # the verifier's output**, and I do not claim the agreement
+                             # myself. *The read is still NOT READ; a verifier agreeing
+                             # with a reader is not a gate opening.*
+  R_590Cs_CONDITIONAL_FIRED_ITS_OWN_FALSIFIER_WITHIN_ONE_ROUND: THE-RECEIPTS-CARRY-ZERO-AND-I-DROVE-IT
+                             # CHECKED 2026-09-06T08:00:21Z at all four receipts, with a
+                             # positive control, and **this is a ruling's own falsifier
+                             # firing one round after it was written.**
+                             # **BOTH TEXTS, QUOTED.** R-590(C): the population stays five
+                             # named days "**subject to the reviewer establishing what the
+                             # two interim receipts actually carry**", **void if they
+                             # carry no incumbent increment**. R-592: ***"R-590(C) IS VOID
+                             # AS POSED -- the two 09-01/02 receipts are SEAL-RELOCATION
+                             # receipts that carry no economics by their own rule."***
+                             # **MY OWN DRIVE:** all four receipts
+                             # (`…20260901.json`, `.v2.json`, `…20260902.json`, `.v2.json`)
+                             # return **ZERO** hits for increment / net_cents / incumbent /
+                             # MATCHED / cents / statistic; protocols are exactly
+                             # `BE_FORWARD_DAY_SEALED_V1` and
+                             # `BE_FORWARD_DAY_SEAL_RELOCATION_V2`; **and my positive
+                             # control fires at 24 on the v2 declaration**, so the scan is
+                             # proven able to hit before its zeros are reported.
+                             # **AND THE RECEIPTS STATE THEIR OWN RULE:** "no metric, rho,
+                             # net value or sign appears outside this file."
+                             # ***SO THE CONDITION WAS NOT A HEDGE. It named the evidence
+                             # that would retract the ruling, that evidence was gathered,
+                             # and the ruling retracted -- inside one round.*** *I recorded
+                             # it at round 136 as "a ruling that names its own falsifier
+                             # before the evidence is in"; the falsifier fired.*
+  THE_COORDINATOR_CITED_TWO_RECEIPTS_FOR_A_NUMBER_THEY_CANNOT_CARRY: ITS-OWN-WORDS-AND-THE-CLASS-IS-MINE-TOO
+                             # CHECKED 2026-09-06T08:00:21Z at R-592(A).
+                             # ***"My R-590(C) cited two receipts for a number they cannot
+                             # carry; the reviewer's search closed the only form that kept
+                             # G = 5."***
+                             # **That is the same class as my own two relay instances**
+                             # (round 129's receipt summary, round 136's feed prose):
+                             # ***a claim about what an artifact contains, made without
+                             # opening it.*** *Three instances in ten rounds across two
+                             # seats -- and each time the artifact was small, present, and
+                             # one read away.*
+                             # **AND THE REVIEWER'S SEARCH IS WHAT CLOSED IT, WITH ITS
+                             # SURFACE AND AS-OF STATED:** no interim-read artifact by
+                             # NAME on `data`, `~/.local/state/pm-co`,
+                             # `~/ctaNew_forward_runs` (depth 3, 07:41:02Z, exit 0) and
+                             # none by CONTENT over the 404 files under 10 MB there
+                             # (07:51:46Z, exit 0, **hits LISTED** -- the 09-03/04/05
+                             # receipts' prose, the consumed 011 cells, and an iteration-011
+                             # reconciliation receipt naming no race day). **And one 180 s
+                             # search was KILLED and reported as INCONCLUSIVE rather than
+                             # clean.** *A search that ran out of time and says so is worth
+                             # more than one that finishes by narrowing itself.*
+  THE_RULING_IS_FORM_3_AND_NOTHING_WAS_CHOSEN_AFTER_SEEING: G-EQUALS-3-AT-v2s-OWN-PESSIMISTIC-BRANCH
+                             # CHECKED 2026-09-06T08:00:21Z at R-592(B) and against v2.
+                             # **The five NAMED days remain the population -- none
+                             # dropped, none added.** 09-03/04/05 are read from the pinned
+                             # feeds; **09-01 and 09-02 are disclosed READ-BUT-
+                             # UNRECOVERABLE** -- opened under the interim (R-549), their
+                             # statistic recoverable from no surviving artifact on the
+                             # searched surface. **The directional read rests on G = 3,
+                             # floor 0.25 -- EXACTLY v2's own
+                             # `PESSIMISTIC_only_the_three_first_openings_are_fresh`
+                             # branch, which I verified at round 136.**
+                             # ***THE PHRASE THAT MATTERS IS "NO NEW CONCEPT".*** *The
+                             # number the read will rest on was already declared, as the
+                             # unflattering branch, before anyone knew it would be the
+                             # operative one -- which is the whole purpose of declaring
+                             # both readings and putting the worse one in the resolved
+                             # field.* **A population that loses two of five days without
+                             # anything being chosen after seeing, because the pessimistic
+                             # case was written down in advance.**
+                             # **No re-score of consumed days. R-590(C) is superseded by
+                             # this paragraph.** Declaration v4 (BE 56) declares the form
+                             # and **cites no receipt for a number it does not carry.**
+  THE_READER_BINDS_TO_NO_PIN_AND_ITS_DIGEST_IS_A_LITERAL_THE_BATTERY_ASSERTS: BOTH-DRIVEN-BY-ME-AT-THE-CODE
+                             # CHECKED 2026-09-06T08:00:21Z at `be_race_reader.py`, both
+                             # findings.
+                             # **(A.3) THE READER BINDS TO NO PIN.** `feed_pins`,
+                             # `expect_sha256` and `voids_on_mismatch` each occur **ZERO**
+                             # times in the module -- ***so the pin file's
+                             # `the_read_voids_on_mismatch: true` has NO CODE BEHIND
+                             # IT.*** *A protection declared in one artifact and
+                             # implemented in none is the shape this programme has now
+                             # found in a declaration (v3's missing feed digests), in a
+                             # rule (my `updated:` window), and here in a reader.*
+                             # **(A.4) THE DIGEST IS A THIRD READ, AND ITS CLAIM IS A
+                             # LITERAL THE BATTERY ASSERTS.** Line 179 emits
+                             # `"digest_is_of_the_bytes_parsed": True` and line 295 **the
+                             # battery asserts that same key** -- and `load_two_arm_feed`
+                             # takes a PATH and opens the file itself between the before-
+                             # and after-digests. ***Rule 10 and rule 16 in one place: a
+                             # printed conclusion, and a control that cannot fail because
+                             # it reads the conclusion it is meant to verify.***
+                             # **AND THE FIX IS CHEAPER THAN THE DEFECT:** hash
+                             # incrementally over the same stream that is parsed -- **one
+                             # pass, ~285 MB instead of ~850 MB per day.** *Three reads
+                             # collapse to one and the claim becomes true by construction;
+                             # it is rare that the correct version is also the fast one.*
+                             # **Reader APPROVED-PENDING-TWO-FIXES (BE 56), and neither is
+                             # a re-design.** *Also latent: a whole-string path replace
+                             # that corrupts a directory component containing `.json` --
+                             # `with_name` is the fix.*
+  THE_SMOKE_IS_REHEARSED_AND_ITS_STATUS_CARRIES_ITS_OWN_REASON: NOT_READY_P2_book_exists_P2_builder_receipt_exists
+                             # CHECKED 2026-09-06T08:00:21Z at the rehearsal receipt.
+                             # `p003_de_gate1_smoke_rehearsal_09_03__20260906T075707Z
+                             # .json` records **`THE_ONE_COMMAND`** (the flock +
+                             # systemd-run invocation to run at GO) and
+                             # **`status: NOT_READY_P2_book_exists_P2_builder_receipt_
+                             # exists`.**
+                             # ***THE STATUS NAMES ITS OWN TWO UNMET PRECONDITIONS IN THE
+                             # STATUS STRING ITSELF.*** *A bare NOT_READY would need a
+                             # reader to go looking; this one cannot be quoted without its
+                             # reason travelling with it -- the opposite of the verdict
+                             # strings the currency audit found unauditable.*
+                             # **AND THREE DEFECTS THAT WOULD EACH HAVE REFUSED A CORRECT
+                             # BOOK AT GO WERE FOUND BY REHEARSING RATHER THAN AT GO:**
+                             # the builder receipt's NAME, the COMPACT vs DASHED day, and
+                             # **the digest at `book.sha256`.** *Each would have produced
+                             # a refusal that looked like a data problem and was a wiring
+                             # problem -- at the moment the lock is held and a book
+                             # exists.* **Fixed on DE's side.**
+                             # Resources read **from the run's OWN scope with an
+                             # ambient-scope falsifier** (anon / file / peak / events) --
+                             # *the high-water item closed at DE 79.* **Flag word: the
+                             # smoke is REHEARSED, NOT RUN.**
+  DA_63_IS_VERIFIED_BY_THE_REVIEWER_AND_BOTH_RULED_CONTROLS_BEHAVE: 08-24-AND-08-26-EXCLUDED-08-29-30-ADMITTED
+                             # RELAYED from R-592(A) §C 2026-09-06T08:00:21Z.
+                             # The era leg computed at the boundary `1787579334881534478`
+                             # (**15 -> 11**, the four lost days with row counts, the 11
+                             # counted from the 19 admission rows) -- *which reproduces
+                             # the number I computed at round 130 and DA derived at 136,
+                             # now by a third route.*
+                             # **BOTH R-580(C) CONTROLS BEHAVE AS RULED:** 08-24 and 08-26
+                             # EXCLUDED on 158 s and 4,656 s heartbeat gaps with 2
+                             # restarts each; **08-29/08-30 ADMITTED with EMPTY exclusion
+                             # lists.** ***The withdrawal I swept as a ruling at round 130
+                             # and recorded as pinned-by-a-check at 136 is now verified
+                             # behaving, by the reviewer, on the real leg.*** REVIEW_DA61
+                             # §A.5 CLOSED; the seal walked independently (1,759 leaves,
+                             # 1,167 numeric). Two reporting gaps -> DA 66.
   A_SEALED_RECEIPT_IS_NOT_A_VERIFIABLE_ONE_AND_ZERO_MISMATCHES_WOULD_CERTIFY_AN_EMPTY_SET: THE-VERIFIERS-SHARPEST-CONTROL-NAMES-A-PROGRAMME-FACT
                              # CHECKED 2026-09-06T07:53:33Z: the verifier driven by me (**25
                              # checks, 0 failures**, at a tree I confirmed clean first),
@@ -16708,6 +16843,75 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 138, 2026-09-06T08:00:21Z ------------------------------
+  DAs_RACE_READ_VERIFIER_AGREES_WITH_BEs_READ:
+    prov: RELAYED
+    from: Q-DA-287 (commits 20f87d5, f18a375)
+    as_of: 2026-09-06T08:04:01Z
+  R_590Cs_CONDITIONAL_FIRED_ITS_OWN_FALSIFIER_WITHIN_ONE_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_forward_day_receipt_20260901.v2.json
+    as_of: 2026-09-06T08:00:21Z
+    said: >-
+      all four 09-01/02 receipts return zero hits for increment, net_cents,
+      incumbent, MATCHED, cents and statistic, with protocols
+      BE_FORWARD_DAY_SEALED_V1 and BE_FORWARD_DAY_SEAL_RELOCATION_V2, and my
+      positive control over be_race_read_declaration_v2.json fires at 24 so the
+      scan is proven able to hit. R-590(C) made the population conditional and
+      void if the receipts carried no incumbent increment; R-592 records it VOID
+      AS POSED, so the ruling's own named falsifier fired one round after it was
+      written.
+  THE_COORDINATOR_CITED_TWO_RECEIPTS_FOR_A_NUMBER_THEY_CANNOT_CARRY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T08:00:21Z
+    said: >-
+      R-592(A) states "My R-590(C) cited two receipts for a number they cannot
+      carry; the reviewer's search closed the only form that kept G = 5", and
+      records the search's surface and as-of -- no artifact by name on data,
+      ~/.local/state/pm-co or ~/ctaNew_forward_runs at depth 3 as-of 07:41:02Z,
+      none by content over the 404 files under 10 MB as-of 07:51:46Z with the hits
+      listed, and one 180 s search killed and reported as inconclusive rather than
+      clean.
+  THE_RULING_IS_FORM_3_AND_NOTHING_WAS_CHOSEN_AFTER_SEEING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T08:00:21Z
+    said: >-
+      R-592(B) rules form (3): the five named days remain the population with none
+      dropped or added; 09-03/04/05 read from the pinned feeds; 09-01 and 09-02
+      disclosed READ-BUT-UNRECOVERABLE; the directional read resting on G = 3 at
+      floor 0.25, exactly v2's PESSIMISTIC_only_the_three_first_openings_are_fresh
+      branch which I verified at round 136 -- no new concept, no re-score of
+      consumed days, and R-590(C) superseded by that paragraph.
+  THE_READER_BINDS_TO_NO_PIN_AND_ITS_DIGEST_IS_A_LITERAL_THE_BATTERY_ASSERTS:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-06T08:00:21Z
+    said: >-
+      feed_pins, expect_sha256 and voids_on_mismatch each occur zero times in the
+      module, so the pin file's the_read_voids_on_mismatch true has no code behind
+      it; and line 179 emits "digest_is_of_the_bytes_parsed": True as a literal
+      which line 295's battery then asserts, while load_two_arm_feed takes a path
+      and opens the file itself between the before- and after-digests. The fix is
+      to hash incrementally over the parsed stream: one pass, about 285 MB instead
+      of 850 MB per day.
+  THE_SMOKE_IS_REHEARSED_AND_ITS_STATUS_CARRIES_ITS_OWN_REASON:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_smoke_rehearsal_09_03__20260906T075707Z.json
+    as_of: 2026-09-06T08:00:21Z
+    said: >-
+      the receipt records THE_ONE_COMMAND as the flock plus systemd-run invocation
+      to run at GO, and status NOT_READY_P2_book_exists_P2_builder_receipt_exists
+      -- naming its two unmet preconditions inside the status string. Q-DE-82
+      records three defects that would each have refused a correct book at GO --
+      the builder receipt's name, the compact versus dashed day, and the digest at
+      book.sha256 -- found by rehearsing rather than at GO, with resources read
+      from the run's own scope under an ambient-scope falsifier.
+  DA_63_IS_VERIFIED_BY_THE_REVIEWER_AND_BOTH_RULED_CONTROLS_BEHAVE:
+    prov: RELAYED
+    from: R-592(A) section C
+    as_of: 2026-09-06T08:00:21Z
   # --- MEM round 137, 2026-09-06T07:53:33Z ------------------------------
   A_SEALED_RECEIPT_IS_NOT_A_VERIFIABLE_ONE_AND_ZERO_MISMATCHES_WOULD_CERTIFY_AN_EMPTY_SET:
     prov: CHECKED

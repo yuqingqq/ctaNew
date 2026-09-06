@@ -10104,3 +10104,107 @@ directions.
   round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
   flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 120 — archived 2026-09-06T08:00:21Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 138 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T07:27:43Z (MEM ROUND 135 -- R-587 AND R-588 SWEPT AS ENTRIES. STATE
+  ONLY. FOR THE FIRST TIME TODAY ONE OF THE THREE TESTS IS EXECUTING ON REAL DATA.
+  (1) **THE RACE READ IS UNBLOCKED AND IT IS NOT READ, AND THOSE ARE NOT THE SAME
+  WORD.** The estimand is computable, the ruling is made, the reader is being
+  retargeted -- **and BE 54 must land it on the FEED, REV 44 must drive it, and the
+  coordinator must open on GO.** *This file has carried FOUR states for this one
+  question in twelve rounds -- approved-to-open, blocked-on-reader,
+  blocked-at-declaration, unblocked -- and each transition changed what a reader
+  should DO.* **The five days are consumed by the opening act, not by the ruling.**
+  (2) **THE RULING IS OPTION A AND IT IS CHOSEN BY A RULE, NOT A PREFERENCE.**
+  `option: "A -- an estimand computable from the sealed bytes AS THEY ARE, against
+  the FEED"`, MATCHED_VOLUME primary, `re_seal_NOT_recommended: true` -- **and the
+  `why` field is the point: "it is the one with a RULE cited (CLAUDE.md rule 7:
+  controls matched on the DECISION VARIABLE)".** ***Between two candidate
+  statistics the tiebreak was not which is better but which one a standing rule
+  already selects -- the difference between a choice and a derivation.*** And the
+  re-seal is refused **on its merits, not its cost**: "not needed", the ~5 x 23 min
+  never weighed.
+  (3) **v3 NAMES A SECOND CONTRADICTION NOBODY HAD STATED:** "v2 declares the
+  pairing BY_THRESHOLD; **the interim declares BY_THRESHOLD explicitly NOT
+  primary**". *So the file inversion I swept last round was not v2's only
+  self-contradiction, and the second points the same way: v2 inherited the
+  interim's vocabulary while inverting its choices.* **BY_THRESHOLD is REPORTED,
+  never PRIMARY** -- *a convention kept visible and demoted is safer than one
+  deleted.*
+  (4) **AND THE WHOLE QUESTION WAS SETTLED WITHOUT OPENING A SEALED DAY, BECAUSE
+  THE FEED WAS READ AT THE WRITER.** `read_at_the_writer_not_by_opening: true`,
+  `source: be_forward_day.FEED_FIELDS`, the writer's own comment quoted. ***Under
+  rule 11 an opened day is consumed whether or not the read was useful*** --
+  reading the PRODUCER is what made an estimand adjudicable at zero cost. **The
+  same move failed the other way at my round 129**, when I relayed a receipt's
+  summary field instead of its rows: *read the writer, not the summary; read the
+  writer, not the sealed bytes -- one discipline, two directions.*
+  (5) **THE TWO MEM LEDGER ITEMS WERE ALREADY CLOSED, AND I NAME THE ROUNDS: the
+  three STALE flags at ROUND 125** (each `SUPERSEDED-IN-BAND` with a re-measurement
+  BY SYMBOL; `evaluate_predicates` left **UNVERIFIED rather than withdrawn**) **and
+  the unauditable-flag rule at ROUND 131**, closed as an INSTRUMENT rather than an
+  argument -- `new_flags_without_provenance`, three call sites into `audit()`,
+  falsifiers both directions, **a positive control that plants a flag into the LIVE
+  file**, and it has fired on my own batches twice. **Neither was open at 134;
+  neither is closed by this round.** ***The ledger recorded a communication gap,
+  not a disagreement: closure landed on my surface and the ledger was built from
+  the reviewer's own filings*** -- which is an argument FOR the ledger.
+  (6) **DA FOUND TWO DEFECTS IN ITS OWN INSTRUMENTS BY ENUMERATION BEFORE
+  PUBLISHING**, and the first is a shape I named yesterday in another seat: **the
+  leak scan shared its blind spot with the REDACTOR** -- eff_RT under names no
+  marker matched, so the thing that redacts and the thing that checks the redaction
+  were blind together. ***Two instruments with one blind spot is not redundancy***
+  -- **the identical form as the lock predicate's "two independent mechanisms", one
+  hour later, in a different seat.** Fixed with a numeric-leaf census that **fails
+  CLOSED on economic-shaped names.** And **a commit id rewritten out from under a
+  declaration by another seat's rebase** (`cd212f9` -> `acd393a`, identical bytes)
+  -- **both declaration and runner now cite by CONTENT DIGEST.** *A sha naming a
+  commit is a name another seat can change; a digest of the content is not.*
+  (7) **RULE 21 GAINED ITS INTEGRATION PATH, AND IT IS THE CASE I HIT AT ROUND
+  132:** "otherwise LEAVE the commit, REPORT it as stranded, and continue -- the
+  coordinator rebases stranded commits at the first clean-tree moment". ***That is
+  exactly what I did and reported rather than resolved, and my batch was rebased
+  intact.*** **And the cites resolve** -- R-586 and R-588 both exist. *At round 129
+  I filed the mirror: rule 21 citing R-576 before R-576 existed. The protocol has
+  now been amended WITH its entries rather than ahead of them.*
+  (8) **THE THREE TESTS, DRIVEN BY ME: the sealed BTC smoke is RUNNING**
+  (`da63smoke.scope`, 619 s, 1.62 GB, `heavy=True locked=True`, "none heavy without
+  the lock"); **the 09-03 BOOK is NOT ASSEMBLED** (BE 54, both halves of the
+  blocker now existing); **the RACE READ is UNBLOCKED, NOT READ.** ***For the first
+  time in this programme's day one of the three is EXECUTING on real data under the
+  lock*** -- and the honest summary changes by exactly one word: **the machinery is
+  close, one test is running, and no test has produced a number.**
+  (9) **AND THE COMMIT-TIME RE-READ CAUGHT THE SMOKE FINISHING.** Receipt
+  `p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json` at 07:28:45Z:
+  **2,849,388 KiB against a 6.0 GiB cap, a `sealed_payload`, and
+  `the_arm_that_ran: MIN_SIZE_NOT_THE_E2A_GATE`.** *I read the top-level keys and
+  did NOT open the sealed payload.* ***So the first of the three tests has RUN TO
+  COMPLETION and still has no number to read*** -- the arm is labelled NOT the gate
+  (R-567(C) holding at the artifact) and the gate is read only at 14 post-boundary
+  days. **A completed run whose economics stay sealed is this programme's answer to
+  "the machinery works and the population does not yet exist"** -- *the shape I
+  recorded as a RULING three rounds ago, now standing as an ARTIFACT.*
+  (10) **AND R-589 LANDED TWO MINUTES BEFORE MY RE-READ.** BE 54's reader computes
+  MATCHED_VOLUME **through the interim's OWN CODE, 10/10 reproduced** -- *which is
+  what makes "the same statistic the interim read" checkable rather than asserted*
+  -- and **the assembly REFUSED because the heavy lock was held by DA's smoke,
+  "the correct act."** ***Rule 20 working BETWEEN SEATS for the first time today:
+  one seat's heavy run blocked another's, and the blocked seat refused rather than
+  waiting or proceeding.*** *The instrument owed at R-575(C) is now enforcing a
+  real sequencing decision rather than certifying an empty room.* **And one gap the
+  coordinator closed: v3 PINNED NO FEED DIGEST** -- ***the declaration that
+  retargeted the read TO the feed did not pin the feed's digests, the exact
+  protection v2 carried for the scores.*** *Nothing about v3 looked incomplete,
+  which is why it had to be noticed.*
+  MEASURED BEFORE THIS SENTENCE: flags 731 -> 740, flag_provenance 276 -> 285,
+  tasks 19; 161 CHECKED, 124 RELAYED, **455 UNMARKED -- unchanged for the eleventh
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
+  flags vs HEAD 0 without provenance.)
+```

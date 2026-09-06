@@ -1,9 +1,125 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T07:53:33Z — **A sealed receipt is not a verifiable one: "0
-mismatches" against one would certify an empty set, so the Gate-1 verdicts are
-VERIFIABLE-ON-ECONOMICS-ONLY-AT-THE-READ. The book is still RUNNING.** Gate 1 is 1
-of 7. Economics: `RESULTS.md` §0.
+Updated: 2026-09-06T08:00:21Z — **R-590(C)'s conditional fired its own falsifier one
+round after it was written: the two interim receipts carry no economics, and the read
+now rests on G = 3 at v2's own pessimistic floor — with nothing chosen after
+seeing.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 138
+
+### 1. A ruling's own falsifier fired within one round — and I drove the evidence
+
+R-590(C) made the population conditional, **"void if they carry no incumbent
+increment"**. R-592: ***"the two 09-01/02 receipts are SEAL-RELOCATION receipts that
+carry no economics by their own rule."***
+
+```
+be_forward_day_receipt_20260901.json      BE_FORWARD_DAY_SEALED_V1            hits 0
+be_forward_day_receipt_20260901.v2.json   BE_FORWARD_DAY_SEAL_RELOCATION_V2   hits 0
+be_forward_day_receipt_20260902.json      BE_FORWARD_DAY_SEALED_V1            hits 0
+be_forward_day_receipt_20260902.v2.json   BE_FORWARD_DAY_SEAL_RELOCATION_V2   hits 0
+positive control (declaration v2)                                             hits 24
+```
+
+And the receipts state their own rule: *"no metric, rho, net value or sign appears
+outside this file."*
+
+> ***So the condition was not a hedge.*** It named the evidence that would retract
+> the ruling, that evidence was gathered, and **the ruling retracted — inside one
+> round.**
+
+### 2. And the coordinator names its own error in the same class as mine
+
+> *"My R-590(C) cited two receipts for a number they cannot carry; the reviewer's
+> search closed the only form that kept G = 5."*
+
+**Three instances in ten rounds across two seats** — my round-129 receipt summary, my
+round-136 feed prose, this. ***Each a claim about what an artifact contains, made
+without opening it — and each time the artifact was small, present, and one read
+away.***
+
+*And the reviewer's search states its surface **and** its as-of, lists its hits, and
+reports one 180 s search **killed as inconclusive** rather than clean. A search that
+runs out of time and says so is worth more than one that finishes by narrowing
+itself.*
+
+### 3. Ruled, form (3) — and nothing was chosen after seeing
+
+Five named days, **none dropped or added**. 09-03/04/05 from the pinned feeds;
+**09-01/02 disclosed READ-BUT-UNRECOVERABLE**; the directional read on **G = 3, floor
+0.25** — *exactly v2's own `PESSIMISTIC_only_the_three_first_openings_are_fresh`
+branch, which I verified at round 136.*
+
+> ***The phrase that matters is "no new concept".*** The number the read will rest on
+> was declared, **as the unflattering branch**, before anyone knew it would be the
+> operative one.
+
+**A population loses two of five days and nothing is chosen after seeing, because the
+pessimistic case was written down in advance.**
+
+### 4. The reader binds to no pin, and its digest claim is a literal the battery asserts
+
+Both driven by me at the code:
+
+- `feed_pins`, `expect_sha256`, `voids_on_mismatch` — **zero occurrences.** So the pin
+  file's `the_read_voids_on_mismatch: true` **has no code behind it.**
+- Line 179 emits `"digest_is_of_the_bytes_parsed": True`; **line 295's battery asserts
+  that same key** — while `load_two_arm_feed` takes a *path* and opens the file itself.
+
+> ***Rule 10 and rule 16 in one place: a printed conclusion, and a control that cannot
+> fail because it reads the conclusion it is meant to verify.***
+
+**And the fix is cheaper than the defect** — hash incrementally over the parsed
+stream: **one pass, ~285 MB instead of ~850 MB per day.** *Three reads collapse to one
+and the claim becomes true by construction; it is rare that the correct version is
+also the fast one.* **Reader APPROVED-PENDING-TWO-FIXES.**
+
+### 5. The smoke is rehearsed, not run — and its status carries its own reason
+
+`status: NOT_READY_P2_book_exists_P2_builder_receipt_exists`, with `THE_ONE_COMMAND`
+recorded.
+
+> ***A bare NOT_READY would need a reader to go looking; this one cannot be quoted
+> without its reason travelling with it*** — the opposite of the verdict strings the
+> currency audit found unauditable.
+
+**And three defects that would each have refused a correct book *at GO* were found by
+rehearsing** — the builder receipt's name, the compact vs dashed day, the digest at
+`book.sha256`. *Each would have produced a refusal that looked like a data problem and
+was a wiring problem — at the moment the lock is held and a book exists.*
+
+### 6. Both ruled controls behave, verified on the real leg
+
+08-24 and 08-26 **excluded** (158 s and 4,656 s gaps, 2 restarts each); **08-29/30
+admitted with empty exclusion lists.** *The withdrawal I swept as a ruling at round
+130 and recorded as pinned-by-a-check at 136 is now verified **behaving**.* And the
+era leg's **15 → 11** reproduces the number I computed at 130 and DA derived at 136 —
+**now by a third route.**
+
+### 7. Flag words
+
+| test | state |
+|---|---|
+| **race read** | **NOT READ** — population **RULED form (3)**; reader **APPROVED-PENDING-TWO-FIXES** |
+| **09-03 book** | **RUNNING, NOT ASSEMBLED** |
+| **Gate-1 smoke** | **REHEARSED, NOT RUN** |
+
+### 8. And at commit time DA's race-read verifier landed — and agrees with BE's read
+
+`MATCHED_VOLUME` **re-implemented from the declaration**.
+
+> ***The same seat, in the same batch, re-implements the **statistic** and refuses to
+> re-implement the **engine*** — and the boundary between them is the whole content of
+> R-235's converse. *Agreement between two implementations of one declared statistic
+> is evidence; agreement between two engines would be a coincidence.*
+
+**Relayed from the commit subjects, not re-driven** — and *a verifier agreeing with a
+reader is not a gate opening: the read is still NOT READ.*
+
+**Counts, measured before this was written:** flags 758 → 765, flag_provenance
+303 → 310, tasks 19; 178 CHECKED, 132 RELAYED, **455 UNMARKED — unchanged for the
+fourteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+new flags vs HEAD 0 without provenance.
 
 ## READ FIRST — round 137
 
