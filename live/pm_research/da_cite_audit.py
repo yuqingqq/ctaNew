@@ -241,6 +241,16 @@ TABLES: tuple = (
      "module": "de_phase4_diag_runner", "attr": "USER_ADMISSIONS",
      "field": "authority", "subject_terms_from_key": True,
      "extra_terms": ("admission", "admit")},
+    # ADDED ROUND 53, AND THE COVERAGE GUARD IS WHAT FOUND IT. DE landed
+    # this table in the ruled fee-endpoint run and nothing declared it here;
+    # `undeclared_authority_tables` named it within a day of the guard
+    # existing. That is the round-51 fix earning its keep: a hand-enumerated
+    # list would have stayed silently two-short again.
+    {"id": "fee_endpoint.signing_build_requirement",
+     "module": "de_v2_fee_endpoint_sensitivity",
+     "attr": "SIGNING_BUILD_REQUIREMENT",
+     "field": None, "subject_terms_from_key": True,
+     "extra_terms": ("signing", "signed", "fee", "bps", "maker")},
     {"id": "phase2_arms.registration_provenance",
      "module": "phase2_arms", "attr": "REGISTRATION_PROVENANCE",
      "field": None, "subject_terms_from_key": True,
