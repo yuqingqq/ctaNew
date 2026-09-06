@@ -20,8 +20,14 @@ import ast as _ast
 import hashlib, json, resource, sys, time
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import de_data_root as DR
+# R-559(C): the root comes from ONE resolver, and a result-bearing arms
+# emission REFUSES a non-canonical one. This was three hardcoded absolute
+# paths; a worktree shell would have read a different ledger and said
+# nothing.
+DE_ROOT = DR.require_canonical("the section-8.1 arms emission")
 import flow_intensity as fi
-fi.PM = Path("/home/yuqing/ctaNew/data/pm_5min"); fi.RAW = fi.PM / "raw"
+fi.PM = Path(DE_ROOT["data_root"]) / "pm_5min"; fi.RAW = fi.PM / "raw"
 fi.MARKETS = fi.PM / "markets.jsonl"; fi.GAPS = fi.PM / "collector_gaps.jsonl"
 fi.DAYS = fi._discover_days()
 import de_phase4_diag_runner as R
@@ -178,6 +184,7 @@ def provenance() -> dict:
         "produced_by": me.name,
         "producing_code": hashlib.sha256(me.read_bytes()).hexdigest()[:16],
         "producing_code_path": str(me),
+        "data_root": DE_ROOT,
         "carrying_commit": _git("rev-parse", "HEAD"),
         "carrying_commit_short": _git("rev-parse", "--short", "HEAD"),
         "working_tree_clean_for_this_file": (

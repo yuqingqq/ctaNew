@@ -42,6 +42,7 @@ from pathlib import Path
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import de_data_root as DR  # noqa: E402
 import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
@@ -516,6 +517,7 @@ def fixture_run() -> dict:
         "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "no_day_book_was_read": True,
         "no_path_under_data_was_opened": True,
+        "data_root": DR.require_canonical("the fixture run", fixture=True),
         "runnable_from_a_shell_worktree": True,
         "the_committed_day_set_is_empty": True,
         "why_fixtures": "the reviewer has not filed on design v3 and BE's "

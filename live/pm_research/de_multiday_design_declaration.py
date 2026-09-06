@@ -26,6 +26,9 @@ import statistics
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import de_data_root as DR  # noqa: E402
+
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V4"
 EXPECTED_CHECKS = 53
@@ -325,17 +328,24 @@ def day_sets_from_the_ledger(root: Path | None = None) -> dict:
     # qualifying set where the real ledger has 6 -- caught only because the
     # count disagreed with a hand check. Resolve the symlink when it exists
     # and RECORD which root was read.
-    data_root = base / "data" / "data" if (base / "data" / "data").exists() \
-        else base / "data"
+    # R-559(C): ONE resolution for the whole DE surface, imported.
+    if root is None:
+        rr = DR.resolve()
+        data_root = Path(rr["data_root"])
+    else:
+        rr = {"branch": "0_explicit_root_argument", "data_root": None}
+        data_root = base / "data" / "data" \
+            if (base / "data" / "data").exists() else base / "data"
     # (4) IT MUST REFUSE, NOT RETURN AN EMPTY SET. The reviewer drove a
     # non-ledger root and got a silent [] -- a derivation that answers
     # "no days qualify" when it is looking at the wrong tree is worse than
     # one that crashes.
     resolved = data_root.resolve()
-    if str(resolved) != DECLARED_LEDGER_ROOT:
+    if str(resolved) != DR.CANONICAL_DATA_ROOT:
         raise DesignRefused(
             f"REFUSED: the ledger root resolves to {resolved}, not the "
-            f"declared {DECLARED_LEDGER_ROOT}. A day set derived from the "
+            f"declared {DR.CANONICAL_DATA_ROOT} (branch {rr['branch']}). "
+            f"A day set derived from the "
             f"wrong tree is not a smaller day set, it is a different "
             f"question -- and the failure mode is an EMPTY answer that "
             f"looks like a result.")
@@ -396,8 +406,9 @@ def day_sets_from_the_ledger(root: Path | None = None) -> dict:
     return {
         "ledger_root_read": str(data_root),
         "ledger_root_resolved": str(resolved),
-        "declared_ledger_root": DECLARED_LEDGER_ROOT,
+        "declared_ledger_root": DR.CANONICAL_DATA_ROOT,
         "root_verified_at_run_time": True,
+        "root_resolution": rr,
         "why_the_root_is_recorded": (
             "in a seat worktree `<root>/data` is the git-materialised "
             "shell of COMMITTED artifacts only; the real tree hangs off "
@@ -1481,6 +1492,8 @@ def main() -> int:
     LAST_BATTERY.clear()
     selftest(quiet=True)
     payload["battery"] = dict(LAST_BATTERY)
+    payload["data_root"] = DR.require_canonical(
+        "the multi-day design declaration")
     payload["worktree_data_shell_trap"]["root_read_this_emission"] = \
         payload["R7_the_day_set"]["ledger_root_read"]
     payload["withdrawn_phrase_audit"] = _withdrawn_phrase_audit(payload)
