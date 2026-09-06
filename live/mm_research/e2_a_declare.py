@@ -62,14 +62,15 @@ import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-DECL_VERSION = 4
+DECL_VERSION = 5
 SUPERSEDES = {
-    "path": "live/mm_research/declarations/p002_e2_a_declaration_v3.json",
-    "sha256": "6383d781c7bbeaa65ecccf4c5af469539c2fac3ba060d7d3fbc87d557e960ea7",
-    "carrying_commit": "39f3eca",
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v4.json",
+    "sha256": "756ca9a31b89cd74489ce72523d0598d097c189079b256f3de9813dcabb47533",
+    "carrying_commit": "0718fea",
     "chain": ["v1 405ddb7ab10486c2 (367b800)",
               "v2 6567a25f04d7fb89 (0cbaba6)",
-              "v3 6383d781c7bbeaa6 (39f3eca)"],
+              "v3 6383d781c7bbeaa6 (39f3eca)",
+              "v4 756ca9a31b89cd74 (0718fea)"],
     "correction_is_in_band": (
         "rule 13: v1 is NOT edited and stands as provenance. v2 adds the "
         "data-root discipline the E2.0 RESULT review (section 6) requires of "
@@ -126,6 +127,30 @@ SUPERSEDES = {
         "defect and REFUTES), cost ordering at the AGGREGATE gate row (a "
         "violation raises REFUTES_THE_BRACKET). Flagged rather than "
         "silently narrowed.",
+
+        "v5, TWO CORRECTIONS THE RUNNER'S OWN FIXTURE FORCED, BOTH BEFORE "
+        "ANY TAPE WAS OPENED. (i) v4 declared the min-size arm's q as 'the "
+        "same estimator, and the same function, E1-A already uses for the "
+        "price tick'. Driven, that is WRONG: tick_size/tick_mode keep a GCD "
+        "fallback that fires when fewer than 99.9% of the diffs are integer "
+        "multiples, and the GCD of a set containing ONE off-grid value "
+        "collapses to the representation floor -- measured, a tape of 0.25 "
+        "multiples plus a single 3.14159 returns 1e-5. q is therefore the "
+        "MODAL positive diff with NO fallback, in the runner's own "
+        "`qty_step_mode`, and the PRICE tick is left untouched because it is "
+        "pinned by the E1-A reproduction control. (ii) a depth20 row with "
+        "FEWER than twenty levels a side is NaN-PADDED by the CSV reader "
+        "rather than rejected, and would have entered the simulation as a "
+        "book with zero-size levels -- an invented queue position, the same "
+        "defect class as reading an absent level as an empty one. Ragged "
+        "rows are now detected, EXCLUDED and COUNTED in both directions.",
+
+        "v5, AND THE SAME MECHANISM SHARPENS R-570(D)'s RECORD DEFECT. The "
+        "modal-diff fix E1_RESULTS calls 'FIXED post-audit' IS present in "
+        "the committed tick_size; what returns 1e-6 for FIL is the GCD "
+        "FALLBACK the same docstring says was 'kept', firing on exactly the "
+        "input the fix was written for. 'Designed and not landed' is not the "
+        "whole account: it was landed, and it is overridden.",
     ],
 }
 
@@ -454,11 +479,21 @@ RUNNER_BOUNDARIES = {
                                  "queue model needs an order SIZE, which "
                                  "E1-A never had because its fills were "
                                  "binary.",
-        "q": "the venue's quantity STEP for the symbol, estimated from the "
-             "tape by mode-of-diffs over the day's distinct trade "
-             "quantities -- the same estimator, and the same function, E1-A "
-             "already uses for the PRICE tick and which the reproduction "
-             "control reproduces to 4 dp.",
+        "q": "the venue's quantity STEP for the symbol: the MODAL positive "
+             "diff over the day's distinct trade quantities, with NO GCD "
+             "fallback, in the runner's own `qty_step_mode`.",
+        "why_it_is_NOT_E1A_s_tick_function_although_v4_said_it_was": (
+            "v4 declared it as the same function E1-A uses for the price "
+            "tick. Driven in the fixture, that is wrong: tick_size / "
+            "tick_mode keep a GCD fallback that fires when fewer than 99.9% "
+            "of diffs are integer multiples of the modal one, and the GCD of "
+            "a set containing ONE off-grid value collapses to the "
+            "representation floor -- measured, 0.25 multiples plus a single "
+            "3.14159 returns 1e-5. The PRICE tick is NOT changed: it is "
+            "pinned by the E1-A reproduction control and must not move. The "
+            "quantity step is a new quantity and takes the robust form. Both "
+            "directions are driven: the robust estimator returns 0.25 and "
+            "the fallback version is shown returning 1e-5."),
         "why_not_a_round_number": "a size chosen in this seat would make the "
                                   "gate a function of that choice, which is "
                                   "rule 11's shape and is exactly what the "
@@ -477,6 +512,18 @@ RUNNER_BOUNDARIES = {
                        "of 0.25 must return 0.25; a tape with a single "
                        "off-grid quantity must NOT be dragged to that "
                        "quantity by one print",
+    },
+    "ragged_depth20_rows": {
+        "when": "a depth20 line does not carry exactly twenty levels a side",
+        "rule": "the row is EXCLUDED and COUNTED, in both directions "
+                "(over-long rows the CSV reader rejects, and SHORT rows it "
+                "silently NaN-pads), with the counts reported per day",
+        "never": "padded with zeros. A zero-size level is a queue position, "
+                 "and inventing one is the same defect class as reading an "
+                 "ABSENT level as an EMPTY one -- which boundary 1 refuses.",
+        "the_control": "a two-row fixture, one complete and one truncated, "
+                       "must yield exactly one snapshot and one counted "
+                       "ragged row",
     },
     "the_chase_crosses_the_REAL_touch": {
         "rule": "an unfilled or partly filled episode is chased at T_p by "
