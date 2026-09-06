@@ -1,0 +1,621 @@
+{
+ "ROUND_49_BUDGET_WITHDRAWN": {
+  "and_the_term_it_could_not_close_is_now_measured": "asm's own peak, published per run as resources.asm_peak_gb_PUBLISHED",
+  "so_the_floor_was_an_ARTEFACT": "of indexing the wrong tape, not a property of the day. The budget's arithmetic was right and its input was wrong.",
+  "status": "WITHDRAWN. The declaration is not edited (rule 13); this records the withdrawal where the budgets are read.",
+  "what_it_rested_on": "an A1_index peak of 5.971 GB, MEASURED while indexing the LIVE v5 tape -- the consumed hour's, not the day's",
+  "what_was_declared": "be_assembly_budget_declaration_v1.json computed 8.713 GB against the 8 GB cap (resident floor 5.971 + whole fragment 2.742) and answered NO",
+  "what_was_measured_once_the_seam_took_a_path": "A1_index 3.190 GB, from the day's 991 MB tape"
+ },
+ "WHAT_THE_SCOPE_NUMBERS_SUPPORT": {
+  "a_peak_equal_to_the_cap_is_a_floor": "09-04's tape reported peak_bytes == max_bytes with 1,199 reclaims that pinned it there. That is a bound, not a measurement of demand: it supports `demand was AT LEAST the cap and was throttled 1,199 times`, and it is not commensurable with an unthrottled peak from another run",
+  "the_field_that_says_so": "scope.peak_is_censored",
+  "what_the_two_days_constrain": "the builder's own footprint did not move (peak_rss_gb identical to three decimals across a 31% row spread, from a field that varies sensibly elsewhere); the whole cgroup difference sits in page cache, which ROSE on the smaller day as anon FELL -- so whatever differed was outside the builder's own allocation. Stronger than a correlation, weaker than a mechanism, and asserted as neither"
+ },
+ "asm": {
+  "both_heads_present": true,
+  "by_arm_keys": [
+   [
+    "btc",
+    "incumbent_linear_d"
+   ],
+   [
+    "btc",
+    "q1_arrival_composed_lgbm"
+   ]
+  ],
+  "coverage_by_head": {
+   "incumbent_linear_d": {
+    "coverage": 0.9319146861121114,
+    "n_covered": 248441,
+    "n_reference_generations": 266592,
+    "n_scored_keys": 248441,
+    "n_uncovered": 18151,
+    "theta": 0.43525926488298716
+   },
+   "q1_arrival_composed_lgbm": {
+    "coverage": 0.9319146861121114,
+    "n_covered": 248441,
+    "n_reference_generations": 266592,
+    "n_scored_keys": 248441,
+    "n_uncovered": 18151,
+    "theta": 0.32450609461933483
+   }
+  },
+  "n_shared_keys": 248441,
+  "set_equality_asserted": true,
+  "sets_are_equal": true
+ },
+ "assembly_evidence": {
+  "ROW_ACCOUNTING": {
+   "accounted": 489434,
+   "by_reason": {
+    "fine": 0,
+    "gap_at_cutoff_excluded": 4,
+    "no_archive": 0,
+    "no_level_history_excluded": 19,
+    "pm": 0,
+    "pre_window_excluded": 26027,
+    "state_join_failed": 0
+   },
+   "dropped": 26050,
+   "if_they_do_not_close": "the residual is UNEXPLAINED and is reported as such rather than absorbed. Both sides are ROW counts and the total comes from round 58's receipt, not from this function -- so a mismatch is a real disagreement between producers, not a unit error",
+   "kept": 463384,
+   "population": "FRAGMENT ROWS -- the rows phase2_arms reads from the day's fragment with status OK",
+   "residual": 0,
+   "rows_accounted_for": true,
+   "rows_pin_receipt": "be_gate1_state_tape_receipt_20260905_btc.json",
+   "rows_published_by_the_tape_receipt": 489434
+  },
+  "UNCOVERED_GENERATIONS": {
+   "count": 18151,
+   "coverage": 0.9319146861121114,
+   "identical_across_heads": true,
+   "n_reference_generations": 266592,
+   "population": "REFERENCE GENERATIONS -- a DIFFERENT population from the row accounting above, which is why no reason breakdown is attached to it",
+   "superseded_field": "reasons_account_for_the_count (round 59) -- withdrawn, not silently dropped: it compared rows with generations",
+   "why_no_reason_class_here": "the drop classes (pre_window_excluded, gap_at_cutoff_excluded, no_level_history_excluded, state_join_failed) are counted in FRAGMENT ROWS. Attaching them to a generation count is what made round 59's `reasons_account_for_the_count` report FALSE on numbers that were each correct"
+  },
+  "chunk_windows": 6,
+  "kept_by_coin": {
+   "btc": 463384
+  },
+  "n_chunks": 48,
+  "n_windows": 288,
+  "state_join_failed": 0,
+  "state_join_failed_is_zero": true,
+  "why_that_matters": "a non-zero state_join_failed would mean the day's generations did not find rows in the day's tape -- which is exactly what the parameterised seam exists to make impossible"
+ },
+ "book": {
+  "bytes": 260449687,
+  "digest_is_of_the_buffer_as_written": true,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl",
+  "readback_matches": true,
+  "readback_sha256": "499f859673676827923df8fddad6f267fcfff07ee06cd64f57dbff9bc215f1f6",
+  "sha256": "499f859673676827923df8fddad6f267fcfff07ee06cd64f57dbff9bc215f1f6",
+  "sha256_of_asm": "279640d4409263ad1a411f81bf8cb45e67d2929309a1e423e4f8282a23e04874",
+  "why_readback": "the digest is taken from the buffer that was written (the B-1 discipline on the write side); the readback is a SECOND, independent statement of the same bytes and is reported beside it, not instead"
+ },
+ "coin": "btc",
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day": "20260905",
+ "decides_nothing": "REPORTED (rule 14).",
+ "inputs_pinned": {
+  "fragment": {
+   "matches_the_receipt_pin": true,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260905_btc.json",
+   "receipt": "be_gate1_fragment_receipt_20260905_btc.json",
+   "sha256": "50318a3a7c011739eed25f2bf1db656a38f4e7c46d10487ea419bcef82f1dfe6"
+  },
+  "tape": {
+   "matches_the_receipt_pin": true,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260905_btc.json",
+   "receipt": "be_gate1_state_tape_receipt_20260905_btc.json",
+   "receipt_name_is": "read from the resolver that chose it, not restated",
+   "sha256": "0650e21348dbccb8c77e0478de26f62f832faded74fe058573d1ad5b240b1f80",
+   "split": "score"
+  }
+ },
+ "no_economics": true,
+ "no_null_draws": true,
+ "no_scoring_of_arms": true,
+ "producing_code": {
+  "builder_commit": "5f5f76c8f3aaf3725dae57ffb6de9723968c440d",
+  "captured_at": "IMPORT",
+  "closure_drift": [],
+  "closure_unchanged_during_the_run": true,
+  "head_at_emit": {
+   "dirty": true,
+   "dirty_code": false,
+   "dirty_paths": [
+    "data"
+   ],
+   "dirty_paths_code": [],
+   "exempt_entries": [
+    {
+     "exempt": true,
+     "is_symlink": true,
+     "is_untracked": true,
+     "ledger": "/home/yuqing/ctaNew/data",
+     "path": "data",
+     "resolves_to": "/home/yuqing/ctaNew/data",
+     "resolves_to_the_ledger": true,
+     "status_code": "??"
+    }
+   ],
+   "exemption_is_a_property": "untracked AND a real symlink AND resolving to the ledger -- never a path called `data`",
+   "head": "5f5f76c8f3aaf3725dae57ffb6de9723968c440d",
+   "worktree": "/home/yuqing/ctaNew-wt-be"
+  },
+  "head_at_import": {
+   "dirty": true,
+   "dirty_code": false,
+   "dirty_paths": [
+    "data"
+   ],
+   "dirty_paths_code": [],
+   "exempt_entries": [
+    {
+     "exempt": true,
+     "is_symlink": true,
+     "is_untracked": true,
+     "ledger": "/home/yuqing/ctaNew/data",
+     "path": "data",
+     "resolves_to": "/home/yuqing/ctaNew/data",
+     "resolves_to_the_ledger": true,
+     "status_code": "??"
+    }
+   ],
+   "exemption_is_a_property": "untracked AND a real symlink AND resolving to the ledger -- never a path called `data`",
+   "head": "5f5f76c8f3aaf3725dae57ffb6de9723968c440d",
+   "worktree": "/home/yuqing/ctaNew-wt-be"
+  },
+  "head_unchanged_during_the_run": true,
+  "import_closure": {
+   "first_seen_at": {
+    "adverse_feature_rows.py": "be_daybook_build build(): after the lazy imports",
+    "adverse_feature_rows_fast.py": "be_daybook_build build(): after the lazy imports",
+    "adverse_move_fast.py": "be_daybook_build build(): after the lazy imports",
+    "adverse_move_harmful.py": "be_daybook_build build(): after the lazy imports",
+    "adverse_move_hurdle.py": "be_daybook_build build(): after the lazy imports",
+    "adverse_move_nonlinear.py": "be_daybook_build build(): after the lazy imports",
+    "be_data_root.py": "be_daybook_build import",
+    "be_daybook_build.py": "be_daybook_build import",
+    "be_forward_day.py": "be_daybook_build build(): after the lazy imports",
+    "be_gate1_fragment.py": "be_gate1_fragment import",
+    "be_gate1_state_tape.py": "be_gate1_state_tape import",
+    "be_rule22.py": "be_daybook_build import",
+    "da_content_liveness_rule.py": "be_daybook_build build(): after the lazy imports",
+    "da_governed_verdict_preflight.py": "be_daybook_build build(): after the lazy imports",
+    "de_action_economic_ledger.py": "be_daybook_build build(): after the lazy imports",
+    "de_admissible_windows.py": "be_daybook_build build(): after the lazy imports",
+    "de_constraints.py": "be_daybook_build build(): after the lazy imports",
+    "de_data_root.py": "be_daybook_build build(): after the lazy imports",
+    "de_head_scoring.py": "be_daybook_build build(): after the lazy imports",
+    "de_matched_random_control.py": "be_daybook_build build(): after the lazy imports",
+    "de_multiday_design_declaration.py": "be_daybook_build build(): after the lazy imports",
+    "de_multiday_gate1_runner.py": "be_daybook_build build(): after the lazy imports",
+    "de_phase4_diag_runner.py": "be_daybook_build build(): after the lazy imports",
+    "de_ratification_check.py": "be_daybook_build build(): after the lazy imports",
+    "de_rho_estimator.py": "be_daybook_build build(): after the lazy imports",
+    "de_score_stream.py": "be_daybook_build build(): after the lazy imports",
+    "edge_layer1.py": "be_daybook_build build(): after the lazy imports",
+    "ev_replay_seam.py": "be_daybook_build build(): after the lazy imports",
+    "flow_fill_development.py": "be_daybook_build build(): after the lazy imports",
+    "flow_intensity.py": "be_daybook_build build(): after the lazy imports",
+    "harmful_candidate_manifest.py": "be_daybook_build build(): after the lazy imports",
+    "harmful_exposure_rows.py": "be_daybook_build build(): after the lazy imports",
+    "harmful_forward_scorer.py": "be_daybook_build build(): after the lazy imports",
+    "harmful_stateful_policy.py": "be_daybook_build build(): after the lazy imports",
+    "inventory_walk.py": "be_daybook_build build(): after the lazy imports",
+    "layer2_v1.py": "be_daybook_build build(): after the lazy imports",
+    "phase2_arms.py": "be_daybook_build build(): after the lazy imports",
+    "phase2_declaration.py": "be_daybook_build build(): after the lazy imports",
+    "phase4_generation_tables.py": "be_daybook_build build(): after the lazy imports",
+    "placement_skew.py": "be_daybook_build build(): after the lazy imports",
+    "pm_tape_density.py": "be_gate1_state_tape import",
+    "policy_bounds_v1.py": "be_daybook_build build(): after the lazy imports",
+    "policy_optimizer.py": "be_daybook_build build(): after the lazy imports",
+    "policy_optimizer_cancel_hold_skew.py": "be_daybook_build build(): after the lazy imports",
+    "policy_optimizer_cancel_skew.py": "be_daybook_build build(): after the lazy imports",
+    "policy_optimizer_queue_realistic.py": "be_daybook_build build(): after the lazy imports",
+    "skew_bound.py": "be_daybook_build build(): after the lazy imports",
+    "warning_window.py": "be_daybook_build build(): after the lazy imports"
+   },
+   "modules": {
+    "adverse_feature_rows.py": "646ae21f3aa3a4955bc1634965d15d1b6bf4b95a0356ad8cf4874aad05225b8f",
+    "adverse_feature_rows_fast.py": "70ea5f511cc7676b701a0801fcbcee9c0de1c019e8746193b9ec69cdb568221e",
+    "adverse_move_fast.py": "893632bbc5ca24e96a06b2185777d53eed2a0433b94206c9f875fea4a6d49f84",
+    "adverse_move_harmful.py": "296839d9af6f493b0a5de51d5c4b1a39389d3007ef24cbbee06706504095960b",
+    "adverse_move_hurdle.py": "aea9678a7edcca1870b171421b12b3d0768962b031681c409b414f1f93e9d773",
+    "adverse_move_nonlinear.py": "8d3a9381998b3398057c577ff23251cfb903c9169f8836fed5011d10d75bab33",
+    "be_data_root.py": "8ad48fc48f4b54441f505c22d5398c52c4aa0291c7034b2a851a13a4f329350f",
+    "be_daybook_build.py": "a4b81b50e6e68eb61465c371c81e8ca211e4989c0b83906ba25f99ef05365540",
+    "be_forward_day.py": "2a8d50c61357bcf31d15e2beefaf6c1e52cad6b54032872955e7f8395d754690",
+    "be_gate1_fragment.py": "cfc3456e35645551f19f69ea6c53e3ea52fbe7e786b547dd9caa9daceb594c05",
+    "be_gate1_state_tape.py": "75db3ac6efd36bffa0c074f6a5beac0fe33e92e7628f8c8c223496d49779c37f",
+    "be_rule22.py": "ceddda3f34f76cda983d77eefb6a8288fbb1a3ced3e6e03af5db7ce97589a253",
+    "da_content_liveness_rule.py": "7196676840304f30a5465714333183812d6ebedd30e451f182e60084f4174ad0",
+    "da_governed_verdict_preflight.py": "e111886987729cf4021e5a469b3b89fd8467b93f616e43808bddfc1e3ec07d22",
+    "de_action_economic_ledger.py": "998d40c7c13c9f675e71fa503457e2e88828a7cf1ab79505deb3c2183657437f",
+    "de_admissible_windows.py": "4d8f622075b0447fb0b9f80c5a5b5201a243edd7a2afe882430358ce42cefc1d",
+    "de_constraints.py": "3834d236f0a6a2afad393c3476ac344d93fe1ac892fd8eaf996181397530d774",
+    "de_data_root.py": "faa5871836555684779c0e2e617d8bbeb7f1f8d1378f02398edf6637384109ad",
+    "de_head_scoring.py": "60ef48fea69e83f16e93dd1e86ea83c7a866cf3a70fe47e0516f195fffba2b62",
+    "de_matched_random_control.py": "f77aaf2bd2f21988fbd9d8b3900d8d5c7f5624618453efbc795e2a3b26eb17fc",
+    "de_multiday_design_declaration.py": "e6a1e51e3877249a2024099f5e7a3665739ffdd95a61089b559507328f1dfce3",
+    "de_multiday_gate1_runner.py": "f6071f1245ca07425cac2de24823cc36171ffaaa412e23c8e49ffa30d45519bf",
+    "de_phase4_diag_runner.py": "9aebc7579cc57c839d62a83bab3a87bcd83edb433b8a3b48fe3aacd6f2b0675d",
+    "de_ratification_check.py": "d32843dad21b010b163cf62114a94a0e92c4b37f72dc8974a4d8878f1bcf0fec",
+    "de_rho_estimator.py": "048b8e077c3d37e8d67b9fbc1ed132a28d7a8ea5c1a66a114c2e53db3bd11387",
+    "de_score_stream.py": "f85be3354610e2cebf452696f2c7c32e1f4a9bc3d2116ab8b7e799f4bf2a7bb1",
+    "edge_layer1.py": "1f72e3856e73f23d802cc8367e9e29fb23445086f9ca6932456f13c39fe8e479",
+    "ev_replay_seam.py": "d63612a2a7b26c4846f7bad503ac7474bd0c3d87ea31c295442747a414ea02fd",
+    "flow_fill_development.py": "d5f381cccdc4b7b6e12fa80d0c05947c8338bb0683cd7a0e58f74ac53074dce4",
+    "flow_intensity.py": "e0b0c5787770ba3d70afcfda560352ea8ae314fb281ec60d0cbc64442fff0fdd",
+    "harmful_candidate_manifest.py": "68d2d89c1d543b7e62c9406caa007a0b887fa3c581d48b522925ddc11659f79b",
+    "harmful_exposure_rows.py": "57654d0293e5739187014b7fadc8ff89fbb47e590fe205bcf618b18cbb64fb9a",
+    "harmful_forward_scorer.py": "37142b125ffbd842adefce8ebcb0a1158231664d25a348561d8032fbc9d30333",
+    "harmful_stateful_policy.py": "db37f504182628f85ff81d6abbd338799356804761e58f299554ecc7516a9975",
+    "inventory_walk.py": "5486f275d9752f1054ca3a458316a42fb676e9c199293c5d76941cacb7863107",
+    "layer2_v1.py": "4552bed0122241db40382e2da5a2bb2123c2a5d0fa2fefd41031b05e06929570",
+    "phase2_arms.py": "e8c7134da15112e18825ec5046513b894490d3dd803189e06d00238eafc0205c",
+    "phase2_declaration.py": "aa866f8261677d799dbf56bcb2feb9a7f99f59db7982820e60fff05db0a54df9",
+    "phase4_generation_tables.py": "22ac4efe2014ac952e8813257dd0a4758b26515617a4ac9b1c015fb54b15f680",
+    "placement_skew.py": "7bb0fb555d11a90a9573a04c8ac1defc75bf9d417e59066c8056af1dbf3979e3",
+    "pm_tape_density.py": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912",
+    "policy_bounds_v1.py": "717033ba3b571def77efb50a7ed8d2b4fffd1332df8213c487e2e750a06f0374",
+    "policy_optimizer.py": "cdaf25e2ff4352822a7777a23ccee053d52e7d47d755176362ed10b7c23b5833",
+    "policy_optimizer_cancel_hold_skew.py": "aae4f8606de63e5f18fb41d79fd756fc2f8f4917ce07f4012b8a21f049a6e940",
+    "policy_optimizer_cancel_skew.py": "7ed7b72df65d809cfeef467e70849383a4708eb3dada176d81320f4533584c65",
+    "policy_optimizer_queue_realistic.py": "ae13af2931bc33b85b6a73a144261f0ca1d45b4767e985cf94e0cdda0e5c204c",
+    "skew_bound.py": "d7dde689908454a79704d4a85ffbdc5ff8836184767b2332d842c34344ea193e",
+    "warning_window.py": "72abb33062bb647a02b0a69e6d41ff44e67e428183309c05634e7d8281234068"
+   },
+   "n_modules": 48,
+   "not_covered": "modules imported after the last capture call, packages outside this root, the interpreter, and data",
+   "root": "/home/yuqing/ctaNew-wt-be/live"
+  },
+  "producing_code": "be_daybook_build.py",
+  "producing_code_sha256": "a4b81b50e6e68eb61465c371c81e8ca211e4989c0b83906ba25f99ef05365540",
+  "what_the_two_dirty_fields_mean": "`worktree_was_dirty_at_import` is git's raw answer and includes the ledger symlink a seat worktree carries by R-553; `worktree_CODE_was_dirty_at_import` excludes entries that are PROVEN to be that symlink (untracked, a real link, resolving to the ledger). Rule 22 asks the second one",
+  "why_not_at_emit": "a digest taken when the receipt is written can be of bytes that changed during the run; the receipt would then name code that did not produce its numbers (R-603, rule 22)",
+  "worktree_CODE_was_dirty_at_import": false,
+  "worktree_was_dirty_at_import": true
+ },
+ "protocol": "BE_DAYBOOK_V1",
+ "reference": {
+  "generations": 266592,
+  "n_slugs": 288,
+  "n_terminal_marks": 288,
+  "statuses": {
+   "ADMITTED": 288,
+   "BINANCE_GAP_EXCLUDED": 0,
+   "NO_REPLAY": 0,
+   "RECONCILIATION_FAILED": 0,
+   "TERMINAL_MARK_ENDED_IN_GAP": 49,
+   "TERMINAL_MARK_MISSING": 0,
+   "TERMINAL_MARK_OK": 288,
+   "TRANCHE_KEPT": 49668,
+   "TRANCHE_NO_MARKOUT": 0
+  },
+  "terminal_marks_present": true,
+  "windows": 288
+ },
+ "resources": {
+  "after_tape_peak_gb": 2.899,
+  "asm_peak_gb_PUBLISHED": 3.551,
+  "assembly_inputs": {
+   "fragment": {
+    "bytes": 545493868,
+    "day": "2026-09-05",
+    "day_is_in_the_ruled_set": true,
+    "digest_recomputed_at_read_time": true,
+    "is_the_consumed_era_constant": false,
+    "kind": "fragment",
+    "ledger_root": "/home/yuqing/ctaNew/data",
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260905_btc.json",
+    "sha256": "50318a3a7c011739eed25f2bf1db656a38f4e7c46d10487ea419bcef82f1dfe6"
+   },
+   "regime": "RULED_DAY_INPUTS_SUPPLIED",
+   "ruled_day_set": [
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06",
+    "2026-09-07",
+    "2026-09-08"
+   ],
+   "tape": {
+    "bytes": 890640737,
+    "day": "2026-09-05",
+    "day_is_in_the_ruled_set": true,
+    "digest_recomputed_at_read_time": true,
+    "is_the_consumed_era_constant": false,
+    "kind": "tape",
+    "ledger_root": "/home/yuqing/ctaNew/data",
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260905_btc.json",
+    "sha256": "0650e21348dbccb8c77e0478de26f62f832faded74fe058573d1ad5b240b1f80"
+   },
+   "what_this_does_not_check": "that the day's tape was BUILT correctly -- schema, splits, coverage. Those are the builder's own guards; this verifies WHICH BYTES reach the pass"
+  },
+  "assembly_s": 1114.7,
+  "fragment_bytes": 545493868,
+  "fragment_is_the_days_own": true,
+  "index_released": {
+   "asserted_not_only_measured": true,
+   "current_gb_after": 2.362,
+   "current_gb_before": 3.419,
+   "freed_fraction_of_index_peak": 0.3646,
+   "freed_gb": 1.057,
+   "index_is_build_time_only": "DE design v9 R11 -- INDEX_SPLITS_NEEDED_BY_DAY = NONE at any stage",
+   "index_peak_gb": 2.899,
+   "measured_on_CURRENT_rss": "ru_maxrss is a high-water mark and cannot show a release; this is VmRSS",
+   "released": true,
+   "required_fraction": 0.1,
+   "required_freed_gb": 0.29
+  },
+  "inputs_vs_their_receipts": [
+   {
+    "compared_full_length": true,
+    "kind": "tape",
+    "matches_its_builder_receipt": true,
+    "receipt": "be_gate1_state_tape_receipt_20260905_btc.json",
+    "sha256": "0650e21348dbccb8c77e0478de26f62f832faded74fe058573d1ad5b240b1f80"
+   },
+   {
+    "compared_full_length": true,
+    "kind": "fragment",
+    "matches_its_builder_receipt": true,
+    "receipt": "be_gate1_fragment_receipt_20260905_btc.json",
+    "sha256": "50318a3a7c011739eed25f2bf1db656a38f4e7c46d10487ea419bcef82f1dfe6"
+   }
+  ],
+  "peak_gb": 3.551,
+  "peak_rss_gb": 3.551,
+  "reference_peak_gb": 1.839,
+  "reference_s": 461.9,
+  "rule22_checked_before_write": {
+   "closure_unchanged": true,
+   "head_unchanged": true,
+   "n_modules": 48,
+   "where": "be_daybook_build: before the book is written"
+  },
+  "stage_budgets_gb": {
+   "A0_reference": 3.0,
+   "A1_index": 6.5,
+   "A2_assemble": 7.5,
+   "A3_release_index": 7.5,
+   "A4_write_book": 7.5
+  },
+  "stages": [
+   {
+    "baseline_gb": 0.043,
+    "budget_gb": 3.0,
+    "budget_is_measured_on": "CURRENT RSS minus this _Stages' own baseline -- an instrument that can FALL, so the budget fires as often as it is asked. The cap below is measured on the process high-water, which is the right instrument for a ceiling that must never be crossed",
+    "cap_gb": 8.0,
+    "current_gb": 1.802,
+    "growth_gb": 1.759,
+    "peak_gb": 1.839,
+    "stage": "A0_reference",
+    "wall_s": 461.9,
+    "what_growth_cannot_see": "a transient INSIDE a stage that is already released by the time the stage ends. That is what the high-water cap check catches, and it is why both are reported",
+    "within_budget": true,
+    "within_cap": true
+   },
+   {
+    "baseline_gb": 0.043,
+    "budget_gb": 6.5,
+    "budget_is_measured_on": "CURRENT RSS minus this _Stages' own baseline -- an instrument that can FALL, so the budget fires as often as it is asked. The cap below is measured on the process high-water, which is the right instrument for a ceiling that must never be crossed",
+    "cap_gb": 8.0,
+    "current_gb": 2.881,
+    "growth_gb": 2.838,
+    "peak_gb": 2.899,
+    "stage": "A1_index",
+    "wall_s": 107.5,
+    "what_growth_cannot_see": "a transient INSIDE a stage that is already released by the time the stage ends. That is what the high-water cap check catches, and it is why both are reported",
+    "within_budget": true,
+    "within_cap": true
+   },
+   {
+    "baseline_gb": 0.043,
+    "budget_gb": 7.5,
+    "budget_is_measured_on": "CURRENT RSS minus this _Stages' own baseline -- an instrument that can FALL, so the budget fires as often as it is asked. The cap below is measured on the process high-water, which is the right instrument for a ceiling that must never be crossed",
+    "cap_gb": 8.0,
+    "current_gb": 3.419,
+    "growth_gb": 3.376,
+    "peak_gb": 3.551,
+    "stage": "A2_assemble",
+    "wall_s": 1114.7,
+    "what_growth_cannot_see": "a transient INSIDE a stage that is already released by the time the stage ends. That is what the high-water cap check catches, and it is why both are reported",
+    "within_budget": true,
+    "within_cap": true
+   },
+   {
+    "baseline_gb": 0.043,
+    "budget_gb": 7.5,
+    "budget_is_measured_on": "CURRENT RSS minus this _Stages' own baseline -- an instrument that can FALL, so the budget fires as often as it is asked. The cap below is measured on the process high-water, which is the right instrument for a ceiling that must never be crossed",
+    "cap_gb": 8.0,
+    "current_gb": 2.361,
+    "growth_gb": 2.318,
+    "peak_gb": 3.551,
+    "stage": "A3_release_index",
+    "wall_s": 1.4,
+    "what_growth_cannot_see": "a transient INSIDE a stage that is already released by the time the stage ends. That is what the high-water cap check catches, and it is why both are reported",
+    "within_budget": true,
+    "within_cap": true
+   },
+   {
+    "baseline_gb": 0.043,
+    "budget_gb": 7.5,
+    "budget_is_measured_on": "CURRENT RSS minus this _Stages' own baseline -- an instrument that can FALL, so the budget fires as often as it is asked. The cap below is measured on the process high-water, which is the right instrument for a ceiling that must never be crossed",
+    "cap_gb": 8.0,
+    "current_gb": 2.573,
+    "growth_gb": 2.53,
+    "peak_gb": 3.551,
+    "stage": "A4_write_book",
+    "wall_s": 5.0,
+    "what_growth_cannot_see": "a transient INSIDE a stage that is already released by the time the stage ends. That is what the high-water cap check catches, and it is why both are reported",
+    "within_budget": true,
+    "within_cap": true
+   }
+  ],
+  "tape_index_s": 107.5,
+  "tape_rows": 489434,
+  "wall_s": 1696.4,
+  "wrapper": {
+   "a_SHARED_hold_does_not_satisfy_rule_20": "rule 20 is ONE heavy run at a time. `flock -s` lets two holders in at once, and both would have read `held: true` under the previous two-conjunct test (REV 41)",
+   "ancestor_pids": [
+    1,
+    1004,
+    3485787,
+    3485789,
+    3485791
+   ],
+   "cgroup_leaf": "be64book.service",
+   "declared_wrapper_is_not_evidence": "params carries a `wrapper` string; a string in a file cannot say what launched this process (R-575(C))",
+   "delegated_to": "de_multiday_gate1_runner.wrapper_observed",
+   "exclusive": true,
+   "fixture": false,
+   "flock_holder_pids": [
+    3485789
+   ],
+   "flock_modes_on_the_inode": [
+    "WRITE"
+   ],
+   "fresh_probe": {
+    "holder_is_exclusive": true,
+    "probed": true,
+    "probes": [
+     "LOCK_EX|LOCK_NB",
+     "LOCK_SH|LOCK_NB"
+    ],
+    "someone_holds_it": true,
+    "why_two": "a shared hold blocks an exclusive request and admits a shared one; only an exclusive hold blocks both. Rule 20 needs exclusivity"
+   },
+   "heavy_run_lock_held": true,
+   "held_by_self_or_ancestor": true,
+   "holder_is_exclusive": true,
+   "how": "a fresh-fd LOCK_EX|LOCK_NB that FAILS, AND a /proc/locks FLOCK entry on the lock's inode whose pid is this process or an ancestor -- the holder is the `flock` wrapper, not the python child",
+   "in_a_transient_scope": false,
+   "lock_fd_is_corroboration_not_the_test": "an fd on the lock file says the file is OPEN. Two lines of `open()` with no flock forged the old field, and a 1-hour / 6.84 GiB run certified itself (reviewer \u00a72.3)",
+   "lock_fds": [
+    3
+   ],
+   "lock_is_held_by_someone": true,
+   "lock_mode": "WRITE",
+   "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+   "n_flock_holders": 1,
+   "self_or_ancestor_holds_EXCLUSIVE": true,
+   "why_mode_not_just_held": "two `flock -s` holders would both report the fd and both certify; only WRITE is mutual exclusion"
+  }
+ },
+ "scope": {
+  "anon_bytes": 2678550528,
+  "cap_was_hit": false,
+  "cgroup": "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/research.slice/be64book.service",
+  "current_bytes": "4454567936",
+  "events": {
+   "high": 0,
+   "low": 0,
+   "max": 0,
+   "oom": 0,
+   "oom_group_kill": 0,
+   "oom_kill": 0,
+   "sock_throttled": 0
+  },
+  "file_bytes": 1760157696,
+  "max_bytes": "8589934592",
+  "peak_bytes": "5161025536",
+  "peak_censoring": {
+   "cap_bytes": 8589934592,
+   "not_comparable_to": "an uncensored peak from another run -- a floor and a measurement are not commensurable, and differencing them reads as a demand difference that the numbers do not support",
+   "peak_bytes": 5161025536,
+   "reclaim_events_max": 0,
+   "what_this_peak_supports": "demand peaked here and was never throttled; the peak is a measurement"
+  },
+  "peak_is_censored": false,
+  "unit": "be64book.service"
+ },
+ "seam": {
+  "commit": {
+   "commit": "4a345f43b79b92591bee53d1acce69bcbc73ad7e",
+   "module": "de_phase4_diag_runner.py",
+   "short": "4a345f4",
+   "source": "git log -1 -- <module>, read at import"
+  },
+  "digests_recomputed_at_read_time": true,
+  "front_door": "de_phase4_diag_runner.day_assembly_inputs",
+  "index": "build_tape_index(splits, inputs=inp)",
+  "was_a_typed_literal_until_round_60": "`seam.commit` read \"6f134a6\" for three rounds -- true of the front door once and unchecked since (DA 77, R-613). It is now READ from the module the call goes through, at import, and says so when it cannot be located"
+ },
+ "selection": {
+  "era": "clob_v3_1",
+  "n_supplied_slugs": 288,
+  "source": "de_admissible_windows.supply(day, be_forward_day.present_from_ledger(day))",
+  "why_not_select_v2_era": "the declared population intervals end 2026-08-26T00:00, so no September day passes them"
+ },
+ "stage_budgets_gb": {
+  "A0_reference": 3.0,
+  "A1_index": 6.5,
+  "A2_assemble": 7.5,
+  "A3_release_index": 7.5,
+  "A4_write_book": 7.5
+ },
+ "wrapper_measured": {
+  "a_SHARED_hold_does_not_satisfy_rule_20": "rule 20 is ONE heavy run at a time. `flock -s` lets two holders in at once, and both would have read `held: true` under the previous two-conjunct test (REV 41)",
+  "ancestor_pids": [
+   1,
+   1004,
+   3485787,
+   3485789,
+   3485791
+  ],
+  "cgroup_leaf": "be64book.service",
+  "declared_wrapper_is_not_evidence": "params carries a `wrapper` string; a string in a file cannot say what launched this process (R-575(C))",
+  "delegated_to": "de_multiday_gate1_runner.wrapper_observed",
+  "exclusive": true,
+  "fixture": false,
+  "flock_holder_pids": [
+   3485789
+  ],
+  "flock_modes_on_the_inode": [
+   "WRITE"
+  ],
+  "fresh_probe": {
+   "holder_is_exclusive": true,
+   "probed": true,
+   "probes": [
+    "LOCK_EX|LOCK_NB",
+    "LOCK_SH|LOCK_NB"
+   ],
+   "someone_holds_it": true,
+   "why_two": "a shared hold blocks an exclusive request and admits a shared one; only an exclusive hold blocks both. Rule 20 needs exclusivity"
+  },
+  "heavy_run_lock_held": true,
+  "held_by_self_or_ancestor": true,
+  "holder_is_exclusive": true,
+  "how": "a fresh-fd LOCK_EX|LOCK_NB that FAILS, AND a /proc/locks FLOCK entry on the lock's inode whose pid is this process or an ancestor -- the holder is the `flock` wrapper, not the python child",
+  "in_a_transient_scope": false,
+  "lock_fd_is_corroboration_not_the_test": "an fd on the lock file says the file is OPEN. Two lines of `open()` with no flock forged the old field, and a 1-hour / 6.84 GiB run certified itself (reviewer \u00a72.3)",
+  "lock_fds": [
+   3
+  ],
+  "lock_is_held_by_someone": true,
+  "lock_mode": "WRITE",
+  "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+  "n_flock_holders": 1,
+  "self_or_ancestor_holds_EXCLUSIVE": true,
+  "why_mode_not_just_held": "two `flock -s` holders would both report the fd and both certify; only WRITE is mutual exclusion"
+ }
+}
