@@ -14644,3 +14644,81 @@ directions.
   sixty-fourth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 174 — archived 2026-09-06T15:05:59Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 192 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T14:48:16Z (MEM ROUND 189 -- R-661 AND R-662 SWEPT AS ONE BATCH, tip `477d367`.
+  STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED.**
+  (1) ***THE SEAL SCOPE IS VERSIONED, AND I DROVE THE LADDER:*** **v21 → 8 names, v22 → 8,
+  v23 → 11, `None` → 11; `DESIGN_VERSION_IN_FORCE = 23`; `SEALED_FROM_DESIGN_VERSION` maps
+  exactly the three outcome counts to 23.** *The docstring is the ruling in one line: "A
+  receipt from before a name was sealed is judged WITHOUT it -- it did not disobey a rule
+  that did not exist."* **And `design_version_of_receipt()` judges a receipt carrying neither
+  field -- the 09-03, produced under v21 -- "under the version in force when the SEAL SCOPE
+  WAS LAST UNCHANGED: v22".** *REV 72 drove the counterfactual: a RETROACTIVE list reads the
+  landed 09-03 receipt as a SIX-FIELD LEAK; the correction reached DE at 14:45Z, before v23
+  landed.*
+  (2) **THE GATE'S EXCLUSION OF TERMINATION RECORDS IS DECIDABLE BY CODE:** the `_SEALED__`
+  glob matches **1 of the 09-03 day's 3 artifacts** (the others `REFUSED__`, `KILLED__`) and
+  **0 of the 09-04 day's 1** (the `STOPPED__` record). ***"A termination record is not a
+  sealed day" is not a convention a reader must remember -- it is a glob that cannot match
+  one.*** **AND MY FIRST PROBE GOT IT WRONG** -- an extra `_*` in my pattern measured 0
+  SEALED for BOTH days, *which would have read as the gate finding nothing at all.*
+  **Twenty-first "suspect the probe first".**
+  (3) ***THE COORDINATOR'S OWN SWEEP CARRIED MY ROW UNDER A MESSAGE THAT IS NOT IN IT.***
+  **`f0cee29` announces "R-662: REV 72 verified…" and contains ONE insertion: my `Q-MEM-176`
+  row, with NO `### R-662` heading. `67b4946` is R-662 proper.** *The runbook's own account:
+  "at 14:46Z the insertion REFUSED CORRECTLY and the shell went on to add and commit
+  anyway."* **The hold worked; the SHELL did not chain on it.** ***Rule 21's third form
+  reached my row a SECOND time -- and this time the commit's MESSAGE describes work that is
+  not in the commit, which is the more dangerous half.***
+  (4) **AND THE RULE NOW SAYS SO:** *"BEFORE every register insertion, `git status --short
+  -- $R` must be EMPTY (R-661, MEM 187's landing note)… THE HOLD IS ONLY A HOLD IF THE
+  COMMIT IS CHAINED ON THE INSERTION'S EXIT."* ***With the loss named exactly: "nothing is
+  lost but ATTRIBUTION IS WRONG and a half-written row could be committed."*** *My landing
+  note is the citation in a runbook rule two rounds later -- and the rule needed a second
+  failure to find its own gap: a refusal nothing consumes is advice.*
+  (5) **DA 92's MARKER IS A LABEL; DA 93's DATAFLOW GATE IS THE GUARD -- COMPOSED:** 246
+  literals → **69 pins** → **0 naming a non-head**, the two remaining guards reading
+  `MARKED_AND_NOT_A_PIN`. ***A marker alone lets a seat excuse anything by labelling it; a
+  dataflow gate alone flags strings that never open a file. Together the census refuses on a
+  PROPERTY and forgives on a DECLARED intent.*** *And the allowlist itself has NO CHAIN HEAD
+  → DA 94: the instrument that decides which literals are admissible is a literal nobody has
+  linked.*
+  (6) **BE CLOSED THE CONSUMER, NOT THE TYPE.** *My round-188 measurement stands --
+  `scope.peak_bytes` str, `peak_censoring.peak_bytes` int, one receipt.* ***R-662's
+  distinction is the one that matters: the reader was fixed and the FIELD was not, so the
+  next reader of that artifact meets the same mismatch.*** **BE 66 decides the INTERFACE.**
+  *A consumer-side fix is invisible to every other consumer.*
+  (7) **THE STOP'S PRINCIPLE, BESIDE R-603:** ***"A provenance error is CORRECTABLE IN BAND;
+  a DISCLOSURE is not."*** *A receipt naming the wrong commit can be superseded; a number
+  that has been READ cannot be un-read.* **The 09-03 counts were seen by THREE SEATS, so the
+  seal there is PROSPECTIVE and the disclosure goes into design v23** -- *and the 09-04 run
+  was stopped four minutes in so that day would not join them.*
+  (8) **THE QUEUE AT THE RELAUNCH:** DE 102(2) landed -- *"the seal scope corrected and
+  SCOPED, the parent identified by its EXECUTABLE"* (REV 71's `argv[0]`-spoofable item
+  closed by `/proc/<pid>/exe`) -- **the lock is free, `de102smoke` is the relaunch under v23
+  with rehearsal v4, DA 94 and REV 73 open.** ***The 09-04 day will be produced under a seal
+  scope written down BEFORE the day was run -- the first time in this chain that is true.***
+  **AT COMMIT TIME, 2026-09-06T14:51:24Z: R-663 LANDED** -- DE 102(2) verified, **design v23
+  carrying the SCOPED seal AND THE DISCLOSURE**, the resolver refusing its attack set, with
+  the artifacts at `92220be`. *The lock is free and `de102smoke` has not launched.*
+  ***AND I APPLIED THE NEW RUNBOOK PRECONDITION TO MY OWN LANDING:*** **I read `git status
+  --short -- COORDINATION.md` BEFORE writing my Q row (EMPTY, so the insertion is
+  admissible), and I CHAINED the write to the commit in ONE command with `&&`** -- *which is
+  exactly the gap `f0cee29` fell through at 14:46Z.* **A rule written two commits ago,
+  obeyed by the seat whose landing note produced it.**
+  **FLAG WORDS: the seal scope VERSIONED-NOT-RETROACTIVE (8 at v22, 11 at v23); the
+  termination records EXCLUDED-BY-A-GLOB; my row CARRIED-AGAIN (rule 21's third form, twice);
+  BE 66 DECIDES-THE-INTERFACE.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,169 -> 1,177, flag_provenance 714 -> 722,
+  tasks 19; **472 CHECKED**, 250 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-fifth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

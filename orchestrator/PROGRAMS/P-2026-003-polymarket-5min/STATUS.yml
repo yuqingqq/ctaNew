@@ -63,6 +63,75 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T15:05:59Z (MEM ROUND 192 -- R-666 SWEPT, tip `6cb89cc`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- EVERY SELECTOR CELL DRIVEN
+  ON A SYNTHETIC RECEIPT.**
+  (1) ***I DROVE THE SELECTOR'S FOUR CELLS AND THE POLARITY IS RIGHT.*** **No provenance →
+  v23, ELEVEN names ("THE STRICTEST LIST IN FORCE -- no verifiable design pair, and nothing
+  positively identifies this receipt as older"); a CORRECT `{path, sha256}` pair naming v21 →
+  v21, EIGHT names ("the PAIR, digest RECOMPUTED from the file the path names"); a MISMATCHED
+  digest → strictest; a path WITHOUT a digest → strictest.** ***Absence and unverifiability
+  now buy NOTHING -- the exact inverse of the hole REV 73 found, where "ABSENCE selected the
+  WEAKER rule inside the scoping built to protect the seal".*** *The third hole is DROPPED,
+  not fixed: "an opened path is not a pin" -- because the 09-03 run opened a stale v10 beside
+  v21.*
+  (2) **AND THE OLD RECEIPT IS RECOGNISED POSITIVELY, BY ITS EMIT STAMP.** *A synthetic
+  receipt stamped `14:01:55.557479Z` -- the 09-03 seal's own emit time -- resolves to **v22 /
+  8** with the reason "POSITIVE recognition of a pre-correction receipt"; stamped 15:00:00 it
+  resolves to **v23 / 11**.* ***The code's principle in five words: "Never by a field being
+  absent."*** **Corroborated by a `carrying_commit` that resolves -- two positive facts, not
+  one absence.** *The shape handed to REV 75 is the seam between the two paths: a
+  positively-old receipt WITH a mismatched pair is judged old and UNFLAGGED.*
+  (3) **BE'S PARSER IS NOW A THIN CALL INTO DA'S**, and its docstring carries the measurement
+  that earned the ruling: ***"three implementations disagreed on FOUR OF TWELVE LINES and NO
+  TWO WERE WRONG IN THE SAME PLACE, which is exactly 'two implementations corroborate
+  nothing'"*** -- *so a way of READING A TOOL'S OUTPUT is not a statistic.* **BE's algorithm
+  won on merit; BE's file now calls DA's.**
+  (4) **THE POLL SETTLES ON THE LAUNCH RECORD, NOT ON `ActiveState`** (`5501d45`, the comment
+  carrying its own measurement time 15:03:14Z) -- ***closing the finding I swept last round:
+  under `RemainAfterExit` a REFUSED unit reads `active`, so a poll waiting for "not active"
+  waits forever and one reading "active" as RUNNING is wrong.*** **The remedy is a different
+  SOURCE, not a better field.** *And the refusal path is reproduced ON THE REAL LOCK.*
+  (5) **THE CENSUS ARTIFACT AND THE LIVE CENSUS DISAGREE, AND BOTH ARE RIGHT** -- R-666
+  verifies my round-191 note: the artifact still says four, the live census reads 0, DA 95
+  re-emits. ***Seventh instance today of fix-in-source versus record-a-reader-resolves, and
+  the remedy is always the same: RE-EMIT, and until then say which object you read.*** **REV
+  74 lands the strongest form: "all eleven declarations are JSON-IDENTICAL to their pre-BE-65
+  selves ONCE THE LINK IS REMOVED."**
+  (6) **R-666 VERIFIED DE 103 BY DRIVE, AND SO DID I** -- four selector cells plus two stamp
+  cells, independently. ***A selector whose three holes were found by driving is verified by
+  driving, not by reading the diff that closed them: a diff shows what CHANGED; a drive shows
+  what the code DOES with an input nobody has typed before.***
+  (7) **THE SEAL SCOPE HAS TWO INDEPENDENT READERS AND ONE IS STILL WRONG** -- DE's selector
+  judges by version; DA's `economic_absence` still reads the flat list. ***The wrong one is
+  HELD OUT OF USE rather than trusted: no re-run of the 09-03 pre-read until DA 95.*** *That
+  is the honest shape while a seam is open -- one instrument named as wrong and not run.*
+  (8) **THE RUN:** `loaded / active / running / 0`, `MemoryPeak` 2,957,488,128 B **unchanged
+  since 14:56**, payload at 11:59, RSS 843,644 KiB. *The peak plateaus early -- the 09-03
+  smoke held its 2,554,003,456 B for all 86 minutes.* **Receipt ≈16:20Z; BE 66's heavy half
+  blocked on the lock; DA 94 and REV 74 in flight.**
+  **AT COMMIT TIME, 2026-09-06T15:09:11Z: R-667 LANDED AND I CHECKED ITS SHARPEST CLAIM.**
+  ***"Content-identical at the objects AND re-serialised": on
+  `be_race_read_declaration_v3.json` the pre-BE-65 blob hashes `603c684784b148b6…` and the
+  current file `3a2fdb28d87d77d9…`, while the parsed content is IDENTICAL once `supersedes`
+  and its note are removed.*** **So BE 65's linking changed those files' DIGESTS without
+  changing a single value -- and any pin taken by digest before BE 65 now fails against a
+  file whose content it would still accept.** *That is the pair form's cost stated plainly:
+  `{path, sha256}` binds the BYTES, and a re-serialisation is a byte change -- which is
+  exactly why R-666's selector RECOMPUTES the digest from the file the path names rather than
+  trusting one carried in a receipt.*
+  **BE 66's heavy half tried and was REFUSED at 15:08:36Z:** *its poll record reads
+  `LoadState loaded / ActiveState failed / SubState failed / Result exit-code /
+  ExecMainStatus "75"` beside "This unit did NO work and wrote nothing (rule 20)" -- the five
+  fields plus the id in a poll line, exactly as ruled.* **And the runbook now lands the
+  register and itself as SEPARATE COMMITS; the next entry is R-668.**
+  **FLAG WORDS: the selector STRICTEST-BY-DEFAULT-POSITIVE-BY-STAMP; the porcelain parser
+  ONE-AND-CALLED-BY-BOTH; the poll SETTLES-ON-THE-RECORD; the seal scope
+  TWO-READERS-ONE-HELD-OUT-OF-USE.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,193 -> 1,201, flag_provenance 738 -> 746,
+  tasks 19; **491 CHECKED**, 255 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T14:59:31Z (MEM ROUND 191 -- R-664 AND R-665 SWEPT AS ONE BATCH, tip `89b640c`.
   STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
   (1) ***THE FOUR FAMILIES ARE LINKED IN THE FILES -- AND THE CENSUS ARTIFACT STILL SAYS
@@ -191,74 +260,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 1,177 -> 1,185, flag_provenance 722 -> 730,
   tasks 19; **479 CHECKED**, 251 RELAYED, **455 UNMARKED -- unchanged for the
   sixty-sixth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T14:48:16Z (MEM ROUND 189 -- R-661 AND R-662 SWEPT AS ONE BATCH, tip `477d367`.
-  STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED.**
-  (1) ***THE SEAL SCOPE IS VERSIONED, AND I DROVE THE LADDER:*** **v21 → 8 names, v22 → 8,
-  v23 → 11, `None` → 11; `DESIGN_VERSION_IN_FORCE = 23`; `SEALED_FROM_DESIGN_VERSION` maps
-  exactly the three outcome counts to 23.** *The docstring is the ruling in one line: "A
-  receipt from before a name was sealed is judged WITHOUT it -- it did not disobey a rule
-  that did not exist."* **And `design_version_of_receipt()` judges a receipt carrying neither
-  field -- the 09-03, produced under v21 -- "under the version in force when the SEAL SCOPE
-  WAS LAST UNCHANGED: v22".** *REV 72 drove the counterfactual: a RETROACTIVE list reads the
-  landed 09-03 receipt as a SIX-FIELD LEAK; the correction reached DE at 14:45Z, before v23
-  landed.*
-  (2) **THE GATE'S EXCLUSION OF TERMINATION RECORDS IS DECIDABLE BY CODE:** the `_SEALED__`
-  glob matches **1 of the 09-03 day's 3 artifacts** (the others `REFUSED__`, `KILLED__`) and
-  **0 of the 09-04 day's 1** (the `STOPPED__` record). ***"A termination record is not a
-  sealed day" is not a convention a reader must remember -- it is a glob that cannot match
-  one.*** **AND MY FIRST PROBE GOT IT WRONG** -- an extra `_*` in my pattern measured 0
-  SEALED for BOTH days, *which would have read as the gate finding nothing at all.*
-  **Twenty-first "suspect the probe first".**
-  (3) ***THE COORDINATOR'S OWN SWEEP CARRIED MY ROW UNDER A MESSAGE THAT IS NOT IN IT.***
-  **`f0cee29` announces "R-662: REV 72 verified…" and contains ONE insertion: my `Q-MEM-176`
-  row, with NO `### R-662` heading. `67b4946` is R-662 proper.** *The runbook's own account:
-  "at 14:46Z the insertion REFUSED CORRECTLY and the shell went on to add and commit
-  anyway."* **The hold worked; the SHELL did not chain on it.** ***Rule 21's third form
-  reached my row a SECOND time -- and this time the commit's MESSAGE describes work that is
-  not in the commit, which is the more dangerous half.***
-  (4) **AND THE RULE NOW SAYS SO:** *"BEFORE every register insertion, `git status --short
-  -- $R` must be EMPTY (R-661, MEM 187's landing note)… THE HOLD IS ONLY A HOLD IF THE
-  COMMIT IS CHAINED ON THE INSERTION'S EXIT."* ***With the loss named exactly: "nothing is
-  lost but ATTRIBUTION IS WRONG and a half-written row could be committed."*** *My landing
-  note is the citation in a runbook rule two rounds later -- and the rule needed a second
-  failure to find its own gap: a refusal nothing consumes is advice.*
-  (5) **DA 92's MARKER IS A LABEL; DA 93's DATAFLOW GATE IS THE GUARD -- COMPOSED:** 246
-  literals → **69 pins** → **0 naming a non-head**, the two remaining guards reading
-  `MARKED_AND_NOT_A_PIN`. ***A marker alone lets a seat excuse anything by labelling it; a
-  dataflow gate alone flags strings that never open a file. Together the census refuses on a
-  PROPERTY and forgives on a DECLARED intent.*** *And the allowlist itself has NO CHAIN HEAD
-  → DA 94: the instrument that decides which literals are admissible is a literal nobody has
-  linked.*
-  (6) **BE CLOSED THE CONSUMER, NOT THE TYPE.** *My round-188 measurement stands --
-  `scope.peak_bytes` str, `peak_censoring.peak_bytes` int, one receipt.* ***R-662's
-  distinction is the one that matters: the reader was fixed and the FIELD was not, so the
-  next reader of that artifact meets the same mismatch.*** **BE 66 decides the INTERFACE.**
-  *A consumer-side fix is invisible to every other consumer.*
-  (7) **THE STOP'S PRINCIPLE, BESIDE R-603:** ***"A provenance error is CORRECTABLE IN BAND;
-  a DISCLOSURE is not."*** *A receipt naming the wrong commit can be superseded; a number
-  that has been READ cannot be un-read.* **The 09-03 counts were seen by THREE SEATS, so the
-  seal there is PROSPECTIVE and the disclosure goes into design v23** -- *and the 09-04 run
-  was stopped four minutes in so that day would not join them.*
-  (8) **THE QUEUE AT THE RELAUNCH:** DE 102(2) landed -- *"the seal scope corrected and
-  SCOPED, the parent identified by its EXECUTABLE"* (REV 71's `argv[0]`-spoofable item
-  closed by `/proc/<pid>/exe`) -- **the lock is free, `de102smoke` is the relaunch under v23
-  with rehearsal v4, DA 94 and REV 73 open.** ***The 09-04 day will be produced under a seal
-  scope written down BEFORE the day was run -- the first time in this chain that is true.***
-  **AT COMMIT TIME, 2026-09-06T14:51:24Z: R-663 LANDED** -- DE 102(2) verified, **design v23
-  carrying the SCOPED seal AND THE DISCLOSURE**, the resolver refusing its attack set, with
-  the artifacts at `92220be`. *The lock is free and `de102smoke` has not launched.*
-  ***AND I APPLIED THE NEW RUNBOOK PRECONDITION TO MY OWN LANDING:*** **I read `git status
-  --short -- COORDINATION.md` BEFORE writing my Q row (EMPTY, so the insertion is
-  admissible), and I CHAINED the write to the commit in ONE command with `&&`** -- *which is
-  exactly the gap `f0cee29` fell through at 14:46Z.* **A rule written two commits ago,
-  obeyed by the seat whose landing note produced it.**
-  **FLAG WORDS: the seal scope VERSIONED-NOT-RETROACTIVE (8 at v22, 11 at v23); the
-  termination records EXCLUDED-BY-A-GLOB; my row CARRIED-AGAIN (rule 21's third form, twice);
-  BE 66 DECIDES-THE-INTERFACE.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,169 -> 1,177, flag_provenance 714 -> 722,
-  tasks 19; **472 CHECKED**, 250 RELAYED, **455 UNMARKED -- unchanged for the
-  sixty-fifth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
@@ -2933,6 +2934,126 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+                             # **EXTENDED IN BAND 2026-09-06T15:09:11Z: R-667 LANDED AND I CHECKED
+                             # ITS SHARPEST CLAIM MYSELF -- "content-identical at the objects AND
+                             # RE-SERIALISED (digests changed)".** *On
+                             # `be_race_read_declaration_v3.json`: the pre-BE-65 blob hashes
+                             # `603c684784b148b6…` and the current file `3a2fdb28d87d77d9…`, while
+                             # the parsed content is IDENTICAL once `supersedes` and its note are
+                             # removed.*
+                             # ***So the linking changed every one of those files' DIGESTS without
+                             # changing a single value -- and any pin taken by digest before BE 65
+                             # now fails against a file whose content it would still accept.***
+                             # **That is the pair form's cost, stated plainly: `{path, sha256}`
+                             # binds the BYTES, and a re-serialisation is a byte change.** *The
+                             # remedy is the one the census already enforces -- resolve the CHAIN
+                             # HEAD rather than a remembered digest -- and it is why R-666's
+                             # selector recomputes the digest from the file the path names rather
+                             # than trusting one carried in a receipt.*
+                             # *And BE 66's heavy half tried and was REFUSED at 15:08:36Z: its poll
+                             # record reads `LoadState loaded / ActiveState failed / SubState failed
+                             # / Result exit-code / ExecMainStatus "75"` with the refusal text "This
+                             # unit did NO work and wrote nothing (rule 20)" -- the five fields plus
+                             # the id in a poll line, exactly as ruled.*
+  I_DROVE_THE_SELECTORS_FOUR_CELLS_AND_THE_POLARITY_IS_RIGHT: ABSENCE_NOW_BUYS_NOTHING
+                             # CHECKED 2026-09-06T15:05:59Z, driven on SYNTHETIC receipts (no
+                             # sealed day opened). **no provenance → v23, ELEVEN names, reason "THE
+                             # STRICTEST LIST IN FORCE -- no verifiable design pair, and nothing
+                             # positively identifies this receipt as older"; a CORRECT `{path,
+                             # sha256}` pair naming v21 → v21, EIGHT names, "the PAIR, digest
+                             # RECOMPUTED from the file the path names"; a MISMATCHED digest →
+                             # strictest; a path WITHOUT a digest → strictest.**
+                             # ***So absence and unverifiability both fall to the STRICTEST list,
+                             # and only a verifiable pair buys leniency -- the exact inverse of the
+                             # hole REV 73 found, where "ABSENCE selected the WEAKER rule inside the
+                             # scoping built to protect the seal".***
+                             # *The third hole is dropped rather than fixed: "an opened path is not
+                             # a pin" -- and the concrete reason is in the code, that the 09-03 run
+                             # opened a STALE v10 beside v21.*
+  THE_OLD_RECEIPT_IS_RECOGNISED_POSITIVELY_BY_ITS_EMIT_STAMP: NEVER_BY_A_FIELD_BEING_ABSENT
+                             # CHECKED 2026-09-06T15:05:59Z, driven. **A synthetic receipt stamped
+                             # `2026-09-06T14:01:55.557479+00:00` -- the 09-03 seal's own emit time
+                             # -- resolves to v22 with EIGHT names and the reason "POSITIVE
+                             # recognition of a pre-correction receipt"; the same shape stamped
+                             # 15:00:00 resolves to v23 with ELEVEN.**
+                             # ***The code says the principle in five words: "Never by a field being
+                             # absent."*** *Recognition is by an emit stamp before the correction,
+                             # CORROBORATED by a `carrying_commit` that resolves -- two facts, not
+                             # one, and both positive.*
+                             # **AND THE SHAPE HANDED TO REV 75 IS THE SEAM BETWEEN THE TWO PATHS: a
+                             # positively-old receipt WITH a mismatched pair is judged OLD and
+                             # UNFLAGGED** -- *the positive path wins and nothing says the pair was
+                             # bad.*
+  BES_PARSER_IS_NOW_A_THIN_CALL_INTO_DAS: TWO_IMPLEMENTATIONS_CORROBORATE_NOTHING
+                             # CHECKED 2026-09-06T15:05:59Z at `be_rule22.parse_porcelain_line`,
+                             # whose docstring is now the ruling: **"A THIN CALL into
+                             # `da_root.parse_porcelain`, which now carries this algorithm… the
+                             # programme has ONE porcelain parser."**
+                             # ***And it states the measurement that earned it: "the reviewer
+                             # measured what three implementations cost -- FOUR OF TWELVE LINES
+                             # DISAGREED AND NO TWO WERE WRONG IN THE SAME PLACE, which is exactly
+                             # 'two implementations corroborate nothing'".***
+                             # *So R-235's do-not-harmonize is bounded once more, on the same
+                             # principle as R-646's infrastructure ruling: **a way of READING A
+                             # TOOL'S OUTPUT is not a statistic.*** **BE's algorithm won on merit
+                             # and BE's file now calls DA's -- the winner moved, the caller did
+                             # not.**
+  THE_POLL_SETTLES_ON_THE_RECORD_NOT_ON_ACTIVESTATE: MY_ROUND_191_FINDING_CLOSED
+                             # CHECKED 2026-09-06T15:05:59Z at `be_heavy_run.sh` (`5501d45`): **"#
+                             # SETTLE ON THE RECORD, NOT ON ActiveState. Measured 15:03:14Z on the
+                             # …"** -- *the comment carries its own measurement time.*
+                             # ***This closes the finding I swept last round: under
+                             # `RemainAfterExit` a REFUSED unit reads `active`, so a poll that waits
+                             # for "not active" waits forever and a poll that reads "active" as
+                             # RUNNING is wrong.*** **The remedy is not a better field but a
+                             # different SOURCE: the launcher's own run record, which says what
+                             # happened rather than what the unit currently looks like.**
+                             # *And the refusal path is reproduced ON THE REAL LOCK, which is the
+                             # drive rule 20 asks for.*
+  THE_CENSUS_ARTIFACT_AND_THE_LIVE_CENSUS_DISAGREE_AND_BOTH_ARE_RIGHT: DA_95_RE_EMITS
+                             # CHECKED 2026-09-06T15:05:59Z (R-666 verifying MEM 191). **My note
+                             # stands: the census ARTIFACT on disk still says four families without
+                             # one head, while the LIVE census reads 0 -- and DA 95 re-emits.**
+                             # ***Both readings are correct about different objects: the files were
+                             # linked after the artifact was written.*** *The distinction the
+                             # programme has now hit seven times today is the same one every time --
+                             # a fix in the source is not a fix in the record a reader resolves --
+                             # and the remedy is always the same: RE-EMIT, and until then say which
+                             # object you read.*
+                             # **REV 74 lands the strongest form of the same check: "all eleven
+                             # declarations are JSON-IDENTICAL to their pre-BE-65 selves ONCE THE
+                             # LINK IS REMOVED"** -- *a linking that changed nothing but the link.*
+  THE_RUN_AT_TWELVE_MINUTES_AND_A_FLAT_PEAK: TWO_POINT_NINE_SIX_GIGABYTES_SINCE_14_56
+                             # CHECKED 2026-09-06T15:05:59Z: **`de102smoke.service` `loaded /
+                             # active / running / 0`, `MemoryPeak` 2,957,488,128 B -- UNCHANGED
+                             # since my 14:56 read -- the payload at 11:59 with RSS 843,644 KiB.**
+                             # *The peak plateaus early in these runs: the 09-03 smoke sat at
+                             # 2,554,003,456 B for its whole 86 minutes, and this one has held
+                             # 2.96 GB for ten.*
+                             # **Receipt expected ≈16:20Z; BE 66's heavy half is BLOCKED on the
+                             # lock; DA 94 and REV 74 are in flight.**
+  R_666S_VERIFICATION_METHOD_IS_THE_DRIVE_NOT_THE_READ: VERIFIED_BY_DRIVE
+                             # CHECKED 2026-09-06T15:05:59Z. **R-666's own headline says "DE 103
+                             # VERIFIED BY DRIVE" -- and my four cells plus the two stamp cells
+                             # reproduce it independently.**
+                             # ***That is the standard the programme reached today: a selector whose
+                             # THREE HOLES were found by driving is verified by driving, not by
+                             # reading the diff that closed them.*** *A diff shows what changed; a
+                             # drive shows what the code now does with an input nobody has typed
+                             # before.*
+                             # *Six of my last seven rounds have carried at least one finding that
+                             # exists only because something was driven rather than read.*
+  THE_SEAL_SCOPE_HAS_TWO_INDEPENDENT_READERS_AND_ONE_IS_STILL_WRONG: DA_95_IS_THE_GATE
+                             # CHECKED 2026-09-06T15:05:59Z, carried forward. **DE's selector now
+                             # judges by version (8 at v22, 11 at v23, strictest by default) and
+                             # DA's `economic_absence` still reads `ECONOMIC_FIELDS` as a FLAT LIST
+                             # -- which I drove synthetically at round 190 and REV 73 confirmed on
+                             # the landed receipt.**
+                             # ***So the programme currently holds TWO readers of one rule, one
+                             # correct and one known-wrong, with the wrong one HELD OUT OF USE
+                             # rather than trusted: no re-run of the 09-03 pre-read until DA 95.***
+                             # *That is the honest shape while a seam is open -- not "both agree",
+                             # not "we'll see", but one instrument named as wrong and not run.*
   THE_FOUR_FAMILIES_ARE_LINKED_IN_THE_FILES_AND_THE_CENSUS_ARTIFACT_STILL_SAYS_FOUR: SIXTH_INSTANCE
                              # CHECKED 2026-09-06T14:59:31Z. **Both families I sampled now carry the
                              # link: `be_ceiling_null_declaration_v2` names v1 and
@@ -22717,6 +22838,90 @@ flag_provenance:
       commit and the index collision, and the only silent one: it looks like success, and
       the way to see it is to notice the staged count and ask git which commit holds the
       line.
+  # --- MEM round 192, 2026-09-06T15:05:59Z ------------------------------
+  I_DROVE_THE_SELECTORS_FOUR_CELLS_AND_THE_POLARITY_IS_RIGHT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T15:05:59Z
+    said: >-
+      driven on synthetic receipts: no provenance resolves to v23 with eleven names under the
+      strictest list, a correct path and sha256 pair naming v21 resolves to v21 with eight and
+      the digest recomputed from the file the path names, a mismatched digest falls to
+      strictest, and a path without a digest falls to strictest. Absence and unverifiability
+      both buy nothing, which inverts the hole where absence selected the weaker rule, and the
+      order-dependent fallback is dropped because an opened path is not a pin.
+  THE_OLD_RECEIPT_IS_RECOGNISED_POSITIVELY_BY_ITS_EMIT_STAMP:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T15:05:59Z
+    said: >-
+      a synthetic receipt stamped 2026-09-06T14:01:55.557479Z, the 09-03 seal's own emit time,
+      resolves to v22 with eight names and the reason POSITIVE recognition of a pre-correction
+      receipt, while the same shape stamped 15:00:00 resolves to v23 with eleven. The code's
+      principle is never by a field being absent, and recognition is corroborated by a
+      carrying_commit that resolves. The shape handed to REV 75 is the seam between the two
+      paths: a positively-old receipt with a mismatched pair is judged old and unflagged.
+  BES_PARSER_IS_NOW_A_THIN_CALL_INTO_DAS:
+    prov: CHECKED
+    artifact: live/pm_research/be_rule22.py
+    as_of: 2026-09-06T15:05:59Z
+    said: >-
+      parse_porcelain_line is a thin call into da_root.parse_porcelain, and its docstring
+      carries the measurement that earned the ruling: three implementations disagreed on four
+      of twelve lines with no two wrong in the same place, which is exactly two
+      implementations corroborating nothing, so a way of reading a tool's output is not a
+      statistic. BE's algorithm won on merit and BE's file now calls DA's.
+  THE_POLL_SETTLES_ON_THE_RECORD_NOT_ON_ACTIVESTATE:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-06T15:05:59Z
+    said: >-
+      the launcher now settles on the launch record rather than on ActiveState, with the
+      comment carrying its own measurement time of 15:03:14Z, which closes the finding I swept
+      last round: under RemainAfterExit a refused unit reads active, so a poll waiting for not
+      active waits forever and one reading active as running is wrong. The remedy is a
+      different source rather than a better field, and the refusal path is reproduced on the
+      real lock.
+  THE_CENSUS_ARTIFACT_AND_THE_LIVE_CENSUS_DISAGREE_AND_BOTH_ARE_RIGHT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T144403Z.json
+    as_of: 2026-09-06T15:05:59Z
+    said: >-
+      R-666 verifies my round-191 note: the census artifact on disk still says four families
+      without one head while the live census reads zero, and DA 95 re-emits. Both readings are
+      correct about different objects because the files were linked after the artifact was
+      written. REV 74 lands the strongest form of the same check, that all eleven declarations
+      are JSON-identical to their pre-BE-65 selves once the link is removed.
+  THE_RUN_AT_TWELVE_MINUTES_AND_A_FLAT_PEAK:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/heavy_run_form_v3.json
+    as_of: 2026-09-06T15:05:59Z
+    said: >-
+      de102smoke reads loaded, active, running with ExecMainStatus 0 and MemoryPeak
+      2,957,488,128 unchanged since my 14:56 read, the payload at 11:59 with RSS 843,644 KiB.
+      The peak plateaus early in these runs, as the 09-03 smoke held 2,554,003,456 for its
+      whole 86 minutes. Receipt expected about 16:20Z, BE 66's heavy half blocked on the lock,
+      DA 94 and REV 74 in flight.
+  R_666S_VERIFICATION_METHOD_IS_THE_DRIVE_NOT_THE_READ:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T15:05:59Z
+    said: >-
+      R-666's headline says DE 103 verified by drive, and my four selector cells plus two stamp
+      cells reproduce it independently. A selector whose three holes were found by driving is
+      verified by driving rather than by reading the diff that closed them: a diff shows what
+      changed, a drive shows what the code does with an input nobody has typed before.
+  THE_SEAL_SCOPE_HAS_TWO_INDEPENDENT_READERS_AND_ONE_IS_STILL_WRONG:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T15:05:59Z
+    said: >-
+      DE's selector now judges by version while DA's economic_absence still reads
+      ECONOMIC_FIELDS as a flat list, which I drove synthetically at round 190 and REV 73
+      confirmed on the landed receipt, so the programme holds two readers of one rule with the
+      wrong one held out of use rather than trusted: no re-run of the 09-03 pre-read until
+      DA 95. That is the honest shape while a seam is open -- one instrument named as wrong and
+      not run.
   # --- MEM round 191, 2026-09-06T14:59:31Z ------------------------------
   THE_FOUR_FAMILIES_ARE_LINKED_IN_THE_FILES_AND_THE_CENSUS_ARTIFACT_STILL_SAYS_FOUR:
     prov: CHECKED

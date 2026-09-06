@@ -5,6 +5,85 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 192
+
+**As of 2026-09-06T15:05:59Z, R-666 swept (tip `6cb89cc`). State only — MEM writes no
+result. No sealed value read; the sealed day not opened — every selector cell driven on a
+synthetic receipt.**
+
+### I drove the selector's four cells — and the polarity is right
+
+| input | verdict |
+|---|---|
+| no provenance | **v23, eleven names** — *"the strictest list in force… nothing positively identifies this receipt as older"* |
+| correct `{path, sha256}` pair (v21) | **v21, eight** — *"the PAIR, digest recomputed from the file the path names"* |
+| mismatched digest | **strictest** |
+| path without a digest | **strictest** |
+
+***Absence and unverifiability now buy nothing*** — the inverse of the hole where *"absence
+selected the weaker rule inside the scoping built to protect the seal"*. **The third hole is
+dropped, not fixed: "an opened path is not a pin"** — *because the 09-03 run opened a stale
+v10 beside v21.*
+
+**And the old receipt is recognised positively, by its emit stamp:** a synthetic receipt
+stamped **14:01:55.557479Z** resolves to **v22 / 8** — *"POSITIVE recognition of a
+pre-correction receipt"* — while 15:00:00 resolves to **v23 / 11**. ***The code's principle
+in five words: "Never by a field being absent."*** *The shape handed to REV 75 is the seam:
+a positively-old receipt **with a mismatched pair** is judged old and **unflagged**.*
+
+### AT COMMIT TIME (15:09:11Z): R-667 — content-identical *and* re-serialised
+
+***I checked the sharpest claim myself:*** on `be_race_read_declaration_v3.json` the
+**pre-BE-65 blob hashes `603c684784b148b6…`** and the **current file `3a2fdb28d87d77d9…`**,
+while **the parsed content is identical once `supersedes` and its note are removed**.
+***So the linking changed those files' digests without changing a single value — and any pin
+taken by digest before BE 65 now fails against a file whose content it would still
+accept.*** **That is the pair form's cost: `{path, sha256}` binds the bytes, and a
+re-serialisation is a byte change** — *which is exactly why R-666's selector **recomputes**
+the digest from the file the path names.*
+
+**BE 66's heavy half tried and was refused at 15:08:36Z** — its poll record reads
+`loaded / failed / failed / exit-code / ExecMainStatus "75"` beside *"This unit did NO work
+and wrote nothing (rule 20)"*: **the five fields plus the id in a poll line, exactly as
+ruled.** *The runbook now lands the register and itself as separate commits; next entry
+R-668.*
+
+### Three closures worth carrying
+
+- **BE's parser is a thin call into DA's**, and the docstring carries the measurement that
+  earned it: ***three implementations disagreed on four of twelve lines with no two wrong in
+  the same place — "two implementations corroborate nothing"*** — so *a way of reading a
+  tool's output is not a statistic*. **BE's algorithm won on merit; BE's file calls DA's.**
+- **The poll settles on the launch record, not on `ActiveState`** (comment stamped
+  15:03:14Z) — ***closing the finding I swept last round: under `RemainAfterExit` a refused
+  unit reads `active`.*** **The remedy is a different source, not a better field.**
+- **The census artifact and the live census disagree, and both are right** — R-666 verifies
+  my round-191 note; **DA 95 re-emits**. *Seventh instance today of fix-in-source vs
+  record-a-reader-resolves.* **REV 74 lands the strongest form: all eleven declarations are
+  JSON-identical to their pre-BE-65 selves once the link is removed.**
+
+### Two standing facts
+
+- **R-666 verified DE 103 by drive, and so did I** — six cells, independently. ***A diff
+  shows what changed; a drive shows what the code does with an input nobody has typed
+  before.***
+- **The seal scope has two independent readers and one is still wrong.** *The wrong one is
+  held out of use rather than trusted:* **no re-run of the 09-03 pre-read until DA 95.**
+
+### The run
+
+`loaded / active / running / 0`, **`MemoryPeak` 2,957,488,128 B — unchanged since 14:56**,
+payload at **11:59**, RSS 843,644 KiB. *The peak plateaus early: the 09-03 smoke held its
+2,554,003,456 B for all 86 minutes.* **Receipt ≈16:20Z; BE 66's heavy half blocked on the
+lock; DA 94 and REV 74 in flight.**
+
+**Counts, measured before the sentence:** flags 1,193 → **1,201**, `flag_provenance`
+738 → **746**, tasks 19; **491 CHECKED**, 255 RELAYED, **455 UNMARKED — unchanged for the
+sixty-eighth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 174** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 191
 
 **As of 2026-09-06T14:59:31Z, R-664 and R-665 swept (tip `89b640c`). State only — MEM writes
