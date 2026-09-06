@@ -1,0 +1,47 @@
+{
+  "as_of": "2026-09-06T12:18:26.409797+00:00",
+  "leg_1_the_failure_reproduced": {
+    "died_with_its_launcher": true,
+    "form": "--scope",
+    "state_after_the_group_TERM": "inactive",
+    "state_before_the_group_TERM": "active",
+    "unit": "de94leg1.scope",
+    "why": "a scope registers processes the CALLER forks, so the payload is in the launching shell's process group"
+  },
+  "leg_2_the_fix_driven": {
+    "forked_by_the_manager": true,
+    "form": "transient service",
+    "main_pid": "3359842",
+    "main_pid_PPid": 1004,
+    "state_after_systemctl_stop": "inactive",
+    "state_after_the_group_TERM": "active",
+    "state_before_the_group_TERM": "active",
+    "survived_the_group_TERM": true,
+    "systemctl_stop_ends_it": true,
+    "unit": "de94leg2.service",
+    "why": "the MANAGER forks a service, so it is in its own process group and nothing that happens to a tool shell can reach it"
+  },
+  "leg_3_a_held_lock_inside_the_unit": {
+    "ExecMainStatus": "1",
+    "Result": "exit-code",
+    "exited_nonzero": true,
+    "how_that_is_known": "the payload would have CREATED A FILE. Searching the journal for a marker string reported the opposite: systemd's own `Started <unit> - <command>.` line carries the command, marker included",
+    "journal_tail": [
+      "Sep 06 12:18:24 ip-172-31-78-41 systemd[1004]: Started de94leg3.service - /usr/bin/flock -n /home/yuqing/ctaNew/data/.heavy_run.lock /bin/touch /tmp/tmp3fjwrdze/THE_PAYLOAD_RAN.",
+      "Sep 06 12:18:24 ip-172-31-78-41 systemd[1004]: de94leg3.service: Main process exited, code=exited, status=1/FAILURE",
+      "Sep 06 12:18:24 ip-172-31-78-41 systemd[1004]: de94leg3.service: Failed with result 'exit-code'."
+    ],
+    "note_if_not": "another seat's run may hold it; the leg is valid either way -- what it tests is that a HELD lock exits the unit, not who held it",
+    "the_lock_was_held_by_this_probe": false,
+    "the_payload_never_ran": true,
+    "unit": "de94leg3.service",
+    "why": "`flock -n` is the unit's OWN ExecStart, so a held lock is the unit's exit status -- read it, never assume the run started"
+  },
+  "protocol": "P003_DE_LAUNCH_FORM_PROBE_V1",
+  "ruling": "R-628: a heavy run is NEVER a child of a tool shell",
+  "the_ruling_holds": true,
+  "what_this_is_not": {
+    "a_day_result": false,
+    "heavy": "three sleeps and an echo; it takes no heavy lock and holds one only for the second it needs to prove a held lock refuses"
+  }
+}
