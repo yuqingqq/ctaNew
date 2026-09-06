@@ -48,6 +48,9 @@ from pathlib import Path
 
 PROTOCOL = "P003_DA_PROCESS_BUDGET_AND_RULE22_SWEEP_V1"
 HERE = Path(__file__).resolve().parent
+#: see da_root: importable as a script AND under `python3 -m`.
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
 REPO = HERE.parents[1]
 #: THE TREE UNDER AUDIT. This seat executes from its own worktree, whose
 #: copies of ANOTHER seat's files are whatever they were at the last sync --

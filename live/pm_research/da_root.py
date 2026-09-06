@@ -26,7 +26,18 @@ invisible in a branch.
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
+
+#: IMPORTABLE BOTH WAYS. Under `python3 -m live.pm_research.<mod>` the
+#: package directory is NOT on `sys.path`, so a bare `import da_root`
+#: raises ModuleNotFoundError -- the reviewer and the coordinator run these
+#: both ways, and a module that works only when invoked as a script is an
+#: instrument with a launch convention nobody declared.
+_HERE = Path(__file__).resolve().parent
+if str(_HERE) not in sys.path:
+    sys.path.insert(0, str(_HERE))
+
 
 HERE = Path(__file__).resolve().parent
 DE_MODULE = HERE / "de_data_root.py"

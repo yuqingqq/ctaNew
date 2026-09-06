@@ -45,6 +45,8 @@ from pathlib import Path
 
 PROTOCOL = "P003_DA_RESOLVER_PROBE_V1"
 HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
 LEDGER = Path("/home/yuqing/ctaNew")
 WORKTREE_HINTS = ("-wt-", "/worktrees/", "ctaNew-wt")
 
