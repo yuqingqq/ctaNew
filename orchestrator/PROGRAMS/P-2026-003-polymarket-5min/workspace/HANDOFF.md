@@ -5,6 +5,84 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 186
+
+**As of 2026-09-06T14:28:34Z, R-656 swept (tip `7e4e0bb`); DA 91 landed during the round and
+is swept with it. State only — MEM writes no result. No sealed value read, quoted or
+inferred.**
+
+### The "299" was never a census of the receipt
+
+DA 91's superseding pre-read carries **`n_receipt_leaves_walked = 545`** beside
+**`n_leaves_emitted = 315`** — *and the second was 299 at 14:08*. **So that number counts
+DA's own record and moves with it.** ***My round-185 wording ("DA counted a narrower
+population than the reviewer's 545") is superseded in band by the artifact's own two named
+counts.*** *Each census now says what it counts in its own field name.*
+
+**INCOMPLETE is not FLAGGED, and `None` is not 0:** `status: INCOMPLETE` (was FLAGGED) —
+*"FLAGGED is reserved for a flag in the day"*; `n_arms_agreeing: None` — *"no population was
+recomputed, so no arm was compared. **0 would read as two arms DISAGREEING**"*. ***Two
+vocabularies separated in one edit: "I could not" versus "I found something."***
+
+### AT COMMIT TIME (14:31:33Z): the 09-05 book finished and the conditional GO fired by itself
+
+**The book:** `be_daybook_20260905_btc.pkl` **260,449,687 B** (`499f85967367…`), receipt
+**30,004 B** (`394c292cd92d…`), written 14:30:35–37Z; the unit's own lines read
+`assembly_s 1114.7`, `peak_gb 3.551`, and **`Consumed 28min 8.235s CPU time, 4.8G memory
+peak`**. **`be64book` was collected on success** — `not-found / inactive / dead / 0` — with
+a detail worth keeping: **`MemoryPeak` reads `[not set]`**, so the post-collection defaults
+are *not uniformly zeros*. *BE's launcher carries no `RemainAfterExit=yes`; that is DE's v3
+form.*
+
+***And DE 101 launched within the minute:*** **`de101smoke.service` started 14:31:18Z** —
+`loaded / active / running / 0 / success`, `InvocationID 499d6470b7844459…`,
+**`RemainAfterExit=yes`**, MainPID 3521828 = `flock` with **`PPid 1004`**, payload 3521829 —
+running the **09-04** day behind `flock -n -E 75`. **One launch, on a named condition, with
+no seat deciding it in the moment — and the first heavy run to carry the full ruled form.**
+*DE 101(a) also landed design v22 (the seal's scope written down before day 2) and the 09-04
+re-rehearsal.*
+
+### Verified at the commit, and the literal pin is gone
+
+- **`producing_code_locatable`:** `git cat-file blob b741352:…runner.py | sha256sum` →
+  **`f6071f1245ca07425c…`** — read from the object store, not a worktree.
+- **No `heavy_run_form_v<N>` literal remains in the runner**; the call site is
+  `form = heavy_run_form()` with the chain-head machinery beside it. *The runner had pinned
+  v2 by literal **34 seconds after v3 existed** — the third instance of a literal that must
+  track something that moves.*
+- **The non-head census** (21,636 B, `aa4ef4f97b17…`): **20 literals, 2 naming a non-head;
+  20 families, 4 without exactly one head; 5 checks, 0 failed**, under *"each literal
+  belongs to the seat that wrote it; this census names them"* — *an instrument that names
+  rather than rules.*
+
+### And I read a file while it was being written
+
+My `ls` at 14:27:50 showed the superseding pre-read at **23,763 B**; my `stat` at 14:28:34
+shows **24,704 B, mtime 14:28:03**, `65048af3fda7…`. **The same name was written twice
+inside ~13 seconds** — a size quoted from the first read would have described bytes that no
+longer exist. ***A second slip in the same census: a pre-read stamped `142709Z` existed when
+I listed at 14:27:13 and is gone, while the non-head census stamped `142709Z` remains — my
+substring check answered 1 without telling me which artifact it found.*** *Two artifacts
+sharing a name-stamp; the digest and the full name are the only identity.*
+
+**`output_format` is ruled and in no copy yet:** `grep -c` returns **0** in both landed
+journal copies — *the emitter/artifact distinction for the fourth time today.*
+
+### The GO, and the queue
+
+**R-620 interpreted: DE 101's GO names the condition** — *launch once when `be64book` has
+finished* — **and that is ONE launch, not a standing licence.** *The condition replaces the
+coordinator's watch, not the count.* **State:** the book `loaded / active / running`,
+`MemoryCurrent` 4,854,235,136 B, **`MemoryPeak` 4,933,337,088 B**, payload at **25:03**, RSS
+3,574,592 KiB; **DE 100 still READY-AND-BLOCKED**, its rehearsal `862252360579b779…` unused.
+
+**Counts, measured before the sentence:** flags 1,144 → **1,152**, `flag_provenance`
+689 → **697**, tasks 19; **451 CHECKED**, 246 RELAYED, **455 UNMARKED — unchanged for the
+sixty-second round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 168** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 185
 
 **As of 2026-09-06T14:21:55Z, R-655 swept (tip `20db97a`). State only — MEM writes no

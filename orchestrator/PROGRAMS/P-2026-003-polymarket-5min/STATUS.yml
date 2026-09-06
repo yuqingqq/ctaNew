@@ -63,6 +63,76 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T14:28:34Z (MEM ROUND 186 -- R-656 SWEPT, tip `7e4e0bb`; DA 91 landed DURING the
+  round and is swept with it. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ,
+  QUOTED OR INFERRED.**
+  (1) **`producing_code_locatable` VERIFIED AT THE COMMIT, BY ME:** `git cat-file blob
+  b741352:…/de_multiday_gate1_runner.py | sha256sum` → **`f6071f1245ca07425c…`**, the digest
+  R-656 names. *The bytes that ran are in the object store at the commit the receipt names;
+  I read them there rather than from a worktree.*
+  (2) ***THE "299" WAS NEVER A CENSUS OF THE RECEIPT.*** DA 91's superseding pre-read
+  carries **`n_receipt_leaves_walked = 545` beside `n_leaves_emitted = 315`** -- *and the
+  second was 299 at 14:08.* **So that number counts DA'S OWN RECORD and MOVES WITH IT.**
+  ***My round-185 wording ("DA counted a narrower population than the reviewer's 545") IS
+  SUPERSEDED IN BAND by the artifact's own two named counts*** -- *each census now says
+  what it counts in its own field name, so no reader infers a denominator from a number.*
+  (3) **INCOMPLETE IS NOT FLAGGED, AND `None` IS NOT 0.** `status: INCOMPLETE` (was FLAGGED)
+  with *"FLAGGED is reserved for a flag IN THE DAY"*; `n_arms_agreeing: None` with *"no
+  population was recomputed, so no arm was compared. **0 would read as two arms
+  DISAGREEING**"*, beside `n_arms_declared 2` and `n_arms_with_a_recomputed_population 0`.
+  ***Two vocabularies separated in one edit: "I could not" versus "I found something" -- the
+  day's fourth three-valued repair and the first on a STATUS rather than a count.***
+  (4) **THE LITERAL PIN IS GONE FROM THE RUNNER:** no `heavy_run_form_v<N>` literal remains;
+  the call site is `form = heavy_run_form()` with the chain-head machinery beside it. *The
+  finding it closes: the runner pinned v2 BY LITERAL **34 seconds after v3 existed** -- the
+  third instance of a literal that must track something that moves.* ***A declaration that
+  supersedes by pair is only as good as the readers that resolve the CHAIN HEAD.***
+  (5) **THE NON-HEAD CENSUS NAMES WHAT IT FINDS** (21,636 B, `aa4ef4f97b17…`): **20
+  literals, 2 naming a non-head; 20 families, 4 without exactly one head; 5 checks, 0
+  failed**, under *"each literal belongs to the seat that wrote it; this census names
+  them"*. *A directory-wide instrument that NAMES rather than rules -- the only form that
+  crosses seat boundaries without becoming an entitlement.*
+  (6) ***AND I READ A FILE WHILE IT WAS BEING WRITTEN.*** *My `ls` at 14:27:50 showed the
+  superseding pre-read at **23,763 B**; my `stat` at 14:28:34 shows **24,704 B, mtime
+  14:28:03**, `65048af3fda7…`.* **The same NAME was written twice inside ~13 seconds, so a
+  size quoted from the first read would have described bytes that no longer exist.**
+  ***And a second slip in the same census: a pre-read stamped `142709Z` existed when I
+  listed at 14:27:13 and is gone, while the NON-HEAD CENSUS stamped `142709Z` remains -- so
+  my substring check for "142709Z" answered 1 without telling me WHICH artifact it
+  found.*** *Two artifacts sharing a name-stamp; the digest and the full name are the only
+  identity.*
+  (7) **`output_format` IS RULED AND IN NO COPY YET:** `grep -c` returns **0** in both
+  landed journal copies. *The emitter/artifact distinction for the FOURTH time today, and
+  the honest sentence is the same each time: true of what will be written, not of what a
+  reader resolves now.*
+  (8) **R-620 INTERPRETED: DE 101's GO NAMES THE CONDITION** ("launch once when `be64book`
+  has finished") **and that is ONE LAUNCH, not a standing licence** -- *the condition
+  replaces the coordinator's watch, not the count.* **State: the book `loaded / active /
+  running`, `MemoryCurrent` 4,854,235,136 B, `MemoryPeak` 4,933,337,088 B, payload at 25:03,
+  RSS 3,574,592 KiB; DE 100 still READY-AND-BLOCKED, its rehearsal `862252360579b779…`
+  unused.**
+  ***AT COMMIT TIME, 2026-09-06T14:31:33Z: THE 09-05 BOOK FINISHED AND THE CONDITIONAL GO
+  FIRED BY ITSELF.*** **The book is `be_daybook_20260905_btc.pkl`, 260,449,687 B
+  (`499f85967367…`), with its receipt at 30,004 B (`394c292cd92d…`), written 14:30:35-37Z;
+  the unit's own lines read `assembly_s 1114.7`, `peak_gb 3.551`, and `Consumed 28min
+  8.235s CPU time, 4.8G memory peak`.** **`be64book` was COLLECTED on success --
+  `not-found / inactive / dead / 0` -- and `MemoryPeak` now reads `[not set]`: the defaults
+  after collection are NOT uniformly zeros.** *BE's launcher carries no
+  `RemainAfterExit=yes`; that is DE's v3 form.*
+  ***AND DE 101 LAUNCHED WITHIN THE MINUTE: `de101smoke.service` started 14:31:18Z --
+  `loaded / active / running / 0 / success`, `InvocationID 499d6470b7844459…`,
+  `RemainAfterExit=yes`, MainPID 3521828 = `flock` with `PPid 1004`, payload 3521829 --
+  running the 09-04 day behind `flock -n -E 75`.*** **One launch, on a named condition, with
+  no seat deciding it in the moment; the first heavy run to carry the FULL ruled form.**
+  *DE 101(a) also landed design v22 (the seal's SCOPE written down before day 2) and the
+  09-04 re-rehearsal.*
+  **FLAG WORDS: the 09-05 book PAST-FOUR-POINT-NINE-GIGABYTES; the pre-read
+  INCOMPLETE-NOT-FLAGGED (n_arms_agreeing None); the literal pin GONE-FROM-THE-RUNNER; the
+  GO ONE-LAUNCH-ON-A-NAMED-CONDITION.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,144 -> 1,152, flag_provenance 689 -> 697,
+  tasks 19; **451 CHECKED**, 246 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-second round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T14:21:55Z (MEM ROUND 185 -- R-655 SWEPT, tip `20db97a`. STATE ONLY. MEM
   ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED.**
   (1) ***THE PARTIAL RIGHT ONE IS WORSE THAN A ZERO, AND THE CODE SAYS SO IN ITS OWN
@@ -195,79 +265,6 @@ updated: >-
   tasks 19; **440 CHECKED**, 241 RELAYED, **455 UNMARKED -- unchanged for the
   sixtieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
   new flags vs HEAD 0 without provenance.)
-  2026-09-06T14:07:45Z (MEM ROUND 183 -- R-651 AND R-652 SWEPT AS ONE BATCH, tip
-  `9e40c57`. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED FIELD IS READ OR QUOTED
-  ANYWHERE IN THIS ENTRY.**
-  (1) ***DE 84's JOURNAL RECORD IS GONE, AND I HAD PREDICTED THE HOUR.*** **`journalctl
-  --user -u de84smoke.scope` returns `-- No entries --`: ZERO lines, with the host horizon
-  at `09:57:58Z` and that unit's last line having been `09:46:29Z`.** *At round 178 I
-  recorded that its last line sat ~20 minutes ahead of the boundary and that the record
-  would be gone when the boundary passed it.* **REV 69 measured the loss BETWEEN TWO OF ITS
-  OWN FILINGS.** *Contrast, same read: `de95smoke.service` still has THREE lines -- and its
-  `Started` line is 12:35:35Z, which is why the two copies exist.*
-  (2) **THE COVERAGE CONTRACT IS SHARED AND NAMES ITS REGIME.** `da_root.journal_coverage`
-  (:201) takes `unit`, `window_start_epoch`, `regime`; its docstring IS the contract:
-  ***"Two MEASURED clocks and no text search … for a CONTINUOUS logger the reference is the
-  window's start; for a BURSTY unit it is the unit's own start, and ITS SILENCE BETWEEN
-  BURSTS IS NOT A GAP IN THE RECORD."*** *That clause is the whole correction to REV 68: the
-  old text search could not tell silence from truncation.*
-  (3) **THE ARTIFACT IS THE RECORD, FOR A NUMBER WHOSE SOURCE IS GONE.** The smoke's cost
-  is carried by `SMOKE_COST_CARRIERS` (the v4 receipt, then the v3) through
-  `smoke_cost_carried()`: ***"the value was COPIED INTO A LANDED RECEIPT at the moment it
-  was read, and it is carried forward from there -- with the receipt's own PATH, DIGEST and
-  AS-OF -- rather than re-measured from a store that no longer holds it. Nothing is
-  re-derived and nothing is typed."*** *A fallback CHAIN, so the citation survives a
-  superseded receipt as well as a rotated journal.*
-  (4) **EXIT 9 MEANS "VERIFIED, UNRECORDED".** `_REC_FAILED` is set at the failed append and
-  both messages name what was lost. ***A third outcome beside success and failure: the run's
-  result and the record's fate are two facts, and the exit code now carries both*** -- the
-  answer to `|| true` on the only evidence.
-  (5) **THE SEALED RECEIPT, AT ITS THREE OPEN FIELDS ONLY.**
-  `p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json`, **37,104 B**, sha256
-  **`5dd3a8f3f5818379…`** (hashed by me; matches the register), `status DAY_RUN_SEALED`,
-  `day 2026-09-03`, `emitted_at_utc 14:01:55Z`, from wt-de2 at `b741352`. ***Those are the
-  only fields named. A digest is not a read.*** **Both run-record copies verified by me:**
-  the coordinator's (`58a3f08df4bb…`, 2,483 B; 3 lines by both invocation fields, and I
-  counted 3 by `-u`) and DE's sidecar (`b1b1fff1772d…`, 5,418 B) -- *two copies of a record
-  that no longer exists anywhere else, by two seats, 27 seconds apart.*
-  (6) **MY FAIL-OPEN CELL HAS AN OWNER:** the `kind: None` case -- ADMITTED while the record
-  says `checked: True` -- is **DE 99, dispatched 14:06Z**, with REV 68's guard items **and
-  THE MISSING Q-DE-95 ROW.** ***DE 95 produced the first sealed receipt of the programme and
-  its Q row was never filed: the register can lose a step the artifacts kept.***
-  (7) **THE BOOK IS THE HEAVY RUN NOW:** `be64book.service` `loaded/active/running`,
-  `MainPID 3485787`, `MemoryCurrent` 2,503,032,832 B, `MemoryPeak` 2,526,744,576 B, the
-  payload at 05:25 / RSS 1,411,416 KiB. ***The FIRST BE heavy build under the ruled SERVICE
-  form*** -- *every BE run through 09-05 was a `.scope`* -- **and its fifty-nine refusals at
-  75 were the ruled grounding drive happening in production before the rule asked for it.**
-  (8) **THE QUEUE AFTER THE SEAL:** **DA 89 (the PRE-READ) dispatched 14:04Z; DE 99 14:06Z;
-  DE 100 = the 09-04 LAUNCH after the lock; BE 64 holds the lock.** *The chain that consumed
-  the day has its first sealed day, and the next launch waits on a LOCK rather than on a
-  RULE.*
-  **AT COMMIT TIME, 2026-09-06T14:11:00Z: DE 99 AND DA 89 LANDED.** **I drove DE 99's fix
-  and BOTH halves close:** *`kind=None` → REFUSED ("a guard that cannot see what it is in
-  has not checked anything"); a REAL day with `fixture=True` → REFUSED; the DECLARED
-  fixture day under a scope → ADMITTED with `checked: False`; `kind='transient service'` →
-  ADMITTED, `checked: True`.* ***The predicate is POSITIVE now and the exemption is the
-  GATE.*** **DE's docstring cites this seat: "R-651 / MEM 181: when the kind is UNKNOWN the
-  record must not claim `checked` -- it says False."**
-  ***AND MY OWN PROBE NEARLY FILED A BLOCKING DEFECT THAT DID NOT EXIST:*** *my first drive
-  passed `kind='service'`, got a refusal, and read like a guard that would refuse REAL
-  service runs and stall DE 100.* **The declared token is `"transient service"` -- `known =
-  kind in ("transient service", "scope")` -- so MY value was the unknown one, and the
-  refusal was correct.** *Nineteenth "suspect the probe first"; I read the function before
-  writing the sentence.*
-  **DA 89 landed the PRE-READ on the first real sealed day** (`e8a2dc3`, Q-DA-312; the
-  landing record at `326d7bb`; `p003_da_gate1_pre_read_20260903__20260906T140810Z.json`,
-  **22,419 B, `24f2191009177b4a…`**, censused and hashed by me -- *no sealed field read*).
-  **The book keeps growing: `MemoryCurrent` 3.45 GB, the payload at 08:41, RSS 2,972,264
-  KiB; the horizon is `10:03:58Z` and `de95smoke`'s three lines are still ahead of it.**
-  **FLAG WORDS: the 09-03 day SEALED (37,104 B, `5dd3a8f3f581…`, 14:01:55Z -- three open
-  fields only); the 09-05 book BUILDING-UNDER-THE-SERVICE-FORM; de84smoke's journal record
-  GONE-AS-PREDICTED; the fail-open cell OWNED-BY-DE-99.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,120 -> 1,128, flag_provenance 665 -> 673,
-  tasks 19; **433 CHECKED**, 240 RELAYED, **455 UNMARKED -- unchanged for the
-  fifty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2941,6 +2938,116 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  PRODUCING_CODE_LOCATABLE_VERIFIED_AT_THE_COMMIT_BY_ME: F6071F12
+                             # CHECKED 2026-09-06T14:28:34Z. **`git cat-file blob
+                             # b741352:live/pm_research/de_multiday_gate1_runner.py | sha256sum` →
+                             # `f6071f1245ca07425c…`, the digest R-656 names.**
+                             # ***So the sealed day's `producing_code_sha256` is locatable AT THE
+                             # COMMIT: the bytes that ran are in the repository at the commit the
+                             # receipt names, and I checked it from the object store rather than
+                             # from a worktree.*** *The half that DA 89 could not close (`params`)
+                             # is still open by name; this half is closed.*
+                             # **EXTENDED IN BAND 2026-09-06T14:31:33Z: THE 09-05 BOOK FINISHED AND
+                             # THE CONDITIONAL GO FIRED BY ITSELF.**
+                             # **The book: `be_daybook_20260905_btc.pkl` 260,449,687 B
+                             # (`499f85967367…`) and its receipt 30,004 B (`394c292cd92d…`), written
+                             # 14:30:35-37Z; the unit's own last lines read `{"stage":"assembled",
+                             # "assembly_s":1114.7, "peak_gb":3.551}` and `Consumed 28min 8.235s CPU
+                             # time, 4.8G memory peak`.**
+                             # ***AND `be64book` WAS COLLECTED ON SUCCESS -- `not-found / inactive /
+                             # dead / 0` -- with a detail I had not seen before: `MemoryPeak=[not
+                             # set]`, so the defaults after collection are not uniformly zeros.***
+                             # *BE's launcher does not carry `RemainAfterExit=yes`; that is DE's v3
+                             # form, so BE's units still vanish on success.*
+                             # ***THEN DE 101 LAUNCHED WITHIN THE MINUTE: `de101smoke.service`
+                             # started 14:31:18Z, `loaded / active / running / 0 / success`,
+                             # `InvocationID 499d6470b7844459…`, `RemainAfterExit=yes`, MainPID
+                             # 3521828 = `flock` with `PPid 1004`, its payload 3521829 -- running
+                             # `--day 2026-09-04` against `be_daybook_20260904_btc.pkl` behind
+                             # `flock -n -E 75`.***
+                             # **One launch, on a named condition, with no seat deciding it in the
+                             # moment -- and the first heavy run to carry the FULL ruled form.**
+  THE_299_WAS_NEVER_A_CENSUS_OF_THE_RECEIPT: TWO_NAMED_COUNTS_IN_ONE_ARTIFACT
+                             # CHECKED 2026-09-06T14:28:34Z in DA 91's superseding pre-read.
+                             # **`economic_absence.n_receipt_leaves_walked = 545` and
+                             # `emitted_census.n_leaves_emitted = 315` sit side by side -- and the
+                             # second was 299 in the 14:08 pre-read.**
+                             # ***So the number counts DA'S OWN RECORD and MOVES WITH IT; it was
+                             # never a narrower slice of the receipt.*** **My round-185 wording --
+                             # "DA counted a narrower population than the reviewer's 545" -- IS
+                             # SUPERSEDED IN BAND by the artifact's own two named counts.**
+                             # *The remedy is the shape now visible in the file: each census says
+                             # WHAT IT COUNTS in its own field name, so no reader has to infer the
+                             # denominator from a number.*
+  INCOMPLETE_IS_NOT_FLAGGED_AND_NONE_IS_NOT_ZERO: THE_STATUS_VOCABULARY_SEPARATED
+                             # CHECKED 2026-09-06T14:28:34Z. **`status: INCOMPLETE` (was FLAGGED),
+                             # with `why_this_status`: "FLAGGED is reserved for a flag IN THE DAY --
+                             # an arm COMPARED and disagreeing, a DECLARED digest its file does not
+                             # have, or a seal…".** **And `n_arms_agreeing: None` with
+                             # `why_n_arms_agreeing_is_none`: "no population was recomputed, so no
+                             # arm was compared. 0 WOULD READ AS TWO ARMS DISAGREEING" --
+                             # `n_arms_declared 2`, `n_arms_with_a_recomputed_population 0`.**
+                             # ***Two vocabularies separated in one edit: "I could not" (INCOMPLETE,
+                             # None) versus "I found something" (FLAGGED, 0).*** *The day's fourth
+                             # three-valued repair, and the first on a STATUS rather than a count.*
+  THE_LITERAL_PIN_IS_GONE_FROM_THE_RUNNER: THE_THIRD_INSTANCE_CLOSED_AT_THE_CODE
+                             # CHECKED 2026-09-06T14:28:34Z: **no `heavy_run_form_v<N>` literal
+                             # remains anywhere in `de_multiday_gate1_runner.py`; the call site is
+                             # `form = heavy_run_form()` (:2100) and the chain-head machinery is at
+                             # :1228, :1306, :1418.**
+                             # *R-656's finding: the runner had pinned `heavy_run_form_v2.json` BY
+                             # LITERAL **34 seconds after v3 existed** -- the third instance of a
+                             # literal that must track something that moves.*
+                             # ***A declaration that supersedes by pair is only as good as the
+                             # readers that resolve the CHAIN HEAD; a filename pinned in code goes
+                             # stale at the next supersession, and this one went stale inside a
+                             # minute.***
+  THE_NON_HEAD_CENSUS_NAMES_THE_LITERALS_IT_FINDS: TWENTY_FAMILIES_FOUR_WITHOUT_A_HEAD
+                             # CHECKED 2026-09-06T14:28:34Z at
+                             # `p003_da_nonhead_census__20260906T142709Z.json` (21,636 B,
+                             # `aa4ef4f97b17…`). **`literal_census.n_literals 20`, of which
+                             # `n_naming_a_non_head` is **2**; `n_families 20` of which
+                             # `n_families_without_exactly_one_head` is **4**; `n_checks 5`,
+                             # `n_failed 0`.**
+                             # **`decides_nothing: "each literal belongs to the seat that wrote it;
+                             # this census names them"`** -- *a directory-wide instrument that
+                             # NAMES rather than rules, which is the only form that can cross seat
+                             # boundaries without becoming an entitlement.*
+  I_READ_A_FILE_WHILE_IT_WAS_BEING_WRITTEN: THE_SAME_NAME_TWICE_IN_THIRTEEN_SECONDS
+                             # CHECKED 2026-09-06T14:28:34Z -- **mine, and it is a measurement
+                             # hazard rather than anyone's defect.** *My `ls` at 14:27:50 showed the
+                             # superseding pre-read at **23,763 B**; my `stat` at 14:28:34 shows
+                             # **24,704 B, mtime 14:28:03**, digest `65048af3fda7…`.* **The same
+                             # NAME was written twice inside ~13 seconds, so a size quoted from the
+                             # first read would have described bytes that no longer exist.**
+                             # ***AND A SECOND SLIP IN THE SAME CENSUS: a pre-read stamped `142709Z`
+                             # existed when I listed at 14:27:13 and is gone now, while the NON-HEAD
+                             # CENSUS stamped `142709Z` remains -- so my substring check for
+                             # "142709Z" answered 1 and could not tell me WHICH artifact it
+                             # found.*** *Two artifacts sharing a name-stamp; the digest and the
+                             # full name are the only identity.*
+  OUTPUT_FORMAT_IS_RULED_AND_IN_NO_COPY_YET: THE_EMITTER_ARTIFACT_DISTINCTION_AGAIN
+                             # CHECKED 2026-09-06T14:28:34Z: **`grep -c output_format` returns 0 in
+                             # BOTH landed journal copies** -- DE's sidecar (14:02:58Z) and the
+                             # coordinator's (14:03:25Z) -- **and no journal copy on disk carries
+                             # the key.**
+                             # *R-656 rules `output_format` into every journal copy; the two that
+                             # exist predate the ruling.* ***The emitter/artifact distinction for
+                             # the fourth time today (peak_is_censored, wrapper_measured, the
+                             # censored-peak status, now this) -- and each time the honest sentence
+                             # is the same: true of what will be written, not of what a reader
+                             # resolves now.***
+  THE_GO_NAMES_THE_CONDITION_AND_IS_ONE_LAUNCH: R_620_INTERPRETED
+                             # RELAYED from R-656's ruling, with the state CHECKED by me.
+                             # **R-620 said every launch is a separate GO; the interpretation ruled
+                             # now: DE 101's GO NAMES THE CONDITION ("launch once when `be64book`
+                             # has finished") and that is ONE LAUNCH, not a standing licence.**
+                             # *So a conditional GO is still a single-use GO -- the condition
+                             # replaces the coordinator's watch, not the count.*
+                             # **State: `be64book` `loaded/active/running`, `MemoryCurrent`
+                             # 4,854,235,136 B, `MemoryPeak` 4,933,337,088 B, payload at 25:03, RSS
+                             # 3,574,592 KiB; DE 100 remains READY-AND-BLOCKED with its rehearsal
+                             # `862252360579b779…` unused.**
   THE_C_UNQUOTING_HELPER_DOES_BOTH_PATH_FIELDS: DRIVEN_ON_OCTAL_AND_A_QUOTED_RENAME
                              # CHECKED 2026-09-06T14:21:55Z by driving `da_root.parse_porcelain`.
                              # **`?? "caf\\303\\251.py"` → `path: 'café.py'` with
@@ -22002,6 +22109,86 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 186, 2026-09-06T14:28:34Z ------------------------------
+  PRODUCING_CODE_LOCATABLE_VERIFIED_AT_THE_COMMIT_BY_ME:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T14:28:34Z
+    said: >-
+      git cat-file blob b741352 for the runner hashes f6071f1245ca07425c, the digest R-656
+      names, so the sealed day's producing_code_sha256 is locatable at the commit and I
+      checked it from the object store rather than from a worktree. The params half DA 89
+      could not close is still open by name.
+  THE_299_WAS_NEVER_A_CENSUS_OF_THE_RECEIPT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T142749Z.json
+    as_of: 2026-09-06T14:28:34Z
+    said: >-
+      the superseding pre-read carries economic_absence.n_receipt_leaves_walked 545 beside
+      emitted_census.n_leaves_emitted 315, where the second was 299 at 14:08 -- so that
+      number counts DA's own record and moves with it, and my round-185 wording that DA
+      counted a narrower population of the receipt is superseded in band by the artifact's
+      two named counts. Each census now says what it counts in its own field name.
+  INCOMPLETE_IS_NOT_FLAGGED_AND_NONE_IS_NOT_ZERO:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T142749Z.json
+    as_of: 2026-09-06T14:28:34Z
+    said: >-
+      status is INCOMPLETE where it was FLAGGED, with why_this_status reserving FLAGGED for
+      a flag in the day, and n_arms_agreeing is None with the reason that no population was
+      recomputed so no arm was compared and 0 would read as two arms disagreeing, beside
+      n_arms_declared 2 and n_arms_with_a_recomputed_population 0. Two vocabularies
+      separated in one edit: I could not, versus I found something.
+  THE_LITERAL_PIN_IS_GONE_FROM_THE_RUNNER:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T14:28:34Z
+    said: >-
+      no heavy_run_form_v<N> literal remains in the runner; the call site is form =
+      heavy_run_form() at :2100 with the chain-head machinery at :1228, :1306 and :1418. The
+      finding it closes is that the runner had pinned v2 by literal 34 seconds after v3
+      existed, the third instance of a literal that must track something that moves.
+  THE_NON_HEAD_CENSUS_NAMES_THE_LITERALS_IT_FINDS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T142709Z.json
+    as_of: 2026-09-06T14:28:34Z
+    said: >-
+      the census (21,636 bytes, aa4ef4f97b17) reports 20 literals of which 2 name a
+      non-head, 20 families of which 4 lack exactly one head, and 5 checks with 0 failures,
+      under decides_nothing saying each literal belongs to the seat that wrote it and this
+      census names them -- a directory-wide instrument that names rather than rules.
+  I_READ_A_FILE_WHILE_IT_WAS_BEING_WRITTEN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T142749Z.json
+    as_of: 2026-09-06T14:28:34Z
+    said: >-
+      my ls at 14:27:50 showed the superseding pre-read at 23,763 bytes and my stat at
+      14:28:34 shows 24,704 bytes with mtime 14:28:03 and digest 65048af3fda7, so the same
+      name was written twice inside about thirteen seconds and a size quoted from the first
+      read would have described bytes that no longer exist. A second slip in the same
+      census: a pre-read stamped 142709Z existed when I listed at 14:27:13 and is gone,
+      while the non-head census stamped 142709Z remains, so my substring check answered 1
+      without telling me which artifact it found.
+  OUTPUT_FORMAT_IS_RULED_AND_IN_NO_COPY_YET:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_co_journal_copy_de95smoke_run__20260906T140325Z.json
+    as_of: 2026-09-06T14:28:34Z
+    said: >-
+      grep -c output_format returns 0 in both landed journal copies, DE's sidecar and the
+      coordinator's, and no journal copy on disk carries the key; R-656 rules it into every
+      journal copy and the two that exist predate the ruling. The emitter versus artifact
+      distinction for the fourth time today.
+  THE_GO_NAMES_THE_CONDITION_AND_IS_ONE_LAUNCH:
+    prov: RELAYED
+    from: R-656, with the unit state checked by me
+    as_of: 2026-09-06T14:28:34Z
+    said: >-
+      R-620 said every launch is a separate GO and the interpretation ruled now is that
+      DE 101's GO names the condition, launch once when be64book has finished, which is one
+      launch and not a standing licence: the condition replaces the coordinator's watch, not
+      the count. State: be64book loaded, active and running with MemoryCurrent 4,854,235,136
+      and MemoryPeak 4,933,337,088, the payload at 25:03 with RSS 3,574,592 KiB, and DE 100
+      still READY-AND-BLOCKED with its rehearsal unused.
   # --- MEM round 185, 2026-09-06T14:21:55Z ------------------------------
   THE_C_UNQUOTING_HELPER_DOES_BOTH_PATH_FIELDS:
     prov: CHECKED

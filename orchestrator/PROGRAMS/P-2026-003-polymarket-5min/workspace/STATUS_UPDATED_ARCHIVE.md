@@ -14166,3 +14166,86 @@ directions.
   fifty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 168 — archived 2026-09-06T14:28:34Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 186 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T14:07:45Z (MEM ROUND 183 -- R-651 AND R-652 SWEPT AS ONE BATCH, tip
+  `9e40c57`. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED FIELD IS READ OR QUOTED
+  ANYWHERE IN THIS ENTRY.**
+  (1) ***DE 84's JOURNAL RECORD IS GONE, AND I HAD PREDICTED THE HOUR.*** **`journalctl
+  --user -u de84smoke.scope` returns `-- No entries --`: ZERO lines, with the host horizon
+  at `09:57:58Z` and that unit's last line having been `09:46:29Z`.** *At round 178 I
+  recorded that its last line sat ~20 minutes ahead of the boundary and that the record
+  would be gone when the boundary passed it.* **REV 69 measured the loss BETWEEN TWO OF ITS
+  OWN FILINGS.** *Contrast, same read: `de95smoke.service` still has THREE lines -- and its
+  `Started` line is 12:35:35Z, which is why the two copies exist.*
+  (2) **THE COVERAGE CONTRACT IS SHARED AND NAMES ITS REGIME.** `da_root.journal_coverage`
+  (:201) takes `unit`, `window_start_epoch`, `regime`; its docstring IS the contract:
+  ***"Two MEASURED clocks and no text search … for a CONTINUOUS logger the reference is the
+  window's start; for a BURSTY unit it is the unit's own start, and ITS SILENCE BETWEEN
+  BURSTS IS NOT A GAP IN THE RECORD."*** *That clause is the whole correction to REV 68: the
+  old text search could not tell silence from truncation.*
+  (3) **THE ARTIFACT IS THE RECORD, FOR A NUMBER WHOSE SOURCE IS GONE.** The smoke's cost
+  is carried by `SMOKE_COST_CARRIERS` (the v4 receipt, then the v3) through
+  `smoke_cost_carried()`: ***"the value was COPIED INTO A LANDED RECEIPT at the moment it
+  was read, and it is carried forward from there -- with the receipt's own PATH, DIGEST and
+  AS-OF -- rather than re-measured from a store that no longer holds it. Nothing is
+  re-derived and nothing is typed."*** *A fallback CHAIN, so the citation survives a
+  superseded receipt as well as a rotated journal.*
+  (4) **EXIT 9 MEANS "VERIFIED, UNRECORDED".** `_REC_FAILED` is set at the failed append and
+  both messages name what was lost. ***A third outcome beside success and failure: the run's
+  result and the record's fate are two facts, and the exit code now carries both*** -- the
+  answer to `|| true` on the only evidence.
+  (5) **THE SEALED RECEIPT, AT ITS THREE OPEN FIELDS ONLY.**
+  `p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json`, **37,104 B**, sha256
+  **`5dd3a8f3f5818379…`** (hashed by me; matches the register), `status DAY_RUN_SEALED`,
+  `day 2026-09-03`, `emitted_at_utc 14:01:55Z`, from wt-de2 at `b741352`. ***Those are the
+  only fields named. A digest is not a read.*** **Both run-record copies verified by me:**
+  the coordinator's (`58a3f08df4bb…`, 2,483 B; 3 lines by both invocation fields, and I
+  counted 3 by `-u`) and DE's sidecar (`b1b1fff1772d…`, 5,418 B) -- *two copies of a record
+  that no longer exists anywhere else, by two seats, 27 seconds apart.*
+  (6) **MY FAIL-OPEN CELL HAS AN OWNER:** the `kind: None` case -- ADMITTED while the record
+  says `checked: True` -- is **DE 99, dispatched 14:06Z**, with REV 68's guard items **and
+  THE MISSING Q-DE-95 ROW.** ***DE 95 produced the first sealed receipt of the programme and
+  its Q row was never filed: the register can lose a step the artifacts kept.***
+  (7) **THE BOOK IS THE HEAVY RUN NOW:** `be64book.service` `loaded/active/running`,
+  `MainPID 3485787`, `MemoryCurrent` 2,503,032,832 B, `MemoryPeak` 2,526,744,576 B, the
+  payload at 05:25 / RSS 1,411,416 KiB. ***The FIRST BE heavy build under the ruled SERVICE
+  form*** -- *every BE run through 09-05 was a `.scope`* -- **and its fifty-nine refusals at
+  75 were the ruled grounding drive happening in production before the rule asked for it.**
+  (8) **THE QUEUE AFTER THE SEAL:** **DA 89 (the PRE-READ) dispatched 14:04Z; DE 99 14:06Z;
+  DE 100 = the 09-04 LAUNCH after the lock; BE 64 holds the lock.** *The chain that consumed
+  the day has its first sealed day, and the next launch waits on a LOCK rather than on a
+  RULE.*
+  **AT COMMIT TIME, 2026-09-06T14:11:00Z: DE 99 AND DA 89 LANDED.** **I drove DE 99's fix
+  and BOTH halves close:** *`kind=None` → REFUSED ("a guard that cannot see what it is in
+  has not checked anything"); a REAL day with `fixture=True` → REFUSED; the DECLARED
+  fixture day under a scope → ADMITTED with `checked: False`; `kind='transient service'` →
+  ADMITTED, `checked: True`.* ***The predicate is POSITIVE now and the exemption is the
+  GATE.*** **DE's docstring cites this seat: "R-651 / MEM 181: when the kind is UNKNOWN the
+  record must not claim `checked` -- it says False."**
+  ***AND MY OWN PROBE NEARLY FILED A BLOCKING DEFECT THAT DID NOT EXIST:*** *my first drive
+  passed `kind='service'`, got a refusal, and read like a guard that would refuse REAL
+  service runs and stall DE 100.* **The declared token is `"transient service"` -- `known =
+  kind in ("transient service", "scope")` -- so MY value was the unknown one, and the
+  refusal was correct.** *Nineteenth "suspect the probe first"; I read the function before
+  writing the sentence.*
+  **DA 89 landed the PRE-READ on the first real sealed day** (`e8a2dc3`, Q-DA-312; the
+  landing record at `326d7bb`; `p003_da_gate1_pre_read_20260903__20260906T140810Z.json`,
+  **22,419 B, `24f2191009177b4a…`**, censused and hashed by me -- *no sealed field read*).
+  **The book keeps growing: `MemoryCurrent` 3.45 GB, the payload at 08:41, RSS 2,972,264
+  KiB; the horizon is `10:03:58Z` and `de95smoke`'s three lines are still ahead of it.**
+  **FLAG WORDS: the 09-03 day SEALED (37,104 B, `5dd3a8f3f581…`, 14:01:55Z -- three open
+  fields only); the 09-05 book BUILDING-UNDER-THE-SERVICE-FORM; de84smoke's journal record
+  GONE-AS-PREDICTED; the fail-open cell OWNED-BY-DE-99.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,120 -> 1,128, flag_provenance 665 -> 673,
+  tasks 19; **433 CHECKED**, 240 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
