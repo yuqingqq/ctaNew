@@ -5,6 +5,101 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 180
+
+**As of 2026-09-06T13:49:26Z, R-647 swept (tip `fd663cd`). State only — MEM writes no
+result.**
+
+### How the outcome pair perishes — driven in two cells, not reasoned
+
+| cell | what happened |
+|---|---|
+| `/bin/true` transient unit | **collected within ~0.6 s** — `LoadState=not-found`, `show` reports `inactive / 0 / success` |
+| `/bin/false` transient unit | **retained while failed** — `loaded / failed / 1 / exit-code`; after `systemctl --user reset-failed` → `not-found` with **the same defaults** |
+
+***So it is not "unload after exit" in general:*** success auto-collects at once; **failure
+is retained until an explicit `reset-failed`** (or a manager restart); **both end at
+identical defaults.** That is why `show` after the fact cannot distinguish **succeeded**,
+**reset-after-failing** and **never-existed** — and why **`LoadState` is the only field
+that says the reading is meaningless**. *Live corroboration:* `be64book.service` is still
+`loaded/failed/75` after **46** launches. *The reviewer's reset of its `rev67*` units is
+relayed from its own filing; I did not observe it.*
+
+### AT COMMIT TIME (13:52:23Z): my caveat is ruled R3′, and REV 68 drives the one I set aside
+
+**R3′ (R-648):** a unit's outcome is the **TRIPLE (`LoadState`, `ActiveState`,
+`ExecMainStatus`) read WHILE loaded and copied at once** — a collected unit reads as
+defaults and **the reading is VOID** — and **heavy runs from DE 98 on carry
+`-p RemainAfterExit=yes`** so a success stays readable. *The coordinator drove four cells
+where I drove two, and my two paths generalise; declaration v2 supersedes v1 by
+path+sha256.*
+
+***The consequence is the hazard my measurement predicted:*** `de95smoke.service` was
+launched under **v1**, so **on success it vanishes at exit**, leaving only its `Started`
+line. **Its record is the sealed receipt its payload writes plus the manager's lines
+copied by `USER_INVOCATION_ID`; no post-exit reading of its pair means anything; and the
+absence of a "Failed with result" line in a rotating journal is not evidence.**
+
+***And REV 68 files the finding I set aside at round 178:*** **"the FIXTURE half is a
+report, not a gate"** — an **undeclared** fixture name in a `.scope` is admitted, and so is
+a **real day name with `fixture=True`**; the declared list is **never consulted**. *I
+measured exactly that and concluded it was not a hole because the record says
+`checked: false`.* **The fact stands; my verdict was too generous — honesty about what a
+check did not do is not a gate.** *Flag value superseded in band, key untouched.*
+
+*REV 68 also reports `window_fully_covered` TRUE on a read that had lost **141 of 161**
+lines, and corrects itself for a claim filed before the drive that earned it.* **My scratch
+cells left nothing: `mem180a` and `mem180b` both read `LoadState=not-found`.**
+
+### Twelve of twelve — and my comparator was the suspect
+
+I drove **every line** of DA 87's table against the live `da_root.parse_porcelain`:
+**agreement on all twelve**, including the **trailing space kept**, the quoted odd name,
+and the copy with `renamed_from`. **My first pass printed 10/12** because the receipt
+records refused lines as `result: "MALFORMED"` while the parser returns `rows=[]` with
+`n_malformed: 1`, and I had tested whether the receipt's *string* appeared inside the
+parser's *dict*. ***The count that would have contradicted R-647 was an artefact of how I
+compared.***
+
+### The rulings are in the code, and one qualifier is load-bearing
+
+- **DE's one command, driven:** `… -- flock -n -E 75 …`, **no `--scope`**;
+  `heavy_run_form()` reads `lock_path`, `lock_conflict_rc`, `slice` from the single
+  declaration; **`RUNNER_EXIT_CODES` declares only 0 and 1 — 75 excluded by
+  construction**, with the reason at :3596.
+- **I chose the unit that violates the cross-check's precondition on purpose.** The
+  declaration says the `-u` count equals the by-id count **for a unit launched once**;
+  `be64book` has been launched **46** times, so **`-u` 176 lines vs `USER_INVOCATION_ID`
+  3 vs `_SYSTEMD_INVOCATION_ID` 0**. ***The qualifier is not decoration — an InvocationID
+  scopes one launch.***
+- **The stranded commit holds identical bytes:** `91bdf63` is wt-de's HEAD and **not an
+  ancestor of `origin/mm-research`**, while its blobs match the landed `226c9a6`'s exactly.
+  *Rule 21's first form, benign.*
+
+### Closed and recorded
+
+- **My round-178 routing is answered by a ruling:** the scratch-preserved `params_v6` bytes
+  are an **uncommitted draft whose digest is its record**, not preserved further. *The
+  question was whether the bytes matter; a digest already says what the programme needs
+  about a draft that never became a version.*
+- **Three slips, each recorded by the seat that wrote it:** DA's two (an unquoted heredoc;
+  a stray `> b`, removed) and **DE's one — a check matching a key NAME, not a value.** *The
+  needle-matching-its-own-prose class, on the assertion side.*
+
+### The run
+
+`LoadState=loaded`, `active`, `ExecMainStatus=0` (the **running** value), **`MemoryPeak`
+still 2,554,003,456 B — eleven reads across 74 minutes**; the runner at **1:12:30**, RSS
+769,852 KiB. `be64book`: 46 launches, 176 journal lines, latest exit 13:47:18Z at 75.
+Receipt ≈14:00Z → DA's pre-read → the 09-04 smoke → the 09-05 book.
+
+**Counts, measured before the sentence:** flags 1,096 → **1,104**, `flag_provenance`
+641 → **649**, tasks 19; **411 CHECKED**, 238 RELAYED, **455 UNMARKED — unchanged for the
+fifty-sixth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 162** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 179
 
 **As of 2026-09-06T13:40:54Z, R-645 and R-646 swept (tip `fcd6b53`). State only — MEM
