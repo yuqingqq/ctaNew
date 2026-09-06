@@ -889,9 +889,14 @@ def audit_module(path: Path, role: str) -> dict:
     frp = fixture_on_real_path(tree, src)
     r22 = rule22_stamp(tree, src)
     mism = [c for c in cmps if c["verdict"] == SCOPE_MISMATCH]
+    #: THE PREFIX IS "SCOPE_MISMATCH", not the whole refusing verdict
+    #: string. Testing `startswith(SCOPE_MISMATCH)` -- the full constant --
+    #: matched nothing, so the assertion-only mismatches counted ZERO while
+    #: the module rows carried them. A count pinned to a whole string rather
+    #: than the property is the defect this seat keeps shipping.
     mism_assert = [c for c in cmps
-                   if c["verdict"].startswith(SCOPE_MISMATCH)
-                   and c not in mism]
+                   if c["verdict"].startswith("SCOPE_MISMATCH")
+                   and c["verdict"] != SCOPE_MISMATCH]
     unc = [c for c in cmps if c["verdict"] == UNCLASSIFIED]
     return {
         "path": (str(path.relative_to(AUDIT_ROOT))
@@ -1379,6 +1384,45 @@ def selftest() -> tuple:                                      # noqa: C901
        f"be_daybook_build.py:{typed[0]['line']} commit=\"{typed[0]['value']}\""
        f" -- and e2_a_declare's supersedes literal reads as "
        f"{by['live/mm_research/e2_a_declare.py']['rule22']['typed_literals'][0]['kind']}")
+
+    # -- I2. THE CENSUS AGREES WITH THE ROWS IT SUMMARISES ---------------
+    bad = []
+    for m in rep["modules"]:
+        if not m.get("census"):
+            continue
+        rows = m["budget_comparisons"]
+        exp = {
+            "n_budget_comparisons": len(rows),
+            "n_deltas": sum(1 for c in rows if c["is_delta"]),
+            "n_scope_mismatch": sum(1 for c in rows
+                                    if c["verdict"] == SCOPE_MISMATCH),
+            "n_scope_mismatch_inside_an_assertion": sum(
+                1 for c in rows if c["verdict"].startswith("SCOPE_MISMATCH")
+                and c["verdict"] != SCOPE_MISMATCH),
+            "n_unresolved_measure_lookalikes":
+                len(m["unresolved_measure_lookalikes"]),
+            "n_battery_calls_on_the_real_path":
+                len(m["fixture_on_real_path"]["findings"])}
+        for k, v in exp.items():
+            if m["census"][k] != v:
+                bad.append(f"{m['path']}.{k}: census {m['census'][k]} "
+                           f"vs rows {v}")
+    tot_ok = (rep["totals"]["n_scope_mismatch_inside_an_assertion"]
+              == sum(m["census"]["n_scope_mismatch_inside_an_assertion"]
+                     for m in rep["modules"] if m.get("census")))
+    ck("EVERY COUNT IN THE CENSUS IS RECOMPUTED FROM THE ROWS IT SUMMARISES "
+       "AND THE TOTALS FROM THE MODULES. ***The first emission of this "
+       "receipt reported ZERO assertion-only mismatches while DE's row "
+       "carried one: the count tested `startswith(<the whole refusing "
+       "verdict string>)` instead of the prefix. A count pinned to how a "
+       "verdict is SPELLED rather than what it IS -- rounds 69, 72, 74, 75, "
+       "and here again in the summary of my own rows***",
+       not bad and tot_ok,
+       f"{sum(1 for m in rep['modules'] if m.get('census'))} module "
+       f"censuses recomputed from their rows, 0 disagreements; the "
+       f"assertion-only total is "
+       f"{rep['totals']['n_scope_mismatch_inside_an_assertion']}"
+       if not bad else "; ".join(bad[:3]))
 
     # -- J. the report decides nothing ------------------------------------
     ck("THE REPORT NAMES SITES AND COUNTS PREDICATES AND DECIDES NOTHING: "
