@@ -63,6 +63,53 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T05:23:29Z (MEM ROUND 124 -- R-569 SWEPT. STATE ONLY, AND THE
+  HEADLINE IS A CRITIQUE PAYING OFF IN ONE ROUND.
+  (1) **THE INTERIOR CONTROL CAUGHT v2's ProbQueue-f3 ORIENTATION BACKWARDS --
+  FILL PROBABILITY RISING WITH THE QUEUE AHEAD** -- fixed before any run. Last
+  round I swept the reviewer's condition and called it the sharpest falsifier
+  critique in either programme; **WRITING THE CONTROLS IT DEMANDED FOUND AN
+  INVERTED MODEL ONE ROUND LATER.** A model whose fill probability rises as more
+  orders sit in front of you is not subtly wrong, it is inverted -- **AND IT
+  PASSED EVERY BOUNDARY KNOWN-BAD, BECAUSE AT THE ENDPOINTS THE TWO ORIENTATIONS
+  AGREE.** The argument demonstrated on the very model it was made about.
+  (2) AND I DERIVED THE CONTROL MYSELF, WHICH IS THE TEST OF WHETHER IT IS ONE.
+  From the published f(x) = x**3 alone, queue_ahead 30 / depth_behind 70 gives
+  f(0.7)/(f(0.3)+f(0.7)) = **343/370 = 7**3/(3**3+7**3) = 0.927027027027027**,
+  matching the declaration **to 1e-15**. THAT IT IS A CLEAN RATIONAL IS THE
+  POINT: a control someone can check on paper is a control; one that needs the
+  implementation to evaluate is a second implementation.
+  (3) THE RECORD DEFECT IS NOW CONFIRMED BY MY OWN EXECUTION -- THE THIRD
+  INDEPENDENT RUN. I imported e1_markout_scan and called tick_size('FILUSDT'):
+  **IT RETURNS 1e-06** against the corrections queue's 1e-4. I ran the one and
+  read the other. R-569 adds the half I could not see: **TWO IMPLEMENTATIONS
+  AGREE on the repo value**, so the 1e-4 is a number in a record **THAT NOTHING
+  ON DISK CAN PRODUCE.** Still a record defect, still not a blocker, and E1-A's
+  operative number reproduces to 4 dp on both published pairs.
+  (4) THE SMOKE GATE IS OPEN AND NOT RUN **BECAUSE THE E2-A RUNNER DOES NOT
+  EXIST** -- checked by me: live/mm_research/ holds e2_a_declare.py and
+  e2_a_episodes.py AND NO RUNNER. It needs real-book placement, depth20
+  queue-ahead, two fill sims wired to episodes, partial fills and falsifiers --
+  **a batch, not a step** -- and it goes to a **FRESH DA CONTEXT** (DA at 80%,
+  resetting). So the seat that builds the runner will not be the seat that wrote
+  the declaration it implements; **the declaration, v3 and the interior controls
+  ARE the handover, which is what they were for.**
+  (5) AND IT IS RECORDED AS NOT_RUN IN P-002's OWN STATE FILES RATHER THAN LEFT
+  TO BE INFERRED FROM AN ABSENT RECEIPT. An open gate with nothing behind it is
+  exactly the state that gets read as "presumably ran and produced nothing".
+  (6) THE LOOP IS SETTLED AND THIS SUPERSEDES THE R-552/R-566 SHELL-WAITER
+  LINES: **five shell waiters stopped by the harness within seconds to a minute
+  regardless of duration, with the USER CONFIRMING NO KEYPRESS** -- which removes
+  the one hypothesis that would have made it human. **THE HARNESS-NATIVE
+  PERSISTENT MONITOR SURVIVED AND ITS EVENTS WAKE THE COORDINATOR BETWEEN TURNS,
+  THREE WAKES EACH ACTED ON WITHIN A MINUTE.**
+  (7) THE GENERAL FORM, NOW SEEN THREE TIMES HERE: **WHEN EVERY INSTANCE OF A
+  MECHANISM FAILS THE SAME WAY, THE FORM IS THE DEFECT.** Neither symlink worked
+  because both fought git; neither waiter survived because both fought the
+  harness. **Five failures were what it took to stop treating the instance as the
+  problem -- AND THE CAUSE IS STILL NOT KNOWN**, because the mechanism was
+  replaced rather than explained.
+  PRIOR CHECKPOINT:
   2026-09-06T05:18:48Z (MEM ROUND 123 -- R-568 AND THE E1-A CONTROL SWEPT.
   STATE ONLY.
   (1) E2-A IS **APPROVED TO RUN** ON ONE CONDITION, AND THE CONDITION IS THE
@@ -3157,7 +3204,45 @@ flags:
                              # that fire is the coordinator's call. Recorded so
                              # that if it goes wrong, nobody has to reconstruct
                              # that both stakes were known in advance.
-  THE_LOOP_NOW_RESTS_ON_A_HARNESS_NATIVE_MONITOR: FIVE-KILLS-AND-THE-SURVIVOR-IS-A-DIFFERENT-KIND
+  THE_LOOP_RESTS_ON_THE_PERSISTENT_MONITOR_SETTLED: SUPERSEDES-THE-R552-AND-R566-SHELL-WAITER-LINES
+                             # SETTLED 2026-09-06T05:23:29Z, and this flag now
+                             # **SUPERSEDES THE R-552 AND R-566 SHELL-WAITER
+                             # LINES** rather than sitting beside them.
+                             # THE FACTS, AS FAR AS THEY GO: **FIVE background
+                             # shell waiters were stopped by the harness within
+                             # seconds to a minute, REGARDLESS OF DURATION** --
+                             # and **THE USER CONFIRMS NO KEYPRESS**, which
+                             # removes the one hypothesis that would have made it
+                             # a human act and leaves it a property of the
+                             # harness.
+                             # **THE HARNESS-NATIVE PERSISTENT MONITOR SURVIVED,
+                             # AND ITS EVENTS WAKE THE COORDINATOR BETWEEN TURNS
+                             # -- THREE WAKES, EACH ACTED ON WITHIN A MINUTE.**
+                             # That is the mechanism the loop now rests on.
+                             # WHAT THIS CLOSES, AND IT IS A LONG THREAD: R-541(A)
+                             # named the between-turn stall as STRUCTURAL after
+                             # ten hours of finished work sat unread; round 113
+                             # recorded a shell waiter as the remedy; rounds
+                             # 119-123 recorded it re-armed, stopped, re-armed
+                             # and killed again. **THE ANSWER WAS NEVER A
+                             # BETTER-BEHAVED WAITER.**
+                             # AND THE GENERAL FORM, NOW SEEN THREE TIMES IN THIS
+                             # PROGRAMME: **WHEN EVERY INSTANCE OF A MECHANISM
+                             # FAILS THE SAME WAY, THE FORM IS THE DEFECT.**
+                             # Neither symlink route worked because both fought
+                             # git, and the answer left the filesystem; neither
+                             # shell waiter survived because both fought the
+                             # harness, and the answer became harness-native.
+                             # Five failures were what it took to stop treating
+                             # the instance as the problem.
+                             # **AND THE CAUSE IS STILL NOT KNOWN.** The trigger
+                             # was never visible from inside, and it is not
+                             # visible now -- the mechanism was replaced, not
+                             # explained. If the Monitor is ever stopped the same
+                             # way there is no more diagnostic than there was for
+                             # the five.
+                             # EARLIER VALUE (rule 13):
+                             # FIVE-KILLS-AND-THE-SURVIVOR-IS-A-DIFFERENT-KIND
                              # RELAYED from R-568(B) and the round's dispatch,
                              # and it is the fifth state of this flag in four
                              # rounds -- re-armed, stopped, re-armed, and now
@@ -3378,7 +3463,74 @@ flags:
                              # round-116 zero-length loop and DA's stale-pycache
                              # green. Three seats, three forms, one shape.
                              # DE STANDS BY FOR BE'S BOOK. Second round running.
-  E2_A_IS_APPROVED_TO_RUN_ON_ONE_CONDITION: PINNED-AT-THE-BOUNDARIES-NOT-IN-THE-INTERIOR
+  THE_INTERIOR_CONTROL_CAUGHT_v2s_QUEUE_MODEL_ORIENTATION_BACKWARDS: THE-CONDITION-DID-ITS-JOB-IN-ONE-ROUND
+                             # RELAYED from R-569 for the defect; **THE CONTROL
+                             # ITSELF DERIVED BY HAND BY ME** at 2026-09-06T05:23:29Z.
+                             # LAST ROUND I SWEPT THE REVIEWER'S CONDITION AND
+                             # CALLED IT "the sharpest falsifier critique in
+                             # either programme" -- pinned at the boundaries and
+                             # by nothing in the interior. **WRITING THE INTERIOR
+                             # CONTROLS EXPOSED THAT v2 HAD ProbQueue-f3's
+                             # ORIENTATION BACKWARDS: FILL PROBABILITY RISING
+                             # WITH THE QUEUE AHEAD.** Fixed before any run.
+                             # A MODEL WHOSE FILL PROBABILITY INCREASES AS MORE
+                             # ORDERS SIT IN FRONT OF YOU IS NOT SUBTLY WRONG --
+                             # IT IS INVERTED. AND IT PASSED EVERY BOUNDARY
+                             # KNOWN-BAD, because at the endpoints the two
+                             # orientations agree. That is the reviewer's
+                             # argument, demonstrated on the very model it was
+                             # made about, ONE ROUND LATER.
+                             # I DERIVED THE CONTROL MYSELF, WHICH IS THE TEST OF
+                             # WHETHER IT IS ONE: the declaration's
+                             # ProbQueue_f3 case is "queue_ahead 30, depth_behind
+                             # 70" with expected_prob 0.927027027027027. From the
+                             # published f(x) = x**3 alone:
+                             # f(0.7)/(f(0.3)+f(0.7)) = 0.343/0.370 =
+                             # **343/370 = 7**3/(3**3+7**3)**, and my computation
+                             # matches the declaration **to 1e-15**.
+                             # THE FACT THAT IT IS A CLEAN RATIONAL IS THE POINT:
+                             # a control someone can check on paper is a control;
+                             # one that needs the implementation to evaluate is a
+                             # second implementation.
+                             # AND THE DECLARATION SAYS WHY EACH CASE IS
+                             # INTERIOR, IN ITS OWN FIELD -- ProbQueue_f3: "not 0
+                             # and not 1 -- a strictly interior probability whose
+                             # value follows from the published f(x) = x**3 and
+                             # nothing else"; RiskAverse: "not 0 (no volume) and
+                             # not 10 (fully through) -- the order is HALF
+                             # filled, which only a model that counts the queue
+                             # correctly" produces. **A control that states its
+                             # own interiority is one nobody can later mistake
+                             # for a boundary case.**
+                             # EARLIER VALUE (rule 13):
+                             # PINNED-AT-THE-BOUNDARIES-NOT-IN-THE-INTERIOR
+  the_E2_A_SMOKE_GATE_IS_OPEN_AND_NOT_RUN: THE-RUNNER-DOES-NOT-EXIST-YET
+                             # CHECKED 2026-09-06T05:23:29Z. The gate is OPEN --
+                             # the control passed, v3 landed, the escalations are
+                             # ruled -- **AND THE SMOKE IS NOT RUN BECAUSE THE
+                             # E2-A RUNNER DOES NOT EXIST.**
+                             # MY OWN CHECK: live/mm_research/ contains
+                             # `e2_a_declare.py` and `e2_a_episodes.py` AND NO
+                             # RUNNER MODULE. The declaring machinery and the
+                             # episode machinery are built; the thing that would
+                             # place orders on a real book is not.
+                             # WHAT IT STILL NEEDS, as the entry lists it:
+                             # real-book placement, depth20 queue-ahead, TWO fill
+                             # sims wired to episodes, PARTIAL FILLS, falsifiers.
+                             # THAT IS A BATCH, NOT A STEP.
+                             # **AND IT IS RECORDED AS "NOT_RUN" IN P-002's OWN
+                             # STATE FILES RATHER THAN LEFT TO BE INFERRED FROM
+                             # AN ABSENT RECEIPT** -- e2_a_control_passed beside
+                             # e2_a_smoke: NOT_RUN. An open gate with nothing
+                             # behind it is exactly the state that gets read as
+                             # "presumably ran and produced nothing", and naming
+                             # it stops that.
+                             # IT GOES TO A **FRESH DA CONTEXT** -- DA is at 80%
+                             # and resetting. So the batch that must build the
+                             # runner will be written by a seat that did not
+                             # write the declaration it implements; the
+                             # declaration, v3, and the interior controls are the
+                             # handover, which is what they were for.
                              # RELAYED from R-568(A), REV 34 (4e73cdd).
                              # "APPROVED to run once the two escalations are
                              # ruled" -- and they are (R-567(C)) -- **WITH ONE
@@ -3460,6 +3612,28 @@ flags:
                              # A finding filed with its own scope limit attached
                              # is the difference between a correction and a
                              # scare.
+                             # ---- CONFIRMED BY MY OWN EXECUTION 2026-09-06T05:23:29Z,
+                             # WHICH MAKES THIS THE THIRD INDEPENDENT RUN OF THE
+                             # SAME FUNCTION: I imported e1_markout_scan and
+                             # called `tick_size('FILUSDT')`. **IT RETURNS
+                             # 1e-06.** The corrections queue in E1_RESULTS.md
+                             # claims 1e-4. They do not agree, and I did not
+                             # transcribe either -- I ran the one and read the
+                             # other.
+                             # SO THREE ROUTES NOW REACH THE SAME PLACE: DA's
+                             # run, the receipt's recorded evidence, and mine.
+                             # **A CLAIM THAT SURVIVES THREE INDEPENDENT
+                             # EXECUTIONS OF THE FUNCTION IT IS ABOUT IS AS
+                             # SETTLED AS A RECORD DEFECT GETS.**
+                             # AND R-569 ADDS THE HALF I COULD NOT SEE: **TWO
+                             # IMPLEMENTATIONS AGREE** on the repo value, so the
+                             # 1e-4 in the queue is not a second implementation's
+                             # answer either -- it is a number in a record that
+                             # NOTHING ON DISK CAN PRODUCE.
+                             # STILL ROUTED AS A RECORD DEFECT, STILL NOT A
+                             # BLOCKER, AND E1-A's OPERATIVE NUMBER IS
+                             # UNTOUCHED -- both published pairs reproduce to
+                             # 4 dp on E1-A's own aggTrades.
                              # RELAYED from R-567(C).
                              # p002_e2_a_declaration_v2.json, **21 checks BOTH
                              # DIRECTIONS, NO DATA.** Two escalations -- **not two
@@ -12974,6 +13148,33 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T05:23:29Z, THE REVIEWER'S CONDITION PAID OFF IN ONE ROUND:
+  **writing the interior controls it demanded exposed that v2 had ProbQueue-f3's
+  ORIENTATION BACKWARDS -- fill probability rising with the queue ahead -- fixed
+  before any run.** It had passed every boundary known-bad, **because at the
+  endpoints the two orientations agree.** I derived the control myself from the
+  published f(x) = x**3: 343/370 = 0.927027027027027, matching to 1e-15 -- and
+  that it is a clean rational is the point, because **a control you can check on
+  paper is a control; one that needs the implementation is a second
+  implementation.**
+  THE RECORD DEFECT IS CONFIRMED BY MY OWN EXECUTION, the third independent run:
+  `tick_size('FILUSDT')` returns **1e-06** against the corrections queue's 1e-4,
+  and two implementations agree on the repo value -- **a number in a record that
+  nothing on disk can produce.** Record defect, not a blocker; E1-A's operative
+  number reproduces to 4 dp.
+  THE SMOKE GATE IS OPEN AND NOT RUN **BECAUSE THE RUNNER DOES NOT EXIST** --
+  checked: declare and episodes modules only. It is a batch, not a step, and it
+  goes to a FRESH DA context, so **the declaration and its interior controls ARE
+  the handover.** Recorded as NOT_RUN rather than left to be inferred from an
+  absent receipt.
+  THE LOOP IS SETTLED ON THE PERSISTENT MONITOR, superseding the shell-waiter
+  lines: five waiters stopped regardless of duration with **no keypress**, the
+  Monitor surviving and waking the coordinator three times. **When every instance
+  of a mechanism fails the same way, the FORM is the defect** -- the third time
+  that shape has appeared here -- **and the cause is still not known.**
+  Gate 1 is 1 of 7; BE 48 builds the 09-03 book. Economics:
+  workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T05:18:48Z, RETAINED BELOW --
   AS-OF 2026-09-06T05:18:48Z, E2-A IS **APPROVED TO RUN** on one condition, and
   the condition is the sharpest falsifier critique in either programme: **the
   closed-form queue models are pinned at the BOUNDARIES and by nothing in the
@@ -14112,6 +14313,36 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 124, 2026-09-06T05:23:29Z ------------------------------
+  THE_INTERIOR_CONTROL_CAUGHT_v2s_QUEUE_MODEL_ORIENTATION_BACKWARDS:
+    prov: CHECKED
+    artifact: live/mm_research/declarations/p002_e2_a_declaration_v3.json
+    as_of: 2026-09-06T05:23:29Z
+    said: >-
+      interior_controls.ProbQueue_f3 gives case "queue_ahead 30, depth_behind
+      70" with expected_prob 0.927027027027027 and why_interior "not 0 and not
+      1 -- a strictly interior probability whose value follows from the published
+      f(x) = x**3 and nothing else"; interior_controls.RiskAverse's why_interior
+      states the order is HALF filled. I derived the ProbQueue value by hand from
+      f(x)=x**3 alone: f(0.7)/(f(0.3)+f(0.7)) = 343/370 = 0.927027027027027,
+      matching to 1e-15. That v2 had the orientation backwards is RELAYED from
+      R-569; what I establish is that the control is hand-derivable, which is the
+      property that makes it able to catch such a defect.
+  the_E2_A_SMOKE_GATE_IS_OPEN_AND_NOT_RUN:
+    prov: CHECKED
+    artifact: live/mm_research/e2_a_episodes.py
+    as_of: 2026-09-06T05:23:29Z
+    said: >-
+      listing live/mm_research/ for e2_a returns exactly e2_a_declare.py and
+      e2_a_episodes.py, with no runner module; the declaring and episode
+      machinery exist and the thing that would place orders on a real book does
+      not. What the runner still needs, and that it goes to a fresh DA context,
+      are RELAYED from R-569.
+  THE_LOOP_RESTS_ON_THE_PERSISTENT_MONITOR_SETTLED:
+    prov: RELAYED
+    from: >-
+      R-569, with the USER's confirmation of no keypress. Supersedes the
+      shell-waiter lines at R-552 and R-566.
   # --- MEM round 123, 2026-09-06T05:18:48Z ------------------------------
   the_E1_A_INHERITED_CONTROL_PASSES_AND_FINDS_A_DEFECT_IN_E1_S_OWN_RECORD:
     prov: CHECKED
@@ -14138,12 +14369,6 @@ flag_provenance:
       a 3 m 46 s miss rather than the ~04:41 the prose rounds to. That BE refused
       to match the E2.0 "APPROVED" by word, and that BE 48 reads the approval by
       path, are RELAYED.
-  E2_A_IS_APPROVED_TO_RUN_ON_ONE_CONDITION:
-    prov: RELAYED
-    from: R-568(A), REV 34 (4e73cdd)
-  THE_LOOP_NOW_RESTS_ON_A_HARNESS_NATIVE_MONITOR:
-    prov: RELAYED
-    from: R-568(B) and this round's dispatch for the fifth kill and the Monitor
   # --- MEM round 122, 2026-09-06T05:11:53Z ------------------------------
   R567_REPEATS_THE_867f647_CITATION_ONE_ENTRY_AFTER_I_CORRECTED_IT:
     prov: CHECKED

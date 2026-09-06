@@ -1,5 +1,106 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T05:23:29Z — **The reviewer's condition paid off in one round: the
+interior control it demanded caught the queue model running BACKWARDS.** Gate 1
+is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 124
+
+### 1. The critique paid off in one round
+
+Writing the interior controls **exposed that v2 had ProbQueue-f3's orientation
+backwards — fill probability rising with the queue ahead.** Fixed before any run.
+
+> A model whose fill probability rises as more orders sit in front of you is not
+> subtly wrong, **it is inverted.** **And it passed every boundary known-bad,
+> because at the endpoints the two orientations agree.**
+
+*Last round I called this condition the sharpest falsifier critique in either
+programme. It found an inverted model one round later, on the very model it was
+made about.*
+
+### 2. I derived the control myself — which is the test of whether it is one
+
+From the published `f(x) = x³` **alone**, `queue_ahead 30 / depth_behind 70`:
+
+```
+f(0.7)/(f(0.3)+f(0.7)) = 0.343/0.370 = 343/370 = 7³/(3³+7³) = 0.927027027027027
+```
+
+**Matching the declaration to 1e-15.** *That it is a clean rational is the point:
+**a control you can check on paper is a control; one that needs the
+implementation to evaluate is a second implementation.*** And the declaration
+**states its own interiority** in a field — *"not 0 and not 1 … follows from the
+published f(x) = x³ and nothing else"* — so nobody can later mistake it for a
+boundary case.
+
+### 3. The record defect — my own execution makes it three routes
+
+I imported `e1_markout_scan` and called `tick_size('FILUSDT')`. **It returns
+`1e-06`**, against the corrections queue's `1e-4`. *I ran the one and read the
+other.*
+
+> **Three independent routes now reach the same place** — DA's run, the receipt's
+> evidence, and mine. And R-569 adds the half I could not see: **two
+> implementations agree on the repo value**, so the `1e-4` is **a number in a
+> record that nothing on disk can produce.**
+
+Still **a record defect, not a blocker**; E1-A's operative number reproduces to
+4 dp on both published pairs.
+
+### 4. The gate is open and the smoke is not run — the runner does not exist
+
+**Checked:** `live/mm_research/` holds `e2_a_declare.py` and `e2_a_episodes.py`
+and **no runner module.** The declaring and episode machinery are built; **the
+thing that would place orders on a real book is not.**
+
+It needs real-book placement, depth20 queue-ahead, two fill sims wired to
+episodes, partial fills, falsifiers — **a batch, not a step** — and it goes to a
+**fresh DA context** (DA at 80%, resetting).
+
+> **So the seat that builds the runner will not be the seat that wrote the
+> declaration it implements. The declaration, v3 and the interior controls ARE
+> the handover — which is what they were for.**
+
+**And it is recorded as `NOT_RUN` in P-002's state files rather than left to be
+inferred from an absent receipt.** *An open gate with nothing behind it is exactly
+the state that gets read as "presumably ran and produced nothing".*
+
+### 5. The loop is settled — this supersedes the R-552/R-566 shell-waiter lines
+
+**Five shell waiters stopped by the harness within seconds to a minute,
+regardless of duration — and the USER confirms no keypress**, which removes the
+one hypothesis that would have made it human. **The harness-native persistent
+Monitor survived, and its events wake the coordinator between turns: three wakes,
+each acted on within a minute.**
+
+*This closes a thread that ran from R-541(A)'s ten-hour stall through five
+re-armings.* **The answer was never a better-behaved waiter.**
+
+> **When every instance of a mechanism fails the same way, the FORM is the
+> defect.** Third time here: neither symlink worked because both fought git;
+> neither waiter survived because both fought the harness. **Five failures were
+> what it took to stop treating the instance as the problem.**
+
+**And the cause is still not known.** The mechanism was **replaced, not
+explained** — if the Monitor is ever stopped the same way, there is no more
+diagnostic than there was for the five.
+
+### 6. Measured before the sentence
+
+**637 flags, 78 CHECKED, 104 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 182; tasks 19.** *(Two renames, two ORPHANs, caught
+pre-commit; message by `-F`, third round.)*
+
+### Still open, still mine
+
+**RELAY FIDELITY**, **CORROBORATION**. **455 of 637 UNCITED.** **USER-PENDING:
+the notional's source** for E2-A's size-aware arm. I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T05:18:48Z — **E2-A is APPROVED to run on one condition, and the
 condition is the sharpest falsifier critique in either programme.** Gate 1 is
 1 of 7. Economics: `RESULTS.md` §0.
