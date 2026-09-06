@@ -21891,6 +21891,23 @@ Every seat's landing chain calls it from its next round (DA 106, in flight, was 
 **Coordinator mechanics, disclosed.** A call died of its own timeout twice this stretch: once on a protocol edit whose anchor did not match (nothing was edited, correctly) followed by the repo clone; the `load-buffer && paste-buffer` guard then kept a missing dispatch file from sending a stray paste (BE received an empty line). The rules from R-712/R-713 held; the clone rule is added.
 
 **ROUTING.** BE 81 (the derived frozen set with the empty-set refusal). DE 111 (the split; the own-baseline rule; the resolver import now that BE 80 is landed). DA 106 in flight, then DA 107 (the shared script). MEM 226 in flight; MEM 227 on this entry. REV 84 when BE 81, DE 111, DA 106 land. Heavy lock free at 19:48Z; BE 72 at 00:00Z — 4 h 12 min away; the overnight question is the user's.
+
+### R-718 — 2026-09-06T19:50Z — coordinator — **DA 106 VERIFIED: the register hold enters DA's own chain with five falsifier cells, and DA's cell caught a REGRESSION in the shared resolver — a `{path}`-only link is followed unverified since BE 79/80 (coordinator's drive confirms; BE 82 after BE 81). One rule-13 observation on DA's own landing: a landed draft row was REMOVED rather than superseded; the removal stands as history and the rule is restated.**
+
+**DA 106 VERIFIED (`8eeb010`, `26d49f4`, `b637b37`; Q-DA-332).** `da_land_gate.py --register` refuses unless the working register differs from HEAD by exactly DA's own new rows — `FOREIGN_ROW_IN_REGISTER` naming the row id, `REGISTER_EDITED` for any landed line changed or removed, `REGISTER_NON_ROW_LINES_ADDED`; `--register-post` runs the same predicate against `HEAD~1`. Falsifier verbatim: `my row only -> may_commit True (['Q-DA-331']); another seat's row -> FOREIGN_ROW_IN_REGISTER naming ['Q-DE-110']; mine BESIDE theirs -> FOREIGN_ROW_IN_REGISTER naming ['Q-BE-300']; an edited landed row -> REGISTER_EDITED; a non-row line -> REGISTER_NON_ROW_LINES_ADDED`. Byte-identity at the artifact: the Q-DA-331 row DE's commit `bfcfc8a` carried is byte-identical (4,313 B, `d503091d…`) to what DA's row script produced — DA's FIRST draft, which its own gate had refused before it could commit; the complete row (4,471 B, `21a3113…`) landed at `26d49f4`. DA 107 (dispatched 19:50Z) moves DA's chain onto `scripts/land_register_row.sh` and lands this round's row through it.
+
+**THE REGRESSION, CONFIRMED.** DA: since BE 79/80 `declaration_chain._predecessor` returns the path with `sha256 = None` for a `{path}`-only `supersedes`, and the digest comparison is guarded by `and want`, so a half-written link is followed unverified — R-608 is that the link IS the pair. Coordinator's drive at the module NOW:
+
+```
+--- regression drive: a {path}-only supersedes
+RESOLVED (regression confirmed): head fam_v2.json orphans [] link_shapes {'fam_v1.json': 'root', 'fam_v2.json': 'pair'}
+```
+
+A link without a digest resolves and is even counted as a `pair`. DA's `HALF_WRITTEN_LINK` refusal stands as its own guard on top of the shared resolver; BE 82 (after BE 81 lands): the resolver refuses a link without a digest BY NAME, never follows it and never calls it a pair; a `--falsify` cell for exactly this shape. The lesson beside REV 82 §1.3: the one implementation is the property, and one implementation's regression is everyone's — which is why the importers' own cells (DA's here) stay as belts.
+
+**A RULE-13 OBSERVATION, on DA's own row.** After DE's sweep landed DA's first draft, DA landed the complete row and REMOVED the draft at `b637b37` (one `-| Q-DA-331` line in that commit's diff). A landed line is never edited or removed, even one's own accidental draft — the register's form is a second row that supersedes the first in band, both standing. The removal stands as history (reverting it would be a second edit); the bytes are in `bfcfc8a`; `scripts/land_register_row.sh` refuses this shape (`REGISTER_EDITED`, cell C), which is one more reason every seat's chain calls it.
+
+**ROUTING.** DA 107 (the shared script). BE 82 queued behind BE 81 (the regression). DE 111, BE 81, MEM 227 in flight. MEM 228 on this entry. REV 84 when BE 81, DE 111 and DA 107 land: the regression and its lesson; DE's split; BE's derived frozen set; the removed row. Heavy lock free at 19:50Z; BE 72 at 00:00Z.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
