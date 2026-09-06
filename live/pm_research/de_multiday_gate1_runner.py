@@ -50,7 +50,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 335
+EXPECTED_CHECKS = 337
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -174,6 +174,13 @@ def design_chain_orphans(directory=None, family: str | None = None,
             "orphan_branches": [o["version"] for o in
                                 shared["orphan_branches"]],
             "n_orphan_branches": len(shared["orphan_branches"]),
+            # HOW THE FORK WAS CLOSED, not only that it is (DE 112). A
+            # reader seeing `orphan_branches: []` beside a `forks` block
+            # with two entries needs the merge links to tell "closed by a
+            # merge version" from "never forked".
+            "n_merge_links": shared.get("n_merge_links"),
+            "merged_tips": shared.get("merged_tips"),
+            "fork_status": shared.get("fork_status"),
             "forks_two_versions_superseding_one":
                 shared["forks_two_versions_superseding_one"]}
     except Exception as exc:                       # a STATUS, never a skip
@@ -7321,11 +7328,26 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     _cov99 = DAROOT.journal_coverage(
         window_start_epoch=(_hz99["oldest_epoch"] - 3600),
         regime=DAROOT.CONTINUOUS) if _hz99.get("oldest_epoch") else None
+    # THE HORIZON IS READ TWICE AND IT MOVES (rule 20: "a state named
+    # once and re-quoted later is stale" -- measured at ~15 min of drift
+    # in 18 min). Comparing `_hz99`'s reading to a message built from
+    # `journal_coverage`'s OWN, later reading made this cell fail whenever
+    # the window advanced between the two calls; the rehearsal hit it.
+    # The property is that the message names the horizon IT used, so the
+    # assertion reads that one, and the drift between the two readings is
+    # recorded rather than asserted away.
+    _hz99b = (_cov99 or {}).get("host_horizon") or {}
+    _drift99 = (None if not _hz99.get("oldest_epoch")
+                or not _hz99b.get("oldest_epoch")
+                else _hz99b["oldest_epoch"] - _hz99["oldest_epoch"])
     ok(_cov99 is None or (
            _cov99["covered"] is False
            and _cov99["status"] == "MEASURED"
-           and _hz99["oldest_utc"] in _cov99["why"]
+           and _hz99b.get("oldest_utc")
+           and _hz99b["oldest_utc"] in _cov99["why"]
            and _cov99["two_clocks_no_text_search"] is True),
+       f"(horizon drift between this cell's read and the coverage "
+       f"call's own: {_drift99} s) "
        f"REV 68 S1.5 KNOWN-BAD: a window an HOUR BEFORE the host's "
        f"horizon is UNCOVERED, and the refusal NAMES the horizon "
        f"({_hz99.get('oldest_utc')}). The old predicate would have "
@@ -9825,6 +9847,40 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     # stopped refusing and a known-bad that had fired for rounds ADMITTED.
     # A check whose ability to fail depends on what ran before it is
     # rule 16's class; the fix is order, and this is the note that says so.
+    # ===== DE 112: THE RECEIPT NAMES EVERY CHAIN IT RESOLVED ============
+    _pem = producer_exit_map()
+    ok(_pem["status"] == "DECLARED" and _pem["codes"] == [0, 1]
+       and _pem["lock_conflict_rc_excluded"] == 75
+       and _pem["agrees_with_the_module"] is True
+       and _pem["head_sha256"] == hashlib.sha256(
+           (Path(__file__).resolve().parents[2] / EXIT_MAP_DIR
+            / _pem["head_path"]).read_bytes()).hexdigest(),
+       f"R-709 CONSUMED: this producer's exit map resolves to "
+       f"{_pem['head_path']} at {_pem['head_sha256'][:12]}… (v"
+       f"{_pem['head_version']}), codes {_pem['codes']}, 75 excluded, and "
+       f"the digest RECOMPUTED from the file the head names. The receipt "
+       f"carries this block, so a reader resolving a non-zero "
+       f"`ExecMainStatus` to a KIND reads the map THIS RUN resolved -- "
+       f"not today's head against yesterday's run")
+    # READS `data/` (the real design family) -- skipped offline and NAMED,
+    # exactly as its sibling below. The fixture-run data-freeness
+    # instrument caught this one the moment it was written, which is the
+    # second time this round; the guard goes in with the cell now.
+    if offline:
+        offline_skip("DE 112: the merge facts on the REAL design family "
+                     "(reads data/pm_5min/derived)")
+    else:
+        _mk = design_chain_orphans()["shared_resolver"]
+        ok(_mk.get("n_merge_links") is not None
+           and isinstance(_mk.get("merged_tips"), list)
+           and (len(_mk["merged_tips"]) == _mk["n_merge_links"]),
+           f"and the orphan block records HOW the fork was closed, not "
+           f"only that it is: {_mk['n_merge_links']} merge link(s) "
+           f"absorbing {len(_mk['merged_tips'])} tip(s). "
+           f"`orphan_branches: []` beside a `forks` block with two "
+           f"entries cannot tell 'closed by a merge version' from 'never "
+           f"forked' -- these two fields can")
+
     # ===== DE 111: A KNOWN-BAD MEASURES AGAINST ITS OWN BASELINE ========
     # THE DISARMING CASE, DRIVEN -- with the real mechanism, not a story.
     # THE MECHANISM, REPRODUCED ON THIS CELL'S OWN FIXTURES -- not on the
@@ -10367,6 +10423,14 @@ def _main_day(a) -> int:
         # producers reach the rule through their launcher and this one
         # does not.
         "peak_of_record_rule": peak_of_record_rule(),
+        # R-709 CONSUMED (DE 112). A reader holding this receipt and a
+        # non-zero `ExecMainStatus` for its unit has to resolve the code
+        # to a KIND, and the map that answers is a CHAIN -- so the receipt
+        # names the head IT resolved, by pair, rather than leaving the
+        # reader to resolve today's head against yesterday's run. The
+        # rehearsal found this absent: every other chain this run reads
+        # was already named here and the exit map was not.
+        "producer_exit_map": producer_exit_map(),
     }
     _uid = unit_identity()
     payload["launch_form"] = {
