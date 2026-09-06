@@ -1,0 +1,282 @@
+{
+  "aggregate": {
+    "G": 3,
+    "any_arm_fails": true,
+    "multiplicity_m": 2,
+    "per_arm": {
+      "CONDVALUE_X_SKEW": {
+        "FAILS_THE_SECTION_7_PREDICATE": false,
+        "G": 3,
+        "a_pass_is_significance_bearing": false,
+        "alpha": 0.05,
+        "best_attainable_p_at_this_G": 0.125,
+        "clears_holm": false,
+        "cluster_unit": "UTC day",
+        "days": [
+          "FIXTURE-1",
+          "FIXTURE-2",
+          "FIXTURE-3"
+        ],
+        "holm_threshold_for_the_smaller_p": 0.025,
+        "mean_standardised_excess": 2.489053200986309,
+        "multiplicity_m": 2,
+        "n_days_positive": 3,
+        "p_one_sided_sign_test": 0.125,
+        "signs_unanimous": true,
+        "smallest_G_that_clears_holm": 6,
+        "smallest_G_that_clears_holm_at_m_1": 5,
+        "verdict": "BEATS_DIRECTIONALLY_NOT_SIGNIFICANTLY",
+        "why_a_pass_cannot_be_significant_here": "2^-3 = 0.125 against a Holm threshold of 0.025 at m = 2; the smallest G that clears is 6 at m = 2 and 5 at m = 1",
+        "z_by_day": {
+          "FIXTURE-1": 2.4869710419511253,
+          "FIXTURE-2": 2.5256153124786445,
+          "FIXTURE-3": 2.4545732485291585
+        }
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "FAILS_THE_SECTION_7_PREDICATE": true,
+        "G": 3,
+        "a_pass_is_significance_bearing": false,
+        "alpha": 0.05,
+        "best_attainable_p_at_this_G": 0.125,
+        "clears_holm": false,
+        "cluster_unit": "UTC day",
+        "days": [
+          "FIXTURE-1",
+          "FIXTURE-2",
+          "FIXTURE-3"
+        ],
+        "holm_threshold_for_the_smaller_p": 0.025,
+        "mean_standardised_excess": -0.2046869750014975,
+        "multiplicity_m": 2,
+        "n_days_positive": 0,
+        "p_one_sided_sign_test": null,
+        "signs_unanimous": false,
+        "smallest_G_that_clears_holm": 6,
+        "smallest_G_that_clears_holm_at_m_1": 5,
+        "verdict": "FAILS_TO_BEAT_THE_REPLAY_NULL",
+        "why_a_pass_cannot_be_significant_here": "2^-3 = 0.125 against a Holm threshold of 0.025 at m = 2; the smallest G that clears is 6 at m = 2 and 5 at m = 1",
+        "z_by_day": {
+          "FIXTURE-1": -0.24412971976115436,
+          "FIXTURE-2": -0.22482760506096616,
+          "FIXTURE-3": -0.14510360018237195
+        }
+      }
+    },
+    "section_7": {
+      "CONDVALUE_X_SKEW": false,
+      "HAZARD_OVER_SKEWED_REF": true
+    },
+    "the_rule": "the harmful-fill route STOPS if EITHER arm fails to beat the replay null at day-cluster level (R-547 item 5)"
+  },
+  "as_of": "2026-09-06T04:16:09.902698+00:00",
+  "battery": {
+    "expected_checks_in_the_source": 29,
+    "n_checks_run": 29,
+    "outcome": "PASS",
+    "ran_in_the_emitting_process": true,
+    "run_count_equals_source_expected": true
+  },
+  "be_module_citation": {
+    "cited_not_copied": true,
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "sha256": "67fc7b6c0150d3f9c933d9000481e19f7b8b90088dee1d7e6f4b7836662dd657",
+    "verified_at_run_time": true
+  },
+  "design_battery": {
+    "expected_checks_in_the_source": 42,
+    "n_checks_run": 42,
+    "outcome": "PASS",
+    "ran_in_the_emitting_process": true,
+    "run_count_equals_source_expected": true,
+    "v1_defect_this_closes": "v1's receipt recorded n_checks 19 while the source's EXPECTED_CHECKS was 20 -- main() wrote EXPECTED_CHECKS - 1 instead of the count the run produced. The source hash matched, so it was a RECEIPT-COUNT defect and not a code difference. Both numbers are now carried WITH their computed equality, so a receipt cannot disagree with its own source again"
+  },
+  "design_declaration": {
+    "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
+    "sha256": "a1016a8762fffdfeb368c5ff217e8bcc83141b1567e218a2f1b69c658a65289c"
+  },
+  "no_day_book_was_read": true,
+  "params_used": {
+    "G": 3,
+    "G_derived_from_len_days": true,
+    "alpha": 0.05,
+    "coin": "btc",
+    "min_decisions_per_arm_day": 30,
+    "min_draws_per_arm_day": 500,
+    "multiplicity_m": 2,
+    "per_day_deadline_s": 43200,
+    "sd_floor_fraction": 0.25
+  },
+  "per_day_sealed_artifacts": [
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "reasons": [],
+        "sd_over_abs_mean": 89.38924890677114,
+        "status": "OK"
+      },
+      "arm": "CONDVALUE_X_SKEW",
+      "day": "FIXTURE-1",
+      "seal_status": "SEALED -- 1 of 3 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 4078102352,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "reasons": [],
+        "sd_over_abs_mean": 22.144783087064937,
+        "status": "OK"
+      },
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "day": "FIXTURE-1",
+      "seal_status": "SEALED -- 1 of 3 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 1251488242,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "reasons": [],
+        "sd_over_abs_mean": 48.30426197263814,
+        "status": "OK"
+      },
+      "arm": "CONDVALUE_X_SKEW",
+      "day": "FIXTURE-2",
+      "seal_status": "SEALED -- 2 of 3 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 2843645714,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "reasons": [],
+        "sd_over_abs_mean": 41.81374381385027,
+        "status": "OK"
+      },
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "day": "FIXTURE-2",
+      "seal_status": "SEALED -- 2 of 3 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 3791040828,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "null_mean": 0.006658810494571176,
+        "null_sd": 1.0157941674788076,
+        "reasons": [],
+        "sd_over_abs_mean": 152.5488926748957,
+        "status": "OK"
+      },
+      "arm": "CONDVALUE_X_SKEW",
+      "day": "FIXTURE-3",
+      "economic": {
+        "D_E0": 2.5,
+        "Z": 2.4545732485291585,
+        "null_draws_summary": {
+          "n": 600
+        },
+        "null_mean": 0.006658810494571176,
+        "null_sd": 1.0157941674788076,
+        "p_location": 0.008319467554076539
+      },
+      "seal_status": "UNSEALED_ALL_DAYS_COMPLETE",
+      "sealed": false,
+      "seed": 3620666193,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "null_mean": -0.05267442230958869,
+        "null_sd": 1.0153130418903922,
+        "reasons": [],
+        "sd_over_abs_mean": 19.275257276159397,
+        "status": "OK"
+      },
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "day": "FIXTURE-3",
+      "economic": {
+        "D_E0": -0.2,
+        "Z": -0.14510360018237195,
+        "null_draws_summary": {
+          "n": 600
+        },
+        "null_mean": -0.05267442230958869,
+        "null_sd": 1.0153130418903922,
+        "p_location": 0.5823627287853578
+      },
+      "seal_status": "UNSEALED_ALL_DAYS_COMPLETE",
+      "sealed": false,
+      "seed": 882242147,
+      "status": "OK"
+    }
+  ],
+  "protocol": "P003_DE_MULTIDAY_GATE1_RUNNER_V1",
+  "resources_observed": {
+    "max_rss_kib": 19696,
+    "user_cpu_seconds": 0.041062,
+    "wall_seconds": 0.018675565719604492
+  },
+  "status": "FIXTURE_RUN_NO_DATA",
+  "the_committed_day_set_is_empty": true,
+  "what_this_receipt_is_not": {
+    "a_day_run": false,
+    "a_result": false,
+    "it_says_nothing_about_either_arm": true,
+    "the_fixture_arms_are_synthetic": "CONDVALUE's fixture is planted above the null and HAZARD's below it, to drive both verdict branches"
+  },
+  "why_fixtures": "the reviewer has not filed on design v3 and BE's book declaration is in flight; nothing may touch a day. This proves the runner EXECUTES, not that any arm does anything",
+  "wrapper_used": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100%"
+}
