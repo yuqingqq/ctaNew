@@ -147,6 +147,16 @@ except where marked USER-ONLY.
     never fast-forward once a local commit exists, and the shared tree is
     dirty for the length of every MEM batch).
 
+22. **A heavy run's code is frozen until its receipt lands** (R-603, REV 49 §0):
+    a run executes from a worktree whose HEAD is not moved and whose files are
+    not edited until the run's receipt has landed — the Gate-1 runner stamped
+    its own provenance by re-reading `__file__` at EMIT time, so a landing to
+    the runner 13 minutes into a 1.5-hour run would have named code that did
+    not execute, and the committed-bytes guard PASSED because the replacement
+    was committed. A seat that must land code during its own run lands from a
+    SECOND worktree. Runners capture their source digest at import and refuse
+    the emit by name if the on-disk bytes have changed since.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under
