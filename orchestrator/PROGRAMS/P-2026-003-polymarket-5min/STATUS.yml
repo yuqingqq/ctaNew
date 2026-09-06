@@ -63,6 +63,58 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T05:18:48Z (MEM ROUND 123 -- R-568 AND THE E1-A CONTROL SWEPT.
+  STATE ONLY.
+  (1) E2-A IS **APPROVED TO RUN** ON ONE CONDITION, AND THE CONDITION IS THE
+  SHARPEST FALSIFIER CRITIQUE I HAVE SWEPT: **the closed-form queue models are
+  PINNED BY KNOWN-BADS AT THE BOUNDARIES AND BY NOTHING IN THE INTERIOR.** A
+  boundary known-bad proves a model is not constant and not inverted; it says
+  nothing about the curve between the endpoints. **A REIMPLEMENTATION CAN AGREE
+  AT BOTH ENDS AND BE WRONG EVERYWHERE ELSE.** v3 adds an interior control per
+  model whose expected fill is **DERIVABLE BY HAND FROM THE PUBLISHED
+  DEFINITION** -- which is what makes it a control rather than a second
+  implementation of the same mistake.
+  (2) AND THREE CLOSURES RIDE WITH IT, EACH DRIVEN RATHER THAN ASSERTED: DA 59's
+  resolver **REPRODUCES AT THE REVIEWER'S OWN SCRATCH ROOT** (2 of 19 days,
+  every directory present -> DataRootRefused at run():1167 BEFORE ANY DAY IS
+  READ); all three E2.0 findings are now DRIVEN CHECKS, including **the interval
+  decision-bearing WITH A POSITIVE CONTROL THAT ADMITS**; and the supersession
+  sidecar is independently confirmed field by field, with the convention to be
+  WRITTEN DOWN in P-002's HANDOFF -- NOT MINE TO WRITE.
+  (3) THE E1-A INHERITED CONTROL **PASSES**, CHECKED BY ME AT THE RECEIPT:
+  abs_error_bps 1.0628e-05 (touch) and 2.7032e-05 (sweep) against a declared
+  0.05 bps, all three checks within tolerance. E1-A's published T_p = 600
+  numbers reproduce on E1-A's OWN aggTrades before any real-book number.
+  (4) **AND IT FOUND A DEFECT IN E1's OWN RECORD, WHICH IS WHAT A REPRODUCTION
+  CONTROL IS FOR:** E1_RESULTS claims "tick_size() FIXED post-audit; corrected
+  aggregate 3.36/6.28", but **E1's OWN COMMITTED tick_size('FILUSDT'), EXECUTED
+  DIRECTLY RATHER THAN TRANSCRIBED, RETURNS 1e-6 -- THE PRE-FIX VALUE.** The
+  corrections queue records a fix the committed code does not carry:
+  NOT_REPRODUCIBLE_FROM_THE_COMMITTED_CODE. And the receipt BOUNDS ITS OWN
+  FINDING -- "it does not impugn E1-A's operative number, which reproduces here
+  EXACTLY" -- routed as A RECORD DEFECT, NOT A BLOCKER. **A finding filed with
+  its own scope limit attached is the difference between a correction and a
+  scare.**
+  (5) BE 47 CLOSED WITHOUT THE BOOK. It polled at 04:39 for an approval whose
+  commit 4daaea9 I timestamped at **04:42:46Z** -- a **3 m 46 s** miss, not the
+  "~04:41" the dispatch rounds to; I record the clock value because a time in
+  prose is the thing this programme has corrected four times.
+  (6) AND THE PART THAT IS NOT A MISS: **BE CORRECTLY REFUSED TO MATCH THE E2.0
+  "APPROVED" BY WORD.** There was an APPROVED in the tree belonging to a
+  different object in a different programme. **A poll matching on a VERDICT
+  STRING rather than on the ARTIFACT IT QUALIFIES would have fired on it.** BE 48
+  now builds the 09-03 book with the approval **READ BY PATH** -- the same lesson
+  as my round-120 symbols-not-line-numbers rule, in another medium.
+  (7) THE WAITER STORY RESOLVES BY REPLACEMENT, NOT REPAIR. **FIVE KILLS; the
+  shell waiter AS A FORM is what the harness stops, regardless of duration or
+  condition** -- four rounds of re-arming produced the diagnosis no single kill
+  could. **THE HARNESS-NATIVE MONITOR SURVIVED AND WOKE THE COORDINATOR AT
+  05:18:20Z.** Same shape as the data root: neither symlink worked because both
+  fought git, and the answer left the filesystem; neither waiter survived because
+  both fought the harness, and the answer became harness-native. **THE TRIGGER
+  WAS NEVER VISIBLE FROM INSIDE** -- the mechanism was replaced without the cause
+  being understood, which is sound engineering and NOT an explanation.
+  PRIOR CHECKPOINT:
   2026-09-06T05:11:53Z (MEM ROUND 122 -- R-567 SWEPT. STATE ONLY.
   (1) E2.0 IS **SETTLED**: "I could not find a reading that rescues it." And it
   is a settlement by RECOMPUTATION -- delta_rs re-derived from the per-day cells
@@ -3105,7 +3157,43 @@ flags:
                              # that fire is the coordinator's call. Recorded so
                              # that if it goes wrong, nobody has to reconstruct
                              # that both stakes were known in advance.
-  THE_WAITER_IS_RE_ARMED_AT_THE_USERS_INSTRUCTION_WITH_ITS_KILLS_ANALYSED: 30-TO-80s-AFTER-ARMING
+  THE_LOOP_NOW_RESTS_ON_A_HARNESS_NATIVE_MONITOR: FIVE-KILLS-AND-THE-SURVIVOR-IS-A-DIFFERENT-KIND
+                             # RELAYED from R-568(B) and the round's dispatch,
+                             # and it is the fifth state of this flag in four
+                             # rounds -- re-armed, stopped, re-armed, and now
+                             # SUPERSEDED BY A DIFFERENT MECHANISM.
+                             # **BACKGROUND SHELL WAITERS ARE BEING STOPPED BY
+                             # THE HARNESS WITHIN SECONDS OF ARMING REGARDLESS OF
+                             # DURATION -- FIVE KILLS.** The fourth (bn31x470d,
+                             # armed 05:12:02Z, killed 05:12:54Z) had NO WAKE
+                             # CONDITION MET; every survivor woke inside the
+                             # 30-80 s window before the kill would have come.
+                             # SO THE PATTERN IS NOW LEGIBLE: **IT IS NOT THE
+                             # DURATION AND IT IS NOT THE CONDITION -- THE SHELL
+                             # WAITER AS A FORM IS WHAT IS BEING KILLED.** Four
+                             # rounds of re-arming produced the diagnosis that no
+                             # single kill could.
+                             # **AND THE HARNESS-NATIVE PERSISTENT MONITOR
+                             # (blqqd0y69) SURVIVED, AND ITS FIRST EVENT WOKE THE
+                             # COORDINATOR AT 05:18:20Z. THE LOOP NOW RESTS ON
+                             # THAT.**
+                             # THE LESSON, AND IT IS THE ONE I HAVE WRITTEN THREE
+                             # TIMES IN OTHER PLACES: **THE ANSWER WAS NOT A
+                             # BETTER-BEHAVED INSTANCE OF THE THING THAT KEPT
+                             # DYING, IT WAS A DIFFERENT KIND OF THING.** Same
+                             # shape as the data root -- neither symlink route
+                             # worked because both fought git, and the answer had
+                             # to leave the filesystem; here neither waiter
+                             # survived because both fought the harness, and the
+                             # answer had to be harness-native.
+                             # WHAT IS STILL TRUE AND WORTH NOT LOSING: **THE
+                             # TRIGGER WAS NEVER VISIBLE FROM INSIDE.** The
+                             # mechanism was replaced without the cause being
+                             # understood, which is a sound engineering move and
+                             # NOT an explanation -- if the Monitor is ever
+                             # killed the same way, nobody will know why either.
+                             # EARLIER VALUE (rule 13):
+                             # 30-TO-80s-AFTER-ARMING
                              # UPDATED 2026-09-06T05:06:00Z from R-566, and this
                              # is the fourth state this flag has held in three
                              # rounds -- re-armed, stopped, re-armed.
@@ -3290,7 +3378,88 @@ flags:
                              # round-116 zero-length loop and DA's stale-pycache
                              # green. Three seats, three forms, one shape.
                              # DE STANDS BY FOR BE'S BOOK. Second round running.
-  E2_A_IS_DECLARED_WITH_TWO_ESCALATIONS_RULED: AND-THE-NOTIONALS-SOURCE-IS-USER-PENDING
+  E2_A_IS_APPROVED_TO_RUN_ON_ONE_CONDITION: PINNED-AT-THE-BOUNDARIES-NOT-IN-THE-INTERIOR
+                             # RELAYED from R-568(A), REV 34 (4e73cdd).
+                             # "APPROVED to run once the two escalations are
+                             # ruled" -- and they are (R-567(C)) -- **WITH ONE
+                             # CONDITION FOR v3: the closed-form RiskAverse and
+                             # ProbQueue-f3 ARE PINNED BY KNOWN-BADS AT THE
+                             # BOUNDARIES AND BY NOTHING IN THE INTERIOR.**
+                             # THAT IS THE SHARPEST FORM OF A FALSIFIER CRITIQUE
+                             # I HAVE SWEPT. A boundary known-bad proves the
+                             # model is not constant and not inverted; it says
+                             # NOTHING about whether the CURVE BETWEEN the
+                             # endpoints is the published one. **A
+                             # REIMPLEMENTATION CAN AGREE AT BOTH ENDS AND BE
+                             # WRONG EVERYWHERE ELSE**, and no amount of
+                             # boundary testing will show it.
+                             # v3 ADDS AN INTERIOR CONTROL PER MODEL: a
+                             # queue-position case whose expected fill is
+                             # **DERIVABLE BY HAND FROM THE MODEL'S PUBLISHED
+                             # DEFINITION**, matched to a declared tolerance,
+                             # REFUSING otherwise. Derivable by hand is what
+                             # makes it a control rather than a second
+                             # implementation of the same mistake.
+                             # Sent to DA 60 as an addendum at 05:13Z; the gated
+                             # smoke proceeds AGAINST v3.
+                             # ALSO VERIFIED BY THE REVIEWER, and each is a
+                             # closure rather than an opinion: DA 59's resolver
+                             # adoption **REPRODUCES AT THE REVIEWER'S OWN
+                             # SCRATCH ROOT** -- 36 real bookTicker files, 2 of
+                             # 19 days, every directory present ->
+                             # `DataRootRefused` at `run():1167` BEFORE ANY DAY
+                             # IS READ; all three E2.0 findings are now DRIVEN
+                             # CHECKS under the recommended names (the
+                             # intersection pair; NOT_KILLED_PENDING_GATE_1 for
+                             # the 1.8-2.3 band; the interval decision-bearing
+                             # **with a positive control that ADMITS**); and the
+                             # supersession sidecar's
+                             # all_gate_bearing_fields_identical INDEPENDENTLY
+                             # CONFIRMED with a per-field breakdown.
+                             # "THE CONVENTION SHOULD BE WRITTEN DOWN" -- DA adds
+                             # the supersession sidecar convention to P-002's
+                             # HANDOFF. **NOT MINE TO WRITE**; P-002 is
+                             # single-seat.
+                             # THE NOTIONAL'S SOURCE REMAINS **USER-PENDING**
+                             # (R-567(C)); nothing in this approval touches it.
+                             # EARLIER VALUE (rule 13):
+                             # AND-THE-NOTIONALS-SOURCE-IS-USER-PENDING
+  the_E1_A_INHERITED_CONTROL_PASSES_AND_FINDS_A_DEFECT_IN_E1_S_OWN_RECORD: NOT-REPRODUCIBLE-FROM-THE-COMMITTED-CODE
+                             # CHECKED 2026-09-06T05:18:48Z at the receipt,
+                             # data/mm_hf/e1/
+                             # p002_e2a_e1a_reproduction__20260906T051626Z.json.
+                             # **THE CONTROL PASSES, AND BY A MARGIN THAT MAKES
+                             # THE CLAIM UNARGUABLE:** checks/csv/touch
+                             # abs_error_bps = **1.0628e-05**, checks/csv/sweep
+                             # = **2.7032e-05**, checks/tick_fixed/sweep =
+                             # 0.013597 -- all three `within_tolerance: True`
+                             # against the declared 0.05 bps. E1-A's published
+                             # T_p = 600 numbers reproduce ON E1-A's OWN
+                             # aggTrades before any real-book number is reported.
+                             # **AND IT FOUND A DEFECT IN E1's OWN RECORD, WHICH
+                             # IS WHAT A REPRODUCTION CONTROL IS FOR:**
+                             # `the_second_pair_is_a_FINDING_ABOUT_E1_S_RECORD.
+                             # status = NOT_REPRODUCIBLE_FROM_THE_COMMITTED_CODE`.
+                             # E1_RESULTS claims "tick_size() FIXED post-audit;
+                             # corrected aggregate 3.36/6.28" -- but **E1's OWN
+                             # COMMITTED tick_size('FILUSDT'), EXECUTED DIRECTLY
+                             # RATHER THAN TRANSCRIBED, RETURNS 1e-6, THE
+                             # **PRE**-FIX VALUE.**
+                             # SO THE CORRECTIONS QUEUE RECORDS A FIX THAT THE
+                             # COMMITTED CODE DOES NOT CARRY. That is the
+                             # producer/emission class again -- a record and its
+                             # code disagreeing -- reached this time by EXECUTING
+                             # THE FUNCTION rather than reading the claim about
+                             # it.
+                             # AND THE RECEIPT BOUNDS ITS OWN FINDING, which is
+                             # the part to keep: `what_it_does_NOT_mean` -- "it
+                             # does not impugn E1-A's operative number, which
+                             # reproduces here EXACTLY -- both legs to 4 dp and
+                             # both bootstrap CIs." **ROUTED AS A RECORD DEFECT
+                             # IN P-002, NOT AS A BLOCKER ON E2-A.**
+                             # A finding filed with its own scope limit attached
+                             # is the difference between a correction and a
+                             # scare.
                              # RELAYED from R-567(C).
                              # p002_e2_a_declaration_v2.json, **21 checks BOTH
                              # DIRECTIONS, NO DATA.** Two escalations -- **not two
@@ -4406,6 +4575,40 @@ flags:
                              # NEITHER OPTION CHANGES THE DESIGN, and BE's
                              # book-building starts with 09-03 EITHER WAY -- so
                              # the work is not blocked on the ruling.
+  BE_47_CLOSED_WITHOUT_THE_BOOK_ON_A_POLL_THAT_MISSED_BY_MINUTES: AND-REFUSED-TO-MATCH-APPROVED-BY-WORD
+                             # RELAYED for the sequence; **THE TIMING CHECKED BY
+                             # ME AT THE COMMIT.**
+                             # BE 47 polled at 04:39 for the runner approval and
+                             # closed without building the book. **THE APPROVAL
+                             # COMMIT 4daaea9 IS TIMESTAMPED 2026-09-06T04:42:46Z**
+                             # -- so the miss is **3 m 46 s**, not the "~04:41"
+                             # the dispatch describes. I record the clock value
+                             # because a time in prose is exactly what this
+                             # programme has corrected four times, and the
+                             # rounding is mine to resist even when it is
+                             # harmless.
+                             # AND THE PART THAT IS NOT A MISS AT ALL, WHICH IS
+                             # WHY THIS FLAG IS NOT A REPROACH: **BE CORRECTLY
+                             # REFUSED TO MATCH THE E2.0 "APPROVED" BY WORD.**
+                             # There was an APPROVED in the tree; it belonged to
+                             # a different object in a different programme. A
+                             # poll that matches on a VERDICT STRING rather than
+                             # on the ARTIFACT IT QUALIFIES would have fired on
+                             # it -- and BE's did not.
+                             # SO BE 48 BUILDS THE 09-03 BOOK NOW, **WITH THE
+                             # APPROVAL READ BY PATH (4daaea9) RATHER THAN
+                             # MATCHED BY WORD**, and files the race-read v2.
+                             # THAT IS THE SAME LESSON AS MY OWN
+                             # SYMBOLS-NOT-LINE-NUMBERS RULE FROM ROUND 120, IN A
+                             # DIFFERENT MEDIUM: **AN ADDRESS, NOT A STRING THAT
+                             # LOOKS RIGHT.**
+                             # BE'S OWN WRONG-DIAGNOSIS FILING (Q-BE-283) IS
+                             # RECORDED AS THE CORRECT SHAPE. A seat that files
+                             # its own mis-diagnosis rather than quietly
+                             # correcting it is doing what this programme's whole
+                             # error record depends on -- and BE has now done it
+                             # twice, after the "no PASS line in 900 s" that was
+                             # its own grep pattern.
   be46_THE_RACE_READ_AND_THE_BUILDER_ARE_DECLARED_AND_OPEN_NOTHING: BUILT-NOTHING-OPENED-NOTHING
                              # RELAYED from R-560(A), verified by the
                              # coordinator at the artifacts.
@@ -12771,6 +12974,29 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T05:18:48Z, E2-A IS **APPROVED TO RUN** on one condition, and
+  the condition is the sharpest falsifier critique in either programme: **the
+  closed-form queue models are pinned at the BOUNDARIES and by nothing in the
+  INTERIOR -- a reimplementation can agree at both ends and be wrong everywhere
+  else.** v3's interior control must be DERIVABLE BY HAND from the published
+  definition, which is what stops it being a second implementation of the same
+  mistake.
+  THE E1-A INHERITED CONTROL PASSES at 1.06e-05 / 2.70e-05 bps against a 0.05
+  declared tolerance -- **and it found a defect in E1's own record**: E1_RESULTS
+  claims tick_size() was fixed post-audit, and **E1's own committed function,
+  EXECUTED rather than transcribed, still returns the PRE-fix value**. Routed as
+  a record defect, **not a blocker**, with the receipt bounding its own finding.
+  BE 47 CLOSED WITHOUT THE BOOK on a poll that missed the approval by 3 m 46 s --
+  **and correctly REFUSED to match the E2.0 "APPROVED" by word**, which a
+  string-matching poll would have fired on. BE 48 builds the 09-03 book with the
+  approval READ BY PATH.
+  THE WAITER STORY RESOLVES BY REPLACEMENT: **five kills, the shell waiter as a
+  FORM is what the harness stops**, and the harness-native Monitor survived and
+  woke the coordinator at 05:18:20Z. Same shape as the data root -- the answer
+  was not a better instance of the dying thing but a different kind of thing --
+  **and the trigger was never visible from inside.**
+  Gate 1 is 1 of 7. Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T05:11:53Z, RETAINED BELOW --
   AS-OF 2026-09-06T05:11:53Z, P-2026-002's E2.0 IS **SETTLED AS A PROGRAM-LEVEL
   FACT** -- "I could not find a reading that rescues it" -- and it is settled by
   RECOMPUTATION: delta_rs re-derived from the per-day cells, the verdict
@@ -13886,6 +14112,38 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 123, 2026-09-06T05:18:48Z ------------------------------
+  the_E1_A_INHERITED_CONTROL_PASSES_AND_FINDS_A_DEFECT_IN_E1_S_OWN_RECORD:
+    prov: CHECKED
+    artifact: data/mm_hf/e1/p002_e2a_e1a_reproduction__20260906T051626Z.json
+    as_of: 2026-09-06T05:18:48Z
+    said: >-
+      checks/csv/touch/abs_error_bps 1.0628442265403493e-05,
+      checks/csv/sweep/abs_error_bps 2.7032070271992836e-05 and
+      checks/tick_fixed/sweep/abs_error_bps 0.013597079045499783, all three with
+      within_tolerance true; and
+      the_second_pair_is_a_FINDING_ABOUT_E1_S_RECORD carries status
+      NOT_REPRODUCIBLE_FROM_THE_COMMITTED_CODE with the evidence that E1's own
+      committed tick_size('FILUSDT'), executed directly rather than transcribed,
+      returns 1e-6, the pre-fix value, against E1_RESULTS' claim that it was
+      fixed post-audit; and a what_it_does_NOT_mean field stating that E1-A's
+      operative number reproduces exactly.
+  BE_47_CLOSED_WITHOUT_THE_BOOK_ON_A_POLL_THAT_MISSED_BY_MINUTES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T05:18:48Z
+    said: >-
+      `git log -1 --format=%cI 4daaea9` returns 2026-09-06T04:42:46+00:00 for the
+      runner-approval commit, against BE's 04:39 poll relayed in the dispatch --
+      a 3 m 46 s miss rather than the ~04:41 the prose rounds to. That BE refused
+      to match the E2.0 "APPROVED" by word, and that BE 48 reads the approval by
+      path, are RELAYED.
+  E2_A_IS_APPROVED_TO_RUN_ON_ONE_CONDITION:
+    prov: RELAYED
+    from: R-568(A), REV 34 (4e73cdd)
+  THE_LOOP_NOW_RESTS_ON_A_HARNESS_NATIVE_MONITOR:
+    prov: RELAYED
+    from: R-568(B) and this round's dispatch for the fifth kill and the Monitor
   # --- MEM round 122, 2026-09-06T05:11:53Z ------------------------------
   R567_REPEATS_THE_867f647_CITATION_ONE_ENTRY_AFTER_I_CORRECTED_IT:
     prov: CHECKED
@@ -13917,9 +14175,6 @@ flag_provenance:
   THE_R557_REFRESH_COMMAND_UNDID_THE_R553_FIX_EVERY_TIME_IT_RAN:
     prov: RELAYED
     from: R-567(B) / Q-DA-279
-  E2_A_IS_DECLARED_WITH_TWO_ESCALATIONS_RULED:
-    prov: RELAYED
-    from: R-567(C); the notional source is open to the USER
   # --- MEM round 121, 2026-09-06T05:06:00Z ------------------------------
   P_2026_002_E2_0_IS_SETTLED_BY_THE_REVIEWER:
     prov: CHECKED
@@ -13945,9 +14200,6 @@ flag_provenance:
   de76_THE_FIXTURE_DOOR_HAS_ITS_LOCK:
     prov: RELAYED
     from: R-566(A), verified by the coordinator's own runs
-  THE_WAITER_IS_RE_ARMED_AT_THE_USERS_INSTRUCTION_WITH_ITS_KILLS_ANALYSED:
-    prov: RELAYED
-    from: R-566
   # --- MEM round 120, 2026-09-06T04:54:04Z ------------------------------
   REV32_CURRENCY_AUDIT_MEASURED_THE_AXIS_I_NAMED_AND_NEVER_BUILT:
     prov: CHECKED

@@ -1,5 +1,108 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T05:18:48Z — **E2-A is APPROVED to run on one condition, and the
+condition is the sharpest falsifier critique in either programme.** Gate 1 is
+1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 123
+
+### 1. Pinned at the boundaries, and by nothing in the interior
+
+The closed-form RiskAverse and ProbQueue-f3 are **pinned by known-bads at the
+BOUNDARIES and by nothing in the INTERIOR.**
+
+> A boundary known-bad proves a model is not constant and not inverted. It says
+> **nothing** about whether the curve *between* the endpoints is the published
+> one. **A reimplementation can agree at both ends and be wrong everywhere
+> else** — and no amount of boundary testing will show it.
+
+v3 adds an interior control per model whose expected fill is **derivable by hand
+from the model's published definition**, matched to a declared tolerance,
+refusing otherwise. *Derivable by hand is what makes it a control rather than a
+second implementation of the same mistake.*
+
+**Three closures ride with the approval, each driven rather than asserted:** DA
+59's resolver **reproduces at the reviewer's own scratch root** — 2 of 19 days,
+every directory present → `DataRootRefused` at `run():1167` **before any day is
+read**; all three E2.0 findings are **driven checks**, including the interval
+decision-bearing **with a positive control that admits**; and the supersession
+sidecar is confirmed **field by field**, with the convention to be written into
+P-002's HANDOFF — **not mine to write.**
+
+### 2. The E1-A control passes — and finds a defect in E1's own record
+
+**Checked by me at the receipt:** `abs_error_bps` **1.0628e-05** (touch),
+**2.7032e-05** (sweep), 0.0136 (tick-fixed) — **all three within the declared
+0.05 bps.** E1-A's published T_p = 600 numbers reproduce on **E1-A's own
+aggTrades**, before any real-book number.
+
+> **And that is what a reproduction control is for:**
+> `NOT_REPRODUCIBLE_FROM_THE_COMMITTED_CODE`. `E1_RESULTS` claims *"tick_size()
+> FIXED post-audit; corrected aggregate 3.36/6.28"* — but **E1's own committed
+> `tick_size('FILUSDT')`, executed directly rather than transcribed, returns
+> `1e-6`: the PRE-fix value.** The corrections queue records a fix the committed
+> code does not carry.
+
+**And the receipt bounds its own finding** — *"it does not impugn E1-A's
+operative number, which reproduces here EXACTLY"* — **routed as a record defect,
+not a blocker.** *A finding filed with its own scope limit attached is the
+difference between a correction and a scare.*
+
+### 3. BE 47 closed without the book — and the part that isn't a miss
+
+It polled at 04:39; **the approval commit `4daaea9` is timestamped 04:42:46Z** —
+a **3 m 46 s** miss, not the "~04:41" the dispatch rounds to. *I record the clock
+value because a time in prose is the thing this programme has corrected four
+times, and the rounding is mine to resist even when harmless.*
+
+> **BE correctly refused to match the E2.0 "APPROVED" by word.** There was an
+> APPROVED in the tree — belonging to a **different object in a different
+> programme**. **A poll matching on a verdict STRING rather than on the ARTIFACT
+> it qualifies would have fired on it.**
+
+BE 48 now builds the 09-03 book with the approval **read by path**. *Same lesson
+as my round-120 symbols-not-line-numbers rule, in another medium: an address, not
+a string that looks right.* And **BE filed its own wrong diagnosis (Q-BE-283)** —
+the second time, after the "no PASS line in 900 s" that was its own grep pattern.
+
+### 4. The waiter resolves by replacement, not repair
+
+**Five kills. The shell waiter *as a form* is what the harness stops** —
+regardless of duration or condition; the fourth (armed 05:12:02Z, killed
+05:12:54Z) had **no wake condition met**, and every survivor woke inside the
+30–80 s window before the kill would have come.
+
+> **Four rounds of re-arming produced the diagnosis that no single kill could.**
+
+**The harness-native Monitor survived, and its first event woke the coordinator
+at 05:18:20Z. The loop now rests on that.**
+
+*Same shape as the data root: neither symlink worked because both fought git, and
+the answer had to leave the filesystem; neither waiter survived because both
+fought the harness, and the answer had to be harness-native.* **The answer was
+not a better-behaved instance of the dying thing — it was a different kind of
+thing.**
+
+**And what is not resolved: the trigger was never visible from inside.** The
+mechanism was replaced **without the cause being understood** — sound
+engineering, **not an explanation.** *If the Monitor is ever killed the same way,
+nobody will know why either.*
+
+### 5. Measured before the sentence
+
+**636 flags, 76 CHECKED, 105 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 181; tasks 19.** *(Two renames, two ORPHANs, caught
+pre-commit; commit message by `-F`, second round.)*
+
+### Still open, still mine
+
+**RELAY FIDELITY**, **CORROBORATION**. **455 of 636 UNCITED.** And **USER-PENDING:
+the notional's source** for E2-A's size-aware arm. I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T05:11:53Z — **E2.0 is SETTLED. And two of this round's items
 sharpen my own earlier entries against me.** Gate 1 is 1 of 7. Economics:
 `RESULTS.md` §0.
