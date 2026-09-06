@@ -347,14 +347,18 @@ PLAIN_STAMP_FIELDS = ("builder_commit", "reader_sha256", "producing_code_sha256"
 
 def correction_census(v1: dict, v2: dict,
                       added=("pinned_days_not_in_READABLE",
-                             "producing_code", "supersedes",
-                             "correction_census")) -> dict:
+                             "producing_code", "supersedes"),
+                      also_permitted=("correction_census",)) -> dict:
     """PROVE a correction added only what it declared, and touched nothing.
 
     Extracted so the falsifier can drive THE PREDICATE rather than trying to
     make the emitter misbehave: the first form of that known-bad patched
     `json.dumps` and tested nothing."""
+    # `added` are REQUIRED to be present in v2; `also_permitted` may change
+    # without being required -- `correction_census` is written by the caller
+    # AFTER this runs, so requiring it here would refuse the emitter itself.
     added = set(added)
+    permitted = added | set(also_permitted)
     changed = sorted(k for k in set(v1) | set(v2)
                      if json.dumps(v1.get(k), sort_keys=True, default=str)
                      != json.dumps(v2.get(k), sort_keys=True, default=str))
@@ -372,11 +376,11 @@ def correction_census(v1: dict, v2: dict,
             f"{[b for b, okv in frozen_ok.items() if not okv]}. "
             f"{list(FROZEN_BLOCKS)} are the read itself, and a correction "
             f"that touches them is not a correction.")
-    outside = sorted(set(changed) - added)
+    outside = sorted(set(changed) - permitted)
     if outside:
         raise ReadRefused(
             f"REFUSED: the .v2 differs from v1 in {outside}, which is "
-            f"outside the declared additions {sorted(added)}.")
+            f"outside the permitted set {sorted(permitted)}.")
     pc = v2.get("producing_code") or {}
     for f in PLAIN_STAMP_FIELDS:
         if f in pc:
@@ -388,10 +392,26 @@ def correction_census(v1: dict, v2: dict,
         raise ReadRefused(
             "REFUSED: `producing_code.status` is not the block's first "
             "field.")
+    # REV 79 §1.3: this compared `changed` against `added` FILTERED TO WHAT
+    # v2 HAPPENS TO CARRY -- so a .v2 that simply OMITTED a declared
+    # addition passed, `supersedes` first among them. A correction with no
+    # supersession link is not a correction; it is an orphan file beside the
+    # artifact it claims to replace.
+    missing = sorted(k for k in added if k not in v2)
+    if missing:
+        raise ReadRefused(
+            f"REFUSED: the .v2 is missing declared addition(s) {missing}. "
+            f"A correction that omits {'`supersedes`' if 'supersedes' in missing else 'a declared block'} "
+            f"cannot be resolved to what it supersedes -- it is an orphan "
+            f"file beside the artifact it claims to replace.")
     return {"keys_changed_vs_v1": changed,
             "declared_additions": sorted(added),
+            "missing_declared_additions": missing,
             "difference_is_exactly_the_additions":
-                sorted(changed) == sorted(k for k in added if k in v2),
+                set(changed) >= added and not (set(changed) - permitted),
+            "permitted_but_not_required": sorted(also_permitted),
+            "compared_against": "the declared additions THEMSELVES, not the "
+                                "subset v2 happens to carry (REV 79 §1.3)",
             "frozen_blocks_byte_identical": frozen_ok}
 
 
@@ -857,7 +877,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 44
+EXPECTED_CHECKS = 48
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -1252,10 +1272,44 @@ def selftest() -> int:
         correction_census(_base, _extra)
         _extra_refused = False
     except ReadRefused as _eW:
-        _extra_refused = "outside the declared additions" in str(_eW)
+        _extra_refused = "outside the permitted set" in str(_eW)
     ok(_extra_refused,
        "KNOWN-BAD: a correction that changes ANY key outside the declared "
        "additions is REFUSED, naming the key")
+    # FALSIFIER (REV 79 §1.3): a .v2 MISSING a declared addition is REFUSED
+    for _miss in ("supersedes", "producing_code",
+                  "pinned_days_not_in_READABLE"):
+        _lack = dict(_base, producing_code={"status":
+                                            "RECONSTRUCTED_NOT_A_STAMP"},
+                     supersedes={}, pinned_days_not_in_READABLE={})
+        _lack.pop(_miss)
+        try:
+            correction_census(_base, _lack,
+                              added=("pinned_days_not_in_READABLE",
+                                     "producing_code", "supersedes"))
+            _miss_refused = False
+        except ReadRefused as _eM:
+            _miss_refused = ("missing declared addition" in str(_eM)
+                             and _miss in str(_eM))
+        ok(_miss_refused,
+           f"REV 79 §1.3 KNOWN-BAD: a .v2 that OMITS the declared addition "
+           f"{_miss!r} is REFUSED, naming it. The census compared `changed` "
+           f"against `added` FILTERED TO WHAT v2 CARRIED, so an omission "
+           f"passed -- `supersedes` first among them, which would leave an "
+           f"orphan file beside the artifact it claims to replace")
+    _full = dict(_base, producing_code={"status": "RECONSTRUCTED_NOT_A_STAMP"},
+                 supersedes={"sha256": "a" * 64},
+                 pinned_days_not_in_READABLE={"days": []})
+    _c_ok = correction_census(_base, _full,
+                              added=("pinned_days_not_in_READABLE",
+                                     "producing_code", "supersedes"))
+    ok(_c_ok["difference_is_exactly_the_additions"]
+       and _c_ok["missing_declared_additions"] == []
+       and "THEMSELVES" in _c_ok["compared_against"],
+       "POSITIVE CONTROL STILL PASSES: a .v2 carrying ALL the declared "
+       "additions and touching nothing else admits, with "
+       "missing_declared_additions empty")
+
     # FALSIFIER 2: a reconstruction under a PLAIN field name is REFUSED
     _plain = dict(_base,
                   producing_code={"status": "RECONSTRUCTED_NOT_A_STAMP",
