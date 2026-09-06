@@ -28,7 +28,10 @@ class ChainRefused(RuntimeError):
     """A named refusal. Every message begins with its own reason code."""
 
 
-VERSION_RE = re.compile(r"_v(\d+)\.json$")
+#: `<family>_v<N>.json` AND `<family>_v<N>__<stamp>.json`. The stamped form
+#: is what the design family actually uses (22 of its 23 files); a pattern
+#: anchored on `_v<N>.json$` parsed EVERY one of them as version 0.
+VERSION_RE = re.compile(r"_v(\d+)(?:__[^/]*)?\.json$")
 
 
 def _sha(p: Path) -> str:
@@ -74,20 +77,63 @@ def resolve_head(directory, family: str) -> dict:
             f"match the {family} glob and are not valid JSON. PRESENT and "
             f"unreadable is not the same as absent: the file is there to be "
             f"fixed. ({unparseable[0]['error']})")
-    superseded, broken = {}, []
+    superseded, broken, shapes = {}, [], {}
+
+    def _predecessor(sup):
+        """(name, sha256, shape) of the DIRECT predecessor, or (None, …).
+
+        Two link shapes exist in this programme and BOTH must be read. The
+        `{path, sha256}` pair is the ruled form. The EARLY form -- a dict
+        carrying `chain: [[path, sha256], …]` -- is what the design family
+        used for 22 of its 23 versions, and a resolver that does not follow
+        it reports those versions as ORPHAN BRANCHES: an unread link
+        presented as a missing one. That is what this resolver did, and it
+        disagreed with DE's on four early design versions (Q-MEM-211,
+        reproduced by the coordinator). Never report an unread link as an
+        orphan: follow it, or refuse it by name.
+        """
+        if sup is None:
+            return None, None, "root"
+        if isinstance(sup, dict) and sup.get("path"):
+            return Path(sup["path"]).name, sup.get("sha256"), "pair"
+        if isinstance(sup, dict) and isinstance(sup.get("chain"), list) \
+                and sup["chain"]:
+            last = sup["chain"][-1]
+            if isinstance(last, (list, tuple)) and len(last) >= 2:
+                return Path(str(last[0])).name, str(last[1]), "chain"
+            return None, None, "chain-malformed"
+        if isinstance(sup, str) and sup:
+            return None, None, "bare-string"
+        return None, None, "unknown"
+
     for name, e in loaded.items():
         sup = (e["doc"] or {}).get("supersedes")
-        if isinstance(sup, dict) and sup.get("path"):
-            prev = Path(sup["path"]).name
-            if prev in loaded and loaded[prev]["sha256"] != sup.get("sha256"):
-                broken.append({"version": name, "names": prev,
-                               "pair_sha256": sup.get("sha256"),
-                               "on_disk_sha256": loaded[prev]["sha256"]})
-            superseded.setdefault(prev, []).append(name)
-        elif isinstance(sup, str) and sup:
-            broken.append({"version": name, "names": sup,
-                           "why": "supersedes is a bare string, not the "
-                                  "{path, sha256} pair -- unfollowable"})
+        prev, want, shape = _predecessor(sup)
+        shapes[name] = shape
+        if shape in ("bare-string", "chain-malformed", "unknown") and sup:
+            broken.append({"version": name, "shape": shape,
+                           "supersedes": str(sup)[:120],
+                           "why": "LINK_SHAPE_UNSUPPORTED: this resolver "
+                                  "cannot follow that shape, and reporting "
+                                  "the version as an orphan would present "
+                                  "an UNREAD link as a MISSING one"})
+            continue
+        if prev is None:
+            continue
+        if prev in loaded and want and loaded[prev]["sha256"] != want:
+            broken.append({"version": name, "names": prev,
+                           "shape": shape,
+                           "pair_sha256": want,
+                           "on_disk_sha256": loaded[prev]["sha256"]})
+        superseded.setdefault(prev, []).append(name)
+    unsupported = [b for b in broken if b.get("shape") in
+                   ("bare-string", "chain-malformed", "unknown")]
+    if unsupported:
+        raise ChainRefused(
+            f"LINK_SHAPE_UNSUPPORTED: {[(b['version'], b['shape']) for b in unsupported]}. "
+            f"This resolver reads the {{path, sha256}} pair and the early "
+            f"`chain: [[path, sha256], …]` form; it will not guess at "
+            f"another, and it will not report an unread link as an orphan.")
     if broken:
         raise ChainRefused(
             f"DECLARATION_LINK_CORRUPTED: {broken}. Every version is present "
@@ -105,6 +151,7 @@ def resolve_head(directory, family: str) -> dict:
             "sha256": head["sha256"], "doc": head["doc"],
             "version": head["version"], "n_versions": len(loaded),
             "orphan_branches": orphans,
+            "link_shapes": shapes,
             "forks_two_versions_superseding_one": forks,
             "head_rule": "the highest version number among the versions "
                          "nobody supersedes",
@@ -180,3 +227,106 @@ def write_next_version(directory, family: str, payload: dict,
             "superseded": {"path": now["path"], "sha256": now["sha256"]},
             "pair": {"path": str(dst), "sha256": _sha(dst)},
             "written": "temp file + rename in the same directory"}
+
+
+# --------------------------------------------------------------------------
+# RULE 15 AT THE IMPORT SURFACE (Q-MEM-211). This module is imported by other
+# seats' emitters, and a falsifier that lives only in one caller's battery
+# cannot be fired by a caller from outside. `python3 declaration_chain.py
+# --falsify` drives every cell here.
+# --------------------------------------------------------------------------
+def _falsify() -> int:
+    import tempfile
+    ok_n, fails = 0, []
+
+    def ok(cond, label):
+        nonlocal ok_n
+        ok_n += 1
+        print(("PASS: " if cond else "FAIL: ") + label)
+        if not cond:
+            fails.append(label)
+
+    FAM = "fixture_family"
+
+    def pl(sup=None, note=""):
+        return {"protocol": "FIXTURE", "note": note, "supersedes": sup}
+
+    d = Path(tempfile.mkdtemp(prefix="dc_falsify_"))
+    (d / f"{FAM}_v1.json").write_text(json.dumps(pl(None, "first"), indent=1,
+                                                 sort_keys=True) + "\n")
+    h = resolve_head(d, FAM)
+    ok(h["name"] == f"{FAM}_v1.json" and h["version"] == 1
+       and h["orphan_branches"] == [],
+       f"CELL 0 resolve: head {h['name']} v{h['version']}, no orphans")
+    w = write_next_version(d, FAM, pl({"path": h["path"],
+                                       "sha256": h["sha256"]}, "second"),
+                           h["pair"])
+    h2 = resolve_head(d, FAM)
+    ok(h2["sha256"] == w["sha256"] and w["version"] == 2,
+       f"CELL 1 positive: wrote {w['name']} and the resolver returns it")
+    codes = []
+    for pay, hr in ((pl({"path": h["path"], "sha256": h["sha256"]}), h["pair"]),
+                    (pl({"path": h2["path"], "sha256": h2["sha256"]}),
+                     {"path": str(d / f"{FAM}_v2.json"), "sha256": "0" * 64}),
+                    (pl({"path": h2["path"], "sha256": "b" * 64}), h2["pair"])):
+        try:
+            write_next_version(d, FAM, pay, hr)
+            codes.append("NOT REFUSED")
+        except ChainRefused as e:
+            codes.append(str(e).split(":")[0])
+    ok(codes == ["VERSION_PATH_EXISTS", "HEAD_MOVED", "PAIR_MISMATCH"],
+       f"CELLS 2-4 the three refusals, distinct and by name: {codes}")
+    df = Path(tempfile.mkdtemp(prefix="dc_fork_"))
+    (df / f"{FAM}_v1.json").write_text(json.dumps(pl(None, "base"), indent=1,
+                                                  sort_keys=True) + "\n")
+    b = {"path": str(df / f"{FAM}_v1.json"), "sha256": _sha(df / f"{FAM}_v1.json")}
+    for n in (2, 3):
+        (df / f"{FAM}_v{n}.json").write_text(
+            json.dumps(pl(b, f"branch {n}"), indent=1, sort_keys=True) + "\n")
+    hf = resolve_head(df, FAM)
+    ok(hf["name"] == f"{FAM}_v3.json"
+       and [o["version"] for o in hf["orphan_branches"]] == [f"{FAM}_v2.json"],
+       f"CELL 5 fork REPORTED not refused: head {hf['name']}, orphans "
+       f"{[o['version'] for o in hf['orphan_branches']]}")
+    # THE EARLY-SHAPE CELL (Q-MEM-211): a `chain: [[path, sha256], …]` link
+    # must be FOLLOWED, not reported as an orphan.
+    de = Path(tempfile.mkdtemp(prefix="dc_early_"))
+    (de / f"{FAM}_v1__20260101T000000Z.json").write_text(
+        json.dumps(pl(None, "root"), indent=1, sort_keys=True) + "\n")
+    r1 = de / f"{FAM}_v1__20260101T000000Z.json"
+    (de / f"{FAM}_v2__20260102T000000Z.json").write_text(json.dumps(
+        pl({"chain": [[r1.name, _sha(r1)]]}, "early form"), indent=1,
+        sort_keys=True) + "\n")
+    he = resolve_head(de, FAM)
+    ok(he["name"] == f"{FAM}_v2__20260102T000000Z.json" and he["version"] == 2
+       and he["orphan_branches"] == []
+       and he["link_shapes"][he["name"]] == "chain",
+       f"CELL 6 the EARLY `chain` form is FOLLOWED: head {he['name']} v"
+       f"{he['version']}, orphans {[o['version'] for o in he['orphan_branches']]} "
+       f"-- an unread link reported as an orphan is a MISSING link claimed "
+       f"where an UNREAD one exists (Q-MEM-211), and the stamped name parses "
+       f"as version {he['version']}, not 0")
+    du = Path(tempfile.mkdtemp(prefix="dc_unsup_"))
+    (du / f"{FAM}_v1.json").write_text(json.dumps(pl(None), indent=1,
+                                                  sort_keys=True) + "\n")
+    (du / f"{FAM}_v2.json").write_text(json.dumps(pl("just_a_name.json"),
+                                                  indent=1, sort_keys=True) + "\n")
+    try:
+        resolve_head(du, FAM)
+        unsup = "NOT REFUSED"
+    except ChainRefused as e:
+        unsup = str(e).split(":")[0]
+    ok(unsup == "LINK_SHAPE_UNSUPPORTED",
+       f"CELL 7 an unfollowable shape is REFUSED BY NAME ({unsup}), never "
+       f"reported as an orphan")
+    print()
+    print(f"{ok_n} cells, {len(fails)} failures")
+    return 1 if fails else 0
+
+
+if __name__ == "__main__":
+    import sys as _sys
+    if "--falsify" in _sys.argv:
+        raise SystemExit(_falsify())
+    print("usage: declaration_chain.py --falsify")
+    raise SystemExit(2)
