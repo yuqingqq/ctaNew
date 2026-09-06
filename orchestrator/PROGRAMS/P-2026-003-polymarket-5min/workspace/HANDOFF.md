@@ -1,5 +1,133 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T03:12:12Z — **USER RULING: V2 Gate 1's control is the REPLAY
+NULL, on five NAMED days, and it decides the §7 stopping rule and nothing
+else.** Gate 1 is 1 of 7; 09-05 stays sealed. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 110
+
+### 1. The ruling, and the clause that carries it
+
+**Gate 1's control is the replay null** — random decisions, same count and side
+split, drawn from **the arm's own decision population at its own theta**,
+replayed through the **same** stateful cascade. **The exact-fiber sampler is
+WITHDRAWN**, not failed-and-retried: its bars were pre-declared, are not
+widened, and the instrument is replaced.
+
+≥500 draws per arm per day, **declared and committed before the first draw**;
+cluster unit UTC day; m = 2; metric = net value delta at **E0**.
+
+> **§7 is evaluated on this run and nothing else. If either arm fails to beat
+> the replay null at day-cluster level, the harmful-fill route STOPS.**
+
+**And item 6 is the whole protection:** design and null committed **before data
+is touched**, with **the reviewer filing on the design first.** That order is the
+only thing separating this run from the three consumed windows behind it.
+
+### 2. Five named days, and the bar equals the supply
+
+**09-01…09-05 are the only admissible complete days that exist.** 08-29 lies
+entirely in `clob_v3_1`; 08-30 and 08-31 **straddle** era boundaries;
+08-26…08-28 carry no era block. *There is no slack anywhere.*
+
+They stay usable **only because the race scored a different object on them
+(`1b53929`) and every score is SEALED AND UNREAD** — so nothing has been chosen
+on them. **The unseal hold now protects Gate 1's design, not just the race.**
+
+**Gates 2–6, if reached, need FIVE FURTHER days — 09-06 onward, earliest
+complete 09-10, readable 09-11.**
+
+**Open, routed to DA:** the consumed 08-24 development hour **predates
+`clob_v4_1`**, and its era status for sub-second features is **unrecorded** —
+a limit on *every economic number this programme currently has.*
+
+### 3. The boundary distinction — and the re-import risk is already in the code
+
+CLAUDE.md rule 5's `recv_ns >= 1787579334881534478` is the **Binance** hf_ws_v2
+stamp boundary. **P-003's admissibility is the collector ERA ruling**
+(`clob_v4_1` from 2026-08-31T22:00:02.274534Z).
+
+> **I checked whether the confusion is hypothetical. It is not.** That literal
+> appears **27 times** in `live/pm_research/`, and **two P-003 modules bind it to
+> a name that means the other thing**: `harmful_candidate_manifest.py:38`
+> **`ERA_BOUNDARY_NS`** and `da_topup_receipt.py:71` **`ERA_FLOOR_RECV_NS`**.
+
+**I am not claiming those uses are wrong** — they appear to govern the Binance
+feed P-003 consumes, and `da_fair_price_identity.py:417` labels the same value
+"hf_ws_v2 stamp boundary". **The claim is about vocabulary:** *"the era
+boundary" names two different instants, and grepping `ERA_BOUNDARY` in this
+programme's own code finds the Binance one.* **That is how the drafting error
+happened, and the source makes it easy to repeat.**
+
+### 4. My `cascade_spread` invariance was vacuous, not wrong
+
+I carried, since round 104: *"1.9398838 under BOTH baselines, computed inside
+the emission — the ordering finding is invariant."*
+
+**The invariance held only because the denominator was SHARED:**
+`(n_C/B)/(n_H/B) = n_C/n_H` — **B cancels.** Under per-arm rates it becomes
+`(n_C/n_H)·(B_H/B_C)`.
+
+**My own arithmetic:** `1.9398838090426878 × 0.8055274 = 1.5626295610002527`,
+matching the reviewer's 1.5626296 and DE's emitted **1.562630032178208**. At the
+artifact (sha `19479bc6064bc14a`): `..._is_invariant_to_the_baseline_choice`
+**FALSE**, `ordering_is_invariant` **TRUE**.
+
+> **The ordering survives and must be RE-DERIVED per arm-local null, not
+> inherited.** And the lesson is mine: **a correctly computed number can still be
+> a tautology.** Rule 10 protects against *printed* conclusions, not *vacuous*
+> ones — and I recorded "computed, not asserted" as though that settled it.
+
+*DE computed the cost before the reviewer filed it, which is the right order.*
+
+### 5. A SIGKILL still defers — third variant, and it survived the fix
+
+`Killed` is written by the **parent shell to its own stderr** and never reaches
+`> "$_mlog" 2>&1`, so the marker is **dead code that has never matched**. A
+builder that prints the token and is then killed → DEFERRED → rc 2 → success.
+**The C-1 token fix did not touch it, so the hole survived the fix meant to
+close this class.** Prose match, then mixed log, now a kill signal.
+
+**Fix at a signal the log cannot forge:** DEFERRED requires the builder's **own
+exit code `_mrc == 1`**; any other non-zero rc is FAILURE. *Keying on the
+process's exit status rather than on anything the process wrote is the
+difference between a signal and a claim.* DA 56.
+
+### 6. Two of my open items close
+
+- **The midnight unit is LIVE** — C-1-fixed, installed 02:51:29Z, identical to
+  repo, confirmed at the daemon **and by behaviour**. Q-DA-266's *"4 behind and
+  dirty"* was **true at 02:49Z and overtaken by pulls at 02:51Z** — *a claim with
+  an as-of resolved cleanly where one without would have festered.*
+- **The 1,309 is explained as a filter stage**, so **my round-109 inference —
+  "one published population block is wrong" — is withdrawn as stated.** Two
+  counts can both be right if they count at different stages. **Marked
+  EXPLAINED, not RESOLVED:** the reviewer's check and BE's confirmation are both
+  outstanding.
+
+### 7. My instrument caught the same rename a third time — before it shipped
+
+The ORPHAN check fired on `cascade_baseline_contested_but_the_spread_is_invariant`
+after I renamed the flag and left its provenance key behind. **Third consecutive
+occasion.**
+
+> **The discipline has failed three times; the audit-first order has caught it
+> three times.** That is the case for the instrument, demonstrated on my own
+> file, and it is why the counts moved before the sentence this round too.
+
+**Measured before writing: 577 flags, 53 CHECKED, 69 RELAYED, 455 UNMARKED,
+0 findings; `flag_provenance` 122; tasks 19.**
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — three named axes, none
+built; **455 of 577 flags never audited for staleness.** DA is at ~75% and holds
+the 08-24 era audit; **I am at ~14%.**
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T02:51:45Z — **A remedy these files carried for two rounds does
 not work, and I reproduced the counterexample myself.** 09-05 stays sealed and
 unread; Gate 1 unmoved, **1 of 7**. Economics: `RESULTS.md` §0.

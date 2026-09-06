@@ -63,6 +63,64 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T03:12:12Z (MEM ROUND 110 -- R-547 AND R-548 SWEPT. STATE ONLY.
+  (1) USER RULING, VERBATIM IN R-547(A): V2 GATE 1'S CONTROL IS THE REPLAY NULL
+  -- random decisions, same count and side split, drawn from THE ARM'S OWN
+  decision population at ITS OWN theta, replayed through the SAME cascade. THE
+  EXACT-FIBER SAMPLER IS WITHDRAWN, not failed-and-retried. >=500 draws per arm
+  per day DECLARED BEFORE THE FIRST DRAW; cluster unit UTC day; m = 2; metric
+  net value delta at E0. AND THE SECTION 7 STOPPING RULE IS EVALUATED ON THIS
+  RUN AND NOTHING ELSE: if either arm fails to beat the replay null at
+  day-cluster level, THE HARMFUL-FILL ROUTE STOPS. Design and null committed
+  BEFORE data; THE REVIEWER FILES ON THE DESIGN FIRST -- which is the whole
+  protection, and the only thing separating this from the three consumed
+  windows behind it.
+  (2) THE DAYS ARE NAMED AND THERE IS NO SLACK: 09-01..09-05 are THE ONLY FIVE
+  ADMISSIBLE COMPLETE DAYS IN EXISTENCE (08-29 entirely clob_v3_1; 08-30 and
+  08-31 STRADDLE era boundaries; 08-26..08-28 carry no era block). The bar and
+  the supply are the same five days. They are untouched for Gate 1 BECAUSE THE
+  RACE SCORED A DIFFERENT OBJECT ON THEM AND EVERY SCORE IS SEALED AND UNREAD --
+  so the unseal hold now protects Gate 1's design, not just the race.
+  CONSEQUENCE: GATES 2-6 NEED FIVE FURTHER DAYS, 09-06 ONWARD, EARLIEST
+  COMPLETE 09-10, READABLE 09-11.
+  (3) THE ADMISSIBILITY BOUNDARY IS THE ERA RULING, NOT THE BINANCE CLOCK -- and
+  I CHECKED THE RE-IMPORT RISK MYSELF AND FOUND IT IS NOT HYPOTHETICAL. CLAUDE.md
+  rule 5's 1787579334881534478 governs mm_hf tape. IT ALSO APPEARS 27 TIMES IN
+  live/pm_research/, AND TWO P-003 MODULES BIND IT TO A NAME THAT MEANS THE
+  OTHER THING -- harmful_candidate_manifest.py:38 ERA_BOUNDARY_NS and
+  da_topup_receipt.py:71 ERA_FLOOR_RECV_NS. I make NO claim those uses are wrong
+  (they appear to govern the Binance feed P-003 consumes, and one is even
+  labelled hf_ws_v2). THE CLAIM IS ABOUT VOCABULARY: "the era boundary" names
+  two different instants, and grepping ERA_BOUNDARY in THIS programme's code
+  finds the Binance one. That is how the drafting error happened and the source
+  makes it easy to repeat.
+  (4) MY cascade_spread INVARIANCE FLAG IS CORRECTED AND I DID THE ARITHMETIC
+  MYSELF: 1.9398838090426878 x 0.8055274 = 1.5626295610002527, matching the
+  reviewer's 1.5626296 and DE's emitted 1.562630032178208. THE INVARIANCE HELD
+  ONLY BECAUSE THE DENOMINATOR WAS SHARED -- (n_C/B)/(n_H/B) = n_C/n_H, B
+  CANCELS. Read at DE's artifact (sha 19479bc6064bc14a):
+  cascade_spread_is_invariant_to_the_baseline_choice FALSE,
+  ordering_is_invariant TRUE. SO THE ORDERING SURVIVES AND MUST BE RE-DERIVED
+  PER ARM-LOCAL NULL, NOT INHERITED. AND THE LESSON IS MINE: A CORRECTLY
+  COMPUTED NUMBER CAN STILL BE A TAUTOLOGY -- rule 10 protects against printed
+  conclusions, not vacuous ones, and I recorded "computed, not asserted" as
+  though that settled it.
+  (5) A SIGKILL STILL DEFERS -- the third variant of one defect, and IT SURVIVED
+  THE FIX MEANT TO CLOSE THE CLASS. "Killed" is written by the PARENT SHELL to
+  its own stderr and never reaches the log, so the marker is DEAD CODE that has
+  never matched. Fix at a signal the log cannot forge: DEFERRED requires the
+  builder's OWN exit code _mrc == 1. DA 56.
+  (6) MY ROUND-106 INSTALL FLAG IS RESOLVED: the C-1-fixed unit is live,
+  identical to repo, confirmed at the daemon and by behaviour. Q-DA-266's "4
+  behind and dirty" was TRUE AT 02:49Z AND OVERTAKEN BY PULLS AT 02:51Z -- a
+  claim with an as-of resolving cleanly where one without would have festered.
+  (7) THE 1,309 IS EXPLAINED AS A FILTER STAGE, SO MY "one published population
+  block is wrong" IS WITHDRAWN AS STATED -- two counts can both be right if they
+  count at different stages. Marked EXPLAINED, NOT RESOLVED: the reviewer's
+  check and BE's confirmation are both outstanding.
+  (8) DA IS AT ~75% CONTEXT, light batch, reset at 80, and it holds the 08-24
+  era audit and the recompute declaration. I am at ~14%.
+  PRIOR CHECKPOINT:
   2026-09-06T02:51:45Z (MEM ROUND 109 -- R-546 SWEPT. STATE ONLY, AND THE
   CENTRAL ITEM IS A REMEDY OF MINE THAT DOES NOT WORK.
   (1) PYTHONDONTWRITEBYTECODE=1 DOES NOT CLOSE THE STALE-PYCACHE HAZARD, AND I
@@ -1360,7 +1418,27 @@ flags:
                              # A ceiling that does not bind is not a failure of
                              # the ceiling; it is the answer that the headroom
                              # has to be defended some other way.
-  midnight_unit_installed: SUPERSEDED-THE-INSTALLED-COPY-PREDATES-THE-C1-FIX
+  midnight_unit_installed: RESOLVED-C1-FIXED-UNIT-LIVE-AND-CONFIRMED-AT-THE-DAEMON
+                             # RESOLVED 2026-09-06T03:12:12Z. Both halves of what
+                             # I left open at round 109 are closed.
+                             # THE C-1-FIXED UNIT IS INSTALLED, 02:51:29Z,
+                             # identical to repo (sha 4c804c6ec0abff7f),
+                             # CONFIRMED AT THE DAEMON AND BY BEHAVIOUR from the
+                             # main tree at 664f8a1 (Q-DA-267). So the mixed-log
+                             # failure mode is no longer live on the machine, and
+                             # "installed" now means "fixed".
+                             # AND Q-DA-266's "4 behind and dirty" IS CLOSED, not
+                             # refuted: R-547(E) checked at 02:52:11Z -- main
+                             # tree 664f8a1, 0 behind, clean; ExecStart runs the
+                             # main tree. DA'S MEASUREMENT WAS TRUE AT 02:49Z AND
+                             # WAS OVERTAKEN BY PULLS AT 02:51Z. I named it as
+                             # unadopted at round 109 rather than carrying it as
+                             # a defect; three minutes was the whole of it, and
+                             # a claim with an as-of resolved cleanly where a
+                             # claim without one would have festered.
+                             # Next run Mon 2026-09-07 00:06:00Z.
+                             # EARLIER VALUE (rule 13):
+                             # SUPERSEDED-THE-INSTALLED-COPY-PREDATES-THE-C1-FIX
                              # QUALIFIED 2026-09-06T02:51:45Z. THE DEPLOY FACTS
                              # BELOW STAND; WHAT IS INSTALLED IS NO LONGER WHAT
                              # SHOULD BE.
@@ -1506,7 +1584,64 @@ flags:
                              # cascade_spread_under_the_other_baseline is the
                              # SAME VALUE, both in the file -- the ordering
                              # finding is invariant, computed and not asserted.
-  two_cache_counts_29813_vs_31122: BOTH-EMITTED-NEITHER-PREFERRED
+  two_cache_counts_29813_vs_31122: EXPLAINED-AS-A-FILTER-STAGE-PENDING-TWO-CONFIRMATIONS
+                             # UPDATED 2026-09-06T03:12:12Z. RELAYED from
+                             # R-548(A): the 1,309-generation gap is explained as
+                             # A FILTER STAGE IN ONE PIPELINE, NOT TWO CACHES.
+                             # SO MY ROUND-109 READING -- "one published
+                             # population block is wrong" -- IS WITHDRAWN AS
+                             # STATED. It was the right thing to record as an
+                             # open disagreement and the wrong inference to draw
+                             # from it: two counts of a thing can both be right
+                             # if they count it at different stages, and I
+                             # jumped to a contradiction where a pipeline
+                             # explains it.
+                             # STILL PENDING TWO CONFIRMATIONS AND NOT CLOSED:
+                             # the reviewer's check of DE's explanation, and BE's
+                             # confirmation of its own half (BE 46). Marked
+                             # explained, NOT resolved.
+  sigkill_still_defers_fix_at_the_exit_code: THE-Killed-MARKER-IS-DEAD-CODE
+                             # RELAYED from R-548(C), the reviewer's A-1,
+                             # REPRODUCED BY THE REVIEWER.
+                             # A builder that prints
+                             # MASK_STATUS=CONTENT_LIVENESS_UNJUDGEABLE and is
+                             # then SIGKILLed leaves a log holding THE TOKEN AND
+                             # NOTHING ELSE -- because "Killed" is written by the
+                             # PARENT SHELL to ITS OWN stderr, never into
+                             # > "$_mlog" 2>&1. Conjunct (a) holds, (b) finds no
+                             # marker, DEFERRED, rc 2, SUCCESS.
+                             # THE Killed MARKER IS DEAD CODE. It has never
+                             # matched and never could, and the C-1 token fix did
+                             # not touch it -- SO THE HOLE SURVIVED THE FIX THAT
+                             # WAS SUPPOSED TO CLOSE THIS CLASS. Third variant of
+                             # one defect: prose match, then mixed log, now a
+                             # kill signal.
+                             # THE FIX IS AT A SIGNAL THE LOG CANNOT FORGE:
+                             # DEFERRED requires the builder's OWN REFUSAL EXIT
+                             # CODE _mrc == 1; ANY OTHER NON-ZERO rc IS FAILURE.
+                             # DA 56. Keying on the process's exit status rather
+                             # than on anything the process WROTE is the
+                             # difference between a signal and a claim.
+                             # ALSO FROM THE FILING: the token has EXACTLY TWO
+                             # WRITERS (:1509 refusal, :1512 OK), provable from
+                             # the source; the fixture rot CANNOT RECUR because a
+                             # clock-derived offset has no fixed instant; and the
+                             # battery block is GENUINELY PRODUCED BY THE RUN
+                             # (26 per-check label strings -- a copied count
+                             # cannot fabricate them), which closes the
+                             # reviewer's own section 1.7 gap from two rounds ago.
+  da_is_at_75_percent_context: LIGHT-BATCH-THEN-RESET-AT-80
+                             # RELAYED from R-548(B). DA reports ~75% context;
+                             # its next batch is LIGHT, it STOPS AT 80% for a
+                             # seat reset, and it TAKES NOTHING NEW after that.
+                             # P-2026-002's E2.0 has no free seat this round and
+                             # goes to THE FIRST SEAT THAT RESETS FRESH -- which
+                             # is DA. Recorded here because a reset is the one
+                             # event that loses context that is not in a file,
+                             # and DA currently holds the era audit of the 08-24
+                             # hour and the independent-recompute declaration.
+                             # I AM AT ~14% AND WILL SAY SO AT 80%.
+
                              # RELAYED from R-546(C), routed to BE 46. BE's
                              # population block reports 29,813 generations from
                              # de_section81_cache_12.pkl; DE counts 31,122 from
@@ -1532,7 +1667,46 @@ flags:
                              # out of view instead of showing up as a mismatch.
                              # DA 55 reads both and ASSERTS AGREEMENT, which
                              # turns the coincidence into a check.
-  cascade_baseline_contested_but_the_spread_is_invariant: 1.9398838-UNDER-BOTH-BASELINES
+  cascade_spread_invariance_holds_under_SHARED_denominators_only: 1.9399-SHARED-1.5626-PER-ARM
+                             # CORRECTED 2026-09-06T03:12:12Z, AND I DID THE
+                             # ARITHMETIC MYSELF RATHER THAN RELAY IT.
+                             # WHAT I CARRIED SINCE ROUND 104: "cascade_spread =
+                             # 1.9398838090426878 under BOTH baselines, computed
+                             # inside the emission -- cheap fills first, few
+                             # fills second is INVARIANT to the choice."
+                             # WHY IT WAS VACUOUS AS EVIDENCE, WHICH IS WORSE
+                             # THAN BEING WRONG: the invariance held ONLY BECAUSE
+                             # THE DENOMINATOR WAS SHARED. (n_C/B)/(n_H/B) =
+                             # n_C/n_H -- B CANCELS. Under per-arm rates it
+                             # becomes (n_C/n_H)*(B_H/B_C).
+                             # MY OWN COMPUTATION: 1.9398838090426878 x
+                             # 0.8055274 = 1.5626295610002527, matching the
+                             # reviewer's 1.5626296 and DE's emitted
+                             # 1.562630032178208.
+                             # READ BY ME AT
+                             # de_section81_arms__20260906T025943Z.json (sha256
+                             # 19479bc6064bc14a):
+                             # cascade_spread_is_invariant_to_the_baseline_choice
+                             # = FALSE; cascade_spread = 1.562630032178208;
+                             # cascade_spread_under_the_other_baseline =
+                             # 1.9398838090426878;
+                             # ordering_is_invariant_to_the_baseline_choice =
+                             # TRUE.
+                             # SO THE ORDERING SURVIVES AND MUST BE RE-DERIVED
+                             # PER ARM-LOCAL NULL, NOT INHERITED. "Cheap fills
+                             # first, few fills second" stands as a finding and
+                             # NOT as a consequence of the old spread.
+                             # AND THE LESSON IS MINE: AN INVARIANCE THAT IS AN
+                             # ALGEBRAIC IDENTITY OF THE DENOMINATOR IS NOT
+                             # EVIDENCE OF ANYTHING. I recorded "computed inside
+                             # the emission, not asserted" as though computation
+                             # settled it -- BUT A CORRECTLY COMPUTED NUMBER CAN
+                             # STILL BE A TAUTOLOGY, and rule 10 protects against
+                             # printed conclusions, not against vacuous ones.
+                             # DE COMPUTED THE COST BEFORE THE REVIEWER FILED IT,
+                             # which is the right order and worth saying.
+                             # EARLIER VALUE (rule 13):
+                             # 1.9398838-UNDER-BOTH-BASELINES
                              # RELAYED from R-543(B). DE accepted BE's finding
                              # AT THE CODE -- 1.1176 is fills per FILLING
                              # generation and CONDITIONS ON THE OUTCOME THE NULL
@@ -1764,6 +1938,128 @@ flags:
                              # 582.5587255292 -- DE's arithmetic correction to
                              # the specification's sizing, carried in the receipt
                              # rather than argued in prose.
+  p003_admissibility_is_the_ERA_ruling_not_the_binance_boundary: AND-THE-NAME-COLLIDES-IN-P003-CODE
+                             # CHECKED 2026-09-06T03:12:12Z, and this is the
+                             # distinction the brief asked me to flag so nobody
+                             # re-imports the wrong boundary. I FOUND THE
+                             # COLLISION IS NOT HYPOTHETICAL.
+                             # THE TWO BOUNDARIES. CLAUDE.md rule 5 (lines
+                             # 111-112) fixes "Sub-second-reliable BINANCE data
+                             # exists ONLY from 2026-08-24 13:48:54 UTC
+                             # (recv_ns >= 1787579334881534478, the hf_ws_v2
+                             # stamp boundary)". THAT GOVERNS mm_hf TAPE.
+                             # P-003'S ADMISSIBILITY IS THE COLLECTOR ERA RULING
+                             # CARRIED IN EVERY DAY VERDICT: clob_v3_1 NOT
+                             # admissible, clob_v4 NOT admissible, clob_v4_1
+                             # ADMISSIBLE FROM 2026-08-31T22:00:02.274534Z.
+                             # (Era values relayed from R-547(B)/(C); I did not
+                             # open the verdicts.)
+                             # WHAT I FOUND MYSELF, AND IT SHARPENS THE WARNING:
+                             # THE BINANCE LITERAL IS ALREADY RESIDENT IN P-003's
+                             # OWN CODE -- 27 occurrences of 1787579334881534478
+                             # across live/pm_research/ and this programme's
+                             # workspace -- AND TWO MODULES BIND IT TO A NAME
+                             # THAT MEANS THE OTHER THING:
+                             # harmful_candidate_manifest.py:38
+                             # `ERA_BOUNDARY_NS = 1787579334881534478` and
+                             # da_topup_receipt.py:71
+                             # `ERA_FLOOR_RECV_NS = 1787579334881534478`.
+                             # I AM NOT CLAIMING THOSE USES ARE WRONG. They
+                             # appear to govern the Binance/HF tape that P-003
+                             # consumes for fair-price features, which genuinely
+                             # IS subject to rule 5 --
+                             # da_fair_price_identity.py:417 even labels it
+                             # "hf_ws_v2 stamp boundary". I HAVE NOT AUDITED
+                             # THEIR CALL SITES AND MAKE NO CLAIM ABOUT
+                             # CORRECTNESS.
+                             # THE CLAIM IS ABOUT THE VOCABULARY: "THE ERA
+                             # BOUNDARY" NAMES TWO DIFFERENT INSTANTS IN THE TWO
+                             # PROGRAMMES, AND P-003 MODULES USE THE BINANCE ONE
+                             # UNDER THAT NAME. The two ledgers are separate too
+                             # -- data/mm_hf/collector_runs.jsonl and
+                             # data/pm_5min/collector_runs.jsonl both exist.
+                             # SO THE RE-IMPORT RISK IS NOT SOMEONE FETCHING A
+                             # FOREIGN CONSTANT; IT IS SOMEONE GREPPING
+                             # "ERA_BOUNDARY" IN THIS PROGRAMME'S OWN CODE AND
+                             # FINDING THE BINANCE ONE. That is how the
+                             # coordinator's drafting error happened, and the
+                             # source makes it easy to repeat.
+  v2_gate1_control_is_the_replay_null: USER-RULING-R-547-EXACT-FIBER-SAMPLER-WITHDRAWN
+                             # RELAYED from R-547(A), the USER's ruling, quoted
+                             # verbatim in the entry: "Rule as drafted."
+                             # (1) CONTROL. Gate 1's acting matched control IS
+                             # THE REPLAY NULL: random decisions, SAME COUNT and
+                             # SAME SIDE SPLIT as the arm, drawn from THE ARM'S
+                             # OWN decision population at THE ARM'S OWN theta,
+                             # replayed through the SAME stateful policy cascade.
+                             # THIS WITHDRAWS THE EXACT-FIBER MATCHED SAMPLER --
+                             # iid, ESS>=100, quota -- which refused three ways.
+                             # THREE REFUSALS THAT COST A DAY ARE NOW A
+                             # WITHDRAWN INSTRUMENT, NOT A FAILED RESULT: the
+                             # bars they failed were pre-declared and are not
+                             # widened; the instrument is replaced.
+                             # (2) SAMPLE: >=5 complete admissible UTC days,
+                             # NAMED BEFORE ANY RUN and recorded in the register;
+                             # 08-20..08-25 consumed and excluded; NO threshold,
+                             # window or feature chosen on these days.
+                             # (3) NULL: >=500 draws per arm per day, DECLARED
+                             # AND COMMITTED BEFORE THE FIRST DRAW; cluster unit
+                             # UTC day; intervals only at G >= 5; multiplicity
+                             # m = 2 declared.
+                             # (4) METRIC: net value delta at E0; E-R as
+                             # robustness. Unchanged from R-537.
+                             # (5) OUTCOME: THE SECTION 7 STOPPING RULE IS
+                             # EVALUATED ON THIS RUN AND NOTHING ELSE. If either
+                             # arm fails to beat the replay null on the decision
+                             # metric AT DAY-CLUSTER LEVEL, THE HARMFUL-FILL
+                             # ROUTE STOPS. If an arm beats it, Gates 2-6 proceed
+                             # ON DAYS NOT USED HERE.
+                             # (6) FREEZE: the plan's Gate 1 text is amended to
+                             # cite the ruling and THE OLD TEXT STAYS AS
+                             # PROVENANCE; design and null committed BEFORE data
+                             # is touched; THE REVIEWER FILES ON THE DESIGN
+                             # FIRST.
+                             # THE ORDER IN (6) IS THE WHOLE PROTECTION: a
+                             # declaration reviewed before any draw is the only
+                             # thing separating this from the three consumed
+                             # windows behind it.
+  the_five_named_days_are_the_only_admissible_days_that_exist: 09-01-TO-09-05-AND-GATES-2-6-NEED-FIVE-MORE
+                             # RELAYED from R-547(C), read by the coordinator at
+                             # the day verdicts at 03:06Z; I did not open them.
+                             # 08-26..08-28 carry NO era-admission block
+                             # (pre-ruling verdicts). 08-29 lies ENTIRELY in
+                             # clob_v3_1 -- inadmissible. 08-30 STRADDLES
+                             # clob_v3_1/clob_v4 (boundary 05:30:02Z) --
+                             # inadmissible. 08-31 STRADDLES clob_v4/clob_v4_1
+                             # (boundary 22:00:02Z) -- inadmissible. 09-01..09-05
+                             # are each ERA-PURE in clob_v4_1, FINISHED,
+                             # ADMISSIBLE, HEALTHY and accrued.
+                             # SO THERE ARE EXACTLY FIVE ADMISSIBLE COMPLETE DAYS
+                             # IN EXISTENCE AND THEY ARE THE RACE DAYS. The bar
+                             # and the supply are the same five days; there is no
+                             # slack anywhere.
+                             # WHY THEY ARE STILL UNTOUCHED FOR GATE 1: the arms'
+                             # thetas were fixed on the consumed 08-24 hour, and
+                             # the race scored A DIFFERENT OBJECT on them (the
+                             # frozen candidate 1b53929) with EVERY SCORE SEALED
+                             # AND UNREAD -- so nothing has been chosen on them.
+                             # That argument depends on the seal holding, which
+                             # is why the unseal hold matters more now than it
+                             # did when it was made.
+                             # THE CONSEQUENCE, STATED NOW SO IT IS NOT
+                             # DISCOVERED LATER: "days not used here" means
+                             # GATES 2-6, IF REACHED, NEED FIVE FURTHER
+                             # ADMISSIBLE DAYS -- 09-06 onward, EARLIEST COMPLETE
+                             # SET 09-10, READABLE 09-11.
+                             # The race unseal (R-544(B)) is UNAFFECTED: it reads
+                             # the frozen candidate's scores, not the arms.
+                             # OPEN, ROUTED TO DA AND NOT A RULING: the consumed
+                             # development hour (08-24 13:50-14:50Z) PREDATES
+                             # clob_v4_1; its era status for sub-second features
+                             # is UNRECORDED in the section 8.1 receipts and must
+                             # be stated as a limit on every number derived from
+                             # it -- which is every economic number this
+                             # programme currently has.
   ruled_run_declared_bar_two_endpoints: E0-AND-E_MINUS_R-CHARGE-ENDPOINT-COLLAPSED
                              # RELAYED from R-540(A), the reviewer's
                              # specification at 01edfd2, ADOPTED AS THE DECLARED
@@ -9317,6 +9613,29 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T03:12:12Z, THE USER HAS RULED V2 GATE 1'S CONTROL: THE
+  REPLAY NULL, ON FIVE NAMED DAYS, DECIDING THE SECTION 7 STOPPING RULE AND
+  NOTHING ELSE. The exact-fiber sampler is WITHDRAWN. >=500 draws per arm per
+  day declared before the first draw, cluster unit UTC day, m = 2, metric at E0
+  -- and DESIGN AND NULL ARE COMMITTED BEFORE DATA IS TOUCHED, WITH THE REVIEWER
+  FILING ON THE DESIGN FIRST. If either arm fails to beat the replay null at
+  day-cluster level, THE HARMFUL-FILL ROUTE STOPS.
+  THE DAYS ARE 09-01..09-05 AND THEY ARE THE ONLY ADMISSIBLE COMPLETE DAYS THAT
+  EXIST -- the bar and the supply are the same five days. They stay usable only
+  because the race scored a different object on them and EVERY SCORE IS SEALED
+  AND UNREAD, so the unseal hold now protects Gate 1's design as well as the
+  race. GATES 2-6 WOULD NEED FIVE FURTHER DAYS, READABLE 09-11.
+  ADMISSIBILITY IS THE COLLECTOR ERA RULING, NOT CLAUDE.md RULE 5's BINANCE
+  BOUNDARY -- and the re-import risk is live, because that literal sits 27 times
+  in this programme's own code under names like ERA_BOUNDARY_NS.
+  MY cascade_spread INVARIANCE IS CORRECTED: it held only because the
+  denominator was SHARED (1.9399 shared, 1.5626 per-arm, arithmetic done by me).
+  The ORDERING survives and must be RE-DERIVED per arm-local null, not
+  inherited. A SIGKILL still defers -- the third variant of one defect, and it
+  survived the fix meant to close the class -- routed to the exit code.
+  The midnight unit is LIVE and confirmed. 09-05 stays SEALED. Gate 1 is 1 of 7.
+  Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T02:51:45Z, RETAINED BELOW --
   AS-OF 2026-09-06T02:51:45Z, A REMEDY THESE FILES CARRIED FOR TWO ROUNDS DOES
   NOT WORK, AND I REPRODUCED THE COUNTEREXAMPLE MYSELF:
   PYTHONDONTWRITEBYTECODE=1 SUPPRESSES WRITING BYTECODE AND DOES NOTHING ABOUT
@@ -10106,6 +10425,65 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 110, 2026-09-06T03:12:12Z ------------------------------
+  p003_admissibility_is_the_ERA_ruling_not_the_binance_boundary:
+    prov: CHECKED
+    artifact: live/pm_research/harmful_candidate_manifest.py
+    as_of: 2026-09-06T03:12:12Z
+    said: >-
+      CLAUDE.md lines 111-112 fix the Binance boundary as recv_ns >=
+      1787579334881534478, the hf_ws_v2 stamp boundary, governing mm_hf tape.
+      grep for that literal across live/pm_research/ and this programme's
+      workspace returns 27 occurrences, and two of them bind it to a name that
+      means P-003's other boundary: this file's line 38
+      `ERA_BOUNDARY_NS = 1787579334881534478` and da_topup_receipt.py:71
+      `ERA_FLOOR_RECV_NS = 1787579334881534478`; da_fair_price_identity.py:417
+      labels the same value "hf_ws_v2 stamp boundary". P-003's own era values
+      (clob_v4_1 admissible from 2026-08-31T22:00:02.274534Z) are RELAYED from
+      R-547(B)/(C) -- I did not open the day verdicts. I make no claim that the
+      27 uses are wrong; the claim is that the NAME collides.
+  cascade_spread_invariance_holds_under_SHARED_denominators_only:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/de_section81_arms__20260906T025943Z.json
+    as_of: 2026-09-06T03:12:12Z
+    said: >-
+      sha256 begins 19479bc6064bc14a;
+      cascade_spread_is_invariant_to_the_baseline_choice FALSE; cascade_spread
+      1.562630032178208; cascade_spread_under_the_other_baseline
+      1.9398838090426878; ordering_is_invariant_to_the_baseline_choice TRUE;
+      baseline_status RESOLVED_BY_REPLAY_CITATION; both arms'
+      published_headline_cross_check agree True at 8.701293309168168 vs 8.7013
+      and 5.568364315281405 vs 5.5684, tolerance 1e-3. I also computed the
+      reviewer's B-3 arithmetic myself: 1.9398838090426878 * 0.8055274 =
+      1.5626295610002527, matching both figures.
+  v2_gate1_control_is_the_replay_null:
+    prov: RELAYED
+    from: R-547(A), the USER's ruling quoted verbatim in the entry
+  the_five_named_days_are_the_only_admissible_days_that_exist:
+    prov: RELAYED
+    from: >-
+      R-547(C), read by the coordinator at the day verdicts at 03:06Z. I did not
+      open them; my standing practice on sealed forward days is unchanged.
+  midnight_unit_installed:
+    prov: RELAYED
+    from: >-
+      R-547(E) and Q-DA-267 -- installed 02:51:29Z, identical to repo (sha
+      4c804c6ec0abff7f), confirmed at the daemon and by behaviour. Resolves the
+      qualification I carried at round 109; Q-DA-266's "4 behind and dirty" was
+      true at 02:49Z and overtaken by pulls at 02:51Z.
+  two_cache_counts_29813_vs_31122:
+    prov: RELAYED
+    from: >-
+      R-548(A) -- explained as a filter stage in one pipeline, not two caches.
+      My round-109 inference that one published population block is wrong is
+      withdrawn as stated. Marked explained, NOT resolved: the reviewer's check
+      and BE's confirmation are both outstanding.
+  sigkill_still_defers_fix_at_the_exit_code:
+    prov: RELAYED
+    from: R-548(C), the reviewer's A-1, reproduced by the reviewer
+  da_is_at_75_percent_context:
+    prov: RELAYED
+    from: R-548(B)
   # --- MEM round 109, 2026-09-06T02:51:45Z ------------------------------
   mutation_audit_hazards_for_every_seat:
     prov: CHECKED
@@ -10304,9 +10682,6 @@ flag_provenance:
   rebate_ceiling_does_not_bind:
     prov: RELAYED
     from: R-543(A), DA 53
-  cascade_baseline_contested_but_the_spread_is_invariant:
-    prov: RELAYED
-    from: R-543(B)
   be_book_is_a_pickle_with_no_digest:
     prov: RELAYED
     from: R-543(C)
