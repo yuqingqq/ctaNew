@@ -63,6 +63,98 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T16:39:40Z (MEM ROUND 200 -- R-674 SWEPT, tip `ade9a96`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ. THE 09-04 SEALED RECEIPT WAS HASHED AND CENSUSED AND NOT
+  OPENED -- a digest is not a read -- and no field of it is quoted anywhere in this round.**
+  (1) ***THE UNIT WAS COLLECTED BETWEEN THEIR COPY AND MINE, AND IT STILL READS `success`.***
+  The journal stamps `Stopped de102smoke.service` at **16:37:12Z**. My five-field read at
+  **16:37:59Z** -- forty-seven seconds later -- returns `LoadState=not-found`,
+  `ActiveState=inactive`, `SubState=dead`, `InvocationID` **empty**, MemoryPeak **[not set]**,
+  ***and `Result=success` with `ExecMainStatus=0`***. **A COLLECTED UNIT READS AS DEFAULTS: my
+  reading is VOID, never "success".** *R-674 records the unit as readable after exit, copied by
+  the coordinator and by DE at ~16:34Z -- true then.* **The window CLOSED between their copy
+  and mine, and by an explicit stop rather than decay.** My round-179 "the pair is itself
+  perishable" finally has a MEASURED lifetime: readable 16:33:52-16:34Z, gone by 16:37:59Z.
+  (2) ***AND THE CLEANEST DEMONSTRATION OF R3' I HAVE MEASURED IS TWO UNITS MINUTES APART.***
+  `be66struct`'s last poll: `loaded / active / exited / success / 0` -- **a GENUINE success**,
+  readable precisely because the unit is still loaded. `de102smoke`: `not-found / inactive /
+  dead / success / 0` -- **VOID**. ***THE TWO ECONOMIC-LOOKING FIELDS ARE IDENTICAL. ONLY THE
+  TRIPLE SEPARATES THEM.***
+  (3) **THE 09-04 SEALED RECEIPT, CENSUSED:** `…_20260904_SEALED__20260906T163351Z.json`,
+  **49,650 B**, `37dd376befad0a31a374935d…`, mtime 16:33:52Z. The 09-04 day now carries TWO
+  records (STOPPED, SEALED) against 09-03's three (REFUSED, KILLED, SEALED): *every attempt is
+  a named status on disk and none was overwritten.*
+  (4) **THE RUNNER'S OWN EMIT LINE IS IN THE JOURNAL, AND THE JOURNAL OUTLIVES THE UNIT.**
+  `journalctl -u de102smoke.service` still returns its lines **after `LoadState=not-found`** --
+  the emit line at 16:33:52Z (`DAY_RUN_SEALED`, day 2026-09-04, both arms OK, `wall_s 5991.2`,
+  `peak_rss_mb 2821.6`, `lock_held true`, `no_tape_artifact_opened true`, `battery PASS`), the
+  `Stopped` line, and *Consumed 1h 39min 40.638s CPU time, 2.7G memory peak*. **I read the
+  unit's JOURNAL, not the receipt.** *The unit's five fields die with the unit; the journal does
+  not.*
+  (5) **THE LOCK IS FREE** -- `/proc/locks` matched by dev:inode returns no holder, the first
+  such reading this session.
+  (6) **BE's POLL ENDED IN A TAKE AND THE ARTIFACT SHOWS THE TRANSITION:** 89 attempts x 3
+  rows, **88 at `rc 75` and the 89th at `rc 0`**, take at 16:34:28Z, **zero refusals after**,
+  **89 distinct InvocationIDs of 89**. *BE took the lock the minute DE's unit released it.* At
+  round 199 I measured 60 as-of 16:05:30Z -- **the as-of is what makes 60 and 89 comparable
+  instead of looking like a correction.**
+  (7) ***SEVENTY-SEVEN VERSUS EIGHTY-NINE IS TWO POPULATIONS, NOT A CONTRADICTION.*** BE's
+  receipt says `attempts_to_take 77` / `refusals 76`; its record says 89 / 88. **Reconciled
+  exactly: the record is append-only across TWO poll sessions.** There is **exactly ONE cadence
+  gap over 120 s in the whole file** (15:14:39Z -> 15:17:41Z, **182 s against a 61 s median**),
+  and the attempt immediately after it is #13 -- **so attempts 13..89 = 77**, the receipt's own
+  number. *The receipt counts ITS session; the record accumulated across both.* **NEITHER
+  ARTIFACT NAMES ITS POPULATION.** Routed to BE as a missing population statement, **not a
+  defect in either number** -- *and I went looking for the innocent explanation before filing a
+  contradiction, the third time this session that discipline changed the answer.*
+  (8) **BE NAMES ITS OWN POLL DEFECT INSIDE THE ARTIFACT:** the poll block's `note` says the
+  poll classified the SUCCESSFUL completion as UNEXPECTED, having no branch for a run that
+  finishes inside the settle window, that the run is unaffected, and that the gap is fixed in
+  the batch. *A limitation stated where a reader will actually resolve it.*
+  (9) **THE STRUCTURE DECLARATION IS NOW VERIFIED AGAINST A REAL BOOK:**
+  `be_daybook_structure_verification_20260903_btc.json`, 2,841 B, `6694025c33708213`,
+  `all_hold TRUE` over 7 checks against `be_daybook_20260903_btc.pkl` (290,758,834 B),
+  `peak_rss_gb 2.079`, **`digest_pin.digest_checked_before_open: TRUE`**. *The declaration that
+  said OF ITSELF it was derived from producing code and not yet verified against a real book is
+  now verified against one.*
+  (10) ***AND FIVE OF MY OWN PROVENANCE POINTERS ROTTED IN THE SAME SECOND.*** The audit
+  returned **5 FINDINGS**, all one event: at round 197 it refused an entry for naming a RUNNING
+  UNIT, and I "fixed" it by pointing at the transient unit file -- *a real file, and still a
+  RUNTIME path*. **When the unit was collected the file went with it and four entries from
+  rounds 197-199 rotted at once**, plus this round's journal entry, which is not a path at all.
+  ***A RUNTIME PATH IS NOT A DURABLE ARTIFACT; IT IS THE OBJECT'S SHADOW AND DIES WITH IT.***
+  Repointed at the run's own emitted receipt (censused, NOT opened) and at BE's record, **with
+  the rot NAMED in each `said:` rather than the pointer moved quietly**, and the reading now
+  stated for what it is: live at its as-of and no longer re-checkable. **The instrument is the
+  only reason I know.**
+  (11) **DA 97 HAS NOT LANDED:** five census records, one link, **four heads**, re-measured.
+  R-674 makes the link MANDATORY at DA 97 -- *the FORM I routed at round 199, where the link
+  was a flag and an omitted flag produced a head silently.* `477d367`, the tree the 09-04 run
+  was produced from, resolves: a real commit, an ancestor of `origin/mm-research`.
+  AT COMMIT TIME, UNSWEPT: **R-675 LANDED** (BE 66 verified, 165 checks) and it lands directly
+  on item (7). **THE REGISTER NOW CARRIES THE SESSION NUMBER: R-675 says the lock was taken
+  "after 76 counted refusals" and names the take as "attempt 77"** -- *the receipt's population,
+  exactly the one I reconciled* -- **while BE's launch record for the same unit shows 88
+  refusals across 89 attempts.** Both right, neither naming its population, and the routing is
+  now demonstrably not pedantry: the programme's own authority document and the producing
+  artifact disagree by twelve on a quantity they both call "counted refusals". ***AND I CHECKED
+  A THIRD NUMBER BEFORE CLAIMING IT:*** the register also contains "after 78 counted refusals",
+  but that is **R-612, BE 58, a DIFFERENT RUN** -- not a third count of this one. *Fourth time
+  this session that checking before filing changed the answer.* R-675 also confirms the rest at
+  the same values I measured independently: the structure verification's digest pinned before
+  the pickle was opened, 7 of 7 claims, `6694025c33708213`, and be66struct's five fields read
+  **while loaded, before the stop** (`loaded / active / exited / success / 0`, id
+  `10cc3fcd…`) -- *the discipline whose absence made my de102smoke reading VOID forty-seven
+  seconds after its stop.* **The structure declaration is superseded in band and I drove the
+  chain: v1 `ea1e88595844e800` -> v2 `0fa3c6db8750857f` by the pair, v2 the SOLE head, v1
+  untouched.** And BE reports three defects against itself, one of them a **24.5 KB deletion of
+  thirteen definitions** made by replacing a span between two anchors without reading between
+  them -- *CLAUDE.md's "do not slice source by index" rule, paid for again* -- caught by the
+  batteries, restored from HEAD, with an assert now refusing any span over 3 KB. **Noted in
+  band; the round-200 flags above are not edited (rule 13).**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,261 -> 1,272; flag_provenance 806 -> 817;
+  tasks 19; **559 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-SIXTH round unchanged.**
+  ORPHAN audit: 5 findings, all repointed, re-run to **0**. Q-MEM-188 filed.)
   2026-09-06T16:06:30Z (MEM ROUND 199 -- R-673 SWEPT, tip `4c61210`. STATE ONLY. MEM ASSERTS
   NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- the absence of a 09-04
   receipt established by FILENAME CENSUS.**
@@ -201,101 +293,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,241 -> 1,251; flag_provenance 786 -> 796;
   tasks 19; **538 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-FOURTH round unchanged.**
   ORPHAN audit 0 findings. Q-MEM-186 filed.)
-  2026-09-06T15:46:30Z (MEM ROUND 197 -- R-671 SWEPT, tip `3427357`. STATE ONLY. MEM ASSERTS
-  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every version cell driven on
-  a SYNTHETIC receipt against the REAL v21/v23 design declarations.**
-  (1) ***R-671 NAMES TWO GUARDS ON THE SCOPE MAP; I DROVE FIVE CELLS AND THERE ARE THREE.***
-  A map **no function consults** REFUSES; a name in `ECONOMIC_FIELDS` **absent from the map**
-  REFUSES; and -- unnamed in R-671 -- **a scope bound INSIDE a function rather than at module
-  level** REFUSES too. *Positive control: DE's real source copied to another path ADMITS, 11
-  names, `design_version_in_force` 23, `referenced_by_functions` exactly
-  `['economic_fields_in_force']`.* An absent source REFUSES. **Every guard has a falsifier AND
-  the instrument has a control it admits** -- rule 15 satisfied by driving it, not by reading it.
-  (2) **THE VERSION-FROM-A-PAIR RESOLVER DRIVES CORRECTLY IN SEVEN CELLS, AND IT HASHES A
-  BASENAME.** Route (1) against the real `..._design_v21.json` (`a52b463c89498332`) resolves
-  **v21 with EIGHT names in force** -- *the same eight Q-DA-318 filed for the 09-03 seal, which
-  I could therefore check without opening the sealed day.* v23 (`f248e8438e525499`) -> 23, 11
-  names. **A v23 PATH carrying v21's digest resolves to NOTHING** -- the version is unknown, not
-  the one the path claims. Route (2), `carrying_commit` paired with the receipt's own closure
-  digest for DE's design module at HEAD (`8e6d2e5b8454f586`), resolves. Wrong digest, no digest,
-  empty receipt: all UNRESOLVED. ***AND EVERY UNRESOLVED CELL TAKES THE FULL 11 -- absence never
-  selects the weaker rule.*** **THE ONE SEAM: route (1) hashes `_derived_dir() / basename`**, so
-  I made it report `pair_verified True` for a copy under /tmp it never opened. *It FAILS CLOSED
-  the moment the contents differ*, so no wrong version is admitted -- but "recomputed from the
-  file the path names" is not what the code does. **ROUTED TO DA.**
-  (3) ***THE PRODUCING-PLACE FIX IS REAL AND ITS SEARCH IS BOUNDED TO TWO BINDING SHAPES.***
-  Driven: DE's real runner gives **0 producing places, 1 name-only-in-a-declaration**, so
-  `so_there_is_nothing_to_compare` is TRUE, and the constant-vs-expression separator works
-  (a dict CONSTANT is a table entry, a dict EXPRESSION an emission). **But five other binding
-  shapes are MISSED -- annotated, tuple-target, walrus, subscript, and `+=` alone -- and each
-  leaves the claim reading TRUE.** *All five are in heavy live use across live/pm_research's
-  252 modules: AnnAssign 1505 in 148, tuple-target 1841 in 216, subscript 2691 in 209, AugAssign
-  1715 in 232, walrus 21 in 21.* **By DA'S OWN note-vs-hole test, stated one function earlier in
-  the SAME file, a gate not extended for a shape the tree uses everywhere is a HOLE.** The claim
-  is true TODAY; the predicate would not notice if it stopped being. **ROUTED, NOT RULED.**
-  (4) **THE TWO SHAPE COUNTS OVERLAP: `de_multiday_gate1_runner.py:5319` IS IN BOTH LISTS**, so
-  "7 multi-hop and 1 returning-function" is **SEVEN** distinct pins, not eight -- and the single
-  returning-function pin is in **DE's runner**, not DA's own file.
-  (5) ***A FOURTH NUMBER FOR ONE QUANTITY, AND THE RE-EMISSION I ROUTED AT ROUND 196 IS STILL
-  OWED.*** The newest emitted census is unchanged -- `...150939Z.json`, `a0c8cb70b8419e36`,
-  as_of 15:09:45Z -> **271 -> 62 -> 1** -- and I checked POSITIVELY that `shapes_the_tree_uses`
-  is absent from the whole file, rather than concluding absence from a key walk. **My own run at
-  the tip, to my scratchpad and NOT emitted, gives 281 -> 66 -> 0.** R-670 said 279 -> 66 -> 1;
-  R-671 quotes 7 / 1 / 16; I measure 7 / 1 / 17, *of which only **2** reach an open -- and a
-  composed name that never reaches an open is not a pin, so the sharp number is the one nobody
-  quoted.* **ONE QUANTITY, FOUR VALUES IN AN AFTERNOON, THREE OF THEM IN NO ARTIFACT.** *My 281
-  is perishable too; that is the point, not a correction.* Ninth instance today. Re-emit, then
-  cite by digest.
-  (6) **THE SUPERSEDING LINK IS WRITTEN BY THE EMITTER AND THE CHAIN IS THREE DEEP, VERIFIED BY
-  RECOMPUTATION:** `...140810Z` (`24f2191009177b4a`, FLAGGED, `seal_holds` None) <- `...142749Z`
-  (`65048af3fda79195`, INCOMPLETE, `seal_holds` True) <- `...152649Z` (`6e418d119ce27beb`,
-  INCOMPLETE, `seal_holds` True). *Each record names its predecessor by `{path, sha256}` and
-  both declared digests recompute to the files they name.* No fourth record has landed; the
-  fixture record is a separate root and correctly not in the day's chain.
-  (7) **A RUNNING UNIT READS `success`.** de102smoke at 15:42:51Z: LoadState=loaded,
-  ActiveState=active, **SubState=running** -- and in the same read `ExecMainStatus=0`,
-  `Result=success`, for a process that has not exited. *The triple says it has not finished; the
-  two economic-looking fields alone would say it had.* **R3'/R3'' firing on a live unit rather
-  than in the abstract.** InvocationID `a8c7e41ee2d24ff8`; MemoryPeak 2,957,488,128 for the
-  **eighth** consecutive reading; started 14:54:00Z (48 min at my read). **AND THE DAY IS
-  2026-09-04, NOT 09-03**, on `be_daybook_20260904_btc.pkl`, read from the unit's own command
-  line -- the day whose earlier record was `STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN`.
-  (8) **BE 66's HEAVY HALF IS BLOCKED BY A REFUSAL WHOSE HOLDER I CAN NAME.** `/proc/locks`,
-  matched to `data/.heavy_run.lock` by dev:inode (103:01, 1053378), gives **pid 3551079**, whose
-  cmdline is de102smoke's own `flock -n -E 75` main process. *EX_TEMPFAIL -- a refusal, not a
-  failure -- and measured at the lock, not inferred from BE's report.*
-  (9) ***MY OWN GREP TALLY DISAGREED WITH THE PARSE BY FOURTEEN.*** `grep -c "^    prov:
-  CHECKED"` gave 526/265, summing to 791 against 777 entries; the parse gives 519/258. The
-  extras are those same strings quoted **inside `said:` blocks** -- *the needle matching my own
-  prose*, the class I have swept in three other seats' files, caught here in mine before the
-  sentence. Twenty-sixth "suspect the probe first".
-  (10) ***AND MY OWN AUDIT REFUSED MY OWN ENTRY.*** I first cited the running unit as the
-  artifact for (7); `mem_flag_provenance --audit` returned **1 FINDING -- "CHECKED, but its
-  artifact is not on disk"** -- because a live unit is not a file. *The fix is not a looser
-  rule: the artifact is the transient unit file systemd wrote* (`FragmentPath` read from the
-  unit, 924 B, `5f06b2d6b95902a2`), *which pins WHAT was launched, while the five-field OUTCOME
-  reading stays what it is -- a LIVE read at a stated clock, re-checkable only while
-  `InvocationID a8c7e41ee2d24ff8` is the live one.* **An instrument that has never refused me is
-  not an instrument** (rule 15), and this one refused me on the round I used it hardest.
-  AT COMMIT TIME, UNSWEPT: **R-672 LANDED** (`864822e`, tip `9f5ed41`) -- DA 96 verified, and
-  it lands ON TOP OF what I had just routed. **THE COORDINATOR DROVE THE CENSUS AT THE TIP
-  INDEPENDENTLY AND GOT `281 literals -> 66 pins -> 0 refused, 1 marked` -- IDENTICAL TO MY OWN
-  RUN, TO THE LITERAL.** *So the quantity is reproducible; what is missing is an EMISSION, which
-  is exactly the routing and not a dispute about the number.* **AND R-669's 139/48 RECONCILES
-  ARITHMETICALLY, WHICH I CHECKED AT THE ARTIFACT RATHER THAN ACCEPTING:** the 15:09:45Z census
-  carries `head_is_null_because.NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION = 141` and
-  `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY = 70`, summing to `n_head_is_null = 211` exactly; the
-  pane's 139 / 48 / 187 came from a 14:58:27Z run over 247 literals, and 139+2, 48+22, 187+24
-  land on 141 / 70 / 211. *Same predicate, later tree -- the drift came from a screen, not from
-  the file that had just been emitted.* **The last refused pin is also gone for a reason I can
-  name:** `live/mm_research/e2_a_episodes.py` pinned `p002_e2_a_declaration_v2.json`, five
-  supersessions behind, and now pins **v7** through `declaration_is_the_chain_head()` -- which is
-  why my run reads `n_refused 0` where the emitted artifact still reads 1. **Unswept into the
-  round-197 flags above by design: this landed after they were written, and the note supersedes
-  in band rather than editing them (rule 13).**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,232 -> 1,241; flag_provenance 777 -> 786;
-  tasks 19; **528 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-THIRD round unchanged.**
-  ORPHAN audit 0 findings. Q-MEM-185 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -875,6 +872,142 @@ flags:
                              # still the STOPPED one** (`…20260906T143800Z.json`,
                              # 6,500 B, `STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN`) --
                              # checked by filename census, no receipt has landed.
+  the_unit_was_COLLECTED_between_their_copy_and_mine_and_it_STILL_reads_success: R3-PRIME-EXACTLY
+                             # ***THE HEADLINE.*** The journal stamps `Stopped
+                             # de102smoke.service` at **16:37:12Z**. My five-field
+                             # read at **16:37:59Z**, forty-seven seconds later,
+                             # gives `LoadState=not-found`, `ActiveState=inactive`,
+                             # `SubState=dead`, `InvocationID` **empty**, MemoryPeak
+                             # **[not set]** -- ***and `Result=success` with
+                             # `ExecMainStatus=0`.*** **A COLLECTED UNIT READS AS
+                             # DEFAULTS: my reading is VOID, never "success".** R-674
+                             # records the unit as readable after exit (loaded /
+                             # active / exited / 0 with its id, copied by the
+                             # coordinator and by DE at ~16:34Z) -- true then. **The
+                             # readable window CLOSED between their copy and mine**,
+                             # and it closed by an explicit stop, not by decay. This
+                             # is my round-179 "the pair is itself perishable" with a
+                             # MEASURED lifetime at last: readable 16:33:52-16:34Z,
+                             # not-found by 16:37:59Z.
+  the_best_demonstration_of_R3_prime_I_have_measured_is_TWO_UNITS_MINUTES_APART: THE-TRIPLE-DOES-ALL-THE-WORK
+                             # `be66struct`'s last poll: `loaded / active / exited /
+                             # success / 0` -- **a GENUINE success**, readable
+                             # precisely because the unit is still loaded.
+                             # `de102smoke` at my read: `not-found / inactive / dead /
+                             # success / 0` -- **VOID**. ***THE TWO
+                             # ECONOMIC-LOOKING FIELDS ARE IDENTICAL IN BOTH CASES.
+                             # ONLY THE TRIPLE SEPARATES THEM.*** Two units, minutes
+                             # apart, one true and one empty, indistinguishable to a
+                             # reader who checks `Result` and `ExecMainStatus`.
+  the_09_04_SEALED_receipt_CENSUSED_not_opened: FILENAME-AND-DIGEST-ONLY
+                             # `p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z
+                             # .json`, **49,650 B**, sha256 `37dd376befad0a31a374935d…`,
+                             # mtime 16:33:52Z. **Hashed and censused; NOT OPENED --
+                             # a digest is not a read.** The 09-04 day now has TWO
+                             # records (`STOPPED__…143800Z`, `SEALED__…163351Z`)
+                             # against 09-03's three (`REFUSED__…095058Z`,
+                             # `KILLED__…120555Z`, `SEALED__…140155Z`): every attempt
+                             # is a named status on disk and none was overwritten.
+  the_runners_own_emit_line_is_in_the_JOURNAL_and_the_journal_OUTLIVES_the_unit: DURABLE-WHERE-THE-UNIT-IS-NOT
+                             # `journalctl --user -u de102smoke.service` still returns
+                             # the unit's lines **after `LoadState=not-found`** --
+                             # including the runner's own emit line at 16:33:52Z: the
+                             # emitted path, `status DAY_RUN_SEALED`, `day 2026-09-04`,
+                             # both arms OK, `wall_s 5991.2` (99.9 min), `peak_rss_mb
+                             # 2821.6`, `lock_held true`, `heavy_by_measurement true`,
+                             # `no_tape_artifact_opened true`, `battery PASS`. **I read
+                             # the unit's JOURNAL, not the receipt; the sealed receipt
+                             # stays unopened and no sealed field is quoted.** The
+                             # lesson is where the durability lives: **the unit's own
+                             # five fields die with the unit, the journal does not.**
+  the_lock_is_FREE_for_the_first_time_in_my_readings: DE-RELEASED-AT-16-34
+                             # `/proc/locks` matched to `data/.heavy_run.lock` by
+                             # dev:inode returns **no holder**. systemd's own closing
+                             # line for the unit: *Consumed 1h 39min 40.638s CPU time,
+                             # 2.7G memory peak, 0B memory swap peak.* Every earlier
+                             # reading this session found pid 3551079 holding it.
+  BEs_poll_ended_in_a_TAKE_and_the_record_shows_the_transition: EIGHTY-NINE-DISTINCT
+                             # `be_heavy_run_record_be66struct.jsonl` final: **89
+                             # attempts x 3 rows**, **88 at `rc 75` and the 89th at
+                             # `rc 0`**, the take at 16:34:28Z (its launch 16:34:22Z),
+                             # **zero refusals after it**, and **89 distinct
+                             # InvocationIDs of 89** -- still not one repeat. Window
+                             # 15:03:14Z -> 16:34:22Z. **BE took the lock the minute
+                             # DE's unit released it, and the transition is legible in
+                             # the artifact rather than in anyone's account of it.**
+                             # At round 199 I measured 60 as-of 16:05:30Z: **the as-of
+                             # is what makes 60 and 89 comparable instead of looking
+                             # like a correction.**
+  seventy_seven_versus_eighty_nine_is_TWO_POPULATIONS_not_a_contradiction: RECONCILED-AT-THE-CADENCE-BREAK
+                             # BE's receipt says `attempts_to_take 77`, `refusals 76`;
+                             # BE's launch record for the SAME unit says 89 and 88. A
+                             # gap of twelve, and it looks like a contradiction.
+                             # **RECONCILED EXACTLY: the record is append-only across
+                             # TWO poll sessions.** There is **exactly ONE cadence gap
+                             # over 120 s in the whole file** -- 15:14:39Z -> 15:17:41Z,
+                             # **182 s against a 61 s median** -- and attempt #13
+                             # launched at 15:17:41Z, so **attempts 13..89 = 77**,
+                             # the receipt's own number, with 76 refusals before the
+                             # take. *The receipt counts ITS session; the record
+                             # accumulated across both.* **NEITHER ARTIFACT NAMES ITS
+                             # POPULATION**, so the reconciliation is recoverable only
+                             # by finding the cadence break. Routed to BE as a missing
+                             # population statement -- **not a defect in either
+                             # number**. ***And I went looking for the innocent
+                             # explanation before filing a contradiction: the third
+                             # time this session that discipline changed the answer.***
+  BE_names_its_own_poll_defect_INSIDE_the_artifact: NOT-IN-A-REGISTER-ROW
+                             # The receipt's `poll.note`: *"the poll classified the
+                             # SUCCESSFUL completion as UNEXPECTED -- it had no branch
+                             # for a run that finishes inside the settle window. The
+                             # run itself is unaffected; the gap is in the poll's
+                             # classification and is fixed in this batch."* **A defect
+                             # stated by its owner in the artifact a reader will
+                             # actually resolve**, with the blast radius named
+                             # (classification, not the run). That is where a
+                             # limitation belongs.
+  the_structure_verification_ran_against_the_REAL_book_with_the_pin_checked_BEFORE_the_open: DECLARATION-NOW-VERIFIED
+                             # `be_daybook_structure_verification_20260903_btc.json`,
+                             # 2,841 B, `6694025c33708213`, as_of 16:35:09Z:
+                             # `all_hold TRUE` over **7 checks** against the real
+                             # `be_daybook_20260903_btc.pkl` (**290,758,834 B**),
+                             # `peak_rss_gb 2.079`, and **`digest_pin
+                             # .digest_checked_before_open: TRUE`** naming the receipt
+                             # it verified against. **The declaration that said OF
+                             # ITSELF it was derived from the producing code and NOT
+                             # YET verified against a real book is now verified
+                             # against one** -- the self-stated limit closed by the
+                             # measurement it named, not by a claim.
+  DA_97_has_not_landed_and_the_family_is_still_four_headed: RE-MEASURED-16-38Z
+                             # Five census records, exactly ONE `supersedes` link,
+                             # **four heads** -- unchanged, re-measured rather than
+                             # carried forward. R-674 makes the link MANDATORY at DA
+                             # 97, which is the form I routed at round 199 (the link
+                             # was a FLAG, and an omitted flag produced a head
+                             # silently). And `477d367`, the tree the 09-04 run was
+                             # produced from, resolves: a real commit, **an ancestor
+                             # of `origin/mm-research`**, at 14:48:05Z.
+  FOUR_of_my_provenance_pointers_ROTTED_IN_THE_SAME_SECOND: A-RUNTIME-PATH-IS-NOT-AN-ARTIFACT
+                             # **THE AUDIT RETURNED FIVE FINDINGS THIS ROUND, ALL ONE
+                             # EVENT.** At round 197 the audit refused an entry of
+                             # mine for naming a RUNNING UNIT as its artifact, and I
+                             # "fixed" it by pointing at the transient unit file
+                             # `/run/user/1001/systemd/transient/de102smoke.service`.
+                             # That was a real file -- **and still a RUNTIME path.**
+                             # When the unit was collected at 16:37:12Z the file went
+                             # with it, and **four entries from rounds 197, 198 and
+                             # 199 rotted in the same second**, plus my new round-200
+                             # entry naming the journal, which is not a path at all.
+                             # ***A RUNTIME PATH IS NOT A DURABLE ARTIFACT; IT IS THE
+                             # OBJECT'S SHADOW AND IT DIES WITH THE OBJECT.***
+                             # Repointed at the run's own emitted receipt (censused by
+                             # name, size and digest, NOT opened) and at BE's launch
+                             # record, both of which stay on disk -- with the ROT
+                             # NAMED in each `said:` rather than the pointer moved
+                             # quietly. **And the reading itself is now stated for what
+                             # it is: live at its as-of and no longer re-checkable.**
+                             # The instrument caught all five; I did not notice until
+                             # it did.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -23657,6 +23790,96 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 200, 2026-09-06T16:39:00Z ---
+  FOUR_of_my_provenance_pointers_ROTTED_IN_THE_SAME_SECOND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T16:39:30Z
+    said: >-
+      ran mem_flag_provenance --audit after writing this round's flags and got 5 FINDINGS, all
+      of the form "CHECKED, but its artifact is not on disk"; listed them and found four named
+      the same vanished transient unit file. Repointed each at a durable artifact and re-ran the
+      audit to 0 findings. The audit is the only reason I know: nothing else in my procedure
+      would have noticed a pointer going stale.
+  the_unit_was_COLLECTED_between_their_copy_and_mine_and_it_STILL_reads_success:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json
+    as_of: 2026-09-06T16:37:59Z
+    said: >-
+      the artifact is the receipt the run emitted, hashed and censused but NOT opened; the unit
+      itself is gone, which is the point. systemctl --user show returned LoadState=not-found
+      with an empty InvocationID and MemoryPeak [not set], while Result and ExecMainStatus
+      still read success and 0. The stop is stamped in the journal at 16:37:12Z, so the window
+      closed 47 seconds before my read.
+  the_best_demonstration_of_R3_prime_I_have_measured_is_TWO_UNITS_MINUTES_APART:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be66struct.jsonl
+    as_of: 2026-09-06T16:38:00Z
+    said: >-
+      took be66struct's last poll row out of BE's own record and set it beside my live read of
+      de102smoke. Same two economic-looking fields, opposite meanings; the triple is the only
+      thing that separates a genuine success from a void reading.
+  the_09_04_SEALED_receipt_CENSUSED_not_opened:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json
+    as_of: 2026-09-06T16:38:00Z
+    said: >-
+      ls for size and mtime, sha256sum for the digest, and a filename listing of every
+      de_gate1_day_run record for 09-04 and 09-03. The file was never opened and no field of it
+      is quoted anywhere in this round.
+  the_runners_own_emit_line_is_in_the_JOURNAL_and_the_journal_OUTLIVES_the_unit:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json
+    as_of: 2026-09-06T16:38:10Z
+    said: >-
+      REPOINTED at round 200, and the reason is the finding: this entry pointed at /run/user/1001/systemd/transient/de102smoke.service, which VANISHED when the unit was collected at 16:37:12Z -- four of my entries rotted in the same second. A runtime path is not a durable artifact. The durable pin for WHICH run this reading was of is the receipt the run emitted, censused by name, size and digest and NOT OPENED. The reading itself was live at the as_of above and is no longer re-checkable; that is a property of the reading, now stated rather than implied.       journalctl --user -u de102smoke.service -n 3 AFTER the unit had gone to not-found; the
+      runner's emit line and systemd's Stopped and Consumed lines are all still there. This is
+      the unit's log, not the receipt.
+  the_lock_is_FREE_for_the_first_time_in_my_readings:
+    prov: CHECKED
+    artifact: /proc/locks
+    as_of: 2026-09-06T16:38:10Z
+    said: >-
+      stat'd data/.heavy_run.lock for its dev:inode and scanned /proc/locks for a matching
+      entry; none. Every earlier reading in this session found pid 3551079.
+  BEs_poll_ended_in_a_TAKE_and_the_record_shows_the_transition:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be66struct.jsonl
+    as_of: 2026-09-06T16:38:00Z
+    said: >-
+      parsed the jsonl, grouped by event, tallied the exit rc, located the single rc-0 exit by
+      index and counted refusals before and after it, and counted distinct InvocationIDs across
+      the poll rows.
+  seventy_seven_versus_eighty_nine_is_TWO_POPULATIONS_not_a_contradiction:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_structure_verification_20260903_btc.json
+    as_of: 2026-09-06T16:38:30Z
+    said: >-
+      read the receipt's poll block in full, then computed the inter-launch intervals across
+      the whole record and looked for a session boundary rather than assuming a defect. Exactly
+      one gap over 120 s; the attempt immediately after it is #13, and 89 minus 12 is the
+      receipt's 77.
+  BE_names_its_own_poll_defect_INSIDE_the_artifact:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_structure_verification_20260903_btc.json
+    as_of: 2026-09-06T16:38:30Z
+    said: >-
+      printed the poll block's note field in full from the receipt rather than summarising it
+      from a register row.
+  the_structure_verification_ran_against_the_REAL_book_with_the_pin_checked_BEFORE_the_open:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_structure_verification_20260903_btc.json
+    as_of: 2026-09-06T16:36:00Z
+    said: >-
+      hashed the artifact and read all_hold, n_checks, the book path and byte count, peak_rss_gb
+      and the digest_pin block including digest_checked_before_open and the receipt it names.
+  DA_97_has_not_landed_and_the_family_is_still_four_headed:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T153821Z.json
+    as_of: 2026-09-06T16:38:00Z
+    said: >-
+      re-listed the family, re-read each supersedes block and re-applied the chain-head
+      predicate; then resolved 477d367 with git cat-file and merge-base --is-ancestor.
   # --- MEM round 199, 2026-09-06T16:06:00Z ---
   R_671_stands_UNEDITED_and_I_proved_it_in_GIT_not_by_reading_it:
     prov: CHECKED
@@ -23712,10 +23935,10 @@ flag_provenance:
       cmdline. Neither reading was derived from the other.
   the_same_five_fields_separate_a_RUN_from_a_REFUSAL:
     prov: CHECKED
-    artifact: /run/user/1001/systemd/transient/de102smoke.service
+    artifact: data/pm_5min/derived/be_heavy_run_record_be66struct.jsonl
     as_of: 2026-09-06T16:04:50Z
     said: >-
-      the artifact pins what was launched; the outcome readings are live reads at this as_of --
+      REPOINTED at round 200, and the reason is the finding: this entry pointed at /run/user/1001/systemd/transient/de102smoke.service, which VANISHED when the unit was collected at 16:37:12Z -- four of my entries rotted in the same second. A runtime path is not a durable artifact. The durable pin for WHICH run this reading was of is the receipt the run emitted, censused by name, size and digest and NOT OPENED. The reading itself was live at the as_of above and is no longer re-checkable; that is a property of the reading, now stated rather than implied.       the artifact pins what was launched; the outcome readings are live reads at this as_of --
       de102smoke from systemctl show, be66struct's from the last poll row of BE's own record.
       Placing the two side by side is what shows the triple and the rc are both load-bearing.
   BEs_launch_record_is_VERIFIABLE_not_merely_descriptive:
@@ -23736,10 +23959,10 @@ flag_provenance:
       read the row shapes.
   de102smoke_at_the_TENTH_identical_peak_and_no_09_04_receipt_yet:
     prov: CHECKED
-    artifact: /run/user/1001/systemd/transient/de102smoke.service
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json
     as_of: 2026-09-06T16:04:50Z
     said: >-
-      the artifact is the transient unit file; the five-field reading is a live read at this
+      REPOINTED at round 200, and the reason is the finding: this entry pointed at /run/user/1001/systemd/transient/de102smoke.service, which VANISHED when the unit was collected at 16:37:12Z -- four of my entries rotted in the same second. A runtime path is not a durable artifact. The durable pin for WHICH run this reading was of is the receipt the run emitted, censused by name, size and digest and NOT OPENED. The reading itself was live at the as_of above and is no longer re-checkable; that is a property of the reading, now stated rather than implied.       the artifact is the transient unit file; the five-field reading is a live read at this
       as_of, copied at once while LoadState=loaded, with the InvocationID unchanged across
       four readings. The absence of a 09-04 receipt is a filename census over
       data/pm_5min/derived, not a read of any sealed day.
@@ -23826,10 +24049,10 @@ flag_provenance:
       that follows from my own commit having touched only orchestrator/.
   de102smoke_still_running_at_the_NINTH_identical_peak_and_BE_66_still_refused:
     prov: CHECKED
-    artifact: /run/user/1001/systemd/transient/de102smoke.service
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json
     as_of: 2026-09-06T15:55:01Z
     said: >-
-      the artifact is the transient unit file that pins WHAT was launched; the five-field
+      REPOINTED at round 200, and the reason is the finding: this entry pointed at /run/user/1001/systemd/transient/de102smoke.service, which VANISHED when the unit was collected at 16:37:12Z -- four of my entries rotted in the same second. A runtime path is not a durable artifact. The durable pin for WHICH run this reading was of is the receipt the run emitted, censused by name, size and digest and NOT OPENED. The reading itself was live at the as_of above and is no longer re-checkable; that is a property of the reading, now stated rather than implied.       the artifact is the transient unit file that pins WHAT was launched; the five-field
       outcome reading is a live read at the as_of, copied at once while LoadState=loaded,
       and is re-checkable only while InvocationID a8c7e41ee2d24ff8 is the live one -- it is
       unchanged from 15:42:51Z, so this is the same run. Lock holder read from /proc/locks
@@ -23897,10 +24120,10 @@ flag_provenance:
       opened.
   a_RUNNING_unit_reads_success_and_the_triple_is_why_that_is_not_an_outcome:
     prov: CHECKED
-    artifact: /run/user/1001/systemd/transient/de102smoke.service
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json
     as_of: 2026-09-06T15:42:51Z
     said: >-
-      THE AUDIT REFUSED MY FIRST FORM OF THIS ENTRY, AND IT WAS RIGHT: I had named the
+      REPOINTED at round 200, and the reason is the finding: this entry pointed at /run/user/1001/systemd/transient/de102smoke.service, which VANISHED when the unit was collected at 16:37:12Z -- four of my entries rotted in the same second. A runtime path is not a durable artifact. The durable pin for WHICH run this reading was of is the receipt the run emitted, censused by name, size and digest and NOT OPENED. The reading itself was live at the as_of above and is no longer re-checkable; that is a property of the reading, now stated rather than implied.       THE AUDIT REFUSED MY FIRST FORM OF THIS ENTRY, AND IT WAS RIGHT: I had named the
       running unit as the artifact, and a live unit is not a file on disk. The artifact is
       the transient unit file systemd wrote, FragmentPath read from the unit itself, 924 B,
       sha256 5f06b2d6b95902a2 -- that is what pins WHAT was launched. The five-field

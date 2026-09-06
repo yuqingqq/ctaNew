@@ -15220,3 +15220,106 @@ generation and the window went 4 → 3. Nothing rewritten.
   seventy-second round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 182 — archived 2026-09-06T16:39:40Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 200 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T15:46:30Z (MEM ROUND 197 -- R-671 SWEPT, tip `3427357`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every version cell driven on
+  a SYNTHETIC receipt against the REAL v21/v23 design declarations.**
+  (1) ***R-671 NAMES TWO GUARDS ON THE SCOPE MAP; I DROVE FIVE CELLS AND THERE ARE THREE.***
+  A map **no function consults** REFUSES; a name in `ECONOMIC_FIELDS` **absent from the map**
+  REFUSES; and -- unnamed in R-671 -- **a scope bound INSIDE a function rather than at module
+  level** REFUSES too. *Positive control: DE's real source copied to another path ADMITS, 11
+  names, `design_version_in_force` 23, `referenced_by_functions` exactly
+  `['economic_fields_in_force']`.* An absent source REFUSES. **Every guard has a falsifier AND
+  the instrument has a control it admits** -- rule 15 satisfied by driving it, not by reading it.
+  (2) **THE VERSION-FROM-A-PAIR RESOLVER DRIVES CORRECTLY IN SEVEN CELLS, AND IT HASHES A
+  BASENAME.** Route (1) against the real `..._design_v21.json` (`a52b463c89498332`) resolves
+  **v21 with EIGHT names in force** -- *the same eight Q-DA-318 filed for the 09-03 seal, which
+  I could therefore check without opening the sealed day.* v23 (`f248e8438e525499`) -> 23, 11
+  names. **A v23 PATH carrying v21's digest resolves to NOTHING** -- the version is unknown, not
+  the one the path claims. Route (2), `carrying_commit` paired with the receipt's own closure
+  digest for DE's design module at HEAD (`8e6d2e5b8454f586`), resolves. Wrong digest, no digest,
+  empty receipt: all UNRESOLVED. ***AND EVERY UNRESOLVED CELL TAKES THE FULL 11 -- absence never
+  selects the weaker rule.*** **THE ONE SEAM: route (1) hashes `_derived_dir() / basename`**, so
+  I made it report `pair_verified True` for a copy under /tmp it never opened. *It FAILS CLOSED
+  the moment the contents differ*, so no wrong version is admitted -- but "recomputed from the
+  file the path names" is not what the code does. **ROUTED TO DA.**
+  (3) ***THE PRODUCING-PLACE FIX IS REAL AND ITS SEARCH IS BOUNDED TO TWO BINDING SHAPES.***
+  Driven: DE's real runner gives **0 producing places, 1 name-only-in-a-declaration**, so
+  `so_there_is_nothing_to_compare` is TRUE, and the constant-vs-expression separator works
+  (a dict CONSTANT is a table entry, a dict EXPRESSION an emission). **But five other binding
+  shapes are MISSED -- annotated, tuple-target, walrus, subscript, and `+=` alone -- and each
+  leaves the claim reading TRUE.** *All five are in heavy live use across live/pm_research's
+  252 modules: AnnAssign 1505 in 148, tuple-target 1841 in 216, subscript 2691 in 209, AugAssign
+  1715 in 232, walrus 21 in 21.* **By DA'S OWN note-vs-hole test, stated one function earlier in
+  the SAME file, a gate not extended for a shape the tree uses everywhere is a HOLE.** The claim
+  is true TODAY; the predicate would not notice if it stopped being. **ROUTED, NOT RULED.**
+  (4) **THE TWO SHAPE COUNTS OVERLAP: `de_multiday_gate1_runner.py:5319` IS IN BOTH LISTS**, so
+  "7 multi-hop and 1 returning-function" is **SEVEN** distinct pins, not eight -- and the single
+  returning-function pin is in **DE's runner**, not DA's own file.
+  (5) ***A FOURTH NUMBER FOR ONE QUANTITY, AND THE RE-EMISSION I ROUTED AT ROUND 196 IS STILL
+  OWED.*** The newest emitted census is unchanged -- `...150939Z.json`, `a0c8cb70b8419e36`,
+  as_of 15:09:45Z -> **271 -> 62 -> 1** -- and I checked POSITIVELY that `shapes_the_tree_uses`
+  is absent from the whole file, rather than concluding absence from a key walk. **My own run at
+  the tip, to my scratchpad and NOT emitted, gives 281 -> 66 -> 0.** R-670 said 279 -> 66 -> 1;
+  R-671 quotes 7 / 1 / 16; I measure 7 / 1 / 17, *of which only **2** reach an open -- and a
+  composed name that never reaches an open is not a pin, so the sharp number is the one nobody
+  quoted.* **ONE QUANTITY, FOUR VALUES IN AN AFTERNOON, THREE OF THEM IN NO ARTIFACT.** *My 281
+  is perishable too; that is the point, not a correction.* Ninth instance today. Re-emit, then
+  cite by digest.
+  (6) **THE SUPERSEDING LINK IS WRITTEN BY THE EMITTER AND THE CHAIN IS THREE DEEP, VERIFIED BY
+  RECOMPUTATION:** `...140810Z` (`24f2191009177b4a`, FLAGGED, `seal_holds` None) <- `...142749Z`
+  (`65048af3fda79195`, INCOMPLETE, `seal_holds` True) <- `...152649Z` (`6e418d119ce27beb`,
+  INCOMPLETE, `seal_holds` True). *Each record names its predecessor by `{path, sha256}` and
+  both declared digests recompute to the files they name.* No fourth record has landed; the
+  fixture record is a separate root and correctly not in the day's chain.
+  (7) **A RUNNING UNIT READS `success`.** de102smoke at 15:42:51Z: LoadState=loaded,
+  ActiveState=active, **SubState=running** -- and in the same read `ExecMainStatus=0`,
+  `Result=success`, for a process that has not exited. *The triple says it has not finished; the
+  two economic-looking fields alone would say it had.* **R3'/R3'' firing on a live unit rather
+  than in the abstract.** InvocationID `a8c7e41ee2d24ff8`; MemoryPeak 2,957,488,128 for the
+  **eighth** consecutive reading; started 14:54:00Z (48 min at my read). **AND THE DAY IS
+  2026-09-04, NOT 09-03**, on `be_daybook_20260904_btc.pkl`, read from the unit's own command
+  line -- the day whose earlier record was `STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN`.
+  (8) **BE 66's HEAVY HALF IS BLOCKED BY A REFUSAL WHOSE HOLDER I CAN NAME.** `/proc/locks`,
+  matched to `data/.heavy_run.lock` by dev:inode (103:01, 1053378), gives **pid 3551079**, whose
+  cmdline is de102smoke's own `flock -n -E 75` main process. *EX_TEMPFAIL -- a refusal, not a
+  failure -- and measured at the lock, not inferred from BE's report.*
+  (9) ***MY OWN GREP TALLY DISAGREED WITH THE PARSE BY FOURTEEN.*** `grep -c "^    prov:
+  CHECKED"` gave 526/265, summing to 791 against 777 entries; the parse gives 519/258. The
+  extras are those same strings quoted **inside `said:` blocks** -- *the needle matching my own
+  prose*, the class I have swept in three other seats' files, caught here in mine before the
+  sentence. Twenty-sixth "suspect the probe first".
+  (10) ***AND MY OWN AUDIT REFUSED MY OWN ENTRY.*** I first cited the running unit as the
+  artifact for (7); `mem_flag_provenance --audit` returned **1 FINDING -- "CHECKED, but its
+  artifact is not on disk"** -- because a live unit is not a file. *The fix is not a looser
+  rule: the artifact is the transient unit file systemd wrote* (`FragmentPath` read from the
+  unit, 924 B, `5f06b2d6b95902a2`), *which pins WHAT was launched, while the five-field OUTCOME
+  reading stays what it is -- a LIVE read at a stated clock, re-checkable only while
+  `InvocationID a8c7e41ee2d24ff8` is the live one.* **An instrument that has never refused me is
+  not an instrument** (rule 15), and this one refused me on the round I used it hardest.
+  AT COMMIT TIME, UNSWEPT: **R-672 LANDED** (`864822e`, tip `9f5ed41`) -- DA 96 verified, and
+  it lands ON TOP OF what I had just routed. **THE COORDINATOR DROVE THE CENSUS AT THE TIP
+  INDEPENDENTLY AND GOT `281 literals -> 66 pins -> 0 refused, 1 marked` -- IDENTICAL TO MY OWN
+  RUN, TO THE LITERAL.** *So the quantity is reproducible; what is missing is an EMISSION, which
+  is exactly the routing and not a dispute about the number.* **AND R-669's 139/48 RECONCILES
+  ARITHMETICALLY, WHICH I CHECKED AT THE ARTIFACT RATHER THAN ACCEPTING:** the 15:09:45Z census
+  carries `head_is_null_because.NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION = 141` and
+  `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY = 70`, summing to `n_head_is_null = 211` exactly; the
+  pane's 139 / 48 / 187 came from a 14:58:27Z run over 247 literals, and 139+2, 48+22, 187+24
+  land on 141 / 70 / 211. *Same predicate, later tree -- the drift came from a screen, not from
+  the file that had just been emitted.* **The last refused pin is also gone for a reason I can
+  name:** `live/mm_research/e2_a_episodes.py` pinned `p002_e2_a_declaration_v2.json`, five
+  supersessions behind, and now pins **v7** through `declaration_is_the_chain_head()` -- which is
+  why my run reads `n_refused 0` where the emitted artifact still reads 1. **Unswept into the
+  round-197 flags above by design: this landed after they were written, and the note supersedes
+  in band rather than editing them (rule 13).**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,232 -> 1,241; flag_provenance 777 -> 786;
+  tasks 19; **528 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-THIRD round unchanged.**
+  ORPHAN audit 0 findings. Q-MEM-185 filed.)
+```

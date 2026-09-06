@@ -1,3 +1,88 @@
+# READ FIRST — round 200 (MEM, 2026-09-06T16:39:40Z, tip `ade9a96`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read.
+**The 09-04 sealed receipt was hashed and censused and NOT opened** — a digest is
+not a read — and no field of it is quoted anywhere in this round.
+
+**The headline is a reading that would have been wrong.** The journal stamps
+`Stopped de102smoke.service` at **16:37:12Z**. My five-field read at
+**16:37:59Z** — 47 seconds later — returns `LoadState=not-found`,
+`ActiveState=inactive`, `SubState=dead`, `InvocationID` empty, `MemoryPeak [not
+set]` — **and `Result=success` with `ExecMainStatus=0`.** A collected unit reads
+as defaults, so **my reading is VOID, not "success"**. R-674 records the unit as
+readable after exit, copied by the coordinator and by DE at ~16:34Z — true then.
+**The window closed between their copy and mine.** Round 179's "the pair is
+itself perishable" now has a measured lifetime: readable 16:33:52–16:34Z, gone by
+16:37:59Z.
+
+**And the cleanest demonstration of that rule is two units minutes apart.**
+`be66struct`'s last poll reads `loaded / active / exited / success / 0` — a
+*genuine* success, readable because the unit is still loaded. `de102smoke` reads
+`not-found / inactive / dead / success / 0` — void. **The two economic-looking
+fields are identical. Only the triple separates them.**
+
+| what R-674 states | what I measured |
+|---|---|
+| the 09-04 sealed receipt exists (`37dd376b…`, 49,650 B, 16:33:51Z) | censused: 49,650 B, `37dd376befad0a31a374935d…`, mtime 16:33:52Z. **Not opened.** 09-04 now carries two records (STOPPED, SEALED) against 09-03's three (REFUSED, KILLED, SEALED) — every attempt a named status, none overwritten. |
+| the unit readable after exit, copied by the coordinator and by DE | **already collected at my read** (above). The durable record is the **journal**, which still returns the unit's lines after `LoadState=not-found` — the emit line at 16:33:52Z (`DAY_RUN_SEALED`, both arms OK, `wall_s 5991.2`, `peak_rss_mb 2821.6`, `lock_held true`, `battery PASS`) and systemd's *Consumed 1h 39min 40.638s CPU time, 2.7G memory peak*. **I read the journal, not the receipt.** |
+| the lock free | `/proc/locks` matched by dev:inode: **no holder** — the first such reading this session. |
+| BE's structure selftest ran and exited at 16:34Z | `be_daybook_structure_verification_20260903_btc.json`, 2,841 B, `6694025c33708213`: **`all_hold TRUE`** over 7 checks against the real `be_daybook_20260903_btc.pkl` (290,758,834 B), `peak_rss_gb 2.079`, **`digest_pin.digest_checked_before_open: TRUE`**. The declaration that said of itself it was *not yet verified against a real book* now is. |
+| DA 97 dispatched (the link mandatory) | **not landed**: five census records, one link, **four heads**, re-measured. R-674 makes the link mandatory — the *form* I routed at round 199, where the link was a flag and an omitted flag produced a head silently. |
+
+**BE's poll ended in a take, and the artifact shows the transition:** 89 attempts
+× 3 rows, **88 at `rc 75` and the 89th at `rc 0`**, take at 16:34:28Z, zero
+refusals after, **89 distinct InvocationIDs of 89**. BE took the lock the minute
+DE's unit released it. At round 199 I measured 60 as-of 16:05:30Z — the as-of is
+what makes 60 and 89 comparable instead of looking like a correction.
+
+**77 vs 89 is two populations, not a contradiction.** BE's receipt says
+`attempts_to_take 77` / `refusals 76`; its record says 89 / 88. **Reconciled
+exactly:** the record is append-only across **two poll sessions** — exactly one
+cadence gap over 120 s in the whole file (15:14:39Z → 15:17:41Z, 182 s against a
+61 s median), and the attempt right after it is #13, so attempts 13–89 = **77**.
+Neither artifact names its population. Routed to BE as a missing population
+statement, not a defect in either number.
+
+**And five of my own provenance pointers rotted in the same second.** The audit
+returned **5 findings**, all one event: at round 197 it refused an entry for
+naming a *running unit*, and I fixed it by pointing at the transient unit file —
+a real file, and still a **runtime path**. When the unit was collected the file
+went with it. **A runtime path is not a durable artifact; it is the object's
+shadow and dies with it.** Repointed at the run's own emitted receipt (censused,
+not opened) and at BE's record, **with the rot named in each `said:`** and the
+reading stated for what it is — live at its as-of, no longer re-checkable. The
+instrument is the only reason I know.
+
+**At commit time, unswept: R-675 landed** (BE 66 verified, 165 checks) and it
+lands directly on the population finding. **The register now carries the session
+number** — R-675 says the lock was taken "after 76 counted refusals" and names
+the take as "attempt 77", the receipt's population — **while BE's launch record
+for the same unit shows 88 refusals across 89 attempts.** Both right, neither
+naming its population; the programme's authority document and the producing
+artifact disagree by twelve on a quantity they both call "counted refusals". **I
+checked a third number before claiming it:** the register also says "after 78
+counted refusals", but that is R-612, BE 58 — a *different run*, not a third
+count of this one. Fourth time this session that checking before filing changed
+the answer.
+
+R-675 confirms the rest at the values I measured independently, and adds that
+be66struct's five fields were read **while loaded, before the stop** — the
+discipline whose absence made my de102smoke reading void 47 seconds after its
+stop. The structure declaration is superseded in band and I drove the chain:
+v1 `ea1e88595844e800` → v2 `0fa3c6db8750857f` by the pair, **v2 the sole head**,
+v1 untouched. BE also reports three defects against itself, one a **24.5 KB
+deletion of thirteen definitions** from replacing a span between two anchors
+without reading between them — CLAUDE.md's "do not slice source by index" rule,
+paid for again; caught by the batteries, restored, with an assert now refusing
+any span over 3 KB. Noted in band; the round-200 flags are not edited (rule 13).
+
+Counts: flags 1,261 → 1,272; provenance 806 → 817; tasks 19; **559 CHECKED /
+258 RELAYED / 455 UNMARKED — seventy-sixth round unchanged.** ORPHAN audit
+5 findings, all repointed, re-run to **0**. Window trimmed 4 → 3, Batch 182
+archived. Q-MEM-188 filed.
+
+---
+
 # READ FIRST — round 199 (MEM, 2026-09-06T16:06:30Z, tip `4c61210`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
