@@ -6,7 +6,13 @@
   "what_this_build_did": "day fragment -> TRAIN; an explicitly EMPTY file -> SCORE",
   "why_it_bites_here": "those are two POPULATIONS (eraB, top-up), not two feature sets. A one-day Gate-1 tape has ONE population, so one split has no input."
  },
- "build_ref": "af37cb78c9605a30b7c8096eafe7d071c517f950",
+ "WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY": {
+  "corrected_from": "the first 09-03 tape put the day in TRAIN and left SCORE empty; that artifact is moved aside as .WRONG_SPLIT and superseded",
+  "split": "score",
+  "why": "a RULED FORWARD DAY is not trained on. Every row is a SCORE row that the PINNED heads score at their PINNED thetas to produce `asm`; nothing is fitted here.",
+  "why_the_label_is_not_cosmetic": "`phase2_arms.tape_index` filters `r['split'] != split`, so the label decides which index a row lands in -- and a forward day labelled `train` reports as a day the heads were FITTED on, which is the look-ahead-shaped misreport"
+ },
+ "build_ref": "3bd2c2f501a42f6cbdb447d132a98b67be4803cb",
  "coin": "btc",
  "data_root": {
   "branch": "1_env_PM_DATA_ROOT",
@@ -33,12 +39,13 @@
  },
  "inputs": {
   "score_split": {
-   "EMPTY_BY_CONSTRUCTION": true,
-   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260903_btc.EMPTY_SCORE.json"
-  },
-  "train_split": {
+   "THE_DAY'S_ROWS": true,
    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260903_btc.json",
    "sha256": "2860832a66e820cad0b2ee039740692d4d17f3fec11ee4874ef6ef9b244f0764"
+  },
+  "train_split": {
+   "EMPTY_BY_CONSTRUCTION": true,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260903_btc.EMPTY_SCORE.json"
   }
  },
  "no_assembly_run": true,
@@ -47,13 +54,13 @@
  "resources": {
   "cap_gb": 8.0,
   "cap_raised": false,
-  "peak_rss_gb": 4.74,
-  "wall_s": 1475.8
+  "peak_rss_gb": 4.741,
+  "wall_s": 1471.6
  },
  "tape": {
   "bytes": 991078272,
   "n_rows": 544286,
   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260903_btc.json",
-  "sha256": "7206101d9378b1911841d1c3a2b8779c7760f9841adec62db5cb5ee9c66204f1"
+  "sha256": "9de88da950598e8603f913a4166491e1a3d0da7c3c355f0ebaef8383b63310bf"
  }
 }

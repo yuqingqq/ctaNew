@@ -128,7 +128,16 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
                           "out": str(dst), "BUILD_REF": ref[:12]}), flush=True)
 
     import build_state_tape_v2 as BST
-    rc = BST.main(fragment_path=frag, topup_path=empty, out_path=dst,
+    # THE SPLIT ASSIGNMENT, CORRECTED (coordinator, round 51). The first
+    # build put the day's rows in TRAIN and left SCORE empty. That is wrong
+    # for a RULED FORWARD DAY: nothing is trained on it -- every row is a
+    # SCORE row the PINNED heads score to produce `asm`. Labelling a forward
+    # day `train` would report it as a day the heads were fitted on, which is
+    # the look-ahead-shaped misreport, and `phase2_arms.tape_index` filters
+    # `r["split"] != split`, so the label decides which index a row lands in.
+    # `build_state_tape_v2` maps (('train', FRAG), ('score', TOP)) -- so the
+    # DAY FRAGMENT goes in the TOPUP slot.
+    rc = BST.main(fragment_path=empty, topup_path=frag, out_path=dst,
                   allow_overwrite=False)
     if rc != 0:
         raise TapeRefused(f"REFUSED: build_state_tape_v2 returned rc={rc}.")
@@ -149,9 +158,27 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
         "tape": {"path": str(dst), "bytes": len(body),
                  "sha256": hashlib.sha256(body).hexdigest(),
                  "n_rows": n_rows},
-        "inputs": {"train_split": {"path": str(frag), "sha256": frag_sha},
-                   "score_split": {"path": str(empty),
+        "inputs": {"score_split": {"path": str(frag), "sha256": frag_sha,
+                                   "THE_DAY'S_ROWS": True},
+                   "train_split": {"path": str(empty),
                                    "EMPTY_BY_CONSTRUCTION": True}},
+        "WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY": {
+            "split": "score",
+            "why": "a RULED FORWARD DAY is not trained on. Every row is a "
+                   "SCORE row that the PINNED heads score at their PINNED "
+                   "thetas to produce `asm`; nothing is fitted here.",
+            "why_the_label_is_not_cosmetic": "`phase2_arms.tape_index` "
+                                             "filters `r['split'] != split`, "
+                                             "so the label decides which "
+                                             "index a row lands in -- and a "
+                                             "forward day labelled `train` "
+                                             "reports as a day the heads "
+                                             "were FITTED on, which is the "
+                                             "look-ahead-shaped misreport",
+            "corrected_from": "the first 09-03 tape put the day in TRAIN and "
+                              "left SCORE empty; that artifact is moved "
+                              "aside as .WRONG_SPLIT and superseded",
+        },
         "THE_SPLIT_QUESTION_IS_NOT_MINE": {
             "mechanism": "build_state_tape_v2 maps its two inputs onto the "
                          "two splits: (('train', FRAG), ('score', TOP))",

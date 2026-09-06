@@ -31,6 +31,7 @@ THAT buffer is written. There is no second read and no second serialisation.
 """
 from __future__ import annotations
 
+import gc
 import hashlib
 import json
 import pickle
@@ -58,6 +59,22 @@ LEDGER_DERIVED = _BDR.derived()
 OUT_DERIVED = LEDGER_DERIVED
 
 COIN = "btc"
+
+#: PER-STAGE MEMORY BUDGETS, declared, and a stage over its budget REFUSES.
+#: Named to match DE's `--day` stages so the seams agree: DE's S0/S1 consume
+#: the book this produces, and R11 says the index is needed ONLY to produce
+#: `asm` -- so it is RELEASED before the book is written and the whole-day
+#: peak is max(index stage, assembly stage), not their sum.
+STAGE_BUDGETS_GB = {
+    "A0_reference": 3.0,      # measured 2.008 on 09-03
+    "A1_index": 6.5,          # measured 5.971 cumulative (reference + index)
+    "A2_assemble": 7.5,       # index + reference + chunked fragment + asm
+    "A3_release_index": 7.5,  # high-water only; CURRENT must fall
+    "A4_write_book": 7.5,
+}
+FIXTURE_STAGE_BUDGETS_GB = {k: 0.7 for k in STAGE_BUDGETS_GB}
+CHUNK_WINDOWS = 6             # as declared in be_assembly_budget
+
 HEADS = {"CONDVALUE_X_SKEW": "q1_arrival_composed_lgbm",
          "HAZARD_OVER_SKEWED_REF": "incumbent_linear_d"}
 BUDGET = 0.10
@@ -67,8 +84,101 @@ class BookRefused(RuntimeError):
     """A named refusal."""
 
 
+def assert_day_tape(day: str, coin: str = COIN) -> dict:
+    """THE ASSEMBLY MUST READ THE DAY'S TAPE, AND TODAY IT CANNOT.
+
+    `phase2_arms.tape_index` reads the MODULE CONSTANT `TAPE_PATH`
+    (`phase2_state_tape_v5.json`, the live August tape) and neither it nor
+    `de_phase4_diag_runner.build_tape_index(splits)` takes a path --
+    VERIFIED at the signatures. So an assembly run for a September day would
+    index the WRONG TAPE, find no rows for the day's generations, and emit a
+    book whose `asm` is empty. That is the failure that looks like a result,
+    and DE's guard would fire on it one stage later.
+
+    This refuses BEFORE any of it. The fix is a path parameter on
+    `phase2_arms.tape_index` -- DE's surface, routed at the reviewer's BE48
+    item 2, not taken here."""
+    import be_gate1_state_tape as TAPEMOD
+    import phase2_arms as PA
+    want = TAPEMOD.out_path(day, coin)
+    have = Path(PA.TAPE_PATH)
+    if have.resolve() != want.resolve():
+        raise BookRefused(
+            f"REFUSED: the assembly would index {have.name}, not this day's "
+            f"tape {want.name}. `phase2_arms.TAPE_PATH` is a module constant "
+            f"and neither `tape_index(split, features_in_order)` nor "
+            f"`build_tape_index(splits)` accepts a path -- so a September "
+            f"day cannot be pointed at its own tape and the run would emit a "
+            f"book with an EMPTY `asm`. BLOCKED on a path parameter, which "
+            f"is DE's surface (reviewer BE48, item 2). Not raised here, and "
+            f"not worked around.")
+    return {"tape": str(want), "is_the_days_tape": True}
+
+
+def assert_rule20(*, fixture: bool = False) -> dict:
+    """DELEGATED to DE's `wrapper_observed` -- MEASURED, not declared.
+
+    R12: `flock -n <lock> systemd-run --scope` passes the lock's fd through
+    the exec, so holding it is READ FROM /proc/self/fd. A string in a params
+    file cannot be evidence that a lock was held. My 05:54Z breach is exactly
+    what this refuses: a heavy run beside another heavy run, in the slice but
+    without the lock. Delegated rather than reimplemented -- two
+    implementations of one check is two checks (Q-BE-271)."""
+    import de_multiday_gate1_runner as RUN
+    w = dict(RUN.wrapper_observed())
+    w["delegated_to"] = "de_multiday_gate1_runner.wrapper_observed"
+    w["fixture"] = fixture
+    if not fixture and not w.get("heavy_run_lock_held"):
+        raise BookRefused(
+            "REFUSED: a real day is HEAVY BY CONSTRUCTION and this process "
+            "does not hold /home/yuqing/ctaNew/data/.heavy_run.lock. Run it "
+            "as `flock -n <lock> systemd-run --user --scope "
+            "--slice=research.slice -p MemoryMax=8G -p CPUQuota=100% ...`. "
+            "At 05:54Z on 2026-09-06 this seat ran a heavy build beside "
+            "another heavy run because it used the scope without the lock; "
+            "this refuses that before any work.")
+    return w
+
+
 def _rss_gb() -> float:
+    """HIGH-WATER mark. It never falls, which is why `_rss_now_gb` exists."""
     return round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 2**20, 3)
+
+
+def _rss_now_gb() -> float:
+    """CURRENT RSS. `ru_maxrss` is a high-water mark and cannot show a
+    release, so the claim "the index was dropped" needs a falling number to
+    rest on. Read from /proc/self/status."""
+    try:
+        for line in open("/proc/self/status"):
+            if line.startswith("VmRSS:"):
+                return round(int(line.split()[1]) / 2**20, 3)
+    except OSError:
+        pass
+    return float("nan")
+
+
+class _Stages:
+    """Per-stage budgets, asserted. A stage over its budget REFUSES."""
+
+    def __init__(self, budgets: dict):
+        self.budgets = dict(budgets)
+        self.rows = []
+
+    def done(self, name: str, t0: float) -> dict:
+        b = self.budgets.get(name)
+        row = {"stage": name, "wall_s": round(time.time() - t0, 1),
+               "peak_gb": _rss_gb(), "current_gb": _rss_now_gb(),
+               "budget_gb": b}
+        row["within_budget"] = (b is None or row["peak_gb"] <= b)
+        self.rows.append(row)
+        if not row["within_budget"]:
+            raise BookRefused(
+                f"REFUSED at stage {name}: peak {row['peak_gb']} GB exceeds "
+                f"its declared budget of {b} GB. R8/R-174: the cap is NOT "
+                f"raised and the population is NOT reduced. The day is "
+                f"reported with its measured peak and refused.")
+        return row
 
 
 def day_slugs(day: str, coin: str = COIN, *, supply: dict = None) -> list:
@@ -158,11 +268,16 @@ def assert_coverage(cov: dict, n_gen: int, day: str) -> bool:
     return True
 
 
-def build(day: str, *, coin: str = COIN, chunk_windows: int = 6,
-          scratch: Path | None = None, progress: bool = True) -> dict:
+def build(day: str, *, coin: str = COIN,
+          chunk_windows: int = CHUNK_WINDOWS,
+          scratch: Path | None = None, progress: bool = True,
+          fixture: bool = False) -> dict:
     import de_phase4_diag_runner as R
     t0 = time.time()
     obs = {}
+    stages = _Stages(FIXTURE_STAGE_BUDGETS_GB if fixture
+                     else STAGE_BUDGETS_GB)
+    obs["wrapper"] = assert_rule20(fixture=fixture)
     sel = day_selector(day, coin)
     if progress:
         print(json.dumps({"stage": "selected", "slugs": sel.n_wanted,
@@ -170,6 +285,7 @@ def build(day: str, *, coin: str = COIN, chunk_windows: int = 6,
 
     t = time.time()
     fr = R.build_reference(coin, selector=sel)
+    stages.done("A0_reference", t)
     ref = fr["reference"]
     obs["reference_s"] = round(time.time() - t, 1)
     obs["reference_peak_gb"] = _rss_gb()
@@ -181,9 +297,11 @@ def build(day: str, *, coin: str = COIN, chunk_windows: int = 6,
     if not ref:
         raise BookRefused(f"REFUSED: {day} produced an EMPTY reference.")
 
+    assert_day_tape(day, coin)
     splits = R.DECLARED_SPLIT_SETS[R.RULED_SPLIT_SET]
     t = time.time()
     tape = R.build_tape_index(splits)
+    stages.done("A1_index", t)
     obs["tape_index_s"] = round(time.time() - t, 1)
     obs["tape_rows"] = tape.get("n_tape_rows")
     obs["after_tape_peak_gb"] = _rss_gb()
@@ -203,8 +321,32 @@ def build(day: str, *, coin: str = COIN, chunk_windows: int = 6,
     asm = R.assemble_streaming({coin: ref}, splits=splits, coins=(coin,),
                                chunk_windows=chunk_windows, source=frag,
                                tape=tape)
+    stages.done("A2_assemble", t)
     obs["assembly_s"] = round(time.time() - t, 1)
     obs["peak_gb"] = _rss_gb()
+
+    # DE v9 R11: THE INDEX IS NEEDED ONLY TO PRODUCE `asm`. The consumer of
+    # the book reads `asm` and the reference and never a tape row, so the
+    # index does not have to be alive when the book is written. Releasing it
+    # here is what makes the whole-day peak max(index, assembly) instead of
+    # their sum -- on the measured numbers, the difference between fitting
+    # the cap and not.
+    t = time.time()
+    _before_release = _rss_now_gb()
+    del tape
+    gc.collect()
+    _after_release = _rss_now_gb()
+    stages.done("A3_release_index", t)
+    obs["index_released"] = {
+        "current_gb_before": _before_release,
+        "current_gb_after": _after_release,
+        "freed_gb": round(_before_release - _after_release, 3),
+        "measured_on_CURRENT_rss": "ru_maxrss is a high-water mark and "
+                                   "cannot show a release; this is VmRSS",
+        "index_is_build_time_only": "DE design v9 R11 -- "
+                                    "INDEX_SPLITS_NEEDED_BY_DAY = NONE at "
+                                    "any stage",
+    }
     if progress:
         print(json.dumps({"stage": "assembled", **{k: obs[k] for k in
                           ("assembly_s", "peak_gb")}}), flush=True)
@@ -234,6 +376,7 @@ def build(day: str, *, coin: str = COIN, chunk_windows: int = 6,
     assert_coverage(cov, n_gen, day)
 
     _BDR.require_ledger()          # result-bearing: refuse a non-ledger tree
+    t = time.time()
     book = {"fr": fr, "asm": asm}
     buf = pickle.dumps(book, protocol=pickle.HIGHEST_PROTOCOL)
     digest = hashlib.sha256(buf).hexdigest()
@@ -242,8 +385,14 @@ def build(day: str, *, coin: str = COIN, chunk_windows: int = 6,
     dst = LEDGER_DERIVED / f"be_daybook_{day}_{coin}.pkl"
     dst.write_bytes(buf)
     back = hashlib.sha256(dst.read_bytes()).hexdigest()
+    stages.done("A4_write_book", t)
     obs["wall_s"] = round(time.time() - t0, 1)
     obs["peak_rss_gb"] = _rss_gb()
+    obs["stages"] = stages.rows
+    obs["stage_budgets_gb"] = stages.budgets
+    obs["asm_peak_gb_PUBLISHED"] = next(
+        (r["peak_gb"] for r in stages.rows if r["stage"] == "A2_assemble"),
+        None)
     return {
         "protocol": "BE_DAYBOOK_V1",
         "day": day, "coin": coin,
@@ -284,7 +433,7 @@ def build(day: str, *, coin: str = COIN, chunk_windows: int = 6,
     }
 
 
-EXPECTED_CHECKS = 9
+EXPECTED_CHECKS = 10
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -404,6 +553,18 @@ def selftest() -> int:
         ok("EMPTY decision population" in str(e),
            "KNOWN-BAD: zero coverage on every head REFUSES -- an empty "
            "decision population is the failure that looks like a result")
+
+    try:
+        assert_day_tape("20260903")
+        ok(False, "the day-tape guard must refuse while TAPE_PATH is a "
+                  "module constant")
+    except BookRefused as e:
+        ok("module constant" in str(e) and "EMPTY `asm`" in str(e),
+           "KNOWN-BAD, AND IT IS THE LIVE BLOCKER: the assembly would index "
+           "the live August tape, not the day's, because "
+           "`phase2_arms.TAPE_PATH` is a module constant -- so a September "
+           "run would emit a book with an empty `asm`. It REFUSES before "
+           "any work rather than producing that book")
 
     return _finish(checks, fails, skipped)
 
