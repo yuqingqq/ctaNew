@@ -551,13 +551,27 @@ def receipt_design_version(rec: dict) -> dict:
 def fields_in_force_for(rec: dict) -> dict:
     """The sealed names a receipt is judged against, and WHY those."""
     v = receipt_design_version(rec)
-    if v["resolved"]:
+    #: DA 105. ***A CORRECTION IS EMITTED TODAY, SO IT IS JUDGED BY
+    #: TODAY'S LIST TOO.*** R-663 scopes a receipt by the list in force
+    #: WHEN IT WAS PRODUCED -- which is right for the original emission.
+    #: A `.vN` carrying a `supersedes` pair is a NEW artifact written
+    #: under today's rules, and a name sealed now may not enter the ledger
+    #: through it. The judged set is the UNION: the scope of the corrected
+    #: artifact AND the list in force at the correction.
+    _is_a_correction = isinstance(rec, dict) and bool(rec.get("supersedes"))
+    if v["resolved"] and not _is_a_correction:
         names = tuple(n for n in ECONOMIC_FIELDS
                       if SEALED_FROM_DESIGN_VERSION[n] <= v["design_version"])
         later = tuple(n for n in ECONOMIC_FIELDS if n not in names)
     else:
         names, later = tuple(ECONOMIC_FIELDS), ()
     return {"fields": names, "n_fields": len(names),
+            "is_a_correction": _is_a_correction,
+            "why_the_strictest_for_a_correction": (
+                "a `.vN` carrying a supersedes pair is a NEW artifact "
+                "written under today's rules; a name sealed now may not "
+                "enter the ledger through a correction of an older one"
+                if _is_a_correction else None),
             "design_version": v["design_version"],
             "version_resolved": v["resolved"], "how_resolved": v["how"],
             "version_evidence": {k: x for k, x in v.items()
@@ -2702,6 +2716,10 @@ def main() -> int:
     ap.add_argument("--supersedes", default=None,
                     help="the record this one replaces: R-608's pair is "
                          "written and the prior chain extended")
+    ap.add_argument("--first-of-family", action="store_true",
+                    help="this pre-read is of a NEW receipt head, so it "
+                         "starts its own family rather than correcting "
+                         "the pre-read of the receipt it superseded")
     ap.add_argument("--what-changed", default=None)
     a = ap.parse_args()
     if a.selftest:
@@ -2743,7 +2761,7 @@ def main() -> int:
         #: ***My census family reached four heads exactly this way*** --
         #: by an emission that was easier to write without the link than
         #: with it.
-        if a.output and not a.supersedes:
+        if a.output and not a.supersedes and not a.first_of_family:
             _h = landing_record_for(a.day)
             if _h.get("status") in ("CHAIN_HEAD", "ONE_RECORD"):
                 print(f"REFUSED: DAY_ALREADY_HAS_A_LANDING_RECORD -- "
@@ -2756,6 +2774,7 @@ def main() -> int:
                          open_book=a.open_book,
                          supersedes=a.supersedes,
                          what_changed=a.what_changed,
+                         first_of_family=a.first_of_family,
                          builder_receipt=a.builder_receipt)
         #: DA 99: the CLI line must not say NO POPULATION RECOMPUTED when
         #: one was -- on the pickle path `n_arms_agreeing` is None because
@@ -3414,6 +3433,7 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
                  now: datetime.datetime | None = None,
                  supersedes: str | Path | None = None,
                  what_changed: str | None = None,
+                 first_of_family: bool = False,
                  builder_receipt: str | None = None) -> dict:
     """THE PRE-READ. Everything the runbook promises before the bar, and
     NOTHING that the bar exists to schedule.
@@ -3623,6 +3643,14 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         #: the fact is indistinguishable from the one the read was
         #: scheduled against.
         "is_the_declared_LANDING_RECORD": True,
+        **({"first_of_family": True,
+            "why_first_of_family": (
+                "this is the pre-read of a NEW receipt head. A pre-read is "
+                "ABOUT one receipt; when the receipt is superseded the new "
+                "head is a different artifact, so its pre-read starts its "
+                "own family rather than correcting the record of the "
+                "receipt it replaced -- that record stays true of the "
+                "receipt it read")} if first_of_family else {}),
         #: REV 73 S0: the superseding link is written BY THE EMITTER now.
         **({"supersedes": supersession_block(
             supersedes,
@@ -3863,7 +3891,24 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         "PRE_READ_VERIFIED": 0, "PROVENANCE_INCOMPLETE": 3,
         "INCOMPLETE": 3, "FLAGGED": 1,
         "why": "the four-state scheme this seat already uses (DA 71)"}
-    out["provenance_all_matched"] = prov_ok
+    #: DA 105: THREE STATES, NOT TWO. Where a half is RECONSTRUCTED, this
+    #: is neither matched nor mismatched -- it is None, with the reason
+    #: named beside it, because a silent true would certify a digest
+    #: nobody stamped and a silent false would accuse a receipt that
+    #: reconstructed one honestly.
+    _recon = sorted(k for k in ("params", "design",
+                                "params_named_by_the_receipt")
+                    if (prov[k] or {}).get("status")
+                    == "PROVENANCE_RECONSTRUCTED_NOT_A_PIN")
+    out["provenance_all_matched"] = (None if _recon else prov_ok)
+    out["provenance_reconstructed_not_a_pin"] = _recon or None
+    if _recon:
+        out["why_provenance_all_matched_is_none"] = (
+            f"{_recon} carry a digest RECONSTRUCTED after the fact, which "
+            f"verifies nothing about what the run read. Neither matched "
+            f"nor mismatched: a silent true would certify a digest nobody "
+            f"stamped, a silent false would accuse a receipt that "
+            f"reconstructed one honestly and said so in the key")
     out["code_is_committed"] = bool(
         prov["verifier"]["producing_code_is_the_committed_bytes"])
     out["verifier_sha256"] = prov["verifier"]["sha256"]
@@ -3973,9 +4018,32 @@ def _derived_dir() -> Path:
 #: itself instead of the receipt. Every place the receipt may state a pin
 #: is read, and two of its own statements that DISAGREE are a named
 #: CONFLICT, never a silent choice between them.
+#: DA 105. ***A RECONSTRUCTED DIGEST IS NOT A PIN, AND IT IS NOT AN
+#: ABSENCE EITHER.*** DE 109's 09-03 correction carries the design and
+#: params digests under `sha256_AT_THE_CARRYING_COMMIT_RECONSTRUCTED` and
+#: says in the artifact that they cannot act as pins. Read as a pin, that
+#: would be a verification of a digest nobody stamped; read as nothing, it
+#: would say "the receipt names no params declaration", which is false.
+#: It is a THIRD state, named.
+RECONSTRUCTED_MARK = "RECONSTRUCTED"
+
+
+def _reconstructed_digest(blk) -> str | None:
+    if not isinstance(blk, dict):
+        return None
+    for k in blk:
+        if k.startswith("sha256") and RECONSTRUCTED_MARK in k:
+            return k
+    return None
+
+
 def receipt_pin_candidates(receipt: dict, kind: str) -> dict:
     """Every block in which THE RECEIPT ITSELF names a `kind` pin."""
     found = []
+    #: the RECONSTRUCTED shape, reported as its own state
+    inputs = ((receipt.get("provenance") or {}).get("inputs") or {})
+    rblk = inputs.get(kind)
+    rkey = _reconstructed_digest(rblk)
     prov = (receipt.get("provenance") or {}).get(kind)
     if isinstance(prov, dict) and (prov.get("path") or prov.get("protocol")):
         found.append({"where": f"provenance.{kind}", "block": prov})
@@ -3989,6 +4057,16 @@ def receipt_pin_candidates(receipt: dict, kind: str) -> dict:
     ident = {(Path(str(f["block"].get("path") or "")).name,
               f["block"].get("sha256")) for f in found}
     return {"found": found, "n_places": len(found),
+            "reconstructed_block": (
+                None if not rkey else
+                {"where": f"provenance.inputs.{kind}", "digest_key": rkey,
+                 "path": rblk.get("path"),
+                 "why_not_a_pin": (
+                     "the digest is RECONSTRUCTED after the fact -- it says "
+                     "so in its own key -- so it verifies nothing about "
+                     "what the run read. The artifact says the same; this "
+                     "verifier does not promote it to a pin, and does not "
+                     "report the receipt as naming nothing either")}),
             "conflict": len(ident) > 1,
             "identities": sorted((n, (h or "")[:16]) for n, h in ident),
             "why": ("the receipt is the authority on what it read; where "
@@ -4017,6 +4095,15 @@ def params_check(receipt: dict) -> dict:
                         "than one place and the pins disagree; choosing "
                         "one would be this verifier deciding which of the "
                         "receipt's own statements to believe")}
+    if not cand["found"] and cand.get("reconstructed_block"):
+        return {"named_by_the_receipt": True, "matches": None,
+                "status": "PROVENANCE_RECONSTRUCTED_NOT_A_PIN",
+                **cand["reconstructed_block"],
+                "why": ("the receipt names the params declaration only "
+                        "through a digest it RECONSTRUCTED after the fact; "
+                        "a reconstruction verifies nothing about what the "
+                        "run read, and this verifier neither promotes it "
+                        "to a pin nor reports the receipt as naming none")}
     blk = cand["found"][0]["block"] if cand["found"] else None
     named_at = cand["found"][0]["where"] if cand["found"] else None
     if not isinstance(blk, dict) or not (blk.get("path") or blk.get("protocol")):
@@ -4086,6 +4173,11 @@ def design_check(receipt: dict, params: dict) -> dict:
                         "and the pins disagree; this verifier will not "
                         "pick which of the receipt's statements to hold "
                         "it to")}
+    if not cand["found"] and cand.get("reconstructed_block"):
+        return {"found": True, "matches": None,
+                "named_by": "the receipt, as a RECONSTRUCTION",
+                "status": "PROVENANCE_RECONSTRUCTED_NOT_A_PIN",
+                **cand["reconstructed_block"]}
     blk = (cand["found"][0]["block"] if cand["found"]
            else params.get("design_declaration"))
     src = (f"the receipt ({cand['found'][0]['where']})" if cand["found"]
@@ -4258,6 +4350,50 @@ def run_identity_and_peak() -> dict:
             "leaf against 847,671,296 at the property for one run. Both "
             "are reported, each with its source")
     return out
+
+
+#: DA 105. A RECOMPUTATION OF A RECONSTRUCTION IS ALLOWED -- it is not a
+#: sealed field, and DE's `n_days_complete_TRUE_AT_EMIT_RECONSTRUCTED` is
+#: recovered after the fact by its own admission. This counts the same
+#: thing independently: SEALED day receipts under the ledger whose OWN
+#: `emitted_at_utc` is at or before this receipt's, keyed by DAY so a
+#: `.vN` correction of a day already counted does not count it twice.
+def day_count_true_at_emit(rec: dict, derived: Path | None = None) -> dict:
+    d = Path(derived) if derived else _derived_dir()
+    mine = str(rec.get("emitted_at_utc") or "")
+    days, considered = set(), []
+    for f in sorted(d.glob("p003_de_gate1_day_run_*_SEALED__*.json")):
+        try:
+            o = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        stamp = str(o.get("emitted_at_utc") or "")
+        day = str(o.get("day") or "").replace("-", "")
+        counted = bool(stamp and mine and stamp <= mine and day)
+        considered.append({"file": f.name, "day": day,
+                           "emitted_at_utc": stamp, "counted": counted})
+        if counted:
+            days.add(day)
+    theirs = ((rec.get("n_days_complete_TRUE_AT_EMIT_RECONSTRUCTED") or {})
+              .get("n_days_complete_TRUE_AT_EMIT_RECONSTRUCTED"))
+    return {"mine": len(days), "days": sorted(days),
+            "the_receipt_s_reconstruction": theirs,
+            "agrees": (None if theirs is None else len(days) == theirs),
+            "emitted_n_days_complete": rec.get("n_days_complete"),
+            "n_receipts_considered": len(considered),
+            "method": ("counted from the SEALED day receipts whose OWN "
+                       "`emitted_at_utc` is at or before this receipt's, "
+                       "keyed by DAY -- a `.vN` correction of a day "
+                       "already counted does not count it twice"),
+            "neither_field_is_economic": (
+                "`n_days_complete` and the reconstruction are POPULATION "
+                "SIZES, not sealed statistics: neither appears in "
+                "ECONOMIC_FIELDS, and recomputing a reconstruction is "
+                "allowed because it is not a sealed field"),
+            "checked_against_the_sealed_list": [
+                n for n in ("n_days_complete",
+                            "n_days_complete_TRUE_AT_EMIT_RECONSTRUCTED")
+                if n in ECONOMIC_FIELDS]}
 
 
 def structure_declaration_for_book(book_sha256: str,
@@ -5777,6 +5913,64 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"{_cap_ns['this_capture_holds_both_readings']}, the_two_disagree "
        f"{_cap_ns['the_two_disagree']}; no leaf read -> {_no_leaf}; "
        f"another head -> {_wrong_head}")
+
+    # -- DA 105: A CORRECTION IS JUDGED BY TODAY'S LIST TOO --------------
+    _v21 = {"provenance": {"design": {
+                "path": str(_derived_dir()
+                            / "p003_de_multiday_gate1_design_v21.json"),
+                "sha256": hashlib.sha256(
+                    (_derived_dir()
+                     / "p003_de_multiday_gate1_design_v21.json").read_bytes()
+                ).hexdigest()}},
+            "per_day_sealed_artifacts": [
+                {"arm": "A", "counts": {"n_fills_arm": 7}}]}
+    _orig = fields_in_force_for(_v21)
+    _corr = fields_in_force_for(dict(_v21, supersedes={
+        "path": "x.json", "sha256": "a" * 64}))
+    _abs_o = economic_absence(_v21)
+    _abs_c = economic_absence(dict(_v21, supersedes={
+        "path": "x.json", "sha256": "a" * 64}))
+    ck("DA 105 -- ***A CORRECTION IS EMITTED TODAY, SO IT IS JUDGED BY "
+       "TODAY'S LIST TOO.*** R-663 scopes a receipt by the list in force "
+       "WHEN IT WAS PRODUCED, which is right for an original emission and "
+       "wrong for a `.vN`: a correction is a NEW artifact written under "
+       "today's rules, and ***a name sealed NOW may not enter the ledger "
+       "through a correction of an older one***. Driven on the same bytes "
+       "twice: as an ORIGINAL under a v21 pin, `n_fills_arm` is not yet "
+       "sealed and the receipt is clean; the SAME receipt carrying a "
+       "`supersedes` pair is judged against ALL ELEVEN and REFUSES, naming "
+       "the path",
+       _orig["n_fields"] == 8 and _orig["is_a_correction"] is False
+       and _abs_o["sealed"] is True
+       and _corr["n_fields"] == 11 and _corr["is_a_correction"] is True
+       and _abs_c["sealed"] is False
+       and any("n_fills_arm" in x for x in _abs_c["leaked_field_paths"]),
+       f"as an original: {_orig['n_fields']} names, sealed "
+       f"{_abs_o['sealed']}; as a correction: {_corr['n_fields']} names, "
+       f"sealed {_abs_c['sealed']}, leaked at "
+       f"{_abs_c['leaked_field_paths']}")
+    _recon = {"provenance": {"inputs": {
+        "params": {"path": "p.json",
+                   "sha256_AT_THE_CARRYING_COMMIT_RECONSTRUCTED": "b" * 64},
+        "design": {"path": "d.json",
+                   "sha256_AT_THE_CARRYING_COMMIT_RECONSTRUCTED": "c" * 64}}}}
+    _pc = params_check(_recon)
+    _dc = design_check(_recon, _pc)
+    ck("AND A RECONSTRUCTED DIGEST IS A THIRD STATE, NAMED: not a pin and "
+       "not an absence. DE 109's 09-03 correction carries the design and "
+       "params digests under "
+       "`sha256_AT_THE_CARRYING_COMMIT_RECONSTRUCTED` and says they "
+       "cannot act as pins. ***Read as a pin it would certify a digest "
+       "nobody stamped; read as nothing it would say the receipt names no "
+       "params declaration, which is false.*** Both halves report "
+       "`PROVENANCE_RECONSTRUCTED_NOT_A_PIN` with `matches: None`",
+       _pc["status"] == "PROVENANCE_RECONSTRUCTED_NOT_A_PIN"
+       and _pc["matches"] is None
+       and _dc["status"] == "PROVENANCE_RECONSTRUCTED_NOT_A_PIN"
+       and _dc["matches"] is None
+       and "RECONSTRUCTED" in _pc["digest_key"],
+       f"params -> {_pc['status']} (matches {_pc['matches']}, key "
+       f"{_pc['digest_key']}); design -> {_dc['status']}")
 
     # -- DA 104: THE CHAIN IS RESOLVED AND WRITTEN BY THE SHARED CODE ---
     import declaration_chain as _DC                           # noqa: PLC0415
