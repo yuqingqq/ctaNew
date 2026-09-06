@@ -1,0 +1,278 @@
+{
+  "both_directions": true,
+  "checks": [
+    {
+      "check": "THE BARS COME FROM THE NEWEST PARAMS PRESENT, RESOLVED NOT TYPED (REV 45 3.3, learned twice): a checker pinned to a superseded declaration reads bars nobody runs under -- and pinning the FILENAME taught it again, because v5 predates `read_gate` and the conjunction this verifier must evaluate was not in the file it was pinned to",
+      "detail": "de_multiday_gate1_params_v8.json sha 8c3f26766bea3af4, protocol P003_DE_MULTIDAY_GATE1_PARAMS_V8, read bar 2026-09-09T00:06:00Z; versions present [1, 2, 3, 4, 5, 6, 7, 8], newest chosen",
+      "passed": true
+    },
+    {
+      "check": "DE's ECONOMIC FIELD LIST IS READ AT THE SOURCE BY AST, and the assertion is not just that the constant exists but that `_strip_economic` -- the function that actually removes them -- REFERENCES THAT NAME. A constant nothing uses would pin nothing",
+      "detail": "8 fields from live/pm_research/de_multiday_gate1_runner.py sha 8072eee0a7f4cff0: ['D_E0', 'D_E_MINUS_R', 'Z', 'p_location', 'null_mean', 'null_sd', 'null_draws_summary', 'sd_over_abs_mean'] -- GREW by ['sd_over_abs_mean'] since the seven this check pins as a floor",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: a runner whose `_strip_economic` does NOT reference the constant REFUSES -- the stripper could then be removing a different set entirely and the seal detection would be pinned to nothing",
+      "detail": "a source with the constant present but unused by the stripper raises",
+      "passed": true
+    },
+    {
+      "check": "THE BOOK ADAPTER BOTH WAYS: a book carrying rows AND per-arm scores loads; one without the scores REFUSES BY NAME. This verifier re-derives the STATISTIC, not the scoring -- re-scoring from the pinned heads would make a disagreement a scoring difference",
+      "detail": "80 rows, 2 armed score vectors; a book without them raises BOOK_CARRIES_NO_ARM_SCORES",
+      "passed": true
+    },
+    {
+      "check": "BEFORE THE BAR THE REAL-DAY PATH REFUSES, AND THE BAR IS NAMED: a day verdict recomputed before the read bar is a read of the gate, whatever it is called",
+      "detail": "'REFUSED: the Gate-1 real-day path is closed until 2026-09-09T00:06:00Z (now 2026-09-06T08:00:00+00:00, 2...'",
+      "passed": true
+    },
+    {
+      "check": "AND WITH THE CLOCK PAST THE BAR IT ADMITS AND VERIFIES: every declared arm recomputed from the book at its own seed, compared EXACT, and IS_A_VERIFICATION_OF_THE_ECONOMICS computed true",
+      "detail": "2 of 2 arms verified, 0 sealed; the clock is a PARAMETER for this test and is NOT a CLI flag -- a bar with a documented way past it is not a bar",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: ONE MOVED ECONOMIC FIELD IS FLAGGED and the run is NOT a verification -- the comparison is exact, so 1e-9 is a mismatch",
+      "detail": "CONDVALUE_X_SKEW.D_E0 +1e-9 -> flagged ['D_E0'], verification False",
+      "passed": true
+    },
+    {
+      "check": "THE BAR OPENING DOES NOT OPEN A SEAL: with the clock PAST the read bar, a sealed receipt is still ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED and the run is NOT a verification. Those are different gates -- one schedules the read, the other withholds the numbers",
+      "detail": "gate open True, 2 arms sealed, verification False -- and the seal is detected by DE's OWN field list read at source",
+      "passed": true
+    },
+    {
+      "check": "A WRONG BOOK REFUSES THE WHOLE VERIFICATION, not the offending arm: a day whose book does not match the receipt's digest is not the day the receipt describes",
+      "detail": "'REFUSED: book digest mismatch at /tmp/da67_18s5ycbt/wrong_book.json: receipt says 3e8dac65ded140984b8bb092a347...'",
+      "passed": true
+    },
+    {
+      "check": "WITHOUT A REPLAY ENGINE THE PATH REFUSES BY NAME rather than substituting a second implementation of the policy -- the engine is the instrument of record and a second one would measure a different thing",
+      "detail": "'REFUSED: REPLAY_ENGINE_NOT_RESOLVED. The policy replay is the instrument of record and this module...'",
+      "passed": true
+    },
+    {
+      "check": "AN ARM DECLARED IN PARAMS AND ABSENT FROM THE RECEIPT IS A STATUS, NEVER A SILENT PASS -- and the run is not a verification",
+      "detail": "HAZARD_OVER_SKEWED_REF absent -> ABSENT_FROM_THE_RECEIPT, verification False",
+      "passed": true
+    },
+    {
+      "check": "THE FOUR LIMITS ARE A COMPUTED LIST, NOT PROSE: each carries a field this run measured -- D(E-R) is in DE's economic list and the runner produces it in ZERO places; the book is shared and nothing was re-scored; the declaration is read by both sides from one file; and sealed arms are counted",
+      "detail": "['D_E_MINUS_R_IS_NOT_VERIFIED', 'THE_BOOK_IS_SHARED_AND_ITS_CONSTRUCTION_IS_NOT_CHECKED', 'AN_ERROR_IN_THE_DECLARATION_REPRODUCES_IN_BOTH', 'SEALED_ECONOMICS_CANNOT_BE_VERIFIED_AT_ALL']; D(E-R) appears in 0 producing places, so there is nothing to compare",
+      "passed": true
+    },
+    {
+      "check": "AND THE LIMITS MOVE WITH THE RUN: on the SEALED receipt the sealed limit counts every arm, on the open one it counts none -- a limits block that read the same either way would be prose after all",
+      "detail": "sealed run: 2 of 2; open run: 0",
+      "passed": true
+    },
+    {
+      "check": "ONE DECLARED ARTIFACT, carrying the computed verdict, the gate, the book digest, the params pin, DE's field list with its source digest, and the limits",
+      "detail": "verdict.json: verification True, params 8c3f26766bea3af4, field list from 8072eee0a7f4cff0",
+      "passed": true
+    },
+    {
+      "check": "THERE IS NO OVERRIDE FLAG ON THE CLI -- asserted from THIS FILE's OWN argument parser by AST, not from a comment. The clock is a PARAMETER so the battery can drive both sides of the predicate; a bar with a documented way past it is not a bar",
+      "detail": "CLI flags ['--book', '--builder-receipt', '--day', '--output', '--pre-read', '--receipt', '--selftest']; none matches now/clock/force/override/skip/unsafe/go",
+      "passed": true
+    },
+    {
+      "check": "THE PRE-READ RUNS BEFORE THE BAR AND VERIFIES -- which is the whole gap: the full read gates on 2026-09-09T00:06Z, so the population, seed, statuses and provenance the runbook promises BEFORE it had nowhere to be checked",
+      "detail": "clock 2026-09-06 (bar 2026-09-09T00:06:00Z, open=False) -> PRE_READ_VERIFIED, 2/2 arms agree",
+      "passed": true
+    },
+    {
+      "check": "IT READS NO ECONOMICS AND THAT IS STRUCTURAL, NOT A CONVENTION: no replay engine is resolved and no null is drawn, so D(E0) and everything downstream are not merely unreported -- they are uncomputable on this path",
+      "detail": "replay_engine_used=False, null_drawn=False, IS_A_VERIFICATION_OF_THE_ECONOMICS=False",
+      "passed": true
+    },
+    {
+      "check": "AND THE EMISSION IS PROVEN CLEAN BY A COMPUTED CENSUS, two ways: no economic field NAME appears in what was emitted, AND none of the receipt's economic VALUES appears anywhere in it. A name check alone passes while the number rides out under another key",
+      "detail": "167 leaves emitted, 0 economic names, 0 echoed values",
+      "passed": true
+    },
+    {
+      "check": "AFTER THE BAR THE SAME MODE STILL RUNS AND STILL READS NO ECONOMICS -- two gates, independent: the bar schedules the READ, the seal withholds the NUMBERS, and this mode is on the far side of neither",
+      "detail": "clock past the bar (open=True) -> PRE_READ_VERIFIED, economics read: NONE",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A MOVED POPULATION COUNT IS FLAGGED. n_decisions is recomputed from the book at the declared theta, so a receipt that claims a different one disagrees with the book it names",
+      "detail": "CONDVALUE_X_SKEW.n_decisions +1 -> ['n_decisions']",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A WRONG SEED IS FLAGGED. The seed is re-derived from the book's digest and the arm name, so a receipt whose seed does not follow from the book it names drew a different null",
+      "detail": "CONDVALUE_X_SKEW.seed +1 -> ['seed']; recomputed 3793768369",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD, AND THE HARD HALF: A LEAKED ECONOMIC FIELD IS FLAGGED BY NAME AND ITS VALUE IS NEVER ECHOED. The leak's PATH is recorded, the number is not -- a checker that reported `D_E0 = <value> leaked` would publish exactly what the seal exists to withhold",
+      "detail": "leak named at ['per_day_sealed_artifacts[0].D_E0']; the value appears 0 times in the emission and the census confirms 0 echoed",
+      "passed": true
+    },
+    {
+      "check": "REV 49 section 2.4 CLOSED -- A SEALED NUMBER HIDDEN IN PROSE IS CAUGHT. The receipt is properly sealed and carries NO economic numeric leaf, so the value lives only in a refusal reason's TEXT: an emission repeating it is caught by the string scan, and one that does not is clean. ***The first version's watch list was built from numeric leaves alone, so on a SEALED receipt it was EMPTY -- the census could only catch a leak in a receipt that had already leaked***",
+      "detail": "watch list: 0 from numeric leaves (a sealed receipt has none) + 1 from the receipt's prose. The echoing emission -> 1 string hit(s); the clean one -> 0",
+      "passed": true
+    },
+    {
+      "check": "AND THE HIT IS REPORTED BY PATH AND HOW, NEVER BY VALUE -- a census that printed the number it caught would publish exactly what the seal withholds, in the field that exists to prevent it",
+      "detail": "hits: [('arms.A.note', 'exact numeric token')]; the value appears 0 times in them",
+      "passed": true
+    },
+    {
+      "check": "AND THE PRE-READ NEVER ECHOES `admissibility.reasons` AT ALL: with the reason carrying a sealed number, its own emission is still clean, because it copies the STATUS and the COUNTS and not the prose",
+      "detail": "0 `reasons` paths in the emission; census clean True over 165 string fields",
+      "passed": true
+    },
+    {
+      "check": "REV 49 section 2.5 CLOSED -- THE `iff` NOW FIRES AND ADMITS, because the fixture carries BOTH states: a v12-shaped receipt KEEPS `sd_over_abs_mean` (v12's stripper did not know it) while DE's current list says it should be gone, and a v13-shaped one strips it. ***A check that could only ever see one state was pinning nothing***",
+      "detail": "v12-shaped: present=True, consistent=False; v13-shaped: present=False, consistent=True",
+      "passed": true
+    },
+    {
+      "check": "AND THE INCONSISTENT STATE IS READ AS A PROVENANCE SIGNAL, NOT A DEFECT IN THE DAY: a receipt carrying the ratio while the list seals it was produced by code older than the list -- which is the state the REAL 09-03 receipt is in",
+      "detail": "reading: 'present while DE's list says it should be stripped: this receipt was produced by code older than...'",
+      "passed": true
+    },
+    {
+      "check": "REV 49 section 2.6 CLOSED -- THE DESIGN PIN IS READ FROM THE RECEIPT AND VERIFIED AT THE FILE IT NAMES, not against a version hardcoded here. A receipt declaring a digest the named file does not have is FLAGGED",
+      "detail": "the receipt names p003_de_multiday_gate1_design_v9__20260906T062115Z.json and declares its digest; verified fe4b0db4ddfdcc3a. A declared digest that the file does not have -> FLAGGED (True)",
+      "passed": true
+    },
+    {
+      "check": "A WRONG BOOK REFUSES THE PRE-READ TOO: a day whose book does not match the receipt's digest is not the day the receipt describes, and no population recomputed from it would mean anything",
+      "detail": "'REFUSED: book digest mismatch at /tmp/da68_08vq9qpe/wrong_book.json: receipt says 3e8dac65ded140...'",
+      "passed": true
+    },
+    {
+      "check": "REV 51 section 2.6 CLOSED ON THE PARAMS PIN TOO: the design pin was bound to the receipt and TWO LINES AWAY the params pin was a constant. Round 74 made it newest-present, which is still this verifier CHOOSING -- ***the newest is not what ran***. The RECEIPT names its params now and the file it names is verified",
+      "detail": "the receipt names de_multiday_gate1_params_v8.json (P003_DE_MULTIDAY_GATE1_PARAMS_V8) and declares its digest; verified 8c3f26766bea3af4",
+      "passed": true
+    },
+    {
+      "check": "AND BOTH GAPS ARE INCOMPLETE, NEVER A FALLBACK: a receipt naming NO params is PROVENANCE_INCOMPLETE_NO_PARAMS_NAMED, and one naming a params file this worktree cannot resolve is PROVENANCE_INCOMPLETE_PARAMS_UNRESOLVED -- verifying against a DIFFERENT declaration would be a verdict about bars the receipt never ran under",
+      "detail": "unnamed -> PROVENANCE_INCOMPLETE; unresolvable -> PROVENANCE_INCOMPLETE; both with every arm still agreeing (2/2) -- a GAP, not a defect",
+      "passed": true
+    },
+    {
+      "check": "R-604 -- A PARAMS FILE WITHOUT THE READ-GATE CONJUNCTION REFUSES, AND NEVER FALLS BACK TO THE CLOCK. `gate_is_open` used to read `read_not_before_utc` ALONE, so it would have opened on a bar WEAKER than the one DE declares",
+      "detail": "params carrying no read_gate.the_bar_is_a_CONJUNCTION raises rather than holding the clock alone",
+      "passed": true
+    },
+    {
+      "check": "R-604 -- THE CONJUNCTS COME FROM DE's OWN FIELD AND EACH IS EVALUATED AND NAMED. Before the clock bar the clock conjunct fails; after it, the conjuncts that fail are the ARTIFACT ones, each named -- so the gate says WHICH bar is not met",
+      "detail": "8 conjuncts declared in read_gate.the_bar_is_a_CONJUNCTION (P003_DE_MULTIDAY_GATE1_PARAMS_V8); before the bar 2 hold, after it 2; failing by name ['every_ruled_day_has_exactly_one_sealed_receipt', 'every_sealed_receipt_matches_its_LANDING_RECORD', 'every_day_has_at_least_one_admissible_arm', 'the_ledger_verdict_stands_for_every_day', 'every_receipt_names_locatable_producing_code', 'clock_at_or_before_horizon']",
+      "passed": true
+    },
+    {
+      "check": "AND A CONJUNCT NO EVALUATOR MATCHES IS A STATUS, NEVER A PASS -- so params growing from two conjuncts to eight cannot widen what this verifier silently accepts",
+      "detail": "0 conjunct(s) unevaluable; the gate is open=False",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD FOR THE SAME AXIS: a conjunct this verifier cannot evaluate is REPORTED and CLOSES the gate -- driven by adding one to the declared list",
+      "detail": "an unrecognised conjunct -> 1 unevaluable, gate open=False",
+      "passed": true
+    },
+    {
+      "check": "R-604 / REV 51 -- ALL EIGHT OF PARAMS v8's CONJUNCTS ARE BOUND BY STABLE ID, not by matching prose. `matched some words` and `is this conjunct` are different claims, and the binding route is RECORDED per conjunct so a reader knows which was made",
+      "detail": "8 of 8 bound by ID, 0 unevaluable; ids ['at_least_one_admissible_arm', 'clock_ge_read_not_before', 'horizon_fallback_G5_directional']...",
+      "passed": true
+    },
+    {
+      "check": "AND EVERY CONJUNCT IS EVALUATED, WITH THE FAILING ONES NAMED: on an empty ledger the artifact conjuncts fail by name while `params_field_required` holds -- reaching the evaluator IS that conjunct holding, because a missing field REFUSES before any conjunct runs",
+      "detail": "2 of 8 hold on an empty ledger; failing by name ['clock_at_or_after_read_not_before_utc', 'every_day_has_at_least_one_admissible_arm', 'every_receipt_names_locatable_producing_code']...",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: AN ID THIS VERIFIER IS NOT BOUND TO CLOSES THE GATE, and the route says so -- ID NOT IN THIS VERIFIER'S MAP. DE renaming or adding a conjunct cannot widen what is silently accepted",
+      "detail": "an unknown id -> 1 unevaluable, gate open=False",
+      "passed": true
+    },
+    {
+      "check": "REV 51 (b) -- THE HORIZON IS EVALUATED AGAINST THE CLOCK AND ITS FALLBACK IS NAMED, NEVER APPLIED SILENTLY: inside the horizon it HOLDS; past it, it fails and the receipt states the declared outcome -- G = 5, DIRECTIONAL. ***That is a different claim from the six-day test, and taking it is the coordinator's act***",
+      "detail": "horizon 2026-09-09T12:00:00Z: inside -> holds; past it -> fails with the fallback named G=5 directional",
+      "passed": true
+    },
+    {
+      "check": "REV 51 (a) -- THE SUPERSEDES CHAIN IS FOLLOWED AND AN UNCHAINED PAIR REFUSES: one receipt resolves; a v1 plus a CHAINED v2 resolves to the HEAD; a third with NO link makes the day AMBIGUOUS. ***Picking the newest by mtime would resolve an ambiguous pair silently, and a day that ran twice is not a day that ran***",
+      "detail": "one -> ONE; chained pair -> CHAIN_HEAD at p003_de_gate1_day_run_20260903_SEALED__B.json; unchained third -> AMBIGUOUS",
+      "passed": true
+    },
+    {
+      "check": "AND THE LANDING DIGEST IS THE CHAIN HEAD'S, not the superseded one's -- the head is what a read would use, so a v1 whose v2 supersedes it is not the artifact under test",
+      "detail": "the landing conjunct resolves 20260903 through the chain to p003_de_gate1_day_run_20260903_SEALED__B.json",
+      "passed": true
+    },
+    {
+      "check": "REV 50 section 3.3 item 3 -- THE PRE-READ ARTIFACT IS THE DECLARED LANDING RECORD of the day's sealed receipt digest, and it says so in its protocol. Nothing else in the programme records it: without it a receipt RE-EMITTED after the fact is indistinguishable from the one the read was scheduled against",
+      "detail": "records sealed_de.json at c4309e0ca953eed8 as of 2026-09-06T08:00:00Z",
+      "passed": true
+    },
+    {
+      "check": "AND THE RECORDS ARE READABLE BACK BY DAY, so the read gate's landing-digest conjunct has something to compare against",
+      "detail": "1 landing record(s) indexed; 09-03 -> c4309e0ca953eed8",
+      "passed": true
+    },
+    {
+      "check": "BE's BUILDER RECEIPT IS A SECOND, INDEPENDENT BINDING ON THE BOOK: agreeing digests admit, and two receipts naming DIFFERENT books REFUSE -- one binding can be right about the wrong artifact",
+      "detail": "builder agrees -> PRE_READ_VERIFIED; a disagreeing builder receipt raises",
+      "passed": true
+    },
+    {
+      "check": "PROVENANCE IS MATCHED BY DIGEST, not by name: params v5 306bfdb0..., design v12 c32c7245..., DE's economic field list from the runner's own source, and the verifier's own committed-bytes flag",
+      "detail": "params 8c3f26766bea3af4, design p003_de_multiday_gate1_design_v9__20260906T062115Z.json sha fe4b0db4ddfdcc3a named by the receipt, field list from 8072eee0a7f4cff0; the verifier's own committed-bytes flag is REPORTED (True) beside its content digest fa16394a4ebd7784, not folded into the verdict",
+      "passed": true
+    },
+    {
+      "check": "AND HALF A PREDICATE IS NOT REPORTED AS THE PREDICATE: R4's DECISION half is arithmetic on the book and is checked; its SD half compares the null's sd against its mean, both sealed, and the receipt says so rather than implying R4 passed. The `sd_over_abs_mean` presence flag is pinned as a CONSISTENCY with DE's own list, never as the state of the day",
+      "detail": "decisions 51 >= 30 passes; the sd half stays unverifiable before the read. `sd_over_abs_mean` is IN DE's economic field list, and it is correspondingly ABSENT from the sealed receipt -- R-599 IMPLEMENTED BY DE 85: the ratio my round-68 finding named is now sealed, and this instrument saw it from the SOURCE within the hour, without being told",
+      "passed": true
+    }
+  ],
+  "economic_field_list": {
+    "fields": [
+      "D_E0",
+      "D_E_MINUS_R",
+      "Z",
+      "p_location",
+      "null_mean",
+      "null_sd",
+      "null_draws_summary",
+      "sd_over_abs_mean"
+    ],
+    "read_by": "ast, at the source; not imported and not copied",
+    "source_path": "live/pm_research/de_multiday_gate1_runner.py",
+    "source_sha256": "8072eee0a7f4cff0a99c5897e99430423e43f993c0dcb4c09a990854a09a36f3",
+    "stripper_references_the_same_name": true
+  },
+  "n_checks": 46,
+  "n_failed": 0,
+  "params_declaration": {
+    "path": "de_multiday_gate1_params_v8.json",
+    "sha256": "8c3f26766bea3af4c4ea213eac368f27231a5672b352ea6698be113d012a1cd6"
+  },
+  "protocol": "P003_DA_GATE1_DAY_VERDICT_VERIFIER_V1_FIXTURE",
+  "status": "FIXTURE_NO_REAL_BOOK_NO_REAL_DAY",
+  "tolerance": {
+    "exact_bit_for_bit": [
+      "D_E0",
+      "Z",
+      "p_location",
+      "null_mean",
+      "null_sd"
+    ],
+    "float_equality_rule": "compared with `==` on floats after both sides are cast to float. A near-miss is a MISMATCH here, not a pass: the whole point of a seeded null is that it reproduces.",
+    "where_it_CANNOT_be_exact": "if the replay engine is not deterministic, D(E0) and every null value inherit that. This module does NOT assume determinism: it REPLAYS THE BASELINE TWICE and refuses if the two disagree, so the precondition the exact comparison rests on is checked rather than asserted.",
+    "why_exact": "the seed pins the DRAW SEQUENCE -- same seed, same pools, same sorted side order, same numpy Generator gives the same indices -- and the valuation is a finite sum of products of floats read from the same records in the same order. Nothing here is sampled twice or averaged over runs, so an equality is the honest comparison and a tolerance would only hide a real difference."
+  },
+  "verifier_identity": {
+    "commit_best_effort": "9dd79573bf2cd611a8f17425c17f10bd25262766",
+    "path": "live/pm_research/da_gate1_day_verdict.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "fa16394a4ebd77841e557fcd795f40e1b3ca0600dd2c3657743239961a2b5b62",
+    "tree_head": "9dd79573bf2cd611a8f17425c17f10bd25262766"
+  }
+}
