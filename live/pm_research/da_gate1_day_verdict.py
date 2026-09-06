@@ -92,6 +92,15 @@ DE_RUNNER_PATH = HERE / "de_multiday_gate1_runner.py"
 #: turns on. Read from the module (a constant, not a computation).
 BUY_SIDE = "BUY_UP"
 
+#: The seven the list has carried since it was written. Pinned as a FLOOR,
+#: never as the count: a field LEAVING the list would unseal a quantity and
+#: must be caught, while DE adding one is DE's to do -- and DE 85 did, under
+#: R-599, sealing `sd_over_abs_mean`.
+SEVEN_ORIGINAL_ECONOMIC_FIELDS = (
+    "D_E0", "D_E_MINUS_R", "Z", "p_location", "null_mean", "null_sd",
+    "null_draws_summary")
+
+
 def de_economic_fields_at_source(path: Path | None = None) -> dict:
     """DE's ECONOMIC_FIELDS, read FROM THE SOURCE by AST -- never imported,
     never copied into this file (REV 45 section 3.3).
@@ -906,11 +915,19 @@ def selftest() -> tuple:                                      # noqa: C901
        "assertion is not just that the constant exists but that "
        "`_strip_economic` -- the function that actually removes them -- "
        "REFERENCES THAT NAME. A constant nothing uses would pin nothing",
-       de["fields"] == ECONOMIC_FIELDS and len(de["fields"]) == 7
-       and de["stripper_references_the_same_name"] is True
-       and "D_E_MINUS_R" in de["fields"],
+       de["fields"] == ECONOMIC_FIELDS
+       #: the SEVEN the list has always carried must still be in it -- a
+       #: field silently LEAVING the list would unseal a quantity. The
+       #: COUNT is not pinned: DE may add to it, and DE 85 did exactly that
+       #: under R-599, which this instrument saw from the source within the
+       #: hour without being told.
+       and set(SEVEN_ORIGINAL_ECONOMIC_FIELDS) <= set(de["fields"])
+       and de["stripper_references_the_same_name"] is True,
        f"{len(de['fields'])} fields from {de['source_path']} sha "
-       f"{de['source_sha256'][:16]}: {list(de['fields'])}")
+       f"{de['source_sha256'][:16]}: {list(de['fields'])}"
+       + (f" -- GREW by {sorted(set(de['fields']) - set(SEVEN_ORIGINAL_ECONOMIC_FIELDS))} "
+          f"since the seven this check pins as a floor"
+          if set(de["fields"]) - set(SEVEN_ORIGINAL_ECONOMIC_FIELDS) else ""))
     bad_src = td / "nostrip.py"
     bad_src.write_text("ECONOMIC_FIELDS = ('D_E0',)\n"
                        "def _strip_economic(o):\n    return o\n")
@@ -1828,17 +1845,38 @@ def selftest_pre_read() -> list:                              # noqa: C901
 
     # -- K. the R4 sd half is NOT claimed ---------------------------------
     a0 = pre["arms"][arm0]
+    #: THE INVARIANT, not the state of the day. `sd_over_abs_mean` is a
+    #: ratio of two SEALED quantities. Whether it survives the seal is DE's
+    #: to decide -- and R-599 decided it -- so what this pins is the
+    #: CONSISTENCY: it is in the sealed receipt if and only if DE's own
+    #: field list does NOT carry it. An earlier version of this check
+    #: asserted `is True`, which pinned the day's state and failed the
+    #: moment DE 85 sealed the ratio. That failure was the instrument
+    #: working; the check was the thing that was wrong.
+    ratio_sealed_by_DE = "sd_over_abs_mean" in ECONOMIC_FIELDS
     ck("AND HALF A PREDICATE IS NOT REPORTED AS THE PREDICATE: R4's "
        "DECISION half is arithmetic on the book and is checked; its SD half "
        "compares the null's sd against its mean, both sealed, and the "
-       "receipt says so rather than implying R4 passed",
+       "receipt says so rather than implying R4 passed. The `sd_over_abs_"
+       "mean` presence flag is pinned as a CONSISTENCY with DE's own list, "
+       "never as the state of the day",
        a0["R4_decision_half"]["passes"] is True
        and "sealed" in a0["R4_sd_half_is_NOT_verifiable_before_the_read"]
-       and a0["sd_over_abs_mean_present_in_the_sealed_receipt"] is True,
+       and (a0["sd_over_abs_mean_present_in_the_sealed_receipt"]
+            is not ratio_sealed_by_DE),
        f"decisions {a0['R4_decision_half']['n_decisions']} >= "
-       f"{a0['R4_decision_half']['min_declared']} passes; the sd half is "
-       f"unverifiable, and `sd_over_abs_mean` DOES survive DE's seal -- "
-       f"reported as an observation, not ruled on")
+       f"{a0['R4_decision_half']['min_declared']} passes; the sd half stays "
+       f"unverifiable before the read. `sd_over_abs_mean` is "
+       f"{'IN' if ratio_sealed_by_DE else 'NOT in'} DE's economic field "
+       f"list, and it is correspondingly "
+       f"{'ABSENT from' if ratio_sealed_by_DE else 'PRESENT in'} the sealed "
+       f"receipt -- "
+       + ("R-599 IMPLEMENTED BY DE 85: the ratio my round-68 finding named "
+          "is now sealed, and this instrument saw it from the SOURCE within "
+          "the hour, without being told"
+          if ratio_sealed_by_DE else
+          "the ratio still survives the seal, which is the round-68 "
+          "observation standing"))
 
     return checks
 
