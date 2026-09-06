@@ -41,13 +41,25 @@ class Rule22Refused(RuntimeError):
     """The code that produced this emit is not the code that ran."""
 
 
-def _git(root: str, *args) -> str | None:
+def _git(root: str, *args, raw: bool = False) -> str | None:
+    """`raw=True` preserves LEADING whitespace.
+
+    `git status --porcelain` encodes the index state in column 1 and the
+    worktree state in column 2, so a tracked modification begins with a
+    SPACE (" M path"). Stripping that shifts every subsequent index by one
+    and the parse silently drops the first character of the path -- which is
+    exactly what this did until it was driven on a worktree whose first
+    porcelain line was a tracked change. Untracked entries ("?? path") have
+    no leading space, so the defect was invisible on every receipt landed so
+    far: their only entry was the ledger symlink."""
     try:
         r = subprocess.run(["git", "-C", root, *args], capture_output=True,
                            text=True, timeout=60)
     except Exception:                                        # noqa: BLE001
         return None
-    return r.stdout.strip() if r.returncode == 0 else None
+    if r.returncode != 0:
+        return None
+    return r.stdout.rstrip("\n") if raw else r.stdout.strip()
 
 
 def module_commit(path) -> dict:
@@ -107,12 +119,77 @@ class Capture:
             self.head_at_import = self.head_state()
         return self
 
+    @staticmethod
+    def _ledger_data() -> Path | None:
+        """The canonical ledger, RESOLVED from the data-root resolver -- not
+        a path typed here. A hardcoded ledger path is the same class of
+        literal this module exists to catch."""
+        try:
+            import be_data_root as _B
+            return Path(_B.data_root()).resolve()
+        except Exception:                                    # noqa: BLE001
+            return None
+
+    def classify_dirt(self, line: str) -> dict:
+        """One porcelain line -> is this CODE dirt, or the ledger symlink?
+
+        THE EXEMPTION IS A PROPERTY, NEVER A NAME. Exempting anything called
+        `data` would be the defect this seat keeps shipping: a literal
+        standing in for a fact. Three conjuncts, each computed, all required:
+
+          * git reports it UNTRACKED (`??`) -- a tracked modification at
+            that path is real dirt and stays dirt;
+          * the entry on disk IS a symlink -- a plain file at that name is
+            real dirt;
+          * it RESOLVES to the ledger -- a symlink pointing anywhere else is
+            real dirt.
+
+        A link to the ledger under some OTHER name is exempt too, and that
+        is deliberate: the question rule 22 asks is whether the PRODUCING
+        CODE moved, and a symlink to the ledger is not producing code no
+        matter what it is called. The name carries nothing either way."""
+        code, _, path = line[:2], line[2:3], line[3:]
+        full = Path(self.worktree) / path
+        is_untracked = code == "??"
+        is_link = full.is_symlink()
+        target = None
+        if is_link:
+            try:
+                target = str(full.resolve())
+            except OSError:
+                target = None
+        ledger = self._ledger_data()
+        points_at_ledger = bool(ledger and target and target == str(ledger))
+        return {"path": path, "status_code": code,
+                "is_untracked": is_untracked, "is_symlink": is_link,
+                "resolves_to": target,
+                "resolves_to_the_ledger": points_at_ledger,
+                "ledger": str(ledger) if ledger else None,
+                "exempt": is_untracked and is_link and points_at_ledger}
+
     def head_state(self) -> dict:
-        st = _git(self.worktree, "status", "--porcelain")
+        st = _git(self.worktree, "status", "--porcelain", raw=True)
+        lines = [x for x in (st or "").split("\n") if x]
+        rows = [self.classify_dirt(x) for x in lines]
+        code_rows = [r for r in rows if not r["exempt"]]
         return {"worktree": self.worktree,
                 "head": _git(self.worktree, "rev-parse", "HEAD"),
+                # RAW -- meaning unchanged from every receipt already landed:
+                # anything at all that git reports.
                 "dirty": bool(st) if st is not None else None,
-                "dirty_paths": [x[3:] for x in (st or "").split("\n") if x][:20]}
+                "dirty_paths": [r["path"] for r in rows][:20],
+                # THE RULE-22 QUESTION, under a key that cannot be confused
+                # with the raw one. A seat worktree carries `data` as a
+                # symlink to the ledger by R-553, so `dirty` reads true on a
+                # perfectly clean code tree and a reader of the receipt sees
+                # dirt that is not there.
+                "dirty_code": (bool(code_rows) if st is not None else None),
+                "dirty_paths_code": [r["path"] for r in code_rows][:20],
+                "exempt_entries": [r for r in rows if r["exempt"]][:20],
+                "exemption_is_a_property": "untracked AND a real symlink AND "
+                                           "resolving to the ledger -- never "
+                                           "a path called `data`",
+                }
 
     # ---- drift ---------------------------------------------------------
     def drift(self) -> list:
@@ -161,7 +238,22 @@ class Capture:
             "head_at_import": hi,
             "head_at_emit": head_now,
             "head_unchanged_during_the_run": hi.get("head") == head_now.get("head"),
+            # BOTH, and neither redefined: the raw answer keeps the meaning
+            # every landed receipt already used, and the rule-22 question
+            # gets its own key rather than quietly changing that one.
             "worktree_was_dirty_at_import": hi.get("dirty"),
+            "worktree_CODE_was_dirty_at_import": hi.get("dirty_code"),
+            "what_the_two_dirty_fields_mean": "`worktree_was_dirty_at_import` "
+                                              "is git's raw answer and "
+                                              "includes the ledger symlink a "
+                                              "seat worktree carries by "
+                                              "R-553; "
+                                              "`worktree_CODE_was_dirty_at_"
+                                              "import` excludes entries that "
+                                              "are PROVEN to be that symlink "
+                                              "(untracked, a real link, "
+                                              "resolving to the ledger). Rule "
+                                              "22 asks the second one",
         }
 
     # ---- the refusal ---------------------------------------------------

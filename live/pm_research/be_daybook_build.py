@@ -907,7 +907,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 64
+EXPECTED_CHECKS = 73
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -1643,6 +1643,122 @@ def selftest() -> int:
            "rather than writing a .v2 with nothing behind it")
     finally:
         globals()["OUT_DERIVED"] = _saved2
+
+    # ---- CODE DIRT vs THE LEDGER SYMLINK: a PROPERTY, never a name ------
+    # DE 94's four cells, driven in a REAL git worktree. A seat worktree
+    # carries `data` as a symlink to the ledger (R-553), so `git status`
+    # reports it and every receipt read `dirty: true` on a clean code tree.
+    # Exempting anything CALLED `data` would be this seat's recurring defect
+    # in a new place, so the exemption is three computed conjuncts.
+    import subprocess as _sp2
+    _gd = _tf.mkdtemp(prefix="be62_dirt_")
+    _LEDGER = str(_BDR.data_root())
+
+    def _g2(*a):
+        return _sp2.run(["git", "-C", _gd, *a], capture_output=True,
+                        text=True, timeout=60)
+    _g2("init", "-q")
+    _g2("config", "user.email", "b@e"); _g2("config", "user.name", "be")
+    (Path(_gd) / "README").write_text("x\n")
+    _g2("add", "README"); _g2("commit", "-qm", "init")
+
+    def _cells():
+        return {r["path"]: r for r in
+                [_R22.Capture(worktree=_gd).classify_dirt(x)
+                 for x in (_sp2.run(["git", "-C", _gd, "status",
+                                     "--porcelain"], capture_output=True,
+                                    text=True, timeout=60).stdout
+                           .rstrip("\n").split("\n")) if x]}
+
+    # (a) a plain untracked FILE at that name -- NOT exempt
+    (Path(_gd) / "data").write_text("not a link\n")
+    _a = _cells()["data"]
+    ok(_a["exempt"] is False and _a["is_untracked"] is True
+       and _a["is_symlink"] is False,
+       "CELL (a): a plain untracked FILE named `data` is NOT exempt -- it is "
+       "untracked, but it is not a symlink, so the second conjunct refuses. "
+       "A name-based exemption would have waved it through")
+    # (b) a TRACKED modification at that path -- NOT exempt
+    _g2("add", "data"); _g2("commit", "-qm", "track data")
+    (Path(_gd) / "data").write_text("modified\n")
+    _b = _cells()["data"]
+    ok(_b["exempt"] is False and _b["is_untracked"] is False,
+       f"CELL (b): a TRACKED modification at that path is NOT exempt "
+       f"(status {_b['status_code']!r}) -- real dirt at the same name stays "
+       f"dirt, which is the case a name-based rule hides most dangerously")
+    _g2("rm", "-qf", "data"); _g2("commit", "-qm", "untrack")
+    # (c) an untracked symlink pointing SOMEWHERE ELSE -- NOT exempt
+    _os2 = __import__("os")
+    _os2.symlink("/tmp", str(Path(_gd) / "data"))
+    _c = _cells()["data"]
+    ok(_c["exempt"] is False and _c["is_symlink"] is True
+       and _c["resolves_to_the_ledger"] is False,
+       f"CELL (c): a symlink at that name pointing ELSEWHERE "
+       f"({_c['resolves_to']}) is NOT exempt -- the third conjunct is where "
+       f"it resolves, not that it is a link")
+    # (d) the real thing -- EXEMPT
+    _os2.unlink(str(Path(_gd) / "data"))
+    _os2.symlink(_LEDGER, str(Path(_gd) / "data"))
+    _d = _cells()["data"]
+    ok(_d["exempt"] is True and _d["is_untracked"] and _d["is_symlink"]
+       and _d["resolves_to_the_ledger"] and _d["ledger"] == _LEDGER,
+       f"CELL (d), THE POSITIVE CONTROL: the real ledger symlink IS exempt "
+       f"-- untracked AND a symlink AND resolving to {_d['ledger']}, all "
+       f"three computed. A guard shown only to refuse has not been shown to "
+       f"work (rule 16)")
+    # (e) the same link under a DIFFERENT name -- also exempt, deliberately
+    _os2.symlink(_LEDGER, str(Path(_gd) / "ledger_alias"))
+    _e = _cells()["ledger_alias"]
+    ok(_e["exempt"] is True,
+       "CELL (e): the same link under ANOTHER name is exempt too -- stated "
+       "because it is a deliberate consequence of keying on the property. "
+       "A symlink to the ledger is not producing code whatever it is called")
+    # (f) the leading-space regression: a tracked change as the FIRST line
+    (Path(_gd) / "README").write_text("y\n")
+    _rows = _cells()
+    _hs = _R22.Capture(worktree=_gd).capture("battery").head_state()
+    ok("README" in _rows and _rows["README"]["exempt"] is False
+       and "README" in _hs["dirty_paths_code"]
+       and _hs["dirty_code"] is True
+       and sorted(_hs["dirty_paths"]) == sorted(
+           ["README", "data", "ledger_alias"]),
+       f"CELL (f), A DEFECT FOUND BY DRIVING THIS: porcelain puts a SPACE in "
+       f"column 1 for a tracked modification, and the git helper stripped "
+       f"it -- so the first path lost its first character. Landed receipts "
+       f"escaped it only because their one entry was `?? data`, which has "
+       f"no leading space. Paths now parse whole: "
+       f"{_hs['dirty_paths_code']}")
+    ok(_hs["dirty"] is True and _hs["dirty_code"] is True
+       and set(_hs["dirty_paths"]) - set(_hs["dirty_paths_code"])
+       == {"data", "ledger_alias"},
+       "AND BOTH FIELDS SURVIVE, NEITHER REDEFINED: `dirty` keeps the raw "
+       "meaning every landed receipt used, `dirty_code` answers the rule-22 "
+       "question, and the difference between them is exactly the exempt "
+       "entries -- so an old receipt and a new one can still be compared")
+    # WHY THE TWO LANDED 09-05 RECEIPTS ARE NOT SUPERSEDED. Their fields
+    # read `dirty: true` and `dirty_paths: ["data"]`. Reproduce a worktree
+    # in exactly that condition -- the ledger link and nothing else -- and
+    # the new code emits the SAME two values; only the new keys are added.
+    # So those receipts stay accurate as written and rule 13 does not fire.
+    (Path(_gd) / "README").write_text("x\n")            # undo the (f) edit
+    _os2.unlink(str(Path(_gd) / "ledger_alias"))
+    _only = _R22.Capture(worktree=_gd).capture("battery").head_state()
+    ok(_only["dirty"] is True and _only["dirty_paths"] == ["data"]
+       and _only["dirty_code"] is False
+       and _only["dirty_paths_code"] == []
+       and len(_only["exempt_entries"]) == 1,
+       "THE LANDED 09-05 RECEIPTS STAY ACCURATE: on a worktree carrying the "
+       "ledger link and nothing else, the new code emits `dirty: true` and "
+       "`dirty_paths: ['data']` -- byte-for-byte what those receipts say -- "
+       "and adds `dirty_code: false` beside them. No field changed meaning, "
+       "so they are not superseded (rule 13 does not fire on an accurate "
+       "receipt); the classification starts with the 09-05 book")
+    _hs2 = _R22.stamp(__file__)
+    ok("worktree_CODE_was_dirty_at_import" in _hs2
+       and "worktree_was_dirty_at_import" in _hs2,
+       "AND THE STAMP CARRIES BOTH KEYS: the rule-22 question gets its own "
+       "name rather than quietly changing the meaning of the field already "
+       "in the landed 09-05 receipts")
 
     return _finish(checks, fails, skipped)
 
