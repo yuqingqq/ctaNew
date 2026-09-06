@@ -1,0 +1,117 @@
+{
+  "both_directions": true,
+  "builder_call_read_by_ast": {
+    "calls": [
+      {
+        "keywords": [
+          "inputs"
+        ],
+        "line": 516,
+        "positional": [
+          "splits"
+        ],
+        "rendered": "build_tape_index(splits, inputs=\u2026)"
+      }
+    ],
+    "keyword_names": [
+      "inputs"
+    ],
+    "n_calls": 1,
+    "read_by": "ast over the builder's source; not imported, not regexed, not restated",
+    "source": "working tree"
+  },
+  "checks": [
+    {
+      "check": "BOTH TIERS VERIFY A BOOK OF BE's OWN SHAPE: the RECEIPT tier holds the receipt to itself and to the bytes; the FULL tier opens the book and recomputes what only the book can say",
+      "detail": "receipt tier VERIFIED (0 flags), full VERIFIED (0 flags)",
+      "passed": true
+    },
+    {
+      "check": "THE DIGEST CHAIN CHECKS BOTH STATEMENTS OF THE SAME BYTES: the write-side `sha256` AND the independent `readback_sha256`, against one streamed hash of the file. Checking one and calling it the chain leaves the other unchecked -- and they can disagree",
+      "detail": "3647 bytes hashing to df3abe060b6aacc7; both declared statements agree; 2 pinned inputs hashed, 0 absent",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A TAMPERED BOOK FAILS THE CHAIN -- one appended byte moves the digest and the chain does not hold, against BOTH declared statements",
+      "detail": "one byte appended -> 3e26c771079eca83 against declared df3abe060b6aacc7",
+      "passed": true
+    },
+    {
+      "check": "AN ABSENT PINNED INPUT IS A STATUS, NEVER A PASS: it is reported INPUT_ABSENT_NOT_CHECKED with `matches: null`, because a `true` there would be a pass for a check that never ran",
+      "detail": "tape absent -> status INPUT_ABSENT_NOT_CHECKED, matches None",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: ONE MOVED COUNT IS FLAGGED. ADMITTED + the excluded classes must equal the windows, so a receipt whose statuses no longer sum is flagged on the sum, not on the field",
+      "detail": "ADMITTED +1 -> ['population.admitted_plus_excluded_equals_windows']",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD, AND THE ONE THAT MATTERS MOST: UNEQUAL HEAD KEY SETS ARE FLAGGED AND THE DIFFERENCE IS SIZED -- the receipt CLAIMS `sets_are_equal: true` and the recomputation over the book's own keys disagrees. Set equality is the precondition the null rests on, so it is compared, never read",
+      "detail": "the book's two heads differ by 5 keys (3 only in one, 2 only in the other) while the receipt claims equality",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE CONTROL ON THE SAME AXIS: equal key sets RECOMPUTE equal, agree with the receipt, and the shared count matches -- so the flag means something",
+      "detail": "360 shared keys recomputed against 360 declared, difference 0",
+      "passed": true
+    },
+    {
+      "check": "COVERAGE AND THE THETAS ARE RECOMPUTED FROM THE BOOK: n_scored_keys counted off the book's own key sets, coverage divided out again, and each head's theta compared to the one the receipt pins",
+      "detail": "incumbent_linear_d: 360 keys, coverage 0.900000, theta 0.43525926488298716; q1_arrival_composed_lgbm: 360 keys, coverage 0.900000, theta 0.32450609461933483",
+      "passed": true
+    },
+    {
+      "check": "A RECEIPT FOR A DIFFERENT DAY OR COIN REFUSES: a receipt for another day is not this day's evidence, however well its numbers hold together",
+      "detail": "day: 'REFUSED: the receipt is for day '20260903' and the verification ...'; coin: 'REFUSED: the receipt is for coin 'btc' and the verificat...'",
+      "passed": true
+    },
+    {
+      "check": "THE BUILDER'S `build_tape_index` CALL IS READ BY AST FROM ITS OWN SOURCE -- argument names off the syntax tree, not a regex over text and not the receipt's word for it",
+      "detail": "1 call(s) at line(s) [516], keywords ['inputs'], rendered 'build_tape_index(splits, inputs=\u2026)'",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A `seam.index` LITERAL THAT CONTRADICTS THE CALL REFUSES -- a literal describing a call the code does not make is rule 10's shape, and a verifier that shrugged would be certifying the prose beside the number",
+      "detail": "'REFUSED: `seam.index` is a LITERAL that contradicts the call. The receipt says 'build_tape_index(splits, tape_path=\u2026)', ...'",
+      "passed": true
+    },
+    {
+      "check": "AND THE POSITIVE CONTROL: the fixture's own literal is DERIVED from the builder's real call, and it passes -- so the check admits a truthful receipt and is not a wall",
+      "detail": "literal 'build_tape_index(splits, inputs=\u2026)' agrees with the call at HEAD",
+      "passed": true
+    },
+    {
+      "check": "THE RESOURCES ARE FACTS, NOT VERDICTS: every stage's peak is compared to its OWN declared budget and the builder's `within_budget` is checked against the recomputation, with the index release fraction divided out",
+      "detail": "2 stages all within budget; index release 1.156 GB = 0.282 of what was held",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A `within_budget` FLAG THAT DISAGREES WITH THE ARITHMETIC IS FLAGGED -- the builder's own boolean is checked against peak <= budget rather than taken",
+      "detail": "stage A0 declares within_budget false at peak 2.0 <= budget 3.0",
+      "passed": true
+    },
+    {
+      "check": "THE RECEIPT TIER STATES WHAT IT CANNOT SAY, and the heavy tier's cost is DECLARED before it runs: set equality stays a CLAIM until the book is opened, and opening it is expected to cost about 2.0 GB against a declared 4.0 GB cap",
+      "detail": "receipt tier opened no book; the full tier did. Expected peak 2.0 GB, cap 4.0 GB, rule-20 wrapper required for the real book",
+      "passed": true
+    }
+  ],
+  "n_checks": 15,
+  "n_failed": 0,
+  "protocol": "P003_DA_BOOK_VERIFIER_V1_FIXTURE",
+  "status": "FIXTURE_NO_REAL_BOOK",
+  "the_real_book_tier_is_HEAVY": {
+    "declared_cap_gb": 4.0,
+    "expected_peak_gb": 2.0,
+    "the_real_run_is_a_coordinator_GO": true,
+    "why": "the 09-03 book is a 290,758,834-byte pickle; unpickling is expected to cost about 2 GB resident, which is heavy under rule 20"
+  },
+  "verifier_identity": {
+    "commit_best_effort": "3104cce96e0e43ace5c02b5ac7bff9b4ce500550",
+    "path": "live/pm_research/da_book_verify.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "8f40ee15d996e74a0fefabbc2592aafc0aef55d9015928a781b23d09de83c01d",
+    "tree_head": "3104cce96e0e43ace5c02b5ac7bff9b4ce500550"
+  }
+}
