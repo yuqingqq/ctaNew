@@ -35,12 +35,28 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import be_data_root as _BDR
+try:
+    import be_data_root as _BDR
+
+    def _resolved_repo_root():
+        return _BDR.repo_root()
+except ModuleNotFoundError:      # pragma: no cover - old-checkout path
+    # BE7-R4 RUNS THIS DRIVER INSIDE A WORKTREE MADE FROM `HEAD~2`, and it
+    # plants the CURRENT bytes there. So the running driver can find itself
+    # in a checkout that PREDATES `be_data_root.py` -- which is not a
+    # failure, it is that control working as designed. The fallback is not a
+    # literal and not a second precedence: it calls the SAME resolver of
+    # record, `pm_tape_density._resolve_data_root()`, which `be_data_root`
+    # itself delegates to and which has been in the tree far longer.
+    import pm_tape_density as _T
+
+    def _resolved_repo_root():
+        return Path(_T._resolve_data_root())
 
 #: R-559(C) / Q-MEM-106: resolved through the shared resolver, which
 #: DELEGATES to `pm_tape_density._resolve_data_root()`. This was an
 #: absolute literal, which no env var could redirect.
-REPO = _BDR.repo_root()
+REPO = _resolved_repo_root()
 
 
 def _exec_tree_is_repo(tree: Path = None) -> bool:
