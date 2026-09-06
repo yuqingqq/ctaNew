@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 268
+EXPECTED_CHECKS = 279
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -2065,35 +2065,69 @@ def assert_launch_form_at_runtime(day: str, *, fixture: bool,
     """THE LAUNCH FORM REFUSES AT RUN TIME, from the cgroup leaf.
 
     REV 65 S1.2 / REV 62 S3: `is_the_declared_launch_form` REPORTED and
-    GATED NOTHING. A real day launched under `--scope` would run all 85
-    minutes and say so only in its receipt -- and the lint on the command
-    string cannot see a `--scope` behind a shell variable, an alias or a
-    wrapper script. A form that must not be used is one the RUN refuses,
-    not one a string check disapproves of.
+    GATED NOTHING -- a real day under `--scope` would run all 85 minutes
+    and say so only in its receipt, and a lint on the command STRING
+    cannot see a `--scope` behind a variable or a wrapper.
 
-    So the verdict comes from what this process is actually IN: the cgroup
-    leaf's kind. `.scope` means the caller forked it and it is in the
-    caller's process group -- which is how the 09-03 re-run lost 35
-    minutes. It refuses BEFORE ANY STAGE; the lint stays a lint."""
+    REV 68 found the first version of THIS guard wrong in two ways, both
+    reproduced:
+
+      S1.2  the fixture exemption was a REPORT. `fixture=True` admitted a
+            REAL DAY NAME -- the list was computed into
+            `fixture_exemption_by_name` and then never consulted. The
+            exemption is now the GATE.
+      S1.3  it FAILED OPEN. The test was `kind == "scope"`, so `kind`
+            None -- an unreadable cgroup, a leaf shape nobody anticipated
+            -- ADMITTED a real day. The real-day predicate is now the
+            POSITIVE one: refuse unless the kind is the declared form.
+
+    And R-651 / MEM 181: when the kind is UNKNOWN the record must not
+    claim `checked` -- it says False. A guard that cannot see what it is
+    in has not checked anything."""
     obs = observed if observed is not None else unit_identity()
-    kind, leaf = obs.get("kind"), obs.get("cgroup_leaf")
-    exempt = fixture and str(day) in SCOPE_EXEMPT_FIXTURE_DAYS
-    if not fixture and kind == "scope":
-        raise RunnerRefused(
-            f"REFUSED DAY {day} BEFORE ANY STAGE: this process is in a "
-            f"`.scope` ({leaf}). A scope registers the processes the "
-            f"CALLER forks, so the run is in the launching shell's process "
-            f"group and dies with it -- that is how the 09-03 re-run lost "
-            f"35 minutes with nothing written (R-628). A real day runs as "
-            f"a transient SERVICE the manager forks. Nothing was read.")
-    return {"day": day, "fixture": fixture, "cgroup_leaf": leaf,
-            "kind": kind, "refused": False,
-            "checked": not fixture,
+    kind = (obs or {}).get("kind")
+    leaf = (obs or {}).get("cgroup_leaf")
+    known = kind in ("transient service", "scope")
+    exempt = bool(fixture) and str(day) in SCOPE_EXEMPT_FIXTURE_DAYS
+    base = {"day": day, "fixture": fixture, "cgroup_leaf": leaf,
+            "kind": kind, "kind_is_known": known,
             "fixture_exemption_by_name": exempt,
-            "why_runtime_and_not_the_lint": (
-                "the lint reads the command STRING and cannot see a "
-                "`--scope` behind a variable or a wrapper; this reads what "
-                "the process is IN. The lint stays as a lint")}
+            "the_exemption_is_the_GATE": (
+                "not a report beside it: `fixture=True` alone used to "
+                "admit a REAL DAY NAME (REV 68 S1.2)"),
+            "the_real_day_predicate_is_POSITIVE": (
+                "refuse unless kind == 'transient service'. The negative "
+                "test `kind == 'scope'` FAILED OPEN on kind None and on "
+                "an empty observation (REV 68 S1.3)"),
+            # R-651 / MEM 181: `checked` is only true when the guard could
+            # SEE what it was in.
+            "checked": bool(known) and not fixture,
+            "why_checked_may_be_false": (
+                "an unknown kind is not a passed check. It used to admit "
+                "a real day AND claim `checked` true"),
+            "refused": False}
+    if not fixture:
+        if kind != "transient service":
+            raise RunnerRefused(
+                f"REFUSED DAY {day} BEFORE ANY STAGE: the declared launch "
+                f"form is a transient SERVICE and this process's cgroup "
+                f"leaf is {leaf!r} (kind {kind!r}). A scope registers the "
+                f"processes the CALLER forks, so the run is in the "
+                f"launching shell's process group and dies with it -- "
+                f"that is how the 09-03 re-run lost 35 minutes (R-628). "
+                f"An UNKNOWN kind refuses too: a guard that cannot see "
+                f"what it is in has not checked anything (REV 68 S1.3). "
+                f"Nothing was read.")
+        return base
+    if kind == "scope" and not exempt:
+        raise RunnerRefused(
+            f"REFUSED DAY {day} BEFORE ANY STAGE: a FIXTURE under a "
+            f"`.scope` ({leaf}) is admitted only for a DECLARED fixture "
+            f"name, and {day!r} is not among "
+            f"{list(SCOPE_EXEMPT_FIXTURE_DAYS)}. `fixture=True` alone "
+            f"used to admit anything, including a real day name "
+            f"(REV 68 S1.2).")
+    return base
 
 
 def declared_chain() -> list:
@@ -2125,8 +2159,18 @@ def declared_chain() -> list:
                               "the output directory",
              "then": "the receipt is the record; the unit reading "
                      "corroborates it"},
-            {"step": 5, "do": "`systemctl --user stop <unit>` -- the "
-                              "owner stops it once the triple is copied",
+            {"step": 5, "do": "COPY THE UNIT'S JOURNAL AGAIN, by both "
+                              "invocation fields, AFTER the unit has "
+                              "exited",
+             "then": "the `Consumed` line is written at exit and it is "
+                     "the line that survives longest -- DE 84's `Started` "
+                     "line was gone four hours later while its `Consumed` "
+                     "line remained. The receipt's own copy is taken at "
+                     "the EMIT, before that line exists, so the record "
+                     "needs both"},
+            {"step": 6, "do": "`systemctl --user stop <unit>` -- the "
+                              "owner stops it once both copies are "
+                              "taken",
              "then": "the name is free for the next launch. "
                      "RemainAfterExit keeps a finished unit loaded until "
                      "someone does this"},
@@ -3549,16 +3593,28 @@ def journal_copy_by_invocation(unit: str, *, invocation_id=None,
             datetime.timezone.utc).isoformat()
     except ValueError:
         oldest = None
+    # COVERAGE IS TWO MEASURED CLOCKS, NOT A TEXT SEARCH (REV 68 S1.5).
+    # This was `any(" Started " in x for x in lines)`, and it was wrong
+    # twice over: it reported TRUE on a tail that had lost 141 of 161
+    # lines (the needle was in the tail), and it would match a PAYLOAD
+    # line that merely contains the words. DA 88 shipped the right shape
+    # as `da_root.journal_coverage` -- the host's oldest retained entry
+    # against the unit's own ExecMainStartTimestamp -- and it is IMPORTED
+    # here, not mirrored: one more parallel implementation of a shared
+    # reading is what R-641 ruled against.
+    cov = DAROOT.journal_coverage(unit=unit)
     out.update({
         "status": "PRESENT",
         "oldest_line_utc": oldest,
         "oldest_line_raw": first,
-        "window_fully_covered": any(" Started " in x for x in by_id),
+        "coverage": cov,
+        "window_fully_covered": cov.get("covered"),
         "how_that_is_computed": (
-            "the run's own `Started` line is still present, so this copy "
-            "reaches the beginning of the run. False means the beginning "
-            "has already rotated -- which happened to DE 84's within four "
-            "hours"),
+            "da_root.journal_coverage: the host journal's oldest retained "
+            "entry against the unit's own start timestamp -- TWO MEASURED "
+            "CLOCKS, no needle. The old predicate searched the copied "
+            "lines for ' Started ' and reported TRUE on a tail that had "
+            "lost 141 of 161 lines"),
         "counts_agree": len(by_id) == len(by_unit),
         "counts_note": ("they differ legitimately when the NAME has been "
                         "used more than once; the id is the run"),
@@ -5447,6 +5503,101 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
+    # ---- REV 68 S1.2/S1.3 (R-649): THE GUARD GATES, AND FAILS CLOSED --
+    # S1.2 the fixture exemption was a REPORT: `fixture=True` admitted a
+    # REAL DAY NAME, because the list was computed into a field and never
+    # consulted. S1.3 the guard FAILED OPEN: the test was
+    # `kind == "scope"`, so `kind` None -- an unreadable cgroup, a leaf
+    # shape nobody anticipated -- ADMITTED a real day and claimed
+    # `checked` true (R-651 / MEM 181).
+    _SC99 = {"cgroup_leaf": "x.scope", "kind": "scope"}
+    _SV99 = {"cgroup_leaf": "x.service", "kind": "transient service"}
+    refuses(lambda: assert_launch_form_at_runtime(
+                "2026-09-03", fixture=True, observed=_SC99),
+            "REV 68 S1.2 KNOWN-BAD: `fixture=True` with a REAL DAY NAME "
+            "under a scope REFUSES. The exemption is the GATE now; it was "
+            "a field computed beside the decision and never consulted, so "
+            "any caller passing fixture=True admitted anything",
+            "not among")
+    ok(assert_launch_form_at_runtime(
+           "FIXTURE-DAY-1", fixture=True,
+           observed=_SC99)["fixture_exemption_by_name"] is True,
+       "POSITIVE CONTROL: a DECLARED fixture name under a scope still "
+       "admits -- which is what lets the launch-form probe run its "
+       "falsifier under a real scope at all")
+    for _obs99, _lbl99 in (({"kind": None}, "kind None"),
+                           ({}, "an EMPTY observation"),
+                           ({"kind": "something-new"}, "an UNKNOWN kind")):
+        refuses(lambda o=_obs99: assert_launch_form_at_runtime(
+                    "2026-09-03", fixture=False, observed=o),
+                f"REV 68 S1.3 KNOWN-BAD, {_lbl99}: a REAL DAY refuses "
+                f"unless the kind IS the declared form. The old test was "
+                f"`kind == 'scope'`, which FAILED OPEN on exactly this -- "
+                f"an unreadable cgroup admitted a real day",
+                "UNKNOWN kind refuses too")
+    _unk99 = {"kind": None}
+    try:
+        assert_launch_form_at_runtime("2026-09-03", fixture=False,
+                                      observed=_unk99)
+        ok(False, "an unknown kind was ADMITTED for a real day")
+    except RunnerRefused:
+        pass
+    _fx99 = assert_launch_form_at_runtime("FIXTURE-DAY-1", fixture=True,
+                                          observed={"kind": None})
+    ok(_fx99["checked"] is False and _fx99["kind_is_known"] is False,
+       "R-651 / MEM 181: when the kind is UNKNOWN the record says "
+       "`checked` FALSE. It used to ADMIT a real day AND claim `checked` "
+       "true -- a guard that cannot see what it is in has not checked "
+       "anything")
+    ok(assert_launch_form_at_runtime(
+           "2026-09-03", fixture=False, observed=_SV99)["checked"] is True,
+       "and a real day in a transient SERVICE is `checked` TRUE -- so the "
+       "field means what it says in both directions")
+
+    # ---- REV 68 S1.5 (R-649): COVERAGE IS TWO CLOCKS, NOT A NEEDLE ----
+    # It was `any(" Started " in x for x in lines)`: TRUE on a tail that
+    # had lost 141 of 161 lines, and matchable by a PAYLOAD line that
+    # merely contains the words. DA 88 shipped the right shape and it is
+    # IMPORTED, not mirrored.
+    _hz99 = DAROOT.host_journal_horizon()
+    _cov99 = DAROOT.journal_coverage(
+        window_start_epoch=(_hz99["oldest_epoch"] - 3600),
+        regime=DAROOT.CONTINUOUS) if _hz99.get("oldest_epoch") else None
+    ok(_cov99 is None or (
+           _cov99["covered"] is False
+           and _cov99["status"] == "MEASURED"
+           and _hz99["oldest_utc"] in _cov99["why"]
+           and _cov99["two_clocks_no_text_search"] is True),
+       f"REV 68 S1.5 KNOWN-BAD: a window an HOUR BEFORE the host's "
+       f"horizon is UNCOVERED, and the refusal NAMES the horizon "
+       f"({_hz99.get('oldest_utc')}). The old predicate would have "
+       f"answered from whether the word ' Started ' appeared in the lines "
+       f"it happened to copy")
+    _covok99 = DAROOT.journal_coverage(
+        window_start_epoch=(_hz99["oldest_epoch"] + 60),
+        regime=DAROOT.CONTINUOUS) if _hz99.get("oldest_epoch") else None
+    ok(_covok99 is None or _covok99["covered"] is True,
+       "POSITIVE CONTROL: a window INSIDE the horizon is covered -- so "
+       "the known-bad above fires on the two clocks and not on "
+       "everything")
+    _nodet99 = DAROOT.journal_coverage(
+        unit="de99-a-unit-that-cannot-exist.service")
+    ok(_nodet99["covered"] is None
+       and _nodet99["status"] == "NOT_DETERMINABLE",
+       "and when one of the two clocks is unreadable -- a COLLECTED unit "
+       "has no start timestamp -- coverage is NOT_DETERMINABLE, never "
+       "assumed either way. The needle would have answered TRUE or FALSE "
+       "with equal confidence")
+    _chain99 = declared_chain()
+    ok(len(_chain99) == 6
+       and "AFTER the unit has exited" in _chain99[4]["do"]
+       and "Consumed" in _chain99[4]["then"]
+       and _chain99[5]["do"].startswith("`systemctl --user stop"),
+       f"and the chain carries the EXIT COPY as its own step "
+       f"({len(_chain99)} steps): the receipt's copy is taken at the EMIT, "
+       f"before the `Consumed` line exists, and that is the line which "
+       f"survives longest -- DE 84's `Started` line was gone four hours "
+       f"later while its `Consumed` line remained")
     # ---- R-648 (R3'): THE TRIPLE, AND WHAT A COLLECTED UNIT REPORTS ---
     # A transient unit that exits 0 is COLLECTED at exit: LoadState goes
     # not-found and `systemctl show` then returns DEFAULTS --
@@ -5503,13 +5654,15 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        "ActiveState, SubState), so a positional parse mislabels every "
        "field -- mine declared a LIVE run VOID before it was fixed")
     _chain98 = declared_chain()
-    ok(len(_chain98) == 5
-       and _chain98[-1]["do"].startswith("`systemctl --user stop")
+    ok(_chain98[-1]["do"].startswith("`systemctl --user stop")
        and any("VOID" in st["then"] for st in _chain98),
        f"and the chain is a DECLARED FIELD of the rehearsal "
        f"({len(_chain98)} steps ending in the STOP that frees the name), "
        f"not prose in a runbook a launcher may not read. "
-       f"RemainAfterExit is what makes step 5 necessary")
+       f"RemainAfterExit is what makes that last step necessary. The "
+       f"LENGTH is asserted where the chain's shape is ruled, not here -- "
+       f"a literal 5 beside a chain that grew to 6 is the class this "
+       f"codebase keeps finding")
     # ---- R-646 (R2): THE LOCK-CONFLICT CODE, DECLARED ONCE ------------
     # Measured before the ruling: under the ruled form a HELD LOCK and a
     # PAYLOAD CRASH were both ExecMainStatus=1, so at GO #5 a refusal
@@ -5666,13 +5819,18 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        "admits, and a FIXTURE may declare an exemption BY NAME -- the "
        "falsifier has to be able to run under a real `.scope` to prove the "
        "refusal fires at all")
-    ok(assert_launch_form_at_runtime(
-           "FIXTURE-DAY-NOT-DECLARED", fixture=True,
-           observed=_scope96)["fixture_exemption_by_name"] is False,
-       f"and the fixture exemption is a DECLARED LIST "
-       f"({len(SCOPE_EXEMPT_FIXTURE_DAYS)} names), not 'any fixture': an "
-       f"undeclared fixture name reports no exemption, so the list cannot "
-       f"quietly become a blanket")
+    # THIS CELL WAS AN `ok(...)` THAT READ THE FIELD, and that is exactly
+    # REV 68 S1.2's finding: the exemption was REPORTED, not enforced, so
+    # an undeclared name "reported no exemption" and ran anyway. It is a
+    # `refuses(...)` now.
+    refuses(lambda: assert_launch_form_at_runtime(
+                "FIXTURE-DAY-NOT-DECLARED", fixture=True,
+                observed=_scope96),
+            f"and the fixture exemption is a DECLARED LIST "
+            f"({len(SCOPE_EXEMPT_FIXTURE_DAYS)} names) that GATES, not "
+            f"'any fixture': an undeclared fixture name under a scope "
+            f"REFUSES, so the list cannot quietly become a blanket",
+            "not among")
     # ---- R-628: THE LAUNCH FORM IS A TRANSIENT SERVICE ----------------
     # The scope form was published in THE_ONE_COMMAND for four rounds and
     # cost a real day 35 minutes: `systemd-run --scope` registers the
