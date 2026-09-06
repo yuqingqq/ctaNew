@@ -417,7 +417,7 @@ DA reclassified it (DA 52) and the coordinator INSTALLED the fixed unit at 02:24
 true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94% of
 its controls at both endpoints; Gate 1's three sampler refusals stand.
 
-- **Tip:** see `git log`. Next register entry after R-570: **R-571**.
+- **Tip:** see `git log`. Next register entry after R-571: **R-572**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
   USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
   + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
@@ -461,3 +461,9 @@ file — wait for its commit. Every coordinator commit is `git commit -- <paths>
 pathspec swept a seat's staged file). `PM_DATA_ROOT` names the REPO root
 (`/home/yuqing/ctaNew`), not the data directory (R-562). Seat refresh is ONE command:
 `git checkout --detach mm-research && git ls-files data | xargs git update-index --skip-worktree`.
+
+## Seat context (R-571)
+
+Read each seat's context from its pane status line (`tmux capture-pane … | grep -o '[0-9]*% context used'`),
+never from the seat's own estimate (MEM said 14% at 99%). Reset at 80%; three seats reached 98–100%
+on 2026-09-06 before anyone read the line.
