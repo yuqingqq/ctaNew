@@ -63,6 +63,114 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T06:41:49Z (MEM ROUND 130 -- R-580 AND THE ROUND'S LANDINGS SWEPT.
+  STATE ONLY. THE HEADLINE IS A POPULATION COLLAPSE THAT NOBODY LOWERED A BAR TO
+  ESCAPE.
+  (1) **EVERY SYMBOL HAS EXACTLY 11 POST-BOUNDARY ADMISSIBLE DAYS -- I COMPUTED
+  IT.** All twelve show `n_days_seen` 19, `n_admissible` 15, and **exactly 11**
+  admissible days at or after 2026-08-25. R-580(C)(2)'s "at most 11" is exact
+  **and UNIFORM, which is itself the finding: the constraint is CALENDAR-WIDE, not
+  symbol-specific**, so no symbol substitutes for another. ***The era leg removes
+  exactly four days per symbol, and v6's own leg gives 15 against a minimum of 14
+  -- so E2-A passes admission today and fails it the moment rule 5 is applied.***
+  (2) **AND THE 09-09 DATE RECONCILES, WHICH MY FIRST ARITHMETIC DID NOT.** A
+  naive calendar count of 08-25..09-05 gives TWELVE days and a 14th on 09-07 --
+  *neither figure matches, and I nearly filed that as a discrepancy.* The claim is
+  about ADMISSIBLE days: **11 + 09-06 + 09-07 + 09-08 = 14 on 2026-09-08, read at
+  the 09-09 verdict -- the same date as the Gate-1 read.** *The difference between
+  a calendar and a population is one day at each end, and it was the whole gap.*
+  (3) **NO THRESHOLD CHANGE AFTER SEEING.** The tempting move was available --
+  lower the minimum and E2-A runs today -- and was refused (rule 11). **The answer
+  is the P-003 pattern: a SEALED SMOKE at G = 11, economics sealed, resources and
+  statuses published, and the gate read only at G >= 14.** *Which separates
+  exercising the machinery from reading a number; only the second needs the
+  population.* **USER-VISIBLE and reversible by the USER**, which is where a bar
+  change belongs.
+  (4) **THE 08-29/30 POSITIVE CONTROL IS WITHDRAWN -- I VERIFIED THE RESTARTS
+  MYSELF.** The ledger holds four, at 08-24 13:48:08Z and 13:48:54Z and 08-26
+  05:11:43Z and 05:26:26Z -- **none on 08-29/30.** ***The discriminant is
+  COMPOSITION, not level: an outage suppresses EVERY stream; a quiet market
+  suppresses only the event-driven ones*** -- and depth20 held at ~92-93% while
+  the event-driven streams fell ~40%. **And the reason it matters beyond the fact:
+  requiring the liveness leg to flag a quiet weekend would rebuild the
+  activity-selecting defect v6 removed -- through the CONTROL rather than the
+  predicate.** *A wrong positive control does not merely fail to test; it drags
+  the instrument back to the defect.* 08-29/30 is now the NEGATIVE control.
+  (5) **AND THE BOUNDARY IS THE SECOND OF TWO RESTARTS 46 SECONDS APART** --
+  sharpening round 129's finding that rule 5's constant is a ledger row. *So
+  anything selecting on `>= 2026-08-24` rather than the exact `recv_ns` admits
+  forty-six seconds of legacy-stamped rows.* No artifact I have read does.
+  (6) **MY ROUND-129 ENTRY RELAYED A RECEIPT'S SELF-DESCRIPTION INSTEAD OF
+  TESTING IT.** I recorded the state tape's split as PROVISIONAL and routed to DE,
+  because its own field says so. **R-580(A) rules it a DEFECT: every row sits in
+  the TRAIN split with an EMPTY score split, and for a ruled forward day every row
+  is a SCORE row.** ***A receipt that flags its own provisionality reads as
+  diligence, and I let that stand in for checking the thing it was provisional
+  about.*** *"Which split does this population belong to" is a question; "a
+  forward day has no train rows" is an answer available from the definition.*
+  Relay fidelity, one of my two standing open axes, landing on me again.
+  (7) **BOTH MISSING INPUTS EXIST FOR ONE DAY AND THE READER EXISTS.** The 09-03
+  state tape (544,286 rows, 4.74 GB of 8) and **`be_race_reader.py` -- 9 checks
+  under MY run**: a clean read admits, a file mutated between the two digest
+  passes VOIDS, a planted Gate-1 path refuses. *The reader REV 36 said had no code
+  to run in now has code.*
+  (8) **AND THE SLICE AUDIT PASSES ON A NON-EMPTY ROOM** -- rc 0 under my run
+  while naming a live scope, `be51tape.scope`, **heavy=True locked=True**, 333 s,
+  rebuilding 09-03's tape. ***The instrument R-575(C) owed is doing real work on
+  its first outing, and it proves compliance rather than proving nothing because
+  nothing was running.***
+  (9) **WHAT DIRTIED 41 .pyc FILES, STATED SO IT CANNOT RECUR -- AND ONLY ONE HALF
+  WAS MINE.** BE 50's landing made bytecode TRACKED (gitignore never applies to
+  tracked files); **I then drove four selftests from the repo root with no
+  `PYTHONDONTWRITEBYTECODE=1`.** *Neither half alone dirties anything.* **DRIVEN
+  RECURRENCE TEST: clean tree -> unguarded selftest -> `git status --short` still
+  0 lines**, 95 `.pyc` on disk, all ignored. **The structural half closed at
+  `b474e34` and it cannot recur** -- not because I will remember. *My own practice
+  stands anyway and is now stated: the guard on every suite, in any tree -- a
+  habit that depends on which directory I am in is not a habit.*
+  (10) **v7 SUPERSEDES v6 BECAUSE A LANDED RECEIPT ALREADY CITES v6** -- *the test
+  is not whether an artifact is frozen but whether anything has already resolved
+  through it.* **REV 39 APPROVED `--day`** for the smoke once BE's book exists
+  (three wiring items -> DE 79); **REV 40 on the reader is in flight and the
+  opening waits on it**; BE 51 builds the streaming assembly and the book; DA 63
+  is GO. *Every one of the four items I listed at round 127 as standing between
+  here and the smoke has now landed or has a named owner in flight.*
+  (11) **AND THE COMMIT-TIME RE-READ MADE ITS MOST CONSEQUENTIAL CATCH: R-581
+  LANDED AND THE RACE READER IS NOT APPROVED.** My "9 checks passed" was TRUE AND
+  INSUFFICIENT. **The statistic is not the declared estimand** -- the declaration
+  commits in four places to net cents against the INCUMBENT at the ACTION unit
+  with L = 50 ms and BY_THRESHOLD pairing; the reader nets sign-flips between
+  consecutive scores within a coin. **And on the writer's real shape the day sign
+  is ARITHMETICALLY FORCED TO +1** -- 604,512 up / 287 down, identical across
+  three draws *and on a strictly collapsing day*; the same series gives -1 when
+  values tie exactly and +1 when they differ by 1e-9. ***"Had the coordinator
+  opened the read with this reader, ALL FIVE RACE DAYS WOULD HAVE BEEN CONSUMED
+  on a degenerate statistic, with no sixth day."*** **THE CLASS IS NEW AND IT IS
+  MINE TO NAME: SUITE-GREEN IS NOT ESTIMAND-CORRECT** -- SEAT_PROTOCOL 17
+  separates a control that cannot FAIL from one that cannot RUN; *this is a third,
+  nine checks that all run, all pass, and all test the wrong quantity.* **The
+  opening is HELD, not waiting; BE 52 rebuilds the reader.**
+  (12) **AND I CORRECT MY OWN SELF-CRITICISM, WHICH WAS OVERSTATED.** I charged
+  myself above with relaying a receipt's self-description instead of testing it,
+  on R-580(A)'s "defect" reading. **REV 40 read the CODE: the split label is
+  assigned by input file and its only behavioural consequence in the builder is an
+  embargo comparison an empty `score` split passes trivially.** ***So three
+  readings exist and none is ruled -- and my round-129 entry was closer to right
+  than my round-130 charge allowed.*** **What I actually got wrong was accepting
+  the NEXT reading as settled just as readily as the first**: the habit is taking
+  a stated disposition for a checked one, in either direction. *Re-scoped, not
+  withdrawn.*
+  (13) **AND ONE LEVEL FINER ON THE LOCK:** REV 39 requires the lock instrument to
+  test **the LOCK, not the fd**. *I recorded last round that reading
+  `/proc/self/fd` is the right shape; an fd is evidence a file is OPEN, not that a
+  LOCK is held. A descriptor and a lock are different objects and I took the
+  stronger reading.* **REV 39 otherwise stands: `--day` APPROVED once the book
+  exists, three wiring items (DE 79).** The reviewer is at ~82% and resets;
+  harvest at R-582.
+  MEASURED BEFORE THIS SENTENCE: flags 691 -> 700, flag_provenance 236 -> 245,
+  tasks 19; 128 CHECKED, 117 RELAYED, **455 UNMARKED -- unchanged for the sixth
+  round running**, because all nine new flags carried provenance when written.
+  ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3.)
   2026-09-06T06:28:46Z (MEM ROUND 129 -- R-577, R-578, R-579 SWEPT. STATE ONLY.
   THE ROUND'S TWO EDGES: A NEGATIVE-EXISTENCE CLAIM THAT IS FALSE AT THE TIP AND
   SHOULD NOT BE FILED, AND A PASS GATE RESTING 36% ON DATA RULE 5 FORBIDS.
@@ -283,110 +391,6 @@ updated: >-
   round running**, because all nine new flags carried provenance when written.
   ORPHAN audit 0 findings, exit 0 **after it refused one of mine**; window 3 of a
   ruled 3.)
-  2026-09-06T06:05:16Z (MEM ROUND 127 -- R-574, BE 49 AND REV 36 SWEPT. STATE
-  ONLY. THE ROUND REMOVED THE ITEM EVERYONE WAS WORRIED ABOUT AND ADDED A HARDER
-  ONE NOBODY HAD NAMED.
-  (1) **MY ROUND-126 SWEEP CARRIED ONE MISSING INPUT. THERE ARE TWO, AND THE
-  SECOND IS THE HARDER ONE.** The feature pass draws from two sources; PM and FN
-  are computed live from the archives, **ST comes only from the state tape**, and
-  a missing key is a BOUNDED drop at 1% -- so a September fragment alone fails
-  closed. **My own checks: the tape is mtime 2026-08-27** (a file written 08-27
-  cannot hold 09-03 -- the cheapest decisive fact, no parse needed) **and a
-  word-bounded scan for any 09-03-range t0 returns 0 with a positive control
-  returning 5,344,002 in the same run.**
-  (2) **AND MY FIRST PROBE RETURNED 1,732 -- NOT ZERO.** Unbounded digits matched
-  inside 19-digit nanosecond stamps. ***Two rounds running my first probe was
-  wrong: round 126 a silent ZERO on a folded scalar, this one an inflated
-  NON-zero on unbounded digits. Opposite directions, one root -- the pattern was
-  never checked against the shape of the real data before its output was
-  believed.*** It was caught because the number was implausible, not because
-  anything checked it. **Standing now: every count I report from a scan ships a
-  positive control in the same run.**
-  (3) **THE SHARPEST THING IN THE FILING, AND I VERIFIED ITS ARITHMETIC:** BE
-  credited its index as sound because 1,764,206 matched DE's docstring
-  (638,917 + 1,125,289 -- exact). **It matched because it is the same
-  consumed-era tape**: ~4 GB and 387 s indexing 1.76 M rows, not one of which can
-  join a 09-03 generation. ***A number used as a positive control that is the
-  symptom of the blocker*** -- a new shape for the control family: not a fixture
-  supplying the answer, but **a reproduction that succeeds because both sides
-  share the defect.**
-  (4) **THE FEATURE PASS FITS -- MEASURED IN ONE ROUND.** 247 windows, 545,240
-  rows, 608.4 s, **1.915 GB of 8, cap not raised**, sha 2860832a..., streamed and
-  never materialised, four violation counters at zero. **AND THE ASSEMBLY DOES
-  NOT, COMPUTED BY MY OWN CALL:** floor 5.971 + fragment resident 2.742 =
-  **8.713 against 8, over by 0.713, FITS_WITH_WHOLE_FRAGMENT false --
-  `and_that_is_before_asm`, which the module reports as UNKNOWN in words rather
-  than assigning it zero.** Lever: 182 windows would fit the headroom against a
-  shipped chunk of 6.
-  (5) **MY ROUND-126 ARITHMETIC WAS 7.7% HIGH AND ON THE WRONG QUANTITY.** I
-  predicted 0.651 GB/day; it is 0.605. ***And the binding term is not disk bytes
-  but RESIDENT bytes -- 2.742 GB for the same file, a 4.5x expansion. My number
-  was accurate about something that does not bind.***
-  (6) **A BUILDER KNOWN-BAD PASSES ON A TAUTOLOGY, AND I DROVE IT ONE STEP
-  FURTHER THAN THE FILING.** `isinstance(e, Exception)` inside `except Exception
-  as e` is true by construction; executing it shows the named disjunct
-  **"no supplied" is NOT in the message** -- the actual raise is
-  `ForwardDayRefused` about the ledger. ***So the check does not merely fail to
-  be able to fail; it never touches the behaviour it claims to pin.*** BE removed
-  the literal placeholder and the CLASS survived in a different dress.
-  (7) **DE WITHDREW THE RUNNER'S APPROVAL ITSELF** (materially changed, P1 back to
-  NOT MET) and **the real-day `--day` path is UNBUILT** -- the 05:47Z build list
-  said "built, approved", true of the fixture path only, corrected in band.
-  (8) **DA's TICK DIAGNOSIS CLOSES THE HALF I REFUSED TO ASSERT IN ROUND 125.**
-  FIL: modal diff **1e-4** (the fix's value), frac_int **0.909489 < 0.999**,
-  fallback fires, returns 1e-6; ADA is the control in the other direction. **It
-  is the second of my two candidate paths -- and the intuitive branch was the
-  wrong one.** Overturns R-570(D)'s cause. **Routed: `e1_markout_scan.py` has no
-  data-root resolver, still open in the module that produced E1's published
-  numbers.**
-  (9) **THE RACE READ IS APPROVED TO OPEN -- AND THERE IS NO READER.** Two
-  residuals: the required byte-identity recheck has no code to run in, and the
-  Gate-1 separation field matches a constant against a constant. **Carry into the
-  opening: quote the resolved floor 0.25 and the resolved G 5 TOGETHER.** The
-  separation field is **not vacuous as a FUNCTION but vacuous as a CHECK** -- it
-  fires only if its own constant is edited. *Rule 16 stated with a precision this
-  programme has not had: a control can be live and still test nothing.* **Fourth
-  instance of the answer already sitting one field away in the same file.**
-  (10) **THE SMOKE IS BEHIND FOUR THINGS, NOT ONE:** the September STATE TAPE
-  (new, and the harder input), the streaming/index-split declaration, the
-  unbuilt `--day` path, and REV 37's re-approval. **One item came off -- the
-  feature pass.** So 09-09 stays a CONDITIONAL and **its condition changed**: the
-  day's feature pass fits and its assembly does not.
-  (11) **`PM_DATA_ROOT` WAS LIVE IN TWO OF EIGHT SESSIONS** for three rounds
-  after the ruling that established it. *A ruling lands in a file; an environment
-  lands in a process, and nothing was checking the second* -- the same shape as
-  my own window bar. Now set globally and per session.
-  (12) **AND SEAT_PROTOCOL GAINED RULE 21 MID-BATCH, CITING AN R-ENTRY THAT DOES
-  NOT EXIST.** "Landing in the shared tree is add, commit, push -- nothing else
-  **(R-576)**" -- **R-576 occurs zero times in the register and the highest entry
-  is R-575.** The document's own header says every rule cites its R-entry and the
-  register wins on conflict, ***so a rule in force whose authority has not landed
-  cannot be checked against the register at all.*** **Mirror of my round-122
-  finding in the other direction** -- there an address resolved to the WRONG
-  object, here to NOTHING. Most likely a sequencing artifact; stated with its
-  as-of; **and my commit-time re-read at 06:14:16Z found it RESOLVED -- R-576
-  landed about eight minutes later, exactly the sequencing I named.** *The finding
-  was real when written, is closed now, and cost nobody a dispatch because it was
-  filed with its likely explanation attached rather than as an accusation.*
-  ***THIRD ROUND RUNNING THE COMMIT-TIME RE-READ CAUGHT A CLAIM OF MINE GOING
-  FALSE*** -- it is not a formality at the end of my round, it is the step that
-  keeps a sweep of a fast-moving register from shipping stale. **The rule itself I
-  adopt regardless:** my round-opening `pull --ff-only` is not among the forbidden
-  verbs, and my landing has been add+commit+push throughout.
-  (13) **AND MY OWN GUARD COULD NOT EXPRESS RULE 21 LITERALLY, SO I GAVE IT
-  `-F`.** It accepted only `-m`; I had been complying via `-m "$(cat file)"` and
-  verifying byte-identity for three rounds -- **but an instrument that cannot say
-  the rule is one the rule drifts away from.** `-F` now **refuses** an unreadable
-  file and a whitespace-only one (both driven on the real CLI), and refuses `-m`
-  and `-F` together. *The empty-message refusal is rule 11 inside my own file: a
-  commit that lands with no message is a silent success.* 16 checks, up from 13.
-  MEASURED BEFORE THIS SENTENCE: flags 655 -> 670, flag_provenance 200 -> 215,
-  tasks 19; 105 CHECKED, 110 RELAYED, **455 UNMARKED -- unchanged for the third
-  round running**, because all fifteen new flags carried provenance when written.
-  ORPHAN audit 0 findings, exit 0. **And the window guard I built last round did
-  its first real work this round: it FIRED at 4 of a ruled 3 when this generation
-  arrived -- findings 1, exit 1 -- and holds at 3 after the move. The drift it
-  exists to catch, caught on its first opportunity.**)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2768,6 +2772,285 @@ flags:
                              # is touched -- **a coordinator ruling, not mine.**
                              # *I state it in my own Q-row too, so the register's own
                              # record of who carried it is not silently wrong.*
+  THE_PYCACHE_DIRTYING_CANNOT_RECUR_AND_THIS_IS_WHAT_DID_IT: UNGUARDED-INTERPRETER-ON-THEN-TRACKED-BYTECODE
+                             # CHECKED 2026-09-06T06:41:49Z by DRIVING THE RECURRENCE TEST,
+                             # because the USER asked what did it so it does not recur and
+                             # an account without a test is a guess.
+                             # **WHAT DID IT, EXACTLY, IN TWO PARTS -- AND ONLY ONE OF
+                             # THEM WAS MINE.** (1) BE round 50's landing swept 82
+                             # compiled `.pyc` into git; `__pycache__/` was already in
+                             # `.gitignore` and **gitignore never applies to tracked
+                             # files**, so from that moment the bytecode was live content.
+                             # (2) **MINE: I drove four selftests from the repo root as
+                             # `python3 live/pm_research/<m>.py --selftest` with no
+                             # `PYTHONDONTWRITEBYTECODE=1`,** so CPython rewrote
+                             # `__pycache__/*.pyc` -- and against tracked blobs those
+                             # writes showed as 41 modified paths.
+                             # ***NEITHER HALF ALONE DIRTIES ANYTHING.*** Bytecode writes
+                             # are invisible when untracked; tracked bytecode is inert
+                             # when nothing runs. *I had used the guard one round earlier
+                             # in the reviewer's worktree and dropped it in the main
+                             # tree -- the practice existed and did not survive a change
+                             # of directory.*
+                             # **THE RECURRENCE TEST, DRIVEN:** tree clean -> ran a
+                             # selftest with NO guard -> **`git status --short` still 0
+                             # lines**, with 95 `.pyc` on disk and `git check-ignore`
+                             # returning YES. **So the structural half is closed at
+                             # `b474e34` and the behaviour cannot recur** -- not because I
+                             # will remember, but because there is nothing tracked to
+                             # dirty.
+                             # **MY OWN PRACTICE STANDS ANYWAY AND IS NOW STATED:
+                             # `PYTHONDONTWRITEBYTECODE=1` on every suite I drive, in any
+                             # tree.** *A habit that depends on which directory I am in is
+                             # not a habit; the environment variable costs nothing and
+                             # does not care.*
+  EVERY_SYMBOL_HAS_EXACTLY_11_POST_BOUNDARY_ADMISSIBLE_DAYS_I_COMPUTED_IT: AND-IT-RECONCILES-THE-09-09-DATE
+                             # CHECKED 2026-09-06T06:41:49Z by computing it from the v6
+                             # admission census myself, per symbol.
+                             # DA's harvest -- "the single most consequential thing I hold
+                             # and it is in no file" -- is that the rule-5 era leg
+                             # collapses E2-A's population below its declared minimum.
+                             # **I INTERSECTED THE CENSUS WITH THE BOUNDARY: all twelve
+                             # symbols show `n_days_seen` 19, `n_admissible` 15, and
+                             # EXACTLY 11 admissible days at or after 2026-08-25. Max
+                             # across symbols: 11.** R-580(C)(2)'s "at most 11" is exact,
+                             # and **uniform across all twelve -- which is itself the
+                             # finding: the constraint is CALENDAR-WIDE, not symbol-
+                             # specific**, so no symbol can be substituted for another.
+                             # **THE ERA LEG REMOVES EXACTLY FOUR DAYS PER SYMBOL**
+                             # (15 - 11), and v6's own leg already gives 15 >= the
+                             # minimum 14 -- ***so E2-A passes admission today and fails
+                             # it the moment rule 5 is applied. The two legs disagree by
+                             # one day either side of the bar.***
+                             # **AND THE 09-09 DATE RECONCILES, WHICH MY FIRST ARITHMETIC
+                             # DID NOT.** A naive calendar count of 08-25..09-05 gives
+                             # TWELVE days and a 14th on 09-07 -- *neither figure matches,
+                             # and I nearly filed that as a discrepancy.* The claim is
+                             # about ADMISSIBLE days, not calendar days: **11 + 09-06 +
+                             # 09-07 + 09-08 = 14 on 2026-09-08, read at the 09-09
+                             # verdict -- the same date as the Gate-1 read.** *The
+                             # difference between a calendar and a population is one day
+                             # at each end, and it is the whole discrepancy.*
+  THE_08_29_30_POSITIVE_CONTROL_IS_WITHDRAWN_AND_BECOMES_THE_NEGATIVE_ONE: I-VERIFIED-THE-RESTART-DATES-MYSELF
+                             # CHECKED 2026-09-06T06:41:49Z: the restart ledger by me, the
+                             # heartbeat/drop/throughput channels RELAYED from DA.
+                             # **THE LEDGER, READ BY ME:** 4 restarts, timestamps
+                             # 2026-08-24 13:48:08Z, 2026-08-24 13:48:54Z, 2026-08-26
+                             # 05:11:43Z, 2026-08-26 05:26:26Z -- **08-24 x2 and 08-26 x2,
+                             # and NONE on 08-29/30.** Exactly as R-580(C)(1) states.
+                             # RELAYED, not re-derived: 1,439 of 1,440 heartbeats each day
+                             # with a 61 s max gap against 158 s on 08-24 and 4,656 s on
+                             # 08-26; zero WS drops on 08-29/30 against 3 on 08-28 and 1
+                             # on 08-31; **and the decisive channel -- the event-driven
+                             # streams fell ~40% while fixed-cadence depth20 held at
+                             # ~92-93%.**
+                             # ***THE DISCRIMINANT IS THE COMPOSITION, NOT THE LEVEL:
+                             # an outage suppresses EVERY stream; a quiet market
+                             # suppresses only the event-driven ones.*** A single
+                             # throughput number cannot tell them apart and the ratio
+                             # across two stream types can. **08-29/30 is a quiet weekend
+                             # with a live collector.**
+                             # **AND THE REASON THE WITHDRAWAL MATTERS BEYOND THE FACT:**
+                             # requiring the liveness leg to FLAG a quiet weekend would
+                             # **rebuild the activity-selecting defect v6 was written to
+                             # remove -- through the CONTROL rather than through the
+                             # predicate.** *A wrong positive control does not merely fail
+                             # to test; it drags the instrument back to the defect.*
+                             # **RULED: the measured positive controls are the 08-24 and
+                             # 08-26 collector events; 08-29/30 is the NEGATIVE control
+                             # (quiet market, live collector -> ADMITS).**
+  THE_ERA_BOUNDARY_IS_THE_SECOND_OF_TWO_RESTARTS_46_SECONDS_APART: SHARPENING-LAST-ROUNDS-TRACEABILITY-FINDING
+                             # CHECKED 2026-09-06T06:41:49Z, and it sharpens what I filed
+                             # last round.
+                             # Round 129 established that CLAUDE.md rule 5's constant
+                             # `1787579334881534478` is a ROW in `collector_runs.jsonl`
+                             # rather than a remembered figure. **Reading the timestamps
+                             # out: the collector restarted TWICE on 08-24 -- 13:48:08Z
+                             # and 13:48:54Z, forty-six seconds apart -- and the boundary
+                             # is the SECOND of the pair.**
+                             # *So the era is defined not by "the day the collector
+                             # restarted" but by the second of two restarts inside one
+                             # minute, which is the kind of detail that a date-level
+                             # reading of rule 5 silently loses.* **Anything selecting on
+                             # `>= 2026-08-24` rather than on the exact `recv_ns` admits
+                             # 46 seconds of legacy-stamped rows.**
+                             # Recorded as a precision note, not a finding against
+                             # anyone: no artifact I have read selects on the date.
+  MY_ROUND_129_RELAYED_THE_RECEIPTS_SELF_DESCRIPTION_INSTEAD_OF_TESTING_IT: THREE-READINGS-EXIST-AND-MY-SELF-CRITICISM-WAS-OVERSTATED
+                             # CORRECTED-IN-BAND 2026-09-06T06:46:53Z at my commit-time
+                             # re-read, **against my own charge**, because a
+                             # self-accusation the evidence does not support is as wrong
+                             # as any other unsupported claim.
+                             # I wrote above that I relayed a field's self-description
+                             # instead of testing it, taking R-580(A)'s "defect" reading
+                             # as settled. **REV 40 read the CODE and reports a third
+                             # reading: the split label is assigned BY INPUT FILE and its
+                             # ONLY behavioural consequence in the builder is an embargo
+                             # comparison that an empty `score` split passes trivially.**
+                             # **SO THERE ARE THREE READINGS AND NONE IS RULED:** BE's
+                             # (provisional, routed to DE), the coordinator's (a defect --
+                             # every forward-day row is a SCORE row), and the reviewer's
+                             # (largely inert in the builder). **BE 51 states it.**
+                             # ***MY ROUND-129 ENTRY WAS THEREFORE CLOSER TO RIGHT THAN
+                             # MY ROUND-130 SELF-CRITICISM ALLOWED.*** What I got wrong
+                             # was not recording it as provisional -- **it was that I
+                             # accepted the NEXT reading as settled just as readily.**
+                             # *The habit is the same in both directions: taking a stated
+                             # disposition as a checked one. The correction is not "trust
+                             # the receipt less" but "notice when a disposition is an
+                             # assertion".*
+                             # The relay-fidelity axis stays open; **this instance is
+                             # re-scoped, not withdrawn.**
+                             # EARLIER VALUE (rule 13):
+                             # THE-EMPTY-SCORE-SPLIT-IS-A-DEFECT-NOT-A-PROVISIONAL-CHOICE
+                             # CHECKED 2026-09-06T06:41:49Z against R-580(A), and it is a
+                             # relay-fidelity instance -- one of my two standing open
+                             # axes, landing on me again.
+                             # Last round I recorded the state tape's split assignment as
+                             # **PROVISIONAL and routed to DE**, because that is what the
+                             # receipt's own `THE_SPLIT_QUESTION_IS_NOT_MINE` field says.
+                             # **THE COORDINATOR'S READING IS THAT IT IS A DEFECT:** the
+                             # receipt puts every row in the TRAIN split with an EMPTY
+                             # score split, and **"for a ruled forward day every row is a
+                             # SCORE row the pinned heads score to produce `asm`"** --
+                             # routed to BE 51 to fix the assignment BEFORE assembly.
+                             # ***I TOOK A FIELD'S SELF-DESCRIPTION AT ITS WORD RATHER
+                             # THAN ASKING WHETHER THE ASSIGNMENT WAS RIGHT.*** The field
+                             # was honest about its own uncertainty, which is exactly what
+                             # made it easy to relay: **a receipt that flags its own
+                             # provisionality reads as diligence, and I let that stand in
+                             # for checking the thing it was provisional about.**
+                             # *The distinction I should have drawn: "which split does
+                             # this population belong to" is a question; "a forward day
+                             # has no train rows" is an answer available from the
+                             # definition.*
+  THE_RACE_READER_EXISTS_AND_THE_SLICE_AUDIT_CAUGHT_A_LIVE_LOCKED_SCOPE: THE-READER-IS-NOT-APPROVED-9-GREEN-CHECKS-ON-THE-WRONG-STATISTIC
+                             # SUPERSEDED-IN-BAND 2026-09-06T06:46:53Z at my commit-time
+                             # re-read, and this is the most consequential catch the
+                             # re-read has made.
+                             # **REV 40 FILED: NOT APPROVED.** My "9 checks passed" was
+                             # TRUE AND INSUFFICIENT. **(1) The statistic is NOT the
+                             # declared estimand** -- the declaration commits in four
+                             # places to NET CENTS against the INCUMBENT at the ACTION
+                             # unit (slug, side, gen) de-duplicated, with L = 50 ms and
+                             # BY_THRESHOLD pairing; **the reader computes the net of
+                             # sign-flips between consecutive score values within a coin
+                             # -- no incumbent, no action unit, no latency, no pairing.**
+                             # **(2) On the writer's real shape the day sign is
+                             # ARITHMETICALLY FORCED TO +1** -- driven: 288 windows x
+                             # 2,100 rows gives up 604,512 / down 287 / net +604,225,
+                             # identical across three random draws **and on a strictly
+                             # COLLAPSING day**; the decisive pair is the same collapsing
+                             # series returning -1 when within-window values are exactly
+                             # tied and +1 when they differ by 1e-9.
+                             # ***AND THE COST THAT WAS AVOIDED: "Had the coordinator
+                             # opened the read with this reader, ALL FIVE RACE DAYS WOULD
+                             # HAVE BEEN CONSUMED (rule 11) on a degenerate statistic,
+                             # with no sixth day."*** *The plan was R-580(D)'s "REV 40 …
+                             # then the race read opens on GO" -- which is precisely what
+                             # the review protocol exists to interrupt.*
+                             # **THE CLASS, AND IT IS NEW: SUITE-GREEN IS NOT
+                             # ESTIMAND-CORRECT.** SEAT_PROTOCOL 17 already separates a
+                             # control that cannot FAIL from one that cannot RUN; **this
+                             # is a third: nine checks that all run, all pass, all test
+                             # the wrong quantity.** *My own drive of those nine checks
+                             # was a correct measurement of an instrument nobody had
+                             # checked against its declaration -- which is rule 16 with
+                             # the artifact being the DECLARATION rather than the code.*
+                             # **BE 52 rebuilds the reader to the declared estimand with
+                             # the collapsing-series +/-1e-9 known-bad; the opening STAYS
+                             # HELD.** The slice-audit half of this flag is untouched and
+                             # stands.
+                             # EARLIER VALUE (rule 13): BOTH-DRIVEN-BY-ME
+                             # CHECKED 2026-09-06T06:41:49Z by running both.
+                             # **`be_race_reader.py`: 9 checks passed under my run** --
+                             # the reader the race read has been waiting on since REV 36
+                             # ("the byte-identity check has no code to run in") now
+                             # exists. Its shape per R-580(A): a clean read admits, a file
+                             # mutated between the two digest passes **VOIDS**, a planted
+                             # Gate-1 path refuses, and the sealed shape is taken from the
+                             # WRITER.
+                             # **`heavy_slice_audit.py`: rc 0 under my run, and it is not
+                             # reporting an empty room** -- it named a live scope,
+                             # `be51tape.scope`, **`heavy=True locked=True`**, 2,075,140
+                             # KiB and 333 s, running `be_gate1_state_tape.py --day
+                             # 20260903`, and concluded "1 scope(s) in research.slice,
+                             # none heavy without the lock".
+                             # ***THE INSTRUMENT R-575(C) OWED IS DOING REAL WORK ON ITS
+                             # FIRST OUTING, AND IT PASSES ON A NON-EMPTY ROOM*** -- which
+                             # is the difference between an audit that proves compliance
+                             # and one that proves nothing because nothing was running.
+                             # **AND IT TELLS ME WHAT BE 51 IS DOING RIGHT NOW:**
+                             # rebuilding 09-03's state tape -- consistent with the
+                             # EMPTY-score-split correction above being applied before the
+                             # assembly.
+  NO_THRESHOLD_CHANGE_AFTER_SEEING_AND_THE_SEALED_SMOKE_IS_THE_ANSWER: USER-VISIBLE-AND-REVERSIBLE-BY-THE-USER
+                             # RELAYED from R-580(C)(2) 2026-09-06T06:41:49Z; the population
+                             # arithmetic behind it I computed myself (flag above).
+                             # The tempting move was available and was refused: with 11
+                             # post-boundary days against a declared minimum of 14, **the
+                             # threshold could have been lowered and E2-A would run
+                             # today.** **RULED: NO THRESHOLD CHANGE AFTER SEEING**
+                             # (CLAUDE.md rule 11 -- choosing after seeing voids the
+                             # test).
+                             # **THE ANSWER IS THE P-003 PATTERN, REUSED:** the mechanism
+                             # work proceeds on the post-boundary days as a **SEALED
+                             # SMOKE** -- G = 11, economics SEALED, resources and statuses
+                             # published -- and **the gate is read only at G >= 14
+                             # post-boundary days (~09-09).**
+                             # *Which separates the two things a run does: exercising the
+                             # machinery, and reading a number. Only the second needs the
+                             # population.* **Recorded USER-VISIBLE and reversible by the
+                             # USER**, which is where a bar change belongs (rule 14).
+  v7_SUPERSEDES_v6_BECAUSE_A_LANDED_RECEIPT_ALREADY_CITES_v6: RULE-13-APPLIED-TO-A-DECLARATION
+                             # RELAYED from R-580(C)(3) 2026-09-06T06:41:49Z.
+                             # v6 is committed **and cited by a landed receipt
+                             # (`11f12371…`)**, so rule 13 forbids editing it: **v7
+                             # supersedes v6** rather than "v6 in band".
+                             # *The test is not whether the artifact is frozen but whether
+                             # anything has already resolved through it.* **A citation
+                             # from a landed receipt is what converts an editable draft
+                             # into a provenance record** -- the same reasoning that keeps
+                             # fixture receipt v7's false literal in place while v8 carries
+                             # the computed one.
+  REV_39_APPROVED_day_AND_REV_40_IS_IN_FLIGHT: REV-40-HAS-FILED-AND-THE-OPENING-IS-HELD-NOT-WAITING
+                             # SUPERSEDED-IN-BAND 2026-09-06T06:46:53Z. **REV 40 has filed:
+                             # NOT APPROVED (flag above). The opening is HELD, not
+                             # pending a review** -- and BE 52 rebuilds the reader.
+                             # **REV 39 stands and is unaffected: `--day` APPROVED for the
+                             # 09-03 smoke once BE's book exists** -- every declared
+                             # behaviour reproduces, all five declared attacks fire plus
+                             # one of the reviewer's own, both R-577 findings closed at
+                             # the artifact, batteries at 71/100/18/26. **Three wiring
+                             # items first (DE 79):** the fixture/real lock on the DAY
+                             # path with the seal-symmetry assertion wired onto the
+                             # emitted artifact; **the lock instrument testing the LOCK,
+                             # NOT THE FD** (a fresh-fd LOCK_EX|LOCK_NB probe, or a
+                             # /proc/locks entry on the inode owned by this process or an
+                             # ancestor); and `selftest(offline=fixture)` so a real day's
+                             # receipt carries the 23 day-path checks.
+                             # *Item two is worth its own line: I recorded last round that
+                             # the lock is "proven from /proc/self/fd, not from a flag" and
+                             # called it the right shape. **The reviewer's point is one
+                             # level finer -- an fd is evidence a file is OPEN, not that a
+                             # LOCK is held.** A descriptor and a lock are different
+                             # objects, and I took the stronger reading.*
+                             # **And the reviewer is at ~82%: stop-for-reset sent, its
+                             # held state enumerated by filing and section, harvest at
+                             # R-582.**
+                             # EARLIER VALUE (rule 13): THE-OPENING-WAITS-ON-REV-40
+                             # RELAYED 2026-09-06T06:41:49Z.
+                             # **REV 39 APPROVED DE's `--day` for the 09-03 smoke once
+                             # BE's book exists**, with three small wiring items first ->
+                             # DE 79. **REV 40 on the race reader is IN FLIGHT and the
+                             # opening waits on it** -- so the race read now has its
+                             # reader (9 checks, driven by me) and needs only the review
+                             # and the coordinator's GO. **BE 51 builds the streaming
+                             # assembly and the 09-03 book; DA 63 (v7 + the sealed smoke)
+                             # is GO.**
+                             # *Every one of the four items I listed at round 127 as
+                             # standing between here and the 09-03 smoke has now either
+                             # landed or has a named owner in flight.*
   THE_09_03_STATE_TAPE_IS_BUILT_AND_BOTH_MISSING_INPUTS_NOW_EXIST_FOR_ONE_DAY: LANDED-90-SECONDS-BEFORE-MY-COMMIT-TIME-RE-READ
                              # CHECKED 2026-09-06T06:34:39Z at the receipt, after BE 50
                              # landed `57ccc62` at 06:33:11Z -- **90 seconds before my
@@ -15102,6 +15385,87 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 130, 2026-09-06T06:41:49Z ------------------------------
+  THE_PYCACHE_DIRTYING_CANNOT_RECUR_AND_THIS_IS_WHAT_DID_IT:
+    prov: CHECKED
+    artifact: .gitignore
+    as_of: 2026-09-06T06:41:49Z
+    said: >-
+      driven recurrence test: with the tree at 0 dirty paths I ran a selftest with
+      no PYTHONDONTWRITEBYTECODE and git status --short still returned 0 lines,
+      with 95 .pyc present on disk and git check-ignore returning YES for them.
+      The two causes were BE round 50's landing making bytecode tracked (gitignore
+      does not apply to tracked files) and my own four selftests run from the repo
+      root without the guard; neither alone dirties anything. The structural half
+      closed at b474e34.
+  EVERY_SYMBOL_HAS_EXACTLY_11_POST_BOUNDARY_ADMISSIBLE_DAYS_I_COMPUTED_IT:
+    prov: CHECKED
+    artifact: data/mm_hf/e1/p002_e2a_v6_admission__20260906T062536Z.json
+    as_of: 2026-09-06T06:41:49Z
+    said: >-
+      all twelve symbols carry n_days_seen 19, n_admissible 15 and exactly 11
+      admissible days at or after 2026-08-25; the maximum across symbols is 11,
+      matching R-580(C)(2)'s "at most 11" exactly and uniformly, so the constraint
+      is calendar-wide rather than symbol-specific. The era leg removes exactly
+      four days per symbol, and v6's own leg gives 15 against a minimum of 14. A
+      naive calendar count of 08-25..09-05 gives twelve days and a 14th on 09-07 --
+      neither matching -- because the claim is about admissible days: 11 plus
+      09-06, 09-07 and 09-08 is 14 on 2026-09-08, read at the 09-09 verdict.
+  THE_08_29_30_POSITIVE_CONTROL_IS_WITHDRAWN_AND_BECOMES_THE_NEGATIVE_ONE:
+    prov: CHECKED
+    artifact: data/mm_hf/collector_runs.jsonl
+    as_of: 2026-09-06T06:41:49Z
+    said: >-
+      the ledger holds four restarts at 2026-08-24 13:48:08Z, 2026-08-24
+      13:48:54Z, 2026-08-26 05:11:43Z and 2026-08-26 05:26:26Z -- two on 08-24,
+      two on 08-26, none on 08-29 or 08-30, exactly as R-580(C)(1) states. The
+      heartbeat, WS-drop and throughput-composition channels are relayed from DA;
+      the discriminant is that an outage suppresses every stream while a quiet
+      market suppresses only the event-driven ones.
+  THE_ERA_BOUNDARY_IS_THE_SECOND_OF_TWO_RESTARTS_46_SECONDS_APART:
+    prov: CHECKED
+    artifact: data/mm_hf/collector_runs.jsonl
+    as_of: 2026-09-06T06:41:49Z
+    said: >-
+      the two 08-24 restarts are 13:48:08Z and 13:48:54Z, forty-six seconds apart,
+      and rule 5's constant 1787579334881534478 is the second of the pair. A
+      selection on the date rather than the exact recv_ns would admit those
+      forty-six seconds of legacy-stamped rows; no artifact I have read does so.
+  MY_ROUND_129_RELAYED_THE_RECEIPTS_SELF_DESCRIPTION_INSTEAD_OF_TESTING_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T06:41:49Z
+    said: >-
+      R-580(A) rules the state-tape receipt's split assignment a defect rather
+      than a provisional choice -- every row is in the TRAIN split with an EMPTY
+      score split, and for a ruled forward day every row is a SCORE row the pinned
+      heads score to produce asm -- routed to BE 51 to fix before assembly. My
+      round-129 entry recorded it as PROVISIONAL and routed to DE because the
+      receipt's own field says so; I relayed a field's self-description instead of
+      asking whether the assignment was right.
+  THE_RACE_READER_EXISTS_AND_THE_SLICE_AUDIT_CAUGHT_A_LIVE_LOCKED_SCOPE:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-06T06:41:49Z
+    said: >-
+      be_race_reader.py --selftest reports 9 checks passed under my run, and
+      heavy_slice_audit.py exits 0 while naming a live scope -- be51tape.scope,
+      heavy=True locked=True, 2,075,140 KiB, 333 s, running be_gate1_state_tape.py
+      --day 20260903 -- concluding "1 scope(s) in research.slice, none heavy
+      without the lock". The audit passes on a non-empty room rather than on an
+      empty one.
+  NO_THRESHOLD_CHANGE_AFTER_SEEING_AND_THE_SEALED_SMOKE_IS_THE_ANSWER:
+    prov: RELAYED
+    from: R-580(C)(2)
+    as_of: 2026-09-06T06:41:49Z
+  v7_SUPERSEDES_v6_BECAUSE_A_LANDED_RECEIPT_ALREADY_CITES_v6:
+    prov: RELAYED
+    from: R-580(C)(3)
+    as_of: 2026-09-06T06:41:49Z
+  REV_39_APPROVED_day_AND_REV_40_IS_IN_FLIGHT:
+    prov: RELAYED
+    from: R-580
+    as_of: 2026-09-06T06:41:49Z
   # --- MEM round 129, 2026-09-06T06:28:46Z ------------------------------
   THE_UNTRACK_COMMIT_DID_NOT_UNTRACK_AND_ITS_COUNT_IS_WRONG:
     prov: CHECKED

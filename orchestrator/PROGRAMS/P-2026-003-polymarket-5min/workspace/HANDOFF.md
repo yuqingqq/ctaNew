@@ -1,9 +1,185 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T06:28:46Z — **E2-A is approved for a symbol smoke against v6 —
-but its PASS gate would rest 36% on data rule 5 declares inadmissible, and the ICP
-cell's honest end is STATED, not unresolved.** Gate 1 is 1 of 7. Economics:
+Updated: 2026-09-06T06:41:49Z — **Every symbol has exactly 11 post-boundary
+admissible days against a declared 14 — and nobody lowered the bar. Both missing
+inputs exist for one day and the race reader exists.** Gate 1 is 1 of 7. Economics:
 `RESULTS.md` §0.
+
+## READ FIRST — round 130
+
+### 1. Every symbol has exactly 11 post-boundary admissible days — I computed it
+
+All twelve carry `n_days_seen` 19, `n_admissible` 15, and **exactly 11** admissible
+days at or after 2026-08-25. R-580(C)(2)'s *"at most 11"* is exact — **and uniform,
+which is itself the finding: the constraint is calendar-wide, not symbol-specific**,
+so no symbol substitutes for another.
+
+> **The era leg removes exactly four days per symbol, and v6's own leg gives 15
+> against a minimum of 14 — so E2-A passes admission today and fails it the moment
+> rule 5 is applied.** The two legs disagree by one day either side of the bar.
+
+### 2. And the 09-09 date reconciles, which my first arithmetic did not
+
+A naive calendar count of 08-25..09-05 gives **twelve** days and a 14th on **09-07**
+— *neither matches, and I nearly filed it as a discrepancy.* The claim is about
+**admissible** days:
+
+```
+11 (now)  +  09-06  +  09-07  +  09-08  =  14 on 2026-09-08
+                                        →  read at the 09-09 verdict
+```
+
+— the same date as the Gate-1 read. *The difference between a calendar and a
+population is one day at each end, and it was the whole gap.*
+
+### 3. No threshold change after seeing
+
+The tempting move was available — lower the minimum and E2-A runs today — and was
+refused (rule 11). **The answer is the P-003 pattern: a sealed smoke at G = 11,
+economics sealed, resources and statuses published, and the gate read only at
+G ≥ 14.**
+
+*Which separates exercising the machinery from reading a number; only the second
+needs the population.* **USER-visible and reversible by the USER** — where a bar
+change belongs.
+
+### 4. The 08-29/30 positive control is withdrawn — I verified the restarts myself
+
+The ledger holds four restarts — **08-24 13:48:08Z and 13:48:54Z, 08-26 05:11:43Z
+and 05:26:26Z — none on 08-29/30.**
+
+> **The discriminant is composition, not level.** An outage suppresses *every*
+> stream; a quiet market suppresses only the event-driven ones — and depth20 held
+> at ~92–93% while the event-driven streams fell ~40%.
+
+**And the reason it matters beyond the fact:** requiring the liveness leg to flag a
+quiet weekend would **rebuild the activity-selecting defect v6 removed — through the
+control rather than the predicate.** *A wrong positive control does not merely fail
+to test; it drags the instrument back to the defect.* **08-29/30 is now the negative
+control.**
+
+### 5. And the boundary is the second of two restarts, 46 seconds apart
+
+Sharpening round 129's finding that rule 5's constant is a ledger row: the two 08-24
+restarts are 46 s apart and **the boundary is the second of the pair.** *So anything
+selecting on `>= 2026-08-24` rather than the exact `recv_ns` admits forty-six seconds
+of legacy-stamped rows.* No artifact I have read does.
+
+### 6. My round-129 entry relayed a receipt's self-description instead of testing it
+
+I recorded the state tape's split as **PROVISIONAL, routed to DE** — because its own
+field says so. **R-580(A) rules it a defect**: every row sits in the TRAIN split with
+an EMPTY score split, and *for a ruled forward day every row is a SCORE row.*
+
+> **A receipt that flags its own provisionality reads as diligence, and I let that
+> stand in for checking the thing it was provisional about.**
+
+*"Which split does this population belong to" is a question; "a forward day has no
+train rows" is an answer available from the definition.* Relay fidelity — one of my
+two standing open axes — landing on me again.
+
+### 7. Both missing inputs exist for one day, and the reader exists
+
+The 09-03 state tape (544,286 rows, 991 MB, **4.74 GB of 8**) and
+**`be_race_reader.py` — 9 checks under my own run**: a clean read admits, a file
+mutated between the two digest passes **VOIDS**, a planted Gate-1 path refuses, and
+the sealed shape is taken from the writer. *The reader REV 36 said had no code to run
+in now has code.*
+
+### 8. And the slice audit passes on a non-empty room
+
+`heavy_slice_audit.py` exits 0 under my run **while naming a live scope** —
+`be51tape.scope`, **`heavy=True locked=True`**, 2,075,140 KiB, 333 s, rebuilding
+09-03's tape.
+
+> *The instrument R-575(C) owed is doing real work on its first outing — and it
+> proves compliance rather than proving nothing because nothing was running.*
+
+### 9. What dirtied 41 `.pyc` files, stated so it cannot recur — and only one half was mine
+
+1. **BE 50's landing made bytecode tracked.** `__pycache__/` was already in
+   `.gitignore`, and **gitignore never applies to tracked files.**
+2. **Mine:** I drove four selftests from the repo root with no
+   `PYTHONDONTWRITEBYTECODE=1`, so CPython rewrote the `.pyc` — against tracked
+   blobs those writes showed as 41 modified paths.
+
+**Neither half alone dirties anything.** *I had used the guard one round earlier in
+the reviewer's worktree and dropped it in the main tree — the practice existed and
+did not survive a change of directory.*
+
+**Driven recurrence test:** clean tree → unguarded selftest → **`git status --short`
+still 0 lines**, 95 `.pyc` on disk, all ignored. **The structural half closed at
+`b474e34`; it cannot recur** — not because I will remember. *My own practice stands
+anyway and is now stated: the guard on every suite, in any tree. A habit that depends
+on which directory I am in is not a habit.*
+
+### 10. State
+
+**v7 supersedes v6** because a landed receipt already cites v6 — *the test is not
+whether an artifact is frozen but whether anything has already resolved through it.*
+**REV 39 approved `--day`** for the smoke once BE's book exists (three wiring items →
+DE 79); **REV 40 on the reader is in flight and the opening waits on it**; BE 51
+builds the streaming assembly and the book; DA 63 is GO.
+
+*Every one of the four items I listed at round 127 as standing between here and the
+09-03 smoke has now landed or has a named owner in flight.*
+
+### 11. The commit-time re-read's most consequential catch: the reader is NOT approved
+
+**R-581 landed while I wrote.** My *"9 checks passed"* was **true and insufficient**.
+
+- **The statistic is not the declared estimand.** The declaration commits, in four
+  places, to **net cents against the incumbent at the action unit** (slug, side,
+  gen) de-duplicated, with L = 50 ms and BY_THRESHOLD pairing. **The reader nets
+  sign-flips between consecutive score values within a coin** — no incumbent, no
+  action unit, no latency, no pairing.
+- **On the writer's real shape the day sign is arithmetically forced to +1** —
+  288 windows × 2,100 rows → up 604,512 / down 287, identical across three draws
+  **and on a strictly collapsing day**. The decisive pair: the same collapsing
+  series gives **−1 when values tie exactly and +1 when they differ by 1e-9**.
+
+> **"Had the coordinator opened the read with this reader, all five race days would
+> have been consumed (rule 11) on a degenerate statistic, with no sixth day."**
+
+**The class is new: suite-green is not estimand-correct.** SEAT_PROTOCOL 17
+separates a control that cannot *fail* from one that cannot *run*; **this is a
+third — nine checks that all run, all pass, and all test the wrong quantity.** *My
+drive of those nine was a correct measurement of an instrument nobody had checked
+against its declaration — rule 16 with the artifact being the **declaration**.*
+
+**The opening is HELD, not waiting. BE 52 rebuilds the reader.**
+
+### 12. And I correct my own self-criticism, which was overstated
+
+I charged myself in §6 with relaying a receipt's self-description, on R-580(A)'s
+*"defect"* reading. **REV 40 read the code: the split label is assigned by input
+file, and its only behavioural consequence in the builder is an embargo comparison
+an empty `score` split passes trivially.**
+
+> **Three readings exist and none is ruled** — BE's (provisional), the
+> coordinator's (a defect), the reviewer's (largely inert). **My round-129 entry was
+> closer to right than my round-130 charge allowed.**
+
+**What I actually got wrong was accepting the *next* reading as settled just as
+readily as the first.** *The habit is taking a stated disposition for a checked one,
+in either direction.* Re-scoped, not withdrawn.
+
+### 13. One level finer on the lock
+
+REV 39 requires the lock instrument to test **the lock, not the fd** — a fresh-fd
+`LOCK_EX|LOCK_NB` probe, or a `/proc/locks` entry on the inode owned by this process
+or an ancestor.
+
+*I recorded last round that reading `/proc/self/fd` is the right shape. **An fd is
+evidence a file is open, not that a lock is held.** A descriptor and a lock are
+different objects, and I took the stronger reading.*
+
+**REV 39 otherwise stands: `--day` APPROVED for the smoke once BE's book exists**,
+three wiring items (DE 79). The reviewer is at ~82% and resets; harvest at R-582.
+
+**Counts, measured before this was written:** flags 691 → 700, flag_provenance
+236 → 245, tasks 19; 128 CHECKED, 117 RELAYED, **455 UNMARKED — unchanged for the
+sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3.
 
 ## READ FIRST — round 129
 

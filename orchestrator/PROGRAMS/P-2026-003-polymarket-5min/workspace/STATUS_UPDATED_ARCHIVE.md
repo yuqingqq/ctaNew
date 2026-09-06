@@ -9250,3 +9250,118 @@ containment check in all three directions.
   ORPHAN audit 0 findings, exit 0, **and the window now reports 3 of a ruled 3
   in that same run.**)
 ```
+
+## Batch 112 — archived 2026-09-06T06:41:49Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 130 entered the field —
+the fourth consecutive round the window guard has demanded the trim rather than a
+seat remembering to make it. Trim by MOVING, never by interpreting; boundaries at
+the generation markers as they stand; verified by an alnum-normalised containment
+check in all three directions.
+
+```
+  2026-09-06T06:05:16Z (MEM ROUND 127 -- R-574, BE 49 AND REV 36 SWEPT. STATE
+  ONLY. THE ROUND REMOVED THE ITEM EVERYONE WAS WORRIED ABOUT AND ADDED A HARDER
+  ONE NOBODY HAD NAMED.
+  (1) **MY ROUND-126 SWEEP CARRIED ONE MISSING INPUT. THERE ARE TWO, AND THE
+  SECOND IS THE HARDER ONE.** The feature pass draws from two sources; PM and FN
+  are computed live from the archives, **ST comes only from the state tape**, and
+  a missing key is a BOUNDED drop at 1% -- so a September fragment alone fails
+  closed. **My own checks: the tape is mtime 2026-08-27** (a file written 08-27
+  cannot hold 09-03 -- the cheapest decisive fact, no parse needed) **and a
+  word-bounded scan for any 09-03-range t0 returns 0 with a positive control
+  returning 5,344,002 in the same run.**
+  (2) **AND MY FIRST PROBE RETURNED 1,732 -- NOT ZERO.** Unbounded digits matched
+  inside 19-digit nanosecond stamps. ***Two rounds running my first probe was
+  wrong: round 126 a silent ZERO on a folded scalar, this one an inflated
+  NON-zero on unbounded digits. Opposite directions, one root -- the pattern was
+  never checked against the shape of the real data before its output was
+  believed.*** It was caught because the number was implausible, not because
+  anything checked it. **Standing now: every count I report from a scan ships a
+  positive control in the same run.**
+  (3) **THE SHARPEST THING IN THE FILING, AND I VERIFIED ITS ARITHMETIC:** BE
+  credited its index as sound because 1,764,206 matched DE's docstring
+  (638,917 + 1,125,289 -- exact). **It matched because it is the same
+  consumed-era tape**: ~4 GB and 387 s indexing 1.76 M rows, not one of which can
+  join a 09-03 generation. ***A number used as a positive control that is the
+  symptom of the blocker*** -- a new shape for the control family: not a fixture
+  supplying the answer, but **a reproduction that succeeds because both sides
+  share the defect.**
+  (4) **THE FEATURE PASS FITS -- MEASURED IN ONE ROUND.** 247 windows, 545,240
+  rows, 608.4 s, **1.915 GB of 8, cap not raised**, sha 2860832a..., streamed and
+  never materialised, four violation counters at zero. **AND THE ASSEMBLY DOES
+  NOT, COMPUTED BY MY OWN CALL:** floor 5.971 + fragment resident 2.742 =
+  **8.713 against 8, over by 0.713, FITS_WITH_WHOLE_FRAGMENT false --
+  `and_that_is_before_asm`, which the module reports as UNKNOWN in words rather
+  than assigning it zero.** Lever: 182 windows would fit the headroom against a
+  shipped chunk of 6.
+  (5) **MY ROUND-126 ARITHMETIC WAS 7.7% HIGH AND ON THE WRONG QUANTITY.** I
+  predicted 0.651 GB/day; it is 0.605. ***And the binding term is not disk bytes
+  but RESIDENT bytes -- 2.742 GB for the same file, a 4.5x expansion. My number
+  was accurate about something that does not bind.***
+  (6) **A BUILDER KNOWN-BAD PASSES ON A TAUTOLOGY, AND I DROVE IT ONE STEP
+  FURTHER THAN THE FILING.** `isinstance(e, Exception)` inside `except Exception
+  as e` is true by construction; executing it shows the named disjunct
+  **"no supplied" is NOT in the message** -- the actual raise is
+  `ForwardDayRefused` about the ledger. ***So the check does not merely fail to
+  be able to fail; it never touches the behaviour it claims to pin.*** BE removed
+  the literal placeholder and the CLASS survived in a different dress.
+  (7) **DE WITHDREW THE RUNNER'S APPROVAL ITSELF** (materially changed, P1 back to
+  NOT MET) and **the real-day `--day` path is UNBUILT** -- the 05:47Z build list
+  said "built, approved", true of the fixture path only, corrected in band.
+  (8) **DA's TICK DIAGNOSIS CLOSES THE HALF I REFUSED TO ASSERT IN ROUND 125.**
+  FIL: modal diff **1e-4** (the fix's value), frac_int **0.909489 < 0.999**,
+  fallback fires, returns 1e-6; ADA is the control in the other direction. **It
+  is the second of my two candidate paths -- and the intuitive branch was the
+  wrong one.** Overturns R-570(D)'s cause. **Routed: `e1_markout_scan.py` has no
+  data-root resolver, still open in the module that produced E1's published
+  numbers.**
+  (9) **THE RACE READ IS APPROVED TO OPEN -- AND THERE IS NO READER.** Two
+  residuals: the required byte-identity recheck has no code to run in, and the
+  Gate-1 separation field matches a constant against a constant. **Carry into the
+  opening: quote the resolved floor 0.25 and the resolved G 5 TOGETHER.** The
+  separation field is **not vacuous as a FUNCTION but vacuous as a CHECK** -- it
+  fires only if its own constant is edited. *Rule 16 stated with a precision this
+  programme has not had: a control can be live and still test nothing.* **Fourth
+  instance of the answer already sitting one field away in the same file.**
+  (10) **THE SMOKE IS BEHIND FOUR THINGS, NOT ONE:** the September STATE TAPE
+  (new, and the harder input), the streaming/index-split declaration, the
+  unbuilt `--day` path, and REV 37's re-approval. **One item came off -- the
+  feature pass.** So 09-09 stays a CONDITIONAL and **its condition changed**: the
+  day's feature pass fits and its assembly does not.
+  (11) **`PM_DATA_ROOT` WAS LIVE IN TWO OF EIGHT SESSIONS** for three rounds
+  after the ruling that established it. *A ruling lands in a file; an environment
+  lands in a process, and nothing was checking the second* -- the same shape as
+  my own window bar. Now set globally and per session.
+  (12) **AND SEAT_PROTOCOL GAINED RULE 21 MID-BATCH, CITING AN R-ENTRY THAT DOES
+  NOT EXIST.** "Landing in the shared tree is add, commit, push -- nothing else
+  **(R-576)**" -- **R-576 occurs zero times in the register and the highest entry
+  is R-575.** The document's own header says every rule cites its R-entry and the
+  register wins on conflict, ***so a rule in force whose authority has not landed
+  cannot be checked against the register at all.*** **Mirror of my round-122
+  finding in the other direction** -- there an address resolved to the WRONG
+  object, here to NOTHING. Most likely a sequencing artifact; stated with its
+  as-of; **and my commit-time re-read at 06:14:16Z found it RESOLVED -- R-576
+  landed about eight minutes later, exactly the sequencing I named.** *The finding
+  was real when written, is closed now, and cost nobody a dispatch because it was
+  filed with its likely explanation attached rather than as an accusation.*
+  ***THIRD ROUND RUNNING THE COMMIT-TIME RE-READ CAUGHT A CLAIM OF MINE GOING
+  FALSE*** -- it is not a formality at the end of my round, it is the step that
+  keeps a sweep of a fast-moving register from shipping stale. **The rule itself I
+  adopt regardless:** my round-opening `pull --ff-only` is not among the forbidden
+  verbs, and my landing has been add+commit+push throughout.
+  (13) **AND MY OWN GUARD COULD NOT EXPRESS RULE 21 LITERALLY, SO I GAVE IT
+  `-F`.** It accepted only `-m`; I had been complying via `-m "$(cat file)"` and
+  verifying byte-identity for three rounds -- **but an instrument that cannot say
+  the rule is one the rule drifts away from.** `-F` now **refuses** an unreadable
+  file and a whitespace-only one (both driven on the real CLI), and refuses `-m`
+  and `-F` together. *The empty-message refusal is rule 11 inside my own file: a
+  commit that lands with no message is a silent success.* 16 checks, up from 13.
+  MEASURED BEFORE THIS SENTENCE: flags 655 -> 670, flag_provenance 200 -> 215,
+  tasks 19; 105 CHECKED, 110 RELAYED, **455 UNMARKED -- unchanged for the third
+  round running**, because all fifteen new flags carried provenance when written.
+  ORPHAN audit 0 findings, exit 0. **And the window guard I built last round did
+  its first real work this round: it FIRED at 4 of a ruled 3 when this generation
+  arrived -- findings 1, exit 1 -- and holds at 3 after the move. The drift it
+  exists to catch, caught on its first opportunity.**)
+```
