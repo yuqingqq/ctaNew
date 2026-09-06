@@ -4130,18 +4130,42 @@ def structure_declaration_for_book(book_sha256: str,
             f"{st['name']} carries STATUS {status!r}. A declaration ABOUT "
             f"a book is not a reading OF it, and this recompute will not "
             f"map on a claim.")
-    m = re.search(r"sha256 ([0-9a-f]{64})", detail)
-    declared = m.group(1) if m else None
-    if str(book_sha256) not in detail:
+    #: DA 100, SECOND HALF: ***THE DECLARATION GREW A FIELD AND MY GUARD
+    #: WAS READING PROSE.*** v2 named ONE book in `status_detail`; BE 74's
+    #: v3 verifies THREE and lists them in a `verified_books` MAP with a
+    #: digest each. A guard that scrapes a sentence answers about the
+    #: shape it was written against, not about the declaration in force --
+    #: so the FIELD is read where it exists, and the prose only where it
+    #: does not.
+    vb = sobj.get("verified_books")
+    declared_set, by_day = [], {}
+    if isinstance(vb, dict):
+        for day, blk in sorted(vb.items()):
+            if isinstance(blk, dict) and blk.get("sha256"):
+                declared_set.append(blk["sha256"])
+                by_day[day] = blk["sha256"]
+    if not declared_set:
+        m = re.search(r"sha256 ([0-9a-f]{64})", detail)
+        if m:
+            declared_set = [m.group(1)]
+    if str(book_sha256) not in declared_set and str(
+            book_sha256) not in detail:
         raise VerifierRefused(
             f"REFUSED: STRUCTURE_DECLARATION_NAMES_ANOTHER_BOOK -- "
-            f"{st['name']} was VERIFIED against the book whose digest it "
-            f"names, {(declared or 'UNSTATED')[:16]}…, and the book "
-            f"offered here hashes to {str(book_sha256)[:16]}…. A "
-            f"structure verified elsewhere says nothing about these "
-            f"bytes, and NOTHING IS OPENED on the strength of it.")
+            f"{st['name']} was VERIFIED against "
+            f"{len(declared_set) or 'no'} book(s) "
+            f"{[x[:16] + '…' for x in declared_set]}, and the book offered "
+            f"here hashes to {str(book_sha256)[:16]}…. A structure "
+            f"verified elsewhere says nothing about these bytes, and "
+            f"NOTHING IS OPENED on the strength of it.")
+    declared = next((d for d in declared_set if d == str(book_sha256)),
+                    declared_set[0] if declared_set else None)
     return {**st, "STATUS": status,
             "verified_against_digest": declared,
+            "verified_books_by_day": by_day,
+            "n_books_verified": len(declared_set),
+            "read_from": ("the `verified_books` FIELD" if by_day
+                          else "the status_detail PROSE (no field present)"),
             "offered_digest": str(book_sha256),
             "MAY_read": sobj.get("what_a_population_recompute_MAY_read"),
             "MAY_NOT_read": sobj.get("what_it_MAY_NOT_read"),
@@ -5410,45 +5434,58 @@ def selftest_pre_read() -> list:                              # noqa: C901
     #: THE DIGESTS ARE READ FROM BE'S BUILDER RECEIPTS. No book is opened
     #: and none is hashed: the guard takes a digest, which is the whole
     #: point of putting it in front of the open.
-    def _book_sha_from_receipt(day):
+    def _rcpt_sha(day, *, field="book", inner=None):
         q = _derived_dir() / f"be_daybook_receipt_{day}_btc.json"
         if not q.is_file():
             return None
-        return ((json.loads(q.read_text()).get("book") or {}).get("sha256"))
-    _sha03 = _book_sha_from_receipt("20260903")
-    _sha04 = _book_sha_from_receipt("20260904")
-    if _sha03 and _sha04:
+        o = json.loads(q.read_text())
+        blk = o.get(field) or {}
+        if inner:
+            blk = (blk.get(inner) or {})
+        return blk.get("sha256")
+    _sha03 = _rcpt_sha("20260903")
+    _sha04 = _rcpt_sha("20260904")
+    _tape04 = _rcpt_sha("20260904", field="inputs_pinned", inner="tape")
+    if _sha03 and _tape04:
         _pos = structure_declaration_for_book(_sha03)
+        _pos4 = (structure_declaration_for_book(_sha04) if _sha04 else None)
         try:
-            structure_declaration_for_book(_sha04)
+            structure_declaration_for_book(_tape04)
             _neg = "ADMITTED"
         except VerifierRefused as _e:
             _neg = str(_e)
-        ck("DA 100 -- ***THE GUARD IS IN FRONT OF THE OPEN, AND IT IS "
-           "DRIVEN AT THE REAL DECLARATION.*** It used to run AFTER "
-           "`pickle.load`, so a book the declaration was never verified "
-           "against was ***UNPICKLED FIRST and refused afterwards*** -- "
-           "executing another seat's serialisation to discover that "
-           "nothing licensed reading it. It takes a DIGEST now. POSITIVE "
-           "CONTROL: the 09-03 digest, which "
-           "`be_daybook_structure_v2.json` names, PASSES. KNOWN-BAD: the "
-           "REAL 09-04 book's digest, read from BE's 09-04 builder "
-           "receipt, is REFUSED BY NAME -- naming the digest the "
-           "declaration was verified against AND the one offered -- "
-           "***and nothing was opened or even hashed to decide it***",
-           _pos["verified_against_digest"] == _sha03
+        ck("DA 100 -- ***THE GUARD IS IN FRONT OF THE OPEN, DRIVEN AT THE "
+           "REAL DECLARATION -- AND THE DECLARATION GREW A FIELD WHILE I "
+           "WAS WRITING THE DRIVE.*** It used to run AFTER `pickle.load`, "
+           "so a book the declaration was never verified against was "
+           "UNPICKLED FIRST and refused afterwards. It takes a DIGEST now. "
+           "***And v2 named ONE book in a SENTENCE while BE 74's v3 "
+           "verifies THREE in a `verified_books` FIELD*** -- a guard that "
+           "scrapes prose answers about the shape it was written against, "
+           "not about the declaration in force, so the FIELD is read where "
+           "it exists. POSITIVE CONTROLS: the 09-03 and 09-04 book digests "
+           "from BE's builder receipts both PASS. KNOWN-BAD: a REAL digest "
+           "that names no verified book -- the 09-04 run's pinned TAPE -- "
+           "is REFUSED BY NAME, naming how many books the declaration "
+           "covers and the digest offered. ***Nothing was opened or even "
+           "hashed to decide any of it.***",
+           _pos["read_from"].startswith("the `verified_books` FIELD")
+           and _pos["verified_against_digest"] == _sha03
            and _pos["checked_before_any_open"] is True
+           and (_pos4 is None
+                or _pos4["verified_against_digest"] == _sha04)
            and _neg.startswith(
                "REFUSED: STRUCTURE_DECLARATION_NAMES_ANOTHER_BOOK")
-           and _sha03[:16] in _neg and _sha04[:16] in _neg,
-           f"09-03 digest -> admitted by {_pos['name']}; 09-04 digest -> "
-           f"{_neg.split(' -- ')[0].replace('REFUSED: ', '')}, naming both "
-           f"digests")
+           and _tape04[:16] in _neg,
+           f"{_pos['name']} covers {_pos['n_books_verified']} book(s), read "
+           f"from {_pos['read_from']}; 09-03 and 09-04 admitted; the 09-04 "
+           f"TAPE digest -> "
+           f"{_neg.split(' -- ')[0].replace('REFUSED: ', '')}")
     else:
         ck("DA 100 STRUCTURE-GUARD CELL -- ***SKIPPED AND NAMED***: a "
            "builder receipt is missing at this root, so the real digests "
            "cannot be read", False,
-           f"09-03 receipt digest: {bool(_sha03)}; 09-04: {bool(_sha04)}")
+           f"09-03 digest: {bool(_sha03)}; 09-04 tape: {bool(_tape04)}")
 
     # -- DA 99: THE POPULATION RECOMPUTE, DRIVEN ON THE DECLARED SHAPE --
     _rcpt = {"decision_populations": {
