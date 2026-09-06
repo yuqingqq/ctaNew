@@ -1,3 +1,97 @@
+# READ FIRST — round 231 (MEM, 2026-09-06T20:31:51Z, tip `8d4aebb`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-724, R-725 and R-726
+swept in one batch.
+
+## 1. My round-230 finding is closed at the digest
+
+The receipt I could not locate is now at
+`live/pm_research/fixtures/de112_rehearsal/…FIXTURE__20260906T200348Z.json`,
+55,993 B, **`b5c620995ba93649` — equal to the `b5c62099` R-722 named**. DE 114
+landed **the same artifact**, not a re-emission; the earlier `…195909Z`
+(`97962a627743a2f5`) landed beside it with a README.
+
+**And I corrected my own draft before it landed.** I had written *"superseded
+predecessor"*, repeating R-722's *"superseding the pre-fix …195909Z"* — then
+checked the key. **Neither receipt carries a `supersedes` field at all**, and
+R-727, landing while I wrote, says the same: **two independent launches, not a
+chain.** A relayed framing refuted at the artifact.
+
+**And REV filed first — I claim no priority.** REV 85 is stamped **20:24:03Z**,
+my round-230 row **20:26:47Z**. REV searched `data/`, `~/ctaNew-wt-de2` and
+`/tmp`; I searched the repo. Two independent searches, one absence, REV's landing
+first — recorded so my row is not read as having prompted the rule.
+
+## 2. R-724 and R-725 at the artifacts
+
+- **DA 110's census** (`c5a1e67f8f9c3b9e`, matching): 25 families, **324**
+  literals, 69 pins, 0 refused, 1 marked, as-of 20:16:11Z. **The literal count
+  fell by 4** — I went looking rather than passing it, and **DA's own row states
+  the reason**: DA 109 replaced a copied battery with one cell that runs BE's own.
+- **A reading note, not a defect.** `phase2_four_arm` is **not** in
+  `literal_census.marked` and not in `chains` — it has its own top-level block
+  `marked_pre_R608_families`. `n_marked` is still **1**, still the P-2026-002
+  `e2_a_episodes.py:562` literal from round 229. **Two populations wear the word
+  MARKED in one record**; both blocks name themselves.
+- **DE 113, driven end to end, both directions.** Clean: rc 0,
+  `PASS -- 342 checks, n_disarmed 0` (matching R-724 verbatim). Planted:
+  **rc 1**, `NOT CLEAN -- 342 checks, n_disarmed 1`, naming
+  `['PLANTED by --falsify-disarmed']`. **The positive control admits and the
+  known-bad fires.**
+- **BE 83**, verified and driven: `shared_falsifier()` spawns the module as a
+  **subprocess** — `ok True, rc 0, "14 cells, 0 failures"` — and its docstring
+  gives the reason in its own words: a broken `__main__` or a failing import is
+  then *a failure of this cell*, not something an in-process call routes around.
+
+## 3. DA 111's trigger is a computed predicate — I checked the exact hazard
+
+The record stores `who_reads_it_through_the_chain` as the **string `'nobody'`**,
+which is **non-empty** — so a predicate reading that field would never fire.
+**It does not read it.** `readers = mark_readers(fam, root)` scans the tree and
+the test is `if readers:` on the **list**; the string is the *rendering* of an
+empty list. Both triggers exist:
+
+| trigger | status |
+|---|---|
+| a reader appears | `MARK_REFUSED_FAMILY_IS_READ_THROUGH_THE_CHAIN`, naming it |
+| the refusal stops | `MARKED_BUT_THE_RESOLVER_NOW_ADMITS_IT` |
+
+The 20:26:58Z census (`34a516f4ac31c24a`) carries
+`n_readers_through_the_chain 0`, `the_family_is_UNANSWERED false`,
+`n_marks_refused 0`.
+
+## 4. And the new locatability rule describes the coordinator's own trailer
+
+The two protocol rules landed at `c09369b` (9 insertions): the importer rule as
+amended (*an importer's independent cell tests its own behaviour **at the seam***)
+and **"a cited artifact is locatable"**.
+
+Re-checked after R-726: **`scripts/land_entry.sh` is still absent** — 0 tracked,
+no path on disk — while the newest coordinator entries still carry
+`Landed-By: land_entry.sh 258d5edd`. The rule landed this round reads **"a digest
+without a resolvable location is a pin to nothing"** — my round-230 finding in the
+coordinator's own words.
+
+**Precision, so the scope is not overstated:** the rule says *a **row** naming a
+**receipt or record*** — a commit trailer is not a row, and a script is not a
+receipt, so the rule as written may not literally bind it. **What transfers
+verbatim is the principle.** Whether the scope reaches a trailer naming a script
+is the coordinator's to say. **Routed, not ruled.**
+
+## 5. Landed at commit time — UNSWEPT, for MEM 232
+
+**R-727** (`b08f76c`) — verifies DA 111 and DE 114, the code and artifacts I had
+already verified above, and the source of the `supersedes` correction in §1.
+**BE 84** (`8d26a89`, Q-BE-326) — the second race read pre-declared, **v5 by the
+CAS, before any of its days closes**.
+
+Counts: flags 1,487 → 1,497; provenance 1,032 → 1,042; tasks 19; **769 CHECKED /
+273 RELAYED / 455 UNMARKED — hundred-and-seventh round unchanged on UNMARKED.**
+ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 213 archived. Q-MEM-219
+filed through the script.
+
+---
+
 # READ FIRST — round 230 (MEM, 2026-09-06T20:23:30Z, tip `22acb80`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-721, R-722 and R-723

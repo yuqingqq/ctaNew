@@ -63,6 +63,61 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T20:31:51Z (MEM ROUND 231 -- R-724, R-725 AND R-726 SWEPT, tip `8d4aebb`. STATE ONLY.
+  MEM ASSERTS NO RESULT.
+  (1) ***MY ROUND-230 FINDING IS CLOSED AT THE DIGEST.*** The receipt I could not locate is now at
+  `live/pm_research/fixtures/de112_rehearsal/...FIXTURE__20260906T200348Z.json`, 55,993 B,
+  **`b5c620995ba93649` -- EQUAL to the `b5c62099` R-722 named**, so DE 114 landed THE SAME ARTIFACT
+  and not a re-emission; the earlier `...195909Z` (`97962a627743a2f5`) landed beside it.
+  ***AND I CORRECTED MY OWN DRAFT BEFORE IT LANDED***: I had written "superseded predecessor",
+  repeating R-722's *"superseding the pre-fix ...195909Z"* -- then checked the key. **NEITHER
+  receipt carries a `supersedes` field at all**, and R-727, landing while I wrote, says the same:
+  **two INDEPENDENT launches, not a chain.** A relayed framing refuted at the artifact.
+  ***AND REV FILED FIRST: I CLAIM NO PRIORITY*** -- REV 85 is stamped **20:24:03Z** and my
+  round-230 row **20:26:47Z**. REV searched under `data/`, `~/ctaNew-wt-de2` and `/tmp`; I searched
+  the repo. Two independent searches, one absence, REV's landing first -- recorded so my row is not
+  read as having prompted the rule.
+  (2) **DA 110's CENSUS VERIFIED** (`c5a1e67f8f9c3b9e`, matching R-724): 25 families, **324**
+  literals, 69 pins, 0 refused, 1 marked, as-of 20:16:11Z. **The literal count FELL by 4** against
+  the 19:56Z census and I went looking rather than passing it: **DA's own row states the reason** --
+  DA 109 replaced a copied battery with one cell that runs BE's own. Accounted for.
+  (3) **A READING NOTE, NOT A DEFECT:** `phase2_four_arm` is **not** in `literal_census.marked` and
+  not in `chains` -- it has its own top-level block `marked_pre_R608_families`. `n_marked` is still
+  **1** and still the P-2026-002 `e2_a_episodes.py:562` literal I read at round 229. **Two
+  populations wear the word MARKED in one record**; both blocks name themselves.
+  (4) ***DA 111's TRIGGER IS A COMPUTED PREDICATE, AND I CHECKED THE EXACT HAZARD.*** The record
+  stores `who_reads_it_through_the_chain` as the STRING `'nobody'` -- which is NON-EMPTY, so a
+  predicate reading that field would never fire. **It does not read it**: `readers =
+  mark_readers(fam, root)` scans the tree and the test is `if readers:` on the LIST; the string is
+  the RENDERING of an empty list. Both triggers exist -- a reader appearing refuses the mark BY
+  NAME, and `MARKED_BUT_THE_RESOLVER_NOW_ADMITS_IT` fires when the refusal stops. The 20:26:58Z
+  census (`34a516f4ac31c24a`) carries `n_readers_through_the_chain 0`, `n_marks_refused 0`.
+  (5) **DE 113 DRIVEN END TO END, BOTH DIRECTIONS:** clean rc 0, `PASS -- 342 checks, n_disarmed 0`
+  (matching R-724 verbatim); with `--falsify-disarmed` **rc 1**, `NOT CLEAN -- 342 checks,
+  n_disarmed 1`, naming `['PLANTED by --falsify-disarmed']`. The positive control ADMITS and the
+  known-bad FIRES. **BE 83** verified and driven: `shared_falsifier()` spawns the module as a
+  SUBPROCESS -- `ok True, rc 0, '14 cells, 0 failures'` -- and its docstring gives the reason in its
+  own words: a broken `__main__` or a failing import is then a FAILURE OF THIS CELL rather than
+  something an in-process call routes around.
+  (6) **THE TWO PROTOCOL RULES LANDED** at `c09369b` (9 insertions): the importer rule as amended
+  (an importer's independent cell tests its OWN behaviour AT THE SEAM) and *"a cited artifact is
+  locatable"*.
+  (7) ***AND THE NEW LOCATABILITY RULE DESCRIBES THE COORDINATOR'S OWN TRAILER.*** Re-checked after
+  R-726: **`scripts/land_entry.sh` is STILL absent** -- 0 tracked, no path on disk -- while the
+  newest coordinator entries still carry `Landed-By: land_entry.sh 258d5edd`. The rule landed this
+  round reads ***"a digest without a resolvable location is a pin to nothing"***, which is my
+  round-230 finding in the coordinator's own words. **PRECISION, so the scope is not overstated:**
+  the rule says *a ROW naming a RECEIPT OR RECORD*, and a commit TRAILER is not a row while a SCRIPT
+  is not a receipt -- so the rule as written may not literally bind it. **What transfers verbatim is
+  the principle.** Whether the scope reaches a trailer naming a script is the coordinator's to say.
+  ROUTED, NOT RULED.
+  UNSWEPT, FOR MEM 232: **R-727** (`b08f76c`), which landed while I wrote and verifies DA 111 and
+  DE 114 -- the code and artifacts I had already verified above, and the source of the `supersedes`
+  correction I made to this entry; and **BE 84** (`8d26a89`, Q-BE-326) -- the second race read
+  pre-declared, v5 by the CAS, before any of its days closes.
+  Counts: flags 1,487 -> 1,497; provenance 1,032 -> 1,042; tasks 19; **769 CHECKED / 273 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-SEVENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 213 archived. Q-MEM-219 filed through the script.)
   2026-09-06T20:23:30Z (MEM ROUND 230 -- R-721, R-722 AND R-723 SWEPT, tip `22acb80`. STATE ONLY.
   MEM ASSERTS NO RESULT.
   (1) ***BE 82 IS CLOSED AT MY OWN ROUND-228 CELLS.*** Re-built the three, keys printed first:
@@ -173,39 +228,6 @@ updated: >-
   Counts: flags 1,467 -> 1,477; provenance 1,012 -> 1,022; tasks 19; **749 CHECKED / 273 RELAYED /
   455 UNMARKED -- the HUNDRED-AND-FIFTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 211 archived. Q-MEM-217 filed through the script.)
-  2026-09-06T19:54:30Z (MEM ROUND 228 -- R-718 SWEPT, tip `de23992`. STATE ONLY. MEM ASSERTS NO
-  RESULT. Row landed through `land_register_row.sh`, dry-run first.
-  (1) ***THE REGRESSION REPRODUCED, WITH A CONTROL ON EITHER SIDE.*** Three cells, keys printed
-  first: **A** a complete pair with the real digest -> `link_shapes {'fam_v2.json': 'pair'}`,
-  accepted; ***B `path` ONLY, no `sha256` at all -> THE SAME LABEL, `'pair'`, AND ACCEPTED***; **C**
-  path with a WRONG digest -> **`ChainRefused: DECLARATION_LINK_CORRUPTED`**, naming version,
-  target, shape and both digests. ***THE BOUNDARY IS EXACT: THE DIGEST IS VERIFIED WHEN PRESENT
-  AND ITS ABSENCE IS NOT DETECTED*** -- reproduced independently, with controls proving the check
-  works and the gap is absence alone.
-  (2) **AND THE LABEL IS THE PROBLEM, NOT ONLY THE ACCEPTANCE.** Cell B reports `'pair'`, so ***a
-  reader auditing `link_shapes` -- which is what that field is FOR -- sees "pair" for a link that
-  has no digest.*** **The field that would reveal the gap is the field that hides it**, and
-  R-608's rule is *"the link IS the pair"*: a half-written link now not only passes, it reports
-  itself whole.
-  (3) **THE REFUSAL ON A WRONG DIGEST IS WELL BUILT** -- it carries both digests and says *"it is
-  the LINK that is wrong, so the repair is the link, not the files."* ***A refusal that names where
-  the repair goes***, in the same module that carries the gap above.
-  (4) **MY ROW LANDED WITH THE SCRIPT'S OWN DIGEST AS ITS TRAILER** -- `c943dad`, **one path, one
-  insertion**, `Landed-By: land_register_row.sh 853dcf874eaf58ab…`. **AND A PRECISION POINT: the
-  script's `PUSHED` line names the BRANCH TIP, not the commit it created** (it printed `de23992`
-  while its commit was `c943dad`) -- *anyone reading that as a commit id would cite the wrong
-  object.*
-  (5) **RULE 13's REMOVED DRAFT ROW NOW HAS AN INSTRUMENT.** DA removed a landed draft instead of
-  superseding it; the removal stands as history. **Checked in the source: the script counts removed
-  lines and refuses `REGISTER_EDITED` on any**, printing the first three. ***A rule carried by
-  discipline for a hundred rounds now has a guard that fires -- on the SHAPE, not the intent, so a
-  draft and a landed row are protected identically.***
-  (6) **MY PROBE THREW A `TypeError` AND I FIXED IT BEFORE ANY SENTENCE** -- *two of three cells
-  had already printed.* **The cheapest probe error is the one that CRASHES; the expensive ones
-  return a plausible value**, as three of mine did this session.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,461 -> 1,467; flag_provenance 1,006 -> 1,012;
-  tasks 19; **739 CHECKED / 273 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FOURTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-216 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -399,6 +421,17 @@ flags:
   # exists to prevent.
   # =====================================================================
   # --- MEM round 229, R-719 + R-720 swept ---
+  # --- MEM round 231, R-724 + R-725 + R-726 swept ---
+  MY_ROUND_230_FINDING_IS_CLOSED_AT_THE_DIGEST: SAME-ARTIFACT-B5C62099-NOW-LOCATABLE
+  and_REV_FILED_FIRST_I_CLAIM_NO_PRIORITY: REV85-2024-03Z-MY-ROW-2026-47Z
+  DA110_census_verified_and_the_literal_FALL_is_explained: C5A1E67F-25-324-69-0-DA-EXPLAINS-THE-4
+  the_family_mark_is_NOT_in_the_literal_marked_list: TWO-POPULATIONS-ONE-WORD
+  DA111_trigger_is_a_COMPUTED_predicate_not_the_stored_string: READERS-LIST-NOT-THE-WORD-NOBODY
+  DE113_driven_END_TO_END_BOTH_DIRECTIONS: CLEAN-RC0-342-N0-PLANTED-RC1-342-N1
+  BE83_shared_falsifier_is_a_SUBPROCESS_and_drives_clean: OK-TRUE-RC-0-14-CELLS
+  the_two_protocol_rules_landed_at_c09369b: IMPORTER-SEAM-AND-LOCATABILITY-9-INSERTIONS
+  the_NEW_LOCATABILITY_RULE_DESCRIBES_THE_COORDINATORS_OWN_TRAILER: LAND-ENTRY-SH-STILL-ABSENT
+  a_pin_to_nothing_is_the_coordinators_own_phrase_for_my_round_230_case: PRINCIPLE-APPLIES-SCOPE-IS-THEIRS
   # --- MEM round 230, R-721 + R-722 + R-723 swept ---
   BE82_closed_the_regression_AT_MY_OWN_ROUND_228_CELLS: RE-DRIVEN-B-NOW-REFUSES-BY-NAME
   the_coordinators_entries_now_carry_a_trailer_too: 3-OF-3-SINCE-R721-12-OF-12-SEAT-ROWS
@@ -25825,6 +25858,108 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 231, 2026-09-06T20:31:51Z ---
+  MY_ROUND_230_FINDING_IS_CLOSED_AT_THE_DIGEST:
+    prov: CHECKED
+    artifact: live/pm_research/fixtures/de112_rehearsal/
+    as_of: 2026-09-06T20:28:00Z
+    said: >-
+      the receipt I could not locate last round is now at
+      live/pm_research/fixtures/de112_rehearsal/p003_de_gate1_day_run_FIXTURE-DAY-1_FIXTURE__20260906T200348Z.json,
+      55,993 B, sha256 b5c620995ba93649 -- EQUAL to the b5c62099 R-722 named, so DE 114 landed the
+      SAME artifact and not a re-emission; the earlier ...195909Z (54,573 B, 97962a627743a2f5)
+      landed beside it, with a README. CORRECTED BEFORE LANDING: my draft called that one the
+      'superseded predecessor', repeating R-722's 'superseding the pre-fix ...195909Z'. I then
+      checked the key: NEITHER receipt carries a supersedes field at all. R-727, landed while I
+      wrote, says the same -- two INDEPENDENT launches, not a chain. A relayed framing refuted at
+      the artifact before it landed.
+  and_REV_FILED_FIRST_I_CLAIM_NO_PRIORITY:
+    prov: CHECKED
+    artifact: git commit timestamps
+    as_of: 2026-09-06T20:28:00Z
+    said: >-
+      REV 85's filing 39d45c7 is stamped 2026-09-06T20:24:03Z and my round-230 row 3438d95
+      2026-09-06T20:26:47Z. REV searched under data/, ~/ctaNew-wt-de2 and /tmp to depth 4; I
+      searched the repo. Two independent searches reaching the same absence, REV's landing first.
+      Recorded so my row is not read as having prompted the rule.
+  DA110_census_verified_and_the_literal_FALL_is_explained:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T201555Z.json sha256 c5a1e67f8f9c3b9e
+    as_of: 2026-09-06T20:29:00Z
+    said: >-
+      digest matches R-724. Read from the record: 25 families, 324 literals, 69 pins, 0 refused,
+      1 marked, 0 failed, as-of 20:16:11Z. The literal count FELL by 4 against the 19:56Z census
+      (328) and I went looking for the reason rather than passing it: DA's own row states it --
+      DA 109 replaced a copied battery with one cell that runs BE's own. Accounted for.
+  the_family_mark_is_NOT_in_the_literal_marked_list:
+    prov: CHECKED
+    artifact: the 201555Z and 202658Z census records
+    as_of: 2026-09-06T20:29:00Z
+    said: >-
+      phase2_four_arm is not in literal_census.marked and not in chains; it lives in its own
+      top-level block marked_pre_R608_families. literal_census.n_marked is still 1 and still the
+      P-2026-002 e2_a_episodes.py:562 literal I read at round 229. Two populations wear the word
+      MARKED in one record, and a reader resolving 'marked' by the count field meets the other one.
+      Recorded as a reading note, NOT a defect: both blocks name themselves.
+  DA111_trigger_is_a_COMPUTED_predicate_not_the_stored_string:
+    prov: CHECKED
+    artifact: live/pm_research/da_nonhead_census.py, the mark block
+    as_of: 2026-09-06T20:30:00Z
+    said: >-
+      I checked the exact hazard: the record stores who_reads_it_through_the_chain as the STRING
+      'nobody', which is non-empty, so a predicate reading that field would never fire. It does not
+      read it -- readers = mark_readers(fam, root) scans the tree and the test is `if readers:` on
+      the LIST; the string is the RENDERING of an empty list (readers or 'nobody'). Two triggers
+      exist: MARK_REFUSED_FAMILY_IS_READ_THROUGH_THE_CHAIN when a reader appears (naming it), and
+      MARKED_BUT_THE_RESOLVER_NOW_ADMITS_IT when the refusal stops. The 20:26:58Z census
+      (34a516f4ac31c24a) carries n_readers_through_the_chain 0, the_family_is_UNANSWERED false,
+      n_marks_refused 0.
+  DE113_driven_END_TO_END_BOTH_DIRECTIONS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py --selftest [--falsify-disarmed]
+    as_of: 2026-09-06T20:30:00Z
+    said: >-
+      clean run rc 0, '[de_multiday_gate1_runner] PASS -- 342 checks, n_disarmed 0', matching
+      R-724's quoted line. With --falsify-disarmed rc 1, 'NOT CLEAN -- 342 checks, n_disarmed 1'
+      and the module names the planted cell ['PLANTED by --falsify-disarmed']. The positive control
+      ADMITS and the known-bad FIRES, driven from outside.
+  BE83_shared_falsifier_is_a_SUBPROCESS_and_drives_clean:
+    prov: CHECKED
+    artifact: live/pm_research/be_rule22.py shared_falsifier
+    as_of: 2026-09-06T20:31:00Z
+    said: >-
+      read the form and drove it: sorted(r.keys()) = failed_cells, n_cells, ok, ran, rc,
+      stderr_tail, summary; ok True, rc 0, summary '14 cells, 0 failures'. The docstring gives the
+      reason for the subprocess form in its own words -- a broken __main__, a syntax error under an
+      edit or an import that fails is then a FAILURE OF THIS CELL rather than something an
+      in-process call routes around.
+  the_two_protocol_rules_landed_at_c09369b:
+    prov: CHECKED
+    artifact: workspace/SEAT_PROTOCOL.md at c09369b
+    as_of: 2026-09-06T20:31:00Z
+    said: >-
+      9 insertions, one file: the importer rule as amended (an importer's independent cell tests its
+      OWN behaviour AT THE SEAM, never the module's invariant, which the shared falsifier covers)
+      and 'A cited artifact is locatable (R-601, REV 85 s4, R-726)'.
+  the_NEW_LOCATABILITY_RULE_DESCRIBES_THE_COORDINATORS_OWN_TRAILER:
+    prov: CHECKED
+    artifact: git ls-files, the working tree, and the trailers on the newest R-entries
+    as_of: 2026-09-06T20:31:00Z
+    said: >-
+      re-checked after R-726: scripts/land_entry.sh is STILL absent -- 0 tracked, no path on disk --
+      while the newest coordinator entries still carry Landed-By: land_entry.sh 258d5edd. The rule
+      landed this round reads 'a digest without a resolvable location is a pin to nothing', which is
+      my round-230 finding in the coordinator's own words.
+  a_pin_to_nothing_is_the_coordinators_own_phrase_for_my_round_230_case:
+    prov: CHECKED
+    artifact: SEAT_PROTOCOL.md c09369b, the rule's exact wording
+    as_of: 2026-09-06T20:31:00Z
+    said: >-
+      PRECISION, so the scope is not overstated: the rule's words are 'a ROW naming a RECEIPT OR
+      RECORD by digest names its PATH in the ledger, or states it is scratch-only with the absolute
+      path'. A commit TRAILER is not a row and a SCRIPT is not a receipt, so the rule as written may
+      not literally bind the trailer. What transfers verbatim is its PRINCIPLE. Whether the scope
+      reaches a trailer naming a script is the coordinator's to say. ROUTED, NOT RULED.
   # --- MEM round 230, 2026-09-06T20:22:30Z ---
   BE82_closed_the_regression_AT_MY_OWN_ROUND_228_CELLS:
     prov: CHECKED

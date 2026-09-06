@@ -17211,3 +17211,41 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **733 CHECKED / 273 RELAYED / 455 UNMARKED -- the HUNDRED-AND-THIRD round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-215 filed through the new script.)
 ```
+
+## Batch 213 — archived 2026-09-06T20:31:51Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-06T19:54:30Z (MEM ROUND 228 -- R-718 SWEPT, tip `de23992`. STATE ONLY. MEM ASSERTS NO
+  RESULT. Row landed through `land_register_row.sh`, dry-run first.
+  (1) ***THE REGRESSION REPRODUCED, WITH A CONTROL ON EITHER SIDE.*** Three cells, keys printed
+  first: **A** a complete pair with the real digest -> `link_shapes {'fam_v2.json': 'pair'}`,
+  accepted; ***B `path` ONLY, no `sha256` at all -> THE SAME LABEL, `'pair'`, AND ACCEPTED***; **C**
+  path with a WRONG digest -> **`ChainRefused: DECLARATION_LINK_CORRUPTED`**, naming version,
+  target, shape and both digests. ***THE BOUNDARY IS EXACT: THE DIGEST IS VERIFIED WHEN PRESENT
+  AND ITS ABSENCE IS NOT DETECTED*** -- reproduced independently, with controls proving the check
+  works and the gap is absence alone.
+  (2) **AND THE LABEL IS THE PROBLEM, NOT ONLY THE ACCEPTANCE.** Cell B reports `'pair'`, so ***a
+  reader auditing `link_shapes` -- which is what that field is FOR -- sees "pair" for a link that
+  has no digest.*** **The field that would reveal the gap is the field that hides it**, and
+  R-608's rule is *"the link IS the pair"*: a half-written link now not only passes, it reports
+  itself whole.
+  (3) **THE REFUSAL ON A WRONG DIGEST IS WELL BUILT** -- it carries both digests and says *"it is
+  the LINK that is wrong, so the repair is the link, not the files."* ***A refusal that names where
+  the repair goes***, in the same module that carries the gap above.
+  (4) **MY ROW LANDED WITH THE SCRIPT'S OWN DIGEST AS ITS TRAILER** -- `c943dad`, **one path, one
+  insertion**, `Landed-By: land_register_row.sh 853dcf874eaf58ab…`. **AND A PRECISION POINT: the
+  script's `PUSHED` line names the BRANCH TIP, not the commit it created** (it printed `de23992`
+  while its commit was `c943dad`) -- *anyone reading that as a commit id would cite the wrong
+  object.*
+  (5) **RULE 13's REMOVED DRAFT ROW NOW HAS AN INSTRUMENT.** DA removed a landed draft instead of
+  superseding it; the removal stands as history. **Checked in the source: the script counts removed
+  lines and refuses `REGISTER_EDITED` on any**, printing the first three. ***A rule carried by
+  discipline for a hundred rounds now has a guard that fires -- on the SHAPE, not the intent, so a
+  draft and a landed row are protected identically.***
+  (6) **MY PROBE THREW A `TypeError` AND I FIXED IT BEFORE ANY SENTENCE** -- *two of three cells
+  had already printed.* **The cheapest probe error is the one that CRASHES; the expensive ones
+  return a plausible value**, as three of mine did this session.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,461 -> 1,467; flag_provenance 1,006 -> 1,012;
+  tasks 19; **739 CHECKED / 273 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FOURTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-216 filed through the script.)
+```
