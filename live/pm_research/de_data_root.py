@@ -33,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pm_tape_density as TD  # noqa: E402
 
 
-EXPECTED_CHECKS = 12
+EXPECTED_CHECKS = 16
 
 #: The only root a RESULT-BEARING emission may be produced against.
 CANONICAL_REPO_ROOT = "/home/yuqing/ctaNew"
@@ -42,7 +42,62 @@ CANONICAL_DATA_ROOT = "/home/yuqing/ctaNew/data"
 
 class DataRootRefused(RuntimeError):
     """A result-bearing emission was attempted against a non-canonical
-    root."""
+    root, or a fixture claim was made without its data-free proof."""
+
+
+#: THE ONE DOOR THAT HAD NO LOCK (reviewer 4981d00). `fixture=True` let a
+#: caller past every refusal on its own word: "a fixture run that touched
+#: the ledger is not a fixture run, and today only its author knows."
+#: A fixture claim now REQUIRES a proof produced IN THE SAME PROCESS by
+#: instrumenting `open`, `Path.read_bytes` and `Path.read_text` -- and the
+#: proof carries its own non-vacuity, because an instrument that observed
+#: nothing cannot testify that nothing was opened.
+_LAST_PROOF: dict = {}
+
+
+def instrumented(fn, *args, **kwargs):
+    """Run `fn` with file-opening instrumented; return (result, proof).
+
+    The proof is REGISTERED for this process, so `require_canonical` can
+    demand it rather than take a caller's word."""
+    import builtins
+    import pathlib
+    seen: list = []
+    _o, _rb, _rt = (builtins.open, pathlib.Path.read_bytes,
+                    pathlib.Path.read_text)
+    try:
+        builtins.open = lambda f, *a, **k: (seen.append(str(f)),
+                                            _o(f, *a, **k))[1]
+        pathlib.Path.read_bytes = lambda self: (seen.append(str(self)),
+                                                _rb(self))[1]
+        pathlib.Path.read_text = lambda self, *a, **k: (
+            seen.append(str(self)), _rt(self, *a, **k))[1]
+        result = fn(*args, **kwargs)
+    finally:
+        builtins.open, pathlib.Path.read_bytes, pathlib.Path.read_text = (
+            _o, _rb, _rt)
+    data_hits = sorted({x for x in seen if "/data/" in x})
+    proof = {
+        "instrument": "builtins.open + Path.read_bytes + Path.read_text",
+        "pid": os.getpid(),
+        "n_paths_opened": len(seen),
+        "n_distinct_paths": len(set(seen)),
+        "data_paths_opened": data_hits,
+        "no_path_under_data_was_opened": not data_hits,
+        # NON-VACUITY: an instrument that saw nothing at all proves
+        # nothing. It must have observed SOME open to testify about the
+        # ones it did not see.
+        "non_vacuous": len(seen) > 0,
+        "produced_in_the_same_process_as_the_claim": True,
+    }
+    _LAST_PROOF.clear()
+    _LAST_PROOF.update(proof)
+    return result, proof
+
+
+def clear_proof() -> None:
+    """Forget any registered proof -- so a stale one cannot be reused."""
+    _LAST_PROOF.clear()
 
 
 def resolve() -> dict:
@@ -74,7 +129,8 @@ def resolve() -> dict:
     }
 
 
-def require_canonical(purpose: str, *, fixture: bool = False) -> dict:
+def require_canonical(purpose: str, *, fixture: bool = False,
+                      proof: dict | None = None) -> dict:
     """REFUSE a result-bearing emission against a non-canonical root.
 
     `fixture=True` admits any root and says so in the returned block --
@@ -84,7 +140,34 @@ def require_canonical(purpose: str, *, fixture: bool = False) -> dict:
     r["purpose"] = purpose
     r["fixture"] = bool(fixture)
     if fixture:
+        pf = proof if proof is not None else (dict(_LAST_PROOF) or None)
+        if not pf:
+            raise DataRootRefused(
+                f"REFUSED: {purpose} claims fixture=True and carries NO "
+                f"DATA-FREE PROOF. A fixture claim used to be the one door "
+                f"a caller could walk through on its own word; it now "
+                f"requires a proof produced in the same process by "
+                f"instrumenting opens.")
+        if pf.get("pid") != os.getpid():
+            raise DataRootRefused(
+                f"REFUSED: {purpose} carries a proof from pid "
+                f"{pf.get('pid')}, not this process ({os.getpid()}). A "
+                f"proof produced elsewhere is a proof about elsewhere.")
+        if not pf.get("non_vacuous"):
+            raise DataRootRefused(
+                f"REFUSED: {purpose} carries a VACUOUS proof -- the "
+                f"instrument observed no open at all, so it cannot testify "
+                f"that none touched the ledger.")
+        if not pf.get("no_path_under_data_was_opened"):
+            raise DataRootRefused(
+                f"REFUSED: {purpose} claims fixture=True but the "
+                f"instrument observed "
+                f"{len(pf.get('data_paths_opened') or [])} path(s) under "
+                f"`data/`: {(pf.get('data_paths_opened') or [])[:3]}. A "
+                f"fixture run that touched the ledger is not a fixture "
+                f"run, and a real run cannot be laundered as one.")
         r["refusal"] = "NOT_APPLICABLE_FIXTURE_RUN"
+        r["data_free_proof"] = pf
         return r
     if not r["is_canonical"]:
         raise DataRootRefused(
@@ -157,12 +240,73 @@ def selftest() -> int:
                 ok(td in str(e) and "result-bearing" in str(e),
                    "KNOWN-BAD, ENV POINTING AT A SCRATCH DIR: a "
                    "result-bearing emission REFUSES and names the root")
-            fx = require_canonical("a fixture run", fixture=True)
+            # THE FIXTURE DOOR NOW HAS A LOCK (reviewer 4981d00).
+            clear_proof()
+            try:
+                require_canonical("a fixture run", fixture=True)
+                ok(False, "KNOWN-BAD: a fixture claim with NO PROOF was "
+                          "admitted -- the door that had no lock")
+            except DataRootRefused as e:
+                ok("NO DATA-FREE PROOF" in str(e),
+                   "KNOWN-BAD, THE DOOR THAT HAD NO LOCK: `fixture=True` "
+                   "with no proof REFUSES. It used to be the one way past "
+                   "every refusal on the caller's own word")
+            _, pf_ok = instrumented(
+                lambda: Path(__file__).read_text() and None)
+            fx = require_canonical("a fixture run", fixture=True,
+                                   proof=pf_ok)
             ok(fx["refusal"] == "NOT_APPLICABLE_FIXTURE_RUN"
-               and fx["fixture"] is True,
-               "AND THE SAME SCRATCH ROOT ADMITS A FIXTURE RUN -- a "
-               "fixture must be runnable from a shell worktree, which is "
-               "what makes it a fixture")
+               and fx["fixture"] is True
+               and fx["data_free_proof"]["no_path_under_data_was_opened"]
+               and fx["data_free_proof"]["non_vacuous"],
+               f"POSITIVE CONTROL, AND IT ADMITS: the SAME scratch root "
+               f"admits a fixture run that CARRIES ITS PROOF "
+               f"({pf_ok['n_paths_opened']} opens observed, 0 under "
+               f"`data/`) -- a fixture must be runnable from a shell "
+               f"worktree, which is what makes it a fixture")
+            _, pf_bad = instrumented(
+                lambda: (Path(CANONICAL_DATA_ROOT)
+                         / "pm_5min/derived").exists()
+                and Path(__file__).read_text()
+                and (Path(CANONICAL_DATA_ROOT)
+                     / "pm_5min/derived/.keep").exists())
+            pf_bad = dict(pf_bad)
+            pf_bad["data_paths_opened"] = [
+                CANONICAL_DATA_ROOT + "/pm_5min/derived/x.json"]
+            pf_bad["no_path_under_data_was_opened"] = False
+            try:
+                require_canonical("a fixture run", fixture=True,
+                                  proof=pf_bad)
+                ok(False, "KNOWN-BAD: a fixture emission that opened a "
+                          "ledger path was admitted")
+            except DataRootRefused as e:
+                ok("touched the ledger" in str(e)
+                   and "laundered" in str(e),
+                   "KNOWN-BAD: a fixture emission whose proof shows ONE "
+                   "path under `data/` REFUSES -- a real run cannot be "
+                   "laundered as a fixture")
+            pf_vac = dict(pf_ok); pf_vac["non_vacuous"] = False
+            try:
+                require_canonical("a fixture run", fixture=True,
+                                  proof=pf_vac)
+                ok(False, "KNOWN-BAD: a vacuous proof was admitted")
+            except DataRootRefused as e:
+                ok("VACUOUS" in str(e),
+                   "KNOWN-BAD: an instrument that observed NO open at all "
+                   "cannot testify that none touched the ledger, and the "
+                   "claim REFUSES")
+            pf_pid = dict(pf_ok); pf_pid["pid"] = pf_ok["pid"] + 1
+            try:
+                require_canonical("a fixture run", fixture=True,
+                                  proof=pf_pid)
+                ok(False, "KNOWN-BAD: a foreign-process proof was "
+                          "admitted")
+            except DataRootRefused as e:
+                ok("not this process" in str(e),
+                   "KNOWN-BAD: a proof from ANOTHER PROCESS refuses -- a "
+                   "proof produced elsewhere is a proof about elsewhere, "
+                   "and 'in the same process' is the whole requirement")
+            clear_proof()
 
         del os.environ["PM_DATA_ROOT"]
         ru = resolve()

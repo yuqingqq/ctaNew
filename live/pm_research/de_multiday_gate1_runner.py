@@ -47,7 +47,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V1"
-EXPECTED_CHECKS = 42
+EXPECTED_CHECKS = 44
 PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v1.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
@@ -447,6 +447,25 @@ def aggregate(day_results: list, params: dict) -> dict:
 FIXTURE_MODULE_SHA = "f" * 64          # the fixture's stand-in cascade
 
 
+def fixture_run_proven() -> dict:
+    """The fixture run, executed under instrumentation, with the proof
+    attached AFTER the body completes.
+
+    Reviewer 4981d00: `fixture=True` was the one door a caller could walk
+    through on its own word. The claim now cannot precede its own proof --
+    the body runs first, the instrument reports, and
+    `require_canonical(fixture=True)` refuses unless that report says no
+    path under `data/` was opened and the instrument was not vacuous."""
+    DR.clear_proof()
+    payload, proof = DR.instrumented(fixture_run)
+    payload["no_path_under_data_was_opened"] = proof[
+        "no_path_under_data_was_opened"]
+    payload["data_free_proof"] = proof
+    payload["data_root"] = DR.require_canonical(
+        "the fixture run", fixture=True, proof=proof)
+    return payload
+
+
 def dry_run_ledger() -> dict:
     """READ THE LEDGER, NOTHING ELSE. No book, no arm, no economics.
 
@@ -623,8 +642,10 @@ def fixture_run() -> dict:
         "status": "FIXTURE_RUN_NO_DATA",
         "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "no_day_book_was_read": True,
-        "no_path_under_data_was_opened": True,
-        "data_root": DR.require_canonical("the fixture run", fixture=True),
+        # FILLED BY `fixture_run_proven()` AFTER the body has run under
+        # instrumentation -- the claim cannot precede its own proof.
+        "no_path_under_data_was_opened": None,
+        "data_root": None,
         "runnable_from_a_shell_worktree": True,
         "the_committed_day_set_is_empty": True,
         "why_fixtures": "the reviewer has not filed on design v3 and BE's "
@@ -984,6 +1005,29 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         finally:
             _b.open, _pl.Path.read_bytes, _pl.Path.read_text = _o, _rb, _rt
         _data_hits = [x for x in _seen if "/data/" in x]
+        # AND THE CLAIM IS NOW BOUND TO THE PROOF, not merely beside it.
+        _pv = fixture_run_proven()
+        ok(_pv["data_root"]["refusal"] == "NOT_APPLICABLE_FIXTURE_RUN"
+           and _pv["data_free_proof"]["no_path_under_data_was_opened"]
+           and _pv["data_free_proof"]["non_vacuous"]
+           and _pv["no_path_under_data_was_opened"] is True,
+           f"THE FIXTURE CLAIM CARRIES ITS PROOF: "
+           f"`fixture_run_proven()` runs the body under instrumentation "
+           f"FIRST and only then calls require_canonical(fixture=True) "
+           f"with that report -- {_pv['data_free_proof']['n_paths_opened']}"
+           f" opens observed, 0 under `data/`. The claim cannot precede "
+           f"its own proof")
+        try:
+            DR.clear_proof()
+            DR.require_canonical("a laundered real run", fixture=True)
+            ok(False, "KNOWN-BAD: a fixture claim with no registered "
+                      "proof was admitted through the runner's own "
+                      "resolver")
+        except DR.DataRootRefused as _e:
+            ok("NO DATA-FREE PROOF" in str(_e),
+               "KNOWN-BAD, THE LAUNDERING PATH: claiming fixture=True "
+               "without a proof REFUSES even here -- the door the "
+               "reviewer named is shut from both sides")
         ok(not _data_hits,
            f"(3) FIXTURE_RUN_NO_DATA IS DRIVEN, NOT DECLARED: `open`, "
            f"`read_bytes` and `read_text` are instrumented and a full "
@@ -1003,6 +1047,9 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         offline_skip("(3) the instrumented fixture-run data-freeness probe "
                      "(it calls fixture_run, which would recurse)")
         offline_skip("(3) the non-vacuity check on that probe")
+        offline_skip("(3) the fixture-claim-carries-its-proof check "
+                     "(it calls fixture_run_proven, which would recurse)")
+        offline_skip("(3) the laundering known-bad on require_canonical")
 
     ok(seed_for("a" * 64, "X") != seed_for("b" * 64, "X")
        and seed_for("a" * 64, "X") == seed_for("a" * 64, "X"),
@@ -1060,7 +1107,7 @@ def main() -> int:
         return 0
     if not a.fixture or a.output is None:
         ap.error("choose --selftest or --fixture-run --output PATH")
-    payload = fixture_run()
+    payload = fixture_run_proven()
     if a.output.exists():
         raise RunnerRefused(f"output already exists: {a.output}")
     a.output.parent.mkdir(parents=True, exist_ok=True)
