@@ -33,7 +33,7 @@ from pathlib import Path
 
 
 PROTOCOL = "P003_DE_SUPERSESSION_LEAF_DIFF_V1"
-EXPECTED_CHECKS = 18
+EXPECTED_CHECKS = 20
 EPSILON = 1e-9
 
 #: A-1b (reviewer 89e81d5). THE OLD RULE WAS `name OR parent`, so ANY leaf
@@ -48,11 +48,20 @@ EPSILON = 1e-9
 #:                 occur in this programme's artifacts rather than guessed
 PROVENANCE_CONTAINERS = ("code_identity", "provenance", "source_identity",
                          "resource_observation", "supersedes")
+#: (B, still open after round 71) A TOP-LEVEL `as_of` was still classed
+#: provenance, so BE's `cb9bf8a` diff -- whose ONE substantive in-place
+#: edit is `/as_of` -- still reported "nothing but provenance moved". The
+#: reviewer's two options were "require a provenance parent" or "give
+#: timestamps their own reported class". THE SECOND IS THE HONEST ONE: a
+#: timestamp move is neither a result nor invisible, and burying it in
+#: either class loses information. It gets its own class and is REPORTED.
+TIMESTAMP_LEAVES = frozenset({"as_of", "generated_at", "emitted"})
+
 PROVENANCE_PAIRS = frozenset({
-    ("", "run_id"), ("", "as_of"), ("", "total_wall_s"),
+    ("", "run_id"), ("", "total_wall_s"),
     ("", "peak_rss_gb"), ("", "max_rss_gb"), ("", "emitted"),
     ("", "generated_at"), ("", "elapsed_s"),
-    ("population", "as_of"), ("population", "feed_wall_s"),
+    ("population", "feed_wall_s"),
     ("population", "tape_index_s"), ("population", "assembly_s"),
     ("population", "peak_gb"), ("population", "wall_s"),
 })
@@ -97,6 +106,19 @@ def _is_provenance(path: str) -> bool:
     return (parent, last) in PROVENANCE_PAIRS
 
 
+def _is_timestamp(path: str) -> bool:
+    """A timestamp leaf OUTSIDE a provenance container gets its own class.
+
+    Inside `provenance`/`source_identity` a stamp is provenance and says
+    nothing. At the top level of an artifact it can be the ONE substantive
+    in-place edit rule 8 requires -- which is exactly what BE's `cb9bf8a`
+    was -- so it is REPORTED rather than absorbed either way."""
+    parts = [x.split("[")[0] for x in path.split(".")]
+    if any(par in parts[:-1] for par in PROVENANCE_CONTAINERS):
+        return False
+    return parts[-1] in TIMESTAMP_LEAVES
+
+
 def _is_residual(path: str) -> bool:
     low = path.lower()
     return any(m in low for m in RESIDUAL_MARKERS)
@@ -105,6 +127,8 @@ def _is_residual(path: str) -> bool:
 def classify(path: str, old, new) -> str:
     if _is_provenance(path):
         return "provenance"
+    if _is_timestamp(path):
+        return "timestamp"
     num = (isinstance(old, (int, float)) and not isinstance(old, bool)
            and isinstance(new, (int, float)) and not isinstance(new, bool))
     if not num:
@@ -132,7 +156,7 @@ def diff(old_doc, new_doc) -> dict:
     for v in moved.values():
         counts[v["class"]] = counts.get(v["class"], 0) + 1
     for cls in ("numeric-substantive", "numeric-epsilon", "string",
-                "string-embedded-provenance", "provenance"):
+                "string-embedded-provenance", "timestamp", "provenance"):
         counts.setdefault(cls, 0)
     return {
         "protocol": PROTOCOL,
@@ -148,7 +172,8 @@ def diff(old_doc, new_doc) -> dict:
             f"{counts['numeric-epsilon']} epsilon residual, "
             f"{counts['string']} string, "
             f"{counts['string-embedded-provenance']} string-embedded-"
-            f"provenance, {counts['provenance']} provenance "
+            f"provenance, {counts['timestamp']} timestamp, "
+            f"{counts['provenance']} provenance "
             f"-- of {len(shared)} shared leaves"),
         "how_this_was_produced": "COMPUTED by a leaf diff inside the "
                                  "emitter against the named predecessor, "
@@ -187,7 +212,7 @@ def selftest() -> int:
     d = diff(a, b)
     ok(d["n_moved_total"] == 5 and d["counts_by_class"] == {
         "numeric-substantive": 1, "numeric-epsilon": 1, "string": 1,
-        "string-embedded-provenance": 0, "provenance": 2},
+        "string-embedded-provenance": 0, "timestamp": 0, "provenance": 2},
        f"POSITIVE CONTROL, AND IT ADMITS: one substantive number, one "
        f"epsilon residual, one string and two provenance leaves are each "
        f"classified as themselves -- {d['sentence']}")
@@ -210,25 +235,42 @@ def selftest() -> int:
                 {"cancellation_economics": {"as_of": "2026-09-06T10:00Z"},
                  "arms": {"X": {"producing_code": "bbbb"}},
                  "provenance": {"as_of": "2026-09-06T10:00Z"}})
-    ok(hole["moved"]["cancellation_economics.as_of"]["class"] == "string"
+    ok(hole["moved"]["cancellation_economics.as_of"]["class"] == "timestamp"
        and hole["moved"]["arms.X.producing_code"]["class"] == "string",
        "A-1b KNOWN-BAD, THE HOLE ITSELF: a leaf CALLED `as_of` or "
-       "`producing_code` sitting under a RESULT-BEARING parent is "
-       "SUBSTANTIVE, not provenance. The old rule was `name OR parent` and "
-       "classified both as provenance with the parent ignored")
+       "`producing_code` under a RESULT-BEARING parent is no longer "
+       "provenance. The old rule was `name OR parent` and classified both "
+       "as provenance with the parent ignored; `producing_code` is now a "
+       "reported string and `as_of` its own reported class")
+    ok(_is_timestamp("population.as_of") and _is_timestamp("as_of")
+       and not _is_timestamp("provenance.as_of")
+       and not _is_timestamp("source_identity.as_of"),
+       "and the rule is CONSISTENT rather than a list of exceptions: any "
+       "timestamp OUTSIDE a provenance container is reported as a "
+       "timestamp, and one INSIDE it stays provenance -- so there is no "
+       "depth at which a stamp silently changes meaning")
+    top = diff({"as_of": "2026-09-05T10:00Z"}, {"as_of": "2026-09-06T10:00Z"})
+    ok(top["moved"]["as_of"]["class"] == "timestamp",
+       "A-1b, THE HALF THAT SURVIVED ROUND 71: a TOP-LEVEL `as_of` now has "
+       "its OWN reported class. BE's cb9bf8a diff -- whose one substantive "
+       "in-place edit IS `/as_of` -- reported 'nothing but provenance "
+       "moved' under both the old and the tightened rule. A timestamp is "
+       "neither a result nor invisible, and burying it in either class "
+       "loses the information the reviewer needed")
     ok(hole["moved"]["provenance.as_of"]["class"] == "provenance",
        "AND THE OTHER DIRECTION, so the fix is not just a refusal: a "
        "GENUINE `provenance.as_of` is still provenance -- the container "
        "carries it, and tightening the rule did not break the case it "
        "exists for")
-    ok(_is_provenance("population.as_of")
+    ok(_is_timestamp("population.as_of")
        and _is_provenance("provenance.code_identity.f.py")
        and _is_provenance("run_id")
        and not _is_provenance("cascade_baseline_candidates.population_block"
                               ".source_cache"),
        "and the pairs are built from leaves that ACTUALLY OCCUR in this "
-       "programme's artifacts -- population.as_of, the provenance "
-       "container, top-level run_id -- while "
+       "programme's artifacts -- population.feed_wall_s, the provenance "
+       "container, top-level run_id (population.as_of is now a TIMESTAMP) "
+       "-- while "
        "`population_block.source_cache` is NOT provenance under either "
        "rule. THE REVIEWER'S MECHANISM IS RIGHT AND ITS EXAMPLE IS NOT: "
        "last round's real transcription defect was never at risk of being "

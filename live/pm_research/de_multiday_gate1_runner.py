@@ -46,7 +46,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V1"
-EXPECTED_CHECKS = 29
+EXPECTED_CHECKS = 33
 PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v1.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
@@ -125,6 +125,79 @@ def verify_be_module(params: dict, *, actual_sha: str | None = None) -> dict:
             f"citation must be re-pointed deliberately.")
     return {"path": params["be_module"]["path"], "sha256": actual_sha,
             "cited_not_copied": True, "verified_at_run_time": True}
+
+
+MODEL_DIR = "data/pm_5min/derived/phase2_fits"
+
+
+def verify_pinned_models(params: dict, root: Path | None = None) -> dict:
+    """R6, THE HALF THAT WAS MISSING: READ the pinned model files at run
+    time, hash them, and compare. A mismatch REFUSES THE RUN.
+
+    The reviewer's phrase for the previous state was exact -- "a recorded
+    digest that nobody compares is provenance theatre" -- and that was
+    what the model half was. This reads bytes."""
+    base = Path(root) if root is not None else Path(
+        __file__).resolve().parents[2]
+    out, bad = {}, []
+    for arm, spec in sorted(params["arms"].items()):
+        out[arm] = {}
+        for name, pin in sorted(spec["model_digests"].items()):
+            f = base / MODEL_DIR / name
+            if not f.is_file():
+                bad.append({"arm": arm, "model": name, "why": "ABSENT",
+                            "path": str(f)})
+                out[arm][name] = {"status": "ABSENT", "path": str(f)}
+                continue
+            got = hashlib.sha256(f.read_bytes()).hexdigest()[:len(pin)]
+            ok_ = got == pin
+            out[arm][name] = {"pinned": pin, "read": got, "matches": ok_,
+                              "path": str(f.relative_to(base))}
+            if not ok_:
+                bad.append({"arm": arm, "model": name, "pinned": pin,
+                            "read": got})
+    if bad:
+        raise RunnerRefused(
+            f"REFUSED RUN: {len(bad)} pinned model file(s) do not match "
+            f"their declared digest: {bad[:3]}. A moved model means the "
+            f"object under test is not the frozen one, so no day is "
+            f"trustworthy -- this refuses the RUN, not a day.")
+    return {"model_dir": MODEL_DIR, "verified_at_run_time": True,
+            "n_models_read": sum(len(v) for v in out.values()),
+            "per_arm": out, "bytes_were_read_not_recorded": True}
+
+
+def verify_pinned_thetas(params: dict, root: Path | None = None) -> dict:
+    """R6: the theta half, read from the artifact each theta is pinned in
+    (BE's null), not from this module's copy."""
+    base = Path(root) if root is not None else Path(
+        __file__).resolve().parents[2]
+    art = base / "data/pm_5min/derived/be_cancel_axis_null_v1.json"
+    if not art.is_file():
+        raise RunnerRefused(f"REFUSED RUN: theta pin source absent: {art}")
+    doc = json.loads(art.read_text())
+    out, bad = {}, []
+    for arm, spec in sorted(params["arms"].items()):
+        got = ((doc.get("cells") or {}).get(arm) or {}).get(
+            "arm_filed", {}).get("theta")
+        out[arm] = {"declared": spec["theta"], "read": got,
+                    "matches": got == spec["theta"],
+                    "json_path": f"cells.{arm}.arm_filed.theta"}
+        if got != spec["theta"]:
+            bad.append({"arm": arm, "declared": spec["theta"], "read": got})
+    if bad:
+        raise RunnerRefused(
+            f"REFUSED RUN: theta mismatch against the pin source: {bad}. A "
+            f"refitted theta makes every day's object different.")
+    return {"source": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
+            "verified_at_run_time": True, "per_arm": out}
+
+
+def verify_run_inputs(params: dict, root: Path | None = None) -> dict:
+    """Everything that must hold BEFORE the first day is touched."""
+    return {"be_module": verify_be_module(params),
+            "models": verify_pinned_models(params, root),
+            "thetas": verify_pinned_thetas(params, root)}
 
 
 def verify_day_inputs(day: str, declared_book_sha: str, actual_book_sha: str,
@@ -326,7 +399,8 @@ def fixture_run() -> dict:
     params["days"] = ["FIXTURE-1", "FIXTURE-2", "FIXTURE-3"]
     params["G"] = len(params["days"])
     params["G_derived_from_len_days"] = True
-    be = verify_be_module(params)
+    inputs = verify_run_inputs(params)
+    be = inputs["be_module"]
 
     rng = random.Random(20260906)
     results, sealed_artifacts = [], []
@@ -371,6 +445,13 @@ def fixture_run() -> dict:
             "sd_floor_fraction", "alpha", "multiplicity_m",
             "per_day_deadline_s", "G", "G_derived_from_len_days")},
         "be_module_citation": be,
+        "run_input_verification_R6": {
+            "models": inputs["models"], "thetas": inputs["thetas"],
+            "closed_the_reviewers_half_a_code_path": (
+                "the book digest was already a verifier; the THETA and "
+                "MODEL digests were pinned and never compared. Both now "
+                "READ BYTES at run time and a mismatch REFUSES THE RUN"),
+        },
         "design_declaration": params["design_declaration"],
         "per_day_sealed_artifacts": sealed_artifacts,
         "aggregate": agg,
@@ -480,6 +561,48 @@ def selftest(*, quiet: bool = False) -> int:
             "KNOWN-BAD: a DIFFERENT cascade digest refuses -- a null run "
             "through another cascade is not a control for this arm",
             "cascade module digest differs")
+
+    # ---- R6: THE MODEL AND THETA HALVES ARE NOW CODE PATHS -------------
+    vr = verify_run_inputs(live)
+    ok(vr["models"]["n_models_read"] == 3
+       and vr["models"]["bytes_were_read_not_recorded"] is True
+       and all(v["matches"] for a in vr["models"]["per_arm"].values()
+               for v in a.values())
+       and all(v["matches"] for v in vr["thetas"]["per_arm"].values()),
+       f"R6 POSITIVE CONTROL, AND IT ADMITS: {vr['models']['n_models_read']}"
+       f" pinned model files are READ AND HASHED at run time and match, "
+       f"and both thetas are read from the artifact they are pinned in. "
+       f"Until now these were recorded and never compared -- the "
+       f"reviewer's 'provenance theatre'")
+    import shutil as _sh
+    with _tf.TemporaryDirectory() as tdm:
+        # A PLANTED MODEL BYTE. The whole model dir is copied so the
+        # pristine tree is never touched.
+        src = Path(__file__).resolve().parents[2] / MODEL_DIR
+        dst = Path(tdm) / MODEL_DIR
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        _sh.copytree(src, dst)
+        tgt = dst / "linear_d_btc.json"
+        tgt.write_bytes(tgt.read_bytes() + b" ")
+        refuses(lambda: verify_pinned_models(live, Path(tdm)),
+                "R6 KNOWN-BAD, A PLANTED MODEL BYTE: one trailing space in "
+                "linear_d_btc.json changes its digest and REFUSES THE RUN "
+                "-- not the day, because a moved model makes every day's "
+                "object different", "do not match their declared digest")
+        (dst / "lgbm_haz_btc.txt").unlink()
+        refuses(lambda: verify_pinned_models(live, Path(tdm)),
+                "and an ABSENT pinned model refuses too, rather than "
+                "verifying the ones that happen to be there",
+                "do not match their declared digest")
+    with _tf.TemporaryDirectory() as tdt:
+        bad = dict(live)
+        bad["arms"] = {a: dict(v) for a, v in live["arms"].items()}
+        bad["arms"]["CONDVALUE_X_SKEW"]["theta"] = 0.5
+        refuses(lambda: verify_pinned_thetas(bad),
+                "R6 KNOWN-BAD, A THETA THAT DISAGREES WITH ITS PIN SOURCE: "
+                "refuses the RUN. The theta is read from BE's artifact at "
+                "its declared JSON path, not from this module's copy",
+                "theta mismatch against the pin source")
 
     # ---- R6, all three, both directions --------------------------------
     th = {a: s["theta"] for a, s in P["arms"].items()}

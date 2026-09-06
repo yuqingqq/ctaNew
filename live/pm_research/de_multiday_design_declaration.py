@@ -27,8 +27,8 @@ import sys
 from pathlib import Path
 
 
-PROTOCOL = "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V3"
-EXPECTED_CHECKS = 42
+PROTOCOL = "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V4"
+EXPECTED_CHECKS = 47
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1b"
@@ -36,10 +36,32 @@ V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
 V2_DECLARATION = ("p003_de_multiday_gate1_design_v2__20260906T035617Z.json",
                   "c4da696f60ca62700d18551f523e571aab09bc5b8b42f6970112aba"
                   "6490ce903")
+V3_DECLARATION = ("p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
+                  "a1016a8762fffdfeb368c5ff217e8bcc83141b1567e218a2f1b69c6"
+                  "58a65289c")
+
+#: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
+#: one population already seen, exactly as R4's 0.25 was set against
+#: HAZARD's observed 0.4055.
+HEAD_OVERLAP_OBSERVED = 1.0
+HEAD_OVERLAP_FLOOR = 0.90
+HEAD_OVERLAP_MEASUREMENT = {
+    "cache": "de_section81_cache_v2_12.pkl",
+    "asm_key_shape": "asm['by_arm'][(coin, head)][0]",
+    "scored_CONDVALUE_X_SKEW_q1_arrival_composed_lgbm": 29813,
+    "scored_HAZARD_OVER_SKEWED_REF_incumbent_linear_d": 29813,
+    "intersection": 29813,
+    "overlap_over_the_smaller": 1.0,
+    "jaccard": 1.0,
+}
 
 #: (4) DEGENERACY BARS, declared NOW so nobody decides after seeing a day.
 MIN_DECISIONS_PER_ARM_DAY = 30
 SD_FLOOR_FRACTION = 0.25          # refuse when sd < f * |mean| of the null
+
+#: (4) THE DECLARED LEDGER ROOT. The derivation resolves through the R-397
+#: symlink and compares; a different root REFUSES with the root named.
+DECLARED_LEDGER_ROOT = "/home/yuqing/ctaNew/data"
 
 #: (7) the two candidate day sets, DERIVED from the ledger, not listed.
 LEDGER_CONJUNCTS = ("day_closed_calendar", "post_freeze_pass",
@@ -299,6 +321,18 @@ def day_sets_from_the_ledger(root: Path | None = None) -> dict:
     # and RECORD which root was read.
     data_root = base / "data" / "data" if (base / "data" / "data").exists() \
         else base / "data"
+    # (4) IT MUST REFUSE, NOT RETURN AN EMPTY SET. The reviewer drove a
+    # non-ledger root and got a silent [] -- a derivation that answers
+    # "no days qualify" when it is looking at the wrong tree is worse than
+    # one that crashes.
+    resolved = data_root.resolve()
+    if str(resolved) != DECLARED_LEDGER_ROOT:
+        raise DesignRefused(
+            f"REFUSED: the ledger root resolves to {resolved}, not the "
+            f"declared {DECLARED_LEDGER_ROOT}. A day set derived from the "
+            f"wrong tree is not a smaller day set, it is a different "
+            f"question -- and the failure mode is an EMPTY answer that "
+            f"looks like a result.")
     rows = {}
     for path in sorted(glob.glob(str(
             data_root / "pm_5min/derived/da_dayverdict_2026*.json"))):
@@ -325,6 +359,10 @@ def day_sets_from_the_ledger(root: Path | None = None) -> dict:
         rows[day] = {k: found.get(k) for k in LEDGER_CONJUNCTS}
         rows[day]["all_conjuncts_and_quality"] = all(
             found.get(k) is True for k in LEDGER_CONJUNCTS)
+    if not rows:
+        raise DesignRefused(
+            f"REFUSED: no day-verdict files under {resolved}. An empty "
+            f"verdict set is a MISSING LEDGER, not a day set of size zero.")
     qualifying = [d for d, v in sorted(rows.items())
                   if v["all_conjuncts_and_quality"]]
     set_a = list(qualifying)
@@ -351,6 +389,9 @@ def day_sets_from_the_ledger(root: Path | None = None) -> dict:
                 "smallest_G_that_clears_m1": _smallest_G(ALPHA, 1)}
     return {
         "ledger_root_read": str(data_root),
+        "ledger_root_resolved": str(resolved),
+        "declared_ledger_root": DECLARED_LEDGER_ROOT,
+        "root_verified_at_run_time": True,
         "why_the_root_is_recorded": (
             "in a seat worktree `<root>/data` is the git-materialised "
             "shell of COMMITTED artifacts only; the real tree hangs off "
@@ -657,9 +698,37 @@ def declaration() -> dict:
                 "REQUIRES BE TO PUBLISH |scored(head)| PER HEAD PER DAY and "
                 "their overlap, so the size of that cost is measured "
                 "rather than assumed"),
-            "refuses_if": "the two heads' scored sets overlap by less than "
-                          "0.90 of the smaller -- declared now, and a "
-                          "REFUSAL of the arm-day, not a note",
+            "refuses_if": f"the two heads' scored sets overlap by less "
+                          f"than {HEAD_OVERLAP_FLOOR} of the smaller -- a "
+                          f"REFUSAL of the arm-day, not a note",
+            "floor_calibration": {
+                "measured_on": "the CONSUMED 2026-08-24 13:50-14:50Z hour, "
+                               "the one population already seen -- the "
+                               "same basis R4's 0.25 was set on",
+                "measurement": HEAD_OVERLAP_MEASUREMENT,
+                "observed_overlap": HEAD_OVERLAP_OBSERVED,
+                "floor": HEAD_OVERLAP_FLOOR,
+                "floor_admits_the_consumed_hour":
+                    HEAD_OVERLAP_FLOOR <= HEAD_OVERLAP_OBSERVED,
+                "what_the_measurement_says": (
+                    "the two heads score the SAME 29,813 generations -- "
+                    "identical sets, Jaccard 1.0. On the precedent run the "
+                    "shared-pool choice costs EXACTLY NOTHING, because "
+                    "there is only one pool to share"),
+                "why_this_floor_cannot_be_read_as_tuned": (
+                    "the observed value is 1.0, which is the CEILING of "
+                    "the statistic -- an overlap cannot exceed 1. So no "
+                    "floor below 1.0 can have been chosen to clear the "
+                    "seen value, and the ONLY floor that would exclude the "
+                    "consumed hour is one strictly above 1.0, which is "
+                    "unattainable. 0.90 leaves day-to-day headroom without "
+                    "being fitted to anything"),
+                "and_it_is_a_ONE_DAY_measurement": (
+                    "one hour of one coin. Two heads agreeing perfectly "
+                    "there does not establish they agree on an unseen day, "
+                    "which is exactly why the floor is a per-arm-day "
+                    "REFUSAL and not an assumption"),
+            },
         },
         "R3_the_coin_set": {
             "declared": ["btc"],
@@ -724,6 +793,27 @@ def declaration() -> dict:
                 "the per-day emitter REFUSES to write any economic field "
                 "while `n_days_complete < G`; the sealed fields are absent "
                 "from the artifact, not present-and-ignored"),
+            "IT_IS_NOW_A_CODE_PATH_NOT_A_PROMISE": {
+                "emitter": "de_multiday_gate1_runner.seal()",
+                "guard": "de_multiday_gate1_runner.assert_no_economic_leak()",
+                "shared_name_list": "de_multiday_gate1_runner."
+                                    "ECONOMIC_FIELDS -- the emitter and "
+                                    "the guard read ONE list and ONE "
+                                    "traversal, so they cannot disagree",
+                "proof_it_fired": (
+                    "the guard caught the emitter on its first run: "
+                    "sealing only the top-level `economic` block left "
+                    "`admissibility.null_sd` and `null_mean` behind, "
+                    "because the R4 block carries null statistics"),
+                "fixture_receipt_field": "per_day_sealed_artifacts[*]."
+                                         "seal_status and .sealed",
+                "fixture_receipt": "p003_de_multiday_gate1_fixture_run_v2"
+                                   "__20260906T041609Z.json",
+                "what_that_field_shows": "six per-day artifacts, sealed "
+                                         "True until the last day and "
+                                         "False after -- both states "
+                                         "present in one receipt",
+            },
         },
         "R6_runtime_verification": {
             "verified_at_run_time_not_merely_recorded": True,
@@ -1070,7 +1160,7 @@ def selftest(*, quiet: bool = False) -> int:
        "keyed by (coin, head) for BOTH pinned heads, scored at the pinned "
        "thetas -- and its digest's route into the seed is stated")
     ok(d["R2_the_draw_pool"]["declared_choice"] == "SHARED"
-       and "0.90" in d["R2_the_draw_pool"]["refuses_if"],
+       and str(HEAD_OVERLAP_FLOOR) in d["R2_the_draw_pool"]["refuses_if"],
        "R2: the draw pool is declared SHARED with the reason, the COST "
        "stated, and a numeric refusal bar (heads' scored sets overlapping "
        "by less than 0.90 of the smaller REFUSES the arm-day)")
@@ -1185,6 +1275,53 @@ def selftest(*, quiet: bool = False) -> int:
            "declared withdrawal context REFUSES the emission -- so a grep "
            "hit at the artifact is answerable by a field instead of by "
            "reading three sentences")
+    # ---- (1) R2's floor, CALIBRATED -----------------------------------
+    fc = d["R2_the_draw_pool"]["floor_calibration"]
+    ok(fc["observed_overlap"] == 1.0
+       and fc["measurement"]["intersection"] == 29813
+       and fc["floor_admits_the_consumed_hour"] is True,
+       f"(1) R2's floor is CALIBRATED on the consumed hour exactly as "
+       f"R4's was: both heads score the SAME 29,813 generations, overlap "
+       f"{fc['observed_overlap']} (Jaccard 1.0), so the "
+       f"{fc['floor']} floor ADMITS the precedent run -- and the "
+       f"shared-pool choice costs EXACTLY NOTHING there, because there is "
+       f"only one pool to share")
+    ok(HEAD_OVERLAP_FLOOR < 1.0
+       and not (1.0000001 <= HEAD_OVERLAP_OBSERVED),
+       "FALSIFIER: a floor ABOVE the observed overlap would refuse the "
+       "consumed hour itself -- 1.0000001 > 1.0 excludes it. And because "
+       "the observed value is the CEILING of the statistic, no floor "
+       "below 1.0 can have been chosen to clear it")
+    # ---- (2) R5 cites the code path and the field that proves it fired -
+    cp = d["R5_the_smoke_is_sealed"]["IT_IS_NOW_A_CODE_PATH_NOT_A_PROMISE"]
+    ok(cp["emitter"] == "de_multiday_gate1_runner.seal()"
+       and "assert_no_economic_leak" in cp["guard"]
+       and "caught the emitter on its first run" in cp["proof_it_fired"]
+       and cp["fixture_receipt_field"].startswith(
+           "per_day_sealed_artifacts"),
+       "(2) R5 names the emitter, the guard, the ONE shared name list, "
+       "and the fixture-receipt field that proves the guard fired -- it "
+       "is a code path now, not a promise the runner must keep")
+    # ---- (4) the root derivation REFUSES ------------------------------
+    r7x = d["R7_the_day_set"]
+    ok(r7x["ledger_root_resolved"] == DECLARED_LEDGER_ROOT
+       and r7x["root_verified_at_run_time"] is True,
+       f"(4) the ledger root is RESOLVED through the symlink and compared "
+       f"to the declared {DECLARED_LEDGER_ROOT} at run time")
+    import tempfile as _tf2
+    with _tf2.TemporaryDirectory() as _td3:
+        (Path(_td3) / "data/pm_5min/derived").mkdir(parents=True)
+        try:
+            day_sets_from_the_ledger(_td3)
+            ok(False, "(4) KNOWN-BAD: a PLANTED SHELL ROOT returned a day "
+                      "set instead of refusing")
+        except DesignRefused as _e:
+            ok("not the declared" in str(_e) and _td3 in str(_e),
+               "(4) KNOWN-BAD, A PLANTED SHELL ROOT: the derivation "
+               "REFUSES and NAMES THE ROOT. It used to return an empty day "
+               "set silently -- an answer that looks like a result while "
+               "looking at the wrong tree")
+
     ok(d["worktree_data_shell_trap"]["how_it_bit_this_declaration"]
        .startswith("the R7 derivation read")
        and len(d["worktree_data_shell_trap"]["prior_instances"]) == 2,
