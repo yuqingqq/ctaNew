@@ -1,0 +1,1265 @@
+{
+  "carrying_commit": "91da6f216b0f8ab6b093c64032e3f202ecef790f",
+  "data_root_check": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "adopted_from": "live/pm_research/de_data_root.py, imported not copied",
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "mm_hf_tape_present": true,
+    "purpose": "P-2026-002 E2-A admission census",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "declaration": {
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v5.json",
+    "sha256": "90a9a99f6cb2a2cc4c8f45f211177695355859e157643e854a34ef77ccc7b593"
+  },
+  "gap_threshold": 0.05,
+  "protocol": "P002_E2_A_OVERLAY_RUNNER_V1_CENSUS",
+  "symbols": {
+    "ADAUSDT": {
+      "days": [
+        {
+          "admissible": false,
+          "day": "20260819",
+          "decision_time_quote_age_ms": null,
+          "gap_fraction": null,
+          "gap_profile": null,
+          "reasons_excluded": [
+            "bookTicker_files=12",
+            "trade_files=12",
+            "depth20_files=12"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 12,
+            "depth20": 12,
+            "trade": 12
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260820",
+          "decision_time_quote_age_ms": {
+            "max_ms": 435.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 88.5,
+            "p90_ms": 296.8
+          },
+          "gap_fraction": 0.0009722222222222222,
+          "gap_profile": {
+            "gap_fraction": 0.0009722222222222222,
+            "max_gap_run_s": 2,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 81,
+            "n_missing_seconds": 84,
+            "n_quotes_in_day": 3746418,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260821",
+          "decision_time_quote_age_ms": {
+            "max_ms": 336.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 110.0,
+            "p90_ms": 325.8
+          },
+          "gap_fraction": 0.00045138888888888887,
+          "gap_profile": {
+            "gap_fraction": 0.00045138888888888887,
+            "max_gap_run_s": 7,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 30,
+            "n_missing_seconds": 39,
+            "n_quotes_in_day": 5826639,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260822",
+          "decision_time_quote_age_ms": {
+            "max_ms": 337.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 111.0,
+            "p90_ms": 298.5999999999999
+          },
+          "gap_fraction": 0.0008564814814814815,
+          "gap_profile": {
+            "gap_fraction": 0.0008564814814814815,
+            "max_gap_run_s": 10,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 64,
+            "n_missing_seconds": 74,
+            "n_quotes_in_day": 5628766,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260823",
+          "decision_time_quote_age_ms": {
+            "max_ms": 299.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 100.0,
+            "p90_ms": 278.0
+          },
+          "gap_fraction": 0.0018055555555555555,
+          "gap_profile": {
+            "gap_fraction": 0.0018055555555555555,
+            "max_gap_run_s": 12,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 140,
+            "n_missing_seconds": 156,
+            "n_quotes_in_day": 3908411,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260824",
+          "decision_time_quote_age_ms": {
+            "max_ms": 351.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 120.5,
+            "p90_ms": 324.2
+          },
+          "gap_fraction": 0.002766203703703704,
+          "gap_profile": {
+            "gap_fraction": 0.002766203703703704,
+            "max_gap_run_s": 60,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 164,
+            "n_missing_seconds": 239,
+            "n_quotes_in_day": 4170516,
+            "n_runs_ge_60s": 1,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.2510460251046025
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260825",
+          "decision_time_quote_age_ms": {
+            "max_ms": 602.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 68.0,
+            "p90_ms": 283.09999999999997
+          },
+          "gap_fraction": 0.0012268518518518518,
+          "gap_profile": {
+            "gap_fraction": 0.0012268518518518518,
+            "max_gap_run_s": 10,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 96,
+            "n_missing_seconds": 106,
+            "n_quotes_in_day": 3801962,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260826",
+          "decision_time_quote_age_ms": null,
+          "gap_fraction": null,
+          "gap_profile": null,
+          "reasons_excluded": [
+            "bookTicker_files=23",
+            "trade_files=23",
+            "depth20_files=23"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 23,
+            "depth20": 23,
+            "trade": 23
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260827",
+          "decision_time_quote_age_ms": {
+            "max_ms": 827.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 145.5,
+            "p90_ms": 292.9
+          },
+          "gap_fraction": 0.0020601851851851853,
+          "gap_profile": {
+            "gap_fraction": 0.0020601851851851853,
+            "max_gap_run_s": 7,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 170,
+            "n_missing_seconds": 178,
+            "n_quotes_in_day": 2906224,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260828",
+          "decision_time_quote_age_ms": {
+            "max_ms": 337.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 121.5,
+            "p90_ms": 252.2
+          },
+          "gap_fraction": 0.0014467592592592592,
+          "gap_profile": {
+            "gap_fraction": 0.0014467592592592592,
+            "max_gap_run_s": 3,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 119,
+            "n_missing_seconds": 125,
+            "n_quotes_in_day": 3074742,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260829",
+          "decision_time_quote_age_ms": {
+            "max_ms": 282.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 229.5,
+            "p90_ms": 266.7
+          },
+          "gap_fraction": 0.0030324074074074073,
+          "gap_profile": {
+            "gap_fraction": 0.0030324074074074073,
+            "max_gap_run_s": 10,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 249,
+            "n_missing_seconds": 262,
+            "n_quotes_in_day": 1553810,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260830",
+          "decision_time_quote_age_ms": {
+            "max_ms": 299.0,
+            "n_decision_times_with_a_prior_quote": 23,
+            "p50_ms": 137.0,
+            "p90_ms": 286.6
+          },
+          "gap_fraction": 0.0013657407407407407,
+          "gap_profile": {
+            "gap_fraction": 0.0013657407407407407,
+            "max_gap_run_s": 9,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 109,
+            "n_missing_seconds": 118,
+            "n_quotes_in_day": 2393696,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260831",
+          "decision_time_quote_age_ms": {
+            "max_ms": 286.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 171.0,
+            "p90_ms": 257.3
+          },
+          "gap_fraction": 0.001388888888888889,
+          "gap_profile": {
+            "gap_fraction": 0.001388888888888889,
+            "max_gap_run_s": 9,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 107,
+            "n_missing_seconds": 120,
+            "n_quotes_in_day": 2630473,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260901",
+          "decision_time_quote_age_ms": {
+            "max_ms": 290.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 181.5,
+            "p90_ms": 265.8
+          },
+          "gap_fraction": 0.0021296296296296298,
+          "gap_profile": {
+            "gap_fraction": 0.0021296296296296298,
+            "max_gap_run_s": 8,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 174,
+            "n_missing_seconds": 184,
+            "n_quotes_in_day": 2384534,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260902",
+          "decision_time_quote_age_ms": {
+            "max_ms": 303.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 155.5,
+            "p90_ms": 291.8
+          },
+          "gap_fraction": 0.002002314814814815,
+          "gap_profile": {
+            "gap_fraction": 0.002002314814814815,
+            "max_gap_run_s": 9,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 161,
+            "n_missing_seconds": 173,
+            "n_quotes_in_day": 2494463,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260903",
+          "decision_time_quote_age_ms": {
+            "max_ms": 306.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 110.5,
+            "p90_ms": 265.9
+          },
+          "gap_fraction": 0.0007754629629629629,
+          "gap_profile": {
+            "gap_fraction": 0.0007754629629629629,
+            "max_gap_run_s": 4,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 60,
+            "n_missing_seconds": 67,
+            "n_quotes_in_day": 3911185,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260904",
+          "decision_time_quote_age_ms": {
+            "max_ms": 297.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 60.5,
+            "p90_ms": 278.09999999999997
+          },
+          "gap_fraction": 0.0002777777777777778,
+          "gap_profile": {
+            "gap_fraction": 0.0002777777777777778,
+            "max_gap_run_s": 9,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 12,
+            "n_missing_seconds": 24,
+            "n_quotes_in_day": 4329038,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260905",
+          "decision_time_quote_age_ms": {
+            "max_ms": 306.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 94.0,
+            "p90_ms": 297.7
+          },
+          "gap_fraction": 0.0002546296296296296,
+          "gap_profile": {
+            "gap_fraction": 0.0002546296296296296,
+            "max_gap_run_s": 10,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 13,
+            "n_missing_seconds": 22,
+            "n_quotes_in_day": 2742198,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260906",
+          "decision_time_quote_age_ms": null,
+          "gap_fraction": null,
+          "gap_profile": null,
+          "reasons_excluded": [
+            "bookTicker_files=6",
+            "trade_files=6",
+            "depth20_files=6"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 6,
+            "depth20": 6,
+            "trade": 6
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        }
+      ],
+      "meets_minimum": true,
+      "min_complete_days": 14,
+      "n_admissible": 16,
+      "n_days_all_three_streams_complete": 16,
+      "n_days_seen": 19,
+      "n_excluded_by_gap_alone": 0
+    },
+    "ICPUSDT": {
+      "days": [
+        {
+          "admissible": false,
+          "day": "20260819",
+          "decision_time_quote_age_ms": null,
+          "gap_fraction": null,
+          "gap_profile": null,
+          "reasons_excluded": [
+            "bookTicker_files=12",
+            "trade_files=12",
+            "depth20_files=12"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 12,
+            "depth20": 12,
+            "trade": 12
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260820",
+          "decision_time_quote_age_ms": {
+            "max_ms": 2537.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 416.5,
+            "p90_ms": 1560.3
+          },
+          "gap_fraction": 0.17444444444444446,
+          "gap_profile": {
+            "gap_fraction": 0.17444444444444446,
+            "max_gap_run_s": 13,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 9831,
+            "n_missing_seconds": 15072,
+            "n_quotes_in_day": 818047,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1744>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260821",
+          "decision_time_quote_age_ms": {
+            "max_ms": 1815.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 206.0,
+            "p90_ms": 940.4
+          },
+          "gap_fraction": 0.109375,
+          "gap_profile": {
+            "gap_fraction": 0.109375,
+            "max_gap_run_s": 9,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 7131,
+            "n_missing_seconds": 9450,
+            "n_quotes_in_day": 1248065,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1094>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "day": "20260822",
+          "decision_time_quote_age_ms": {
+            "max_ms": 1968.0,
+            "n_decision_times_with_a_prior_quote": 23,
+            "p50_ms": 217.0,
+            "p90_ms": 955.0
+          },
+          "gap_fraction": 0.037800925925925925,
+          "gap_profile": {
+            "gap_fraction": 0.037800925925925925,
+            "max_gap_run_s": 8,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 2853,
+            "n_missing_seconds": 3266,
+            "n_quotes_in_day": 1666733,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260823",
+          "decision_time_quote_age_ms": {
+            "max_ms": 3953.0,
+            "n_decision_times_with_a_prior_quote": 23,
+            "p50_ms": 400.0,
+            "p90_ms": 2641.2000000000003
+          },
+          "gap_fraction": 0.15278935185185186,
+          "gap_profile": {
+            "gap_fraction": 0.15278935185185186,
+            "max_gap_run_s": 17,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 9164,
+            "n_missing_seconds": 13201,
+            "n_quotes_in_day": 1137714,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1528>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260824",
+          "decision_time_quote_age_ms": {
+            "max_ms": 6359.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 535.0,
+            "p90_ms": 3231.6999999999994
+          },
+          "gap_fraction": 0.13381944444444444,
+          "gap_profile": {
+            "gap_fraction": 0.13381944444444444,
+            "max_gap_run_s": 61,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 8212,
+            "n_missing_seconds": 11562,
+            "n_quotes_in_day": 1164938,
+            "n_runs_ge_60s": 1,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.005275903822868016
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1338>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260825",
+          "decision_time_quote_age_ms": {
+            "max_ms": 7185.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 499.0,
+            "p90_ms": 1956.3
+          },
+          "gap_fraction": 0.1477199074074074,
+          "gap_profile": {
+            "gap_fraction": 0.1477199074074074,
+            "max_gap_run_s": 11,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 9094,
+            "n_missing_seconds": 12763,
+            "n_quotes_in_day": 1145740,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1477>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260826",
+          "decision_time_quote_age_ms": null,
+          "gap_fraction": null,
+          "gap_profile": null,
+          "reasons_excluded": [
+            "bookTicker_files=23",
+            "trade_files=23",
+            "depth20_files=23"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 23,
+            "depth20": 23,
+            "trade": 23
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260827",
+          "decision_time_quote_age_ms": {
+            "max_ms": 2104.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 710.5,
+            "p90_ms": 1786.3999999999999
+          },
+          "gap_fraction": 0.1607175925925926,
+          "gap_profile": {
+            "gap_fraction": 0.1607175925925926,
+            "max_gap_run_s": 12,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 9532,
+            "n_missing_seconds": 13886,
+            "n_quotes_in_day": 756454,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1607>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260828",
+          "decision_time_quote_age_ms": {
+            "max_ms": 4192.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 620.5,
+            "p90_ms": 1721.1999999999996
+          },
+          "gap_fraction": 0.16082175925925926,
+          "gap_profile": {
+            "gap_fraction": 0.16082175925925926,
+            "max_gap_run_s": 11,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 9499,
+            "n_missing_seconds": 13895,
+            "n_quotes_in_day": 752787,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1608>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260829",
+          "decision_time_quote_age_ms": {
+            "max_ms": 5150.0,
+            "n_decision_times_with_a_prior_quote": 23,
+            "p50_ms": 902.0,
+            "p90_ms": 3298.8
+          },
+          "gap_fraction": 0.21895833333333334,
+          "gap_profile": {
+            "gap_fraction": 0.21895833333333334,
+            "max_gap_run_s": 17,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 11997,
+            "n_missing_seconds": 18918,
+            "n_quotes_in_day": 649812,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.2190>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260830",
+          "decision_time_quote_age_ms": {
+            "max_ms": 3661.0,
+            "n_decision_times_with_a_prior_quote": 23,
+            "p50_ms": 866.0,
+            "p90_ms": 2517.0000000000005
+          },
+          "gap_fraction": 0.2051736111111111,
+          "gap_profile": {
+            "gap_fraction": 0.2051736111111111,
+            "max_gap_run_s": 13,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 11399,
+            "n_missing_seconds": 17727,
+            "n_quotes_in_day": 636413,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.2052>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260831",
+          "decision_time_quote_age_ms": {
+            "max_ms": 3028.0,
+            "n_decision_times_with_a_prior_quote": 23,
+            "p50_ms": 676.0,
+            "p90_ms": 1954.8
+          },
+          "gap_fraction": 0.1669212962962963,
+          "gap_profile": {
+            "gap_fraction": 0.1669212962962963,
+            "max_gap_run_s": 17,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 9706,
+            "n_missing_seconds": 14422,
+            "n_quotes_in_day": 723311,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1669>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260901",
+          "decision_time_quote_age_ms": {
+            "max_ms": 5556.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 611.5,
+            "p90_ms": 2544.299999999999
+          },
+          "gap_fraction": 0.1725462962962963,
+          "gap_profile": {
+            "gap_fraction": 0.1725462962962963,
+            "max_gap_run_s": 12,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 10047,
+            "n_missing_seconds": 14908,
+            "n_quotes_in_day": 881851,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1725>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260902",
+          "decision_time_quote_age_ms": {
+            "max_ms": 4687.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 225.0,
+            "p90_ms": 1562.0999999999995
+          },
+          "gap_fraction": 0.1675925925925926,
+          "gap_profile": {
+            "gap_fraction": 0.1675925925925926,
+            "max_gap_run_s": 14,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 9874,
+            "n_missing_seconds": 14480,
+            "n_quotes_in_day": 996506,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1676>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260903",
+          "decision_time_quote_age_ms": {
+            "max_ms": 2260.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 352.0,
+            "p90_ms": 1573.0999999999997
+          },
+          "gap_fraction": 0.13618055555555555,
+          "gap_profile": {
+            "gap_fraction": 0.13618055555555555,
+            "max_gap_run_s": 12,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 8517,
+            "n_missing_seconds": 11766,
+            "n_quotes_in_day": 870796,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1362>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260904",
+          "decision_time_quote_age_ms": {
+            "max_ms": 4113.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 638.5,
+            "p90_ms": 1965.4
+          },
+          "gap_fraction": 0.13693287037037036,
+          "gap_profile": {
+            "gap_fraction": 0.13693287037037036,
+            "max_gap_run_s": 11,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 8392,
+            "n_missing_seconds": 11831,
+            "n_quotes_in_day": 961750,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1369>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260905",
+          "decision_time_quote_age_ms": {
+            "max_ms": 2552.0,
+            "n_decision_times_with_a_prior_quote": 24,
+            "p50_ms": 286.0,
+            "p90_ms": 1723.1
+          },
+          "gap_fraction": 0.13349537037037038,
+          "gap_profile": {
+            "gap_fraction": 0.13349537037037038,
+            "max_gap_run_s": 48,
+            "median_gap_run_s": 1.0,
+            "n_gap_runs": 8423,
+            "n_missing_seconds": 11534,
+            "n_quotes_in_day": 994538,
+            "n_runs_ge_60s": 0,
+            "reading": "QUIET-BOOK-SHAPED: the missing seconds are scattered short holes, i.e. seconds in which the best quote did not change",
+            "share_of_missing_seconds_in_runs_ge_60s": 0.0
+          },
+          "reasons_excluded": [
+            "gap_fraction=0.1335>=0.05"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "day": "20260906",
+          "decision_time_quote_age_ms": null,
+          "gap_fraction": null,
+          "gap_profile": null,
+          "reasons_excluded": [
+            "bookTicker_files=6",
+            "trade_files=6",
+            "depth20_files=6"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 6,
+            "depth20": 6,
+            "trade": 6
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        }
+      ],
+      "meets_minimum": false,
+      "min_complete_days": 14,
+      "n_admissible": 1,
+      "n_days_all_three_streams_complete": 16,
+      "n_days_seen": 19,
+      "n_excluded_by_gap_alone": 15
+    }
+  }
+}
