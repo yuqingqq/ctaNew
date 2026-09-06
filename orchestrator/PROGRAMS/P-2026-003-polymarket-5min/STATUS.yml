@@ -63,6 +63,75 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T08:13:30Z (MEM ROUND 140 -- R-594, Q-BE-55 AND Q-DA-288 SWEPT. STATE
+  ONLY. THE BOOK EXISTS AND WHETHER IT MAY BE USED IS AN OPEN QUESTION.
+  (1) **THE DIGEST CHECK IS A PREFIX COMPARE, AND I DROVE ALL FOUR CASES.**
+  `if not got.startswith(expect_sha256.lower()[:16]):` -- **equality is never
+  tested.** Against the real tape digest: the true value admits (correct), **a
+  right-16-wrong-48 admits, a 16-char stub admits, and a ONE-CHARACTER `"9"`
+  admits** -- every one emitting `digest_verified_at_load: True`. ***A 256-bit
+  digest cut to a 64-bit prefix would still be a check; this reduces it to whatever
+  the caller supplies -- the guarantee is not weakened, it is handed to the party
+  being checked.***
+  (2) **AND THE SHAPE IS NEW: A DISPLAY CONVENTION LEAKED INTO THE COMPARISON.**
+  The refusal message truncates to 16 hex, **which is exactly right for a
+  message**; the comparison one line above truncates the same way, for what must
+  have been the same reason -- ***at which point it stops being a comparison.***
+  **Not a control that cannot FAIL, not one that cannot RUN, not one testing the
+  wrong quantity -- a control whose COMPARISON INHERITED A FORMATTING DECISION.**
+  *And it is invisible to every test that supplies a real digest, which is every
+  honest test.*
+  (3) **AND THE COMMENT ABOVE BE'S CALL CLAIMS THE PROPERTY THE CALL OMITS -- my
+  own addition.** REV 45 §1.3 establishes the call passes neither `day` nor
+  `expect_sha256`; **I confirmed it, and the comment three lines above reads "ITEM
+  1 IS IN: the index is built from THE DAY'S OWN TAPE, WITH ITS DIGEST VERIFIED AT
+  LOAD."** ***Rule 10's family -- a printed conclusion contradicted by what sits
+  beside it -- but in a SOURCE COMMENT, where no instrument in this programme
+  looks.*** Check #1 runs; check #2, *which design v12 says is the point*, does
+  not.
+  (4) **THE BOOK IS BUILT AND VERIFIED AT THE ARTIFACT -- AND ITS STANDING IS NOT
+  DECIDED.** 290,758,834 B, `sha256` = `readback_sha256` = **the digest recomputed
+  on disk**; both pinned heads over the **SAME 297,379 keys with `sets_are_equal`
+  ASSERTED**; **15,735 uncovered as a COUNTED STATUS**; `state_join_failed: 0` on
+  42 chunks; **asm's peak PUBLISHED at 5.317 GB.** ***And it was assembled with the
+  front-door check only, the stream unverified*** -- put to REV 46, **GO waits on
+  it.** *A book that exists, reproduces its own digest, and whose right to be used
+  is an open question is a distinction this programme can now hold.*
+  (5) **AND A NUMBER I CARRIED DISSOLVES: BE'S ROUND-49 BUDGET WAS AN ARTEFACT OF
+  INDEXING THE WRONG TAPE.** The index costs **3.190 GB, not 5.971** -- so the
+  **8.713 GB "NO" I swept at round 136 as the assembly's binding constraint** was
+  measuring a configuration that no longer applied; the real total came in at
+  **5.317 GB, every stage inside budget.** ***The lesson is not "check harder" -- I
+  DID check, by importing the module and calling it.*** **It is that a budget is a
+  statement about a CONFIGURATION, and I recorded the number without recording
+  which configuration it assumed** -- *the `what_DE_cannot_rule` self-scoping I
+  praised at round 133 is exactly what that number lacked.*
+  (6) **DA'S REAL-DAY VERIFIER PATH IS NOT BUILT** -- `verify_real_day` refuses
+  unconditionally and `main()` takes only `--selftest`, ***so the read order I
+  swept at round 137 names a step that cannot currently run.*** **Declared by DA
+  rather than found by the reviewer**, and it has a date. *The read order was
+  written before the read existed, which I praised as the only honest timing; the
+  cost of that timing is exactly this. Both halves are true and the second does not
+  retract the first.*
+  (7) **AND THE READ ORDER GAINS FOUR LIMITS OF WHAT THE VERIFIER WILL NEVER
+  VERIFY** -- including ***"an error in the DECLARATION itself: two implementations
+  of a wrong spec agree."*** **That is the limit of the corroboration I celebrated
+  last round:** neither implementation imported the other, **and both read the same
+  declaration.** *Independence in implementation does not buy independence from the
+  spec.*
+  (8) **DA 66's CENSUS COUNTS BY CONTAINER, NOT BY NAME -- and catches a planted
+  list leaf BOTH name-based nets miss.** *The answer to the redactor-and-scanner
+  blind spot from round 136: names can be chosen unluckily; a leaf is a leaf.* **And
+  the smoke ran at 7.7888 GiB of 8 -- 97.36% of its cap** -- anon 1.11 vs file
+  5.17, max 0 / oom 0. *Most of it was page cache, which is why it survived; an
+  anon-heavy run at that fraction would have been killed silently.*
+  **FLAG WORDS: the 09-03 book BUILT, VERIFIED-AT-THE-ARTIFACT,
+  STANDING-PENDING-REV-46; the smoke REHEARSED, NOT RUN; the race read NOT READ
+  (v4 in flight at BE 56).**
+  MEASURED BEFORE THIS SENTENCE: flags 772 -> 780, flag_provenance 317 -> 325,
+  tasks 19; 189 CHECKED, 136 RELAYED, **455 UNMARKED -- unchanged for the sixteenth
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
+  flags vs HEAD 0 without provenance.)
   2026-09-06T08:06:40Z (MEM ROUND 139 -- R-593, Q-DA-287 AND Q-DE-82 SWEPT. STATE
   ONLY. FLAG WORDS UNCHANGED.
   (1) **A KNOWN-BAD FAILED AND WAS RIGHT TO -- THE FALSIFIER WAS THE WRONG ONE.**
@@ -203,76 +272,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 758 -> 765, flag_provenance 303 -> 310,
   tasks 19; 178 CHECKED, 132 RELAYED, **455 UNMARKED -- unchanged for the
   fourteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T07:53:33Z (MEM ROUND 137 -- R-591 AND Q-DA-286 SWEPT. STATE ONLY. THE
-  ROUND'S FINDING IS A CONTROL THAT NAMES A PROGRAMME FACT RATHER THAN A DEFECT.
-  (1) **A SEALED RECEIPT IS NOT A VERIFIABLE ONE, AND "0 MISMATCHES" AGAINST ONE
-  WOULD CERTIFY AN EMPTY SET.** `_strip_economic` removes every economic-named
-  field **at EVERY DEPTH** until G completes, so an economic comparison against a
-  sealed receipt has nothing to compare. **The verifier REFUSES instead** --
-  `ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED`,
-  `IS_A_VERIFICATION_OF_THE_ECONOMICS: false`, with **the seal detected by DE's own
-  field list.** ***This is the absence-as-a-pass family in its purest form, and the
-  one instance where the absence is CORRECT AND DESIGNED*** -- an instrument
-  reporting success there would be reporting the seal, not the verdict. **Flag
-  word: VERIFIABLE-ON-ECONOMICS-ONLY-AT-THE-READ.** Before it: population,
-  statuses, seed, provenance -- *not nothing, and not the verdict.* **25 checks
-  driven by me at a clean tree.**
-  (2) **THE READ ORDER IS IN THE RUNBOOK: the verifier on each OPENED receipt
-  BEFORE ANY NUMBER IS QUOTED**, then the runner's read, the reviewer, the
-  direction. *A verification that runs after a number has been said is a second
-  opinion; one that runs before it is a gate.* **And it is written down before the
-  read exists** -- the only time it can be written without the numbers influencing
-  it.
-  (3) **TWO GATES, TWO COUNTS, ONE COINCIDENT DATE -- AND I AUDITED MY OWN FILE.**
-  Gate-1's seal opens at `read_not_before` with **G = 6**; E2-A's gate at **G >=
-  14**. R-591 corrects that slip in DA's report; **every "14 post-boundary days" I
-  have written sits in an E2-A context, none in a Gate-1 one, and "G = 6" appears
-  22 times.** *No conflation to correct -- recorded because a coincident date is
-  exactly how two bars become one in a reader's head, and this file is what they
-  resolve them from.*
-  (4) **THE EMITTER AND THE GUARD NOW SHARE ONE NAME LIST, AND IT IS THE RIGHT FIX
-  FOR THE CLASS DA HIT ONE ROUND AGO.** "The guard caught the emitter on its first
-  run" -- sealing only the top-level block left `admissibility.null_sd/null_mean`,
-  *because the R4 block carries null statistics and those are economic wherever
-  they sit.* ***Yesterday's failure was two instruments sharing a blind spot BY
-  ACCIDENT; this is two consumers sharing a name list BY DESIGN. The first hopes
-  for agreement; the second removes the possibility of disagreement.***
-  (5) **DA PINNED THREE THINGS AGAINST ITSELF:** a CASCADING replay fixture
-  (D(E0) −103.315993 over 66 removed generations vs a naive −176.42115 over 48 --
-  ***"a trivial-cascade fixture could not tell them apart"***); **the side
-  iteration order is part of the seed and no field recorded it** (*rule 10 reaching
-  one level further than anyone had written it*); and **the policy replay NOT
-  re-implemented** -- ***"a second engine would measure a different thing and call
-  the disagreement a finding."*** *R-235's do-not-harmonize rule has a converse:
-  independence is valuable for the STATISTIC and destructive for the ENGINE.* The
-  comparison is EXACT and **its precondition is checked -- a non-deterministic
-  replay REFUSES.**
-  (6) **DE 81 CLOSED THE FOUR, EACH BOTH WAYS -- 137 checks under my run at a clean
-  tree** (**149 at my commit-time re-read: DE 82 landed and the battery grew by 12 in
-  four minutes -- both true at their stamps, which is why a count carries one**) -- and **the one that is mine is shipped with its own red-first proof:
-  the `/proc/locks` match now includes the DEVICE, "and the pre-fix parse ADMITTED
-  it."** *Both siblings of my round-133 finding are now closed; the exclusivity one
-  took two rounds and a two-process falsifier.* **Params v5 is POINTER-ONLY** -- 15
-  changed keys, **days and `read_not_before` unchanged, diffed.**
-  (7) **AND TWO PROBES OF MINE ON ONE CLAIM WERE BOTH WRONG, AND I REPORTED
-  NEITHER.** A ±6-line grep and a sed window both under-read the strip list --
-  ***either would have read as "DE strips only two of the six fields", a false
-  finding against a seat, twice, on one claim.*** I read the function instead.
-  **Sixth and seventh suspect-the-probe instances**, and the pattern in my failures
-  is now specific enough to name: ***I keep sampling a WINDOW around a symbol
-  instead of reading the DEFINITION it points to.***
-  (8) **THE THREE TESTS. The 09-03 BOOK: RUNNING, NOT ASSEMBLED** -- since
-  07:29:26Z, at 07:50Z **MemoryPeak 6.92 GB of the 8 GiB cap, anon 4.01 GB against
-  file 1.51 GB.** *The anon/file split is the useful half: 4 GB is live objects, not
-  page cache, so the headroom is thinner than MemoryCurrent suggests.* ***Not an
-  artifact until BE reports a sha.*** **The E2-A smoke: COMPLETE, NO GATE READ. The
-  RACE READ: UNBLOCKED, NOT READ, population RULED-CONDITIONAL** -- with **DA 65
-  and REV 44 verifying the two interim receipts INDEPENDENTLY**, *the corroboration
-  axis spent where a ruling turns on it.*
-  MEASURED BEFORE THIS SENTENCE: flags 750 -> 758, flag_provenance 295 -> 303,
-  tasks 19; 173 CHECKED, 130 RELAYED, **455 UNMARKED -- unchanged for the
-  thirteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2927,6 +2926,155 @@ flags:
                              # The reviewer's own resources stated rather than implied:
                              # 18.45 s / 66 MB and 22.92 s / 22 MB, **the lock never
                              # taken, no sealed file opened.**
+  THE_DIGEST_CHECK_IS_A_PREFIX_COMPARE_AND_A_ONE_CHARACTER_DIGEST_ADMITS: I-DROVE-ALL-FOUR-CASES
+                             # CHECKED 2026-09-06T08:13:30Z at `phase2_arms.py:480` and
+                             # driven by me on four inputs.
+                             # The line is **`if not got.startswith(expect_sha256.lower()
+                             # [:16]):`** -- *equality is never tested.* **Driven against
+                             # the real tape digest:** the true digest ADMITS (correct);
+                             # **a right-16-wrong-48 ADMITS; a 16-char stub ADMITS; and a
+                             # ONE-CHARACTER `"9"` ADMITS** -- all four with
+                             # `digest_verified_at_load: True`.
+                             # *Because `[:16]` truncates the EXPECTED value to itself
+                             # when it is shorter, and a one-character prefix matches
+                             # almost anything.*
+                             # ***A 256-bit digest reduced to a 64-bit prefix would still
+                             # be a check. This reduces it to whatever the caller
+                             # supplies*** -- **the guarantee is not weakened, it is
+                             # handed to the party being checked.**
+  A_DISPLAY_CONVENTION_LEAKED_INTO_THE_COMPARISON: THE-REFUSAL-MESSAGE-TRUNCATES-FOR-READABILITY-AND-SO-DID-THE-CHECK
+                             # CHECKED 2026-09-06T08:13:30Z at the same lines, and this is
+                             # the shape rather than the instance.
+                             # The refusal message reads *"digests {got[:16]}…, not the
+                             # expected {expect_sha256[:16]}…"* -- **truncating to 16
+                             # hex is exactly right for a MESSAGE.** ***And the comparison
+                             # one line above truncates the same way, for what must have
+                             # been the same reason -- at which point it stops being a
+                             # comparison.***
+                             # **THIS IS A NEW SHAPE FOR THE CATALOGUE.** Not a control
+                             # that cannot FAIL (rule 16), not one that cannot RUN
+                             # (SEAT_PROTOCOL 17), not one testing the wrong quantity
+                             # (round 131's estimand class): ***a control whose COMPARISON
+                             # INHERITED A FORMATTING DECISION.*** *The display convention
+                             # is correct, the check is wrong, and they are the same three
+                             # characters.*
+                             # *And it is invisible to every test that supplies a real
+                             # digest -- which is every honest test.*
+  THE_COMMENT_ABOVE_THE_CALL_CLAIMS_THE_PROPERTY_THE_CALL_OMITS: MY-OWN-ADDITION-TO-THE-FILING
+                             # CHECKED 2026-09-06T08:13:30Z at `be_daybook_build.py:402-406`,
+                             # and **I have not seen this half stated anywhere.**
+                             # REV 45 §1.3 establishes that BE's call passes **neither
+                             # `day` nor `expect_sha256`**, so the load-side check never
+                             # fires -- **I confirmed it: zero matches for either keyword
+                             # in the call.**
+                             # ***AND THE COMMENT THREE LINES ABOVE THAT CALL READS:
+                             # "ITEM 1 IS IN: the index is built from THE DAY'S OWN TAPE,
+                             # WITH ITS DIGEST VERIFIED AT LOAD."***
+                             # **So the comment asserts the exact property the line
+                             # beneath omits the parameter for.** *This is CLAUDE.md rule
+                             # 10's family -- a printed conclusion contradicted by what
+                             # sits beside it -- but in a SOURCE COMMENT rather than a
+                             # receipt, where no instrument in this programme looks.*
+                             # **And the front door DOES run** (`assert_day_tape(day,
+                             # coin)` at :388, before the call at :406): ***check #1 runs,
+                             # check #2 -- which design v12 says is THE POINT -- does
+                             # not.*** *A reader auditing this file finds a comment
+                             # claiming both.*
+  THE_BOOK_IS_BUILT_AND_VERIFIED_AT_THE_ARTIFACT_AND_ITS_STANDING_IS_NOT_DECIDED: STANDING-PENDING-REV-46
+                             # CHECKED 2026-09-06T08:13:30Z at R-594(A); the sha I checked
+                             # at the receipt last round.
+                             # **VERIFIED AT THE ARTIFACT:** 290,758,834 bytes, `sha256` =
+                             # `readback_sha256` = **the digest the coordinator recomputed
+                             # ON DISK**, taken from the buffer as written (B-1); 247
+                             # windows, 313,114 reference generations; **both pinned heads
+                             # at their pinned thetas over the SAME 297,379 keys with
+                             # `sets_are_equal: true` ASSERTED**; coverage 0.9497 with
+                             # **15,735 uncovered as a COUNTED STATUS**;
+                             # `state_join_failed: 0` on all 42 chunks; every stage budget
+                             # held; **asm's peak PUBLISHED at 5.317 GB**; 2,115.7 s.
+                             # Inputs pinned to the day's own tape and fragment, **both
+                             # `digest_recomputed_at_read_time`, neither the consumed-era
+                             # constant.**
+                             # ***AND THE STANDING IS EXPLICITLY NOT DECIDED:*** the book
+                             # was assembled **with the front-door check only, the stream
+                             # itself unverified -- the weaker of the two call forms R16
+                             # offers.** Put to REV 46; **GO waits on it.**
+                             # *A book that exists, reproduces its own digest, and whose
+                             # right to be used is an open question is a distinction this
+                             # programme can now hold -- and could not have three weeks
+                             # ago.* **Flag word: BUILT, VERIFIED-AT-THE-ARTIFACT,
+                             # STANDING-PENDING-REV-46.**
+  BEs_ROUND_49_BUDGET_WAS_AN_ARTEFACT_OF_INDEXING_THE_WRONG_TAPE: THE-8.713-NO-I-SWEPT-AT-136-DISSOLVES
+                             # CHECKED 2026-09-06T08:13:30Z at R-594(A), and it corrects a
+                             # number I carried.
+                             # **The index costs 3.190 GB, not 5.971** -- because it now
+                             # indexes **the day's own tape** rather than v5's. ***So the
+                             # "NO" that budget computed -- 8.713 GB against a cap of 8,
+                             # which I swept at round 136 as the assembly's binding
+                             # constraint -- was an ARTEFACT OF INDEXING THE WRONG
+                             # TAPE.***
+                             # **The real total came in at 5.317 GB with every stage
+                             # inside budget.** *I recorded the 8.713 correctly, from a
+                             # module I drove myself, and the module was measuring a
+                             # configuration that no longer applied.*
+                             # ***THE LESSON IS NOT "CHECK HARDER" -- I DID CHECK, BY
+                             # IMPORTING THE MODULE AND CALLING IT.*** **It is that a
+                             # budget is a statement about a CONFIGURATION, and I recorded
+                             # the number without recording which configuration it
+                             # assumed.** *The `what_DE_cannot_rule` field I praised at
+                             # round 133 for naming its own scope is exactly what this
+                             # number lacked.*
+  DAs_REAL_DAY_PATH_IS_NOT_BUILT_AND_THE_READ_ORDER_NAMES_A_STEP_THAT_CANNOT_RUN: A-SCHEDULE-FINDING-BEFORE-09-09
+                             # RELAYED from REV 45 §4 2026-09-06T08:13:30Z.
+                             # `verify_real_day` **refuses unconditionally** after the
+                             # gate check and `main()` **accepts only `--selftest`** --
+                             # ***so the read order I swept at round 137, which puts DA's
+                             # verifier before any number is quoted, names a step that
+                             # cannot currently run.***
+                             # **Declared as such by DA rather than found by the
+                             # reviewer** -- *a seat naming the gap between what a runbook
+                             # says it will do and what its code can do, before the date
+                             # arrives.* **A schedule finding, and it has a date: 09-09.**
+                             # *The read order was written before the read existed, which
+                             # I praised as the only time it could be written honestly.
+                             # The cost of that timing is exactly this: an order can name
+                             # a step nobody has built yet.* **Both halves are true and
+                             # the second does not retract the first.**
+  THE_READ_ORDER_GAINS_FOUR_LIMITS_OF_WHAT_THE_VERIFIER_WILL_NEVER_VERIFY: INCLUDING-TWO-IMPLEMENTATIONS-OF-A-WRONG-SPEC
+                             # RELAYED from REV 45 §4 2026-09-06T08:13:30Z.
+                             # Four stated limits now in the read order: **D(E−R); the
+                             # BOOK's construction; an error in the DECLARATION itself --
+                             # "two implementations of a wrong spec agree"; and a sealed
+                             # receipt's economics.**
+                             # ***THE THIRD IS THE ONE THAT MATTERS AND IT IS THE LIMIT OF
+                             # THE CORROBORATION I HAVE BEEN CELEBRATING.*** At round 139
+                             # I recorded two independent implementations agreeing exactly
+                             # and quoted the code's own "agreement is only evidence
+                             # because neither imported the other's statistic." **This
+                             # names the remaining hole: neither imported the other, and
+                             # BOTH read the same declaration.** *Independence in
+                             # implementation does not buy independence from the spec.*
+                             # **A verifier that publishes what it will NEVER verify is
+                             # doing the thing I have asked of flags all session** --
+                             # stating the scope beside the claim.
+  DA_66s_CONTAINER_CENSUS_CAUGHT_A_LEAF_BOTH_NAME_NETS_MISS: AND-THE-SMOKE-RAN-AT-97-36-PERCENT-OF-ITS-CAP
+                             # RELAYED from Q-DA-288 2026-09-06T08:13:30Z.
+                             # The container census reproduces **1,759 leaves / 1,167
+                             # numeric / 1,119 list-resident** and **catches a PLANTED
+                             # LIST LEAF that both name-based nets miss.** ***A census by
+                             # CONTAINER rather than by NAME is the answer to the
+                             # redactor-and-scanner blind spot from round 136*** -- *names
+                             # can be chosen unluckily; a leaf is a leaf.*
+                             # **AND THE RESOURCE FACT IS THE ONE TO CARRY: the E2-A smoke
+                             # ran at 7.7888 GiB of 8 -- 97.36% of its cap** -- with
+                             # **anon 1.11 vs file 5.17** and **max 0 / oom 0.** *Most of
+                             # it is page cache, which is why it survived; an anon-heavy
+                             # run at that fraction would have been killed silently, and
+                             # the 6.0 GiB cap DA chose for the day read (75% of 8) exists
+                             # because a cgroup kill leaves nothing written.*
+                             # Wall 631.8 s explained as **100.55 + 262.35 + 268.9**, and
+                             # the `0/261` line. *A total decomposed into named stages is
+                             # checkable; a total is not.*
   THE_09_03_BOOK_IS_ASSEMBLED_AND_THE_SHA_CONDITION_I_SET_IS_MET: THE-BLOCKER-OF-FIFTEEN-ROUNDS-IS-CLEARED
                              # CHECKED 2026-09-06T08:10:20Z at the artifacts, at my
                              # commit-time re-read. ***THE 09-03 BOOK IS BUILT.***
@@ -17010,6 +17158,80 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 140, 2026-09-06T08:13:30Z ------------------------------
+  THE_DIGEST_CHECK_IS_A_PREFIX_COMPARE_AND_A_ONE_CHARACTER_DIGEST_ADMITS:
+    prov: CHECKED
+    artifact: live/pm_research/phase2_arms.py
+    as_of: 2026-09-06T08:13:30Z
+    said: >-
+      the guard reads `if not got.startswith(expect_sha256.lower()[:16]):`, so
+      equality is never tested. Driven by me against the real tape digest
+      9de88da9...: the true digest admits, a right-16-wrong-48 admits, a 16-char
+      stub admits, and a one-character "9" admits -- all four would emit
+      digest_verified_at_load True, because [:16] truncates the expected value to
+      itself when it is shorter and a one-character prefix matches almost
+      anything.
+  A_DISPLAY_CONVENTION_LEAKED_INTO_THE_COMPARISON:
+    prov: CHECKED
+    artifact: live/pm_research/phase2_arms.py
+    as_of: 2026-09-06T08:13:30Z
+    said: >-
+      the refusal message reads "digests {got[:16]}..., not the expected
+      {expect_sha256[:16]}...", where truncating to 16 hex is correct for a
+      message; the comparison one line above truncates the same way, at which
+      point it stops being a comparison. A distinct shape from a control that
+      cannot fail, one that cannot run, or one testing the wrong quantity: a
+      control whose comparison inherited a formatting decision, invisible to every
+      test that supplies a real digest.
+  THE_COMMENT_ABOVE_THE_CALL_CLAIMS_THE_PROPERTY_THE_CALL_OMITS:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T08:13:30Z
+    said: >-
+      the call at line 406 is R.build_tape_index(splits, tape_path=inp["tape"]
+      ["path"]) with zero matches for day= or expect_sha256= in the surrounding
+      lines, so the load-side check never fires; and the comment three lines above
+      reads "ITEM 1 IS IN: the index is built from THE DAY'S OWN TAPE, with its
+      digest verified at load". The front door assert_day_tape(day, coin) does run
+      at line 388, so check #1 runs and check #2 does not, while the comment
+      claims both.
+  THE_BOOK_IS_BUILT_AND_VERIFIED_AT_THE_ARTIFACT_AND_ITS_STANDING_IS_NOT_DECIDED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T08:13:30Z
+    said: >-
+      R-594(A) verifies the book at be_daybook_receipt_20260903_btc.json: 290,758,834
+      bytes with sha256 equal to readback_sha256 equal to the digest recomputed on
+      disk; 247 windows, 313,114 reference generations; both pinned heads at their
+      pinned thetas over the same 297,379 keys with sets_are_equal asserted;
+      coverage 0.9497 with 15,735 uncovered as a counted status;
+      state_join_failed 0 on all 42 chunks; every stage budget held; asm's peak
+      published at 5.317 GB; 2,115.7 s. And it states that whether the book stands
+      for the smoke is not decided, because it was assembled with the front-door
+      check only, the stream unverified -- put to REV 46, with GO waiting on it.
+  BEs_ROUND_49_BUDGET_WAS_AN_ARTEFACT_OF_INDEXING_THE_WRONG_TAPE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T08:13:30Z
+    said: >-
+      R-594(A) records BE's correction of its own round-49 budget: the index costs
+      3.190 GB rather than 5.971 because it now indexes the day's tape rather than
+      v5's, so the 8.713 GB "NO" that budget computed -- which I swept at round 136
+      as the assembly's binding constraint after driving the module myself -- was an
+      artefact of indexing the wrong tape. The real total was 5.317 GB with every
+      stage inside budget.
+  DAs_REAL_DAY_PATH_IS_NOT_BUILT_AND_THE_READ_ORDER_NAMES_A_STEP_THAT_CANNOT_RUN:
+    prov: RELAYED
+    from: REV 45 section 4
+    as_of: 2026-09-06T08:13:30Z
+  THE_READ_ORDER_GAINS_FOUR_LIMITS_OF_WHAT_THE_VERIFIER_WILL_NEVER_VERIFY:
+    prov: RELAYED
+    from: REV 45 section 4
+    as_of: 2026-09-06T08:13:30Z
+  DA_66s_CONTAINER_CENSUS_CAUGHT_A_LEAF_BOTH_NAME_NETS_MISS:
+    prov: RELAYED
+    from: Q-DA-288
+    as_of: 2026-09-06T08:13:30Z
   # --- MEM round 139, 2026-09-06T08:06:40Z ------------------------------
   THE_09_03_BOOK_IS_ASSEMBLED_AND_THE_SHA_CONDITION_I_SET_IS_MET:
     prov: CHECKED
