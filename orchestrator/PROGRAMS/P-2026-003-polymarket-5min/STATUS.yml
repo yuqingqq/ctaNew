@@ -63,6 +63,100 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T07:27:43Z (MEM ROUND 135 -- R-587 AND R-588 SWEPT AS ENTRIES. STATE
+  ONLY. FOR THE FIRST TIME TODAY ONE OF THE THREE TESTS IS EXECUTING ON REAL DATA.
+  (1) **THE RACE READ IS UNBLOCKED AND IT IS NOT READ, AND THOSE ARE NOT THE SAME
+  WORD.** The estimand is computable, the ruling is made, the reader is being
+  retargeted -- **and BE 54 must land it on the FEED, REV 44 must drive it, and the
+  coordinator must open on GO.** *This file has carried FOUR states for this one
+  question in twelve rounds -- approved-to-open, blocked-on-reader,
+  blocked-at-declaration, unblocked -- and each transition changed what a reader
+  should DO.* **The five days are consumed by the opening act, not by the ruling.**
+  (2) **THE RULING IS OPTION A AND IT IS CHOSEN BY A RULE, NOT A PREFERENCE.**
+  `option: "A -- an estimand computable from the sealed bytes AS THEY ARE, against
+  the FEED"`, MATCHED_VOLUME primary, `re_seal_NOT_recommended: true` -- **and the
+  `why` field is the point: "it is the one with a RULE cited (CLAUDE.md rule 7:
+  controls matched on the DECISION VARIABLE)".** ***Between two candidate
+  statistics the tiebreak was not which is better but which one a standing rule
+  already selects -- the difference between a choice and a derivation.*** And the
+  re-seal is refused **on its merits, not its cost**: "not needed", the ~5 x 23 min
+  never weighed.
+  (3) **v3 NAMES A SECOND CONTRADICTION NOBODY HAD STATED:** "v2 declares the
+  pairing BY_THRESHOLD; **the interim declares BY_THRESHOLD explicitly NOT
+  primary**". *So the file inversion I swept last round was not v2's only
+  self-contradiction, and the second points the same way: v2 inherited the
+  interim's vocabulary while inverting its choices.* **BY_THRESHOLD is REPORTED,
+  never PRIMARY** -- *a convention kept visible and demoted is safer than one
+  deleted.*
+  (4) **AND THE WHOLE QUESTION WAS SETTLED WITHOUT OPENING A SEALED DAY, BECAUSE
+  THE FEED WAS READ AT THE WRITER.** `read_at_the_writer_not_by_opening: true`,
+  `source: be_forward_day.FEED_FIELDS`, the writer's own comment quoted. ***Under
+  rule 11 an opened day is consumed whether or not the read was useful*** --
+  reading the PRODUCER is what made an estimand adjudicable at zero cost. **The
+  same move failed the other way at my round 129**, when I relayed a receipt's
+  summary field instead of its rows: *read the writer, not the summary; read the
+  writer, not the sealed bytes -- one discipline, two directions.*
+  (5) **THE TWO MEM LEDGER ITEMS WERE ALREADY CLOSED, AND I NAME THE ROUNDS: the
+  three STALE flags at ROUND 125** (each `SUPERSEDED-IN-BAND` with a re-measurement
+  BY SYMBOL; `evaluate_predicates` left **UNVERIFIED rather than withdrawn**) **and
+  the unauditable-flag rule at ROUND 131**, closed as an INSTRUMENT rather than an
+  argument -- `new_flags_without_provenance`, three call sites into `audit()`,
+  falsifiers both directions, **a positive control that plants a flag into the LIVE
+  file**, and it has fired on my own batches twice. **Neither was open at 134;
+  neither is closed by this round.** ***The ledger recorded a communication gap,
+  not a disagreement: closure landed on my surface and the ledger was built from
+  the reviewer's own filings*** -- which is an argument FOR the ledger.
+  (6) **DA FOUND TWO DEFECTS IN ITS OWN INSTRUMENTS BY ENUMERATION BEFORE
+  PUBLISHING**, and the first is a shape I named yesterday in another seat: **the
+  leak scan shared its blind spot with the REDACTOR** -- eff_RT under names no
+  marker matched, so the thing that redacts and the thing that checks the redaction
+  were blind together. ***Two instruments with one blind spot is not redundancy***
+  -- **the identical form as the lock predicate's "two independent mechanisms", one
+  hour later, in a different seat.** Fixed with a numeric-leaf census that **fails
+  CLOSED on economic-shaped names.** And **a commit id rewritten out from under a
+  declaration by another seat's rebase** (`cd212f9` -> `acd393a`, identical bytes)
+  -- **both declaration and runner now cite by CONTENT DIGEST.** *A sha naming a
+  commit is a name another seat can change; a digest of the content is not.*
+  (7) **RULE 21 GAINED ITS INTEGRATION PATH, AND IT IS THE CASE I HIT AT ROUND
+  132:** "otherwise LEAVE the commit, REPORT it as stranded, and continue -- the
+  coordinator rebases stranded commits at the first clean-tree moment". ***That is
+  exactly what I did and reported rather than resolved, and my batch was rebased
+  intact.*** **And the cites resolve** -- R-586 and R-588 both exist. *At round 129
+  I filed the mirror: rule 21 citing R-576 before R-576 existed. The protocol has
+  now been amended WITH its entries rather than ahead of them.*
+  (8) **THE THREE TESTS, DRIVEN BY ME: the sealed BTC smoke is RUNNING**
+  (`da63smoke.scope`, 619 s, 1.62 GB, `heavy=True locked=True`, "none heavy without
+  the lock"); **the 09-03 BOOK is NOT ASSEMBLED** (BE 54, both halves of the
+  blocker now existing); **the RACE READ is UNBLOCKED, NOT READ.** ***For the first
+  time in this programme's day one of the three is EXECUTING on real data under the
+  lock*** -- and the honest summary changes by exactly one word: **the machinery is
+  close, one test is running, and no test has produced a number.**
+  (9) **AND THE COMMIT-TIME RE-READ CAUGHT THE SMOKE FINISHING.** Receipt
+  `p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json` at 07:28:45Z:
+  **2,849,388 KiB against a 6.0 GiB cap, a `sealed_payload`, and
+  `the_arm_that_ran: MIN_SIZE_NOT_THE_E2A_GATE`.** *I read the top-level keys and
+  did NOT open the sealed payload.* ***So the first of the three tests has RUN TO
+  COMPLETION and still has no number to read*** -- the arm is labelled NOT the gate
+  (R-567(C) holding at the artifact) and the gate is read only at 14 post-boundary
+  days. **A completed run whose economics stay sealed is this programme's answer to
+  "the machinery works and the population does not yet exist"** -- *the shape I
+  recorded as a RULING three rounds ago, now standing as an ARTIFACT.*
+  (10) **AND R-589 LANDED TWO MINUTES BEFORE MY RE-READ.** BE 54's reader computes
+  MATCHED_VOLUME **through the interim's OWN CODE, 10/10 reproduced** -- *which is
+  what makes "the same statistic the interim read" checkable rather than asserted*
+  -- and **the assembly REFUSED because the heavy lock was held by DA's smoke,
+  "the correct act."** ***Rule 20 working BETWEEN SEATS for the first time today:
+  one seat's heavy run blocked another's, and the blocked seat refused rather than
+  waiting or proceeding.*** *The instrument owed at R-575(C) is now enforcing a
+  real sequencing decision rather than certifying an empty room.* **And one gap the
+  coordinator closed: v3 PINNED NO FEED DIGEST** -- ***the declaration that
+  retargeted the read TO the feed did not pin the feed's digests, the exact
+  protection v2 carried for the scores.*** *Nothing about v3 looked incomplete,
+  which is why it had to be noticed.*
+  MEASURED BEFORE THIS SENTENCE: flags 731 -> 740, flag_provenance 276 -> 285,
+  tasks 19; 161 CHECKED, 124 RELAYED, **455 UNMARKED -- unchanged for the eleventh
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
+  flags vs HEAD 0 without provenance.)
   2026-09-06T07:17:23Z (MEM ROUND 134 -- R-586 AND THE BE-51 FILING SWEPT. STATE
   ONLY. THE ROUND'S FINDING IS A PATTERN THAT IS NOW NAMEABLE, AND ONE OF ITS
   THREE INSTANCES IS MINE.
@@ -247,99 +341,6 @@ updated: >-
   tasks 19; 147 CHECKED, 121 RELAYED, **455 UNMARKED -- unchanged for the ninth
   round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
   flags vs HEAD 0 without provenance.)
-  2026-09-06T06:57:19Z (MEM ROUND 132 -- R-583 SWEPT, PLUS A CURRENCY AUDIT ON MY
-  OWN FILE. STATE ONLY, AND THE CURRENCY DEFECT IS MINE AND IS NOT THE ONE THE
-  QUESTION ANTICIPATED.
-  (1) **THE QUESTION ASKED WAS CLEAN: NO FLAG SAYS THE BOOK NEEDS ONLY THE
-  FRAGMENT.** Every mention from round 127 forward carries both inputs; the
-  round-127 "a MISSING INPUT" hits are historically scoped to the fragment
-  refusal. ***The two-input correction from REVIEW_BE48 A.3 propagated cleanly on
-  its first pass and has not rotted.***
-  (2) **AND THE METHOD IS HALF THAT ANSWER. MY FIRST SCAN WAS VALUE-ONLY AND
-  COULD NOT SEE FLAG BODIES** -- they are YAML COMMENTS and `safe_load` discards
-  them. ***A clean result from it would have been a silent zero over most of the
-  file*** -- the folded-scalar defect of round 126 in a second shape. Re-scanned on
-  RAW TEXT with a positive control (7 hits / 6 hits).
-  (3) **THE DEFECT THAT IS THERE IS MINE: "BOTH MISSING INPUTS NOW EXIST FOR ONE
-  DAY" IS FALSE AT THIS MOMENT.** The 09-03 tape on disk is
-  `...**WRONG_SPLIT**.json` (991,078,272 B, 06:31:21Z) and **the corrected tape
-  does not exist** -- BE 51's rebuild is 1,238 s in. **The count of existing
-  correct inputs is ONE.** ***And the claim was TRUE when I wrote it: the artifact
-  existed and was ruled defective afterwards.*** **This is the one failure mode my
-  new-flag instrument cannot catch -- the flag was cited correctly and the world
-  moved.** *The distinction to carry: a FILE CENSUS and a READINESS CLAIM are
-  different statements, and the artifact that existed is precisely the one being
-  replaced.*
-  (4) **AND BE RENAMED RATHER THAN OVERWROTE.** The superseded 991 MB tape sits
-  under a name that says what is wrong with it. *Rule 13 is written about receipts;
-  this is the same discipline applied to a data file by a seat that was not asked
-  to.* **A stale path now fails on a NAME instead of succeeding on WRONG ROWS**, and
-  a guard was added so the assembly cannot run against it.
-  (5) **DE 79 CLOSED THE THREE WIRING ITEMS -- 76 / 115 / 18, DRIVEN BY ME AT A
-  TREE I CHECKED CLEAN FIRST** -- and **the item I conceded last round is closed at
-  the code**: the runner now carries BOTH forms, **FLOCK entries on the lock's
-  INODE from `/proc/locks` AND a fresh-fd `LOCK_EX|LOCK_NB` that must FAIL.**
-  *Two independent mechanisms for one predicate, neither satisfiable by merely
-  having the file open.* **REV 41 drives them and states whether `--day` remains
-  approved** -- *the approval is not assumed to survive the change that answered
-  its conditions.*
-  (6) **DE REPORTS ALL THREE INSTRUMENTS IT BUILT THE ROUND BEFORE WERE WRONG.**
-  *The second seat today to report its own batch wrong (DA's four at R-576).* **And
-  the pattern worth naming: the instruments that fail are the ones built to satisfy
-  a REVIEW ITEM, because they are built against the WORDS of the item rather than
-  against the property** -- an fd check satisfies "prove the lock is held" in words
-  and not in fact.
-  (7) **AND DE'S OWN DEFECT IS A LIVE HAZARD IN MY METHOD: a 4-space anchor
-  matched 8-space lines as SUBSTRINGS and the file stopped parsing.** ***I edit
-  this file by exact-string anchors every round.*** The inherited rule -- anchor to
-  strings, never slice by index -- **protects against one hazard and creates this
-  one.** *What already protects me, stated so it is not luck: every edit asserts
-  `count(anchor) == 1` before replacing and every write is followed by a
-  `yaml.safe_load`; both have caught real anchor collisions this session.* **What I
-  ADD: an anchor must be unambiguous about INDENT, not only about text -- a bare
-  key fragment is a substring of its own deeper copies.**
-  (8) **THE SMOKE CHAIN IS FIVE LINKS AND LINK ONE IS RUNNING:** tape rebuild ->
-  assembly -> book -> the reviewer's filing -> GO. `be_gate1_state_tape.py`, pid
-  2945533, 1,238 s, 2,134,456 KiB, and the slice audit reads **one scope,
-  heavy=True locked=True** -- driven by me. *BE's own lock probe had matched the
-  WRONG PID and was corrected -- the third lock instrument today to be wrong in its
-  first form.*
-  (9) **AND THE COMMIT-TIME RE-READ CAUGHT TWO THINGS, ONE OF THEM A USER RULING.**
-  **(a) The corrected tape APPEARED** -- `phase2_state_tape_gate1_20260903_btc
-  .json`, 07:01:11Z, **991,078,272 bytes, EXACTLY the `.WRONG_SPLIT` byte count**,
-  with the builder STILL RUNNING. *I do not claim completion and a size match is
-  not a content match.* ***But an identical byte count points at the unruled
-  question: if the corrected tape is the same size, the split correction moved
-  LABELS not ROWS -- the REVIEWER's reading rather than the coordinator's.*** Three
-  readings, still unruled, and the first physical evidence bears on it; **I record
-  the observation with its limits and rule nothing.**
-  **(b) A USER RULING landed at 06:59Z, two minutes before my re-read: "We can
-  focus on btc for now, don't have to extend to other symbols."** P-003 Gate-1 is
-  already BTC-only; **E2-A's sealed smoke moves ADA/DOGE -> BTCUSDT**, v7 declared
-  over BTC, the twelve-symbol census standing as CONTEXT, the gate read on BTC at
-  14 post-boundary days. ***AND IT SUPERSEDES MY OWN ICP FRAMING:*** I carried "the
-  honest end is STATED, not unresolved" from round 129; **the cell is now DEFERRED,
-  not resolved, with its machinery kept DECLARED for when scope widens.**
-  *Deferring a cell with its instruments already declared is not dropping it, and
-  that is what makes the deferral reversible.* E2.0's ADA result and the race read
-  are unaffected.
-  (10) **AND THE BATCH COULD NOT BE PUSHED: THE SHARED TREE IS DIVERGED.** 1 ahead
-  / 1 behind on DISJOINT file sets -- local-only `cd212f9` (DA's v7 emitter, in NO
-  remote branch) against origin-only `9d15e35` (BE 51). ***I do not resolve it:
-  the verbs are not mine (rule 21 forbids rebase; merge is not permitted either)
-  and the commit at risk is ANOTHER SEAT'S AND UNPUSHED*** -- losing it would be
-  the orphan class a third time. **I commit my four files so they cannot be swept
-  by another seat's pathspec commit (which cost me my Q-row at round 128), attempt
-  the push, and REPORT THE REFUSAL** -- rule 21's own sequence, which anticipates
-  a refused push and therefore anticipates the commit. **Fourth shared-tree
-  incident today; one root, and it has now failed in each of the three ways a git
-  tree can.**
-  MEASURED BEFORE THIS SENTENCE: flags 706 -> 716, flag_provenance 251 -> 261,
-  tasks 19; 140 CHECKED, 121 RELAYED, **455 UNMARKED -- unchanged for the eighth
-  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; **the
-  new-flag instrument fired on this round's seven flags before their entries
-  existed (7 findings, exit 1) and cleared to 0 once written -- its second
-  consecutive live positive control.**)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2803,6 +2804,213 @@ flags:
                              # family: a parse that reads the field it wants and not the
                              # field that qualifies it.* **REV 41's 2.6; routed with the
                              # exclusivity item.**
+  THE_RACE_READ_IS_UNBLOCKED_AND_IT_IS_NOT_READ: TWO-GATES-REMAIN-REV-44-THEN-THE-OPENING-ACT
+                             # CHECKED 2026-09-06T07:27:43Z at R-588 and declaration v3, and
+                             # **the two words are not the same word.**
+                             # **UNBLOCKED** -- the estimand is computable from what was
+                             # sealed, the ruling is made, the reader is being retargeted.
+                             # **NOT READ** -- **BE 54 must land the reader on the FEED**
+                             # (the five feed digests pinned BEFORE the read;
+                             # MATCHED_VOLUME via `load_two_arm_feed`; the post-read
+                             # digest recompute **on the bytes parsed**; falsifiers on a
+                             # synthetic two-arm feed of the writer's shape), **then REV
+                             # 44 drives it, then the coordinator opens on GO.**
+                             # *I write both words because this file has carried four
+                             # different states for this one question in twelve rounds --
+                             # approved-to-open, blocked-on-reader, blocked-at-
+                             # declaration, unblocked -- and each transition changed what
+                             # a reader should DO.* **"Unblocked" is not "read", and the
+                             # five days are consumed by the opening act, not by the
+                             # ruling.**
+                             # EARLIER VALUE (rule 13):
+                             # UNBLOCKED-AT-07-22Z-v2-HAD-THE-TWO-FILES-BACKWARDS
+  THE_RULING_IS_OPTION_A_AND_IT_IS_CHOSEN_BY_A_RULE_NOT_A_PREFERENCE: MATCHED_VOLUME-IS-THE-ONE-WITH-A-RULE-CITED
+                             # CHECKED 2026-09-06T07:27:43Z at
+                             # `be_race_read_declaration_v3.json`, field by field.
+                             # **`RECOMMENDATION.option` = "A -- declare an estimand
+                             # computable from the sealed bytes AS THEY ARE, against the
+                             # FEED"; `primary_statistic_recommended` = MATCHED_VOLUME;
+                             # `re_seal_NOT_recommended` = true.**
+                             # ***AND THE `why` FIELD IS WHY THIS IS A RULING RATHER THAN
+                             # A PREFERENCE:*** "it is the one with a RULE cited
+                             # (**CLAUDE.md rule 7: controls matched on the DECISION
+                             # VARIABLE**)". *Between two candidate statistics the
+                             # tiebreak was not which is better but which one a standing
+                             # rule already selects -- that is the difference between a
+                             # choice and a derivation.*
+                             # **`why_not` disposes of the alternative on its merits, not
+                             # its cost:** the ~5 x 23 min re-seal "is not needed: every
+                             # field the est[imand names is present]". *A cheaper option
+                             # refused because it is unnecessary rather than because it is
+                             # expensive.*
+  v3_NAMES_A_SECOND_CONTRADICTION_THAT_NOBODY_HAD_STATED: BY_THRESHOLD-IS-DECLARED-EXPLICITLY-NOT-PRIMARY
+                             # CHECKED 2026-09-06T07:27:43Z at v3's
+                             # `RECOMMENDATION.the_second_contradiction_named`.
+                             # **"v2 declares the pairing BY_THRESHOLD; the interim
+                             # declares BY_THRESHOLD explicitly NOT primary."**
+                             # *So the file/estimand inversion I swept last round was not
+                             # v2's only self-contradiction -- there is a second, about
+                             # the PAIRING, and it points the same way: v2 inherited the
+                             # interim's vocabulary while inverting its choices.*
+                             # **BY_THRESHOLD is REPORTED, never PRIMARY.** *A convention
+                             # kept visible and demoted is safer than one deleted: a
+                             # reader who remembers v2 finds it and finds its rank.*
+  THE_FEED_WAS_READ_AT_THE_WRITER_NOT_BY_OPENING_IT: THE-DISCIPLINE-THAT-SETTLED-IT-WITHOUT-CONSUMING-A-DAY
+                             # CHECKED 2026-09-06T07:27:43Z at v3's `feed` block.
+                             # **`read_at_the_writer_not_by_opening: true`**, with
+                             # `source: be_forward_day.FEED_FIELDS`, `protocol:
+                             # BE_FORWARD_METRIC_FEED_V1`, 11 fields, and **the writer's
+                             # own words quoted: "The feed the action-level estimand
+                             # consumes. Named here so a checker can assert the driver
+                             # […]"**.
+                             # ***THIS IS THE WHOLE REASON THE QUESTION COULD BE SETTLED
+                             # AT ALL.*** Establishing what the sealed files contain by
+                             # reading the PRODUCER rather than the ARTIFACT is what let
+                             # BE, the reviewer and the coordinator adjudicate an estimand
+                             # **without opening a sealed day** -- *and under rule 11 an
+                             # opened day is consumed whether or not the read was
+                             # useful.*
+                             # **The same move failed the other way at round 129**, when I
+                             # relayed a receipt's summary field instead of its rows.
+                             # *Read the writer, not the summary; read the writer, not the
+                             # sealed bytes -- one discipline, two directions.*
+  MY_TWO_MEM_LEDGER_ITEMS_WERE_ALREADY_CLOSED_AT_ROUNDS_125_AND_131: NEITHER_NEEDED_CLOSING_THIS_ROUND
+                             # CHECKED 2026-09-06T07:27:43Z at my own file and instrument,
+                             # because the dispatch asks and a ledger about my surface is
+                             # mine to answer with rounds, not assurances.
+                             # **(1) THE THREE STALE FLAGS -- CLOSED AT ROUND 125.** All
+                             # three carry `SUPERSEDED-IN-BAND` with re-measurements **by
+                             # SYMBOL**: `EXPECTED_CHECKS` 66 not 52; G = 5 by R-529(A)
+                             # with the independent count 3; `evaluate_predicates` moved,
+                             # so that finding is **UNVERIFIED rather than withdrawn.**
+                             # **(2) THE UNAUDITABLE-FLAG RULE -- CLOSED AT ROUND 131**,
+                             # and closed as an INSTRUMENT rather than an argument:
+                             # `new_flags_without_provenance` exists and is wired into
+                             # `audit()` as a finding (3 call sites), with falsifiers both
+                             # directions and **a positive control that plants a flag into
+                             # the LIVE STATUS.yml.** *It fired on my own six flags at
+                             # round 131 and my own seven at round 132 before their
+                             # entries were written.*
+                             # **SO NEITHER WAS OPEN AT ROUND 134 AND NEITHER IS CLOSED BY
+                             # THIS ROUND.** ***What the reviewer's ledger recorded was
+                             # not a disagreement but a communication gap: closure landed
+                             # on my surface and the ledger was built from the reviewer's
+                             # own filings.*** *A per-seat ledger is only as current as
+                             # the last time that seat's file was read -- which is an
+                             # argument for the ledger, not against it.*
+  DA_FOUND_TWO_DEFECTS_IN_ITS_OWN_INSTRUMENTS_BEFORE_PUBLISHING: A-LEAK-SCAN-SHARING-ITS-BLIND-SPOT-WITH-THE-REDACTOR
+                             # RELAYED from R-588(C) 2026-09-06T07:27:43Z.
+                             # **(1) THE LEAK SCAN SHARED ITS BLIND SPOT WITH THE
+                             # REDACTOR:** `staleness_sensitivity.reading_A/B_*_bps` are
+                             # eff_RT at the gate row **under names no marker matched** --
+                             # so the thing that redacts and the thing that checks the
+                             # redaction were blind to the same names. ***Two instruments
+                             # with one blind spot is not redundancy*** -- **the identical
+                             # shape as the lock predicate's "two independent mechanisms"
+                             # that both missed exclusivity, in a different seat, one hour
+                             # later.** Fixed twice over, with a **numeric-leaf census
+                             # that fails CLOSED on economic-shaped names.**
+                             # **(2) A COMMIT ID REWRITTEN OUT FROM UNDER A DECLARATION**
+                             # by another seat's rebase (`cd212f9` -> `acd393a`, identical
+                             # bytes) -- **so both declaration and runner now cite by
+                             # CONTENT DIGEST.** *A sha that names a commit is a name that
+                             # another seat can change; a digest of the content is not.*
+                             # **And this is the second time today a citation moved under
+                             # an entry** -- the first was my own `867f647` correction
+                             # travelling entry to entry. *Same class, opposite cause:
+                             # there the address was copied, here the address was
+                             # rewritten.*
+                             # **Both found by ENUMERATION before anything was published**
+                             # -- which is what makes them self-found rather than caught.
+  RULE_21_GAINED_ITS_INTEGRATION_PATH_AND_IT_IS_THE_CASE_I_HIT_AT_ROUND_132: LEAVE-IT-REPORT-IT-THE-COORDINATOR-REBASES
+                             # CHECKED 2026-09-06T07:27:43Z at SEAT_PROTOCOL, with a
+                             # positive control (the grep fires on `flock`).
+                             # Rule 21 now reads: retry the push only with an EMPTY
+                             # status, "**otherwise LEAVE the commit, REPORT it as
+                             # stranded, and continue -- the coordinator rebases stranded
+                             # commits onto origin at the first clean-tree moment
+                             # (R-586/R-588; a retry can never fast-forward once a local
+                             # commit exists, and the shared tree is dirty for the length
+                             # of every MEM batch)**".
+                             # ***THAT IS EXACTLY WHAT I DID AT ROUND 132 AND REPORTED
+                             # RATHER THAN RESOLVED*** -- commit, attempt, refuse, report,
+                             # wait -- **and my batch was rebased intact by the
+                             # coordinator, as this clause now promises.** *The judgement
+                             # that the verbs were not mine is now the documented
+                             # procedure, and the clause names its own reason rather than
+                             # just its rule.*
+                             # **AND THE CITE RESOLVES, WHICH IS THE POINT WORTH MAKING:**
+                             # R-586 and R-588 both exist. *At round 129 I filed the
+                             # mirror of this -- rule 21 citing R-576 before R-576
+                             # existed. The protocol has now been amended WITH its
+                             # entries rather than ahead of them.*
+  THE_THREE_TESTS_AT_THIS_AS_OF_ONE_RUNNING_ONE_NOT_ASSEMBLED_ONE_NOT_READ: THE-SMOKE-COMPLETED-AT-MY-COMMIT-TIME-RE-READ-SEALED
+                             # SUPERSEDED-IN-BAND 2026-09-06T07:31:52Z. **THE E2-A SEALED BTC
+                             # SMOKE COMPLETED WHILE I WROTE.** Receipt
+                             # `p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json`
+                             # (07:28:45Z, 85,883 B): **`max_rss_kib` 2,849,388 against a
+                             # `memory_cap_gib` of 6.0**, a `sealed_payload` block, and
+                             # **`the_arm_that_ran: MIN_SIZE_NOT_THE_E2A_GATE`.**
+                             # *I read the top-level keys and did NOT open the sealed
+                             # payload; the receipt's own field names are sufficient and
+                             # the economics are sealed by design.*
+                             # **SO THE FIRST OF THE THREE TESTS HAS RUN TO COMPLETION --
+                             # AND STILL HAS NO NUMBER TO READ:** the arm is labelled NOT
+                             # the gate (R-567(C)'s ruling holding at the artifact), and
+                             # the gate itself is read only at 14 post-boundary days
+                             # (~09-09) under R-580's no-threshold-change ruling.
+                             # ***A completed run whose economics stay sealed is the
+                             # programme's answer to "the machinery works and the
+                             # population does not yet exist" -- and it is the shape I
+                             # recorded as a RULING three rounds ago now standing as an
+                             # ARTIFACT.***
+                             # EARLIER VALUE (rule 13): I-DROVE-THE-SLICE-AUDIT-MYSELF
+  BE_54s_READER_REPRODUCES_THROUGH_THE_INTERIMS_OWN_CODE_AND_v3_PINNED_NO_FEED_DIGEST: THE-ASSEMBLY-REFUSED-BECAUSE-THE-LOCK-WAS-HELD
+                             # CHECKED 2026-09-06T07:31:52Z at R-589, which landed two
+                             # minutes before my re-read.
+                             # **BE 54 VERIFIED: the reader is retargeted to the FEED and
+                             # computes MATCHED_VOLUME THROUGH THE INTERIM'S OWN CODE --
+                             # 10/10 reproduced under the coordinator's run -- and the
+                             # SEALED_scores stay sealed.** *Reproducing through the
+                             # producer's own code rather than a reimplementation is what
+                             # makes "the same statistic the interim read" checkable
+                             # instead of asserted.*
+                             # **AND THE ASSEMBLY REFUSED BECAUSE THE HEAVY LOCK WAS HELD
+                             # -- BY DA 63's SMOKE -- "the correct act."** ***Rule 20
+                             # working BETWEEN SEATS for the first time today: one seat's
+                             # heavy run blocked another's, the blocked seat refused
+                             # rather than waiting or proceeding, and BE 55 takes the book
+                             # on the next lock window.*** *The instrument I recorded as
+                             # owed at R-575(C) and driven at round 130 is now enforcing a
+                             # real sequencing decision rather than certifying an empty
+                             # room.*
+                             # **AND ONE GAP THE COORDINATOR CLOSED: v3 PINNED NO FEED
+                             # DIGEST.** ***The declaration that retargeted the read TO
+                             # the feed did not pin the feed's digests -- the exact
+                             # protection v2 carried for the scores.*** The five feed
+                             # files are now pinned by byte digest **before any read.**
+                             # *A correction that moves a protection from the file that is
+                             # no longer read to the file that will be -- and it had to be
+                             # noticed, because nothing about v3 looked incomplete.*
+
+                             # CHECKED 2026-09-06T07:27:43Z at the process table and the
+                             # slice audit under my own run.
+                             # **E2-A: the sealed BTC smoke is RUNNING** --
+                             # `da63smoke.scope`, `e2_a_runner.py --run --sealed --symbols
+                             # BTCUSDT`, **619 s, 1,618,432 KiB, `heavy=True
+                             # locked=True`**, and the audit concludes "1 scope(s) in
+                             # research.slice, none heavy without the lock." *v7 pinned
+                             # (`57c92c9e…`), the runner fixture 53 checks with 0 tape
+                             # paths, v6 untouched.*
+                             # **The 09-03 BOOK: NOT ASSEMBLED.** BE 54 runs it through
+                             # the parameterised seam now that both halves of the blocker
+                             # exist.
+                             # **The RACE READ: UNBLOCKED, NOT READ** (flag above).
+                             # ***So for the first time in this programme's day one of the
+                             # three tests is EXECUTING on real data under the lock*** --
+                             # and the honest summary changes by exactly one word from
+                             # last round: **the machinery is close, one test is running,
+                             # and no test has produced a number.**
   THE_RACE_READ_IS_BLOCKED_AT_ITS_DECLARATION_NOT_ITS_READER: UNBLOCKED-AT-07-22Z-v2-HAD-THE-TWO-FILES-BACKWARDS
                              # SUPERSEDED-IN-BAND 2026-09-06T07:24:20Z at my commit-time
                              # re-read, **and the reversal is the sharpest instance of the
@@ -16152,6 +16360,102 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 135, 2026-09-06T07:27:43Z ------------------------------
+  BE_54s_READER_REPRODUCES_THROUGH_THE_INTERIMS_OWN_CODE_AND_v3_PINNED_NO_FEED_DIGEST:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T07:31:52Z
+    said: >-
+      R-589 verifies BE 54: the reader retargeted to the FEED computing
+      MATCHED_VOLUME through the interim's own code, 10/10 reproduced under the
+      coordinator's run, with the SEALED_scores staying sealed; the assembly
+      REFUSED because the heavy lock was held by DA 63's E2-A smoke, called the
+      correct act, with BE 55 taking the book on the next lock window; and one gap
+      closed by the coordinator -- v3 pinned NO feed digest, so the five feed
+      files are now pinned by byte digest before any read.
+  THE_RACE_READ_IS_UNBLOCKED_AND_IT_IS_NOT_READ:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T07:27:43Z
+    said: >-
+      R-588(B) dispatches BE 54 to retarget the reader to the FEED per v3 -- the
+      five feed digests pinned before the read, MATCHED_VOLUME via
+      load_two_arm_feed, the post-read digest recompute on the bytes parsed,
+      falsifiers on a synthetic two-arm feed of the writer's shape -- with the
+      reviewer driving it as REV 44 and the coordinator opening on GO afterwards.
+      So the ruling is made and the read has not happened; the five days are
+      consumed by the opening act, not by the ruling.
+  THE_RULING_IS_OPTION_A_AND_IT_IS_CHOSEN_BY_A_RULE_NOT_A_PREFERENCE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v3.json
+    as_of: 2026-09-06T07:27:43Z
+    said: >-
+      RECOMMENDATION.option reads "A -- declare an estimand computable from the
+      sealed bytes AS THEY ARE, against the FEED";
+      primary_statistic_recommended is MATCHED_VOLUME; re_seal_NOT_recommended is
+      true; and the why field states "it is the one with a RULE cited (CLAUDE.md
+      rule 7: controls matched on the DECISION VARIABLE)". why_not disposes of the
+      re-seal as unnecessary rather than expensive.
+  v3_NAMES_A_SECOND_CONTRADICTION_THAT_NOBODY_HAD_STATED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v3.json
+    as_of: 2026-09-06T07:27:43Z
+    said: >-
+      RECOMMENDATION.the_second_contradiction_named reads "v2 declares the pairing
+      BY_THRESHOLD; the interim declares BY_THRESHOLD explicitly NOT primary" --
+      a second self-contradiction in v2, about the pairing rather than the file,
+      pointing the same way: v2 inherited the interim's vocabulary while inverting
+      its choices. BY_THRESHOLD is reported, never primary.
+  THE_FEED_WAS_READ_AT_THE_WRITER_NOT_BY_OPENING_IT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v3.json
+    as_of: 2026-09-06T07:27:43Z
+    said: >-
+      the feed block carries read_at_the_writer_not_by_opening true, source
+      be_forward_day.FEED_FIELDS, protocol BE_FORWARD_METRIC_FEED_V1, eleven
+      fields, and the writer's own comment "The feed the action-level estimand
+      consumes. Named here so a checker can assert the driver". Establishing the
+      sealed files' contents at the producer rather than the artifact is what let
+      the estimand be adjudicated without opening a sealed day, which rule 11
+      would have consumed.
+  MY_TWO_MEM_LEDGER_ITEMS_WERE_ALREADY_CLOSED_AT_ROUNDS_125_AND_131:
+    prov: CHECKED
+    artifact: live/pm_research/mem_flag_provenance.py
+    as_of: 2026-09-06T07:27:43Z
+    said: >-
+      all three STALE flags carry SUPERSEDED-IN-BAND in STATUS.yml with
+      symbol-based re-measurements landed at round 125; and
+      new_flags_without_provenance exists in the instrument with three call sites
+      wiring it into audit() as a finding, landed at round 131 with falsifiers
+      both directions and a positive control planting a flag into the live
+      STATUS.yml. Neither item was open at round 134 and neither is closed by this
+      round.
+  DA_FOUND_TWO_DEFECTS_IN_ITS_OWN_INSTRUMENTS_BEFORE_PUBLISHING:
+    prov: RELAYED
+    from: R-588(C)
+    as_of: 2026-09-06T07:27:43Z
+  RULE_21_GAINED_ITS_INTEGRATION_PATH_AND_IT_IS_THE_CASE_I_HIT_AT_ROUND_132:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-06T07:27:43Z
+    said: >-
+      rule 21 now reads that on a refused push a seat retries only with an EMPTY
+      status, "otherwise LEAVE the commit, REPORT it as stranded, and continue --
+      the coordinator rebases stranded commits onto origin at the first clean-tree
+      moment (R-586/R-588; a retry can never fast-forward once a local commit
+      exists, and the shared tree is dirty for the length of every MEM batch)".
+      Both cited entries exist, unlike the R-576 forward citation I filed at round
+      129. This is the procedure I followed and reported at round 132.
+  THE_THREE_TESTS_AT_THIS_AS_OF_ONE_RUNNING_ONE_NOT_ASSEMBLED_ONE_NOT_READ:
+    prov: CHECKED
+    artifact: live/pm_research/heavy_slice_audit.py
+    as_of: 2026-09-06T07:27:43Z
+    said: >-
+      the slice audit under my run reports da63smoke.scope at rss 1,618,432 KiB,
+      619 s, heavy=True locked=True, running e2_a_runner.py --run --sealed
+      --symbols BTCUSDT, and concludes "1 scope(s) in research.slice, none heavy
+      without the lock". The 09-03 book is not assembled (BE 54 in flight) and the
+      race read is unblocked but not read.
   # --- MEM round 134, 2026-09-06T07:17:23Z ------------------------------
   THE_TAPE_PATH_IS_A_PARAMETER_AND_BEs_HALF_OF_THE_BLOCKER_IS_CLEARED_BOTH_HALVES:
     prov: CHECKED

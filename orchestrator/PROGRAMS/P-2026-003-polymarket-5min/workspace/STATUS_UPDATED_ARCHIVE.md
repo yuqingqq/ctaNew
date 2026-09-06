@@ -9797,3 +9797,106 @@ directions.
   ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new flags vs HEAD 0
   without provenance.)
 ```
+
+## Batch 117 — archived 2026-09-06T07:27:43Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 135 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T06:57:19Z (MEM ROUND 132 -- R-583 SWEPT, PLUS A CURRENCY AUDIT ON MY
+  OWN FILE. STATE ONLY, AND THE CURRENCY DEFECT IS MINE AND IS NOT THE ONE THE
+  QUESTION ANTICIPATED.
+  (1) **THE QUESTION ASKED WAS CLEAN: NO FLAG SAYS THE BOOK NEEDS ONLY THE
+  FRAGMENT.** Every mention from round 127 forward carries both inputs; the
+  round-127 "a MISSING INPUT" hits are historically scoped to the fragment
+  refusal. ***The two-input correction from REVIEW_BE48 A.3 propagated cleanly on
+  its first pass and has not rotted.***
+  (2) **AND THE METHOD IS HALF THAT ANSWER. MY FIRST SCAN WAS VALUE-ONLY AND
+  COULD NOT SEE FLAG BODIES** -- they are YAML COMMENTS and `safe_load` discards
+  them. ***A clean result from it would have been a silent zero over most of the
+  file*** -- the folded-scalar defect of round 126 in a second shape. Re-scanned on
+  RAW TEXT with a positive control (7 hits / 6 hits).
+  (3) **THE DEFECT THAT IS THERE IS MINE: "BOTH MISSING INPUTS NOW EXIST FOR ONE
+  DAY" IS FALSE AT THIS MOMENT.** The 09-03 tape on disk is
+  `...**WRONG_SPLIT**.json` (991,078,272 B, 06:31:21Z) and **the corrected tape
+  does not exist** -- BE 51's rebuild is 1,238 s in. **The count of existing
+  correct inputs is ONE.** ***And the claim was TRUE when I wrote it: the artifact
+  existed and was ruled defective afterwards.*** **This is the one failure mode my
+  new-flag instrument cannot catch -- the flag was cited correctly and the world
+  moved.** *The distinction to carry: a FILE CENSUS and a READINESS CLAIM are
+  different statements, and the artifact that existed is precisely the one being
+  replaced.*
+  (4) **AND BE RENAMED RATHER THAN OVERWROTE.** The superseded 991 MB tape sits
+  under a name that says what is wrong with it. *Rule 13 is written about receipts;
+  this is the same discipline applied to a data file by a seat that was not asked
+  to.* **A stale path now fails on a NAME instead of succeeding on WRONG ROWS**, and
+  a guard was added so the assembly cannot run against it.
+  (5) **DE 79 CLOSED THE THREE WIRING ITEMS -- 76 / 115 / 18, DRIVEN BY ME AT A
+  TREE I CHECKED CLEAN FIRST** -- and **the item I conceded last round is closed at
+  the code**: the runner now carries BOTH forms, **FLOCK entries on the lock's
+  INODE from `/proc/locks` AND a fresh-fd `LOCK_EX|LOCK_NB` that must FAIL.**
+  *Two independent mechanisms for one predicate, neither satisfiable by merely
+  having the file open.* **REV 41 drives them and states whether `--day` remains
+  approved** -- *the approval is not assumed to survive the change that answered
+  its conditions.*
+  (6) **DE REPORTS ALL THREE INSTRUMENTS IT BUILT THE ROUND BEFORE WERE WRONG.**
+  *The second seat today to report its own batch wrong (DA's four at R-576).* **And
+  the pattern worth naming: the instruments that fail are the ones built to satisfy
+  a REVIEW ITEM, because they are built against the WORDS of the item rather than
+  against the property** -- an fd check satisfies "prove the lock is held" in words
+  and not in fact.
+  (7) **AND DE'S OWN DEFECT IS A LIVE HAZARD IN MY METHOD: a 4-space anchor
+  matched 8-space lines as SUBSTRINGS and the file stopped parsing.** ***I edit
+  this file by exact-string anchors every round.*** The inherited rule -- anchor to
+  strings, never slice by index -- **protects against one hazard and creates this
+  one.** *What already protects me, stated so it is not luck: every edit asserts
+  `count(anchor) == 1` before replacing and every write is followed by a
+  `yaml.safe_load`; both have caught real anchor collisions this session.* **What I
+  ADD: an anchor must be unambiguous about INDENT, not only about text -- a bare
+  key fragment is a substring of its own deeper copies.**
+  (8) **THE SMOKE CHAIN IS FIVE LINKS AND LINK ONE IS RUNNING:** tape rebuild ->
+  assembly -> book -> the reviewer's filing -> GO. `be_gate1_state_tape.py`, pid
+  2945533, 1,238 s, 2,134,456 KiB, and the slice audit reads **one scope,
+  heavy=True locked=True** -- driven by me. *BE's own lock probe had matched the
+  WRONG PID and was corrected -- the third lock instrument today to be wrong in its
+  first form.*
+  (9) **AND THE COMMIT-TIME RE-READ CAUGHT TWO THINGS, ONE OF THEM A USER RULING.**
+  **(a) The corrected tape APPEARED** -- `phase2_state_tape_gate1_20260903_btc
+  .json`, 07:01:11Z, **991,078,272 bytes, EXACTLY the `.WRONG_SPLIT` byte count**,
+  with the builder STILL RUNNING. *I do not claim completion and a size match is
+  not a content match.* ***But an identical byte count points at the unruled
+  question: if the corrected tape is the same size, the split correction moved
+  LABELS not ROWS -- the REVIEWER's reading rather than the coordinator's.*** Three
+  readings, still unruled, and the first physical evidence bears on it; **I record
+  the observation with its limits and rule nothing.**
+  **(b) A USER RULING landed at 06:59Z, two minutes before my re-read: "We can
+  focus on btc for now, don't have to extend to other symbols."** P-003 Gate-1 is
+  already BTC-only; **E2-A's sealed smoke moves ADA/DOGE -> BTCUSDT**, v7 declared
+  over BTC, the twelve-symbol census standing as CONTEXT, the gate read on BTC at
+  14 post-boundary days. ***AND IT SUPERSEDES MY OWN ICP FRAMING:*** I carried "the
+  honest end is STATED, not unresolved" from round 129; **the cell is now DEFERRED,
+  not resolved, with its machinery kept DECLARED for when scope widens.**
+  *Deferring a cell with its instruments already declared is not dropping it, and
+  that is what makes the deferral reversible.* E2.0's ADA result and the race read
+  are unaffected.
+  (10) **AND THE BATCH COULD NOT BE PUSHED: THE SHARED TREE IS DIVERGED.** 1 ahead
+  / 1 behind on DISJOINT file sets -- local-only `cd212f9` (DA's v7 emitter, in NO
+  remote branch) against origin-only `9d15e35` (BE 51). ***I do not resolve it:
+  the verbs are not mine (rule 21 forbids rebase; merge is not permitted either)
+  and the commit at risk is ANOTHER SEAT'S AND UNPUSHED*** -- losing it would be
+  the orphan class a third time. **I commit my four files so they cannot be swept
+  by another seat's pathspec commit (which cost me my Q-row at round 128), attempt
+  the push, and REPORT THE REFUSAL** -- rule 21's own sequence, which anticipates
+  a refused push and therefore anticipates the commit. **Fourth shared-tree
+  incident today; one root, and it has now failed in each of the three ways a git
+  tree can.**
+  MEASURED BEFORE THIS SENTENCE: flags 706 -> 716, flag_provenance 251 -> 261,
+  tasks 19; 140 CHECKED, 121 RELAYED, **455 UNMARKED -- unchanged for the eighth
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; **the
+  new-flag instrument fired on this round's seven flags before their entries
+  existed (7 findings, exit 1) and cleared to 0 once written -- its second
+  consecutive live positive control.**)
+```
