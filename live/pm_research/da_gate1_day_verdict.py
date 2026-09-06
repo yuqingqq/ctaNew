@@ -3640,11 +3640,23 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         #: population was recomputed it means NOTHING WAS COMPARED. Same
         #: rule DA 84 applied to the absence flag, one field over: a
         #: predicate that was not evaluated is None.
-        "n_arms_agreeing": (None if book_refusal
+        #: DA 99: AND THE PICKLE PATH IS THE SAME CASE. The row loop that
+        #: fills `agree` is the JSON book's; on BE's pickle it is skipped,
+        #: so the sum is 0 over an EMPTY list -- and the heavy record said
+        #: `n_arms_agreeing: 0` while the population it DID recompute
+        #: agreed on every field. ***0 read alone says the arms
+        #: disagree***; what was true is that this comparison was not the
+        #: one that ran. The population verdict lives in
+        #: `population_from_the_book`.
+        "n_arms_agreeing": (None if (book_refusal or _pickle_path)
                             else sum(1 for a in agree if a)),
         "why_n_arms_agreeing_is_none": (
             "no population was recomputed, so no arm was compared. 0 would "
-            "read as two arms DISAGREEING" if book_refusal else None),
+            "read as two arms DISAGREEING" if book_refusal else
+            "the ROW comparison did not run: this is BE's PICKLE book, "
+            "whose population is recomputed through the structure "
+            "declaration -- see `population_from_the_book`, which carries "
+            "the per-arm verdict" if _pickle_path else None),
         "IS_A_VERIFICATION_OF_THE_ECONOMICS": False,
         "why_never_a_verification_of_the_economics": (
             "this mode reads no economic field and computes no economic "
