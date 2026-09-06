@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 312
+EXPECTED_CHECKS = 318
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -580,15 +580,28 @@ def verify_input_digests(where: str) -> dict:
     taken here. A receipt that carries only the second names bytes that
     may not be the bytes the run used."""
     root = Path(__file__).resolve().parents[2]
-    out, moved = {}, []
+    out, moved, null_half = {}, [], []
     for name, rec in sorted(INPUT_DIGESTS.items()):
         f = root / rec["path"]
         now = (hashlib.sha256(f.read_bytes()).hexdigest()
                if f.is_file() else None)
         agrees = now == rec["sha256_at_load"]
         out[name] = {**rec, "sha256_at_emit": now, "agrees": agrees}
-        if not agrees:
+        if rec["sha256_at_load"] is None or now is None:
+            # A `{path, sha256: null}` IS NOT A PAIR (R-608). A half that
+            # is absent cannot be compared, and reporting `agrees: null`
+            # beside it lets a reader take an unmade comparison for a
+            # made one.
+            null_half.append(name)
+        elif not agrees:
             moved.append(name)
+    if null_half:
+        raise RunnerRefused(
+            f"REFUSED at {where}: a declared input's digest pair carries a "
+            f"NULL HALF -- {null_half}. A `{{path, sha256: null}}` is not "
+            f"a pair (R-608): one half absent cannot be compared, and "
+            f"`agrees: null` beside it lets a reader take an unmade "
+            f"comparison for a made one.")
     if moved:
         raise RunnerRefused(
             f"REFUSED at {where}: a DECLARED INPUT changed under this run "
@@ -597,7 +610,11 @@ def verify_input_digests(where: str) -> dict:
             f"receipt naming bytes that are not the bytes the run read is "
             f"provenance theatre (REV 71 S1.4(c)).")
     return {"inputs": out, "n_inputs": len(out),
-            "all_agree": True,
+            "all_agree": True, "no_null_halves": True,
+            "the_design_is_digested_at_params_load": (
+                "not at the emit, where its two digests would be one read "
+                "twice and the pair could not detect the file changing "
+                "under the run (REV 75 S1.1)"),
             "why_both_digests": (
                 "the one taken WHERE THE FILE WAS READ and the one taken "
                 "at the emit. The block used to carry only the second and "
@@ -1156,6 +1173,43 @@ SEAL_LAYOUT_KEYS = ("sealed", "seal_status", "sealed_at_every_depth",
 SEAL_LAYOUT_CONDITIONAL_KEY = "economic"
 
 
+def days_complete_now(params: dict, root: Path | None = None) -> dict:
+    """HOW MANY RULED DAYS HAVE A SEALED RECEIPT, COMPUTED (REV 75 S1.2).
+
+    `n_days_complete` was a DEFAULT PARAMETER of 1 that nothing on the
+    real path ever passed, so the 09-04 receipt says "SEALED -- 1 of 6
+    days complete" on the day when TWO were. Every consumer is fail-safe
+    by accident: a constant 1 can only ever over-seal, so nothing broke --
+    and rule 10 says a number a receipt claims must be one the code
+    evaluated.
+
+    It is counted through the READ GATE'S OWN resolver, so "complete"
+    means exactly what the gate means by it: a day whose sealed receipt
+    resolves to a chain head."""
+    r = Path(root) if root else Path(DR.resolve()["data_root"])
+    per_day, complete = {}, []
+    for day in params["days"]:
+        res = find_sealed_day_receipt(day, r)
+        per_day[day] = {"status": res["status"],
+                        "present": res["present"],
+                        "n_matches": res["n_matches"]}
+        if res["present"]:
+            complete.append(day)
+    return {"n_days_complete": len(complete),
+            "days_complete": complete,
+            "ruled_days": list(params["days"]),
+            "G": params["G"],
+            "per_day": per_day,
+            "counted_by": "find_sealed_day_receipt -- the READ GATE'S own "
+                          "resolver, so `complete` means what the gate "
+                          "means by it",
+            "was_a_default_parameter": (
+                "1, and nothing on the real path passed it. The 09-04 "
+                "receipt reads `1 of 6` on a day when two were complete "
+                "(REV 75 S1.2). Fail-safe by accident: a constant 1 can "
+                "only over-seal")}
+
+
 def seal(day_result: dict, n_days_complete: int, g: int) -> dict:
     """R5 -- the economic fields are ABSENT until every day is complete.
 
@@ -1257,12 +1311,27 @@ def assert_seal_layout_symmetric(sealed_artifact: dict,
 #:
 #: DA 98 carries the same sentence. If the two ever diverge, this line is
 #: the one to compare.
+#: DECLARED IN THE SHAPE DA'S READER LOOKS FOR (R-683 / REV 76 S0): a
+#: module-level name containing `SEAL_RULE`, holding a literal. DA's
+#: `de_seal_rule_at_source()` parses this file by AST, reads THIS string,
+#: and compares it with its own after normalising whitespace, case and
+#: dashes. At the previous tip it returned
+#: DE_HAS_NOT_DECLARED_THE_KEY_WALK_RULE_YET -- an absence reported by
+#: name, never read as agreement. The two censuses stay INDEPENDENT
+#: implementations (R-235); what is shared is the RULE, and it is read at
+#: the source rather than assumed.
+SEAL_RULE = ("A SEALED NAME PRESENT AS A KEY REFUSES, WHATEVER ITS VALUE "
+             "-- including an empty container and null. ABSENCE IS THE "
+             "ONLY SEAL.")
+#: The same rule in this seat's own words, kept because the walker's
+#: docstring cites it and because it says WHY (an empty container yields
+#: no leaf, so a leaf-walk reports it absent).
 CENSUS_RULE = ("a sealed name present as a KEY is a leak whatever its "
                "value, including [] and {} and null; the census walks "
                "KEYS, never leaves")
 
 
-def _economic_keys_in(o, path="") -> list:
+def seal_key_walk(o, path="") -> list:
     """Economic fields present as KEYS, at any depth.
 
     THE RULE IS `CENSUS_RULE` ABOVE, and it is the key-walk: a name is
@@ -1279,11 +1348,18 @@ def _economic_keys_in(o, path="") -> list:
         for k, v in o.items():
             if k in ECONOMIC_FIELDS:
                 found.append(f"{path}.{k}".lstrip("."))
-            found += _economic_keys_in(v, f"{path}.{k}")
+            found += seal_key_walk(v, f"{path}.{k}")
     elif isinstance(o, list):
         for i, v in enumerate(o):
-            found += _economic_keys_in(v, f"{path}[{i}]")
+            found += seal_key_walk(v, f"{path}[{i}]")
     return found
+
+
+#: The old name, kept so every existing caller and DA's AST census keep
+#: working. `seal_key_walk` is the name DA's reader looks for (it wants a
+#: function whose name carries `key` AND `walk`/`seal`), and the rule it
+#: implements is `SEAL_RULE`.
+_economic_keys_in = seal_key_walk
 
 
 def economic_absence_scoped(rec: dict) -> dict:
@@ -2608,12 +2684,23 @@ def declared_chain() -> list:
                      "the EMIT, before that line exists, so the record "
                      "needs both"},
             {"step": 6, "do": "`systemctl --user stop <unit>` -- the "
-                              "owner stops it once both copies are "
+                              "owner stops it once the exit copy is "
                               "taken",
              "then": "the name is free for the next launch. "
                      "RemainAfterExit keeps a finished unit loaded until "
                      "someone does this"},
-            ]
+                {"step": 7, "do": "COPY THE JOURNAL AGAIN, AFTER THE "
+                              "STOP, by both invocation fields, "
+                              "cross-checked against `-u`",
+             "then": "under RemainAfterExit the manager emits `Stopped` "
+                     "and `Consumed` AT THE STOP, not at the payload's "
+                     "exit -- so the step-5 copy holds the run's OUTPUT "
+                     "and not its COST. Measured on the 09-04 run: 2 "
+                     "lines at step 5, 4 after the stop, and the two it "
+                     "missed are `Stopped` and `Consumed 1h 39min "
+                     "40.638s CPU, 2.7G peak`. The sidecar records which "
+                     "lines existed at EACH copy (REV 75 S3)"},
+        ]
 
 
 def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
@@ -5001,6 +5088,16 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     if not fixture:
         verify_pinned_models(params)
         verify_pinned_thetas(params)
+        # THE DESIGN IS DIGESTED HERE, AT S0 (REV 75 S1.1) -- the
+        # earliest point a REAL day may read `data/`, and far before the
+        # emit. It was recorded AT THE EMIT, so its "at load" and "at
+        # emit" digests were one read twice and the pair could not detect
+        # the design file changing under a run. It cannot go in
+        # `load_params`: a FIXTURE run must open no path under `data/`,
+        # and the data-root guard refused it there.
+        _drel0 = (params.get("design_declaration") or {}).get("path")
+        if _drel0:
+            record_input_digest("design", _drel0)
     _mark("S0_verify")
 
     # ---- S0b: THE BATTERY, BEFORE THE DAY'S WORK (R-610) ---------------
@@ -6236,6 +6333,72 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"`_strip_economic` seals by the list in force for THIS run; a "
        f"census judges a receipt by the list in force when THAT receipt "
        f"was produced")
+    # ---- REV 75: the four defects, driven ----------------------------
+    # S1.1 a `{path, sha256: null}` is not a pair (R-608), and the DESIGN
+    # was digested at the EMIT -- so its "at load" and "at emit" were one
+    # read twice and the pair could not see the file change under a run.
+    _id106 = dict(INPUT_DIGESTS)
+    # NO `or True`. I wrote one here and removed it: a check that cannot
+    # fail is not a check, and this is the second round running I have
+    # had to say so about my own.
+    ok("params" in _id106
+       and bool(_id106["params"].get("sha256_at_load"))
+       and all(bool(v.get("sha256_at_load")) for v in _id106.values())
+       and "record_input_digest(\"design\"" in
+           Path(__file__).read_text(),
+       f"REV 75 S1.1: the params are digested WHERE THEY ARE LOADED "
+       f"({sorted(_id106)}), and the DESIGN at S0 of the real day path -- "
+       f"the earliest point a real day may read `data/`, and far before "
+       f"the emit, where its two digests were one read twice. It cannot "
+       f"go in `load_params`: a FIXTURE run must open no path under "
+       f"`data/`, and the guard refused it there")
+    _saved106 = dict(INPUT_DIGESTS.get("params") or {})
+    try:
+        INPUT_DIGESTS["params"] = {**_saved106, "sha256_at_load": None}
+        refuses(lambda: verify_input_digests("a probe"),
+                "REV 75 S1.1 KNOWN-BAD: a digest pair with a NULL HALF "
+                "REFUSES. `{path, sha256: null}` is not a pair (R-608): "
+                "one half absent cannot be compared, and `agrees: null` "
+                "beside it lets a reader take an unmade comparison for a "
+                "made one", "NULL HALF")
+    finally:
+        if _saved106:
+            INPUT_DIGESTS["params"] = _saved106
+    # S1.2 `n_days_complete` was a DEFAULT PARAMETER nobody passed.
+    _dc106 = days_complete_now(live)
+    ok(_dc106["n_days_complete"] == len(_dc106["days_complete"])
+       and set(_dc106["per_day"]) == set(live["days"])
+       and _dc106["counted_by"].startswith("find_sealed_day_receipt"),
+       f"REV 75 S1.2: `n_days_complete` is COMPUTED through the read "
+       f"gate's own resolver -- {_dc106['n_days_complete']} of "
+       f"{_dc106['G']}, days {_dc106['days_complete']}. It was a DEFAULT "
+       f"of 1 that nothing on the real path passed, so the 09-04 receipt "
+       f"reads `1 of 6` on a day when two were complete. Fail-safe by "
+       f"accident: a constant 1 can only over-seal")
+    ok(f"{_dc106['n_days_complete']} of {_dc106['G']}" in seal(
+           {"day": "D", "arm": "A", "status": "OK", "admissibility": {},
+            "economic": {"Z": 1.0}},
+           _dc106["n_days_complete"], _dc106["G"])["seal_status"],
+       "and the receipt's PROSE is generated from that computed value, so "
+       "the sentence and the number cannot disagree (rule 10)")
+    # S3 the exit copy was one step early.
+    _ch106 = declared_chain()
+    ok(len(_ch106) == 7
+       and "AFTER THE " in _ch106[6]["do"]
+       and "Consumed" in _ch106[6]["then"],
+       f"REV 75 S3: the chain has a STEP 7 -- copy the journal AGAIN "
+       f"after the stop. Under RemainAfterExit the manager emits "
+       f"`Stopped` and `Consumed` AT THE STOP, so step 5 holds the run's "
+       f"OUTPUT and not its COST: measured 2 lines at step 5 and 4 after "
+       f"the stop on the 09-04 run")
+    # R-683 the seam: DA reads this seat's rule at the source.
+    ok(SEAL_RULE.startswith("A SEALED NAME PRESENT AS A KEY REFUSES")
+       and "ABSENCE IS THE ONLY SEAL" in SEAL_RULE,
+       "R-683: the key-walk rule is DECLARED as `SEAL_RULE`, in the shape "
+       "DA's `de_seal_rule_at_source` reads by AST. At the previous tip it "
+       "returned DE_HAS_NOT_DECLARED_THE_KEY_WALK_RULE_YET -- an absence "
+       "reported by name, never read as agreement. The two censuses stay "
+       "independent implementations of ONE rule")
     # ---- REV 76 S0: THE CENSUS WALKS KEYS, NOT LEAVES ----------------
     # An empty container yields NO LEAF, so a leaf-walking census reports
     # a sealed key emitted as `[]` or `{}` as ABSENT -- while the
@@ -6674,12 +6837,12 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        "assumed either way. The needle would have answered TRUE or FALSE "
        "with equal confidence")
     _chain99 = declared_chain()
-    ok(len(_chain99) == 6
-       and "AFTER the unit has exited" in _chain99[4]["do"]
+    ok("AFTER the unit has exited" in _chain99[4]["do"]
        and "Consumed" in _chain99[4]["then"]
        and _chain99[5]["do"].startswith("`systemctl --user stop"),
        f"and the chain carries the EXIT COPY as its own step "
-       f"({len(_chain99)} steps): the receipt's copy is taken at the EMIT, "
+       f"({len(_chain99)} steps; the LENGTH is asserted where the shape "
+       f"is ruled, not here): the receipt's copy is taken at the EMIT, "
        f"before the `Consumed` line exists, and that is the line which "
        f"survives longest -- DE 84's `Started` line was gone four hours "
        f"later while its `Consumed` line remained")
@@ -6746,10 +6909,17 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        "ActiveState, SubState), so a positional parse mislabels every "
        "field -- mine declared a LIVE run VOID before it was fixed")
     _chain98 = declared_chain()
-    ok(_chain98[-1]["do"].startswith("`systemctl --user stop")
+    # THE STOP IS NO LONGER LAST: step 7 copies the journal AFTER it
+    # (REV 75 S3), because the manager writes `Stopped` and `Consumed` at
+    # the stop. This asserted `[-1]`, which is the same literal-that-must-
+    # track-a-moving-thing shape one position along.
+    _stopstep = [st for st in _chain98
+                 if st["do"].startswith("`systemctl --user stop")]
+    ok(len(_stopstep) == 1
        and any("VOID" in st["then"] for st in _chain98),
        f"and the chain is a DECLARED FIELD of the rehearsal "
-       f"({len(_chain98)} steps ending in the STOP that frees the name), "
+       f"({len(_chain98)} steps, one of which is the STOP that frees the "
+       f"name), "
        f"not prose in a runbook a launcher may not read. "
        f"RemainAfterExit is what makes that last step necessary. The "
        f"LENGTH is asserted where the chain's shape is ruled, not here -- "
@@ -9273,9 +9443,15 @@ def _main_day(a) -> int:
         _battery.update(LAST_BATTERY)
         return dict(LAST_BATTERY)
 
+    # COMPUTED, NOT DEFAULTED (REV 75 S1.2). The count is taken BEFORE
+    # this day's own receipt exists, so it is the days complete when this
+    # day started; the emitted prose is generated from it.
+    _dc = days_complete_now(params)
     proof = day_split_residency_proof(
         day, book, params=params, fixture=fixture,
-        n_days_complete=a.n_days_complete, before_work=_battery_first)
+        n_days_complete=(a.n_days_complete if fixture
+                         else _dc["n_days_complete"]),
+        before_work=_battery_first)
     payload = proof.pop("day_result")
     payload["split_residency_proof"] = proof
     payload["source_identity"] = {
@@ -9375,6 +9551,7 @@ def _main_day(a) -> int:
     if _design_rel:
         record_input_digest("design", _design_rel)
     _inputs = verify_input_digests("the day-run emit")
+    payload["days_complete_when_this_day_started"] = _dc
     payload["provenance"] = {
         "params": _pair(PARAMS_REL),
         "design": (_pair(_design_rel) if _design_rel else
