@@ -447,6 +447,113 @@ def aggregate(day_results: list, params: dict) -> dict:
 FIXTURE_MODULE_SHA = "f" * 64          # the fixture's stand-in cascade
 
 
+def dry_run_ledger() -> dict:
+    """READ THE LEDGER, NOTHING ELSE. No book, no arm, no economics.
+
+    A BEFORE-PICTURE for 00:06Z on 09-07, when 09-06 is re-verdicted: the
+    ruled days' admissibility resolved end to end through `de_data_root`,
+    each PENDING day named as pending rather than absent, and the R7
+    relations evaluated LIVE so the assertion that replaced three
+    hardcoded counts can be compared against its own future."""
+    started = time.time()
+    root = DR.require_canonical("the dry-run ledger read")
+    params = load_params()
+    r7 = DESIGN.day_sets_from_the_ledger()
+    rows = r7["ledger_rows_as_read"]
+
+    per_day = {}
+    for day in params["days"]:
+        row = rows.get(day)
+        st = DESIGN.DAY_READ_STATE.get(day, {})
+        if row is None:
+            per_day[day] = {
+                "status": "PENDING_NO_VERDICT_FILE",
+                "why": "the day has not been verdicted; a day-verdict file "
+                       "appears at 00:06Z on the following day",
+                "previously_opened_for": st.get("previously_opened_for"),
+                "counts_toward_G_when": "its verdict lands AND it passes "
+                                        "the four conjuncts and quality"}
+            continue
+        closed = row.get("day_closed_calendar") is True
+        conj = {k: row.get(k) for k in DESIGN.LEDGER_CONJUNCTS}
+        qualifies = row.get("all_conjuncts_and_quality") is True
+        per_day[day] = {
+            "status": ("CLOSED_AND_QUALIFIES" if qualifies else
+                       "CLOSED_AND_DOES_NOT_QUALIFY" if closed else
+                       "OPEN_NOT_YET_CLOSED"),
+            "conjuncts": conj,
+            "all_conjuncts_and_quality": qualifies,
+            "previously_opened_for": st.get("previously_opened_for"),
+            "untouched": st.get("previously_opened_for")
+            == DESIGN.OPENED_NONE,
+            "in_the_ruled_set": True}
+
+    closed_days = [d for d, v in per_day.items()
+                   if v.get("status", "").startswith("CLOSED")]
+    pending = [d for d, v in per_day.items()
+               if v.get("status") != "CLOSED_AND_QUALIFIES"]
+    qual = set(r7["qualifying_on_quality"])
+    a_days = set(r7["SET_A_reads_count_as_untouched"]["days"])
+    b_days = set(r7["SET_B_reads_consume_the_day"]["days"])
+    ruled_closed_not_qualifying = [
+        d for d in params["days"]
+        if per_day[d].get("status") == "CLOSED_AND_DOES_NOT_QUALIFY"]
+    relations = {
+        "SET_A_equals_qualifying": a_days == qual,
+        "SET_B_subset_of_SET_A": b_days <= a_days,
+        "every_SET_B_day_is_untouched": all(
+            DESIGN.DAY_READ_STATE[d]["previously_opened_for"]
+            == DESIGN.OPENED_NONE for d in b_days),
+        "every_ruled_closed_day_qualifies": not ruled_closed_not_qualifying,
+        "ruled_closed_days_not_qualifying": ruled_closed_not_qualifying,
+        "holm_consistent_with_own_G": all(
+            blk["holm"]["clears_holm_at_m2"]
+            == (2.0 ** -blk["holm"]["G"] <= params["alpha"] / 2)
+            for blk in (r7["SET_A_reads_count_as_untouched"],
+                        r7["SET_B_reads_consume_the_day"])),
+    }
+    relations["all_relations_hold"] = all(
+        v for k, v in relations.items()
+        if isinstance(v, bool))
+    usage = __import__("resource").getrusage(
+        __import__("resource").RUSAGE_SELF)
+    return {
+        "protocol": "P003_DE_MULTIDAY_GATE1_DRY_RUN_LEDGER_V1",
+        "status": "DRY_RUN_LEDGER_READ_NOT_A_FIXTURE_RUN",
+        "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "what_this_reads": ["day-verdict files", "the declared read-state "
+                            "table"],
+        "what_this_does_NOT_read": ["any reference book", "any arm",
+                                    "any score stream", "any economics"],
+        "data_root": root,
+        "ledger_root_resolved": r7["ledger_root_resolved"],
+        "root_branch": r7["root_resolution"]["branch"],
+        "n_verdict_files_read": r7["n_verdict_files_read"],
+        "ruled_day_set": params["days"],
+        "G_from_the_ruled_set": params["G"],
+        "per_ruled_day": per_day,
+        "summary": {
+            "n_ruled_closed": len(closed_days),
+            "n_ruled_pending": len(pending),
+            "closed": sorted(closed_days),
+            "pending": sorted(pending)},
+        "qualifying_on_quality_whole_ledger":
+            r7["qualifying_on_quality"],
+        "SET_A": r7["SET_A_reads_count_as_untouched"],
+        "SET_B": r7["SET_B_reads_consume_the_day"],
+        "r7_assertion_evaluated_live": relations,
+        "why_a_before_picture": (
+            "at 00:06Z on 09-07 the 09-06 verdict lands and the qualifying "
+            "count changes. The R7 assertion was rewritten from three "
+            "hardcoded counts to these relations precisely so that event "
+            "does not break it; this receipt is what the after-picture is "
+            "compared against"),
+        "resource_observation": {
+            "wall_seconds": time.time() - started,
+            "max_rss_kib": usage.ru_maxrss},
+    }
+
+
 def fixture_run() -> dict:
     """An end-to-end run on FIXTURES. **NOTHING UNDER `data/` IS OPENED.**
 
@@ -935,15 +1042,21 @@ def main() -> int:
     if a.selftest:
         return selftest()
     if a.ledger:
-        r7 = DESIGN.day_sets_from_the_ledger()
-        print(json.dumps({
-            "status": "DRY_RUN_LEDGER_READ_NOT_A_FIXTURE_RUN",
-            "ledger_root_resolved": r7["ledger_root_resolved"],
-            "n_verdict_files_read": r7["n_verdict_files_read"],
-            "qualifying_on_quality": r7["qualifying_on_quality"],
-            "SET_A_G": r7["SET_A_reads_count_as_untouched"]["holm"]["G"],
-            "SET_B_G": r7["SET_B_reads_consume_the_day"]["holm"]["G"]},
-            indent=1))
+        payload = dry_run_ledger()
+        if a.output is not None:
+            if a.output.exists():
+                raise RunnerRefused(f"output already exists: {a.output}")
+            a.output.parent.mkdir(parents=True, exist_ok=True)
+            a.output.write_text(
+                json.dumps(payload, indent=2, sort_keys=True) + "\n")
+            payload = {**{k: payload[k] for k in (
+                "status", "ledger_root_resolved", "root_branch")},
+                "emitted": str(a.output),
+                "n_ruled_closed": payload["summary"]["n_ruled_closed"],
+                "n_ruled_pending": payload["summary"]["n_ruled_pending"],
+                "r7_assertion": payload["r7_assertion_evaluated_live"][
+                    "all_relations_hold"]}
+        print(json.dumps(payload, indent=1, sort_keys=True))
         return 0
     if not a.fixture or a.output is None:
         ap.error("choose --selftest or --fixture-run --output PATH")
