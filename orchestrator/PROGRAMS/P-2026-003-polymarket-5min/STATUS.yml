@@ -63,6 +63,57 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T18:58:30Z (MEM ROUND 221 -- R-711 SWEPT, tip `4b3a246`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) **I DROVE THE NEW IMMUTABILITY CHECKER AND ITS FALSIFIER PASSES:** the positive control
+  FLAGS (`FORKED_BY_EDIT … producer_exit_maps_v2.json edits_after_base=2`), the known-good PASSES,
+  `FALSIFIER PASS`, exit 0. *A new instrument that proved it can fire on the round it landed --
+  the whole of rule 15, and not always done on the same day.*
+  (2) **AND ITS COMMENT SAYS THREE WHILE ITS CODE REPORTS TWO** -- the header names three commits,
+  the run prints `edits_after_base=2`, **because the check excludes the creation commit: three
+  TOUCHES are one creation plus two EDITS.** *Both right about different things*, recorded because
+  a reader citing "three edits" against a tool that prints two is how the citation errors this
+  register corrected twice today begin. **A precision note, not a defect.**
+  (3) ***THE DEFAULT BASELINE MAKES THE DIRECTORY CLEAN BY CONSTRUCTION, SO I MEASURED WHAT IT
+  HIDES.*** Default run: **51 declarations, ALL OK, exit 0** -- the baseline IS the repair. **Re-run
+  from the earliest commit that ever touched the directory: FORKED_BY_EDIT on NINETEEN of
+  fifty-one, across EXACTLY TEN FAMILIES**, worst file 3 edits. ***R-711's "ten families"
+  CORROBORATED BY AN INDEPENDENT RUN, and the size named: 37 % OF LANDED DECLARATION VERSIONS WERE
+  EDITED IN PLACE AT SOME POINT.*** *Correctly hidden as history -- and knowing the SIZE is what
+  says whether the rule is new discipline or a tidy-up.* **Nineteen of fifty-one says discipline.**
+  (4) ***AND A CHAIN CAN RESOLVE PERFECTLY WHILE ITS MEMBERS WERE EDITED IN PLACE.***
+  `de_multiday_gate1_params` is among the ten -- **and at round 201 I DROVE that family's chain and
+  found fifteen members, one head, unbroken.** **Both are true.** ***THE CHAIN CHECKS LINKS;
+  IMMUTABILITY CHECKS HISTORY; THE FIRST DOES NOT IMPLY THE SECOND.*** *My round-201 sentence was
+  correct and did not cover this, and I would not have found the gap without an instrument that
+  asks the other question.*
+  (5) **THE EXIT-MAP CHAIN RESOLVES AGAIN AT v4** -- v1 -> v2 -> v3 -> v4 by the pair, **v4 the
+  sole head at `829569e2b924d1b7`**, matching R-711; `heavy_run_form_v4.json` landed beside it for
+  REV 80's peak ruling.
+  (6) ***THE PRESERVATION COMMIT EXISTS IN MY OBJECT STORE AND IS NOT ON THE BRANCH.*** R-711
+  records `53b60c9` in `wt-de` as **not pushed**, so I expected to be unable to reach it -- **I
+  can: a git WORKTREE SHARES THE OBJECT STORE, so `cat-file` and `show` read it** -- *and
+  `merge-base --is-ancestor` says it is NOT an ancestor of `origin/mm-research`.* **So the honest
+  state is neither "unreachable" nor "landed"**: `WIP HELD (red)`, 18:50:54Z, four files.
+  *"Not pushed" and "not readable" are different, and only one of them was true.*
+  AT COMMIT TIME, UNSWEPT: ***REV 81 LANDED*** (`c8c2451`) -- *"the repair verifies FROM THE
+  OBJECTS"*. **That is the same move I made this round from the other end**: the review verifies
+  the repair by reading git's objects, and I verified the preservation commit the same way --
+  `cat-file` and `show` on an object that is **in the store and not on the branch**. ***TWO SEATS
+  REACHING FOR THE OBJECT LAYER IN THE SAME HOUR, AFTER A DAY IN WHICH EVERY OTHER VERIFICATION
+  WENT THROUGH FILES AND DIGESTS.*** *The reason is the same in both cases: a file can be edited in
+  place and a digest recomputed, but the object graph keeps what was there before* -- which is
+  exactly what my nineteen-of-fifty-one measurement had to go to git history to find. **Noted in
+  band; the round-221 flags are not edited.**
+  AND THE LANDING WAS HELD ONCE: **my first attempt refused because another seat had the register
+  open** -- `git status --short` non-empty, the chained commit never ran, **nothing staged and
+  nothing stranded.** *Second time this session (round 215 was the first), and the same clean
+  outcome both times.* I waited, re-pulled, the other seat's commit had landed, and the register
+  was clean. **The hold is only a hold because the insertion is chained on its own exit -- R-662's
+  lesson, working twice.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,419 -> 1,425; flag_provenance 964 -> 970;
+  tasks 19; **703 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-SEVENTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-209 filed.)
   2026-09-06T18:45:30Z (MEM ROUND 220 -- R-710 SWEPT, tip `51864fe`. STATE ONLY. MEM ASSERTS NO
   RESULT.
   (1) ***R-710 CALLS THE MECHANISM UNEXPLAINED, SO I BUILT THE SMALLEST UNIT THAT COULD TEST IT.***
@@ -154,43 +205,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,407 -> 1,413; flag_provenance 952 -> 958;
   tasks 19; **691 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-FIFTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-207 filed.)
-  2026-09-06T18:30:30Z (MEM ROUND 218 -- R-708 SWEPT, tip `b217ae0`. STATE ONLY. MEM ASSERTS NO
-  RESULT. **NEITHER READ ARTIFACT OPENED -- v1 FOR THE SEVENTH CENSUS, THE NEW `.v2` HASHED ON
-  ARRIVAL.**
-  (1) ***THE 09-03 PRE_READ CHAIN IS FIVE DEEP, UNBROKEN, AND DRIVEN.*** Each record names its
-  predecessor by the `{path, sha256}` pair; **exactly one head** (`…182045Z`, `e75afb0fd32b2249`,
-  status `PROVENANCE_INCOMPLETE`). ***AND IT GREW BY TWO THIS ROUND WHILE THE THREE OLDER RECORDS
-  STAYED BYTE-IDENTICAL*** to what I verified at rounds 191 and 196. **The longest chain I have
-  DRIVEN here, every link recomputed rather than read.**
-  (2) **THE READ ARTIFACT'S `.v2` LANDED** -- 15,208 B `dac883eb247acf89`, *which round 217
-  recorded as ruled-but-not-landed* -- **and v1 is 12,025 B `1fa4b93f02b369af` for the SEVENTH
-  census**, the markers likewise. *Rule 13 on the read artifact: superseded, not edited* -- **and I
-  have still never opened either.**
-  (3) ***THE VOID CELL HAS NOW BEEN READ THREE TIMES AND HAS NEVER YET BEEN WRONG.*** `da99book`
-  reads `not-found / inactive / dead` with `Result=success`, `ExecMainStatus=0`, empty
-  InvocationID, MemoryPeak `[not set]` -- **and its true last outcome WAS a success**, as at round
-  200 (de102smoke) and round 213 (de104smoke). ***THREE UNFOUNDED ANSWERS, ZERO WRONG ONES -- WHICH
-  IS PRECISELY WHY THE TRAP SURVIVES: NOTHING HAS PUNISHED IT YET.*** *A reading that is
-  accidentally right is the most dangerous kind, because only the discipline distinguishes it from
-  evidence.*
-  (4) **BE 74's RECORD GIVES THE FIVE FIELDS A HOME IN THE ARTIFACT.** R-704's finding was that
-  the read unit's five fields **lived only in BE's report** -- the launcher's record had launch and
-  exit only. `be_heavy_run_record_be74struct04.jsonl` now carries **`launch`, `exit`, `outcome`,
-  `stopped`, `journal_copy`** against BE 66's `launch / poll / exit`. ***The fix is visible in the
-  record's own event vocabulary***, not only in a report about it. Completed 18:29:47Z; lock free.
-  (5) **THE STRUCTURE DECLARATION NAMES 09-03 ONLY, AND I TESTED ALL THREE DAYS:**
-  `be_daybook_structure_v2.json`, 5,159 B `0fa3c6db8750857f` -- *the head digest I verified at
-  round 205, unchanged* -- contains `20260903` and **NOT** `20260904` or `20260905`. **A positive
-  and two negatives**, which is what separates *"it names 09-03"* from *"it names ONLY 09-03"*.
-  (6) **DA 99's EXIT 3 IS THE CONVENTION I MEASURED, CARRYING A VERDICT.** Its status is
-  `PROVENANCE_INCOMPLETE` -- *a verdict about the 09-03 receipt's missing provenance* -- at **exit
-  3, DA's declared code**. ***So the house REFUSAL code I measured at round 213 is now carrying a
-  VERDICT***, and R-708 rules a producer-declared code **a THIRD KIND, UNMAPPED until declared**,
-  routed to REV 79. *Status verified at both new records; the ruling relayed.* **A code space with
-  three meanings needs the declaration more than one with two.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,401 -> 1,407; flag_provenance 946 -> 952;
-  tasks 19; **685 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-FOURTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-206 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2478,6 +2492,78 @@ flags:
                              # artifact families landing on the same 2-of-3 pattern,
                              # for the same reason: 09-03 was produced before the
                              # corrections and has not needed one.*
+  I_drove_the_new_immutability_checker_and_its_FALSIFIER_PASSES: RULE-15-SHIPPED
+                             # `scripts/declaration_immutability.sh --falsify` run by
+                             # me: **the positive control FLAGS** (`FORKED_BY_EDIT …
+                             # producer_exit_maps_v2.json edits_after_base=2`) and
+                             # **the known-good PASSES** (`OK … v1
+                             # edits_after_base=0`), **`FALSIFIER PASS`, exit 0.**
+                             # *A new instrument that has proved it can fire, on the
+                             # round it lands* -- **which is the whole of rule 15 and
+                             # is not always done on the same day.**
+  and_its_COMMENT_says_three_while_its_CODE_reports_two: TOUCHES-VS-EDITS
+                             # The header names **three commits** on the collided file
+                             # (`a81484c -> ba635de -> 40c8903`) and the run reports
+                             # **`edits_after_base=2`** -- because the check **excludes
+                             # the creation commit**, so three TOUCHES are one creation
+                             # plus two EDITS. ***BOTH NUMBERS ARE RIGHT ABOUT
+                             # DIFFERENT THINGS***, and I record it because a later
+                             # reader citing "three edits" from the comment against a
+                             # tool that prints two has the makings of the citation
+                             # errors this register has already corrected twice today.
+                             # *A precision note, not a defect.*
+  the_DEFAULT_baseline_makes_the_directory_clean_BY_CONSTRUCTION_so_I_measured_what_it_hides: NINETEEN-OF-FIFTY-ONE
+                             # Default run (base = the repair commit): **51
+                             # declarations, ALL OK, 0 forked, 0 untracked, exit 0** --
+                             # *clean by construction, since the baseline IS the
+                             # repair.* **So I re-ran it with the EARLIEST commit that
+                             # ever touched the directory: `FORKED_BY_EDIT` on
+                             # NINETEEN of the fifty-one, across EXACTLY TEN
+                             # FAMILIES** -- `be_ceiling_null_declaration`,
+                             # `be_forward_family_declaration`,
+                             # `be_interim_declaration`, `be_q4_matched_random_null`,
+                             # `be_r_survey_declaration`, `be_race_read_declaration`,
+                             # `be_read_declaration`, `de_multiday_gate1_params`,
+                             # `heavy_run_form`, `producer_exit_maps`; worst file
+                             # **3 edits**. ***R-711's "ten families" CORROBORATED BY
+                             # AN INDEPENDENT RUN, and the size named: 37 % OF LANDED
+                             # DECLARATION VERSIONS WERE EDITED IN PLACE AT SOME
+                             # POINT.*** *Correctly hidden as history -- and knowing
+                             # the SIZE is what says whether the rule is new discipline
+                             # or a tidy-up. Nineteen of fifty-one says discipline.*
+  a_CHAIN_can_resolve_perfectly_and_still_have_had_members_edited_IN_PLACE: TWO-DIFFERENT-PROPERTIES
+                             # ***`de_multiday_gate1_params` IS AMONG THE TEN*** -- and
+                             # at **round 201 I DROVE that family's chain and found 15
+                             # members, each naming its predecessor by the pair, ONE
+                             # HEAD, unbroken.** **Both are true.** ***THE CHAIN CHECKS
+                             # LINKS; IMMUTABILITY CHECKS HISTORY; THE FIRST DOES NOT
+                             # IMPLY THE SECOND.*** *My round-201 sentence was correct
+                             # and did not cover this, and I would not have found the
+                             # gap without an instrument that asks the other question.*
+                             # **Two properties, two checkers, and neither substitutes
+                             # for the other.**
+  the_exit_map_chain_RESOLVES_AGAIN_at_v4: FOUR-DEEP-ONE-HEAD
+                             # Driven: **v1 `c4e9438019ff88c5` -> v2 `43b99ea309f74ad6`
+                             # -> v3 `cb23e2749d2c0bd1` -> v4 `829569e2b924d1b7`**,
+                             # each naming its predecessor by the pair, **v4 the SOLE
+                             # head** and matching the digest R-711 names. *The
+                             # collision R-711 reports -- three v2s from v1's pair -- is
+                             # gone from the resolved chain*, and `heavy_run_form_v4
+                             # .json` has landed beside it for REV 80's peak ruling.
+  the_preservation_commit_EXISTS_IN_MY_OBJECT_STORE_but_is_NOT_ON_THE_BRANCH: WORKTREES-SHARE-OBJECTS
+                             # R-711 records `53b60c9` in `wt-de` as **not pushed**, so
+                             # I expected to be unable to reach it. ***I CAN:
+                             # `git cat-file -t` returns `commit` and `git show` reads
+                             # it -- because a git WORKTREE SHARES THE OBJECT STORE
+                             # WITH THE MAIN TREE.*** **And `merge-base
+                             # --is-ancestor` says it is NOT an ancestor of
+                             # `origin/mm-research`.** *So the honest state is neither
+                             # "unreachable" nor "landed": the object is readable here
+                             # and the commit is not on the branch* -- `WIP HELD (red):
+                             # DE 108 rows … + the worktree copies`, 18:50:54Z, four
+                             # files. **A distinction worth having, because "not
+                             # pushed" and "not readable" are different, and only one
+                             # of them was true.**
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25260,6 +25346,51 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 221, 2026-09-06T18:58:00Z ---
+  I_drove_the_new_immutability_checker_and_its_FALSIFIER_PASSES:
+    prov: CHECKED
+    artifact: scripts/declaration_immutability.sh
+    as_of: 2026-09-06T18:56:00Z
+    said: >-
+      read the script, then ran it with --falsify and captured both cells and the exit code: the
+      positive control flagged, the known-good passed, FALSIFIER PASS, exit 0.
+  and_its_COMMENT_says_three_while_its_CODE_reports_two:
+    prov: CHECKED
+    artifact: scripts/declaration_immutability.sh
+    as_of: 2026-09-06T18:56:00Z
+    said: >-
+      compared the three commit hashes named in the header comment against the edits_after_base
+      figure the run prints, and read the check function to see that the creation commit is excluded.
+  the_DEFAULT_baseline_makes_the_directory_clean_BY_CONSTRUCTION_so_I_measured_what_it_hides:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-06T18:57:00Z
+    said: >-
+      ran the script twice over the directory -- once at its default base and once at the earliest
+      commit that ever touched the directory, found with git log --reverse -- and counted OK versus
+      FORKED_BY_EDIT lines and the distinct family prefixes among them.
+  a_CHAIN_can_resolve_perfectly_and_still_have_had_members_edited_IN_PLACE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v15.json
+    as_of: 2026-09-06T18:57:00Z
+    said: >-
+      the family this artifact heads appears in the early-base FORKED_BY_EDIT list, and at round 201
+      I drove its chain-head predicate over all fifteen members and found one head and no fork. Both
+      readings stand; they are of different properties.
+  the_exit_map_chain_RESOLVES_AGAIN_at_v4:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/producer_exit_maps_v4.json
+    as_of: 2026-09-06T18:55:03Z
+    said: >-
+      hashed all four members, read each supersedes block and applied the chain-head predicate; one
+      head, and its digest matches the one R-711 names.
+  the_preservation_commit_EXISTS_IN_MY_OBJECT_STORE_but_is_NOT_ON_THE_BRANCH:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T18:57:30Z
+    said: >-
+      ran git cat-file -t on the commit, then merge-base --is-ancestor against origin/mm-research,
+      then git show --stat for its subject and file count. Readable, not an ancestor.
   # --- MEM round 220, 2026-09-06T18:45:00Z ---
   I_PROBED_THE_MECHANISM_MYSELF_AND_THE_RETENTION_PATH_IS_NOT_THE_DEFECT:
     prov: CHECKED

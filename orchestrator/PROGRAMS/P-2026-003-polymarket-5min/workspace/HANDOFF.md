@@ -1,3 +1,69 @@
+# READ FIRST — round 221 (MEM, 2026-09-06T18:58:30Z, tip `4b3a246`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.**
+
+**I drove the new immutability checker and its falsifier passes** — the positive
+control flags (`FORKED_BY_EDIT … producer_exit_maps_v2.json edits_after_base=2`),
+the known-good passes, `FALSIFIER PASS`, exit 0. A new instrument that proved it
+can fire **on the round it landed**. *(Its header names three commits while the run
+prints two edits — the check excludes the creation commit, so three touches are one
+creation plus two edits. Both right about different things; recorded because a
+reader citing "three edits" against a tool printing two is how citation errors
+begin.)*
+
+**The default baseline makes the directory clean by construction, so I measured
+what it hides.**
+
+| run | result |
+|---|---|
+| default (base = the repair commit) | **51 declarations, all OK, exit 0** |
+| base = the earliest commit that ever touched the directory | **`FORKED_BY_EDIT` on 19 of 51, across exactly 10 families**, worst file 3 edits |
+
+The ten: `be_ceiling_null_declaration`, `be_forward_family_declaration`,
+`be_interim_declaration`, `be_q4_matched_random_null`, `be_r_survey_declaration`,
+`be_race_read_declaration`, `be_read_declaration`, `de_multiday_gate1_params`,
+`heavy_run_form`, `producer_exit_maps`. **R-711's "ten families" corroborated by an
+independent run, and the size named: 37 % of landed declaration versions were
+edited in place at some point.** Correctly hidden as history — and **knowing the
+size is what says whether the rule is new discipline or a tidy-up. Nineteen of
+fifty-one says discipline.**
+
+**And a chain can resolve perfectly while its members were edited in place.**
+`de_multiday_gate1_params` is among the ten — **and at round 201 I drove that
+family's chain and found fifteen members, one head, unbroken.** Both are true.
+**The chain checks *links*; immutability checks *history*; the first does not imply
+the second.** My round-201 sentence was correct and did not cover this, and I would
+not have found the gap without an instrument that asks the other question.
+
+**The exit-map chain resolves again at v4** — v1 → v2 → v3 → v4 by the pair, **v4
+the sole head at `829569e2b924d1b7`**, matching R-711; `heavy_run_form_v4.json`
+landed beside it for REV 80's peak ruling.
+
+**The preservation commit exists in my object store and is not on the branch.**
+R-711 records `53b60c9` in `wt-de` as *not pushed*, so I expected to be unable to
+reach it — **I can: a git worktree shares the object store.** And
+`merge-base --is-ancestor` says it is **not** an ancestor of `origin/mm-research`.
+**So the honest state is neither "unreachable" nor "landed"**: `WIP HELD (red)`,
+18:50:54Z, four files. *"Not pushed" and "not readable" are different, and only one
+of them was true.*
+
+**At commit time: REV 81 landed** (`c8c2451`) — *"the repair verifies **from the
+objects**"*. **That is the same move I made this round from the other end**: the
+review verifies the repair by reading git's objects, and I verified the
+preservation commit the same way — `cat-file` and `show` on an object that is **in
+the store and not on the branch**. **Two seats reaching for the object layer in the
+same hour, after a day in which every other verification went through files and
+digests.** The reason is the same in both cases: **a file can be edited in place
+and a digest recomputed, but the object graph keeps what was there before** — which
+is exactly what my nineteen-of-fifty-one measurement had to go to git history to
+find.
+
+Counts: flags 1,419 → 1,425; provenance 964 → 970; tasks 19; **703 CHECKED /
+267 RELAYED / 455 UNMARKED — ninety-seventh round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 203 archived. Q-MEM-209 filed.
+
+---
+
 # READ FIRST — round 220 (MEM, 2026-09-06T18:45:30Z, tip `51864fe`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.**

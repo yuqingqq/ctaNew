@@ -16680,3 +16680,48 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **679 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-THIRD round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-205 filed.)
 ```
+
+## Batch 203 — archived 2026-09-06T18:58:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 221 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T18:30:30Z (MEM ROUND 218 -- R-708 SWEPT, tip `b217ae0`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NEITHER READ ARTIFACT OPENED -- v1 FOR THE SEVENTH CENSUS, THE NEW `.v2` HASHED ON
+  ARRIVAL.**
+  (1) ***THE 09-03 PRE_READ CHAIN IS FIVE DEEP, UNBROKEN, AND DRIVEN.*** Each record names its
+  predecessor by the `{path, sha256}` pair; **exactly one head** (`…182045Z`, `e75afb0fd32b2249`,
+  status `PROVENANCE_INCOMPLETE`). ***AND IT GREW BY TWO THIS ROUND WHILE THE THREE OLDER RECORDS
+  STAYED BYTE-IDENTICAL*** to what I verified at rounds 191 and 196. **The longest chain I have
+  DRIVEN here, every link recomputed rather than read.**
+  (2) **THE READ ARTIFACT'S `.v2` LANDED** -- 15,208 B `dac883eb247acf89`, *which round 217
+  recorded as ruled-but-not-landed* -- **and v1 is 12,025 B `1fa4b93f02b369af` for the SEVENTH
+  census**, the markers likewise. *Rule 13 on the read artifact: superseded, not edited* -- **and I
+  have still never opened either.**
+  (3) ***THE VOID CELL HAS NOW BEEN READ THREE TIMES AND HAS NEVER YET BEEN WRONG.*** `da99book`
+  reads `not-found / inactive / dead` with `Result=success`, `ExecMainStatus=0`, empty
+  InvocationID, MemoryPeak `[not set]` -- **and its true last outcome WAS a success**, as at round
+  200 (de102smoke) and round 213 (de104smoke). ***THREE UNFOUNDED ANSWERS, ZERO WRONG ONES -- WHICH
+  IS PRECISELY WHY THE TRAP SURVIVES: NOTHING HAS PUNISHED IT YET.*** *A reading that is
+  accidentally right is the most dangerous kind, because only the discipline distinguishes it from
+  evidence.*
+  (4) **BE 74's RECORD GIVES THE FIVE FIELDS A HOME IN THE ARTIFACT.** R-704's finding was that
+  the read unit's five fields **lived only in BE's report** -- the launcher's record had launch and
+  exit only. `be_heavy_run_record_be74struct04.jsonl` now carries **`launch`, `exit`, `outcome`,
+  `stopped`, `journal_copy`** against BE 66's `launch / poll / exit`. ***The fix is visible in the
+  record's own event vocabulary***, not only in a report about it. Completed 18:29:47Z; lock free.
+  (5) **THE STRUCTURE DECLARATION NAMES 09-03 ONLY, AND I TESTED ALL THREE DAYS:**
+  `be_daybook_structure_v2.json`, 5,159 B `0fa3c6db8750857f` -- *the head digest I verified at
+  round 205, unchanged* -- contains `20260903` and **NOT** `20260904` or `20260905`. **A positive
+  and two negatives**, which is what separates *"it names 09-03"* from *"it names ONLY 09-03"*.
+  (6) **DA 99's EXIT 3 IS THE CONVENTION I MEASURED, CARRYING A VERDICT.** Its status is
+  `PROVENANCE_INCOMPLETE` -- *a verdict about the 09-03 receipt's missing provenance* -- at **exit
+  3, DA's declared code**. ***So the house REFUSAL code I measured at round 213 is now carrying a
+  VERDICT***, and R-708 rules a producer-declared code **a THIRD KIND, UNMAPPED until declared**,
+  routed to REV 79. *Status verified at both new records; the ruling relayed.* **A code space with
+  three meanings needs the declaration more than one with two.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,401 -> 1,407; flag_provenance 946 -> 952;
+  tasks 19; **685 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-FOURTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-206 filed.)
+```
