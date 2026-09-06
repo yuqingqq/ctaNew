@@ -58,6 +58,14 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import be_data_root as _BDR
+import be_rule22 as _R22
+
+#: RULE 22 AS AMENDED (R-605): the closure and HEAD are captured HERE, at
+#: import, before any work. This producer carried NO provenance stamp at
+#: all until round 60 (R-613) -- a landing to it mid-run would have been
+#: invisible in its receipt. The stamp is READ at emit so it can report
+#: drift; the digests it reports are the ones seen at import.
+_R22.init("be_gate1_fragment import")
 
 ROOT = HERE.parents[1]
 DERIVED = _BDR.derived()
@@ -298,13 +306,16 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
                   "required_stem": GATE1_STEM},
         "data_root": _BDR.receipt_block(),
         "scope": _BDR.scope_stats(),
+        "producing_code": _R22.stamp(__file__),
+        "rule22_checked_at_emit": _R22.assert_unchanged(
+            "be_gate1_fragment receipt emit"),
         "one_file_per_day": True,
         "no_book_built": True, "no_assembly_run": True,
         "decides_nothing": "REPORTED (rule 14).",
     }
 
 
-EXPECTED_CHECKS = 10
+EXPECTED_CHECKS = 14
 
 
 def selftest() -> int:
@@ -373,6 +384,47 @@ def selftest() -> int:
        f"{len(names)}-dataset refusal set and the cap all come from the "
        f"module's own constants, so a declaration cannot drift from the "
        f"builder")
+
+    # ---- RULE 22 AS AMENDED (R-605): this producer had NO stamp at all ----
+    import tempfile as _tf, importlib as _il
+    _st22 = _R22.stamp(__file__)
+    ok(_st22["producing_code"] == "be_gate1_fragment.py"
+       and _st22["producing_code_sha256"]
+       == __import__("hashlib").sha256(
+           Path(__file__).read_bytes()).hexdigest()
+       and _st22["captured_at"] == "IMPORT"
+       and _st22["builder_commit"]
+       and _st22["import_closure"]["n_modules"] >= 2,
+       f"RULE 22: this module now stamps its OWN identity -- the digest of "
+       f"the bytes at import, HEAD {{str(_st22['builder_commit'])[:12]}}, "
+       f"and the {{_st22['import_closure']['n_modules']}} modules of its "
+       f"import closure under live/. Until round 60 it carried none of "
+       f"this, so a landing to it mid-run was invisible in its receipt")
+    ok(_st22["closure_unchanged_during_the_run"] is True
+       and _R22.assert_unchanged("be_gate1_fragment battery")["closure_unchanged"],
+       "POSITIVE CONTROL: with nothing moved the emit ADMITS -- a guard "
+       "shown only to refuse has not been shown to work (rule 16)")
+    _td22 = _tf.mkdtemp(prefix="be60_be_gate1_fragment_")
+    _pm = Path(_td22) / "be60_probe_be_gate1_fragment.py"
+    _pm.write_text("V = 1\n")
+    sys.path.insert(0, _td22)
+    _il.import_module("be60_probe_be_gate1_fragment")
+    _c22 = _R22.Capture(root=_td22).capture("battery")
+    _pm.write_text("V = 2\n")
+    try:
+        _c22.assert_unchanged("be_gate1_fragment known-bad")
+        ok(False, "a module rewritten mid-run must refuse the emit")
+    except _R22.Rule22Refused as _e22:
+        ok("be60_probe_be_gate1_fragment.py" in str(_e22) and "DID NOT RUN" in str(_e22),
+           "KNOWN-BAD: a module of the closure rewritten mid-run REFUSES "
+           "THE EMIT BY NAME -- R-603's defect, where a receipt would have "
+           "named bytes that did not run")
+    sys.path.remove(_td22)
+    _src22 = Path(__file__).read_text()
+    ok('"producing_code": _R22.stamp(__file__),' in _src22
+       and '"rule22_checked_at_emit": _R22.assert_unchanged(' in _src22,
+       "AND IT IS WIRED INTO THE EMITTED RECEIPT: both the stamp and the "
+       "refusal, read from this module's own source rather than claimed")
 
     print()
     if fails:

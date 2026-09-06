@@ -44,6 +44,18 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import be_data_root as _BDR
+import be_rule22 as _R22
+
+#: RULE 22 AS AMENDED (R-605). The CAPTURE happens here, at import,
+#: before any work: the digest of every module of this run's import
+#: closure under `live/`, plus the worktree HEAD and its dirty state.
+#: The STAMP is taken at EMIT -- it has to be, because the fields that
+#: matter (`closure_drift`, `head_unchanged_during_the_run`) are
+#: statements about the interval BETWEEN import and emit, and a stamp
+#: frozen at import could not carry them. What must never be read at
+#: emit is the DIGEST, and it is not: `stamp()` reports the bytes seen
+#: at first sight and compares them with the file now.
+_R22.init("be_daybook_build import")
 
 #: BE48 §B.4: THIS MODULE HAD TWO ROOTS. The book went through the resolver
 #: while the scratch fragment and the receipt went to `HERE.parents[1]` -- so
@@ -73,6 +85,8 @@ STAGE_BUDGETS_GB = {
     "A4_write_book": 7.5,
 }
 FIXTURE_STAGE_BUDGETS_GB = {k: 0.7 for k in STAGE_BUDGETS_GB}
+#: The scope cap every budget above was derived against. Never raised.
+CAP_GB = 8.0
 CHUNK_WINDOWS = 6             # as declared in be_assembly_budget
 
 #: REV 46 (5). The index release was MEASURED and never ASSERTED -- a
@@ -96,16 +110,34 @@ def _index_call_made() -> str:
 
 
 def _assembly_evidence(asm: dict, ref: dict, cov: dict, n_gen: int,
-                       chunk_windows: int) -> dict:
-    """REV 46 (2) and (3): the numbers that PROVE the seam worked, as FIELDS.
+                       chunk_windows: int, rows_pin: dict | None = None) -> dict:
+    """REV 46 (2) and (3), corrected in round 60: the numbers that PROVE the
+    seam worked, as FIELDS -- each accounting CLOSED IN ITS OWN POPULATION.
 
-    (2) `state_join_failed` and the chunk count lived only in a Q-row and in
-    the run log. The number that establishes the day's rows joined the day's
-    tape belongs in the receipt a reader resolves.
+    WHAT ROUND 59 GOT WRONG, measured on the 09-04 book. The field
+    `reasons_account_for_the_count` compared `sum(drops_by_coin)` with
+    `n_uncovered` and reported FALSE (29,465 against 19,663). Both numbers
+    were right; the comparison was not. `drops_by_coin` counts FRAGMENT ROWS
+    (`phase2_arms` builds it over `[r for r in data["rows"] if status ==
+    "OK"]`); `n_uncovered` counts REFERENCE GENERATIONS
+    (`n_reference_generations - n_covered`). Those are two populations, so
+    the predicate could not hold on any real day -- and REV 48's known-bad
+    could not reveal that, because the fixture supplied both sides in the
+    same unit (15 against 15). A control whose fixture makes the two sides
+    commensurable cannot fail the way the real data fails.
 
-    (3) The uncovered generations get their REASON CLASS beside the count,
-    and the classes are CHECKED to sum to it -- a count without a reason
-    invites the reading that the gap is unexplained."""
+    So there are now TWO statements, each within one population:
+
+      ROWS        kept + dropped == the rows the producer published
+                  (the tape receipt's `n_rows`, an INDEPENDENT number from
+                  round 58, not a total this function computed itself).
+                  On 09-04: 609,137 + 29,465 = 638,602. It closes.
+
+      GENERATIONS n_uncovered, reported with its coverage and WITHOUT a
+                  reason breakdown -- because none of the drop classes is in
+                  that unit. Saying so is the honest form; attaching row
+                  reasons to a generation count is what produced the false
+                  field."""
     a = asm.get("assembly", {}) or {}
     drops = {c: dict(v) for c, v in (a.get("drops_by_coin") or {}).items()}
     kept = dict(a.get("kept_by_coin") or {})
@@ -116,7 +148,10 @@ def _assembly_evidence(asm: dict, ref: dict, cov: dict, n_gen: int,
         for k, v in dd.items():
             per_reason[k] = per_reason.get(k, 0) + int(v)
     total_drops = sum(per_reason.values())
+    total_kept = sum(int(v) for v in kept.values())
     one_uncovered = sorted(set(uncovered.values()))
+    rows_published = (rows_pin or {}).get("n_rows")
+    accounted = total_kept + total_drops
     return {
         "state_join_failed": per_reason.get("state_join_failed"),
         "state_join_failed_is_zero":
@@ -129,23 +164,52 @@ def _assembly_evidence(asm: dict, ref: dict, cov: dict, n_gen: int,
         "chunk_windows": chunk_windows,
         "n_windows": len(ref),
         "kept_by_coin": kept,
+        "ROW_ACCOUNTING": {
+            "population": "FRAGMENT ROWS -- the rows phase2_arms reads from "
+                          "the day's fragment with status OK",
+            "kept": total_kept,
+            "dropped": total_drops,
+            "by_reason": per_reason,
+            "accounted": accounted,
+            "rows_published_by_the_tape_receipt": rows_published,
+            "rows_pin_receipt": (rows_pin or {}).get("receipt"),
+            "rows_accounted_for": (rows_published is not None
+                                   and accounted == rows_published),
+            "if_they_do_not_close": "the residual is UNEXPLAINED and is "
+                                    "reported as such rather than absorbed. "
+                                    "Both sides are ROW counts and the "
+                                    "total comes from round 58's receipt, "
+                                    "not from this function -- so a "
+                                    "mismatch is a real disagreement "
+                                    "between producers, not a unit error",
+            "residual": (None if rows_published is None
+                         else rows_published - accounted),
+        },
         "UNCOVERED_GENERATIONS": {
+            "population": "REFERENCE GENERATIONS -- a DIFFERENT population "
+                          "from the row accounting above, which is why no "
+                          "reason breakdown is attached to it",
             "count": one_uncovered[0] if len(one_uncovered) == 1 else uncovered,
             "identical_across_heads": len(one_uncovered) == 1,
-            "by_reason": per_reason,
-            "reasons_sum": total_drops,
-            "reasons_account_for_the_count":
-                (len(one_uncovered) == 1 and total_drops == one_uncovered[0]),
-            "if_they_do_not_sum": "the residual is UNEXPLAINED and is "
-                                  "reported as such rather than absorbed -- "
-                                  "a count without a reason invites the "
-                                  "reading that the gap is understood",
             "n_reference_generations": n_gen,
+            "coverage": (1 - one_uncovered[0] / n_gen
+                         if len(one_uncovered) == 1 and n_gen else None),
+            "why_no_reason_class_here": "the drop classes "
+                                        "(pre_window_excluded, "
+                                        "gap_at_cutoff_excluded, "
+                                        "no_level_history_excluded, "
+                                        "state_join_failed) are counted in "
+                                        "FRAGMENT ROWS. Attaching them to a "
+                                        "generation count is what made "
+                                        "round 59's "
+                                        "`reasons_account_for_the_count` "
+                                        "report FALSE on numbers that were "
+                                        "each correct",
+            "superseded_field": "reasons_account_for_the_count (round 59) -- "
+                                "withdrawn, not silently dropped: it "
+                                "compared rows with generations",
         },
-        "computed_from": "asm['assembly']['drops_by_coin'] and the reference, "
-                         "not from the run log",
     }
-
 
 def assert_index_released(before_gb: float, after_gb: float,
                           index_peak_gb: float,
@@ -193,20 +257,85 @@ def day_tape_sha(day: str, coin: str = COIN) -> str | None:
     # the builder auto-versioned past it -- which it did the same round.
     # The search now GLOBS and takes the HIGHEST version, so it follows the
     # builder instead of restating a snapshot of it.
+    return (day_tape_pin(day, coin) or {}).get("sha256")
+
+
+def _receipt_head(stem: str) -> tuple:
+    """The HIGHEST-versioned receipt matching `stem`, and its parsed version.
+
+    ONE resolver, used by everything that needs a round-58 receipt -- so the
+    name a receipt REPORTS and the file it READ can never disagree again.
+    Round 59 emitted `...v3.json` from a hardcoded f-string 470 lines away
+    from this glob, and named a file that does not exist for 09-04."""
     import re
-    stem = f"be_gate1_state_tape_receipt_{day}_{coin}"
 
     def _ver(q: Path) -> int:
         m = re.search(r"\.v(\d+)\.json$", q.name)
         return int(m.group(1)) if m else 1
 
     cands = sorted(OUT_DERIVED.glob(f"{stem}*.json"), key=_ver, reverse=True)
+    return (cands, _ver)
+
+
+def day_tape_pin(day: str, coin: str = COIN) -> dict | None:
+    """The tape's PIN as the round-58 receipt publishes it: digest, the
+    receipt's REAL name, and the row count the row accounting closes on."""
+    stem = f"be_gate1_state_tape_receipt_{day}_{coin}"
+    cands, _ = _receipt_head(stem)
     for r in cands:
         d = json.loads(r.read_text())
         if d.get("WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY", {}) \
                 .get("split") == "score":
-            return d["tape"]["sha256"]
+            return {"sha256": d["tape"]["sha256"],
+                    "receipt": r.name,          # READ, never typed
+                    "n_rows": d["tape"].get("n_rows"),
+                    "bytes": d["tape"].get("bytes"),
+                    "split": "score"}
     return None
+
+
+def day_fragment_pin(day: str, coin: str = COIN) -> dict | None:
+    """The fragment's PIN as its own receipt publishes it.
+
+    Round 59 had no such binding: the builder hashed the file itself and
+    handed that digest to the front door, which recomputed and compared it
+    with itself. A self-consistency check over a two-statement window is not
+    the check its name implies -- it cannot tell that these are the bytes
+    round 58 published."""
+    stem = f"be_gate1_fragment_receipt_{day}_{coin}"
+    cands, _ = _receipt_head(stem)
+    for r in cands:
+        d = json.loads(r.read_text())
+        fr = d.get("fragment") or {}
+        if fr.get("sha256"):
+            return {"sha256": fr["sha256"], "receipt": r.name,
+                    "n_rows": (d.get("build") or {}).get("n_rows"),
+                    "n_windows": (d.get("build") or {}).get("n_windows"),
+                    "bytes": fr.get("bytes")}
+    return None
+
+
+def assert_input_matches_its_receipt(kind: str, path, pin: dict | None) -> dict:
+    """THE FILE ON DISK IS THE ONE ITS BUILDER PUBLISHED -- or refuse.
+
+    This is the check round 59 did not have. `day_assembly_inputs` verifies
+    WHICH BYTES reach the pass; only this says those bytes are the ones the
+    producing receipt pinned."""
+    if not pin or not pin.get("sha256"):
+        raise BookRefused(
+            f"REFUSED: no builder receipt pin for the {kind}. The assembly "
+            f"binds to the digest its producer published; without one there "
+            f"is nothing to bind to and the day is refused, never assumed.")
+    got = _sha_file(path)
+    if got != pin["sha256"]:
+        raise BookRefused(
+            f"REFUSED: the {kind} on disk does not match the digest its "
+            f"receipt {pin['receipt']} pins -- {got[:16]}... on disk against "
+            f"{pin['sha256'][:16]}... pinned. These are not the bytes round "
+            f"58 published.")
+    return {"kind": kind, "sha256": got, "receipt": pin["receipt"],
+            "matches_its_builder_receipt": True,
+            "compared_full_length": len(got) == 64}
 
 
 def _sha_file(p) -> str:
@@ -353,25 +482,57 @@ def _rss_now_gb() -> float:
 
 
 class _Stages:
-    """Per-stage budgets, asserted. A stage over its budget REFUSES."""
+    """Per-stage budgets, asserted, measured as THIS RUN'S OWN GROWTH.
 
-    def __init__(self, budgets: dict):
+    DA 77 (R-613) found the smoke's shape one caller away here: `ru_maxrss`
+    is process-wide and never falls, so a budget narrower than the process --
+    one stage's, one fixture's -- compared against it is not measuring what
+    it names, and once earlier work has raised the high-water the narrow
+    check can never pass again. That is exactly how the 09-03 smoke died: a
+    real day's 2,426 MB high-water judged against a fixture's 700 MB budget.
+
+    So the BUDGET is now compared against `growth_gb` -- the high-water minus
+    this run's own baseline at the first stage -- for the fixture and the
+    real path alike. That comparison is LOOSER than the old one by the
+    baseline (~0.1-0.2 GB), and a budget must never be quietly widened, so
+    the absolute figure is not dropped: `peak_gb` is still measured and now
+    checked against the CAP itself, which is the ceiling every budget was
+    derived from. Nothing is relaxed overall -- one check became two, each
+    against the quantity it actually names."""
+
+    def __init__(self, budgets: dict, *, cap_gb: float = CAP_GB):
         self.budgets = dict(budgets)
+        self.cap_gb = cap_gb
+        #: this run's own high-water BEFORE its first stage
+        self.baseline_gb = _rss_gb()
         self.rows = []
 
     def done(self, name: str, t0: float) -> dict:
         b = self.budgets.get(name)
+        peak = _rss_gb()
         row = {"stage": name, "wall_s": round(time.time() - t0, 1),
-               "peak_gb": _rss_gb(), "current_gb": _rss_now_gb(),
-               "budget_gb": b}
-        row["within_budget"] = (b is None or row["peak_gb"] <= b)
+               "peak_gb": peak,
+               "baseline_gb": self.baseline_gb,
+               "growth_gb": round(peak - self.baseline_gb, 3),
+               "current_gb": _rss_now_gb(),
+               "budget_gb": b, "cap_gb": self.cap_gb,
+               "budget_is_measured_on": "growth_gb (this run's own), never "
+                                        "the process-wide ru_maxrss"}
+        row["within_budget"] = (b is None or row["growth_gb"] <= b)
+        row["within_cap"] = peak <= self.cap_gb
         self.rows.append(row)
         if not row["within_budget"]:
             raise BookRefused(
-                f"REFUSED at stage {name}: peak {row['peak_gb']} GB exceeds "
-                f"its declared budget of {b} GB. R8/R-174: the cap is NOT "
-                f"raised and the population is NOT reduced. The day is "
-                f"reported with its measured peak and refused.")
+                f"REFUSED at stage {name}: this run GREW {row['growth_gb']} "
+                f"GB from its own {self.baseline_gb} GB baseline, which "
+                f"exceeds the declared budget of {b} GB. R8/R-174: the cap "
+                f"is NOT raised and the population is NOT reduced. The day "
+                f"is reported with its measured growth and refused.")
+        if not row["within_cap"]:
+            raise BookRefused(
+                f"REFUSED at stage {name}: process high-water "
+                f"{row['peak_gb']} GB is at or over the CAP of "
+                f"{self.cap_gb} GB. The cap is never raised (R8/R-174).")
         return row
 
 
@@ -497,9 +658,22 @@ def build(day: str, *, coin: str = COIN,
     # read time, refusing a ruled day that supplies nothing rather than
     # falling back to the consumed-era constant.
     import be_gate1_fragment as FRAGMOD
+    # RULE 22: that import is LAZY and lands ~11 minutes into the run, so the
+    # closure captured at module import did not contain it. Capture again --
+    # a stamp that silently omits a module it later used would be worse than
+    # no stamp, because it reads as coverage.
+    _R22.CAPTURE.capture("be_daybook_build build(): after the lazy imports")
     _hy = f"{day[:4]}-{day[4:6]}-{day[6:]}"
     _tp = TAPEMOD.out_path(day, coin)
     _fp = FRAGMOD.out_path(day, coin)
+    # THE INPUTS ARE THE ONES ROUND 58 PUBLISHED, not merely self-consistent:
+    # each digest is compared with the pin in its own builder receipt, at the
+    # receipt's REAL head, before the front door sees it.
+    _tpin = day_tape_pin(day, coin)
+    _fpin = day_fragment_pin(day, coin)
+    obs["inputs_vs_their_receipts"] = [
+        assert_input_matches_its_receipt("tape", _tp, _tpin),
+        assert_input_matches_its_receipt("fragment", _fp, _fpin)]
     inp = R.day_assembly_inputs(
         _hy,
         tape={"path": str(_tp), "sha256": _sha_file(_tp)},
@@ -587,6 +761,15 @@ def build(day: str, *, coin: str = COIN,
     assert_coverage(cov, n_gen, day)
 
     _BDR.require_ledger()          # result-bearing: refuse a non-ledger tree
+    # RULE 22 (R-605): REFUSE BEFORE ANYTHING IS WRITTEN, not after. DE's
+    # runner refuses at the emit and loses the receipt; refusing here loses
+    # neither -- if a module of this run's closure moved, or HEAD moved, no
+    # book and no receipt exist to misattribute. What this does NOT cover is
+    # stated rather than implied: the ~7 s between this line and the last
+    # byte of the receipt. The stamp in the receipt re-reads the closure and
+    # reports it again, so that window is visible too.
+    obs["rule22_checked_before_write"] = _R22.assert_unchanged(
+        "be_daybook_build: before the book is written")
     t = time.time()
     book = {"fr": fr, "asm": asm}
     buf = pickle.dumps(book, protocol=pickle.HIGHEST_PROTOCOL)
@@ -630,7 +813,8 @@ def build(day: str, *, coin: str = COIN,
                       "terminal_marks_present": bool(fr.get("terminal_marks")),
                       "n_terminal_marks": len(fr.get("terminal_marks") or {})},
         "assembly_evidence": _assembly_evidence(asm, ref, cov, n_gen,
-                                                chunk_windows),
+                                                chunk_windows,
+                                                rows_pin=_tpin),
         "asm": {"by_arm_keys": [list(k) for k in asm["by_arm"]],
                 "coverage_by_head": cov,
                 "both_heads_present": True,
@@ -662,17 +846,42 @@ def build(day: str, *, coin: str = COIN,
                 "resources.asm_peak_gb_PUBLISHED",
         },
         "resources": obs,
-        "seam": {"commit": "6f134a6",
+        # RULE 22 AS AMENDED: captured at IMPORT (and again after the lazy
+        # imports), reported here, and REFUSED above if anything moved.
+        "producing_code": _R22.stamp(__file__),
+        "seam": {"commit": _R22.module_commit(R.__file__),
+                 "was_a_typed_literal_until_round_60":
+                     "`seam.commit` read \"6f134a6\" for three rounds -- true "
+                     "of the front door once and unchecked since (DA 77, "
+                     "R-613). It is now READ from the module the call goes "
+                     "through, at import, and says so when it cannot be "
+                     "located",
                  "front_door": "de_phase4_diag_runner.day_assembly_inputs",
                  "index": _index_call_made(),
                  "digests_recomputed_at_read_time": True},
         "inputs_pinned": {
+            # THE RECEIPT NAME IS THE RESOLVER'S, NEVER AN f-STRING. Round 59
+            # emitted `.v3.json` here while the resolver 470 lines up had
+            # correctly bound to `.v2` -- a name that was true of 09-03 and
+            # false of the day it was written for.
             "tape": {"path": str(_tp), "sha256": _sha_file(_tp),
-                     "receipt": f"be_gate1_state_tape_receipt_{day}_{coin}"
-                                f".v3.json", "split": "score"},
-            "fragment": {"path": str(_fp), "sha256": _sha_file(_fp)}},
+                     "receipt": (_tpin or {}).get("receipt"),
+                     "receipt_name_is": "read from the resolver that chose "
+                                        "it, not restated",
+                     "matches_the_receipt_pin": True,
+                     "split": "score"},
+            "fragment": {"path": str(_fp), "sha256": _sha_file(_fp),
+                         "receipt": (_fpin or {}).get("receipt"),
+                         "matches_the_receipt_pin": True}},
         "wrapper_measured": obs.get("wrapper"),
         "data_root": _BDR.receipt_block(),
+        # THE SCOPE'S OWN ACCOUNTING. The fragment and tape receipts have
+        # carried this since round 58 and the book's did not, so round 59's
+        # "the cap was not hit" rested on a poll of mine and on systemd's
+        # stop line rather than on the artifact. `ru_maxrss` cannot answer
+        # it: the tape scope hit the 8 GiB cap 1,199 times while the process
+        # RSS peaked at 4.741 GB.
+        "scope": _BDR.scope_stats(),
         "no_scoring_of_arms": True,
         "no_null_draws": True,
         "no_economics": True,
@@ -680,7 +889,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 30
+EXPECTED_CHECKS = 58
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -952,25 +1161,59 @@ def selftest() -> int:
         "gap_at_cutoff_excluded": 3, "no_level_history_excluded": 2}},
         "kept_by_coin": {"btc": 85}}}
     _cov = {"h1": {"n_uncovered": 15}, "h2": {"n_uncovered": 15}}
-    _ev = _assembly_evidence(_asm, _ref, _cov, 100, 6)
+    # THE FIXTURE'S TWO SIDES ARE NOW IN DIFFERENT UNITS ON PURPOSE. 85 kept
+    # + 15 dropped are ROWS; 100 is the generation count; the row total the
+    # producer published is 100 ROWS. Round 59's fixture made both sides 15
+    # and 15, which is precisely why its known-bad could not expose that the
+    # real comparison crossed two populations.
+    _pin = {"n_rows": 100, "receipt": "FIXTURE_tape_receipt.v2.json"}
+    _ev = _assembly_evidence(_asm, _ref, _cov, 100, 6, rows_pin=_pin)
     ok(_ev["state_join_failed"] == 0 and _ev["state_join_failed_is_zero"]
        and _ev["n_chunks"] == 2 and _ev["n_windows"] == 12,
        f"REV 46(2): `state_join_failed` ({_ev['state_join_failed']}) and "
        f"`n_chunks` ({_ev['n_chunks']} over {_ev['n_windows']} windows) are "
        f"RECEIPT FIELDS now -- the 09-03 receipt carried neither, and the "
        f"number proving the seam worked lived only in a Q-row")
-    ok(_ev["UNCOVERED_GENERATIONS"]["reasons_account_for_the_count"]
-       and _ev["UNCOVERED_GENERATIONS"]["by_reason"]["pre_window_excluded"]
-       == 10 and _ev["UNCOVERED_GENERATIONS"]["identical_across_heads"],
-       f"REV 46(3): the uncovered count carries its REASON CLASS "
-       f"({_ev['UNCOVERED_GENERATIONS']['by_reason']}) and the reasons are "
-       f"CHECKED to sum to it")
-    _bad = _assembly_evidence(_asm, _ref, {"h1": {"n_uncovered": 99},
-                                           "h2": {"n_uncovered": 99}}, 100, 6)
-    ok(not _bad["UNCOVERED_GENERATIONS"]["reasons_account_for_the_count"],
-       "KNOWN-BAD: when the reasons do NOT sum to the count the predicate "
-       "reads FALSE and the residual is reported as unexplained -- it is not "
-       "absorbed, and the flag can go red")
+    _ra = _ev["ROW_ACCOUNTING"]
+    ok(_ra["kept"] == 85 and _ra["dropped"] == 15 and _ra["accounted"] == 100
+       and _ra["rows_published_by_the_tape_receipt"] == 100
+       and _ra["rows_accounted_for"] is True and _ra["residual"] == 0
+       and _ra["rows_pin_receipt"] == "FIXTURE_tape_receipt.v2.json",
+       f"POSITIVE CONTROL, ONE POPULATION: kept {_ra['kept']} + dropped "
+       f"{_ra['dropped']} = {_ra['accounted']} ROWS against the "
+       f"{_ra['rows_published_by_the_tape_receipt']} ROWS round 58's "
+       f"receipt published -- it CLOSES, and the total comes from the "
+       f"producing receipt rather than from the function checking it")
+    _bad = _assembly_evidence(_asm, _ref, _cov, 100, 6,
+                              rows_pin={"n_rows": 137, "receipt": "x.json"})
+    ok(_bad["ROW_ACCOUNTING"]["rows_accounted_for"] is False
+       and _bad["ROW_ACCOUNTING"]["residual"] == 37,
+       "KNOWN-BAD, SAME UNIT: when the rows do not close against the "
+       "published total the predicate reads FALSE and the residual (37 "
+       "rows) is reported rather than absorbed")
+    # THE KNOWN-BAD ROUND 59 COULD NOT HAVE: a GENERATION count handed in
+    # where a ROW total belongs. This is the actual defect -- 29,465 rows
+    # compared with 19,663 generations -- and it must read FALSE.
+    _units = _assembly_evidence(
+        _asm, _ref, {"h1": {"n_uncovered": 15}, "h2": {"n_uncovered": 15}},
+        100, 6, rows_pin={"n_rows": 15, "receipt": "wrong_unit.json"})
+    ok(_units["ROW_ACCOUNTING"]["rows_accounted_for"] is False,
+       "KNOWN-BAD, THE ONE THE OLD FIXTURE HID: feed the GENERATION-side "
+       "number (15 uncovered) where the published ROW total belongs and the "
+       "accounting REFUSES to close -- 100 rows accounted against 15. The "
+       "round-59 fixture made both sides 15 and 15, so it passed while the "
+       "real day reported FALSE on two correct numbers")
+    ok("reasons_account_for_the_count" not in _ev["UNCOVERED_GENERATIONS"]
+       and "by_reason" not in _ev["UNCOVERED_GENERATIONS"]
+       and _ev["UNCOVERED_GENERATIONS"]["count"] == 15
+       and _ev["UNCOVERED_GENERATIONS"]["identical_across_heads"]
+       and "FRAGMENT ROWS" in
+       _ev["UNCOVERED_GENERATIONS"]["why_no_reason_class_here"],
+       "THE CROSS-POPULATION CLAIM IS WITHDRAWN, NOT SILENTLY DROPPED: the "
+       "generations block carries its count, its coverage and the reason "
+       "there is no reason class in that unit -- and names the field it "
+       "supersedes, so a reader of the 09-04 receipt can find out what "
+       "happened to it")
 
     # (4) the round-49 withdrawal, beside the budgets
     import re as _re4
@@ -991,6 +1234,302 @@ def selftest() -> int:
        f"module's own source and reads {_idx!r}. The 09-03 receipt said "
        f"`tape_path=…` while the call was already `inputs=` -- a literal "
        f"contradicting the code beside it, the third of that class here")
+
+    # ---- RULE 22 AS AMENDED (R-605): the closure, HEAD, and the refusal --
+    import tempfile as _tf
+    import importlib as _il
+    _td = _tf.mkdtemp(prefix="be60_rule22_")
+    _m1 = Path(_td) / "be60_probe_a.py"
+    _m1.write_text("VALUE = 1\n")
+    _outside = Path(_tf.mkdtemp(prefix="be60_outside_")) / "be60_probe_b.py"
+    _outside.write_text("VALUE = 1\n")
+    sys.path.insert(0, _td); sys.path.insert(0, str(_outside.parent))
+    _pa = _il.import_module("be60_probe_a")
+    _pb = _il.import_module("be60_probe_b")
+    # a capture whose ROOT is the temp tree, so the falsifier never has to
+    # mutate a real module in the worktree to prove the check fires
+    _cap = _R22.Capture(root=_td).capture("battery")
+    ok(len(_cap.closure) == 1
+       and str(_m1.resolve()) in _cap.closure
+       and str(_outside.resolve()) not in _cap.closure,
+       f"THE CLOSURE IS SCOPED AND SAYS WHAT IT COVERS: {len(_cap.closure)} "
+       f"module under the declared root; a module OUTSIDE it is not "
+       f"captured and is not claimed to be")
+    _adm = _cap.assert_unchanged("battery positive control")
+    ok(_adm["closure_unchanged"] and _adm["head_unchanged"],
+       "POSITIVE CONTROL, RULE 22: with nothing moved the emit ADMITS -- a "
+       "guard shown only to refuse has not been shown to work (rule 16)")
+    _sha_at_import = _cap.closure[str(_m1.resolve())]["sha256"]
+    _m1.write_text("VALUE = 2   # a landing mid-run\n")
+    try:
+        _cap.assert_unchanged("battery known-bad")
+        ok(False, "a moved module must refuse the emit")
+    except _R22.Rule22Refused as _e:
+        ok("be60_probe_a.py" in str(_e) and "IMPORT CLOSURE" in str(_e)
+           and "DID NOT RUN" in str(_e),
+           "KNOWN-BAD, RULE 22: a module of the closure rewritten mid-run "
+           "REFUSES THE EMIT BY NAME -- this is R-603's defect exactly, "
+           "where a runner re-read `__file__` at emit and would have "
+           "stamped bytes that did not run")
+    _st = _cap.stamp(_m1)
+    ok(_st["producing_code_sha256"] == _sha_at_import
+       and _st["closure_drift"][0]["at_import"] == _sha_at_import
+       and _st["closure_drift"][0]["now"] != _sha_at_import
+       and _st["closure_unchanged_during_the_run"] is False,
+       "THE DIGEST IS THE ONE FROM IMPORT, NOT FROM EMIT: after the file "
+       "changed, the stamp still reports the bytes that RAN and names the "
+       "drift beside them. An emit-time digest would have reported the new "
+       "bytes and called them the producer")
+    _outside.write_text("VALUE = 3\n")
+    _cap2 = _R22.Capture(root=str(_outside.parent)).capture("battery")
+    _cap2.closure[str(_outside.resolve())]["sha256"] = "0" * 64
+    try:
+        _cap2.assert_unchanged("battery head test")
+        ok(False, "a drifted module must refuse")
+    except _R22.Rule22Refused:
+        ok(True, "KNOWN-BAD: a planted digest mismatch refuses too -- the "
+                 "comparison is of BYTES, not of a flag someone set")
+    _cap3 = _R22.Capture(root=_td).capture("battery")
+    _cap3.head_at_import = dict(_cap3.head_at_import or {})
+    _cap3.head_at_import["head"] = "0" * 40
+    try:
+        _cap3.assert_unchanged("battery head known-bad")
+        ok(False, "a moved HEAD must refuse the emit")
+    except _R22.Rule22Refused as _e:
+        ok("HEAD MOVED" in str(_e) and "builder_commit" in str(_e),
+           "KNOWN-BAD, RULE 22: HEAD moving under the run REFUSES -- a "
+           "receipt's builder_commit would otherwise name a commit the run "
+           "did not execute from")
+    sys.path.remove(_td); sys.path.remove(str(_outside.parent))
+    _mine = _R22.stamp(__file__)
+    ok(_mine["producing_code"] == "be_daybook_build.py"
+       and _mine["producing_code_sha256"] == _sha_file(Path(__file__))
+       and _mine["captured_at"] == "IMPORT"
+       and _mine["import_closure"]["n_modules"] > 1
+       and _mine["builder_commit"],
+       f"THIS MODULE'S OWN STAMP IS REAL: "
+       f"{_mine['import_closure']['n_modules']} modules of the live closure "
+       f"digested at import, HEAD {str(_mine['builder_commit'])[:12]}, and "
+       f"the producing digest equals this file on disk")
+
+    # ---- the per-stage budget is GROWTH, never the process high-water ----
+    _now_hw = _rss_gb()
+    _sg = _Stages({"S": round(_now_hw / 2, 3)}, cap_gb=CAP_GB)
+    _sg.baseline_gb = round(_now_hw - 0.01, 3)   # as if earlier work ran
+    _rowg = _sg.done("S", time.time())
+    ok(_rowg["within_budget"]
+       and _rowg["growth_gb"] <= _rowg["budget_gb"]
+       and _rowg["peak_gb"] > _rowg["budget_gb"]
+       and _rowg["baseline_gb"] == round(_now_hw - 0.01, 3),
+       f"DA 77 / R-613 CLOSED: a stage whose own GROWTH is "
+       f"{_rowg['growth_gb']} GB passes a {_rowg['budget_gb']} GB budget "
+       f"even though the process high-water is {_rowg['peak_gb']} GB -- "
+       f"ABOVE that budget. This is the smoke's "
+       f"death exactly -- a real day's 2,426 MB judged against a fixture's "
+       f"700 MB -- and it now admits")
+    _sb = _Stages({"S": 0.001}, cap_gb=CAP_GB); _sb.baseline_gb = 0.0
+    try:
+        _sb.done("S", time.time())
+        ok(False, "growth over budget must refuse")
+    except BookRefused as _e:
+        ok("GREW" in str(_e) and "own" in str(_e) and "NOT raised" in str(_e),
+           "KNOWN-BAD: growth over the declared budget REFUSES, naming the "
+           "growth and the baseline it is measured from -- the budget is "
+           "not widened by moving to growth, it is measured on the "
+           "quantity it names")
+    _sc = _Stages({"S": 99.0}, cap_gb=0.001); _sc.baseline_gb = 0.0
+    try:
+        _sc.done("S", time.time())
+        ok(False, "a peak over the cap must refuse")
+    except BookRefused as _e:
+        ok("CAP" in str(_e) and "never raised" in str(_e),
+           "KNOWN-BAD, AND THE REASON GROWTH DOES NOT WIDEN ANYTHING: the "
+           "absolute high-water is still checked against the CAP, so a run "
+           "that fits its budget but not the machine still refuses")
+
+    # ---- the seam commit is READ, and the receipt name is the resolver's --
+    _sc2 = _R22.module_commit(Path(HERE) / "de_phase4_diag_runner.py")
+    ok(_sc2["commit"] and len(_sc2["commit"]) == 40
+       and _sc2["short"] != "6f134a6",
+       f"THE TYPED SEAM COMMIT IS GONE: the front door's commit is READ "
+       f"from the module ({_sc2['short']}), not the literal \"6f134a6\" "
+       f"that stood for three rounds and was stale")
+    _nc = _R22.module_commit(Path(_td) / "be60_probe_a.py")
+    ok(_nc["commit"] is None and "why_absent" in _nc,
+       "AND WHEN IT CANNOT BE LOCATED IT SAYS SO: a module with no history "
+       "returns a null commit with the reason, rather than a constant")
+    # TEST THE CODE, NOT THE TEXT. Two earlier forms of this check scanned
+    # source text and failed on their own prose -- first the module, then
+    # the emit block, each containing the sentence that names the literal it
+    # forbids. A string search cannot tell a hardcoded value from a
+    # description of one; the AST can, because a comment is not a node.
+    import ast as _ast
+    _tree = _ast.parse(Path(__file__).read_text())
+    _bld = next(n for n in _ast.walk(_tree)
+                if isinstance(n, _ast.FunctionDef) and n.name == "build")
+    _suffix = ".v" + "3" + ".json"
+    _lits = [n.value for n in _ast.walk(_bld)
+             if isinstance(n, _ast.Constant) and isinstance(n.value, str)
+             and n.value.endswith(_suffix)]
+    _srcm = Path(__file__).read_text()
+    ok(not _lits and '"receipt": (_tpin or {}).get("receipt")' in _srcm,
+       f"MY ROUND-59 DEFECT IS CLOSED AT THE SOURCE: the AST finds "
+       f"{len(_lits)} hardcoded receipt-version literals inside `build()`, "
+       f"the function that constructs the receipt -- and the name emitted "
+       f"is the one the resolver actually chose. THREE forms of this check "
+       f"failed before this one: scanning the module, then the emit block, "
+       f"then the whole AST, each finding its OWN description of the "
+       f"literal it forbids. A checker that names a forbidden string "
+       f"contains it; the search space has to exclude the checker")
+    _fx = Path(_td) / "derived"; _fx.mkdir()
+    for _nm, _sp in ((f"be_gate1_state_tape_receipt_20260904_btc.json", "train"),
+                     (f"be_gate1_state_tape_receipt_20260904_btc.v2.json", "score")):
+        (_fx / _nm).write_text(json.dumps(
+            {"WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY": {"split": _sp},
+             "tape": {"sha256": "a" * 64, "n_rows": 638602, "bytes": 1}}))
+    _saved = globals()["OUT_DERIVED"]
+    globals()["OUT_DERIVED"] = _fx
+    try:
+        _pin2 = day_tape_pin("20260904", "btc")
+    finally:
+        globals()["OUT_DERIVED"] = _saved
+    ok(_pin2["receipt"] == "be_gate1_state_tape_receipt_20260904_btc.v2.json"
+       and _pin2["n_rows"] == 638602,
+       f"THE RESOLVER PICKS THE REAL HEAD AND REPORTS ITS NAME: "
+       f"{_pin2['receipt']} -- the .v2, because the unversioned file is the "
+       f"TRAIN split; round 59 emitted `.v3.json`, which does not exist for "
+       f"this day")
+
+    # ---- the inputs are the bytes their own receipts pinned --------------
+    _f = Path(_td) / "input.bin"; _f.write_bytes(b"the day's bytes")
+    _good = assert_input_matches_its_receipt(
+        "tape", _f, {"sha256": _sha_file(_f), "receipt": "r.v2.json"})
+    ok(_good["matches_its_builder_receipt"] and _good["compared_full_length"],
+       "POSITIVE CONTROL: an input whose bytes match the digest its builder "
+       "receipt published ADMITS, compared over all 64 characters")
+    try:
+        assert_input_matches_its_receipt(
+            "tape", _f, {"sha256": "b" * 64, "receipt": "r.v2.json"})
+        ok(False, "a file that does not match its receipt must refuse")
+    except BookRefused as _e:
+        ok("does not match the digest its receipt" in str(_e)
+           and "round 58 published" in str(_e),
+           "KNOWN-BAD, MY RELOAD FINDING CLOSED: an input that does not "
+           "match its BUILDER RECEIPT's pin refuses. Round 59 hashed the "
+           "file itself and handed that digest to the front door, which "
+           "compared it with itself -- a check that could not tell these "
+           "were round 58's bytes")
+    try:
+        assert_input_matches_its_receipt("tape", _f, None)
+        ok(False, "a missing pin must refuse")
+    except BookRefused as _e:
+        ok("no builder receipt pin" in str(_e),
+           "KNOWN-BAD: NO receipt pin at all REFUSES rather than proceeding "
+           "unbound -- absence must never read as a pass (rule 11)")
+
+    # ---- the scope block the book receipt lacked -------------------------
+    _sc3 = _BDR.scope_stats()
+    ok(isinstance(_sc3, dict)
+       and (_sc3.get("status") == "NO_CGROUP"
+            or ("cap_was_hit" in _sc3 and "events" in _sc3
+                and "anon_bytes" in _sc3)),
+       f"THE SCOPE BLOCK IS AVAILABLE TO THIS RECEIPT: "
+       f"{sorted(_sc3)[:6]}... -- the fragment and tape receipts have "
+       f"carried it since round 58 and the book's did not, so round 59's "
+       f"cap answer rested on my poll and systemd's stop line, not on the "
+       f"artifact")
+    _srcr = Path(__file__).read_text()
+    ok('"scope": _BDR.scope_stats(),' in _srcr,
+       "AND IT IS WIRED INTO THE EMITTED RECEIPT: read from this module's "
+       "own source, not asserted in prose")
+
+    # ---- the in-band correction (rule 13), driven on a fixture ----------
+    _tdS = _tf.mkdtemp(prefix="be60_sup_")
+    _fx2 = Path(_tdS); _saved2 = globals()["OUT_DERIVED"]
+    (_fx2 / "be_gate1_state_tape_receipt_20260101_btc.v2.json").write_text(
+        json.dumps({"WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY":
+                    {"split": "score"},
+                    "tape": {"sha256": "c" * 64, "n_rows": 1000}}))
+    _v1 = {"book": {"sha256": "d" * 64},
+           "seam": {"commit": "6f134a6"},
+           "inputs_pinned": {"tape": {"receipt": "a_name_that_does_not_"
+                                                 "exist.json"}},
+           "assembly_evidence": {
+               "kept_by_coin": {"btc": 900},
+               "UNCOVERED_GENERATIONS": {
+                   "count": 50, "n_reference_generations": 2000,
+                   "reasons_sum": 100, "by_reason": {"pre_window_excluded": 100},
+                   "reasons_account_for_the_count": False,
+                   "identical_across_heads": True}}}
+    (_fx2 / "be_daybook_receipt_20260101_btc.json").write_text(
+        json.dumps(_v1, indent=1, sort_keys=True))
+    _v1_sha_before = _sha_file(_fx2 / "be_daybook_receipt_20260101_btc.json")
+    globals()["OUT_DERIVED"] = _fx2
+    try:
+        _res = supersede_receipt("20260101", "btc")
+        _out = json.loads((_fx2 / "be_daybook_receipt_20260101_btc.v2.json")
+                          .read_text())
+    finally:
+        globals()["OUT_DERIVED"] = _saved2
+    ok(_res["v1_untouched"]
+       and _sha_file(_fx2 / "be_daybook_receipt_20260101_btc.json")
+       == _v1_sha_before
+       and _out["supersedes"]["sha256"] == _v1_sha_before
+       and _out["supersedes"]["path"].endswith(
+           "be_daybook_receipt_20260101_btc.json"),
+       "RULE 13: the correction writes a .v2 and LEAVES v1 byte-identical, "
+       "linked by {path, sha256} -- the link is the identity, not the name "
+       "(R-609)")
+    ok(_out["inputs_pinned"]["tape"]["receipt"]
+       == "be_gate1_state_tape_receipt_20260101_btc.v2.json"
+       and _out["inputs_pinned"]["tape"]["receipt_corrected_from"]["was"]
+       == "a_name_that_does_not_exist.json"
+       and _out["inputs_pinned"]["tape"]["receipt_corrected_from"]["existed"]
+       is False,
+       "THE CORRECTED NAME IS THE RESOLVER'S, and what it replaced is "
+       "recorded WITH the fact that the old name pointed at nothing")
+    _ra2 = _out["assembly_evidence"]["ROW_ACCOUNTING"]
+    ok(_ra2["kept"] == 900 and _ra2["dropped"] == 100
+       and _ra2["accounted"] == 1000
+       and _ra2["rows_published_by_the_tape_receipt"] == 1000
+       and _ra2["rows_accounted_for"] is True and _ra2["residual"] == 0,
+       f"THE COUNT PREDICATE IS RESTATED IN ONE POPULATION WITHOUT "
+       f"RE-ASSEMBLY: {_ra2['kept']} + {_ra2['dropped']} = "
+       f"{_ra2['accounted']} rows against the {_ra2['rows_published_by_the_tape_receipt']} "
+       f"the tape receipt published -- computed from v1's own numbers")
+    _wd = _out["assembly_evidence"]["UNCOVERED_GENERATIONS"]["WITHDRAWN_FIELD"]
+    ok(_wd["field"] == "reasons_account_for_the_count"
+       and _wd["value_in_v1"] is False and "FRAGMENT ROWS" in _wd["why"]
+       and _out["assembly_evidence"]["UNCOVERED_GENERATIONS"]["count"] == 50,
+       "THE FALSE FIELD IS WITHDRAWN IN BAND, CARRYING ITS OLD VALUE AND "
+       "THE REASON -- a reader of v1 can find out what happened to it")
+    ok(_out["scope"]["recoverable_from_the_run"] is False
+       and _out["producing_code"]["reconstructed_after_the_fact"] is True,
+       "AND WHAT CANNOT BE RECOVERED IS SAID, NOT RECONSTRUCTED: the scope "
+       "block is marked unrecoverable with both external observations and "
+       "their disagreement, and the producing code is labelled a "
+       "reconstruction rather than dressed up as an import-time stamp")
+    ok(_out["producing_code"]["run_head_recoverable_from_the_receipt"]
+       is False
+       and "NOT RECOVERABLE" in _out["producing_code"]["run_head_source"]
+       and _out["producing_code"]["builder_digest_matches_that_commit"]
+       is None,
+       "THE COMMIT A RUN EXECUTED FROM IS NOT DERIVED FROM THE LANDING "
+       "RECORD: with no run head supplied the block says NOT RECOVERABLE "
+       "and computes no blob check. The first form of this function took "
+       "the landing commit's PARENT and produced a right-looking wrong "
+       "answer -- the shared tree's position, not the worktree the run "
+       "executed from")
+    globals()["OUT_DERIVED"] = Path(_tf.mkdtemp(prefix="be60_none_"))
+    try:
+        supersede_receipt("29990101", "btc")
+        ok(False, "superseding a receipt that does not exist must refuse")
+    except BookRefused as _e:
+        ok("no receipt to supersede" in str(_e),
+           "KNOWN-BAD: superseding a receipt that does not exist REFUSES "
+           "rather than writing a .v2 with nothing behind it")
+    finally:
+        globals()["OUT_DERIVED"] = _saved2
 
     return _finish(checks, fails, skipped)
 
@@ -1015,10 +1554,236 @@ def _finish(checks, fails, skipped) -> int:
     return 0
 
 
+#: WHAT ROUND 59'S SCOPE ACTUALLY DID, and where each number comes from.
+#: This is a LITERAL, and literals are this seat's recurring defect -- so:
+#: it describes ONE COMPLETED RUN whose scope no longer exists, which is the
+#: only kind of literal that cannot go stale. It is NOT the run's own cgroup
+#: read: `be_daybook_build` did not carry a scope block at round 59, and the
+#: transient scope was reaped between the process exiting and the read. Both
+#: sources are named so a reader can weigh them, and they DISAGREE.
+BE59_SCOPE_OBSERVED = {
+    "recoverable_from_the_run": False,
+    "why": "the receipt carried no scope block at round 59 and a transient "
+           "systemd scope is destroyed when its last process exits; the "
+           "post-exit read returned empty",
+    "poll_by_the_seat": {
+        "as_of": "2026-09-06T11:17:57Z", "about_40s_before_exit": True,
+        "memory_peak_bytes": 7117090816, "memory_current_bytes": 7039881216,
+        "memory_max_bytes": 8589934592,
+        "events": {"max": 0, "high": 0, "low": 0, "oom": 0, "oom_kill": 0},
+        "cap_was_hit_up_to_this_read": False,
+        "source": "direct read of the scope's cgroup files"},
+    "systemd_stop_line": {
+        "as_of": "2026-09-06T11:18:37Z",
+        "memory_peak": "6.5G", "swap_peak": "0B",
+        "cpu_time": "39min 31.340s", "wall": "39min 43s",
+        "source": "journalctl --user -u be59book.scope"},
+    "the_two_do_not_reconcile": "6.5G formats BELOW the 6.628 GiB read 40 s "
+                                "earlier, and memory.peak is monotone -- so "
+                                "systemd's line reports some other "
+                                "quantity. Stated, not explained",
+    "unmeasured_window": "the final ~40 s (A3 release and A4 write)",
+}
+
+
+def supersede_receipt(day: str, coin: str = COIN, *,
+                      out_suffix: str = ".v2",
+                      run_head: str | None = None,
+                      run_head_source: str | None = None) -> dict:
+    """CORRECT A LANDED BOOK RECEIPT IN BAND (rule 13). NO RE-ASSEMBLY.
+
+    Every correction below is computed from numbers that already exist -- the
+    landed receipt's own fields and round 58's tape receipt -- or is an
+    explicit statement that something is NOT recoverable. Nothing is
+    re-derived from the book, no arm is scored, and v1 is never edited: it
+    stays as provenance and this file supersedes it by {path, sha256}."""
+    import copy
+    src = OUT_DERIVED / f"be_daybook_receipt_{day}_{coin}.json"
+    if not src.exists():
+        raise BookRefused(f"REFUSED: no receipt to supersede at {src.name}.")
+    raw = src.read_bytes()
+    v1 = json.loads(raw)
+    v1_sha = hashlib.sha256(raw).hexdigest()
+    v2 = copy.deepcopy(v1)
+
+    # (a) the tape receipt's REAL name, from the resolver rather than an
+    #     f-string. This is the defect that made round 59 name a file that
+    #     does not exist.
+    pin = day_tape_pin(day, coin)
+    was = ((v1.get("inputs_pinned") or {}).get("tape") or {}).get("receipt")
+    v2.setdefault("inputs_pinned", {}).setdefault("tape", {})
+    v2["inputs_pinned"]["tape"]["receipt"] = (pin or {}).get("receipt")
+    v2["inputs_pinned"]["tape"]["receipt_corrected_from"] = {
+        "was": was, "existed": bool(was and (OUT_DERIVED / was).exists()),
+        "why": "the emitter hardcoded the version suffix in an f-string "
+               "while the resolver 470 lines above globbed for the real "
+               "head; the name was true of 09-03 and false here",
+        "now": "read from the resolver that chose the digest"}
+
+    # (b) the count predicate, restated within ONE population. Both numbers
+    #     were already in v1; only the comparison was wrong.
+    ev = v2.get("assembly_evidence") or {}
+    ug = ev.get("UNCOVERED_GENERATIONS") or {}
+    kept = sum(int(x) for x in (ev.get("kept_by_coin") or {}).values())
+    dropped = int(ug.get("reasons_sum") or 0)
+    rows_published = (pin or {}).get("n_rows")
+    ev["ROW_ACCOUNTING"] = {
+        "population": "FRAGMENT ROWS",
+        "kept": kept, "dropped": dropped,
+        "by_reason": ug.get("by_reason"),
+        "accounted": kept + dropped,
+        "rows_published_by_the_tape_receipt": rows_published,
+        "rows_pin_receipt": (pin or {}).get("receipt"),
+        "rows_accounted_for": (rows_published is not None
+                               and kept + dropped == rows_published),
+        "residual": (None if rows_published is None
+                     else rows_published - (kept + dropped)),
+        "computed_from": "v1's own kept_by_coin and by_reason against round "
+                         "58's tape receipt -- no re-assembly",
+    }
+    ev["UNCOVERED_GENERATIONS"] = {
+        "population": "REFERENCE GENERATIONS -- a DIFFERENT population from "
+                      "the row accounting",
+        "count": ug.get("count"),
+        "identical_across_heads": ug.get("identical_across_heads"),
+        "n_reference_generations": ug.get("n_reference_generations"),
+        "coverage": (1 - ug["count"] / ug["n_reference_generations"]
+                     if ug.get("count") is not None
+                     and ug.get("n_reference_generations") else None),
+        "WITHDRAWN_FIELD": {
+            "field": "reasons_account_for_the_count",
+            "value_in_v1": ug.get("reasons_account_for_the_count"),
+            "why": "it compared sum(drops_by_coin) -- FRAGMENT ROWS -- with "
+                   "n_uncovered -- REFERENCE GENERATIONS. Both numbers were "
+                   "correct; the equality between them could not hold on "
+                   "any real day. Its known-bad passed because the fixture "
+                   "supplied both sides in the same unit",
+            "what_replaces_it": "ROW_ACCOUNTING above, closed within one "
+                                "population against a total round 58 "
+                                "published"},
+    }
+    v2["assembly_evidence"] = ev
+
+    # (c) the seam commit, READ as of the commit this run executed from
+    seam_mod = Path(HERE) / "de_phase4_diag_runner.py"
+    # THE COMMIT THE RUN EXECUTED FROM IS NOT IN v1 -- that is the gap
+    # R-601 named, and it is why this parameter is explicit. The first form
+    # of this function DERIVED it as the parent of the landing commit and
+    # got 9ad6a16, the shared tree's position; the run executed from
+    # b827ca2 in a worktree. Right-looking and wrong, from a record that
+    # does not carry the fact. It is now supplied with its source, or the
+    # block says the receipt cannot support it.
+    head = ((v1.get("producing_code") or {}).get("builder_commit")
+            or run_head)
+    v2.setdefault("seam", {})["commit"] = _commit_of_at(seam_mod, head)
+    v2["seam"]["commit_corrected_from"] = {
+        "was": (v1.get("seam") or {}).get("commit"),
+        "why": "a typed literal, true of the front door once and unchecked "
+               "for three rounds (DA 77, R-613)",
+        "now": "git log -1 <run's HEAD> -- de_phase4_diag_runner.py"}
+
+    # (d) the scope: NOT recoverable, and said so rather than reconstructed
+    v2["scope"] = dict(BE59_SCOPE_OBSERVED)
+
+    # (e) the producing code: RECONSTRUCTED, and labelled as such. The code
+    #     that ran carried no import-time capture, so this is not a stamp.
+    _blob = _blob_sha_at(head, "live/pm_research/be_daybook_build.py")
+    v2["producing_code"] = {
+        "reconstructed_after_the_fact": True,
+        "run_head_recoverable_from_the_receipt": bool(
+            (v1.get("producing_code") or {}).get("builder_commit")),
+        "run_head_source": run_head_source or (
+            "the receipt's own stamp" if (v1.get("producing_code") or {})
+            .get("builder_commit") else "NOT RECOVERABLE from the artifact"),
+        "builder_digest_matches_that_commit": (
+            None if not (head and _blob) else
+            _blob == "6a09f7e3aac7ede37ce7347ee341cb950861767e"
+                     "8a2d96bd91dcc6e10d33ddbd"),
+        "what_this_check_can_and_cannot_do": "matching the blob at the named "
+                                             "commit CONFIRMS those bytes "
+                                             "existed there; it cannot prove "
+                                             "the run used that commit, "
+                                             "because a file identical at "
+                                             "two commits matches both",
+        "NOT_an_import_time_capture": "the round-59 builder had no rule-22 "
+                                      "capture; this is read from the "
+                                      "landing record, which is weaker and "
+                                      "must not be read as a stamp",
+        "producing_code": "be_daybook_build.py",
+        "sha256_at_the_run_head": _blob_sha_at(head,
+                                               "live/pm_research/"
+                                               "be_daybook_build.py"),
+        "builder_commit": head,
+        "from_round_60_onward": "captured at IMPORT with the import closure "
+                                "and HEAD, and the emit refused by name if "
+                                "any of it moves",
+    }
+
+    v2["supersedes"] = {
+        "artifact": src.name,
+        "path": str(src),
+        "sha256": v1_sha,
+        "rule": "13 -- vN+1; v1 is NOT edited",
+        "what_changed": "FOUR REPORTING FIELDS AND ONE ADDITION. No number "
+                        "from the assembly moves; the book is the same "
+                        "bytes and was not rebuilt.",
+    }
+    dst = OUT_DERIVED / f"be_daybook_receipt_{day}_{coin}{out_suffix}.json"
+    dst.write_text(json.dumps(v2, indent=1, sort_keys=True, default=str))
+    after = hashlib.sha256(src.read_bytes()).hexdigest()
+    if after != v1_sha:
+        raise BookRefused(
+            f"REFUSED: v1 changed while its superseding version was being "
+            f"written -- {v1_sha[:16]} -> {after[:16]}. A superseding "
+            f"receipt whose predecessor moved is not a correction.")
+    return {"v2": str(dst), "v2_sha256": _sha_file(dst),
+            "v1_sha256": v1_sha, "v1_untouched": True,
+            "book_sha256_unchanged": v2["book"]["sha256"] == v1["book"]["sha256"]}
+
+
+def _commit_of_at(path, head) -> dict:
+    """The commit that last touched `path` AS OF `head` -- not as of now."""
+    import subprocess as _sp
+    try:
+        r = _sp.run(["git", "-C", str(HERE), "log", "-1", "--format=%H",
+                     head or "HEAD", "--", str(path)],
+                    capture_output=True, text=True, timeout=60)
+        c = r.stdout.strip() if r.returncode == 0 else None
+    except Exception:                                        # noqa: BLE001
+        c = None
+    return {"module": Path(path).name, "commit": c, "short": c[:7] if c else None,
+            "as_of": head, "source": "git log -1 <run head> -- <module>"}
+
+
+def _blob_sha_at(head, relpath) -> str | None:
+    import subprocess as _sp
+    try:
+        r = _sp.run(["git", "-C", str(HERE.parents[1]), "show",
+                     f"{head}:{relpath}"], capture_output=True, timeout=60)
+        return (hashlib.sha256(r.stdout).hexdigest()
+                if r.returncode == 0 else None)
+    except Exception:                                        # noqa: BLE001
+        return None
+
+
 def main(argv=None) -> int:
     argv = list(sys.argv) if argv is None else list(argv)
     if "--selftest" in argv:
         return selftest()
+    if "--supersede-receipt" in argv:
+        day = argv[argv.index("--supersede-receipt") + 1]
+        _rh = (argv[argv.index("--run-head") + 1]
+               if "--run-head" in argv else None)
+        print(json.dumps(supersede_receipt(
+            day, run_head=_rh,
+            run_head_source=(
+                "SUPPLIED ON THE COMMAND LINE from the seat's landing report "
+                "(Q-BE-301 and commit 50f30d9's message, which record the "
+                "run as frozen at that commit). PROSE, not a stamp: round "
+                "59's receipt carries no builder_commit, which is exactly "
+                "the gap R-601 named and rule 22 closes from round 60 on"
+                if _rh else None)), indent=1))
+        return 0
     if "--day" in argv:
         day = argv[argv.index("--day") + 1]
         out = build(day)
@@ -1031,7 +1796,8 @@ def main(argv=None) -> int:
                           "wall_s": out["resources"]["wall_s"],
                           "peak_rss_gb": out["resources"]["peak_rss_gb"]}))
         return 0
-    print("usage: be_daybook_build.py --selftest | --day <YYYYMMDD>")
+    print("usage: be_daybook_build.py --selftest | --day <YYYYMMDD> "
+          "| --supersede-receipt <YYYYMMDD>")
     return 2
 
 
