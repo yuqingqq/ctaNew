@@ -47,7 +47,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 137
+EXPECTED_CHECKS = 149
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -65,7 +65,7 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 60
+DAY_PATH_CHECKS = 72
 
 
 class RunnerRefused(RuntimeError):
@@ -869,6 +869,142 @@ def fixture_run_proven() -> dict:
     return payload
 
 
+def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
+    """THE SMOKE INVOCATION, REHEARSED -- so GO is one verified command.
+
+    Everything typed at GO time is a chance to type it wrong, and the two
+    naming defects this rehearsal found (BE's receipt is
+    `be_daybook_receipt_<DAY>_<COIN>.json`, not the book with a `.json`
+    suffix; and BE stamps the day COMPACT while DE names it dashed) would
+    each have refused a correct book AT GO, for a reason that had nothing
+    to do with the book.
+
+    It touches no book and runs no arm: it resolves the paths, states the
+    command, evaluates every precondition it can NOW, and REFUSES BY NAME
+    on the one that cannot yet hold -- the book does not exist."""
+    started = time.time()
+    root = Path(DR.resolve()["data_root"])
+    params = load_params()
+    repo = Path(__file__).resolve().parents[2]
+    dashed = [d for d in sorted(day_forms(day)) if "-" in d][0]
+    compact = [d for d in sorted(day_forms(day)) if "-" not in d][0]
+    book = root / "pm_5min/derived" / f"be_daybook_{compact}_{coin}.pkl"
+    receipt = root / "pm_5min/derived" / \
+        f"be_daybook_receipt_{compact}_{coin}.json"
+    cmd = (f"flock -n {HEAVY_RUN_LOCK} "
+           f"systemd-run --user --scope --slice={RESEARCH_SLICE} "
+           f"-p MemoryMax=8G -p CPUQuota=100% "
+           f"--setenv=PM_DATA_ROOT={DR.resolve()['repo_root']} "
+           f"python3 live/pm_research/de_multiday_gate1_runner.py "
+           f"--day {dashed} --book {book} "
+           f"--output <receipt path>")
+
+    def _digest(p):
+        q = Path(p)
+        return (hashlib.sha256(q.read_bytes()).hexdigest()
+                if q.is_file() else None)
+
+    design = params["design_declaration"]
+    pre = []
+
+    def _p(name, ok_, detail, *, blocks=True):
+        # INFORMATIONAL vs BLOCKING is a real distinction here: the lock is
+        # TAKEN by the wrapper at GO, so its state now says nothing about
+        # whether GO can proceed. Counting it as blocking would inflate the
+        # status and train a reader to ignore it.
+        pre.append({"precondition": name, "holds": ok_, "detail": detail,
+                    "blocks_go": blocks})
+
+    _p("P2_book_exists", book.is_file(), str(book))
+    _p("P2_builder_receipt_exists", receipt.is_file(), str(receipt))
+    _p("P3_params", _digest(repo / PARAMS_REL) == _digest(repo / PARAMS_REL),
+       {"path": PARAMS_REL, "sha256": _digest(repo / PARAMS_REL)})
+    _p("P3_design", _digest(root.parent / design["path"])
+       == design["sha256"],
+       {"path": design["path"], "declared": design["sha256"],
+        "on_disk": _digest(root.parent / design["path"])})
+    _p("P4_data_root_is_the_ledger",
+       DR.resolve()["is_canonical"] is True, DR.resolve()["data_root"])
+    _p("P5_lock_free_now", not wrapper_observed()["lock_is_held_by_someone"],
+       "INFORMATIONAL: the lock is TAKEN by the wrapper at GO, so its "
+       "state now does not gate GO. Held right now by BE 55's assembly, "
+       "which is the correct state while a book is being built",
+       blocks=False)
+    _p("P7_cascade_digest",
+       _digest(repo / params["be_module"]["path"])
+       == params["be_module"]["sha256"],
+       {"path": params["be_module"]["path"],
+        "declared": params["be_module"]["sha256"]})
+    _p("day_is_in_the_ruled_set", dashed in ruled_day_set(), ruled_day_set())
+
+    blocking = [x["precondition"] for x in pre
+                if not x["holds"] and x["blocks_go"]]
+    informational_now_false = [x["precondition"] for x in pre
+                               if not x["holds"] and not x["blocks_go"]]
+    return {
+        "protocol": "P003_DE_GATE1_SMOKE_REHEARSAL_V1",
+        "status": ("READY" if not blocking else
+                   "NOT_READY_" + "_".join(blocking)),
+        "as_of": datetime.datetime.now(
+            datetime.timezone.utc).isoformat(),
+        "day": dashed, "day_compact": compact, "coin": coin,
+        "THE_ONE_COMMAND": cmd,
+        "book": {"path": str(book), "exists": book.is_file(),
+                 "builder_receipt": str(receipt),
+                 "builder_receipt_exists": receipt.is_file(),
+                 "REFUSES_NOW_BY_NAME": (
+                     None if book.is_file() else
+                     f"the book {book.name} does not exist yet; BE 55's "
+                     f"assembly writes it. `--day` refuses at "
+                     f"builder_receipt_for() naming every path it tried, "
+                     f"which is the intended order: the refusal is the "
+                     f"guard, not the reminder")},
+        "preconditions_evaluated_now": pre,
+        "blocking": blocking,
+        "informational_and_false_now": informational_now_false,
+        "what_the_run_writes": {
+            "sealed_per_day_artifact": "economic fields ABSENT at every "
+                                       "depth; counts, statuses, "
+                                       "admissibility and draw provenance "
+                                       "published",
+            "seal_layout": {"keys_in_both_states": list(SEAL_LAYOUT_KEYS),
+                            "conditional_key": SEAL_LAYOUT_CONDITIONAL_KEY,
+                            "sealed_field_names": list(ECONOMIC_FIELDS)},
+            "run_receipt": "battery equality, the resolved data root, the "
+                           "BE citation, the wrapper AS MEASURED, and the "
+                           "scope's anon/file/peak/events",
+        },
+        "the_null": {
+            "draws_per_arm": params["min_draws_per_arm_day"],
+            "generated": "IN PROCESS, through be_cancel_axis_null at the "
+                         "verified digest (R-572(B)(1))",
+            "seed_rule": DESIGN.SEED_CONVENTION["expression"],
+            "seed_is_derived_from": "the day book's own sha256 and the arm "
+                                    "name -- so it cannot be computed "
+                                    "until the book exists",
+            "metric": "D(E0) per draw = value(draw's fills) - value("
+                      "baseline fills), from fill_value_cents",
+        },
+        "declarations": {
+            "params": {"path": PARAMS_REL,
+                       "sha256": _digest(repo / PARAMS_REL)},
+            "design": {"path": design["path"], "sha256": design["sha256"]},
+        },
+        "what_this_rehearsal_found": [
+            "BE's builder receipt is `be_daybook_receipt_<DAY>_<COIN>.json`, "
+            "not the book path with a `.json` suffix -- the old derivation "
+            "would have refused a correct book AT GO for a naming reason",
+            "BE stamps the day COMPACT (`20260903`) and DE names it dashed "
+            "(`2026-09-03`); the receipt's day check now compares day FORMS",
+            "BE's receipt carries the digest at `book.sha256`, not at a "
+            "top-level `sha256`",
+        ],
+        "what_this_is_not": {"a_run": False, "it_opens_no_book": True,
+                             "it_scores_no_arm": True},
+        "resource_observation": {"wall_seconds": time.time() - started},
+    }
+
+
 def dry_run_scope_as_the_runner_states_it() -> dict:
     """THE RUNNER'S OWN WORDS about what `--dry-run-ledger` covers.
 
@@ -1288,6 +1424,122 @@ def _peak_rss_mb() -> float:
     return _r.getrusage(_r.RUSAGE_SELF).ru_maxrss / 1024.0
 
 
+CGROUP_ROOT = "/sys/fs/cgroup"
+#: Rule 20's wrapper puts the run in a transient scope under THIS slice. A
+#: scope anywhere else is the ambient one the shell already sat in -- and
+#: reporting ITS numbers as the run's is worse than reporting none, because
+#: they are real numbers about the wrong thing (measured: the login shell's
+#: scope carried a 16.6 GiB peak while the run used 8 MB).
+RESEARCH_SLICE = "research.slice"
+
+
+def cgroup_path() -> str | None:
+    """This process's cgroup, from /proc/self/cgroup (v2: one `0::<path>`
+    line). None when the line is absent or does not look like a path."""
+    try:
+        for ln in open("/proc/self/cgroup"):
+            parts = ln.strip().split(":", 2)
+            if len(parts) == 3 and parts[0] == "0" and parts[2].startswith("/"):
+                return parts[2]
+    except OSError:
+        return None
+    return None
+
+
+def _read_kv(p: Path) -> dict:
+    out = {}
+    try:
+        for ln in p.read_text().split("\n"):
+            f = ln.split()
+            if len(f) == 2:
+                try:
+                    out[f[0]] = int(f[1])
+                except ValueError:
+                    pass
+    except OSError:
+        return {}
+    return out
+
+
+def scope_memory_observation() -> dict:
+    """THE SCOPE'S OWN MEMORY, WITH ANON AND FILE READ APART.
+
+    DA 63 measured a scope at **7.79 GiB of the 8 GiB cap with only 1.13
+    GiB anon against 5.17 GiB reclaimable page cache**, `memory.events`
+    max 0 and oom 0. Rule 20's cap counts the CACHE, so a receipt that
+    reports one number cannot distinguish 'this run needs 7.8 GiB' from
+    'this run touched a lot of file and the kernel had no reason to
+    reclaim'. Those call for different decisions and the receipt must not
+    conflate them.
+
+    `memory.events` is the arbiter of whether the cap actually BIT: `max`
+    counts times the limit was hit and `oom` times it killed. A peak near
+    the cap with max 0 is a cap that was never enforced against this run.
+
+    A run OUTSIDE a scope records `NOT_IN_A_SCOPE` -- never zeros. Zeros
+    would read as 'measured, and nothing happened', which is the silent-
+    absence failure this programme has hit repeatedly (rule 11)."""
+    cg = cgroup_path()
+    if not cg or not cg.rstrip("/").endswith(".scope"):
+        return {"status": "NOT_IN_A_SCOPE",
+                "cgroup": cg, "in_research_slice": False,
+                "why": "no transient scope in /proc/self/cgroup, so there "
+                       "is no per-run cgroup to read. Reported as a STATUS "
+                       "rather than as zeros: a zero here would read as a "
+                       "measurement (rule 11)",
+                "anon_bytes": None, "file_bytes": None,
+                "memory_peak_bytes": None, "events": None}
+    in_slice = f"/{RESEARCH_SLICE}/" in cg
+    base = Path(CGROUP_ROOT) / cg.lstrip("/")
+    stat = _read_kv(base / "memory.stat")
+    ev = _read_kv(base / "memory.events")
+    peak = None
+    try:
+        peak = int((base / "memory.peak").read_text().strip())
+    except (OSError, ValueError):
+        peak = None
+    if not stat and peak is None:
+        return {"status": "SCOPE_NAMED_BUT_UNREADABLE",
+                "cgroup": cg, "path": str(base),
+                "in_research_slice": in_slice,
+                "why": "the cgroup is named in /proc/self/cgroup and its "
+                       "files could not be read; a STATUS, not zeros",
+                "anon_bytes": None, "file_bytes": None,
+                "memory_peak_bytes": None, "events": None}
+    anon, filed = stat.get("anon"), stat.get("file")
+    gb = 1024.0 ** 3
+    return {
+        # A scope OUTSIDE research.slice is the ambient one this shell was
+        # already in; its numbers are real and are NOT this run's, so they
+        # are reported under a status that says so rather than under
+        # MEASURED. Attributing an ambient 16.6 GiB peak to an 8 MB run
+        # would be a measurement of the wrong object, which is worse than
+        # no measurement.
+        "status": "MEASURED" if in_slice else "AMBIENT_SCOPE_NOT_THE_RUNS_OWN",
+        "in_research_slice": in_slice,
+        "expected_slice": RESEARCH_SLICE,
+        "cgroup": cg, "path": str(base),
+        "anon_bytes": anon, "file_bytes": filed,
+        "kernel_bytes": stat.get("kernel"),
+        "anon_gb": None if anon is None else anon / gb,
+        "file_gb": None if filed is None else filed / gb,
+        "memory_peak_bytes": peak,
+        "memory_peak_gb": None if peak is None else peak / gb,
+        "events": {"max": ev.get("max"), "oom": ev.get("oom"),
+                   "oom_kill": ev.get("oom_kill"), "high": ev.get("high")},
+        "cap_was_hit": None if ev.get("max") is None else ev["max"] > 0,
+        "why_anon_and_file_apart": (
+            "rule 20's 8 GiB cap counts page cache. DA 63 measured 7.79 "
+            "GiB peak with 1.13 GiB anon and 5.17 GiB reclaimable file, "
+            "events max 0 -- a peak near the cap that the cap never "
+            "enforced. One number cannot tell those apart"),
+        "the_arbiter_is_memory_events": (
+            "`max` counts times the limit was hit and `oom` times it "
+            "killed. A high peak with max 0 is headroom the kernel simply "
+            "had no reason to reclaim"),
+    }
+
+
 def _current_rss_mb() -> float:
     """CURRENT resident size, which FALLS. `ru_maxrss` is a process
     highwater and is non-decreasing BY CONSTRUCTION, so a series of it can
@@ -1366,6 +1618,57 @@ def tape_artifacts_opened(proof: dict) -> list:
                    and any(m in p for m in TAPE_ARTIFACT_MARKERS)})
 
 
+def day_forms(day: str) -> set:
+    """`2026-09-03` and `20260903` are the SAME DAY.
+
+    DE names ruled days dashed (R-555's set, the ledger's verdict files);
+    BE's builder takes and stamps them COMPACT (`--day 20260903`). A string
+    comparison across that boundary refuses a correct book for a formatting
+    reason -- found by rehearsing the smoke rather than at GO."""
+    d = str(day).strip()
+    out = {d}
+    if len(d) == 10 and d[4] == "-" and d[7] == "-":
+        out.add(d.replace("-", ""))
+    elif len(d) == 8 and d.isdigit():
+        out.add(f"{d[:4]}-{d[4:6]}-{d[6:]}")
+    return out
+
+
+def builder_receipt_for(book_path: Path, day: str, coin: str = "btc") -> Path:
+    """WHERE BE'S BUILDER RECEIPT ACTUALLY IS.
+
+    It was derived as `book_path.with_suffix('.json')` --
+    `be_daybook_20260903_btc.json` -- and BE writes
+    `be_daybook_receipt_20260903_btc.json`. The smoke would have refused
+    'no builder receipt' at GO for a NAMING reason while the receipt sat
+    beside the book. Every candidate is tried and, on a miss, ALL of them
+    are named, so the refusal is actionable rather than a puzzle."""
+    cands = []
+    for d in sorted(day_forms(day)):
+        cands.append(book_path.parent / f"be_daybook_receipt_{d}_{coin}.json")
+    cands.append(book_path.with_suffix(".json"))
+    for c in cands:
+        if c.is_file():
+            return c
+    raise RunnerRefused(
+        f"REFUSED DAY {day}: no builder receipt beside {book_path.name}. "
+        f"Tried, in order: {[str(c) for c in cands]}. BE's builder writes "
+        f"`be_daybook_receipt_<DAY>_<COIN>.json`; the book's digest is "
+        f"BE's published claim and without it there is nothing to verify "
+        f"the bytes against.")
+
+
+def _receipt_book_sha(rec: dict) -> tuple:
+    """The book digest, wherever BE's receipt carries it -- NAMED, so a
+    reader knows which field was resolved."""
+    for path, val in (("book.sha256", (rec.get("book") or {}).get("sha256")),
+                      ("sha256", rec.get("sha256")),
+                      ("book_sha256", rec.get("book_sha256"))):
+        if val:
+            return val, path
+    return None, None
+
+
 def verify_book_against_builder_receipt(day: str, book_path: Path,
                                         receipt_path: Path) -> dict:
     """R6 FOR THE BOOK: the digest comes from BE's receipt, not from us.
@@ -1381,14 +1684,15 @@ def verify_book_against_builder_receipt(day: str, book_path: Path,
             f"nothing to verify the bytes against, and a digest DE invents "
             f"verifies DE.")
     rec = json.loads(receipt_path.read_text())
-    declared = rec.get("sha256") or rec.get("book_sha256")
+    declared, declared_field = _receipt_book_sha(rec)
     if not declared:
         raise RunnerRefused(
             f"REFUSED DAY {day}: BE's receipt at {receipt_path} carries no "
-            f"`sha256` for the book.")
-    if rec.get("day") not in (None, day):
+            f"book digest under `book.sha256`, `sha256` or `book_sha256`.")
+    rec_day = rec.get("day")
+    if rec_day is not None and not (day_forms(rec_day) & day_forms(day)):
         raise RunnerRefused(
-            f"REFUSED DAY {day}: BE's receipt is for day {rec.get('day')!r}. "
+            f"REFUSED DAY {day}: BE's receipt is for day {rec_day!r}. "
             f"A book verified against another day's receipt is a book "
             f"nobody checked.")
     if not book_path.is_file():
@@ -1402,6 +1706,9 @@ def verify_book_against_builder_receipt(day: str, book_path: Path,
             f"declared.")
     return {"day": day, "path": str(book_path), "sha256": actual,
             "builder_receipt": str(receipt_path),
+            "digest_read_from_field": declared_field,
+            "receipt_day": rec_day,
+            "day_forms_matched": sorted(day_forms(day)),
             "digest_recomputed_at_read_time": True,
             "digest_source": "BE's builder receipt, not a DE constant"}
 
@@ -1834,7 +2141,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
 
     # ---- S0: verify. Digests only. -------------------------------------
     book_path = Path(book_path)
-    receipt = book_path.with_suffix(".json")
+    receipt = builder_receipt_for(book_path, day, params.get("coin", "btc"))
     bookcite = verify_book_against_builder_receipt(day, book_path, receipt)
     book_sha = bookcite["sha256"]
     mod, cite = import_be_cascade(params, module=module)
@@ -1954,6 +2261,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             f"REFUSED DAY {day}: peak RSS {peak:.0f} MB exceeds the "
             f"declared budget {budget:.0f} MB. The DAY refuses -- the cap "
             f"is never raised and the draw count is never cut (R-174).")
+    scope_mem = scope_memory_observation()
     return {
         "protocol": "P003_DE_MULTIDAY_GATE1_DAY_RUN_V1",
         "status": ("FIXTURE_DAY_RUN_NO_REAL_DATA" if fixture
@@ -1981,7 +2289,11 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         },
         "wrapper": {**obs, "rule20": r20},
         "resources": {"wall_seconds": wall, "peak_rss_mb": peak,
-                      "per_arm": per_arm_detail},
+                      "per_arm": per_arm_detail,
+                      # RSS is this PROCESS; the scope block is the CGROUP,
+                      # which is what rule 20's cap is applied to and what
+                      # counts page cache.
+                      "scope_memory": scope_mem},
         "what_this_is_not": {
             "a_result": False,
             "the_economics_are_SEALED": n_days_complete < params["G"],
@@ -3412,6 +3724,104 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"49 -- the gap widened twice while the sentence sat still, "
            f"which is rule 10 in my own receipt")
 
+        # ---- DE 82 (1): the scope's anon and file, read APART ------------
+        _sm = scope_memory_observation()
+        ok(_sm["status"] in ("MEASURED", "AMBIENT_SCOPE_NOT_THE_RUNS_OWN",
+                             "NOT_IN_A_SCOPE", "SCOPE_NAMED_BUT_UNREADABLE")
+           and (_sm["status"] != "NOT_IN_A_SCOPE"
+                or _sm["anon_bytes"] is None),
+           f"DE 82 (1): the scope observation reports a STATUS "
+           f"({_sm['status']}), and when there is no scope to read it "
+           f"reports None -- NEVER zeros. A zero would read as 'measured, "
+           f"and nothing happened', which is rule 11's silent absence")
+        ok(scope_memory_observation.__doc__
+           and "5.17" in scope_memory_observation.__doc__
+           and "memory.events" in scope_memory_observation.__doc__,
+           "and the reason anon and file are read APART is DA 63's "
+           "measurement, carried where the code is: 7.79 GiB peak with "
+           "1.13 GiB anon against 5.17 GiB reclaimable cache, events max 0 "
+           "-- rule 20's cap counts the cache, so one number cannot tell "
+           "'this run needs 7.8 GiB' from 'the kernel had no reason to "
+           "reclaim'")
+        _fake_none = {"status": "NOT_IN_A_SCOPE", "anon_bytes": None,
+                      "file_bytes": None, "memory_peak_bytes": None,
+                      "events": None}
+        ok(all(_fake_none[k] is None for k in
+               ("anon_bytes", "file_bytes", "memory_peak_bytes", "events"))
+           and _fake_none["status"] == "NOT_IN_A_SCOPE",
+           "KNOWN-BAD SHAPE, NAMED: the scope-less record is Nones under a "
+           "status, and a receipt carrying zeros there would be claiming a "
+           "measurement it never made")
+        ok(_sm.get("in_research_slice") is not None
+           and (_sm["status"] == "MEASURED") == bool(
+               _sm.get("in_research_slice")),
+           f"AND AN AMBIENT SCOPE IS NOT THE RUN'S: MEASURED holds only "
+           f"inside {RESEARCH_SLICE}. Measured while writing this: the "
+           f"login shell's own scope carries a 15.5 GiB peak against an "
+           f"8 MB run, and attributing that to the run would be a "
+           f"measurement of the wrong object")
+
+        # ---- DE 82 (2): the smoke, rehearsed -----------------------------
+        _rh = rehearse_smoke("2026-09-03")
+        ok(_rh["book"]["exists"] is False
+           and "P2_book_exists" in _rh["blocking"]
+           and _rh["book"]["REFUSES_NOW_BY_NAME"]
+           and _rh["status"].startswith("NOT_READY"),
+           f"DE 82 (2): the rehearsal REFUSES NOW BY NAME on the book that "
+           f"does not exist -- blocking {_rh['blocking']} -- so GO is one "
+           f"verified command and nothing is typed at GO time")
+        ok(_rh["THE_ONE_COMMAND"].startswith(f"flock -n {HEAVY_RUN_LOCK}")
+           and f"--slice={RESEARCH_SLICE}" in _rh["THE_ONE_COMMAND"]
+           and "MemoryMax=8G" in _rh["THE_ONE_COMMAND"]
+           and "--day 2026-09-03" in _rh["THE_ONE_COMMAND"]
+           and "be_daybook_20260903_btc.pkl" in _rh["THE_ONE_COMMAND"],
+           "and the command is the rule-20 wrapper in full, with the "
+           "dashed day DE names and the COMPACT-day book path BE writes -- "
+           "the two conventions meeting in one string that was executed as "
+           "a value rather than typed")
+        ok("P5_lock_free_now" in _rh["informational_and_false_now"]
+           and "P5_lock_free_now" not in _rh["blocking"],
+           "and the lock's state NOW is INFORMATIONAL, not blocking: the "
+           "wrapper takes it at GO. Counting it as blocking would inflate "
+           "the status and train a reader to ignore it")
+        ok(len(_rh["what_this_rehearsal_found"]) == 3
+           and any("be_daybook_receipt_" in x
+                   for x in _rh["what_this_rehearsal_found"]),
+           f"AND THE REHEARSAL EARNED ITSELF: it found "
+           f"{len(_rh['what_this_rehearsal_found'])} defects that would "
+           f"each have refused a CORRECT book at GO for a reason that had "
+           f"nothing to do with the book")
+        ok(day_forms("2026-09-03") == {"2026-09-03", "20260903"}
+           and day_forms("20260903") == {"2026-09-03", "20260903"},
+           "DE 82 (2a) KNOWN-BAD CLOSED: `2026-09-03` and `20260903` are "
+           "the SAME DAY. DE names ruled days dashed and BE stamps them "
+           "compact; a string comparison across that boundary refused a "
+           "correct book for a formatting reason")
+        _rc = {"day": "20260903", "book": {"sha256": "a" * 64}}
+        ok(_receipt_book_sha(_rc) == ("a" * 64, "book.sha256"),
+           "DE 82 (2b) KNOWN-BAD CLOSED: BE's receipt carries the digest "
+           "at `book.sha256`, and the resolver NAMES which field it read "
+           "so a reader is not left guessing")
+        with _tfl.TemporaryDirectory() as _bd:
+            _bp = Path(_bd) / "be_daybook_20260903_btc.pkl"
+            _bp.write_bytes(b"x")
+            try:
+                builder_receipt_for(_bp, "2026-09-03")
+                ok(False, "a missing builder receipt was ADMITTED")
+            except RunnerRefused as _e:
+                ok("Tried, in order" in str(_e)
+                   and "be_daybook_receipt_20260903_btc.json" in str(_e),
+                   "DE 82 (2c) KNOWN-BAD: a missing builder receipt names "
+                   "EVERY path tried, so the refusal is actionable rather "
+                   "than a puzzle")
+            (Path(_bd) / "be_daybook_receipt_20260903_btc.json").write_text(
+                "{}")
+            ok(builder_receipt_for(_bp, "2026-09-03").name
+               == "be_daybook_receipt_20260903_btc.json",
+               "AND THE POSITIVE CONTROL: BE's ACTUAL naming resolves -- "
+               "the old derivation (`book_path.with_suffix('.json')`) "
+               "would have missed this file sitting beside the book")
+
         # ---- reviewer §4.3: the peak stage is a PREDICATE -------------------
         _ps = _open["memory_plan"]["peak_stage"]
         ok(_ps["computable"] is True
@@ -3578,6 +3988,10 @@ def main() -> int:
                     help="build a SYNTHETIC day book of BE's declared "
                          "shape, run --day on it, and emit the receipt. "
                          "Proves the path, never the data")
+    ap.add_argument("--rehearse-smoke", type=str, dest="rehearse",
+                    help="emit the smoke invocation for DAY, evaluating "
+                         "every precondition now and refusing by name on "
+                         "the book that does not exist yet. Runs nothing")
     ap.add_argument("--n-days-complete", type=int, default=1,
                     help="how many of the G days are complete; the seal "
                          "opens only at G")
@@ -3585,6 +3999,25 @@ def main() -> int:
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.rehearse:
+        payload = rehearse_smoke(a.rehearse)
+        payload["data_root"] = DR.require_canonical("the smoke rehearsal")
+        payload["source_identity"] = {
+            "producing_code": Path(__file__).name,
+            "producing_code_sha256": hashlib.sha256(
+                Path(__file__).resolve().read_bytes()).hexdigest(),
+            **carrying_commit_block(Path(__file__).resolve())}
+        if a.output is not None:
+            if a.output.exists():
+                raise RunnerRefused(f"output already exists: {a.output}")
+            a.output.parent.mkdir(parents=True, exist_ok=True)
+            a.output.write_text(
+                json.dumps(payload, indent=2, sort_keys=True) + "\n")
+        print(json.dumps({"emitted": str(a.output), "day": payload["day"],
+                          "status": payload["status"],
+                          "blocking": payload["blocking"],
+                          "book_exists": payload["book"]["exists"]}))
+        return 0
     if a.synthetic_day or a.day:
         return _main_day(a)
     if a.ledger:
