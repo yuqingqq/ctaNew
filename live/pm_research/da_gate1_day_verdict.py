@@ -6093,6 +6093,54 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"params -> {_pc['status']} (matches {_pc['matches']}, key "
        f"{_pc['digest_key']}); design -> {_dc['status']}")
 
+    # -- DA 108: A FORK WITH A MERGE IS ONE HEAD; WITHOUT ONE IT IS NOT -
+    import declaration_chain as _DC2                          # noqa: PLC0415
+    _mt = Path(tempfile.mkdtemp(prefix="da108merge_"))
+    (_mt / "mm_v1.json").write_text(json.dumps({"v": 1}))
+    _p1 = {"path": "mm_v1.json",
+           "sha256": hashlib.sha256(
+               (_mt / "mm_v1.json").read_bytes()).hexdigest()}
+    (_mt / "mm_v2.json").write_text(json.dumps({"v": 2, "supersedes": _p1}))
+    (_mt / "mm_v3.json").write_text(json.dumps({"v": 3, "supersedes": _p1}))
+    _forked = _DC2.resolve_head(_mt, "mm")
+    try:
+        _declaration_head("mm", _mt)
+        _fork_verdict = "ADMITTED"
+    except VerifierRefused as _e:
+        _fork_verdict = str(_e).split(" -- ")[0].replace("REFUSED: ", "")
+    #: THE MERGE: a version naming BOTH tips -- one as `supersedes`, the
+    #: other in the field BE 80's resolver reads for exactly this.
+    _p2 = {"path": "mm_v2.json",
+           "sha256": hashlib.sha256(
+               (_mt / "mm_v2.json").read_bytes()).hexdigest()}
+    _p3 = {"path": "mm_v3.json",
+           "sha256": hashlib.sha256(
+               (_mt / "mm_v3.json").read_bytes()).hexdigest()}
+    (_mt / "mm_v4.json").write_text(json.dumps(
+        {"v": 4, "supersedes": _p2, "also_supersedes": [_p3]}))
+    _merged = _DC2.resolve_head(_mt, "mm")
+    _merged_head = _declaration_head("mm", _mt)
+    ck("DA 108 -- ***A FORK WITHOUT A MERGE IS REFUSED; A FORK WITH ONE IS "
+       "ONE HEAD.*** Two versions superseding v1 leave TWO unsuperseded "
+       "tips: the shared resolver names the higher one and REPORTS the "
+       "other as an orphan branch, and this verifier REFUSES -- ***a pin "
+       "would have no answer to which version it should name***. Add a "
+       "version naming BOTH tips -- one as `supersedes`, the other in the "
+       "field BE 80's resolver reads for exactly this -- and the family "
+       "resolves to ONE head with NO orphan, and this verifier admits it. "
+       "That is the line: a fork is not a defect, ***an UNMERGED fork "
+       "is***",
+       [o["version"] for o in _forked["orphan_branches"]] == ["mm_v2.json"]
+       and _forked["name"] == "mm_v3.json"
+       and _fork_verdict == "MM_DOES_NOT_RESOLVE_TO_ONE_HEAD"
+       and _merged["name"] == "mm_v4.json"
+       and _merged["orphan_branches"] == []
+       and _merged_head["name"] == "mm_v4.json",
+       f"forked: head {_forked['name']}, orphan "
+       f"{[o['version'] for o in _forked['orphan_branches']]} -> "
+       f"{_fork_verdict}; merged: head {_merged['name']}, orphans "
+       f"{_merged['orphan_branches']} -> admitted")
+
     # -- DA 104: THE CHAIN IS RESOLVED AND WRITTEN BY THE SHARED CODE ---
     import declaration_chain as _DC                           # noqa: PLC0415
     _ct = Path(tempfile.mkdtemp(prefix="da104chain_"))
