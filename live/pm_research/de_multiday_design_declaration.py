@@ -43,9 +43,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 11
+VERSION = 12
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 80
+EXPECTED_CHECKS = 81
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -80,12 +80,16 @@ V10_DECLARATION = ("p003_de_multiday_gate1_design_v10__20260906T064720Z"
                    ".json",
                    "0c8445983f2e43c83e16a9f0be502274328b68642664e15ac02483"
                    "79e95f72d7")
+V11_DECLARATION = ("p003_de_multiday_gate1_design_v11__20260906T071214Z"
+                   ".json",
+                   "5039b35cc3d84709101f4e208bed522258ffa477382fe4a9bc8afd"
+                   "7637bfe1e8")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
-                    V10_DECLARATION)
+                    V10_DECLARATION, V11_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -1265,13 +1269,39 @@ def declaration() -> dict:
                 "front_door": "de_phase4_diag_runner.day_assembly_inputs("
                               "day, tape={'path','sha256'}, "
                               "fragment={'path','sha256'})",
-                "then": ["build_tape_index(splits, tape_path=inp['tape']"
-                         "['path'])",
+                "then": ["build_tape_index(splits, inputs=inp)  "
+                         "<- PREFERRED: path, digest and day as ONE object",
                          "fragment_slice(dst, n_windows=..., "
                          "only_slugs=..., source=inp['fragment']['path'])",
                          "assemble_streaming(..., source=frag, tape=tape)"],
+                "or_explicitly": "build_tape_index(splits, "
+                                 "tape_path=inp['tape']['path'], day=day, "
+                                 "expect_sha256=inp['tape']['sha256'])",
                 "or_in_one_step": "feature_blocks(splits=..., day=day, "
                                   "inputs=inp) threads both",
+                "AND_A_RULED_DAY_WITHOUT_expect_sha256_REFUSES": (
+                    "a tape path supplied for a ruled day with no digest "
+                    "is rejected rather than running a call that reads the "
+                    "right path and verifies nothing while its signature "
+                    "says a digest is expected (REV 43 item 1)"),
+            },
+            "THE_DIGEST_IS_CHECKED_TWICE_AND_THAT_IS_THE_POINT": {
+                "before_the_stream": "day_assembly_inputs -- the ADMISSION "
+                                     "decision",
+                "as_the_stream_is_read": "phase2_arms.tape_index("
+                                         "expect_sha256=) -- BE 52's own "
+                                         "check, which this seam now "
+                                         "reaches",
+                "why_not_redundant": "the first leaves a window between "
+                                     "the check and the use; the file can "
+                                     "move. REV 43 filed that split and BE "
+                                     "built the fix before the threading "
+                                     "arrived",
+                "handover_is_BY_SIGNATURE": "the onward keywords are "
+                                            "detected on phase2_arms, so "
+                                            "the scoped rebind handed over "
+                                            "to BE's PARAMETER with no "
+                                            "edit on either side",
             },
             "what_is_verified_and_in_which_order": [
                 "the input kind is one this seam knows",
@@ -2292,10 +2322,23 @@ def selftest(*, quiet: bool = False) -> int:
     _sig = _i2.signature(_PD2.day_assembly_inputs).parameters
     ok(set(_sig) == {"day", "tape", "fragment"}
        and "day_assembly_inputs" in _r16["THE_CALL_BE_MAKES"]["front_door"]
-       and "tape_path=" in _r16["THE_CALL_BE_MAKES"]["then"][0],
+       and "inputs=inp" in _r16["THE_CALL_BE_MAKES"]["then"][0]
+       and "expect_sha256" in _r16["THE_CALL_BE_MAKES"]["or_explicitly"]
+       and {"tape_path", "day", "expect_sha256", "inputs"} <= set(
+           _i2.signature(_PD2.build_tape_index).parameters),
        f"R16: the call BE makes is a FIELD, and its arguments match the "
        f"function's real signature {sorted(_sig)} -- a declaration that "
        f"named a call BE could not make would be worse than none")
+    _mechd = _PD2.tape_path_mechanism()
+    _twice = _r16["THE_DIGEST_IS_CHECKED_TWICE_AND_THAT_IS_THE_POINT"]
+    ok(_mechd["expect_sha256_available"] is True
+       and "expect_sha256" in _twice["as_the_stream_is_read"]
+       and "window between" in _twice["why_not_redundant"],
+       f"REV 43 (1) IN THE DECLARATION: the digest is checked at the "
+       f"ADMISSION and again AS THE STREAM IS READ, and the entry says why "
+       f"that is not redundancy -- the first leaves a window between the "
+       f"check and the use. BE's onward parameters are live: "
+       f"{_mechd['onward_parameters_detected']}")
     ok("tape_path" in _i2.signature(_PD2.build_tape_index).parameters
        and "day" in _i2.signature(_PD2.assembly_preconditions).parameters,
        "and the two seam functions carry the parameters the field names -- "
