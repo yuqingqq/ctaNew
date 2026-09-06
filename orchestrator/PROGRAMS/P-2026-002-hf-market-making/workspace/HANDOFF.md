@@ -1,19 +1,94 @@
 # HANDOFF — P-2026-002 HF Market Making
 
-Updated: 2026-09-06T06:05Z (DA seat). **THE E2-A RUNNER EXISTS AND HAS RUN. THE
-SMOKE REFUSED ON THE POPULATION, NOT ON THE GATE — no `eff_RT` was produced and
-there is nothing to seal.** The inherited E1-A reproduction control ran first
-and passed, gating the run. Then ICP returned **1 admissible day against a
-declared minimum of 14**, and a census over 8 symbols shows why: **the
-day-admission gap leg, inherited from E2.0 where it guarded against collector
-OUTAGE, selects on how often the best quote CHANGES.** It is sound as code —
-ADA reproduces E2.0's 16-day admissible set exactly — and the exclusion is
-monotone in activity. **E2-A has a population and it is the ACTIVE names; the
-thin ones it was built to resolve (AVAX, AAVE, and ICP first among them) are
-the ones it drops.** The bar is **not** touched: a ruling is escalated, and
-eight symbols over 08-20..09-05 are now consumed for any re-choice of the
-predicate. The real-book path itself executes clean. Read this section, then
-E2.0's below it.
+Updated: 2026-09-06T06:24Z (DA seat). **THE ADMISSION LEG IS RE-DECLARED AS
+AN OUTAGE DETECTOR (declaration v6).** DA 61's census8 showed the inherited
+gap-fraction leg selects on *how often the best quote changes* — exclusion
+monotone in activity, ICP cut from 16 structurally complete days to 1 — so
+E2-A was dropping precisely the thin cell it exists to resolve. Admissibility
+is now a property of **the collector being live**; book activity is REPORTED,
+never gated. Nothing has been read for a gate under v6: the reviewer files on
+v6 (REV 38) before the smoke re-runs, and **the ICP smoke's reading stays
+SEALED.** Read this section, then E2.0's below it.
+
+## v6 — admission is the COLLECTOR, not the book
+
+**The leg v1–v5 carried** gated a day on the intra-day bookTicker gap
+fraction, inherited from E2.0 where it guarded against collector *outage*.
+Measured over eight symbols it selects on activity:
+
+| | DOGE | BNB | ADA | FIL | LTC | AVAX | AAVE | ICP |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| admissible (v5) | 16 | 16 | 16 | 14 | 14 | 13 | 11 | **1** |
+| median decision-time age | 68 | 102 | 116 | 169 | 194 | 222 | 261 | **517 ms** |
+
+**v6's predicate** — (a) 24 hour-files on all three streams, unchanged; and
+(b) **the collector was live**: no gap between consecutive heartbeats beyond
+2× the collector's own *measured* modal cadence, and no restart inside the day.
+
+**The bar is not chosen on this data.** The collector emits a heartbeat line
+per minute; its cadence is measured as the modal inter-heartbeat interval
+(60 s) and the bar is 2×. Measured separation on the real ledger:
+
+| day | max heartbeat gap | reading |
+|---|---:|---|
+| every clean day 08-20…09-05 | **61 s** | one cadence — live |
+| 2026-08-24 | **158 s** | the hf_ws_v2 era-boundary restart |
+| 2026-08-26 | **4,656 s** | the reboot |
+
+The bar sits between them by construction; the tightest separation is 2.6×.
+*And the leg independently rediscovers the era boundary* — 08-24 is the day
+CLAUDE.md rule 5 already marks as the sub-second stamp boundary.
+
+**REPORTED, never gated:** the gap fraction, the gap run-length profile, and
+decision-time quote age per symbol-day, under `REPORTED_not_gated` — so a
+reader still sees the staleness a thin name carries into placement.
+
+**What measuring it consumed.** The *decision* to replace the leg was informed
+by seeing which days v5 excluded, so **eight symbols over 08-20…09-05 are
+CONSUMED for any further re-choice of an admission predicate** (rule 11). The
+new leg itself is not tuned on them: different quantity, bar from the
+collector's own cadence. A *third* predicate proposed on this evidence would
+need days not yet examined.
+
+## The partial-fill bracket now fires (rule 16, self-reported in DA 61)
+
+At `partial_share = 0.000` the two R-570(C)(2) pricings coincided and the
+straddle rule could not fire. The battery now carries an episode built to be
+partial — queue 100, order 10, 104 units through → **filled 4 of 10** — on
+which the pricings give **eff_RT 6.0 vs 10.0** and the straddle rule **fires**,
+their mean 8.0 being exactly the pass it exists to refuse. The R-570(B)
+ordering falsifier is split in the battery as it already was in prose:
+**quantity per episode, cost at the aggregate gate row.**
+
+## `e1_markout_scan.py` — the resolver adopted, ruled a portability change
+
+`REPO = Path(__file__).parents[2]` → `de_data_root.resolve()`, **imported not
+copied**, with a fall back to the code tree. Closes the gap filed twice: from a
+per-seat worktree `day_files()` returned `[]` and `tick_size()` raised on an
+empty argmax. **Falsifier `--e1-resolver-parity`**, both halves driven every
+run — *parity* where the old resolution was already right (same tree ⇒ the
+twelve symbols' `tick_size` and file counts must be identical), and *the fix*
+where it was wrong (worktree ⇒ old root zero files, new root the real count).
+A parity check that could only ever pass is rule 16's shape, which is why the
+second half is there.
+
+## Rule 20 finally has an instrument
+
+`live/pm_research/heavy_slice_audit.py` — lists every transient scope in
+`research.slice` with RSS, wall and command; names the lock holder; **REFUSES
+with rc 2, offenders named**, when a scope over 1 GiB or 60 s runs without the
+lock held by *its own process tree*. It keys on the **slice**, because the
+calling shell is itself in a transient scope and "is there a scope" is true
+either way. **Its first live run found 3 unlocked heavy scopes.**
+
+> **And its own selftest passed its known-bad for the wrong reason.** The first
+> version asserted on the audit's global `refused` flag and fired on *another
+> seat's* real heavy run that happened to be in the slice, then failed its
+> positive control for the same reason. Each planted scope now carries an
+> explicit `--unit` and every assertion names it. A second defect in the same
+> test: terminating the `systemd-run` **client** does not stop the **scope**,
+> so the planted scope survived teardown and held the lock through two later
+> controls.
 
 ## READ FIRST — E2-A, 2026-09-06
 
@@ -201,13 +276,36 @@ removed.
   E2.0 result review's §6 gap, still open in the module that **produced E1's
   published numbers**. The reviewer hit it independently. Not edited: it is
   E1's producing code.
-- **A commit of mine was ORPHANED by a concurrent commit in the shared tree.**
-  Between two pushes the main tree's HEAD moved back to an earlier commit;
-  `git commit` landed on a detached HEAD and `git push origin mm-research` then
-  pushed **another seat's** tip while mine dangled — *reporting success.* Same
-  family as the backtick incident (R-567(B)). Recovered by verifying the
-  working-tree blob byte-identical and re-committing by pathspec. **R-397's
-  stated limitation is not theoretical.**
+- **THE ORPHANED COMMIT — my DA-61 account of it was WRONG, and the reflog
+  says so.** I reported that "the main tree's HEAD moved back to an earlier
+  commit". It did not. Both reflogs, read at 06:11Z:
+
+  | | |
+  |---|---|
+  | shared tree `HEAD` | 30ddbf3 → 13e978d → 26c4c08 → 91da6f2 — **monotone; it never moved backwards, and `11cf710` never appears in it at all** |
+  | `~/ctaNew-wt-da` `HEAD` | 05:52:44 `checkout … to mm-research` (30ddbf3) → **05:56:52 `commit: E2-A census: report QUOTE AGE …` = `11cf710`** → 05:56:53 `checkout … to mm-research` |
+
+  **The commit was made in MY OWN detached worktree.** The mechanism is two
+  independent failures composing:
+
+  1. **A bare `git` command inherits a `cd` from earlier in the same compound
+     shell command.** That call began `cd ~/ctaNew-wt-da && …`, so the
+     `git commit` at the end of the same line ran in the *worktree*, on its
+     detached HEAD, not in the shared tree.
+  2. **`git push origin mm-research` from a detached worktree pushes the
+     BRANCH, not your HEAD.** The branch had just advanced to another seat's
+     commit (26c4c08, 05:56:14), so git pushed *that*, printed
+     `13e978d..26c4c08`, and exited 0. My commit was never referenced.
+
+  **Rule 21 as drafted forbids a mechanism that did not occur here.** No
+  `checkout`/`reset`/`rebase` in the shared tree was involved — the shared-tree
+  detachment was the *other* incident, the backtick expansion of R-567(B). What
+  prevents *this* one is rule 21's **positive** form, which the rule already
+  states: always `git -C /home/yuqing/ctaNew …`, never a bare `git` whose tree
+  depends on the shell's cwd. What it does **not** yet cover is (2): a push that
+  reports success for someone else's commit. **The missing step is verifying
+  that the pushed tip is your commit** — `git -C … rev-parse HEAD` equal to the
+  remote's new tip — which no rule currently asks for.
 
 ---
 

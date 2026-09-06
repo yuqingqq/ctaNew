@@ -66,6 +66,35 @@ flags:
                           # returns 1e-6, the pre-fix value, and an
                           # independent transcription agrees. Not a blocker
                           # on E2-A; E1-A's operative number is untouched.
+  e1_resolver_adopted: 2026-09-06
+                          # e1_markout_scan.py -- E1's PRODUCING module --
+                          # now resolves its data root through
+                          # de_data_root.resolve(), IMPORTED not copied,
+                          # falling back to the code tree. Ruled a
+                          # PORTABILITY change, not a result change (DA 62).
+                          # Closes the E2.0 result review's section-6 gap,
+                          # filed twice: from a per-seat worktree
+                          # day_files() returned [] and tick_size() raised on
+                          # an empty argmax.
+                          # FALSIFIER --e1-resolver-parity, both halves every
+                          # run: PARITY (same tree -> the twelve symbols'
+                          # tick_size and file counts identical old vs new)
+                          # and THE FIX (worktree -> old root zero files, new
+                          # root the real count).
+  rule20_instrument: live/pm_research/heavy_slice_audit.py
+                          # R-575(C) had no instrument. Lists every transient
+                          # scope in research.slice with RSS/wall/cmd, names
+                          # the lock holder, and REFUSES with rc 2 when a
+                          # scope over 1 GiB or 60 s runs without the lock
+                          # held by ITS OWN process tree. Keys on the SLICE:
+                          # the calling shell is itself in a transient scope,
+                          # so "is there a scope" is true either way.
+                          # Selftest 6 checks both directions on planted
+                          # scopes. FIRST LIVE RUN FOUND 3 UNLOCKED HEAVY
+                          # SCOPES. Its own selftest first passed its
+                          # known-bad for the WRONG REASON (fired on another
+                          # seat's real run in the slice); assertions now
+                          # name the planted --unit.
   e2_a_runner_built: 2026-09-06
                           # live/mm_research/e2_a_runner.py. Real-book
                           # placement from bookTicker at t0- with integer
@@ -96,7 +125,34 @@ flags:
                           # met everywhere; what excludes 15 of them is the
                           # bookTicker gap-fraction leg (0.109-0.219 against
                           # a 0.05 bar).
-  e2_a_admission_blocker: RULING-NEEDED
+  e2_a_admission_leg: v6-COLLECTOR-OUTAGE
+                          # RE-DECLARED 2026-09-06 (coordinator addendum to
+                          # DA 62, on DA 61's census8 finding).
+                          # declaration v6 sha256 127e0a56ddee775e, carrying
+                          # e29f984; v5 90a9a99f6cb2a2cc untouched.
+                          # ADMISSIBILITY IS NOW A PROPERTY OF THE COLLECTOR
+                          # BEING LIVE: (a) 24 hour-files on all three
+                          # streams and (b) no heartbeat gap beyond 2x the
+                          # collector's own MEASURED modal cadence and no
+                          # restart inside the day. Book activity -- gap
+                          # fraction, gap run-length profile, decision-time
+                          # quote age -- is REPORTED per symbol-day under
+                          # REPORTED_not_gated, never gated.
+                          # THE BAR IS NOT CHOSEN ON THIS DATA: cadence
+                          # measured at 60 s, bar 2x; every clean day's max
+                          # heartbeat gap is 61 s, 2026-08-24 (era-boundary
+                          # restart) is 158 s and 2026-08-26 (reboot) is
+                          # 4,656 s. Tightest separation 2.6x. The leg
+                          # independently rediscovers the era boundary.
+                          # CONSUMED (rule 11): the DECISION to replace the
+                          # leg was informed by seeing which days v5
+                          # excluded, so eight symbols over 08-20..09-05 are
+                          # consumed for any further re-choice of an
+                          # admission predicate. A THIRD predicate proposed
+                          # on this evidence needs days not yet examined.
+                          # NOTHING HAS BEEN READ FOR A GATE UNDER v6; the
+                          # reviewer files on v6 (REV 38) first.
+  e2_a_admission_blocker_v5: SUPERSEDED-BY-v6
                           # Census receipt data/mm_hf/e1/
                           # p002_e2a_census__20260906T055752Z.json (sha256 9fa3e218a929ab8a) and the 8-symbol census8 receipt.
                           # THE PREDICATE IS SOUND AS CODE: ADAUSDT is 16 of
