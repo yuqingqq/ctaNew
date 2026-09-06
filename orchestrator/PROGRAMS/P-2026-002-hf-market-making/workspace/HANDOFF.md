@@ -1,8 +1,215 @@
 # HANDOFF — P-2026-002 HF Market Making
 
-Updated: 2026-09-06T04:47:21Z (DA seat). **E2.0 RAN AND IS READ: ADA IS SETTLED
-DEAD ON TRUE BOOKS, AND E1 IS VINDICATED AS A MEASUREMENT.** E1-B is now empty
-with no pending cell. Read this section, then session 1's below it.
+Updated: 2026-09-06T06:05Z (DA seat). **THE E2-A RUNNER EXISTS AND HAS RUN. THE
+SMOKE REFUSED ON THE POPULATION, NOT ON THE GATE — no `eff_RT` was produced and
+there is nothing to seal.** The inherited E1-A reproduction control ran first
+and passed, gating the run. Then ICP returned **1 admissible day against a
+declared minimum of 14**, and a census over 8 symbols shows why: **the
+day-admission gap leg, inherited from E2.0 where it guarded against collector
+OUTAGE, selects on how often the best quote CHANGES.** It is sound as code —
+ADA reproduces E2.0's 16-day admissible set exactly — and the exclusion is
+monotone in activity. **E2-A has a population and it is the ACTIVE names; the
+thin ones it was built to resolve (AVAX, AAVE, and ICP first among them) are
+the ones it drops.** The bar is **not** touched: a ruling is escalated, and
+eight symbols over 08-20..09-05 are now consumed for any re-choice of the
+predicate. The real-book path itself executes clean. Read this section, then
+E2.0's below it.
+
+## READ FIRST — E2-A, 2026-09-06
+
+### What was built
+
+`live/mm_research/e2_a_runner.py`, against declaration **v5**
+(`p002_e2_a_declaration_v5.json`, sha256 `90a9a99f6cb2a2cc`, carrying
+`8e6b753`; v1–v4 untouched, superseded in band).
+
+| checklist item (REVIEW_DA60 §3) | state |
+|---|---|
+| real-book placement from bookTicker at t0⁻ | built — the touch and the decision mid, integer tick indices everywhere |
+| depth20 queue-ahead at placement | built — `p@q\|…`×20 parsed by byte-translation into a flat 84-column CSV |
+| both fill sims wired to episodes, ordering predicate computed | built |
+| partial fills, `filled_qty` a quantity | built, both pricings |
+| chase leg at the taker fee + realised drift | built — crosses the **real** touch at T_p; `ES_day` is gone from E2-A entirely |
+| falsifiers both directions | 24, all green, 0 tape paths |
+| E1-A reproduction control runs FIRST and gates | built — and it **passed and gated** the smoke |
+| `require_canonical` on every emission | inherited |
+| one symbol first with resources | ICP: 33.55 s, 1,124 MiB |
+
+### The smoke: REFUSED on the population — and there is no reading to seal
+
+`p002_e2a_smoke_ICPUSDT__20260906T055050Z.json` (sha256 `ad722557872b837a`,
+carrying `b5bf558`). The inherited control ran first and reproduced E1-A
+exactly — sweep **6.264472967929728**, touch **3.4484893715577347**, matching
+`e1a_gate_summary.csv` row `tp_s=600` to full printed precision — so E2-A is
+superseding E1-A's estimator and not a different one.
+
+Then: **1 admissible day against the declared minimum of 14.** All 16 complete
+days carry 24 hour-files on **all three** streams, so the depth20 requirement
+is met everywhere. What excludes 15 of them is the bookTicker gap-fraction leg
+(0.109–0.219 against a 0.05 bar). **No `eff_RT` exists in that receipt, no
+overlay verdict, nothing to seal — the gate was never reached.**
+
+### Why, measured — and the control that makes it readable
+
+`p002_e2a_census__20260906T055752Z.json`.
+
+| | ADAUSDT | ICPUSDT |
+|---|---:|---:|
+| complete days | 16 | 16 |
+| **admissible** | **16** | **1** |
+| quotes/day | 1.55–5.83 M | 0.64–1.67 M |
+| gap fraction | 0.0003–0.0030 | 0.0378–0.2190 |
+| gap runs/day | 12–249 | 2,853–11,997 |
+| median gap run | 1 s | 1 s |
+| missing seconds in runs ≥ 60 s | 0.0000 (one day 0.2510) | **0.0000** on 15 of 16 |
+| **quote age at the 24 decision times, p50** | **60–230 ms** | **206–902 ms** |
+| p90 | 252–326 ms | **940–3,299 ms** |
+| max | ≤ 827 ms | up to **7,185 ms** |
+
+**ADA reproduces E2.0's own admissible set exactly**, so the predicate is not
+broken as code. **ICP's missing seconds are one-second holes, not outages** —
+zero of them sit in runs of a minute or more on 15 of 16 days. The gap leg,
+inherited from E2.0 where it guarded against *collector outage*, is measuring
+*quietness* on a thinner symbol.
+
+**But it is pointing at something real.** E2-A places at the touch from the
+last bookTicker strictly before t0. On ICP that quote is a half-second to a
+second old at the median and up to 3.3 s old at p90 — 3–10× ADA. *That is a
+limit on what "place at the real touch" means for a thin name, and no
+threshold change removes it.*
+
+### The population, across 8 symbols — E2-A has one, and it is the ACTIVE names
+
+`p002_e2a_census8__20260906T055936Z.json` (sha256 `9fa3e218a929ab8a`). Every
+symbol whose bookTicker is under 2 GB; **the cut is by measured input size,
+declared before the run, not by outcome.** SOL 3.6, XRP 3.2, BTC 8.6, ETH
+8.9 GB are queued with their sizes.
+
+| symbol | complete | **admissible** | excl. by gap | median decision-time age p50 |
+|---|---:|---:|---:|---:|
+| DOGE | 16 | **16** | 0 | 68 ms |
+| BNB | 16 | **16** | 0 | 102 ms |
+| ADA | 16 | **16** | 0 | 116 ms |
+| FIL | 16 | **14** | 2 | 169 ms |
+| LTC | 16 | **14** | 2 | 194 ms |
+| AVAX | 16 | 13 | 3 | 222 ms |
+| AAVE | 16 | 11 | 5 | 261 ms |
+| ICP | 16 | **1** | 15 | 517 ms |
+
+Against the declared 14-day minimum: **DOGE, BNB, ADA, FIL, LTC clear; AVAX,
+AAVE, ICP do not.** *The exclusion is monotone in activity* — the two-symbol
+finding confirmed across eight. **E2-A has a population, and it is the
+population of active names; the thin ones it was built to resolve are the ones
+it drops.** All eight over 08-20..09-05 are now CONSUMED for any re-choice of
+the predicate.
+
+### The real-book path EXECUTES — mechanism check, all costs redacted
+
+`p002_e2a_mechanism_ICPUSDT__20260906T060417Z.json` (sha256
+`29c04cf58f9524f5`). ICP's single admissible day, 15.61 s / 1,165 MiB. **No
+`eff_RT`, no verdict, nothing to seal** — it answers one question: does the
+path meet a real tape without breaking?
+
+- 144 attempted, **138 RESOLVED**, 6 `NO_QUOTE_BEFORE_T0` (hour 0, both
+  directions, all three T_p — no quote exists strictly before 00:00:00 in a
+  day-scoped read; counted, not dropped)
+- **`QUEUE_AHEAD_UNDEFINED`: 0.** The depth20 top-20 carried the bookTicker
+  touch at *every* placement — so "depth-aware" is a property here, and one of
+  the declaration's five named design-refuters does **not** fire.
+- **Ordering violations: 0**, per episode, on quantity. Aggregate fill rate
+  0.935 RiskAverse vs 0.978 ProbQueue-f3.
+- depth20: **499,175 snapshots, 0 ragged.** Trades: **402 zero-quantity prints
+  excluded and counted** — E2.0's collected-tape defect is on ICP too.
+- queue-ahead at placement: p50 683.5, p90 2,021.5, max 2,717, **zero zeros**.
+
+**One honest consequence, because it makes a declared rule vacuous.**
+`partial_share = 0.000`. With q = one lot against a queue of ~700, RiskAverse
+fills fully or not at all, so φ ∈ {0,1} and **the two partial-fill pricings of
+R-570(C)(2) coincide — the straddle rule cannot fire on the min-size arm.** It
+is implemented and controlled both ways in the fixture, but on the arm that
+*runs* it is guarding nothing; it binds only when order size is comparable to
+the volume arriving in the window, i.e. the **size-aware** arm, which refuses
+for want of a declared rebalance notional. Rule 16's shape, reported rather
+than left looking like a guard.
+
+### THE RULING NEEDED — and what I have consumed by measuring
+
+**The declared gap leg excludes the symbols E2-A exists to resolve.** E1-A
+already left ICP UNRESOLVED at 72% episode skips; E2-A now cannot admit its
+days. The declaration named this class itself: *"a systematically empty
+admissible-day set once all three streams are required — that refutes the
+population predicate."*
+
+Three readings, none of them chosen here:
+
+1. **Keep the bar.** E2-A resolves the queue question only for the active
+   names and reports the thin ones UNRESOLVED on the population leg. Honest,
+   and it leaves the ICP cell exactly where E1-A left it.
+2. **Replace the gap leg with an OUTAGE predicate** (max contiguous run, or
+   the share of missing seconds in runs ≥ 60 s) — which is what the leg was
+   always meant to measure.
+3. **Admit on decision-time quote age**, the quantity E2-A actually rests on.
+
+**2 and 3 are threshold choices made after seeing, so I cannot make them.**
+2026-08-20..09-05 on **ADA and ICP** is now **CONSUMED** for any re-choice of
+this predicate (rule 11): I have seen both profiles. A new predicate declared
+on this evidence must be validated on symbols or days not yet examined, and
+that constraint travels with whichever option is picked.
+
+### Two defects the runner's own fixture caught before any tape was opened
+
+1. **A short depth20 row is NaN-PADDED by the CSV reader, not rejected.**
+   `on_bad_lines="skip"` only catches rows with *more* fields than names. Left
+   alone it would have entered the queue simulation as a book with zero-size
+   levels — an **invented queue position**, the same defect class as reading an
+   *absent* level as an *empty* one. Now excluded and counted both ways.
+2. **The quantity-step estimator.** v4 declared q as "the same function E1-A
+   uses for the price tick". Driven, that is wrong — see below.
+
+A third was caught by a control rather than a fixture: a hand-typed fixture
+day-boundary constant was **four days out**. The runner now derives `day0` from
+the day *string*, never from the first row read.
+
+### R-570(D), the record defect — at the MECHANISM, and my first note was wrong
+
+`p002_e2a_tick_diagnosis__20260906T054915Z.json`:
+
+| symbol | distinct prices | modal diff (the FIX) | frac. integer-multiple | fallback fires? | `tick_size()` returns |
+|---|---:|---:|---:|---|---:|
+| **FILUSDT** | 1,371 | **1e-4** | **0.909489** | **YES** (< 0.999) | **1e-6** |
+| ADAUSDT | 586 | 1e-4 | 1.000000 | no | 1e-4 |
+
+**The mode-of-diffs fix IS present and DOES produce the 1e-4 the record
+claims.** What returns 1e-6 is the **retained GCD fallback**, firing because
+only 90.9% of FIL's price diffs are integer multiples of the modal one — the 81
+off-grid prints the audit itself named. *The fallback supersedes the fix on
+exactly the input the fix was written for.* ADA is the other direction: the
+diagnosis can fail to fire.
+
+**This supersedes my own first note (commit `0718fea`)**, which followed the
+reviewer's proposed wording *"fix DESIGNED post-audit and NOT LANDED"*. That is
+not right. Two independent implementations returning 1e-6 established the
+**value**; only executing the intermediates established the **cause** — and the
+difference matters, because "not landed" points a reader at a missing edit that
+is in fact present. E1-A's operative CSV pair is untouched; the fallback is not
+removed.
+
+### Open items routed, not absorbed
+
+- **`e1_markout_scan.py` has NO data-root resolver.** From a worktree
+  `day_files()` returns `[]` and `tick_size()` raises on an empty argmax — the
+  E2.0 result review's §6 gap, still open in the module that **produced E1's
+  published numbers**. The reviewer hit it independently. Not edited: it is
+  E1's producing code.
+- **A commit of mine was ORPHANED by a concurrent commit in the shared tree.**
+  Between two pushes the main tree's HEAD moved back to an earlier commit;
+  `git commit` landed on a detached HEAD and `git push origin mm-research` then
+  pushed **another seat's** tip while mine dangled — *reporting success.* Same
+  family as the backtick incident (R-567(B)). Recovered by verifying the
+  working-tree blob byte-identical and re-committing by pathspec. **R-397's
+  stated limitation is not theoretical.**
+
+---
 
 ## READ FIRST — E2.0, 2026-09-06
 

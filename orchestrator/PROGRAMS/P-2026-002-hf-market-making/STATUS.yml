@@ -4,6 +4,22 @@ phase: in-progress        # planning / in-progress / review / done
 status: active            # not-started / active / blocked / deployed / stopped
 
 updated: >-
+  2026-09-06T06:05Z (DA seat). THE E2-A RUNNER EXISTS AND HAS RUN, AND IT REFUSED ON
+  THE POPULATION RATHER THAN THE GATE. The inherited E1-A reproduction
+  control ran FIRST and gated the smoke, reproducing 6.264473 / 3.448489
+  exactly; then ICPUSDT returned 1 admissible day against a declared minimum
+  of 14, so NO eff_RT exists and there is nothing to seal. The census shows
+  the predicate is SOUND -- ADA is 16 of 16 under the same code -- and that
+  ICP's exclusion is a QUIET BOOK (median gap run 1 s, 0.0000 of missing
+  seconds in runs >= 60 s) rather than an outage, while the decision-time
+  quote age it correlates with (p50 up to 902 ms, p90 up to 3.3 s) is a real
+  limit on placing at "the real touch" for a thin name. The bar is NOT
+  touched: a ruling is escalated, and ADA and ICP over 08-20..09-05 are
+  CONSUMED for any re-choice of the predicate. Declaration v5 supersedes v4
+  in band after the runner's own fixture refuted two things v4 declared.
+  R-570(D) is answered at the MECHANISM: E1's mode-of-diffs tick fix IS
+  landed and is OVERRIDDEN by the retained GCD fallback on FIL.
+  PRIOR ENTRY, unchanged in substance:
   2026-09-06T05:04:52Z (DA seat). E2.0 IS VERIFIED BY THE COORDINATOR AT THE
   RECEIPT (R-565) AND REVIEWED (ed14c87): the result is SETTLED as a
   program-level fact -- every number reproduces, the kill survives
@@ -50,15 +66,59 @@ flags:
                           # returns 1e-6, the pre-fix value, and an
                           # independent transcription agrees. Not a blocker
                           # on E2-A; E1-A's operative number is untouched.
-  e2_a_smoke: NOT_RUN
-                          # The reviewer APPROVED (REVIEW_P002_E2A_DESIGN_
-                          # 2026-09-06.md, landed) and v3 meets its interior-
-                          # control condition, so THE GATE IS OPEN. The E2-A
-                          # RUNNER does not exist yet: real-book placement,
-                          # depth20 queue-ahead, the two fill simulations,
-                          # partial fills and their falsifiers are still to
-                          # build. Nothing was run against a half-built
-                          # runner.
+  e2_a_runner_built: 2026-09-06
+                          # live/mm_research/e2_a_runner.py. Real-book
+                          # placement from bookTicker at t0- with integer
+                          # tick indices everywhere; the depth20 p@q|... x 20
+                          # parse; both fill simulations wired to episodes;
+                          # partial fills as a QUANTITY with both R-570(C)(2)
+                          # pricings; the chase crossing the real touch at
+                          # T_p. FIXTURE receipt data/mm_hf/e1/
+                          # p002_e2a_fixture__20260906T054725Z.json, sha256
+                          # 880b87f82fd0d3dc: 24 checks BOTH DIRECTIONS, 0
+                          # failures, and the no-data claim PRODUCED in
+                          # process -- 3 paths opened, 0 under data/mm_hf.
+  e2_a_smoke: REFUSED_ON_POPULATION
+                          # ICPUSDT, receipt data/mm_hf/e1/
+                          # p002_e2a_smoke_ICPUSDT__20260906T055050Z.json,
+                          # sha256 ad722557872b837a, carrying b5bf558,
+                          # declaration v5 90a9a99f6cb2a2cc. 33.55 s wall,
+                          # 1,124 MiB RSS, one CPU under the rule-20 wrapper.
+                          # THE INHERITED CONTROL RAN FIRST AND GATED THE RUN
+                          # and it PASSED: sweep 6.264472967929728, touch
+                          # 3.4484893715577347, matching e1a_gate_summary.csv
+                          # row tp_s=600 to full printed precision.
+                          # THEN 1 ADMISSIBLE DAY AGAINST A DECLARED MINIMUM
+                          # OF 14, so NO GATE WAS READ: there is no eff_RT in
+                          # the receipt, no overlay verdict and NOTHING TO
+                          # SEAL. All 16 complete days carry 24 hour-files on
+                          # all THREE streams, so the depth20 requirement is
+                          # met everywhere; what excludes 15 of them is the
+                          # bookTicker gap-fraction leg (0.109-0.219 against
+                          # a 0.05 bar).
+  e2_a_admission_blocker: RULING-NEEDED
+                          # Census receipt data/mm_hf/e1/
+                          # p002_e2a_census__20260906T055752Z.json (sha256 9fa3e218a929ab8a) and the 8-symbol census8 receipt.
+                          # THE PREDICATE IS SOUND AS CODE: ADAUSDT is 16 of
+                          # 16 admissible under the same code and the same
+                          # bar, reproducing E2.0's own admissible set.
+                          # ICP's exclusion is a QUIET BOOK, not an outage:
+                          # 2,853-11,997 gap runs a day, median run 1 s, and
+                          # 0.0000 of the missing seconds sit in runs of 60 s
+                          # or more on 15 of 16 days. ICP carries 0.64-1.67M
+                          # quotes a day against ADA's 1.55-5.83M.
+                          # BUT THE LEG IS POINTING AT SOMETHING REAL: quote
+                          # age at the 24 decision times is p50 206-902 ms /
+                          # p90 940-3,299 ms / max 7,185 ms on ICP against
+                          # ADA's p50 60-230 / p90 252-326 / max 827. E2-A
+                          # places at the touch from the last quote strictly
+                          # before t0, so on a thin name that touch is
+                          # seconds old.
+                          # THE BAR IS NOT TOUCHED AND NO NEW ONE IS PROPOSED
+                          # IN THE SEAT: choosing an admission rule after
+                          # seeing which days it excludes is rule 11's shape.
+                          # 2026-08-20..09-05 on ADA and ICP is CONSUMED for
+                          # any re-choice of this predicate.
   e2_a_declared: 2026-09-06
                           # DECLARATION ONLY, no data. live/mm_research/
                           # declarations/p002_e2_a_declaration_v3.json,
