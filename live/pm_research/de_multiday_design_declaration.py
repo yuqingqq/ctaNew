@@ -44,9 +44,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 20
+VERSION = 21
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 103
+EXPECTED_CHECKS = 105
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -128,6 +128,9 @@ V18_DECLARATION = ("p003_de_multiday_gate1_design_v18.json",
 V19_DECLARATION = ("p003_de_multiday_gate1_design_v19.json",
                    "81db0b9eb64df5068b57748ab914b43b61b8a1b546cc94f9db4203"
                    "f26ac75858")
+V20_DECLARATION = ("p003_de_multiday_gate1_design_v20.json",
+                   "1a481c970afdc88cb874d8b0422ae53d055e60d59ac90320ac20ce"
+                   "177aed3685")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
@@ -136,7 +139,7 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V10_DECLARATION, V11_DECLARATION, V12_DECLARATION,
                     V13_DECLARATION, V14_DECLARATION, V15_DECLARATION,
                     V16_DECLARATION, V17_DECLARATION, V18_DECLARATION,
-                    V19_DECLARATION)
+                    V19_DECLARATION, V20_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -557,7 +560,7 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 
 #: The params file this design pins. ONE name, and everything in the pin
 #: block is derived from it.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v13.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v14.json"
 
 
 def _params_path() -> Path:
@@ -1839,6 +1842,89 @@ def declaration() -> dict:
                             "de_multiday_gate1_runner."
                             "day_split_residency_proof()"],
         },
+        # ---- DE 94 / R-628: THE LAUNCH FORM. A declaration change,
+        # because THE_ONE_COMMAND is what a coordinator executes at GO.
+        "R27_a_heavy_run_is_never_a_child_of_a_tool_shell": {
+            "ruling": "R-628",
+            "what_happened": (
+                "the 09-03 re-run was launched under `systemd-run "
+                "--scope` from a background tool shell. A SCOPE registers "
+                "the processes the CALLER forks, so the run sat in that "
+                "shell's process group; when the harness stopped the "
+                "background task the run died at 35 minutes with 34m52s "
+                "of CPU spent and NOTHING written. The same thing killed "
+                "the coordinator's shell waiters five times that "
+                "morning"),
+            "the_form": RUNNER.LAUNCH_FORM,
+            "requirements": RUNNER.LAUNCH_FORM_REQUIREMENTS,
+            "the_lock_moves_INSIDE_the_unit": (
+                "`flock -n` is the unit's own ExecStart, so a held lock "
+                "is the UNIT's exit status. Read `ExecMainStatus`; never "
+                "assume the run started -- driven: status 1, Result "
+                "exit-code, and the payload never ran"),
+            "stdout_is_journald": (
+                "the refused run's launch log survived only because a "
+                "launcher happened to write it to a file. A unit's output "
+                "is in the journal by construction"),
+            "poll_by_UNIT_never_by_a_child_PID": (
+                "`systemctl --user show -p ActiveState -p ExecMainStatus "
+                "-p MemoryPeak`. A PID poll asks the wrong object: the "
+                "question is whether the RUN is alive, and only the unit "
+                "knows"),
+            "driven_both_ways": {
+                "scope_TERM_to_the_launchers_process_group": "the run DIES",
+                "service_TERM_to_the_same_group": "the unit LIVES",
+                "service_systemctl_stop": "the unit ends -- a run nothing "
+                                          "can stop would be worse",
+                "service_with_a_HELD_lock": "ExecMainStatus 1 and the "
+                                            "payload never runs",
+            },
+            "enforced_by": [
+                "de_multiday_gate1_runner.the_one_command()",
+                "de_multiday_gate1_runner.assert_launch_form()",
+                "de_multiday_gate1_runner.unit_identity()",
+                "de_launch_form_probe.py -- the three legs, against a real "
+                "session manager",
+            ],
+            "why_the_probe_is_a_separate_file": (
+                "the runner's battery must not need a systemd user "
+                "manager; a checker that fails where there is no session "
+                "bus teaches people to ignore it. The battery checks the "
+                "command's SHAPE, the probe checks the BEHAVIOUR"),
+        },
+        # ---- DE 94: the refresh procedure made GO impossible.
+        "R28_the_shared_data_symlink_is_not_a_dirty_worktree": {
+            "what_happened": (
+                "`scripts/wt_refresh.sh` replaces a seat worktree's "
+                "`data/` with a SYMLINK to the canonical data root. "
+                "`.gitignore` carries `data/`, which matches a DIRECTORY "
+                "and not a symlink, so the link showed as untracked and "
+                "the worktree read DIRTY -- and a REAL day refuses at "
+                "import on a dirty worktree. Measured immediately after "
+                "the mandated refresh: the rehearsal NOT_READY on P10 and "
+                "`assert_source_unchanged` REFUSED. The refresh procedure "
+                "made GO impossible"),
+            "the_rule": (
+                "the guard exists so the PRODUCING CODE is locatable in a "
+                "commit. A symlink to the data root is not code. It is "
+                "exempted by PROPERTY -- the entry must be UNTRACKED, must "
+                "really be a symlink, and must resolve to the canonical "
+                "data root -- never by name: a name-matched exemption is "
+                "how a binding map comes to excuse the thing it exists to "
+                "catch (R-613)"),
+            "both_readings_travel": ["dirty (any untracked entry)",
+                                     "dirty_beyond_the_shared_data_link "
+                                     "(what the refusal uses)"],
+            "found_in_passing": (
+                "`git status --porcelain` was read through `.strip()`, "
+                "which ate the leading space of the FIRST line, so every "
+                "reported dirty path was one character short "
+                "(`ive/pm_research/...`). It had been printing that into "
+                "refusal messages"),
+            "enforced_by": ["de_multiday_gate1_runner._head_state()",
+                            "de_multiday_gate1_runner."
+                            "_is_the_shared_data_link()"],
+        },
         "R20_the_serial_schedule": serial_schedule(),
         "R22_the_launch_capture_is_the_IMPORT_CLOSURE": {
             "ruling": "SEAT_PROTOCOL rule 22 AS AMENDED (REV 51 S3)",
@@ -2865,6 +2951,27 @@ def selftest(*, quiet: bool = False) -> int:
        f"V{VERSION}, the chain holds {len(DECLARATION_CHAIN)} = VERSION - 1 "
        f"predecessors and its head is v{VERSION - 1}. v7 on disk read "
        f"protocol V4, filename v7 and supersedes v2")
+    # ---- DE 94: the launch form and the data-link exemption ----------
+    _r27 = d["R27_a_heavy_run_is_never_a_child_of_a_tool_shell"]
+    ok(_r27["ruling"] == "R-628"
+       and "34m52s" in _r27["what_happened"]
+       and set(_r27["driven_both_ways"]) == {
+           "scope_TERM_to_the_launchers_process_group",
+           "service_TERM_to_the_same_group",
+           "service_systemctl_stop",
+           "service_with_a_HELD_lock"}
+       and len(_r27["enforced_by"]) == 4,
+       "DE 94 / R-628: the launch form is DECLARED -- a transient service "
+       "the manager forks, the lock as the unit's own ExecStart, polled by "
+       "UNIT and never by a child PID -- with all four cells driven "
+       "against a real session manager")
+    _r28 = d["R28_the_shared_data_symlink_is_not_a_dirty_worktree"]
+    ok("made GO impossible" in _r28["what_happened"]
+       and "by PROPERTY" in _r28["the_rule"]
+       and len(_r28["both_readings_travel"]) == 2,
+       "and R28 records that the mandated refresh procedure made GO "
+       "impossible, and that the exemption is a checked PROPERTY rather "
+       "than a name")
     # ---- DE 91: the receipt's name, and the uncapped membership set ---
     _r15 = d["R15_a_real_days_battery_is_the_FULL_battery"]
     ok(_r15["day_path_checks_declared"] == RUNNER.DAY_PATH_CHECKS

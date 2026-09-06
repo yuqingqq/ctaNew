@@ -48,14 +48,14 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 235
+EXPECTED_CHECKS = 245
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
 #: stays as provenance (rule 13).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v13.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v14.json"
 SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v12.json")
+                        "de_multiday_gate1_params_v13.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -131,23 +131,88 @@ def _capture_closure() -> None:
         _digest_module(m)
 
 
+def _is_the_shared_data_link(root: str, porcelain_line: str,
+                             path: str) -> bool:
+    """Is this porcelain entry the shared-tree DATA SYMLINK, by property?
+
+    Three conditions, all required: the entry is UNTRACKED (`??`), the
+    path is really a symlink, and it resolves to the canonical data root.
+    Anything else -- a real edit, a directory, a link somewhere else --
+    is dirt and refuses."""
+    import os as _os
+    if not porcelain_line.startswith("??"):
+        return False
+    full = _os.path.join(root, path.rstrip("/"))
+    if not _os.path.islink(full):
+        return False
+    try:
+        canonical = _os.path.realpath(
+            _os.path.join(DR.resolve()["data_root"]))
+    except Exception:                                     # noqa: BLE001
+        return False
+    return _os.path.realpath(full) == canonical
+
+
 def _head_state() -> dict:
     """The worktree's HEAD and whether it was dirty AT IMPORT."""
     import subprocess as _sp
     root = str(Path(__file__).resolve().parents[2])
 
-    def _g(*a):
+    def _g(*a, raw=False):
         try:
             r = _sp.run(["git", "-C", root, *a], capture_output=True,
                         text=True, timeout=60)
         except Exception:
             return None
-        return r.stdout.strip() if r.returncode == 0 else None
+        if r.returncode != 0:
+            return None
+        return r.stdout if raw else r.stdout.strip()
 
-    st = _g("status", "--porcelain")
+    # RAW, NOT STRIPPED. Porcelain is `XY<space>PATH` and an UNSTAGED
+    # modification has X = space, so `.strip()` on the whole output ate the
+    # leading space of the FIRST line and every path after it was reported
+    # one character short -- `ive/pm_research/...`. It has been printing
+    # that into refusal messages and into `dirty_paths`. Found while
+    # classifying the entries, because a classifier has to read the status
+    # characters that the strip was removing.
+    st = _g("status", "--porcelain", raw=True)
+    lines = [x for x in (st or "").split("\n") if x]
+    paths = [x[3:] for x in lines]
+    # THE SHARED-TREE DATA LINK IS NOT A DIRTY WORKTREE -- AND IT IS
+    # CHECKED, NOT NAMED. `scripts/wt_refresh.sh` replaces this worktree's
+    # `data/` with a SYMLINK to the canonical data root so every seat reads
+    # and writes one tree. `.gitignore` carries `data/`, which matches a
+    # DIRECTORY and not a symlink, so the link shows as untracked and the
+    # whole worktree read DIRTY -- and a REAL day refuses at import on a
+    # dirty worktree. Measured after the mandated refresh: P10 blocking,
+    # `assert_source_unchanged` REFUSED. The refresh procedure made GO
+    # impossible.
+    #
+    # The guard exists so the PRODUCING CODE is locatable in a commit. A
+    # symlink to the data root is not code and cannot move a byte of it.
+    # So it is excluded -- but by PROPERTY, never by name: the entry must
+    # be UNTRACKED, must actually be a symlink, and must resolve to the
+    # canonical data root. A name-matched exemption is how a binding map
+    # comes to excuse the very thing it exists to catch (R-613).
+    import os as _os
+    exempt, remaining = [], []
+    for ln, path in zip(lines, paths):
+        if _is_the_shared_data_link(root, ln, path):
+            exempt.append(path)
+        else:
+            remaining.append(path)
     return {"worktree": root, "head": _g("rev-parse", "HEAD"),
-            "dirty": bool(st) if st is not None else None,
-            "dirty_paths": [x[3:] for x in (st or "").split("\n") if x][:20]}
+            "dirty": bool(lines) if st is not None else None,
+            "dirty_paths": paths[:20],
+            "dirty_beyond_the_shared_data_link": bool(remaining),
+            "dirty_paths_beyond_the_shared_data_link": remaining[:20],
+            "shared_data_link_exempted": exempt,
+            "why_exempted": (
+                "an UNTRACKED SYMLINK resolving to the canonical data root "
+                "-- `scripts/wt_refresh.sh` makes it so every seat reads "
+                "one data tree. Verified as a property (untracked AND a "
+                "symlink AND resolving to the data root), never matched by "
+                "name" if exempt else None)}
 
 
 _capture_closure()
@@ -229,7 +294,13 @@ def source_identity_at_launch() -> dict:
         "head_at_emit": head_now,
         "head_unchanged_during_the_run": (
             LAUNCH_HEAD.get("head") == head_now.get("head")),
-        "worktree_was_dirty_at_import": LAUNCH_HEAD.get("dirty"),
+        # THE READING THE REFUSAL USES is the one that excludes the
+        # verified data symlink; the RAW reading travels beside it, so
+        # nothing is hidden.
+        "worktree_was_dirty_at_import": LAUNCH_HEAD.get(
+            "dirty_beyond_the_shared_data_link"),
+        "worktree_had_any_untracked_entry_at_import": LAUNCH_HEAD.get(
+            "dirty"),
     }
 
 
@@ -261,7 +332,9 @@ def assert_source_unchanged(where: str, *, fixture: bool = True) -> dict:
     if not fixture and idy["worktree_was_dirty_at_import"]:
         raise RunnerRefused(
             f"REFUSED at {where}: THE WORKTREE WAS DIRTY AT IMPORT "
-            f"({idy['head_at_import'].get('dirty_paths')}). For a REAL day "
+            f"({idy['head_at_import'].get('dirty_paths_beyond_the'
+                                          '_shared_data_link')}). "
+            f"For a REAL day "
             f"the producing code must be locatable in a commit; "
             f"uncommitted bytes are locatable nowhere. Recorded as a fact "
             f"for a fixture, refused for a day (REV 49 S0).")
@@ -1980,23 +2053,11 @@ def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
     book = root / "pm_5min/derived" / f"be_daybook_{compact}_{coin}.pkl"
     receipt = root / "pm_5min/derived" / \
         f"be_daybook_receipt_{compact}_{coin}.json"
-    # `--output` NAMES THE DIRECTORY (REV 55 S2.1). It said
-    # `<receipt path>`, and the only two names an operator can supply both
-    # fail: a LAUNCH-stamped one refuses at the emit (measured -5,074 s on
-    # the last smoke's own name) and a stamp-free one passes the emit and
-    # is INVISIBLE to the sealed glob. The runner composes the filename
-    # from the clock at the moment of writing; what the command carries is
-    # the directory, which is knowable in advance and carries no stamp.
+    # `--output` NAMES THE DIRECTORY (REV 55 S2.1) and the wrapper is a
+    # transient SERVICE (R-628). Composed by `the_one_command`, so the
+    # string published here and the predicate that checks it are one fact.
     outdir = root / "pm_5min/derived"
-    cmd = (f"flock -n {HEAVY_RUN_LOCK} "
-           f"systemd-run --user --scope --unit=<deNNsmoke> "
-           f"--slice={RESEARCH_SLICE} "
-           f"-p MemoryMax=8G -p CPUQuota=100% "
-           f"--setenv=PM_DATA_ROOT={DR.resolve()['repo_root']} "
-           f"{sys.executable} "
-           f"live/pm_research/de_multiday_gate1_runner.py "
-           f"--day {dashed} --book {book} "
-           f"--output {outdir}")
+    cmd = the_one_command(dashed, book, outdir)
 
     def _digest(p):
         q = Path(p)
@@ -2074,6 +2135,14 @@ def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
         _outdetail, _outheld = {"refusal": str(_e)}, False
     _p("P8_output_is_a_directory_and_the_name_is_composed",
        _outheld, _outdetail)
+    # R-628 AS A PRECONDITION: the published command's own shape, checked.
+    try:
+        _p("P11_launch_form_is_a_transient_service", True,
+           {**assert_launch_form(cmd), "unit_substitution_left":
+            cmd.count("<deNNsmoke>")})
+    except RunnerRefused as _e:
+        _p("P11_launch_form_is_a_transient_service", False,
+           {"refusal": str(_e)})
     try:
         _p("P9_no_sealed_receipt_for_this_day_yet", True,
            assert_no_sealed_receipt_yet(dashed, root))
@@ -3219,6 +3288,110 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
 HEAVY_RUN_LOCK = "/home/yuqing/ctaNew/data/.heavy_run.lock"
 HEAVY_WALL_S = 60.0
 HEAVY_RSS_GB = 1.0
+
+
+#: R-628. THE LAUNCH FORM, DECLARED -- a heavy run is NEVER a child of a
+#: tool shell. `systemd-run --scope` registers processes the CALLER forks,
+#: so the run sits in the launching shell's process group; when the harness
+#: stopped this seat's background task the 09-03 re-run died at 35 minutes
+#: with 34m52s of CPU spent and nothing written. Measured both ways:
+#:
+#:   --scope,   TERM to the launcher's process group -> the run DIED
+#:   --service, TERM to the launcher's process group -> the unit LIVES
+#:              systemctl --user stop <unit>          -> the unit ends
+#:
+#: A transient SERVICE is forked by the MANAGER (PPID = the user systemd,
+#: its own process group), so nothing that happens to a tool shell can
+#: reach it, and journald keeps its stdout -- the launch log of the refused
+#: run was only recoverable because a launcher wrote it to a file.
+LAUNCH_FORM = "systemd-run --user transient SERVICE (never --scope)"
+LAUNCH_FORM_REQUIREMENTS = {
+    "no_scope": "`--scope` runs the payload in the CALLER's process group",
+    "unit_named": "`--unit=` so the run can be polled and stopped by NAME, "
+                  "never by a child PID",
+    "slice": f"`--slice={RESEARCH_SLICE}` so rule 20's cgroup accounting "
+             f"applies",
+    "memory_and_cpu": "-p MemoryMax=8G -p CPUQuota=100%",
+    "lock_inside_the_unit": "`flock -n` is the unit's own ExecStart, so a "
+                            "held lock exits 1 INSIDE the unit and the "
+                            "payload never starts -- read "
+                            "`ExecMainStatus`, never assume it started",
+    "working_directory": "`--working-directory=` because the manager does "
+                         "not inherit the caller's cwd",
+    "absolute_interpreter": "the venv's own python3, resolved",
+}
+
+
+def the_one_command(day: str, book, outdir, *, unit: str = "<deNNsmoke>",
+                    workdir: str | None = None) -> str:
+    """THE launch string -- composed once, so the command and the predicate
+    that checks it cannot be two different facts."""
+    wd = workdir or str(Path(__file__).resolve().parents[2])
+    return (f"systemd-run --user --unit={unit} --slice={RESEARCH_SLICE} "
+            f"-p MemoryMax=8G -p CPUQuota=100% "
+            f"--setenv=PM_DATA_ROOT={DR.resolve()['repo_root']} "
+            f"--working-directory={wd} "
+            f"-- flock -n {HEAVY_RUN_LOCK} {sys.executable} "
+            f"live/pm_research/de_multiday_gate1_runner.py "
+            f"--day {day} --book {book} --output {outdir}")
+
+
+def assert_launch_form(cmd: str) -> dict:
+    """THE COMMAND'S SHAPE IS A PREDICATE, not a paragraph in a runbook.
+
+    The scope form was published in `THE_ONE_COMMAND` for four rounds and
+    cost a real day 35 minutes. A form that must not be used again is one
+    a checker refuses."""
+    problems = []
+    if "--scope" in cmd:
+        problems.append(
+            "carries `--scope`: the payload would run in the CALLING "
+            "shell's process group and dies with it (R-628, measured)")
+    if "--unit=" not in cmd:
+        problems.append("names no `--unit=`, so the run could only be "
+                        "polled by a child PID")
+    if f"--slice={RESEARCH_SLICE}" not in cmd:
+        problems.append(f"is not in {RESEARCH_SLICE}")
+    if "--working-directory=" not in cmd:
+        problems.append("sets no `--working-directory=`; the manager does "
+                        "not inherit the caller's cwd")
+    if " -- " not in cmd:
+        problems.append("has no `--` separator, so the lock and the "
+                        "payload are not the unit's own ExecStart")
+    else:
+        _pre, _post = cmd.split(" -- ", 1)
+        if not _post.startswith("flock -n "):
+            problems.append(
+                "the unit's ExecStart does not begin with `flock -n`: the "
+                "lock must be taken INSIDE the unit, so a held lock exits "
+                "1 there and the payload never starts")
+        if "--scope" in _pre:
+            problems.append("`--scope` before the separator")
+    if problems:
+        raise RunnerRefused(
+            "REFUSED: this launch command is not the declared form "
+            f"({LAUNCH_FORM}) -- it " + "; and it ".join(problems) + ".")
+    return {"form": LAUNCH_FORM, "ok": True,
+            "requirements_checked": sorted(LAUNCH_FORM_REQUIREMENTS),
+            "lock_is_inside_the_unit": True,
+            "poll_by": "the UNIT name, never a child PID"}
+
+
+def unit_identity() -> dict:
+    """WHICH UNIT THIS PROCESS IS RUNNING IN, measured from its cgroup."""
+    import os as _os
+    leaf = (cgroup_path() or "").rstrip("/").rsplit("/", 1)[-1]
+    return {"cgroup_leaf": leaf or None,
+            "unit": leaf if leaf.endswith((".service", ".scope")) else None,
+            "kind": ("transient service" if leaf.endswith(".service")
+                     else "scope" if leaf.endswith(".scope") else None),
+            "invocation_id": _os.environ.get("INVOCATION_ID"),
+            "is_the_declared_launch_form": leaf.endswith(".service"),
+            "why_that_matters": (
+                "a `.scope` leaf means the run is in a CALLER's process "
+                "group and dies with it -- that is how the 09-03 re-run "
+                "lost 35 minutes (R-628)")}
+
 
 
 def _lock_fd_held(lock_path: str) -> list:
@@ -4790,6 +4963,91 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
+    # ---- R-628: THE LAUNCH FORM IS A TRANSIENT SERVICE ----------------
+    # The scope form was published in THE_ONE_COMMAND for four rounds and
+    # cost a real day 35 minutes: `systemd-run --scope` registers the
+    # processes the CALLER forks, so the run sat in this seat's tool-shell
+    # process group and died when the harness stopped the background task.
+    # Measured both ways, out of battery (a battery must not need a
+    # session manager) and recorded in `de_launch_form_probe.py`:
+    #   --scope,   TERM to the launcher's process group -> the run DIED
+    #   --service, TERM to the launcher's process group -> the unit LIVES
+    #   --service, a HELD lock -> ExecMainStatus 1, the payload never runs
+    _cmd94 = the_one_command("2026-09-03", "/BOOK", "/OUT")
+    ok(assert_launch_form(_cmd94)["ok"] is True
+       and "--scope" not in _cmd94
+       and " -- flock -n " in _cmd94
+       and _cmd94.count("<deNNsmoke>") == 1,
+       f"R-628 POSITIVE CONTROL: the published command is a transient "
+       f"SERVICE with the lock as the unit's OWN ExecStart, and exactly "
+       f"one substitution is left (the unit name). The command and the "
+       f"predicate are ONE fact -- `the_one_command` composes it and "
+       f"`assert_launch_form` checks that string, not a second one typed "
+       f"beside it")
+    for _bad94, _needle94 in (
+            (_cmd94.replace("--user --unit", "--user --scope --unit"),
+             "process group"),
+            (_cmd94.replace("--unit=<deNNsmoke> ", ""), "no `--unit=`"),
+            (_cmd94.replace(" -- flock -n", " -- "), "INSIDE the unit"),
+            (_cmd94.replace("--working-directory=", "--wd="),
+             "working-directory")):
+        refuses(lambda c=_bad94: assert_launch_form(c),
+                f"R-628 KNOWN-BAD: a launch command that fails "
+                f"{_needle94!r} is REFUSED. The scope form is the one that "
+                f"actually happened, so it is the one the checker must "
+                f"refuse by name", _needle94)
+    _uid94 = unit_identity()
+    ok(set(_uid94) >= {"cgroup_leaf", "unit", "kind", "invocation_id",
+                       "is_the_declared_launch_form"}
+       and _uid94["is_the_declared_launch_form"] is (
+           str(_uid94["cgroup_leaf"]).endswith(".service")),
+       f"and the RECEIPT can say which wrapper actually ran it -- measured "
+       f"from this process's own cgroup leaf ({_uid94['cgroup_leaf']}, "
+       f"kind {_uid94['kind']}), not from the form that was published. A "
+       f"receipt that cannot be asked 'scope or service?' cannot be asked "
+       f"why it died")
+
+    # ---- the shared-tree DATA SYMLINK is not a dirty worktree ---------
+    # `scripts/wt_refresh.sh` replaces this worktree's `data/` with a
+    # symlink to the canonical data root. `.gitignore` carries `data/`,
+    # which matches a DIRECTORY and not a symlink, so the link showed as
+    # untracked, the worktree read DIRTY, and a REAL day refuses at import
+    # on a dirty worktree. Measured after the mandated refresh: the
+    # rehearsal NOT_READY on P10 and `assert_source_unchanged` REFUSED --
+    # the refresh procedure made GO impossible.
+    _hs94 = _head_state()
+    ok(set(_hs94) >= {"dirty", "dirty_beyond_the_shared_data_link",
+                      "shared_data_link_exempted"}
+       and _hs94["dirty"] is not None,
+       f"R-628 / the refresh procedure: the worktree's state is reported "
+       f"in BOTH readings -- any untracked entry ({_hs94['dirty']}) and "
+       f"the one the refusal uses "
+       f"({_hs94['dirty_beyond_the_shared_data_link']}) -- so the "
+       f"exemption is visible rather than silent")
+    _fake94 = Path(_tfr.mkdtemp(prefix="de94link_"))
+    (_fake94 / "notalink").write_text("x")
+    (_fake94 / "elsewhere").mkdir()
+    ok(_is_the_shared_data_link(
+           str(_fake94), "?? notalink", "notalink") is False
+       and _is_the_shared_data_link(
+           str(_fake94), " M data", "data") is False,
+       "KNOWN-BAD, BOTH DOORS: a plain untracked FILE named like the link "
+       "is NOT exempted, and a TRACKED MODIFICATION at the exempt path is "
+       "NOT exempted either -- the exemption is a PROPERTY (untracked AND "
+       "a symlink AND resolving to the data root), never a name. A "
+       "name-matched exemption is how a binding map comes to excuse the "
+       "thing it exists to catch (R-613)")
+    import os as _os94
+    _os94.symlink(DR.resolve()["data_root"], _fake94 / "data")
+    ok(_is_the_shared_data_link(str(_fake94), "?? data", "data") is True,
+       "POSITIVE CONTROL, AND IT ADMITS: an untracked symlink resolving to "
+       "the canonical data root IS exempted -- so the known-bads above "
+       "fire on the property and not on everything")
+    _os94.symlink("/tmp", _fake94 / "otherlink")
+    ok(_is_the_shared_data_link(
+           str(_fake94), "?? otherlink", "otherlink") is False,
+       "and a symlink pointing SOMEWHERE ELSE is refused, which is the "
+       "half a name match would have missed entirely")
     # ---- REV 55 S1.2 / S2.4: two numbers that must say what they are --
     _der91 = REAL_DAY_BUDGET_DERIVATION
     _measured91 = set(_der91["which_terms_are_MEASURED"])
@@ -6619,15 +6877,19 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            "AND THE ABSENT BRANCH IS DRIVEN ON A DAY WHOSE BOOK CANNOT YET "
            "EXIST (09-08, still in the future): it REFUSES NOW BY NAME, so "
            "GO is one verified command and nothing is typed at GO time")
-        ok(_rh["THE_ONE_COMMAND"].startswith(f"flock -n {HEAVY_RUN_LOCK}")
-           and f"--slice={RESEARCH_SLICE}" in _rh["THE_ONE_COMMAND"]
+        # THE SHAPE IS ASSERTED THROUGH THE PREDICATE, not by a second
+        # list of substrings beside it. This one began `flock -n ...` --
+        # the SCOPE-era shape, with the lock OUTSIDE the wrapper -- and it
+        # would have gone red on R-628's change while saying nothing about
+        # why the form moved.
+        ok(assert_launch_form(_rh["THE_ONE_COMMAND"])["ok"] is True
            and "MemoryMax=8G" in _rh["THE_ONE_COMMAND"]
            and "--day 2026-09-03" in _rh["THE_ONE_COMMAND"]
            and "be_daybook_20260903_btc.pkl" in _rh["THE_ONE_COMMAND"],
-           "and the command is the rule-20 wrapper in full, with the "
-           "dashed day DE names and the COMPACT-day book path BE writes -- "
-           "the two conventions meeting in one string that was executed as "
-           "a value rather than typed")
+           "and the published command PASSES the launch-form predicate "
+           "and carries the dashed day DE names beside the COMPACT-day "
+           "book path BE writes -- the two conventions meeting in one "
+           "string that is executed as a value rather than typed")
         _p5 = [x for x in _rh["preconditions_evaluated_now"]
                if x["precondition"] == "P5_lock_free_now"][0]
         ok(_p5["blocks_go"] is False
@@ -7116,6 +7378,17 @@ def _main_day(a) -> int:
     payload["emitted_at_utc"] = _emitted_at.isoformat()
     out_path = Path(a.output) / day_receipt_name(
         day, fixture=fixture, stamp=emission_stamp(_emitted_at))
+    # R-628: WHICH WRAPPER ACTUALLY RAN THIS, measured from the cgroup --
+    # not the form that was published, the form that executed.
+    payload["launch_form"] = {
+        "declared": LAUNCH_FORM,
+        "requirements": LAUNCH_FORM_REQUIREMENTS,
+        "observed": unit_identity(),
+        "why_it_is_in_the_receipt": (
+            "the 09-03 re-run died at 35 minutes because it ran in a "
+            "`.scope` -- the caller's process group. A receipt that does "
+            "not say which wrapper produced it cannot be asked that"),
+    }
     payload["output_name"] = {
         **_outdir_check,
         "composed_name": out_path.name,
