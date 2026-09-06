@@ -1,0 +1,171 @@
+{
+  "as_of": "2026-09-06T17:56:42.511864+00:00",
+  "chain_steps_taken": [
+    "5 exit copy (unit loaded)",
+    "6 stop",
+    "7 copy again after the stop"
+  ],
+  "day": "2026-09-05",
+  "invocation_id": "549bd234e4324408bf931992ada421d8",
+  "journal_copy_at_step_5_the_exit_copy": {
+    "copied_at_the_moment_of_reading": true,
+    "counts_agree": true,
+    "counts_note": "they differ legitimately when the NAME has been used more than once; the id is the run",
+    "coverage": {
+      "covered": true,
+      "host_horizon": {
+        "oldest_epoch": 1788702305.0,
+        "oldest_utc": "2026-09-06T13:45:05Z",
+        "output_format": "short-iso --utc",
+        "query": "journalctl --user -o short-iso --no-pager --utc",
+        "read_at_utc": "2026-09-06T17:56:23Z",
+        "status": "MEASURED"
+      },
+      "reference_is": "the unit's own start",
+      "reference_utc": "2026-09-06T16:45:44Z",
+      "regime": "BURSTY_UNIT__the_reference_is_the_unit_start",
+      "status": "MEASURED",
+      "two_clocks_no_text_search": true,
+      "unit_start": {
+        "query": "systemctl --user show de104smoke.service -p ExecMainStartTimestamp --value",
+        "raw": "Sun 2026-09-06 16:45:44 UTC",
+        "start_epoch": 1788713144.0,
+        "start_utc": "2026-09-06T16:45:44Z",
+        "status": "MEASURED",
+        "unit": "de104smoke.service"
+      },
+      "why": "the journal's oldest retained entry is 2026-09-06T13:45:05Z and the unit's own start is 2026-09-06T16:45:44Z; the journal reaches back past it"
+    },
+    "cross_check": "the by-id count against `-u <unit>`; a unit NAME names every run ever launched under it, an id names ONE",
+    "field_not_used_here": "INVOCATION_ID -- the SYSTEM manager's field; it matches nothing under --user",
+    "fields_matched": [
+      "_SYSTEMD_INVOCATION_ID (the payload's lines)",
+      "USER_INVOCATION_ID (the user manager's lines: Started, Consumed, Failed)"
+    ],
+    "how_that_is_computed": "da_root.journal_coverage: the host journal's oldest retained entry against the unit's own start timestamp -- TWO MEASURED CLOCKS, no needle. The old predicate searched the copied lines for ' Started ' and reported TRUE on a tail that had lost 141 of 161 lines",
+    "invocation_id": "549bd234e4324408bf931992ada421d8",
+    "invocation_id_source": "the unit's own `InvocationID` property",
+    "journalctl_error_by_id": null,
+    "journalctl_error_by_unit": null,
+    "lines": [
+      "2026-09-06T16:45:44.153409+00:00 ip-172-31-78-41 systemd[1004]: Started de104smoke.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-05 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.",
+      "2026-09-06T17:55:50.615749+00:00 ip-172-31-78-41 flock[3665965]: {\"emitted\": \"/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json\", \"status\": \"DAY_RUN_SEALED\", \"day\": \"2026-09-05\", \"arms\": {\"CONDVALUE_X_SKEW\": \"OK\", \"HAZARD_OVER_SKEWED_REF\": \"OK\"}, \"decisions\": {\"CONDVALUE_X_SKEW\": 16744, \"HAZARD_OVER_SKEWED_REF\": 1684}, \"peak_rss_mb\": 2207.2, \"wall_s\": 4205.5, \"lock_held\": true, \"heavy_by_measurement\": true, \"no_tape_artifact_opened\": true, \"battery\": \"PASS\"}"
+    ],
+    "n_lines_by_id": 2,
+    "n_lines_by_unit_name": 2,
+    "oldest_line_raw": "2026-09-06T16:45:44.153409+00:00",
+    "oldest_line_utc": "2026-09-06T16:45:44.153409+00:00",
+    "output_format": "short-iso-precise",
+    "output_format_note": "journalctl -o short-iso-precise: an ISO timestamp, the host and the process prefix, then the message. A copy that does not name its format cannot be diffed against one that used another",
+    "query": "journalctl --user _SYSTEMD_INVOCATION_ID=549bd234e4324408bf931992ada421d8 + USER_INVOCATION_ID=549bd234e4324408bf931992ada421d8",
+    "read_at_utc": "2026-09-06T17:56:22.969516+00:00",
+    "status": "PRESENT",
+    "taken_at": "2026-09-06T17:56:22.904994+00:00",
+    "unit": "de104smoke.service",
+    "window_fully_covered": true
+  },
+  "journal_copy_at_step_7_after_the_stop": {
+    "copied_at_the_moment_of_reading": true,
+    "counts_agree": true,
+    "counts_note": "they differ legitimately when the NAME has been used more than once; the id is the run",
+    "coverage": {
+      "covered": null,
+      "host_horizon": {
+        "oldest_epoch": 1788702305.0,
+        "oldest_utc": "2026-09-06T13:45:05Z",
+        "output_format": "short-iso --utc",
+        "query": "journalctl --user -o short-iso --no-pager --utc",
+        "read_at_utc": "2026-09-06T17:56:42Z",
+        "status": "MEASURED"
+      },
+      "reference_is": null,
+      "reference_utc": null,
+      "regime": "BURSTY_UNIT__the_reference_is_the_unit_start",
+      "status": "NOT_DETERMINABLE",
+      "two_clocks_no_text_search": true,
+      "unit_start": {
+        "query": "systemctl --user show de104smoke.service -p ExecMainStartTimestamp --value",
+        "raw": "",
+        "start_epoch": null,
+        "start_utc": null,
+        "status": "NO_START_TIMESTAMP",
+        "unit": "de104smoke.service"
+      },
+      "why": "one of the two clocks is unreadable, so coverage is UNKNOWN -- never assumed either way"
+    },
+    "cross_check": "the by-id count against `-u <unit>`; a unit NAME names every run ever launched under it, an id names ONE",
+    "field_not_used_here": "INVOCATION_ID -- the SYSTEM manager's field; it matches nothing under --user",
+    "fields_matched": [
+      "_SYSTEMD_INVOCATION_ID (the payload's lines)",
+      "USER_INVOCATION_ID (the user manager's lines: Started, Consumed, Failed)"
+    ],
+    "how_that_is_computed": "da_root.journal_coverage: the host journal's oldest retained entry against the unit's own start timestamp -- TWO MEASURED CLOCKS, no needle. The old predicate searched the copied lines for ' Started ' and reported TRUE on a tail that had lost 141 of 161 lines",
+    "invocation_id": "549bd234e4324408bf931992ada421d8",
+    "invocation_id_source": "the unit's own `InvocationID` property",
+    "journalctl_error_by_id": null,
+    "journalctl_error_by_unit": null,
+    "lines": [
+      "2026-09-06T16:45:44.153409+00:00 ip-172-31-78-41 systemd[1004]: Started de104smoke.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-05 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.",
+      "2026-09-06T17:55:50.615749+00:00 ip-172-31-78-41 flock[3665965]: {\"emitted\": \"/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json\", \"status\": \"DAY_RUN_SEALED\", \"day\": \"2026-09-05\", \"arms\": {\"CONDVALUE_X_SKEW\": \"OK\", \"HAZARD_OVER_SKEWED_REF\": \"OK\"}, \"decisions\": {\"CONDVALUE_X_SKEW\": 16744, \"HAZARD_OVER_SKEWED_REF\": 1684}, \"peak_rss_mb\": 2207.2, \"wall_s\": 4205.5, \"lock_held\": true, \"heavy_by_measurement\": true, \"no_tape_artifact_opened\": true, \"battery\": \"PASS\"}",
+      "2026-09-06T17:56:23.324283+00:00 ip-172-31-78-41 systemd[1004]: Stopped de104smoke.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-05 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.",
+      "2026-09-06T17:56:23.324322+00:00 ip-172-31-78-41 systemd[1004]: de104smoke.service: Consumed 1h 9min 59.444s CPU time, 2.1G memory peak, 0B memory swap peak."
+    ],
+    "n_lines_by_id": 4,
+    "n_lines_by_unit_name": 4,
+    "oldest_line_raw": "2026-09-06T16:45:44.153409+00:00",
+    "oldest_line_utc": "2026-09-06T16:45:44.153409+00:00",
+    "output_format": "short-iso-precise",
+    "output_format_note": "journalctl -o short-iso-precise: an ISO timestamp, the host and the process prefix, then the message. A copy that does not name its format cannot be diffed against one that used another",
+    "query": "journalctl --user _SYSTEMD_INVOCATION_ID=549bd234e4324408bf931992ada421d8 + USER_INVOCATION_ID=549bd234e4324408bf931992ada421d8",
+    "read_at_utc": "2026-09-06T17:56:42.549548+00:00",
+    "retention": {
+      "it_is_a_MEASUREMENT_not_a_property": "five reads across one hour walked the window's start from 08:45Z to 09:29:57Z -- about as fast as the clock. A retention state named once is stale within minutes, so it carries its own as-of and query (R-646 R4)",
+      "measured_at_utc": "2026-09-06T17:56:42.549548+00:00",
+      "oldest_entry_from": "the entry's OWN clock, as journald printed it -- never typed, never a policy setting",
+      "oldest_entry_raw": "2026-09-06T13:45:05.786375+00:00",
+      "oldest_user_journal_entry_utc": "2026-09-06T13:45:05.786375+00:00",
+      "query": "journalctl --user --no-pager -o short-iso-precise (first line = the oldest entry retained)"
+    },
+    "status": "PRESENT",
+    "unit": "de104smoke.service",
+    "window_fully_covered": null
+  },
+  "protocol": "P003_DE_GATE1_RUN_JOURNAL_SIDECAR_V2",
+  "receipt_it_accompanies": {
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json",
+    "sha256": "975264754a06ec9ae32cb87a5594b91924e5c742d0366a3f26eac341d2c8dce9"
+  },
+  "the_five_fields_in_the_LOADED_window": {
+    "ActiveState": "active",
+    "ExecMainStartTimestamp": "Sun 2026-09-06 16:45:44 UTC",
+    "ExecMainStatus": "0",
+    "InvocationID": "549bd234e4324408bf931992ada421d8",
+    "LoadState": "loaded",
+    "MemoryPeak": "2312695808",
+    "Result": "success",
+    "SubState": "exited",
+    "finished": true,
+    "read_at_utc": "2026-09-06T17:56:22.904997+00:00",
+    "still_running": false
+  },
+  "unit": "de104smoke.service",
+  "what_this_is_not": {
+    "a_result": false,
+    "an_economic_reading": "NONE"
+  },
+  "which_lines_existed_at_each_copy": {
+    "at_step_5": 2,
+    "at_step_7": 4,
+    "step_5_lines": [
+      "2026-09-06T16:45:44.153409+00:00 ip-172-31-78-41 systemd[1004]: Started de104smoke.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-05 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.",
+      "2026-09-06T17:55:50.615749+00:00 ip-172-31-78-41 flock[3665965]: {\"emitted\": \"/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json\", \"status\": \"DAY_RUN_SEALED\", \"day\": \"2026-09-05\", \"arms\": {\"CONDVALUE_X_SKEW\": \"OK\", \"HAZARD_OVER_SKEWED_REF\": \"OK\"}, \"decisions\": {\"CONDVALUE_X_SKEW\": 16744, \"HAZARD_OVER_SKEWED_REF\": 1684}, \"peak_rss_mb\": 2207.2, \"wall_s\": 4205.5, \"lock_held\": true, \"heavy_by_measurement\": true, \"no_tape_artifact_opened\": true, \"battery\": \"PASS\"}"
+    ],
+    "step_7_lines": [
+      "2026-09-06T16:45:44.153409+00:00 ip-172-31-78-41 systemd[1004]: Started de104smoke.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-05 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.",
+      "2026-09-06T17:55:50.615749+00:00 ip-172-31-78-41 flock[3665965]: {\"emitted\": \"/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json\", \"status\": \"DAY_RUN_SEALED\", \"day\": \"2026-09-05\", \"arms\": {\"CONDVALUE_X_SKEW\": \"OK\", \"HAZARD_OVER_SKEWED_REF\": \"OK\"}, \"decisions\": {\"CONDVALUE_X_SKEW\": 16744, \"HAZARD_OVER_SKEWED_REF\": 1684}, \"peak_rss_mb\": 2207.2, \"wall_s\": 4205.5, \"lock_held\": true, \"heavy_by_measurement\": true, \"no_tape_artifact_opened\": true, \"battery\": \"PASS\"}",
+      "2026-09-06T17:56:23.324283+00:00 ip-172-31-78-41 systemd[1004]: Stopped de104smoke.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-05 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.",
+      "2026-09-06T17:56:23.324322+00:00 ip-172-31-78-41 systemd[1004]: de104smoke.service: Consumed 1h 9min 59.444s CPU time, 2.1G memory peak, 0B memory swap peak."
+    ],
+    "the_difference": "under RemainAfterExit the manager emits `Stopped` and `Consumed` AT THE STOP, not at the payload's exit -- so step 5 holds the run's OUTPUT and step 7 adds its COST (REV 75 S3, and the reason step 7 exists at all)"
+  }
+}
