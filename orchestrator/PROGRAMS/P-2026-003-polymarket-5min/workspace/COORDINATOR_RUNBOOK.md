@@ -421,6 +421,9 @@ true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94
 its controls at both endpoints; Gate 1's three sampler refusals stand.
 
 - **Tip:** see `git log`. Next register entry after R-590: **R-591**.
+
+**THE GATE-1 READ ORDER (R-591, from DA 64's finding).** DE's sealed day receipts strip every economic field (D_E0, Z, p, null mean/sd, draws summary) until the seal opens at the ruled `read_not_before` 2026-09-09T00:06Z (G = 6). Before that, DA's verifier (`live/pm_research/da_gate1_day_verdict.py`) can verify population, statuses, seed and provenance only, and says so (`IS_A_VERIFICATION_OF_THE_ECONOMICS: false`). At the read: (1) DA's verifier on each OPENED day receipt against the day book, EXACT comparison, before any number is quoted; (2) the runner's own read; (3) the reviewer's filing; (4) the coordinator reports the direction. A verdict quoted before step 1 is unverified by construction.
+
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
   USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
   + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
