@@ -311,6 +311,189 @@ def day_matched_volume(path, *, latency_ms: int = LATENCY_MS) -> dict:
             "latency_ms": latency_ms}
 
 
+#: The FAMILY of the first read's result, derived from the constant that
+#: already names its artifact -- never a second typed claim about it.
+def first_read_result_family() -> str:
+    import declaration_chain as _DCH
+    return _DCH.VERSION_RE.sub("", OUT_NAME)
+
+
+def not_pooled_clause(doc=None, *, decl_dir: Path | None = None,
+                      derived_dir: Path | None = None) -> dict:
+    """THE SENTENCE A SECOND READ'S ARTIFACT MUST CARRY (REV 86 §5).
+
+    A reader can arrive holding ONLY the second artifact. Its floor is
+    2^-G x m, which counts ARMS -- and a reader who has never heard of the
+    first read has no way to know that a second chance was taken at all.
+    Neither artifact's floor prices the other's existence, so the second one
+    has to SAY so.
+
+    EVERY PART OF IT IS DERIVED, and the derivation is the point: a typed
+    sentence about another artifact goes stale the moment that artifact
+    changes, and nobody notices because prose does not fail. Here the pair
+    is READ from this declaration's `supersedes`, VERIFIED against the file
+    on disk (R-608: the link is the pair), the first read's days are read
+    from ITS OWN declaration, m is read from both and refused if they
+    disagree, each floor is RECOMPUTED from arms alone, and the consistency
+    word is a PREDICATE over the first read's `day_signs` -- the one thing
+    R-529(A) leaves quotable -- never a conclusion typed beside it (rule
+    10).
+
+    WHEN IT APPLIES. A declaration that names days CONSUMED BY A PREVIOUS
+    READ has a previous read; one that names none does not, and there is no
+    other read for a clause to be about. That is a property of the
+    declaration's content, not of whether a field happens to parse -- so a
+    declaration that names consumed days and carries NO usable pair is
+    REFUSED rather than rendered without it.
+    """
+    import declaration_chain as _DCH
+    import be_rule22 as _R22
+    if doc is None:
+        if decl_dir is not None:
+            saved = _R22.DECLARATIONS
+            try:
+                _R22.DECLARATIONS = Path(decl_dir)
+                head = _R22.declaration_head("be_race_read_declaration")
+            finally:
+                _R22.DECLARATIONS = saved
+        else:
+            head = _R22.declaration_head("be_race_read_declaration")
+        doc = head["doc"]
+    ddir = Path(decl_dir) if decl_dir is not None else Path(_R22.DECLARATIONS)
+    pop = doc.get("population") or {}
+    consumed = sorted(pop.get("CONSUMED_BY_THE_FIRST_READ") or [])
+    if not consumed:
+        return {"applies": False,
+                "declaration_R_529_A": doc.get("R_529_A_UP_FRONT"),
+                "declaration_may_not_infer":
+                    doc.get("what_a_reader_may_NOT_infer"),
+                "why": "this declaration names no days CONSUMED BY A "
+                       "PREVIOUS READ, so there is no other read for a "
+                       "clause to be about and no reader of this artifact "
+                       "is at risk of the inference",
+                "checked": "population.CONSUMED_BY_THE_FIRST_READ"}
+    sup = doc.get("supersedes")
+    if not isinstance(sup, dict) or not sup.get("path"):
+        raise ReadRefused(
+            f"FIRST_READ_PAIR_ABSENT: this declaration names {consumed} as "
+            f"consumed by a previous read, but carries no `supersedes` pair "
+            f"naming that read's declaration. The clause about the two reads "
+            f"cannot be GENERATED, and it may not be typed: a sentence about "
+            f"another artifact that is not derived from it is a claim nobody "
+            f"checks. Nothing is rendered.")
+    fault = None
+    _dg = sup.get("sha256")
+    if _dg is None:
+        fault = "no `sha256` at all"
+    elif not (isinstance(_dg, str) and _DCH.DIGEST_RE.match(_dg)):
+        fault = f"`sha256` = {str(_dg)[:16]!r}, which is not 64 lowercase hex"
+    if fault:
+        raise ReadRefused(
+            f"FIRST_READ_PAIR_HALF_WRITTEN: the `supersedes` naming the "
+            f"first read's declaration has {fault}. R-608: the link IS the "
+            f"pair -- a path with no usable digest verifies nothing, so the "
+            f"artifact this clause would speak for is unidentified.")
+    fp = ddir / Path(str(sup["path"])).name
+    if not fp.exists():
+        raise ReadRefused(
+            f"FIRST_READ_DECLARATION_ABSENT: {fp.name} is named by the pair "
+            f"but is not in {ddir}. The clause would describe a read whose "
+            f"declaration this reader cannot open.")
+    got = hashlib.sha256(fp.read_bytes()).hexdigest()
+    if got != _dg:
+        raise ReadRefused(
+            f"FIRST_READ_PAIR_MISMATCH: {fp.name} on disk is {got[:16]}… "
+            f"and the pair names {str(_dg)[:16]}…. The bytes moved, so the "
+            f"declaration this clause would read is not the one the pair "
+            f"identifies.")
+    first = json.loads(fp.read_text())
+    first_days = sorted((first.get("population") or {}).get("READABLE") or [])
+    if first_days != consumed:
+        raise ReadRefused(
+            f"FIRST_READ_DAYS_DISAGREE: this declaration says the previous "
+            f"read consumed {consumed}, and {fp.name} declares READABLE "
+            f"{first_days}. One of the two is aimed at the wrong read, and "
+            f"the clause would state a day set no artifact supports.")
+    m_here = ((doc.get("permutation_floor") or {}).get("multiplicity"))
+    m_first = ((first.get("permutation_floor") or {}).get("multiplicity"))
+    if m_here != m_first:
+        raise ReadRefused(
+            f"MULTIPLICITY_DISAGREES: this declaration counts m = {m_here} "
+            f"arms and {fp.name} counts m = {m_first}. The clause asserts "
+            f"ONE m for both artifacts and cannot, so it is not rendered.")
+    g_here, g_first = len(sorted(pop.get("READABLE") or [])), len(first_days)
+    arms_only = {"this_read": (2.0 ** -g_here) * m_here,
+                 "first_read": (2.0 ** -g_first) * m_first}
+    declared = {"this_read": ((doc.get("permutation_floor") or {})
+                              .get("best_possible_adjusted_p")),
+                "first_read": ((first.get("permutation_floor") or {})
+                               .get("best_possible_adjusted_p"))}
+    off = sorted(k for k, v in declared.items()
+                 if v is not None and abs(float(v) - arms_only[k]) > 1e-12)
+    if off:
+        raise ReadRefused(
+            f"FLOOR_IS_NOT_ARMS_ONLY: {off} declares a floor that is not "
+            f"2^-G x m computed from its OWN G and m ({declared} vs "
+            f"{arms_only}). The clause claims each floor counts arms and not "
+            f"reads; that claim is a PREDICATE here, and it does not hold.")
+    dd = Path(derived_dir) if derived_dir is not None else Path(_BDR.derived())
+    fam = first_read_result_family()
+    try:
+        rh = _DCH.resolve_head(dd, fam)
+    except Exception as e:
+        raise ReadRefused(
+            f"FIRST_READ_RESULT_UNRESOLVED: the family {fam!r} does not "
+            f"resolve to a head in {dd} ({type(e).__name__}: "
+            f"{str(e)[:120]}). The consistency word is a predicate over the "
+            f"first read's own `day_signs` and cannot be typed in its "
+            f"place.") from e
+    signs = (rh["doc"] or {}).get("day_signs")
+    if not isinstance(signs, dict) or not signs:
+        raise ReadRefused(
+            f"FIRST_READ_RESULT_CARRIES_NO_day_signs: {rh['name']} has no "
+            f"`day_signs` block, and that block is the only thing R-529(A) "
+            f"leaves quotable about the first read.")
+    consistency = "inconsistent" if len(set(signs.values())) > 1 \
+        else "consistent"
+    span = f"{consumed[0]}..{consumed[-1]}" if len(consumed) > 1 \
+        else consumed[0]
+    sentence = (
+        f"Neither read's floor prices the other's existence: two reads are "
+        f"two chances; each artifact's floor counts ARMS (m = {m_here}), not "
+        f"reads. A first read over {span} ({len(consumed)} days) existed and "
+        f"returned {consistency} signs. The two reads are NOT pooled, and "
+        f"cannot be -- the first is opened.")
+    return {
+        "applies": True,
+        "sentence": sentence,
+        "declaration_R_529_A": doc.get("R_529_A_UP_FRONT"),
+        "declaration_may_not_infer": doc.get("what_a_reader_may_NOT_infer"),
+        "generated_from": {
+            "this_declaration_names_the_first_read_BY_PAIR": {
+                "path": str(sup["path"]), "sha256": _dg},
+            "verified_against_the_file": {"name": fp.name, "sha256": got,
+                                          "matches": True},
+            "first_read_days_read_from": f"{fp.name} population.READABLE",
+            "consistency_read_from": {"family": fam, "head": rh["name"],
+                                      "block": "day_signs",
+                                      "n_days": len(signs)},
+            "never_typed": "every part above is read from an artifact this "
+                           "function opened; the only literals in the "
+                           "sentence are the words",
+        },
+        "computed": {
+            "m": m_here, "G_this_read": g_here, "G_first_read": g_first,
+            "floor_this_read_ARMS_ONLY": arms_only["this_read"],
+            "floor_first_read_ARMS_ONLY": arms_only["first_read"],
+            "declared_floors_equal_the_arms_only_formula": True,
+            "sign_consistency_predicate":
+                "len(set(day_signs.values())) > 1 -> inconsistent",
+            "signs_are": consistency,
+            "no_sign_value_is_carried_here": True,
+        },
+    }
+
+
 def declared_read(decl_dir: Path | None = None) -> dict:
     """THE DECLARATION'S OWN READ SET, from the CHAIN HEAD.
 
@@ -1005,6 +1188,10 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     # consumes: a horizon crossed halfway through, or a fourth day with no
     # pin, cannot be undone once the first three days are spent.
     _horizon = assert_read_horizon(_dc)
+    # RENDERED BEFORE THE ACT: if the clause cannot be generated, the read
+    # does not happen -- an artifact that omits it is exactly the artifact
+    # REV 86 §5 is about, and there is no second attempt at a consumed day.
+    _npc = not_pooled_clause(decl_dir=decl_dir)
     _pinned_all = assert_every_declared_day_is_pinned(_dc["days"], pd or {})
     _pre = pre_state(_dc["days"], _out_d, {d: str(v) for d, v in paths.items()},
                      pd or {}, _dc) if consume else None
@@ -1139,6 +1326,25 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
         "every_day_pinned_before_the_act": _pinned_all,
         "data_root": _BDR.receipt_block(),
         "decides_nothing": "REPORTED (rule 14).",
+        # REV 86 §5: FOR THE READER WHO ARRIVES HOLDING ONLY THIS ARTIFACT.
+        # Its floor counts arms, so nothing in it says that a second chance
+        # was taken at all -- and a reader cannot ask an artifact a question
+        # it does not answer. GENERATED from the declaration, never typed.
+        "R_529_A_UP_FRONT": _npc.get("declaration_R_529_A"),
+        "what_a_reader_may_NOT_infer": {
+            "from_the_declaration": _npc.get("declaration_may_not_infer"),
+            "neither_read_prices_the_other": _npc.get("sentence"),
+            "clause_applies": _npc["applies"],
+            "why_absent": _npc.get("why"),
+            "generated_from": _npc.get("generated_from"),
+            "computed": _npc.get("computed"),
+            "never_typed": "the pair is read from the declaration and "
+                           "verified against the file, the first read's days "
+                           "come from ITS declaration, m from both, each "
+                           "floor is recomputed from arms alone, and the "
+                           "consistency word is a predicate over the first "
+                           "read's own day_signs (rule 10)",
+        },
     }
     if write:
         d = Path(outdir) if outdir is not None else _BDR.derived()
@@ -1148,7 +1354,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 70
+EXPECTED_CHECKS = 76
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -2040,6 +2246,117 @@ def selftest() -> int:
        f"declares a different family -- is REFUSED BY NAME, so a correction "
        f"can never carry the wrong read's provenance under right-looking "
        f"field names: {_wrongdecl[:170]!r}")
+
+    # ---- BE 85 / REV 86 §5: THE CLAUSE FOR THE READER WHO HOLDS ONLY
+    # THE SECOND ARTIFACT. Driven on the real head for the positive control,
+    # and on scratch declarations for every refusal -- one mutation at a
+    # time, so each refusal is shown to fire for ITS OWN reason.
+    _npc5 = not_pooled_clause()
+    ok(_npc5["applies"] is True
+       and "two chances" in _npc5["sentence"]
+       and "m = 2" in _npc5["sentence"]
+       and "20260903..20260905" in _npc5["sentence"]
+       and "NOT pooled" in _npc5["sentence"]
+       and _npc5["computed"]["floor_this_read_ARMS_ONLY"] == 0.125
+       and _npc5["computed"]["floor_first_read_ARMS_ONLY"] == 0.25
+       and _npc5["computed"]["declared_floors_equal_the_arms_only_formula"]
+       and _npc5["generated_from"]["verified_against_the_file"]["matches"],
+       f"REV 86 §5, GENERATED FROM THE DECLARATION AND NOT TYPED: "
+       f"{_npc5['sentence']!r}. The pair is read from v5's `supersedes` and "
+       f"VERIFIED against the file on disk; the first read's days come from "
+       f"ITS OWN declaration; m from both; each floor RECOMPUTED from arms "
+       f"alone ({_npc5['computed']['floor_first_read_ARMS_ONLY']} and "
+       f"{_npc5['computed']['floor_this_read_ARMS_ONLY']}), which is what "
+       f"`counts arms, not reads` MEANS as a predicate")
+    _sgn = json.dumps(_npc5)
+    ok(_npc5["computed"]["signs_are"] in ("consistent", "inconsistent")
+       and _npc5["computed"]["sign_consistency_predicate"].startswith("len(")
+       and '"day_signs":' not in _sgn,
+       f"AND THE CONSISTENCY WORD IS A PREDICATE, NOT A CONCLUSION TYPED "
+       f"BESIDE ONE (rule 10): "
+       f"{_npc5['computed']['sign_consistency_predicate']!r} over "
+       f"{_npc5['generated_from']['consistency_read_from']['head']}'s "
+       f"day_signs -- and NO SIGN VALUE is carried into the clause")
+    import tempfile as _tfN
+    _dN = Path(_tfN.mkdtemp(prefix="be85_clause_"))
+    (_dN / "decl").mkdir()
+    (_dN / "der").mkdir()
+    _first = {"protocol": "FIXTURE-FIRST", "supersedes": None,
+              "population": {"READABLE": ["20990101", "20990102"]},
+              "permutation_floor": {"G": 2, "multiplicity": 2,
+                                    "best_possible_adjusted_p": 0.5}}
+    _fp = _dN / "decl" / "be_race_read_declaration_v1.json"
+    _fp.write_text(json.dumps(_first, indent=1, sort_keys=True))
+    _fsha = hashlib.sha256(_fp.read_bytes()).hexdigest()
+    (_dN / "der" / "be_race_read_result_v1.json").write_text(json.dumps(
+        {"day_signs": {"20990101": 1, "20990102": -1}}))
+
+    def _second(**over):
+        d = {"protocol": "FIXTURE-SECOND",
+             "supersedes": {"path": _fp.name, "sha256": _fsha},
+             "population": {"READABLE": ["20990201", "20990202"],
+                            "CONSUMED_BY_THE_FIRST_READ": ["20990101",
+                                                           "20990102"]},
+             "permutation_floor": {"G": 2, "multiplicity": 2,
+                                   "best_possible_adjusted_p": 0.5}}
+        d.update(over)
+        return d
+
+    def _clause(doc):
+        try:
+            return "ADMITTED", not_pooled_clause(
+                doc, decl_dir=_dN / "decl", derived_dir=_dN / "der")
+        except ReadRefused as _e:
+            return str(_e).split(":")[0], str(_e)
+    _code, _out = _clause(_second())
+    ok(_code == "ADMITTED" and _out["applies"] and "m = 2" in _out["sentence"]
+       and "20990101..20990102" in _out["sentence"]
+       and "inconsistent" in _out["sentence"],
+       f"POSITIVE CONTROL ON THE FIXTURE: a well-formed pair renders the "
+       f"clause from the fixture's own artifacts: {_out['sentence']!r}")
+    _codes = {}
+    _codes["no pair at all"] = _clause(_second(supersedes=None))[0]
+    _codes["a pair with no digest"] = _clause(
+        _second(supersedes={"path": _fp.name}))[0]
+    _codes["a pair naming a file that is not there"] = _clause(
+        _second(supersedes={"path": "be_race_read_declaration_v9.json",
+                            "sha256": _fsha}))[0]
+    _codes["a pair whose digest has moved"] = _clause(
+        _second(supersedes={"path": _fp.name, "sha256": "0" * 64}))[0]
+    ok(list(_codes.values()) == ["FIRST_READ_PAIR_ABSENT",
+                                "FIRST_READ_PAIR_HALF_WRITTEN",
+                                "FIRST_READ_DECLARATION_ABSENT",
+                                "FIRST_READ_PAIR_MISMATCH"],
+       f"KNOWN-BAD, THE REQUIRED ONE AND ITS THREE NEIGHBOURS -- a template "
+       f"rendered WITHOUT the first read's pair REFUSES BY NAME, and the "
+       f"four ways the pair can fail refuse under four DIFFERENT names: "
+       f"{_codes}. None of them renders a sentence: an ungenerated clause is "
+       f"never replaced by a typed one")
+    _dis = {}
+    _dis["days"] = _clause(_second(population={
+        "READABLE": ["20990201"], "CONSUMED_BY_THE_FIRST_READ": ["20990103"]}))[0]
+    _dis["m"] = _clause(_second(permutation_floor={
+        "G": 2, "multiplicity": 3, "best_possible_adjusted_p": 0.75}))[0]
+    _dis["floor"] = _clause(_second(permutation_floor={
+        "G": 2, "multiplicity": 2, "best_possible_adjusted_p": 0.99}))[0]
+    ok(_dis == {"days": "FIRST_READ_DAYS_DISAGREE",
+                "m": "MULTIPLICITY_DISAGREES",
+                "floor": "FLOOR_IS_NOT_ARMS_ONLY"},
+       f"AND THE THREE CLAIMS THE SENTENCE MAKES ARE PREDICATES, EACH "
+       f"REFUSING BY NAME WHEN IT DOES NOT HOLD: {_dis}. `counts arms, not "
+       f"reads` is CHECKED against 2^-G x m recomputed from each "
+       f"declaration's own fields -- a sentence that asserted it without "
+       f"checking would be a hardcoded verdict beside a table (rule 10)")
+    _na = not_pooled_clause({"protocol": "NO-PREVIOUS-READ",
+                             "population": {"READABLE": ["20990301"]}},
+                            decl_dir=_dN / "decl", derived_dir=_dN / "der")
+    ok(_na["applies"] is False and "no other read" in _na["why"]
+       and "sentence" not in _na,
+       f"AND A FIRST READ SAYS SO RATHER THAN SAYING NOTHING: a declaration "
+       f"naming no consumed days renders `applies False` WITH ITS REASON "
+       f"({_na['checked']}), never silence -- and the discriminator is the "
+       f"declaration's CONTENT, not whether a field happens to parse, so a "
+       f"second read cannot escape the clause by dropping its pair")
 
     # markers into the ledger. It is compared against the ledger's marker
     # set as it stood when the battery started, so it holds before the read
