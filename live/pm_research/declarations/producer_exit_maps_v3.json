@@ -37,15 +37,25 @@
       "where_the_verdict_is_written": "the record named by --output; the exit code is a summary of `status`, never the record itself"
     },
     "live/pm_research/da_race_read_verify.py": {
-      "status": "UNDECLARED",
-      "who_declares": "DA, by pair"
+      "a_note_on_2": "this producer shares argparse's code and is separated from it by stream and named string; the STDERR pair (da_contamination_record, da_mutation_audit) took 3 instead, at DA 101's R-697 batch",
+      "codes": {
+        "0": "the real-path verification holds: IS_A_VERIFICATION true",
+        "1": "FLAGGED -- the read artifact exists and something in it disagrees with this verifier's recomputation, or a day the pins name is not SAID. A VERDICT",
+        "2": "a REFUSAL this verifier names, printed to STDOUT where argparse never writes (READ_ARTIFACT_ABSENT_THE_READ_HAS_NOT_BEEN_OPENED, PINS_DECLARATION_ABSENT, a pin that does not hold, and the rest). Separable from argparse's own usage exit 2 by STREAM and by STRING"
+      },
+      "declared_by": "DA",
+      "not_declared_here": {
+        "75": "NEVER -- the wrapper's refusal",
+        "any_other_non_zero": "an uncaught exception, recorded verbatim as UNMAPPED"
+      },
+      "status": "DECLARED"
     },
     "live/pm_research/de_multiday_gate1_runner.py": {
       "status": "UNDECLARED",
       "who_declares": "DE, by pair"
     }
   },
-  "protocol": "PRODUCER_EXIT_MAPS_V2",
+  "protocol": "PRODUCER_EXIT_MAPS_V3",
   "reading_kinds": {
     "75": "REFUSAL by the wrapper",
     "declared code": "a VERDICT by name, resolved in the producer's block",
@@ -60,12 +70,12 @@
     "why_a_sibling": "the form's constants are the WRAPPER's (lock path, conflict code, caps) and belong to every producer alike; an exit map is one producer's own and would make the shared form change whenever any producer added a code (REV 79 \u00a72.1)"
   },
   "supersedes": {
-    "path": "live/pm_research/declarations/producer_exit_maps_v1.json",
+    "path": "live/pm_research/declarations/producer_exit_maps_v2.json",
     "rule": "13 -- vN+1 by the {path, sha256} PAIR; the prior version is NOT edited",
-    "sha256": "c4e9438019ff88c57c84ebbe766969d434c363337acb2aa162817124ffe3ab5a",
-    "what_changes": "DA declares `live/pm_research/da_gate1_day_verdict.py`. ONE producer's block per version, as this chain's rule requires."
+    "sha256": "43b99ea309f74ad6e95fb14f96628fa296d885b463698959459c866a46f7bae0",
+    "what_changes": "DA declares `live/pm_research/da_race_read_verify.py`. ONE producer's block per version."
   },
-  "version": 2,
+  "version": 3,
   "what": "One block per producer that runs under the heavy-run lock: {exit code: meaning}. A capture record resolves a non-zero ExecMainStatus HERE, never in the producer's source. A code with no entry is recorded VERBATIM as UNMAPPED and is not a reading.",
   "what_this_is_not": "not a list of the wrapper's five fields (heavy_run_form), not a permission (a declared code is a reading, decisions live in the policy layer, rule 14)",
   "wrapper_reserved": {

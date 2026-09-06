@@ -3620,6 +3620,7 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
             "resolves one -- so it cannot compute an economic value, let "
             "alone emit it"),
         "book": book_meta,
+        "the_run_that_produced_this": run_identity_and_peak(),
         "peak_rss_bytes_in_this_process": (
             __import__("resource").getrusage(
                 __import__("resource").RUSAGE_SELF).ru_maxrss * 1024),
@@ -4110,6 +4111,50 @@ def _declaration_head(family: str, decl_dir: Path | None = None) -> dict:
             "obj": json.loads(f.read_text())}
 
 
+#: R-709 / REV 79 S2.2 and BE 74's correction. ***THE RUN MUST NAME
+#: ITSELF INSIDE ITS OWN BYTES***, and the PEAK must be read where the
+#: peak actually is. systemd's `MemoryPeak` PROPERTY read after the unit
+#: exits is not the run's peak (BE 74 measured a leaf peak of 2,578,067,456
+#: against a property of 847,671,296 for one run); the payload's own cgroup
+#: leaf carries `memory.peak`, and this reads it AT THE END OF THE RUN,
+#: from inside the run.
+def run_identity_and_peak() -> dict:
+    """The unit invocation this process is running under, and the peak of
+    its own cgroup leaf -- read here, not inferred by a later reader."""
+    out = {"invocation_id_env": os.environ.get("INVOCATION_ID"),
+           "unit_env": os.environ.get("SYSTEMD_UNIT")
+           or os.environ.get("UNIT"),
+           "why_here": (
+               "a Q-row is prose; the id belongs in the artifact's own "
+               "bytes so a reader resolves the run without a person")}
+    leaf = None
+    try:
+        for line in Path("/proc/self/cgroup").read_text().splitlines():
+            parts = line.split(":", 2)
+            if len(parts) == 3 and parts[2].strip("/"):
+                leaf = parts[2].strip()
+    except OSError as e:
+        out["cgroup_leaf_read"] = f"UNREADABLE: {e!r}"
+    out["cgroup_leaf"] = leaf
+    if leaf:
+        base = Path("/sys/fs/cgroup") / leaf.lstrip("/")
+        vals = {}
+        for f in ("memory.peak", "memory.current", "memory.max"):
+            try:
+                vals[f] = (base / f).read_text().strip()
+            except OSError as e:
+                vals[f] = f"UNREADABLE: {type(e).__name__}"
+        out["cgroup_leaf_path"] = str(base)
+        out["cgroup_memory"] = vals
+        out["read_at"] = "THE END OF THE RUN, from inside the run"
+        out["why_not_the_property"] = (
+            "systemd's MemoryPeak property read after the unit exits is "
+            "NOT the run's peak -- BE 74 measured 2,578,067,456 at the "
+            "leaf against 847,671,296 at the property for one run. Both "
+            "are reported, each with its source")
+    return out
+
+
 def structure_declaration_for_book(book_sha256: str,
                                    decl_dir: Path | None = None) -> dict:
     """BE's structure declaration for THIS book -- by digest alone.
@@ -4505,6 +4550,40 @@ def recompute_population_from_book(obj: dict, receipt: dict) -> dict:
             out and not flags
             and all(r.get("status") == "RECOMPUTED" for r in out.values())),
     }
+
+
+#: R-709: THE EXIT MAP. A non-zero `ExecMainStatus` resolves in the
+#: producer's block of `producer_exit_maps_v<N>.json`, never in prose and
+#: never in this source. ***75 MAY NOT BE DECLARED BY A PRODUCER***: it is
+#: the WRAPPER's refusal (a held lock), and a producer that claimed it
+#: could make a lock conflict read as one of its own verdicts.
+EXIT_MAP_FAMILY = "producer_exit_maps"
+THIS_PRODUCER = "live/pm_research/da_gate1_day_verdict.py"
+
+
+def exit_map_head(decl_dir: Path | None = None) -> dict:
+    """The chain head of the exit-map family, and MY block in it."""
+    st = _declaration_head(EXIT_MAP_FAMILY, decl_dir)
+    obj = st.pop("obj")
+    producers = obj.get("producers") or {}
+    with_75 = sorted(k for k, v in producers.items()
+                     if isinstance(v, dict)
+                     and any(str(c) == "75" for c in
+                             (v.get("codes") or {})))
+    if with_75:
+        raise VerifierRefused(
+            f"REFUSED: A_PRODUCER_DECLARES_75 -- {with_75}. 75 is the "
+            f"WRAPPER's refusal (a held lock exits the unit with it); a "
+            f"producer that declares it makes a lock conflict read as one "
+            f"of its own verdicts, which is the one confusion this map "
+            f"exists to prevent.")
+    mine = producers.get(THIS_PRODUCER) or {}
+    return {"head": st["name"], "sha256": st["sha256"],
+            "n_producers": len(producers),
+            "my_block": mine,
+            "my_codes": (mine.get("codes") or {}),
+            "i_am_declared": bool(mine.get("codes")),
+            "no_producer_declares_75": True}
 
 
 def selftest_pre_read() -> list:                              # noqa: C901
@@ -5429,6 +5508,34 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"a 3-digit count collision -> coincidence at "
        f"{_co['low_precision_coincidence_paths']}, clean={_co['clean']}; a "
        f"16-digit sealed value -> echoed, clean={_ec['clean']}")
+
+    # -- R-709: THE EXIT MAP, AND 75 IS NEVER A PRODUCER'S ---------------
+    _em = exit_map_head()
+    _emt = Path(tempfile.mkdtemp(prefix="da101em_"))
+    (_emt / "producer_exit_maps_v1.json").write_text(json.dumps({
+        "producers": {THIS_PRODUCER: {"codes": {"3": "x", "75": "mine"}}}}))
+    try:
+        exit_map_head(_emt)
+        _bad75 = "ADMITTED"
+    except VerifierRefused as _e:
+        _bad75 = str(_e).split(" -- ")[0].replace("REFUSED: ", "")
+    ck("R-709 -- ***THE EXIT CODE RESOLVES IN THE MAP, NOT IN THIS "
+       "SOURCE, AND 75 IS NEVER A PRODUCER'S.*** A non-zero "
+       "`ExecMainStatus` is the wrapper's 75, a code DECLARED in the "
+       "producer's block of the exit-map chain head, or UNMAPPED -- and "
+       "UNMAPPED does not satisfy a GO conditioned on that run. This "
+       "producer's block is read at the head by the pair, and ***a map in "
+       "which ANY producer declares 75 is REFUSED***: 75 is what a HELD "
+       "LOCK exits with, so a producer claiming it would make a lock "
+       "conflict read as one of its own verdicts",
+       _em["i_am_declared"] is True
+       and sorted(_em["my_codes"]) == ["0", "1", "2", "3"]
+       and "75" not in _em["my_codes"]
+       and _em["no_producer_declares_75"] is True
+       and _bad75 == "A_PRODUCER_DECLARES_75",
+       f"head {_em['head']} ({_em['sha256'][:16]}) declares this producer's "
+       f"{sorted(_em['my_codes'])} across {_em['n_producers']} producers; a "
+       f"planted map declaring 75 -> {_bad75}")
 
     # -- DA 100: THE STRUCTURE GUARD, DRIVEN AT THE REAL DECLARATION ----
     #: THE DIGESTS ARE READ FROM BE'S BUILDER RECEIPTS. No book is opened
