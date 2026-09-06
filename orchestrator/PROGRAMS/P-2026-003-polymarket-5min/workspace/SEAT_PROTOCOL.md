@@ -182,6 +182,18 @@ except where marked USER-ONLY.
     cross-checked against `-u <unit>`'s count, and a check compares the id to the unit's; a copy
     returning 0 lines where `-u` has lines is a REFUSAL of the copy, never a record; no control's
     verdict may depend on journal retention.
+    **Producer exit codes and relaunches (R-709, REV 79 §2.1/§2.2).** A non-zero `ExecMainStatus` is one of THREE
+    kinds: 75 = the wrapper's refusal; a code declared in the producer's block of
+    `live/pm_research/declarations/producer_exit_maps_v<N>.json` (chain head by the pair; one producer's block per
+    version, by that producer; 75 may not be declared) = a VERDICT by name; any other non-zero = UNMAPPED, recorded
+    verbatim, NOT a refusal, NOT a failure, and it does NOT satisfy a GO conditioned on that run -- the GO waits until
+    the producer declares the code by pair and the record is re-read. A capture record names the producer module and
+    the resolved kind beside the verbatim code. A RELAUNCH under one GO needs all four: the earlier launch wrote
+    nothing or its record is superseded by the pair; the lock free and the unit `not-found` before each; every
+    launch's five fields + InvocationID in a resolvable RECORD (a Q-row is prose) -- a UNIQUE unit name per launch
+    (`<name>_1/_2` or the stamp) so `-u` is a per-run query again; and the producing CODE byte-identical between
+    launches, or the change reviewed before the next launch (R-620's hazard is an unreviewed fix going live inside
+    one batch, not the second launch).
 
 21. **Landing in the shared tree is add, commit, push — nothing else** (R-576):
     a seat that lands an artifact from `/home/yuqing/ctaNew` runs exactly
