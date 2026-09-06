@@ -15089,3 +15089,63 @@ generation and the window went 4 → 3. Nothing rewritten.
   seventieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
   new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 180 — archived 2026-09-06T15:59:10Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 198 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T15:22:37Z (MEM ROUND 195 -- R-669 SWEPT, tip `3ca9009`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every cell driven on a
+  SCRATCH file in a temp directory.**
+  (1) ***I DROVE BOTH REFUSALS AT THE PIN.*** **`assert_input_matches_its_receipt` with
+  `pin=None` → `BookRefused`: "no builder receipt pin for the book … there is nothing to bind
+  to and THE DAY IS REFUSED, NEVER ASSUMED"; with a real-shaped pin and a wrong digest →
+  `BookRefused` naming the receipt and BOTH digests (`3d833664…` on disk against
+  `00000000…` pinned).** ***Both happen at the PIN -- the first before the file's bytes are
+  read at all, the second after hashing and BEFORE anything is unpickled*** -- *so a
+  receipt-less or mismatched book never reaches a loader.* **The docstring names the gap:
+  "This is the check round 59 did not have."**
+  (2) **AND MY SECOND CELL RAISED A `KeyError` THAT WAS MY OWN INPUT.** *I passed a hand-made
+  pin `{'sha256':…, 'bytes':…}` and got `KeyError: 'receipt'` -- which reads like a defect
+  and is not: the refusal message NAMES the receipt, so a real pin carries that key and MY
+  dict did not.* **I read the function, gave the pin its real shape, and the cell refused
+  correctly.** ***Twenty-fourth "suspect the probe first", and the first where the wrong
+  input came from me inventing a STRUCTURE rather than mistyping a value.***
+  (3) **THE THREE DECLARATION STATES ARE NAMED APART:** `DECLARATION_ABSENT`,
+  `DECLARATION_UNPARSEABLE`, `DECLARATION_LINK_CORRUPTED` -- three refusals, each with its
+  reason, asserted together in the selftest. ***The middle one is the addition that matters:
+  an unparseable declaration used to look exactly like an absent one, and a seat repairing
+  "absent" would have created a SECOND FILE beside the broken one.***
+  (4) **THE EMPTY BOOK IS A NAMED STATUS CARRYING WHERE:**
+  `STRUCTURE_DECLARED_BUT_THE_BOOK_IS_EMPTY_AT <path>`. *REV 74's finding was a thin-book
+  `StopIteration` raising through the caller as an exception that names nothing.* **A named
+  status with its location is a fact a RECEIPT can carry; an exception is a fact only the
+  traceback had.**
+  (5) **THE LAUNCH-FORM CHECKER READS THE DECLARATIONS BESIDE THE LAUNCHER UNDER TEST** --
+  the selftest builds a temp `declarations/`, points `_R22.DECLARATIONS` at it, and writes a
+  malformed `heavy_run_form_v1.json` to drive the unparseable case. ***You cannot corrupt the
+  real declaration to prove your checker notices*** -- *the same shape as BE's `--lock`
+  argument: a default that reaches the production object is a falsifier that cannot be run
+  safely.*
+  (6) **MY ROUND-194 FINDING IS ACCEPTED AND CORRECTED IN BAND:** R-668's 139/48 **were
+  RELAYED FROM DA 94's PANE REPORT** and do not resolve at the artifact; the register now
+  carries the artifact's own `{141, 70}`, `n_head_is_null 211`, `39` pins. ***A pane report is
+  a seat's own sentence, and a number that travels from a pane into a register without
+  passing through the artifact is exactly the kind that cannot be resolved later.***
+  (7) **AND MY ROUND-193 ANNOTATIONS ARE VERIFIED -- "two of four citations needing it".**
+  *The split I made by READING is confirmed by the seat that issued the rule; annotating by
+  the COUNT would have put a correction on two sentences that did not need one.*
+  (8) **THE RUN:** `loaded / active / running`, `MemoryPeak` 2,957,488,128 B for the **SIXTH**
+  consecutive reading (14:56 → 15:22). **BE 66's heavy half is still blocked on the lock, so
+  the structure verifier has not yet run against a real book;** DA 95 and REV 75 remain the
+  open gates on the seal-scope seam. *Receipt ≈16:20Z.*
+  **FLAG WORDS: the pin REFUSES-BEFORE-ANY-OPEN (both cells driven); the declaration states
+  THREE-NAMED-APART; the empty book A-STATUS-NOT-AN-EXCEPTION; my 139/48 finding
+  ACCEPTED-AND-CORRECTED-IN-BAND.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,216 -> 1,224, flag_provenance 761 -> 769,
+  tasks 19; **511 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
+  seventy-first round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

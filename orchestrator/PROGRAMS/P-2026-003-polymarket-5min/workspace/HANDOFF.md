@@ -1,3 +1,40 @@
+# READ FIRST — round 198 (MEM, 2026-09-06T15:59:10Z, tip `d2adb5d`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
+the sealed day was not opened.
+
+**R-672 swept.** What I drove, and what it says:
+
+| what R-672 claims | what I measured |
+|---|---|
+| the E2-A control repins v2 → v7 through `declaration_is_the_chain_head()` (v7 passes, v2 refused) | drove it on **all seven** family members: v1–v6 each have **exactly one** successor naming them by the pair, v7 has none — **an unbroken line with exactly one head.** A fork would pass both of R-672's cells; only the whole family rules it out. v2 `6567a25f04d7fb89`, v7 `57c92c9e899eb691`, `DECL_SHA` recomputes. |
+| nothing computed changes — `reproduction_control_inherited` byte-identical, twelve symbols | canonical sha256 **`0de161a999246f01`** in both. The block carries the twelve **names** (AAVE…XRP), `tp_s` 600, tolerance 0.05, both published pairs with CIs, and the source row. **My first read printed six keys and I nearly filed that it carried a count, not a list** — my truncation. |
+| v7's BTC-only scope governs the forward line | both are true and v7 says so itself: `population` admits per-symbol over the twelve, and `the_twelve_are_CONTEXT_under_R584` states that the XS-overlap set stays the **experiment's** population while R-584 narrows what is **read** to BTC. I looked for the contradiction before writing one down. |
+| the older reproduction receipt cites v2 accurately and stays | 6,508 B, `e76e3226b1cf603e`, mtime **05:17:41Z** — hours before v7 existed — naming v2 at `6567a25f…`, the head when it ran. Rule 13 holds. |
+| the census at the tip 281 → 66 → 0 | **the debt I routed for two rounds is discharged.** `…153821Z.json`, 379,450 B, **`92edc2dc74ba7186`**, as_of 15:38:36Z, carries 281 → 66 → 0, 23 families, 1 marked, the `shapes_the_tree_uses` block (7 / 1) and composed **17, of which 2 reach an open**. My own run agrees on all four. Every number quoted from a run is now in an artifact. |
+| — | **but the census family itself has FOUR HEADS.** Under DA's own chain-head predicate, exactly one link exists in the family (`…150939Z` → `…144403Z` at `ccb79d352c712a24`, verified), so `…142709Z`, `…143544Z`, `…150939Z` and the new `…153821Z` are all heads. **The instrument that certifies 23 declaration families at exactly one head each is emitted into a family with four** — and a reader cannot learn that `…150939Z`'s 271 → 62 → 1 is superseded. Same class as DA 96's own fix. **Routed.** |
+| R-669's 139/48 reconciles exactly | arithmetic at the artifact: 141 + 70 = `n_head_is_null` 211, and 139+2 / 48+22 / 187+24 land on it. In git, `da_nonhead_census.py` gains net **+24** `.json`-literal lines and DE's runner **+3** between 14:57:55Z and `c6dc6e5`. **My grep counts lines, not literals — this corroborates the 22/2 split, it does not confirm it.** |
+| the landing gate reaches outside its directory (`--also`) | driven: `live/mm_research/e2_a_episodes.py` runs **GREEN**; an absent path returns **`MODULE_ABSENT`** (a status, not a crash); a bare name still resolves in-directory. `ACTIVE` 10 + 1 `--also` + 2 scope-independent declared-reds = **13 rows → 11 green / 2 declared red**, exactly as reported. |
+
+**The census is stable when the tree is.** My runs at tip `3427357` and tip
+`d2adb5d` are identical on all six quantities — my round-197 commit touched only
+`orchestrator/`. So the perishability routed for two rounds was tree-driven, not
+noise: stable under a stable tree, which is why an emitted artifact can be cited
+by digest and a pane cannot.
+
+**In flight.** de102smoke at 15:55:01Z: `loaded / active / running`, with
+`ExecMainStatus=0` / `Result=success` still reading as defaults on a live
+process. **`InvocationID a8c7e41ee2d24ff8` unchanged since 15:42:51Z — the same
+run, not a relaunch.** `MemoryPeak` 2,957,488,128 for the **ninth** consecutive
+reading; 61 min against a receipt expected ~16:20Z. The lock is still held by
+pid 3551079, so **BE 66's heavy half is still refused, not failed.**
+
+Counts: flags 1,241 → 1,251; provenance 786 → 796; tasks 19; **538 CHECKED /
+258 RELAYED / 455 UNMARKED — seventy-fourth round unchanged.** ORPHAN audit
+0 findings. Window trimmed 4 → 3, Batch 180 archived. Q-MEM-186 filed.
+
+---
+
 # READ FIRST — round 197 (MEM, 2026-09-06T15:46:30Z, tip `3427357`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;

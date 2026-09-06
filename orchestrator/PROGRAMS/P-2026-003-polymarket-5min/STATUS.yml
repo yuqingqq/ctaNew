@@ -63,6 +63,80 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T15:59:10Z (MEM ROUND 198 -- R-672 SWEPT, tip `d2adb5d`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
+  (1) ***R-672 NAMES TWO CELLS OF THE CHAIN-HEAD CHECK; I DROVE ALL SEVEN.*** `v1..v6` each
+  have **exactly one** successor naming them by the `{path, sha256}` pair, `v7` has none:
+  **an unbroken line with exactly ONE head.** *That is the property that matters and the two
+  cells would not have caught its absence -- a FORK passes "v7 is a head" and "v2 is refused"
+  equally well.* v2 `6567a25f04d7fb89`, v7 `57c92c9e899eb691`, and the module's `DECL_SHA`
+  recomputes to v7's bytes.
+  (2) **NOTHING COMPUTED CHANGES, AND I READ THE BLOCK RATHER THAN THE CLAIM.**
+  `reproduction_control_inherited` canonicalises to sha256 `0de161a999246f01` in **both** v2
+  and v7. *The block carries the twelve symbol NAMES themselves* -- AAVE ADA AVAX BNB BTC DOGE
+  ETH FIL ICP LTC SOL XRP -- with `tp_s` 600, tolerance 0.05, both published pairs and their
+  CIs, and the source `e1a_gate_summary.csv row tp_s=600`. ***AND MY FIRST READ PRINTED SIX
+  KEYS AND I WAS ABOUT TO FILE THAT THE BLOCK CARRIED A COUNT AND NOT A LIST.*** *My
+  truncation, not the artifact's.* **Twenty-seventh "suspect the probe first" -- and the
+  SECOND this round that would have become a wrong routing.**
+  (3) **THE SECOND ONE: THE TWELVE AND BTC-ONLY ARE BOTH TRUE, AND v7 SAYS SO ITSELF.** v7's
+  `population` declares day admission PER SYMBOL over the twelve in scope; v7 also carries
+  R-584, *"SCOPE IS BTC FOR NOW"*. Read alone either looks like a contradiction of R-672.
+  **v7 resolves it in its own words -- `the_twelve_are_CONTEXT_under_R584`: the XS-overlap set
+  remains the declared population of the EXPERIMENT, and R-584 narrows what is READ to BTC.**
+  *I went looking for the contradiction before writing one down.*
+  (4) **THE OLDER RECEIPT IS ACCURATE AND UNTOUCHED.**
+  `p002_e2a_e1a_reproduction__20260906T051626Z.json`, 6,508 B, `e76e3226b1cf603e`, mtime
+  05:17:41Z -- *hours before v7 existed* -- names v2 with sha `6567a25f04d7fb89…`, which was
+  the head when it ran. Rule 13 holds: the old receipt stays as provenance.
+  (5) ***THE DEBT I ROUTED FOR TWO ROUNDS IS DISCHARGED.***
+  `p003_da_nonhead_census__20260906T153821Z.json`, 379,450 B, `92edc2dc74ba7186`, as_of
+  15:38:36Z -- *emitted between my round-197 measurement and my round-197 commit* -- carries
+  **281 -> 66 -> 0**, 23 families, 1 marked, **the `shapes_the_tree_uses` block** (multi-hop 7,
+  returning-function 1) and composed names **17, of which 2 reach an open**. **My own
+  independent run at the tip agrees on all four counts.** *Every number R-670, R-671 and R-672
+  quoted from a run is now in an artifact and citable by digest.* **Closed by the remedy I
+  named -- an emission -- not by anyone conceding a number.**
+  (6) ***AND THE CENSUS FAMILY ITSELF HAS FOUR HEADS.*** Applying **DA's OWN chain-head
+  predicate** to the five census artifacts: **exactly ONE link exists in the whole family** --
+  `…150939Z` names `…144403Z` at `ccb79d352c712a24`, which recomputes -- so `…142709Z`,
+  `…143544Z`, `…150939Z` **and the new `…153821Z`** are all heads. ***THE INSTRUMENT THAT
+  CERTIFIES 23 DECLARATION FAMILIES AT EXACTLY ONE HEAD EACH IS EMITTED INTO A FAMILY WITH
+  FOUR.*** Its CLI offers `--supersedes` and one member used it, so the family is a chain in
+  one member and a bare series in the rest: *a reader cannot tell which, and cannot learn that
+  `…150939Z`'s 271 -> 62 -> 1 is superseded* -- numbers quoted in three register entries.
+  **Exactly the defect DA 96 just fixed in `e2_a_episodes.py`, on the instrument that found
+  it. ROUTED TO DA, NOT RULED.**
+  (7) **THE LANDING GATE REACHES OUTSIDE ITS DIRECTORY, DRIVEN WITH ITS KNOWN-BAD.**
+  `live/mm_research/e2_a_episodes.py` runs **GREEN** through `run_module` (script form, "0
+  failure(s)"); an absent path returns **`MODULE_ABSENT`** -- *a status, not a crash and not a
+  silent pass*; a bare name still resolves in-directory. `ACTIVE` is 10, the declared-red map
+  is 2 (`da_cite_audit`, `da_iter011_contract_verify`), **and every declared known-red runs
+  whatever the scope** -- so 10 + 1 `--also` + 2 = **13 rows -> 11 green / 2 declared red**,
+  R-672's report exactly. *The row count was reconcilable only because the known-reds are
+  scope-independent by construction.*
+  (8) **THE 139/48 RECONCILIATION IS ARITHMETIC AT THE ARTIFACT AND ONLY CORROBORATED IN GIT.**
+  At `a0c8cb70b841`: `NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION` 141 +
+  `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY` 70 = `n_head_is_null` 211 exactly, and 139+2 / 48+22
+  / 187+24 land on it. In git, between the tree at 14:57:55Z and `c6dc6e5`,
+  `da_nonhead_census.py` gains net **+24** lines carrying a `.json` literal and DE's runner net
+  **+3** -- the right two files, the right order, the right sign. ***MY GREP COUNTS LINES, NOT
+  THE CENSUS'S LITERALS, SO THIS CORROBORATES THE 22/2 DECOMPOSITION AND DOES NOT CONFIRM IT***
+  -- said plainly rather than let a rough count stand in for the instrument's.
+  (9) **THE CENSUS IS STABLE WHEN THE TREE IS, AND THAT IS WHAT MAKES IT CITABLE.** My run at
+  tip `3427357` and at tip `d2adb5d` are IDENTICAL on all six quantities -- as they must be,
+  since my own round-197 commit touched only `orchestrator/`. *So the perishability I routed
+  for two rounds is TREE-DRIVEN, not noise: the quantity is stable under a stable tree, which
+  is exactly why an emitted artifact can be cited by digest and a pane cannot.*
+  (10) **IN FLIGHT, MEASURED.** de102smoke at 15:55:01Z: `loaded / active / running`, with
+  `ExecMainStatus=0` / `Result=success` still reading as defaults on a live process;
+  **InvocationID `a8c7e41ee2d24ff8` unchanged since 15:42:51Z, so it is the SAME run and not a
+  relaunch**; MemoryPeak 2,957,488,128 for the **NINTH** consecutive reading; 61 min against a
+  receipt expected ~16:20Z. The lock is still held by pid 3551079 -- the same flock -- so BE
+  66's heavy half is still **refused**, not failed.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,241 -> 1,251; flag_provenance 786 -> 796;
+  tasks 19; **538 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-FOURTH round unchanged.**
+  ORPHAN audit 0 findings. Q-MEM-186 filed.)
   2026-09-06T15:46:30Z (MEM ROUND 197 -- R-671 SWEPT, tip `3427357`. STATE ONLY. MEM ASSERTS
   NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every version cell driven on
   a SYNTHETIC receipt against the REAL v21/v23 design declarations.**
@@ -220,58 +294,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 1,224 -> 1,232, flag_provenance 769 -> 777,
   tasks 19; **519 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
   seventy-second round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T15:22:37Z (MEM ROUND 195 -- R-669 SWEPT, tip `3ca9009`. STATE ONLY. MEM ASSERTS
-  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every cell driven on a
-  SCRATCH file in a temp directory.**
-  (1) ***I DROVE BOTH REFUSALS AT THE PIN.*** **`assert_input_matches_its_receipt` with
-  `pin=None` → `BookRefused`: "no builder receipt pin for the book … there is nothing to bind
-  to and THE DAY IS REFUSED, NEVER ASSUMED"; with a real-shaped pin and a wrong digest →
-  `BookRefused` naming the receipt and BOTH digests (`3d833664…` on disk against
-  `00000000…` pinned).** ***Both happen at the PIN -- the first before the file's bytes are
-  read at all, the second after hashing and BEFORE anything is unpickled*** -- *so a
-  receipt-less or mismatched book never reaches a loader.* **The docstring names the gap:
-  "This is the check round 59 did not have."**
-  (2) **AND MY SECOND CELL RAISED A `KeyError` THAT WAS MY OWN INPUT.** *I passed a hand-made
-  pin `{'sha256':…, 'bytes':…}` and got `KeyError: 'receipt'` -- which reads like a defect
-  and is not: the refusal message NAMES the receipt, so a real pin carries that key and MY
-  dict did not.* **I read the function, gave the pin its real shape, and the cell refused
-  correctly.** ***Twenty-fourth "suspect the probe first", and the first where the wrong
-  input came from me inventing a STRUCTURE rather than mistyping a value.***
-  (3) **THE THREE DECLARATION STATES ARE NAMED APART:** `DECLARATION_ABSENT`,
-  `DECLARATION_UNPARSEABLE`, `DECLARATION_LINK_CORRUPTED` -- three refusals, each with its
-  reason, asserted together in the selftest. ***The middle one is the addition that matters:
-  an unparseable declaration used to look exactly like an absent one, and a seat repairing
-  "absent" would have created a SECOND FILE beside the broken one.***
-  (4) **THE EMPTY BOOK IS A NAMED STATUS CARRYING WHERE:**
-  `STRUCTURE_DECLARED_BUT_THE_BOOK_IS_EMPTY_AT <path>`. *REV 74's finding was a thin-book
-  `StopIteration` raising through the caller as an exception that names nothing.* **A named
-  status with its location is a fact a RECEIPT can carry; an exception is a fact only the
-  traceback had.**
-  (5) **THE LAUNCH-FORM CHECKER READS THE DECLARATIONS BESIDE THE LAUNCHER UNDER TEST** --
-  the selftest builds a temp `declarations/`, points `_R22.DECLARATIONS` at it, and writes a
-  malformed `heavy_run_form_v1.json` to drive the unparseable case. ***You cannot corrupt the
-  real declaration to prove your checker notices*** -- *the same shape as BE's `--lock`
-  argument: a default that reaches the production object is a falsifier that cannot be run
-  safely.*
-  (6) **MY ROUND-194 FINDING IS ACCEPTED AND CORRECTED IN BAND:** R-668's 139/48 **were
-  RELAYED FROM DA 94's PANE REPORT** and do not resolve at the artifact; the register now
-  carries the artifact's own `{141, 70}`, `n_head_is_null 211`, `39` pins. ***A pane report is
-  a seat's own sentence, and a number that travels from a pane into a register without
-  passing through the artifact is exactly the kind that cannot be resolved later.***
-  (7) **AND MY ROUND-193 ANNOTATIONS ARE VERIFIED -- "two of four citations needing it".**
-  *The split I made by READING is confirmed by the seat that issued the rule; annotating by
-  the COUNT would have put a correction on two sentences that did not need one.*
-  (8) **THE RUN:** `loaded / active / running`, `MemoryPeak` 2,957,488,128 B for the **SIXTH**
-  consecutive reading (14:56 → 15:22). **BE 66's heavy half is still blocked on the lock, so
-  the structure verifier has not yet run against a real book;** DA 95 and REV 75 remain the
-  open gates on the seal-scope seam. *Receipt ≈16:20Z.*
-  **FLAG WORDS: the pin REFUSES-BEFORE-ANY-OPEN (both cells driven); the declaration states
-  THREE-NAMED-APART; the empty book A-STATUS-NOT-AN-EXCEPTION; my 139/48 finding
-  ACCEPTED-AND-CORRECTED-IN-BAND.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,216 -> 1,224, flag_provenance 761 -> 769,
-  tasks 19; **511 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
-  seventy-first round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -606,6 +628,134 @@ flags:
                              # Caught before the sentence, which is what the
                              # count-before-you-write rule is for. The parse is the
                              # authority; the greps are not.
+  the_E2A_chain_resolves_UNBROKEN_v1_to_v7_and_v7_is_the_SOLE_head: DROVE-ALL-SEVEN-NOT-THE-TWO
+                             # R-672 names two cells (v7 passes, v2 refused). I
+                             # drove `declaration_is_the_chain_head` on ALL SEVEN
+                             # family members: v1..v6 each have EXACTLY ONE
+                             # successor naming them by the {path, sha256} pair,
+                             # and v7 has none. So the family is an UNBROKEN LINE
+                             # WITH EXACTLY ONE HEAD -- a stronger property than
+                             # the two cells, and the one that matters, because a
+                             # FORK would also pass both of them. v2
+                             # `6567a25f04d7fb89`, v7 `57c92c9e899eb691`, and the
+                             # module's own `DECL_SHA` recomputes to v7's bytes.
+  nothing_computed_changes_and_I_read_the_BLOCK_not_the_claim: BYTE-IDENTICAL-TWELVE-NAMED
+                             # `reproduction_control_inherited` canonical-JSON
+                             # sha256 `0de161a999246f01` in BOTH v2 and v7. The
+                             # block carries the TWELVE SYMBOL NAMES themselves --
+                             # AAVE ADA AVAX BNB BTC DOGE ETH FIL ICP LTC SOL XRP --
+                             # not merely `n_symbols: 12`, plus tp_s 600, tolerance
+                             # 0.05, both published pairs with their CIs, and the
+                             # source `e1a_gate_summary.csv row tp_s=600`. **AND MY
+                             # FIRST READ PRINTED ONLY THE FIRST SIX KEYS AND I WAS
+                             # ABOUT TO FILE THAT THE SYMBOLS WERE A COUNT AND NOT A
+                             # LIST** -- my truncation, not the artifact's. Caught by
+                             # printing the block in full. Twenty-seventh "suspect
+                             # the probe first", and the second one this week that
+                             # would have become a wrong routing.
+  the_twelve_and_BTC_ONLY_are_BOTH_true_and_v7_says_so_itself: CHECKED-BEFORE-FILING-A-CONTRADICTION
+                             # v7's `population` declares day admission PER SYMBOL
+                             # over the twelve in scope; v7 ALSO carries R-584
+                             # ("SCOPE IS BTC FOR NOW"). Read alone, either looks
+                             # like it contradicts R-672's "v7's BTC-only scope
+                             # governs the forward line". v7 resolves it in its own
+                             # words -- `the_twelve_are_CONTEXT_under_R584`: *the
+                             # XS-overlap set remains the declared population of the
+                             # EXPERIMENT; R-584 narrows what is READ to BTC*. So the
+                             # reproduction control's twelve are E1-A's inherited
+                             # list, the forward line is BTC, and neither is a scope
+                             # choice made by this module. **I went looking for the
+                             # contradiction before writing one down.**
+  the_older_reproduction_receipt_cites_v2_ACCURATELY_and_is_untouched: RULE-13-HOLDS
+                             # `p002_e2a_e1a_reproduction__20260906T051626Z.json`,
+                             # 6,508 B, `e76e3226b1cf603e`, mtime 05:17:41Z -- hours
+                             # before v7 existed. Its `declaration` block names
+                             # `p002_e2_a_declaration_v2.json` with sha
+                             # `6567a25f04d7fb89…`, which was the head when it ran.
+                             # Accurate for that run, NOT edited: the old receipt
+                             # stays as provenance and the correction supersedes in
+                             # band.
+  the_debt_I_routed_for_TWO_rounds_is_DISCHARGED_by_re_emission: ARTIFACT-AGREES-WITH-MY-RUN-ON-ALL-FOUR
+                             # `p003_da_nonhead_census__20260906T153821Z.json`,
+                             # 379,450 B, `92edc2dc74ba7186`, as_of 15:38:36Z --
+                             # emitted between my round-197 measurement and my
+                             # round-197 commit. It carries **281 -> 66 -> 0**, 23
+                             # families, 1 marked, the `shapes_the_tree_uses` block
+                             # (multi-hop 7, returning-function 1) and composed names
+                             # 17 with **2 reaching an open**. My own independent run
+                             # at the tip agrees on all four counts. **Every number
+                             # R-670, R-671 and R-672 quoted from a run is now IN AN
+                             # ARTIFACT and citable by digest.** Closed by the remedy
+                             # I named -- an emission -- and not by anyone conceding
+                             # a number.
+  the_census_family_itself_has_FOUR_HEADS: ROUTED-SAME-CLASS-ON-THE-INSTRUMENT-THAT-FOUND-IT
+                             # ROUTED TO DA, NOT RULED. Applying **DA's OWN chain-head
+                             # predicate** (head = no sibling names it by the {path,
+                             # sha256} pair) to the five census artifacts: exactly ONE
+                             # link exists in the whole family -- `…150939Z` names
+                             # `…144403Z` at `ccb79d352c712a24`, which I verified
+                             # recomputes -- so `…142709Z`, `…143544Z`, `…150939Z`
+                             # AND the new `…153821Z` are ALL heads. **THE INSTRUMENT
+                             # THAT CERTIFIES 23 DECLARATION FAMILIES AT EXACTLY ONE
+                             # HEAD EACH (`n_families_without_exactly_one_head: 0`) IS
+                             # EMITTED INTO A FAMILY WITH FOUR.** Its CLI offers
+                             # `--supersedes` and one member used it, so the family is
+                             # a chain in one member and a bare series in the rest:
+                             # **a reader cannot tell which, and cannot learn that
+                             # `…150939Z`'s 271 -> 62 -> 1 is superseded** -- numbers
+                             # quoted in three register entries. Exactly the defect
+                             # DA 96 just fixed in `e2_a_episodes.py`, on the
+                             # instrument that found it.
+  the_landing_gate_reaches_outside_its_directory_and_the_rows_reconcile_to_13: DRIVEN-WITH-ITS-KNOWN-BAD
+                             # `run_module` driven on paths outside `pm_research`:
+                             # `live/mm_research/e2_a_episodes.py` runs **GREEN**,
+                             # script form, "selftest OK -- 0 failure(s)"; an absent
+                             # path returns **MODULE_ABSENT** -- a STATUS, not a crash
+                             # and not a silent pass; a bare module name still resolves
+                             # in-directory. `ACTIVE` is 10 and the declared-red map is
+                             # 2 (`da_cite_audit`, `da_iter011_contract_verify`), and
+                             # **every declared known-red runs whatever the scope**, so
+                             # 10 + 1 `--also` + 2 = **13 rows -> 11 green / 2 declared
+                             # red**, which is R-672's report exactly. The row count
+                             # was reconcilable only because the known-reds are
+                             # scope-independent by construction.
+  the_139_48_reconciliation_is_arithmetic_at_the_artifact_and_only_CORROBORATED_in_git: SAID-WHICH-IS-WHICH
+                             # At `a0c8cb70b841`: `head_is_null_because
+                             # .NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION` = 141 and
+                             # `.NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY` = 70, summing
+                             # to `n_head_is_null` 211 exactly; 139+2 / 48+22 / 187+24
+                             # land on 141 / 70 / 211, and 271 - 247 = 24. **That much
+                             # is arithmetic at the artifact.** In git, between the tree
+                             # at 14:57:55Z and `c6dc6e5` (15:09:17Z, the commit before
+                             # the 15:09:45Z run), `da_nonhead_census.py` gains net +24
+                             # lines carrying a `.json"` literal and
+                             # `de_multiday_gate1_runner.py` net +3 -- the right two
+                             # files, the right order, the right sign. **MY GREP COUNTS
+                             # LINES, NOT THE CENSUS'S LITERALS, SO THIS CORROBORATES
+                             # THE 22 / 2 DECOMPOSITION AND DOES NOT CONFIRM IT** --
+                             # said plainly rather than let a rough count stand in for
+                             # the instrument's.
+  the_census_is_STABLE_when_the_tree_is_and_that_is_what_makes_it_citable: TWO-TIPS-IDENTICAL
+                             # My run at tip `3427357` and my run at tip `d2adb5d` give
+                             # IDENTICAL 281 -> 66 -> 0, composed 17 / 2, multi-hop 7,
+                             # returning-function 1, 23 families -- as they must, since
+                             # my own round-197 commit touched only `orchestrator/`.
+                             # **So the perishability I routed for two rounds is
+                             # TREE-DRIVEN, not noise:** the quantity is stable under a
+                             # stable tree, which is precisely why an emitted artifact
+                             # can be cited by digest and a pane cannot.
+  de102smoke_still_running_at_the_NINTH_identical_peak_and_BE_66_still_refused: MEASURED-15-55-01Z
+                             # Five-field read at 15:55:01Z: LoadState=loaded,
+                             # ActiveState=active, **SubState=running**, with
+                             # ExecMainStatus=0 / Result=success still reading as
+                             # defaults on a live process; InvocationID
+                             # `a8c7e41ee2d24ff8` unchanged since 15:42:51Z, so it is
+                             # the SAME run and not a relaunch; MemoryPeak
+                             # 2,957,488,128 for the **NINTH** consecutive reading;
+                             # 61 min since ExecMainStartTimestamp 14:54:00Z against
+                             # a receipt expected ~16:20Z. `/proc/locks` matched by
+                             # dev:inode still gives pid 3551079 -- the same flock --
+                             # so BE 66's heavy half is still refused, not failed.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -23388,6 +23538,97 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 198, 2026-09-06T15:58:00Z ---
+  the_E2A_chain_resolves_UNBROKEN_v1_to_v7_and_v7_is_the_SOLE_head:
+    prov: CHECKED
+    artifact: live/mm_research/declarations/p002_e2_a_declaration_v7.json
+    as_of: 2026-09-06T15:53:00Z
+    said: >-
+      imported e2_a_episodes and called declaration_is_the_chain_head on each of the seven
+      family files in numeric order, printing the recomputed digest and the successor list
+      for each. v1..v6 have exactly one successor apiece, v7 none; DECL_SHA recomputes to
+      v7's bytes. Driving the whole family is what rules out a fork, which the two cells
+      R-672 names would not.
+  nothing_computed_changes_and_I_read_the_BLOCK_not_the_claim:
+    prov: CHECKED
+    artifact: live/mm_research/declarations/p002_e2_a_declaration_v2.json
+    as_of: 2026-09-06T15:53:30Z
+    said: >-
+      canonicalised reproduction_control_inherited from v2 and v7 with sorted keys and
+      compact separators and hashed both -- sha256 0de161a999246f01 for each. Then printed
+      the block in full, which is how I found that my first read had truncated the key list
+      to six and hidden the twelve symbol names.
+  the_twelve_and_BTC_ONLY_are_BOTH_true_and_v7_says_so_itself:
+    prov: CHECKED
+    artifact: live/mm_research/declarations/p002_e2_a_declaration_v7.json
+    as_of: 2026-09-06T15:54:00Z
+    said: >-
+      read v7's population block, then searched the serialised declaration for every line
+      mentioning R-584 or a BTC-only scope. the_twelve_are_CONTEXT_under_R584 states the
+      distinction in the declaration's own words, so there is no contradiction to file.
+  the_older_reproduction_receipt_cites_v2_ACCURATELY_and_is_untouched:
+    prov: CHECKED
+    artifact: data/mm_hf/e1/p002_e2a_e1a_reproduction__20260906T051626Z.json
+    as_of: 2026-09-06T15:54:00Z
+    said: >-
+      hashed the receipt (6508 B, e76e3226b1cf603e), read its mtime (05:17:41Z, hours before
+      v7 existed) and extracted every declaration filename it mentions -- v2 only, with sha
+      6567a25f04d7fb89, which was the head at that time.
+  the_debt_I_routed_for_TWO_rounds_is_DISCHARGED_by_re_emission:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T153821Z.json
+    as_of: 2026-09-06T15:57:00Z
+    said: >-
+      hashed the re-emitted census (379,450 B, 92edc2dc74ba7186, as_of 15:38:36Z), read its
+      four counts, its shapes block and its composed-name counts, and compared each against
+      my own run at the same tip. All four agree.
+  the_census_family_itself_has_FOUR_HEADS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T150939Z.json
+    as_of: 2026-09-06T15:58:00Z
+    said: >-
+      hashed all five census artifacts, read each one's supersedes block, and applied the
+      same predicate DA's declaration_is_the_chain_head uses -- a member is the head iff no
+      sibling names it by the {path, sha256} pair. Exactly one link exists and its digest
+      recomputes; four members are heads. The census's own
+      n_families_without_exactly_one_head applies to the declaration families it scans, not
+      to the family it is emitted into.
+  the_landing_gate_reaches_outside_its_directory_and_the_rows_reconcile_to_13:
+    prov: CHECKED
+    artifact: live/pm_research/da_land_gate.py
+    as_of: 2026-09-06T15:55:00Z
+    said: >-
+      called run_module directly on an out-of-directory path, on an absent path and on a
+      bare in-directory name, and read the status of each; then counted ACTIVE and the
+      declared-red map and added them to reconcile the 13 rows behind R-672's 11 green / 2
+      declared red.
+  the_139_48_reconciliation_is_arithmetic_at_the_artifact_and_only_CORROBORATED_in_git:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T150939Z.json
+    as_of: 2026-09-06T15:56:00Z
+    said: >-
+      walked the artifact for the values 141, 70 and 211 to find which fields carry them and
+      checked they sum; then diffed the two source files between the tree at 14:57:55Z and
+      c6dc6e5 counting added lines that carry a .json literal. The git half is a line count
+      and is recorded as corroboration, not confirmation.
+  the_census_is_STABLE_when_the_tree_is_and_that_is_what_makes_it_citable:
+    prov: CHECKED
+    artifact: live/pm_research/da_nonhead_census.py
+    as_of: 2026-09-06T15:57:00Z
+    said: >-
+      ran the census to my scratchpad at tip d2adb5d and diffed every count against my
+      round-197 run at tip 3427357. Identical on all six quantities, which is the prediction
+      that follows from my own commit having touched only orchestrator/.
+  de102smoke_still_running_at_the_NINTH_identical_peak_and_BE_66_still_refused:
+    prov: CHECKED
+    artifact: /run/user/1001/systemd/transient/de102smoke.service
+    as_of: 2026-09-06T15:55:01Z
+    said: >-
+      the artifact is the transient unit file that pins WHAT was launched; the five-field
+      outcome reading is a live read at the as_of, copied at once while LoadState=loaded,
+      and is re-checkable only while InvocationID a8c7e41ee2d24ff8 is the live one -- it is
+      unchanged from 15:42:51Z, so this is the same run. Lock holder read from /proc/locks
+      by matching the lock file's dev:inode.
   # --- MEM round 197, 2026-09-06T15:45:00Z ---
   the_scope_map_carries_THREE_refusals_not_two:
     prov: CHECKED
