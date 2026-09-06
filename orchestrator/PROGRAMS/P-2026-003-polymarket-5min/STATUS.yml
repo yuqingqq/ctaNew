@@ -2941,6 +2941,22 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  MY_Q_ROW_LANDED_IN_ANOTHER_SEATS_COMMIT: RULE_21S_THIRD_LANDING_FORM
+                             # CHECKED 2026-09-06T14:41Z, at landing. **My round-187 commit staged
+                             # THREE files, not four: `COORDINATION.md` was already identical to
+                             # HEAD.** *The row was written -- and `git log -S 'Q-MEM-175'` names
+                             # the commit that carries it: `171f292` (R-660), the COORDINATOR'S own
+                             # commit, which included the register by pathspec while my line sat
+                             # uncommitted in the shared tree.*
+                             # **Q-MEM-175 is in HEAD exactly once and the working tree matches
+                             # HEAD; nothing is lost or duplicated.**
+                             # ***THE THIRD FORM OF RULE 21's LANDING HAZARD, and the mirror of
+                             # R-635(A)'s note: (1) a refused push leaves a STRANDED commit;
+                             # (2) two seats on one index REFUSE before a commit exists; (3) another
+                             # seat's PATHSPEC COMMIT CARRIES MY UNCOMMITTED LINES in a shared
+                             # file.*** *The first two are visible as errors; the third is silent
+                             # and looks like success -- the only way to see it is to notice the
+                             # staged COUNT and then ask git WHICH commit holds the line.*
   THE_COVERAGE_ARITHMETIC_REPRODUCES_DIGIT_FOR_DIGIT: 248441_OVER_266592
                              # CHECKED 2026-09-06T14:34:57Z at BE's 09-05 receipt. **`asm.n_shared_
                              # keys 248,441` over `UNCOVERED_GENERATIONS.n_reference_generations
@@ -22232,6 +22248,19 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  MY_Q_ROW_LANDED_IN_ANOTHER_SEATS_COMMIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T14:41:00Z
+    said: >-
+      my round-187 commit staged three files rather than four because COORDINATION.md was
+      already identical to HEAD; git log -S names 171f292, the coordinator's own commit, as
+      the one carrying Q-MEM-175, which it included by pathspec while my line sat
+      uncommitted in the shared tree. The row is in HEAD exactly once and the working tree
+      matches HEAD. This is the third form of rule 21's landing hazard, after the stranded
+      commit and the index collision, and the only silent one: it looks like success, and
+      the way to see it is to notice the staged count and ask git which commit holds the
+      line.
   # --- MEM round 187, 2026-09-06T14:34:57Z ------------------------------
   THE_COVERAGE_ARITHMETIC_REPRODUCES_DIGIT_FOR_DIGIT:
     prov: CHECKED

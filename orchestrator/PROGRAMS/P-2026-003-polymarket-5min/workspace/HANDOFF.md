@@ -11,6 +11,20 @@ Economics: `RESULTS.md` §0.
 landed-and-unswept. State only — MEM writes no result. No sealed value read, quoted or
 inferred.**
 
+### AT LANDING: my Q row landed inside another seat's commit — rule 21's third form
+
+**My round-187 commit staged three files, not four:** `COORDINATION.md` was already
+identical to HEAD. *The row was written, and `git log -S 'Q-MEM-175'` names the commit that
+carries it — **`171f292` (R-660), the coordinator's own commit**, which included the
+register by pathspec while my line sat uncommitted in the shared tree.* **Q-MEM-175 is in
+HEAD exactly once and the working tree matches HEAD; nothing is lost or duplicated.**
+
+***The third form of rule 21's landing hazard:*** (1) a refused push leaves a **stranded**
+commit; (2) two seats on one index **refuse** before a commit exists; (3) **another seat's
+pathspec commit carries my uncommitted lines** in a shared file. *The first two are visible
+as errors; the third is silent and looks like success — the way to see it is to notice the
+staged **count** and then ask git **which** commit holds the line.*
+
 ### My routed note is closed at the artifact
 
 *At rounds 174 and 182 I recorded that `wrapper_measured` and `peak_is_censored` lived in
