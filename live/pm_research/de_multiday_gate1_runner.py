@@ -47,14 +47,14 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 100
+EXPECTED_CHECKS = 115
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
 #: stays as provenance (rule 13).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v2.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v3.json"
 SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v1.json")
+                        "de_multiday_gate1_params_v2.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -65,7 +65,7 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 23
+DAY_PATH_CHECKS = 38
 
 
 class RunnerRefused(RuntimeError):
@@ -465,6 +465,35 @@ def ruled_day_set() -> list:
     ).get("days", []))
 
 
+def assert_fixture_day_lock(day: str, fixture: bool, *,
+                            what: str = "run") -> dict:
+    """FIXTURE-OR-REAL, DECIDED ON THE DAY. One implementation.
+
+    It existed once, inside `resolve_draws`, and the `--day` path built one
+    round later went around it -- the THIRD instance of one class in three
+    rounds (DE 77(d): the fixture run went around `resolve_draws`; R-577:
+    `may_run_day` hardened and unwired; the reviewer's §1.4: the CLI goes
+    around both). A rule with one call site is a rule the next caller will
+    not meet, so this is a function and every entry point calls it."""
+    ruled = ruled_day_set()
+    in_ruled = day in ruled
+    if fixture and in_ruled:
+        raise RunnerRefused(
+            f"REFUSED: a FIXTURE {what} was claimed for {day}, which IS in "
+            f"the ruled day set {ruled}. A fixture run on a ruled day is "
+            f"not a fixture run, and only its author would know -- and "
+            f"once a real {day} artifact exists, a synthetic one carrying "
+            f"the same `day` is exactly the collision this forbids.")
+    if not fixture and not in_ruled:
+        raise RunnerRefused(
+            f"REFUSED: a REAL {what} was claimed for {day}, which is NOT "
+            f"in the ruled day set {ruled}. The ruled set is the "
+            f"population; a day outside it is a day chosen after the fact.")
+    return {"day": day, "fixture": fixture, "in_ruled_day_set": in_ruled,
+            "ruled_day_set_read_from": PARAMS_REL,
+            "decided_on_the_day_not_the_callers_flag": True}
+
+
 def resolve_draws(params: dict, *, day: str, arm: str, fixture: bool,
                   supplied: dict | None = None, **kw) -> dict:
     """GENERATED on a ruled day, SUPPLIED only for a fixture -- and the
@@ -480,18 +509,8 @@ def resolve_draws(params: dict, *, day: str, arm: str, fixture: bool,
     # fixture run does exactly that, replacing `days` with FIXTURE-1..3. A
     # lock read from the object the caller controls is the caller's word
     # again, which is the whole defect this is closing.
-    in_ruled = day in ruled_day_set()
-    if fixture and in_ruled:
-        raise RunnerRefused(
-            f"REFUSED: fixture draws were claimed for {day}, which IS in "
-            f"the ruled day set {ruled_day_set()}. A fixture run on a "
-            f"ruled day is not a fixture run, and only its author would "
-            f"know.")
-    if not fixture and not in_ruled:
-        raise RunnerRefused(
-            f"REFUSED: a real-day run was claimed for {day}, which is NOT "
-            f"in the ruled day set. The ruled set is the population; a day "
-            f"outside it is a day chosen after the fact.")
+    lock = assert_fixture_day_lock(day, fixture, what="draw set")
+    in_ruled = lock["in_ruled_day_set"]
     if not fixture:
         if supplied is not None:
             raise RunnerRefused(
@@ -1185,8 +1204,14 @@ DAY_STAGES = (
                   "the pinned models and thetas, BE's cascade module. The "
                   "book is READ ONCE here as bytes for its digest and the "
                   "buffer is handed to S1, never read twice (BE's B-1)"),
-    ("S1_load", "reference + asm + rows. THIS IS THE PEAK of the day path: "
-                "everything after it is derived and bounded"),
+    ("S1_load", "reference + asm + rows. THE PEAK OF THE DAY PATH WHEN "
+                "THE BOOK DOMINATES -- which is the real-day regime (BE "
+                "measured a day's reference at 2.008 GB) and is NOT true "
+                "on a small fixture: on the synthetic book, measured, the "
+                "peak is S4_null, because the draw loop's fixed cost is "
+                "larger than a few hundred KB of book. The claim is "
+                "CONDITIONAL, the condition is stated, and it is ASSERTED "
+                "on a real day -- where the 8 GiB ceiling rests on it"),
     ("S2_population", "adds one score float per generation per arm, twice. "
                       "asm's gen_scores are ALREADY resident from S1; the "
                       "arm stream is a view over `rows`"),
@@ -1261,6 +1286,77 @@ REAL_DAY_PEAK_RSS_GB_CEILING = 8.0
 def _peak_rss_mb() -> float:
     import resource as _r
     return _r.getrusage(_r.RUSAGE_SELF).ru_maxrss / 1024.0
+
+
+def _current_rss_mb() -> float:
+    """CURRENT resident size, which FALLS. `ru_maxrss` is a process
+    highwater and is non-decreasing BY CONSTRUCTION, so a series of it can
+    never show which stage was the peak -- it can only show the last stage
+    that ever allocated (reviewer §4.3: declared peak S1_load, measured
+    argmax S4_null, and no predicate anywhere asserting either)."""
+    try:
+        pages = int(open("/proc/self/statm").read().split()[1])
+    except (OSError, IndexError, ValueError):
+        return float("nan")
+    import os as _os
+    return pages * _os.sysconf("SC_PAGE_SIZE") / (1024.0 * 1024.0)
+
+
+def peak_stage_predicate(stages: dict, *, declared: str = "S1_load") -> dict:
+    """WHICH STAGE WAS THE PEAK -- computed from the falling instrument.
+
+    `DAY_STAGES` declares S1_load "THIS IS THE PEAK of the day path", and
+    the 8 GiB real-day ceiling rests on that shape. It was prose beside a
+    highwater series; it is a predicate now."""
+    cur = {k: v.get("rss_mb_current") for k, v in stages.items()
+           if isinstance(v.get("rss_mb_current"), float)}
+    if not cur:
+        return {"computable": False,
+                "why": "no current-RSS samples were recorded"}
+    arg = max(cur, key=lambda k: cur[k])
+    hi = {k: v.get("peak_rss_mb_highwater") for k, v in stages.items()}
+    return {
+        "computable": True,
+        "declared_peak_stage": declared,
+        "measured_peak_stage": arg,
+        "declared_stage_is_the_measured_peak": arg == declared,
+        "current_rss_mb_by_stage": cur,
+        "highwater_by_stage": hi,
+        "highwater_is_non_decreasing_BY_CONSTRUCTION": True,
+        "why_two_instruments": "the highwater bounds the process and can "
+                               "never fall; the current-RSS series can, so "
+                               "it is the only one that can locate a peak",
+        "binds_on_a_real_day_only": (
+            "on a real day the book dominates (BE: 2.008 GB reference) and "
+            "S1 being the peak is what the 8 GiB ceiling rests on, so a "
+            "disagreement REFUSES the day. On a fixture the book is a few "
+            "hundred KB and the draw loop's fixed cost is larger, so the "
+            "measured peak is S4_null -- recorded, not refused, and design "
+            "v9 stated the claim flatly where it should have stated the "
+            "condition"),
+    }
+
+
+def assert_peak_stage(pred: dict, *, fixture: bool, day: str) -> dict:
+    """The declared shape is a PREDICATE on a real day.
+
+    If the peak is not where the plan says, the basis of the 8 GiB ceiling
+    is wrong and the day stops -- the cap is never raised (R-174)."""
+    if not pred.get("computable"):
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: the peak stage is not computable, so the "
+            f"memory plan's central claim cannot be checked at all.")
+    if not fixture and not pred["declared_stage_is_the_measured_peak"]:
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: the memory plan declares "
+            f"{pred['declared_peak_stage']} as the peak and the measured "
+            f"peak is {pred['measured_peak_stage']} "
+            f"({pred['current_rss_mb_by_stage']}). The 8 GiB ceiling rests "
+            f"on that shape; if the shape is wrong the ceiling is not "
+            f"established and the day refuses.")
+    return {"asserted": not fixture, "agrees":
+            pred["declared_stage_is_the_measured_peak"],
+            "recorded_not_refused_because_fixture": fixture}
 
 
 def tape_artifacts_opened(proof: dict) -> list:
@@ -1457,24 +1553,130 @@ def _lock_fd_held(lock_path: str) -> list:
     return sorted(out)
 
 
+def _ancestor_pids(limit: int = 64) -> list:
+    """This pid and its ancestors. The flock WRAPPER holds the lock, not
+    the python child, so a bare "is my pid the holder" test would reject a
+    legitimately wrapped run (the reviewer's §2.3, measured: holder pid
+    2916372, a `flock` process)."""
+    import os as _os
+    out, pid = [], _os.getpid()
+    for _ in range(limit):
+        if pid <= 0 or pid in out:
+            break
+        out.append(pid)
+        try:
+            txt = open(f"/proc/{pid}/status").read()
+        except OSError:
+            break
+        nxt = 0
+        for ln in txt.splitlines():
+            if ln.startswith("PPid:"):
+                nxt = int(ln.split()[1])
+                break
+        pid = nxt
+    return out
+
+
+def _flock_holders(lock_path: str) -> dict:
+    """FLOCK entries on the lock's INODE, from /proc/locks -- the
+    authoritative surface. Returns the holder pids and whether any of them
+    is this process or an ancestor of it."""
+    import os as _os
+    try:
+        st = _os.stat(lock_path)
+    except OSError:
+        return {"readable": False, "pids": [], "by_self_or_ancestor": False}
+    ino = st.st_ino
+    pids, ok_read = [], True
+    try:
+        for ln in open("/proc/locks"):
+            f = ln.split()
+            # e.g. "6: FLOCK ADVISORY WRITE 2916372 103:01:1053378 0 EOF"
+            if len(f) < 6 or f[1] != "FLOCK":
+                continue
+            try:
+                if int(f[5].rsplit(":", 1)[-1]) != ino:
+                    continue
+                pids.append(int(f[4]))
+            except (ValueError, IndexError):
+                continue
+    except OSError:
+        ok_read = False
+    anc = set(_ancestor_pids())
+    return {"readable": ok_read, "inode": ino, "pids": sorted(set(pids)),
+            "by_self_or_ancestor": any(p in anc for p in pids),
+            "ancestors_considered": sorted(anc)}
+
+
+def _fresh_probe_fails(lock_path: str) -> dict:
+    """A FRESH-FD LOCK_EX|LOCK_NB attempt. If it FAILS, somebody holds the
+    flock. If it succeeds we took it by accident and release it at once --
+    and its success proves nobody held it."""
+    import fcntl as _fc
+    try:
+        fd = __import__("os").open(lock_path, __import__("os").O_RDWR)
+    except OSError as exc:
+        return {"probed": False, "why": f"cannot open the lock: {exc}",
+                "someone_holds_it": None}
+    try:
+        try:
+            _fc.flock(fd, _fc.LOCK_EX | _fc.LOCK_NB)
+        except OSError:
+            return {"probed": True, "someone_holds_it": True}
+        _fc.flock(fd, _fc.LOCK_UN)
+        return {"probed": True, "someone_holds_it": False,
+                "acquired_and_released_immediately": True}
+    finally:
+        __import__("os").close(fd)
+
+
 def wrapper_observed(*, lock_path: str = HEAVY_RUN_LOCK) -> dict:
-    """WHAT ACTUALLY RAN, read from the process, not from the params."""
+    """WHAT ACTUALLY RAN -- and it tests the LOCK, not an fd.
+
+    THE DEFECT THIS REPLACES (reviewer §2.3, reproduced in two lines):
+    `open(lock_path)` with no `flock` at all made the old instrument report
+    `heavy_run_lock_held: True`, and `assert_rule20` then ADMITTED a
+    1-hour / 6.84 GiB run. Worse, at the moment it was driven ANOTHER
+    process genuinely held the flock -- so the instrument built to expose
+    the 05:54Z condition would have certified a process running beside it.
+
+    THE TEST IS NOW A CONJUNCTION OF TWO INDEPENDENT SURFACES:
+      * a FRESH-FD `LOCK_EX|LOCK_NB` that FAILS -- somebody holds it; and
+      * a `/proc/locks` FLOCK entry on that INODE whose pid is this
+        process OR AN ANCESTOR -- and that somebody is us.
+    Either alone is insufficient: the probe cannot say WHO holds it, and
+    the inode test alone would pass if a stale entry named an ancestor
+    that had since released. The inherited fd is kept as corroboration and
+    is no longer the test."""
     import os as _os
     try:
         cg = open("/proc/self/cgroup").read().strip().rsplit("/", 1)[-1]
     except OSError:
         cg = None
     fds = _lock_fd_held(lock_path)
+    probe = _fresh_probe_fails(lock_path)
+    holders = _flock_holders(lock_path)
+    held = bool(probe.get("someone_holds_it")) and holders[
+        "by_self_or_ancestor"]
     return {
-        "heavy_run_lock_held": bool(fds),
+        "heavy_run_lock_held": held,
+        "lock_is_held_by_someone": probe.get("someone_holds_it"),
+        "flock_holder_pids": holders["pids"],
+        "held_by_self_or_ancestor": holders["by_self_or_ancestor"],
+        "ancestor_pids": holders["ancestors_considered"],
+        "fresh_probe": probe,
         "lock_fds": fds,
+        "lock_fd_is_corroboration_not_the_test": (
+            "an fd on the lock file says the file is OPEN. Two lines of "
+            "`open()` with no flock forged the old field, and a 1-hour / "
+            "6.84 GiB run certified itself (reviewer §2.3)"),
         "lock_path": lock_path,
         "cgroup_leaf": cg,
         "in_a_transient_scope": bool(cg and cg.endswith(".scope")),
-        "how": "the lock's fd is inherited through `flock -n <lock> "
-               "systemd-run --scope`; this is READ FROM /proc/self/fd, so "
-               "the field is a measurement and not the declared wrapper "
-               "string",
+        "how": "a fresh-fd LOCK_EX|LOCK_NB that FAILS, AND a /proc/locks "
+               "FLOCK entry on the lock's inode whose pid is this process "
+               "or an ancestor -- the holder is the `flock` wrapper, not "
+               "the python child",
         "declared_wrapper_is_not_evidence": (
             "params carries a `wrapper` string; a string in a file cannot "
             "say what launched this process (R-575(C))"),
@@ -1520,8 +1722,14 @@ def run_day(day: str, book_path, *, params: dict, module=None,
 
     def _mark(name):
         stages[name] = {"peak_rss_mb_highwater": _peak_rss_mb(),
+                        "rss_mb_current": _current_rss_mb(),
                         "elapsed_s": round(time.time() - t_start, 3)}
 
+    # THE FIXTURE/REAL LOCK, ON THE DAY PATH ITSELF (reviewer §1.4).
+    # `--synthetic-day 2026-09-03` used to emit a SEALED artifact stamped
+    # with the smoke day from a synthetic book. Disclosed, but exactly the
+    # collision the lock was built to forbid.
+    day_lock = assert_fixture_day_lock(day, fixture, what="day run")
     obs = wrapper_observed()
     if not fixture and not obs["heavy_run_lock_held"]:
         raise RunnerRefused(
@@ -1628,11 +1836,22 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     sealed = [seal(r, n_days_complete, params["G"]) for r in results]
     for a in sealed:
         assert_no_economic_leak(a, n_days_complete, params["G"])
+    # THE CONSUMER FALSIFIER MEETS A REAL EMISSION (reviewer §1.4). It had
+    # three call sites, all in the battery. Each emitted result is checked
+    # in BOTH states -- the artifact as sealed here, and the same result
+    # unsealed -- so the symmetry is a property of what was written, not of
+    # a hand-built pair.
+    seal_symmetry = [
+        assert_seal_layout_symmetric(seal(r, 0, params["G"]),
+                                     seal(r, params["G"], params["G"]))
+        for r in results]
     _mark("S5_seal")
 
     wall = time.time() - t_start
     peak = max(v["peak_rss_mb_highwater"] for v in stages.values())
     r20 = assert_rule20(obs, wall_s=wall, peak_rss_mb=peak, day=day)
+    peak_pred = peak_stage_predicate(stages)
+    peak_shape = assert_peak_stage(peak_pred, fixture=fixture, day=day)
     budget = (peak_rss_mb_budget if peak_rss_mb_budget is not None
               else (FIXTURE_DAY_PEAK_RSS_MB_BUDGET if fixture else
                     REAL_DAY_PEAK_RSS_GB_CEILING * 1024.0))
@@ -1653,6 +1872,8 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         "draw_pool_set_equality_checked": pool_equal,
         "decision_populations": pops,
         "per_day_sealed_artifacts": sealed,
+        "seal_layout_symmetry_checked_on_the_emitted_results": seal_symmetry,
+        "fixture_day_lock": day_lock,
         "n_days_complete": n_days_complete, "G": params["G"],
         "memory_plan": {
             "stages": [{"stage": k, "holds": v} for k, v in DAY_STAGES],
@@ -1660,6 +1881,8 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             "peak_rss_mb": peak,
             "budget_mb": budget,
             "within_budget": peak <= budget,
+            "peak_stage": peak_pred,
+            "peak_stage_assertion": peak_shape,
             "index_splits": INDEX_SPLITS_NEEDED_BY_DAY,
         },
         "wrapper": {**obs, "rule20": r20},
@@ -2221,7 +2444,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"fixture run opens {len(_seen)} paths, ZERO of them under "
            f"`data/`. It reads only its own module source and the "
            f"committed parameter file, so it runs from a shell worktree")
-        ok(any(x.endswith("de_multiday_gate1_params_v2.json")
+        ok(any(x.endswith("de_multiday_gate1_params_v3.json")
                for x in _seen),
            "and the instrument is not vacuous -- it DID observe the "
            "parameter file being read, so a zero above is a measurement "
@@ -2523,7 +2746,7 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
         # ================= DE 78: THE REAL-DAY PATH, ON A SYNTHETIC DAY ======
         import tempfile as _tfd
         _DAYP = dict(live)
-        _DAY = "2026-09-03"
+        _DAY = "FIXTURE-DAY-1"          # NOT a ruled day: the lock now forbids it
 
         def _mkday(**kw):
             _d = _tfd.mkdtemp(prefix="de78_")
@@ -2696,6 +2919,42 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
                 "not 'nothing matters'; it is that the book is the only thing "
                 "that does", "no entry for")
 
+        # ---- reviewer §1.4: the lock is ON THE DAY PATH, not beside it -----
+        _ruled_day = live["days"][0]
+        refuses(lambda: run_day(_ruled_day, _made["book_path"], params=_DAYP,
+                                fixture=True),
+                f"REVIEWER §1.4, THE FINDING ITSELF: `--synthetic-day "
+                f"{_ruled_day}` used to emit a SEALED artifact stamped with "
+                f"THE SMOKE DAY from a synthetic book. run_day now calls the "
+                f"SAME lock resolve_draws calls -- decided on the DAY, not on "
+                f"the caller's flag -- and REFUSES. Third instance of one "
+                f"class in three rounds; it is one function with three call "
+                f"sites now", "IS in the ruled day set")
+        refuses(lambda: run_day("FIXTURE-DAY-9", _made["book_path"],
+                                params=_DAYP, fixture=False),
+                "AND THE OTHER DIRECTION ON THE DAY PATH: a REAL run claimed "
+                "for a day outside the ruled set REFUSES -- the lock is "
+                "symmetric here as it is in resolve_draws", "is NOT in the "
+                "ruled day set")
+        ok(_open["fixture_day_lock"]["decided_on_the_day_not_the_callers_flag"]
+           is True
+           and _open["fixture_day_lock"]["in_ruled_day_set"] is False
+           and _open["fixture_day_lock"]["ruled_day_set_read_from"]
+           == PARAMS_REL,
+           f"and the ADMITTED fixture run records the lock it passed, naming "
+           f"the committed file it read the ruled set from -- so a reader can "
+           f"tell a fixture that was CHECKED from one that was merely labelled")
+        _sym = _open["seal_layout_symmetry_checked_on_the_emitted_results"]
+        ok(len(_sym) == len(_open["per_day_sealed_artifacts"])
+           and all(x["symmetric"] is True for x in _sym)
+           and all(x["sealed_reads"]["readable"] is True
+                   and x["unsealed_reads"]["readable"] is True for x in _sym),
+           f"AND THE CONSUMER FALSIFIER MEETS A REAL EMISSION: "
+           f"assert_seal_layout_symmetric is wired onto every emitted result, "
+           f"in BOTH states ({len(_sym)} of them). It had three call sites and "
+           f"all three were in this battery -- mitigated in fact, unwired in "
+           f"truth")
+
         # ---- rule 20 / R-575(C), driven both ways --------------------------
         _obs_now = wrapper_observed()
         ok(set(_obs_now) >= {"heavy_run_lock_held", "lock_fds", "cgroup_leaf"}
@@ -2735,6 +2994,111 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"{_open['memory_plan']['peak_rss_mb']:.0f} MB against the declared "
            f"{FIXTURE_DAY_PEAK_RSS_MB_BUDGET:.0f} MB, with a high-water "
            f"recorded at each of the {len(DAY_STAGES)} stages")
+
+        # ---- reviewer §2.3: the instrument tests the LOCK, not an fd -------
+        import tempfile as _tfl
+        with _tfl.TemporaryDirectory() as _ld:
+            _plock = str(Path(_ld) / "probe.lock")
+            Path(_plock).write_text("")
+            _clean = wrapper_observed(lock_path=_plock)
+            ok(_clean["heavy_run_lock_held"] is False
+               and _clean["lock_is_held_by_someone"] is False
+               and _clean["flock_holder_pids"] == [],
+               "R-575(C) BASELINE: with nobody holding the lock the fresh-fd "
+               "LOCK_EX|LOCK_NB probe SUCCEEDS, is released at once, and the "
+               "field reads False")
+            _g = open(_plock)                       # the reviewer's forge
+            try:
+                _forged = wrapper_observed(lock_path=_plock)
+                ok(_forged["lock_fds"] == [_g.fileno()]
+                   and _forged["heavy_run_lock_held"] is False,
+                   f"REVIEWER §2.3, THE FORGE, DRIVEN: `open(lock)` with NO "
+                   f"flock puts fd {_g.fileno()} on the lock file and the OLD "
+                   f"instrument reported `heavy_run_lock_held: True` -- two "
+                   f"lines certified a 1-hour, 6.84 GiB run. The fd is now "
+                   f"CORROBORATION and the test is the flock: this reads "
+                   f"False with the fd present")
+            finally:
+                _g.close()
+            _h = open("/etc/hostname")
+            try:
+                _unrel = wrapper_observed(lock_path=_plock)
+                ok(_unrel["heavy_run_lock_held"] is False,
+                   "and an UNRELATED open fd does not pass either -- the "
+                   "instrument is keyed to the lock's own inode, not to a "
+                   "descriptor number")
+            finally:
+                _h.close()
+            import fcntl as _fc
+            _fd = __import__("os").open(_plock, __import__("os").O_RDWR)
+            try:
+                _fc.flock(_fd, _fc.LOCK_EX | _fc.LOCK_NB)
+                _held = wrapper_observed(lock_path=_plock)
+                ok(_held["heavy_run_lock_held"] is True
+                   and _held["lock_is_held_by_someone"] is True
+                   and _held["held_by_self_or_ancestor"] is True
+                   and __import__("os").getpid() in _held["flock_holder_pids"],
+                   f"POSITIVE CONTROL, AND IT ADMITS: with a REAL flock held "
+                   f"the probe fails, /proc/locks names the holder "
+                   f"{_held['flock_holder_pids']}, and it is this process -- "
+                   f"both surfaces agree. The ancestor walk exists because a "
+                   f"wrapped run's holder is the `flock` PARENT, not the "
+                   f"python child")
+            finally:
+                _fc.flock(_fd, _fc.LOCK_UN)
+                __import__("os").close(_fd)
+            _after = wrapper_observed(lock_path=_plock)
+            ok(_after["heavy_run_lock_held"] is False,
+               "and it goes back to False once the flock is released -- the "
+               "field tracks the lock's state and not a fact about startup")
+
+        # ---- reviewer §4.3: the peak stage is a PREDICATE -------------------
+        _ps = _open["memory_plan"]["peak_stage"]
+        ok(_ps["computable"] is True
+           and set(_ps["current_rss_mb_by_stage"]) == {k for k, _ in DAY_STAGES}
+           and _ps["declared_peak_stage"] == "S1_load",
+           f"REVIEWER §4.3: the peak stage is COMPUTED over all "
+           f"{len(DAY_STAGES)} stages from a CURRENT-RSS series that can FALL "
+           f"-- measured peak {_ps['measured_peak_stage']}, declared "
+           f"{_ps['declared_peak_stage']}, agree: "
+           f"{_ps['declared_stage_is_the_measured_peak']}")
+        _hw = [_open["memory_plan"]["observed"][k]["peak_rss_mb_highwater"]
+               for k, _ in DAY_STAGES]
+        ok(all(b >= a for a, b in zip(_hw, _hw[1:])),
+           f"AND THE OLD INSTRUMENT'S DEFECT IS SHOWN RATHER THAN ASSERTED: "
+           f"the highwater series {[round(x, 1) for x in _hw]} is "
+           f"non-decreasing BY CONSTRUCTION, so it could never have located a "
+           f"peak anywhere but the last stage that allocated")
+        _shape = _open["memory_plan"]["peak_stage_assertion"]
+        ok(_shape["asserted"] is False
+           and _shape["agrees"] is False
+           and _ps["measured_peak_stage"] == "S4_null",
+           f"AND A CORRECTION TO MY OWN DESIGN v9, MEASURED: it declared "
+           f"S1_load 'THIS IS THE PEAK' flatly, and on the only book I can "
+           f"measure the peak is {_ps['measured_peak_stage']} -- the "
+           f"fixture's book is a few hundred KB and the draw loop's fixed "
+           f"cost is larger. The claim is CONDITIONAL on the book "
+           f"dominating, which is the real-day regime, and it is recorded "
+           f"rather than refused here")
+        _bad_pred = dict(_ps); _bad_pred["declared_stage_is_the_measured_peak"] = False
+        refuses(lambda: assert_peak_stage(_bad_pred, fixture=False,
+                                          day="2026-09-03"),
+                "AND ON A REAL DAY IT REFUSES: a measured peak that is not "
+                "where the plan says it is means the 8 GiB ceiling's basis "
+                "is wrong, so the DAY stops -- the cap is never raised "
+                "(R-174)", "the memory plan declares")
+        _ok_pred = dict(_ps); _ok_pred["declared_stage_is_the_measured_peak"] = True
+        ok(assert_peak_stage(_ok_pred, fixture=False,
+                             day="2026-09-03")["asserted"] is True,
+           "and a real day whose peak IS where the plan says it is admits, "
+           "marked asserted -- both directions, so the predicate is one "
+           "that can fail and one that can pass")
+        refuses(lambda: assert_peak_stage({"computable": False},
+                                          fixture=True, day="X"),
+                "and an UNCOMPUTABLE peak refuses in either mode -- a plan "
+                "whose central claim cannot be checked at all is worse "
+                "than one that disagrees", "not computable")
+
 
         # ---- a real day is refused for the reasons it must be --------------
         refuses(lambda: run_day("2026-09-04", _made["book_path"],
@@ -2948,9 +3312,25 @@ def _main_day(a) -> int:
             "REFUSED: a REAL day run whose producing code is not the bytes "
             "HEAD holds. Commit the runner first; the artifact must be able "
             "to name the commit that produced it (DE 78 ruling).")
+    # (3) reviewer §3.4: `offline=fixture`, not `offline=True`. A REAL
+    # day's receipt used to say `battery: PASS` having skipped all four R6
+    # controls and ALL 23 day-path checks -- honestly disclosed, but the
+    # field a consumer resolves on a real-day artifact was a pass that
+    # excluded the path being run. The offline choice is right for a
+    # fixture, where it preserves the data-free property; a real day is
+    # already reading the ledger and has no such justification.
     LAST_BATTERY.clear()
-    selftest(quiet=True, offline=True)
+    selftest(quiet=True, offline=fixture)
     payload["battery"] = dict(LAST_BATTERY)
+    payload["battery_scope"] = {
+        "offline": fixture,
+        "why": ("a FIXTURE run skips the checks that read `data/`, because "
+                "that is what makes it a fixture" if fixture else
+                "a REAL day runs the FULL battery -- the four R6 controls "
+                "and all 23 day-path checks -- because the run is already "
+                "reading the ledger (reviewer S3.4)"),
+        "day_path_checks_declared": DAY_PATH_CHECKS,
+    }
     payload["data_root"] = DR.require_canonical(
         f"the {'fixture' if fixture else 'sealed'} day run", fixture=False)
     a.output.parent.mkdir(parents=True, exist_ok=True)

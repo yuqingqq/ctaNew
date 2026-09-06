@@ -43,9 +43,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 9
+VERSION = 10
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 71
+EXPECTED_CHECKS = 76
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -72,11 +72,15 @@ V8_DECLARATION = ("p003_de_multiday_gate1_design_v8__20260906T055810Z"
                   ".json",
                   "139052dfa87db3fe11f24ec9c25906825f84bf03d4b324439b8745"
                   "2a55d32555")
+V9_DECLARATION = ("p003_de_multiday_gate1_design_v9__20260906T062115Z"
+                  ".json",
+                  "fe4b0db4ddfdcc3a942fef9a35cd702646a9c020704ca81b5f28ff"
+                  "175f7aff2e")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
-                    V7_DECLARATION, V8_DECLARATION)
+                    V7_DECLARATION, V8_DECLARATION, V9_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -1188,6 +1192,28 @@ def declaration() -> dict:
             },
             "day_run_stages": [{"stage": k, "holds": v}
                                for k, v in RUNNER.DAY_STAGES],
+            "peak_stage_is_a_PREDICATE_now": {
+                "reviewer": "REVIEW_DAY_PATH_DE78 S4.3",
+                "the_defect": "the per-stage instrument was `ru_maxrss`, a "
+                              "process highwater that is non-decreasing BY "
+                              "CONSTRUCTION, so its series could never "
+                              "locate a peak anywhere but the last stage "
+                              "that allocated. The plan's central claim "
+                              "sat beside it as prose",
+                "now": "a CURRENT-RSS series from /proc/self/statm, which "
+                       "falls, plus `peak_stage_predicate()` computing the "
+                       "argmax and `assert_peak_stage()` REFUSING a real "
+                       "day whose peak is not where the plan says",
+                "AND_v9s_CLAIM_IS_CORRECTED": (
+                    "v9 declared S1_load 'THIS IS THE PEAK of the day "
+                    "path' FLATLY. Measured on the synthetic book the peak "
+                    "is S4_null -- the book is a few hundred KB and the "
+                    "draw loop's fixed cost is larger. The claim is "
+                    "CONDITIONAL on the book dominating, which is the "
+                    "real-day regime (BE measured a day's reference at "
+                    "2.008 GB); it is asserted on a real day and recorded "
+                    "on a fixture"),
+            },
             "index_splits_needed_by_day":
                 RUNNER.INDEX_SPLITS_NEEDED_BY_DAY,
             "fixture_peak_rss_mb_budget":
@@ -1207,6 +1233,32 @@ def declaration() -> dict:
                 "`asm` is BE's measurement and R-496(E)'s ruling. DE "
                 "declares only the consumer's requirement, which is the "
                 "half BE was waiting on"),
+        },
+        "R14_the_fixture_real_lock_is_ONE_function": {
+            "reviewer": "REVIEW_DAY_PATH_DE78 S1.4",
+            "the_defect": "`--synthetic-day 2026-09-03` emitted a SEALED "
+                          "day artifact stamped with THE SMOKE DAY from a "
+                          "synthetic book. Disclosed, never hidden -- and "
+                          "exactly the collision the lock forbids, because "
+                          "once a real 09-03 artifact exists a synthetic "
+                          "one carrying the same `day` cannot be told "
+                          "apart by a consumer keying on the day",
+            "the_class": "THIRD INSTANCE IN THREE ROUNDS -- DE 77(d): the "
+                         "fixture run went around `resolve_draws`; R-577: "
+                         "`may_run_day` hardened and unwired; this: the "
+                         "CLI built one round later went around both. Rule "
+                         "17 is the wiring, not the unit",
+            "now": "`assert_fixture_day_lock()` is ONE function with THREE "
+                   "call sites (resolve_draws, run_day, and the day CLI "
+                   "through run_day). A rule with one call site is a rule "
+                   "the next caller will not meet",
+            "decided_on": "THE DAY, against the COMMITTED ruled set -- "
+                          "never the caller's flag and never the caller's "
+                          "dict",
+            "and_the_consumer_falsifier_is_wired": (
+                "`assert_seal_layout_symmetric` had three call sites and "
+                "all three were in the battery. It now runs on EVERY "
+                "emitted result, in both states"),
         },
         "R12_wrapper_is_measured": {
             "ruling": "R-575(C): at 05:54Z two heavy scopes ran "
@@ -1229,6 +1281,53 @@ def declaration() -> dict:
                                                "held",
             "implemented_by": ["de_multiday_gate1_runner.wrapper_observed",
                                "de_multiday_gate1_runner.assert_rule20"],
+            "AND_THE_INSTRUMENT_WAS_DEFEATED_BY_open": {
+                "reviewer": "REVIEW_DAY_PATH_DE78 S2.3",
+                "the_defect": "the instrument asked 'is one of my fds "
+                              "pointing at this file'. Holding a flock is "
+                              "a different fact: two lines of `open()` "
+                              "with no flock made the field read True and "
+                              "`assert_rule20` ADMITTED a 1-hour / 6.84 "
+                              "GiB run -- and when the reviewer drove it, "
+                              "ANOTHER process genuinely held the lock, so "
+                              "the instrument built to expose the 05:54Z "
+                              "condition would have certified a run beside "
+                              "it",
+                "now": "a CONJUNCTION of two independent surfaces -- a "
+                       "fresh-fd LOCK_EX|LOCK_NB that FAILS (somebody "
+                       "holds it) AND a /proc/locks FLOCK entry on the "
+                       "lock's INODE whose pid is this process or an "
+                       "ANCESTOR (that somebody is us)",
+                "why_the_ancestor_walk": "the holder is the `flock` "
+                                         "wrapper process, not the python "
+                                         "child, so a bare 'is my pid the "
+                                         "holder' test would reject a "
+                                         "legitimately wrapped run",
+                "the_fd_is_corroboration_now": True,
+            },
+        },
+        "R15_a_real_days_battery_is_the_FULL_battery": {
+            "reviewer": "REVIEW_DAY_PATH_DE78 S3.4",
+            "the_defect": "`_main_day` called selftest(offline=True) "
+                          "unconditionally, so a REAL day's receipt would "
+                          "say `battery: PASS` having skipped all four R6 "
+                          "controls and ALL of the day-path checks -- "
+                          "honestly disclosed in the skip list, but the "
+                          "field a consumer resolves would be a pass that "
+                          "EXCLUDED the path being run",
+            "now": "selftest(offline=fixture)",
+            "why_the_asymmetry_is_right": "the offline choice preserves "
+                                          "the data-free property that "
+                                          "makes a fixture a fixture; a "
+                                          "real day is already reading the "
+                                          "ledger and has no such "
+                                          "justification",
+            "day_path_checks_declared": RUNNER.DAY_PATH_CHECKS,
+            "stated_fairly": "the day path itself always ENFORCED R6 -- "
+                             "run_day calls verify_pinned_models and "
+                             "verify_pinned_thetas for real when fixture "
+                             "is false. What was skipped were the "
+                             "battery's CONTROLS on those verifiers",
         },
         "R13_committed_bytes_policy": {
             "ruling": "the coordinator's DE 78 ruling",
@@ -2059,6 +2158,41 @@ def selftest(*, quiet: bool = False) -> int:
        "AND THAT CLAIM IS CHECKED AT THE FUNCTION: `fill_value_cents`'s "
        "source carries no fee or rebate term, so calling it the E0 "
        "endpoint is a property of the code and not a reading of its name")
+
+    # ---- v10: the reviewer's three wiring items, as fields --------------
+    _r14 = d["R14_the_fixture_real_lock_is_ONE_function"]
+    ok("THIRD INSTANCE IN THREE ROUNDS" in _r14["the_class"]
+       and _r14["decided_on"].startswith("THE DAY")
+       and _RUN.assert_fixture_day_lock.__doc__,
+       "R14: the fixture/real lock is ONE function, named in the "
+       "declaration, and the entry recording it also records that this was "
+       "the THIRD instance of the class rather than presenting it as new")
+    import inspect as _i2
+    _rd = _i2.getsource(_RUN.run_day)
+    ok("assert_fixture_day_lock(" in _rd
+       and "assert_seal_layout_symmetric(" in _rd,
+       "AND IT IS ON THE DAY PATH, checked at the SOURCE of `run_day` -- "
+       "both the lock and the consumer falsifier appear in it, which is "
+       "the wiring the reviewer's finding was about and not a claim that "
+       "they exist somewhere")
+    _main = _i2.getsource(_RUN._main_day)
+    ok("offline=fixture" in _main,
+       "R15: `selftest(offline=fixture)` is in `_main_day`'s source, so a "
+       "REAL day's receipt carries the battery that ran the day-path "
+       "checks and the R6 controls")
+    _wo = _i2.getsource(_RUN.wrapper_observed)
+    ok("LOCK_EX" in _i2.getsource(_RUN._fresh_probe_fails)
+       and "/proc/locks" in _i2.getsource(_RUN._flock_holders)
+       and "corroboration" in _wo,
+       "R12's fix at the source: a fresh-fd LOCK_EX probe and a "
+       "/proc/locks inode test, with the fd demoted to corroboration -- "
+       "the field can no longer be forged by `open()`")
+    _ps = d["R11_memory_and_index_residency"]["peak_stage_is_a_PREDICATE_now"]
+    ok("statm" in _ps["now"] and "S4_null" in _ps["AND_v9s_CLAIM_IS_CORRECTED"],
+       "R11's correction is IN the declaration: v9 said S1_load is the "
+       "peak flatly, the measurement says S4_null on the fixture, and the "
+       "claim is restated as conditional on the book dominating rather "
+       "than quietly dropped")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
