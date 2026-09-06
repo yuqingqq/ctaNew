@@ -4,6 +4,15 @@ phase: in-progress        # planning / in-progress / review / done
 status: active            # not-started / active / blocked / deployed / stopped
 
 updated: >-
+  2026-09-06T05:04:52Z (DA seat). E2.0 IS VERIFIED BY THE COORDINATOR AT THE
+  RECEIPT (R-565) AND REVIEWED (ed14c87): the result is SETTLED as a
+  program-level fact -- every number reproduces, the kill survives
+  leave-one-out on all 16 days, and E1-B is empty. The reviewer's one gap was
+  that P-002 had NO data-root resolver; it now imports DE's
+  (de_data_root.require_canonical), which refuses a result-bearing emission
+  off the canonical ledger -- the partial-shell case my own tape-exists check
+  would have admitted. E2-A IS DECLARED (declaration only, no data).
+  PRIOR ENTRY, unchanged in substance:
   2026-09-06T04:47:21Z (DA seat, E2.0 RUN AND READ ON ADA). E2.0's declared
   purpose was to VOID or SETTLE the ADA result. IT SETTLES IT, AND THE VERDICT
   IS DEAD: notional-weighted rs(30 s) on TRUE bookTicker mids = -0.5552 bps
@@ -26,6 +35,25 @@ flags:
                           # notional-weighted (H1 fat-tick artifact; same flip all wide-tick
                           # names); majors NEGATIVE pre-fee. Program → overlay-only track.
                           # See live/mm_research/E1_RESULTS.md.
+  e2_a_declared: 2026-09-06
+                          # DECLARATION ONLY, no data. live/mm_research/
+                          # declarations/p002_e2_a_declaration_v1.json,
+                          # sha256 405ddb7ab10486c2, carrying_commit 367b800.
+                          # Gate: eff_RT <= 8 bps under RiskAverse at
+                          # T_p = 600 s, with the interval binding on the PASS
+                          # side; a bracket that straddles the threshold is a
+                          # FAIL, never averaged; ProbQueue > RiskAverse
+                          # REFUTES THE INSTRUMENT. ICP: above a 50%
+                          # episode-skip bar a symbol is UNRESOLVED and
+                          # excluded, reported both ways (E1-A measured ICP at
+                          # 72%). TWO RULINGS NEEDED BEFORE ANY RUN:
+                          # (a) hftbacktest is NOT installed -- both queue
+                          # models are declared in closed form and implemented
+                          # by the seat, which is a DEVIATION from the plan;
+                          # (b) the XS rebalance notional does not exist in
+                          # this programme, and its absence REFUSES the
+                          # size-aware arm rather than defaulting to min-size.
+                          # The reviewer files on the declaration first.
   e2_passed: null         # markout-adjusted spread > 0 somewhere (naive or signal-gated)
   e2_0_done: ada-settled-dead
                           # 2026-09-06, DA seat. Notional-weighted TRUE-MID

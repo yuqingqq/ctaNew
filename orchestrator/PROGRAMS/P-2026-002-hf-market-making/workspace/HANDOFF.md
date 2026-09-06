@@ -82,6 +82,34 @@ just clears the 2.3 gate, and it is 0.08% of the notional.
    the instrument worked, but the standing refresh procedure silently undoes
    the fix. Restored twice this session. See the Q-DA row.
 
+## E2-A is DECLARED — and two things need a ruling before it runs
+
+`live/mm_research/declarations/p002_e2_a_declaration_v1.json`
+(sha256 `405ddb7ab10486c2`, carrying_commit `367b800`), **no data touched**.
+Gate: `eff_RT <= 8 bps` under **RiskAverse** at T_p = 600 s, interval binding
+on the PASS side. A bracket that **straddles** the threshold is a FAIL, never
+averaged. **ProbQueue-f3 costing more than RiskAverse refutes the INSTRUMENT**,
+not the symbol. ICP: above a **50% episode-skip bar** a symbol is UNRESOLVED
+and excluded, aggregate reported both ways — the bar is declared before any
+census and applies to all twelve (E1-A measured ICP at 72%).
+
+> **RULING NEEDED (a): `hftbacktest` is NOT installed on this box.** The plan
+> names it for the bracket. Installing a dependency is an environment change
+> and not the seat's to make, so both queue models are declared in closed form
+> and implemented in the runner — which makes their **correctness mine**. Each
+> ships a falsifier, and the ordering property is a computed predicate. Either
+> the direct implementation is accepted, the dependency is authorised, or E2-A
+> waits.
+>
+> **RULING NEEDED (b): the XS rebalance notional does not exist.** "Depth-aware
+> sizes at the XS book's actual rebalance notionals" needs a per-symbol
+> notional this programme has never pinned — E1-A's episodes were explicitly
+> *min-size, notional-free*. Its absence **REFUSES the size-aware arm** and
+> reports the min-size arm labelled NOT the gate, because a min-size answer is
+> E1-A's answer with a better fill model.
+
+**The reviewer files on the declaration before any run.**
+
 ## Next steps (in order)
 
 1. **E2.0 on the remaining 15 symbols.** The smoke was one symbol by dispatch.
