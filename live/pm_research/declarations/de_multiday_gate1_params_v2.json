@@ -1,0 +1,133 @@
+{
+  "alpha": 0.05,
+  "arms": {
+    "CONDVALUE_X_SKEW": {
+      "head": "q1_arrival_composed_lgbm",
+      "model_digests": {
+        "lgbm_haz_btc.txt": "ec52055214a01ed5",
+        "lgbm_thresholds_btc.json": "0fa2f1f7a5a4c58f"
+      },
+      "theta": 0.32450609461933483
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+      "head": "incumbent_linear_d",
+      "model_digests": {
+        "linear_d_btc.json": "18701008c2bd18c6"
+      },
+      "theta": 0.43525926488298716
+    }
+  },
+  "be_module": {
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "sha256": "2b164df2ec0653a51c6db71fd69db052564b1dcc6c8956ea576d9840d89d9274"
+  },
+  "be_module_repoint": {
+    "changed_by_commit": "ab75b41",
+    "commit_subject": "BE round 47: every BE root resolves through DA's own resolver, twelve absolute ledger paths routed with the grep shipped as a check, and B-1 fixed",
+    "draw_path_functions_changed": [],
+    "draw_path_functions_checked": [
+      "draw_null",
+      "draw_flags",
+      "_alloc",
+      "replay",
+      "flagged_stream",
+      "arm_stream",
+      "mechanics",
+      "base_fills_lost",
+      "params_for"
+    ],
+    "draw_path_is_byte_identical": true,
+    "how_the_repoint_was_justified": "NOT by reading BE's commit message. Every top-level definition in the module was digested at ab75b41^ and at ab75b41 and the changed set COMPUTED; the nine functions the draw path runs through were checked against it by name",
+    "n_top_level_definitions_unchanged": 17,
+    "new_sha256": "2b164df2ec0653a51c6db71fd69db052564b1dcc6c8956ea576d9840d89d9274",
+    "old_sha256": "67fc7b6c0150d3f9c933d9000481e19f7b8b90088dee1d7e6f4b7836662dd657",
+    "residual_risk_stated": "`load()` DID change (the B-1 loaded-buffer digest and the resolved read root). It is on the draw path in the sense that it produces `bk`. Its change is the digest source and the root, both of which the runner now re-verifies against the declared book digest, so a different book cannot pass",
+    "top_level_definitions_changed": [
+      "load",
+      "main",
+      "run"
+    ],
+    "what_this_does_NOT_establish": "module-level constants and imports are not top-level definitions and are NOT covered by this comparison -- DERIVED, OUT_DERIVED, CACHE and the root resolution all changed at module level, and the READ ROOT changing is precisely what could feed a different book. That hazard is closed elsewhere, at the book digest: the runner compares BE's own loaded-buffer digest to the declared day book",
+    "why_a_repoint_was_needed": "the runner's own guard REFUSED on reload: BE's cascade changed at `ab75b41` (BE round 47) and the pinned digest was stale. The guard fired on a real change, which is what it is for"
+  },
+  "candidate_sets": {
+    "SET_A_reads_do_not_consume": [
+      "2026-08-29",
+      "2026-09-01",
+      "2026-09-02",
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ],
+    "SET_B_reads_consume": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ]
+  },
+  "coin": "btc",
+  "day_runs_allowed_for_closed_qualifying_days": true,
+  "days": [
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06",
+    "2026-09-07",
+    "2026-09-08"
+  ],
+  "design_declaration": {
+    "carrying_commit": "8deee7a1981ea50833bd5834b1e737d61d263254",
+    "note": "params v1 cited design v3 while v7 was operative. The pin runs params -> design in ONE direction only; the design cites params by PATH, because two digest pins would be circular",
+    "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v8__20260906T055810Z.json",
+    "protocol": "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V8",
+    "sha256": "139052dfa87db3fe11f24ec9c25906825f84bf03d4b324439b87452a55d32555",
+    "supersedes": "data/pm_5min/derived/p003_de_multiday_gate1_design_v7__20260906T045059Z.json"
+  },
+  "expected_G": 6,
+  "head_overlap_floor": 0.9,
+  "min_decisions_per_arm_day": 30,
+  "min_draws_per_arm_day": 500,
+  "multiplicity_m": 2,
+  "note": "G IS DERIVED FROM len(days) AND IS NEVER A CONSTANT; `expected_G` below is a CROSS-CHECK the loader must satisfy, not the source of G. THE VERSION TRAVELS IN `version`; v1's protocol string said V2 while its filename said v1.",
+  "per_day_deadline_s": 43200,
+  "protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V2",
+  "read_not_before_utc": "2026-09-09T00:06:00Z",
+  "required_previously_opened_for": "none",
+  "ruling": {
+    "authority": "R-555 (USER): untouched days only",
+    "completion": "the 2026-09-09T00:06Z verdict; the run does not start before it",
+    "if_a_future_day_fails_its_verdict": "the set waits for the next qualifying CLOSED day in calendar order. G STAYS 6 and nothing is chosen",
+    "rule": "the four ledger conjuncts AND day-quality, on COMPLETE days only, AND previously_opened_for == none",
+    "smoke_day": "2026-09-03",
+    "smoke_publishes": "resource observations only; its economic fields are SEALED until all 6 days are complete",
+    "why_not_SET_A": "SET A included 08-29, 09-01 and 09-02, whose previously_opened_for is development_read or interim_read_of_frozen_candidate. The USER ruled untouched days only"
+  },
+  "sd_floor_fraction": 0.25,
+  "status": "DAY_SET_RULED_R555_USER",
+  "supersedes": {
+    "fields_changed": [
+      "be_module.sha256 -- RE-POINTED, deliberately (below)",
+      "run_not_before_utc -> read_not_before_utc + day_runs_allowed_for_closed_qualifying_days (R-572(B)(2))",
+      "design_declaration -> design v8 (v1 cited v3 while v7 was operative)",
+      "protocol/version -- v1's protocol string read P003_DE_MULTIDAY_GATE1_PARAMS_V2 while its FILENAME read v1; the version now travels in the `version` integer and the filename and protocol agree with it"
+    ],
+    "path": "live/pm_research/declarations/de_multiday_gate1_params_v1.json",
+    "rule": "13 -- a superseding declaration, vN+1; v1 stays as provenance",
+    "sha256": "b06125e9e10b9652ebb5130fe0f08e5d7b1d312828dac219b7e7ac0496130138",
+    "v1_untouched": true
+  },
+  "timing": {
+    "day_runs_allowed_for": "any CLOSED, QUALIFYING day in the ruled set",
+    "enforced_by": [
+      "de_multiday_gate1_runner.may_run_day()",
+      "de_multiday_gate1_runner.may_read_aggregate()"
+    ],
+    "read_not_before_utc_governs": "the AGGREGATE READ only: the unseal of the economic fields and the section-7 verdict",
+    "ruling": "R-572(B)(2) (coordinator)",
+    "superseded_field": "run_not_before_utc",
+    "what_v1_said": "2026-09-09T00:06:00Z",
+    "why_it_was_wrong": "one whole-set field did two jobs and read as a bar on every run. A per-day run is SEALED -- resources, counts and statuses, no economic field -- so it cannot inform a later choice, and holding 09-03 behind 2026-09-09 bought nothing and cost the calendar"
+  },
+  "version": 2,
+  "wrapper": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100%"
+}
