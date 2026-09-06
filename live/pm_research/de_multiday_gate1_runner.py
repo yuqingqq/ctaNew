@@ -47,7 +47,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 126
+EXPECTED_CHECKS = 137
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -65,7 +65,7 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 49
+DAY_PATH_CHECKS = 60
 
 
 class RunnerRefused(RuntimeError):
@@ -1577,38 +1577,69 @@ def _ancestor_pids(limit: int = 64) -> list:
     return out
 
 
+def _flock_line_matches(fields: list, want_dev: tuple,
+                        want_ino: int) -> bool:
+    """Does one /proc/locks line name THIS file?
+
+    THE DEFECT THIS CLOSES (REV 43): the match was on the INODE ALONE, and
+    an inode is unique only WITHIN a filesystem. /proc/locks on this box
+    already carries entries from several devices -- `103:01:...` beside
+    `00:1d:...` -- so a lock held on an unrelated filesystem whose inode
+    collided would have read as a hold on ours, and a heavy run could have
+    certified itself on somebody else's lock.
+
+    The field is `MAJOR:MINOR:INODE`, the two device numbers in HEX and the
+    inode in decimal -- measured against this box's own lock: st_dev 66305
+    -> major 259, minor 1 -> `103:01`.
+
+    Pure on purpose: a matcher that reads /proc/locks itself cannot be
+    handed a crafted line, and the known-bad here IS a crafted line."""
+    if len(fields) < 6 or fields[1] != "FLOCK":
+        return False
+    try:
+        maj, mnr, ino = fields[5].split(":")
+        return ((int(maj, 16), int(mnr, 16)) == want_dev
+                and int(ino) == want_ino)
+    except (ValueError, IndexError):
+        return False
+
+
 def _flock_holders(lock_path: str) -> dict:
     """FLOCK entries on the lock's INODE, from /proc/locks -- the
     authoritative surface. Returns the holder pids and whether any of them
     is this process or an ancestor of it."""
     import os as _os
-    try:
-        st = _os.stat(lock_path)
-    except OSError:
-        return {"readable": False, "pids": [], "by_self_or_ancestor": False}
+    # (3) A MISSING LOCK FILE IS A NAMED REFUSAL, NOT A CRASH -- raised by
+    # the CALLER, which is the only place that knows it is fatal. The early
+    # return here used to omit whichever key the caller had grown that
+    # round, so an absent lock raised `KeyError` twice on two different
+    # keys. The incomplete early return is gone.
+    st = _os.stat(lock_path)
     ino = st.st_ino
+    want_dev = (_os.major(st.st_dev), _os.minor(st.st_dev))
     pids, ok_read = [], True
     try:
         for ln in open("/proc/locks"):
             f = ln.split()
             # e.g. "6: FLOCK ADVISORY WRITE 2916372 103:01:1053378 0 EOF"
-            if len(f) < 6 or f[1] != "FLOCK":
+            if not _flock_line_matches(f, want_dev, ino):
                 continue
-            try:
-                if int(f[5].rsplit(":", 1)[-1]) != ino:
-                    continue
-                # f[3] is READ (a SHARED hold) or WRITE (an EXCLUSIVE one).
-                # REV 41: rule 20's invariant is ONE heavy run at a time,
-                # and only an exclusive lock enforces it -- two concurrent
-                # `flock -s` holders would both have certified themselves.
-                pids.append((int(f[4]), f[3]))
-            except (ValueError, IndexError):
-                continue
+            # f[3] is READ (a SHARED hold) or WRITE (an EXCLUSIVE one).
+            # REV 41: rule 20's invariant is ONE heavy run at a time, and
+            # only an exclusive lock enforces it -- two concurrent
+            # `flock -s` holders would both have certified themselves.
+            # The parse that could raise now lives in the matcher, which
+            # returns False rather than throwing.
+            pids.append((int(f[4]), f[3]))
     except OSError:
         ok_read = False
     anc = set(_ancestor_pids())
     mine = [(p, m) for p, m in pids if p in anc]
     return {"readable": ok_read, "inode": ino,
+            "device": {"major": want_dev[0], "minor": want_dev[1],
+                       "proc_locks_field": "%02x:%02x" % want_dev},
+            "matched_on": "MAJOR:MINOR:INODE -- an inode is unique only "
+                          "within a filesystem (REV 43)",
             "pids": sorted({p for p, _ in pids}),
             "modes": sorted({m for _, m in pids}),
             "holders": sorted(set(pids)),
@@ -1692,6 +1723,14 @@ def wrapper_observed(*, lock_path: str = HEAVY_RUN_LOCK) -> dict:
         cg = open("/proc/self/cgroup").read().strip().rsplit("/", 1)[-1]
     except OSError:
         cg = None
+    # (3) THE MISSING LOCK FILE, REFUSED BY NAME.
+    if not _os.path.exists(lock_path):
+        raise RunnerRefused(
+            f"REFUSED: the heavy-run lock file {lock_path} does not exist, "
+            f"so nothing can be said about who holds it. This is a NAMED "
+            f"REFUSAL and not a crash: an absent lock is a real state (a "
+            f"fresh box, a wrong path, a deleted file) and rule 20 cannot "
+            f"be evaluated without it. It raised KeyError for two rounds.")
     fds = _lock_fd_held(lock_path)
     probe = _fresh_probe_fails(lock_path)
     holders = _flock_holders(lock_path)
@@ -3182,6 +3221,7 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
 
         # ---- DE 80: the day's tape and fragment are PARAMETERS -----------
         import de_phase4_diag_runner as _PD
+        import inspect as _i3
         _consumed = _PD.consumed_era_inputs()
         _ruled_d = live["days"][0]
         _dref = lambda k, p, h, d: _PD.day_assembly_inputs(
@@ -3264,6 +3304,113 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"and recorded: {_mech['mechanism']}. BE 52 owns that "
            f"parameter; the moment it exists this adopts it without an "
            f"edit here, and until then the receipt says which ran")
+
+        # ---- REV 43 (1): the digest is threaded TO THE LOAD --------------
+        _mech2 = _PD.tape_path_mechanism()
+        ok(_mech2["expect_sha256_available"] is True
+           and _mech2["day_available"] is True
+           and _mech2["mechanism"] == "PARAMETER",
+           f"REV 43 (1): BE 52's onward parameters are DETECTED by "
+           f"signature -- {_mech2['onward_parameters_detected']} -- and the "
+           f"mechanism is now {_mech2['mechanism']}, so the scoped rebind "
+           f"has handed over without an edit here, which is what choosing "
+           f"by signature was for")
+        try:
+            _PD.build_tape_index({"score": None}, tape_path=_real,
+                                 day=_ruled_d)
+            ok(False, "a ruled-day tape with NO digest was ADMITTED")
+        except _PD.DiagRefused as _e:
+            ok("NO expect_sha256" in str(_e),
+               "REV 43 (1) KNOWN-BAD, THE AMBIGUOUS CASE: a ruled day's "
+               "tape path supplied WITHOUT its digest REFUSES rather than "
+               "running a call that reads the right path and checks "
+               "nothing -- the signature would otherwise say a digest was "
+               "expected while nothing verified one")
+        import phase2_arms as _PA3
+        try:
+            _PD.build_tape_index({"score": None}, tape_path=_real,
+                                 day=_ruled_d, expect_sha256="0" * 64)
+            ok(False, "a WRONG load digest was ADMITTED")
+        except Exception as _e:
+            ok(type(_e).__name__ == "TapePathRefused"
+               and "digests" in str(_e),
+               f"REV 43 (1) KNOWN-BAD AT THE LOAD, AND IT IS BE'S OWN "
+               f"CHECK THAT FIRES: a wrong `expect_sha256` raises "
+               f"{type(_e).__name__} from phase2_arms as the stream is "
+               f"opened. That is the proof the keyword ARRIVED -- the "
+               f"digest was checked in day_assembly_inputs before, which "
+               f"left a window between the check and the use")
+        _threaded = False
+        try:
+            _PD.build_tape_index({"score": None}, tape_path=_real,
+                                 day=_ruled_d, expect_sha256=_rh)
+        except Exception as _e:
+            _threaded = type(_e).__name__ != "TapePathRefused"
+        ok(_threaded,
+           "AND THE POSITIVE CONTROL: with the RIGHT digest the call gets "
+           "PAST the digest gate -- it fails later, on the file not being "
+           "a tape, which is a different refusal. So the known-bad above "
+           "fires on the digest and not on the file")
+        _inp_form = _PD.day_assembly_inputs(
+            _ruled_d, tape={"path": str(_real), "sha256": _rh},
+            fragment={"path": str(_real), "sha256": _rh})
+        ok(_inp_form["tape"]["sha256"] == _rh
+           and "expect_sha256" in _i3.getsource(_PD.build_tape_index),
+           "and `inputs=` is the preferred form because it carries path, "
+           "digest and day as ONE object that cannot drift apart -- it is "
+           "exactly what day_assembly_inputs returns")
+
+        # ---- REV 43 (2): the /proc/locks match includes the DEVICE -------
+        _wd = (259, 1)
+        _fake_same_dev = "6: FLOCK ADVISORY WRITE 999 103:01:4242 0 EOF"
+        _fake_other_dev = "7: FLOCK ADVISORY WRITE 999 07:99:4242 0 EOF"
+        ok(_flock_line_matches(_fake_same_dev.split(), _wd, 4242) is True,
+           "REV 43 (2) POSITIVE CONTROL, AND IT ADMITS: a crafted "
+           "/proc/locks line on the RIGHT device and inode matches")
+        ok(_flock_line_matches(_fake_other_dev.split(), _wd, 4242) is False,
+           "REV 43 (2) KNOWN-BAD, THE COLLISION ITSELF: the SAME inode on "
+           "a DIFFERENT device (07:99 against 103:01) no longer matches. "
+           "The pre-fix parse compared the inode alone and ADMITTED this, "
+           "so a lock held on an unrelated filesystem could have certified "
+           "a heavy run here -- and this box's own /proc/locks already "
+           "carries entries from several devices")
+        _obs_real = wrapper_observed()
+        ok(_obs_real["flock_modes_on_the_inode"] is not None
+           and isinstance(_flock_holders(HEAVY_RUN_LOCK)["device"], dict),
+           f"and the real lock's device travels in the observation: "
+           f"{_flock_holders(HEAVY_RUN_LOCK)['device']}")
+
+        # ---- REV 43 (3): a missing lock file REFUSES BY NAME -------------
+        with _tfl.TemporaryDirectory() as _md:
+            _gone = str(Path(_md) / "not-there.lock")
+            refuses(lambda: wrapper_observed(lock_path=_gone),
+                    "REV 43 (3) KNOWN-BAD: a MISSING lock file is a NAMED "
+                    "REFUSAL, not a KeyError. It crashed for two rounds on "
+                    "two different keys, because each round's new field "
+                    "joined the same incomplete early return -- a "
+                    "KeyError from an instrument tells a reader nothing "
+                    "about the lock", "does not exist")
+            Path(_gone).write_text("")
+            ok(wrapper_observed(lock_path=_gone)[
+                   "heavy_run_lock_held"] is False,
+               "and the same path ADMITS the moment the file exists, "
+               "reporting an unheld lock -- so the refusal is about "
+               "absence and not about the path being unusual")
+
+        # ---- REV 43 (4): the day-path count is COMPUTED, never a literal -
+        # `battery_scope` is written by `_main_day`, not `run_day`, so
+        # the receipt-level check belongs at the SOURCE: the literal is
+        # what has to be absent, and it is absent everywhere or nowhere.
+        import re as _re4
+        _srcs = {"runner": _i3.getsource(sys.modules[__name__])}
+        _lit = [m for m in _re4.findall(r"all (\d+) day-path checks",
+                                        _srcs["runner"])]
+        ok(not _lit,
+           f"REV 43 (4) KNOWN-BAD SWEPT AT THE SOURCE: no literal "
+           f"'all <N> day-path checks' remains anywhere in this module "
+           f"(found {_lit}). It read 23 beside a constant of 38 and then "
+           f"49 -- the gap widened twice while the sentence sat still, "
+           f"which is rule 10 in my own receipt")
 
         # ---- reviewer §4.3: the peak stage is a PREDICATE -------------------
         _ps = _open["memory_plan"]["peak_stage"]
@@ -3527,7 +3674,7 @@ def _main_day(a) -> int:
             "to name the commit that produced it (DE 78 ruling).")
     # (3) reviewer §3.4: `offline=fixture`, not `offline=True`. A REAL
     # day's receipt used to say `battery: PASS` having skipped all four R6
-    # controls and ALL 23 day-path checks -- honestly disclosed, but the
+    # controls and EVERY day-path check -- honestly disclosed, but the
     # field a consumer resolves on a real-day artifact was a pass that
     # excluded the path being run. The offline choice is right for a
     # fixture, where it preserves the data-free property; a real day is
@@ -3539,9 +3686,12 @@ def _main_day(a) -> int:
         "offline": fixture,
         "why": ("a FIXTURE run skips the checks that read `data/`, because "
                 "that is what makes it a fixture" if fixture else
-                "a REAL day runs the FULL battery -- the four R6 controls "
-                "and all 23 day-path checks -- because the run is already "
-                "reading the ledger (reviewer S3.4)"),
+                f"a REAL day runs the FULL battery -- the four R6 "
+                f"controls and all {DAY_PATH_CHECKS} day-path checks -- "
+                f"because the run is already reading the ledger (reviewer "
+                f"S3.4). THIS COUNT IS COMPUTED: it read a literal 23 "
+                f"beside a constant of 38 and then 49, which is rule 10 in "
+                f"my own receipt"),
         "day_path_checks_declared": DAY_PATH_CHECKS,
     }
     payload["data_root"] = DR.require_canonical(

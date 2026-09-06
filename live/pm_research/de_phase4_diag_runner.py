@@ -7266,6 +7266,10 @@ def tape_path_mechanism() -> dict:
     return {
         "parameter_available": bool(named),
         "parameter_name": named[0] if named else None,
+        "expect_sha256_available": "expect_sha256" in params,
+        "day_available": "day" in params,
+        "onward_parameters_detected": sorted(
+            p for p in ("expect_sha256", "day") if p in params),
         "mechanism": ("PARAMETER" if named else "SCOPED_REBIND_PENDING_BE52"),
         "owner_of_the_parameter": "BE (BE 52) -- phase2_arms is BE's module "
                                   "and DE does not edit it",
@@ -7706,10 +7710,13 @@ def feature_blocks(*, splits, fragment: Path | None = None,
         stages, TAPE, split_of = dict(tape["stages"]), tape["TAPE"], \
             tape["split_of"]
     else:
+        _ruled_regime2 = pre.get("regime") == "RULED_DAY_INPUTS_SUPPLIED"
         _t = build_tape_index(
-            got, tape_path=(Path(pre["tape_path"])
-                            if pre.get("regime")
-                            == "RULED_DAY_INPUTS_SUPPLIED" else None))
+            got,
+            tape_path=Path(pre["tape_path"]) if _ruled_regime2 else None,
+            day=day if _ruled_regime2 else None,
+            expect_sha256=((inputs or {}).get("tape", {}).get("sha256")
+                           if _ruled_regime2 else None))
         stages, TAPE, split_of = dict(_t["stages"]), _t["TAPE"], \
             _t["split_of"]
     t1 = time.time()
@@ -7727,7 +7734,8 @@ def feature_blocks(*, splits, fragment: Path | None = None,
             "n_tape_rows": len(TAPE)}
 
 
-def build_tape_index(splits, *, tape_path=None) -> dict:
+def build_tape_index(splits, *, tape_path=None, day=None,
+                     expect_sha256=None, inputs=None) -> dict:
     """THE TAPE INDEX, built ONCE and reusable across feature passes.
 
     MEASURED at full scale, which the price never did: the score split is
@@ -7738,7 +7746,34 @@ def build_tape_index(splits, *, tape_path=None) -> dict:
     fragment be consumed in chunks against ONE index."""
     got = validate_splits(splits)
     import phase2_arms as PA
+    # (1) THE DIGEST IS THREADED TO THE LOAD -- REV 43's finding. It was
+    # checked in `day_assembly_inputs`, a separate act BEFORE the stream
+    # opens, which is the check-and-use split the reviewer filed: the file
+    # can move between the check and the read. BE 52 built
+    # `tape_index(..., expect_sha256=)`, which verifies as the stream is
+    # read, and this seam did not reach it. One keyword, threaded.
+    #
+    # `inputs=` is the PREFERRED form because it carries path, digest and
+    # day as ONE object that cannot drift apart -- it is what
+    # `day_assembly_inputs` returns.
+    if inputs is not None:
+        tape_path = tape_path or inputs["tape"]["path"]
+        expect_sha256 = expect_sha256 or inputs["tape"].get("sha256")
+        day = day if day is not None else inputs.get("day")
     mech = tape_path_mechanism()
+    # AND THE AMBIGUOUS CASE REFUSES rather than looking checked. A caller
+    # that passes a ruled day's tape WITHOUT its digest would otherwise get
+    # a run that reads the right path and verifies nothing, while the
+    # parameter's presence in the signature says a digest is expected.
+    if (tape_path is not None and expect_sha256 is None
+            and day in _ruled_day_set_imported()):
+        raise DiagRefused(
+            f"REFUSED for day {day}: a tape path was supplied with NO "
+            f"expect_sha256. The digest is verified AT LOAD, as the stream "
+            f"is read; without it this call reads the right path and "
+            f"checks nothing, which is exactly the check-and-use split "
+            f"this seam exists to close. Pass inputs=day_assembly_inputs("
+            f"...) or expect_sha256=.")
     _restore = None
     if tape_path is not None and not mech["parameter_available"]:
         # SCOPED REBIND, until BE 52's `path` parameter lands. Restored in
@@ -7753,8 +7788,14 @@ def build_tape_index(splits, *, tape_path=None) -> dict:
       for sp in got:
         t0 = time.time()
         if tape_path is not None and mech["parameter_available"]:
-            idx = PA.tape_index(sp, **{mech["parameter_name"]:
-                                       Path(tape_path)})
+            _kw = {mech["parameter_name"]: Path(tape_path)}
+            # ONWARD, when BE's module accepts them -- detected by
+            # SIGNATURE, so nothing here breaks if BE renames or drops one.
+            if expect_sha256 is not None and mech["expect_sha256_available"]:
+                _kw["expect_sha256"] = expect_sha256
+            if day is not None and mech["day_available"]:
+                _kw["day"] = day
+            idx = PA.tape_index(sp, **_kw)
         else:
             idx = PA.tape_index(sp)
         dup = [k for k in idx if k in TAPE]
@@ -7780,6 +7821,17 @@ def build_tape_index(splits, *, tape_path=None) -> dict:
             "tape_path": str(tape_path) if tape_path is not None
             else str(PA.TAPE_PATH),
             "tape_path_was_a_parameter": tape_path is not None,
+            "expect_sha256_threaded_to_the_load": (
+                expect_sha256 is not None
+                and mech["expect_sha256_available"]),
+            "expect_sha256": expect_sha256,
+            "day": day,
+            "why_the_digest_is_checked_TWICE": (
+                "`day_assembly_inputs` checks it before the stream opens "
+                "and `tape_index(expect_sha256=)` checks it AS the stream "
+                "is read. That is not redundancy: the first is the "
+                "admission decision and the second closes the window "
+                "between the check and the use (REV 43)"),
             "tape_path_mechanism": mech}
 
 
