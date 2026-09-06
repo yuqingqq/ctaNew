@@ -1441,9 +1441,14 @@ def e1_resolver_parity(out_path: Path | None = None) -> dict:
                   or old[sy]["n_day_files"] != new[sy]["n_day_files"]]
     old_empty = [sy for sy in syms if old[sy]["n_day_files"] == 0]
     new_found = [sy for sy in syms if new[sy]["n_day_files"] > 0]
-    parity_holds = (not mismatches) if same_tree else True
-    fix_demonstrated = (not same_tree) and len(old_empty) == len(syms) \
-        and len(new_found) == len(syms)
+    #: PARITY IS NOT APPLICABLE WHEN THE ROOTS DIFFER, and saying `true`
+    #: there would be a verdict that cannot fail sitting beside a table of
+    #: mismatches -- which is exactly what the first version of this field
+    #: printed: `PARITY ...: true` with `n_mismatches: 12`. None, not True.
+    parity_holds = (not mismatches) if same_tree else None
+    fix_demonstrated = ((not same_tree) and len(old_empty) == len(syms)
+                        and len(new_found) == len(syms)) or None \
+        if not same_tree else None
     out = {"protocol": PROTOCOL + "_E1_RESOLVER_PARITY",
            "carrying_commit": carrying_commit(),
            "wrapper": wrapper_block(),
@@ -1456,9 +1461,20 @@ def e1_resolver_parity(out_path: Path | None = None) -> dict:
            "code_and_data_are_the_same_tree": same_tree,
            "per_symbol_old": old, "per_symbol_new": new,
            "n_symbols": len(syms),
-           "PARITY_tick_size_and_file_counts_identical": bool(parity_holds),
+           "half_exercised": ("PARITY (roots coincide)" if same_tree
+                              else "THE FIX (roots differ)"),
+           "PARITY_tick_size_and_file_counts_identical":
+               (None if parity_holds is None else bool(parity_holds)),
+           "PARITY_not_applicable_here": (not same_tree),
            "n_mismatches": len(mismatches), "mismatched_symbols": mismatches,
-           "FIX_old_root_empty_new_root_populated": bool(fix_demonstrated),
+           "what_the_mismatches_ARE": (
+               "the OLD root seeing nothing where the NEW root sees the "
+               "tape -- that IS the fix, not a parity failure"
+               if not same_tree else
+               "genuine disagreements between old and new resolution on the "
+               "same tree; any at all refuse the change"),
+           "FIX_old_root_empty_new_root_populated":
+               (None if fix_demonstrated is None else bool(fix_demonstrated)),
            "n_symbols_old_root_saw_zero_files": len(old_empty),
            "n_symbols_new_root_sees_files": len(new_found),
            "how_to_read_this": (
@@ -1690,8 +1706,9 @@ def main() -> int:
             "no_path_under_data_mm_hf_was_opened"] else 0
     if a.e1_resolver_parity:
         r = e1_resolver_parity(a.output)
-        return 0 if (r["PARITY_tick_size_and_file_counts_identical"]
-                     or r["FIX_old_root_empty_new_root_populated"]) else 1
+        good = (r["PARITY_tick_size_and_file_counts_identical"] is True
+                or r["FIX_old_root_empty_new_root_populated"] is True)
+        return 0 if good else 1
     if a.mechanism_check:
         mechanism_check(a.mechanism_check, a.output)
         return 0
