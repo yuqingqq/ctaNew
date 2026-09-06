@@ -11298,3 +11298,85 @@ directions.
   twenty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 134 — archived 2026-09-06T09:54:10Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 152 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T09:31:36Z (MEM ROUND 149 -- R-605, REV 51'S FILING, Q-DA-296 AND Q-DE-87
+  (PARTIAL) SWEPT. STATE ONLY. THE FINDING IS A PIN THAT RESOLVES IN NEITHER
+  DIRECTION, AND A CORRECTION THAT TRIPS THE GATE IT SERVES.
+  (1) **I HASHED THE FILES MYSELF.** Design v14 names **`parameters.path =
+  …/de_multiday_gate1_params_v2.json`** with **`parameters.sha256 = 1af1befb…`**, and
+  the digests I computed are **v2 = `ce46b577…`, v6 = `1af1befb…`, v7 =
+  `d58426e0…`.** ***The file at the named PATH has a different digest; the file with
+  the named DIGEST has a different path.*** **And the reverse pin names no file at
+  all: params v7 -- the NEWEST -- still carries `design_declaration.path =
+  "…_design_v14__<emitted this round>.json"`, `sha256: "NOT_PINNED_HERE"`.** *A
+  cross-pointer broken in BOTH directions with the runner's 167 and the design's 89
+  GREEN beside it* -- **rule 15: a claim with no check behind it drifts without
+  either side noticing.**
+  (2) **AND THE EMITTER MAY BE FIXED WHILE THE EMITTED ARTIFACT IS NOT.** DE 87b
+  landed *"the design pins params v7"* -- and **the newest EMITTED design artifact is
+  still v14 with the broken pin; `design_v15` does not exist on disk (census 0).**
+  ***So the 09-04 preflight's `P3_design` block stands at my read regardless of what
+  the emitter now does, because the preflight reads the ARTIFACT.*** *The same
+  distinction that governs a receipt, and the same reason `.v2` supersessions exist.*
+  (3) **AND THE DESIGN ARTIFACT HAS NO `version` FIELD AT ALL** -- its top-level keys
+  are `protocol` and the R-numbered rules; **the "v14" is in the FILENAME.**
+  ***Which is exactly why a template path sits in a pin and looks right: when
+  identity is carried by NAME, an unfilled name is still a well-formed name.*** *The
+  digest field that would have refused says `NOT_PINNED_HERE`.*
+  (4) **THE CORRECTION TRIPS THE GATE IT SERVES.** `find_sealed_day_receipt` returns
+  **`AMBIGUOUS`** on more than one match, with the reason ***"two sealed receipts for
+  one day is a day that ran twice; a read that picks the newest is a read that chose
+  after seeing."*** **Every word is a correct principle -- and all of it is FALSE of a
+  corrected day.** R-603's `.v2` matches the day glob, so v1 + `.v2` -> `may_open
+  False, missing ['2026-09-03']`. ***The correction ruled in R-603 would make the
+  gate ruled in R-602 refuse the very day it corrects.*** *The cases are
+  distinguishable from the artifacts -- a correction carries `supersedes` -- and DE
+  ships supersession machinery the gate does not use.* OPEN-PENDING-DE-87.
+  (5) **BE'S THREE HEAVY PRODUCERS CARRY ZERO PROVENANCE STAMPS** -- census over
+  `be_daybook_build.py`, `be_gate1_fragment.py`, `be_gate1_state_tape.py`: **no
+  `producing_code_sha256`, no `LAUNCH_SOURCE_SHA256`, no `carrying_commit`, in any of
+  the three.** ***These are the next three heavy runs, and BE 59 was about to add
+  `builder_commit` AT EMIT -- inheriting the defect DE had just fixed, on its first
+  use.*** **The class does not travel by being written down; it travels by being
+  implemented the obvious way.**
+  (6) **RULE 22 AMENDED:** runners **and every heavy producer** capture at IMPORT the
+  digest of every module in their **import closure** under `live/` **plus the
+  worktree's HEAD**, stamp both, and refuse the emit by name if any moved -- *"a
+  digest of ONE FILE closes a THIRD of the class; the closure and HEAD close it;*
+  ***a practice that depends on noticing is not a control."*** *The first
+  stop-the-line was caught by a human looking, three minutes before the state would
+  have cost the day.*
+  (7) **AND ONE OF THE EIGHT WAS DRIVEN, NOT ARGUED:** at v14, **two closed, two
+  partly, four open** -- and ***"six days in which every arm is inadmissible OPEN the
+  gate"*** was RUN. *That is the case I read out of the status expression last round;
+  the reviewer exhibited it.* **Same defect at two levels, and the exhibit is what
+  closes it.** DA 74 verified (**38 / 19 / 11**), with a suite that **failed one
+  check because the world moved between two runs -- v7 landing mid-verification, a
+  correct refusal on a v6 lacking the field.**
+  **AT COMMIT TIME, 2026-09-06T09:34:27Z: PARAMS v8 AND DESIGN v15 BOTH LANDED, AND
+  THE PIN IS STILL BROKEN IN BOTH DIRECTIONS.** I hashed the new pair: **design v15
+  names `params_v2.json` STILL, with v8's ACTUAL digest `8c3f2676…`** -- *the digest
+  advanced v6 -> v8 across two revisions while the path stayed at v2* -- **and params
+  v8 names the REAL `…design_v15__20260906T094500Z.json` with `sha256` still
+  `NOT_PINNED_HERE`** (v15 hashes `0c83afb1…`). ***Forward: right digest, wrong path.
+  Reverse: right path, no digest. Each side repaired the half the OTHER lacked.***
+  *(1) stands as history at its as-of; the block is unchanged in substance.* And
+  `9dd7957`: **DA 75 landed -- "params v8 landed mid-round and my ids match DE's
+  exactly, but one of my own checks was still matching PROSE"** -- *another seat
+  suspecting its own probe, in the same hour.*
+  **FLAG WORDS: the 09-04 PREFLIGHT BLOCKED-ON-P3_DESIGN (pending DE 87's v8/v15);
+  the read gate's supersession collision OPEN-PENDING-DE-87; rule 22 AMENDED; the
+  smoke RUNNING -- I measure pid 3049132 at 4,117 s (~68 min), output ABSENT.**
+  MEASURED BEFORE THIS SENTENCE: flags 843 -> 851, flag_provenance 388 -> 396,
+  tasks 19; **236 CHECKED**, 160 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

@@ -5,6 +5,102 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 152
+
+**As of 2026-09-06T09:54:10Z. State only — MEM writes no result.**
+
+### The 09-03 smoke REFUSED — to be re-run. The day is NOT consumed.
+
+`RunnerRefused: REFUSED DAY FIXTURE-DAY-1: peak RSS 2426 MB exceeds the declared
+budget 700 MB` — exit 09:46:29Z after **1 h 24 min 20.439 s CPU**, scope peak
+**2.3 G** (journal). **Say "refused, to be re-run" — not "failed", not "run".**
+
+**The day is not consumed, measured:** no artifact under the sealed layout
+(`sealed_layout_artifacts_for_this_day = []`; I re-measured **SEALED-layout matches =
+0**). Nothing economic was read or written. **The 09-03 book STANDS.**
+
+**The file states the distinction it then fails to make.** At `a7e28e6^` — the bytes
+that ran — line 1432 is `FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0`, commented *"A
+fixture that exceeds it REFUSES: the point of a budget nobody enforces is nothing"* —
+and **the very next comment reads *"The real day's ceiling is the cap itself and the
+response is R-174's:"***. Adjacent lines: the rule, then the constant that ignores
+it. **A comment is not a control.**
+
+**One thing routed to DE:** the refusal record's own predicate,
+`glob(p003_de_gate1_day_run_*20260903*) is EMPTY`, **now returns one match — the
+record itself**. The substantive field still holds, so the conclusion is untouched;
+the fix is one word (match `_SEALED__`, or exclude `_REFUSED__`). Otherwise that
+record is a model of a non-result: verbatim message, label as printed, launch/exit,
+scope CPU + peak **with its journal line and source command**, the runner blob that
+ran (`2089d74e…`, noting the file was replaced at 08:35:20Z), the book digest, the
+launcher log pinned by sha, and a **`what_this_record_is_not`** block.
+
+**At commit time (2026-09-06T09:57:09Z) the mechanism is already named** (`c64e2f5`,
+runbook, REV 53 §0 → R-609): *"`_main_day` ran the in-run battery's **fixture** day
+inside the **real** day's process and compared the fixture's 700 MB budget against
+the process-wide `ru_maxrss` the real day had set to 2,426 MB."* **The two numbers
+never met in the code — they met in the process.** (Which is why the systemd peak I
+quoted for 82 minutes was the right quantity: the process-wide peak *is* what the
+fixture budget was compared against.) **Before any GO, checked at the code, not the
+report:** no fixture check inside a real day's process, **or** every fixture budget a
+highwater **delta**; and the receipt's battery field says what actually ran.
+
+### The re-run in the continuous schedule
+
+One heavy run at a time (rule 20), under
+`flock -n data/.heavy_run.lock systemd-run --user --scope --slice=research.slice`:
+
+| order | day | step | owner | state |
+|---|---|---|---|---|
+| **now** | 09-04 | inputs: **fragment** | BE 58 | **RUNNING** (`be58frag.scope`, pid 3154841) |
+| next | 09-04 | inputs: tape | BE 58 | queued behind the fragment |
+| then | 09-04 | book | BE 59 | released |
+| **then** | **09-03** | **smoke RE-RUN** | DE | **GO after the reviewer files on the refusal record, the diagnosis and the declaration act** — cost ~1.5 h |
+| then | 09-04 | smoke | DE | after the re-run |
+| as each completes | 09-05, 09-06, 09-07 | inputs → book → smoke | BE → DE | 1.165 h + smoke per day |
+| from 09-09T00:00Z | 09-08 | the same chain | BE → DE | immediately |
+| ≈09-09 03:00–04:00Z, horizon 12:00Z | — | the aggregate read | coordinator | **horizon UNAFFECTED** |
+
+**Before the re-run, a declaration act — never a raised cap:** the real day's budget
+derived from the design's own ceiling (the plan's S1 peak and the 8 GiB cap), stated
+**with its derivation** (never the measured peak plus a margin), checked **per stage**
+with the refusal at the **first** crossing, and the label computed from `--day`.
+
+### The seam, confirmed at both code sites
+
+**DA resolves supersession by NAME** (`ref = sup.get("path") or sup.get("artifact")`;
+`heads = [h for h in hits if h.name not in superseded]`); **DE by DIGEST**
+(`by_digest[sha256_streamed(p)] = p`; `sup_of[p] = supersedes.sha256`). A `.v2`
+carrying only `{sha256}` is a **head** to DE and **AMBIGUOUS** to DA; one carrying
+only `{path}` is the reverse. **Ruled: a link is the pair `{path, sha256}`, both
+required; a matching digest under a different name is a MOVED file, refused by name;
+the head is the artifact no present file supersedes** — declared in **design v17** so
+both seats read it from the declaration rather than from each other.
+
+### State
+
+- **The eight conjuncts ENFORCED and driven both ways** — the positive control
+  **opens** at G = 6; each of six drivable conjuncts refuses alone; both directions of
+  the id/evaluator correspondence refuse; a params file without the field refuses.
+  The horizon is **named, not applied**.
+- **Still open, already named:** the landing record has **no declared name and no
+  correction path** (DA 76, with §2.5's "a present file whose bytes do not match the
+  pin refuses as ONE-ARM before the pin is compared"); design v15/v16's
+  `parameters.path` naming v2 (DE 89).
+- **The lock arbitrated two seats without a coordinator** — 63+ refusals over 79
+  minutes of polling, then acquisition the moment the holder died. The queue advanced
+  on a **refusal** exactly as it would have on a receipt; nothing in the schedule
+  distinguishes them.
+- **In flight:** BE 58 (fragment), DE 89 (+ the link shape + the refusal ruling),
+  DA 76, REV 53 (DE 88's closure and stamps).
+
+**Counts, measured before the sentence:** flags 871 → 879, `flag_provenance`
+416 → 424, tasks 19; **257 CHECKED**, 167 RELAYED, **455 UNMARKED — unchanged for
+the twenty-eighth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 134 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 151
 
 **As of 2026-09-06T09:46:40Z. State only — MEM writes no result.**

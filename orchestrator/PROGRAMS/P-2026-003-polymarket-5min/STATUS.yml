@@ -63,6 +63,79 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T09:54:10Z (MEM ROUND 152 -- R-608 AND REV 52'S FILING SWEPT. STATE ONLY.
+  THE FIRST SEALED GATE-1 SMOKE DAY REFUSED, AND IT IS TO BE RE-RUN.
+  (1) **THE FILE STATES THE DISTINCTION IT THEN FAILS TO MAKE.** At `a7e28e6^` -- the
+  bytes that RAN -- line 1432 is `FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0`, its
+  comment *"A fixture that exceeds it REFUSES: the point of a budget nobody enforces
+  is nothing"*, **and the very next comment reads *"The real day's ceiling is the cap
+  itself and the response is R-174's:"***. ***Adjacent lines: the rule, then the
+  constant that ignores it.*** **A comment is not a control** -- *the round-151 shape
+  (a message asserting more than its predicate) one level up.* The real day was
+  judged against the fixture's number and labelled `FIXTURE-DAY-1`.
+  (2) **THE REFUSAL RECORD LANDED -- AND ITS OWN PREDICATE IS SELF-FALSIFYING.**
+  `p003_de_gate1_day_run_20260903_REFUSED__20260906T095058Z.json` carries
+  `predicate: "glob(p003_de_gate1_day_run_*20260903*) is EMPTY"`. ***I re-ran it: ONE
+  match -- the record itself.*** **The substantive field holds**
+  (`sealed_layout_artifacts_for_this_day = []`; I measure SEALED-layout matches
+  **0**), *so the conclusion stands* -- **but rule 10's point is that a reader
+  RE-EVALUATES, and this one now returns the opposite.** *One word: match `_SEALED__`
+  or exclude `_REFUSED__`.* ROUTED TO DE.
+  (3) **AND OTHERWISE THAT RECORD IS A MODEL OF WHAT A NON-RESULT LOOKS LIKE:** the
+  verbatim message; `the_label_as_printed`; launch and exit; the scope's CPU, peak
+  **and its journal line quoted with its source command**; `runner_that_RAN.sha256
+  2089d74e…` with the note that the file on disk was replaced at 08:35:20Z; the book
+  digest; the launcher log pinned by `sha256 c0df5d37…`, 1,398 bytes, 22 lines; and a
+  **`what_this_record_is_not`** block -- *`a_day_run: false`, `a_result: false`,
+  `it_says_nothing_about_either_arm: true`.* ***Fields that say what the artifact is
+  NOT are the cheapest defence against a reader treating a refusal as a result.***
+  (4) **THE SEAM, CONFIRMED AT BOTH CODE SITES RATHER THAN RELAYED:** **DA resolves
+  supersession by NAME** (`ref = sup.get("path") or sup.get("artifact")`,
+  `heads = [h for h in hits if h.name not in superseded]`); **DE by DIGEST**
+  (`by_digest[sha256_streamed(p)] = p`, `sup_of[p] = supersedes.sha256`). ***A `.v2`
+  carrying only `{sha256}` is a head to DE and AMBIGUOUS to DA; one carrying only
+  `{path}` is the reverse.*** **And the ruling -- a link is the PAIR `{path,
+  sha256}`, both required, a matching digest under another name being a MOVED file
+  refused by name -- is exactly the UNION of what the two seats each already read**,
+  declared in design v17 so both read it from the declaration rather than from each
+  other.
+  (5) **THE RESPONSE IS A DECLARATION ACT, NEVER A RAISED CAP:** the refusal record
+  (landed); DE's diagnosis from the v12 bytes of why the real-day path took the
+  fixture's budget AND label, and why it refused at the END of 84 minutes rather than
+  at the first stage that crossed; then **the real day's budget derived from the
+  design's own ceiling, stated WITH ITS DERIVATION -- never the measured peak plus a
+  margin -- checked PER STAGE, refusing at the FIRST crossing, the label computed
+  from `--day`.** **The re-run takes the first heavy slot after BE 58 and BE 59; cost
+  one run, ~1.5 h; the 09-09T12:00Z horizon is UNAFFECTED.**
+  (6) **THE LOCK ARBITRATED TWO SEATS WITHOUT A COORDINATOR:** `be58frag.scope`
+  active, pid 3154841 at 392 s -- **63+ refusals over 79 minutes of polling, then
+  acquisition the moment the holder died.** *And the queue advanced on a REFUSAL
+  exactly as it would have on a receipt: nothing in the schedule distinguishes them.*
+  (7) **THE EIGHT ARE ENFORCED AND DRIVEN BOTH WAYS** -- the positive control OPENS
+  at G = 6, each of six drivable conjuncts refuses ALONE, both directions of the
+  id/evaluator correspondence refuse, a params file without the field refuses; the
+  resolver correct in four cases; the horizon NAMED not applied. ***A gate whose
+  positive control OPENS is the half rule 16 says is usually missing.*** *Still open
+  and already named: the landing record has no declared name and no correction path
+  (DA 76).*
+  **AT COMMIT TIME, 2026-09-06T09:57:09Z, THE MECHANISM IS ALREADY NAMED (`c64e2f5`,
+  runbook, REV 53 SS0 -> R-609):** ***"`_main_day` ran the in-run battery's FIXTURE
+  day inside the REAL day's process and compared the fixture's 700 MB budget against
+  the process-wide `ru_maxrss` the real day had set to 2,426 MB."*** **So the two
+  numbers never met in the code -- they met in the PROCESS.** *Which is why my
+  round-151 observation that the systemd peak was 3.5x the fixture budget for 82
+  minutes was measuring the right quantity: the process-wide peak IS what the
+  fixture's budget was compared against.* **The runbook's check before any GO: at the
+  CODE, not the report -- no fixture check inside a real day's process, or every
+  fixture budget a highwater DELTA; and the receipt's battery field says what
+  actually ran.** *Recorded unswept.*
+  **FLAG WORDS: the 09-03 smoke REFUSED-TO-BE-RE-RUN (not "failed", not "run"); the
+  day NOT CONSUMED -- no artifact under the sealed layout, measured; the horizon
+  UNAFFECTED; the 09-04 fragment BUILDING (`be58frag.scope`).**
+  MEASURED BEFORE THIS SENTENCE: flags 871 -> 879, flag_provenance 416 -> 424,
+  tasks 19; **257 CHECKED**, 167 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T09:46:40Z (MEM ROUND 151 -- R-607 AND Q-DE-88 SWEPT. STATE ONLY.
   THE FINDING IS A MESSAGE THAT ASSERTS MORE THAN ITS PREDICATE TESTS.
   (1) **THE QUESTION I ROUTED AT ROUND 150 IS SETTLED AS A DEFECT, AND IT IS STILL
@@ -213,78 +286,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 851 -> 859, flag_provenance 396 -> 404,
   tasks 19; **242 CHECKED**, 162 RELAYED, **455 UNMARKED -- unchanged for the
   twenty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T09:31:36Z (MEM ROUND 149 -- R-605, REV 51'S FILING, Q-DA-296 AND Q-DE-87
-  (PARTIAL) SWEPT. STATE ONLY. THE FINDING IS A PIN THAT RESOLVES IN NEITHER
-  DIRECTION, AND A CORRECTION THAT TRIPS THE GATE IT SERVES.
-  (1) **I HASHED THE FILES MYSELF.** Design v14 names **`parameters.path =
-  …/de_multiday_gate1_params_v2.json`** with **`parameters.sha256 = 1af1befb…`**, and
-  the digests I computed are **v2 = `ce46b577…`, v6 = `1af1befb…`, v7 =
-  `d58426e0…`.** ***The file at the named PATH has a different digest; the file with
-  the named DIGEST has a different path.*** **And the reverse pin names no file at
-  all: params v7 -- the NEWEST -- still carries `design_declaration.path =
-  "…_design_v14__<emitted this round>.json"`, `sha256: "NOT_PINNED_HERE"`.** *A
-  cross-pointer broken in BOTH directions with the runner's 167 and the design's 89
-  GREEN beside it* -- **rule 15: a claim with no check behind it drifts without
-  either side noticing.**
-  (2) **AND THE EMITTER MAY BE FIXED WHILE THE EMITTED ARTIFACT IS NOT.** DE 87b
-  landed *"the design pins params v7"* -- and **the newest EMITTED design artifact is
-  still v14 with the broken pin; `design_v15` does not exist on disk (census 0).**
-  ***So the 09-04 preflight's `P3_design` block stands at my read regardless of what
-  the emitter now does, because the preflight reads the ARTIFACT.*** *The same
-  distinction that governs a receipt, and the same reason `.v2` supersessions exist.*
-  (3) **AND THE DESIGN ARTIFACT HAS NO `version` FIELD AT ALL** -- its top-level keys
-  are `protocol` and the R-numbered rules; **the "v14" is in the FILENAME.**
-  ***Which is exactly why a template path sits in a pin and looks right: when
-  identity is carried by NAME, an unfilled name is still a well-formed name.*** *The
-  digest field that would have refused says `NOT_PINNED_HERE`.*
-  (4) **THE CORRECTION TRIPS THE GATE IT SERVES.** `find_sealed_day_receipt` returns
-  **`AMBIGUOUS`** on more than one match, with the reason ***"two sealed receipts for
-  one day is a day that ran twice; a read that picks the newest is a read that chose
-  after seeing."*** **Every word is a correct principle -- and all of it is FALSE of a
-  corrected day.** R-603's `.v2` matches the day glob, so v1 + `.v2` -> `may_open
-  False, missing ['2026-09-03']`. ***The correction ruled in R-603 would make the
-  gate ruled in R-602 refuse the very day it corrects.*** *The cases are
-  distinguishable from the artifacts -- a correction carries `supersedes` -- and DE
-  ships supersession machinery the gate does not use.* OPEN-PENDING-DE-87.
-  (5) **BE'S THREE HEAVY PRODUCERS CARRY ZERO PROVENANCE STAMPS** -- census over
-  `be_daybook_build.py`, `be_gate1_fragment.py`, `be_gate1_state_tape.py`: **no
-  `producing_code_sha256`, no `LAUNCH_SOURCE_SHA256`, no `carrying_commit`, in any of
-  the three.** ***These are the next three heavy runs, and BE 59 was about to add
-  `builder_commit` AT EMIT -- inheriting the defect DE had just fixed, on its first
-  use.*** **The class does not travel by being written down; it travels by being
-  implemented the obvious way.**
-  (6) **RULE 22 AMENDED:** runners **and every heavy producer** capture at IMPORT the
-  digest of every module in their **import closure** under `live/` **plus the
-  worktree's HEAD**, stamp both, and refuse the emit by name if any moved -- *"a
-  digest of ONE FILE closes a THIRD of the class; the closure and HEAD close it;*
-  ***a practice that depends on noticing is not a control."*** *The first
-  stop-the-line was caught by a human looking, three minutes before the state would
-  have cost the day.*
-  (7) **AND ONE OF THE EIGHT WAS DRIVEN, NOT ARGUED:** at v14, **two closed, two
-  partly, four open** -- and ***"six days in which every arm is inadmissible OPEN the
-  gate"*** was RUN. *That is the case I read out of the status expression last round;
-  the reviewer exhibited it.* **Same defect at two levels, and the exhibit is what
-  closes it.** DA 74 verified (**38 / 19 / 11**), with a suite that **failed one
-  check because the world moved between two runs -- v7 landing mid-verification, a
-  correct refusal on a v6 lacking the field.**
-  **AT COMMIT TIME, 2026-09-06T09:34:27Z: PARAMS v8 AND DESIGN v15 BOTH LANDED, AND
-  THE PIN IS STILL BROKEN IN BOTH DIRECTIONS.** I hashed the new pair: **design v15
-  names `params_v2.json` STILL, with v8's ACTUAL digest `8c3f2676…`** -- *the digest
-  advanced v6 -> v8 across two revisions while the path stayed at v2* -- **and params
-  v8 names the REAL `…design_v15__20260906T094500Z.json` with `sha256` still
-  `NOT_PINNED_HERE`** (v15 hashes `0c83afb1…`). ***Forward: right digest, wrong path.
-  Reverse: right path, no digest. Each side repaired the half the OTHER lacked.***
-  *(1) stands as history at its as-of; the block is unchanged in substance.* And
-  `9dd7957`: **DA 75 landed -- "params v8 landed mid-round and my ids match DE's
-  exactly, but one of my own checks was still matching PROSE"** -- *another seat
-  suspecting its own probe, in the same hour.*
-  **FLAG WORDS: the 09-04 PREFLIGHT BLOCKED-ON-P3_DESIGN (pending DE 87's v8/v15);
-  the read gate's supersession collision OPEN-PENDING-DE-87; rule 22 AMENDED; the
-  smoke RUNNING -- I measure pid 3049132 at 4,117 s (~68 min), output ABSENT.**
-  MEASURED BEFORE THIS SENTENCE: flags 843 -> 851, flag_provenance 388 -> 396,
-  tasks 19; **236 CHECKED**, 160 RELAYED, **455 UNMARKED -- unchanged for the
-  twenty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2958,6 +2959,97 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_CODE_DOCUMENTS_THE_DISTINCTION_IT_THEN_FAILS_TO_MAKE: BOTH_SENTENCES_ARE_IN_THE_FILE
+                             # CHECKED 2026-09-06T09:54:10Z at `a7e28e6^` -- the bytes that RAN.
+                             # Line 1432 is `FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0`, and the comment above
+                             # it reads *"A fixture that exceeds it REFUSES: the point of a budget nobody
+                             # enforces is nothing"* -- **and the very next comment says *"The real day's
+                             # ceiling is the cap itself and the response is R-174's:"***.
+                             # ***So the file states the distinction between the fixture's budget and the
+                             # real day's ceiling, in adjacent lines, and the real day was then judged
+                             # against the fixture's number and labelled `FIXTURE-DAY-1`.***
+                             # **A comment is not a control** -- *the same shape as the walk's message
+                             # asserting more than its predicate (round 151), one level up: here the
+                             # correct rule is written down beside the constant that ignores it.*
+  THE_REFUSAL_RECORD_LANDED_AND_ITS_OWN_PREDICATE_IS_SELF_FALSIFYING: ONE_WORD_ROUTED_NOT_RULED
+                             # CHECKED 2026-09-06T09:54:10Z at
+                             # `p003_de_gate1_day_run_20260903_REFUSED__20260906T095058Z.json`. **Item (1)
+                             # of the ruling has LANDED**, and it carries
+                             # `NOTHING_ECONOMIC_WAS_READ_OR_WRITTEN.predicate = "glob(p003_de_gate1_day_run_*20260903*)
+                             # is EMPTY"`.
+                             # ***I re-ran that glob: it returns ONE match -- this record itself.***
+                             # **The substantive field still holds** (`sealed_layout_artifacts_for_this_day
+                             # = []`, and I measure SEALED-layout matches = **0**), *so the conclusion is
+                             # untouched* -- **but the predicate as WRITTEN is falsified by the existence of
+                             # the artifact that carries it**, and rule 10's whole point is that a reader
+                             # re-evaluates. *The fix is one word: match `_SEALED__`, or exclude
+                             # `_REFUSED__`.* **ROUTED TO DE, NOT RULED.**
+  THE_REFUSAL_RECORD_IS_A_MODEL_OF_WHAT_A_NON_RESULT_LOOKS_LIKE: WHAT_THIS_RECORD_IS_NOT
+                             # CHECKED 2026-09-06T09:54:10Z, field by field. **The verbatim message; `the_label_as_printed:
+                             # FIXTURE-DAY-1`; `launch_utc 08:22:03Z` / `exit_utc 09:46:29Z`; the scope's
+                             # `cpu 1h 24min 20.439s`, `memory_peak 2.3G` and its JOURNAL LINE quoted with
+                             # `source: journalctl --user -u de84smoke.scope`; `runner_that_RAN.sha256
+                             # 2089d74e…` with the note "the bytes in memory for the whole run; the file on
+                             # disk was replaced at 08:35:20Z by DE 85"; the book digest `aad816d6…`; the
+                             # launcher log pinned by `sha256 c0df5d37…`, 1,398 bytes, 22 lines; and a
+                             # `what_this_record_is_not` block -- `a_day_run: false`, `a_result: false`,
+                             # `it_says_nothing_about_either_arm: true`.**
+                             # ***A record whose fields say what it is NOT is the cheapest defence against
+                             # a future reader treating a refusal as a result*** -- *and this programme has
+                             # three instances of exactly that misreading.*
+  THE_SEAM_CONFIRMED_AT_BOTH_CODE_SITES_NOT_RELAYED: THE_RULING_IS_THE_UNION_OF_WHAT_EACH_SEAT_READS
+                             # CHECKED 2026-09-06T09:54:10Z at both files. **DA resolves by NAME:
+                             # `ref = sup.get("path") or sup.get("artifact")`, `superseded.add(Path(ref).name)`,
+                             # `heads = [h for h in hits if h.name not in superseded]`. DE resolves by
+                             # DIGEST: `by_digest[sha256_streamed(p)] = p`, `sup_of[p] = (rec.get("supersedes")
+                             # or {}).get("sha256")`.**
+                             # ***So a `.v2` carrying only `{sha256}` is a head to DE and AMBIGUOUS to DA;
+                             # one carrying only `{path}` is the reverse*** -- the reviewer drove it on
+                             # identical bytes and I confirm it at the two code sites.
+                             # **And the ruling -- a link is the PAIR `{path, sha256}`, both required, a
+                             # matching digest under a different name being a MOVED file refused by name --
+                             # is exactly the UNION of what the two seats each already read.** *Declared in
+                             # design v17 so both read it from the declaration rather than from each other.*
+  BE_58_HOLDS_THE_LOCK_AND_RULE_20_ARBITRATED_WITHOUT_A_COORDINATOR: SEVENTY_NINE_MINUTES_OF_POLLING
+                             # CHECKED 2026-09-06T09:54:10Z: **`be58frag.scope` is `active / running`;
+                             # pid 3154841 is `be_gate1_fragment.py --day 20260904` at 392 s.**
+                             # ***The lock passed from DE 84 to BE 58 at 09:46Z with no seat deciding it***
+                             # -- 63+ refusals over 79 minutes of polling, then acquisition the moment the
+                             # holder died. **Rule 20 arbitrated two seats without a coordinator, which is
+                             # what a lock is for** -- *and the same mechanism means the queue advanced on a
+                             # REFUSAL exactly as it would have on a receipt, which is worth saying because
+                             # nothing in the schedule distinguishes them.*
+  THE_RESPONSE_IS_A_DECLARATION_ACT_AND_THE_RE_RUN_TAKES_THE_FIRST_SLOT: NEVER_A_RAISED_CAP
+                             # RELAYED from R-608(B), 2026-09-06T09:54:10Z. **(1) the refusal record
+                             # (landed); (2) DE diagnoses from the v12 bytes WHY the real-day path read the
+                             # fixture's budget and label, and why it refused at the END of 84 minutes of
+                             # null draws rather than at the first stage that crossed; (3) the DECLARATION
+                             # ACT before the re-run -- the real day's budget derived from the design's own
+                             # ceiling (the plan's S1 peak and the 8 GiB cap), stated WITH ITS DERIVATION,
+                             # never the measured peak plus a margin; checked PER STAGE with the refusal at
+                             # the FIRST crossing; the label computed from `--day`.**
+                             # **The re-run is the coordinator's GO after the reviewer files; it takes the
+                             # first heavy slot after BE 58 (fragment + tape) and BE 59 (the 09-04 book).
+                             # Cost: one run, ~1.5 h. The 09-09T12:00Z horizon is UNAFFECTED.**
+  THE_EIGHT_ARE_ENFORCED_AND_DRIVEN_BOTH_WAYS: A_POSITIVE_CONTROL_THAT_OPENS
+                             # RELAYED from R-608(C) / REV 52, 2026-09-06T09:54:10Z. **The positive
+                             # control OPENS at G = 6; each of the six drivable conjuncts refuses ALONE;
+                             # both directions of the id/evaluator correspondence refuse; a params file
+                             # without the field refuses.** *The chain-head resolver correct in four cases,
+                             # closing REV 51 SS1.5 without losing item 2; the horizon NAMED not applied, a
+                             # minute either side; `rehearse_smoke` 09-03 READY, 09-04 on the book alone.*
+                             # ***A gate whose positive control OPENS is the half rule 16 says is usually
+                             # missing*** -- **every one of the eight can refuse, and the whole can still
+                             # admit.**
+  THE_LANDING_RECORD_HAS_NO_DECLARED_NAME: THE_NEXT_SEAM_ALREADY_NAMED
+                             # RELAYED from R-608(C) SS2.4/SS2.5, 2026-09-06T09:54:10Z. **The landing
+                             # record -- the artifact the read predicate's `receipt_at_landing_digest`
+                             # conjunct rests on -- has NO DECLARED NAME and NO CORRECTION PATH** (DA 76:
+                             # the per-day pre-read's filename convention declared, chain resolution for
+                             # landing records). *And SS2.5's filed case is named properly now: "a present
+                             # file whose bytes do not match the pin refuses as ONE-ARM before the pin is
+                             # compared."* **Two probe errors of the reviewer's own, caught before a
+                             # claim** -- *the fourth seat this session to catch its own probe first.*
   THE_SMOKE_REFUSED_ON_A_FIXTURE_BUDGET_AFTER_EIGHTY_FOUR_MINUTES: NO-ARTIFACT-WAS-PRODUCED
                              # CHECKED 2026-09-06T09:49:19Z at the machine, at COMMIT TIME, and this
                              # supersedes every "RUNNING" reading in this round's flag words.
@@ -18460,6 +18552,76 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 152, 2026-09-06T09:54:10Z ------------------------------
+  THE_CODE_DOCUMENTS_THE_DISTINCTION_IT_THEN_FAILS_TO_MAKE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:54:10Z
+    said: >-
+      at a7e28e6^, the bytes that ran, line 1432 is FIXTURE_DAY_PEAK_RSS_MB_BUDGET =
+      700.0 with the comment "A fixture that exceeds it REFUSES: the point of a budget
+      nobody enforces is nothing", and the very next comment reads "The real day's
+      ceiling is the cap itself and the response is R-174's:". The file states the
+      distinction in adjacent lines and the real day was judged against the fixture's
+      number and labelled FIXTURE-DAY-1. A comment is not a control.
+  THE_REFUSAL_RECORD_LANDED_AND_ITS_OWN_PREDICATE_IS_SELF_FALSIFYING:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260903_REFUSED__20260906T095058Z.json
+    as_of: 2026-09-06T09:54:10Z
+    said: >-
+      the record carries NOTHING_ECONOMIC_WAS_READ_OR_WRITTEN.predicate =
+      "glob(p003_de_gate1_day_run_*20260903*) is EMPTY"; I re-ran that glob and it
+      returns one match, the record itself. The substantive field still holds --
+      sealed_layout_artifacts_for_this_day = [] and I measure SEALED-layout matches 0
+      -- so the conclusion is untouched, but the predicate as written is falsified by
+      the existence of the artifact carrying it. The fix is one word: match _SEALED__
+      or exclude _REFUSED__. Routed to DE, not ruled.
+  THE_REFUSAL_RECORD_IS_A_MODEL_OF_WHAT_A_NON_RESULT_LOOKS_LIKE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260903_REFUSED__20260906T095058Z.json
+    as_of: 2026-09-06T09:54:10Z
+    said: >-
+      field by field: the verbatim message; the_label_as_printed FIXTURE-DAY-1;
+      launch_utc 08:22:03Z and exit_utc 09:46:29Z; the scope's cpu 1h 24min 20.439s,
+      memory_peak 2.3G and its journal line quoted with source journalctl --user -u
+      de84smoke.scope; runner_that_RAN.sha256 2089d74e... with the note that the file
+      on disk was replaced at 08:35:20Z; the book digest aad816d6...; the launcher log
+      pinned by sha256 c0df5d37..., 1398 bytes, 22 lines; and a what_this_record_is_not
+      block with a_day_run false, a_result false, it_says_nothing_about_either_arm true.
+  THE_SEAM_CONFIRMED_AT_BOTH_CODE_SITES_NOT_RELAYED:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T09:54:10Z
+    said: >-
+      DA resolves supersession by NAME (ref = sup.get("path") or sup.get("artifact");
+      superseded.add(Path(ref).name); heads = [h for h in hits if h.name not in
+      superseded]) and DE by DIGEST (by_digest[sha256_streamed(p)] = p; sup_of[p] =
+      (rec.get("supersedes") or {}).get("sha256"), in de_multiday_gate1_runner.py at
+      the same as_of). A .v2 carrying only {sha256} is a head to DE and AMBIGUOUS to
+      DA, and one carrying only {path} is the reverse. The ruling that a link is the
+      pair {path, sha256} is the union of what the two seats each already read.
+  BE_58_HOLDS_THE_LOCK_AND_RULE_20_ARBITRATED_WITHOUT_A_COORDINATOR:
+    prov: CHECKED
+    artifact: live/pm_research/be_gate1_fragment.py
+    as_of: 2026-09-06T09:54:10Z
+    said: >-
+      be58frag.scope is active/running and pid 3154841 is be_gate1_fragment.py --day
+      20260904 at 392 s. The lock passed from DE 84 to BE 58 at 09:46Z with no seat
+      deciding it, after 63+ refusals over 79 minutes of polling; the queue advanced
+      on a refusal exactly as it would have on a receipt, and nothing in the schedule
+      distinguishes them.
+  THE_RESPONSE_IS_A_DECLARATION_ACT_AND_THE_RE_RUN_TAKES_THE_FIRST_SLOT:
+    prov: RELAYED
+    from: R-608(B)
+    as_of: 2026-09-06T09:54:10Z
+  THE_EIGHT_ARE_ENFORCED_AND_DRIVEN_BOTH_WAYS:
+    prov: RELAYED
+    from: R-608(C)
+    as_of: 2026-09-06T09:54:10Z
+  THE_LANDING_RECORD_HAS_NO_DECLARED_NAME:
+    prov: RELAYED
+    from: R-608(C)
+    as_of: 2026-09-06T09:54:10Z
   # --- MEM round 151, 2026-09-06T09:46:40Z ------------------------------
   THE_SMOKE_REFUSED_ON_A_FIXTURE_BUDGET_AFTER_EIGHTY_FOUR_MINUTES:
     prov: CHECKED
