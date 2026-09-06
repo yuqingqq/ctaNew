@@ -1652,7 +1652,11 @@ def main() -> int:
     if a.selftest:
         checks, n_fail = selftest()
         if a.output:
-            rep = build_report()
+            #: an in-band re-emission carries the R-608 PAIR of the census
+            #: it supersedes AND its own battery -- a superseding artifact
+            #: that dropped the checks would be a weaker statement wearing
+            #: a later name.
+            rep = build_report(supersedes=a.supersedes)
             rep["checks"] = checks
             rep["n_checks"] = len(checks)
             rep["n_failed"] = n_fail
