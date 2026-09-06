@@ -386,22 +386,29 @@ recorded as R-495.
 
 ---
 
-## 7. State at this writing (2026-09-05T11:38Z) — verify, don't trust
+## 7. State at this writing (2026-09-06T02:2xZ, R-541) — verify, don't trust
 
-**Programme: RESUMED by the USER at 2026-09-05T14:54Z (R-534), WITHIN THE V2
-SCOPE** — verification, closure and the ceiling's missing null; NO model fit,
-broad replay, survey, grid, cache rebuild or Gate-2. Seats: all five reloaded
-(R-533) and ALL carrying batches — USER: "make all modules work" (R-539), no
-standby seats while the loop runs (BE 43 cancel-axis null; DA 51 attainable companion + 22 legs + mutation audit;
-DE 64 THE RULED GATE-1e RUN at E0/E−R under the reviewer's declared bar (01edfd2);
-REV self-attacking its spec + adjudicating DA's straddle; MEM 104 next).
-The seat monitor (`seatwatch.sh`) is **RE-ARMED**. **The V2 Gate-1f blocker is DISSOLVED (R-535/R-536): the maker fee is
-published at zero by the venue and confirmed on-chain. USER RULING R-537: Gate 1e
-is RE-RUN at three fee endpoints (0, +0.07·p(1−p), −rebate) reporting invariance;
-the reviewer specifies, DE runs, DA verifies. Gate 1's three sampler refusals
-stand.** R-536's header time is wrong (16:04Z; true 15:51Z) — see R-537(A).
+**⚠ STRUCTURAL FACT, learned three times: the seat monitor's notifications reach
+the coordinator ONLY inside a running turn. Between turns NOTHING wakes it. The
+loop stalls at the coordinator whenever the USER is not prompting** — 40 min on
+09-05, then TEN HOURS overnight with five finished seats idle and G reached. A
+coordinator session must be prompted, or the standing duty is a fiction.
 
-- **Tip:** `917d743` (R-532). Next register entry after R-533: **R-534**.
+**Race: G = 5 REACHED** (09-05 accrued at 00:06:01Z, four conjuncts, CONTENT_LIVE,
+mask WRITTEN). DIRECTIONAL by USER ruling. **09-05 is UNSCORED** — the scorer was
+never wired to a unit; BE runs it by hand (BE 44).
+
+**The midnight unit is RED EVERY NIGHT by design collision**: the open day's mask
+refuses (correctly) for want of windows and the script classifies that as
+INSTRUMENT FAILURE, rc=4. Its exit status is meaningless as a health signal until
+DA reclassifies it (DA 52). Read the unit's own log
+(`data/pm_5min/derived/.da_midnight_verify.log`), not `systemctl`.
+
+**The ruled Gate-1e run (R-537) is DONE and verified at the receipt: INVARIANT
+true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94% of
+its controls at both endpoints; Gate 1's three sampler refusals stand.
+
+- **Tip:** see `git log`. Next register entry after R-541: **R-542**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
   USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
   + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
