@@ -63,6 +63,56 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T05:11:53Z (MEM ROUND 122 -- R-567 SWEPT. STATE ONLY.
+  (1) E2.0 IS **SETTLED**: "I could not find a reading that rescues it." And it
+  is a settlement by RECOMPUTATION -- delta_rs re-derived from the per-day cells
+  (-0.006570 against the receipt's -0.006570), the verdict IDENTICAL UNDER EITHER
+  CI READING, and **LEAVE-ONE-DAY-OUT ON ALL 16 DAYS WITH ci_hi RECOMPUTED EACH
+  TIME: THE KILL SURVIVES EVERY DROP.** tau* was PRE-DECLARED before any rs was
+  seen. The earlier receipt is retired with its 49 differing leaves COUNTED AND
+  LOCATED, none on what the verdict rests on.
+  (2) AND R-567(A) REPEATS `867f647` FOR REV 33 -- **THE SHA I CORRECTED ONE
+  ENTRY EARLIER.** `ed14c87` occurs in the register EXACTLY ONCE, IN MY OWN
+  Q-MEM-109 ROW. R-566 cannot be edited and I do not ask for that; what is new is
+  that A FRESH ENTRY REPEATED IT, so the address is being carried forward from
+  entry to entry rather than read from the commit that holds the file. **FOURTH
+  INSTANCE IN TEN ROUNDS OF "the thing that would have prevented it was already
+  in the repository" -- and this time I put it there on purpose, for this.** I
+  route no fix: what a coordinator reads before writing an entry is not my
+  surface.
+  (3) Q-DA-279 SHARPENS MY OWN ROUND-116/117 ENTRIES AGAINST ME. **`git checkout
+  --detach` REPLACES A WORKTREE'S data SYMLINK**, and the R-557 refresh command
+  BEGINS WITH THAT COMMAND -- **so the refresh UNDID THE R-553 FIX EVERY TIME IT
+  RAN.** I called it "a fix that decays" and "a chore with an invisible
+  deadline". **BOTH UNDERSTATED IT: IT WAS A REMEDY WHOSE FIRST ACT REVERSED THE
+  REPAIR.** And I had the evidence -- at round 117 I recorded DE landing by
+  CHERRY-PICK because it could not run that command, and read it as the
+  conflict's COST rather than asking what the command DID when it succeeded.
+  (4) A BACKTICK IN A `-m` STRING RAN `git checkout --detach` IN THE SHARED TREE,
+  the commit landed detached, **AND THE PUSH SILENTLY NO-OP'D** -- the fourth
+  member of the "operation that does nothing and reports success" family. **MY
+  OWN EXPOSURE, MEASURED: 5 of my 119 commit messages contain a backtick; ZERO
+  contain the other expanders.** All five messages are intact, and **I CANNOT
+  ESTABLISH FROM THE LOG WHY, SO I DO NOT CLAIM I WAS SAFE BY DESIGN** -- five
+  carried the hazardous character, they happen to have survived, and the rule
+  removes the question. **COMMIT MESSAGES BY HEREDOC OR -F FROM THIS COMMIT ON;
+  this one uses -F.**
+  (5) DA 59 VERIFIED: the earlier E2.0 receipt superseded by a sidecar whose
+  same-result claim is COMPUTED FIELD BY FIELD; the deploy record STATES ITS
+  BOUNDARY and that deployed_commit is provenance; the P-002 surface resolves
+  through the IMPORTED de_data_root, **and splitting the roots EXPOSED A LATENT
+  relative_to(ROOT) BUG** -- fixed and pinned. **The partial-root falsifier was
+  DRIVEN THROUGH run(): a real tape holding 2 of 19 days with every directory
+  present PRINTS ITS CENSUS AND THEN REFUSES BEFORE ANY DAY IS READ.** That is
+  the reviewer's gap closed at the mechanism rather than by inspection.
+  (6) E2-A IS DECLARED (21 checks both directions, no data) WITH TWO ESCALATIONS
+  RULED -- **not two defaults**. No dependency is installed and the closed forms
+  are attacked by the reviewer before any run; the size-aware arm REFUSES and the
+  min-size arm runs **LABELLED NOT THE GATE**, which is only safe while the label
+  travels with every number. **AND THE NOTIONAL'S SOURCE IS USER-PENDING** -- it
+  exists only in P-2026-001's paper-trading exports, "if anywhere", and that "if
+  anywhere" is the honest part.
+  PRIOR CHECKPOINT:
   2026-09-06T05:06:00Z (MEM ROUND 121 -- R-566 AND THE E2.0 RESULT REVIEW SWEPT.
   STATE ONLY, AND THREE OF THE FOUR ITEMS ARE CITATION OR TIMING CHECKS.
   (1) MY ROUND-120 "PENDING-REVIEW, NOT SETTLED" WAS ALREADY SUPERSEDED WHEN I
@@ -2369,7 +2419,46 @@ flags:
                              # R-549(B) is corrected in band at R-551(2); DE 70
                              # states the fields as COMPUTED FROM THE MEASURED
                              # SECONDS rather than typed.
-  R566_CITES_867f647_FOR_REV33_AND_THE_REVIEW_IS_AT_ed14c87: CHECKED-BY-ME-AT-BOTH-COMMITS
+  R567_REPEATS_THE_867f647_CITATION_ONE_ENTRY_AFTER_I_CORRECTED_IT: THE-CORRECTION-DID-NOT-PROPAGATE
+                             # CHECKED 2026-09-06T05:11:53Z, and it is the finding
+                             # of this round about routing rather than about a
+                             # sha.
+                             # I FILED THE CORRECTION AT ROUND 121 (Q-MEM-109):
+                             # 867f647 holds exactly p002_e2_a_declaration_v1.json
+                             # and the review is at ed14c87. **R-567(A) OPENS
+                             # "E2.0 -- SETTLED (REV 33, `867f647`)" -- THE SAME
+                             # SHA, ONE ENTRY LATER.**
+                             # AND THE MEASURE THAT MAKES IT A PROPAGATION
+                             # FAILURE RATHER THAN A DISAGREEMENT: **`ed14c87`
+                             # OCCURS IN THE REGISTER EXACTLY ONCE, IN MY OWN
+                             # Q-MEM-109 ROW.** The correct address exists in the
+                             # register and has never been used by an entry.
+                             # R-566 CANNOT BE EDITED (rule 13) AND I DO NOT ASK
+                             # FOR THAT -- its citation stands as provenance.
+                             # WHAT IS NEW IS THAT **A FRESH ENTRY REPEATED IT**,
+                             # which means the sha is being carried forward from
+                             # entry to entry rather than read from the commit
+                             # that holds the file.
+                             # THE CONTENT IS RIGHT IN BOTH ENTRIES, EXTENSIVELY
+                             # AND CORRECTLY -- R-567(A) quotes the review's
+                             # recomputations accurately. **SO THIS IS AN ADDRESS
+                             # TRAVELLING WITHOUT ITS OBJECT**, and a reader who
+                             # follows it still lands on a real commit, which is
+                             # what keeps it from being noticed.
+                             # AND IT IS THE FOURTH INSTANCE OF ONE SHAPE IN TEN
+                             # ROUNDS: my round-101 census (found at 113), DA's
+                             # limits[2] (107), the shell trap solved in a code
+                             # comment (117), and now a correction filed
+                             # SPECIFICALLY TO PREVENT THIS, ONE ENTRY EARLIER.
+                             # **THE THING THAT WOULD HAVE PREVENTED IT WAS
+                             # ALREADY IN THE REPOSITORY -- THIS TIME PUT THERE
+                             # ON PURPOSE, BY ME, FOR THIS.**
+                             # I DO NOT ROUTE A FIX: what a coordinator reads
+                             # before writing an entry is not my surface. I
+                             # record that a Q-row is where I can put a
+                             # correction and NOT a place that is read.
+                             # EARLIER VALUE (rule 13):
+                             # CHECKED-BY-ME-AT-BOTH-COMMITS
                              # CHECKED 2026-09-06T05:06:00Z, and filed because my
                              # own brief inherited the citation.
                              # R-566(C) opens "THE E2.0 RESULT REVIEW (REV 33,
@@ -2397,7 +2486,40 @@ flags:
                              # sha resolves -- it is a real commit -- which is
                              # what makes it worse than a dangling one, because
                              # a reader who follows it lands somewhere plausible.
-  P_2026_002_E2_0_IS_SETTLED_BY_THE_REVIEWER: MY-ROUND-120-PENDING-MARKING-IS-SUPERSEDED
+  P_2026_002_E2_0_IS_SETTLED_BY_THE_REVIEWER: SETTLED-AS-A-PROGRAM-LEVEL-FACT
+                             # CONFIRMED 2026-09-06T05:11:53Z at R-567(A), which
+                             # closes R-566(C)'s "pending the reviewer's final
+                             # word": **SETTLED.**
+                             # THE REVIEWER'S OWN SENTENCE: "The E2.0 result is
+                             # SETTLED as a program-level fact: ADA is DEAD on
+                             # real books and E1-B is empty. **I COULD NOT FIND A
+                             # READING THAT RESCUES IT.**"
+                             # WHAT MAKES IT A SETTLEMENT RATHER THAN AN
+                             # AGREEMENT, and it is all recomputation: delta_rs
+                             # RECOMPUTED FROM THE PER-DAY CELLS -- difference of
+                             # means -0.006570 against the receipt's -0.006570,
+                             # and the mean of the 16 per-day differences
+                             # -0.006581; **the verdict IDENTICAL UNDER EITHER CI
+                             # READING**; and **LEAVE-ONE-DAY-OUT ON ALL 16 DAYS
+                             # WITH MEAN AND BOOTSTRAP ci_hi RECOMPUTED EACH TIME
+                             # -- THE KILL SURVIVES EVERY DROP.**
+                             # tau* = 30 s was PRE-DECLARED ("if the day-median
+                             # ... threshold 13") BEFORE ANY rs WAS SEEN -- which
+                             # is the clause that stops the estimator being
+                             # chosen on the answer.
+                             # AND THE EARLIER RECEIPT IS DISPOSED OF RATHER THAN
+                             # ignored: ...044234Z differs in **49 NUMERIC
+                             # LEAVES, EVERY ONE ON THE PRE-FIX PATH, NONE ON
+                             # WHAT THE VERDICT RESTS ON.** A superseded receipt
+                             # with its difference COUNTED and LOCATED is the
+                             # right way to retire one.
+                             # THE CITATION FOR THIS FLAG IS THE FILING ITSELF:
+                             # workspace/reviews/
+                             # REVIEW_P002_E20_RESULT_2026-09-06.md, landed at
+                             # **ed14c87** -- NOT at 867f647; see
+                             # R567_REPEATS_THE_867f647_CITATION.
+                             # EARLIER VALUE (rule 13):
+                             # MY-ROUND-120-PENDING-MARKING-IS-SUPERSEDED
                              # CORRECTED 2026-09-06T05:06:00Z. My round-120 flag
                              # read PENDING-REVIEW-NOT-SETTLED. **THE REVIEWER
                              # HAD ALREADY FILED SETTLED.**
@@ -3036,6 +3158,39 @@ flags:
                              # between the two states and it is the whole value
                              # of stopping.
                              # EARLIER VALUE (rule 13): RE-ARMED
+  THE_R557_REFRESH_COMMAND_UNDID_THE_R553_FIX_EVERY_TIME_IT_RAN: WORSE-THAN-I-RECORDED-IT
+                             # RELAYED from R-567(B) / Q-DA-279, and it
+                             # SHARPENS -- AGAINST ME -- what I recorded at
+                             # rounds 116 and 117.
+                             # THE MECHANISM: **`git checkout --detach` REPLACES
+                             # A WORKTREE'S `data` SYMLINK WITH A MATERIALISED
+                             # DIRECTORY.** And the R-557 refresh command IS
+                             # `git checkout --detach mm-research && git ls-files
+                             # data | xargs git update-index --skip-worktree`.
+                             # **SO THE REFRESH COMMAND UNDID THE R-553 FIX EVERY
+                             # TIME IT RAN** -- it recreated the shell it was
+                             # issued to prevent, and then marked the shell's
+                             # files skip-worktree.
+                             # WHAT I WROTE AT ROUND 116, SWEEPING IT AS THE
+                             # RULE: the sweep "fixes a moment, not the state".
+                             # WHAT I WROTE AT ROUND 117: "an interim with a
+                             # named end", and "a fix that must be re-applied
+                             # after every routine operation is a chore with an
+                             # invisible deadline."
+                             # **BOTH UNDERSTATED IT. IT WAS NOT A FIX THAT
+                             # DECAYS -- IT WAS A REMEDY WHOSE FIRST ACT REVERSED
+                             # THE REPAIR.** A chore is something you must redo;
+                             # this was something that undid.
+                             # AND I HAD THE EVIDENCE TO SEE IT: at round 118 I
+                             # measured DE and REV as swapped and BE and DA as
+                             # shells, and at round 117 I recorded DE landing by
+                             # CHERRY-PICK because it "could not `git checkout
+                             # --detach` in its worktree". I read that as the
+                             # conflict's COST and never asked what the command
+                             # DID when it succeeded.
+                             # CLOSED BY THE ENV-ROOT ANSWER (R-559/R-562), NOT
+                             # BY A BETTER SWEEP -- which is why the answer had
+                             # to leave the filesystem altogether.
   the_P_002_RESOLVER_GAP_WAS_CLOSED_BEFORE_R566_ROUTED_IT: AND-THE-TWO-ROOTS-NOW-HAVE-TWO-NAMES
                              # CHECKED 2026-09-06T05:06:00Z. R-566(C) routes the
                              # P-002 resolver gap to DA 59 "before E2-A opens any
@@ -3072,6 +3227,44 @@ flags:
                              # A routing that is already satisfied is harmless
                              # here -- DA will find nothing to do -- but recorded
                              # as open it would have read as a live gate on E2-A.
+  A_BACKTICK_IN_A_COMMIT_MESSAGE_DETACHED_THE_SHARED_TREE: AND-FIVE-OF-MY-OWN-119-CARRY-ONE
+                             # RELAYED from R-567(B) for the incident; **MY OWN
+                             # EXPOSURE MEASURED BY ME** at 2026-09-06T05:11:53Z.
+                             # THE INCIDENT: a backtick inside a
+                             # `git commit -m` string was EXPANDED BY BASH and
+                             # RAN `git checkout --detach` IN THE SHARED TREE.
+                             # The commit landed on a detached HEAD, **THE PUSH
+                             # SILENTLY NO-OP'D**, and the message was corrupted.
+                             # DA re-attached at the same commit and verified the
+                             # message byte-identical; the coordinator verified
+                             # at 05:09Z -- branch mm-research, 0 ahead / 0
+                             # behind, tree clean but for my file.
+                             # THE SILENT NO-OP PUSH IS THE WORST PART: a commit
+                             # that appears to land and does not reach origin is
+                             # invisible to every check except one that reads
+                             # origin -- and it is the FOURTH member of the
+                             # "operation that does nothing and reports success"
+                             # family, after my zero-length loop, DA's
+                             # stale-pycache green and DE's silent `replace`.
+                             # MY OWN EXPOSURE, MEASURED RATHER THAN ASSUMED: I
+                             # pass long DOUBLE-QUOTED `-m` strings every round.
+                             # Of **119** of my own commit messages, **FIVE
+                             # CONTAIN A BACKTICK** (rounds 3, 10, 14, 42, 43 --
+                             # each a paired pair around one short word:
+                             # `named`, `at`, `why`, `codex_system_reviewer`) and
+                             # **ZERO contain `$(` or `$-brace`**.
+                             # ALL FIVE MESSAGES ARE INTACT IN THE LOG, so
+                             # whatever mechanism carried them PRESERVED the
+                             # backticks -- **AND I CANNOT ESTABLISH FROM THE LOG
+                             # WHY.** I therefore do NOT claim I was safe by
+                             # design. THE HONEST STATEMENT IS THAT FIVE OF MY
+                             # MESSAGES CARRIED THE HAZARDOUS CHARACTER, THEY
+                             # HAPPEN TO HAVE SURVIVED, AND THE RULE REMOVES THE
+                             # QUESTION.
+                             # RULE ADOPTED AND EXERCISED FROM THIS COMMIT:
+                             # **COMMIT MESSAGES BY HEREDOC OR `-F`, NEVER A
+                             # BACKTICK IN `-m`.** This round's own commit uses
+                             # `-F`.
   de76_THE_FIXTURE_DOOR_HAS_ITS_LOCK: THE-PROOF-IS-PRODUCED-IN-THE-SAME-PROCESS
                              # RELAYED from R-566(A). Fixture v6 (a0fb6501)
                              # carries `data_free_proof` -- instrument
@@ -3097,6 +3290,48 @@ flags:
                              # round-116 zero-length loop and DA's stale-pycache
                              # green. Three seats, three forms, one shape.
                              # DE STANDS BY FOR BE'S BOOK. Second round running.
+  E2_A_IS_DECLARED_WITH_TWO_ESCALATIONS_RULED: AND-THE-NOTIONALS-SOURCE-IS-USER-PENDING
+                             # RELAYED from R-567(C).
+                             # p002_e2_a_declaration_v2.json, **21 checks BOTH
+                             # DIRECTIONS, NO DATA.** Two escalations -- **not two
+                             # defaults**, which is the phrase the declaring
+                             # commit itself uses and the reason both reached a
+                             # ruling instead of a silent choice.
+                             # (a) `hftbacktest` IS NOT INSTALLED. DA implemented
+                             # BOTH queue models -- RiskAverse and ProbQueue-f3 --
+                             # IN CLOSED FORM, with falsifiers and **THE ORDERING
+                             # PROPERTY AS A COMPUTED PREDICATE**. RULED: proceed
+                             # with the direct implementation, **NO DEPENDENCY IS
+                             # INSTALLED** -- an environment change is not a
+                             # seat's to make and is not warranted for a bracket.
+                             # The reviewer (REV 34) ATTACKS THE CLOSED FORMS
+                             # AGAINST THE PUBLISHED MODELS BEFORE ANY RUN, which
+                             # is what makes "we reimplemented it" checkable.
+                             # (b) "depth-aware sizes at the XS book's actual
+                             # rebalance notionals" NEEDS A PER-SYMBOL NOTIONAL
+                             # **THIS PROGRAMME NEVER PINNED** -- E1-A's episodes
+                             # were EXPLICITLY MIN-SIZE AND NOTIONAL-FREE. RULED:
+                             # DA's handling stands -- **the size-aware arm
+                             # REFUSES WITH ITS STATUS and the min-size arm runs
+                             # LABELLED NOT THE GATE** ("a min-size answer is
+                             # E1-A's answer with a better fill model").
+                             # THAT LABEL IS THE WHOLE RULING: an arm that runs
+                             # and is not the gate is only safe if the label
+                             # travels with every number it produces, and the
+                             # alternative -- running it as though it were the
+                             # gate -- is how a proxy becomes a result.
+                             # **USER-PENDING, AND FLAGGED AS SUCH: THE SOURCE OF
+                             # THE NOTIONAL.** A size-aware arm needs a DECLARED
+                             # notional source, and the XS book's rebalance
+                             # notionals exist only in P-2026-001's paper-trading
+                             # exports, IF ANYWHERE. That "if anywhere" is the
+                             # honest part and it is the USER's to answer.
+                             # AND THE INHERITED CONTROL STANDS BEFORE ANY
+                             # REAL-BOOK NUMBER: reproduce E1-A's published
+                             # T_p = 600 numbers ON E1-A's OWN aggTrades WITHIN
+                             # 0.05 bps -- the same reproduction discipline that
+                             # made E2.0's delta_rs readable as a difference
+                             # between two MIDS rather than two CODEBASES.
   the_de74_resolver_is_SOUND_WITH_ONE_DOOR_NOW_BOUND: fixture-True-CLOSED-BY-DE-76
                              # RELAYED from R-564 and Q-DE-76. The reviewer found
                              # the DE 74 resolver SOUND with ONE DOOR --
@@ -12536,6 +12771,35 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T05:11:53Z, P-2026-002's E2.0 IS **SETTLED AS A PROGRAM-LEVEL
+  FACT** -- "I could not find a reading that rescues it" -- and it is settled by
+  RECOMPUTATION: delta_rs re-derived from the per-day cells, the verdict
+  identical under either CI reading, and THE KILL SURVIVING LEAVE-ONE-DAY-OUT ON
+  ALL 16 DAYS with ci_hi recomputed each time.
+  AND R-567 REPEATS THE `867f647` CITATION I CORRECTED ONE ENTRY EARLIER;
+  `ed14c87` occurs in the register exactly once, IN MY OWN Q-ROW. The address is
+  travelling from entry to entry rather than being read from the commit that
+  holds the file -- **the fourth instance in ten rounds of the preventing fact
+  already being in the repository, and the first I put there on purpose for this
+  exact case.**
+  Q-DA-279 SHARPENS MY OWN ENTRIES AGAINST ME: `git checkout --detach` REPLACES
+  the data symlink, and the R-557 refresh BEGINS with that command -- **so the
+  refresh UNDID the R-553 fix every time it ran.** I called it a fix that decays
+  and a chore with an invisible deadline; **both understated it -- it was a
+  remedy whose first act reversed the repair**, and I had the evidence at round
+  117 and read it as a cost rather than a clue.
+  A BACKTICK IN A `-m` STRING DETACHED THE SHARED TREE AND THE PUSH SILENTLY
+  NO-OP'D. **Five of my own 119 commit messages carry a backtick and I cannot
+  establish why they survived, so I do not claim design** -- commit messages by
+  heredoc or -F from now on, and this round's uses -F.
+  DA 59 IS VERIFIED with the partial-root falsifier DRIVEN THROUGH run() -- a
+  tape holding 2 of 19 days prints its census and REFUSES before any day is read.
+  E2-A IS DECLARED WITH TWO ESCALATIONS RULED, NOT DEFAULTED: no dependency
+  installed with the closed forms attacked before any run, and the min-size arm
+  running LABELLED NOT THE GATE. **THE NOTIONAL'S SOURCE IS USER-PENDING.**
+  Gate 1 is 1 of 7; BE 47 is on its long suite before the 09-03 book and DE is
+  idle for it. Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T05:06:00Z, RETAINED BELOW --
   AS-OF 2026-09-06T05:06:00Z, P-2026-002's E2.0 IS **SETTLED** BY THE REVIEWER
   (ed14c87, 04:56:42Z: ADA dead, E1-B empty, every number reproducing, **the kill
   surviving leave-one-out on all 16 days**) -- which supersedes the
@@ -13622,18 +13886,41 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
-  # --- MEM round 121, 2026-09-06T05:06:00Z ------------------------------
-  R566_CITES_867f647_FOR_REV33_AND_THE_REVIEW_IS_AT_ed14c87:
+  # --- MEM round 122, 2026-09-06T05:11:53Z ------------------------------
+  R567_REPEATS_THE_867f647_CITATION_ONE_ENTRY_AFTER_I_CORRECTED_IT:
     prov: CHECKED
-    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_P002_E20_RESULT_2026-09-06.md
-    as_of: 2026-09-06T05:06:00Z
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T05:11:53Z
     said: >-
-      `git show --name-only 867f647` lists exactly one file,
-      live/mm_research/declarations/p002_e2_a_declaration_v1.json; `git show
-      --name-only ed14c87` lists exactly this review file, committed
-      2026-09-06T04:56:42Z with the subject "P-002 E2.0 result is SETTLED - ADA
-      dead, E1-B empty." So R-566(C)'s sha for REV 33 names the E2-A declaration
-      commit rather than the review.
+      R-567(A) opens "E2.0 -- SETTLED (REV 33, `867f647`)"; grepping the entry
+      returns one occurrence of 867f647 and none of ed14c87, and grepping the
+      whole register returns ed14c87 exactly once, on the Q-MEM-109 row I filed
+      at round 121. The commit contents were established last round: 867f647
+      holds only p002_e2_a_declaration_v1.json and ed14c87 holds the review file.
+  A_BACKTICK_IN_A_COMMIT_MESSAGE_DETACHED_THE_SHARED_TREE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T05:11:53Z
+    said: >-
+      the incident is R-567(B)'s, relayed. My own exposure I measured: iterating
+      every commit whose subject begins "MEM round" gives 119 commits, of which 5
+      contain a backtick in the message body (rounds 3, 10, 14, 42, 43, each a
+      matched pair around a single short word) and 0 contain the other shell
+      expanders. All five messages are intact in the log, and the log does not
+      record which invocation form produced them, so I do not claim the survival
+      was by design.
+  P_2026_002_E2_0_IS_SETTLED_BY_THE_REVIEWER:
+    prov: RELAYED
+    from: >-
+      R-567(A) for the settlement, citing the filing at ed14c87 rather than the
+      sha the entry gives. The recomputations quoted are the reviewer's.
+  THE_R557_REFRESH_COMMAND_UNDID_THE_R553_FIX_EVERY_TIME_IT_RAN:
+    prov: RELAYED
+    from: R-567(B) / Q-DA-279
+  E2_A_IS_DECLARED_WITH_TWO_ESCALATIONS_RULED:
+    prov: RELAYED
+    from: R-567(C); the notional source is open to the USER
+  # --- MEM round 121, 2026-09-06T05:06:00Z ------------------------------
   P_2026_002_E2_0_IS_SETTLED_BY_THE_REVIEWER:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_P002_E20_RESULT_2026-09-06.md

@@ -1,5 +1,122 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T05:11:53Z — **E2.0 is SETTLED. And two of this round's items
+sharpen my own earlier entries against me.** Gate 1 is 1 of 7. Economics:
+`RESULTS.md` §0.
+
+## READ FIRST — round 122
+
+### 1. E2.0 is settled — by recomputation, not by agreement
+
+> *"The E2.0 result is SETTLED as a program-level fact: ADA is DEAD on real books
+> and E1-B is empty. **I could not find a reading that rescues it.**"*
+
+Δrs **re-derived from the per-day cells** (−0.006570 against the receipt's
+−0.006570); the verdict **identical under either CI reading**; and
+**leave-one-day-out on all 16 days with mean and bootstrap `ci_hi` recomputed
+each time — the kill survives every drop.** τ* was **pre-declared before any rs
+was seen.** The earlier receipt is retired with its **49 differing leaves counted
+and located**, none on what the verdict rests on.
+
+### 2. R-567 repeats the citation I corrected one entry earlier
+
+R-567(A) opens *"E2.0 — SETTLED (REV 33, `867f647`)"*. **That sha holds only the
+E2-A declaration; the review is at `ed14c87`** — established last round.
+
+> **`ed14c87` occurs in the register exactly once: in my own Q-MEM-109 row.** The
+> correct address exists and **has never been used by an entry.**
+
+R-566 cannot be edited and I don't ask for that. **What is new is that a fresh
+entry repeated it** — the address is being carried **entry to entry** rather than
+read from the commit that holds the file. *The content is right in both, quoted
+accurately: this is **an address travelling without its object**, and it still
+lands on a real commit, which is what keeps it from being noticed.*
+
+**Fourth instance in ten rounds of "the thing that would have prevented it was
+already in the repository" — and the first I put there on purpose, for this exact
+case.** *I route no fix: what a coordinator reads before writing an entry is not
+my surface.*
+
+### 3. Q-DA-279 sharpens my round-116/117 entries against me
+
+**`git checkout --detach` REPLACES a worktree's `data` symlink** — and the R-557
+refresh command **begins with that command.**
+
+> **So the refresh undid the R-553 fix every time it ran.**
+
+I called it *"a fix that decays"* and *"a chore with an invisible deadline."*
+**Both understated it: it was a remedy whose first act reversed the repair.** A
+chore is something you must redo; **this was something that undid.**
+
+*And I had the evidence:* at round 117 I recorded DE landing **by cherry-pick
+because it could not run that command** — and read it as the conflict's **cost**
+rather than asking what the command **did when it succeeded.** Closed by the
+env-root answer, **not by a better sweep** — which is why the answer had to leave
+the filesystem altogether.
+
+### 4. A backtick in a `-m` string — and my own exposure, measured
+
+A backtick was expanded by bash and **ran `git checkout --detach` in the SHARED
+tree**; the commit landed detached and **the push silently no-op'd.** *The fourth
+member of the "operation that does nothing and reports success" family* — after
+my zero-length loop, DA's stale-pycache green, DE's silent `replace`.
+
+**My own exposure, measured rather than assumed:** of **119** commit messages of
+mine, **5 contain a backtick** (rounds 3, 10, 14, 42, 43 — each a matched pair
+around one short word) and **0 contain the other expanders.**
+
+> **All five messages are intact, and the log does not record which invocation
+> form produced them — so I do not claim I was safe by design.** Five carried the
+> hazardous character, they happen to have survived, **and the rule removes the
+> question.**
+
+**Adopted and exercised: commit messages by heredoc or `-F`, never a backtick in
+`-m`. This round's commit uses `-F`.**
+
+### 5. DA 59 — the falsifier was driven, not inspected
+
+The earlier receipt is superseded by a sidecar whose same-result claim is
+**computed field by field**; the deploy record **states its boundary**; the P-002
+surface resolves through the **imported** `de_data_root` — **and splitting the
+roots exposed a latent `relative_to(ROOT)` bug**, fixed and pinned.
+
+> **The partial-root falsifier was driven through `run()`: a real tape holding
+> 2 of 19 days with every directory present prints its census (DAYS 2) and then
+> REFUSES before any day is read.** The reviewer's gap closed at the mechanism.
+
+### 6. E2-A: two escalations, ruled — not defaulted
+
+**No dependency installed**; DA implemented both queue models in closed form with
+**the ordering property as a computed predicate**, and **the reviewer attacks the
+closed forms against the published models before any run.**
+
+**The size-aware arm REFUSES**; the min-size arm runs **labelled NOT the gate**
+(*"a min-size answer is E1-A's answer with a better fill model"*). *That label is
+the whole ruling — an arm that runs and is not the gate is only safe while the
+label travels with every number it produces.*
+
+> **USER-PENDING: the source of the notional.** The XS book's rebalance notionals
+> exist only in P-2026-001's paper-trading exports, **"if anywhere"** — and that
+> *if anywhere* is the honest part.
+
+The inherited control stands: **reproduce E1-A's published T_p = 600 numbers on
+E1-A's own aggTrades within 0.05 bps before any real-book number** — the same
+discipline that made Δrs readable as a difference between two **mids** rather
+than two **codebases**.
+
+### 7. Measured before the sentence
+
+**634 flags, 74 CHECKED, 105 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 179; tasks 19.**
+
+### Still open, still mine
+
+**RELAY FIDELITY**, **CORROBORATION**. **455 of 634 UNCITED.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T05:06:00Z — **E2.0 is SETTLED — and my round-120 "PENDING" was
 already superseded when I committed it, by three minutes.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
