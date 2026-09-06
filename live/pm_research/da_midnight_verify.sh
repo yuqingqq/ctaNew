@@ -180,7 +180,7 @@ OPENED=$(date -u +%Y%m%d)
 # unreadable verdict can never be deferred -- it falls through to FAILURE,
 # which is the safe direction.
 classify_mask_failure() {
-  _c="$1"; _l="$2"
+  _c="$1"; _l="$2"; _rc="${3:-1}"
   # ROUND 54, C-1: THIS USED TO KEY ON PROSE AND THE REVIEWER BROKE IT.
   # The old test grepped the builder's TRACEBACK for the liveness token, so a
   # log carrying BOTH the token and a real failure --
@@ -199,10 +199,28 @@ classify_mask_failure() {
   #       MemoryError, a kill. So a run that refused CORRECTLY and then died
   #       anyway is a FAILURE, which is what it is.
   if [ "$_c" != "0" ]; then echo "FAILURE"; return; fi
+  # ROUND 56, A-1: THE EXIT CODE IS THE CONJUNCT THE LOG CANNOT FORGE.
+  # The reviewer demonstrated the hole: a builder that PRINTS the token and is
+  # then SIGKILLed leaves a log containing the token ALONE. `Killed` is
+  # written by the PARENT SHELL to ITS stderr when it reaps the signal -- it
+  # never enters `> "$_mlog" 2>&1`, which captures only the child's own
+  # streams. So the `Killed` alternative in the marker regex below is DEAD
+  # CODE and cannot fire, and the mixed case deferred a killed builder.
+  #
+  # The builder's own refusal path returns EXACTLY 1 (`da_blackout_mask.main`
+  # prints MASK_STATUS and `return 1`). A signal death returns 128+N -- 137
+  # for SIGKILL, 139 for SIGSEGV, 143 for SIGTERM -- and no output the child
+  # writes can change the code the kernel reports to the parent. So rc is
+  # checked FIRST and exactly.
+  if [ "$_rc" != "1" ]; then echo "FAILURE"; return; fi
   if ! grep -qE '^MASK_STATUS=(CONTENT_LIVENESS_UNRESOLVED|CONTENT_LIVENESS_UNJUDGEABLE)$' \
        "$_l" 2>/dev/null; then
     echo "FAILURE"; return
   fi
+  # `Killed` and `Segmentation fault` are RETAINED here deliberately and they
+  # CANNOT MATCH from a redirected child log -- kept so that a future caller
+  # which pipes the parent shell's stderr in still gets the right answer, and
+  # so the dead alternative is documented rather than silently removed.
   if grep -qE '^Traceback|^[A-Za-z_.]*(Error|Exception):|Killed|Segmentation fault|MemoryError' \
        "$_l" 2>/dev/null; then
     echo "FAILURE"; return
@@ -399,7 +417,7 @@ try:
     print("1" if json.load(open(sys.argv[1])).get("day_closed_calendar") is True else "0")
 except Exception:
     print("?")' "$OUTDIR/da_dayverdict_$d.json" 2>/dev/null)"
-      if [ "$(classify_mask_failure "$_closed" "$_mlog")" = "DEFERRED" ]; then
+      if [ "$(classify_mask_failure "$_closed" "$_mlog" "$_mrc")" = "DEFERRED" ]; then
         if [ "$broke" -lt 2 ]; then broke=2; fi
         echo "MASK DEFERRED for $d  <-- OPEN_DAY_MASK_DEFERRED (rc=2, EXPECTED STATUS, not an instrument failure): the day is not closed and the frozen detector cannot judge it yet for want of windows. The refusal is CORRECT and the mask will land at the next 00:06Z run, when this day is closed. Counted and reported, never silent (rule 4)." >> "$LOG"
       else

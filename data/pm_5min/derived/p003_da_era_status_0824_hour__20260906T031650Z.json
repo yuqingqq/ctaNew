@@ -1,0 +1,61 @@
+{
+  "carrying_commit": "33c49499932387c0ae3b9588f4d5dcb6e7565205",
+  "computed_predicates": {
+    "era_has_an_authority_entry": true,
+    "era_is_ruled_INADMISSIBLE_by_version": false,
+    "era_predates_clob_v4_1": true,
+    "era_that_stamped_the_hour": "clob_v3_1",
+    "hour_is_single_era": true,
+    "ledger_and_tape_agree": true
+  },
+  "era_authority_verbatim": "USER RULING 2026-09-03, R-497 (F)(1): \"We check the data quality and only use qualifiable data\" -- collector version is not a bar, quality is; merits at R496-R7",
+  "era_by_ledger": {
+    "boundary_utc": null,
+    "era": "clob_v3_1",
+    "first_boundary_after_it": "2026-08-30T05:30:00Z",
+    "how": "BEFORE THE FIRST LEDGERED BOUNDARY -- named as what the first entry SUPERSEDES"
+  },
+  "era_by_tape_stamp": {
+    "available": true,
+    "collector_era_coverage": {
+      "LEDGER_ACTIVE": 36566
+    },
+    "collector_version": {
+      "clob_v3_1": 36566
+    },
+    "era": "clob_v3_1",
+    "n_rows_in_hour": 36566,
+    "single_era": true
+  },
+  "hour": {
+    "coin": "btc",
+    "n_fills_in_the_measurement": 4315,
+    "n_windows": 12,
+    "t0": 1787579400,
+    "utc": "2026-08-24T13:50:00Z..14:50:00Z"
+  },
+  "ledger_eras": [
+    {
+      "authority": "R-232 user ruling; boundary R-251/R-276",
+      "boundary_recv_ns": 1788067802114726542,
+      "boundary_utc": "2026-08-30T05:30:00Z",
+      "era": "clob_v4",
+      "supersedes": "clob_v3_1"
+    },
+    {
+      "authority": "USER ruling 2026-08-31 'redeploy v4_1 first'",
+      "boundary_recv_ns": 1788213602274533509,
+      "boundary_utc": "2026-08-31T22:00:00Z",
+      "era": "clob_v4_1",
+      "supersedes": "clob_v4"
+    }
+  ],
+  "limits_that_DO_bind_this_hour": [
+    "CONSUMED (rule 11): 08-20..25 are named consumed for the harmful-fill line, so this hour cannot serve as validation for anything selected on it -- this is the binding limit, not the era",
+    "G = 0 complete UTC days and cluster n = 1: one hour, one coin, 12 windows. No interval is claimable (rule 8)",
+    "sub-second features: CLAUDE.md rule 5's boundary is about the mm_hf BINANCE tape (recv_ns >= 1787579334881534478), a DIFFERENT collector from this PM clob tape. It is not evidence about clob_v3_1 and is not cited here as though it were"
+  ],
+  "protocol": "P003_DA_ERA_STATUS_0824_HOUR_V1",
+  "role": "REPORTED, NOT ENFORCED (rule 14). No re-measurement: every field is read from the ledger, the era table, or the tape's own stamp columns.",
+  "the_answer": "The hour was stamped by clob_v3_1 -- established TWICE, from the ledger's boundaries and independently from the tape's own `collector_version` column on all 36,566 trade rows in the hour, which agree. It does predate clob_v4_1. But the era table's entry for clob_v3_1 is a USER RULING that collector version is NOT a bar -- 'We check the data quality and only use qualifiable data' (R-497(F)(1)) -- so the hour is NOT inadmissible by era, and treating 'predates clob_v4_1' as disqualifying would import a bar the USER declined to set. clob_v4, which sits BETWEEN this hour and clob_v4_1, is the era ruled never admissible (R-340); this hour is not in it."
+}

@@ -1,0 +1,80 @@
+{
+ "decides_nothing": "REPORTED (rule 14).",
+ "declaration": "DA_MULTIDAY_RECOMPUTE_V1",
+ "declared_at_commit": "33c49499932387c0ae3b9588f4d5dcb6e7565205",
+ "declared_utc": "2026-09-06T03:15Z",
+ "falsifiers_shipped_with_it": [
+  "a PLANTED per-day artifact whose D(E0) disagrees with its own gross delta must make the recompute REFUSE",
+  "an artifact that AGREES must NOT refuse -- the other direction, so the check is not simply strict",
+  "a SHORT draw array must refuse",
+  "a digest MISMATCH between the two copies must refuse",
+  "a recompute that has never been shown to refuse is not evidence (rule 15)"
+ ],
+ "filed_under": "R-548(F) design round: 'DA declares the independent recompute and the era-status audit of the 08-24 hour'. The era audit is da_era_status_0824_hour.py and is already run; this is the other half.",
+ "paths_and_digests_pinned_now": {
+  "as_of": "2026-09-06T03:15Z",
+  "entries": [
+   {
+    "path": "data/pm_5min/derived/p003_v2_fee_endpoint_sensitivity__20260905T161824Z.json",
+    "sha256": "f4974039c1fc99c0ad848e188522380b96895e03203a4170cb2fe05db3956238",
+    "what": "the single-day precedent verified at Q-DA-258"
+   },
+   {
+    "path": "live/pm_research/de_v2_lifecycle_economics.py",
+    "sha256": "6f5c91961bf05020943786ac22875e8564954cc2d735f608a7630f859d13be9a",
+    "what": "DE's ledger (READ to learn the convention, never imported for the arithmetic)"
+   },
+   {
+    "path": "live/pm_research/de_v2_fee_endpoint_sensitivity.py",
+    "sha256": "48459f95fa4e29f11c59408c80827d7dd027417648069f82118276a505d812ea",
+    "what": "DE's endpoint module"
+   },
+   {
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "sha256": "485e55e86e5ffbb2ac6d1e52ea308a73415da5b708bf36bc7f7c415e6c64350d",
+    "what": "BE's replay machinery (READ only)"
+   },
+   {
+    "at_run_time": "pinned at read time and recorded in my receipt",
+    "path": "data/pm_5min/derived/ -- DOES NOT EXIST YET",
+    "sha256": null,
+    "what": "the multi-day artifact itself"
+   }
+  ],
+  "note": "a digest that has moved by run time is a FINDING, not a nuisance: I report the change and recompute against the new one rather than silently following it",
+  "read_at_both_copies": "the multi-day artifact is read in the MAIN TREE and in my worktree and I refuse if they differ -- the check that would catch a mid-flight rewrite"
+ },
+ "refusal_conditions": [
+  "the identity fails: D(E0) != gross_delta on any arm-day, to 1e-9",
+  "the draw array is ABSENT or SHORT of the declared per-day minimum (R-548(F): >=500 draws per arm per day). A p recomputed from fewer draws than declared is not the declared statistic",
+  "the two copies disagree -- main tree vs worktree digest of the artifact",
+  "the seed does not PIN THE DATA. R-548(F) requires the seed to pin the data by digest; a seed with no input digest means the draws are not reproducible, and I say so rather than recompute against whatever is on disk",
+  "day-set mismatch: the days in the artifact differ from the days declared, or any day is not independently verifiable as accrued by my own da_forward_day_verify re-run",
+  "fe is RECONSTRUCTED rather than READ anywhere I depend on it -- the B-4 defect, now a standing check on my own side too"
+ ],
+ "round": 56,
+ "seat": "DA (pm-da)",
+ "status": "DECLARED BEFORE ANY RUN. Nothing in this file has been computed.",
+ "what_I_will_NOT_read": [
+  "BE's PICKLE (de_section81_cache_*.pkl or any successor). The recompute reads the EMITTED RECEIPT, not the producer's intermediate state: reading the pickle would make my number a second evaluation of BE's own in-memory objects rather than an independent reading of what was published, and the published artifact is what every downstream claim cites",
+  "any DE or BE module IMPORTED for the arithmetic (R-235: separate implementations are the point). I read their source to learn the convention -- as in round 55, where reading located p = level and the factor of five -- then write the arithmetic myself",
+  "DE's reported p, D, or rank AS INPUTS. Those are the things being checked"
+ ],
+ "what_I_will_recompute": {
+  "a_per_day_D_E0": {
+   "definition": "the decision delta at the zero-maker-fee endpoint, arm minus baseline, per day",
+   "method": "read each arm's and the baseline's gross_after_queue_reset_before_fees_cents from DE's emitted receipt and difference them in my own code",
+   "the_check": "at E0 the maker fee is zero, so D(E0) MUST equal the gross delta exactly. That identity is the check, not an assumption"
+  },
+  "b_per_day_null_location": {
+   "definition": "the treated arm's rank among its own per-day draws and the resulting one-sided p",
+   "formula": "p = (1 + #{draws >= treated}) / (n + 1), one-sided, ties counting TOWARD the control",
+   "method": "recomputed from the per-draw ARRAY, never from DE's reported p"
+  }
+ },
+ "what_this_will_NOT_establish": [
+  "NOT a validation: G-counting and the R-529(A) directional ruling are untouched. Agreement between DE and me is agreement about ARITHMETIC",
+  "NOT independence of the null's DESIGN: I recompute the treated arm's location within the draws DE GENERATED. If the draw-generating design is wrong, my recompute agrees with DE and both are wrong. That is a limit of this check and it is the reviewer's to attack, not mine to close",
+  "NOT admissibility: whether the days may be used is a policy question (rule 14). I report the arithmetic and the accrual"
+ ]
+}
