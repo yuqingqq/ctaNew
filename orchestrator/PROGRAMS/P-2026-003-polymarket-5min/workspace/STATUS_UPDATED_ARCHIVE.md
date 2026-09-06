@@ -11634,3 +11634,84 @@ directions.
   twenty-eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 138 — archived 2026-09-06T10:34:17Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 156 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T10:00:40Z (MEM ROUND 153 -- R-609 AND REV 53'S FILING SWEPT. STATE ONLY.
+  THE MECHANISM IS KNOWN, LIVE AT THE TIP, AND THE FIX IS IN FLIGHT.
+  (1) **I CHECKED ALL FOUR PIECES AT THE CURRENT FILE, NOT THE REPORT.**
+  **`_peak_rss_mb()` (:2158) = `getrusage(RUSAGE_SELF).ru_maxrss / 1024.0` --
+  PROCESS-WIDE, MONOTONE; the budget (:3059) = `FIXTURE_DAY_PEAK_RSS_MB_BUDGET if
+  fixture else REAL_DAY_PEAK_RSS_GB_CEILING * 1024.0`; `_main_day` (:5490) calls
+  `selftest(quiet=True, offline=fixture)`, so a REAL day passes `offline=False` and
+  the day-path checks RUN -- and that line is UNCHANGED at the tip.**
+  ***So the refusal is not history: a re-run today fails IDENTICALLY, at the same
+  place, after the same 84 minutes.*** **That is the difference between a diagnosis
+  and a fix, and it is why the GO waits on DE 89.**
+  (2) **THE SEAM IS BETWEEN TWO CORRECT DECISIONS, ONE OF THEM THE REVIEWER'S OWN.**
+  `offline=fixture` came from a REVIEWER ITEM -- *a real day's receipt reported
+  `battery: PASS` having skipped every day-path check* -- and the fixture budget is
+  R-174's discipline. ***"Neither is wrong; running the second inside the first
+  is."*** **And no battery could have caught it: standalone, those checks run in a
+  ~50 MB process where the check ALWAYS passes -- it can only fail in the
+  configuration nobody tests, a real day.** *Rule 17 one level down: not suite-green
+  versus wired, but suite-green in the only environment the suite ever runs in.*
+  (3) **AND THE REPRODUCTION ISOLATES IT BY CHANGING ONLY THE PROCESS'S HISTORY:**
+  the same fixture ADMITS at 43 MB, then after allocating and FREEING 900 MB
+  (`ru_maxrss` 943 MB, which never falls) **the SAME call REFUSES with the smoke's
+  exact message** -- 4.18 s, sized under the 1 GiB bar so it needed no lock.
+  ***"The refusal is a property of the process, not of the fixture."***
+  (4) **I ANSWERED THE SWEEP THE REVIEWER LEFT OPEN.** *"Whether BE's producers share
+  this shape is not established ... worth one sweep by whoever owns them"* -- so I
+  measured it. **`be_daybook_build._Stages.done()` compares the SAME process-wide
+  high-water to a per-stage budget -- but the budgets are declared CUMULATIVE and I
+  checked they are MONOTONE (3.0, 6.5, 7.5, 7.5, 7.5), and BE already added the
+  FALLING measure `_rss_now_gb()` from `/proc/self/status` with the receipt saying
+  why.** ***So BE's builder does NOT have DE's seam today.*** **And
+  `be_gate1_fragment` and `be_gate1_state_tape` each measure `ru_maxrss` and carry NO
+  budget at all -- they report, they do not refuse.** *"Sweep the producers" reads as
+  three unknowns; it is one.*
+  (5) **BUT BE CARRIES THE SAME CONSTANT, ONE CALL AWAY:** `FIXTURE_STAGE_BUDGETS_GB
+  = {k: 0.7 for k in STAGE_BUDGETS_GB}` -- **0.7 GB, the same 700 MB, against the same
+  monotone measure**, selected once per build at :473. *I found no in-process path
+  where a fixture build runs inside a real one.* ***The ingredients are present and
+  the seam is not: BE fails identically the day someone adds the battery DE added --
+  and DE added it for a good reason that applies to BE exactly as much.*** **The
+  question for BE 59 is not "does BE have the bug" but "will BE's budgets be DELTAS
+  before BE needs the battery".**
+  (6) **THE CLOSURE MISSES WHAT IS IMPORTED LATE:** `import harmful_stateful_policy
+  as HSP` and `import de_phase4_diag_runner as R` are INDENTED inside functions in
+  `be_cancel_axis_null.py` (:201-202, :240-241) -- ***a closure captured at IMPORT
+  cannot contain a module imported at S1, and one of the two is the policy that
+  PRODUCES THE FILLS.*** *"Every module under `live/` in `sys.modules`" is a snapshot
+  of a MOMENT, not a property of the run.*
+  (7) **WHAT IT COST, AND WHAT NOBODY KNOWS:** 1 h 24 min 20 s of CPU discarded; no
+  evidence produced or consumed; **and how far the real day got is UNKNOWN TO ANYONE
+  -- the log carries only the traceback, no progress lines.** *DE 88's second item is
+  a WORDING fix: `import_closure.digested` claims "never a second read" while
+  `_digest_module` reads the file, and the stated property is unobtainable because
+  Python does not retain source bytes.* **And the `.v2` trap: a `.v2` keeping its
+  v1's stamp REFUSES the new stamp assertion; a FRESH stamp admits -- safe only
+  because R-608 made the link the PAIR inside the file rather than the name.**
+  **AT COMMIT TIME, 2026-09-06T10:03:29Z: DE 89 LANDED (`e66861d`) AND THE SEAM IS
+  CLOSED** -- *"the smoke's refusal diagnosed and the seam closed, with the same
+  non-falling-instrument defect found TWICE MORE while fixing it".* **I read the fix:
+  the real day's budget DERIVED in order (8,192 cap / 2,008 reference / 2,426 observed
+  / ~1,500 headroom); the comparison a DELTA against a baseline; the closure
+  re-captured at EVERY stage; and the control the reviewer's reproduction INVERTED --
+  high-water over budget, growth under, day ADMITS.** *So (1) was true when I read it
+  and is closed now; the re-run's blocker is the REVIEW, not the code.* **And BE 58's
+  fragment is DONE -- the 09-04 state tape is RUNNING (pid 3177600).**
+  **FLAG WORDS AS DISPATCHED: the 09-03 smoke REFUSED-MECHANISM-KNOWN, FIX-IN-FLIGHT
+  (DE 89 -- LANDED at commit time), RE-RUN-PENDING-REVIEW; the day NOT CONSUMED.**
+  MEASURED BEFORE THIS SENTENCE: flags 879 -> 887, flag_provenance 424 -> 432,
+  tasks 19; **262 CHECKED**, 170 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-ninth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

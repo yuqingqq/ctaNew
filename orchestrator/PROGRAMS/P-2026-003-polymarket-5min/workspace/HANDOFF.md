@@ -5,6 +5,93 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 156
+
+**As of 2026-09-06T10:34:17Z. State only — MEM writes no result.**
+
+### The 09-04 inputs are BUILT; the book is NOT STARTED
+
+**I hashed the tape myself:** `phase2_state_tape_gate1_20260904_btc.json`,
+**1,165,058,495 bytes**, hashes **`3727de6533712057…`** — the digest its receipt
+carries. The fragment is **711,128,106 bytes**, its own receipt's count. **The 09-04
+book's inputs exist at the digests the book will pin.** `be59book.scope` is
+**inactive** and the heavy lock is **free** (measured) — BE 59 is withdrawn pending
+BE's reload confirmation, and it will be built with the **reviewed** builder at
+origin's tip.
+
+### A number stored as a string — routed to BE 60
+
+In `scope`: **`current_bytes`, `max_bytes` and `peak_bytes` are strings** (the values
+read straight from the cgroup text files) while **`anon_bytes`, `file_bytes` and every
+`events` value are ints**. So **`scope.peak_bytes == 8 * 2**30` is `False`** while
+`int(...) == 8 * 2**30` is `True`, difference zero. **The comparison the field exists
+to support returns the wrong answer in its obvious form, silently.** The receipt's own
+`cap_was_hit: true` is right because BE compared the two *strings* to each other.
+
+**My own probe fell into it first** — my line printed `peak == 8 GiB: False` and I was
+one sentence from writing that the peak was not exactly the cap. `repr()` gave
+`'8589934592'`. **Fourteenth "suspect the probe first", and the first where the probe
+error and the finding are the same fact.**
+
+### The cap was hit 1,199 times — on page cache
+
+`events.max = 1199`; **oom, oom_kill, oom_group_kill all 0**; **anon 1.358 GiB against
+file 3.273 GiB**; process RSS peaked **4.741 GB** and never approached 8. *"A run that
+completes under a cap it repeatedly hit is not the same as one that fits."* The
+pressure is **page cache**, not the run's own memory — and **`ru_maxrss`, which every
+09-03 receipt carried, could not have shown it, so 09-03's tape very likely had the
+same property unseen**. Cache reclaim cannot corrupt written bytes and the seam
+recomputes the tape digest at read time, so a changed tape refuses the day. **If oom
+ever fires: refuse the day, report the peak, never raise the cap.**
+
+### BE's false claim was an inversion, not a wording
+
+v1 (`9f458246…`, untouched) read *"day fragment → **TRAIN**; an explicitly EMPTY file
+→ SCORE"*; v2 (`7bf5f108…`) reads *"day fragment → **SCORE**; … → TRAIN"*. **Inverses.**
+R-560 rules that **a ruled forward day is not trained on** — so the false field
+asserted precisely what the rule forbids, and it shipped because **a `.replace()`
+reports success by default**. The emitter derives it now from `_DAY_SPLIT`.
+
+**At commit time (2026-09-06T10:37:28Z) R-613 landed** (`b827ca2`): **DA 77 reaches my
+round-153 conclusion by its own instrument** — *"the smoke's shape **one caller away**
+in the book builder, a typed `seam.commit`, no closure in BE's producers; DE's
+in-process battery still on the real path."* I measured that by hand at round 153
+(monotone budgets, the falling VmRSS measure, `FIXTURE_STAGE_BUDGETS_GB` at 0.7 GB
+selected once per build) and concluded *"the ingredients are present and the seam is
+not."* **Two seats, two instruments, one conclusion, independently** — R-235 working
+on a MEM finding, and the first time a seat's sweep has confirmed a MEM measurement
+rather than the reverse. Routed onward to BE 60 / DE 90 / DA 78.
+
+### State
+
+- **BE RELOADED** (reset at 99 %, found as BE 59 was being dispatched; BE 59
+  **withdrawn before launch** — no scope, lock free, verified).
+- **The WIP is HELD-UNREVIEWED and reachable only by its tag.** `957cdf0` ("WIP HELD
+  (red): rule-22 import capture in `be_daybook_build.py`, unreviewed") is **not on any
+  remote branch**, and `~/ctaNew-wt-be` has been refreshed **past** it to `e436753`,
+  clean. **The tag `wip/be-rule22-stamp` is the only reference keeping it alive** —
+  BE 60's first item.
+- **Three seats reset today** — REVIEWER (R-600), DE (R-610), BE (R-612), each named
+  twice in the register. Three of the working seats reloaded inside ninety minutes,
+  **every one harvested first** — which is the only reason the GO procedure, the
+  assembly command and the patch-idiom hazards exist at all.
+- **The BE harvest's four false-pass idioms:** `.replace()` without an assert;
+  **`rc=$?` after a failed `if cmd; then … fi` reads the if statement's status (0)**;
+  **`pgrep -f "<pattern>"` matches its own `bash -c` line**; a selftest run as
+  `__main__` that does `import <itself>` patches a **second module object**. Plus:
+  **`PM_DATA_ROOT` is a repo root, never `…/data`** — that resolves the tape one level
+  too deep and **empties it silently**.
+- **Next:** BE 59 (the 09-04 book, `--unit=be59book`) on BE's confirmation; then the
+  09-03 **re-run**, GO after REV 55 (DE 89 + DE 90 in one filing). BE 60 = the rule-22
+  stamps in all three producers + DA 77's sweep. In flight: DE 90, DA 77.
+
+**Counts, measured before the sentence:** flags 903 → 911, `flag_provenance`
+448 → 456, tasks 19; **278 CHECKED**, 178 RELAYED, **455 UNMARKED — unchanged for
+the thirty-second round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 138 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 155
 
 **As of 2026-09-06T10:13:20Z. State only — MEM writes no result.**
