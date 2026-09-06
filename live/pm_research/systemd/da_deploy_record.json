@@ -4,9 +4,10 @@
   "commits_behind_origin_at_deploy": 0,
   "deploy_host": "ip-172-31-78-41",
   "deploy_tree": "/home/yuqing/ctaNew",
-  "deployed_at_utc": "2026-09-06T04:13:31Z",
+  "deployed_at_utc": "2026-09-06T04:57:25Z",
   "deployed_by": "DA seat (pm-da)",
-  "deployed_commit": "0dce2a49b92abfcab9c3b4d32ee832d62571f32f",
+  "deployed_commit": "284fb9f21e0bc8b62b4bfe3a92f4a98a02e366fc",
+  "deployed_commit_can_be_orphaned": "PROVENANCE, NOT A GATE, AND THE LIMITATION IS NAMED: a later history rewrite (rebase, amend, force-push) can leave `deployed_commit` pointing at a commit no longer reachable from any branch -- the same dangling-pointer class as any recorded commit ref. NOTHING AT RUN TIME DEPENDS ON IT: the 00:06Z gate compares DIGESTS, and an orphaned commit id degrades what a reader can look up, never what the unit will do. Recorded because an unstated limitation is indistinguishable from an unnoticed one (reviewer 118af18).",
   "drift_exit_code": 7,
   "files": [
     {
@@ -17,9 +18,9 @@
       "why": "executed directly by the unit on every run (ExecStart, or invoked by it before any write)"
     },
     {
-      "bytes": 38038,
+      "bytes": 40127,
       "path": "live/pm_research/da_deploy_guard.py",
-      "sha256": "9346cc7c525274a8b697397b6cb0366f4c653ba2e5a082b6773e5630b0fc53bd",
+      "sha256": "0eae7637705fba8f7e75643f1948eaa8f15e493e4c902e0761ef8e24affae15c",
       "tier": "REFUSE",
       "why": "executed directly by the unit on every run (ExecStart, or invoked by it before any write)"
     },
@@ -274,6 +275,7 @@
     "exists": true,
     "path": "/home/yuqing/pricer-sol/venv/bin/python3",
     "realpath": "/usr/bin/python3.12",
+    "scope_boundary_STATED": "THE BINARY IS PINNED; ITS STDLIB AND SITE-PACKAGES ARE NOT. A change under /usr/lib/python3.12/ or in the venv's site-packages reaches 00:06Z with no digest, no report and no journal line. This is a DELIBERATE exclusion on the same trade as the binary itself -- pinning a whole stdlib would make a distro update cost a night's verdict -- and it is recorded here because the reviewer's point (118af18) is correct: a record that states the boundary for the binary and is SILENT about the libraries leaves a reader unable to tell considered-and-excluded from missed.",
     "sha256": "1643dacd9feaedc58f3cc581e4d22577dfe25c09b10282936186ccf0f2e61118",
     "tier": "REPORT",
     "why": "outside the repo and under no commit. Recorded so a reader can see it changed; not fatal, because losing a night's verdict to a distro python update is the wrong trade and the change is visible either way."
@@ -281,7 +283,7 @@
   "module_dir_dirty_at_deploy": false,
   "n_refuse": 7,
   "n_report": 26,
-  "origin_mm_research_at_deploy": "0dce2a49b92abfcab9c3b4d32ee832d62571f32f",
+  "origin_mm_research_at_deploy": "284fb9f21e0bc8b62b4bfe3a92f4a98a02e366fc",
   "protocol": "P003_DA_DEPLOY_RECORD_V1",
   "record_schema": 1,
   "unit_exit_codes": {
@@ -293,6 +295,7 @@
     "6": "canonical write by a run that names itself as neither leg",
     "7": "DEPLOY_DRIFT -- the executed bytes are not the deployed bytes"
   },
+  "what_a_change_to_THIS_RECORD_requires": "NOTHING. The record is not in the manifest and is not a REFUSE-tier file, so changing its FIELDS does not require a re-deploy. But the fields are produced by da_deploy_guard.py, which IS one of the seven REFUSE-tier files -- so editing the guard to add a field DOES change a recorded digest and DOES require a re-deploy. The two are different acts and this sentence exists so nobody has to work that out under time pressure.",
   "what_this_is": "the DEPLOY RECORD for da-midnight-verify.service. It is written ONLY by da_deploy_midnight.sh, an explicit act. The unit recomputes these digests at 00:06Z BEFORE anything is written and refuses with rc 7 if a REFUSE-tier digest differs.",
   "why_not_exit_5": "5 is already taken twice in da_midnight_verify.sh (the LOG/OUTDIR pair guard and the verifier-substitution refusal) and 6 by the unnamed-canonical-write refusal. Reusing one would make two different refusals indistinguishable in systemctl."
 }
