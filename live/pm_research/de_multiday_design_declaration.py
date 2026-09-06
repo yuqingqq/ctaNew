@@ -28,7 +28,7 @@ from pathlib import Path
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V2"
-EXPECTED_CHECKS = 34
+EXPECTED_CHECKS = 36
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1b"
@@ -133,7 +133,7 @@ def _smallest_G(alpha: float, m: int, cap: int = 40) -> int | None:
 
 
 def day_cluster_verdict(z_by_day: dict, *, alpha: float = ALPHA,
-                        m: int = MULTIPLICITY) -> dict:
+                        m: int = MULTIPLICITY, g: int | None = None) -> dict:
     """THE SECTION-7 PREDICATE, DECLARED BEFORE ANY DAY IS SEEN.
 
     Cluster unit is the UTC day (rule 8). The statistic is the mean of the
@@ -157,30 +157,35 @@ def day_cluster_verdict(z_by_day: dict, *, alpha: float = ALPHA,
     So ONE MORE ADMISSIBLE DAY would make a unanimous pass
     significance-bearing at m = 2 -- which is a fact worth having before
     the run rather than after it."""
+    # G IS BOUND AT RUN TIME FROM THE RULED DAY SET, not from a constant.
+    # R7 computes two candidate sets and the USER's answer selects one; the
+    # module default is v1's five only so the rule can be driven on a
+    # fixture before that answer exists.
+    g = G if g is None else g
     days = sorted(z_by_day)
-    if len(days) != G:
+    if len(days) != g:
         raise DesignRefused(
-            f"REFUSED: the cluster test is declared over exactly G = {G} "
+            f"REFUSED: the cluster test is declared over exactly G = {g} "
             f"days; got {len(days)}. Dropping or adding a day after the "
             f"fact is choosing after seeing (rule 11).")
     zs = [z_by_day[d] for d in days]
     mean_z = statistics.fmean(zs)
     n_pos = sum(1 for z in zs if z > 0)
-    unanimous = n_pos == G
-    p_sign = 2.0 ** (-G) if unanimous else None
+    unanimous = n_pos == g
+    p_sign = 2.0 ** (-g) if unanimous else None
     holm_threshold = alpha / m
     clears_holm = bool(p_sign is not None and p_sign <= holm_threshold)
     fails = (mean_z <= 0) or (not unanimous)
     return {
         "days": days, "z_by_day": {d: z_by_day[d] for d in days},
-        "cluster_unit": "UTC day", "G": G,
+        "cluster_unit": "UTC day", "G": g,
         "mean_standardised_excess": mean_z,
         "n_days_positive": n_pos, "signs_unanimous": unanimous,
         "p_one_sided_sign_test": p_sign,
         "multiplicity_m": m, "alpha": alpha,
         "holm_threshold_for_the_smaller_p": holm_threshold,
         "clears_holm": clears_holm,
-        "best_attainable_p_at_this_G": 2.0 ** (-G),
+        "best_attainable_p_at_this_G": 2.0 ** (-g),
         "a_pass_is_significance_bearing": clears_holm,
         "FAILS_THE_SECTION_7_PREDICATE": fails,
         "verdict": ("FAILS_TO_BEAT_THE_REPLAY_NULL" if fails
@@ -188,7 +193,7 @@ def day_cluster_verdict(z_by_day: dict, *, alpha: float = ALPHA,
         "smallest_G_that_clears_holm": _smallest_G(alpha, m),
         "smallest_G_that_clears_holm_at_m_1": _smallest_G(alpha, 1),
         "why_a_pass_cannot_be_significant_here": (
-            f"2^-{G} = {2.0 ** (-G)} against a Holm threshold of "
+            f"2^-{g} = {2.0 ** (-g)} against a Holm threshold of "
             f"{holm_threshold} at m = {m}; the smallest G that clears is "
             f"{_smallest_G(alpha, m)} at m = {m} and "
             f"{_smallest_G(alpha, 1)} at m = 1"),
@@ -406,7 +411,12 @@ def declaration() -> dict:
                   "five named days decide the section-7 stopping rule; "
                   "design and null committed before data.",
         "days": {
-            "named": list(DAYS), "G": G,
+            "STATUS": "SUPERSEDED_BY_R7 -- v1's five named days rested on "
+                      "the imported era bar. The operative set is R7's, "
+                      "and G IS NOT FIXED until the USER answers R7's one "
+                      "parameter",
+            "G_is_PENDING_the_USER_parameter": True,
+            "v1_named": list(DAYS), "v1_G": G,
             "why_these": "the only era-pure clob_v4_1 days in existence "
                          "(R-547(C)); 08-29/30/31 straddle era boundaries "
                          "and are inadmissible; 08-20..08-25 are consumed",
@@ -775,8 +785,24 @@ def selftest(*, quiet: bool = False) -> int:
                          f"-- ADMITTED")
 
     d = declaration()
-    ok(d["days"]["named"] == list(DAYS) and d["days"]["G"] == 5,
-       f"the five days are NAMED in the declaration: {DAYS}")
+    ok(d["days"]["G_is_PENDING_the_USER_parameter"] is True
+       and d["days"]["STATUS"].startswith("SUPERSEDED_BY_R7"),
+       "v1's five named days are marked SUPERSEDED_BY_R7 and G is declared "
+       "PENDING the USER's parameter -- the declaration must not state a G "
+       "its own day-set derivation contradicts")
+    _v6 = day_cluster_verdict({f"d{i}": 3.0 for i in range(6)}, g=6)
+    ok(abs(_v6["p_one_sided_sign_test"] - 0.015625) < 1e-12
+       and _v6["clears_holm"] is True
+       and _v6["a_pass_is_significance_bearing"] is True,
+       f"AND THE RULE IS DRIVEN AT G = 6, THE SET-A CASE: unanimous gives "
+       f"2^-6 = {_v6['p_one_sided_sign_test']} which CLEARS Holm at m = 2 "
+       f"-- so under SET A a pass IS significance-bearing, and the cap "
+       f"that binds at G = 5 does not bind there")
+    _v3 = day_cluster_verdict({f"d{i}": 3.0 for i in range(3)}, g=3)
+    ok(_v3["clears_holm"] is False
+       and _v3["p_one_sided_sign_test"] == 0.125,
+       "and at G = 3, the SET-B case, a unanimous pass gives 0.125 and "
+       "clears nothing -- the two sets are not a matter of degree")
     ok(d["theta"]["CONDVALUE_X_SKEW"] == 0.32450609461933483
        and d["theta"]["HAZARD_OVER_SKEWED_REF"] == 0.43525926488298716
        and all("sha256" in v for v in d["theta_pins"].values()),
