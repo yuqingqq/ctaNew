@@ -1,0 +1,150 @@
+{
+  "FIX_old_root_empty_new_root_populated": null,
+  "PARITY_not_applicable_here": false,
+  "PARITY_tick_size_and_file_counts_identical": true,
+  "carrying_commit": "cd34946579b46c5720720f918bb99b7950dda264",
+  "code_and_data_are_the_same_tree": true,
+  "data_root_check": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "adopted_from": "live/pm_research/de_data_root.py, imported not copied",
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "mm_hf_tape_present": true,
+    "purpose": "P-2026-002 E1 resolver parity",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "half_exercised": "PARITY (roots coincide)",
+  "how_to_read_this": "run from the SHARED tree the two roots coincide and the PARITY half is the meaningful one; run from a per-seat WORKTREE they differ and the FIX half is. Both halves are reported every time so a reader can see which one this run actually exercised.",
+  "mismatched_symbols": [],
+  "n_mismatches": 0,
+  "n_symbols": 12,
+  "n_symbols_new_root_sees_files": 12,
+  "n_symbols_old_root_saw_zero_files": 0,
+  "new_resolution": {
+    "expression": "de_data_root.resolve()['repo_root'], imported",
+    "root": "/home/yuqing/ctaNew"
+  },
+  "old_resolution": {
+    "expression": "Path(__file__).parents[2]",
+    "root": "/home/yuqing/ctaNew"
+  },
+  "per_symbol_new": {
+    "AAVEUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.01
+    },
+    "ADAUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.0001
+    },
+    "AVAXUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.001
+    },
+    "BNBUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.01
+    },
+    "BTCUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.1
+    },
+    "DOGEUSDT": {
+      "n_day_files": 31,
+      "tick_size": 1e-05
+    },
+    "ETHUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.01
+    },
+    "FILUSDT": {
+      "n_day_files": 31,
+      "tick_size": 1e-06
+    },
+    "ICPUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.001
+    },
+    "LTCUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.01
+    },
+    "SOLUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.01
+    },
+    "XRPUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.0001
+    }
+  },
+  "per_symbol_old": {
+    "AAVEUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.01
+    },
+    "ADAUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.0001
+    },
+    "AVAXUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.001
+    },
+    "BNBUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.01
+    },
+    "BTCUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.1
+    },
+    "DOGEUSDT": {
+      "n_day_files": 31,
+      "tick_size": 1e-05
+    },
+    "ETHUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.01
+    },
+    "FILUSDT": {
+      "n_day_files": 31,
+      "tick_size": 1e-06
+    },
+    "ICPUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.001
+    },
+    "LTCUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.01
+    },
+    "SOLUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.01
+    },
+    "XRPUSDT": {
+      "n_day_files": 31,
+      "tick_size": 0.0001
+    }
+  },
+  "protocol": "P002_E2_A_OVERLAY_RUNNER_V1_E1_RESOLVER_PARITY",
+  "what_the_mismatches_ARE": "genuine disagreements between old and new resolution on the same tree; any at all refuse the change",
+  "wrapper": {
+    "heavy_run_lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+    "note": "false means this step was NOT inside the capped scope. That is correct only for a step under 60 s and 1 GiB that opens no tape; anything else takes the lock FIRST and REFUSES if it is held.",
+    "ran_under_the_rule20_wrapper": false,
+    "read_from": "/proc/self/cgroup, in this process",
+    "rule": "SEAT_PROTOCOL rule 20 / R-575(C)",
+    "systemd_scope": "run-r324799b229734b96a812ff93f6624164.scope",
+    "systemd_slice": "app.slice",
+    "why_the_SLICE_and_not_the_scope": "the first version of this field tested `scope.startswith('run-')` and reported TRUE for an UNWRAPPED run, because the calling shell is itself inside a transient scope (app.slice). A field that is true either way is a control that cannot fail. `--slice=research.slice` is what the rule-20 wrapper adds and nothing else in this session does."
+  }
+}
