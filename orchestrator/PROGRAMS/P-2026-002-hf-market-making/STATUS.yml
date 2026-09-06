@@ -3,6 +3,22 @@ name: HF Market Making on Crypto Perps
 phase: in-progress        # planning / in-progress / review / done
 status: active            # not-started / active / blocked / deployed / stopped
 
+updated: >-
+  2026-09-06T04:47:21Z (DA seat, E2.0 RUN AND READ ON ADA). E2.0's declared
+  purpose was to VOID or SETTLE the ADA result. IT SETTLES IT, AND THE VERDICT
+  IS DEAD: notional-weighted rs(30 s) on TRUE bookTicker mids = -0.5552 bps
+  over 16 admissible UTC days (2026-08-20..09-05, 2,077,916 sweeps), below the
+  1.8 bps VIP0 death bar, with CI95 [-1.86, +0.12] so the kill is
+  INTERVAL-ROBUST. Delta_rs on the intersection = -0.0066 bps against a +1.0
+  voiding threshold, so E1's print-based mid was NOT optimistic and E1's
+  measurement stands -- ADA was a WEIGHTING artifact, not a mid artifact, and
+  that is now confirmed against real books. Verdict NOT_VOIDED+DEAD.
+  E1-B is now EMPTY WITH NO PENDING CELL; `pending_e1x` is resolved and E1x is
+  moot. All four readable section 1.5 gates fail. Receipt
+  data/mm_hf/e1/p002_e2_0_smoke_ADAUSDT__20260906T044455Z.json
+  (sha256 6942eb5ff574a42e, carrying_commit 2cf2029), declaration v2
+  054ff4e7536291ee (reviewer 46030b1's three findings carried in band).
+
 flags:
   e1_passed: overlay-only # FINAL (post results-audit): E1-A PASS audit-robust
                           # (sweep 6.26 [5.76,6.75] ≤ 8; stale-shadow 7.20; excl-ICP 6.15).
@@ -11,6 +27,25 @@ flags:
                           # names); majors NEGATIVE pre-fee. Program → overlay-only track.
                           # See live/mm_research/E1_RESULTS.md.
   e2_passed: null         # markout-adjusted spread > 0 somewhere (naive or signal-gated)
+  e2_0_done: ada-settled-dead
+                          # 2026-09-06, DA seat. Notional-weighted TRUE-MID
+                          # recompute on 16 admissible days of collected L2.
+                          # ADA: notional rs(30 s) = -0.5552 bps (death bar
+                          # 1.8), CI95 [-1.86, +0.12], interval-robust kill.
+                          # Delta_rs = -0.0066 bps: the PROXY WAS FINE, so E1
+                          # is vindicated as a measurement and ADA dies on the
+                          # weighting, exactly as the results audit predicted.
+                          # Size buckets, day-clustered, by notional quintile:
+                          # +2.29 / +1.98 / +1.73 / +0.98 / -0.69, with the top
+                          # quintile carrying 92% of the $3.21bn notional.
+                          # SETTLED ON 2026-08-20..09-05, NOT on E1's window --
+                          # a different period, stated as a limit of the
+                          # settlement in the declaration itself.
+                          # 15 SYMBOLS NOT YET RUN: the smoke was one symbol by
+                          # dispatch. BTC is ~12x ADA's daily volume (480 MB/day
+                          # gz vs 41 MB) and must be resource-checked before it
+                          # runs; ADA cost 67 s wall / 657 MiB RSS for 16 days
+                          # at one CPU under 8G.
   venue_choice: null      # binance / hyperliquid / none — decided after E1+E4
   collector_running: true  # Binance: since 2026-08-19 ~12:45 UTC (collect_hf.py, data/mm_hf/collector.log)
   hl_collector_running: true  # Hyperliquid: since 2026-08-19 ~13:20 UTC (collect_hl.py,
