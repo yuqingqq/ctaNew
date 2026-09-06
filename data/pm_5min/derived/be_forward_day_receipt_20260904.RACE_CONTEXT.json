@@ -1,0 +1,159 @@
+{
+ "LARGE_ARTIFACTS_PINNED_BY_DIGEST_NOT_COMMITTED": {
+  "files": [
+   {
+    "bytes": 297461852,
+    "location": "/home/yuqing/ctaNew_forward_runs/20260904_be45",
+    "name": "be_forward_day_SEALED_feed_20260904.jsonl",
+    "sha256": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949"
+   },
+   {
+    "bytes": 61595588,
+    "location": "/home/yuqing/ctaNew_forward_runs/20260904_be45",
+    "name": "be_forward_day_SEALED_scores_20260904.json",
+    "sha256": "a610b64ab7e204766c5a7c08bc8c05f2556af0a0e9291b76021c34f5a05a7a05"
+   }
+  ],
+  "rule": "result-bearing artifacts under ~1 MB commit with their code; larger ones are pinned by sha256"
+ },
+ "THE_RACE_FRAMING_THIS_DAY_MUST_BE_READ_UNDER": {
+  "AND_IT_CANNOT_VALIDATE_THE_CHANGED_PIPELINE": "V2's own HANDOFF: the prior race cannot validate the V2 pipeline, because the pipeline the race scores is not the pipeline V2 changed. This limit is INDEPENDENT of the directional limit and both stand together.",
+  "DIRECTIONAL_NOT_SIGNIFICANCE_BEARING": "USER ruling, R-529(A). At G = 5 with recorded multiplicity m = 2 the BEST ACHIEVABLE adjusted p is 0.0625 > 0.05 -- the ceiling of a clustered permutation test is its floor 1/2^G. Reaching G = 5 therefore CANNOT make this race significance-bearing, and no result from it may be stated as significant.",
+  "G": 5,
+  "best_achievable_adjusted_p": 0.0625,
+  "days": [
+   "2026-09-01",
+   "2026-09-02",
+   "2026-09-03",
+   "2026-09-04",
+   "2026-09-05"
+  ],
+  "multiplicity_m": 2,
+  "this_day_is_one_of": 5,
+  "what_this_receipt_is": "a scored, sealed, gate-complete day of the race. It is evidence of ACCRUAL and of PIPELINE HEALTH. It is not evidence for or against any candidate, and this seat asserts no read."
+ },
+ "THE_READ_IS_NOT_MINE_AND_I_DID_NOT_TAKE_IT": {
+  "and_did_not_compare_across_days": true,
+  "sealed": true,
+  "sealing_note": "per-action scores and every value metric are written to the sealed file only; this receipt carries counts, identities and hashes and NO metric (rule 11). Unsealing is the coordinator's or the USER's act.",
+  "this_seat_did_not_open": [
+   "be_forward_day_SEALED_feed_20260904.jsonl",
+   "be_forward_day_SEALED_scores_20260904.json"
+  ]
+ },
+ "day": "20260904",
+ "decides_nothing": "REPORTED (rule 14).",
+ "gates": {
+  "all_pass": true,
+  "n": 12,
+  "results": {
+   "bridged_windows_equal_row_windows": "PASS",
+   "day_closed_and_attributed": "PASS",
+   "frozen_contract": "PASS",
+   "import_anchors_from_run_dir": "PASS",
+   "import_closure_disclosure": "PASS",
+   "mask_seam_and_complement_report": "PASS",
+   "materialise_frozen_bytes": "PASS",
+   "population_supply_and_bridge": "PASS",
+   "reconciliation": "PASS",
+   "rows_and_scores_streamed": "PASS",
+   "selection_from_specs": "PASS",
+   "user_admission": "PASS"
+  }
+ },
+ "population": {
+  "coins": [
+   "bnb",
+   "btc",
+   "doge",
+   "eth",
+   "hype",
+   "sol",
+   "xrp"
+  ],
+  "governed": true,
+  "identity_supplied_equals_present_minus_masked": true,
+  "mask_identity_hash": "7b4714558a91ea1bb59dac816761c90fc13030db20a1c650e12b4a4642954513",
+  "n_masked_total": 6,
+  "n_present_total": 2015,
+  "n_supplied_total": 2009,
+  "per_coin": {
+   "bnb": {
+    "n_masked": 1,
+    "n_present": 288,
+    "n_supplied": 287
+   },
+   "btc": {
+    "n_masked": 0,
+    "n_present": 288,
+    "n_supplied": 288
+   },
+   "doge": {
+    "n_masked": 1,
+    "n_present": 287,
+    "n_supplied": 286
+   },
+   "eth": {
+    "n_masked": 3,
+    "n_present": 288,
+    "n_supplied": 285
+   },
+   "hype": {
+    "n_masked": 0,
+    "n_present": 288,
+    "n_supplied": 288
+   },
+   "sol": {
+    "n_masked": 1,
+    "n_present": 288,
+    "n_supplied": 287
+   },
+   "xrp": {
+    "n_masked": 0,
+    "n_present": 288,
+    "n_supplied": 288
+   }
+  }
+ },
+ "producing_code": {
+  "companion": "live/pm_research/be_forward_day_race_context.py",
+  "day_runner": "live/pm_research/be_forward_day.py",
+  "preflight": "live/pm_research/be_forward_preflight.py",
+  "scorer": "live/pm_research/be_score_forward_day.sh",
+  "unchanged_this_round": true
+ },
+ "protocol": "BE_FORWARD_DAY_RACE_CONTEXT_V2",
+ "receipt": {
+  "bytes": 26894,
+  "path": "data/pm_5min/derived/be_forward_day_receipt_20260904.json",
+  "prefix_matches": true,
+  "run_dir_path": "/home/yuqing/ctaNew_forward_runs/20260904_be45/be_forward_day_receipt_20260904.json",
+  "scorer_reported_sha256_prefix": "8f08b089c5989dfe",
+  "sha256": "8f08b089c5989dfe422f1f604a98b537ed2710c531167dc741cf90a58867eeb2",
+  "why_that_matters": "the digest is CHECKED, not merely computed here: the scorer stated it independently."
+ },
+ "run": {
+  "command": "live/pm_research/be_score_forward_day.sh 20260904 /home/yuqing/ctaNew_forward_runs/20260904_be45",
+  "finished_utc": "03:42:28Z",
+  "go_utc": "03:09:27Z",
+  "memory_max": "8G, the scorer's own default; cap NOT raised (R-174)",
+  "outdir_was_new_and_empty": true,
+  "preflight": {
+   "accrues": true,
+   "blockers": [],
+   "checks": {
+    "attribution": "scheduled-unit prefix present",
+    "day_closed_calendar": "day_closed_calendar=True",
+    "gate_1_would_pass": "day_closed_and_attributed passes",
+    "mask_present_if_governed": "governed=True; mask at /home/yuqing/ctaNew-wt-be/data/pm_5min/derived/da_blackout_mask_20260904.json EXISTS",
+    "ratification": "R-419 / RACE",
+    "verdict_exists": "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260904.json"
+   },
+   "verdict": "GO"
+  },
+  "run_exactly_as_built": true,
+  "scoring_rc": 0
+ },
+ "what_this_is": "a COMPANION to one sealed forward-day receipt. It resolves BY DIGEST to exactly those bytes and supplies the race framing the generated receipt does not carry. It is not a correction of the receipt and asserts no read.",
+ "why_not_a_receipt_field": "the receipt is generated and SEALED. Editing it is forbidden (rule 13); re-running would re-seal an accrued day for a prose field. Rule 13's objection to sidecars is that readers resolve FIELDS -- so this pins its receipt by sha256 rather than by filename."
+}
