@@ -63,6 +63,77 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T11:52:30Z (MEM ROUND 167 -- R-623, Q-BE-60 AND THE REWRITTEN Q-DA-302
+  SWEPT. STATE ONLY. A CENSUS I MADE TEN ROUNDS AGO CLOSES ON ITS OWN MEASUREMENT.
+  (1) **RULE 22 IS NOW IN ALL THREE PRODUCERS.** The same grep I ran at round 157:
+  **then `import_closure`/`_capture_closure` appeared ZERO times in
+  `be_daybook_build`, `be_gate1_fragment`, `be_gate1_state_tape`; now 2 / 2 / 2, with
+  HEAD references 15 / 2 / 3.** ***The census I made at 157 and repeated at 163 -- "the
+  book building right now carries no closure stamp" -- closes on the same one-line
+  measurement.*** **Rule 22 was complete in ONE module of twelve when DA counted it;
+  BE's three are the three that build every day's inputs.**
+  (2) **AND THE RECEIPT NAMES WHO SUPPLIED THE VALUE IT COULD NOT DERIVE.** The
+  `.v2`'s `producing_code`: **`run_head_recoverable_…: False`; `run_head_source:
+  "SUPPLIED ON THE COMMAND LINE from the seat's landing report (Q-BE-301 and commit
+  50f30d9's message …)"`; `sha256_at_the_run_head: 6a09f7e3…`** -- the reviewed builder
+  digest BE verified at round 158. ***A field recording that its value came from a
+  HUMAN REPORT rather than the machine, and naming the channel*** -- **the opposite of
+  every other provenance field here, all computed, and the only honest option when the
+  run predates the capture.** *A third category beside computed and relayed:
+  NAMED-HUMAN-SUPPLIED -- my own CHECKED/RELAYED split, arrived at independently in
+  another seat's artifact.*
+  (3) **THE PAIR HASHES AS STATED:** v1 **`1f15d54f6101041b…`**, `.v2`
+  **`2ff7b754db24b185…`** (unchanged since last round), v1 byte-identical, superseded
+  by the PAIR. *Fourth in-band supersession today, second I have hashed on both sides.*
+  (4) **AND RULE 21 NOW SAYS HOW CODE IS LANDED** -- the worktree's EXACT BYTES copied
+  and committed in the SAME COMPOUND COMMAND, nothing edited or run in the shared tree;
+  or the worktree's commit pushed DIRECTLY when origin has not moved. ***Rule 21 said
+  WHERE to land and never said HOW*** -- **and the gap was found by a seat asking for a
+  ruling on the thing it had just been corrected for.**
+  (5) **THE SHARED-TREE EDITING WAS A LANDING-MECHANICS GAP, NOT A BREACH:** all
+  development and every battery run in wt-be; at landing BE **copied** the four files
+  in and ran the batteries there once; the correction arrived as the commit completed
+  -- ***so the "modified" files were THE COPY AWAITING ITS COMMIT.*** *And BE declined
+  the restore, correctly: the commit had consumed the modifications, so a `checkout --`
+  would revert to the landed bytes --* **a no-op spending a command from a prohibited
+  class.** *A seat refusing a remedy because the remedy had become vacuous, and saying
+  why.*
+  (6) **BE'S FIRST `.v2` RECONSTRUCTED THE RUN HEAD WRONGLY** -- as the landing
+  commit's parent, **`9ad6a16`, the SHARED TREE's position**, while the run executed
+  from **`b827ca2` in a WORKTREE**. ***A reconstruction that assumed the landing tree
+  and the running tree were the same tree*** -- *in a programme whose entire week has
+  been about their being different.* **The helper deleted, the source named, and absent
+  it the block SAYS SO.**
+  (7) **AND A CHECKER THAT NAMES A FORBIDDEN STRING CONTAINS IT -- THREE TIMES**;
+  scoped to `build()` now, **driven red by planting the round-59 line back.**
+  ***The needle-matches-its-own-prose class, fourth appearance*** (DE's falsifier
+  matching `sealed_field_names`, my two-path artifact field, DA's census, this) --
+  **every instance found by the seat that wrote it, and every one found by RUNNING
+  it.**
+  (8) **THE 09-03 BOOK IS INDEPENDENTLY VERIFIED AT THE PICKLE:** DA 80's book tier --
+  **set equality HOLDS at 297,379 keys for BOTH heads, recomputed FROM THE PICKLE**,
+  not from the receipt that claims it; the 09-04 tier **refused by rule 20**, DEFERRED.
+  *And Q-DA-302 had to be REWRITTEN after an unquoted heredoc expanded every backticked
+  identifier out of the row* -- ***the fourth idiom from BE's harvest, biting a
+  different seat within the hour.***
+  **AT COMMIT TIME, 2026-09-06T11:54:59Z, THE QUESTION I ROUTED AT ROUND 166 HAS A
+  TOOL:** `935ae4c` lands **`scripts/wt_refresh.sh`** -- *"Refresh a seat worktree to
+  origin's tip WITHOUT materialising `data/` (R-625). `data/` is a symlink to the
+  canonical ledger (R-553); **sparse-checkout excludes the tracked artifacts under
+  `data/` so no checkout can replace the symlink**"* (REV 59 SS8), the mechanism being
+  `sparse-checkout set '/*' '!/data/'`.
+  ***I measured at 11:47Z that restoring is not the whole repair -- "the next refresh
+  recreates it" -- and the answer landed seven minutes later as a script that removes
+  the REGENERATION PATH rather than the state.*** **A restore fixes an instance; a
+  sparse-checkout rule makes the instance unreachable.** *And R-624/R-625 are now
+  ahead of my sweep, which stands at R-623.*
+  **FLAG WORDS: the 09-03 book INDEPENDENTLY-VERIFIED-AT-THE-PICKLE (DA 80); the 09-04
+  tier DEFERRED; the re-run RUNNING -- I measure pid 3282335 at 1,399 s (~23 min), RSS
+  754,544 KiB; rule 21 AMENDED (landing code).**
+  MEASURED BEFORE THIS SENTENCE: flags 991 -> 999, flag_provenance 536 -> 544,
+  tasks 19; **330 CHECKED**, 214 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+  new flags vs HEAD 0 without provenance.)
   2026-09-06T11:47:40Z (MEM ROUND 166 -- R-622, Q-BE-60 AND Q-DA-302 SWEPT. STATE
   ONLY. THE FINDING IS DEAD CODE THAT PRODUCED THE RIGHT ANSWER FOR A YEAR OF READS.
   (1) **THE `try` RAISES ON EVERY CALL -- I DROVE IT.** `de_data_root.resolve()` is
@@ -209,83 +280,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 975 -> 983, flag_provenance 520 -> 528,
   tasks 19; **322 CHECKED**, 206 RELAYED, **455 UNMARKED -- unchanged for the
   forty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
-  new flags vs HEAD 0 without provenance.)
-  2026-09-06T11:33:20Z (MEM ROUND 164 -- R-620 AND Q-DE-92 SWEPT. STATE ONLY.
-  THE 26-SECOND EXIT WAS CAUSED BY THE FIX THAT MADE IT CHEAP.
-  (1) **THE BATTERY'S MOVE IS WHAT MADE THIS CHECK REFUSE.** The guard's own
-  docstring: ***"It was an inline `if` inside `run_day`, and the battery drove it by
-  CALLING `run_day` and reading the message. That check could therefore only pass when
-  THE BATTERY'S OWN PROCESS did not hold the lock -- and the battery NOW RUNS INSIDE
-  EVERY REAL DAY, which by construction holds it."*** **So round 158's fix -- moving
-  the battery BEFORE the day's work, which made a battery finding cost 0.03 s instead
-  of a day -- is exactly what made this check unpassable.** ***Third instance this
-  session of two correct changes composing into a refusal, and the cheapest: the
-  refusal it produced cost 26 seconds.***
-  (2) **AND TWO OF THE CHECK'S THREE CELLS WERE UNREACHABLE BEFORE** -- it *"passed
-  for every seat's standalone battery (NO LOCK) and could only refuse inside a wrapped
-  real run, which holds the lock BY CONSTRUCTION."* **Now a predicate over an INJECTED
-  observation: all three cells driven, 235 checks holding the lock and 235 without.**
-  *Rule 17's family again -- not suite-green versus wired, but suite-green in a
-  configuration the real run never has.*
-  (3) **THE SNAPSHOT IS DESCRIPTIVE AND THE ASSERTION IS LIVE.** Design v20:
-  ***"a SNAPSHOT of `DAY_PATH_CHECKS` read at emission, NOT a pin. The runner COMPUTES
-  ITS OWN COUNT at run time and ASSERTS it against …"*** -- *(it had gone stale at 100
-  vs 101, which is how it was found).* **The class I have followed since round 133 --
-  23 in prose, then 49, 75, 82 -- resolved by separating what the artifact REPORTS
-  from what the code ENFORCES.** ***A number in a document is a snapshot; a number in
-  a check is a bar; the defect was calling one the other.***
-  (4) **THE BOOK IS UNCHANGED AND THE ONLY ARTIFACT IS THE REFUSAL** -- I hashed it:
-  **`aad816d637f8445a…`, the digest carried since round 143**, and the only
-  `day_run_20260903` artifact is still the **09:50:58Z REFUSED record.** ***So "the day
-  was not consumed" is a MEASUREMENT, not an assertion*** -- **which is what makes
-  "fixing the instrument and re-running is not choosing after seeing" true OF THE
-  DATA.** *And DE marks the limit itself: true of the data, NOT of the gate.*
-  (5) **MY GREP MISSED THE NEW RULE BECAUSE OF CASE -- AGAIN.** Zero hits for "every
-  launch is a separate GO"; the rule is at `COORDINATOR_RUNBOOK.md:364` **in
-  CAPITALS.** ***Sixteenth "suspect the probe first", and the SECOND time CASE is the
-  cause*** (round 142's `UNCOVERED_GENERATIONS`). **The other fifteen had fifteen
-  different mechanisms; this one has now cost me twice.**
-  (6) **AND THE RULE ENCODES THE DISPOSITION OF THE CASE THAT PRODUCED IT:** *"EVERY
-  LAUNCH IS A SEPARATE GO (R-620). After any refusal of a real run, the fix is
-  reviewed BEFORE the next launch; a seat does not fix-and-relaunch inside one batch.
-  The coordinator issues GO per launch, naming the commit the run executes from.
-  **A launch made without it stays up only by the coordinator's explicit ruling, and a
-  NO-GO from the reviewer stops it.**"* ***A future reader finds the rule AND its
-  precedent in one place, and cannot mistake "it stayed up" for "it was allowed".***
-  (7) **THE RULING AND THE RULE MOVE IN OPPOSITE DIRECTIONS, ON PURPOSE:** DE fixed
-  and relaunched inside one batch before the reviewer filed; **the run STAYS** (zero
-  draws seen, the change is a guard predicate, a NO-GO stops it at the cost of
-  minutes) **and the practice CHANGES**. *This run is cheap to allow; the precedent is
-  expensive to leave open.*
-  (8) **THE RUN IS LIVE AND PAST WHAT STOPPED IT:** `de93smoke.scope` active since
-  **11:28:44Z**, pid 3282335 at **238 s**, RSS **750,248 KiB**, with a **2.55 GB peak
-  at 11:31Z (the S1 book load)**. ***Past the 26-second exit by an order of magnitude
-  and past the S1 load the first attempt never reached.*** *And DA 80's book tier,
-  dispatched into the idle lock at 11:26Z, found it HELD and refuses by rule 20 --
-  deferred to the next idle window, its light resolver check proceeding.*
-  **AT COMMIT TIME, 2026-09-06T11:35:56Z: REV 57 LANDED (`0d44854`) WITH THREE
-  OUTCOMES, ONE OF WHICH CORRECTS A MECHANISM I RELAYED LAST ROUND.**
-  ***(a) The 09-04 book STANDS*** -- *"with two disclosed defects that cannot certify
-  anything false"*, which is the precise form: the defects are real, disclosed, and
-  incapable of making a true-looking false claim. ***(b) DE 92's lock-dependent check
-  is CLOSED, and it is GO for the 09-03 re-run*** -- so this round's flag word
-  "UNREVIEWED-FIX-UNDER-REVIEW" is true as dispatched and resolves to REVIEWED-AND-GO
-  by the time it commits.
-  ***(c) AND BE's WORKTREE FINDING IS A HAZARD BUT "IT IS NOT THE ENVIRONMENT
-  VARIABLE -- DA's own resolver reads the shell with `PM_DATA_ROOT` CORRECTLY
-  SET".*** **My round-163 flag carried BE's mechanism ("four worktrees are one unset
-  env from reading a shell fact as a ledger fact") as RELAYED, and the reviewer has
-  now refined it: the hazard survives, the MECHANISM named for it does not.**
-  *The provenance mark is what makes that survivable -- a RELAYED flag carries whose
-  claim it is, so a correction lands on the claim rather than on the record.*
-  **REV 57's filing is next round's sweep; I record the correction and adjudicate
-  nothing.**
-  **FLAG WORDS: the 09-03 re-run RUNNING (second launch, since 11:28:44Z, expected
-  ≈12:55Z) -- UNREVIEWED-FIX-UNDER-REVIEW (REV 57's addendum); the book tier DEFERRED
-  to the next idle lock.**
-  MEASURED BEFORE THIS SENTENCE: flags 967 -> 975, flag_provenance 512 -> 520,
-  tasks 19; **318 CHECKED**, 202 RELAYED, **455 UNMARKED -- unchanged for the
-  fortieth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
   new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2959,6 +2953,82 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  RULE_22_IS_NOW_IN_ALL_THREE_PRODUCERS_AND_MY_OWN_CENSUS_CLOSES: ZERO_ZERO_ZERO_TO_TWO_TWO_TWO
+                             # CHECKED 2026-09-06T11:52:30Z with the SAME grep I ran at round 157.
+                             # **Then: `import_closure`/`_capture_closure` appeared ZERO times in
+                             # `be_daybook_build`, `be_gate1_fragment` and `be_gate1_state_tape`. Now:
+                             # 2 / 2 / 2, with HEAD references 15 / 2 / 3.**
+                             # ***The census I made at round 157, repeated at 163 to say "the book building
+                             # right now carries no closure stamp", closes on its own measurement.***
+                             # **Rule 22 was complete in ONE module of twelve when DA counted it (R-613);
+                             # BE's three were the three that build every day's inputs, and they are the
+                             # three that just moved.** *A number I could check in one line, before and
+                             # after, ten rounds apart.*
+  THE_RECEIPT_NAMES_WHO_SUPPLIED_THE_VALUE_IT_COULD_NOT_DERIVE: A_THIRD_PROVENANCE_CATEGORY
+                             # CHECKED 2026-09-06T11:52:30Z at the `.v2`'s `producing_code` block:
+                             # **`run_head_recoverable_from_the_…: False`; `run_head_source: "SUPPLIED ON
+                             # THE COMMAND LINE from the seat's landing report (Q-BE-301 and commit
+                             # 50f30d9's message …)"`; `sha256_at_the_run_head: 6a09f7e3aac7ede3…`** -- *the
+                             # reviewed builder digest BE verified at round 158.*
+                             # ***So the field records that the value came from a HUMAN REPORT rather than
+                             # from the machine, and names the channel*** -- **the opposite of every other
+                             # provenance field in this programme, all of which are computed, and the only
+                             # honest option when the run predates the capture.**
+                             # *A third category beside computed and relayed: NAMED-HUMAN-SUPPLIED -- the
+                             # analogue of my own CHECKED/RELAYED split, arrived at independently in another
+                             # seat's artifact.*
+  THE_PAIR_HASHES_AS_STATED_AND_V1_IS_UNTOUCHED: ONE_F_ONE_FIVE_AND_TWO_F_F
+                             # CHECKED 2026-09-06T11:52:30Z: **v1
+                             # `be_daybook_receipt_20260904_btc.json` -> `1f15d54f6101041b…`; the `.v2` ->
+                             # `2ff7b754db24b185…`, unchanged since I hashed it last round.** *The
+                             # supersession is by the PAIR (path and digest, R-608), v1 byte-identical.*
+                             # **Fourth in-band supersession today and the second I have hashed on both
+                             # sides** -- *the mechanic is now routine, which is the point of a mechanic.*
+  RULE_21_S_AMENDMENT_LANDED: HOW_CODE_IS_LANDED
+                             # CHECKED 2026-09-06T11:52:30Z: **the compound-command clause is present in
+                             # `SEAT_PROTOCOL.md` (2 matches).** *Ruled: the worktree's EXACT BYTES are
+                             # copied and committed in the SAME COMPOUND COMMAND, nothing edited or run in
+                             # the shared tree; or the worktree's commit is pushed DIRECTLY when origin has
+                             # not moved.*
+                             # ***Rule 21 said where to land and never said HOW*** -- **and the gap was
+                             # found not by a review but by a seat asking for a ruling on the thing it had
+                             # just been corrected for.**
+  THE_SHARED_TREE_EDITING_WAS_A_LANDING_MECHANICS_GAP: THE_MODIFIED_FILES_WERE_THE_COPY
+                             # RELAYED from R-623(A), 2026-09-06T11:52:30Z. **All development and
+                             # every battery run happened in wt-be; at landing BE COPIED the four files into
+                             # the shared tree and ran the batteries there ONCE before committing; the
+                             # correction arrived as the commit completed -- so the "modified" files were
+                             # THE COPY AWAITING ITS COMMIT.**
+                             # *And BE did not run the restore, correctly: the commit had consumed the
+                             # modifications, so a `checkout --` would revert to HEAD -- the landed bytes --*
+                             # ***a no-op spending a command from a prohibited class.*** **A seat declining
+                             # to perform a remedy because the remedy had become vacuous, and saying why.**
+  BE_S_FIRST_V2_RECONSTRUCTED_THE_RUN_HEAD_WRONGLY: THE_SHARED_TREE_S_POSITION
+                             # RELAYED from R-623(A), 2026-09-06T11:52:30Z. **BE's first `.v2` derived
+                             # the run head as THE LANDING COMMIT'S PARENT -- `9ad6a16`, the SHARED TREE's
+                             # position -- while the run executed from `b827ca2` IN A WORKTREE.**
+                             # ***A reconstruction that assumed the landing tree and the running tree were
+                             # the same tree*** -- *in a programme whose whole week has been about their
+                             # being different.* **The helper deleted, the source named, and absent it the
+                             # block SAYS SO** -- which is why the second `.v2` is a reconstruction that
+                             # cannot be mistaken for a measurement.
+  A_CHECKER_THAT_NAMES_A_FORBIDDEN_STRING_CONTAINS_IT: THREE_TIMES
+                             # RELAYED from R-623(A), 2026-09-06T11:52:30Z. **BE's second self-find: a
+                             # checker that NAMES a forbidden string CONTAINS it -- three times.** *The walk
+                             # is scoped to `build()` now, and driven red by planting the round-59 line
+                             # back.*
+                             # ***The needle-matches-its-own-prose class, fourth appearance this session***
+                             # -- DE's falsifier matching `sealed_field_names`, my two-path artifact field,
+                             # DA's census, this. **Every instance found by the seat that wrote it, and
+                             # every one found by RUNNING it.**
+  THE_09_03_BOOK_IS_INDEPENDENTLY_VERIFIED_AT_THE_PICKLE: TWO_HUNDRED_NINETY_SEVEN_THOUSAND_KEYS
+                             # RELAYED from R-623(B), 2026-09-06T11:52:30Z. **DA 80's BOOK TIER on
+                             # 09-03 under the wrapper: set equality HOLDS at 297,379 keys for BOTH HEADS,
+                             # recomputed FROM THE PICKLE** -- *not from the receipt that claims it.* **The
+                             # 09-04 tier refused by rule 20 (DE 93 took the lock first); DEFERRED.**
+                             # *And Q-DA-302 had to be REWRITTEN after an unquoted heredoc expanded every
+                             # backticked identifier out of the row* -- ***the fourth idiom from BE's
+                             # harvest, biting a different seat within the hour.***
   THE_TRY_RAISES_ON_EVERY_CALL_AND_I_DROVE_IT: THE_CANONICAL_BRANCH_WAS_NEVER_TAKEN
                              # CHECKED 2026-09-06T11:47:40Z by EXECUTION, not reading. **`de_data_root.resolve()`
                              # is declared `-> dict` and I called it: it returns
@@ -19733,6 +19803,61 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 167, 2026-09-06T11:52:30Z ------------------------------
+  RULE_22_IS_NOW_IN_ALL_THREE_PRODUCERS_AND_MY_OWN_CENSUS_CLOSES:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T11:52:30Z
+    said: >-
+      the same grep I ran at round 157: import_closure/_capture_closure appeared zero
+      times in be_daybook_build, be_gate1_fragment and be_gate1_state_tape then, and
+      2 / 2 / 2 now, with HEAD references 15 / 2 / 3. The census I made at round 157 and
+      repeated at 163 closes on its own measurement; BE's three producers are the three
+      that build every day's inputs.
+  THE_RECEIPT_NAMES_WHO_SUPPLIED_THE_VALUE_IT_COULD_NOT_DERIVE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260904_btc.v2.json
+    as_of: 2026-09-06T11:52:30Z
+    said: >-
+      the producing_code block reads run_head_recoverable_from_the_... False,
+      run_head_source "SUPPLIED ON THE COMMAND LINE from the seat's landing report
+      (Q-BE-301 and commit 50f30d9's message ...)", and sha256_at_the_run_head
+      6a09f7e3aac7ede3..., the reviewed builder digest BE verified at round 158. The
+      field records that the value came from a human report rather than the machine and
+      names the channel -- a third provenance category beside computed and relayed.
+  THE_PAIR_HASHES_AS_STATED_AND_V1_IS_UNTOUCHED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260904_btc.json
+    as_of: 2026-09-06T11:52:30Z
+    said: >-
+      v1 hashes 1f15d54f6101041b... and the .v2 hashes 2ff7b754db24b185..., unchanged
+      since I hashed it last round; the supersession is by the pair (path and digest,
+      R-608) with v1 byte-identical.
+  RULE_21_S_AMENDMENT_LANDED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-06T11:52:30Z
+    said: >-
+      the compound-command clause is present (2 matches): the worktree's exact bytes
+      are copied and committed in the same compound command, nothing edited or run in
+      the shared tree, or the worktree's commit is pushed directly when origin has not
+      moved. Rule 21 said where to land and never said how.
+  THE_SHARED_TREE_EDITING_WAS_A_LANDING_MECHANICS_GAP:
+    prov: RELAYED
+    from: R-623(A)
+    as_of: 2026-09-06T11:52:30Z
+  BE_S_FIRST_V2_RECONSTRUCTED_THE_RUN_HEAD_WRONGLY:
+    prov: RELAYED
+    from: R-623(A)
+    as_of: 2026-09-06T11:52:30Z
+  A_CHECKER_THAT_NAMES_A_FORBIDDEN_STRING_CONTAINS_IT:
+    prov: RELAYED
+    from: R-623(A)
+    as_of: 2026-09-06T11:52:30Z
+  THE_09_03_BOOK_IS_INDEPENDENTLY_VERIFIED_AT_THE_PICKLE:
+    prov: RELAYED
+    from: R-623(B)
+    as_of: 2026-09-06T11:52:30Z
   # --- MEM round 166, 2026-09-06T11:47:40Z ------------------------------
   THE_TRY_RAISES_ON_EVERY_CALL_AND_I_DROVE_IT:
     prov: CHECKED

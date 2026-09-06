@@ -5,6 +5,87 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 167
+
+**As of 2026-09-06T11:52:30Z. State only — MEM writes no result.**
+
+### Rule 22 is now in all three producers — my own census closes
+
+The same grep I ran at round 157: **then 0 / 0 / 0** for
+`import_closure`/`_capture_closure` in `be_daybook_build`, `be_gate1_fragment`,
+`be_gate1_state_tape`; **now 2 / 2 / 2**, with HEAD references **15 / 2 / 3**. The
+census I made at 157 and repeated at 163 — *"the book building right now carries no
+closure stamp"* — **closes on the same one-line measurement.** Rule 22 was complete in
+**one module of twelve** when DA counted it; **BE's three are the three that build
+every day's inputs.**
+
+**BE 60 closed the seven debts** (58 / 14 / 10 selftests): the closure + HEAD +
+producing-code digest **at import** in all three producers; the growth budget **per
+stage**; the cgroup **scope block**; the front door's commit **read, not typed**; the
+`.v3` pointer and the **one-population** count predicate; the inputs' digests against
+**the round-58 receipts**; and the 09-04 receipt `.v2`.
+
+### The receipt names who supplied the value it could not derive
+
+`producing_code`: **`run_head_recoverable_…: False`**, **`run_head_source: "SUPPLIED
+ON THE COMMAND LINE from the seat's landing report (Q-BE-301 and commit 50f30d9's
+message …)"`**, `sha256_at_the_run_head: 6a09f7e3…` (the reviewed builder digest).
+**A field recording that its value came from a human report rather than the machine,
+and naming the channel** — the only honest option when the run predates the capture.
+*A third provenance category beside computed and relayed.*
+
+**And BE's first `.v2` had reconstructed the run head wrongly** — as the landing
+commit's parent (**`9ad6a16`, the shared tree's position**) while the run executed from
+**`b827ca2` in a worktree**. *A reconstruction that assumed the landing tree and the
+running tree were the same tree.* The helper is deleted, the source named, and absent
+it **the block says so**.
+
+**Hashes:** v1 **`1f15d54f6101041b…`**, `.v2` **`2ff7b754db24b185…`** — v1
+byte-identical, superseded by the **pair**.
+
+### Rule 21 now says HOW code is landed
+
+**The worktree's exact bytes are copied and committed in the SAME compound command,
+nothing edited or run in the shared tree; or the worktree's commit is pushed directly
+when origin has not moved.** *Rule 21 said where to land and never said how* — and the
+gap was found **by a seat asking for a ruling on the thing it had just been corrected
+for**. The shared-tree editing was that gap, not a breach: development and every
+battery run in **wt-be**, then a **copy** in to commit — the "modified" files were **the
+copy awaiting its commit** — and BE **declined the restore** because the commit had
+consumed the modifications, so `checkout --` would have been **a no-op spending a
+prohibited-class command**.
+
+### State
+
+- **At commit time (2026-09-06T11:54:59Z) the regeneration path is closed by a
+  tool:** `935ae4c` lands **`scripts/wt_refresh.sh`** — *"refresh a seat worktree to
+  origin's tip **without materialising `data/`** … sparse-checkout excludes the tracked
+  artifacts under `data/` **so no checkout can replace the symlink**"* (REV 59 §8,
+  R-625), via `sparse-checkout set '/*' '!/data/'`. **I measured at 11:47Z that
+  restoring is not the whole repair; the answer landed seven minutes later as a rule
+  that makes the regeneration unreachable.** (R-624/R-625 are now ahead of this
+  sweep, which stands at R-623.)
+- **The 09-03 book: INDEPENDENTLY VERIFIED AT THE PICKLE** — DA 80's book tier, **set
+  equality holds at 297,379 keys for both heads, recomputed from the pickle**, not
+  from the receipt that claims it.
+- **The 09-04 tier: DEFERRED** — refused by rule 20 (DE 93 holds the lock).
+- **The re-run: RUNNING** — pid 3282335 at **1,399 s (~23 min)**, RSS 754,544 KiB;
+  expected **≈12:55Z**.
+- **Rule 21 AMENDED** (landing code); **wt-rev and wt-be `data/` symlinks restored**;
+  wt-da after DA 80, wt-de2 after the run, wt-de when DE releases it.
+- **Open:** REV 59 (BE 60); DA's resolver fix (**the dead `try` still raises** at my
+  last drive); **DE 94** (design vs code on the landing field) after the run.
+- *A checker that names a forbidden string contained it — **three times** — now scoped
+  to `build()` and driven red. The needle-matches-its-own-prose class, fourth
+  appearance, every instance found by the seat that wrote it, by running it.*
+
+**Counts, measured before the sentence:** flags 991 → 999, `flag_provenance`
+536 → 544, tasks 19; **330 CHECKED**, 214 RELAYED, **455 UNMARKED — unchanged for
+the forty-third round running**. ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+3 (Batch 149 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 166
 
 **As of 2026-09-06T11:47:40Z. State only — MEM writes no result.**

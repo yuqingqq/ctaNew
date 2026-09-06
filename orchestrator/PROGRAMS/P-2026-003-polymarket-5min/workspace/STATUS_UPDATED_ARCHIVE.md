@@ -12530,3 +12530,90 @@ directions.
   thirty-ninth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 149 — archived 2026-09-06T11:52:30Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 167 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T11:33:20Z (MEM ROUND 164 -- R-620 AND Q-DE-92 SWEPT. STATE ONLY.
+  THE 26-SECOND EXIT WAS CAUSED BY THE FIX THAT MADE IT CHEAP.
+  (1) **THE BATTERY'S MOVE IS WHAT MADE THIS CHECK REFUSE.** The guard's own
+  docstring: ***"It was an inline `if` inside `run_day`, and the battery drove it by
+  CALLING `run_day` and reading the message. That check could therefore only pass when
+  THE BATTERY'S OWN PROCESS did not hold the lock -- and the battery NOW RUNS INSIDE
+  EVERY REAL DAY, which by construction holds it."*** **So round 158's fix -- moving
+  the battery BEFORE the day's work, which made a battery finding cost 0.03 s instead
+  of a day -- is exactly what made this check unpassable.** ***Third instance this
+  session of two correct changes composing into a refusal, and the cheapest: the
+  refusal it produced cost 26 seconds.***
+  (2) **AND TWO OF THE CHECK'S THREE CELLS WERE UNREACHABLE BEFORE** -- it *"passed
+  for every seat's standalone battery (NO LOCK) and could only refuse inside a wrapped
+  real run, which holds the lock BY CONSTRUCTION."* **Now a predicate over an INJECTED
+  observation: all three cells driven, 235 checks holding the lock and 235 without.**
+  *Rule 17's family again -- not suite-green versus wired, but suite-green in a
+  configuration the real run never has.*
+  (3) **THE SNAPSHOT IS DESCRIPTIVE AND THE ASSERTION IS LIVE.** Design v20:
+  ***"a SNAPSHOT of `DAY_PATH_CHECKS` read at emission, NOT a pin. The runner COMPUTES
+  ITS OWN COUNT at run time and ASSERTS it against …"*** -- *(it had gone stale at 100
+  vs 101, which is how it was found).* **The class I have followed since round 133 --
+  23 in prose, then 49, 75, 82 -- resolved by separating what the artifact REPORTS
+  from what the code ENFORCES.** ***A number in a document is a snapshot; a number in
+  a check is a bar; the defect was calling one the other.***
+  (4) **THE BOOK IS UNCHANGED AND THE ONLY ARTIFACT IS THE REFUSAL** -- I hashed it:
+  **`aad816d637f8445a…`, the digest carried since round 143**, and the only
+  `day_run_20260903` artifact is still the **09:50:58Z REFUSED record.** ***So "the day
+  was not consumed" is a MEASUREMENT, not an assertion*** -- **which is what makes
+  "fixing the instrument and re-running is not choosing after seeing" true OF THE
+  DATA.** *And DE marks the limit itself: true of the data, NOT of the gate.*
+  (5) **MY GREP MISSED THE NEW RULE BECAUSE OF CASE -- AGAIN.** Zero hits for "every
+  launch is a separate GO"; the rule is at `COORDINATOR_RUNBOOK.md:364` **in
+  CAPITALS.** ***Sixteenth "suspect the probe first", and the SECOND time CASE is the
+  cause*** (round 142's `UNCOVERED_GENERATIONS`). **The other fifteen had fifteen
+  different mechanisms; this one has now cost me twice.**
+  (6) **AND THE RULE ENCODES THE DISPOSITION OF THE CASE THAT PRODUCED IT:** *"EVERY
+  LAUNCH IS A SEPARATE GO (R-620). After any refusal of a real run, the fix is
+  reviewed BEFORE the next launch; a seat does not fix-and-relaunch inside one batch.
+  The coordinator issues GO per launch, naming the commit the run executes from.
+  **A launch made without it stays up only by the coordinator's explicit ruling, and a
+  NO-GO from the reviewer stops it.**"* ***A future reader finds the rule AND its
+  precedent in one place, and cannot mistake "it stayed up" for "it was allowed".***
+  (7) **THE RULING AND THE RULE MOVE IN OPPOSITE DIRECTIONS, ON PURPOSE:** DE fixed
+  and relaunched inside one batch before the reviewer filed; **the run STAYS** (zero
+  draws seen, the change is a guard predicate, a NO-GO stops it at the cost of
+  minutes) **and the practice CHANGES**. *This run is cheap to allow; the precedent is
+  expensive to leave open.*
+  (8) **THE RUN IS LIVE AND PAST WHAT STOPPED IT:** `de93smoke.scope` active since
+  **11:28:44Z**, pid 3282335 at **238 s**, RSS **750,248 KiB**, with a **2.55 GB peak
+  at 11:31Z (the S1 book load)**. ***Past the 26-second exit by an order of magnitude
+  and past the S1 load the first attempt never reached.*** *And DA 80's book tier,
+  dispatched into the idle lock at 11:26Z, found it HELD and refuses by rule 20 --
+  deferred to the next idle window, its light resolver check proceeding.*
+  **AT COMMIT TIME, 2026-09-06T11:35:56Z: REV 57 LANDED (`0d44854`) WITH THREE
+  OUTCOMES, ONE OF WHICH CORRECTS A MECHANISM I RELAYED LAST ROUND.**
+  ***(a) The 09-04 book STANDS*** -- *"with two disclosed defects that cannot certify
+  anything false"*, which is the precise form: the defects are real, disclosed, and
+  incapable of making a true-looking false claim. ***(b) DE 92's lock-dependent check
+  is CLOSED, and it is GO for the 09-03 re-run*** -- so this round's flag word
+  "UNREVIEWED-FIX-UNDER-REVIEW" is true as dispatched and resolves to REVIEWED-AND-GO
+  by the time it commits.
+  ***(c) AND BE's WORKTREE FINDING IS A HAZARD BUT "IT IS NOT THE ENVIRONMENT
+  VARIABLE -- DA's own resolver reads the shell with `PM_DATA_ROOT` CORRECTLY
+  SET".*** **My round-163 flag carried BE's mechanism ("four worktrees are one unset
+  env from reading a shell fact as a ledger fact") as RELAYED, and the reviewer has
+  now refined it: the hazard survives, the MECHANISM named for it does not.**
+  *The provenance mark is what makes that survivable -- a RELAYED flag carries whose
+  claim it is, so a correction lands on the claim rather than on the record.*
+  **REV 57's filing is next round's sweep; I record the correction and adjudicate
+  nothing.**
+  **FLAG WORDS: the 09-03 re-run RUNNING (second launch, since 11:28:44Z, expected
+  ≈12:55Z) -- UNREVIEWED-FIX-UNDER-REVIEW (REV 57's addendum); the book tier DEFERRED
+  to the next idle lock.**
+  MEASURED BEFORE THIS SENTENCE: flags 967 -> 975, flag_provenance 512 -> 520,
+  tasks 19; **318 CHECKED**, 202 RELAYED, **455 UNMARKED -- unchanged for the
+  fortieth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+  new flags vs HEAD 0 without provenance.)
+```
