@@ -1,0 +1,562 @@
+{
+  "IS_A_VERIFICATION": false,
+  "digest_chain": {
+    "all_checked_inputs_match": true,
+    "book_path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+    "bytes_declared": 290758834,
+    "bytes_match": true,
+    "bytes_on_disk": 290758834,
+    "chain_holds": true,
+    "declared_and_readback_agree": true,
+    "inputs": {
+      "fragment": {
+        "bytes": 604605715,
+        "declared_sha256": "2860832a66e820cad0b2ee039740692d4d17f3fec11ee4874ef6ef9b244f0764",
+        "matches": true,
+        "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260903_btc.json",
+        "sha256_recomputed": "2860832a66e820cad0b2ee039740692d4d17f3fec11ee4874ef6ef9b244f0764",
+        "status": "HASHED"
+      },
+      "tape": {
+        "bytes": 991078272,
+        "declared_sha256": "9de88da950598e8603f913a4166491e1a3d0da7c3c355f0ebaef8383b63310bf",
+        "matches": true,
+        "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260903_btc.json",
+        "sha256_recomputed": "9de88da950598e8603f913a4166491e1a3d0da7c3c355f0ebaef8383b63310bf",
+        "status": "HASHED"
+      }
+    },
+    "matches_declared": true,
+    "matches_readback": true,
+    "n_inputs": 2,
+    "n_inputs_absent": 0,
+    "n_inputs_checked": 2,
+    "readback_sha256_declared": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+    "sha256_declared": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+    "sha256_recomputed": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+    "why_both": "the write-side digest is of the buffer that was written and the readback is a SECOND, independent statement of the same bytes. Checking one and calling it the chain would leave the other unchecked -- and they can disagree"
+  },
+  "economic_census_of_the_book": {
+    "NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK": null,
+    "budget": 400000,
+    "field_names": [
+      "ADMITTED",
+      "BINANCE_GAP_EXCLUDED",
+      "BUY_UP",
+      "NO_REPLAY",
+      "RECONCILIATION_FAILED",
+      "SELL_UP",
+      "TERMINAL_MARK_ENDED_IN_GAP",
+      "TERMINAL_MARK_MISSING",
+      "TERMINAL_MARK_OK",
+      "TRANCHE_KEPT",
+      "TRANCHE_NO_MARKOUT",
+      "absorption_bound_scope",
+      "adopted",
+      "any_fill_ahead",
+      "ask",
+      "asm",
+      "assembly",
+      "at_s",
+      "bn_cache_clear_s",
+      "bn_cache_cleared",
+      "btc",
+      "by_arm",
+      "chunk_windows",
+      "coin",
+      "consequence_stated_in_the_ruling",
+      "day",
+      "displayed",
+      "drops_by_coin",
+      "ended_in_gap",
+      "fine",
+      "fr",
+      "fragment_bytes",
+      "fragment_path",
+      "gap_at_cutoff_excluded",
+      "gen",
+      "gen_t0",
+      "gen_t1",
+      "incumbent_width",
+      "kept_by_coin",
+      "labelling",
+      "last_quote_t",
+      "latency",
+      "level",
+      "lgbm_norm_width",
+      "lgbm_width",
+      "manifest_identity_check_applies",
+      "mark",
+      "markout_cents_per_share",
+      "mid_at_fill",
+      "n_bn_cache_clears",
+      "n_chunks",
+      "n_slugs",
+      "n_tape_rows",
+      "net",
+      "no_archive",
+      "no_level_history_excluded",
+      "partition_by_split",
+      "passes",
+      "peak_rss_mb_highwater",
+      "pm",
+      "population",
+      "pre_window_excluded",
+      "preventable_shares",
+      "preventable_value_cents",
+      "qahead",
+      "reference",
+      "regime",
+      "resting",
+      "rows",
+      "rows_indexed",
+      "ruled_by",
+      "ruling",
+      "set",
+      "shares",
+      "side",
+      "slug",
+      "split_by_gen",
+      "split_counts",
+      "split_set",
+      "splits",
+      "stages",
+      "stale_shares",
+      "staleness_s",
+      "state_join_failed",
+      "state_width",
+      "status",
+      "statuses",
+      "t",
+      "t0",
+      "t1",
+      "t_end",
+      "t_start",
+      "tape_bytes",
+      "tape_index[score]",
+      "tape_index[train]",
+      "tape_path",
+      "terminal_marks",
+      "tranches",
+      "wall_s",
+      "why",
+      "widths"
+    ],
+    "field_names_naming_a_SEALED_DAY_STATISTIC": [],
+    "field_names_naming_a_VALUE_INPUT": [
+      "TRANCHE_NO_MARKOUT",
+      "markout_cents_per_share",
+      "preventable_value_cents"
+    ],
+    "identity_key_example": [
+      "10",
+      "100",
+      "150"
+    ],
+    "leaf_type_census": {
+      "NoneType": 1,
+      "bool": 314,
+      "float": 265764,
+      "int": 32870,
+      "str": 31965
+    },
+    "n_distinct_string_keys": 357,
+    "n_field_names": 101,
+    "n_field_names_naming_a_SEALED_DAY_STATISTIC": 0,
+    "n_field_names_naming_a_VALUE_INPUT": 3,
+    "n_identity_keys": 256,
+    "nodes_visited": 400000,
+    "sealed_day_statistic_markers_tested": 11,
+    "sealed_statistic_check": "NOT_ESTABLISHED_WALK_TRUNCATED",
+    "summary": "the book names 3 reference-valuation field(s) (TRANCHE_NO_MARKOUT, markout_cents_per_share, preventable_value_cents), expected by construction; the census cannot establish the absence of others at this budget: the walk TRUNCATED at 400000 nodes",
+    "the_value_inputs_are_EXPECTED": "a reference book is built from VALUED tranches -- the label side the arms are scored against -- so names like `markout_cents_per_share` BELONG here. They are REPORTED, not flagged. What must never be here is the DAY's own sealed statistics: D(E0), the null, the ratio, the verdict",
+    "truncated": true,
+    "what_it_cannot_establish": [
+      "that a float under an innocent name is not secretly a price -- names and shapes are checkable, intent is not",
+      "the ABSENCE of any name, whenever the walk truncated: a bounded walk REFUTES and never ESTABLISHES"
+    ],
+    "what_this_establishes": "the set of NAMED fields the book carries, which of them name a VALUE INPUT (expected) and that none names a SEALED DAY STATISTIC. ***The claim `nothing economic is in a book` is FALSE as literally stated: the book carries the valued tranches it scores against. What it does not carry is the day's own sealed result***"
+  },
+  "flags": [],
+  "identity": {
+    "coin": "btc",
+    "day": "20260903",
+    "is_BEs_declared_shape": true,
+    "protocol": "BE_DAYBOOK_V1"
+  },
+  "launch_capture": {
+    "closure_drift": [],
+    "closure_unchanged_during_the_run": true,
+    "digest_taken_at": "MODULE IMPORT, before any work",
+    "head_at_emit": {
+      "dirty": false,
+      "dirty_paths": [],
+      "exempt_ledger_symlinks": [
+        "data"
+      ],
+      "head": "bce9a0db5c8de9e7772b116174a76bd4116c1fc5",
+      "why_exempt": "untracked AND a symlink AND resolving to the canonical data root -- a property of the object, never its name",
+      "worktree": "/home/yuqing/ctaNew-wt-da"
+    },
+    "head_at_import": {
+      "dirty": false,
+      "dirty_paths": [],
+      "exempt_ledger_symlinks": [
+        "data"
+      ],
+      "head": "bce9a0db5c8de9e7772b116174a76bd4116c1fc5",
+      "why_exempt": "untracked AND a symlink AND resolving to the canonical data root -- a property of the object, never its name",
+      "worktree": "/home/yuqing/ctaNew-wt-da"
+    },
+    "head_unchanged_during_the_run": true,
+    "import_closure": {
+      "capture_points": [
+        {
+          "n_added": 1,
+          "n_modules_after": 1,
+          "where": "module import"
+        },
+        {
+          "n_added": 1,
+          "n_modules_after": 2,
+          "where": "after the book was unpickled"
+        }
+      ],
+      "digested": "from the bytes each module held when it FIRST entered this run -- never re-read",
+      "modules": [
+        [
+          "da_book_verify.py",
+          "a69def6ab97c86c0e4b6570c604c41acd59741d02567e505616e9f653edbf8e0"
+        ]
+      ],
+      "n_modules": 1,
+      "root": "/home/yuqing/ctaNew-wt-da/live"
+    },
+    "launch_time_utc": "2026-09-06T12:33:16Z",
+    "on_disk_sha256_at_emit": "a69def6ab97c86c0e4b6570c604c41acd59741d02567e505616e9f653edbf8e0",
+    "producing_code": "da_book_verify.py",
+    "producing_code_sha256": "a69def6ab97c86c0e4b6570c604c41acd59741d02567e505616e9f653edbf8e0",
+    "source_unchanged_during_the_run": true,
+    "worktree_was_dirty_at_import": false
+  },
+  "n_flags": 0,
+  "n_predicates_not_computable": 3,
+  "population_from_the_book": {
+    "book_layout": {
+      "asm_keys": [
+        "assembly",
+        "by_arm",
+        "split_by_gen",
+        "split_counts"
+      ],
+      "asm_keys_naming_a_theta": [],
+      "top_level_keys": [
+        "asm",
+        "fr"
+      ],
+      "why": "recorded so the next reader does not have to open a 300 MB pickle to learn where a field lives"
+    },
+    "by_arm_keys": [
+      [
+        "btc",
+        "incumbent_linear_d"
+      ],
+      [
+        "btc",
+        "q1_arrival_composed_lgbm"
+      ]
+    ],
+    "heads_in_the_book": [
+      "incumbent_linear_d",
+      "q1_arrival_composed_lgbm"
+    ],
+    "n_heads": 2,
+    "per_head": {
+      "incumbent_linear_d": {
+        "coverage_declared": 0.949746737609944,
+        "coverage_matches": true,
+        "coverage_recomputed": 0.949746737609944,
+        "matches": true,
+        "n_scored_keys_declared": 297379,
+        "n_scored_keys_recomputed": 297379,
+        "the_second_element_of_by_arm": {
+          "is_a_theta": false,
+          "type": "dict",
+          "value": {
+            "NO_ROWS_KEPT": 12853409,
+            "PARTIAL_ROWS": 0,
+            "SCORED": 297379
+          },
+          "why": "a NUMBER here is the arm's theta; a MAPPING is the stage's count map. The tier says which it found rather than assuming"
+        },
+        "theta_declared": 0.43525926488298716,
+        "theta_in_the_book": null,
+        "theta_matches": null
+      },
+      "q1_arrival_composed_lgbm": {
+        "coverage_declared": 0.949746737609944,
+        "coverage_matches": true,
+        "coverage_recomputed": 0.949746737609944,
+        "matches": true,
+        "n_scored_keys_declared": 297379,
+        "n_scored_keys_recomputed": 297379,
+        "the_second_element_of_by_arm": {
+          "is_a_theta": false,
+          "type": "dict",
+          "value": {
+            "NO_ROWS_KEPT": 12853409,
+            "PARTIAL_ROWS": 0,
+            "SCORED": 297379
+          },
+          "why": "a NUMBER here is the arm's theta; a MAPPING is the stage's count map. The tier says which it found rather than assuming"
+        },
+        "theta_declared": 0.32450609461933483,
+        "theta_in_the_book": null,
+        "theta_matches": null
+      }
+    },
+    "reference_generations_in_the_book": 313114,
+    "set_equality": {
+      "agrees_with_the_receipt": true,
+      "declared": true,
+      "difference_sized": 0,
+      "n_only_in_incumbent_linear_d": 0,
+      "n_only_in_q1_arrival_composed_lgbm": 0,
+      "n_shared_declared": 297379,
+      "n_shared_recomputed": 297379,
+      "recomputed": true,
+      "why_recomputed": "`sets_are_equal: true` is the builder's own claim about its own output. Two heads scoring different key sets is exactly the precondition the null rests on, so it is compared, not read"
+    }
+  },
+  "population_from_the_receipt": {
+    "NOTE": "these hold the receipt to ITSELF. Set equality and the scored keys are RECOMPUTED only in the BOOK tier -- `sets_are_equal: true` is a claim until the keys are compared",
+    "admitted_plus_excluded": 247,
+    "admitted_plus_excluded_equals_windows": true,
+    "both_heads_present_declared": true,
+    "generations": 313114,
+    "n_heads_in_coverage": 2,
+    "n_shared_keys_declared": 297379,
+    "n_terminal_marks_equals_windows": true,
+    "per_head": {
+      "incumbent_linear_d": {
+        "coverage_declared": 0.949746737609944,
+        "coverage_matches": true,
+        "coverage_recomputed": 0.949746737609944,
+        "covered_plus_uncovered_equals_generations": true,
+        "n_covered": 297379,
+        "n_reference_generations": 313114,
+        "n_scored_keys_equals_n_covered": true,
+        "n_uncovered": 15735,
+        "reference_generations_matches_the_reference_block": true,
+        "theta": 0.43525926488298716
+      },
+      "q1_arrival_composed_lgbm": {
+        "coverage_declared": 0.949746737609944,
+        "coverage_matches": true,
+        "coverage_recomputed": 0.949746737609944,
+        "covered_plus_uncovered_equals_generations": true,
+        "n_covered": 297379,
+        "n_reference_generations": 313114,
+        "n_scored_keys_equals_n_covered": true,
+        "n_uncovered": 15735,
+        "reference_generations_matches_the_reference_block": true,
+        "theta": 0.32450609461933483
+      }
+    },
+    "sets_are_equal_declared": true,
+    "terminal_mark_ok_plus_missing": 247,
+    "terminal_marks_equal_windows": true,
+    "windows": 247,
+    "windows_equals_n_supplied_slugs": true,
+    "windows_equals_reference_n_slugs": true,
+    "windows_equals_reference_windows": true
+  },
+  "predicates_not_computable": [
+    "book.incumbent_linear_d.theta_matches",
+    "book.q1_arrival_composed_lgbm.theta_matches",
+    "book.no_sealed_day_statistic_is_named__WALK_TRUNCATED"
+  ],
+  "protocol": "P003_DA_BOOK_VERIFIER_V1_FULL",
+  "provenance_incomplete": true,
+  "receipt": {
+    "path": "be_daybook_receipt_20260903_btc.json",
+    "sha256": "70d583d87090def40c6aad852f4549438b3d526d2490daf52684c2f52e49ee85"
+  },
+  "resource_observation": {
+    "book_loaded_from": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+    "book_was_opened": true,
+    "declared_cap_gb": 4.0,
+    "expected_peak_gb": 2.0,
+    "load_delta_gb": 1.918,
+    "rss_gb_after_load": 1.962,
+    "rss_gb_at_end": 0.044,
+    "rss_gb_before_load": 0.044
+  },
+  "resources": {
+    "THESE_ARE_FACTS_NOT_VERDICTS": "budgets are the builder's own and are reported against its own measurements. Nothing here passes or fails the run; a reader who wants a verdict has the numbers to form one",
+    "declared_agrees_with_recomputed": true,
+    "every_stage_within_its_budget": true,
+    "index_release": {
+      "freed_gb_declared": 1.156,
+      "freed_gb_recomputed": 1.156,
+      "measured_on": "ru_maxrss is a high-water mark and cannot show a release; this is VmRSS",
+      "release_fraction": 0.28222656250000006
+    },
+    "n_stages": 5,
+    "peak_gb": 5.317,
+    "stages": [
+      {
+        "budget_gb": 3.0,
+        "peak_gb": 2.006,
+        "stage": "A0_reference",
+        "wall_s": 555.9,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 6.5,
+        "peak_gb": 3.19,
+        "stage": "A1_index",
+        "wall_s": 118.0,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 7.5,
+        "peak_gb": 5.317,
+        "stage": "A2_assemble",
+        "wall_s": 1420.4,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 7.5,
+        "peak_gb": 5.317,
+        "stage": "A3_release_index",
+        "wall_s": 1.5,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      },
+      {
+        "budget_gb": 7.5,
+        "peak_gb": 5.317,
+        "stage": "A4_write_book",
+        "wall_s": 6.2,
+        "within_budget_declared": true,
+        "within_budget_recomputed": true
+      }
+    ],
+    "wall_s": 2115.7,
+    "wall_s_equals_sum_of_stages": false
+  },
+  "seam": {
+    "builder_commit": null,
+    "contradicts_the_code": null,
+    "front_door": "de_phase4_diag_runner.day_assembly_inputs",
+    "front_door_check": {
+      "checked": true,
+      "commit": "6f134a6",
+      "function": "day_assembly_inputs",
+      "module": "live/pm_research/de_phase4_diag_runner.py",
+      "resolves": true,
+      "why": "the front door is defined in DE's module at the commit the receipt names"
+    },
+    "keywords_the_literal_claims": [
+      "tape_path"
+    ],
+    "literal_in_the_receipt": "build_tape_index(splits, tape_path=\u2026)",
+    "seam_commit": "6f134a6",
+    "status": "PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT",
+    "the_literal_was_NOT_judged": true,
+    "what_seam_commit_NAMES": "DE's front door's commit -- NOT the builder's. Reading BE's builder there is reading a different object at a real commit",
+    "why": "the receipt names no builder commit (R-387's carrying_commit), so the code that produced it cannot be located and its literal cannot be checked against the call it describes. This is a PROVENANCE GAP, not a false statement -- and computing a contradiction against HEAD or another seat's commit would be an answer about code the receipt never ran"
+  },
+  "status": "PROVENANCE_INCOMPLETE",
+  "supersedes": {
+    "chain": [
+      [
+        "p003_da_book_tier_20260903__20260906T112813Z.json",
+        "9aaa1b5fefc4a452597df145c45911e9d4e6f0c617f6a90867b3488dee6a4506"
+      ]
+    ],
+    "path": "p003_da_book_tier_20260903__20260906T112813Z.json",
+    "sha256": "9aaa1b5fefc4a452597df145c45911e9d4e6f0c617f6a90867b3488dee6a4506",
+    "the_link_is_the_PAIR": [
+      "path",
+      "sha256"
+    ],
+    "v1_untouched": true,
+    "what_changed": "the prose. The superseded artifact carried `NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: false` beside a sentence saying none of them names an economic quantity, and two theta MISMATCHES that were a misread of the book's count map. The numbers about the BOOK -- set equality, key counts, coverage -- are unchanged and were right in the superseded artifact too"
+  },
+  "the_book_tier_is_HEAVY": {
+    "declared_cap_gb": 4.0,
+    "expected_peak_gb": 2.0,
+    "rule_20": "over 60 s or 1 GiB, so it takes the heavy lock and runs under the wrapper; the real 09-03 run is a coordinator GO, not this module's own initiative",
+    "why": "the book is a pickle of 290758834 bytes and unpickling it is expected to cost about 2.0 GB resident"
+  },
+  "tier": "FULL",
+  "verifier_identity": {
+    "commit_best_effort": "bce9a0db5c8de9e7772b116174a76bd4116c1fc5",
+    "path": "live/pm_research/da_book_verify.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "a69def6ab97c86c0e4b6570c604c41acd59741d02567e505616e9f653edbf8e0",
+    "source_identity": {
+      "closure_drift": [],
+      "closure_unchanged_during_the_run": true,
+      "digest_taken_at": "MODULE IMPORT, before any work",
+      "head_at_emit": {
+        "dirty": false,
+        "dirty_paths": [],
+        "exempt_ledger_symlinks": [
+          "data"
+        ],
+        "head": "bce9a0db5c8de9e7772b116174a76bd4116c1fc5",
+        "why_exempt": "untracked AND a symlink AND resolving to the canonical data root -- a property of the object, never its name",
+        "worktree": "/home/yuqing/ctaNew-wt-da"
+      },
+      "head_at_import": {
+        "dirty": false,
+        "dirty_paths": [],
+        "exempt_ledger_symlinks": [
+          "data"
+        ],
+        "head": "bce9a0db5c8de9e7772b116174a76bd4116c1fc5",
+        "why_exempt": "untracked AND a symlink AND resolving to the canonical data root -- a property of the object, never its name",
+        "worktree": "/home/yuqing/ctaNew-wt-da"
+      },
+      "head_unchanged_during_the_run": true,
+      "import_closure": {
+        "capture_points": [
+          {
+            "n_added": 1,
+            "n_modules_after": 1,
+            "where": "module import"
+          },
+          {
+            "n_added": 1,
+            "n_modules_after": 2,
+            "where": "after the book was unpickled"
+          }
+        ],
+        "digested": "from the bytes each module held when it FIRST entered this run -- never re-read",
+        "modules": [
+          [
+            "da_book_verify.py",
+            "a69def6ab97c86c0e4b6570c604c41acd59741d02567e505616e9f653edbf8e0"
+          ]
+        ],
+        "n_modules": 1,
+        "root": "/home/yuqing/ctaNew-wt-da/live"
+      },
+      "launch_time_utc": "2026-09-06T12:33:16Z",
+      "on_disk_sha256_at_emit": "a69def6ab97c86c0e4b6570c604c41acd59741d02567e505616e9f653edbf8e0",
+      "producing_code": "da_book_verify.py",
+      "producing_code_sha256": "a69def6ab97c86c0e4b6570c604c41acd59741d02567e505616e9f653edbf8e0",
+      "source_unchanged_during_the_run": true,
+      "worktree_was_dirty_at_import": false
+    },
+    "tree_head": "bce9a0db5c8de9e7772b116174a76bd4116c1fc5"
+  },
+  "what_incomplete_means": "every group that COULD be checked was, and they hold; the seam literal was not judged because the receipt names no builder commit. A gap, not a defect -- and not a verification either",
+  "what_this_tier_cannot_say": "that the day's TAPE and FRAGMENT were built correctly -- schema, splits, coverage. Those are the builder's own guards. This verifies WHICH BYTES reached the pass and what the book says about itself"
+}
