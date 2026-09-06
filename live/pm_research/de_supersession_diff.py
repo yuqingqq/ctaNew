@@ -33,7 +33,7 @@ from pathlib import Path
 
 
 PROTOCOL = "P003_DE_SUPERSESSION_LEAF_DIFF_V1"
-EXPECTED_CHECKS = 20
+EXPECTED_CHECKS = 26
 EPSILON = 1e-9
 
 #: A-1b (reviewer 89e81d5). THE OLD RULE WAS `name OR parent`, so ANY leaf
@@ -57,14 +57,33 @@ PROVENANCE_CONTAINERS = ("code_identity", "provenance", "source_identity",
 #: either class loses information. It gets its own class and is REPORTED.
 TIMESTAMP_LEAVES = frozenset({"as_of", "generated_at", "emitted"})
 
+#: (C, DE 77) `("", "emitted")` and `("", "generated_at")` USED TO SIT HERE
+#: and they contradicted the rule the check beside them claims: because
+#: `_is_provenance` runs FIRST, a top-level `emitted` classified provenance
+#: while a top-level `as_of` classified timestamp. That is a list of
+#: exceptions wearing the words "a consistent rule", and the check passed
+#: only because it tested `as_of`. All three top-level stamps now take the
+#: timestamp class.
 PROVENANCE_PAIRS = frozenset({
     ("", "run_id"), ("", "total_wall_s"),
-    ("", "peak_rss_gb"), ("", "max_rss_gb"), ("", "emitted"),
-    ("", "generated_at"), ("", "elapsed_s"),
+    ("", "peak_rss_gb"), ("", "max_rss_gb"),
+    ("", "elapsed_s"),
     ("population", "feed_wall_s"),
     ("population", "tape_index_s"), ("population", "assembly_s"),
     ("population", "peak_gb"), ("population", "wall_s"),
 })
+
+#: (B, R-572(C) / the coordinator's DE 77 ruling) WHICH CLASSES ARE
+#: SUBSTANTIVE. The reviewer's open item is not really about a class NAME --
+#: it is that a `cb9bf8a`-class in-place edit must not be reported as moving
+#: NOTHING. The class stays `timestamp`, which carries strictly more
+#: information than folding it into `numeric-substantive` would, and
+#: SUBSTANTIVE becomes a computed first-class field that a consumer
+#: resolves. Measured on the REAL cb9bf8a pair: 1,110 shared leaves, one
+#: moved, and it is `/as_of`.
+SUBSTANTIVE_CLASSES = frozenset({"numeric-substantive", "string", "timestamp"})
+NOT_SUBSTANTIVE_CLASSES = frozenset({"provenance", "numeric-epsilon",
+                                     "string-embedded-provenance"})
 
 #: A residual is a numeric leaf whose job is to be ~0; it moves with the
 #: magnitude of the quantity it checks.
@@ -154,6 +173,7 @@ def diff(old_doc, new_doc) -> dict:
         moved[p] = {"old": a, "new": b, "class": classify(p, a, b)}
     counts = {}
     for v in moved.values():
+        v["substantive"] = v["class"] in SUBSTANTIVE_CLASSES
         counts[v["class"]] = counts.get(v["class"], 0) + 1
     for cls in ("numeric-substantive", "numeric-epsilon", "string",
                 "string-embedded-provenance", "timestamp", "provenance"):
@@ -166,6 +186,21 @@ def diff(old_doc, new_doc) -> dict:
         "n_added": len(set(n) - set(o)), "n_removed": len(set(o) - set(n)),
         "moved": moved, "n_moved_total": len(moved),
         "counts_by_class": counts,
+        # THE FIELD A CONSUMER RESOLVES. A class name is for a reader; this
+        # is for the automated one rule 13 exists for.
+        "n_substantive": sum(1 for v in moved.values() if v["substantive"]),
+        "substantive_paths": sorted(p for p, v in moved.items()
+                                    if v["substantive"]),
+        "nothing_but_provenance_moved": not any(
+            v["substantive"] for v in moved.values()),
+        "substantive_classes": sorted(SUBSTANTIVE_CLASSES),
+        "why_timestamp_is_substantive": (
+            "a top-level stamp edited in place can be the ONE substantive "
+            "change a supersession makes -- BE's cb9bf8a is exactly that, "
+            "and `as_of` is the field rule 8 requires. Its own class is "
+            "kept because a timestamp is not a number and not a result; "
+            "what changed is that SUBSTANTIVE is computed rather than "
+            "inferred from the class name by whoever is reading"),
         "epsilon": EPSILON,
         "sentence": (
             f"{counts['numeric-substantive']} substantive numeric, "
@@ -174,7 +209,9 @@ def diff(old_doc, new_doc) -> dict:
             f"{counts['string-embedded-provenance']} string-embedded-"
             f"provenance, {counts['timestamp']} timestamp, "
             f"{counts['provenance']} provenance "
-            f"-- of {len(shared)} shared leaves"),
+            f"-- of {len(shared)} shared leaves; "
+            f"{sum(1 for v in moved.values() if v['substantive'])} "
+            f"SUBSTANTIVE"),
         "how_this_was_produced": "COMPUTED by a leaf diff inside the "
                                  "emitter against the named predecessor, "
                                  "never counted by hand (A-2)",
@@ -198,6 +235,7 @@ def assert_claim(d: dict, claim: dict) -> dict:
 
 def selftest() -> int:
     n = [0]
+    skipped: list = []
 
     def ok(cond, label):
         if not cond:
@@ -286,6 +324,77 @@ def selftest() -> int:
        and diff({"a": 1, "b": 2}, {"a": 1})["n_removed"] == 1,
        "added and removed leaves are counted separately from moved ones")
 
+    # ===== (B) THE REVIEWER'S OPEN ITEM, DRIVEN ON THE REAL ARTIFACT =====
+    ok(top["moved"]["as_of"]["substantive"] is True
+       and top["n_substantive"] == 1
+       and top["nothing_but_provenance_moved"] is False,
+       "R-572(C): A TOP-LEVEL `as_of` EDITED IN PLACE IS SUBSTANTIVE. The "
+       "class stays `timestamp` -- strictly more information -- and "
+       "SUBSTANTIVE is a COMPUTED field a consumer resolves, so a "
+       "cb9bf8a-class edit can no longer be reported as moving nothing")
+    ok(hole["moved"]["provenance.as_of"]["substantive"] is False
+       and hole["moved"]["cancellation_economics.as_of"]["substantive"]
+       is True,
+       "AND BOTH DIRECTIONS AT ONE DEPTH: the SAME leaf name is substantive "
+       "outside a provenance container and not substantive inside one -- so "
+       "the field is not simply 'as_of is always substantive', which would "
+       "make every re-emission look like a change")
+    _prov_only = diff({"run_id": "A", "provenance": {"as_of": "2026-09-05"},
+                       "r": {"identity_residual": 1e-16}},
+                      {"run_id": "B", "provenance": {"as_of": "2026-09-06"},
+                       "r": {"identity_residual": 5e-16}})
+    ok(_prov_only["nothing_but_provenance_moved"] is True
+       and _prov_only["n_moved_total"] == 3
+       and _prov_only["n_substantive"] == 0,
+       "POSITIVE CONTROL ON THE OTHER SIDE, AND IT ADMITS: a re-emission "
+       "that moves ONLY a run id, a provenance stamp and an epsilon "
+       "residual reports `nothing_but_provenance_moved: true` with three "
+       "leaves moved -- the field says something, so it is not a constant")
+    ok(_is_timestamp("emitted") and _is_timestamp("generated_at")
+       and not _is_provenance("emitted") and not _is_provenance(
+           "generated_at"),
+       "(C) AND THE RULE IS NOW ACTUALLY CONSISTENT: top-level `emitted` "
+       "and `generated_at` were in PROVENANCE_PAIRS, and `_is_provenance` "
+       "runs first, so they classified provenance while `as_of` classified "
+       "timestamp -- a list of exceptions under a check that claimed a "
+       "consistent rule, passing only because it tested `as_of`")
+    ok(_is_provenance("provenance.emitted")
+       and _is_provenance("source_identity.generated_at"),
+       "and the container still carries them: `provenance.emitted` and "
+       "`source_identity.generated_at` are provenance, so removing the "
+       "top-level pairs did not break the case they existed for")
+
+    # ---- THE REAL cb9bf8a PAIR, read from git, never authored here ------
+    import subprocess
+    _CB = "cb9bf8a"
+    _ART = "data/pm_5min/derived/be_ceiling_null_v1.json"
+    try:
+        _old = subprocess.run(["git", "-C", str(Path(__file__).resolve(
+        ).parents[2]), "show", f"{_CB}^:{_ART}"], capture_output=True,
+            text=True, timeout=60)
+        _new = subprocess.run(["git", "-C", str(Path(__file__).resolve(
+        ).parents[2]), "show", f"{_CB}:{_ART}"], capture_output=True,
+            text=True, timeout=60)
+        _have = _old.returncode == 0 and _new.returncode == 0
+    except Exception:
+        _have = False
+    if _have:
+        _real = diff(json.loads(_old.stdout), json.loads(_new.stdout))
+        ok(_real["n_shared"] > 1000 and _real["n_moved_total"] == 1
+           and _real["substantive_paths"] == ["as_of"]
+           and _real["nothing_but_provenance_moved"] is False,
+           f"THE KNOWN-BAD IS THE REAL ARTIFACT PAIR, NOT ONE I AUTHORED: "
+           f"`{_CB}` against its parent on {_ART} -- "
+           f"{_real['n_shared']} shared leaves, {_real['n_moved_total']} "
+           f"moved, and the one that moved is `/as_of`. It now reports "
+           f"SUBSTANTIVE; before this round the same input produced "
+           f"'0 substantive' and the reviewer's finding stood")
+    else:
+        skipped.append("the real cb9bf8a pair (git objects unavailable)")
+        print("  SKIP  the real cb9bf8a pair (git objects unavailable) -- "
+              "the structural known-bads above still ran")
+
+
     ok(assert_claim(d, {"numeric-substantive": 1, "string": 1})[
            "claim_checked_against_the_computed_diff"] is True,
        "POSITIVE CONTROL ON THE CLAIM CHECK, AND IT ADMITS: a claim the "
@@ -324,9 +433,12 @@ def selftest() -> int:
        "and the provenance marker does not swallow a result field -- nor "
        "does a resource NAME parked under an arm")
 
-    ok(n[0] + 1 == EXPECTED_CHECKS,
-       f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
-    print(f"[de_supersession_diff] PASS -- {n[0]} checks")
+    ok(n[0] + 1 + len(skipped) == EXPECTED_CHECKS,
+       f"check count asserted at run time: {n[0] + 1} run + "
+       f"{len(skipped)} skipped == {EXPECTED_CHECKS}"
+       + (f" (skipped: {skipped})" if skipped else ""))
+    print(f"[de_supersession_diff] PASS -- {n[0]} checks"
+          + (f", {len(skipped)} skipped" if skipped else ""))
     return 0
 
 

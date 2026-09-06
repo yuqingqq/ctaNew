@@ -30,18 +30,44 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import de_data_root as DR  # noqa: E402
 
 
-PROTOCOL = "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V4"
-EXPECTED_CHECKS = 53
+#: THE VERSION LIVES IN ONE PLACE. It travelled in THREE and they
+#: disagreed: v7 on disk carried `protocol ..._V4`, and its
+#: `supersedes.path` named **v2** -- so a reader resolving the receipt
+#: field (rule 13's whole premise: automated readers resolve fields, not
+#: sidecars) walked from v7 straight past v3, v4, v5 and v6. The
+#: filename, the protocol suffix and the head of the chain are now
+#: DERIVED from this integer and a battery check asserts all three
+#: agree.
+VERSION = 8
+PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
+EXPECTED_CHECKS = 65
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
-                  "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1b"
-                  "781c7bd6f")
+                  "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
+                  "b781c7bd6f")
 V2_DECLARATION = ("p003_de_multiday_gate1_design_v2__20260906T035617Z.json",
-                  "c4da696f60ca62700d18551f523e571aab09bc5b8b42f6970112aba"
-                  "6490ce903")
+                  "c4da696f60ca62700d18551f523e571aab09bc5b8b42f6970112ab"
+                  "a6490ce903")
 V3_DECLARATION = ("p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
-                  "a1016a8762fffdfeb368c5ff217e8bcc83141b1567e218a2f1b69c6"
-                  "58a65289c")
+                  "a1016a8762fffdfeb368c5ff217e8bcc83141b1567e218a2f1b69c"
+                  "658a65289c")
+V4_DECLARATION = ("p003_de_multiday_gate1_design_v4__20260906T042458Z.json",
+                  "24db4e1bd5bfc04bbdcd13ecdd28bb4260d2854539ac90b7df40e6"
+                  "71eee78a3d")
+V5_DECLARATION = ("p003_de_multiday_gate1_design_v5__20260906T043134Z.json",
+                  "dfc599ba46a7c4a7dd4d0e274df128a780f27c7ccc732e84a72df8"
+                  "fed9046cec")
+V6_DECLARATION = ("p003_de_multiday_gate1_design_v6__20260906T043936Z.json",
+                  "966ca76d2803fa5aa45cb5b15c3b6eff498c7888e9d9bb33b53612"
+                  "effcbd39d2")
+V7_DECLARATION = ("p003_de_multiday_gate1_design_v7__20260906T045059Z.json",
+                  "bd33daf5beb4774b40cadcf7239f830ee0ea3edd12b617b6d5a161"
+                  "1f9213072f")
+#: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
+#: constant -- that is how v7 came to name v2.
+DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
+                    V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
+                    V7_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -160,6 +186,209 @@ CASCADE_MACHINERY = {
            "must run through the SAME stateful policy the arm ran through "
            "or it is not a control for it (R-547 item 1)",
 }
+
+
+#: R-572(B)(4) -- THE SEED CONVENTION, WHICH LIVED ONLY IN `seed_for()`.
+#: The literal `P003_GATE1_MULTIDAY`, the `|` separator, the field ORDER and
+#: the **8-hex truncation** were implementation details of one function. Change
+#: any one of them and every draw sequence in the run changes SILENTLY -- the
+#: artifact would still say "seeded from the book digest" and still be
+#: reproducible-looking, and no reader could tell the sequence had moved. They
+#: are declared fields now, and `seed_from_convention()` below is a REFERENCE
+#: implementation built from these fields alone; the battery drives it against
+#: the runner's own `seed_for()` and, field by field, against mutated copies
+#: that must DISAGREE.
+SEED_CONVENTION = {
+    "hash": "sha256",
+    "encoding": "utf-8",
+    "field_order": ["day_book_sha256", "arm", "domain_separator"],
+    "joiner": "|",
+    "domain_separator": "P003_GATE1_MULTIDAY",
+    "hex_truncation_chars": 8,
+    "int_base": 16,
+    "expression": ("int(sha256(f'{day_book_sha256}|{arm}|"
+                   "P003_GATE1_MULTIDAY'.encode()).hexdigest()[:8], 16)"),
+    "why_the_truncation_is_declared": (
+        "8 hex characters is a 32-bit seed. It is not a safety property and "
+        "it is not arbitrary -- it is the number that fixes WHICH integer "
+        "the RNG is started from, and a silent change to 16 would reseed "
+        "every arm-day while every other field in the receipt read the same"),
+    "what_it_pins": "THE DATA, not merely the RNG (R-234 / protocol rule 10): "
+                    "the book digest is an input, so a book that moved cannot "
+                    "reuse a draw sequence",
+    "implemented_by": "de_multiday_gate1_runner.seed_for()",
+    "checked_by": "the battery drives seed_from_convention() against "
+                  "seed_for() and against one mutation per declared field",
+}
+
+#: R-572(B)(1) -- WHERE THE DRAWS COME FROM. Unruled until R-572: nothing in
+#: the repository called BE's cascade to produce the null, so the provenance
+#: block could have been GENERATED or SUPPLIED and the artifact would look the
+#: same either way.
+DRAW_SOURCE_RULE = {
+    "ruling": "R-572(B)(1) (coordinator)",
+    "on_a_real_day": "GENERATED_IN_PROCESS",
+    "how": "the runner imports be_cancel_axis_null, verifies the digest of "
+           "the file the import actually loaded (module.__file__), and calls "
+           "its draw_null() itself",
+    "why_in_process": "generation in the SAME process is what binds the "
+                      "verified digest to the numbers. A digest verified "
+                      "here and draws handed over from elsewhere says which "
+                      "cascade EXISTS, not which one produced these draws "
+                      "(reviewer efba2b6 item 2)",
+    "supplied_draws": "FIXTURE ONLY. A supplied draw set on a ruled day "
+                      "REFUSES",
+    "the_door_is_shut_structurally_not_on_the_callers_word": (
+        "fixture mode is refused when the day is IN the ruled set, and "
+        "real mode is refused when the day is NOT -- the same lock DE 76 "
+        "put on `fixture=True` in de_data_root, in the second place a "
+        "caller could have walked through on its own word"),
+    "de_does_not_reimplement_the_cascade": True,
+}
+
+#: R-572(B)(2) -- the not-before date governs the READ, not the runs.
+TIMING_RULE = {
+    "ruling": "R-572(B)(2) (coordinator)",
+    "read_not_before_utc": "2026-09-09T00:06:00Z",
+    "what_that_date_governs": "the AGGREGATE READ only -- the unsealing of "
+                              "the economic fields and the section-7 verdict",
+    "day_runs_allowed_for_closed_qualifying_days": True,
+    "why": "a per-day run is SEALED: it publishes resources, counts and "
+           "statuses and no economic field, so running 09-03 today cannot "
+           "inform any later choice. Holding the runs behind the aggregate "
+           "date bought nothing and cost the calendar",
+    "what_still_refuses": ["a day that is not closed", "a day that does not "
+                           "qualify on the four conjuncts and day-quality",
+                           "a day outside the ruled set",
+                           "the aggregate read before the date",
+                           "the aggregate read before all G days are "
+                           "complete"],
+    "superseded_field": "run_not_before_utc (params v1), a whole-set property "
+                        "that read as a bar on every run",
+}
+
+#: R-572(B)(3) -- the sealed/unsealed layout, made SYMMETRIC.
+SEAL_LAYOUT = {
+    "ruling": "R-572(B)(3) (coordinator)",
+    "the_asymmetry_it_fixes": (
+        "a sealed artifact carried `sealed_at_every_depth` and "
+        "`sealed_field_names`; an unsealed one dropped BOTH and gained "
+        "`economic`. A consumer keying on either key got None after "
+        "unsealing and could not tell 'unsealed' from 'a field I misspelled'"),
+    "keys_present_in_BOTH_states": ["sealed", "seal_status",
+                                    "sealed_at_every_depth",
+                                    "sealed_field_names", "economic"],
+    "sealed_values": {"sealed": True, "sealed_at_every_depth": True,
+                      "sealed_field_names": "the full ECONOMIC_FIELDS list",
+                      "economic": "ABSENT -- the one key that is absent by "
+                                  "design, because a field a reader can see "
+                                  "is a field a reader can quote"},
+    "unsealed_values": {"sealed": False, "sealed_at_every_depth": False,
+                        "sealed_field_names": "[] -- nothing is sealed",
+                        "economic": "present; None with a stated reason on a "
+                                    "refused arm-day"},
+    "why_economic_is_the_exception": (
+        "symmetry of KEYS is for the consumer; the seal is for the reader. "
+        "Present-and-null would leak the shape of what is sealed and invites "
+        "a reader to quote a null as a result. So four keys are symmetric by "
+        "value and the fifth is symmetric by RULE: present iff unsealed, "
+        "stated in both states"),
+    "consumer_falsifier": "de_multiday_gate1_runner."
+                          "assert_seal_layout_symmetric() -- driven on BOTH "
+                          "states, with the pre-fix layout as the known-bad",
+}
+
+
+#: R-572(B)(4), second convention -- WHAT `--dry-run-ledger` ACTUALLY
+#: COVERS. It reads day verdicts and the declared read-state table. That is
+#: ALL it reads, and the receipt it writes is green when the ledger is
+#: healthy no matter what state anything else is in. The playbook's P2, P6
+#: and P7 -- BE's book, the pinned models and thetas, BE's cascade digest --
+#: are NOT in its scope, so a green dry run says nothing about any of them.
+#: Declared here because the gap is invisible at the console: the run exits
+#: 0 and prints a receipt.
+#:
+#: The runner keeps its OWN literals in `dry_run_ledger()`; the battery
+#: compares the two lists. Sharing one constant would make the check unable
+#: to fail (rule 16).
+DRY_RUN_LEDGER_SCOPE_DECLARED = {
+    "entry_point": "de_multiday_gate1_runner.py --dry-run-ledger",
+    "reads": ["day-verdict files", "the declared read-state table"],
+    "does_NOT_read": ["any reference book", "any arm", "any score stream",
+                      "any economics"],
+    "does_NOT_verify": {
+        "P2_BE_reference_book": "verify_day_inputs() is not called",
+        "P6_pinned_models_and_thetas": "verify_pinned_models() and "
+                                       "verify_pinned_thetas() are not "
+                                       "called",
+        "P7_BE_cascade_module_digest": "verify_be_module() is not called",
+    },
+    "therefore": "a GREEN dry run is evidence about the LEDGER and the ruled "
+                 "day set, and about nothing else. It is a before-picture, "
+                 "not a preflight",
+    "what_it_writes": "a dry-run ledger receipt; no book, no arm, no "
+                      "economics, no seal",
+    "checked_by": "the battery compares this declared scope against the "
+                  "runner's own what_this_reads / what_this_does_NOT_read",
+}
+
+
+def seed_from_convention(day_book_sha256: str, arm: str,
+                         conv: dict | None = None) -> int:
+    """REFERENCE implementation, built from the DECLARED fields only.
+
+    Deliberately not imported by the runner: the runner keeps its own
+    expression, and the battery compares the two. One shared constant would
+    make the check unable to fail, which is rule 16's exact defect."""
+    import hashlib as _h
+    c = SEED_CONVENTION if conv is None else conv
+    parts = {"day_book_sha256": day_book_sha256, "arm": arm,
+             "domain_separator": c["domain_separator"]}
+    payload = c["joiner"].join(parts[f] for f in c["field_order"])
+    if c["hash"] != "sha256":
+        raise DesignRefused(
+            f"REFUSED: the declared hash is {c['hash']!r}; this reference "
+            f"implements sha256 only, and silently substituting another is "
+            f"how a declared convention drifts from its code")
+    digest = _h.sha256(payload.encode(c["encoding"])).hexdigest()
+    return int(digest[:c["hex_truncation_chars"]], c["int_base"])
+
+
+def verify_declaration_chain(root: Path | None = None,
+                             chain=None) -> dict:
+    """Every chain entry's digest READ from the file, never trusted typed.
+
+    A chain of typed digests is a chain of claims. This round typed one that
+    was invented outright and one that was a literal `PLACEHOLDER`; both were
+    caught by computing them instead."""
+    base = (Path(root) if root is not None
+            else Path(DR.resolve()["data_root"])) / "pm_5min/derived"
+    rows, bad = [], []
+    for name, sha in (DECLARATION_CHAIN if chain is None else chain):
+        p = base / name
+        if not p.is_file():
+            bad.append({"file": name, "why": "ABSENT"})
+            continue
+        got = hashlib.sha256(p.read_bytes()).hexdigest()
+        rows.append({"file": name, "declared": sha, "computed": got,
+                     "agrees": got == sha})
+        if got != sha:
+            bad.append({"file": name, "declared": sha, "computed": got})
+    if bad:
+        raise DesignRefused(
+            f"REFUSED: the supersession chain does not match the artifacts "
+            f"on disk: {bad}. A typed digest in a chain is a claim, and this "
+            f"chain already carried an invented one.")
+    return {"n_entries": len(rows), "every_digest_recomputed": True,
+            "entries": rows}
+
+
+#: R-555 (USER), the ruled day set. Named here so the declaration STATES
+#: it rather than leaving a reader to derive it -- and the battery asserts
+#: it equals the set the runner loads from the parameter file.
+RULED_DAYS = ("2026-09-03", "2026-09-04", "2026-09-05",
+              "2026-09-06", "2026-09-07", "2026-09-08")
+RULED_G = len(RULED_DAYS)
 
 
 class DesignRefused(RuntimeError):
@@ -593,6 +822,48 @@ def _r8_from_resources() -> dict:
     }
 
 
+def carrying_commit_block(producing: Path) -> dict:
+    """R-387's `carrying_commit`, with the property that actually matters.
+
+    A whole-tree `dirty` flag is too coarse and too easy to satisfy: what a
+    reader needs is whether THE FILE THAT RAN is the file the named commit
+    holds. So the producer's own blob at HEAD is compared to its bytes on
+    disk. `tree_dirty` is reported beside it and is NOT the check -- other
+    seats' files being uncommitted says nothing about this producer.
+
+    DA's rule, in DE's emitters: "a carrying_commit recorded over a dirty
+    tree points at bytes that did not run"."""
+    import subprocess
+    root = Path(__file__).resolve().parents[2]
+
+    def _git(*a, raw=False):
+        r = subprocess.run(["git", "-C", str(root), *a],
+                           capture_output=True, text=True, timeout=60)
+        if r.returncode != 0:
+            return None
+        # `raw` matters: `.strip()` eats the trailing newline of a blob and
+        # then EVERY file compares unequal to itself. Caught by the positive
+        # control, which is what a positive control is for.
+        return r.stdout if raw else r.stdout.strip()
+
+    head = _git("rev-parse", "HEAD")
+    rel = str(producing.resolve().relative_to(root))
+    blob = _git("show", f"HEAD:{rel}", raw=True)
+    on_disk = producing.read_text()
+    status = _git("status", "--porcelain")
+    return {
+        "carrying_commit": head,
+        "producing_code_path": rel,
+        "producing_code_is_the_committed_bytes": (blob is not None
+                                                  and blob == on_disk),
+        "tree_dirty": bool(status) if status is not None else None,
+        "tree_dirty_is_NOT_the_check": (
+            "other seats' uncommitted files say nothing about this "
+            "producer; the check above compares THIS file's blob at HEAD "
+            "with the bytes that ran"),
+    }
+
+
 def declaration() -> dict:
     return {
         "protocol": PROTOCOL,
@@ -602,11 +873,31 @@ def declaration() -> dict:
                   "five named days decide the section-7 stopping rule; "
                   "design and null committed before data.",
         "days": {
-            "STATUS": "SUPERSEDED_BY_R7 -- v1's five named days rested on "
-                      "the imported era bar. The operative set is R7's, "
-                      "and G IS NOT FIXED until the USER answers R7's one "
-                      "parameter",
-            "G_is_PENDING_the_USER_parameter": True,
+            "STATUS": "RULED BY R-555 (USER). v1's five named days rested "
+                      "on the imported era bar and are superseded; R7's "
+                      "candidate sets are superseded too -- the ruled set "
+                      "is NEITHER of them",
+            # v8: THIS FIELD READ `True` UNTIL THIS ROUND, four hours after
+            # the USER answered. A declaration that still says its own key
+            # parameter is pending is a declaration a cold reader cannot
+            # act on, and the CLI summary was printing the stale value.
+            "G_is_PENDING_the_USER_parameter": False,
+            "G_RULED": RULED_G,
+            "ruled_set": list(RULED_DAYS),
+            "ruling": "R-555 (USER): untouched days only. Days opened for a "
+                      "read of the frozen candidate (08-29, 09-01, 09-02) "
+                      "do NOT count as untouched",
+            "the_ruled_set_is_neither_candidate": (
+                "SET A held 08-29/09-01/09-02, which the ruling excludes; "
+                "SET B held the three untouched days that EXISTED on "
+                "09-06 and G would have been 3. The ruling keeps SET B's "
+                "predicate and extends it forward to 09-06, 09-07 and "
+                "09-08 as each closes and is verdicted -- so G is 6 and "
+                "the set completes at the 2026-09-09T00:06Z verdict"),
+            "if_a_future_day_fails_its_verdict": (
+                "the set is NOT extended by choosing another day: it waits "
+                "for the next qualifying CLOSED day in calendar order and "
+                "G stays 6 (R-555(B))"),
             "v1_named": list(DAYS), "v1_G": G,
             "why_these": "the only era-pure clob_v4_1 days in existence "
                          "(R-547(C)); 08-29/30/31 straddle era boundaries "
@@ -629,9 +920,17 @@ def declaration() -> dict:
         "theta_pins": THETA_PINS,
         "theta_is_not_refitted_on_any_of_the_five_days": True,
         "supersedes": {
-            "path": f"data/pm_5min/derived/{V2_DECLARATION[0]}",
-            "sha256": V2_DECLARATION[1],
-            "chain": [V1_DECLARATION, V2_DECLARATION],
+            # THE LAST ELEMENT OF THE CHAIN, never a typed constant. v7 named
+            # v2 here and a reader resolving this field walked past v3..v6.
+            "path": f"data/pm_5min/derived/{DECLARATION_CHAIN[-1][0]}",
+            "sha256": DECLARATION_CHAIN[-1][1],
+            "chain": [list(x) for x in DECLARATION_CHAIN],
+            "version": VERSION,
+            "the_version_travels_in_ONE_place": (
+                "VERSION; the protocol suffix, the emitted filename and the "
+                "head of this chain are derived from it and the battery "
+                "asserts all three agree. v7 on disk read protocol V4, "
+                "filename v7 and supersedes v2 -- three axes, three answers"),
             "v1_and_v2_untouched": True,
             "v3_closes": [
                 "the withdrawn 'sealed and unread' sentence, replaced by a "
@@ -845,6 +1144,29 @@ def declaration() -> dict:
                                 "detectable and does not detect it",
         },
         "R7_the_day_set": day_sets_from_the_ledger(),
+        "parameters": {
+            "path": "live/pm_research/declarations/"
+                    "de_multiday_gate1_params_v2.json",
+            "supersedes": "live/pm_research/declarations/"
+                          "de_multiday_gate1_params_v1.json",
+            "digest_deliberately_NOT_carried_here": (
+                "params v2 cites THIS declaration by digest. If this "
+                "declaration also cited params by digest neither could ever "
+                "be emitted -- each digest would depend on the other. The "
+                "pin runs in ONE direction, params -> design, and this is "
+                "the statement of which"),
+            "what_v2_changed": [
+                "run_not_before_utc split into read_not_before_utc + "
+                "day_runs_allowed_for_closed_qualifying_days (R-572(B)(2))",
+                "BE's cascade digest re-pointed at ab75b41, justified by a "
+                "COMPUTED per-definition diff rather than by BE's commit "
+                "message -- see params v2 `be_module_repoint`",
+            ],
+        },
+        "R9_timing": TIMING_RULE,
+        "R10_seal_layout": SEAL_LAYOUT,
+        "dry_run_ledger_scope": DRY_RUN_LEDGER_SCOPE_DECLARED,
+        "seed_convention": SEED_CONVENTION,
         "worktree_data_shell_trap": {
             "what": "in a seat worktree `<root>/data` is the "
                     "git-materialised shell holding only COMMITTED "
@@ -927,6 +1249,7 @@ def declaration() -> dict:
                 "fills lost -- a decision is not a cancel"],
             "min_draws_per_arm_per_day": MIN_DRAWS,
             "machinery": CASCADE_MACHINERY,
+            "draw_source": DRAW_SOURCE_RULE,
             "seed": {
                 "rule": "seed = int(sha256(day_book_sha256 || arm || "
                         "'P003_GATE1_MULTIDAY')[:8], 16)",
@@ -934,7 +1257,11 @@ def declaration() -> dict:
                        "day's book digest, so a book that moved cannot "
                        "reuse the same draw sequence, and the sequence is "
                        "reproducible from the artifact alone",
-                "not_a_bare_integer": True},
+                "not_a_bare_integer": True,
+                # v8: the prose rule above is unchanged and is no longer the
+                # only statement of it. The FIELDS are what a reader and the
+                # battery resolve.
+                "convention": SEED_CONVENTION},
         },
         "metric": {
             "primary": "D(E0) -- net value delta at maker fee zero (our "
@@ -1062,11 +1389,18 @@ def selftest(*, quiet: bool = False) -> int:
                          f"-- ADMITTED")
 
     d = declaration()
-    ok(d["days"]["G_is_PENDING_the_USER_parameter"] is True
-       and d["days"]["STATUS"].startswith("SUPERSEDED_BY_R7"),
-       "v1's five named days are marked SUPERSEDED_BY_R7 and G is declared "
-       "PENDING the USER's parameter -- the declaration must not state a G "
-       "its own day-set derivation contradicts")
+    # v8: THIS CHECK USED TO ASSERT THE STALE STATE. It required
+    # `G_is_PENDING_the_USER_parameter is True` and so it PINNED the
+    # declaration to a question the USER answered in R-555 four hours
+    # earlier -- a check that held a stale field in place is worse than no
+    # check, because it makes the staleness look verified.
+    ok(d["days"]["G_is_PENDING_the_USER_parameter"] is False
+       and d["days"]["STATUS"].startswith("RULED BY R-555")
+       and d["days"]["v1_named"] and d["days"]["v1_G"] == 5,
+       "v1's five named days stay recorded as provenance and the STATUS "
+       "reads RULED BY R-555 -- the declaration states the ruled G rather "
+       "than a pending question, and the check no longer pins the stale "
+       "answer in place")
     _v6 = day_cluster_verdict({f"d{i}": 3.0 for i in range(6)}, g=6)
     ok(abs(_v6["p_one_sided_sign_test"] - 0.015625) < 1e-12
        and _v6["clears_holm"] is True
@@ -1449,6 +1783,135 @@ def selftest(*, quiet: bool = False) -> int:
        "the per-day decision counts are declared as OUTPUTS, so no "
        "expectation about them can be quietly turned into a filter")
 
+    # ================= v8: THE CONVENTIONS THAT LIVED ONLY IN CODE ========
+    import de_multiday_gate1_runner as _RUN
+
+    # ---- the seed convention, driven against the runner's own expression --
+    _cases = [("0" * 64, "CONDVALUE_X_SKEW"), ("f" * 64, "HAZARD_OVER_SKEWED_REF"),
+              ("a1b2c3" + "0" * 58, "CONDVALUE_X_SKEW")]
+    _agree = [(seed_from_convention(b, a), _RUN.seed_for(b, a))
+              for b, a in _cases]
+    ok(all(x == y for x, y in _agree) and len({x for x, _ in _agree}) == 3,
+       f"THE DECLARED SEED CONVENTION IS THE ONE THE RUNNER IMPLEMENTS -- a "
+       f"reference built from the DECLARED FIELDS ALONE reproduces "
+       f"seed_for() on {len(_cases)} distinct (book, arm) pairs, and the "
+       f"three seeds are distinct so the check is not passing on a constant: "
+       f"{[x for x, _ in _agree]}")
+
+    # ---- INTERIOR CONTROL, one mutation per declared field ---------------
+    _muts = {
+        "domain_separator": {"domain_separator": "P003_GATE1_MULTIDAY_X"},
+        "joiner": {"joiner": "-"},
+        "hex_truncation_chars": {"hex_truncation_chars": 16},
+        "int_base": {"int_base": 32},
+        "field_order": {"field_order": ["arm", "day_book_sha256",
+                                        "domain_separator"]},
+        "encoding": {"encoding": "utf-16"},
+    }
+    _still_equal = []
+    for _f, _patch in _muts.items():
+        _c = dict(SEED_CONVENTION)
+        _c.update(_patch)
+        if seed_from_convention("7" * 64, "CONDVALUE_X_SKEW", _c) == \
+                _RUN.seed_for("7" * 64, "CONDVALUE_X_SKEW"):
+            _still_equal.append(_f)
+    ok(not _still_equal,
+       f"AND EVERY DECLARED FIELD IS LOAD-BEARING -- mutating any ONE of "
+       f"{sorted(_muts)} changes the seed. A convention with an inert field "
+       f"is a convention that did not need declaring, and a check that "
+       f"cannot notice the mutation is rule 16's control that cannot fail "
+       f"(fields that survived mutation: {_still_equal or 'none'})")
+
+    ok(SEED_CONVENTION["hex_truncation_chars"] == 8
+       and SEED_CONVENTION["domain_separator"] == "P003_GATE1_MULTIDAY"
+       and "[:8], 16" in SEED_CONVENTION["expression"],
+       "the two values R-572(B)(4) names by hand -- the literal "
+       "`P003_GATE1_MULTIDAY` and the 8-hex truncation -- are the values in "
+       "the declared fields, so the register entry and the artifact agree "
+       "without a reader translating between them")
+
+    # ---- the --dry-run-ledger scope, declared vs the runner's own words --
+    _rd = _RUN.dry_run_scope_as_the_runner_states_it()
+    ok(_rd["reads"] == DRY_RUN_LEDGER_SCOPE_DECLARED["reads"]
+       and _rd["does_NOT_read"] ==
+       DRY_RUN_LEDGER_SCOPE_DECLARED["does_NOT_read"],
+       f"THE DECLARED --dry-run-ledger SCOPE IS THE SCOPE THE RUNNER STATES "
+       f"-- two independently authored lists compared, not one constant read "
+       f"twice: reads {_rd['reads']}")
+    ok(set(DRY_RUN_LEDGER_SCOPE_DECLARED["does_NOT_verify"]) ==
+       {"P2_BE_reference_book", "P6_pinned_models_and_thetas",
+        "P7_BE_cascade_module_digest"}
+       and not any(f in str(_rd["reads"]) for f in ("book", "model", "theta",
+                                                    "cascade")),
+       "AND THE SCOPE NAMES THE PLAYBOOK PRECONDITIONS IT DOES NOT COVER -- "
+       "P2, P6 and P7. A green dry run exits 0 and prints a receipt while "
+       "BE's book, the pinned models and BE's cascade digest are entirely "
+       "unexamined; that gap is invisible at the console and is a field now")
+
+    # ---- R9 / R10, the two rulings as fields -----------------------------
+    ok(TIMING_RULE["day_runs_allowed_for_closed_qualifying_days"] is True
+       and TIMING_RULE["read_not_before_utc"] == "2026-09-09T00:06:00Z"
+       and "AGGREGATE READ only" in TIMING_RULE["what_that_date_governs"],
+       "R9: the not-before date governs the AGGREGATE READ and per-day "
+       "sealed runs are allowed on closed qualifying days (R-572(B)(2)) -- "
+       "the field params v1 carried as one whole-set `run_not_before_utc` "
+       "is split into the two things it was doing")
+    ok(set(SEAL_LAYOUT["keys_present_in_BOTH_states"]) ==
+       {"sealed", "seal_status", "sealed_at_every_depth",
+        "sealed_field_names", "economic"}
+       and SEAL_LAYOUT["unsealed_values"]["sealed_at_every_depth"] is False,
+       "R10: the five seal-layout keys are declared present in BOTH states "
+       "with explicit values, and the one that is absent by design "
+       "(`economic`, when sealed) is declared as a RULE rather than left to "
+       "a consumer to discover as a None")
+
+    # ---- the version axis ------------------------------------------------
+    ok(PROTOCOL.endswith(f"_V{VERSION}")
+       and DECLARATION_CHAIN[-1][0].startswith(
+           f"p003_de_multiday_gate1_design_v{VERSION - 1}__")
+       and len(DECLARATION_CHAIN) == VERSION - 1,
+       f"THE VERSION TRAVELS IN ONE PLACE: protocol {PROTOCOL} ends in "
+       f"V{VERSION}, the chain holds {len(DECLARATION_CHAIN)} = VERSION - 1 "
+       f"predecessors and its head is v{VERSION - 1}. v7 on disk read "
+       f"protocol V4, filename v7 and supersedes v2")
+    _sup = d["supersedes"]
+    ok(_sup["path"].endswith(DECLARATION_CHAIN[-1][0])
+       and _sup["sha256"] == DECLARATION_CHAIN[-1][1]
+       and len(_sup["chain"]) == len(DECLARATION_CHAIN),
+       "and `supersedes.path` resolves to the IMMEDIATE predecessor -- the "
+       "field an automated reader follows (rule 13). v7's named v2 and skipped "
+       "four versions")
+    _chain = verify_declaration_chain()
+    ok(_chain["n_entries"] == len(DECLARATION_CHAIN)
+       and _chain["every_digest_recomputed"] is True
+       and all(r["agrees"] for r in _chain["entries"]),
+       f"AND EVERY CHAIN DIGEST IS READ FROM ITS FILE, not trusted as typed "
+       f"-- {_chain['n_entries']} recomputed and equal. This round typed one "
+       f"digest that was INVENTED and one that was the literal "
+       f"'PLACEHOLDER'; computing them is what caught both")
+    _bad_chain = list(DECLARATION_CHAIN[:-1]) + [
+        (DECLARATION_CHAIN[-1][0], "0" * 64)]
+    _saw = None
+    try:
+        verify_declaration_chain(chain=_bad_chain)
+    except DesignRefused as exc:
+        _saw = str(exc)
+    ok(_saw is not None and "does not match the artifacts" in _saw,
+       "KNOWN-BAD, THE OTHER DIRECTION: a chain entry whose typed digest is "
+       "not the file's REFUSES -- so the check above is one that can fail")
+
+    ok(d["days"]["G_is_PENDING_the_USER_parameter"] is False
+       and d["days"]["G_RULED"] == 6
+       and d["days"]["ruled_set"] == ["2026-09-03", "2026-09-04",
+                                      "2026-09-05", "2026-09-06",
+                                      "2026-09-07", "2026-09-08"]
+       and d["days"]["ruled_set"] == _RUN.load_params()["days"],
+       "AND R-555 IS IN THE DECLARATION, not only in the parameter file: "
+       "G_RULED = 6 on the ruled set, `G_is_PENDING_the_USER_parameter` is "
+       "FALSE -- it read True for four hours after the USER answered, and "
+       "the CLI summary was printing that stale value -- and the ruled set "
+       "here EQUALS the one the runner loads, so the two cannot drift")
+
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
     LAST_BATTERY.update({
@@ -1488,6 +1951,7 @@ def main() -> int:
     payload["source_identity"] = {
         "producing_code": me.name,
         "producing_code_sha256": hashlib.sha256(me.read_bytes()).hexdigest(),
+        **carrying_commit_block(me),
     }
     LAST_BATTERY.clear()
     selftest(quiet=True)
@@ -1504,10 +1968,11 @@ def main() -> int:
     r7 = payload["R7_the_day_set"]
     print(json.dumps({
         "emitted": str(a.output), "status": payload["status"],
-        # NOT the module constant. The CLI printed `G: 5` from `G` while
-        # the payload's own R7 says the set is 6 or 3 pending the USER --
-        # a summary line that disowns its own artifact.
-        "G": "PENDING_THE_USER_PARAMETER",
+        # NOT the module constant, and no longer "PENDING" either: the
+        # CLI printed `G: 5` from `G`, then printed PENDING for four hours
+        # after R-555 answered. It now prints the payload's OWN field.
+        "G": payload["days"]["G_RULED"],
+        "G_source": "the emitted payload's days.G_RULED",
         "SET_A_G": r7["SET_A_reads_count_as_untouched"]["holm"]["G"],
         "SET_B_G": r7["SET_B_reads_consume_the_day"]["holm"]["G"],
         "arms": list(ARMS),

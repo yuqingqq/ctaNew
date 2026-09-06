@@ -46,9 +46,15 @@ import de_data_root as DR  # noqa: E402
 import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
-PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V1"
-EXPECTED_CHECKS = 44
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v1.json"
+PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
+EXPECTED_CHECKS = 69
+#: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
+#: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
+#: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
+#: stays as provenance (rule 13).
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v2.json"
+SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
+                        "de_multiday_gate1_params_v1.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -268,6 +274,18 @@ def verify_draw_provenance(prov: dict, *, arm: str, book_digest: str,
     if prov.get("arm") != arm:
         bad.append({"field": "arm", "declared": prov.get("arm"),
                     "expected": arm})
+    # A CLAIM OF IN-PROCESS GENERATION IS CHECKED AGAINST THIS PROCESS.
+    # Same lock as DE 76 put on the data-free proof: a claim produced
+    # elsewhere is a claim about elsewhere.
+    if prov.get("draw_source") == "GENERATED_IN_PROCESS":
+        _pid = __import__("os").getpid()
+        if prov.get("generated_in_process") is not True:
+            bad.append({"field": "generated_in_process",
+                        "declared": prov.get("generated_in_process"),
+                        "expected": True})
+        if prov.get("pid") != _pid:
+            bad.append({"field": "pid", "declared": prov.get("pid"),
+                        "this_process": _pid})
     if bad:
         raise RunnerRefused(
             f"REFUSED: draw provenance does not bind to the verified "
@@ -276,8 +294,198 @@ def verify_draw_provenance(prov: dict, *, arm: str, book_digest: str,
             f"not this arm's null.")
     return {"module_sha256": prov["module_sha256"], "seed": want_seed,
             "book_digest": book_digest, "arm": arm,
+            "draw_source": prov.get("draw_source", "UNDECLARED"),
+            "generated_in_process": prov.get("generated_in_process"),
             "recomputed_by_the_runner": True,
             "binds_the_verified_module_to_the_numbers": True}
+
+
+BE_MODULE_IMPORT_NAME = "be_cancel_axis_null"
+
+
+def carrying_commit_block(producing: Path) -> dict:
+    """R-387's `carrying_commit`, with the property that actually matters.
+
+    A whole-tree `dirty` flag is too coarse and too easy to satisfy: what a
+    reader needs is whether THE FILE THAT RAN is the file the named commit
+    holds. So the producer's own blob at HEAD is compared to its bytes on
+    disk. `tree_dirty` is reported beside it and is NOT the check -- other
+    seats' files being uncommitted says nothing about this producer.
+
+    DA's rule, in DE's emitters: "a carrying_commit recorded over a dirty
+    tree points at bytes that did not run"."""
+    import subprocess
+    root = Path(__file__).resolve().parents[2]
+
+    def _git(*a, raw=False):
+        r = subprocess.run(["git", "-C", str(root), *a],
+                           capture_output=True, text=True, timeout=60)
+        if r.returncode != 0:
+            return None
+        # `raw` matters: `.strip()` eats the trailing newline of a blob and
+        # then EVERY file compares unequal to itself. Caught by the positive
+        # control, which is what a positive control is for.
+        return r.stdout if raw else r.stdout.strip()
+
+    head = _git("rev-parse", "HEAD")
+    rel = str(producing.resolve().relative_to(root))
+    blob = _git("show", f"HEAD:{rel}", raw=True)
+    on_disk = producing.read_text()
+    status = _git("status", "--porcelain")
+    return {
+        "carrying_commit": head,
+        "producing_code_path": rel,
+        "producing_code_is_the_committed_bytes": (blob is not None
+                                                  and blob == on_disk),
+        "tree_dirty": bool(status) if status is not None else None,
+        "tree_dirty_is_NOT_the_check": (
+            "other seats' uncommitted files say nothing about this "
+            "producer; the check above compares THIS file's blob at HEAD "
+            "with the bytes that ran"),
+    }
+
+
+def import_be_cascade(params: dict, *, module=None) -> tuple:
+    """Import BE's cascade and digest THE FILE THE IMPORT ACTUALLY LOADED.
+
+    Two distinct properties, both required, because either alone is a hole:
+      * the loaded module's `__file__` IS the declared path -- otherwise a
+        module of the same name earlier on `sys.path` is what ran;
+      * the digest of THOSE BYTES matches the declared one -- BE's own B-1
+        lesson (a digest taken by a second read attests to bytes the run
+        never saw), applied on the consuming side."""
+    if module is None:
+        import importlib
+        module = importlib.import_module(BE_MODULE_IMPORT_NAME)
+    loaded = Path(getattr(module, "__file__", "") or "")
+    declared = (Path(__file__).resolve().parents[2]
+                / params["be_module"]["path"])
+    if not loaded.is_file():
+        raise RunnerRefused(
+            f"REFUSED: the imported cascade has no readable __file__ "
+            f"({loaded!s}); a module whose source cannot be read cannot be "
+            f"digested, and an undigested cascade is not a cited one.")
+    if loaded.resolve() != declared.resolve():
+        raise RunnerRefused(
+            f"REFUSED: the import loaded {loaded.resolve()} but the "
+            f"declaration cites {declared.resolve()}. A module of the right "
+            f"NAME earlier on sys.path is not the module that was cited.")
+    actual = hashlib.sha256(loaded.read_bytes()).hexdigest()
+    cite = verify_be_module(params, actual_sha=actual)
+    cite["digest_is_of_the_file_the_import_loaded"] = True
+    cite["loaded_from"] = str(loaded.resolve())
+    return module, cite
+
+
+def generate_draws_in_process(params: dict, *, day: str, arm: str,
+                              book_path: str, book_sha: str,
+                              by_side: dict, n_draws: int,
+                              module=None) -> dict:
+    """R-572(B)(1): THE RUNNER PRODUCES THE DRAWS, in this process.
+
+    A digest verified here and a draw list handed over from elsewhere binds
+    nothing -- it says which cascade EXISTS, not which one produced these
+    numbers. So the runner imports BE's module, verifies it, loads the day
+    book through BE's own loader and calls BE's own `draw_null` with the
+    seed it recomputes. Nothing about the cascade is reimplemented.
+
+    THE BOOK IS BOUND TWICE OVER: BE's loader returns `source_sha256`, the
+    digest of the very buffer it unpickled (BE's B-1 fix), and that must
+    equal the day book digest the seed was derived from. So the draws, the
+    seed and the bytes are one chain."""
+    mod, cite = import_be_cascade(params, module=module)
+    seed = seed_for(book_sha, arm)
+    bk = mod.load(Path(book_path))
+    loaded_sha = bk.get("source_sha256")
+    if loaded_sha != book_sha:
+        raise RunnerRefused(
+            f"REFUSED DAY {day} / {arm}: the cascade loaded a book whose "
+            f"own digest is {str(loaded_sha)[:16]} while the declared day "
+            f"book is {book_sha[:16]}. The seed is derived from the "
+            f"declared digest, so draws from other bytes are seeded by a "
+            f"book that did not produce them.")
+    # THE NEUTRAL NO-CANCEL REFERENCE PATH (CLAUDE.md reliability rule 1),
+    # taken through BE's own replay -- NOT BE's `reproduction_gate`, whose
+    # BASELINE_CANCELS/BASELINE_FILLS and filed arm numbers are pinned to the
+    # consumed 08-24 development hour and cannot reproduce on a day book.
+    # The day-level reproduction gate is a real and still-open question; it
+    # is recorded as one rather than approximated by a gate that would
+    # refuse every day (see `day_level_reproduction_gate_is_open`).
+    base = mod.replay(bk, mod.flagged_stream(bk["rows"], []), 0.5)
+    draws = mod.draw_null(bk, base["fills"], by_side,
+                          n_draws=n_draws, seed=seed)
+    if len(draws) != n_draws:
+        raise RunnerRefused(
+            f"REFUSED DAY {day} / {arm}: asked BE's cascade for {n_draws} "
+            f"draws and received {len(draws)}.")
+    return {
+        "draws": draws,
+        "provenance": {
+            "module_sha256": cite["sha256"], "seed": seed,
+            "book_digest": book_sha, "arm": arm,
+            "draw_source": "GENERATED_IN_PROCESS",
+            "generated_in_process": True,
+            "pid": __import__("os").getpid(),
+            "n_draws": len(draws),
+            "loaded_from": cite["loaded_from"],
+            "book_digest_is_the_loaded_buffers":
+                bk.get("digest_is_of_the_loaded_buffer", False),
+            "baseline": "the no-cancel reference replay through BE's own "
+                        "replay(); n_fills = %d" % base["n_fills"],
+            "day_level_reproduction_gate_is_open": (
+                "BE's reproduction_gate pins the 08-24 hour's filed numbers "
+                "and would refuse every day book. The day-level equivalent "
+                "must come from BE's own per-day book receipt; it is NOT "
+                "asserted here and NOT silently skipped -- it is named"),
+        },
+        "cite": cite,
+    }
+
+
+def resolve_draws(params: dict, *, day: str, arm: str, fixture: bool,
+                  supplied: dict | None = None, **kw) -> dict:
+    """GENERATED on a ruled day, SUPPLIED only for a fixture -- and the
+    door is shut by the DAY, not by the caller's word.
+
+    DE 76 put a lock on `de_data_root`'s `fixture=True`, which was the one
+    refusal a caller could walk past on its own say-so. This is the second
+    such door and it gets a structural lock rather than a promise: fixture
+    mode REFUSES when the day is in the ruled set, and real mode REFUSES
+    when it is not."""
+    in_ruled = day in params.get("days", [])
+    if fixture and in_ruled:
+        raise RunnerRefused(
+            f"REFUSED: fixture draws were claimed for {day}, which IS in "
+            f"the ruled day set {params.get('days')}. A fixture run on a "
+            f"ruled day is not a fixture run, and only its author would "
+            f"know.")
+    if not fixture and not in_ruled:
+        raise RunnerRefused(
+            f"REFUSED: a real-day run was claimed for {day}, which is NOT "
+            f"in the ruled day set. The ruled set is the population; a day "
+            f"outside it is a day chosen after the fact.")
+    if not fixture:
+        if supplied is not None:
+            raise RunnerRefused(
+                f"REFUSED DAY {day} / {arm}: draws were SUPPLIED on a ruled "
+                f"day. R-572(B)(1) rules the runner generates them in "
+                f"process at the digest it verified; a supplied set is a "
+                f"set this process cannot attest to.")
+        return generate_draws_in_process(params, day=day, arm=arm, **kw)
+    if supplied is None:
+        raise RunnerRefused(
+            f"REFUSED: fixture mode on {day} with no supplied draws. The "
+            f"fixture path does not call BE's cascade -- generating would "
+            f"need a real book -- so there is nothing to run.")
+    prov = dict(supplied.get("provenance") or {})
+    prov["draw_source"] = "SUPPLIED_FIXTURE_ONLY"
+    prov["generated_in_process"] = False
+    prov["why_supplied_is_allowed_here"] = (
+        "the day is not in the ruled set, so no result can be claimed from "
+        "it; the fixture proves the SEAM executes, never that any arm does "
+        "anything")
+    return {"draws": supplied["draws"], "provenance": prov,
+            "cite": supplied.get("cite")}
 
 
 def arm_day(day: str, arm: str, observed: float, null_draws: list,
@@ -347,30 +555,101 @@ def _strip_economic(o):
     return o
 
 
+#: R-572(B)(3). The keys a consumer keys on, present in BOTH states.
+#: `economic` is the declared exception: present iff unsealed. Symmetry of
+#: KEYS serves the consumer; the seal serves the reader, and a
+#: present-and-null economic block would leak the shape of what is sealed
+#: and invite a reader to quote a null as a result.
+SEAL_LAYOUT_KEYS = ("sealed", "seal_status", "sealed_at_every_depth",
+                    "sealed_field_names")
+SEAL_LAYOUT_CONDITIONAL_KEY = "economic"
+
+
 def seal(day_result: dict, n_days_complete: int, g: int) -> dict:
     """R5 -- the economic fields are ABSENT until every day is complete.
 
     Absent, not present-and-ignored: a field a reader can see is a field a
-    reader can quote."""
+    reader can quote.
+
+    R-572(B)(3), THE ASYMMETRY THIS FIXES. A sealed artifact carried
+    `sealed_at_every_depth` and `sealed_field_names`; an unsealed one
+    dropped BOTH and gained `economic`. A consumer keying on either name
+    got `None` after the unseal and could not distinguish "this run is
+    unsealed" from "I misspelled the field". Both keys are now present in
+    both states with EXPLICIT values."""
     if n_days_complete >= g:
         out = dict(day_result)
-        if not out.get("economic"):
-            out.pop("economic", None)
+        # UNSEALED: `economic` is present -- explicitly None, with the
+        # reason already carried in `why_no_economic`, on a refused arm-day.
+        # Popping it made the unsealed state asymmetric WITH ITSELF: present
+        # for an OK arm-day, absent for a refused one.
+        out.setdefault("economic", None)
         out["sealed"] = False
         out["seal_status"] = "UNSEALED_ALL_DAYS_COMPLETE"
+        out["sealed_field_names"] = []
+        out["sealed_at_every_depth"] = False
         return out
     out = _strip_economic({k: v for k, v in day_result.items()
                            if k != "economic"})
-    if True:
-        out["sealed"] = True
-        out["seal_status"] = (
-            f"SEALED -- {n_days_complete} of {g} days complete. Every "
-            f"economic field is ABSENT from this artifact, not "
-            f"present-and-ignored, so whoever runs the remaining days "
-            f"has not seen this one's result")
-        out["sealed_field_names"] = list(ECONOMIC_FIELDS)
-        out["sealed_at_every_depth"] = True
+    out["sealed"] = True
+    out["seal_status"] = (
+        f"SEALED -- {n_days_complete} of {g} days complete. Every "
+        f"economic field is ABSENT from this artifact, not "
+        f"present-and-ignored, so whoever runs the remaining days "
+        f"has not seen this one's result")
+    out["sealed_field_names"] = list(ECONOMIC_FIELDS)
+    out["sealed_at_every_depth"] = True
     return out
+
+
+def read_seal_state(artifact: dict) -> dict:
+    """WHAT A CONSUMER DOES. Not a checker -- the reader whose experience
+    the symmetry exists for. Every value here must come from a key that is
+    PRESENT; a `None` returned by `.get()` on a missing key is the defect."""
+    missing = [k for k in SEAL_LAYOUT_KEYS if k not in artifact]
+    return {
+        "sealed": artifact.get("sealed"),
+        "seal_status": artifact.get("seal_status"),
+        "sealed_at_every_depth": artifact.get("sealed_at_every_depth"),
+        "sealed_field_names": artifact.get("sealed_field_names"),
+        "economic_present": SEAL_LAYOUT_CONDITIONAL_KEY in artifact,
+        "keys_missing": missing,
+        "readable": not missing,
+    }
+
+
+def assert_seal_layout_symmetric(sealed_artifact: dict,
+                                 unsealed_artifact: dict) -> dict:
+    """THE CONSUMER FALSIFIER, driven on BOTH states.
+
+    It fails on the pre-fix layout (the unsealed artifact dropped the two
+    sealed_* keys) and it admits the fixed one -- both directions, because
+    a guard shown only to refuse has proved nothing about the good case."""
+    s, u = read_seal_state(sealed_artifact), read_seal_state(unsealed_artifact)
+    problems = []
+    if s["keys_missing"]:
+        problems.append({"state": "sealed", "missing": s["keys_missing"]})
+    if u["keys_missing"]:
+        problems.append({"state": "unsealed", "missing": u["keys_missing"]})
+    if s["economic_present"]:
+        problems.append({"state": "sealed",
+                         "why": "`economic` is present while sealed"})
+    if not u["economic_present"]:
+        problems.append({"state": "unsealed",
+                         "why": "`economic` is absent while unsealed"})
+    if s["sealed"] is not True or u["sealed"] is not False:
+        problems.append({"why": "the `sealed` flag does not describe the "
+                                "state it sits in"})
+    if problems:
+        raise RunnerRefused(
+            f"REFUSED: the sealed/unsealed layout is ASYMMETRIC: {problems}. "
+            f"A consumer keying on one of these names gets None in one "
+            f"state and a value in the other, and cannot tell an unsealed "
+            f"run from a misspelled field (R-572(B)(3)).")
+    return {"symmetric": True,
+            "keys_present_in_both": list(SEAL_LAYOUT_KEYS),
+            "conditional_key": SEAL_LAYOUT_CONDITIONAL_KEY,
+            "sealed_reads": s, "unsealed_reads": u}
 
 
 def _economic_keys_in(o, path="") -> list:
@@ -406,6 +685,70 @@ def assert_no_economic_leak(artifact: dict, n_days_complete: int,
             f"smoke publishes resources only; a leaked Z is an early stop "
             f"waiting to happen.")
     return True
+
+
+# ------------------------------------------------- R9, the two clocks ----
+
+def _iso_utc(s: str) -> datetime.datetime:
+    return datetime.datetime.fromisoformat(str(s).replace("Z", "+00:00"))
+
+
+def may_run_day(params: dict, day: str, *, day_row: dict) -> dict:
+    """R-572(B)(2): A PER-DAY SEALED RUN IS ADMISSIBLE NOW.
+
+    `run_not_before_utc` was one whole-set field doing two jobs, and read as
+    a bar on every run -- which would have held the 09-03 smoke behind
+    2026-09-09 for nothing. A per-day run publishes resources, counts and
+    statuses and NO economic field, so it cannot inform a later choice. The
+    date governs the READ.
+
+    `day_row` is passed in rather than read here: the ledger read belongs to
+    the caller, and a predicate that fetches its own inputs cannot be driven
+    against the rows that matter."""
+    if day not in params.get("days", []):
+        raise RunnerRefused(
+            f"REFUSED: {day} is not in the ruled day set {params.get('days')}. "
+            f"The ruled set is the population (R-555).")
+    if params.get("day_runs_allowed_for_closed_qualifying_days") is not True:
+        raise RunnerRefused(
+            "REFUSED: the parameter file does not carry "
+            "`day_runs_allowed_for_closed_qualifying_days: true`; without "
+            "the ruling in the file the runner will not infer it.")
+    if day_row.get("day_closed_calendar") is not True:
+        raise RunnerRefused(
+            f"REFUSED: {day} is not a CLOSED calendar day. R-555 evaluates "
+            f"day-quality on complete days only; an in-progress verdict is "
+            f"not an input.")
+    if day_row.get("all_conjuncts_and_quality") is not True:
+        raise RunnerRefused(
+            f"REFUSED: {day} does not pass the four ledger conjuncts and "
+            f"day-quality.")
+    return {"day": day, "may_run": True, "sealed": True,
+            "authority": "R-572(B)(2)",
+            "what_this_does_not_authorise": "the aggregate read -- see "
+                                            "may_read_aggregate()"}
+
+
+def may_read_aggregate(params: dict, *, n_days_complete: int,
+                       now_utc: datetime.datetime) -> dict:
+    """The OTHER clock: the unseal and the section-7 verdict.
+
+    BOTH conditions, not either: the declared date AND all G days. The date
+    alone would let a five-day read happen on the ninth; the count alone
+    would let the read happen the moment the sixth day landed early."""
+    not_before = _iso_utc(params["read_not_before_utc"])
+    if now_utc < not_before:
+        raise RunnerRefused(
+            f"REFUSED: the aggregate read is not before "
+            f"{params['read_not_before_utc']}; it is {now_utc.isoformat()}.")
+    if n_days_complete < params["G"]:
+        raise RunnerRefused(
+            f"REFUSED: {n_days_complete} of {params['G']} days are complete. "
+            f"The read unseals every day at once or not at all (R5).")
+    return {"may_read": True, "n_days_complete": n_days_complete,
+            "G": params["G"],
+            "read_not_before_utc": params["read_not_before_utc"],
+            "both_conditions_required": True}
 
 
 # ------------------------------------------------------------- aggregate
@@ -464,6 +807,21 @@ def fixture_run_proven() -> dict:
     payload["data_root"] = DR.require_canonical(
         "the fixture run", fixture=True, proof=proof)
     return payload
+
+
+def dry_run_scope_as_the_runner_states_it() -> dict:
+    """THE RUNNER'S OWN WORDS about what `--dry-run-ledger` covers.
+
+    Kept here, in the module that implements it, and compared in the design
+    battery against `DESIGN.DRY_RUN_LEDGER_SCOPE_DECLARED`. Two lists in two
+    modules can DRIFT and the check catches that; they cannot catch both
+    being wrong in the same way, and this comment is where that limit is
+    stated rather than implied."""
+    return {
+        "reads": ["day-verdict files", "the declared read-state table"],
+        "does_NOT_read": ["any reference book", "any arm", "any score stream",
+                          "any economics"],
+    }
 
 
 def dry_run_ledger() -> dict:
@@ -540,10 +898,17 @@ def dry_run_ledger() -> dict:
         "protocol": "P003_DE_MULTIDAY_GATE1_DRY_RUN_LEDGER_V1",
         "status": "DRY_RUN_LEDGER_READ_NOT_A_FIXTURE_RUN",
         "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "what_this_reads": ["day-verdict files", "the declared read-state "
-                            "table"],
-        "what_this_does_NOT_read": ["any reference book", "any arm",
-                                    "any score stream", "any economics"],
+        "what_this_reads": dry_run_scope_as_the_runner_states_it()["reads"],
+        "what_this_does_NOT_read":
+            dry_run_scope_as_the_runner_states_it()["does_NOT_read"],
+        "what_a_GREEN_DRY_RUN_DOES_NOT_SAY": {
+            "P2_BE_reference_book": "not verified here",
+            "P6_pinned_models_and_thetas": "not verified here",
+            "P7_BE_cascade_module_digest": "not verified here",
+            "why_this_matters": "the dry run exits 0 and prints a receipt "
+                                "while all three are unexamined, so the gap "
+                                "is invisible at the console (R-572(B)(4))",
+        },
         "data_root": root,
         "ledger_root_resolved": r7["ledger_root_resolved"],
         "root_branch": r7["root_resolution"]["branch"],
@@ -640,6 +1005,12 @@ def fixture_run() -> dict:
     return {
         "protocol": PROTOCOL,
         "status": "FIXTURE_RUN_NO_DATA",
+        "source_identity": {
+            "producing_code": Path(__file__).name,
+            "producing_code_sha256": hashlib.sha256(
+                Path(__file__).resolve().read_bytes()).hexdigest(),
+            **carrying_commit_block(Path(__file__).resolve()),
+        },
         "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "no_day_book_was_read": True,
         # FILLED BY `fixture_run_proven()` AFTER the body has run under
@@ -1034,7 +1405,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"fixture run opens {len(_seen)} paths, ZERO of them under "
            f"`data/`. It reads only its own module source and the "
            f"committed parameter file, so it runs from a shell worktree")
-        ok(any(x.endswith("de_multiday_gate1_params_v1.json")
+        ok(any(x.endswith("de_multiday_gate1_params_v2.json")
                for x in _seen),
            "and the instrument is not vacuous -- it DID observe the "
            "parameter file being read, so a zero above is a measurement "
@@ -1055,6 +1426,260 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        and seed_for("a" * 64, "X") == seed_for("a" * 64, "X"),
        "the seed PINS THE DATA: it changes with the book digest and is "
        "reproducible from the artifact alone")
+
+    # ============ v2: THE DRAWS, THE TWO CLOCKS AND THE SEAL LAYOUT ======
+
+    # ---- R-572(B)(2): the two clocks ------------------------------------
+    _row_ok = {"day_closed_calendar": True, "all_conjuncts_and_quality": True}
+    _may = may_run_day(live, "2026-09-03", day_row=_row_ok)
+    ok(_may["may_run"] is True and _may["sealed"] is True,
+       "R9 POSITIVE CONTROL, AND IT ADMITS: the 09-03 smoke -- a closed, "
+       "qualifying, ruled day -- MAY RUN NOW, sealed. v1's single "
+       "`run_not_before_utc` read as a bar on every run and would have held "
+       "it behind 2026-09-09 for nothing (R-572(B)(2))")
+    refuses(lambda: may_run_day(live, "2026-09-07",
+                                day_row={"day_closed_calendar": False,
+                                         "all_conjuncts_and_quality": None}),
+            "R9 KNOWN-BAD, AN OPEN DAY: a day that has not closed REFUSES -- "
+            "day-quality is evaluated on COMPLETE days only (R-555)",
+            "not a CLOSED calendar day")
+    refuses(lambda: may_run_day(live, "2026-09-03",
+                                day_row={"day_closed_calendar": True,
+                                         "all_conjuncts_and_quality": False}),
+            "R9 KNOWN-BAD, A CLOSED DAY THAT FAILS QUALITY: refuses",
+            "conjuncts and day-quality")
+    refuses(lambda: may_run_day(live, "2026-09-02", day_row=_row_ok),
+            "R9 KNOWN-BAD, A DAY OUTSIDE THE RULED SET: 09-02 is closed and "
+            "qualifies on quality and is still REFUSED -- the ruled set is "
+            "the population", "not in the ruled day set")
+    _noflag = dict(live)
+    _noflag.pop("day_runs_allowed_for_closed_qualifying_days", None)
+    refuses(lambda: may_run_day(_noflag, "2026-09-03", day_row=_row_ok),
+            "R9 KNOWN-BAD, THE RULING ABSENT FROM THE FILE: without "
+            "`day_runs_allowed_for_closed_qualifying_days` the runner "
+            "REFUSES rather than inferring the ruling", "does not carry")
+    _t = datetime.datetime
+    _tz = datetime.timezone.utc
+    _read = may_read_aggregate(live, n_days_complete=6,
+                               now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz))
+    ok(_read["may_read"] is True and _read["both_conditions_required"] is True,
+       "AND THE OTHER CLOCK ADMITS at 2026-09-09T00:06Z with all 6 days "
+       "complete -- the date governs the READ, which is the job it was "
+       "actually doing")
+    refuses(lambda: may_read_aggregate(
+        live, n_days_complete=6, now_utc=_t(2026, 9, 8, 23, 59, tzinfo=_tz)),
+        "KNOWN-BAD, ONE MINUTE EARLY: six complete days do not open the "
+        "read before the declared date", "not before")
+    refuses(lambda: may_read_aggregate(
+        live, n_days_complete=5, now_utc=_t(2026, 9, 12, 0, 0, tzinfo=_tz)),
+        "KNOWN-BAD, FIVE OF SIX AFTER THE DATE: the date does not open a "
+        "read of an incomplete set -- BOTH conditions, never either",
+        "of 6 days are complete")
+    ok(live["read_not_before_utc"] == "2026-09-09T00:06:00Z"
+       and "run_not_before_utc" not in live
+       and live["timing"]["superseded_field"] == "run_not_before_utc",
+       "and params v2 carries the SPLIT, with the superseded field named: "
+       "`read_not_before_utc` + "
+       "`day_runs_allowed_for_closed_qualifying_days`, and no "
+       "`run_not_before_utc` left to be resolved by a reader")
+
+    # ---- R-572(B)(3): the seal layout, both states -----------------------
+    _armres = {"day": "D", "arm": "A", "status": "OK",
+               "admissibility": {"admissible": True, "null_sd": 1.0},
+               "economic": {"D_E0": 1.0, "Z": 2.0, "p_location": 0.01,
+                            "null_mean": 0.0, "null_sd": 1.0,
+                            "null_draws_summary": {"n": 500}}}
+    _sealed = seal(_armres, 1, 6)
+    _unsealed = seal(_armres, 6, 6)
+    _sym = assert_seal_layout_symmetric(_sealed, _unsealed)
+    ok(_sym["symmetric"] is True
+       and _sym["sealed_reads"]["readable"] is True
+       and _sym["unsealed_reads"]["readable"] is True
+       and _sym["unsealed_reads"]["sealed_field_names"] == []
+       and _sym["sealed_reads"]["sealed_field_names"] == list(ECONOMIC_FIELDS),
+       f"R10 POSITIVE CONTROL, AND IT ADMITS: a CONSUMER reads all four "
+       f"layout keys in BOTH states -- sealed_at_every_depth "
+       f"{_sym['sealed_reads']['sealed_at_every_depth']}/"
+       f"{_sym['unsealed_reads']['sealed_at_every_depth']}, "
+       f"sealed_field_names {len(ECONOMIC_FIELDS)} names/[] -- and never "
+       f"gets a None from a missing key (R-572(B)(3))")
+    _prefix = dict(_unsealed)
+    for _k in ("sealed_at_every_depth", "sealed_field_names"):
+        _prefix.pop(_k, None)
+    refuses(lambda: assert_seal_layout_symmetric(_sealed, _prefix),
+            "R10 KNOWN-BAD, THE PRE-FIX LAYOUT ITSELF: an unsealed artifact "
+            "that DROPS `sealed_at_every_depth` and `sealed_field_names` -- "
+            "exactly what seal() emitted before this round -- is REFUSED, "
+            "so the falsifier fires on the real defect and not a "
+            "constructed one", "ASYMMETRIC")
+    _leaky = dict(_sealed); _leaky["economic"] = {"D_E0": 1.0}
+    refuses(lambda: assert_seal_layout_symmetric(_leaky, _unsealed),
+            "R10 KNOWN-BAD, THE OTHER DIRECTION: `economic` PRESENT while "
+            "sealed is refused -- the one key that is asymmetric by design "
+            "is checked in the direction that matters", "ASYMMETRIC")
+    _refused_day = {"day": "D", "arm": "A", "status": "DEGENERATE",
+                    "admissibility": {"admissible": False}, "economic": None,
+                    "why_no_economic": "a refused arm-day carries none"}
+    _u2 = seal(_refused_day, 6, 6)
+    ok("economic" in _u2 and _u2["economic"] is None
+       and read_seal_state(_u2)["readable"] is True,
+       "AND THE UNSEALED STATE IS SYMMETRIC WITH ITSELF: a REFUSED arm-day "
+       "keeps `economic` present-and-None with its stated reason. The old "
+       "emitter popped it, so `economic` was present for an OK day and "
+       "absent for a refused one -- an asymmetry inside one state")
+
+    # ---- R-572(B)(1): the draws seam ------------------------------------
+    import tempfile as _tf2
+    import importlib.util as _ilu
+    _STUB = '''
+"""A STAND-IN CASCADE. It does NOT supply what the runner should produce --
+the runner's job here is the BINDING (which module, which seed, which book),
+and this stub records what it was handed so the binding can be checked."""
+CALLS = {}
+def load(path):
+    CALLS["load"] = str(path)
+    return {"rows": [{"side": "B"}] * 10, "source_sha256": CALLS["book_sha"],
+            "digest_is_of_the_loaded_buffer": True}
+def flagged_stream(rows, flagged):
+    return list(rows)
+def replay(bk, scores, theta):
+    return {"cancels_issued": 0, "fills": [], "n_fills": 0}
+def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
+              progress=False):
+    CALLS["seed"] = seed
+    CALLS["n_draws"] = n_draws
+    CALLS["by_side"] = dict(by_side)
+    return [{"draw": i} for i in range(n_draws)]
+'''
+    with _tf2.TemporaryDirectory() as _td:
+        _sp = Path(_td) / "stub_cascade.py"
+        _sp.write_text(_STUB)
+        _spec = _ilu.spec_from_file_location("stub_cascade", _sp)
+        _stub = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_stub)
+        _stub_sha = hashlib.sha256(_sp.read_bytes()).hexdigest()
+        _book_sha = "b" * 64
+        _stub.CALLS["book_sha"] = _book_sha
+        _sp_rel = _sp.resolve().relative_to(Path("/"))
+        _pstub = dict(live)
+        _pstub["be_module"] = {"path": str(_sp.resolve()),
+                               "sha256": _stub_sha}
+
+        # the declared path is absolute here, so parents[2] / abs == abs
+        _gen = generate_draws_in_process(
+            _pstub, day="FIXTURE-1", arm="CONDVALUE_X_SKEW",
+            book_path=str(_sp), book_sha=_book_sha,
+            by_side={"B": 3}, n_draws=500, module=_stub)
+        ok(len(_gen["draws"]) == 500
+           and _gen["provenance"]["draw_source"] == "GENERATED_IN_PROCESS"
+           and _gen["provenance"]["generated_in_process"] is True
+           and _stub.CALLS["seed"] == seed_for(_book_sha,
+                                               "CONDVALUE_X_SKEW"),
+           f"R-572(B)(1) POSITIVE CONTROL, AND IT ADMITS: the runner "
+           f"IMPORTS the cascade, verifies the digest OF THE FILE THE "
+           f"IMPORT LOADED, and calls its draw_null ITSELF with the seed it "
+           f"recomputed ({_stub.CALLS['seed']}) -- the draws are GENERATED "
+           f"IN PROCESS, which is what binds the verified digest to the "
+           f"numbers")
+        _pbad = dict(_pstub)
+        _pbad["be_module"] = {"path": str(_sp.resolve()), "sha256": "0" * 64}
+        refuses(lambda: generate_draws_in_process(
+            _pbad, day="FIXTURE-1", arm="CONDVALUE_X_SKEW",
+            book_path=str(_sp), book_sha=_book_sha, by_side={"B": 3},
+            n_draws=500, module=_stub),
+            "KNOWN-BAD, A CASCADE THAT IS NOT THE CITED ONE: the digest of "
+            "the loaded file is compared and a mismatch REFUSES -- and it "
+            "is the LOADED file, not a second read of a declared path "
+            "(BE's own B-1 lesson on the consuming side)",
+            "digest differs")
+        _pelse = dict(_pstub)
+        _pelse["be_module"] = {"path": "live/pm_research/de_data_root.py",
+                               "sha256": _stub_sha}
+        refuses(lambda: generate_draws_in_process(
+            _pelse, day="FIXTURE-1", arm="CONDVALUE_X_SKEW",
+            book_path=str(_sp), book_sha=_book_sha, by_side={"B": 3},
+            n_draws=500, module=_stub),
+            "KNOWN-BAD, THE RIGHT NAME AT THE WRONG PATH: a module whose "
+            "__file__ is not the declared path REFUSES before any digest "
+            "argument can be made -- a same-named module earlier on "
+            "sys.path is not the cited one", "but the declaration cites")
+        _stub.CALLS["book_sha"] = "c" * 64
+        refuses(lambda: generate_draws_in_process(
+            _pstub, day="FIXTURE-1", arm="CONDVALUE_X_SKEW",
+            book_path=str(_sp), book_sha=_book_sha, by_side={"B": 3},
+            n_draws=500, module=_stub),
+            "KNOWN-BAD, A BOOK THAT IS NOT THE DECLARED ONE: the cascade's "
+            "OWN loaded-buffer digest is compared against the day book the "
+            "SEED was derived from, so draws seeded by one book and drawn "
+            "from another REFUSE", "own digest is")
+        _stub.CALLS["book_sha"] = _book_sha
+
+        # ---- the fixture/real-day lock, both directions -----------------
+        refuses(lambda: resolve_draws(
+            live, day="2026-09-03", arm="CONDVALUE_X_SKEW", fixture=True,
+            supplied={"draws": [1] * 500, "provenance": {}}),
+            "THE DOOR IS SHUT BY THE DAY, NOT THE CALLER'S WORD: fixture "
+            "draws claimed for 09-03 -- a RULED day -- REFUSE. This is the "
+            "second door of DE 76's kind and it gets a structural lock",
+            "IS in the ruled day set")
+        refuses(lambda: resolve_draws(
+            live, day="2026-09-03", arm="CONDVALUE_X_SKEW", fixture=False,
+            supplied={"draws": [1] * 500, "provenance": {}}),
+            "KNOWN-BAD, SUPPLIED DRAWS ON A RULED DAY: REFUSED. R-572(B)(1) "
+            "rules the runner generates them in process; a supplied set is "
+            "one this process cannot attest to", "were SUPPLIED on a ruled")
+        refuses(lambda: resolve_draws(
+            live, day="FIXTURE-9", arm="CONDVALUE_X_SKEW", fixture=False),
+            "KNOWN-BAD, THE OTHER DIRECTION: a REAL-day run claimed for a "
+            "day outside the ruled set REFUSES -- the lock is symmetric",
+            "NOT in the ruled day set")
+        refuses(lambda: resolve_draws(
+            live, day="FIXTURE-9", arm="CONDVALUE_X_SKEW", fixture=True),
+            "KNOWN-BAD, FIXTURE MODE WITH NOTHING SUPPLIED: refuses rather "
+            "than reaching for a real book", "no supplied draws")
+        _fx = resolve_draws(live, day="FIXTURE-9", arm="CONDVALUE_X_SKEW",
+                            fixture=True,
+                            supplied={"draws": [1.0] * 500,
+                                      "provenance": {"seed": 1}})
+        ok(_fx["provenance"]["draw_source"] == "SUPPLIED_FIXTURE_ONLY"
+           and _fx["provenance"]["generated_in_process"] is False,
+           "AND THE FIXTURE PATH ADMITS on a day outside the ruled set, "
+           "LABELLED `SUPPLIED_FIXTURE_ONLY` -- the label is what stops a "
+           "supplied set being read later as a generated one")
+        _ppid = {"module_sha256": _stub_sha, "seed": seed_for(_book_sha, "A"),
+                 "book_digest": _book_sha, "arm": "A",
+                 "draw_source": "GENERATED_IN_PROCESS",
+                 "generated_in_process": True, "pid": -1}
+        refuses(lambda: verify_draw_provenance(
+            _ppid, arm="A", book_digest=_book_sha,
+            verified_module_sha=_stub_sha),
+            "KNOWN-BAD, A GENERATED CLAIM FROM ANOTHER PROCESS: provenance "
+            "asserting GENERATED_IN_PROCESS with a foreign pid REFUSES -- "
+            "a proof produced elsewhere is a proof about elsewhere (DE 76's "
+            "rule, in the second place it applies)",
+            "does not bind")
+
+    # ---- R-387: carrying_commit, and the property that matters ---------
+    _cc_ref = carrying_commit_block(
+        Path(__file__).resolve().parents[0] / "be_cancel_axis_null.py")
+    ok(_cc_ref["carrying_commit"] and len(_cc_ref["carrying_commit"]) == 40
+       and _cc_ref["producing_code_is_the_committed_bytes"] is True,
+       f"R-387 POSITIVE CONTROL, AND IT ADMITS: for a file that IS the "
+       f"bytes HEAD holds, `producing_code_is_the_committed_bytes` is True "
+       f"at {_cc_ref['carrying_commit'][:12]} -- and the check is the FILE's "
+       f"blob, not a whole-tree dirty flag (tree_dirty here is "
+       f"{_cc_ref['tree_dirty']}, and it is not the check)")
+    _tmp_in_repo = (Path(__file__).resolve().parents[0]
+                    / "_de77_carrying_commit_knownbad.tmp.py")
+    try:
+        _tmp_in_repo.write_text("# a file HEAD does not hold\n")
+        _cc_bad = carrying_commit_block(_tmp_in_repo)
+        ok(_cc_bad["producing_code_is_the_committed_bytes"] is False,
+           "R-387 KNOWN-BAD: a producer whose bytes HEAD does NOT hold "
+           "reports False -- so a receipt cannot name a commit that does "
+           "not contain the code that ran")
+    finally:
+        _tmp_in_repo.unlink(missing_ok=True)
 
     ok(n[0] + 1 + len(skipped) == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} run + "
