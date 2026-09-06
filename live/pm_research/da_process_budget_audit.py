@@ -596,6 +596,38 @@ FIXTURE_KW = ("fixture", "offline", "synthetic", "fake", "dry_run")
 REAL_ENTRY_HINT = re.compile(r"--day|--run|--build|--sealed")
 
 
+def _innermost_fn_at(tree: ast.AST, line: int) -> str:
+    """The function a line actually sits in, nested defs included."""
+    best, name = None, "<module>"
+    for n in ast.walk(tree):
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) \
+                and n.lineno <= line <= (n.end_lineno or n.lineno):
+            if best is None or n.lineno > best:
+                best, name = n.lineno, n.name
+    return name
+
+
+def _passed_as_callback(tree: ast.AST, src: str, fname: str) -> list:
+    """Every call that receives this function BY NAME as a keyword.
+
+    A battery called inside a nested `_battery_first()` handed to the real
+    path as `before_work=_battery_first` is still a battery on the real
+    path -- and saying WHERE it is handed over is the difference between
+    'the shape is there' and 'the shape is there and it fires last'."""
+    out = []
+    for n in ast.walk(tree):
+        if not isinstance(n, ast.Call):
+            continue
+        callee = (n.func.id if isinstance(n.func, ast.Name)
+                  else n.func.attr if isinstance(n.func, ast.Attribute)
+                  else "")
+        for k in n.keywords:
+            if k.arg and isinstance(k.value, ast.Name) \
+                    and k.value.id == fname:
+                out.append(f"{callee}({k.arg}={fname})")
+    return out
+
+
 def call_graph(tree: ast.AST, src: str) -> dict:
     """caller -> [ {callee, line, kwargs, guards} ]. Guards are the source
     of every `if` test enclosing the call, so a battery reached ONLY through
@@ -658,20 +690,83 @@ def call_graph(tree: ast.AST, src: str) -> dict:
 #: fixture case. Matching the word alone excused the exact call this sweep
 #: exists to find, and the sweep reported the runner CLEAN.
 BATTERY_SWITCH_RE = re.compile(
-    r"^(not\s+)?(a\.|args\.|self\.)?(selftest|fixture|is_fixture)$", re.I)
+    r"^(a\.|args\.|self\.)?(selftest|fixture|is_fixture)$", re.I)
 
 
-def _is_battery_switch(text: str) -> bool:
+def _operands(text: str) -> list:
+    """Split `A or B` at the TOP LEVEL only.
+
+    A regex split found the ` or ` inside `"--selftest" in (argv or [])`
+    and tore one operand into two, after which a correctly guarded CLI read
+    as unguarded. Depth and quotes are tracked."""
+    t = " ".join((text or "").split())
+    out, buf, depth, quote, i = [], [], 0, "", 0
+    while i < len(t):
+        c = t[i]
+        if quote:
+            buf.append(c)
+            if c == quote:
+                quote = ""
+            i += 1
+            continue
+        if c in "\"'":
+            quote = c
+            buf.append(c)
+            i += 1
+            continue
+        if c in "([{":
+            depth += 1
+        elif c in ")]}":
+            depth -= 1
+        if depth == 0:
+            for op in (" or ", " and "):
+                if t[i:i + len(op)] == op:
+                    out.append("".join(buf).strip())
+                    buf = []
+                    i += len(op)
+                    break
+            else:
+                buf.append(c)
+                i += 1
+            continue
+        buf.append(c)
+        i += 1
+    out.append("".join(buf).strip())
+    return [x for x in out if x]
+
+
+def _switch(t: str, negated: bool) -> bool:
+    t = t.strip()
+    if ("--selftest" in t or "--fixture" in t):
+        #: `"--selftest" in argv` is the POSITIVE dispatch; its negation is
+        #: spelled with `not`.
+        return negated == t.startswith("not ")
+    if t.startswith("not "):
+        return negated and bool(BATTERY_SWITCH_RE.match(t[4:].strip()))
+    return (not negated) and bool(BATTERY_SWITCH_RE.match(t))
+
+
+def _is_battery_switch(text: str, negated: bool = False) -> bool:
     """`a.selftest` is a dispatch; so is `a.selftest or a.fixture`. A test
     that merely MENTIONS the word beside something else is not."""
     t = " ".join((text or "").replace("EARLY_EXIT: ", "").split())
-    if "--selftest" in t or "--fixture" in t:
-        return True
-    if BATTERY_SWITCH_RE.match(t):
-        return True
-    parts = re.split(r"\s+or\s+|\s+and\s+", t)
-    return len(parts) > 1 and all(BATTERY_SWITCH_RE.match(x.strip())
-                                  for x in parts)
+    ops = _operands(t)
+    return bool(ops) and all(_switch(o, negated) for o in ops)
+
+
+def _guard_admits(text: str) -> bool:
+    """Does this guard put the call ON the battery branch?
+
+    THE TWO FORMS ARE OPPOSITE. An ENCLOSING `if a.selftest:` puts the code
+    inside it on the battery branch. A dominating EARLY EXIT does the
+    reverse: after `if a.selftest: return`, everything below runs on the
+    REAL path -- so only a NEGATED switch (`if not a.selftest: error()`)
+    leaves the battery branch below it. Reading both the same way excused a
+    fixture-mode call sitting on a real path, which is the whole finding
+    this sweep exists to make."""
+    if (text or "").startswith("EARLY_EXIT: "):
+        return _is_battery_switch(text, negated=True)
+    return _is_battery_switch(text, negated=False)
 
 
 def _is_committed(path: Path) -> bool:
@@ -694,8 +789,11 @@ def fixture_on_real_path(tree: ast.AST, src: str) -> dict:
         for e in edges:
             if not BATTERY_RE.search(e["callee"]):
                 continue
-            guarded = any(_is_battery_switch(gtxt) for gtxt in e["guards"])
+            guarded = any(_guard_admits(gtxt) for gtxt in e["guards"])
+            inner = _innermost_fn_at(tree, e["line"])
             row = {"caller": caller, "callee": e["callee"], "line": e["line"],
+                   "innermost_caller": inner,
+                   "handed_to": _passed_as_callback(tree, src, inner),
                    "kwargs": e["kwargs"], "guards": e["guards"],
                    "guarded_by_the_battery_switch": guarded,
                    "caller_is_itself_a_battery": caller_is_battery}
@@ -721,7 +819,13 @@ def fixture_on_real_path(tree: ast.AST, src: str) -> dict:
             #: flagging it would report every honest plumb as a defect.
             hits = {k: v for k, v in e["kwargs"].items()
                     if k in FIXTURE_KW and v == "True"}
-            if hits and not BATTERY_RE.search(e["callee"]):
+            #: THE GUARD RULE APPLIES HERE TOO. The first half checked
+            #: guards and this half did not, so `assert_source_unchanged(
+            #: ..., fixture=True)` inside a CLI's own `if a.selftest:`
+            #: branch read as a fixture on the real path. A rule that holds
+            #: on one half of a check and not the other is two rules.
+            guarded2 = any(_guard_admits(g) for g in e["guards"])
+            if hits and not guarded2 and not BATTERY_RE.search(e["callee"]):
                 findings.append({
                     "caller": caller, "callee": e["callee"],
                     "line": e["line"], "kwargs": e["kwargs"],
@@ -997,7 +1101,37 @@ RULE22_BINDS = {
 }
 
 
-def build_report(now: datetime.datetime | None = None) -> dict:
+def supersession_block(prior: Path, current: dict) -> dict:
+    """The R-608 PAIR for an in-band re-emission, plus WHAT MOVED.
+
+    A re-run of a census is only worth landing if the thing censused
+    changed; the receipt says which modules moved and which did not, so a
+    reader never has to diff two files to find out."""
+    pri = json.loads(prior.read_text())
+    was = {m["path"]: m.get("sha256") for m in pri.get("modules", [])
+           if m.get("sha256")}
+    now = {m["path"]: m.get("sha256") for m in current.get("modules", [])
+           if m.get("sha256")}
+    moved = sorted(p for p in set(was) & set(now) if was[p] != now[p])
+    return {
+        "path": prior.name,
+        "sha256": hashlib.sha256(prior.read_bytes()).hexdigest(),
+        "chain": [[prior.name,
+                   hashlib.sha256(prior.read_bytes()).hexdigest()]],
+        "v1_untouched": True,
+        "why_re_emitted": ("the tree under audit moved: a census names the "
+                           "bytes it read, so a census of other bytes is a "
+                           "different statement"),
+        "modules_that_moved_since": moved,
+        "modules_added": sorted(set(now) - set(was)),
+        "modules_removed": sorted(set(was) - set(now)),
+        "n_modules_moved": len(moved),
+        "totals_then": pri.get("totals"),
+    }
+
+
+def build_report(now: datetime.datetime | None = None,
+                 supersedes: Path | None = None) -> dict:
     now = now or datetime.datetime.now(datetime.timezone.utc)
     sw = sweep()
     for m in sw["modules"]:
@@ -1054,6 +1188,8 @@ def build_report(now: datetime.datetime | None = None) -> dict:
         "rule22_binds_and_incomplete": [
             {"path": m["path"], "status": m["rule22"]["status"]}
             for m in binding],
+        "supersedes": (supersession_block(Path(supersedes), sw)
+                       if supersedes else None),
         "decides_nothing": (
             "the owners fix: BE 59 for the builders, DE 90 for the runner. "
             "This sweep names sites and counts predicates"),
@@ -1101,6 +1237,26 @@ def main(argv=None):
 PLANTED_BATTERY_SRC = CLEAN_SRC.replace(
     '''    peak = _rss_gb()''', '''    selftest()
     peak = _rss_gb()''')
+
+GUARDED_FIXTURE_KW_SRC = '''
+def emit(where, fixture=False):
+    return {"where": where, "fixture": fixture}
+
+
+def build(day):
+    return emit("real", fixture=False)
+
+
+def main(argv=None):
+    if "--selftest" in (argv or []):
+        return emit("the fixture receipt", fixture=True)
+    return build("20260903")
+'''
+
+UNGUARDED_FIXTURE_KW_SRC = GUARDED_FIXTURE_KW_SRC.replace(
+    '''    return build("20260903")''',
+    '''    emit("on the real path", fixture=True)
+    return build("20260903")''')
 
 PLANTED_MISMATCH_SRC = '''
 import resource
@@ -1235,6 +1391,22 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{[f['caller'] + '->' + f['callee'] for f in planted['fixture_on_real_path']['findings']]}; "
        f"clean -> {clean['verdict']}")
 
+    guarded_kw = _audit_text(tmp, "guarded_kw.py", GUARDED_FIXTURE_KW_SRC)
+    unguarded_kw = _audit_text(tmp, "unguarded_kw.py",
+                               UNGUARDED_FIXTURE_KW_SRC)
+    ck("AND THE GUARD RULE APPLIES TO THE FIXTURE-ARGUMENT HALF TOO: "
+       "`emit(fixture=True)` inside a CLI's own `if a.selftest:` branch is "
+       "NOT a finding; the same call on an unguarded path IS. ***The first "
+       "half checked guards and this half did not, so this sweep flagged "
+       "its own seat's book verifier for a call sitting inside the battery "
+       "branch -- a rule that holds on one half of a check and not the "
+       "other is two rules***",
+       guarded_kw["census"]["n_battery_calls_on_the_real_path"] == 0
+       and unguarded_kw["census"]["n_battery_calls_on_the_real_path"] == 1,
+       f"guarded -> {guarded_kw['verdict']}; unguarded -> "
+       f"{unguarded_kw['verdict']} at "
+       f"{[f['caller'] for f in unguarded_kw['fixture_on_real_path']['findings']]}")
+
     # -- D. PLANTED SCOPE MISMATCH, and its DELTA repair -----------------
     mism = _audit_text(tmp, "planted_mismatch.py", PLANTED_MISMATCH_SRC)
     delta = _audit_text(tmp, "planted_delta.py", PLANTED_DELTA_SRC)
@@ -1289,13 +1461,22 @@ def selftest() -> tuple:                                      # noqa: C901
        "actual early exit above the battery call -- is NOT. ***Matching the "
        "word alone excused the exact call this sweep exists to find, and "
        "the sweep reported the runner CLEAN***",
-       _is_battery_switch("a.selftest")
-       and _is_battery_switch("a.selftest or a.fixture")
-       and _is_battery_switch('"--selftest" in argv')
-       and not _is_battery_switch(
+       _guard_admits("a.selftest")
+       and _guard_admits("a.selftest or a.fixture")
+       and _guard_admits('"--selftest" in argv')
+       and not _guard_admits(
            'not fixture and not payload["source_identity"]["x"]')
-       and not _is_battery_switch("a.output is None"),
-       "four positives, two negatives")
+       and not _guard_admits("a.output is None")
+       #: AND THE TWO FORMS ARE OPPOSITE: an ENCLOSING positive switch puts
+       #: the code on the battery branch; a dominating EARLY EXIT on the
+       #: same positive switch leaves the REAL path below it, and only its
+       #: NEGATION guards what follows.
+       and _guard_admits("EARLY_EXIT: not a.selftest")
+       and not _guard_admits("EARLY_EXIT: a.selftest")
+       and not _guard_admits('EARLY_EXIT: "--selftest" in argv')
+       and _guard_admits('EARLY_EXIT: not "--selftest" in argv'),
+       "three positives and two negatives on enclosing guards; on early "
+       "exits the polarity is REVERSED and driven both ways")
 
     # -- H. THE REAL SWEEP, and its census --------------------------------
     rep = build_report()
@@ -1463,6 +1644,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--sweep", action="store_true")
+    ap.add_argument("--supersedes", type=Path, default=None,
+                    help="a prior census this re-emission supersedes; the "
+                         "R-608 PAIR and what moved are computed")
     ap.add_argument("--output", type=Path, default=None)
     a = ap.parse_args()
     if a.selftest:
@@ -1477,7 +1661,7 @@ def main() -> int:
                                            default=str) + "\n")
         return 1 if n_fail else 0
     if a.sweep:
-        rep = build_report()
+        rep = build_report(supersedes=a.supersedes)
         if a.output:
             a.output.write_text(json.dumps(rep, indent=2, sort_keys=True,
                                            default=str) + "\n")
