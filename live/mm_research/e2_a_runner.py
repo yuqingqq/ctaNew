@@ -1020,7 +1020,30 @@ def diagnose_tick(sym: str, out_path: Path | None = None) -> dict:
     root = E20.require_canonical_root(
         "P-2026-002 E1_RESULTS record-defect diagnosis")
     import e1_markout_scan as E1                              # noqa: PLC0415
-    files = E1.day_files(sym)
+    #: `e1_markout_scan` has NO data-root resolver -- it computes
+    #: `SRC = REPO / "data/..."` from its own file location, so from a
+    #: worktree it returns an EMPTY day list and `tick_size` raises on an
+    #: empty argmax. That is the same gap the E2.0 result review filed
+    #: against `e2_0_true_mid.py:46`, still open in the module that PRODUCED
+    #: E1's published numbers; the reviewer hit it too (REVIEW_DA60 section
+    #: 1, "I could not execute tick_size() in my worktree"). It is not edited
+    #: here -- E1's producing code is not this step's surface -- but it is
+    #: pointed at the resolved ledger for the duration, and an empty file
+    #: list REFUSES rather than being read as a symbol with no prints.
+    src_before = E1.SRC
+    E1.SRC = E20.VISION
+    try:
+        files = E1.day_files(sym)
+        if not files:
+            raise E2ARefused(
+                f"REFUSED: no Vision aggTrades for {sym} under "
+                f"{E20.VISION}. An empty price population is not a tick.")
+        return _diagnose_tick_inner(sym, files, E1, root, out_path)
+    finally:
+        E1.SRC = src_before
+
+
+def _diagnose_tick_inner(sym, files, E1, root, out_path):
     uniq: set[float] = set()
     for f in files:
         uniq.update(np.unique(
