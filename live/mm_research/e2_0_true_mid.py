@@ -564,6 +564,26 @@ def summarise(days: list[dict], decl: dict) -> dict:
                 c = cell(mid, side, w, ts_)
                 if c:
                     out["cells"][f"{mid}|{side}|{w}"] = c
+    # SIZE BUCKETS. The amendment asks for "notional-weighted AND
+    # size-bucketed rs on true mids"; v1 computed them and did not emit them.
+    # Added after the first v2 run, which is safe because they are declared
+    # `also_reported`, are not gate-bearing, and the re-run's gate cells are
+    # required to come back bit-identical (they did).
+    bk = pd.DataFrame([b for d in adm for b in d.get("buckets", [])])
+    if not bk.empty:
+        bs = bk[bk["tau_s"] == ts_]
+        out["size_buckets_at_tau_star"] = [
+            {"bucket": int(b),
+             "n_events": int(g["n_events"].sum()),
+             "notional_usd": float(g["notional_usd"].sum()),
+             "mo_eq_bps_day_clustered": float(np.nanmean(g["mo_eq_bps"])),
+             "mo_notional_bps_day_clustered":
+                 float(np.nanmean(g["mo_notional_bps"]))}
+            for b, g in bs.groupby("bucket")]
+        out["size_buckets_note"] = (
+            "notional quintiles per symbol-day, day-clustered. Bucket 0 is "
+            "the smallest fifth by sweep notional, bucket 4 the largest.")
+
     # gate-2 interval on the primary cell only (rule 8: G>=5 or no interval)
     prim = df[(df["mid"] == "true") & (df["side"] == "all")
               & (df["weighting"] == "notional") & (df["tau_s"] == ts_)]
