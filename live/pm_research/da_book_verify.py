@@ -47,6 +47,7 @@ import ast
 import datetime
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -639,11 +640,19 @@ def receipt_population_predicates(receipt: dict) -> dict:
 #: economics (D(E0), the null, the ratio) live in the DAY RECEIPT, which is
 #: sealed. A reader entitled to know the book is safe to open before the
 #: read bar is entitled to see the names that are in it.
-BOOK_ECONOMIC_MARKERS = ("bps", "eff_rt", "eff_", "cost", "ci_", "capture",
-                         "pnl", "spread", "fee", "rebate", "markout",
-                         "cents", "profit", "edge", "revenue", "d_e0",
-                         "null_", "p_location", "sd_over", "phi_",
-                         "fill_rate", "verdict")
+#: TWO CLASSES, because the first run of this census flagged a real book on
+#: `markout_cents_per_share` and `preventable_value_cents` -- and those are
+#: the LABEL side, the valued tranches the arms are scored against. They
+#: BELONG in a reference book. What must never be there is the DAY's own
+#: sealed statistics. Reporting both under one word would have called the
+#: book's own inputs a leak.
+SEALED_DAY_STATISTIC_MARKERS = ("d_e0", "null_", "p_location", "sd_over",
+                                "z_score", "eff_rt", "ci_lo", "ci_hi",
+                                "p_value", "verdict", "admissib")
+VALUE_INPUT_MARKERS = ("markout", "cents", "value", "spread", "fee",
+                       "rebate", "pnl", "bps", "profit", "revenue")
+#: identity, not a name: a slug or a bare number keying a mapping
+_IDENTITY_KEY = re.compile(r"^(btc|eth|sol)[-_].*\d+$|^\d+$", re.I)
 CENSUS_VISIT_BUDGET = 400_000
 
 
@@ -678,25 +687,44 @@ def economic_census(book, budget: int = CENSUS_VISIT_BUDGET) -> dict:
             kinds[type(o).__name__] = kinds.get(type(o).__name__, 0) + 1
 
     walk(book)
-    hits = sorted(n for n in names
-                  if any(m in n.lower() for m in BOOK_ECONOMIC_MARKERS))
+    ident = sorted(n for n in names if _IDENTITY_KEY.match(n))
+    fields = sorted(n for n in names if not _IDENTITY_KEY.match(n))
+    sealed_hits = sorted(n for n in fields
+                         if any(m in n.lower()
+                                for m in SEALED_DAY_STATISTIC_MARKERS))
+    value_hits = sorted(n for n in fields
+                        if any(m in n.lower() for m in VALUE_INPUT_MARKERS))
     return {
-        "n_distinct_string_field_names": len(names),
-        "field_names": sorted(names)[:200],
+        "n_distinct_string_keys": len(names),
+        "n_identity_keys": len(ident),
+        "n_field_names": len(fields),
+        "field_names": fields,
+        "identity_key_example": ident[:3],
         "leaf_type_census": dict(sorted(kinds.items(),
                                         key=lambda kv: -kv[1])[:12]),
-        "economic_markers_tested": len(BOOK_ECONOMIC_MARKERS),
-        "n_field_names_matching_an_economic_marker": len(hits),
-        "matching_field_names": hits,
-        "NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK": not hits,
+        "sealed_day_statistic_markers_tested":
+            len(SEALED_DAY_STATISTIC_MARKERS),
+        "n_field_names_naming_a_SEALED_DAY_STATISTIC": len(sealed_hits),
+        "field_names_naming_a_SEALED_DAY_STATISTIC": sealed_hits,
+        "NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK": not sealed_hits,
+        "n_field_names_naming_a_VALUE_INPUT": len(value_hits),
+        "field_names_naming_a_VALUE_INPUT": value_hits,
+        "the_value_inputs_are_EXPECTED": (
+            "a reference book is built from VALUED tranches -- the label "
+            "side the arms are scored against -- so names like "
+            "`markout_cents_per_share` BELONG here. They are REPORTED, not "
+            "flagged. What must never be here is the DAY's own sealed "
+            "statistics: D(E0), the null, the ratio, the verdict"),
         "nodes_visited": visited[0],
         "budget": budget,
         "truncated": truncated[0],
         "what_this_establishes": (
-            "the set of NAMED fields the book carries and that none of them "
-            "names an economic quantity -- the book is arm SCORES and the "
-            "arms' thetas; D(E0), the null and the ratio live in the day "
-            "receipt, which is sealed"),
+            "the set of NAMED fields the book carries, which of them name a "
+            "VALUE INPUT (expected) and that none names a SEALED DAY "
+            "STATISTIC. ***The claim `nothing economic is in a book` is "
+            "FALSE as literally stated: the book carries the valued "
+            "tranches it scores against. What it does not carry is the "
+            "day's own sealed result***"),
         "what_it_cannot_establish": (
             "that a float under an innocent name is not secretly a price. "
             "Names and shapes are checkable; intent is not"),
@@ -710,15 +738,33 @@ def book_population_predicates(book: dict, receipt: dict,
     by_arm = asm.get("by_arm") or {}
     ref = book.get("fr") or {}
     r_asm = receipt.get("asm") or {}
-    keys_by_head, thetas = {}, {}
+    keys_by_head, thetas, second = {}, {}, {}
     for k, v in by_arm.items():
         coin, head = (k if isinstance(k, tuple) else tuple(k))
         scored = v[0] if isinstance(v, (list, tuple)) else v
         keys_by_head[head] = set(scored)
         if isinstance(v, (list, tuple)) and len(v) > 1:
-            thetas[head] = v[1]
+            #: THE SECOND ELEMENT IS NOT A THETA. The first real run of this
+            #: tier read it as one and flagged BOTH heads on a real book:
+            #: it is a COUNT MAP ({SCORED, NO_ROWS_KEPT, PARTIAL_ROWS}).
+            #: A number is a theta; a mapping is not, and guessing which
+            #: turned the verifier's own misread into a finding against the
+            #: book.
+            second[head] = v[1]
+            if isinstance(v[1], (int, float)) and not isinstance(v[1], bool):
+                thetas[head] = float(v[1])
     heads = sorted(keys_by_head)
     out = {"heads_in_the_book": heads, "n_heads": len(heads),
+           "book_layout": {
+               "top_level_keys": sorted(k for k in book
+                                        if isinstance(k, str)),
+               "asm_keys": sorted(k for k in asm if isinstance(k, str)),
+               "asm_keys_naming_a_theta": sorted(
+                   k for k in asm if isinstance(k, str)
+                   and "theta" in k.lower()),
+               "why": ("recorded so the next reader does not have to open "
+                       "a 300 MB pickle to learn where a field lives"),
+           },
            "by_arm_keys": sorted([list(k) if not isinstance(k, str) else k
                                   for k in by_arm], key=str)}
     if len(heads) == 2:
@@ -756,8 +802,23 @@ def book_population_predicates(book: dict, receipt: dict,
                                  and n_scored / n_gen == d.get("coverage")),
             "theta_in_the_book": thetas.get(head),
             "theta_declared": d.get("theta"),
-            "theta_matches": (head not in thetas
-                              or thetas[head] == d.get("theta")),
+            #: TRUE when the book carries a theta and it agrees; FALSE when
+            #: it carries one and it does not; NONE when the book carries
+            #: none -- which is NOT a mismatch and is NOT a pass either. It
+            #: is reported as not computable and it keeps the tier from
+            #: claiming a verification (rule 11).
+            "theta_matches": (None if head not in thetas
+                              else thetas[head] == d.get("theta")),
+            "the_second_element_of_by_arm": {
+                "type": type(second.get(head)).__name__,
+                "value": (second.get(head)
+                          if not isinstance(second.get(head), dict)
+                          else dict(list(second[head].items())[:6])),
+                "is_a_theta": head in thetas,
+                "why": ("a NUMBER here is the arm's theta; a MAPPING is the "
+                        "stage's count map. The tier says which it found "
+                        "rather than assuming"),
+            },
         }
         if params_thetas and head in params_thetas:
             per_head[head]["theta_in_params"] = params_thetas[head]
@@ -960,21 +1021,29 @@ def verify_full(book_path, receipt_path, *, day: str | None = None,
             flags.append("book.n_shared_keys")
     if bp["n_heads"] != 2:
         flags.append("book.n_heads")
+    not_computable = []
     for head, blk in bp["per_head"].items():
         for k in ("matches", "coverage_matches", "theta_matches"):
-            if blk[k] is not True:
+            if blk[k] is False:
                 flags.append(f"book.{head}.{k}")
+            elif blk[k] is None:
+                #: NEITHER a flag NOR a pass. A predicate that could not be
+                #: computed is a STATUS, and it keeps IS_A_VERIFICATION
+                #: false (rule 11).
+                not_computable.append(f"book.{head}.{k}")
         if blk.get("theta_matches_params") is False:
             flags.append(f"book.{head}.theta_matches_params")
-    incomplete = bool(out.get("provenance_incomplete"))
+    incomplete = bool(out.get("provenance_incomplete")) or bool(not_computable)
     census = economic_census(book)
-    if not census["NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK"]:
-        flags.append("book.an_economic_field_name_is_present")
+    if not census["NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK"]:
+        flags.append("book.a_SEALED_DAY_STATISTIC_is_named_in_the_book")
     out.update({
         "protocol": PROTOCOL + "_FULL",
         "tier": "FULL",
         "economic_census_of_the_book": census,
         "population_from_the_book": bp,
+        "predicates_not_computable": not_computable,
+        "n_predicates_not_computable": len(not_computable),
         "flags": flags, "n_flags": len(flags),
         "status": ("FLAGGED" if flags
                    else "PROVENANCE_INCOMPLETE" if incomplete else "VERIFIED"),
@@ -1385,21 +1454,45 @@ def selftest() -> tuple:                                      # noqa: C901
         print("       " + c["detail"])
     # -- THE ECONOMIC CENSUS OF A BOOK, BOTH DIRECTIONS ------------------
     clean_c = economic_census(book)
-    dirty_c = economic_census({**book, "leak": {"eff_rt_bps": 3.21}})
-    ck("NOTHING ECONOMIC IS NAMED IN A BOOK, AND THAT IS A CENSUS RATHER "
-       "THAN A PROMISE: every STRING field name in the book is collected "
-       "and tested against the economic markers, and a planted "
-       "`eff_rt_bps` is FLAGGED by name. ***The census says what it "
-       "establishes -- the NAMES -- and what it cannot: that a float under "
-       "an innocent name is not secretly a price***",
-       clean_c["NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK"] is True
-       and clean_c["n_field_names_matching_an_economic_marker"] == 0
-       and dirty_c["NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK"] is False
-       and "eff_rt_bps" in dirty_c["matching_field_names"]
+    sealed_c = economic_census({**book, "leak": {"null_mean": 3.21,
+                                                 "D_E0": 1.0}})
+    value_c = economic_census({**book, "fr2": {
+        "markout_cents_per_share": 1.5, "preventable_value_cents": 2.0}})
+    ck("THE CENSUS SEPARATES THE DAY'S SEALED STATISTICS FROM THE BOOK'S "
+       "OWN VALUE INPUTS, AND ONLY THE FIRST IS A FLAG. ***The first real "
+       "run of this tier flagged a REAL book on "
+       "`markout_cents_per_share` and `preventable_value_cents` -- which "
+       "are the LABEL side, the valued tranches the arms are scored "
+       "against, and they BELONG in a reference book. Reporting both under "
+       "one word would have called the book's own inputs a leak***: "
+       "planted `null_mean`/`D_E0` are named as SEALED DAY STATISTICS; "
+       "planted value fields are REPORTED, not flagged",
+       clean_c["NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK"] is True
+       and sealed_c["NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK"] is False
+       and "null_mean" in sealed_c["field_names_naming_a_SEALED_DAY_"
+                                   "STATISTIC"]
+       and value_c["NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK"] is True
+       and "markout_cents_per_share" in value_c[
+           "field_names_naming_a_VALUE_INPUT"]
        and clean_c["what_it_cannot_establish"],
-       f"clean book: {clean_c['n_distinct_string_field_names']} field "
-       f"name(s), 0 economic; planted -> "
-       f"{dirty_c['matching_field_names']}")
+       f"clean: {clean_c['n_field_names']} field names, "
+       f"{clean_c['n_field_names_naming_a_SEALED_DAY_STATISTIC']} sealed; "
+       f"planted sealed -> "
+       f"{sealed_c['field_names_naming_a_SEALED_DAY_STATISTIC']}; planted "
+       f"value inputs -> "
+       f"{value_c['field_names_naming_a_VALUE_INPUT']} (reported, not "
+       f"flagged)")
+    ident_c = economic_census({"btc-updown-5m-1788393600": {"x": 1},
+                               "12345": {"y": 2}, "real_field": 3})
+    ck("AND AN IDENTITY KEY IS NOT A FIELD NAME: a slug or a bare number "
+       "keying a mapping is counted separately, so a 297,379-key book does "
+       "not drown its own field list. ***The first run listed 200 names "
+       "and 160 of them were slugs***",
+       ident_c["n_identity_keys"] == 2 and ident_c["n_field_names"] == 2
+       and "real_field" in ident_c["field_names"],
+       f"{ident_c['n_identity_keys']} identity key(s), "
+       f"{ident_c['n_field_names']} field name(s): "
+       f"{ident_c['field_names']}")
 
     # -- RULE 22 / R-605: THE LAUNCH CAPTURE, BOTH DIRECTIONS ------------
     idy = source_identity_at_launch()
