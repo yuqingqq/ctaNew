@@ -1,0 +1,122 @@
+{
+ "all_hold": true,
+ "as_of": "2026-09-06T18:35:55Z",
+ "book": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl",
+ "bytes": 260449687,
+ "checks": [
+  {
+   "claim": "the top level is a dict",
+   "holds": true
+  },
+  {
+   "claim": "the top-level keys are ['fr', 'asm'], found ['asm', 'fr']",
+   "holds": true
+  },
+  {
+   "claim": "asm carries by_arm and assembly",
+   "holds": true
+  },
+  {
+   "claim": "asm.by_arm is keyed by (coin, head) TUPLES",
+   "holds": true
+  },
+  {
+   "claim": "each by_arm value is indexable and its [0] carries the scored keys",
+   "holds": true
+  },
+  {
+   "claim": "fr carries the reference",
+   "holds": true
+  },
+  {
+   "claim": "asm.assembly carries the chunk and drop accounting",
+   "holds": true
+  }
+ ],
+ "declaration": "be_daybook_structure_v2.json",
+ "digest_pin": {
+  "digest_checked_before_open": true,
+  "receipt": "be_daybook_receipt_20260905_btc.json",
+  "sha256": "499f859673676827923df8fddad6f267fcfff07ee06cd64f57dbff9bc215f1f6",
+  "what_this_does_not_make_safe": "pickle.load executes the payload's opcodes; pinning the digest says WHICH bytes are executed, not that executing them is harmless. This runs under the heavy lock and the declared cap, on another seat's serialisation."
+ },
+ "in_process_cgroup_reads": {
+  "available": false,
+  "why": "this run predates the code change that records them (landed at eb9e957 after it). They are NOT reconstructed here: nothing in that run measured its own leaf, and a value invented afterwards would be worse than an absence."
+ },
+ "journal": {
+  "as_of": "2026-09-06T18:30:38Z",
+  "query": "journalctl --user _SYSTEMD_INVOCATION_ID=51542d2f084645d3ad5af2d37cc1358c + USER_INVOCATION_ID=51542d2f084645d3ad5af2d37cc1358c",
+  "retention_oldest_entry": "2026-09-06T14:22:48+00:00",
+  "the_journal_is_not_the_record": "copied at the moment of reading (R-641); the record is this artifact"
+ },
+ "launch_record": {
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_heavy_run_record_be74struct05.jsonl",
+  "rows": [
+   "launch",
+   "exit",
+   "outcome",
+   "stopped",
+   "journal_copy"
+  ],
+  "sha256": "5c8425c99fb5858457fe6d6278ead2d77e2efa97efafe13e40e4038593959aba"
+ },
+ "memory_measured_not_explained": {
+  "positive_control": {
+   "leaf_is_the_units": true,
+   "memory_max": "8589934592",
+   "memory_peak": "1083482112",
+   "payload": "1 GiB anon, touched, held 5 s",
+   "payload_own_leaf": "/user.slice/user-1001.slice/user@1001.service/research.slice/be74probe.service",
+   "systemd_MemoryPeak_read_while_RUNNING": "1081647104",
+   "unit": "be74probe",
+   "verdict": "under the exact launcher form the payload IS charged to the unit's own leaf and MemoryMax sits on that leaf -- rule 20's property HOLDS; the cap binds the payload."
+  },
+  "the_09_04_relaunch": {
+   "THE_TWO_DISAGREE": true,
+   "cgroup_memory_current": "2443567104",
+   "cgroup_memory_max": "8589934592",
+   "cgroup_memory_peak_read_in_process_at_the_end": "2578067456",
+   "consequence_for_a_reader": "do not read a run's memory from `systemctl show -p MemoryPeak` after the payload exits. The run's own peak is `peak_rss_gb` in this document, and the cgroup's is `payload_cgroup.memory_peak`, both read in-process.",
+   "in_process_peak_rss_gb": 2.405,
+   "invocation_id": "5b9bcbbd6a2b4ec6a074ab5cb3374393",
+   "not_explained_here": "why systemd's latched value lags by different amounts. This document reports the readings and the leaf names; it does not offer a mechanism.",
+   "payload_own_leaf": "/user.slice/user-1001.slice/user@1001.service/research.slice/be74struct04b.service",
+   "spread_across_four_runs": {
+    "be74probe (read while running)": "systemd 1081647104 vs cgroup 1083482112 -- agree",
+    "be74struct04 (read after exit)": "systemd 21946368 vs in-process RSS 2.405 GB",
+    "be74struct04b (read after exit)": "systemd 847671296 vs cgroup 2578067456",
+    "be74struct05 (read after exit)": "systemd 2011267072 vs in-process RSS 1.879 GB"
+   },
+   "systemd_MemoryPeak_read_while_loaded_after_exit": "847671296",
+   "the_finding": "the leaf names are IDENTICAL and the payload's memory IS charged to it (memory.peak 2,578,067,456 = 2.401 GiB, matching the in-process 2.405 GB), but systemd's MemoryPeak PROPERTY for the same unit reads 847,671,296. So the discrepancy is not in the cgroup and not in when the query happens -- it is that `systemctl show -p MemoryPeak` does not return the cgroup's memory.peak for an exited unit. Read WHILE RUNNING (be74probe) the two agreed exactly.",
+   "unit": "be74struct04b"
+  },
+  "what_was_measured_instead_of_explained": "BE 74's first records carried a `MemoryPeak_caveat` saying the unit's MemoryPeak reads low because it is queried after the payload exits and the accounting has dropped. THAT EXPLANATION IS WRONG and was contradicted by this seat's own 09-05 record (MemoryPeak 2,011,267,072 against 1.879 GB in-process, also queried after exit). memory.peak is a high-watermark and does not drop when the payload exits."
+ },
+ "n_checks": 7,
+ "peak_rss_gb": 1.879,
+ "protocol": "BE_DAYBOOK_STRUCTURE_VERIFICATION_V1",
+ "sha256": "499f859673676827923df8fddad6f267fcfff07ee06cd64f57dbff9bc215f1f6",
+ "supersedes": {
+  "artifact": "be_daybook_structure_verification_20260905_btc.json",
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_structure_verification_20260905_btc.json",
+  "rule": "13 / R-608 -- vN+1 by the {path, sha256} pair; v1 is NOT edited",
+  "sha256": "c39eddcdc1a1277124751179f1d29b60b1b007c7e70c5e4313d95e178a9a3a4e",
+  "what_changed": "the MemoryPeak_caveat is REMOVED -- its explanation was wrong -- and replaced by measurements: a positive control under the launcher form and, for 09-04, a relaunch recording the payload's own cgroup reads. No structure claim moves; both days remain 7 of 7."
+ },
+ "this_is_the_step_that_makes_the_declaration_a_measurement": "before this ran, the declaration was derived from the producing code and said so (R-654)",
+ "unit": "be74struct05.service",
+ "unit_outcome_read_while_loaded": {
+  "ActiveState": "active",
+  "ExecMainStatus": "0",
+  "InvocationID": "51542d2f084645d3ad5af2d37cc1358c",
+  "LoadState": "loaded",
+  "MemoryPeak": "2011267072",
+  "Result": "success",
+  "SubState": "exited"
+ },
+ "verdict": "THE DECLARATION HOLDS AGAINST THIS BOOK",
+ "wall_s": 2.9,
+ "why_while_loaded": "R-653: LoadState not-found is VOID, never a verdict. Captured by be_heavy_run.sh --capture BEFORE the stop."
+}
