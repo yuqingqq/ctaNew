@@ -1,0 +1,79 @@
+{
+  "admissible_days_used": [
+    "20260822"
+  ],
+  "carrying_commit": "af37cb78c9605a30b7c8096eafe7d071c517f950",
+  "data_root_check": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "adopted_from": "live/pm_research/de_data_root.py, imported not copied",
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "mm_hf_tape_present": true,
+    "purpose": "P-2026-002 E2-A mechanism check",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "days": [
+    {
+      "day": "20260822",
+      "fill_rate_ProbQueue_f3": 0.9782608695652174,
+      "fill_rate_RiskAverse": 0.9347826086956522,
+      "gate_row_tp_s": 600,
+      "n_attempted": 144,
+      "n_gate_row_episodes": 46,
+      "n_opposite_trades_p50": 514.5,
+      "n_ordering_violations": 0,
+      "partial_share_RiskAverse": 0.0,
+      "qty_step": 1.0,
+      "queue_ahead_at_placement": {
+        "max": 2717.0,
+        "n_zero": 0,
+        "p50": 683.5,
+        "p90": 2021.5
+      },
+      "status_counts": {
+        "NO_BOOK_AT_TP": 0,
+        "NO_QUOTE_BEFORE_T0": 6,
+        "QUEUE_AHEAD_UNDEFINED": 0,
+        "RESOLVED": 138
+      },
+      "stream_meta": {
+        "book": {
+          "n_nonpositive_or_crossed_quotes": 0,
+          "n_quotes": 1720678,
+          "n_unparsed_lines": 0
+        },
+        "depth20": {
+          "n_ragged_overlong": 0,
+          "n_ragged_rows": 0,
+          "n_ragged_short_nan_padded": 0,
+          "n_raw_rows": 499175,
+          "n_snapshots": 499175
+        },
+        "trades": {
+          "n_nonpositive_prints_excluded": 402,
+          "n_prints_kept": 410148,
+          "n_unparsed_lines": 0
+        }
+      },
+      "tick": 0.001
+    }
+  ],
+  "declaration": {
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v5.json",
+    "sha256": "90a9a99f6cb2a2cc4c8f45f211177695355859e157643e854a34ef77ccc7b593"
+  },
+  "max_rss_kib": 1193168,
+  "min_complete_days_declared": 14,
+  "protocol": "P002_E2_A_OVERLAY_RUNNER_V1_MECHANISM_CHECK",
+  "status": "MECHANISM_ONLY_ALL_COSTS_REDACTED",
+  "symbol": "ICPUSDT",
+  "wall_s": 15.61,
+  "why_no_number": "this is NOT a gate read and emits no cost, no eff_RT and no verdict. It answers one question -- does the real-book path execute on a real tape -- so that a first real run is not also a first contact. The declared minimum-day floor is untouched because no gate is read."
+}
