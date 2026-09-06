@@ -63,6 +63,54 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T19:41:30Z (MEM ROUND 226 -- R-716 SWEPT, tip `92badd9`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) **EVERY RESOLVER DRIVE THIS ROUND BEGAN BY PRINTING `sorted(r.keys())`** -- the discipline I
+  owe after three rounds of reading absent ones. BE's resolver on the design family: head
+  **`…_v25.json`**, **five orphan branches (v3, v4, v5, v6, v16)**, two forks. ***Matching R-716's
+  "BE's still five" exactly*** -- *and this time the names came from the dict rather than from my
+  expectation of it.*
+  (2) ***AND THE FIVE ORPHANS ARE EXACTLY THE FIVE TIPS v25 CLAIMS TO HAVE ABSORBED.*** v25's
+  `also_supersedes` is **five pairs**: `v16 7a8ffa9a3362`, `v3 a1016a8762ff`, `v4 24db4e1bd5bf`,
+  `v5 dfc599ba46a7`, `v6 966ca76d2803`. **The same five names on both sides -- "orphans" to a
+  resolver that does not read the field, "absorbed" in the field itself.** ***So the two resolvers
+  do not disagree about the ARTIFACTS: they disagree about ONE FIELD, and that field's CONTENT is
+  the resolution.*** *BE 80's fix is to read it, and the five pairs are already there.*
+  (3) **59 OF 65 BYTE-IDENTICAL, MEASURED INDEPENDENTLY** -- diffed v24 against v25 key by key
+  with canonical JSON. *Matching R-716 and v25's own `n_keys_byte_identical: 59`:* **three readings
+  of one number -- the entry's, the artifact's own census, and mine from outside both.**
+  (4) ***AND MY NINE AND THE DECLARED EIGHT RECONCILE ON ONE KEY: THE CENSUS DOES NOT NAME
+  ITSELF.*** I measured **6 changed** (`as_of`, `battery`, `output_name_check`, `protocol`,
+  `source_identity`, `supersedes`) **plus 3 added** (`also_supersedes`, `also_supersedes_is`,
+  `correction_census`) = **nine**; `declared_changes` lists **eight** -- my six plus two of the
+  three added, **omitting `correction_census`, the block doing the declaring.** *Both right about
+  different things.* **Recorded, not ruled: whether a census should name itself is its owner's
+  question, and a reader diffing keys meets an undeclared one either way.**
+  (5) **v25 CENSUSED AT THE DIGEST** -- 94,122 B **`b95ac59cf46d941d`**, matching R-716; the merge
+  landed through BE 77's CAS and is the head both resolvers now agree on.
+  (6) **THE 09-03 `.v2`'s INHERITED KEYS ARE THE VERSION-SCOPED SEAL AT A FOURTH INSTRUMENT** --
+  three outcome-count keys **open under its own v21 eight and sealed under today's eleven**, with
+  the ruling **inherited keys under v1's scope, ADDED keys under the union.** *That is the property
+  I drove at round 196, after `economic_absence`, DA 100's precision predicate and REV 82's
+  correction census.* ***Four instruments, one property -- and this ruling is the first form that
+  splits it by the PROVENANCE OF THE KEY rather than by version alone, which is what an artifact
+  carrying both kinds needs.***
+  AT COMMIT TIME, UNSWEPT -- ***AND IT CLOSES THE FIELD I SAID WAS ALREADY THERE TO BE READ.***
+  **BE 80 landed** (`cdcce79`): *"the resolver reads `also_supersedes`"*. **Re-driven immediately:
+  `orphan_branches` is now `[]`** -- the five are gone -- ***while both forks are STILL reported***
+  (`v2 -> [v3..v7]`, `v15 -> [v16,v17]`). **That is the right pair of answers: a fork HAPPENED and
+  is history; the tips were ABSORBED and are resolved** -- the module's own docstring distinction
+  ("a fork is REPORTED, not refused") now visible in the output. ***AND THE KEY SET GREW FROM 13 TO
+  18*** -- `fork_open_branches`, `fork_status`, `merged_tips`, `merges`, `n_merge_links` are new.
+  ***WHICH IS THE POINT OF THE DISCIPLINE I ADOPTED THIS MORNING AFTER GETTING IT WRONG THREE
+  TIMES: THE KEYS ARE THE CONTRACT, AND THIS CONTRACT CHANGED UNDER ME WITHIN THE HOUR.*** *A
+  reader who had memorised `orphan_branches` alone would today miss `fork_status` and
+  `merged_tips` -- printing `sorted(r.keys())` first is what shows it, and it cost one line.*
+  **Noted in band; the round-226 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,449 -> 1,455; flag_provenance 994 -> 1,000;
+  tasks 19; **729 CHECKED / 271 RELAYED / 455 UNMARKED -- the HUNDRED-AND-SECOND round unchanged on
+  UNMARKED, and flag_provenance reaches ONE THOUSAND entries.** ORPHAN audit 0 findings.
+  Q-MEM-214 filed.)
   2026-09-06T19:31:30Z (MEM ROUND 225 -- R-715 SWEPT AND MY OWN CELL CORRECTED IN BAND, tip
   `7993360`. STATE ONLY. MEM ASSERTS NO RESULT.
   (1) ***THE CORRECTION IS AGAINST ME AND IT IS TOTAL: I READ KEYS THE DICT DOES NOT CARRY AND
@@ -147,55 +195,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,436 -> 1,443; flag_provenance 981 -> 988;
   tasks 19; **719 CHECKED / 269 RELAYED / 455 UNMARKED -- the HUNDREDTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-212 filed.)
-  2026-09-06T19:17:30Z (MEM ROUND 223 -- R-713 SWEPT, tip `540801c`. STATE ONLY. MEM ASSERTS NO
-  RESULT. **EIGHT SEALED RECORDS CENSUSED AND NONE OPENED.**
-  (1) ***THE SHARED RESOLVER STILL REPORTS NO FORK, AND NOW WITH TWO CONTROLS BESIDE IT.***
-  Re-driven at the new tip: the design family gives **head v24, `orphans=[]`, `forks=None`** --
-  *the family R-713 itself dispatches DE 110 to merge, because it forked at v15 and orphaned v16.*
-  **AND `producer_exit_maps` AND `heavy_run_form`, WHICH GENUINELY ARE UNFORKED, GIVE THE SAME
-  REPORT.** ***So the resolver does not merely miss the fork: a forked family and two unforked
-  families come back indistinguishable.*** *Round 222's finding stands, re-driven later and with
-  controls.*
-  (2) **SIX MODULES IMPORT IT AND THE FALSIFIERS ARE BESIDE IT, NOT IN IT.** The module carries
-  **zero** `selftest` / `--falsify` / `__main__`, and is imported by **six** -- BE's tape and
-  rule-22, DA's census, race-read verifier and day verdict, DE's design declaration. **R-713
-  records five falsifiers in BE's BATTERY, which is exactly what I measure.** ***The consequence is
-  mine to add: rule 15 is satisfied where the battery is and NOT at the IMPORT SURFACE, so a seat
-  importing the module does not get the falsifier with it*** -- *and that is why one drive from
-  outside found something five falsifiers beside it did not.*
-  (3) **ALL THREE SEALED DAYS NOW CARRY A CORRECTION, AND THE 2-OF-3 SHAPE IS CLOSED.** 09-03's
-  first `.v2`, **47,406 B `b4f1159015ebda65`**; 09-04 at `.v3` **`6c74928fbc6c8a6b`**; 09-05 at
-  `.v3` **`5f0241fc4d082420`** -- *all three matching R-713.* **At round 215 I recorded that only
-  two of the three carried a `.v2`, and at round 220 I found the same 2-of-3 shape in a second
-  family; it is now three of three, closed by the day that was behind catching up.**
-  (4) **EVERY PREDECESSOR DIGEST IS UNCHANGED ACROSS THE EIGHT** -- 09-04 v1 `37dd376befad0a31`
-  (round 200) and `.v2` `54a32fd6df986a46` (round 205), 09-05 v1 `975264754a06ec9a` (round 213)
-  and `.v2` `7b1df3dfa536d2cd` (round 214), and ***09-03's `5dd3a8f3f5818379`, UNCHANGED SINCE
-  ROUND 196 -- TWENTY-SEVEN ROUNDS.*** **Rule 13 held across a family superseded five times.**
-  (5) **MY PIPE FINDING IS NOW A RULE AND I HAD TO OBEY IT IN THE SAME ROUND.** R-713 makes it
-  *"no pipe before `&&`"*; **this round's pull ran unpiped with the exit captured into a variable
-  and the whole measurement block gated on that variable.** *The first implementation of a rule I
-  caused by getting it wrong twice -- driven, not asserted.*
-  AT COMMIT TIME, UNSWEPT: ***REV 82 LANDED*** (`7654adc`) and it says **"a forked family
-  resolves with the orphan's full pair named"** -- *the opposite of what I measured twice.* **So I
-  built the smallest fixture that could settle the shape question: a synthetic family whose v2 and
-  v3 BOTH carry `{"path": "fam_v1.json", "sha256": <v1's real digest>}` -- a genuine fork in
-  EXACTLY the shape the resolver documents.** ***IT REPORTS `orphans: []` AND `forks: None` ON
-  THAT TOO.*** **And the design family is not defeated by its link SHAPE either: its `supersedes`
-  carries a top-level `path` and `sha256` beside the cumulative `chain`, so the pair is there to
-  be read.** ***TWO INDEPENDENT DRIVES OF ONE FUNCTION DISAGREE, AND NEITHER OF US HAS THE OTHER'S
-  FIXTURE.*** *I do not claim the resolver is broken: my fixture may omit a field its contract
-  requires and I did not establish that either way.* **What I can hand over is the cell: three
-  files, one fork, the documented pair shape, and a report of nothing** -- which is the one thing
-  a battery beside the module could not tell anybody, because it is built from the same
-  assumptions. **ROUTED TO BE AND REV, NOT RULED.** *REV 82's own two findings are relayed: the
-  frozen set DERIVED from v1's keys rather than read from the protocol declaration, and a
-  correction seal-censused under the scope of the artifact it corrects -- the second being the
-  version-scoped seal I drove at round 196 arriving at a third instrument.* **Noted in band; the
-  round-223 flags are not edited.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,431 -> 1,436; flag_provenance 976 -> 981;
-  tasks 19; **714 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-NINTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-211 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2820,6 +2819,70 @@ flags:
                              # the register when I made it three times.** ***AN ERROR
                              # THAT HAS A NAME IN YOUR OWN RECORD IS THE ONE YOU HAVE
                              # LEAST EXCUSE FOR.***
+  I_drove_BOTH_sides_with_the_KEYS_PRINTED_FIRST: THE-DISCIPLINE-I-NOW-OWE
+                             # After three rounds of reading absent keys, **every
+                             # resolver drive this round begins by printing
+                             # `sorted(r.keys())`.** BE's resolver on the design
+                             # family: keys `dir, doc, family,
+                             # forks_two_versions_superseding_one, head_rule,
+                             # link_shapes, n_versions, name, orphan_branches, pair,
+                             # path, sha256, version`; **head `…_v25.json`**; **five
+                             # orphan branches -- v3, v4, v5, v6, v16**; two forks
+                             # (`v2 -> [v3,v4,v5,v6,v7]`, `v15 -> [v16,v17]`).
+                             # ***MATCHING R-716's "BE's still five" EXACTLY*** -- *and
+                             # this time the names came from the dict rather than from
+                             # my expectation of it.*
+  and_the_FIVE_orphans_are_EXACTLY_the_five_tips_v25_claims_to_have_absorbed: ONE-FIELD-IS-THE-WHOLE-DISAGREEMENT
+                             # v25's **`also_supersedes` is a list of FIVE pairs**:
+                             # `v16 7a8ffa9a3362`, `v3 a1016a8762ff`, `v4
+                             # 24db4e1bd5bf`, `v5 dfc599ba46a7`, `v6 966ca76d2803`.
+                             # ***THE SAME FIVE NAMES APPEAR ON BOTH SIDES -- AS
+                             # "ORPHANS" TO A RESOLVER THAT DOES NOT READ THE FIELD,
+                             # AND AS ABSORBED TIPS IN THE FIELD ITSELF.*** **So the
+                             # two resolvers do not disagree about the artifacts at
+                             # all: they disagree about ONE FIELD, and that field's
+                             # CONTENT is the resolution.** *BE 80's fix is to read
+                             # it, and the five pairs are already there to be read.*
+  fifty_nine_of_sixty_five_byte_identical_measured_INDEPENDENTLY: AND-v25-SAYS-59-TOO
+                             # Diffed v24 against v25 key by key with canonical JSON:
+                             # **65 shared keys, 59 BYTE-IDENTICAL** -- *matching both
+                             # R-716's "59/65" and v25's own
+                             # `n_keys_byte_identical: 59`.* **Three readings of one
+                             # number: the entry's, the artifact's own census, and
+                             # mine from outside both.**
+  my_NINE_and_the_declared_EIGHT_reconcile_on_ONE_key_the_census_does_not_name_ITSELF: BOTH-RIGHT
+                             # I measured **6 CHANGED** shared keys (`as_of`,
+                             # `battery`, `output_name_check`, `protocol`,
+                             # `source_identity`, `supersedes`) **plus 3 ADDED**
+                             # (`also_supersedes`, `also_supersedes_is`,
+                             # `correction_census`) -- **nine differences.** v25's
+                             # `declared_changes` lists **EIGHT**: my six changed plus
+                             # two of the three added. ***THE ONE IT OMITS IS
+                             # `correction_census` ITSELF -- THE BLOCK DOING THE
+                             # DECLARING.*** *Both counts are right about different
+                             # things, and the difference is exactly one key: the
+                             # census does not name itself.* **Recorded, not ruled --
+                             # whether a census should is a question for its owner, and
+                             # a reader diffing keys will meet an undeclared one either
+                             # way.**
+  v25_censused_at_the_digest: B95AC59C
+                             # `p003_de_multiday_gate1_design_v25.json`, **94,122 B
+                             # `b95ac59cf46d941d`** -- matching R-716. *The merge
+                             # landed through BE 77's CAS, and the head both resolvers
+                             # now agree on.*
+  the_09_03_v2s_inherited_keys_are_the_VERSION_SCOPED_SEAL_at_a_FOURTH_instrument: EIGHT-VS-ELEVEN-AGAIN
+                             # RELAYED: the 09-03 `.v2` **inherits three outcome-count
+                             # keys -- OPEN under its own v21 eight, SEALED under
+                             # today's eleven** -- stated as a scope disagreement, with
+                             # the ruling for DE 111 being **inherited keys under v1's
+                             # scope, ADDED keys under the union.** ***THAT IS THE
+                             # PROPERTY I DROVE AT ROUND 196 ARRIVING AT ITS FOURTH
+                             # INSTRUMENT*** after `economic_absence`, DA 100's
+                             # precision predicate and REV 82's correction census.
+                             # **Four instruments, one property, and the ruling now
+                             # splits it by PROVENANCE OF THE KEY rather than by
+                             # version alone** -- *which is the first form of it that
+                             # says what to do when an artifact carries both kinds.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25602,6 +25665,49 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 226, 2026-09-06T19:41:00Z ---
+  I_drove_BOTH_sides_with_the_KEYS_PRINTED_FIRST:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py
+    as_of: 2026-09-06T19:39:08Z
+    said: >-
+      called resolve_head on the design family and printed sorted(r.keys()) before reading any
+      value, then read head, orphan_branches and forks_two_versions_superseding_one by their real
+      names.
+  and_the_FIVE_orphans_are_EXACTLY_the_five_tips_v25_claims_to_have_absorbed:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v25.json
+    as_of: 2026-09-06T19:39:08Z
+    said: >-
+      read also_supersedes out of the merge version and listed its five entries with their digests,
+      then compared the names against the five the resolver reports as orphan branches; the sets
+      are the same.
+  fifty_nine_of_sixty_five_byte_identical_measured_INDEPENDENTLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v24.json
+    as_of: 2026-09-06T19:40:00Z
+    said: >-
+      loaded v24 and v25 and compared every shared key by canonical JSON dump; 65 shared, 59
+      identical. The artifact named is the version compared against.
+  my_NINE_and_the_declared_EIGHT_reconcile_on_ONE_key_the_census_does_not_name_ITSELF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v25.json
+    as_of: 2026-09-06T19:40:00Z
+    said: >-
+      set my own key diff -- six changed, three added -- beside the declared_changes list in the
+      artifact's correction_census; the list carries eight and omits correction_census itself.
+  v25_censused_at_the_digest:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v25.json
+    as_of: 2026-09-06T19:39:08Z
+    said: >-
+      took the file's size and sha256 and compared against the digest R-716 names.
+  the_09_03_v2s_inherited_keys_are_the_VERSION_SCOPED_SEAL_at_a_FOURTH_instrument:
+    prov: RELAYED
+    from: R-716 (coordinator, 2026-09-06), citing REV 82 section 2.3 and DA 105
+    said: >-
+      the inherited outcome-count keys and the ruling for DE 111 are relayed; the eight-versus-
+      eleven property is one I drove myself at round 196 and have now seen in four instruments.
   # --- MEM round 225, 2026-09-06T19:31:00Z ---
   I_READ_KEYS_THE_DICT_DOES_NOT_CARRY_AND_CALLED_THE_DEFAULTS_A_FINDING:
     prov: CHECKED

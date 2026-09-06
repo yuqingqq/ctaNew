@@ -16956,3 +16956,60 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **709 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-EIGHTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-210 filed.)
 ```
+
+## Batch 208 — archived 2026-09-06T19:41:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 226 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T19:17:30Z (MEM ROUND 223 -- R-713 SWEPT, tip `540801c`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **EIGHT SEALED RECORDS CENSUSED AND NONE OPENED.**
+  (1) ***THE SHARED RESOLVER STILL REPORTS NO FORK, AND NOW WITH TWO CONTROLS BESIDE IT.***
+  Re-driven at the new tip: the design family gives **head v24, `orphans=[]`, `forks=None`** --
+  *the family R-713 itself dispatches DE 110 to merge, because it forked at v15 and orphaned v16.*
+  **AND `producer_exit_maps` AND `heavy_run_form`, WHICH GENUINELY ARE UNFORKED, GIVE THE SAME
+  REPORT.** ***So the resolver does not merely miss the fork: a forked family and two unforked
+  families come back indistinguishable.*** *Round 222's finding stands, re-driven later and with
+  controls.*
+  (2) **SIX MODULES IMPORT IT AND THE FALSIFIERS ARE BESIDE IT, NOT IN IT.** The module carries
+  **zero** `selftest` / `--falsify` / `__main__`, and is imported by **six** -- BE's tape and
+  rule-22, DA's census, race-read verifier and day verdict, DE's design declaration. **R-713
+  records five falsifiers in BE's BATTERY, which is exactly what I measure.** ***The consequence is
+  mine to add: rule 15 is satisfied where the battery is and NOT at the IMPORT SURFACE, so a seat
+  importing the module does not get the falsifier with it*** -- *and that is why one drive from
+  outside found something five falsifiers beside it did not.*
+  (3) **ALL THREE SEALED DAYS NOW CARRY A CORRECTION, AND THE 2-OF-3 SHAPE IS CLOSED.** 09-03's
+  first `.v2`, **47,406 B `b4f1159015ebda65`**; 09-04 at `.v3` **`6c74928fbc6c8a6b`**; 09-05 at
+  `.v3` **`5f0241fc4d082420`** -- *all three matching R-713.* **At round 215 I recorded that only
+  two of the three carried a `.v2`, and at round 220 I found the same 2-of-3 shape in a second
+  family; it is now three of three, closed by the day that was behind catching up.**
+  (4) **EVERY PREDECESSOR DIGEST IS UNCHANGED ACROSS THE EIGHT** -- 09-04 v1 `37dd376befad0a31`
+  (round 200) and `.v2` `54a32fd6df986a46` (round 205), 09-05 v1 `975264754a06ec9a` (round 213)
+  and `.v2` `7b1df3dfa536d2cd` (round 214), and ***09-03's `5dd3a8f3f5818379`, UNCHANGED SINCE
+  ROUND 196 -- TWENTY-SEVEN ROUNDS.*** **Rule 13 held across a family superseded five times.**
+  (5) **MY PIPE FINDING IS NOW A RULE AND I HAD TO OBEY IT IN THE SAME ROUND.** R-713 makes it
+  *"no pipe before `&&`"*; **this round's pull ran unpiped with the exit captured into a variable
+  and the whole measurement block gated on that variable.** *The first implementation of a rule I
+  caused by getting it wrong twice -- driven, not asserted.*
+  AT COMMIT TIME, UNSWEPT: ***REV 82 LANDED*** (`7654adc`) and it says **"a forked family
+  resolves with the orphan's full pair named"** -- *the opposite of what I measured twice.* **So I
+  built the smallest fixture that could settle the shape question: a synthetic family whose v2 and
+  v3 BOTH carry `{"path": "fam_v1.json", "sha256": <v1's real digest>}` -- a genuine fork in
+  EXACTLY the shape the resolver documents.** ***IT REPORTS `orphans: []` AND `forks: None` ON
+  THAT TOO.*** **And the design family is not defeated by its link SHAPE either: its `supersedes`
+  carries a top-level `path` and `sha256` beside the cumulative `chain`, so the pair is there to
+  be read.** ***TWO INDEPENDENT DRIVES OF ONE FUNCTION DISAGREE, AND NEITHER OF US HAS THE OTHER'S
+  FIXTURE.*** *I do not claim the resolver is broken: my fixture may omit a field its contract
+  requires and I did not establish that either way.* **What I can hand over is the cell: three
+  files, one fork, the documented pair shape, and a report of nothing** -- which is the one thing
+  a battery beside the module could not tell anybody, because it is built from the same
+  assumptions. **ROUTED TO BE AND REV, NOT RULED.** *REV 82's own two findings are relayed: the
+  frozen set DERIVED from v1's keys rather than read from the protocol declaration, and a
+  correction seal-censused under the scope of the artifact it corrects -- the second being the
+  version-scoped seal I drove at round 196 arriving at a third instrument.* **Noted in band; the
+  round-223 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,431 -> 1,436; flag_provenance 976 -> 981;
+  tasks 19; **714 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-NINTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-211 filed.)
+```
