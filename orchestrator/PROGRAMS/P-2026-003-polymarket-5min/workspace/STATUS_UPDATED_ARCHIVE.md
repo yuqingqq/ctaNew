@@ -13190,3 +13190,103 @@ directions.
   forty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 157 — archived 2026-09-06T13:05:10Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 175 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T12:35:47Z (MEM ROUND 172 -- R-630 AND R-631 SWEPT, WITH Q-DE-94; Q-DA-306
+  NOT FILED. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) **REV 58 §2.3 IS RETRACTED AND THE RETRACTION HOLDS AT FOUR ARTIFACTS I READ.**
+  DE's design **v20 and v21** each carry `"landing_record.receipt_sha256"` twice; DE's
+  code head is `LANDING_RECORD_FIELD_COPIES[0]`; DA's
+  `LANDING_DIGEST_AUTHORITATIVE_FIELD` is the same string; and `git log` on v20 shows
+  **ONE commit, `6e32506`** -- so "DE's code and design agreed all along" is checkable,
+  and true. ***AND ONE THING I CAN ADD TO THE REVIEWER'S ACCOUNT, because I searched the
+  design instead of trusting the story:*** **a standalone `"receipt.sha256"` IS in v20 --
+  and still in v21 -- inside `second_copies_that_must_agree`, as the VALUE mapped FROM
+  `landing_record.receipt_sha256`.** *A grep for the string HITS DE's design; reading the
+  hit as the name inverts a map.* **Two different ways into one wrong sentence, and only
+  this one is visible in the file.**
+  (2) **THE 09-03 BOOK-TIER CONTRADICTION CLOSED WHILE I WAS MEASURING IT.** At 12:31Z
+  the 11:28Z receipt still carried `NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: false` beside
+  "none of them names an economic quantity"; at **12:33:21Z** the `.v2` landed with
+  `supersedes` **as the PAIR** (`the_link_is_the_PAIR: ["path","sha256"]`, digest
+  `9aaa1b5fefc4a452…`, `v1_untouched: true`), the key renamed to
+  `NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK`, **the old string surviving only inside
+  the quoted `what_changed`** -- which also names a second correction: **two theta
+  MISMATCHES that were a misread of the book's count map.**
+  (3) ***THE THREE-VALUED FLAG I SWEPT LAST ROUND WAS INVERTED BY ITS FIRST CONSUMER.***
+  **`not None` is True**, so the NOT-ESTABLISHED state raised the flag that means
+  REFUTED -- "the exact inversion the truncation limit exists to prevent" (`f8e6d6f`),
+  FLAGGED with one flag beside an EMPTY sealed-hit list. *Fixed in the artifact: `null`,
+  `truncated: true`, `NOT_ESTABLISHED_WALK_TRUNCATED` a named entry in
+  `predicates_not_computable` that blocks `IS_A_VERIFICATION` and claims nothing.*
+  **A three-valued flag stays three-valued only while every reader tests for the third
+  value.**
+  (4) **AND THE FIX ON THE FIX, 18 SECONDS LATER (`02f3227`): `UnboundLocalError`,
+  caught by DA's own selftest IN THE SAME COMMAND THAT LANDED IT.** ***Routed, not
+  ruled:*** *rule 21 as amended (R-623) tells seats to copy and commit in ONE COMPOUND
+  COMMAND -- the idiom that makes "test, then land" collapse into "land and test".* **A
+  fix on one side of a seam opening the other, for the fourth time today.**
+  (5) **THE 09-05 TAPE IS BUILT AND THE LOCK IS FREE, 16 MINUTES EARLY** -- 890,640,737
+  B, 489,434 rows, `wall_s 755.4`, `peak_rss_gb 4.741`, TAPE_RC=0 and CHAIN_RC=0 at
+  **12:28:58Z**, `fuser` on the lock returning no holder. ***TWO INSTRUMENTS, TWO
+  MARGINS:*** **the cgroup's `scope.peak_bytes` is 7,554,551,808 of 8,589,934,592 --
+  87.9 % of the cap -- where the process figure reads 4.741 GB.** *R-632: zero reclaim
+  events, against 09-04's 1,199 cap hits, correlation recorded with no mechanism at
+  n = 2.*
+  (6) ***I CAN ACCOUNT FOR THE NON-ZERO EXIT REV 62 §5 COULD NOT -- AND IT IS ROUTED, NOT
+  RULED.*** The reviewer records one unreproducible non-zero exit of the GO-gating
+  battery. **My own first run exited 1 with the runner's own message: "and HEAD and the
+  dirty state are captured AT IMPORT: 989373fa87c6, dirty=False"; the predicate is
+  `_sid2["head_unchanged_during_the_run"] is True`; my import captured `989373f`
+  (12:30:40Z) and the reflog shows DA committing at 12:30:55Z and 12:31:13Z -- three
+  seats committing into one tree inside 33 seconds. My re-run on a settled tree: 245
+  checks, exit 0.** **THE CAVEAT: a linked worktree has its own HEAD**, so this explains
+  MY exit and is a candidate of the SAME SHAPE for theirs. *Unreproducible by
+  construction: it depends on another seat's timing.*
+  (7) **THE DIRT EXEMPTION IS A PROPERTY IN THREE SEATS INDEPENDENTLY** -- DE's four
+  driven cells (R-631), DA's `8a620d9` before its re-run, BE's receipts carrying
+  `dirty: true, dirty_paths: ['data']` with BE 62 classifying it (R-632) -- **and R-626
+  had already exempted that same line for LANDING.** *Other seats' clean-tree checks must
+  do the same.*
+  (8) **GO #4 IS FILED BY REV 62** -- `REVIEW_DE94_GO4_2026-09-06.md`, 12:33Z, "GO for
+  the 09-03 smoke", batteries 245 / 105 / 5 -- **and at the rehearsal artifact I checked
+  the form myself: `status READY`, `blocking []`, `THE_ONE_COMMAND` carrying `--unit=`,
+  `--working-directory=…wt-de2`, `flock -n` INSIDE the unit and NO `--scope`.** *My first
+  probe asked the whole DOCUMENT about `--scope` and it said True -- the hits are the
+  declaration "never --scope" and a known-bad. Second needle-vs-prose slip of mine this
+  round; the other was `grep -c FAIL` counting six PASS lines.* ***R-631's sequence puts
+  the coordinator's GO next; the lock is idle.***
+  **AT COMMIT TIME, 2026-09-06T12:39:11Z -- AND THE RE-READ CAUGHT ITS OWN HEADLINE:
+  GO #4 ISSUED (R-633, 12:35Z) AND THE FOURTH LAUNCH IS RUNNING.** **`de95smoke.service`:
+  `ActiveState=active`, `SubState=running`, `MainPID=3384217`, started **12:35:35 UTC**,
+  `MemoryPeak` 2,554,003,456 B, the lock held by the unit's own `flock -n` -- the first
+  launch under the transient-SERVICE form after three lost runs.** *The v8 rehearsal
+  (12:35:16Z) is READY, `blocking []`, and its `THE_ONE_COMMAND` still carries the
+  `<deNNsmoke>` placeholder: the unit NAME is all the launch added to the driven string.*
+  **R-633 records leg 1 proving itself the hard way -- the reviewer's TERM to a scope's
+  process group killed the reviewer's own tool shell, TWICE, while the service's MainPID
+  has PPid 1004 -- and it records the unexplained battery exit as UNEXPLAINED, not
+  explained away.** ***That is the gap paragraph (6) above lands in: my exit has a
+  measured mechanism, offered as a candidate of the same shape, not as their answer.***
+  **R-634 (12:37Z) VERIFIES DA 83 AND AGREES WITH WHAT I MEASURED INDEPENDENTLY:** the
+  flag was DA's own defect introduced by DA 82's fix, `not None` reading as "a sealed day
+  statistic IS named" beside an EMPTY hit list; **both tiers re-ran UNDER THE SERVICE
+  FORM** -- 09-03 297,379 shared keys, 09-04 338,444, **0 mismatches**, coverage
+  0.949746737609944 / 0.9450918300954743, 1.962 / 2.287 GB, receipts superseded.
+  **Q-DA-306 has landed.** *Flag values superseded in band, keys untouched.*
+  **FLAG WORDS: GO #4 FILED-BY-REV-62 (the coordinator's GO next; the lock FREE since
+  12:28:58Z, not ≈12:45Z); the refresh-symlink DIRT-EXEMPTION-BY-PROPERTY (DE, DA and BE
+  independently) -- other seats' clean-tree checks must do the same; the 09-05 tape
+  BUILT.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,032 -> 1,040, flag_provenance 577 -> 585,
+  tasks 19; **358 CHECKED**, 227 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a
+  ruled 3; new flags vs HEAD 0 without provenance.)
+```

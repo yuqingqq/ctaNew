@@ -5,6 +5,105 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 175
+
+**As of 2026-09-06T13:05:10Z. State only — MEM writes no result.**
+
+### Read `ExecMainStatus`, not `ActiveState`
+
+**`be64book.service` started 13:04:17Z and exited `75/TEMPFAIL`** — `Result=exit-code`,
+`ActiveState=failed`, and the journal line ***"REFUSED: the heavy-run lock … is held by
+another run"***. **That is BE 64's first poll for the 09-05 book, refused as designed while
+DE 95 holds the lock** — measured 47 seconds after it happened.
+
+***At the unit level a refusal and a failure are the same state.*** The only discriminator
+is **`ExecMainStatus`**, which is exactly what `flock -E 75` exists to provide. *Measured
+contrast: the three `da83book*` units are also `failed` and exited **3**, not 75 — a
+different cause, in units whose later attempts produced the tier artifacts.*
+
+### AT COMMIT TIME (13:08:25Z): R-641, and rule 20 now binds every journal citation
+
+**REV 66 verified, three findings.** *(i)* ***The porcelain falsifier's THIRD line is the
+one that matters:*** a bare `[3:]` passes ` M live/x.py` and `?? data` and **fails the
+rename**, returning `a -> b` where the path is `b` — *"fail-safe in direction, wrong in
+cause"*. **BE's is closed — I drove it: `parse_porcelain_line` returns `(' M',
+'live/x.py')`, `('??', 'data')`, `('R ', 'b')` — DE's remains until DE 96.** *(ii)* **The
+mid-selftest summary shape exists in NO other seat's battery**, read from *structure*, not
+output. *(iii)* **The journal ambient is wider than the accrual — seven readers of a
+rotating journal, and one piece of the reviewer's own evidence has already decayed** (REV
+53 §0's `Started` line for DE 84's death; the `Consumed` line survives).
+
+***Ruled into rule 20 (`689c911`): the journal is NOT the record*** — a number read from it
+is **copied into an artifact at the moment of reading, with the retention state named**; a
+receipt carries its own journal lines at emit; **no control's verdict may depend on journal
+retention.**
+
+**The rule reached my own citation in the round it was ruled.** The `be64book` REFUSED line
+above is copied into STATUS at 13:05:10Z and again at 13:08:25Z, and the retention state
+is: **user journal 184.5 MB archived+active, oldest entry 2026-09-06T09:00:20Z — a ~4 h
+08 m window** (which is why a four-hour-old line was already gone).
+
+**Also:** `be64book` has now started **five** times, every one `ExecMainStatus=75` — the
+poll is a loop and the refusal path holds. The run is at **32:49, RSS 787,564 KiB**,
+`MemoryPeak` still 2,554,003,456 B. **The reviewer's seat is being reset at ≈75 %** (second
+today), superseding the dispatch's ≈68 %.
+
+### The launcher's falsifier asks its own invocation
+
+**`be_heavy_run.sh` re-invokes itself as `$0` at lines 64 and 85, both with output to
+`/dev/null`** — so the verdict is a function of *how the launcher was called*, and the
+failure is **silent**. The same code **failed both cells for the reviewer and passed for
+the coordinator**. *`readlink -f "$0"` exists at line 103: the qualification is in the
+file, just not in the two places that needed it.* **The falsifier class from the other
+end — not an instrument that cannot fire, but one whose firing depends on the caller's
+`$PATH`.** → BE 65.
+
+**And the static check's scope is right while its level is wrong** — a `--scope` behind a
+variable or a wrapper still passes. ***The durable guard is a runtime refusal: the build
+reads its own cgroup leaf and refuses when `kind == "scope"` — a property proved by what
+the process IS, not by what its command line SAYS***, with the invocation check kept as a
+lint. **BE 65 and DE 97 carry it; REV 62 §3 recommended it first; the code does not exist
+yet.**
+
+### A named boundary on a standing rule
+
+**BE's `wrapper_measured` delegates to DE's `wrapper_observed`, and that is judged
+acceptable for an *infrastructure observation*** — *an observation of the machine is not a
+statistic* — **with the lock mode still read independently from `/proc/locks`.** R-235
+(do-not-harmonize) keeps its force where a **number** is at stake. *MEM records the
+boundary and rules nothing.*
+
+### Closed and moved
+
+- **BE 64a closed the porcelain slice half in its own parser** (`5f5f76c`, landed before
+  the book so HEAD is frozen for the run): `parse_porcelain_line()` with
+  `code, rest = line[:2], line[3:]` and the reason beside it — *correct only while the
+  read stays raw*. **BE kept its own parser rather than importing DA's: two independent
+  implementations.** *Round 174's table row for BE is superseded by events, not by an
+  error.*
+- **My routed note is closed by R-640 §5** — "the landed 09-05 receipts unchanged" — and I
+  re-measured: both still carry neither `wrapper_measured` nor `peak_is_censored`, mtimes
+  **12:16:22Z** and **12:28:57Z**, unmoved. *Nothing to reconcile.*
+- **My own provenance guard refused two of my entries** — "RELAYED without `from:`" —
+  before the sentence. Fixed; re-run clean. *Second round running that it has caught my
+  formatting.*
+
+### The run and the queue
+
+`de95smoke.service` active/running, the runner at **29:05 elapsed, RSS 758,000 KiB**,
+`MemoryPeak` **unmoved at 2,554,003,456 B across four reads spanning 26 minutes**.
+**Receipt ≈14:00Z.** Then: **DA's pre-read** (DA is READY) → **the 09-04 smoke** → **the
+09-05 book** (BE 64 polling). REV 66 on DA 84 — *including whether any other seat's battery
+has the mid-selftest shape, read from structure not output*; BE 65 after the book; DE 97
+after the 09-04 smoke. *The reviewer is at ≈68 % context — a seat's own report, relayed.*
+
+**Counts, measured before the sentence:** flags 1,056 → **1,064**, `flag_provenance`
+601 → **609**, tasks 19; **380 CHECKED**, 229 RELAYED, **455 UNMARKED — unchanged for the
+fifty-first round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 157** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 174
 
 **As of 2026-09-06T12:56:38Z. State only — MEM writes no result.**
