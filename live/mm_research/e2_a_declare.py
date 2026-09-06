@@ -62,13 +62,14 @@ import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-DECL_VERSION = 3
+DECL_VERSION = 4
 SUPERSEDES = {
-    "path": "live/mm_research/declarations/p002_e2_a_declaration_v2.json",
-    "sha256": "6567a25f04d7fb892d001da3dee7d7db00f3df342197d7ab9663e8a2f8e03ed1",
-    "carrying_commit": "0cbaba6",
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v3.json",
+    "sha256": "6383d781c7bbeaa65ecccf4c5af469539c2fac3ba060d7d3fbc87d557e960ea7",
+    "carrying_commit": "39f3eca",
     "chain": ["v1 405ddb7ab10486c2 (367b800)",
-              "v2 6567a25f04d7fb89 (0cbaba6)"],
+              "v2 6567a25f04d7fb89 (0cbaba6)",
+              "v3 6383d781c7bbeaa6 (39f3eca)"],
     "correction_is_in_band": (
         "rule 13: v1 is NOT edited and stands as provenance. v2 adds the "
         "data-root discipline the E2.0 RESULT review (section 6) requires of "
@@ -93,6 +94,38 @@ SUPERSEDES = {
         "nothing is retracted -- but a boundary-only battery would have "
         "carried this into the first smoke.",
         "carried from v2: the data_root_discipline block.",
+
+        "v4, THE RUNNER'S BOUNDARIES, DECLARED BEFORE THE RUNNER READS A "
+        "TAPE. v3 declared the models; it did not declare what the runner "
+        "does at the edges where a model has no answer. Three were ruled by "
+        "the coordinator (R-570(C)) and one was left open by the reviewer "
+        "(REVIEW_DA60 section 2): the queue-ahead-undefined status, the "
+        "partial-fill pricing pair with its straddle rule, day admission "
+        "over the twelve IN SCOPE, and the at-or-through-L direction. Each "
+        "is now a field with a control, because a boundary settled in the "
+        "runner's code and nowhere else is a boundary a reader cannot "
+        "check.",
+
+        "v4, THE OWED ATTRIBUTION (REVIEW_P002_E2A_DESIGN section A.2). v3 "
+        "asserted RiskAverse's rule as hftbacktest's. The library is ABSENT "
+        "and cannot be consulted, so which half is the published model and "
+        "which is my tightening is now stated as fields rather than left "
+        "for a reader to assume. The same treatment is given to every other "
+        "place where the closed form needed a choice the library would "
+        "otherwise have made: the observable definition of `back`, the "
+        "fill quantity on a successful draw, and the at-L direction.",
+
+        "v4, AND THE ORDERING PROPERTY IS SPLIT, BECAUSE ONE HALF OF IT WAS "
+        "NOT TRUE AS WRITTEN. R-570(B) owes a falsifier reading `ProbQueue "
+        "<= RiskAverse per EPISODE`. On COST that is false as finance, not "
+        "as arithmetic: an episode whose mid runs AWAY over T_p is cheaper "
+        "chased than filled, so filling more can cost more and a per-episode "
+        "cost inversion is the winner's curse rather than a defect. What IS "
+        "arithmetic per episode is the FILLED QUANTITY. v4 declares both: "
+        "quantity ordering per episode (a violation is an implementation "
+        "defect and REFUTES), cost ordering at the AGGREGATE gate row (a "
+        "violation raises REFUTES_THE_BRACKET). Flagged rather than "
+        "silently narrowed.",
     ],
 }
 
@@ -205,6 +238,68 @@ QUEUE_MODELS = {
             "placement time -- never a fraction of it."),
         "queue_ahead_at_placement": "the depth20 snapshot's size at L at the "
                                     "last snapshot at or before t0",
+        "filled_quantity": "clip(volume_at_or_through_L_since_t0 - "
+                           "queue_ahead, 0, q) -- a QUANTITY, not a boolean; "
+                           "full fill is the case where that clip saturates "
+                           "at q, i.e. volume > queue_ahead + q",
+        "ATTRIBUTION_the_library_is_absent_so_this_is_stated_not_assumed": {
+            "why_this_field_exists": (
+                "REVIEW_P002_E2A_DESIGN section A.2: v3 asserted 'this is "
+                "hftbacktest's RiskAverse'. hftbacktest is NOT installed, so "
+                "that claim cannot be checked here and must not be made "
+                "flatly. Which half is the published model and which is my "
+                "tightening is stated instead."),
+            "the_published_model_s_half": (
+                "everything ahead of the order must trade before the order "
+                "trades, and the queue ahead is taken as the FULL depth "
+                "observed at the level at placement. That is the RiskAverse "
+                "idea and it is not mine."),
+            "MY_tightening": (
+                "the '+q' term -- requiring the cumulative volume to exceed "
+                "the queue ahead PLUS the order's own size for a FULL fill, "
+                "rather than filling the whole order the moment the queue "
+                "ahead is exhausted. Whether the library carries that term I "
+                "cannot verify with the library absent."),
+            "its_direction_is_unambiguous_even_though_its_provenance_is_not": (
+                "including '+q' makes fills rarer and eff_RT HIGHER, so it "
+                "is CONSERVATIVE for a PASS gate: a PASS under this form is "
+                "a PASS under a library that omits the term. A FAIL might "
+                "not be, and that asymmetry is why the tightening is "
+                "acceptable in a gate that only binds on PASS."),
+            "what_would_settle_it": (
+                "installing hftbacktest and comparing on the same episodes. "
+                "That is an environment change and is not the seat's to "
+                "make; it is named here so the open question is visible "
+                "rather than resolved by silence."),
+        },
+        "at_or_through_L_direction": {
+            "why_this_field_exists": (
+                "REVIEW_DA60 section 2, the one residual the reviewer could "
+                "not close: 'whether an opposite-side trade exactly AT L "
+                "counts is a directional choice that changes the fill count, "
+                "and no control pins it'. The interior control uses "
+                "`volume_through`, which presupposes the answer."),
+            "the_direction": (
+                "a trade AT L COUNTS. For a resting BUY at L an aggressive "
+                "sell printing at exactly L executes against resting bids AT "
+                "L, which is the queue this order is standing in; a print "
+                "strictly below L means the book was swept past L and "
+                "everything at L traded too. So the admissible set is "
+                "k_price <= k_L for a buy and k_price >= k_L for a sell, "
+                "with the comparison on INTEGER TICK INDICES."),
+            "why_integer_tick_indices": (
+                "E1's D-i defect exists because on floats the touch (<=) and "
+                "sweep-through (<) rules are indistinguishable. The same "
+                "hazard reappears at every level comparison inside the queue "
+                "simulation, so every one of them is done on integers."),
+            "the_control": (
+                "a single opposite-side trade at EXACTLY L, with volume "
+                "greater than the queue ahead, must FILL under RiskAverse; "
+                "the strict-through reading (k_price < k_L) is the known-bad "
+                "and must NOT fill. Both directions are driven in the "
+                "runner's battery, which is what makes this a choice with a "
+                "check rather than a choice in a comment."),
+        },
         "why_this_is_the_gate": (
             "EXPERIMENT_PLAN section 2: 'Gate: eff_RT <= 8 bps under "
             "RiskAverse.' A pass under the pessimistic model passes "
@@ -225,6 +320,183 @@ QUEUE_MODELS = {
             "the fill draw is seeded per (symbol, day, hour, direction) from "
             "sha256 of those fields plus the declaration digest, so the "
             "optimistic end is REPRODUCIBLE and the seed pins the data."),
+        "front_is_observable_back_is_CONSTRUCTED": {
+            "front": "queue ahead REMAINING = max(queue_ahead_at_placement - "
+                     "cumulative volume at-or-through L since t0, 0). Purely "
+                     "observable from the two tapes.",
+            "back": (
+                "max(depth at L in the latest depth20 snapshot at or before "
+                "the trade - front, 0). This is MY construction, not the "
+                "library's: hftbacktest tracks `back` from the order feed, "
+                "which this programme does not have and which no public tape "
+                "carries. The observable analogue is 'what is standing at the "
+                "level now, less what is still ahead of me' -- so `back` "
+                "grows when other orders join at L, which is exactly the "
+                "quantity the model wants."),
+            "the_degenerate_case_is_DECLARED_not_left_to_a_zero_divide": (
+                "front = 0 and back = 0 makes f(front)+f(back) = 0 and the "
+                "ratio undefined. Declared: front = 0 fills with probability "
+                "1 -- the queue ahead is exhausted, so there is nothing left "
+                "to wait for. That branch is taken FIRST, so the ratio is "
+                "only ever evaluated with a positive denominator. It agrees "
+                "with the ratio by continuity wherever the ratio is defined "
+                "(front = 0, back > 0 gives f(back)/f(back) = 1)."),
+            "fill_quantity_on_a_successful_draw": (
+                "the WHOLE remaining order fills. MY choice, and its "
+                "direction is the model's role: ProbQueue-f3 is the "
+                "OPTIMISTIC end, so on the event that the order is reached "
+                "the optimistic reading is that the reaching sweep takes all "
+                "of it. Filling only min(q, trade volume) instead would let "
+                "a partial ProbQueue fill sit BELOW a full RiskAverse fill "
+                "on the same episode, i.e. it would break the bracket "
+                "arithmetically rather than empirically."),
+        },
+        "the_ordering_property_is_SPLIT_and_one_half_of_R570B_was_not_true": {
+            "per_episode_ARITHMETIC": (
+                "filled_qty(ProbQueue) >= filled_qty(RiskAverse) on EVERY "
+                "episode. This holds by the models' own logic and not by a "
+                "clamp: RiskAverse fills only once front reaches 0, and at "
+                "front = 0 ProbQueue's probability is 1, so ProbQueue fills "
+                "at that trade at the latest and possibly earlier. A "
+                "violation cannot be finance; it is an implementation defect "
+                "and REFUTES."),
+            "per_episode_COST_is_NOT_an_ordering_property": (
+                "R-570(B) owes 'ProbQueue <= RiskAverse per EPISODE'. On "
+                "COST that is FALSE, and not because of a defect: an episode "
+                "whose mid runs AWAY from the maker over T_p is CHEAPER "
+                "chased than filled (the chase captures the favourable "
+                "drift), so filling more can cost more. A per-episode cost "
+                "inversion is the winner's curse in the sign that favours "
+                "the maker. Narrowing this silently would have made a real "
+                "check into a spurious refusal, so it is flagged."),
+            "aggregate_COST": (
+                "eff_RT(ProbQueue) <= eff_RT(RiskAverse) at the gate row is "
+                "the bracket ordering the gate reads, and a violation there "
+                "raises REFUTES_THE_BRACKET as v3 declared. It is an "
+                "aggregate property because the maker's edge is an average "
+                "over episodes, not a per-episode identity."),
+        },
+    },
+}
+
+
+#: R-570(C): three boundaries the coordinator ruled after the design review,
+#: plus the arm size the min-size arm needs. Declared as data, each with the
+#: control that pins it, because a boundary settled only inside the runner is
+#: a boundary a reader cannot check.
+RUNNER_BOUNDARIES = {
+    "queue_ahead_undefined": {
+        "ruling": "R-570(C)(1)",
+        "when": "the level L taken from bookTicker at t0- is ABSENT from the "
+                "relevant side of the last depth20 snapshot at or before t0 "
+                "(the twenty levels do not reach it), or there is no depth20 "
+                "snapshot at or before t0 at all",
+        "rule": "the episode carries the counted status "
+                "QUEUE_AHEAD_UNDEFINED, is EXCLUDED from BOTH fill "
+                "simulations, and its count is reported with every table "
+                "(CLAUDE.md rule 4)",
+        "never": "a queue-ahead of ZERO. An absent level is not an empty "
+                 "level: zero would make the order fill on the first trade "
+                 "and would read as the most favourable queue position there "
+                 "is, which is the opposite of what absence licenses.",
+        "the_control": "an episode whose L is outside the snapshot's twenty "
+                       "levels must carry the status and appear in NEITHER "
+                       "model's population; the mirror control is an episode "
+                       "whose L IS in the book, which must be admitted -- a "
+                       "status that only ever fires is a filter, not a status",
+    },
+    "partial_fill_pricing": {
+        "ruling": "R-570(C)(2)",
+        "gate_bearing": "RESIDUAL_CHASED_AT_TP -- an episode filled to "
+                        "fraction phi costs phi*c_fill + (1-phi)*c_chase, "
+                        "because the unfilled part is still a working order "
+                        "and is chased at T_p exactly as a wholly unfilled "
+                        "episode is. Reduces to E1-A's formula exactly when "
+                        "phi is 0 or 1, which is why the two remain "
+                        "comparable.",
+        "pessimistic_bracket": "WHOLE_LEG_CHARGED -- an episode that is not "
+                               "FULLY filled costs c_chase entire. Reported "
+                               "BESIDE the gate-bearing number, never "
+                               "instead of it.",
+        "straddle_is_a_FAIL": "if the two pricings fall on OPPOSITE sides of "
+                              "the 8.0 bps threshold the verdict is "
+                              "FAIL_PARTIAL_FILL_PRICING_STRADDLES. Never "
+                              "averaged -- the same rule the queue bracket "
+                              "carries (R-567), applied to the second "
+                              "bracket the partial fills open.",
+        "the_control": "a fabricated episode at phi = 0.5 must price "
+                       "strictly between c_fill and c_chase under the "
+                       "gate-bearing rule and exactly at c_chase under the "
+                       "pessimistic one; and a straddling pair must return "
+                       "the straddle verdict rather than a mean",
+    },
+    "day_admission_scope": {
+        "ruling": "R-570(C)(3)",
+        "rule": "depth20 completeness is required for the TWELVE SYMBOLS IN "
+                "SCOPE -- the population E2-A supersedes E1-A on -- and not "
+                "for all sixteen the collector happens to carry. A day is "
+                "admissible FOR A SYMBOL; there is no cross-symbol day "
+                "filter.",
+        "why": "the four extra collected symbols (APT, ARB, ATOM, GMX) are "
+               "not in E1-A's XS-overlap set. Requiring their depth20 would "
+               "let a stream outage on a symbol E2-A does not measure delete "
+               "days from one it does, which is a population change with no "
+               "measurement behind it.",
+        "the_control": "a symbol outside the twelve must be REFUSED by name "
+                       "rather than measured; and a day complete on all "
+                       "three streams for a symbol in scope must be ADMITTED "
+                       "while the same day missing depth20 alone is EXCLUDED",
+    },
+    "the_min_size_arm_needs_a_q_and_it_is_MEASURED_not_chosen": {
+        "why_this_field_exists": "the size-aware arm REFUSES for want of a "
+                                 "declared rebalance notional (R-567(C)(b)), "
+                                 "so the arm that RUNS is min-size -- and a "
+                                 "queue model needs an order SIZE, which "
+                                 "E1-A never had because its fills were "
+                                 "binary.",
+        "q": "the venue's quantity STEP for the symbol, estimated from the "
+             "tape by mode-of-diffs over the day's distinct trade "
+             "quantities -- the same estimator, and the same function, E1-A "
+             "already uses for the PRICE tick and which the reproduction "
+             "control reproduces to 4 dp.",
+        "why_not_a_round_number": "a size chosen in this seat would make the "
+                                  "gate a function of that choice, which is "
+                                  "rule 11's shape and is exactly what the "
+                                  "notional escalation refused to do. The "
+                                  "quantity step is a property of the venue "
+                                  "read off the venue's own prints.",
+        "what_it_does_NOT_claim": "the step is the smallest ORDERABLE "
+                                  "increment, which is a lower bound on the "
+                                  "exchange minimum order size, not "
+                                  "necessarily equal to it. The arm is "
+                                  "labelled MIN_SIZE_NOT_THE_E2A_GATE either "
+                                  "way, so the distinction changes no "
+                                  "verdict; it is stated so the number is "
+                                  "not read as an exchange filter.",
+        "the_control": "a synthetic tape whose quantities are all multiples "
+                       "of 0.25 must return 0.25; a tape with a single "
+                       "off-grid quantity must NOT be dragged to that "
+                       "quantity by one print",
+    },
+    "the_chase_crosses_the_REAL_touch": {
+        "rule": "an unfilled or partly filled episode is chased at T_p by "
+                "crossing to the actual best ask (buy) or best bid (sell) "
+                "from bookTicker at T_p, plus the taker fee.",
+        "why_this_is_not_a_change_of_estimand": "E1-A priced the chase at "
+                                                "m(T_p) + sign*ES_day/2 "
+                                                "because it had no book. "
+                                                "E2-A removes ES_day from "
+                                                "PLACEMENT as a sanctioned "
+                                                "same-day look-ahead; "
+                                                "leaving it in the CHASE "
+                                                "would keep the look-ahead "
+                                                "in half the episodes. "
+                                                "ES_day is gone from E2-A "
+                                                "entirely.",
+        "the_cost_is_still_E1A_s": "shortfall against the DECISION mid plus "
+                                   "the taker fee -- realised drift over T_p "
+                                   "and the spread actually crossed, so the "
+                                   "winner's curse is charged in full.",
     },
 }
 
@@ -314,6 +586,39 @@ def gate_predicate(eff_rt_riskaverse: float | None,
     }
 
 
+def partial_pricing_predicate(eff_rt_residual_chased: float | None,
+                              eff_rt_whole_leg_charged: float | None) -> dict:
+    """R-570(C)(2): the SECOND bracket, the one partial fills open.
+
+    The gate-bearing pricing chases the residual at T_p; the pessimistic one
+    charges the whole leg. If those two fall on opposite sides of the
+    threshold the run has not decided, and the rule is the one the queue
+    bracket already carries: a straddle is a FAIL, never an average.
+    """
+    T = CAPSTONE_THRESHOLD_BPS
+    a, b = eff_rt_residual_chased, eff_rt_whole_leg_charged
+    if a is None or b is None:
+        return {"decidable": False, "straddles": None,
+                "why": "both pricings are required to read the second bracket"}
+    straddles = (a <= T) != (b <= T)
+    return {
+        "decidable": True,
+        "straddles": bool(straddles),
+        "state": ("FAIL_PARTIAL_FILL_PRICING_STRADDLES" if straddles
+                  else "PARTIAL_FILL_PRICING_AGREES"),
+        "threshold_bps": T,
+        "eff_rt_residual_chased_bps": a,
+        "eff_rt_whole_leg_charged_bps": b,
+        "gate_bearing": "residual_chased",
+        "why": (f"the two partial-fill pricings fall on opposite sides of "
+                f"{T} bps, so the verdict depends on a convention rather "
+                f"than on the book -- a FAIL, never the mean of the two"
+                if straddles else
+                f"both partial-fill pricings fall on the same side of {T} "
+                f"bps, so the verdict does not depend on which is used"),
+    }
+
+
 def icp_predicate(skip_rate: float | None, in_aggregate: bool) -> dict:
     """The named cell E1-A left unresolved.
 
@@ -388,6 +693,13 @@ def declaration() -> dict:
                 "2026-09-06T05:01Z: 16 complete days per stream per symbol "
                 "(08-20..08-25, 08-27..09-05); the gap-fraction leg is NOT "
                 "yet evaluated."),
+            "day_admission_is_PER_SYMBOL_over_the_twelve_IN_SCOPE": (
+                "R-570(C)(3): depth20 completeness is required for the "
+                "TWELVE symbols in scope, not for all sixteen the collector "
+                "carries. A day is admissible FOR A SYMBOL and there is no "
+                "cross-symbol day filter -- otherwise a stream outage on "
+                "APT, ARB, ATOM or GMX, none of which E2-A measures, would "
+                "delete days from a symbol it does."),
             "min_complete_days": MIN_COMPLETE_DAYS,
             "refuses_below_min": True,
             "cluster_unit": "UTC day (CLAUDE.md rule 8)",
@@ -454,6 +766,7 @@ def declaration() -> dict:
 
         "the_queue_bracket": QUEUE_MODELS,
         "interior_controls": INTERIOR_CONTROLS,
+        "runner_boundaries": RUNNER_BOUNDARIES,
         "hftbacktest_is_absent": {
             "checked": "import hftbacktest raises ModuleNotFoundError on this "
                        "interpreter, as-of 2026-09-06T05:01Z",
@@ -507,6 +820,17 @@ def declaration() -> dict:
                                    "model cannot cost more than the "
                                    "pessimistic one, so the INSTRUMENT is "
                                    "refuted and no overlay verdict is read",
+            "FAIL_PARTIAL_FILL_PRICING_STRADDLES":
+                "the residual-chased and whole-leg-charged pricings fall on "
+                "opposite sides of the threshold -- R-570(C)(2), never "
+                "averaged",
+            "the_order_the_states_are_checked_in": [
+                "1. REFUTES_THE_BRACKET -- the instrument, before any verdict",
+                "2. FAIL_PARTIAL_FILL_PRICING_STRADDLES -- the second "
+                "bracket, before the gate reads either pricing",
+                "3. the gate, on the GATE-BEARING pricing (residual chased "
+                "at T_p) under RiskAverse",
+            ],
             "INCONCLUSIVE_NO_INTERVAL": "point clears, G < 5, no interval",
             "INCONCLUSIVE_INTERVAL_DOES_NOT_CLEAR":
                 "point clears, CI upper bound does not",
@@ -563,6 +887,15 @@ def declaration() -> dict:
                 "the E1-A reproduction control passing on E1-A's own data",
                 "a day with all three streams complete and no gaps is "
                 "ADMITTED",
+                "an episode whose L IS inside the depth20 snapshot's twenty "
+                "levels is ADMITTED to both models -- the undefined status "
+                "must be able NOT to fire, or it is a filter wearing a "
+                "status's name",
+                "an episode filled to phi = 0.5 must price STRICTLY between "
+                "c_fill and c_chase under the gate-bearing rule -- partial "
+                "pricing must be able to produce an interior number",
+                "a synthetic tape whose quantities are all multiples of 0.25 "
+                "must return a quantity step of 0.25",
             ],
             "known_bads": [
                 "a resting order behind depth larger than all subsequent "
@@ -583,7 +916,23 @@ def declaration() -> dict:
                 "adopted from P-003 and imported, not copied)",
                 "the runner must REFUSE if the E1-A reproduction control "
                 f"misses the published numbers by more than "
-                f"{E1A_REPRODUCTION_TARGET['tolerance_bps']} bps",
+                f"{E1A_REPRODUCTION_TARGET['tolerance_bps']} bps"
+                "an episode whose level L is ABSENT from the depth20 "
+                "snapshot must carry QUEUE_AHEAD_UNDEFINED and appear in "
+                "NEITHER model's population -- a queue-ahead of zero there "
+                "would read as the most favourable queue position there is",
+                "an opposite-side trade at EXACTLY L must FILL under "
+                "RiskAverse when it carries enough volume; the "
+                "strict-through reading is the known-bad and must not",
+                "the two partial-fill pricings straddling the threshold must "
+                "return FAIL_PARTIAL_FILL_PRICING_STRADDLES, never their "
+                "mean",
+                "a symbol outside the twelve in scope must be REFUSED by "
+                "name rather than measured",
+                "filled_qty(ProbQueue) < filled_qty(RiskAverse) on ANY "
+                "single episode must REFUTE -- that ordering is arithmetic, "
+                "unlike the per-episode COST ordering, which the winner's "
+                "curse can invert with no defect present",
             ],
         },
 
@@ -797,8 +1146,10 @@ def selftest() -> int:                                        # noqa: C901
 
     d = declaration()
     states = set(d["what_settles_and_what_fails"]) - {
-        "why_the_interval_binds_only_on_PASS", "what_this_supersedes"}
-    produced = {gate_predicate(*a, **k)["state"] for a, k in (
+        "why_the_interval_binds_only_on_PASS", "what_this_supersedes",
+        "the_order_the_states_are_checked_in"}
+    produced = {partial_pricing_predicate(7.0, 9.0)["state"]} | {
+        gate_predicate(*a, **k)["state"] for a, k in (
         ((6.0, 5.0), {"ci_lo": 5.0, "ci_hi": 7.0}),
         ((10.0, 9.0), {"ci_lo": 9.0, "ci_hi": 11.0}),
         ((9.0, 7.0), {"ci_lo": 8.0, "ci_hi": 10.0}),
@@ -837,6 +1188,66 @@ def selftest() -> int:                                        # noqa: C901
     ok(d["reproduction_control_inherited"]["eff_rt_sweep_bps"] == 6.2645,
        "THE INHERITED CONTROL pins E1-A's published T_p=600 numbers, so a "
        "superseding number cannot come from a different estimator unnoticed")
+
+    # ---- v4: the three ruled boundaries and the owed attribution --------
+    ok(partial_pricing_predicate(7.0, 9.0)["state"]
+       == "FAIL_PARTIAL_FILL_PRICING_STRADDLES",
+       "PARTIAL-PRICING KNOWN-BAD: 7.0 residual-chased against 9.0 "
+       "whole-leg-charged STRADDLES 8.0 and is a FAIL -- not the mean 8.0, "
+       "which would have passed (R-570(C)(2))")
+    ok(partial_pricing_predicate(6.0, 7.0)["state"]
+       == "PARTIAL_FILL_PRICING_AGREES"
+       and partial_pricing_predicate(9.0, 11.0)["state"]
+       == "PARTIAL_FILL_PRICING_AGREES",
+       "PARTIAL-PRICING POSITIVE CONTROL: two pricings on the SAME side of "
+       "the threshold AGREE, on both sides of it -- the straddle rule can "
+       "not fire, so it is a rule and not a veto")
+    ok(partial_pricing_predicate(None, 7.0)["decidable"] is False,
+       "PARTIAL-PRICING REFUSES a half-populated bracket rather than "
+       "reading the half it has")
+
+    rb = d["runner_boundaries"]
+    ok(rb["queue_ahead_undefined"]["ruling"] == "R-570(C)(1)"
+       and "never" in rb["queue_ahead_undefined"]
+       and "ZERO" in rb["queue_ahead_undefined"]["never"],
+       "BOUNDARY 1 DECLARED: an absent level is QUEUE_AHEAD_UNDEFINED and "
+       "excluded from both models -- explicitly NOT a queue-ahead of zero, "
+       "which would read as the best queue position there is")
+    ok(rb["partial_fill_pricing"]["gate_bearing"].startswith(
+           "RESIDUAL_CHASED_AT_TP")
+       and "never" in rb["partial_fill_pricing"]["straddle_is_a_FAIL"].lower(),
+       "BOUNDARY 2 DECLARED: the residual chased at T_p is gate-bearing, "
+       "the whole-leg charge is the pessimistic bracket, and a straddle is a "
+       "FAIL rather than an average")
+    ok("TWELVE" in rb["day_admission_scope"]["rule"]
+       and d["population"][
+           "day_admission_is_PER_SYMBOL_over_the_twelve_IN_SCOPE"],
+       "BOUNDARY 3 DECLARED: day admission is per symbol over the twelve in "
+       "scope, so an outage on a symbol E2-A does not measure cannot delete "
+       "days from one it does")
+
+    att = QUEUE_MODELS["RiskAverse"][
+        "ATTRIBUTION_the_library_is_absent_so_this_is_stated_not_assumed"]
+    ok("+q" in att["MY_tightening"]
+       and "HIGHER" in att[
+           "its_direction_is_unambiguous_even_though_its_provenance_is_not"],
+       "THE OWED ATTRIBUTION IS A FIELD, NOT A HOPE: the '+q' term is named "
+       "as MY tightening, with its direction (fills rarer, eff_RT higher, "
+       "conservative for a PASS gate) stated because its provenance cannot "
+       "be checked with the library absent")
+    ok(QUEUE_MODELS["RiskAverse"]["at_or_through_L_direction"][
+           "the_direction"].count("k_price") == 2,
+       "THE REVIEWER'S RESIDUAL IS CLOSED IN THE DECLARATION: the at-L "
+       "direction is stated for both sides on INTEGER TICK INDICES, with a "
+       "control that a trade exactly AT L fills and the strict-through "
+       "reading is the known-bad")
+    ordr = QUEUE_MODELS["ProbQueue_f3"][
+        "the_ordering_property_is_SPLIT_and_one_half_of_R570B_was_not_true"]
+    ok("FALSE" in ordr["per_episode_COST_is_NOT_an_ordering_property"]
+       and "ARITHMETIC" in "".join(ordr),
+       "THE ORDERING PROPERTY IS SPLIT AND SAYS SO: quantity per episode is "
+       "arithmetic; COST per episode is not an ordering property at all, "
+       "because favourable drift makes a chase cheaper than a fill")
 
     print(f"\n{'selftest OK' if not fails else 'SELFTEST FAILED'} -- "
           f"{len(fails)} failure(s)")

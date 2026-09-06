@@ -62,6 +62,33 @@ program continues) — recommended, not yet started.
 - tick_size(): FIXED post-audit (mode-of-diffs; FIL had been misdetected 1e-6
   vs true 1e-4 by 81 off-grid prints; corrected aggregate 3.36/6.28, verdict
   unchanged — current CSVs still carry the old FIL tick, immaterial).
+
+  > **IN-BAND CORRECTION, 2026-09-06 (DA seat; R-570(D), reviewer
+  > `REVIEW_DA60_2026-09-06.md`). The entry above is not reproducible from the
+  > committed code and the word to change is "FIXED".** The line should read:
+  > *tick_size(): fix DESIGNED post-audit (mode-of-diffs) and **NOT LANDED** —
+  > the committed function still returns FIL = 1e-6; the corrected aggregate
+  > 3.36/6.28 is what the fix WOULD produce, recomputed, and the operative CSV
+  > pair 3.4485 / 6.2645 stands.*
+  >
+  > **How it was found and on what evidence.** E2-A's inherited reproduction
+  > control ran BOTH published pairs rather than one. `e1_markout_scan.py`'s
+  > own `tick_size('FILUSDT')`, **executed** rather than transcribed, returns
+  > **1e-6** — the pre-fix value — and an independent mode-of-diffs
+  > implementation returns 1e-6 as well, so two implementations agree and the
+  > defect is not a transcription. The committed code's own comment at
+  > `e1_markout_scan.py:148` still describes the UNFIXED behaviour. The
+  > repository therefore does not carry the FIL = 1e-4 this entry describes
+  > and **cannot produce 3.36 / 6.28**: a reader reaching for that pair is
+  > reaching for a number nothing on disk can make.
+  >
+  > **What does NOT move.** E1-A's operative number is the **csv regime**,
+  > which E2-A's control reproduces to four decimal places (touch 3.4485,
+  > sweep 6.2645; errors 1.1e-5 and 2.7e-5 bps against a 0.05 tolerance).
+  > The tick fix is **not re-landed here** — E1's frozen artifacts are not
+  > edited (rule 13) and this note supersedes the record in band. Receipt:
+  > `data/mm_hf/e1/p002_e2a_e1a_reproduction__20260906T051626Z.json`
+  > (sha256 `e76e3226b1cf603e`).
 - E1x (ADA + any future passer): notional-weighted gate quantity (amendment
   above), fixed tick, and the §1.4 bin bootstrap at the symbol's τ*.
 - Prereg gaps found by review, for the record: day-clustered t declared but
