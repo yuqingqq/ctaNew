@@ -194,6 +194,16 @@ except where marked USER-ONLY.
     (`<name>_1/_2` or the stamp) so `-u` is a per-run query again; and the producing CODE byte-identical between
     launches, or the change reviewed before the next launch (R-620's hazard is an unreviewed fix going live inside
     one batch, not the second launch).
+    **Declaration chains: a landed version is IMMUTABLE and the write is a compare-and-swap (R-711, REV 81 §1.4).**
+    Chains are versioned by ONE new `<family>_v<N>.json` per landing, never by editing a landed version (the exit-map
+    chain lost two seats' blocks to in-place landings on 2026-09-06). The CLOSURE is at the moment of the write: the
+    emitter REFUSES to write `<family>_v<N>.json` if a file already exists at that path, or if the head's digest at
+    write time differs from the head it read -- one shared implementation, imported, never re-typed. A landing whose
+    diff shows M on an existing version (instead of A on a new one) is a refusal; the landing-time head re-read is a
+    discipline and `scripts/declaration_immutability.sh` is the detection -- neither is the rule.
+    **A halted seat's worktree (R-627's clause, REV 81 §4).** "Never touch a seat's worktree while the seat works" --
+    *idle* includes *halted for a reset*: a preservation-only commit in a halted worktree is permitted, UNPUSHED, the
+    bytes unaltered, the act disclosed in the register by commit id; the rows then land in the shared register attributed.
 
 21. **Landing in the shared tree is add, commit, push — nothing else** (R-576):
     a seat that lands an artifact from `/home/yuqing/ctaNew` runs exactly

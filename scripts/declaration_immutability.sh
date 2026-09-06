@@ -22,6 +22,15 @@ if [ "$MODE" = "falsify" ]; then
   r1=$(check live/pm_research/declarations/producer_exit_maps_v2.json); r2=$(check live/pm_research/declarations/producer_exit_maps_v1.json); echo "$r1"; echo "$r2"
   case "$r1" in FORKED_BY_EDIT*) ;; *) echo "FALSIFIER FAIL: positive control did not flag"; exit 1;; esac
   case "$r2" in OK*) ;; *) echo "FALSIFIER FAIL: known-good did not pass"; exit 1;; esac
-  echo "FALSIFIER PASS (base $BASE)"; exit 0
+  hist=$("$0" "$DIR" --base "$BASE" | grep -c "^HISTORY (not judged):"); [ "$hist" -eq 1 ] || { echo "FALSIFIER FAIL: no HISTORY denominator line"; exit 1; }
+  echo "FALSIFIER PASS (base $BASE; denominator line present)"; exit 0
 fi
-RC=0; for f in "$DIR"/*_v[0-9]*.json; do [ -e "$f" ] || continue; check "$f" || RC=1; done; echo "base $BASE; exit $RC"; exit $RC
+RC=0; HF=0; declare -A HFAM; NF=0
+for f in "$DIR"/*_v[0-9]*.json; do [ -e "$f" ] || continue; NF=$((NF+1)); check "$f" || RC=1
+  created=$(git log --diff-filter=A --format=%H -- "$f" | tail -1)
+  if [ -n "$created" ]; then h=$(git log --format=%H "$created..$BASE" -- "$f" 2>/dev/null | wc -l); if [ "$h" -gt 0 ]; then HF=$((HF+1)); fam=$(basename "$f" | sed -E 's/_v[0-9]+\.json$//'); HFAM[$fam]=1; fi; fi
+done
+# REV 81 §1.3: the denominator -- what this run did NOT judge, named as history, so exit 0 reads as
+# "nothing edited since $BASE" and never as "the declarations are immutable".
+echo "HISTORY (not judged): $HF of $NF version files in ${#HFAM[@]} families had in-place edits BEFORE base $BASE"
+echo "base $BASE; exit $RC"; exit $RC
