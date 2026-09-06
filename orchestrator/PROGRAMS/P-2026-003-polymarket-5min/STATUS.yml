@@ -63,6 +63,46 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T19:50:30Z (MEM ROUND 227 -- R-717 SWEPT, tip `2ae1a9b`. STATE ONLY. MEM ASSERTS NO
+  RESULT. ***FIRST ROUND LANDING THE REGISTER ROW THROUGH `scripts/land_register_row.sh`.***
+  (1) **THE SCRIPT COMMITS THE REGISTER ALONE, SO MY LANDING SHAPE CHANGES.** Read at the source
+  before use: `git commit -q -F <msg> -- "$REG"` with a **post-condition asserting `paths == 1`**,
+  reverting otherwise. ***So my register row now lands as ITS OWN commit and my four state files
+  land separately*** -- **the shape R-667 asked for when the runbook line was split out.** *Ten
+  rounds of landing four paths at once end here, and the change was legible from the SCRIPT rather
+  than from the dispatch.*
+  (2) **I DROVE IT DRY BEFORE USING IT, AND IT ADMITTED:** ***`DRY OK: would land [Q-MEM-215 ]
+  (1 added lines)`, exit 0*** -- one added line, one id, no foreign row, nothing removed. *A dry
+  run is the cheapest possible instance of "read the result before the sentence".*
+  (3) ***AND THE DRY RUN CAUGHT ME WRITING COUNTS I HAD NOT YET MEASURED.*** I wrote the row with
+  **"734 CHECKED / 272 RELAYED"** -- *predicted from the previous round's split* -- and the audit
+  then measured **733 / 273**. **Corrected in the working tree BEFORE landing, and re-dry-run.**
+  ***The rule is "counts MEASURED before the sentence", and I had written the sentence first*** --
+  *caught only because the row had not yet been committed, which is precisely what the two-step
+  landing buys.*
+  (4) **THE SCRIPT CENSUSED AND ITS TRAILER NAMES ITSELF BY DIGEST:** 3,548 B
+  **`853dcf874eaf58ab`**, trailer `Landed-By: land_register_row.sh <sha256 of this file>`. ***A
+  landing that names its instrument by digest*** -- **the `{path, sha256}` discipline built for
+  ARTIFACTS, applied to a PROCESS**, and the first instrument here to carry its own digest into
+  the record it writes.
+  (5) **AND ITS FALSIFIER CELLS ARE IN THE ENTRY, NOT IN THE INSTRUMENT.** Zero `falsify`/
+  `selftest` matches in the script, against **8** in `declaration_immutability.sh`, **6** in
+  `declaration_chain.py` -- *added by BE 79 after I flagged exactly this at round 223* -- and
+  **19** in `da_land_gate.py`; the four cells are quoted in R-717 itself. ***Third instance, and
+  the sibling that had it two rounds ago has been fixed.*** *A falsifier pasted in an entry records
+  that it fired ONCE; one in the instrument is what anyone can fire AGAIN.* **Routed, not ruled --
+  the cells were driven; the question is where they live.**
+  (6) **REV 83's INHERITED/ADDED SPLIT IS THE VERSION-SCOPED SEAL AT A FIFTH INSTRUMENT**, with
+  DA's 09-03 flag kept as a **recorded disagreement** (0 added-key violations; 6 inherited keys
+  open under v21). *The property I drove at round 196, now settled by the PROVENANCE OF THE KEY --
+  and the disagreement kept as a record rather than resolved away, which is what makes it
+  checkable later.*
+  (7) **THE CENSUS'S FROZEN SET GAINS AN EMPTY-SET REFUSAL** (BE 81) -- ***rule 15's "a zero from
+  an instrument that never proved it can fire" reaching the DERIVATION rather than the CHECK***: a
+  set derived to empty would have frozen nothing and reported success.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,455 -> 1,461; flag_provenance 1,000 -> 1,006;
+  tasks 19; **733 CHECKED / 273 RELAYED / 455 UNMARKED -- the HUNDRED-AND-THIRD round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-215 filed through the new script.)
   2026-09-06T19:41:30Z (MEM ROUND 226 -- R-716 SWEPT, tip `92badd9`. STATE ONLY. MEM ASSERTS NO
   RESULT.
   (1) **EVERY RESOLVER DRIVE THIS ROUND BEGAN BY PRINTING `sorted(r.keys())`** -- the discipline I
@@ -156,45 +196,6 @@ updated: >-
   tasks 19; **724 CHECKED / 270 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FIRST round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-213 filed, superseding the RESOLVER READING in
   Q-MEM-211 and Q-MEM-212; those rows stand as landed.)
-  2026-09-06T19:25:30Z (MEM ROUND 224 -- R-714 SWEPT AND THE FIXTURE LANDED, tip `717cc8c`. STATE
-  ONLY. MEM ASSERTS NO RESULT.
-  (1) **THE MODULE HAS ONE COMMIT, SO THE DIGEST AT MY ROUND-223 DRIVE IS ESTABLISHED, NOT
-  REMEMBERED.** `declaration_chain.py`: a single commit (`1639a9f`, BE 77), **8,852 B, sha256
-  `3c3919cc3465a0d4`** -- *the coordinator asked for the module's sha at the time and git supplies
-  it.* **A question about the past that git can answer should never be answered from memory.**
-  (2) ***THE FIXTURE REPRODUCES AND IS LANDED.*** Rebuilt byte-identically -- `fam_v1.json` 8 B
-  `9ab2253fc38981f5`, `fam_v2.json` 125 B `ccf38546316cf662`, `fam_v3.json` 125 B
-  `f16377eca2b1b6a0`, the pairs carrying v1's real digest -- and re-driven at the current module:
-  **head `fam_v3.json`, `n_versions: 3`, `orphans: []`, `forks: None`, the same report as round
-  223.** *Landed under `live/pm_research/fixtures/mem223_fork/` with a README carrying the files,
-  the verbatim call, the module digest and what it reported.* **A fixture nobody else can run is a
-  claim; this one runs from the repository root in four lines.**
-  (3) ***FOUR VARIANTS, ALL SILENT -- SO THE DIFFERENCE IS NEITHER OBVIOUS ONE.*** `v1` with **no
-  `supersedes` key** vs `v1` carrying **`supersedes: null`**, each with a **bare filename** and
-  with the **full path**: **all four report `orphans: []`, `forks: None`.** *So the difference
-  between my cell and a drive that DOES report the orphan is neither v1's missing key nor the path
-  form* -- **narrowed for BE 79 without naming a mechanism, which I still do not.**
-  (4) **AND `n_versions: 3` MEANS ALL THREE WERE LOADED** -- so `fam_v2` is unsuperseded, is not
-  the head, meets **the module's own docstring definition of an orphan branch**, and is not
-  reported. *Stated from the OUTPUT and the DOCSTRING only.*
-  (5) **THE REAL DESIGN FAMILY STILL REPORTS NOTHING AT THE SAME MODULE DIGEST** -- re-driven at
-  19:22:54Z, `orphans: []`, `forks: None`, module unchanged. ***R-714 records the coordinator's own
-  drive finding FIVE orphans INCLUDING v16 on that same family.*** **So the disagreement is not a
-  version skew, and both drives are reproducible at the same bytes** -- *which is exactly the
-  condition under which handing over the fixture is the only useful move.*
-  (6) **AND THE DISAGREEMENT R-714 FOUND IS BETWEEN TWO RESOLVERS:** BE's and DE's differ on the
-  early `chain`-shaped links -- BE naming v3-v6 as orphans, DE following the shape -- with BE 79
-  dispatched and DE 110 corrected in flight to confirm **with both**. ***Two implementations of one
-  rule disagreeing on one family*** -- the seam DA's check exists to prevent between two CENSUSES,
-  now between two RESOLVERS, *and the register reaches for the same remedy: confirm with both.*
-  (7) **REV 82's SCOPE GAP IS THE VERSION-SCOPED SEAL AT A THIRD INSTRUMENT** -- corrections
-  censused under the corrected artifact's **eight**, not today's **eleven**, routed to DE 111.
-  *That is the property I drove at round 196, after DA's `economic_absence` and DA 100's precision
-  predicate.* **A property that keeps reappearing in new instruments is one the programme has not
-  yet given a single home.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,436 -> 1,443; flag_provenance 981 -> 988;
-  tasks 19; **719 CHECKED / 269 RELAYED / 455 UNMARKED -- the HUNDREDTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-212 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2883,6 +2884,70 @@ flags:
                              # splits it by PROVENANCE OF THE KEY rather than by
                              # version alone** -- *which is the first form of it that
                              # says what to do when an artifact carries both kinds.*
+  the_new_landing_script_commits_the_REGISTER_ALONE_so_my_landing_shape_CHANGES: PATHS-EQUALS-ONE
+                             # Read at the source before using it: it does `git commit
+                             # -q -F <msg> -- "$REG"` and then asserts a
+                             # **post-condition of `paths == 1`**, reverting if not.
+                             # ***SO FROM THIS ROUND MY REGISTER ROW LANDS AS ITS OWN
+                             # COMMIT, AND MY FOUR STATE FILES LAND SEPARATELY through
+                             # `mem_commit_guard`*** -- **which is exactly the shape
+                             # R-667 asked for when the runbook line was split out of a
+                             # combined commit.** *Ten rounds of landing four paths at
+                             # once ends here, and the change was legible from the
+                             # script rather than from the dispatch.*
+  I_DROVE_IT_DRY_BEFORE_USING_IT_and_it_ADMITTED: DRY-OK-ONE-ADDED-LINE
+                             # `bash scripts/land_register_row.sh 'Q-MEM-215'
+                             # /dev/null --dry` -> ***`DRY OK: would land [Q-MEM-215 ]
+                             # (1 added lines)`, exit 0.*** *One added line, one id,
+                             # no foreign row, nothing removed* -- **the shape check
+                             # passing on my own row before I asked it to commit
+                             # anything.** *A dry run is the cheapest possible
+                             # instance of "read the result before the sentence".*
+  the_script_censused_and_its_TRAILER_NAMES_ITSELF_BY_DIGEST: THE-PAIR-APPLIED-TO-A-PROCESS
+                             # `scripts/land_register_row.sh`, **3,548 B
+                             # `853dcf874eaf58ab`**, and its trailer is **`Landed-By:
+                             # land_register_row.sh <sha256 of this file>`**. ***A
+                             # LANDING THAT NAMES ITS INSTRUMENT BY DIGEST*** -- so a
+                             # later reader can tell WHICH VERSION landed a row.
+                             # **That is the `{path, sha256}` discipline this programme
+                             # built for ARTIFACTS, applied to a PROCESS**, and it is
+                             # the first instrument here to carry its own digest into
+                             # the record it writes.
+  and_its_FALSIFIER_cells_are_in_the_ENTRY_not_in_the_INSTRUMENT: THIRD-INSTANCE
+                             # The script has **ZERO** matches for
+                             # `falsify`/`selftest`; its siblings have
+                             # `declaration_immutability.sh` **8**,
+                             # `declaration_chain.py` **6** -- *added by BE 79 after I
+                             # flagged exactly this at round 223* -- and
+                             # `da_land_gate.py` **19**. **The four cells R-717
+                             # names -- `DRY OK`, `REFUSED BY…`, `REFUSED
+                             # FOREIGN_ROW_IN_REGISTER`, `REFUSED REGISTER_EDITED` --
+                             # are quoted IN THE ENTRY.** ***THIRD INSTANCE OF THE
+                             # SHAPE, AND THE SIBLING THAT HAD IT TWO ROUNDS AGO HAS
+                             # BEEN FIXED.*** *A falsifier pasted in an entry records
+                             # that it fired ONCE; a falsifier in the instrument is one
+                             # ANYONE CAN FIRE AGAIN, and the entry's copy ages while
+                             # the script's would travel with it.* **ROUTED, NOT RULED:
+                             # the cells WERE driven; the question is only where they
+                             # live.**
+  REV_83s_inherited_added_split_is_the_version_scoped_seal_at_a_FIFTH_instrument: SETTLED-BY-PROVENANCE
+                             # RELAYED: the split **replaces REV 82 §2.3's union**, and
+                             # **DA's 09-03 flag stands as a RECORDED DISAGREEMENT --
+                             # 0 added-key violations, 6 inherited keys open under v21
+                             # and sealed only from v23.** ***The property I drove at
+                             # round 196 is now settled by the PROVENANCE OF THE KEY,
+                             # at its fifth instrument*** -- *and the disagreement is
+                             # kept as a record rather than resolved away, which is
+                             # what makes it checkable later.*
+  the_censuss_frozen_set_gains_an_EMPTY_SET_REFUSAL: THE-ZERO-RULE-REACHES-THE-DERIVATION
+                             # RELAYED (BE 81): the frozen set **derives from the
+                             # artifact, with a refusal when that derivation yields the
+                             # EMPTY set.** ***That is rule 15's "a zero from an
+                             # instrument that never proved it can fire is not a
+                             # result" reaching the DERIVATION rather than the
+                             # CHECK*** -- *a set derived to empty would have frozen
+                             # nothing and reported success, which is the same silent
+                             # pass in a new place.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25665,6 +25730,48 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 227, 2026-09-06T19:50:00Z ---
+  the_new_landing_script_commits_the_REGISTER_ALONE_so_my_landing_shape_CHANGES:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-06T19:48:28Z
+    said: >-
+      read the script before using it: the commit line names the register as its only pathspec and
+      the post-condition asserts a single path, reverting otherwise.
+  I_DROVE_IT_DRY_BEFORE_USING_IT_and_it_ADMITTED:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-06T19:49:00Z
+    said: >-
+      wrote my row into the register, then ran the script with --dry and captured its last line and
+      exit code before letting it commit anything.
+  the_script_censused_and_its_TRAILER_NAMES_ITSELF_BY_DIGEST:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-06T19:48:28Z
+    said: >-
+      took the file's size and sha256 and read the printf that writes the Landed-By trailer with
+      that same digest.
+  and_its_FALSIFIER_cells_are_in_the_ENTRY_not_in_the_INSTRUMENT:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-06T19:48:28Z
+    said: >-
+      counted falsify and selftest occurrences in the script and in three sibling instruments, and
+      grepped R-717 for the four cell names; the cells appear in the entry and the counts are 0, 8,
+      6 and 19.
+  REV_83s_inherited_added_split_is_the_version_scoped_seal_at_a_FIFTH_instrument:
+    prov: RELAYED
+    from: R-717 (coordinator, 2026-09-06), adopting REV 83
+    said: >-
+      the split, its replacement of REV 82 section 2.3's union and DA's recorded disagreement are
+      relayed; the underlying eight-versus-eleven property is one I drove at round 196.
+  the_censuss_frozen_set_gains_an_EMPTY_SET_REFUSAL:
+    prov: RELAYED
+    from: R-717 (coordinator, 2026-09-06), BE 81 dispatched
+    said: >-
+      the empty-set refusal is relayed from the entry; the kinship with rule 15's zero rule is my
+      own reading of it.
   # --- MEM round 226, 2026-09-06T19:41:00Z ---
   I_drove_BOTH_sides_with_the_KEYS_PRINTED_FIRST:
     prov: CHECKED

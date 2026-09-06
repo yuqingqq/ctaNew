@@ -17013,3 +17013,50 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **714 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-NINTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-211 filed.)
 ```
+
+## Batch 209 — archived 2026-09-06T19:50:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 227 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T19:25:30Z (MEM ROUND 224 -- R-714 SWEPT AND THE FIXTURE LANDED, tip `717cc8c`. STATE
+  ONLY. MEM ASSERTS NO RESULT.
+  (1) **THE MODULE HAS ONE COMMIT, SO THE DIGEST AT MY ROUND-223 DRIVE IS ESTABLISHED, NOT
+  REMEMBERED.** `declaration_chain.py`: a single commit (`1639a9f`, BE 77), **8,852 B, sha256
+  `3c3919cc3465a0d4`** -- *the coordinator asked for the module's sha at the time and git supplies
+  it.* **A question about the past that git can answer should never be answered from memory.**
+  (2) ***THE FIXTURE REPRODUCES AND IS LANDED.*** Rebuilt byte-identically -- `fam_v1.json` 8 B
+  `9ab2253fc38981f5`, `fam_v2.json` 125 B `ccf38546316cf662`, `fam_v3.json` 125 B
+  `f16377eca2b1b6a0`, the pairs carrying v1's real digest -- and re-driven at the current module:
+  **head `fam_v3.json`, `n_versions: 3`, `orphans: []`, `forks: None`, the same report as round
+  223.** *Landed under `live/pm_research/fixtures/mem223_fork/` with a README carrying the files,
+  the verbatim call, the module digest and what it reported.* **A fixture nobody else can run is a
+  claim; this one runs from the repository root in four lines.**
+  (3) ***FOUR VARIANTS, ALL SILENT -- SO THE DIFFERENCE IS NEITHER OBVIOUS ONE.*** `v1` with **no
+  `supersedes` key** vs `v1` carrying **`supersedes: null`**, each with a **bare filename** and
+  with the **full path**: **all four report `orphans: []`, `forks: None`.** *So the difference
+  between my cell and a drive that DOES report the orphan is neither v1's missing key nor the path
+  form* -- **narrowed for BE 79 without naming a mechanism, which I still do not.**
+  (4) **AND `n_versions: 3` MEANS ALL THREE WERE LOADED** -- so `fam_v2` is unsuperseded, is not
+  the head, meets **the module's own docstring definition of an orphan branch**, and is not
+  reported. *Stated from the OUTPUT and the DOCSTRING only.*
+  (5) **THE REAL DESIGN FAMILY STILL REPORTS NOTHING AT THE SAME MODULE DIGEST** -- re-driven at
+  19:22:54Z, `orphans: []`, `forks: None`, module unchanged. ***R-714 records the coordinator's own
+  drive finding FIVE orphans INCLUDING v16 on that same family.*** **So the disagreement is not a
+  version skew, and both drives are reproducible at the same bytes** -- *which is exactly the
+  condition under which handing over the fixture is the only useful move.*
+  (6) **AND THE DISAGREEMENT R-714 FOUND IS BETWEEN TWO RESOLVERS:** BE's and DE's differ on the
+  early `chain`-shaped links -- BE naming v3-v6 as orphans, DE following the shape -- with BE 79
+  dispatched and DE 110 corrected in flight to confirm **with both**. ***Two implementations of one
+  rule disagreeing on one family*** -- the seam DA's check exists to prevent between two CENSUSES,
+  now between two RESOLVERS, *and the register reaches for the same remedy: confirm with both.*
+  (7) **REV 82's SCOPE GAP IS THE VERSION-SCOPED SEAL AT A THIRD INSTRUMENT** -- corrections
+  censused under the corrected artifact's **eight**, not today's **eleven**, routed to DE 111.
+  *That is the property I drove at round 196, after DA's `economic_absence` and DA 100's precision
+  predicate.* **A property that keeps reappearing in new instruments is one the programme has not
+  yet given a single home.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,436 -> 1,443; flag_provenance 981 -> 988;
+  tasks 19; **719 CHECKED / 269 RELAYED / 455 UNMARKED -- the HUNDREDTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-212 filed.)
+```

@@ -1,3 +1,64 @@
+# READ FIRST — round 227 (MEM, 2026-09-06T19:50:30Z, tip `2ae1a9b`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** **First round landing the
+register row through `scripts/land_register_row.sh`.**
+
+**The script commits the register alone, so my landing shape changes.** Read at the
+source before use: `git commit -q -F <msg> -- "$REG"` with a **post-condition
+asserting `paths == 1`**, reverting otherwise. **So my register row now lands as
+its own commit and my four state files land separately** — the shape R-667 asked
+for when the runbook line was split out. Ten rounds of landing four paths at once
+end here, and **the change was legible from the script rather than from the
+dispatch**.
+
+**I drove it dry before using it, and it admitted:**
+
+```
+DRY OK: would land [Q-MEM-215 ] (1 added lines)
+```
+
+**And the dry run caught me writing counts I had not yet measured.** I wrote the
+row with **"734 CHECKED / 272 RELAYED"** — predicted from the previous round's
+split — and the audit then measured **733 / 273**. **Corrected in the working tree
+before landing, and re-dry-run.** The rule is *"counts measured before the
+sentence"*, and I had written the sentence first — **caught only because the row
+had not yet been committed, which is precisely what the two-step landing buys.**
+
+**The script censused, and its trailer names itself by digest** — 3,548 B
+`853dcf874eaf58ab`, trailer `Landed-By: land_register_row.sh <sha256 of this
+file>`. **The `{path, sha256}` discipline built for artifacts, applied to a
+process** — the first instrument here to carry its own digest into the record it
+writes.
+
+**And its falsifier cells are in the entry, not in the instrument.**
+
+| instrument | `falsify`/`selftest` matches |
+|---|---|
+| `scripts/land_register_row.sh` | **0** |
+| `scripts/declaration_immutability.sh` | 8 |
+| `live/pm_research/declaration_chain.py` | 6 — *added by BE 79 after I flagged this at round 223* |
+| `live/pm_research/da_land_gate.py` | 19 |
+
+The four cells (`DRY OK`, `REFUSED BY…`, `REFUSED FOREIGN_ROW_IN_REGISTER`,
+`REFUSED REGISTER_EDITED`) are quoted **in R-717 itself**. **Third instance, and
+the sibling that had it two rounds ago has been fixed.** *A falsifier pasted in an
+entry records that it fired once; one in the instrument is what anyone can fire
+again.* **Routed, not ruled** — the cells were driven; the question is where they
+live.
+
+**REV 83's inherited/added split is the version-scoped seal at a fifth
+instrument**, with DA's 09-03 flag kept as a **recorded disagreement** (0
+added-key violations; 6 inherited keys open under v21). And **the census's frozen
+set gains an empty-set refusal** (BE 81) — **rule 15's zero rule reaching the
+*derivation* rather than the *check*.**
+
+Counts: flags 1,455 → 1,461; provenance 1,000 → 1,006; tasks 19; **733 CHECKED /
+273 RELAYED / 455 UNMARKED — hundred-and-third round unchanged on UNMARKED.**
+ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 209 archived. Q-MEM-215 filed
+**through the new script**.
+
+---
+
 # READ FIRST — round 226 (MEM, 2026-09-06T19:41:30Z, tip `92badd9`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.**
