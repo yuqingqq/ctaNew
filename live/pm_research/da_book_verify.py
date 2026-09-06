@@ -199,6 +199,15 @@ def builder_index_call(path: Path | None = None, *,
                 f"cannot be compared to the call it describes and MUST NOT "
                 f"be taken on trust.")
         src, src_from = p.read_text(), "working tree"
+        #: REV 50 section 1.3. THE FALLBACK IS THE POINT. When a commit was
+        #: ASKED FOR and did not resolve, the working tree is a DIFFERENT
+        #: object -- and returning it silently is the R-601 class through
+        #: the other door: a verdict computed from HEAD wearing a sentence
+        #: that attributes it to the receipt's commit. The caller is told,
+        #: and `check_seam` refuses to judge on it.
+        if at_commit:
+            src_from = "working tree (FALLBACK -- the requested commit did "
+            src_from += f"not resolve: {at_commit})"
     tree = ast.parse(src)
     calls = []
     for node in ast.walk(tree):
@@ -242,6 +251,8 @@ def check_identity(receipt: dict, *, day: str | None = None,
 
 SEAM_STATUS_VERIFIED = "SEAM_VERIFIED"
 SEAM_STATUS_INCOMPLETE = "PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT"
+SEAM_STATUS_UNRESOLVED = (
+    "PROVENANCE_INCOMPLETE_BUILDER_COMMIT_UNRESOLVED")
 
 
 def front_door_at(front_door: str | None, commit: str | None) -> dict:
@@ -339,6 +350,25 @@ def check_seam(receipt: dict) -> dict:
         })
         return out
     call = builder_index_call(at_commit=b_commit)
+    #: REV 50 section 1.3: INSPECT WHERE THE SOURCE CAME FROM. `front_door_at`
+    #: two functions above never falls back and never returns a verdict on a
+    #: commit it could not read; this did both.
+    if call["source"] != f"git {b_commit}":
+        out.update({
+            "status": "PROVENANCE_INCOMPLETE_BUILDER_COMMIT_UNRESOLVED",
+            "the_literal_was_NOT_judged": True,
+            "call_source": call["source"],
+            "contradicts_the_code": None,
+            "why": (
+                f"the receipt names builder commit {b_commit} and this "
+                f"worktree cannot resolve it, so the builder's source at "
+                f"that commit could not be read. Judging the literal against "
+                f"the WORKING TREE instead would compute a verdict from HEAD "
+                f"while attributing it to the receipt's commit -- the same "
+                f"error R-601 corrected, arriving through the other door. "
+                f"A gap, not a defect."),
+        })
+        return out
     agrees = (None if call["n_calls"] == 0
               else any(sorted(c["keywords"]) == kw_claimed
                        for c in call["calls"]))
@@ -574,7 +604,8 @@ def verify_receipt_tier(book_path, receipt_path, *,
     #: be located is INCOMPLETE, not wrong: the groups that were checked
     #: stand, and the seam literal was not judged at all. Collapsing that
     #: into FLAGGED would report a defect where there is a gap.
-    incomplete = seam.get("status") == SEAM_STATUS_INCOMPLETE
+    incomplete = seam.get("status") in (
+        SEAM_STATUS_INCOMPLETE, SEAM_STATUS_UNRESOLVED)
     status = ("FLAGGED" if flags
               else "PROVENANCE_INCOMPLETE" if incomplete else "VERIFIED")
     out = {
@@ -987,6 +1018,39 @@ def selftest() -> tuple:                                      # noqa: C901
        "contradicts the call" in why_seam
        and "BUILDER COMMIT" in why_seam and "tape_path" in why_seam,
        f"'{why_seam[:112]}...'")
+
+    #: REV 50 section 1.3, both directions.
+    r_unres = json.loads(rp.read_text())
+    r_unres["builder_commit"] = "deadbeef" * 5
+    rp_u = td / "receipt_unresolvable_commit.json"
+    rp_u.write_text(json.dumps(r_unres, default=str))
+    ur = verify_receipt_tier(bp, rp_u, day="20260903", coin="btc")
+    ck("REV 50 section 1.3 CLOSED -- A BUILDER COMMIT THIS WORKTREE CANNOT "
+       "RESOLVE IS INCOMPLETE, NEVER FLAGGED. `builder_index_call` fell back "
+       "to the WORKING TREE and `check_seam` never looked at `source`, so a "
+       "verdict computed from HEAD wore a sentence attributing it to the "
+       "receipt's commit -- ***the R-601 class through the other door***. "
+       "`front_door_at` two functions above never fell back and never "
+       "returned a verdict on a commit it could not read",
+       ur["seam"]["status"] == SEAM_STATUS_UNRESOLVED
+       and ur["seam"]["contradicts_the_code"] is None
+       and ur["seam"]["the_literal_was_NOT_judged"] is True
+       and ur["status"] == "PROVENANCE_INCOMPLETE"
+       and ur["n_flags"] == 0
+       and "FALLBACK" in ur["seam"]["call_source"],
+       f"an unresolvable commit -> {ur['seam']['status']}, "
+       f"{ur['n_flags']} flags, source "
+       f"'{ur['seam']['call_source'][:44]}...'")
+    ck("AND THE POSITIVE CONTROL ON THE SAME AXIS: a RESOLVABLE builder "
+       "commit whose call matches still VERIFIES -- the fix removes a false "
+       "verdict, not the check",
+       r_tier["seam"]["status"] == SEAM_STATUS_VERIFIED
+       and r_tier["seam"]["call_at_the_builder_commit"]["source"]
+       == f"git {r_tier['seam']['builder_commit']}"
+       and r_tier["status"] == "VERIFIED",
+       f"builder_commit {r_tier['seam']['builder_commit']} resolved from "
+       f"{r_tier['seam']['call_at_the_builder_commit']['source']} and the "
+       f"literal agrees")
 
     #: and seam.commit is checked against DE's module, which is what it names
     fd = r_tier["seam"]["front_door_check"]
