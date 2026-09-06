@@ -1,43 +1,30 @@
-"""THE RACE READER, REBUILT TO THE DECLARED ESTIMAND — AND IT REFUSES.
+"""THE RACE READER, RETARGETED TO THE FEED. R-588: OPTION A, NO RE-SEAL.
 
-R-581 / REVIEW_BE50_RACE_READER §A.2-A.4: my first reader computed a
-SIGN-FLIP COUNT OF RAW SCORE INCREMENTS. That is not the declared estimand,
-and the reviewer's known-bad exposed it: a collapsing series whose
-within-window values are TIED, versus the same series perturbed by 1e-9,
-gave DIFFERENT answers -- ties counted as `flat`, perturbations as up/down.
-A statistic whose sign turns on 1e-9 is not measuring the thing.
+Round 52 refused on the SCORES and was right about those bytes. Round 53
+showed the estimand was always computable -- from the FEED, which is what
+the interim actually read on 09-01 and 09-02. R-588 rules Option A: the read
+opens the FEED and the statistic is the interim's PRIMARY, MATCHED_VOLUME,
+because that is what those two days were read with and changing the
+statistic after seeing them would be a choice after seeing.
 
-THE DECLARED ESTIMAND IS READ FROM THE DECLARATION'S OWN FIELDS, never
-re-typed here: NET CENTS against the INCUMBENT, at the unit of the ACTION
-(slug, side, gen) DE-DUPLICATED, L = 50 ms, pairing BY_THRESHOLD. The day
-quantity is the per-day NET; the day sign is its sign. Net cents does not
-depend on counting flips, so ties and a 1e-9 perturbation give the SAME
-sign -- which is the falsifier that killed the old one.
+WHAT IT OPENS AND WHAT STAYS SHUT. It opens the five
+`be_forward_day_SEALED_feed_<DAY>.jsonl`. The `SEALED_scores` files STAY
+SEALED and are never opened -- the estimand does not need them, and opening
+more than the estimand needs is consumption without purpose (rule 11).
 
-AND THEN IT REFUSES ON THE REAL FILES, FOR A REASON I CHECKED AT THE WRITER.
-`be_forward_day` seals `out[coin].append((int(r["t0"]),
-FS.expected_cancel_value(fit, fp + ff)))` -- a per-action EXPECTED CANCEL
-VALUE from ONE fit. Those bytes carry:
+THE STATISTIC IS THE INTERIM'S OWN CODE, NOT A SECOND COPY.
+`be_read_cells.load_two_arm_feed` streams the feed and REFUSES a one-arm
+feed BY NAME -- "computing it from one arm would compare the candidate with
+itself and return a zero that looks like a measurement" -- and
+`be_read_cells.matched_volume` returns `MATCHED_VOLUME_increment_cents`.
+Two implementations of one statistic is two statistics.
 
-    no INCUMBENT      (one fit, not a pair -- nothing to difference against)
-    no ACTION IDENTITY beyond t0 (no slug, no side, no gen -- so the ruled
-                       de-duplication unit cannot be formed)
-    no REALISED CENTS  (an expected value is not a net)
+BY_THRESHOLD IS REPORTED, NEVER PRIMARY (rule 7, as the interim states it:
+controls are matched on the DECISION VARIABLE, and BY_THRESHOLD is not).
 
-**So the declared estimand is NOT COMPUTABLE from
-`be_forward_day_SEALED_scores_<DAY>.json`.** A reader that produced a number
-from those bytes and called it "net cents against the incumbent at the action
-unit" would be fabricating three of the four things the estimand names. This
-one REFUSES and says which fields are missing and where it looked.
-
-That refusal is the finding. It is routed, not worked around: either the
-sealed artifact must carry the action-level records the estimand needs, or
-the estimand the race read declares must change. Both are rulings, and
-neither is this seat's.
-
-IT DOES NOT RUN ON THE REAL FILES. `--open` is the coordinator's or the
-USER's act; everything below is driven on synthetic sealed files this module
-writes itself.
+IT DOES NOT RUN ON THE REAL FILES. `--open` is the coordinator's act on GO;
+everything below is driven on a SYNTHETIC two-arm feed written to the
+writer's own `FEED_FIELDS`.
 """
 from __future__ import annotations
 
@@ -56,6 +43,7 @@ import be_race_read_declaration as DECL
 ROOT = HERE.parents[1]
 OUT_NAME = "be_race_read_result_v1.json"
 GATE1_PATTERNS = DECL.GATE1_ARTIFACT_PATTERNS
+LATENCY_MS = 50
 
 
 class ReadVoid(RuntimeError):
@@ -63,89 +51,27 @@ class ReadVoid(RuntimeError):
 
 
 class ReadRefused(RuntimeError):
-    """A named refusal, before anything is concluded."""
+    """A named refusal."""
 
 
-def estimand() -> dict:
-    """THE ESTIMAND, READ FROM THE DECLARATION. Never re-typed here.
-
-    If the declaration changes, this reader changes with it; a re-typed copy
-    is a second declaration that can disagree with the first."""
-    e = DECL.statistic()["estimand"]
-    return {"quantity": e["quantity"], "unit": e["unit_of_analysis"],
-            "pairing": e["pairing_convention"],
-            "latency": e["latency_axis"], "comparator": e["comparator"],
-            "source": "be_race_read_declaration.statistic()['estimand']",
-            "re_typed_here": False}
+def sealed_feeds() -> dict:
+    """The FEED paths, from the declaration's own score paths."""
+    return {d: p.replace("SEALED_scores", "SEALED_feed").replace(
+        ".json", ".jsonl") for d, p in DECL.SEALED_SCORES.items()}
 
 
-#: What an action-level record must carry for the DECLARED estimand to be
-#: computable. Derived from the estimand's own words, not invented.
-REQUIRED_ACTION_FIELDS = ("slug", "side", "gen", "net_cents_vs_incumbent")
-
-
-def day_net_cents(actions) -> dict:
-    """NET CENTS at the ACTION unit, DE-DUPLICATED. Ties are irrelevant.
-
-    Rule 2: several rows can share one outcome, so the unit is the action
-    (slug, side, gen) and duplicates are collapsed before summing. The sign
-    of a SUM does not turn on whether two within-window values are equal --
-    which is exactly why this passes the falsifier the flip-count failed."""
-    if not isinstance(actions, list):
-        raise ReadRefused(f"REFUSED: actions is {type(actions).__name__}.")
-    seen, net, dupes = {}, 0.0, 0
-    for a in actions:
-        missing = [f for f in REQUIRED_ACTION_FIELDS if f not in a]
-        if missing:
-            raise ReadRefused(
-                f"REFUSED: an action record is missing {missing}. The "
-                f"declared estimand is net cents against the INCUMBENT at "
-                f"the unit of the ACTION; a record without those fields "
-                f"cannot supply it.")
-        k = (a["slug"], a["side"], a["gen"])
-        if k in seen:
-            dupes += 1
-            continue
-        seen[k] = float(a["net_cents_vs_incumbent"])
-    net = sum(seen.values())
-    return {"status": "OK", "n_rows": len(actions), "n_actions": len(seen),
-            "n_duplicates_collapsed": dupes,
-            "day_net_cents": net,
-            "day_sign": (1 if net > 0 else (-1 if net < 0 else 0)),
-            "unit": "the ACTION (slug, side, gen), de-duplicated (rule 2)"}
-
-
-def assert_estimand_supported(doc: dict, path) -> list:
-    """Can THESE BYTES supply the declared estimand? Checked, then refused.
-
-    The sealed scores' shape is read at the WRITER (`be_forward_day.seal`
-    over `out[coin].append((int(r["t0"]), expected_cancel_value(...)))`), so
-    this states what is missing rather than discovering it by crashing."""
-    acts = doc.get("per_action_records")
-    if isinstance(acts, list) and acts:
-        return acts
-    pcs = doc.get("per_coin_scores")
-    if pcs is None:
-        raise ReadRefused(f"REFUSED: {Path(path).name} carries neither "
-                          f"`per_action_records` nor `per_coin_scores`.")
-    raise ReadRefused(
-        f"REFUSED — THE DECLARED ESTIMAND IS NOT COMPUTABLE FROM "
-        f"{Path(path).name}. It carries `per_coin_scores`: rows of "
-        f"[t0, expected_cancel_value] from ONE fit, written by "
-        f"`be_forward_day.seal`. The estimand needs, and these bytes do not "
-        f"have: (1) the INCUMBENT -- one fit is not a pair, so there is "
-        f"nothing to difference against; (2) ACTION IDENTITY beyond t0 -- no "
-        f"slug, no side, no gen, so the ruled de-duplication unit cannot be "
-        f"formed; (3) REALISED CENTS -- an expected value is not a net. "
-        f"Producing a number from these and calling it 'net cents against "
-        f"the incumbent at the action unit' would fabricate three of the "
-        f"four things the estimand names. ROUTED: either the sealed artifact "
-        f"carries action-level records, or the declared estimand changes. "
-        f"Both are rulings and neither is this seat's.")
+def theta_for(coin: str, budget_label: str = "10%") -> float:
+    """READ from the operating-point declaration, never typed."""
+    d = json.loads((HERE / "declarations"
+                    / "be_operating_point_declaration_v1.json").read_text())
+    t = d["theta_frozen_by_coin"].get(coin, {}).get(budget_label)
+    if t is None:
+        raise ReadRefused(f"REFUSED: no frozen theta for {coin} at "
+                          f"{budget_label}.")
+    return float(t)
 
 
 def assert_separation(opened) -> dict:
-    """FROM THE PATHS ACTUALLY OPENED, not from a constant."""
     paths = [str(p) for p in opened]
     hits = sorted({f"{pat} in {p}" for pat in GATE1_PATTERNS
                    for p in paths if pat in p})
@@ -158,6 +84,43 @@ def assert_separation(opened) -> dict:
             "n_paths_checked": len(paths), "matches": []}
 
 
+def day_matched_volume(path, *, latency_ms: int = LATENCY_MS) -> dict:
+    """MATCHED_VOLUME per day, through the INTERIM'S OWN functions."""
+    import be_read_cells as C
+    feed = C.load_two_arm_feed(Path(path), latency_ms)
+    per_coin, net = {}, 0.0
+    # the loader returns {"per_coin": {...}, "n_feed_rows": ...}: the coins
+    # are NESTED, and iterating the top level would silently find none.
+    for coin, blk in sorted(feed["per_coin"].items()):
+        if not isinstance(blk, dict) or "rows" not in blk:
+            continue
+        mv = C.matched_volume(blk["rows"], blk["cand"], blk["inc"],
+                              theta_for(coin), latency_ms)
+        per_coin[coin] = {
+            "MATCHED_VOLUME_increment_cents":
+                mv["MATCHED_VOLUME_increment_cents"],
+            "candidate_net_cents": mv["candidate_net_cents"],
+            "incumbent_net_cents_matched": mv["incumbent_net_cents_matched"],
+            "counts_matched": mv["counts_matched"],
+            "n_actions": mv["n_actions"],
+        }
+        net += float(mv["MATCHED_VOLUME_increment_cents"])
+    if not per_coin:
+        raise ReadRefused(f"REFUSED: {Path(path).name} yielded no coin with "
+                          f"rows; a day with no action is a STATUS, not a "
+                          f"zero increment.")
+    return {"status": "OK", "per_coin": per_coin,
+            "day_increment_cents": net,
+            "day_sign": (1 if net > 0 else (-1 if net < 0 else 0)),
+            "n_feed_rows": feed["n_feed_rows"],
+            "n_rows_without_an_incumbent_score":
+                feed["n_rows_without_an_incumbent_score"],
+            "statistic": "MATCHED_VOLUME (R-588; the interim's PRIMARY)",
+            "computed_by": "be_read_cells.matched_volume -- the interim's own "
+                           "code, not a second copy",
+            "latency_ms": latency_ms}
+
+
 def floors(g_opt: int, g_pess: int, m: int = 2) -> dict:
     o, p = m / 2 ** g_opt, m / 2 ** g_pess
     return {"optimistic": {"G": g_opt, "best_possible_adjusted_p": o},
@@ -168,19 +131,15 @@ def floors(g_opt: int, g_pess: int, m: int = 2) -> dict:
 
 
 def read(paths: dict, *, outdir: Path = None, write: bool = True) -> dict:
-    """Digest the parsed bytes, compute, digest again, VOID on mismatch."""
     opened = [Path(v) for v in paths.values()]
     sep = assert_separation(opened)
-    missing = [str(p) for p in opened if not p.exists()]
+    missing = [str(p) for p in opened if not Path(p).exists()]
     if missing:
-        raise ReadRefused(f"REFUSED: sealed file(s) absent: {missing}")
+        raise ReadRefused(f"REFUSED: sealed feed(s) absent: {missing}")
     per_day, before = {}, {}
     for d, p in sorted(paths.items()):
-        raw = Path(p).read_bytes()
-        # THE DIGEST IS OF THE BYTES PARSED, not of a separate read.
-        before[d] = hashlib.sha256(raw).hexdigest()
-        doc = json.loads(raw)
-        per_day[d] = day_net_cents(assert_estimand_supported(doc, p))
+        before[d] = hashlib.sha256(Path(p).read_bytes()).hexdigest()
+        per_day[d] = day_matched_volume(p)
     after = {d: hashlib.sha256(Path(p).read_bytes()).hexdigest()
              for d, p in paths.items()}
     moved = sorted(d for d in before if before[d] != after[d])
@@ -191,14 +150,25 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True) -> dict:
             f"taken after. A read that moved the bytes it read is not a "
             f"read, it is an edit. No result is emitted.")
     signs = {d: v["day_sign"] for d, v in per_day.items()}
-    fresh = [d for d in paths if d not in DECL.ALREADY_OPENED_UNDER_THE_INTERIM]
+    fresh = [d for d in paths
+             if d not in DECL.ALREADY_OPENED_UNDER_THE_INTERIM]
     out = {
         "protocol": "BE_RACE_READ_RESULT_V1",
         "as_of_utc": dt.datetime.now(dt.timezone.utc).strftime(
             "%Y-%m-%dT%H:%M:%SZ"),
         "R_529_A_UP_FRONT": "THIS READ ESTABLISHES DIRECTION AND CONSISTENCY "
                             "AND NEVER A HOLM-CLEARING VERDICT (R-529(A)).",
-        "estimand": estimand(),
+        "ruling": "R-588: OPTION A, NO RE-SEAL. The read opens the FEED; the "
+                  "statistic is MATCHED_VOLUME, the interim's PRIMARY, "
+                  "because that is what 09-01 and 09-02 were read with and "
+                  "changing it after seeing two days would be a choice after "
+                  "seeing. BY_THRESHOLD is reported, never primary (rule 7).",
+        "opened": {"files": [str(p) for p in opened],
+                   "what_stays_sealed": "be_forward_day_SEALED_scores_"
+                                        "<DAY>.json -- the estimand does not "
+                                        "need them and opening more than it "
+                                        "needs is consumption without "
+                                        "purpose (rule 11)"},
         "days": sorted(paths), "per_day": per_day, "day_signs": signs,
         "n_positive": sum(1 for v in signs.values() if v == 1),
         "n_negative": sum(1 for v in signs.values() if v == -1),
@@ -207,8 +177,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True) -> dict:
         "byte_identity": {"before": before, "after": after,
                           "all_unchanged": True,
                           "digest_is_of_the_bytes_parsed": True,
-                          "on_mismatch": "the read is VOID -- enforced, not "
-                                         "instructed"},
+                          "on_mismatch": "the read is VOID -- enforced"},
         "gate1_separation": sep,
         "writes": {"artifact": OUT_NAME, "and_nothing_else": True},
         "data_root": _BDR.receipt_block(),
@@ -225,16 +194,24 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True) -> dict:
 EXPECTED_CHECKS = 10
 
 
-def _seal(d: Path, day: str, *, actions=None, scores=None) -> Path:
-    body = {"protocol": "BE_FORWARD_DAY_SEALED_SCORES_V1", "day": day,
-            "SEALED": "synthetic fixture", "report": {}}
-    if actions is not None:
-        body["per_action_records"] = actions
-    if scores is not None:
-        body["per_coin_scores"] = {"btc": scores}
-    p = d / f"be_forward_day_SEALED_scores_{day}.json"
-    p.write_text(json.dumps(body))
+def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
+    p = d / f"be_forward_day_SEALED_feed_{day}.jsonl"
+    with p.open("w") as fh:
+        for r in rows:
+            r = dict(r)
+            if one_arm:
+                r.pop("score_incumbent", None)
+            fh.write(json.dumps(r) + "\n")
     return p
+
+
+def _row(gen, score, inc, cents, **kw):
+    """A row in the WRITER's own shape (`be_forward_day.FEED_FIELDS`)."""
+    return dict({"slug": "btc-updown-5m-1", "side": "BUY_UP", "gen": gen,
+                 "t0": 0.0, "t_start": 0.0, "score": score,
+                 "score_incumbent": inc, "any_fill_ahead": True,
+                 "value_cents": cents, "preventable_shares": 1.0,
+                 "level": 0.5}, **kw)
 
 
 def selftest() -> int:
@@ -248,102 +225,113 @@ def selftest() -> int:
         if not cond:
             fails.append(label)
 
-    e = estimand()
-    ok("NET CENTS" in e["quantity"] and "ACTION" in e["unit"]
-       and e["pairing"] == "BY_THRESHOLD" and not e["re_typed_here"],
-       f"THE ESTIMAND IS READ FROM THE DECLARATION: {e['quantity']!r} at "
-       f"{e['unit'][:34]!r}, pairing {e['pairing']} -- not re-typed here")
+    import be_forward_day as FD
+    import be_read_cells as C
+    ok(set(_row(0, 1.0, 1.0, 1.0)) >= set(FD.FEED_FIELDS),
+       f"THE SYNTHETIC FEED IS THE WRITER'S OWN SHAPE: every one of "
+       f"`be_forward_day.FEED_FIELDS` is present in the fixture row")
+    ok(theta_for("btc") == 0.7230267681941027,
+       f"and theta is READ from the operating-point declaration "
+       f"({theta_for('btc')}), never typed here")
 
-    # ---- THE REVIEWER'S KNOWN-BAD, THE ONE THAT KILLED THE OLD READER ----
-    def collapsing(perturb):
-        return [{"slug": "s", "side": "BUY_UP", "gen": i,
-                 "net_cents_vs_incumbent": -1.0 + (i * perturb)}
-                for i in range(6)]
-    tied = day_net_cents(collapsing(0.0))
-    pert = day_net_cents(collapsing(1e-9))
-    ok(tied["day_sign"] == pert["day_sign"] == -1,
-       f"THE FALSIFIER THAT EXPOSED THE OLD READER: a collapsing series with "
-       f"within-window values TIED and the same series perturbed by 1e-9 "
-       f"give the SAME sign ({tied['day_sign']}). The old flip-count did "
-       f"not; a NET does not turn on 1e-9")
-    ok(abs(tied["day_net_cents"] - pert["day_net_cents"]) < 1e-6,
-       f"and the quantities agree to 1e-6 ({tied['day_net_cents']:.6f} vs "
-       f"{pert['day_net_cents']:.6f}) -- the perturbation moves the number "
-       f"by less than it could move a sign")
-
-    # ---- a KNOWN net, reproduced by construction -------------------------
-    acts = [{"slug": "s", "side": "BUY_UP", "gen": 1,
-             "net_cents_vs_incumbent": 3.5},
-            {"slug": "s", "side": "BUY_UP", "gen": 2,
-             "net_cents_vs_incumbent": -1.25},
-            {"slug": "s", "side": "BUY_UP", "gen": 2,
-             "net_cents_vs_incumbent": 99.0}]        # duplicate action
-    r = day_net_cents(acts)
-    ok(abs(r["day_net_cents"] - 2.25) < 1e-9 and r["n_actions"] == 2
-       and r["n_duplicates_collapsed"] == 1,
-       f"A KNOWN NET REPRODUCES BY CONSTRUCTION: 3.5 + (-1.25) = "
-       f"{r['day_net_cents']}, with the repeated (slug, side, gen) "
-       f"DE-DUPLICATED (rule 2) -- the 99.0 duplicate does not enter")
-
-    # ---- the REAL shape refuses, naming what is missing -------------------
     with tempfile.TemporaryDirectory() as td:
         d = Path(td)
-        real = _seal(d, "20260903", scores=[[1, 0.5], [2, 0.7]])
+        # ONE-ARM: must refuse BY NAME, through the interim's own reader
+        p1 = _feed(d, "20260903", [_row(i, 1.0, 0.5, 2.0) for i in range(4)],
+                   one_arm=True)
         try:
-            read({"20260903": real}, outdir=d)
-            ok(False, "the real sealed shape must refuse")
-        except ReadRefused as ex:
-            ok("NOT COMPUTABLE" in str(ex) and "INCUMBENT" in str(ex)
-               and "ACTION IDENTITY" in str(ex) and "REALISED CENTS" in str(ex),
-               "KNOWN-BAD, AND IT IS THE REAL ARTIFACT'S SHAPE: "
-               "`per_coin_scores` REFUSES, naming all three missing inputs "
-               "-- the incumbent, action identity, and realised cents")
+            day_matched_volume(p1)
+            ok(False, "a one-arm feed must refuse")
+        except C.ReadCellsRefused as e:
+            ok("ONE-ARM feed" in str(e) and "zero that looks like a "
+               "measurement" in str(e),
+               "KNOWN-BAD: a ONE-ARM feed REFUSES **by name**, in the "
+               "interim's own reader -- comparing the candidate with itself "
+               "would return a zero that looks like a measurement")
 
-        p1 = _seal(d, "20260903", actions=acts)
-        p2 = _seal(d, "20260904", actions=[{"slug": "t", "side": "SELL_UP",
-                                            "gen": 1,
-                                            "net_cents_vs_incumbent": -4.0}])
-        paths = {"20260903": p1, "20260904": p2}
-        res = read(paths, outdir=d)
-        ok(res["byte_identity"]["all_unchanged"]
-           and res["byte_identity"]["digest_is_of_the_bytes_parsed"]
-           and res["n_positive"] == 1 and res["n_negative"] == 1,
-           "A CLEAN READ ADMITS on action-level records, one sign each way, "
-           "with the digest taken from THE BYTES PARSED")
-        ok((d / OUT_NAME).exists()
+        # THE DEGENERACY KNOWN-BAD: tied vs 1e-9-perturbed, same sign
+        # THE ARMS MUST RANK DIFFERENTLY or the increment is 0 by
+        # construction and the sign check proves nothing. Candidate ranks by
+        # +i, incumbent by -i, and the cents differ per row.
+        # The two arms must select DISJOINT sets or the increment is 0 by
+        # construction and the sign proves nothing: the candidate clears
+        # theta on the first half, the incumbent ranks the second half top.
+        def collapsing(eps):
+            return ([_row(i, 2.0, 0.0, -10.0 + i * eps) for i in (0, 1)]
+                    + [_row(i, 0.1, 2.0, 8.0 + i * eps) for i in (2, 3)])
+        a = day_matched_volume(_feed(d, "20260904", collapsing(0.0)))
+        b = day_matched_volume(_feed(d, "20260905", collapsing(1e-9)))
+        ok(a["day_sign"] == b["day_sign"] and a["day_sign"] != 0,
+           f"THE DEGENERACY FALSIFIER: a collapsing series with values TIED "
+           f"and the same series perturbed by 1e-9 give the SAME sign "
+           f"({a['day_sign']}) -- a net does not turn on 1e-9, where the old "
+           f"flip-count did")
+
+        # a KNOWN net reproduces
+        kn = day_matched_volume(_feed(d, "20260901",
+                                      [_row(0, 2.0, 0.0, 10.0),
+                                       _row(1, 2.0, 0.0, 6.0),
+                                       _row(2, 0.1, 2.0, -8.0),
+                                       _row(3, 0.1, 2.0, -9.0)]))
+        ok(kn["status"] == "OK" and kn["per_coin"]["btc"]["n_actions"] == 4
+           and kn["per_coin"]["btc"]["counts_matched"]
+           and kn["per_coin"]["btc"]["MATCHED_VOLUME_increment_cents"] != 0,
+           f"A KNOWN FEED REPRODUCES BY CONSTRUCTION: 4 actions, counts "
+           f"matched, increment "
+           f"{kn['per_coin']['btc']['MATCHED_VOLUME_increment_cents']}")
+
+        pos = [_row(0, 2.0, 0.0, 10.0), _row(1, 2.0, 0.0, 6.0),
+               _row(2, 0.1, 2.0, -8.0), _row(3, 0.1, 2.0, -9.0)]
+        neg = [_row(0, 2.0, 0.0, -10.0), _row(1, 2.0, 0.0, -6.0),
+               _row(2, 0.1, 2.0, 8.0), _row(3, 0.1, 2.0, 9.0)]
+        paths = {"20260901": _feed(d, "20260901", pos),
+                 "20260902": _feed(d, "20260902", neg)}
+        r = read(paths, outdir=d)
+        ok(r["n_positive"] == 1 and r["n_negative"] == 1,
+           f"and the two fixture days give OPPOSITE signs "
+           f"({r['day_signs']}) -- the statistic tracks the data, not a "
+           f"constant")
+        ok(r["byte_identity"]["all_unchanged"]
+           and r["byte_identity"]["digest_is_of_the_bytes_parsed"]
+           and (d / OUT_NAME).exists()
            and sorted(x.name for x in d.glob("be_race_read_*")) == [OUT_NAME],
-           f"and it writes THE ONE declared artifact and nothing else")
-        f = res["permutation_floors"]
-        ok(f["optimistic"]["best_possible_adjusted_p"] == 0.5
-           and f["pessimistic"]["best_possible_adjusted_p"] == 0.5
-           and f["resolved_best_possible_adjusted_p"] == 0.5
+           "A CLEAN READ ADMITS, digests taken on THE BYTES PARSED, and it "
+           "writes THE ONE declared artifact and nothing else")
+        f = r["permutation_floors"]
+        ok(f["resolved_best_possible_adjusted_p"] ==
+           max(f["optimistic"]["best_possible_adjusted_p"],
+               f["pessimistic"]["best_possible_adjusted_p"])
            and floors(5, 3)["resolved_best_possible_adjusted_p"] == 0.25,
-           f"both floors are COMPUTED and the CONSERVATIVE one resolved: on "
-           f"these two fixture days 2/2^2 = 0.5, and on the real 5/3 split "
-           f"the resolved floor is 0.25 (not the flattering 0.0625)")
+           "both floors computed, CONSERVATIVE resolved (0.25 on the real "
+           "5/3 split, not the flattering 0.0625)")
 
         _g = globals()
-        _orig = _g["day_net_cents"]
+        _orig = _g["day_matched_volume"]
 
-        def _mutate(a):
-            Path(p2).write_text(Path(p2).read_text() + " ")
-            return _orig(a)
-        _g["day_net_cents"] = _mutate
+        def _mut(p, **kw):
+            # append a VALID JSONL line: the bytes must change (so the
+            # digest moves) without breaking the parse, or the falsifier
+            # would be testing the JSON decoder instead of the guard.
+            with Path(paths["20260902"]).open("a") as fh:
+                fh.write(json.dumps(_row(99, 5.0, 1.0, -9.0)) + "\n")
+            return _orig(p, **kw)
+        _g["day_matched_volume"] = _mut
         try:
             read(paths, outdir=d)
-            ok(False, "a tampered sealed file must VOID the read")
-        except ReadVoid as ex:
-            ok("THE READ IS VOID" in str(ex),
+            ok(False, "a tampered feed must VOID the read")
+        except ReadVoid as e:
+            ok("THE READ IS VOID" in str(e),
                "KNOWN-BAD: bytes mutated between the parse-digest and the "
-               "after-digest VOID the read, and no result is emitted")
+               "after-digest VOID the read; no result is emitted")
         finally:
-            _g["day_net_cents"] = _orig
+            _g["day_matched_volume"] = _orig
 
         try:
-            assert_separation([p1, d / "be_daybook_20260903_btc.pkl"])
+            assert_separation([paths["20260901"],
+                               d / "be_daybook_20260903_btc.pkl"])
             ok(False, "a planted Gate-1 path must refuse")
-        except ReadRefused as ex:
-            ok("Gate-1 object is on this read's path" in str(ex),
+        except ReadRefused as e:
+            ok("Gate-1 object is on this read's path" in str(e),
                "KNOWN-BAD: a Gate-1 object planted into the OPENED set "
                "REFUSES -- the haystack is what this run opened")
 
@@ -363,12 +351,12 @@ def main(argv=None) -> int:
     if "--selftest" in argv:
         return selftest()
     if "--open" in argv:
-        out = read({d: Path(p) for d, p in DECL.SEALED_SCORES.items()})
+        out = read({d: Path(p) for d, p in sealed_feeds().items()})
         print(json.dumps({"written": out.get("_written"),
                           "day_signs": out["day_signs"]}))
         return 0
     print("usage: be_race_reader.py --selftest | --open  (--open CONSUMES the "
-          "five sealed days; the coordinator's or the USER's act on GO)")
+          "five sealed FEEDS; the coordinator's act on GO)")
     return 2
 
 

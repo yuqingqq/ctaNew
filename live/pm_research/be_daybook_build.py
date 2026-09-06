@@ -102,6 +102,14 @@ def day_tape_sha(day: str, coin: str = COIN) -> str | None:
     return None
 
 
+def _sha_file(p) -> str:
+    h = hashlib.sha256()
+    with Path(p).open("rb") as fh:
+        for c in iter(lambda: fh.read(1 << 20), b""):
+            h.update(c)
+    return h.hexdigest()
+
+
 def assert_day_tape(day: str, coin: str = COIN, *,
                     tape: Path | None = None,
                     receipt_sha: str | None = None) -> dict:
@@ -378,14 +386,24 @@ def build(day: str, *, coin: str = COIN,
         raise BookRefused(f"REFUSED: {day} produced an EMPTY reference.")
 
     assert_day_tape(day, coin)
+    # DE 80's FRONT DOOR (Q-DE-80): the verified pair, digests recomputed at
+    # read time, refusing a ruled day that supplies nothing rather than
+    # falling back to the consumed-era constant.
+    import be_gate1_fragment as FRAGMOD
+    _hy = f"{day[:4]}-{day[4:6]}-{day[6:]}"
+    _tp = TAPEMOD.out_path(day, coin)
+    _fp = FRAGMOD.out_path(day, coin)
+    inp = R.day_assembly_inputs(
+        _hy,
+        tape={"path": str(_tp), "sha256": _sha_file(_tp)},
+        fragment={"path": str(_fp), "sha256": _sha_file(_fp)})
+    obs["assembly_inputs"] = {k: v for k, v in inp.items() if k != "day"}
     splits = R.DECLARED_SPLIT_SETS[R.RULED_SPLIT_SET]
     t = time.time()
     # ITEM 1 IS IN: the index is built from THE DAY'S OWN TAPE, with its
     # digest verified at load. Before this, `build_tape_index` had no path
     # and would have indexed the consumed hour's tape for a September day.
-    _dt = TAPEMOD.out_path(day, coin)
-    tape = R.build_tape_index(splits, path=_dt, day=day,
-                              expect_sha256=day_tape_sha(day, coin))
+    tape = R.build_tape_index(splits, tape_path=inp["tape"]["path"])
     stages.done("A1_index", t)
     obs["tape_index_s"] = round(time.time() - t, 1)
     obs["tape_rows"] = tape.get("n_tape_rows")
@@ -395,12 +413,11 @@ def build(day: str, *, coin: str = COIN,
                           ("tape_index_s", "tape_rows",
                            "after_tape_peak_gb")}}), flush=True)
 
-    sd = Path(scratch) if scratch is not None else OUT_DERIVED
-    frag = sd / f"be_daybook_frag_{day}.json"
-    t = time.time()
-    R.fragment_slice(frag, n_windows=len(ref), only_slugs=list(ref))
-    obs["fragment_s"] = round(time.time() - t, 1)
-    obs["fragment_bytes"] = frag.stat().st_size if frag.exists() else None
+    # NO SLICE. The day's own fragment IS the source -- slicing off the eraB
+    # fragment is what round 48 refused, because eraB holds no September slug.
+    frag = Path(inp["fragment"]["path"])
+    obs["fragment_bytes"] = inp["fragment"]["bytes"]
+    obs["fragment_is_the_days_own"] = True
 
     t = time.time()
     asm = R.assemble_streaming({coin: ref}, splits=splits, coins=(coin,),
