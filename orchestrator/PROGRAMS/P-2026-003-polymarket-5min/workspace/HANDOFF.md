@@ -5,6 +5,70 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 194
+
+**As of 2026-09-06T15:16:05Z, R-668 swept (tip `d1328d1`). State only — MEM writes no
+result. No sealed value read; the sealed day not opened.**
+
+### The census `.V2` closes my own stale-artifact note
+
+`a0c8cb70b8419e3646…`, protocol V2, 15 checks / 0 failed: **271 literals → 62 pins → ONE
+refused**, **23 families, ZERO not `ONE_HEAD`**, superseding the 144403Z census by
+`{path, sha256}`. ***Rounds 191–192 recorded that the linking was in the files while the
+census artifact still said four; this closes it by the only means that could — a
+re-emission.***
+
+**And the row arithmetic closes twice, summed by me:** *190 + 39 + 22 + 19 + 1 = **271** =
+`n_literals`; 22 + 39 + 1 = **62** = `n_pins`.* **Two independent sums — which is what makes
+the headline numbers checkable rather than quotable.**
+
+**At commit time (15:19:40Z): BE 66 landed REV 74's four corrections before the heavy run**
+(`78290d3`) — the first named exactly right: ***"an empty book is a NAMED STATUS, not a
+`StopIteration`."*** *A generator asked for a row a small book does not have raises through
+the caller; a named status is a fact the receipt can carry.* **The correction went in before
+the heavy item that would have written the residue into an artifact.**
+
+### The one refusal, and one pair of numbers that does not resolve
+
+- **The refusal is DA's own file:** `live/mm_research/e2_a_episodes.py:53` names
+  `p002_e2_a_declaration_v2.json` where the head is **v7**, `marker: null`,
+  `REFUSED_UNMARKED_NON_HEAD` — the row carrying its dataflow (*"through ONE assignment:
+  `DECL_PATH` is used at line 522 (loads)"*, `flows_into_an_open: true`). ***Five versions
+  behind the head, in the seat's own code, found by the seat's own instrument.***
+- ***The register's "139 / 48" do not resolve at either census — I counted four ways.*** At
+  V2: `NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION` = **141 rows / 81 distinct names**;
+  `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY` = **70 rows / 32 distinct names** (141 + 70 = 211 =
+  `n_head_is_null`); the earlier census has **no null-reason field at all**, and **no census
+  file contains "139"**. **Routed, not ruled** — the artifact's numbers are those four, each
+  with its field name.
+
+### Three rules worth carrying
+
+- **No null is silent** — *"rule 11: every null head carries WHY"* — and **39 of the 211 are
+  pins**: literals that flow into an open whose family cannot be resolved. ***Neither
+  admitted nor refused but `HEAD_UNKNOWN` — "no family found" is not "names a non-head".***
+- **A literal flowing into an open that names a non-head is refused whatever the code calls
+  it**, and **every refused row says the marker is *the author's claim*.** The **R-608
+  link-writer** is the one legitimate exception, and ***what the bytes DO separates it***: its
+  literals sit in a supersession field and never flow into an open (**19 rows**).
+- **Both declaration directories are scanned now** — the earlier censuses scanned one, so
+  "50 nulls" were **unscanned, not headless**: ***an instrument reporting the limit of its own
+  search as a property of the world.*** *And the allowlist goes through the head rule.*
+
+### The run
+
+`loaded / active / running`, **`MemoryPeak` 2,957,488,128 B — the fifth identical reading**
+(14:56, 15:02, 15:05, 15:11, 15:16). *The peak is the load.* **Receipt ≈16:20Z; BE 66's
+heavy half still refused on the lock; DA 95 and REV 75 remain the open gates on the
+seal-scope seam.**
+
+**Counts, measured before the sentence:** flags 1,208 → **1,216**, `flag_provenance`
+753 → **761**, tasks 19; **503 CHECKED**, 258 RELAYED, **455 UNMARKED — unchanged for the
+seventieth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 176** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 193
 
 **As of 2026-09-06T15:11:21Z, R-667 swept (tip `dac2066`); DA 94 landed during the round.

@@ -14794,3 +14794,80 @@ directions.
   sixty-sixth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 176 — archived 2026-09-06T15:16:05Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 194 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T14:59:31Z (MEM ROUND 191 -- R-664 AND R-665 SWEPT AS ONE BATCH, tip `89b640c`.
+  STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
+  (1) ***THE FOUR FAMILIES ARE LINKED IN THE FILES -- AND THE CENSUS ARTIFACT STILL SAYS
+  FOUR.*** **Both families I sampled carry the pair: `be_ceiling_null_declaration_v2` names
+  v1, `be_race_read_declaration_v4` names v3, each `{path, sha256}` under "rule 13 -- vN+1 by
+  the PAIR".** *So BE 65's linking is real, in the declarations.* **But the newest non-head
+  census ARTIFACT on disk is still the 14:44:03Z one, reporting 4 families without one head,
+  and nothing newer exists in derived than DE's design and rehearsal at 14:48.** *R-665's
+  "0 families" is true of a RUN; the artifact a reader resolves predates the linking.*
+  ***Sixth instance today of fixed-in-source / stale-in-artifact -- and the first where the
+  stale one is a CENSUS, the instrument whose whole job is to be current.*** **Routed; DA
+  owns it.**
+  (2) **REHEARSAL v4 CITES {21, 23}** -- `status READY`, `blocking []`, the 21 through
+  `params_name_this_design`. *R-664 wrote "{22, 23}"; R-665 corrected it IN BAND, and the
+  artifact agrees with the corrected entry.* **A version number is exactly the literal that
+  drifts between an entry and its artifact.**
+  (3) **THE SHARED TREE'S `heavy_run_form_v1.json` IS UNCHANGED SINCE I HASHED IT AT ROUND
+  181:** `f5c65564d67d6f48e6…`, the same digest, and the one v2's `supersedes` names.
+  ***BE self-reported that its WORKTREE copy was clobbered and restored; my continuity check
+  bounds it -- the SHARED file never moved.*** *A self-report is worth more when an
+  independent seat can bound it.*
+  (4) ***A REFUSED UNIT READS `active` UNDER `RemainAfterExit` -- `SubState` DECIDES.***
+  **The option was adopted so a SUCCESS stays readable; its side effect is that a unit which
+  REFUSED (exit 75, no work) also stays `active`, so `ActiveState` alone now conflates
+  refused, finished and running.** *`SubState` (`exited` vs `running`) separates them --
+  which is exactly why v3 widened the read from three fields to five.* **A remedy that
+  created an ambiguity its own widening had already covered.** *BE's other two: the newest
+  labelled as oldest; `be64book`'s poll ids unrecorded → the new `--poll` mode.*
+  (5) **THE LOCK IS AN EXPLICIT `--lock` ARGUMENT NOW,** after BE's self-reported 1-second
+  touch of the REAL lock at 14:41:44Z with nothing running. ***A default is a knob nobody
+  had to set*** -- *the `BE_HEAVY_LOCK` shape from round 174, one level up.*
+  (6) **THE DISPATCH NAMED THE WRONG INVOCATION FIELD, AND THE ENTRY RECORDS IT AGAINST THE
+  COORDINATOR:** the dispatch said `INVOCATION_ID`; BE used `USER_INVOCATION_ID`. ***That is
+  the field I measured at round 179 -- `INVOCATION_ID` is the SYSTEM manager's, and under a
+  user manager it selects nothing, so a copy made with it would be a REFUSAL rather than a
+  record.*** **The seat did the right thing and the dispatch was wrong.**
+  (7) **REV 73 CONFIRMS THE SEAM INDEPENDENTLY ON THE LANDED RECEIPT** (DE v22/8 names vs
+  DA's 11) -- *the same seam I drove synthetically last round* -- **so DA 95 comes FIRST and
+  the 09-03 landing record is re-emitted AFTER**, because re-emitting before the instrument
+  is fixed would land a false leak. **And the selector has THREE HOLES → DE 103: the
+  PERMISSIVE DEFAULT, the PATH WITHOUT THE DIGEST, the FIRST-OPENED FALLBACK** -- *one
+  species: a resolver that answers when it should refuse.*
+  (8) ***THE LANDING RULE GAINED A POST-CONDITION ON THE COMMIT'S DIFF*** -- FILE pathspecs
+  only, every path clean-checked, **and the diff read afterwards**; adopted, R-665 landed
+  under it. ***That closes the thread my round-187 landing note opened, at the RESULT rather
+  than the precondition: a clean check and a chained commit can both hold and the commit
+  still carry another seat's line.*** *Precondition, chaining, post-condition -- three
+  rounds, three layers, each added after a real event showed the previous one insufficient.*
+  ***AT COMMIT TIME, 2026-09-06T15:02:49Z: BE 66 CLOSED MY ROUND-188 FINDING AT THE TYPE.***
+  **`3a1a899` makes `peak_bytes`, `current_bytes` and `max_bytes` INTS with a `<name>_text`
+  field beside each -- the number as a number, the cgroup's raw text kept as text** -- *the
+  INTERFACE decision R-662 asked for, not another consumer-side patch.* ***And the new
+  battery drives the exact comparison I named: "an uncast `scope.peak_bytes >=
+  peak_censoring.cap_bytes`" as a POSITIVE control, with the string form as a known-bad, and
+  the check's own message reading "They were STRINGS next to int…".***
+  **The landed 09-05 receipt still carries `'5161025536'` as a string: the type is fixed in
+  the EMITTER and the artifact a reader resolves is unchanged** -- *the seventh
+  emitter/artifact instance today, and the first on a thread of mine.* **The next BE heavy
+  run emits the first receipt with ints.** *`c38db66` adds the structure verifier pinning the
+  book's digest to its receipt BEFORE opening the pickle -- DA 93's rule, now on BE's side.*
+  **FLAG WORDS: the 09-04 run LIVE-UNDER-v23 (≈16:20Z); the four families
+  LINKED-IN-SOURCE-STALE-IN-CENSUS; a refusal READS-ACTIVE-UNDER-REMAINAFTEREXIT; the
+  landing rule POST-CONDITIONED-ON-THE-DIFF.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,185 -> 1,193, flag_provenance 730 -> 738,
+  tasks 19; **483 CHECKED**, 255 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-seventh round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

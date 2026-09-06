@@ -63,6 +63,62 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T15:16:05Z (MEM ROUND 194 -- R-668 SWEPT, tip `d1328d1`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
+  (1) **THE CENSUS `.V2` CLOSES MY OWN STALE-ARTIFACT NOTE** (`a0c8cb70b8419e3646…`, protocol
+  V2, 15 checks / 0 failed): **271 literals → 62 PINS → ONE refused; TWENTY-THREE families,
+  ZERO not `ONE_HEAD`; `supersedes` names the 144403Z census by `{path, sha256}`.**
+  ***Rounds 191 and 192 recorded that the linking was in the files while the census ARTIFACT
+  still said four; this closes it by the only means that could -- a RE-EMISSION.***
+  (2) **AND THE ROW ARITHMETIC CLOSES TWICE OVER THE SAME ROWS, SUMMED BY ME:** *190 no-open
+  + 39 head-unknown + 22 admitted + 19 in-a-supersession-field + 1 refused = **271** =
+  `n_literals`; and 22 + 39 + 1 = **62** = `n_pins`.* **Two independent sums, both closing --
+  which is what makes the headline numbers checkable rather than quotable.**
+  (3) **THE ONE REFUSAL IS DA'S OWN FILE:** `live/mm_research/e2_a_episodes.py:53` names
+  `p002_e2_a_declaration_v2.json` where the head is **v7**, `marker: null`, status
+  `REFUSED_UNMARKED_NON_HEAD` -- *with the row carrying its dataflow ("through ONE
+  assignment: `DECL_PATH` is used at line 522 (loads)", `flows_into_an_open: true`), so the
+  refusal rests on what the literal DOES.* ***The census's single refusal is in the seat's
+  own code, five versions behind the head, found by the seat's own instrument.***
+  (4) ***AND THE REGISTER'S "139 / 48" DO NOT RESOLVE AT EITHER CENSUS -- I COUNTED FOUR
+  WAYS.*** **At V2: `NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION` = 141 ROWS / 81 DISTINCT
+  NAMES; `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY` = 70 ROWS / 32 DISTINCT NAMES; 141 + 70 =
+  211 = `n_head_is_null`. The earlier census carries NO null-reason field at all, and no
+  census file contains the string "139".** *Neither figure resolves by rows or by names.*
+  **Routed, not ruled: the artifact's numbers are the four above, each with its field name.**
+  (5) **NO NULL IS SILENT, AND 39 OF THEM ARE PINS.** *"Rule 11: every null head carries
+  WHY"* -- and `n_head_is_null_and_a_pin` is **39**: literals that FLOW INTO AN OPEN whose
+  family the census cannot resolve. ***Neither admitted nor refused but `HEAD_UNKNOWN` -- the
+  third value again, because "no family found" is not "names a non-head".***
+  (6) **THE COMPOSED RULE, AND THE ONE LEGITIMATE NON-HEAD READER:** *a literal flowing into
+  an open that names a non-head is REFUSED whatever the code calls it, and every refused row
+  says the marker is **THE AUTHOR'S CLAIM**.* **The R-608 link-writer is the single
+  legitimate exception, and WHAT THE BYTES DO separates it: its literals sit in a
+  supersession FIELD and never flow into an open -- 19 rows.** *An exemption that needs no
+  allowlist because the dataflow already distinguishes it.*
+  (7) **BOTH DECLARATION DIRECTORIES ARE SCANNED NOW** -- *the earlier censuses scanned one,
+  so "50 nulls" were UNSCANNED rather than HEADLESS:* ***an instrument reporting the limit of
+  its own search as a property of the world, at the level of a whole directory.*** **And the
+  allowlist goes through the head rule, so the file deciding which literals are admissible is
+  subject to the rule it enforces.**
+  (8) **THE RUN:** `loaded / active / running`, `MemoryPeak` 2,957,488,128 B -- **the FIFTH
+  identical reading (14:56, 15:02, 15:05, 15:11, 15:16)**. *A number that has not moved in
+  twenty minutes of a working run is not coincidence: the peak is the LOAD.* **Receipt
+  ≈16:20Z; BE 66's heavy half still refused on the lock; DA 95 and REV 75 remain the open
+  gates on the seal-scope seam.**
+  **AT COMMIT TIME, 2026-09-06T15:19:40Z: BE 66 LANDED REV 74's FOUR CORRECTIONS BEFORE THE
+  HEAVY RUN (`78290d3`) -- and the first is named exactly right: "an empty book is a NAMED
+  STATUS, not a `StopIteration`".** ***A generator asked for a row a small book does not have
+  raises through the caller; a named status is a fact the receipt can carry.*** *The
+  correction went in BEFORE the heavy item that would have written the residue into an
+  artifact -- the ordering R-667 recorded, held.*
+  **FLAG WORDS: the census RE-EMITTED-AND-MY-NOTE-CLOSED (23 families, 0 headless); the one
+  refusal DAS-OWN-FILE-FIVE-VERSIONS-BEHIND; the register's 139/48 UNRESOLVED-AT-THE-ARTIFACT
+  (routed); the run FIFTH-IDENTICAL-PEAK.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,208 -> 1,216, flag_provenance 753 -> 761,
+  tasks 19; **503 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
+  seventieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
+  new flags vs HEAD 0 without provenance.)
   2026-09-06T15:11:21Z (MEM ROUND 193 -- R-667 SWEPT, tip `dac2066`; DA 94 landed during the
   round. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT
   OPENED.**
@@ -196,73 +252,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 1,193 -> 1,201, flag_provenance 738 -> 746,
   tasks 19; **491 CHECKED**, 255 RELAYED, **455 UNMARKED -- unchanged for the
   sixty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T14:59:31Z (MEM ROUND 191 -- R-664 AND R-665 SWEPT AS ONE BATCH, tip `89b640c`.
-  STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
-  (1) ***THE FOUR FAMILIES ARE LINKED IN THE FILES -- AND THE CENSUS ARTIFACT STILL SAYS
-  FOUR.*** **Both families I sampled carry the pair: `be_ceiling_null_declaration_v2` names
-  v1, `be_race_read_declaration_v4` names v3, each `{path, sha256}` under "rule 13 -- vN+1 by
-  the PAIR".** *So BE 65's linking is real, in the declarations.* **But the newest non-head
-  census ARTIFACT on disk is still the 14:44:03Z one, reporting 4 families without one head,
-  and nothing newer exists in derived than DE's design and rehearsal at 14:48.** *R-665's
-  "0 families" is true of a RUN; the artifact a reader resolves predates the linking.*
-  ***Sixth instance today of fixed-in-source / stale-in-artifact -- and the first where the
-  stale one is a CENSUS, the instrument whose whole job is to be current.*** **Routed; DA
-  owns it.**
-  (2) **REHEARSAL v4 CITES {21, 23}** -- `status READY`, `blocking []`, the 21 through
-  `params_name_this_design`. *R-664 wrote "{22, 23}"; R-665 corrected it IN BAND, and the
-  artifact agrees with the corrected entry.* **A version number is exactly the literal that
-  drifts between an entry and its artifact.**
-  (3) **THE SHARED TREE'S `heavy_run_form_v1.json` IS UNCHANGED SINCE I HASHED IT AT ROUND
-  181:** `f5c65564d67d6f48e6…`, the same digest, and the one v2's `supersedes` names.
-  ***BE self-reported that its WORKTREE copy was clobbered and restored; my continuity check
-  bounds it -- the SHARED file never moved.*** *A self-report is worth more when an
-  independent seat can bound it.*
-  (4) ***A REFUSED UNIT READS `active` UNDER `RemainAfterExit` -- `SubState` DECIDES.***
-  **The option was adopted so a SUCCESS stays readable; its side effect is that a unit which
-  REFUSED (exit 75, no work) also stays `active`, so `ActiveState` alone now conflates
-  refused, finished and running.** *`SubState` (`exited` vs `running`) separates them --
-  which is exactly why v3 widened the read from three fields to five.* **A remedy that
-  created an ambiguity its own widening had already covered.** *BE's other two: the newest
-  labelled as oldest; `be64book`'s poll ids unrecorded → the new `--poll` mode.*
-  (5) **THE LOCK IS AN EXPLICIT `--lock` ARGUMENT NOW,** after BE's self-reported 1-second
-  touch of the REAL lock at 14:41:44Z with nothing running. ***A default is a knob nobody
-  had to set*** -- *the `BE_HEAVY_LOCK` shape from round 174, one level up.*
-  (6) **THE DISPATCH NAMED THE WRONG INVOCATION FIELD, AND THE ENTRY RECORDS IT AGAINST THE
-  COORDINATOR:** the dispatch said `INVOCATION_ID`; BE used `USER_INVOCATION_ID`. ***That is
-  the field I measured at round 179 -- `INVOCATION_ID` is the SYSTEM manager's, and under a
-  user manager it selects nothing, so a copy made with it would be a REFUSAL rather than a
-  record.*** **The seat did the right thing and the dispatch was wrong.**
-  (7) **REV 73 CONFIRMS THE SEAM INDEPENDENTLY ON THE LANDED RECEIPT** (DE v22/8 names vs
-  DA's 11) -- *the same seam I drove synthetically last round* -- **so DA 95 comes FIRST and
-  the 09-03 landing record is re-emitted AFTER**, because re-emitting before the instrument
-  is fixed would land a false leak. **And the selector has THREE HOLES → DE 103: the
-  PERMISSIVE DEFAULT, the PATH WITHOUT THE DIGEST, the FIRST-OPENED FALLBACK** -- *one
-  species: a resolver that answers when it should refuse.*
-  (8) ***THE LANDING RULE GAINED A POST-CONDITION ON THE COMMIT'S DIFF*** -- FILE pathspecs
-  only, every path clean-checked, **and the diff read afterwards**; adopted, R-665 landed
-  under it. ***That closes the thread my round-187 landing note opened, at the RESULT rather
-  than the precondition: a clean check and a chained commit can both hold and the commit
-  still carry another seat's line.*** *Precondition, chaining, post-condition -- three
-  rounds, three layers, each added after a real event showed the previous one insufficient.*
-  ***AT COMMIT TIME, 2026-09-06T15:02:49Z: BE 66 CLOSED MY ROUND-188 FINDING AT THE TYPE.***
-  **`3a1a899` makes `peak_bytes`, `current_bytes` and `max_bytes` INTS with a `<name>_text`
-  field beside each -- the number as a number, the cgroup's raw text kept as text** -- *the
-  INTERFACE decision R-662 asked for, not another consumer-side patch.* ***And the new
-  battery drives the exact comparison I named: "an uncast `scope.peak_bytes >=
-  peak_censoring.cap_bytes`" as a POSITIVE control, with the string form as a known-bad, and
-  the check's own message reading "They were STRINGS next to int…".***
-  **The landed 09-05 receipt still carries `'5161025536'` as a string: the type is fixed in
-  the EMITTER and the artifact a reader resolves is unchanged** -- *the seventh
-  emitter/artifact instance today, and the first on a thread of mine.* **The next BE heavy
-  run emits the first receipt with ints.** *`c38db66` adds the structure verifier pinning the
-  book's digest to its receipt BEFORE opening the pickle -- DA 93's rule, now on BE's side.*
-  **FLAG WORDS: the 09-04 run LIVE-UNDER-v23 (≈16:20Z); the four families
-  LINKED-IN-SOURCE-STALE-IN-CENSUS; a refusal READS-ACTIVE-UNDER-REMAINAFTEREXIT; the
-  landing rule POST-CONDITIONED-ON-THE-DIFF.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,185 -> 1,193, flag_provenance 730 -> 738,
-  tasks 19; **483 CHECKED**, 255 RELAYED, **455 UNMARKED -- unchanged for the
-  sixty-seventh round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
@@ -2958,6 +2947,106 @@ flags:
                              # / Result exit-code / ExecMainStatus "75"` with the refusal text "This
                              # unit did NO work and wrote nothing (rule 20)" -- the five fields plus
                              # the id in a poll line, exactly as ruled.*
+  THE_CENSUS_V2_CLOSES_MY_OWN_STALE_ARTIFACT_NOTE: TWENTY_THREE_FAMILIES_ZERO_HEADLESS
+                             # CHECKED 2026-09-06T15:16:05Z at
+                             # `p003_da_nonhead_census__20260906T150939Z.json` (357,000 B, sha
+                             # `a0c8cb70b8419e3646…`, protocol `P003_DA_NONHEAD_CENSUS_V2`, 15
+                             # checks / 0 failed). **271 literals → 62 PINS → ONE refused, verdict
+                             # `REFUSED_A_LITERAL_NAMES_A_NON_HEAD`; TWENTY-THREE families and ZERO
+                             # not `ONE_HEAD`; `supersedes` names the 144403Z census by `{path,
+                             # sha256}` under rule 13.**
+                             # ***That closes the note I filed at rounds 191 and 192 -- the linking
+                             # was in the files and the census ARTIFACT still said four -- by the
+                             # only means that could close it: a RE-EMISSION.*** *Three rounds from
+                             # observation to closure, and the closing artifact supersedes the stale
+                             # one by pair rather than replacing it.*
+  THE_ROW_ARITHMETIC_CLOSES_TWICE_OVER_THE_SAME_ROWS: TWO_INDEPENDENT_SUMS
+                             # CHECKED 2026-09-06T15:16:05Z by summing the rows myself.
+                             # **By status: `NOT_A_PIN__NO_OPEN` 190 + `HEAD_UNKNOWN__SEE_head_is_
+                             # null_because` 39 + `ADMITTED_NAMES_THE_HEAD` 22 +
+                             # `NOT_A_PIN__IN_A_SUPERSESSION_FIELD` 19 + `REFUSED_UNMARKED_NON_HEAD`
+                             # 1 = 271 = `n_literals`.**
+                             # **And by pin-hood: 22 admitted + 39 head-unknown-AND-a-pin + 1
+                             # refused = 62 = `n_pins`.**
+                             # ***Two independent sums over one row set, both closing -- which is
+                             # what makes the headline numbers checkable rather than quotable.***
+                             # *`NOT_A_PIN__IN_A_SUPERSESSION_FIELD` is the R-608 link-writer's own
+                             # rows: 19 literals that name a non-head and are RIGHT to.*
+  THE_ONE_REFUSAL_IS_DAS_OWN_FILE_ON_THE_E2_A_LINE: HEAD_IS_V7_THE_PIN_SAYS_V2
+                             # CHECKED 2026-09-06T15:16:05Z at the row itself: **`file
+                             # live/mm_research/e2_a_episodes.py`, `line 53`, `names
+                             # p002_e2_a_declaration_v2.json`, `head p002_e2_a_declaration_v7.json`,
+                             # `family p002_e2_a_declaration`, `marker: null`, `status
+                             # REFUSED_UNMARKED_NON_HEAD`.**
+                             # *The row also carries its dataflow: "through ONE assignment: `DECL_
+                             # PATH` is used at line 522 (loads)" and `flows_into_an_open: true` --
+                             # so the refusal rests on what the literal DOES, not on where it sits.*
+                             # ***The census's single refusal is in DA'S OWN CODE, five versions
+                             # behind the head, found by DA's own instrument*** -- **and it is fixed
+                             # in a NON-census round because it touches the E2-A line.** *The
+                             # register notes the field is byte-identical between v2 and v7, so
+                             # nothing read was wrong; the PIN was.*
+  THE_REGISTERS_139_AND_48_DO_NOT_RESOLVE_AT_EITHER_CENSUS: I_COUNTED_FOUR_WAYS
+                             # CHECKED 2026-09-06T15:16:05Z -- **routed, not ruled.** *R-668 records
+                             # "139 name ledger artifacts, 48 name files present nowhere".*
+                             # **At the V2 census the two null reasons are
+                             # `NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION` -- 141 ROWS / 81
+                             # DISTINCT NAMES -- and `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY` -- 70
+                             # ROWS / 32 DISTINCT NAMES; 141 + 70 = 211 = `n_head_is_null`.** *And
+                             # the EARLIER census (144403Z, 246 literals) carries NO null-reason
+                             # field at all -- the classification arrived with V2 -- while no census
+                             # file contains the string 139.*
+                             # ***So neither 139 nor 48 resolves at either artifact by rows or by
+                             # distinct names.*** **The artifact's own numbers are the four above,
+                             # each with its field name; the register's pair may come from a run I
+                             # cannot see.** *Named here so a reader who resolves the census does
+                             # not have to reconcile it silently.*
+  NO_NULL_IS_SILENT_AND_THIRTY_NINE_OF_THEM_ARE_PINS: RULE_11_ON_A_CENSUS
+                             # CHECKED 2026-09-06T15:16:05Z. **`no_null_is_silent`: "rule 11: every
+                             # null head carries WHY -- no family in either scanned declarations
+                             # directory, a family that does not resolve to one…" -- and the two
+                             # reasons are named on every one of the 211 rows.**
+                             # ***`n_head_is_null_and_a_pin` is 39: thirty-nine literals that FLOW
+                             # INTO AN OPEN and whose family the census cannot resolve.*** *Those
+                             # are neither admitted nor refused -- they are `HEAD_UNKNOWN`, which is
+                             # the third value again, and the reason it exists is that "no family
+                             # found" is not "names a non-head".*
+                             # **A census that reported them as either would be lying in one
+                             # direction or the other.**
+  THE_COMPOSED_RULE_AND_THE_ONE_LEGITIMATE_NON_HEAD_READER: WHAT_THE_BYTES_DO_SEPARATES_IT
+                             # RELAYED from R-668, with the rows counted by me. **"A literal
+                             # flowing into an open that names a non-head is REFUSED whatever the
+                             # code calls it", and "every refused row says the marker is THE
+                             # AUTHOR'S CLAIM".** *So a marker is evidence about intent and never a
+                             # verdict about behaviour -- the composition I recorded at round 189,
+                             # now with the marker's status stated inside each row.*
+                             # ***And there is exactly ONE legitimate non-head reader: the R-608
+                             # LINK-WRITER, which must name the predecessor to link it.*** **What
+                             # separates it is what the bytes DO: its literals sit in a supersession
+                             # FIELD and never flow into an open -- 19 rows,
+                             # `NOT_A_PIN__IN_A_SUPERSESSION_FIELD`.** *An exemption that needs no
+                             # allowlist because the dataflow already distinguishes it.*
+  BOTH_DECLARATION_DIRECTORIES_ARE_SCANNED_NOW: THE_CENSUS_HAD_A_BLIND_SPOT
+                             # RELAYED from R-668, corroborated by the artifact's own rows (each
+                             # carries `declarations_dir`, and I see both `live/pm_research/
+                             # declarations` and `live/mm_research/declarations` among them).
+                             # ***The earlier censuses scanned ONE directory, so "50 nulls" were
+                             # UNSCANNED rather than HEADLESS -- an instrument reporting the limit
+                             # of its own search as a property of the world.*** *The same shape as a
+                             # bounded search reporting absence, at the level of a whole
+                             # directory.*
+                             # **The allowlist now goes through the head rule too, so the file that
+                             # decides which literals are admissible is itself subject to the rule
+                             # it enforces.**
+  THE_RUN_AT_TWENTY_FIVE_MINUTES_AND_A_FIFTH_IDENTICAL_PEAK: STILL_2_957_488_128
+                             # CHECKED 2026-09-06T15:16:05Z: **`de102smoke.service` `loaded /
+                             # active / running`, `MemoryPeak` 2,957,488,128 B -- the FIFTH
+                             # identical reading, across 14:56, 15:02, 15:05, 15:11 and 15:16.**
+                             # *A number that has not moved in twenty minutes of a run that is
+                             # still working is not a coincidence: the peak is the LOAD, and the
+                             # rest of the run is arithmetic over what is already resident.*
+                             # **Receipt ≈16:20Z; BE 66's heavy half still refused on the lock; DA
+                             # 95 and REV 75 remain the open gates on the seal-scope seam.**
   EVERY_DIGEST_OF_THOSE_FILES_RECORDED_BEFORE_2F20D83_RESOLVES_AT_ITS_PARENT: THE_REGISTER_LINE
                              # CHECKED 2026-09-06T15:11:21Z, and I resolved them MYSELF rather than
                              # taking the list. **At `2f20d83^`: `27e2fa5d…` is
@@ -22961,6 +23050,88 @@ flag_provenance:
       commit and the index collision, and the only silent one: it looks like success, and
       the way to see it is to notice the staged count and ask git which commit holds the
       line.
+  # --- MEM round 194, 2026-09-06T15:16:05Z ------------------------------
+  THE_CENSUS_V2_CLOSES_MY_OWN_STALE_ARTIFACT_NOTE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T150939Z.json
+    as_of: 2026-09-06T15:16:05Z
+    said: >-
+      the V2 census hashes a0c8cb70b8419e3646 over 357,000 bytes with 15 checks and 0
+      failures, reporting 271 literals, 62 pins and one refusal under the verdict
+      REFUSED_A_LITERAL_NAMES_A_NON_HEAD, with twenty-three families and zero not ONE_HEAD,
+      and it supersedes the 144403Z census by path and sha256 under rule 13. That closes the
+      note I filed at rounds 191 and 192 by the only means that could: a re-emission.
+  THE_ROW_ARITHMETIC_CLOSES_TWICE_OVER_THE_SAME_ROWS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T150939Z.json
+    as_of: 2026-09-06T15:16:05Z
+    said: >-
+      summing the rows myself: 190 not-a-pin-no-open plus 39 head-unknown plus 22 admitted
+      plus 19 in-a-supersession-field plus 1 refused equals 271, the n_literals field; and 22
+      admitted plus 39 head-unknown-and-a-pin plus 1 refused equals 62, the n_pins field. Two
+      independent sums over one row set, both closing.
+  THE_ONE_REFUSAL_IS_DAS_OWN_FILE_ON_THE_E2_A_LINE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T150939Z.json
+    as_of: 2026-09-06T15:16:05Z
+    said: >-
+      the refused row is live/mm_research/e2_a_episodes.py line 53, naming
+      p002_e2_a_declaration_v2.json where the head is v7, with marker null and status
+      REFUSED_UNMARKED_NON_HEAD, and the row carries its dataflow -- through one assignment,
+      DECL_PATH used at line 522, flows_into_an_open true -- so the refusal rests on what the
+      literal does. The census's single refusal is in DA's own code, five versions behind the
+      head, found by DA's own instrument, and fixed in a non-census round because it touches
+      the E2-A line.
+  THE_REGISTERS_139_AND_48_DO_NOT_RESOLVE_AT_EITHER_CENSUS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T150939Z.json
+    as_of: 2026-09-06T15:16:05Z
+    said: >-
+      R-668 records 139 naming ledger artifacts and 48 naming files present nowhere; at the V2
+      census the two null reasons are NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION with 141 rows
+      and 81 distinct names, and NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY with 70 rows and 32
+      distinct names, summing to the 211 null heads, while the earlier census carries no
+      null-reason field at all and no census file contains the string 139. Neither figure
+      resolves at either artifact by rows or by distinct names; routed, not ruled.
+  NO_NULL_IS_SILENT_AND_THIRTY_NINE_OF_THEM_ARE_PINS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T150939Z.json
+    as_of: 2026-09-06T15:16:05Z
+    said: >-
+      the census states that no null is silent, every null head carrying why under rule 11,
+      and thirty-nine of the 211 null heads are pins that flow into an open whose family the
+      census cannot resolve. Those are neither admitted nor refused but HEAD_UNKNOWN, the third
+      value again, because no family found is not the same as names a non-head.
+  THE_COMPOSED_RULE_AND_THE_ONE_LEGITIMATE_NON_HEAD_READER:
+    prov: RELAYED
+    from: R-668, with the rows counted by me
+    as_of: 2026-09-06T15:16:05Z
+    said: >-
+      a literal flowing into an open that names a non-head is refused whatever the code calls
+      it, and every refused row says the marker is the author's claim, so a marker is evidence
+      about intent and never a verdict about behaviour. The one legitimate non-head reader is
+      the R-608 link-writer, and what separates it is what the bytes do: its literals sit in a
+      supersession field and never flow into an open, nineteen rows of
+      NOT_A_PIN__IN_A_SUPERSESSION_FIELD.
+  BOTH_DECLARATION_DIRECTORIES_ARE_SCANNED_NOW:
+    prov: RELAYED
+    from: R-668, corroborated at the artifact's declarations_dir field
+    as_of: 2026-09-06T15:16:05Z
+    said: >-
+      the earlier censuses scanned one directory, so the fifty nulls were unscanned rather than
+      headless -- an instrument reporting the limit of its own search as a property of the
+      world, the bounded-search shape at the level of a directory. Both directories are scanned
+      now and the allowlist goes through the head rule, so the file deciding which literals are
+      admissible is subject to the rule it enforces.
+  THE_RUN_AT_TWENTY_FIVE_MINUTES_AND_A_FIFTH_IDENTICAL_PEAK:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/heavy_run_form_v3.json
+    as_of: 2026-09-06T15:16:05Z
+    said: >-
+      de102smoke reads loaded, active and running with MemoryPeak 2,957,488,128, the fifth
+      identical reading across 14:56, 15:02, 15:05, 15:11 and 15:16. The peak is the load and
+      the rest of the run is arithmetic over what is already resident. Receipt about 16:20Z, BE
+      66's heavy half still refused on the lock, DA 95 and REV 75 the open gates on the seam.
   # --- MEM round 193, 2026-09-06T15:11:21Z ------------------------------
   EVERY_DIGEST_OF_THOSE_FILES_RECORDED_BEFORE_2F20D83_RESOLVES_AT_ITS_PARENT:
     prov: CHECKED
