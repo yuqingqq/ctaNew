@@ -1,0 +1,226 @@
+{
+  "alpha": 0.05,
+  "arms": {
+    "CONDVALUE_X_SKEW": {
+      "head": "q1_arrival_composed_lgbm",
+      "model_digests": {
+        "lgbm_haz_btc.txt": "ec52055214a01ed5",
+        "lgbm_thresholds_btc.json": "0fa2f1f7a5a4c58f"
+      },
+      "theta": 0.32450609461933483
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+      "head": "incumbent_linear_d",
+      "model_digests": {
+        "linear_d_btc.json": "18701008c2bd18c6"
+      },
+      "theta": 0.43525926488298716
+    }
+  },
+  "be_module": {
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "sha256": "93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef"
+  },
+  "be_module_repoint": {
+    "AND_A_GAP_IN_MY_OWN_METHOD_CLOSED_HERE": "DE 77's justification compared top-level DEFINITIONS only. THIS change moved NO definition at all -- it would have passed that check in silence. `ARMS` (both thetas), `SEED`, `N_DRAWS` and `COIN` are module-level ASSIGNMENTS, so a refitted theta or a changed seed is exactly the class of change that method could not see. Both axes are compared now, and the pinned constants are named and checked one by one",
+    "changed_by_commit": "68b34bd",
+    "compared_against": "ab75b41",
+    "draw_path_functions_changed": [],
+    "draw_path_functions_checked": [
+      "draw_null",
+      "draw_flags",
+      "_alloc",
+      "replay",
+      "flagged_stream",
+      "arm_stream",
+      "mechanics",
+      "base_fills_lost",
+      "params_for",
+      "load"
+    ],
+    "module_level_assignments_changed": {
+      "OUT_DERIVED": {
+        "new": "_BDR.derived()",
+        "old": "ROOT / 'data/pm_5min/derived'"
+      }
+    },
+    "n_top_level_definitions_unchanged": 20,
+    "new_sha256": "93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef",
+    "old_sha256": "2b164df2ec0653a51c6db71fd69db052564b1dcc6c8956ea576d9840d89d9274",
+    "pinned_constants_changed": [],
+    "pinned_constants_checked": [
+      "SEED",
+      "N_DRAWS",
+      "MIN_DRAWS",
+      "COIN",
+      "ARMS",
+      "BASELINE_CANCELS",
+      "BASELINE_FILLS",
+      "LAT",
+      "BUDGET"
+    ],
+    "the_only_thing_that_moved": "OUT_DERIVED, BE's WRITE root -- from `ROOT / 'data/pm_5min/derived'` to `_BDR.derived()`. DE's day path never uses it: it calls load, arm_stream, flagged_stream, replay, _alloc, draw_flags and draw_null, and never BE's run() or main()",
+    "top_level_definitions_changed": [],
+    "why": "the runner's own guard REFUSED on reload for the SECOND round running: BE's cascade changed at 68b34bd (round 50) and the pin was stale. The guard fired on a real change, which is what it is for"
+  },
+  "candidate_sets": {
+    "SET_A_reads_do_not_consume": [
+      "2026-08-29",
+      "2026-09-01",
+      "2026-09-02",
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ],
+    "SET_B_reads_consume": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ]
+  },
+  "coin": "btc",
+  "day_runs_allowed_for_closed_qualifying_days": true,
+  "days": [
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06",
+    "2026-09-07",
+    "2026-09-08"
+  ],
+  "design_declaration": {
+    "note": "THE PIN DIRECTION IS FLIPPED, and this is the round it cost enough to fix. params cited the design BY DIGEST, so every design bump forced a params version whose only change was a pointer -- v3->v4, v4->v5, and v5->v6 would have been a third. The DESIGN is emitted LAST (it needs the code committed for its carrying_commit), so the DESIGN can pin the params by digest and the params names the design by PATH. One direction, no churn, and the senior document holds the pin.",
+    "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v14__<emitted this round>.json",
+    "sha256": "NOT_PINNED_HERE -- SEE THE NOTE",
+    "the_design_pins_THIS_file": "design v14 `parameters.sha256`"
+  },
+  "expected_G": 6,
+  "head_overlap_floor": 0.9,
+  "min_decisions_per_arm_day": 30,
+  "min_draws_per_arm_day": 500,
+  "multiplicity_m": 2,
+  "note": "G IS DERIVED FROM len(days) AND IS NEVER A CONSTANT; `expected_G` below is a CROSS-CHECK the loader must satisfy, not the source of G. THE VERSION TRAVELS IN `version`; v1's protocol string said V2 while its filename said v1.",
+  "per_day_deadline_s": 43200,
+  "protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V7",
+  "read_gate": {
+    "a_missing_or_tampered_receipt_REFUSES_BY_NAME": true,
+    "enforced_by": [
+      "de_multiday_gate1_runner.read_gate()",
+      "de_multiday_gate1_runner.may_read_aggregate()"
+    ],
+    "receipt_naming": {
+      "convention": "the runner's own: p003_de_gate1_day_run_<YYYYMMDD>_SEALED__<stamp>.json",
+      "expected_per_day": {
+        "2026-09-03": "p003_de_gate1_day_run_20260903_SEALED__*.json",
+        "2026-09-04": "p003_de_gate1_day_run_20260904_SEALED__*.json",
+        "2026-09-05": "p003_de_gate1_day_run_20260905_SEALED__*.json",
+        "2026-09-06": "p003_de_gate1_day_run_20260906_SEALED__*.json",
+        "2026-09-07": "p003_de_gate1_day_run_20260907_SEALED__*.json",
+        "2026-09-08": "p003_de_gate1_day_run_20260908_SEALED__*.json"
+      },
+      "resolved_by": "PREFIX glob, with EXACTLY ONE match required -- zero is a day that never ran and two is a day that ran twice, which a read must refuse rather than resolve by picking the newest"
+    },
+    "ruling": "R-602 (coordinator), on DA 72's cadence measurement",
+    "the_bar_is_a_CONJUNCTION": [
+      "the clock >= read_not_before_utc",
+      "all six ruled days' SEALED day receipts exist at the ledger root, each carrying its book digest and the runner identity, VERIFIED at read time"
+    ],
+    "the_day_set_is_UNCHANGED": "R-555 ruled the population; this rules only WHEN the read may open. Nothing is chosen on data",
+    "why": "DA 72 measured the pipeline at 1.165 h SERIAL per day (fragment 608.4 s + tape 1,471.6 s + book 2,115.7 s = 4,195.7 s), and the sixth ruled day 2026-09-08 completes by CALENDAR at 2026-09-09T00:00:00Z -- six minutes before the ruled read_not_before of 00:06Z. Under a clock bar alone the read would open on FIVE days, and G = 5 gives 2^-5 = 0.03125, which FAILS Holm at m = 2 by the design's own arithmetic"
+  },
+  "read_gate_predicate": {
+    "also_read_by": "DA's independent gate -- the same field, so the two implementations cannot disagree about the bar",
+    "at_the_horizon": {
+      "G": 5,
+      "declared_now_with_its_date": "so the stopping rule is not a degree of freedom chosen after seeing which days landed",
+      "verdict": "DIRECTIONAL ONLY",
+      "why": "2^-5 = 0.03125 is not significant at m = 2 -- the USER's own words"
+    },
+    "conjuncts": {
+      "1_clock": "now >= read_not_before_utc. A GENUINE conjunct: six receipts before the bar must NOT open the read",
+      "2_all_six_RULED_days": "the days come from THIS file, never 'six receipts present' -- a receipt for another day fills no hole",
+      "3_digest_at_landing": "each day's sealed receipt digest equals the one DA's pre-read recorded WHEN THE DAY LANDED. A re-run after landing changes it and REFUSES: waiting must not become re-rolling. A superseding vN is admitted only when its chain reaches the landed digest",
+      "4_an_admissible_arm": "each day has >= 1 arm with admissibility.admissible true, read from the SEALED artifact (non-economic). Six all-inadmissible days satisfy existence and contribute ZERO SIGNS",
+      "5_ledger_verdict": "day_quality_pass AND era_pure AND counts_toward_race -- R-555's membership. A sealed receipt is DE's own artifact and is not a day verdict",
+      "6_code_locatable": "producing_code_sha256 equals the runner's blob at the receipt's carrying_commit. For 2026-09-03 the .v2 supersession is what makes this hold: v1 was stamped from a file replaced mid-run (R-603)",
+      "7_horizon": "if the sixth ruled day's sealed receipt has not landed by the horizon, the read opens at G = 5 over the five LANDED ruled days, DIRECTIONAL ONLY, with the sixth disclosed as UNBUILT and why",
+      "8_this_field_is_REQUIRED": "a params file lacking it REFUSES. DA's gate reads the same field; two implementations of one bar must not disagree silently"
+    },
+    "each_refusal_is_by_name": true,
+    "enforced_by": [
+      "de_multiday_gate1_runner.read_gate()",
+      "de_multiday_gate1_runner.may_read_aggregate()"
+    ],
+    "horizon_utc": "2026-09-09T12:00:00Z",
+    "ledger_membership_conjuncts": [
+      "day_quality_pass",
+      "era_pure",
+      "counts_toward_race"
+    ],
+    "opens_only_when_ALL_hold": true,
+    "ruling": "R-604 (coordinator), completing R-602 on REV 50 S3.3"
+  },
+  "read_not_before_utc": "2026-09-09T00:06:00Z",
+  "read_requires_all_ruled_days_sealed": true,
+  "required_previously_opened_for": "none",
+  "ruling": {
+    "authority": "R-555 (USER): untouched days only",
+    "completion": "the 2026-09-09T00:06Z verdict; the run does not start before it",
+    "if_a_future_day_fails_its_verdict": "the set waits for the next qualifying CLOSED day in calendar order. G STAYS 6 and nothing is chosen",
+    "rule": "the four ledger conjuncts AND day-quality, on COMPLETE days only, AND previously_opened_for == none",
+    "smoke_day": "2026-09-03",
+    "smoke_publishes": "resource observations only; its economic fields are SEALED until all 6 days are complete",
+    "why_not_SET_A": "SET A included 08-29, 09-01 and 09-02, whose previously_opened_for is development_read or interim_read_of_frozen_candidate. The USER ruled untouched days only"
+  },
+  "sd_floor_fraction": 0.25,
+  "status": "DAY_SET_RULED_R555_USER",
+  "supersedes": {
+    "chain": [
+      {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v1.json",
+        "sha256": "b06125e9e10b9652ebb5130fe0f08e5d7b1d312828dac219b7e7ac0496130138"
+      },
+      {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v2.json",
+        "sha256": "ce46b5775d8f17a4b417640b620db275868a9efec19abdde6caaecd4dbd405dd"
+      },
+      {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v3.json",
+        "sha256": "d6368dcef76795aa9f626dc38d327ea8261882fea8d7610d79448f357913229c"
+      },
+      {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v4.json",
+        "sha256": "03e5cd029f69e660b07d3eb7214e4b8b80f54736105353c60227ef6e96c5261d"
+      },
+      {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v5.json",
+        "sha256": "306bfdb0491afdaded181b0b6777fe4c4a88030e79817881eca076a8452cdc1f"
+      },
+      {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v6.json",
+        "sha256": "1af1befbbf0b496a841c5538098c0a52948b177791ce35d9e4515e72260b560f"
+      }
+    ],
+    "fields_changed": [
+      "read_gate_predicate (new, R-604)"
+    ],
+    "path": "live/pm_research/declarations/de_multiday_gate1_params_v6.json",
+    "rule": "13 -- a superseding declaration, vN+1",
+    "sha256": "1af1befbbf0b496a841c5538098c0a52948b177791ce35d9e4515e72260b560f",
+    "v6_untouched": true
+  },
+  "timing": {
+    "day_runs_allowed_for": "any CLOSED, QUALIFYING day in the ruled set",
+    "enforced_by": [
+      "de_multiday_gate1_runner.may_run_day()",
+      "de_multiday_gate1_runner.may_read_aggregate()"
+    ],
+    "read_not_before_utc_governs": "the AGGREGATE READ only: the unseal of the economic fields and the section-7 verdict",
+    "ruling": "R-572(B)(2) (coordinator)",
+    "superseded_field": "run_not_before_utc",
+    "what_v1_said": "2026-09-09T00:06:00Z",
+    "why_it_was_wrong": "one whole-set field did two jobs and read as a bar on every run. A per-day run is SEALED -- resources, counts and statuses, no economic field -- so it cannot inform a later choice, and holding 09-03 behind 2026-09-09 bought nothing and cost the calendar"
+  },
+  "version": 7,
+  "wrapper": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100%"
+}

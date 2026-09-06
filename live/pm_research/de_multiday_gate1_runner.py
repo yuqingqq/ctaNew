@@ -47,14 +47,14 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 167
+EXPECTED_CHECKS = 172
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
 #: stays as provenance (rule 13).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v6.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v7.json"
 SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v5.json")
+                        "de_multiday_gate1_params_v6.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -72,7 +72,7 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 85
+DAY_PATH_CHECKS = 88
 
 
 #: R-603 / REV 49 §0 -- THE DIGEST OF THE BYTES THAT ARE RUNNING, taken
@@ -925,8 +925,65 @@ def verify_sealed_day_receipt(day: str, path: str, root: Path) -> dict:
             "n_arm_days": len(sealed)}
 
 
+#: R-604 item 7, THE HORIZON, declared with its date so the stopping rule
+#: is not a degree of freedom.
+READ_HORIZON_UTC = "2026-09-09T12:00:00Z"
+
+#: R-604 item 5: R-555's membership, read from the day's LEDGER verdict. A
+#: sealed receipt is DE's own artifact and is not a day verdict.
+LEDGER_MEMBERSHIP_CONJUNCTS = ("day_quality_pass", "era_pure",
+                               "counts_toward_race")
+
+
+def landing_record_for(day: str, root: Path) -> dict:
+    """DA's PRE-READ artifact for a day -- the LANDING RECORD.
+
+    R-604 item 3: the digest a day's receipt had WHEN IT LANDED. A re-run
+    after landing produces a different receipt, and waiting must not become
+    re-rolling: the gate compares against this, not against whatever is on
+    disk at read time."""
+    d = Path(root) / "pm_5min/derived"
+    hits = []
+    for p in sorted(d.glob("p003_da_gate1_pre_read*.json")):
+        try:
+            rec = json.loads(p.read_text())
+        except (OSError, ValueError):
+            continue
+        if rec.get("day") and (day_forms(rec["day"]) & day_forms(day)):
+            hits.append((p, rec))
+    if not hits:
+        return {"day": day, "present": False, "status": "NO_LANDING_RECORD",
+                "why": "DA's pre-read artifact is the landing record; "
+                       "without it there is nothing to compare the "
+                       "receipt's digest against, and a re-run after "
+                       "landing would be invisible"}
+    if len(hits) > 1:
+        return {"day": day, "present": False, "status": "AMBIGUOUS",
+                "n": len(hits), "paths": [str(p) for p, _ in hits]}
+    p, rec = hits[0]
+    return {"day": day, "present": True, "status": "PRESENT",
+            "path": str(p),
+            "receipt_sha256_at_landing": (rec.get("receipt") or {}
+                                          ).get("sha256"),
+            "receipt_name_at_landing": (rec.get("receipt") or {}
+                                        ).get("path")}
+
+
+def _blob_sha256_at(commit: str, rel: str, repo: Path) -> str | None:
+    import subprocess
+    try:
+        r = subprocess.run(["git", "-C", str(repo), "show", f"{commit}:{rel}"],
+                           capture_output=True, timeout=60)
+    except Exception:
+        return None
+    if r.returncode != 0:
+        return None
+    return hashlib.sha256(r.stdout).hexdigest()
+
+
 def read_gate(params: dict, *, now_utc: datetime.datetime,
-              root: Path | None = None) -> dict:
+              root: Path | None = None,
+              ledger_rows: dict | None = None) -> dict:
     """R-602: THE SEAL-OPEN BAR IS A PREDICATE ON ARTIFACTS, NOT A CLOCK.
 
     DA 72 measured the pipeline at 1.165 h serial per day and found that
@@ -940,39 +997,182 @@ def read_gate(params: dict, *, now_utc: datetime.datetime,
     The day set is UNCHANGED and nothing is chosen on data: this decides
     WHEN the read may open, never WHICH days are in it (R-555)."""
     root = Path(root) if root is not None else Path(DR.resolve()["data_root"])
+    repo = Path(__file__).resolve().parents[2]
     days = params["days"]
+    spec = params.get("read_gate_predicate")
+    # (8) THE FIELD IS REQUIRED. DA's gate reads the SAME field; two
+    # implementations of one bar must not disagree silently, and a params
+    # file that lacks it is a file that has not been updated to the ruling.
+    if not isinstance(spec, dict):
+        raise RunnerRefused(
+            "REFUSED: the parameter file carries no `read_gate_predicate`. "
+            "R-604 makes the field REQUIRED -- DA's gate reads the same "
+            "one, and a bar implemented twice from different files is a "
+            "bar that can disagree without anybody noticing.")
     not_before = _iso_utc(params["read_not_before_utc"])
-    clock_ok = now_utc >= not_before
+    horizon = _iso_utc(spec.get("horizon_utc", READ_HORIZON_UTC))
+    C = []
+
+    def _c(name, holds, detail):
+        C.append({"conjunct": name, "holds": bool(holds), "detail": detail})
+
+    # (1) THE CLOCK, a genuine conjunct: six receipts before it must NOT
+    #     open the read.
+    _c("1_clock", now_utc >= not_before,
+       {"now_utc": now_utc.isoformat(),
+        "read_not_before_utc": params["read_not_before_utc"]})
+
+    # (2) THE SIX RULED DAYS, from the committed params -- never "six
+    #     receipts present". A receipt for another day fills no hole.
     found = {d: find_sealed_day_receipt(d, root) for d in days}
-    verified = {}
-    for d, f in found.items():
-        verified[d] = (verify_sealed_day_receipt(d, f["path"], root)
-                       if f["present"] else
-                       {"day": d, "ok": False, "problems": [f["status"]],
-                        "path": None})
-    missing = [d for d in days if not found[d]["present"]]
-    bad = [d for d in days if found[d]["present"] and not verified[d]["ok"]]
-    receipts_ok = not missing and not bad
+    # NOT `per_day, ledger_rows = {}, {}` -- that reset the PARAMETER to
+    # an empty dict before the check below, so an injected set was silently
+    # discarded and every day failed conjunct 5. A local initialiser that
+    # shadows a parameter of the same name is invisible at the call site.
+    per_day = {}
+    if ledger_rows is None:
+        # THE PRODUCTION PATH uses the design's reader, which REFUSES any
+        # root but the canonical ledger -- deliberately, so a day set can
+        # never be derived from the wrong tree. `ledger_rows` is injectable
+        # ONLY so conjunct 5 can be driven on a synthetic root; the real
+        # path never passes it.
+        try:
+            ledger_rows = DESIGN.day_sets_from_the_ledger(
+            )["ledger_rows_as_read"]
+        except Exception as exc:                  # ledger unreadable
+            ledger_rows = {"_error": str(exc)}
+    for d in days:
+        f = found[d]
+        row = {"day": d, "receipt": f}
+        if f["present"]:
+            try:
+                rec = json.loads(Path(f["path"]).read_text())
+            except (OSError, ValueError) as exc:
+                rec = {}
+                row["unreadable"] = str(exc)
+            row["verify"] = verify_sealed_day_receipt(d, f["path"], root)
+            # (3) THE DIGEST AT LANDING.
+            land = landing_record_for(d, root)
+            here = sha256_streamed(Path(f["path"]))
+            sup = ((rec.get("supersedes") or {}).get("sha256"))
+            row["landing"] = {
+                **land, "receipt_sha256_now": here,
+                "supersedes_sha256": sup,
+                "matches_landing": bool(
+                    land.get("present")
+                    and land.get("receipt_sha256_at_landing")
+                    in (here, sup)),
+                "why": "a re-run after landing changes the digest; waiting "
+                       "must not become re-rolling. A superseding vN is "
+                       "admitted only when its chain reaches the landed "
+                       "digest",
+            }
+            # (4) AT LEAST ONE ADMISSIBLE ARM, from the sealed artifact.
+            arts = rec.get("per_day_sealed_artifacts") or []
+            adm = [a for a in arts
+                   if (a.get("admissibility") or {}).get("admissible")
+                   is True]
+            row["admissible_arms"] = {
+                "n": len(adm), "n_arms": len(arts),
+                "holds": len(adm) >= 1,
+                "status": rec.get("status"),
+                "why": "six all-inadmissible days satisfy existence and "
+                       "contribute ZERO SIGNS; the aggregate would have "
+                       "nothing to aggregate",
+            }
+            # (6) THE PRODUCING CODE IS LOCATABLE.
+            si = rec.get("source_identity") or {}
+            cc, pcs = si.get("carrying_commit"), si.get(
+                "producing_code_sha256")
+            blob = (_blob_sha256_at(cc, "live/pm_research/"
+                                    "de_multiday_gate1_runner.py", repo)
+                    if cc else None)
+            row["code_locatable"] = {
+                "carrying_commit": cc, "producing_code_sha256": pcs,
+                "blob_sha256_at_that_commit": blob,
+                "holds": bool(pcs and blob and pcs == blob),
+                "why": "a receipt whose producing digest is in no commit "
+                       "names code nobody can fetch. For 2026-09-03 the "
+                       ".v2 supersession is what makes this hold: v1 was "
+                       "stamped from a file replaced mid-run (R-603)",
+            }
+        else:
+            row["landing"] = {"matches_landing": False,
+                              "status": "NO_RECEIPT"}
+            row["admissible_arms"] = {"holds": False, "status": "NO_RECEIPT"}
+            row["code_locatable"] = {"holds": False, "status": "NO_RECEIPT"}
+        # (5) THE LEDGER VERDICT -- R-555's membership.
+        lr = ledger_rows.get(d) if isinstance(ledger_rows, dict) else None
+        row["ledger"] = {
+            "present": lr is not None,
+            "conjuncts": ({k: lr.get(k) for k in
+                           LEDGER_MEMBERSHIP_CONJUNCTS} if lr else None),
+            "holds": bool(lr and all(lr.get(k) is True
+                                     for k in LEDGER_MEMBERSHIP_CONJUNCTS)),
+            "why": "a sealed receipt is DE's own artifact and is not a day "
+                   "verdict; membership is R-555's and lives in the ledger",
+        }
+        per_day[d] = row
+
+    _c("2_all_six_ruled_days_have_a_receipt",
+       all(found[d]["present"] for d in days),
+       {"missing": [d for d in days if not found[d]["present"]],
+        "note": "the days come from the committed params; a receipt for "
+                "another day fills no hole"})
+    _c("3_digest_matches_the_landing_record",
+       all(per_day[d]["landing"].get("matches_landing") for d in days),
+       {"failing": [d for d in days
+                    if not per_day[d]["landing"].get("matches_landing")]})
+    _c("4_each_day_has_an_admissible_arm",
+       all(per_day[d]["admissible_arms"]["holds"] for d in days),
+       {"failing": [d for d in days
+                    if not per_day[d]["admissible_arms"]["holds"]]})
+    _c("5_ledger_verdict_holds",
+       all(per_day[d]["ledger"]["holds"] for d in days),
+       {"conjuncts": list(LEDGER_MEMBERSHIP_CONJUNCTS),
+        "failing": [d for d in days if not per_day[d]["ledger"]["holds"]]})
+    _c("6_producing_code_is_locatable",
+       all(per_day[d]["code_locatable"]["holds"] for d in days),
+       {"failing": [d for d in days
+                    if not per_day[d]["code_locatable"]["holds"]]})
+    _c("8_params_carries_the_predicate", True,
+       {"field": "read_gate_predicate", "note": "checked above; a file "
+        "lacking it refuses before any day is examined"})
+
+    landed = [d for d in days if found[d]["present"]]
+    all_hold = all(c["holds"] for c in C)
+    # (7) THE HORIZON, declared with its date.
+    horizon_reached = now_utc >= horizon
+    horizon_open = bool(
+        not all_hold and horizon_reached and C[0]["holds"]
+        and len(landed) == len(days) - 1
+        and all(per_day[d]["landing"].get("matches_landing")
+                and per_day[d]["admissible_arms"]["holds"]
+                and per_day[d]["ledger"]["holds"]
+                and per_day[d]["code_locatable"]["holds"] for d in landed))
     return {
-        "protocol": "P003_DE_GATE1_READ_GATE_V1",
-        "ruling": "R-602 (coordinator)",
-        "clock": {"now_utc": now_utc.isoformat(),
-                  "read_not_before_utc": params["read_not_before_utc"],
-                  "holds": clock_ok},
-        "receipts": {"required": len(days),
-                     "present": sum(1 for d in days if found[d]["present"]),
-                     "verified": sum(1 for d in days if verified[d]["ok"]),
-                     "missing_days": missing, "failing_days": bad,
-                     "holds": receipts_ok,
-                     "per_day": {d: {**found[d], **verified[d]}
-                                 for d in days}},
-        "read_requires_all_ruled_days_sealed":
-            params.get("read_requires_all_ruled_days_sealed"),
-        "may_open": bool(clock_ok and receipts_ok
-                         and params.get(
-                             "read_requires_all_ruled_days_sealed") is True),
-        "the_conjunction": "clock >= read_not_before_utc AND all six ruled "
-                           "days' SEALED receipts present and verified",
+        "protocol": "P003_DE_GATE1_READ_GATE_V2",
+        "ruling": "R-602, completed as eight conjuncts by R-604",
+        "conjuncts": C,
+        "per_day": per_day,
+        "ruled_days": list(days),
+        "n_landed": len(landed),
+        "may_open": all_hold,
+        "G_if_opened": len(days) if all_hold else (
+            len(landed) if horizon_open else None),
+        "horizon": {
+            "utc": spec.get("horizon_utc", READ_HORIZON_UTC),
+            "reached": horizon_reached,
+            "opens_at_G_minus_one": horizon_open,
+            "verdict_if_opened_here": "DIRECTIONAL ONLY -- 2^-5 = 0.03125 "
+                                      "is not significant at m = 2",
+            "the_sixth_day_is_disclosed_as": (
+                [d for d in days if d not in landed] if horizon_open
+                else None),
+            "why_declared_now": "with its date, so the stopping rule is "
+                                "not a degree of freedom chosen after "
+                                "seeing which days landed",
+        },
         "what_this_does_NOT_decide": "WHICH days are in the set. R-555 "
                                      "ruled the population; this rules "
                                      "only WHEN the read may open",
@@ -981,37 +1181,53 @@ def read_gate(params: dict, *, now_utc: datetime.datetime,
 
 def may_read_aggregate(params: dict, *, n_days_complete: int,
                        now_utc: datetime.datetime,
-                       root: Path | None = None) -> dict:
+                       root: Path | None = None,
+                       ledger_rows: dict | None = None) -> dict:
     """The OTHER clock: the unseal and the section-7 verdict.
 
     BOTH conditions, not either: the declared date AND all G days. The date
     alone would let a five-day read happen on the ninth; the count alone
     would let the read happen the moment the sixth day landed early."""
-    not_before = _iso_utc(params["read_not_before_utc"])
-    if now_utc < not_before:
-        raise RunnerRefused(
-            f"REFUSED: the aggregate read is not before "
-            f"{params['read_not_before_utc']}; it is {now_utc.isoformat()}.")
-    if n_days_complete < params["G"]:
-        raise RunnerRefused(
-            f"REFUSED: {n_days_complete} of {params['G']} days are complete. "
-            f"The read unseals every day at once or not at all (R5).")
+    # THE CLOCK IS CONJUNCT 1 OF THE GATE, and only there. It was checked
+    # here as well, which is two implementations of one bar inside one
+    # function -- the defect R-604 item 8 names between DE and DA, in
+    # miniature.
+    # THE COMPLETENESS CHECK COMPARES AGAINST THE GATE'S OWN G, and is
+    # therefore evaluated AFTER it: at the horizon the ruled G is 5 by the
+    # declaration, and a check hardcoded to params["G"] refused the very
+    # case R-604 item 7 exists to allow.
     # R-602: AND THE ARTIFACTS. A clock bar alone would open the read on
     # five days, and G = 5 fails Holm at m = 2 by the design's own
     # arithmetic. `root` is threaded so the gate can be driven.
-    gate = read_gate(params, now_utc=now_utc, root=root)
     if params.get("read_requires_all_ruled_days_sealed") is not True:
         raise RunnerRefused(
             "REFUSED: the parameter file does not carry "
             "`read_requires_all_ruled_days_sealed: true`; without the "
             "ruling in the file the runner will not infer it (R-602).")
-    if not gate["receipts"]["holds"]:
+    gate = read_gate(params, now_utc=now_utc, root=root,
+                     ledger_rows=ledger_rows)
+    _need = gate["G_if_opened"]
+    if _need is not None and n_days_complete < _need:
         raise RunnerRefused(
-            f"REFUSED: the read requires all {gate['receipts']['required']} "
-            f"ruled days' SEALED receipts. Missing: "
-            f"{gate['receipts']['missing_days']}; failing verification: "
-            f"{gate['receipts']['failing_days']}. A missing or tampered "
-            f"receipt refuses BY NAME (R-602).")
+            f"REFUSED: {n_days_complete} of {_need} days are complete. "
+            f"The read unseals every day at once or not at all (R5).")
+    if not gate["may_open"]:
+        failed = [c for c in gate["conjuncts"] if not c["holds"]]
+        if gate["horizon"]["opens_at_G_minus_one"]:
+            return {"may_read": True, "G": gate["G_if_opened"],
+                    "n_days_complete": n_days_complete,
+                    "read_not_before_utc": params["read_not_before_utc"],
+                    "opened_at_the_HORIZON": True,
+                    "verdict_is": "DIRECTIONAL ONLY",
+                    "unbuilt_days": gate["horizon"][
+                        "the_sixth_day_is_disclosed_as"],
+                    "read_gate": gate}
+        raise RunnerRefused(
+            "REFUSED: the read predicate does not hold. Failing conjuncts, "
+            "by name: "
+            + "; ".join(f"{c['conjunct']} -> {c['detail']}"
+                        for c in failed)
+            + ". (R-602 as completed by R-604.)")
     return {"may_read": True, "n_days_complete": n_days_complete,
             "G": params["G"],
             "read_not_before_utc": params["read_not_before_utc"],
@@ -2586,8 +2802,19 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             "realpath": _os3.path.realpath(sys.executable),
             "is_a_symlink": _os3.path.islink(sys.executable),
             "version": sys.version.split()[0]},
+        # (4) A DAY WITH NO ADMISSIBLE ARM SAYS SO IN ITS STATUS. It
+        # carried the constant DAY_RUN_SEALED, so a day that contributed
+        # ZERO SIGNS was indistinguishable from one that contributed two --
+        # and six such days would satisfy every existence test in the read
+        # gate while the aggregate had nothing to aggregate.
         "status": ("FIXTURE_DAY_RUN_NO_REAL_DATA" if fixture
-                   else "DAY_RUN_SEALED"),
+                   else ("DAY_RUN_SEALED" if any(
+                       (a.get("admissibility") or {}).get("admissible")
+                       is True for a in sealed)
+                       else "DAY_RUN_SEALED_NO_ADMISSIBLE_ARM")),
+        "n_admissible_arms": sum(
+            1 for a in sealed
+            if (a.get("admissibility") or {}).get("admissible") is True),
         "day": day,
         "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "fixture": fixture,
@@ -3172,7 +3399,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"fixture run opens {len(_seen)} paths, ZERO of them under "
            f"`data/`. It reads only its own module source and the "
            f"committed parameter file, so it runs from a shell worktree")
-        ok(any(x.endswith("de_multiday_gate1_params_v6.json")
+        ok(any(x.endswith("de_multiday_gate1_params_v7.json")
                for x in _seen),
            "and the instrument is not vacuous -- it DID observe the "
            "parameter file being read, so a zero above is a measurement "
@@ -3260,13 +3487,22 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     # ---- R-602: the seal-open bar is a PREDICATE ON ARTIFACTS ----------
     import tempfile as _tfr
 
-    def _synth_ledger(days, *, tamper=None):
-        """A ledger root carrying one sealed receipt per day, each naming a
-        book whose digest it declares. Built, never faked: the digest is
-        computed from the book that is written."""
-        d = _tfr.mkdtemp(prefix="de86_")
+    def _synth_ledger(days, *, tamper=None, no_admissible=None,
+                      reroll=None, skip_landing=None):
+        """A ledger root satisfying R-604's eight conjuncts, or failing ONE
+        of them on purpose. Built, never faked: every digest is computed
+        from the bytes that were written, and the producing-code digest is
+        the RUNNER'S OWN BLOB AT HEAD, so conjunct 6 is driven against a
+        real commit rather than a constant."""
+        import subprocess as _sp3
+        d = _tfr.mkdtemp(prefix="de87_")
         der = Path(d) / "pm_5min/derived"
         der.mkdir(parents=True)
+        _repo = Path(__file__).resolve().parents[2]
+        _head = _sp3.run(["git", "-C", str(_repo), "rev-parse", "HEAD"],
+                         capture_output=True, text=True).stdout.strip()
+        _blob = _blob_sha256_at(
+            _head, "live/pm_research/de_multiday_gate1_runner.py", _repo)
         for day in days:
             compact = [x for x in sorted(day_forms(day))
                        if "-" not in x][0]
@@ -3274,94 +3510,143 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
             bk.write_bytes(b"book-" + compact.encode())
             sha = sha256_streamed(bk)
             if tamper == day:
-                sha = "0" * 64          # the receipt names bytes that moved
-            (der / f"{SEALED_DAY_RECEIPT_PREFIX}{compact}"
-                   f"{SEALED_DAY_RECEIPT_MIDFIX}20260906T000000Z.json"
-             ).write_text(json.dumps({
-                 "day": day,
-                 "reference_book": {"path": str(bk), "sha256": sha},
-                 "source_identity": {"carrying_commit": "0" * 40,
-                                     "producing_code_sha256": "a" * 64},
-                 "per_day_sealed_artifacts": [{"arm": "A", "sealed": True}],
-             }))
+                sha = "0" * 64
+            rp = (der / f"{SEALED_DAY_RECEIPT_PREFIX}{compact}"
+                        f"{SEALED_DAY_RECEIPT_MIDFIX}20260906T000000Z.json")
+            adm = (day != no_admissible)
+            rp.write_text(json.dumps({
+                "day": day,
+                "status": ("DAY_RUN_SEALED" if adm
+                           else "DAY_RUN_SEALED_NO_ADMISSIBLE_ARM"),
+                "reference_book": {"path": str(bk), "sha256": sha},
+                "source_identity": {"carrying_commit": _head,
+                                    "producing_code_sha256": _blob},
+                "per_day_sealed_artifacts": [
+                    {"arm": "A", "sealed": True,
+                     "admissibility": {"admissible": adm}}],
+            }))
+            landed = sha256_streamed(rp)
+            if reroll == day:
+                # THE DAY RE-RAN AFTER LANDING: the file changes and the
+                # landing record still names the old digest.
+                rp.write_text(rp.read_text().replace('"arm": "A"',
+                                                     '"arm": "A "'))
+            if skip_landing != day:
+                (der / f"p003_da_gate1_pre_read_{compact}__"
+                       f"20260906T000000Z.json").write_text(json.dumps({
+                           "day": day, "mode": "PRE_READ",
+                           "receipt": {"path": rp.name,
+                                       "sha256": landed}}))
         return Path(d)
 
-    _all6 = _synth_ledger(live["days"])
-    _read = may_read_aggregate(live, n_days_complete=6,
-                               now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz),
-                               root=_all6)
+    def _synth_rows(days, *, bad=None):
+        return {d: {k: (d != bad) for k in LEDGER_MEMBERSHIP_CONJUNCTS}
+                for d in days}
+
+    _D6, _rows6 = live["days"], _synth_rows(live["days"])
+    _all6 = _synth_ledger(_D6)
+    _after = _t(2026, 9, 9, 0, 6, tzinfo=_tz)
+    _before = _t(2026, 9, 8, 23, 59, tzinfo=_tz)
+    _read = may_read_aggregate(live, n_days_complete=6, now_utc=_after,
+                               root=_all6, ledger_rows=_rows6)
     ok(_read["may_read"] is True
        and _read["read_gate"]["may_open"] is True
-       and _read["read_gate"]["receipts"]["verified"] == 6,
-       "R-602 POSITIVE CONTROL, AND IT ADMITS: the clock past 09-09T00:06Z "
-       "AND all six ruled days' SEALED receipts present and verified OPENS "
-       "the read")
-    _five = _synth_ledger(live["days"][:5])
+       and len(_read["read_gate"]["conjuncts"]) == 7
+       and all(c["holds"] for c in _read["read_gate"]["conjuncts"]),
+       f"R-604 POSITIVE CONTROL, AND IT ADMITS: six of six after the "
+       f"clock, every conjunct holding -- "
+       f"{[c['conjunct'] for c in _read['read_gate']['conjuncts']]}")
     refuses(lambda: may_read_aggregate(
-        live, n_days_complete=6, now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz),
-        root=_five),
-        f"R-602 KNOWN-BAD, THE CASE THAT FORCED THE RULING: the clock is "
-        f"PAST and only FIVE days are sealed -- it REFUSES AND NAMES THE "
-        f"MISSING DAY. DA 72 measured the pipeline at 1.165 h serial and "
-        f"09-08 completes by calendar SIX MINUTES before 00:06Z, so a "
-        f"clock bar alone would have opened the read at G = 5, and 2^-5 = "
-        f"0.03125 FAILS Holm at m = 2 -- the design's own arithmetic",
-        "2026-09-08")
+        live, n_days_complete=6, now_utc=_before, root=_all6,
+        ledger_rows=_rows6),
+        "R-604 (1) KNOWN-BAD, SIX OF SIX BEFORE THE CLOCK: the artifacts do "
+        "not open the read early -- the clock is a GENUINE conjunct, not a "
+        "formality the receipts can satisfy around. And it is checked in "
+        "ONE place: it was ALSO checked ahead of the gate, which is two "
+        "implementations of one bar inside one function", "1_clock")
     refuses(lambda: may_read_aggregate(
-        live, n_days_complete=6, now_utc=_t(2026, 9, 8, 23, 59, tzinfo=_tz),
-        root=_all6),
-        "R-602 KNOWN-BAD, ONE MINUTE EARLY WITH ALL SIX SEALED: the "
-        "artifacts do not open the read before the declared date -- BOTH "
-        "conjuncts, never either", "not before")
-    _tamp = _synth_ledger(live["days"], tamper=live["days"][5])
+        live, n_days_complete=6, now_utc=_after,
+        root=_synth_ledger(_D6[:5]), ledger_rows=_rows6),
+        "R-604 (2) KNOWN-BAD, FIVE OF SIX: the RULED days come from the "
+        "params -- a receipt for another day would fill no hole",
+        "2_all_six_ruled_days")
     refuses(lambda: may_read_aggregate(
-        live, n_days_complete=6, now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz),
-        root=_tamp),
-        "R-602 KNOWN-BAD, A TAMPERED SIXTH: a receipt whose declared book "
-        "digest is not the book's bytes REFUSES on the digest, by name -- "
-        "the receipt is verified AT READ TIME, not trusted because it "
-        "exists", "failing verification")
-    _dbl = _synth_ledger(live["days"])
-    _c6 = [x for x in sorted(day_forms(live["days"][5])) if "-" not in x][0]
-    (_dbl / "pm_5min/derived" /
-     f"{SEALED_DAY_RECEIPT_PREFIX}{_c6}{SEALED_DAY_RECEIPT_MIDFIX}"
-     f"20260906T111111Z.json").write_text("{}")
+        live, n_days_complete=6, now_utc=_after,
+        root=_synth_ledger(_D6, reroll=_D6[2]), ledger_rows=_rows6),
+        "R-604 (3) KNOWN-BAD, A DAY RE-ROLLED AFTER LANDING: its digest no "
+        "longer matches the one DA's pre-read recorded, and it REFUSES -- "
+        "WAITING MUST NOT BECOME RE-ROLLING",
+        "3_digest_matches_the_landing_record")
     refuses(lambda: may_read_aggregate(
-        live, n_days_complete=6, now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz),
-        root=_dbl),
-        "AND A DAY WITH TWO SEALED RECEIPTS REFUSES AS AMBIGUOUS: a day "
-        "that ran twice is not a day with a newest result, and a read that "
-        "picks one has chosen after seeing", "failing verification")
-    _noflag2 = dict(live)
-    _noflag2.pop("read_requires_all_ruled_days_sealed", None)
+        live, n_days_complete=6, now_utc=_after,
+        root=_synth_ledger(_D6, no_admissible=_D6[4]), ledger_rows=_rows6),
+        "R-604 (4) KNOWN-BAD, A DAY WITH NO ADMISSIBLE ARM: it satisfies "
+        "existence and contributes ZERO SIGNS, so the read REFUSES. Six "
+        "such days would have passed every earlier test while the "
+        "aggregate had nothing to aggregate",
+        "4_each_day_has_an_admissible_arm")
     refuses(lambda: may_read_aggregate(
-        _noflag2, n_days_complete=6,
-        now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz), root=_all6),
-        "and without `read_requires_all_ruled_days_sealed` in the FILE the "
-        "runner REFUSES rather than inferring the ruling (R-602)",
-        "does not carry")
+        live, n_days_complete=6, now_utc=_after, root=_all6,
+        ledger_rows=_synth_rows(_D6, bad=_D6[1])),
+        "R-604 (5) KNOWN-BAD, A DAY WHOSE LEDGER VERDICT FAILS: a sealed "
+        "receipt is DE's own artifact and is not a day verdict; membership "
+        "is R-555's and lives in the ledger", "5_ledger_verdict_holds")
+    _badcode = _synth_ledger(_D6)
+    _bc = sorted((_badcode / "pm_5min/derived").glob(
+        f"{SEALED_DAY_RECEIPT_PREFIX}*"))[0]
+    _bcj = json.loads(_bc.read_text())
+    _bcj["source_identity"]["producing_code_sha256"] = "0" * 64
+    _bc.write_text(json.dumps(_bcj))
     refuses(lambda: may_read_aggregate(
-        live, n_days_complete=5, now_utc=_t(2026, 9, 12, 0, 0, tzinfo=_tz),
-        root=_all6),
-        "KNOWN-BAD, FIVE OF SIX COMPLETE: the date does not open a read of "
-        "an incomplete set", "of 6 days are complete")
-    _live_gate = read_gate(live, now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz))
-    ok(_live_gate["may_open"] is (
-           _live_gate["receipts"]["verified"] == len(live["days"]))
-       and _live_gate["clock"]["holds"] is True,
-       f"AND EVALUATED ON THE REAL LEDGER NOW, as a RELATION: "
-       f"{_live_gate['receipts']['verified']} of "
-       f"{_live_gate['receipts']['required']} ruled days sealed, so "
-       f"may_open is {_live_gate['may_open']}. Asserted as a relation "
-       f"because the count changes as days land -- a check that pinned "
-       f"'0 of 6' would go red on the first receipt")
-    ok(live["read_not_before_utc"] == "2026-09-09T00:06:00Z"
-       and "run_not_before_utc" not in live
-       and live["timing"]["superseded_field"] == "run_not_before_utc",
-       "and params v2 carries the SPLIT, with the superseded field named: "
-       "`read_not_before_utc` + "
-       "`day_runs_allowed_for_closed_qualifying_days`, and no "
-       "`run_not_before_utc` left to be resolved by a reader")
+        live, n_days_complete=6, now_utc=_after, root=_badcode,
+        ledger_rows=_rows6),
+        "R-604 (6) KNOWN-BAD, PRODUCING CODE NOT LOCATABLE: a receipt whose "
+        "producing digest is in no commit names code nobody can fetch. For "
+        "2026-09-03 the .v2 supersession is exactly what makes this hold",
+        "6_producing_code_is_locatable")
+    refuses(lambda: may_read_aggregate(
+        {**live, "read_gate_predicate": None}, n_days_complete=6,
+        now_utc=_after, root=_all6, ledger_rows=_rows6),
+        "R-604 (8) KNOWN-BAD, THE FIELD ABSENT: a params file without "
+        "`read_gate_predicate` REFUSES before any day is examined -- DA's "
+        "gate reads the same field, and a bar implemented twice from "
+        "different files can disagree without anybody noticing",
+        "carries no `read_gate_predicate`")
+    _five = _synth_ledger(_D6[:5])
+    _hz = may_read_aggregate(live, n_days_complete=5,
+                             now_utc=_t(2026, 9, 9, 12, 0, tzinfo=_tz),
+                             root=_five, ledger_rows=_rows6)
+    ok(_hz["may_read"] is True and _hz["G"] == 5
+       and _hz["opened_at_the_HORIZON"] is True
+       and _hz["verdict_is"] == "DIRECTIONAL ONLY"
+       and _hz["unbuilt_days"] == [_D6[5]],
+       f"R-604 (7) THE HORIZON, DRIVEN: at 2026-09-09T12:00Z with five "
+       f"landed days the read OPENS at G = 5, DIRECTIONAL ONLY, with "
+       f"{_hz['unbuilt_days']} disclosed as UNBUILT. Declared WITH ITS "
+       f"DATE so the stopping rule is not a degree of freedom chosen after "
+       f"seeing which days landed")
+    refuses(lambda: may_read_aggregate(
+        live, n_days_complete=5,
+        now_utc=_t(2026, 9, 9, 11, 59, tzinfo=_tz), root=_five,
+        ledger_rows=_rows6),
+        "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
+        "horizon is a declared instant, not a mood",
+        "2_all_six_ruled_days")
+    if offline:
+        offline_skip("the live read-gate evaluation (it reads the day verdicts "
+                     "under data/, which a fixture run may not touch)")
+    else:
+        _live_gate = read_gate(live, now_utc=_after)
+        _held = [c["conjunct"] for c in _live_gate["conjuncts"] if c["holds"]]
+        ok(_live_gate["may_open"] is all(
+               c["holds"] for c in _live_gate["conjuncts"])
+           and len(_live_gate["conjuncts"]) == 7,
+           f"AND EVALUATED ON THE REAL LEDGER NOW, as a RELATION: "
+           f"{_live_gate['n_landed']} of {len(_live_gate['ruled_days'])} ruled "
+           f"days landed, holding {_held}, so may_open is "
+           f"{_live_gate['may_open']}. A relation because the counts change as "
+           f"days land -- a check pinning '0 of 6' would go red on the first "
+           f"receipt")
 
     # ---- R-572(B)(3): the seal layout, both states -----------------------
     _armres = {"day": "D", "arm": "A", "status": "OK",
@@ -4131,6 +4416,40 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"(found {_lit}). It read 23 beside a constant of 38 and then "
            f"49 -- the gap widened twice while the sentence sat still, "
            f"which is rule 10 in my own receipt")
+
+        # ---- REV 49 S1.5: R4's booleans on the PRODUCTION path ----------
+        import inspect as _i6
+        _prod = _i6.getsource(run_day)
+        ok("arm_day_admissible" in _prod
+           and "min_decisions_per_arm_day" in _prod
+           and "DEGENERATE_ARM_DAY_" in _prod
+           and "arm_day_admissible" in _i6.getsource(arm_day),
+           "REV 49 S1.5: R4's bars are on the PRODUCTION refusal path -- "
+           "`run_day` reads `min_decisions_per_arm_day` and returns "
+           "DEGENERATE_ARM_DAY_REFUSED, and `arm_day` calls "
+           "`arm_day_admissible` on the REAL draws. A fixed function that "
+           "is not on the path that refuses in production is rule 17's "
+           "defect. My first version of this check looked for the decision "
+           "bar in `arm_day`, where it is not -- it is in `run_day`")
+        _adm_ok = DESIGN.arm_day_admissible(100, [float(i % 7)
+                                                  for i in range(500)])
+        _adm_thin = DESIGN.arm_day_admissible(3, [float(i % 7)
+                                                  for i in range(500)])
+        ok(_adm_ok["decisions_meet_bar"] is True
+           and _adm_ok["sd_meets_floor"] is True
+           and _adm_thin["decisions_meet_bar"] is False
+           and _adm_thin["admissible"] is False,
+           "and BOTH booleans are computed on real inputs, admitting a "
+           "healthy arm-day and refusing a thin one -- the production "
+           "objects, not a fixture of them")
+        # ---- REV 49 S1.6: the params pin the design THE CODE IS ---------
+        _pd = live.get("design_declaration", {})
+        ok(isinstance(_pd, dict) and _pd.get("path")
+           and "the_design_pins_THIS_file" in _pd,
+           "REV 49 S1.6: the params name the design and record that the "
+           "PIN RUNS design -> params. The design is emitted last and "
+           "pins this file by a digest read at emission, so the two cannot "
+           "drift without one of them refusing")
 
         # ---- R-599 (DA 68): the RATIO is sealed, and so is its text -----
         _adm_bad = DESIGN.arm_day_admissible(10, [1.0] * 500)
