@@ -63,6 +63,61 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T02:37:28Z (MEM ROUND 107 -- R-543 SWEPT, INCLUDING TWO IN-BAND
+  CORRECTIONS TO ENTRIES MY OWN FLAGS CARRIED. STATE ONLY.
+  (1) MY ROUND-105 STOP-THE-LINE IS CORRECTED AND CLOSED. "DE's certification
+  rests entirely on DA's suite; 0 of 4 on DE's census" measured DE'S SELFTEST,
+  not its production census: at c476d0f the selftest NEVER ASSERTED ON
+  PA.compare's OUTPUT, so the 0/4 WAS STRUCTURALLY GUARANTEED BEFORE ANY MUTANT
+  EXISTED, and the predicate NAME over-attributed it. AND DA HAD DISCLOSED IT --
+  CHECKED BY ME AT DA'S ARTIFACT THIS ROUND: limits is three elements and
+  limits[2] reads "the consumer is run at its own selftest, which is not the
+  same as the production census it performs on real data". THE QUALIFICATION WAS
+  ONE FIELD AWAY IN A FILE I NEVER OPENED. I marked the flag RELAYED and RELAYED
+  DID NOT SAVE IT. THE GAP WAS REAL -- there was no consumer-side falsifier, DE
+  agreed and BUILT one -- AND IT IS CLOSED AT e67252d: 4 of 4 caught everywhere,
+  0 surviving, target restored byte-exact, verified by the coordinator's own
+  execution in an isolated worktree. STOP-THE-LINE LIFTED.
+  (2) R-542(E) IS CORRECTED IN BAND AND THE COORDINATOR NAMES THE CAUSE: "my
+  ruling relayed Q-MEM-90's round-102 description of the file WITHOUT READING
+  THE FILE." The operative part I executed, 11 of 11; the other two parts were
+  VOID FOR WANT OF A REFERENT, as I reported. AND Q-MEM-90 WAS MINE: my
+  round-102 row measured the field honestly and then said its boundaries "are
+  not clean", WHICH WAS A JUDGEMENT INSIDE A MEASUREMENT AND I DID NOT SEPARATE
+  THEM. A description filed for ROUTING became a PREMISE when somebody ruled on
+  it. Both halves were needed; either would have prevented it.
+  (3) THE WORST FINDING IS C-1 AND I CARRIED IT TOO: classify_mask_failure keys
+  the deferral ON A PROSE MATCH, and driven with a log carrying a traceback, a
+  disk-full OSError AND the liveness token it returns DEFERRED -- A GENUINE
+  INSTRUMENT FAILURE MAPPED TO rc 2, WHICH THE UNIT NOW DECLARES A SUCCESS. The
+  falsifier's ten cases never drive that log, and its summary line is A PRINTED
+  CONCLUSION BESIDE A PASSING TEST SET -- RULE 10 IN A SHELL echo. The
+  coordinator quoted it as verification at R-542(A); I SWEPT R-542(A) AT ROUND
+  106 AND CARRIED THE SAME LINE. A printed conclusion travelled from an echo,
+  through a register entry, into my state file, and every hop looked like a
+  citation. DA 54.
+  (4) THE REBATE CEILING DOES NOT BIND: 53.84x (baseline) and 76.42x
+  (treatment) above the identity value; PARTIAL_LOWER_BOUND_ON_THE_CEILING with
+  completeness NOT established, and conclusion_robust_to_incompleteness TRUE AS
+  A COMPUTED DIRECTION -- a partial pool understates the pool, which only raises
+  the ceiling. So THE 3.6184x MATERIAL HEADROOM IS NOT PROTECTED BY A CEILING.
+  (5) THE CASCADE BASELINE IS CONTESTED WITH THREE POPULATIONS AND NO VERDICT IS
+  READ FROM THE LEVEL -- DE accepted BE's finding at the code, corrected, AND
+  ITS OWN NEW PREDICATE CAUGHT THE CORRECTION OVERSHOOTING (neither 1.1176 nor
+  0.1386 lands in BE's [0.40, 0.50]). SETTLED REGARDLESS: cascade_spread =
+  1.9398838090426878 under BOTH baselines, computed inside the emission.
+  (6) TWO FINDINGS I CHECKED MYSELF AT THE ARTIFACTS. C-2: the ruled module pins
+  the v1 seam by name and digest and grep for seam_v2 returns NOTHING, while
+  line 70 still reads PROTOCOL = "P003_V2_FEE_ENDPOINT_SENSITIVITY_V1" -- a
+  legitimate citation with a missing pointer. A-1: 6eaa538a IS a real commit,
+  is on NO BRANCH, and is NOT an ancestor of 4c17646 while 8b930b4 IS -- so the
+  proof of "declared before the draw" runs through a pointer nobody can follow.
+  (7) TWO HAZARDS FOR EVERY SEAT: same-length mutants can serve a STALE
+  __pycache__ (use PYTHONDONTWRITEBYTECODE=1) -- which FAILS SILENT AND GREEN --
+  and mutation audits must never run in the shared tree. 36 worktrees
+  registered, 22 under /tmp/ by my own listing; housekeeping QUEUED and I DID
+  NOT PRUNE.
+  PRIOR CHECKPOINT:
   2026-09-06T02:26:37Z (MEM ROUND 106 -- R-542 SWEPT AND ITS RULING (E) EXECUTED.
   STATE ONLY.
   (1) THE `updated:` ROLLING WINDOW IS BACK TO THREE, BY MOVING AND NEVER BY
@@ -569,7 +624,42 @@ flags:
                              # to 612.7% at 5 s, because k counts fills removed.
                              # A test that cannot fail is not a test, and this
                              # one was found by its own author.
-  da_certification_of_nothing_excluded_has_no_independent_check: DE-SUITE-0-OF-4-MUTANTS
+  da_certification_of_nothing_excluded_has_no_independent_check: CORRECTED-AND-CLOSED-THE-0-OF-4-MEASURED-A-SELFTEST
+                             # CORRECTED AND CLOSED 2026-09-06T02:37:28Z, and the
+                             # correction is one I could have made myself at
+                             # round 105 and did not.
+                             # WHAT WAS WRONG WITH MY VALUE. "0 of 4 on DE's
+                             # census" measured DE'S SELFTEST, not its
+                             # production census. At c476d0f DE's selftest
+                             # NEVER ASSERTED ON PA.compare's OUTPUT, so it
+                             # COULD NOT DETECT A MUTATION OF IT -- the 0/4 was
+                             # STRUCTURALLY GUARANTEED BEFORE ANY MUTANT
+                             # EXISTED. The predicate NAME
+                             # every_applied_mutant_caught_by_the_consumer:
+                             # False reads as four holes in a census; the
+                             # measurement was narrower than its name.
+                             # AND DA DISCLOSED IT. CHECKED BY ME AT DA'S OWN
+                             # ARTIFACT THIS ROUND
+                             # (p003_da_population_mutation_audit__20260905T161926Z.json):
+                             # limits is a THREE-ELEMENT array and limits[2]
+                             # reads "the consumer is run at its own selftest,
+                             # which is not the same as the production census it
+                             # performs on real data". The qualification was ONE
+                             # FIELD AWAY in a file I never opened.
+                             # THIS IS THE LESSON AND IT IS MINE: I marked the
+                             # flag RELAYED, which was honest, and RELAYED DID
+                             # NOT SAVE IT -- because the artifact that would
+                             # have corrected it was in reach and I did not
+                             # reach. Rule 16: verify at the artifact a claim
+                             # NAMES. RELAY FIDELITY again, fourth instance, and
+                             # this time the source itself was right and only my
+                             # reading of the coordinator's reading was not.
+                             # WHAT WAS RIGHT AND STAYS RIGHT: THERE WAS NO
+                             # CONSUMER-SIDE FALSIFIER. DE agreed and BUILT ONE.
+                             # THE GAP IS CLOSED AT e67252d -- see
+                             # de_consumer_side_falsifier_built_and_closed.
+                             # THE STOP-THE-LINE IS LIFTED.
+                             # EARLIER VALUE (rule 13): DE-SUITE-0-OF-4-MUTANTS
                              # RELAYED from R-541(F), and it is a STOP-THE-LINE
                              # to DE (65), not a note.
                              # Four mutants planted in da_population_audit --
@@ -587,6 +677,41 @@ flags:
                              # OWN. This is standing rule 15's exact shape: a
                              # zero from an instrument that never proved it can
                              # fire is not a result.
+  de_consumer_side_falsifier_built_and_closed: 4-OF-4-CAUGHT-EVERYWHERE-0-SURVIVING
+                             # RELAYED from R-543(B), and the coordinator ran it
+                             # ITSELF -- in a throwaway detached worktree with
+                             # PYTHONDONTWRITEBYTECODE=1, DA's harness
+                             # da_population_mutation_audit.py --real: ALL FOUR
+                             # MUTANTS CAUGHT EVERYWHERE, n_surviving = 0,
+                             # target_restored_byte_exact = true.
+                             # DE's census now FAILS BY NAME -- "ORACLE
+                             # LIVENESS, BOTH DIRECTIONS ON THE SHIPPED
+                             # INSTRUMENT ... ORACLE_IS_LIVE=False" -- and
+                             # LOCALISES the broken surface (statistic mutants
+                             # tvd 0.0 / p 1.0; the non-permuting null tvd 1.0
+                             # with p 1.0; the status mutant tvd None). PA. call
+                             # sites went 3 -> 12 between c476d0f and HEAD.
+                             # A FALSIFIER THAT NAMES WHICH SURFACE BROKE IS
+                             # BETTER THAN ONE THAT ONLY GOES RED, and this one
+                             # was built because a measurement with an
+                             # over-broad NAME pointed at a real hole.
+  mutation_audit_hazards_for_every_seat: NO-PYCACHE-AND-NEVER-IN-THE-SHARED-TREE
+                             # RELAYED from R-543(B). Two hazards paid for by DE
+                             # and recorded for every seat, not just DE.
+                             # (1) SAME-BYTE-LENGTH MUTANTS (0.5 -> 0.0) CAN
+                             # SERVE A STALE __pycache__ under second-granularity
+                             # mtime -- the mutant is written, the interpreter
+                             # runs the OLD bytecode, and the audit reports a
+                             # pass that never tested anything. Run mutation
+                             # audits with PYTHONDONTWRITEBYTECODE=1.
+                             # (2) A MUTATION AUDIT IN THE SHARED TREE LEAVES A
+                             # MUTATED FILE WHERE ANOTHER SEAT'S COMMIT CAN
+                             # SWEEP IT IN. Run them in an ISOLATED WORKTREE.
+                             # THE FIRST IS THE MORE DANGEROUS BECAUSE IT FAILS
+                             # SILENT AND GREEN: an instrument that cannot fire
+                             # reporting that nothing fired is exactly standing
+                             # rule 15's shape, arriving through the interpreter
+                             # rather than through the code.
   the_22_taker_legs_are_real_and_the_formula_is_open: 19-SUBMITTERS-EACH-100-PERCENT-NON-CONFORMING
                              # RELAYED from R-541(F). The independent FeeCharged
                              # event carries the SAME amount as the OrderFilled
@@ -825,6 +950,33 @@ flags:
                              # WE SIGN -- a stronger footing than a venue
                              # promise, because it does not depend on the venue
                              # keeping one.
+  r542e_ruled_on_a_relayed_description_of_my_own_file: THE-COORDINATOR-NAMES-THE-CAUSE
+                             # RELAYED from R-543(D), and recorded because it is
+                             # the coordinator correcting its own ruling, in
+                             # band, on the file I write.
+                             # R-542(E) had THREE parts. The operative one --
+                             # move, never interpret; guard the write -- I
+                             # executed, 11 of 11. THE OTHER TWO WERE VOID FOR
+                             # WANT OF A REFERENT: no paragraph ends
+                             # mid-sentence, and rounds 69, 70 and 71 were
+                             # already archived.
+                             # THE CAUSE, IN THE COORDINATOR'S OWN WORDS: "MY
+                             # RULING RELAYED Q-MEM-90's ROUND-102 DESCRIPTION
+                             # OF THE FILE WITHOUT READING THE FILE; A RULING ON
+                             # A RELAYED DESCRIPTION."
+                             # AND Q-MEM-90 WAS MINE. My round-102 row described
+                             # the field as "11,212 chars with eight nested
+                             # generation markers", which was true and MEASURED,
+                             # and said the boundaries were not clean, WHICH WAS
+                             # MY JUDGEMENT AND NOT A MEASUREMENT. Four rounds
+                             # later a ruling was issued against that sentence.
+                             # THE SHAPE WORTH KEEPING, AND IT CUTS BOTH WAYS:
+                             # A DESCRIPTION FILED FOR ROUTING BECOMES A PREMISE
+                             # WHEN SOMEBODY RULES ON IT. Mine carried a
+                             # judgement inside a measurement and I did not
+                             # separate them; the ruling did not go back to the
+                             # file. Both are needed for the failure and each
+                             # would have been enough to prevent it.
   updated_rolling_window_restored_to_three: MOVED-NEVER-INTERPRETED-GUARD-11-OF-11-PASS
                              # CHECKED 2026-09-06T02:26:37Z. R-542(E) executed.
                              # Eleven generations moved VERBATIM to archive
@@ -923,6 +1075,63 @@ flags:
                              # 288.4177679999994 is IDENTICAL to the E0 value in
                              # DE's ruled receipt, read from BOTH files. The
                              # straddle quantity is GONE, not moved.
+  the_rc_deferral_can_swallow_a_real_failure: DEFERRED-ON-A-DISK-FULL-TRACEBACK
+                             # RELAYED from R-543(C), the reviewer's C-1, and
+                             # the coordinator reproduced it by driving the path
+                             # itself. THE WORST FINDING OF THE ROUND.
+                             # classify_mask_failure KEYS THE DEFERRAL ON A
+                             # PROSE MATCH. Driven with a log carrying a
+                             # traceback, a disk-full OSError AND the liveness
+                             # token, it returns DEFERRED -- so A GENUINE
+                             # INSTRUMENT FAILURE ON AN OPEN DAY MAPS TO rc 2,
+                             # WHICH THE UNIT NOW DECLARES A SUCCESS, INVISIBLE
+                             # IN systemctl.
+                             # THE FIX INSTALLED AT 02:24Z MADE THE FAILURE MODE
+                             # QUIETER, WHICH IS WHY THIS MATTERS: before it,
+                             # rc 4 at least showed red for the wrong reason;
+                             # after it, the mixed log is green.
+                             # AND THE SECOND HALF IS AGAINST THE INSTRUMENT'S
+                             # OWN EVIDENCE: the falsifier's ten cases NEVER
+                             # DRIVE THE MIXED LOG, and its summary line -- "rc 2
+                             # is reachable ONLY for an open day refusing for
+                             # want of windows" -- IS A PRINTED CONCLUSION BESIDE
+                             # A PASSING TEST SET. Rule 10 IN A SHELL echo.
+                             # THE COORDINATOR QUOTED THAT LINE AS VERIFICATION
+                             # AT R-542(A) and says so. I SWEPT R-542(A) AT
+                             # ROUND 106 AND CARRIED THE SAME LINE. A printed
+                             # conclusion travelled from a shell echo, through a
+                             # register entry, into my state file, and each hop
+                             # looked like a citation.
+                             # DA 54 fixes it at the classification with the
+                             # mixed-log case in the battery BOTH DIRECTIONS and
+                             # the summary line REPLACED BY A COMPUTED PREDICATE.
+  rebate_ceiling_does_not_bind: 53.84x-AND-76.42x-ABOVE-THE-IDENTITY-VALUE
+                             # RELAYED from R-543(A), DA 53. The assumption-free
+                             # ceiling 0.20 * sum_m P_m on the ruled window's
+                             # FULL public taker tape -- 3,837 trades, 122,249.79
+                             # shares, pool 106,144.90c, ceiling 21,228.98c --
+                             # sits 53.84x (baseline) and 76.42x (treatment)
+                             # ABOVE the identity value.
+                             # ceiling_below_headroom = FALSE;
+                             # bound_status = PARTIAL_LOWER_BOUND_ON_THE_CEILING;
+                             # pool_completeness_established = FALSE (the
+                             # reference tranches carry no transaction hash, so a
+                             # superset join is impossible); and
+                             # conclusion_robust_to_incompleteness = TRUE AS A
+                             # COMPUTED DIRECTION -- a partial pool understates
+                             # P_m, which only RAISES the ceiling.
+                             # THAT LAST MOVE IS THE ONE TO COPY: an
+                             # incompleteness you cannot close can still be
+                             # DISPOSED OF, if you can compute which way it
+                             # pushes.
+                             # WHAT IT MEANS, EXACTLY AS DA STATES IT: THE
+                             # REVIEWER'S INSTRUMENT DOES NOT BIND. E-R's
+                             # magnitude clauses rest on the identity being
+                             # right, where they already were, AND THE 3.6184x
+                             # MATERIAL HEADROOM IS NOT PROTECTED BY A CEILING.
+                             # A ceiling that does not bind is not a failure of
+                             # the ceiling; it is the answer that the headroom
+                             # has to be defended some other way.
   midnight_unit_installed: DEPLOYED-2026-09-06T02:24Z-BY-THE-COORDINATOR
                              # RELAYED from R-542(B), and flagged with the clock
                              # time from the entry because IT IS A DEPLOY and
@@ -943,6 +1152,102 @@ flags:
                              # is closed by the same copy. DA 53 verifies from
                              # its own side, which is the right shape: the seat
                              # that deployed is not the seat that certifies.
+  seam_v1_pinned_with_no_successor_pointer: CHECKED-BY-ME-AND-THE-PROTOCOL-STRING-STILL-SAYS-V1
+                             # CHECKED 2026-09-06T02:37:28Z, the reviewer's C-2,
+                             # read by me at the code.
+                             # de_v2_fee_endpoint_sensitivity.py pins
+                             # DA_SEAM_ARTIFACT =
+                             # ("p003_da_fee_interval_seam__20260905T155346Z.json",
+                             # "a7b562f0ab4673160aa8757083a721c9c90d8b317a36beb
+                             # 538674cf22db624f8") -- THE v1 SEAM -- and grepping
+                             # the whole module for seam_v2 returns NOTHING.
+                             # It is a LEGITIMATE CITATION WITH A MISSING
+                             # POINTER, not a wrong number: v1 is what the run
+                             # used and pinning it is correct provenance; what is
+                             # absent is any signal that v2 exists and supersedes
+                             # it, so a reader who follows the pin lands on the
+                             # superseded artifact with nothing telling them so.
+                             # AND I ALSO READ line 70: PROTOCOL =
+                             # "P003_V2_FEE_ENDPOINT_SENSITIVITY_V1" -- the
+                             # module's own protocol string still ends _V1.
+                             # SENT TO DE AS AN ADDENDUM (a sixth field) TO THE
+                             # IN-FLIGHT vN+1 RATHER THAN QUEUED FOR A vN+2, AND
+                             # RECORDED AS A DELIBERATE EXCEPTION TO R-378 WITH
+                             # ITS REASON. Worth carrying: the batching rule was
+                             # broken ON PURPOSE and the breach was NAMED, which
+                             # is the difference between an exception and a lapse.
+  be_declaration_pointer_names_a_commit_on_no_branch: CHECKED-BY-ME-BY-ANCESTRY
+                             # CHECKED 2026-09-06T02:37:28Z, the reviewer's A-1,
+                             # verified by me with git rather than relayed --
+                             # the same class as e3a1f088 at round 103, and this
+                             # time the object EXISTS, which makes it subtler.
+                             # git cat-file -t 6eaa538a returns "commit", SO IT
+                             # IS A REAL OBJECT. git branch -a --contains
+                             # 6eaa538a returns NOTHING -- ON NO BRANCH. And
+                             # git merge-base --is-ancestor 6eaa538a 4c17646 is
+                             # FALSE, while the same test for 8b930b4 is TRUE.
+                             # SO BE'S RECEIPT NAMES, BESIDE THE sha256 THAT
+                             # FIXED ROUND 42'S DANGLING HASH, A COMMIT FROM
+                             # WHICH THE ORDERING IT ASSERTS CANNOT BE CHECKED.
+                             # THE POINT IS NOT THAT THE DECLARATION IS WRONG --
+                             # the null declaration is byte-identical at 8b930b4
+                             # and HEAD, verified by the reviewer -- IT IS THAT
+                             # THE PROOF OF "DECLARED BEFORE THE DRAW" RUNS
+                             # THROUGH A POINTER NOBODY CAN FOLLOW. A dangling
+                             # hash was fixed and replaced by a reachable-looking
+                             # one that is not on the graph. BE 45.
+  cascade_baseline_contested_but_the_spread_is_invariant: 1.9398838-UNDER-BOTH-BASELINES
+                             # RELAYED from R-543(B). DE accepted BE's finding
+                             # AT THE CODE -- 1.1176 is fills per FILLING
+                             # generation and CONDITIONS ON THE OUTCOME THE NULL
+                             # MUST BE IGNORANT OF -- and withdrew the
+                             # docstring's "denominator a random cancel is priced
+                             # against" IN PLACE.
+                             # THEN ITS OWN NEW PREDICATE CAUGHT THE CORRECTION
+                             # OVERSHOOTING: corrected to all cancellable
+                             # generations gives 0.1386, and NEITHER 1.1176 NOR
+                             # 0.1386 LANDS IN BE'S [0.40, 0.50]. BE's decision
+                             # population is smaller than every generation and
+                             # richer in filling ones, and DE's module does not
+                             # count it.
+                             # baseline_status =
+                             # CONTESTED_PENDING_A_DECISION_POPULATION_COUNT and
+                             # no_verdict_is_read_from_the_cascade_LEVEL_in_this_state
+                             # = true. THREE POPULATIONS, NO VERDICT READ FROM
+                             # THE LEVEL -- which is the right answer to a
+                             # contested denominator and not a deferral.
+                             # SETTLED REGARDLESS OF THE LEVEL: cascade_spread =
+                             # 1.9398838090426878 under BOTH baselines, COMPUTED
+                             # INSIDE THE EMISSION. "CHEAP FILLS FIRST, FEW FILLS
+                             # SECOND" IS INVARIANT TO THE CHOICE. Read from
+                             # de_section81_arms__20260906T022701Z.json, sha
+                             # d77e97b176c80fdf, carrying 0e5f3d3.
+                             # A CORRECTION THAT OVERSHOT AND WAS CAUGHT BY THE
+                             # CORRECTOR'S OWN NEW PREDICATE IS THE BEST SHAPE IN
+                             # THIS ROUND.
+  be_book_is_a_pickle_with_no_digest: RULE-10-SATISFIED-IN-SUBSTANCE-NOT-IN-FORM
+                             # RELAYED from R-543(C). The cascade IS the
+                             # treatment's own replay_policy -- seven delegated
+                             # call sites, NO SECOND COPY -- with a three-point
+                             # reproduction gate, so "same cascade" is true at
+                             # the code. BUT THE BOOK IS A PICKLE INSIDE BE'S
+                             # WORKTREE WITH NO DIGEST.
+                             # RULE 10 SATISFIED IN SUBSTANCE, NOT IN FORM: the
+                             # thing is right and nothing pins WHICH thing was
+                             # used. A sha256 costs one line. BE 45.
+  worktrees_36_registered_21_from_dead_sessions: HOUSEKEEPING-QUEUED-NEVER-PRUNED-BY-ME
+                             # CHECKED 2026-09-06T02:37:28Z BY LISTING ONLY --
+                             # git worktree list returns 36 entries, 22 of them
+                             # under /tmp/ (the coordinator counts 21 from dead
+                             # sessions; my /tmp/ count is a SUPERSET by one and
+                             # I do not reconcile it, because the difference is a
+                             # classification of which sessions are dead and that
+                             # is not mine to make).
+                             # NONE IS PRUNABLE AUTOMATICALLY BECAUSE THE
+                             # DIRECTORIES STILL EXIST. Housekeeping is QUEUED,
+                             # NOT DONE. I DID NOT PRUNE AND WILL NOT: never
+                             # prune a worktree entry is a standing prohibition,
+                             # and a listing is not a prune.
   receipt_does_not_record_that_its_own_battery_ran: RULE-15-AT-THE-RECEIPT
                              # RELAYED from R-542(C). The reviewer's one real
                              # gap, and the coordinator walked the same 208 key
@@ -8510,6 +8815,29 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T02:37:28Z, TWO ENTRIES MY OWN FLAGS CARRIED ARE CORRECTED
+  IN BAND, AND BOTH CORRECTIONS ARE ABOUT READING. My round-105 stop-the-line
+  ("0 of 4 on DE's census") measured DE's SELFTEST, not its census -- the
+  measurement was narrower than the predicate's NAME, DA had said so in
+  limits[2], and I never opened the file. THE GAP WAS REAL AND IS NOW CLOSED
+  (4 of 4, 0 surviving, at e67252d); the stop-the-line is LIFTED. And R-542(E)
+  ruled on a relayed description of my own file -- two of its three parts had
+  no referent, as I reported; the third I executed, 11 of 11.
+  THE WORST FINDING IS THE DEFERRAL: it returns DEFERRED on a log carrying a
+  disk-full traceback, so a genuine instrument failure maps to rc 2, WHICH THE
+  UNIT NOW DECLARES A SUCCESS -- and the falsifier's summary line that said
+  otherwise is a printed conclusion beside a passing test set, which I carried
+  into these files at round 106. DA 54.
+  THE REBATE CEILING DOES NOT BIND (53.84x/76.42x), so the 3.6184x MATERIAL
+  headroom is not protected by one. The cascade baseline is CONTESTED across
+  three populations with NO VERDICT READ FROM THE LEVEL, while cascade_spread
+  1.9398838 is INVARIANT to the choice -- "cheap fills first, few fills second"
+  survives. Two pointer defects checked by me at the artifacts: the ruled module
+  pins the v1 seam with no successor pointer and still calls itself _V1, and
+  BE's declaration names a real commit that is on no branch and not an ancestor.
+  Gate 1 unmoved, 1 of 7; G = 5, directional; BE 44's score NOT LANDED.
+  Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T02:14:36Z, RETAINED BELOW --
   AS-OF 2026-09-06T02:14:36Z, THE RACE HAS REACHED ITS BAR -- G = 5, 09-01
   THROUGH 09-05 -- AND IT ESTABLISHES EXACTLY WHAT IT ALWAYS COULD: DIRECTION
   AND CONSISTENCY, NEVER A HOLM-CLEARING VERDICT (R-529(A)), and it cannot
@@ -9230,6 +9558,74 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 107, 2026-09-06T02:37:28Z ------------------------------
+  da_certification_of_nothing_excluded_has_no_independent_check:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_population_mutation_audit__20260905T161926Z.json
+    as_of: 2026-09-06T02:37:28Z
+    said: >-
+      computed_predicates carries every_applied_mutant_caught_by_its_own_suite
+      True, every_applied_mutant_caught_by_the_consumer False,
+      every_applied_mutant_caught_everywhere False, n_surviving 4 -- and `limits`
+      is a three-element array whose third element reads "the consumer is run at
+      its own selftest, which is not the same as the production census it
+      performs on real data". So the 0/4 measured a SELFTEST and DA said so; the
+      predicate NAME over-attributed it to the census. The closure at e67252d
+      (4 of 4, n_surviving 0) is RELAYED from R-543(B) -- the coordinator ran
+      that harness, I did not.
+  seam_v1_pinned_with_no_successor_pointer:
+    prov: CHECKED
+    artifact: live/pm_research/de_v2_fee_endpoint_sensitivity.py
+    as_of: 2026-09-06T02:37:28Z
+    said: >-
+      DA_SEAM_ARTIFACT pins ("p003_da_fee_interval_seam__20260905T155346Z.json",
+      "a7b562f0ab4673160aa8757083a721c9c90d8b317a36beb538674cf22db624f8") -- the
+      v1 seam -- and a grep of the whole module for seam_v2 returns nothing;
+      line 70 reads PROTOCOL = "P003_V2_FEE_ENDPOINT_SENSITIVITY_V1".
+  be_declaration_pointer_names_a_commit_on_no_branch:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_cancel_axis_null_declaration_v1.json
+    as_of: 2026-09-06T02:37:28Z
+    said: >-
+      git cat-file -t 6eaa538a returns "commit"; git branch -a --contains
+      6eaa538a returns nothing; git merge-base --is-ancestor 6eaa538a 4c17646 is
+      FALSE while the same test for 8b930b4 is TRUE. The object exists, sits on
+      no branch, and cannot establish the ordering the receipt asserts. That the
+      declaration is byte-identical at 8b930b4 and HEAD is RELAYED from R-543(C).
+  worktrees_36_registered_21_from_dead_sessions:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T02:37:28Z
+    said: >-
+      git worktree list returns 36 entries and 22 of them are under /tmp/. I
+      counted by listing only and did not prune. The coordinator's figure is 21
+      from dead sessions; my /tmp/ count is a superset by one and I do not
+      reconcile it, because the difference is a judgement about which sessions
+      are dead and that is not mine to make.
+  r542e_ruled_on_a_relayed_description_of_my_own_file:
+    prov: RELAYED
+    from: R-543(D) -- the coordinator correcting its own ruling and naming the cause
+  de_consumer_side_falsifier_built_and_closed:
+    prov: RELAYED
+    from: R-543(B), run by the coordinator in an isolated worktree
+  mutation_audit_hazards_for_every_seat:
+    prov: RELAYED
+    from: R-543(B)
+  the_rc_deferral_can_swallow_a_real_failure:
+    prov: RELAYED
+    from: >-
+      R-543(C), the reviewer's C-1, reproduced by the coordinator driving the
+      path. Recorded with the part that is mine: I swept R-542(A) at round 106
+      and carried its falsifier-summary line as verification.
+  rebate_ceiling_does_not_bind:
+    prov: RELAYED
+    from: R-543(A), DA 53
+  cascade_baseline_contested_but_the_spread_is_invariant:
+    prov: RELAYED
+    from: R-543(B)
+  be_book_is_a_pickle_with_no_digest:
+    prov: RELAYED
+    from: R-543(C)
   # --- MEM round 106, 2026-09-06T02:26:37Z ------------------------------
   updated_rolling_window_restored_to_three:
     prov: CHECKED

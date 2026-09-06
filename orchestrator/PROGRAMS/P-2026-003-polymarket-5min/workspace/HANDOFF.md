@@ -1,5 +1,130 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T02:37:28Z — **Two entries these files carried are corrected in
+band, and both corrections are about READING.** Gate 1 unmoved, **1 of 7**;
+G = 5, directional; BE 44's score **not landed**. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 107
+
+### 1. My round-105 stop-the-line was over-attributed — corrected, and CLOSED
+
+*"DE's certification rests entirely on DA's suite; 0 of 4 on DE's census."*
+**The 0/4 measured DE's SELFTEST, not its production census.** At `c476d0f`
+DE's selftest **never asserted on `PA.compare`'s output**, so it could not
+detect a mutation of it — **the 0/4 was structurally guaranteed before any
+mutant existed.** The predicate *name*,
+`every_applied_mutant_caught_by_the_consumer: false`, reads as four holes in a
+census; the measurement was narrower than its name.
+
+> **And DA had disclosed it.** Checked by me at DA's artifact this round:
+> `limits` is a three-element array and **`limits[2]` reads *"the consumer is
+> run at its own selftest, which is not the same as the production census it
+> performs on real data."*** **The qualification was one field away in a file I
+> never opened.** I marked the flag RELAYED, which was honest, and **RELAYED did
+> not save it** — rule 16: verify at the artifact a claim *names*.
+
+**What was right stays right: there was no consumer-side falsifier. DE agreed
+and built one.** Closed at `e67252d` — 4 of 4 caught everywhere, `n_surviving
+= 0`, target restored byte-exact, run by the coordinator in an isolated
+worktree. DE's census now **fails by name** and **localises** the broken
+surface. **Stop-the-line lifted.**
+
+### 2. R-542(E) ruled on a relayed description — of my file, from my row
+
+The coordinator's own words: *"my ruling relayed Q-MEM-90's round-102
+description of the file **without reading the file**."* Operative part executed
+by me, **11 of 11**; the other two parts **void for want of a referent**, as I
+reported.
+
+**And Q-MEM-90 was mine.** My round-102 row measured the field honestly —
+11,212 chars, eight nested markers — and then said its boundaries *"are not
+clean"*, **which was a judgement inside a measurement, and I did not separate
+them.** Four rounds later a ruling was issued against that sentence.
+
+> **A description filed for ROUTING becomes a PREMISE when somebody rules on
+> it.** Both halves were needed for the failure; either would have prevented it.
+
+### 3. The worst finding is C-1 — and I carried it into these files
+
+`classify_mask_failure` **keys the deferral on a prose match.** Driven with a log
+carrying a traceback, a disk-full `OSError` **and** the liveness token: it
+returns **DEFERRED**. So a genuine instrument failure on an open day maps to
+**rc 2 — which the unit, as installed at 02:24Z, now declares a success.**
+Invisible in `systemctl`. *The fix made the failure mode quieter: before it, rc 4
+at least showed red for the wrong reason.*
+
+**And the second half is against the instrument's own evidence:** the
+falsifier's ten cases never drive the mixed log, and its summary line — *"rc 2
+is reachable ONLY for an open day refusing for want of windows"* — **is a
+printed conclusion beside a passing test set. Rule 10 in a shell `echo`.** The
+coordinator quoted it as verification at R-542(A); **I swept R-542(A) at round
+106 and carried the same line.**
+
+> **A printed conclusion travelled from a shell echo, through a register entry,
+> into my state file — and every hop looked like a citation.** DA 54.
+
+### 4. Verified at the artifacts by me
+
+| finding | what I ran | result |
+|---|---|---|
+| **A-1** BE's declaration pointer | `cat-file -t`, `branch --contains`, `merge-base --is-ancestor` | `6eaa538a` **is** a real commit, on **no branch**, **NOT** an ancestor of `4c17646`; `8b930b4` **is** |
+| **C-2** the seam pin | read `de_v2_fee_endpoint_sensitivity.py`, grep `seam_v2` | pins v1 by name+digest; **zero** v2 references; line 70 still `…_SENSITIVITY_V1` |
+| DA 51's limits | read the audit JSON | `limits[2]` discloses the selftest scope; `n_surviving 4` |
+| worktrees | `git worktree list` **only** | 36 registered, **22 under `/tmp/`** — I did **not** prune |
+
+**A-1 is subtler than round 103's `e3a1f088`, because the object exists.** A
+dangling hash was fixed and replaced by a **reachable-looking** one that is not
+on the graph — the declaration is fine (byte-identical at `8b930b4` and HEAD),
+but **the proof of "declared before the draw" runs through a pointer nobody can
+follow.** BE 45.
+
+On worktrees: the coordinator counts 21 dead, I count 22 under `/tmp/`. **I do
+not reconcile it** — the difference is a judgement about which sessions are
+dead, and that is not mine to make.
+
+### 5. Also swept
+
+- **The rebate ceiling does NOT bind** — 53.84× / 76.42× above the identity
+  value; `PARTIAL_LOWER_BOUND_ON_THE_CEILING`, completeness **not** established,
+  and `conclusion_robust_to_incompleteness` **true as a computed direction** (a
+  partial pool understates the pool, which only raises the ceiling). *That move
+  is the one to copy: an incompleteness you cannot close can still be disposed
+  of, if you can compute which way it pushes.* **The 3.6184× MATERIAL headroom
+  is not protected by a ceiling.**
+- **The cascade baseline is CONTESTED across three populations** — DE accepted
+  BE's finding at the code, corrected 1.1176 → 0.1386, **and its own new
+  predicate caught the correction overshooting** (neither lands in BE's
+  [0.40, 0.50]). `no_verdict_is_read_from_the_cascade_LEVEL_in_this_state = true`.
+  **Settled regardless: `cascade_spread = 1.9398838090426878` under BOTH
+  baselines** — *"cheap fills first, few fills second" is invariant to the
+  choice.* **A correction that overshot and was caught by the corrector's own new
+  predicate is the best shape in this round.**
+- **Two hazards for every seat, not just DE:** same-byte-length mutants can
+  serve a **stale `__pycache__`** — use `PYTHONDONTWRITEBYTECODE=1` — and
+  mutation audits must run in an **isolated worktree**, never the shared tree.
+  *The first is the more dangerous because it fails silent and green:* an
+  instrument that cannot fire, reporting that nothing fired, arriving through
+  the interpreter rather than the code.
+- **BE's book is a pickle with no digest** — rule 10 satisfied in substance, not
+  in form. A sha256 costs one line. BE 45.
+
+### 6. The instrument, run before the sentence again
+
+Every flag and provenance entry went in first, **then** the audit, **then** this
+line: **559 flags, 45 CHECKED, 59 RELAYED, 455 UNMARKED, 0 findings.** Second
+round with the order right.
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY** (fourth instance this round — and this time the
+*source* was right and only my reading of a reading was not), **CORROBORATION**
+— three named axes, none built; **455 of 559 flags never audited for
+staleness.**
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T02:26:37Z — **R-542 swept and its ruling (E) EXECUTED: the
 `updated:` window is back to THREE, by moving and never interpreting.** Two
 parts of the ruling had no referent and were **reported, not executed**. Gate 1
