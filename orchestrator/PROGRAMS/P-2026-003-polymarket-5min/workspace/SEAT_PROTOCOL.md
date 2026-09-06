@@ -130,6 +130,15 @@ except where marked USER-ONLY.
     capped at CPUQuota=200% so light suites can overlap a heavy run. "Heavy" =
     anything expected over 60 s wall or 1 GiB RSS.
 
+21. **Landing in the shared tree is add, commit, push — nothing else** (R-576):
+    a seat that lands an artifact from `/home/yuqing/ctaNew` runs exactly
+    `git -C /home/yuqing/ctaNew add -f <paths> && git -C /home/yuqing/ctaNew commit -F <msgfile> -- <paths> && git -C /home/yuqing/ctaNew push origin mm-research`.
+    Never `checkout`, `switch`, `reset`, `rebase`, `stash` or `pull --rebase` in
+    the shared tree (two detachments and one orphaned commit on 2026-09-06). A
+    refused push means another seat landed first: `git -C … fetch` and retry the
+    push only if `git -C … status --short` is EMPTY; otherwise report and wait —
+    MEM's state files are dirty there for the length of every MEM batch.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under
