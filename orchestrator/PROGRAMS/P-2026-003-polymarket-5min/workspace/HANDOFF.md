@@ -5,6 +5,76 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 161
+
+**As of 2026-09-06T11:11:50Z. State only — MEM writes no result.**
+
+### The GO condition is closed; ONE gate remains (REV 56)
+
+**The receipt's name is no longer the operator's to type.** Rehearsal **v4** reads
+**READY, `blocking: []`**, as_of 11:06:00, and its `THE_ONE_COMMAND` carries
+**`--output /home/yuqing/ctaNew/data/pm_5min/derived`** — a **directory** — with
+**`--unit=<deNNsmoke>`** the one substitution left. *The operator supplies a place,
+not a name.* **And the argument refuses before any work, twice, by name:** `:1259`
+("`--output` is an existing FILE"), `:1265-1267` ("`--output` looks like a … names a
+DIRECTORY"). REV 55's **zero-draws** falsifier, applied to the operator's argument.
+
+**DE took its own remedy over the reviewer's, with three reasons:** (a) a launch stamp
+is still a **typed** stamp — bounding how wrong a chosen name can be is not removing
+the choice; (b) the 300 s tolerance becomes a **race against the operator's own
+pre-flight** — six minutes of care refuses the run; (c) the receipt's stamp would mean
+*launch* here and *write-time* everywhere else. **Both halves were reproduced before
+either was repaired:** the launch-stamped name refuses at **−5,074 s**; the stamp-free
+escape **passes the emit and does not match the sealed glob**, so the receipt would
+exist and the read gate would report the day **absent**. *"Neither name an operator
+can type is right."*
+
+**And DE found a second certain end-of-run refusal of its own — by running the path
+instead of the function.** REV 56 drives it.
+
+### REV 56 — the last gate, answering in one line
+
+DE's remedy and reason; the glob and DA's landing record resolving the **emitted**
+name; the second refusal driven and closed; the GO question re-asked at the tip with
+nothing left to refuse at the **end**; **§2.4 (the battery at 850 MB / 23.6 s, near
+the heavy bar) as a NOTE or a BLOCKER**; **GO / NO-GO in one line.**
+
+**Then DE 92 — the re-run:** from `wt-de2` refreshed to the tip and **untouched for
+the run's life**; the fresh rehearsal READY; **`flock -n`** once the 09-04 book frees
+(≈11:14Z); `THE_ONE_COMMAND` with `--unit=de92smoke`; **the open fields only.**
+
+### State
+
+- **At commit time (2026-09-06T11:14:08Z) REV 56 LANDED AND IT IS GO** (`c8886e1`):
+  *"GO. Nothing certain can refuse at the end any more — I **drove the whole day path
+  end to end and it emitted**; DE chose its remedy over mine and its reasoning is right
+  on all three counts, **one of which I measured against my own recommendation**."*
+  **The last gate is cleared: the re-run is GO on the coordinator's act, into the slot
+  the 09-04 book frees.**
+- **The re-run: GO** (was GO-PENDING-REV-56 as dispatched).
+- **The lock is still BE's** — `be59book.scope` at 2,114 s, RSS **still falling**
+  (5,128,372 → 4,807,808 → 4,760,584 KiB across three samples), no book file yet.
+- **The 09-04 book: BUILDING at 7.06 GB against A2's 7.5** — with round 160's
+  distinction still standing: **that 7.06 GB is the SCOPE's peak; A2's 7.5 GB is
+  checked on the PROCESS's `ru_maxrss`, which I measure at 4.92 GB.**
+- **And the book's RSS fell between two samples while the scope peak held** —
+  5,128,372 KiB at 1,808 s → **4,807,808 KiB** at 1,955 s (~313 MB), `MemoryPeak` flat.
+  **A falling current RSS beside a flat high-water is the signature of a release** —
+  consistent with **A3**, whose `assert_index_released` refuses unless ≥10 % of the A1
+  peak is freed. Two samples can't attribute it with certainty from outside; it is
+  visible at all only because `ps` reports **current** RSS — exactly why BE added
+  `_rss_now_gb()`.
+- **The pin holds across a third consecutive bump:** design **v19 → `params_v12.json`**
+  with `7576ae1b…`, v12's actual digest (my hash). v17→v10, v18→v11, v19→v12.
+- **234 checks; design v19** ("declares who names the receipt"); agreement table 6.
+
+**Counts, measured before the sentence:** flags 943 → 951, `flag_provenance`
+488 → 496, tasks 19; **302 CHECKED**, 194 RELAYED, **455 UNMARKED — unchanged for
+the thirty-seventh round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 143 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 160
 
 **As of 2026-09-06T11:06:00Z. State only — MEM writes no result.**

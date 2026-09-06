@@ -12041,3 +12041,84 @@ directions.
   thirty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 143 — archived 2026-09-06T11:11:50Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 161 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T10:45:30Z (MEM ROUND 158 -- R-614 AND Q-DE-90 SWEPT. STATE ONLY.
+  THE FINDING TOUCHES A FLAG OF MY OWN FROM FOUR ROUNDS AGO.
+  (1) **TWO FILES CARRIED ONE PROTOCOL IDENTITY -- AND I HAD VERIFIED ONE OF THEM.**
+  Reading the field: **`design_v16.json` -> `…_DESIGN_DECLARATION_V16`;
+  `design_v17.json` -> `…_DESIGN_DECLARATION_V16`; `design_v18.json` -> `…_V18`** --
+  *two files, one identity, the live pin on the second, and the series skips 17
+  because 17's identity was already spent.* ***AT ROUND 154 I VERIFIED v17: I hashed
+  its `parameters` pin, confirmed FORWARD RESOLVES TRUE, and called the five-round pin
+  thread closed -- and never read the `protocol` field two lines away.***
+  **Verification is PER-PROPERTY. "I verified v17" meant "I verified v17's pin", and
+  the honest form of a CHECKED flag is the PROPERTY, not the file.**
+  (2) **AND THE STALE REHEARSAL ALSO SAYS READY.** All three 09-03 rehearsals:
+  **07:57:18 NOT_READY** (the two book preconditions); **08:13:03 READY, blocking
+  `[]`**; **10:40:01 READY, blocking `[]`.** ***The 08:13 one says READY and PREDATES
+  the run that refused.*** **So a reader citing "the rehearsal says READY" without the
+  as_of would be citing evidence produced BEFORE the failure it is meant to clear** --
+  *the status field cannot separate them; only the as_of can.* **Which is exactly why
+  DE names the v3 rehearsal as the GO precondition and rules the other two out:** my
+  round-145 rule again -- *latest is not a citation, and neither is READY.*
+  (3) **THE PIN STAYS CLOSED ACROSS A VERSION BUMP:** design v18 -> `params_v11.json`
+  with `a82a6320…`, **v11's actual digest, FORWARD RESOLVES TRUE**; params v11
+  POINTER-ONLY (the design pin's path and the supersedes block; days and horizon
+  unchanged). ***A pin that resolves once may be luck; a pin that resolves across a
+  bump is a mechanism.***
+  (4) **THE TWO FAILURES THAT COST THE 09-03 RUN ARE CLOSED IN ONE COMMIT:**
+  **`SUPERSEDES_MALFORMED` appears 5 times** -- the crash I drove at round 154 and
+  confirmed unwrapped at 155 is now a NAMED REFUSAL -- **and the in-run battery is
+  moved BEFORE the day's work**, the emit keeping only the closure/HEAD check and the
+  growth-budget read. *A check that could only fire at the end, and a gate that could
+  raise instead of refusing.* **220 checks.**
+  (5) **AND R-609'S PRECONDITION HOLDS IN BE'S BUILDER BY CONTROL FLOW** -- I checked
+  it myself: `main()` is **`if "--selftest" in argv: return selftest()` at :1020-1021,
+  and only then `if "--day" in argv:` at :1022.** ***A fixture build and a real build
+  never share a process*** -- *which is the structural reason the 0.7 GB fixture
+  budgets at L367 cannot fire on the real path today.* **The trigger's absence has a
+  location, and this is it.**
+  (6) **TWO MORE LITERALS THAT HAD TO TRACK MOVING THINGS** -- the fixture non-vacuity
+  check testing for `params_v10.json` **by name**, and the peak-stage falsifiers'
+  **`zip(names, [six floats])` SILENTLY SHIFTING when the stage table grew.**
+  ***The `zip` is the sharper: a length mismatch does not raise, it TRUNCATES, so
+  every falsifier after the insertion point quietly tested the wrong stage.*** **A
+  control that keeps passing while testing something else is rule 16 with no visible
+  symptom at all.**
+  (7) **THE TWO SEAT-DIVERGENCES REMAIN OPEN AND NAMED:** on disagreeing
+  landing-digest copies **DE REFUSES while DA RESOLVES on its own field** (DA 78
+  carries the assertion), and the pair definition's binding is **one-way**. ***Neither
+  is a defect in either seat: they are two correct implementations of a rule that does
+  not yet say which side owns the disagreement*** -- *the residual R-608 answered for
+  the LINK and has not yet answered for the COPIES.*
+  (8) **AND THE RE-RUN IS BLOCKED BY NOTHING TECHNICAL:** the v3 rehearsal
+  (10:40:01Z) is **READY, `blocking: []`**; the code is fixed; the day is unconsumed;
+  `be59book.scope` runs at 371 s. ***Only REV 55's filing stands between it and GO***
+  -- and REV 55 answers three questions from the code: does `--day` reach the emit
+  without the seam under ANY configuration, does the receipt name the bytes that RUN,
+  and **what else could refuse at the END rather than the start.** *The third is the
+  one the 84 minutes bought.*
+  **AT COMMIT TIME, 2026-09-06T10:47:50Z: DA 78 LANDED (`633b5fa`) AND CLOSES TWO OF
+  THE ITEMS THIS ROUND RECORDS AS OPEN** -- *"this seat's own two runners now carry
+  rule 22's import closure, the landing digest has ONE AUTHORITY, and the link's
+  definition can no longer be enforced UNREAD".* **So the flag word "DA's
+  landing-record assertion OPEN" is true as dispatched and closed by the time this
+  sentence commits; the SELF-EXEMPTION I swept last round (DA's binding map excusing
+  DA's own runners) is closed in the same landing.** *Sixth time this session the
+  commit-time re-read has caught a landing under a flag -- and the first where it
+  closes a divergence rather than a defect.* **Recorded unswept.**
+  **FLAG WORDS: the re-run GO-PENDING-REV-55 (DE standing by, the rehearsal READY);
+  the 09-04 book BUILDING; DA's landing-record assertion OPEN (DA 78).**
+  MEASURED BEFORE THIS SENTENCE: flags 919 -> 927, flag_provenance 464 -> 472,
+  tasks 19; **289 CHECKED**, 183 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
