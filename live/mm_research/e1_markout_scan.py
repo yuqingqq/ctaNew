@@ -41,7 +41,39 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-REPO = Path(__file__).resolve().parents[2]
+CODE_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _data_repo_root() -> Path:
+    """WHERE THE LEDGER IS -- resolved, not assumed from this file's location.
+
+    PORTABILITY ONLY, NOT A RESULT CHANGE (ruled, DA 62). This module computed
+    its data paths from `Path(__file__).parents[2]`, so run from a per-seat
+    worktree it pointed at a tree carrying no tape: `day_files()` returned an
+    EMPTY list and `tick_size()` raised on an empty argmax. That is the E2.0
+    result review's section-6 gap, filed twice, still open in the module that
+    PRODUCED E1's published numbers -- and the reviewer hit it independently.
+
+    The resolution is IMPORTED from `de_data_root`, which imports it from
+    `pm_tape_density`. A second implementation of "where is the ledger" is
+    exactly the defect. If the import is unavailable this falls back to the
+    code tree, which is the pre-existing behaviour, so the module can never
+    become unimportable because of this change.
+
+    THE FALSIFIER IS E1's OWN NUMBERS: the published T_p=600 pair must
+    reproduce to the same tolerance before and after this change. It does --
+    see the DA 62 receipt.
+    """
+    try:
+        import sys                                            # noqa: PLC0415
+        sys.path.insert(0, str(CODE_ROOT / "live" / "pm_research"))
+        import de_data_root as DR                             # noqa: PLC0415
+        return Path(DR.resolve()["repo_root"])
+    except Exception:                                         # noqa: BLE001
+        return CODE_ROOT
+
+
+REPO = _data_repo_root()
 SRC = REPO / "data/mm_hf/vision/parquet/aggTrades"
 OUT = REPO / "data/mm_hf/e1"
 

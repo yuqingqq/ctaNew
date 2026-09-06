@@ -32,8 +32,10 @@ import argparse
 import builtins
 import gzip
 import hashlib
+import datetime
 import io
 import json
+import re
 import subprocess
 import sys
 import time
@@ -52,8 +54,8 @@ CODE_ROOT = E20.CODE_ROOT
 ROOT = E20.ROOT
 RAW = E20.RAW
 PROTOCOL = "P002_E2_A_OVERLAY_RUNNER_V1"
-DECL_PATH = HERE / "declarations" / "p002_e2_a_declaration_v5.json"
-DECL_SHA = "90a9a99f6cb2a2cc4c8f45f211177695355859e157643e854a34ef77ccc7b593"
+DECL_PATH = HERE / "declarations" / "p002_e2_a_declaration_v6.json"
+DECL_SHA = "127e0a56ddee775ecb478453e77ee08614b58023aa45f22fe1642492d8c0f4fb"
 
 EPS = 1e-12
 TP_GRID_S = D.TP_GRID_S
@@ -61,7 +63,9 @@ TP_PRIMARY_S = D.TP_PRIMARY_S
 FEE_MAKER = D.FEE_MAKER_VIP0
 FEE_TAKER = D.FEE_TAKER_VIP0
 THRESHOLD = D.CAPSTONE_THRESHOLD_BPS
-GAP_MAX = 0.05
+#: REPORTED, NEVER GATED since v6. Kept only so the number v5 gated on stays
+#: visible beside the days it used to exclude.
+GAP_REPORTING_REFERENCE = 0.05
 HOURS_PER_DAY_FILES = 24
 SEC_PER_DAY_MS = 86_400_000
 N_LEVELS = 20
@@ -270,24 +274,147 @@ def read_depth20(sym: str, day: str):
 # --------------------------------------------------------------------------
 # admission
 # --------------------------------------------------------------------------
+#: The collector's own heartbeat, which is the health ledger the admission
+#: predicate reads. Both files: the live log and the pre-reboot rotation.
+COLLECTOR_LOGS = ("collector.log.pre-reboot-20260826", "collector.log")
+HEARTBEAT_RE = re.compile(rb"^\[hf\] (\d{2}):(\d{2}):(\d{2})Z bookTicker=")
+
+
+def _log_beats(path: Path, end_date) -> list[float]:
+    """Absolute heartbeat times from a log whose lines carry only HH:MM:SSZ.
+
+    Anchored from the END at a known date and walked BACKWARDS, decrementing
+    the day at each wrap. The end anchor is a fact (the live log ends now; the
+    rotated one ends at its reboot), so no date is guessed from a filename.
+    """
+    secs = []
+    with builtins.open(path, "rb") as fh:
+        for line in fh:
+            m = HEARTBEAT_RE.match(line)
+            if m:
+                secs.append(int(m[1]) * 3600 + int(m[2]) * 60 + int(m[3]))
+    if not secs:
+        return []
+    days = [None] * len(secs)
+    d = end_date
+    for i in range(len(secs) - 1, -1, -1):
+        days[i] = d
+        if i > 0 and secs[i - 1] > secs[i]:
+            d = d - datetime.timedelta(days=1)
+    return [datetime.datetime.combine(
+        days[i], datetime.time(), datetime.timezone.utc).timestamp() + secs[i]
+        for i in range(len(secs))]
+
+
+def collector_heartbeats(now_utc_date=None) -> np.ndarray:
+    base = ROOT / "data" / "mm_hf"
+    now = now_utc_date or datetime.datetime.now(
+        datetime.timezone.utc).date()
+    ends = {"collector.log": now,
+            "collector.log.pre-reboot-20260826": datetime.date(2026, 8, 26)}
+    ts: list[float] = []
+    for name in COLLECTOR_LOGS:
+        p = base / name
+        if p.is_file():
+            ts += _log_beats(p, ends[name])
+    return np.array(sorted(set(ts)))
+
+
+def collector_restarts() -> np.ndarray:
+    p = ROOT / "data" / "mm_hf" / "collector_runs.jsonl"
+    if not p.is_file():
+        return np.zeros(0)
+    out = []
+    for line in p.read_text().splitlines():
+        line = line.strip()
+        if line:
+            out.append(json.loads(line)["started_at_ns"] / 1e9)
+    return np.array(sorted(set(out)))
+
+
+def collector_health(day: str, beats: np.ndarray,
+                     restarts: np.ndarray) -> dict:
+    """WAS THE COLLECTOR LIVE ON THIS DAY? -- v6's admission leg.
+
+    This is a property of the COLLECTOR, never of how often a quiet book
+    moves. The bar is 2x the collector's own MEASURED modal cadence, so it is
+    derived from the collector's behaviour rather than chosen: a day where
+    every beat lands is one cadence apart, and a day with a real stop is
+    orders of magnitude away from that.
+    """
+    d0 = int(pd.Timestamp(day, tz="UTC").timestamp())
+    d1 = d0 + 86_400
+    if beats.size < 2:
+        return {"live": False, "why": "no heartbeat ledger available",
+                "n_beats": 0}
+    diffs = np.diff(beats).astype(np.int64)
+    diffs = diffs[diffs > 0]
+    cadence = float(np.bincount(diffs).argmax()) if diffs.size else 60.0
+    bar = 2.0 * cadence
+    inday = beats[(beats >= d0) & (beats < d1)]
+    if inday.size == 0:
+        return {"live": False, "why": "no heartbeat inside the day",
+                "n_beats": 0, "cadence_s": cadence, "bar_s": bar}
+    #: The day's boundaries count: a collector that came up at 06:00 was not
+    #: live at 00:30, and an interior-only view would not see it.
+    seq = np.concatenate(([d0], inday, [d1]))
+    gaps = np.diff(seq)
+    n_restarts = int(((restarts >= d0) & (restarts < d1)).sum())
+    return {"live": bool(gaps.max() <= bar and n_restarts == 0),
+            "n_beats": int(inday.size),
+            "cadence_s": cadence, "bar_s": bar,
+            "max_heartbeat_gap_s": float(gaps.max()),
+            "n_gaps_over_bar": int((gaps > bar).sum()),
+            "n_collector_restarts_in_day": n_restarts,
+            "why": ("collector live: every heartbeat gap is within 2x its own "
+                    "measured cadence and no restart falls inside the day"
+                    if gaps.max() <= bar and n_restarts == 0 else
+                    f"collector NOT live: max heartbeat gap "
+                    f"{gaps.max():.0f} s against a bar of {bar:.0f} s, "
+                    f"{n_restarts} restart(s) in day")}
+
+
 def stream_file_counts(sym: str, day: str) -> dict:
     return {s: len(E20._hour_files(s, sym, day))
             for s in ("bookTicker", "trade", "depth20")}
 
 
 def day_admission(sym: str, day: str, counts: dict,
-                  gap: float | None) -> dict:
-    """A UTC day is admissible FOR A SYMBOL iff all THREE streams carry 24
-    hour-files and the intra-day bookTicker gap fraction is < 0.05."""
+                  health: dict | None = None,
+                  gap: float | None = None,
+                  age: dict | None = None) -> dict:
+    """v6. A UTC day is ADMISSIBLE FOR A SYMBOL iff (a) all THREE streams
+    carry 24 hour-files and (b) THE COLLECTOR WAS LIVE.
+
+    v5 gated on the intra-day bookTicker gap fraction, inherited from E2.0
+    where it guarded against collector OUTAGE. Measured over eight symbols,
+    that leg selects on HOW OFTEN THE BEST QUOTE CHANGES: exclusion was
+    monotone in activity and ICP -- 16 structurally complete days, zero of
+    its missing seconds in runs of a minute or more -- was cut to ONE day,
+    which is precisely the thin cell E2-A exists to resolve.
+
+    ADMISSIBILITY IS NOW A PROPERTY OF THE COLLECTOR, NEVER OF THE BOOK.
+    Decision-time quote age and the gap fraction are REPORTED per symbol-day
+    as statuses, so a reader can see the staleness a thin name carries --
+    but no book is excluded for being quiet.
+    """
     complete = {s: n == HOURS_PER_DAY_FILES for s, n in counts.items()}
     all_complete = all(complete.values())
-    gap_ok = (gap is not None) and (gap < GAP_MAX)
+    live = bool(health and health.get("live"))
     reasons = [f"{s}_files={counts[s]}" for s in counts if not complete[s]]
-    if gap is not None and not gap_ok:
-        reasons.append(f"gap_fraction={gap:.4f}>={GAP_MAX}")
-    return {"day": day, "admissible": bool(all_complete and gap_ok),
+    if not live:
+        reasons.append("collector_not_live: "
+                       + (health or {}).get("why", "no health ledger"))
+    return {"day": day, "admissible": bool(all_complete and live),
             "stream_file_counts": counts, "streams_complete": complete,
-            "gap_fraction": gap, "reasons_excluded": reasons}
+            "collector_health": health,
+            "reasons_excluded": reasons,
+            "REPORTED_not_gated": {
+                "gap_fraction": gap,
+                "decision_time_quote_age_ms": age,
+                "why": ("these describe how ACTIVE the book is, not whether "
+                        "the data is there. v5 gated on the first of them "
+                        "and cut ICP from 16 days to 1.")}}
 
 
 # --------------------------------------------------------------------------
@@ -614,14 +741,11 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
         days_all = sorted({f.name.split("_")[0]
                            for f in (RAW / "bookTicker" / sym).glob("*.csv*")})
         admissions, evaluated = [], []
+        beats, restarts = collector_heartbeats(), collector_restarts()
         for day in days_all:
             counts = stream_file_counts(sym, day)
-            gap = None
-            if counts["bookTicker"] == HOURS_PER_DAY_FILES:
-                bk, _, _ = E20.read_book(sym, day, extend=False)
-                gap = None if bk is None else E20.gap_fraction(bk[0], day)
-            adm = day_admission(sym, day, counts, gap)
-            admissions.append(adm)
+            health = collector_health(day, beats, restarts)
+            admissions.append(day_admission(sym, day, counts, health))
         adm_days = [a["day"] for a in admissions if a["admissible"]]
         if len(adm_days) < min_days:
             result["symbols"][sym] = {
@@ -912,21 +1036,102 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
            f"(7.0, 9.0) -> {strad['state']} even though the mean is exactly "
            f"8.0 and would have passed; (6.0, 7.0) -> {agree['state']}")
 
-        # -- 9. day admission, both directions ------------------------------
+        # -- 9. day admission v6: the COLLECTOR, not the book ---------------
         full = {"bookTicker": 24, "trade": 24, "depth20": 24}
-        a_ok = day_admission("ICPUSDT", FIX_DAY, full, 0.001)
-        a_d20 = day_admission("ICPUSDT", FIX_DAY,
-                              dict(full, depth20=23), 0.001)
-        a_gap = day_admission("ICPUSDT", FIX_DAY, full, 0.20)
-        ck("BOUNDARY 3 POSITIVE: three complete streams and no gaps is "
-           "ADMITTED", a_ok["admissible"], str(a_ok["reasons_excluded"]))
-        ck("BOUNDARY 3 KNOWN-BAD: a day missing depth20 ALONE is EXCLUDED",
+        d0 = int(pd.Timestamp(FIX_DAY, tz="UTC").timestamp())
+        live_beats = np.arange(d0 - 120, d0 + 86_520, 60, dtype=float)
+        out_beats = np.concatenate([
+            np.arange(d0 - 120, d0 + 40_000, 60, dtype=float),
+            np.arange(d0 + 45_000, d0 + 86_520, 60, dtype=float)])
+        no_rs = np.zeros(0)
+        h_live = collector_health(FIX_DAY, live_beats, no_rs)
+        h_out = collector_health(FIX_DAY, out_beats, no_rs)
+        h_restart = collector_health(FIX_DAY, live_beats,
+                                     np.array([d0 + 50_000.0]))
+        a_quiet = day_admission("ICPUSDT", FIX_DAY, full, h_live,
+                                gap=0.99, age={"p50_ms": 5000.0})
+        a_d20 = day_admission("ICPUSDT", FIX_DAY, dict(full, depth20=23),
+                              h_live)
+        a_out = day_admission("ICPUSDT", FIX_DAY, full, h_out)
+        a_rs = day_admission("ICPUSDT", FIX_DAY, full, h_restart)
+        ck("v6 POSITIVE, THE WHOLE POINT: a book so quiet that 99% of its "
+           "seconds carry no message is ADMITTED when the COLLECTOR is live",
+           a_quiet["admissible"]
+           and a_quiet["REPORTED_not_gated"]["gap_fraction"] == 0.99,
+           f"gap_fraction 0.99 and decision-time age 5,000 ms are REPORTED "
+           f"({a_quiet['REPORTED_not_gated']['gap_fraction']}) and the day "
+           f"still admits -- under v5 this day was excluded, which is what "
+           f"cut ICP from 16 days to 1")
+        ck("v6 KNOWN-BAD: a COLLECTOR OUTAGE refuses -- a heartbeat gap of "
+           "5,000 s against a bar of 2x the measured 60 s cadence",
+           not a_out["admissible"] and h_out["max_heartbeat_gap_s"] > 4000
+           and h_out["bar_s"] == 120.0,
+           f"max_heartbeat_gap_s {h_out['max_heartbeat_gap_s']:.0f} vs bar "
+           f"{h_out['bar_s']:.0f}: {a_out['reasons_excluded']}")
+        ck("v6 KNOWN-BAD: a COLLECTOR RESTART inside the day refuses even "
+           "with an unbroken heartbeat",
+           not a_rs["admissible"]
+           and h_restart["n_collector_restarts_in_day"] == 1,
+           f"1 restart in day, max gap {h_restart['max_heartbeat_gap_s']:.0f} "
+           f"s within bar: {a_rs['reasons_excluded']}")
+        ck("v6 KNOWN-BAD: a day missing depth20 ALONE is still EXCLUDED",
            not a_d20["admissible"]
            and a_d20["reasons_excluded"] == ["depth20_files=23"],
            f"{a_d20['reasons_excluded']} -- the third stream is a real "
            f"requirement, not decoration")
-        ck("BOUNDARY 3 KNOWN-BAD: a complete day with a 20% gap is EXCLUDED",
-           not a_gap["admissible"], str(a_gap["reasons_excluded"]))
+        ck("v6: THE BAR IS THE COLLECTOR'S OWN MEASURED CADENCE, not a "
+           "number chosen here",
+           h_live["cadence_s"] == 60.0 and h_live["bar_s"] == 120.0,
+           f"modal inter-heartbeat interval {h_live['cadence_s']:.0f} s -> "
+           f"bar {h_live['bar_s']:.0f} s")
+
+        # -- 9b. PARTIAL FILLS MUST BE ABLE TO FIRE (rule 16) ---------------
+        #: Reported in DA 61: at partial_share = 0.000 the two R-570(C)(2)
+        #: pricings coincide and the straddle rule cannot fire. A rule that
+        #: cannot fire is not a guard, so it is driven here on an episode
+        #: built to be partial.
+        part = simulate_episode(queue_ahead=100.0, order_qty=10.0,
+                                vol=np.array([104.0]),
+                                depth_at_L=np.array([0.0]),
+                                rng=np.random.default_rng(11))
+        ck("PARTIAL FILL FIRES: a queue of 100, an order of 10 and 104 units "
+           "through leaves the order HALF FILLED under RiskAverse",
+           abs(part["filled_qty_RiskAverse"] - 4.0) < 1e-9,
+           f"filled {part['filled_qty_RiskAverse']} of 10 -- clip(104-100, "
+           f"0, 10) = 4, strictly between the two boundaries")
+        #: c_fill 0.0 / c_chase 5.0 are chosen so the TWO PRICINGS LAND ON
+        #: OPPOSITE SIDES of the 8.0 bps threshold once doubled to eff_RT --
+        #: that is the case the straddle rule exists for and the case
+        #: partial_share = 0.000 made unreachable.
+        pr_part = price_episode(part["filled_qty_RiskAverse"], 10.0,
+                                c_fill=0.0, c_chase=5.0)
+        eff_res, eff_whole = 2 * pr_part[PR_RESIDUAL], 2 * pr_part[PR_WHOLE]
+        ck("AND BOTH PRICINGS THEN DIFFER: residual-chased prices the "
+           "unfilled 60%, whole-leg charges the entire leg as a chase",
+           abs(pr_part[PR_RESIDUAL] - 3.0) < 1e-9
+           and pr_part[PR_WHOLE] == 5.0 and pr_part["is_partial"],
+           f"phi {pr_part['phi']:.2f}: residual_chased "
+           f"{pr_part[PR_RESIDUAL]} vs whole_leg_charged {pr_part[PR_WHOLE]} "
+           f"-- eff_RT {eff_res} vs {eff_whole}, so the second bracket is "
+           f"not degenerate")
+        strad_real = D.partial_pricing_predicate(eff_res, eff_whole)
+        ck("AND THE STRADDLE RULE FIRES ON THEM: eff_RT 6.0 against 10.0 "
+           "spans the 8.0 bps threshold",
+           strad_real["state"] == "FAIL_PARTIAL_FILL_PRICING_STRADDLES",
+           f"{strad_real['state']} -- the rule DA 61 reported as unable to "
+           f"fire at partial_share 0.000 is shown FIRING on an episode that "
+           f"is actually partial, and their mean 8.0 would have passed")
+
+        # -- 9c. THE ORDERING FALSIFIER, SPLIT ------------------------------
+        agg_ra, agg_pq = 7.0, 6.0
+        ck("ORDERING (aggregate, COST): ProbQueue at or below RiskAverse at "
+           "the gate row ADMITS; above it REFUTES THE INSTRUMENT",
+           D.gate_predicate(agg_ra, agg_pq, ci_lo=5.0,
+                            ci_hi=7.5)["state"] == "PASS"
+           and D.gate_predicate(agg_ra, 9.0, ci_lo=5.0,
+                                ci_hi=7.5)["state"] == "REFUTES_THE_BRACKET",
+           "aggregate cost ordering is the gate-level check; the per-episode "
+           "cost ordering is NOT an ordering property at all (driven above)")
 
         # -- 10. the population is the twelve, by name ----------------------
         refused_scope = False
@@ -1129,13 +1334,17 @@ def census(symbols, out_path: Path | None = None) -> dict:
     threshold is applied to anything but the DECLARED admission predicate.
     """
     root = E20.require_canonical_root("P-2026-002 E2-A admission census")
+    beats, restarts = collector_heartbeats(), collector_restarts()
     out = {"protocol": PROTOCOL + "_CENSUS",
            "carrying_commit": carrying_commit(),
            "wrapper": wrapper_block(),
            "data_root_check": root,
            "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
                            "sha256": DECL_SHA},
-           "gap_threshold": GAP_MAX, "symbols": {}}
+           "admission_leg": "v6 -- COLLECTOR LIVENESS, not book activity",
+           "collector_heartbeats_seen": int(beats.size),
+           "collector_restarts_seen": int(restarts.size),
+           "symbols": {}}
     for sym in symbols:
         require_symbol_in_scope(sym)
         days = sorted({f.name.split("_")[0]
@@ -1143,6 +1352,7 @@ def census(symbols, out_path: Path | None = None) -> dict:
         rows = []
         for day in days:
             counts = stream_file_counts(sym, day)
+            health = collector_health(day, beats, restarts)
             prof, gap, age = None, None, None
             if counts["bookTicker"] == HOURS_PER_DAY_FILES:
                 bk, _, _ = E20.read_book(sym, day, extend=False)
@@ -1150,25 +1360,109 @@ def census(symbols, out_path: Path | None = None) -> dict:
                     prof = gap_profile(bk[0], day)
                     gap = prof["gap_fraction"]
                     age = decision_time_quote_age(bk[0], day)
-            adm = day_admission(sym, day, counts, gap)
+            adm = day_admission(sym, day, counts, health, gap, age)
             adm["gap_profile"] = prof
-            adm["decision_time_quote_age_ms"] = age
             rows.append(adm)
         n_adm = sum(1 for r in rows if r["admissible"])
         n_complete = sum(1 for r in rows
                          if all(r["streams_complete"].values()))
+        n_not_live = sum(1 for r in rows
+                         if all(r["streams_complete"].values())
+                         and not r["admissible"])
         out["symbols"][sym] = {
             "days": rows, "n_days_seen": len(rows),
             "n_days_all_three_streams_complete": n_complete,
             "n_admissible": n_adm,
-            "n_excluded_by_gap_alone": n_complete - n_adm,
+            "n_excluded_by_collector_outage_alone": n_not_live,
             "min_complete_days": D.MIN_COMPLETE_DAYS,
             "meets_minimum": bool(n_adm >= D.MIN_COMPLETE_DAYS)}
         print(f"{sym}: {n_complete} days with all three streams complete, "
-              f"{n_adm} admissible, {n_complete - n_adm} excluded by the gap "
-              f"leg alone (threshold {GAP_MAX})")
+              f"{n_adm} admissible, {n_not_live} excluded by COLLECTOR "
+              f"OUTAGE alone")
     if out_path:
         out_path.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
+    return out
+
+
+def e1_resolver_parity(out_path: Path | None = None) -> dict:
+    """The falsifier for adopting the resolver in E1's PRODUCING module.
+
+    The ruling (DA 62) is that this is a PORTABILITY change, not a result
+    change. That is a claim with two halves and both are driven here:
+
+      PARITY   where the OLD resolution was already right -- the shared tree,
+               whose `parents[2]` IS the ledger -- the OLD and NEW roots must
+               agree and E1's own `tick_size` must return the SAME value for
+               every one of the twelve symbols. A single difference means the
+               change moved a number and the commit is refused.
+      THE FIX  where the OLD resolution was wrong -- a per-seat worktree --
+               the OLD root must yield ZERO day-files (which is what made
+               `tick_size` raise) and the NEW root must yield the real count.
+
+    A parity check that could only ever pass would be rule 16's shape, which
+    is why the second half is here: the two roots must DIFFER somewhere and
+    the difference must be the whole of the effect.
+    """
+    root = E20.require_canonical_root("P-2026-002 E1 resolver parity")
+    sys.path.insert(0, str(HERE))
+    import e1_markout_scan as E1                              # noqa: PLC0415
+    old_root = Path(E1.__file__).resolve().parents[2]
+    new_root = E1.REPO
+    syms = list(SYMBOLS_IN_SCOPE)
+
+    def probe(repo: Path) -> dict:
+        before = E1.SRC
+        E1.SRC = repo / "data/mm_hf/vision/parquet/aggTrades"
+        try:
+            out = {}
+            for sy in syms:
+                files = E1.day_files(sy)
+                out[sy] = {"n_day_files": len(files),
+                           "tick_size": (float(E1.tick_size(sy)) if files
+                                         else None)}
+            return out
+        finally:
+            E1.SRC = before
+
+    new = probe(new_root)
+    old = probe(old_root)
+    same_tree = old_root == new_root
+    mismatches = [sy for sy in syms
+                  if old[sy]["tick_size"] != new[sy]["tick_size"]
+                  or old[sy]["n_day_files"] != new[sy]["n_day_files"]]
+    old_empty = [sy for sy in syms if old[sy]["n_day_files"] == 0]
+    new_found = [sy for sy in syms if new[sy]["n_day_files"] > 0]
+    parity_holds = (not mismatches) if same_tree else True
+    fix_demonstrated = (not same_tree) and len(old_empty) == len(syms) \
+        and len(new_found) == len(syms)
+    out = {"protocol": PROTOCOL + "_E1_RESOLVER_PARITY",
+           "carrying_commit": carrying_commit(),
+           "wrapper": wrapper_block(),
+           "data_root_check": root,
+           "old_resolution": {"expression": "Path(__file__).parents[2]",
+                              "root": str(old_root)},
+           "new_resolution": {"expression": "de_data_root.resolve()"
+                                            "['repo_root'], imported",
+                              "root": str(new_root)},
+           "code_and_data_are_the_same_tree": same_tree,
+           "per_symbol_old": old, "per_symbol_new": new,
+           "n_symbols": len(syms),
+           "PARITY_tick_size_and_file_counts_identical": bool(parity_holds),
+           "n_mismatches": len(mismatches), "mismatched_symbols": mismatches,
+           "FIX_old_root_empty_new_root_populated": bool(fix_demonstrated),
+           "n_symbols_old_root_saw_zero_files": len(old_empty),
+           "n_symbols_new_root_sees_files": len(new_found),
+           "how_to_read_this": (
+               "run from the SHARED tree the two roots coincide and the "
+               "PARITY half is the meaningful one; run from a per-seat "
+               "WORKTREE they differ and the FIX half is. Both halves are "
+               "reported every time so a reader can see which one this run "
+               "actually exercised.")}
+    if out_path:
+        out_path.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
+    print(json.dumps({k: v for k, v in out.items()
+                      if k not in ("data_root_check", "per_symbol_old",
+                                   "per_symbol_new")}, indent=2))
     return out
 
 
@@ -1195,13 +1489,11 @@ def mechanism_check(sym: str, out_path: Path | None = None) -> dict:
     days_all = sorted({f.name.split("_")[0]
                        for f in (RAW / "bookTicker" / sym).glob("*.csv*")})
     adm_days = []
+    beats, restarts = collector_heartbeats(), collector_restarts()
     for day in days_all:
         counts = stream_file_counts(sym, day)
-        gap = None
-        if counts["bookTicker"] == HOURS_PER_DAY_FILES:
-            bk, _, _ = E20.read_book(sym, day, extend=False)
-            gap = None if bk is None else E20.gap_fraction(bk[0], day)
-        if day_admission(sym, day, counts, gap)["admissible"]:
+        if day_admission(sym, day, counts,
+                         collector_health(day, beats, restarts))["admissible"]:
             adm_days.append(day)
     if not adm_days:
         raise E2ARefused(
@@ -1379,12 +1671,17 @@ def main() -> int:
     ap.add_argument("--diagnose-tick", nargs="*", default=None)
     ap.add_argument("--census", nargs="*", default=None)
     ap.add_argument("--mechanism-check", default=None)
+    ap.add_argument("--e1-resolver-parity", action="store_true")
     ap.add_argument("--output", type=Path, default=None)
     a = ap.parse_args()
     if a.selftest or a.fixture:
         r = fixture(a.output)
         return 1 if r["n_failed"] or not r["data_free_proof"][
             "no_path_under_data_mm_hf_was_opened"] else 0
+    if a.e1_resolver_parity:
+        r = e1_resolver_parity(a.output)
+        return 0 if (r["PARITY_tick_size_and_file_counts_identical"]
+                     or r["FIX_old_root_empty_new_root_populated"]) else 1
     if a.mechanism_check:
         mechanism_check(a.mechanism_check, a.output)
         return 0
