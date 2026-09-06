@@ -84,8 +84,14 @@ just clears the 2.3 gate, and it is 0.08% of the notional.
 
 ## E2-A is DECLARED — and two things need a ruling before it runs
 
-`live/mm_research/declarations/p002_e2_a_declaration_v1.json`
-(sha256 `405ddb7ab10486c2`, carrying_commit `367b800`), **no data touched**.
+`live/mm_research/declarations/p002_e2_a_declaration_v2.json`
+(sha256 `6567a25f04d7fb89`, carrying_commit `0cbaba6`; v1 `405ddb7ab10486c2`
+superseded in band, untouched), **no data touched under either**. v2 adds the
+data-root discipline the E2.0 result review requires: the P-002 surface
+resolves through the same imported resolver as P-003, every receipt records the
+root and branch, and a result-bearing run off the canonical ledger REFUSES —
+with the falsifier being a **partial** root (a real tape holding 2 days of 19),
+which must refuse rather than report a smaller census.
 Gate: `eff_RT <= 8 bps` under **RiskAverse** at T_p = 600 s, interval binding
 on the PASS side. A bracket that **straddles** the threshold is a FAIL, never
 averaged. **ProbQueue-f3 costing more than RiskAverse refutes the INSTRUMENT**,

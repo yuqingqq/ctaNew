@@ -37,8 +37,9 @@ flags:
                           # See live/mm_research/E1_RESULTS.md.
   e2_a_declared: 2026-09-06
                           # DECLARATION ONLY, no data. live/mm_research/
-                          # declarations/p002_e2_a_declaration_v1.json,
-                          # sha256 405ddb7ab10486c2, carrying_commit 367b800.
+                          # declarations/p002_e2_a_declaration_v2.json,
+                          # sha256 6567a25f04d7fb89 (v1 405ddb7ab10486c2 superseded in band),
+                          # carrying_commit 0cbaba6.
                           # Gate: eff_RT <= 8 bps under RiskAverse at
                           # T_p = 600 s, with the interval binding on the PASS
                           # side; a bracket that straddles the threshold is a
