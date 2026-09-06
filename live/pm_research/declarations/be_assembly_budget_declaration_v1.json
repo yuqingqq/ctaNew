@@ -1,0 +1,112 @@
+{
+ "budget": {
+  "FITS_WITH_WHOLE_FRAGMENT": false,
+  "and_that_is_before_asm": true,
+  "asm_budget_gb": "UNKNOWN \u2014 asm has never been built for a September day, so the true requirement is headroom MINUS asm, and asm is the term nobody has measured",
+  "cap_gb": 8.0,
+  "computed_not_asserted": true,
+  "fragment_resident_per_window_mb": 11.37,
+  "fragment_whole_gb": 2.742,
+  "headroom_after_the_floor_gb": 2.029,
+  "max_windows_resident_within_headroom": 182,
+  "over_by_gb": 0.713,
+  "resident_floor_gb": 5.971,
+  "total_if_fragment_is_whole_gb": 8.713,
+  "what_is_in_the_floor": [
+   "the day reference (2.008 GB)",
+   "the tape index (3.963 GB, both ruled splits)"
+  ]
+ },
+ "coin": "btc",
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day_measured": "20260903",
+ "decides_nothing": "REPORTED (rule 14).",
+ "measurement_sources": {
+  "asm_gb": "NOT MEASURED -- no assembly has completed on a September day",
+  "fragment_file_mib": "be_gate1_fragment_receipt_20260903_btc.json",
+  "fragment_materialised_whole_gb": "measured this round: read + json.loads under the 8 GB scope",
+  "reference_and_tape_index_gb": "same receipt, after_tape_peak_gb",
+  "reference_gb": "be_daybook_build_attempt_20260903_btc.json (round 48, reference stage)"
+ },
+ "measurements": {
+  "asm_gb": null,
+  "fragment_file_mib": 576.6,
+  "fragment_materialisation_factor": 4.87,
+  "fragment_materialised_whole_gb": 2.742,
+  "n_fragment_rows": 545240,
+  "n_generations": 313114,
+  "n_tape_rows": 1764206,
+  "n_windows": 247,
+  "reference_and_tape_index_gb": 5.971,
+  "reference_gb": 2.008,
+  "tape_index_alone_gb": 3.963
+ },
+ "protocol": "BE_ASSEMBLY_BUDGET_DECLARATION_V1",
+ "scope": "one day's assembly under the 8 GB cap. A DECLARATION for DE's runner and this seat's builder; it ships no assembly code.",
+ "streamed_plan": {
+  "CHUNK_SIZING": {
+   "6_is_also_what_the_arms_run_used": true,
+   "headroom_gb": 2.029,
+   "per_window_mb": 11.37,
+   "recommended_chunk_windows": 6,
+   "why_6_and_not_the_maximum": "6 windows is ~68 MB resident, about 3% of headroom, leaving essentially all of it for asm -- the unmeasured term. Sizing the chunk to the maximum spends the budget on the term that is known and starves the one that is not.",
+   "windows_that_fit_headroom_ignoring_asm": 182
+  },
+  "ORDER": [
+   "1. build the day reference (531 s) and keep it",
+   "2. build the tape index ONCE (387 s) and keep it -- the floor is now 5.971 GB and is not revisited",
+   "3. build the day fragment to disk (608 s) -- it is NOT loaded here; the builder streams it out and never holds it",
+   "4. stream the fragment in chunks of N windows into assemble_streaming, against the resident index and reference",
+   "5. emit asm with the book; measure asm's peak and publish it, because it is the term this budget cannot close"
+  ],
+  "REQUIRED_BECAUSE": "8.713 GB > 8.0 GB with 0 allocated for asm",
+  "THE_LARGEST_LEVER_IS_NOT_MINE_TO_PULL": {
+   "consequence": "if one split were sufficient the floor would fall by roughly 2.5 GB and the whole question would close.",
+   "observation": "the tape index is 3.963 GB of the 5.971 GB floor, and it is built over BOTH ruled splits (MECHANICS_BOTH_SPLITS). DE's own docstring measures the score split alone at 1.42 GB against 3.90 GB cumulative for both.",
+   "routed_not_taken": true,
+   "why_this_seat_does_not_do_it": "the split set is RULED. Changing it is a declaration change, not a memory optimisation, and it is the coordinator's and DE's."
+  },
+  "THE_REFUSAL_IF_IT_STILL_DOES_NOT_FIT": {
+   "not_permitted": [
+    "a larger MemoryMax",
+    "fewer windows than the day supplies",
+    "dropping a ruled split"
+   ],
+   "rule": "R8 -- the cap is NOT raised and the population is NOT reduced. A day that will not assemble is REPORTED with its measured peak and REFUSED."
+  },
+  "WHAT_IS_STREAMED": {
+   "measured_cost_per_window_mb": 11.37,
+   "mechanism": "de_phase4_diag_runner.assemble_streaming(chunk_windows=N, source=<fragment>)",
+   "never_resident_whole": true,
+   "object": "the day fragment",
+   "unit": "windows"
+  },
+  "WHAT_STAYS_RESIDENT": [
+   {
+    "gb": 3.963,
+    "object": "tape index",
+    "why": "it is the shared index every chunk is joined against; rebuilding it per chunk would cost 387 s each time"
+   },
+   {
+    "gb": 2.008,
+    "object": "day reference",
+    "why": "assemble_streaming takes {coin: ref} and the generation table is the join key"
+   },
+   {
+    "gb": null,
+    "object": "asm, accumulating",
+    "why": "it is the output; it grows as chunks land and is the one term that has never been measured"
+   }
+  ]
+ }
+}

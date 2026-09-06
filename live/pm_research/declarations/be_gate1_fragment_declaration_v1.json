@@ -1,0 +1,54 @@
+{
+ "builds_no_book_and_runs_no_assembly": true,
+ "cap": {
+  "gb": 8.0,
+  "on_exceed": "REFUSE the day and report the measured peak",
+  "raised": false
+ },
+ "coin": "btc",
+ "coin_ruling": "R-560, btc-only for all ruled days",
+ "decides_nothing": "REPORTED (rule 14).",
+ "digest_discipline": "the encoder streams into the file and into the hash at once, so the sha256 is of exactly the bytes that landed and the document is never materialised (the B-1 rule on the write side; write_text(json.dumps(...)) is the allocation shape build_topup_rows was changed to avoid)",
+ "guard": {
+  "model": "build_topup_rows.guard_output, WIDENED",
+  "refuses_any_name_outside_the_gate1_stem": true,
+  "refuses_any_path_that_already_exists": true,
+  "refuses_every_existing_exposure_row_dataset": [
+   "harmful_exposure_rows_v1.json",
+   "harmful_exposure_rows_v2.json",
+   "harmful_exposure_rows_v2_eraB.json",
+   "harmful_exposure_rows_v3.json",
+   "harmful_exposure_rows_v3_eraB.json",
+   "harmful_exposure_rows_v3_topup.PREFIX_FILTERED.json",
+   "harmful_exposure_rows_v3_topup.json"
+  ],
+  "why_widened": "the top-up guard named TWO pinned datasets; there are seven on disk, and overwriting yesterday's Gate-1 fragment with today's under a name nobody pinned is the same defect one step down"
+ },
+ "one_file_per_ruled_day": true,
+ "path_scheme": "data/pm_5min/derived/harmful_exposure_rows_v3_gate1_<YYYYMMDD>_<coin>.json",
+ "population": {
+  "definition": "that day's admissible windows from de_admissible_windows.supply(day, be_forward_day.present_from_ledger(day))",
+  "digest_pinned": "sha256 over the sorted slug list, in every receipt, so a fragment built from a different selection cannot be mistaken for this one",
+  "never_reduced": "R8 -- a fragment over fewer windows than the day supplies is a fragment about another day",
+  "why_not_a_declared_population": "the declared intervals end 2026-08-26T00:00; no September day passes slug_in_population"
+ },
+ "protocol": "BE_GATE1_FRAGMENT_DECLARATION_V1",
+ "receipt_fields_per_day": [
+  "population.slugs_sha256",
+  "population.n_windows",
+  "build.n_rows",
+  "resources.wall_s",
+  "resources.peak_rss_gb",
+  "fragment.sha256",
+  "fragment.bytes"
+ ],
+ "ruled_days": [
+  "20260901",
+  "20260902",
+  "20260903",
+  "20260904",
+  "20260905"
+ ],
+ "why": "round 48's book refused at fragment_slice because harmful_exposure_rows_v3_eraB.json is the CONSUMED, PINNED 08-24/25 population (1.24 GB, 471 windows, verified at the artifact) and September was never materialised into it",
+ "why_per_day_and_not_one_file": "a per-day fragment can be built, measured, refused and rebuilt on its own, and a day that will not fit costs only itself"
+}

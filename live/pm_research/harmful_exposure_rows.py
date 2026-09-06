@@ -753,10 +753,22 @@ def replay_with_recorder(path, up, dn, gaps, spec):
 def build_rows(per_coin: int | None = None,
                coins: Sequence[str] = ("btc", "eth"),
                v2_era: bool = False,
-               population: str = "v3_4_consumed_fragment") -> dict[str, Any]:
+               population: str = "v3_4_consumed_fragment",
+               selector=None) -> dict[str, Any]:
+    """`selector` mirrors `de_phase4_diag_runner.build_reference`'s own hook.
+
+    WHY IT EXISTS: `select_v2_era` is bounded by the DECLARED POPULATION
+    INTERVALS, which end 2026-08-26T00:00. A ruled forward day in September
+    cannot pass `slug_in_population` at all, so a Gate-1 fragment for such a
+    day cannot be built through the population door -- it would come out
+    EMPTY, which is the failure that looks like a result. The caller supplies
+    the day's admissible windows instead. Default is None and every existing
+    call is unchanged."""
     import datetime as _dt
     spec = qr._qr_spec(qr.QR_SKEW, latency_ms=0, cancel=False)
-    if v2_era:
+    if selector is not None:
+        selected, n_bn_gap = selector(coins, population)
+    elif v2_era:
         selected, n_bn_gap = select_v2_era(coins, population)
     else:
         selected, n_bn_gap = select_stratified(per_coin or 10, coins=coins), 0

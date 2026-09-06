@@ -1,0 +1,65 @@
+{
+ "build": {
+  "boundary_time_violations": 0,
+  "consume_clock_violations": 0,
+  "days": [
+   "2026-09-03"
+  ],
+  "n_rows": 545240,
+  "n_windows": 247,
+  "reconciliation_failures": 0,
+  "unhooked_state_changes": 0
+ },
+ "coin": "btc",
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day": "20260903",
+ "decides_nothing": "REPORTED (rule 14).",
+ "fragment": {
+  "bytes": 604605715,
+  "digest_is_of_the_bytes_as_written": true,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260903_btc.json",
+  "sha256": "2860832a66e820cad0b2ee039740692d4d17f3fec11ee4874ef6ef9b244f0764",
+  "streamed_never_materialised": true
+ },
+ "guard": {
+  "refuses_any_existing_path": true,
+  "refuses_existing_datasets": [
+   "harmful_exposure_rows_v1.json",
+   "harmful_exposure_rows_v2.json",
+   "harmful_exposure_rows_v2_eraB.json",
+   "harmful_exposure_rows_v3.json",
+   "harmful_exposure_rows_v3_eraB.json",
+   "harmful_exposure_rows_v3_topup.PREFIX_FILTERED.json",
+   "harmful_exposure_rows_v3_topup.json"
+  ],
+  "required_stem": "harmful_exposure_rows_v3_gate1_"
+ },
+ "no_assembly_run": true,
+ "no_book_built": true,
+ "one_file_per_day": true,
+ "population": {
+  "coin": "btc",
+  "day": "20260903",
+  "n_windows": 247,
+  "slugs_sha256": "69176e813aa894f754890a791f8e167be361cd9f976d562d98665f34de501e24",
+  "source": "de_admissible_windows.supply(day, be_forward_day.present_from_ledger(day))",
+  "why_not_a_declared_population": "the declared population intervals end 2026-08-26T00:00; no September day passes slug_in_population"
+ },
+ "protocol": "BE_GATE1_FRAGMENT_V1",
+ "resources": {
+  "cap_gb": 8.0,
+  "cap_raised": false,
+  "peak_rss_gb": 1.915,
+  "wall_s": 608.4
+ }
+}
