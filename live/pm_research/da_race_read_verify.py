@@ -885,6 +885,64 @@ def _derived_for_markers() -> Path:
     return _R.derived_dir("the race read's OPENED markers")
 
 
+#: DA 112 / Q-BE-326. ***THE ARTIFACT'S DECLARATION IS THE ARTIFACT'S,
+#: NOT TODAY'S HEAD.*** This verifier resolved the family head and judged
+#: every read against it, so the moment BE 84 landed v5 -- the SECOND
+#: read's pre-declaration -- the FIRST read's artifact would have been
+#: refused or misread against a day set it was never taken under. A read
+#: is verified against the declaration IT NAMES, by the pair it carries;
+#: the head is consulted only to SAY whether that declaration is the head
+#: or a superseded version. ***Both are fine. A version that is not in
+#: the chain at all is not.***
+def declaration_of_the_read(art: dict) -> dict:
+    """The declaration THIS read was taken under, by its own pair."""
+    import declaration_chain as _DC                           # noqa: PLC0415
+    d = Path(__file__).resolve().parent / "declarations"
+    ps = art.get("pre_state") or {}
+    cs = art.get("consumption") or {}
+    named = (ps.get("declaration")
+             or cs.get("decl_declaration"))
+    sha = (ps.get("declaration_sha256")
+           or cs.get("decl_declaration_sha256"))
+    if not sha:
+        raise RaceVerifyRefused(
+            "REFUSED: READ_ARTIFACT_NAMES_NO_DECLARATION_DIGEST — the "
+            "artifact carries neither `pre_state.declaration_sha256` nor "
+            "`consumption.decl_declaration_sha256`, so the day set it was "
+            "taken under cannot be identified, and this verifier will not "
+            "substitute today's head for it.")
+    present = {}
+    for f in sorted(d.glob(f"{RACE_DECL_FAMILY}_v*.json")):
+        present[hashlib.sha256(f.read_bytes()).hexdigest()] = f
+    if sha not in present:
+        raise RaceVerifyRefused(
+            f"REFUSED: READ_ARTIFACT_DECLARATION_NOT_IN_THE_CHAIN — the "
+            f"artifact says it read under {str(named)!r} "
+            f"({str(sha)[:16]}…) and no version of "
+            f"`{RACE_DECL_FAMILY}` on disk has that digest. A read taken "
+            f"under a declaration nobody can produce is not one this "
+            f"verifier can check.")
+    f = present[sha]
+    obj = json.loads(f.read_text())
+    pop = obj.get("population") or {}
+    head = race_declaration_head()
+    return {"name": f.name, "path": str(f), "sha256": sha,
+            "named_by_the_artifact": named,
+            "G_declared": obj.get("G"),
+            "READABLE": sorted(pop.get("READABLE") or []),
+            "READ_BUT_UNRECOVERABLE": sorted(
+                pop.get("READ_BUT_UNRECOVERABLE") or []),
+            "is_the_current_head": f.name == head["name"],
+            "the_current_head": head["name"],
+            "why_not_the_head": (
+                "a read is verified against the declaration IT NAMES. The "
+                "head moves when the NEXT read is pre-declared, and "
+                "judging an earlier read against it would test that read "
+                "against a day set it was never taken under"),
+            "resolved_by": ("the artifact's own {declaration, sha256} "
+                            "pair, matched against the versions on disk")}
+
+
 def race_declaration_head() -> dict:
     """The chain head of BE's race-read declaration family, by the pair.
 
@@ -1132,31 +1190,42 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
 
     #: DA 100 (2)(3): THE DECLARATION, THE DAY SET'S TWO G's, THE
     #: BYTE-IDENTITY BLOCK AND THE OPENED MARKERS.
-    head = race_declaration_head()
+    #: DA 112: the declaration THIS read names, by its own pair.
+    head = declaration_of_the_read(art)
     ps = art.get("pre_state") or {}
     ds = art.get("day_set") or {}
     cons = art.get("consumption") or {}
     bi = art.get("byte_identity") or {}
     declared_sha = ps.get("declaration_sha256") or ds.get(
         "declaration_sha256")
+    #: DA 112: the digest is checked against the declaration THE ARTIFACT
+    #: NAMES (already resolved by its own pair), not against today's head
+    #: -- the head moves when the NEXT read is pre-declared.
     if declared_sha is not None and declared_sha != head["sha256"]:
         raise RaceVerifyRefused(
             f"REFUSED: READ_ARTIFACT_DECLARATION_DIGEST_DIFFERS — the "
-            f"artifact says it read under {str(declared_sha)[:16]}… and "
-            f"the chain head {head['name']} is {head['sha256'][:16]}…. A "
-            f"read taken under another declaration is a read of another "
-            f"day set, and this verifier will not reconcile the two.")
+            f"artifact's two statements of its own declaration disagree: "
+            f"{str(declared_sha)[:16]}… against {head['sha256'][:16]}… "
+            f"({head['name']}). A read cannot have been taken under two "
+            f"declarations.")
     markers = opened_markers(
         Path(ps.get("marker_dir") or _derived_for_markers()),
         head["READABLE"])
     decl_block = {
-        "chain_head": {k: head[k] for k in
-                       ("name", "sha256", "G_declared", "READABLE",
-                        "READ_BUT_UNRECOVERABLE", "n_members",
-                        "resolved_by")},
+        "the_declaration_this_read_names": {
+            k: head[k] for k in
+            ("name", "sha256", "G_declared", "READABLE",
+             "READ_BUT_UNRECOVERABLE", "resolved_by",
+             "is_the_current_head", "the_current_head",
+             "why_not_the_head")},
         "the_artifact_says_it_read_under": declared_sha,
-        "digest_agrees_with_the_chain_head": (
-            None if declared_sha is None else declared_sha == head["sha256"]),
+        "the_declaration_is_in_the_chain": True,
+        "it_is_the_current_head": head["is_the_current_head"],
+        "and_a_superseded_one_is_fine": (
+            "a read is verified against the declaration it names; the "
+            "head moves when the next read is pre-declared, and judging "
+            "an earlier read against it would test that read against a "
+            "day set it was never taken under"),
         "declaration_named_in_the_artifact": (
             ps.get("declaration") or ds.get("from")),
         "decl_source": cons.get("decl_source"),
@@ -1435,7 +1504,7 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
     out["IS_A_VERIFICATION"] = bool(
         not bad and readable
         and markers["one_per_declared_day"]
-        and (decl_block["digest_agrees_with_the_chain_head"] is not False)
+        and decl_block["the_declaration_is_in_the_chain"]
         and out["the_gate_is_the_artifacts_existence"]["is_BEs_declared_shape"]
         and day_set["no_unrecoverable_day_carries_a_number"]
         and not day_set["days_not_said_as_the_pins_expect"])
@@ -1476,6 +1545,27 @@ def _synthetic_pins(d: Path, feeds: dict, absent: list) -> Path:
     return p
 
 
+def _declaration_covering(days) -> dict:
+    """The chain version whose READABLE set is exactly `days`."""
+    import declaration_chain as _DC                           # noqa: PLC0415
+    d = Path(__file__).resolve().parent / "declarations"
+    want = sorted(days)
+    for f in sorted(d.glob(f"{RACE_DECL_FAMILY}_v*.json")):
+        try:
+            o = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        pop = o.get("population") or {}
+        if sorted(pop.get("READABLE") or []) == want:
+            return {"name": f.name, "path": str(f),
+                    "sha256": hashlib.sha256(f.read_bytes()).hexdigest(),
+                    "G_declared": o.get("G"), "READABLE": want}
+    raise RaceVerifyRefused(
+        f"REFUSED: NO_DECLARATION_COVERS_{want} — a fixture read must name "
+        f"the declaration it was taken under, and no version of "
+        f"`{RACE_DECL_FAMILY}` declares exactly those READABLE days.")
+
+
 def _synthetic_read_artifact(d: Path, per_day: dict, *,
                              name: str = "be_race_read_result_v1.json",
                              extra_days: dict | None = None,
@@ -1492,7 +1582,12 @@ def _synthetic_read_artifact(d: Path, per_day: dict, *,
     positive control that omits them is not a control over the check that
     reads them."""
     days = sorted(per_day)
-    _head = race_declaration_head()
+    #: DA 112: THE FIXTURE NAMES THE DECLARATION IT WAS "TAKEN UNDER" --
+    #: the version whose READABLE set is the days it carries -- not
+    #: today's head. Stamping the head made every fixture claim the SECOND
+    #: read's pre-declaration the moment BE 84 landed it, and the battery
+    #: then indexed the FIRST read's pins by days that declaration names.
+    _head = _declaration_covering(days)
     if markers:
         #: THE PINS THIS FIXTURE IS ACTUALLY VERIFIED AGAINST -- a marker
         #: carrying the REAL pin beside a synthetic pins file is a marker
@@ -1898,7 +1993,10 @@ def selftest_real() -> list:                                  # noqa: C901
 
 
     # -- DA 100: THE DECLARATION, THE MARKERS, AND THE READ ORDER --------
-    _real_head = race_declaration_head()
+    #: DA 112: THE BATTERY READS THE DECLARATION ITS FIXTURE NAMES, not
+    #: today's head -- the head moved to v5 (the SECOND read's
+    #: pre-declaration) and these cells drive the FIRST read's pins.
+    _real_head = declaration_of_the_read(json.loads(art_p.read_text()))
     ck("DA 100 (2) -- THE DECLARATION IS THE OTHER HALF OF THE PIN, AND "
        "IT IS RESOLVED AS A CHAIN HEAD, NEVER AS A FILENAME. ***The pins "
        "say WHICH BYTES each day was read from; the declaration says "
@@ -1907,13 +2005,20 @@ def selftest_real() -> list:                                  # noqa: C901
        "the wrong day set. At HEAD it resolves to one head by the R-608 "
        "pair, and its population and G are READ from it rather than typed "
        "here",
-       _real_head["name"] == "be_race_read_declaration_v4.json"
-       and _real_head["sha256"].startswith("a741b4d6b5ac7f59")
-       and _real_head["G_declared"] == 3
-       and _real_head["READABLE"] == ["20260903", "20260904", "20260905"],
-       f"{_real_head['name']} {_real_head['sha256'][:16]}, G="
+       #: THE PROPERTY: the declaration this READ names is resolved by
+       #: its own pair, is IN the chain, and its READABLE set is what the
+       #: pins cover -- never "the head", which moves with the next
+       #: pre-declaration (BE 84 landed v5 and this cell asserted v4).
+       _real_head["sha256"] == json.loads(art_p.read_text())[
+           "pre_state"]["declaration_sha256"]
+       and _real_head["G_declared"] == len(_real_head["READABLE"])
+       and set(_real_head["READABLE"]) <= set(
+           json.loads(Path(pins_p).read_text())["per_day"]),
+       f"{_real_head['name']} {_real_head['sha256'][:16]} (head today: "
+       f"{_real_head['the_current_head']}; is the head: "
+       f"{_real_head['is_the_current_head']}), G="
        f"{_real_head['G_declared']}, READABLE {_real_head['READABLE']}, "
-       f"{_real_head['n_members']} members in the family")
+       f"resolved by {_real_head['resolved_by']}")
     _wrongd = Path(tempfile.mkdtemp(prefix="da100wd_"))
     _bad_art = _synthetic_read_artifact(td, mine_days,
                                         name="art_wrong_decl.json",
@@ -1923,11 +2028,16 @@ def selftest_real() -> list:                                  # noqa: C901
         _wd = "ADMITTED"
     except RaceVerifyRefused as _e:
         _wd = str(_e).split(" — ")[0].replace("REFUSED: ", "")
-    ck("AND A READ TAKEN UNDER ANOTHER DECLARATION IS REFUSED BY NAME: "
-       "the artifact's `pre_state.declaration_sha256` against the chain "
-       "head's digest. ***A read under another declaration is a read of "
-       "another day set***, and this verifier will not reconcile the two",
-       _wd == "READ_ARTIFACT_DECLARATION_DIGEST_DIFFERS",
+    ck("AND A READ NAMING A DECLARATION THAT IS NOT IN THE CHAIN IS "
+       "REFUSED BY NAME (DA 112). The artifact's own "
+       "`pre_state.declaration_sha256` is matched against the versions on "
+       "disk -- ***not against today's head***, which moves the moment "
+       "the NEXT read is pre-declared (BE 84 landed v5 and this verifier "
+       "would have refused the FIRST read's artifact). A digest no "
+       "version has is `READ_ARTIFACT_DECLARATION_NOT_IN_THE_CHAIN`: ***a "
+       "read taken under a declaration nobody can produce is not one this "
+       "verifier can check***",
+       _wd == "READ_ARTIFACT_DECLARATION_NOT_IN_THE_CHAIN",
        f"a planted declaration digest -> {_wd}")
     _md = Path(tempfile.mkdtemp(prefix="da100mk_"))
     _art4 = _synthetic_read_artifact(_md, mine_days, extra_marker="20260906", pins_path=pins_p)
