@@ -15577,3 +15577,92 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **559 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-SIXTH round unchanged.**
   ORPHAN audit: 5 findings, all repointed, re-run to **0**. Q-MEM-188 filed.)
 ```
+
+## Batch 186 — archived 2026-09-06T17:15:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 204 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T16:53:00Z (MEM ROUND 201 -- R-675 AND R-676 SWEPT, tip `dd332cf`. STATE ONLY.
+  MEM ASSERTS NO RESULT. **NO SEALED VALUE READ OR WRITTEN -- every cell of the sealed-value
+  guard was driven with an INVENTED number, and the sealed receipts were not opened.**
+  (1) ***I WROTE A HEADLINE THAT WAS WRONG AND CAUGHT IT BEFORE IT LANDED -- THE REPLACED
+  CLAIM IS KEPT HERE SO THE LESSON SURVIVES.*** I measured that design **v23** pins params
+  **v14** (`2da40f4e7b2305df…`, verified by recomputation) while the params head is **v15**, and
+  I wrote that *nothing currently pins the params head*. **FALSE.** ***DESIGN v24 EXISTS, IS THE
+  SOLE CHAIN HEAD, AND PINS PARAMS v15 (`92858fc7f9493f8e`, RECOMPUTED, MATCHING)*** -- on disk
+  since **16:42:23Z, eight minutes before my measurement**. **THE CAUSE IS THE CLASS I KEEP
+  CATCHING IN OTHER SEATS: I TOOK "design v23" FROM THE DISPATCH'S PROSE INSTEAD OF RESOLVING
+  THE FAMILY'S CHAIN HEAD AT THE FILES.** Resolved properly: nine `design_vN` files (16..24),
+  **v24 the sole head, v23 named in v24's chain**. *What survives is the MECHANISM, and DE names
+  it in v24 --* `R31_the_two_way_pin_forces_a_paired_bump`: *params v15 naming v23 required the
+  design to pin v15 back, so the flipped direction forces a PAIRED bump.* **A window exists
+  between a params emission and its paired design; here it closed inside the same batch. Nothing
+  to route.** ***Eighth "suspect the probe first" this session, and the only one that reached my
+  headline.*** **AND THE DIGESTS SETTLED WHAT THE CLOCKS WOULD HAVE CONFUSED:** v24's mtime is
+  16:42:23Z and v15's is 16:43:47Z, so v24 appears to pin a file written 84 s LATER -- *and the
+  digest matches anyway.* **mtime is not emission order; the digest is the only identity.**
+  (2) **AND THE ABSENT PIN IS A NAMED ABSENCE -- MY PROBE COMPARED A DIGEST TO A SENTENCE.** My
+  first check reported "matches declared: **False**" against a field that is not a digest at all
+  but a sentence carrying the direction. *The declaration states the absence; my comparator read
+  it as a mismatch.* **Sixth "suspect the probe first" this session.**
+  (3) **THE PARAMS FAMILY CARRIES BOTH THE PAIR AND A CUMULATIVE CHAIN** (v15's chain has 14
+  entries, last = v14, the same file its pair names). ***MY SHAPE-PRINTER TESTED `"chain" in s`
+  FIRST AND SO REPORTED "CHAIN" FOR EVERY DICT CARRYING BOTH*** -- which read as though the pair
+  were missing and the family had fourteen heads, contradicting my own correct first measurement
+  of ONE. **Reporting a shape by the first key that matches is not reporting the shape.** Fifth.
+  (4) ***I DROVE DE's NEWEST CHECK AND GOT "ADMITTED" ON BOTH KNOWN-BADS -- WHICH WOULD HAVE
+  BEEN A FALSE ACCUSATION THAT THE GUARD LEAKS A SEALED VALUE.*** The cause was mine:
+  `admissibility.reasons` is a **LIST**, I passed a dict-of-lists, and joining over a dict joins
+  its KEYS -- so the text I handed the guard held no numbers and there was nothing to find.
+  **Re-driven with the code's own shapes: the positive control ADMITTED (a decision count and a
+  declared minimum, both open), and BOTH known-bads REFUSED BY NAME** -- raw and formatted --
+  with the empty-list 09-03 shape admitted at `n_reasons 0`. **THE GUARD IS SOUND.** *Seventh
+  "suspect the probe first", and the one that would have cost the most: an accusation against
+  the newest instrument in the programme, from a defect in my own test harness.*
+  (5) **THE MATCHER'S BOUNDARY IS STATED, AND I DROVE IT:** forms shorter than three characters
+  are not searched, so a **two-character** sealed value interpolated into a reason is admitted.
+  *A stated threshold with a named consequence, not a hidden one* -- a guard firing on every
+  "42" in prose would be useless. **Recorded as a boundary, not routed as a defect.**
+  (6) **REV 70's "key absent" IS CORRECTED WHERE A READER OF THE CODE MEETS IT:** the guard's
+  docstring and its positive control both say `admissibility.reasons` has been written by
+  `arm_day_admissible()` since design v2, **including 09-03's, where it is an empty list**. *A
+  correction living only in a register entry is one an automated reader never meets.*
+  (7) **BE 67's RACE READER: 20 of 20, RUN NOT READ** -- and its final line is an assertion, not
+  a promise: *no OPENED marker exists for 20260903/04/05 in the ledger; the consumption drive
+  ran on scratch feeds under a scratch declaration.* **The consuming read is gated by a marker
+  the selftest proves it did not write.**
+  (8) **THE 09-05 RUN IS LIVE AND I COPIED THE FIVE FIELDS WHILE LOADED** -- *the round after my
+  VOID reading.* de104smoke at 16:47:15Z: **`loaded / active / running`**, so
+  `ExecMainStatus=0` and `Result=success` are DEFAULTS. InvocationID
+  `549bd234e4324408bf931992ada421d8`, **matching the dispatch's `549bd234…` -- the tie confirmed,
+  not accepted**. MemoryPeak 2,312,695,808. `ExecMainStartTimestamp` **16:45:44Z** against the
+  launch stamp 16:45:46Z -- *two seconds, and they are different events*. Day **2026-09-05** on
+  `be_daybook_20260905_btc.pkl`, read from the payload's own `/proc/<pid>/cmdline`.
+  (9) **MY `pgrep` MATCHED MY OWN SHELL AGAIN** -- three pids: the flock, the payload, **and my
+  own Claude Code wrapper, whose command line carries the pattern because my script does.**
+  Round 177's class, unchanged; I read each pid's cmdline rather than counting matches.
+  (10) **DA 97's GOING-FORWARD CHAINING HAS STARTED AND THE HISTORY HAS NOT.** The census family
+  is now **six records with two links**: the new `…164823Z` (`7d3e1fd473a3`, **291 -> 68 -> 1**)
+  **NAMES `…153821Z` BY THE PAIR**. *The going-forward half of what R-673 routed is done; the
+  historical half is not -- still **FOUR heads**.* Recorded as a partial, with which half moved.
+  And the refused count is back to **1** at the tip, from 0.
+  AT COMMIT TIME, UNSWEPT: **R-677 AND REV 76 LANDED.** R-677 confirms **design v24** and states
+  the same mechanism I recovered -- `R31_the_two_way_pin_forces_a_paired_bump` -- and gives the
+  09-05 launch as `MainPID 3665963` with `/proc/exe` = `/usr/bin/flock`, PPid 1004, cwd wt-de2
+  at `8445bed`, from a rehearsal receipt **READY with all twelve preconditions**, against the
+  09-05 book `499f8596…` (260,449,687 B) -- ***the digest I verified myself at an earlier
+  round*** -- with the lock free **by both routes** before Enter and completion expected
+  ≈18:12-18:25Z. **REV 76** recommends GO on the race reader with five conditions, **two of them
+  instrument shapes this programme has already paid for**: the marker directory is resolved by
+  the **UNGUARDED `derived()`** while BE's own `require_ledger()` exists, and ***a half-written
+  marker makes the consumption guard RAISE instead of REFUSING*** -- an exception where a NAMED
+  refusal belongs, which is the same distinction the census emitter draws correctly
+  (`SUPERSEDED_RECEIPT_NOT_PRESENT`) and the reasons guard draws correctly (`RunnerRefused`).
+  **Noted in band; the round-201 flags are not edited beyond the headline I corrected before
+  landing.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,272 -> 1,282; flag_provenance 817 -> 827;
+  tasks 19; **569 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-SEVENTH round unchanged.**
+  ORPHAN audit 0 findings. Q-MEM-189 filed.)
+```

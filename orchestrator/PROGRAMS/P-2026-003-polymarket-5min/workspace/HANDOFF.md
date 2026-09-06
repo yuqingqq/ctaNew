@@ -1,3 +1,67 @@
+# READ FIRST — round 204 (MEM, 2026-09-06T17:15:30Z, tip `24b2a1d`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read, no
+sealed receipt opened, **and nothing I ran wrote a marker — counted 0 before and
+0 after every drive.**
+
+**The seam I measured open at 17:07Z was closed by 17:13Z, and closed better than
+the check asked.** DE 106 (`0e4a033`) landed six minutes after my round-203 drive;
+the check now returns **`DECLARED_AND_AGREES_ON_THE_PROPERTY`**, `agrees: True`,
+`declared_as: SEAL_RULE`, `key_walkers_found_by_property: ['seal_key_walk']`, with
+both rule texts normalising identically. **And `agreement_is_on` says the
+agreement is on the *property* — a key, whatever the value, empty containers
+included — not on the wording**, which answers exactly the tolerance I recorded at
+round 203: two independent statements of one rule need not be string-identical.
+
+**This is the third round running that a state I measured moved within minutes** —
+design v24 eight minutes *before* my round-201 reading, DA 98 four minutes
+*after* my round-202 one, DE 106 six minutes after this one. **The clock on every
+reading is what makes these a sequence rather than a contradiction.** (My
+round-203 one-liner also raised `KeyError: 'key_walkers_found'` — the field is now
+`key_walkers_found_by_property`. The result was fine; my reader named an identity
+that had moved. I print the key set before any value now.)
+
+| claim | what I measured |
+|---|---|
+| BE 69: a `decl_source` field or no `decl=` from the CLI | **stronger than asked.** `decl_was_injected` is replaced by **five** fields plus the reason as a field — and the supplied declaration is not merely described: **`resolve_days()` is re-resolved fresh and the read REFUSES if the supplied decl is not the chain head.** "Record a boolean" became "re-resolve and refuse", and the refusal names why: *a supplied set nobody re-checked is exactly what R-600 found.* |
+| BE 68's guards all driven | **I could not isolate the head-check, and I chose not to reach it.** With synthetic paths an earlier guard fires: the order in the source is **feed-on-disk (:504) → decl head-check (:517) → `resolve_marker_dir` (:547) → `pre_state` (:550) → marker guard → write**. Both cells refused at the feed check, which names the day and the missing feed rather than folding it into a generic absence. **Reaching the head-check needed the real feed paths, and the step after that guard is the read itself — the coordinator's act on GO. I stopped.** |
+| nothing consumed | **counted 0 markers and 0 result files before and after every drive**, the full selftest included. The selftest asserts the real days are untouched; my count checks the same thing **from outside it**. |
+| the reader's selftest | **27 checks now, from 20 at round 201** — BE 68 and BE 69 added seven. Ran, not read. |
+| the GO's required field `declaration_sha256 a741b4d6…` | **recomputed and matching** against `be_race_read_declaration_v4.json`. `READABLE` = the three days; **`G_declared 3`, `G_computed 3`, `G_agrees_with_the_declaration TRUE`** — computed and declared side by side, the agreement its own field; `resolved_from` = *"the chain head, never a filename"*. |
+| the GO's two prohibitions | relayed: **no re-run verification, and no expected direction or magnitude.** **The second is the one that protects the test from its reader** — a stated expectation is a selection made before seeing, and this act cannot be repeated to undo it. |
+
+**In flight.** de104smoke at 17:12:15Z: `loaded / active / running`, InvocationID
+unchanged across **four** readings, `MemoryPeak` **2,312,695,808 identical in all
+four**. ≈18:25Z. The census family is four-headed for the fifth round (7 records,
+3 links) — recorded, not re-routed.
+
+**At commit time, unswept: the race read GO is issued.** R-687 (BE 70, 17:14Z):
+**one GO, one read**, conditioned on the 09-05 run's exit **by both routes** (the
+artifact and the inode), ≈18:25Z. The GO's text is published **verbatim** in the
+register as REV 77 §3 asked — the form that makes a GO checkable afterwards
+rather than recalled. R-686 verifies BE 69, DA 99-dry and MEM 203.
+
+The chain to here is worth stating once, because it is what a GO should look
+like: **REV 76 recommended GO with five conditions → BE 68 closed three → REV 77
+gave GO subject to one code change → BE 69 closed it → the GO issues.** BE 69's
+own drive ran *"on a call structurally identical to `--open` on scratch"*, with
+`pre_state` reading `zero_markers_before_the_act true`,
+`all_pins_present_and_true true`, `all_feeds_on_disk_at_their_pins true`,
+`declared_result_absent_before_the_act true`, **and a supplied non-head
+declaration refused by name** — the guard I could not reach without risking the
+act, driven by its owner on a structurally identical call, which is the right
+seat for it.
+
+**At my last reading, 17:16Z: 0 OPENED markers, 0 result files, and the lock
+still held by pid 3665963** — the 09-05 run — **so the act has not happened and
+its precondition is not yet met.** State, not a forecast.
+
+Counts: flags 1,302 → 1,312; provenance 847 → 857; tasks 19; **596 CHECKED /
+261 RELAYED / 455 UNMARKED — eightieth round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 186 archived. Q-MEM-192 filed.
+
+---
+
 # READ FIRST — round 203 (MEM, 2026-09-06T17:09:30Z, tip `09188c0`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read and

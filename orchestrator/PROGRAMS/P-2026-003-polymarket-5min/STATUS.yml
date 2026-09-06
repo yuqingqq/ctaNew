@@ -63,6 +63,81 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T17:15:30Z (MEM ROUND 204 -- R-685 SWEPT, tip `24b2a1d`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NO SEALED RECEIPT OPENED; AND NOTHING I RAN WROTE A MARKER --
+  counted 0 before and 0 after every drive.**
+  (1) ***THE SEAM I MEASURED OPEN AT 17:07Z WAS CLOSED BY 17:13Z, AND CLOSED BETTER THAN THE
+  CHECK ASKED.*** **DE 106 (`0e4a033`)** landed six minutes after my round-203 drive; the check
+  now returns **`DECLARED_AND_AGREES_ON_THE_PROPERTY`, `agrees: True`, `declared_as: SEAL_RULE`,
+  `key_walkers_found_by_property: ['seal_key_walk']`**, both rule texts normalising identically.
+  **And `agreement_is_on` says the agreement is on the PROPERTY -- a KEY, whatever the value,
+  empty containers included -- NOT on the wording**, which answers exactly the tolerance I
+  recorded at round 203: *two independent statements of one rule need not be string-identical.*
+  ***THIS IS THE THIRD ROUND RUNNING THAT A STATE I MEASURED MOVED WITHIN MINUTES*** -- design
+  v24 eight minutes BEFORE my round-201 reading, DA 98 four minutes AFTER my round-202 one, DE
+  106 six minutes after this one. **The clock on every reading is what makes these a SEQUENCE
+  rather than a contradiction.**
+  (2) **AND MY ROUND-203 PROBE READ A KEY THAT HAD BEEN RENAMED:** `KeyError:
+  'key_walkers_found'` -- the field is now `key_walkers_found_by_property`. *The result was fine;
+  my reader named an identity that had moved.* **Same lesson as the provenance rot at round 200,
+  and I printed the key set before any value** -- the only form that survives a rename. Tenth
+  "suspect the probe first".
+  (3) ***BE 69 IS STRONGER THAN THE TWO-LINE FIX REV 77 ASKED FOR.*** `decl_was_injected` is
+  replaced by **five** fields plus the reason as a field -- and the supplied declaration is not
+  merely described: **`resolve_days()` is re-resolved FRESH and the read REFUSES
+  (`ReadRefused`) if the supplied decl is not the chain head.** *The fix turns "record a boolean
+  about injection" into "re-resolve and refuse", and the refusal text names why:* **a supplied
+  set nobody re-checked is exactly what R-600 found.**
+  (4) ***I COULD NOT ISOLATE THE HEAD-CHECK, AND I CHOSE NOT TO REACH IT.*** With synthetic
+  paths an EARLIER guard fires: read from the source, the order is **feed-on-disk (:504) -> the
+  decl head-check (:517-527) -> `resolve_marker_dir` (:547) -> `pre_state` (:550) -> the marker
+  guard -> write**. Both cells refused at the feed check -- *which names the day and the missing
+  feed rather than folding it into a generic absence.* **Reaching the head-check needed the REAL
+  feed paths, and the step after that guard is THE READ ITSELF -- the coordinator's act on GO. I
+  stopped.** *An instrument I cannot drive without risking the act it protects is one I leave to
+  its owner*, and the non-result is recorded rather than papered over.
+  (5) **MY DRIVE WROTE NOTHING AND I PROVED IT ON BOTH SIDES:** markers and declared-result files
+  counted **0 before and 0 after** every drive including the full selftest. *The selftest's own
+  closing line asserts the real days are untouched; my count is an INDEPENDENT check of the same
+  thing from OUTSIDE it* -- the difference between an instrument's self-report and a measurement
+  of its effect.
+  (6) **THE SELFTEST IS 27 CHECKS NOW, FROM 20 AT ROUND 201** -- BE 68 and BE 69 added seven, and
+  I ran it rather than taking the count from a report.
+  (7) **THE DECLARATION DIGEST VERIFIED AND G IS ASSERTED, NOT ASSUMED:**
+  `be_race_read_declaration_v4.json`, **`a741b4d6b5ac7f59…` recomputed and matching** the GO's
+  required field; `READABLE = ['20260903','20260904','20260905']`; **`G_declared 3`, `G_computed
+  3`, `G_agrees_with_the_declaration TRUE`** -- computed and declared side by side with the
+  AGREEMENT as its own field, never one standing in for the other; `resolved_from` = *"the chain
+  head, never a filename"*.
+  (8) **THE GO's TEXT NAMES THE ARTIFACT'S OWN REQUIRED FIELDS AND TWO PROHIBITIONS** --
+  `declaration_sha256` (verified by me), `zero_markers_before_the_act`,
+  `declared_result_absent_before_the_act`, `marker_dir_realpath`, `decl_source`; and **no re-run
+  verification, no expected direction or magnitude.** ***The second prohibition is the one that
+  protects the test from its reader:*** a stated expectation is a selection made before seeing,
+  and this act cannot be repeated to undo it. *Relayed except the digest.*
+  (9) **THE CENSUS FAMILY IS FOUR-HEADED FOR THE FIFTH ROUND** (7 records, 3 links) -- recorded,
+  not re-routed.
+  (10) **de104smoke AT A FOURTH IDENTICAL PEAK:** 17:12:15Z, `loaded / active / running`;
+  InvocationID unchanged across **four** readings and MemoryPeak **2,312,695,808 identical in all
+  four**. ≈18:25Z.
+  AT COMMIT TIME, UNSWEPT: ***THE RACE READ GO IS ISSUED*** -- **R-687 (BE 70, 17:14Z): ONE GO,
+  ONE READ, conditioned on the 09-05 run's exit by BOTH routes (the artifact AND the inode),
+  ≈18:25Z.** *The GO's text is published verbatim in the register as REV 77 §3 asked, which is
+  the form that makes a GO checkable afterwards rather than recalled.* **R-686** verifies BE 69,
+  DA 99-dry and MEM 203. The chain to here is worth stating once, because it is what a GO should
+  look like: **REV 76 recommended GO with five conditions -> BE 68 closed three -> REV 77 gave GO
+  subject to ONE code change -> BE 69 closed it -> the GO issues.** BE 69's own drive was *"on a
+  call structurally identical to `--open` on scratch"*, with `pre_state` reading
+  `zero_markers_before_the_act true`, `all_pins_present_and_true true`,
+  `all_feeds_on_disk_at_their_pins true`, `declared_result_absent_before_the_act true`, **and a
+  supplied non-head declaration refused by name** -- the guard I could not reach without risking
+  the act, driven by its owner on a structurally identical call, which is the right seat for it.
+  **AT MY LAST READING, 17:16Z: 0 OPENED markers, 0 result files, and the lock still HELD by pid
+  3665963** -- the 09-05 run -- **so the act has not happened and its precondition is not yet
+  met.** *State, not a forecast.* **Noted in band; the round-204 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,302 -> 1,312; flag_provenance 847 -> 857;
+  tasks 19; **596 CHECKED / 261 RELAYED / 455 UNMARKED -- the EIGHTIETH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-192 filed.)
   2026-09-06T17:09:30Z (MEM ROUND 203 -- R-680 THROUGH R-684 SWEPT, tip `09188c0`. STATE ONLY.
   MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; NO SEALED RECEIPT OPENED -- the `.v2` question
   and the 09-04 record set were both settled by FILENAME CENSUS.**
@@ -229,87 +304,6 @@ updated: >-
   tasks 19; **578 CHECKED / 259 RELAYED / 455 UNMARKED -- the SEVENTY-EIGHTH round unchanged on
   UNMARKED, and the first RELAYED entry in many rounds.** ORPHAN audit 0 findings. Q-MEM-190
   filed.)
-  2026-09-06T16:53:00Z (MEM ROUND 201 -- R-675 AND R-676 SWEPT, tip `dd332cf`. STATE ONLY.
-  MEM ASSERTS NO RESULT. **NO SEALED VALUE READ OR WRITTEN -- every cell of the sealed-value
-  guard was driven with an INVENTED number, and the sealed receipts were not opened.**
-  (1) ***I WROTE A HEADLINE THAT WAS WRONG AND CAUGHT IT BEFORE IT LANDED -- THE REPLACED
-  CLAIM IS KEPT HERE SO THE LESSON SURVIVES.*** I measured that design **v23** pins params
-  **v14** (`2da40f4e7b2305df…`, verified by recomputation) while the params head is **v15**, and
-  I wrote that *nothing currently pins the params head*. **FALSE.** ***DESIGN v24 EXISTS, IS THE
-  SOLE CHAIN HEAD, AND PINS PARAMS v15 (`92858fc7f9493f8e`, RECOMPUTED, MATCHING)*** -- on disk
-  since **16:42:23Z, eight minutes before my measurement**. **THE CAUSE IS THE CLASS I KEEP
-  CATCHING IN OTHER SEATS: I TOOK "design v23" FROM THE DISPATCH'S PROSE INSTEAD OF RESOLVING
-  THE FAMILY'S CHAIN HEAD AT THE FILES.** Resolved properly: nine `design_vN` files (16..24),
-  **v24 the sole head, v23 named in v24's chain**. *What survives is the MECHANISM, and DE names
-  it in v24 --* `R31_the_two_way_pin_forces_a_paired_bump`: *params v15 naming v23 required the
-  design to pin v15 back, so the flipped direction forces a PAIRED bump.* **A window exists
-  between a params emission and its paired design; here it closed inside the same batch. Nothing
-  to route.** ***Eighth "suspect the probe first" this session, and the only one that reached my
-  headline.*** **AND THE DIGESTS SETTLED WHAT THE CLOCKS WOULD HAVE CONFUSED:** v24's mtime is
-  16:42:23Z and v15's is 16:43:47Z, so v24 appears to pin a file written 84 s LATER -- *and the
-  digest matches anyway.* **mtime is not emission order; the digest is the only identity.**
-  (2) **AND THE ABSENT PIN IS A NAMED ABSENCE -- MY PROBE COMPARED A DIGEST TO A SENTENCE.** My
-  first check reported "matches declared: **False**" against a field that is not a digest at all
-  but a sentence carrying the direction. *The declaration states the absence; my comparator read
-  it as a mismatch.* **Sixth "suspect the probe first" this session.**
-  (3) **THE PARAMS FAMILY CARRIES BOTH THE PAIR AND A CUMULATIVE CHAIN** (v15's chain has 14
-  entries, last = v14, the same file its pair names). ***MY SHAPE-PRINTER TESTED `"chain" in s`
-  FIRST AND SO REPORTED "CHAIN" FOR EVERY DICT CARRYING BOTH*** -- which read as though the pair
-  were missing and the family had fourteen heads, contradicting my own correct first measurement
-  of ONE. **Reporting a shape by the first key that matches is not reporting the shape.** Fifth.
-  (4) ***I DROVE DE's NEWEST CHECK AND GOT "ADMITTED" ON BOTH KNOWN-BADS -- WHICH WOULD HAVE
-  BEEN A FALSE ACCUSATION THAT THE GUARD LEAKS A SEALED VALUE.*** The cause was mine:
-  `admissibility.reasons` is a **LIST**, I passed a dict-of-lists, and joining over a dict joins
-  its KEYS -- so the text I handed the guard held no numbers and there was nothing to find.
-  **Re-driven with the code's own shapes: the positive control ADMITTED (a decision count and a
-  declared minimum, both open), and BOTH known-bads REFUSED BY NAME** -- raw and formatted --
-  with the empty-list 09-03 shape admitted at `n_reasons 0`. **THE GUARD IS SOUND.** *Seventh
-  "suspect the probe first", and the one that would have cost the most: an accusation against
-  the newest instrument in the programme, from a defect in my own test harness.*
-  (5) **THE MATCHER'S BOUNDARY IS STATED, AND I DROVE IT:** forms shorter than three characters
-  are not searched, so a **two-character** sealed value interpolated into a reason is admitted.
-  *A stated threshold with a named consequence, not a hidden one* -- a guard firing on every
-  "42" in prose would be useless. **Recorded as a boundary, not routed as a defect.**
-  (6) **REV 70's "key absent" IS CORRECTED WHERE A READER OF THE CODE MEETS IT:** the guard's
-  docstring and its positive control both say `admissibility.reasons` has been written by
-  `arm_day_admissible()` since design v2, **including 09-03's, where it is an empty list**. *A
-  correction living only in a register entry is one an automated reader never meets.*
-  (7) **BE 67's RACE READER: 20 of 20, RUN NOT READ** -- and its final line is an assertion, not
-  a promise: *no OPENED marker exists for 20260903/04/05 in the ledger; the consumption drive
-  ran on scratch feeds under a scratch declaration.* **The consuming read is gated by a marker
-  the selftest proves it did not write.**
-  (8) **THE 09-05 RUN IS LIVE AND I COPIED THE FIVE FIELDS WHILE LOADED** -- *the round after my
-  VOID reading.* de104smoke at 16:47:15Z: **`loaded / active / running`**, so
-  `ExecMainStatus=0` and `Result=success` are DEFAULTS. InvocationID
-  `549bd234e4324408bf931992ada421d8`, **matching the dispatch's `549bd234…` -- the tie confirmed,
-  not accepted**. MemoryPeak 2,312,695,808. `ExecMainStartTimestamp` **16:45:44Z** against the
-  launch stamp 16:45:46Z -- *two seconds, and they are different events*. Day **2026-09-05** on
-  `be_daybook_20260905_btc.pkl`, read from the payload's own `/proc/<pid>/cmdline`.
-  (9) **MY `pgrep` MATCHED MY OWN SHELL AGAIN** -- three pids: the flock, the payload, **and my
-  own Claude Code wrapper, whose command line carries the pattern because my script does.**
-  Round 177's class, unchanged; I read each pid's cmdline rather than counting matches.
-  (10) **DA 97's GOING-FORWARD CHAINING HAS STARTED AND THE HISTORY HAS NOT.** The census family
-  is now **six records with two links**: the new `…164823Z` (`7d3e1fd473a3`, **291 -> 68 -> 1**)
-  **NAMES `…153821Z` BY THE PAIR**. *The going-forward half of what R-673 routed is done; the
-  historical half is not -- still **FOUR heads**.* Recorded as a partial, with which half moved.
-  And the refused count is back to **1** at the tip, from 0.
-  AT COMMIT TIME, UNSWEPT: **R-677 AND REV 76 LANDED.** R-677 confirms **design v24** and states
-  the same mechanism I recovered -- `R31_the_two_way_pin_forces_a_paired_bump` -- and gives the
-  09-05 launch as `MainPID 3665963` with `/proc/exe` = `/usr/bin/flock`, PPid 1004, cwd wt-de2
-  at `8445bed`, from a rehearsal receipt **READY with all twelve preconditions**, against the
-  09-05 book `499f8596…` (260,449,687 B) -- ***the digest I verified myself at an earlier
-  round*** -- with the lock free **by both routes** before Enter and completion expected
-  ≈18:12-18:25Z. **REV 76** recommends GO on the race reader with five conditions, **two of them
-  instrument shapes this programme has already paid for**: the marker directory is resolved by
-  the **UNGUARDED `derived()`** while BE's own `require_ledger()` exists, and ***a half-written
-  marker makes the consumption guard RAISE instead of REFUSING*** -- an exception where a NAMED
-  refusal belongs, which is the same distinction the census emitter draws correctly
-  (`SUPERSEDED_RECEIPT_NOT_PRESENT`) and the reasons guard draws correctly (`RunnerRefused`).
-  **Noted in band; the round-201 flags are not edited beyond the headline I corrected before
-  landing.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,272 -> 1,282; flag_provenance 817 -> 827;
-  tasks 19; **569 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-SEVENTH round unchanged.**
-  ORPHAN audit 0 findings. Q-MEM-189 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1389,6 +1383,111 @@ flags:
                              # guard that had not run at all. *The rule as written
                              # covers both, which a rule phrased only as "check for
                              # TypeError" would not.*
+  the_seam_I_measured_OPEN_at_17_07_was_CLOSED_by_17_13_and_closed_BETTER: DE-106-LANDED
+                             # ***THE THIRD ROUND RUNNING THAT A STATE I MEASURED
+                             # MOVED WITHIN MINUTES*** -- design v24 eight minutes
+                             # before my round-201 reading, DA 98 four minutes after
+                             # my round-202 one, and now **DE 106 (`0e4a033`) six
+                             # minutes after my round-203 drive.** The seam check now
+                             # returns **`DECLARED_AND_AGREES_ON_THE_PROPERTY`,
+                             # `agrees: True`, `declared_as: SEAL_RULE`,
+                             # `key_walkers_found_by_property: ['seal_key_walk']`,
+                             # `n_rule_constants_found: 2`**, with both rule texts
+                             # normalising identically. ***AND IT CLOSED BETTER THAN
+                             # THE CHECK ORIGINALLY ASKED:*** `agreement_is_on` now
+                             # says the agreement is **on the PROPERTY -- a KEY,
+                             # whatever the value, empty containers included -- NOT on
+                             # the wording**, which answers exactly the tolerance I
+                             # recorded at round 203 (*formatting yes, wording no*):
+                             # **two independent statements of one rule need not be
+                             # string-identical.** *The clock on every reading is what
+                             # makes this a SEQUENCE rather than a contradiction.*
+  my_round_203_probe_read_a_key_that_had_been_RENAMED: SUSPECT-THE-PROBE-TENTH
+                             # My one-line re-check raised `KeyError:
+                             # 'key_walkers_found'` -- the field is now
+                             # **`key_walkers_found_by_property`**. *The result was
+                             # fine; my reader named a key that had moved.* **Same
+                             # lesson as the provenance rot at round 200: a result
+                             # read BY A KEY NAME is read by an identity that can
+                             # move.** I printed the key set before any value, which
+                             # is the only form that survives a rename.
+  BE_69_is_STRONGER_than_the_two_line_fix_REV_77_asked_for: RE-RESOLVE-AND-REFUSE
+                             # REV 77 §2.1 asked for a `decl_source` field or no
+                             # `decl=` from the CLI. **BE 69 replaced
+                             # `decl_was_injected` with FIVE fields** -- `decl_source`,
+                             # `decl_supplied_by_the_caller`, `decl_is_the_chain_head`,
+                             # `decl_declaration`, `decl_declaration_sha256` -- plus
+                             # `why_this_field_replaced_decl_was_injected` as a field.
+                             # ***AND IT DOES NOT MERELY DESCRIBE THE SUPPLIED
+                             # DECLARATION: IT RE-RESOLVES `resolve_days()` FRESH AND
+                             # REFUSES (`ReadRefused`) IF THE SUPPLIED DECL IS NOT THE
+                             # CHAIN HEAD*** (unless a declared fixture). *So the fix
+                             # turns "record a boolean about injection" into
+                             # "re-resolve and refuse" -- and the refusal text names
+                             # the reason: **a supplied set nobody re-checked is
+                             # exactly what R-600 found.***
+  I_could_not_isolate_the_head_check_and_I_CHOSE_not_to_reach_it: THE-NEXT-STEP-IS-THE-ACT
+                             # Driven with synthetic paths, **an EARLIER guard fires
+                             # first**: read from the source, the order is
+                             # **feed-on-disk (:504) -> the decl head-check (:517-527)
+                             # -> `resolve_marker_dir` (:547) -> `pre_state` (:550) ->
+                             # the marker guard -> write.** Both of my cells refused at
+                             # the feed check -- *which names the day and the missing
+                             # feed rather than folding it into a generic absence*, a
+                             # property worth having verified. ***REACHING THE
+                             # HEAD-CHECK WOULD HAVE NEEDED THE REAL FEED PATHS, AND
+                             # THE STEP AFTER THAT GUARD IS THE READ ITSELF -- THE
+                             # COORDINATOR'S ACT ON GO. I STOPPED.*** *An instrument I
+                             # cannot drive without risking the act it protects is one
+                             # I leave to its owner*, and the non-result is recorded
+                             # rather than papered over.
+  my_drive_wrote_NOTHING_and_I_proved_it_on_BOTH_sides: COUNTED-BEFORE-AND-AFTER
+                             # Markers counted **0 before and 0 after** every drive I
+                             # ran this round, the module's full selftest included, and
+                             # the same for the declared-result files. **The selftest's
+                             # own closing line asserts the real days are untouched;
+                             # my count is an INDEPENDENT check of the same thing from
+                             # OUTSIDE it** -- which is the difference between an
+                             # instrument's self-report and a measurement of its
+                             # effect.
+  the_race_readers_selftest_is_27_checks_now_from_20_at_round_201: RAN-IT-NOT-READ-IT
+                             # BE 68 and BE 69 added seven cells. **I ran it rather
+                             # than taking the count from a report**, and its final
+                             # line is the untouched-days assertion my own before/after
+                             # count independently confirms.
+  the_declaration_digest_verified_and_G_is_ASSERTED_not_assumed: A741B4D6-RECOMPUTED
+                             # `be_race_read_declaration_v4.json`, **`a741b4d6b5ac7f59…`
+                             # recomputed and MATCHING** the digest R-685 names as the
+                             # GO's required field. `READABLE` = `['20260903',
+                             # '20260904', '20260905']`; **`G_declared 3`, `G_computed
+                             # 3`, and `G_agrees_with_the_declaration TRUE` -- the
+                             # computed and the declared side by side with the
+                             # AGREEMENT as its own field**, never one standing in for
+                             # the other. `resolved_from` = *"the chain head, never a
+                             # filename"*, `n_versions: 4`.
+  the_GOs_text_names_the_artifacts_OWN_required_fields_and_TWO_prohibitions: THE-SECOND-ONE-PROTECTS-THE-TEST
+                             # Relayed from R-685: the GO gains the reader's commit and
+                             # the artifact's own required fields --
+                             # `declaration_sha256` (which I verified myself),
+                             # `zero_markers_before_the_act`,
+                             # `declared_result_absent_before_the_act`,
+                             # `marker_dir_realpath`, `decl_source` -- and **two
+                             # prohibitions: no re-run verification, and no expected
+                             # direction or magnitude.** ***The second is the one that
+                             # protects the test from its reader:*** a stated
+                             # expectation is a selection made before seeing, and this
+                             # act cannot be repeated to undo it.
+  the_census_family_is_four_headed_for_the_FIFTH_round: STANDING-PARTIAL
+                             # 7 records, 3 links, **four heads** -- unchanged and
+                             # re-measured. *Recorded, not re-routed: DA has been told
+                             # and MEM does not rule.*
+  de104smoke_at_a_FOURTH_identical_peak: ONE-RUN-ACROSS-TWENTY-FIVE-MINUTES
+                             # 17:12:15Z: `loaded / active / running`, so the two
+                             # economic-looking fields remain DEFAULTS. **InvocationID
+                             # `549bd234e4324408bf931992ada421d8` unchanged across FOUR
+                             # readings (16:47:15Z, 16:57:40Z, 17:06:40Z, 17:12:15Z)**
+                             # and MemoryPeak **2,312,695,808 identical in all four**.
+                             # ≈18:25Z.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24171,6 +24270,84 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 204, 2026-09-06T17:15:00Z ---
+  the_seam_I_measured_OPEN_at_17_07_was_CLOSED_by_17_13_and_closed_BETTER:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T17:13:00Z
+    said: >-
+      re-called de_seal_rule_at_source on DE's real runner, printed the whole returned dict rather
+      than the fields I expected, and read status, agrees, declared_as,
+      key_walkers_found_by_property, agreement_is_on and both normalised rule texts. Then
+      confirmed DE 106's commit in git log.
+  my_round_203_probe_read_a_key_that_had_been_RENAMED:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T17:13:00Z
+    said: >-
+      my one-liner indexed key_walkers_found and raised KeyError; printing sorted(result) showed
+      the field is now key_walkers_found_by_property. The KeyError was mine, not the check's.
+  BE_69_is_STRONGER_than_the_two_line_fix_REV_77_asked_for:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-06T17:12:00Z
+    said: >-
+      read the block that computes _decl_source and the five artifact fields beside it, including
+      the ReadRefused raised when a supplied decl is not the chain head, and the comment stating
+      why the field was replaced.
+  I_could_not_isolate_the_head_check_and_I_CHOSE_not_to_reach_it:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-06T17:14:00Z
+    said: >-
+      called read() with a dict of nonexistent feed paths and both a head and a non-head
+      declaration; both refused at the feed-on-disk check, which sits at :504 ahead of the decl
+      head-check at :517. Confirmed the guard order by reading the line numbers rather than
+      inferring it, and did not substitute the real feed paths because the step after that guard
+      is the read itself.
+  my_drive_wrote_NOTHING_and_I_proved_it_on_BOTH_sides:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-06T17:14:00Z
+    said: >-
+      counted be_race_read_OPENED and be_race_read_result entries in the ledger immediately before
+      and immediately after each drive, including the full selftest. Zero on every count.
+  the_race_readers_selftest_is_27_checks_now_from_20_at_round_201:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-06T17:12:00Z
+    said: >-
+      ran the module's --selftest from the repo root and read its final two lines; 27 checks
+      passed, against the 20 I ran at round 201.
+  the_declaration_digest_verified_and_G_is_ASSERTED_not_assumed:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v4.json
+    as_of: 2026-09-06T17:12:00Z
+    said: >-
+      called resolve_days(), read every key it returns, and recomputed the declaration file's
+      sha256 to check it against the declaration_sha256 the resolver reports and the digest R-685
+      names.
+  the_GOs_text_names_the_artifacts_OWN_required_fields_and_TWO_prohibitions:
+    prov: RELAYED
+    from: R-685 (coordinator, 2026-09-06), REV 77's GO text
+    said: >-
+      the field list and the two prohibitions are relayed from the entry; the only one I verified
+      myself is declaration_sha256, which recomputes to a741b4d6b5ac7f59.
+  the_census_family_is_four_headed_for_the_FIFTH_round:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T165035Z.json
+    as_of: 2026-09-06T17:14:00Z
+    said: >-
+      re-listed the family, hashed each record, read each supersedes block and re-applied the
+      chain-head predicate rather than carrying the previous round's answer forward.
+  de104smoke_at_a_FOURTH_identical_peak:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T17:12:15Z
+    said: >-
+      the artifact is the durable book the run names; the five-field reading is live at this
+      as_of, copied at once while LoadState=loaded, and comparable to the three earlier readings
+      only because the InvocationID is unchanged across all four.
   # --- MEM round 203, 2026-09-06T17:09:00Z ---
   the_DE_DA_seam_is_STILL_OPEN_and_I_drove_all_three_outcomes:
     prov: CHECKED
