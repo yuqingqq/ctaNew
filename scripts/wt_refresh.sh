@@ -15,9 +15,12 @@ git -C "$WT" ls-files data | xargs -r git -C "$WT" update-index --skip-worktree 
 IDENT=0
 while IFS= read -r line; do
   f="${line:3}"; [ -n "$f" ] || continue
-  case "$line" in ' M '*|'M  '*|'MM '*) ;; *) continue ;; esac
+  case "$line" in ' M '*|'M  '*|'MM '*|'?? '*) ;; *) continue ;; esac
   wt_blob=$(git -C "$WT" hash-object -- "$f" 2>/dev/null || echo none); ref_blob=$(git -C "$WT" rev-parse -q --verify "$REF:$f" 2>/dev/null || echo absent)
-  if [ "$wt_blob" = "$ref_blob" ]; then git -C "$WT" checkout -q -- "$f" && IDENT=$((IDENT+1)); fi
+  if [ "$wt_blob" = "$ref_blob" ]; then
+    case "$line" in '?? '*) rm -f -- "$WT/$f" && IDENT=$((IDENT+1)) ;;   # an untracked copy of a file $REF tracks: the checkout recreates it
+                    *) git -C "$WT" checkout -q -- "$f" && IDENT=$((IDENT+1)) ;; esac
+  fi
 done < <(git -C "$WT" status --short | grep -v '^?? data$')
 [ "$IDENT" -gt 0 ] && echo "restored $IDENT landed-identical file(s) (bytes equal to $REF's) before the checkout"
 [ -L "$WT/data" ] && rm "$WT/data"                       # drop the symlink so the checkout cannot write through it
