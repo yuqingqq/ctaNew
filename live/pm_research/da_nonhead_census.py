@@ -1049,7 +1049,54 @@ MARKED_PRE_R608_FAMILIES = {
 }
 
 
-def marked_families(derived: Path | None = None) -> dict:
+#: REV 85 S2. ***THE MARK IS LICENSED BY ONE CLAUSE, SO THE CLAUSE MUST BE
+#: A PREDICATE.*** `who_reads_it_through_the_chain: nobody` is what makes
+#: marking a pre-rule family honest rather than convenient: nothing
+#: resolves it, so nothing gets a wrong answer. The moment a reader
+#: resolves that family THROUGH THE CHAIN -- not by literal path -- the
+#: clause is false and the mark with it. A resolver-path reference is a
+#: call into the chain machinery carrying the family NAME.
+RESOLVER_CALLS = ("resolve_head", "_declaration_head", "declaration_chains",
+                  "next_version_path", "write_next_version",
+                  "race_declaration_head", "exit_map_head",
+                  "anti_echo_declaration", "structure_declaration_for_book")
+
+
+def mark_readers(family: str, root: Path | None = None) -> list:
+    """Every place that resolves `family` THROUGH THE CHAIN."""
+    r = Path(root) if root else _root()
+    hits = []
+    for py in sorted((r / "live").rglob("*.py")):
+        try:
+            src = py.read_text()
+            if family not in src:
+                continue
+            with warnings.catch_warnings(record=True):
+                warnings.simplefilter("always")
+                tree = ast.parse(src)
+        except (OSError, SyntaxError):
+            continue
+        for n in ast.walk(tree):
+            if not isinstance(n, ast.Call):
+                continue
+            f = n.func
+            name = (f.id if isinstance(f, ast.Name)
+                    else f.attr if isinstance(f, ast.Attribute) else "")
+            if name not in RESOLVER_CALLS:
+                continue
+            for a in list(n.args) + [k.value for k in n.keywords]:
+                if isinstance(a, ast.Constant) and a.value == family:
+                    hits.append({"file": str(py.relative_to(r)),
+                                 "line": n.lineno, "call": name,
+                                 "how": ("the family NAME is passed to a "
+                                         "chain resolver -- this reader "
+                                         "gets its answer THROUGH the "
+                                         "chain, not from a literal path")})
+    return hits
+
+
+def marked_families(derived: Path | None = None,
+                    root: Path | None = None) -> dict:
     """The pre-R-608 families, and what the resolver says about each."""
     import declaration_chain as _DC                           # noqa: PLC0415
     ix = derived_index()
@@ -1058,6 +1105,10 @@ def marked_families(derived: Path | None = None) -> dict:
     out = {}
     for fam, note in sorted(MARKED_PRE_R608_FAMILIES.items()):
         row = dict(note)
+        readers = mark_readers(fam, root)
+        row["who_reads_it_through_the_chain"] = (
+            readers or "nobody")
+        row["n_readers_through_the_chain"] = len(readers)
         if d is None:
             row["resolver_says"] = "THE_DERIVED_TREE_IS_NOT_READABLE"
         else:
@@ -1072,11 +1123,33 @@ def marked_families(derived: Path | None = None) -> dict:
                 row["refusal"] = str(e)[:400]
             except OSError as e:
                 row["resolver_says"] = f"UNREADABLE: {e!r}"
-        row["status"] = ("MARKED_PRE_R608_NOT_REPAIRED"
-                         if row["resolver_says"] != "RESOLVED"
-                         else "MARKED_BUT_THE_RESOLVER_NOW_ADMITS_IT")
+        #: THE TRIGGER: the clause that licenses the mark, evaluated.
+        if readers:
+            row["status"] = "MARK_REFUSED_FAMILY_IS_READ_THROUGH_THE_CHAIN"
+            row["the_family_is_UNANSWERED"] = True
+            row["why_the_mark_is_refused"] = (
+                f"the mark is licensed by `who_reads_it_through_the_chain: "
+                f"nobody`, and "
+                f"{[h['file'] + ':' + str(h['line']) for h in readers]} "
+                f"resolve(s) this family THROUGH the chain. A marked "
+                f"family that something reads is a family whose reader "
+                f"gets no answer -- the mark would be hiding that, so it "
+                f"refuses instead")
+        else:
+            row["status"] = ("MARKED_PRE_R608_NOT_REPAIRED"
+                             if row["resolver_says"] != "RESOLVED"
+                             else "MARKED_BUT_THE_RESOLVER_NOW_ADMITS_IT")
+            row["the_family_is_UNANSWERED"] = False
         out[fam] = row
     return {"families": out, "n_marked": len(out),
+            "n_marks_refused": sum(
+                1 for v in out.values()
+                if v["status"].startswith("MARK_REFUSED")),
+            "the_clause_is_a_predicate": (
+                "`who_reads_it_through_the_chain` is EVALUATED over the "
+                "tree, not asserted: a call into the chain machinery "
+                "carrying the family name makes the mark false, and the "
+                "family is then reported UNANSWERED with its reader named"),
             "the_mark_is_not_a_repair": (
                 "a marked family is REPORTED with the resolver's own "
                 "refusal beside it; nothing here rewrites a landed "
@@ -1608,6 +1681,45 @@ def selftest() -> tuple:
        and chBoth["p002_declaration"]["n_heads"] == 2,
        f"{chBoth['p002_declaration']['status']}, heads "
        f"{sorted(chBoth['p002_declaration']['heads'])}")
+
+    # -- REV 85 S2: THE MARK'S LICENSING CLAUSE IS A PREDICATE ---------
+    mk = Path(tempfile.mkdtemp(prefix="da111mark_"))
+    (mk / "live" / "pm_research").mkdir(parents=True)
+    _fam = sorted(MARKED_PRE_R608_FAMILIES)[0]
+    _clean = mark_readers(_fam, mk)
+    (mk / "live" / "pm_research" / "a_reader.py").write_text(
+        "import declaration_chain as DC\n"
+        "from pathlib import Path\n"
+        f"def go():\n    return DC.resolve_head(Path('.'), {_fam!r})\n")
+    _dirty = mark_readers(_fam, mk)
+    (mk / "live" / "pm_research" / "by_path.py").write_text(
+        f"P = 'data/pm_5min/derived/{_fam}_v2.json'\n"
+        "OPEN = open(P) if False else None\n")
+    _by_path_only = mark_readers(_fam, mk)
+    (mk / "live" / "pm_research" / "a_reader.py").unlink()
+    _removed = mark_readers(_fam, mk)
+    ck("REV 85 S2 -- ***THE MARK IS LICENSED BY ONE CLAUSE, SO THE CLAUSE "
+       "IS A PREDICATE.*** `who_reads_it_through_the_chain: nobody` is "
+       "what makes marking a pre-rule family honest rather than "
+       "convenient: nothing resolves it, so nothing gets a wrong answer. "
+       "***The moment a reader resolves the family THROUGH THE CHAIN the "
+       "clause is false and the mark with it*** -- the census reports "
+       "`MARK_REFUSED_FAMILY_IS_READ_THROUGH_THE_CHAIN`, names the "
+       "reader, and calls the family UNANSWERED. Driven: no reader -> no "
+       "hits; a module calling `resolve_head(..., <family>)` -> ONE hit "
+       "naming file and line; ***a module naming the family only by "
+       "LITERAL PATH -> still no hit***, because reading a file is not "
+       "resolving a chain; the resolver-path module removed -> the mark "
+       "stands again",
+       _clean == [] and len(_dirty) == 1
+       and _dirty[0]["call"] == "resolve_head"
+       and _dirty[0]["file"].endswith("a_reader.py")
+       and len(_by_path_only) == 1
+       and _removed == [],
+       f"clean -> {len(_clean)} readers; a resolver-path reader -> "
+       f"{len(_dirty)} at {_dirty[0]['file']}:{_dirty[0]['line']} via "
+       f"{_dirty[0]['call']}(); a literal-path-only reader adds "
+       f"{len(_by_path_only) - len(_dirty)}; removed -> {len(_removed)}")
 
     # -- R-673(c) / MEM 198-199: THE CENSUS ON ITS OWN FAMILY ----------
     fam = Path(tempfile.mkdtemp(prefix="da97fam_"))
