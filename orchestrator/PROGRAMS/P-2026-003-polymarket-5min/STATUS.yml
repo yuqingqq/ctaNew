@@ -63,6 +63,71 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T02:14:36Z (MEM ROUND 105 -- R-541 SWEPT. STATE ONLY.
+  (1) G = 5. THE BAR IS REACHED: 09-05 accrued at the scheduled unit's
+  00:06:01Z write, four conjuncts true, content_liveness CONTENT_LIVE, mask
+  WRITTEN, counts_toward_race True, "exit=0 for 20260905" in the unit's log.
+  RELAYED from R-541(B) -- I did not open the day verdict. AND NOTHING ABOUT
+  WHAT THE RACE CAN ESTABLISH HAS CHANGED: still DIRECTIONAL, never
+  significance-bearing (best attainable adjusted p 0.0625 at G=5 with
+  multiplicity 2; smallest clearing G is 6), and still unable to validate the
+  changed V2 pipeline. THE BAR BEING MET IS NOT THE RACE BECOMING A TEST.
+  (2) AND 09-05 IS UNSCORED, BECAUSE THE SCORER WAS NEVER WIRED TO A UNIT --
+  CHECKED BY ME ON THREE SURFACES, full output, not truncated: four repo files
+  mention be_score_forward_day and NONE is a unit; ZERO hits in
+  ~/.config/systemd/user/; ZERO in every *.service and *.timer in the repo. THE
+  VERDICT PIPELINE IS AUTOMATED AND THE THING THAT TURNS AN ACCRUED DAY INTO A
+  RESULT IS NOT, so the programme reached its bar with no day scored and no
+  instrument reported the gap. BE 44 scores it by hand.
+  (3) THE RULED GATE-1e RUN IS DONE, AND I READ EVERY FIGURE AT THE RECEIPT
+  MYSELF: D(E0) -4215.882156999999, D(E-R) -4332.3939021058395, p 0.9402985 AT
+  BOTH ENDPOINTS (188 of 200 controls >= treatment), materiality 0.0276364
+  against threshold 0.1, INVARIANT True, MATERIAL False, snapshot 9b37088,
+  sha256 f4974039c1fc99c0, status
+  FEE_ENDPOINT_SENSITIVITY_NOT_A_GATE_RESULT. Both delta identities compute
+  True in the file. THE TREATMENT IS WORSE THAN 94% OF ITS OWN CONTROLS AT BOTH
+  ENDPOINTS AND THE FEE MOVES NOTHING -- the fee question is answered and was
+  never what stood in the way. AND I TESTED THE TRAP THE RIGHT WAY: walking
+  KEYS gives ZERO named gate1_exit at any depth, while a SUBSTRING search gives
+  FOUR -- which is exactly why the coordinator's first test misfired, R-507's
+  error reproduced as a measurement. STILL PENDING: DA's independent E-R
+  recompute and the reviewer's clause-by-clause. MY CHECK IS A SECOND READING
+  OF THE SAME ARTIFACT, NOT AN INDEPENDENT RECOMPUTE.
+  (4) THE CASCADE IS SELECTION: random through the SAME stateful policy
+  cascades at 0.497 fills/cancel, CONDVALUE at 4.324 -- 8.70x, entirely outside
+  the null. The lever finding STANDS.
+  (5) BUT BE WITHDREW ITS OWN ROUND-42 COST CLAIM ON ITS OWN NULL: 2.8646
+  c/cancel sits INSIDE a null of mean 2.108, sd 3.808, p 0.6228 -- a sixth of
+  the sd. SO R-535(D)'s "the two axes disagree" IS CORRECTED TO "the fill axis
+  showed a direction; THE CANCEL AXIS IS UNINFORMATIVE AT THIS SAMPLE."
+  (6) THE 701% HAS ITS COMPANION ON ITS OWN SURFACE: 516.11%, overstating
+  26.41% AND GROWING WITH BUDGET. DA passed a reproduction gate first and
+  killed its own false monotonicity assertion, which had passed only because a
+  toy's two values were EQUAL -- a comparison that never discriminated.
+  (7) DE'S NOTHING_EXCLUDED CERTIFICATION HAS NO CHECK BEHIND IT: four mutants
+  in da_population_audit, DA's suite 4 of 4 caught, DE's de_section81_mid_census
+  0 OF 4 -- GREEN even with NOTHING_EXCLUDED emitted unconditionally, the exact
+  string DE's artifact cites. Stop-the-line to DE 65.
+  (8) THE STRADDLE IS CONFIRMED AN ARTIFACT, by execution at DA's artifact: it
+  collapses to +288.4178c = E0 and the bracket list should be EMPTY -- taking
+  the reviewer's own "reuse, not rework" with it. MY ROUND-104
+  PENDING-ADJUDICATION MARKING WAS RIGHT, AND WOULD HAVE BEEN WRONG AS CHECKED
+  even though the guess would have landed: I had verified line 79, not the
+  straddle.
+  (9) E-R IS THREE VALUES, NOT ONE -- correcting my own round-104 "the share
+  cancels, so E-R is a point". The bound survives one-sided by a route needing
+  none of the four parts, so the verdict is untouched and only the
+  JUSTIFICATION changed.
+  (10) THE COORDINATOR'S TEN-HOUR STALL IS STRUCTURAL: THE MONITOR'S
+  NOTIFICATIONS REACH IT ONLY INSIDE A RUNNING TURN, AND BETWEEN TURNS NOTHING
+  WAKES IT. Recorded as a fact about the seat. My round-102 line understated it
+  -- the monitor cannot be read when there is no turn to read it in, and a
+  discipline cannot fix a wake-up problem.
+  (11) THE MIDNIGHT UNIT IS RED EVERY NIGHT BY DESIGN COLLISION and its exit
+  status is not a health signal: the open day's mask refuses CORRECTLY for want
+  of windows and the script calls it INSTRUMENT FAILURE rc=4, identically the
+  night before. Fix at the classification, never the refusal. DA 52.
+  PRIOR CHECKPOINT:
   2026-09-05T16:10:57Z (MEM ROUND 104 -- R-539 AND R-540 SWEPT. STATE ONLY.
   (1) NO SEAT STANDS BY. The USER's "make all modules work" WITHDRAWS the
   recorded-standby reading of R-381 while the loop runs. BE 43 (the CANCEL-axis
@@ -692,7 +757,76 @@ flags:
                              # artifact a claim names, and know what KIND of
                              # document you are reading -- and here the artifact
                              # carried its own contraindication one line down.
-  da_straddle_pending_adjudication: NOT-CHECKED-TWO-SEATS-SAY-IT-USES-THE-FORBIDDEN-SUBTRACTION
+  attainable_companion_on_the_4315_fill_surface: 516-PERCENT-AGAINST-THE-FILED-701
+                             # RELAYED from R-541(F), DA 51. The 701% ceiling
+                             # finally has its companion ON ITS OWN SURFACE.
+                             # REPRODUCTION GATE FIRST, WHICH IS WHY THIS ONE IS
+                             # WORTH BELIEVING: net 8,598.758849, V_oracle
+                             # 60,303.760723, n_neg/n_pos/n_zero
+                             # 2,072/2,234/9 -- ALL EXACT AGAINST BE, with the
+                             # oracle curve agreeing at all five cells to 1e-9.
+                             # ATTAINABLE 516.11% AGAINST THE FILED 701.31% --
+                             # OVERSTATEMENT 26.41%, AND IT GROWS WITH BUDGET
+                             # (10.75% at k=107 to 23.93% at k=1,440): THE
+                             # CASCADE COMPOUNDS.
+                             # AND DA KILLED ITS OWN FALSE ASSERTION IN THE SAME
+                             # FILING: "attainable is monotone non-increasing in
+                             # dwell" had passed only because a toy's two values
+                             # were EQUAL -- A COMPARISON THAT NEVER
+                             # DISCRIMINATED. Attainable RISES, 229.9% at 0.25 s
+                             # to 612.7% at 5 s, because k counts fills removed.
+                             # A test that cannot fail is not a test, and this
+                             # one was found by its own author.
+  da_certification_of_nothing_excluded_has_no_independent_check: DE-SUITE-0-OF-4-MUTANTS
+                             # RELAYED from R-541(F), and it is a STOP-THE-LINE
+                             # to DE (65), not a note.
+                             # Four mutants planted in da_population_audit --
+                             # statistic returns zero; drops abs; null does not
+                             # permute; NOTHING_EXCLUDED emitted unconditionally
+                             # -- each restored byte-exact afterwards.
+                             # DA'S OWN SUITE: 4 OF 4 CAUGHT, RED BY NAME.
+                             # DE'S de_section81_mid_census, WHICH IMPORTS THE
+                             # SAME MODULE UNCHANGED: 0 OF 4 -- GREEN EVERY
+                             # TIME, INCLUDING WITH NOTHING_EXCLUDED EMITTED
+                             # UNCONDITIONALLY, WHICH IS THE EXACT STRING DE'S
+                             # ARTIFACT CITES AS ITS CERTIFICATION.
+                             # SO DE'S NOTHING_EXCLUDED CERTIFICATION RESTS
+                             # ENTIRELY ON DA'S SUITE AND HAS NO CHECK OF ITS
+                             # OWN. This is standing rule 15's exact shape: a
+                             # zero from an instrument that never proved it can
+                             # fire is not a result.
+  the_22_taker_legs_are_real_and_the_formula_is_open: 19-SUBMITTERS-EACH-100-PERCENT-NON-CONFORMING
+                             # RELAYED from R-541(F). The independent FeeCharged
+                             # event carries the SAME amount as the OrderFilled
+                             # fee word on ALL 901 legs, so the 22 are REAL and
+                             # not a decode artifact. 19 non-conforming
+                             # submitters, EACH 100% NON-CONFORMING -- the
+                             # exception is ADDRESS-PARTITIONED, like the ten
+                             # signed maker legs were. Decode error, relayer,
+                             # clustering and lot size are ruled out. THE
+                             # FORMULA IS NOT ESTABLISHED: implied rates are a
+                             # continuum 0.072-1.40. CARRIED OPEN.
+  da_straddle_CONFIRMED_an_artifact_of_the_forbidden_subtraction: COLLAPSES-TO-E0-288.4178c
+                             # RESOLVED 2026-09-06T02:14:36Z, and the resolution is
+                             # the one I withheld judgement on last round.
+                             # RELAYED from R-541(G): the reviewer CONFIRMED IT
+                             # BY EXECUTION AT DA'S OWN ARTIFACT. DE was right;
+                             # FLOW_MODEL_STATE.md:79 names the number; the
+                             # straddle COLLAPSES TO +288.4178c = E0, and
+                             # arms_whose_bracket_straddles_zero SHOULD BE
+                             # EMPTY.
+                             # AND IT TAKES THE REVIEWER'S OWN section 1.3
+                             # "reuse, not rework" WITH IT, WITHDRAWN.
+                             # MY ROUND-104 MARKING WAS RIGHT TO BE
+                             # PENDING-ADJUDICATION AND WOULD HAVE BEEN WRONG AS
+                             # CHECKED -- not because the finding failed, but
+                             # because I had verified line 79 and NOT the
+                             # straddle, and those are different claims. The
+                             # discipline paid on a case where the guess would
+                             # have been right.
+                             # EARLIER FLAG NAME (rule 13):
+                             # da_straddle_pending_adjudication, value
+                             # NOT-CHECKED-TWO-SEATS-SAY-IT-USES-THE-FORBIDDEN-SUBTRACTION
                              # PENDING-ADJUDICATION as of 2026-09-05T16:10:57Z.
                              # NOT a finding I am asserting and NOT a flag I am
                              # marking CHECKED.
@@ -833,6 +967,44 @@ flags:
                              # DA's own framing and the honest one.
                              # DA ALSO CONFIRMS THE FEE-INTERVAL RE-RUN IS
                              # RUNNABLE UNMODIFIED: the seam exists.
+  the_cascade_is_selection_not_machinery: RANDOM-0.497-CONDVALUE-4.324-8.70x-OUTSIDE-THE-NULL
+                             # RELAYED from R-541(E). BE 43, declared at 8b930b4
+                             # BEFORE ANY DRAW, n = 500 sized from a measured
+                             # 0.35 s/replay.
+                             # THE ANSWER TO THE QUESTION BE 43 EXISTED FOR:
+                             # random decisions replayed through THE SAME
+                             # STATEFUL POLICY cascade at 0.497 fills/cancel
+                             # (sd 0.072, range [0.310, 0.818]). CONDVALUE
+                             # cascades at 4.324 -- 8.70x, ENTIRELY OUTSIDE THE
+                             # NULL; HAZARD 2.229 -- 5.57x, also outside.
+                             # the_cascade_is_machinery_not_selection = FALSE,
+                             # COMPUTED. THE CASCADE IS THE RANKER'S SELECTION,
+                             # NOT THE MACHINERY'S PROPERTY, AND THE LEVER
+                             # FINDING STANDS.
+                             # AND A MEASUREMENT AGAINST DE'S MODULE RIDES WITH
+                             # IT: the assumed blind-cancel rate 1.1176
+                             # fills/generation is fills per FILLING generation
+                             # (4,315/3,861), while a random cancel mostly lands
+                             # on generations that NEVER FILL. The measured
+                             # random rate is 0.40-0.50 and 1.1176 is OUTSIDE
+                             # BOTH DRAWN RANGES. Routed to DE.
+  be_round42_cost_claim_withdrawn_inside_its_own_null: p-0.6228-A-SIXTH-OF-THE-NULLS-SD
+                             # RELAYED from R-541(E), and it is BE withdrawing
+                             # BE's own claim on BE's own null, which is the
+                             # part worth carrying.
+                             # CONDVALUE's 2.8646 c/cancel sits INSIDE a null of
+                             # mean 2.108, sd 3.808 -- p 0.6228. HAZARD p 0.4112.
+                             # THE WHOLE EFFECT IS A SIXTH OF THE NULL'S SD.
+                             # "1.29x WORSE THAN A BLIND CANCEL" CANNOT BE TOLD
+                             # FROM NOISE and is WITHDRAWN.
+                             # SO R-535(D)'s "THE TWO AXES DISAGREE" IS
+                             # CORRECTED TO: THE FILL AXIS SHOWED A DIRECTION;
+                             # THE CANCEL AXIS IS UNINFORMATIVE AT THIS SAMPLE.
+                             # Two axes cannot disagree when one of them is not
+                             # saying anything. The correction is smaller than it
+                             # sounds and sharper than it sounds: it removes a
+                             # TENSION that was being reasoned from, and leaves
+                             # ONE measured direction plus one unmeasured axis.
   the_maker_fee_is_a_signed_order_parameter: WE-SIGN-IT-SO-FOR-US-IT-IS-ZERO
                              # RELAYED from R-538(B), DA round 50, the only
                              # check that decoded the chain. NOT verified by me
@@ -861,6 +1033,61 @@ flags:
                              # WE SIGN -- a stronger footing than a venue
                              # promise, because it does not depend on the venue
                              # keeping one.
+  ruled_run_result_invariant_and_immaterial: CHECKED-BY-ME-AT-THE-RECEIPT
+                             # CHECKED 2026-09-06T02:14:36Z -- I OPENED THE
+                             # RECEIPT AND READ EVERY FIGURE, and I did the KEY
+                             # WALK the coordinator's first test got wrong.
+                             # data/pm_5min/derived/
+                             # p003_v2_fee_endpoint_sensitivity__20260905T161824Z.json,
+                             # sha256 begins f4974039c1fc99c0 (matches R-541(D)),
+                             # source_identity.snapshot_commit
+                             # 9b370881b9049e34c341478d9700aef744b04db8,
+                             # status FEE_ENDPOINT_SENSITIVITY_NOT_A_GATE_RESULT.
+                             # THE NUMBERS, READ NOT RELAYED: D_E0
+                             # -4215.882156999999 with D_E0_sign -1; D_E_MINUS_R
+                             # -4332.3939021058395; fe_B 1971.5171314202, fe_T
+                             # 1388.958405891, delta_fe 582.5587255292; p_E0 =
+                             # p_E_MINUS_R = 0.9402985074626866 with
+                             # n_controls_ge_treatment 188 of 200 AT BOTH
+                             # ENDPOINTS; materiality value 0.02763638564052018
+                             # against threshold 0.1. INVARIANT True, MATERIAL
+                             # False.
+                             # THE IDENTITIES ARE COMPUTED, NOT PRINTED, AND
+                             # BOTH ARE TRUE IN THE FILE:
+                             # D_E0_equals_gross_delta True and
+                             # D_E_MINUS_R_equals_gross_delta_minus_0p20_delta_fe
+                             # True; plus every_arm_fe_at_or_below_its_flat_atm_bound
+                             # True, 201 arms fe <= baseline, 0 above.
+                             # THE TRAP IS CLOSED, AND I TESTED IT THE RIGHT WAY:
+                             # walking KEYS gives ZERO keys named gate1_exit at
+                             # any depth. A SUBSTRING search over the serialized
+                             # payload gives FOUR hits -- which is exactly why
+                             # the coordinator's first test fired and is R-507's
+                             # vocabulary-versus-identity error reproduced. I
+                             # RAN BOTH so the distinction is on the record as a
+                             # measurement rather than as an anecdote.
+                             # WHAT THE RESULT SAYS: THE TREATMENT IS WORSE THAN
+                             # 94% OF ITS OWN CONTROLS AT BOTH ENDPOINTS AND THE
+                             # FEE MOVES NOTHING. The fee question is answered
+                             # and it was never the thing standing in the way.
+                             # WHAT IT IS NOT: thresholds on a DESCRIPTION, not
+                             # a test -- G = 0, n = 1, consumed, matched_null
+                             # hardcoded None, and the receipt says so in its own
+                             # fields. It does NOT clear Gate 1; the three
+                             # sampler refusals are carried as FIELDS.
+                             # STILL PENDING AND NOT MINE: DA's independent
+                             # E-R recompute and the reviewer's clause-by-clause
+                             # against the bar. My check is a SECOND READING OF
+                             # THE SAME ARTIFACT, not an independent recompute --
+                             # if the ledger is built wrong, both of us read the
+                             # same wrong number.
+                             # ALSO IN THE FILE: spec_1_5_1_D_E_MINUS_R
+                             # -4424.786083699999 against the measured
+                             # -4332.3939021058395, and delta_fe_from_the_flat_bound
+                             # 1044.5196335 against delta_fe_measured
+                             # 582.5587255292 -- DE's arithmetic correction to
+                             # the specification's sizing, carried in the receipt
+                             # rather than argued in prose.
   ruled_run_declared_bar_two_endpoints: E0-AND-E_MINUS_R-CHARGE-ENDPOINT-COLLAPSED
                              # RELAYED from R-540(A), the reviewer's
                              # specification at 01edfd2, ADOPTED AS THE DECLARED
@@ -1121,6 +1348,51 @@ flags:
                              # carried as DISPATCH-RELAYED, never as register
                              # citations, and a citation check is not a claim
                              # check either way.
+  e_minus_r_is_three_values_not_one: THE-BOUND-SURVIVES-BY-A-ROUTE-NEEDING-NONE-OF-THEM
+                             # RELAYED from R-541(G), and it corrects something I
+                             # wrote at round 104. My flag
+                             # ruled_run_declared_bar_two_endpoints records
+                             # "the per-market share CANCELS in the delta, so
+                             # E-R is A POINT". The reviewer attacked its own
+                             # bar and found: THE ATTACK AS POSED MISSES -- the
+                             # cancellation IS within a market, not between arms
+                             # -- BUT IT RESTED ON AN UNSTATED IDENTITY,
+                             # total_fee_equivalent_m = pool_base_m, which has
+                             # FOUR PARTS AND IS NOT A BOUND. SO E-R IS THREE
+                             # VALUES, NOT ONE.
+                             # THE BOUND ITSELF SURVIVES, one-sided and
+                             # unconditional, BY A ROUTE NEEDING NONE OF THE
+                             # FOUR PARTS -- so the run's verdict is untouched
+                             # and only the JUSTIFICATION changed.
+                             # THE SHAPE WORTH KEEPING: a defence that reaches
+                             # the right conclusion through an unstated
+                             # assumption is still a defect, and the reviewer
+                             # found it by attacking its own specification
+                             # rather than someone else's.
+  coordinator_stall_is_structural_not_a_lapse: MONITOR-DOES-NOT-WAKE-IT-BETWEEN-TURNS
+                             # RELAYED from R-541(A), and recorded AS A FACT
+                             # ABOUT THE SEAT rather than as a lapse, which is
+                             # what makes it actionable.
+                             # THE SECOND STALL AND THE LONGER ONE: all five
+                             # seats finished 16:13Z-16:27Z on 09-05, EIGHT
+                             # COMMITS INCLUDING THE RULED RUN, and sat idle
+                             # until 02:06Z -- TEN HOURS. The monitor fired 61
+                             # events, FOUR of them IDLE-LONG. The 09-05 verdict
+                             # fired at 00:06Z and went unread for two hours.
+                             # THIRD TIME IN TWO DAYS THE USER HAS HAD TO ASK.
+                             # THE STRUCTURAL FACT, WHICH IS THE WHOLE ENTRY:
+                             # THE MONITOR'S NOTIFICATIONS REACH THE COORDINATOR
+                             # ONLY INSIDE A RUNNING TURN. BETWEEN TURNS NOTHING
+                             # WAKES IT. THE LOOP STALLS AT THE COORDINATOR
+                             # WHENEVER THE USER IS NOT PROMPTING.
+                             # SO THE MONITOR IS NOT AN INSTRUMENT FOR THIS
+                             # FAILURE AND NEVER WAS -- my round-102 line "a
+                             # monitor that fires and is not read is not an
+                             # instrument, it is a log" understated it. IT
+                             # CANNOT BE READ WHEN THERE IS NO TURN TO READ IT
+                             # IN. A discipline cannot fix a wake-up problem.
+                             # SUPERSEDES the 40-minute framing below as the
+                             # EXPLANATION; that entry's facts stand.
   the_coordinator_was_the_idle_seat: STALLED-40-MIN-15:08Z-TO-15:48Z-R-535(A)
                              # RELAYED from R-535(A), and recorded here because
                              # the coordinator asked for it to be recorded
@@ -1152,6 +1424,36 @@ flags:
                              # TURN FROM `ps`, WITH THE OBSERVER EXCLUDED.
                              # A pattern that fails three times is a rule
                              # missing, not three seats being careless.
+  scorer_was_never_wired_to_a_unit: CHECKED-BY-ME-ZERO-UNIT-FILES-REFERENCE-IT
+                             # CHECKED 2026-09-06T02:14:36Z. A NEGATIVE EXISTENCE
+                             # CLAIM, SO IT CARRIES ITS SURFACE AND AN AS-OF.
+                             # SURFACE 1, the repo: grep -rl
+                             # "be_score_forward_day" over the whole tree
+                             # excluding .git returns FOUR files, FULL OUTPUT,
+                             # NOT TRUNCATED -- workspace/COORDINATION.md,
+                             # live/pm_research/be_forward_preflight.py,
+                             # live/pm_research/be_score_forward_day.sh (the
+                             # script itself) and
+                             # live/pm_research/declarations/
+                             # be_cancel_axis_null_declaration_v1.json.
+                             # SURFACE 2, the user units: grep -rl over
+                             # ~/.config/systemd/user/ returns NOTHING.
+                             # SURFACE 3, unit files in the repo: every
+                             # *.service and *.timer outside .git, grepped --
+                             # NOTHING.
+                             # SO NO UNIT OR TIMER ANYWHERE ON EITHER SURFACE
+                             # INVOKES THE SCORER. THE SCORER WAS ALWAYS A
+                             # MANUAL STEP, and 09-05 IS UNSCORED. BE 44 is
+                             # dispatched to score it by hand.
+                             # WHY THIS IS WORTH A FLAG RATHER THAN A LINE: the
+                             # verdict pipeline IS automated and fires nightly,
+                             # so the race ACCRUES on its own -- and the thing
+                             # that turns an accrued day into a RESULT does not.
+                             # A programme can reach its bar without anyone
+                             # having scored a single day, WHICH IS WHAT
+                             # HAPPENED, and no instrument reported the gap
+                             # because no instrument was watching for a step
+                             # that was never wired.
   no_seat_stands_by: USER-MAKE-ALL-MODULES-WORK-R-539(A)
                              # RELAYED from R-539(A). The USER's instruction was
                              # "Make all modules work." THE RECORDED-STANDBY
@@ -1187,6 +1489,31 @@ flags:
                              # (R-381) -- it is a named wait with a named
                              # trigger, and the monitor must not read it as a
                              # stall.
+  midnight_unit_is_red_every_night_by_design_collision: SYSTEMCTL-STATUS-IS-MEANINGLESS-HERE
+                             # RELAYED from R-541(C).
+                             # da-midnight-verify.service exited status=4 at
+                             # 00:06:41Z -- AND NOT ON 09-05. On the OPEN day:
+                             # days_needing_verdict included 20260906, its
+                             # verdict was written as an open-day write at
+                             # 00:06:28 (exit=1, CORRECT), then
+                             # da_blackout_mask.py raised MaskRefused:
+                             # CONTENT_LIVENESS_UNJUDGEABLE for 20260906 (no coin
+                             # had enough windows for a median) -- A CORRECT
+                             # REFUSAL 389 SECONDS INTO A DAY -- and the script's
+                             # "MASK NOT WRITTEN" branch classified that as
+                             # INSTRUMENT FAILURE, worst_instrument_rc=4.
+                             # THE UNIT'S OWN LOG SHOWS THE IDENTICAL SEQUENCE
+                             # FOR 20260905 THE NIGHT BEFORE (lines 14532-14543)
+                             # -- AND 09-05 THEN ACCRUED CLEANLY TONIGHT.
+                             # SO A READER OF systemctl CANNOT TELL A REAL
+                             # INSTRUMENT FAILURE FROM THE OPEN-DAY REFUSAL, AND
+                             # THIS UNIT'S EXIT STATUS IS NOT A HEALTH SIGNAL.
+                             # THE FIX IS AT THE CLASSIFICATION, NOT THE
+                             # INSTRUMENT: the refusal FIRED CORRECTLY and must
+                             # not be "repaired". Routed to DA 52. Recorded here
+                             # because a red unit that is red by design will be
+                             # read as a fault by the next person who looks, and
+                             # the night it means something they will not notice.
   results_md_g_is_corrected_to_4: FIXED-IN-0c56940-THE-ROUTE-I-FILED-WORKED
                              # CHECKED 2026-09-05T15:47:09Z at the artifact:
                              # workspace/RESULTS.md line 522 now reads "Current
@@ -1205,7 +1532,7 @@ flags:
                              # own R-531(G) observation: the ruling rate does not
                              # exceed the rate at which a second seat can check
                              # each ruling at an artifact.
-  race_next_decision_point: 09-05-VERDICT-AT-TONIGHT-00:06Z-WOULD-MAKE-G-5
+  race_next_decision_point: RESOLVED-09-05-ACCRUED-G-IS-5-AND-THE-WARNING-HELD
                              # RELAYED from R-534(D). If 09-05 accrues at the
                              # governed 00:06Z verdict, G = 5 -- MEETING THE BAR
                              # FOR THE FIRST TIME. It changes nothing about what
@@ -1298,7 +1625,43 @@ flags:
                              # 09-01 is era-pure/admissible and provisionally
                              # passes its governing v2 quality bars, but is not
                              # a complete UTC day and therefore has not accrued.
-  hazard_forward_reach: G-4-OF-5-ACCRUED-BAR-NOT-REACHED-RACE-RULED-DIRECTIONAL
+  hazard_forward_reach: G-5-OF-5-REACHED-2026-09-06T00:06:01Z-STILL-DIRECTIONAL
+                             # ADVANCED 2026-09-06T02:14:36Z (MEM round 105).
+                             # THE BAR IS REACHED. 09-05 accrued at the
+                             # scheduled unit's 00:06:01Z write: FINISHED,
+                             # AFTER, ADMISSIBLE, HEALTHY all true;
+                             # content_liveness CONTENT_LIVE; mask WRITTEN
+                             # (7,457 B); counts_toward_race True; the unit's own
+                             # log reads "exit=0 for 20260905". G = 5, days
+                             # 09-01 through 09-05.
+                             # RELAYED FROM R-541(B). I did NOT open the day
+                             # verdict: my standing practice since round 101 is
+                             # that the accrual is the coordinator's reading and
+                             # a filename census is all I take myself.
+                             # AND NOTHING ABOUT WHAT THE RACE CAN ESTABLISH HAS
+                             # CHANGED. It is still DIRECTIONAL, NEVER
+                             # significance-bearing: at G = 5 with the recorded
+                             # multiplicity of 2 the best attainable adjusted p
+                             # is 0.0625 > 0.05, and the smallest G that clears
+                             # is 6 (R-529(A), standing rule 15). And V2's own
+                             # HANDOFF still says THE PRIOR RACE CANNOT VALIDATE
+                             # THE CHANGED V2 PIPELINE. THE BAR BEING MET IS NOT
+                             # THE RACE BECOMING A TEST -- the flag
+                             # race_next_decision_point was written at round 101
+                             # precisely so this would not be misread today.
+                             # A NOTE ON MY OWN RECORD, BECAUSE IT IS INSTRUCTIVE
+                             # AND NOT A VINDICATION: this flag read
+                             # G-5-OF-5-REACHED at round 100, was FALSE then, was
+                             # corrected at round 101, and is TRUE now for a
+                             # reason that had not happened yet when it was
+                             # written. A value that is right by accident is
+                             # still wrong when written, and the correction was
+                             # right at the time it was made.
+                             # 09-05 IS UNSCORED -- see
+                             # scorer_was_never_wired_to_a_unit. The bar is
+                             # reached on ACCRUAL, not on a scored result.
+                             # EARLIER VALUE (rule 13):
+                             # G-4-OF-5-ACCRUED-BAR-NOT-REACHED-RACE-RULED-DIRECTIONAL
                              # CORRECTED 2026-09-05T15:01:22Z (MEM round 101), and
                              # this is a CORRECTION, not an advance: the value
                              # below read G-5-OF-5-REACHED and G HAS NEVER
@@ -8038,6 +8401,27 @@ flags:
     G-COUNTING item from the three open USER items is the coordinator's call, not
     mine -- I do not move that count on my own reading.
   THE_CEILING_IS_MEASURED_AND_BOTH_ARMS_CAPTURE_A_NEGATIVE_FRACTION: >-
+    FURTHER CORRECTED BY R-541(E)/(F) AT 2026-09-06T02:14:36Z, TWICE.
+    (1) THE "TWO AXES DISAGREE" READING BELOW IS WITHDRAWN. BE's cancel-axis
+    null puts CONDVALUE's 2.8646 c/cancel INSIDE it -- mean 2.108, sd 3.808,
+    p 0.6228; HAZARD p 0.4112 -- so the whole effect is A SIXTH OF THE NULL'S
+    SD and "1.29x worse than a blind cancel" CANNOT BE TOLD FROM NOISE. THE
+    CORRECT FORM: THE FILL AXIS SHOWED A DIRECTION; THE CANCEL AXIS IS
+    UNINFORMATIVE AT THIS SAMPLE. Two axes cannot disagree when one is silent,
+    and a tension that was being reasoned from is removed rather than resolved.
+    (2) THE CEILING NOW HAS ITS ATTAINABLE COMPANION ON ITS OWN SURFACE:
+    516.11% against the filed 701.31%, overstatement 26.41% AND GROWING WITH
+    BUDGET (10.75% at k=107 to 23.93% at k=1,440) -- the cascade compounds. DA
+    passed a reproduction gate first (net, V_oracle and the 2,072/2,234/9 split
+    all EXACT against BE, oracle curve to 1e-9), which is why this companion is
+    the one to quote. Every 701% statement must now carry the 516%.
+    (3) AND WHAT SURVIVES UNTOUCHED IS THE CASCADE FINDING: random decisions
+    through the SAME stateful policy cascade at 0.497 fills/cancel against
+    CONDVALUE's 4.324 -- 8.70x, ENTIRELY OUTSIDE THE NULL. THE CASCADE IS
+    SELECTION, NOT MACHINERY. That was the question worth asking and it got a
+    clean answer.
+    ALL THREE RELAYED FROM R-541; I opened neither BE's nor DA's artifact.
+    EARLIER SUPERSESSION, KEPT (rule 13):
     SUPERSEDED-BY-R-535(D) AT 2026-09-05T15:47:09Z, IN BAND, TEXT BELOW KEPT AS
     PROVENANCE AND NOT EDITED. THE MEASUREMENT STANDS; THE ZERO IT WAS READ
     AGAINST WAS WRONG. BE built the null this ceiling lacked (463010b, DECLARED
@@ -8178,6 +8562,31 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T02:14:36Z, THE RACE HAS REACHED ITS BAR -- G = 5, 09-01
+  THROUGH 09-05 -- AND IT ESTABLISHES EXACTLY WHAT IT ALWAYS COULD: DIRECTION
+  AND CONSISTENCY, NEVER A HOLM-CLEARING VERDICT (R-529(A)), and it cannot
+  validate the changed V2 pipeline. 09-05 IS UNSCORED because the scorer was
+  never wired to a unit -- checked by me on three surfaces -- so the programme
+  reached its bar with no day scored; BE 44 scores it by hand.
+  THE RULED GATE-1e RUN IS DONE AND ANSWERS THE FEE QUESTION: INVARIANT true,
+  MATERIAL false, D(E0) -4215.88 and D(E-R) -4332.39 with p 0.9403 AT BOTH
+  ENDPOINTS -- THE TREATMENT IS WORSE THAN 94% OF ITS OWN CONTROLS EITHER WAY
+  AND THE FEE MOVES NOTHING. Read at the receipt by me, key-walked for the
+  gate1_exit trap (zero keys; four substring hits, which is why the first test
+  misfired). It does NOT clear Gate 1: three sampler refusals, 1 of 7.
+  THE CASCADE IS SELECTION (random 0.497 fills/cancel against CONDVALUE's
+  4.324, 8.70x outside the null) -- BUT THE CANCEL-AXIS COST CLAIM IS WITHDRAWN
+  INSIDE ITS OWN NULL (p 0.6228), so "the two axes disagree" becomes "the fill
+  axis showed a direction; the cancel axis is uninformative at this sample."
+  THE 701% NOW CARRIES ITS COMPANION: 516%, overstating 26.41% and GROWING WITH
+  BUDGET. DE'S NOTHING_EXCLUDED CERTIFICATION HAS NO CHECK BEHIND IT -- its
+  suite caught 0 of 4 mutants where DA's caught 4 of 4 -- stop-the-line, DE 65.
+  DA's straddle is CONFIRMED an artifact of the forbidden subtraction.
+  AND THE LOOP'S OWN FAILURE MODE IS NOW NAMED AS STRUCTURAL: THE MONITOR
+  REACHES THE COORDINATOR ONLY INSIDE A RUNNING TURN, so between turns nothing
+  wakes it -- ten hours of finished work sat unread. Five dispatches in flight:
+  BE 44, DA 52, DE 65, REV, MEM. Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-05T16:10:57Z, RETAINED BELOW --
   AS-OF 2026-09-05T16:10:57Z, NO SEAT STANDS BY (the USER's "make all modules
   work", R-539) AND THE RULED GATE-1e RUN IS EXECUTING UNDER A BAR DECLARED
   BEFORE IT. BE 43, DA 51, DE 64 and the reviewer are in flight; none is done.
@@ -8873,6 +9282,94 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 105, 2026-09-06T02:14:36Z ------------------------------
+  ruled_run_result_invariant_and_immaterial:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_v2_fee_endpoint_sensitivity__20260905T161824Z.json
+    as_of: 2026-09-06T02:14:36Z
+    said: >-
+      sha256 begins f4974039c1fc99c0; source_identity.snapshot_commit
+      9b370881b9049e34c341478d9700aef744b04db8; status
+      FEE_ENDPOINT_SENSITIVITY_NOT_A_GATE_RESULT. D_E0 -4215.882156999999 with
+      D_E0_sign -1; D_E_MINUS_R -4332.3939021058395; fe_arm baseline
+      1971.5171314202, treatment 1388.958405891, delta_fe 582.5587255292; p_E0 =
+      p_E_MINUS_R = 0.9402985074626866 with n_controls_ge_treatment 188 of 200 at
+      both; materiality.value 0.02763638564052018 vs threshold 0.1; INVARIANT
+      True, MATERIAL False; D_E0_equals_gross_delta True and
+      D_E_MINUS_R_equals_gross_delta_minus_0p20_delta_fe True;
+      every_arm_fe_at_or_below_its_flat_atm_bound True with 201 arms at or below
+      baseline and 0 above. TRAP: walking KEYS gives ZERO named gate1_exit at any
+      depth; a SUBSTRING count over the serialized payload gives FOUR -- I ran
+      both, which is the identity-versus-vocabulary distinction as a measurement.
+      LIMIT STATED: this is a second reading of the same artifact, NOT an
+      independent recompute; DA's E-R recompute and the reviewer's
+      clause-by-clause are still pending.
+  scorer_was_never_wired_to_a_unit:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_forward_day.sh
+    as_of: 2026-09-06T02:14:36Z
+    said: >-
+      three surfaces, each reported whole and not truncated. grep -rl
+      "be_score_forward_day" over the working tree excluding .git returns FOUR
+      files -- workspace/COORDINATION.md, live/pm_research/be_forward_preflight.py,
+      this script, and live/pm_research/declarations/
+      be_cancel_axis_null_declaration_v1.json -- and none is a unit. grep -rl over
+      ~/.config/systemd/user/ returns nothing. Every *.service and *.timer in the
+      repo outside .git, grepped, returns nothing. So no unit or timer on either
+      surface invokes the scorer.
+  hazard_forward_reach:
+    prov: RELAYED
+    from: >-
+      R-541(B) for the 09-05 accrual, exactly as at round 101: the accrual is the
+      coordinator's reading at the day verdict and I did not open the sealed day.
+      The DIRECTIONAL limit is R-529(A) and the pipeline limit is V2's HANDOFF;
+      neither moved when the bar was met.
+  race_next_decision_point:
+    prov: RELAYED
+    from: R-541(B) -- the 09-05 verdict landed and the flag's warning is the part that held
+  the_cascade_is_selection_not_machinery:
+    prov: RELAYED
+    from: R-541(E), BE 43, declared at 8b930b4 before any draw
+  be_round42_cost_claim_withdrawn_inside_its_own_null:
+    prov: RELAYED
+    from: R-541(E) -- BE withdrawing BE's own claim on BE's own null
+  attainable_companion_on_the_4315_fill_surface:
+    prov: RELAYED
+    from: R-541(F), DA 51, which passed a reproduction gate against BE first
+  da_certification_of_nothing_excluded_has_no_independent_check:
+    prov: RELAYED
+    from: R-541(F) -- stop-the-line to DE 65, not a note
+  the_22_taker_legs_are_real_and_the_formula_is_open:
+    prov: RELAYED
+    from: R-541(F)
+  da_straddle_CONFIRMED_an_artifact_of_the_forbidden_subtraction:
+    prov: RELAYED
+    from: >-
+      R-541(G) -- the reviewer confirmed it BY EXECUTION at DA's artifact.
+      Renamed from `da_straddle_pending_adjudication` at 2026-09-06T02:14:36Z; the
+      old name and value are kept in the flag body under rule 13.
+      AND THE SENTENCE THAT STOOD HERE UNTIL 2026-09-06T02:14:36Z WAS FALSE, SO
+      IT IS REPLACED RATHER THAN TRIMMED: it read "the provenance key was
+      renamed with it so the ORPHAN check that caught me last round has nothing
+      to catch this time." THE ORPHAN CHECK CAUGHT ONE. I added this entry under
+      the new name and LEFT THE OLD `da_straddle_pending_adjudication` ENTRY IN
+      PLACE -- the SAME half-rename as round 104, in the round where I wrote a
+      sentence claiming I had avoided it.
+      TWO THINGS ARE WORTH MORE THAN THE FIX. (1) SAME CLASS, CONSECUTIVE
+      ROUNDS, KNOWING ABOUT IT: awareness of a failure mode did not prevent it,
+      which is the argument for the instrument and against the discipline.
+      (2) I ASSERTED A CLEAN RESULT BESIDE AN ARTIFACT THAT SAID OTHERWISE --
+      CLAUDE.md RULE 10 IN MY OWN PROVENANCE BLOCK, and the only reason it did
+      not ship is that I ran the audit after writing rather than before.
+  e_minus_r_is_three_values_not_one:
+    prov: RELAYED
+    from: R-541(G) -- and it corrects my own round-104 "E-R is a point"
+  coordinator_stall_is_structural_not_a_lapse:
+    prov: RELAYED
+    from: R-541(A)
+  midnight_unit_is_red_every_night_by_design_collision:
+    prov: RELAYED
+    from: R-541(C)
   # --- MEM round 104, 2026-09-05T16:10:57Z ------------------------------
   maker_fee_setting_is_three_values_in_three_places:
     prov: CHECKED
@@ -8910,18 +9407,6 @@ flag_provenance:
       **BOTH TERMS ARE THE SAME SIDE. DO NOT SUBTRACT THIS FROM A MAKER NET.** |
       btc/eth; n=600 transactions, as-of 2026-08-23 |" -- the row immediately
       below the fee row at :78 that R-536, R-538 and Q-DA-252 each quote.
-  da_straddle_pending_adjudication:
-    prov: RELAYED
-    from: >-
-      [MY INSTRUMENT REFUSED `prov: PENDING-ADJUDICATION` AS MALFORMED --
-      "unknown prov 'PENDING-ADJUDICATION' (expected CHECKED or RELAYED)" -- and
-      I TOOK THE REFUSAL RATHER THAN WIDEN THE VOCABULARY WHILE IT WAS FLAGGING
-      ME. The pending status lives in the flag's VALUE, which reads
-      NOT-CHECKED-TWO-SEATS-SAY-IT-USES-THE-FORBIDDEN-SUBTRACTION, and in this
-      note. The gap it exposes is real and is the CORROBORATION axis again: my
-      vocabulary has two words, and "two seats reported this independently and
-      nobody has adjudicated it" is neither of them. Named, not built --
-      instrument work is not this round's authorisation.]
       DE (R-540(C)) and the reviewer's section 1.5.1, independently. I did NOT
       open Q-DA-252 and make no claim about how its straddle was built; I
       verified only that FLOW_MODEL_STATE.md:79 says what it says. The reviewer

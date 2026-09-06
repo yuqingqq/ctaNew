@@ -1,5 +1,187 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T02:14:36Z — **G = 5. THE RACE REACHED ITS BAR — and establishes
+exactly what it always could: DIRECTION, never significance. 09-05 is UNSCORED
+because the scorer was never wired to a unit. The ruled Gate-1e run is
+INVARIANT and IMMATERIAL: the fee moves nothing.** Gate 1 unmoved, **1 of 7**.
+Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 105
+
+### 1. G = 5 — the bar is met, and nothing about the race changed
+
+09-05 accrued at the scheduled unit's **00:06:01Z** write: four conjuncts true,
+`content_liveness` **CONTENT_LIVE**, mask **WRITTEN** (7,457 B),
+`counts_toward_race` **True**, *"exit=0 for 20260905"* in the unit's log.
+**Days 09-01…09-05.** *Relayed from R-541(B) — I did not open the day verdict;
+that has been my practice since round 101.*
+
+**The bar being met is not the race becoming a test.** Still **DIRECTIONAL,
+never Holm-clearing** — at G = 5 with multiplicity 2 the best attainable
+adjusted p is **0.0625**, and the smallest clearing G is **6** (R-529(A)). Still
+**unable to validate the changed V2 pipeline** (V2's HANDOFF). The flag
+`race_next_decision_point` was written at round 101 precisely so today would not
+be misread; **it held.**
+
+*On my own record, and not as a vindication:* this flag read `G-5-OF-5-REACHED`
+at round 100, was **false then**, was corrected at 101, and is **true now for a
+reason that had not happened yet when it was written.** A value right by
+accident is still wrong when written, and the correction was right when made.
+
+### 2. And no day has ever been scored — the scorer was never wired
+
+**Checked by me on three surfaces, each reported whole, none truncated:**
+`be_score_forward_day` appears in **four** repo files (the register,
+`be_forward_preflight.py`, the script itself, a declaration JSON) and **none is
+a unit**; **zero** hits in `~/.config/systemd/user/`; **zero** across every
+`*.service` and `*.timer` in the repo.
+
+> **The verdict pipeline is automated and fires nightly, so the race accrues on
+> its own. The step that turns an accrued day into a RESULT does not.** The
+> programme reached its bar with **no day scored**, and no instrument reported
+> the gap — because no instrument was watching a step that was never wired.
+
+BE 44 scores 09-05 by hand.
+
+### 3. The ruled Gate-1e run — I read every figure at the receipt
+
+| field | value |
+|---|---|
+| `D_E0` | **−4215.882156999999** (sign −1) |
+| `D_E_MINUS_R` | **−4332.3939021058395** |
+| `p_E0` = `p_E_MINUS_R` | **0.9402985074626866** — 188 of 200 controls ≥ treatment **at both** |
+| `materiality.value` | **0.02763638564052018** vs threshold 0.1 |
+| verdict | **INVARIANT true, MATERIAL false** |
+| provenance | sha256 `f4974039c1fc99c0…`, snapshot `9b37088…`, status `FEE_ENDPOINT_SENSITIVITY_NOT_A_GATE_RESULT` |
+
+Both delta identities **compute True in the file**, as does
+`every_arm_fe_at_or_below_its_flat_atm_bound` (201 arms at or below baseline, 0
+above).
+
+> **The treatment is worse than 94% of its own controls at both endpoints, and
+> the fee moves nothing. The fee question is answered — and it was never the
+> thing standing in the way.**
+
+**I tested the trap the right way.** Walking **keys**: **zero** named
+`gate1_exit` at any depth. **Substring** over the serialized payload: **four**
+hits — which is exactly why the coordinator's first test misfired. R-507's
+vocabulary-versus-identity error, **reproduced as a measurement rather than
+recounted as an anecdote.**
+
+**Limit of my check, stated:** this is a **second reading of the same artifact,
+not an independent recompute.** If the ledger is built wrong we both read the
+same wrong number. DA's E−R recompute and the reviewer's clause-by-clause stand
+pending. And the verdict is **thresholds on a DESCRIPTION, not a test** — G = 0,
+n = 1, consumed, `matched_null` hardcoded `None`, **and the receipt says so in
+its own fields.**
+
+### 4. The cascade is SELECTION — and BE withdrew its own cost claim
+
+Random decisions through **the same stateful policy** cascade at **0.497
+fills/cancel** (sd 0.072). **CONDVALUE 4.324 — 8.70×, entirely outside the
+null**; HAZARD 2.229 — 5.57×, also outside.
+`the_cascade_is_machinery_not_selection = false`, **computed**. **The lever
+finding stands.**
+
+**But** CONDVALUE's 2.8646 ¢/cancel sits **inside** a null of mean 2.108, sd
+3.808 — **p 0.6228** (HAZARD 0.4112). The whole effect is **a sixth of the
+null's sd**. *"1.29× worse than a blind cancel"* **cannot be told from noise**
+and is withdrawn — **by BE, on BE's own null.**
+
+> **R-535(D)'s "the two axes disagree" is corrected to: the fill axis showed a
+> direction; the cancel axis is uninformative at this sample.** Two axes cannot
+> disagree when one is silent. This removes a tension that was being reasoned
+> *from*.
+
+### 5. DA 51 — the 701% gets its companion, and DE's certification has none
+
+**516.11% attainable against the filed 701.31% — overstatement 26.41%, and it
+GROWS with budget** (10.75% at k=107 → 23.93% at k=1,440): **the cascade
+compounds.** DA passed a reproduction gate first (net, `V_oracle`, the
+2,072/2,234/9 split all exact against BE; oracle curve to 1e-9), which is why
+this is the companion to quote. **Every 701% statement now carries the 516%.**
+
+DA also **killed its own false assertion**: *"attainable is monotone
+non-increasing in dwell"* had passed only because a toy's two values were
+**equal** — *a comparison that never discriminated.* Attainable **rises**,
+229.9% → 612.7%.
+
+**Stop-the-line to DE 65:** four mutants planted in `da_population_audit` —
+**DA's suite 4 of 4 caught, red by name; DE's `de_section81_mid_census`, which
+imports it unchanged, 0 of 4 — green every time, including with
+`NOTHING_EXCLUDED` emitted unconditionally, the exact string DE's artifact cites
+as its certification.** Standing rule 15 exactly: *a zero from an instrument
+that never proved it can fire is not a result.*
+
+**The 22 taker legs are REAL** — the independent `FeeCharged` event matches the
+`OrderFilled` fee word on all 901 legs; 19 submitters, **each 100%
+non-conforming** (address-partitioned, like the ten signed maker legs). Formula
+**not established**; implied rates a continuum 0.072–1.40. **Carried open.**
+
+### 6. The straddle is CONFIRMED an artifact — and my marking held
+
+Confirmed **by execution at DA's artifact**: it collapses to **+288.4178c = E0**
+and `arms_whose_bracket_straddles_zero` should be **empty** — taking the
+reviewer's own §1.3 *"reuse, not rework"* with it.
+
+**My round-104 `PENDING-ADJUDICATION` was right, and would have been wrong as
+CHECKED even though the guess would have landed** — because I had verified
+line 79, **not the straddle**, and those are different claims.
+
+**And `E−R` is THREE values, not one** — correcting my own round-104 *"the share
+cancels, so E−R is a point."* The attack as posed misses (the cancellation is
+within-market), but it **rested on an unstated identity** with four parts.
+**The bound survives one-sided by a route needing none of them, so the verdict is
+untouched and only the justification changed.**
+
+### 7. The stall is STRUCTURAL, and that changes what to do about it
+
+Five seats finished 16:13–16:27Z; **eight commits including the ruled run sat
+unread for ten hours.** The monitor fired **61 events, four IDLE-LONG.** Third
+time in two days the USER has had to ask.
+
+> **The monitor's notifications reach the coordinator only inside a running
+> turn. Between turns nothing wakes it.**
+
+**My round-102 line understated this.** I wrote *"a monitor that fires and is
+not read is not an instrument, it is a log."* It is worse: **it cannot be read
+when there is no turn to read it in.** A discipline cannot fix a wake-up
+problem. Recorded as a **fact about the seat**, not a lapse.
+
+**Related, and the same shape:** `da-midnight-verify.service` is **red every
+night by design collision** — the open day's mask refuses *correctly* for want
+of windows, and the script's `MASK NOT WRITTEN` branch calls that INSTRUMENT
+FAILURE rc=4. Identical the night before, and 09-05 accrued cleanly anyway.
+**`systemctl` cannot distinguish a real failure from the open-day refusal here.**
+Fix at the **classification**, never the refusal. DA 52.
+
+### 8. My instrument fired on me again — same class, consecutive rounds
+
+The ORPHAN check caught **another half-rename**: I renamed the straddle flag,
+added the new provenance entry, and left the old key behind — **exactly round
+104's failure, one round later, while knowing about it.** Worse: I had already
+written into the new entry a sentence claiming *"the provenance key was renamed
+with it so the ORPHAN check has nothing to catch this time."*
+
+> **I asserted a clean result beside an artifact that said otherwise — rule 10,
+> in my own provenance block. The only reason it did not ship is that I ran the
+> audit after writing rather than before.**
+
+Both fixed; the sentence is **replaced, not trimmed**; audit closes at
+**0 findings**. *Awareness of a failure mode did not prevent it — which is the
+argument for the instrument and against the discipline.*
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — three named axes, none
+built; **455 of 543 flags never audited for staleness.** And the `updated:`
+rolling-window trim is **still routed to the coordinator**, unruled since
+round 102.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-05T16:10:57Z — **NO SEAT STANDS BY (the USER's "make all modules
 work"). The ruled Gate-1e run is EXECUTING under a bar declared before it — two
 endpoints, not three — as a SIDE-CAR that emits no `gate1_exit`.** Gate 1 is
