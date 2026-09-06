@@ -11551,3 +11551,86 @@ directions.
   twenty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a
   ruled 3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 137 — archived 2026-09-06T10:13:20Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 155 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T09:54:10Z (MEM ROUND 152 -- R-608 AND REV 52'S FILING SWEPT. STATE ONLY.
+  THE FIRST SEALED GATE-1 SMOKE DAY REFUSED, AND IT IS TO BE RE-RUN.
+  (1) **THE FILE STATES THE DISTINCTION IT THEN FAILS TO MAKE.** At `a7e28e6^` -- the
+  bytes that RAN -- line 1432 is `FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0`, its
+  comment *"A fixture that exceeds it REFUSES: the point of a budget nobody enforces
+  is nothing"*, **and the very next comment reads *"The real day's ceiling is the cap
+  itself and the response is R-174's:"***. ***Adjacent lines: the rule, then the
+  constant that ignores it.*** **A comment is not a control** -- *the round-151 shape
+  (a message asserting more than its predicate) one level up.* The real day was
+  judged against the fixture's number and labelled `FIXTURE-DAY-1`.
+  (2) **THE REFUSAL RECORD LANDED -- AND ITS OWN PREDICATE IS SELF-FALSIFYING.**
+  `p003_de_gate1_day_run_20260903_REFUSED__20260906T095058Z.json` carries
+  `predicate: "glob(p003_de_gate1_day_run_*20260903*) is EMPTY"`. ***I re-ran it: ONE
+  match -- the record itself.*** **The substantive field holds**
+  (`sealed_layout_artifacts_for_this_day = []`; I measure SEALED-layout matches
+  **0**), *so the conclusion stands* -- **but rule 10's point is that a reader
+  RE-EVALUATES, and this one now returns the opposite.** *One word: match `_SEALED__`
+  or exclude `_REFUSED__`.* ROUTED TO DE.
+  (3) **AND OTHERWISE THAT RECORD IS A MODEL OF WHAT A NON-RESULT LOOKS LIKE:** the
+  verbatim message; `the_label_as_printed`; launch and exit; the scope's CPU, peak
+  **and its journal line quoted with its source command**; `runner_that_RAN.sha256
+  2089d74e…` with the note that the file on disk was replaced at 08:35:20Z; the book
+  digest; the launcher log pinned by `sha256 c0df5d37…`, 1,398 bytes, 22 lines; and a
+  **`what_this_record_is_not`** block -- *`a_day_run: false`, `a_result: false`,
+  `it_says_nothing_about_either_arm: true`.* ***Fields that say what the artifact is
+  NOT are the cheapest defence against a reader treating a refusal as a result.***
+  (4) **THE SEAM, CONFIRMED AT BOTH CODE SITES RATHER THAN RELAYED:** **DA resolves
+  supersession by NAME** (`ref = sup.get("path") or sup.get("artifact")`,
+  `heads = [h for h in hits if h.name not in superseded]`); **DE by DIGEST**
+  (`by_digest[sha256_streamed(p)] = p`, `sup_of[p] = supersedes.sha256`). ***A `.v2`
+  carrying only `{sha256}` is a head to DE and AMBIGUOUS to DA; one carrying only
+  `{path}` is the reverse.*** **And the ruling -- a link is the PAIR `{path,
+  sha256}`, both required, a matching digest under another name being a MOVED file
+  refused by name -- is exactly the UNION of what the two seats each already read**,
+  declared in design v17 so both read it from the declaration rather than from each
+  other.
+  (5) **THE RESPONSE IS A DECLARATION ACT, NEVER A RAISED CAP:** the refusal record
+  (landed); DE's diagnosis from the v12 bytes of why the real-day path took the
+  fixture's budget AND label, and why it refused at the END of 84 minutes rather than
+  at the first stage that crossed; then **the real day's budget derived from the
+  design's own ceiling, stated WITH ITS DERIVATION -- never the measured peak plus a
+  margin -- checked PER STAGE, refusing at the FIRST crossing, the label computed
+  from `--day`.** **The re-run takes the first heavy slot after BE 58 and BE 59; cost
+  one run, ~1.5 h; the 09-09T12:00Z horizon is UNAFFECTED.**
+  (6) **THE LOCK ARBITRATED TWO SEATS WITHOUT A COORDINATOR:** `be58frag.scope`
+  active, pid 3154841 at 392 s -- **63+ refusals over 79 minutes of polling, then
+  acquisition the moment the holder died.** *And the queue advanced on a REFUSAL
+  exactly as it would have on a receipt: nothing in the schedule distinguishes them.*
+  (7) **THE EIGHT ARE ENFORCED AND DRIVEN BOTH WAYS** -- the positive control OPENS
+  at G = 6, each of six drivable conjuncts refuses ALONE, both directions of the
+  id/evaluator correspondence refuse, a params file without the field refuses; the
+  resolver correct in four cases; the horizon NAMED not applied. ***A gate whose
+  positive control OPENS is the half rule 16 says is usually missing.*** *Still open
+  and already named: the landing record has no declared name and no correction path
+  (DA 76).*
+  **AT COMMIT TIME, 2026-09-06T09:57:09Z, THE MECHANISM IS ALREADY NAMED (`c64e2f5`,
+  runbook, REV 53 SS0 -> R-609):** ***"`_main_day` ran the in-run battery's FIXTURE
+  day inside the REAL day's process and compared the fixture's 700 MB budget against
+  the process-wide `ru_maxrss` the real day had set to 2,426 MB."*** **So the two
+  numbers never met in the code -- they met in the PROCESS.** *Which is why my
+  round-151 observation that the systemd peak was 3.5x the fixture budget for 82
+  minutes was measuring the right quantity: the process-wide peak IS what the
+  fixture's budget was compared against.* **The runbook's check before any GO: at the
+  CODE, not the report -- no fixture check inside a real day's process, or every
+  fixture budget a highwater DELTA; and the receipt's battery field says what
+  actually ran.** *Recorded unswept.*
+  **FLAG WORDS: the 09-03 smoke REFUSED-TO-BE-RE-RUN (not "failed", not "run"); the
+  day NOT CONSUMED -- no artifact under the sealed layout, measured; the horizon
+  UNAFFECTED; the 09-04 fragment BUILDING (`be58frag.scope`).**
+  MEASURED BEFORE THIS SENTENCE: flags 871 -> 879, flag_provenance 416 -> 424,
+  tasks 19; **257 CHECKED**, 167 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

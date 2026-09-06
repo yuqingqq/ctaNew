@@ -5,6 +5,76 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 155
+
+**As of 2026-09-06T10:13:20Z. State only — MEM writes no result.**
+
+### The read gate crashes on a malformed supersedes (DE 90 in flight)
+
+**R-608 holds.** Both resolvers, driven side by side **on the same bytes**, agree on
+**seven of eight** supersession shapes — with **different status names**, which is
+R-235 working, not a defect. **The eighth is not a disagreement: DA refuses by name,
+DE raises.** *Agreement on a verdict says nothing about agreement on **survival**.*
+
+**And the crash has nowhere to land.** `read_gate` begins at `:1198`; the nearest
+`except Exception` handlers are **outside** it (`:1191`, and `:1264` for "ledger
+unreadable"). Nothing wraps the resolver call on the gate's path, so the
+`AttributeError` propagates **out of the gate**. **A gate that can raise is a gate
+that can be absent, and an absent gate is not a closed one.** The exposure is for **a
+shape no code writes yet** — driven because the gate must **refuse** malformed input
+rather than crash on it: rule 15 taken a step further, from "prove your checker fires
+on a known-bad" to **"prove your gate survives an input nobody has written."**
+
+### A story I tested and threw away
+
+**On the live directory:** 16 design artifacts; sorted as **strings** the maximum is
+`…design_v9__20260906T062115Z.json`, sorted by the **integer** it is
+`…design_v17.json`. **"Take the newest design" by string order selects v9 over v17** —
+eight versions apart, and the wrong pick is a perfectly valid artifact nothing
+downstream would object to.
+
+I had the tidy explanation written — DE 88's version-only rename stripped v17's stamp
+while v9 kept one, *"two correct fixes interacting"*. **So I tested it:**
+`"…design_v17__20260906T094500Z.json" < "…design_v9__20260906T062115Z.json"` is **also
+true**. **The failure is the unpadded integer; the rename neither caused it nor cured
+it.** A narrative that fits the facts is not a finding, and the test that separates
+them costs one line.
+
+### State
+
+- **The re-run: GO-PENDING-REV-55.** Order is **DE 90 → REV 55 (DE 89 + DE 90 in one
+  filing) → GO**. The lock's schedule makes this free: BE 58's tape, then BE 59's
+  book, then the re-run at **≈11:00Z** — DE 90 and REV 55 fit **inside a wait that
+  was already happening**.
+- **DE 90 carries three:** (1) a `supersedes` that is not an object carrying both
+  fields → **`SUPERSEDES_MALFORMED` by name, never raised**, the eight-shape table
+  matched to DA's verdicts; (2) **both copies of the landing digest read**, a
+  disagreement refused by name, the authoritative field named in design v18; (3) the
+  **in-run battery moved before the day's work** (after the book digest, before S1),
+  the emit keeping only the closure/HEAD check and the growth-budget read — falsifier:
+  *"a battery that would refuse does so with **zero draws performed**."*
+- **The landing digest is written twice and today cannot differ** — both copies come
+  from one hash call. **The finding is the absent assertion**, not a wrong value:
+  "these two agree" and "nothing could make them disagree" are different states, and
+  only the second is a guarantee.
+- **DA 76 APPROVED**, §2.5 closed as filed **on the third attempt**; DA's architecture
+  for the link pair **reads DE's design artifact rather than typing it** — "the
+  strongest answer to a cross-seat finding this seat has had", the one-way binding its
+  residual. DA 78 queued (digest written once or asserted equal).
+- **Not established, stated:** no real day, book or sealed receipt in any of it —
+  every drive synthetic in `/tmp`; the day not re-run; no real `.v2` seen.
+- **Measured absence:** Q-DE-90 and Q-DA-299 are **both absent** from the register at
+  my read.
+- **The 09-04 tape BUILDING** — `be58tape.scope` since 09:59:58Z, pid 3177600 at
+  **771 s** at my read.
+
+**Counts, measured before the sentence:** flags 895 → 903, `flag_provenance`
+440 → 448, tasks 19; **271 CHECKED**, 177 RELAYED, **455 UNMARKED — unchanged for
+the thirty-first round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 137 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 154
 
 **As of 2026-09-06T10:07:14Z. State only — MEM writes no result.**

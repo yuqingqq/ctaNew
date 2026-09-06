@@ -63,6 +63,68 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T10:13:20Z (MEM ROUND 155 -- R-611 AND REV 54'S FILING SWEPT. STATE ONLY.
+  THE ROUND'S BEST WORK IS A STORY I TESTED AND THREW AWAY.
+  (1) **THE LEXICOGRAPHIC PICK IS v9 AND THE NUMERIC PICK IS v17, ON THE LIVE
+  DIRECTORY.** 16 design artifacts; sorted as STRINGS the maximum is
+  **`…design_v9__20260906T062115Z.json`**, sorted by the INTEGER it is
+  **`…design_v17.json`.** ***"Take the newest design" by string order selects v9 over
+  v17 -- eight versions apart.*** **And the wrong pick is not a crash and not a
+  mismatch: it returns an artifact that is valid in every other respect**, which is
+  why nothing downstream would object.
+  (2) **AND I ALMOST BLAMED THE STAMP FIX FOR IT.** I had the tidy version written --
+  DE 88's version-only rename stripped v17's stamp while v9 kept one, *"two correct
+  fixes interacting"*, exactly the shape this programme keeps producing. **So I
+  tested it: `"…design_v17__20260906T094500Z.json" < "…design_v9__20260906T062115Z.json"`
+  is ALSO True.** ***The failure is the UNPADDED INTEGER -- `1` sorts before `9` --
+  and it would be there with or without the stamp. The rename neither caused it nor
+  cured it.*** **A narrative that FITS the facts is not a finding, and the test that
+  separates them costs one line.** *Thirteenth "suspect the probe first", and the
+  first where the probe was a STORY rather than a command.*
+  (3) **THE CRASH HAS NOWHERE TO LAND:** `read_gate` begins at :1198 and the nearest
+  `except Exception` handlers are OUTSIDE it -- :1191, and :1264 whose comment reads
+  *"ledger unreadable"*. **Nothing wraps the resolver call on the gate's path**, so
+  the `AttributeError` I drove last round propagates OUT of the gate. *The driven
+  result -- "the gate aborts", measured through the whole of `read_gate` -- is the
+  reviewer's.* ***A gate that can RAISE is a gate that can be ABSENT, and an absent
+  gate is not a closed one.***
+  (4) **AND THE EXPOSURE IS FOR A SHAPE NO CODE WRITES YET** -- *"driven because the
+  gate must refuse malformed input rather than crash on it."* ***A defect found for
+  an input that does not exist: the opposite of every other finding this week, which
+  were all live in an artifact on disk.*** **Rule 15 taken one step further -- not
+  "prove your checker fires on a known-bad" but "prove your gate SURVIVES an input
+  nobody has written".** DE 90 makes it `SUPERSEDES_MALFORMED` BY NAME, never raised,
+  with the eight-shape table matched to DA's verdicts.
+  (5) **R-608 HOLDS, AND WHAT THE REVIEW ADDS IS ABOUT SURVIVAL:** both resolvers,
+  driven side by side ON THE SAME BYTES, agree on **seven of eight** shapes -- **with
+  different STATUS NAMES, which is R-235 working.** *The eighth is not a disagreement:
+  DA refuses by name, DE raises.* ***Agreement on a VERDICT says nothing about
+  agreement on SURVIVAL.*** **And DA's architecture for the pair is READ FROM DE'S
+  DESIGN ARTIFACT rather than typed** -- *"the strongest answer to a cross-seat
+  finding this seat has had"*, the one-way binding its residual.
+  (6) **THE LANDING DIGEST IS WRITTEN TWICE AND TODAY CANNOT DIFFER** -- both copies
+  come from ONE hash call. ***So the finding is not a wrong value but an ABSENT
+  ASSERTION***: correct by construction today, unprotected tomorrow. **"These two
+  agree" and "nothing could make them disagree" are different states, and only the
+  second is a guarantee.**
+  (7) **AND THE BATTERY MOVES BEFORE THE DAY'S WORK** -- after the book digest,
+  before S1; the emit keeps only the closure/HEAD check and the growth-budget read;
+  the falsifier is ***"a battery that would refuse does so with ZERO DRAWS
+  PERFORMED."*** *The first soft spot from the DE reset's harvest, turned into work
+  within one round of being written down -- and the falsifier states the property
+  that matters, not the mechanism.*
+  (8) **MEASURED ABSENCE:** Q-DE-90 and Q-DA-299 are **both absent** from the
+  register (0 matches each) -- the dispatch's "if landed" resolves to **NOT LANDED**,
+  recorded rather than left to inference. **`be58tape.scope` active, pid 3177600 at
+  771 s (~13 min).** *The lock's schedule is what makes DE 90 and REV 55 free: they
+  fit inside a wait that was already happening.*
+  **FLAG WORDS: the read gate CRASH-ON-MALFORMED-SUPERSEDES (DE 90 in flight); the
+  re-run GO-PENDING-REV-55; the 09-04 tape BUILDING (`be58tape.scope` since
+  09:59:58Z).**
+  MEASURED BEFORE THIS SENTENCE: flags 895 -> 903, flag_provenance 440 -> 448,
+  tasks 19; **271 CHECKED**, 177 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T10:07:14Z (MEM ROUND 154 -- R-610, Q-DE-89 AND Q-DA-298 SWEPT. STATE
   ONLY. A FIVE-ROUND THREAD CLOSES AND ONE OPEN ITEM GOES MOOT.
   (1) **THE PIN CLOSES AT v10/v17, AND THE CLOSING EVIDENCE IS A HASH I COMPUTED.**
@@ -212,79 +274,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 879 -> 887, flag_provenance 424 -> 432,
   tasks 19; **262 CHECKED**, 170 RELAYED, **455 UNMARKED -- unchanged for the
   twenty-ninth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T09:54:10Z (MEM ROUND 152 -- R-608 AND REV 52'S FILING SWEPT. STATE ONLY.
-  THE FIRST SEALED GATE-1 SMOKE DAY REFUSED, AND IT IS TO BE RE-RUN.
-  (1) **THE FILE STATES THE DISTINCTION IT THEN FAILS TO MAKE.** At `a7e28e6^` -- the
-  bytes that RAN -- line 1432 is `FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0`, its
-  comment *"A fixture that exceeds it REFUSES: the point of a budget nobody enforces
-  is nothing"*, **and the very next comment reads *"The real day's ceiling is the cap
-  itself and the response is R-174's:"***. ***Adjacent lines: the rule, then the
-  constant that ignores it.*** **A comment is not a control** -- *the round-151 shape
-  (a message asserting more than its predicate) one level up.* The real day was
-  judged against the fixture's number and labelled `FIXTURE-DAY-1`.
-  (2) **THE REFUSAL RECORD LANDED -- AND ITS OWN PREDICATE IS SELF-FALSIFYING.**
-  `p003_de_gate1_day_run_20260903_REFUSED__20260906T095058Z.json` carries
-  `predicate: "glob(p003_de_gate1_day_run_*20260903*) is EMPTY"`. ***I re-ran it: ONE
-  match -- the record itself.*** **The substantive field holds**
-  (`sealed_layout_artifacts_for_this_day = []`; I measure SEALED-layout matches
-  **0**), *so the conclusion stands* -- **but rule 10's point is that a reader
-  RE-EVALUATES, and this one now returns the opposite.** *One word: match `_SEALED__`
-  or exclude `_REFUSED__`.* ROUTED TO DE.
-  (3) **AND OTHERWISE THAT RECORD IS A MODEL OF WHAT A NON-RESULT LOOKS LIKE:** the
-  verbatim message; `the_label_as_printed`; launch and exit; the scope's CPU, peak
-  **and its journal line quoted with its source command**; `runner_that_RAN.sha256
-  2089d74e…` with the note that the file on disk was replaced at 08:35:20Z; the book
-  digest; the launcher log pinned by `sha256 c0df5d37…`, 1,398 bytes, 22 lines; and a
-  **`what_this_record_is_not`** block -- *`a_day_run: false`, `a_result: false`,
-  `it_says_nothing_about_either_arm: true`.* ***Fields that say what the artifact is
-  NOT are the cheapest defence against a reader treating a refusal as a result.***
-  (4) **THE SEAM, CONFIRMED AT BOTH CODE SITES RATHER THAN RELAYED:** **DA resolves
-  supersession by NAME** (`ref = sup.get("path") or sup.get("artifact")`,
-  `heads = [h for h in hits if h.name not in superseded]`); **DE by DIGEST**
-  (`by_digest[sha256_streamed(p)] = p`, `sup_of[p] = supersedes.sha256`). ***A `.v2`
-  carrying only `{sha256}` is a head to DE and AMBIGUOUS to DA; one carrying only
-  `{path}` is the reverse.*** **And the ruling -- a link is the PAIR `{path,
-  sha256}`, both required, a matching digest under another name being a MOVED file
-  refused by name -- is exactly the UNION of what the two seats each already read**,
-  declared in design v17 so both read it from the declaration rather than from each
-  other.
-  (5) **THE RESPONSE IS A DECLARATION ACT, NEVER A RAISED CAP:** the refusal record
-  (landed); DE's diagnosis from the v12 bytes of why the real-day path took the
-  fixture's budget AND label, and why it refused at the END of 84 minutes rather than
-  at the first stage that crossed; then **the real day's budget derived from the
-  design's own ceiling, stated WITH ITS DERIVATION -- never the measured peak plus a
-  margin -- checked PER STAGE, refusing at the FIRST crossing, the label computed
-  from `--day`.** **The re-run takes the first heavy slot after BE 58 and BE 59; cost
-  one run, ~1.5 h; the 09-09T12:00Z horizon is UNAFFECTED.**
-  (6) **THE LOCK ARBITRATED TWO SEATS WITHOUT A COORDINATOR:** `be58frag.scope`
-  active, pid 3154841 at 392 s -- **63+ refusals over 79 minutes of polling, then
-  acquisition the moment the holder died.** *And the queue advanced on a REFUSAL
-  exactly as it would have on a receipt: nothing in the schedule distinguishes them.*
-  (7) **THE EIGHT ARE ENFORCED AND DRIVEN BOTH WAYS** -- the positive control OPENS
-  at G = 6, each of six drivable conjuncts refuses ALONE, both directions of the
-  id/evaluator correspondence refuse, a params file without the field refuses; the
-  resolver correct in four cases; the horizon NAMED not applied. ***A gate whose
-  positive control OPENS is the half rule 16 says is usually missing.*** *Still open
-  and already named: the landing record has no declared name and no correction path
-  (DA 76).*
-  **AT COMMIT TIME, 2026-09-06T09:57:09Z, THE MECHANISM IS ALREADY NAMED (`c64e2f5`,
-  runbook, REV 53 SS0 -> R-609):** ***"`_main_day` ran the in-run battery's FIXTURE
-  day inside the REAL day's process and compared the fixture's 700 MB budget against
-  the process-wide `ru_maxrss` the real day had set to 2,426 MB."*** **So the two
-  numbers never met in the code -- they met in the PROCESS.** *Which is why my
-  round-151 observation that the systemd peak was 3.5x the fixture budget for 82
-  minutes was measuring the right quantity: the process-wide peak IS what the
-  fixture's budget was compared against.* **The runbook's check before any GO: at the
-  CODE, not the report -- no fixture check inside a real day's process, or every
-  fixture budget a highwater DELTA; and the receipt's battery field says what
-  actually ran.** *Recorded unswept.*
-  **FLAG WORDS: the 09-03 smoke REFUSED-TO-BE-RE-RUN (not "failed", not "run"); the
-  day NOT CONSUMED -- no artifact under the sealed layout, measured; the horizon
-  UNAFFECTED; the 09-04 fragment BUILDING (`be58frag.scope`).**
-  MEASURED BEFORE THIS SENTENCE: flags 871 -> 879, flag_provenance 416 -> 424,
-  tasks 19; **257 CHECKED**, 167 RELAYED, **455 UNMARKED -- unchanged for the
-  twenty-eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2958,6 +2947,87 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_LEXICOGRAPHIC_MAX_IS_V9_AND_THE_NUMERIC_MAX_IS_V17_ON_THE_LIVE_DIRECTORY: MEASURED_NOT_RELAYED
+                             # CHECKED 2026-09-06T10:13:20Z on the real directory: **16 design artifacts;
+                             # sorting the filenames as STRINGS gives
+                             # `p003_de_multiday_gate1_design_v9__20260906T062115Z.json` as the maximum,
+                             # while sorting by the integer gives `p003_de_multiday_gate1_design_v17.json`.
+                             # They DIFFER.**
+                             # ***So "take the newest design" by string order selects v9 over v17*** -- DA
+                             # found it in its own code, and here it is on the live directory, eight
+                             # versions apart. **A wrong pick that is not a crash and not a mismatch: the
+                             # selection simply returns an older artifact that is valid in every other
+                             # respect**, which is why nothing downstream would object.
+  AND_I_ALMOST_BLAMED_THE_STAMP_FIX_FOR_IT: THE_TIDY_STORY_WAS_FALSE
+                             # CHECKED 2026-09-06T10:13:20Z -- against my own draft. **I was about to
+                             # record that DE 88's version-only rename made the sort worse** (v17 lost its
+                             # stamp, v9 kept one), *a neat "two correct fixes interacting" story of exactly
+                             # the kind this programme keeps producing.* **So I tested it before writing
+                             # it: `"…design_v17__20260906T094500Z.json" < "…design_v9__20260906T062115Z.json"`
+                             # is ALSO True.**
+                             # ***The failure is the UNPADDED INTEGER -- `1` sorts before `9` -- and it
+                             # would be there with or without the stamp. The rename neither caused it nor
+                             # cured it.***
+                             # **A narrative that FITS the facts is not a finding; the test that would
+                             # separate them costs one line.** *Thirteenth "suspect the probe first", and
+                             # the first where the probe was a STORY rather than a command.*
+  THE_RESOLVER_CALL_IS_NOT_WRAPPED_WHERE_THE_GATE_CALLS_IT: THE_CRASH_HAS_NOWHERE_TO_LAND
+                             # CHECKED 2026-09-06T10:13:20Z: `read_gate` begins at :1198, and the
+                             # nearest `except Exception` handlers are OUTSIDE it -- :1191 (before the
+                             # function) and :1264, whose comment is *"ledger unreadable"*. **Nothing wraps
+                             # the resolver call on the gate's path**, so the `AttributeError` I drove last
+                             # round propagates out of the gate rather than becoming a status.
+                             # *The DRIVEN result -- "the gate aborts", measured through the whole of
+                             # `read_gate` -- is the reviewer's; what I add is that the code offers the
+                             # exception nowhere to land.* ***A gate that can raise is a gate that can be
+                             # ABSENT, and an absent gate is not a closed one.***
+  THE_EXPOSURE_IS_FOR_A_SHAPE_NO_CODE_WRITES_YET: A_CONTROL_AHEAD_OF_ITS_INPUT
+                             # RELAYED from R-611(A), 2026-09-06T10:13:20Z. **The bare-string
+                             # `supersedes` "depends on a shape no code writes yet, driven because the gate
+                             # must refuse malformed input rather than crash on it."**
+                             # ***A defect found for an input that does not exist -- the opposite of every
+                             # other finding this week, which were all live in an artifact on disk.***
+                             # *Rule 15's falsifier logic taken one step further: not "prove your checker
+                             # can fire on a known-bad", but "prove your gate survives an input nobody has
+                             # written".* **DE 90 turns it into `SUPERSEDES_MALFORMED` BY NAME, never
+                             # raised, with the eight-shape table matched to DA's verdicts.**
+  THE_DIGEST_IS_WRITTEN_TWICE_AND_TODAY_IT_CANNOT_DIFFER: THE_FINDING_IS_THE_ABSENT_ASSERTION
+                             # RELAYED from R-611(A) SS1.3, 2026-09-06T10:13:20Z. **The landing record
+                             # writes its digest TWICE, and each seat reads a DIFFERENT COPY -- but both
+                             # copies come from ONE hash call today, so they cannot disagree.**
+                             # ***The finding is therefore not a wrong value but an ABSENT ASSERTION***: a
+                             # structure that is correct by construction today and unprotected tomorrow.
+                             # *DE 90 reads both and refuses a disagreement by name, naming the
+                             # authoritative field in design v18; DA 78 writes it once or asserts equality.*
+                             # **The distinction is worth keeping: "these two agree" and "nothing could
+                             # make them disagree" are different states, and only the second is a
+                             # guarantee.**
+  SEVEN_OF_EIGHT_AGREE_WITH_DIFFERENT_STATUS_NAMES: R-235_WORKING
+                             # RELAYED from R-611, 2026-09-06T10:13:20Z. **Both resolvers, driven side
+                             # by side ON THE SAME BYTES, agree on SEVEN of the eight supersession shapes
+                             # -- with DIFFERENT STATUS NAMES, which is R-235 working, not a defect.**
+                             # *The eighth is not a disagreement at all: DA refuses by name, DE raises.*
+                             # ***R-608's ruling -- a link is the pair {path, sha256} -- HOLDS; what the
+                             # review found is that agreement on a verdict says nothing about agreement on
+                             # SURVIVAL.*** **And DA's architecture for the pair is READ FROM DE'S DESIGN
+                             # ARTIFACT rather than typed -- "the strongest answer to a cross-seat finding
+                             # this seat has had", with the one-way binding as the residual.**
+  THE_BATTERY_MOVES_BEFORE_THE_DAY_S_WORK: ZERO_DRAWS_PERFORMED
+                             # RELAYED from R-611(B), 2026-09-06T10:13:20Z. **DE 90 (3): the in-run
+                             # battery runs AFTER the book digest and BEFORE S1; the emit keeps only the
+                             # closure/HEAD-unchanged check and the growth-budget read; and the falsifier
+                             # is *"a battery that would refuse does so with ZERO DRAWS PERFORMED."***
+                             # ***The first soft spot from the DE reset's harvest, turned into work within
+                             # one round of being written down*** -- *and the falsifier states the property
+                             # that matters (nothing wasted), not the mechanism.*
+  THE_ROWS_ARE_NOT_LANDED_AND_THE_TAPE_IS_AT_THIRTEEN_MINUTES: MEASURED_ABSENCE
+                             # CHECKED 2026-09-06T10:13:20Z: **Q-DE-90 and Q-DA-299 are BOTH ABSENT
+                             # from the register (0 matches each)** -- the dispatch's "if landed" resolves
+                             # to NOT LANDED, and I record the absence rather than leaving the reader to
+                             # infer it. **`be58tape.scope` is `active / running`, pid 3177600 at 771 s
+                             # (~13 min).** *The lock's schedule -- BE's tape, then BE 59's book, then the
+                             # re-run at ~11:00Z -- is what makes DE 90 and REV 55 free: they fit INSIDE a
+                             # wait that was already happening.*
   THE_PIN_THREAD_CLOSES_AT_V10_V17_AND_I_HASHED_IT_MYSELF: FIVE_ROUNDS_ONE_LINE
                              # CHECKED 2026-09-06T10:07:14Z. **Design v17's `parameters.path` is
                              # `…/de_multiday_gate1_params_v10.json` -- THE RIGHT FILE -- and its
@@ -18767,6 +18837,64 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 155, 2026-09-06T10:13:20Z ------------------------------
+  THE_LEXICOGRAPHIC_MAX_IS_V9_AND_THE_NUMERIC_MAX_IS_V17_ON_THE_LIVE_DIRECTORY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v17.json
+    as_of: 2026-09-06T10:13:20Z
+    said: >-
+      on the live directory there are 16 design artifacts; sorting the filenames as
+      strings gives p003_de_multiday_gate1_design_v9__20260906T062115Z.json as the
+      maximum while sorting by the integer gives p003_de_multiday_gate1_design_v17.json
+      -- they differ, so "take the newest design" by string order selects v9 over v17,
+      eight versions apart, and the wrong pick is a valid artifact that nothing
+      downstream would object to.
+  AND_I_ALMOST_BLAMED_THE_STAMP_FIX_FOR_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v17.json
+    as_of: 2026-09-06T10:13:20Z
+    said: >-
+      I was about to record that DE 88's version-only rename made the sort worse (v17
+      lost its stamp while v9 kept one) and tested it first: the stamped form
+      "...design_v17__20260906T094500Z.json" < "...design_v9__20260906T062115Z.json" is
+      also True, so the failure is the unpadded integer and would be there with or
+      without the stamp. The rename neither caused it nor cured it. A narrative that
+      fits the facts is not a finding.
+  THE_RESOLVER_CALL_IS_NOT_WRAPPED_WHERE_THE_GATE_CALLS_IT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T10:13:20Z
+    said: >-
+      read_gate begins at :1198 and the nearest except Exception handlers are outside
+      it -- :1191 before the function and :1264 for an unreadable ledger -- so nothing
+      wraps the resolver call on the gate's path and an AttributeError propagates out
+      of the gate rather than becoming a status. The driven result that the gate
+      aborts is the reviewer's; what MEM adds is that the exception has nowhere to
+      land.
+  THE_EXPOSURE_IS_FOR_A_SHAPE_NO_CODE_WRITES_YET:
+    prov: RELAYED
+    from: R-611(A)
+    as_of: 2026-09-06T10:13:20Z
+  THE_DIGEST_IS_WRITTEN_TWICE_AND_TODAY_IT_CANNOT_DIFFER:
+    prov: RELAYED
+    from: R-611(A)
+    as_of: 2026-09-06T10:13:20Z
+  SEVEN_OF_EIGHT_AGREE_WITH_DIFFERENT_STATUS_NAMES:
+    prov: RELAYED
+    from: R-611
+    as_of: 2026-09-06T10:13:20Z
+  THE_BATTERY_MOVES_BEFORE_THE_DAY_S_WORK:
+    prov: RELAYED
+    from: R-611(B)
+    as_of: 2026-09-06T10:13:20Z
+  THE_ROWS_ARE_NOT_LANDED_AND_THE_TAPE_IS_AT_THIRTEEN_MINUTES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T10:13:20Z
+    said: >-
+      Q-DE-90 and Q-DA-299 are both absent from the register (0 matches each), so the
+      dispatch's "if landed" resolves to not landed; and be58tape.scope is
+      active/running with pid 3177600 at 771 s.
   # --- MEM round 154, 2026-09-06T10:07:14Z ------------------------------
   THE_PIN_THREAD_CLOSES_AT_V10_V17_AND_I_HASHED_IT_MYSELF:
     prov: CHECKED
