@@ -311,6 +311,25 @@ def build_record(tree: Path, by: str, at_utc: str,
             "LOG/OUTDIR pair guard and the verifier-substitution refusal) and "
             "6 by the unnamed-canonical-write refusal. Reusing one would make "
             "two different refusals indistinguishable in systemctl."),
+        "deployed_commit_can_be_orphaned": (
+            "PROVENANCE, NOT A GATE, AND THE LIMITATION IS NAMED: a later "
+            "history rewrite (rebase, amend, force-push) can leave "
+            "`deployed_commit` pointing at a commit no longer reachable from "
+            "any branch -- the same dangling-pointer class as any recorded "
+            "commit ref. NOTHING AT RUN TIME DEPENDS ON IT: the 00:06Z gate "
+            "compares DIGESTS, and an orphaned commit id degrades what a "
+            "reader can look up, never what the unit will do. Recorded "
+            "because an unstated limitation is indistinguishable from an "
+            "unnoticed one (reviewer 118af18)."),
+        "what_a_change_to_THIS_RECORD_requires": (
+            "NOTHING. The record is not in the manifest and is not a "
+            "REFUSE-tier file, so changing its FIELDS does not require a "
+            "re-deploy. But the fields are produced by da_deploy_guard.py, "
+            "which IS one of the seven REFUSE-tier files -- so editing the "
+            "guard to add a field DOES change a recorded digest and DOES "
+            "require a re-deploy. The two are different acts and this "
+            "sentence exists so nobody has to work that out under time "
+            "pressure."),
         "commit_is_provenance_not_a_gate": (
             "a HEAD move alone is NOT drift. Pinning the commit would refuse "
             "nearly every night -- the register is appended several times a "
@@ -324,7 +343,18 @@ def build_record(tree: Path, by: str, at_utc: str,
             "why": "outside the repo and under no commit. Recorded so a "
                    "reader can see it changed; not fatal, because losing a "
                    "night's verdict to a distro python update is the wrong "
-                   "trade and the change is visible either way."},
+                   "trade and the change is visible either way.",
+            "scope_boundary_STATED": (
+                "THE BINARY IS PINNED; ITS STDLIB AND SITE-PACKAGES ARE NOT. "
+                "A change under /usr/lib/python3.12/ or in the venv's "
+                "site-packages reaches 00:06Z with no digest, no report and "
+                "no journal line. This is a DELIBERATE exclusion on the same "
+                "trade as the binary itself -- pinning a whole stdlib would "
+                "make a distro update cost a night's verdict -- and it is "
+                "recorded here because the reviewer's point (118af18) is "
+                "correct: a record that states the boundary for the binary "
+                "and is SILENT about the libraries leaves a reader unable to "
+                "tell considered-and-excluded from missed."),},
         **fs,
     }
 

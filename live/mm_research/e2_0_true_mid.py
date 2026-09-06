@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import gzip
 import hashlib
+import os
 import io
 import json
 import math
@@ -43,7 +44,34 @@ import numpy as np
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[1]
+CODE_ROOT = HERE.parents[1]
+
+#: WHERE THE LEDGER IS, RESOLVED AND RECORDED -- NOT ASSUMED FROM THE CODE.
+#: `PM_DATA_ROOT` names the REPO root (pm_tape_density.py:99 returns Path(env)
+#: and consumers append `data/`), and nine modules in this repo already honour
+#: it. This family did not, and relied on a `data` symlink in the worktree --
+#: which `git checkout --detach` destroys, silently leaving a near-empty shell.
+#: That cost a run in round 58: the smoke found zero days and refused. The
+#: branch taken is recorded in every receipt so a reader can see WHICH tree a
+#: number came from, and a root with no tape REFUSES instead of reading a
+#: partial tree.
+DATA_ROOT_BRANCH = "unresolved"
+
+
+def _resolve_root() -> Path:
+    global DATA_ROOT_BRANCH
+    env = os.environ.get("PM_DATA_ROOT")
+    if env:
+        DATA_ROOT_BRANCH = "1_env_PM_DATA_ROOT"
+        return Path(env)
+    if (CODE_ROOT / "data" / "mm_hf" / "raw").is_dir():
+        DATA_ROOT_BRANCH = "2_code_tree_carries_the_tape"
+        return CODE_ROOT
+    DATA_ROOT_BRANCH = "3_unresolved_no_tape"
+    return CODE_ROOT
+
+
+ROOT = _resolve_root()
 RAW = ROOT / "data" / "mm_hf" / "raw"
 VISION = ROOT / "data" / "mm_hf" / "vision" / "parquet" / "aggTrades"
 DECL_PATH = HERE / "declarations" / "p002_e2_0_declaration_v2.json"
@@ -916,6 +944,42 @@ def selftest() -> int:                                        # noqa: C901
        "POSITIVE CONTROL: the real declaration still loads after the "
        "known-bads -- the refusal discriminates rather than always firing")
 
+    # --- THE LEDGER ROOT: resolved, recorded, and a rootless tree REFUSES ---
+    ok(DATA_ROOT_BRANCH in ("1_env_PM_DATA_ROOT",
+                            "2_code_tree_carries_the_tape",
+                            "3_unresolved_no_tape"),
+       f"LEDGER ROOT: the branch taken is RECORDED, not assumed -- "
+       f"{DATA_ROOT_BRANCH}, root {ROOT}")
+    import subprocess as _sp
+    import tempfile as _tf2
+    with _tf2.TemporaryDirectory() as d:
+        r = _sp.run([sys.executable, "-c",
+                     "import sys; sys.path.insert(0, %r)\n"
+                     "import e2_0_true_mid as E\n"
+                     "print(E.DATA_ROOT_BRANCH)\n"
+                     "try:\n"
+                     "    E.require_tape(); print('ADMITTED')\n"
+                     "except E.E20Refused as e: print('REFUSED')\n"
+                     % str(HERE)],
+                    capture_output=True, text=True,
+                    env={**os.environ, "PM_DATA_ROOT": d})
+        out = r.stdout.strip().splitlines()
+        ok(out == ["1_env_PM_DATA_ROOT", "REFUSED"],
+           f"KNOWN-BAD: PM_DATA_ROOT pointed at a tree with NO TAPE takes the "
+           f"env branch and then REFUSES -- an empty population is not a "
+           f"result, which is the failure that cost a run in round 58 "
+           f"(got {out})")
+        r2 = _sp.run([sys.executable, "-c",
+                      "import sys; sys.path.insert(0, %r)\n"
+                      "import e2_0_true_mid as E\n"
+                      "E.require_tape(); print(E.DATA_ROOT_BRANCH, "
+                      "len(E.days_available('ADAUSDT')) > 0)\n" % str(HERE)],
+                     capture_output=True, text=True,
+                     env={**os.environ, "PM_DATA_ROOT": "/home/yuqing/ctaNew"})
+        ok(r2.returncode == 0 and "1_env_PM_DATA_ROOT True" in r2.stdout,
+           "POSITIVE CONTROL: PM_DATA_ROOT at the real repo root ADMITS and "
+           "finds tape -- the refusal discriminates rather than always firing")
+
     # --- tau* rule reproduces the plan's own instantiation ---
     ts30 = [10.0] * 24 + [90.0] * 7
     ok(tau_star(ts30, decl)[0] == 30,
@@ -987,6 +1051,16 @@ def selftest() -> int:                                        # noqa: C901
 
 
 # --------------------------------------------------------------------------
+def require_tape() -> None:
+    """A root with no tape REFUSES. Reporting zero days would be a result-
+    shaped object built from an absent input -- the shape that cost a run."""
+    if not RAW.is_dir():
+        raise E20Refused(
+            f"REFUSED: no tape at {RAW} (root branch {DATA_ROOT_BRANCH}, "
+            f"code tree {CODE_ROOT}). Set PM_DATA_ROOT to the REPO root that "
+            f"carries data/mm_hf/raw. An empty population is not a result.")
+
+
 def days_available(sym: str) -> list[str]:
     d = RAW / "bookTicker" / sym
     return sorted({f.name.split("_")[0] for f in d.glob("*.csv*")})
@@ -994,7 +1068,19 @@ def days_available(sym: str) -> list[str]:
 
 def run(symbols, decl, out_path: Path | None):
     t0 = time.time()
+    require_tape()
     result = {"protocol": PROTOCOL, "carrying_commit": carrying_commit(),
+              "ledger_root": {
+                  "data_root": str(ROOT),
+                  "data_root_branch": DATA_ROOT_BRANCH,
+                  "code_root": str(CODE_ROOT),
+                  "raw": str(RAW),
+                  "code_and_data_are_the_same_tree": str(ROOT) == str(CODE_ROOT),
+                  "why_recorded": (
+                      "so a reader can see WHICH tree a number came from. A "
+                      "worktree's own data/ carries only the git-tracked "
+                      "receipts, not the tape; running there silently would "
+                      "measure a different population.")},
               "declaration": {"path": str(DECL_PATH.relative_to(ROOT)),
                               "sha256": DECL_SHA,
                               "carrying_commit": decl["carrying_commit"]},
@@ -1032,9 +1118,73 @@ def run(symbols, decl, out_path: Path | None):
     return result
 
 
+def supersede_note(earlier: Path, operative: Path, out: Path) -> dict:
+    """Mark an earlier receipt superseded WITHOUT editing it (rule 13).
+
+    The claim "these two carry the same result" is COMPUTED here field by
+    field, not asserted in prose: if any gate-bearing field differs, the note
+    says so and refuses to call the earlier one merely superseded.
+    """
+    a = json.loads(earlier.read_text())
+    b = json.loads(operative.read_text())
+    sa = list(a["symbols"])[0]
+    ga, gb = a["symbols"][sa], b["symbols"][sa]
+    fields = {
+        "cells": ga["summary"]["cells"] == gb["summary"]["cells"],
+        "verdict": ga["predicates"]["verdict"] == gb["predicates"]["verdict"],
+        "primary_ci95": (ga["summary"]["primary_ci95"]
+                         == gb["summary"]["primary_ci95"]),
+        "population_at_tau_star": (ga["summary"].get("population_at_tau_star")
+                                   == gb["summary"].get("population_at_tau_star")),
+        "tau_star_s": ga["summary"]["tau_star_s"] == gb["summary"]["tau_star_s"],
+        "admissible_days": (ga["summary"]["admissible_days"]
+                            == gb["summary"]["admissible_days"]),
+        "delta_rs_bps": (ga["predicates"]["delta_rs_bps"]
+                         == gb["predicates"]["delta_rs_bps"]),
+    }
+    only_new = sorted(set(gb["summary"]) - set(ga["summary"]))
+    note = {
+        "protocol": "P002_E2_0_SUPERSEDED_BY_V1",
+        "what_this_is": (
+            "a SIDECAR. The superseded receipt is NOT edited (rule 13): a "
+            "frozen artifact stays as provenance and the pointer lives beside "
+            "it, because an automated reader resolves receipt fields and a "
+            "receipt with no `superseded_by` reads as current."),
+        "superseded": {"path": str(earlier).split("ctaNew/")[-1],
+                       "sha256": digest(earlier)},
+        "operative": {"path": str(operative).split("ctaNew/")[-1],
+                      "sha256": digest(operative)},
+        "carrying_commit": carrying_commit(),
+        "gate_bearing_fields_identical": fields,
+        "all_gate_bearing_fields_identical": all(fields.values()),
+        "what_differs": {
+            "keys_only_in_the_operative_receipt": only_new,
+            "why": ("the operative receipt adds the declared but previously "
+                    "un-emitted size-bucket table (the amendment asks for "
+                    "notional-weighted AND size-bucketed rs). Nothing "
+                    "gate-bearing moved, which is the point of the field-by-"
+                    "field comparison above rather than a prose assurance."),
+        },
+        "why_both_stand_in_git": (
+            "the earlier receipt was READ before the buckets were added, so "
+            "deleting it would remove an artifact a decision saw. It is "
+            "committed as provenance and this sidecar makes it "
+            "unresolvable-as-current."),
+    }
+    if not all(fields.values()):
+        note["REFUSED"] = (
+            "a gate-bearing field DIFFERS between the two receipts; this is "
+            "not a supersession by an added diagnostic and must not be "
+            "described as one")
+    out.write_text(json.dumps(note, indent=2, sort_keys=True) + "\n")
+    return note
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--supersede", nargs=3, metavar=("EARLIER", "OPERATIVE",
+                                                     "OUT"))
     ap.add_argument("--reproduce-e1", action="store_true")
     ap.add_argument("--run", action="store_true")
     ap.add_argument("--symbols", nargs="*", default=["ADAUSDT"])
@@ -1042,6 +1192,11 @@ def main() -> int:
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.supersede:
+        n = supersede_note(Path(a.supersede[0]), Path(a.supersede[1]),
+                           Path(a.supersede[2]))
+        print(json.dumps(n, indent=2, sort_keys=True))
+        return 0 if n["all_gate_bearing_fields_identical"] else 1
     decl = load_declaration()
     if a.reproduce_e1:
         r = reproduce_e1(a.symbols[0], decl)

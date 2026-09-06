@@ -1,0 +1,31 @@
+{
+  "all_gate_bearing_fields_identical": true,
+  "carrying_commit": "2cf2029be0843991a5cf9c14b1defa8fd34dbb78",
+  "gate_bearing_fields_identical": {
+    "admissible_days": true,
+    "cells": true,
+    "delta_rs_bps": true,
+    "population_at_tau_star": true,
+    "primary_ci95": true,
+    "tau_star_s": true,
+    "verdict": true
+  },
+  "operative": {
+    "path": "data/mm_hf/e1/p002_e2_0_smoke_ADAUSDT__20260906T044455Z.json",
+    "sha256": "6942eb5ff574a42e3c940b30a79e1ac80eceecb93ea688b570ed7d151562644b"
+  },
+  "protocol": "P002_E2_0_SUPERSEDED_BY_V1",
+  "superseded": {
+    "path": "data/mm_hf/e1/p002_e2_0_smoke_ADAUSDT__20260906T044234Z.json",
+    "sha256": "93d1d8d0e33549d3d774f6fd1b07eab1178c2c2348de69fcb2f937203ecf8d5a"
+  },
+  "what_differs": {
+    "keys_only_in_the_operative_receipt": [
+      "size_buckets_at_tau_star",
+      "size_buckets_note"
+    ],
+    "why": "the operative receipt adds the declared but previously un-emitted size-bucket table (the amendment asks for notional-weighted AND size-bucketed rs). Nothing gate-bearing moved, which is the point of the field-by-field comparison above rather than a prose assurance."
+  },
+  "what_this_is": "a SIDECAR. The superseded receipt is NOT edited (rule 13): a frozen artifact stays as provenance and the pointer lives beside it, because an automated reader resolves receipt fields and a receipt with no `superseded_by` reads as current.",
+  "why_both_stand_in_git": "the earlier receipt was READ before the buckets were added, so deleting it would remove an artifact a decision saw. It is committed as provenance and this sidecar makes it unresolvable-as-current."
+}
