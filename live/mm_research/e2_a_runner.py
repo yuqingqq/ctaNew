@@ -38,6 +38,7 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -321,6 +322,186 @@ MODELS = ("RiskAverse", "ProbQueue_f3")
 
 class E2ARefused(RuntimeError):
     """The run cannot proceed under the declaration."""
+
+
+class LaunchCaptureRefused(E2ARefused):
+    """The code that ran is not the code the receipt would name."""
+
+
+# ---------------------------------------------------------- RULE 22 / R-605
+#: THE LAUNCH CAPTURE. Rule 22 as amended: a runner and every heavy producer
+#: capture AT IMPORT the digest of every module of their import closure
+#: under `live/`, plus the worktree's HEAD and whether it was dirty, and
+#: REFUSE THE EMIT BY NAME if any of it moved. DA 77's own sweep found this
+#: seat's two runners lacking it -- and found that this seat's binding map
+#: had exempted them, which is worse than the gap.
+#:
+#: R-235: DE's `source_identity_at_launch` / `assert_source_unchanged` were
+#: read AS A DOCUMENT and re-implemented here. Nothing of DE's is imported.
+#: The property is not "the file I am is unchanged" -- that is one module of
+#: many; it is "every module that RAN is still the bytes that ran".
+LIVE_DIR = str(Path(__file__).resolve().parents[1])
+LAUNCH_TIME_UTC = datetime.datetime.now(
+    datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+LAUNCH_SOURCE_SHA256 = hashlib.sha256(
+    Path(__file__).resolve().read_bytes()).hexdigest()
+#: path -> digest OF THE BYTES SEEN WHEN THE MODULE FIRST ENTERED THIS RUN.
+#: Never a second read: an import can return a module already in
+#: `sys.modules` whose file has since moved, and the second read would
+#: record the mover's bytes as the runner's.
+LAUNCH_CLOSURE: dict = {}
+LAUNCH_CAPTURE_POINTS: list = []
+
+
+def _digest_module(mod) -> None:
+    f = getattr(mod, "__file__", None)
+    if not f:
+        return
+    try:
+        p = Path(f).resolve()
+    except OSError:
+        return
+    if not str(p).startswith(LIVE_DIR) or str(p) in LAUNCH_CLOSURE:
+        return
+    try:
+        LAUNCH_CLOSURE[str(p)] = hashlib.sha256(p.read_bytes()).hexdigest()
+    except OSError:
+        LAUNCH_CLOSURE[str(p)] = None
+
+
+def capture_closure(where: str = "module import") -> int:
+    """Digest every `live/` module loaded so far. Callable again AFTER a
+    lazy import, because a module imported inside a function was not in
+    `sys.modules` at import time and would otherwise be outside the
+    closure -- the exact gap REV 53 section 1.1 found in DE's."""
+    before = len(LAUNCH_CLOSURE)
+    for m in list(sys.modules.values()):
+        _digest_module(m)
+    LAUNCH_CAPTURE_POINTS.append(
+        {"where": where, "n_modules_after": len(LAUNCH_CLOSURE),
+         "n_added": len(LAUNCH_CLOSURE) - before})
+    return len(LAUNCH_CLOSURE)
+
+
+def _head_state() -> dict:
+    """The worktree's HEAD and whether it was dirty, AT IMPORT."""
+    root = str(Path(__file__).resolve().parents[2])
+
+    def _g(*a):
+        try:
+            r = subprocess.run(["git", "-C", root, *a], capture_output=True,
+                               text=True, timeout=60)
+        except Exception:                                     # noqa: BLE001
+            return None
+        return r.stdout.strip() if r.returncode == 0 else None
+
+    st = _g("status", "--porcelain")
+    return {"worktree": root, "head": _g("rev-parse", "HEAD"),
+            "dirty": bool(st) if st is not None else None,
+            "dirty_paths": [x[3:] for x in (st or "").split("\n") if x][:20]}
+
+
+def closure_drift(closure: dict | None = None) -> list:
+    """Every module of the closure whose FILE no longer holds the bytes it
+    held when it entered this run. `closure` is injectable ONLY so the
+    falsifier can drive both directions on copies; every production call
+    takes the launch capture."""
+    src = LAUNCH_CLOSURE if closure is None else closure
+    out = []
+    for path, at_launch in sorted(src.items()):
+        try:
+            now = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+        except OSError:
+            now = None
+        if now != at_launch:
+            out.append({"module": Path(path).name, "path": path,
+                        "at_launch": at_launch, "now": now,
+                        "gone": now is None})
+    return out
+
+
+def source_identity_at_launch() -> dict:
+    """THE BYTES THAT RAN -- all of them -- and whether they still hold."""
+    me = Path(__file__).resolve()
+    try:
+        now = hashlib.sha256(me.read_bytes()).hexdigest()
+    except OSError:
+        now = None
+    drift = closure_drift()
+    head_now = _head_state()
+    return {
+        "producing_code": me.name,
+        "producing_code_sha256": LAUNCH_SOURCE_SHA256,
+        "digest_taken_at": "MODULE IMPORT, before any work",
+        "launch_time_utc": LAUNCH_TIME_UTC,
+        "on_disk_sha256_at_emit": now,
+        "source_unchanged_during_the_run": now == LAUNCH_SOURCE_SHA256,
+        "import_closure": {
+            "n_modules": len(LAUNCH_CLOSURE),
+            "root": LIVE_DIR,
+            #: A LIST OF [name, digest] PAIRS, not a dict keyed by
+            #: filename: a module name must never sit where a key-scanning
+            #: net looks for economic keys (this programme owns a module
+            #: called `e1_markout_scan.py`). The shape removes the
+            #: interaction instead of exempting the block from the scan.
+            "modules": [[Path(k).name, v]
+                        for k, v in sorted(LAUNCH_CLOSURE.items())],
+            "digested": ("from the bytes each module held when it FIRST "
+                         "entered this run -- never re-read"),
+            "capture_points": LAUNCH_CAPTURE_POINTS,
+        },
+        "closure_drift": drift,
+        "closure_unchanged_during_the_run": not drift,
+        "head_at_import": LAUNCH_HEAD,
+        "head_at_emit": head_now,
+        "head_unchanged_during_the_run": (
+            LAUNCH_HEAD.get("head") == head_now.get("head")),
+        "worktree_was_dirty_at_import": LAUNCH_HEAD.get("dirty"),
+    }
+
+
+def assert_source_unchanged(where: str, *, fixture: bool = True) -> dict:
+    """REFUSE THE EMIT if any of the code that ran changed under it.
+
+    Not the RUN -- the modules are in memory and the run is unaffected.
+    What is not honest is a receipt naming bytes that did not produce it,
+    and `producing_code_is_the_committed_bytes` PASSES when the replacement
+    is itself committed (R-603)."""
+    idy = source_identity_at_launch()
+    if idy["closure_drift"]:
+        raise LaunchCaptureRefused(
+            f"REFUSED at {where}: A MODULE OF THIS RUN'S IMPORT CLOSURE "
+            f"CHANGED UNDER IT -- "
+            f"{[d['module'] for d in idy['closure_drift']]}. The run is "
+            f"unaffected; a receipt stamped from the files would name code "
+            f"that DID NOT RUN. Rule 22 as amended (R-605): the capture is "
+            f"the CLOSURE, not one file.")
+    if not idy["source_unchanged_during_the_run"]:
+        raise LaunchCaptureRefused(
+            f"REFUSED at {where}: THE SOURCE CHANGED UNDER THIS RUN. This "
+            f"process is executing {LAUNCH_SOURCE_SHA256[:16]} (read at "
+            f"import) and the file now holds "
+            f"{str(idy['on_disk_sha256_at_emit'])[:16]}.")
+    if not idy["head_unchanged_during_the_run"]:
+        raise LaunchCaptureRefused(
+            f"REFUSED at {where}: THE WORKTREE'S HEAD MOVED UNDER THIS RUN "
+            f"-- {str(idy['head_at_import'].get('head'))[:12]} -> "
+            f"{str(idy['head_at_emit'].get('head'))[:12]}. A "
+            f"carrying_commit would name a commit this run did not execute "
+            f"from.")
+    if not fixture and idy["worktree_was_dirty_at_import"]:
+        raise LaunchCaptureRefused(
+            f"REFUSED at {where}: THE WORKTREE WAS DIRTY AT IMPORT "
+            f"({idy['head_at_import'].get('dirty_paths')}). For a REAL "
+            f"artifact the producing code must be locatable in a commit; "
+            f"uncommitted bytes are locatable nowhere. A fact for a "
+            f"fixture, a refusal for a real run.")
+    return idy
+
+
+capture_closure("module import")
+LAUNCH_HEAD = _head_state()
+
 
 
 def carrying_commit() -> str:
@@ -1211,6 +1392,26 @@ def find_economic_shaped_leaks(obj):
                   if any(m in k.lower() for m in ECONOMIC_SHAPE))
 
 
+#: RULE 22 MEETS THE SEAL, and the answer is the SHAPE, not an exemption.
+#: A closure stamped as a dict keyed by FILENAME puts module names where
+#: the seal's nets look for economic KEYS -- and this programme owns a
+#: module called `e1_markout_scan.py`. The first draft of this fix carved
+#: the closure out of both nets, which is a HOLE in a seal to solve a
+#: problem the seal does not have. The closure is stamped as a LIST OF
+#: [name, digest] PAIRS instead: no module name is ever a key, the values
+#: are strings so the numeric census never sees them, and NEITHER NET IS
+#: TOUCHED.
+_DIGEST_RE = re.compile(r"^[0-9a-f]{64}$")
+
+
+def closure_name_collides_with_the_seal(name: str) -> bool:
+    """Would this module's NAME be read as an economic key if the closure
+    were ever stamped as a dict again? Reported, never relied on."""
+    n = name.lower()
+    return (any(m in n for m in SEALED_KEY_MARKERS)
+            or any(m in n for m in ECONOMIC_SHAPE))
+
+
 def redact_sealed(obj, path="", dropped=None):
     """Remove every economic quantity, recording WHICH keys were removed.
 
@@ -1223,8 +1424,9 @@ def redact_sealed(obj, path="", dropped=None):
     if isinstance(obj, dict):
         out = {}
         for k, v in obj.items():
+            here = f"{path}.{k}" if path else str(k)
             if _is_sealed_key(str(k)):
-                dropped.append(f"{path}.{k}" if path else str(k))
+                dropped.append(here)
                 continue
             out[k] = redact_sealed(v, f"{path}.{k}" if path else str(k),
                                    dropped)
@@ -1548,6 +1750,12 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
             "wall_s": round(time.time() - w0, 2)}
 
     result["wall_s_total"] = round(time.time() - t_start, 2)
+    #: RULE 22 / R-605. The closure, HEAD and the dirty state, captured at
+    #: IMPORT and stamped here; the emit REFUSES BY NAME if any moved. A
+    #: real run's bar is the strict one: a dirty worktree is locatable in no
+    #: commit.
+    result["source_identity"] = assert_source_unchanged(
+        "the E2-A run's emit", fixture=False)
     try:
         import resource                                       # noqa: PLC0415
         result["max_rss_kib"] = resource.getrusage(
@@ -2420,12 +2628,96 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
                "escalated"]),
            "the arm that runs is labelled MIN_SIZE_NOT_THE_E2A_GATE")
 
+    # -- 16. RULE 22 / R-605: THE LAUNCH CAPTURE ------------------------
+    _idy = source_identity_at_launch()
+    ck("RULE 22 / R-605 -- THE LAUNCH CAPTURE IS THE IMPORT CLOSURE, NOT "
+       "ONE FILE: at import this run digested every `live/` module in "
+       "`sys.modules` plus HEAD and the dirty state, and it re-captures "
+       "after a LAZY import so a module that entered mid-run is not left "
+       "outside. ***DA 77's sweep found this runner without it -- and "
+       "found that this seat's own binding map had EXEMPTED it***",
+       _idy["import_closure"]["n_modules"] >= 4
+       and _idy["producing_code_sha256"] == LAUNCH_SOURCE_SHA256
+       and _idy["closure_unchanged_during_the_run"] is True
+       and any("lazy" in c["where"] or "import" in c["where"]
+               for c in _idy["import_closure"]["capture_points"]),
+       f"{_idy['import_closure']['n_modules']} modules "
+       f"{sorted(_idy['import_closure']['modules'])}, HEAD "
+       f"{str(_idy['head_at_import']['head'])[:8]}, dirty "
+       f"{_idy['head_at_import']['dirty']}")
+
+    _sd = Path(tempfile.mkdtemp(prefix="da78_e2a_closure_"))
+    _a, _b = _sd / "sib_one.py", _sd / "sib_two.py"
+    _a.write_text("X = 1\n")
+    _b.write_text("X = 2\n")
+    _syn = {str(_a): hashlib.sha256(_a.read_bytes()).hexdigest(),
+            str(_b): hashlib.sha256(_b.read_bytes()).hexdigest()}
+    _none = closure_drift(_syn)
+    _b.write_text("X = 2  # landed mid-run\n")
+    _one = closure_drift(_syn)
+    _hold = dict(LAUNCH_CLOSURE)
+    LAUNCH_CLOSURE.clear()
+    LAUNCH_CLOSURE.update(_syn)
+    _msg = ""
+    try:
+        assert_source_unchanged("a driven emit", fixture=True)
+    except LaunchCaptureRefused as _e:
+        _msg = str(_e)
+    LAUNCH_CLOSURE.clear()
+    LAUNCH_CLOSURE.update(_hold)
+    _ok = assert_source_unchanged("a driven emit", fixture=True)
+    ck("AND IT REFUSES BY MODULE NAME WHEN A SIBLING IS REWRITTEN MID-RUN "
+       "AND ADMITS WHEN NOTHING MOVED -- driven on COPIES, never on a "
+       "module another seat is working in. ***The run is unaffected; a "
+       "receipt stamped from the files would name code that DID NOT RUN, "
+       "and `producing_code_is_the_committed_bytes` PASSES when the "
+       "replacement is itself committed (R-603)***",
+       _none == [] and [d["module"] for d in _one] == ["sib_two.py"]
+       and "IMPORT CLOSURE" in _msg and "sib_two.py" in _msg
+       and _ok["closure_unchanged_during_the_run"] is True,
+       f"nothing moved -> {len(_none)} drift; one rewritten -> "
+       f"{[d['module'] for d in _one]} and the emit refuses naming it")
+
+    # -- 17. the capture meets the SEAL, by SHAPE ------------------------
+    _mods = _idy["import_closure"]["modules"]
+    _names = [m[0] for m in _mods]
+    _collide = [n for n in _names if closure_name_collides_with_the_seal(n)]
+    _stamped = {"source_identity": _idy}
+    _red = redact_sealed(_stamped, "", [])
+    _after = ((_red.get("source_identity") or {}).get("import_closure")
+              or {}).get("modules")
+    _leaks = find_sealed_leaks(_stamped)
+    _econ = find_economic_shaped_leaks(_stamped)
+    _planted = {"source_identity": {"import_closure": {
+        "modules": _mods, "cost_per_fill": 12.5}}}
+    _p_leaks = find_sealed_leaks(_planted)
+    _p_econ = find_economic_shaped_leaks(_planted)
+    ck("THE CLOSURE IS STAMPED AS [name, digest] PAIRS, SO NO MODULE NAME "
+       "IS EVER A KEY -- and the seal's two nets are UNTOUCHED. ***The "
+       "first draft of this fix carved the closure out of both nets: a "
+       "HOLE in a seal, to solve a problem the seal does not have. The "
+       "shape removes the interaction instead.*** The stamp survives "
+       "redaction intact, both nets find nothing in it, and an economic "
+       "key planted BESIDE it is still caught by name",
+       isinstance(_mods, list) and all(len(m) == 2 for m in _mods)
+       and _after == _mods and _leaks == [] and _econ == []
+       and any("cost_per_fill" in x for x in _p_leaks + _p_econ),
+       f"{len(_mods)} pairs survive redaction unchanged; 0 leaks from "
+       f"either net; a planted `cost_per_fill` beside them -> "
+       f"{sorted(set(_p_leaks + _p_econ))}; module names that WOULD have "
+       f"collided as keys: {_collide or 'none today'}")
+
     tape = watch.tape_paths()
     n_fail = sum(1 for c in checks if not c["passed"])
     receipt = {
         "protocol": PROTOCOL + "_FIXTURE",
         "carrying_commit": carrying_commit(),
         "runner_identity": runner_identity(),
+        #: RULE 22 / R-605: the closure, HEAD and dirty state captured at
+        #: IMPORT. A fixture RECORDS the dirty state; a real run refuses on
+        #: it.
+        "source_identity": assert_source_unchanged(
+            "the fixture receipt's emit", fixture=True),
         "wrapper": wrapper_block(),
         "status": "FIXTURE_NO_DATA_TOUCHED",
         "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
@@ -2619,6 +2911,10 @@ def e1_resolver_parity(out_path: Path | None = None) -> dict:
     root = E20.require_canonical_root("P-2026-002 E1 resolver parity")
     sys.path.insert(0, str(HERE))
     import e1_markout_scan as E1                              # noqa: PLC0415
+    #: RULE 22: a LAZY import was not in `sys.modules` at launch, so it was
+    #: outside the closure. REV 53 section 1.1 found exactly that hole in
+    #: DE's -- the two modules that do the replaying were outside it.
+    capture_closure("after a lazy import of e1_markout_scan")
     old_root = Path(E1.__file__).resolve().parents[2]
     new_root = E1.REPO
     syms = list(SYMBOLS_IN_SCOPE)
@@ -2819,6 +3115,10 @@ def diagnose_tick(sym: str, out_path: Path | None = None) -> dict:
     root = E20.require_canonical_root(
         "P-2026-002 E1_RESULTS record-defect diagnosis")
     import e1_markout_scan as E1                              # noqa: PLC0415
+    #: RULE 22: a LAZY import was not in `sys.modules` at launch, so it was
+    #: outside the closure. REV 53 section 1.1 found exactly that hole in
+    #: DE's -- the two modules that do the replaying were outside it.
+    capture_closure("after a lazy import of e1_markout_scan")
     #: `e1_markout_scan` has NO data-root resolver -- it computes
     #: `SRC = REPO / "data/..."` from its own file location, so from a
     #: worktree it returns an EMPTY day list and `tick_size` raises on an

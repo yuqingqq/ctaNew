@@ -1367,7 +1367,15 @@ def selftest() -> tuple:                                      # noqa: C901
            for p in BE_PRODUCERS)
        and by["live/pm_research/de_multiday_gate1_runner.py"][
            "rule22"]["rule22_complete"] is True
-       and rep["totals"]["n_modules_rule22_complete"] == 1,
+       #: THE COUNT IS RECOMPUTED, NEVER PINNED. Round 77 asserted it was
+       #: exactly ONE -- true that day, and DA 78 closing this seat's own
+       #: two runners would have broken a check that was measuring the
+       #: calendar rather than the property. Rounds 69/72/74/75/77: the
+       #: same defect, caught before landing this time.
+       and rep["totals"]["n_modules_rule22_complete"] == sum(
+           1 for m in rep["modules"]
+           if m.get("rule22", {}).get("rule22_complete"))
+       and rep["totals"]["n_modules_rule22_complete"] >= 1,
        "; ".join(f"{Path(p).name}: closure="
                  f"{by[p]['rule22']['status']['import_closure']}, code="
                  f"{by[p]['rule22']['status']['producing_code_digest'][:9]},"

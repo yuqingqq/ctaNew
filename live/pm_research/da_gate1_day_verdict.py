@@ -664,11 +664,12 @@ CONJUNCTION_FIELD = "the_bar_is_a_CONJUNCTION"
 SUPERSESSION_PAIR_FIELDS = ("path", "sha256")
 
 
-def _designs_by_version() -> list:
+def _designs_by_version(derived: Path | None = None) -> list:
     """DE's designs, ordered NUMERICALLY. Lexicographic ordering puts v9
     after v16, which would read the definition out of an older design."""
     out = []
-    for f in _derived_dir().glob("p003_de_multiday_gate1_design_v*.json"):
+    d = Path(derived) if derived else _derived_dir()
+    for f in d.glob("p003_de_multiday_gate1_design_v*.json"):
         tok = f.stem.split("design_v", 1)[-1].split("_", 1)[0].split("__")[0]
         try:
             out.append((int("".join(c for c in tok if c.isdigit())), f))
@@ -677,7 +678,7 @@ def _designs_by_version() -> list:
     return [f for _, f in sorted(out)]
 
 
-def supersession_pair_definition() -> dict:
+def supersession_pair_definition(derived: Path | None = None) -> dict:
     """The link's definition, OBSERVED IN DE's DESIGN rather than typed.
 
     DE's design declares its own supersession chain as two-element
@@ -686,7 +687,7 @@ def supersession_pair_definition() -> dict:
     the seat whose links it is resolving -- which is precisely what REV 52
     found: two seats resolving the same link by different fields, so exactly
     one of them would call the R-603 correction a day that ran twice."""
-    designs = _designs_by_version()
+    designs = _designs_by_version(derived)
     if not designs:
         return {"declared": False,
                 "status": "SUPERSESSION_DEFINITION_NOT_DECLARED",
@@ -707,9 +708,19 @@ def supersession_pair_definition() -> dict:
                          and isinstance(e[0], str) and isinstance(e[1], str)
                          and len(e[1]) == 64 for e in chain))
     if not pair_form:
+        shapes = sorted({len(e) if isinstance(e, (list, tuple)) else
+                         type(e).__name__ for e in (chain or [])},
+                        key=str)
         return {"declared": False, "source": d.name,
                 "status": "SUPERSESSION_DEFINITION_NOT_A_PAIR_FORM",
                 "required_fields": None,
+                #: A DESIGN IS PRESENT AND DECLARES SOMETHING ELSE. That is
+                #: DRIFT, not absence, and the two must not share a branch:
+                #: absence leaves this seat enforcing its own constant and
+                #: saying so; drift means the authority has moved and every
+                #: link judged here would be judged by the wrong rule.
+                "a_design_is_present_declaring_another_form": True,
+                "observed_entry_shapes": shapes,
                 "why": ("DE's design does not carry its own chain as "
                         "[path, sha256] pairs, so the pair form cannot be "
                         "read from it and MUST NOT be assumed")}
@@ -721,6 +732,84 @@ def supersession_pair_definition() -> dict:
                             "superseded, BOTH of which must match ONE "
                             "PRESENT file"),
             "status": "PAIR_DEFINITION_READ_FROM_DES_DESIGN"}
+
+
+#: REV 54 section 1.1's RESIDUAL. The binding is ONE-WAY: this seat reads
+#: the pair's definition from DE's design, and DE's resolver types its own
+#: rule in code. If the design ever declared a different form, DA would
+#: follow the design and DE would follow its literals and the seats would
+#: part with neither noticing. This seat cannot fix DE's half. What it CAN
+#: do is refuse to enforce a rule it did not read: the definition READ and
+#: the definition ENFORCED are compared, and a drift REFUSES BY NAME.
+AUTHORITATIVE_FOR_THE_LINK_DEFINITION = {
+    "artifact": "DE's newest p003_de_multiday_gate1_design_v*.json",
+    "field": "supersedes.chain",
+    "form": "two-element [path, sha256] entries",
+    "why": ("the seat that WRITES the links owns their form; a verifier "
+            "that types its own copy can hold a rule the writer abandoned"),
+    "this_seat_enforces": list(SUPERSESSION_PAIR_FIELDS),
+    "the_binding_is_one_way": (
+        "DE's resolver does not read DA's declaration. Closing the loop is "
+        "DE's act (REV 54 section 1.1); what this seat guarantees is that "
+        "it never enforces a definition it did not read from the authority"),
+}
+
+_DEFN_CACHE: dict = {}
+
+
+def assert_definition_matches_enforcement(force: bool = False,
+                                          derived: Path | None = None
+                                          ) -> dict:
+    """The definition READ must be the definition ENFORCED, or REFUSE.
+
+    Not a warning and not a fallback: if DE's design declares a form this
+    code does not implement, every link this resolver judges would be
+    judged by the wrong rule, and the verdicts would look normal."""
+    if not force and derived is None and "v" in _DEFN_CACHE:
+        return _DEFN_CACHE["v"]
+    d = supersession_pair_definition(derived)
+    out = {"read": d.get("required_fields"),
+           "enforced": list(SUPERSESSION_PAIR_FIELDS),
+           "source": d.get("source"), "status": d.get("status")}
+    if d.get("a_design_is_present_declaring_another_form"):
+        raise VerifierRefused(
+            f"REFUSED: SUPERSESSION_DEFINITION_DRIFT -- {d['source']} IS "
+            f"PRESENT and does not declare the link as a "
+            f"{list(SUPERSESSION_PAIR_FIELDS)} PAIR: its own chain entries "
+            f"have shapes {d.get('observed_entry_shapes')}. A design that "
+            f"declares another form is DRIFT, not absence -- every link "
+            f"judged under a definition this seat did not read would be "
+            f"judged by the wrong rule and the verdicts would look normal. "
+            f"The authority is "
+            f"{AUTHORITATIVE_FOR_THE_LINK_DEFINITION['artifact']}, field "
+            f"{AUTHORITATIVE_FOR_THE_LINK_DEFINITION['field']}.")
+    if not d.get("declared"):
+        #: absence is a STATUS, not a pass and not a refusal: with no design
+        #: on disk there is nothing to drift FROM, and this seat says so
+        #: rather than silently enforcing its own constant as if it had been
+        #: read from somewhere.
+        out["agrees"] = None
+        out["why"] = ("the authority is not readable, so the enforced "
+                      "fields are THIS SEAT'S OWN and are reported as such")
+        if derived is None:
+            _DEFN_CACHE["v"] = out
+        return out
+    out["agrees"] = list(d["required_fields"]) == list(
+        SUPERSESSION_PAIR_FIELDS)
+    if not out["agrees"]:
+        raise VerifierRefused(
+            f"REFUSED: SUPERSESSION_DEFINITION_DRIFT -- "
+            f"{d['source']} declares the link as "
+            f"{list(d['required_fields'])} and this resolver enforces "
+            f"{list(SUPERSESSION_PAIR_FIELDS)}. Every link judged under a "
+            f"definition this seat did not read would be judged by the "
+            f"wrong rule and the verdicts would look normal. The authority "
+            f"for the link's definition is "
+            f"{AUTHORITATIVE_FOR_THE_LINK_DEFINITION['artifact']}, field "
+            f"{AUTHORITATIVE_FOR_THE_LINK_DEFINITION['field']}.")
+    if derived is None:
+        _DEFN_CACHE["v"] = out
+    return out
 
 
 def resolve_supersession_link(block, present: dict) -> dict:
@@ -800,11 +889,14 @@ def resolve_chain(files, kind: str = "artifact") -> dict:
     day that ran twice -- or, resolved by name alone, into a clean chain
     over bytes nobody checked."""
     files = sorted(files)
+    #: the rule is checked against its AUTHORITY before it is applied
+    defn = assert_definition_matches_enforcement()
     if not files:
-        return {"status": "NO_ARTIFACT", "n_matches": 0, "head": None}
+        return {"status": "NO_ARTIFACT", "n_matches": 0, "head": None,
+                "definition": defn}
     if len(files) == 1:
         return {"status": "ONE", "n_matches": 1, "head": files[0],
-                "chain": [files[0].name], "links": []}
+                "chain": [files[0].name], "links": [], "definition": defn}
     present, links, superseded, refusals = {}, [], set(), []
     for f in files:
         present[f.name] = hashlib.sha256(f.read_bytes()).hexdigest()
@@ -875,6 +967,83 @@ def pre_read_artifact_naming() -> dict:
     }
 
 
+#: REV 54 section 1.3. THE DIGEST HAS TWO HOMES IN THIS ARTIFACT AND ONE
+#: AUTHORITY. `receipt.sha256` is the authority because it is the field DE's
+#: `landing_record_for` reads (`(rec.get("receipt") or {}).get("sha256")`),
+#: and conjunct 3 -- the one that stops a re-roll -- resolves through it.
+LANDING_DIGEST_AUTHORITATIVE_FIELD = "receipt.sha256"
+LANDING_DIGEST_MIRROR_FIELD = "landing_record.receipt_sha256"
+
+
+def landing_digest_fields() -> dict:
+    """THIS SEAT'S DECLARATION of which field carries the landing digest."""
+    return {
+        "authoritative": LANDING_DIGEST_AUTHORITATIVE_FIELD,
+        "mirror": LANDING_DIGEST_MIRROR_FIELD,
+        "written_from": "ONE hashlib.sha256(receipt bytes) call",
+        "equality_is_asserted": "at write time, and again at every read",
+        "why_the_authority_is_that_one": (
+            "DE's `landing_record_for` reads `receipt.sha256`; this seat "
+            "used to read only its own `landing_record.receipt_sha256`. Two "
+            "copies written by two calls agree until they do not, and the "
+            "conjunct that stops a re-roll resolves through the copy nobody "
+            "was checking (REV 54 section 1.3)"),
+        "what_DEs_design_must_name": (
+            "the same field. Until DE's design names one, this is DA's "
+            "declaration alone and says so"),
+        "named_in_DEs_design": _design_names_landing_digest_field(),
+    }
+
+
+def _design_names_landing_digest_field() -> dict:
+    """Does DE's newest design NAME a landing-digest field?
+
+    A status, never an assumption: absence here is reported as absence."""
+    designs = _designs_by_version()
+    if not designs:
+        return {"status": "NO_DE_DESIGN_ON_DISK", "field": None}
+    d = designs[-1]
+    try:
+        blob = d.read_text()
+    except OSError:
+        return {"status": "DE_DESIGN_UNREADABLE", "field": None,
+                "source": d.name}
+    for f in (LANDING_DIGEST_AUTHORITATIVE_FIELD,
+              LANDING_DIGEST_MIRROR_FIELD, "receipt_sha256_at_landing"):
+        if f in blob:
+            return {"status": "NAMED", "field": f, "source": d.name,
+                    "agrees_with_DA":
+                        f != LANDING_DIGEST_MIRROR_FIELD}
+    return {"status": "NOT_YET_NAMED_IN_DES_DESIGN", "field": None,
+            "source": d.name,
+            "why": ("DE 90 is to name it in design v18; until it does, the "
+                    "authority is DA's declaration and the two seats agree "
+                    "only because DA now writes and reads the field DE "
+                    "reads")}
+
+
+def landing_digest_of(record: dict) -> dict:
+    """The landing digest READ THROUGH THE AUTHORITY, with the mirror
+    checked. Disagreement REFUSES BY NAME -- it is never resolved by
+    preferring one copy."""
+    auth = (record.get("receipt") or {}).get("sha256")
+    mirror = (record.get("landing_record") or {}).get("receipt_sha256")
+    if auth and mirror and auth != mirror:
+        return {"status": "LANDING_RECORD_DIGEST_FIELDS_DISAGREE",
+                "sha256": None, "authoritative": auth, "mirror": mirror,
+                "why": ("one artifact carrying two different digests for "
+                        "one receipt: each seat would resolve the conjunct "
+                        "through its own copy and neither would complain")}
+    if not auth and mirror:
+        return {"status": "AUTHORITATIVE_FIELD_ABSENT_MIRROR_ONLY",
+                "sha256": mirror, "authoritative": None, "mirror": mirror,
+                "why": ("an older record predating the declaration: the "
+                        "mirror is read and the state is NAMED, never "
+                        "silently promoted to the authority")}
+    return {"status": "OK", "sha256": auth, "authoritative": auth,
+            "mirror": mirror}
+
+
 def landing_record_for(day: str, derived: Path | None = None) -> dict:
     """ONE day's landing record, resolved through the SAME pair rule.
 
@@ -914,10 +1083,17 @@ def landing_record_for(day: str, derived: Path | None = None) -> dict:
            "receipt_path": None, "recorded_at_utc": None,
            "recorded_by": (res["head"].name if res.get("head") else None)}
     if res.get("head") is not None:
-        lr = (json.loads(res["head"].read_text()).get("landing_record")
-              or {})
-        out["receipt_sha256"] = lr.get("receipt_sha256")
-        out["receipt_path"] = lr.get("receipt_path")
+        rec = json.loads(res["head"].read_text())
+        lr = rec.get("landing_record") or {}
+        #: READ THROUGH THE AUTHORITY, with the mirror checked (REV 54 1.3)
+        dig = landing_digest_of(rec)
+        out["digest_read"] = dig
+        if dig["status"] == "LANDING_RECORD_DIGEST_FIELDS_DISAGREE":
+            out["status"] = dig["status"]
+            out["why"] = dig["why"]
+        out["receipt_sha256"] = dig["sha256"]
+        out["receipt_path"] = lr.get("receipt_path") or (
+            rec.get("receipt") or {}).get("path")
         out["recorded_at_utc"] = lr.get("recorded_at_utc")
         out["name_matches_convention"] = bool(
             re.match(r"^p003_da_gate1_pre_read_\d{8}__.+\.json$",
@@ -1058,7 +1234,8 @@ def read_gate_predicate(params: dict, now: datetime.datetime | None = None,
             if lr["status"] == "NO_LANDING_RECORD":
                 st = "NO_LANDING_RECORD"
             elif lr["status"] not in ("ONE", "CHAIN_HEAD"):
-                st = "LANDING_RECORD_" + lr["status"]
+                st = (lr["status"] if lr["status"].startswith("LANDING_")
+                      else "LANDING_RECORD_" + lr["status"])
             elif r["status"] in CHAIN_REFUSAL_STATUSES:
                 st = "RECEIPT_" + r["status"]
             elif r["status"] == "AMBIGUOUS":
@@ -2348,6 +2525,13 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     #: (d) THE SEAL. Absent = good. A leak is NAMED, never read.
     absence = economic_absence(receipt)
 
+    #: REV 54 section 1.3: the digest is computed ONCE and written into both
+    #: fields from that one value. Two `hashlib.sha256(rp.read_bytes())`
+    #: calls beside each other agree today and nothing said they must --
+    #: and DE resolves conjunct 3 through the copy this seat was not
+    #: checking, which is the conjunct that stops a re-roll.
+    rp_sha = hashlib.sha256(rp.read_bytes()).hexdigest()
+
     out = {
         "protocol": PROTOCOL + "_PRE_READ_AND_LANDING_RECORD",
         "mode": "PRE_READ",
@@ -2364,7 +2548,15 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         "landing_record": {
             "day": day,
             "receipt_path": rp.name,
-            "receipt_sha256": hashlib.sha256(rp.read_bytes()).hexdigest(),
+            #: REV 54 section 1.3. ONE CALL, TWO FIELDS, EQUALITY ASSERTED
+            #: AT WRITE TIME -- and `receipt.sha256` is the AUTHORITATIVE
+            #: one, because that is the field DE's conjunct 3 resolves
+            #: through. This mirror exists for readers of the landing block
+            #: and is checked against the authority, never trusted beside it.
+            "receipt_sha256": rp_sha,
+            "THIS_FIELD_IS_A_MIRROR": landing_digest_fields()["mirror"],
+            "the_authoritative_field_is": landing_digest_fields()[
+                "authoritative"],
             "recorded_at_utc": (now or datetime.datetime.now(
                 datetime.timezone.utc)).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "what_it_is_for": (
@@ -2389,8 +2581,11 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
             "alone emit it"),
         "book": book_meta,
         "builder_receipt": builder,
-        "receipt": {"path": rp.name,
-                    "sha256": hashlib.sha256(rp.read_bytes()).hexdigest()},
+        #: THE AUTHORITATIVE DIGEST. Both seats now resolve through this
+        #: field; the landing block's copy mirrors it and is asserted equal
+        #: at write time.
+        "receipt": {"path": rp.name, "sha256": rp_sha},
+        "landing_digest_fields": landing_digest_fields(),
         "provenance": prov,
         "economic_absence": absence,
         "arms": arms_out,
@@ -3288,11 +3483,15 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and pre["landing_record_naming"]["template"] == nm["template"],
        f"{nm['template']}; day from {nm['day_comes_from']}")
 
-    def _lr(name, sha, sup=None):
+    def _lr(name, sha, sup=None, mirror=None):
         rec = dict(pre)
         rec["day"] = "2026-09-03"
-        rec["landing_record"] = dict(pre["landing_record"],
-                                     receipt_sha256=sha)
+        #: ONE digest in BOTH homes, as the emitter now writes it. `mirror`
+        #: is here ONLY so the disagreement can be DRIVEN.
+        rec["receipt"] = dict(pre["receipt"], sha256=sha)
+        rec["landing_record"] = dict(
+            pre["landing_record"],
+            receipt_sha256=(sha if mirror is None else mirror))
         if sup is not None:
             rec["supersedes"] = {
                 "path": Path(sup).name,
@@ -3326,6 +3525,96 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"{lr_one['receipt_sha256'][:8]}; chained -> {lr_chain['status']} at "
        f"{lr_chain['head']} ({lr_chain['receipt_sha256'][:8]}); unchained "
        f"pair -> {lr_amb['status']}")
+
+    # -- H2g. REV 54 section 1.3: ONE DIGEST, ONE AUTHORITY --------------
+    lf = landing_digest_fields()
+    ck("REV 54 section 1.3 -- THE LANDING DIGEST IS WRITTEN ONCE AND READ "
+       "THROUGH ONE DECLARED AUTHORITY. The emitter computes ONE "
+       "`sha256(receipt bytes)` and writes it into `receipt.sha256` -- the "
+       "field DE's `landing_record_for` reads -- and into the landing "
+       "block as a MIRROR that says so. ***Two copies written by two calls "
+       "agreed until they did not, and conjunct 3, the one that stops a "
+       "re-roll, resolved through the copy this seat was NOT checking***",
+       lf["authoritative"] == "receipt.sha256"
+       and lf["mirror"] == "landing_record.receipt_sha256"
+       and pre["receipt"]["sha256"]
+       == pre["landing_record"]["receipt_sha256"]
+       == hashlib.sha256(spath.read_bytes()).hexdigest()
+       and pre["landing_record"]["the_authoritative_field_is"]
+       == "receipt.sha256",
+       f"authority {lf['authoritative']}, mirror {lf['mirror']}, both "
+       f"{pre['receipt']['sha256'][:16]}; DE's design "
+       f"{lf['named_in_DEs_design']['status']}")
+    lrd2 = td / "lr_disagree"
+    lrd2.mkdir(exist_ok=True)
+    lrd_hold, lrd = lrd, lrd2
+    good = _lr("p003_da_gate1_pre_read_20260903__20260906T160000Z.json",
+               "a" * 64)
+    ok_read = landing_digest_of(json.loads(good.read_text()))
+    for f in lrd.glob("*.json"):
+        f.unlink()
+    bad = _lr("p003_da_gate1_pre_read_20260903__20260906T161000Z.json",
+              "a" * 64, mirror="f" * 64)
+    bad_read = landing_digest_of(json.loads(bad.read_text()))
+    bad_res = landing_record_for("2026-09-03", lrd)
+    rec_old = json.loads(bad.read_text())
+    rec_old.pop("receipt", None)
+    (lrd / "old_shape.json").write_text(json.dumps(rec_old, default=str))
+    mirror_only = landing_digest_of(rec_old)
+    lrd = lrd_hold
+    ck("AND TWO DIGESTS FOR ONE RECEIPT REFUSE BY NAME, WHILE AN OLDER "
+       "RECORD CARRYING ONLY THE MIRROR IS READ AND ***NAMED***, never "
+       "silently promoted to the authority. ***A record whose two copies "
+       "disagree is a record where each seat's answer depends on which "
+       "field it happened to read***",
+       ok_read["status"] == "OK" and ok_read["sha256"] == "a" * 64
+       and bad_read["status"] == "LANDING_RECORD_DIGEST_FIELDS_DISAGREE"
+       and bad_read["sha256"] is None
+       and bad_res["status"] == "LANDING_RECORD_DIGEST_FIELDS_DISAGREE"
+       and mirror_only["status"] == "AUTHORITATIVE_FIELD_ABSENT_MIRROR_ONLY"
+       and mirror_only["sha256"] == "f" * 64,
+       f"agreeing -> {ok_read['status']} at {ok_read['sha256'][:8]}; "
+       f"disagreeing -> {bad_read['status']} (authority "
+       f"{bad_read['authoritative'][:8]} vs mirror "
+       f"{bad_read['mirror'][:8]}); mirror-only -> "
+       f"{mirror_only['status']}")
+
+    # -- H2h. REV 54 section 1.1's residual: the definition is BOUND ------
+    d_ok = assert_definition_matches_enforcement(force=True)
+    dd = td / "designs_drift"
+    dd.mkdir(exist_ok=True)
+    (dd / "p003_de_multiday_gate1_design_v99.json").write_text(json.dumps({
+        "supersedes": {"chain": [["a.json", "b" * 64, "EXTRA"],
+                                 ["c.json", "d" * 64, "EXTRA"]]}}))
+    drift_msg = ""
+    try:
+        assert_definition_matches_enforcement(force=True, derived=dd)
+    except VerifierRefused as e:
+        drift_msg = str(e)
+    empty = td / "designs_none"
+    empty.mkdir(exist_ok=True)
+    d_none = assert_definition_matches_enforcement(force=True, derived=empty)
+    ck("REV 54 section 1.1's RESIDUAL -- THE AUTHORITY FOR THE LINK'S "
+       "DEFINITION IS DECLARED, AND A DEFINITION THIS SEAT DID NOT READ IS "
+       "NEVER ENFORCED. The definition READ from DE's design and the "
+       "definition ENFORCED here are compared before any chain is "
+       "resolved; a design declaring a different form REFUSES by name "
+       "(SUPERSESSION_DEFINITION_DRIFT), and with NO design on disk the "
+       "answer is a STATUS -- neither a pass nor a refusal -- saying the "
+       "enforced fields are this seat's own. ***The binding is one-way: DE "
+       "types its rule in code and does not read DA's declaration, so "
+       "closing the loop is DE's act; what this seat guarantees is that it "
+       "cannot enforce a rule it did not read***",
+       d_ok["agrees"] is True
+       and d_ok["read"] == d_ok["enforced"] == ["path", "sha256"]
+       and "SUPERSESSION_DEFINITION_DRIFT" in drift_msg
+       and d_none["agrees"] is None
+       and d_none["status"] == "SUPERSESSION_DEFINITION_NOT_DECLARED"
+       and AUTHORITATIVE_FOR_THE_LINK_DEFINITION["field"]
+       == "supersedes.chain",
+       f"{d_ok['source']} declares {d_ok['read']} = enforced; a design "
+       f"declaring 3-element entries -> refused by name; no design -> "
+       f"{d_none['status']} with agrees={d_none['agrees']}")
 
     #: and the landing conjunct CONSUMES those statuses rather than reading
     #: an unresolvable record as a missing one.
