@@ -137,6 +137,11 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
     # `r["split"] != split`, so the label decides which index a row lands in.
     # `build_state_tape_v2` maps (('train', FRAG), ('score', TOP)) -- so the
     # DAY FRAGMENT goes in the TOPUP slot.
+    # `build_state_tape_v2` maps (('train', FRAG), ('score', TOP)); the day
+    # fragment goes in the TOPUP slot, so its split is SCORE. Derived from
+    # the call, not restated.
+    _fragment_arg, _empty_arg = "topup", "fragment"
+    _DAY_SPLIT = "score" if _fragment_arg == "topup" else "train"
     rc = BST.main(fragment_path=empty, topup_path=frag, out_path=dst,
                   allow_overwrite=False)
     if rc != 0:
@@ -195,12 +200,22 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
                                  "not two feature sets. A one-day Gate-1 "
                                  "tape has ONE population, so one split has "
                                  "no input.",
-            "what_this_build_did": "day fragment -> TRAIN; an explicitly "
-                                   "EMPTY file -> SCORE",
-            "status": "PROVISIONAL — routed to DE under R-574, which puts "
-                      "the split declaration with DE. Which split a day's "
-                      "rows belong to is a modelling question, not plumbing, "
-                      "and this seat does not decide it.",
+            # RULE 10, AND THIS IS THE SECOND ATTEMPT. Round 53 filed
+            # that this field was "computed from the build". It was NOT:
+            # that patch used a non-asserting `.replace()` whose pattern did
+            # not match, so it silently did nothing and the literal below
+            # survived -- FALSE of the build, which sends the day to SCORE.
+            # Found in the 09-04 receipt this round. Computed now, from the
+            # arguments actually passed, with the assert the first patch
+            # lacked.
+            "what_this_build_did": (
+                f"day fragment -> {_DAY_SPLIT.upper()}; an explicitly EMPTY "
+                f"file -> {'TRAIN' if _DAY_SPLIT == 'score' else 'SCORE'}"),
+            "computed_from_the_build_not_a_literal": True,
+            "status": "RULED — the day's rows are the SCORE split (R-560). A "
+                      "ruled forward day is not trained on. (Superseded the "
+                      "PROVISIONAL status this field carried while the "
+                      "question was open.)",
             "consequence_if_DE_rules_otherwise": "the tape is rebuilt; it is "
                                                  "one day and it is cheap "
                                                  "relative to the fragment",

@@ -1,0 +1,88 @@
+{
+ "THE_SPLIT_QUESTION_IS_NOT_MINE": {
+  "consequence_if_DE_rules_otherwise": "the tape is rebuilt; it is one day and it is cheap relative to the fragment",
+  "mechanism": "build_state_tape_v2 maps its two inputs onto the two splits: (('train', FRAG), ('score', TOP))",
+  "status": "PROVISIONAL \u2014 routed to DE under R-574, which puts the split declaration with DE. Which split a day's rows belong to is a modelling question, not plumbing, and this seat does not decide it.",
+  "what_this_build_did": "day fragment -> TRAIN; an explicitly EMPTY file -> SCORE",
+  "why_it_bites_here": "those are two POPULATIONS (eraB, top-up), not two feature sets. A one-day Gate-1 tape has ONE population, so one split has no input."
+ },
+ "WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY": {
+  "corrected_from": "the first 09-03 tape put the day in TRAIN and left SCORE empty; that artifact is moved aside as .WRONG_SPLIT and superseded",
+  "split": "score",
+  "why": "a RULED FORWARD DAY is not trained on. Every row is a SCORE row that the PINNED heads score at their PINNED thetas to produce `asm`; nothing is fitted here.",
+  "why_the_label_is_not_cosmetic": "`phase2_arms.tape_index` filters `r['split'] != split`, so the label decides which index a row lands in -- and a forward day labelled `train` reports as a day the heads were FITTED on, which is the look-ahead-shaped misreport"
+ },
+ "build_ref": "6c2c11abd233ff9b37d366b162e68f58b569ea9a",
+ "coin": "btc",
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day": "20260904",
+ "decides_nothing": "REPORTED (rule 14).",
+ "guard": {
+  "refuses_any_existing_path": true,
+  "refuses_existing_state_tapes": [
+   "phase2_state_tape_v2.json",
+   "phase2_state_tape_v5.QUARANTINED_ZERO_ROW.json",
+   "phase2_state_tape_v5.QUARANTINED_tape6d_286.json",
+   "phase2_state_tape_v5.json"
+  ],
+  "required_stem": "phase2_state_tape_gate1_"
+ },
+ "inputs": {
+  "score_split": {
+   "THE_DAY'S_ROWS": true,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260904_btc.json",
+   "sha256": "839e5377b6666e59d68563025ffb8b8be28c183070382c0f783b16e5201d4b2a"
+  },
+  "train_split": {
+   "EMPTY_BY_CONSTRUCTION": true,
+   "bytes": 234,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260904_btc.EMPTY_SCORE.json",
+   "sha256": "5f13170c0602d1e9bcf48604d4845075d4ea73522e47733409a81031c67bf50b",
+   "why_it_still_carries_a_digest": "REV 43: 'empty by construction' is a claim about the file, and a claim about a file that carries no digest cannot be checked. An empty file is still bytes."
+  }
+ },
+ "no_assembly_run": true,
+ "no_book_built": true,
+ "protocol": "BE_GATE1_STATE_TAPE_V1",
+ "resources": {
+  "cap_gb": 8.0,
+  "cap_raised": false,
+  "peak_rss_gb": 4.741,
+  "wall_s": 1528.2
+ },
+ "scope": {
+  "anon_bytes": 1458565120,
+  "cap_was_hit": true,
+  "cgroup": "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/research.slice/be58tape.scope",
+  "current_bytes": "5013860352",
+  "events": {
+   "high": 0,
+   "low": 0,
+   "max": 1199,
+   "oom": 0,
+   "oom_group_kill": 0,
+   "oom_kill": 0,
+   "sock_throttled": 0
+  },
+  "file_bytes": 3514445824,
+  "max_bytes": "8589934592",
+  "peak_bytes": "8589934592",
+  "unit": "be58tape.scope"
+ },
+ "tape": {
+  "bytes": 1165058495,
+  "n_rows": 638602,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260904_btc.json",
+  "sha256": "3727de65337120576a1cb4f9c6ab197d377c8aced36d419bd5fb3f9cdc1614a0"
+ }
+}

@@ -1,0 +1,84 @@
+{
+ "build": {
+  "boundary_time_violations": 0,
+  "consume_clock_violations": 0,
+  "days": [
+   "2026-09-04"
+  ],
+  "n_rows": 644046,
+  "n_windows": 288,
+  "reconciliation_failures": 0,
+  "unhooked_state_changes": 0
+ },
+ "coin": "btc",
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day": "20260904",
+ "decides_nothing": "REPORTED (rule 14).",
+ "fragment": {
+  "bytes": 711128106,
+  "digest_is_of_the_bytes_as_written": true,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260904_btc.json",
+  "sha256": "839e5377b6666e59d68563025ffb8b8be28c183070382c0f783b16e5201d4b2a",
+  "streamed_never_materialised": true
+ },
+ "guard": {
+  "refuses_any_existing_path": true,
+  "refuses_existing_datasets": [
+   "harmful_exposure_rows_v1.json",
+   "harmful_exposure_rows_v2.json",
+   "harmful_exposure_rows_v2_eraB.json",
+   "harmful_exposure_rows_v3.json",
+   "harmful_exposure_rows_v3_eraB.json",
+   "harmful_exposure_rows_v3_topup.PREFIX_FILTERED.json",
+   "harmful_exposure_rows_v3_topup.json"
+  ],
+  "required_stem": "harmful_exposure_rows_v3_gate1_"
+ },
+ "no_assembly_run": true,
+ "no_book_built": true,
+ "one_file_per_day": true,
+ "population": {
+  "coin": "btc",
+  "day": "20260904",
+  "n_windows": 288,
+  "slugs_sha256": "7a37d7d8614f04a87945b3edd0e091c9dc091d7cf986a46f6084f36b8a40698c",
+  "source": "de_admissible_windows.supply(day, be_forward_day.present_from_ledger(day))",
+  "why_not_a_declared_population": "the declared population intervals end 2026-08-26T00:00; no September day passes slug_in_population"
+ },
+ "protocol": "BE_GATE1_FRAGMENT_V1",
+ "resources": {
+  "cap_gb": 8.0,
+  "cap_raised": false,
+  "peak_rss_gb": 2.199,
+  "wall_s": 766.1
+ },
+ "scope": {
+  "anon_bytes": 2275696640,
+  "cap_was_hit": false,
+  "cgroup": "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/research.slice/be58frag.scope",
+  "current_bytes": "5562105856",
+  "events": {
+   "high": 0,
+   "low": 0,
+   "max": 0,
+   "oom": 0,
+   "oom_group_kill": 0,
+   "oom_kill": 0,
+   "sock_throttled": 0
+  },
+  "file_bytes": 3257819136,
+  "max_bytes": "8589934592",
+  "peak_bytes": "5562105856",
+  "unit": "be58frag.scope"
+ }
+}
