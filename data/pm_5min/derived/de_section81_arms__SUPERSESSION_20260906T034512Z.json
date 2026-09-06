@@ -1,0 +1,69 @@
+{
+ "MOVED_is_zero_on_every_result_axis": {
+  "numeric_epsilon": 0,
+  "numeric_substantive": 0,
+  "string": 0,
+  "the_only_non_provenance_movement": "one sentence whose embedded emission timestamp changed, classed string-embedded-provenance by rule"
+ },
+ "and_the_cross_check_fired_on_its_first_real_run": "population_block.source_cache was transcribed as the basename de_section81_cache_12.pkl; BE's artifact carries the FULL PATH /home/yuqing/ctaNew-wt-be/data/pm_5min/derived/de_section81_cache_12.pkl -- BE's OWN WORKTREE. The digest matched throughout, which is exactly the class a file digest cannot catch. Corrected to the artifact's value. CAVEAT THIS PUTS ON MY ROUND-67 EXPLANATION OF THE 1,309: BE's cache is a worktree-local file whose bytes I have never compared, so the 'same reference at two filter stages' argument rests on da_de53_exclusion's counts over DE's cache, not on the two files being identical.",
+ "as_of": "2026-09-06T03:47Z",
+ "claim_checked_against_the_computed_diff": {
+  "claim_checked_against_the_computed_diff": true,
+  "claimed": {
+   "numeric-epsilon": 0,
+   "numeric-substantive": 0,
+   "provenance": 8,
+   "string": 0,
+   "string-embedded-provenance": 1
+  }
+ },
+ "computed_diff": {
+  "counts_by_class": {
+   "numeric-epsilon": 0,
+   "numeric-substantive": 0,
+   "provenance": 8,
+   "string": 0,
+   "string-embedded-provenance": 1
+  },
+  "epsilon": 1e-09,
+  "how_this_was_produced": "COMPUTED by a leaf diff inside the emitter against the named predecessor, never counted by hand (A-2)",
+  "n_added": 26,
+  "n_moved_total": 9,
+  "n_new_leaves": 4269,
+  "n_old_leaves": 4243,
+  "n_removed": 0,
+  "n_shared": 4243,
+  "protocol": "P003_DE_SUPERSESSION_LEAF_DIFF_V1",
+  "sentence": "0 substantive numeric, 0 epsilon residual, 0 string, 1 string-embedded-provenance, 8 provenance -- of 4243 shared leaves"
+ },
+ "moved_leaves_non_provenance": {
+  "cancellation_economics.scope_and_limits": {
+   "class": "string-embedded-provenance",
+   "new": "THE FILLS LEG ONLY, valued at t + MARKOUT_S over n=12 windows of 2026-09-06T03:45:12Z. It EXCLUDES the residual position at window end (`inventory_loss_cents`, unruled) and any value of avoiding a fill whose harm lands beyond the markout horizon. DEVELOPMENT EVIDENCE, not a validation: one coin, one latency rung, no forward day, no interval -- 12 windows is below the 5-complete-day cluster floor, so a POINT ESTIMATE AND NO INTERVAL (rule 8).",
+   "old": "THE FILLS LEG ONLY, valued at t + MARKOUT_S over n=12 windows of 2026-09-06T03:20:53Z. It EXCLUDES the residual position at window end (`inventory_loss_cents`, unruled) and any value of avoiding a fill whose harm lands beyond the markout horizon. DEVELOPMENT EVIDENCE, not a validation: one coin, one latency rung, no forward day, no interval -- 12 windows is below the 5-complete-day cluster floor, so a POINT ESTIMATE AND NO INTERVAL (rule 8)."
+  }
+ },
+ "numbers_moved": false,
+ "record": "SUPERSESSION",
+ "still_open_on_this_surface": [
+  "the multi-day Gate-1 run: the design is declared and committed and waits on the reviewer's filing (R-547 item 6); DE does not touch the declaration until then",
+  "the declined fills' keys are still not emitted (R-519(F) item 4)",
+  "attempt_bound/required_attempts remain UNWIRED; RANDOM_MATCHED still REFUSED at 60 attempts, all 60 rejected at P4",
+  "fields() is a closure inside run_arms, so its emission guards are AST source pins rather than driven checks",
+  "BE's cache is a worktree-local file DE has never compared byte-for-byte; the 1,309 explanation does not depend on it, and says so"
+ ],
+ "superseded": [
+  {
+   "artifact": "de_section81_arms__20260906T032053Z.json",
+   "committed": true,
+   "reason": "content only: it takes its cited numbers from module literals rather than reading them from the artifact, so its citation was guarded by a digest over the file and not over the copy. Every number in it is unchanged here. Retained in place as provenance (rule 13).",
+   "sha256": "5da816b0407b966f5a6e959363c9bf5c1c21f01bbd7487a4170eb59d6293c02a"
+  }
+ ],
+ "superseding": "de_section81_arms__20260906T034512Z.json",
+ "superseding_carrying_commit": "0fe061b",
+ "superseding_carrying_commit_is_published": "yes -- pushed before the emission",
+ "superseding_code_identity_differences_at_that_commit": "0 of 7",
+ "superseding_sha256": "b6f925cff4cf1692a92c7934433e692c6368839d8801c6d8a1e982e4e5774857",
+ "what_changed": "A-1 (reviewer 3563fd2): every cited value from BE's null is now READ from the parsed artifact at a declared JSON path rather than from a literal in this module. The literal dict survives as BE_EXPECTED_VALUES, a CROSS-CHECK that refuses on mismatch -- the transcription is the falsifier, not the source. The digest refusal is kept and guards a different thing: the file's bytes. 22 values are cross-checked at read time, 0 mismatching, and the emission now carries citation_read_mode, transcription_crosscheck and cited_json_paths."
+}

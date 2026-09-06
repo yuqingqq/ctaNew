@@ -1,0 +1,116 @@
+{
+ "as_of": "2026-09-06T03:47Z",
+ "claim_checked_against_the_computed_diff": {
+  "claim_checked_against_the_computed_diff": true,
+  "claimed": {
+   "numeric-epsilon": 2,
+   "numeric-substantive": 8,
+   "provenance": 10,
+   "string": 3,
+   "string-embedded-provenance": 1
+  }
+ },
+ "computed_diff": {
+  "counts_by_class": {
+   "numeric-epsilon": 2,
+   "numeric-substantive": 8,
+   "provenance": 10,
+   "string": 3,
+   "string-embedded-provenance": 1
+  },
+  "epsilon": 1e-09,
+  "how_this_was_produced": "COMPUTED by a leaf diff inside the emitter against the named predecessor, never counted by hand (A-2)",
+  "n_added": 84,
+  "n_moved_total": 24,
+  "n_new_leaves": 4224,
+  "n_old_leaves": 4151,
+  "n_removed": 11,
+  "n_shared": 4140,
+  "protocol": "P003_DE_SUPERSESSION_LEAF_DIFF_V1",
+  "sentence": "8 substantive numeric, 2 epsilon residual, 3 string, 1 string-embedded-provenance, 10 provenance -- of 4140 shared leaves"
+ },
+ "corrects": "de_section81_arms__SUPERSESSION_20260906T025943Z.json",
+ "corrects_sha256": "76aa9c620cee7f9784a4bf3bc5fe21f8d4cbebc63f0a965b4ab286958154c4d9",
+ "moved_leaves_non_provenance": {
+  "cancellation_economics.scope_and_limits": {
+   "class": "string-embedded-provenance",
+   "new": "THE FILLS LEG ONLY, valued at t + MARKOUT_S over n=12 windows of 2026-09-06T02:59:43Z. It EXCLUDES the residual position at window end (`inventory_loss_cents`, unruled) and any value of avoiding a fill whose harm lands beyond the markout horizon. DEVELOPMENT EVIDENCE, not a validation: one coin, one latency rung, no forward day, no interval -- 12 windows is below the 5-complete-day cluster floor, so a POINT ESTIMATE AND NO INTERVAL (rule 8).",
+   "old": "THE FILLS LEG ONLY, valued at t + MARKOUT_S over n=12 windows of 2026-09-06T02:44:25Z. It EXCLUDES the residual position at window end (`inventory_loss_cents`, unruled) and any value of avoiding a fill whose harm lands beyond the markout horizon. DEVELOPMENT EVIDENCE, not a validation: one coin, one latency rung, no forward day, no interval -- 12 windows is below the 5-complete-day cluster floor, so a POINT ESTIMATE AND NO INTERVAL (rule 8)."
+  },
+  "tail_and_cascade.cancel_mechanics.arms.CONDVALUE_X_SKEW.cascade_factor": {
+   "class": "numeric-substantive",
+   "new": 8.701293309168168,
+   "old": 31.189251824246035
+  },
+  "tail_and_cascade.cancel_mechanics.arms.CONDVALUE_X_SKEW.cascade_factor_baseline": {
+   "class": "string",
+   "new": "BE_REPLAYED_PER_ARM_RATE_CITED",
+   "old": "RANDOM_DECISION_over_all_cancellable_generations"
+  },
+  "tail_and_cascade.cancel_mechanics.arms.CONDVALUE_X_SKEW.cascade_x_selectivity": {
+   "class": "numeric-substantive",
+   "new": 2.8925271513053685,
+   "old": 10.368086044803915
+  },
+  "tail_and_cascade.cancel_mechanics.arms.CONDVALUE_X_SKEW.identity_residual": {
+   "class": "numeric-epsilon",
+   "new": 4.440892098500626e-16,
+   "old": 3.552713678800501e-15
+  },
+  "tail_and_cascade.cancel_mechanics.arms.CONDVALUE_X_SKEW.ratio_vs_random_cancel": {
+   "class": "numeric-substantive",
+   "new": 2.892527151305368,
+   "old": 10.368086044803912
+  },
+  "tail_and_cascade.cancel_mechanics.arms.HAZARD_OVER_SKEWED_REF.cascade_factor": {
+   "class": "numeric-substantive",
+   "new": 5.568364315281405,
+   "old": 16.07789687137891
+  },
+  "tail_and_cascade.cancel_mechanics.arms.HAZARD_OVER_SKEWED_REF.cascade_factor_baseline": {
+   "class": "string",
+   "new": "BE_REPLAYED_PER_ARM_RATE_CITED",
+   "old": "RANDOM_DECISION_over_all_cancellable_generations"
+  },
+  "tail_and_cascade.cancel_mechanics.arms.HAZARD_OVER_SKEWED_REF.cascade_x_selectivity": {
+   "class": "numeric-substantive",
+   "new": 0.3278923188499916,
+   "old": 0.9467446073741741
+  },
+  "tail_and_cascade.cancel_mechanics.arms.HAZARD_OVER_SKEWED_REF.identity_residual": {
+   "class": "numeric-epsilon",
+   "new": 0.0,
+   "old": 1.1102230246251565e-16
+  },
+  "tail_and_cascade.cancel_mechanics.arms.HAZARD_OVER_SKEWED_REF.ratio_vs_random_cancel": {
+   "class": "numeric-substantive",
+   "new": 0.3278923188499916,
+   "old": 0.9467446073741742
+  },
+  "tail_and_cascade.cancel_mechanics.cascade_baseline_candidates.baseline_status": {
+   "class": "string",
+   "new": "RESOLVED_BY_REPLAY_CITATION",
+   "old": "CONTESTED_THE_BASELINE_IS_NOT_A_COUNT"
+  },
+  "tail_and_cascade.cancel_mechanics.separation.cascade_spread": {
+   "class": "numeric-substantive",
+   "new": 1.562630032178208,
+   "old": 1.9398838090426878
+  },
+  "tail_and_cascade.cancel_mechanics.separation.dominance_ratio": {
+   "class": "numeric-substantive",
+   "new": 3.6127163756021736,
+   "old": 2.9101429064681352
+  }
+ },
+ "record": "SUPERSESSION_CORRECTION_V2",
+ "the_artifact_is_unchanged": {
+  "artifact": "de_section81_arms__20260906T025943Z.json",
+  "nothing_in_it_moves": true,
+  "sha256": "19479bc6064bc14ae2a9383ee1e450ba05cadfdb9f9bbbf0276c5aabdc39aa13",
+  "this_corrects_the_RECORD_not_the_RESULT": true
+ },
+ "the_mechanism_that_replaces_the_sentence": "live/pm_research/de_supersession_diff.py (15 checks). The moved set is now COMPUTED by a leaf diff inside the emitter against the named predecessor, classified into numeric-substantive / numeric-epsilon / string / string-embedded-provenance / provenance, and a claimed count the diff does not produce is REFUSED. Three records in a row stated a moved set by hand and the third was wrong on the axis it was correcting; a prose count beside a table has now contradicted the table three times in this programme.",
+ "what_was_wrong": "the v1 record stated '8 substantive + 2 label + 1 status of 4,140 shared, no residual moved'. The reviewer (3563fd2 A-2) and the coordinator both re-diffed it. THE SUBSTANTIVE COUNT AND THE STRING COUNT WERE RIGHT -- 8, and 2 label + 1 status = 3 string. 'NO RESIDUAL MOVED' WAS WRONG: BOTH identity_residual leaves moved (CONDVALUE 3.5527e-15 -> 4.4409e-16, HAZARD 1.1102e-16 -> 0.0). A residual tracks the magnitude of what it checks, so it moves when that grows; it is neither a substantive change NOR an unchanged number, and calling it the latter was the error.",
+ "why_the_coordinators_11_numeric_and_my_10_are_not_a_disagreement": "we agree on 14 non-provenance moved leaves and on WHICH they are. The split differs by one because `cancellation_economics.scope_and_limits` differs only by an embedded emission timestamp; the instrument now classes that as string-embedded-provenance by RULE (the strings match once ISO stamps are masked), not by listing fields. The convention is in the instrument and checkable, instead of in two hand counts."
+}

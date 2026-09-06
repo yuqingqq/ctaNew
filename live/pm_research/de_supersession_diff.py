@@ -28,12 +28,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
+import re
 from pathlib import Path
 
 
 PROTOCOL = "P003_DE_SUPERSESSION_LEAF_DIFF_V1"
-EXPECTED_CHECKS = 13
+EXPECTED_CHECKS = 15
 EPSILON = 1e-9
 
 #: Leaf names whose movement is provenance or resource, never a result.
@@ -51,6 +51,12 @@ PROVENANCE_PARENTS = ("code_identity", "source_identity",
 #: A residual is a numeric leaf whose job is to be ~0; it moves with the
 #: magnitude of the quantity it checks.
 RESIDUAL_MARKERS = ("residual", "_resid")
+
+#: A sentence that embeds the run id or an emission timestamp differs on
+#: every emission and says nothing about the result. Recognised by RULE --
+#: the two strings become equal once ISO-8601 stamps are masked -- and not
+#: by listing the fields that happen to do it today.
+_ISO = re.compile(r"\d{4}-?\d{2}-?\d{2}[T ]\d{2}:?\d{2}:?\d{2}Z?")
 
 
 class DiffRefused(RuntimeError):
@@ -86,6 +92,9 @@ def classify(path: str, old, new) -> str:
     num = (isinstance(old, (int, float)) and not isinstance(old, bool)
            and isinstance(new, (int, float)) and not isinstance(new, bool))
     if not num:
+        if (isinstance(old, str) and isinstance(new, str)
+                and _ISO.sub("<TS>", old) == _ISO.sub("<TS>", new)):
+            return "string-embedded-provenance"
         return "string"
     if _is_residual(path) and abs(float(new) - float(old)) < EPSILON:
         return "numeric-epsilon"
@@ -107,7 +116,7 @@ def diff(old_doc, new_doc) -> dict:
     for v in moved.values():
         counts[v["class"]] = counts.get(v["class"], 0) + 1
     for cls in ("numeric-substantive", "numeric-epsilon", "string",
-                "provenance"):
+                "string-embedded-provenance", "provenance"):
         counts.setdefault(cls, 0)
     return {
         "protocol": PROTOCOL,
@@ -121,7 +130,9 @@ def diff(old_doc, new_doc) -> dict:
         "sentence": (
             f"{counts['numeric-substantive']} substantive numeric, "
             f"{counts['numeric-epsilon']} epsilon residual, "
-            f"{counts['string']} string, {counts['provenance']} provenance "
+            f"{counts['string']} string, "
+            f"{counts['string-embedded-provenance']} string-embedded-"
+            f"provenance, {counts['provenance']} provenance "
             f"-- of {len(shared)} shared leaves"),
         "how_this_was_produced": "COMPUTED by a leaf diff inside the "
                                  "emitter against the named predecessor, "
@@ -160,7 +171,7 @@ def selftest() -> int:
     d = diff(a, b)
     ok(d["n_moved_total"] == 5 and d["counts_by_class"] == {
         "numeric-substantive": 1, "numeric-epsilon": 1, "string": 1,
-        "provenance": 2},
+        "string-embedded-provenance": 0, "provenance": 2},
        f"POSITIVE CONTROL, AND IT ADMITS: one substantive number, one "
        f"epsilon residual, one string and two provenance leaves are each "
        f"classified as themselves -- {d['sentence']}")
@@ -200,6 +211,20 @@ def selftest() -> int:
             ok("does not produce" in str(e),
                f"KNOWN-BAD REFUSED -- {why}: a claimed count the diff does "
                f"not produce is not published")
+    _ts = diff({"m": "n=12 windows of 2026-09-06T03:20:53Z. It excludes X"},
+               {"m": "n=12 windows of 2026-09-06T03:45:12Z. It excludes X"})
+    ok(_ts["moved"]["m"]["class"] == "string-embedded-provenance",
+       "a sentence differing ONLY by an embedded emission timestamp is "
+       "string-embedded-provenance -- recognised by RULE (the strings "
+       "match once ISO stamps are masked), not by listing the fields that "
+       "happen to do it today")
+    _ts2 = diff({"m": "at 2026-09-06T03:20:53Z the value was 4"},
+                {"m": "at 2026-09-06T03:45:12Z the value was 5"})
+    ok(_ts2["moved"]["m"]["class"] == "string",
+       "KNOWN-BAD, THE OTHER SIDE: a sentence that ALSO changes beyond its "
+       "timestamp stays a plain string -- the rule cannot be used to hide "
+       "a changed claim inside a re-stamped sentence")
+
     ok(_is_residual("arms.X.identity_residual_cents")
        and not _is_residual("arms.X.cascade_factor"),
        "the residual marker matches residual paths and not others")
